@@ -1,202 +1,157 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2078.outbound.protection.outlook.com [40.107.236.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CBF2207658
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 15:22:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743520956; cv=none; b=jP3HDUqrM/VNwYzUuJvqtHa5fuuBVptNMf1ID0xIguPhpvbTRLiRNM9xCI2U9pehiFHOcN6vMK7ucVd3OcNoESbXRBxQpLWhllDyLjdmYWQplKWssDI+vtUAVZXLHq3m3WKkB6iiMadhss687Y+kycPFvUoRopfmJIOMwSYKq/g=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743520956; c=relaxed/simple;
-	bh=r0HUfnvrGuNXBkU8f4JgPPyejXbQ+55BCOXyLiRiJKQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XGIH/08QwN6xoQy8PSiKzfOma7458q17YZ+1qbGqk6r6GviJOTdhP7RmRrDOG0lTtx1hSk/zJQvZO8wUzL9ASxPn9KOEjSxaBP9nT2SXgCdI54LLm+Nk9l5rl+FaYPbIepe1hvpbWFC1e9Kqo4Y21RuJFhpmKn/tT7g1yzf9Tks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=U0z/v+QN; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=zjZdp7Qd; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=U0z/v+QN; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=zjZdp7Qd; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6FC4381A3
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 15:23:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.78
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743521004; cv=fail; b=A3tLVkuPSzKz14/nN14sWspp97/54/tD7SLaNwGrZLk9xEudRi1aX7t4nMB2UkZ9cnmEamvWJ9gP2Sd7dHBifbQo0JXNFJdKmKfv/D/El5gv0XwDW6gaTg1CLb2FHFEka677SF1xi+qU+a3SJEZkhAVzG2NsywxnEmgW51XdkvE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743521004; c=relaxed/simple;
+	bh=LI4UzN5XLWKtRXyKNULT3mCjw6cnDUV8NhAX25ewj7s=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=kmlG6HGZ9k4a6wv5SChhcvQyQWo/rE2a4GEq2jd0cREdm9TxWX4zkpbJTSJ3DJasSPCMjTBE2PtmUDpJDUE+pWWCD7BfdZBnyW5QwSIlCuQ9W6Zn+YAGNz7lvB6euMLciOvEJsuL9hHY5lSppLEP0sJ7C4BuX6QsqKgrfEMTu1c=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=lJ045K5+; arc=fail smtp.client-ip=40.107.236.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="U0z/v+QN";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="zjZdp7Qd";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="U0z/v+QN";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="zjZdp7Qd"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 0F7421F38E;
-	Tue,  1 Apr 2025 15:22:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1743520953; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rhM+w/8fgX8obEXBtvlqnSEmhlWyjfAXaHU7wQ05dyY=;
-	b=U0z/v+QNLV3MdTMicBbuEKeB0W6IIgSEy5cnHEZojVqKn70H6SddH3fMm2roLyhy1Hh8IW
-	wrfAKEl3dxekHdJl1w7QqvbdB3wnai3j8vsVdazroxLbnNfdJYs9W6m3FFKRGEE0jTN+YV
-	RiBhoQYj5gczWJLLJZUWjS/E457cANc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1743520953;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rhM+w/8fgX8obEXBtvlqnSEmhlWyjfAXaHU7wQ05dyY=;
-	b=zjZdp7QdPESKg4IOQPyImgEm0Ol+stKDCJ/3lxvlg72oGJ5mER2Q25rxXdoB3PEtmGRWib
-	+gfTK746Bbc938BQ==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1743520953; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rhM+w/8fgX8obEXBtvlqnSEmhlWyjfAXaHU7wQ05dyY=;
-	b=U0z/v+QNLV3MdTMicBbuEKeB0W6IIgSEy5cnHEZojVqKn70H6SddH3fMm2roLyhy1Hh8IW
-	wrfAKEl3dxekHdJl1w7QqvbdB3wnai3j8vsVdazroxLbnNfdJYs9W6m3FFKRGEE0jTN+YV
-	RiBhoQYj5gczWJLLJZUWjS/E457cANc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1743520953;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rhM+w/8fgX8obEXBtvlqnSEmhlWyjfAXaHU7wQ05dyY=;
-	b=zjZdp7QdPESKg4IOQPyImgEm0Ol+stKDCJ/3lxvlg72oGJ5mER2Q25rxXdoB3PEtmGRWib
-	+gfTK746Bbc938BQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id EB28C13691;
-	Tue,  1 Apr 2025 15:22:32 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 5C8NObgE7GdXeAAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Tue, 01 Apr 2025 15:22:32 +0000
-Message-ID: <b2c07fdf-5ab1-4a65-9ce2-38638b7c718e@suse.cz>
-Date: Tue, 1 Apr 2025 17:22:32 +0200
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="lJ045K5+"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=exBm+OtUQhUiqmgkOPdER3UV98CrlTWHktnBdHjzm6J1OakYai4dHdl0Li/MFmNgb6wGNH0FbKdiowcG4MA6PJeYtlyATPdyhTqIMdFmEw2iSLFANfCMVJmCWgWCRefb1hRNStxxfD69mOhhqx6Uy4MrVgGeC94+Fo3g7xsZ0DDTlWTNnaGodsMzJU1MmPHcTnBTmIkW6tCbrrwxkaOF0viw16hkxleDB3GGYKODmoneuEyZyI4Ia7Ge3RwOzhzS+BNFmpfZX2ETsUNsGVZreMrAE3CMmQJRKc7pw1xBb+ChY173h2EmUL+AiEW1vhgZQ1gRnNVzaG+e9YJmKhtbkw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=3tQv6Dsz9xUo0tc7fh3/osIYlZyRXnC4iDEB98mPEs8=;
+ b=YLM7+QPQwIQ7KrFV3mxIE8PX38kGJjk8TcuDhe4Q2D0dXV1G+mo2Omwybq+eZ9Ag9A2FLbwUvkPoSWt4h8jO1Bh4b27iYtARX7lkL/AzsEDswvODBd1q5IFMzI3PtFB5LwlAIUa2uOTM2gYONo1Jdh26CtV3v4fwIZNxGdKFL64Q1GgPnvetZcUpq291NQVmeos/otrdFu9MrVJaHJa+NnT+KG/ecIs0rvNegaIGhvbIKPjooHfg5O/pDYIYdnwkK8nBFyZjJPrNFWqXV8sn9BwSHp7XwN5daaImPgGCwHVf9NpAe6Kqhl5WPD9/zqwyr7jwsIeqxixDDzKaopv+Hw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3tQv6Dsz9xUo0tc7fh3/osIYlZyRXnC4iDEB98mPEs8=;
+ b=lJ045K5+YWjVmb8CURI9RCsFPLLxJQspBnc/PkSlB8dy3FCuhai06sZy2/zAn8DrbW3O7iS3wA1Qx3C8Va92R+/bRMyTLooy8gGi41Bhc6efAfbgWV4za6Ovs9GEGT8W/2gzRVdhhvIifs+7F4m+o4IfcY6tPtbimMAgUjtkkNzfElIXRSmFzw5yVXpIFp8ullkRtGWS0EAW5XUGvtyTp60mwfczRIfk711SZZaHxpXOiutSkLsK830upjqixmbUm3sLn4onhYMGv/iVatQpimOuFjj9vvhUGRyvmnLzNnPIK4DV5OY2XZ0np3+MKqjEUWmQGWhd+1BDDVQdHQue1g==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5) by
+ BL3PR12MB6450.namprd12.prod.outlook.com (2603:10b6:208:3b9::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Tue, 1 Apr
+ 2025 15:23:19 +0000
+Received: from DS7PR12MB9473.namprd12.prod.outlook.com
+ ([fe80::5189:ecec:d84a:133a]) by DS7PR12MB9473.namprd12.prod.outlook.com
+ ([fe80::5189:ecec:d84a:133a%4]) with mapi id 15.20.8534.043; Tue, 1 Apr 2025
+ 15:23:19 +0000
+From: Zi Yan <ziy@nvidia.com>
+To: "Vishal Moola (Oracle)" <vishal.moola@gmail.com>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ akpm@linux-foundation.org, muchun.song@linux.dev
+Subject: Re: [PATCH] mm/compaction: Use folio in hugetlb pathway
+Date: Tue, 01 Apr 2025 11:23:16 -0400
+X-Mailer: MailMate (2.0r6233)
+Message-ID: <D2548CA2-938E-4EF5-BE86-B63DEF6D40BC@nvidia.com>
+In-Reply-To: <20250401021025.637333-2-vishal.moola@gmail.com>
+References: <20250401021025.637333-1-vishal.moola@gmail.com>
+ <20250401021025.637333-2-vishal.moola@gmail.com>
+Content-Type: text/plain
+X-ClientProxiedBy: SJ0PR03CA0019.namprd03.prod.outlook.com
+ (2603:10b6:a03:33a::24) To DS7PR12MB9473.namprd12.prod.outlook.com
+ (2603:10b6:8:252::5)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] lib/iov_iter: fix to increase non slab folio refcount
-Content-Language: en-US
-To: Sheng Yong <shengyong2021@gmail.com>, akpm@linux-foundation.org,
- willy@infradead.org
-Cc: linux-kernel@vger.kernel.org, linux-mm@archiver.kernel.org,
- Sheng Yong <shengyong1@xiaomi.com>
-References: <20250401144712.1377719-1-shengyong1@xiaomi.com>
-From: Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <20250401144712.1377719-1-shengyong1@xiaomi.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Score: -4.30
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_TO(0.00)[gmail.com,linux-foundation.org,infradead.org];
-	TO_DN_SOME(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	RCVD_TLS_ALL(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[xiaomi.com:email,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Flag: NO
-X-Spam-Level: 
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR12MB9473:EE_|BL3PR12MB6450:EE_
+X-MS-Office365-Filtering-Correlation-Id: cd012632-a188-4b96-9f16-08dd713121e9
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?0cxKy0uSFJI2TA0TJQnmoaQbXst6zHSuMxbkmtTjrNY0F+lnQR1TQLDb6fYK?=
+ =?us-ascii?Q?Sx6idJhtnsBfKTJyYOzT6+/o/hWrNAy2dcqfVud/F+cQojIh7Nc7RblcGPKe?=
+ =?us-ascii?Q?59BZ8+9bGNgyJWBhLzRIo0saLLGZoUJJdZQrteUyITRq4Mz3s2URNhWp10+C?=
+ =?us-ascii?Q?KOImc/7pGxg7BN9lmPgRb+wz/3j/Xl0Bny0Xx11dTKJV0OpRW3BhKvsNML5J?=
+ =?us-ascii?Q?slhNer9qhRI8kd1io0qdLCIDCmOaOMJ7EogwTI23ojj/VBcb01erXpoZ9HrE?=
+ =?us-ascii?Q?Cc9b9aJAt4ktptPtzlDr9PJhusx4uez++wn56/SYfyB2FnYJthoT2OvlT+r/?=
+ =?us-ascii?Q?I4AOnXT2NdcSFnLMPmeClSW+Ipo9Az1FCCkYjEGHtuselU9Acrhpm7EHKBwI?=
+ =?us-ascii?Q?64ArFwGBIldO5V/c/6vDOY5ZJwXE9J0JoIjHcwj47QpzWgwdeFHzad9mVeFA?=
+ =?us-ascii?Q?svgBQsFU5ag2+NozCOqn+uYHkl7W5qHINEjduYc8FmYS2hcno8brce+ABUdA?=
+ =?us-ascii?Q?xwlteXHsfimEauifuB4/hvpT/ixR9nobhHA/KzoJF0DmZ6oqY0rBpm+yoQ39?=
+ =?us-ascii?Q?z6miTTovAXPIps4dQCkKdhfDXffuFjZNrABu61dc0QseYKtCC+5zks7nMuZ4?=
+ =?us-ascii?Q?b/GQ/jRVGuUnrmaJBReuj0u2PoxcD4ARLYyr+GG3HofLKyXDNd9jZnygxG+v?=
+ =?us-ascii?Q?P/3Ld11kGR/uvhNcN1n1MFwFdxai8rgYPFCZmedLNH0cki4eiiCa4W0RVuo6?=
+ =?us-ascii?Q?7M6iIssJgNwbFCY/Z9IwlPmRcELy24RW+kGL6j9ofmATMc722ieKX+keNMeD?=
+ =?us-ascii?Q?ecgXzbkkp27n1HChn2c/d6OdxHKaT0eCiTSjG1Cns8GSj9xmnL0T2zsgGOm6?=
+ =?us-ascii?Q?dCyKDi0ztx+95eV/kAjvxY9lOUYlv7x6IcPypEue1CRJEBJ1NLAjNjM0BpgE?=
+ =?us-ascii?Q?CodUbPfK3kp1vHwfP8BYJXR+Htuaroe/3KnaKPkVYL4G979Ma39+cBlyt+5q?=
+ =?us-ascii?Q?vb5kUHS8NjvmXJo49LrTjrkaIG8/vqU/GMpxYxsPqSL7XyBnTfo+VclxZiul?=
+ =?us-ascii?Q?MBo4gKg/RLl7hkSWVF7eDNRIutyAiuLcKXKtpaLyvMfmcgBKex+HM4mGJ0qa?=
+ =?us-ascii?Q?MFbhJ6t73AbqxKQKkMsPL4CIQfI+E5JKz60O1cuJcXqY0quhuYp2H20EW055?=
+ =?us-ascii?Q?++ngCEozppIr+Q5u2q0V4U8otsUnsv8wsTZzawIZmoJiM6ZvAhTkG/1TlWlY?=
+ =?us-ascii?Q?Ed6u31gr//4vIX1Xbmgs6UBcCjYRmEhTPbVS6+SufQMQKBlAqlKUX1ua5uIQ?=
+ =?us-ascii?Q?TWMrlpuOGeWU1NY3VxER6S0MCMJD4AC591xr+WleVrTZS2ZXoGhQkGObLTH+?=
+ =?us-ascii?Q?q6KDAujTWT9VrtHiPgN2Ro/gQ5tz?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB9473.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?UNsWX3/EIMGK5mX8vtFffxvN8JXruA8FzaKvFP0oTnRoo83npZmpRlUnFtCk?=
+ =?us-ascii?Q?c8Gh5L26hrjCVh2bw9SQdZMVmpRqL17gefkqoiLFMjFqjX2NPfmISSiSyoqY?=
+ =?us-ascii?Q?nVODHti4wF1iNp+xnwF5yDJNqiitKc8BiFkTKbjVQ2kazILaEishPYltiO62?=
+ =?us-ascii?Q?LcZeExZQvreeAnyXIRk5Idz2SkebLtcxgpNVvsMQyHcf90wrklXtGJAFKN/3?=
+ =?us-ascii?Q?v/Wy5T5KDJdsB4ftRsT16yuClKBVRch/+lBRLkky58zxQd8rRHgBwTfTtiRz?=
+ =?us-ascii?Q?hOdGdTJ0rPbfQLJZmbZ6CPEvB7YL3NPh7sImQavmcodJU+TGw/P07DBmsHP7?=
+ =?us-ascii?Q?3suItxlUq0XJqB05Evl1xt+jrIizZLINvaxFxT8t3Drgwf0ddjTNZFGxykPa?=
+ =?us-ascii?Q?6INnMCWvxiiSEIKPs23gGyfTXQjbintV7Z8M5dabcbPD57pOzyHVSmvlLrLJ?=
+ =?us-ascii?Q?xye8daehioejNR60y/hekiGrjXRNTEbmbTBzaSEdtCgsojMLCr5vZJbzdL1Y?=
+ =?us-ascii?Q?50Ty0VZQcybNcc0ClEbQcmk1L56I7KCj4NXp85EgrUZwmlELk9OPSjqBthwh?=
+ =?us-ascii?Q?u7rcupAh3cMil8ZXVekDro6bmhdNHqVMeHD9giX/DZmpd9MZCzYsrCB7WftS?=
+ =?us-ascii?Q?34e8M48Y+x11Qq9WtRj8kvJNhidUk/UznkvKiQ5cZ5RAbE0Z40RemIJgnYjo?=
+ =?us-ascii?Q?dikQxQhCN+aqCPWjwKQeZ3d6ogXpdYhDg16I4iY5+A6LJFj7meNKkW2MyWlv?=
+ =?us-ascii?Q?g3hwGZQpUD+0EBOZkmAKmex3Zth4yDdy/C4R19zTBAo4UH1XHAUDMWHQYmLF?=
+ =?us-ascii?Q?ubpT/CFgMi6VmtJwHKcKh5JeIfNcFGKpPfjLghKNKrP1eqqMf0aHOMhzByXj?=
+ =?us-ascii?Q?JFPHjb8pRp/7qkqa5O/hoD8mtLmMA7KISAj4C2iRBEQTBAntaS5bkxGIvDs3?=
+ =?us-ascii?Q?2SlGEkIQ9vIwlaPQdWsZO5UYr+Nt6t4z0rrmfXAa4qXqq7gLy4exHAyg8bP8?=
+ =?us-ascii?Q?/NjpXmpX68WB4KC9+o+zVJdPK1ihreHV4DKFA89BI87Zm0ZgFZkQtPbaDV3L?=
+ =?us-ascii?Q?pBf8GyD+voOAmfYmJf9k/czo9hBY2j4JgR0Gw0XKpxnsZr1uQL/Z9JvOuSN6?=
+ =?us-ascii?Q?x2n++Fxu9iiyonprXEw+8OLD7zJWuBc+rohqvIoqrCOTP54ATVKq7qkhXJq+?=
+ =?us-ascii?Q?zfYiftdl/aVYr9k6BN/op3GWIq5yA2/Y0ZtOuWM/na92H33ptt7PmZep3LN8?=
+ =?us-ascii?Q?Ro7qGpxWW7M/xQ82DSbxUSnKIkZKbAJdDZMCaeIDPAXme6EAQkQNxFShe4zl?=
+ =?us-ascii?Q?mM4BPQ1xOnLboJ6bpnb8qk4Dv8OjIDlYW/iGZshIt2iA+PL5Pepo4V0ND5S1?=
+ =?us-ascii?Q?ZAQA1znLGRLQxe1eBn39HFpsKi7KJrz6EZYIC+a+78qpsVQqEhMH/oeHdChj?=
+ =?us-ascii?Q?rL1itHsRVgORF1Zo9b4pARJkHB8sEY7iwIA1GQTRVeQvJZ8mMDR49xXF3mHL?=
+ =?us-ascii?Q?SQCKbvfTjPMxI61byRzMAHNQvtUrqeQ5ln3E/pLVhcxgoF2fCcuqlXXz+cKz?=
+ =?us-ascii?Q?Aem/Zyu9x/H8GfaHeQ/BY3Ib9NTy9bQsfimY36PO?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cd012632-a188-4b96-9f16-08dd713121e9
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB9473.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Apr 2025 15:23:19.3894
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: uoCnSVyHApCsZfvILGvv/aQft+iVlnCWBnCWONTfALlTEvVd75nfV5nDc0J6mmnK
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL3PR12MB6450
 
-On 4/1/25 16:47, Sheng Yong wrote:
-> From: Sheng Yong <shengyong1@xiaomi.com>
-> 
-> When testing EROFS file-backed mount over v9fs on qemu, I encountered
-> a folio UAF issue. The page sanity check reports the following call
-> trace. The root cause is that pages in bvec are coalesced across a folio
-> bounary. The refcount of all non-slab folios should be increased to
-> ensure p9_releas_pages can put them correctly.
-> 
-> BUG: Bad page state in process md5sum  pfn:18300
-> page: refcount:0 mapcount:0 mapping:00000000d5ad8e4e index:0x60 pfn:0x18300
-> head: order:0 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
-> aops:z_erofs_aops ino:30b0f dentry name(?):"GoogleExtServicesCn.apk"
-> flags: 0x100000000000041(locked|head|node=0|zone=1)
-> raw: 0100000000000041 dead000000000100 dead000000000122 ffff888014b13bd0
-> raw: 0000000000000060 0000000000000020 00000000ffffffff 0000000000000000
-> head: 0100000000000041 dead000000000100 dead000000000122 ffff888014b13bd0
-> head: 0000000000000060 0000000000000020 00000000ffffffff 0000000000000000
-> head: 0100000000000000 0000000000000000 ffffffffffffffff 0000000000000000
-> head: 0000000000000010 0000000000000000 00000000ffffffff 0000000000000000
-> page dumped because: PAGE_FLAGS_CHECK_AT_FREE flag(s) set
-> Call Trace:
->  dump_stack_lvl+0x53/0x70
->  bad_page+0xd4/0x220
->  __free_pages_ok+0x76d/0xf30
->  __folio_put+0x230/0x320
->  p9_release_pages+0x179/0x1f0
->  p9_virtio_zc_request+0xa2a/0x1230
->  p9_client_zc_rpc.constprop.0+0x247/0x700
->  p9_client_read_once+0x34d/0x810
->  p9_client_read+0xf3/0x150
->  v9fs_issue_read+0x111/0x360
->  netfs_unbuffered_read_iter_locked+0x927/0x1390
->  netfs_unbuffered_read_iter+0xa2/0xe0
->  vfs_iocb_iter_read+0x2c7/0x460
->  erofs_fileio_rq_submit+0x46b/0x5b0
->  z_erofs_runqueue+0x1203/0x21e0
->  z_erofs_readahead+0x579/0x8b0
->  read_pages+0x19f/0xa70
->  page_cache_ra_order+0x4ad/0xb80
->  filemap_readahead.isra.0+0xe7/0x150
->  filemap_get_pages+0x7aa/0x1890
->  filemap_read+0x320/0xc80
->  vfs_read+0x6c6/0xa30
->  ksys_read+0xf9/0x1c0
->  do_syscall_64+0x9e/0x1a0
->  entry_SYSCALL_64_after_hwframe+0x71/0x79
-> 
-> Fixes: b9c0e49abfca ("mm: decline to manipulate the refcount on a slab page")
+On 31 Mar 2025, at 22:10, Vishal Moola (Oracle) wrote:
 
-Sigh. That went to v6.14
-
-mm-hotfixes and Cc: stable then?
-
-> Signed-off-by: Sheng Yong <shengyong1@xiaomi.com>
-
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
-
-Thanks.
-
+> Use a folio in the hugetlb pathway during the compaction migrate-able
+> pageblock scan.
+>
+> This removes a call to compound_head().
+>
+> Signed-off-by: Vishal Moola (Oracle) <vishal.moola@gmail.com>
 > ---
->  lib/iov_iter.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> ---
-> v2:
->   * update commit message
->   * update coding style
-> 
-> diff --git a/lib/iov_iter.c b/lib/iov_iter.c
-> index 8c7fdb7d8c8f..bc9391e55d57 100644
-> --- a/lib/iov_iter.c
-> +++ b/lib/iov_iter.c
-> @@ -1191,7 +1191,7 @@ static ssize_t __iov_iter_get_pages_alloc(struct iov_iter *i,
->  			return -ENOMEM;
->  		p = *pages;
->  		for (int k = 0; k < n; k++) {
-> -			struct folio *folio = page_folio(page);
-> +			struct folio *folio = page_folio(page + k);
->  			p[k] = page + k;
->  			if (!folio_test_slab(folio))
->  				folio_get(folio);
+>  include/linux/hugetlb.h | 4 ++--
+>  mm/compaction.c         | 8 ++++----
+>  mm/hugetlb.c            | 3 +--
+>  3 files changed, 7 insertions(+), 8 deletions(-)
+>
+LGTM. Reviewed-by: Zi Yan <ziy@nvidia.com>
 
+Best Regards,
+Yan, Zi
