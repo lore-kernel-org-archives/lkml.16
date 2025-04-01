@@ -1,69 +1,69 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97771221703
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 16:12:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E676522172F
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 16:12:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743523923; cv=none; b=OR3x+8vAc47FovmIVugug3XrFr+0VFvCEPV9eACoZ44PYAbgjZSRBcLbsL5uW25ySnyRVkx7IPMmJc/Hca3Ug6ezl/1sDef5rYkG8TKV1S8S2vbuMN4mY8Xo3rpDlkIiwxUB5diZiDwGN+HuarOB4gfE6B1H9NGB3jwlKMEYANQ=
+	t=1743523924; cv=none; b=OQRz+othiROxngsb2AJZx+kpbOmVIy7GQ2KNI0iPgaBwAvpCdEje4Vwu3l1DWuPS68fWZGp2fvtKasi3BpG1F3fGtbJg1WiKuDM+7nFDqDfbZ8njSk1GjEoIFFVA8eveYTuAUfQfOyIrn0fylEPevOVTlfcS85EQKNHgzML05Gw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743523923; c=relaxed/simple;
-	bh=2CI/mkWBrTgnbik9OCHRAn1y+W1g2QV9UjWHcVB514o=;
+	s=arc-20240116; t=1743523924; c=relaxed/simple;
+	bh=ZS7aDIfTrGTsc3CaJTz/rmizqT3vdz4Mep7cX4xxC20=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XhcMEApsptTeJynU3Gu7NZApijbWziQNncwEeS85Qocv9P/22etPxqJPqYCDi8tMNP1XpB9CUnZ+q57Me0sVdujXyGrKjXbQ/3vpi8aUfp+wj9VY5s0e+kR7ib5ULdfoT3KxlaULnIzhO0qNd9a5kcsEfqzfd2xdVg60rWej9Dw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=L5+R+PkQ; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=cbo6Bhtn7BK9jVoYnzFd57guzghOfROHCGbTyf8PPukzRuHHJ1E1zK6e9UKvE2O29eOFFPKtB4ZzThU6luryb+QdkDXtVbWN1ixh/yu6WQLFTFg4nTID0YyHRJDrmH6bvMr98i2j36tIbo60k3WUmt2m2FdY2SohuQZN4mQ8IbY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HvdamQs4; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L5+R+PkQ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HvdamQs4"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743523920;
+	s=mimecast20190719; t=1743523922;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=jloFR1LDGvNeXK6NZWVsMX9b3AeMl8ttvkfYFFUhR2s=;
-	b=L5+R+PkQBVIojOOAGNx8XWaJ/sB5vhxU4ca2PQ7fHXyfsr4D/BFHogDf5OkNp2DV0+QA9M
-	DEoiNwBweEuvGZ4rd/BTMQEZMunrXaPk2yIFdHL4FaNoHBoXZvATCdWpscf1yRwjGaSFBd
-	sPPLEcRzFGOA2Xvl/LevGIN6Lut6OXA=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=MGWdj9YvBEqpmgwNvC3/3vvpLMl37emPFU+fvsJE+7I=;
+	b=HvdamQs4gLOoBOKuGz0sqg6xxb54vyijXCnWFO/WNcRBnCGrNk8zegmyIb4XD0nogrbd5y
+	ZTR3hwB4Qjo0oJhDJy3gHbxJ4ACilyOcEm9cg9l+NLRivjzIit3rnqPW5MhneoBNpwMiTq
+	t+CnDB6X6wgfbN0+2IFu8DDwv7Gk6RM=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-448-HcHhYcCzPyOF83xDi8NCJw-1; Tue, 01 Apr 2025 12:11:59 -0400
-X-MC-Unique: HcHhYcCzPyOF83xDi8NCJw-1
-X-Mimecast-MFC-AGG-ID: HcHhYcCzPyOF83xDi8NCJw_1743523917
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43d0830c3f7so47371935e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 09:11:58 -0700 (PDT)
+ us-mta-474-xQQT1V8EPjmXFrb3wctkGw-1; Tue, 01 Apr 2025 12:12:00 -0400
+X-MC-Unique: xQQT1V8EPjmXFrb3wctkGw-1
+X-Mimecast-MFC-AGG-ID: xQQT1V8EPjmXFrb3wctkGw_1743523920
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43d007b2c79so47306405e9.2
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 09:12:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743523916; x=1744128716;
+        d=1e100.net; s=20230601; t=1743523919; x=1744128719;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=jloFR1LDGvNeXK6NZWVsMX9b3AeMl8ttvkfYFFUhR2s=;
-        b=dF8z8gnP0qXb86pp2ENL5Pw1U2h09yrd6pf8ID72Jq/nXxneoqKXQdtMu8eaZsim+P
-         axGxVq6JpjpFUzpBkkQdQl+gczy2cHtBDCq8zcGaleP9IHfGgPGeEubbbK+lfUXNfJfT
-         oAMYkrZg+UcJijtNCCSmk4Lx24t01OHai72Kzn5/zyV/0zGSAt5RitCz3t7MHitO5Wl0
-         qlEImjc6cMokFLv77o7YJy8rb1oHNoEe1niU+4GszNvqFAgm4sVpIE0oh7DTsrSTZHtl
-         lNSKlAb0FxitHaWKR2gbLaVxUYTtkHv77mUnsMJKYWPjXLe/2pwxksdxiIIUBFHR6xrj
-         5aNA==
-X-Gm-Message-State: AOJu0Yw8f2nj3icGhIqpypx/CaPvrJKHCHPzP4Av9POAAeVYw3t4ldTI
-	YcCPyWvXQIksMSaR+XpJav+j+b4XdViSrfaI5jqamOHjj46QGW44ZEbGOZjsg7X11O1zMJ6G9U8
-	flC9I7Mp9xqbFL7Ut8UXRm+jJVZef6bcy8NcYLDeXyiweY5sY1x4yfN2zf2r9JMHKQ4mhCjiWRa
-	jR/m+afSATJNQ9FxzkkUIrWkh8iDhTwtEo95SVceEK889tug==
-X-Gm-Gg: ASbGnct+4TsJm4MrYY801nc2QMnkUqSx3gVlcolhF808UpxW86FT78mBmZY3cnBquMB
-	kYJAJA1f+yOKzYc0rTnAOfJHU5v5j4/SssQdcEGhHqQSAmQ2BRO06/s8mRgHhIPy+M4ZkoVkdjR
-	TpoSrhGJ3FBgHGc9tlUN1MANRp/1nVLj2UpqdD4HlGmnA/igRsRHoCUmCUcFh4kc2BPrapuWah5
-	IVOy2CXrZKkSIqrfQJIC96fF8lvY48VhrZPusGnMeQJzhqJ7wnuOb7L9DrMJSbIiQi8oVQDTSJp
-	eoUHxcsoY0lYwi9mkfV3YA==
-X-Received: by 2002:a05:600c:3b9d:b0:43c:fe15:41c9 with SMTP id 5b1f17b1804b1-43db6227a09mr118810675e9.9.1743523916436;
-        Tue, 01 Apr 2025 09:11:56 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGeSHmn91hmeZ7x284dZn+qQrcC5V3D8Ul3VDkKtIvDkX2ROgQp+v6dSPuSJJ1Vzfw+gbjPKg==
-X-Received: by 2002:a05:600c:3b9d:b0:43c:fe15:41c9 with SMTP id 5b1f17b1804b1-43db6227a09mr118810055e9.9.1743523915943;
-        Tue, 01 Apr 2025 09:11:55 -0700 (PDT)
+        bh=MGWdj9YvBEqpmgwNvC3/3vvpLMl37emPFU+fvsJE+7I=;
+        b=M6vYXervfdqgCBT7VzlLuh1UqdvnrLoRvXO7PCnCkLCF9H+YbRIuQLC0JSkaZsNXy7
+         DYkxjtYTAk/Vw4RjRP2ypNL08nQx0Egfh2d99RBLpZas4+A5tkgnIUh69wNbnjojy2cG
+         mgFWyf0h6chk0Xq8Ekg550zGGjMGcqKDjSiGHfGXzCDhz0JyM1KVtJi4Z3o9MRYwf3Gk
+         Ui1Mv+t/BBnVDGJ8b2t7AE6BZ4/7gHf/92KiLouzEhAxMIdJNfl+lMIHYqpM9U36I21I
+         uT9VwM8f3OqM9VQxX3flvZggWl80eoRMzkpPBZwN6OARYJEBTGMrBh5dU2mloA1B9KUu
+         yjkQ==
+X-Gm-Message-State: AOJu0YwyGxxKXbXQBmemOJkQ4JOtn1Kj1tLCieC18mvHIXOS/F/hQTLK
+	CBt0F5tkPIbnJV4XbO4hyFQf4+GjjdHYOHVlUo543PppS7DXi5c2xGJ9tIG6FPtxdlnFeISlLWs
+	3lGbYiPUFqDAjlQxkKphsRcNJwi68xZveuUpNgxfGVHrzqoSh55B5iFqffVT8rHyTDzdTwqQKju
+	Xlrq3k0zrKSiOzi+9vDIhcqiky34Xa2q7xovycNLfwzGxWfQ==
+X-Gm-Gg: ASbGnctMG86kELkXc9Ak0DI8eFXmsxyFGYnoNkuV5R8j9fcSOmAZPKsvXArQzJAdkml
+	ZR9vs/oU9vVZKzevHnUwT1KJT5DGAhCJT44G7J796KqIhw5k2OVxUhvPsB/OrwvvcOdw8rFrRGN
+	P6sQ224jjWQy2qwcY1fr847n5QOSJma/Izi0/oWbyDo2O3SJFrQORouCJAqur0B9BXu0FF9gwZB
+	FC8Q50mpayHuipFhNHSjps8hFUvNgpWQidAEHUKL6MeIwO+R/nw/N4yWQs96N3vkwSjpXcU5HJs
+	/3cn5MXq72qJprE6idneMQ==
+X-Received: by 2002:a05:6000:2508:b0:39c:2688:4ebf with SMTP id ffacd0b85a97d-39c26884ef7mr2250165f8f.6.1743523918702;
+        Tue, 01 Apr 2025 09:11:58 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHej+s4j6aGPDin98dlsYk56EQfZoCit5BuzqKpA6tBi49RGgt4j5M4CiOy46C9AQy9PMLW9Q==
+X-Received: by 2002:a05:6000:2508:b0:39c:2688:4ebf with SMTP id ffacd0b85a97d-39c26884ef7mr2250116f8f.6.1743523918194;
+        Tue, 01 Apr 2025 09:11:58 -0700 (PDT)
 Received: from [192.168.10.48] ([176.206.111.201])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d82efe9d1sm203529975e9.24.2025.04.01.09.11.53
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0ddeecc9sm13258499f8f.83.2025.04.01.09.11.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Apr 2025 09:11:53 -0700 (PDT)
+        Tue, 01 Apr 2025 09:11:57 -0700 (PDT)
 From: Paolo Bonzini <pbonzini@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
@@ -76,9 +76,9 @@ Cc: roy.hopkins@suse.com,
 	nsaenz@amazon.com,
 	anelkz@amazon.de,
 	James.Bottomley@HansenPartnership.com
-Subject: [PATCH 17/29] KVM: x86: block creating irqchip if planes are active
-Date: Tue,  1 Apr 2025 18:10:54 +0200
-Message-ID: <20250401161106.790710-18-pbonzini@redhat.com>
+Subject: [PATCH 18/29] KVM: x86: track APICv inhibits per plane
+Date: Tue,  1 Apr 2025 18:10:55 +0200
+Message-ID: <20250401161106.790710-19-pbonzini@redhat.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250401161106.790710-1-pbonzini@redhat.com>
 References: <20250401161106.790710-1-pbonzini@redhat.com>
@@ -90,87 +90,406 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Force creating the irqchip before planes, so that APICV_INHIBIT_REASON_ABSENT
-only needs to be removed from plane 0.
+As a first step towards per-plane APIC maps, track APICv inhibits per
+plane.  Most of the inhibits are set or cleared when building the map,
+and the virtual machine as a whole will have the OR of the inhibits
+of the individual plane.
 
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- Documentation/virt/kvm/api.rst | 6 ++++--
- arch/x86/kvm/x86.c             | 4 ++--
- include/linux/kvm_host.h       | 1 +
- virt/kvm/kvm_main.c            | 1 +
- 4 files changed, 8 insertions(+), 4 deletions(-)
+ arch/x86/include/asm/kvm_host.h | 21 +++++----
+ arch/x86/kvm/hyperv.c           |  2 +-
+ arch/x86/kvm/i8254.c            |  4 +-
+ arch/x86/kvm/lapic.c            | 15 +++---
+ arch/x86/kvm/svm/sev.c          |  2 +-
+ arch/x86/kvm/svm/svm.c          |  3 +-
+ arch/x86/kvm/x86.c              | 83 +++++++++++++++++++++++++--------
+ include/linux/kvm_host.h        |  2 +-
+ 8 files changed, 90 insertions(+), 42 deletions(-)
 
-diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-index e1c67bc6df47..16d836b954dc 100644
---- a/Documentation/virt/kvm/api.rst
-+++ b/Documentation/virt/kvm/api.rst
-@@ -882,6 +882,8 @@ On s390, a dummy irq routing table is created.
- Note that on s390 the KVM_CAP_S390_IRQCHIP vm capability needs to be enabled
- before KVM_CREATE_IRQCHIP can be used.
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index e29694a97a19..d07ab048d7cc 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1087,6 +1087,7 @@ struct kvm_arch_memory_slot {
+ };
  
-+The interrupt controller must be created before any extra VM planes.
-+
+ struct kvm_arch_plane {
++	unsigned long apicv_inhibit_reasons;
+ };
  
- 4.25 KVM_IRQ_LINE
- -----------------
-@@ -7792,8 +7794,8 @@ used in the IRQ routing table.  The first args[0] MSI routes are reserved
- for the IOAPIC pins.  Whenever the LAPIC receives an EOI for these routes,
- a KVM_EXIT_IOAPIC_EOI vmexit will be reported to userspace.
+ /*
+@@ -1299,11 +1300,13 @@ enum kvm_apicv_inhibit {
+ 	/*
+ 	 * PIT (i8254) 're-inject' mode, relies on EOI intercept,
+ 	 * which AVIC doesn't support for edge triggered interrupts.
++	 * Applied only to plane 0.
+ 	 */
+ 	APICV_INHIBIT_REASON_PIT_REINJ,
  
--Fails if VCPU has already been created, or if the irqchip is already in the
--kernel (i.e. KVM_CREATE_IRQCHIP has already been called).
-+Fails if VCPUs or planes have already been created, or if the irqchip is
-+already in the kernel (i.e. KVM_CREATE_IRQCHIP has already been called).
+ 	/*
+-	 * AVIC is disabled because SEV doesn't support it.
++	 * AVIC is disabled because SEV doesn't support it.  Sticky and applied
++	 * only to plane 0.
+ 	 */
+ 	APICV_INHIBIT_REASON_SEV,
  
- 7.6 KVM_CAP_S390_RI
- -------------------
+@@ -2232,21 +2235,21 @@ gpa_t kvm_mmu_gva_to_gpa_system(struct kvm_vcpu *vcpu, gva_t gva,
+ bool kvm_apicv_activated(struct kvm *kvm);
+ bool kvm_vcpu_apicv_activated(struct kvm_vcpu *vcpu);
+ void __kvm_vcpu_update_apicv(struct kvm_vcpu *vcpu);
+-void __kvm_set_or_clear_apicv_inhibit(struct kvm *kvm,
++void __kvm_set_or_clear_apicv_inhibit(struct kvm_plane *plane,
+ 				      enum kvm_apicv_inhibit reason, bool set);
+-void kvm_set_or_clear_apicv_inhibit(struct kvm *kvm,
++void kvm_set_or_clear_apicv_inhibit(struct kvm_plane *plane,
+ 				    enum kvm_apicv_inhibit reason, bool set);
+ 
+-static inline void kvm_set_apicv_inhibit(struct kvm *kvm,
++static inline void kvm_set_apicv_inhibit(struct kvm_plane *plane,
+ 					 enum kvm_apicv_inhibit reason)
+ {
+-	kvm_set_or_clear_apicv_inhibit(kvm, reason, true);
++	kvm_set_or_clear_apicv_inhibit(plane, reason, true);
+ }
+ 
+-static inline void kvm_clear_apicv_inhibit(struct kvm *kvm,
++static inline void kvm_clear_apicv_inhibit(struct kvm_plane *plane,
+ 					   enum kvm_apicv_inhibit reason)
+ {
+-	kvm_set_or_clear_apicv_inhibit(kvm, reason, false);
++	kvm_set_or_clear_apicv_inhibit(plane, reason, false);
+ }
+ 
+ int kvm_mmu_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa, u64 error_code,
+@@ -2360,8 +2363,8 @@ void kvm_make_scan_ioapic_request(struct kvm *kvm);
+ void kvm_make_scan_ioapic_request_mask(struct kvm *kvm,
+ 				       unsigned long *vcpu_bitmap);
+ 
+-static inline void kvm_arch_init_plane(struct kvm_plane *plane) {}
+-static inline void kvm_arch_free_plane(struct kvm_plane *plane) {}
++void kvm_arch_init_plane(struct kvm_plane *plane);
++void kvm_arch_free_plane(struct kvm_plane *plane);
+ 
+ bool kvm_arch_async_page_not_present(struct kvm_vcpu *vcpu,
+ 				     struct kvm_async_pf *work);
+diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
+index c6592e7f40a2..a522b467be48 100644
+--- a/arch/x86/kvm/hyperv.c
++++ b/arch/x86/kvm/hyperv.c
+@@ -145,7 +145,7 @@ static void synic_update_vector(struct kvm_vcpu_hv_synic *synic,
+ 	 * Inhibit APICv if any vCPU is using SynIC's AutoEOI, which relies on
+ 	 * the hypervisor to manually inject IRQs.
+ 	 */
+-	__kvm_set_or_clear_apicv_inhibit(vcpu->kvm,
++	__kvm_set_or_clear_apicv_inhibit(vcpu_to_plane(vcpu),
+ 					 APICV_INHIBIT_REASON_HYPERV,
+ 					 !!hv->synic_auto_eoi_used);
+ 
+diff --git a/arch/x86/kvm/i8254.c b/arch/x86/kvm/i8254.c
+index e3a3e7b90c26..ded1a9565c36 100644
+--- a/arch/x86/kvm/i8254.c
++++ b/arch/x86/kvm/i8254.c
+@@ -306,13 +306,13 @@ void kvm_pit_set_reinject(struct kvm_pit *pit, bool reinject)
+ 	 * So, deactivate APICv when PIT is in reinject mode.
+ 	 */
+ 	if (reinject) {
+-		kvm_set_apicv_inhibit(kvm, APICV_INHIBIT_REASON_PIT_REINJ);
++		kvm_set_apicv_inhibit(kvm->planes[0], APICV_INHIBIT_REASON_PIT_REINJ);
+ 		/* The initial state is preserved while ps->reinject == 0. */
+ 		kvm_pit_reset_reinject(pit);
+ 		kvm_register_irq_ack_notifier(kvm, &ps->irq_ack_notifier);
+ 		kvm_register_irq_mask_notifier(kvm, 0, &pit->mask_notifier);
+ 	} else {
+-		kvm_clear_apicv_inhibit(kvm, APICV_INHIBIT_REASON_PIT_REINJ);
++		kvm_clear_apicv_inhibit(kvm->planes[0], APICV_INHIBIT_REASON_PIT_REINJ);
+ 		kvm_unregister_irq_ack_notifier(kvm, &ps->irq_ack_notifier);
+ 		kvm_unregister_irq_mask_notifier(kvm, 0, &pit->mask_notifier);
+ 	}
+diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+index c078269f7b1d..4077c8d1e37e 100644
+--- a/arch/x86/kvm/lapic.c
++++ b/arch/x86/kvm/lapic.c
+@@ -377,6 +377,7 @@ enum {
+ 
+ static void kvm_recalculate_apic_map(struct kvm *kvm)
+ {
++	struct kvm_plane *plane = kvm->planes[0];
+ 	struct kvm_apic_map *new, *old = NULL;
+ 	struct kvm_vcpu *vcpu;
+ 	unsigned long i;
+@@ -456,19 +457,19 @@ static void kvm_recalculate_apic_map(struct kvm *kvm)
+ 	 * map also applies to APICv.
+ 	 */
+ 	if (!new)
+-		kvm_set_apicv_inhibit(kvm, APICV_INHIBIT_REASON_PHYSICAL_ID_ALIASED);
++		kvm_set_apicv_inhibit(plane, APICV_INHIBIT_REASON_PHYSICAL_ID_ALIASED);
+ 	else
+-		kvm_clear_apicv_inhibit(kvm, APICV_INHIBIT_REASON_PHYSICAL_ID_ALIASED);
++		kvm_clear_apicv_inhibit(plane, APICV_INHIBIT_REASON_PHYSICAL_ID_ALIASED);
+ 
+ 	if (!new || new->logical_mode == KVM_APIC_MODE_MAP_DISABLED)
+-		kvm_set_apicv_inhibit(kvm, APICV_INHIBIT_REASON_LOGICAL_ID_ALIASED);
++		kvm_set_apicv_inhibit(plane, APICV_INHIBIT_REASON_LOGICAL_ID_ALIASED);
+ 	else
+-		kvm_clear_apicv_inhibit(kvm, APICV_INHIBIT_REASON_LOGICAL_ID_ALIASED);
++		kvm_clear_apicv_inhibit(plane, APICV_INHIBIT_REASON_LOGICAL_ID_ALIASED);
+ 
+ 	if (xapic_id_mismatch)
+-		kvm_set_apicv_inhibit(kvm, APICV_INHIBIT_REASON_APIC_ID_MODIFIED);
++		kvm_set_apicv_inhibit(plane, APICV_INHIBIT_REASON_APIC_ID_MODIFIED);
+ 	else
+-		kvm_clear_apicv_inhibit(kvm, APICV_INHIBIT_REASON_APIC_ID_MODIFIED);
++		kvm_clear_apicv_inhibit(plane, APICV_INHIBIT_REASON_APIC_ID_MODIFIED);
+ 
+ 	old = rcu_dereference_protected(kvm->arch.apic_map,
+ 			lockdep_is_held(&kvm->arch.apic_map_lock));
+@@ -2630,7 +2631,7 @@ static void __kvm_apic_set_base(struct kvm_vcpu *vcpu, u64 value)
+ 
+ 	if ((value & MSR_IA32_APICBASE_ENABLE) &&
+ 	     apic->base_address != APIC_DEFAULT_PHYS_BASE) {
+-		kvm_set_apicv_inhibit(apic->vcpu->kvm,
++		kvm_set_apicv_inhibit(vcpu_to_plane(vcpu),
+ 				      APICV_INHIBIT_REASON_APIC_BASE_MODIFIED);
+ 	}
+ }
+diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
+index 827dbe4d2b3b..130d895f1d95 100644
+--- a/arch/x86/kvm/svm/sev.c
++++ b/arch/x86/kvm/svm/sev.c
+@@ -458,7 +458,7 @@ static int __sev_guest_init(struct kvm *kvm, struct kvm_sev_cmd *argp,
+ 	INIT_LIST_HEAD(&sev->mirror_vms);
+ 	sev->need_init = false;
+ 
+-	kvm_set_apicv_inhibit(kvm, APICV_INHIBIT_REASON_SEV);
++	kvm_set_apicv_inhibit(kvm->planes[0], APICV_INHIBIT_REASON_SEV);
+ 
+ 	return 0;
+ 
+diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+index f6a435ff7e2d..917bfe8db101 100644
+--- a/arch/x86/kvm/svm/svm.c
++++ b/arch/x86/kvm/svm/svm.c
+@@ -3926,7 +3926,8 @@ static void svm_enable_irq_window(struct kvm_vcpu *vcpu)
+ 		 * the VM wide AVIC inhibition.
+ 		 */
+ 		if (!is_guest_mode(vcpu))
+-			kvm_set_apicv_inhibit(vcpu->kvm, APICV_INHIBIT_REASON_IRQWIN);
++			kvm_set_apicv_inhibit(vcpu_to_plane(vcpu),
++					      APICV_INHIBIT_REASON_IRQWIN);
+ 
+ 		svm_set_vintr(svm);
+ 	}
 diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index f70d9a572455..653886e6e1c8 100644
+index 653886e6e1c8..382d8ace131f 100644
 --- a/arch/x86/kvm/x86.c
 +++ b/arch/x86/kvm/x86.c
-@@ -6561,7 +6561,7 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
- 		r = -EEXIST;
- 		if (irqchip_in_kernel(kvm))
- 			goto split_irqchip_unlock;
--		if (kvm->created_vcpus)
-+		if (kvm->created_vcpus || kvm->has_planes)
- 			goto split_irqchip_unlock;
- 		/* Pairs with irqchip_in_kernel. */
+@@ -6567,7 +6567,7 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
  		smp_wmb();
-@@ -7087,7 +7087,7 @@ int kvm_arch_vm_ioctl(struct file *filp, unsigned int ioctl, unsigned long arg)
- 			goto create_irqchip_unlock;
+ 		kvm->arch.irqchip_mode = KVM_IRQCHIP_SPLIT;
+ 		kvm->arch.nr_reserved_ioapic_pins = cap->args[0];
+-		kvm_clear_apicv_inhibit(kvm, APICV_INHIBIT_REASON_ABSENT);
++		kvm_clear_apicv_inhibit(kvm->planes[0], APICV_INHIBIT_REASON_ABSENT);
+ 		r = 0;
+ split_irqchip_unlock:
+ 		mutex_unlock(&kvm->lock);
+@@ -7109,7 +7109,7 @@ int kvm_arch_vm_ioctl(struct file *filp, unsigned int ioctl, unsigned long arg)
+ 		/* Write kvm->irq_routing before enabling irqchip_in_kernel. */
+ 		smp_wmb();
+ 		kvm->arch.irqchip_mode = KVM_IRQCHIP_KERNEL;
+-		kvm_clear_apicv_inhibit(kvm, APICV_INHIBIT_REASON_ABSENT);
++		kvm_clear_apicv_inhibit(kvm->planes[0], APICV_INHIBIT_REASON_ABSENT);
+ 	create_irqchip_unlock:
+ 		mutex_unlock(&kvm->lock);
+ 		break;
+@@ -9996,14 +9996,18 @@ static void set_or_clear_apicv_inhibit(unsigned long *inhibits,
+ 	trace_kvm_apicv_inhibit_changed(reason, set, *inhibits);
+ }
  
- 		r = -EINVAL;
--		if (kvm->created_vcpus)
-+		if (kvm->created_vcpus || kvm->has_planes)
- 			goto create_irqchip_unlock;
+-static void kvm_apicv_init(struct kvm *kvm)
++static void kvm_apicv_init(struct kvm *kvm, unsigned long *apicv_inhibit_reasons)
+ {
+-	enum kvm_apicv_inhibit reason = enable_apicv ? APICV_INHIBIT_REASON_ABSENT :
+-						       APICV_INHIBIT_REASON_DISABLED;
++	enum kvm_apicv_inhibit reason;
  
- 		r = kvm_pic_init(kvm);
+-	set_or_clear_apicv_inhibit(&kvm->arch.apicv_inhibit_reasons, reason, true);
++	if (!enable_apicv)
++		reason = APICV_INHIBIT_REASON_DISABLED;
++	else if (!irqchip_kernel(kvm))
++		reason = APICV_INHIBIT_REASON_ABSENT;
++	else
++		return;
+ 
+-	init_rwsem(&kvm->arch.apicv_update_lock);
++	set_or_clear_apicv_inhibit(apicv_inhibit_reasons, reason, true);
+ }
+ 
+ static void kvm_sched_yield(struct kvm_vcpu *vcpu, unsigned long dest_id)
+@@ -10633,10 +10637,22 @@ static void kvm_vcpu_update_apicv(struct kvm_vcpu *vcpu)
+ 	__kvm_vcpu_update_apicv(vcpu);
+ }
+ 
+-void __kvm_set_or_clear_apicv_inhibit(struct kvm *kvm,
++static bool kvm_compute_apicv_inhibit(struct kvm *kvm,
++				      enum kvm_apicv_inhibit reason)
++{
++	int i;
++	for (i = 0; i < KVM_MAX_VCPU_PLANES; i++)
++		if (test_bit(reason, &kvm->planes[i]->arch.apicv_inhibit_reasons))
++			return true;
++
++	return false;
++}
++
++void __kvm_set_or_clear_apicv_inhibit(struct kvm_plane *plane,
+ 				      enum kvm_apicv_inhibit reason, bool set)
+ {
+-	unsigned long old, new;
++	struct kvm *kvm = plane->kvm;
++	unsigned long local, global;
+ 	bool changed;
+ 
+ 	lockdep_assert_held_write(&kvm->arch.apicv_update_lock);
+@@ -10644,9 +10660,24 @@ void __kvm_set_or_clear_apicv_inhibit(struct kvm *kvm,
+ 	if (!(kvm_x86_ops.required_apicv_inhibits & BIT(reason)))
+ 		return;
+ 
+-	old = new = kvm->arch.apicv_inhibit_reasons;
+-	set_or_clear_apicv_inhibit(&new, reason, set);
+-	changed = (!!old != !!new);
++	local = plane->arch.apicv_inhibit_reasons;
++	set_or_clear_apicv_inhibit(&local, reason, set);
++
++	/* Could this flip change the global state? */
++	global = kvm->arch.apicv_inhibit_reasons;
++	if ((local & BIT(reason)) == (global & BIT(reason))) {
++		/* Easy case 1, the bit is now the same as for the whole VM.  */
++		changed = false;
++	} else if (set) {
++		/* Easy case 2, maybe the bit flipped globally from clear to set?  */
++		changed = !global;
++		set_or_clear_apicv_inhibit(&global, reason, set);
++	} else {
++		/* Harder case, check if no other plane had this inhibit.  */
++		set = kvm_compute_apicv_inhibit(kvm, reason);
++		set_or_clear_apicv_inhibit(&global, reason, set);
++		changed = !global;
++	}
+ 
+ 	if (changed) {
+ 		/*
+@@ -10664,7 +10695,8 @@ void __kvm_set_or_clear_apicv_inhibit(struct kvm *kvm,
+ 		kvm_make_all_cpus_request(kvm, KVM_REQ_APICV_UPDATE);
+ 	}
+ 
+-	kvm->arch.apicv_inhibit_reasons = new;
++	plane->arch.apicv_inhibit_reasons = local;
++	kvm->arch.apicv_inhibit_reasons = global;
+ 
+ 	if (changed && set) {
+ 		unsigned long gfn = gpa_to_gfn(APIC_DEFAULT_PHYS_BASE);
+@@ -10675,14 +10707,17 @@ void __kvm_set_or_clear_apicv_inhibit(struct kvm *kvm,
+ 	}
+ }
+ 
+-void kvm_set_or_clear_apicv_inhibit(struct kvm *kvm,
++void kvm_set_or_clear_apicv_inhibit(struct kvm_plane *plane,
+ 				    enum kvm_apicv_inhibit reason, bool set)
+ {
++	struct kvm *kvm;
++
+ 	if (!enable_apicv)
+ 		return;
+ 
++	kvm = plane->kvm;
+ 	down_write(&kvm->arch.apicv_update_lock);
+-	__kvm_set_or_clear_apicv_inhibit(kvm, reason, set);
++	__kvm_set_or_clear_apicv_inhibit(plane, reason, set);
+ 	up_write(&kvm->arch.apicv_update_lock);
+ }
+ EXPORT_SYMBOL_GPL(kvm_set_or_clear_apicv_inhibit);
+@@ -12083,24 +12118,26 @@ int kvm_arch_vcpu_ioctl_set_sregs(struct kvm_vcpu *vcpu,
+ 	return ret;
+ }
+ 
+-static void kvm_arch_vcpu_guestdbg_update_apicv_inhibit(struct kvm *kvm)
++static void kvm_arch_vcpu_guestdbg_update_apicv_inhibit(struct kvm_plane *plane)
+ {
+ 	bool set = false;
++	struct kvm *kvm;
+ 	struct kvm_vcpu *vcpu;
+ 	unsigned long i;
+ 
+ 	if (!enable_apicv)
+ 		return;
+ 
++	kvm = plane->kvm;
+ 	down_write(&kvm->arch.apicv_update_lock);
+ 
+-	kvm_for_each_vcpu(i, vcpu, kvm) {
++	kvm_for_each_plane_vcpu(i, vcpu, plane) {
+ 		if (vcpu->guest_debug & KVM_GUESTDBG_BLOCKIRQ) {
+ 			set = true;
+ 			break;
+ 		}
+ 	}
+-	__kvm_set_or_clear_apicv_inhibit(kvm, APICV_INHIBIT_REASON_BLOCKIRQ, set);
++	__kvm_set_or_clear_apicv_inhibit(plane, APICV_INHIBIT_REASON_BLOCKIRQ, set);
+ 	up_write(&kvm->arch.apicv_update_lock);
+ }
+ 
+@@ -12156,7 +12193,7 @@ int kvm_arch_vcpu_ioctl_set_guest_debug(struct kvm_vcpu *vcpu,
+ 
+ 	kvm_x86_call(update_exception_bitmap)(vcpu);
+ 
+-	kvm_arch_vcpu_guestdbg_update_apicv_inhibit(vcpu->kvm);
++	kvm_arch_vcpu_guestdbg_update_apicv_inhibit(vcpu_to_plane(vcpu));
+ 
+ 	r = 0;
+ 
+@@ -12732,6 +12769,11 @@ void kvm_arch_free_vm(struct kvm *kvm)
+ }
+ 
+ 
++void kvm_arch_init_plane(struct kvm_plane *plane)
++{
++	kvm_apicv_init(plane->kvm, &plane->arch.apicv_inhibit_reasons);
++}
++
+ int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
+ {
+ 	int ret;
+@@ -12767,6 +12809,7 @@ int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
+ 	set_bit(KVM_IRQFD_RESAMPLE_IRQ_SOURCE_ID,
+ 		&kvm->arch.irq_sources_bitmap);
+ 
++	init_rwsem(&kvm->arch.apicv_update_lock);
+ 	raw_spin_lock_init(&kvm->arch.tsc_write_lock);
+ 	mutex_init(&kvm->arch.apic_map_lock);
+ 	seqcount_raw_spinlock_init(&kvm->arch.pvclock_sc, &kvm->arch.tsc_write_lock);
+@@ -12789,7 +12832,7 @@ int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
+ 	INIT_DELAYED_WORK(&kvm->arch.kvmclock_update_work, kvmclock_update_fn);
+ 	INIT_DELAYED_WORK(&kvm->arch.kvmclock_sync_work, kvmclock_sync_fn);
+ 
+-	kvm_apicv_init(kvm);
++	kvm_apicv_init(kvm, &kvm->arch.apicv_inhibit_reasons);
+ 	kvm_hv_init_vm(kvm);
+ 	kvm_xen_init_vm(kvm);
+ 
 diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index 16a8b3adb76d..152dc5845309 100644
+index 152dc5845309..5cade1c04646 100644
 --- a/include/linux/kvm_host.h
 +++ b/include/linux/kvm_host.h
-@@ -883,6 +883,7 @@ struct kvm {
- 	bool dirty_ring_with_bitmap;
- 	bool vm_bugged;
- 	bool vm_dead;
-+	bool has_planes;
+@@ -943,7 +943,7 @@ static inline struct kvm_plane *vcpu_to_plane(struct kvm_vcpu *vcpu)
+ #else
+ static inline struct kvm_plane *vcpu_to_plane(struct kvm_vcpu *vcpu)
+ {
+-	return vcpu->kvm->planes[vcpu->plane_id];
++	return vcpu->kvm->planes[vcpu->plane];
+ }
+ #endif
  
- #ifdef CONFIG_HAVE_KVM_PM_NOTIFIER
- 	struct notifier_block pm_notifier;
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index cb04fe6f8a2c..db38894f6fa3 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -5316,6 +5316,7 @@ static int kvm_vm_ioctl_create_plane(struct kvm *kvm, unsigned id)
- 		return fd;
- 
- 	plane = kvm_create_vm_plane(kvm, id);
-+	kvm->has_planes = true;
- 	if (IS_ERR(plane)) {
- 		r = PTR_ERR(plane);
- 		goto put_fd;
 -- 
 2.49.0
 
