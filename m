@@ -1,250 +1,162 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B20B1EB19A;
-	Tue,  1 Apr 2025 15:45:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C850B20CCC3;
+	Tue,  1 Apr 2025 15:45:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743522344; cv=none; b=agOlZXuuuF5BAM7Xr59n9/ArHO8FhU4ybiT66R+ZwiXtl/Hwf/DVuQIpoFKoCWL5VPEBJFJUcgoUdHVPwA/RCrYe27ZKydamqQqmblvpAaU/zZEgEcdGmw0jClmlTAtHClIeQ/EaYtDfWSP93Wk+yS44XdojRIrTvzL0Km8yvwE=
+	t=1743522350; cv=none; b=g4YB96Oh5n6wnC9iW854OgRtPX1La75bm/Bm9faSVlntPzsmM1gAleJ7Mw2EGwoStASZa0UX4awboFBSDdwa6eZi8MBm3K/QXU5sH2ZWS87Yz6/2YXey/V9b+eMli05Wi7cCGHF1eLV2kGCPjhyX3OxWu2B1ve0GttRjRxEi9k8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743522344; c=relaxed/simple;
-	bh=WBy7/6zN4feM/TeCGcXiAJPz1NiTYo51RtnynhTaOM8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AF4xALAKLO67GBmk/VUPSJ8wmnooPp56jgV5GpUW3dS344/HFTuHr12e/PYFe3pO//uyV8fmUVA07RDnrn963/tQ4N6I6qWl/QcsaAmpov01DE/R6m1m6guNhxE19Q+jWEzBMJyoK61b9cjoW0PKgDnu3cfJV/ZxNXq0bZZldag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IlUb/NJm; arc=none smtp.client-ip=209.85.214.177
+	s=arc-20240116; t=1743522350; c=relaxed/simple;
+	bh=IZl+SfnZiNB3eblr5+5BUK4KuET7Fyh/voPaywYEQW8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HU1R9N/P1ahyJeA68Mzdem/bKRXNS/CPWNgsZhCVnUmGjqJuUkvSxXR0Jjwult9hSY2mCRpfdwhwsENHmm2CXWdTE6lnsJsnoXFx4LfzMPPOF8FYpVZwVJ0Ytm2nu0GUXYAvYkgSqf1Qcy3ixzJD/8WlT6XlV+FkhLZLENP2FlE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZTXwPAHN; arc=none smtp.client-ip=209.85.128.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IlUb/NJm"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-224019ad9edso30283745ad.1;
-        Tue, 01 Apr 2025 08:45:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZTXwPAHN"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43cfa7e7f54so35253035e9.1;
+        Tue, 01 Apr 2025 08:45:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743522341; x=1744127141; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Kzegyg8cpGoKhVLZCKUfoTEzY8SEhsuSorY4Wg6W7wk=;
-        b=IlUb/NJmDd+jXbBkm2j3X4/qbX9tLdvY+lq4ly40ihU+XoIeqKyNy5FT7Ar+XvapOO
-         6OPTtzLlQgvpe/K5ib36AyKGwcBvn4ES/MvXedwXV0QtauVG3VuM0BBPDcJK9PWEtAO/
-         SDqd2U0r6IiE0v7XGDRYgxDgIcWb/UsmOAuTVLOwIIFm+a+6rfSAUprJzsdEkCxrEzaa
-         MSuZKbMvXOd/+BfPoCgPR+OZGDRSc0sahpNtYQ6pHpA3GSDYpaKO7njh0ngxqpC34Gg9
-         GtYtPOph5KxOOUmuuutxPmSuadD8TedBQ+LYFKu6OH5B3bm1V8tt7VT5MWpPp46Dvp29
-         idaQ==
+        d=gmail.com; s=20230601; t=1743522347; x=1744127147; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=T5ThBuRpKnHRPY4PmL9t1IknVwrvZgD4qu/gh0Vq+Tc=;
+        b=ZTXwPAHNWCWiABJqVlcPSPvU1y8g3HqD/ywLLxwEaxglrlRdvY8Mk77eROSCBKunUU
+         b17OUcfH6X0cwH6Jd1rDoWwQJu5Z9uNo0PP6VpE88Kd5l1H2MYx8lCBxK1efzqlh9k8u
+         Qq+m+3lGOKwEmR6ZW62tURQdzo4dG3wTYCEYmfxf3kySR2pDHFh0eZa9USPh4uYPd1Fh
+         gjixjCt11uCWbkW3oeVX0etAxwLQVdII0aMgYDMjyYp6lrL/1WAxgJbvFdepYmHAStvG
+         12FPggEZHgwft3sBM0Z5OAfMcGhKp3fjPV/awkEgeoKT+V3phZXEzMJ02bLzX8TczJLi
+         xWQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743522341; x=1744127141;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Kzegyg8cpGoKhVLZCKUfoTEzY8SEhsuSorY4Wg6W7wk=;
-        b=fm389fWXx6fq47oTkuwZ3x4Cd1AZut3umgi+lnd0ohRTP96EzHn9b7CkCIjOjNDkTs
-         J3ZUA5YDVdM4vxgFBIpkbY6hDuvgWhWxWmjk/gHvIG5X/wO6fc3jIBRuS3GsKYFBTGhT
-         G8vVEwDhNDFTNW1mxdDnF8W9Dv3DZeCzVaKYcBv4RSG1jFkq2CxEEszLrq6+u7nFLP10
-         UQO5J4yB9QoxYvMH03IazKJduhfBYcHSVQ2VrmEGgHtc6Rlw0tCbvoeNUZnnTYDEEaa1
-         lCeKlhAXECROO+LH2HfPaccxIVKcyiA6s4Vb1n4d6jw4LD/tXI3OaefTjXx4GQdVfZH8
-         IRxw==
-X-Forwarded-Encrypted: i=1; AJvYcCUHxxLXar0fdfOq7kfvdRxu5/WDCxmzBK2cU4q36+knYQ37zUZb31NsuxgdihTfYpmvL/7NM1eD8WLKhQ==@vger.kernel.org, AJvYcCUNAFIiShfdkX5RNBx5jms5d2OGrlbDIa2kxzYtrXeOtX+dTVFBKrYFQsxIF73v5gKxFxZKiqXfBLY=@vger.kernel.org, AJvYcCVBw87wYoRh0pU0r+94MoHEDNakbAee9Vw/hcc8B69LyysrqO0aXr+z9JqW3jDkuk47NbaHUCceiItzMQ==@vger.kernel.org, AJvYcCVEZnxbGHAv7eJzKR5qjMiwpotL0QXSkrF5QvmWLAZHYC7rg2L1MWpACZdiqspiv7u/vS/nqFZG6U3zlE6B@vger.kernel.org, AJvYcCVfS6Me2xxZhQvG4YaX5RIQj4ZrVamV9Xmt39+T9pWqpGimgN1ZXPJLKvlu4scO3LRjr/+7N0DR98RApX9/M/F6@vger.kernel.org, AJvYcCVxEbj6Xc84sDJ0a0q/RgDRepIn1jGKU3U/8TgiMtH8q9IwDPo2zLleG+PRBQkAsLYhwqIqPA==@vger.kernel.org, AJvYcCW2x0rVVJvFQHvAhLU0EbDscZfdFCPBPFcQoHlq3zp94pdLwyp8tQ7RsBe7nUl4DV42IzpeWem9@vger.kernel.org, AJvYcCW4yGUSiJtK8l8ZBrhCs03i8YqPKeqBoa5ozceBgvEV0+0ZOHOOYfp0pq//lW3+3tf6T7x/nxTIvTKZ@vger.kernel.org, AJvYcCWO1I1Utbzi621O2fQpMvjIyUlq28VQMdVJtgqrSxJU05XYXYXfbe3zMcn4QlR7M02S1XLuVMma46hTeg==@vger.kernel.org, AJvYcCWPbD5wwExMgpb4qp7HXecHWMH0T95OasKsq/pAMtWfUdR7XUQdO2buLldp9307FCLPlRdYC0N/7t/r@vger.kernel.org, AJvYcCXAUsNjYPvPeK2OibZgEs2WwpoUOtKFxXqq6mfmn4d4+Q/CT+2fNM7+/pvCUpMy8DIjia939rLszKUhjw==@vger.kernel.org, AJvYcCXPWJXyiroHz9lWdO2PNVtFpg+X1wt6XZzphxfjrJDZ6hxqtawQr17XYcvPtrfUEzkQnoXa8eZd8Hkq0Q==@vger.kernel.org, AJvYcCXhhHZ6A24d1D6OWPNWCRRQQmSchp+spjLTbKnBr6/UuVmR8rTrHIzQQKHXXtSVDhSzf80=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyhn0ue1Dwx2e3VhQmyP+uOHrFegqU83ikyUkQ+lkHxWxIuNF4R
-	3ce0I2OaovU9nBlJ2oibrM3zl++ZKC6GpqDM0RIuGPre4++Ix7c=
-X-Gm-Gg: ASbGncvpnnU/aX06vLcU81GFHixJ1zw8rTdmurVxj4eXrdjCxEdMoNuhndOlFgOQ4g+
-	oXxOd9j6ErWH5TFtVXnf02hJWCdPRrcy+gTcwL4QVKLUqSjllFNvlNamE+kfttvUTum7XMz9Pg5
-	780um28/GA/FwPC0U87sgpy2ySHa01NruKeQSNCz3jb0LnaHQ5LMHrQS++ZlQ6yd1Dj79CGzr1u
-	bkoAbqsZ+xi9A0mA/7/o2H7wDiczI3tlL0jbJJI1Y187ON9Ch4CFP+JWv2RTqylVk7kry6omv+l
-	iXjbAQ9M0fn9cDDeisURntmWAqXW91ZwCBNxa/MlldIM
-X-Google-Smtp-Source: AGHT+IF8/7u5sPPUnxUKs7/1U46BgrbqaNr+VNf0UHTBb569zkxnb+rV1+QWTbUu5Xora+LmVv4FIA==
-X-Received: by 2002:a17:902:d54f:b0:224:1074:63a0 with SMTP id d9443c01a7336-2292f9e62bfmr264543585ad.34.1743522341280;
-        Tue, 01 Apr 2025 08:45:41 -0700 (PDT)
-Received: from localhost ([2601:646:9e00:f56e:123b:cea3:439a:b3e3])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-2291eec6f91sm90062555ad.17.2025.04.01.08.45.40
+        d=1e100.net; s=20230601; t=1743522347; x=1744127147;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=T5ThBuRpKnHRPY4PmL9t1IknVwrvZgD4qu/gh0Vq+Tc=;
+        b=FO2CsMdTEdJPSlZ8FD+rnMmK/BE8vNeByx+nNsS1QRolkj49zReJif6AQ3KlqhZoGg
+         5Jt4hEEl87OBL0TmQIJUDf5op63EQZBjVg3g2beWAZbf7abApiLDXv/Pc9tScxvbA/Qt
+         lZfr4rDochoSj/FXZ/doCdZwhQd5+pA7gV/76cR8oStcQrEPKdKVGjjS1qUy2nmNT9XW
+         UP0RtRuSF0ZELe0SHWFEboljkSQZx0egI3bchThetcCUKzaX75uigEjsPBcO8LURTTQf
+         FVxKuy79PZN5m+GMEZLkdHqYNEOJF6/zNNSFT1xGVOJV33oGE2aeX3ZkKj0taffw5uHE
+         b/bQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUa6TH+sUu4GPtCn+AuXhlH8n9cnSJzISgpxPCUyLlkw19OVgxGo3QytFlo8s1SrqkQu2RDSvj2D92o@vger.kernel.org, AJvYcCWfGL2IpKek3Av1vOuF4IBRnMgKtPM/Q5LsgSYm5QK0rAI2qFVkQGL/It/dToD0QQWMQ9lpzKmNIcIoZ9ON@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxd7oaepMtLrYkpPMbOvAAX9pu89QWB5syXmknmentrz26aBUoK
+	rWm1EPKSkPCWRQd7m+KprCNB66ZPi7YNhVPyQigSngePfVpWnHgV
+X-Gm-Gg: ASbGncsHV3VzCpaIsaCu39U92rab/pdRnN5R0pq6W1py+HU0y39ucBFLRF7Pe5RyDJQ
+	8GVJ3xJ89H++KwNQ5UwBxtT9N5S3U2ZJ59fygz4SxeapH1dtnri0oTU5DMoHDQwTwe/+hxvqODl
+	o8fdLNMLilOmulROn/llC054aUTLF6/ERH//TavjiYWeDwt9EHlUwBRheN742yeJADmxyM5Ia53
+	BP10R+ylEF6O1OrQBCd4ue2QajNISrYVlgOlYiAr3jXE3L8D1g8u3khEMj1mMwuSwY0vRa2hZge
+	eE1iqCN+5TrHnqf0ykr4rbhr7v9pxiaKJElQp25qpzQnla5aXhq0dI52XB0yFgJ5LnHDozWo/vC
+	G3l5/QXA=
+X-Google-Smtp-Source: AGHT+IFKiVxzUU2B9RPhqEV6JDP87B+NzuBTFyeKmjre2c1ZpVECp9TuSc269NxnKveemRjQQW/DLw==
+X-Received: by 2002:a05:600c:285:b0:43b:bfa7:c7d with SMTP id 5b1f17b1804b1-43eb055b4b9mr3423905e9.2.1743522346657;
+        Tue, 01 Apr 2025 08:45:46 -0700 (PDT)
+Received: from playground.localdomain ([82.79.237.110])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d8ff042bcsm158795735e9.28.2025.04.01.08.45.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Apr 2025 08:45:40 -0700 (PDT)
-Date: Tue, 1 Apr 2025 08:45:39 -0700
-From: Stanislav Fomichev <stfomichev@gmail.com>
-To: Breno Leitao <leitao@debian.org>
-Cc: Stefan Metzmacher <metze@samba.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Jens Axboe <axboe@kernel.dk>,
-	Pavel Begunkov <asml.silence@gmail.com>,
-	Jakub Kicinski <kuba@kernel.org>, Christoph Hellwig <hch@lst.de>,
-	Karsten Keil <isdn@linux-pingi.de>,
-	Ayush Sawal <ayush.sawal@chelsio.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Kuniyuki Iwashima <kuniyu@amazon.com>,
-	Willem de Bruijn <willemb@google.com>,
-	David Ahern <dsahern@kernel.org>,
-	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-	Xin Long <lucien.xin@gmail.com>,
-	Neal Cardwell <ncardwell@google.com>,
-	Joerg Reuter <jreuter@yaina.de>,
-	Marcel Holtmann <marcel@holtmann.org>,
-	Johan Hedberg <johan.hedberg@gmail.com>,
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-	Oliver Hartkopp <socketcan@hartkopp.net>,
-	Marc Kleine-Budde <mkl@pengutronix.de>,
-	Robin van der Gracht <robin@protonic.nl>,
-	Oleksij Rempel <o.rempel@pengutronix.de>, kernel@pengutronix.de,
-	Alexander Aring <alex.aring@gmail.com>,
-	Stefan Schmidt <stefan@datenfreihafen.org>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Alexandra Winter <wintera@linux.ibm.com>,
-	Thorsten Winkler <twinkler@linux.ibm.com>,
-	James Chapman <jchapman@katalix.com>,
-	Jeremy Kerr <jk@codeconstruct.com.au>,
-	Matt Johnston <matt@codeconstruct.com.au>,
-	Matthieu Baerts <matttbe@kernel.org>,
-	Mat Martineau <martineau@kernel.org>,
-	Geliang Tang <geliang@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Remi Denis-Courmont <courmisch@gmail.com>,
-	Allison Henderson <allison.henderson@oracle.com>,
-	David Howells <dhowells@redhat.com>,
-	Marc Dionne <marc.dionne@auristor.com>,
-	Wenjia Zhang <wenjia@linux.ibm.com>,
-	Jan Karcher <jaka@linux.ibm.com>,
-	"D. Wythe" <alibuda@linux.alibaba.com>,
-	Tony Lu <tonylu@linux.alibaba.com>,
-	Wen Gu <guwen@linux.alibaba.com>, Jon Maloy <jmaloy@redhat.com>,
-	Boris Pismenny <borisp@nvidia.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Stefano Garzarella <sgarzare@redhat.com>,
-	Martin Schiller <ms@dev.tdt.de>,
-	=?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>,
-	Magnus Karlsson <magnus.karlsson@intel.com>,
-	Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-	Jonathan Lemon <jonathan.lemon@gmail.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Jesper Dangaard Brouer <hawk@kernel.org>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-sctp@vger.kernel.org,
-	linux-hams@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-	linux-can@vger.kernel.org, dccp@vger.kernel.org,
-	linux-wpan@vger.kernel.org, linux-s390@vger.kernel.org,
-	mptcp@lists.linux.dev, linux-rdma@vger.kernel.org,
-	rds-devel@oss.oracle.com, linux-afs@lists.infradead.org,
-	tipc-discussion@lists.sourceforge.net,
-	virtualization@lists.linux.dev, linux-x25@vger.kernel.org,
-	bpf@vger.kernel.org, isdn4linux@listserv.isdn4linux.de,
-	io-uring@vger.kernel.org
-Subject: Re: [RFC PATCH 0/4] net/io_uring: pass a kernel pointer via optlen_t
- to proto[_ops].getsockopt()
-Message-ID: <Z-wKI1rQGSgrsjbl@mini-arch>
-References: <cover.1743449872.git.metze@samba.org>
- <Z-sDc-0qyfPZz9lv@mini-arch>
- <39515c76-310d-41af-a8b4-a814841449e3@samba.org>
- <407c1a05-24a7-430b-958c-0ca78c467c07@samba.org>
- <ed2038b1-0331-43d6-ac15-fd7e004ab27e@samba.org>
- <Z+wH1oYOr1dlKeyN@gmail.com>
+        Tue, 01 Apr 2025 08:45:46 -0700 (PDT)
+From: Laurentiu Mihalcea <laurentiumihalcea111@gmail.com>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Daniel Baluta <daniel.baluta@nxp.com>,
+	Shengjiu Wang <shengjiu.wang@nxp.com>,
+	Frank Li <Frank.li@nxp.com>,
+	Marco Felsch <m.felsch@pengutronix.de>,
+	Marc Kleine-Budde <mkl@pengutronix.de>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>,
+	devicetree@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/6] imx8mp: add support for the IMX AIPSTZ bridge
+Date: Tue,  1 Apr 2025 11:43:58 -0400
+Message-Id: <20250401154404.45932-1-laurentiumihalcea111@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z+wH1oYOr1dlKeyN@gmail.com>
 
-On 04/01, Breno Leitao wrote:
-> On Tue, Apr 01, 2025 at 03:48:58PM +0200, Stefan Metzmacher wrote:
-> > Am 01.04.25 um 15:37 schrieb Stefan Metzmacher:
-> > > Am 01.04.25 um 10:19 schrieb Stefan Metzmacher:
-> > > > Am 31.03.25 um 23:04 schrieb Stanislav Fomichev:
-> > > > > On 03/31, Stefan Metzmacher wrote:
-> > > > > > The motivation for this is to remove the SOL_SOCKET limitation
-> > > > > > from io_uring_cmd_getsockopt().
-> > > > > > 
-> > > > > > The reason for this limitation is that io_uring_cmd_getsockopt()
-> > > > > > passes a kernel pointer as optlen to do_sock_getsockopt()
-> > > > > > and can't reach the ops->getsockopt() path.
-> > > > > > 
-> > > > > > The first idea would be to change the optval and optlen arguments
-> > > > > > to the protocol specific hooks also to sockptr_t, as that
-> > > > > > is already used for setsockopt() and also by do_sock_getsockopt()
-> > > > > > sk_getsockopt() and BPF_CGROUP_RUN_PROG_GETSOCKOPT().
-> > > > > > 
-> > > > > > But as Linus don't like 'sockptr_t' I used a different approach.
-> > > > > > 
-> > > > > > @Linus, would that optlen_t approach fit better for you?
-> > > > > 
-> > > > > [..]
-> > > > > 
-> > > > > > Instead of passing the optlen as user or kernel pointer,
-> > > > > > we only ever pass a kernel pointer and do the
-> > > > > > translation from/to userspace in do_sock_getsockopt().
-> > > > > 
-> > > > > At this point why not just fully embrace iov_iter? You have the size
-> > > > > now + the user (or kernel) pointer. Might as well do
-> > > > > s/sockptr_t/iov_iter/ conversion?
-> > > > 
-> > > > I think that would only be possible if we introduce
-> > > > proto[_ops].getsockopt_iter() and then convert the implementations
-> > > > step by step. Doing it all in one go has a lot of potential to break
-> > > > the uapi. I could try to convert things like socket, ip and tcp myself, but
-> > > > the rest needs to be converted by the maintainer of the specific protocol,
-> > > > as it needs to be tested. As there are crazy things happening in the existing
-> > > > implementations, e.g. some getsockopt() implementations use optval as in and out
-> > > > buffer.
-> > > > 
-> > > > I first tried to convert both optval and optlen of getsockopt to sockptr_t,
-> > > > and that showed that touching the optval part starts to get complex very soon,
-> > > > see https://git.samba.org/?p=metze/linux/wip.git;a=commitdiff;h=141912166473bf8843ec6ace76dc9c6945adafd1
-> > > > (note it didn't converted everything, I gave up after hitting
-> > > > sctp_getsockopt_peer_addrs and sctp_getsockopt_local_addrs.
-> > > > sctp_getsockopt_context, sctp_getsockopt_maxseg, sctp_getsockopt_associnfo and maybe
-> > > > more are the ones also doing both copy_from_user and copy_to_user on optval)
-> > > > 
-> > > > I come also across one implementation that returned -ERANGE because *optlen was
-> > > > too short and put the required length into *optlen, which means the returned
-> > > > *optlen is larger than the optval buffer given from userspace.
-> > > > 
-> > > > Because of all these strange things I tried to do a minimal change
-> > > > in order to get rid of the io_uring limitation and only converted
-> > > > optlen and leave optval as is.
-> > > > 
-> > > > In order to have a patchset that has a low risk to cause regressions.
-> > > > 
-> > > > But as alternative introducing a prototype like this:
-> > > > 
-> > > >          int (*getsockopt_iter)(struct socket *sock, int level, int optname,
-> > > >                                 struct iov_iter *optval_iter);
-> > > > 
-> > > > That returns a non-negative value which can be placed into *optlen
-> > > > or negative value as error and *optlen will not be changed on error.
-> > > > optval_iter will get direction ITER_DEST, so it can only be written to.
-> > > > 
-> > > > Implementations could then opt in for the new interface and
-> > > > allow do_sock_getsockopt() work also for the io_uring case,
-> > > > while all others would still get -EOPNOTSUPP.
-> > > > 
-> > > > So what should be the way to go?
-> > > 
-> > > Ok, I've added the infrastructure for getsockopt_iter, see below,
-> > > but the first part I wanted to convert was
-> > > tcp_ao_copy_mkts_to_user() and that also reads from userspace before
-> > > writing.
-> > > 
-> > > So we could go with the optlen_t approach, or we need
-> > > logic for ITER_BOTH or pass two iov_iters one with ITER_SRC and one
-> > > with ITER_DEST...
-> > > 
-> > > So who wants to decide?
-> > 
-> > I just noticed that it's even possible in same cases
-> > to pass in a short buffer to optval, but have a longer value in optlen,
-> > hci_sock_getsockopt() with SOL_BLUETOOTH completely ignores optlen.
-> > 
-> > This makes it really hard to believe that trying to use iov_iter for this
-> > is a good idea :-(
-> 
-> That was my finding as well a while ago, when I was planning to get the
-> __user pointers converted to iov_iter. There are some weird ways of
-> using optlen and optval, which makes them non-trivial to covert to
-> iov_iter.
+From: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
 
-Can we ignore all non-ip/tcp/udp cases for now? This should cover +90%
-of useful socket opts. See if there are any obvious problems with them
-and if not, try converting. The rest we can cover separately when/if
-needed.
+The AIPSTZ bridge offers some security-related configurations which can
+be used to restrict master access to certain peripherals on the bridge.
+
+Normally, this could be done from a secure environment such as ATF before
+Linux boots but the configuration of AIPSTZ5 is lost each time the power
+domain is powered off and then powered on. Because of this, it has to be
+configured each time the power domain is turned on and before any master
+tries to access the peripherals (e.g: AP, CM7, DSP, on i.MX8MP).
+
+The child-parent relationship between the bridge and its peripherals
+should guarantee that the bridge is configured before the AP attempts
+to access the IPs.
+
+Other masters should use the 'access-controllers' property to enforce
+a dependency between their device and the bridge device (see the DSP,
+for example).
+
+The initial version of the series can be found at [1]. The new version
+should provide better management of the device dependencies.
+
+[1]: https://lore.kernel.org/linux-arm-kernel/20241119130726.2761726-1-daniel.baluta@nxp.com/
+
+---
+Changes in v4:
+* AIPS5 node now only contains a single memory region: that of the AC
+(just like in V2). 'reg-names' property is dropped.
+* AIPS5 node now uses 'ranges' property to restrict the size of the bus
+(1:1 mapping)
+* change the number of AC cells from 0 to 3
+* add binding headers
+* link to v3: https://lore.kernel.org/lkml/20250324162556.30972-1-laurentiumihalcea111@gmail.com/
+
+Changes in v3:
+* make '#address-cells' and '#size-cells' constants and equal to 1 in the 
+binding. The bus is 32-bit.
+* add child node in the example DT snippet.
+* the 'aips5' DT node now contains 2 memory regions: that of the
+peripherals accessible via this bridge and that of the access controller.
+* link to v2: https://lore.kernel.org/lkml/20250226165314.34205-1-laurentiumihalcea111@gmail.com/
+
+Changes in v2:
+* adress Frank Li's comments
+* pick up some A-b/R-b's
+* don't use "simple-bus" as the second compatible. As per Krzysztof's
+comment, AIPSTZ is not a "simple-bus".
+* link to v1: https://lore.kernel.org/lkml/20250221191909.31874-1-laurentiumihalcea111@gmail.com/
+---
+
+Laurentiu Mihalcea (6):
+  dt-bindings: bus: add documentation for the IMX AIPSTZ bridge
+  dt-bindings: dsp: fsl,dsp: document 'access-controllers' property
+  bus: add driver for IMX AIPSTZ bridge
+  arm64: dts: imx8mp: convert 'aips5' to 'aipstz5'
+  arm64: dts: imx8mp: add aipstz master ID definitions
+  arm64: dts: imx8mp: make 'dsp' node depend on 'aips5'
+
+ .../bindings/bus/fsl,imx8mp-aipstz.yaml       | 104 ++++++++++++++++++
+ .../devicetree/bindings/dsp/fsl,dsp.yaml      |   3 +
+ arch/arm64/boot/dts/freescale/imx8mp-aipstz.h |  25 +++++
+ arch/arm64/boot/dts/freescale/imx8mp.dtsi     |  12 +-
+ drivers/bus/Kconfig                           |   6 +
+ drivers/bus/Makefile                          |   1 +
+ drivers/bus/imx-aipstz.c                      |  92 ++++++++++++++++
+ include/dt-bindings/bus/imx-aipstz.h          |  25 +++++
+ 8 files changed, 264 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/bus/fsl,imx8mp-aipstz.yaml
+ create mode 100644 arch/arm64/boot/dts/freescale/imx8mp-aipstz.h
+ create mode 100644 drivers/bus/imx-aipstz.c
+ create mode 100644 include/dt-bindings/bus/imx-aipstz.h
+
+-- 
+2.34.1
+
