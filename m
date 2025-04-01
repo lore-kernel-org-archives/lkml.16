@@ -1,117 +1,158 @@
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1A4B13AC1
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 18:03:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8E1C2EAF7
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 18:03:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743530584; cv=none; b=EwVYfokwz51O0kIj0zQ8+2PT5eSIJCN8sDr1pWSc7qHFuXQO42TGfRmfCC0/mksM31B9TwUomcRRk8ENAB/WMTYYbyH6NWaimJ10zmRZUdd1hoHLak/+qlZLfyFJu+sk1KbiPuK3r//YPV7Jf5BkvZrIbLJyg7+rZ2spDGHRdiQ=
+	t=1743530632; cv=none; b=lxiDCWx8xZhgJLTpu3/fgzrVdbck1Yz8rI/brsQ1Vonl5C7OrvSs0aKK+dEVCNw16rHb6Od9+KDlh9elD4+iL3i014S+Cv2NTMObgfSCrkB8aNc2E7uO7M6qndF2jgVheG0lB60hIN8/vY3hyCiGT3x6tmc6tg5UM88ki/i7SIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743530584; c=relaxed/simple;
-	bh=dmqg5GhAnNOYRTKbDo2x0+pPDeIiIFeQ0zAhtcA6Jv0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FTxt/BGAxBZoT0v1IxvJuIBmVaV5TGJetc4bei6isbN31QiSnQ+WAZIccMmYQOfYU85WRMp+z4kgt/QHXYknUCRw7pQ6Zvik+41kHOPduaGbBy7FryS0lwk48QWGQ70s4fJanmYt5hrqEfG+GBtDkIF43TuXQkcSJ2ZWU0T1/hQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com; spf=pass smtp.mailfrom=raspberrypi.com; dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b=bZUQmI/Y; arc=none smtp.client-ip=209.85.128.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raspberrypi.com
+	s=arc-20240116; t=1743530632; c=relaxed/simple;
+	bh=fa9Yg66rJ5KL6eWvE5zAgPcslLj7QNNF1zTzQ1VFLIs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Oz4vHEPiDxmzPbXuQTPH1Fk5k8JpsRUHuXQi6JAt3gkRdIk2BQDYUFI38plYWkDzDUVYmVeHrpnJLY3gVh30j7XTQN4wVrOXCi6sfdce1UwzDLKiJEKGJ/UAqmu5Ps0mG+1UxOsZnDr3Y5RauAsbQgiFiYf3SHQG/GyEwOx/ZTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=NlFRbqIe; arc=none smtp.client-ip=209.85.160.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="bZUQmI/Y"
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-6f768e9be1aso1145917b3.0
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 11:03:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="NlFRbqIe"
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-47663aeff1bso55582811cf.0
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 11:03:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=raspberrypi.com; s=google; t=1743530581; x=1744135381; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=RElqtDNXiao5Fe66tX7PbQO9u80Hzs14f9V2tQZKzpA=;
-        b=bZUQmI/YoF6cyS+u6LKi5Npktu1+3Tw8+8O5K5vXR8FAxe7fx6LTiUiUT7jawTm2yz
-         +e1XtQZsKSEfWB/8BZH0rUv0hrvZksHCG1rCMkYvAoEcgMosX5Kx4+q9IdNGOBv50SC0
-         SDXCEIPfTifSHv58Bhn/b91eMa7bGhgTuN16DUrnbak9b3pM29NDb6a6g9hHve2efaGz
-         Z22pzUov3xECKaue0MwIqKTkIl3PWjbjDdEZdMZznxdrGmgoyghco7N6MwssqaQs+fZe
-         mvhuGYPb90KXKdD4/R90Trj/Igp87aMUvTZiZu8y/uyjjukyC31qiRijciJ2t/pX6KkB
-         f4ZQ==
+        d=gourry.net; s=google; t=1743530630; x=1744135430; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=w/pmtjLBaI1GK3c3R4g+2ziQwqKlgj707RNFDRmc4/E=;
+        b=NlFRbqIeLy8yKPn12gvadvigHbE/UrD4681/NkSew2XcBeUjbbDhjUEaoM1K/PeDuP
+         ciRgiclX7eWA/R0D7nrGbj63E09uajnn6mz53sL+/81goxmVX6rAm7wqVO8of3jg2fNn
+         FhwMxW1zStkz1yyusaOtfJx2OxtpaENZ+1duHkGvZwSB3bptlNX5PnxIIIsQoTo4xnG8
+         uaS8CTIGfQ4XBJw4kCtBREQBKPd7YQ39FuWZeRFtOKDFkC8Aji9juxaOalF/ylqDjymK
+         KL07SMXj48AFNZD72oxZO4lOTNGhCsLlxKwVOizyYUnXGAlbIGbS0ZjpORmWjgcE+h4U
+         xeAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743530581; x=1744135381;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=RElqtDNXiao5Fe66tX7PbQO9u80Hzs14f9V2tQZKzpA=;
-        b=sioDBGVqEN1Y9qz8VezXwy9iEYsGp18Aobc35zPD/UKtInMPd9Ed3ZaCSZkzYDiGOu
-         1lY50cjVaszxeLp0HV9eOfU4ZVHrmL+D4sCqTCilhlVECcsH02h7cGCNMLM+pZuc3s2g
-         HwZpTDMDyO9BY1Z7JvS0NifrmUZrfAyPYtxvS9oKcq3AgjxZy2/xlpCpyLvg4bHPHlWa
-         3VAoHtolx3ZpIMiLNfYy/3OuXCjEW3FDTMH+KpazKkEleaUFSbdne4xM+Tny+i2svTms
-         kchECpaj1txgjp65IgCuXpr+NpK5wWp+NZBQL/4If+8ihn1raRW3fSJvl2U4ww3gvRsV
-         S2LA==
-X-Forwarded-Encrypted: i=1; AJvYcCU9HdN34b0/F0pKsIev+obsVV+6x5IzGqIkOYvSsA4yhvGXSEJNgaOn9WG0L4ctYdeIWOKDxAHQ4TkKuWc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzuHIk8EaV4v7zUwh9KZ4YzNG4HB9iuj2cIhivD4yhqGIE+LUnw
-	xk+PByL2FgotHfSq/AZKNIbXePIroDMydiBXEMxkSnwPqYxiOPKBGZHnU4wGG0+bU/PZ64tlbRk
-	NDcoQw6R/UIn06XYjl3lNRS9f7Tz+2yGk6MUq1g==
-X-Gm-Gg: ASbGncuCe7tnpXP06aI5NkEuyV+tM4cejQdEP4wgMAf2GcGHa8nrQASVSz6e3056OC8
-	d7HAqUNXgVpwz6bmkDwtBpUeP55LWSjpy7wk9zoKxhnYhMDpH/NV+BaOhRjaLNaIyoODqaeMgBn
-	IMqpypy8z7bEiePxY6vO+ca8uwldl+uD5DJKGG4XoyhsHPlL6jXYcBnUjJwQ==
-X-Google-Smtp-Source: AGHT+IEAZ9awAdsvEF18jxvMFTvl6qOXCPx2YncirI/WvgPAq+emAZx1k23zW+DI5dEunJl/9DWT7JfGSiLy6Ulrod0=
-X-Received: by 2002:a05:690c:6b86:b0:6ea:8901:dad8 with SMTP id
- 00721157ae682-703b65e9521mr14267287b3.3.1743530581705; Tue, 01 Apr 2025
- 11:03:01 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743530630; x=1744135430;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=w/pmtjLBaI1GK3c3R4g+2ziQwqKlgj707RNFDRmc4/E=;
+        b=s6XOszOG4kADBfSy+GM0TboJdmLPbc1DDvL0QRB1d4PzEeD9iBKNEd5Bt+11rtZZ3z
+         vcSK3DQmTiDsaOlsK7zmVELDoaiMNRYdN/DqFTy2L2OqhUYNwmQNdG7WXEpVGNIqNL8a
+         NT3FO3W5zlGa3MVefaB8YOJDy7gVJ+ISRLTUSFNstjPkMwquCG/RHaiFFoqDl93tqou5
+         8FycLVaCGxKhJpWaqGCSpeQaDMGnxvJOLGCrw6EpgMCltZSW4Sou1uTAm+sIDqt6BGuU
+         V9yNJradL32cFFMY7cWNyK1DCFY652N7Chk8oz2GHEQYolq0ak2NBmUNHakj84E5rBTa
+         kNnA==
+X-Forwarded-Encrypted: i=1; AJvYcCUEJBhMa/05NXamOjhr95f/KbknVJKhfCnK3VgU7LCpY2849MV+40yft49CC85w/LOib8CelxrnfYA8Y74=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4wsNIAkA5G7AXrVc/LAMc1iBSuFT5PcJS25JAA89alwwPepkj
+	LwZJzRL+Lp2U2diH5ldenYH3LiEChasSae0BzabaARyho3SMYPzlICm6InuKy0w=
+X-Gm-Gg: ASbGnct/WytT/mRIlz0vIpnrywrxuwe6CdW5Zbmnk5RYEYTS9qvcW4HUOAByv7wf52q
+	iGagLtRbyOX4740Rn39u2623rMLkxd9y/EQrsGTgOEyI/DK34F1AYI62pkH4sTHNrvLT8kVz48f
+	IY9QUUE1JwZW5MV8MfPUwzgd+zS4f2RROp47zKhmJwUiB1uvWjuxiJFqruiU2DXKaCyeXGcfZZg
+	RNlAAGfSrdhdmTjmgi93yMosVSyw+0oWkAE3MhVLfi0Eu8nwSda7+EhKlk/V1HN8yCMqruZGB52
+	3xgmTnlHiQFmQXEA5c+xaHdxjYDQkAvGKVnHUNJHqaUiOyoRg7a2cudq8PfNDgIiiwoe2qIwRwI
+	K1z9G+lsq6ykrRlysyJEL534C38gmYypJ5A55cg==
+X-Google-Smtp-Source: AGHT+IFWulk+PKL6z0sywIwGtZBfiIm2z+K2664jV7oKth7BWn/oo0zgj6aMDW6mSS6Zur5TnBRWhA==
+X-Received: by 2002:ac8:7dc8:0:b0:476:b02d:2b4a with SMTP id d75a77b69052e-477ed75af82mr200365901cf.27.1743530629711;
+        Tue, 01 Apr 2025 11:03:49 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-47782a10459sm68534151cf.4.2025.04.01.11.03.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Apr 2025 11:03:49 -0700 (PDT)
+Date: Tue, 1 Apr 2025 14:03:47 -0400
+From: Gregory Price <gourry@gourry.net>
+To: Robert Richter <rrichter@amd.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+	Terry Bowman <terry.bowman@amd.com>
+Subject: Re: [PATCH v2 10/15] cxl/region: Use root decoders interleaving
+ parameters to create a region
+Message-ID: <Z-wqg92rgqY1WY8v@gourry-fedora-PF4VCD3F>
+References: <20250218132356.1809075-1-rrichter@amd.com>
+ <20250218132356.1809075-11-rrichter@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250401132324.27312-1-bsdhenrymartin@gmail.com>
-In-Reply-To: <20250401132324.27312-1-bsdhenrymartin@gmail.com>
-From: Dave Stevenson <dave.stevenson@raspberrypi.com>
-Date: Tue, 1 Apr 2025 18:02:41 +0000
-X-Gm-Features: AQ5f1JqNWcGg680Z3tQAJYQEnY6EuyQA4mTpaPDzPlzakkRAMGdaRw5B6PW0Yrk
-Message-ID: <CAPY8ntAFHW3kiqCnXjFtzL9FnRoQ69v8+3yJ+jR8_W8Bb+6d8A@mail.gmail.com>
-Subject: Re: [PATCH v1] clk: bcm: Add NULL check in raspberrypi_clk_register()
-To: Henry Martin <bsdhenrymartin@gmail.com>
-Cc: mturquette@baylibre.com, sboyd@kernel.org, florian.fainelli@broadcom.com, 
-	bcm-kernel-feedback-list@broadcom.com, popcornmix@gmail.com, 
-	mripard@kernel.org, u.kleine-koenig@baylibre.com, nathan@kernel.org, 
-	linux-clk@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250218132356.1809075-11-rrichter@amd.com>
 
-Hi Henry
+On Tue, Feb 18, 2025 at 02:23:51PM +0100, Robert Richter wrote:
+> Endpoints requiring address translation might not be aware of the
+> system's interleaving configuration. Instead, interleaving can be
+> configured on an upper memory domain (from an endpoint view) and thus
+> is not visible to the endpoint. For region creation this might cause
+> an invalid interleaving config that does not match the CFMWS entries.
+> 
+> Use the interleaving configuration of the root decoders to create a
+> region which bases on CFMWS entries. This always matches the system's
+> interleaving configuration and is independent of the underlying memory
+> topology.
+> 
+> Signed-off-by: Robert Richter <rrichter@amd.com>
+... snip ...
+> @@ -1955,12 +1971,23 @@ static int cxl_port_calc_interleave(struct cxl_port *port,
+>  	if (is_cxl_root(port))
+>  		return 0;
+>  
+> -	rc = find_pos_and_ways(port, ctx->hpa_range, &parent_pos, &parent_ways);
+> +	rc = find_pos_and_ways(port, ctx->hpa_range, &parent_pos, &parent_ways,
+> +			&parent_granularity);
+>  	if (rc)
+>  		return rc;
+>  
+>  	ctx->pos = ctx->pos * parent_ways + parent_pos;
+>  
+> +	if (ctx->interleave_ways)
+> +		ctx->interleave_ways *= parent_ways;
+> +	else
+> +		ctx->interleave_ways = parent_ways;
+> +
+> +	if (ctx->interleave_granularity)
+> +		ctx->interleave_granularity *= ctx->interleave_ways;
+> +	else
+> +		ctx->interleave_granularity = parent_granularity;
+> +
+>  	return ctx->pos;
+>  }
 
-Thanks for the patch.
 
-On Tue, 1 Apr 2025 at 14:23, Henry Martin <bsdhenrymartin@gmail.com> wrote:
->
-> devm_kasprintf() returns NULL when memory allocation fails. Currently,
-> raspberrypi_clk_register() does not check for this case, which results
-> in a NULL pointer dereference.
->
-> Add NULL check after devm_kasprintf() to prevent this issue.
->
-> Fixes: 7dad8a613185 ("clk: bcm: rpi: Give firmware clocks a name")
+The root is always build from the CFMWS, so you don't need to do any
+math, you just need to take the root.  Since the logic calling this will
+always climb to the root, you'll always get the right value.
 
-Nit: It was 93d2725affd6 ("clk: bcm: rpi: Discover the firmware
-clocks") that introduced the devm_kasprintf. 7dad8a613185 only changed
-the thing being printed.
+So I think you just want this
 
-> Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
+--- 
 
-Reviewed-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index fe23dc106956..05b24b008a1b 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -1977,17 +1977,8 @@ static int cxl_port_calc_interleave(struct cxl_port *port,
+                return rc;
 
-> ---
->  drivers/clk/bcm/clk-raspberrypi.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/drivers/clk/bcm/clk-raspberrypi.c b/drivers/clk/bcm/clk-raspberrypi.c
-> index 0e1fe3759530..720acc10f8aa 100644
-> --- a/drivers/clk/bcm/clk-raspberrypi.c
-> +++ b/drivers/clk/bcm/clk-raspberrypi.c
-> @@ -286,6 +286,8 @@ static struct clk_hw *raspberrypi_clk_register(struct raspberrypi_clk *rpi,
->         init.name = devm_kasprintf(rpi->dev, GFP_KERNEL,
->                                    "fw-clk-%s",
->                                    rpi_firmware_clk_names[id]);
-> +       if (!init.name)
-> +               return ERR_PTR(-ENOMEM);
->         init.ops = &raspberrypi_firmware_clk_ops;
->         init.flags = CLK_GET_RATE_NOCACHE;
->
-> --
-> 2.34.1
->
+        ctx->pos = ctx->pos * parent_ways + parent_pos;
+-
+-       if (ctx->interleave_ways)
+-               ctx->interleave_ways *= parent_ways;
+-       else
+-               ctx->interleave_ways = parent_ways;
+-
+-       if (ctx->interleave_granularity)
+-               ctx->interleave_granularity *= ctx->interleave_ways;
+-       else
+-               ctx->interleave_granularity = parent_granularity;
+-
++       ctx->interleave_ways = parent_ways;
++       ctx->interleave_granularity = parent_granularity;
+        return ctx->pos;
+ }
