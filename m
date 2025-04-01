@@ -1,107 +1,124 @@
-Received: from mail-pl1-f193.google.com (mail-pl1-f193.google.com [209.85.214.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1876A4501A;
-	Tue,  1 Apr 2025 13:58:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 067362046AD
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 13:59:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743515914; cv=none; b=fwPryB/Y76hJ1vrzsuNnx1+wJ12aNNnaOwrLR4XcaLWGS2M6UIwrECuLjJOz2aZikSjkUmRpZ9KPBzSMwj8/+3K1FmBAThWFjT4Io9doWfnrnsiJthH8gLGUxuPsIzMy1VToGmgeA24QkHvDavYrfnI/7/z/bXy8jloSnfEI/A8=
+	t=1743515981; cv=none; b=ST9Sg8Qj3dNDdJCr3gpLNs0BHTqbM+YGA3GEYujOjXI9yIvzRGdfNduZdWfjyQRoJ21qJnMSS6e7PwislgJqfxnk8tGWX/3WWwSf1Ha+EXpP1K2xIYXFK3jNeTpgMa5Txx/HaN7bKqJ7mRFUx+KhlnAdvxm9FylGzmv7LGfUrQk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743515914; c=relaxed/simple;
-	bh=Ik9ndR1ZOthTt3RPFJbayzRDoWqFGAwHZ4LyIzPoYyI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=NBhlg1iyrII4+++qTg9RuE73Dk2wA9fpECEoT4bLb7VdH0IissczzIaJW+xzAP2VSx4W+x6ZrgzczCWBocyQQ/YOuICFf9Cwm5XU93ATNOVzYqo44dyDMF4BoK058Dw7zlWTswLBR0gCEvAvCWD2Hn7DkDPMDvL9j5J61ljgJao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K7yfZrBB; arc=none smtp.client-ip=209.85.214.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743515981; c=relaxed/simple;
+	bh=hDLzqRPsoDGnUdms0LQYvaYmGEbT2S3EwsAgwQYZnT4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hfxFEOtlF+mMCCxKgEEmJQLFzqPE6DrIIhdJ8OPnb6HokrmBocPTXRZUI9uErpmj6bdGLto80BKOs5pLvQ9iSosjAvPVXX1eVe93g5Onr8ku55tLdnu4nbpS/kA0vNEk7rsBLai7enNJ63jCV6/7V9xsqNSsTAFyRSiE1Fzk+z8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Nc3qaYli; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K7yfZrBB"
-Received: by mail-pl1-f193.google.com with SMTP id d9443c01a7336-224341bbc1dso93898085ad.3;
-        Tue, 01 Apr 2025 06:58:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743515912; x=1744120712; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=gvs23NKWJWpxifCmG2JMMd+dceGohlJ1NYBE+YufBB0=;
-        b=K7yfZrBBp8X10Vr+cBlTDZfQF+XKB2OsZlrCLko6NBkPoAVn2yfVMBg6UVexnZhp0T
-         RsykDtyepGNgHsVUTpo93WkFGuwA7E8dEMUlLaDbCQBHxEqO8sonQVCJFrukml8ul0W7
-         fUyOw+JcYN1wwji+oiIIkY8dsQcPzoPvIycNU9vsde0BhHC1LdVmYcJMj/Hn1OYOczMT
-         +7wIEuaJvRA7DXm9shnX+4tvWuya5GOX5m8tWXSBSMGoi/GoGtn54y2cT6w24LiCRwd4
-         Ae4Ser3VTkgIHoioNhi9f4dkgS9lYZFSbqOR3k68MSZYXPKCzv7wKlj4nAM3kc14em1C
-         2Cvw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Nc3qaYli"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743515978;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=t2IgA5uO8titoAWyijzoucLkCRmrJQPxxk3pK7glj/g=;
+	b=Nc3qaYli77fk94B2Iltg+UoQtHZMDsV+eV+sHgZsFGEt8ruSABBk+ILPO4INxqj+vm9nKC
+	sqGrMQ8l8jLuk92p2lJTGIkifeqSM0954vTZehYw2WWZ+TGDJvImwEuRHkHGqnPaNcF3bY
+	vbvFfshrHmTEkP/JCu31jisnwENQR+M=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-102-umA22UiMM1KcEZjPnT00Zg-1; Tue, 01 Apr 2025 09:59:37 -0400
+X-MC-Unique: umA22UiMM1KcEZjPnT00Zg-1
+X-Mimecast-MFC-AGG-ID: umA22UiMM1KcEZjPnT00Zg_1743515976
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3913f97d115so2695670f8f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 06:59:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743515912; x=1744120712;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=gvs23NKWJWpxifCmG2JMMd+dceGohlJ1NYBE+YufBB0=;
-        b=JPb/QszxwP+OC000xhOxSJfQogZsCiCTaXbB1+nifKl/8lr4y9Z9ruBEkI3JGMsa2d
-         JvYWqeb9pALzOXyFSrtm/e77khwNkm5Bv3hLQZ1Ec8bOndIwqwWY3kk8oh3BxkKm065e
-         W36/wknor2nFUPw6RI7KGu44i7x+GwkK0PHTDZx6grN8Rcp1bPKuDu4rLQSKGBCVLf29
-         GqIl3u55srB0hnt+5HptwGKjgZPrn/5/aT1R7CIqwnuiKgWaK89y/uhS0fQ0wRMLo/Dj
-         Ljdx1b1XDVi3nv2sI7LvtefbA4lbEhaEOZG+deuotcA3OpaBHDaG+6V477fLKhG4YDrb
-         RONg==
-X-Forwarded-Encrypted: i=1; AJvYcCU7quvZ+eaMRXxRcmcIDBb7H3OvLCnWepePX5eMMbm/YPnC5M/D/fFbx2z9fpg6E27mHWCRqTM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwJX61zPZzfV8EJuan2m1MBj1iRLkFCPVG8FpntqEth6WMvcJm1
-	bNhH9Tu+b0kX7ta07XOca9z/b1Annu1jOW6gafK59D1ZEiQpRwcH
-X-Gm-Gg: ASbGncuMQ/VeVDWGguXt3KeOFKkDSyHIX9AE0XqRzuhco76iYi921CXNBt5V42eaRoI
-	g4uSQLrgXYlpgG0tKBIz3eI2cEihLvCOMr/h89nZfqVYk2fiqZzH/vUr91WfBnb9uTldVcGpA48
-	omEk8jNQwtzBe21du1nOYuaXzP50dyKI4+D60nTYmvsGOEWp4KL64TCxu+YlgZnQJhSXWZJJMJ0
-	9sWFKGxnBvyDqZUC7ARCf3CCxSHtxUJ1ZEcwHylc5OAdwygCpwucqwdmKVOXuy7muJp7d6mOf+p
-	ThKBfliSL6/PfnuyRTLBT2YOmwS0lIkD1lAjQ5Cl9aGw53l6M19i0YMlu4OXEx+eiuWLQGHBp1m
-	X5BJv0w==
-X-Google-Smtp-Source: AGHT+IFe5huXyqUWJr2X0qS753K3KbtPpTRYhcHoKF9r1UMNQ7vm5c8wsTWP9penkOThrq06D6mW9Q==
-X-Received: by 2002:a05:6a00:ac3:b0:736:5544:7ad7 with SMTP id d2e1a72fcca58-739803c0672mr15923478b3a.14.1743515912195;
-        Tue, 01 Apr 2025 06:58:32 -0700 (PDT)
-Received: from henry.localdomain ([111.202.148.167])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73970e1d922sm8923850b3a.37.2025.04.01.06.58.30
+        d=1e100.net; s=20230601; t=1743515976; x=1744120776;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=t2IgA5uO8titoAWyijzoucLkCRmrJQPxxk3pK7glj/g=;
+        b=omW1lIC+ATWgYbESS30e6q+FkjDg9yyN8i8bO7CniLRJnnN2PpcMK6DUDPU9L7mtN9
+         qV1Jb/8MDFdrWliDj19WvsSVs/NLHmQ2hEFM9MKVjTyu05Wj2pXIkXR/yEbal4A+73LX
+         +c099LkzRTaZEC5lSixFLQnszCdwlqkItheAZw8MJy+sL8mPZmYlS6YGp8YcY1A+dK/H
+         e2tk3cDkwBuo65jiLNTbd38GKoNlzA5AxEvEw5fyEc4ThUUGuNMs1r2KAwBHrAXcxQT9
+         +A7WDfRoAca0W3q+XkKT1f5guxOt+d2ZMpT+tZNvkkHwpCZFBvk0yU775hz8jGx4mPom
+         clhA==
+X-Forwarded-Encrypted: i=1; AJvYcCWXqvg39wPqvtNEaC3Ky4eA7I1Aa9x9nC/jw62b4jfNkpPW0PYhoN7m6ES58MxCvak0oA9eR2+llw6ZQ+E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyIZhD05hd9ivu9zwpbVejHixcCSpxgR6Kh8cM2LZaV8L3BYy3G
+	cjaJRfRWS5uVl09CdEUeaoXUDeC9fIFfpsKDxtGRhDHkLR7o67d0oMepOXxXCQxgsJBgtk1Bymv
+	9GK57x+Y43/oD1HE0dAKJrHfk4oSkdgzpOpR3DBc5tOsT3E3E9Vf7ePrWz/QCcw==
+X-Gm-Gg: ASbGncuILhR+0RTxvoMKfCf3pUvW8A1hA3arVjzDcyslJafCh/GjJ6q0j9Xl1g+BZFu
+	CC590WZIaa9VP2LS86U6+vcCPdlLVIQk9HXi7iHUlicRItYsoaMAYhOrjIvrq24AOfb/ajVbb7l
+	7MoGAmJxx0RBQhCBV4XLyPaMdU8xVPrqYpQFS02j7lcbVPuqbOValKyJQS75RfYxgGsAWGsoMxU
+	nl9OCCH1lepscAyuBkfQ8vwJoYESt4chUNgCr+5bC075v+9HLHyeXyYoD/DvFqY+7Mk4+DOxDbx
+	hYaUd9hk7X9vPwjNQ8OjwtfzZYldUOu07Ys2PzKItwgS9hJJcMEbq4uVDJ0=
+X-Received: by 2002:a5d:584c:0:b0:39b:3c96:80df with SMTP id ffacd0b85a97d-39c27ee611bmr75398f8f.11.1743515976253;
+        Tue, 01 Apr 2025 06:59:36 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF09FwfqnRb8UJMujFmXs/QqdYBJeJRX2YI3guWVQi2x8F5XNEe7ScWOGZy7YxSOXZw3qmefg==
+X-Received: by 2002:a5d:584c:0:b0:39b:3c96:80df with SMTP id ffacd0b85a97d-39c27ee611bmr75369f8f.11.1743515975769;
+        Tue, 01 Apr 2025 06:59:35 -0700 (PDT)
+Received: from sgarzare-redhat (host-87-11-6-59.retail.telecomitalia.it. [87.11.6.59])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d82e6adf6sm198134245e9.15.2025.04.01.06.59.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Apr 2025 06:58:31 -0700 (PDT)
-From: Henry Martin <bsdhenrymartin@gmail.com>
-To: arnd@arndb.de,
-	gregkh@linuxfoundation.org
-Cc: linux-kernel@vger.kernel.org,
-	Henry Martin <bsdhenrymartin@gmail.com>,
-	stable@vger.kernel.org
-Subject: [PATCH v2] misc: tps6594-pfsm: Add NULL check in tps6594_pfsm_probe()
-Date: Tue,  1 Apr 2025 21:58:25 +0800
-Message-Id: <20250401135825.28694-1-bsdhenrymartin@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        Tue, 01 Apr 2025 06:59:34 -0700 (PDT)
+Date: Tue, 1 Apr 2025 15:59:26 +0200
+From: Stefano Garzarella <sgarzare@redhat.com>
+To: Cindy Lu <lulu@redhat.com>
+Cc: jasowang@redhat.com, mst@redhat.com, michael.christie@oracle.com, 
+	linux-kernel@vger.kernel.org, virtualization@lists.linux-foundation.org, 
+	netdev@vger.kernel.org
+Subject: Re: [PATCH v8 7/8] vhost: Add check for inherit_owner status
+Message-ID: <d35istatjtnr42x4gwpwlgx627pl3ntqua3kde7fymtotl676i@jxxxkrii6rue>
+References: <20250328100359.1306072-1-lulu@redhat.com>
+ <20250328100359.1306072-8-lulu@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20250328100359.1306072-8-lulu@redhat.com>
 
-devm_kasprintf() returns NULL when memory allocation fails. Currently,
-tps6594_pfsm_probe() does not check for this case, which results in a
-NULL pointer dereference.
+On Fri, Mar 28, 2025 at 06:02:51PM +0800, Cindy Lu wrote:
+>The VHOST_NEW_WORKER requires the inherit_owner
+>setting to be true. So we need to add a check for this.
+>
+>Signed-off-by: Cindy Lu <lulu@redhat.com>
+>---
+> drivers/vhost/vhost.c | 7 +++++++
+> 1 file changed, 7 insertions(+)
 
-Add NULL check after devm_kasprintf() to prevent this issue.
+IMHO we should squash this patch also with the previous one, or do this 
+before allowing the user to change inherit_owner, otherwise bisection 
+can be broken.
 
-Cc: stable@vger.kernel.org # 6.5+
-Fixes: a0df3ef087f8 ("misc: tps6594-pfsm: Add driver for TI TPS6594 PFSM")
-Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
----
-V1 -> V2: Add Cc stable line.
+Thanks,
+Stefano
 
- drivers/misc/tps6594-pfsm.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/misc/tps6594-pfsm.c b/drivers/misc/tps6594-pfsm.c
-index 0a24ce44cc37..0d9dad20b6ae 100644
---- a/drivers/misc/tps6594-pfsm.c
-+++ b/drivers/misc/tps6594-pfsm.c
-@@ -281,6 +281,8 @@ static int tps6594_pfsm_probe(struct platform_device *pdev)
- 	pfsm->miscdev.minor = MISC_DYNAMIC_MINOR;
- 	pfsm->miscdev.name = devm_kasprintf(dev, GFP_KERNEL, "pfsm-%ld-0x%02x",
- 					    tps->chip_id, tps->reg);
-+	if (!pfsm->miscdev.name)
-+		return -ENOMEM;
- 	pfsm->miscdev.fops = &tps6594_pfsm_fops;
- 	pfsm->miscdev.parent = dev->parent;
- 	pfsm->chip_id = tps->chip_id;
--- 
-2.34.1
+>
+>diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+>index ff930c2e5b78..fb0c7fb43f78 100644
+>--- a/drivers/vhost/vhost.c
+>+++ b/drivers/vhost/vhost.c
+>@@ -1018,6 +1018,13 @@ long vhost_worker_ioctl(struct vhost_dev *dev, unsigned int ioctl,
+> 	switch (ioctl) {
+> 	/* dev worker ioctls */
+> 	case VHOST_NEW_WORKER:
+>+		/*
+>+		 * vhost_tasks will account for worker threads under the parent's
+>+		 * NPROC value but kthreads do not. To avoid userspace overflowing
+>+		 * the system with worker threads inherit_owner must be true.
+>+		 */
+>+		if (!dev->inherit_owner)
+>+			return -EFAULT;
+> 		ret = vhost_new_worker(dev, &state);
+> 		if (!ret && copy_to_user(argp, &state, sizeof(state)))
+> 			ret = -EFAULT;
+>-- 
+>2.45.0
+>
 
