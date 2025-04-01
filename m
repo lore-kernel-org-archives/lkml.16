@@ -1,96 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1E1C215178;
-	Tue,  1 Apr 2025 23:08:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A2EF1E7C03
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 23:10:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743548904; cv=none; b=fmPyvTZXzs8rrZlnZOwRkxpzSJG0va6X7I551GOu/87j0OG29SxQWlyWmd+n1aJK/lrRGtfLW2+DS/DSF7Pz72OkVZHI2ydIRgOl6wb8zjrHX5h2+YGN+p/lcBJNFCwh/78kL2cq8dCrDXJMHCpzMq2Zr07d4Y7xk0qaPF03f54=
+	t=1743549015; cv=none; b=ecH2J1rPh0RIhS+w1VbUUCcG4qHis2TvcU2fPlz4Hq20yX0n/zRLfoTK6ZDYqe5WvPw1MxsI5vWVNERcWBLhVR7wiC9BO7Istzv00JwX4znAtyjLTtt9YaXsMzYzDlr7S6b/bCZMhTfYmXbtSI4vCaOvpQ0DphzVi3LrOC2Q8z8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743548904; c=relaxed/simple;
-	bh=K7gVs9G1yl1ZQ48ZWHwRC7lW+9mYi+4pcNf/trZ31Kg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W3IDMjSAyHRlfhEQvNSSX6ibOs7ixHCtzJ0CCDxegLlWksLRy5k8Je8MlPg8DpoAC0y+sopodf11uhcMhvBIyRaySLhzuIuT8Qd18N6Klyijt6zq4trHkhD65HeDaDL+qth56BIm8AGMEoKLNGhGb+q5OIw9p18xyL2QsCOCJX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jTKc5/qK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743549015; c=relaxed/simple;
+	bh=ArgquqCkjTlx8ZEocnVlllQn0k30tEKp0YZkXXMU5Gg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kKJ8vHPQkgvO3WT8vNWg1VjFf3X+2Nr03QQOTeTu/vta3MliHu7pHWdAlHF9+urpAOP4EySWkru4Sicy+x00WGvyLJutL2h32LNUnVfWJAi4UHKGVeK/hmx7OpMkpLuIizZFxOf7XXP4/RxItQ4DwiiA6FX+qzC+O9189+M0zp0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wkennington.com; spf=none smtp.mailfrom=wkennington.com; dkim=pass (2048-bit key) header.d=wkennington-com.20230601.gappssmtp.com header.i=@wkennington-com.20230601.gappssmtp.com header.b=YM4XhsGl; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wkennington.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=wkennington.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jTKc5/qK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BB78C4CEE4;
-	Tue,  1 Apr 2025 23:08:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743548903;
-	bh=K7gVs9G1yl1ZQ48ZWHwRC7lW+9mYi+4pcNf/trZ31Kg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jTKc5/qK4CKBIz2EvhGfP1gRdoZqJvWZwqPhpDY1+tiIhwP1SErfny34FMaZrgrLT
-	 eaZBS6xlgykLN6AuYxrSjk0UR5HpeHe+HaeVLH532aYPIK3L/NOowvZ6PPZXBfz+7u
-	 MwJUJPrghB6GZOkdU0a8diyTBMV8nWNR9EZPTc5N9id3fuR1kcPZakF5HcExXSOuvK
-	 RSK7gON3QPVgBmLDwttXgKpPKGxyHHjuDb5RCSblASIen9yIwXKg9EZ5AttBfs+CWr
-	 bumFJxJanFeG8XdA31YLIfP/5ZDxWkqRxp4uM+C3ehakuQHZa8bgmXPCa0q0fkBrFT
-	 cuColpTfpW1Bw==
-Date: Tue, 1 Apr 2025 18:08:22 -0500
-From: Rob Herring <robh@kernel.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Francesco Dolcini <francesco@dolcini.it>,
-	Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Farouk Bouabid <farouk.bouabid@cherry.de>,
-	Quentin Schulz <quentin.schulz@cherry.de>,
-	Francesco Dolcini <francesco.dolcini@toradex.com>,
-	linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] dt-bindings: hwmon: amc6821: add fan and PWM
- output
-Message-ID: <20250401230822.GA43191-robh@kernel.org>
-References: <20250331155229.147879-1-francesco@dolcini.it>
- <20250331155229.147879-2-francesco@dolcini.it>
- <20250401-boisterous-teal-bison-533b01@krzk-bin>
+	dkim=pass (2048-bit key) header.d=wkennington-com.20230601.gappssmtp.com header.i=@wkennington-com.20230601.gappssmtp.com header.b="YM4XhsGl"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-22622ddcc35so47472625ad.2
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 16:10:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=wkennington-com.20230601.gappssmtp.com; s=20230601; t=1743549010; x=1744153810; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:reply-to:message-id:date
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=HJoGY0zt2NxjVkfzNkoD0uw5cIldUNLmTUrnr2dqKdI=;
+        b=YM4XhsGl5ojT8060Pjb4hlvOT8urcdXU97N2ktfMwmhUHrtJVT1vVZ+NLTc6gkwnia
+         aow23akao8z9lx2X01DCznb1Z4eaFwetgMdUrs03OAcQ/etvX8uI896DWclFj1PQl++X
+         mVduauIZgSOLIWPaKkGa4sKBPTk2kgjf+BedrclNNTjMZ7RFlTMWsKFf6rjpqN/EzmGd
+         q3km5tpwbRXKxidcN9i5DIs5U5+Pb6elAwGcE4RX7tfjoV7PThXH6Bj6bnXjMMOnQZoV
+         0YJ2bnLSj/jxda2R3RIBh4OS1rAxvn4/ynexf9Bj9kkZZrhUj8AjrmUFxBe4ew1IA/4w
+         mabA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743549010; x=1744153810;
+        h=content-transfer-encoding:mime-version:reply-to:message-id:date
+         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HJoGY0zt2NxjVkfzNkoD0uw5cIldUNLmTUrnr2dqKdI=;
+        b=k6QpuIZ7lwqzxuBSrdEV5C9grtkn3nOhW/gmSlTwOPxl88pUg3U+fs+/R3GoCjkanF
+         dvLUHZIqTHzHacrmKa++/wNacXYndxi+7xvSyZCZisvbCEGYjmHSkigWmV+W/thdKADj
+         5vuWRnjsQdMgJLHmebvRotdKzwGjWeB7GQph7rQJ1jK8tPQ5KXmMGiSKURdmV0XyS2PZ
+         Owiy84KLAj9HyKKFohondfHPO1fm/K5viTeJN6aMGgDXuheWdhPZMx2AUzPDYDO9FzSs
+         lvZZBuv6ep44BNf7YeNos9LBQqSDNjqm93ulcO3W4r7LaZAR/NoawtEZTDEcxuVbpUbn
+         3D/w==
+X-Forwarded-Encrypted: i=1; AJvYcCVpAZ6dMC5jp2mGt71ZyUg3WGgWfEghneUHLO9wBd5glBa0z8JuIWjzjH2OdnK71c3F2YFtryqT4Ss10oU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz2Owtlv5spPDnMEP/Z4iPAoSW3hfA2uh9mX9SHVjYCJ2wl1/XX
+	1M+0bc1TyFoinVe3hxeDnmqZEWfGxQNS7PpibDpvRwregGGHMQH7Br3nlR1aNB4=
+X-Gm-Gg: ASbGncvN2qH+O1pA5UlJ2NULAVqRw+dS6nFyncV9/jJ42m6A6gT9PgYr8/glcAZ8G6X
+	Gmv5iebnfUpcVG0dgcNa4mixiAfK24DF9q6qrjeV5bF19BHvWMTeGUxn4hdcXZ09aIgS8KVgaZw
+	+MFa2sKVeZEqx9xFEtvrUWPRldRvXCXLycdOlnAyPvN/eoExRRg90w9op+X7LZchgqUwIU1c5S+
+	9BDOvwmWDd8lbvVQrQcnvjC5vjgBSsY5yr34mgRJJkuC2K/TmhmWff6/q6uy0jPLzvhw23OZMQ3
+	5BdixPKo6ByDzFWOs16gWuKuBEHNwkKSjKqHuMrvvTeFuIEwGwq9g4Uepx7pMm4vJFRZZ8Yddjl
+	N280ge+i0EX0nbJOw/gyqFsccfSTpwn8=
+X-Google-Smtp-Source: AGHT+IG/6yrvEy0DucEk+7yGDoGxvKtVhd6CgHHuqZC1H0LHR/81r26V6cKIRQYMnCllxZ56ye797g==
+X-Received: by 2002:a17:902:db0d:b0:224:b60:3ce0 with SMTP id d9443c01a7336-2296c603927mr2757295ad.5.1743549010472;
+        Tue, 01 Apr 2025 16:10:10 -0700 (PDT)
+Received: from wak-linux.svl.corp.google.com ([2a00:79e0:2e5b:9:895:611e:1a61:85c1])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291f1cf170sm95176925ad.148.2025.04.01.16.10.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Apr 2025 16:10:10 -0700 (PDT)
+From: "William A. Kennington III" <william@wkennington.com>
+To: Tomer Maimon <tmaimon77@gmail.com>,
+	Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	openbmc@lists.ozlabs.org,
+	"William A. Kennington III" <william@wkennington.com>
+Subject: [PATCH v2] ARM: dts nuvoton: Add EDAC node
+Date: Tue,  1 Apr 2025 16:10:01 -0700
+Message-ID: <20250401231001.3202669-1-william@wkennington.com>
+X-Mailer: git-send-email 2.49.0.472.ge94155a9ec-goog
+Reply-To: 20240930214659.193376-1-william@wkennington.com
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250401-boisterous-teal-bison-533b01@krzk-bin>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 01, 2025 at 08:13:14AM +0200, Krzysztof Kozlowski wrote:
-> On Mon, Mar 31, 2025 at 05:52:28PM +0200, Francesco Dolcini wrote:
-> > From: Francesco Dolcini <francesco.dolcini@toradex.com>
-> > 
-> > Add properties to describe the fan and the PWM controller output.
-> > 
-> > Link: https://www.ti.com/lit/gpn/amc6821
-> > Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
-> > ---
-> > v3:
-> >  - explicitly describe the fan, use standard PWM and FAN bindings
-> >  - pwm.yaml cannot be referenced, because of the $nodename pattern that is
-> >    enforced there
-> > v2: https://lore.kernel.org/all/20250224180801.128685-2-francesco@dolcini.it/
-> >  - no changes
-> > v1: https://lore.kernel.org/all/20250218165633.106867-2-francesco@dolcini.it/
-> > ---
-> >  .../devicetree/bindings/hwmon/ti,amc6821.yaml      | 14 +++++++++++++-
-> >  1 file changed, 13 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/hwmon/ti,amc6821.yaml b/Documentation/devicetree/bindings/hwmon/ti,amc6821.yaml
-> > index 5d33f1a23d03..94aca9c378e6 100644
-> > --- a/Documentation/devicetree/bindings/hwmon/ti,amc6821.yaml
-> > +++ b/Documentation/devicetree/bindings/hwmon/ti,amc6821.yaml
-> > @@ -28,6 +28,13 @@ properties:
-> >    i2c-mux:
-> >      type: object
-> >  
-> > +  fan:
-> > +    $ref: fan-common.yaml#
-> > +    unevaluatedProperties: false
-> 
-> Why do you need the child, instead of referencing fan-common in the top
-> level?
+We have the driver support code, now we just need to expose the device
+node which can export the EDAC properties for the system memory
+controller. Tested on real hardware to verify that error counters show
+up.
 
-Because shockingly a fan controller and a fan are 2 different pieces of 
-h/w. It took *years* for this advancement to come to fruition.
+Signed-off-by: William A. Kennington III <william@wkennington.com>
+---
+V1 -> V2: Fixed compatible string that got truncated
 
-Rob
+ arch/arm/boot/dts/nuvoton/nuvoton-common-npcm7xx.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/arch/arm/boot/dts/nuvoton/nuvoton-common-npcm7xx.dtsi b/arch/arm/boot/dts/nuvoton/nuvoton-common-npcm7xx.dtsi
+index 868454ae6bde..c7880126cc78 100644
+--- a/arch/arm/boot/dts/nuvoton/nuvoton-common-npcm7xx.dtsi
++++ b/arch/arm/boot/dts/nuvoton/nuvoton-common-npcm7xx.dtsi
+@@ -122,6 +122,13 @@ clk: clock-controller@f0801000 {
+ 			clocks = <&clk_refclk>, <&clk_sysbypck>, <&clk_mcbypck>;
+ 		};
+ 
++		mc: memory-controller@f0824000 {
++			compatible = "nuvoton,npcm750-memory-controller";
++			reg = <0xf0824000 0x1000>;
++			interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
++			status = "disabled";
++		};
++
+ 		gmac0: eth@f0802000 {
+ 			device_type = "network";
+ 			compatible = "snps,dwmac";
+-- 
+2.49.0.472.ge94155a9ec-goog
+
