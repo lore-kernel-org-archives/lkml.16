@@ -1,36 +1,88 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E0D72AEFE;
-	Tue,  1 Apr 2025 09:14:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3FF31EB1AB
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 09:16:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743498869; cv=none; b=MeUiOFaeVfgvNg1rDzBnHqG/o6zUgq/HZ8sHtrbDMu0+MKVDHmr7/0U/K+HrXkdhH6ZrkmKWAfxbk3dhMQeekrYbpaME6k1eZzFaMyPQjyEof15khBG61WmU/NVEd31jOezoaI8CRoNH+cAvEk5tnlq0u5dVK7uR43suxFCi19w=
+	t=1743498987; cv=none; b=A5uo28ZnWJZ8XivQPRwwTjToParWTHuKa8ZQgZJSHUP+P26zCoywl/lWhvI2MfZMy8nN1oxingIaxKcplOTwnBLO4Hmq4BVNXiojvIuaw7X8kKR36a6nW7Gstt69F4adEs0hmLM+9L8kUM9Ihuk8SFMSknxex4BV61rRPsmLh3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743498869; c=relaxed/simple;
-	bh=4A3rvVF9aE2vaR2QWrgljQmOr0ua8PY3wrAprQQTqac=;
+	s=arc-20240116; t=1743498987; c=relaxed/simple;
+	bh=+nik7Tvg/51eI/Ya5TbSY9360OoLrYMzidLK4vZ8VJg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JME3KEG+hO4RUvtbHTEibOkmBblESLATPgbTkm2h5Pi9jPDwCGwrZFkdMSPwoxmaJOYYMCA1vofObJ9nvrrVb8d7LKkb802HH1H196NCMeajuDj8ggHjM99vqXOem0ET0SCESQ2x6n8Skn3GUiJd0PXY7XfpDlp+WFxu1JgLYvs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 14EAF14BF;
-	Tue,  1 Apr 2025 02:14:31 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 367B13F694;
-	Tue,  1 Apr 2025 02:14:27 -0700 (PDT)
-Date: Tue, 1 Apr 2025 10:14:22 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: Ian Rogers <irogers@google.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	James Clark <james.clark@linaro.org>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf tests switch-tracking: Fix timestamp comparison
-Message-ID: <20250401091422.GA115840@e132581.arm.com>
-References: <20250331172759.115604-1-leo.yan@arm.com>
- <CAP-5=fVsgahBhOEOac52PmL0V+n1jqAxzf7n9PVWgWsxq9TvgQ@mail.gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=RK/1uHLW5P6qzs9Dtrc9HQZUneECeg292AInfKFaYF7RkvbwelduePXj4bjDAW2dULWbdI+c88Q+Jh3M27ixC+FzXisWQ8g6+7NCanGVr1S97kYdfrgi82tmAVpf0l52VPP0P4vrnWf3VaNSPbtVNDuFocZoGIPzO0/QtOkfKGk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=WMz+80oi; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Duab3wO6; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=WMz+80oi; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Duab3wO6; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="WMz+80oi";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Duab3wO6";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="WMz+80oi";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Duab3wO6"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 1B2CF21163;
+	Tue,  1 Apr 2025 09:16:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1743498983; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lzwqT88FUUmuP4AeS3GXYNARxly+cJCGN2uYTtENPOI=;
+	b=WMz+80oiWTnt+wgSYRY3BWpRfzNbsDh+xtMUG6fYoyjnefOGmeNfdAcqABiGELQ7sWq6aO
+	In6LzW2Bhd0qgCmdZcElCQ5Vzge+cwsK54/wDpktAPM8PXvlqVdoSuQXGdJCnY+OzHA0w5
+	DF4tLtG1Xg4XutHZSKCl8FcTvoKFp/k=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1743498983;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lzwqT88FUUmuP4AeS3GXYNARxly+cJCGN2uYTtENPOI=;
+	b=Duab3wO6fcVOjauoKDE5fxUOXyv1I9nCe1GyAjkpaacwgQEpQqojg6Juf/XIXFB21dY6q9
+	g729rfSXpE/uewAg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1743498983; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lzwqT88FUUmuP4AeS3GXYNARxly+cJCGN2uYTtENPOI=;
+	b=WMz+80oiWTnt+wgSYRY3BWpRfzNbsDh+xtMUG6fYoyjnefOGmeNfdAcqABiGELQ7sWq6aO
+	In6LzW2Bhd0qgCmdZcElCQ5Vzge+cwsK54/wDpktAPM8PXvlqVdoSuQXGdJCnY+OzHA0w5
+	DF4tLtG1Xg4XutHZSKCl8FcTvoKFp/k=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1743498983;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lzwqT88FUUmuP4AeS3GXYNARxly+cJCGN2uYTtENPOI=;
+	b=Duab3wO6fcVOjauoKDE5fxUOXyv1I9nCe1GyAjkpaacwgQEpQqojg6Juf/XIXFB21dY6q9
+	g729rfSXpE/uewAg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0919913691;
+	Tue,  1 Apr 2025 09:16:23 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 7pHmAeeu62fwegAAD6G6ig
+	(envelope-from <jack@suse.cz>); Tue, 01 Apr 2025 09:16:23 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id A5A7EA07E6; Tue,  1 Apr 2025 11:16:18 +0200 (CEST)
+Date: Tue, 1 Apr 2025 11:16:18 +0200
+From: Jan Kara <jack@suse.cz>
+To: Christian Brauner <brauner@kernel.org>
+Cc: linux-fsdevel@vger.kernel.org, jack@suse.cz, 
+	Ard Biesheuvel <ardb@kernel.org>, linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	James Bottomley <James.Bottomley@hansenpartnership.com>, mcgrof@kernel.org, hch@infradead.org, david@fromorbit.com, 
+	rafael@kernel.org, djwong@kernel.org, pavel@kernel.org, peterz@infradead.org, 
+	mingo@redhat.com, will@kernel.org, boqun.feng@gmail.com
+Subject: Re: [PATCH 1/6] ext4: replace kthread freezing with auto fs freezing
+Message-ID: <z3zqumhqgzq3agjps4ufdcqqrgip7t7xtr6v5kymchkdjfnwhp@i76pwshkydig>
+References: <20250401-work-freeze-v1-0-d000611d4ab0@kernel.org>
+ <20250401-work-freeze-v1-1-d000611d4ab0@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -39,24 +91,174 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAP-5=fVsgahBhOEOac52PmL0V+n1jqAxzf7n9PVWgWsxq9TvgQ@mail.gmail.com>
+In-Reply-To: <20250401-work-freeze-v1-1-d000611d4ab0@kernel.org>
+X-Spam-Score: -2.30
+X-Spamd-Result: default: False [-2.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_RCPT(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[17];
+	RCVD_COUNT_THREE(0.00)[3];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[vger.kernel.org,suse.cz,kernel.org,hansenpartnership.com,infradead.org,fromorbit.com,redhat.com,gmail.com];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.com:email]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On Mon, Mar 31, 2025 at 01:18:31PM -0700, Ian Rogers wrote:
+On Tue 01-04-25 02:32:46, Christian Brauner wrote:
+> From: Luis Chamberlain <mcgrof@kernel.org>
+> 
+> The kernel power management now supports allowing the VFS
+> to handle filesystem freezing freezes and thawing. Take advantage
+> of that and remove the kthread freezing. This is needed so that we
+> properly really stop IO in flight without races after userspace
+> has been frozen. Without this we rely on kthread freezing and
+> its semantics are loose and error prone.
+> 
+> The filesystem therefore is in charge of properly dealing with
+> quiescing of the filesystem through its callbacks if it thinks
+> it knows better than how the VFS handles it.
+> 
+> The following Coccinelle rule was used as to remove the now superfluous
+> freezer calls:
+> 
+> make coccicheck MODE=patch SPFLAGS="--in-place --no-show-diff" COCCI=./fs-freeze-cleanup.cocci M=fs/ext4
+> 
+> virtual patch
+> 
+> @ remove_set_freezable @
+> expression time;
+> statement S, S2;
+> expression task, current;
+> @@
+> 
+> (
+> -       set_freezable();
+> |
+> -       if (try_to_freeze())
+> -               continue;
+> |
+> -       try_to_freeze();
+> |
+> -       freezable_schedule();
+> +       schedule();
+> |
+> -       freezable_schedule_timeout(time);
+> +       schedule_timeout(time);
+> |
+> -       if (freezing(task)) { S }
+> |
+> -       if (freezing(task)) { S }
+> -       else
+> 	    { S2 }
+> |
+> -       freezing(current)
+> )
+> 
+> @ remove_wq_freezable @
+> expression WQ_E, WQ_ARG1, WQ_ARG2, WQ_ARG3, WQ_ARG4;
+> identifier fs_wq_fn;
+> @@
+> 
+> (
+>     WQ_E = alloc_workqueue(WQ_ARG1,
+> -                              WQ_ARG2 | WQ_FREEZABLE,
+> +                              WQ_ARG2,
+> 			   ...);
+> |
+>     WQ_E = alloc_workqueue(WQ_ARG1,
+> -                              WQ_ARG2 | WQ_FREEZABLE | WQ_ARG3,
+> +                              WQ_ARG2 | WQ_ARG3,
+> 			   ...);
+> |
+>     WQ_E = alloc_workqueue(WQ_ARG1,
+> -                              WQ_ARG2 | WQ_ARG3 | WQ_FREEZABLE,
+> +                              WQ_ARG2 | WQ_ARG3,
+> 			   ...);
+> |
+>     WQ_E = alloc_workqueue(WQ_ARG1,
+> -                              WQ_ARG2 | WQ_ARG3 | WQ_FREEZABLE | WQ_ARG4,
+> +                              WQ_ARG2 | WQ_ARG3 | WQ_ARG4,
+> 			   ...);
+> |
+> 	    WQ_E =
+> -               WQ_ARG1 | WQ_FREEZABLE
+> +               WQ_ARG1
+> |
+> 	    WQ_E =
+> -               WQ_ARG1 | WQ_FREEZABLE | WQ_ARG3
+> +               WQ_ARG1 | WQ_ARG3
+> |
+>     fs_wq_fn(
+> -               WQ_FREEZABLE | WQ_ARG2 | WQ_ARG3
+> +               WQ_ARG2 | WQ_ARG3
+>     )
+> |
+>     fs_wq_fn(
+> -               WQ_FREEZABLE | WQ_ARG2
+> +               WQ_ARG2
+>     )
+> |
+>     fs_wq_fn(
+> -               WQ_FREEZABLE
+> +               0
+>     )
+> )
+> 
+> @ add_auto_flag @
+> expression E1;
+> identifier fs_type;
+> @@
+> 
+> struct file_system_type fs_type = {
+> 	.fs_flags = E1
+> +                   | FS_AUTOFREEZE
+> 	,
+> };
+> 
+> Generated-by: Coccinelle SmPL
+> Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
+> Link: https://lore.kernel.org/r/20250326112220.1988619-5-mcgrof@kernel.org
+> Signed-off-by: Christian Brauner <brauner@kernel.org>
+> ---
+>  fs/ext4/mballoc.c | 2 +-
+>  fs/ext4/super.c   | 3 ---
+>  2 files changed, 1 insertion(+), 4 deletions(-)
+> 
+> diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
+> index 0d523e9fb3d5..ae235ec5ff3a 100644
+> --- a/fs/ext4/mballoc.c
+> +++ b/fs/ext4/mballoc.c
+> @@ -6782,7 +6782,7 @@ static ext4_grpblk_t ext4_last_grp_cluster(struct super_block *sb,
+>  
+>  static bool ext4_trim_interrupted(void)
+>  {
+> -	return fatal_signal_pending(current) || freezing(current);
+> +	return fatal_signal_pending(current);
+>  }
 
-[...]
+This change should not happen. ext4_trim_interrupted() makes sure FITRIM
+ioctl doesn't cause hibernation failures and has nothing to do with kthread
+freezing...
 
-> I'm reminded of a Java check I wrote for this:
+Otherwise the patch looks good.
 
-Nice short article.
-
-> In clang -Wshorten-64-to-32 looks to cover this. I'll see if we can
-> clean those warnings up a bit.
-
-I checked a bit and seems GCC has no this flag, but it makes sense for
-me to enable the flag for Clang.
-
-> Reviewed-by: Ian Rogers <irogers@google.com>
-
-Thanks a lot, Ian.
-
-Leo
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
