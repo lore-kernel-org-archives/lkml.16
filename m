@@ -1,99 +1,103 @@
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [212.227.15.3])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7811520AF7B
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 15:36:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 174D2EACE;
+	Tue,  1 Apr 2025 15:37:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743521778; cv=none; b=iupql2MG7HnWytS68KTuOHhdyXZLDPCTsPuo4FuIzi0edh8+nO2bv4rTI1aCrzc/UhoQLvFXPBhYlY2mbu+uCEcn8HfTSV8BVuHKy6xlYLbJEIp2Yp93jen5daYhUaFU/N6UsTPbvs8d9Nsrrl06MWzdI4kqVQws2uQCTFbpQEs=
+	t=1743521866; cv=none; b=c0DGWKZ3JtT/9gwnuMvt+BZlCbV4wA/lJzIj1K8ozLNBIjbA4HHSfqbuaoyIuXEXm45TFywH6+Y+CYI+YbDvxSJc3erjVUaieWQwjcclkr4ahHL9auteKqW4yZgtKXAU0F2yn5H3aaIwVqLbXmYYKElmtHGJ1S6/bZYlos9wOhM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743521778; c=relaxed/simple;
-	bh=WjBgEYRtDf+VXzdcMzZI5eDklNvn6/aE6Z39PTjvRE8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZdWWNozBbXygzFda/AKq6/wrAgm3dKYIoqrot3v69L1st8/ZReryRSPj2P4BkYTdcHun+xp0ZAKtsJENFNpHCmoVpAbHjvqLDWqH0QQ1PABCFKaJ+nRkXDJqcaV7WP0AiAPUXeV6LKSQLqBWFoVd6K7B3SmwIcNZn5zbzolN3Ko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=m3AUBxx3; arc=none smtp.client-ip=209.85.222.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+	s=arc-20240116; t=1743521866; c=relaxed/simple;
+	bh=aKe+UrjQqsBcfIGYc6KdcxoN+1wJZX+CaVO+RJM2vjk=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=saG1e2A1GzKcheIUvBi5by/XSlRe0PTkp4vV2bdmtMWut5dqEV6IgfA5S+WS3tGdRDYOP2n0Y31XzcLiBetXqDqVGQFiXuvt5oiFEa/DWYrNVzQhRyZf/5ZSfmUUzYvSLflB3sdeqmWr+oUbIXyoXXJkubSJi7cioKlk+WSxgAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=j8lLEcLt; arc=none smtp.client-ip=212.227.15.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="m3AUBxx3"
-Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7c56321b22cso529194585a.1
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 08:36:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1743521774; x=1744126574; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=WjBgEYRtDf+VXzdcMzZI5eDklNvn6/aE6Z39PTjvRE8=;
-        b=m3AUBxx3xhRDmxtypLM4Pt54pD7o/KygxmczlsZH9r98bh7nljPrapMxgz3x8DxeOg
-         z4k10ulbzkffTBYiEGEL/FL9mg63VEG4uJlwdJeWBDUkysZAY0bxadyqOrulZzuSnbqK
-         0A/kYbYZoDqvZG36C9XlQ4VxVcBUnt0lKueY7/mmAidCSmEG4xrsQZbiKoIt3bem+HZq
-         H79/1SGoBMhSCVZYyWHkXf4RFTU6RwgIbd8gGIrfpU9y5N7073mQrmWhAcQtB3jPJT+F
-         82VdDRTZZWF6yWcppe0gRD4MucCkwjuhFCSA+daUx4KyrL7kQf1OOWAuZyELEV2s3ytO
-         fMEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743521774; x=1744126574;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WjBgEYRtDf+VXzdcMzZI5eDklNvn6/aE6Z39PTjvRE8=;
-        b=SjIheWVf/CyayhdT54vrJOEpEvCbmOVHe31Xue130hgFjxZ/wr1Bus+USeMcVTJE0b
-         y+nrnVUCs/zJkHOtyFeyL9qnTClAfLGYUuoGg0isxNuAPjuNYunSMUu0dZSgby5+QWx0
-         QCcXqidQ3c4znjjfFm57sQtw1iBNVHM0LWqsPUJ8ZJfpepPP4VauwuHTYhJlbGfcphXL
-         XsDknIiMAXP6V4JdX6bCNUSTjPMIBmZ8VSGwLSeCuk2ZhodC2zhRGR2qN6iGteioqf2V
-         0D94RCKFXGuNWrwWwzVMWyzj42hARzxAcrNkQVPeSJ1iPe/T6PoVIgE/Xj0Ln33dp9KB
-         74ng==
-X-Forwarded-Encrypted: i=1; AJvYcCVZkFwoxSp/llOSekIdZEb80ZrbHb0cRLJGkFqbTiHBiWNi8ng8h2fp3J8vCcYfAcraerbtcgKgd+hun5U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzOPA5tA3sCKMeFwbM4OBbAqWmS7XnjmajwbNWxCoIKtxoanmYn
-	43g8GCRaX1PTS+9ugG2Yzz5zQhv4skzBeLssW6zGMCDhbXD8riE8+UIyVUHbtjs=
-X-Gm-Gg: ASbGnctWoqk+ODW+DqPCDrGE8ed+xoRkzJ3AbOpc7S64Q3lLY+0G1CIOJf26nUTyk5f
-	r8A6nN+rGyL3ZnQmXfsLfaFwWd8AhjUWFZqSBLtNZKbDOVUeK+ijMQRxN+BVMJdtxtIOa8gxuko
-	Vd1rsqhOtPJqfwK3JcN7B02g3JyPwjq/rI6Effvw+2HnrQVuvvefXSbpSYjvmLG8Dm9fM06yfb+
-	zfp1Udo/j+/ggp28u/JrtAQPwNRCSR5QXr7qU34E83ovE28ryiUetkMdGVxJd/EnO//27UweZXW
-	3BvBOshK1K2YLVk4i7jfbNLw5cBxvP3WqKhbENnsRDSVNYtfNYjkcZljapjQJYGac2jcDtJb1Bc
-	16Jer3DWCrANmswwYVeNSOVMbewAQ2RjXtA==
-X-Google-Smtp-Source: AGHT+IEZcbbkp6FMant09E2KObVJvCKVBbin+tpe470FPzBoJeASmhbh4JQZP0IGWuOjBWsuWH+nzQ==
-X-Received: by 2002:a05:620a:44c2:b0:7be:73f6:9e86 with SMTP id af79cd13be357-7c762a3f294mr49012785a.20.1743521774336;
-        Tue, 01 Apr 2025 08:36:14 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-167-219-86.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.219.86])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c5f7684ff6sm668661585a.33.2025.04.01.08.36.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Apr 2025 08:36:13 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1tzdev-00000001M65-1n6W;
-	Tue, 01 Apr 2025 12:36:13 -0300
-Date: Tue, 1 Apr 2025 12:36:13 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Patrisious Haddad <phaddad@nvidia.com>
-Cc: Mark Bloch <mbloch@nvidia.com>, Arnd Bergmann <arnd@kernel.org>,
-	Leon Romanovsky <leon@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	Tariq Toukan <tariqt@nvidia.com>, Jakub Kicinski <kuba@kernel.org>,
-	Moshe Shemesh <moshe@nvidia.com>, linux-rdma@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] RDMA/mlx5: hide unused code
-Message-ID: <20250401153613.GH186258@ziepe.ca>
-References: <20250328131022.452068-1-arnd@kernel.org>
- <20250328131513.GB20836@ziepe.ca>
- <a754f37e-d9ea-4fba-820e-cc56204d954f@nvidia.com>
- <84bf60b7-2d7e-4549-8e81-bc35efeef069@nvidia.com>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="j8lLEcLt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1743521858; x=1744126658; i=markus.elfring@web.de;
+	bh=brNkqSrtHqItVMdw8H2joMsIf58KrB5AZqOKMhsX514=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=j8lLEcLtbgNAcCc+uyijihHxt/z3dn/2YmwuCnhNjSKTHFOS981rosw0FzP6Vxs8
+	 T/ZtZB90u+kyosAVIPV+fo79zBC6fi1mrN2E6IjjKnQohbDq7QnRqY0eCR7qhn56h
+	 SsmFQ0Ivo3zPsT0h1bZL1BlWXBIT+Wch4+HFk6TnQ4KbVeejqFkWM/wU+2zjXFIn+
+	 UzSaW7JJfeW5S3VpUKTK0mrzfQz9MpeayjmfMVkeEPJmelb4z6qRP/rB24ivzv9cP
+	 VfWqu97UwSjrYZJp8QqBq7oVKDfVgTHCYSsY2rt6KCDB+a4+KkQXYNUa7qW38vL6+
+	 SLnSXYCxWnYUOAXRuA==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.70.54]) by smtp.web.de (mrweb005
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1MiMAE-1tUS8N3nj4-00iffO; Tue, 01
+ Apr 2025 17:37:37 +0200
+Message-ID: <f85c219e-2463-4d59-84d4-5807bbcb1a41@web.de>
+Date: Tue, 1 Apr 2025 17:37:18 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <84bf60b7-2d7e-4549-8e81-bc35efeef069@nvidia.com>
+User-Agent: Mozilla Thunderbird
+To: Henry Martin <bsdhenrymartin@gmail.com>, netdev@vger.kernel.org
+Cc: LKML <linux-kernel@vger.kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>,
+ Michael Grzeschik <m.grzeschik@pengutronix.de>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>
+References: <20250401145330.31817-1-bsdhenrymartin@gmail.com>
+Subject: Re: [PATCH v2] arcnet: Add NULL check in com20020pci_probe()
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20250401145330.31817-1-bsdhenrymartin@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:oO/FAZFSZEiM+ASYPQSAF5CZcgIgII08lNNbsegTNzvR3wO7tkd
+ NbnovQN5gSMI07DMZYkYnFYzH8pjhElqQ9MYYzstBo8JCAmWdcd5JHPWOb17OAZxEiq/x/+
+ NH0Q4GUR5mOQEvwgn22ZaqEKcFdmIn0szULtMPYADGWU+FQkAc6QymVbkMhXDq0/bmOJ9WH
+ oL6/QZMrtv5Z74fyxmLuw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:0vquusVhoJ4=;pgtAkuFf1nkQQL4utwa2fnBREd4
+ NmTz2WBP+s8068eQZPCHOfKpHYaWTKGniVymEY9SsqL6f9pKFaHHK0i3pey/fDf1WLDhKAjSS
+ LHFq4f/3IJaqHo0I5u43qy4VTQWZei2OO2TgVMBr5z3Juit/eclq6uY2+InUxgFTQs6qV1K02
+ FGfnHjRJ0xeLKuFTsBYXgsQBc981jucrv0oxv8CdoSOphECCwCnvqjP08sJ8bRowsKkhN6H3I
+ QtZwIiiFZMabsrid4JRKA4d/Kv8gsZsfoEIT+hFw6UhxqCMIQbOQ3RhJSAXqpJIGqGx3MyT8R
+ fLA0F8BwKgVPuCCq6O4YBw5e0tVOq1VT1rDshf5RU8Iep2bUVBKr1gs0BKVa8HK5A1EiC2Q3e
+ QlTU/3gSGD7daj/qVyhSEC0yvUC4tYEDzqvKYkfEf2KFpgTby7jGg+JDKuz4Q4KIEiGEmOgUQ
+ wgWgo5k7pYcRJXFHts6dr7Do/tMKKQl46AcBSVc+uVQpWsS4pCt1IR6wTW0IA6pA5dlcYeai/
+ mEVfA+3Vnda1zO/lgKKBaAyhvt0s4ZQMcPMa4mz2SOsOoTcVJR7YoPcROuTjAxqzPpnM5NzNk
+ avXneqL/2Dh/F2gS/S6mGjn4FzxqPhM5c56cPFIZvex2ufNdztjQ5Oc+sAAmqaqIEseYLEcEq
+ FBjBIc77OjcHQxQav7chwUz8H2EvZ+3ppITatlnbmnIx+HQeg4v82GdZXCxs1eC9pD3f6MNQs
+ HqOJWgEmxnBRV5KHQ3vaSKJr80wgqIGrihWt2TtAd/brfLcYt87j6Kja2cHvcTPR23xq2dwUp
+ d5FaKZ4l9zG2vyGp1OdeIsQKJryB5hDh61eio17g8tWl/kJYIuP++b1+QouR+BQsTaZ105amh
+ YfessXR6kmV5rdiuVSp2vs0t6IC69tZdPsgEy1OKFU5VOUkc39NFLvhIOBy5IJoUBKrOX5EXj
+ wbHiGk9scmoUzLq2bBlwbpxJfx3KnIjzIj1l9pnlpZkJfVqZF/hnthqadWOk8yCxO5h6Z1U+9
+ kfDjz8y39zBZu4u+eNVp1JsU7GhJVjm/N+sokfE+fhTh4A6EgTJ11ykdcsFHmadWU+NrlEyfD
+ FmHRWZNb26s7aonWHh1Pktfluau1GU5a62na0nBIP09ghDKc2ToPvgvxqfpQ60wDwuebqh7s8
+ QycpdLaf9GGA0l4J4CFjGrZBOahznMyjsuvQ03Dee/uJoAFUi7Z2l6NfCybnylYOvkEWzLILR
+ iziZE4Eztc47MjnZzb/Rm/lODb7lqQSjSzuWvuoopYg5e00aonRNGf6j5cT2VnvDIhl1rkXjh
+ pAMjQG/v5QLk6DmxDHR7Hid8+Kdd+eftMxW1IMDHcG+GdElr0w4Qo5bisuvR+dteqm4IreS37
+ s/Y3yZzK/Nr1eX9lrFIc+7YxzIA24HO9xzNYblFTpRjIE/P4Gjm4SIre/vOdoRloCCCFmplEp
+ JWYIAVD9RJ1rqucahsDW8i0Rk0945Gs0v1xSsLqPEvA8Qwr3s
 
-On Tue, Apr 01, 2025 at 06:20:09PM +0300, Patrisious Haddad wrote:
+> devm_kasprintf() return NULL if memory allocation fails. Currently,
+=E2=80=A6
+                call?                               failed?
 
-> > > #ifdefing away half the file seems ugly.
-> agreed, which is why I think mark bloch suggestion makes more sense, do you
-> think it is okay ? or you think there is issues with it ?
 
-I think you should split the file so we get the proper level of code
-elimination.
+> Add NULL check after devm_kasprintf() to prevent this issue.
 
-But Mark's is small and sane enough to fix the build problems.
+Please complete also the corresponding exception handling.
 
-Jason
+Source code example for further inspiration:
+https://elixir.bootlin.com/linux/v6.14-rc6/source/drivers/net/arcnet/com20=
+020-pci.c#L239-L244
+
+Thus I suggest to use another label like =E2=80=9Ce_nomem=E2=80=9D for thi=
+s purpose.
+
+Regards,
+Markus
