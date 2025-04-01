@@ -1,60 +1,63 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F74F1FAC50;
-	Tue,  1 Apr 2025 11:46:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D468202983;
+	Tue,  1 Apr 2025 11:46:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743508009; cv=none; b=g7dhOAFaSp+BYExD/j3dnSzjhq7BpCnTwwf9aaksjyO4sIF1K4IA/pRZMz0LAlsBkkD6MLgWR2nnC0ahO0hybKSQmaTS9Yi0fgELuWRF8JyCVYwUbn127PB3NhuA7+KpwpexLjJWoQMtT7WrauxVGwwqjkU/6GF/V1D21JgB3PM=
+	t=1743508011; cv=none; b=Nf/SxP+ZrC3Z0O3BBqrMTnWw+GiosrJ/7HxBfjWmZPnMx5yisxc+U44UZ99TXhGHEIqX0mf98bypQtseZS/YFzI7PsyHbMUwcWhlfL1Gk4DacxceMDuqLwpTOyiaAvD2CFfWfyFNiDjIt8g8ZfydqnWPY+ZM9v7rW4aAAbTRMfg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743508009; c=relaxed/simple;
-	bh=ceoqctLKCcbnOajnu47CcnpUXs373ivSmAbLGEWNX98=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=C8e9xBiQqdPIWPQqGMqmspendvdIvPYDr3KqD8RAIBbraCeLS0VXHe0tZl2omuqljm2l1jtNu2aJmN0ES0SVRTrYvskCU/SjgOERF6DCfjimOMucgtEmdQs0RaTiDk/A/8o++0pFHoV1OY1lMOjGDb+pFu7r6OC5iH6vpOF6R8I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ACaxnbrC; arc=none smtp.client-ip=209.85.128.42
+	s=arc-20240116; t=1743508011; c=relaxed/simple;
+	bh=9G4ubJ6lV4V2dWOs0FNh/K1YDBBBYb3K8frA6VqI9G8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=tbsZGYPywRnuhsuGc3WjunjkKMBaG2lbTNkHq+vawq79eo+DYf9DN8g03MfO5SpF0uPBK6XaUe/5/ftwn2MUUS0XGAySkwyG4PLYOT0GU568Fr0WUrZ8/P3jkxmja0UYHa0BzZK3YJ6/UW4cjBmRUpVIYdF8YhRaPKJKQc/UVpM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=We86xZDZ; arc=none smtp.client-ip=209.85.128.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ACaxnbrC"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43ce71582e9so38690325e9.1;
-        Tue, 01 Apr 2025 04:46:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="We86xZDZ"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43ea40a6e98so13256255e9.1;
+        Tue, 01 Apr 2025 04:46:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743508006; x=1744112806; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=CCF3/Qv9Ekc9KpUGlNmFhgd8mAsoihUePrT98r2Qqv8=;
-        b=ACaxnbrCqfdZl+cc6tYdPBQFLz0rLP5R5c5md4wfFOXl9c592iYq26mxy4Peh+PHbv
-         fdSiEiWBJSXMETWxBrHH+HMfQU/zP0PBXP3iY3JfMqQRl1PnroENAGzACnNPsyr/yIMN
-         8MSba6no3Hcq+XNMNlELbzwfmtWYI01bNsTNW56aAXt+/2CFvrVddeA96XLVs8qQ1lS1
-         6B2x54rJBD21J3dEJO9irz7KnyfEiS5xy+ZZLXbEqnRqXUP2PAw2VJWgoGNTuTdbDOhg
-         hl3Ds7zrwsMNfxbibT3PVk8UJt6v/YouZi+Ze9oMsuJv5GTtGCGPpf3pzCMzVyzIV6yw
-         lGiw==
+        d=gmail.com; s=20230601; t=1743508008; x=1744112808; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pvRhcUvsur4qZV9ZsxMG2pchOpKzL3rOM+elE1weNSU=;
+        b=We86xZDZTCK97fgM2+RqmGwqlJ4Do+O9qtaxfFLYBVRwj92hlqn0ghCAoKuku+qml1
+         hBD/wlbBp0JBrRS/iApi3jaTvWwZJEO1ln3UItSgNnstdYYjbjlv5ea5sXT/Qd1G12/x
+         7TIofTQDrO7DlbJL/73EZrqhlvREkwkFY9UAzkRhF50PCd+iHRC2ppTFeUp0CBxfnpTX
+         O4xdaYqLXKXEE7oZ7zLb9F/SonCcrrqNshHbT5CfXG5thPado/wr7ytMGP2a+njFUglK
+         jMsXSUusQqur/ZTJAKSEyEKlLPscz0YCPf0YwaEsLNQPl1Or9b63eyxImjYM+nRt18Nl
+         aOZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743508006; x=1744112806;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CCF3/Qv9Ekc9KpUGlNmFhgd8mAsoihUePrT98r2Qqv8=;
-        b=IMkt1MujyXmX9KOk6H3YdLMii6b1ZNdlg/IyLtQRAkH6yYUjJaYbiDgduQI0Fzp2bC
-         RfXEK5L3Hbj1pO+mS+tvYSNHk0XOEjqHGIWOgM9FMXQucsoxHfiSzaO7nWQXp7VL2QOk
-         3RkGNNymI418t+RKsHRf6gHDnuVm/U0xKYZ9LbpaePH143/ABE3hdw4UDyWdSIHEjiQm
-         kzK8b6S9Hj4dSA9rfTy8JCgvr2YoX06w8+xksZ7yVDV5u+quc3xIphvn7JGqT8LFyKzX
-         0CdJhYiVkGrn/wQxbqDet4QtB3TSYRZy+QNqX9yWpu0QdUauQND98/leGiRyeFiiW29L
-         p7pw==
-X-Forwarded-Encrypted: i=1; AJvYcCUDhMqI8xEHTVndIHW33uH/WiFrS2P/BkBxj5pBgIUkRrdUO+PyRIYdjzbWHz07ih+Fp4BOuHfmSo88@vger.kernel.org, AJvYcCUDwVX84seePegmoZudRyNxSEmJqvSQI9+ncj1It2+WMTPi8eA/jHw0Po2EQZCjPrvNOhBHbrtA@vger.kernel.org, AJvYcCXVcb2tusMgFqZ8SnjLGt36nofUYGZlpHPVO1HtOguA4GqOxgXGSkEQLR6E2bZG7Wx7wR0wnzQ/oivwu2eE@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy3zCYnFoY1EZLAWkm/ZFUr3ALLtsVNKH7WHs6BLk/BtT4yLngL
-	ZaVR9QcePGRZge7Jkq2xt0np3XN0J2Bh+xpYZuHMyAMxh5LQNQI5
-X-Gm-Gg: ASbGncu6eZyb5euHxBZaB39yGV9YbW029wzOrgSicQjJfYLGk+5pyLmPDV5ymxtSVXI
-	kkexEEFA8b96dIN6yn5duBqbZsQWcDMsqeVAYDvRS5itvVYwMhLtDazBKbkG8YIgTKusR4KWxbQ
-	zpBalDH5YzcY/LTuZ/61UQN4tZgjg5RmjBUIznxvCVqBFH6W48T1MLE6hin84/vFDv13/qSdxLY
-	bSt7T43ySYZsWUUSRT9dt6bVUutHG68rFu6WYYryssB269rOfNQ9GYMx0WTVrqHtMwjumwqWiaI
-	huQ9d6R1HjN3qtaZZqqDLCrLEAriZo7ljt17q+0y+WITpyAU9vqsu8Lv5DOymaImM1dh/C+J++1
-	1OMm5mDzHWUhcrzFLwytsy5wF
-X-Google-Smtp-Source: AGHT+IECBdGy0veigc4dKDxdqeIRbDAyoVZxmglOTHF5tsWKDtaGPfK2VbavW3AsceadqMj/Ll0N2Q==
-X-Received: by 2002:a05:600c:548c:b0:43d:97ea:2f4 with SMTP id 5b1f17b1804b1-43db61d3924mr119814325e9.12.1743508005651;
-        Tue, 01 Apr 2025 04:46:45 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743508008; x=1744112808;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pvRhcUvsur4qZV9ZsxMG2pchOpKzL3rOM+elE1weNSU=;
+        b=qIlO9FJolRECn20wAvzuSMETKhcj7PFBCHMI/DV1Pt72TZIQtDMm32TKKYu8kfilZr
+         cqszTdBCnWmCZjl+2ARyTwItj5xTDHWpKescJu1fTqkKS/l9feRHQl1apwLy0pwQ2NQL
+         TMARFxo9lEPFS9LaBE0ukc49PTiG6Sz/6DCkmGTW0px8lXINVH3ZFHP5TmdXBTML9Bed
+         HU+hkolo/LCG+PFWSMFkoBTmx1/7mTSR3SFXGXIRUZfM/Spmarjkl5AgYP0ftoZFmkGW
+         BHjepcGEgTtrBwVD551C9cwAzdK4yotWKLgD0xHqxsC3DacQoJZ5fdNUjwankWy8w5Pu
+         dc1g==
+X-Forwarded-Encrypted: i=1; AJvYcCUXrki5Dw7Vnh0y912UKcwe/cog+z8fEJSW8QycWkqO2Ks0RV6Z+Vq63pwbaytwD41Cj+n3qh6c9zBO@vger.kernel.org, AJvYcCVnJscTraqf19vUwMl2b4BXfrtEoF8C8VWu97B8y1ZM4ScJXHLgOQG+aKx+EBjkUv7N6aj/WzxY@vger.kernel.org, AJvYcCXjMW3labPQNWiEMDhG6GJFdxKEikXWQaRKN1uG5uH0AdUo5lkrgBGkptJqRLa/Usa0vyydSwW/QdfDc697@vger.kernel.org
+X-Gm-Message-State: AOJu0YwdEnEyUykvW24Epmor1+uEdeZ3vDdCzOH2tRsRJ74GiUB9M1r3
+	h8gicBNHZUKUjcgJez51RqTyV3uRvCwBRnFNt7d6u1L1IevOfK3Q
+X-Gm-Gg: ASbGnct3plrZdscqhks5X/n844lNGx7TRm19iOFErlTZUpsMKfc9eP9ZkKt//uEG3uW
+	eIbX9ezZ8MwzsPEAjyY7yun4xwV6WHwbM7FIyqLRK43eq4uDoBO8+CmZTIvXAmysIbc9pbJrUxN
+	9VHNljIvMh+hRiQTUVzpCE7Q5RA/tmqEqjwk5EdIfI+z9TReHLxoMQND5eNE1tKq56wmgoWqGak
+	IfvqM0MGAfIlU9S5WOU2H9Ed3R4C9/NMV0R8L7vbWFSp5+irCjA4QVXLErGO0CtJLw20Ku+jP/F
+	aKYwo8SXueqWPiNc0FNc22SFndCS8KFo6Pk/j9nZzI675fZf/0xQMPCiZrHvnI1q3/iz5yJ3avB
+	yobAlrQkn2ya1qQ==
+X-Google-Smtp-Source: AGHT+IHQ0Hjq73bRHFl+XWRxDmb2IoAYW5dsebo09D2nD52qy2Fc5tL5APjwKqJJcI4Dc3k9ZOB/ug==
+X-Received: by 2002:a05:600c:1c15:b0:43d:7bfa:2739 with SMTP id 5b1f17b1804b1-43db62bfdcbmr97222135e9.23.1743508008315;
+        Tue, 01 Apr 2025 04:46:48 -0700 (PDT)
 Received: from localhost.localdomain (93-34-88-225.ip49.fastwebnet.it. [93.34.88.225])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-43ead679894sm8148175e9.40.2025.04.01.04.46.44
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-43ead679894sm8148175e9.40.2025.04.01.04.46.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Apr 2025 04:46:45 -0700 (PDT)
+        Tue, 01 Apr 2025 04:46:48 -0700 (PDT)
 From: Christian Marangi <ansuelsmth@gmail.com>
 To: Christian Marangi <ansuelsmth@gmail.com>,
 	Andrew Lunn <andrew+netdev@lunn.ch>,
@@ -77,10 +80,13 @@ To: Christian Marangi <ansuelsmth@gmail.com>,
 	netdev@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [net-next RFC PATCH v5 0/6] net: phy: Add support for new Aeonsemi PHYs
-Date: Tue,  1 Apr 2025 13:46:01 +0200
-Message-ID: <20250401114611.4063-1-ansuelsmth@gmail.com>
+Cc: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
+Subject: [net-next RFC PATCH v5 2/6] net: phy: bcm87xx: simplify .match_phy_device OP
+Date: Tue,  1 Apr 2025 13:46:03 +0200
+Message-ID: <20250401114611.4063-3-ansuelsmth@gmail.com>
 X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250401114611.4063-1-ansuelsmth@gmail.com>
+References: <20250401114611.4063-1-ansuelsmth@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -89,93 +95,56 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add support for new Aeonsemi 10G C45 PHYs. These PHYs intergate an IPC
-to setup some configuration and require special handling to sync with
-the parity bit. The parity bit is a way the IPC use to follow correct
-order of command sent.
+Simplify .match_phy_device OP by using a generic function and using the
+new phy_id PHY driver info instead of hardcoding the matching PHY ID.
 
-Supported PHYs AS21011JB1, AS21011PB1, AS21010JB1, AS21010PB1,
-AS21511JB1, AS21511PB1, AS21510JB1, AS21510PB1, AS21210JB1,
-AS21210PB1 that all register with the PHY ID 0x7500 0x7500
-before the firmware is loaded.
+Reviewed-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+---
+ drivers/net/phy/bcm87xx.c | 14 ++++----------
+ 1 file changed, 4 insertions(+), 10 deletions(-)
 
-The big special thing about this PHY is that it does provide
-a generic PHY ID in C45 register that change to the correct one
-one the firmware is loaded.
-
-In practice:
-- MMD 0x7 ID 0x7500 0x9410 -> FW LOAD -> ID 0x7500 0x9422
-
-To handle this, we operate on .match_phy_device where
-we check the PHY ID, if the ID match the generic one,
-we load the firmware and we return 0 (PHY driver doesn't
-match). Then PHY core will try the next PHY driver in the list
-and this time the PHY is correctly filled in and we register
-for it.
-
-To help in the matching and not modify part of the PHY device
-struct, .match_phy_device is extended to provide also the
-current phy_driver is trying to match for. This add the
-extra benefits that some other PHY can simplify their
-.match_phy_device OP.
-
-Changes v5:
-- Add Reviewed-by tag from Rob
-- Fix subject in DT patch
-- Fix wrong Suggested-by tag in patch 1
-- Rework nxp patch to 80 column
-Changes v4:
-- Add Reviewed-by tag
-- Better handle PHY ID scan in as21xxx
-- Also simplify nxp driver and fix .match_phy_device
-Changes v3:
-- Correct typo intergate->integrate
-- Try to reduce to 80 column (where possible... define become
-  unreasable if split)
-- Rework to new .match_phy_device implementation
-- Init active_low_led and fix other minor smatch war
-- Drop inline tag (kbot doesn't like it but not reported by checkpatch???)
-Changes v2:
-- Move to RFC as net-next closed :(
-- Add lock for IPC command
-- Better check size values from IPC
-- Add PHY ID for all supported PHYs
-- Drop .get_feature (correct values are exported by standard
-  regs)
-- Rework LED event to enum
-- Update .yaml with changes requested (firmware-name required
-  for generic PHY ID)
-- Better document C22 in C45
-- Document PHY name logic
-- Introduce patch to load PHY 2 times
-
-Christian Marangi (6):
-  net: phy: pass PHY driver to .match_phy_device OP
-  net: phy: bcm87xx: simplify .match_phy_device OP
-  net: phy: nxp-c45-tja11xx: simplify .match_phy_device OP
-  net: phy: introduce genphy_match_phy_device()
-  net: phy: Add support for Aeonsemi AS21xxx PHYs
-  dt-bindings: net: Document support for Aeonsemi PHYs
-
- .../bindings/net/aeonsemi,as21xxx.yaml        |  122 ++
- MAINTAINERS                                   |    7 +
- drivers/net/phy/Kconfig                       |   12 +
- drivers/net/phy/Makefile                      |    1 +
- drivers/net/phy/as21xxx.c                     | 1067 +++++++++++++++++
- drivers/net/phy/bcm87xx.c                     |   14 +-
- drivers/net/phy/icplus.c                      |    6 +-
- drivers/net/phy/marvell10g.c                  |   12 +-
- drivers/net/phy/micrel.c                      |    6 +-
- drivers/net/phy/nxp-c45-tja11xx.c             |   41 +-
- drivers/net/phy/nxp-tja11xx.c                 |    6 +-
- drivers/net/phy/phy_device.c                  |   52 +-
- drivers/net/phy/realtek/realtek_main.c        |   27 +-
- drivers/net/phy/teranetics.c                  |    3 +-
- include/linux/phy.h                           |    6 +-
- 15 files changed, 1316 insertions(+), 66 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/net/aeonsemi,as21xxx.yaml
- create mode 100644 drivers/net/phy/as21xxx.c
-
+diff --git a/drivers/net/phy/bcm87xx.c b/drivers/net/phy/bcm87xx.c
+index 1e1e2259fc2b..299f9a8f30f4 100644
+--- a/drivers/net/phy/bcm87xx.c
++++ b/drivers/net/phy/bcm87xx.c
+@@ -185,16 +185,10 @@ static irqreturn_t bcm87xx_handle_interrupt(struct phy_device *phydev)
+ 	return IRQ_HANDLED;
+ }
+ 
+-static int bcm8706_match_phy_device(struct phy_device *phydev,
++static int bcm87xx_match_phy_device(struct phy_device *phydev,
+ 				    const struct phy_driver *phydrv)
+ {
+-	return phydev->c45_ids.device_ids[4] == PHY_ID_BCM8706;
+-}
+-
+-static int bcm8727_match_phy_device(struct phy_device *phydev,
+-				    const struct phy_driver *phydrv)
+-{
+-	return phydev->c45_ids.device_ids[4] == PHY_ID_BCM8727;
++	return phydev->c45_ids.device_ids[4] == phydrv->phy_id;
+ }
+ 
+ static struct phy_driver bcm87xx_driver[] = {
+@@ -208,7 +202,7 @@ static struct phy_driver bcm87xx_driver[] = {
+ 	.read_status	= bcm87xx_read_status,
+ 	.config_intr	= bcm87xx_config_intr,
+ 	.handle_interrupt = bcm87xx_handle_interrupt,
+-	.match_phy_device = bcm8706_match_phy_device,
++	.match_phy_device = bcm87xx_match_phy_device,
+ }, {
+ 	.phy_id		= PHY_ID_BCM8727,
+ 	.phy_id_mask	= 0xffffffff,
+@@ -219,7 +213,7 @@ static struct phy_driver bcm87xx_driver[] = {
+ 	.read_status	= bcm87xx_read_status,
+ 	.config_intr	= bcm87xx_config_intr,
+ 	.handle_interrupt = bcm87xx_handle_interrupt,
+-	.match_phy_device = bcm8727_match_phy_device,
++	.match_phy_device = bcm87xx_match_phy_device,
+ } };
+ 
+ module_phy_driver(bcm87xx_driver);
 -- 
 2.48.1
 
