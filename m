@@ -1,51 +1,50 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E63851BBBF7;
-	Tue,  1 Apr 2025 23:03:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1E1C215178;
+	Tue,  1 Apr 2025 23:08:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743548628; cv=none; b=gDky4i1XN7K+unFlnD1OxIyl8uFsJaE1NYzMNX690QpCSwSbgLnsrUNqZ3c0xzPaBm+jKhcVTYnuQZ/CAy3besbheF80SF77lqwz/Md9ofjrV+Qmx/0JWmG7JGUUdCe2dGKmN3bcLtriaNx5zKPVOM/t9MeS1UrEX3C7oG+XVBg=
+	t=1743548904; cv=none; b=fmPyvTZXzs8rrZlnZOwRkxpzSJG0va6X7I551GOu/87j0OG29SxQWlyWmd+n1aJK/lrRGtfLW2+DS/DSF7Pz72OkVZHI2ydIRgOl6wb8zjrHX5h2+YGN+p/lcBJNFCwh/78kL2cq8dCrDXJMHCpzMq2Zr07d4Y7xk0qaPF03f54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743548628; c=relaxed/simple;
-	bh=BYOXmSOsaPKAshZKAzxa/WceoPbno44r7z7Qhx1eioY=;
+	s=arc-20240116; t=1743548904; c=relaxed/simple;
+	bh=K7gVs9G1yl1ZQ48ZWHwRC7lW+9mYi+4pcNf/trZ31Kg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bmwI4zpjgJx7sab9Btn0xWHi0VbFaIa96+oYBhbQV+guDwpYhz+HT1liLONJlwsvGb1dP6TGE7bUS5YQIs1zRKxf+1moBh1uxHsbKnMd4WHqp3/Or4swvmJ4talYlv+ngorcF0+dVjiX6dzNg12te+UEg28HdA7Bm8QUGAavbr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SLJf2v8h; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=W3IDMjSAyHRlfhEQvNSSX6ibOs7ixHCtzJ0CCDxegLlWksLRy5k8Je8MlPg8DpoAC0y+sopodf11uhcMhvBIyRaySLhzuIuT8Qd18N6Klyijt6zq4trHkhD65HeDaDL+qth56BIm8AGMEoKLNGhGb+q5OIw9p18xyL2QsCOCJX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jTKc5/qK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SLJf2v8h"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17DCFC4CEE4;
-	Tue,  1 Apr 2025 23:03:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jTKc5/qK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BB78C4CEE4;
+	Tue,  1 Apr 2025 23:08:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743548627;
-	bh=BYOXmSOsaPKAshZKAzxa/WceoPbno44r7z7Qhx1eioY=;
+	s=k20201202; t=1743548903;
+	bh=K7gVs9G1yl1ZQ48ZWHwRC7lW+9mYi+4pcNf/trZ31Kg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SLJf2v8hEejssbPR01Tj2/A/wIryXbN0voAiZ6/Lm087eksrq31aOcBsL/0S71klr
-	 b1Gb5Zw/RmCftZB36g8EGidgctqXwMTypk96G0moqwOGcWOIb+W//XTJwxBdwGBPDf
-	 StRRNSnx1yuCQV3K+1NeppyDOrjdkIur0MEI23GQ78JsQXAXLji9Dr9am2NdHjv2D4
-	 7paYtgQxa3jlQICY82f5hCO6JKjvWmSAUMY59vLN6g0Y6Zx1SQCTmofOUtf2UkrAbT
-	 lAfqHGGO/u6Ki9dk5wUX1mvfx82cXWk/FXWgZC5XoClRbTJ3m2RYtUtjjb3OjwTCQV
-	 3ONLn9gsrLxnQ==
-Date: Tue, 1 Apr 2025 18:03:46 -0500
+	b=jTKc5/qK4CKBIz2EvhGfP1gRdoZqJvWZwqPhpDY1+tiIhwP1SErfny34FMaZrgrLT
+	 eaZBS6xlgykLN6AuYxrSjk0UR5HpeHe+HaeVLH532aYPIK3L/NOowvZ6PPZXBfz+7u
+	 MwJUJPrghB6GZOkdU0a8diyTBMV8nWNR9EZPTc5N9id3fuR1kcPZakF5HcExXSOuvK
+	 RSK7gON3QPVgBmLDwttXgKpPKGxyHHjuDb5RCSblASIen9yIwXKg9EZ5AttBfs+CWr
+	 bumFJxJanFeG8XdA31YLIfP/5ZDxWkqRxp4uM+C3ehakuQHZa8bgmXPCa0q0fkBrFT
+	 cuColpTfpW1Bw==
+Date: Tue, 1 Apr 2025 18:08:22 -0500
 From: Rob Herring <robh@kernel.org>
-To: Lukasz Majewski <lukma@denx.de>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>, davem@davemloft.net,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Francesco Dolcini <francesco@dolcini.it>,
+	Jean Delvare <jdelvare@suse.com>,
+	Guenter Roeck <linux@roeck-us.net>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Richard Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 1/4] dt-bindings: net: Add MTIP L2 switch description
-Message-ID: <20250401230346.GA28557-robh@kernel.org>
-References: <20250331103116.2223899-1-lukma@denx.de>
- <20250331103116.2223899-2-lukma@denx.de>
- <20250331235518.GA2823373-robh@kernel.org>
- <20250401123507.2e3bf0a6@wsk>
+	Conor Dooley <conor+dt@kernel.org>,
+	Farouk Bouabid <farouk.bouabid@cherry.de>,
+	Quentin Schulz <quentin.schulz@cherry.de>,
+	Francesco Dolcini <francesco.dolcini@toradex.com>,
+	linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] dt-bindings: hwmon: amc6821: add fan and PWM
+ output
+Message-ID: <20250401230822.GA43191-robh@kernel.org>
+References: <20250331155229.147879-1-francesco@dolcini.it>
+ <20250331155229.147879-2-francesco@dolcini.it>
+ <20250401-boisterous-teal-bison-533b01@krzk-bin>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,196 +53,44 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250401123507.2e3bf0a6@wsk>
+In-Reply-To: <20250401-boisterous-teal-bison-533b01@krzk-bin>
 
-On Tue, Apr 01, 2025 at 12:35:07PM +0200, Lukasz Majewski wrote:
-> Hi Rob,
-> 
-> > On Mon, Mar 31, 2025 at 12:31:13PM +0200, Lukasz Majewski wrote:
-> > > This patch provides description of the MTIP L2 switch available in
-> > > some NXP's SOCs - e.g. imx287.
-> > > 
-> > > Signed-off-by: Lukasz Majewski <lukma@denx.de>
-> > > ---
-> > > Changes for v2:
-> > > - Rename the file to match exactly the compatible
-> > >   (nxp,imx287-mtip-switch)
-> > > 
-> > > Changes for v3:
-> > > - Remove '-' from const:'nxp,imx287-mtip-switch'
-> > > - Use '^port@[12]+$' for port patternProperties
-> > > - Drop status = "okay";
-> > > - Provide proper indentation for 'example' binding (replace 8
-> > >   spaces with 4 spaces)
-> > > - Remove smsc,disable-energy-detect; property
-> > > - Remove interrupt-parent and interrupts properties as not required
-> > > - Remove #address-cells and #size-cells from required properties
-> > > check
-> > > - remove description from reg:
-> > > - Add $ref: ethernet-switch.yaml#
-> > > ---
-> > >  .../bindings/net/nxp,imx287-mtip-switch.yaml  | 154
-> > > ++++++++++++++++++ 1 file changed, 154 insertions(+)
-> > >  create mode 100644
-> > > Documentation/devicetree/bindings/net/nxp,imx287-mtip-switch.yaml
-> > > 
-> > > diff --git
-> > > a/Documentation/devicetree/bindings/net/nxp,imx287-mtip-switch.yaml
-> > > b/Documentation/devicetree/bindings/net/nxp,imx287-mtip-switch.yaml
-> > > new file mode 100644 index 000000000000..98eba3665f32 --- /dev/null
-> > > +++
-> > > b/Documentation/devicetree/bindings/net/nxp,imx287-mtip-switch.yaml
-> > > @@ -0,0 +1,154 @@ +# SPDX-License-Identifier: (GPL-2.0-only OR
-> > > BSD-2-Clause) +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/net/nxp,imx287-mtip-switch.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: NXP SoC Ethernet Switch Controller (L2 MoreThanIP switch)
-> > > +
-> > > +maintainers:
-> > > +  - Lukasz Majewski <lukma@denx.de>
-> > > +
-> > > +description:
-> > > +  The 2-port switch ethernet subsystem provides ethernet packet
-> > > (L2)
-> > > +  communication and can be configured as an ethernet switch. It
-> > > provides the
-> > > +  reduced media independent interface (RMII), the management data
-> > > input
-> > > +  output (MDIO) for physical layer device (PHY) management.
-> > > +
-> > > +$ref: ethernet-switch.yaml#  
+On Tue, Apr 01, 2025 at 08:13:14AM +0200, Krzysztof Kozlowski wrote:
+> On Mon, Mar 31, 2025 at 05:52:28PM +0200, Francesco Dolcini wrote:
+> > From: Francesco Dolcini <francesco.dolcini@toradex.com>
 > > 
-> > This needs to be: ethernet-switch.yaml#/$defs/ethernet-ports
+> > Add properties to describe the fan and the PWM controller output.
 > > 
-> > With that, you can drop much of the below part. More below...
+> > Link: https://www.ti.com/lit/gpn/amc6821
+> > Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
+> > ---
+> > v3:
+> >  - explicitly describe the fan, use standard PWM and FAN bindings
+> >  - pwm.yaml cannot be referenced, because of the $nodename pattern that is
+> >    enforced there
+> > v2: https://lore.kernel.org/all/20250224180801.128685-2-francesco@dolcini.it/
+> >  - no changes
+> > v1: https://lore.kernel.org/all/20250218165633.106867-2-francesco@dolcini.it/
+> > ---
+> >  .../devicetree/bindings/hwmon/ti,amc6821.yaml      | 14 +++++++++++++-
+> >  1 file changed, 13 insertions(+), 1 deletion(-)
 > > 
-> > > +
-> > > +properties:
+> > diff --git a/Documentation/devicetree/bindings/hwmon/ti,amc6821.yaml b/Documentation/devicetree/bindings/hwmon/ti,amc6821.yaml
+> > index 5d33f1a23d03..94aca9c378e6 100644
+> > --- a/Documentation/devicetree/bindings/hwmon/ti,amc6821.yaml
+> > +++ b/Documentation/devicetree/bindings/hwmon/ti,amc6821.yaml
+> > @@ -28,6 +28,13 @@ properties:
+> >    i2c-mux:
+> >      type: object
+> >  
+> > +  fan:
+> > +    $ref: fan-common.yaml#
+> > +    unevaluatedProperties: false
 > 
-> So it shall be after the "properties:"
-> 
-> $ref: ethernet-switch.yaml#/$defs/ethernet-ports   [*]
+> Why do you need the child, instead of referencing fan-common in the top
+> level?
 
-It can stay where it is, just add "/$defs/ethernet-ports"
-
-
-> > > +  compatible:
-> > > +    const: nxp,imx287-mtip-switch
-> > > +
-> > > +  reg:
-> > > +    maxItems: 1
-> > > +
-> > > +  phy-supply:
-> > > +    description:
-> > > +      Regulator that powers Ethernet PHYs.
-> > > +
-> > > +  clocks:
-> > > +    items:
-> > > +      - description: Register accessing clock
-> > > +      - description: Bus access clock
-> > > +      - description: Output clock for external device - e.g. PHY
-> > > source clock
-> > > +      - description: IEEE1588 timer clock
-> > > +
-> > > +  clock-names:
-> > > +    items:
-> > > +      - const: ipg
-> > > +      - const: ahb
-> > > +      - const: enet_out
-> > > +      - const: ptp
-> > > +
-> > > +  interrupts:
-> > > +    items:
-> > > +      - description: Switch interrupt
-> > > +      - description: ENET0 interrupt
-> > > +      - description: ENET1 interrupt
-> > > +
-> > > +  pinctrl-names: true
-> > > +  
-> > 
-> > > +  ethernet-ports:
-> 
-> And then this "node" can be removed as it has been referenced above [*]?
-
-Well, you have to keep it to have 'required' in the child nodes.
-
-> 
-> (I shall only keep the properties, which are not standard to [*] if
-> any).
-> 
-> > > +    type: object
-> > > +    additionalProperties: false
-> > > +
-> > > +    properties:
-> > > +      '#address-cells':
-> > > +        const: 1
-> > > +      '#size-cells':
-> > > +        const: 0
-> > > +
-> > > +    patternProperties:
-> > > +      '^port@[12]+$':  
-> > 
-> > Note that 'ethernet-port' is the preferred node name though 'port' is 
-> > allowed.
-> 
-> Ok. That would be the correct define:
-> 
-> ethernet-ports {
->      mtip_port1: ethernet-port@1 {
->                reg = <1>;
->                label = "lan0";
->                local-mac-address = [ 00 00 00 00 00 00 ];
->                phy-mode = "rmii";
->                phy-handle = <&ethphy0>;
-> 	       };
-> 
->                mtip_port2: port@2 {
-
-And here...
-
-> 		....
-> 	       };
-> 
-> > 
-> > > +        type: object
-> > > +        description: MTIP L2 switch external ports
-> > > +
-> > > +        $ref: ethernet-controller.yaml#
-> > > +        unevaluatedProperties: false
-> > > +
-> > > +        properties:
-> > > +          reg:
-> > > +            items:
-> > > +              - enum: [1, 2]
-> > > +            description: MTIP L2 switch port number
-> > > +
-> > > +          label:
-> > > +            description: Label associated with this port
-> > > +
-> > > +        required:
-> > > +          - reg
-> > > +          - label
-> > > +          - phy-mode
-> > > +          - phy-handle  
-> > 
-> > All the above under 'ethernet-ports' can be dropped though you might 
-> > want to keep 'required' part.
-> 
-> Ok, I will keep it.
-
-So I think you just want this:
-
-ethernet-ports:
-  type: object
-  additionalProperties: true  # Check if you need this
-
-  patternProperties:
-    '^ethernet-port@[12]$':
-      required:
-        - label
-        - phy-mode
-        - phy-handle
+Because shockingly a fan controller and a fan are 2 different pieces of 
+h/w. It took *years* for this advancement to come to fruition.
 
 Rob
