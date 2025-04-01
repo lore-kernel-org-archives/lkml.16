@@ -1,57 +1,68 @@
-Received: from mail.cab.de (mail.cab.de [46.232.229.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f195.google.com (mail-pl1-f195.google.com [209.85.214.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFEC11F930
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 13:33:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.232.229.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 368BA1F930
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 13:34:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743514404; cv=none; b=t0rOsiXH/kwr9HmVqNxp7RMXCN+j4hKL96n21VdLDTiXbv8BuBKiaJbJthyHBEXhm2f9AJnUHvoY6RE+lNX2EZeGn6MF5K2kJSTLQAXSlQ4CwW2FOveVvl+UG1+kQjKySpOC/d6Yx24UP3w/2wxMM1d3I74rS2khHhahwtmnR5Y=
+	t=1743514458; cv=none; b=J6UJE9W5sByRj+giA/YvJIXNRDaEOcDhii+WArFjpUmfiot7vBAi/9Wf2AMMZWpZRp89FbKKxWXRwov1k9/d9LUnHRoUhZ5cIJbXSh89QcJKjgdlTcVIoMVcls/SSArZwoDzDQIxuwkH9lJcI+Om77rr8zmArPimtU1srlOXBeQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743514404; c=relaxed/simple;
-	bh=jMMC+wm6vXcF1DkhT8g6MXmLjOdtu1T9dhA3en6FymE=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cjvkjaJajAUaPq9EoKfUZ1ZyawQMOYkOKCz/liEDK/atWoeIaFNIXQ7p+yf5BLxSHiU1r9r55VcF66vxlpXIU7VTOMVkEugXqBqNFM/21is3TGgWAk3BszyA1yTEIccmJZR2f03SNZVQImE23ewZ16gj6d8sQvEoEutj4fR9n3k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cab.de; spf=pass smtp.mailfrom=cab.de; dkim=pass (1024-bit key) header.d=cab.de header.i=@cab.de header.b=TjkIegWK; arc=none smtp.client-ip=46.232.229.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cab.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cab.de
+	s=arc-20240116; t=1743514458; c=relaxed/simple;
+	bh=b9tOLPXI+LhqU57upgPdTJNcO2Vx6rZyWG+gAdw7cPE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=aEpZf+e6lVZZbXOW62yxSrNKfHaYpScVUa/1VvXBVczVSHRB2ZGXV6TaOCSof57NegWAgW1hAcs2TBDFsuSAPBLaoyV8VvNplrZfwEb61jO5/m4nRKMQWDNn2Cat1Kq6sJS5myjAT6cbClEHEP3khrV1FAqT0ckM/HAouwhCEI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hjUV1QJM; arc=none smtp.client-ip=209.85.214.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=cab.de header.i=@cab.de header.b="TjkIegWK"
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.cab.de 4ZRpq40P9dzMvZsd
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cab.de; s=default;
-	t=1743514400; bh=wnt780oLccvGGA06d4dBzhYIn/GiO4i1xcNjf5ih2p4=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-	b=TjkIegWKGkeuJpE+oToDmA5LAC1QbnP1tkqqXcR0wp5/hBAIYJEzRV5S79KI/6sK6
-	 3QaDSvXZMS1Lniv7MlqiqHLu0PRCM+rEd7ETKuLaMlr8iAXeVy3ukbUKlC27uKAO/9
-	 tMY87qOEa1Jc25HE6NiwkFEIlvraKcY+NbHcvwzE=
-X-cab-MailScanner-Watermark: 1744119195.55986@ypLX5Y4JCgHJBEtHSayM+Q
-X-cab-MailScanner-From: m.heidelberg@cab.de
-X-cab-MailScanner: Found to be clean
-X-cab-MailScanner-ID: 4ZRppv53YRzMvb0J
-X-cab-MailScanner-Information: Please contact it@cab.de for more information
-Received: from Adranos.cab.de ([10.10.1.54] [10.10.1.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(no client certificate requested)
-	by hephaistos.cab.de (MailScanner Milter) with SMTP id 4ZRppv53YRzMvb0J;
-	Tue,  1 Apr 2025 15:33:12 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.cab.de 4ZRppv53YRzMvb0J
-Received: from KAN23-025.cab.de (10.10.3.178) by Adranos.cab.de (10.10.1.54)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Tue, 1 Apr
- 2025 15:33:20 +0200
-From: Markus Heidelberg <m.heidelberg@cab.de>
-To: Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Christian
- Eggers <ceggers@arri.de>
-CC: Markus Heidelberg <m.heidelberg@cab.de>, Jiri Prchal
-	<jiri.prchal@aksignal.cz>, <linux-kernel@vger.kernel.org>,
-	<devicetree@vger.kernel.org>
-Subject: [RFC PATCH 1/2] eeprom: at25: support Cypress FRAMs without device ID
-Date: Tue, 1 Apr 2025 15:30:47 +0200
-Message-ID: <20250401133148.38330-2-m.heidelberg@cab.de>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250401133148.38330-1-m.heidelberg@cab.de>
-References: <20250401133148.38330-1-m.heidelberg@cab.de>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hjUV1QJM"
+Received: by mail-pl1-f195.google.com with SMTP id d9443c01a7336-223fb0f619dso103783835ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 06:34:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743514455; x=1744119255; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/MSWH/HiBeaFQMdiFwHNOtYn+KeoAUfiMDG3P5XehY8=;
+        b=hjUV1QJMFEyA9DgbutBCe6dbirqLj4sKg0mqTs9nSmdUIzAx5anpLK+M1l9MK5XKv3
+         cH87BPksgl5hUPgt0mtwupqJ6fOaLjUYgCW4NPr17lPuL0bj5Cm/XyO8kdcV/RW6dz7G
+         qgUDSOThRi5m6AcbjRtxF3YbjVib6XILpv0Fh6zZsUwVDo1ykE4YJw/kVW+7OIir+NYg
+         cOsHEAlhpoJhSvmZ3WbmYW8Hljzlj2SmPwPdDNfSliDRyHlUxzkT5w8Yuq1ORbUbFHSH
+         UdqAzJtFd8ZhKIGGFyhI7GOHdk82jWPdfhSz1P6sazhbcO9FkpPZLVJcQOpJwkFTpn6/
+         rQHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743514455; x=1744119255;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/MSWH/HiBeaFQMdiFwHNOtYn+KeoAUfiMDG3P5XehY8=;
+        b=ObRTDuFlFC2/WdZcmYiwpqZfvI65ZfMHyGLziubU015QDvalLOcQqPQyizzhVg+pYp
+         9yG/tzpaSj4+2yb3c7vDpmiyFwkP36sj6NrOHfyp1szhyyyvurDTxrJWkiTsZTB+91Kr
+         CGN91ssXy2bgVver0uQAWOOqAx4kX/LU8QW2J63prwCipzgj7mvixjkN1dZ6NxtvqkjF
+         uHcJr2N5tigsEf6uQNO7Q0n0M6qyoq67kZG5tL11+iK1zZdU75sV0elxHZX0KIq5+A36
+         HDKJ+0AvLA/GUczPYTc+ENgWnA+VYnA5+9ssMyykiZNZCV4znUz/o8AWClzh5pIUAPwQ
+         Z1xA==
+X-Gm-Message-State: AOJu0YxKp8eeio8U2iLJSilZIQ/njpN4+54OAiI5qt97gI1uizqo6O/8
+	B5SjAZWWSiTRJberR1yzHyOus6n5tlspFRmvwF1OqZZlQ48lAs8PQS3IthA5ujrRYw==
+X-Gm-Gg: ASbGncuHi8RDNXW9Jg/RyHHsKckxLZGg5EAgVp9WDkSjkyY8/aW3aRic1ijF6X+cjxS
+	AYu0AMY2B1F4TmfNInXB24Yi+E0GvT6LPI2THraR1T/3XmmITO0yL+CoHV3XLziYuFhxRVOfkQZ
+	a0bqiD0luOhuTTS8oQexSpSP2wkyr7TKVwx33w0e1Zpc5zwGj1Y3S5ZIhoClETAwI2+Kk3063Bi
+	63hEUKGKTwjOUQ0PWKPxSulgJpdZwRrq9h5CCNmdLn1Il50YQXD3DA+P+dN42S6a+g61BPan9iK
+	Gi9qdaGH4Dly8SbAzDO2wAxa5JNpf/JJ5LBsknQnCxarwdnFoflFNO9uwVZ18dmCGfXyjTw=
+X-Google-Smtp-Source: AGHT+IGrCwu+4MxibwDWg9L5VXO1vZhQVPm3peKDSlNK/eSh1y83UVBqCiMJb2t9DhsbuKt9LRCTUw==
+X-Received: by 2002:a17:902:ce0b:b0:223:5e6a:57ab with SMTP id d9443c01a7336-2295c0ed0e3mr48246625ad.39.1743514455343;
+        Tue, 01 Apr 2025 06:34:15 -0700 (PDT)
+Received: from henry.localdomain ([111.202.148.167])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291eedfdf0sm88497385ad.64.2025.04.01.06.34.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Apr 2025 06:34:14 -0700 (PDT)
+From: Henry Martin <bsdhenrymartin@gmail.com>
+To: arnd@arndb.de,
+	gregkh@linuxfoundation.org
+Cc: linux-kernel@vger.kernel.org,
+	Henry Martin <bsdhenrymartin@gmail.com>
+Subject: [PATCH v1] misc: tps6594-pfsm: Add NULL check in tps6594_pfsm_probe()
+Date: Tue,  1 Apr 2025 21:34:04 +0800
+Message-Id: <20250401133404.27793-1-bsdhenrymartin@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,113 +70,32 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: Adranos.cab.de (10.10.1.54) To Adranos.cab.de (10.10.1.54)
 
-Not all FRAM chips have a device ID and implement the corresponding read
-command. For such chips this led to the following error on module
-loading:
+devm_kasprintf() returns NULL when memory allocation fails. Currently,
+tps6594_pfsm_probe() does not check for this case, which results in a
+NULL pointer dereference.
 
-    at25 spi2.0: Error: no Cypress FRAM (id 00)
+Add NULL check after devm_kasprintf() to prevent this issue.
 
-The device ID contains the memory size, so devices without this ID are
-supported now by setting the size manually in Devicetree using the
-"size" property.
-
-Tested with FM25L16B.
-
-According to Infineon/Cypress datasheets, these FRAMs have a device ID:
-
-    FM25V01A
-    FM25V02A
-    FM25V05
-    FM25V10
-    FM25V20A
-    FM25VN10
-
-but these do not:
-
-    FM25040B
-    FM25640B
-    FM25C160B
-    FM25CL64B
-    FM25L04B
-    FM25L16B
-    FM25W256
-
-So all "FM25V*" FRAMs and only these have a device ID. The letter after
-"FM25" (V/C/L/W) only describes the voltage range, though.
-
-Signed-off-by: Markus Heidelberg <m.heidelberg@cab.de>
+Fixes: a0df3ef087f8 ("misc: tps6594-pfsm: Add driver for TI TPS6594 PFSM")
+Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
 ---
- drivers/misc/eeprom/at25.c | 42 ++++++++++++++++++++++----------------
- 1 file changed, 24 insertions(+), 18 deletions(-)
+ drivers/misc/tps6594-pfsm.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/misc/eeprom/at25.c b/drivers/misc/eeprom/at25.c
-index 595ceb9a7126..16ce36c02ed4 100644
---- a/drivers/misc/eeprom/at25.c
-+++ b/drivers/misc/eeprom/at25.c
-@@ -382,35 +382,41 @@ static int at25_fram_to_chip(struct device *dev, struct spi_eeprom *chip)
- 	struct at25_data *at25 = container_of(chip, struct at25_data, chip);
- 	u8 sernum[FM25_SN_LEN];
- 	u8 id[FM25_ID_LEN];
-+	u32 val;
- 	int i;
- 
- 	strscpy(chip->name, "fm25", sizeof(chip->name));
- 
--	/* Get ID of chip */
--	fm25_aux_read(at25, id, FM25_RDID, FM25_ID_LEN);
--	if (id[6] != 0xc2) {
--		dev_err(dev, "Error: no Cypress FRAM (id %02x)\n", id[6]);
--		return -ENODEV;
--	}
--	/* Set size found in ID */
--	if (id[7] < 0x21 || id[7] > 0x26) {
--		dev_err(dev, "Error: unsupported size (id %02x)\n", id[7]);
--		return -ENODEV;
-+	if (!device_property_read_u32(dev, "size", &val)) {
-+		chip->byte_len = val;
-+	} else {
-+		/* Get ID of chip */
-+		fm25_aux_read(at25, id, FM25_RDID, FM25_ID_LEN);
-+		if (id[6] != 0xc2) {
-+			dev_err(dev, "Error: no Cypress FRAM (id %02x)\n", id[6]);
-+			return -ENODEV;
-+		}
-+		/* Set size found in ID */
-+		if (id[7] < 0x21 || id[7] > 0x26) {
-+			dev_err(dev, "Error: unsupported size (id %02x)\n", id[7]);
-+			return -ENODEV;
-+		}
-+
-+		chip->byte_len = BIT(id[7] - 0x21 + 4) * 1024;
-+
-+		if (id[8]) {
-+			fm25_aux_read(at25, sernum, FM25_RDSN, FM25_SN_LEN);
-+			/* Swap byte order */
-+			for (i = 0; i < FM25_SN_LEN; i++)
-+				at25->sernum[i] = sernum[FM25_SN_LEN - 1 - i];
-+		}
- 	}
- 
--	chip->byte_len = BIT(id[7] - 0x21 + 4) * 1024;
- 	if (chip->byte_len > 64 * 1024)
- 		chip->flags |= EE_ADDR3;
- 	else
- 		chip->flags |= EE_ADDR2;
- 
--	if (id[8]) {
--		fm25_aux_read(at25, sernum, FM25_RDSN, FM25_SN_LEN);
--		/* Swap byte order */
--		for (i = 0; i < FM25_SN_LEN; i++)
--			at25->sernum[i] = sernum[FM25_SN_LEN - 1 - i];
--	}
--
- 	chip->page_size = PAGE_SIZE;
- 	return 0;
- }
+diff --git a/drivers/misc/tps6594-pfsm.c b/drivers/misc/tps6594-pfsm.c
+index 0a24ce44cc37..0d9dad20b6ae 100644
+--- a/drivers/misc/tps6594-pfsm.c
++++ b/drivers/misc/tps6594-pfsm.c
+@@ -281,6 +281,8 @@ static int tps6594_pfsm_probe(struct platform_device *pdev)
+ 	pfsm->miscdev.minor = MISC_DYNAMIC_MINOR;
+ 	pfsm->miscdev.name = devm_kasprintf(dev, GFP_KERNEL, "pfsm-%ld-0x%02x",
+ 					    tps->chip_id, tps->reg);
++	if (!pfsm->miscdev.name)
++		return -ENOMEM;
+ 	pfsm->miscdev.fops = &tps6594_pfsm_fops;
+ 	pfsm->miscdev.parent = dev->parent;
+ 	pfsm->chip_id = tps->chip_id;
 -- 
-2.43.0
-
+2.34.1
 
