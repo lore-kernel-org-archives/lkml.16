@@ -1,102 +1,206 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06F2A1F03C5
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 11:20:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB1E71F152F
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 11:20:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743506409; cv=none; b=ok0PNSiCcZxIkWdlVo19XTmcyjQmdWR+488XzGfvJbClPq4Tfu1N0o2jPdb8Ze8mVexxziduZlzmHelEQbSvchmmRPimSVVOvO5da9mgwkqEDICzydJLxwAVWe4l92PSFpLasYJhtBxxpcx1V6Ic56SkSiMIs4CYhxx2ESUtaxU=
+	t=1743506441; cv=none; b=rdifAJZ8vhdtS6yJz6LEVQXsjqacXeXx/DF66cTF3ortG/ZBpbqEsRU7uVggQxQjqXCutuIbkI+JzRwCYM5/KwBIl8KsV2nww27zEdfk72NoLYfk9YDVjZSc3Ig6KxxowcrNh1MKQZ34JlKuqdgvZLBsVzxaLOjfSR6qCJqysNI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743506409; c=relaxed/simple;
-	bh=sCjvl7izauThsYwNFbnNKf9NZ42TJuZNSgB3wjxKjJc=;
+	s=arc-20240116; t=1743506441; c=relaxed/simple;
+	bh=4z0yWuovovzT4P0Rx5n7A0VZ8Le5ZD/+97cst0pdcGU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D7mcxGdXjvvJ80+SlujWYVU+wiSOzCrmK4YnK/goitBmNlNMBf1XgUSnT5N2KP484mjPOjghvU+P8VCG9Z+/R/gCRknqfl/oNU2qAcHZqP/Q23P9ILTVdx9ESOB3BInISUxckEkN03zIfk92eafCbMEYHhBoqwxN2goAAN5oL8I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hACLBpIX; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=O4+XsmpPVv4Oje+bynJYUodkdTq7lMRhcuAowQ8Ghm5ez1JCDFofn6d2BUTu2Pim7sDpQTrhpTV67AG2x4T0k/Ly8k3mtvqb96i9KvRU8NMSi5RpM09kL+1sFnhGpi2xOcfTUck6rUsO/cnqnBUK5OJJXvywuwDG6oi7taInysE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=LQCzv7lw; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=+zx+wweq; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=LQCzv7lw; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=+zx+wweq; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hACLBpIX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743506406;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OLK5xMu00RCz/CjhdjrD5oqQm053cd7+2VWl0bjzUcQ=;
-	b=hACLBpIXGDQjXoWhGEbSADLwp1iGxHX+rdj3JCQzlCSIb7lZGNrc4O2qP/Qf5yDXZBXlbC
-	4VlukUSsvYhju06TGPx+sTC0d6dhJzq18D9Ct45EUYnIMJ35ZaMiZ/ukZqR/6zGEOcq/Q5
-	GQiQdjaWVhSD9jpMswvB5ILTzmGI9ys=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-561-rPaSlO7TNKe6qaCGaenIBw-1; Tue,
- 01 Apr 2025 07:20:05 -0400
-X-MC-Unique: rPaSlO7TNKe6qaCGaenIBw-1
-X-Mimecast-MFC-AGG-ID: rPaSlO7TNKe6qaCGaenIBw_1743506404
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="LQCzv7lw";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="+zx+wweq";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="LQCzv7lw";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="+zx+wweq"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A69BA180899B;
-	Tue,  1 Apr 2025 11:20:03 +0000 (UTC)
-Received: from localhost (unknown [10.43.135.229])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6BF6A1955BEF;
-	Tue,  1 Apr 2025 11:20:00 +0000 (UTC)
-Date: Tue, 1 Apr 2025 13:19:57 +0200
-From: Miroslav Lichvar <mlichvar@redhat.com>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: John Stultz <jstultz@google.com>, LKML <linux-kernel@vger.kernel.org>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
-	kernel-team@android.com, Lei Chen <lei.chen@smartx.com>
-Subject: Re: [PATCH v2 1/2] time/timekeeping: Fix possible inconsistencies in
- _COARSE clockids
-Message-ID: <Z-vL3cVZuQ8XQXhG@localhost>
-References: <20250320200306.1712599-1-jstultz@google.com>
- <Z-KURRE_Gr72Xv_n@localhost>
- <874izezv3c.ffs@tglx>
- <Z-Vx8kV4M3khPknC@localhost>
- <Z-qsg6iDGlcIJulJ@localhost>
- <87o6xgwftc.ffs@tglx>
+	by smtp-out1.suse.de (Postfix) with ESMTPS id CF393211E8;
+	Tue,  1 Apr 2025 11:20:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1743506437; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9Qm5ZIzmgsTH99+u6cTQsdFe97BWstocOSAgLAVKl+0=;
+	b=LQCzv7lw82pO8LAxuMgGur/XBrzsFQciXqJfRsQ/W2/02rA+j3khv6i2XoaYJKItUoBq1O
+	z2nFygqtd2f8f5K87Cc/UX3f0ricKqsk+XIkh7KwpXMLype29Q+FrpPZUk6tQda8eu3zl/
+	EXN8nW0/IhKReCadq4AYnt7JdVyS+vY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1743506437;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9Qm5ZIzmgsTH99+u6cTQsdFe97BWstocOSAgLAVKl+0=;
+	b=+zx+wweqdmixvCE8O9nYTmgqZMsAcc+QjZJy85pfSYKYmRvDaXx2fx3llWMYBTAyIr7fbE
+	d686O1ZWJZOsXoBw==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1743506437; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9Qm5ZIzmgsTH99+u6cTQsdFe97BWstocOSAgLAVKl+0=;
+	b=LQCzv7lw82pO8LAxuMgGur/XBrzsFQciXqJfRsQ/W2/02rA+j3khv6i2XoaYJKItUoBq1O
+	z2nFygqtd2f8f5K87Cc/UX3f0ricKqsk+XIkh7KwpXMLype29Q+FrpPZUk6tQda8eu3zl/
+	EXN8nW0/IhKReCadq4AYnt7JdVyS+vY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1743506437;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9Qm5ZIzmgsTH99+u6cTQsdFe97BWstocOSAgLAVKl+0=;
+	b=+zx+wweqdmixvCE8O9nYTmgqZMsAcc+QjZJy85pfSYKYmRvDaXx2fx3llWMYBTAyIr7fbE
+	d686O1ZWJZOsXoBw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C18DB13691;
+	Tue,  1 Apr 2025 11:20:37 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id kYs7LwXM62d9JQAAD6G6ig
+	(envelope-from <jack@suse.cz>); Tue, 01 Apr 2025 11:20:37 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 76DF4A07E6; Tue,  1 Apr 2025 13:20:37 +0200 (CEST)
+Date: Tue, 1 Apr 2025 13:20:37 +0200
+From: Jan Kara <jack@suse.cz>
+To: James Bottomley <James.Bottomley@hansenpartnership.com>
+Cc: Christian Brauner <brauner@kernel.org>, jack@suse.cz, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, mcgrof@kernel.org, 
+	hch@infradead.org, david@fromorbit.com, rafael@kernel.org, djwong@kernel.org, 
+	pavel@kernel.org, peterz@infradead.org, mingo@redhat.com, will@kernel.org, 
+	boqun.feng@gmail.com
+Subject: Re: [RFC PATCH 1/4] locking/percpu-rwsem: add freezable alternative
+ to down_read
+Message-ID: <3bfnds6nsvxy5jfbcoy62uva6kebhacjuavqxvelbfs6ut6rqf@m4pzsudbqg6l>
+References: <20250327140613.25178-1-James.Bottomley@HansenPartnership.com>
+ <20250327140613.25178-2-James.Bottomley@HansenPartnership.com>
+ <77774eb380e343976de3de681204e2c7f3ab1926.camel@HansenPartnership.com>
+ <20250401-anwalt-dazugeben-18d8c3efd1fd@brauner>
+ <f6bdfa23b9f54055f8a539ce396f1134b0921417.camel@HansenPartnership.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <87o6xgwftc.ffs@tglx>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <f6bdfa23b9f54055f8a539ce396f1134b0921417.camel@HansenPartnership.com>
+X-Spam-Score: -2.30
+X-Spamd-Result: default: False [-2.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	RCVD_COUNT_THREE(0.00)[3];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[15];
+	RCVD_TLS_LAST(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FREEMAIL_CC(0.00)[kernel.org,suse.cz,vger.kernel.org,infradead.org,fromorbit.com,redhat.com,gmail.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On Tue, Apr 01, 2025 at 08:34:23AM +0200, Thomas Gleixner wrote:
-> On Mon, Mar 31 2025 at 16:53, Miroslav Lichvar wrote:
-> > Mult reduction	Updates/sec	Skew before	Skew after
-> > 16		4		0.004		0.009
-> > 16		16		0.011		0.069
-> > 16		64		0.020		0.117
-> > 64		4		0.013		0.012
-> > 64		16		0.030		0.107
-> > 64		64		0.058		0.879
+On Mon 31-03-25 21:13:20, James Bottomley wrote:
+> On Tue, 2025-04-01 at 01:32 +0200, Christian Brauner wrote:
+> > On Mon, Mar 31, 2025 at 03:51:43PM -0400, James Bottomley wrote:
+> > > On Thu, 2025-03-27 at 10:06 -0400, James Bottomley wrote:
+> > > [...]
+> > > > -static void percpu_rwsem_wait(struct percpu_rw_semaphore *sem,
+> > > > bool
+> > > > reader)
+> > > > +static void percpu_rwsem_wait(struct percpu_rw_semaphore *sem,
+> > > > bool
+> > > > reader,
+> > > > +			      bool freeze)
+> > > >  {
+> > > >  	DEFINE_WAIT_FUNC(wq_entry, percpu_rwsem_wake_function);
+> > > >  	bool wait;
+> > > > @@ -156,7 +157,8 @@ static void percpu_rwsem_wait(struct
+> > > > percpu_rw_semaphore *sem, bool reader)
+> > > >  	spin_unlock_irq(&sem->waiters.lock);
+> > > >  
+> > > >  	while (wait) {
+> > > > -		set_current_state(TASK_UNINTERRUPTIBLE);
+> > > > +		set_current_state(TASK_UNINTERRUPTIBLE |
+> > > > +				  freeze ? TASK_FREEZABLE : 0);
+> > > 
+> > > This is a bit embarrassing, the bug I've been chasing is here: the
+> > > ?
+> > > operator is lower in precedence than | meaning this expression
+> > > always
+> > > evaluates to TASK_FREEZABLE and nothing else (which is why the
+> > > process
+> > > goes into R state and never wakes up).
+> > > 
+> > > Let me fix that and redo all the testing.
+> > 
+> > I don't think that's it. I think you're missing making pagefault
+> > writers such
+> > as systemd-journald freezable:
+> > 
+> > diff --git a/include/linux/fs.h b/include/linux/fs.h
+> > index b379a46b5576..528e73f192ac 100644
+> > --- a/include/linux/fs.h
+> > +++ b/include/linux/fs.h
+> > @@ -1782,7 +1782,8 @@ static inline void __sb_end_write(struct
+> > super_block *sb, int level)
+> >  static inline void __sb_start_write(struct super_block *sb, int
+> > level)
+> >  {
+> >         percpu_down_read_freezable(sb->s_writers.rw_sem + level - 1,
+> > -                                  level == SB_FREEZE_WRITE);
+> > +                                  (level == SB_FREEZE_WRITE ||
+> > +                                   level == SB_FREEZE_PAGEFAULT));
+> >  }
 > 
-> Hrm.
-> 
-> Can you try the delta patch below?
+> Yes, I was about to tell Jan that the condition here simply needs to be
+> true.  All our rwsem levels need to be freezable to avoid a hibernation
+> failure.
 
-It seems to improve the worst cases, but overall it's still
-a regression.
+So there is one snag with this. SB_FREEZE_PAGEFAULT level is acquired under
+mmap_sem, SB_FREEZE_INTERNAL level is possibly acquired under some other
+filesystem locks. So if you freeze the filesystem, a task can block on
+frozen filesystem with e.g. mmap_sem held and if some other task then
+blocks on grabbing that mmap_sem, hibernation fails because we'll be unable
+to hibernate the task waiting for mmap_sem. So if you'd like to completely
+avoid these hibernation failures, you'd have to make a slew of filesystem
+related locks use freezable sleeping. I don't think that's feasible.
 
-Mult reduction	Updates/sec	Skew
-16		4		0.012
-16		16		0.014
-16		64	        0.033
-64		4		0.012
-64		16		0.105
-64		64		0.138
+I was hoping that failures due to SB_FREEZE_PAGEFAULT level not being
+freezable would be rare enough but you've proven they are quite frequent.
+We can try making SB_FREEZE_PAGEFAULT level (or even SB_FREEZE_INTERNAL)
+freezable and see whether that works good enough...
 
-Thanks,
-
+								Honza
 -- 
-Miroslav Lichvar
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
