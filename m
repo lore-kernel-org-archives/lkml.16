@@ -1,146 +1,88 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3BAA59B71;
-	Tue,  1 Apr 2025 02:51:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 235D559B71;
+	Tue,  1 Apr 2025 02:51:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743475896; cv=none; b=iS/6XpvdKD+xuNOGvuRRQGcwpWlroNv5WH5/bZFuSj840+UozC8p5ZpGQVj007dzWIokgIRhUbraMvVXiwYbmCKTl7CdZtkxz0qfAi4r3zoG24Ud9bCyE3uYLMhPXtv3Gsseyz/8BtlMSYYjQbwty98hjL2qM0HM4SCRZWqNzZw=
+	t=1743475909; cv=none; b=T0zE13VQRlfJJA9StOi4hPiXs94ocn6w0bltDI4duuzQAka2kwukUaHFIxiAzb91DcV7zyHONCJ1prr4zm9wH6H1Pk20xvIIOQvmaJ8eKaTBD1OhOvDiFGsTGykHDHf4O4o22Uw4wEXRPnlc8xqWXAQ0Ai1KiV0Q5ZSJWu069qk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743475896; c=relaxed/simple;
-	bh=xwD9fXC742YoiMkB28g64Ee+KLt7yC3cgvk3V2DweOM=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=XJUVMe6B8hjXMbaqF3wGEV31XMrS0jrc0Nad060HiNniNPUeNj4lDi21aX+Z6rmEgYx4FQeQ7sSr8fPFxeM8mQl8BZ983P96gpGwuUHqzrcnsTmDS+QfnwbKZ1OIr2x0Dc3OoqtMNeZkICS7r04rUbqAsOu+RXSWiTnFPR5FVBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=rqKtic+3; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="rqKtic+3"
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 5312pQhB5799497, This message is accepted by code: ctloc85258
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
-	t=1743475886; bh=xwD9fXC742YoiMkB28g64Ee+KLt7yC3cgvk3V2DweOM=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:
-	 Content-Transfer-Encoding:Content-Type;
-	b=rqKtic+3He4u22CFp4S85LbMHWw6GXR/LH3ZWbPtl12+keZcdYKU/1HeVb5PsNNTk
-	 7b3BQr/FqhxSNeyjxmlm3XF/nntMWEHYSJc7IxyslxB6sXSuCwep9YkYk9xTDxuil0
-	 Bgkctmx8PQ4mA8ptr7lsNtfz3+NbeM5rB7nvrPDtz4uQ1qLF5/0Ui8LHkbRYf1p24O
-	 lAbjRfiFzh96T5aMzVkBAkS30BUHfrtTm3EMvttWqZAWkxmj4S42rG8RvhY52a2cXc
-	 0b8wEsNw6IeuBSVhhvFqDIYYmZiQq5j23hpYADZy2FpDPo9oC5WC2wXc2giDlCOpBD
-	 9+KKwQ/3oCtNA==
-Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
-	by rtits2.realtek.com.tw (8.15.2/3.06/5.92) with ESMTPS id 5312pQhB5799497
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 1 Apr 2025 10:51:26 +0800
-Received: from RTEXMBS05.realtek.com.tw (172.21.6.98) by
- RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Tue, 1 Apr 2025 10:51:26 +0800
-Received: from RTEXH36506.realtek.com.tw (172.21.6.27) by
- RTEXMBS05.realtek.com.tw (172.21.6.98) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Tue, 1 Apr 2025 10:51:26 +0800
-Received: from localhost (172.22.144.1) by RTEXH36506.realtek.com.tw
- (172.21.6.27) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
- Transport; Tue, 1 Apr 2025 10:51:26 +0800
-From: Ricky Wu <ricky_wu@realtek.com>
-To: <linux-kernel@vger.kernel.org>, <ulf.hansson@linaro.org>,
-        <linux-mmc@vger.kernel.org>, <viro@zeniv.linux.org.uk>,
-        <ricky_wu@realtek.com>
-Subject: [PATCH] mmc: rtsx: usb add 74 clocks in poweron flow
-Date: Tue, 1 Apr 2025 10:51:23 +0800
-Message-ID: <20250401025123.895307-1-ricky_wu@realtek.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1743475909; c=relaxed/simple;
+	bh=RItUkqRKucQWp7MFuyOxMmqREl9gCnkIuNph40EdEFw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Y1FAOR8v1lkooEojcB60ew/5FTXFDiG7QO7BdKRC35/yVn3X6czTaop8OG5uhtxspzsHeiq177sK2x82F4QFeScuqljL2aXKCdD60n7TWbvsjgYWB+4De04f6BL+bHcxD9h4zyOanDTFKW/f5YytTQ+9OnPfFnhwMSaAeGMcAXk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9F36714BF;
+	Mon, 31 Mar 2025 19:51:49 -0700 (PDT)
+Received: from [10.162.16.153] (unknown [10.162.16.153])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 018F23F59E;
+	Mon, 31 Mar 2025 19:51:39 -0700 (PDT)
+Message-ID: <86a276d6-afe3-4c70-aa85-7cafe33b8e5c@arm.com>
+Date: Tue, 1 Apr 2025 08:21:36 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] mm/ptdump: Split note_page() into level specific
+ callbacks
+To: Alexander Gordeev <agordeev@linux.ibm.com>
+Cc: linux-mm@kvack.org, Catalin Marinas <catalin.marinas@arm.com>,
+ Will Deacon <will@kernel.org>, Steven Price <steven.price@arm.com>,
+ Ryan Roberts <ryan.roberts@arm.com>,
+ Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Nicholas Piggin <npiggin@gmail.com>, Paul Walmsley
+ <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+ Heiko Carstens <hca@linux.ibm.com>, Peter Zijlstra <peterz@infradead.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+ linux-s390@vger.kernel.org
+References: <20250317061818.16244-1-anshuman.khandual@arm.com>
+ <20250317061818.16244-2-anshuman.khandual@arm.com>
+ <Z+pZX2QmFnNnnjZ5@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+Content-Language: en-US
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <Z+pZX2QmFnNnnjZ5@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-SD spec definition:
-"Host provides at least 74 Clocks before issuing first command"
-After 1ms for the voltage stable then start issuing the Clock signals
 
-add if statement to issue/stop the clock signal to card:
-The power state from POWER_OFF to POWER_UP issue the signal to card,
-POWER_UP to POWER_ON stop the signal
 
-add 100ms delay in power_on to make sure the power cycle complete
+On 3/31/25 14:29, Alexander Gordeev wrote:
+> On Mon, Mar 17, 2025 at 11:48:17AM +0530, Anshuman Khandual wrote:
+> 
+> Hi Anshuman,
+> 
+> ...
+>> --- a/include/linux/ptdump.h
+>> +++ b/include/linux/ptdump.h
+>> @@ -11,9 +11,12 @@ struct ptdump_range {
+>>  };
+>>  
+>>  struct ptdump_state {
+>> -	/* level is 0:PGD to 4:PTE, or -1 if unknown */
+>> -	void (*note_page)(struct ptdump_state *st, unsigned long addr,
+>> -			  int level, u64 val);
+>> +	void (*note_page_pte)(struct ptdump_state *st, unsigned long addr, pte_t pte);
+>> +	void (*note_page_pmd)(struct ptdump_state *st, unsigned long addr, pmd_t pmd);
+>> +	void (*note_page_pud)(struct ptdump_state *st, unsigned long addr, pud_t pud);
+>> +	void (*note_page_p4d)(struct ptdump_state *st, unsigned long addr, p4d_t p4d);
+>> +	void (*note_page_pgd)(struct ptdump_state *st, unsigned long addr, pgd_t pgd);
+>> +	void (*note_page_flush)(struct ptdump_state *st);
+>>  	void (*effective_prot)(struct ptdump_state *st, int level, u64 val);
+> 
+> Should you treat effective_prot() similarly?
 
-Signed-off-by: Ricky Wu <ricky_wu@realtek.com>
----
- drivers/mmc/host/rtsx_usb_sdmmc.c | 28 +++++++++++++++++++++++++---
- 1 file changed, 25 insertions(+), 3 deletions(-)
+Agreed. effective_prot() also uses pxd_val() derived data type in generic MM and
+might cause the same problem later going ahead. Will split the helper into level
+specific callbacks as well.
 
-diff --git a/drivers/mmc/host/rtsx_usb_sdmmc.c b/drivers/mmc/host/rtsx_usb_sdmmc.c
-index d229c2b83ea9..e5820b2bb380 100644
---- a/drivers/mmc/host/rtsx_usb_sdmmc.c
-+++ b/drivers/mmc/host/rtsx_usb_sdmmc.c
-@@ -48,7 +48,7 @@ struct rtsx_usb_sdmmc {
- 	bool			ddr_mode;
- 
- 	unsigned char		power_mode;
--
-+	unsigned char		prev_power_mode;
- #ifdef RTSX_USB_USE_LEDS_CLASS
- 	struct led_classdev	led;
- 	char			led_name[32];
-@@ -952,6 +952,8 @@ static int sd_power_on(struct rtsx_usb_sdmmc *host)
- 	struct rtsx_ucr *ucr = host->ucr;
- 	int err;
- 
-+	msleep(100);
-+
- 	dev_dbg(sdmmc_dev(host), "%s\n", __func__);
- 	rtsx_usb_init_cmd(ucr);
- 	rtsx_usb_add_cmd(ucr, WRITE_REG_CMD, CARD_SELECT, 0x07, SD_MOD_SEL);
-@@ -1014,6 +1016,16 @@ static int sd_set_power_mode(struct rtsx_usb_sdmmc *host,
- 		unsigned char power_mode)
- {
- 	int err;
-+	int power_mode_temp;
-+	struct rtsx_ucr *ucr = host->ucr;
-+
-+	power_mode_temp = power_mode;
-+
-+	if ((power_mode == MMC_POWER_ON) && (host->power_mode == MMC_POWER_ON) &&
-+			(host->prev_power_mode == MMC_POWER_UP)) {
-+		host->prev_power_mode = MMC_POWER_ON;
-+		rtsx_usb_write_register(ucr, SD_BUS_STAT, SD_CLK_TOGGLE_EN, 0x00);
-+	}
- 
- 	if (power_mode != MMC_POWER_OFF)
- 		power_mode = MMC_POWER_ON;
-@@ -1029,9 +1041,18 @@ static int sd_set_power_mode(struct rtsx_usb_sdmmc *host,
- 		err = sd_power_on(host);
- 	}
- 
--	if (!err)
--		host->power_mode = power_mode;
-+	if (!err) {
-+		if ((power_mode_temp == MMC_POWER_UP) && (host->power_mode == MMC_POWER_OFF)) {
-+			host->prev_power_mode = MMC_POWER_UP;
-+			rtsx_usb_write_register(ucr, SD_BUS_STAT, SD_CLK_TOGGLE_EN,
-+					SD_CLK_TOGGLE_EN);
-+		}
-+
-+		if ((power_mode_temp == MMC_POWER_OFF) && (host->power_mode == MMC_POWER_ON))
-+			host->prev_power_mode = MMC_POWER_OFF;
- 
-+		host->power_mode = power_mode;
-+	}
- 	return err;
- }
- 
-@@ -1316,6 +1337,7 @@ static void rtsx_usb_init_host(struct rtsx_usb_sdmmc *host)
- 	mmc->max_req_size = 524288;
- 
- 	host->power_mode = MMC_POWER_OFF;
-+	host->prev_power_mode = MMC_POWER_OFF;
- }
- 
- static int rtsx_usb_sdmmc_drv_probe(struct platform_device *pdev)
--- 
-2.25.1
-
+> 
+>>  	const struct ptdump_range *range;
+>>  };
