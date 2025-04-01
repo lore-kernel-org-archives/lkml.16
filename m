@@ -1,168 +1,125 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vern.gendns.com (vern.gendns.com [98.142.107.122])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AA8E204C20
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 14:22:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79605189F56;
+	Tue,  1 Apr 2025 14:24:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=98.142.107.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743517363; cv=none; b=MsE4rhoupT8h/tmtvr7BouMnbL21QHikYQQJZzk2TQE5eZIuT16+tYgsUiOENsyFMBovyHD9TaowiEEr9YnA78oH8HeLJwY8dldyLzHEYYDNPslnxa/pG46YuqjtoGgZQ0848UhrL923VHf4xvZgXzZsITsBpgxBGlmBe0zeSPo=
+	t=1743517486; cv=none; b=jJExMM8uo+CagnVkOADaK0EQ8zuy+HU44BV4qkRy+kphEEcVMEy0uRDRiUmboWXeF9OKRBGn+GT8p7VNPi3NMk0b6kcwSsWJFpFGp5cOrrJEsefOGf1V3NlDPEp/YFQk/BhjlGEQV6iJVgHQxOXaDf8QHT0pVaqTHeOmMB+VddU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743517363; c=relaxed/simple;
-	bh=sw+aC5ewjJj5UHGw0yY9U0SXiO6WO4oeB/HY4wRa14o=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=tMNH4x/24aCqsH4PZCVNVCMgrR5s9/8TeAOdt1CLm9D5Yxfaxzzo+opDabLPdifKW8NJeO17IE/6vE8Cg+X6iFtIIF1IVxjjvs6IZWDIdFFCqPc7Ts4CKnhaTWOL1F0XJowqiztNjUa5U4pGWy+BvCi2M8tWVb4KuRufM62tb84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=I4CVfNX6; arc=none smtp.client-ip=209.85.214.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1743517486; c=relaxed/simple;
+	bh=UEwhfsnRmdNrlpCAYZKSnEloif6NrMNWguTi4XBkR/k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UdqlDMd8v9XqI0ztqokosRXvsVOL7GsLQjlqhazw7RUEpnUTZ5OwbPtqoU5YT+++e0KaPyqCD1iDpUfIEyWY88NKgSBKKV90Pc17WqmbBSGNEmTJYmkmQLX1N5ULzF8YGQ3F9rQZiUBI5vyab+g1ZTyeo2KF8zC8xehwHAQUXjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lechnology.com; spf=pass smtp.mailfrom=lechnology.com; dkim=pass (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b=Hj5njTlZ; arc=none smtp.client-ip=98.142.107.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lechnology.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lechnology.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="I4CVfNX6"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2242ade807fso4384175ad.2
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 07:22:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743517361; x=1744122161; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GRRQLmB2UHTKWjLPNOKgO+07J02Vyv6Q87GOygHVBSc=;
-        b=I4CVfNX692iIbBsdOeBa+thYY68GzkY0qyOgrjD8DP7/JeYyvNmgXFfReshST3eu8+
-         d50ABGowy1Mdlinu+zbR0BCyBz79x9qFKlm5f/CR1m13CJqT5NoBArwPOmv2HjZyRo5g
-         DiNmI/E/RxDp0i4up87S6gZtVhPSePmEx3lAUhhjGjgAdbUKqHPyEExVVWeBRsCzg2tt
-         l7ug4IZ8fu40FSLy3TdMaA4NOSqm3QfxXPhUhTu7kobjsgiN+XUrn60ssvMTiNNOmaPt
-         5DsfggPVpR2oSjd6G9SvFNbqItAeGj01jTXTDZkUUhWDxBOOE3jqqORpH4PLPNmwn4wd
-         qHdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743517361; x=1744122161;
-        h=cc:to:from:subject:message-id:mime-version:date:reply-to
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GRRQLmB2UHTKWjLPNOKgO+07J02Vyv6Q87GOygHVBSc=;
-        b=K2Q3ty7mkq54OaZt2ccm+JU26V2ZTX/KoYoJKksbBCooZsZBH+JhRdBNvnE7qPS0fY
-         IgKKyqcPRzSyC2H8uxxisV4zohxoPuoy0IOOICE8L4AAICjRHU6w+ys9MAqM050tBTsU
-         nGQ2LKn16Bu6kXIXI+8AYAXWeCFiYy8sEa5BP9PDG/VlaUbYQBaZbF4vOQd+kvNJnX66
-         yCeyAO9spWYtn3NosK+YZOGLTQzigzDqMmmnKUzbr7voTYBCpcY85MXfzBhSUuY9cb4k
-         l6+O49DEJI7OlUlqARY7o3fbcA57H2pA1MNzlWwBUhZi4oSfgMbj1nTlITCIvi/Q88Js
-         SEvg==
-X-Forwarded-Encrypted: i=1; AJvYcCVnV479Cn4xeubUf1WUBKwbVDlxlA3iIvcbYzNGOYdIqrrpn1xj68DJaUJlxvBzi7h2T0qvC/emtJTj570=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzF4KGsPfWMbIAjjJcRuMtOK2Vp/aHC9CJgRaIQTyQ6vs6pJ1nB
-	q5/F4Vg/gI/E1QWt0u53xHskKupBlxhMx2qtMuXcB3a/sQ7P1J9ZvAFkTxEs9M4L8GjVl7hS6sC
-	pzA==
-X-Google-Smtp-Source: AGHT+IEj5AB9UPwSuBWy7y5gfFeTD62CFXIYtj8wLb2uV6AxixKP7fkmJtTBIxCecQBTTXeak4Qv5N/DQ9g=
-X-Received: from pfbhx12.prod.google.com ([2002:a05:6a00:898c:b0:732:6425:de9a])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:d489:b0:220:e9ef:ec98
- with SMTP id d9443c01a7336-2292f9629bemr199164595ad.19.1743517361442; Tue, 01
- Apr 2025 07:22:41 -0700 (PDT)
-Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Tue,  1 Apr 2025 07:22:38 -0700
+	dkim=pass (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="Hj5njTlZ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=lechnology.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=nyoNBGkZ/SvbWg6/7VkY8tnH5nK8aXreynxludftxRs=; b=Hj5njTlZyw29UjEq9ufWY6IQqS
+	+BTPdR9qp5fBzzyZxLjb5cnfuYsX/kq2s9+7/0VqSTY0rgH/KYykvZDGILggKPSYXqKJMkRGvF6kH
+	Az0rHZ2EPh+H5kaL8aUBDIDJYa9bhvJx3zcACLs5StNJvYF1z9DrQ1t0nJWdyXnhxYxgo7b+X2z1s
+	rGOlnou6COwSzW0igrksph46ghfws3puz3jumymQPfrZatjvQV40YZcmDvVzitk+9V1C+KA/ABrFL
+	SoOD514rjslnw5xcQHVp9Sx8IEls5hmzOGSVG7KvSvAMclWQ9Lf38ztUbxN351nxJWsHfQNW1Q29y
+	EbrGGzFg==;
+Received: from ip98-183-112-25.ok.ok.cox.net ([98.183.112.25]:42244 helo=[192.168.0.113])
+	by vern.gendns.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.98.1)
+	(envelope-from <david@lechnology.com>)
+	id 1tzcGf-000000006K1-3v06;
+	Tue, 01 Apr 2025 10:05:34 -0400
+Message-ID: <b79bda63-79bf-47b6-8ac1-1444ed101423@lechnology.com>
+Date: Tue, 1 Apr 2025 09:05:34 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.49.0.472.ge94155a9ec-goog
-Message-ID: <20250401142238.819487-1-seanjc@google.com>
-Subject: [PATCH] KVM: selftests: Add option to rseq test to override /dev/cpu_dma_latency
-From: Sean Christopherson <seanjc@google.com>
-To: Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Dongsheng Zhang <dongsheng.x.zhang@intel.com>, Zide Chen <zide.chen@intel.com>, 
-	Sean Christopherson <seanjc@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] clk: davinci: Add NULL check in
+ davinci_lpsc_clk_register()
+To: Henry Martin <bsdhenrymartin@gmail.com>, mturquette@baylibre.com,
+ sboyd@kernel.org
+Cc: linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250401131341.26800-1-bsdhenrymartin@gmail.com>
+Content-Language: en-US
+From: David Lechner <david@lechnology.com>
+Autocrypt: addr=david@lechnology.com; keydata=
+ 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
+In-Reply-To: <20250401131341.26800-1-bsdhenrymartin@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - vern.gendns.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lechnology.com
+X-Get-Message-Sender-Via: vern.gendns.com: authenticated_id: davidmain+lechnology.com/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: vern.gendns.com: davidmain@lechnology.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 
-Add a "-l <latency>" param to the rseq test so that the user can override
-/dev/cpu_dma_latency, as described by the test's suggested workaround for
-not being able to complete enough migrations.
+On 4/1/25 8:13 AM, Henry Martin wrote:
+> devm_kasprintf() returns NULL when memory allocation fails. Currently,
+> davinci_lpsc_clk_register() does not check for this case, which results
+> in a NULL pointer dereference.
+> 
+> Add NULL check after devm_kasprintf() to prevent this issue and ensuring
+> no resources are left allocated.
+> 
+> Fixes: c6ed4d734bc7 ("clk: davinci: New driver for davinci PSC clocks")
+> Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
+> ---
 
-cpu_dma_latency is not a normal file, even as far as procfs files go.
-Writes to cpu_dma_latency only persist so long as the file is open, e.g.
-so that the kernel automatically reverts back to a power-optimized state
-once the sensitive workload completes.  Provide the necessary functionality
-instead of effectively forcing the user to write a non-obvious wrapper.
-
-Cc: Dongsheng Zhang <dongsheng.x.zhang@intel.com>
-Cc: Zide Chen <zide.chen@intel.com>
-Signed-off-by: Sean Christopherson <seanjc@google.com>
----
- tools/testing/selftests/kvm/rseq_test.c | 31 ++++++++++++++++++++-----
- 1 file changed, 25 insertions(+), 6 deletions(-)
-
-diff --git a/tools/testing/selftests/kvm/rseq_test.c b/tools/testing/selftests/kvm/rseq_test.c
-index e5898678bfab..1375fca80bcd 100644
---- a/tools/testing/selftests/kvm/rseq_test.c
-+++ b/tools/testing/selftests/kvm/rseq_test.c
-@@ -196,25 +196,27 @@ static void calc_min_max_cpu(void)
- static void help(const char *name)
- {
- 	puts("");
--	printf("usage: %s [-h] [-u]\n", name);
-+	printf("usage: %s [-h] [-u] [-l latency]\n", name);
- 	printf(" -u: Don't sanity check the number of successful KVM_RUNs\n");
-+	printf(" -l: Set /dev/cpu_dma_latency to suppress deep sleep states\n");
- 	puts("");
- 	exit(0);
- }
- 
- int main(int argc, char *argv[])
- {
-+	int r, i, snapshot, opt, fd = -1, latency = -1;
- 	bool skip_sanity_check = false;
--	int r, i, snapshot;
- 	struct kvm_vm *vm;
- 	struct kvm_vcpu *vcpu;
- 	u32 cpu, rseq_cpu;
--	int opt;
- 
--	while ((opt = getopt(argc, argv, "hu")) != -1) {
-+	while ((opt = getopt(argc, argv, "hl:u")) != -1) {
- 		switch (opt) {
- 		case 'u':
- 			skip_sanity_check = true;
-+		case 'l':
-+			latency = atoi_paranoid(optarg);
- 			break;
- 		case 'h':
- 		default:
-@@ -243,6 +245,20 @@ int main(int argc, char *argv[])
- 	pthread_create(&migration_thread, NULL, migration_worker,
- 		       (void *)(unsigned long)syscall(SYS_gettid));
- 
-+	if (latency >= 0) {
-+		/*
-+		 * Writes to cpu_dma_latency persist only while the file is
-+		 * open, i.e. it allows userspace to provide guaranteed latency
-+		 * while running a workload.  Keep the file open until the test
-+		 * completes, otherwise writing cpu_dma_latency is meaningless.
-+		 */
-+		fd = open("/dev/cpu_dma_latency", O_RDWR);
-+		TEST_ASSERT(fd >= 0, __KVM_SYSCALL_ERROR("open() /dev/cpu_dma_latency", fd));
-+
-+		r = write(fd, &latency, 4);
-+		TEST_ASSERT(r >= 1, "Error setting /dev/cpu_dma_latency");
-+	}
-+
- 	for (i = 0; !done; i++) {
- 		vcpu_run(vcpu);
- 		TEST_ASSERT(get_ucall(vcpu, NULL) == UCALL_SYNC,
-@@ -278,6 +294,9 @@ int main(int argc, char *argv[])
- 			    "rseq CPU = %d, sched CPU = %d", rseq_cpu, cpu);
- 	}
- 
-+	if (fd > 0)
-+		close(fd);
-+
- 	/*
- 	 * Sanity check that the test was able to enter the guest a reasonable
- 	 * number of times, e.g. didn't get stalled too often/long waiting for
-@@ -293,8 +312,8 @@ int main(int argc, char *argv[])
- 	TEST_ASSERT(skip_sanity_check || i > (NR_TASK_MIGRATIONS / 2),
- 		    "Only performed %d KVM_RUNs, task stalled too much?\n\n"
- 		    "  Try disabling deep sleep states to reduce CPU wakeup latency,\n"
--		    "  e.g. via cpuidle.off=1 or setting /dev/cpu_dma_latency to '0',\n"
--		    "  or run with -u to disable this sanity check.", i);
-+		    "  e.g. via cpuidle.off=1 or via -l <latency>, or run with -u to\n"
-+		    "  disable this sanity check.", i);
- 
- 	pthread_join(migration_thread, NULL);
- 
-
-base-commit: 782f9feaa9517caf33186dcdd6b50a8f770ed29b
--- 
-2.49.0.472.ge94155a9ec-goog
+Reviewed-by: David Lechner <david@lechnology.com>
 
