@@ -1,98 +1,113 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2FFA26AE4;
-	Tue,  1 Apr 2025 11:14:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC2251E5B7E;
+	Tue,  1 Apr 2025 11:16:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743506065; cv=none; b=n/dJNj8uG2dY4ILT+21tcT66qvAgXxXjj2oWYLl5KTcDNaBualwzTSUYYlFexaQqcRkac6VfmwyPm5FWxSf/vz4lJRFY2nK0d7miC16Jck+cf5jWSlp4Q2Ot5EanYFkLRyi0q6Tkuoco6VirfJpZdvOp3w9V38gNymIjLrpFObg=
+	t=1743506181; cv=none; b=rb8KjGwHAXfdNaXgt0wxduxYREjVbthKFIr9cItslyeZ68JDrZu9FObVZglvHdzv+pS+CgEvj0ZMBZs/zJ9IRK6zoBLw3z/qim3V2Ezit603E5n/Ma1arAG7Cad5kIvawrfKUywpJUo2R0S+kMx5Du7qu2Ia2XQJ7dVZZ+iqfjg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743506065; c=relaxed/simple;
-	bh=XkN6QSSye3gn+M3fMvTNIV0lRCTkeu0sH4/gJnGYDAA=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=CCC3WzZrRCgByqfexX4iaNj5OFGe2fWmyqmK6TOXocFNwJxQTpjTcUgT5HNy2U3HTEgHgnojci/lWiXRO7NJ6rW+8Ce0uddTNAp3hazMhhp3UXYWDDbUR5fl7oLZIQaRO2adwv9h6Hce0edPVXysN0Ux1+FW9HWxgkv8mRsO0lc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k4043wa6; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k4043wa6"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-307c13298eeso61682301fa.0;
-        Tue, 01 Apr 2025 04:14:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743506062; x=1744110862; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=XkN6QSSye3gn+M3fMvTNIV0lRCTkeu0sH4/gJnGYDAA=;
-        b=k4043wa6/OhQnEMfYTCr9J4atpMW6O0YKtcYrMkybvqTUdD/0+54ujxp7LwO8EdSY1
-         GtfBMaXejBJOT2PQa8DCklzLbgWfO4JtdN6OlVmz2GoK+bZYJaJRJqGI86anmBSMvgtO
-         DIqZ6gWH5Jd5vCW7DdIE/RSeUBeUdm28tF8/GAnFI7h1R2KDccdZ3h7ka2GXq2BrYvmK
-         IGsUbc/HCZXc81u5ZpVZ3lINbO9Swt01VdiRyYEGCSbG9gIdfFwNcx1KR6QH1w2w9epe
-         LGZqVF97y2fTtKUeYUvJmt6deYLQP7N2D9IokKbqpvGIdVOkkhS+BEbLNIWjoxEPVZzG
-         7cMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743506062; x=1744110862;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=XkN6QSSye3gn+M3fMvTNIV0lRCTkeu0sH4/gJnGYDAA=;
-        b=nYsG/vuNvv6hWYRd54hXNaDbQkofuRGMR8BuwmYzE0TXyl8HHACJ4BBNQ7NCHcxneq
-         tClVCk8IVVCoLvE/aZllWN+cbYNYz29JijNmDbGUSMcv5ouSVC9DvhSxxAQHcJhBflzS
-         kg2Ilf+KUKJZmsyJSRWkLMkBNNwo4PxK7yA0DK/PXB8RlO9BoyDP9IoPomrEJwqpMn3T
-         HGiuSHtAo+sKPRNSRmrlkHdbuA8fv0W+I/Ac1EncwY13GI9KpoHPfE1ISyY6vQpSaQ1K
-         J5/xu+AWzBJZn3nrIT5QnF92A5lp8YBsNcDrb0Jn3+Mf/bhz7f8waN+FdQet6xNWRGkI
-         du5g==
-X-Forwarded-Encrypted: i=1; AJvYcCUJhk7wlObr2QVf2K3pij7OTjndj+PHmiTyk1cq5/gFhO2vAHMjNFGPiAazynQKrOEJbrC98R950pSn94+d@vger.kernel.org, AJvYcCVysGwdisNiczRNthAiz/+Tynvwuc5n3N82/Z83GK73Bwk4vh9VheuGfCwooWiVmjBYqVBshuCvOFk9R2MN@vger.kernel.org
-X-Gm-Message-State: AOJu0YwGEy1cUgrcQ8nLdUy2JQHUXMRxIZTQKdefsmY5Vdv6j0+Wgxfx
-	swKOtkDIsaR1w2pntAc1uNbB9WnADo22pKR/nKNQG5XtdQLRfEDK+1JdQGOe8BXfTrS/TKPKoJq
-	mMeIQ3YI5/thuwKeroq/HzS60ug==
-X-Gm-Gg: ASbGncu0xSk+BOwF/jhjnlwEE1xWEFArFNsl8VgU5N5m+sLnNKRyvqUGZyZA7nlTWkX
-	OkhYa235Q+5TJG6lu7ETgORRHg0CiGRwuVQaxlnSqylxr5LA6UokZ3ydaj2fgxUyz+3J/5DgivM
-	DcwkCicFp3VYV3a66J5xInxZA=
-X-Google-Smtp-Source: AGHT+IEHXU3npfPY3e2AZAgiXkRPkDoeSeQ4HIOCYEc6v/XlurUG1d7lGv6TLev+ssbLRtBsmvq1scS5Nrl2RRpvV/8=
-X-Received: by 2002:a2e:a905:0:b0:30b:c9cb:47eb with SMTP id
- 38308e7fff4ca-30ddf98eed5mr34283631fa.13.1743506061500; Tue, 01 Apr 2025
- 04:14:21 -0700 (PDT)
+	s=arc-20240116; t=1743506181; c=relaxed/simple;
+	bh=zJ3kLovwcr8+0e7SOkpB718W/KjQg3TgUmzwOppugwM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RXpoGokqPXCCCd/jLFsY6TuKE7klpaREjxzgyhhxVva5xbt6TU8ukxOujJf1rAYQ3rfGaD+FNuvalWsBxEswbjgWYtlGOG1T9tkztcwoQiC7XbDG0eGWL3h7Vm3696b9Ytt9zdBwX1Wp6lZI4qcE2HFGhDGhAj8foMk+IrXeoPU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8742A14BF;
+	Tue,  1 Apr 2025 04:16:20 -0700 (PDT)
+Received: from [10.163.46.196] (unknown [10.163.46.196])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A15103F694;
+	Tue,  1 Apr 2025 04:16:14 -0700 (PDT)
+Message-ID: <03b4456f-de06-42c6-91e0-4ea21de665ad@arm.com>
+Date: Tue, 1 Apr 2025 16:46:09 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Alexey Dobriyan <adobriyan@gmail.com>
-Date: Tue, 1 Apr 2025 14:14:10 +0300
-X-Gm-Features: AQ5f1JpCX8vr8D1N1XWcgqiuCkYPqSO2b-8a00U3lFHSKydprH4QXs3scq0dR6U
-Message-ID: <CACVxJT_qZP-AKUzf5sXfp2h+qJ+L0BZit3pgi-aGCuXk4Kmzuw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] proc: add a helper for marking files as permanent by
- external consumers
-To: Mateusz Guzik <mjguzik@gmail.com>
-Cc: Christian Brauner <brauner@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
-	Linux Kernel <linux-kernel@vger.kernel.org>, 
-	linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] arm64: Don't call NULL in do_compat_alignment_fixup
+To: Angelos Oikonomopoulos <angelos@igalia.com>,
+ linux-arm-kernel@lists.infradead.org
+Cc: catalin.marinas@arm.com, will@kernel.org, linux-kernel@vger.kernel.org,
+ kernel-dev@igalia.com, stable@vger.kernel.org
+References: <20250401085150.148313-1-angelos@igalia.com>
+Content-Language: en-US
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20250401085150.148313-1-angelos@igalia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-> +void proc_make_permanent(struct proc_dir_entry *de)
-> +{
-> + pde_make_permanent(de);
-> +}
-> +EXPORT_SYMBOL(proc_make_permanent);
 
-no, no, no, no
 
-this is wrong!
+On 4/1/25 14:21, Angelos Oikonomopoulos wrote:
+> do_alignment_t32_to_handler only fixes up alignment faults for specific
+> instructions; it returns NULL otherwise. When that's the case, signal to
+> the caller that it needs to proceed with the regular alignment fault
+> handling (i.e. SIGBUS). Without this patch, we get:
+> 
+>   Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
+>   Mem abort info:
+>     ESR = 0x0000000086000006
+>     EC = 0x21: IABT (current EL), IL = 32 bits
+>     SET = 0, FnV = 0
+>     EA = 0, S1PTW = 0
+>     FSC = 0x06: level 2 translation fault
+>   user pgtable: 4k pages, 48-bit VAs, pgdp=00000800164aa000
+>   [0000000000000000] pgd=0800081fdbd22003, p4d=0800081fdbd22003, pud=08000815d51c6003, pmd=0000000000000000
+>   Internal error: Oops: 0000000086000006 [#1] SMP
+>   Modules linked in: cfg80211 rfkill xt_nat xt_tcpudp xt_conntrack nft_chain_nat xt_MASQUERADE nf_nat nf_conntrack_netlink nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 xfrm_user xfrm_algo xt_addrtype nft_compat br_netfilter veth nvme_fa>
+>    libcrc32c crc32c_generic raid0 multipath linear dm_mod dax raid1 md_mod xhci_pci nvme xhci_hcd nvme_core t10_pi usbcore igb crc64_rocksoft crc64 crc_t10dif crct10dif_generic crct10dif_ce crct10dif_common usb_common i2c_algo_bit i2c>
+>   CPU: 2 PID: 3932954 Comm: WPEWebProcess Not tainted 6.1.0-31-arm64 #1  Debian 6.1.128-1
+>   Hardware name: GIGABYTE MP32-AR1-00/MP32-AR1-00, BIOS F18v (SCP: 1.08.20211002) 12/01/2021
+>   pstate: 80400009 (Nzcv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+>   pc : 0x0
+>   lr : do_compat_alignment_fixup+0xd8/0x3dc
+>   sp : ffff80000f973dd0
+>   x29: ffff80000f973dd0 x28: ffff081b42526180 x27: 0000000000000000
+>   x26: 0000000000000000 x25: 0000000000000000 x24: 0000000000000000
+>   x23: 0000000000000004 x22: 0000000000000000 x21: 0000000000000001
+>   x20: 00000000e8551f00 x19: ffff80000f973eb0 x18: 0000000000000000
+>   x17: 0000000000000000 x16: 0000000000000000 x15: 0000000000000000
+>   x14: 0000000000000000 x13: 0000000000000000 x12: 0000000000000000
+>   x11: 0000000000000000 x10: 0000000000000000 x9 : ffffaebc949bc488
+>   x8 : 0000000000000000 x7 : 0000000000000000 x6 : 0000000000000000
+>   x5 : 0000000000400000 x4 : 0000fffffffffffe x3 : 0000000000000000
+>   x2 : ffff80000f973eb0 x1 : 00000000e8551f00 x0 : 0000000000000001
+>   Call trace:
+>    0x0
+>    do_alignment_fault+0x40/0x50
+>    do_mem_abort+0x4c/0xa0
+>    el0_da+0x48/0xf0
+>    el0t_32_sync_handler+0x110/0x140
+>    el0t_32_sync+0x190/0x194
+>   Code: bad PC value
+>   ---[ end trace 0000000000000000 ]---
+> 
+> Signed-off-by: Angelos Oikonomopoulos <angelos@igalia.com>
+> Fixes: 3fc24ef32d3b93 ("arm64: compat: Implement misalignment fixups for multiword loads")
+> Cc: stable@vger.kernel.org
 
-marking should be done in the context of a module!
+Commit message looks good and attributed commit ID in "Fixes: "
+tag also checks out.
 
-the reason it is not exported is because the aren't safeguards against
-module misuse
+Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
 
-the flag is supposed to be used in case where
-a) PDE itself is never removed and,
-b) all the code supporting is never removed,
-so that locking can be skipped
-
-this it fine to mark /proc/filesystems because kernel controls it
-
-this is fine to mark /proc/aaa if all module does is to write some
-info to it and deletes it during rmmod
-
-but it is not fine to mark /proc/aaa/bbb if "bbb" is created/deleted
-while module is running,
-locking _must_ be done in this case
+> ---
+>  arch/arm64/kernel/compat_alignment.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/arch/arm64/kernel/compat_alignment.c b/arch/arm64/kernel/compat_alignment.c
+> index deff21bfa680..b68e1d328d4c 100644
+> --- a/arch/arm64/kernel/compat_alignment.c
+> +++ b/arch/arm64/kernel/compat_alignment.c
+> @@ -368,6 +368,8 @@ int do_compat_alignment_fixup(unsigned long addr, struct pt_regs *regs)
+>  		return 1;
+>  	}
+>  
+> +	if (!handler)
+> +		return 1;
+>  	type = handler(addr, instr, regs);
+>  
+>  	if (type == TYPE_ERROR || type == TYPE_FAULT)
