@@ -1,53 +1,53 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+Received: from mail-wr1-f74.google.com (mail-wr1-f74.google.com [209.85.221.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0ED1202C26
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 13:34:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9AA42040AD
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 13:34:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743514476; cv=none; b=EZy+qolSCJbPZeNCmTuC9wLj8ChXmCRccE0t4Fu5NF9X8ObumysWjYEN3DoLOeKRocZI8sn20Tk9YBQNd6dtyHs4UQ7ZwI8Q7IVO4LkhoRoldxSVJIh7cGPhG5XvldzaKxYG+kJ436WlZDi1YwHMLCUux+/H5FMTxMDhkZisbiE=
+	t=1743514478; cv=none; b=BOe+R0M7n4HJb4ap5327h5TvO0NA14dy3ghd+jytIi6N1izhaPSC1ajstAtCrzRmOrGR76bELwAiAhyovkikmtR7g1idzNhoGJqk0In/Is33nFhCbXInFkCpeiTbN8L94UZSjtxnonEkwOUvE4RjvwRcxRJr9ppEIbacnRt7/+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743514476; c=relaxed/simple;
-	bh=+jsVXUY+JNWjKDWkdCkg/3wzBjLZu5mOtImMQ3fql1Q=;
+	s=arc-20240116; t=1743514478; c=relaxed/simple;
+	bh=jVv82q0VAwBPvYZ5/rIuosPXebvdrL2vHJ8IsDzi2y8=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=jVs5uKYcdXIBLi/pWKJgBk8zDXcbe/AiYCoLBO/C7oxpA0PWnpm6jFi97Rn/Vti6ioekz6gEZzAbq3APa7GwWJN2oMQwCEl9STq/A5djZasG4iY1KZ9ZdpJRHEKzffRPmnQMxGxqnygAQHQa9jK/Pq0tE14BX0DKzek1q8iLH70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=P3Ys0OKV; arc=none smtp.client-ip=209.85.128.74
+	 To:Cc:Content-Type; b=Ch2HvKQNXAKLVwzmcLx/vwxVc9X4JVJJ7TYha96ySjtr8BC15wHaHN7SKTO6Q3WYOywgNIHLVmo0aKrAdQ9UgYPtMx0bh3A4Ebneon3CXo5zVCJPrXNAWSo0ADUDJAzhwZ1TGgGHdE56G461N+xgYy0ZoqjupHGiV+gmkfhYjFA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=G3NJwlJO; arc=none smtp.client-ip=209.85.221.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="P3Ys0OKV"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43d209dc2d3so32753995e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 06:34:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G3NJwlJO"
+Received: by mail-wr1-f74.google.com with SMTP id ffacd0b85a97d-3912b54611dso2979889f8f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 06:34:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743514473; x=1744119273; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1743514475; x=1744119275; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hdHYlnm7oCIQrR8yQXWXDs/JGWUxXVNjmYJAO6rvmBw=;
-        b=P3Ys0OKVDFQ1j+Mak/eyXxJZN3pgOrYgukznUbGWafaTgdn0fQ0WiSSnJ+kYic7Stv
-         gEK/XKWP5LWS9dndmHkNbGIEwHwEJThGRQd3qk13HPJO2atjhQPOb5/FN3/PxT0G68nr
-         HqWW9Fwzs1Q4HCHgf/ucKvkJF6t0Lh0a3HK1pT5nbj9o9+B5Gkg6gedm1xb/7yOIrEvg
-         YQLB+7NIpc+Sk0NCCUo1abvk4TC8LZomiCNh9yb52nreuCAFQ1YnhsN89uFjnnMVp2iY
-         bnp1DgoyZ9VqpNdY9HKXBgmuC9onQ0wE77ILUX0EP8BGTUqOTXalPPfwpmbs0e2bTKcC
-         lBlA==
+        bh=KkkgdoQS7XsAFt9UmFe68Xk/ys+reCGu9v6By+aRdFc=;
+        b=G3NJwlJOSAQKohRI0zN9krFZa3FmDcluaJKAgvN1g8FyI0ApEtnH0LBhSZrGffrpea
+         Tu0/n3UMX2doH+oIWFJ4tWXAfznTW8lms1NaXFQ6ld/yraNm+B/+EkvPMgytkUIjDvyn
+         6SDKgV5Ru82mVumNNfVj6BXeXBZUXbFeRjxoYQYkdAS400Aut2hE6OzB7b3gs5xfw1Dd
+         oe0M+HpNP1rj1vVZsHVwvDgO12DjJSfUMt4nBc+6ZbwYFiNi1yaif3imZhC/8I/XIT1P
+         kdfh6MR1o25QdbPMKg/abyXJyoZOgqtcHZKWsPzc4HI3mgVxGka+J+McDzV9hcwWK3aw
+         AQwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743514473; x=1744119273;
+        d=1e100.net; s=20230601; t=1743514475; x=1744119275;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hdHYlnm7oCIQrR8yQXWXDs/JGWUxXVNjmYJAO6rvmBw=;
-        b=VuOkn16SENcsY6QwgtEpMMx8uxE3/OnvktOHNXEkerX62PkkV5lYbRtruGiq88/rvV
-         nv/jclsZRfRqUyTx/qo+Tax1TK8G5KY4R7crV491TovAZlLUcpb8NT9u4jPnRyr1HuRy
-         fQruo6sYJQQekzmxji7vJDMqO6TneD9LvdZOCd5ki46q7k4xeCjd+PfRAKrRvsvCSzdz
-         1uCamxD5a+7li1hldrQRVzWS2Jc1xSpt/4zKJQy8VJ1Pnna/0ePZLsXdkUt4fmDDXM/w
-         eJdej/s6myhqF9dE/4CsqFg7z9E1enavPCved7adtBZCntKYJidN4L3hIIBjxfEa3EP6
-         8Qjw==
-X-Gm-Message-State: AOJu0Yzy2VHGT+8EcMoU+XoPpiJMSowu+hsgc3P8UIHDWJ1WLL6mkDfp
-	PxRWXZ6U25jJAHk+VytVnS0YPRaucdCWRDmNjZ829DX6lfjNj2wPfvS+1azmEthEEKDowQ==
-X-Google-Smtp-Source: AGHT+IG4x3Uac6Y88MEiNOljIjoS9AYRY3yNgjLa2c+ZBfDE53M+PxszbnOClR7HCFEi1qXaEnB2o3tn
-X-Received: from wmbjg21.prod.google.com ([2002:a05:600c:a015:b0:43c:f60a:4c59])
- (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:1e8f:b0:43c:ec4c:25b1
- with SMTP id 5b1f17b1804b1-43db62bbe2amr107359285e9.23.1743514473105; Tue, 01
- Apr 2025 06:34:33 -0700 (PDT)
-Date: Tue,  1 Apr 2025 15:34:18 +0200
+        bh=KkkgdoQS7XsAFt9UmFe68Xk/ys+reCGu9v6By+aRdFc=;
+        b=bZRORK7N1RK1nNkIa5IlYmn32VeLGZD1i5WNPc5i5gJQZmrY3oxsvh4vHXeaRLyWLQ
+         DhacbW3/7PWtRUSGb5mtCDM9pBhO5P00HJyCbhnN6CZ6HWZooe6mKGDYbRzhBFFym89d
+         HDiPWXyDp5F5++Ts3eTB9OpieiWCzEMHpcdo2eHiCtNRrI++ZN1cevZQRYULMwmHz3Dg
+         CXE+n2J8xBN7XmZtsv7UG2p3u7OAZioV2otghZ3Tt9M0Doj/nf88MvCww5TqTi7CkLnQ
+         a1psbnsbT8aqyInNinNojIvM/02cRCIiSljkyIbtiUV3T6INRoD9Vv7ShUGxXtEgpFcy
+         GHIA==
+X-Gm-Message-State: AOJu0YzPXjytmo4hZqr/g7CFN1JavfwyLWY4KdQsSWCVrjlcAGtGoyey
+	BnGkb2v2tgaTvL1mq5PO3J+IzL0efDgpXZeBxwIi3DU6tn6iyXEGT/3scoewmqou88gcgg==
+X-Google-Smtp-Source: AGHT+IH1Rwf0SPfvTDMLTXKr8r2VF8laxDRTirFJIzh3OocUBKb+W0dll+mMOctsSfKR+qI/IAtXpqrI
+X-Received: from wmco22.prod.google.com ([2002:a05:600c:a316:b0:43d:40ea:764d])
+ (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6000:250f:b0:39c:1f10:d294
+ with SMTP id ffacd0b85a97d-39c1f10d4e4mr4825842f8f.26.1743514475045; Tue, 01
+ Apr 2025 06:34:35 -0700 (PDT)
+Date: Tue,  1 Apr 2025 15:34:19 +0200
 In-Reply-To: <20250401133416.1436741-8-ardb+git@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -57,15 +57,14 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250401133416.1436741-8-ardb+git@google.com>
 X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3921; i=ardb@kernel.org;
- h=from:subject; bh=GJdt6JvaRkOjRUstkEclqIh4LycHXHj4RdQlgPesOr0=;
- b=owGbwMvMwCFmkMcZplerG8N4Wi2JIf3166iwvV57Pr1dd6HFzzxazmNikkIP+57Qks7WsI5Xq
- mmCzpc6SlkYxDgYZMUUWQRm/3238/REqVrnWbIwc1iZQIYwcHEKwESMnjP8s/7fKHxHZMuuOMeV
- ya5siWtPzNrNuvd68kbD9dMKF6013Mfw30vUsddv1keFe16/5XnU/vcukHvNEM3SN8G/Nm2ZkUQ JCwA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2642; i=ardb@kernel.org;
+ h=from:subject; bh=Rg+9UesfDX7KMCl1WWKPr+VDxB1ApETGwnITWSbmCXE=;
+ b=owGbwMvMwCFmkMcZplerG8N4Wi2JIf3165iHHY4uD/afSnKPszOfHrj0WLV0h5/xr5jp/9fL/
+ hfe86qio5SFQYyDQVZMkUVg9t93O09PlKp1niULM4eVCWQIAxenAEzEOJmR4WbK2rN+i8pqm1+u
+ 5Ty+lHNTx/7ty24JfU27l7xzopd2+3OGfxq2ZvoFgR7zv5R8WvRAlHmLamzcifaAktn3uVdt0Hn iwgkA
 X-Mailer: git-send-email 2.49.0.472.ge94155a9ec-goog
-Message-ID: <20250401133416.1436741-9-ardb+git@google.com>
-Subject: [RFC PATCH 1/6] x86/boot/compressed: Merge local pgtable.h include
- into asm/boot.h
+Message-ID: <20250401133416.1436741-10-ardb+git@google.com>
+Subject: [RFC PATCH 2/6] x86/boot: Move 5-level paging trampoline into startup code
 From: Ard Biesheuvel <ardb+git@google.com>
 To: linux-efi@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org, x86@kernel.org, 
@@ -75,121 +74,69 @@ Content-Type: text/plain; charset="UTF-8"
 
 From: Ard Biesheuvel <ardb@kernel.org>
 
-Merge the local include "pgtable.h" -which declares the API of the
-5-level paging trampoline- into <asm/boot.h> so that its implementation
-in la57toggle.S as well as the calling code can be decoupled from the
-traditional decompressor.
+The 5-level paging trampoline is used by both the EFI stub and the
+traditional decompressor. Move it out of the decompressor sources into
+the newly minted arch/x86/boot/startup/ sub-directory which will hold
+startup code that may be shared between the decompressor, the EFI stub
+and the kernel proper, and needs to tolerate being called during early
+boot, before the kernel virtual mapping has been created.
+
+This will allow the 5-level paging trampoline to be used by EFI boot
+images such as zboot that omit the traditional decompressor entirely.
 
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- arch/x86/boot/compressed/head_64.S    |  1 -
- arch/x86/boot/compressed/la57toggle.S |  1 -
- arch/x86/boot/compressed/misc.c       |  1 -
- arch/x86/boot/compressed/pgtable.h    | 18 ------------------
- arch/x86/boot/compressed/pgtable_64.c |  1 -
- arch/x86/include/asm/boot.h           | 10 ++++++++++
- 6 files changed, 10 insertions(+), 22 deletions(-)
+ arch/x86/Makefile                                  | 1 +
+ arch/x86/boot/compressed/Makefile                  | 2 +-
+ arch/x86/boot/startup/Makefile                     | 3 +++
+ arch/x86/boot/{compressed => startup}/la57toggle.S | 0
+ 4 files changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/boot/compressed/head_64.S b/arch/x86/boot/compressed/head_64.S
-index eafd4f185e77..d9dab940ff62 100644
---- a/arch/x86/boot/compressed/head_64.S
-+++ b/arch/x86/boot/compressed/head_64.S
-@@ -35,7 +35,6 @@
- #include <asm/bootparam.h>
- #include <asm/desc_defs.h>
- #include <asm/trapnr.h>
--#include "pgtable.h"
+diff --git a/arch/x86/Makefile b/arch/x86/Makefile
+index 27efe2dc2aa8..c8703276e3e7 100644
+--- a/arch/x86/Makefile
++++ b/arch/x86/Makefile
+@@ -287,6 +287,7 @@ archprepare: $(cpufeaturemasks.hdr)
+ ###
+ # Kernel objects
  
- /*
-  * Fix alignment at 16 bytes. Following CONFIG_FUNCTION_ALIGNMENT will result
-diff --git a/arch/x86/boot/compressed/la57toggle.S b/arch/x86/boot/compressed/la57toggle.S
-index 9ee002387eb1..370075b4d95b 100644
---- a/arch/x86/boot/compressed/la57toggle.S
-+++ b/arch/x86/boot/compressed/la57toggle.S
-@@ -5,7 +5,6 @@
- #include <asm/boot.h>
- #include <asm/msr.h>
- #include <asm/processor-flags.h>
--#include "pgtable.h"
++core-y  += arch/x86/boot/startup/
+ libs-y  += arch/x86/lib/
  
- /*
-  * This is the 32-bit trampoline that will be copied over to low memory. It
-diff --git a/arch/x86/boot/compressed/misc.c b/arch/x86/boot/compressed/misc.c
-index 1cdcd4aaf395..94b5991da001 100644
---- a/arch/x86/boot/compressed/misc.c
-+++ b/arch/x86/boot/compressed/misc.c
-@@ -14,7 +14,6 @@
+ # drivers-y are linked after core-y
+diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
+index 2eb63536c5d0..468e135de88e 100644
+--- a/arch/x86/boot/compressed/Makefile
++++ b/arch/x86/boot/compressed/Makefile
+@@ -98,7 +98,6 @@ ifdef CONFIG_X86_64
+ 	vmlinux-objs-$(CONFIG_AMD_MEM_ENCRYPT) += $(obj)/mem_encrypt.o
+ 	vmlinux-objs-y += $(obj)/pgtable_64.o
+ 	vmlinux-objs-$(CONFIG_AMD_MEM_ENCRYPT) += $(obj)/sev.o
+-	vmlinux-objs-y += $(obj)/la57toggle.o
+ endif
  
- #include "misc.h"
- #include "error.h"
--#include "pgtable.h"
- #include "../string.h"
- #include "../voffset.h"
- #include <asm/bootparam_utils.h>
-diff --git a/arch/x86/boot/compressed/pgtable.h b/arch/x86/boot/compressed/pgtable.h
-deleted file mode 100644
-index 6d595abe06b3..000000000000
---- a/arch/x86/boot/compressed/pgtable.h
-+++ /dev/null
-@@ -1,18 +0,0 @@
--#ifndef BOOT_COMPRESSED_PAGETABLE_H
--#define BOOT_COMPRESSED_PAGETABLE_H
--
--#define TRAMPOLINE_32BIT_SIZE		(2 * PAGE_SIZE)
--
--#define TRAMPOLINE_32BIT_CODE_OFFSET	PAGE_SIZE
--#define TRAMPOLINE_32BIT_CODE_SIZE	0xA0
--
--#ifndef __ASSEMBLER__
--
--extern unsigned long *trampoline_32bit;
--
--extern void trampoline_32bit_src(void *trampoline, bool enable_5lvl);
--
--extern const u16 trampoline_ljmp_imm_offset;
--
--#endif /* __ASSEMBLER__ */
--#endif /* BOOT_COMPRESSED_PAGETABLE_H */
-diff --git a/arch/x86/boot/compressed/pgtable_64.c b/arch/x86/boot/compressed/pgtable_64.c
-index d8c5de40669d..5a6c7a190e5b 100644
---- a/arch/x86/boot/compressed/pgtable_64.c
-+++ b/arch/x86/boot/compressed/pgtable_64.c
-@@ -4,7 +4,6 @@
- #include <asm/bootparam_utils.h>
- #include <asm/e820/types.h>
- #include <asm/processor.h>
--#include "pgtable.h"
- #include "../string.h"
- #include "efi.h"
+ vmlinux-objs-$(CONFIG_ACPI) += $(obj)/acpi.o
+@@ -107,6 +106,7 @@ vmlinux-objs-$(CONFIG_UNACCEPTED_MEMORY) += $(obj)/mem.o
  
-diff --git a/arch/x86/include/asm/boot.h b/arch/x86/include/asm/boot.h
-index 3f02ff6d333d..02b23aa78955 100644
---- a/arch/x86/include/asm/boot.h
-+++ b/arch/x86/include/asm/boot.h
-@@ -74,6 +74,11 @@
- # define BOOT_STACK_SIZE	0x1000
- #endif
+ vmlinux-objs-$(CONFIG_EFI) += $(obj)/efi.o
+ vmlinux-libs-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
++vmlinux-libs-$(CONFIG_X86_64)	+= $(objtree)/arch/x86/boot/startup/lib.a
  
-+#define TRAMPOLINE_32BIT_SIZE		(2 * PAGE_SIZE)
+ $(obj)/vmlinux: $(vmlinux-objs-y) $(vmlinux-libs-y) FORCE
+ 	$(call if_changed,ld)
+diff --git a/arch/x86/boot/startup/Makefile b/arch/x86/boot/startup/Makefile
+new file mode 100644
+index 000000000000..03519ef4869d
+--- /dev/null
++++ b/arch/x86/boot/startup/Makefile
+@@ -0,0 +1,3 @@
++# SPDX-License-Identifier: GPL-2.0
 +
-+#define TRAMPOLINE_32BIT_CODE_OFFSET	PAGE_SIZE
-+#define TRAMPOLINE_32BIT_CODE_SIZE	0xA0
-+
- #ifndef __ASSEMBLER__
- extern unsigned int output_len;
- extern const unsigned long kernel_text_size;
-@@ -83,6 +88,11 @@ unsigned long decompress_kernel(unsigned char *outbuf, unsigned long virt_addr,
- 				void (*error)(char *x));
- 
- extern struct boot_params *boot_params_ptr;
-+extern unsigned long *trampoline_32bit;
-+extern const u16 trampoline_ljmp_imm_offset;
-+
-+void trampoline_32bit_src(void *trampoline, bool enable_5lvl);
-+
- #endif
- 
- #endif /* _ASM_X86_BOOT_H */
++lib-$(CONFIG_X86_64)		+= la57toggle.o
+diff --git a/arch/x86/boot/compressed/la57toggle.S b/arch/x86/boot/startup/la57toggle.S
+similarity index 100%
+rename from arch/x86/boot/compressed/la57toggle.S
+rename to arch/x86/boot/startup/la57toggle.S
 -- 
 2.49.0.472.ge94155a9ec-goog
 
