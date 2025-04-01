@@ -1,80 +1,60 @@
-Received: from mail-pl1-f193.google.com (mail-pl1-f193.google.com [209.85.214.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 208481514F6;
-	Tue,  1 Apr 2025 09:17:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BB6C1EDA09;
+	Tue,  1 Apr 2025 09:17:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743499024; cv=none; b=QRdRrgr0y1SoYRNgDXv271G/0iHvzSV0TwHXUH7uGpCXphjwHSezmgq0nc3lQgsPY3/qyWa60zIsKEpdpfuzv2d38Se0t+JqcV0NcrmFtFtZDhbnRlWHtjSHWbdkpxST50YwGpJ3cQqCQgXDQsRfclpY7KEiXIJFIRLkk+jzsbI=
+	t=1743499057; cv=none; b=KdVU6QBUy5HREVG24Z3HEmZ/tRRStP2SH5Yi8iK/RmlhYUQc/H3a7Mpg9TR7P53BUSUbWJPDkfClfrgAph7fayEf/R5XFt0oEhHsM9RcMEBEn00OxjWArr05//xhoSlDEIySflHYch3di7b6CL2MthKo8IylOxq1SgoK54ixVeQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743499024; c=relaxed/simple;
-	bh=PXFATimqMqSBc1k8B3/5XU/qx7AM9Z/4Y86iX1AA+1o=;
+	s=arc-20240116; t=1743499057; c=relaxed/simple;
+	bh=xS1nUNg7xfA1crBoOsh68GgY9HijVyxfaNBF6+vlanQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=tAQ1fiNHHSQOPhSGTULVbYi4TnLYiEIKCOCZtwKVWFDzeeClY+aBUoHe4PI4JTuj7XjqFGkkZPKYPSzJmlvyQUXfvZlF7ke9OHnQKybWTZHe+uaViDfvVXHmZeYQUdzN0NXUlJolDI8Ipp6QdBNP28AW26M6m9v1XqHgpM/om6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V8ssTNxH; arc=none smtp.client-ip=209.85.214.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 MIME-Version; b=IjfRDY7A0REwjJT64kYE1OA1eojqvo3imh3L7RY9ebulA34CKvmX//BCnBs1iiIYi5XjISAJ/PpnJQFRJTSQ1qJFtdLpV9r4juCx4g1LrLr2I0SS1aGspB6dS6LHHtZV6fiW/c1oRTyeeWwRv23DGvoX11mzAgKMTcdlRjVeNcY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c7uIOk1u; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V8ssTNxH"
-Received: by mail-pl1-f193.google.com with SMTP id d9443c01a7336-224171d6826so76646745ad.3;
-        Tue, 01 Apr 2025 02:17:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743499022; x=1744103822; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+GLEyWRUn87tdAHFpsIgdK3yHHnhiGzWNhKJ4cVG5iU=;
-        b=V8ssTNxHEn76vu4tZaSLUrHsqwWXNFCZvo8Tx/5mFNizbL33LZXrc4DsyZfSmhPg+S
-         c4uUb6A20tUJydDF/izyc8pthOrMxBqrumsvI/gYKYPuZMrbmnSyXrWikQsrcBq5G5nB
-         ZKJL8bUouIBS9lY+BgEwSMqAKCSjYn+Af6yxX+hexKceZiF4CJRtu4qV+PU3NqMx5GOh
-         PNrOozIniwX47uOjmpNz94ymZDGBHe6gW4K57ADsm6vP8/ETx0laYacZw1LKH0gvsj0k
-         ccwwrn311sdJKX5PVV5Fc7S2dxWE+uDOzCBD/L3LMoREp5p5K1Fc+Ig+fFGU/Z1wauB+
-         9XYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743499022; x=1744103822;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+GLEyWRUn87tdAHFpsIgdK3yHHnhiGzWNhKJ4cVG5iU=;
-        b=VWq71E88oVZS+xqYBpzosA0KpMI4FwD+JFl72KDljJCukHus8H5qznOL+YoZsRlZEo
-         vPfAhQ5WfEqLPwBoBsgRRt93/Ox0OdfYHnLrrMmAjU1M8VVksiwcpvZiWXo2sfTrljBl
-         5HjSI/dV54Q1kIpjHSkL0QwuVxYOJPNTOIdetHS2b1yI4ul8oFynUoAohNcJmSucrkaA
-         jHLl7sIDDb+bg4BJT1f67kjYg2yvVbOItgsF0+inPZxdMmuONrKh0y5AV1kcclRQJen3
-         imhCo9iXr0aeI1jhms0ZtrslzFnJVwjZaisrQ0W4tO/4ZvK1NqhKGAO9Lq53K7k1egrE
-         5+kQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU+DuoqGpqN4etZNo/Vb4uusE4DVX5yuUA1MxD7R5jX+6QZfqT7gM3pMSUu/z09JqWiRjVzEkAbXX5Gyc0t@vger.kernel.org, AJvYcCVBIoDMtDkXhQNbtqLkROVTO/yXJkPC9EHPUiLoVbRsV4d+jytNYaLbbzYnMAfaXxnZSuLatNVW2WAX9u7b@vger.kernel.org, AJvYcCWqi63rRC03sgeaavQ98JALkq22fdDRGfVN8GtAt+fz2G6Wm9/gTMDC9/iuaXyaH/oi2Pm7ZQWwLcYOZm0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwsduIx3EqanNaC3lPLHS2fGChTXGDzmj1pmFOOg3GdCsVmQbDd
-	BVeZuUeNec8evDi6k2vhZNIoHTDzTxRI/u2aASLLp/Fwx7xBrPbjyx7z/rKiUoE=
-X-Gm-Gg: ASbGncunKtlaCZJ607Z/ea2Hh9ok7ieoPQwMBgvWdqOd9gF58ewuFwEEa4UXfufCKRM
-	cQBvyJxmpOJV0vj4hUCfUD6vo8IpTUTywRgNVw7mGFkToB4FPYk/49qhMi5reHjiV/HleY0vouG
-	vGXQY8v/CxoyLGgfxX+j5kVYL4ChSmfaOTpZS2tr7Dnbx6oVgEApr5axVSqsSnfsTqnNXGJbHLG
-	qeJKfUmxV1QwZsGCIByisqZH9PabtgS9s34eSuZOQBOU17gY1SyD1GdTWaDYV2JH3CLZ1EEsDHW
-	Z0Ouuf+XmRqoLJCgT8s8WeePYAqkE45fWRtAy3qC2ZQ7U3x/UcIdFBTUNcEBTGxbONPDAcmMUke
-	+U4Tdsg==
-X-Google-Smtp-Source: AGHT+IHunF5jyUL3TmPXi3AK47epCDZ22lyUsYqq4UiVJYVJRr74B+C/7SC7nQxjxJzTz0Tx+kvJng==
-X-Received: by 2002:a17:903:1cb:b0:223:f928:4553 with SMTP id d9443c01a7336-2292f9f7646mr232149915ad.44.1743499022271;
-        Tue, 01 Apr 2025 02:17:02 -0700 (PDT)
-Received: from henry.localdomain ([111.202.148.167])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291eedf9b4sm83492285ad.84.2025.04.01.02.16.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Apr 2025 02:17:01 -0700 (PDT)
-From: Henry Martin <bsdhenrymartin@gmail.com>
-To: danielt@kernel.org
-Cc: lee@kernel.org,
-	jingoohan1@gmail.com,
-	deller@gmx.de,
-	linux-arm-msm@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linux-fbdev@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c7uIOk1u"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D5AFC4CEEE;
+	Tue,  1 Apr 2025 09:17:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743499057;
+	bh=xS1nUNg7xfA1crBoOsh68GgY9HijVyxfaNBF6+vlanQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=c7uIOk1uxTmqkd1LZXt6QvkK6njwrR6Dq9BFcm0MnVDIe+i2Ka2BAvumdXOdUWky+
+	 tBvuId4px10UBbXUN58IYBgjY6sQPjfZiSaAyVeIYn+vTM/ZhhvOoQerRCCeCeIG2l
+	 H8BhS3y0UwRdy+CqVQmF3IPQ9os4pBRQTxEqik7nVptnLwyPgELfbnw32vnheKExD6
+	 a1UyAHCsFQvAYNddfhhx04/J+qH26zq4YQxrWfpmNt0nVp2ZOE/EADSxiopzL+NJw/
+	 J+KlTeEYOn4jBsuhb3KaSgWfdjsIfZow8/pNSxyTEryzPhMQfQKszMXwdqxYRxGZ10
+	 /Lpc/L0lgsGcQ==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=valley-girl.lan)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1tzXkU-001GqU-Vi;
+	Tue, 01 Apr 2025 10:17:35 +0100
+From: Marc Zyngier <maz@kernel.org>
+To: linux-arm-kernel@lists.infradead.org,
+	linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Henry Martin <bsdhenrymartin@gmail.com>,
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Subject: [PATCH v4] backlight: pm8941: Add NULL check in wled_configure()
-Date: Tue,  1 Apr 2025 17:16:47 +0800
-Message-Id: <20250401091647.22784-1-bsdhenrymartin@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <Z-uqpxcge0J99IPI@aspen.lan>
-References: <Z-uqpxcge0J99IPI@aspen.lan>
+	asahi@lists.linux.dev
+Cc: Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+	Janne Grunau <j@jannau.net>,
+	Hector Martin <marcan@marcan.st>,
+	Sven Peter <sven@svenpeter.dev>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Mark Kettenis <mark.kettenis@xs4all.nl>
+Subject: [PATCH v3 01/13] PCI: apple: Set only available ports up
+Date: Tue,  1 Apr 2025 10:17:01 +0100
+Message-Id: <20250401091713.2765724-2-maz@kernel.org>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20250401091713.2765724-1-maz@kernel.org>
+References: <20250401091713.2765724-1-maz@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -82,47 +62,51 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, asahi@lists.linux.dev, alyssa@rosenzweig.io, j@jannau.net, marcan@marcan.st, sven@svenpeter.dev, bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org, robh@kernel.org, krzk+dt@kernel.org, mark.kettenis@xs4all.nl
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-devm_kasprintf() returns NULL when memory allocation fails. Currently,
-wled_configure() does not check for this case, which results in a NULL
-pointer dereference.
+From: Janne Grunau <j@jannau.net>
 
-Add NULL check after devm_kasprintf() to prevent this issue.
+Iterating over disabled ports results in of_irq_parse_raw() parsing
+the wrong "interrupt-map" entries, as it takes the status of the node
+into account.
 
-Fixes: f86b77583d88 ("backlight: pm8941: Convert to using %pOFn instead of device_node.name")
-Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Reviewed-by: Daniel Thompson (RISCstar) <danielt@kernel.org>
+This became apparent after disabling unused PCIe ports in the Apple
+Silicon device trees instead of deleting them.
+
+Switching from for_each_child_of_node() to for_each_available_child_of_node()
+solves this issue.
+
+Link: https://lore.kernel.org/asahi/20230214-apple_dts_pcie_disable_unused-v1-0-5ea0d3ddcde3@jannau.net/
+Link: https://lore.kernel.org/asahi/1ea2107a-bb86-8c22-0bbc-82c453ab08ce@linaro.org/
+Fixes: 1e33888fbe44 ("PCI: apple: Add initial hardware bring-up")
+Fixes: a0189fdfb73d ("arm64: dts: apple: t8103: Disable unused PCIe ports")
+Cc: stable@vger.kernel.org
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+Acked-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+Tested-by: Janne Grunau <j@jannau.net>
+Signed-off-by: Janne Grunau <j@jannau.net>
+Signed-off-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
 ---
-V3 -> V4: No functional changes, just correcting the version number
-V2 -> V3: Correct commit meessage and confirm this patch has considered
-resource cleanup to avoid any subsequent issues, ensuring that errors
-are handled properly and no resources are left in an inconsistent
-state.
-V1 -> V2: Fix commit message to use imperative mood and wrap lines to 75
-characters.
+ drivers/pci/controller/pcie-apple.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- drivers/video/backlight/qcom-wled.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/video/backlight/qcom-wled.c b/drivers/video/backlight/qcom-wled.c
-index 9afe701b2a1b..a63bb42c8f8b 100644
---- a/drivers/video/backlight/qcom-wled.c
-+++ b/drivers/video/backlight/qcom-wled.c
-@@ -1406,9 +1406,11 @@ static int wled_configure(struct wled *wled)
- 	wled->ctrl_addr = be32_to_cpu(*prop_addr);
+diff --git a/drivers/pci/controller/pcie-apple.c b/drivers/pci/controller/pcie-apple.c
+index a7e51bc1c2fe8..842f8cee7c868 100644
+--- a/drivers/pci/controller/pcie-apple.c
++++ b/drivers/pci/controller/pcie-apple.c
+@@ -755,7 +755,7 @@ static int apple_pcie_init(struct pci_config_window *cfg)
+ 	if (ret)
+ 		return ret;
  
- 	rc = of_property_read_string(dev->of_node, "label", &wled->name);
--	if (rc)
-+	if (rc) {
- 		wled->name = devm_kasprintf(dev, GFP_KERNEL, "%pOFn", dev->of_node);
--
-+		if (!wled->name)
-+			return -ENOMEM;
-+	}
- 	switch (wled->version) {
- 	case 3:
- 		u32_opts = wled3_opts;
+-	for_each_child_of_node(dev->of_node, of_port) {
++	for_each_available_child_of_node(dev->of_node, of_port) {
+ 		ret = apple_pcie_setup_port(pcie, of_port);
+ 		if (ret) {
+ 			dev_err(pcie->dev, "Port %pOF setup fail: %d\n", of_port, ret);
 -- 
-2.34.1
+2.39.2
 
