@@ -1,134 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D5951EB9F3;
-	Tue,  1 Apr 2025 15:16:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F266937160
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 15:17:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743520580; cv=none; b=t3uzOw6EA1nhjqxlz7BYem8hO/Sn7j9Gk1jlufS/515BdJvpeOPSKNv/jCznw065CvglT5nqYdQiNSmxz8M5DQ/KczMp6e6OHO/RcK7wboBnVVgBsY7jGo/clwCgMBc/+Lzfm/AL85+LnFIgCDIvs6aN7arkPYEFioSQo3jE+Z0=
+	t=1743520624; cv=none; b=PaxVco05Ehfgou6WRbG9uiIj9t92Y8UUZJCP2Ey9iJC4mOznts3pXzVw5CmO53/PslBvM49CLWjbpo+2uUXMfWtO/O0rn5KOmJ5I+8x7WjWs7R88diP7QkDeWWZalJEEOfcWpL1B0h4OMIf3QVmusOEoDr6pSOzqK89ZGIEy6ZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743520580; c=relaxed/simple;
-	bh=jfC3tqKIz3LeHJC4ONTwz3P1JxkbCPRmxXY3x7/hqMY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MAixSYMU1I6msTrF1UJmVb+Kqwp8LOKM1VHZ68wHxbUWQIsOg3L/1MptGp9AhnMoe6yL/emc1cdOu/chbqz81Ykd/+A9PkSxhS6jJzUVF14iPRQ7RL74u9DITAkbrz+vEPfXxZWQJM46A8B9H4yowKNp8x2ZCRyjGFWWFxq8ae0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qEHxD/jE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743520624; c=relaxed/simple;
+	bh=dQiiCWw0gJL3pM8AURs73NsIreNo5plvxy7k2Sp5/Ig=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=C7fGCHJqZR7W0k516NtOYbzZcbVVyg47jIK/H12JyqwHZmmMCOa8GU4WdKNa5pzhefpVO/uNjP8lDAubKN9xifS136mjYVq82Bp9KdN6BdQA3/NKxy6xGrzcy3F78kN99cf9Kik5c7yxzNTdEkRpNp5MDVBiM9OO4K71ILF3Yck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=X+gejdf0; arc=none smtp.client-ip=209.85.160.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qEHxD/jE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2C41C4CEE5;
-	Tue,  1 Apr 2025 15:16:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743520576;
-	bh=jfC3tqKIz3LeHJC4ONTwz3P1JxkbCPRmxXY3x7/hqMY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=qEHxD/jEeI8uxbbiZqRBSFKNqvIkf/9WuEFV09uMnhpDWKLnDf0cuT9oshVUSGsFR
-	 tsH03ck1ODmCdDR8nmuDU2bSJrjlAO75udgAQy002tCe2jIaxldFS07H/l2pDRgKDY
-	 QlYht3hJW34lzDxSpCD7uoQgt8nHKyazijkZ7bboSBvOFuJ3HrIq9Ans2bKJsysH79
-	 7ipOFZSp0Xq51vgJGkJn60OduYkce5zT62FNoSZ7zJ3UwELUKB1XfGnQ4tRxga6O95
-	 d0ogsUMkr67HxvBebots2DTRN0gBrvdcHyySPT7GHDglyW2MLP7HhP8GbrsVh8xk+E
-	 KmQ1mkXjUSMYg==
-Message-ID: <bd2acf53-de9f-42d9-a671-a67930c7be64@kernel.org>
-Date: Tue, 1 Apr 2025 17:16:10 +0200
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="X+gejdf0"
+Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-47662449055so29320461cf.1
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 08:17:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1743520622; x=1744125422; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=oMrBJmHxMmocbV+bbsiTIdh0Ur8L8QCQ53gPPEe2fCY=;
+        b=X+gejdf0tXX6mWVpXXz59sDwuqpn9AlKFNsFBWWMmVge3Tq/O3C32MhKIJNWw9tjs8
+         4uTLRZnV8PKfCGuUrfVCRxbzei1IflOjO09tCX03k4HNK9YV7LRmBB4jFB9m7wksTkc+
+         60q6ouovEhloQk1ywn+bKEuZwN6jD82fgVafbZI/aVl++6nKlSQ/ssH7SSFUHBwwYWuU
+         QBOXrMHuBg5e2OZj9zjwmlCKGgiCWc5TwmIsMJf//knQOGmSHTm568PwKaYWv9mwQHVi
+         YiqRsJYpq2z8wmUOgQhgaxCkz9HP7kURFQ3TBjWB5rBgw1UEAOX4c+pnpU3PqBDlt9Jw
+         DwBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743520622; x=1744125422;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oMrBJmHxMmocbV+bbsiTIdh0Ur8L8QCQ53gPPEe2fCY=;
+        b=hh+8ED83YFIGAGun4Vlqe0ByXoIGDnfQ4cQMqMY4As5L7SOol8OJgybtlPAnnfmb4q
+         59+pkPWskYfRz+vDIiTHhbKRFZb2dMxFj+Pow4U+DoHT+hzOs28ZzIzODYJIFCihWtzF
+         AsA6o1X6mIWtX+n/Tz+L0KaiEZBEjAWCd0TEAAjIpPspD/pPtl4tzZK6Bz/pnPClTvsF
+         FdROWyIkbesFI109SpJ2mvrPysZrn0TMniXq2ZibUFfHAkB0lZaZ3nV16mvNygC7jAji
+         XZKM5oDwELxe1NNJhNC+7YRVb1pIcSnz3g0ItpS46z4R3URDlYdnW/D+B/IOMYqeHu0u
+         yp4w==
+X-Forwarded-Encrypted: i=1; AJvYcCWtGcAy2pKK1MFEMtcK2CcUV7Nkdls0cMd8l9nD4zNPxsDT1QC4LFkecNfBMOa36x8Wtlk+IkDtgnMATww=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyGvmYuDv1CxwvYf4MyWInCXhcSBLmly9wOJ9F+Q7GVL4DxJoYZ
+	o6kggKHTmfsy7+uCSCHy1Omb+3hfmjCJ9gKZ6d40BYYWFejuwCAp5x5XmsjwDHw=
+X-Gm-Gg: ASbGncu/KWgzy8N9Ump5OaMnZUh5tA3ikppWRM/gk254uLVcLrnHZmJOC5jqMR/CxEk
+	+JCqPvOfoioKtV8/iDGl0zTJLKq23ypLb2Zf8KbKCod/VToSQ/Ik+gGvfIP14TThlauVW7MXZ4I
+	4i3RQDwNtJYEms88HObLSDRn7f+yWNRkA3lv5iGtnmziHE+J03EhsCCROkAOlbCPW9viElXswD1
+	S3Ydq4ZD8iZKx4zPJUyGJmfFBUo5YywmTm89VzfypsCkHzFLoFRYLTyOP8ue+Fwhy13h/xCGw4K
+	bwD5+bMyOG46gsiNwfmmz06dHF9Yg42UHnN0rnREcgOtyJquYXznxyLbq+fn5szkl16VbCEEyNS
+	0FteBbVQKyhXfA+kBmtA65O7mSLjozqGPFoziHA==
+X-Google-Smtp-Source: AGHT+IHIy9M0MoItUdMIpylHvPXfzLOBmJq2T30poREcLIQ7vfJ8f7SMSyY6atAj0Wc7wGiOXe7vUQ==
+X-Received: by 2002:a05:6214:c2f:b0:6e8:ddf6:d136 with SMTP id 6a1803df08f44-6eed627788cmr186283296d6.45.1743520621884;
+        Tue, 01 Apr 2025 08:17:01 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c5f765ad89sm667321785a.16.2025.04.01.08.17.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Apr 2025 08:17:01 -0700 (PDT)
+Date: Tue, 1 Apr 2025 11:16:59 -0400
+From: Gregory Price <gourry@gourry.net>
+To: David Hildenbrand <david@redhat.com>
+Cc: dan.j.williams@intel.com, nvdimm@lists.linux.dev,
+	linux-kernel@vger.kernel.org, kernel-team@meta.com,
+	vishal.l.verma@intel.com, dave.jiang@intel.com,
+	linux-cxl@vger.kernel.org
+Subject: Re: [PATCH] DAX: warn when kmem regions are truncated for memory
+ block alignment.
+Message-ID: <Z-wDa2aLDKQeetuG@gourry-fedora-PF4VCD3F>
+References: <20250321180731.568460-1-gourry@gourry.net>
+ <Z-remBNWEej6KX3-@gourry-fedora-PF4VCD3F>
+ <3e3115c0-c3a2-4ec2-8aea-ee1b40057dd6@redhat.com>
+ <Z-v7mMZcP1JPIuj4@gourry-fedora-PF4VCD3F>
+ <4d051167-9419-43fe-ab80-701c3f46b19f@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] dt-bindings: watchdog: Add NXP Software Watchdog
- Timer
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, wim@linux-watchdog.org
-Cc: linux@roeck-us.net, linux-watchdog@vger.kernel.org,
- linux-kernel@vger.kernel.org, S32@nxp.com,
- Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>,
- Thomas Fossati <thomas.fossati@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>,
- "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
- <devicetree@vger.kernel.org>
-References: <20250328151516.2219971-1-daniel.lezcano@linaro.org>
- <c433c28d-c88d-4647-b472-7bc81b332d8c@kernel.org>
- <0638eb8c-d87f-44aa-9f1c-eee529b1e1a1@linaro.org>
- <b14718f2-add3-436d-95a5-908eb9217120@kernel.org>
- <16a0832a-7645-44ee-867f-fde8822f219c@linaro.org>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <16a0832a-7645-44ee-867f-fde8822f219c@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4d051167-9419-43fe-ab80-701c3f46b19f@redhat.com>
 
-On 01/04/2025 10:46, Daniel Lezcano wrote:
->> Yes, with one being the fallback.
+On Tue, Apr 01, 2025 at 04:50:40PM +0200, David Hildenbrand wrote:
 > 
-> Like that ?
+> Oh, you mean with the whole memmap_on_memory thing. Even with that, using
+> 2GB memory blocks would only fit a single 1GB memory block ... and it
+> requires ZONE_NORMAL.
 > 
-> properties:
->    compatible:
->      oneOf:
->        - const: nxp,s32g2-wdt
->        - items:
->            - const: nxp,s32g3-wdt
->            - const: nxp,s32g2-wdt
-
-Yes
-
+> For ordinary boot memory, the 1GB behavior should be independent of the
+> memory block size (a 1GB page can span multiple blocks as long as they are
+> in the same zone), which is the most important thing.
 > 
-> Why a fallback is needed for this case ? It is exactly the same hardware 
-> for s32g2 and s32g3. Could it be:
+> So I don't think it's a concern for DAX right now. Whoever needs that, can
+> disable the memmap_on_memory option.
+>
 
-Fallback is needed because it is exactly the same hardware.
+If we think it's not a major issue then I'll rebase onto latest and push
+a v9.  I think there was one minor nit left.
 
-> 
-> properties:
->    compatible:
->      oneOf:
->        - const: nxp,s32g2-wdt
->        - const: nxp,s32g3-wdt
+I suppose folks can complain to their vendors about alignment if they
+don't want 60000 memoryN entries on their huge-memory-systems.
 
-This tells hardware is different.
+Probably we still want this warning?  Silent truncation still seems
+undesirable.
 
-Best regards,
-Krzysztof
+~Gregory
