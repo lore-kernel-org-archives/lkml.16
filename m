@@ -1,108 +1,83 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCEDE1E5B70
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 10:33:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 001345A4D5;
+	Tue,  1 Apr 2025 10:34:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743503597; cv=none; b=MWX6f+CD1f/ZW91rMeWu9BdYnPVbsIFlWi8Pg5aVwCCHkcSQFw2U78D1NSQk0nNR9sPSC7rfWuetZ9TcnHYxZRuBE6Txm7ws89dlO1emIl8auWSQXuuplc/NunHTImVr1GsLD8qhFA2FH1S+tvj7YabeKoW0PgDTF16hI7Q6mno=
+	t=1743503700; cv=none; b=CAd/ddkt8wgLEOTpJLKE9W0HuyYdGgsHZx8SzkiJMpnws2b5v/lacQX+yMSOq6eDDePa5ZoGWSWoM7KElVJqTXBGAKUdXTXPmk7BNofy9j4/u6pV0KuEImOWmiu9ZJOn0xn3z78A+mWvmcLesFMCkYEJEgVYunmjgxmAGMiCaCk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743503597; c=relaxed/simple;
-	bh=ApBnmgcKqMD058hx45MHE4QVSw6qEmgZIyz8Wmp0Z8U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NdvlT4mo4JDJiLvr99pcdK5umX/wJEQO7nYGTO3z0+pgRDaCZSpvot35ErQgukBvzYQCfKYeCdXndTf9yjkrbnDBmZpF9mHEUnKD7gNUmACnMocyjM9pjYTPCGwhtSqHvjSqqrC/lRBS6F8wArdP2dFQKc+wcGHqk3O2hx99uwM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=O5HMXC4w; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1743503700; c=relaxed/simple;
+	bh=TD7XfWz5YDF4LfBDwutCvNXE2Wz+eKV/25wZX0rusfQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nrIGFcBwKC1Kj0EfMPS9I9UlJEert7GCPUNeO2hI7JqdQ5x7rXX2zARP1wAAfEkVbZ1zykXaANo/2wc8Fa8qilEQ0Kfm8jxKohAWP4vK5GPM8nXUiyCxsVR9+uY5aAM4cAWdXrrIfdTwFyw1/wGkRivFUPQJtqAABQjJDDgItGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XGgqhV7D; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O5HMXC4w"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743503594;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8TsOOeVbIrS0kLjU5o00N+CHVLz6q84BnG/iW8mymGA=;
-	b=O5HMXC4wRotUbBHqnAThf8R2t0IKOHhCdwlsa3dXKDW63P3kzYciCFaOVVAq9jyW5+SIeU
-	kRIPJVl3HnsysxWezdzRkPnWrjWSrRXRAHmvwQR1GxPpzY/8gaXji11WUaRFvaHr8P1O9x
-	WqIIX8ZaMiiNdIMk/6MkoY4reYHC5h8=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-86-CID3rIZOOsWr7YBYBZaVGA-1; Tue, 01 Apr 2025 06:33:13 -0400
-X-MC-Unique: CID3rIZOOsWr7YBYBZaVGA-1
-X-Mimecast-MFC-AGG-ID: CID3rIZOOsWr7YBYBZaVGA_1743503592
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43bd0586a73so42511685e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 03:33:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743503592; x=1744108392;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8TsOOeVbIrS0kLjU5o00N+CHVLz6q84BnG/iW8mymGA=;
-        b=rBL3LK7pOC1Qva7WI5h/dJdXKMyEMQL0tWMieK0ZV/nPSFDSG6WOYtCt0w2vNL///B
-         MfBdoBteF/WIRryRZ7ckWTNWV3kcP7Wuvc8HDdXHaHOIQYHpaZZyR1CBC+HrSkNpboaQ
-         o1wXgt2JYkfVGbiV/Y2MLg26WeV8NFkwkSgfoY1IQSX1dmvreSXz6XofeMcF1kmTuABP
-         1ru9ry8Dz5FvDmoDRSi9OZNv/AtQ5k1jwKgREr2j+A2+mdmpkakDUCIuyg9m6hStExm2
-         fNBruCHRhv5gLkNRcHxcE1LW1BSeh3qgy7mqIU4q2hVJ4po9LZL2Xt/kwsmqXFtHQYdv
-         s/JA==
-X-Forwarded-Encrypted: i=1; AJvYcCWcSi9prNRmX8047SKPOBCLHlnmeWFbZS1ficTJF9ANIN69ZPy8Ci7hakM7KfxcgWEBhP0mXf2cOZNRvoo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzvrg52N2OR3Evzcs9Ue9Rhnq4y+PhQUkUhSUH8aalor4HLb3Pw
-	2NcwIEZYSa0XlJqRb0ehjfCFnNMp7E0ro/JjEV0kTyxqmQ8zKIM6HxeHDFl5eowP1IX+LaQznuP
-	u7T/e3wU632q6hWpO6TsXZvu6JMxQio8OFwpxkKCwQT0m0zggyDIla0GmH9zSRg==
-X-Gm-Gg: ASbGncvHZ+DApg4BsYp13twUSjwQW7hDqsLmI6ib3aUr9WSJUt6xvaYf/R2QyZrUj+R
-	4a/G3Rp2io+GyzpibsBvLUcC5nLB1e+NhlPjxkkOffHmtnc/do8DusDVqek1tt0BgeslNJ0c3Rx
-	sADN79J7KrYaAJFXvbDDhBFUNNgqNNgZKaqlLNgO16YPZkWy6h8DafLsR1zts+BEsWYuesv2DF4
-	6ol+QX5xjJ7niMqDE5gBXMN5CBtOvusNGXD9iKhEMtrsUikhoqL62kWZmFXcx3xEDEPgwC9enKS
-	niKM+Z1vIcUsVmMOOCP8FgGSNAbnvOj8kKE4LZZhQPJ5DQ==
-X-Received: by 2002:a05:600c:4f4f:b0:43c:fcbc:968c with SMTP id 5b1f17b1804b1-43db6228823mr106308225e9.7.1743503592246;
-        Tue, 01 Apr 2025 03:33:12 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHMLjX+su0ElU+wdiotWIkpWOESzlWW59YNDgOLOqWSNKSZCQnxyBq6YuI7/DjQUyGF1DSr5g==
-X-Received: by 2002:a05:600c:4f4f:b0:43c:fcbc:968c with SMTP id 5b1f17b1804b1-43db6228823mr106307925e9.7.1743503591949;
-        Tue, 01 Apr 2025 03:33:11 -0700 (PDT)
-Received: from [192.168.88.253] (146-241-68-231.dyn.eolo.it. [146.241.68.231])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d82efdffdsm193576985e9.18.2025.04.01.03.33.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Apr 2025 03:33:11 -0700 (PDT)
-Message-ID: <d2914c9f-5fc6-4719-bf6b-bc48991cd563@redhat.com>
-Date: Tue, 1 Apr 2025 12:33:09 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XGgqhV7D"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE41FC4CEE4;
+	Tue,  1 Apr 2025 10:34:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743503699;
+	bh=TD7XfWz5YDF4LfBDwutCvNXE2Wz+eKV/25wZX0rusfQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=XGgqhV7DgvBSEKNwHpPPEH8rFaM8d0i9CNUsLtAeyTZvqy5GOfJYe998LxX8Cfrkk
+	 TACrruFZkSy+eTp7q544QWS49Hk8vFIwJv8sqg4TMTuMSAvvENGKn0DUpr8xnO5UnN
+	 ZBefYBqHFykpvrg/Y1sdc7pH+pmN+QHOlarKSEDcMM+dPB01XSXzBTotREPqeZrGBP
+	 MctZY+2BrhA84l769HIo/sAkQNYNL7KOeeuaZzzTERxmRQj9KbM2DeegII/sE8WBQp
+	 mI543IkzgJrMtmgmukK154o4kzdgbPlOz9OpVZHM8LYxLmiM9shx1bW1rWhdv0qVru
+	 BfvdgLhuq7+wA==
+From: Christian Brauner <brauner@kernel.org>
+To: Mateusz Guzik <mjguzik@gmail.com>
+Cc: Christian Brauner <brauner@kernel.org>,
+	viro@zeniv.linux.org.uk,
+	jack@suse.cz,
+	linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 0/2] speed up /proc/filesystems
+Date: Tue,  1 Apr 2025 12:34:51 +0200
+Message-ID: <20250401-zugute-wahrnehmen-d95d2334d0fc@brauner>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250329192821.822253-1-mjguzik@gmail.com>
+References: <20250329192821.822253-1-mjguzik@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH bpf] bpf: add missing ops lock around dev_xdp_attach_link
-To: Stanislav Fomichev <sdf@fomichev.me>, bpf@vger.kernel.org,
- netdev@vger.kernel.org
-Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
- martin.lau@linux.dev, song@kernel.org, yhs@fb.com, john.fastabend@gmail.com,
- kpsingh@kernel.org, haoluo@google.com, jolsa@kernel.org,
- linux-kernel@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, horms@kernel.org, hawk@kernel.org,
- syzbot+08936936fe8132f91f1a@syzkaller.appspotmail.com
-References: <20250331142814.1887506-1-sdf@fomichev.me>
-Content-Language: en-US
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <20250331142814.1887506-1-sdf@fomichev.me>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1379; i=brauner@kernel.org; h=from:subject:message-id; bh=TD7XfWz5YDF4LfBDwutCvNXE2Wz+eKV/25wZX0rusfQ=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaS/PuibtrLNP/GwxaYCxbleH3Lv9fquF+oUYb4VGuDsx HLnW7RyRykLgxgXg6yYIotDu0m43HKeis1GmRowc1iZQIYwcHEKwEQOMDEyzD3OeGZf10FduQ+f FlekFs8V1NH98L9j6lMXhpOmrk3+WQx/xY+wFnb6zbJ2ehXewDm/V91myeXnEQ6alT2blArSRKP 4AQ==
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 
-On 3/31/25 4:28 PM, Stanislav Fomichev wrote:
-> Syzkaller points out that create_link path doesn't grab ops lock,
-> add it.
+On Sat, 29 Mar 2025 20:28:19 +0100, Mateusz Guzik wrote:
+> I accidentally found out it is used a lot *and* is incredibly slow.
 > 
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Reported-by: syzbot+08936936fe8132f91f1a@syzkaller.appspotmail.com
-> Closes: https://lore.kernel.org/bpf/67e6b3e8.050a0220.2f068f.0079.GAE@google.com/
-> Fixes: 97246d6d21c2 ("net: hold netdev instance lock during ndo_bpf")
-> Signed-off-by: Stanislav Fomichev <sdf@fomichev.me>
+> Part of it is procfs protecting the file from going away on each op,
+> other part is content generatin being dog slow.
+> 
+> Turns out procfs did not provide an interface to mark files as
+> permanent. I added easiest hack I could think of to remedy the problem,
+> I am not going to argue how to do it.
+> 
+> [...]
 
-LGTM, but are there any special reasons to get this via the bpf tree? It
-looks like 'net' material to me?!?
+Applied to the vfs-6.16.procfs branch of the vfs/vfs.git tree.
+Patches in the vfs-6.16.procfs branch should appear in linux-next soon.
 
-Thanks,
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
 
-Paolo
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
 
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs-6.16.procfs
+
+[1/2] proc: add a helper for marking files as permanent by external consumers
+      https://git.kernel.org/vfs/vfs/c/6040503a448b
+[2/2] fs: cache the string generated by reading /proc/filesystems
+      https://git.kernel.org/vfs/vfs/c/9750cdeb327d
