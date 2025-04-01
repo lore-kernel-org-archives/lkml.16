@@ -1,107 +1,343 @@
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31A1921481B;
-	Tue,  1 Apr 2025 22:17:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8463E1D79B8;
+	Tue,  1 Apr 2025 22:20:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743545835; cv=none; b=MFbfOFoNrgJGTFiGTMCCNR47IJKxQEc8yDjqX5G3WNedC3uGvenYS3han51PvZriYGT8GYNxsprqcAer7X1AwIV83XNGb57sbiq9h2yLAH8iIIYfIQ6n9+zAQrIAAu3/TVZJPd+/bAQ9//sqkgM6u/B4u0BqLEc8ApVfe7ivTlg=
+	t=1743546017; cv=none; b=KFntvNL3ErplwcGi4EBtaaGaF6XjYlpceiOvJgHcKyZXOnp/yue6sxAcDskRZWngY0QoUlrMPyrV9y3XBTaEvyL0u89XglyYSKOsOmaCQoVjOCSnF5uUhgsdIFjw80/J7c/7yskknn/Rkgi3jNt4PNr8Vm9IVs5VoJIdtYG7Mb4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743545835; c=relaxed/simple;
-	bh=dlt7QCpO5Xv9hp7ALZyMRj3fKMrEMyD8TZAEVGCrWW4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iieU+Pgw305EysDEO3sNTpb4TJFE98k+Pf9ns4IqORUxXhHKbuqrhaSkM/t7THeGacd5jFJl4x4FiKvjqyRl25bdeArQSgqB9+RT5UuOn5Rxj19FT/HKcNVO+CbI+Y+bqEvDODkUGAHx43pGic5vcLmZjbYNMUJJlYHViVonddo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QkEbg7Jj; arc=none smtp.client-ip=209.85.216.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743546017; c=relaxed/simple;
+	bh=PCe4XJj1618IPiPDCpzKGLt3nFoVFS3rRpXBluX4gWY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Bw9yo2lLLiSvg5zd1txGyYSVAxrhRNqDt5rVDZ9BrKanlbzVhg7nXdh7qyTgGhtmbehKE5FA8/lHOqHUdxJyFao8CywmAK8xMQcvUfDpFucUd+1K0qjJJgwgMdlkQANWUPfJ9WQUcaPSzSSKyYHpMCtWcd9lbqV9sOb0nifRXN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oeT8KluB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QkEbg7Jj"
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-2ff85fec403so528977a91.1;
-        Tue, 01 Apr 2025 15:17:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743545833; x=1744150633; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dlt7QCpO5Xv9hp7ALZyMRj3fKMrEMyD8TZAEVGCrWW4=;
-        b=QkEbg7JjxS/NimYunjx/yvyFCo8sRe8/ge0YIGn93necXdwzp24+ynwc7t8JXWkMGF
-         dM/vSTe7e6Oq4sQb/aMHB1c0ZhotUjRhbwrssE31a52Q0qOuOx4Z2dmMGcaKjcoFuN6X
-         48M5iIvLvyCi3rmnTmXzaEYKYGmWipqcxXQVs86dT3Y3seNSFkRKhxsz10w8SnFw/ZDj
-         vtIS8Y1WmLBuaNhSzMXekpiM9E2JU/g9AXitwY3C45p6QlDa89Gvhal0qTBKtoGxe0S7
-         xrMci4S3W5fY4IyDbT1p+DMSUlu0hQ4uIqKeWaiAb334gYlAeAl2hAxjlIlzuqDmSjJ8
-         hcXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743545833; x=1744150633;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dlt7QCpO5Xv9hp7ALZyMRj3fKMrEMyD8TZAEVGCrWW4=;
-        b=XPwwiN17A3O0DyP39oQ61JFcrrBMObUPoQkjfuruOQkxNHrSJWUDMUUMgPxK0LT07q
-         6TweA70a3GIx/II+AmqkIxE7G8g8RLc6DbmVRCCgQ1ISlYWqU5C1S5rCOoyJ9R0Px8mO
-         f17W1TW0s+Nh9nc2+ceal2lxHpup4HWrM8STqIyEdKVAQgs9loyFWohdJRFmSFXjHD/x
-         +li0Ms5qJgnBDrXB21L/kEout9Z2wOEyOgVQTzo5KFUtDmHLRsEFBba7qsU9IGoI/h+0
-         eRT32FWo1bcmZV2/7r/xVZsEpjK+RStSQ8CaV+fJ3pFSKo3nxxW6rxuH65+GDAL8JR3L
-         glQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVQI2fQjiYSpEX5mozp39dn7uulVnW5slxFb/B5VyFcyBX5XnKvFBag23u7ubPIEWmVFgY=@vger.kernel.org, AJvYcCVaC4cD3o7cmVE93MsoyoIteMBTz8teKfFfirTFI8hNz38ZuyszEBkS1dVm6Xhh4u2+Jf+dYyyStpVzHB4EYcNmGDqz@vger.kernel.org, AJvYcCXdZsbbRaTAOs66Ti+QQnNP4iiCRWott9ksG1pywzPXNJiX9CitDOp4bOhPm0TgKkNWLaoxh8rJEnPiWSbM@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzs99r9AwiaEY7X55CcHB57JqEs+j/ravMQWJRrrqwOjJm0Jqpc
-	cWYteZtRd6ryZkIJ7Fm8vuah4/kGFobhzINeQ+HMPFkVfK7ux2nnOmspYFfm7eHJi0z0v6+Z0dD
-	0glbf+9ty4vwWdiyT+Zx47jeuaoA=
-X-Gm-Gg: ASbGncuValnI+UEDqelNk2k2I3HknyDRj3OOnxzzmQD6wsKWWuqaNFqCaK/aKZO1XKQ
-	Z+tUU2crwe7GnGKsmpZxDRHqj/X9plCcb2p/xEq9tGXFbLTldfFlkWNFlBrZenSd2MNabSXC9A6
-	Z+LsLvM0waeYUV01qOwrXRQ+d9klCHw6niyvikYa/wGA==
-X-Google-Smtp-Source: AGHT+IHsdVcRKU/HnAfaKmj45OiH/aGPI+lfz6VUo5PCwjZekRmsF12vaqobS72FeYh81aDSDOF6uW4pPq/F9Ohz4Kk=
-X-Received: by 2002:a17:90b:270e:b0:2f1:2e10:8160 with SMTP id
- 98e67ed59e1d1-3056b763ac5mr2155472a91.11.1743545833400; Tue, 01 Apr 2025
- 15:17:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oeT8KluB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA6A3C4CEE4;
+	Tue,  1 Apr 2025 22:20:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743546017;
+	bh=PCe4XJj1618IPiPDCpzKGLt3nFoVFS3rRpXBluX4gWY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oeT8KluBovLtL9LKQKukpkY6vRCKRuNBCDXFtrGnD3zYPHmD/NmDqezNOa+tNZfB7
+	 vuBEy6y4lXK7NdyZmG/nTgrmX3sOVJUy+pyASbOxWMYi7kHqLRP804r0q+fYNTFfBx
+	 XvFWshkGNd/q1lZNnZc6/jdXdunYQHX6Ry50cdwTmoXdsrZJjFgxDXiLpJGhByE/cH
+	 POZAE1ZodOHMPK1Kv8tsxqOs2YOHJmtNXToH3qghUagoEmKVYQJuWdTMdK11uX1TDj
+	 mMHiMGLNWLXu8cM0tSoxpKyF2svEJ7SOGnGiQMn6AgaVinm+nbsRCOd74n0aKepW7D
+	 HfTWwQx6scfrA==
+Date: Tue, 1 Apr 2025 17:20:15 -0500
+From: Rob Herring <robh@kernel.org>
+To: Patrice Chotard <patrice.chotard@foss.st.com>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, christophe.kerello@foss.st.com,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v7 2/7] dt-bindings: memory-controllers: Add STM32 Octo
+ Memory Manager controller
+Message-ID: <20250401222015.GA4071342-robh@kernel.org>
+References: <20250401-upstream_ospi_v6-v7-0-0ef28513ed81@foss.st.com>
+ <20250401-upstream_ospi_v6-v7-2-0ef28513ed81@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250401184021.2591443-1-andrii@kernel.org> <20250401173249.42d43a28@gandalf.local.home>
- <CAEf4BzYB1dvFF=7x-H3UDo4=qWjdhOO1Wqo9iFyz235u+xp9+g@mail.gmail.com> <20250401181315.524161b5@gandalf.local.home>
-In-Reply-To: <20250401181315.524161b5@gandalf.local.home>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Tue, 1 Apr 2025 15:17:01 -0700
-X-Gm-Features: AQ5f1Jpy9wZlb6kYNbOfLWFJ_JgrVUqW3aufwWwkFsC5kDKyBIwH9DiG_-fmIas
-Message-ID: <CAEf4Bzbq1AMdpBysK-OqJPwrKpibyLk9RffiwEU9xdGwwHC_3w@mail.gmail.com>
-Subject: Re: [PATCH] exit: add trace_task_exit() tracepoint before current->mm
- is reset
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org, 
-	peterz@infradead.org, mingo@kernel.org, bpf@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, kernel-team@meta.com, mhocko@kernel.org, 
-	oleg@redhat.com, brauner@kernel.org, glider@google.com, mhiramat@kernel.org, 
-	mathieu.desnoyers@efficios.com, akpm@linux-foundation.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250401-upstream_ospi_v6-v7-2-0ef28513ed81@foss.st.com>
 
-On Tue, Apr 1, 2025 at 3:12=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org>=
- wrote:
->
-> On Tue, 1 Apr 2025 15:04:11 -0700
-> Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
->
-> > How bad would it be to just move trace_sched_process_exit() then? (and
-> > add group_dead there, as you mentioned)?
->
-> I personally don't have an issue with that. In fact, the one place I used
-> the sched_process_exit tracepoint, I had to change to use
-> sched_process_free because it does too much after that.
+On Tue, Apr 01, 2025 at 02:21:46PM +0200, Patrice Chotard wrote:
+> Add bindings for STM32 Octo Memory Manager (OMM) controller.
+> 
+> OMM manages:
+>   - the muxing between 2 OSPI busses and 2 output ports.
+>     There are 4 possible muxing configurations:
+>       - direct mode (no multiplexing): OSPI1 output is on port 1 and OSPI2
+>         output is on port 2
+>       - OSPI1 and OSPI2 are multiplexed over the same output port 1
+>       - swapped mode (no multiplexing), OSPI1 output is on port 2,
+>         OSPI2 output is on port 1
+>       - OSPI1 and OSPI2 are multiplexed over the same output port 2
+>   - the split of the memory area shared between the 2 OSPI instances.
+>   - chip select selection override.
+>   - the time between 2 transactions in multiplexed mode.
+> 
+> Signed-off-by: Patrice Chotard <patrice.chotard@foss.st.com>
+> ---
+>  .../memory-controllers/st,stm32mp25-omm.yaml       | 227 +++++++++++++++++++++
+>  1 file changed, 227 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/memory-controllers/st,stm32mp25-omm.yaml b/Documentation/devicetree/bindings/memory-controllers/st,stm32mp25-omm.yaml
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..c028bc5341f5072afbed1e435b43245952e50300
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/memory-controllers/st,stm32mp25-omm.yaml
+> @@ -0,0 +1,227 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/memory-controllers/st,stm32mp25-omm.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: STM32 Octo Memory Manager (OMM)
+> +
+> +maintainers:
+> +  - Patrice Chotard <patrice.chotard@foss.st.com>
+> +
+> +description: |
+> +  The STM32 Octo Memory Manager is a low-level interface that enables an
+> +  efficient OCTOSPI pin assignment with a full I/O matrix (before alternate
+> +  function map) and multiplex of single/dual/quad/octal SPI interfaces over
+> +  the same bus. It Supports up to:
+> +    - Two single/dual/quad/octal SPI interfaces
+> +    - Two ports for pin assignment
+> +
+> +properties:
+> +  compatible:
+> +    const: st,stm32mp25-omm
+> +
+> +  "#address-cells":
+> +    const: 2
+> +
+> +  "#size-cells":
+> +    const: 1
+> +
+> +  ranges:
+> +    description: |
+> +      Reflects the memory layout per OSPI instance.
+> +      Format:
+> +      <chip-select> 0 <registers base address> <size>
+> +    minItems: 2
+> +    maxItems: 2
+> +
+> +  reg:
+> +    items:
+> +      - description: OMM registers
+> +      - description: OMM memory map area
+> +
+> +  reg-names:
+> +    items:
+> +      - const: regs
+> +      - const: memory_map
+> +
+> +  memory-region:
+> +    description:
+> +      Memory region shared between the 2 OCTOSPI instance.
+> +      One or two phandle to a node describing a memory mapped region
+> +      depending of child number.
+> +    minItems: 1
+> +    maxItems: 2
+> +
+> +  memory-region-names:
+> +    description:
+> +      Identify to which OSPI instance the memory region belongs to.
+> +    items:
+> +      enum: [ospi1, ospi2]
+> +    minItems: 1
+> +    maxItems: 2
+> +
+> +  clocks:
+> +    minItems: 3
+> +    maxItems: 3
 
-heh, I ran into that as well just recently and also had to use
-sched_process_free instead of sched_process_exit, because between exit
-and free we still can get sched_switch tracepoint trigger (so it's a
-bit too early to clean up whatever per-task state I maintain in BPF
-program).
+Just maxItems is enough.
 
-So yeah, I'm up for that as well, will send v2 just moving and
-extending the existing tracepoint. Thanks!
+> +
+> +  clock-names:
+> +    items:
+> +      - const: omm
+> +      - const: ospi1
+> +      - const: ospi2
+> +
+> +  resets:
+> +    minItems: 3
+> +    maxItems: 3
 
->
-> OK, let's just move the sched_process_exit tracepoint. It's in an arbitra=
-ry
-> location anyway.
->
-> -- Steve
+Same here.
+
+> +
+> +  reset-names:
+> +    items:
+> +      - const: omm
+> +      - const: ospi1
+> +      - const: ospi2
+> +
+> +  access-controllers:
+> +    maxItems: 1
+> +
+> +  st,syscfg-amcr:
+> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> +    description: |
+> +      The Address Mapping Control Register (AMCR) is used to split the 256MB
+> +      memory map area shared between the 2 OSPI instance. The Octo Memory
+> +      Manager sets the AMCR depending of the memory-region configuration.
+> +      The memory split bitmask description is:
+> +        - 000: OCTOSPI1 (256 Mbytes), OCTOSPI2 unmapped
+> +        - 001: OCTOSPI1 (192 Mbytes), OCTOSPI2 (64 Mbytes)
+> +        - 010: OCTOSPI1 (128 Mbytes), OCTOSPI2 (128 Mbytes)
+> +        - 011: OCTOSPI1 (64 Mbytes), OCTOSPI2 (192 Mbytes)
+> +        - 1xx: OCTOSPI1 unmapped, OCTOSPI2 (256 Mbytes)
+> +    items:
+> +      - description: phandle to syscfg
+> +      - description: register offset within syscfg
+> +      - description: register bitmask for memory split
+
+This needs to be:
+
+items:
+  - items:
+      - description: ...
+      - description: ...
+      - description: ...
+
+'phandle-array' name was poorly chosen and is really a matrix of 
+phandle plus arg cell entries.
+
+> +
+> +  st,omm-req2ack-ns:
+> +    description:
+> +      In multiplexed mode (MUXEN = 1), this field defines the time in
+> +      nanoseconds between two transactions.
+> +    default: 0
+> +
+> +  st,omm-cssel-ovr:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: |
+> +      Configure the chip select selector override for the 2 OCTOSPIs.
+> +      - 0: OCTOSPI1 chip select send to NCS1 OCTOSPI2 chip select send to NCS1
+> +      - 1: OCTOSPI1 chip select send to NCS2 OCTOSPI2 chip select send to NCS1
+> +      - 2: OCTOSPI1 chip select send to NCS1 OCTOSPI2 chip select send to NCS2
+> +      - 3: OCTOSPI1 chip select send to NCS2 OCTOSPI2 chip select send to NCS2
+> +    minimum: 0
+> +    maximum: 3
+> +    default: 0
+> +
+> +  st,omm-mux:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: |
+> +      Configure the muxing between the 2 OCTOSPIs busses and the 2 output ports.
+> +      - 0: direct mode
+> +      - 1: mux OCTOSPI1 and OCTOSPI2 to port 1
+> +      - 2: swapped mode
+> +      - 3: mux OCTOSPI1 and OCTOSPI2 to port 2
+> +    minimum: 0
+> +    maximum: 3
+> +    default: 0
+> +
+> +  power-domains:
+> +    maxItems: 1
+
+Standard properties go before vendor specific properties.
+
+> +
+> +patternProperties:
+> +  ^spi@[0-9]:
+> +    type: object
+> +    $ref: /schemas/spi/st,stm32mp25-ospi.yaml#
+> +    description: Required spi child node
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - "#address-cells"
+> +  - "#size-cells"
+> +  - clocks
+> +  - clock-names
+> +  - resets
+> +  - reset-names
+> +  - st,syscfg-amcr
+> +  - ranges
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/st,stm32mp25-rcc.h>
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/reset/st,stm32mp25-rcc.h>
+> +    ommanager@40500000 {
+> +      compatible = "st,stm32mp25-omm";
+> +      reg = <0x40500000 0x400>, <0x60000000 0x10000000>;
+> +      reg-names = "regs", "memory_map";
+> +      ranges = <0 0 0x40430000 0x400>,
+> +               <1 0 0x40440000 0x400>;
+> +      memory-region = <&mm_ospi1>, <&mm_ospi2>;
+> +      memory-region-names = "ospi1", "ospi2";
+> +      pinctrl-0 = <&ospi_port1_clk_pins_a
+> +                   &ospi_port1_io03_pins_a
+> +                   &ospi_port1_cs0_pins_a>;
+> +      pinctrl-1 = <&ospi_port1_clk_sleep_pins_a
+> +                   &ospi_port1_io03_sleep_pins_a
+> +                   &ospi_port1_cs0_sleep_pins_a>;
+> +      pinctrl-names = "default", "sleep";
+> +      clocks = <&rcc CK_BUS_OSPIIOM>,
+> +               <&scmi_clk CK_SCMI_OSPI1>,
+> +               <&scmi_clk CK_SCMI_OSPI2>;
+> +      clock-names = "omm", "ospi1", "ospi2";
+> +      resets = <&rcc OSPIIOM_R>,
+> +               <&scmi_reset RST_SCMI_OSPI1>,
+> +               <&scmi_reset RST_SCMI_OSPI2>;
+> +      reset-names = "omm", "ospi1", "ospi2";
+> +      access-controllers = <&rifsc 111>;
+> +      power-domains = <&CLUSTER_PD>;
+> +      #address-cells = <2>;
+> +      #size-cells = <1>;
+> +      st,syscfg-amcr = <&syscfg 0x2c00 0x7>;
+> +      st,omm-req2ack-ns = <0>;
+> +      st,omm-mux = <0>;
+> +      st,omm-cssel-ovr = <0>;
+> +
+> +      spi@0 {
+> +        compatible = "st,stm32mp25-ospi";
+> +        reg = <0 0 0x400>;
+> +        memory-region = <&mm_ospi1>;
+> +        interrupts = <GIC_SPI 163 IRQ_TYPE_LEVEL_HIGH>;
+> +        dmas = <&hpdma 2 0x62 0x00003121 0x0>,
+> +               <&hpdma 2 0x42 0x00003112 0x0>;
+> +        dma-names = "tx", "rx";
+> +        clocks = <&scmi_clk CK_SCMI_OSPI1>;
+> +        resets = <&scmi_reset RST_SCMI_OSPI1>, <&scmi_reset RST_SCMI_OSPI1DLL>;
+
+Looks like you are duplicating properties in the parent and child nodes. 
+Maybe that accurately models the h/w, but if it is just so the drivers 
+can get the resources from "the driver's node", you can always just look 
+in the child nodes for the resources (as probably you want to drop the 
+per instance resources from the parent).
+
+> +        access-controllers = <&rifsc 74>;
+> +        power-domains = <&CLUSTER_PD>;
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +        st,syscfg-dlyb = <&syscfg 0x1000>;
+> +      };
+> +
+> +      spi@1 {
+> +        compatible = "st,stm32mp25-ospi";
+> +        reg = <1 0 0x400>;
+> +        memory-region = <&mm_ospi1>;
+> +        interrupts = <GIC_SPI 164 IRQ_TYPE_LEVEL_HIGH>;
+> +        dmas = <&hpdma 3 0x62 0x00003121 0x0>,
+> +               <&hpdma 3 0x42 0x00003112 0x0>;
+> +        dma-names = "tx", "rx";
+> +        clocks = <&scmi_clk CK_KER_OSPI2>;
+> +        resets = <&scmi_reset RST_SCMI_OSPI2>, <&scmi_reset RST_SCMI_OSPI1DLL>;
+> +        access-controllers = <&rifsc 75>;
+> +        power-domains = <&CLUSTER_PD>;
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +        st,syscfg-dlyb = <&syscfg 0x1000>;
+> +      };
+> +    };
+> 
+> -- 
+> 2.25.1
+> 
