@@ -1,166 +1,174 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF3471EF39A
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 10:08:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1A1D1F03E0
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 10:11:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743502108; cv=none; b=i+xnhJ4f7TFXdU9LErIyAIGlUMlphesR+rU8YjYmBaNQ4uEjLQlS1tSowTbtywvL4q9DXMfbfZNeIzEy090opnmkS1JPaW6vh9DEXVoJWnwIf0U+SVet4Nr7HAvR+vBuPx533ZzE8FsSRe51PQHhcRNcdrCggJUWJhYJsMbqXj4=
+	t=1743502273; cv=none; b=PB4rQaN9Ddaz564mNyb0aFIcS46Xz3OCilhrxVJWzm9kdTDKhLfFXcoTqEc1RCWQ7Y7MZdEmQbDgcDQYoVjDTJPp1j/PuVHfwAj97TkPod8QEBAdrC4x+oxLRe8bxqOMnZbdbehVzNchWVRvxEPIblFgm+51qNiW/0/sb7lQnaI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743502108; c=relaxed/simple;
-	bh=++urWKNC5cfWd08urLWmZ0ardJRYr+sbgQ55JmwHDrw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tJAJnsa/y75HPghw95yetV1L5hIZVYAB9kZ9LFp0IkN0QQ0/jWP2A8eU5G2D2cqIuyy7ZoFLqYdX+S4x4hh58gBQtxKRm5GUIBvrHu/7Ct3SeDQLJZ3xwhQt0uZ2NRQhZSUrgIlpr2TPVl2z0g+L4ZrMGDpKZ7UA6FG1Cx7cFnE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=PYY8ydHB; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=LKmuADDT; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=PYY8ydHB; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=LKmuADDT; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1743502273; c=relaxed/simple;
+	bh=ri0c6XAKIbAL5r1pMx1YsjfpBuk6BBaZV7LqaDJixho=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=rHPJnUVqA0SVdoy+ncScWzkBB9e6Iz3+1H+TPG5VhwYT8qyQUm7RgiYv5gIaSY6UEYyyM47uqHn68w+IW5MmhgPGqw4UKM1fp23CBCM0EfwrzEGf0XcWWLewp/XCfRF6sYZyLrdCcFDWaL0AgfDQ+2bf2xQi8E/5RWkgDBcxKQU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kAQ9TJw9; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="PYY8ydHB";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="LKmuADDT";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="PYY8ydHB";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="LKmuADDT"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 15CEF1F38E;
-	Tue,  1 Apr 2025 10:08:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1743502105; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=suSfpVgBId8IpI/9A13Qm+aO2xaK6bvk0WIrZ6mJqfA=;
-	b=PYY8ydHB/BRKkb/f3uJZM9WIn6uy/Nfx8TSP6hkW5iebHUuThEl8ebraeZsLbQ6sE/aQ/a
-	Q7OnyH7q+A2YF3dxvliPf9T0+yFPLqHXsNgc3h+o+p94GlxdiZDmy0LzB5RJmi0CsTqcqv
-	hNOmIXk6ftY7zJWt39c1JHaPRMEFt0E=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1743502105;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=suSfpVgBId8IpI/9A13Qm+aO2xaK6bvk0WIrZ6mJqfA=;
-	b=LKmuADDTSRI+wAfkOuD8IZKmzy14iQ//uKy8wxs4aZxgA3/E+p7wAEUCDZxwDoe5qKImX0
-	wRx/yN98+xBVuFBg==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1743502105; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=suSfpVgBId8IpI/9A13Qm+aO2xaK6bvk0WIrZ6mJqfA=;
-	b=PYY8ydHB/BRKkb/f3uJZM9WIn6uy/Nfx8TSP6hkW5iebHUuThEl8ebraeZsLbQ6sE/aQ/a
-	Q7OnyH7q+A2YF3dxvliPf9T0+yFPLqHXsNgc3h+o+p94GlxdiZDmy0LzB5RJmi0CsTqcqv
-	hNOmIXk6ftY7zJWt39c1JHaPRMEFt0E=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1743502105;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=suSfpVgBId8IpI/9A13Qm+aO2xaK6bvk0WIrZ6mJqfA=;
-	b=LKmuADDTSRI+wAfkOuD8IZKmzy14iQ//uKy8wxs4aZxgA3/E+p7wAEUCDZxwDoe5qKImX0
-	wRx/yN98+xBVuFBg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 043E9138A5;
-	Tue,  1 Apr 2025 10:08:25 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id XomxABm762cjDgAAD6G6ig
-	(envelope-from <jack@suse.cz>); Tue, 01 Apr 2025 10:08:25 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id AAF3FA07E6; Tue,  1 Apr 2025 12:08:24 +0200 (CEST)
-Date: Tue, 1 Apr 2025 12:08:24 +0200
-From: Jan Kara <jack@suse.cz>
-To: Christian Brauner <brauner@kernel.org>
-Cc: Jan Kara <jack@suse.cz>, linux-fsdevel@vger.kernel.org, 
-	Ard Biesheuvel <ardb@kernel.org>, linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	James Bottomley <James.Bottomley@hansenpartnership.com>, mcgrof@kernel.org, hch@infradead.org, david@fromorbit.com, 
-	rafael@kernel.org, djwong@kernel.org, pavel@kernel.org, peterz@infradead.org, 
-	mingo@redhat.com, will@kernel.org, boqun.feng@gmail.com
-Subject: Re: [PATCH 1/6] ext4: replace kthread freezing with auto fs freezing
-Message-ID: <2nqlkokmbkvamnrza3fpjjmye3w3fy7gf5bqpjt2cxeviks5ax@u4wqm4ldxuy6>
-References: <20250401-work-freeze-v1-0-d000611d4ab0@kernel.org>
- <20250401-work-freeze-v1-1-d000611d4ab0@kernel.org>
- <z3zqumhqgzq3agjps4ufdcqqrgip7t7xtr6v5kymchkdjfnwhp@i76pwshkydig>
- <20250401-konsens-nahebringen-fa1c80956371@brauner>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kAQ9TJw9"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-aaee2c5ee6eso806267066b.1
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 03:11:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1743502270; x=1744107070; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=f0fLcWG3xRCCoczcLQcRJk5lZ+cdqHvZLEk7m94iuVA=;
+        b=kAQ9TJw9GuspSLgSC2f2kFrc8YWz0y5QB39dvHfXL0rItj4MT9bhCXIoc5qUBjzjnY
+         z7CWPKC9TX3sRuJZVJ6+cRTsN/rJUW0dJ4zuaOo/odFW9qnhOP40aUG1c4bDc6556KYz
+         2tU4m+dENAgd4Bd+bvu09Oqm9nQ2fqa5kgMtwwUmuu9IYCK3TRefc/vy9Ou/KmCaAuvZ
+         DhAFSqzE+Il4/WLCvtYT/NV5FFHft5nfbVXfdB7snNgSyObEe30iKWIbWyJI5P7jKAWu
+         BjCFirZ59QKtCE3PansEfCPvqxccFTCBt2lG7eYruN4/MHRXWKok+JaZHM818haualK8
+         MFhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743502270; x=1744107070;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=f0fLcWG3xRCCoczcLQcRJk5lZ+cdqHvZLEk7m94iuVA=;
+        b=X0FCB8pCsYn1zfxsJEUmLAKFcsi4PpN2r0DMfPFwGGgpclrQuORrXG5Ya23uJmMlRK
+         E6hYAtLEva5lacV9YTfI+2+fTyWlS+KoPE7UTwLiAnepvxw5698k/zsIwPkazyBQfmmY
+         I3Xx+HO0sVKP/LK4LJmKhopRk77cdJJsCdGkxC9tbPuma5+xhMYy5636zYYq4t6DyvJh
+         6PBrk/CBZdJU1hs0rm/no7XV9vvyT1vUfpgYgAJfIG/FhE1u+jJ+zldcpNhrk5NER/HZ
+         S7y58YXzbNSCCJ5wokY6KEZ6U/xlkX3XUpUdYtNOGfafuaTp/l3jd9KqH8tPumFPC3SA
+         /7QQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW/rqi6KBm7aPybb2s4YT4OKAhyAZKpx2GZmHd2IvKttiJsfjxsgnGwb9ZdJjynA2idjINONJTrVu7PIlw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YySVVOYCVUGU6KlwCAki4QuFLYlcwj5YwDzgoDr5zYft+kkUEXo
+	Q1BUXkTz57SdQuT59jiMWFsvxj8esu5HgG+l6BA71t7dWzN6p6c92c+niPkfYPQ=
+X-Gm-Gg: ASbGnctFWy26ClHS0ZHRwunY3MAdxF1yTRHnT4i8LPiPVbtqWmcDi227E2FikK3McCU
+	wIEeaxsNSsemVQFJDwU2Wt0Zh4avEL1VF/YpLUExUVtO/T6MgGhmttFtVWzCdwOS7Q/DK7d2vWn
+	AV5rgAFeRI96dZwQ0fhwIBy6555f5NBLfpHAjal1Y2T1dVZSKFLXGIBG9U8VNfGw9aNje4rJnrl
+	vJlm65VwLKQ4ah9kiLSPjYAwfp2wtZpXHaToIjQzDM5m7LkYKAR2tSvibjWSeJiBNpfHVLHPM2/
+	6+nPTaodnh8QTDvYkxRp0YKFEs+ARdNmXQRYDsMj70gcHIVxE6ihDJI9U11Eb4aCbiizWRw+0D8
+	3w+cvG3uRfRkwvjO2OWaOktKj2GRG
+X-Google-Smtp-Source: AGHT+IELZUBLM5q9YYlt+lD2I0tWCOgW2YPV6e8Gm9HIS3wyPkKW8jVGcaajvDyvq1766HKI/b1QYg==
+X-Received: by 2002:a17:907:7eaa:b0:ac3:45c6:a1ec with SMTP id a640c23a62f3a-ac738a841a3mr1407550166b.25.1743502269931;
+        Tue, 01 Apr 2025 03:11:09 -0700 (PDT)
+Received: from puffmais.c.googlers.com (8.239.204.35.bc.googleusercontent.com. [35.204.239.8])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac71967ffcdsm757406966b.140.2025.04.01.03.11.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Apr 2025 03:11:09 -0700 (PDT)
+From: =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+Date: Tue, 01 Apr 2025 11:11:02 +0100
+Subject: [PATCH v5 1/2] dt-bindings: reset: syscon-reboot: add
+ google,gs101-reboot
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250401-konsens-nahebringen-fa1c80956371@brauner>
-X-Spam-Level: 
-X-Spamd-Result: default: False [-2.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_RCPT(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[17];
-	RCVD_COUNT_THREE(0.00)[3];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[suse.cz,vger.kernel.org,kernel.org,hansenpartnership.com,infradead.org,fromorbit.com,redhat.com,gmail.com];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email]
-X-Spam-Score: -2.30
-X-Spam-Flag: NO
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250401-syscon-reboot-reset-mode-v5-1-5b9357442363@linaro.org>
+References: <20250401-syscon-reboot-reset-mode-v5-0-5b9357442363@linaro.org>
+In-Reply-To: <20250401-syscon-reboot-reset-mode-v5-0-5b9357442363@linaro.org>
+To: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>
+Cc: Peter Griffin <peter.griffin@linaro.org>, 
+ Tudor Ambarus <tudor.ambarus@linaro.org>, 
+ Will McVicker <willmcvicker@google.com>, kernel-team@android.com, 
+ linux-pm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-samsung-soc@vger.kernel.org, 
+ =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+X-Mailer: b4 0.14.2
 
-On Tue 01-04-25 11:35:56, Christian Brauner wrote:
-> On Tue, Apr 01, 2025 at 11:16:18AM +0200, Jan Kara wrote:
-> > > ---
-> > >  fs/ext4/mballoc.c | 2 +-
-> > >  fs/ext4/super.c   | 3 ---
-> > >  2 files changed, 1 insertion(+), 4 deletions(-)
-> > > 
-> > > diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
-> > > index 0d523e9fb3d5..ae235ec5ff3a 100644
-> > > --- a/fs/ext4/mballoc.c
-> > > +++ b/fs/ext4/mballoc.c
-> > > @@ -6782,7 +6782,7 @@ static ext4_grpblk_t ext4_last_grp_cluster(struct super_block *sb,
-> > >  
-> > >  static bool ext4_trim_interrupted(void)
-> > >  {
-> > > -	return fatal_signal_pending(current) || freezing(current);
-> > > +	return fatal_signal_pending(current);
-> > >  }
-> > 
-> > This change should not happen. ext4_trim_interrupted() makes sure FITRIM
-> > ioctl doesn't cause hibernation failures and has nothing to do with kthread
-> > freezing...
-> > 
-> > Otherwise the patch looks good.
-> 
-> Afaict, we don't have to do these changes now. Yes, once fsfreeze
-> reliably works in the suspend/resume codepaths then we can switch all
-> that off and remove the old freezer. But we should only do that once we
-> have some experience with the new filesystem freezing during
-> suspend/hibernate. So we should place this under a
-> /sys/power/freeze_filesystems knob and wait a few kernel releases to see
-> whether we see significant problems. How does that sound to you?
+GS101 supports a couple different reset types via certain registers in
+the SYSCON register map.
 
-I agree that enabling this with some knob to allow easy way out if things
-don't work makes sense. And the removal of kthread freezing can be done
-somewhat later when we are more confident filesystem freezing on
-hibernation is solid.
+Add a compatible for it. When in effect, all register values and offsets
+are implied, hence they shall not be specified in that case.
 
-								Honza
+Signed-off-by: André Draszik <andre.draszik@linaro.org>
+---
+ .../bindings/power/reset/syscon-reboot.yaml        | 42 +++++++++++++++-------
+ 1 file changed, 30 insertions(+), 12 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/power/reset/syscon-reboot.yaml b/Documentation/devicetree/bindings/power/reset/syscon-reboot.yaml
+index 19d3093e6cd2f7e39d94c56636dc202a4427ffc3..ccd5558700943ef56f5e1c866400bcc21c0115f0 100644
+--- a/Documentation/devicetree/bindings/power/reset/syscon-reboot.yaml
++++ b/Documentation/devicetree/bindings/power/reset/syscon-reboot.yaml
+@@ -21,7 +21,9 @@ description: |+
+ 
+ properties:
+   compatible:
+-    const: syscon-reboot
++    enum:
++      - syscon-reboot
++      - google,gs101-reboot
+ 
+   mask:
+     $ref: /schemas/types.yaml#/definitions/uint32
+@@ -49,12 +51,6 @@ properties:
+   priority:
+     default: 192
+ 
+-oneOf:
+-  - required:
+-      - offset
+-  - required:
+-      - reg
+-
+ required:
+   - compatible
+ 
+@@ -63,12 +59,29 @@ additionalProperties: false
+ allOf:
+   - $ref: restart-handler.yaml#
+   - if:
+-      not:
+-        required:
+-          - mask
++      properties:
++        compatible:
++          contains:
++            const: google,gs101-reboot
+     then:
+-      required:
+-        - value
++      properties:
++        mask: false
++        offset: false
++        reg: false
++        value: false
++
++    else:
++      if:
++        not:
++          required:
++            - mask
++      then:
++        required:
++          - value
++
++      oneOf:
++        - required: [offset]
++        - required: [reg]
+ 
+ examples:
+   - |
+@@ -78,3 +91,8 @@ examples:
+         offset = <0x0>;
+         mask = <0x1>;
+     };
++
++  - |
++    reboot {
++        compatible = "google,gs101-reboot";
++    };
+
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+2.49.0.472.ge94155a9ec-goog
+
