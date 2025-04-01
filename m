@@ -1,69 +1,69 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F87C20F088
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 16:11:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B549320D4F2
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 16:11:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743523888; cv=none; b=Myp64PZm0x98wKBBIrufT0f65UM/IzoRKjuo1BJaBvDqHSASawnoYhehaH4JnaIZQQsbBeXxPldV4+4B7cUfZ37NEmDkgja7eDNxNK7qugU5n3CGwiJtaIUNjmSc48hTFkrgVFha/T9MbcAckydOdJTMyqVDLbmTnFjpoXCQJRw=
+	t=1743523893; cv=none; b=LAsRuzi8rdThr6KSs55XG3kXiO7g2Fe8GJmlYHhCy/gQMwCcXbYPyIQumM/AlTgAfpOgfZWUVh+RLRW5M/J88EkKFpyTxKvXKJOXYS5RK1+BskkFr1NGPdsZPYgSeHTMFimTvQ4ohrDuhH1Q+FgSIH5ToHUn8t4I0fW3EbFnYmo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743523888; c=relaxed/simple;
-	bh=rxM4+r5oKn3FrtYxyoYERVyr2vDI5fg2rK7DFIuTtwg=;
+	s=arc-20240116; t=1743523893; c=relaxed/simple;
+	bh=ZfkfOM480M1YBqKpC2/kM72sR6VmePA1K6dauSV8B3s=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=G/Bo8iY4D14KmnKmZlpxwkGcCJeF9OyNy5PVPa6oOxAfiGVhmZa//gSBDX6/++DeUcsr7n8rlPeVMFp7VsyhQIWArRSr9w+PXQEAF4xi4H0SjDLosqPHsKb26aigAUjYBeP0H+sTSsWDUYkcZ40Ff/jETIlKVItEAzs3L6LCuak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=e6q7JRT0; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=dC9z8ohrKR2hm3FwVCiHlD2bXNAixvsRNdPzyHBDjNE0CV5J6pCC9gMOfEqDhCYz8BwCABN7wCeDg7AkI9wQHITVL/xlBn4//fLlEB6mVggFflUIYJuqp3fdYR10JPg9RA0Z0RacHNnpFAJIf5s4XDHroRXIvfGJ0mlTVc0SgO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=T7QbLDvG; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e6q7JRT0"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="T7QbLDvG"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743523885;
+	s=mimecast20190719; t=1743523890;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=QaUbfvoP8aPmiGrV9eVE67gclsfaX3jw4nCiV/n0Ni4=;
-	b=e6q7JRT0izGViacuCXk2qpAW675QODl6wzwH8s4rHsR9Qw2eV+s23TAnXZUVSD0KxmFbyV
-	eBQyANkOThmLFO21RExFlE0/bLK6QMyOxZMq2tf9wjlsvpXlQELyDfsysU5JabolY5+ZQj
-	D92x76ZbUA37T/7lnIow4Yuj0NPSv1w=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=KsKBW7BEHbNNA2EQflKemABN/u2ulObIcmH48WXDJ8s=;
+	b=T7QbLDvGMwg8nESFawk9kYozEVXVPArJoRXUQfXRNPfb0X7R2I6gDB5qUnOBS+u1HUziPp
+	rHKiNZ5BnvMppSh86Ht5A6+XVyr1KsOLQSFb/i/0Xr2qcwJrsFvKcW4j2kt9jWHNgAPKiJ
+	ew98ApazTF3fin8qehlWIzvhh1jHeWQ=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-523-5ftztJdKO5i2n1vV51m4lQ-1; Tue, 01 Apr 2025 12:11:24 -0400
-X-MC-Unique: 5ftztJdKO5i2n1vV51m4lQ-1
-X-Mimecast-MFC-AGG-ID: 5ftztJdKO5i2n1vV51m4lQ_1743523883
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43ceb011ea5so40935005e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 09:11:24 -0700 (PDT)
+ us-mta-6-jmiAbRM3MyuUNgN_LlSP9g-1; Tue, 01 Apr 2025 12:11:29 -0400
+X-MC-Unique: jmiAbRM3MyuUNgN_LlSP9g-1
+X-Mimecast-MFC-AGG-ID: jmiAbRM3MyuUNgN_LlSP9g_1743523888
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43ceb011ea5so40935915e9.2
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 09:11:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743523882; x=1744128682;
+        d=1e100.net; s=20230601; t=1743523887; x=1744128687;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=QaUbfvoP8aPmiGrV9eVE67gclsfaX3jw4nCiV/n0Ni4=;
-        b=wJVqGfehcUIyP++PB2/EYNt6PuWymPZ0j+zcoczF/CKrgvTUt48UFeR7Fx4dQxgXy6
-         E3ImaLEdyarb5gVrEVLALMCxBAEZBCmiGSjKlaz99+CV2aHCho0ClmsJZeJPzgt8HoWG
-         rCNwe51s8uPtEju2Q9aRHGtzX+ck9feP62EAq2hCBInpy8l4O8b/tvMZzrx6+JrCE/xP
-         hdhzhhTw8vE3A9pvLvDCQPR1bBY+f3V6PrY1jRUoALIElK3OH0p4CY933lMnN7BP+AfR
-         /nNU9hsWOgX7HKvLfi5hbDffj3J+88HpRD3LLzh7MMkdE7faCs+PM146gru1RcnnUDEc
-         sR2A==
-X-Gm-Message-State: AOJu0Yw7xs0Rs2l5u5UwRThgDjR6mcarqws85CchKzDpnrZalQk2ncxT
-	Kd8ydK3kWUHZp6yIJnvyoC3rqIU741AcCAY0XPvIcxK2uhKNyi7gq26BcpuLVzWo5bn2cyWOSdc
-	vYyVJBBJhMTK1lwKgcSNX2kosHIok0G/TDywo9GnTnfwKDozJfOhkpJF+jP6FZGfvvfnT6d0BH7
-	ejyArZg9YC4A9KzYQttElYZUhXBkURoiAVddrd+VkmMHpwrw==
-X-Gm-Gg: ASbGncsLYloJt9CUHTaCvUnssUhkZA4dikhYqdcRu4helNDR39HUlPX9EF4b2CgWRBz
-	zeftWUUZ5tsmxGxIc26VYftvv2x/yLIvp09Gvhp3/lCZvwFqMlCu4TfVAriZkH/BXpUVEbY7xvb
-	e5iIHy5GkrgPJU3hN0g5YeiSrs+e16xHZTAbicRxaDj1PLqhToEGm2tZ99cO30jC2zPOLObO4HM
-	TJ4bnkdSPDvEah5a44lcDKi4slmy4MHNQnpBrbQv1SsWZwlOMlVUQoLcMMMycqkte6OgTFy2nNR
-	6NXv5+DCUP3bTpHesGqO9w==
-X-Received: by 2002:a05:600c:cc8:b0:43d:b3:fb1 with SMTP id 5b1f17b1804b1-43ea5f001b7mr45447985e9.27.1743523882231;
-        Tue, 01 Apr 2025 09:11:22 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHZdEWzHsg0YswCSXrdzj6ch9i3n9G2iz9TWc1mNERKBxpVsH1+e/xNG+caFFDjVEabapAovQ==
-X-Received: by 2002:a05:600c:cc8:b0:43d:b3:fb1 with SMTP id 5b1f17b1804b1-43ea5f001b7mr45447655e9.27.1743523881889;
-        Tue, 01 Apr 2025 09:11:21 -0700 (PDT)
+        bh=KsKBW7BEHbNNA2EQflKemABN/u2ulObIcmH48WXDJ8s=;
+        b=tnpGB4fINEJadzVZQ9rytUWO14CqT0jqGomcbscpy/+381XG2vCFIBaRx6GA8CXwRp
+         a18XiKk2OkLJyjVp+A6ibPRDEYDRA6TYgBdnUyIT9GEY4svhigzWoSyenvXIcjzakR3x
+         OxfJKfVKYKBjLcXMWHNWLO58LlWnnIo/3dw52tZiZUpQ8K5l8BJNRjF6ZTai2AC8m4xS
+         y6XQmAz4o1ysSWHLnwx83HyzX0Cd8Z7fC4nz3j7qAKZV4l0T4Z+tWKCrfEFfZCoW5V9o
+         KuxoRaz2HIOBMv7U3LjMvC7QOcIXep9q1hM2L+xvQbTWlhE6bG0+D9ULnXbEI8wH18+D
+         fxlg==
+X-Gm-Message-State: AOJu0YzUneLDkgyzqkqEFPnlEPHspnXc6Oysd540/QdLPYRCW1duj/x4
+	91qq6R6KSH1GxAA0foKYMCIRaLwnHtYeXz+XpyokyRkVvcFVLnvOaUj+aPqC7+ZMNFSe2zQNF0v
+	rIR8C6e2eHSHGtrm8brlh/qW/iTij85JevVGAnTst5+6aKwE6GNYSaV4SDRElNhbaJY4377Vce4
+	dUzefyAgW5a7us5e7KXxWt0yY0UewBeeB2v0C06nFSxYuBpQ==
+X-Gm-Gg: ASbGncvt+AwEmLQqqn4+PmcsiDIhf1q5ilk7AB3t17whRZoG/GtPYSg/ORYWgzdKm3G
+	8PgrMLw4LrDDjhp7By+yijkhFwS5ZfCxF9vlckg9jwZKUfnWbXemm+62TOHoboE6I66vWArJw/Y
+	cvngnnMuQm6EhaIuKDov+k9v6TmqRzq7V276eL6jwbAbxXEy/P/hSV1c2Uq6hCieoJwiQatA3cG
+	90DOrQruSa3klEWYtz5Hf/3XawKL7ROA4SZmlbTjkWZsHnkH4pElVBNNpg8yOdB9b4NGM6qzVyy
+	TCObO3khsmG3LOEwKQLPwg==
+X-Received: by 2002:a05:6000:2410:b0:39c:142a:35f9 with SMTP id ffacd0b85a97d-39c142a35famr11329201f8f.10.1743523887505;
+        Tue, 01 Apr 2025 09:11:27 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEUBBONFMxXubuB0rFZnmFR8I8IBPlykXIOGysFwqjq21RAjnf88FJ3fTcF64SWlqgmRjwgcw==
+X-Received: by 2002:a05:6000:2410:b0:39c:142a:35f9 with SMTP id ffacd0b85a97d-39c142a35famr11329136f8f.10.1743523887070;
+        Tue, 01 Apr 2025 09:11:27 -0700 (PDT)
 Received: from [192.168.10.48] ([176.206.111.201])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b66ab86sm14896816f8f.51.2025.04.01.09.11.20
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b66a9d2sm14476457f8f.43.2025.04.01.09.11.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Apr 2025 09:11:20 -0700 (PDT)
+        Tue, 01 Apr 2025 09:11:25 -0700 (PDT)
 From: Paolo Bonzini <pbonzini@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
@@ -76,9 +76,9 @@ Cc: roy.hopkins@suse.com,
 	nsaenz@amazon.com,
 	anelkz@amazon.de,
 	James.Bottomley@HansenPartnership.com
-Subject: [PATCH 05/29] KVM: add plane support to KVM_SIGNAL_MSI
-Date: Tue,  1 Apr 2025 18:10:42 +0200
-Message-ID: <20250401161106.790710-6-pbonzini@redhat.com>
+Subject: [PATCH 07/29] KVM: do not use online_vcpus to test vCPU validity
+Date: Tue,  1 Apr 2025 18:10:44 +0200
+Message-ID: <20250401161106.790710-8-pbonzini@redhat.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250401161106.790710-1-pbonzini@redhat.com>
 References: <20250401161106.790710-1-pbonzini@redhat.com>
@@ -90,76 +90,128 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-struct kvm_kernel_irq_routing_entry is the main tool for sending
-cross-plane IPIs.  Make kvm_send_userspace_msi the first function to
-accept a struct kvm_plane pointer, in preparation for making it available
-from plane file descriptors.
+Different planes can initialize their vCPUs separately, therefore there is
+no single online_vcpus value that can be used to test that a vCPU has
+indeed been fully initialized.
+
+Use the shiny new plane field instead, initializing it to an invalid value
+(-1) while the vCPU is visible in the xarray but may still disappear if
+the creation fails.
 
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- include/linux/kvm_host.h | 3 ++-
- virt/kvm/irqchip.c       | 5 ++++-
- virt/kvm/kvm_main.c      | 2 +-
- 3 files changed, 7 insertions(+), 3 deletions(-)
+ arch/x86/kvm/i8254.c     |  3 ++-
+ include/linux/kvm_host.h | 23 ++++++-----------------
+ virt/kvm/kvm_main.c      | 20 +++++++++++++-------
+ 3 files changed, 21 insertions(+), 25 deletions(-)
 
+diff --git a/arch/x86/kvm/i8254.c b/arch/x86/kvm/i8254.c
+index d7ab8780ab9e..e3a3e7b90c26 100644
+--- a/arch/x86/kvm/i8254.c
++++ b/arch/x86/kvm/i8254.c
+@@ -260,9 +260,10 @@ static void pit_do_work(struct kthread_work *work)
+ 	 * VCPUs and only when LVT0 is in NMI mode.  The interrupt can
+ 	 * also be simultaneously delivered through PIC and IOAPIC.
+ 	 */
+-	if (atomic_read(&kvm->arch.vapics_in_nmi_mode) > 0)
++	if (atomic_read(&kvm->arch.vapics_in_nmi_mode) > 0) {
+ 		kvm_for_each_vcpu(i, vcpu, kvm)
+ 			kvm_apic_nmi_wd_deliver(vcpu);
++	}
+ }
+ 
+ static enum hrtimer_restart pit_timer_fn(struct hrtimer *data)
 diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index 6bd9b0b3cbee..98bae5dc3515 100644
+index 4d408d1d5ccc..0db27814294f 100644
 --- a/include/linux/kvm_host.h
 +++ b/include/linux/kvm_host.h
-@@ -684,6 +684,7 @@ struct kvm_kernel_irq_routing_entry {
- 			u32 data;
- 			u32 flags;
- 			u32 devid;
-+			u32 plane;
- 		} msi;
- 		struct kvm_s390_adapter_int adapter;
- 		struct kvm_hv_sint hv_sint;
-@@ -2218,7 +2219,7 @@ static inline int kvm_init_irq_routing(struct kvm *kvm)
+@@ -992,27 +992,16 @@ static inline struct kvm_io_bus *kvm_get_bus(struct kvm *kvm, enum kvm_bus idx)
  
- #endif
- 
--int kvm_send_userspace_msi(struct kvm *kvm, struct kvm_msi *msi);
-+int kvm_send_userspace_msi(struct kvm_plane *plane, struct kvm_msi *msi);
- 
- void kvm_eventfd_init(struct kvm *kvm);
- int kvm_ioeventfd(struct kvm *kvm, struct kvm_ioeventfd *args);
-diff --git a/virt/kvm/irqchip.c b/virt/kvm/irqchip.c
-index 162d8ed889f2..84952345e3c2 100644
---- a/virt/kvm/irqchip.c
-+++ b/virt/kvm/irqchip.c
-@@ -45,8 +45,10 @@ int kvm_irq_map_chip_pin(struct kvm *kvm, unsigned irqchip, unsigned pin)
- 	return irq_rt->chip[irqchip][pin];
- }
- 
--int kvm_send_userspace_msi(struct kvm *kvm, struct kvm_msi *msi)
-+int kvm_send_userspace_msi(struct kvm_plane *plane, struct kvm_msi *msi)
+ static inline struct kvm_vcpu *kvm_get_vcpu(struct kvm *kvm, int i)
  {
-+	struct kvm *kvm = plane->kvm;
-+	unsigned plane_id = plane->plane;
- 	struct kvm_kernel_irq_routing_entry route;
+-	int num_vcpus = atomic_read(&kvm->online_vcpus);
+-
+-	/*
+-	 * Explicitly verify the target vCPU is online, as the anti-speculation
+-	 * logic only limits the CPU's ability to speculate, e.g. given a "bad"
+-	 * index, clamping the index to 0 would return vCPU0, not NULL.
+-	 */
+-	if (i >= num_vcpus)
++	struct kvm_vcpu *vcpu = xa_load(&kvm->vcpu_array, i);
++	if (vcpu && unlikely(vcpu->plane == -1))
+ 		return NULL;
  
- 	if (!kvm_arch_irqchip_in_kernel(kvm) || (msi->flags & ~KVM_MSI_VALID_DEVID))
-@@ -57,6 +59,7 @@ int kvm_send_userspace_msi(struct kvm *kvm, struct kvm_msi *msi)
- 	route.msi.data = msi->data;
- 	route.msi.flags = msi->flags;
- 	route.msi.devid = msi->devid;
-+	route.msi.plane = plane_id;
- 
- 	return kvm_set_msi(&route, kvm, KVM_USERSPACE_IRQ_SOURCE_ID, 1, false);
+-	i = array_index_nospec(i, num_vcpus);
+-
+-	/* Pairs with smp_wmb() in kvm_vm_ioctl_create_vcpu.  */
+-	smp_rmb();
+-	return xa_load(&kvm->vcpu_array, i);
++	return vcpu;
  }
+ 
+-#define kvm_for_each_vcpu(idx, vcpup, kvm)				\
+-	if (atomic_read(&kvm->online_vcpus))				\
+-		xa_for_each_range(&kvm->vcpu_array, idx, vcpup, 0,	\
+-				  (atomic_read(&kvm->online_vcpus) - 1))
++#define kvm_for_each_vcpu(idx, vcpup, kvm)			\
++	xa_for_each(&kvm->vcpu_array, idx, vcpup)		\
++		if ((vcpup)->plane == -1) ; else		\
+ 
+ static inline struct kvm_vcpu *kvm_get_vcpu_by_id(struct kvm *kvm, int id)
+ {
 diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index e83db27580da..5b44a7f9e52e 100644
+index e343905e46d8..eba02cb7cc57 100644
 --- a/virt/kvm/kvm_main.c
 +++ b/virt/kvm/kvm_main.c
-@@ -5207,7 +5207,7 @@ static long kvm_vm_ioctl(struct file *filp,
- 		r = -EFAULT;
- 		if (copy_from_user(&msi, argp, sizeof(msi)))
- 			goto out;
--		r = kvm_send_userspace_msi(kvm, &msi);
-+		r = kvm_send_userspace_msi(kvm->planes[0], &msi);
- 		break;
+@@ -4186,6 +4186,11 @@ static int kvm_vm_ioctl_create_vcpu(struct kvm *kvm, unsigned long id)
+ 		goto unlock_vcpu_destroy;
  	}
- #endif
+ 
++	/*
++	 * Store an invalid plane number until fully initialized.  xa_insert() has
++	 * release semantics, which ensures the write is visible to kvm_get_vcpu().
++	 */
++	vcpu->plane = -1;
+ 	vcpu->vcpu_idx = atomic_read(&kvm->online_vcpus);
+ 	r = xa_insert(&kvm->vcpu_array, vcpu->vcpu_idx, vcpu, GFP_KERNEL_ACCOUNT);
+ 	WARN_ON_ONCE(r == -EBUSY);
+@@ -4195,7 +4200,7 @@ static int kvm_vm_ioctl_create_vcpu(struct kvm *kvm, unsigned long id)
+ 	/*
+ 	 * Now it's all set up, let userspace reach it.  Grab the vCPU's mutex
+ 	 * so that userspace can't invoke vCPU ioctl()s until the vCPU is fully
+-	 * visible (per online_vcpus), e.g. so that KVM doesn't get tricked
++	 * visible (valid vcpu->plane), e.g. so that KVM doesn't get tricked
+ 	 * into a NULL-pointer dereference because KVM thinks the _current_
+ 	 * vCPU doesn't exist.  As a bonus, taking vcpu->mutex ensures lockdep
+ 	 * knows it's taken *inside* kvm->lock.
+@@ -4206,12 +4211,13 @@ static int kvm_vm_ioctl_create_vcpu(struct kvm *kvm, unsigned long id)
+ 	if (r < 0)
+ 		goto kvm_put_xa_erase;
+ 
+-	/*
+-	 * Pairs with smp_rmb() in kvm_get_vcpu.  Store the vcpu
+-	 * pointer before kvm->online_vcpu's incremented value.
+-	 */
+-	smp_wmb();
+ 	atomic_inc(&kvm->online_vcpus);
++
++	/*
++	 * Pairs with xa_load() in kvm_get_vcpu, ensuring that online_vcpus
++	 * is updated before vcpu->plane.
++	 */
++	smp_store_release(&vcpu->plane, 0);
+ 	mutex_unlock(&vcpu->mutex);
+ 
+ 	mutex_unlock(&kvm->lock);
+@@ -4355,7 +4361,7 @@ static int kvm_wait_for_vcpu_online(struct kvm_vcpu *vcpu)
+ 	 * In practice, this happy path will always be taken, as a well-behaved
+ 	 * VMM will never invoke a vCPU ioctl() before KVM_CREATE_VCPU returns.
+ 	 */
+-	if (likely(vcpu->vcpu_idx < atomic_read(&kvm->online_vcpus)))
++	if (likely(vcpu->plane != -1))
+ 		return 0;
+ 
+ 	/*
 -- 
 2.49.0
 
