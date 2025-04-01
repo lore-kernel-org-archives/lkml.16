@@ -1,41 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FA883594F
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 19:57:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70EEF149C7D;
+	Tue,  1 Apr 2025 19:59:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743537455; cv=none; b=UruuJ9ZGLYxP/imHmutgR0jCO1Su57aNsjidtN/RRvA8ApKtJzG/I3+wa67r/6giq35niDKnOuhb9DBLBoEetCN8R4B7Q4VQvWlaEyZaapI9m6BKBBJnlBXREH/jtf6mGi4BYhBQEojioH55YgKy2ujOZBQZ8Ia6esuGzG0n3VY=
+	t=1743537580; cv=none; b=dKzF7q1jLNNtZQbemTrWOls63w3jo+srIK7dvQS5Es8DSe20o4nd8XunQr1+gTNqNwccETOw02v6b14pEEvMBZWe0317ZR94svTG4IkQzN8RJZrsux3geyrOOHOQ7YeDxTTSNvWiuJRLfNmZldfhcG3C5HeBdd7M5aEjIJlI6BM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743537455; c=relaxed/simple;
-	bh=NPHqjUK4I8TSG+iJyt5MsH0oXaEzwN8CszIZjsDcS0Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=ulAg/bIkbg2cQV1d2wAVpWSaRvIKrJR7IdRJ/qBzWNTGxledQUMeAokg/E0d9hZlXgYsfGIkuLl3BOnX8RLMsYA8Q1HG2pK7DT//mqHxAdNa1PhvsusMzcHFYiov4tMusdJrnQdV1ptz0+DkI/HCElF0/D2cvIznf+2P9tug+Ss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KgsPb5xk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743537580; c=relaxed/simple;
+	bh=tncNSm+UNYU1jooNfPV27W/DH7UbX3ICgX+sPHAz5jw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hIRJ8b9u1TsFf7fkBbB0Elv70y9jN2zdPV89IcgWjeuRNbkf0ZUK3vvE0w61DnZH51G2ZTXnD8/8FaQoYswRZtoESIlIkFS1pgdq1d/00xPJkngMq9H7OW9rzKGJ8S3T6yiSH58+ptJuwdXy+0BBVrCzweNpElZeWUAViloy7Ko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nhDoIu3t; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KgsPb5xk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3D4FC4CEE4;
-	Tue,  1 Apr 2025 19:57:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nhDoIu3t"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA9A9C4CEE5;
+	Tue,  1 Apr 2025 19:59:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743537454;
-	bh=NPHqjUK4I8TSG+iJyt5MsH0oXaEzwN8CszIZjsDcS0Y=;
-	h=Date:From:To:Cc:Subject:From;
-	b=KgsPb5xkU/0d69jjTF5r57J47NuYEBJ37DOB/T9Vsn54hUv4DJR4dvfRPgsdBQzkJ
-	 OvmPQcnFU3rPi/FrcMrPXHOh8+QzTXAByx3OfFnjDGOzHu8WB+MRoz64w9KIyYOgEW
-	 72rRtzSMllklnSlXROl4/v1BrOB4pEhCdEIgEJe6YZqNzaOcWe6OOIro8jx8yGkBt+
-	 1NprHlBguCBpyNgRYRE/lWbGUDqTk3mSAJxkCAeBTYD2e1FtvY83Itl4zboJv0tr3n
-	 0SSohsUjtucTCl/EdvJJ2i6+o7M/vqmGigeg8yzaGSFLuDQN3bdsrgU4xzfuOdHO2Z
-	 rUS3IwFndfLcA==
-Date: Tue, 1 Apr 2025 21:57:29 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, Peter Zijlstra <a.p.zijlstra@chello.nl>,
-	Josh Poimboeuf <jpoimboe@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: [GIT PULL] objtool fixes
-Message-ID: <Z-xFKa5hiQ5urVwS@gmail.com>
+	s=k20201202; t=1743537579;
+	bh=tncNSm+UNYU1jooNfPV27W/DH7UbX3ICgX+sPHAz5jw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nhDoIu3tP7Yb5bpoY/L4pQIzGPL14n46v3UDUR6FYHFCEbccIrMCOKs5u6C6yDfhm
+	 Jmyhumxp2Kdg4O0pebV7ZYayJJvzP2zITFiLhuA/cEfGMA16l9rl60mrTqb8rP5ydY
+	 iDNnYD0Fb4qMWd0iNh9BO7dNNHgReM06pGUpKItYh0LgDckIK9LPI0GswdPdoCoULP
+	 zwAiGN0KP6vNJUw+Tvv0ZF6czCpGn07Uo+tpkri38GRiDTLqsok3JhVr+paCDCVwNY
+	 fxAH2sQkqKQM/ov/8W/7IKmZWEWTxFvtT/pZal9tIpGdV+Y48PTMaGHqQlCWAFd14r
+	 xRbARAOfAwMSA==
+Date: Tue, 1 Apr 2025 09:59:38 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Waiman Long <llong@redhat.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>,
+	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
+	Shuah Khan <shuah@kernel.org>, cgroups@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 01/10] cgroup/cpuset: Fix race between newly created
+ partition and dying one
+Message-ID: <Z-xFqkBsh640l5j0@mtj.duckdns.org>
+References: <20250330215248.3620801-1-longman@redhat.com>
+ <20250330215248.3620801-2-longman@redhat.com>
+ <Z-shjD2OwHJPI0vG@slm.duckdns.org>
+ <915d1261-ee9f-4080-a338-775982e1c48d@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,118 +48,36 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <915d1261-ee9f-4080-a338-775982e1c48d@redhat.com>
 
-Linus,
+Hello, Waiman.
 
-Please pull the latest objtool/urgent Git tree from:
+On Mon, Mar 31, 2025 at 11:12:06PM -0400, Waiman Long wrote:
+> The problem is the RCU delay between the time a cgroup is killed and is in a
+> dying state and when the partition is deactivated when cpuset_css_offline()
+> is called. That delay can be rather lengthy depending on the current
+> workload.
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git objtool-urgent-2025-04-01
+If we don't have to do it too often, synchronize_rcu_expedited() may be
+workable too. What do you think?
 
-   # HEAD: 7c977393b8277ed319e92e4b598b26598c9d30c0 objtool/loongarch: Add unwind hints in prepare_frametrace()
+> Another alternative that I can think of is to scan the remote partition list
+> for remote partition and sibling cpusets for local partition whenever some
+> kind of conflicts are detected when enabling a partition. When a dying
+> cpuset partition is detected, deactivate it immediately to resolve the
+> conflict. Otherwise, the dying partition will still be deactivated at
+> cpuset_css_offline() time.
+> 
+> That will be a bit more complex and I think can still get the problem solved
+> without adding a new method. What do you think? If you are OK with that, I
+> will send out a new patch later this week.
 
-These are objtool fixes and updates by Josh Poimboeuf, centered
-around the fallout from the new CONFIG_OBJTOOL_WERROR=y feature,
-which, despite its default-off nature, increased the profile/impact
-of objtool warnings:
+If synchronize_rcu_expedited() won't do, let's go with the original patch.
+The operation does make general sense in that it's for a distinctive step in
+the destruction process although I'm a bit curious why it's called before
+DYING is set.
 
- - Improve error handling and the presentation of warnings/errors.
+Thanks.
 
- - Revert the new summary warning line that some test-bot tools
-   interpreted as new regressions.
-
- - Fix a number of objtool warnings in various drivers, core kernel
-   code and architecture code. About half of them are potential
-   problems related to out-of-bounds accesses or potential undefined
-   behavior, the other half are additional objtool annotations.
-
- - Update objtool to latest (known) compiler quirks and
-   objtool bugs triggered by compiler code generation
-
- - Misc fixes
-
- Thanks,
-
-	Ingo
-
------------------->
-David Laight (1):
-      objtool: Fix verbose disassembly if CROSS_COMPILE isn't set
-
-Josh Poimboeuf (35):
-      objtool: Fix detection of consecutive jump tables on Clang 20
-      objtool: Warn when disabling unreachable warnings
-      objtool: Ignore entire functions rather than instructions
-      objtool: Fix X86_FEATURE_SMAP alternative handling
-      objtool: Fix CONFIG_OBJTOOL_WERROR for vmlinux.o
-      objtool: Fix init_module() handling
-      objtool: Silence more KCOV warnings
-      objtool: Properly disable uaccess validation
-      objtool: Improve error handling
-      objtool: Reduce CONFIG_OBJTOOL_WERROR verbosity
-      objtool: Fix up some outdated references to ENTRY/ENDPROC
-      objtool: Remove --no-unreachable for noinstr-only vmlinux.o runs
-      objtool: Remove redundant opts.noinstr dependency
-      objtool, spi: amd: Fix out-of-bounds stack access in amd_set_spi_freq()
-      objtool, nvmet: Fix out-of-bounds stack access in nvmet_ctrl_state_show()
-      objtool, media: dib8000: Prevent divide-by-zero in dib8000_set_dds()
-      objtool, panic: Disable SMAP in __stack_chk_fail()
-      objtool, Input: cyapa - Remove undefined behavior in cyapa_update_fw_store()
-      objtool, ASoC: codecs: wcd934x: Remove potential undefined behavior in wcd934x_slim_irq_handler()
-      objtool, regulator: rk808: Remove potential undefined behavior in rk806_set_mode_dcdc()
-      objtool, lkdtm: Obfuscate the do_nothing() pointer
-      objtool: Fix NULL printf() '%s' argument in builtin-check.c:save_argv()
-      objtool: Fix segfault in ignore_unreachable_insn()
-      objtool: Fix STACK_FRAME_NON_STANDARD for cold subfunctions
-      objtool, drm/vmwgfx: Don't ignore vmw_send_msg() for ORC
-      objtool: Silence more KCOV warnings, part 2
-      objtool: Ignore end-of-section jumps for KCOV/GCOV
-      objtool: Append "()" to function name in "unexpected end of section" warning
-      Revert "objtool: Increase per-function WARN_FUNC() rate limit"
-      objtool: Always fail on fatal errors
-      objtool: Change "warning:" to "error: " for fatal errors
-      sched/smt: Always inline sched_smt_active()
-      context_tracking: Always inline ct_{nmi,irq}_{enter,exit}()
-      rcu-tasks: Always inline rcu_irq_work_resched()
-      objtool/loongarch: Add unwind hints in prepare_frametrace()
-
-
- arch/loongarch/include/asm/stacktrace.h   |   3 +
- arch/loongarch/include/asm/unwind_hints.h |  10 +-
- arch/x86/include/asm/arch_hweight.h       |   6 +-
- arch/x86/include/asm/smap.h               |  23 +-
- arch/x86/include/asm/xen/hypercall.h      |   6 +-
- drivers/gpu/drm/vmwgfx/vmwgfx_msg.c       |   2 +-
- drivers/input/mouse/cyapa.c               |   4 +-
- drivers/media/dvb-frontends/dib8000.c     |   5 +-
- drivers/misc/lkdtm/perms.c                |  14 +-
- drivers/nvme/target/debugfs.c             |   2 +-
- drivers/regulator/rk808-regulator.c       |   4 +-
- drivers/spi/spi-amd.c                     |   2 +-
- include/linux/context_tracking_irq.h      |   8 +-
- include/linux/linkage.h                   |   4 -
- include/linux/objtool.h                   |   2 +-
- include/linux/rcupdate.h                  |   2 +-
- include/linux/sched/smt.h                 |   2 +-
- kernel/panic.c                            |   6 +
- scripts/Makefile.lib                      |   4 +-
- scripts/Makefile.vmlinux_o                |  15 +-
- sound/soc/codecs/wcd934x.c                |   2 +-
- tools/objtool/Documentation/objtool.txt   |  10 +-
- tools/objtool/arch/loongarch/decode.c     |  14 +-
- tools/objtool/arch/loongarch/orc.c        |   8 +-
- tools/objtool/arch/x86/decode.c           |  15 +-
- tools/objtool/arch/x86/orc.c              |   6 +-
- tools/objtool/arch/x86/special.c          |  38 +-
- tools/objtool/builtin-check.c             | 132 +++---
- tools/objtool/check.c                     | 647 +++++++++++++++---------------
- tools/objtool/elf.c                       | 156 ++++---
- tools/objtool/include/objtool/builtin.h   |   6 +-
- tools/objtool/include/objtool/check.h     |   3 +-
- tools/objtool/include/objtool/elf.h       |  30 +-
- tools/objtool/include/objtool/objtool.h   |   2 +-
- tools/objtool/include/objtool/special.h   |   4 +-
- tools/objtool/include/objtool/warn.h      |  62 +--
- tools/objtool/objtool.c                   |  15 +-
- tools/objtool/orc_dump.c                  |  30 +-
- tools/objtool/special.c                   |  25 +-
- 39 files changed, 679 insertions(+), 650 deletions(-)
+-- 
+tejun
