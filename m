@@ -1,198 +1,142 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3684381A3
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 17:47:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06C0C53AC;
+	Tue,  1 Apr 2025 17:50:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743529677; cv=none; b=TC1Zv5enKpMwV7fygzmdyVgO30NcHUi124hLzs7dS2rkKORLBdV1iG6mkC8ub+gP5/F2MUefovPXNs5P2GFXQjdY6nYrZCDzWoU6RREZ5ygtRBlWQDvXkiLEry4nSLyDkDR2QWtI6yga9Yv9ofv8UAmvlYEesvgG4M4EV+6HeBk=
+	t=1743529814; cv=none; b=WWQzCaiXYyRwoFJmm2yrLgc00YTt66OmjEHHorlEicfZZ1t/wckViAXtXIay0+j8d8EGXcC7y6Tl7eYPxWk6dgGJvaEu3ILInyMdajPNrIjBJLvE47ThtWxTlHobJBi1MYAqLmy3xVNpXC+g2BMxeVHxuo71G/dSQqt+3oeI7LE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743529677; c=relaxed/simple;
-	bh=edebkzSuqAL6jKa/CtidC2FbBuTeo+GKzzBhsYuApOY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PZnxvSJATQhzMeKBFOMNuC8z+pEuh7f7tZ4utlNGLNYVvazpoVfvSHPLTqIG5afGYcyGdDkNtOYkUPuLK+eTsEWB0rVZrwO6KSl5t2YLbEUZjK3Hshf8a14IYgJd6dn0zXSFOJUMP+Tc4SItOZXcvTmT9HsOh6PXFlWuYkgN8c0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AxnbOsbA; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1743529814; c=relaxed/simple;
+	bh=5w1rWSu4FoKgUz0ufLzbenr7Kw901BbMLrngbLFGrlo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NtaOyH4I75tLfuW3Y83fKr0Me2j0laGU7N50dAJPiNT6kGmQoR3KAjrdvURiPD9oilV9L+gPShxGNSZfeXFg8X79Ijm22sX2ch8AoIZAZHOAt8LhoH/sJtjoPyHik9gYFS4BqFh/vKoNGwxQRTYi+K3OA/deZ0kN16EJVpIAnwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S34CMq7U; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AxnbOsbA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743529676; x=1775065676;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=edebkzSuqAL6jKa/CtidC2FbBuTeo+GKzzBhsYuApOY=;
-  b=AxnbOsbAhNR5XbxRjSvxmXRJxarguS4piT+axw//8DlhopBMHVkZzSUY
-   F6bEJZp37Mnts2Boj7r1OUjYOobYpBW0N+Odp6Z5Hfw9ET1ts0iA/Ecl/
-   DhWkOyqLZqI/zXinqqNeX7WmNw/cOGTXz4PoMwKFDKJq4GcGF/Ftopwrv
-   68DeOHpBNGTET4ms4HRHdPTqs4J9iE9X4yO13rYpIj1ICB6q4hUQD3N7R
-   LHMxNrZJfJ5FywHRt+s5G2c9k305KxwQ1jjnscaDXcWqJj7lM69Tr5wm8
-   A5liN6kPn82zj6O4n6d7UE58jFe7zirEO1xZb0DlUII8Iz7pJv1D+mhzt
-   w==;
-X-CSE-ConnectionGUID: kgrf3ivoTc6XWriFf9mLbA==
-X-CSE-MsgGUID: Wjn9SukQQ9aI+Cv+CN2usQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11391"; a="48534015"
-X-IronPort-AV: E=Sophos;i="6.14,294,1736841600"; 
-   d="scan'208";a="48534015"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2025 10:47:55 -0700
-X-CSE-ConnectionGUID: 0dqWsMIVT8GOMr0E+QPSRw==
-X-CSE-MsgGUID: jxjDqosGT/+Mv5QDxYiLLA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,294,1736841600"; 
-   d="scan'208";a="131658409"
-Received: from stinkpipe.fi.intel.com (HELO stinkbox) ([10.237.72.74])
-  by orviesa005.jf.intel.com with SMTP; 01 Apr 2025 10:47:52 -0700
-Received: by stinkbox (sSMTP sendmail emulation); Tue, 01 Apr 2025 20:47:50 +0300
-Date: Tue, 1 Apr 2025 20:47:50 +0300
-From: Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-To: Jocelyn Falempe <jfalempe@redhat.com>
-Cc: Jani Nikula <jani.nikula@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	intel-gfx@lists.freedesktop.org, intel-xe@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 4/8] drm/i915/gem: Add i915_gem_object_panic_map()
-Message-ID: <Z-wmxijRKQiZFyup@intel.com>
-References: <20250401125818.333033-1-jfalempe@redhat.com>
- <20250401125818.333033-5-jfalempe@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S34CMq7U"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B734AC4CEE8;
+	Tue,  1 Apr 2025 17:50:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743529813;
+	bh=5w1rWSu4FoKgUz0ufLzbenr7Kw901BbMLrngbLFGrlo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=S34CMq7U+GwwfKhxHN1rfUSV9PEggYUCsmRvaCbOFa/6taOyTRfF4zT1Oba3Mrc2E
+	 xEsM/EsBr7H0Wuoshsfs7Lj6VhykH1TXb8nb/2vO/MGIDAc4p33l06ncFTS5ea1l/N
+	 VO3XWs9ZN3yEdbeFBahpMB6BUSYFAO++2F8sgAnv3USP6sv1M/t/yRbBaGuWdNteQO
+	 ufx4Jn7zqD9KKFWJJxA80ZXIqMNdVT5tMxNzBRCBTOKaWJsM0Y0lftfg3iGGLC1xAP
+	 Bh55HS0fAPOzMFxQA2ESasrNXA1WD0OBY5WVYzmkbJ8P45FX+WDB4v6V89/IMvjxgQ
+	 WzM6a3Zj6C2aA==
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-30bfc8faef9so57468061fa.1;
+        Tue, 01 Apr 2025 10:50:13 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXFxZcy06gWOTcsN1Qmx6l5Td0biInIlEnzbevYct3wvgka5ixzixISbyJiy96e3+t+yfqLYBoGo63r+So=@vger.kernel.org, AJvYcCXw4B+yx+/T/x2Tqa7uOgaE3ILXTBwtxHgPpxoEBLbPGqACuOwomRAkUMEJG7XCnKLhPENF+/SVB/BcaQMv@vger.kernel.org
+X-Gm-Message-State: AOJu0YwqQchSofm+BQ7W6HRK27ecjLXyIqvN6vGxsKegyC96L+Ri1YTP
+	YaoUD12u5H9SvOsU/JOp+U7YEG1dqzh4HLEpvioIrNpB5ceacQsZztaK/IWvV4BHhf7xL0JHoKt
+	Lk4oD7NzJMTi5sAnh3RFxTiX38Go=
+X-Google-Smtp-Source: AGHT+IGkYmWarqLME3M5HUIsQ/RX+P/5BKahl7gfF2DogfQq8fD0ENinrg/PiXRnlDNAOxCWg2EL+7CI4PMqzlSG+Eg=
+X-Received: by 2002:a2e:9fcb:0:b0:30b:9813:b010 with SMTP id
+ 38308e7fff4ca-30de0349ecbmr48182701fa.31.1743529812331; Tue, 01 Apr 2025
+ 10:50:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250401125818.333033-5-jfalempe@redhat.com>
-X-Patchwork-Hint: comment
+References: <20250401121830.21696-1-jani.nikula@intel.com> <20250401121830.21696-5-jani.nikula@intel.com>
+In-Reply-To: <20250401121830.21696-5-jani.nikula@intel.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Wed, 2 Apr 2025 02:49:35 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATBy2NwnZ73ihzuD+LMg44abo0JOz6RrU2saH7+Ofnz7Q@mail.gmail.com>
+X-Gm-Features: AQ5f1JqXPpYsKshoJPHuR6f9NFVrbpHQ-JH5po56qE-Fc4aHML7godt8OXSg-vY
+Message-ID: <CAK7LNATBy2NwnZ73ihzuD+LMg44abo0JOz6RrU2saH7+Ofnz7Q@mail.gmail.com>
+Subject: Re: [PATCH 4/5] kbuild: hdrtest: place header test files in .hdrtest subdirectories
+To: Jani Nikula <jani.nikula@intel.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, 
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, linux-kbuild@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, intel-xe@lists.freedesktop.org, 
+	intel-gfx@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 01, 2025 at 02:51:10PM +0200, Jocelyn Falempe wrote:
-> Prepare the work for drm_panic support. This is used to map the
-> current framebuffer, so the CPU can overwrite it with the panic
-> message.
-> 
-> Signed-off-by: Jocelyn Falempe <jfalempe@redhat.com>
+On Tue, Apr 1, 2025 at 9:19=E2=80=AFPM Jani Nikula <jani.nikula@intel.com> =
+wrote:
+>
+> The header tests track whether headers have been checked using empty
+> *.hdrtest files in the build tree. This pollutes the build directories,
+> as the files live in the same "name space" as the real output files,
+> messing with TAB completion among other things.
+>
+> Hide the disgusting turds by placing them in .hdrtest subdirectories.
+>
+> Note that it would be somewhat nicer to have the basename of the
+> .hdrtest files be dot-prefixed instead of using subdirectories. However,
+> it's challenging to come up with a pattern rule for that, as we can list
+> headers to test in the subdirectories of $(src) too, without requiring
+> Makefiles and kbuild to descend to each of them.
+>
+> Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
+> Closes: https://lore.kernel.org/r/CAHk-=3DwjMrqzuUmH-mFbR_46EWEFS=3DbB=3D=
+J7h9ABMVy56Vi81PKQ@mail.gmail.com
+> Fixes: fcbb8461fd23 ("kbuild: remove header compile test")
+> Cc: Masahiro Yamada <masahiroy@kernel.org>
+> Cc: David Airlie <airlied@gmail.com>
+> Cc: Daniel Vetter <daniel@ffwll.ch>
+> Signed-off-by: Jani Nikula <jani.nikula@intel.com>
+>
 > ---
-> 
-> v5:
->  * Use iosys_map for intel_bo_panic_map().
-> 
->  drivers/gpu/drm/i915/display/intel_bo.c    |  5 ++++
->  drivers/gpu/drm/i915/display/intel_bo.h    |  1 +
->  drivers/gpu/drm/i915/gem/i915_gem_object.h |  2 ++
->  drivers/gpu/drm/i915/gem/i915_gem_pages.c  | 29 ++++++++++++++++++++++
->  drivers/gpu/drm/xe/display/intel_bo.c      | 10 ++++++++
->  5 files changed, 47 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/i915/display/intel_bo.c b/drivers/gpu/drm/i915/display/intel_bo.c
-> index fbd16d7b58d9..ac904e9ec7d5 100644
-> --- a/drivers/gpu/drm/i915/display/intel_bo.c
-> +++ b/drivers/gpu/drm/i915/display/intel_bo.c
-> @@ -57,3 +57,8 @@ void intel_bo_describe(struct seq_file *m, struct drm_gem_object *obj)
->  {
->  	i915_debugfs_describe_obj(m, to_intel_bo(obj));
->  }
-> +
-> +void intel_bo_panic_map(struct drm_gem_object *obj, struct iosys_map *map)
-> +{
-> +	i915_gem_object_panic_map(to_intel_bo(obj), map);
-> +}
-> diff --git a/drivers/gpu/drm/i915/display/intel_bo.h b/drivers/gpu/drm/i915/display/intel_bo.h
-> index ea7a2253aaa5..5b6c63d99786 100644
-> --- a/drivers/gpu/drm/i915/display/intel_bo.h
-> +++ b/drivers/gpu/drm/i915/display/intel_bo.h
-> @@ -23,5 +23,6 @@ struct intel_frontbuffer *intel_bo_set_frontbuffer(struct drm_gem_object *obj,
->  						   struct intel_frontbuffer *front);
->  
->  void intel_bo_describe(struct seq_file *m, struct drm_gem_object *obj);
-> +void intel_bo_panic_map(struct drm_gem_object *obj, struct iosys_map *map);
->  
->  #endif /* __INTEL_BO__ */
-> diff --git a/drivers/gpu/drm/i915/gem/i915_gem_object.h b/drivers/gpu/drm/i915/gem/i915_gem_object.h
-> index a5f34542135c..b16092707ea5 100644
-> --- a/drivers/gpu/drm/i915/gem/i915_gem_object.h
-> +++ b/drivers/gpu/drm/i915/gem/i915_gem_object.h
-> @@ -692,6 +692,8 @@ i915_gem_object_unpin_pages(struct drm_i915_gem_object *obj)
->  int __i915_gem_object_put_pages(struct drm_i915_gem_object *obj);
->  int i915_gem_object_truncate(struct drm_i915_gem_object *obj);
->  
-> +void i915_gem_object_panic_map(struct drm_i915_gem_object *obj, struct iosys_map *map);
-> +
->  /**
->   * i915_gem_object_pin_map - return a contiguous mapping of the entire object
->   * @obj: the object to map into kernel address space
-> diff --git a/drivers/gpu/drm/i915/gem/i915_gem_pages.c b/drivers/gpu/drm/i915/gem/i915_gem_pages.c
-> index 8780aa243105..718bea6474d7 100644
-> --- a/drivers/gpu/drm/i915/gem/i915_gem_pages.c
-> +++ b/drivers/gpu/drm/i915/gem/i915_gem_pages.c
-> @@ -355,6 +355,35 @@ static void *i915_gem_object_map_pfn(struct drm_i915_gem_object *obj,
->  	return vaddr ?: ERR_PTR(-ENOMEM);
->  }
->  
-> +/* Map the current framebuffer for CPU access. Called from panic handler, so no
-> + * need to pin or cleanup.
-> + */
-> +void i915_gem_object_panic_map(struct drm_i915_gem_object *obj, struct iosys_map *map)
-> +{
-> +	enum i915_map_type has_type;
-> +	void *ptr;
-> +
-> +	ptr = page_unpack_bits(obj->mm.mapping, &has_type);
-> +
-> +
-> +	if (!ptr) {
-> +		if (i915_gem_object_has_struct_page(obj))
-> +			ptr = i915_gem_object_map_page(obj, I915_MAP_WB);
-> +		else
-> +			ptr = i915_gem_object_map_pfn(obj, I915_MAP_WB);
 
-WB mapping would require clflushing to make it to the display.
-Is that being done somewhere?
 
-> +
-> +		if (IS_ERR(ptr))
-> +			return;
+Linus did not mention anything bad for usr/include/.
 
-What happens when the mapping fails?
+This crap is unneeded.
 
-> +
-> +		obj->mm.mapping = page_pack_bits(ptr, I915_MAP_WB);
-> +	}
-> +
-> +	if (i915_gem_object_has_iomem(obj))
-> +		iosys_map_set_vaddr_iomem(map, (void __iomem *) ptr);
-> +	else
-> +		iosys_map_set_vaddr(map, ptr);
-> +}
-> +
->  /* get, pin, and map the pages of the object into kernel space */
->  void *i915_gem_object_pin_map(struct drm_i915_gem_object *obj,
->  			      enum i915_map_type type)
-> diff --git a/drivers/gpu/drm/xe/display/intel_bo.c b/drivers/gpu/drm/xe/display/intel_bo.c
-> index 27437c22bd70..c68166a64336 100644
-> --- a/drivers/gpu/drm/xe/display/intel_bo.c
-> +++ b/drivers/gpu/drm/xe/display/intel_bo.c
-> @@ -59,3 +59,13 @@ void intel_bo_describe(struct seq_file *m, struct drm_gem_object *obj)
->  {
->  	/* FIXME */
->  }
-> +
-> +void intel_bo_panic_map(struct drm_gem_object *obj, struct iosys_map *map)
-> +{
-> +	struct xe_bo *bo = gem_to_xe_bo(obj);
-> +	int ret;
-> +
-> +	ret = ttm_bo_vmap(&bo->ttm, map);
-> +	if (ret)
-> +		iosys_map_clear(map);
-> +}
-> -- 
-> 2.49.0
+NACK.
 
--- 
-Ville Syrjälä
-Intel
+
+
+
+
+
+>
+> Cc: linux-kbuild@vger.kernel.org
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: intel-xe@lists.freedesktop.org
+> Cc: intel-gfx@lists.freedesktop.org
+> ---
+>  usr/include/Makefile | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/usr/include/Makefile b/usr/include/Makefile
+> index e3d6b03527fe..4fb574fd3fec 100644
+> --- a/usr/include/Makefile
+> +++ b/usr/include/Makefile
+> @@ -71,7 +71,7 @@ endif
+>  # asm-generic/*.h is used by asm/*.h, and should not be included directl=
+y
+>  no-header-test +=3D asm-generic/%
+>
+> -always-y :=3D $(patsubst $(obj)/%.h,%.hdrtest, $(shell find $(obj) -name=
+ '*.h' 2>/dev/null))
+> +always-y :=3D $(patsubst $(obj)/%.h,.hdrtest/%.hdrtest, $(shell find $(o=
+bj) -name '*.h' 2>/dev/null))
+>
+>  # Include the header twice to detect missing include guard.
+>  quiet_cmd_hdrtest =3D HDRTEST $<
+> @@ -81,7 +81,7 @@ quiet_cmd_hdrtest =3D HDRTEST $<
+>                 $(PERL) $(src)/headers_check.pl $(obj) $<; \
+>                 touch $@
+>
+> -$(obj)/%.hdrtest: $(obj)/%.h FORCE
+> +$(obj)/.hdrtest/%.hdrtest: $(obj)/%.h FORCE
+>         $(call if_changed_dep,hdrtest)
+>
+>  # Since GNU Make 4.3, $(patsubst $(obj)/%/,%,$(wildcard $(obj)/*/)) work=
+s.
+> --
+> 2.39.5
+>
+
+
+--
+Best Regards
+Masahiro Yamada
