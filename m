@@ -1,226 +1,124 @@
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C880132103;
-	Tue,  1 Apr 2025 08:12:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0AA31DC988
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 08:12:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743495148; cv=none; b=j9kEcltvf9ZQrWUZHlpdN3r9Y/elnx3T1FVljNmhfRczK2whhpxXISM6MzsynR1kKYxwIpxUwKjOFYWUDJt10Oo4jNHBfJrevCViZ/PUs1Jxs7gtelVJEbOCQt7S+DqNmt+OhKcfXIKACg8F1zUMS8GlTgE6wqLz/2f/8xdVKtA=
+	t=1743495162; cv=none; b=bUj0dLIHJQRio6DlH+FwnV93Gd1tLVvjTrXaekDN636hhbrf9aMXnHe9GUaLMWoCuPqX6a/RyhhnyIxNy5XBPCSq5KyLA48reZKVCadJczjxx9z6ksdwWzfTz4sUQF3PhP2ta98BC3pBnllE1C0F5F3ydb1h2VsmtRAZuXajc0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743495148; c=relaxed/simple;
-	bh=/waPTM4xPD4317aDJ0hxEkq/rYW4h1hSGRbxP3lbXHk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BtvaoKea39H7y59wYvOBtDcl35Mk1KqDRx0a5dfTAHN4Xf3tMgWmfwAHZeBhnnc4Ol1KPm5b3npeCBQyEP9Tad6UoS/IGE5HYWDDjclm57K2r1peDhV8GEBKbeycYf4mqsBjCOt0oWvSWFuU38Uj5W/kHm5akWgh94w41fGigy0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gYBPKsZS; arc=none smtp.client-ip=209.85.222.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gYBPKsZS"
-Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-7c5b2472969so533858985a.1;
-        Tue, 01 Apr 2025 01:12:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743495145; x=1744099945; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=N921zeEVObbyyzXGZX+/L4SVyesPmMbWZMrfrZMAMZI=;
-        b=gYBPKsZSZuncc84FAmAB2dTrZW1TMTPrBSnol3BqvCM/JZuuRikBU6koP40hXj2P+F
-         Z6r5dIVfwDjT6W2z98EtOVQwoX8W9j61NWtxRQtRdkKiEO4MD6n6KMUUttexDP0W9WKH
-         ty0o3Wcl9E179vHC/FUiRfeHlw93crfZlEbS5g6/3AOwPTf7Zv1065Gd1CPwaWjfdSuO
-         SbWl1a+WnG++DoqKAaycIbWix4izPMLXXlOyFQr43vPgDk6A+QxkiKplUD2cjwxDVE2p
-         KN8aNK8h7qRienEIFWsdCcXG73feEc8JMC2qUrebTHEVWqd3N9AbCCEpxi6u+V7H4AzD
-         zAGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743495145; x=1744099945;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=N921zeEVObbyyzXGZX+/L4SVyesPmMbWZMrfrZMAMZI=;
-        b=OHHPNV08ZuS+5ogeL3xwdcebtwhs1MjIkv0vKL9VOxEyrzUFdqbJTrQQ7dxHbHAang
-         feeXEIocvZg2IpbdBgEYy2P6Zl4RP+zqoLp8hmhEfpqBPz3DoAuBTs1Nj7KieLTQvA93
-         CTIfk2i2NC4kNSDuzOC2b3E7h1WyntLzo9PbxoK9Iit8LaSy33d+o/O/6LGJfWl0823E
-         sdXXwfK/JYHxX7m44B79Eatx+Gcv0LvxjQk/9mkA7JHr+HkM3p5iHtmpTtYx7g7OiKMs
-         52gK93oyt54DRCa1W3Dug0ocJ60p0cWjujmFR8a9F21Y2Hg6nFHjWsHtwVmKAhFUppOP
-         NkdA==
-X-Forwarded-Encrypted: i=1; AJvYcCU5wrIe3Qp9ror/PWd0XpDeV00tTmM+pXoMx7l/BFyNM+lxFs8EEAnI3uYfFmxuxuDgb/PenrEn@vger.kernel.org, AJvYcCWO2+Hk3UWVuXyEZo3SEkcVkGFqDo6iOjDJ4ERDrb5gIPD3b55ZldurDuOPetyHddWO/AY=@vger.kernel.org, AJvYcCWSLZKUnQE4Vq71PK5RL9F7stPASD8e7BlgcPeLrP5LYU+3SjT1/YKFJcu0HNmvZr8uYQXi+XJZZ26wxKkT@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz+j8C3juxLDc8uit6/SYtsBZDA479akCpUwHscLhmJQHatVMYd
-	+BUk73JhO06yss2ahL9thFohQrcR1s/MYs+5h4+81GWkf9neQlK1eKn1lil+ghL/2qqnF7rrUkV
-	YS9yw2JP6cY2ClHKfoNKiOZcQKUo=
-X-Gm-Gg: ASbGnctlRnNrSjvI7mwQC7OJNwftfqxfBDUI4ay8aWkVO5e6Xzwk8qIUBUSREer6voo
-	PM6VUP5vkM9LvSBHxSr1JH89EY4i96RmjQKzxL9n6bbmQhZFE9Ew/C/UcLMpVm97L0xMLFe2QGS
-	wxEEWnZkUNAL52xkT9aKvhmmYh1Dypcu1Kf+BWZUo=
-X-Google-Smtp-Source: AGHT+IHHhqW7g5N8MXmKeQ3ZdpNS4nfu3IJeiO8IjKHPXDxhW5RCauWGQn75EU0rmHifckbfG9wIri5Wmu8NJ1eEBmc=
-X-Received: by 2002:a05:620a:17a0:b0:7c5:3e22:6167 with SMTP id
- af79cd13be357-7c69073366amr1734893785a.23.1743495145058; Tue, 01 Apr 2025
- 01:12:25 -0700 (PDT)
+	s=arc-20240116; t=1743495162; c=relaxed/simple;
+	bh=yZPtQSky4DskpgGH1LeyvgJ08nwn3VhrsJs4lxL+hVQ=;
+	h=Subject:To:References:CC:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=Ta6nsZRnywsLUGw/9CycD+36IWyaG7+7QgIY3CvYISo1NPdRSc9MQP6x7RQtPtIb859FKFT8P5/nD2UgDrmuowbU8YJaGT92W4BYxw0KPa6f09RuYW982MLRKNsL8ZfBSGj0KxoKFDRPaTa8UR+EmNz5T+qTuUWpkRgMeNDxgQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4ZRghJ0zsFz13L7w;
+	Tue,  1 Apr 2025 16:12:00 +0800 (CST)
+Received: from kwepemg200013.china.huawei.com (unknown [7.202.181.64])
+	by mail.maildlp.com (Postfix) with ESMTPS id 87BD6180080;
+	Tue,  1 Apr 2025 16:12:30 +0800 (CST)
+Received: from [10.174.179.24] (10.174.179.24) by
+ kwepemg200013.china.huawei.com (7.202.181.64) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Tue, 1 Apr 2025 16:12:29 +0800
+Subject: Re: [PATCH v3] mm/hugetlb: update nr_huge_pages and
+ surplus_huge_pages together
+To: Muchun Song <muchun.song@linux.dev>, Andrew Morton
+	<akpm@linux-foundation.org>, David Hildenbrand <david@redhat.com>, Oscar
+ Salvador <osalvador@suse.de>, Kefeng Wang <wangkefeng.wang@huawei.com>, Peter
+ Xu <peterx@redhat.com>
+References: <20250305035409.2391344-1-liushixin2@huawei.com>
+CC: <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
+From: Liu Shixin <liushixin2@huawei.com>
+Message-ID: <8f63f6bd-41ab-c819-291c-f66c239da27b@huawei.com>
+Date: Tue, 1 Apr 2025 16:12:29 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250329061548.1357925-1-wangliang74@huawei.com>
- <Z-qzLyGKskaqgFh5@mini-arch> <Z-sRF0G43HpGiGwH@mini-arch> <0d1b689c-c0ef-460a-9969-ff5aebbb8fac@huawei.com>
- <CAJ8uoz1JxhXFkzW8n_Dud8SR-4zE7gim5vS_UZHELiA7d0k+wQ@mail.gmail.com> <ed10eea2-0bf2-4747-b519-f9b9089e434e@huawei.com>
-In-Reply-To: <ed10eea2-0bf2-4747-b519-f9b9089e434e@huawei.com>
-From: Magnus Karlsson <magnus.karlsson@gmail.com>
-Date: Tue, 1 Apr 2025 10:12:14 +0200
-X-Gm-Features: AQ5f1JpJTLxGpoXFk_gCek9AD6xD42I4RGHs3jBV7-49f2FG1SOBDoEkHyywjuI
-Message-ID: <CAJ8uoz2QXNN4so-EgR8sU8A86E_AeYx1w_b+BSVeCgzr1kaR+g@mail.gmail.com>
-Subject: Re: [PATCH net] xsk: correct tx_ring_empty_descs count statistics
-To: Wang Liang <wangliang74@huawei.com>
-Cc: Stanislav Fomichev <stfomichev@gmail.com>, bjorn@kernel.org, magnus.karlsson@intel.com, 
-	maciej.fijalkowski@intel.com, jonathan.lemon@gmail.com, davem@davemloft.net, 
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org, 
-	ast@kernel.org, daniel@iogearbox.net, hawk@kernel.org, 
-	john.fastabend@gmail.com, yuehaibing@huawei.com, zhangchangzhong@huawei.com, 
-	netdev@vger.kernel.org, bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250305035409.2391344-1-liushixin2@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemg200013.china.huawei.com (7.202.181.64)
 
-On Tue, 1 Apr 2025 at 09:44, Wang Liang <wangliang74@huawei.com> wrote:
->
->
-> =E5=9C=A8 2025/4/1 14:57, Magnus Karlsson =E5=86=99=E9=81=93:
-> > On Tue, 1 Apr 2025 at 04:36, Wang Liang <wangliang74@huawei.com> wrote:
-> >>
-> >> =E5=9C=A8 2025/4/1 6:03, Stanislav Fomichev =E5=86=99=E9=81=93:
-> >>> On 03/31, Stanislav Fomichev wrote:
-> >>>> On 03/29, Wang Liang wrote:
-> >>>>> The tx_ring_empty_descs count may be incorrect, when set the XDP_TX=
-_RING
-> >>>>> option but do not reserve tx ring. Because xsk_poll() try to wakeup=
- the
-> >>>>> driver by calling xsk_generic_xmit() for non-zero-copy mode. So the
-> >>>>> tx_ring_empty_descs count increases once the xsk_poll()is called:
-> >>>>>
-> >>>>>     xsk_poll
-> >>>>>       xsk_generic_xmit
-> >>>>>         __xsk_generic_xmit
-> >>>>>           xskq_cons_peek_desc
-> >>>>>             xskq_cons_read_desc
-> >>>>>               q->queue_empty_descs++;
-> > Sorry, but I do not understand how to reproduce this error. So you
-> > first issue a setsockopt with the XDP_TX_RING option and then you do
-> > not "reserve tx ring". What does that last "not reserve tx ring" mean?
-> > No mmap() of that ring, or something else? I guess you have bound the
-> > socket with a bind()? Some pseudo code on how to reproduce this would
-> > be helpful. Just want to understand so I can help. Thank you.
-> Sorry, the last email is garbled, and send again.
->
-> Ok. Some pseudo code like below:
->
->      fd =3D socket(AF_XDP, SOCK_RAW, 0);
->      setsockopt(fd, SOL_XDP, XDP_UMEM_REG, &mr, sizeof(mr));
->
->      setsockopt(fd, SOL_XDP, XDP_UMEM_FILL_RING, &fill_size,
-> sizeof(fill_size));
->      setsockopt(fd, SOL_XDP, XDP_UMEM_COMPLETION_RING, &comp_size,
-> sizeof(comp_size));
->      mmap(NULL, off.fr.desc + fill_size * sizeof(__u64), ...,
-> XDP_UMEM_PGOFF_FILL_RING);
->      mmap(NULL, off.cr.desc + comp_size * sizeof(__u64), ...,
-> XDP_UMEM_PGOFF_COMPLETION_RING);
->
->      setsockopt(fd, SOL_XDP, XDP_RX_RING, &rx_size, sizeof(rx_size));
->      setsockopt(fd, SOL_XDP, XDP_TX_RING, &tx_size, sizeof(tx_size));
->      mmap(NULL, off.rx.desc + rx_size * sizeof(struct xdp_desc), ...,
-> XDP_PGOFF_RX_RING);
->      mmap(NULL, off.tx.desc + tx_size * sizeof(struct xdp_desc), ...,
-> XDP_PGOFF_TX_RING);
->
->      bind(fd, (struct sockaddr *)&sxdp, sizeof(sxdp));
->      bpf_map_update_elem(xsk_map_fd, &queue_id, &fd, 0);
->
->      while(!global_exit) {
->          poll(fds, 1, -1);
->          handle_receive_packets(...);
->      }
->
-> The xsk is created success, and xs->tx is initialized.
->
-> The "not reserve tx ring" means user app do not update tx ring producer.
-> Like:
->
->      xsk_ring_prod__reserve(tx, 1, &tx_idx);
->      xsk_ring_prod__tx_desc(tx, tx_idx)->addr =3D frame;
->      xsk_ring_prod__tx_desc(tx, tx_idx)->len =3D pkg_length;
->      xsk_ring_prod__submit(tx, 1);
->
-> These functions (xsk_ring_prod__reserve, etc.) is provided by libxdp.
->
-> The tx->producer is not updated, so the xs->tx->cached_cons and
-> xs->tx->cached_prod are always zero.
->
-> When receive packets and user app call poll(), xsk_generic_xmit() will be
-> triggered by xsk_poll(), leading to this issue.
 
-Thanks, that really helped. The problem here is that the kernel cannot
-guess your intent. Since you created a socket with both Rx and Tx, it
-thinks you will use it for both, so it should increase
-queue_empty_descs in this case as you did not provide any Tx descs.
-Your proposed patch will break this. Consider this Tx case with the
-exact same init code as you have above but with this send loop:
 
-while(!global_exit) {
-       maybe_send_packets(...);
-       poll(fds, 1, -1);
-}
+On 2025/3/5 11:54, Liu Shixin wrote:
+> In alloc_surplus_hugetlb_folio(), we increase nr_huge_pages and
+> surplus_huge_pages separately. In the middle window, if we set
+> nr_hugepages to smaller and satisfy count < persistent_huge_pages(h),
+> the surplus_huge_pages will be increased by adjust_pool_surplus().
+>
+> After adding delay in the middle window, we can reproduce the problem
+> easily by following step:
+>
+>  1. echo 3 > /proc/sys/vm/nr_overcommit_hugepages
+>  2. mmap two hugepages. When nr_huge_pages=2 and surplus_huge_pages=1,
+>     goto step 3.
+>  3. echo 0 > /proc/sys/vm/nr_huge_pages
+>
+> Finally, nr_huge_pages is less than surplus_huge_pages.
+>
+> To fix the problem, call only_alloc_fresh_hugetlb_folio() instead and
+> move down __prep_account_new_huge_page() into the hugetlb_lock.
+>
+> Fixes: 0c397daea1d4 ("mm, hugetlb: further simplify hugetlb allocation API")
+> Signed-off-by: Liu Shixin <liushixin2@huawei.com>
+> ---
+> v2->v3: Modify the comment suggested by Oscar.
+>  mm/hugetlb.c | 11 ++++++++++-
+>  1 file changed, 10 insertions(+), 1 deletion(-)
+>
+> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+> index 9faa1034704ff..0e08d2fff2360 100644
+> --- a/mm/hugetlb.c
+> +++ b/mm/hugetlb.c
+> @@ -2253,11 +2253,20 @@ static struct folio *alloc_surplus_hugetlb_folio(struct hstate *h,
+>  		goto out_unlock;
+>  	spin_unlock_irq(&hugetlb_lock);
+>  
+> -	folio = alloc_fresh_hugetlb_folio(h, gfp_mask, nid, nmask);
+> +	folio = only_alloc_fresh_hugetlb_folio(h, gfp_mask, nid, nmask, NULL);
+>  	if (!folio)
+>  		return NULL;
+>  
+> +	hugetlb_vmemmap_optimize_folio(h, folio);
+> +
+>  	spin_lock_irq(&hugetlb_lock);
+> +	/*
+> +	 * nr_huge_pages needs to be adjusted within the same lock cycle
+> +	 * as surplus_pages, otherwise it might confuse
+> +	 * persistent_huge_pages() momentarily.
+> +	 */
+> +	__prep_account_new_huge_page(h, nid);
+> +
+>  	/*
+>  	 * We could have raced with the pool size change.
+>  	 * Double check that and simply deallocate the new page
 
-With your patch, the queue_empty_descs will never be increased in the
-case when I do not submit any Tx descs, even though we would like it
-to be so.
+Hi,
 
-So in my mind, you have a couple of options:
+Sorry, there's a mistake that the nid may be mismatch.
+Please use the following code to fix it, or should I send a fix patch ?
 
-* Create two sockets, one rx only and one tx only and use the
-SHARED_UMEM mode to bind them to the same netdev and queue id. In your
-loop above, you would use the Rx socket. This might have the drawback
-that you need to call poll() twice if you are both sending and
-receiving in the same loop. But the stats will be the way you want
-them to be.
-
-* Introduce a new variable in user space that you increase every time
-you do poll() in your loop above. When displaying the statistics, just
-deduct this variable from the queue_empty_descs that the kernel
-reports using the XDP_STATISTICS getsockopt().
-
-Hope this helps.
-
-> >>>>> To avoid this count error, add check for tx descs before send msg i=
-n poll.
-> >>>>>
-> >>>>> Fixes: df551058f7a3 ("xsk: Fix crash in poll when device does not s=
-upport ndo_xsk_wakeup")
-> >>>>> Signed-off-by: Wang Liang <wangliang74@huawei.com>
-> >>>> Acked-by: Stanislav Fomichev <sdf@fomichev.me>
-> >>> Hmm, wait, I stumbled upon xskq_has_descs again and it looks only at
-> >>> cached prod/cons. How is it supposed to work when the actual tx
-> >>> descriptor is posted? Is there anything besides xskq_cons_peek_desc f=
-rom
-> >>> __xsk_generic_xmit that refreshes cached_prod?
-> >>
-> >> Yes, you are right!
-> >>
-> >> How about using xskq_cons_nb_entries() to check free descriptors?
-> >>
-> >> Like this:
-> >>
-> >>
-> >> diff --git a/net/xdp/xsk.c b/net/xdp/xsk.c
-> >> index e5d104ce7b82..babb7928d335 100644
-> >> --- a/net/xdp/xsk.c
-> >> +++ b/net/xdp/xsk.c
-> >> @@ -993,7 +993,7 @@ static __poll_t xsk_poll(struct file *file, struct
-> >> socket *sock,
-> >>           if (pool->cached_need_wakeup) {
-> >>                   if (xs->zc)
-> >>                           xsk_wakeup(xs, pool->cached_need_wakeup);
-> >> -               else if (xs->tx)
-> >> +               else if (xs->tx && xskq_cons_nb_entries(xs->tx, 1))
-> >>                           /* Poll needs to drive Tx also in copy mode =
-*/
-> >>                           xsk_generic_xmit(sk);
-> >>           }
-> >>
-> >>
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index 39f92aad7bd1..6670f9b9e07a 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -2271,7 +2271,7 @@ static struct folio *alloc_surplus_hugetlb_folio(struct hstate *h,
+         * as surplus_pages, otherwise it might confuse
+         * persistent_huge_pages() momentarily.
+         */
+-       __prep_account_new_huge_page(h, nid);
++       __prep_account_new_huge_page(h, folio_nid(folio));
+ 
+        /*
+         * We could have raced with the pool size change.
