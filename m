@@ -1,70 +1,41 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C750A1C860D;
-	Tue,  1 Apr 2025 16:14:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC13B20C030;
+	Tue,  1 Apr 2025 16:15:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743524074; cv=none; b=VoSgphLgbOJm6hnNY6K/psfZoaGFJJ1+f7n9IN/gfesLwK/IP0UVmsOCCplKwMQ12wK+tF5EkVHQaEl3t4Dn3obSVBpbc+3Xs2BmOwXe7J/Ny6tYZSy7r/cWL4iGYaKnvqARwt5ZP2bBsmTHipRGlmIHPn/WjIQbt4HGVdvONZ0=
+	t=1743524109; cv=none; b=X6sD7sJTFmqXaQDF9lKPs/vgLtafVJLqkNoFhAI525BaI/lzHo06atncUyuq7yY8a3/NzXaA/Y7ixxaKL77Zob5JR4RuRRE2UdIHpU5/MPagvd80+odQfHOolwB8iADZAbG1P7L/MjLOXs+4XPSO4bkL8IjtavOJYJrlfpNT4Pg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743524074; c=relaxed/simple;
-	bh=DDKt5Tf8tyOSWwo8RoxYUYaD1o7YgZ6YMlCzfiwEp4Y=;
+	s=arc-20240116; t=1743524109; c=relaxed/simple;
+	bh=/ONfagkohhhiZRJPzYx2p+Vo1swPb6lMi17snaUkFH8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nJaGClV/hBSarx/dIBNHOf8W8KbV6dNkQaffkt2MlEgl+GtE1CWAmhRTxbLN4j5zCM2I+vjQ2N8BOoI0ccsdmM1zOamYqirCNoByveTG+9Tc0akczBk4FHcukJliZp2zzAeWqAAlzpFfVQUZuRy1AwNPjBKLtYMFmiKY5URss/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=CWCcwtsc; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	 Content-Type:Content-Disposition:In-Reply-To; b=ryglQj7zxj4FXIjBuYul0p1gx/cv3+BxDPX1DiXv77GlBq58E+qkzj4vMUytzMsLnVJaSmCqwf9wr/w4Hkc11vGQ7Rglcu0bsrC5DjFpinvVu1tr5z6VlpgQQwrN91n0N3RADqzjaURXhP8rcdNVrMA88IJL5Ik05RPD8yZkuIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tqJ6YYP5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="CWCcwtsc"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=DI/uIgABP4Y3ZOODtItV+UJ8AlzzvTWEXR4AkcopqNk=; b=CWCcwtscKHyCA2hRf538Qcm+I8
-	QVyW0WYPTllm9WtlHc8zbFGk8laKuMFvGZYsXkYpHUhDFu720OkZjsyc2HTpJHVJLIbFA3+SF601V
-	zQiuAaCWE1dW/WYu3tZTl9UACvLp8+TNU2gNlPY6boPIpHHgYyJPKsHVGFmO0A1Bm+P+QHKCgDjru
-	NQZ++2IBzT8OE1ud0m22At/E4yhLg0sI2THUOYWRT1kz/GJ4hUjdfRe2DoD8AK/6v4mIZhmUiBsAZ
-	9IWGfl9oNSVQs+1Bg32FRxcotQHx8v8lWboVrucTFSJKV9/1/8UexfP7KKh79CRMR+7QIX9WoXe8N
-	c3jocreA==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:54120)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1tzeFk-0006b5-1R;
-	Tue, 01 Apr 2025 17:14:16 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1tzeFg-0002pe-2a;
-	Tue, 01 Apr 2025 17:14:12 +0100
-Date: Tue, 1 Apr 2025 17:14:12 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Alexander H Duyck <alexander.duyck@gmail.com>
-Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>, davem@davemloft.net,
-	Andrew Lunn <andrew@lunn.ch>, Jakub Kicinski <kuba@kernel.org>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
-	linux-arm-kernel@lists.infradead.org,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Vladimir Oltean <vladimir.oltean@nxp.com>,
-	=?iso-8859-1?Q?K=F6ry?= Maincent <kory.maincent@bootlin.com>,
-	Oleksij Rempel <o.rempel@pengutronix.de>,
-	Simon Horman <horms@kernel.org>,
-	Romain Gantois <romain.gantois@bootlin.com>
-Subject: Re: [PATCH net-next v5 09/13] net: phylink: Use phy_caps_lookup for
- fixed-link configuration
-Message-ID: <Z-wQ1Ml_9xNz0XtV@shell.armlinux.org.uk>
-References: <20250307173611.129125-1-maxime.chevallier@bootlin.com>
- <20250307173611.129125-10-maxime.chevallier@bootlin.com>
- <8d3a9c9bb76b1c6bc27d2bd01f4831b2cac83f7f.camel@gmail.com>
- <20250328090621.2d0b3665@fedora-2.home>
- <CAKgT0Ue_JzmJAPKBhe6XaMkDCy+YNNg5_5VvzOR6CCbqcaQg3Q@mail.gmail.com>
- <20250331091449.155e14a4@fedora-2.home>
- <3517cb7b3b10c29a6bf407f2e35fdebaf7a271e3.camel@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tqJ6YYP5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B391C4CEE4;
+	Tue,  1 Apr 2025 16:15:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743524109;
+	bh=/ONfagkohhhiZRJPzYx2p+Vo1swPb6lMi17snaUkFH8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tqJ6YYP5IdrY2MGTWtph+dzGi1EKfds4HJTQCB41hKqrtu6Yf/+WOGReafdEgCf2N
+	 PAuSsHnuWBJyUqi7w18TfVYSSToRlijV+KwN1+0v9m14QXeLbN0zTI9oFw2CEt8NEd
+	 NqChL+aa4RsfrHsqMXxZpBALDPfaTe3uG9/nwoV/6hEHH/wOLgICHKyhYhb/kDqIKM
+	 TGFn/qNCoqkEiGnOHCrS6OI3oin9VBuECL30Hj/JY7/oJI5G8dQijS03iNkwgCA/yJ
+	 0aUUpqO9om4mSXD+vh24suwr+CqruzJL2Sfvh2ma5eNJLLgVAaOvNaojSgKYnx79ST
+	 GIP7Jv4iSTSqw==
+Date: Tue, 1 Apr 2025 09:15:08 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Hans Holmberg <Hans.Holmberg@wdc.com>
+Cc: Carlos Maiolino <cem@kernel.org>, Dave Chinner <david@fromorbit.com>,
+	hch <hch@lst.de>,
+	"linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] xfs: document zoned rt specifics in admin-guide
+Message-ID: <20250401161508.GT2803749@frogsfrogsfrogs>
+References: <20250331091333.6799-1-hans.holmberg@wdc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,61 +44,78 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3517cb7b3b10c29a6bf407f2e35fdebaf7a271e3.camel@gmail.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+In-Reply-To: <20250331091333.6799-1-hans.holmberg@wdc.com>
 
-On Tue, Apr 01, 2025 at 08:28:29AM -0700, Alexander H Duyck wrote:
-> diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
-> index 16a1f31f0091..380e51c5bdaa 100644
-> --- a/drivers/net/phy/phylink.c
-> +++ b/drivers/net/phy/phylink.c
-> @@ -713,17 +713,24 @@ static int phylink_parse_fixedlink(struct phylink *pl,
->                 phylink_warn(pl, "fixed link specifies half duplex for %dMbps link?\n",
->                              pl->link_config.speed);
+On Mon, Mar 31, 2025 at 09:15:00AM +0000, Hans Holmberg wrote:
+> Document the lifetime, nolifetime and max_open_zones mount options
+> added for zoned rt file systems.
+> 
+> Also add documentation describing the max_open_zones sysfs attribute
+> exposed in /sys/fs/xfs/<dev>/zoned/
+> 
+> Fixes: 4e4d52075577 ("xfs: add the zoned space allocator")
+> Signed-off-by: Hans Holmberg <hans.holmberg@wdc.com>
+
+This is consistent with what I saw when the code went by, so
+Reviewed-by: "Darrick J. Wong" <djwong@kernel.org>
+
+--D
+
+> ---
+>  Documentation/admin-guide/xfs.rst | 29 +++++++++++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+> 
+> diff --git a/Documentation/admin-guide/xfs.rst b/Documentation/admin-guide/xfs.rst
+> index b67772cf36d6..9d0344ce81f1 100644
+> --- a/Documentation/admin-guide/xfs.rst
+> +++ b/Documentation/admin-guide/xfs.rst
+> @@ -124,6 +124,14 @@ When mounting an XFS filesystem, the following options are accepted.
+>  	controls the size of each buffer and so is also relevant to
+>  	this case.
 >  
-> -       linkmode_zero(pl->supported);
-> -       phylink_fill_fixedlink_supported(pl->supported);
-> -
-> +       linkmode_fill(pl->supported);
->         linkmode_copy(pl->link_config.advertising, pl->supported);
->         phylink_validate(pl, pl->supported, &pl->link_config);
->  
->         c = phy_caps_lookup(pl->link_config.speed, pl->link_config.duplex,
->                             pl->supported, true);
-> -       if (c)
-> +       if (c) {
->                 linkmode_and(match, pl->supported, c->linkmodes);
->  
-> +               /* Compatbility with the legacy behaviour:
-> +                * Report one single BaseT mode.
-> +                */
-> +               phylink_fill_fixedlink_supported(mask);
-> +               if (linkmode_intersects(match, mask))
-> +                       linkmode_and(match, match, mask);
-> +               linkmode_zero(mask);
-> +       }
+> +  lifetime (default) or nolifetime
+> +	Enable data placement based on write life time hints provided
+> +	by the user. This turns on co-allocation of data of similar
+> +	life times when statistically favorable to reduce garbage
+> +	collection cost.
 > +
->         linkmode_set_bit(ETHTOOL_LINK_MODE_Pause_BIT, mask);
->         linkmode_set_bit(ETHTOOL_LINK_MODE_Asym_Pause_BIT, mask);
->         linkmode_set_bit(ETHTOOL_LINK_MODE_Autoneg_BIT, mask);
+> +	These options are only available for zoned rt file systems.
+> +
+>    logbsize=value
+>  	Set the size of each in-memory log buffer.  The size may be
+>  	specified in bytes, or in kilobytes with a "k" suffix.
+> @@ -143,6 +151,14 @@ When mounting an XFS filesystem, the following options are accepted.
+>  	optional, and the log section can be separate from the data
+>  	section or contained within it.
+>  
+> +  max_open_zones=value
+> +	Specify the max number of zones to keep open for writing on a
+> +	zoned rt device. Many open zones aids file data separation
+> +	but may impact performance on HDDs.
+> +
+> +	If ``max_open_zones`` is not specified, the value is determined
+> +	by the capabilities and the size of the zoned rt device.
+> +
+>    noalign
+>  	Data allocations will not be aligned at stripe unit
+>  	boundaries. This is only relevant to filesystems created
+> @@ -542,3 +558,16 @@ The interesting knobs for XFS workqueues are as follows:
+>    nice           Relative priority of scheduling the threads.  These are the
+>                   same nice levels that can be applied to userspace processes.
+>  ============     ===========
+> +
+> +Zoned Filesystems
+> +=================
+> +
+> +For zoned file systems, the following attribute is exposed in:
+> +
+> +  /sys/fs/xfs/<dev>/zoned/
+> +
+> +  max_open_zones                (Min:  1  Default:  Varies  Max:  UINTMAX)
+> +	This read-only attribute exposes the maximum number of open zones
+> +	available for data placement. The value is determined at mount time and
+> +	is limited by the capabilities of the backing zoned device, file system
+> +	size and the max_open_zones mount option.
+> -- 
+> 2.34.1
 > 
-> Basically we still need the value to be screened by the pl->supported.
-> The one change is that we have to run the extra screening on the
-> intersect instead of skipping the screening, or doing it before we even
-> start providing bits.
-> 
-> With this approach we will even allow people to use non twisted pair
-> setups regardless of speed as long as they don't provide any twisted
-> pair modes in the standard set.
-> 
-> I will try to get this tested today and if it works out I will submit
-> it for net. I just need to test this and an SFP ksettings_set issue I
-> found when we aren't using autoneg.
-
-This code used to be so simple... and that makes me wonder whether
-Maxime's work is really the best approach. It seems that the old way
-was better precisely because it was more simple.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
