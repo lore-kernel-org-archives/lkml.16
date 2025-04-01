@@ -1,163 +1,129 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F10B9C13B
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 03:03:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54FBB35942
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 03:12:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743476621; cv=none; b=kTbfE6HHd+yTINSElAfR5up0i83jK8w2z8lRDPQ6I99iH0jy0Kw022qCiPneehMqKLjxGhd3TnphpHPzQ8vfDgy2ZczsZeoa6QPuw3wRbZ6ZvfqplijAZyA7a0yddSWHZtOgAAC2dGVVAZuwW9O1tc5sMkroowcBG40c6+sdwyM=
+	t=1743477139; cv=none; b=G8hyOuLuMXhSAozw7NRpCH5qgA3Hj1Jp/vWt+ZQSPhoQpny+biJHYIBG7onJUoHxyE3PRhpR4GqHqHC8NH+ahx1V0wUMMUux7jW3SOznUahIELKWmaii7PdKhBtJilU75CAGztj0B5K51SMX7NJB5jouzRrCf4MOisH3mPpORmI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743476621; c=relaxed/simple;
-	bh=r6FKJG2M+mUCoEGL99LjKOla4PjjienLCWA1NscCvWs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mliVYwiX7o+uvf3gBoGv37rnwns2GUp/DnuAbAUX5wkz7cosVRy67+8vlsFVtPCpnjwKTphXmZlkJu/NipFHGma6QNoxnFpEpoXa09sT0AK9B9YNgORoK4DGnZZCeIYmecY+NmDjOkdV83NoSCqJnEF70Xw+Egs7IEvWLkQd4+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZVcpSKTh; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1743477139; c=relaxed/simple;
+	bh=YH7JCvQ8t1ajK7yqoxSreEprl3ng3fcJ/g1aGkjZ1Ok=;
+	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=n0Zx6tQOgGk2/gSOxPl6JfSY7gkv1mZ9SfLpnlXOYBulXyqwAwWpkbf1Mmg0g1LKa9oCSjYCWtO+UY1RR7FCmo7Zsru3MaTs8LF4/A3BbRXWh8eb+9KA4y9VrZsljylQX0kFjbv8lfbSvK5LE2EWey5050/HVzjtcTTMtO5egkw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EifkrBKb; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZVcpSKTh"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2264c9d0295so96945ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 20:03:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743476619; x=1744081419; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=BjUDQYLmLdJCHkWtR5Ib967c0f12WTa/m9uAIMxzWgg=;
-        b=ZVcpSKTh7YcGrTfkqXjkS8hZGjHuJ8orpMlaIefnNrxEdZhoY12iLXO9VIL02l5Nme
-         Y8F0heJ6OkvQDAdTx6lwQqw3LdCkuxknRUm9fDMibA7FmWUE8UvII5Bw6toE2MlDTZze
-         HzU44MzYTFSe/qRZ9qC3u7lYMHOh4o+fOsIYHJ2QA9MRqCAeVdJbMljqPyodFjVgJWrL
-         SgYBrcJaPKZSZHnF99TsCjGu0hsIml5znbxmuwea3+LZuAdsgLBPGDJ5aVy4GOhje4Kp
-         zjiyIz4bDJ7q8tA27iZsMC63TJyxoMIFto6MOCvlQjl0R1z1k0dTo0r9SVr1XTEbOWhh
-         34Xw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EifkrBKb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743477136;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=D+yChQ8LHPX/9hgzwjNue2CwizV8oJdhGjOx1G3bhZ4=;
+	b=EifkrBKb5igA0BYklHY0ebl4RlY9I0oBIefvA+5eAi7RqKzEsSffCYOK1LwJwC2IF4RWpw
+	bi39gdxAAaV97qbXBgBYjXU436JAj4FgVJ6BQJyUQAKgJeMSFDhHiHdlQqaHqNnh+M8nRk
+	gNtpjxi1ZDUDxZnq0bIR5KOMYmQyESY=
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
+ [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-76-avG4W-ZLOp-lEbLPngEBTg-1; Mon, 31 Mar 2025 23:12:10 -0400
+X-MC-Unique: avG4W-ZLOp-lEbLPngEBTg-1
+X-Mimecast-MFC-AGG-ID: avG4W-ZLOp-lEbLPngEBTg_1743477129
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c5f3b94827so762112885a.0
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 20:12:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743476619; x=1744081419;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BjUDQYLmLdJCHkWtR5Ib967c0f12WTa/m9uAIMxzWgg=;
-        b=Uz8TgMjIAC2mi2809icyisl9aVjuN5anueRgP98njhOZttTSmodCBuwjglZmSBJOfp
-         8QxllV6l7L+CeitaKiZEF3Glyn3BdtoWrg8rxKl4hl59j1rqDv7eAeZcD9AuS9zVRx6y
-         EZoMhEPdvn2+SV5mrsl0NC7dIv9WjqKMuELWD39dw40pUEOfAISQ4ndGaiZskvCYL6Y5
-         vOW3TXMc1OFhAMSUvBH9GUkNfcLb1jbm92QErJsARwa9Lk1y+sv/ct7BCucDnG8dn+QN
-         r7LCLikJytuVKiL5hBfNKt28CfNpXCVayYlZEW9dM/KcKocUxx2VmtkVQxsoKPSVt1Kq
-         rxRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWAXOAHz0T9Nm8Y7NyLE2zpbvRY5/7nhoscOY8VeLSLV8X6LgXnF2KwBZj5puT00Mp/M4eO9ClWjjoXWdA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YycnWD5iSos6/1OeDh9y+vrmsvUIrxMgfOxAMI7EshpEDDtp2O9
-	Phv/LHaxP5IoTMtwElp8Xsyl8kFUl+V9qY5AsL2VQKTW6lGmn5x85P+9WYHutA==
-X-Gm-Gg: ASbGnct7cBz1Oi6T0qXEsAU9JfiLs4Wt4Ep969wYWnc52JDRt7MEE73NpOZdI1T7qEE
-	vV1MX2Lc+HOOvXjpMTuD0x8F0/JKnUG1E+abA0TK3MyjOphiG+plx9KqBm44ecG8V1GM6+Ufl14
-	cHbs+cqDy+0CafzeW1rgZD7CJmFI60JlobHSZ2CvMdbvkos/nq8amjgLcUrzHKtWaVr80w3tush
-	pnlzt9wKmNEehTr9SMGF9uGmRB4GULa19I4SNCAWSEihoCJsB0jdtz6vicVJbZpXQRtuOIE5eL6
-	wspklyr9fP017osITHhtW0JV/H5N2fnR7Ui9PAWjtS4tcTvVsIdMFPFLCe9Qs5bBhQb2v4jHVt1
-	wSqdS
-X-Google-Smtp-Source: AGHT+IE/MuK86WseXBdrNNikU3DFYrWcjoRpEbwx6nOX84qWfVtsVGInFBF1tTl/HgZkyg8t66laNQ==
-X-Received: by 2002:a17:902:ecc5:b0:215:42a3:e844 with SMTP id d9443c01a7336-2295d0f168cmr953055ad.17.1743476618866;
-        Mon, 31 Mar 2025 20:03:38 -0700 (PDT)
-Received: from google.com (128.65.83.34.bc.googleusercontent.com. [34.83.65.128])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-305175cae63sm8135392a91.44.2025.03.31.20.03.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Mar 2025 20:03:38 -0700 (PDT)
-Date: Tue, 1 Apr 2025 03:03:34 +0000
-From: Carlos Llamas <cmllamas@google.com>
-To: Frode Isaksen <fisaksen@baylibre.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
-	Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Christian Brauner <brauner@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Frode Isaksen <frode@meta.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] binder: do not crash on bad transaction in
- binder_thread_release()
-Message-ID: <Z-tXhrdTtV5t_P5p@google.com>
-References: <20250331152515.113421-1-fisaksen@baylibre.com>
+        d=1e100.net; s=20230601; t=1743477128; x=1744081928;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:user-agent:mime-version:date:message-id:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=D+yChQ8LHPX/9hgzwjNue2CwizV8oJdhGjOx1G3bhZ4=;
+        b=WBMyJm0HWnZH3b6RE1uzyif0a7Ft5XltLCGLruM+UOqmWx8sDhS0sT+nvp3yiEpe9D
+         5O6y0toSAY6jwhLdzKCUvuen4P+WJSvXT4G+WgD6E65kJ2P4ffBPrkDhEWi6AjC8qwWO
+         fMF6Vw02i32z/E2EORoBjxqCHWqlz40G/J1M5NVCfD3E74jBWIswatkzRDhOqKuvFWx3
+         uKxN3pzZna438VKumHe08iE0rvly4bW7sSSWhTCtzw4yclAyTZL6EN6F4eb9HtWfkOIN
+         7+V1nwoPSNxZGbyD6+/PJKiIOHQitUfZWsk4ag0N629Btdw4ZRujsFGKEUioA0WU/G/p
+         /jlA==
+X-Forwarded-Encrypted: i=1; AJvYcCUM6LuROwPIZ1WkFNQhMS5IuOQK0lQcN5SXb47zh+/T6Kr7Fj0xBm5MKFvM9NdUMWjJMbdJwOgOmZZHaFs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyHHVkZLcZXTy9ViV0OrHf87Rdjt98osX1S7BH/wHlRuCls6gtR
+	aNXihPoYDquA69Attz6EBxJhx1sZJsWLXDlPl+/dL2VJ3qA1mFIWQviwaKW70ag5lVC+4RNtrl3
+	8SLG3iRfR32GL2KD2a3dr7g3HB5Ji2Ype8jpPNbQaO2FQnWXvQDsi46XC5T1VjlaBJk4k4Q==
+X-Gm-Gg: ASbGncs6fk4gOcH0PKTfV1LP1zoqh3GYQgKpNAar3YhS+OUndUL4Z+GTTEwFUWNq436
+	+KT47suy/JI9N1zxcfGgXjfI/YgQSzb22xWCooVxYgco4uMNnTSmZEw6IJUM+1UjVZiR9POWteg
+	I2FJYuLx5gGU4hcxNEu93/Wtd6iFdiwfh0QhOoSmuFmGM6ajznB2VnE6RWx82LWs1Hf815xsE1g
+	9dwnS/dIMBr5OFw8w4QoZjgD0Ptc7kOp5sPtcoLbX8PF0KW1cn39zv3rewHYh0KB16PCS8SqXaZ
+	oVNUGBu/Q4sYu1LEt1VgZVu8fawTf/jQY0/H3ZfC/hHHcDdaNLtSAJdedPsDdw==
+X-Received: by 2002:a05:620a:3193:b0:7c5:aec7:7ecc with SMTP id af79cd13be357-7c75bbb2973mr216489585a.13.1743477128007;
+        Mon, 31 Mar 2025 20:12:08 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGg1j7Vc+zuUQ1pOrhianPa9k1mLxzvuGG2Gm2NPTKGwMMBDaWsWyn19rFctKJdNGrDvU+WZw==
+X-Received: by 2002:a05:620a:3193:b0:7c5:aec7:7ecc with SMTP id af79cd13be357-7c75bbb2973mr216488085a.13.1743477127711;
+        Mon, 31 Mar 2025 20:12:07 -0700 (PDT)
+Received: from ?IPV6:2601:188:c100:5710:315f:57b3:b997:5fca? ([2601:188:c100:5710:315f:57b3:b997:5fca])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c5f7764c7fsm587396785a.84.2025.03.31.20.12.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 31 Mar 2025 20:12:06 -0700 (PDT)
+From: Waiman Long <llong@redhat.com>
+X-Google-Original-From: Waiman Long <longman@redhat.com>
+Message-ID: <915d1261-ee9f-4080-a338-775982e1c48d@redhat.com>
+Date: Mon, 31 Mar 2025 23:12:06 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250331152515.113421-1-fisaksen@baylibre.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 01/10] cgroup/cpuset: Fix race between newly created
+ partition and dying one
+To: Tejun Heo <tj@kernel.org>
+Cc: Johannes Weiner <hannes@cmpxchg.org>, =?UTF-8?Q?Michal_Koutn=C3=BD?=
+ <mkoutny@suse.com>, Shuah Khan <shuah@kernel.org>, cgroups@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+References: <20250330215248.3620801-1-longman@redhat.com>
+ <20250330215248.3620801-2-longman@redhat.com>
+ <Z-shjD2OwHJPI0vG@slm.duckdns.org>
+Content-Language: en-US
+In-Reply-To: <Z-shjD2OwHJPI0vG@slm.duckdns.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Mar 31, 2025 at 05:24:14PM +0200, Frode Isaksen wrote:
-> From: Frode Isaksen <frode@meta.com>
-> 
-> Instead of calling BUG(), set the binder_thread to NULL,
-Yeap, not crashing the kernel is a good idea.
-
-> as is done in other parts of the code.
-> Log if it is a bad transaction (other than in or out).
-> The BUG in binder_thread_release() was preceded by
-> these warning logs:
-> binder: 1198:1217 got reply transaction with bad transaction stack,
->  transaction 49693 has target 1198:0
-
-So tid 1217 is sending a reply to an incoming sync transaction. However,
-its transaction_stack shows that t->to_thread is NULL. I have no idea
-how can this be possible. When the transaction was picked up by 1217,
-its info was recorded in its transaction_stack as such:
-
-	if (cmd != BR_REPLY && !(t->flags & TF_ONE_WAY)) {
-		binder_inner_proc_lock(thread->proc);
-		t->to_parent = thread->transaction_stack;
-		t->to_thread = thread;            <----- HERE
-		thread->transaction_stack = t;
-		binder_inner_proc_unlock(thread->proc);
-	}
-
-I don't understand how 't->to_thread' later becomes NULL, maybe memory
-corruption?
-
-> binder: 1198:1217 transaction failed 29201/-71, size 4-0 line 3065
+On 3/31/25 7:13 PM, Tejun Heo wrote:
+> Hello,
+>
+> On Sun, Mar 30, 2025 at 05:52:39PM -0400, Waiman Long wrote:
 > ...
-> binder: release 954:1333 transaction 49693 out, still active
-> ...
-> binder: release 1198:1217 transaction 49693 out, still active
-> kernel BUG at drivers/android/binder.c:5070!
-> 
-> Signed-off-by: Frode Isaksen <frode@meta.com>
-> ---
-> This bug was discovered, tested and fixed (no more crashes seen) on Meta Quest 3 device.
+>> One possible way to fix this is to iterate the dying cpusets as well and
+>> avoid using the exclusive CPUs in those dying cpusets. However, this
+>> can still cause random partition creation failures or other anomalies
+>> due to racing. A better way to fix this race is to reset the partition
+>> state at the moment when a cpuset is being killed.
+> I'm not a big fan of adding another method call in the destruction path.
+> css_offline() is where the kill can be seen from all CPUs and notified to
+> the controller and I'm not sure why bringing it sooner would be necessary to
+> close the race window. Can't the creation side drain the cgroups that are
+> going down if the asynchronous part is a problem? e.g. We already have
+> cgroup_lock_and_drain_offline() which isn't the most scalable thing but
+> partition operations aren't very frequent, right? And if that's a problem,
+> there should be a way to make it reasonably quicker.
 
-Do you have a way to reproduce this? It sounds like there is something
-else going wrong before and we probably want to fix that.
+The problem is the RCU delay between the time a cgroup is killed and is 
+in a dying state and when the partition is deactivated when 
+cpuset_css_offline() is called. That delay can be rather lengthy 
+depending on the current workload.
 
-> 
->  drivers/android/binder.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/android/binder.c b/drivers/android/binder.c
-> index 76052006bd87..c21d7806e42b 100644
-> --- a/drivers/android/binder.c
-> +++ b/drivers/android/binder.c
-> @@ -5302,7 +5302,8 @@ static int binder_thread_release(struct binder_proc *proc,
->  			     "release %d:%d transaction %d %s, still active\n",
->  			      proc->pid, thread->pid,
->  			     t->debug_id,
-> -			     (t->to_thread == thread) ? "in" : "out");
-> +			     (t->to_thread == thread) ? "in" :
-> +			     (t->from == thread) ? "out" : "bad");
->  
->  		if (t->to_thread == thread) {
->  			thread->proc->outstanding_txns--;
-> @@ -5317,7 +5318,7 @@ static int binder_thread_release(struct binder_proc *proc,
->  			t->from = NULL;
->  			t = t->from_parent;
->  		} else
-> -			BUG();
-> +			t = NULL;
+Another alternative that I can think of is to scan the remote partition 
+list for remote partition and sibling cpusets for local partition 
+whenever some kind of conflicts are detected when enabling a partition. 
+When a dying cpuset partition is detected, deactivate it immediately to 
+resolve the conflict. Otherwise, the dying partition will still be 
+deactivated at cpuset_css_offline() time.
 
-Dropping BUG() is nice but this could use en error message.
+That will be a bit more complex and I think can still get the problem 
+solved without adding a new method. What do you think? If you are OK 
+with that, I will send out a new patch later this week.
 
->  		spin_unlock(&last_t->lock);
->  		if (t)
->  			spin_lock(&t->lock);
-> -- 
-> 2.49.0
-> 
+Thanks,
+Longman
 
-Regards,
---
-Carlos Llamas
