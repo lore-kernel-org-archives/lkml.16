@@ -1,121 +1,135 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from out-177.mta1.migadu.com (out-177.mta1.migadu.com [95.215.58.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2951A1F2380
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 12:39:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743511178; cv=pass; b=O+p1wUXSnH3oZfrrGH/czbiWFc3YAtDxp1b3zNbd4gSlaAcxFl/rHrRfunv/94Qefu5Miv4E//jnNmTJwIRyBvY2QRoEdYEf8+5S3TKaATI82p9sLruXiV0ju2crAOyH4tQBjifdmexcUFOTi3YSNfvzwcZl+v1UokjYVuLCbm8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743511178; c=relaxed/simple;
-	bh=nIdFLac3PcgOhQ89iTqZLUZTFOkV8oZW51m/YAYvgbM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bArYrfjAMzldpvUc90NO+ySqbgAJ+Nkiby4tdzvKLMXs0/xCNqT+MJcWDTTnIP+e1tdEft/dj0IMupSQfwi+h6HNj9kzR3XuJoRQCwhT5eVOKZ/+yK2gaYESLOE6wqZ8k2TIZ1rhKwvTq2qtBw+6RAgnkgt1i30simHM8uS6E9M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b=WGB4Tc30; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D4301F0E56
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 12:40:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.177
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743511240; cv=none; b=nPCrul5h/RSDkHc04ZPH4GF8lIR39MtkqdIoF+OrQUFn682YYlmROSeMmdGcfGIbR+dlX6Ctr37VXGZW6CgCeKYKLa/2jfl6sy67PmPsrqD+KyAlv1taIS44OjPyH8JJIh+8ILqmVul/Iy7cPqaV73HO4DcRCYWvE0lBbkSUTVc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743511240; c=relaxed/simple;
+	bh=f7HZvkkUjREv5E0SrXmMOMtofQNQWMeSVV+VWTUHkYI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BB8lAoJATFQmEkxgfNAJEPOSFqqdwTP052uzMm5Vnv+97QfO+vPTuwDXZOVTeI4IyWJjd3Oq6TrXpp6sNHN0xWWF5Tu0hqCgcxZAy1GCzbg8GEIt3DH2I5pl++MdJLoQ214Jl4uWLnUlZb3uYO6aGNTuxgKk4GPtLv44Imwe4+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Fchy4Nkx; arc=none smtp.client-ip=95.215.58.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b="WGB4Tc30"
-ARC-Seal: i=1; a=rsa-sha256; t=1743511153; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=IF9rUeRgrX5eSUtvwiz5JxSnYfWUiVNN2I4vj8sbWAk07xu/v8vFhrhzsJnIbRWLeQseCsJnT35hu2mD1q5el5kOzUbVZYcaHseVI1bgXAmO2F9ImxvoiY5Q+QsczyXcNpsrigavR6ebzUOvIvy0Q3qaBMgjWG9EUqkrWY0knfc=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1743511153; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=y3el005xY3oGMc8cUqaR8dg1yT/0Pba1l5i18SJCzzQ=; 
-	b=VwdvGm6DrkcD0EVqPinped/0Hazmqs02E4ihBaZ/siM0I5S27+ahzAgjgZ1/F+5iSk4UAG/NIbVbSe3s8nrW66y2XFzztkoRn6I7e2pP6Wb2sdMis/HsAc6YB5J+oTqBmpwtblYO8SVUoroZ3E/HMlqaix140KDpWx4nVSiM1rE=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=dmitry.osipenko@collabora.com;
-	dmarc=pass header.from=<dmitry.osipenko@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1743511153;
-	s=zohomail; d=collabora.com; i=dmitry.osipenko@collabora.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=y3el005xY3oGMc8cUqaR8dg1yT/0Pba1l5i18SJCzzQ=;
-	b=WGB4Tc307vnWrmiLDqgK4AtVuvluqr3Ag/ZP4xwho3xjn3ZNtIYR0+t0EMqX7HUj
-	74Kpq7VSfCp/16ko/SkQbpxluEemA5Ig+7PBtYGqJcJAmLX4ouDknB3pdc8ozD9cdHO
-	u0XdhuBPtPlcI1TTw3f0jBZOKO1zCd75ePF1iZs0=
-Received: by mx.zohomail.com with SMTPS id 1743511151947972.5636952683552;
-	Tue, 1 Apr 2025 05:39:11 -0700 (PDT)
-From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-To: David Airlie <airlied@redhat.com>,
-	Gerd Hoffmann <kraxel@redhat.com>,
-	Gurchetan Singh <gurchetansingh@chromium.org>,
-	Chia-I Wu <olvaffe@gmail.com>,
-	Vivek Kasireddy <vivek.kasireddy@intel.com>,
-	Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>,
-	Rob Clark <robdclark@gmail.com>
-Cc: dri-devel@lists.freedesktop.org,
-	virtualization@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	kernel@collabora.com
-Subject: [PATCH v2 2/2] drm/virtio: Fix missed dmabuf unpinning in error path of prepare_fb()
-Date: Tue,  1 Apr 2025 15:38:42 +0300
-Message-ID: <20250401123842.2232205-2-dmitry.osipenko@collabora.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250401123842.2232205-1-dmitry.osipenko@collabora.com>
-References: <20250401123842.2232205-1-dmitry.osipenko@collabora.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Fchy4Nkx"
+Message-ID: <918395a6-122c-4fb0-9761-892b8020b95e@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1743511227;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fxXB0v/fRE15xa1xwGjpmAOOzPKuIdD5kdimGTGzH+g=;
+	b=Fchy4Nkx5sjdVRFqStHp/4fJ9CvOVIz1lWoNOxriM4dNDNYiQYgPPLqB4J+DachbihZSdO
+	eaUmeVwvGSLSb4xO3JB5SyCiJ1OUWFG8rkVq82L8O7/7B/Elj9RKyF3b1Xa+rNbNkxOWoe
+	pBzoFSWxh+/rKTKTk49yTQwX22+c4hc=
+Date: Tue, 1 Apr 2025 20:40:15 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Subject: Re: [PATCH bpf-next 2/2] bpf: Check link_create parameter for
+ multi_uprobe
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: song@kernel.org, ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
+ martin.lau@linux.dev, eddyz87@gmail.com, yonghong.song@linux.dev,
+ john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me,
+ haoluo@google.com, rostedt@goodmis.org, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, laoar.shao@gmail.com, bpf@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+References: <20250331094745.336010-1-chen.dylane@linux.dev>
+ <20250331094745.336010-2-chen.dylane@linux.dev> <Z-vH_HiJhR3cwLhF@krava>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Tao Chen <chen.dylane@linux.dev>
+In-Reply-To: <Z-vH_HiJhR3cwLhF@krava>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+X-Migadu-Flow: FLOW_OUT
 
-Correct error handling in prepare_fb() to fix leaking resources when
-error happens.
+在 2025/4/1 19:03, Jiri Olsa 写道:
+> On Mon, Mar 31, 2025 at 05:47:45PM +0800, Tao Chen wrote:
+>> The target_fd and flags in link_create no used in multi_uprobe
+>> , return -EINVAL if they assigned, keep it same as other link
+>> attach apis.
+>>
+>> Fixes: 89ae89f53d20 ("bpf: Add multi uprobe link")
+>> Signed-off-by: Tao Chen <chen.dylane@linux.dev>
+>> ---
+>>   kernel/trace/bpf_trace.c | 3 +++
+>>   1 file changed, 3 insertions(+)
+>>
+>> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+>> index 2f206a2a2..f7ebf17e3 100644
+>> --- a/kernel/trace/bpf_trace.c
+>> +++ b/kernel/trace/bpf_trace.c
+>> @@ -3385,6 +3385,9 @@ int bpf_uprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *pr
+>>   	if (sizeof(u64) != sizeof(void *))
+>>   		return -EOPNOTSUPP;
+>>   
+>> +	if (attr->link_create.target_fd || attr->link_create.flags)
+>> +		return -EINVAL;
+> 
+> I think the CI is failing because usdt code does uprobe multi detection
+> with target_fd = -1 and it fails and perf-uprobe fallback will fail on
+> not having enough file descriptors
+> 
 
-Fixes: 4a696a2ee646 ("drm/virtio: Add prepare and cleanup routines for imported dmabuf obj")
-Cc: <stable@vger.kernel.org> # v6.14+
-Acked-by: Vivek Kasireddy <vivek.kasireddy@intel.com>
-Signed-off-by: Dmitry Osipenko <dmitry.osipenko@collabora.com>
----
+Hi jiri
 
-v2: Change order of prep_obj/fence_alloc, add ack from Vivek
+As you said, i found it, thanks.
 
- drivers/gpu/drm/virtio/virtgpu_plane.c | 20 ++++++++++++++------
- 1 file changed, 14 insertions(+), 6 deletions(-)
+static int probe_uprobe_multi_link(int token_fd)
+{
+         LIBBPF_OPTS(bpf_prog_load_opts, load_opts,
+                 .expected_attach_type = BPF_TRACE_UPROBE_MULTI,
+                 .token_fd = token_fd,
+                 .prog_flags = token_fd ? BPF_F_TOKEN_FD : 0,
+         );
+         LIBBPF_OPTS(bpf_link_create_opts, link_opts);
+         struct bpf_insn insns[] = {
+                 BPF_MOV64_IMM(BPF_REG_0, 0),
+                 BPF_EXIT_INSN(),
+         };
+         int prog_fd, link_fd, err;
+         unsigned long offset = 0;
 
-diff --git a/drivers/gpu/drm/virtio/virtgpu_plane.c b/drivers/gpu/drm/virtio/virtgpu_plane.c
-index 42aa554eca9f..26abe3d1b122 100644
---- a/drivers/gpu/drm/virtio/virtgpu_plane.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_plane.c
-@@ -322,12 +322,6 @@ static int virtio_gpu_plane_prepare_fb(struct drm_plane *plane,
- 		return 0;
- 
- 	obj = new_state->fb->obj[0];
--	if (obj->import_attach) {
--		ret = virtio_gpu_prepare_imported_obj(plane, new_state, obj);
--		if (ret)
--			return ret;
--	}
--
- 	if (bo->dumb || obj->import_attach) {
- 		vgplane_st->fence = virtio_gpu_fence_alloc(vgdev,
- 						     vgdev->fence_drv.context,
-@@ -336,7 +330,21 @@ static int virtio_gpu_plane_prepare_fb(struct drm_plane *plane,
- 			return -ENOMEM;
- 	}
- 
-+	if (obj->import_attach) {
-+		ret = virtio_gpu_prepare_imported_obj(plane, new_state, obj);
-+		if (ret)
-+			goto err_fence;
-+	}
-+
- 	return 0;
-+
-+err_fence:
-+	if (vgplane_st->fence) {
-+		dma_fence_put(&vgplane_st->fence->f);
-+		vgplane_st->fence = NULL;
-+	}
-+
-+	return ret;
- }
- 
- static void virtio_gpu_cleanup_imported_obj(struct drm_gem_object *obj)
+         prog_fd = bpf_prog_load(BPF_PROG_TYPE_KPROBE, NULL, "GPL",
+                                 insns, ARRAY_SIZE(insns), &load_opts);
+         if (prog_fd < 0)
+                 return -errno;
+
+         /* Creating uprobe in '/' binary should fail with -EBADF. */
+         link_opts.uprobe_multi.path = "/";
+         link_opts.uprobe_multi.offsets = &offset;
+         link_opts.uprobe_multi.cnt = 1;
+
+         link_fd = bpf_link_create(prog_fd, -1, BPF_TRACE_UPROBE_MULTI, 
+&link_opts);
+
+> but I think at this stage we will brake some user apps by introducing
+> this check, link ebpf go library, which passes 0
+> 
+
+So is it ok just check the flags?
+
+> jirka
+> 
+> 
+>> +
+>>   	if (!is_uprobe_multi(prog))
+>>   		return -EINVAL;
+>>   
+>> -- 
+>> 2.43.0
+>>
+
+
 -- 
-2.49.0
-
+Best Regards
+Tao Chen
