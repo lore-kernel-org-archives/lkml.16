@@ -1,72 +1,65 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f52.google.com (mail-oa1-f52.google.com [209.85.160.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 624D19461
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 16:37:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0403D1C5F27
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 16:38:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743525449; cv=none; b=pdzJftwfgcLnWwwMc5rr6C1QN1wiLisbcmUKERWyWAWO87T6hr4U7Rn867PgsXLlNyJ++Izlts6kDfZNYvr2DAPzzSvTh7/6UErmmeBdGHpU3QJtTp8+zcBh2bUWVlughJzNyIRxPnozl5oWSWE97XYnyV442jFwKAekgQeDaSs=
+	t=1743525531; cv=none; b=M1ts/iRAM7TyEjY62UePSQkOuqy7/011SLdtDskutMXgCcHWu2Ft8SZzl2KV/TN0QVAXWLre/abfFQ05YAZv1jEKq0f/0+9QuHR+3CaNREcHykI9+GRXqmXdLxFiAR97AMDR/xOr6PRAr3EZyBQnd7QPVGGQcCmuirhCcsTyudc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743525449; c=relaxed/simple;
-	bh=xso3yVMv1IMS4sKIOz4iJ1XJ+y9QD15Nm6ONJyFulUc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Z37fy8Gp5IBBZRtkavxVBtufp4t6o4m4zM1tD3Qw7lwoQ6MZOL33jw7o9OO/hoUHq56X8SITJYdXukgG28vc1H1woK9kOpmeFl215TIkKxpJR03IpTyjjylptE8iKAIJtPH9bKGF83Z/ABjfAidFW/QJzrewwxnpsPyhcgzepk4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=mHWcTYla; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1743525531; c=relaxed/simple;
+	bh=L/QUB900bn4/5qxSQgXevW35Ho7xDBeu2EqGEEQtfrg=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=j013t2RF2HDBG8/oA9PMWax5EPZHyrnJGceDPURUXskCOhblRLYfkdr7JlX3fWgeYG6VfNIUnVXNEwPu+1R5cHs12qWrhyjURh4tJZid8kmmsOkn9/oGjC3wwozNpBDjUn22Z3s9fvsHwu9czgrQGv2hWZIQRgGo2ZNhKbb7ozg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=MACl2xXx; arc=none smtp.client-ip=209.85.160.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="mHWcTYla"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 531C4Tfl024680
-	for <linux-kernel@vger.kernel.org>; Tue, 1 Apr 2025 16:37:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	hKbhPlTz0jVjC2n4EBy1zzs4F3CjcmytkwZ1FbdlItY=; b=mHWcTYlaFdmTeZlK
-	ql96SP8BJesuYNcqU5Ok4PBJ81iFViUKlCi4oW57Z9ZvRxdnKOZMcerfWCkSEqIA
-	aVvcD+RnkfgpSOACL+OneHMz30KafrbMjvLa65EI4J6XQWI9lU95UOeWnqnIOFdA
-	XDH5sEbKe7datLiyIxnvWI41o8oAHDOX5tfLpq5GJTrMbessZmkZcknp0dUqzr/b
-	8OxeVWicJPdPqGZGnfCMeFK4OlmxjgbbdRLasinPN3CdAg8DoYKbkwmWw3AEcMei
-	Fzpk2kbzNpGaKc/5o6alrvLj9ihsbWJ96NBOZJwsqVt9OziU+fhaWd4AdK5p77hy
-	b0AGcw==
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45p86krrba-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 16:37:25 +0000 (GMT)
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c5530c2e01so23317785a.0
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 09:37:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="MACl2xXx"
+Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-2c6ed7ec0a5so2141232fac.1
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 09:38:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1743525527; x=1744130327; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Vn5wscEL3RLQT1/gL56P3oGMeI2WM/NBihFUEPIxOCo=;
+        b=MACl2xXxoVtGErHozFr5CJb9eqqbVUZ/dvBEwvg8G3c69v05Q/fPITlDwnJPfpfV8+
+         rfMB4z52zAXCGJC+jh8z1WZK0MHalEw/Dcr8uHEm/DBBELQTD20WvB8hAz51Zj4UeFw4
+         eAaTuhDmsx+MdayDPaN46ux1pZIwyFIIdLQ2kukOAb4MPAXQtp/hrQwlEWTxraC1Sm+i
+         Y4vBU+Q/B3kGfxTvMFk0nB/YJ62fzf/TKePlrQIxNpvuY88BiMPIU0OLS/1QSZaxgFKJ
+         WV/If6czgmUyJqFBlsC6IZNVrdYqUNXEqX3pZKJABCSEbR2xMpQi0djgjupBwCuCRtuw
+         YHNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743525444; x=1744130244;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1743525527; x=1744130327;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hKbhPlTz0jVjC2n4EBy1zzs4F3CjcmytkwZ1FbdlItY=;
-        b=caVtUVi43Iy5r5j6cUlBx3AqtJpaquomVm7YhfITlNYBToRSfHV8v8CJzBrfAGTKLO
-         T9o/cXOgEVN4xDx8BNrjkEWZJbLNnW1dZLANpac8bOXdbhonplmODYNzROcgA49trqRs
-         Ievicda4iWQLT2vQVYy4j2GZ4B7rDO774VZ2WiV83fM9S8fRG4qHhgq7kaERgMtCcAi8
-         2Ttu/U6Vl4rrMayuHhUcnjApAYPn4FIstiKOxW/em9QnXfFiEhTLBIDRTMoYl+jod2Ws
-         thv8RWRt0P+D4IBCznrA4sL2TLxzxIHJqSN0Z2KMeZ1p0sxoS7jD7MEjSz083Q/94VkB
-         +SLw==
-X-Forwarded-Encrypted: i=1; AJvYcCWqi89ciS5uMJ97MwdhFpINxJCsl6rG5I+KWFL1LvlRMjlqhpw4j5TZNB0Uck3GYhAtjaXjnzCIsV9rgRw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yywq46pUBqVp7m4JKAjvPFL0g3DTOhpvsInfMrGzyLQj1wHZCx4
-	vBu6XypiHduWO3HXmhuyXOdnK8zYgIRPPW67uQ08HqSqgquA0IahtltSiEuCGn/3MI9hju7Nffs
-	rKjIf8Q65QsljZDYPJ0GUbynrFkJ7r7ItR1G83bxbY6qtTaKVmLoTJq6+BMsC3ec=
-X-Gm-Gg: ASbGncum9PKQlQ86AkwZjruFVCIOknCJOskERra16NFW11wcHyQB6BipbHIZ2aiPMQa
-	TyxAuB1MScnP/jcXJfD6prq00cVn5ZAJRrYDz6PPIQVKaPXZniZrqlMuX3f7P/Y4Tj/TKiLZEzv
-	un+stcRyZOwO6c2vpnprnJ05UpinS3+E2C74LddHfdZSxYKkoiFkVnLsOQ+ICKjNx7EoQ6WKRnh
-	xgk7pxpyhyhDveEreAHMBWt+c7e+prKQgBn7Gq7vwDlte2LqWoZTiW73VacIqkUe32A6s3fIo7n
-	Zspm6NHJtCOq43thY6NpUYr1xk3qOT3szJriWoSoQbdcKNeBis3nmVORzeVpHZjyHfEUPQ==
-X-Received: by 2002:a05:620a:4491:b0:7c0:c2ec:e560 with SMTP id af79cd13be357-7c75cbf574cmr166615785a.15.1743525444335;
-        Tue, 01 Apr 2025 09:37:24 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFY9F3T3aVlxlnrRQFttmbYcyMce6WTdjZjN6/Nqe8LfX/zNfyXhMverLlyrcOeYnZdRL0LaQ==
-X-Received: by 2002:a05:620a:4491:b0:7c0:c2ec:e560 with SMTP id af79cd13be357-7c75cbf574cmr166614785a.15.1743525443965;
-        Tue, 01 Apr 2025 09:37:23 -0700 (PDT)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac71927b027sm777628666b.47.2025.04.01.09.37.21
+        bh=Vn5wscEL3RLQT1/gL56P3oGMeI2WM/NBihFUEPIxOCo=;
+        b=QyH6cyhDKACYm9rQ3VmnOt6SQNb4JLf/53fSESyVf3VwwefTSkB59BttS3ij+V78zk
+         xlh1DhtPzwFu8Mkh0joFPa+sf1CWPU/XSYbDYd/Iz6SnAiRaOb7r6mwySzVuiAd29Lqt
+         nwDY+afNyK/e7go/kvo2YJs7R4/fF8UzGa7xwKksttjurWEpT7vnFCJAYC2tSTVUIiWw
+         XBEUpZU9PDiuV6L64Zz//EZOM/9+/VyQZbyPO393sIETtezLwdXthK/IAWz40AqyVihy
+         eJA5EwTR5uvVr5Q286ngNaUWFsyeoOc72UdB+/U2XIlTMn7IqoRApcH6m2MCBTk0/P00
+         Gfzg==
+X-Forwarded-Encrypted: i=1; AJvYcCWiw0ncTruPXHK7jlUtLKNEvPTYgaU63+EQSrYVSHSBAPlwgPpz36hQQpTthIp+CXL1UnBubCY/9UH4L40=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzrfJmdWsrwgIjaSJNSWhxcELvuC5DoN+peZjmoieNXx67cmn4k
+	OwwQHlG/mww7FeXgUYhqWT+Nv6mEyUxHJWkfLg8OWcq6Njru1NT0fqSTSF0mX+c=
+X-Gm-Gg: ASbGncs8hTx60QmbCf0006dMgtI/Z+HCFvGphBkiHWFDKErA4DubSot84u4WXVRTczE
+	uwwsUp3bKxbY1Wab1G6bGxlC78onGDPJvA83BiXzFfsEU15pMX9Rz8uFgIxrfj931hBmAeBfmkt
+	U5WAawrWkCmK9mu5P2VV/6V9N4EaGet6rZO02HtZEiFGx/OK3v01WEqr5pzgD52yosiB4TCbaFZ
+	Olq4ei/QgRtquseLoHkZ5DHPNqygrroAHBx9HONnb61nu+3FmwNLOh2IXMxryjW1miFlLdQ3mYN
+	6Zf8TNZGTTXG/HXmSZsOh/Z21pz0F1FwURJYz/E/TPX/iiwW/ShAWYV6r5ZC/gjxaWt2dL1b7hp
+	XIQZ2sw==
+X-Google-Smtp-Source: AGHT+IHU9FmD92LPJ3uip+4pws/5mX50Amq6nNJFvx9VLdxVBV3Kz6b76Gzjd/YUI+o3AWOY0Nu22Q==
+X-Received: by 2002:a05:6871:69c6:b0:297:2719:deb6 with SMTP id 586e51a60fabf-2cbcf477394mr7400077fac.1.1743525527071;
+        Tue, 01 Apr 2025 09:38:47 -0700 (PDT)
+Received: from [192.168.0.113] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2c86a856e16sm2378333fac.37.2025.04.01.09.38.45
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Apr 2025 09:37:23 -0700 (PDT)
-Message-ID: <f105d601-89c3-41b7-8893-f84965a7565f@oss.qualcomm.com>
-Date: Tue, 1 Apr 2025 18:37:21 +0200
+        Tue, 01 Apr 2025 09:38:46 -0700 (PDT)
+Message-ID: <6b9cce5c-6d4b-4be8-ba11-74b3471e358d@baylibre.com>
+Date: Tue, 1 Apr 2025 11:38:44 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,43 +67,52 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 2/2] arm64: dts: qcom: qcs8300: Add CTCU and ETR nodes
-To: Jie Gan <jie.gan@oss.qualcomm.com>,
-        Bjorn Andersson
- <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-Cc: Tingwei Zhang <quic_tingweiz@quicinc.com>,
-        Jinlong Mao <quic_jinlmao@quicinc.com>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250327024943.3502313-1-jie.gan@oss.qualcomm.com>
- <20250327024943.3502313-3-jie.gan@oss.qualcomm.com>
+Subject: Re: [PATCH v4 08/17] iio: adc: ad7768-1: convert driver to use regmap
+From: David Lechner <dlechner@baylibre.com>
+To: Jonathan Santos <Jonathan.Santos@analog.com>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-gpio@vger.kernel.org
+Cc: lars@metafoo.de, Michael.Hennerich@analog.com,
+ marcelo.schmitt@analog.com, jic23@kernel.org, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, linus.walleij@linaro.org,
+ brgl@bgdev.pl, lgirdwood@gmail.com, broonie@kernel.org,
+ marcelo.schmitt1@gmail.com, jonath4nns@gmail.com
+References: <cover.1741268122.git.Jonathan.Santos@analog.com>
+ <b0c7976d4bc817b7056ef40e3ce870b42e8a2d80.1741268122.git.Jonathan.Santos@analog.com>
+ <c72e422c-1ad0-4314-8171-1c3830f63fa5@baylibre.com>
 Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250327024943.3502313-3-jie.gan@oss.qualcomm.com>
+In-Reply-To: <c72e422c-1ad0-4314-8171-1c3830f63fa5@baylibre.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Authority-Analysis: v=2.4 cv=W8g4VQWk c=1 sm=1 tr=0 ts=67ec1645 cx=c_pps a=HLyN3IcIa5EE8TELMZ618Q==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=NSQ7DHjqZRjaoW-GLy4A:9 a=QEXdDO2ut3YA:10
- a=bTQJ7kPSJx9SKPbeHEYW:22
-X-Proofpoint-GUID: uah2qE0keKTqUU5vlWCAwN3ncSC0M4wq
-X-Proofpoint-ORIG-GUID: uah2qE0keKTqUU5vlWCAwN3ncSC0M4wq
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-01_06,2025-04-01_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- priorityscore=1501 lowpriorityscore=0 bulkscore=0 suspectscore=0
- mlxlogscore=663 mlxscore=0 clxscore=1015 malwarescore=0 adultscore=0
- phishscore=0 impostorscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2504010102
 
-On 3/27/25 3:49 AM, Jie Gan wrote:
-> Add CTCU and ETR nodes in DT to enable expected functionalities.
+On 4/1/25 11:31 AM, David Lechner wrote:
+> On 3/6/25 3:02 PM, Jonathan Santos wrote:
+>> Convert the AD7768-1 driver to use the regmap API for register
+>> access. This change simplifies and standardizes register interactions,
+>> reducing code duplication and improving maintainability.
+>>
+>> Create two regmap configurations, one for 8-bit register values and
+>> other for 24-bit register values.
+>>
+>> Since we are using regmap now, define the remaining registers from 0x32
+>> to 0x34.
+>>
+>> Signed-off-by: Jonathan Santos <Jonathan.Santos@analog.com>
+>> ---
 > 
-> Signed-off-by: Jie Gan <jie.gan@oss.qualcomm.com>
-> ---
+> Reviewed-by: David Lechner <dlechner@baylibre.com>
+> 
+>> +static const struct regmap_range ad7768_regmap_rd_ranges[] = {
+>> +	regmap_reg_range(AD7768_REG_CHIP_TYPE, AD7768_REG_DIG_DIAG_ENABLE),
+> 
+> Technically, there are a few holes in here where registers are not defined
+> so we could split this up in to a few ranges to only include registers that
+> actually contain a useful value.
+> 
+>> +	regmap_reg_range(AD7768_REG_MASTER_STATUS, AD7768_REG_COEFF_CONTROL),
+>> +	regmap_reg_range(AD7768_REG_ACCESS_KEY, AD7768_REG_ACCESS_KEY),
+>> +};
+>>  
 
-Acked-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-
-Konrad
+Also just realized we can drop the AD7768_RD_FLAG_MSK and AD7768_WR_FLAG_MSK
+macro definitions in this patch.
