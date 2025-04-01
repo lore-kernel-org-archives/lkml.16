@@ -1,85 +1,165 @@
-Received: from forwardcorp1b.mail.yandex.net (forwardcorp1b.mail.yandex.net [178.154.239.136])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29FA620D4F8;
-	Tue,  1 Apr 2025 18:46:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8D5A7081C
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 18:47:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743533175; cv=none; b=j/yHR1zW/MVSpQchAtell5lc9vkhfirXTqbDNV3JzLfe5lWZjDaGr2KaIg3oZECY1ly7GDwaKKuR8VqXOm+6sUqySY0dyRsL2s52OuBgcPBYC7AWrtgonBgM+3PL6Cj+B/bpL+tUStRLIYtGHPmEBK1NN0H8J+XvteVUlRgAuvw=
+	t=1743533233; cv=none; b=Y+LtQ8gDkFu1jtX3M5fhEOoNqPa6pGOv2c8NQQKsFOi2bEeIWTTlwoUEK8h/bqGfC1yI//w8Fr2cwcAmL7KMHYZm+nz8jIOy6R+HyE7cG6uqCu7trd+LBVPYvONGXr4hxBFTDkUasTfZNBlf6+bjrJG7Cy3XZyoF9+u+VI24wtw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743533175; c=relaxed/simple;
-	bh=HNhHH3uqWFzuN4oweVvGIWCxDu6KHeE/ZBo/2NlYHM8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=KXBR6ejKVpi3vOyyC2SGKglvvjEIz2dmnOdddqoQ5/vKjVRsARFc6ea5pNo0nJ2dvI7WIg0zGMgEGWUN0aWg21w1xWvk+CV5RmZjDkIadsU0+Ct/7dWUKzuF3bsswCp2wBKd0W/y18Ido5OqNa6nDEr6BfUMLBh/JG02u9x5hSk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex-team.ru; spf=pass smtp.mailfrom=yandex-team.ru; dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b=Sb7oSiKq; arc=none smtp.client-ip=178.154.239.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex-team.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex-team.ru
+	s=arc-20240116; t=1743533233; c=relaxed/simple;
+	bh=3EN8DJcs7vuHrjbWwCn5R8YyQjIag3YYATPkbn9N4q8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=A9eZdvMmz7ab/UsHNLABabUhUSoTxuzVgzCa9bSjlsg8dh7ZwJefPyRl0W5jApA1QOJhujLsyMFSGYNxNO0kBpLgVEbLCqSmJo4XmeDoepO1MayZdmKe9GCgFk5hy408K0jQqsUN41JsRT08eXR+FoZ3oL3zHzLfQ+q7wi8OHl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=njS3Clqr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="Sb7oSiKq"
-Received: from mail-nwsmtp-smtp-corp-main-66.iva.yp-c.yandex.net (mail-nwsmtp-smtp-corp-main-66.iva.yp-c.yandex.net [IPv6:2a02:6b8:c0c:471f:0:640:4191:0])
-	by forwardcorp1b.mail.yandex.net (Yandex) with ESMTPS id 4D06560CC6;
-	Tue,  1 Apr 2025 21:44:03 +0300 (MSK)
-Received: from d-tatianin-lin.yandex-team.ru (unknown [2a02:6b8:b081:8129::1:28])
-	by mail-nwsmtp-smtp-corp-main-66.iva.yp-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id ahbvVD0FWa60-Ia69gsQe;
-	Tue, 01 Apr 2025 21:44:02 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru;
-	s=default; t=1743533042;
-	bh=eMhHdCHA6bW4pvBztHIxttEiNTiHXzDH+rRdf/3ovTY=;
-	h=Message-Id:Date:Cc:Subject:To:From;
-	b=Sb7oSiKqPRy+5QUBsoMpQPI6aFkEdbRe3x2rHJXAMBHKVxSHwuaDX3HI6eQXd6t8a
-	 82OWDFFjMKyQoBKWnv0vVTcXdmh44aXK3z4kq/paHA2EbyNwdeZqHcqtfaI7BhUYX4
-	 VesJehXJqmax1SFtROc4C22CdR9HYkLLxceaKfnU=
-Authentication-Results: mail-nwsmtp-smtp-corp-main-66.iva.yp-c.yandex.net; dkim=pass header.i=@yandex-team.ru
-From: Daniil Tatianin <d-tatianin@yandex-team.ru>
-To: Robert Moore <robert.moore@intel.com>
-Cc: Daniil Tatianin <d-tatianin@yandex-team.ru>,
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	Len Brown <lenb@kernel.org>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	linux-acpi@vger.kernel.org,
-	acpica-devel@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] ACPICA: exserial: don't forget to handle FFixedHW opregions for reading
-Date: Tue,  1 Apr 2025 21:43:11 +0300
-Message-Id: <20250401184312.599962-1-d-tatianin@yandex-team.ru>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="njS3Clqr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0C33C4CEE5
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 18:47:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743533233;
+	bh=3EN8DJcs7vuHrjbWwCn5R8YyQjIag3YYATPkbn9N4q8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=njS3ClqrxAwUbF4yEnK0hSlwuD8pke6+aclY1bvdFoign+ox83MQzL0zkf/xHlt7F
+	 8gIQd6jQP7+KH+wl4i+LMPAmdCRYuAs8VhO9/fPhwwMBlipjrP4CYDAayPp12cOyf6
+	 D5Vf/dOXpgrO1XXIt9nPe47LF/BZH3d19y+Gxw7B50PB2apsCFsNawu9Dai/wOIyNs
+	 7lNcVyt/xI+KiwVopJfKMHbmsv2hVe+VdTw9f0HxfHV7d8+8BFMmG3jVl/a0U/tvsd
+	 tipvav+4fehvAW3dszhjFwq9SmM8N7680prbeVQ0YJUZB+tEPRT1mu8VWSHZVg7iIf
+	 epKYMJBGL0y6A==
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-30db1bd3bddso57371721fa.3
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 11:47:13 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWQ5J/wRQUi8GTQnrsjAnN53EW+hZbDt6ld0sBgAPPk/aeW3d8GeBaj+qAUQxkCPYFmoDkZBwujL7o8/Ys=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwhuphsFOM3PCx0Eh+CqYSun6uMuPlUQVvUg5d5wmeVCSD1+Dje
+	VDjU/NQFqqr61Zbz1LzkR0ttTL9B0d2J1Iobm2Nq3l2szNF7j1RdZbI/S6ZkDujhDd1x5NN+sUq
+	9pKIVsx6goXyJhi9G02WF75/nEyk=
+X-Google-Smtp-Source: AGHT+IFr3N20dboMCQNSF1kAFSfln2FgL3bYPKR5XWRvW3QXmxUfL8Uy/4klpXIcJMEO9FFaB3/1p5pp0rQ4zS5ed3s=
+X-Received: by 2002:a05:651c:2209:b0:30c:189d:a169 with SMTP id
+ 38308e7fff4ca-30de03286edmr44217501fa.25.1743533232123; Tue, 01 Apr 2025
+ 11:47:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAPM=9tyx=edsZ3ajuAUAv4vjfa=WNEzobqAsYbBTjCfLbuEeFQ@mail.gmail.com>
+ <CAHk-=wjcdfrDTjzm6J6T-3fxtVyBG7a_0BXc2=mgOuM6KPFnCg@mail.gmail.com>
+ <87h6394i87.fsf@intel.com> <Z-p2ii-N2-dd_HJ6@phenom.ffwll.local>
+ <20250331133137.GA263675@nvidia.com> <87tt782htn.fsf@intel.com> <CAHk-=wiP0ea7xq2P3ryYs6xGWoqTw1E4jha67ZbJkaFrjqUdkQ@mail.gmail.com>
+In-Reply-To: <CAHk-=wiP0ea7xq2P3ryYs6xGWoqTw1E4jha67ZbJkaFrjqUdkQ@mail.gmail.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Wed, 2 Apr 2025 03:46:34 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQThGkgtKgquRPv8Ysi_omedRthF1_++apKda-xWeWcbA@mail.gmail.com>
+X-Gm-Features: AQ5f1JpWfavKws9pXp40pkcWPQBFSZDj0KKmDcek7l7jzydxtf6KAS-HGpcXERE
+Message-ID: <CAK7LNAQThGkgtKgquRPv8Ysi_omedRthF1_++apKda-xWeWcbA@mail.gmail.com>
+Subject: Re: [git pull] drm for 6.15-rc1
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Jani Nikula <jani.nikula@linux.intel.com>, Jason Gunthorpe <jgg@nvidia.com>, 
+	Dave Airlie <airlied@gmail.com>, dri-devel <dri-devel@lists.freedesktop.org>, 
+	LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The initial commit that introduced support for FFixedHW operation
-regions did add a special case in the AcpiExReadSerialBus If, but
-forgot to actually handle it inside the switch, so add the missing case
-to prevent reads from failing with AE_AML_INVALID_SPACE_ID.
+On Wed, Apr 2, 2025 at 1:12=E2=80=AFAM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> On Tue, 1 Apr 2025 at 05:21, Jani Nikula <jani.nikula@linux.intel.com> wr=
+ote:
+> >
+> > The header checks have existed for uapi headers before, including the,
+> > uh, turds, but apparently adding them in drm broke the camel's back.
+>
+> The uapi header test things never caused any problems for me [*],
+> because they don't actually pollute the source tree.
+>
+> Why? Because they all end up in that generated 'usr/include/' directory.
+>
+> So when I look at the source files, filename completion is entirely
+> unaffected, and it all works fine.
+>
+> Look, I can complete something like
+>
+>     include/uapi/asm-generic/poll.h
+>
+> perfectly fine, because there is *not* some generated turd that affects i=
+t all.
+>
+> Because for the uapi files those hdrtest files end up being in
+>
+>     ./usr/include/asm-generic/poll.hdrtest
+>
+> and I never have any reason to really look at that subdirectory at
+> all, since it's all generated.
+>
+> Or put another way - if I _were_ to look at it, it would be exactly
+> because I want to see some generated file, in which case the 'hdrtest'
+> turd would be part of it.
+>
+> (Although I cannot recall that ever having actually happened, to be
+> honest - but looking at various header files is common, and I hit the
+> drm case immediately)
+>
+> Would you mind taking more of that uapi approach than creating that
+> hidden directory specific to the drm tree? Maybe this could *all* be
+> generalized?
+>
+>            Linus
+>
+> [*] I say "never caused any problems for me", but maybe it did way in
+> the past and it was fixed and I just don't recall. I have definitely
+> complained about pathname completion issues to people before.
 
-Link: https://github.com/acpica/acpica/pull/998
-Fixes: ee64b827a9a ("ACPICA: Add support for FFH Opregion special context data")
-Signed-off-by: Daniil Tatianin <d-tatianin@yandex-team.ru>
----
- drivers/acpi/acpica/exserial.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+I know you dislike this, and I NACKed this before (but too late):
+https://lore.kernel.org/dri-devel/CAK7LNATHXwEkjJHP7b-ZmhzLfyyuOdsyimna-=3D=
+r-sJk+DxigrA@mail.gmail.com/
 
-diff --git a/drivers/acpi/acpica/exserial.c b/drivers/acpi/acpica/exserial.c
-index 5241f4c01c76..89a4ac447a2b 100644
---- a/drivers/acpi/acpica/exserial.c
-+++ b/drivers/acpi/acpica/exserial.c
-@@ -201,6 +201,12 @@ acpi_ex_read_serial_bus(union acpi_operand_object *obj_desc,
- 		function = ACPI_READ;
- 		break;
- 
-+	case ACPI_ADR_SPACE_FIXED_HARDWARE:
-+
-+		buffer_length = ACPI_FFH_INPUT_BUFFER_SIZE;
-+		function = ACPI_READ;
-+		break;
-+
- 	default:
- 		return_ACPI_STATUS(AE_AML_INVALID_SPACE_ID);
- 	}
--- 
-2.34.1
+Compile-testing UAPI headers is useful
+(and I believe this is the only case where it is useful)
+because userspace is independent of any CONFIG option,
+and we have no control over the include order in
+userspace programs.
 
+In contrast, kernel-space headers are conditionally parsed,
+depending on CONFIG options.
+
+You dislike this feature for the reason of TAB-completion,
+but I am negative about this feature from another perspective.
+
+We cannot avoid a false-positive:
+https://lore.kernel.org/all/20190718130835.GA28520@lst.de/
+
+It is not <drm/*.h> but <linux/*.h>
+However, it is annoying to make every header self-contained
+"just because we are checking this".
+Actually, it is not a real problem when the relevant
+CONFIG option is disabled.
+I did not interrupt him because he was doing this
+checkunder drivers/gpu/drm/i915/.
+()
+But, I am opposed to expanding it to more-global include/drm/,
+or any other subsystem.
+
+In my opinion, the right fix is
+"git revert 62ae45687e43"
+
+
+If we continue this, maybe leave a caution
+in capital letters?
+
+
+diff --git a/include/Kbuild b/include/Kbuild
+index 5e76a599e2dd..4dff23ae51a4 100644
+--- a/include/Kbuild
++++ b/include/Kbuild
+@@ -1 +1,3 @@
++# The drm subsystem is strict about the self-containedness of header files=
+.
++# OTHER SUBSYSTEMS SHOULD NOT FOLLOW THIS PRACTICE.
+ obj-$(CONFIG_DRM_HEADER_TEST)  +=3D drm/
+
+
+
+--
+Best Regards
+
+Masahiro Yamada
