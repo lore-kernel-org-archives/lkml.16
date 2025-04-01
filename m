@@ -1,125 +1,110 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0D2A2E3363
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 00:17:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2D093A1CD
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 00:17:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743466651; cv=none; b=qd1r2zzlh+MxAm9m2GQgSom2ogw1OQmvkYB1s0IPTwb9vxv6HraGv0Unm6/0JxY9irDvd2PnNSxRziBw+7gyGuKcyS04+9jfbJmeMwaicxG9GZSeA31sSHpTYjmXAsvHh+70GczCTc+tnUHoK88nG4X+MjlGU97QDV6bTZAk/L4=
+	t=1743466653; cv=none; b=uR7k5/7rnI/px39pzZH/UPToCzXe7iPHB2WS0rLk0gFs1D7fymIHgV9UCRFXakQK+d2WesfAd085uW6qVpBBbFpFucmAYFSJMma432C7O6oVpAOQLlcZ5eHZfKq3dnVskY6zX9/CyTVUgFxZ217qgsMy0Htuxs/MbSu7+K5ILkg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743466651; c=relaxed/simple;
-	bh=xZ6w73y7wZacXxUS9dMlTYmRELvACtp0WhZ7oysFGdU=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=m2Mg57QcphT5MMlOkBtc613p5nZ/L2Zhkju8v6JXRu60+JmYJJjwB91nLkFk05rPMLNARc8wZqOValrmEJfvj7SqNr3z9fjtoVOkvWKh/F0UQ7QzDOh+Ucz9ep58DbWnOR63nJuCyoI1LXwpM8b+pfhVWpfmuBKohweLn7HmWKU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kQs1/uan; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743466653; c=relaxed/simple;
+	bh=llBTAisqyOidyTYvFevjD97G6Jq350PBDVWT1qtGfe8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=T3uXbi9D9XEsRrBZ2I19owsWe0xXv5fdE7L3uFbUftg2ebgYlBchX4aLO2t8rYdj1mITsJ50CT0cmM6Dmid1pgSveyG3He9TbY6mQSezn9uM4RR4t8N8TvYduKQwePPb19CbQzD725iIM6ZpNJPdNf2nD50rGYVVvR0s1ReB7mY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=peSfyLyV; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kQs1/uan"
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-54afb5fcebaso6124712e87.3
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 17:17:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743466644; x=1744071444; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=jo1ZDVstn0cyui2K7Lk/mkLvF0vUMx+6tb2R9gkqM6c=;
-        b=kQs1/uan8pQw96UNE+ay5qec91TYmPZY2WtcsT0Ogr3fzCqJF0SX/g7siSbYfmyfld
-         zWjUrxboy/OusJPJ0YEanMFN5rtXED2R9f++rDtwTsdO4lF/FbKOtjGf8G2ZTpNty52K
-         a7pxhz1ysuirGUHetHZx56g8TzXHVIC9vH+CiyRZdu2eNdx+yuFRgpnOzFUiC1eshkqX
-         vSul2i4J6TWD5yvKpCE0EipDdDxBh7lL9tGEGQeCHlXo2ZTzxMlT83K2t+2uqPXhUXv1
-         qcAYQBoP+XLjpB0x/wgY9rKbWNjEsM69syDWJXGl9U7modqiHNjZ6gbKI46r7rk92XH5
-         RRsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743466644; x=1744071444;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jo1ZDVstn0cyui2K7Lk/mkLvF0vUMx+6tb2R9gkqM6c=;
-        b=ZMRqKBdONDDDX1C9oWZim1q07PS+aUbUVRWwnVbjSUzxO03H+zZi/a2tNDj5Ow096B
-         dUEwJQUKG8bXf2RpgS0qFXumEqeOUzCArCmRgiq2y4WPrS1vPxVkTWX7G0JfeyuMxOPW
-         0/TuKO+A7+iHeYglX7ewbniG75HIDr5tzhzZNq2y+3nNFjShfSwZFF5doyEVCQ59V36p
-         b86THIXfBGlIX5v3NhaFGrvooar3UOSwmdp3EnYDrct/A8Jvlhx9ta7dDXmaZSJznh+K
-         uiJi0BDMiQZ51ZEScfUQy7sUYBqNKpZy79+PsgXIOb65dtU9Opi+oDelbhYHLYrtolTF
-         jCiA==
-X-Forwarded-Encrypted: i=1; AJvYcCX8gHyayGxjfHHOavZd2gkLz24VU+pA4gTQt36p+/4OInH92cKSmzxU0h/0k0xYiOpZAXIyL/Y/mP5658A=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywvi3617uiwMvCWGlmOJuJk4e8+kUhMztXHPVU5OhLHojUaKT7j
-	M88Wm8ZUDfLUE9uRwvIWaqdMqnewenC7dDppDf2DYbZBI2bKbQL0AIQ2zUem5tyENecYyeejCgO
-	ZcZRwOPuC/jz6TjvZisJoB21lWx8=
-X-Gm-Gg: ASbGncs/3zswAhhdjihoMOQ1bTh6Wk6ApX24rte7Q+2vHiXT5jlA4cyBCLcVgECrIdQ
-	bObNdL1sirzaTxpEziJOzd7KnpUDc87MYrupxI209RG/vGUUtJMV2GAOfub8MFdN3PDgJekMOLX
-	8vuzQRxm8bdgqj0TUda2e/qDD1Xslu/fo3RkFaY7SUtlePpOwoIxuWG7y5QWsWdetYYCUnvnE=
-X-Google-Smtp-Source: AGHT+IGDb2btGLRDy04lb9dt0xj3PQkYKq9k5XC5neWZOuHOyyS8kixFy/o4CwjwA+7EI9/VQHj48vUyxMV5sB2WnZs=
-X-Received: by 2002:a05:6512:1590:b0:549:4d7d:b61b with SMTP id
- 2adb3069b0e04-54b1100f83bmr3142748e87.35.1743466643683; Mon, 31 Mar 2025
- 17:17:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="peSfyLyV"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52VFCx7d007639;
+	Tue, 1 Apr 2025 00:17:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	pWf+aubKFbVlYI+VsLmquwJeB6ZKPlgud/1Pn+keFGM=; b=peSfyLyVdwqRqmov
+	KGQOieE3z41dL+fBcGU37rjGC3q3t25BTyxD/2sF3ikRseeSxFu4kcQAvUwPGtNF
+	xfN9sD8v+gc1HHlTBuPK1ww8GSRIj7y+5JbovAAL+KnPFyd1BGuA67sRKPiVIafD
+	XH3bsL6kYHNMiABTmXFGr5zhEC6kzrMe+7Hm5Gd5MLplLOaDFRCm9mUyWNwCobii
+	DNjX4NjcwT4guaWJp8hRO1OUGFrpOkM7yNl2pj+bK4W3cZzlD7/kbT7tOrUMUC66
+	2ZselXOZN1fxcMlePEO4VH1qIkCUlObvST1cP/6sQtu69WaDh/oQ2u2DvblIeEKF
+	AD9/og==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45pa1nwumu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 01 Apr 2025 00:17:22 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5310HMoj011319
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 1 Apr 2025 00:17:22 GMT
+Received: from [10.111.180.55] (10.49.16.6) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 31 Mar
+ 2025 17:17:21 -0700
+Message-ID: <4f47df18-e98c-4f23-afde-3fa8e9fd0f86@quicinc.com>
+Date: Mon, 31 Mar 2025 17:17:20 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Steve French <smfrench@gmail.com>
-Date: Mon, 31 Mar 2025 19:17:11 -0500
-X-Gm-Features: AQ5f1JoGmIJKDvlHEmU6rK61F2wh-PwS8a6daImJ7piAzjm_aybO1L2AU3EeH5U
-Message-ID: <CAH2r5msxpWx-jGPQZcowF=u5Lum4mYAOJtgVQ=u0vJv13U254w@mail.gmail.com>
-Subject: [GIT PULL] ksmbd server fixes
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Namjae Jeon <linkinjeon@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [greybus-dev] Re: [PATCH] staging: greybus: Multiple cleanups and
+ refactors
+To: Ganesh Kumar Pittala <ganeshkpittala@gmail.com>,
+        Alex Elder
+	<elder@riscstar.com>
+CC: <johan@kernel.org>, <elder@kernel.org>, <hvaibhav.linux@gmail.com>,
+        <pure.logic@nexus-software.ie>, <greybus-dev@lists.linaro.org>,
+        <linux-staging@lists.linux.dev>, <linux-kernel@vger.kernel.org>
+References: <20250331213337.6171-1-ganeshkpittala@gmail.com>
+ <d683962c-e8b7-4adc-9902-483976197637@riscstar.com>
+ <CALVXb-qDioGFAfmtJPu_jVR_5G7VfC2bDD_bvjicbrVZKkc=hA@mail.gmail.com>
+From: Jeff Johnson <quic_jjohnson@quicinc.com>
+Content-Language: en-US
+In-Reply-To: <CALVXb-qDioGFAfmtJPu_jVR_5G7VfC2bDD_bvjicbrVZKkc=hA@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: WAs377hhi2Z2IkrrkwWxXmTjQS2ZrgW3
+X-Proofpoint-GUID: WAs377hhi2Z2IkrrkwWxXmTjQS2ZrgW3
+X-Authority-Analysis: v=2.4 cv=MPlgmNZl c=1 sm=1 tr=0 ts=67eb3092 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=3H110R4YSZwA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=1O7B8se6RwbiryXEGoAA:9 a=3ZKOabzyN94A:10
+ a=QEXdDO2ut3YA:10 a=D0TqAXdIGyEA:10 a=xa8LZTUigIcA:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-31_11,2025-03-27_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ malwarescore=0 suspectscore=0 phishscore=0 spamscore=0 clxscore=1011
+ bulkscore=0 mlxlogscore=999 impostorscore=0 mlxscore=0 adultscore=0
+ priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504010000
 
-Please pull the following changes since commit
-38fec10eb60d687e30c8c6b5420d86e8149f7557:
+On 3/31/2025 5:03 PM, Ganesh Kumar Pittala wrote:
+> Hi Alex,
+> 
+> Thank you for the detailed feedback and guidance. I appreciate your time
+> reviewing the patch.
+> 
+> I’ll split the changes into separate patches as suggested and send a v2 shortly.
+> 
+> Best regards,
+> Ganesh Pittala
 
-  Linux 6.14 (2025-03-24 07:02:41 -0700)
+Some more feedback:
 
-are available in the Git repository at:
+Don't "top post"
+https://www.kernel.org/doc/html/latest/process/submitting-patches.html#use-trimmed-interleaved-replies-in-email-discussions
 
-  git://git.samba.org/ksmbd.git tags/v6.15rc-part1-ksmbd-server-fixes
+Also don't use HTML e-mail 
+https://www.kernel.org/doc/html/latest/process/submitting-patches.html#no-mime-no-links-no-compression-no-attachments-just-plain-text
 
-for you to fetch changes up to ddb7ea36ba7129c2ed107e2186591128618864e1:
+Yes, there are a lot of hoops you have to jump through to get your code in the
+kernel. It becomes easier over time.
 
-  ksmbd: fix r_count dec/increment mismatch (2025-03-27 19:12:00 -0500)
+/jeff
 
-----------------------------------------------------------------
-10 ksmbd SMB3 server fixes
-- Two fixes for bounds checks of open contexts
-- Two multichannel fixes, including one for important UAF
-- Oplock/lease break fix for potential ksmbd connection refcount leak
-- Security fix to free crypto data more securely
-- Fix to enable allowing Kerberos authentication by default
-- Two RDMA/smbdirect fixes
-- Minor cleanup
-
-This does not include an additional three important fixes for recently
-reported problems that are still being tested
-----------------------------------------------------------------
-Miaoqian Lin (1):
-      ksmbd: use aead_request_free to match aead_request_alloc
-
-Namjae Jeon (7):
-      ksmbd: make SMB_SERVER_KERBEROS5 enable by default
-      ksmbd: add bounds check for durable handle context
-      Revert "ksmbd: fix missing RDMA-capable flag for IPoIB device in
-ksmbd_rdma_capable_netdev()"
-      ksmbd: use ib_device_get_netdev() instead of calling ops.get_netdev
-      ksmbd: fix use-after-free in ksmbd_sessions_deregister()
-      ksmbd: fix multichannel connection failure
-      ksmbd: fix r_count dec/increment mismatch
-
-Norbert Szetei (1):
-      ksmbd: add bounds check for create lease context
-
-Thorsten Blum (1):
-      ksmbd: Use str_read_write() and str_true_false() helpers
-
- fs/smb/server/Kconfig             |  2 +-
- fs/smb/server/auth.c              |  2 +-
- fs/smb/server/mgmt/user_session.c | 19 +++++++++++++++++++
- fs/smb/server/mgmt/user_session.h |  2 ++
- fs/smb/server/oplock.c            | 12 ++++++++++--
- fs/smb/server/smb2pdu.c           | 33 ++++++++++++++++++++++++--------
- fs/smb/server/transport_rdma.c    | 41 ++++++++++------------------------------
- 7 files changed, 68 insertions(+), 43 deletions(-)
-
--- 
-Thanks,
-
-Steve
