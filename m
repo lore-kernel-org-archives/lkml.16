@@ -1,356 +1,318 @@
-Received: from EUR03-DBA-obe.outbound.protection.outlook.com (mail-dbaeur03on2054.outbound.protection.outlook.com [40.107.104.54])
+Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 890F51C7006;
-	Tue,  1 Apr 2025 14:38:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.104.54
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743518290; cv=fail; b=S951JU7hNzV2Ed53C8rhbuggRXmAISSmDAZOuby0/CO/Sd6C7ffJAmBDK4smcNjx7keR+G4kipa1DWQMVP7K/MVnkcc5VZImKoCca57c/D39goQuo3L6+GV2uKBZD3ipEApi1eykSRXfvQ9zwNxane3pL8KTtphPdxWL+iEALYw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743518290; c=relaxed/simple;
-	bh=YFyzd5G0deVwXGp7X7/H3ogfHXLaWUGzX6Rx1Zqkd2c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=SvvNdlK+iybGiA8LwyAaO7m38rg8HOr+BqwNWA9DanwoeUTtBUBnFRp2zU04uwtkMc6skvh48PUEqnKCH1q+2/0uqPttDAWBMxwrbNtnLYeL/yIccsb54TcYhAhQ2h4WtmDUcPxAMFxLzH/9igqHIN6OtkxyVZzaX3IXHRE1teo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=cBo6sjE7; arc=fail smtp.client-ip=40.107.104.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66C7C204C0C
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 14:38:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743518306; cv=none; b=cnvgoALkfWfRfr5oIZOp0jrCRLrgAXNxUKbfKEv15vQpNnAaETesVv0Pw/N8Fdaf33iuPkmM1P77RFVOjXc0becDTwFlsTxDoq3ypFPcpUEhb7DaVV1E+zM63Jb7wDrIWo/3hfZz0VHbdiaYsJASCTOogm2xh3ILNZ9MybxgDAQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743518306; c=relaxed/simple;
+	bh=Uy7qsjdC0ECzrNp66Spy2t2Na970UJ6MjIl/IBeNc+8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type:References; b=siV9J7hHXvbmOwC52aIjvTq6bRVn6XxNMcqcicoxkfNGX2Oz0C1gJFawUKgqmAU8vzFGUHw2ERq8WWcTPd3il8pCta4CTGZnMvWA0E5a+bUQtjEDdUS41DNqAr01EZdOpjphIsIpJMwTm6tghbGzeY4AVGg93frf7Q844s5qpSE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=M6VzVDrT; arc=none smtp.client-ip=210.118.77.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="cBo6sjE7"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=NphyputStKp1FYmIAxgZ4lvJDDIhMIpzY3SrEzeK2ie43buTe3nJFhdT1/pIGd3mfI6qpnwO9rw5fKnPTzhtgLm1dkN1dK6ZfEhYDttWMD5c8wwuoiL4SbLMthOvdBXhv8Kms5KolAkgsomKqklJtVfqvhvHemztKYDdMaTGfdsWC0aJsviaTuLptzPJSDcRgbuS8ZBTHDPdFD9Is5eL5xANX9taKKMDG9w84ERu7hZHoNOQlcaPehyZWx4qrb7wxmRYnNOZYLEdh2KwOGW8i5ZYO8KQ7NO9PAfz/VBzxEyFP2f57T8XJ0I9CxT7+Sc8FLj2mtExrjVt06PKK1LyaA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=LGDz47CnKbQFJVmyszCG0gihemcCXvFjUvp404BXCaM=;
- b=EpN49Y+NhoiG2gPfRqj1WMT99nZzhNjAaUuVjhco0ppcXudfYIXB7/Vlu2gr6wr3BC5HOfMaTEJUxOZdLmeQiXknRLshBPdobTPsP6amkkbXjfO7xYqT5ZpFFYORGcSHx6OTGijEUOGlXFiT2LHevQkrRSLsQ2i6/q5Qd5V9LAMFphFg74WnMA8YhsjNTA6AebMc83iVACCjRV9KeVhKwKe9AhtRknnJs4Cisz5dpEfjeoXRXRZ5Blp/WJdrk0EUq6ESpWHqbvXwkMrf4gO01BSro80YHAe4yW/U0LuKgorNSIu4gY/zcJ0Timhn6hCpZQfn+GtEggu7omIhR9GyVQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LGDz47CnKbQFJVmyszCG0gihemcCXvFjUvp404BXCaM=;
- b=cBo6sjE7R0caBvH1WxhnL2Mh8lv5f4iSq6WczZZ6FbqIwEEfQzjxds0U0JM0aGhWfWlz/FOeb8W9d4gokoJ9i046dxolce0ynXj3sVtWrxnApJYjvmaI3r7slZAvNC7rqnQrQB/4GNTT8HVdovwYXcsgjuB5EWLde/TyPboEYQO1Ijuuznzia6VbfaojmV+ZtXR6S9eSzjuaYHhRmFJpxXFvXxLhOXN2v5JSk00XwewSNBPQCSRSDmOZc5C7wERhqeq73mtKQBUq89bPz80dq01jkHLz6x4eeIsYSEIiZK6M9Ebie4uGOKVSuph0VitsXVOQxlsNeh3y1ftp6h3YKQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by AM7PR04MB7190.eurprd04.prod.outlook.com (2603:10a6:20b:115::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.54; Tue, 1 Apr
- 2025 14:38:05 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%2]) with mapi id 15.20.8534.048; Tue, 1 Apr 2025
- 14:38:05 +0000
-Date: Tue, 1 Apr 2025 10:37:55 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: "Ming Qian(OSS)" <ming.qian@oss.nxp.com>
-Cc: mchehab@kernel.org, hverkuil-cisco@xs4all.nl,
-	mirela.rabulea@oss.nxp.com, shawnguo@kernel.org,
-	s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-	xiahong.bao@nxp.com, eagle.zhou@nxp.com, linux-imx@nxp.com,
-	imx@lists.linux.dev, linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 3/3] media: imx-jpeg: Check decoding is ongoing for
- motion-jpeg
-Message-ID: <Z+v6Q1TRpJUkF2oh@lizhi-Precision-Tower-5810>
-References: <20250328063056.762-1-ming.qian@oss.nxp.com>
- <20250328063056.762-4-ming.qian@oss.nxp.com>
- <Z+a2G5We38cQw3UD@lizhi-Precision-Tower-5810>
- <99aa5db6-eb75-4fcf-ada7-cc6d519a40cc@oss.nxp.com>
- <Z+qnln8qbHCYVH+e@lizhi-Precision-Tower-5810>
- <22fd3087-6832-4b61-8c78-bc8dd3ac808b@oss.nxp.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <22fd3087-6832-4b61-8c78-bc8dd3ac808b@oss.nxp.com>
-X-ClientProxiedBy: SJ0PR13CA0166.namprd13.prod.outlook.com
- (2603:10b6:a03:2c7::21) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="M6VzVDrT"
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250401143815euoutp018a378acc57ac22a714e8a3d049ad5510~yOKcRc4_71502715027euoutp01Y
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 14:38:15 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250401143815euoutp018a378acc57ac22a714e8a3d049ad5510~yOKcRc4_71502715027euoutp01Y
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1743518295;
+	bh=SDsWtV73qvuMIdHiDqANtX+1Rido/jLdHSnNDNiIGlc=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=M6VzVDrTjO5ncrZpmUs9262CDsI3osC9kKQvdtSNQetiQe0fYGTqHkpZX43T5IhBU
+	 7CWLwJaWzhfZS65VL9C62IdT/lW+A0mwx4yKZ1iJbJlMF0iG/bymVVcc5XVvUbCG1W
+	 bTMtpJJJyH48au+1tFFByiVNskk+xFqRwTkD0PY4=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+	20250401143815eucas1p23732e94d5e8f2887a2490c6a748ba05d~yOKbixsnF3032830328eucas1p28;
+	Tue,  1 Apr 2025 14:38:15 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+	eusmges3new.samsung.com (EUCPMTA) with SMTP id 22.8B.20397.65AFBE76; Tue,  1
+	Apr 2025 15:38:15 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+	20250401143814eucas1p16a2149cfa8a89e060d396fa283742765~yOKasDsev2332523325eucas1p1J;
+	Tue,  1 Apr 2025 14:38:14 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+	eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20250401143814eusmtrp1662570be4f10bcaf303bf559c09258ea~yOKaq3F4T1600116001eusmtrp1k;
+	Tue,  1 Apr 2025 14:38:14 +0000 (GMT)
+X-AuditID: cbfec7f5-e59c770000004fad-95-67ebfa56b07a
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+	eusmgms2.samsung.com (EUCPMTA) with SMTP id 75.FF.19654.65AFBE76; Tue,  1
+	Apr 2025 15:38:14 +0100 (BST)
+Received: from [192.168.1.44] (unknown [106.210.136.40]) by
+	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250401143813eusmtip167fc2356ca3d35bfe985370a2fc506fa~yOKZrHUYJ3233532335eusmtip1H;
+	Tue,  1 Apr 2025 14:38:13 +0000 (GMT)
+Message-ID: <ef17e5d1-b364-41e1-ab8b-86140cbe69b2@samsung.com>
+Date: Tue, 1 Apr 2025 16:38:12 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AM7PR04MB7190:EE_
-X-MS-Office365-Filtering-Correlation-Id: e54c724c-fe56-4c93-cba8-08dd712acff2
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|7416014|376014|52116014|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?oFf7HqTGbK5MW1pAyhPCqSpUBWDjVqnBhI1cPObUPzzwd6j/e+zFFy9+KBOz?=
- =?us-ascii?Q?xfGuTZJqbOWoZDpxklC3J8QHYMl4H2U6jVoyAWoZHr02XF+bOvBvAM9azAOH?=
- =?us-ascii?Q?9VtvKkJknzMKmnTbW//3j8omVUbIUwZPMzb9pKEIumpAWF8CGJ4CayckBTaR?=
- =?us-ascii?Q?NBv27xgHTGu7+wht07vfyKXm5lTdBR4wNixmQjKPMuRH1v+7gvAP+z6Zu35X?=
- =?us-ascii?Q?NvpvlyzE8bVvYoMi2A++zZIyV57FFKi8Ywp2KrV9MCMh0Ttkd8FJ3QhtQXKE?=
- =?us-ascii?Q?8aZ++jN7GnQZRGIO6teV/jbAReawnNPE76kPtv98dMVwaWNELQlNmr4sqQTl?=
- =?us-ascii?Q?e3AdlbcCi6qmY0XF3xhJdjLGl2uK1snyCYVYFR1BtJveugq+0bC0WAowotXD?=
- =?us-ascii?Q?KMR6RZWNDpOOC2Z4cQyKYY/u/PyiBNI7YbDz1CK74hd0gNg9O/p6Dn+w5+/s?=
- =?us-ascii?Q?Tvz30rm8swYKqvCU/xttErFiCEk3hqf6WRdp/eCVIopZYwcCt5mdTn4mTtHB?=
- =?us-ascii?Q?YcdoQM8Qu/Eosjfr/w/Ut4WngFKVm2aS1gQ8IYx8Y/KW26HP0+gyDuuhWdkQ?=
- =?us-ascii?Q?i0aEF5p4S0yK3GjZ3fXZ9ucZar2cBfO2SQIPYX04CWvJHGgGcwAGc2q9gnsD?=
- =?us-ascii?Q?Yl98M8/p66A1twsIACCnROaCmUQimfRnOJ87wDgoFlsAVBcFIyIOP/GHH1QS?=
- =?us-ascii?Q?Nh19xnB6K+cI9Tsv4uhfzFrWylEwgte9VRFs/fQwcSrxxNh2CaqZFgDEzmbF?=
- =?us-ascii?Q?v/HIHjhFBue50qNKNCIiW5kxPtXdAQcGoX9XFmGFNpsyZ5XkXFG08V9FPm45?=
- =?us-ascii?Q?uiDYebOdAIRMEf/WPePZsoxg48YC1PqqmLpje19YAO7E20olXsB0esghch8r?=
- =?us-ascii?Q?mv9U7V9wTzZNlNiPAQhlz+2fi7pNi2criPaQyeymh/ZsMwD6W2z03u+YdmsC?=
- =?us-ascii?Q?MguUww7OrJJk9fNEDpAbVErCopZQ2iCeSzHQ44hQW5G0j/UrjLWF7mF7PaaP?=
- =?us-ascii?Q?ourdc5JqqZE9ihdH49qe0uGiDCinuftMwKUIrs3RcqTr0QAbdN2oyYjP6w8n?=
- =?us-ascii?Q?M/jv4EXazDbh1H6WBvGKggXMnnfQ0lmoT+k0YXqEtUdPViP1d3JrbTdzfoXO?=
- =?us-ascii?Q?xvFjzWfR2mSjVS75sCFSRJWp0mMDi4CZoc690P1EGpSgA5q13snDjP8cu88f?=
- =?us-ascii?Q?X9iZeZJexw1VIs459RGfc18Hqigrmfr6wWU1yKCGv3fzZ39rtpFUGLWtf2yj?=
- =?us-ascii?Q?N8R8wmyM9KwLVMmFA6uZRUKOq772TpXHhzEgaf35VKLiKfSGFTJXlVgpraMr?=
- =?us-ascii?Q?4amkdsROQktpqzwvwjS0CK+2X8L4knS+sgGU9vH59g9wzVQcYJJO7kS7w2VE?=
- =?us-ascii?Q?5cHtd91WM/NvfSywENiB7CZYyWd0K0WOsQBjtpn4w64YZM15XQWW5LXSb8tO?=
- =?us-ascii?Q?3Rq0o0lfjxK/FgXlK3AwtIGkPiG8uOQv?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(52116014)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?jHdGbNtvAWvyxNMoMm1vBZis5N8NbqESZaxXW0fpAo6SRNowgX10S49qGhYe?=
- =?us-ascii?Q?gHSPjftqV0Hb5VVjwVzUO1+uVyoJvTzEFKTmfKrN7golpAEYXDNh5/V8YMyL?=
- =?us-ascii?Q?JyCAkJfQCbjmxu+KiJiN6ooDrphh+Cy8C8LbejUsTx0R/026Y5+3DfgfmfYE?=
- =?us-ascii?Q?aIAj+vRPJhbisvvrAFrRcpfE3vm8dob5hi9Ej+muNFDBOLowSEWgtG1apJto?=
- =?us-ascii?Q?2VzTWHqg42z46HfblWZwbmqUbFgipMtN5B0H/eRUgtW4XiAdenaVsFk4lByl?=
- =?us-ascii?Q?yQU2PqKhEqPcka0vowz6fWF+7eKP7ZoMGVSLJLM2SEdead/UQkSxH4lQnJM0?=
- =?us-ascii?Q?gxD66X8HIGIZWPNpmzmSVOHw6yQNmpJPs66B5970XJwJocWnKkaJNWGbT5Mf?=
- =?us-ascii?Q?rvGJGmOqS/bKbJBZYj6Wtpe8rSxTu+Xulr37hpda2rHbSQNdJlDOdKYfZEbG?=
- =?us-ascii?Q?k4ev4P9n5RLjhwYNrC/dSLGiAGzehS5DJrNasOW0IWoKMj9f2DgRWJjjsXR1?=
- =?us-ascii?Q?Yc3p3EECKjzubv+1TWF26rqlc/45y/ZHE9EtK7vJtDRygkyDRapURxpsHoM4?=
- =?us-ascii?Q?WkQdpnyxnclyFAqWid8fbxWYFleITo79PiDbHQRGfFjuiqO+Dhh6ZhTpoyD8?=
- =?us-ascii?Q?mtdiF01iTeeCdYQewCmxopZSTiZQnbhX133iCHfxel8eZT7Ymsd5J7GHXHxv?=
- =?us-ascii?Q?VIVP4PodH/yhQAd4piW2H5NCZ1N14ZQqIloxShuncbaAwD0XYZltbo6zQfqv?=
- =?us-ascii?Q?fSmNnQDXqKyLnFjRvGJoIhdHh/j84MZzLOT6yePCKpPxUiKkSE86v0weRNxq?=
- =?us-ascii?Q?DXroJMToADiAXPWEhnjygza/d//UmU1rsgzTCu3s6cJ+Fq3txycE5t/N0ov9?=
- =?us-ascii?Q?Vlnm749sHcZBdis59V4E4y5BUtwHUAltCJmE2wZ22TB+INazf1y6TjALNXwk?=
- =?us-ascii?Q?A5ww9U+WcvFmfsEDK3Q0edKLSLyBKSZeLCp3mmRYDqWH2+3O7PigIc/XhIh9?=
- =?us-ascii?Q?UilfbbfX0d/iwoLJTdhsAvbDC1LVdDE5iBXcD2xVOCGfWV+Xh7eVjVenLsjG?=
- =?us-ascii?Q?u/iYKdD/o/Zit8o/Hv/pB8rTWR4DpVbtPQP/qqC0Ag0cfFMGrQqFkk3gtF1z?=
- =?us-ascii?Q?qnppSifxh+3ZHh1y6O4JefEEPB6RW/UreIuOw1h/0rwQK3mvEGfQrwqyluq1?=
- =?us-ascii?Q?tW2+T5NJaYM1ceQp/3W8aRpmzxsfq15Azr8tgGc82ItJkYOU19+S+IuLNDqk?=
- =?us-ascii?Q?m1Szdmm053HGu9/+mdepzLhbQEOw4S2ZiBc8RVCsjco9zS+FD9hlF6K42dyY?=
- =?us-ascii?Q?eT/7eI3LWZBRBaCgi9fs8zfhCNT30IvxN2/do4KOBJ+LHX6oksjIjCY5OtSg?=
- =?us-ascii?Q?gFZS822rIXYZEGVcO8t9BYKUXZ+VlRK1cAtzZwW++zJ1A4BetqHbJqKcTseK?=
- =?us-ascii?Q?Gb/kgk6bMcLEkw4ITe/c6kn97S+pOcldvxJkwQXtJWWJAXVep8y3SkAkLQL2?=
- =?us-ascii?Q?/tmqQ/Oc1SLRbNMGipbvfRJFrAzP2aw1noIoPIXu7uX13C68m1efsr4nEZJM?=
- =?us-ascii?Q?XPeym6p4lhlxo6uqAm4=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e54c724c-fe56-4c93-cba8-08dd712acff2
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Apr 2025 14:38:05.0413
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: uZjJDUcbFIw0v5fxtyVUkOWiqGZ5jDmeClagu99WrMySfFZ3axhIy/K4VW27GU0Uevyzf4ZRYqiYAYZkG9GczA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR04MB7190
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 4/4] clk: thead: Add GPU clock gate control with
+ CLKGEN reset support
+To: Ulf Hansson <ulf.hansson@linaro.org>, Stephen Boyd <sboyd@kernel.org>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, alex@ghiti.fr,
+	aou@eecs.berkeley.edu, conor+dt@kernel.org, drew@pdp7.com,
+	guoren@kernel.org, jszhang@kernel.org, krzk+dt@kernel.org,
+	m.szyprowski@samsung.com, mturquette@baylibre.com, palmer@dabbelt.com,
+	paul.walmsley@sifive.com, robh@kernel.org, wefu@redhat.com,
+	linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-pm@vger.kernel.org
+Content-Language: en-US
+From: Michal Wilczynski <m.wilczynski@samsung.com>
+In-Reply-To: <CAPDyKFqsJaTrF0tBSY-TjpqdVt5=6aPQHYfnDebtphfRZSU=-Q@mail.gmail.com>
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmplk+LIzCtJLcpLzFFi42LZduzned3wX6/TDfbPZ7R4ducrq8XW37PY
+	LdbsPcdkMf/IOVaLe5e2MFm82NvIYtF8bD2bxctZ99gsPvbcY7W4vGsOm8Xn3iOMFts+t7BZ
+	rD1yl93i4ilXi7v3TrBYvLzcw2zRNovf4v+eHewW/65tZLE4vjbcomX/FBYHUY/3N1rZPd68
+	fMnicbjjC7vHvRPTWD02repk87hzbQ+bx+Yl9R4ta48xefT/NfB4v+8qm0ffllWMHpear7N7
+	fN4kF8AbxWWTkpqTWZZapG+XwJVxa/5J5oJp3hXde7+zNTC+seli5OSQEDCRuPVjNguILSSw
+	glFi6i3FLkYuIPsLo8Tho3OZIZzPjBI/mxawwnR8Xt7CCJFYziix4N5pVgjnLaPE8o0HmUCq
+	eAXsJG6/W8YGYrMIqEjc+3KZGSIuKHFy5hOwfaIC8hL3b81gB7GFBeIkbmw7CdYrIuApMeN6
+	IyOIzSxwgVni9HUDCFtc4taT+WA1bAJGEg+Wzwe7iFMgUOLsiTVMEDXyEtvfzgE7W0LgH6fE
+	1a5bbBBnu0jMXfIByhaWeHV8CzuELSNxenIPC4SdL/Fg6ydmCLtGYmfPcSjbWuLOuV9AvRxA
+	CzQl1u/Shwg7Sjx+vZ8RJCwhwCdx460gxAl8EpO2TWeGCPNKdLQJQVSrSUzt6YVbem7FNqYJ
+	jEqzkAJlFpInZyF5ZhbC3gWMLKsYxVNLi3PTU4uN81LL9YoTc4tL89L1kvNzNzECU+rpf8e/
+	7mBc8eqj3iFGJg7GQ4wSHMxKIrwRX1+mC/GmJFZWpRblxxeV5qQWH2KU5mBREuddtL81XUgg
+	PbEkNTs1tSC1CCbLxMEp1cBUMEPn+y3++3N+Pb/U7WERVR318gBHyux3dnO3inDvmRjM1pK0
+	642pMt9K73XrVum1TqtLsmtIc+Z0mxmWtHUa891vT66LPHJp9xe7ZuLW8W7CGt4bs62zEm//
+	ZfUOVqw/E/51+uaHiYzJDAHrHsxrnusd/MYtNHBjY9rzZcrWBx0W5ai7PvPTM2Mx0Kkti+Re
+	YsrSylVSVKxy9MAOLdZWu+C1tj7Rmq/eF6u12FW3L3sxd+eWubfLgmYe17+nUMMoUXJMqX6F
+	y4vw2YvlFa7sl3LynTZVRuaopNfWvJeZms4VTJNlixe/PLvJ2ztE8Pm2q4s8Alq4yjv+hf+q
+	mVtz32RnI6OmOOvPZrtrPkosxRmJhlrMRcWJAA892kQYBAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprJKsWRmVeSWpSXmKPExsVy+t/xu7phv16nG/xqZrd4ducrq8XW37PY
+	LdbsPcdkMf/IOVaLe5e2MFm82NvIYtF8bD2bxctZ99gsPvbcY7W4vGsOm8Xn3iOMFts+t7BZ
+	rD1yl93i4ilXi7v3TrBYvLzcw2zRNovf4v+eHewW/65tZLE4vjbcomX/FBYHUY/3N1rZPd68
+	fMnicbjjC7vHvRPTWD02repk87hzbQ+bx+Yl9R4ta48xefT/NfB4v+8qm0ffllWMHpear7N7
+	fN4kF8AbpWdTlF9akqqQkV9cYqsUbWhhpGdoaaFnZGKpZ2hsHmtlZKqkb2eTkpqTWZZapG+X
+	oJdxa/5J5oJp3hXde7+zNTC+seli5OSQEDCR+Ly8hbGLkYtDSGApo8SM5wvZIRIyEte6X7JA
+	2MISf651sUEUvWaUOND8nBkkwStgJ3H73TI2EJtFQEXi3pfLUHFBiZMzn4A1iwrIS9y/NQNs
+	qLBAnMT5XatYQWwRAU+JGdcbwTYzC1xgluj/fZAdYsMCFonOM6/BpjILiEvcejKfCcRmEzCS
+	eLB8Plg3p0CgxNkTa4DiHEA16hLr5wlBlMtLbH87h3kCo9AsJHfMQjJpFkLHLCQdCxhZVjGK
+	pJYW56bnFhvpFSfmFpfmpesl5+duYgSmkW3Hfm7Zwbjy1Ue9Q4xMHIyHGCU4mJVEeCO+vkwX
+	4k1JrKxKLcqPLyrNSS0+xGgKDIuJzFKiyfnARJZXEm9oZmBqaGJmaWBqaWasJM7LduV8mpBA
+	emJJanZqakFqEUwfEwenVAPT1jul+/gW/Rf7IL5naurypLvr2E/LXOa9b3Dh3N9+htuXD7+f
+	O89J8abB1uzCjQ1OTa0zO2ddylV+VO1W8nLJ+rD9y6vMxMtnme10t9S67h17LJazciXb1FRe
+	f+MpGw2vKIt9E7iVfGK/1oP7K9m2bv+37B/L2TsXDZWmrylW5t01t/uYaKy4nN5Wx9fK7ycZ
+	LhfosrjbtyRnxYMH63MOiYQLF17eKlGTOe1S44P107VtSy6y7NjbE7D7y3+j7uMb7118c2fN
+	9ik5rZyKvEt/+t4xOfn+9C2PG+JZ0+PWiHOLf9v+sLLARPvEdD1Tje0V+7bdPHHnyNen8pM3
+	fjhiv/o3e/uquPunjvcLvzHsnjlTiaU4I9FQi7moOBEAqbDea6wDAAA=
+X-CMS-MailID: 20250401143814eucas1p16a2149cfa8a89e060d396fa283742765
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20250303143637eucas1p1a3abdea520ab88688de1263a5f07bba0
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20250303143637eucas1p1a3abdea520ab88688de1263a5f07bba0
+References: <20250303143629.400583-1-m.wilczynski@samsung.com>
+	<CGME20250303143637eucas1p1a3abdea520ab88688de1263a5f07bba0@eucas1p1.samsung.com>
+	<20250303143629.400583-5-m.wilczynski@samsung.com>
+	<de50dd55e1285726e8d5ebae73877486.sboyd@kernel.org>
+	<4c035603-4c11-4e71-8ef3-b857a81bf5ef@samsung.com>
+	<aacd03a071dce7b340d7170eae59d662d58f23b1.camel@pengutronix.de>
+	<e90a0c77-61a0-49db-86ba-bac253f8ec53@samsung.com>
+	<38d9650fc11a674c8b689d6bab937acf@kernel.org>
+	<CAPDyKFqsJaTrF0tBSY-TjpqdVt5=6aPQHYfnDebtphfRZSU=-Q@mail.gmail.com>
 
-On Tue, Apr 01, 2025 at 11:17:36AM +0800, Ming Qian(OSS) wrote:
->
-> Hi Frank,
->
-> On 2025/3/31 22:32, Frank Li wrote:
-> > On Mon, Mar 31, 2025 at 11:10:20AM +0800, Ming Qian(OSS) wrote:
-> > >
-> > > Hi Frank,
-> > >
-> > > On 2025/3/28 22:45, Frank Li wrote:
-> > > > On Fri, Mar 28, 2025 at 02:30:52PM +0800, ming.qian@oss.nxp.com wrote:
-> > > > > From: Ming Qian <ming.qian@oss.nxp.com>
-> > > > >
-> > > > > To support decoding motion-jpeg without DHT, driver will try to decode a
-> > > > > pattern jpeg before actual jpeg frame by use of linked descriptors
-> > > > > (This is called "repeat mode"), then the DHT in the pattern jpeg can be
-> > > > > used for decoding the motion-jpeg.
-> > > > >
-> > > > > In other words, 2 frame done interrupts will be triggered, driver will
-> > > > > ignore the first interrupt,
-> > > >
-> > > > Does any field in linked descriptors to control if issue irq? Generally
-> > > > you needn't enable first descriptors's irq and only enable second one.
-> > > >
-> > >
-> > > Unfortunately, we cannot configure interrupts for each descriptor.
-> > > So we can't only enable the second irq.
-> > >
-> > >
-> > > > > and wait for the second interrupt.
-> > > > > If the resolution is small, and the 2 interrupts may be too close,
-> > > >
-> > > > It also possible two irqs combine to 1 irqs. If I understand correct, your
-> > > > irq handle only handle one descriptors per irq.
-> > > >
-> > > > Another words,
-> > > >
-> > > > If second irq already happen just before 1,
-> > > >
-> > > > 1. dec_ret = readl(reg + MXC_SLOT_OFFSET(slot, SLOT_STATUS));
-> > > > 2. writel(dec_ret, reg + MXC_SLOT_OFFSET(slot, SLOT_STATUS)); /* w1c */
-> > > >
-> > > > Does your driver wait forever because no second irq happen?
-> > > >
-> > > > Frank
-> > >
-> > > Before this patch, the answer is yes, the driver will wait 2 seconds
-> > > until timeout.
-> > > In fact, this is the problem that this patch wants to avoid.
-> > > Now I think there are 3 cases for motion-jpeg decoding:
-> > > 1. The second irq happens before the first irq status check, the on-going
-> > > check
-> > > help to hanle this case.
-> > > 2. The second irq happens after the first irq status check, but before
-> > > on-going check, this on-going check can help handle it, fisnish the
-> > > current decoding and reset the jpeg decoder.
-> > > 3. The second irq happens after the on-going check, this is the normal
-> > > process before. No additional processing required.
-> >
-> > Okay, not sure if hardware provide current_descript position. Generally
-> > descriptor queue irq handle is like
-> >
-> > cur = queue_header;
-> > while(cur != read_hardware_currunt_pos())
-> > {
-> > 	handle(cur);
-> > 	cur = cur->next;
-> > 	queue_header = cur;
-> > }
-> >
-> > with above logic, even you queue new request during irq handler, it should
-> > work correctly.
-> >
-> > But it is depend on if hardware can indicate current working queue
-> > position, some time, hardware stop last queue posistion when handle last
-> > one.
-> >
-> > Frank
-> >
->
-> I think it doesn't matter, the 2 descriptors are the cfg descriptor and
-> then the image descriptor.
-> If the current descriptor register remains the last image descriptor,
-> the ongoing check works.
->
-> And I guess your concern is as below.
-> If the current descriptor register is still the cfg descriptor, but the
-> hardware has finished decoding the next image descriptor.
->
-> I confirmed with our hardware engineer. This can't happen.
-> The first cfg decriptor has a next_descpt_ptr that is pointing to the
-> image descriptor, when the hardware read tne next_descpt_ptr, the
-> current descriptor register is updated, before the actual decoding.
 
-Maybe off topic,
 
-CFG->next = Image
+On 3/26/25 12:24, Ulf Hansson wrote:
+> On Tue, 25 Mar 2025 at 23:40, Stephen Boyd <sboyd@kernel.org> wrote:
+>>
+>> Quoting Michal Wilczynski (2025-03-19 02:22:11)
+>>>
+>>>
+>>> On 3/13/25 10:25, Philipp Zabel wrote:
+>>>> On Do, 2025-03-06 at 17:43 +0100, Michal Wilczynski wrote:
+>>>>>
+>>>>> On 3/6/25 00:47, Stephen Boyd wrote:
+>>>>>> Quoting Michal Wilczynski (2025-03-03 06:36:29)
+>>>>>>> The T-HEAD TH1520 has three GPU clocks: core, cfg, and mem. The mem
+>>>>>>> clock gate is marked as "Reserved" in hardware, while core and cfg are
+>>>>>>> configurable. In order for these clock gates to work properly, the
+>>>>>>> CLKGEN reset must be managed in a specific sequence.
+>>>>>>>
+>>>>>>> Move the CLKGEN reset handling to the clock driver since it's
+>>>>>>> fundamentally a clock-related workaround [1]. This ensures that clk_enabled
+>>>>>>> GPU clocks stay physically enabled without external interference from
+>>>>>>> the reset driver.  The reset is now deasserted only when both core and
+>>>>>>> cfg clocks are enabled, and asserted when either of them is disabled.
+>>>>>>>
+>>>>>>> The mem clock is configured to use nop operations since it cannot be
+>>>>>>> controlled.
+>>>>>>>
+>>>>>>> Link: https://lore.kernel.org/all/945fb7e913a9c3dcb40697328b7e9842b75fea5c.camel@pengutronix.de [1]
+>>>>>>>
+>>>>>>> Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
+>>>>>> [...]
+>>>>>>> diff --git a/drivers/clk/thead/clk-th1520-ap.c b/drivers/clk/thead/clk-th1520-ap.c
+>>>>>>> index ea96d007aecd..1dfcde867233 100644
+>>>>>>> --- a/drivers/clk/thead/clk-th1520-ap.c
+>>>>>>> +++ b/drivers/clk/thead/clk-th1520-ap.c
+>>>>>>> @@ -862,17 +863,70 @@ static CCU_GATE(CLK_SRAM1, sram1_clk, "sram1", axi_aclk_pd, 0x20c, BIT(3), 0);
+>>>>>> [...]
+>>>>>>>
+>>>>>>>  static CCU_GATE_CLK_OPS(CLK_GPU_MEM, gpu_mem_clk, "gpu-mem-clk",
+>>>>>>>                         video_pll_clk_pd, 0x0, BIT(2), 0, clk_nop_ops);
+>>>>>>> +static CCU_GATE_CLK_OPS(CLK_GPU_CORE, gpu_core_clk, "gpu-core-clk",
+>>>>>>> +                       video_pll_clk_pd, 0x0, BIT(3), 0, ccu_gate_gpu_ops);
+>>>>>>> +static CCU_GATE_CLK_OPS(CLK_GPU_CFG_ACLK, gpu_cfg_aclk, "gpu-cfg-aclk",
+>>>>>>> +                       video_pll_clk_pd, 0x0, BIT(4), 0, ccu_gate_gpu_ops);
+>>>>>>> +
+>>>>>>> +static void ccu_gpu_clk_disable(struct clk_hw *hw)
+>>>>>>> +{
+>>>>>>> +       struct ccu_gate *cg = hw_to_ccu_gate(hw);
+>>>>>>> +       unsigned long flags;
+>>>>>>> +
+>>>>>>> +       spin_lock_irqsave(&gpu_reset_lock, flags);
+>>>>>>> +
+>>>>>>> +       ccu_disable_helper(&cg->common, cg->enable);
+>>>>>>> +
+>>>>>>> +       if ((cg == &gpu_core_clk &&
+>>>>>>> +            !clk_hw_is_enabled(&gpu_cfg_aclk.common.hw)) ||
+>>>>>>> +           (cg == &gpu_cfg_aclk &&
+>>>>>>> +            !clk_hw_is_enabled(&gpu_core_clk.common.hw)))
+>>>>>>> +               reset_control_assert(gpu_reset);
+>>>>>>
+>>>>>> Why can't the clk consumer control the reset itself? Doing this here is
+>>>>>> not ideal because we hold the clk lock when we try to grab the reset
+>>>>>> lock. These are all spinlocks that should be small in lines of code
+>>>>>> where the lock is held, but we're calling into an entire other framework
+>>>>>> under a spinlock. If an (unrelated) reset driver tries to grab the clk
+>>>>>> lock it will deadlock.
+>>>>>
+>>>>> So in our case the clk consumer is the drm/imagination driver. Here is
+>>>>> the comment from the maintainer for my previous attempt to use a reset
+>>>>> driver to abstract the GPU init sequence [1]:
+>>>>>
+>>>>> "Do you know what this resets? From our side, the GPU only has a single
+>>>>> reset line (which I assume to be GPU_RESET)."
+>>>>>
+>>>>> "I don't love that this procedure appears in the platform reset driver.
+>>>>> I appreciate it may not be clear from the SoC TRM, but this is the
+>>>>> standard reset procedure for all IMG Rogue GPUs. The currently
+>>>>> supported TI SoC handles this in silicon, when power up/down requests
+>>>>> are sent so we never needed to encode it in the driver before.
+>>>>>
+>>>>> Strictly speaking, the 32 cycle delay is required between power and
+>>>>> clocks being enabled and the reset line being deasserted. If nothing
+>>>>> here touches power or clocks (which I don't think it should), the delay
+>>>>> could potentially be lifted to the GPU driver."
+>>>>>
+>>>>> From the drm/imagination maintainers point of view their hardware has
+>>>>> only one reset, the extra CLKGEN reset is SoC specific.
+>>>>
+>>>> If I am understanding correctly, the CLKGEN reset doesn't reset
+>>>> anything in the GPU itself, but holds the GPU clock generator block in
+>>>> reset, effectively disabling the three GPU clocks as a workaround for
+>>>> the always-ungated GPU_MEM clock.
+>>>>
+>>>>> Also the reset driver maintainer didn't like my way of abstracting two
+>>>>> resets ("GPU" and and SoC specific"CLKGEN") into one reset
+>>>>
+>>>> That is one part of it. The other is that (according to my
+>>>> understanding as laid out above), the combined GPU+CLKGEN reset would
+>>>> effectively disable all three GPU clocks for a while, after the GPU
+>>>> driver has already requested them to be enabled.
+>>>
+>>> Thank you for your comments Philipp, it seems like we're on the same
+>>> page here. I was wondering whether there is anything I can do to move the
+>>> patches forward.
+>>>
+>>> Stephen, if the current patch is a no go from your perspective could you
+>>> please advise whether there is a way to solve this in a clock that would
+>>> be acceptable to you.
+>>
+>> It looks like the SoC glue makes the interactions between the clk and
+>> reset frameworks complicated because GPU clks don't work if a reset is
+>> asserted. You're trying to find a place to coordinate the clk and reset.
+>> Am I right?
+>>
+>> I'd advise managing the clks and resets in a generic power domain that
+>> is attached to the GPU device. In that power domain, coordinate the clk
+>> and reset sequencing so that the reset is deasserted before the clks are
+>> enabled (or whatever the actual requirement is). If the GPU driver
+>> _must_ have a clk and reset pointer to use, implement one that either
+>> does nothing or flag to the GPU driver that the power domain is managing
+>> all this for it so it should just use runtime PM and system PM hooks to
+>> turn on the clks and take the GPU out of reset.
+>>
+>> From what I can tell, the GPU driver maintainer doesn't want to think
+>> about the wrapper that likely got placed around the hardware block
+>> shipped by IMG. This wrapper is the SoC glue that needs to go into a
+>> generic power domain so that the different PM resources, reset, clk,
+>> etc. can be coordinated based on the GPU device's power state. It's
+>> either that, or go the dwc3 route and have SoC glue platform drivers
+>> that manage this stuff and create a child device to represent the hard
+>> macro shipped by the vendor like Synopsys/Imagination. Doing the parent
+>> device design isn't as flexible as PM domains because you can only have
+>> one parent device and the child device state can be ignored vs. many PM
+>> domains attached in a graph to a device that are more directly
+>> influenced by the device using runtime PM.
+>>
+>> Maybe you'll be heartened to know this problem isn't unique and has
+>> existed for decades :) I don't know what state the graphics driver is in
+>> but they'll likely be interested in solving this problem in a way that
+>> doesn't "pollute" their driver with SoC specific details. It's all a
+>> question of where you put the code. The reset framework wants to focus
+>> on resets, the clk framework wants to focus on clks, and the graphics
+>> driver wants to focus on graphics. BTW, we went through a similar
+>> discussion with regulators and clks years ago and ended up handling that
+>> with OPPs and power domains.
+> 
+> Right, power-domain providers are mostly implementing SoC specific code.
+> 
+> In some cases, power-domain providers also handle per device SoC
+> specific constraints/sequences, which seems what you are discussing
+> here. For that, genpd has a couple of callbacks that could be
+> interesting to have a look at, such as:
+> 
+> genpd->attach|detach_dev() - for probe/remove
+> genpd.dev_ops->start|stop() - for runtime/system PM
+> 
+> That said, maybe just using the regular genpd->power_on|off() callback
+> is sufficient here, depending on how you decide to model things.
 
-Image->next = NULL;
 
-If hardware finish image descriptior, current descriptor is 'Image' or 'NULL'
+Thanks Stephen, Ulf !
 
-If it is 'Image', need extra status bit show 'done'
+So the way forward I see:
 
-1:	slot_status = readl(jpeg->base_reg + MXC_SLOT_OFFSET(ctx->slot, SLOT_STATUS));
+1) The reset driver can be merged as-is, if Philipp is fine with this
+code [2].
+2) I will cook up the update to the thead power-domain driver which will
+handle reset and clock management.
+3) I think it would be best to convince the drm/imagination maintainers to
+make the clock management in their consumer driver optional. This way if
+there is a SoC specific sequence the clocks/resets will be managed from
+generic PM driver which is SoC specific. Will talk to them.
+4) Will remove the reset management from this series, and re-send.
 
-I suppose it should be DONE status if just finish CFG description.
+[2] - https://lore.kernel.org/all/4205b786-fb65-468c-a3d8-bce807dd829a@samsung.com/
+> 
+>>
+>> I believe a PM domain is the right place for this kind of stuff, and I
+>> actually presented on this topic at OSSEU[1], but I don't maintain that
+>> code. Ulf does.
+>>
+>> [1] https://osseu2024.sched.com/event/1ej38/the-case-for-an-soc-power-management-driver-stephen-boyd-google
 
-2: 	curr_desc = readl(jpeg->base_reg + MXC_SLOT_OFFSET(ctx->slot, SLOT_CUR_DESCPT_PTR));
+Thanks ! Watched the presentation, very interesting. Hopefully I'll be
+able to attend in person in Amsterdam this year if you're presenting :-)
 
-It is possible curr_desc already was 'Image' after 1.
-
- if (curr_desc == jpeg->slot_data.cfg_desc_handle)  //not hit this
-        return true;
-
- if (slot_status & SLOT_STATUS_ONGOING)  // not hit this
-        return true;
-
-fake false may return.
-
-check two aync condition "slot_status" and "curr_desc" always be risk. But
-I don't know what's happen if fake false return here.
-
-for this type check
-	do {
-		slot_status = readl();
-		curr_desc = readl();
-	} while (slot_status != read());
-
-to make sure slot_status and cur_desc indicate the hardware status
-correctly.
-
-Frank
->
-> Thanks,
-> Ming
->
-> > >
-> > > Thanks,
-> > > Ming
-> > >
-> > > > >
-> > > > > when driver is handling the first interrupt, two frames are done, then
-> > > > > driver will fail to wait for the second interrupt.
-> > > > >
-> > > > > In such case, driver can check whether the decoding is still ongoing,
-> > > > > if not, just done the current decoding.
-> > > > >
-> > > > > Signed-off-by: Ming Qian <ming.qian@oss.nxp.com>
-> > > > > ---
-> > > > >    .../media/platform/nxp/imx-jpeg/mxc-jpeg-hw.h |  1 +
-> > > > >    .../media/platform/nxp/imx-jpeg/mxc-jpeg.c    | 20 ++++++++++++++++++-
-> > > > >    2 files changed, 20 insertions(+), 1 deletion(-)
-> > > > >
-> > > > > diff --git a/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg-hw.h b/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg-hw.h
-> > > > > index d579c804b047..adb93e977be9 100644
-> > > > > --- a/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg-hw.h
-> > > > > +++ b/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg-hw.h
-> > > > > @@ -89,6 +89,7 @@
-> > > > >    /* SLOT_STATUS fields for slots 0..3 */
-> > > > >    #define SLOT_STATUS_FRMDONE			(0x1 << 3)
-> > > > >    #define SLOT_STATUS_ENC_CONFIG_ERR		(0x1 << 8)
-> > > > > +#define SLOT_STATUS_ONGOING			(0x1 << 31)
-> > > > >
-> > > > >    /* SLOT_IRQ_EN fields TBD */
-> > > > >
-> > > > > diff --git a/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c b/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c
-> > > > > index 45705c606769..e6bb45633a19 100644
-> > > > > --- a/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c
-> > > > > +++ b/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c
-> > > > > @@ -910,6 +910,23 @@ static u32 mxc_jpeg_get_plane_size(struct mxc_jpeg_q_data *q_data, u32 plane_no)
-> > > > >    	return size;
-> > > > >    }
-> > > > >
-> > > > > +static bool mxc_dec_is_ongoing(struct mxc_jpeg_ctx *ctx)
-> > > > > +{
-> > > > > +	struct mxc_jpeg_dev *jpeg = ctx->mxc_jpeg;
-> > > > > +	u32 curr_desc;
-> > > > > +	u32 slot_status;
-> > > > > +
-> > > > > +	slot_status = readl(jpeg->base_reg + MXC_SLOT_OFFSET(ctx->slot, SLOT_STATUS));
-> > > > > +	curr_desc = readl(jpeg->base_reg + MXC_SLOT_OFFSET(ctx->slot, SLOT_CUR_DESCPT_PTR));
-> > > > > +
-> > > > > +	if (curr_desc == jpeg->slot_data.cfg_desc_handle)
-> > > > > +		return true;
-> > > > > +	if (slot_status & SLOT_STATUS_ONGOING)
-> > > > > +		return true;
-> > > > > +
-> > > > > +	return false;
-> > > > > +}
-> > > > > +
-> > > > >    static irqreturn_t mxc_jpeg_dec_irq(int irq, void *priv)
-> > > > >    {
-> > > > >    	struct mxc_jpeg_dev *jpeg = priv;
-> > > > > @@ -979,7 +996,8 @@ static irqreturn_t mxc_jpeg_dec_irq(int irq, void *priv)
-> > > > >    		mxc_jpeg_enc_mode_go(dev, reg, mxc_jpeg_is_extended_sequential(q_data->fmt));
-> > > > >    		goto job_unlock;
-> > > > >    	}
-> > > > > -	if (jpeg->mode == MXC_JPEG_DECODE && jpeg_src_buf->dht_needed) {
-> > > > > +	if (jpeg->mode == MXC_JPEG_DECODE && jpeg_src_buf->dht_needed &&
-> > > > > +	    mxc_dec_is_ongoing(ctx)) {
-> > > > >    		jpeg_src_buf->dht_needed = false;
-> > > > >    		dev_dbg(dev, "Decoder DHT cfg finished. Start decoding...\n");
-> > > > >    		goto job_unlock;
-> > > > > --
-> > > > > 2.43.0-rc1
-> > > > >
+> 
+> Kind regards
+> Uffe
+> 
