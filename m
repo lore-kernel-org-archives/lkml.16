@@ -1,248 +1,90 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E8C41EF378
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 22:38:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B9951EF378;
+	Tue,  1 Apr 2025 22:39:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743547103; cv=none; b=ZXSQv+/7VeDWWo6tM0FxhUgcISXvwcD00YI3EtvkXbO8bIXMbgh4ZiR6kZkazL4tWa/P0riX5YountjWl9ZFDScrJqnNmfWhTUIlpDqb0i9LbInYdG7oCxh3IilVipqmBf2DnczDbd35Tw+WjQS6yfasYKQDdpED0LI15UuEBjY=
+	t=1743547149; cv=none; b=MhAk70dtxrc585QDXtAl17+5IVy48JXuXVmTnzZ+4RGlgzckZeKtIQApfw+qiMqs1BRn8ltxPoT7GjzKxihD7m9ecwd50Y9qn6pdMM7RgQz4Y3EN5uodnYqpqplNSA4Eacujiu6B40TAKlfRF1JDGLFup9C+Nsn6wrZlfXri0SQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743547103; c=relaxed/simple;
-	bh=qv9gSESXk0WCzP1yor92KDuUKv6lJ/eUy3rSMxyb73M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SQh1f0/zPYD5fS7QtayLLvog7Dtk3dMg4wkWKOb9bdOqMpnt3DmJdmT6C1bUhU6S1pDGBHQu/Bf9sn8zBDcrV0gJUeDgplpSOhVkCZN9g95DYtlg+0tv6IikTDk/0Wvcmrq8lofZdtwXL2fK66TEnWoj0poPMpXtS4ogKmRMaVQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NISexrp6; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NISexrp6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743547100;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=C5PJKLi2OplBGTGIMXpZ53IzIo/Tz04cZeR9oJzwXFw=;
-	b=NISexrp6rGYP/Z3djlNw4Heo4sv2J/uYFNIkglJ7jI2aaDBhrGZ9ndvqCNabR8v3iWpSYK
-	oQXFtsPNobHgt3O/kI0tA+gn2moLj4HjxAa0iCzS5cGqwGTsNGCoQuQg4GOPxZOuEgN3Ij
-	WAHHqn0LUTC1rJc1haSwtG9Pldq701k=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-76-ABdGfMs-MA2gomLOoFS7Fw-1; Tue, 01 Apr 2025 18:38:18 -0400
-X-MC-Unique: ABdGfMs-MA2gomLOoFS7Fw-1
-X-Mimecast-MFC-AGG-ID: ABdGfMs-MA2gomLOoFS7Fw_1743547097
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43cf3168b87so33909075e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 15:38:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743547096; x=1744151896;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=C5PJKLi2OplBGTGIMXpZ53IzIo/Tz04cZeR9oJzwXFw=;
-        b=Q6ri06auEcvCsGp78f+zecju6/wVO63F07YxqjtjHkTq7nyixCLQ2+Lz/vEXD4ByUa
-         e4oJbkuVkksm90x3tVYwqxEFAPhK9T3ZLfnHBTnNKnGwnmxxr7kuXbtKpaQ8QdsmxZVl
-         KRpu1FQdwzR/0FYIl5f1PyLYQqm/Ncg/jhAdG/s0faBq/3CtX4MLqmaCkYjU5d0TjcYk
-         AKRm+ZT2y8IegNhSPZzrcTmEelMEVXli3u2t8rMU0NGwUb9YaqXw/+SBUGhp0dJ1WGlY
-         4kkNcvz22DuRiTtaHKNT+y/ExBeHw3x3prNm0d/Uwr3GaoovAXggDQEIC5yfQGJPn8nN
-         gLNQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWFWauaP9LizXb9pgKCze6Z8UP35Zf1yNbX7zxBxaAmpIJUj+m31AAKwUadrM/hVZyYBu5a3WnIBXhAgog=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyukt1naCbviHlbpGLgf1Ewj7xOpdze1NKydTtrb+AaaW27zsHe
-	DBT/9mc1CaG0oGyBdDwU9dIOh1DVENIrHtMw4ARNhNvEm6KC1ypy5eus1Puc4jEHQwvdn/DTPM2
-	tiNGF+1sa9+0FSzc9ojKznQ58BQbo6Mbry7QDU/Xe0yy1QyZGsC42AFFCyedyrmApUuTgcQ==
-X-Gm-Gg: ASbGnct2mGtJyw/Fa51YPxAftqM1BFBTZCBGYcfFK3ay5ASZ1hB0V9YoGEVVRTE9mgw
-	qSd1WRVtnvxzbr9OchYPXlyL3KO9K6O5KcIbj9g0cdLEiefJu/aZ4E/mDrth6ttPPijv8W00qKF
-	JIe5r+fU/BXzfb0X0kjActfJ5v9iT20NAF2q2uDkG9adNGUqmuH5rfIUXNiI7xV+vwd1HEAAOOn
-	CkMajnTgmDY9E3bZRPLQKCAnomVUiRN4rwKgLcp1olOih4FOlocKg4z3EkJn2a8BBV40CPQZW6l
-	7+L9+TiptXIAqMIXEiljD/rxbt+FP0jyT7oKG6o+N/xYe3P/3prVQa8=
-X-Received: by 2002:a05:600c:4e52:b0:43b:ca39:6c75 with SMTP id 5b1f17b1804b1-43ead8c33d6mr29300755e9.16.1743547096019;
-        Tue, 01 Apr 2025 15:38:16 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF+A9B3Z3i0+ExREjsKk6CLKNAI1PotfynRKX0NjYjl47QvaVyla0up+c3eNFCiXusT9Z7c5g==
-X-Received: by 2002:a05:600c:4e52:b0:43b:ca39:6c75 with SMTP id 5b1f17b1804b1-43ead8c33d6mr29300575e9.16.1743547095592;
-        Tue, 01 Apr 2025 15:38:15 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:c:37e0:ced3:55bd:f454:e722? ([2a01:e0a:c:37e0:ced3:55bd:f454:e722])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b7a4294sm14934785f8f.89.2025.04.01.15.38.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Apr 2025 15:38:14 -0700 (PDT)
-Message-ID: <4256338c-e547-4ec5-a72e-262d58f2a818@redhat.com>
-Date: Wed, 2 Apr 2025 00:38:13 +0200
+	s=arc-20240116; t=1743547149; c=relaxed/simple;
+	bh=NqRzgb6JFsUuvJzlcJNDZ1xbbYmmmTtYpnNszF7zWOY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=MQzbqEs6/jbGEj7o5IgWCCZLYRhnmK6rerzbp77a/PjZmCR9oOyTQeo3rUOKUD35UZ2+1VmzI1CphEXlKR7qDGBz2ROftu/4M91RNY5KRCYd/2bmu1PNgCjGUTBc6KwnZ80M8qexLEOPtirsUaHtqjox5DrsrZvPiqbgclbDcbw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EC94C4CEE4;
+	Tue,  1 Apr 2025 22:39:07 +0000 (UTC)
+Date: Tue, 1 Apr 2025 18:40:08 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Linus
+ Torvalds <torvalds@linux-foundation.org>, Mark Rutland
+ <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Vincent Donnefort
+ <vdonnefort@google.com>, Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport
+ <rppt@kernel.org>, Jann Horn <jannh@google.com>
+Subject: Re: [PATCH v4 2/4] tracing: Have reserve_mem use phys_to_virt() and
+ separate from memmap buffer
+Message-ID: <20250401184008.77ca9599@gandalf.local.home>
+In-Reply-To: <20250401181640.09bb0333@gandalf.local.home>
+References: <20250401215115.602501043@goodmis.org>
+	<20250401215333.427506494@goodmis.org>
+	<20250401181640.09bb0333@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 4/8] drm/i915/gem: Add i915_gem_object_panic_map()
-To: =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
-Cc: Jani Nikula <jani.nikula@linux.intel.com>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>,
- Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
- Tvrtko Ursulin <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, intel-gfx@lists.freedesktop.org,
- intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org
-References: <20250401125818.333033-1-jfalempe@redhat.com>
- <20250401125818.333033-5-jfalempe@redhat.com> <Z-wmxijRKQiZFyup@intel.com>
- <Z-wo9W5SnvVQDEDt@intel.com>
-Content-Language: en-US, fr
-From: Jocelyn Falempe <jfalempe@redhat.com>
-In-Reply-To: <Z-wo9W5SnvVQDEDt@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 01/04/2025 19:57, Ville Syrjälä wrote:
-> On Tue, Apr 01, 2025 at 08:47:50PM +0300, Ville Syrjälä wrote:
->> On Tue, Apr 01, 2025 at 02:51:10PM +0200, Jocelyn Falempe wrote:
->>> Prepare the work for drm_panic support. This is used to map the
->>> current framebuffer, so the CPU can overwrite it with the panic
->>> message.
->>>
->>> Signed-off-by: Jocelyn Falempe <jfalempe@redhat.com>
->>> ---
->>>
->>> v5:
->>>   * Use iosys_map for intel_bo_panic_map().
->>>
->>>   drivers/gpu/drm/i915/display/intel_bo.c    |  5 ++++
->>>   drivers/gpu/drm/i915/display/intel_bo.h    |  1 +
->>>   drivers/gpu/drm/i915/gem/i915_gem_object.h |  2 ++
->>>   drivers/gpu/drm/i915/gem/i915_gem_pages.c  | 29 ++++++++++++++++++++++
->>>   drivers/gpu/drm/xe/display/intel_bo.c      | 10 ++++++++
->>>   5 files changed, 47 insertions(+)
->>>
->>> diff --git a/drivers/gpu/drm/i915/display/intel_bo.c b/drivers/gpu/drm/i915/display/intel_bo.c
->>> index fbd16d7b58d9..ac904e9ec7d5 100644
->>> --- a/drivers/gpu/drm/i915/display/intel_bo.c
->>> +++ b/drivers/gpu/drm/i915/display/intel_bo.c
->>> @@ -57,3 +57,8 @@ void intel_bo_describe(struct seq_file *m, struct drm_gem_object *obj)
->>>   {
->>>   	i915_debugfs_describe_obj(m, to_intel_bo(obj));
->>>   }
->>> +
->>> +void intel_bo_panic_map(struct drm_gem_object *obj, struct iosys_map *map)
->>> +{
->>> +	i915_gem_object_panic_map(to_intel_bo(obj), map);
->>> +}
->>> diff --git a/drivers/gpu/drm/i915/display/intel_bo.h b/drivers/gpu/drm/i915/display/intel_bo.h
->>> index ea7a2253aaa5..5b6c63d99786 100644
->>> --- a/drivers/gpu/drm/i915/display/intel_bo.h
->>> +++ b/drivers/gpu/drm/i915/display/intel_bo.h
->>> @@ -23,5 +23,6 @@ struct intel_frontbuffer *intel_bo_set_frontbuffer(struct drm_gem_object *obj,
->>>   						   struct intel_frontbuffer *front);
->>>   
->>>   void intel_bo_describe(struct seq_file *m, struct drm_gem_object *obj);
->>> +void intel_bo_panic_map(struct drm_gem_object *obj, struct iosys_map *map);
->>>   
->>>   #endif /* __INTEL_BO__ */
->>> diff --git a/drivers/gpu/drm/i915/gem/i915_gem_object.h b/drivers/gpu/drm/i915/gem/i915_gem_object.h
->>> index a5f34542135c..b16092707ea5 100644
->>> --- a/drivers/gpu/drm/i915/gem/i915_gem_object.h
->>> +++ b/drivers/gpu/drm/i915/gem/i915_gem_object.h
->>> @@ -692,6 +692,8 @@ i915_gem_object_unpin_pages(struct drm_i915_gem_object *obj)
->>>   int __i915_gem_object_put_pages(struct drm_i915_gem_object *obj);
->>>   int i915_gem_object_truncate(struct drm_i915_gem_object *obj);
->>>   
->>> +void i915_gem_object_panic_map(struct drm_i915_gem_object *obj, struct iosys_map *map);
->>> +
->>>   /**
->>>    * i915_gem_object_pin_map - return a contiguous mapping of the entire object
->>>    * @obj: the object to map into kernel address space
->>> diff --git a/drivers/gpu/drm/i915/gem/i915_gem_pages.c b/drivers/gpu/drm/i915/gem/i915_gem_pages.c
->>> index 8780aa243105..718bea6474d7 100644
->>> --- a/drivers/gpu/drm/i915/gem/i915_gem_pages.c
->>> +++ b/drivers/gpu/drm/i915/gem/i915_gem_pages.c
->>> @@ -355,6 +355,35 @@ static void *i915_gem_object_map_pfn(struct drm_i915_gem_object *obj,
->>>   	return vaddr ?: ERR_PTR(-ENOMEM);
->>>   }
->>>   
->>> +/* Map the current framebuffer for CPU access. Called from panic handler, so no
->>> + * need to pin or cleanup.
->>> + */
->>> +void i915_gem_object_panic_map(struct drm_i915_gem_object *obj, struct iosys_map *map)
->>> +{
->>> +	enum i915_map_type has_type;
->>> +	void *ptr;
->>> +
->>> +	ptr = page_unpack_bits(obj->mm.mapping, &has_type);
->>> +
->>> +
->>> +	if (!ptr) {
->>> +		if (i915_gem_object_has_struct_page(obj))
->>> +			ptr = i915_gem_object_map_page(obj, I915_MAP_WB);
->>> +		else
->>> +			ptr = i915_gem_object_map_pfn(obj, I915_MAP_WB);
->>
->> WB mapping would require clflushing to make it to the display.
->> Is that being done somewhere?
+On Tue, 1 Apr 2025 18:16:40 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
+
+
+> Note, your patch to free the persistent ring buffer wasn't fully
+> functional, as it only did the "vunmap()". That doesn't return the buffer
+> back to the buddy allocator. What you saw was just the freeing of all the
+> other descriptors that make up a trace instance.
 > 
-> This also seems to have a bunch of race conditions:
-> - what happens if the oops happens before the pages have
->    even been swapped in?
-> - what happens if the oops happens before we've committed
->    the fb to the hardware?
+> Before this patch:
 > 
-
-The panic handler tries to take the panic_lock from the 
-device->mode_config, which should ensure we're not in the middle of a 
-page swap.
-
-https://elixir.bootlin.com/linux/v6.14-rc6/source/include/drm/drm_panic.h#L70
-
-https://elixir.bootlin.com/linux/v6.14-rc6/source/include/drm/drm_mode_config.h#L500
-
-If the lock is already taken when the panic handler run, it will skip 
-this device, and won't draw the panic screen on it.
-
-Best regards,
-
--- 
-
-Jocelyn
-
->>
->>> +
->>> +		if (IS_ERR(ptr))
->>> +			return;
->>
->> What happens when the mapping fails?
->>
->>> +
->>> +		obj->mm.mapping = page_pack_bits(ptr, I915_MAP_WB);
->>> +	}
->>> +
->>> +	if (i915_gem_object_has_iomem(obj))
->>> +		iosys_map_set_vaddr_iomem(map, (void __iomem *) ptr);
->>> +	else
->>> +		iosys_map_set_vaddr(map, ptr);
->>> +}
->>> +
->>>   /* get, pin, and map the pages of the object into kernel space */
->>>   void *i915_gem_object_pin_map(struct drm_i915_gem_object *obj,
->>>   			      enum i915_map_type type)
->>> diff --git a/drivers/gpu/drm/xe/display/intel_bo.c b/drivers/gpu/drm/xe/display/intel_bo.c
->>> index 27437c22bd70..c68166a64336 100644
->>> --- a/drivers/gpu/drm/xe/display/intel_bo.c
->>> +++ b/drivers/gpu/drm/xe/display/intel_bo.c
->>> @@ -59,3 +59,13 @@ void intel_bo_describe(struct seq_file *m, struct drm_gem_object *obj)
->>>   {
->>>   	/* FIXME */
->>>   }
->>> +
->>> +void intel_bo_panic_map(struct drm_gem_object *obj, struct iosys_map *map)
->>> +{
->>> +	struct xe_bo *bo = gem_to_xe_bo(obj);
->>> +	int ret;
->>> +
->>> +	ret = ttm_bo_vmap(&bo->ttm, map);
->>> +	if (ret)
->>> +		iosys_map_clear(map);
->>> +}
->>> -- 
->>> 2.49.0
->>
->> -- 
->> Ville Syrjälä
->> Intel
+>   ~# free
+>                  total        used        free      shared  buff/cache   available
+>   Mem:         8185908      297404     7825896         916      162288     7888504
+>   Swap:        7812092           0     7812092
+>   ~# rmdir /sys/kernel/tracing/instances/boot_mapped
+>   ~# free
+>                  total        used        free      shared  buff/cache   available
+>   Mem:         8206384      297956     7845904         916      162260     7908428
+>   Swap:        7812092           0     7812092
 > 
+> Amount freed: 7845904 - 7825896 = 20008 (20M)
+> 
+> After this patch:
+> 
+>   ~# free
+>                  total        used        free      shared  buff/cache   available
+>   Mem:         8185912      301808     7820696         920      162860     7884104
+>   Swap:        7812092           0     7812092
+>   ~# rmdir /sys/kernel/tracing/instances/boot_mapped
+>   ~# free
+>                  total        used        free      shared  buff/cache   available
+>   Mem:         8226868      295968     7867644         920      162836     7930900
+>   Swap:        7812092           0     7812092
+> 
+> Amount freed: 7867644 - 7820696 = 46948 (46M)!
 
+Bah! My patch is buggy. Yeah, your code released the memory properly, as you had:
+
+	reserve_mem_release_by_name()
+
+which does do free_reserve_area() on the memory mapping.
+
+Which means this patch is buggy and freed the same memory twice.
+
+OK, time for v5 to fix that :-p
+
+-- Steve
