@@ -1,49 +1,57 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA09D1519B8
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 07:58:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FA5A1519B8;
+	Tue,  1 Apr 2025 07:58:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743494323; cv=none; b=FAXy+KBvsHnIGmfDXd/Wpv5J1kwLgQJS8XeaFzChifsIGJcMbNueiYo+8T7cctZD4omgxGnVFCsxXR0O+vDlQorKW1yjiZXrxYcus7HCoQXKWx5YJcpCGWTQK7Gx2ukCZHT7PdjOnXtuK5dEipGgvTw2SyFfOBdX2v9DL70Tqj0=
+	t=1743494338; cv=none; b=Ss17pmMRswW/qSWn9lW+xQwN1Ryktx+yNef0OqCAYF2eqBSs4+gce2LF4a+OUumZSgiW0O1asopPGaCU8VUjJfqxC0jWoROfVfdhRdiv07NXjG4CUnaGSogVcc2I3njU0MFuy/PXV9t241QyH60/c4uSbmoCiTrQW/2cgA8BYY0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743494323; c=relaxed/simple;
-	bh=REaIDa2/g+mb0jn6qNUOAEAxiQQ4g/SSmeUfYmyFIJU=;
+	s=arc-20240116; t=1743494338; c=relaxed/simple;
+	bh=N0aOQujaXvl0WI/8gV+qMIDU5kNcN5JuX3zlJZZiu3Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LFaWwK9XJkH+UGOyyMHmjCUUxm639CGjKXw4LuFIp5PVMVBjVFuMZdXHdDyJy77uYjxvrj/wXCrj/69bnsAglQDPKQdkChexzUYXkuxhrRINKPp5TctQ+IxQ9OcCwe/W5dNZxjZeNE5Qg8+/dM70Te7wDbjfOQYZbjG/09XLvhk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=prt4HXO+; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=svHccCans8V/Cy5eLTYSZKb1T/2Hunno8OzQLp6uQ1uURmjZMDFKUt06211n/H3Eo8graczAp8nS4U3j0vaJdY1Iq5WEU5z9hAxw2KLbG/LVeOsBOuMt8D7oip+JNUH/tKK6616horEgA2Yux4cpMMOx67gYPslsf7CXuy89qsg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C8+R1PlS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="prt4HXO+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55E8AC4CEE4;
-	Tue,  1 Apr 2025 07:58:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C8+R1PlS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFF80C4CEE4;
+	Tue,  1 Apr 2025 07:58:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743494323;
-	bh=REaIDa2/g+mb0jn6qNUOAEAxiQQ4g/SSmeUfYmyFIJU=;
+	s=k20201202; t=1743494337;
+	bh=N0aOQujaXvl0WI/8gV+qMIDU5kNcN5JuX3zlJZZiu3Y=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=prt4HXO+5GhCqI8fIDPpA5WY/AwPqEauKg83JRluUQ/c3/Sh5QQEzL7rwhDJav2jf
-	 XX/60CM2cPaRfI1pw5Ulnm0nmOwO/SImvp5FugiYwslPKdk8fvB2oPNz/UgrPOgdjZ
-	 8OfgnSQdbDuN3BhwxDMCUN7Gxrtux99Vpwk/CUsxM/Ff6NLvNLuftK8/IBiIhCxU+Q
-	 CThJjjEgwd0aCDmA8Y2mLjhiEX8UNJrzHGiCKvnrm5CKDNUnadFwEl6gdIZe1C/Ud6
-	 mc/dfDyvaEm2Fm8JBAWMD+V1t1MBhjMRMtpopBM4bfzlgPwwrUM1pV0CxMfpheD1jL
-	 zuO4jN0q1yitA==
-Date: Tue, 1 Apr 2025 09:58:38 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	linux-kernel@vger.kernel.org,
-	Peter Zijlstra <a.p.zijlstra@chello.nl>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Tiezhu Yang <yangtiezhu@loongson.cn>
-Subject: Re: [GIT PULL] objtool fixes and updates
-Message-ID: <Z-ucroZoh3TgtQxA@gmail.com>
-References: <Z-cSQXJKMyBSfAAc@gmail.com>
- <20250329153242.GAZ-gSmu8qiXufR04k@fat_crate.local>
- <CAHk-=wjqLm+eTuyLR_84vWOZK+AkhV==r=PcuAt3+3nf68SjOw@mail.gmail.com>
- <20250330231355.GFZ-nQM6NPcC7nWl__@fat_crate.local>
- <sdjfftubzcheo3dpejml54t6axfjfrd7pk6mnbkpb2n7alpfzn@6l6bldqfturq>
- <ttv3iy3i57mvmkdp2mwh4cjwk3qx5eoyr7zmgjl5beohfxvwar@4na7dgto7r6m>
+	b=C8+R1PlSU58+Xkj6v72qEazJhScUDulxNjdpNdBObwRkmx1nQQVyx5DoIXo0oDXb3
+	 DUbsHsJPJ04TvJZlceBAPqq9QkTPIMKh6IXC6qu4nocokujzVQjpexdRqGk7SN3xtW
+	 81U6DERoHeJJEis3pWXYwt6uB1lewwO0wBKmsch+n+GAlvVVPsYOZibwbkME2snpHp
+	 B+tAAUbmMcabcKha4jynjvRH7/YzHnGvLZOrRTF1F/DAybYREdxkPiQavIgTOSuWhi
+	 lzNTh+JMThlogM3oqTMYcy0mWZAlLmTlyTKBEX4y1GI9wd5LeqfCghwPaN/wN8SIeB
+	 KutfL59NdHQ6g==
+Date: Tue, 1 Apr 2025 13:28:48 +0530
+From: Sumit Garg <sumit.garg@kernel.org>
+To: Jens Wiklander <jens.wiklander@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+	op-tee@lists.trustedfirmware.org,
+	linux-arm-kernel@lists.infradead.org,
+	Olivier Masse <olivier.masse@nxp.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Yong Wu <yong.wu@mediatek.com>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
+	Brian Starkey <Brian.Starkey@arm.com>,
+	John Stultz <jstultz@google.com>,
+	"T . J . Mercier" <tjmercier@google.com>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	azarrabi@qti.qualcomm.com, Simona Vetter <simona.vetter@ffwll.ch>,
+	Daniel Stone <daniel@fooishbar.org>
+Subject: Re: [PATCH v6 05/10] tee: implement restricted DMA-heap
+Message-ID: <Z-ucuPzwz4IqVTgb@sumit-X1>
+References: <20250305130634.1850178-1-jens.wiklander@linaro.org>
+ <20250305130634.1850178-6-jens.wiklander@linaro.org>
+ <Z-JOPgcWlpTlskgd@sumit-X1>
+ <CAHUa44GjpHT5Nqo+Ar5jNYNPV-YJQYpLTCf=7oJ1o0VjP-t0nA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,59 +60,64 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ttv3iy3i57mvmkdp2mwh4cjwk3qx5eoyr7zmgjl5beohfxvwar@4na7dgto7r6m>
+In-Reply-To: <CAHUa44GjpHT5Nqo+Ar5jNYNPV-YJQYpLTCf=7oJ1o0VjP-t0nA@mail.gmail.com>
 
-
-* Josh Poimboeuf <jpoimboe@kernel.org> wrote:
-
-> On Sun, Mar 30, 2025 at 06:39:51PM -0700, Josh Poimboeuf wrote:
-> > On Mon, Mar 31, 2025 at 01:13:55AM +0200, Borislav Petkov wrote:
-> > > On Sun, Mar 30, 2025 at 03:19:40PM -0700, Linus Torvalds wrote:
-> > > > On Sat, 29 Mar 2025 at 08:33, Borislav Petkov <bp@alien8.de> wrote:
-> > > > >
-> > > > > Btw, test bot complains:
-> > > > >
-> > > > > https://lore.kernel.org/r/202503292202.Sge7ZEUc-lkp@intel.com
-> > > > 
-> > > > That's not a very helpful error message
-> > > 
-> > > I found this:
-> > > 
-> > > https://lore.kernel.org/r/202503280703.OARM8SrY-lkp@intel.com
-> > > 
-> > > which looks like the original report.
-> > > 
-> > > Looks unsolved yet...
-> > 
-> > The "new" warning is just the "skipping duplicate warning", which was
-> > already merged with commit 0a7fb6f07e3a ("objtool: Increase per-function
-> > WARN_FUNC() rate limit").  So none of the warnings are specific to this
-> > pull request.
-> > 
-> > Tiezhu, can you please look at this warning?
-> >   
-> >    arch/loongarch/kernel/traps.o: warning: objtool: show_stack+0xe0: stack state mismatch: reg1[22]=-1+0 reg2[22]=-2-160
-> >    arch/loongarch/kernel/traps.o: warning: objtool: show_stack+0xe0: stack state mismatch: reg1[23]=-1+0 reg2[23]=-2-152
+On Tue, Mar 25, 2025 at 11:55:46AM +0100, Jens Wiklander wrote:
+> Hi Sumit,
 > 
-> Here's a fix.  Will post a real fix soon, along with another pile of 
-> fixes.
 
-And just to make it clear, these objtool warnings were not a new 
-regression, they were introduced more than a year ago, via:
+<snip>
 
-  cb8a2ef0848c ("LoongArch: Add ORC stack unwinder support")
+> 
+> >
+> > > +
+> > > +#include "tee_private.h"
+> > > +
+> > > +struct tee_dma_heap {
+> > > +     struct dma_heap *heap;
+> > > +     enum tee_dma_heap_id id;
+> > > +     struct tee_rstmem_pool *pool;
+> > > +     struct tee_device *teedev;
+> > > +     /* Protects pool and teedev above */
+> > > +     struct mutex mu;
+> > > +};
+> > > +
+> > > +struct tee_heap_buffer {
+> > > +     struct tee_rstmem_pool *pool;
+> > > +     struct tee_device *teedev;
+> > > +     size_t size;
+> > > +     size_t offs;
+> > > +     struct sg_table table;
+> > > +};
+> > > +
+> > > +struct tee_heap_attachment {
+> > > +     struct sg_table table;
+> > > +     struct device *dev;
+> > > +};
+> > > +
+> > > +struct tee_rstmem_static_pool {
+> > > +     struct tee_rstmem_pool pool;
+> > > +     struct gen_pool *gen_pool;
+> > > +     phys_addr_t pa_base;
+> > > +};
+> > > +
+> > > +#if !IS_MODULE(CONFIG_TEE) && IS_ENABLED(CONFIG_DMABUF_HEAPS)
+> >
+> > Can this dependency rather be better managed via Kconfig?
+> 
+> This was the easiest yet somewhat flexible solution I could find. If
+> you have something better, let's use that instead.
+>
 
-So, to bring this thread to a conclusion, I think by getting rid of the 
-summary warning line:
+--- a/drivers/tee/optee/Kconfig
++++ b/drivers/tee/optee/Kconfig
+@@ -5,6 +5,7 @@ config OPTEE
+        depends on HAVE_ARM_SMCCC
+        depends on MMU
+        depends on RPMB || !RPMB
++       select DMABUF_HEAPS
+        help
+          This implements the OP-TEE Trusted Execution Environment (TEE)
+          driver.
 
-  c5610071a69d ("Revert "objtool: Increase per-function WARN_FUNC() rate limit"")
-
-... the CI test-bots ought to be back to the v6.14 baseline even taking 
-such false positives into account.
-
-I'll send the updated objtool/urgent tree to Linus later today, unless 
-some last-minute problem pops up.
-
-Thanks,
-
-	Ingo
+-Sumit
