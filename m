@@ -1,170 +1,303 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 022BF1E9915
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 07:17:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50A711E8329
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 07:20:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743491846; cv=none; b=pkE1BlBu0x/okIq1ZyxJWMdxFRFAYz3sOL/nPCfX03fnwmnng4K9XuZfTF2QSj26vPg06pWD37hlQpFb4dtokxO1G7gJL73jXcmd7KHDb4NUpOX6rO5TVB5S4KwphA6qDRTppPKmkYOXqpyWvcCFOFgf3Hs+urWPoXH2ux283m4=
+	t=1743492003; cv=none; b=YijBIpKOfi3xwJTzdLbII7rK1u7g5ErQ2WB3f0i42KAY8QiV66wzkDcrkf4ZrEUDRDMaa9bj/V2BGdalUDdemNLp8YOe39o8XD+lBs6iFryyBPMA2750SFOH1i33zA6i1udirHmZ4vUDjm6F+iM+YE9zBKYu+V2K08iVmgYNKSY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743491846; c=relaxed/simple;
-	bh=K94tqSCdI38kDfHqpKSLdrbnPJqSiDjqX6KGxtHaBus=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Nd3JQPZpPsB67bQCRvyKaCUfSKBVkybz4NNl1dY1UCX2h9i97LPJ/Y/cBGTpEe3PgdvXGrt2NL1+lghfMpvmnQxz9KsezSiQJysz6POqc4yhhQ+kfmCtcST29VpY/pieHzLMLE2+GRYrEfRM0ZyxHcn5jiW7hbNQd2Fxbg0Z5AY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=S6zsxb8a; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1743492003; c=relaxed/simple;
+	bh=k/2TAvDo0gcJpXNztWOeZx7SFFzYikRx8NQ+o8K3F9k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TYLV5qZFMdn6Z0PiSBlC9HJWxrKcgRH/063gQ225fgbZP1gOoX7qfel4uMdQ/tUJjPQVMWutuqdB2M0eFdV8IZAm8PhKYrBNKhQva5GO8Mas+HA0L98XKNa9HydZhcOCYv6I7/eazyromqXtL6c73x6LHARjN9tu1Py86rt5yY0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1+dcLU2X; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="S6zsxb8a"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5315maER027938
-	for <linux-kernel@vger.kernel.org>; Tue, 1 Apr 2025 07:17:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	FtMGRVk1ZbNEw+POJb8t9Wm2iW3twKtu3+p8pqREbTY=; b=S6zsxb8ac9snJQ4a
-	pTSJ9wyVBp8SZhPsTxzorNsUhzlFYMn469v5G22Mk820Coizt/sgGtlsRE90TJPA
-	TiKcJldUyDfAqZ65mWrqsRetWJ0ndGKR9F5RHz9RxP2M3GeuqaDKGOVvau+xjydb
-	81Vuv1k9Le+O3hWNx4OaeEN/gb6aAX6TAP/2vMKxb8W24KWlfteo+vj/JIprg4lk
-	gtXGX9fZTwdu9K0OUHOrYdK8zDqBw5S98yioEQ9Khz9fUMFDG+wnm/BrhNRgvG9V
-	aPt/kQq1xw960uFCenOVOfxafW+c8CdTKRiSRm5Ic9fYa3sdOuGnVcPcySUiQlky
-	ycSSxw==
-Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com [209.85.216.69])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45p7v8f053-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 07:17:22 +0000 (GMT)
-Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-3032ea03448so9911536a91.2
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 00:17:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1+dcLU2X"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2242ac37caeso86285ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 00:20:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1743492000; x=1744096800; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4nNzjFLlX0hgN8AxePGDE9S1lJ4kGFRD5jIQ7N2ASbw=;
+        b=1+dcLU2X+4dcEYJPN91EFfZVmau8zJXAW5z/v7N+Ksih71rAQ84V2x7Zbsvmu7x5i7
+         d2S6SvMF71ZkVZi6bf+M8HqQVrIMA8VTlkYDOBMnJV7e/l8VFpU3h2Lb1O8e3HVhPdKC
+         IFoaMAcyCJ//Lqq5eg55vyVbbixgAEJHlPgunJD5bFzHlV7ku2hWbGzgZbBJQa5na8Fc
+         QFw/ttga4wMs4ZRiemyv2WvTgV/rs+250V214P/tC9U3R/QVVSZawkN5Dpr36YtU3ySN
+         jwjmbuTCdhDLvSQhjDAHs/cd74Mi8LkyrNUbCfcArsc9f5VMc8hjBBZGM9eVY6ARxEIE
+         6dTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743491841; x=1744096641;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FtMGRVk1ZbNEw+POJb8t9Wm2iW3twKtu3+p8pqREbTY=;
-        b=eb9cVZhVlZwqp+5kX/v+9UBa3uo70uYDZ9SrtvPfUu2FP3NCzpTx9pbYW/tRAG270r
-         e9fwZn4IXNiiL2QFZ6pQdcXohHHHz0v261MjI95tclQFrd1d3ohrJQWldc3T7klIWEBG
-         7aX0EWJKRMfe4p/b5xooOBaMohtTJtnAAuY14eiUUuUKcmRWDjpZMs0+QCmwSuCZl31Z
-         rDCaLjjhNZsy6VNCCLI3eTtaMEjGAlCzf1NirYxJZ6914FyIJKV6cHKjtbEV27h79qFy
-         4RoJmtaG94MvxWlvntBPKMq0gGHPRu2kZQD1lCOIIkBlBaSA7ECGFRhPGNp+KH8AoD3q
-         dv3g==
-X-Forwarded-Encrypted: i=1; AJvYcCV4gdhYyDDgGbTXNWCwX4y8Aro9KieXezENqN/wJnAWdYmQtOPB3vsI8b+kQ97qay3c8Tvut6oQ1AwYG4M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwONahKx5+zoYZ8Hw7gGZR1MzWbiFfM85n+Llagt8AtHeJwDZ5F
-	c5f9ziyWMAIfNYwfch5uzKBhcIBl5t7DX6De+P+w2DIeX6XL7rqFCghM5rNEQSlUN9W5dLptC1B
-	MrzQCPTyIUJyW9oraJDkwmJ6fQUxTjVrzidbKUkA1M7JEMZ/uc13xvwLDe2lQFyM=
-X-Gm-Gg: ASbGncuRSWAXXZ4/a14l5wCxPsKPlx3juWuwZ11tRj+sT4GGW0yNxRvkjL63PcJCZaP
-	idVFJ9VfnDASvap2i+QX0U55SQ91vlD4Ja4jJVP0rBRRwvn35AORTnBRN+mecveq5OsXLngpecy
-	45TgdvL/xANXXBnCdY32rLHrwYbCkQHxmqMlf9VPipCX/1FrEaMAxg6Zk7c/SQfKNsFx3UZkEQQ
-	+NnsRC0pVUWWlW9mREiDfThi+SYOG0En5M6w4jOy41jfD57jszcDr1GSrwWT/WCZ9n1/08K+bBZ
-	RcoipnGZnpbnxSEJUNKs+UwiLxwHmMKRfWJZPuc3BpAYUQ==
-X-Received: by 2002:a17:90b:134d:b0:2f8:4a3f:dd2d with SMTP id 98e67ed59e1d1-305320ae2eamr18234712a91.15.1743491841335;
-        Tue, 01 Apr 2025 00:17:21 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFr4gOlMNdHJzyZphobs28BNbuI4vi69zmTSjUxMF19Ghg9xXQwTQ1pg7rC685uTI4i0vHJiA==
-X-Received: by 2002:a17:90b:134d:b0:2f8:4a3f:dd2d with SMTP id 98e67ed59e1d1-305320ae2eamr18234674a91.15.1743491840854;
-        Tue, 01 Apr 2025 00:17:20 -0700 (PDT)
-Received: from [10.92.192.202] ([202.46.23.19])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291f1ecb62sm81122505ad.230.2025.04.01.00.17.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Apr 2025 00:17:20 -0700 (PDT)
-Message-ID: <95db82e9-8527-0520-07db-672e64b6e25b@oss.qualcomm.com>
-Date: Tue, 1 Apr 2025 12:47:15 +0530
+        d=1e100.net; s=20230601; t=1743492000; x=1744096800;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4nNzjFLlX0hgN8AxePGDE9S1lJ4kGFRD5jIQ7N2ASbw=;
+        b=R6pberyRp9VwHgPNbZEMMtw5TNyhV75BSOWhNGRdY6oTWi3qojL7uFZBQvtyp7ci7I
+         OCTQs0YxPr7UUYSvlK61R39VqCcl9kLz8HounXG8YcAOapk83PUXSIkeQRO++LOUpbSM
+         GmZnYeveeQng7kI/uhnsq0MaoeNC8i6Bv/zW2Yx4Lx5dPrab4W//HsElE0NffVyVyzRy
+         /ZkOS4QkOewki2kKu4twFoRqa0w7aMfcEgszfFlDJbJ0mwS21qcBg82bbXsoJAQE+D5B
+         JDFhXjkczQCE79YX7k3ZLxfgqkJj288H4y+PzLFWCvTn3NKu/zeC25NJJ2eAJQtVipxH
+         2I3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXkiOmSTFDskvGXw5p0xRAoXStcotNSk0aDbTKa8TcumF9JbExsrKveB+5iRm/iG6ecmjlzuNivQmszF2w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyspXwPWIJnH/ZQQ1UJaoPWn6oZlmtpo3yDQisn9LX5ksbcP5LR
+	b5N/KxuEx41KUIbuTOydyTDpiuxAM8+fCuTCG7+N2Btz+qZhi7+p9jyKvIJr+y5XGL1hGMC7YP9
+	6adZ6zpsodjDoxOj+aspUu7PNRf4Pgo0CaBU0
+X-Gm-Gg: ASbGncueTzqEmncVT8a4JgOu0IyLnkLEYGYuDEIuX/zNySSJf4K1q5+mEKoJKcyOD+d
+	6T03QjaiJYoMzZoES37+cctbWD/1P1wAQ4voPYKzaTk5Vs/ciNamyuiexpBh2AYChBHrjlQ+w+Z
+	LAQh4lf4VyW6x2tEADOQKmmbgWZ4ZgJvzmqwlvOpxrX/x6vMWre1MQ+dTS3A==
+X-Google-Smtp-Source: AGHT+IEnyvd6es/zpWvt015PkcGKvZjgaAm/HA1x1p4f9qCEGneOY3x1NVAjuNd8D9r0AfQw3N5WD9kqvto64BkWnIM=
+X-Received: by 2002:a17:902:d2c6:b0:21f:3e29:9cd1 with SMTP id
+ d9443c01a7336-2295cfe6b1bmr1720245ad.1.1743492000201; Tue, 01 Apr 2025
+ 00:20:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH 2/2] PCI: Add support for PCIe wake interrupt
-Content-Language: en-US
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        cros-qcom-dts-watchers@chromium.org,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, quic_vbadigan@quicinc.com,
-        quic_mrana@quicinc.com
-References: <20250401-wake_irq_support-v1-0-d2e22f4a0efd@oss.qualcomm.com>
- <20250401-wake_irq_support-v1-2-d2e22f4a0efd@oss.qualcomm.com>
- <Z-uPOLNPIgm63PWY@wunner.de>
-From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-In-Reply-To: <Z-uPOLNPIgm63PWY@wunner.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: k9C-x7hYDaXC3jjL7V5CN2VlRIpnEmKG
-X-Authority-Analysis: v=2.4 cv=fdaty1QF c=1 sm=1 tr=0 ts=67eb9302 cx=c_pps a=vVfyC5vLCtgYJKYeQD43oA==:117 a=j4ogTh8yFefVWWEFDRgCtg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=i3ooZJLN8YTFS9vXi5sA:9 a=QEXdDO2ut3YA:10 a=rl5im9kqc5Lf4LNbBjHf:22
-X-Proofpoint-GUID: k9C-x7hYDaXC3jjL7V5CN2VlRIpnEmKG
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-01_02,2025-03-27_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 bulkscore=0
- malwarescore=0 suspectscore=0 spamscore=0 impostorscore=0
- priorityscore=1501 mlxscore=0 mlxlogscore=742 clxscore=1015 adultscore=0
- lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504010048
+References: <20250327160700.1147155-1-ryan.roberts@arm.com>
+ <Z-WAbWfZzG1GA-4n@casper.infradead.org> <5131c7ad-cc37-44fc-8672-5866ecbef65b@arm.com>
+ <Z-b1FmZ5nHzh5huL@casper.infradead.org> <ee11907a-5bd7-44ec-844c-8f10ff406b46@arm.com>
+In-Reply-To: <ee11907a-5bd7-44ec-844c-8f10ff406b46@arm.com>
+From: Kalesh Singh <kaleshsingh@google.com>
+Date: Tue, 1 Apr 2025 00:19:48 -0700
+X-Gm-Features: AQ5f1JrGGiC_D0IIoE2ouih3ARQNGmoqFS-gJpqf2fABIUInDzCxtOi5p0Pa9A4
+Message-ID: <CAC_TJveU2v+EcokLKJVVZ8Xje2nYmmUg8bvCD8KO1oC5MgmWCA@mail.gmail.com>
+Subject: Re: [PATCH v3] mm/filemap: Allow arch to request folio size for exec memory
+To: Ryan Roberts <ryan.roberts@arm.com>
+Cc: Matthew Wilcox <willy@infradead.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	David Hildenbrand <david@redhat.com>, Dave Chinner <david@fromorbit.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Sat, Mar 29, 2025 at 3:08=E2=80=AFAM Ryan Roberts <ryan.roberts@arm.com>=
+ wrote:
+>
+> On 28/03/2025 15:14, Matthew Wilcox wrote:
+> > On Thu, Mar 27, 2025 at 04:23:14PM -0400, Ryan Roberts wrote:
+> >> + Kalesh
+> >>
+> >> On 27/03/2025 12:44, Matthew Wilcox wrote:
+> >>> On Thu, Mar 27, 2025 at 04:06:58PM +0000, Ryan Roberts wrote:
+> >>>> So let's special-case the read(ahead) logic for executable mappings.=
+ The
+> >>>> trade-off is performance improvement (due to more efficient storage =
+of
+> >>>> the translations in iTLB) vs potential read amplification (due to
+> >>>> reading too much data around the fault which won't be used), and the
+> >>>> latter is independent of base page size. I've chosen 64K folio size =
+for
+> >>>> arm64 which benefits both the 4K and 16K base page size configs and
+> >>>> shouldn't lead to any read amplification in practice since the old
+> >>>> read-around path was (usually) reading blocks of 128K. I don't
+> >>>> anticipate any write amplification because text is always RO.
+> >>>
+> >>> Is there not also the potential for wasted memory due to ELF alignmen=
+t?
+> >>
+> >> I think this is an orthogonal issue? My change isn't making that any w=
+orse.
+> >
+> > To a certain extent, it is.  If readahead was doing order-2 allocations
+> > before and is now doing order-4, you're tying up 0-12 extra pages which
+> > happen to be filled with zeroes due to being used to cache the contents
+> > of a hole.
+>
+> Well we would still have read them in before, nothing has changed there. =
+But I
+> guess your point is more about reclaim? Because those pages are now conta=
+ined in
+> a larger folio, if part of the folio is in use then all of it remains act=
+ive.
+> Whereas before, if the folio was fully contained in the pad area and neve=
+r
+> accessed, it would fall down the LRU quickly and get reclaimed.
+>
 
 
+Hi Ryan,
 
-On 4/1/2025 12:31 PM, Lukas Wunner wrote:
-> On Tue, Apr 01, 2025 at 10:12:44AM +0530, Krishna Chaitanya Chundru wrote:
->> PCIe wake interrupt is needed for bringing back PCIe device state
->> from D3cold to D0.
->>
->> Implement new functions, of_pci_setup_wake_irq() and
->> of_pci_teardown_wake_irq(), to manage wake interrupts for PCI devices
->> using the Device Tree.
->>
->>  From the port bus driver call these functions to enable wake support
->> for bridges.
-> [...]
->> --- a/drivers/pci/pcie/portdrv.c
->> +++ b/drivers/pci/pcie/portdrv.c
->> @@ -695,6 +695,10 @@ static int pcie_portdrv_probe(struct pci_dev *dev,
->>   	if (type == PCI_EXP_TYPE_RC_EC)
->>   		pcie_link_rcec(dev);
->>   
->> +	status = of_pci_setup_wake_irq(dev);
->> +	if (status)
->> +		return status;
->> +
->>   	status = pcie_port_device_register(dev);
->>   	if (status)
->>   		return status;
->> @@ -728,6 +732,8 @@ static void pcie_portdrv_remove(struct pci_dev *dev)
->>   		pm_runtime_dont_use_autosuspend(&dev->dev);
->>   	}
->>   
->> +	of_pci_teardown_wake_irq(dev);
->> +
->>   	pcie_port_device_remove(dev);
->>   
->>   	pci_disable_device(dev);
-> 
-> Why doesn't the teardown order mirror the probe order, i.e. why is
-> of_pci_teardown_wake_irq() called *before* pcie_port_device_remove()
-> instead of after?
-> 
-ack, in the next patch I will move teardown after
-pcie_port_device_remove()
-> (pcie_port_device_remove() is the opposite of pcie_port_device_register().)
-> 
-> Also, why is it safe to bail out of probe on failure of
-> of_pci_setup_wake_irq() without unwinding whatever pcie_link_rcec()
-> has done?  I think this needs either an explanation or reordering.
-> 
-if there is a failure in port_device_register also we are not unwinding
-so I taught it is already taken care. Looks like it is not.
+I agree this was happening before and we don't need to completely
+address it here. Though with the patch it's more likely that the holes
+will be cached. I'd like to minimize it if possible. Since this is for
+EXEC mappings, a simple check we could use is to limit this to the
+VM_EXEC vma.
 
-In the next patch I will move of_pci_setup_wake_irq() above 
-pcie_link_rcec() to avoid all this.
++ if (vm_flags & VM_EXEC) {
++ int order =3D arch_exec_folio_order();
++
++ if (order >=3D 0 && ((end-address)*2) >=3D 1<<order) { /* Fault around ca=
+se */
 
-- Krishna Chaitanya.
+For reference I found below (coincidentally? similar) distributions on
+my devices
 
+=3D=3D x86 Workstation =3D=3D
+
+Total unique exec segments:   906
+
+Exec segments >=3D 16 KB:   663 ( 73.18%)
+Exec segments >=3D 64 KB:   414 ( 45.70%)
+
+=3D=3D arm64 Android Device =3D=3D
+
+Total unique exec segments:   2171
+
+Exec segments >=3D 16 KB:  1602 ( 73.79%)
+Exec segments >=3D 64 KB:   988 ( 45.51%)
+
+Result were using the below script:
+
+cat /proc/*/maps | grep 'r-xp' | \
+awk '
+BEGIN { OFS =3D "\t" }
+$NF ~ /^\// {
+path =3D $NF;
+split($1, addr, "-");
+size =3D strtonum("0x" addr[2]) - strtonum("0x" addr[1]);
+print size, path;
+}' | \
+sort -u | \
+awk '
+BEGIN {
+FS =3D "\t";
+total_segments =3D 0;
+segs_ge_16k =3D 0;
+segs_ge_64k =3D 0;
+}
+{
+total_segments++;
+size =3D $1;
+if (size >=3D 16384) segs_ge_16k++;
+if (size >=3D 65536) segs_ge_64k++;
+}
+END {
+if (total_segments > 0) {
+percent_gt_16k =3D (segs_ge_16k / total_segments) * 100;
+percent_gt_64k =3D (segs_ge_64k / total_segments) * 100;
+
+printf "Total unique exec segments: %d\n", total_segments;
+printf "\n";
+printf "Exec segments >=3D 16 KB: %5d (%6.2f%%)\n", segs_ge_16k, percent_gt=
+_16k;
+printf "Exec segments >=3D 64 KB: %5d (%6.2f%%)\n", segs_ge_64k, percent_gt=
+_64k;
+} else {
+print "No executable segments found.";
+}
+}'
+
+> >
+> >>> Kalesh talked about it in the MM BOF at the same time that Ted and I
+> >>> were discussing it in the FS BOF.  Some coordination required (like
+> >>> maybe Kalesh could have mentioned it to me rathere than assuming I'd =
+be
+> >>> there?)
+> >>
+> >> I was at Kalesh's talk. David H suggested that a potential solution mi=
+ght be for
+> >> readahead to ask the fs where the next hole is and then truncate reada=
+head to
+> >> avoid reading the hole. Given it's padding, nothing should directly fa=
+ult it in
+> >> so it never ends up in the page cache. Not sure if you discussed anyth=
+ing like
+> >> that if you were talking in parallel?
+> >
+> > Ted said that he and Kalesh had talked about that solution.  I have a
+> > more bold solution in mind which lifts the ext4 extent cache to the
+> > VFS inode so that the readahead code can interrogate it.
+> >
+
+Sorry about the hiccup in coordination, Matthew. It was my bad for not
+letting you know I planned to discuss it in the MM BoF. I'd like to
+hear Ted and your ideas on this when possible.
+
+Thanks,
+Kalesh
+
+> >> Anyway, I'm not sure if you're suggesting these changes need to be con=
+sidered as
+> >> one somehow or if you're just mentioning it given it is loosely relate=
+d? My view
+> >> is that this change is an improvement indepently and could go in much =
+sooner.
+> >
+> > This is not a reason to delay this patch.  It's just a downside which
+> > should be mentioned in the commit message.
+>
+> Fair point; I'll add a paragraph about the potential reclaim issue.
+>
+> >
+> >>>> +static inline int arch_exec_folio_order(void)
+> >>>> +{
+> >>>> +  return -1;
+> >>>> +}
+> >>>
+> >>> This feels a bit fragile.  I often expect to be able to store an orde=
+r
+> >>> in an unsigned int.  Why not return 0 instead?
+> >>
+> >> Well 0 is a valid order, no? I think we have had the "is order signed =
+or
+> >> unsigned" argument before. get_order() returns a signed int :)
+> >
+> > But why not always return a valid order?  I don't think we need a
+> > sentinel.  The default value can be 0 to do what we do today.
+> >
+>
+> But a single order-0 folio is not what we do today. Note that my change a=
+s
+> currently implemented requests to read a *single* folio of the specified =
+order.
+> And note that we only get the order we request to page_cache_ra_order() b=
+ecause
+> the size is limited to a single folio. If the size were bigger, that func=
+tion
+> would actually expand the requested order by 2. (although the parameter i=
+s
+> called "new_order", it's actually interpretted as "old_order").
+>
+> The current behavior is effectively to read 128K in order-2 folios (with =
+smaller
+> folios for boundary alignment).
+>
+> So I see a few options:
+>
+>   - Continue to allow non-opted in arches to use the existing behaviour; =
+in this
+> case we need a sentinel. This could be -1, UINT_MAX or 0. But in the latt=
+er case
+> you are preventing an opted-in arch from specifying that they want order-=
+0 -
+> it's meaning is overridden.
+>
+>   - Force all arches to use the new approach with a default folio order (=
+and
+> readahead size) of order-0. (The default can be overridden per-arch). Per=
+sonally
+> I'd be nervous about making this change.
+>
+>   - Decouple the read size from the folio order size; continue to use the=
+ 128K
+> read size and only allow opting-in to a specific folio order. The default=
+ order
+> would be 2 (or 0). We would need to fix page_cache_async_ra() to call
+> page_cache_ra_order() with "order + 2" (the new order) and fix
+> page_cache_ra_order() to treat its order parameter as the *new* order.
+>
+> Perhaps we should do those fixes anyway (and then actually start with a f=
+olio
+> order of 0 - which I think you said in the past was your original intenti=
+on?).
+>
 > Thanks,
-> 
-> Lukas
+> Ryan
+>
