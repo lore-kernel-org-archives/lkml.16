@@ -1,40 +1,56 @@
-Received: from mout.web.de (mout.web.de [212.227.15.3])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 174D2EACE;
-	Tue,  1 Apr 2025 15:37:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEBAC1F1517;
+	Tue,  1 Apr 2025 15:40:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743521866; cv=none; b=c0DGWKZ3JtT/9gwnuMvt+BZlCbV4wA/lJzIj1K8ozLNBIjbA4HHSfqbuaoyIuXEXm45TFywH6+Y+CYI+YbDvxSJc3erjVUaieWQwjcclkr4ahHL9auteKqW4yZgtKXAU0F2yn5H3aaIwVqLbXmYYKElmtHGJ1S6/bZYlos9wOhM=
+	t=1743522028; cv=none; b=YJmGdv1Cj+zcXe2z71bJvCWNWxXU+fr+TftoM4Jcd/E5+lfWdDlN+PCP7KaQcVfd1hIlOsdpGjucRdjYQ95vbldcxr62mL4GDaXsap4k5yrxxAgr5+OMTmllojgAZ+L1lMLFqY/33KqSXXuOaElPem6cxv0WBQu9V/av2PlD7r4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743521866; c=relaxed/simple;
-	bh=aKe+UrjQqsBcfIGYc6KdcxoN+1wJZX+CaVO+RJM2vjk=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=saG1e2A1GzKcheIUvBi5by/XSlRe0PTkp4vV2bdmtMWut5dqEV6IgfA5S+WS3tGdRDYOP2n0Y31XzcLiBetXqDqVGQFiXuvt5oiFEa/DWYrNVzQhRyZf/5ZSfmUUzYvSLflB3sdeqmWr+oUbIXyoXXJkubSJi7cioKlk+WSxgAA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=j8lLEcLt; arc=none smtp.client-ip=212.227.15.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1743522028; c=relaxed/simple;
+	bh=DX6CwGWIOUp8UiX4yk4PGZ/Qz79zFJQanQXwoDWbPuA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jkhFWOCnvPhWhDPuiBYqYgWk661JBec042NZqO4eyfIrDght20+vj5zYT40LSpTPqJlDv9sjzRuCZUMimrFhYrzJVzXDxbbDB8pvGccK6GZoT9l1+Rzn0dUGIPZe3yK8mUPlD9e2sCkgezL0ZMNBJuHuaUMWCn0SbgvGCjVSFOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ak97sMXK; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="j8lLEcLt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1743521858; x=1744126658; i=markus.elfring@web.de;
-	bh=brNkqSrtHqItVMdw8H2joMsIf58KrB5AZqOKMhsX514=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=j8lLEcLtbgNAcCc+uyijihHxt/z3dn/2YmwuCnhNjSKTHFOS981rosw0FzP6Vxs8
-	 T/ZtZB90u+kyosAVIPV+fo79zBC6fi1mrN2E6IjjKnQohbDq7QnRqY0eCR7qhn56h
-	 SsmFQ0Ivo3zPsT0h1bZL1BlWXBIT+Wch4+HFk6TnQ4KbVeejqFkWM/wU+2zjXFIn+
-	 UzSaW7JJfeW5S3VpUKTK0mrzfQz9MpeayjmfMVkeEPJmelb4z6qRP/rB24ivzv9cP
-	 VfWqu97UwSjrYZJp8QqBq7oVKDfVgTHCYSsY2rt6KCDB+a4+KkQXYNUa7qW38vL6+
-	 SLnSXYCxWnYUOAXRuA==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.70.54]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MiMAE-1tUS8N3nj4-00iffO; Tue, 01
- Apr 2025 17:37:37 +0200
-Message-ID: <f85c219e-2463-4d59-84d4-5807bbcb1a41@web.de>
-Date: Tue, 1 Apr 2025 17:37:18 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ak97sMXK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743522027; x=1775058027;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=DX6CwGWIOUp8UiX4yk4PGZ/Qz79zFJQanQXwoDWbPuA=;
+  b=ak97sMXKFmx4SXBn2EMVtLUwjDfOlzwarxHJAU0NmwJh/m+nI4hHrlFv
+   c2NN+Ze6d9aACU5f5NCwRVNePN4Ad5M2BxTWzZi97jMDsUnJVT20Xju3v
+   Zjb91PC6gAKjimp+dDYpW8L/bHBG5ZFu6f29g3Bp61KzJfoZMuJrVfsAW
+   Q+owJoUfSiMZu6UzETvBQsmR5QbAvpyRxyVc91RF100uEe0fIlKNuC3fv
+   F0jSvgM6gDxKhvgZsTYO3fGJDB5rje4xt339wpUDC4eOsMCPkxz6ibml5
+   EtH6gDmpWn/tiWIRRHEfnyZt1WUXRA7cdwtw3HGW7pjXwktxZC/QfacyR
+   g==;
+X-CSE-ConnectionGUID: 8lwC1vkHT0yStL+G4f5C5g==
+X-CSE-MsgGUID: iu2w1q7fQZ+GYZEh2VbY8g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11391"; a="62252311"
+X-IronPort-AV: E=Sophos;i="6.14,293,1736841600"; 
+   d="scan'208";a="62252311"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2025 08:40:27 -0700
+X-CSE-ConnectionGUID: SmHi2ruaTsaUnzAAaIbRSg==
+X-CSE-MsgGUID: 0zVsI6h1S5Ob58iVRHbqVg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,293,1736841600"; 
+   d="scan'208";a="163644183"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2025 08:40:26 -0700
+Received: from [10.246.136.14] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.14])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 1A93C20B5736;
+	Tue,  1 Apr 2025 08:40:24 -0700 (PDT)
+Message-ID: <f93c3fef-8e30-408d-9f2f-e833cfb7b1a6@linux.intel.com>
+Date: Tue, 1 Apr 2025 11:40:22 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,62 +58,52 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-To: Henry Martin <bsdhenrymartin@gmail.com>, netdev@vger.kernel.org
-Cc: LKML <linux-kernel@vger.kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>,
- Michael Grzeschik <m.grzeschik@pengutronix.de>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>
-References: <20250401145330.31817-1-bsdhenrymartin@gmail.com>
-Subject: Re: [PATCH v2] arcnet: Add NULL check in com20020pci_probe()
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250401145330.31817-1-bsdhenrymartin@gmail.com>
+Subject: Re: [PATCH] perf/x86: Rename bts_buffer variables and use
+ struct_size()
+To: Peter Zijlstra <peterz@infradead.org>,
+ Thorsten Blum <thorsten.blum@linux.dev>
+Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
+ <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, Thomas Gleixner
+ <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@kernel.org>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Dapeng Mi <dapeng1.mi@linux.intel.com>
+References: <20250331122938.1837255-2-thorsten.blum@linux.dev>
+ <20250401142006.GF5880@noisy.programming.kicks-ass.net>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20250401142006.GF5880@noisy.programming.kicks-ass.net>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:oO/FAZFSZEiM+ASYPQSAF5CZcgIgII08lNNbsegTNzvR3wO7tkd
- NbnovQN5gSMI07DMZYkYnFYzH8pjhElqQ9MYYzstBo8JCAmWdcd5JHPWOb17OAZxEiq/x/+
- NH0Q4GUR5mOQEvwgn22ZaqEKcFdmIn0szULtMPYADGWU+FQkAc6QymVbkMhXDq0/bmOJ9WH
- oL6/QZMrtv5Z74fyxmLuw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:0vquusVhoJ4=;pgtAkuFf1nkQQL4utwa2fnBREd4
- NmTz2WBP+s8068eQZPCHOfKpHYaWTKGniVymEY9SsqL6f9pKFaHHK0i3pey/fDf1WLDhKAjSS
- LHFq4f/3IJaqHo0I5u43qy4VTQWZei2OO2TgVMBr5z3Juit/eclq6uY2+InUxgFTQs6qV1K02
- FGfnHjRJ0xeLKuFTsBYXgsQBc981jucrv0oxv8CdoSOphECCwCnvqjP08sJ8bRowsKkhN6H3I
- QtZwIiiFZMabsrid4JRKA4d/Kv8gsZsfoEIT+hFw6UhxqCMIQbOQ3RhJSAXqpJIGqGx3MyT8R
- fLA0F8BwKgVPuCCq6O4YBw5e0tVOq1VT1rDshf5RU8Iep2bUVBKr1gs0BKVa8HK5A1EiC2Q3e
- QlTU/3gSGD7daj/qVyhSEC0yvUC4tYEDzqvKYkfEf2KFpgTby7jGg+JDKuz4Q4KIEiGEmOgUQ
- wgWgo5k7pYcRJXFHts6dr7Do/tMKKQl46AcBSVc+uVQpWsS4pCt1IR6wTW0IA6pA5dlcYeai/
- mEVfA+3Vnda1zO/lgKKBaAyhvt0s4ZQMcPMa4mz2SOsOoTcVJR7YoPcROuTjAxqzPpnM5NzNk
- avXneqL/2Dh/F2gS/S6mGjn4FzxqPhM5c56cPFIZvex2ufNdztjQ5Oc+sAAmqaqIEseYLEcEq
- FBjBIc77OjcHQxQav7chwUz8H2EvZ+3ppITatlnbmnIx+HQeg4v82GdZXCxs1eC9pD3f6MNQs
- HqOJWgEmxnBRV5KHQ3vaSKJr80wgqIGrihWt2TtAd/brfLcYt87j6Kja2cHvcTPR23xq2dwUp
- d5FaKZ4l9zG2vyGp1OdeIsQKJryB5hDh61eio17g8tWl/kJYIuP++b1+QouR+BQsTaZ105amh
- YfessXR6kmV5rdiuVSp2vs0t6IC69tZdPsgEy1OKFU5VOUkc39NFLvhIOBy5IJoUBKrOX5EXj
- wbHiGk9scmoUzLq2bBlwbpxJfx3KnIjzIj1l9pnlpZkJfVqZF/hnthqadWOk8yCxO5h6Z1U+9
- kfDjz8y39zBZu4u+eNVp1JsU7GhJVjm/N+sokfE+fhTh4A6EgTJ11ykdcsFHmadWU+NrlEyfD
- FmHRWZNb26s7aonWHh1Pktfluau1GU5a62na0nBIP09ghDKc2ToPvgvxqfpQ60wDwuebqh7s8
- QycpdLaf9GGA0l4J4CFjGrZBOahznMyjsuvQ03Dee/uJoAFUi7Z2l6NfCybnylYOvkEWzLILR
- iziZE4Eztc47MjnZzb/Rm/lODb7lqQSjSzuWvuoopYg5e00aonRNGf6j5cT2VnvDIhl1rkXjh
- pAMjQG/v5QLk6DmxDHR7Hid8+Kdd+eftMxW1IMDHcG+GdElr0w4Qo5bisuvR+dteqm4IreS37
- s/Y3yZzK/Nr1eX9lrFIc+7YxzIA24HO9xzNYblFTpRjIE/P4Gjm4SIre/vOdoRloCCCFmplEp
- JWYIAVD9RJ1rqucahsDW8i0Rk0945Gs0v1xSsLqPEvA8Qwr3s
+Content-Transfer-Encoding: 7bit
 
-> devm_kasprintf() return NULL if memory allocation fails. Currently,
-=E2=80=A6
-                call?                               failed?
++ Dapeng
 
+On 2025-04-01 10:20 a.m., Peter Zijlstra wrote:
+> On Mon, Mar 31, 2025 at 02:29:38PM +0200, Thorsten Blum wrote:
+>> Rename struct bts_buffer objects from 'buf' to 'bb' to improve the
+>> readability when accessing the structure's 'buf' member. For example,
+>> 'buf->buf[]' becomes 'bb->buf[]'.
+>>
+>> Use struct_size() to calculate the number of bytes to allocate for a new
+>> bts_buffer. Compared to offsetof(), struct_size() provides additional
+>> compile-time checks (e.g., __must_be_array()).
+>>
+>> Indent line 327 using tabs to silence a checkpatch warning.
+>>
+>> No functional changes intended.
+> 
+> This is two things, as such should be two patches. Also, meh. This is
+> going to create extra work for the arch-pebs guys I suppose.
+> 
 
-> Add NULL check after devm_kasprintf() to prevent this issue.
+I think the patch only changes the internal variables, while the
+arch-pebs only touch the external interfaces. It should be less effort
+to re-base.
 
-Please complete also the corresponding exception handling.
-
-Source code example for further inspiration:
-https://elixir.bootlin.com/linux/v6.14-rc6/source/drivers/net/arcnet/com20=
-020-pci.c#L239-L244
-
-Thus I suggest to use another label like =E2=80=9Ce_nomem=E2=80=9D for thi=
-s purpose.
-
-Regards,
-Markus
+Thanks,
+Kan
