@@ -1,98 +1,142 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C87AE20E703;
-	Tue,  1 Apr 2025 18:07:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43D3D204866
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 18:09:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743530852; cv=none; b=gAHdwqpm0xdbbHW8jo+yDk2EsOatwAZQ0setT0S7e2C6JlHEo1sVU6eEmLjFvO3gzvBqK4T0F8pEswJUI6kh6/Q0DXLj1ABx3xmp+VaivbRadK+my1864ftzSK7ZIYt18z+QQiIDg/cfdOeu2c7Y7L4gNKK5OfNWVde3f2Iw/xw=
+	t=1743530980; cv=none; b=V3ik9/LfrEiHcz8jwESOqoRkxe/LRODmJZJKoHYpV9PNPqAytLCK1ArsgbP+miU0+mFXUJaBE068lx0cT1IWox2KXdjwFKSsuh1a6I/ddQ9MdRHzbAqN/oh5OCQBCsIlRZTzTpux0GYs3wxbYpgqXKqLcLj+lPQLTgiOfITPbV4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743530852; c=relaxed/simple;
-	bh=TXxMNAnXlc8yDC90Wg8saX7ywbgOuUDpvHHIJU0/IH0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ZPokWxSTZ633VBOy57V8RrzUNEKw3TaYYwRh6wECgtm/kNaXWyC3aQcKG8CBqk/gdkZFNmC8si6fTWEc2zuEpFoJssq5Gk4bOZpiDlCHbXhdhtda86FhyPFEqp3WAR0MlQUH6oQeO8JXD9PPq/DvIW5amn8GJ+OcLjjCafnI3vA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 63BD914BF;
-	Tue,  1 Apr 2025 11:07:33 -0700 (PDT)
-Received: from e132581.cambridge.arm.com (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 86A073F59E;
-	Tue,  1 Apr 2025 11:07:28 -0700 (PDT)
-From: Leo Yan <leo.yan@arm.com>
-To: Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Mike Leach <mike.leach@linaro.org>,
-	James Clark <james.clark@linaro.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	coresight@lists.linaro.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Leo Yan <leo.yan@arm.com>
-Subject: [PATCH v4 7/7] Documentation: coresight: Document AUX pause and resume
-Date: Tue,  1 Apr 2025 19:07:08 +0100
-Message-Id: <20250401180708.385396-8-leo.yan@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250401180708.385396-1-leo.yan@arm.com>
-References: <20250401180708.385396-1-leo.yan@arm.com>
+	s=arc-20240116; t=1743530980; c=relaxed/simple;
+	bh=TTC1zB76YN+CveMePfWYPOQo5XC+cQkIkEFO825685U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QemjOaGZpAilSNhl0Auy/jcMiRBlw9qF2xNBIpnEvu2X7O/BEaNA0H3IzachUBgvc10yOQm8xC97dW3c+VRVPXuKeCJvh8z95Sp7CLRJOc77SLtoRmo8y/I3A41f33LeGuZRvJUAb2wOnjerFy0aJfBlq9U3o5HwHpCs5WRKloA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A91Zp0wG; arc=none smtp.client-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A91Zp0wG"
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-30384072398so7934995a91.0
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 11:09:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743530978; x=1744135778; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=L3d1znKqMC7VOlS2a3pEGw5g/7whO3ATqwDLPzCjVS4=;
+        b=A91Zp0wGP1QC4l1/mvLpaxxoXzIkufWM/Ne8MvIjqg/5hXFvXmIx0UexytBM0vM52U
+         fSh5UK+Bn8UtT/MkIZ7sO+sHc7NbleBZ4o+wEuSCZJARM7RKiunCmSO8DdBJvkJApm/r
+         cECPN/aBC9lmxP8DTCrD2IcneeUMESmvRI3JKqKE+rU7C5YKy97EBsNdmfIwEZHKB+CT
+         jjj5uZTuDBjAU0nPN7qqmenXpGS1Qpqv9M8OmdO5yh4C4rxwclMtW/GaTRRsF5bICrvV
+         fgpWwTVEr19B/qtSG/iJaDtc6cHC7pwAQbmLG5eDOA52X9SO/FjL7mNOwGfVAMU0C5dH
+         FWVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743530978; x=1744135778;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=L3d1znKqMC7VOlS2a3pEGw5g/7whO3ATqwDLPzCjVS4=;
+        b=FX7FAPPvYhMYUWXfGFejk6tII1xlG4eEYzwFgCa89iUXFg6+AUGnvOamZJXMsxYRAx
+         5BZ6yCgVn4zU+90NSsCGGdKZuPr65U1bCeK3zGxrpMIwxOzPpxSOvhpKL3M4tGeKdyXR
+         mFMvcSgN7urOk0pq8ZZcL2NW8zHzC1C8xJmBZVqMfLCTB8A2vS79IWS6fdrlzt/KmRjI
+         T8ifpbKELX5PORKgwImGQ/StoqTRF636e19C4Q1RhJN9z0jb4ptRvzqhpzczYKG/rNPT
+         zf54yjXnTydPZ5TSaWZDSvhBbh7hdgmPK66Zex195MzOa0VKeVqL/XrJlsFtB9bwm1BD
+         T1IA==
+X-Forwarded-Encrypted: i=1; AJvYcCUemXrw/I3XeffumJvL8aWcbZVCzajPEqVU4URrSN5W0UvQZcO3xcSSgQQtUaQ+rnK8KNJIhxuj8aCvdL8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxhQtOOEW7Rk8Md/7VGldNU+h5ZD8svFz5HWCBllBuqjWL8rX2h
+	1KcVsvEy5b7XQUJ7z549aCN8hLHpFCqh8IFcsCHNiY0ZQ+cpDR3dfQoOL+s0
+X-Gm-Gg: ASbGncsR0/ZmU6XV82FxB47qwFK7tIVjsk8fFwe4zc87hUu3ajcHBKCCuigmdzeiMwT
+	xMZjjwBytb1vFFvputagudctsaNa+g26YykgTVwfnQVw6G6oriDt+a0S572lD4UFMj+/OivyV/h
+	b1XtSzI595pj21zErSGCW03REWX/5FggKu44YM3xJQRY0ndIYPZkuCDWTjVDQO7b34cPpUklur7
+	Iq6yyFsxuB51j3TFnT53hPxjkplFZuZsOWvD+hqU5nRWrVKKYC6LMz1+hBbpShC3ByU6gEzsszo
+	Hw+rXXkvteWAgWhAUfaqWt96QRm61k9MpuZj8jCjd7jhC/DJ/ckJaEQg36sKHOYx9k9seQ9sgF1
+	3
+X-Google-Smtp-Source: AGHT+IFoWcXlJ2Y2kt5E6hphyINvqSYZoaxpblol2GK31vLmIEJl4Bw3fjiMfbEvKXqLDdPFLWSWYA==
+X-Received: by 2002:a17:90b:384d:b0:2ff:7b28:a519 with SMTP id 98e67ed59e1d1-30532158ee8mr19492718a91.30.1743530978404;
+        Tue, 01 Apr 2025 11:09:38 -0700 (PDT)
+Received: from fedora (c-67-164-59-41.hsd1.ca.comcast.net. [67.164.59.41])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30516d55fbasm9696288a91.15.2025.04.01.11.09.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Apr 2025 11:09:37 -0700 (PDT)
+Date: Tue, 1 Apr 2025 11:09:35 -0700
+From: "Vishal Moola (Oracle)" <vishal.moola@gmail.com>
+To: Zi Yan <ziy@nvidia.com>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	akpm@linux-foundation.org, muchun.song@linux.dev,
+	Miaohe Lin <linmiaohe@huawei.com>,
+	Oscar Salvador <osalvador@suse.de>
+Subject: Re: [PATCH] mm/compaction: Fix bug in hugetlb handling pathway
+Message-ID: <Z-wr3-eKLv0_ChZ-@fedora>
+References: <20250401021025.637333-1-vishal.moola@gmail.com>
+ <4B989B13-EB96-4EA3-B3E4-18763941ABF3@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <4B989B13-EB96-4EA3-B3E4-18763941ABF3@nvidia.com>
 
-This adds description for AUX pause and resume.  It gives introduction
-for what's AUX pause and resume and records usage examples.
+On Tue, Apr 01, 2025 at 11:20:48AM -0400, Zi Yan wrote:
+> On 31 Mar 2025, at 22:10, Vishal Moola (Oracle) wrote:
+> 
+> > The compaction code doesn't take references on pages until we're certain
+> > we should attempt to handle it.
+> >
+> > In the hugetlb case, isolate_or_dissolve_huge_page() may return -EBUSY
+> > without taking a reference to the folio associated with our pfn. If our
+> > folio's refcount drops to 0, compound_nr() becomes unpredictable, making
+> > low_pfn and nr_scanned unreliable.
+> > The user-visible effect is minimal - this should rarely happen (if ever).
+> >
+> > Fix this by storing the folio statistics earlier on the stack (just like
+> > the THP and Buddy cases).
+> >
+> > Also revert commit 66fe1cf7f581 ("mm: compaction: use helper compound_nr
+> > in isolate_migratepages_block")
+> > to make backporting easier.
+> >
+> > Fixes: 369fa227c219 ("mm: make alloc_contig_range handle free hugetlb pages")
+> > Cc: Miaohe Lin <linmiaohe@huawei.com>
+> > Cc: Oscar Salvador <osalvador@suse.de>
+> > Signed-off-by: Vishal Moola (Oracle) <vishal.moola@gmail.com>
+> > ---
+> >  mm/compaction.c | 6 +++---
+> >  1 file changed, 3 insertions(+), 3 deletions(-)
+> >
+> 
+> <snip>
+> 
+> > @@ -1011,8 +1011,8 @@ isolate_migratepages_block(struct compact_control *cc, unsigned long low_pfn,
+> >  				 /* Do not report -EBUSY down the chain */
+> >  				if (ret == -EBUSY)
+> >  					ret = 0;
+> > -				low_pfn += compound_nr(page) - 1;
+> > -				nr_scanned += compound_nr(page) - 1;
+> > +				low_pfn += (1UL << order) - 1;
+> > +				nr_scanned += (1UL << order) - 1;
+> >  				goto isolate_fail;
+> >  			}
+> >
+> 
+> Right after this, there is “low_pfn += folio_nr_pages(folio) - 1” for
+> isolated hugetlb. I wonder if that can use order as well. Maybe not,
+> since the order is obtained without taking a reference, but folio_nr_pages()
+> is called with a reference. They might be different.
 
-Signed-off-by: Leo Yan <leo.yan@arm.com>
----
- Documentation/trace/coresight/coresight-perf.rst | 31 +++++++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
+I thought about that as well. There's a very unlikely case where they
+could be different: We had a hugetlb page, free'd it, then allocated it
+to another hugetlb page. At this point (the success path) we would want
+the rest of the compaction counters all the sync up to whichever folio
+we ended up isolating anyways.
 
-diff --git a/Documentation/trace/coresight/coresight-perf.rst b/Documentation/trace/coresight/coresight-perf.rst
-index d087aae7d492..30be89320621 100644
---- a/Documentation/trace/coresight/coresight-perf.rst
-+++ b/Documentation/trace/coresight/coresight-perf.rst
-@@ -78,6 +78,37 @@ enabled like::
- 
- Please refer to the kernel configuration help for more information.
- 
-+Fine-grained tracing with AUX pause and resume
-+----------------------------------------------
-+
-+Arm CoreSight may generate a large amount of hardware trace data, which
-+will lead to overhead in recording and distract users when reviewing
-+profiling result. To mitigate the issue of excessive trace data, Perf
-+provides AUX pause and resume functionality for fine-grained tracing.
-+
-+The AUX pause and resume can be triggered by associated events. These
-+events can be ftrace tracepoints (including static and dynamic
-+tracepoints) or PMU events (e.g. CPU PMU cycle event). To create a perf
-+session with AUX pause / resume, three configuration terms are
-+introduced:
-+
-+- "aux-action=start-paused": it is specified for the cs_etm PMU event to
-+  launch in a paused state.
-+- "aux-action=pause": an associated event is specified with this term
-+  to pause AUX trace.
-+- "aux-action=resume": an associated event is specified with this term
-+  to resume AUX trace.
-+
-+Example for triggering AUX pause and resume with ftrace tracepoints::
-+
-+  perf record -e cs_etm/aux-action=start-paused/k,syscalls:sys_enter_openat/aux-action=resume/,syscalls:sys_exit_openat/aux-action=pause/ ls
-+
-+Example for triggering AUX pause and resume with PMU event::
-+
-+  perf record -a -e cs_etm/aux-action=start-paused/k \
-+        -e cycles/aux-action=pause,period=10000000/ \
-+        -e cycles/aux-action=resume,period=1050000/ -- sleep 1
-+
- Perf test - Verify kernel and userspace perf CoreSight work
- -----------------------------------------------------------
- 
--- 
-2.34.1
+> Anyway, Reviewed-by: Zi Yan <ziy@nvidia.com>
 
+Thanks!
+
+> 
+> Best Regards,
+> Yan, Zi
