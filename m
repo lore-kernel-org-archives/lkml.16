@@ -1,238 +1,117 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 545F1189F56
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 08:59:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D76B72E3398;
+	Tue,  1 Apr 2025 09:02:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743497985; cv=none; b=ALUWH9+V8vTRvtBwODLuS2Sso2tkPZULZKncCCgfGLslZu+sM0vtVFlHBkoN3c6MhJ7XBTGdMWmGEJZnLRofQWTvjvyUEEkfdzA/IztP+81l0t7CzUAywfCjIGDMdRAGbYXBf89gyxHT3is06YxHCOZ5yf1V7cvE7rurTyTCvX0=
+	t=1743498124; cv=none; b=AE7aFQUuPcN8tDzDvapHPyzGFD7lUAWGvC91U55smaMMNIFw5k/NwprqcDQBpvUeJhQwdl+utYbn1hwKLE64Ac1ELN5yNRDyhPwPkTFflCL85btba1Vee9B05/owHM97m91HH54GFnsmQe0mTmRQBtCeOOL7wC0U1PFkYpfdQ8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743497985; c=relaxed/simple;
-	bh=iA3vc6iBumO0wyuNH4D4SNx9H8X39pPVlKvlLxxeDqY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cofMTD3s3mjuHtbcbzHHznB0QJCh6U6WAK5CnbwnEYlPIdwHR9WdHgE3BLzPAA9WfsbFJOzKXe+Qm9Bn2ajHpDuaecinThufkjGnXSZQcvMtTeDhY9uEKNYcJsPgrIIT3JoC5F9/j1OIN6GwUp9fSfUlZtuATuQv6jTBmnXsO0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RdYg5tmv; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1743498124; c=relaxed/simple;
+	bh=VI5yT9jpHjlzg60KJwY/XU6fciyxVu2IGdFjNie9vpo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qalXQ3ScZEpyXIP5UPpwZlWRHP1Jf5pbWYh3IrBTxYptQkXtd8H2OzEtlC27e9m3FYrtKqof+9GNm/LoHQzedAD9zXD/MvdcXwX9eJLjsMjLlMxsVW6JrEtHq895yVaffTFuETK+Nmh1Kb+NCyr4Yh8bl9lN3LzztkjIYeK1XaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Mqz+4jAA; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RdYg5tmv"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2295d78b433so9270625ad.2
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 01:59:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mqz+4jAA"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43948f77f1aso36976495e9.0;
+        Tue, 01 Apr 2025 02:02:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743497982; x=1744102782; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=DUtQE7nMd/6PSKoEtlC68hCAEgv6hCHzZZn6Ocd8nbQ=;
-        b=RdYg5tmvEjiqm121IL/nr5xTsAa7TODaIHEnWSDofjTsVwB49Br7seF1Dq21pX/7Wz
-         K5QnifMwPrCJ5zbt9gk+6sqkpTWi/+QA09Bs07vk1H6UMLVL2mQsyW6aNnsgHZpOuHhy
-         7E7ByvnqJDTBpw1E8Sg0f71SRGTUbO9gFg8msmdg3yF9gliU7sJ+urFZttPKVFb9hMTv
-         MV+amILgTfQ6z4rq2KcMkStei4C3km3hnTT9OnhPkcT4UsW1O5+CcRZyMA9H9OKolP2b
-         snayhs/E369slo70k5DbOqgQm03ea0BTUA+LPeEdjtzCwrgzYONnY8Lclvinb1iT+oJc
-         tNFg==
+        d=gmail.com; s=20230601; t=1743498121; x=1744102921; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=vXhLpKVjnwBdZ6H+LETE03eu0VWJLVcdTshCBskUvJ8=;
+        b=Mqz+4jAAd7PnJNlu8AWZxTuCYEYU0wzM3JzgAVQXi3qLzwSQ0Y7JeKfaN2k63tgUpc
+         /LdOpH7SRPXtmCY8hOBkw07ZnpExUmmAg2fZMGyN/YAp2jlh4KeNSEk7Un7Ute1MZs8d
+         IZkpdcMJKxrUbNpeRI7oBq66RHG6Emtupg5OHtY+HHEZ8LyijqX1dS6qkPbaFYCbqWwr
+         cY9VaPzAPILQNIy7F7UKvjSDO7cWM1Zfei1SfsmdD/SwephtqMsTAWvcXHIiqQ2OHAvS
+         19Z0Ks2If1mjT7yFDeqicB/HgWv6VchBpp044bj5YRnvQvCt5P6eftYXW6cVbtH1x2Cu
+         0ewg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743497982; x=1744102782;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1743498121; x=1744102921;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=DUtQE7nMd/6PSKoEtlC68hCAEgv6hCHzZZn6Ocd8nbQ=;
-        b=XA9LyW6gOt3C4NBngQZqBDPw+HMDLW7hicPid2+eLqehWox6dTEuSNdVIbE9s/9t0n
-         TFR/FySmcGDXbbwcXesd3l+MbQEUl/lgQuLqk3jolpkqKlHZ7c709dJ+714cLnEjN+YE
-         VHDEOhjTkUC6QzTdwBmdsGtGyj9ePMtrkBcsFxthxiGARmpkfqAeUD/W5sGTO6YJMBIF
-         MriEvh8RQ30XZjFuFjlCneAtVtHK0bLEyy0ZJ2oBxmMuFwpnbuNiBuoqochu1j8cRTQu
-         XOUPIWNvSN7J+/B2+/sKv5dkj7mUvCvMUVJ1C+nY35U5gJqSeV1Ep7OQH53KBg378V6d
-         jt5Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVtzFPH9OXkmWVLdWkO81Hoep1rwesBuX1bEl56uO2k7W+cNEAYq0FhXHU6MX6NNW/Vd5d38nEnXDFbJXw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzurQHP1LG1Z73SjicdMvlCxM3nhjXdCeFcVKlYeZo8Cp1jDa7u
-	FqOimTYSxVbm2C89Zq6LNamtjGzIs4tUBDIR0vjyHebTLmVmpGg8vfsz8HCbJCynoTTfeT6YldF
-	hoB0xM389cIXhPjbG3x5ojm+Vd4xd5wqRA7eka/orJCY+d5D3
-X-Gm-Gg: ASbGncunwcmWIbrTIbfCajMfIeAPi19kS4zLkJt4V/qtRAG3mHjIfbDTPUIvZJg4l8t
-	PyYcpL9aR14rZavcTGob9uOLrbRF1/CUh3Ay6y+myg08lgLtVarHS8VMQ0wUXBau2ZFuAljtnLY
-	exFHgbK79gWZkH0AwxnfT7r6jHn8c=
-X-Google-Smtp-Source: AGHT+IGzin6V0f0YGKy7Udk3aewjUGbBv6XmcP/DU6qB3LkeQJ2R2Z1zAebpSyapanvD2hTwAq7WiNaUzpcJ1/QKOno=
-X-Received: by 2002:a05:6a00:853:b0:736:9fa2:bcbb with SMTP id
- d2e1a72fcca58-73980436cbamr19044549b3a.24.1743497982506; Tue, 01 Apr 2025
- 01:59:42 -0700 (PDT)
+        bh=vXhLpKVjnwBdZ6H+LETE03eu0VWJLVcdTshCBskUvJ8=;
+        b=JLA7mxTbZj8ansERjXdexvfE/zONSIIhFIGYcax90C4AowruQDScQYY1ngsV26d9p7
+         IAbvlaNIl1pmgxZBNodJiH//DCeAl68Ym8qQyoa8NmoqJmVUsCQ7owzlzXaXH46av4hI
+         hQUWYm8j9fJshss+VOJHIt3JYolwOZNW8CReZvX+F8wXJjSXU2kfyr4DuD/bnJrYpEyT
+         8hcnOZ487MuPcP0gl8twQ23ghWQLGsfL13vkgVcJephBvy1ZSa/roj7808lbrrnPWduv
+         zRA5PzbVxufnFKbLBeequtynpFvmZeDDFMzvf3zUc2jewyXv5numf5QRNP4yVUyLLYrF
+         jG7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUBZFae36AAKO5dQ4Y9utJojzFcdL/eKAEzznJOWV5QGkOBeE+NmH6CBgKOs3goQe9HUm2wcjg6kaQd0BwPY5YuskA=@vger.kernel.org, AJvYcCVLZSXv0a49nybXdeTbDjlZe7llM0lelFZdMSWpEgztCx8vMvC2aJI2akgOAq5NBmLoF3POY++tGZ7G45I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxyP1kMN2n9CPJI+dwmeYLjoyOIp/mHOlrcs9ZWhRihn11eCYk9
+	+jjQpgeQXgiPl2AkEvSiGPVpP8udAkJVVnfwcGhwOcIgFuf1heH9
+X-Gm-Gg: ASbGncvHkjk6uSTz3g7SpTXBLQywsHtePKHb4Vj6AYIPF04rbVeq7S1uW5WyYga78fE
+	r2SrP5vtOb2T4AfzB2kRQAhs4ak91F8WA9SWjxgeGN5uQLXIcz4OEWNEQusDur/8ocXjjM9jruR
+	rsP18bdDbgifmJs2YQ8ZZD0YPmrkC2FykvASV0HMWJTJ7jDXbfbMWfuu3ryj5Z8Dd2kNyE4V16J
+	PG91WMmnMxyOJQB+mShXwN1y2ih0p96EX3Rovf64/nDQjqy9jJz4CpH8BP2z3uxHsF8yj/gaV2i
+	XSl054imm3M89a7ZxAjg7RczUKgXS14UMPG1wYbRiyJTtc9htS1rtUL+rpf4o1C5/V0qMg==
+X-Google-Smtp-Source: AGHT+IEbDdByftUuB1De7ADpvc3T3jH/tL6StJDvnUvXJU9t27T8dcC38/SRewNGsYVLRwVfe0oXnw==
+X-Received: by 2002:a05:600c:8718:b0:43c:e8ca:5140 with SMTP id 5b1f17b1804b1-43db62bcfeemr99251765e9.23.1743498120922;
+        Tue, 01 Apr 2025 02:02:00 -0700 (PDT)
+Received: from iku.Home ([2a06:5906:61b:2d00:cd7b:4630:9a98:b82a])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d8fcd0738sm148391545e9.19.2025.04.01.02.02.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Apr 2025 02:02:00 -0700 (PDT)
+From: Prabhakar <prabhakar.csengg@gmail.com>
+X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To: Geert Uytterhoeven <geert+renesas@glider.be>,
+	Russell King <linux@armlinux.org.uk>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	Prabhakar <prabhakar.csengg@gmail.com>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH 0/4] Simplify Renesas SoC Configuration
+Date: Tue,  1 Apr 2025 10:01:29 +0100
+Message-ID: <20250401090133.68146-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250311170451.611389-1-leo.yan@arm.com> <20250311170451.611389-2-leo.yan@arm.com>
-In-Reply-To: <20250311170451.611389-2-leo.yan@arm.com>
-From: Mike Leach <mike.leach@linaro.org>
-Date: Tue, 1 Apr 2025 09:59:31 +0100
-X-Gm-Features: AQ5f1JpICOn046XWir454LuVhWbevJeRSx1F27tfX6sfrfiP5_Zt2Y4Br9MlhyM
-Message-ID: <CAJ9a7Vi7kkjqfTWkY1-KP-HZUNG-25sPCZqDf2_n5i_OagEDGw@mail.gmail.com>
-Subject: Re: [PATCH v3 1/6] coresight: etm4x: Extract the trace unit controlling
-To: Leo Yan <leo.yan@arm.com>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>, James Clark <james.clark@linaro.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Tue, 11 Mar 2025 at 17:05, Leo Yan <leo.yan@arm.com> wrote:
->
-> The trace unit is controlled in the ETM hardware enabling and disabling.
-> The sequential changes for support AUX pause and resume will reuse the
-> same operations.
->
-> Extract the operations in the etm4_{enable|disable}_trace_unit()
-> functions.  A minor improvement in etm4_enable_trace_unit() is for
-> returning the timeout error to callers.
->
-> Signed-off-by: Leo Yan <leo.yan@arm.com>
-> ---
->  .../coresight/coresight-etm4x-core.c          | 103 +++++++++++-------
->  1 file changed, 62 insertions(+), 41 deletions(-)
->
-> diff --git a/drivers/hwtracing/coresight/coresight-etm4x-core.c b/drivers/hwtracing/coresight/coresight-etm4x-core.c
-> index e5972f16abff..53cb0569dbbf 100644
-> --- a/drivers/hwtracing/coresight/coresight-etm4x-core.c
-> +++ b/drivers/hwtracing/coresight/coresight-etm4x-core.c
-> @@ -431,6 +431,44 @@ static int etm4x_wait_status(struct csdev_access *csa, int pos, int val)
->         return coresight_timeout(csa, TRCSTATR, pos, val);
->  }
->
-> +static int etm4_enable_trace_unit(struct etmv4_drvdata *drvdata)
-> +{
-> +       struct coresight_device *csdev = drvdata->csdev;
-> +       struct device *etm_dev = &csdev->dev;
-> +       struct csdev_access *csa = &csdev->access;
-> +
-> +       /*
-> +        * ETE mandates that the TRCRSR is written to before
-> +        * enabling it.
-> +        */
-> +       if (etm4x_is_ete(drvdata))
-> +               etm4x_relaxed_write32(csa, TRCRSR_TA, TRCRSR);
-> +
-> +       etm4x_allow_trace(drvdata);
-> +       /* Enable the trace unit */
-> +       etm4x_relaxed_write32(csa, 1, TRCPRGCTLR);
-> +
-> +       /* Synchronize the register updates for sysreg access */
-> +       if (!csa->io_mem)
-> +               isb();
-> +
-> +       /* wait for TRCSTATR.IDLE to go back down to '0' */
-> +       if (etm4x_wait_status(csa, TRCSTATR_IDLE_BIT, 0)) {
-> +               dev_err(etm_dev,
-> +                       "timeout while waiting for Idle Trace Status\n");
-> +               return -ETIME;
-> +       }
-> +
-> +       /*
-> +        * As recommended by section 4.3.7 ("Synchronization when using the
-> +        * memory-mapped interface") of ARM IHI 0064D
-> +        */
-> +       dsb(sy);
-> +       isb();
-> +
-> +       return 0;
-> +}
-> +
->  static int etm4_enable_hw(struct etmv4_drvdata *drvdata)
->  {
->         int i, rc;
-> @@ -539,33 +577,7 @@ static int etm4_enable_hw(struct etmv4_drvdata *drvdata)
->                 etm4x_relaxed_write32(csa, trcpdcr | TRCPDCR_PU, TRCPDCR);
->         }
->
-> -       /*
-> -        * ETE mandates that the TRCRSR is written to before
-> -        * enabling it.
-> -        */
-> -       if (etm4x_is_ete(drvdata))
-> -               etm4x_relaxed_write32(csa, TRCRSR_TA, TRCRSR);
-> -
-> -       etm4x_allow_trace(drvdata);
-> -       /* Enable the trace unit */
-> -       etm4x_relaxed_write32(csa, 1, TRCPRGCTLR);
-> -
-> -       /* Synchronize the register updates for sysreg access */
-> -       if (!csa->io_mem)
-> -               isb();
-> -
-> -       /* wait for TRCSTATR.IDLE to go back down to '0' */
-> -       if (etm4x_wait_status(csa, TRCSTATR_IDLE_BIT, 0))
-> -               dev_err(etm_dev,
-> -                       "timeout while waiting for Idle Trace Status\n");
-> -
-> -       /*
-> -        * As recommended by section 4.3.7 ("Synchronization when using the
-> -        * memory-mapped interface") of ARM IHI 0064D
-> -        */
-> -       dsb(sy);
-> -       isb();
-> -
-> +       rc = etm4_enable_trace_unit(drvdata);
->  done:
->         etm4_cs_lock(drvdata, csa);
->
-> @@ -884,25 +896,12 @@ static int etm4_enable(struct coresight_device *csdev, struct perf_event *event,
->         return ret;
->  }
->
-> -static void etm4_disable_hw(void *info)
-> +static void etm4_disable_trace_unit(struct etmv4_drvdata *drvdata)
->  {
->         u32 control;
-> -       struct etmv4_drvdata *drvdata = info;
-> -       struct etmv4_config *config = &drvdata->config;
->         struct coresight_device *csdev = drvdata->csdev;
->         struct device *etm_dev = &csdev->dev;
->         struct csdev_access *csa = &csdev->access;
-> -       int i;
-> -
-> -       etm4_cs_unlock(drvdata, csa);
-> -       etm4_disable_arch_specific(drvdata);
-> -
-> -       if (!drvdata->skip_power_up) {
-> -               /* power can be removed from the trace unit now */
-> -               control = etm4x_relaxed_read32(csa, TRCPDCR);
-> -               control &= ~TRCPDCR_PU;
-> -               etm4x_relaxed_write32(csa, control, TRCPDCR);
-> -       }
->
->         control = etm4x_relaxed_read32(csa, TRCPRGCTLR);
->
-> @@ -943,6 +942,28 @@ static void etm4_disable_hw(void *info)
->          * of ARM IHI 0064H.b.
->          */
->         isb();
-> +}
-> +
-> +static void etm4_disable_hw(void *info)
-> +{
-> +       u32 control;
-> +       struct etmv4_drvdata *drvdata = info;
-> +       struct etmv4_config *config = &drvdata->config;
-> +       struct coresight_device *csdev = drvdata->csdev;
-> +       struct csdev_access *csa = &csdev->access;
-> +       int i;
-> +
-> +       etm4_cs_unlock(drvdata, csa);
-> +       etm4_disable_arch_specific(drvdata);
-> +
-> +       if (!drvdata->skip_power_up) {
-> +               /* power can be removed from the trace unit now */
-> +               control = etm4x_relaxed_read32(csa, TRCPDCR);
-> +               control &= ~TRCPDCR_PU;
-> +               etm4x_relaxed_write32(csa, control, TRCPDCR);
-> +       }
-> +
-> +       etm4_disable_trace_unit(drvdata);
->
->         /* read the status of the single shot comparators */
->         for (i = 0; i < drvdata->nr_ss_cmp; i++) {
-> --
-> 2.34.1
->
+From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Reviewed-by: Mike Leach <mike;leach@linaro.org>
+Hi All,
+
+This patch series simplifies the configuration of Renesas SoCs by enabling
+all Renesas SoCs by default when ARCH_RENESAS is set. Since ARCH_RENESAS is
+already  enabled in defconfig files, explicitly listing individual SoCs is
+redundant. By removing these entries, we streamline the configuration, reduce
+maintenance effort, and ensure consistency across different defconfig files.
+
+Note, acks from Geert are added to patches 2-4 which were reviewed here
+https://lore.kernel.org/all/20250327193318.344444-1-prabhakar.mahadev-lad.rj@bp.renesas.com/
+
+Cheers,
+Prabhakar
+
+Lad Prabhakar (4):
+  soc: renesas: Kconfig: Enable SoCs by default when ARCH_RENESAS is set
+  arm64: defconfig: Remove individual Renesas SoC entries
+  arm: shmobile_defconfig: Drop individual Renesas SoC entries
+  arm: multi_v7_defconfig: Drop individual Renesas SoC entries
+
+ arch/arm/configs/multi_v7_defconfig | 19 -------------
+ arch/arm/configs/shmobile_defconfig | 19 -------------
+ arch/arm64/configs/defconfig        | 23 ----------------
+ drivers/soc/renesas/Kconfig         | 42 +++++++++++++++++++++++++++++
+ 4 files changed, 42 insertions(+), 61 deletions(-)
+
+
+base-commit: 7b7d0894c66154494b8295a2e73cfb5516f65756
 -- 
-Mike Leach
-Principal Engineer, ARM Ltd.
-Manchester Design Centre. UK
+2.49.0
+
