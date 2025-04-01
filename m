@@ -1,46 +1,67 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A652D1E261F;
-	Tue,  1 Apr 2025 08:22:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74A0B126C03;
+	Tue,  1 Apr 2025 08:24:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743495779; cv=none; b=sn6h7KKD83b8DT64SNxwhr5eHRfwl5sOe4RV4XJdxhcGxR81xjg6oklE2W9hzyxFDM6FKuDtKJ0KcdYjAq4aHIcm3sFi6kCb9yWpzJhG/EPKk4lvnlrEKbXiSnLJGVstvjm1WqB8lKgZ411/zPM/MU45ITTWIggPYNH04arlfLQ=
+	t=1743495859; cv=none; b=efSXaUI7tuIRVq4xFrq87feHbInGAiO2xXphlaL9RyIzOBI7eFVpI2QPDitP+TInceKvTwiZAyNlt86V4Jp/7dU4O8GqSTGJu+Jql9dEd0mK3Hn+2YJy+Y2SKxrBUAEJixN7gyBZen+UL1UtD0Da/mMofsrVT/oAvl1KZUF0QlI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743495779; c=relaxed/simple;
-	bh=O0QQJEF18+1rlQZs043LAf4yFZOKmppUTBC2llv9WRc=;
+	s=arc-20240116; t=1743495859; c=relaxed/simple;
+	bh=9bg8JE963ebDl+kz9gvUnm5l7+j6XpHxOJuZmSbHKPM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NfH2ozepZhbmUEu2db2bDSoJAXP/EC1Wz+ZIEBXfp/gAQW58/O+WL6hrVr+4X1x4OoI6cOrQ7zzGuibj1ZrJKy9CXZElmH7913cYmPWAqcgQcfuSAveSUgb7Smd6GuxAWjYfWBswp0oSOnt816L01r0Vna/kc4Dye+NqpB/1omo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H3aJCLaU; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=nFIzBzToXc490bYT4E7Dw6SczyOlM1wMkDo0rsCYfRf2S4uSGJupp72LbpjFPP3A4U62QtLSFiHus27+9DV+xKpq2xK4xpCSoTXybJ/i/sPqguKOW9Hx+GetCg13VnQkeO9GNSqzYGuFUCOYGaVMbKkY9baTAAyhKnlZMdDCOZ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=St4nbDsC; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H3aJCLaU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4A2AC4CEE4;
-	Tue,  1 Apr 2025 08:22:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743495779;
-	bh=O0QQJEF18+1rlQZs043LAf4yFZOKmppUTBC2llv9WRc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=H3aJCLaUO6zzX8Z9stF1XQwpJLlyTGC+uYJ1dakhWIF3agcP/5BLLtepziTzajCK1
-	 S8a85mi95sIQ7Uix4i9u31YkllaLlwFy18x7AHj3ISHlDZrMj40OfhfcueXObWLfwB
-	 DVBPMRz0svKriGcJjI98U43pgNZ/gTDXIhtJjAv5nSDwPFw0AI4Mxkcd8gJdt1e/r8
-	 JRl9cWCOIkehMkNwnKrSWYjlWV79JbvvQ6c6cK+TSFmxraAwLdzCCBQ5FDcom+m+FI
-	 TE1f2ITwQfjbbQ2FBBJTE4JE1j50A5T02DmJ1IeMaCdbLOxPHNnifpfM2C4ImcwZip
-	 FADmhbExd11rQ==
-Date: Tue, 1 Apr 2025 10:22:53 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: "H. Peter Anvin" <hpa@zytor.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	"Xin Li (Intel)" <xin@zytor.com>, linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-	pavel@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-	xi.pardee@intel.com, todd.e.brandt@intel.com
-Subject: Re: [PATCH v1 1/1] x86/fred: Fix system hang during S4 resume with
- FRED enabled
-Message-ID: <Z-uiXfz1nOP7jGQv@gmail.com>
-References: <20250326062540.820556-1-xin@zytor.com>
- <CAJZ5v0jfak9K_7b=adf5ew-xDiGHUEPSp5ZpAGt66Okj-ovsGQ@mail.gmail.com>
- <148C8753-8972-4970-8951-E2D1CB26D8B0@zytor.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="St4nbDsC"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5316NGY7029331;
+	Tue, 1 Apr 2025 08:24:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=KuN6HdO0gerIctf9ee3sQ9CHf8meU3
+	/Hiacx5Y7p5UY=; b=St4nbDsCcGTZ2yYy0YOnn6fp5ABc7Fh8netA1YpQjcFVN5
+	5JZhL1FtH99JUHHU/Y1DMN8UwQ+b4PXomKzhlhCoYG2LbuYJNDNulJPs5CI4SBBP
+	hDF/pMZaoj6pfG31U57S3c4r0gbajQ7DF+FvBw7fNVtoVU1O1D7yLlTG2hfvAVvG
+	quM+dRWo9fmreUkqbzNteaGIcb9ocKhr6COQes+mDkwSfCvI3d2TXBM/lcW4fKam
+	z/NYXbUNae9BIpxnNi0cL129oMtHmglUkpNZFAh+7gsDOcZa0Ol7r6iVJIsrtqBo
+	3IAI+YRiDZj0hLk8OTja9EB1/70ZZvMRDxTWnDOg==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45qy7xba57-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 01 Apr 2025 08:24:15 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5315hBE1005431;
+	Tue, 1 Apr 2025 08:24:15 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 45pww29a32-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 01 Apr 2025 08:24:15 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5318OBwQ41091576
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 1 Apr 2025 08:24:11 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A196C20040;
+	Tue,  1 Apr 2025 08:24:11 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 87CB82004B;
+	Tue,  1 Apr 2025 08:24:11 +0000 (GMT)
+Received: from osiris (unknown [9.152.212.60])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Tue,  1 Apr 2025 08:24:11 +0000 (GMT)
+Date: Tue, 1 Apr 2025 10:24:10 +0200
+From: Heiko Carstens <hca@linux.ibm.com>
+To: Anthony Krowiak <akrowiak@linux.ibm.com>
+Cc: linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, gor@linux.ibm.com
+Subject: Re: [PATCH v2] s390/vio-ap: Fix no AP queue sharing allowed message
+ written to kernel log
+Message-ID: <20250401082410.7691A4a-hca@linux.ibm.com>
+References: <20250311103304.1539188-1-akrowiak@linux.ibm.com>
+ <156b71cf-b94f-4fa0-a149-62bb8c2a797b@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,34 +70,30 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <148C8753-8972-4970-8951-E2D1CB26D8B0@zytor.com>
+In-Reply-To: <156b71cf-b94f-4fa0-a149-62bb8c2a797b@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: WAteCHon0117U6igZbU1rI62dPkoyrzi
+X-Proofpoint-GUID: WAteCHon0117U6igZbU1rI62dPkoyrzi
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-01_03,2025-03-27_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 malwarescore=0
+ adultscore=0 mlxlogscore=738 spamscore=0 priorityscore=1501
+ lowpriorityscore=0 bulkscore=0 phishscore=0 suspectscore=0 impostorscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502280000 definitions=main-2504010051
 
-
-* H. Peter Anvin <hpa@zytor.com> wrote:
-
-> Just to make it clear: the patch is correct, the shortcoming is in 
-> the description.
+On Mon, Mar 31, 2025 at 06:22:42PM -0400, Anthony Krowiak wrote:
 > 
-> I would say that Xin's description, although perhaps excessively 
-> brief, is correct from the *hardware* point of view, whereas Rafael 
-> adds the much needed *software* perspective.
+> Gentlemen,
+> 
+> I got some review comments from Heiko for v1 and implemented his suggested
+> changes. I have not heard from anyone else, but I think if Heiko agrees that
+> the changes are sufficient, I think this can go upstream via the s390 tree.
+> What say you?
+> 
+> Kind regards,
+> Tony Krowiak
 
-This part of the -v1 patch was a bit misleading to me:
-
->> Due to changes in the kernel text and data mappings, the FRED MSRs 
->> must be reinitialized.
-
-... as it suggests that the FRED MSRs will change from before the 
-suspend - while they don't.
-
-What this sentence meant is that FRED MSRs set up by the intermediate 
-*kexec kernel* are incorrect and must be reinitialized again to 
-reconstruct the pre-hibernation state. Ie. there's 3 FRED setup states: 
-pre-S4, kexec and post-S4, where pre-S4 == post-S4. Right?
-
-I think the description and comments in the -v2 patch are better in 
-this regard.
-
-Thanks,
-
-	Ingo
+Applied, with subject fixed, and some minor coding style fixes.
+Thanks!
