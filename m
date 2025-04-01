@@ -1,57 +1,40 @@
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
+Received: from mout.web.de (mout.web.de [212.227.15.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 378F0153598
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 16:45:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A913F1FBE83;
+	Tue,  1 Apr 2025 16:47:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743525938; cv=none; b=iIYm1uf7WOmHkR9wHwE8ksUp6wk3yrXE56qI8FcSUbx5OcGbAHyaDHEBMj4c4otMueMB3nGhxe6MSPjR/E9k7w5WdwThmWqnuLon3wp7UrQ6c8NZHShulK8hcc4BL4DtO6dZViR/qFvC1mL4GlKfBT6+oahBXhQyDCQpRKzM8ag=
+	t=1743526029; cv=none; b=SkfCgro2+5OkhJ3Yy/DWfGkMjoXkyobepEe+WpPl+1iAE/M8f6RJ64HjZ/4qKwKLJBWRTJOxo5E6qHvt/Bye1n+conuNaReZLBb2VG1xrYwC2qkxKGq7RwK5wVtFSFXcietWc27OC7EP8XDkVn4tj0K45y+b1oTO+v8KtAuWndg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743525938; c=relaxed/simple;
-	bh=oTGhCamOrM1xMEeBafYdBjBxoq8L4GIh/5cxdVxrWI4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=ty1wtWWIJvmxjNvf+YlieA2qSKxMP2XrireSAV68M+2fA2Z4l2AzkyZFm5meayAi7mb4gMJSow2pff3M0hmaPDc27UwscrZmpccFKqkJnl51Vxo6WUGilf/ZfcX3i5f987WulxcL3R89lvxGDcndc4YRcDBzwfGorSiqU6AykpM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=eDI49ygt; arc=none smtp.client-ip=210.118.77.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1743526029; c=relaxed/simple;
+	bh=a6MFPOblanBjv8HejQd+RDyGK+ufnxyTPj6oKXkPptE=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=L4Q5Ajcy2kQD31F5XmIXwyFI0LloOHO0ZCtXNQ/IUWP/D9ZMgPAvwxShKCVJ+DW+MnU08+/YLtsGl2v9hMRZfP2vOAPXjd73fXVNUi38EDENz11wSZln5/7wwUat0DuFeeMrwCEKr2MPPJdIo/hUg/gtbqfVle9NbRzi6qDTRDQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=r0lN0vQd; arc=none smtp.client-ip=212.227.15.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="eDI49ygt"
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250401164534euoutp0283d6a8a59e3805a6bc65ade23bf87c75~yP5l5DkWr1862218622euoutp02M
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 16:45:34 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250401164534euoutp0283d6a8a59e3805a6bc65ade23bf87c75~yP5l5DkWr1862218622euoutp02M
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1743525934;
-	bh=Du8cCR/sSoRf9rcgO+pEyuLkob3npJUMn2Zdq/2m35Y=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=eDI49ygtc4ET/2jwW0/2sPXZM0iaB6W4wILNPTLDkg8WbgxVk7h6t/O9OumvfzYqM
-	 C26tYbnG/Ki25PGCMClThCdiZ+jpWVZAphVWUsGfoNyKP7UpKahoGZ6k4MHRLlvZ1l
-	 wLmGIc6Z5lNmnYQZg8bkgR/Ji2FmGdNuriql/4yY=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-	20250401164533eucas1p2e13c79cd7be796d91c5ac2dbd00652ec~yP5lbJE652058120581eucas1p2Z;
-	Tue,  1 Apr 2025 16:45:33 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-	eusmges3new.samsung.com (EUCPMTA) with SMTP id D6.4D.20397.D281CE76; Tue,  1
-	Apr 2025 17:45:33 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250401164532eucas1p12733b49f77201419ad208931bd8bbaee~yP5kuU7FM0420604206eucas1p1r;
-	Tue,  1 Apr 2025 16:45:32 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-	eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20250401164532eusmtrp2c5b611f960b39ac9ed7d3470861d6235~yP5ktimqz2743327433eusmtrp2q;
-	Tue,  1 Apr 2025 16:45:32 +0000 (GMT)
-X-AuditID: cbfec7f5-ed1d670000004fad-17-67ec182dd26d
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-	eusmgms2.samsung.com (EUCPMTA) with SMTP id CF.2D.19654.C281CE76; Tue,  1
-	Apr 2025 17:45:32 +0100 (BST)
-Received: from [192.168.1.44] (unknown [106.210.136.40]) by
-	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20250401164531eusmtip189b291997140378de0a617b6bf7a559f~yP5jwXRGe2785927859eusmtip1G;
-	Tue,  1 Apr 2025 16:45:31 +0000 (GMT)
-Message-ID: <a9716af2-2403-44a4-b1a7-c3ab832c3c1c@samsung.com>
-Date: Tue, 1 Apr 2025 18:45:31 +0200
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="r0lN0vQd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1743525973; x=1744130773; i=markus.elfring@web.de;
+	bh=WKBH7ZnN/oJER/hjnFN7pP/Ka1YrlQ/HQDnv3BjczOI=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=r0lN0vQdvYzOxPxQhC5hkIb0SjSUjXVUNgqEPEi0rPpr1sWGFE+LkWS8oWcn2BND
+	 wQheoEdHPJBz0y+izX3vM/j3Mgzchh54PvRWHy77gAs20SHz1HJAxOACPdswe9VUp
+	 Y+Dsh+7tI09s0+ft5n2FXEXjKolsegcXL2oGvAPzLBNudUmDPUsSzjtBviuS+chnI
+	 rbOTBP3CHFVxscI9g7pNLlJZcvICK/uVAuvoJWUIomXgfgWnJOHbhCMDVpVsdy14e
+	 1apYUAdMYfhL7tKGCIE9RYv5rNcm50yRP5d7/vv63HvR6LGKqlBOsiewPxE5LLSmV
+	 BUZSg2Is58rYu3Xrjw==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.70.54]) by smtp.web.de (mrweb006
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1Mcpuw-1tR9HT1k3O-00bcaG; Tue, 01
+ Apr 2025 18:46:13 +0200
+Message-ID: <57fac291-6d7b-40e8-a4bf-8b8704662b9f@web.de>
+Date: Tue, 1 Apr 2025 18:46:12 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,240 +42,67 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 01/18] dt-bindings: gpu: img: Future-proofing
- enhancements
-To: Matt Coster <matt.coster@imgtec.com>, Frank Binns
-	<frank.binns@imgtec.com>, David Airlie <airlied@gmail.com>, Simona Vetter
-	<simona@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Nishanth Menon <nm@ti.com>, Vignesh
-	Raghavendra <vigneshr@ti.com>, Tero Kristo <kristo@kernel.org>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Randolph
-	Sapp <rs@ti.com>, Darren Etheridge <detheridge@ti.com>, Alessio Belle
-	<alessio.belle@imgtec.com>, Alexandru Dadu <alexandru.dadu@imgtec.com>
-Content-Language: en-US
-From: Michal Wilczynski <m.wilczynski@samsung.com>
-In-Reply-To: <20250326-sets-bxs-4-64-patch-v1-v5-1-e4c46e8280a9@imgtec.com>
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrOKsWRmVeSWpSXmKPExsWy7djP87q6Em/SDU5NV7Q4cX0Rk8WBV2uY
-	Lb4/bWO2WLP3HJPFxBVeFvOPnGO1uPL1PZvFuqcX2C2Wf57NbvFy1j02i02Pr7FaXN41h81i
-	4cetLBZLduxitGjrXMZq8ebHWSaL/3t2sFt09Nxks5j9bj+7xZY3E1kt/p/9wO4g6rH32wIW
-	j52z7rJ79Ow8w+ixaVUnm8e8k4Ee97uPM3lsXlLvsfl0tcfxG9uZPD5vkgvgiuKySUnNySxL
-	LdK3S+DKuH/pDWNBu2XF/Nb1LA2M+3S6GDk5JARMJFb+/8rWxcjFISSwglFi0cqbUM4XRonW
-	Be9YIJzPjBIvr25jgml59u8NI4gtJLCcUeLMrTCIoreMErfuz2YFSfAK2Ek0fd8O1MDBwSKg
-	InH/XTVEWFDi5MwnLCC2qIC8xP1bM9hBbGGBYIlL+16zgswREfjELLF11z4wh1lgAZNE48d7
-	YJuZBcQlbj2ZD2azCRhJPFg+H2wZp4C3xPUXLSwQNfISzVtnM4M0Swi845Q4t/gtM8gVEgIu
-	EnsmJUJ8ICzx6vgWdghbRuL/zvlQn+VLPNj6iRnCrpHY2XMcyraWuHPuFxvIGGYBTYn1u/Qh
-	wo4S93e+ZIeYzidx460gxAV8EpO2TYdayivR0SYEUa0mMbWnF27puRXbmCYwKs1CCpVZSH6c
-	heSXWQh7FzCyrGIUTy0tzk1PLTbOSy3XK07MLS7NS9dLzs/dxAhMm6f/Hf+6g3HFq496hxiZ
-	OBgPMUpwMCuJ8EZ8fZkuxJuSWFmVWpQfX1Sak1p8iFGag0VJnHfR/tZ0IYH0xJLU7NTUgtQi
-	mCwTB6dUA5P3369vFD59tyldnOL8YdERsYvqm3dvuPrakv3DQtMTHYsmVaWtKZ4r8awo3Urw
-	edmV2S05XUfZuN/c/ishaTL3Hl+uwcn6l9MZbRNX3WpTmvBUoKJgbayO7BTXx+mXkmOMupZO
-	KmpPyXP8q1uk4FzckX7G2Nkjf5XmKrHZVbvF21OOW9zmkn/+9OqM0Gb+lDnJWTUTdjJZBDvo
-	6j8pnFq08/emhmvJGukHtObl9F9qs525caW5hj4P2wyuJFl/vSe3bv51DNdXvR+39fiVGcun
-	vOUO2CIv7cKxiuP4lbawlEWB/zwcbutIzd3C63p/l8mX6poynZN8eU9nM9QFODZGCulO2Gy8
-	RGCVt87y+UosxRmJhlrMRcWJAAPCYCIKBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupmleLIzCtJLcpLzFFi42I5/e/4XV0diTfpBvt/6lucuL6IyeLAqzXM
-	Ft+ftjFbrNl7jsli4govi/lHzrFaXPn6ns1i3dML7BbLP89mt3g56x6bxabH11gtLu+aw2ax
-	8ONWFoslO3YxWrR1LmO1ePPjLJPF/z072C06em6yWcx+t5/dYsubiawW/89+YHcQ9dj7bQGL
-	x85Zd9k9enaeYfTYtKqTzWPeyUCP+93HmTw2L6n32Hy62uP4je1MHp83yQVwRenZFOWXlqQq
-	ZOQXl9gqRRtaGOkZWlroGZlY6hkam8daGZkq6dvZpKTmZJalFunbJehl3L/0hrGg3bJifut6
-	lgbGfTpdjJwcEgImEs/+vWHsYuTiEBJYyijx6/MDRoiEjMS17pcsELawxJ9rXWwQRa8ZJX68
-	mQCW4BWwk2j6vp2pi5GDg0VAReL+u2qIsKDEyZlPwEpEBeQl7t+awQ5iCwsES1za95oVZI6I
-	wBdmiY3r5jOBOMwCi5gkjt2bzwqx4T6jROeX1WBnMAuIS9x6AlLFycEmYCTxYDlIEScHp4C3
-	xPUXLSwgm5kF1CXWzxOCKJeXaN46m3kCo9AsJIfMQjJpFkLHLCQdCxhZVjGKpJYW56bnFhvp
-	FSfmFpfmpesl5+duYgSmim3Hfm7Zwbjy1Ue9Q4xMHIyHGCU4mJVEeCO+vkwX4k1JrKxKLcqP
-	LyrNSS0+xGgKDIuJzFKiyfnAZJVXEm9oZmBqaGJmaWBqaWasJM7LduV8mpBAemJJanZqakFq
-	EUwfEwenVAOTztyHpw8wf/yc4BG9JHzGJf590tvS287x5+bpGTXnRYu9O2QZWNws2s1jM4vh
-	YqbXNHn75fPm+uxeYX5uVmqaTnKJtH7D2k/Tc6esfNP7tfLHUa6/on9WzPvMPqf925br/5/V
-	Oi0NYKy5fWlC6xPhybz53iERuiXvzyf5s/sWvuF/unXlnZSEz79nbRDeKDzpRrzg4/wtjA8+
-	LIjoMHib8ivM++E6FZmO6CbpS/t8BIzyLa5fEUi+Mb2pd9aWj+s+f7sdX6p5QXDmDhGtjb7b
-	5xh/6hUwXn498Z6O1Jnyurn3n4dfX/TEIjyl9kzK89/m0zc9svVtznCNvfgpx2NRFJ9K6sZa
-	o+RfNwKtTa9kK7EUZyQaajEXFScCAKm3/u6eAwAA
-X-CMS-MailID: 20250401164532eucas1p12733b49f77201419ad208931bd8bbaee
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250326164909eucas1p1525faf017c81554f0d3739123edc1298
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20250326164909eucas1p1525faf017c81554f0d3739123edc1298
-References: <20250326-sets-bxs-4-64-patch-v1-v5-0-e4c46e8280a9@imgtec.com>
-	<CGME20250326164909eucas1p1525faf017c81554f0d3739123edc1298@eucas1p1.samsung.com>
-	<20250326-sets-bxs-4-64-patch-v1-v5-1-e4c46e8280a9@imgtec.com>
+To: Henry Martin <bsdhenrymartin@gmail.com>, linux-clk@vger.kernel.org
+Cc: LKML <linux-kernel@vger.kernel.org>, David Lechner
+ <david@lechnology.com>, Michael Turquette <mturquette@baylibre.com>,
+ Stephen Boyd <sboyd@kernel.org>
+References: <20250401131341.26800-1-bsdhenrymartin@gmail.com>
+Subject: Re: [PATCH] clk: davinci: Add NULL check in
+ davinci_lpsc_clk_register()
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20250401131341.26800-1-bsdhenrymartin@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:VQroEZlMDoo+6n6ZIzp+RndEXyP93F7SoRr6HX6AQElj6DSOcr6
+ 5yCw4l07ZSHLXeckkiFrafshqWQQwR9QoL50TWll9c/28opPI1d7MbAS6eLdJ2jLw0Ncb1D
+ ED56d92ljqKd+CYv8vrsZmSNR3eadPiE8Dg9ulb77WNkphmooaogMg4WqCJBlKxlsvdFXpp
+ ZhwQ2sqvk0fWSpqAoXTbQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:syYlzGPsx1c=;QDvmaDAIUJWsuRymyp11PrjalKa
+ VDkY5lj3KMABx1XZvDtgSKdqb6lkuwaD3zpCHcmXzYzoOrmt+akjj+odatC+bATWuSdWZ6suL
+ JF9cwkWtGda/Yvxm8CvKhGfOhq7Fycl4GJNzA1/mUnSYPXBWWL5UBdoDJNLtGl2iI9zCala7q
+ VYDFJbGIXpa5jlETQV/7Qo7Qs2pKVxFKdcU2zf3+Cn6Q9jgxJfl0kPDdDhwn7ftqQOcluRwpk
+ jzIOlSbCxE1S1VTGkE/0L9jUvW4OR/xR4eXPr1aDVKOFkropDGVlvcPFRRpEBIYZJ67MIMkL4
+ FHkxt96Oh3dt0kY0GcNVmZQRhkeLNRJelYAt0VRKMpEtPYj8XwDuLLIqFBsghl3iHlgr2t9H6
+ 1uQwWxlXHDVOLjxy6cMg/VbVUGOEv3m1BfRq8ceLc/vK8VNS4jj9/NecxZbKr1celVeS1s2XN
+ uFIBFOGIn0e/+SPD934bbaMR2+x+fIixGnAeyhyqx6YwnG8PvQ9OpQcEHndH93t1e3fdwhgJm
+ iS3o9+P+Lv1r2ZZCvr8SU9C4I9mGSvAlswVbySVQ+d1498hjqdzvveSYzcFzcow/wc0KAgRLt
+ 7N69P3C0q4ZIX1pgmK6sPD7nf+9++VV7+iS4unO/FAQpODmeMRokguA+2LvjZjQ/6Gzd7L36C
+ Nia8DkTzwarFq6uLAzQSYKVK2+Lc+7tbwxIO/E02A3EI9vIpPvqZj8EJexpGHLOI23ahEAOWf
+ OzI+Ao5RUGBPSsuZQ6tuTBCoVURU72MPfnuQcFBhffZRZhH3YeHK+dAlQrVJCsaFCzmt+hkH6
+ 7zEYDlmdqtStdsbtG3fvZ8RHqnq886UT003f89Yxdy3kXM7SIO/1dAShSJqpx9xfOvRgm91V6
+ Jy3jgM0DwtHlldHmMiZxqfbnf6gXrLwe6PQpTiXlIgUyA2Kc0Dpd2PG3Ex0rf1ZbJy+4pQlr4
+ wL79HF9H3jxFG6yHgs8c6ufb48KYralrk5cLSVvwLzEuhL7f1BlRNaqPVsUKJzP96byZHNwqa
+ 9Y6q6TklmTVTPAshrvJO99tPSupo094kUlZYePhmPBYfwE6vpvTX5k6Rk6cVtUhduwnsp18a7
+ 9M/T0qYMZuW9p3NBLOsjIDsAQXn0vtyLoIOmvRxzWx9mrL/VRmqxrcHPr3Bw13Rx1aKS/xJsl
+ D5SsXX5lBiMuKsBXNwmTy7F9hkywle8472qpFhc22wItaDICLBZbkOZJRpHcXMV+yp7VEmR3Z
+ BRIpcLXU6pDEvQZDWj1OKF9EfJSnUxxtzxCy4agtqgC0rNP7NGv2I6blbhA2tWHlq+Jn56/KC
+ HFLKrLyRj67LP2sb6AjCvEbOkY0TN+ZqSntBJqV0Y+S87wKELrT+Q6b4K1J7XmvkqJqYn1HAU
+ WjUAbkBZ5d8oNZfMEyDcSSSFZkWG9kh8n23ewRiHB6T+idUZ+MX1ExlRsOdWm6Vncoumcx0RR
+ mMX0/Hh70JSm0nSqJVrHXhVIobSHEpHvNZUNmNy+Ee+70I7+J
+
+> devm_kasprintf() return NULL if memory allocation fails. Currently,
+=E2=80=A6
+                call?                               failed?
 
 
+> Add NULL check after devm_kasprintf() to prevent this issue.
 
-On 3/26/25 17:48, Matt Coster wrote:
-> The first compatible strings added for the AXE-1-16M are not sufficient to
-> accurately describe all the IMG Rogue GPUs. The current "img,img-axe"
-> string refers to the entire family of Series AXE GPUs, but this is
-> primarily a marketing term and does not denote a level of hardware
-> similarity any greater than just "Rogue".
-> 
-> The more specific "img,img-axe-1-16m" string refers to individual AXE-1-16M
-> GPU. For example, unlike the rest of the Series AXE GPUs, the AXE-1-16M
-> only uses a single power domain.
-> 
-> The situation is actually slightly worse than described in the first
-> paragraph, since many "series" (such as Series BXS found in the TI AM68
-> among others and added later in this series) contain cores with both Rogue
-> and Volcanic architectures.
-> 
-> Besides attempting to move away from vague groupings defined only
-> by marketing terms, we want to draw a line between properties inherent to
-> the IP core and choices made by the silicon vendor at integration time.
-> For instance, the number of power domains is a property of the IP core,
-> whereas the decision to use one or multiple clocks is a vendor one.
+I propose to avoid duplicate source code also for the completion of
+the corresponding exception handling.
 
-Hi,
-We’ve had an interesting discussion on how to synchronize clock and
-reset management for the T-HEAD SoC [1] with regard to the Imagination
-GPU. Long story short, there is a preference to place SoC-specific
-elements in the generic PM driver - however since drm/imagination driver
-currently attempts to manage clocks itself, we would need to provide
-some empty stubs, which does seem like an ugly solution.
+* You may avoid repeated function calls by using another label instead.
+  https://wiki.sei.cmu.edu/confluence/display/c/MEM12-C.+Consider+using+a+=
+goto+chain+when+leaving+a+function+on+error+when+using+and+releasing+resou=
+rces#MEM12C.Considerusingagotochainwhenleavingafunctiononerrorwhenusingand=
+releasingresources-CompliantSolution(copy_process()fromLinuxkernel)
 
-I agree that a number of clocks is a vendor decision, but the clocks
-doesn't have to necessarily be managed from the consumer driver. Would
-you be open to a patch which makes the clock management from the
-drm/imagination driver optional ? Same way I've proposed an optional
-reset [2] previously.
+* How do you think about to benefit any more from the application of the a=
+ttribute =E2=80=9C__free=E2=80=9D?
+  https://elixir.bootlin.com/linux/v6.14-rc6/source/include/linux/slab.h#L=
+472
 
-This way if the clocks/reset are not provided, it would be assumed that
-there is something SoC specific to how they're mangaged and they would
-be implemented in the generic PM driver.	
 
 Regards,
-Michał
-
-[1] - https://lore.kernel.org/all/ef17e5d1-b364-41e1-ab8b-86140cbe69b2@samsung.com/
-[2] - https://lore.kernel.org/all/20250219140239.1378758-14-m.wilczynski@samsung.com/
-
-> 
-> In the original compatible strings, we must use "ti,am62-gpu" to constrain
-> both of these properties since the number of power domains cannot be fixed
-> for "img,img-axe".
-> 
-> Work is currently underway to add support for volcanic-based Imagination
-> GPUs, for which bindings will be added in "img,powervr-volcanic.yaml".
-> As alluded to previously, the split between rogue and volcanic cores is
-> non-obvious at times, so add a generic top-level "img,img-rogue" compatible
-> string here to allow for simpler differentiation in devicetrees without
-> referring back to the bindings.
-> 
-> The currently supported GPU (AXE-1-16M) only requires a single power
-> domain. Subsequent patches will add support for BXS-4-64 MC1, which has
-> two power domains. Add infrastructure now to allow for this.
-> 
-> Also allow the dma-coherent property to be added to IMG Rogue GPUs, which
-> are DMA devices. The decision for coherency is made at integration time and
-> this property should be applied wherever it accurately describes the
-> vendor integration.
-> 
-> Note that the new required properties for power domains are conditional on
-> the new base compatible string to avoid an ABI break.
-> 
-> Signed-off-by: Matt Coster <matt.coster@imgtec.com>
-> ---
-> Changes in v5:
-> - Remove extraneous (and error-causing) power-domains minItems constraint
-> - Link to v4: https://lore.kernel.org/r/20250320-sets-bxs-4-64-patch-v1-v4-1-d987cf4ca439@imgtec.com
-> Changes in v4:
-> - Add img,img-rogue back to ti,am62-gpu compatible strings to allow
->   compatibility with older kernels
-> - Revert change to power-domains property and add proper constraint
-> - Link to v3: https://lore.kernel.org/r/20250310-sets-bxs-4-64-patch-v1-v3-1-143b3dbef02f@imgtec.com
-> Changes in v3:
-> - Remove unnecessary example
-> - Remove second power domain details, add these where they're used instead
-> - Avoid ABI breaks by limiting new required properties to new compatible
->   strings and making all binding changes in a single patch.
-> - Links to v2:
->   https://lore.kernel.org/r/20241118-sets-bxs-4-64-patch-v1-v2-1-3fd45d9fb0cf@imgtec.com
->   https://lore.kernel.org/r/20241118-sets-bxs-4-64-patch-v1-v2-3-3fd45d9fb0cf@imgtec.com
->   https://lore.kernel.org/r/20241118-sets-bxs-4-64-patch-v1-v2-4-3fd45d9fb0cf@imgtec.com
-> ---
->  .../devicetree/bindings/gpu/img,powervr-rogue.yaml | 43 +++++++++++++++++++---
->  1 file changed, 38 insertions(+), 5 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/gpu/img,powervr-rogue.yaml b/Documentation/devicetree/bindings/gpu/img,powervr-rogue.yaml
-> index 256e252f8087fa0d6081f771a01601d34b66fe19..e1056bf2af84c3eb43733bdc91124a66aaf51d35 100644
-> --- a/Documentation/devicetree/bindings/gpu/img,powervr-rogue.yaml
-> +++ b/Documentation/devicetree/bindings/gpu/img,powervr-rogue.yaml
-> @@ -12,10 +12,23 @@ maintainers:
->  
->  properties:
->    compatible:
-> -    items:
-> -      - enum:
-> -          - ti,am62-gpu
-> -      - const: img,img-axe # IMG AXE GPU model/revision is fully discoverable
-> +    oneOf:
-> +      - items:
-> +          - enum:
-> +              - ti,am62-gpu
-> +          - const: img,img-axe-1-16m
-> +          # This deprecated element must be kept around to allow old kernels to
-> +          # work with newer dts.
-> +          - const: img,img-axe
-> +          - const: img,img-rogue
-> +
-> +      # This legacy combination of compatible strings was introduced early on
-> +      # before the more specific GPU identifiers were used.
-> +      - items:
-> +          - enum:
-> +              - ti,am62-gpu
-> +          - const: img,img-axe
-> +        deprecated: true
->  
->    reg:
->      maxItems: 1
-> @@ -37,6 +50,12 @@ properties:
->    power-domains:
->      maxItems: 1
->  
-> +  power-domain-names:
-> +    items:
-> +      - const: a
-> +
-> +  dma-coherent: true
-> +
->  required:
->    - compatible
->    - reg
-> @@ -47,6 +66,18 @@ required:
->  additionalProperties: false
->  
->  allOf:
-> +  # Constraints added alongside the new compatible strings that would otherwise
-> +  # create an ABI break.
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: img,img-rogue
-> +    then:
-> +      required:
-> +        - power-domains
-> +        - power-domain-names
-> +
->    - if:
->        properties:
->          compatible:
-> @@ -64,10 +95,12 @@ examples:
->      #include <dt-bindings/soc/ti,sci_pm_domain.h>
->  
->      gpu@fd00000 {
-> -        compatible = "ti,am62-gpu", "img,img-axe";
-> +        compatible = "ti,am62-gpu", "img,img-axe-1-16m", "img,img-axe",
-> +                     "img,img-rogue";
->          reg = <0x0fd00000 0x20000>;
->          clocks = <&k3_clks 187 0>;
->          clock-names = "core";
->          interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
->          power-domains = <&k3_pds 187 TI_SCI_PD_EXCLUSIVE>;
-> +        power-domain-names = "a";
->      };
-> 
+Markus
