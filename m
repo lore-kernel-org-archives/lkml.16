@@ -1,90 +1,112 @@
-Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D2E286353;
-	Tue,  1 Apr 2025 10:55:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B89886353;
+	Tue,  1 Apr 2025 10:57:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743504927; cv=none; b=NKRic1w1Ijssr11yr+8sMWWHLs271reawDVdq2KW0bqNnyL2VmHCM7T8oOfd2Q7bI4e0zQ15fzcA8XUcOtnc8Sm4XRY04bAhji6P7n1c16aD9zTc9VSrOnWF1mquyQ1z0CuK0OtqeZ8Th2dkmD3AU7mqpei/LtF4UY2Hm+vLiic=
+	t=1743505057; cv=none; b=ZmUDJxjw4MVlbDqqbSMiQ6EHP5EfX6WCKbJWjCkVD7QKwJrahd3wyblqKrd+v33V5s2F9/G8WawpKRXw2Be5Jp7igDm5CPSSO7KHhH8hDj1Z9/glILfKQn3s8YXrB2ucxIRSHw5QQ+nnZ43AwxyrKqe4kjelAgu8+sH5gYUUYKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743504927; c=relaxed/simple;
-	bh=z2WSV4DlWcLPlyFbtutl1o1PrtF6Re6sVS35e/QuNHc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=k5bV3Eozy4ILzjJgLGjFj6wXqDZeTjfoQyWZvcr6oZ6HIkXx9fW3xZkZgNpV+fKiOpkolOevWAYdJUs1olVBDJQHUWcxcxsmhY+H7H4v/CjMbGFtDmg7bT8KZBU4raDug8TNpIWcxH0qq10JwILN6N6Ir3RVsIMLyOV8w51kXI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=i3vlB+BU; arc=none smtp.client-ip=80.241.56.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+	s=arc-20240116; t=1743505057; c=relaxed/simple;
+	bh=SecnRZFRRQC2/Ozp9Uh8MS6sUsiH4jCJn7+0iksUvQg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ceS0UuaXNAeq8qOZRvlSfBCoieYnKt3Y6uA399kx5SQJrxAbZcmTZJOw8g3XZr0sXJ6iFxyMn9qo3/EFOO+qGGqiNSUWJH/07dHAVJkwKctveMbmKJaZWIbRTe8LlVVHUgF1LxB81i4H+srylinzEdT8/OoPWfRwV/PZKUx8yoM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=MqAO4Jko; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="i3vlB+BU"
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:b231:465::2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4ZRlJh4CLCz9vLr;
-	Tue,  1 Apr 2025 12:55:16 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1743504916;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dLorxfawL86gg2F0j4j9NdXyKB8vOPzbGPbfhg6XtTk=;
-	b=i3vlB+BUBdIW+HJlb1QX1OsRPtMkKNXmYaJ6lS2LjLNfIrZY+7e2fD4WJ6hZmB/Mx8/MWO
-	I0QtIOYjGwP3bqeJXf4+L8VWfchRaO3/3tnoBcuUNfMh9eBypBoDARlzuRRr0NMwq48PaT
-	2LYD3CDEkSIhMNDpWDLDqKk3ZpEQuo3xeSzRU3EiGMuEGo7UssKrX1AXON1+4VZPrBBYM6
-	coylh8qZU1NX9MZF3c3I9xThLc4Cvsef62nMzfzr/t1CsShKyIRSfCtkJMgyevdcDSf36M
-	/VssBue1vxqPzqz25JsMhoZgIuylCsGUZ4v0fe6ynR3TeNgfvGDWO+pYdRFQSA==
-Message-ID: <43a1986e-3ccd-4fd5-9dcf-9ad945a99293@mailbox.org>
-Date: Tue, 1 Apr 2025 12:55:09 +0200
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="MqAO4Jko"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=5blPN3EyiFVGaeUlfhhjrt6P8PW2cWHwVxZ8k4jGYIk=; b=MqAO4Jko7jOiTECL4fruu0a00E
+	qNQYobHztdg0HojoolLoangJs7zj9lLfeGvnaew+1pXo07uBL2UgTeE2bSQkGsMtAeuHfux2MKoVN
+	2p9dqe8oC0D32jVP8c2IPPmvRIQQqCiQxCYhTTNaUPxx/xeRu2WQSFDW7Hdx68DTuYzg2UsB1ydNI
+	rz0m81bIw2PfpDBG5ffSBf2nHSJSTWlbWIEfl6y2bhEvKTO+MRRvVb+h4LmW6yDQL7Mw66rsdiB2v
+	znjDw03Q0Ot8xJuYjobQ4bGXRvJzIHopSbPt7tTWF7Sddsvs5N8CT0teh3Lmni4H6APq0fN6JFBiu
+	Qsi0+Dpw==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1tzZJ4-00BoQ2-00;
+	Tue, 01 Apr 2025 18:57:23 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Tue, 01 Apr 2025 18:57:21 +0800
+Date: Tue, 1 Apr 2025 18:57:21 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: "Christian Marangi (Ansuel)" <ansuelsmth@gmail.com>
+Cc: "David S. Miller" <davem@davemloft.net>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Antoine Tenart <atenart@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+	Waiman Long <longman@redhat.com>, Boqun Feng <boqun.feng@gmail.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>, linux-crypto@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev, upstream@airoha.com,
+	Richard van Schagen <vschagen@icloud.com>
+Subject: Re: [PATCH v11 3/3] crypto: Add Inside Secure SafeXcel EIP-93 crypto
+ engine support
+Message-ID: <Z-vGkbmX2PQ_gt7Z@gondor.apana.org.au>
+References: <20250114123935.18346-1-ansuelsmth@gmail.com>
+ <20250114123935.18346-4-ansuelsmth@gmail.com>
+ <Z-u67D7xl2_SR-hg@gondor.apana.org.au>
+ <CA+_ehUzZruhT7Bko2Xm2kyOaZxUPA4vNLQhq_5V30gfjgmfcng@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH 4/4] arm64: dts: renesas: r8a779g3: Add Renesas R-Car V4H
- Sparrow Hawk board support
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: linux-arm-kernel@lists.infradead.org, =?UTF-8?Q?Krzysztof_Wilczy=C5=84sk?=
- =?UTF-8?Q?i?= <kw@linux.com>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?=
- <rafal@milecki.pl>, Aradhya Bhatia <a-bhatia1@ti.com>,
- Bjorn Helgaas <bhelgaas@google.com>, Conor Dooley <conor+dt@kernel.org>,
- Geert Uytterhoeven <geert+renesas@glider.be>,
- Heiko Stuebner <heiko@sntech.de>, Junhao Xie <bigfoot@classfun.cn>,
- Kever Yang <kever.yang@rock-chips.com>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Magnus Damm <magnus.damm@gmail.com>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Neil Armstrong <neil.armstrong@linaro.org>, Rob Herring <robh@kernel.org>,
- Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-References: <20250330195715.332106-1-marek.vasut+renesas@mailbox.org>
- <20250330195715.332106-5-marek.vasut+renesas@mailbox.org>
- <CAMuHMdUx31WHW+fUP0Qbfs-Si2+cLmxC=YRUKWvSudn7CBZ4Fg@mail.gmail.com>
-Content-Language: en-US
-From: Marek Vasut <marek.vasut@mailbox.org>
-In-Reply-To: <CAMuHMdUx31WHW+fUP0Qbfs-Si2+cLmxC=YRUKWvSudn7CBZ4Fg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-MBO-RS-ID: 0780a5cab02defaccda
-X-MBO-RS-META: xj3qjesq94bd8gfmzt53ziqwbmtebsmm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+_ehUzZruhT7Bko2Xm2kyOaZxUPA4vNLQhq_5V30gfjgmfcng@mail.gmail.com>
 
-On 4/1/25 11:49 AM, Geert Uytterhoeven wrote:
-> Hi Marek,
-
-Hi,
-
->> +               spi0 = &rpc;
+On Tue, Apr 01, 2025 at 12:54:05PM +0200, Christian Marangi (Ansuel) wrote:
+> Il giorno mar 1 apr 2025 alle ore 12:08 Herbert Xu
+> <herbert@gondor.apana.org.au> ha scritto:
+> >
+> > On Tue, Jan 14, 2025 at 01:36:36PM +0100, Christian Marangi wrote:
+> > >
+> > > +static int eip93_send_hash_req(struct crypto_async_request *async, u8 *data,
+> > > +                            dma_addr_t *data_dma, u32 len, bool last)
+> > > +{
+> >
+> > ...
+> >
+> > > +again:
+> > > +     ret = eip93_put_descriptor(eip93, &cdesc);
+> > > +     if (ret) {
+> > > +             usleep_range(EIP93_RING_BUSY_DELAY,
+> > > +                          EIP93_RING_BUSY_DELAY * 2);
+> > > +             goto again;
+> > > +     }
+> > > +
+> > > +     /* Writing new descriptor count starts DMA action */
+> > > +     writel(1, eip93->base + EIP93_REG_PE_CD_COUNT);
+> >
+> > Why is there no locking here? Shouldn't this be under ring->write_lock?
+> >
 > 
-> Do you need the spi0 alias?
+> Hi Herbert,
+> this is really to tell DMA that there is new packet to process and
+> gets decreased instantly.
+> The lock is used to track what descriptor index should be used in the
+> ring in the put and get
+> functions.
 
-Yes, it is used by U-Boot to enumerate SPI controllers.
+AFAICS it's not safe to call eip93_put_descriptor simultaneously
+since it doesn't use atomics.  Without locking in eip93_send_hash_req
+two threads hashing into two separate eip93 requests will be calling
+eip93_put_descriptor at the same time.
 
-The rest is fixed in V2, thanks !
-
+Cheers,
 -- 
-Best regards,
-Marek Vasut
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
