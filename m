@@ -1,75 +1,205 @@
-Received: from forward202d.mail.yandex.net (forward202d.mail.yandex.net [178.154.239.219])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 209B01EFFB2;
-	Tue,  1 Apr 2025 12:13:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.219
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 089111F91CD;
+	Tue,  1 Apr 2025 12:14:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743509614; cv=none; b=hHkruCeO2kpnKFSgUeo8JN0mf7H1daKJPB+LOSO5oYiEkg4C5/7VO4dZXfOIhw6JXV5IC0oVvOu7POnhPEE7quNdPXYHRFJh6PBbTKdw3+QrCBocE8O50+CovImcUNcAW3v89dLB4GdlFPoqX+Aa9zlbOT6S5Dvr9C1QoTUKtdk=
+	t=1743509648; cv=none; b=odbC3U4GVkP1U3P+PwuGJoFnh6kSqWBDMv9OZ8yIlmJtBoMQmZZGqxWrfF54aoDQyIQn/R/QLzdZIMPi5KRGHVBkEihp+kBhmZ86N+2z20seRfMI9oqVqiXuyV+cb5hIJjp9WDvVgbK7VTLZ2v1p1xiCur66FX6gpH5WahUFAB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743509614; c=relaxed/simple;
-	bh=gosLivFXhj046ky9eWUcHHw7kQlvB5J1NKr+Dn7bgac=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FrZ6yUjfuw3qT5OAJXipMxPRpZkELTuMUpx86NJ96529KvAjPpCEEVnsjXjm0pRjL6A5jRMym5FW7PtNCr8lN298a3oG41TEtoCskvCweyINh0Ke5DUCKekbeaFS5ho0R655f3jAPwGbFmF9W5GVnF7MoZjaRNeVtq9fjIKYPxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosa.ru; spf=pass smtp.mailfrom=rosa.ru; dkim=pass (1024-bit key) header.d=rosa.ru header.i=@rosa.ru header.b=fisZ3jnz; arc=none smtp.client-ip=178.154.239.219
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosa.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rosa.ru
+	s=arc-20240116; t=1743509648; c=relaxed/simple;
+	bh=cW+SgWG4t5icqmSDD5B28BvPyfh8yfBleexRLseF73k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Z7IduuxXE6+B03ZWxDxhXZtOyxF3EIh21tfOgn8mOSIk85iQCpleZZI+Ut1KJV68ChvdRIbf3Th+PBJCuY9oGRsfj0cTp/PeqcpmTvAwZMHm1XVXihkFeXQXgDhZvORfffnRwn/2KRsB5Mtvfk69uqXh1+BrOumBBZal1qg+LsM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m/m2p2JW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rosa.ru header.i=@rosa.ru header.b="fisZ3jnz"
-Received: from forward101d.mail.yandex.net (forward101d.mail.yandex.net [IPv6:2a02:6b8:c41:1300:1:45:d181:d101])
-	by forward202d.mail.yandex.net (Yandex) with ESMTPS id BED7A646BB;
-	Tue,  1 Apr 2025 15:05:19 +0300 (MSK)
-Received: from mail-nwsmtp-smtp-production-main-95.iva.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-95.iva.yp-c.yandex.net [IPv6:2a02:6b8:c0c:3b21:0:640:4c47:0])
-	by forward101d.mail.yandex.net (Yandex) with ESMTPS id 626EE609D6;
-	Tue,  1 Apr 2025 15:05:12 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-95.iva.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id 95Viu91LimI0-6m501TPu;
-	Tue, 01 Apr 2025 15:05:11 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rosa.ru; s=mail;
-	t=1743509111; bh=NOvvSteE+IRlO1alOipjrY3OnJ73k91C4PJic3TK5qA=;
-	h=Cc:Message-ID:References:Date:In-Reply-To:Subject:To:From;
-	b=fisZ3jnzy+7lU47ulRg/MWbErp7pvcHvF376c13FH0vRG2GHukQSRis7h/njZoSZ8
-	 1+TElSYkf4U4OndGZU0aKJEmN8ltxrH0rftCLzQOfOIXBXeMDQ5cbbcrYIvFuLfWZi
-	 vKjwyeuVaxVu6E7zRkHJJUq5GMa+q2z5anjxszRc=
-Authentication-Results: mail-nwsmtp-smtp-production-main-95.iva.yp-c.yandex.net; dkim=pass header.i=@rosa.ru
-From: Mikhail Lobanov <m.lobanov@rosa.ru>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Mikhail Lobanov <m.lobanov@rosa.ru>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Maxim Levitsky <mlevitsk@redhat.com>,
-	kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org
-Subject: Re: [PATCH] KVM: x86: forcibly leave SMM mode on vCPU reset
-Date: Tue,  1 Apr 2025 15:05:05 +0300
-Message-ID: <20250401120507.48218-1-m.lobanov@rosa.ru>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250324175707.19925-1-m.lobanov@rosa.ru>
-References: <20250324175707.19925-1-m.lobanov@rosa.ru>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m/m2p2JW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C69DC4CEED;
+	Tue,  1 Apr 2025 12:14:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743509646;
+	bh=cW+SgWG4t5icqmSDD5B28BvPyfh8yfBleexRLseF73k=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=m/m2p2JWYS9MkVHRFy5prVSfpIMH5SY3jiiWZrPRgGhfd0KNH/PA1tOg7S+KrJxkk
+	 JSX0cD90OB4srHDpp2NCGpyjzGIwACeD0oMeDEI8FNeU3Te/nSYZJ7IQ8PWzdUMktP
+	 CDXdXN96p45hx7W98t9osxv7ohk1bS66TN+4GeSI2mFN8/2rYf0/Ma6kRPhVynCyUW
+	 70E0A1eIbNihkaJVcogpm4i7xO3+1O18jP3ZXUGFwY/oCWWK2b3Xjxd35+2ElDER5Q
+	 hbUeOONMmPAY/FcwTQ0BwB/gJZhc+EhEcCLduC0klRJrH0mL52uS+E/hvi0irNyREs
+	 YZcmhVD7KYUvA==
+Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-2c818343646so3537995fac.3;
+        Tue, 01 Apr 2025 05:14:06 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUMrZQzrAu7UkbdnV/sC/nmXueENngvryKfXSR8c7+lxXDHT3/NNRI306Q0JNOctq+FympXMSN+I4U=@vger.kernel.org, AJvYcCWFhajWfdqvZaYPT/zH0Vj5js9X4Gqa3IKNn6/w1fTswFzj2pOvnSLz3y5vXLCJkglVOlxLJTJ5yAfn@vger.kernel.org, AJvYcCXI9bZWAUzTvzL4n7lb4DLNJNkiNwFK/d3j1sy3icOgrgAySbVKKbZJouOVn+rBnfGRttABtWWjQLF+zjJB@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywhi0w1DlNHixMHdFhSJxS3ibbmRy8phzYa/n0PS+XwaunhDKAn
+	1DNa2yJFo6P/dnsAxSytlBRcrjQlEqvvIFjok9RRooez/jvxpMNmigIwnjQiLXyG2DZz3lY3gHi
+	krl3gTgaVXEMh12dBaLf00FNzqnE=
+X-Google-Smtp-Source: AGHT+IGOlogupRrW1ILu3k/BWzEUrlfnOQdl3bgoOraLGfT5cXQwFCdTo4dpWOe+YYaMJLSMdHaLzj7VnVnNwllSJKU=
+X-Received: by 2002:a05:6870:330a:b0:29e:69a9:8311 with SMTP id
+ 586e51a60fabf-2cbcf7e09acmr7956746fac.36.1743509645617; Tue, 01 Apr 2025
+ 05:14:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20250328143040.9348-1-ggherdovich@suse.cz> <20250328143040.9348-2-ggherdovich@suse.cz>
+ <SJ0PR11MB66228319834B1C7B48FCE52EF5AD2@SJ0PR11MB6622.namprd11.prod.outlook.com>
+ <CAJZ5v0gC3DzanSdPqQiJ4JQppgNeRA7Z9Cge7NxmTO_shoUyOA@mail.gmail.com> <7a14ea42462a346958954f328933f583dcf9cb52.camel@intel.com>
+In-Reply-To: <7a14ea42462a346958954f328933f583dcf9cb52.camel@intel.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Tue, 1 Apr 2025 14:13:54 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0juH2kYx-fyyfoFLBTjg30y59Dwj1wBYXxuHvU2c7X31w@mail.gmail.com>
+X-Gm-Features: AQ5f1JqInvfmF-dEU2O33yfuIWE_7Znqodgm49GlPYWEkfdKphYD_-K3cc_SD6g
+Message-ID: <CAJZ5v0juH2kYx-fyyfoFLBTjg30y59Dwj1wBYXxuHvU2c7X31w@mail.gmail.com>
+Subject: Re: [PATCH 2/2] ACPI: processor: idle: Remove obsolete comment
+To: "Zhang, Rui" <rui.zhang@intel.com>
+Cc: "rafael@kernel.org" <rafael@kernel.org>, "ggherdovich@suse.cz" <ggherdovich@suse.cz>, 
+	"linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "lenb@kernel.org" <lenb@kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Tue, Apr 1, 2025 at 2:25=E2=80=AFAM Zhang, Rui <rui.zhang@intel.com> wro=
+te:
+>
+> On Mon, 2025-03-31 at 14:07 +0200, Rafael J. Wysocki wrote:
+> > On Mon, Mar 31, 2025 at 9:38=E2=80=AFAM Zhang, Rui <rui.zhang@intel.com=
+> wrote:
+> > >
+> > > > -----Original Message-----
+> > > > From: Giovanni Gherdovich <ggherdovich@suse.cz>
+> > > > Sent: Friday, March 28, 2025 10:31 PM
+> > > > To: Rafael J . Wysocki <rafael@kernel.org>; Zhang, Rui
+> > > > <rui.zhang@intel.com>
+> > > > Cc: Len Brown <lenb@kernel.org>; Giovanni Gherdovich
+> > > > <ggherdovich@suse.cz>; linux-acpi@vger.kernel.org; linux-
+> > > > kernel@vger.kernel.org; linux-pm@vger.kernel.org
+> > > > Subject: [PATCH 2/2] ACPI: processor: idle: Remove obsolete comment
+> > > > Importance: High
+> > > >
+> > > > Since commit 496121c02127e9c460b436244c38260b044cc45a ("ACPI:
+> > > > processor:
+> > > > idle: Allow probing on platforms with one ACPI C-state"), the
+> > > > comment
+> > > > doesn't reflect the code anymore; remove it.
+> > > >
+> > > > Signed-off-by: Giovanni Gherdovich <ggherdovich@suse.cz>
+> > > > ---
+> > > >  drivers/acpi/processor_idle.c | 4 ----
+> > > >  1 file changed, 4 deletions(-)
+> > > >
+> > > > diff --git a/drivers/acpi/processor_idle.c
+> > > > b/drivers/acpi/processor_idle.c
+> > > > index b181f7fc2090..2a076c7a825a 100644
+> > > > --- a/drivers/acpi/processor_idle.c
+> > > > +++ b/drivers/acpi/processor_idle.c
+> > > > @@ -482,10 +482,6 @@ static int
+> > > > acpi_processor_get_cstate_info(struct
+> > > > acpi_processor *pr)
+> > > >
+> > > >       pr->power.count =3D acpi_processor_power_verify(pr);
+> > > >
+> > > > -     /*
+> > > > -      * if one state of type C2 or C3 is available, mark this
+> > > > -      * CPU as being "idle manageable"
+> > > > -      */
+> > > >       for (i =3D 1; i < ACPI_PROCESSOR_MAX_POWER; i++) {
+> > > >               if (pr->power.states[i].valid) {
+> > > >                       pr->power.count =3D i;
+> > > > --
+> > > > 2.43.0
+> > >
+> > > I think we can clean up a bit more. How about the patch below?
+> > >
+> > > From 115d3a07febff32eed49f9343ef111e7e1452f9d Mon Sep 17 00:00:00
+> > > 2001
+> > > From: "Zhang, Rui" <rui.zhang@intel.com>
+> > > Date: Mon, 31 Mar 2025 07:29:57 +0000
+> > > Subject: [PATCH] ACPI: processor: idle: Simplify
+> > >  acpi_processor_get_cstate_info() logic
+> > >
+> > > Since commit 496121c02127 ("ACPI: processor: idle: Allow probing on
+> > > platforms with one ACPI C-state"), acpi_idle driver can be probed
+> > > with
+> > > C1 only.
+> > >
+> > > Optimize the logic for setting pr->power.count and pr->flags.power by
+> > > 1. unconditionally set pr->flags.power leveraging the fact that C1 is
+> > >    always valid after acpi_processor_get_power_info_default().
+> > > 2. update acpi_processor_power_verify() to return the highest valid
+> > >    C-state directly.
+> > >
+> > > No functional change intended.
+> > >
+> > > Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+> > > ---
+> > >  drivers/acpi/processor_idle.c | 15 ++-------------
+> > >  1 file changed, 2 insertions(+), 13 deletions(-)
+> > >
+> > > diff --git a/drivers/acpi/processor_idle.c
+> > > b/drivers/acpi/processor_idle.c
+> > > index 698897b29de2..7ce8c3802937 100644
+> > > --- a/drivers/acpi/processor_idle.c
+> > > +++ b/drivers/acpi/processor_idle.c
+> > > @@ -442,7 +442,7 @@ static int acpi_processor_power_verify(struct
+> > > acpi_processor *pr)
+> > >
+> > >                 lapic_timer_check_state(i, pr, cx);
+> > >                 tsc_check_state(cx->type);
+> > > -               working++;
+> > > +               working =3D i;
+> >
+> > What if some states are skipped because they are invalid?  'working'
+> > can be less than 'i' then AFAICS.
+>
+> yes, but please refer to my comments here and below,
+>
+> 1. 'working' is used as return value only in acpi_processor_power_verify(=
+).
+>
+> >
+> > >         }
+> > >
+> > >         if (buggy_latency) {
+> > > @@ -457,7 +457,6 @@ static int acpi_processor_power_verify(struct
+> > > acpi_processor *pr)
+> > >
+> > >  static int acpi_processor_get_cstate_info(struct acpi_processor *pr)
+> > >  {
+> > > -       unsigned int i;
+> > >         int result;
+> > >
+> > >
+> > > @@ -477,17 +476,7 @@ static int acpi_processor_get_cstate_info(struct
+> > > acpi_processor *pr)
+> > >         acpi_processor_get_power_info_default(pr);
+> > >
+> > >         pr->power.count =3D acpi_processor_power_verify(pr);
+>
+> 2. acpi_processor_get_cstate_info(), which is the only caller of
+> acpi_processor_power_verify(), use this return value to set
+> pr->power.count.
 
-Gentle ping on this patch:  
-https://lore.kernel.org/kvm/20250324175707.19925-1-m.lobanov@rosa.ru/
+So far so good.
 
-Sent on March 24, still waiting for feedback.  
-Happy to update the patch if needed — let me know.
+> > > -
+> > > -       /*
+> > > -        * if one state of type C2 or C3 is available, mark this
+> > > -        * CPU as being "idle manageable"
+> > > -        */
+> > > -       for (i =3D 1; i < ACPI_PROCESSOR_MAX_POWER; i++) {
+> > > -               if (pr->power.states[i].valid) {
+> > > -                       pr->power.count =3D i;
+>
+> 3. use a loop to override pr->power.count with the index of the highest
+> valid state
 
-Thanks!
+I see.
 
-Best regards,  
-Mikhail Lobanov
+> So I'm proposing to return the index of the highest valid state directly
+> in acpi_processor_power_verify() and then we don't need this loop any
+> more.
+
+OK, so I'd prefer to first rename power.count to power.max_index
+(which it really is) and then make the changes you have proposed.
