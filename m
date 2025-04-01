@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB8641DE2B4
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 04:27:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D6681DFDAB
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 04:27:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743481653; cv=none; b=ZvgcV5fFhtB0ajk4mvApYjfIOAyOLEJIllK9oKhtzOF7yIsZVbNc65Br2jKVg4d4rVFcOVG4wHFLcgtt22HPsdnhD8L3Gn6jRRwOPKeYAREjHmnFxW51VkTSR4Cizr1f0R5HWXcgaUvVX39I+cVknQgJAGksuImRvYuC8F0wcxQ=
+	t=1743481654; cv=none; b=BbPpEoA5GA7j9HLh9GoWtVdf1d6kFWlX8R142Wdx24ITIcryCWc4NhetSfpcOlte17/9vqdpIWA4SrPHJ6SB0jgMB64hOXjrumDP89YmHvZ3raIc4jxpQ7xbvJtdfRbe1YXJU7Z2Rz5VN41Yk/dFcbysWfQrCkHnkHBMcaT5i1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743481653; c=relaxed/simple;
-	bh=HeWAUSvi+fwdMfowwn5h8IBT9PJLR48hdAQU93J1RUA=;
+	s=arc-20240116; t=1743481654; c=relaxed/simple;
+	bh=iZmlswQ3UvXTNTH1uFvXsw0rEiRaXkBAaCexmzsnDMc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NqHktrlsrgRQTmad9Y4wbmLKPIiq7mDDgMBeTT3HNrgB921k8q1FuL24lqkv0STnZTI1n6ci39B2siJUv6/0pwmHN4zdONkqB5oG7K5qZBboj2xHUo1LIqaBtgDPUPvchrhle3LULHCY8NCWmbyuTJ1cyuuhuzDNHYQJV7DjQNo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jJwz+Yjj; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=a+/OUIeyxq4LQoWwXuM5EFgIDUElG+A2V2oSU62ykwtA31iNMrSBWSfpLnmV2ivlzQFqp0xCbpogtNjwpk5m8/wBFhaj/7hDm55jL4NpSo6EDSpvJEw6Uj5coPsDwJgvOtwOSLK0KHYXH4PQT9zdVtW5ysb5K8DcZMyOxFaSxfE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KpFXWg1z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jJwz+Yjj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89B7EC4AF0B;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KpFXWg1z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1C1BC4CEF2;
 	Tue,  1 Apr 2025 04:27:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743481653;
-	bh=HeWAUSvi+fwdMfowwn5h8IBT9PJLR48hdAQU93J1RUA=;
+	s=k20201202; t=1743481654;
+	bh=iZmlswQ3UvXTNTH1uFvXsw0rEiRaXkBAaCexmzsnDMc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=jJwz+YjjZ3n2NINPqZd7bqchTRWrBBlJ4/AbvrvCkycIud/afDX4LvIHwxxkf2Giv
-	 BLkRf7yqLz5YiAlcuBAoLra8SZYhhdg3znMea6X96y2HIoj8Gvgf3zasGBpEgQQtDX
-	 SCDSO4we5JOMaKhJy8JX74bYIxN73r3OCp2EUUieZ/aGhMBZU9hsRpMi6slR2pftXN
-	 nysd0nJa0OYikbylhoIBJ13S3Fo79ssOQoZogOz9UTOZZEHMBD/6aX3p7Hz5u5LKRw
-	 czbWq758uK+2HGvUvOQ6dmLLNxy1jO1qsbP8g1kFz8xg9sg4whmU82NK9Qe1uou21V
-	 talnLzJdzZzmA==
+	b=KpFXWg1zOoDO6YBmxuDfiCEDJlkaLSqPIQkTOJ0w2lTFSDAf5HRMN/ILv1/VWnaJJ
+	 pClY4UfBCuBGCYti3HKLFuNMoPxKPrnEsTF8KcZj+d0ZpVny+6gdlaZMFVhN6EIsVt
+	 9PTHnrZWkRb8j5/mvUiDxDwhfgBqFgjj0nq7I45/6DZgrPxRyXGP25SIgHZx+0XjdK
+	 /nW+oBrr4ZW73fyRJ6FsjkRHR3bIX8zLtEDjWWNCmbWj7pgDRO6kRTEl+bpdh4zgX8
+	 7efB5vnziusZh+435rHxhVujflRU/vIT7UpZBS2FNklH833k6kXR6lRmsn7yimw+t4
+	 yOxDDdUcrHCQA==
 From: Josh Poimboeuf <jpoimboe@kernel.org>
 To: x86@kernel.org
 Cc: linux-kernel@vger.kernel.org,
 	Ingo Molnar <mingo@kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>,
-	David Laight <david.laight.linux@gmail.com>
-Subject: [PATCH 07/11] objtool: Fix verbose disassembly if CROSS_COMPILE isn't set
-Date: Mon, 31 Mar 2025 21:26:42 -0700
-Message-ID: <b931a4786bc0127aa4c94e8b35ed617dcbd3d3da.1743481539.git.jpoimboe@kernel.org>
+	Tiezhu Yang <yangtiezhu@loongson.cn>,
+	kernel test robot <lkp@intel.com>
+Subject: [PATCH 08/11] objtool/loongarch: Add unwind hints in prepare_frametrace()
+Date: Mon, 31 Mar 2025 21:26:43 -0700
+Message-ID: <270cadd8040dda74db2307f23497bb68e65db98d.1743481539.git.jpoimboe@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <cover.1743481539.git.jpoimboe@kernel.org>
 References: <cover.1743481539.git.jpoimboe@kernel.org>
@@ -46,38 +47,76 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: David Laight <david.laight.linux@gmail.com>
+If 'regs' points to a local stack variable, prepare_frametrace() stores
+all registers to the stack.  This confuses objtool as it expects them to
+be restored from the stack later.
 
-In verbose mode, when printing the disassembly of affected functions, if
-CROSS_COMPILE isn't set, the objdump command string gets prefixed with
-"(null)".
+The stores don't affect stack tracing, so use unwind hints to hide them
+from objtool.
 
-Somehow this worked before.  Maybe some versions of glibc return an
-empty string instead of NULL.  Fix it regardless.
+Fixes the following warnings:
 
-[ jpoimboe: Rewrite commit log. ]
+  arch/loongarch/kernel/traps.o: warning: objtool: show_stack+0xe0: stack state mismatch: reg1[22]=-1+0 reg2[22]=-2-160
+  arch/loongarch/kernel/traps.o: warning: objtool: show_stack+0xe0: stack state mismatch: reg1[23]=-1+0 reg2[23]=-2-152
 
-Fixes: ca653464dd097 ("objtool: Add verbose option for disassembling affected functions")
-Signed-off-by: David Laight <david.laight.linux@gmail.com>
-Link: https://lore.kernel.org/r/20250215142321.14081-1-david.laight.linux@gmail.com
+Cc: Tiezhu Yang <yangtiezhu@loongson.cn>
+Fixes: cb8a2ef0848c ("LoongArch: Add ORC stack unwinder support")
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202503280703.OARM8SrY-lkp@intel.com/
 Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 ---
- tools/objtool/check.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/loongarch/include/asm/stacktrace.h   |  3 +++
+ arch/loongarch/include/asm/unwind_hints.h | 10 +++++++++-
+ 2 files changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index ff83be1aab1d..4a1f6c3169b3 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -4523,6 +4523,8 @@ static void disas_funcs(const char *funcs)
- 	char *cmd;
+diff --git a/arch/loongarch/include/asm/stacktrace.h b/arch/loongarch/include/asm/stacktrace.h
+index f23adb15f418..fc8b64773794 100644
+--- a/arch/loongarch/include/asm/stacktrace.h
++++ b/arch/loongarch/include/asm/stacktrace.h
+@@ -8,6 +8,7 @@
+ #include <asm/asm.h>
+ #include <asm/ptrace.h>
+ #include <asm/loongarch.h>
++#include <asm/unwind_hints.h>
+ #include <linux/stringify.h>
  
- 	cross_compile = getenv("CROSS_COMPILE");
-+	if (!cross_compile)
-+		cross_compile = "";
+ enum stack_type {
+@@ -43,6 +44,7 @@ int get_stack_info(unsigned long stack, struct task_struct *task, struct stack_i
+ static __always_inline void prepare_frametrace(struct pt_regs *regs)
+ {
+ 	__asm__ __volatile__(
++		UNWIND_HINT_SAVE
+ 		/* Save $ra */
+ 		STORE_ONE_REG(1)
+ 		/* Use $ra to save PC */
+@@ -80,6 +82,7 @@ static __always_inline void prepare_frametrace(struct pt_regs *regs)
+ 		STORE_ONE_REG(29)
+ 		STORE_ONE_REG(30)
+ 		STORE_ONE_REG(31)
++		UNWIND_HINT_RESTORE
+ 		: "=m" (regs->csr_era)
+ 		: "r" (regs->regs)
+ 		: "memory");
+diff --git a/arch/loongarch/include/asm/unwind_hints.h b/arch/loongarch/include/asm/unwind_hints.h
+index a01086ad9dde..2c68bc72736c 100644
+--- a/arch/loongarch/include/asm/unwind_hints.h
++++ b/arch/loongarch/include/asm/unwind_hints.h
+@@ -23,6 +23,14 @@
+ 	UNWIND_HINT sp_reg=ORC_REG_SP type=UNWIND_HINT_TYPE_CALL
+ .endm
  
- 	objdump_str = "%sobjdump -wdr %s | gawk -M -v _funcs='%s' '"
- 			"BEGIN { split(_funcs, funcs); }"
+-#endif /* __ASSEMBLY__ */
++#else /* !__ASSEMBLY__ */
++
++#define UNWIND_HINT_SAVE \
++	UNWIND_HINT(UNWIND_HINT_TYPE_SAVE, 0, 0, 0)
++
++#define UNWIND_HINT_RESTORE \
++	UNWIND_HINT(UNWIND_HINT_TYPE_RESTORE, 0, 0, 0)
++
++#endif /* !__ASSEMBLY__ */
+ 
+ #endif /* _ASM_LOONGARCH_UNWIND_HINTS_H */
 -- 
 2.48.1
 
