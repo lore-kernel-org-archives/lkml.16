@@ -1,71 +1,35 @@
-Received: from mail-pl1-f196.google.com (mail-pl1-f196.google.com [209.85.214.196])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A32F31C8639;
-	Tue,  1 Apr 2025 14:09:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEF3C204684
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 14:09:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743516578; cv=none; b=OiJ8HTKD0X3YcwjyS3dbGWIBBEeU6zj9wsWa0e+rdwcNw1mRH9uBtkZhy90NMWDRs7L/PmqTTpIO8xvoDexRNYWrN8J/7lmLRODuUZb7pnwGCIPUtkq+2ZCaRmPQjbL3ocvp7v3o8z3pAKZvVgeNBxoj4iGFOb+M4DFJJgI1+QQ=
+	t=1743516598; cv=none; b=hXFydkhIBwW/JZo2gKiHYU6LCbsqBxdUrn0MWWWiHl6fjg3Vmm2jbxiUYYrte/1IYhDb7XptF1NS3kJ+8wS9dI2/pYhAuGzALxI2uu93NkIvEvNgSf8JIe9F9h17LjAtFZGUW4SeBMEaTJGliYs8cIvbPft2jGDdLYv7G3kwee4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743516578; c=relaxed/simple;
-	bh=My+IhUJPDIGC/U42rriDITzfwFXpKC6Yxi6GLAVN7H0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=sGz0MMmjNaCpRcHu3Z4MRIB/yOrNXLHSda5DtRSHCr/SYvfUqDx3EgI+O49Kos4lWFatbOUCJFByWfJJhq46ApIdclVXWq3xpE32t2uasvv2tVFJY9ib0ytUsJyCV0XcBFpinpsiaxg7j+B+D6BMuV3rQ15fOTnXZoSoAtVnpDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d/Yf4QPH; arc=none smtp.client-ip=209.85.214.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743516598; c=relaxed/simple;
+	bh=t4ERt79E1MKZVCOHESPXrWSpOLzU2ctlJAkZUDmfa28=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=lxRWMP6MW+EfS5Kc0BVVoEWhahHgfuuCUqgT/qGp3MRgVye91UOjpqWJGA6jrLL+M+maSbb6xnvBElNhioFoeVXGFKDSa6UDy0OpCR5v52ulF4JSgidjh2PAcpd6qm5GAHfh+l7kWV880VJkqFzPXkFPnTz2TwcA1MWlNcLu06s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hqDS994r; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d/Yf4QPH"
-Received: by mail-pl1-f196.google.com with SMTP id d9443c01a7336-224100e9a5cso102441785ad.2;
-        Tue, 01 Apr 2025 07:09:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743516576; x=1744121376; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=a9GlRWIrROmsrWYyZDpS+4LIE3y91EaJxNh6RKPsNwg=;
-        b=d/Yf4QPHWlJ86Zk2w8izZcA9byb4441Eb2ZEBbdpU6dMldMq0yugVa+0pSiNDCl5kw
-         bQQkdDduYy/oHh7fLkZF2Lkt5Vczq1A9LW4L980IpjloD/xnL6p/NbTtRE6O5XMTEm/7
-         6/4VzGZG839qwuKISnkqbdKOOUvDMSluE0lsSA1Oq+brGQKsGq67AaOLANR2gNkvaPGk
-         kGGqA77566fsRJy9x6Uzf3fycRQHA5LC/X4hyQiOK5/yGtQUQZDoOdJOaaSKukCkiGo3
-         W5VU2MxuKUn8PjimnGz+UKVjW8pgmBGsQJ+xB3VC/LY/Y+LNQ0OGh6IGVg8ugLxS9cZX
-         ev9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743516576; x=1744121376;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=a9GlRWIrROmsrWYyZDpS+4LIE3y91EaJxNh6RKPsNwg=;
-        b=FlccOTuXMTupWJ8ndxB+IBxWi9mvqUon8rujJKXgixpDHtKzUqZYSXZYOi+N6eLkKJ
-         m6SL1XOjIk3yCaMnFVbOdLquONaSwRryJ4kkSRildTJwTJwaQx3TcnM2vuuIdzRv5i/3
-         rEYpmntcUE80/a1DQtJZ/oE2smx6URkyoEJFXHc0OUSFoxgwsFS/yD1VmXXDqCgQMXbF
-         Q/IRakNHHWLYD5MnR7Iea0aeZREuv6N93L49xz6WyVjM7IM/0/GcItyE+Q4FGkh6VoKH
-         3AY1TIhp1QJqQj0TTwUEGUC1EGwLL03SkL7rj6kJeVNksmTmsbAXFBciO/t1cAFxOyf2
-         G1WQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUaa1eW2/x808XI3OThsmh/YxynjaOUYpIzNTYregCuKv5uQTW+hH7VLekeTuaFjUmjrGs7qO6NVBzNVuI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw5J55w9aYb52BWaqJtU7W+cGJEBsi1kRWdxg5I75mV3BKc8fnR
-	pQS4QCdqpCzVKjoQt6MAhdmBTneNVU7NS9oRt1KiFNAiQV49/jxTk9uDkfEdBv7hVA==
-X-Gm-Gg: ASbGnctUfMM3VZiywaFMkqOBEzcxPPILWEangC3PsWbANYo+iCBeswlqLyPU0sPGi7x
-	40wjT47jNSPK1kQtnsCoQJC/OIfS2H3ar5fjMnTbiBqkCAmLtWyWNxIAtRDOpLEtA5eD1gwJvxp
-	9IVaK11S0t0zGGeihil9iUlJFiaOOFqXT4rTifV7lxFNbiNVN0WQFXDe8Enh+7qfkEuOc4IkL+C
-	lIFtpin4dQ0CgAiSWkzVzusj7FubPw4l3s1YdkcX/JMpPh2WJWdoR24vH2Mvpft3sUhs3gzI1zE
-	Qywu+zeX0yc9fSnqWxm22D14PN2qzw46CEDzScVWK0VWVfA4BgGGTXPKPzPFCbUVU9NxKb8=
-X-Google-Smtp-Source: AGHT+IFgauv64PUqSz27wL93wQDQRU2fSOWY7nWrgsuD8SQDOPwlyH8YGEfCl2nmEhWzzN5QGC28OQ==
-X-Received: by 2002:a05:6a20:3953:b0:1f6:6539:e026 with SMTP id adf61e73a8af0-2009f5fe141mr19082242637.15.1743516575790;
-        Tue, 01 Apr 2025 07:09:35 -0700 (PDT)
-Received: from henry.localdomain ([111.202.148.167])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af93b6d82f2sm8082168a12.40.2025.04.01.07.09.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Apr 2025 07:09:35 -0700 (PDT)
-From: Henry Martin <bsdhenrymartin@gmail.com>
-To: arend.vanspriel@broadcom.com
-Cc: linux-wireless@vger.kernel.org,
-	brcm80211@lists.linux.dev,
-	brcm80211-dev-list.pdl@broadcom.com,
-	linux-kernel@vger.kernel.org,
-	Henry Martin <bsdhenrymartin@gmail.com>
-Subject: [PATCH v1] wifi: brcmfmac: acpi: Add NULL check in brcmf_acpi_probe()
-Date: Tue,  1 Apr 2025 22:09:24 +0800
-Message-Id: <20250401140924.29168-1-bsdhenrymartin@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hqDS994r"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42E85C4CEE4;
+	Tue,  1 Apr 2025 14:09:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743516598;
+	bh=t4ERt79E1MKZVCOHESPXrWSpOLzU2ctlJAkZUDmfa28=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=hqDS994r9kCSuabYQox5+Z2L/OVBL82B1F+BkcOOzXa0tGwnEyZWyYOyBks0mSbs1
+	 DBBlxOyRfW3OnRQ8qwxcH8jn5qTvIGYOsOApcEf0V8pY0wV9yWDq0piT+i9AYtP71I
+	 PZJIPWiHaqCdrI2p7keBnxpxEk4Lete3whbtS5L43CalXmwJImHF8oj8+pqg4iKH2G
+	 NIZ4cIq4PLbZT62viCxmg2kKJWTO2PAZRhMt3ERiTFM15sT9oXcTEVZv+16ORcyCTy
+	 FFP/yrGVgaLY94ZfQtuFAwwZuekBK/ar6jg6nxmuLN3ioniYXeNh8tF8d977jQyvD8
+	 O/IuWwqW9sIFQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 34926380AA7A;
+	Tue,  1 Apr 2025 14:10:36 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,32 +37,41 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH FOR-NEXT] riscv: Add norvc after .option arch in runtime
+ const
+From: patchwork-bot+linux-riscv@kernel.org
+Message-Id: 
+ <174351663474.777137.11029884560691390580.git-patchwork-notify@kernel.org>
+Date: Tue, 01 Apr 2025 14:10:34 +0000
+References: <20250331-fix_runtime_const_norvc-v1-1-89bc62687ab8@rivosinc.com>
+In-Reply-To: <20250331-fix_runtime_const_norvc-v1-1-89bc62687ab8@rivosinc.com>
+To: Charlie Jenkins <charlie@rivosinc.com>
+Cc: linux-riscv@lists.infradead.org, paul.walmsley@sifive.com,
+ palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
+ klarasmodin@gmail.com, linux-kernel@vger.kernel.org
 
-devm_kasprintf() returns NULL when memory allocation fails. Currently,
-brcmf_acpi_probe() does not check for this case, which results in a NULL
-pointer dereference.
+Hello:
 
-Add NULL check after devm_kasprintf() to prevent this issue.
+This patch was applied to riscv/linux.git (for-next)
+by Palmer Dabbelt <palmer@rivosinc.com>:
 
-Fixes: 0f485805d008 ("wifi: brcmfmac: acpi: Add support for fetching Apple ACPI properties")
-Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
----
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/acpi.c | 2 ++
- 1 file changed, 2 insertions(+)
+On Mon, 31 Mar 2025 11:45:24 -0700 you wrote:
+> .option arch clobbers .option norvc. Prevent gas from emitting
+> compressed instructions in the runtime const alternative blocks by
+> setting .option norvc after .option arch. This issue starts appearing on
+> gcc 15, which adds zca to the march.
+> 
+> Reported by: Klara Modin <klarasmodin@gmail.com>
+> 
+> [...]
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/acpi.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/acpi.c
-index c4a54861bfb4..4885d5d0a0af 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/acpi.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/acpi.c
-@@ -25,6 +25,8 @@ void brcmf_acpi_probe(struct device *dev, enum brcmf_bus_type bus_type,
- 		settings->board_type = devm_kasprintf(dev, GFP_KERNEL,
- 						      "apple,%s",
- 						      o->string.pointer);
-+		if (!settings->board_type)
-+			return -ENOMEM;
- 	} else {
- 		brcmf_dbg(INFO, "No ACPI module-instance\n");
- 		return;
+Here is the summary with links:
+  - [FOR-NEXT] riscv: Add norvc after .option arch in runtime const
+    https://git.kernel.org/riscv/c/95c18b7ccdd1
+
+You are awesome, thank you!
 -- 
-2.34.1
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
