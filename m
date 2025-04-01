@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14B9A1EF39A;
-	Tue,  1 Apr 2025 09:17:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC2E71EF376;
+	Tue,  1 Apr 2025 09:17:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743499059; cv=none; b=qISThWbX88ZIYHMBSYfeRAO2LTO/1QcHCv4SgNqETlLAB+m5MRU+gxy9O/YKXrSZVYqx1UMjOKpFXh8mIPDnIKNFkxpUr+bDjHYNe8LCkd7K6rChdLP1jxeh5oceS7vMOVs8GtnMfTe2IaHbC8L4MyUIvSpFpN6wNfI1eS4vNWg=
+	t=1743499058; cv=none; b=Vb3pyhO/2HuVXfZOYeqBnn/Lwtq9jHq0XVb59crWWNbdH57m26+PwOAMJ5flnmH/iFvepSqwdB1fz0xzbQ1XLpg1oLgK9F4ontSR3663+LCO0VD6RsUFVPeWhb/k2u6VHqBOpbGcxIPZ1tfZNI4n3Ne/mxsfFjBeN6V67xTvcw0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743499059; c=relaxed/simple;
-	bh=U0ysh0TLWp+CLpUidcyzO51hkifl4bGUq07snvSw+w4=;
+	s=arc-20240116; t=1743499058; c=relaxed/simple;
+	bh=N1nHX41VAbTth+my1DnLmQ+I/I1nrU0WjhF/thdk4u0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=nm+g5c5LQqpHKhFkGQwsr9bxsYwLO/PENV1aiwA7khZC7drPgefbrJWwacCZgS+D7GxVegwH5c2a1wJGngdKAGhsquBhIShpdyVMzLKOSVbhAjhL81qgwuzq/o41z6nUFSeb5iPvpNlEMW6bGkZJTGLbxH1nUsYE83s32vUSJBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cLuIph2j; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=HdBB9geJsuMh3dmJ/30CdIQpEGBRCYTYIWDtq7k3EaIIr+nHL637TGSIUjtn8VvLvXqoenV67qb0vj9Uzrwvt57g05uy1ikF1ztOFf3OvUyN8DhixkUY4eqg73epPn6gWJSHGqCi7E/PgYtbVdiTi0UTnIFbJO7ehrAiE3gvbs4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O00QXRY8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cLuIph2j"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8028C4AF12;
-	Tue,  1 Apr 2025 09:17:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O00QXRY8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB926C4AF0F;
+	Tue,  1 Apr 2025 09:17:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743499059;
-	bh=U0ysh0TLWp+CLpUidcyzO51hkifl4bGUq07snvSw+w4=;
+	s=k20201202; t=1743499058;
+	bh=N1nHX41VAbTth+my1DnLmQ+I/I1nrU0WjhF/thdk4u0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=cLuIph2jPhPcO3cYdVQtZQtkVXG+tgLp/4t4smob/abxmh2OmnA/+5ZU6hUuX8wxV
-	 KBkK5kWx9h9FJIG7bi6lirw5sVbHustH0pvTEVRV9SNFKdn8eNcbJqHblU4E+MRCO/
-	 nwnkA0JbxNQOYkQVdfO/q9dIfBEiyvQ8hK3WyrtgriNyefrmbk+clmDjrJHqAb77BK
-	 brNHVNMm9wl+hXoiSLJv/gthJUak6a2tLQloDPoz6cN6L90JjSX3EkdR3kVb0S5v1f
-	 Uw7iWOekWcOeztD1MfwY7HhE32vtavMCCm4RThkevAiGrtbub7fCxsWY2skM6E6x+r
-	 2fkkFisZQ5lWA==
+	b=O00QXRY8MVm0JZtF5V6kXJXMMRx/23J4IuUzVJZQbK6AYebjCFP2zDqMMAFCK4XtP
+	 M9YLj8XlQLsryVUY9a5vPqbNFO7CI0/1UD7vUFsba76mOstdeyjGdcGatsyDGeYOgD
+	 8fZWPZAO9WoB+SitnFNWtOSP/tIA2va+/mjCfzkDgG/QdckIJekCzFbDFbHZO8735W
+	 XTYMXUBFvOPKegHcjA1EC5caMKum+EZcEknVOcoGmdUD+zolB9bQioGjHK4ns/mB1Y
+	 qRetlUpdMcJu3faZ1TJLtNe8TqAtqLub2O7DGtzxWnnLSt8ViHXBQNId4AyxxiyE3j
+	 pDjSDLNK8xdlw==
 Received: from sofa.misterjones.org ([185.219.108.64] helo=valley-girl.lan)
 	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.95)
 	(envelope-from <maz@kernel.org>)
-	id 1tzXkX-001GqU-4E;
-	Tue, 01 Apr 2025 10:17:37 +0100
+	id 1tzXkV-001GqU-Uf;
+	Tue, 01 Apr 2025 10:17:36 +0100
 From: Marc Zyngier <maz@kernel.org>
 To: linux-arm-kernel@lists.infradead.org,
 	linux-pci@vger.kernel.org,
@@ -49,9 +49,9 @@ Cc: Alyssa Rosenzweig <alyssa@rosenzweig.io>,
 	Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Mark Kettenis <mark.kettenis@xs4all.nl>
-Subject: [PATCH v3 10/13] PCI: apple: Drop poll for CORE_RC_PHYIF_STAT_REFCLK
-Date: Tue,  1 Apr 2025 10:17:10 +0100
-Message-Id: <20250401091713.2765724-11-maz@kernel.org>
+Subject: [PATCH v3 05/13] PCI: apple: Move over to standalone probing
+Date: Tue,  1 Apr 2025 10:17:05 +0100
+Message-Id: <20250401091713.2765724-6-maz@kernel.org>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20250401091713.2765724-1-maz@kernel.org>
 References: <20250401091713.2765724-1-maz@kernel.org>
@@ -67,40 +67,110 @@ X-SA-Exim-Rcpt-To: linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.o
 X-SA-Exim-Mail-From: maz@kernel.org
 X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-From: Hector Martin <marcan@marcan.st>
+Now that we have the required infrastructure, split the Apple PCIe
+setup into two categories:
 
-This is checking a core refclk in per-port setup which doesn't make a
-lot of sense, and the bootloader needs to have gone through this anyway.
+- stuff that has to do with PCI setup stays in the .init() callback
 
-It doesn't work on T602x, so just drop it across the board.
+- stuff that is just driver gunk (such as MSI setup) goes into a
+  probe routine, which will eventually call into the host-common
+  code
+
+The result is a far more logical setup process.
 
 Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 Acked-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
 Tested-by: Janne Grunau <j@jannau.net>
-Signed-off-by: Hector Martin <marcan@marcan.st>
-Signed-off-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
 Signed-off-by: Marc Zyngier <maz@kernel.org>
 ---
- drivers/pci/controller/pcie-apple.c | 6 ------
- 1 file changed, 6 deletions(-)
+ drivers/pci/controller/pcie-apple.c | 54 ++++++++++++++++-------------
+ 1 file changed, 30 insertions(+), 24 deletions(-)
 
 diff --git a/drivers/pci/controller/pcie-apple.c b/drivers/pci/controller/pcie-apple.c
-index 94c49611b74df..c00ec0781fabc 100644
+index 842f8cee7c868..d07e488051290 100644
 --- a/drivers/pci/controller/pcie-apple.c
 +++ b/drivers/pci/controller/pcie-apple.c
-@@ -475,12 +475,6 @@ static int apple_pcie_setup_refclk(struct apple_pcie *pcie,
- 	u32 stat;
- 	int res;
+@@ -730,35 +730,15 @@ static void apple_pcie_disable_device(struct pci_host_bridge *bridge, struct pci
  
--	res = readl_relaxed_poll_timeout(pcie->base + CORE_RC_PHYIF_STAT, stat,
--					 stat & CORE_RC_PHYIF_STAT_REFCLK,
--					 100, 50000);
--	if (res < 0)
--		return res;
+ static int apple_pcie_init(struct pci_config_window *cfg)
+ {
++	struct apple_pcie *pcie = cfg->priv;
+ 	struct device *dev = cfg->parent;
+-	struct platform_device *platform = to_platform_device(dev);
+ 	struct device_node *of_port;
+-	struct apple_pcie *pcie;
+ 	int ret;
+ 
+-	pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
+-	if (!pcie)
+-		return -ENOMEM;
 -
- 	rmw_set(PHY_LANE_CTL_CFGACC, port->phy + PHY_LANE_CTL);
- 	rmw_set(PHY_LANE_CFG_REFCLK0REQ, port->phy + PHY_LANE_CFG);
+-	pcie->dev = dev;
+-
+-	mutex_init(&pcie->lock);
+-
+-	pcie->base = devm_platform_ioremap_resource(platform, 1);
+-	if (IS_ERR(pcie->base))
+-		return PTR_ERR(pcie->base);
+-
+-	cfg->priv = pcie;
+-	INIT_LIST_HEAD(&pcie->ports);
+-
+-	ret = apple_msi_init(pcie);
+-	if (ret)
+-		return ret;
+-
+ 	for_each_available_child_of_node(dev->of_node, of_port) {
+ 		ret = apple_pcie_setup_port(pcie, of_port);
+ 		if (ret) {
+-			dev_err(pcie->dev, "Port %pOF setup fail: %d\n", of_port, ret);
++			dev_err(dev, "Port %pOF setup fail: %d\n", of_port, ret);
+ 			of_node_put(of_port);
+ 			return ret;
+ 		}
+@@ -778,14 +758,40 @@ static const struct pci_ecam_ops apple_pcie_cfg_ecam_ops = {
+ 	}
+ };
  
++static int apple_pcie_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct apple_pcie *pcie;
++	int ret;
++
++	pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
++	if (!pcie)
++		return -ENOMEM;
++
++	pcie->dev = dev;
++	pcie->base = devm_platform_ioremap_resource(pdev, 1);
++	if (IS_ERR(pcie->base))
++		return PTR_ERR(pcie->base);
++
++	mutex_init(&pcie->lock);
++	INIT_LIST_HEAD(&pcie->ports);
++	dev_set_drvdata(dev, pcie);
++
++	ret = apple_msi_init(pcie);
++	if (ret)
++		return ret;
++
++	return pci_host_common_init(pdev, &apple_pcie_cfg_ecam_ops);
++}
++
+ static const struct of_device_id apple_pcie_of_match[] = {
+-	{ .compatible = "apple,pcie", .data = &apple_pcie_cfg_ecam_ops },
++	{ .compatible = "apple,pcie" },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, apple_pcie_of_match);
+ 
+ static struct platform_driver apple_pcie_driver = {
+-	.probe	= pci_host_common_probe,
++	.probe	= apple_pcie_probe,
+ 	.driver	= {
+ 		.name			= "pcie-apple",
+ 		.of_match_table		= apple_pcie_of_match,
 -- 
 2.39.2
 
