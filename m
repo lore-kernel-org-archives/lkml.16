@@ -1,274 +1,134 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4962221931C
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 16:43:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C596C20E339
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 16:43:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743525810; cv=none; b=K40bCqfo8VJsV+W5C6fgwAGzwYNI8AqmQ9HpK0PfUIqxG19EWQ+SyYDEWRd3YTDSD6H3yBpRoOPFH5FTS6QaiXl7gWWjiVMHlEMgrY361WMn+VHvJ0y+7eusSOfCO3aMHbpLEmOSur5sh1ZUkZ9NQtBkKJxEk1xAVe51QN9d0GY=
+	t=1743525820; cv=none; b=XHAMwzSqcmJ6tjRekrYncxbIkeVXyZacsj693y04DiXf0gMQVrofaEt0x1YYp65XnndjkNrabCjf7ezullZRnd3AeIWlSUa1cVld2O3Ys7s8n5OBSUCyc73zJ4Syk/QihuHxvNPrkCuMPvUru9oreykbUH/4YuqRSQMOm0fvTvg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743525810; c=relaxed/simple;
-	bh=OLOwb1ooeYE8kEqHbAiwmAqVs2RQsyUhuURfPkAdAQg=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=bV5LYikjTEvdgm3R015gPoEGV2LZexkyhgSxtvAABeqiIr3oXCEwKOCBjqrTxqVP/EWOoCVKRt9dMhzQiNdesUj63ivwi+mXrCPtoEMhd8k/fPEceVpJoVCbk9IaAg/GJ5L/RXwsehewl49yJvJ3f3mx1NLnuY0S7pprVwmIDiw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lnEeISpW; arc=none smtp.client-ip=209.85.214.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1743525820; c=relaxed/simple;
+	bh=T91CpCnTj0xwyklVrpy6lRrUPs8IsdueChwCeJaJSdU=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZFbsAgZHlIntrOSJ8OIUhnCn3weS4eFkpijQGVXQubHTmO+ncr71zoFgjJsijIctPvCLvz7bhN14ziu7L1dyfWr/TMEQ4TkD2k8soY7wGfwo9HS0loHoNNE5iq+GXGd0/UoswCHYcGcuy+UpRRUeCuiJSLN5lPAC5G+LQee8+co=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e4geNtSl; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lnEeISpW"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-225429696a9so168194765ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 09:43:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e4geNtSl"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-54acc04516fso5497904e87.0
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 09:43:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743525808; x=1744130608; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=J4EaWThVax9a+rwMhF6yZ1iQunAjXVQBx8Hy6/tixQ4=;
-        b=lnEeISpW1dK+cEevA+wWDVeAveNKwsnIhg43db/iYyyEQatGqQXlIvSynAg3xPnT7a
-         1JxZ1GbD79QXmvPJJgfmceLJUhcLCFcsG1jbQmOoo9aIkqMVAEis7LlWwRtizBuduCwm
-         8mBuxE10G11ZepnKnNf3RcAPqyNOrqXcnA2KaYQFDmT4aQLUjYDlzP13BPuh+xaL6kak
-         rs+we2AFZdYVwURJJ/HO7oFmL16W3fqTs7KFWeDgw/1/km1X1ddvDWUkaG3qJEreGfct
-         TEdw+t+PRA3ed3hWqK04MqDQAPeS6bLnr938k7tLw2aU8wuVxm+AO0A2mhT8/LJ9A9dV
-         91bA==
+        d=gmail.com; s=20230601; t=1743525817; x=1744130617; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=VtRsoKUnzY62F16ZzyXgTuIuFUdJK0crZF8UmK0ccK4=;
+        b=e4geNtSld637eol2NXKVCCjo24wtJ83gkmKm7AxvxgYriRxpvgM3ELn6klIdjNOGCp
+         rg47dDTvfwoFJ5DQjB8WNocPJDBTJCg/OQ9LQ7cUH4NL2V+dPd8jk/qSX3WMCv0jZF0s
+         4Vqga9wNv+KANDVnK2pRu6FxQl0IlNVU4MW+AbfpIYNtHkASUuPqH95R2RGDUpv0YNzU
+         fzG19MMeEylAC2a2r6mhy6lvNO3QsohuOsoSZB6iYaHbh0q/cOJYkeov1s6dPpclakyX
+         QAPzvxNz0codrOMhTZ0B5bhpOWgMXXbie50G91ytlG+xq0D82fzivIwTAVd9h8zZ3A7a
+         AMuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743525808; x=1744130608;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=J4EaWThVax9a+rwMhF6yZ1iQunAjXVQBx8Hy6/tixQ4=;
-        b=RFAQgWGE2XXVFpMCW1QmI6DS7iI0Sj43hsm2Nf+SByB8eWJj5U38hrCd+UVkg8V3BQ
-         U7FdLK36iPXVubK5cYMS1XoAFZy13waxM93NrOxJ9kRcNQGAYVwTk9UQ2Ws5gsho4fPG
-         xo5wg9pGzviRF/5U3UosrMncV2HxS8ei9YyM9ygoLgzw8FPaezTAwNqAQufYp7dBp2+I
-         ChiCH9GDuKwyYlZzQax/MDDIbU3/g6LJzVgg9YPh8sV2E2ZMkNhOSS/0tE6dYi2BArBw
-         1OBi+2J5EYbeP8scPEkvsLZg5FqY3D7Sz8a64MyuzjSj1MiO8UgAp5esYy0iJjBOcSYz
-         fidg==
-X-Gm-Message-State: AOJu0Yxt7kMJfqhHzK6tycLS7FLOhH9fPvYSpDIzvsLZlBXXUZ0UTjLT
-	LaYywyvenWz+AV84XHu0S2r/OP3Vifi6mf9wwBbhLtXBD0KnkIs64WIk7zpqUfZnnA5lMV/GwLN
-	vgQ==
-X-Google-Smtp-Source: AGHT+IG+549uJ+p5h+jsssZ8JRnj/shC1446VEr9mloO2RqS2MvoVJe5+Bo4jdQs31e7cn/R3826qBseTE8=
-X-Received: from pfbde10.prod.google.com ([2002:a05:6a00:468a:b0:730:7b0c:592c])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:2383:b0:736:34a2:8a18
- with SMTP id d2e1a72fcca58-7398044db06mr17829997b3a.24.1743525808635; Tue, 01
- Apr 2025 09:43:28 -0700 (PDT)
-Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Tue,  1 Apr 2025 09:34:47 -0700
-In-Reply-To: <20250401163447.846608-1-seanjc@google.com>
+        d=1e100.net; s=20230601; t=1743525817; x=1744130617;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=VtRsoKUnzY62F16ZzyXgTuIuFUdJK0crZF8UmK0ccK4=;
+        b=RHeXZEhyI9D8dSGC90ksddIyZYZFQgeSraBSJlui5s1BlwHQ3Somsnvslzex+IrWBm
+         kPNv60CVKZyIpF9YhImNz4daQi3XTpDpZldmAh+me1ub6Wav2a7mJkETntLLF/XR5o3/
+         pXMfMwQaYF15dvXEwi0wj01uxzn/hGDzcc//zOFa5I/5YfbUnyuz2uA4n7HD8wYvwnUn
+         XSnpOnHv9SNxRqBwiJMhFC72KtLERawVxQVALG08ctQoRY7LhUUW7Qw63OQEesQw852e
+         mKyIzwq/amniJCXnDap+MsVifaV283Zdnqduo3cUATLgUyuHxULdG5NF8OFUrdTFnCq5
+         9JRw==
+X-Forwarded-Encrypted: i=1; AJvYcCW82UDbmGVoCG0CQ3Ra+LQ6L3rsbFzEmSXEFORITCBCu9rDg++Jyb+m+EqxjvS0MIvmGoLR9v1xW1Jnrn8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxXbAtUdxKiRZH1wlHEu6ZSk895tzg/kIW8BsMha3wkR87lpPmk
+	9ZLW44PHCe+mCwhZDG5QO9QzBs+dNEuih7JeMwKe44TIPOdB7fQ9
+X-Gm-Gg: ASbGncvcqvnvrLFSh615jcMEnxifb0WdkOUlTp2hSL8BzdoOx0U18G7Tm8Zw+51vw8Y
+	d5x2QuBUP8DZqsJvi4JGU7K1PVVwvRnQT+DnmxM7KtG5N9OOUj0ilEneqORMoiz4ctYf2vO79Lp
+	yN7LDDMfvtumbyv9rf9PYLhs+Km9l1CaZxpR/mBI5cNLZOP+ZpNRj2ylPgIzY0iyE8DXfww8xRi
+	ltqS9XAQSbAp63dmITjpbz14ts864P3W7ivX0DeluESdWT8MuhUQYKe3QLv2oTa72pWC09Puwoo
+	jsy+s9Bbx4M=
+X-Google-Smtp-Source: AGHT+IGMjSOepmGd10i7LRathTc4xjO90nBV59dTN5qeuRROXT3Ts5jebW4tDpW5dseK5F3H7TQf1g==
+X-Received: by 2002:a05:6512:31c7:b0:54a:fa47:b2a5 with SMTP id 2adb3069b0e04-54b10ecad2cmr3731763e87.23.1743525816549;
+        Tue, 01 Apr 2025 09:43:36 -0700 (PDT)
+Received: from pc636 ([2001:9b1:d5a0:a500::800])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54b094c1ab6sm1412989e87.97.2025.04.01.09.43.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Apr 2025 09:43:35 -0700 (PDT)
+From: Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date: Tue, 1 Apr 2025 18:43:33 +0200
+To: Huan Yang <link@vivo.com>
+Cc: Uladzislau Rezki <urezki@gmail.com>,
+	"Vishal Moola (Oracle)" <vishal.moola@gmail.com>,
+	linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+	Brendan Jackman <jackmanb@google.com>, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v2 0/1] Introduce vmap_file()
+Message-ID: <Z-wXtZfrxVXfjFIB@pc636>
+References: <20250328211349.845857-1-vishal.moola@gmail.com>
+ <02ba63ed-ef1c-426d-b469-09878c5f03d7@vivo.com>
+ <Z-tGXf5mfTclxZgl@fedora>
+ <a3618dd8-5b4d-45d7-b619-1c89ca7fd6b5@vivo.com>
+ <Z-tbTWP5MYzwrRYX@fedora>
+ <efd24da3-2da2-4acb-be7d-a070a78b80bf@vivo.com>
+ <Z-u2O_MO1NWP42kL@pc636>
+ <a0b86b75-5f84-4cf2-b69e-c20dd9d025fc@vivo.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250401163447.846608-1-seanjc@google.com>
-X-Mailer: git-send-email 2.49.0.472.ge94155a9ec-goog
-Message-ID: <20250401163447.846608-9-seanjc@google.com>
-Subject: [PATCH v2 8/8] x86/irq: KVM: Add helper for harvesting PIR to
- deduplicate KVM and posted MSIs
-From: Sean Christopherson <seanjc@google.com>
-To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
-	Jim Mattson <jmattson@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a0b86b75-5f84-4cf2-b69e-c20dd9d025fc@vivo.com>
 
-Now that posted MSI and KVM harvesting of PIR is identical, extract the
-code (and posted MSI's wonderful comment) to a common helper.
+On Tue, Apr 01, 2025 at 07:09:57PM +0800, Huan Yang wrote:
+> 
+> 在 2025/4/1 17:47, Uladzislau Rezki 写道:
+> > On Tue, Apr 01, 2025 at 02:08:53PM +0800, Huan Yang wrote:
+> > > 在 2025/4/1 11:19, Vishal Moola (Oracle) 写道:
+> > > > On Tue, Apr 01, 2025 at 10:21:46AM +0800, Huan Yang wrote:
+> > > > > 在 2025/4/1 09:50, Vishal Moola (Oracle) 写道:
+> > > > > > On Mon, Mar 31, 2025 at 10:05:53AM +0800, Huan Yang wrote:
+> > > > > > > HI Vishal,
+> > > > > > > 
+> > > > > > > 在 2025/3/29 05:13, Vishal Moola (Oracle) 写道:
+> > > > > > > > Currently, users have to call vmap() or vmap_pfn() to map pages to
+> > > > > > > > kernel virtual space. vmap_pfn() is for special pages (i.e. pfns
+> > > > > > > > without struct page). vmap() handles normal pages.
+> > > > > > > > 
+> > > > > > > > With large folios, we may want to map ranges that only span
+> > > > > > > > part of a folio (i.e. mapping half of a 2Mb folio).
+> > > > > > > > vmap_file() will allow us to do so.
+> > > > > > > You mention vmap_file can support range folio vmap, but when I look code, I can't figure out
+> > > > > > > 
+> > > > > > > how to use, maybe I missed something? :)
+> > > > > > I took a look at the udma-buf code. Rather than iterating through the
+> > > > > > folios using pfns, you can calculate the corresponding file offsets
+> > > > > > (maybe you already have them?) to map the desired folios.
+> > > > > Currently udmabuf folio's not simple based on file(even each memory from memfd). User can provide
+> > > > > 
+> > > > > random range of memfd  to udmabuf to use. For example:
+> > > > > 
+> > > > > We get a memfd maybe 4M, user split it into [0, 2M), [1M, 2M), [2M, 4M), so you can see 1M-2M range repeat.
+> > > > > 
+> > > > > This range can gathered by udmabuf_create_list, then udmabuf use it. So, udmabuf record it by folio array+offset array.
+> Here, :)
+> > > > I was thinking you could call vmap_file() on every sub-range and use
+> > > > those addresses. It should work, we'd have to look at making udmabuf api's
+> > > > support it.
+> > > Hmmm, how to get contigous virtual address? Or there are a way to merge each split vmap's return address?
+> > > 
+> > The patch in question maps whole file to continues memory as i see, but
+> > i can miss something. Partly populate technique requires to get an area
+> Hmm, maybe you missed ahead talk, I point above. :)
+>
+I pointed to how BPF does it, probably it would just give you both some
+extra input.
 
-No functional change intended.
-
-Signed-off-by: Sean Christopherson <seanjc@google.com>
----
- arch/x86/include/asm/posted_intr.h | 64 ++++++++++++++++++++++++++++++
- arch/x86/kernel/irq.c              | 50 ++---------------------
- arch/x86/kvm/lapic.c               | 16 +-------
- 3 files changed, 69 insertions(+), 61 deletions(-)
-
-diff --git a/arch/x86/include/asm/posted_intr.h b/arch/x86/include/asm/posted_intr.h
-index c3e6e4221a5b..3198e4f217dc 100644
---- a/arch/x86/include/asm/posted_intr.h
-+++ b/arch/x86/include/asm/posted_intr.h
-@@ -1,8 +1,13 @@
- /* SPDX-License-Identifier: GPL-2.0 */
- #ifndef _X86_POSTED_INTR_H
- #define _X86_POSTED_INTR_H
-+
-+#include <asm/cmpxchg.h>
-+#include <asm/rwonce.h>
- #include <asm/irq_vectors.h>
- 
-+#include <linux/bitmap.h>
-+
- #define POSTED_INTR_ON  0
- #define POSTED_INTR_SN  1
- 
-@@ -26,6 +31,65 @@ struct pi_desc {
- 	u32 rsvd[6];
- } __aligned(64);
- 
-+/*
-+ * De-multiplexing posted interrupts is on the performance path, the code
-+ * below is written to optimize the cache performance based on the following
-+ * considerations:
-+ * 1.Posted interrupt descriptor (PID) fits in a cache line that is frequently
-+ *   accessed by both CPU and IOMMU.
-+ * 2.During software processing of posted interrupts, the CPU needs to do
-+ *   natural width read and xchg for checking and clearing posted interrupt
-+ *   request (PIR), a 256 bit field within the PID.
-+ * 3.On the other side, the IOMMU does atomic swaps of the entire PID cache
-+ *   line when posting interrupts and setting control bits.
-+ * 4.The CPU can access the cache line a magnitude faster than the IOMMU.
-+ * 5.Each time the IOMMU does interrupt posting to the PIR will evict the PID
-+ *   cache line. The cache line states after each operation are as follows,
-+ *   assuming a 64-bit kernel:
-+ *   CPU		IOMMU			PID Cache line state
-+ *   ---------------------------------------------------------------
-+ *...read64					exclusive
-+ *...lock xchg64				modified
-+ *...			post/atomic swap	invalid
-+ *...-------------------------------------------------------------
-+ *
-+ * To reduce L1 data cache miss, it is important to avoid contention with
-+ * IOMMU's interrupt posting/atomic swap. Therefore, a copy of PIR is used
-+ * when processing posted interrupts in software, e.g. to dispatch interrupt
-+ * handlers for posted MSIs, or to move interrupts from the PIR to the vIRR
-+ * in KVM.
-+ *
-+ * In addition, the code is trying to keep the cache line state consistent
-+ * as much as possible. e.g. when making a copy and clearing the PIR
-+ * (assuming non-zero PIR bits are present in the entire PIR), it does:
-+ *		read, read, read, read, xchg, xchg, xchg, xchg
-+ * instead of:
-+ *		read, xchg, read, xchg, read, xchg, read, xchg
-+ */
-+static __always_inline bool pi_harvest_pir(unsigned long *pir,
-+					   unsigned long *pir_vals)
-+{
-+	unsigned long pending = 0;
-+	int i;
-+
-+	for (i = 0; i < NR_PIR_WORDS; i++) {
-+		pir_vals[i] = READ_ONCE(pir[i]);
-+		pending |= pir_vals[i];
-+	}
-+
-+	if (!pending)
-+		return false;
-+
-+	for (i = 0; i < NR_PIR_WORDS; i++) {
-+		if (!pir_vals[i])
-+			continue;
-+
-+		pir_vals[i] = arch_xchg(&pir[i], 0);
-+	}
-+
-+	return true;
-+}
-+
- static inline bool pi_test_and_set_on(struct pi_desc *pi_desc)
- {
- 	return test_and_set_bit(POSTED_INTR_ON, (unsigned long *)&pi_desc->control);
-diff --git a/arch/x86/kernel/irq.c b/arch/x86/kernel/irq.c
-index 3753a8acd009..f7c6d94cf070 100644
---- a/arch/x86/kernel/irq.c
-+++ b/arch/x86/kernel/irq.c
-@@ -375,58 +375,14 @@ void intel_posted_msi_init(void)
- 	this_cpu_write(posted_msi_pi_desc.ndst, destination);
- }
- 
--/*
-- * De-multiplexing posted interrupts is on the performance path, the code
-- * below is written to optimize the cache performance based on the following
-- * considerations:
-- * 1.Posted interrupt descriptor (PID) fits in a cache line that is frequently
-- *   accessed by both CPU and IOMMU.
-- * 2.During posted MSI processing, the CPU needs to do 64-bit read and xchg
-- *   for checking and clearing posted interrupt request (PIR), a 256 bit field
-- *   within the PID.
-- * 3.On the other side, the IOMMU does atomic swaps of the entire PID cache
-- *   line when posting interrupts and setting control bits.
-- * 4.The CPU can access the cache line a magnitude faster than the IOMMU.
-- * 5.Each time the IOMMU does interrupt posting to the PIR will evict the PID
-- *   cache line. The cache line states after each operation are as follows:
-- *   CPU		IOMMU			PID Cache line state
-- *   ---------------------------------------------------------------
-- *...read64					exclusive
-- *...lock xchg64				modified
-- *...			post/atomic swap	invalid
-- *...-------------------------------------------------------------
-- *
-- * To reduce L1 data cache miss, it is important to avoid contention with
-- * IOMMU's interrupt posting/atomic swap. Therefore, a copy of PIR is used
-- * to dispatch interrupt handlers.
-- *
-- * In addition, the code is trying to keep the cache line state consistent
-- * as much as possible. e.g. when making a copy and clearing the PIR
-- * (assuming non-zero PIR bits are present in the entire PIR), it does:
-- *		read, read, read, read, xchg, xchg, xchg, xchg
-- * instead of:
-- *		read, xchg, read, xchg, read, xchg, read, xchg
-- */
- static __always_inline bool handle_pending_pir(unsigned long *pir, struct pt_regs *regs)
- {
--	unsigned long pir_copy[NR_PIR_WORDS], pending = 0;
--	int i, vec = FIRST_EXTERNAL_VECTOR;
-+	unsigned long pir_copy[NR_PIR_WORDS];
-+	int vec = FIRST_EXTERNAL_VECTOR;
- 
--	for (i = 0; i < NR_PIR_WORDS; i++) {
--		pir_copy[i] = READ_ONCE(pir[i]);
--		pending |= pir_copy[i];
--	}
--
--	if (!pending)
-+	if (!pi_harvest_pir(pir, pir_copy))
- 		return false;
- 
--	for (i = 0; i < NR_PIR_WORDS; i++) {
--		if (!pir_copy[i])
--			continue;
--
--		pir_copy[i] = arch_xchg(&pir[i], 0);
--	}
--
- 	for_each_set_bit_from(vec, pir_copy, FIRST_SYSTEM_VECTOR)
- 		call_irq_handler(vec, regs);
- 
-diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-index 13363327ad87..1c611b84b8ab 100644
---- a/arch/x86/kvm/lapic.c
-+++ b/arch/x86/kvm/lapic.c
-@@ -657,7 +657,7 @@ static u8 count_vectors(void *bitmap)
- 
- bool __kvm_apic_update_irr(unsigned long *pir, void *regs, int *max_irr)
- {
--	unsigned long pir_vals[NR_PIR_WORDS], pending = 0;
-+	unsigned long pir_vals[NR_PIR_WORDS];
- 	u32 *__pir = (void *)pir_vals;
- 	u32 i, vec;
- 	u32 irr_val, prev_irr_val;
-@@ -666,21 +666,9 @@ bool __kvm_apic_update_irr(unsigned long *pir, void *regs, int *max_irr)
- 	max_updated_irr = -1;
- 	*max_irr = -1;
- 
--	for (i = 0; i < NR_PIR_WORDS; i++) {
--		pir_vals[i] = READ_ONCE(pir[i]);
--		pending |= pir_vals[i];
--	}
--
--	if (!pending)
-+	if (!pi_harvest_pir(pir, pir_vals))
- 		return false;
- 
--	for (i = 0; i < NR_PIR_WORDS; i++) {
--		if (!pir_vals[i])
--			continue;
--
--		pir_vals[i] = arch_xchg(&pir[i], 0);
--	}
--
- 	for (i = vec = 0; i <= 7; i++, vec += 32) {
- 		u32 *p_irr = (u32 *)(regs + APIC_IRR + i * 0x10);
- 
--- 
-2.49.0.472.ge94155a9ec-goog
-
+--
+Uladzislau Rezki
