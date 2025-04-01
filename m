@@ -1,264 +1,128 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-pl1-f193.google.com (mail-pl1-f193.google.com [209.85.214.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3FF31EB1AB
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 09:16:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 208481514F6;
+	Tue,  1 Apr 2025 09:17:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743498987; cv=none; b=A5uo28ZnWJZ8XivQPRwwTjToParWTHuKa8ZQgZJSHUP+P26zCoywl/lWhvI2MfZMy8nN1oxingIaxKcplOTwnBLO4Hmq4BVNXiojvIuaw7X8kKR36a6nW7Gstt69F4adEs0hmLM+9L8kUM9Ihuk8SFMSknxex4BV61rRPsmLh3Y=
+	t=1743499024; cv=none; b=QRdRrgr0y1SoYRNgDXv271G/0iHvzSV0TwHXUH7uGpCXphjwHSezmgq0nc3lQgsPY3/qyWa60zIsKEpdpfuzv2d38Se0t+JqcV0NcrmFtFtZDhbnRlWHtjSHWbdkpxST50YwGpJ3cQqCQgXDQsRfclpY7KEiXIJFIRLkk+jzsbI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743498987; c=relaxed/simple;
-	bh=+nik7Tvg/51eI/Ya5TbSY9360OoLrYMzidLK4vZ8VJg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RK/1uHLW5P6qzs9Dtrc9HQZUneECeg292AInfKFaYF7RkvbwelduePXj4bjDAW2dULWbdI+c88Q+Jh3M27ixC+FzXisWQ8g6+7NCanGVr1S97kYdfrgi82tmAVpf0l52VPP0P4vrnWf3VaNSPbtVNDuFocZoGIPzO0/QtOkfKGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=WMz+80oi; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Duab3wO6; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=WMz+80oi; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Duab3wO6; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1743499024; c=relaxed/simple;
+	bh=PXFATimqMqSBc1k8B3/5XU/qx7AM9Z/4Y86iX1AA+1o=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=tAQ1fiNHHSQOPhSGTULVbYi4TnLYiEIKCOCZtwKVWFDzeeClY+aBUoHe4PI4JTuj7XjqFGkkZPKYPSzJmlvyQUXfvZlF7ke9OHnQKybWTZHe+uaViDfvVXHmZeYQUdzN0NXUlJolDI8Ipp6QdBNP28AW26M6m9v1XqHgpM/om6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V8ssTNxH; arc=none smtp.client-ip=209.85.214.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="WMz+80oi";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Duab3wO6";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="WMz+80oi";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Duab3wO6"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 1B2CF21163;
-	Tue,  1 Apr 2025 09:16:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1743498983; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lzwqT88FUUmuP4AeS3GXYNARxly+cJCGN2uYTtENPOI=;
-	b=WMz+80oiWTnt+wgSYRY3BWpRfzNbsDh+xtMUG6fYoyjnefOGmeNfdAcqABiGELQ7sWq6aO
-	In6LzW2Bhd0qgCmdZcElCQ5Vzge+cwsK54/wDpktAPM8PXvlqVdoSuQXGdJCnY+OzHA0w5
-	DF4tLtG1Xg4XutHZSKCl8FcTvoKFp/k=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1743498983;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lzwqT88FUUmuP4AeS3GXYNARxly+cJCGN2uYTtENPOI=;
-	b=Duab3wO6fcVOjauoKDE5fxUOXyv1I9nCe1GyAjkpaacwgQEpQqojg6Juf/XIXFB21dY6q9
-	g729rfSXpE/uewAg==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1743498983; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lzwqT88FUUmuP4AeS3GXYNARxly+cJCGN2uYTtENPOI=;
-	b=WMz+80oiWTnt+wgSYRY3BWpRfzNbsDh+xtMUG6fYoyjnefOGmeNfdAcqABiGELQ7sWq6aO
-	In6LzW2Bhd0qgCmdZcElCQ5Vzge+cwsK54/wDpktAPM8PXvlqVdoSuQXGdJCnY+OzHA0w5
-	DF4tLtG1Xg4XutHZSKCl8FcTvoKFp/k=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1743498983;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lzwqT88FUUmuP4AeS3GXYNARxly+cJCGN2uYTtENPOI=;
-	b=Duab3wO6fcVOjauoKDE5fxUOXyv1I9nCe1GyAjkpaacwgQEpQqojg6Juf/XIXFB21dY6q9
-	g729rfSXpE/uewAg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0919913691;
-	Tue,  1 Apr 2025 09:16:23 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 7pHmAeeu62fwegAAD6G6ig
-	(envelope-from <jack@suse.cz>); Tue, 01 Apr 2025 09:16:23 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id A5A7EA07E6; Tue,  1 Apr 2025 11:16:18 +0200 (CEST)
-Date: Tue, 1 Apr 2025 11:16:18 +0200
-From: Jan Kara <jack@suse.cz>
-To: Christian Brauner <brauner@kernel.org>
-Cc: linux-fsdevel@vger.kernel.org, jack@suse.cz, 
-	Ard Biesheuvel <ardb@kernel.org>, linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	James Bottomley <James.Bottomley@hansenpartnership.com>, mcgrof@kernel.org, hch@infradead.org, david@fromorbit.com, 
-	rafael@kernel.org, djwong@kernel.org, pavel@kernel.org, peterz@infradead.org, 
-	mingo@redhat.com, will@kernel.org, boqun.feng@gmail.com
-Subject: Re: [PATCH 1/6] ext4: replace kthread freezing with auto fs freezing
-Message-ID: <z3zqumhqgzq3agjps4ufdcqqrgip7t7xtr6v5kymchkdjfnwhp@i76pwshkydig>
-References: <20250401-work-freeze-v1-0-d000611d4ab0@kernel.org>
- <20250401-work-freeze-v1-1-d000611d4ab0@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V8ssTNxH"
+Received: by mail-pl1-f193.google.com with SMTP id d9443c01a7336-224171d6826so76646745ad.3;
+        Tue, 01 Apr 2025 02:17:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743499022; x=1744103822; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+GLEyWRUn87tdAHFpsIgdK3yHHnhiGzWNhKJ4cVG5iU=;
+        b=V8ssTNxHEn76vu4tZaSLUrHsqwWXNFCZvo8Tx/5mFNizbL33LZXrc4DsyZfSmhPg+S
+         c4uUb6A20tUJydDF/izyc8pthOrMxBqrumsvI/gYKYPuZMrbmnSyXrWikQsrcBq5G5nB
+         ZKJL8bUouIBS9lY+BgEwSMqAKCSjYn+Af6yxX+hexKceZiF4CJRtu4qV+PU3NqMx5GOh
+         PNrOozIniwX47uOjmpNz94ymZDGBHe6gW4K57ADsm6vP8/ETx0laYacZw1LKH0gvsj0k
+         ccwwrn311sdJKX5PVV5Fc7S2dxWE+uDOzCBD/L3LMoREp5p5K1Fc+Ig+fFGU/Z1wauB+
+         9XYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743499022; x=1744103822;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+GLEyWRUn87tdAHFpsIgdK3yHHnhiGzWNhKJ4cVG5iU=;
+        b=VWq71E88oVZS+xqYBpzosA0KpMI4FwD+JFl72KDljJCukHus8H5qznOL+YoZsRlZEo
+         vPfAhQ5WfEqLPwBoBsgRRt93/Ox0OdfYHnLrrMmAjU1M8VVksiwcpvZiWXo2sfTrljBl
+         5HjSI/dV54Q1kIpjHSkL0QwuVxYOJPNTOIdetHS2b1yI4ul8oFynUoAohNcJmSucrkaA
+         jHLl7sIDDb+bg4BJT1f67kjYg2yvVbOItgsF0+inPZxdMmuONrKh0y5AV1kcclRQJen3
+         imhCo9iXr0aeI1jhms0ZtrslzFnJVwjZaisrQ0W4tO/4ZvK1NqhKGAO9Lq53K7k1egrE
+         5+kQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU+DuoqGpqN4etZNo/Vb4uusE4DVX5yuUA1MxD7R5jX+6QZfqT7gM3pMSUu/z09JqWiRjVzEkAbXX5Gyc0t@vger.kernel.org, AJvYcCVBIoDMtDkXhQNbtqLkROVTO/yXJkPC9EHPUiLoVbRsV4d+jytNYaLbbzYnMAfaXxnZSuLatNVW2WAX9u7b@vger.kernel.org, AJvYcCWqi63rRC03sgeaavQ98JALkq22fdDRGfVN8GtAt+fz2G6Wm9/gTMDC9/iuaXyaH/oi2Pm7ZQWwLcYOZm0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwsduIx3EqanNaC3lPLHS2fGChTXGDzmj1pmFOOg3GdCsVmQbDd
+	BVeZuUeNec8evDi6k2vhZNIoHTDzTxRI/u2aASLLp/Fwx7xBrPbjyx7z/rKiUoE=
+X-Gm-Gg: ASbGncunKtlaCZJ607Z/ea2Hh9ok7ieoPQwMBgvWdqOd9gF58ewuFwEEa4UXfufCKRM
+	cQBvyJxmpOJV0vj4hUCfUD6vo8IpTUTywRgNVw7mGFkToB4FPYk/49qhMi5reHjiV/HleY0vouG
+	vGXQY8v/CxoyLGgfxX+j5kVYL4ChSmfaOTpZS2tr7Dnbx6oVgEApr5axVSqsSnfsTqnNXGJbHLG
+	qeJKfUmxV1QwZsGCIByisqZH9PabtgS9s34eSuZOQBOU17gY1SyD1GdTWaDYV2JH3CLZ1EEsDHW
+	Z0Ouuf+XmRqoLJCgT8s8WeePYAqkE45fWRtAy3qC2ZQ7U3x/UcIdFBTUNcEBTGxbONPDAcmMUke
+	+U4Tdsg==
+X-Google-Smtp-Source: AGHT+IHunF5jyUL3TmPXi3AK47epCDZ22lyUsYqq4UiVJYVJRr74B+C/7SC7nQxjxJzTz0Tx+kvJng==
+X-Received: by 2002:a17:903:1cb:b0:223:f928:4553 with SMTP id d9443c01a7336-2292f9f7646mr232149915ad.44.1743499022271;
+        Tue, 01 Apr 2025 02:17:02 -0700 (PDT)
+Received: from henry.localdomain ([111.202.148.167])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291eedf9b4sm83492285ad.84.2025.04.01.02.16.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Apr 2025 02:17:01 -0700 (PDT)
+From: Henry Martin <bsdhenrymartin@gmail.com>
+To: danielt@kernel.org
+Cc: lee@kernel.org,
+	jingoohan1@gmail.com,
+	deller@gmx.de,
+	linux-arm-msm@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linux-fbdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Henry Martin <bsdhenrymartin@gmail.com>,
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Subject: [PATCH v4] backlight: pm8941: Add NULL check in wled_configure()
+Date: Tue,  1 Apr 2025 17:16:47 +0800
+Message-Id: <20250401091647.22784-1-bsdhenrymartin@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <Z-uqpxcge0J99IPI@aspen.lan>
+References: <Z-uqpxcge0J99IPI@aspen.lan>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250401-work-freeze-v1-1-d000611d4ab0@kernel.org>
-X-Spam-Score: -2.30
-X-Spamd-Result: default: False [-2.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_RCPT(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[17];
-	RCVD_COUNT_THREE(0.00)[3];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[vger.kernel.org,suse.cz,kernel.org,hansenpartnership.com,infradead.org,fromorbit.com,redhat.com,gmail.com];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.com:email]
-X-Spam-Flag: NO
-X-Spam-Level: 
+Content-Transfer-Encoding: 8bit
 
-On Tue 01-04-25 02:32:46, Christian Brauner wrote:
-> From: Luis Chamberlain <mcgrof@kernel.org>
-> 
-> The kernel power management now supports allowing the VFS
-> to handle filesystem freezing freezes and thawing. Take advantage
-> of that and remove the kthread freezing. This is needed so that we
-> properly really stop IO in flight without races after userspace
-> has been frozen. Without this we rely on kthread freezing and
-> its semantics are loose and error prone.
-> 
-> The filesystem therefore is in charge of properly dealing with
-> quiescing of the filesystem through its callbacks if it thinks
-> it knows better than how the VFS handles it.
-> 
-> The following Coccinelle rule was used as to remove the now superfluous
-> freezer calls:
-> 
-> make coccicheck MODE=patch SPFLAGS="--in-place --no-show-diff" COCCI=./fs-freeze-cleanup.cocci M=fs/ext4
-> 
-> virtual patch
-> 
-> @ remove_set_freezable @
-> expression time;
-> statement S, S2;
-> expression task, current;
-> @@
-> 
-> (
-> -       set_freezable();
-> |
-> -       if (try_to_freeze())
-> -               continue;
-> |
-> -       try_to_freeze();
-> |
-> -       freezable_schedule();
-> +       schedule();
-> |
-> -       freezable_schedule_timeout(time);
-> +       schedule_timeout(time);
-> |
-> -       if (freezing(task)) { S }
-> |
-> -       if (freezing(task)) { S }
-> -       else
-> 	    { S2 }
-> |
-> -       freezing(current)
-> )
-> 
-> @ remove_wq_freezable @
-> expression WQ_E, WQ_ARG1, WQ_ARG2, WQ_ARG3, WQ_ARG4;
-> identifier fs_wq_fn;
-> @@
-> 
-> (
->     WQ_E = alloc_workqueue(WQ_ARG1,
-> -                              WQ_ARG2 | WQ_FREEZABLE,
-> +                              WQ_ARG2,
-> 			   ...);
-> |
->     WQ_E = alloc_workqueue(WQ_ARG1,
-> -                              WQ_ARG2 | WQ_FREEZABLE | WQ_ARG3,
-> +                              WQ_ARG2 | WQ_ARG3,
-> 			   ...);
-> |
->     WQ_E = alloc_workqueue(WQ_ARG1,
-> -                              WQ_ARG2 | WQ_ARG3 | WQ_FREEZABLE,
-> +                              WQ_ARG2 | WQ_ARG3,
-> 			   ...);
-> |
->     WQ_E = alloc_workqueue(WQ_ARG1,
-> -                              WQ_ARG2 | WQ_ARG3 | WQ_FREEZABLE | WQ_ARG4,
-> +                              WQ_ARG2 | WQ_ARG3 | WQ_ARG4,
-> 			   ...);
-> |
-> 	    WQ_E =
-> -               WQ_ARG1 | WQ_FREEZABLE
-> +               WQ_ARG1
-> |
-> 	    WQ_E =
-> -               WQ_ARG1 | WQ_FREEZABLE | WQ_ARG3
-> +               WQ_ARG1 | WQ_ARG3
-> |
->     fs_wq_fn(
-> -               WQ_FREEZABLE | WQ_ARG2 | WQ_ARG3
-> +               WQ_ARG2 | WQ_ARG3
->     )
-> |
->     fs_wq_fn(
-> -               WQ_FREEZABLE | WQ_ARG2
-> +               WQ_ARG2
->     )
-> |
->     fs_wq_fn(
-> -               WQ_FREEZABLE
-> +               0
->     )
-> )
-> 
-> @ add_auto_flag @
-> expression E1;
-> identifier fs_type;
-> @@
-> 
-> struct file_system_type fs_type = {
-> 	.fs_flags = E1
-> +                   | FS_AUTOFREEZE
-> 	,
-> };
-> 
-> Generated-by: Coccinelle SmPL
-> Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
-> Link: https://lore.kernel.org/r/20250326112220.1988619-5-mcgrof@kernel.org
-> Signed-off-by: Christian Brauner <brauner@kernel.org>
-> ---
->  fs/ext4/mballoc.c | 2 +-
->  fs/ext4/super.c   | 3 ---
->  2 files changed, 1 insertion(+), 4 deletions(-)
-> 
-> diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
-> index 0d523e9fb3d5..ae235ec5ff3a 100644
-> --- a/fs/ext4/mballoc.c
-> +++ b/fs/ext4/mballoc.c
-> @@ -6782,7 +6782,7 @@ static ext4_grpblk_t ext4_last_grp_cluster(struct super_block *sb,
->  
->  static bool ext4_trim_interrupted(void)
->  {
-> -	return fatal_signal_pending(current) || freezing(current);
-> +	return fatal_signal_pending(current);
->  }
+devm_kasprintf() returns NULL when memory allocation fails. Currently,
+wled_configure() does not check for this case, which results in a NULL
+pointer dereference.
 
-This change should not happen. ext4_trim_interrupted() makes sure FITRIM
-ioctl doesn't cause hibernation failures and has nothing to do with kthread
-freezing...
+Add NULL check after devm_kasprintf() to prevent this issue.
 
-Otherwise the patch looks good.
+Fixes: f86b77583d88 ("backlight: pm8941: Convert to using %pOFn instead of device_node.name")
+Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Reviewed-by: Daniel Thompson (RISCstar) <danielt@kernel.org>
+---
+V3 -> V4: No functional changes, just correcting the version number
+V2 -> V3: Correct commit meessage and confirm this patch has considered
+resource cleanup to avoid any subsequent issues, ensuring that errors
+are handled properly and no resources are left in an inconsistent
+state.
+V1 -> V2: Fix commit message to use imperative mood and wrap lines to 75
+characters.
 
-								Honza
+ drivers/video/backlight/qcom-wled.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/video/backlight/qcom-wled.c b/drivers/video/backlight/qcom-wled.c
+index 9afe701b2a1b..a63bb42c8f8b 100644
+--- a/drivers/video/backlight/qcom-wled.c
++++ b/drivers/video/backlight/qcom-wled.c
+@@ -1406,9 +1406,11 @@ static int wled_configure(struct wled *wled)
+ 	wled->ctrl_addr = be32_to_cpu(*prop_addr);
+ 
+ 	rc = of_property_read_string(dev->of_node, "label", &wled->name);
+-	if (rc)
++	if (rc) {
+ 		wled->name = devm_kasprintf(dev, GFP_KERNEL, "%pOFn", dev->of_node);
+-
++		if (!wled->name)
++			return -ENOMEM;
++	}
+ 	switch (wled->version) {
+ 	case 3:
+ 		u32_opts = wled3_opts;
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+2.34.1
+
