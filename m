@@ -1,55 +1,55 @@
-Received: from mail-ot1-f73.google.com (mail-ot1-f73.google.com [209.85.210.73])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 202A521E091
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 18:25:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 314A322154A
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 18:25:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743531906; cv=none; b=E2uJP0TOj4fxSNFXioP9LnNS4KByTfQoLGFpe9CT88fsp3f6cgVyvPpxQ9Rqr0Q51BWaP0D/t0dY7Sv1GMjgQWEpABxqRSQq0MGxcb5w/xauTXBJpaaZLdHdzc2XRJ2PtLSN0ikjGMDSjVH/R+Zn9kN9acRkm7C+BrXsZwC1mCw=
+	t=1743531911; cv=none; b=E0HPmVmy/r+Svo1qDaKxXq6uo/eLMNTpMqUsclI0uzOOfnPuIxr08ar88ARSaMEeoyeJvztW60PllXsBzawdk1MReBoW0CMkbd6vCz2I7xqQrqHWo7sJV7QXpaKl+m/gQPWM+O1EYjH/vUfVpHhZLaO9XGGDudHlB14d+vU8Dz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743531906; c=relaxed/simple;
-	bh=BdxBvdM8Nz1jjfzc2QOyKg4s6TJ+thWky0MjwWyO/zs=;
+	s=arc-20240116; t=1743531911; c=relaxed/simple;
+	bh=Kfkzo+5W/SAVTQiKbqJy3w6KmtcdHFUtBwo6443WHE4=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=k7WD34n7tuUh7qtvrJr+Od6gKimQ4vODpWhg8SE8JoohoXOwjPnpFLxbbatnHRYkKLgvknzgpHFuwsLdAfp5M6yd/vNkIJHb+1TI+YZKAD+GOMPXHit8mES1z0xXmqqvexc/XZmXNDf045lFbRcpfDjQoL/4Qczbs937/Je07kk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oqs2yE84; arc=none smtp.client-ip=209.85.210.73
+	 To:Content-Type; b=rtm8o1lMtHSVtojZs5Jd4lySCSn+0KjCLDbXmyd+CCU/7WXMl+M24QkmB4q15SKEfjiGwO1HikuiCe6G0nnjUnCxRCvrXkOfXlHcXI68gY2sDjJLehBLr5tmNg9HmSVOVAjblIg9dAEjZEyugNPIoApGotTFzmtmkW4Cpyi87KE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=je75Qr+I; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oqs2yE84"
-Received: by mail-ot1-f73.google.com with SMTP id 46e09a7af769-72a2107154bso2238594a34.2
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 11:25:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="je75Qr+I"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ff7cf599beso10930193a91.0
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 11:25:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743531903; x=1744136703; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1743531909; x=1744136709; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=5ZOeKL1qyiNLxvN/oZiofK7bOvfFp8Vu2ELG7LdRApM=;
-        b=oqs2yE84udBic/QmNM6DVYPaI0HuSLxetxrDvRGLS2zxnlRwwA3nAOiv9A+5mvv+/X
-         oz6VSui4jj+FSywatqhYD1r4bs1RBujHjF1BkrRjM/zDUmiboicYFF2zU8WYEeB5EwwM
-         nAGl6ufgO2T8QnMtcIrJbKiboXg8itz1qUlrsKXayefD8uwz+lbgMvbTqaKKcAQv8TLX
-         gZFHoPNn6GeqpjTW1PDxJArIr3wLMMIyRIE2IqDoMHHuAGeUWT0zU9j8kVjj0C4UG3iG
-         8TFWMvf/HNkQnmBkH5jEUb3lFe6i/HhglIBRTMm4eyX0PA12sQ0LCr4CCesNl5M9MvWl
-         hFkw==
+        bh=u6gZ31IgopMBgDwwNg+Kodxz7McFENtAdZR1UxE8I14=;
+        b=je75Qr+IVZpl0XIF0wdhzQIJHdVypl3g5/GcA29K8DcTlZN0tTGc7YbXTyTQ/Tz5r6
+         RCz7y/0EY5jac5+3wgCspJtd1pZThaDCrKZn1DS09yfgR2lCBsMb2KcFrUCy/qksPfND
+         1NRD6h070uBgjrHk+Z0rqDPsSSEoi3FR4oX9NLFQLJgbw1SBHkh7ZZlp7hNbuDMlRTpw
+         bmFL0yP8WCEMUthaLkTYeAvdLrqeU2XVf2qPoXDmrOdrDqX3k9kVDB2FTeTBSRsmqb6m
+         kf9ysc8NXNI96w9ir29Kdh4FBv8zdZnDDwRmhYNJxbRoZ+N+j1dtuJFDbvzg+I1R+P4W
+         iklg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743531903; x=1744136703;
+        d=1e100.net; s=20230601; t=1743531909; x=1744136709;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5ZOeKL1qyiNLxvN/oZiofK7bOvfFp8Vu2ELG7LdRApM=;
-        b=GWKkW+ZTWmn9DSTPdGgwQfBhTlVmJkb3kORzXdU9vCzka69hPW08bxifUwT2PGMTYT
-         swvmfFZtoeLw7Q+hsKGumEjlie+L+HHT6rAHO1l+6X2Y30H18oDlZfZKND3AMlG7hPcc
-         6StjIcGXM6aO4Z3bc+lXGx53P7PmzN/2ZGMX/a+vbttc9fV1g36YAoj2hW+eS/lnNwZi
-         wtxyDz1RPwetIGrVxSz4VovyAEybRTOtg8BjDNwayMDnLcRAUwhypueL+Vmfyjw8QIuv
-         hlgB8jzx/9iVjhQwZVmmWs3vmPaZftO0z7Mor1pInYCiDR3oZXobuO0K2xHjg6/6gmZr
-         WFmA==
-X-Forwarded-Encrypted: i=1; AJvYcCU9debxMCQY3R5VWgl5TwSsd2x3qzJDvRQvAs7Tx8DsKzqfWR2kz4+EEVJ2LtcoOpa1uzB3G1AOZ4hFuNI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxqQZOR4HStAi08zg6oi406+yjaPlrrt1+vKsVTO8V5ZIdkDsrO
-	nI9ufUtfDbL1AcOuW5rnG+wmArRftWTUshOs6tENl2SwRjEn9k7NzFbKcBpOR2THgpEzn9jmRcy
-	cl3ca7g==
-X-Google-Smtp-Source: AGHT+IEJjExpoJgVVZs6Hlo908U0oi37UxrWtfgmlindyP0XfVD6VZ0siD4yNQUpQLPVE+N9T3e9cbC/UfJi
-X-Received: from oacmm9.prod.google.com ([2002:a05:6871:7289:b0:2b8:e735:4798])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6830:7002:b0:72b:a61c:cbb2
- with SMTP id 46e09a7af769-72c6378e768mr9367054a34.10.1743531903184; Tue, 01
- Apr 2025 11:25:03 -0700 (PDT)
-Date: Tue,  1 Apr 2025 11:23:11 -0700
+        bh=u6gZ31IgopMBgDwwNg+Kodxz7McFENtAdZR1UxE8I14=;
+        b=EcnHfJ5ZhHRGr5qd3GAgQr0zFZ/o9D6Wq6H+jDB7GI8ImRdqRmPmWsEkMnSijzywy0
+         QU4URoLBvcbKfw59LGutH1X+BR+AZDNeKZrqEeZD1uNrgcjuNPzTNZ/eRLXWN1yJ9OAb
+         w57I8qLWVOXFzwZTHLHIw/gLrV/ywz+DIHUSpKMxD+LoGJKaWQVI44GXICFTzb5pLZFZ
+         hH/1c3ZmATO3Os3Ql2uMjSlMsvAjGHYq1c2eMBLL+C2pWXGsCfkTZi/vYAO2eP2pELQ+
+         GeBUa4XqVfwm3G6rJHkTL6rF92NVlTnGoX3eSmQy6tro+gQn15dDS96qXTTxpqVsf9oA
+         dm2A==
+X-Forwarded-Encrypted: i=1; AJvYcCVDAnnwij6Zr7sKoMp6FfHuDG1mNFSFf/pAjqNcW8ZbrPpZjJ5XueWelZXJk6o0aISwOHs8/JQqUI9Yh7Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyNJXtAkEud2uNEsu/f9iRg3HucTatyZ/Qcn90mzaS5B/nfgsMQ
+	xlev78tRxNS3sqbsKgIgH3Dfe/53+IEQbI8pNmcn6Lb91pMatXpeGb0AHqY1oa11mIp3lw+cZn2
+	LGR4kzg==
+X-Google-Smtp-Source: AGHT+IGb9PqtJPk4RJc5mRZLPE5cwOmQxaQKgQS86YxmUT+3hYz9TaBQkDfzuiovvaXbeulfAkLi/U3sT6eX
+X-Received: from pfbln13.prod.google.com ([2002:a05:6a00:3ccd:b0:736:b315:f15e])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:1410:b0:736:8c0f:774f
+ with SMTP id d2e1a72fcca58-7398047c30emr19166828b3a.22.1743531909266; Tue, 01
+ Apr 2025 11:25:09 -0700 (PDT)
+Date: Tue,  1 Apr 2025 11:23:14 -0700
 In-Reply-To: <20250401182347.3422199-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250401182347.3422199-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
-Message-ID: <20250401182347.3422199-14-irogers@google.com>
-Subject: [PATCH v1 13/48] perf trace-event: Silence -Wshorten-64-to-32 warnings
+Message-ID: <20250401182347.3422199-17-irogers@google.com>
+Subject: [PATCH v1 16/48] perf annotate powerpc: Silence -Wshorten-64-to-32 warnings
 From: Ian Rogers <irogers@google.com>
 To: Yury Norov <yury.norov@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
 	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -114,211 +114,22 @@ truncation explicit.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/python.c                      |  4 ++--
- .../scripting-engines/trace-event-python.c    | 13 ++++++-----
- tools/perf/util/trace-event-info.c            |  3 ++-
- tools/perf/util/trace-event-parse.c           |  2 +-
- tools/perf/util/trace-event-read.c            | 23 +++++++++----------
- tools/perf/util/trace-event-scripting.c       |  2 +-
- 6 files changed, 24 insertions(+), 23 deletions(-)
+ tools/perf/arch/powerpc/annotate/instructions.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-index f3c05da25b4a..f55b2b7435ad 100644
---- a/tools/perf/util/python.c
-+++ b/tools/perf/util/python.c
-@@ -305,7 +305,7 @@ tracepoint_field(const struct pyrf_event *pe, struct tep_format_field *field)
- 		len    = field->size;
- 		if (field->flags & TEP_FIELD_IS_DYNAMIC) {
- 			val     = tep_read_number(pevent, data + offset, len);
--			offset  = val;
-+			offset  = (unsigned int)val;
- 			len     = offset >> 16;
- 			offset &= 0xffff;
- 			if (tep_field_is_relative(field->flags))
-@@ -599,7 +599,7 @@ static PyObject *pyrf_thread_map__item(PyObject *obj, Py_ssize_t i)
- 	if (i >= perf_thread_map__nr(pthreads->threads))
+diff --git a/tools/perf/arch/powerpc/annotate/instructions.c b/tools/perf/arch/powerpc/annotate/instructions.c
+index ca567cfdcbdb..598dc10a1751 100644
+--- a/tools/perf/arch/powerpc/annotate/instructions.c
++++ b/tools/perf/arch/powerpc/annotate/instructions.c
+@@ -18,7 +18,7 @@ static struct ins_ops *powerpc__associate_instruction_ops(struct arch *arch, con
+ 
+ 	ops = &jump_ops;
+ 
+-	i = strlen(name) - 1;
++	i = (int)strlen(name) - 1;
+ 	if (i < 0)
  		return NULL;
  
--	return Py_BuildValue("i", perf_thread_map__pid(pthreads->threads, i));
-+	return Py_BuildValue("i", (int)perf_thread_map__pid(pthreads->threads, (int)i));
- }
- 
- static PySequenceMethods pyrf_thread_map__sequence_methods = {
-diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
-index 520729e78965..547eeb45a832 100644
---- a/tools/perf/util/scripting-engines/trace-event-python.c
-+++ b/tools/perf/util/scripting-engines/trace-event-python.c
-@@ -713,9 +713,10 @@ static void set_sample_datasrc_in_dict(PyObject *dict,
- 			_PyUnicode_FromString(decode));
- }
- 
--static void regs_map(struct regs_dump *regs, uint64_t mask, const char *arch, char *bf, int size)
-+static void regs_map(struct regs_dump *regs, uint64_t mask, const char *arch, char *bf, size_t size)
- {
--	unsigned int i = 0, r;
-+	unsigned int i = 0;
-+	u64 r;
- 	int printed = 0;
- 
- 	bf[0] = 0;
-@@ -731,7 +732,7 @@ static void regs_map(struct regs_dump *regs, uint64_t mask, const char *arch, ch
- 
- 		printed += scnprintf(bf + printed, size - printed,
- 				     "%5s:0x%" PRIx64 " ",
--				     perf_reg_name(r, arch), val);
-+				     perf_reg_name((int)r, arch), val);
- 	}
- }
- 
-@@ -744,7 +745,7 @@ static int set_regs_in_dict(PyObject *dict,
- 	struct perf_event_attr *attr = &evsel->core.attr;
- 	const char *arch = perf_env__arch(evsel__env(evsel));
- 
--	int size = (__sw_hweight64(attr->sample_regs_intr) * MAX_REG_SIZE) + 1;
-+	size_t size = (__sw_hweight64(attr->sample_regs_intr) * MAX_REG_SIZE) + 1;
- 	char *bf = NULL;
- 
- 	if (sample->intr_regs) {
-@@ -957,7 +958,7 @@ static void python_process_tracepoint(struct perf_sample *sample,
- 		Py_FatalError(handler_name);
- 	}
- 
--	pid = raw_field_value(event, "common_pid", data);
-+	pid = (int)raw_field_value(event, "common_pid", data);
- 
- 	sprintf(handler_name, "%s__%s", event->system, event->name);
- 
-@@ -1017,7 +1018,7 @@ static void python_process_tracepoint(struct perf_sample *sample,
- 			if (field->flags & TEP_FIELD_IS_DYNAMIC) {
- 				val     = tep_read_number(scripting_context->pevent,
- 							  data + offset, len);
--				offset  = val;
-+				offset  = (unsigned int)val;
- 				len     = offset >> 16;
- 				offset &= 0xffff;
- 				if (tep_field_is_relative(field->flags))
-diff --git a/tools/perf/util/trace-event-info.c b/tools/perf/util/trace-event-info.c
-index c8755679281e..0f012890ff21 100644
---- a/tools/perf/util/trace-event-info.c
-+++ b/tools/perf/util/trace-event-info.c
-@@ -45,7 +45,8 @@ static int record_file(const char *file, ssize_t hdr_sz)
- 	unsigned long long size = 0;
- 	char buf[BUFSIZ], *sizep;
- 	off_t hdr_pos = lseek(output_fd, 0, SEEK_CUR);
--	int r, fd;
-+	int fd;
-+	ssize_t r;
- 	int err = -EIO;
- 
- 	fd = open(file, O_RDONLY);
-diff --git a/tools/perf/util/trace-event-parse.c b/tools/perf/util/trace-event-parse.c
-index 9c015fc2bcfb..982cbbc57168 100644
---- a/tools/perf/util/trace-event-parse.c
-+++ b/tools/perf/util/trace-event-parse.c
-@@ -34,7 +34,7 @@ static int get_common_field(struct scripting_context *context,
- 		*size = field->size;
- 	}
- 
--	return tep_read_number(pevent, context->event_data + *offset, *size);
-+	return (int)tep_read_number(pevent, context->event_data + *offset, *size);
- }
- 
- int common_lock_depth(struct scripting_context *context)
-diff --git a/tools/perf/util/trace-event-read.c b/tools/perf/util/trace-event-read.c
-index ecbbb93f0185..78a3b3801d69 100644
---- a/tools/perf/util/trace-event-read.c
-+++ b/tools/perf/util/trace-event-read.c
-@@ -25,18 +25,18 @@ static int input_fd;
- static ssize_t trace_data_size;
- static bool repipe;
- 
--static int __do_read(int fd, void *buf, int size)
-+static int __do_read(int fd, void *buf, size_t size)
- {
--	int rsize = size;
-+	int rsize = (int)size;
- 
- 	while (size) {
--		int ret = read(fd, buf, size);
-+		ssize_t ret = read(fd, buf, size);
- 
- 		if (ret <= 0)
- 			return -1;
- 
- 		if (repipe) {
--			int retw = write(STDOUT_FILENO, buf, ret);
-+			ssize_t retw = write(STDOUT_FILENO, buf, ret);
- 
- 			if (retw <= 0 || retw != ret) {
- 				pr_debug("repiping input file");
-@@ -51,14 +51,13 @@ static int __do_read(int fd, void *buf, int size)
- 	return rsize;
- }
- 
--static int do_read(void *data, int size)
-+static int do_read(void *data, size_t size)
- {
- 	int r;
- 
- 	r = __do_read(input_fd, data, size);
- 	if (r <= 0) {
--		pr_debug("reading input file (size expected=%d received=%d)",
--			 size, r);
-+		pr_debug("reading input file (size expected=%zd received=%d)", size, r);
- 		return -1;
- 	}
- 
-@@ -68,10 +67,10 @@ static int do_read(void *data, int size)
- }
- 
- /* If it fails, the next read will report it */
--static void skip(int size)
-+static void skip(unsigned long long size)
- {
- 	char buf[BUFSIZ];
--	int r;
-+	unsigned long long r;
- 
- 	while (size) {
- 		r = size > BUFSIZ ? BUFSIZ : size;
-@@ -86,7 +85,7 @@ static unsigned int read4(struct tep_handle *pevent)
- 
- 	if (do_read(&data, 4) < 0)
- 		return 0;
--	return tep_read_number(pevent, &data, 4);
-+	return (unsigned int)tep_read_number(pevent, &data, 4);
- }
- 
- static unsigned long long read8(struct tep_handle *pevent)
-@@ -119,7 +118,7 @@ static char *read_string(void)
- 		}
- 
- 		if (repipe) {
--			int retw = write(STDOUT_FILENO, &c, 1);
-+			ssize_t retw = write(STDOUT_FILENO, &c, 1);
- 
- 			if (retw <= 0 || retw != r) {
- 				pr_debug("repiping input file string");
-@@ -365,7 +364,7 @@ static int read_saved_cmdline(struct tep_handle *pevent)
- 	}
- 	buf[ret] = '\0';
- 
--	parse_saved_cmdline(pevent, buf, size);
-+	parse_saved_cmdline(pevent, buf, (unsigned int)size);
- 	ret = 0;
- out:
- 	free(buf);
-diff --git a/tools/perf/util/trace-event-scripting.c b/tools/perf/util/trace-event-scripting.c
-index 72abb28b7b5a..fb1fa227c98e 100644
---- a/tools/perf/util/trace-event-scripting.c
-+++ b/tools/perf/util/trace-event-scripting.c
-@@ -422,5 +422,5 @@ int perf_sample__sprintf_flags(u32 flags, char *str, size_t sz)
- 	if (pos < sz)
- 		str[pos] = 0;
- 
--	return pos;
-+	return (int)pos;
- }
 -- 
 2.49.0.504.g3bcea36a83-goog
 
