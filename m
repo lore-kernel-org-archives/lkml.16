@@ -1,122 +1,110 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 537A41078F;
-	Tue,  1 Apr 2025 07:58:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA09D1519B8
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 07:58:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743494285; cv=none; b=PT4zWu9lneRWyPrp7zOvA86fUM+7TO4OyTZn1Idh59rpII870umTj3WXlNlPi+wNiQikdyx2O+qz/k9K+wshwF6VGtGNC0a9c3Vqp5sfw5m0qqhPYN+AYFaa3QHMnk3yzWnlJes2BEtpGygC/syNpxNNBOzkBUf/tlwVdvcIAjw=
+	t=1743494323; cv=none; b=FAXy+KBvsHnIGmfDXd/Wpv5J1kwLgQJS8XeaFzChifsIGJcMbNueiYo+8T7cctZD4omgxGnVFCsxXR0O+vDlQorKW1yjiZXrxYcus7HCoQXKWx5YJcpCGWTQK7Gx2ukCZHT7PdjOnXtuK5dEipGgvTw2SyFfOBdX2v9DL70Tqj0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743494285; c=relaxed/simple;
-	bh=Zuky21qHhOoUcW95DBWvq7xeXz3F0IcpbLmzX/Q+5yk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EeOex4eYlhiWbZMAsNpNaQ3/ijv0dxOSqtrXFpJDKChVuTpSOlcb6t1IGnk6fxL96t3EZ44i5fLgkjcB0ygtf6J/hDIKQ8wKN+hQtMHVFZ+joNU6VsxhRLaAAv22JdIawECDKA3Rv8x748AKotFcSZN9TnbBNkoXOZAgHOkVumM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=dbx6XvMy; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1743494323; c=relaxed/simple;
+	bh=REaIDa2/g+mb0jn6qNUOAEAxiQQ4g/SSmeUfYmyFIJU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LFaWwK9XJkH+UGOyyMHmjCUUxm639CGjKXw4LuFIp5PVMVBjVFuMZdXHdDyJy77uYjxvrj/wXCrj/69bnsAglQDPKQdkChexzUYXkuxhrRINKPp5TctQ+IxQ9OcCwe/W5dNZxjZeNE5Qg8+/dM70Te7wDbjfOQYZbjG/09XLvhk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=prt4HXO+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="dbx6XvMy"
-Received: from terminus.zytor.com (terminus.zytor.com [IPv6:2607:7c80:54:3:0:0:0:136])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 5317vSlf3626157
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-	Tue, 1 Apr 2025 00:57:31 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 5317vSlf3626157
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025032001; t=1743494252;
-	bh=PXqPsnXL5zoeesrQ9uDoxGxPHXk0Y7zXqzlVU5X8/Lg=;
-	h=From:To:Cc:Subject:Date:From;
-	b=dbx6XvMy8z0d5iKogpw0LKrho5EEcyx61LP9SgpA9LRDPafRIVAW9FSiKnNykThiJ
-	 4Ya5coPyx8+Ab5GxWkSuohdzIEM2uBPluLzbYyHskEb0TQCflNtCZjkmFYbxprJ/8s
-	 Tz0qnCQ2CmZeMzw3x2Z+z7dcMf5XotW7am3gML6eq8HFSY6TZVAwdzlUrYbewN9seF
-	 170Y0rgiPolqw3YYcHUYXL3LHnFzW0FwArxFt1vxLHBSPfMsTI4ZQhFyIR+nT6FY+Y
-	 9AuKhJMjQnMyNsUix4IGPUUdElWMSACNzv8tkhzjvMZQKxTMFca2OFU0BXPUuA2Ic5
-	 bSx6NsQJA3GXA==
-From: "Xin Li (Intel)" <xin@zytor.com>
-To: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Cc: rafael@kernel.org, pavel@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-        hpa@zytor.com, luto@kernel.org, brgerst@gmail.com, jgross@suse.com,
-        torvalds@linux-foundation.org, xi.pardee@intel.com,
-        todd.e.brandt@intel.com, xin@zytor.com
-Subject: [PATCH v2 1/1] x86/fred: Fix system hang during S4 resume with FRED enabled
-Date: Tue,  1 Apr 2025 00:57:27 -0700
-Message-ID: <20250401075728.3626147-1-xin@zytor.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="prt4HXO+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55E8AC4CEE4;
+	Tue,  1 Apr 2025 07:58:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743494323;
+	bh=REaIDa2/g+mb0jn6qNUOAEAxiQQ4g/SSmeUfYmyFIJU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=prt4HXO+5GhCqI8fIDPpA5WY/AwPqEauKg83JRluUQ/c3/Sh5QQEzL7rwhDJav2jf
+	 XX/60CM2cPaRfI1pw5Ulnm0nmOwO/SImvp5FugiYwslPKdk8fvB2oPNz/UgrPOgdjZ
+	 8OfgnSQdbDuN3BhwxDMCUN7Gxrtux99Vpwk/CUsxM/Ff6NLvNLuftK8/IBiIhCxU+Q
+	 CThJjjEgwd0aCDmA8Y2mLjhiEX8UNJrzHGiCKvnrm5CKDNUnadFwEl6gdIZe1C/Ud6
+	 mc/dfDyvaEm2Fm8JBAWMD+V1t1MBhjMRMtpopBM4bfzlgPwwrUM1pV0CxMfpheD1jL
+	 zuO4jN0q1yitA==
+Date: Tue, 1 Apr 2025 09:58:38 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	linux-kernel@vger.kernel.org,
+	Peter Zijlstra <a.p.zijlstra@chello.nl>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>
+Subject: Re: [GIT PULL] objtool fixes and updates
+Message-ID: <Z-ucroZoh3TgtQxA@gmail.com>
+References: <Z-cSQXJKMyBSfAAc@gmail.com>
+ <20250329153242.GAZ-gSmu8qiXufR04k@fat_crate.local>
+ <CAHk-=wjqLm+eTuyLR_84vWOZK+AkhV==r=PcuAt3+3nf68SjOw@mail.gmail.com>
+ <20250330231355.GFZ-nQM6NPcC7nWl__@fat_crate.local>
+ <sdjfftubzcheo3dpejml54t6axfjfrd7pk6mnbkpb2n7alpfzn@6l6bldqfturq>
+ <ttv3iy3i57mvmkdp2mwh4cjwk3qx5eoyr7zmgjl5beohfxvwar@4na7dgto7r6m>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ttv3iy3i57mvmkdp2mwh4cjwk3qx5eoyr7zmgjl5beohfxvwar@4na7dgto7r6m>
 
-Upon a wakeup from S4, the restore kernel starts and initializes the
-FRED MSRs as needed from its perspective.  It then loads a hibernation
-image, including the image kernel, and attempts to load image pages
-directly into their original page frames used before hibernation unless
-those frames are currently in use.  Once all pages are moved to their
-original locations, it jumps to a "trampoline" page in the image kernel.
 
-At this point, the image kernel takes control, but the FRED MSRs still
-contain values set by the restore kernel, which may differ from those
-set by the image kernel before hibernation.  Therefore, the image kernel
-must ensure the FRED MSRs have the same values as before hibernation.
-Since these values depend only on the location of the kernel text and
-data, they can be recomputed from scratch.
+* Josh Poimboeuf <jpoimboe@kernel.org> wrote:
 
-Reported-by: Xi Pardee <xi.pardee@intel.com>
-Reported-by: Todd Brandt <todd.e.brandt@intel.com>
-Suggested-by: H. Peter Anvin (Intel) <hpa@zytor.com>
-Signed-off-by: Xin Li (Intel) <xin@zytor.com>
-Tested-by: Todd Brandt <todd.e.brandt@intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Brian Gerst <brgerst@gmail.com>
-Cc: Juergen Gross <jgross@suse.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: stable@vger.kernel.org # 6.9+
----
+> On Sun, Mar 30, 2025 at 06:39:51PM -0700, Josh Poimboeuf wrote:
+> > On Mon, Mar 31, 2025 at 01:13:55AM +0200, Borislav Petkov wrote:
+> > > On Sun, Mar 30, 2025 at 03:19:40PM -0700, Linus Torvalds wrote:
+> > > > On Sat, 29 Mar 2025 at 08:33, Borislav Petkov <bp@alien8.de> wrote:
+> > > > >
+> > > > > Btw, test bot complains:
+> > > > >
+> > > > > https://lore.kernel.org/r/202503292202.Sge7ZEUc-lkp@intel.com
+> > > > 
+> > > > That's not a very helpful error message
+> > > 
+> > > I found this:
+> > > 
+> > > https://lore.kernel.org/r/202503280703.OARM8SrY-lkp@intel.com
+> > > 
+> > > which looks like the original report.
+> > > 
+> > > Looks unsolved yet...
+> > 
+> > The "new" warning is just the "skipping duplicate warning", which was
+> > already merged with commit 0a7fb6f07e3a ("objtool: Increase per-function
+> > WARN_FUNC() rate limit").  So none of the warnings are specific to this
+> > pull request.
+> > 
+> > Tiezhu, can you please look at this warning?
+> >   
+> >    arch/loongarch/kernel/traps.o: warning: objtool: show_stack+0xe0: stack state mismatch: reg1[22]=-1+0 reg2[22]=-2-160
+> >    arch/loongarch/kernel/traps.o: warning: objtool: show_stack+0xe0: stack state mismatch: reg1[23]=-1+0 reg2[23]=-2-152
+> 
+> Here's a fix.  Will post a real fix soon, along with another pile of 
+> fixes.
 
-Change in v2:
-* Rewrite the change log and in-code comments based on Rafael's feedback.
----
- arch/x86/power/cpu.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+And just to make it clear, these objtool warnings were not a new 
+regression, they were introduced more than a year ago, via:
 
-diff --git a/arch/x86/power/cpu.c b/arch/x86/power/cpu.c
-index 63230ff8cf4f..08e76a5ca155 100644
---- a/arch/x86/power/cpu.c
-+++ b/arch/x86/power/cpu.c
-@@ -27,6 +27,7 @@
- #include <asm/mmu_context.h>
- #include <asm/cpu_device_id.h>
- #include <asm/microcode.h>
-+#include <asm/fred.h>
- 
- #ifdef CONFIG_X86_32
- __visible unsigned long saved_context_ebx;
-@@ -231,6 +232,19 @@ static void notrace __restore_processor_state(struct saved_context *ctxt)
- 	 */
- #ifdef CONFIG_X86_64
- 	wrmsrl(MSR_GS_BASE, ctxt->kernelmode_gs_base);
-+
-+	/*
-+	 * Reinitialize FRED to ensure the FRED MSRs contain the same values
-+	 * as before hibernation.
-+	 *
-+	 * Note, the setup of FRED RSPs requires access to percpu data
-+	 * structures.  Therefore, FRED reinitialization can only occur after
-+	 * the percpu access pointer (i.e., MSR_GS_BASE) is restored.
-+	 */
-+	if (ctxt->cr4 & X86_CR4_FRED) {
-+		cpu_init_fred_exceptions();
-+		cpu_init_fred_rsps();
-+	}
- #else
- 	loadsegment(fs, __KERNEL_PERCPU);
- #endif
+  cb8a2ef0848c ("LoongArch: Add ORC stack unwinder support")
 
-base-commit: 535bd326c5657fe570f41b1f76941e449d9e2062
--- 
-2.49.0
+So, to bring this thread to a conclusion, I think by getting rid of the 
+summary warning line:
 
+  c5610071a69d ("Revert "objtool: Increase per-function WARN_FUNC() rate limit"")
+
+... the CI test-bots ought to be back to the v6.14 baseline even taking 
+such false positives into account.
+
+I'll send the updated objtool/urgent tree to Linus later today, unless 
+some last-minute problem pops up.
+
+Thanks,
+
+	Ingo
