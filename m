@@ -1,134 +1,123 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3CCB01EC01F
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 12:20:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7601202C38
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 12:20:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743510009; cv=none; b=f8NELhuMPQx/3FrbNkVefGnIDchFbHBqzcP4vWr9dBuYwlmGiJRHALL5u7CSxqRbgbZL1ReliWBoSD3mWLFXJeixC3NBt7+Lw+WqLn6aY4GzFESLpx33t1hpQzIBZmBgBPXTpinMXTactVNXyG4ImZUrAqZ5TVBXL62LNKg8OeA=
+	t=1743510013; cv=none; b=DX7NlyeyB+EzyzisIzAEjYhtOBEImMoqzGUpgAGf6hAfey/58L+7qLVPZZdUQ4KIO77HFmQ7mZXgoG6sFSiPfDtPAu1wif1kMSkWEIcEMnxz9SSTGI8Hxj7dnpF0j71lOMvX52W7xkcvI9A4BEAXULEVkjC5BXAIYYtHZazYZIk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743510009; c=relaxed/simple;
-	bh=DpGxsgVgr/Xpff/beTHEZQp3I9HuOTYslzz02JBPytQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=lzB7Qj0ZptW5FaFZYapvs3tWrETyoq534sGqzZGwxlGtk2j0zb+mSmtfxuZ6stRDKXzbi5ZLqNEroUqtj9xLAUjPCaGHQmnnpk33XjRy+6JVFaFfvFXLLfdH6rs6IOf3WfJoHf/1nx29T7Dh9hjPMhGIB8pLqWsleoHwsyow8Pk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.198])
-	by gateway (Coremail) with SMTP id _____8AxGHHz2etnUMCtAA--.29558S3;
-	Tue, 01 Apr 2025 20:20:03 +0800 (CST)
-Received: from localhost.localdomain (unknown [223.64.68.198])
-	by front1 (Coremail) with SMTP id qMiowMBxGcTp2etnLbhqAA--.28868S2;
-	Tue, 01 Apr 2025 20:20:01 +0800 (CST)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Linus Torvalds <torvalds@linux-foundation.org>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [GIT PULL] LoongArch changes for v6.15
-Date: Tue,  1 Apr 2025 20:19:44 +0800
-Message-ID: <20250401121945.3814892-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.47.1
+	s=arc-20240116; t=1743510013; c=relaxed/simple;
+	bh=dKjPgmKmqyPFfrKL/o1FVi2WVQPuBqkf3y1a5UJuMSU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=WAxn2j9F+qo+qoPfNDy3w5JjaXEScUnwuQFLkdoao8lIBKBO8OTFjGvI3wBgfHAuaa7ZOsTF4PkB4SRoh/LsjvDuNWdf5J/W+pxV5Sz1V0j78clAmiAXFuUepiqiNocljmYD4Djo4G27Xs4zXVTHgUkNfQept2NsCfieK4m8jSg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WMU708Eu; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WMU708Eu"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43cf05f0c3eso36670975e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 05:20:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1743510010; x=1744114810; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=u40FSTwz9ltEwkPBj8DAGOUl61JmubNoHLrIbWFFZgk=;
+        b=WMU708Euich1hVr/7hx9u1Y7ICDoar0kZv0vgPZsKMr6WmYbXceu+4lK1aiwVsm++S
+         ZsPnVcv+FGASTfD06NoEci3eM/l3ypsy1xmYGI/jDg40TEmwHU+vYwuTuk6stJWFN+Jl
+         Vx+tLqzNjAS9mg5I1MN4rDcEfY28fNjYjao/uBdjyeB96iOccGipI02nxaIlCvbzZ2s7
+         JQSxOhdGIJgfQwG+Dsn2kUNqIsiHSANFvPYcZWBQYBMN6P7N4lFuBW+XAPVx17Klh2P0
+         nnvrVOhE3nRW2hqdxccxkYCnfsQEM4ropBWwmv8xoIus7bB/luTqRkx/Tx46esPAWfHA
+         XvJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743510010; x=1744114810;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=u40FSTwz9ltEwkPBj8DAGOUl61JmubNoHLrIbWFFZgk=;
+        b=GfsuMgqyO5QotSDmwir5rQjgzmbzdFr1myM0vsArnI2PNWlzJ+edldydaKYRxk9A9u
+         hesDoT7vlv0hBpMEM2CQ3yuWab7WYLnjTgbtwXgQQfB3X9xLLH5Kw/rwTzyA9End3rSL
+         uyBqFQzOY8J+J42kRIY++S3RBXoQXHT4dZLabc+7pBuQpKoKubxDgJ/ZlPpED14ituIc
+         zcKLKpaWEoe/TN59j5OqFj0X2jSUQqVS6Uk3R38mPatBjYiLA6irtYLeyeIaB+FBSmZL
+         DErMEXBY5gsqc5Pk/CdMcglFWAsimVeZKP+yMTeWMB6YRtp+EmmRXchnkYuz1XoX7xwD
+         oO2g==
+X-Forwarded-Encrypted: i=1; AJvYcCXgghTAzSIBm2JkdaYSwNf/2cImVfVzAD9SaTok8LtKRHpPD/YG1jWRPo6aMtjXIUZpCeDDLTdplrsHXrI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyxLEGwlXKymX49n3iu80Wc/JhLSREwZsxnUFizkSrXsuF8bjld
+	b0dkLEBKqUEPVUI2dnJRlAvreifi0Tc3b+83SAw3r9s0YZtJPgRUTAe73Mevhck=
+X-Gm-Gg: ASbGnctEhS7mXbIc3j5kRJ/WwjpxrUzQyG8VTBAxRitH+9EpztM1YnrrYKSm2mw9iGC
+	ImByjXdXuANeVd0lzaRQfdCXR8pMQMAWR3VymD7AHg16T8X/Xx8kFKbZzTdCPJGlL2J/IUuf0wi
+	zjE1r7qYovVDHS2b9WLP/h6Y1wUEUBnJDAknR3YfGQqmmhYE/l5jMtVNJjyXrz3bUxAsFY4gTPK
+	mNEG3RTaLnHTdhhUuAqTgRNNMeF4P+yeKTZJ3KX87OFg25m3PETMwsEfn/252LCOjEAB7wFy3Zk
+	wqa5cmX81aM5GYkf9OJbAnQRoLi5wbDGGMQ1Gs98gZMh+sFCe20rDE8ZXL+thtHerU318c4Pr+T
+	TAm35S/m2OA==
+X-Google-Smtp-Source: AGHT+IEAyjNnqhQdjxN+s3yUvwDysJt9fO4zS10+QJm5P6u0nZ2k22vHjJEOSoho7ee0nVvgqa8ssw==
+X-Received: by 2002:a05:6000:250f:b0:39c:1f04:a367 with SMTP id ffacd0b85a97d-39c1f04a399mr4181408f8f.4.1743510010130;
+        Tue, 01 Apr 2025 05:20:10 -0700 (PDT)
+Received: from [192.168.0.35] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b6589efsm14281053f8f.16.2025.04.01.05.20.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Apr 2025 05:20:09 -0700 (PDT)
+Message-ID: <be89aad7-130b-4542-84e0-ffa252dff6cf@linaro.org>
+Date: Tue, 1 Apr 2025 13:20:08 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMBxGcTp2etnLbhqAA--.28868S2
-X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxXFy7uw47XrWrJF1DAF47GFX_yoW5XF1xpr
-	y3uFnxGr4DGr9xJwnrK343Wr1DtF1fGr1xXa13G348Cr1UZr1UWr1xGFZ5XFyUt3yktr10
-	qr1rG3ZxKF1UA3cCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvKb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
-	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17
-	McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr4
-	1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_
-	JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17
-	CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0
-	I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I
-	8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU
-	0xZFpf9x07jepB-UUUUU=
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] media: MAINTAINERS: Switch from venus Reviewer to
+ Maintainer
+To: Vikash Garodia <quic_vgarodia@quicinc.com>,
+ Hans Verkuil <hverkuil@xs4all.nl>, Trilok Soni <quic_tsoni@quicinc.com>,
+ stanimir.k.varbanov@gmail.com, quic_dikshita@quicinc.com,
+ mchehab@kernel.org, linux-media@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250329-b4-25-03-29-media-committers-venus-iris-maintainers-v1-0-0ec1007fde3c@linaro.org>
+ <20250329-b4-25-03-29-media-committers-venus-iris-maintainers-v1-1-0ec1007fde3c@linaro.org>
+ <93ca218a-71a2-4751-860c-025ec29b9180@quicinc.com>
+ <f1d4d88f-1ca0-4be8-84cd-3ef0d224feb4@xs4all.nl>
+ <2539ae48-d75f-bb52-3873-de0b6d9a8180@quicinc.com>
+Content-Language: en-US
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <2539ae48-d75f-bb52-3873-de0b6d9a8180@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The following changes since commit 38fec10eb60d687e30c8c6b5420d86e8149f7557:
+On 01/04/2025 06:28, Vikash Garodia wrote:
+> Hi Hans,
+> 
+> On 3/31/2025 12:56 PM, Hans Verkuil wrote:
+>> On 29/03/2025 02:38, Trilok Soni wrote:
+>>> On 3/28/2025 6:26 PM, Bryan O'Donoghue wrote:
+>>>> I'd like to volunteer my help in keeping venus maintained upstream.
+>>>>
+>>>> Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+>>>> ---
+>>>>   MAINTAINERS | 2 +-
+>>>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/MAINTAINERS b/MAINTAINERS
+>>>> index 29b4471574982bf3f8d03158cd5edcb94bc9fab9..5ccddd2030efd96324e53fcee8048120990a85d5 100644
+>>>> --- a/MAINTAINERS
+>>>> +++ b/MAINTAINERS
+>>>> @@ -19592,7 +19592,7 @@ F:	drivers/usb/typec/tcpm/qcom/
+>>>>   QUALCOMM VENUS VIDEO ACCELERATOR DRIVER
+>>>>   M:	Stanimir Varbanov <stanimir.k.varbanov@gmail.com>
+>>>
+>>> Is Stanimir still an active maintainer here?
+>>
+>> He's no longer maintaining venus.
+>>
+>> Bryan, can you post a v2 removing Stan as maintainer? Stan, can you Ack
+>> that v2?
+> I would propose to have Dikshita in the list instead. That way we can have same
+> folks managing patches for both iris and venus, given that Stan is no more
+> sending PRs.
+Yes, I think Dikshita makes sense here.
 
-  Linux 6.14 (2025-03-24 07:02:41 -0700)
+I'll V3 this to this effect.
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-6.15
-
-for you to fetch changes up to 17ba839c3c6c95562f329340e67da432309dd0d4:
-
-  LoongArch: Update Loongson-3 default config file (2025-03-30 16:31:16 +0800)
-
-----------------------------------------------------------------
-LoongArch changes for v6.15
-
-1, Add jump table support for objtool;
-2, Always select HAVE_VIRT_CPU_ACCOUNTING_GEN;
-3, Enable UBSAN (Undefined Behavior Sanitizer);
-4, Increase MAX_IO_PICS up to 8;
-5, Increase ARCH_DMA_MINALIGN up to 16;
-6, Fix and improve BPF JIT;
-7, Fix and improve vDSO implementation;
-8, Update the default config file;
-9, Some bug fixes and other small changes.
-
-Note: There is conflicts in arch/loongarch/Kconfig and rust/Makefile,
-but can be simply fixed by adjusting context as Stephen Rothwell done
-in linux-next.
-
-----------------------------------------------------------------
-Bibo Mao (1):
-      LoongArch: Always select HAVE_VIRT_CPU_ACCOUNTING_GEN
-
-Hengqi Chen (3):
-      LoongArch: BPF: Fix off-by-one error in build_prologue()
-      LoongArch: BPF: Use move_addr() for BPF_PSEUDO_FUNC
-      LoongArch: BPF: Don't override subprog's return value
-
-Huacai Chen (4):
-      Merge Merge tag 'objtool-core-2025-03-22' into loongarch-next
-      LoongArch: Increase MAX_IO_PICS up to 8
-      LoongArch: Increase ARCH_DMA_MINALIGN up to 16
-      LoongArch: Update Loongson-3 default config file
-
-Miaoqian Lin (1):
-      LoongArch: Fix device node refcount leak in fdt_cpu_clk_init()
-
-WANG Rui (1):
-      rust: Fix enabling Rust and building with GCC for LoongArch
-
-Xi Ruoyao (2):
-      LoongArch: vDSO: Remove --hash-style=sysv
-      LoongArch: vDSO: Make use of the t8 register for vgetrandom-chacha
-
-Yuli Wang (2):
-      LoongArch: Enable UBSAN (Undefined Behavior Sanitizer)
-      LoongArch: Rework the arch_kgdb_breakpoint() implementation
-
-谢致邦 (XIE Zhibang) (1):
-      LoongArch: Fix help text of CMDLINE_EXTEND in Kconfig
-
- arch/loongarch/Kconfig                     |  7 ++++---
- arch/loongarch/configs/loongson3_defconfig | 11 ++++++++++-
- arch/loongarch/include/asm/cache.h         |  2 ++
- arch/loongarch/include/asm/irq.h           |  2 +-
- arch/loongarch/kernel/env.c                |  2 ++
- arch/loongarch/kernel/kgdb.c               |  5 +++--
- arch/loongarch/net/bpf_jit.c               | 12 ++++++++++--
- arch/loongarch/net/bpf_jit.h               |  5 +++++
- arch/loongarch/vdso/Makefile               |  3 +--
- arch/loongarch/vdso/vgetrandom-chacha.S    | 13 +++----------
- rust/Makefile                              |  4 +++-
- 11 files changed, 44 insertions(+), 22 deletions(-)
-
+---
+bod
