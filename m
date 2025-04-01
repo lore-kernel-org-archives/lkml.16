@@ -1,204 +1,472 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BD612E3360;
-	Tue,  1 Apr 2025 19:44:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.7
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743536676; cv=fail; b=dMygV3E6ukKHqcW+nM4kxkqL6EywBIwIschsZEw05r/x7d7VcwP2XOYyQqq28wqDfbt/9olToyHrIPVly/SS9SfniWoA6PXlCmLJdRuoaBQsBNT/mcno61hGjjpy1zGdHWN01RwoB2gRsAxpn7KuIMeztDqYfrrAbQjBo4uCie4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743536676; c=relaxed/simple;
-	bh=oQamUWIyrPql/lJ9CM4shWRFxQlEyDMf9Qk/4W5Zp7s=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=d6/qCmZU0POwjvPRheq84+ocl9EVVW0utzVgB+DTDXWidEwCNypSixbvYNhtCvdE+fdo4YuzqEJnrZgH1X+jd1Ypet86A/dT4At8ItjeDfIUmrPZhcZiRjekHhsC7KEvXe4I8fZaafmAR1VHfbZLHUjr3SV4Xcg5Ilf03bQLrtY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dHgheDrc; arc=fail smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4BC2149C7D;
+	Tue,  1 Apr 2025 19:45:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743536746; cv=none; b=ikli/8eow0KZ6P0IXL5V8f85Y0nz24+ecaRxbPA53eEkd+BV9Jad17nLkVk+rO4EEgiQ/8AAUo+jrCbCB219hbHOE0q3A5EwMT/XUGhqfFRXX6Hbs+Sz8xp9Vr3Ypdh8HvaPYYKzwORGz2bJODuxsAv0+tWtm6MtFIxeNFHW+do=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743536746; c=relaxed/simple;
+	bh=TwX5OaqDYnptYUoV1VfrVdMnHt4LWp+L48CJwUkLQBg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cwyG4wbUI0ggwwKcVqA88CvGEq+EgKFLGxMr+gTdrxl2ujIj94bdP7lp3zhfXaZohJ7rfWEY6DEhcDvbHkNa+SdLQqWtziwlg2jJ+C6cfc1MaPb8u+7Z3Ui9R/f4UL2kGEi496qWGC5W6mC/9EAwqeThyWZ4egENtmaHqPDezQU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JKfSa25M; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dHgheDrc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743536674; x=1775072674;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=oQamUWIyrPql/lJ9CM4shWRFxQlEyDMf9Qk/4W5Zp7s=;
-  b=dHgheDrcKjUOsZxrWme4Xu6Js2NxvixHSMplQbky5U31ojvc4NxCTC6X
-   WRyhbYa79/ITbdHWJ1atRxG9IOXbM3XDcsaybgkmQrW7HXkXU65kaCNLQ
-   xgV+ipPcPG3GKPHE1miMBXDVZbVO5SlkRzhyLcKk6RYyeLvkv5kgIhvB8
-   vtJ/xq92gwvg1AMHBIL2aaSJ2IG2CI8t9sQMPsdgvSWBOnAnhqdqXKdJW
-   hWK5uzcOp8q4qSC4IAKQvo5K3K3Q0tgQFuRGHO83IAwd+eT8vqZXEz9Ry
-   9sxvDf5VfW6ECk4QpSpgu3efRnuMFRtgSgo5M6ODnpEV16g3t2CrxrT0d
-   g==;
-X-CSE-ConnectionGUID: 23yCni9ETQiDI6mM1XcDTw==
-X-CSE-MsgGUID: 6dHuppv7QGOVzFaOwe/bVg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11391"; a="70239201"
-X-IronPort-AV: E=Sophos;i="6.14,294,1736841600"; 
-   d="scan'208";a="70239201"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2025 12:44:34 -0700
-X-CSE-ConnectionGUID: E5mH9TBXRxSRD++/6H8fww==
-X-CSE-MsgGUID: pEL9Rz3QTLKR6FMDsQ7qdg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,294,1736841600"; 
-   d="scan'208";a="149659178"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2025 12:44:33 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Tue, 1 Apr 2025 12:44:32 -0700
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Tue, 1 Apr 2025 12:44:32 -0700
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.171)
- by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Tue, 1 Apr 2025 12:44:31 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ha+/YHncpAXTgUk/7pbIV9k2gWhz4cteLd9JSyWzclCxrpzJwA+bWQZOGwRNf21UYSiS21L5uOqbPpZEoZ19gwxJGPeN5iwV3U5ZX/hMxkI8DkeLwttdauZhUS6T3H4N18a/kXGGUjPIVJjJqvV9Jc/ju9RVnTgrT9WDBFW+tcTTtnjAi4+W+LuYWvTwlQ4YB7qTih0LfFbcRu3y1+JB6FsA5ZWsRG7B8cgbt1o7+0y6pHb3AhDKIbeDR5yuVCTBFcMx9RTyYh00aWTFFOtbG4F5+1LJjP+GRdlz0C8hY7LUlF7fMwGCEBohIAD7ub3pwzqLh84Oq4waJR/L+ohRTA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ycF1NgZAuvCDKScxtkbhxNpeR8P+9nnme29cFOGZPyE=;
- b=nhQhTUaXZZj0jvMqSpqJF8VQSinIAD2ObMdiafXMFe1mBfZX/6/ZFCyVdLI8QrkuAXrjV5SH8Zf7j6xEHGYoy1VECcZ6YplNexdV3/M8MsgwjHqFQHepDEepY7Pe4Nk0yfE9eLxweS+0DNpcRbjXXbSSm+9gv7vV+9oag35lECYn/cGqMXX+6BxZJgHgJcxVtK+sm+GXJqZCcea0BTGfKWfx4FoWCQBL8/px4H+UiR5gelsi6X+CVgAKTbBL6nYm4zLoNR3KCyFgWpHCCDl3zpL93k4gtmqNYkxhBxhV5Mt/7HWhhgz7Oy1my4JvkSo5gclR4JcnPxe2m3/xrZry0w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by SJ0PR11MB5070.namprd11.prod.outlook.com (2603:10b6:a03:2d5::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8583.41; Tue, 1 Apr
- 2025 19:44:29 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8%4]) with mapi id 15.20.8534.043; Tue, 1 Apr 2025
- 19:44:29 +0000
-Date: Tue, 1 Apr 2025 12:44:26 -0700
-From: Dan Williams <dan.j.williams@intel.com>
-To: Oscar Salvador <osalvador@suse.de>, Gregory Price <gourry@gourry.net>
-CC: <linux-mm@kvack.org>, <linux-acpi@vger.kernel.org>,
-	<kernel-team@meta.com>, <x86@kernel.org>, <linux-kernel@vger.kernel.org>,
-	<dave.hansen@linux.intel.com>, <luto@kernel.org>, <peterz@infradead.org>,
-	<tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>, <hpa@zytor.com>,
-	<rafael@kernel.org>, <lenb@kernel.org>, <david@redhat.com>,
-	<gregkh@linuxfoundation.org>, <akpm@linux-foundation.org>,
-	<dan.j.williams@intel.com>, <Jonathan.Cameron@huawei.com>,
-	<alison.schofield@intel.com>, <rrichter@amd.com>, <rppt@kernel.org>,
-	<bfaccini@nvidia.com>, <haibo1.xu@intel.com>, <dave.jiang@intel.com>, "Ira
- Weiny" <ira.weiny@intel.com>, Fan Ni <fan.ni@samsung.com>
-Subject: Re: [PATCH v8 0/3] memory,x86,acpi: hotplug memory alignment
- advisement
-Message-ID: <67ec421a15fe8_288d294c9@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20250127153405.3379117-1-gourry@gourry.net>
- <Z-w2O8O9MGJ1Ok78@localhost.localdomain>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <Z-w2O8O9MGJ1Ok78@localhost.localdomain>
-X-ClientProxiedBy: MW4PR03CA0333.namprd03.prod.outlook.com
- (2603:10b6:303:dc::8) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JKfSa25M"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9EB2C4CEE4;
+	Tue,  1 Apr 2025 19:45:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743536745;
+	bh=TwX5OaqDYnptYUoV1VfrVdMnHt4LWp+L48CJwUkLQBg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JKfSa25M0djsGVdwu2s6ex7VU+YN/F4U+Bo+G4rkIruxmeuiM1enQGaiXAU62qIBV
+	 adHyV9qCIil8jgnUYzL+Be2A1FwfhHxngwJ0QbAlTjfV32azNiFpUrZvz0LtrqKPzs
+	 ImNQoroSIb7P0+ken5XFlH1YuwjCkarwMHnSe85QQS4cqo2klyXqyx0O8QOmF8zmK/
+	 I8mD9XLq3Lov4rkSH42PoGKM70TwjvaavalaqShmggIxAw5YW2euMgOnvZVi9iiqGY
+	 QyJU9T297V02vPH/Sya2cQYMqub+SxwvBjhKekD3lA1LDn4SVWRl6n+MQVl2HATT+S
+	 o+/cJ9Ll7fzjg==
+Date: Tue, 1 Apr 2025 12:45:43 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Philip Li <philip.li@intel.com>, Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: kernel test robot <lkp@intel.com>, Guenter Roeck <linux@roeck-us.net>, 
+	oe-kbuild-all@lists.linux.dev, Andrew Morton <akpm@linux-foundation.org>, 
+	Linux Memory Management List <linux-mm@kvack.org>, Alessandro Carminati <acarmina@redhat.com>, 
+	Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org, loongarch@lists.linux.dev
+Subject: Re: [linux-next:master 12681/13861] drivers/i2c/i2c-core-base.o:
+ warning: objtool: __i2c_transfer+0x120: stack state mismatch: reg1[24]=-1+0
+ reg2[24]=-2-24
+Message-ID: <xqfrt2rueezh3upug2umvuw2r44luoaxfqycnmvkh5sezaosw6@h77yjfio4ws6>
+References: <202504011011.jyZ6NtXx-lkp@intel.com>
+ <Z+ttzRArSBMqfABz@rli9-mobl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SJ0PR11MB5070:EE_
-X-MS-Office365-Filtering-Correlation-Id: 519f027f-00d6-4e2d-c67a-08dd71559e0b
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|1800799024|376014|366016;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?GqFdF6bLI8kcHXEedRPe4ZVogcIzM6khfg8VC3rrsZZWezjIj6YIVtUW4inG?=
- =?us-ascii?Q?diVTceb/qcLSby+aOZBPaAtztbB8EKO86GifsfuJaDEnQjsax9zuVWwXVXZS?=
- =?us-ascii?Q?NO2rJE6vnUshugooHiEqy/EzxdPZap97SyBeOEjtTHxNqyA5DblS1IuaK6yv?=
- =?us-ascii?Q?1WBMUx+oJo6X9yFk2Fyy8KgPlAo1N95DtpomUqs/wUWFeh4F55A25YccaGtk?=
- =?us-ascii?Q?n3HmiIsVDCVhPs2FZ2+I6tfvMHWPxhf6rqwAyUq2FppOj6g8FR4lq/hcUc/5?=
- =?us-ascii?Q?fg6FjRjJ6aIcZs6pi68NnvDWOXpXPvilZChPIt2IHNFljr9dZawt6W1vecpN?=
- =?us-ascii?Q?OKRD3sC65DWdBn84YHMbR6bgLOY1FSfF+IDnA0nQs3ZkSswr3DK6fMi20YxJ?=
- =?us-ascii?Q?Qs8r3Wc0Dp7ASc+HS11rTdg9i2wsGFNB5r4uBhWhD1cKyn9zujj5GbyfP05V?=
- =?us-ascii?Q?N/m/DtdZWpD5NztVw2Xx7YV+Ip0p7YSmUy4/N7+RBtekNSqnUb5iFaYCjIsW?=
- =?us-ascii?Q?ezq3cbWcj5MMD2hWA7FlmOk1x6JVYKiWvdxO5/pVH0feM6kD9cfr93MrwYSG?=
- =?us-ascii?Q?qr/G7KsAkoupXUHNKzN0whp30+YhmrQF7oVC+g6vKzLHfitEt4UJIqG4VILT?=
- =?us-ascii?Q?sAGF4XJ51itNWJ3avEf5ciSk7b7DItUT7CaamJi1KsNJsaMkyAQN2GAwhtUd?=
- =?us-ascii?Q?G9y3/kV2TmVtrCCJ5tLSNrEbmsYjYpDa5Nph8aL7NL0HRS/+PW5Anj4oteMl?=
- =?us-ascii?Q?f5DkM0qQljf+56904GsevyxonNi6UWYvCU0gk206PrNtuzaHzuQQhT0dtPkq?=
- =?us-ascii?Q?+LQI+NmnCkoj9zSU8WVuJxrfUTeaIxEZsNv+y8u5YmI924Ymk0DmogCMpifQ?=
- =?us-ascii?Q?5ObLT0c+7+p129cf4aIcf0rRggiLAJSW0ukYBRmvgD0pPveunzhOoX11bJaH?=
- =?us-ascii?Q?CEvitNLQqs/bvZGr01Neb46BSUsClgV+RwqvnZBnjNf3+xOd9aBGyWZdEIig?=
- =?us-ascii?Q?6WhnhzHXXGBELFzRjKxXNRyfvUT69QMRBGH5pV/z8+esv0dMQh9hTbXF/9DC?=
- =?us-ascii?Q?YcTjbLX1CwKPq7p/XYqmUeVdzYFoE2VzpnM0TzNYO/JjyijmfAeBYo532uyf?=
- =?us-ascii?Q?ZfIhXPSOl3SY5mu7HEFMkJFV6goLnLI8rgKy+8XeikD4c7zYk1dpOLVoe6ZH?=
- =?us-ascii?Q?iSn1i2d4D0CvwUnxscwLFvRDT8D23yVoLR0b+C0zVWcOm3Q+goyaqUc2+mh9?=
- =?us-ascii?Q?lNGOQsKdVcBwHKdO8zV4NgLAnCfsGYjNHSjBsjws6/nd3aku6Q6oMtwuFkcK?=
- =?us-ascii?Q?bEBfnoigOALzEPGCbafSfdRCi5hlW6LWAldQVYqSU6I4bY+1+9U/pPF68AKf?=
- =?us-ascii?Q?sknPGI16uyUX+7TUm+93TVrWAeBu?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?zNZOqVCZzLxLGU45Nux1TQIcLFndyWf1PlY8OwsM439weeu38OuKEHQfydyk?=
- =?us-ascii?Q?fierbJa36HpaqmVkmr+H3BC6JPDjtugVZrq6pWuFiWUHZZmuu7A/J8/zAcil?=
- =?us-ascii?Q?0dUT1Aklc3M2WND8lKvIVgu7nOz2fn4m0yiVixceUl9raaxbwgjj8mjYZwEI?=
- =?us-ascii?Q?uGEVeB2rIFkLvb6k8F1hLSBzh5WpPCKxRoCXvbMTFEdHc2TOgdN5dbiNwgZt?=
- =?us-ascii?Q?N8hfo7ayWWwyg3cnV8FROl5WqirwUg5z/93lLpfpkpz/MPYjfpu1BMtANxwc?=
- =?us-ascii?Q?G9gYZS60Oavi4Gg+KC1SEL8WTZJRHBI8yXz5Sk3LWeiDJM3Vn+ppHN2FxyZ6?=
- =?us-ascii?Q?ysHhzlY6tm+rOwx8J3YH4M7NbDPwz8FXLnqGPe3+ikZ5xjTHZlKOHSErnsKX?=
- =?us-ascii?Q?N1taIMfhgIHEPtz40NPa4jhBuOkzZxUIy1zHBY544HCS4bx1wbCgCwM2kt3r?=
- =?us-ascii?Q?n2yGO/cJ/FKnjFlgmu9DwJTWgKEr6Sx8xoUAe0LzSpQoEwbg+OCIK8+oHTvh?=
- =?us-ascii?Q?JozALjaSBc2hd5KQAl5PL9BUKWA6dmrq6U1umVSKFpigHlGyp6VEiDoqqIGb?=
- =?us-ascii?Q?f/KvQIqxeYahKN2FebqX6pxgYObRat0Q92exo67nwe7D9myTxk+mMr9zkzK8?=
- =?us-ascii?Q?0C6EkkmfxZmO4bGb5trUsGIsas7ug9pj5VCKk7bt+tgUZE/ftSf27332cnzN?=
- =?us-ascii?Q?QDqamvw8FZExBFS8GiGAchpi7oahjWWbli4GqoQdoKin772uz44jhuDozffA?=
- =?us-ascii?Q?003b8atZtV6LCK3ygg6QVo95hZPXB3pgCbRrgpFyF5P9eEoGiNQMHl4DV7Yq?=
- =?us-ascii?Q?8jBux8nhMEVrN8Ef70akBVUstP5tH3tyiorhnE7LcFY79Lrr6hXBSZVwWQEf?=
- =?us-ascii?Q?h+IEnT2kw0aD6tfSlPA9Jx7JulEgLFU6bA1xOBm1yKaM9sqlUymPw21vYn/b?=
- =?us-ascii?Q?guOouDrYMW2WmLqPuNrZB/Jr1xmtbDrKxMUBNmN/VUAdLxj6jJrpUu9vOawW?=
- =?us-ascii?Q?GNL7XWOwr/EdcZachs+ket3x9144LJOFZDUZ9S7U2V+eyFLgyfMSqZnOLn4v?=
- =?us-ascii?Q?YtycS2g7l0kg2ScvS2HJwyEZ8dmfE5pRQpE0EkpmUXxNLVGYnhNv7EFKmi9D?=
- =?us-ascii?Q?6MOryqROe1xdGr5Te6o8vd3/JjdNu0Q5OBjEchYyoF4qXMn7M8BYQ7f1GKBO?=
- =?us-ascii?Q?9RXV9q33Brd+ePUpAtZbAFm4KuIqiXxAweMPGufvdVN0vZASZy5sasx19tlV?=
- =?us-ascii?Q?abtPs5zIJilYBEoEs9ZReYG//XVLin6pJnmbHacOWepxavPjghxnzi5VB64j?=
- =?us-ascii?Q?HVlrEjhJmCHLHN3V2wGaSPXLQ+/q+rSduO2hqD1EwRvCijN1/UZcMQNC4uOP?=
- =?us-ascii?Q?NWvFzw6s5T6gNIt4A7ZIJhbx37BqBsi40OAEcBdGcj2Gd85OuavR0zcfx6Hn?=
- =?us-ascii?Q?+GvtXTn9p22cgxHd+p7C3AtVXEDjtiHtH61pDa8InwAMsGh4gZgfYHvWnflJ?=
- =?us-ascii?Q?KcCuTttuieeyVVpg6MfROZv2XsU7HPuwqonzM8bNggzYj5OuO2deILm4Lb4h?=
- =?us-ascii?Q?J0n2tTbR/fDGRrKGWrRscPApsIhhZhKIqEn3G1HFuSEjrAEH5zkfhzNgyXLd?=
- =?us-ascii?Q?QA=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 519f027f-00d6-4e2d-c67a-08dd71559e0b
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Apr 2025 19:44:29.6577
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 5ZA+2dO4Yzr9qe8yEE7uMNhgefXpc8S8ACx2pz25OJminVJkGMOJWT8asEX3HDHYHSvW2WUKPoEQZSqubM0bF7Gu/tZW4inEROPmcOQwXKU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR11MB5070
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <Z+ttzRArSBMqfABz@rli9-mobl>
 
-Oscar Salvador wrote:
-> On Mon, Jan 27, 2025 at 10:34:02AM -0500, Gregory Price wrote:
-> > v8: nits and tag pickups
+On Tue, Apr 01, 2025 at 12:38:37PM +0800, Philip Li wrote:
+> On Tue, Apr 01, 2025 at 10:44:57AM +0800, kernel test robot wrote:
+> > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
+> > head:   405e2241def89c88f008dcb899eb5b6d4be8b43c
+> > commit: 9016dad4dca4bbe61c48ffd5a273cad980caa0d1 [12681/13861] loongarch: add support for suppressing warning backtraces
+> > config: loongarch-randconfig-001-20250401 (https://download.01.org/0day-ci/archive/20250401/202504011011.jyZ6NtXx-lkp@intel.com/config)
+> > compiler: loongarch64-linux-gcc (GCC) 14.2.0
+> > reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250401/202504011011.jyZ6NtXx-lkp@intel.com/reproduce)
 > > 
-> > When physical address regions are not aligned to memory block size,
-> > the misaligned portion is lost (stranded capacity).
+> > If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> > the same patch/commit), kindly add following tags
+> > | Reported-by: kernel test robot <lkp@intel.com>
+> > | Closes: https://lore.kernel.org/oe-kbuild-all/202504011011.jyZ6NtXx-lkp@intel.com/
 > > 
-> > Block size (min/max/selected) is architecture defined. Most architectures
-> > tend to use the minimum block size or some simplistic heurist. On x86,
-> > memory block size increases up to 2GB, and is otherwise fitted to the
-> > alignment of non-hotplug (i.e. not special purpose memory).
-> 
-> I wonder if something like this could help us in improving the
-> ridiculous situation of having 16MB memory-block size on powerpc.
+> > All warnings (new ones prefixed by >>):
+> > 
+> > >> drivers/i2c/i2c-core-base.o: warning: objtool: __i2c_transfer+0x120: stack state mismatch: reg1[24]=-1+0 reg2[24]=-2-24
 
-It's only ridiculous due to what it does to /sys/.../memory,
-right?
+Tiezhu, this looks like a loongarch GCC bug with asm goto, or am I
+confused?  See analysis below.
 
-If you permit me a bit of hand-waving, it would be lovely to deprecate
-/sys/.../memory in favor of a new (fd based?) ABI for memory-hotplug
-policy management and have something like a fuse "compatfs" mounted at
-/sys/.../memory/ for maintaining legacy compatibility for userspace that
-still depends on twiddling with individual blocks in sysfs.
+
+make-loongarch -j12 -s drivers/i2c/i2c-core-base.o OBJTOOL_ARGS="--sec-address --backtrace"
+drivers/i2c/i2c-core-base.o: warning: objtool: __i2c_transfer+0x120 (.text+0x2e78): stack state mismatch: reg1[24]=-1+0 reg2[24]=-2-24
+drivers/i2c/i2c-core-base.o: warning: objtool:   __i2c_transfer+0x168 (.text+0x2ec0): (alt)
+drivers/i2c/i2c-core-base.o: warning: objtool:   __i2c_transfer+0x6c (.text+0x2dc4): (branch)
+drivers/i2c/i2c-core-base.o: warning: objtool:   __i2c_transfer+0x58 (.text+0x2db0): (alt)
+drivers/i2c/i2c-core-base.o: warning: objtool:   __i2c_transfer+0x44 (.text+0x2d9c): (branch)
+drivers/i2c/i2c-core-base.o: warning: objtool:   __i2c_transfer+0x0 (.text+0x2d58): <=== (sym)
+
+
+Below I reconstructed the code path indicated by the above backtrace.
+
+(On a side note, I wonder why the toolchain doesn't strip the ".L" local
+symbols, they're rather distracting.)
+
+
+Here's the jump table to explain the static branches below:
+
+Relocation section '.rela__jump_table' at offset 0xc7f0 contains 9 entries:
+    Offset             Info             Type               Symbol's Value  Symbol's Name + Addend
+0000000000000000  00000a6d00000063 R_LARCH_32_PCREL       0000000000002db0 .L1^B1 + 0
+0000000000000004  00000a6e00000063 R_LARCH_32_PCREL       0000000000002db4 .L849 + 0
+0000000000000008  0000059c0000006d R_LARCH_64_PCREL       0000000000000010 i2c_trace_msg_key + 0
+0000000000000010  00000a6f00000063 R_LARCH_32_PCREL       0000000000002e64 .L1^B2 + 0
+0000000000000014  00000a7000000063 R_LARCH_32_PCREL       0000000000002e78 .L845 + 0
+0000000000000018  0000059c0000006d R_LARCH_64_PCREL       0000000000000010 i2c_trace_msg_key + 0
+0000000000000020  00000a7100000063 R_LARCH_32_PCREL       0000000000002ec0 .L1^B3 + 0
+0000000000000024  00000a7000000063 R_LARCH_32_PCREL       0000000000002e78 .L845 + 0
+0000000000000028  0000059c0000006d R_LARCH_64_PCREL       0000000000000010 i2c_trace_msg_key + 0
+
+
+---------------
+start execution
+---------------
+
+0000000000002d58 <__i2c_transfer>:
+    2d58:	02fe8063 	addi.d      	$sp, $sp, -96
+    2d5c:	29c14077 	st.d        	$s0, $sp, 80
+    2d60:	29c16061 	st.d        	$ra, $sp, 88
+    2d64:	28c0408c 	ld.d        	$t0, $a0, 16
+    2d68:	00150097 	move        	$s0, $a0
+    2d6c:	2600018c 	ldptr.d     	$t0, $t0, 0
+    2d70:	40021980 	beqz        	$t0, 536	# 2f88 <.LVL1023>
+    2d74:	29c12078 	st.d        	$s1, $sp, 72
+    2d78:	001500b8 	move        	$s1, $a1
+
+-----------------------
+$s1 saved and clobbered
+-----------------------
+
+0000000000002d7c <.LBB2114>:
+    2d7c:	400150a0 	beqz        	$a1, 336	# 2ecc <.LVL999+0x4>
+    2d80:	29c10079 	st.d        	$s2, $sp, 64
+    2d84:	001500d9 	move        	$s2, $a2
+
+-----------------------
+$s2 saved and clobbered
+-----------------------
+
+    2d88:	64014006 	blez        	$a2, 320	# 2ec8 <.LVL999>
+
+0000000000002d8c <.LBB2115>:
+    2d8c:	28c9a08c 	ld.d        	$t0, $a0, 616
+    2d90:	0340058c 	andi        	$t0, $t0, 0x1
+    2d94:	44016180 	bnez        	$t0, 352	# 2ef4 <.LBB2119>
+
+0000000000002d98 <.LVL978>:
+    2d98:	28cc008c 	ld.d        	$t0, $a0, 768
+    2d9c:	40000d80 	beqz        	$t0, 12	# 2da8 <.LVL979+0x4>
+
+--------------
+branch -> 2da8 (adal->quirks == NULL)
+--------------
+
+    2da8:	29c0e07a 	st.d        	$s3, $sp, 56
+    2dac:	29c0607e 	st.d        	$s7, $sp, 24
+
+-----------------
+$s3 and $s7 saved
+-----------------
+
+0000000000002db0 <.L1^B1>:
+    2db0:	03400000 	nop
+
+---------------------
+static branch -> 2db4 (i2c_trace_msg_key enabled; branch to next insn
+		       b/c clause is empty due to !CONFIG_TRACEPOINTS)
+---------------------
+
+0000000000002db4 <.L849>:
+    2db4:	1a00001a 	pcalau12i   	$s3, 0	2db4: R_LARCH_GOT_PC_HI20	jiffies
+
+-------------
+$s3 clobbered
+-------------
+
+    2db8:	28c0035a 	ld.d        	$s3, $s3, 0	2db8: R_LARCH_GOT_PC_LO12	jiffies
+    2dbc:	24006eec 	ldptr.w     	$t0, $s0, 108
+    2dc0:	2600035e 	ldptr.d     	$s7, $s3, 0
+
+-------------
+$s7 clobbered
+-------------
+
+0000000000002dc4 <.LVL982>:
+    2dc4:	6000f980 	bltz        	$t0, 248	# 2ebc <.LVL997>
+
+--------------
+branch -> 2ebc (adap->retries < 0)
+--------------
+
+0000000000002ebc <.LVL997>:
+    2ebc:	00150004 	move        	$a0, $zero
+
+0000000000002ec0 <.L1^B3>:
+    2ec0:	03400000 	nop
+
+-----------------------------
+BROKEN: static branch -> 2e78 (i2c_trace_msg_key enabled; again tries to
+			       skip empty tracepoint clause but branches
+			       to the wrong place in epilogue, skipping
+			       reg restores of callee saved registers
+			       $s1, $s2, $s3, $s7)
+-----------------------------
+
+0000000000002e78 <.L845>:
+    2e78:	28c16061 	ld.d        	$ra, $sp, 88
+    2e7c:	28c14077 	ld.d        	$s0, $sp, 80
+
+0000000000002e80 <.LVL994>:
+    2e80:	02c18063 	addi.d      	$sp, $sp, 96
+
+--------------------------------------
+return without restoring $s1, $s2, $s3
+--------------------------------------
+
+    2e84:	4c000020 	ret
+
+
+
+Full disassembly below:
+
+0000000000002d58 <__i2c_transfer>:
+    2d58:	02fe8063 	addi.d      	$sp, $sp, -96
+    2d5c:	29c14077 	st.d        	$s0, $sp, 80
+    2d60:	29c16061 	st.d        	$ra, $sp, 88
+    2d64:	28c0408c 	ld.d        	$t0, $a0, 16
+    2d68:	00150097 	move        	$s0, $a0
+    2d6c:	2600018c 	ldptr.d     	$t0, $t0, 0
+    2d70:	40021980 	beqz        	$t0, 536	# 2f88 <.LVL1023>
+    2d74:	29c12078 	st.d        	$s1, $sp, 72
+    2d78:	001500b8 	move        	$s1, $a1
+
+0000000000002d7c <.LBB2114>:
+    2d7c:	400150a0 	beqz        	$a1, 336	# 2ecc <.LVL999+0x4>
+    2d80:	29c10079 	st.d        	$s2, $sp, 64
+    2d84:	001500d9 	move        	$s2, $a2
+    2d88:	64014006 	blez        	$a2, 320	# 2ec8 <.LVL999>
+
+0000000000002d8c <.LBB2115>:
+    2d8c:	28c9a08c 	ld.d        	$t0, $a0, 616
+    2d90:	0340058c 	andi        	$t0, $t0, 0x1
+    2d94:	44016180 	bnez        	$t0, 352	# 2ef4 <.LBB2119>
+
+0000000000002d98 <.LVL978>:
+    2d98:	28cc008c 	ld.d        	$t0, $a0, 768
+    2d9c:	40000d80 	beqz        	$t0, 12	# 2da8 <.LVL979+0x4>
+    2da0:	57fcdbff 	bl          	-808	# 2a78 <i2c_check_for_quirks>
+
+0000000000002da4 <.LVL979>:
+    2da4:	44018480 	bnez        	$a0, 388	# 2f28 <.LVL1010>
+    2da8:	29c0e07a 	st.d        	$s3, $sp, 56
+    2dac:	29c0607e 	st.d        	$s7, $sp, 24
+
+0000000000002db0 <.L1^B1>:
+    2db0:	03400000 	nop
+
+0000000000002db4 <.L849>:
+    2db4:	1a00001a 	pcalau12i   	$s3, 0	2db4: R_LARCH_GOT_PC_HI20	jiffies
+    2db8:	28c0035a 	ld.d        	$s3, $s3, 0	2db8: R_LARCH_GOT_PC_LO12	jiffies
+    2dbc:	24006eec 	ldptr.w     	$t0, $s0, 108
+    2dc0:	2600035e 	ldptr.d     	$s7, $s3, 0
+
+0000000000002dc4 <.LVL982>:
+    2dc4:	6000f980 	bltz        	$t0, 248	# 2ebc <.LVL997>
+    2dc8:	29c0c07b 	st.d        	$s4, $sp, 48
+    2dcc:	1a00001b 	pcalau12i   	$s4, 0	2dcc: R_LARCH_GOT_PC_HI20	system_state
+    2dd0:	29c0a07c 	st.d        	$s5, $sp, 40
+    2dd4:	29c0807d 	st.d        	$s6, $sp, 32
+    2dd8:	29c0407f 	st.d        	$s8, $sp, 16
+
+0000000000002ddc <.LBB2138>:
+    2ddc:	02800c1d 	li.w        	$s6, 3
+    2de0:	0015001f 	move        	$s8, $zero
+    2de4:	02bfd41c 	li.w        	$s5, -11
+    2de8:	28c0037b 	ld.d        	$s4, $s4, 0	2de8: R_LARCH_GOT_PC_LO12	system_state
+
+0000000000002dec <.LVL983>:
+    2dec:	03400000 	nop
+
+0000000000002df0 <.LBI2138>:
+    2df0:	2400036c 	ldptr.w     	$t0, $s4, 0
+    2df4:	6c00afac 	bgeu        	$s6, $t0, 172	# 2ea0 <.LVL995+0x18>
+
+0000000000002df8 <.LBB2140>:
+    2df8:	24001c4c 	ldptr.w     	$t0, $tp, 28
+    2dfc:	0040818c 	slli.w      	$t0, $t0, 0x0
+    2e00:	44001180 	bnez        	$t0, 16	# 2e10 <.LVL984+0x8>
+
+0000000000002e04 <.LBB2145>:
+    2e04:	0400000c 	csrrd       	$t0, 0x0
+
+0000000000002e08 <.LVL984>:
+    2e08:	0340118c 	andi        	$t0, $t0, 0x4
+    2e0c:	44009580 	bnez        	$t0, 148	# 2ea0 <.LVL995+0x18>
+    2e10:	28c042ec 	ld.d        	$t0, $s0, 16
+    2e14:	28c0218d 	ld.d        	$t1, $t0, 8
+    2e18:	40008da0 	beqz        	$t1, 140	# 2ea4 <.LVL995+0x1c>
+    2e1c:	00150326 	move        	$a2, $s2
+    2e20:	00150305 	move        	$a1, $s1
+    2e24:	001502e4 	move        	$a0, $s0
+    2e28:	4c0001a1 	jirl        	$ra, $t1, 0
+
+0000000000002e2c <.LVL987>:
+    2e2c:	5c00289c 	bne         	$a0, $s5, 40	# 2e54 <.LVL988+0x4>
+
+0000000000002e30 <.LBB2152>:
+    2e30:	29c02060 	st.d        	$zero, $sp, 8
+    2e34:	2600034d 	ldptr.d     	$t1, $s3, 0
+    2e38:	24006aec 	ldptr.w     	$t0, $s0, 104
+    2e3c:	0011b7cd 	sub.d       	$t1, $s7, $t1
+    2e40:	0010b58c 	add.d       	$t0, $t0, $t1
+    2e44:	60001180 	bltz        	$t0, 16	# 2e54 <.LVL988+0x4>
+    2e48:	24006eec 	ldptr.w     	$t0, $s0, 108
+    2e4c:	028007ff 	addi.w      	$s8, $s8, 1
+
+0000000000002e50 <.LVL988>:
+    2e50:	67ffa19f 	bge         	$t0, $s8, -96	# 2df0 <.LBI2138>
+    2e54:	28c0c07b 	ld.d        	$s4, $sp, 48
+    2e58:	28c0a07c 	ld.d        	$s5, $sp, 40
+    2e5c:	28c0807d 	ld.d        	$s6, $sp, 32
+    2e60:	28c0407f 	ld.d        	$s8, $sp, 16
+
+0000000000002e64 <.L1^B2>:
+    2e64:	03400000 	nop
+    2e68:	28c12078 	ld.d        	$s1, $sp, 72
+
+0000000000002e6c <.LVL991>:
+    2e6c:	28c10079 	ld.d        	$s2, $sp, 64
+
+0000000000002e70 <.LVL992>:
+    2e70:	28c0e07a 	ld.d        	$s3, $sp, 56
+    2e74:	28c0607e 	ld.d        	$s7, $sp, 24
+
+0000000000002e78 <.L845>:
+    2e78:	28c16061 	ld.d        	$ra, $sp, 88
+    2e7c:	28c14077 	ld.d        	$s0, $sp, 80
+
+0000000000002e80 <.LVL994>:
+    2e80:	02c18063 	addi.d      	$sp, $sp, 96
+    2e84:	4c000020 	ret
+
+0000000000002e88 <.LVL995>:
+    2e88:	03400000 	nop
+    2e8c:	03400000 	nop
+    2e90:	03400000 	nop
+    2e94:	03400000 	nop
+    2e98:	03400000 	nop
+    2e9c:	03400000 	nop
+    2ea0:	28c042ec 	ld.d        	$t0, $s0, 16
+    2ea4:	2600018c 	ldptr.d     	$t0, $t0, 0
+    2ea8:	00150326 	move        	$a2, $s2
+    2eac:	00150305 	move        	$a1, $s1
+    2eb0:	001502e4 	move        	$a0, $s0
+    2eb4:	4c000181 	jirl        	$ra, $t0, 0
+
+0000000000002eb8 <.LVL996>:
+    2eb8:	53ff77ff 	b           	-140	# 2e2c <.LVL987>
+
+0000000000002ebc <.LVL997>:
+    2ebc:	00150004 	move        	$a0, $zero
+
+0000000000002ec0 <.L1^B3>:
+    2ec0:	03400000 	nop
+    2ec4:	53ffa7ff 	b           	-92	# 2e68 <.L1^B2+0x4>
+
+0000000000002ec8 <.LVL999>:
+    2ec8:	28c10079 	ld.d        	$s2, $sp, 64
+    2ecc:	1a000004 	pcalau12i   	$a0, 0	2ecc: R_LARCH_PCALA_HI20	.LANCHOR0
+
+0000000000002ed0 <.LVL1000>:
+    2ed0:	02c00084 	addi.d      	$a0, $a0, 0	2ed0: R_LARCH_PCALA_LO12	.LANCHOR0
+    2ed4:	02c5a084 	addi.d      	$a0, $a0, 360
+    2ed8:	54000000 	bl          	0	# 2ed8 <.LVL1000+0x8>	2ed8: R_LARCH_B26	__kunit_is_suppressed_warning
+
+0000000000002edc <.LVL1001>:
+    2edc:	0015008c 	move        	$t0, $a0
+    2ee0:	02bfa804 	li.w        	$a0, -22
+    2ee4:	44003d80 	bnez        	$t0, 60	# 2f20 <.LVL1008+0x8>
+
+0000000000002ee8 <.L10001^B7>:
+    2ee8:	002a0001 	break       	0x1
+    2eec:	28c12078 	ld.d        	$s1, $sp, 72
+
+0000000000002ef0 <.LVL1002>:
+    2ef0:	53ff8bff 	b           	-120	# 2e78 <.L845>
+
+0000000000002ef4 <.LBB2119>:
+    2ef4:	0280080d 	li.w        	$t1, 2
+    2ef8:	02c9a08e 	addi.d      	$t2, $a0, 616
+    2efc:	386cb5cc 	amor_db.d   	$t0, $t1, $t2
+
+0000000000002f00 <.LVL1004>:
+    2f00:	0340098c 	andi        	$t0, $t0, 0x2
+    2f04:	40003580 	beqz        	$t0, 52	# 2f38 <.LBB2126>
+
+0000000000002f08 <.LVL1006>:
+    2f08:	28c12078 	ld.d        	$s1, $sp, 72
+    2f0c:	28c10079 	ld.d        	$s2, $sp, 64
+
+0000000000002f10 <.LVL1007>:
+    2f10:	02be5004 	li.w        	$a0, -108
+    2f14:	53ff67ff 	b           	-156	# 2e78 <.L845>
+
+0000000000002f18 <.LVL1008>:
+    2f18:	03400000 	nop
+    2f1c:	03400000 	nop
+    2f20:	28c12078 	ld.d        	$s1, $sp, 72
+
+0000000000002f24 <.LVL1009>:
+    2f24:	53ff57ff 	b           	-172	# 2e78 <.L845>
+
+0000000000002f28 <.LVL1010>:
+    2f28:	28c12078 	ld.d        	$s1, $sp, 72
+
+0000000000002f2c <.LVL1011>:
+    2f2c:	28c10079 	ld.d        	$s2, $sp, 64
+
+0000000000002f30 <.LVL1012>:
+    2f30:	02be8404 	li.w        	$a0, -95
+    2f34:	53ff47ff 	b           	-188	# 2e78 <.L845>
+
+0000000000002f38 <.LBB2126>:
+    2f38:	1a000018 	pcalau12i   	$s1, 0	2f38: R_LARCH_PCALA_HI20	.LANCHOR0
+    2f3c:	02c00318 	addi.d      	$s1, $s1, 0	2f3c: R_LARCH_PCALA_LO12	.LANCHOR0
+    2f40:	02c5e318 	addi.d      	$s1, $s1, 376
+    2f44:	00150304 	move        	$a0, $s1
+
+0000000000002f48 <.LVL1014>:
+    2f48:	54000000 	bl          	0	# 2f48 <.LVL1014>	2f48: R_LARCH_B26	__kunit_is_suppressed_warning
+
+0000000000002f4c <.LVL1015>:
+    2f4c:	47ffbc9f 	bnez        	$a0, -68	# 2f08 <.LVL1006>
+    2f50:	02c1c2e4 	addi.d      	$a0, $s0, 112
+    2f54:	54000000 	bl          	0	# 2f54 <.LVL1015+0x8>	2f54: R_LARCH_B26	dev_driver_string
+
+0000000000002f58 <.LBB2127>:
+    2f58:	28c302e6 	ld.d        	$a2, $s0, 192
+    2f5c:	00150085 	move        	$a1, $a0
+
+0000000000002f60 <.LBI2127>:
+    2f60:	440008c0 	bnez        	$a2, 8	# 2f68 <.LBB2129+0x4>
+
+0000000000002f64 <.LBB2129>:
+    2f64:	28c1c2e6 	ld.d        	$a2, $s0, 112
+    2f68:	1a000004 	pcalau12i   	$a0, 0	2f68: R_LARCH_PCALA_HI20	.LC70
+    2f6c:	02c00084 	addi.d      	$a0, $a0, 0	2f6c: R_LARCH_PCALA_LO12	.LC70
+    2f70:	54000000 	bl          	0	# 2f70 <.LBB2129+0xc>	2f70: R_LARCH_B26	__warn_printk
+
+0000000000002f74 <.LVL1020>:
+    2f74:	00150304 	move        	$a0, $s1
+    2f78:	54000000 	bl          	0	# 2f78 <.LVL1020+0x4>	2f78: R_LARCH_B26	__kunit_is_suppressed_warning
+
+0000000000002f7c <.LVL1021>:
+    2f7c:	47ff8c9f 	bnez        	$a0, -116	# 2f08 <.LVL1006>
+
+0000000000002f80 <.L10001^B8>:
+    2f80:	002a0001 	break       	0x1
+
+
+0000000000002f84 <.LVL1022>:
+    2f84:	53ff87ff 	b           	-124	# 2f08 <.LVL1006>
+
+0000000000002f88 <.LVL1023>:
+    2f88:	1a000006 	pcalau12i   	$a2, 0	2f88: R_LARCH_PCALA_HI20	.LC69
+
+0000000000002f8c <.LVL1024>:
+    2f8c:	1a000004 	pcalau12i   	$a0, 0	2f8c: R_LARCH_PCALA_HI20	.LC9
+
+0000000000002f90 <.LVL1025>:
+    2f90:	02c00084 	addi.d      	$a0, $a0, 0	2f90: R_LARCH_PCALA_LO12	.LC9
+    2f94:	02c1c2e5 	addi.d      	$a1, $s0, 112
+
+0000000000002f98 <.LVL1026>:
+    2f98:	02c000c6 	addi.d      	$a2, $a2, 0	2f98: R_LARCH_PCALA_LO12	.LC69
+    2f9c:	54000000 	bl          	0	# 2f9c <.LVL1026+0x4>	2f9c: R_LARCH_B26	_dev_printk
+
+0000000000002fa0 <.LVL1027>:
+    2fa0:	02be8404 	li.w        	$a0, -95
+    2fa4:	53fed7ff 	b           	-300	# 2e78 <.L845>
