@@ -1,55 +1,55 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3FC221324D
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 18:24:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA7762116FA
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 18:24:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743531891; cv=none; b=iMDITglWBCr8WWTYhIi2PPi3EyySmhb6QgRYxRImWzSOzXNdqfW+vz7JEl8XWULyIqRk5oVit++W7Sam9m5S9BZMzfjA1QjjpRxSrU2GjfzQykdZ+WKivTgYeaxr1LY0YTrtRfCbHLllc7DkQRy+EAnzRBzRHpf/hW38eF0CMH4=
+	t=1743531895; cv=none; b=uaR+/u5gF0ZIaYYg90Y7FdQrESLaC6xHlOrfm2/dhLEGMI2WX9e7jWhFnrMcbF88jfbZEl/4JJHi/iRzuePegbKJKX26oOpZWJ6F+h93K3z0ZTC+WrVpn4g6GZYLOi5fUkMObXoqeWE2Dx1U98q3hz2KvMZ1YL1vpfADEYqhh0U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743531891; c=relaxed/simple;
-	bh=UjPBLV7TbnnPT+/kicTwlHP6fgTIroQn0v9Gw5imbU8=;
+	s=arc-20240116; t=1743531895; c=relaxed/simple;
+	bh=evtKcJO6JgreVhXQ519ZpEqcukEoNZa/Zt1QGZHfhNE=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=u7t3b+gl8/oOpIfuD2+33pZAzmUR5o+UkirlPUsPdOOd6jeTQ/U9NM6Yd0C9geUgWtSFriKljfS1w13pY0CDlSp66QV7EDpkPHR96GKhlJ3QQameasfu2T9+dcMNtf+w6wkYZIWuOqPjNBtqhmeWafNkKOhW5yVcygfkWdkSWb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zuGbK2kl; arc=none smtp.client-ip=209.85.214.201
+	 To:Content-Type; b=G9y5Pxzf1wWcKj6w2hVgBEWJZY+9tS/OJlen40LtOfR8bVb+r/4FtGFccg5E39mxmpyjvyWI+JkN7EB3R4vcYg/BrssBxssGmi6XpATXQ4zazPPt2sLSyNaklwTyHZobZ+2NUPI4iuI+xy6/UIWgwyhUfcuPqHCgP0VoYiTZm2A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BHlkfEaR; arc=none smtp.client-ip=209.85.214.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zuGbK2kl"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2240a96112fso186766815ad.2
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 11:24:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BHlkfEaR"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-22647ff3cf5so95124335ad.0
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 11:24:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743531889; x=1744136689; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1743531893; x=1744136693; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=2X0UycnolpfaNM7suEZJzWVdRugf9Nm4RdXAdNstCu4=;
-        b=zuGbK2klj45FAEILeDcR2Se6C8LsmOP/HErW0moCCv++oK2sgSCBrFm+Qb6tzlgBif
-         Ulnqd+UN8Vp+Of3mZLZNYuU6D0ZQ88MFt6oUWbO7OtUbSRVs3ZbEL6qh+x8JugdylpDC
-         Nx8y1km800Zcj/bLrJN/08jDJCFJaizBLguosu5dHroWA+NtXUcb60LgxnAdSsTFUEyW
-         l/be0IEA0RR4iAwQAphbV0CfZbaETqiPBwQpZFCzADKXoz4Wq4KMg1uPjC5iDh2Pe15o
-         RmBLKD0kO7FDspbTb9vMG+ZeAU+qfhtEuSDZjO3fxd6shFhuorhzzu4wSDuQ2ZfPvGYO
-         XF8A==
+        bh=G+pFNUFuvg3sBu986hGcTsi3XWrtdH4pSJphzXQPDGw=;
+        b=BHlkfEaRDmu+vRulq/hRCDvs+m8nLCe9LQWMfKX+OAqidq/3mkLYxmfJ7VucK+bssY
+         8VG8sqQ6Dwu+51yJX2scY7j9YhSxBs4CBN+Nvyf9xs4JpuOxm2V8UZVuzxrstroVGvQv
+         ls76lBCTY0Aibo2PlRoxYCNIrL9U6ZDaPAxqPFWS4IYA2mXwV+2oa/2MEyL71T0vtuAg
+         anmYYBdRYW0lhrmtADcAp2YNu8OKDJbVP0u9jmdJ86j7SP5H/3WpQ/OTfSVzExr0NP0m
+         wStG/tqs/ZiILm+6fACYKlNQWIwA4DIDu1XraHCWEVCMCGsakb/Bkflbt9LuSL3kIZVn
+         TA6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743531889; x=1744136689;
+        d=1e100.net; s=20230601; t=1743531893; x=1744136693;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2X0UycnolpfaNM7suEZJzWVdRugf9Nm4RdXAdNstCu4=;
-        b=aRLW4dNe3Mq3pX8VZSQthdcxdsQMUmTqJbCt6YCD9MDtTM/2tOl14piprYZK1s5gAA
-         0hJR+KmZG7BRs7oc0wpcEXOc1lgV3DFAxB5GNgM6Orrly6q134kY0EqaViTP/3yzKmpq
-         pSt/zJAVX0yN2rOF3ezbXYK9pM1IjUO//uCIbhmaj2/dn4BOOkZ2kqTyynyNK4T85qyl
-         dpUo4tSLc0Lurh6Dn+rOVEHAdK5L6ZzWklSYUKi/XzxjXpksJb1p2kBWPJOfhUm+AA2Z
-         ByLGp1aIW7J8c2kpAItgNvPtPaISBpl7voG2uCQ3oWX67443hVKKGsE1c7bgWd0VlhsD
-         JOgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXZYEuR/0wYXObpnI0Nyg1UcmArDXAWJu/mWJscKmId2Jfs3SWUpZfti9WZBmBBeGKAjjjUcXGyR8kJ1UU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyBowY2+um+A3Dic3GH3pNU94oEP5vJNg1e56DjmOa9Oh5ufTb/
-	JmtXgPmp1kyT5lUJWh0DAyXE2ddCULm1tecpue7QyTJyzkcd0gDkUa/DmILu0jFQvL4AHYpn1eU
-	wScB5Pg==
-X-Google-Smtp-Source: AGHT+IFcJlGHDxS/pygdPOHZDMsvnMP5O+QCssfsPLdDL4QF8GmFujgsnqh4NtMedvXf8NoELXmC5MZgriWH
-X-Received: from plbbh9.prod.google.com ([2002:a17:902:a989:b0:223:49f0:9077])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:228a:b0:223:f9a4:3fb6
- with SMTP id d9443c01a7336-2292f9423e1mr222739365ad.11.1743531888834; Tue, 01
- Apr 2025 11:24:48 -0700 (PDT)
-Date: Tue,  1 Apr 2025 11:23:04 -0700
+        bh=G+pFNUFuvg3sBu986hGcTsi3XWrtdH4pSJphzXQPDGw=;
+        b=w06fWgcik39tfy8fauvAeuxGf2e+MU7zwRi8S8xu/q8qIBRfIy1HbLqyPwS5QbmYBY
+         wiFJJVHsi6t/mjbiu4H3Myi4QFp7N9ogs9LMvTLV6BBzzhSaV/74mbeqoJ/osAB0ywf9
+         W2WBtksngswJybyS1rupKJTONA5Qf9qYKzy3xtG++cRrZYVm7rNTz6Akk1cYLw1RX4tF
+         amxuwOPkBwpdUf8gGE1qgAmi8rCGPEjtG+XVsn4YgFxvA2LyOxyw1jEYKSE4qCqYi0UK
+         TVadsfarAVhm4BdhDh6hEsXQDq0y6hWYU6Qv6Hm3QfmZOzWZCNP97MBEv3NQER5pwC7+
+         hNEw==
+X-Forwarded-Encrypted: i=1; AJvYcCUqw8HjTx9YXYpNgkobXQEsKWWArIPPJc7/Tji9tT1oo1Ael9DD3mV7hpGa2+mKfzQnsHDnDi93L2v2gek=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxFGeMm+EOkJUfwnGaaeSfmj6VTXnP8bI/+O8YcI4yUZIhf8Byl
+	pbrROWBXkZDmu8mWQP2/j2UkrhF6zIRrap2Pl6q8nrqJI3kJZPqaNYvn9VhN2oONufCuiZjmQw9
+	3EWuIwg==
+X-Google-Smtp-Source: AGHT+IEGuoaOgsEiiCmj+DYkQlzD6TAEH+/gDN4mTjdSDcZNHVUirS5RJWIVMLKioVyAkZjKmJMVmsLL2Kq0
+X-Received: from pfbln13.prod.google.com ([2002:a05:6a00:3ccd:b0:736:47b8:9b88])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:2446:b0:223:525b:2a7
+ with SMTP id d9443c01a7336-2292f95f084mr213479705ad.15.1743531892980; Tue, 01
+ Apr 2025 11:24:52 -0700 (PDT)
+Date: Tue,  1 Apr 2025 11:23:06 -0700
 In-Reply-To: <20250401182347.3422199-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250401182347.3422199-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
-Message-ID: <20250401182347.3422199-7-irogers@google.com>
-Subject: [PATCH v1 06/48] libperf: Silence -Wshorten-64-to-32 warnings
+Message-ID: <20250401182347.3422199-9-irogers@google.com>
+Subject: [PATCH v1 08/48] perf bench: Silence -Wshorten-64-to-32 warnings
 From: Ian Rogers <irogers@google.com>
 To: Yury Norov <yury.norov@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
 	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -114,462 +114,373 @@ truncation explicit.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/lib/perf/cpumap.c                     | 18 +++++-----
- tools/lib/perf/evsel.c                      | 40 +++++++++------------
- tools/lib/perf/include/internal/cpumap.h    |  2 +-
- tools/lib/perf/include/internal/evsel.h     |  2 +-
- tools/lib/perf/include/internal/lib.h       |  2 +-
- tools/lib/perf/include/internal/mmap.h      |  4 +--
- tools/lib/perf/include/internal/threadmap.h |  2 +-
- tools/lib/perf/include/internal/xyarray.h   |  8 ++---
- tools/lib/perf/include/perf/cpumap.h        |  3 +-
- tools/lib/perf/lib.c                        |  2 +-
- tools/lib/perf/mmap.c                       | 13 ++++---
- tools/lib/perf/threadmap.c                  |  4 +--
- tools/lib/perf/xyarray.c                    |  2 +-
- 13 files changed, 46 insertions(+), 56 deletions(-)
+ tools/perf/bench/breakpoint.c           |  8 +++++---
+ tools/perf/bench/epoll-wait.c           |  3 ++-
+ tools/perf/bench/evlist-open-close.c    |  8 ++++----
+ tools/perf/bench/find-bit-bench.c       |  5 +++--
+ tools/perf/bench/futex.h                |  4 ++--
+ tools/perf/bench/inject-buildid.c       |  8 ++++----
+ tools/perf/bench/mem-functions.c        |  2 +-
+ tools/perf/bench/pmu-scan.c             | 12 ++++++------
+ tools/perf/bench/sched-messaging.c      |  4 ++--
+ tools/perf/bench/sched-pipe.c           | 15 +++++++++------
+ tools/perf/bench/sched-seccomp-notify.c |  2 +-
+ tools/perf/bench/synthesize.c           |  6 +++---
+ tools/perf/builtin-bench.c              |  2 +-
+ 13 files changed, 43 insertions(+), 36 deletions(-)
 
-diff --git a/tools/lib/perf/cpumap.c b/tools/lib/perf/cpumap.c
-index 4454a5987570..37d94911449b 100644
---- a/tools/lib/perf/cpumap.c
-+++ b/tools/lib/perf/cpumap.c
-@@ -20,7 +20,7 @@ void perf_cpu_map__set_nr(struct perf_cpu_map *map, int nr_cpus)
- 	RC_CHK_ACCESS(map)->nr = nr_cpus;
- }
+diff --git a/tools/perf/bench/breakpoint.c b/tools/perf/bench/breakpoint.c
+index dfd18f5db97d..72802b334eeb 100644
+--- a/tools/perf/bench/breakpoint.c
++++ b/tools/perf/bench/breakpoint.c
+@@ -57,7 +57,7 @@ static int breakpoint_setup(void *addr)
+ 	attr.bp_addr = (unsigned long)addr;
+ 	attr.bp_type = HW_BREAKPOINT_RW;
+ 	attr.bp_len = HW_BREAKPOINT_LEN_1;
+-	fd = syscall(SYS_perf_event_open, &attr, 0, -1, -1, 0);
++	fd = (int)syscall(SYS_perf_event_open, &attr, 0, -1, -1, 0);
  
--struct perf_cpu_map *perf_cpu_map__alloc(int nr_cpus)
-+struct perf_cpu_map *perf_cpu_map__alloc(size_t nr_cpus)
+ 	if (fd < 0)
+ 		fd = -errno;
+@@ -111,7 +111,8 @@ static void *breakpoint_thread(void *arg)
+ // then starts nparallel threads which create and join bench_repeat batches of nthreads threads.
+ int bench_breakpoint_thread(int argc, const char **argv)
  {
- 	RC_STRUCT(perf_cpu_map) *cpus;
- 	struct perf_cpu_map *result;
-@@ -30,7 +30,7 @@ struct perf_cpu_map *perf_cpu_map__alloc(int nr_cpus)
+-	unsigned int i, result_usec;
++	unsigned int i;
++	long result_usec;
+ 	int repeat = bench_repeat;
+ 	struct breakpoint *breakpoints;
+ 	pthread_t *parallel;
+@@ -197,7 +198,8 @@ static const char * const enable_usage[] = {
+ // and then disables and enables the breakpoint bench_repeat times.
+ int bench_breakpoint_enable(int argc, const char **argv)
+ {
+-	unsigned int i, nthreads, result_usec, done = 0;
++	unsigned int i, nthreads, done = 0;
++	long result_usec;
+ 	char watched;
+ 	int fd;
+ 	pthread_t *threads;
+diff --git a/tools/perf/bench/epoll-wait.c b/tools/perf/bench/epoll-wait.c
+index 20fe4f72b4af..5ea3e0b2daf2 100644
+--- a/tools/perf/bench/epoll-wait.c
++++ b/tools/perf/bench/epoll-wait.c
+@@ -182,7 +182,8 @@ static void shuffle(void *array, size_t n, size_t size)
  
- 	cpus = malloc(sizeof(*cpus) + sizeof(struct perf_cpu) * nr_cpus);
- 	if (ADD_RC_CHK(result, cpus)) {
--		cpus->nr = nr_cpus;
-+		cpus->nr = (int)nr_cpus;
- 		refcount_set(&cpus->refcnt, 1);
+ static void *workerfn(void *arg)
+ {
+-	int fd, ret, r;
++	int fd, ret;
++	ssize_t r;
+ 	struct worker *w = (struct worker *) arg;
+ 	unsigned long ops = w->ops;
+ 	struct epoll_event ev;
+diff --git a/tools/perf/bench/evlist-open-close.c b/tools/perf/bench/evlist-open-close.c
+index 5a27691469ed..770d9db176ee 100644
+--- a/tools/perf/bench/evlist-open-close.c
++++ b/tools/perf/bench/evlist-open-close.c
+@@ -192,16 +192,16 @@ static char *bench__repeat_event_string(const char *evstr, int n)
+ {
+ 	char sbuf[STRERR_BUFSIZE];
+ 	struct strbuf buf;
+-	int i, str_size = strlen(evstr),
+-	    final_size = str_size * n + n,
+-	    err = strbuf_init(&buf, final_size);
++	size_t str_size = strlen(evstr);
++	size_t final_size = str_size * n + n;
++	int err = strbuf_init(&buf, final_size);
+ 
+ 	if (err) {
+ 		pr_err("strbuf_init: %s\n", str_error_r(err, sbuf, sizeof(sbuf)));
+ 		goto out_error;
  	}
- 	return result;
-@@ -78,7 +78,7 @@ void perf_cpu_map__put(struct perf_cpu_map *map)
- static struct perf_cpu_map *cpu_map__new_sysconf(void)
+ 
+-	for (i = 0; i < n; i++) {
++	for (int i = 0; i < n; i++) {
+ 		err = strbuf_add(&buf, evstr, str_size);
+ 		if (err) {
+ 			pr_err("strbuf_add: %s\n", str_error_r(err, sbuf, sizeof(sbuf)));
+diff --git a/tools/perf/bench/find-bit-bench.c b/tools/perf/bench/find-bit-bench.c
+index 7e25b0e413f6..59b00e89f71b 100644
+--- a/tools/perf/bench/find-bit-bench.c
++++ b/tools/perf/bench/find-bit-bench.c
+@@ -31,7 +31,7 @@ static const char *const bench_usage[] = {
+ static unsigned int accumulator;
+ static unsigned int use_of_val;
+ 
+-static noinline void workload(int val)
++static noinline void workload(unsigned long val)
  {
- 	struct perf_cpu_map *cpus;
--	int nr_cpus, nr_cpus_conf;
-+	size_t nr_cpus, nr_cpus_conf;
+ 	use_of_val += val;
+ 	accumulator++;
+@@ -59,8 +59,9 @@ static int do_for_each_set_bit(unsigned int num_bits)
+ 	u64 runtime_us;
+ 	struct stats fb_time_stats, tb_time_stats;
+ 	double time_average, time_stddev;
+-	unsigned int bit, i, j;
++	unsigned int i, j;
+ 	unsigned int set_bits, skip;
++	unsigned long bit;
  
- 	nr_cpus = sysconf(_SC_NPROCESSORS_ONLN);
- 	if (nr_cpus < 0)
-@@ -86,15 +86,13 @@ static struct perf_cpu_map *cpu_map__new_sysconf(void)
- 
- 	nr_cpus_conf = sysconf(_SC_NPROCESSORS_CONF);
- 	if (nr_cpus != nr_cpus_conf) {
--		pr_warning("Number of online CPUs (%d) differs from the number configured (%d) the CPU map will only cover the first %d CPUs.",
-+		pr_warning("Number of online CPUs (%zu) differs from the number configured (%zu) the CPU map will only cover the first %zu CPUs.",
- 			nr_cpus, nr_cpus_conf, nr_cpus);
- 	}
- 
- 	cpus = perf_cpu_map__alloc(nr_cpus);
- 	if (cpus != NULL) {
--		int i;
--
--		for (i = 0; i < nr_cpus; ++i)
-+		for (size_t i = 0; i < nr_cpus; ++i)
- 			RC_CHK_ACCESS(cpus)->map[i].cpu = i;
- 	}
- 
-@@ -132,7 +130,7 @@ static int cmp_cpu(const void *a, const void *b)
- 	return cpu_a->cpu - cpu_b->cpu;
+ 	init_stats(&fb_time_stats);
+ 	init_stats(&tb_time_stats);
+diff --git a/tools/perf/bench/futex.h b/tools/perf/bench/futex.h
+index ebdc2b032afc..6d9076e091eb 100644
+--- a/tools/perf/bench/futex.h
++++ b/tools/perf/bench/futex.h
+@@ -49,14 +49,14 @@ static inline int
+ futex_syscall(volatile u_int32_t *uaddr, int op, u_int32_t val, struct timespec *timeout,
+ 	      volatile u_int32_t *uaddr2, int val3, int opflags)
+ {
+-	return syscall(SYS_futex, uaddr, op | opflags, val, timeout, uaddr2, val3);
++	return (int)syscall(SYS_futex, uaddr, op | opflags, val, timeout, uaddr2, val3);
  }
  
--static struct perf_cpu __perf_cpu_map__cpu(const struct perf_cpu_map *cpus, int idx)
-+static struct perf_cpu __perf_cpu_map__cpu(const struct perf_cpu_map *cpus, size_t idx)
+ static inline int
+ futex_syscall_nr_requeue(volatile u_int32_t *uaddr, int op, u_int32_t val, int nr_requeue,
+ 			 volatile u_int32_t *uaddr2, int val3, int opflags)
  {
- 	return RC_CHK_ACCESS(cpus)->map[idx];
- }
-@@ -247,13 +245,13 @@ static int __perf_cpu_map__nr(const struct perf_cpu_map *cpus)
- 	return RC_CHK_ACCESS(cpus)->nr;
- }
- 
--struct perf_cpu perf_cpu_map__cpu(const struct perf_cpu_map *cpus, int idx)
-+struct perf_cpu perf_cpu_map__cpu(const struct perf_cpu_map *cpus, size_t idx)
- {
- 	struct perf_cpu result = {
- 		.cpu = -1
- 	};
- 
--	if (cpus && idx < __perf_cpu_map__nr(cpus))
-+	if (cpus && idx < (size_t)__perf_cpu_map__nr(cpus))
- 		return __perf_cpu_map__cpu(cpus, idx);
- 
- 	return result;
-diff --git a/tools/lib/perf/evsel.c b/tools/lib/perf/evsel.c
-index c475319e2e41..d647ca25a6db 100644
---- a/tools/lib/perf/evsel.c
-+++ b/tools/lib/perf/evsel.c
-@@ -71,7 +71,7 @@ int perf_evsel__alloc_fd(struct perf_evsel *evsel, int ncpus, int nthreads)
- 	return evsel->fd != NULL ? 0 : -ENOMEM;
+-	return syscall(SYS_futex, uaddr, op | opflags, val, nr_requeue, uaddr2, val3);
++	return (int)syscall(SYS_futex, uaddr, op | opflags, val, nr_requeue, uaddr2, val3);
  }
  
--static int perf_evsel__alloc_mmap(struct perf_evsel *evsel, int ncpus, int nthreads)
-+static int perf_evsel__alloc_mmap(struct perf_evsel *evsel, size_t ncpus, size_t nthreads)
- {
- 	evsel->mmap = xyarray__new(ncpus, nthreads, sizeof(struct perf_mmap));
- 
-@@ -83,7 +83,7 @@ sys_perf_event_open(struct perf_event_attr *attr,
- 		    pid_t pid, struct perf_cpu cpu, int group_fd,
- 		    unsigned long flags)
- {
--	return syscall(__NR_perf_event_open, attr, pid, cpu.cpu, group_fd, flags);
-+	return (int)syscall(__NR_perf_event_open, attr, pid, cpu.cpu, group_fd, flags);
- }
- 
- static int get_group_fd(struct perf_evsel *evsel, int cpu_map_idx, int thread, int *group_fd)
-@@ -179,11 +179,9 @@ int perf_evsel__open(struct perf_evsel *evsel, struct perf_cpu_map *cpus,
- 	return err;
- }
- 
--static void perf_evsel__close_fd_cpu(struct perf_evsel *evsel, int cpu_map_idx)
-+static void perf_evsel__close_fd_cpu(struct perf_evsel *evsel, size_t cpu_map_idx)
- {
--	int thread;
--
--	for (thread = 0; thread < xyarray__max_y(evsel->fd); ++thread) {
-+	for (size_t thread = 0; thread < xyarray__max_y(evsel->fd); ++thread) {
- 		int *fd = FD(evsel, cpu_map_idx, thread);
- 
- 		if (fd && *fd >= 0) {
-@@ -195,7 +193,7 @@ static void perf_evsel__close_fd_cpu(struct perf_evsel *evsel, int cpu_map_idx)
- 
- void perf_evsel__close_fd(struct perf_evsel *evsel)
- {
--	for (int idx = 0; idx < xyarray__max_x(evsel->fd); idx++)
-+	for (size_t idx = 0; idx < xyarray__max_x(evsel->fd); idx++)
- 		perf_evsel__close_fd_cpu(evsel, idx);
- }
- 
-@@ -224,13 +222,11 @@ void perf_evsel__close_cpu(struct perf_evsel *evsel, int cpu_map_idx)
- 
- void perf_evsel__munmap(struct perf_evsel *evsel)
- {
--	int idx, thread;
--
- 	if (evsel->fd == NULL || evsel->mmap == NULL)
- 		return;
- 
--	for (idx = 0; idx < xyarray__max_x(evsel->fd); idx++) {
--		for (thread = 0; thread < xyarray__max_y(evsel->fd); thread++) {
-+	for (size_t idx = 0; idx < xyarray__max_x(evsel->fd); idx++) {
-+		for (size_t thread = 0; thread < xyarray__max_y(evsel->fd); thread++) {
- 			int *fd = FD(evsel, idx, thread);
- 
- 			if (fd == NULL || *fd < 0)
-@@ -246,7 +242,7 @@ void perf_evsel__munmap(struct perf_evsel *evsel)
- 
- int perf_evsel__mmap(struct perf_evsel *evsel, int pages)
- {
--	int ret, idx, thread;
-+	int ret;
- 	struct perf_mmap_param mp = {
- 		.prot = PROT_READ | PROT_WRITE,
- 		.mask = (pages * page_size) - 1,
-@@ -258,8 +254,8 @@ int perf_evsel__mmap(struct perf_evsel *evsel, int pages)
- 	if (perf_evsel__alloc_mmap(evsel, xyarray__max_x(evsel->fd), xyarray__max_y(evsel->fd)) < 0)
- 		return -ENOMEM;
- 
--	for (idx = 0; idx < xyarray__max_x(evsel->fd); idx++) {
--		for (thread = 0; thread < xyarray__max_y(evsel->fd); thread++) {
-+	for (size_t idx = 0; idx < xyarray__max_x(evsel->fd); idx++) {
-+		for (size_t thread = 0; thread < xyarray__max_y(evsel->fd); thread++) {
- 			int *fd = FD(evsel, idx, thread);
- 			struct perf_mmap *map;
- 			struct perf_cpu cpu = perf_cpu_map__cpu(evsel->cpus, idx);
-@@ -415,7 +411,7 @@ int perf_evsel__read(struct perf_evsel *evsel, int cpu_map_idx, int thread,
- }
- 
- static int perf_evsel__ioctl(struct perf_evsel *evsel, int ioc, void *arg,
--			     int cpu_map_idx, int thread)
-+			     size_t cpu_map_idx, size_t thread)
- {
- 	int *fd = FD(evsel, cpu_map_idx, thread);
- 
-@@ -427,11 +423,9 @@ static int perf_evsel__ioctl(struct perf_evsel *evsel, int ioc, void *arg,
- 
- static int perf_evsel__run_ioctl(struct perf_evsel *evsel,
- 				 int ioc,  void *arg,
--				 int cpu_map_idx)
-+				 size_t cpu_map_idx)
- {
--	int thread;
--
--	for (thread = 0; thread < xyarray__max_y(evsel->fd); thread++) {
-+	for (size_t thread = 0; thread < xyarray__max_y(evsel->fd); thread++) {
- 		int err = perf_evsel__ioctl(evsel, ioc, arg, cpu_map_idx, thread);
- 
- 		if (err)
-@@ -463,10 +457,9 @@ int perf_evsel__enable_thread(struct perf_evsel *evsel, int thread)
- 
- int perf_evsel__enable(struct perf_evsel *evsel)
- {
--	int i;
- 	int err = 0;
- 
--	for (i = 0; i < xyarray__max_x(evsel->fd) && !err; i++)
-+	for (size_t i = 0; i < xyarray__max_x(evsel->fd) && !err; i++)
- 		err = perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_ENABLE, NULL, i);
- 	return err;
- }
-@@ -478,10 +471,9 @@ int perf_evsel__disable_cpu(struct perf_evsel *evsel, int cpu_map_idx)
- 
- int perf_evsel__disable(struct perf_evsel *evsel)
- {
--	int i;
- 	int err = 0;
- 
--	for (i = 0; i < xyarray__max_x(evsel->fd) && !err; i++)
-+	for (size_t i = 0; i < xyarray__max_x(evsel->fd) && !err; i++)
- 		err = perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_DISABLE, NULL, i);
- 	return err;
- }
-@@ -512,7 +504,7 @@ struct perf_event_attr *perf_evsel__attr(struct perf_evsel *evsel)
- 	return &evsel->attr;
- }
- 
--int perf_evsel__alloc_id(struct perf_evsel *evsel, int ncpus, int nthreads)
-+int perf_evsel__alloc_id(struct perf_evsel *evsel, size_t ncpus, size_t nthreads)
- {
- 	if (ncpus == 0 || nthreads == 0)
- 		return 0;
-diff --git a/tools/lib/perf/include/internal/cpumap.h b/tools/lib/perf/include/internal/cpumap.h
-index e2be2d17c32b..624c8163cc84 100644
---- a/tools/lib/perf/include/internal/cpumap.h
-+++ b/tools/lib/perf/include/internal/cpumap.h
-@@ -21,7 +21,7 @@ DECLARE_RC_STRUCT(perf_cpu_map) {
- 	struct perf_cpu	map[];
- };
- 
--struct perf_cpu_map *perf_cpu_map__alloc(int nr_cpus);
-+struct perf_cpu_map *perf_cpu_map__alloc(size_t nr_cpus);
- int perf_cpu_map__idx(const struct perf_cpu_map *cpus, struct perf_cpu cpu);
- bool perf_cpu_map__is_subset(const struct perf_cpu_map *a, const struct perf_cpu_map *b);
- 
-diff --git a/tools/lib/perf/include/internal/evsel.h b/tools/lib/perf/include/internal/evsel.h
-index ea78defa77d0..ed04a5d4b032 100644
---- a/tools/lib/perf/include/internal/evsel.h
-+++ b/tools/lib/perf/include/internal/evsel.h
-@@ -139,7 +139,7 @@ void perf_evsel__free_fd(struct perf_evsel *evsel);
- int perf_evsel__read_size(struct perf_evsel *evsel);
- int perf_evsel__apply_filter(struct perf_evsel *evsel, const char *filter);
- 
--int perf_evsel__alloc_id(struct perf_evsel *evsel, int ncpus, int nthreads);
-+int perf_evsel__alloc_id(struct perf_evsel *evsel, size_t ncpus, size_t nthreads);
- void perf_evsel__free_id(struct perf_evsel *evsel);
- 
- bool perf_evsel__attr_has_per_thread_sample_period(struct perf_evsel *evsel);
-diff --git a/tools/lib/perf/include/internal/lib.h b/tools/lib/perf/include/internal/lib.h
-index 85471a4b900f..60253b81699f 100644
---- a/tools/lib/perf/include/internal/lib.h
-+++ b/tools/lib/perf/include/internal/lib.h
-@@ -4,7 +4,7 @@
- 
- #include <sys/types.h>
- 
--extern unsigned int page_size;
-+extern size_t page_size;
- 
- ssize_t readn(int fd, void *buf, size_t n);
- ssize_t writen(int fd, const void *buf, size_t n);
-diff --git a/tools/lib/perf/include/internal/mmap.h b/tools/lib/perf/include/internal/mmap.h
-index 5f08cab61ece..4780691c65f3 100644
---- a/tools/lib/perf/include/internal/mmap.h
-+++ b/tools/lib/perf/include/internal/mmap.h
-@@ -23,7 +23,7 @@ typedef void (*libperf_unmap_cb_t)(struct perf_mmap *map);
-  */
- struct perf_mmap {
- 	void			*base;
--	int			 mask;
-+	size_t			 mask;
- 	int			 fd;
- 	struct perf_cpu		 cpu;
- 	refcount_t		 refcnt;
-@@ -40,7 +40,7 @@ struct perf_mmap {
- 
- struct perf_mmap_param {
- 	int	prot;
--	int	mask;
-+	size_t	mask;
- };
- 
- size_t perf_mmap__mmap_len(struct perf_mmap *map);
-diff --git a/tools/lib/perf/include/internal/threadmap.h b/tools/lib/perf/include/internal/threadmap.h
-index df748baf9eda..c223432be7a5 100644
---- a/tools/lib/perf/include/internal/threadmap.h
-+++ b/tools/lib/perf/include/internal/threadmap.h
-@@ -18,6 +18,6 @@ struct perf_thread_map {
- 	struct thread_map_data map[];
- };
- 
--struct perf_thread_map *perf_thread_map__realloc(struct perf_thread_map *map, int nr);
-+struct perf_thread_map *perf_thread_map__realloc(struct perf_thread_map *map, size_t nr);
- 
- #endif /* __LIBPERF_INTERNAL_THREADMAP_H */
-diff --git a/tools/lib/perf/include/internal/xyarray.h b/tools/lib/perf/include/internal/xyarray.h
-index f10af3da7b21..f8f6e1facf91 100644
---- a/tools/lib/perf/include/internal/xyarray.h
-+++ b/tools/lib/perf/include/internal/xyarray.h
-@@ -14,11 +14,11 @@ struct xyarray {
- 	char contents[] __aligned(8);
- };
- 
--struct xyarray *xyarray__new(int xlen, int ylen, size_t entry_size);
-+struct xyarray *xyarray__new(size_t xlen, size_t ylen, size_t entry_size);
- void xyarray__delete(struct xyarray *xy);
- void xyarray__reset(struct xyarray *xy);
- 
--static inline void *__xyarray__entry(struct xyarray *xy, int x, int y)
-+static inline void *__xyarray__entry(struct xyarray *xy, size_t x, size_t y)
- {
- 	return &xy->contents[x * xy->row_size + y * xy->entry_size];
- }
-@@ -30,12 +30,12 @@ static inline void *xyarray__entry(struct xyarray *xy, size_t x, size_t y)
- 	return __xyarray__entry(xy, x, y);
- }
- 
--static inline int xyarray__max_y(struct xyarray *xy)
-+static inline size_t xyarray__max_y(struct xyarray *xy)
- {
- 	return xy->max_y;
- }
- 
--static inline int xyarray__max_x(struct xyarray *xy)
-+static inline size_t xyarray__max_x(struct xyarray *xy)
- {
- 	return xy->max_x;
- }
-diff --git a/tools/lib/perf/include/perf/cpumap.h b/tools/lib/perf/include/perf/cpumap.h
-index 8c1ab0f9194e..51bf70f639ad 100644
---- a/tools/lib/perf/include/perf/cpumap.h
-+++ b/tools/lib/perf/include/perf/cpumap.h
-@@ -5,6 +5,7 @@
- #include <perf/core.h>
- #include <stdbool.h>
- #include <stdint.h>
-+#include <stdlib.h>
- 
- /** A wrapper around a CPU to avoid confusion with the perf_cpu_map's map's indices. */
- struct perf_cpu {
-@@ -47,7 +48,7 @@ LIBPERF_API void perf_cpu_map__put(struct perf_cpu_map *map);
-  * perf_cpu_map__cpu - get the CPU value at the given index. Returns -1 if index
-  *                     is invalid.
-  */
--LIBPERF_API struct perf_cpu perf_cpu_map__cpu(const struct perf_cpu_map *cpus, int idx);
-+LIBPERF_API struct perf_cpu perf_cpu_map__cpu(const struct perf_cpu_map *cpus, size_t idx);
  /**
-  * perf_cpu_map__nr - for an empty map returns 1, as perf_cpu_map__cpu returns a
-  *                    cpu of -1 for an invalid index, this makes an empty map
-diff --git a/tools/lib/perf/lib.c b/tools/lib/perf/lib.c
-index 696fb0ea67c6..b759f9caee7a 100644
---- a/tools/lib/perf/lib.c
-+++ b/tools/lib/perf/lib.c
-@@ -5,7 +5,7 @@
- #include <linux/kernel.h>
- #include <internal/lib.h>
+diff --git a/tools/perf/bench/inject-buildid.c b/tools/perf/bench/inject-buildid.c
+index f55c07e4be94..b78de817e721 100644
+--- a/tools/perf/bench/inject-buildid.c
++++ b/tools/perf/bench/inject-buildid.c
+@@ -175,7 +175,7 @@ static ssize_t synthesize_mmap(struct bench_data *data, struct bench_dso *dso, u
+ 	union perf_event event;
+ 	size_t len = offsetof(struct perf_record_mmap2, filename);
+ 	u64 *id_hdr_ptr = (void *)&event;
+-	int ts_idx;
++	size_t ts_idx;
  
--unsigned int page_size;
-+size_t page_size;
+ 	len += roundup(strlen(dso->name) + 1, 8) + bench_id_hdr_size;
  
- static ssize_t ion(bool is_read, int fd, void *buf, size_t n)
+@@ -250,14 +250,14 @@ static void *data_reader(void *arg)
+ 	struct bench_data *data = arg;
+ 	char buf[8192];
+ 	int flag;
+-	int n;
+ 
+ 	flag = fcntl(data->output_pipe[0], F_GETFL);
+ 	fcntl(data->output_pipe[0], F_SETFL, flag | O_NONBLOCK);
+ 
+ 	/* read out data from child */
+ 	while (true) {
+-		n = read(data->output_pipe[0], buf, sizeof(buf));
++		ssize_t n = read(data->output_pipe[0], buf, sizeof(buf));
++
+ 		if (n > 0)
+ 			continue;
+ 		if (n == 0)
+@@ -451,7 +451,7 @@ static void do_inject_loop(struct bench_data *data, bool build_id_all)
+ static int do_inject_loops(struct bench_data *data)
  {
-diff --git a/tools/lib/perf/mmap.c b/tools/lib/perf/mmap.c
-index c1a51d925e0e..3af5150f6ccf 100644
---- a/tools/lib/perf/mmap.c
-+++ b/tools/lib/perf/mmap.c
-@@ -109,11 +109,11 @@ void perf_mmap__consume(struct perf_mmap *map)
- 		perf_mmap__put(map);
+ 
+-	srand(time(NULL));
++	srand((int)time(NULL));
+ 	symbol__init(NULL);
+ 
+ 	bench_sample_type  = PERF_SAMPLE_IDENTIFIER | PERF_SAMPLE_IP;
+diff --git a/tools/perf/bench/mem-functions.c b/tools/perf/bench/mem-functions.c
+index 19d45c377ac1..672b76eb8f99 100644
+--- a/tools/perf/bench/mem-functions.c
++++ b/tools/perf/bench/mem-functions.c
+@@ -82,7 +82,7 @@ static int init_cycles(void)
+ 
+ static u64 get_cycles(void)
+ {
+-	int ret;
++	ssize_t ret;
+ 	u64 clk;
+ 
+ 	ret = read(cycles_fd, &clk, sizeof(u64));
+diff --git a/tools/perf/bench/pmu-scan.c b/tools/perf/bench/pmu-scan.c
+index 9e4d36486f62..4a885d4bd279 100644
+--- a/tools/perf/bench/pmu-scan.c
++++ b/tools/perf/bench/pmu-scan.c
+@@ -19,8 +19,8 @@ static unsigned int iterations = 100;
+ 
+ struct pmu_scan_result {
+ 	char *name;
+-	int nr_aliases;
+-	int nr_formats;
++	size_t nr_aliases;
++	size_t nr_formats;
+ 	int nr_caps;
+ 	bool is_core;
+ };
+@@ -63,7 +63,7 @@ static int save_result(void)
+ 		list_for_each(list, &pmu->format)
+ 			r->nr_formats++;
+ 
+-		pr_debug("pmu[%d] name=%s, nr_caps=%d, nr_aliases=%d, nr_formats=%d\n",
++		pr_debug("pmu[%d] name=%s, nr_caps=%d, nr_aliases=%zu, nr_formats=%zu\n",
+ 			nr_pmus, r->name, r->nr_caps, r->nr_aliases, r->nr_formats);
+ 		nr_pmus++;
+ 	}
+@@ -77,7 +77,7 @@ static int check_result(bool core_only)
+ 	struct pmu_scan_result *r;
+ 	struct perf_pmu *pmu;
+ 	struct list_head *list;
+-	int nr;
++	size_t nr;
+ 
+ 	for (int i = 0; i < nr_pmus; i++) {
+ 		r = &results[i];
+@@ -98,7 +98,7 @@ static int check_result(bool core_only)
+ 
+ 		nr = perf_pmu__num_events(pmu);
+ 		if (nr != r->nr_aliases) {
+-			pr_err("Unmatched number of event aliases in %s: expect %d vs got %d\n",
++			pr_err("Unmatched number of event aliases in %s: expect %zu vs got %zu\n",
+ 				pmu->name, r->nr_aliases, nr);
+ 			return -1;
+ 		}
+@@ -107,7 +107,7 @@ static int check_result(bool core_only)
+ 		list_for_each(list, &pmu->format)
+ 			nr++;
+ 		if (nr != r->nr_formats) {
+-			pr_err("Unmatched number of event formats in %s: expect %d vs got %d\n",
++			pr_err("Unmatched number of event formats in %s: expect %zu vs got %zu\n",
+ 				pmu->name, r->nr_formats, nr);
+ 			return -1;
+ 		}
+diff --git a/tools/perf/bench/sched-messaging.c b/tools/perf/bench/sched-messaging.c
+index 93dcd9dba3d0..a2eb47944f44 100644
+--- a/tools/perf/bench/sched-messaging.c
++++ b/tools/perf/bench/sched-messaging.c
+@@ -102,7 +102,7 @@ static void *sender(struct sender_context *ctx)
+ 	/* Now pump to every receiver. */
+ 	for (i = 0; i < nr_loops; i++) {
+ 		for (j = 0; j < ctx->num_fds; j++) {
+-			int ret, done = 0;
++			ssize_t ret, done = 0;
+ 
+ again:
+ 			ret = write(ctx->out_fds[j], data + done,
+@@ -133,7 +133,7 @@ static void *receiver(struct receiver_context* ctx)
+ 	/* Receive them all */
+ 	for (i = 0; i < ctx->num_packets; i++) {
+ 		char data[DATASIZE];
+-		int ret, done = 0;
++		ssize_t ret, done = 0;
+ 
+ again:
+ 		ret = read(ctx->in_fds[0], data + done, DATASIZE - done);
+diff --git a/tools/perf/bench/sched-pipe.c b/tools/perf/bench/sched-pipe.c
+index 70139036d68f..b847213fd616 100644
+--- a/tools/perf/bench/sched-pipe.c
++++ b/tools/perf/bench/sched-pipe.c
+@@ -102,7 +102,8 @@ static const char * const bench_sched_pipe_usage[] = {
+ static int enter_cgroup(int nr)
+ {
+ 	char buf[32];
+-	int fd, len, ret;
++	int fd;
++	ssize_t ret, len;
+ 	int saved_errno;
+ 	struct cgroup *cgrp;
+ 	pid_t pid;
+@@ -118,7 +119,7 @@ static int enter_cgroup(int nr)
+ 	cgrp = cgrps[nr];
+ 
+ 	if (threaded)
+-		pid = syscall(__NR_gettid);
++		pid = (pid_t)syscall(__NR_gettid);
+ 	else
+ 		pid = getpid();
+ 
+@@ -172,23 +173,25 @@ static void exit_cgroup(int nr)
+ 
+ static inline int read_pipe(struct thread_data *td)
+ {
+-	int ret, m;
++	ssize_t ret;
++	int m;
+ retry:
+ 	if (nonblocking) {
+ 		ret = epoll_wait(td->epoll_fd, &td->epoll_ev, 1, -1);
+ 		if (ret < 0)
+-			return ret;
++			return (int)ret;
+ 	}
+ 	ret = read(td->pipe_read, &m, sizeof(int));
+ 	if (nonblocking && ret < 0 && errno == EWOULDBLOCK)
+ 		goto retry;
+-	return ret;
++	return (int)ret;
  }
  
--static int overwrite_rb_find_range(void *buf, int mask, u64 *start, u64 *end)
-+static int overwrite_rb_find_range(void *buf, size_t mask, u64 *start, u64 *end)
+ static void *worker_thread(void *__tdata)
  {
- 	struct perf_event_header *pheader;
- 	u64 evt_head = *start;
--	int size = mask + 1;
-+	size_t size = mask + 1;
+ 	struct thread_data *td = __tdata;
+-	int i, ret, m = 0;
++	int i, m = 0;
++	ssize_t ret;
  
- 	pr_debug2("%s: buf=%p, start=%"PRIx64"\n", __func__, buf, *start);
- 	pheader = (struct perf_event_header *)(buf + (*start & mask));
-@@ -157,7 +157,7 @@ static int __perf_mmap__read_init(struct perf_mmap *md)
- 	if ((md->end - md->start) < md->flush)
- 		return -EAGAIN;
+ 	ret = enter_cgroup(td->nr);
+ 	if (ret < 0) {
+diff --git a/tools/perf/bench/sched-seccomp-notify.c b/tools/perf/bench/sched-seccomp-notify.c
+index 269c1f4a6852..4f0c68b366e3 100644
+--- a/tools/perf/bench/sched-seccomp-notify.c
++++ b/tools/perf/bench/sched-seccomp-notify.c
+@@ -43,7 +43,7 @@ static const char * const bench_seccomp_usage[] = {
  
--	size = md->end - md->start;
-+	size = (unsigned long)(md->end - md->start);
- 	if (size > (unsigned long)(md->mask) + 1) {
- 		if (!md->overwrite) {
- 			WARN_ONCE(1, "failed to keep up with mmap data. (warn only once)\n");
-@@ -212,7 +212,7 @@ static union perf_event *perf_mmap__read(struct perf_mmap *map,
+ static int seccomp(unsigned int op, unsigned int flags, void *args)
  {
- 	unsigned char *data = map->base + page_size;
- 	union perf_event *event = NULL;
--	int diff = end - *startp;
-+	s64 diff = end - *startp;
- 
- 	if (diff >= (int)sizeof(event->header)) {
- 		size_t size;
-@@ -228,8 +228,7 @@ static union perf_event *perf_mmap__read(struct perf_mmap *map,
- 		 * be inside due to u64 alignment of output.
- 		 */
- 		if ((*startp & map->mask) + size != ((*startp + size) & map->mask)) {
--			unsigned int offset = *startp;
--			unsigned int len = size, cpy;
-+			u64 offset = *startp, len = size, cpy;
- 			void *dst = map->event_copy;
- 
- 			if (size > map->event_copy_sz) {
-@@ -242,7 +241,7 @@ static union perf_event *perf_mmap__read(struct perf_mmap *map,
- 
- 			do {
- 				cpy = min(map->mask + 1 - (offset & map->mask), len);
--				memcpy(dst, &data[offset & map->mask], cpy);
-+				memcpy(dst, &data[offset & map->mask], (size_t)cpy);
- 				offset += cpy;
- 				dst += cpy;
- 				len -= cpy;
-diff --git a/tools/lib/perf/threadmap.c b/tools/lib/perf/threadmap.c
-index 07968f3ea093..21c50737bbc2 100644
---- a/tools/lib/perf/threadmap.c
-+++ b/tools/lib/perf/threadmap.c
-@@ -7,7 +7,7 @@
- #include <asm/bug.h>
- #include <stdio.h>
- 
--static void perf_thread_map__reset(struct perf_thread_map *map, int start, int nr)
-+static void perf_thread_map__reset(struct perf_thread_map *map, size_t start, size_t nr)
- {
- 	size_t size = (nr - start) * sizeof(map->map[0]);
- 
-@@ -15,7 +15,7 @@ static void perf_thread_map__reset(struct perf_thread_map *map, int start, int n
- 	map->err_thread = -1;
+-	return syscall(__NR_seccomp, op, flags, args);
++	return (int)syscall(__NR_seccomp, op, flags, args);
  }
  
--struct perf_thread_map *perf_thread_map__realloc(struct perf_thread_map *map, int nr)
-+struct perf_thread_map *perf_thread_map__realloc(struct perf_thread_map *map, size_t nr)
- {
- 	size_t size = sizeof(*map) + sizeof(map->map[0]) * nr;
- 	int start = map ? map->nr : 0;
-diff --git a/tools/lib/perf/xyarray.c b/tools/lib/perf/xyarray.c
-index dcd901d154bb..35b2088da9c4 100644
---- a/tools/lib/perf/xyarray.c
-+++ b/tools/lib/perf/xyarray.c
-@@ -4,7 +4,7 @@
- #include <stdlib.h>
- #include <string.h>
+ static int user_notif_syscall(int nr, unsigned int flags)
+diff --git a/tools/perf/bench/synthesize.c b/tools/perf/bench/synthesize.c
+index 9b333276cbdb..484ba825fcf4 100644
+--- a/tools/perf/bench/synthesize.c
++++ b/tools/perf/bench/synthesize.c
+@@ -120,7 +120,7 @@ static int run_single_threaded(void)
+ 	session = perf_session__new(NULL, NULL);
+ 	if (IS_ERR(session)) {
+ 		pr_err("Session creation failed.\n");
+-		return PTR_ERR(session);
++		return (int)PTR_ERR(session);
+ 	}
+ 	threads = thread_map__new_by_pid(getpid());
+ 	if (!threads) {
+@@ -163,7 +163,7 @@ static int do_run_multi_threaded(struct target *target,
+ 	for (i = 0; i < multi_iterations; i++) {
+ 		session = perf_session__new(NULL, NULL);
+ 		if (IS_ERR(session))
+-			return PTR_ERR(session);
++			return (int)PTR_ERR(session);
  
--struct xyarray *xyarray__new(int xlen, int ylen, size_t entry_size)
-+struct xyarray *xyarray__new(size_t xlen, size_t ylen, size_t entry_size)
+ 		atomic_set(&event_count, 0);
+ 		gettimeofday(&start, NULL);
+@@ -210,7 +210,7 @@ static int run_multi_threaded(void)
+ 	int err;
+ 
+ 	if (max_threads == UINT_MAX)
+-		max_threads = sysconf(_SC_NPROCESSORS_ONLN);
++		max_threads = (int)sysconf(_SC_NPROCESSORS_ONLN);
+ 
+ 	puts(
+ "Computing performance of multi threaded perf event synthesis by\n"
+diff --git a/tools/perf/builtin-bench.c b/tools/perf/builtin-bench.c
+index 2c1a9f3d847a..2f6a34908273 100644
+--- a/tools/perf/builtin-bench.c
++++ b/tools/perf/builtin-bench.c
+@@ -212,7 +212,7 @@ static int bench_str2int(const char *str)
+ static int run_bench(const char *coll_name, const char *bench_name, bench_fn_t fn,
+ 		     int argc, const char **argv)
  {
- 	size_t row_size = ylen * entry_size;
- 	struct xyarray *xy = zalloc(sizeof(*xy) + xlen * row_size);
+-	int size;
++	size_t size;
+ 	char *name;
+ 	int ret;
+ 
 -- 
 2.49.0.504.g3bcea36a83-goog
 
