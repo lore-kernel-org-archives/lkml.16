@@ -1,131 +1,133 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A27CB20AF8A
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 15:29:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3DAE1EE019
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 15:33:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743521394; cv=none; b=gxYhzwjzLSbW9ihtKQZw683S7pbVgEJM9R2VJqjrEO0a3fzMbtgXoptbGuIWqrDoCkjQ2AAwwWP5OCdM3i4Dzgd8Aws1L5BdIpRBts2CnpMECdn1qV134WSoazF8pzRHl9pMEPwnAR04kFb1TVaHU2oeU/ZdjbXU3I26E3DOScc=
+	t=1743521602; cv=none; b=JZTRthg85GgxcbKzNicZmm69ysXZMuHLw8SDLQRPcuffm9M5uFE7a/t5n+F9bheaRnqqV6wTy4ZhpGVR/bd6L0CFUxj7qmaGPZoqnIGP3kZOstYCluP26ZQAin62+5XrRL2i/hWHJhgmGq1yl1HAx9KA8zp4mivhqhctWoDMYKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743521394; c=relaxed/simple;
-	bh=S75cGONzrP0Lj6oXieyprst7HYFKeDFMZZ+9tKmR170=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YXgEbCMrpqnnKL8inHtOAV3JodFe24G8YNCHVgusyDVBmb4yflqqDe0TOEFMo9zR9j7ju+Yw0nJz+wUg45sejMV54bKAgJOhxiCiX5gN4fuQ2t2cdX5gKGIQKgEprcUJT6lcuWedkojNynA+v8Mym2JcDmg5CT9/K6mHjbbuPt0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3248714BF;
-	Tue,  1 Apr 2025 08:29:54 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7CED03F694;
-	Tue,  1 Apr 2025 08:29:50 -0700 (PDT)
-Date: Tue, 1 Apr 2025 16:29:45 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: James Clark <james.clark@linaro.org>
-Cc: Jie Gan <quic_jiegan@quicinc.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Mike Leach <mike.leach@linaro.org>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [PATCH v1 9/9] coresight: Consolidate clock enabling
-Message-ID: <20250401152945.GE115840@e132581.arm.com>
-References: <20250327113803.1452108-1-leo.yan@arm.com>
- <20250327113803.1452108-10-leo.yan@arm.com>
- <b9046586-c884-484f-a308-9f256d3d99f5@linaro.org>
+	s=arc-20240116; t=1743521602; c=relaxed/simple;
+	bh=t+Qib5nHnDXjaJVocaTTtqnSJieem+VXXFLu3b2856M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CS1hsZ3wrlA0z0gpWvcHhKPTn9Iuzeb76TeEJUIf8YCbF7hPUZx1J6u3YlpJS0nPOaaOEiw9gVXlKDwZ9aa9dzcqcu2/DgjQkZd2d6d4s42chCcP8qp8I1Hzm5vIurPng/Xjz1+tJEMweSR8qYYAGg1DickZRcoAFXO9VnKwFlw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=CC+Q2tvS; arc=none smtp.client-ip=209.85.160.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="CC+Q2tvS"
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-477296dce76so51364981cf.3
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 08:33:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google; t=1743521599; x=1744126399; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=t+Qib5nHnDXjaJVocaTTtqnSJieem+VXXFLu3b2856M=;
+        b=CC+Q2tvShJN7qO5N+sWoFKT5/UApGhIEDpGdEnuWuB46XjhF7tPqWf+nXoydnNBGlk
+         8XPLhP39jtwkuvZfcC1KQ8SE2YRZsNK5fchVQlphu4UyGank/hdBFHp3cCtoNYR1d3LZ
+         Iean5Wm4zOCV0rOf0LRDsbO+vZVWYHcm8WljI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743521599; x=1744126399;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=t+Qib5nHnDXjaJVocaTTtqnSJieem+VXXFLu3b2856M=;
+        b=F786EvyIOJU6R0Msz9GuUbYoeGBg4Gjd3oz27IacCg5ul5xMXxRSzluV+o5ytI0Jb0
+         9Fg/fuwyYxEDvo+jXNcjLt4w3ZCV/2HQSReKu/IZSdQMHAUENPsAUrpOuZDfK1AO2/h+
+         07+eF2vmIN14hx4XaOxSqkvyLAbuSnHgXbsEyz2Ob887npab/DRhWDn/oaffPsVfvGtP
+         8r/HxKcyRRzSopCghdeI14AG1YIJR3RJCsOkPdIhambtXYLeDYyzirbaVS1bpODmVhqF
+         lCUlerVWwYyKGnjFcEF0TENsN+Z190L6GYeuXLPYD4WUfa8wGx+m94N/qqA9ZmgtgtJZ
+         7MUg==
+X-Forwarded-Encrypted: i=1; AJvYcCVg9aRffK3h7hGLnLfdpAEiM3l9LQMnQFd2GeGQkGYZW9TbJzvDH4u2fxGr7A4uqnvJvOdQe/wSwBQCLeo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwQPgUz0WqRuHNBL2t1gNOQ2z6XjRBJPj5ABYdMgP7D6wRSwEnS
+	fPbiRrwGkG/rlz+Eqbjml9nwf9YchU9nm/uwYxmFOpOcDhe5BEf+9AbHOpVm6r1CVwwYY1HpeSE
+	YdN6dDED6uVQCpdUTW5Btb2Vg/eeCc94YupQZRIgTgEdum/os
+X-Gm-Gg: ASbGncuQ37a4rHCEoUJOZMghZvzaLZeCRSZCCewWdEUeSvd/VUrEEmGNr/Gi2rUblTP
+	wnSJw1YsRa1aetyhEhYoDmptwKwTI/YGpsaKv9S1R84HqejiFRB614d5cjeVQieiPEhllQQuQfT
+	JRPG7GqSxQqT4kdh5rsL9EL7yzkUeb1CYdlAj3
+X-Google-Smtp-Source: AGHT+IHa116vmL2Z5Aq2fV2WY+Y2v/VkQaYSGka903hF+BoTbYKsBMlvaSypu1+9o1neeUM2mpRF+p5KebfED8HkIdg=
+X-Received: by 2002:ac8:5cd2:0:b0:476:91a5:c832 with SMTP id
+ d75a77b69052e-477f7aeaf03mr234289051cf.32.1743521599578; Tue, 01 Apr 2025
+ 08:33:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b9046586-c884-484f-a308-9f256d3d99f5@linaro.org>
+References: <20250314221701.12509-1-jaco@uls.co.za> <20250401142831.25699-1-jaco@uls.co.za>
+ <20250401142831.25699-3-jaco@uls.co.za> <CAJfpegtOGWz_r=7dbQiCh2wqjKh59BqzqJ0ruhtYtsYBB+GG2Q@mail.gmail.com>
+ <19df312f-06a2-4e71-960a-32bc952b0ed2@uls.co.za>
+In-Reply-To: <19df312f-06a2-4e71-960a-32bc952b0ed2@uls.co.za>
+From: Miklos Szeredi <miklos@szeredi.hu>
+Date: Tue, 1 Apr 2025 17:33:06 +0200
+X-Gm-Features: AQ5f1JqNKTmfouI8hy05YpWvpZNhzZZXyko9L4FgdKti0LZRHnYUJqPtKnHWr74
+Message-ID: <CAJfpegseKMRLpu3-yS6PeU2aTmh_qKyAvJUWud_SLz1aCHY_tw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] fuse: Adjust readdir() buffer to requesting buffer size.
+To: Jaco Kroon <jaco@uls.co.za>
+Cc: bernd.schubert@fastmail.fm, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, christophe.jaillet@wanadoo.fr, 
+	joannelkoong@gmail.com, rdunlap@infradead.org, trapexit@spawn.link, 
+	david.laight.linux@gmail.com
+Content-Type: multipart/mixed; boundary="0000000000009a16360631b941a6"
 
-On Tue, Apr 01, 2025 at 03:58:42PM +0100, James Clark wrote:
+--0000000000009a16360631b941a6
+Content-Type: text/plain; charset="UTF-8"
 
-[...]
+On Tue, 1 Apr 2025 at 17:04, Jaco Kroon <jaco@uls.co.za> wrote:
 
-> >   /*
-> > - * Attempt to find and enable "APB clock" for the given device
-> > + * Attempt to find and enable programming clock (pclk) and trace clock (atclk)
-> > + * for the given device.
-> >    *
-> > - * Returns:
-> > + * The AMBA bus driver will cover the pclk, to avoid duplicate operations,
-> > + * skip to get and enable the pclk for an AMBA device.
-> >    *
-> > - * clk   - Clock is found and enabled
-> > - * NULL  - Clock is not needed as it is managed by the AMBA bus driver
-> > - * ERROR - Clock is found but failed to enable
-> > + * atclk is an optional clock, it will be only enabled when it is existed.
-> > + * Otherwise, a NULL pointer will be returned to caller.
-> > + *
-> > + * Returns: '0' on Success; Error code otherwise.
-> >    */
-> > -static inline struct clk *coresight_get_enable_apb_pclk(struct device *dev)
-> > +static inline int coresight_get_enable_clocks(struct device *dev,
-> > +					      struct clk **pclk,
-> > +					      struct clk **atclk)
-> 
-> This function has grown a bit now, probably best to remove it from the
-> header and export it instead.
+> Because fuse_simple_request via fuse_args_pages (ap) via fuse_io_args
+> (ia) expects folios and changing that is more than what I'm capable off,
+> and has larger overall impact.
 
-Sure.  I can move this function into coresight-core.c file.
-
-> >   {
-> > -	struct clk *pclk = NULL;
-> > +	WARN_ON(!pclk);
-> >   	if (!dev_is_amba(dev)) {
-> > -		pclk = devm_clk_get_enabled(dev, "apb_pclk");
-> > -		if (IS_ERR(pclk))
-> > -			pclk = devm_clk_get_enabled(dev, "apb");
-> > +		*pclk = devm_clk_get_enabled(dev, "apb_pclk");
-> > +		if (IS_ERR(*pclk))
-> > +			*pclk = devm_clk_get_enabled(dev, "apb");
-> > +		if (IS_ERR(*pclk))
-> > +			return PTR_ERR(*pclk);
-> > +	} else {
-> > +		/* Don't enable pclk for an AMBA device */
-> > +		*pclk = NULL;
-> 
-> Now the "apb" clock won't be enabled for amba devices. I'm assuming that's
-> fine if the clock was always called "apb_pclk" for them, but the commit that
-> added the new clock name didn't specify any special casing either.
-
-> Can we have a comment that says it's deliberate? But the more I think about
-> it the more I'm confused why CTCU needed a different clock name to be
-> defined, when all the other Coresight devices use "apb_pclk".
-
-Yes, seems to me, "apb" clock is the same thing with "apb_pclk".  As
-CTCU DT binding has been merged, for backward compatible, we cannot
-remove it now.
-
-CTCU driver only supports static probe, it is never probed by AMBA bus
-driver.  I think this is another reason that "apb_pclk" is not used in
-CTCU driver.  I can add a comment like:
-
-  "apb_pclk" is the default clock name used by the AMBA bus driver,
-  while "apb" is used only by the CTCU driver.  A CoreSight driver
-  should use "apb_pclk" as its programming clock name.
+Attaching a minimally tested patch.
 
 Thanks,
-Leo
+Miklos
 
-> >   	}
-> > -	return pclk;
-> > +	if (atclk) {
-> > +		*atclk = devm_clk_get_optional_enabled(dev, "atclk");
-> > +		if (IS_ERR(*atclk))
-> > +			return PTR_ERR(*atclk);
-> > +	}
-> > +
-> > +	return 0;
-> >   }
-> >   #define CORESIGHT_PIDRn(i)	(0xFE0 + ((i) * 4))
-> 
+--0000000000009a16360631b941a6
+Content-Type: text/x-patch; charset="US-ASCII"; name="fuse-kvmalloc-readdir-buf.patch"
+Content-Disposition: attachment; filename="fuse-kvmalloc-readdir-buf.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_m8ynpz2y0>
+X-Attachment-Id: f_m8ynpz2y0
+
+ZGlmZiAtLWdpdCBhL2ZzL2Z1c2UvcmVhZGRpci5jIGIvZnMvZnVzZS9yZWFkZGlyLmMKaW5kZXgg
+MTdjZTk2MzZhMmIxLi4xOGUzOTUwZTVmZjUgMTAwNjQ0Ci0tLSBhL2ZzL2Z1c2UvcmVhZGRpci5j
+CisrKyBiL2ZzL2Z1c2UvcmVhZGRpci5jCkBAIC0zMzIsMzUgKzMzMiwzMSBAQCBzdGF0aWMgaW50
+IGZ1c2VfcmVhZGRpcl91bmNhY2hlZChzdHJ1Y3QgZmlsZSAqZmlsZSwgc3RydWN0IGRpcl9jb250
+ZXh0ICpjdHgpCiB7CiAJaW50IHBsdXM7CiAJc3NpemVfdCByZXM7Ci0Jc3RydWN0IGZvbGlvICpm
+b2xpbzsKIAlzdHJ1Y3QgaW5vZGUgKmlub2RlID0gZmlsZV9pbm9kZShmaWxlKTsKIAlzdHJ1Y3Qg
+ZnVzZV9tb3VudCAqZm0gPSBnZXRfZnVzZV9tb3VudChpbm9kZSk7CiAJc3RydWN0IGZ1c2VfaW9f
+YXJncyBpYSA9IHt9OwotCXN0cnVjdCBmdXNlX2FyZ3NfcGFnZXMgKmFwID0gJmlhLmFwOwotCXN0
+cnVjdCBmdXNlX2ZvbGlvX2Rlc2MgZGVzYyA9IHsgLmxlbmd0aCA9IFBBR0VfU0laRSB9OworCXN0
+cnVjdCBmdXNlX2FyZ3MgKmFyZ3MgPSAmaWEuYXAuYXJnczsKKwl2b2lkICpidWY7CisJc2l6ZV90
+IGJ1ZnNpemUgPSAxMzEwNzI7CiAJdTY0IGF0dHJfdmVyc2lvbiA9IDAsIGV2aWN0X2N0ciA9IDA7
+CiAJYm9vbCBsb2NrZWQ7CiAKLQlmb2xpbyA9IGZvbGlvX2FsbG9jKEdGUF9LRVJORUwsIDApOwot
+CWlmICghZm9saW8pCisJYnVmID0ga3ZtYWxsb2MoYnVmc2l6ZSwgR0ZQX0tFUk5FTCk7CisJaWYg
+KCFidWYpCiAJCXJldHVybiAtRU5PTUVNOwogCisJYXJncy0+b3V0X2FyZ3NbMF0udmFsdWUgPSBi
+dWY7CisKIAlwbHVzID0gZnVzZV91c2VfcmVhZGRpcnBsdXMoaW5vZGUsIGN0eCk7Ci0JYXAtPmFy
+Z3Mub3V0X3BhZ2VzID0gdHJ1ZTsKLQlhcC0+bnVtX2ZvbGlvcyA9IDE7Ci0JYXAtPmZvbGlvcyA9
+ICZmb2xpbzsKLQlhcC0+ZGVzY3MgPSAmZGVzYzsKIAlpZiAocGx1cykgewogCQlhdHRyX3ZlcnNp
+b24gPSBmdXNlX2dldF9hdHRyX3ZlcnNpb24oZm0tPmZjKTsKIAkJZXZpY3RfY3RyID0gZnVzZV9n
+ZXRfZXZpY3RfY3RyKGZtLT5mYyk7Ci0JCWZ1c2VfcmVhZF9hcmdzX2ZpbGwoJmlhLCBmaWxlLCBj
+dHgtPnBvcywgUEFHRV9TSVpFLAotCQkJCSAgICBGVVNFX1JFQURESVJQTFVTKTsKKwkJZnVzZV9y
+ZWFkX2FyZ3NfZmlsbCgmaWEsIGZpbGUsIGN0eC0+cG9zLCBidWZzaXplLCBGVVNFX1JFQURESVJQ
+TFVTKTsKIAl9IGVsc2UgewotCQlmdXNlX3JlYWRfYXJnc19maWxsKCZpYSwgZmlsZSwgY3R4LT5w
+b3MsIFBBR0VfU0laRSwKLQkJCQkgICAgRlVTRV9SRUFERElSKTsKKwkJZnVzZV9yZWFkX2FyZ3Nf
+ZmlsbCgmaWEsIGZpbGUsIGN0eC0+cG9zLCBidWZzaXplLCBGVVNFX1JFQURESVIpOwogCX0KIAls
+b2NrZWQgPSBmdXNlX2xvY2tfaW5vZGUoaW5vZGUpOwotCXJlcyA9IGZ1c2Vfc2ltcGxlX3JlcXVl
+c3QoZm0sICZhcC0+YXJncyk7CisJcmVzID0gZnVzZV9zaW1wbGVfcmVxdWVzdChmbSwgYXJncyk7
+CiAJZnVzZV91bmxvY2tfaW5vZGUoaW5vZGUsIGxvY2tlZCk7CiAJaWYgKHJlcyA+PSAwKSB7CiAJ
+CWlmICghcmVzKSB7CkBAIC0zNjksMTYgKzM2NSwxNCBAQCBzdGF0aWMgaW50IGZ1c2VfcmVhZGRp
+cl91bmNhY2hlZChzdHJ1Y3QgZmlsZSAqZmlsZSwgc3RydWN0IGRpcl9jb250ZXh0ICpjdHgpCiAJ
+CQlpZiAoZmYtPm9wZW5fZmxhZ3MgJiBGT1BFTl9DQUNIRV9ESVIpCiAJCQkJZnVzZV9yZWFkZGly
+X2NhY2hlX2VuZChmaWxlLCBjdHgtPnBvcyk7CiAJCX0gZWxzZSBpZiAocGx1cykgewotCQkJcmVz
+ID0gcGFyc2VfZGlycGx1c2ZpbGUoZm9saW9fYWRkcmVzcyhmb2xpbyksIHJlcywKLQkJCQkJCWZp
+bGUsIGN0eCwgYXR0cl92ZXJzaW9uLAorCQkJcmVzID0gcGFyc2VfZGlycGx1c2ZpbGUoYnVmLCBy
+ZXMsIGZpbGUsIGN0eCwgYXR0cl92ZXJzaW9uLAogCQkJCQkJZXZpY3RfY3RyKTsKIAkJfSBlbHNl
+IHsKLQkJCXJlcyA9IHBhcnNlX2RpcmZpbGUoZm9saW9fYWRkcmVzcyhmb2xpbyksIHJlcywgZmls
+ZSwKLQkJCQkJICAgIGN0eCk7CisJCQlyZXMgPSBwYXJzZV9kaXJmaWxlKGJ1ZiwgcmVzLCBmaWxl
+LCBjdHgpOwogCQl9CiAJfQogCi0JZm9saW9fcHV0KGZvbGlvKTsKKwlrdmZyZWUoYnVmKTsKIAlm
+dXNlX2ludmFsaWRhdGVfYXRpbWUoaW5vZGUpOwogCXJldHVybiByZXM7CiB9Cg==
+--0000000000009a16360631b941a6--
