@@ -1,135 +1,408 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bayard.4d2.org (bayard.4d2.org [155.254.16.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CACD31C8612
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 17:23:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0008320E33F;
+	Tue,  1 Apr 2025 17:24:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=155.254.16.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743528202; cv=none; b=iyIS5Sj2+ecwTRRkAgi0CxZ5rCk2YdtQW9EwRdy6TZ3wWiCjHFJGX7wm1hGjlziIQpivCn33gmZGcv4xBOW7HOGJyOX4JrLuRk8UKC3UGrYyA+yyD5rZnnotJvzK1pZBQKfSheRsXOZBPOpUNgNtKqaGbpP5yGdIB0lhmbBLzDM=
+	t=1743528297; cv=none; b=jsQGEgePD6THgYPQaG51AIuS0stf2B3z6OwLJnjxhKr5HRVk3WTnpr7kLmvgMVZwa4pVS1sF3hY2HJTL3VdZ27tFtATn/mEEke7CjZmPTiOoMLIuYg296cpCJRZktKr5CNQJ7axkC/YyH0bcR1u240lEhGvQOW7RJBt/GZVEjRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743528202; c=relaxed/simple;
-	bh=Y2NVahqoWXbrwHtxeCMK+uMCUCqvZjwCroDdCq/+QLk=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=AE46TZUqvD9bFcvzfiP5+yHiPYJEhdxn2YhnnhcQwrcCcrY5iesltN4LOde0ftwbB9z/CPSb6k0MDX2I7YXY0709PiUvK9jqJ5NRmAcNUT0cqWT5n1oJoyiob1W89BZ/blqgYWljpODCqcixk8l9UlSo71rZTZ5hIrXloHQFFdk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pcn3R1Kc; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com
+	s=arc-20240116; t=1743528297; c=relaxed/simple;
+	bh=FeUiLSUe8wj7dt0M38twYoeyAWpif9rAC5K+gAkMce4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=sbGMdJtdJQxgMEiQj6j7Kokkj2XeMYIpErWSpp7uKYFk3uuQckCsLp86Q7qvf/R/WbWiM4HRipPdOg329vEsu9Q7VYgFXK0eF7aU8EfvcrJ1zHMMlnby9xurKZPT8C+2oEriy7A3q/qWg8Ax8fkcfCd0kRGJLLWSPFITFiHJooQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=4d2.org; spf=pass smtp.mailfrom=4d2.org; dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b=qtO9GA4/; dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b=lRRI8g8u; arc=none smtp.client-ip=155.254.16.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=4d2.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=4d2.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pcn3R1Kc"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-224364f2492so100603235ad.3
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 10:23:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743528200; x=1744133000; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=QyQc1obK807oGm0cfb/LDMQ0LSKhQg0xMePPIJKuS8c=;
-        b=pcn3R1KcVM9TcevdCch3Kcg9lr31ors9WVdlRpWmg6844kjP3vCyLo5c8pD/ZR3//e
-         kg3Rm3t/zpy7lkeE36s7g00lr52UYETnJCdL8YdyM5aNyH94jny1oqGihJlcJcv8ycFd
-         z2qHD1lKLtFcO7r/dEzOm18AzbzQUywjOzP1RYT6uTmo1ZNr43GMBjh8gd1PqPWs6OE6
-         b5X2H6SXK1oyVTnGeThXUjTA96ALCOFesLHjHz7h4adA+bzKLidVTzRP5gRxShcpmAen
-         kOXc0pjzbBRhUk0r5f5faQ7TnTsFAnyKdb3ujoLfg9dGIACLXr86smYpwrg+7iGijdmO
-         42Fw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743528200; x=1744133000;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=QyQc1obK807oGm0cfb/LDMQ0LSKhQg0xMePPIJKuS8c=;
-        b=tpOF2YqQQPwzEF+NcmCczYXrcr/AszZJd07sezNEer9pKAgV3AJx5iDwynScCOt0BP
-         aPvidTozPnkaaH/vV4NAZ4owjkpfxHV9jTGHIGuFTzV/yCupYjfwznzXwa5YzgYruizg
-         P4bUtp4oHsrtHJ1vCqqqHqipGnvtEbYyEM5VpGREfQGV1TQ6xF/BndV2cPzy+b/P+sdU
-         s3UunZopGgiuxWuudhWAz9XHZQMCnDFi46YUlm5jMq4MMcrpo9J9ueQjcuv3hNLlc2PV
-         Z+2jQVUNeoG7/rIt/61SpVb9G33jbG50Clq7JYaiM8ekEmjBpiKWXUhl0vmydsL+uOqP
-         0jbg==
-X-Gm-Message-State: AOJu0YyxNYlAIxwjCqe2PbDWYxFYZXDVhHwWeyeVVpagbUT/+A5Ep5IJ
-	T/aWPwjYrYtkh94Bfluuk7OMfE5yr9nPLr0Ilm1s1ARZpx5ufiX1Vnx1bk3FG421UwsQjSWJGTo
-	+uR+l6B8HnhFFqkZ+cuGj67brrra17FOVHh+lB05XlUCTk1qBRXobwTI6EwJVr613npqFmRB2OH
-	uZMLkOBMUKimB9ElxFsZPV16fgiEApWH9oulmhnpa3
-X-Google-Smtp-Source: AGHT+IGn+uWDpPJQ9Q1BejGtkWcrh2IzP2FyqV2ddY2F5XEVXCBFVJjOzAB/x4JxfBcyHKprrZEnk1kDv/k=
-X-Received: from plbkq8.prod.google.com ([2002:a17:903:2848:b0:21f:14cc:68b0])
- (user=ctshao job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:e74e:b0:229:1619:ab58
- with SMTP id d9443c01a7336-2292f9fb8f1mr231063535ad.43.1743528200018; Tue, 01
- Apr 2025 10:23:20 -0700 (PDT)
-Date: Tue,  1 Apr 2025 10:22:39 -0700
+	dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b="qtO9GA4/";
+	dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b="lRRI8g8u"
+Received: from bayard.4d2.org (bayard.4d2.org [127.0.0.1])
+	by bayard.4d2.org (Postfix) with ESMTP id 5C0BDEC59FE;
+	Tue, 01 Apr 2025 10:24:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=4d2.org; s=mail;
+	t=1743528294; bh=FeUiLSUe8wj7dt0M38twYoeyAWpif9rAC5K+gAkMce4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=qtO9GA4/5E/GAcM2hgUvUwhkJeO0X5Rd/V8uvVlvn0M6TtrP7AUv4gvb+lIF051g2
+	 cmFKSS6mbhrvEGUXzH/zUb5bW0rtsDk2N+Qd/6r9xL6qOD9lKSfQNG8x9bFWgek4Bm
+	 HuQ0YIcQOf8pT4s3GmESTkfeKDN0if0As5kMUsmkJbA2jXR7yrx+EXaEhEH4MrDEBy
+	 fKWYx8SKKv4JlvG9zOuEYAa7r51gox92tULWX0wvwQukUijY5t4X9ti3DBZxynw5r/
+	 ptSJAKvMfTvGeYGIR0QpN2xPzLcf2kw9ZQAZQxC3uLv0w5hna7Mfp2SpYB88DsCTS/
+	 nuCLO1ACD/7IQ==
+X-Virus-Scanned: amavisd-new at 4d2.org
+Authentication-Results: bayard.4d2.org (amavisd-new); dkim=pass (2048-bit key)
+ header.d=4d2.org
+Received: from bayard.4d2.org ([127.0.0.1])
+ by bayard.4d2.org (bayard.4d2.org [127.0.0.1]) (amavisd-new, port 10024)
+ with ESMTP id BoZijOi-vwPz; Tue,  1 Apr 2025 10:24:51 -0700 (PDT)
+Received: from localhost.localdomain (unknown [183.217.81.55])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: heylenay@4d2.org)
+	by bayard.4d2.org (Postfix) with ESMTPSA id F17B3EC59FC;
+	Tue, 01 Apr 2025 10:24:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=4d2.org; s=mail;
+	t=1743528291; bh=FeUiLSUe8wj7dt0M38twYoeyAWpif9rAC5K+gAkMce4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=lRRI8g8uEhxV6S8aYl+sfGYNAVEBQP+koZjQuRpfB18lma2wX5TGWO5TC7DcF6sIl
+	 zTirzk9m4XLm7zHXzkO+zgrfU2nD+9dYkmt787yBc37QkrUvddilO2RjazUvoSBh2r
+	 o6sSa3TkjIbk2/iiocKPsx9HwrV9fZzEoToZpEqGpSQUbavyigJRphOO4Rtnv+IRJ4
+	 V0HhLMSGHLIEAy7D2uaWdP6XmteI1/ZZlNrREPz67emyx7t3z59mChE20X6AUtocYb
+	 TUGpPTHlgVCu4KiFINUbmiNUyjLvRB3q3vlWZHuHWEcnomTLQnaEOafqRvWzNFtXmh
+	 w/lkv6cUk3kbg==
+From: Haylen Chu <heylenay@4d2.org>
+To: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Haylen Chu <heylenay@outlook.com>,
+	Yixun Lan <dlan@gentoo.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>
+Cc: linux-riscv@lists.infradead.org,
+	linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	spacemit@lists.linux.dev,
+	Inochi Amaoto <inochiama@outlook.com>,
+	Chen Wang <unicornxdotw@foxmail.com>,
+	Jisheng Zhang <jszhang@kernel.org>,
+	Meng Zhang <zhangmeng.kevin@linux.spacemit.com>,
+	Haylen Chu <heylenay@4d2.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v6 1/6] dt-bindings: soc: spacemit: Add spacemit,k1-syscon
+Date: Tue,  1 Apr 2025 17:24:29 +0000
+Message-ID: <20250401172434.6774-2-heylenay@4d2.org>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250401172434.6774-1-heylenay@4d2.org>
+References: <20250401172434.6774-1-heylenay@4d2.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.49.0.472.ge94155a9ec-goog
-Message-ID: <20250401172302.1442092-1-ctshao@google.com>
-Subject: [PATCH v1] perf test: Allow tolerance for leader sampling test
-From: Chun-Tse Shao <ctshao@google.com>
-To: linux-kernel@vger.kernel.org
-Cc: Chun-Tse Shao <ctshao@google.com>, Ian Rogers <irogers@google.com>, 
-	Thomas Richter <tmricht@linux.ibm.com>, peterz@infradead.org, mingo@redhat.com, 
-	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org, adrian.hunter@intel.com, 
-	kan.liang@linux.intel.com, james.clark@linaro.org, dapeng1.mi@linux.intel.com, 
-	vmolnaro@redhat.com, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-There is a known issue that the leader sampling is inconsistent, since
-throttle only affect leader, not the slave. The detail is in [1]. To
-maintain test coverage, this patch sets a tolerance rate of 80% to
-accommodate the throttled samples and prevent test failures due to
-throttling.
+Document APMU, MPMU and APBC syscons found on SpacemiT K1 SoC, which are
+capable of generating clock and reset signals. Additionally, APMU and MPMU
+manage power domains.
 
-[1] lore.kernel.org/20250328182752.769662-1-ctshao@google.com
-
-Signed-off-by: Chun-Tse Shao <ctshao@google.com>
-Suggested-by: Ian Rogers <irogers@google.com>
-Suggested-by: Thomas Richter <tmricht@linux.ibm.com>
-Tested-by: Thomas Richter <tmricht@linux.ibm.com>
+Signed-off-by: Haylen Chu <heylenay@4d2.org>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
- tools/perf/tests/shell/record.sh | 25 +++++++++++++++++++------
- 1 file changed, 19 insertions(+), 6 deletions(-)
+ .../soc/spacemit/spacemit,k1-syscon.yaml      |  80 +++++++
+ .../dt-bindings/clock/spacemit,k1-syscon.h    | 210 ++++++++++++++++++
+ 2 files changed, 290 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/spacemit/spacemit,k1-syscon.yaml
+ create mode 100644 include/dt-bindings/clock/spacemit,k1-syscon.h
 
-diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
-index ba8d873d3ca7..1bbe16fb3420 100755
---- a/tools/perf/tests/shell/record.sh
-+++ b/tools/perf/tests/shell/record.sh
-@@ -238,22 +238,35 @@ test_leader_sampling() {
-     err=1
-     return
-   fi
-+  perf script -i "${perfdata}" | grep brstack > $script_output
-+  # Check if the two instruction counts are equal in each record.
-+  # However, the throttling code doesn't consider event grouping. During throttling, only the
-+  # leader is stopped, causing the slave's counts significantly higher. To temporarily solve this,
-+  # let's set the tolerance rate to 80%.
-+  # TODO: Revert the code for tolerance once the throttling mechanism is fixed.
-   index=0
--  perf script -i "${perfdata}" > $script_output
-+  valid_counts=0
-+  invalid_counts=0
-+  tolerance_rate=0.8
-   while IFS= read -r line
-   do
--    # Check if the two instruction counts are equal in each record
-     cycles=$(echo $line | awk '{for(i=1;i<=NF;i++) if($i=="cycles:") print $(i-1)}')
-     if [ $(($index%2)) -ne 0 ] && [ ${cycles}x != ${prev_cycles}x ]
-     then
--      echo "Leader sampling [Failed inconsistent cycles count]"
--      err=1
--      return
-+      invalid_counts=$(($invalid_counts+1))
-+    else
-+      valid_counts=$(($valid_counts+1))
-     fi
-     index=$(($index+1))
-     prev_cycles=$cycles
-   done < $script_output
--  echo "Basic leader sampling test [Success]"
-+  if [[ "$(echo "scale=2; $invalid_counts/($invalid_counts+$valid_counts)" | bc)" > 1-$tolerance_rate ]]
-+  then
-+      echo "Leader sampling [Failed inconsistent cycles count]"
-+      err=1
-+  else
-+    echo "Basic leader sampling test [Success]"
-+  fi
- }
-
- test_topdown_leader_sampling() {
---
-2.49.0.472.ge94155a9ec-goog
+diff --git a/Documentation/devicetree/bindings/soc/spacemit/spacemit,k1-syscon.yaml b/Documentation/devicetree/bindings/soc/spacemit/spacemit,k1-syscon.yaml
+new file mode 100644
+index 000000000000..30aaf49da03d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/soc/spacemit/spacemit,k1-syscon.yaml
+@@ -0,0 +1,80 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/soc/spacemit/spacemit,k1-syscon.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: SpacemiT K1 SoC System Controller
++
++maintainers:
++  - Haylen Chu <heylenay@4d2.org>
++
++description:
++  System controllers found on SpacemiT K1 SoC, which are capable of
++  clock, reset and power-management functions.
++
++properties:
++  compatible:
++    enum:
++      - spacemit,k1-syscon-apbc
++      - spacemit,k1-syscon-apmu
++      - spacemit,k1-syscon-mpmu
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 4
++
++  clock-names:
++    items:
++      - const: osc
++      - const: vctcxo_1m
++      - const: vctcxo_3m
++      - const: vctcxo_24m
++
++  "#clock-cells":
++    const: 1
++    description:
++      See <dt-bindings/clock/spacemit,k1-syscon.h> for valid indices.
++
++  "#power-domain-cells":
++    const: 1
++
++  "#reset-cells":
++    const: 1
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++  - "#clock-cells"
++  - "#reset-cells"
++
++allOf:
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: spacemit,k1-syscon-apbc
++    then:
++      properties:
++        "#power-domain-cells": false
++    else:
++      required:
++        - "#power-domain-cells"
++
++additionalProperties: false
++
++examples:
++  - |
++    system-controller@d4050000 {
++        compatible = "spacemit,k1-syscon-mpmu";
++        reg = <0xd4050000 0x209c>;
++        clocks = <&osc>, <&vctcxo_1m>, <&vctcxo_3m>, <&vctcxo_24m>;
++        clock-names = "osc", "vctcxo_1m", "vctcxo_3m", "vctcxo_24m";
++        #clock-cells = <1>;
++        #power-domain-cells = <1>;
++        #reset-cells = <1>;
++    };
+diff --git a/include/dt-bindings/clock/spacemit,k1-syscon.h b/include/dt-bindings/clock/spacemit,k1-syscon.h
+new file mode 100644
+index 000000000000..61c8d7360cf8
+--- /dev/null
++++ b/include/dt-bindings/clock/spacemit,k1-syscon.h
+@@ -0,0 +1,210 @@
++/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
++/*
++ * Copyright (C) 2024 Haylen Chu <heylenay@outlook.com>
++ */
++
++#ifndef _DT_BINDINGS_SPACEMIT_CCU_H_
++#define _DT_BINDINGS_SPACEMIT_CCU_H_
++
++/* MPMU clocks */
++#define CLK_PLL1_307P2		0
++#define CLK_PLL1_76P8		1
++#define CLK_PLL1_61P44		2
++#define CLK_PLL1_153P6		3
++#define CLK_PLL1_102P4		4
++#define CLK_PLL1_51P2		5
++#define CLK_PLL1_51P2_AP	6
++#define CLK_PLL1_57P6		7
++#define CLK_PLL1_25P6		8
++#define CLK_PLL1_12P8		9
++#define CLK_PLL1_12P8_WDT	10
++#define CLK_PLL1_6P4		11
++#define CLK_PLL1_3P2		12
++#define CLK_PLL1_1P6		13
++#define CLK_PLL1_0P8		14
++#define CLK_PLL1_409P6		15
++#define CLK_PLL1_204P8		16
++#define CLK_PLL1_491		17
++#define CLK_PLL1_245P76		18
++#define CLK_PLL1_614		19
++#define CLK_PLL1_47P26		20
++#define CLK_PLL1_31P5		21
++#define CLK_PLL1_819		22
++#define CLK_PLL1_1228		23
++#define CLK_SLOW_UART		24
++#define CLK_SLOW_UART1		25
++#define CLK_SLOW_UART2		26
++#define CLK_WDT			27
++#define CLK_RIPC		28
++#define CLK_I2S_SYSCLK		29
++#define CLK_I2S_BCLK		30
++#define CLK_APB			31
++#define CLK_WDT_BUS		32
++
++/* APBC clocks */
++#define CLK_UART0		0
++#define CLK_UART2		1
++#define CLK_UART3		2
++#define CLK_UART4		3
++#define CLK_UART5		4
++#define CLK_UART6		5
++#define CLK_UART7		6
++#define CLK_UART8		7
++#define CLK_UART9		8
++#define CLK_GPIO		9
++#define CLK_PWM0		10
++#define CLK_PWM1		11
++#define CLK_PWM2		12
++#define CLK_PWM3		13
++#define CLK_PWM4		14
++#define CLK_PWM5		15
++#define CLK_PWM6		16
++#define CLK_PWM7		17
++#define CLK_PWM8		18
++#define CLK_PWM9		19
++#define CLK_PWM10		20
++#define CLK_PWM11		21
++#define CLK_PWM12		22
++#define CLK_PWM13		23
++#define CLK_PWM14		24
++#define CLK_PWM15		25
++#define CLK_PWM16		26
++#define CLK_PWM17		27
++#define CLK_PWM18		28
++#define CLK_PWM19		29
++#define CLK_SSP3		30
++#define CLK_RTC			31
++#define CLK_TWSI0		32
++#define CLK_TWSI1		33
++#define CLK_TWSI2		34
++#define CLK_TWSI4		35
++#define CLK_TWSI5		36
++#define CLK_TWSI6		37
++#define CLK_TWSI7		38
++#define CLK_TWSI8		39
++#define CLK_TIMERS1		40
++#define CLK_TIMERS2		41
++#define CLK_AIB			42
++#define CLK_ONEWIRE		43
++#define CLK_SSPA0		44
++#define CLK_SSPA1		45
++#define CLK_DRO			46
++#define CLK_IR			47
++#define CLK_TSEN		48
++#define CLK_IPC_AP2AUD		49
++#define CLK_CAN0		50
++#define CLK_CAN0_BUS		51
++#define CLK_UART0_BUS		52
++#define CLK_UART2_BUS		53
++#define CLK_UART3_BUS		54
++#define CLK_UART4_BUS		55
++#define CLK_UART5_BUS		56
++#define CLK_UART6_BUS		57
++#define CLK_UART7_BUS		58
++#define CLK_UART8_BUS		59
++#define CLK_UART9_BUS		60
++#define CLK_GPIO_BUS		61
++#define CLK_PWM0_BUS		62
++#define CLK_PWM1_BUS		63
++#define CLK_PWM2_BUS		64
++#define CLK_PWM3_BUS		65
++#define CLK_PWM4_BUS		66
++#define CLK_PWM5_BUS		67
++#define CLK_PWM6_BUS		68
++#define CLK_PWM7_BUS		69
++#define CLK_PWM8_BUS		70
++#define CLK_PWM9_BUS		71
++#define CLK_PWM10_BUS		72
++#define CLK_PWM11_BUS		73
++#define CLK_PWM12_BUS		74
++#define CLK_PWM13_BUS		75
++#define CLK_PWM14_BUS		76
++#define CLK_PWM15_BUS		77
++#define CLK_PWM16_BUS		78
++#define CLK_PWM17_BUS		79
++#define CLK_PWM18_BUS		80
++#define CLK_PWM19_BUS		81
++#define CLK_SSP3_BUS		82
++#define CLK_RTC_BUS		83
++#define CLK_TWSI0_BUS		84
++#define CLK_TWSI1_BUS		85
++#define CLK_TWSI2_BUS		86
++#define CLK_TWSI4_BUS		87
++#define CLK_TWSI5_BUS		88
++#define CLK_TWSI6_BUS		89
++#define CLK_TWSI7_BUS		90
++#define CLK_TWSI8_BUS		91
++#define CLK_TIMERS1_BUS		92
++#define CLK_TIMERS2_BUS		93
++#define CLK_AIB_BUS		94
++#define CLK_ONEWIRE_BUS		95
++#define CLK_SSPA0_BUS		96
++#define CLK_SSPA1_BUS		97
++#define CLK_TSEN_BUS		98
++#define CLK_IPC_AP2AUD_BUS	99
++
++/* APMU clocks */
++#define CLK_CCI550		0
++#define CLK_CPU_C0_HI		1
++#define CLK_CPU_C0_CORE		2
++#define CLK_CPU_C0_ACE		3
++#define CLK_CPU_C0_TCM		4
++#define CLK_CPU_C1_HI		5
++#define CLK_CPU_C1_CORE		6
++#define CLK_CPU_C1_ACE		7
++#define CLK_CCIC_4X		8
++#define CLK_CCIC1PHY		9
++#define CLK_SDH_AXI		10
++#define CLK_SDH0		11
++#define CLK_SDH1		12
++#define CLK_SDH2		13
++#define CLK_USB_P1		14
++#define CLK_USB_AXI		15
++#define CLK_USB30		16
++#define CLK_QSPI		17
++#define CLK_QSPI_BUS		18
++#define CLK_DMA			19
++#define CLK_AES			20
++#define CLK_VPU			21
++#define CLK_GPU			22
++#define CLK_EMMC		23
++#define CLK_EMMC_X		24
++#define CLK_AUDIO		25
++#define CLK_HDMI		26
++#define CLK_PMUA_ACLK		27
++#define CLK_PCIE0_MASTER	28
++#define CLK_PCIE0_SLAVE		29
++#define CLK_PCIE0_DBI		30
++#define CLK_PCIE1_MASTER	31
++#define CLK_PCIE1_SLAVE		32
++#define CLK_PCIE1_DBI		33
++#define CLK_PCIE2_MASTER	34
++#define CLK_PCIE2_SLAVE		35
++#define CLK_PCIE2_DBI		36
++#define CLK_EMAC0_BUS		37
++#define CLK_EMAC0_PTP		38
++#define CLK_EMAC1_BUS		39
++#define CLK_EMAC1_PTP		40
++#define CLK_JPG			41
++#define CLK_CCIC2PHY		42
++#define CLK_CCIC3PHY		43
++#define CLK_CSI			44
++#define CLK_CAMM0		45
++#define CLK_CAMM1		46
++#define CLK_CAMM2		47
++#define CLK_ISP_CPP		48
++#define CLK_ISP_BUS		49
++#define CLK_ISP			50
++#define CLK_DPU_MCLK		51
++#define CLK_DPU_ESC		52
++#define CLK_DPU_BIT		53
++#define CLK_DPU_PXCLK		54
++#define CLK_DPU_HCLK		55
++#define CLK_DPU_SPI		56
++#define CLK_DPU_SPI_HBUS	57
++#define CLK_DPU_SPIBUS		58
++#define CLK_DPU_SPI_ACLK	59
++#define CLK_V2D			60
++#define CLK_EMMC_BUS		61
++
++#endif /* _DT_BINDINGS_SPACEMIT_CCU_H_ */
+-- 
+2.49.0
 
