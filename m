@@ -1,135 +1,129 @@
-Received: from out-177.mta1.migadu.com (out-177.mta1.migadu.com [95.215.58.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D4301F0E56
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 12:40:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.177
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 124291F0E56;
+	Tue,  1 Apr 2025 12:40:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743511240; cv=none; b=nPCrul5h/RSDkHc04ZPH4GF8lIR39MtkqdIoF+OrQUFn682YYlmROSeMmdGcfGIbR+dlX6Ctr37VXGZW6CgCeKYKLa/2jfl6sy67PmPsrqD+KyAlv1taIS44OjPyH8JJIh+8ILqmVul/Iy7cPqaV73HO4DcRCYWvE0lBbkSUTVc=
+	t=1743511253; cv=none; b=Fjfo5wemffn7ncVBZL0fpjntLjMQF7RUDYWNix5w47fqFl111aDOWp6GVTxfP8ZKzPKcMxakGqJdKNgtDbRky5xIW6pOuru4TnXWdPErBIvsq5Fx3WYBptTayaFJAZVLsCXtzBIAI1e/KZC4WQpeFiVLIcIX2D4I5MrkeUx6ELk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743511240; c=relaxed/simple;
-	bh=f7HZvkkUjREv5E0SrXmMOMtofQNQWMeSVV+VWTUHkYI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BB8lAoJATFQmEkxgfNAJEPOSFqqdwTP052uzMm5Vnv+97QfO+vPTuwDXZOVTeI4IyWJjd3Oq6TrXpp6sNHN0xWWF5Tu0hqCgcxZAy1GCzbg8GEIt3DH2I5pl++MdJLoQ214Jl4uWLnUlZb3uYO6aGNTuxgKk4GPtLv44Imwe4+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Fchy4Nkx; arc=none smtp.client-ip=95.215.58.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1743511253; c=relaxed/simple;
+	bh=Get7KAvoCaSnLRrPLPueAHCZCSCjbAm1U96QKIwX9RA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=CCgElouZWUL87kijBz6mjKTj/5fuFxu43Xk9g6eLREdcUyFl1PWZ5BPDOklULR+Scl8U9Qj2kJY3gAf2jkOLsPfsQRknpIpAlCne80sCIDedNTkYNXeTmoF8iWKKO1UtFKg5mukp5aorGguJkH6cBzpSobNN//DEI7ulbvzwQiE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=G6Kx5mH9; arc=none smtp.client-ip=117.135.210.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Fchy4Nkx"
-Message-ID: <918395a6-122c-4fb0-9761-892b8020b95e@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1743511227;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fxXB0v/fRE15xa1xwGjpmAOOzPKuIdD5kdimGTGzH+g=;
-	b=Fchy4Nkx5sjdVRFqStHp/4fJ9CvOVIz1lWoNOxriM4dNDNYiQYgPPLqB4J+DachbihZSdO
-	eaUmeVwvGSLSb4xO3JB5SyCiJ1OUWFG8rkVq82L8O7/7B/Elj9RKyF3b1Xa+rNbNkxOWoe
-	pBzoFSWxh+/rKTKTk49yTQwX22+c4hc=
-Date: Tue, 1 Apr 2025 20:40:15 +0800
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="G6Kx5mH9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=6+nnE
+	i89eaWkxtOk2uXcxBBZ5vP3fWMFYrDB8rldhD4=; b=G6Kx5mH9vyvEeZAKu41nB
+	JOOg4O0//KJXxpE/acxhJ72DXkdVZzA8GsH7TPQ6UsuttLG++zY2OVma58OQqj6O
+	N7DyHde3O9AFxapM9u7QVuwWJ/WqBVVk2zGCvzZy2jEEK2owzPlwz3hjpvLbBhrq
+	db26P8TA0RC7O7uD08pRVM=
+Received: from WIN-S4QB3VCT165.localdomain (unknown [36.28.141.24])
+	by gzsmtp5 (Coremail) with SMTP id QCgvCgBnc1qy3utnVqF_TA--.58053S4;
+	Tue, 01 Apr 2025 20:40:20 +0800 (CST)
+From: Debin Zhu <mowenroot@163.com>
+To: pabeni@redhat.com
+Cc: 1985755126@qq.com,
+	kuba@kernel.org,
+	linux-kernel@vger.kernel.org,
+	mowenroot@163.com,
+	netdev@vger.kernel.org,
+	paul@paul-moore.com
+Subject: [PATCH v3] netlabel: Fix NULL pointer exception caused by CALIPSO on IPv4 sockets
+Date: Tue,  1 Apr 2025 20:40:18 +0800
+Message-Id: <20250401124018.4763-1-mowenroot@163.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <2a4f2c24-62a8-4627-88c0-776c0e005163@redhat.com>
+References: <2a4f2c24-62a8-4627-88c0-776c0e005163@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH bpf-next 2/2] bpf: Check link_create parameter for
- multi_uprobe
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: song@kernel.org, ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
- martin.lau@linux.dev, eddyz87@gmail.com, yonghong.song@linux.dev,
- john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me,
- haoluo@google.com, rostedt@goodmis.org, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, laoar.shao@gmail.com, bpf@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-References: <20250331094745.336010-1-chen.dylane@linux.dev>
- <20250331094745.336010-2-chen.dylane@linux.dev> <Z-vH_HiJhR3cwLhF@krava>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Tao Chen <chen.dylane@linux.dev>
-In-Reply-To: <Z-vH_HiJhR3cwLhF@krava>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+X-CM-TRANSID:QCgvCgBnc1qy3utnVqF_TA--.58053S4
+X-Coremail-Antispam: 1Uf129KBjvJXoW7CryUZF1kZr4DXFyUCr4xtFb_yoW8tFWrpF
+	9rGwn8Zw18AFWxWrs3XrWkCry3KF48KF1xurn2yw4UAw1UGr18ta48KryFyFyayFW8Kwsx
+	Xr4Sq3WYk348Z3JanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zio7KfUUUUU=
+X-CM-SenderInfo: pprzv0hurr3qqrwthudrp/1tbiXxAilGfr3gwPWQAAsx
 
-在 2025/4/1 19:03, Jiri Olsa 写道:
-> On Mon, Mar 31, 2025 at 05:47:45PM +0800, Tao Chen wrote:
->> The target_fd and flags in link_create no used in multi_uprobe
->> , return -EINVAL if they assigned, keep it same as other link
->> attach apis.
->>
->> Fixes: 89ae89f53d20 ("bpf: Add multi uprobe link")
->> Signed-off-by: Tao Chen <chen.dylane@linux.dev>
->> ---
->>   kernel/trace/bpf_trace.c | 3 +++
->>   1 file changed, 3 insertions(+)
->>
->> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
->> index 2f206a2a2..f7ebf17e3 100644
->> --- a/kernel/trace/bpf_trace.c
->> +++ b/kernel/trace/bpf_trace.c
->> @@ -3385,6 +3385,9 @@ int bpf_uprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *pr
->>   	if (sizeof(u64) != sizeof(void *))
->>   		return -EOPNOTSUPP;
->>   
->> +	if (attr->link_create.target_fd || attr->link_create.flags)
->> +		return -EINVAL;
-> 
-> I think the CI is failing because usdt code does uprobe multi detection
-> with target_fd = -1 and it fails and perf-uprobe fallback will fail on
-> not having enough file descriptors
-> 
+When calling netlbl_conn_setattr(), addr->sa_family is used
+to determine the function behavior. If sk is an IPv4 socket,
+but the connect function is called with an IPv6 address,
+the function calipso_sock_setattr() is triggered.
+Inside this function, the following code is executed:
 
-Hi jiri
+sk_fullsock(__sk) ? inet_sk(__sk)->pinet6 : NULL;
 
-As you said, i found it, thanks.
+Since sk is an IPv4 socket, pinet6 is NULL, leading to a
+null pointer dereference.
 
-static int probe_uprobe_multi_link(int token_fd)
-{
-         LIBBPF_OPTS(bpf_prog_load_opts, load_opts,
-                 .expected_attach_type = BPF_TRACE_UPROBE_MULTI,
-                 .token_fd = token_fd,
-                 .prog_flags = token_fd ? BPF_F_TOKEN_FD : 0,
-         );
-         LIBBPF_OPTS(bpf_link_create_opts, link_opts);
-         struct bpf_insn insns[] = {
-                 BPF_MOV64_IMM(BPF_REG_0, 0),
-                 BPF_EXIT_INSN(),
-         };
-         int prog_fd, link_fd, err;
-         unsigned long offset = 0;
+This patch fixes the issue by checking if inet6_sk(sk)
+returns a NULL pointer before accessing pinet6.
 
-         prog_fd = bpf_prog_load(BPF_PROG_TYPE_KPROBE, NULL, "GPL",
-                                 insns, ARRAY_SIZE(insns), &load_opts);
-         if (prog_fd < 0)
-                 return -errno;
+Fixes: ceba1832b1b2("calipso: Set the calipso socket label to match the secattr.")
+Signed-off-by: Debin Zhu <mowenroot@163.com>
+Signed-off-by: Bitao Ouyang <1985755126@qq.com>
+Acked-by: Paul Moore <paul@paul-moore.com>
 
-         /* Creating uprobe in '/' binary should fail with -EBADF. */
-         link_opts.uprobe_multi.path = "/";
-         link_opts.uprobe_multi.offsets = &offset;
-         link_opts.uprobe_multi.cnt = 1;
+---
+ net/ipv6/calipso.c | 23 +++++++++++++++++++----
+ 1 file changed, 19 insertions(+), 4 deletions(-)
 
-         link_fd = bpf_link_create(prog_fd, -1, BPF_TRACE_UPROBE_MULTI, 
-&link_opts);
-
-> but I think at this stage we will brake some user apps by introducing
-> this check, link ebpf go library, which passes 0
-> 
-
-So is it ok just check the flags?
-
-> jirka
-> 
-> 
->> +
->>   	if (!is_uprobe_multi(prog))
->>   		return -EINVAL;
->>   
->> -- 
->> 2.43.0
->>
-
-
+diff --git a/net/ipv6/calipso.c b/net/ipv6/calipso.c
+index dbcea9fee..a8a8736df 100644
+--- a/net/ipv6/calipso.c
++++ b/net/ipv6/calipso.c
+@@ -1072,8 +1072,13 @@ static int calipso_sock_getattr(struct sock *sk,
+ 	struct ipv6_opt_hdr *hop;
+ 	int opt_len, len, ret_val = -ENOMSG, offset;
+ 	unsigned char *opt;
+-	struct ipv6_txoptions *txopts = txopt_get(inet6_sk(sk));
++	struct ipv6_pinfo *pinfo = inet6_sk(sk);
++	struct ipv6_txoptions *txopts;
+ 
++	if (!pinfo)
++		return -EAFNOSUPPORT;
++
++	txopts = txopt_get(pinfo);
+ 	if (!txopts || !txopts->hopopt)
+ 		goto done;
+ 
+@@ -1125,8 +1130,13 @@ static int calipso_sock_setattr(struct sock *sk,
+ {
+ 	int ret_val;
+ 	struct ipv6_opt_hdr *old, *new;
+-	struct ipv6_txoptions *txopts = txopt_get(inet6_sk(sk));
+-
++	struct ipv6_pinfo *pinfo = inet6_sk(sk);
++	struct ipv6_txoptions *txopts;
++
++	if (!pinfo)
++		return -EAFNOSUPPORT;
++
++	txopts = txopt_get(pinfo);
+ 	old = NULL;
+ 	if (txopts)
+ 		old = txopts->hopopt;
+@@ -1153,8 +1163,13 @@ static int calipso_sock_setattr(struct sock *sk,
+ static void calipso_sock_delattr(struct sock *sk)
+ {
+ 	struct ipv6_opt_hdr *new_hop;
+-	struct ipv6_txoptions *txopts = txopt_get(inet6_sk(sk));
++	struct ipv6_pinfo *pinfo = inet6_sk(sk);
++	struct ipv6_txoptions *txopts;
+ 
++	if (!pinfo)
++		return;
++
++	txopts = txopt_get(pinfo);
+ 	if (!txopts || !txopts->hopopt)
+ 		goto done;
+ 
 -- 
-Best Regards
-Tao Chen
+2.34.1
+
