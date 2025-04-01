@@ -1,132 +1,98 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from mail15.out.titan.email (mail15.out.titan.email [3.64.226.209])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6AFB204F6A;
-	Tue,  1 Apr 2025 14:40:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA621204F63
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 14:40:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=3.64.226.209
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743518449; cv=none; b=JvLveu9IQJPb6AURcCYWc7Zvb/7mOjNTfaOizVjfiuQ8EevM6/Urg6SSdGak53DwCPwPgrLb9OTFp/IgXqVteeacBZzrjGEHsoqSp6gClK7tEC0yOS9xphL62UpQKZQu9UseDaCBym9g82VwwQ0TJPH3l4os1MrJGQ07LpmipjI=
+	t=1743518466; cv=none; b=XzMDZmwnLz5Ft2nMoVTdo0Lw3AHxp06BlzD/5FFuus54rQ7iX2L9COLTEuuBBTU6eXOaDkdofGCzU6GCKNU3G2MerZhVwtA4nUBe8vt0F3bYIxSd2Ak6cqC4WZEmZLLy9z94KesKjDaljnaEfz4DmDZdAoEFmi6MV61N9rKdnPM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743518449; c=relaxed/simple;
-	bh=Mu9MHZa3fft97on/5nyitcoLVmWrL9uWsEPwIreNy8A=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=XL6ngi2WR62ZOX5/N1jYthNTf/QYsXbD/YykwAa1lCus5mzC9LZvOyxMPiVY316CYEwjkvrSkifuukEJOi9hQy68XLam8idhYjphghnAoVBAC0GeOhPiOHpWHTkvU2M2A+aPQn8R2Xp3kIv6R3gawNBm0Gl+FbHMWCxtVuIaRzE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=Jz7A4Din; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1743518466; c=relaxed/simple;
+	bh=GTGLh/qvy/iDcZKAA30fukLxK7T9pjrQQsNvTrDx6LU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=A8vKGPpaTj7NF6FpFMSekz+q8oPEHckxMP1R6dtG2LjxdWGDpL/1Neb8Ac63liTBMXSJAykGpg17sadAVXGJ5neyL75cZKf1XrMoUkviVNsATG+GnZBwnZjVV5H05G6G/12vwvdohg2h+q4QjAPZ8njvBDDigY407zzcF6C8WAU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=techsingularity.net; spf=pass smtp.mailfrom=techsingularity.net; dkim=pass (1024-bit key) header.d=techsingularity.net header.i=@techsingularity.net header.b=FOiG4QEZ; arc=none smtp.client-ip=3.64.226.209
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=techsingularity.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=techsingularity.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Jz7A4Din"
-Received: from [127.0.0.1] ([76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 531Edwfb3790452
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Tue, 1 Apr 2025 07:39:58 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 531Edwfb3790452
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025032001; t=1743518399;
-	bh=ZcgxQiKrDYB/GpBLGYEzKqgEh7UmE7j84JDP2jnMUIY=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=Jz7A4DinHGlQDcHQcNzNjsQopdBFsBQ7QUgSGXfKBsLhOGsq7mA8gv1rXwCFVS/Mg
-	 3HpHcFgEu7wLsCmPzMMIYUdsFbrSO6E1SQWqCu3eg1YhfuI3psqy9zmXT9M57TG/rw
-	 +0LvJkVNxTMwPWC0cYpvvyQj0Fc3RpmLVm5h7OAE+L6WCfmGPgpZff661s9zCmb0Wo
-	 ES6YqJpgUXXGCb1ZxYA+05YjHAbwrqUx72zaxCmQsKTlnOXJyi2zK8Oi4PIb82zl9a
-	 3JJfvEXa8iQg2SKYnL+qJHwHt+ly0vUL6rJD8fhrxhYUShn7QeNSB9fUeLGt+DOFn/
-	 jZVYMbG7KGklQ==
-Date: Tue, 01 Apr 2025 07:39:56 -0700
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: "Xin Li (Intel)" <xin@zytor.com>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-CC: rafael@kernel.org, pavel@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-        luto@kernel.org, brgerst@gmail.com, jgross@suse.com,
-        torvalds@linux-foundation.org, xi.pardee@intel.com,
-        todd.e.brandt@intel.com, xin@zytor.com
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v2_1/1=5D_x86/fred=3A_Fix_system?=
- =?US-ASCII?Q?_hang_during_S4_resume_with_FRED_enabled?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20250401075728.3626147-1-xin@zytor.com>
-References: <20250401075728.3626147-1-xin@zytor.com>
-Message-ID: <2C7E3D1D-0391-43DF-8D72-02C4C742573F@zytor.com>
+	dkim=pass (1024-bit key) header.d=techsingularity.net header.i=@techsingularity.net header.b="FOiG4QEZ"
+Received: from localhost (localhost [127.0.0.1])
+	by smtp-out0101.titan.email (Postfix) with ESMTP id 8295BA0037;
+	Tue,  1 Apr 2025 13:23:58 +0000 (UTC)
+DKIM-Signature: a=rsa-sha256; bh=XC3zqCP/m5xWM7BLhUPv3DjSI5dmtW9oDx2JOKuCH8E=;
+	c=relaxed/relaxed; d=techsingularity.net;
+	h=cc:subject:date:from:references:mime-version:to:message-id:in-reply-to:from:to:cc:subject:date:message-id:in-reply-to:references:reply-to;
+	q=dns/txt; s=titan1; t=1743513838; v=1;
+	b=FOiG4QEZILENoHds7TBaj3HdYeoe4ldZOHiFBw2F7WlmhKDikk0KmUan3eplbQWI2KUX2uf3
+	Mz/s9E26cNPaM9rxiPRRI/oZ8MqC36aVuc9cUqZg6o+ZNhLTrUe/jVLflSIE3XE9tZ8/w7jMCbL
+	ekcMUDZemhA+Dsupvu8bTtGU=
+Received: from mail.blacknight.com (ip-84-203-198-132.broadband.digiweb.ie [84.203.198.132])
+	by smtp-out0101.titan.email (Postfix) with ESMTPA id E8F54A0003;
+	Tue,  1 Apr 2025 13:23:57 +0000 (UTC)
+Date: Tue, 1 Apr 2025 14:23:53 +0100
+Feedback-ID: :mgorman@techsingularity.net:techsingularity.net:flockmailId
+From: Mel Gorman <mgorman@techsingularity.net>
+To: Libo Chen <libo.chen@oracle.com>
+Cc: peterz@infradead.org, longman@redhat.com, linux-kernel@vger.kernel.org, 
+	mingo@redhat.com, tj@kernel.org
+Subject: Re: [PATCH v2 1/2] sched/numa: skip VMA scanning on memory pinned to
+ one NUMA node via cpuset.mems
+Message-ID: <lx5ydw2yymartewho67aapj53sjfpnjlc6l7uplhefpnnettqk@x4hcxewigix2>
+References: <20250327002352.203332-1-libo.chen@oracle.com>
+ <20250327002352.203332-2-libo.chen@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+In-Reply-To: <20250327002352.203332-2-libo.chen@oracle.com>
+X-F-Verdict: SPFVALID
+X-Titan-Src-Out: 1743513838370976745.9138.2279671669179809732@prod-euc1-smtp-out1002.
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.4 cv=fpomZE4f c=1 sm=1 tr=0 ts=67ebe8ee
+	a=uEl80ZmhafqVrAMTjuFo2w==:117 a=uEl80ZmhafqVrAMTjuFo2w==:17
+	a=Q9fys5e9bTEA:10 a=CEWIc4RMnpUA:10 a=yPCof4ZbAAAA:8
+	a=mpzrRfd7V9-sn5E2lfoA:9 a=PUjeQqilurYA:10
 
-On April 1, 2025 12:57:27 AM PDT, "Xin Li (Intel)" <xin@zytor=2Ecom> wrote:
->Upon a wakeup from S4, the restore kernel starts and initializes the
->FRED MSRs as needed from its perspective=2E  It then loads a hibernation
->image, including the image kernel, and attempts to load image pages
->directly into their original page frames used before hibernation unless
->those frames are currently in use=2E  Once all pages are moved to their
->original locations, it jumps to a "trampoline" page in the image kernel=
-=2E
->
->At this point, the image kernel takes control, but the FRED MSRs still
->contain values set by the restore kernel, which may differ from those
->set by the image kernel before hibernation=2E  Therefore, the image kerne=
-l
->must ensure the FRED MSRs have the same values as before hibernation=2E
->Since these values depend only on the location of the kernel text and
->data, they can be recomputed from scratch=2E
->
->Reported-by: Xi Pardee <xi=2Epardee@intel=2Ecom>
->Reported-by: Todd Brandt <todd=2Ee=2Ebrandt@intel=2Ecom>
->Suggested-by: H=2E Peter Anvin (Intel) <hpa@zytor=2Ecom>
->Signed-off-by: Xin Li (Intel) <xin@zytor=2Ecom>
->Tested-by: Todd Brandt <todd=2Ee=2Ebrandt@intel=2Ecom>
->Cc: Andy Lutomirski <luto@kernel=2Eorg>
->Cc: Brian Gerst <brgerst@gmail=2Ecom>
->Cc: Juergen Gross <jgross@suse=2Ecom>
->Cc: Linus Torvalds <torvalds@linux-foundation=2Eorg>
->Cc: stable@vger=2Ekernel=2Eorg # 6=2E9+
->---
->
->Change in v2:
->* Rewrite the change log and in-code comments based on Rafael's feedback=
-=2E
->---
-> arch/x86/power/cpu=2Ec | 14 ++++++++++++++
-> 1 file changed, 14 insertions(+)
->
->diff --git a/arch/x86/power/cpu=2Ec b/arch/x86/power/cpu=2Ec
->index 63230ff8cf4f=2E=2E08e76a5ca155 100644
->--- a/arch/x86/power/cpu=2Ec
->+++ b/arch/x86/power/cpu=2Ec
->@@ -27,6 +27,7 @@
-> #include <asm/mmu_context=2Eh>
-> #include <asm/cpu_device_id=2Eh>
-> #include <asm/microcode=2Eh>
->+#include <asm/fred=2Eh>
->=20
-> #ifdef CONFIG_X86_32
-> __visible unsigned long saved_context_ebx;
->@@ -231,6 +232,19 @@ static void notrace __restore_processor_state(struct=
- saved_context *ctxt)
-> 	 */
-> #ifdef CONFIG_X86_64
-> 	wrmsrl(MSR_GS_BASE, ctxt->kernelmode_gs_base);
->+
->+	/*
->+	 * Reinitialize FRED to ensure the FRED MSRs contain the same values
->+	 * as before hibernation=2E
->+	 *
->+	 * Note, the setup of FRED RSPs requires access to percpu data
->+	 * structures=2E  Therefore, FRED reinitialization can only occur after
->+	 * the percpu access pointer (i=2Ee=2E, MSR_GS_BASE) is restored=2E
->+	 */
->+	if (ctxt->cr4 & X86_CR4_FRED) {
->+		cpu_init_fred_exceptions();
->+		cpu_init_fred_rsps();
->+	}
-> #else
-> 	loadsegment(fs, __KERNEL_PERCPU);
-> #endif
->
->base-commit: 535bd326c5657fe570f41b1f76941e449d9e2062
+On Wed, Mar 26, 2025 at 05:23:51PM -0700, Libo Chen wrote:
+> When the memory of the current task is pinned to one NUMA node by cgroup,
+> there is no point in continuing the rest of VMA scanning and hinting page
+> faults as they will just be overhead. With this change, there will be no
+> more unnecessary PTE updates or page faults in this scenario.
+> 
+> We have seen up to a 6x improvement on a typical java workload running on
+> VMs with memory and CPU pinned to one NUMA node via cpuset in a two-socket
+> AARCH64 system. With the same pinning, on a 18-cores-per-socket Intel
+> platform, we have seen 20% improvment in a microbench that creates a
+> 30-vCPU selftest KVM guest with 4GB memory, where each vCPU reads 4KB
+> pages in a fixed number of loops.
+> 
+> Signed-off-by: Libo Chen <libo.chen@oracle.com>
+> ---
+>  kernel/sched/fair.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index e43993a4e5807..6f405e00c9c7e 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -3329,6 +3329,13 @@ static void task_numa_work(struct callback_head *work)
+>  	if (p->flags & PF_EXITING)
+>  		return;
+>  
+> +	/*
+> +	 * Memory is pinned to only one NUMA node via cpuset.mems, naturally
+> +	 * no page can be migrated.
+> +	 */
+> +	if (nodes_weight(cpuset_current_mems_allowed) == 1)
+> +		return;
+> +
 
-Reviewed-by: H=2E Peter Anvin (Intel) <hpa@zytor=2Ecom>
+Check cpusets_enabled() first?
+
+-- 
+Mel Gorman
+SUSE Labs
