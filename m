@@ -1,84 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 335532110;
-	Tue,  1 Apr 2025 00:29:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCECE3595D;
+	Tue,  1 Apr 2025 00:31:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743467358; cv=none; b=Wm/8Vp6NGAvocQBdNSbLbcHCgOjaIFSxotX/QDss1PBvhPjrvj5qLhPBhVT2QL0SVTVyGrh8hCKMTRjYssM85a5qGTGoLriP1cVHk9siuH+XyAdETMdIbQJEMw18cT/c7ny5NdyUmuOqwwDt++JCNeXAQa+pn1YKnjb/TOAHnCI=
+	t=1743467474; cv=none; b=tIM18+zTkU/gPO8pYzTcCp437KBlBUWl7kWgTYof8mtdk3WOM1sE5xc7n6N1yH/yzL3Uwec2m1d4LzOJ/El2lXClc6QGd47QQFqaNx30QCGOe+b9RdLpBMwR/0qcfUXP19WTtxaahZBah2+RFkCokxXxnIYva501oOQvt99GxcY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743467358; c=relaxed/simple;
-	bh=bTAjgggG2W/wOFkhPrIxf0x4Kcgbwu1NN49CiLAPGbM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HAYMcwtmjs61zKtUqYn9cYSbEawrXoyejLkAXgNseRn3PTfTI3ExS76ERf6ljeHI1mfjzDEOIBqgMp0bsrNUkHRj71xXV3NPJbfPtvpDdAk9sAnkb+VJjCdIjI1whl4QVTPEViwAyNBWjfgH/mKbKzDyuGRxNzLxrvo5rV82BG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14512C4CEE3;
-	Tue,  1 Apr 2025 00:29:15 +0000 (UTC)
-Date: Mon, 31 Mar 2025 20:30:14 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
- Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>, Vincent Donnefort <vdonnefort@google.com>,
- Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, Kees
- Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>, "Guilherme G.
- Piccoli" <gpiccoli@igalia.com>, linux-hardening@vger.kernel.org, Matthew
- Wilcox <willy@infradead.org>
-Subject: Re: [PATCH v2 1/2] tracing: ring-buffer: Have the ring buffer code
- do the vmap of physical memory
-Message-ID: <20250331203014.5108200c@gandalf.local.home>
-In-Reply-To: <CAHk-=wiDQpOeXi_GjKB7Mrh93Zbd__4k+FF_vJd+-prbaacEug@mail.gmail.com>
-References: <20250331143426.947281958@goodmis.org>
-	<20250331143532.459810712@goodmis.org>
-	<CAHk-=whUOfVucfJRt7E0AH+GV41ELmS4wJqxHDnui6Giddfkzw@mail.gmail.com>
-	<20250331133906.48e115f5@gandalf.local.home>
-	<CAHk-=wi5pLoe3szxLREQGGJuWU0w_POK9Sv6717UH3b7OvvfjQ@mail.gmail.com>
-	<20250331165801.715aba48@gandalf.local.home>
-	<CAHk-=whRNxdkLC6Z91g-_RbrRsUo6K6+nvRWqccjsOycwUe_JQ@mail.gmail.com>
-	<20250331194251.02a4c238@gandalf.local.home>
-	<CAHk-=wiDQpOeXi_GjKB7Mrh93Zbd__4k+FF_vJd+-prbaacEug@mail.gmail.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1743467474; c=relaxed/simple;
+	bh=2bnlZKcqF1QfX8cbYQlebyb0ms5YPOYfQQpLSje/PXg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=YE5m0pF+RbS6ZCEZ1IIDNSafrTakciKBMKvqpAOqqzz+n1Ezxuk9tPLS9D9xppwiHlTt7p8NLkZSGHd0hJBGly30dvwr6B82SBoIoUobuaiOaUVLWKYbZsjI9f1c1hiH/mDwDE6C4KaFiLEcU7oyCFe/wmjWKkcivNp0qHVte7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=iMtwiMao; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="iMtwiMao"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1743467470;
+	bh=f5UFSKlpZMd23yYXyYvmQ+25iHMADDGseIQfDj8UagA=;
+	h=Date:From:To:Cc:Subject:From;
+	b=iMtwiMaozSMxU4VK/dGIL8xtnSqKDo/jUiqSeV4QuJYSrQjnWdBqvai0Ply8nz8Km
+	 sA1XuCft/pr6J7xUtScRH2kYZIjX2a/Eg/nzscBJMpfNDvoCerJsoP8x93svmFIVQp
+	 sUhb4ux/uMhjq0vy9o8nL89vOqbQZE3FK6tCh4kJXOadsMsm4VBWkuPyOR+haiw0oZ
+	 syFXhb7r/XCYi9cuN6ijNZ8L0duQIuAUOq17pcawG9tQPqjo1GymG1I0vJj1w7mneX
+	 8OoYbdqvGaUw7vUcKqp0sh2XiWBtwE2dDLJ/NwWMV6tibMua9H5mFhE5m/KM4dvUoR
+	 UVeCE78ZVMJkw==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZRTSY62SWz4xG8;
+	Tue,  1 Apr 2025 11:31:09 +1100 (AEDT)
+Date: Tue, 1 Apr 2025 11:31:09 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+ Christian Borntraeger <borntraeger@de.ibm.com>, Masahiro Yamada
+ <masahiroy@kernel.org>
+Cc: Ard Biesheuvel <ardb@kernel.org>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>, Sumanth Korikkar <sumanthk@linux.ibm.com>
+Subject: linux-next: manual merge of the s390 tree with the kbuild tree
+Message-ID: <20250401113109.2c8cb2b2@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/a+.RNlqCLfOPPdabUjbL3_p";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+
+--Sig_/a+.RNlqCLfOPPdabUjbL3_p
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 31 Mar 2025 17:11:46 -0700
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
+Hi all,
 
-> I thought you did that already for the user mappings - don't use you
-> remap_pfn_range()?
+Today's linux-next merge of the s390 tree got a conflict in:
 
-No, that's not what is done. The normal buffer is split among several
-sub-buffers (usually one page in size each, but can also be a power of two
-pages), and those pages are allocated via alloc_page() and are not
-contiguous. Which is why the mapping to user space creates an array of
-struct page pointers and then calls vm_insert_pages().
+  arch/s390/Makefile
 
-For the contigous physical memory, then yeah, we can simply use
-vm_iomap_memory().
+between commit:
 
+  9b400d17259b ("kbuild: Introduce Kconfig symbol for linking vmlinux with =
+relocations")
 
-> So if you don't treat this as some kind of 'page' or 'folio' thing,
-> then the proper function is actually flush_cache_range().
-> 
-> I actually suspect that if you treat things just as an arbitrary range
-> of memory, it might simplify things in general.
+from the kbuild tree and commit:
 
-Ah, yeah. That's the function I was looking for.
+  991a20173a1f ("s390: Fix linker error when -no-pie option is unavailable")
 
+from the s390 tree.
 
-> Of course, I would expect the same to be true of the page/folio cases,
-> so I don't think using flush_cache_range() should be any worse, but I
-> *could* imagine that it's bad in a different way ;)
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
 
-At least we can say we covered those other archs, and if a bug is reported,
-then all that would need to be fixed is the flush_cache_range()
-implementation ;-)
+--=20
+Cheers,
+Stephen Rothwell
 
--- Steve
+diff --cc arch/s390/Makefile
+index d5f4be440879,fd3b70d9aab1..000000000000
+--- a/arch/s390/Makefile
++++ b/arch/s390/Makefile
+@@@ -15,7 -15,7 +15,7 @@@ KBUILD_CFLAGS_MODULE +=3D -fPI
+  KBUILD_AFLAGS	+=3D -m64
+  KBUILD_CFLAGS	+=3D -m64
+  KBUILD_CFLAGS	+=3D -fPIC
+- LDFLAGS_vmlinux	:=3D -no-pie
+ -LDFLAGS_vmlinux	:=3D $(call ld-option,-no-pie) --emit-relocs --discard-no=
+ne
+++LDFLAGS_vmlinux	:=3D $(call ld-option,-no-pie)
+  extra_tools	:=3D relocs
+  aflags_dwarf	:=3D -Wa,-gdwarf-2
+  KBUILD_AFLAGS_DECOMPRESSOR :=3D $(CLANG_FLAGS) -m64 -D__ASSEMBLY__
+
+--Sig_/a+.RNlqCLfOPPdabUjbL3_p
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmfrM80ACgkQAVBC80lX
+0GxI0wgApZBKLDbtNZv0NIRRzRuXd4a5KEV+QPNNr38R4se4ygBT9U37ebzferfH
+/azTkTnO/4KVTBsgDYB5FPEYTJ582HVEr8lN7MgbH0wzkCpluIQSJHqHBjwkfSB4
+DYFcU3LQDdjceL0+cWPpK5WRy2d7Ovf3cbEMi8/MPLLdvBUbaLvmMWtxFjVrkyMJ
+Wdh/waIzLSEXfcujFXLOHYmoCsDjcZpMFq8ptiBx31gPLZCLn9ySGMCgF3v2TdGG
+nw/Ycl4PG/SfIxbcAyEQXZ4UK/D7BPE0Gxw4wh9DQP0TX8/Kq5ysybZGjfA5N7Fy
+xheQa+drfU6jR6RD3wv/0oZT+CqaUA==
+=jAJf
+-----END PGP SIGNATURE-----
+
+--Sig_/a+.RNlqCLfOPPdabUjbL3_p--
