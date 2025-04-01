@@ -1,186 +1,107 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f193.google.com (mail-pl1-f193.google.com [209.85.214.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E29E2204680
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 13:57:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1876A4501A;
+	Tue,  1 Apr 2025 13:58:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743515864; cv=none; b=LUdkfpKiLHFR/y7MYI5CpL9kAMlaBi8UzuSZvgxZ9UUKEXQ36NWKUoz4KpBkopwYLq1eHcQC0hOTznc35YgBrAgYRt0M/N9GZpiO6Kkwcw5wXJ82COVwdB0KF2vuVwqSyL4372zZ7cLCa+WFyse4RjTRlYy8+NVex+pWXCMLwTs=
+	t=1743515914; cv=none; b=fwPryB/Y76hJ1vrzsuNnx1+wJ12aNNnaOwrLR4XcaLWGS2M6UIwrECuLjJOz2aZikSjkUmRpZ9KPBzSMwj8/+3K1FmBAThWFjT4Io9doWfnrnsiJthH8gLGUxuPsIzMy1VToGmgeA24QkHvDavYrfnI/7/z/bXy8jloSnfEI/A8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743515864; c=relaxed/simple;
-	bh=Ei4o2YiJCXeec+uFKDsiydnj+4SkZPbIQelCXI4KKNs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YNISS4lcr176ph3ERJu88HRVzUUeJoUsm+MVjODk3jEwMetuJTy4dFtxrbNVLbN6tUoL9QzfowJgbr0SMTMvEWuOI+6NCxbskk/ysInbojduf6/9mYz1fRObS3v6ITRAOVIl3t8ngUzRW4nG4htKGM5phAR3OfGvc8TquRyOP7U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=U9H71HUm; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1743515914; c=relaxed/simple;
+	bh=Ik9ndR1ZOthTt3RPFJbayzRDoWqFGAwHZ4LyIzPoYyI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=NBhlg1iyrII4+++qTg9RuE73Dk2wA9fpECEoT4bLb7VdH0IissczzIaJW+xzAP2VSx4W+x6ZrgzczCWBocyQQ/YOuICFf9Cwm5XU93ATNOVzYqo44dyDMF4BoK058Dw7zlWTswLBR0gCEvAvCWD2Hn7DkDPMDvL9j5J61ljgJao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K7yfZrBB; arc=none smtp.client-ip=209.85.214.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U9H71HUm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743515861;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nK9hIRueLujXj1So3EtFD3gYBWrgxP2wNV1sCqS84Xw=;
-	b=U9H71HUmQsubaekBCr66HRJwKbVXaXEB5Hj1Lu884wmJpFx1061+DxamQFqcbWGq5caPWb
-	bETu8Fyo9ohwqM5Bj/+PJyoV/xgcsSLfLuLTgKcQE6ihQ+hwXDGDFQaJLdmi/LADvhlvTl
-	N6l9ubkCb/2FfW71a0UY0UEl7bE4MMw=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-325-WuLj5_PaMqqHOYY989l02A-1; Tue, 01 Apr 2025 09:57:40 -0400
-X-MC-Unique: WuLj5_PaMqqHOYY989l02A-1
-X-Mimecast-MFC-AGG-ID: WuLj5_PaMqqHOYY989l02A_1743515856
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3912fe32b08so3203985f8f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 06:57:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K7yfZrBB"
+Received: by mail-pl1-f193.google.com with SMTP id d9443c01a7336-224341bbc1dso93898085ad.3;
+        Tue, 01 Apr 2025 06:58:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743515912; x=1744120712; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=gvs23NKWJWpxifCmG2JMMd+dceGohlJ1NYBE+YufBB0=;
+        b=K7yfZrBBp8X10Vr+cBlTDZfQF+XKB2OsZlrCLko6NBkPoAVn2yfVMBg6UVexnZhp0T
+         RsykDtyepGNgHsVUTpo93WkFGuwA7E8dEMUlLaDbCQBHxEqO8sonQVCJFrukml8ul0W7
+         fUyOw+JcYN1wwji+oiIIkY8dsQcPzoPvIycNU9vsde0BhHC1LdVmYcJMj/Hn1OYOczMT
+         +7wIEuaJvRA7DXm9shnX+4tvWuya5GOX5m8tWXSBSMGoi/GoGtn54y2cT6w24LiCRwd4
+         Ae4Ser3VTkgIHoioNhi9f4dkgS9lYZFSbqOR3k68MSZYXPKCzv7wKlj4nAM3kc14em1C
+         2Cvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743515856; x=1744120656;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nK9hIRueLujXj1So3EtFD3gYBWrgxP2wNV1sCqS84Xw=;
-        b=Bt7mNeklGgxT0TwkHq0RgOvZjAOqlor/9FGS7+FOffUQvGkhpbQr/iK4VT2lmsAdYF
-         1TfdjBdxfPd5gAleO87T64Q1UYnET+5HzYDhCmwQZ0XRryI8wLXuDrQNChmhUj9biJ81
-         vS6H9itUr50XQBEewI5Xr/00sq3FuD2Nrrcq8BbSZ/kMglrPdHGhA8VsQ3FWxpm/9kL1
-         ynKpVRV3qVkhmBwewNE5WYGYbjOGzGLtCr/auBPveG2OCue614HX9CTPNUQTI+2+ThPd
-         hRa0qJGse7cqowhLHpdxMOAmtWbPsgob+9q179K3y1lXU8M0jnu3EqSQLNtZ203+0gy2
-         PXhQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW1bWos8Sj++Qr6B4YcTrfFXU8yzDDWB83DYe0/1yQ70JytkQJUEXKm01aD5DHNxAxPkhYeSK8Jrky/h3Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyJwd4tggsG8BvmNjN6zQwL+kWNQjTw/HNBmWxDOBSb6/I88Q/U
-	K7S370hALqDiZwdNGySLC3Ba7UbKqMAsB/vuGnJvpw/iH2SqNjZ2CvJbrMsiJfaZhIsrWczLjM7
-	jvkj5DKCwEnlS4FBlNwO3aF6tqQuzf6jagc5ItV0mDbuuWxZ4J5em+ovsk79Vzg==
-X-Gm-Gg: ASbGncs/BRxuibhdwCP81xkiFXGtvjCxEdhazigHxkfVWtqMQtmSI8bFVgiVCIKwOdh
-	rekh5Js8lxg9Q9LfA/lrjpPrGyVf4VqTTVgmCSAw7WLXhi26tRR+45xY6xyybIRzTrsq7BAfwhf
-	B7pOVb65ykkrqUv5Yv7/0X8fgwsdqFMhxcxEIfampvh+4eQTHQXme/xrms6EoAL10bZ8IlAfo25
-	XLrFgrShgGT3SELxgXjxgyfe/juR3Rhg0mrrda5SORclVgydT/X1NE9nwI1mFEiG5p1kXqtBKdL
-	zqTJZqUO3UGQYYZl3YjypA0Sg/AXnwGYaNiiIF0wrN8J9ceJejKC46sJyUY=
-X-Received: by 2002:a05:6000:2913:b0:39a:ca59:a626 with SMTP id ffacd0b85a97d-39c120e3e5cmr11015548f8f.28.1743515856236;
-        Tue, 01 Apr 2025 06:57:36 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFgTZzKaL62iArCAHG5W6zUwy/3RjZmmIeQYPk9NlRX20WPMdkLbAFtCRU8EaAYV78xSkqWEQ==
-X-Received: by 2002:a05:6000:2913:b0:39a:ca59:a626 with SMTP id ffacd0b85a97d-39c120e3e5cmr11015519f8f.28.1743515855788;
-        Tue, 01 Apr 2025 06:57:35 -0700 (PDT)
-Received: from sgarzare-redhat (host-87-11-6-59.retail.telecomitalia.it. [87.11.6.59])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d8314b5e7sm201779655e9.35.2025.04.01.06.57.34
+        d=1e100.net; s=20230601; t=1743515912; x=1744120712;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gvs23NKWJWpxifCmG2JMMd+dceGohlJ1NYBE+YufBB0=;
+        b=JPb/QszxwP+OC000xhOxSJfQogZsCiCTaXbB1+nifKl/8lr4y9Z9ruBEkI3JGMsa2d
+         JvYWqeb9pALzOXyFSrtm/e77khwNkm5Bv3hLQZ1Ec8bOndIwqwWY3kk8oh3BxkKm065e
+         W36/wknor2nFUPw6RI7KGu44i7x+GwkK0PHTDZx6grN8Rcp1bPKuDu4rLQSKGBCVLf29
+         GqIl3u55srB0hnt+5HptwGKjgZPrn/5/aT1R7CIqwnuiKgWaK89y/uhS0fQ0wRMLo/Dj
+         Ljdx1b1XDVi3nv2sI7LvtefbA4lbEhaEOZG+deuotcA3OpaBHDaG+6V477fLKhG4YDrb
+         RONg==
+X-Forwarded-Encrypted: i=1; AJvYcCU7quvZ+eaMRXxRcmcIDBb7H3OvLCnWepePX5eMMbm/YPnC5M/D/fFbx2z9fpg6E27mHWCRqTM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJX61zPZzfV8EJuan2m1MBj1iRLkFCPVG8FpntqEth6WMvcJm1
+	bNhH9Tu+b0kX7ta07XOca9z/b1Annu1jOW6gafK59D1ZEiQpRwcH
+X-Gm-Gg: ASbGncuMQ/VeVDWGguXt3KeOFKkDSyHIX9AE0XqRzuhco76iYi921CXNBt5V42eaRoI
+	g4uSQLrgXYlpgG0tKBIz3eI2cEihLvCOMr/h89nZfqVYk2fiqZzH/vUr91WfBnb9uTldVcGpA48
+	omEk8jNQwtzBe21du1nOYuaXzP50dyKI4+D60nTYmvsGOEWp4KL64TCxu+YlgZnQJhSXWZJJMJ0
+	9sWFKGxnBvyDqZUC7ARCf3CCxSHtxUJ1ZEcwHylc5OAdwygCpwucqwdmKVOXuy7muJp7d6mOf+p
+	ThKBfliSL6/PfnuyRTLBT2YOmwS0lIkD1lAjQ5Cl9aGw53l6M19i0YMlu4OXEx+eiuWLQGHBp1m
+	X5BJv0w==
+X-Google-Smtp-Source: AGHT+IFe5huXyqUWJr2X0qS753K3KbtPpTRYhcHoKF9r1UMNQ7vm5c8wsTWP9penkOThrq06D6mW9Q==
+X-Received: by 2002:a05:6a00:ac3:b0:736:5544:7ad7 with SMTP id d2e1a72fcca58-739803c0672mr15923478b3a.14.1743515912195;
+        Tue, 01 Apr 2025 06:58:32 -0700 (PDT)
+Received: from henry.localdomain ([111.202.148.167])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73970e1d922sm8923850b3a.37.2025.04.01.06.58.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Apr 2025 06:57:35 -0700 (PDT)
-Date: Tue, 1 Apr 2025 15:57:23 +0200
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Cindy Lu <lulu@redhat.com>
-Cc: jasowang@redhat.com, mst@redhat.com, michael.christie@oracle.com, 
-	linux-kernel@vger.kernel.org, virtualization@lists.linux-foundation.org, 
-	netdev@vger.kernel.org
-Subject: Re: [PATCH v8 6/8] vhost: uapi to control task mode (owner vs
- kthread)
-Message-ID: <pgcopzs6q6kqwlmndtbt2bdpbj3xvosjjxb7vikte3gnt643xh@5qhv5myd2cpc>
-References: <20250328100359.1306072-1-lulu@redhat.com>
- <20250328100359.1306072-7-lulu@redhat.com>
+        Tue, 01 Apr 2025 06:58:31 -0700 (PDT)
+From: Henry Martin <bsdhenrymartin@gmail.com>
+To: arnd@arndb.de,
+	gregkh@linuxfoundation.org
+Cc: linux-kernel@vger.kernel.org,
+	Henry Martin <bsdhenrymartin@gmail.com>,
+	stable@vger.kernel.org
+Subject: [PATCH v2] misc: tps6594-pfsm: Add NULL check in tps6594_pfsm_probe()
+Date: Tue,  1 Apr 2025 21:58:25 +0800
+Message-Id: <20250401135825.28694-1-bsdhenrymartin@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20250328100359.1306072-7-lulu@redhat.com>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Mar 28, 2025 at 06:02:50PM +0800, Cindy Lu wrote:
->Add a new UAPI to configure the vhost device to use the kthread mode
+devm_kasprintf() returns NULL when memory allocation fails. Currently,
+tps6594_pfsm_probe() does not check for this case, which results in a
+NULL pointer dereference.
 
-nit: missing . at the end
+Add NULL check after devm_kasprintf() to prevent this issue.
 
->The userspace application can use IOCTL VHOST_FORK_FROM_OWNER
->to choose between owner and kthread mode if necessary
+Cc: stable@vger.kernel.org # 6.5+
+Fixes: a0df3ef087f8 ("misc: tps6594-pfsm: Add driver for TI TPS6594 PFSM")
+Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
+---
+V1 -> V2: Add Cc stable line.
 
-Ditto
+ drivers/misc/tps6594-pfsm.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
->This setting must be applied before VHOST_SET_OWNER, as the worker
->will be created in the VHOST_SET_OWNER function
-
-Ditto.
-
->
->Signed-off-by: Cindy Lu <lulu@redhat.com>
->---
-> drivers/vhost/vhost.c      | 22 ++++++++++++++++++++--
-> include/uapi/linux/vhost.h | 16 ++++++++++++++++
-> 2 files changed, 36 insertions(+), 2 deletions(-)
->
->diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
->index be97028a8baf..ff930c2e5b78 100644
->--- a/drivers/vhost/vhost.c
->+++ b/drivers/vhost/vhost.c
->@@ -1134,7 +1134,7 @@ void vhost_dev_reset_owner(struct vhost_dev *dev, struct vhost_iotlb *umem)
-> 	int i;
->
-> 	vhost_dev_cleanup(dev);
->-
->+	dev->inherit_owner = true;
-> 	dev->umem = umem;
-> 	/* We don't need VQ locks below since vhost_dev_cleanup makes sure
-> 	 * VQs aren't running.
->@@ -2287,7 +2287,25 @@ long vhost_dev_ioctl(struct vhost_dev *d, unsigned int ioctl, void __user *argp)
-> 		r = vhost_dev_set_owner(d);
-> 		goto done;
-> 	}
->-
-
-As I mentioned, I'll add the Kconfig in this patch to avoid bisection 
-issues.
-
-The rest LGTM.
-
-Thanks,
-Stefano
-
->+	if (ioctl == VHOST_FORK_FROM_OWNER) {
->+		u8 inherit_owner;
->+		/*inherit_owner can only be modified before owner is set*/
->+		if (vhost_dev_has_owner(d)) {
->+			r = -EBUSY;
->+			goto done;
->+		}
->+		if (copy_from_user(&inherit_owner, argp, sizeof(u8))) {
->+			r = -EFAULT;
->+			goto done;
->+		}
->+		if (inherit_owner > 1) {
->+			r = -EINVAL;
->+			goto done;
->+		}
->+		d->inherit_owner = (bool)inherit_owner;
->+		r = 0;
->+		goto done;
->+	}
-> 	/* You must be the owner to do anything else */
-> 	r = vhost_dev_check_owner(d);
-> 	if (r)
->diff --git a/include/uapi/linux/vhost.h b/include/uapi/linux/vhost.h
->index b95dd84eef2d..1ae0917bfeca 100644
->--- a/include/uapi/linux/vhost.h
->+++ b/include/uapi/linux/vhost.h
->@@ -235,4 +235,20 @@
->  */
-> #define VHOST_VDPA_GET_VRING_SIZE	_IOWR(VHOST_VIRTIO, 0x82,	\
-> 					      struct vhost_vring_state)
->+
->+/**
->+ * VHOST_FORK_FROM_OWNER - Set the inherit_owner flag for the vhost device,
->+ * This ioctl must called before VHOST_SET_OWNER.
->+ *
->+ * @param inherit_owner: An 8-bit value that determines the vhost thread mode
->+ *
->+ * When inherit_owner is set to 1(default value):
->+ *   - Vhost will create tasks similar to processes forked from the owner,
->+ *     inheriting all of the owner's attributes.
->+ *
->+ * When inherit_owner is set to 0:
->+ *   - Vhost will create tasks as kernel thread.
->+ */
->+#define VHOST_FORK_FROM_OWNER _IOW(VHOST_VIRTIO, 0x83, __u8)
->+
-> #endif
->-- 
->2.45.0
->
+diff --git a/drivers/misc/tps6594-pfsm.c b/drivers/misc/tps6594-pfsm.c
+index 0a24ce44cc37..0d9dad20b6ae 100644
+--- a/drivers/misc/tps6594-pfsm.c
++++ b/drivers/misc/tps6594-pfsm.c
+@@ -281,6 +281,8 @@ static int tps6594_pfsm_probe(struct platform_device *pdev)
+ 	pfsm->miscdev.minor = MISC_DYNAMIC_MINOR;
+ 	pfsm->miscdev.name = devm_kasprintf(dev, GFP_KERNEL, "pfsm-%ld-0x%02x",
+ 					    tps->chip_id, tps->reg);
++	if (!pfsm->miscdev.name)
++		return -ENOMEM;
+ 	pfsm->miscdev.fops = &tps6594_pfsm_fops;
+ 	pfsm->miscdev.parent = dev->parent;
+ 	pfsm->chip_id = tps->chip_id;
+-- 
+2.34.1
 
