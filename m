@@ -1,110 +1,108 @@
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A53C313C67C;
-	Tue,  1 Apr 2025 01:13:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 602C22E3384;
+	Tue,  1 Apr 2025 01:18:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743470035; cv=none; b=Ppymt5knpGiIYqQkno2IjwrkW9+29ygVLHk7SkhVT+v7X2MKYODLG0gutsChF5v9H35dbGWgZow5ERv1i77+8S5ij7CF56Y3LB0cw8MN7qo7Ebki62pEmg+rm5srXhtu0TNyt/AxTGDYOJU+62f5Kv4gswr4rcoUDwraRvZowjo=
+	t=1743470330; cv=none; b=Jh55gP7PC/IurP07wz2ZOyjXU7XIkP8vK//OmbQtQ1KhQZo+39huDrkKxOA7uIHp1B2qUzLOxRSkriw8zWF7nCY7DJ05o0kbXu2ggjgfiotxvnLKVLBPijQ+nG6LY/g4jwczQC+ZEg9ss9A+73oOpYAWNoDmjBUcIyA3StyMBro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743470035; c=relaxed/simple;
-	bh=9V6gALXQNYdhz5TmaBOH6ma6nrpJil+JKlbs8/kqK/s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RCA2e8Xnb0xi7tkn7kuSrHOIXpPqmvDoeZtrPsDxJ0bB/KV6E2GwERdplJCN0WK/BP+EW0Jw6R5ZVC0oabEQJFjOeUGvq0NVN9foWYsY8bm2EH5OsmsriTvxNJVTC3jj5DYIKZyFmmDZu6WqJSl/ywYylTAs3m1dIZyznNpo1NQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aySm72MF; arc=none smtp.client-ip=209.85.219.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aySm72MF"
-Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-6e90b8d4686so44796356d6.2;
-        Mon, 31 Mar 2025 18:13:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743470032; x=1744074832; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9V6gALXQNYdhz5TmaBOH6ma6nrpJil+JKlbs8/kqK/s=;
-        b=aySm72MFisC48aB3IdkH+0yxD5OPMLxW35pGWX7DRs3FRaSzOBOD2cKNXBrjbiFApv
-         xHCJwPrZBq3IxYS6YNHcKczP8mQaiAxhSQpsUIW0uTsBR0fuokAVPAPmQknike7ywk1I
-         E1edDyJreLpd5u14SJae8wMXqi5/5WunBxsEkSMLkvtTn0jcza6+4VcDPrxvEyKRjZ+G
-         uA7IGuvV1XXkAXMJDG7CpQAmmPemhHnDLWdlKh86tckQt8RKsnUMdxB1aWIK99cOJjhy
-         tIdf1rIFmDC9Wtcu3w1YxU8rwcot5CV++aFtTQMykMBo2CzmmRrQccM9QktYVqxGMr4e
-         SzHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743470032; x=1744074832;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9V6gALXQNYdhz5TmaBOH6ma6nrpJil+JKlbs8/kqK/s=;
-        b=JMPMul2SHqYSTCSjKiXSdzOiMYUkzwLgVNHAnIaXObz0FamfAXI365zg158IDAS/Nq
-         zO+nIoOXENtr0YwasYFsjDZNtCGdH0i/0gHeNnh1MCaY5jpAmTg5JJFve/ynZtp3EhAr
-         PMhn/Asy8XKQhSHf8n3vVAaGWJpdYbQ481GTBDR3qQ8q/vXzBcYHl/8ChlHE9wge7rEL
-         2tf1H8NYSUPEabPbu+MKfzGq1R3mHnH+6mBCqzZuFWdXBKTNNVO99cHILRpryBcw0LNb
-         I6wyrGGEXo88USXPBDFp3nNnEju+AiVmFNHLhb/ryA2dn4NoOpmcJbA91zDnH5MH1EJp
-         /zzw==
-X-Forwarded-Encrypted: i=1; AJvYcCUHYe0899zhYW9yfqPaSyOmmIhhc9nU8dA0kqJliUD0sBhCJJlJWaYR/A5bGiB1U1qjpcToOI6qdhATfcDH@vger.kernel.org, AJvYcCVjR0Csgb4vO8V9U29DQlCL5SjAvhQgNziDUNoQE++Akx4fiH0zDT9AypuV6UofD1mJki29Jq5KCxI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyYqFNIp8uF/D1xIVRnAHIlzvO7AUTbPS+0T6uZINZUR/opLmLX
-	L355/7kJ8pm7OvpP89AzTLU8RwnllRjpj0eyr3/3g4gx5wfHlIr7q+xXfTlsKXMncAvY26fZzJG
-	xtY0xyUi+Q4AOOQ4z/rIcFisF4d/hkcwO
-X-Gm-Gg: ASbGncvFHoNx4YghKXTyO/pBg5ck0xwTk370d0/u2e0GeOc87yoyPrK8M8dpyXzqbYO
-	tpoz3YrM0qCft41X/J+wW2QhcBEs9umShGSNLvdEV8kTJ8IbZ1eS5O/ZHLsOZbTeUX8ty4Ikc2o
-	GKbxr9dp0fVozKoOhEBpX0rQN/Rg==
-X-Google-Smtp-Source: AGHT+IGczQt7n85+GajfuJEx43dpr5UsqwDzByhTbFO0RDOS1lkyVzr0+4hyaEsExSpG06CA7ZTG4IFeeibLL8dcmeA=
-X-Received: by 2002:a05:6214:5185:b0:6e4:269f:60fd with SMTP id
- 6a1803df08f44-6eef5e45d14mr20185076d6.23.1743470032357; Mon, 31 Mar 2025
- 18:13:52 -0700 (PDT)
+	s=arc-20240116; t=1743470330; c=relaxed/simple;
+	bh=mbNr9YD8iEA76ncaVf/NyHRgt9tSCOM7MMjGEKN6/QY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=GZMZDeh7RMhsbqHGX1+kxeN+C/AqAmEz22GAR4+h5aQ0xzl1aAKA7UOjN0DA3dui9Z1DmORGVoLuv8qQ1U6EvW1SdxFjDkQyE9C8AeE7tEcet1wrsteuL+bwoNLGMnMpxN9RBCRubBFSmxOlGH7QBkqS7YYxczwt1XPHkeptSMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4ZRVTr0X5bztRK9;
+	Tue,  1 Apr 2025 09:17:20 +0800 (CST)
+Received: from kwepemg100017.china.huawei.com (unknown [7.202.181.58])
+	by mail.maildlp.com (Postfix) with ESMTPS id 7B1C61800B1;
+	Tue,  1 Apr 2025 09:18:45 +0800 (CST)
+Received: from [10.67.120.108] (10.67.120.108) by
+ kwepemg100017.china.huawei.com (7.202.181.58) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Tue, 1 Apr 2025 09:18:44 +0800
+Message-ID: <11061634-c35f-02fc-ec2d-04f55e9d1e33@huawei.com>
+Date: Tue, 1 Apr 2025 09:18:44 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250329110230.2459730-1-nphamcs@gmail.com> <20250329110230.2459730-2-nphamcs@gmail.com>
- <67eb148e1f818_7baf294b9@dwillia2-mobl3.amr.corp.intel.com.notmuch>
- <CAKEwX=OEQKdoWbyAO=LKE--ssLzBH0UVhz3EYaCiodpbMtQvKw@mail.gmail.com> <67eb23cbcd0b7_11987294fd@dwillia2-xfh.jf.intel.com.notmuch>
-In-Reply-To: <67eb23cbcd0b7_11987294fd@dwillia2-xfh.jf.intel.com.notmuch>
-From: Nhat Pham <nphamcs@gmail.com>
-Date: Mon, 31 Mar 2025 18:13:41 -0700
-X-Gm-Features: AQ5f1JrJGOvy-PDvwAtqA3caAgZR_fWoNj40h_LFmhLE_INmWOy5f2BIOtp8Vgw
-Message-ID: <CAKEwX=OpOrV+Vy1QV1wpX6QypVmP5wkjtQ7-5PMoF0FRuVD=zQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/2] zsmalloc: let callers select NUMA node to store
- the compressed objects
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: linux-mm@kvack.org, akpm@linux-foundation.org, hannes@cmpxchg.org, 
-	yosry.ahmed@linux.dev, chengming.zhou@linux.dev, sj@kernel.org, 
-	kernel-team@meta.com, linux-kernel@vger.kernel.org, gourry@gourry.net, 
-	willy@infradead.org, ying.huang@linux.alibaba.com, 
-	jonathan.cameron@huawei.com, linux-cxl@vger.kernel.org, minchan@kernel.org, 
-	senozhatsky@chromium.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.1
+Subject: Re: [PATCH 1/5] scsi: hisi_sas: Add host_tagset_enable module param
+ for v3 hw
+Content-Language: en-CA
+To: Niklas Cassel <cassel@kernel.org>
+CC: John Garry <john.g.garry@oracle.com>, Yihang Li <liyihang9@huawei.com>,
+	<martin.petersen@oracle.com>, <James.Bottomley@hansenpartnership.com>,
+	<linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linuxarm@huawei.com>, <liuyonglong@huawei.com>, <prime.zeng@hisilicon.com>,
+	<dlemoal@kernel.org>
+References: <20250329073236.2300582-1-liyihang9@huawei.com>
+ <20250329073236.2300582-2-liyihang9@huawei.com>
+ <f53505e6-9bfa-4553-91cc-497512a6977f@oracle.com>
+ <e5ab4e5a-33d0-6102-1c5c-f1f83a752346@huawei.com> <Z-pVGyZ1vMBhUfYH@ryzen>
+From: yangxingui <yangxingui@huawei.com>
+In-Reply-To: <Z-pVGyZ1vMBhUfYH@ryzen>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: kwepemh500017.china.huawei.com (7.202.181.151) To
+ kwepemg100017.china.huawei.com (7.202.181.58)
 
-On Mon, Mar 31, 2025 at 4:23=E2=80=AFPM Dan Williams <dan.j.williams@intel.=
-com> wrote:
->
-> Nhat Pham wrote:
-> [..]
-> > That still leaves zram though. zram is more complicated than zswap -
-> > it has multiple allocation paths, so I don't want to touch it quite
-> > yet (and preferably a zram maintainer/developer should do it). :) Or
-> > if zram maintainers are happy with NUMA_NO_NODE, then we can
-> > completely get rid of the pointer arguments etc.
->
-> At a minimum make the argument a "const int *" so it does not look like
-> the value can be changed by the leaf functions.
 
-That's a good idea! I'll incorporate it into the next version.
 
->
-> ...but I would challenge zram folks to ack/nak that change rather than
-> maintain old behavior based purely on momentum. I.e. add to the commit
-> message an "exclude zswap from this policy for $explicit_reason"
-> statement rather than the current $implicit_guess that the old behavior
-> is there for "reasons".
+On 2025/3/31 16:40, Niklas Cassel wrote:
+> Hello Xingui,
+> 
+> On Sat, Mar 29, 2025 at 05:49:47PM +0800, yangxingui wrote:
+>> Hi，John
+>>
+>> On 2025/3/29 16:50, John Garry wrote:
+>>> On 29/03/2025 07:32, Yihang Li wrote:
+>>>
+>>> +
+>>>
+>>>> From: Xingui Yang<yangxingui@huawei.com>
+>>>>
+>>>> After driver exposes all HW queues and application submits IO to multiple
+>>>> queues in parallel, if NCQ and non-NCQ commands are mixed to sata disk,
+>>>> ata_qc_defer() causes non-NCQ commands to be requeued and possibly
+>>>> repeated
+>>>> forever.
+>>>
+>>> I don't think that it is a good idea to mask out bugs with module
+>>> parameters.
+>>>
+>>> Was this the same libata/libsas issue reported some time ago?
+>>
+>> Yeah，related to this issue: https://lore.kernel.org/linux-block/eef1e927-c9b2-c61d-7f48-92e65d8b0418@huawei.com/
+>>
+>> And, Niklas tried to help fix this problem:
+>> https://lore.kernel.org/linux-scsi/ZynmfyDA9R-lrW71@ryzen/
+>>
+>> Considering that there is no formal solution yet. And our users rarely use
+>> SATA disks and SAS disks together on a single machine. For this reason, they
+>> can flexibly turn off the exposure of multiple queues in the scenario of
+>> using only SATA disks. In addition, it is also convenient to conduct
+>> performance comparison tests to expose multiple hardware queues and single
+>> queues.
+> 
+> The solution I sent is not good since it relies on EH.
+> 
+> One would need to come up with a better solution to fix libsas drivers,
+> possibly a workqueue.
+> 
+> I think Damien is planning to add a workqueue submit path to libata,
+> if so, perhaps we could base a better solution on top of that.
 
-Yeah I'll take a look at the zram code. There's no conceptual reason
-why zram can not or should not adopt the same behavior, from my POV -
-it's just a bit more complicated than zswap, and as such would require
-more hacking. So I'm leaning towards making the minimal change
-required to support zswap first, and letting the zram
-maintainers/developers work it out on the zram side :) We'll see!
+Thank you for your solution. As you said, we may need a better solution.
+
+Thanks,
+Xingui
+.
+
