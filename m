@@ -1,55 +1,55 @@
-Received: from mail-ot1-f74.google.com (mail-ot1-f74.google.com [209.85.210.74])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E432F2288FB
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 18:26:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CCC9229B18
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 18:26:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743531971; cv=none; b=JrrnKpEJ09L5XSYd0gUBdem79oeMzprPzMFFUTtWGDPYWJ5tuRDR9BvDVHK51DrIGVWIOQGhQcvl8juz7JFkyrF59yohMG5rzzHr0uwTgVAutNIuugTibyUR4SmV5P5ZKkCefwvB9i93UPiZjwkmryGAe+xhWpybtEYOsIectQo=
+	t=1743531975; cv=none; b=r6Ak8NfiWOTb7+G1RuroBUo1FANibr861XktgKMuCanwDG2C3FlxHR+FY5WxWa6H/dPcK/pKsDGQ/ThCF6lYEg3UQ4oELbExoXkpsoT/1mTOK+uzhie1mKC11Noq4wiLSTk2dppRGv8cf9+YB8ZQc3vAlIFZtu3wHNuG2/0vBLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743531971; c=relaxed/simple;
-	bh=loSeINwlbc6XnjqNUnme9Ii2wesULU3u9gelnKxDOWo=;
+	s=arc-20240116; t=1743531975; c=relaxed/simple;
+	bh=bRqcJNqdHpJ92JW9Ryv+Tum+BcxSVSmO0diBUAO4Zbk=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=RnhaVD1jqvXOE2PPwRz1XCWwizuC1DP77UCmQyuZGdAI8ey/dHXspXHegCsC9Q4+DoQ1RBUIJP7BE6p4KU1X2ZsXwd5d4Q6jsRhgNVPPF+N7/3y7Ujv9y3LGOzCIC4c0HQsVyYeSvL0AI/CSNiY4GGvPkX6xqObOXVQon77vrRI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=R5Q1a0IW; arc=none smtp.client-ip=209.85.210.74
+	 To:Content-Type; b=lwK7rUfw7xJPYCSC5x5vFegIy1TiNyl2HRL0kgeiKDnFdT1rH/nNm2waMKLaxRTwpsVAtPbG3ZEIkQEWlUtIDJghSOnc/aVY20uQcVqSIn2LRcnqj2m53yawsZxLcNVgIN88Z0RxsiNauOzwWmtBgXDyDGjv4mZnx//HdXbTWfM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=L6eEkNwL; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="R5Q1a0IW"
-Received: by mail-ot1-f74.google.com with SMTP id 46e09a7af769-72bd7984706so310602a34.1
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 11:26:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="L6eEkNwL"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-3055f2e1486so4313833a91.0
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 11:26:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743531968; x=1744136768; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1743531972; x=1744136772; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=iXDN2IiTwXgBiyK9J/TipFHWdZHNwXGG7JKhdVlTKrc=;
-        b=R5Q1a0IWGzWlzo1JrDWeQpmAxwp3pvpMSCmVoqBOjPORBBD/6971t7w+R7QUnfPrbC
-         AZfBS8j8Dsp8Zf6wMOZNxeN3kyfqph9rTUDss1DVv4QZqRoAkQxoy04NzCSh8tE+iC+s
-         fa4M4YTEqzy+tkmQk4C1pZ6pdvIzhdjO07iByhHK14VreN7XVMFLZFhEw0qpxS4o7IL1
-         nQwESGL/w+oXvvdf++hSwmYwodPUtWgIFTmP/k6p7cSDzSWcQrDrXs4Icj1sXi+mlpPV
-         M2AuA2xNyZ5T00r7H3iqXyhWWLgkGVRRigRQfDKhAgqn+sBZicJR/aDpFk5L8T53Kbu7
-         dw8Q==
+        bh=PSwN5ZhtSE4cdH17wQnS7beYUnk/E6AzAjOBdetWRXw=;
+        b=L6eEkNwL7NmxnkYDv9cpBI+gDoZ3+L6GXmnOew3TaXcJB8VPfUfteQrSZR+SSKjuqT
+         SREW1fhvW+CN8FWJq66WCBzgP1orfnhL+8AqC3Bi+a/gBCqZTVZvxcbV/2++mCR+CpXe
+         n9y2aL7GCXAs2LzgR6bBXw8hmYObWI+2xHCSQxLdjl4emjRUgVKYCZxwXMxHLvdqnNG5
+         nbT0ks3pw39LmKFY6b34zBGTG4x84OuzuZZZPzbDNOSMUJUGB9XUsxGm5nE1JYJXgSfX
+         pB51iZj4wRbkkC0HwPrKbfXGp/h2YOk09OW65o5miNoce+7U+oJUUsten2PJVbhkyLiM
+         k4LQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743531968; x=1744136768;
+        d=1e100.net; s=20230601; t=1743531972; x=1744136772;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=iXDN2IiTwXgBiyK9J/TipFHWdZHNwXGG7JKhdVlTKrc=;
-        b=XCXp/7dPwrZV57GLFnOQwV7UnHZJzyN/w+YuShotNoCV94LylSylLqXdYG/HDZw1tA
-         nP3aFs0v0xKd5QdVN+4iYp+3m3mRksuYHfkBrnO4h5DjI2z+50fusQv/aU3UTgtrLsPi
-         7A/w5nMfbPHJHlVAWFE4DVSc0UUGZics7i63dFziijm3OO0jyPQipTYiIIJJfvMW0DDv
-         3zmJBxGOUlVl6EwIZhs2YQXZsWZ2vY7w9yGcGVCuqimOXxpc1enPtlh2D+E9JrErquvi
-         HboVcgP7mhwVHzhZ9Ybr2cRACYsmEXRocAQO5pf7EDZRIOSN0K9VM4jSyRxfarofuD0Q
-         rKnA==
-X-Forwarded-Encrypted: i=1; AJvYcCUit08g1XF2FdlGeftU5EF1snWRZhtGFv1bFeT8R/nxsUsQqd9qxbI/Fk2jEoTObL9n+vOYLzkbCDvTBAE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxyLWE/voaLGxzwDQAxXDVKRfb0ykF68XmSffK1sDKBUeg6ga2a
-	5pp8jMoMdiS/pPxNN7rQMWkcB7GTa41eojN8mxao3WBkXd60o72rmlZTGBsgSjrjo9gHiqzoh4z
-	ap/6+nQ==
-X-Google-Smtp-Source: AGHT+IHUffenbdrxtR2eLoeeVEpZywaWbKXEVYkXtogEfzNSPRpDS6P26p637BPNcEuYtvO3lbjegNy1msNO
-X-Received: from oabhi26.prod.google.com ([2002:a05:6870:c99a:b0:2c1:5c70:acac])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6830:2808:b0:72a:f44b:13ed
- with SMTP id 46e09a7af769-72c637771c3mr8057489a34.2.1743531968061; Tue, 01
- Apr 2025 11:26:08 -0700 (PDT)
-Date: Tue,  1 Apr 2025 11:23:43 -0700
+        bh=PSwN5ZhtSE4cdH17wQnS7beYUnk/E6AzAjOBdetWRXw=;
+        b=uUwV9j+Z66l/pPYzHxEOEquKpt/PCytMhvoq/UwAfqLXHiidWs/7zqKBreXvuk/A4g
+         vtmLs8vWyrmzo40HgRnoC6cEHBjTZZ5lNNnf4pwzqqA4+G8BucN8K+xsCuQEz6OOYD3A
+         onRlxxpepIGeORq1dh9nQSy+l9EN6TnCJTjzEFMbPtyHnegL70/q7ofEwz1ImsSBfOR7
+         YZVkhPk/7rf7Ab7njJwUEBrIwz0nGRX0Zr9DFWHNmiED+29tVRBClKZIlzXwSFEBXc7N
+         k8wI3maEZDr4Vh2Jy1K9DxfTg3HkiHLBL+gXZ4bI1Na3Kh7D78sRxOW0JiAset4Ue3zK
+         cEsg==
+X-Forwarded-Encrypted: i=1; AJvYcCVyYRob846UyPl25nOasIJTU6PMonAmS5U1Uyw6Os7OhD+heekREYeFi8Z1CkuoxjdHEEHF8+mJzPDSsEY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyGi+B3pRxEOnEK3DyxMIBNE5Ih0PgDqgSag9q+UIZR+vRcDHAZ
+	7pqDqm6DisRhYgp5ikBMgnaTqURJMhBoO9XfILZDG74MPl1VrykBqJ4GxFge8/R9trs1l0b25uZ
+	NXiL8xg==
+X-Google-Smtp-Source: AGHT+IF6T2ulSDFK8OsLYwxcRIOMccUUICCNSn+TOjQB/3bOJGqM6yG07KKXmBXUDSyMBIijHO+1iE5Jy859
+X-Received: from pjbsq15.prod.google.com ([2002:a17:90b:530f:b0:2ff:5344:b54])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2dc2:b0:2f9:cf97:56a6
+ with SMTP id 98e67ed59e1d1-30531fa18b7mr25114861a91.14.1743531971624; Tue, 01
+ Apr 2025 11:26:11 -0700 (PDT)
+Date: Tue,  1 Apr 2025 11:23:45 -0700
 In-Reply-To: <20250401182347.3422199-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250401182347.3422199-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
-Message-ID: <20250401182347.3422199-46-irogers@google.com>
-Subject: [PATCH v1 45/48] perf symbol: Silence -Wshorten-64-to-32 warnings
+Message-ID: <20250401182347.3422199-48-irogers@google.com>
+Subject: [PATCH v1 47/48] perf hashmap: Silence -Wshorten-64-to-32 warnings
 From: Ian Rogers <irogers@google.com>
 To: Yury Norov <yury.norov@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
 	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -114,177 +114,58 @@ truncation explicit.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/symbol-elf.c | 33 +++++++++++++++++----------------
- tools/perf/util/symbol.c     | 10 +++++-----
- 2 files changed, 22 insertions(+), 21 deletions(-)
+ tools/perf/util/hashmap.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-index fbf6d0f73af9..9de6e963ca79 100644
---- a/tools/perf/util/symbol-elf.c
-+++ b/tools/perf/util/symbol-elf.c
-@@ -261,7 +261,7 @@ static int elf_read_program_header(Elf *elf, u64 vaddr, GElf_Phdr *phdr)
- 		return -1;
+diff --git a/tools/perf/util/hashmap.c b/tools/perf/util/hashmap.c
+index 140ee4055676..f2719f522b84 100644
+--- a/tools/perf/util/hashmap.c
++++ b/tools/perf/util/hashmap.c
+@@ -115,7 +115,7 @@ static int hashmap_grow(struct hashmap *map)
+ 		return -ENOMEM;
  
- 	for (i = 0; i < phdrnum; i++) {
--		if (gelf_getphdr(elf, i, phdr) == NULL)
-+		if (gelf_getphdr(elf, (int)i, phdr) == NULL)
- 			return -1;
- 
- 		if (phdr->p_type != PT_LOAD)
-@@ -550,7 +550,7 @@ static void get_rela_dyn_info(Elf *elf, GElf_Ehdr *ehdr, struct rela_dyn_info *d
- 	if (!scn || !rela_dyn_shdr.sh_link || !rela_dyn_shdr.sh_entsize)
- 		return;
- 
--	di->nr_entries = rela_dyn_shdr.sh_size / rela_dyn_shdr.sh_entsize;
-+	di->nr_entries = (u32)(rela_dyn_shdr.sh_size / rela_dyn_shdr.sh_entsize);
- 	di->rela_dyn_data = elf_getdata(scn, NULL);
- 
- 	scn = elf_getscn(elf, rela_dyn_shdr.sh_link);
-@@ -789,7 +789,7 @@ int dso__synthesize_plt_symbols(struct dso *dso, struct symsrc *ss)
- 	if (symstrs->d_size == 0)
- 		goto out_elf_end;
- 
--	ri.nr_entries = shdr_rel_plt.sh_size / shdr_rel_plt.sh_entsize;
-+	ri.nr_entries = (u32)(shdr_rel_plt.sh_size / shdr_rel_plt.sh_entsize);
- 
- 	ri.is_rela = shdr_rel_plt.sh_type == SHT_RELA;
- 
-@@ -925,7 +925,7 @@ static int elf_read_build_id(Elf *elf, void *bf, size_t size)
- 				size_t sz = min(size, descsz);
- 				memcpy(bf, ptr, sz);
- 				memset(bf + sz, 0, size - sz);
--				err = sz;
-+				err = (int)sz;
- 				break;
- 			}
- 		}
-@@ -1066,14 +1066,14 @@ int sysfs__read_build_id(const char *filename, struct build_id *bid)
- 			} else if (read(fd, bf, descsz) != (ssize_t)descsz)
- 				break;
- 		} else {
--			int n = namesz + descsz;
-+			size_t n = namesz + descsz;
- 
--			if (n > (int)sizeof(bf)) {
-+			if (n > sizeof(bf)) {
- 				n = sizeof(bf);
- 				pr_debug("%s: truncating reading of build id in sysfs file %s: n_namesz=%u, n_descsz=%u.\n",
- 					 __func__, filename, nhdr.n_namesz, nhdr.n_descsz);
- 			}
--			if (read(fd, bf, n) != n)
-+			if (read(fd, bf, n) != (ssize_t)n)
- 				break;
- 		}
+ 	hashmap__for_each_entry_safe(map, cur, tmp, bkt) {
+-		h = hash_bits(map->hash_fn(cur->key, map->ctx), new_cap_bits);
++		h = hash_bits(map->hash_fn(cur->key, map->ctx), (int)new_cap_bits);
+ 		hashmap_add_entry(&new_buckets[h], cur);
  	}
-@@ -1426,7 +1426,7 @@ static u64 max_text_section(Elf *elf, GElf_Ehdr *ehdr)
- 		if (!gelf_getshdr(sec, &shdr))
- 			break;
  
--		if (!is_exe_text(shdr.sh_flags))
-+		if (!is_exe_text((int)shdr.sh_flags))
- 			continue;
+@@ -164,7 +164,7 @@ int hashmap_insert(struct hashmap *map, long key, long value,
+ 	if (old_value)
+ 		*old_value = 0;
  
- 		/* .init and .exit sections are not placed with .text */
-@@ -1546,7 +1546,7 @@ static int dso__process_kernel_symbol(struct dso *dso, struct map *map,
- 	 * perf does not record module section addresses except for .text, but
- 	 * some sections can use the same mapping as .text.
- 	 */
--	if (kmodule && adjust_kernel_syms && is_exe_text(shdr->sh_flags) &&
-+	if (kmodule && adjust_kernel_syms && is_exe_text((int)shdr->sh_flags) &&
- 	    shdr->sh_offset <= max_text_sh_offset) {
- 		dso__put(*curr_dsop);
- 		*curr_dsop = dso__get(dso);
-@@ -1672,7 +1672,7 @@ dso__load_sym_internal(struct dso *dso, struct map *map, struct symsrc *syms_ss,
- 	if (secstrs_sym == NULL)
- 		goto out_elf_end;
+-	h = hash_bits(map->hash_fn(key, map->ctx), map->cap_bits);
++	h = hash_bits(map->hash_fn(key, map->ctx), (int)map->cap_bits);
+ 	if (strategy != HASHMAP_APPEND &&
+ 	    hashmap_find_entry(map, key, h, NULL, &entry)) {
+ 		if (old_key)
+@@ -188,7 +188,7 @@ int hashmap_insert(struct hashmap *map, long key, long value,
+ 		err = hashmap_grow(map);
+ 		if (err)
+ 			return err;
+-		h = hash_bits(map->hash_fn(key, map->ctx), map->cap_bits);
++		h = hash_bits(map->hash_fn(key, map->ctx), (int)map->cap_bits);
+ 	}
  
--	nr_syms = shdr.sh_size / shdr.sh_entsize;
-+	nr_syms = (uint32_t)(shdr.sh_size / shdr.sh_entsize);
+ 	entry = malloc(sizeof(struct hashmap_entry));
+@@ -208,7 +208,7 @@ bool hashmap_find(const struct hashmap *map, long key, long *value)
+ 	struct hashmap_entry *entry;
+ 	size_t h;
  
- 	memset(&sym, 0, sizeof(sym));
+-	h = hash_bits(map->hash_fn(key, map->ctx), map->cap_bits);
++	h = hash_bits(map->hash_fn(key, map->ctx), (int)map->cap_bits);
+ 	if (!hashmap_find_entry(map, key, h, NULL, &entry))
+ 		return false;
  
-@@ -1734,7 +1734,7 @@ dso__load_sym_internal(struct dso *dso, struct map *map, struct symsrc *syms_ss,
- 		}
+@@ -223,7 +223,7 @@ bool hashmap_delete(struct hashmap *map, long key,
+ 	struct hashmap_entry **pprev, *entry;
+ 	size_t h;
  
- 		if (runtime_ss->opdsec && sym.st_shndx == runtime_ss->opdidx) {
--			u32 offset = sym.st_value - syms_ss->opdshdr.sh_addr;
-+			u32 offset = (u32)(sym.st_value - syms_ss->opdshdr.sh_addr);
- 			u64 *opd = opddata->d_buf + offset;
- 			sym.st_value = DSO__SWAP(dso, u64, *opd);
- 			sym.st_shndx = elf_addr_to_index(runtime_ss->elf,
-@@ -1946,7 +1946,7 @@ static int elf_read_maps(Elf *elf, bool exe, mapfn_t mapfn, void *data)
- 		return -1;
+-	h = hash_bits(map->hash_fn(key, map->ctx), map->cap_bits);
++	h = hash_bits(map->hash_fn(key, map->ctx), (int)map->cap_bits);
+ 	if (!hashmap_find_entry(map, key, h, &pprev, &entry))
+ 		return false;
  
- 	for (i = 0; i < phdrnum; i++) {
--		if (gelf_getphdr(elf, i, &phdr) == NULL)
-+		if (gelf_getphdr(elf, (int)i, &phdr) == NULL)
- 			return -1;
- 		if (phdr.p_type != PT_LOAD)
- 			continue;
-@@ -2767,14 +2767,15 @@ static void sdt_adjust_loc(struct sdt_note *tmp, GElf_Addr base_off)
- 	if (!base_off)
- 		return;
- 
--	if (tmp->bit32)
-+	if (tmp->bit32) {
- 		tmp->addr.a32[SDT_NOTE_IDX_LOC] =
--			tmp->addr.a32[SDT_NOTE_IDX_LOC] + base_off -
--			tmp->addr.a32[SDT_NOTE_IDX_BASE];
--	else
-+			(Elf32_Addr)(tmp->addr.a32[SDT_NOTE_IDX_LOC] + base_off -
-+				     tmp->addr.a32[SDT_NOTE_IDX_BASE]);
-+	} else {
- 		tmp->addr.a64[SDT_NOTE_IDX_LOC] =
- 			tmp->addr.a64[SDT_NOTE_IDX_LOC] + base_off -
- 			tmp->addr.a64[SDT_NOTE_IDX_BASE];
-+	}
- }
- 
- static void sdt_adjust_refctr(struct sdt_note *tmp, GElf_Addr base_addr,
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index 11540219481b..7eceb6679ed5 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -111,7 +111,7 @@ static int prefix_underscores_count(const char *str)
- 	while (*tail == '_')
- 		tail++;
- 
--	return tail - str;
-+	return (int)(tail - str);
- }
- 
- const char * __weak arch__normalize_symbol_name(const char *name)
-@@ -481,10 +481,10 @@ int symbol__match_symbol_name(const char *name, const char *str,
- 
- 	if (includes == SYMBOL_TAG_INCLUDE__DEFAULT_ONLY &&
- 	    (versioning = strstr(name, "@@"))) {
--		int len = strlen(str);
-+		int len = (int)strlen(str);
- 
- 		if (len < versioning - name)
--			len = versioning - name;
-+			len = (int)(versioning - name);
- 
- 		return arch__compare_symbol_names_n(name, str, len);
- 	} else
-@@ -638,7 +638,7 @@ void dso__sort_by_name(struct dso *dso)
-  * While we find nice hex chars, build a long_val.
-  * Return number of chars processed.
-  */
--static int hex2u64(const char *ptr, u64 *long_val)
-+static size_t hex2u64(const char *ptr, u64 *long_val)
- {
- 	char *p;
- 
-@@ -1532,7 +1532,7 @@ static int dso__load_perf_map(const char *map_path, struct dso *dso)
- 	while (!feof(file)) {
- 		u64 start, size;
- 		struct symbol *sym;
--		int line_len, len;
-+		size_t line_len, len;
- 
- 		line_len = getline(&line, &n, file);
- 		if (line_len < 0)
 -- 
 2.49.0.504.g3bcea36a83-goog
 
