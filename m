@@ -1,188 +1,88 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from sender2-op-o17.zoho.eu (sender2-op-o17.zoho.eu [136.143.171.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D80131EA84;
-	Tue,  1 Apr 2025 08:54:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 019EC1EA84;
+	Tue,  1 Apr 2025 08:54:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.171.17
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743497652; cv=pass; b=epuRBjn4hhblaf8H59CHfgwLP6nz5WTosi3R1ygol02mZx9rfZacKfFRqhGzglMK2FcEnEcRjr+xE9+x0HMzzTGTWcf60FcW7KuGQF4Q9YfuWlzVxm7pE3JQv4MHMaAypDrCO7xJ7yrHNur1WtrIg7afW3sZYSAqd2Tn01XmYoM=
+	t=1743497669; cv=pass; b=XSJTnxQkvPD6krKKCH3v5fOgUEhE+sUlMNSxP1Wb6TEvDCFeakGoNBrJ5uBvY4HN+xoFxm3w9AWQGEhAn/9LdvatS/2Yi6rI2bii2OXD1XATMofq1FK6sAM4S717hFr1SyuQL3pbDQ1JFG0ls1t0miK6VpWIt/oMQR3RgFC7LJk=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743497652; c=relaxed/simple;
-	bh=g9QHVW5E7yxcToZMnqomGt3CW3QJyyIarrxd9/qahdM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uUb1Nj44XLcck7gQ9yrvHNieX4uBPFfEvC3Br5EvBXO3BztsUdEzqQMi/p/hIwCwL159Hi/w7OjWRkUVXVYy+1ZZ8W9Re8r5Cb981UuhrifWUuwG1TyViYBml4FOvWCK3Jmd4PCi9jMZy10BtAzesd2NJ7Jkef8BZvo24/11+FU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.fricke@collabora.com header.b=PpVFWJD0; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1743497669; c=relaxed/simple;
+	bh=aKUuJwu0U8bq5ODLU/EBl2gp/37apqgHHw2MWv7l9eI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BMR7izH76lZt7Y2/8f8F4TCSJRcxIKds7flQyzR7pV+xUwXJymA8BZGpoV9swomTjlsUclwfVrueHoLVoinH4/T6EchtZh2kF+k6AJCm+jHxrj+OO7Y+7dBYKv3RE9v7f1H6WCL+7WqTXjlySxs9UXulv6zoUoRiySv9ArOCThA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=chir.rs; spf=pass smtp.mailfrom=chir.rs; dkim=pass (1024-bit key) header.d=chir.rs header.i=lotte@chir.rs header.b=UdyHWwB1; arc=pass smtp.client-ip=136.143.171.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=chir.rs
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chir.rs
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.fricke@collabora.com header.b="PpVFWJD0"
-ARC-Seal: i=1; a=rsa-sha256; t=1743497620; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=PwcJR2MjWwXZ3r/9DeFiS6+7HX4LBTkPVG94v4pkYGNOZBUS9NUrLujLNVD9mqpzOo4cyc9mJo+G9bUFzsnlOhmNYJDgPhq0AK/1Fi41oP0GhELU/aZFv7qvREIZk7YKcSqIHykHd5+6agZj7mWOFh0UW6c8EihDUoLQYSaLvMk=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1743497620; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=cBU0C7170I26NS2nL3j2yZ7Xa8vu3rMrCcjlkS+8Ii4=; 
-	b=Xk1tqxqBkjLezlW5M9t9fVhI7IO7rByPCGQgdkn/nc5otDTywte40BKrWpeAWWsDFBoqENNJpmXLkzlLM8tKZYtFJT45/kWIZTQz9wEfuXX+wIP2yZg1egStBdEh4DvqTC9mn0B1jzgYeUK34FZ1qHJGeXDpW337EKQH2wxRWIg=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=sebastian.fricke@collabora.com;
-	dmarc=pass header.from=<sebastian.fricke@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1743497620;
-	s=zohomail; d=collabora.com; i=sebastian.fricke@collabora.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
-	bh=cBU0C7170I26NS2nL3j2yZ7Xa8vu3rMrCcjlkS+8Ii4=;
-	b=PpVFWJD0dLal7/1EEs6FCsTrrBM8vEYAf0kbhBwpuBhgT52qxVjFXSFB2u2I2rco
-	Frr3V9YS7Kg+A08eCo1g1CghgXjD3qG9CkFIt9D4ukX5hhMsLyj9EJXr1sUDhjIcGSb
-	o6bhxAkqJP0wCfEJ11Q5xNPB8D8NKCZ6xpKAvvXE=
-Received: by mx.zohomail.com with SMTPS id 1743497618474415.27018579292655;
-	Tue, 1 Apr 2025 01:53:38 -0700 (PDT)
-Date: Tue, 1 Apr 2025 10:53:30 +0200
-From: Sebastian Fricke <sebastian.fricke@collabora.com>
-To: ming.qian@oss.nxp.com
-Cc: mchehab@kernel.org, hverkuil-cisco@xs4all.nl, nicolas@ndufresne.ca,
-	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-	festevam@gmail.com, linux-imx@nxp.com, xiahong.bao@nxp.com,
-	eagle.zhou@nxp.com, imx@lists.linux.dev,
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v5 1/2] media: amphion: Reduce decoding latency for HEVC
- decoder
-Message-ID: <20250401085330.2n6mcyfrxbfgebzf@basti-XPS-13-9310>
-References: <20250401073527.1626-1-ming.qian@oss.nxp.com>
+	dkim=pass (1024-bit key) header.d=chir.rs header.i=lotte@chir.rs header.b="UdyHWwB1"
+ARC-Seal: i=1; a=rsa-sha256; t=1743497646; cv=none; 
+	d=zohomail.eu; s=zohoarc; 
+	b=GkWngAyi+uzuViOiCY6JCGHZUgbWETG/+kT53OAui4q2sT3kKd3Zquz6l17QyJ26vfD28cIUdcfhSJSaikZWOpi/S9ZivrQZmFIMgyx83PTzxfUMwzPHvE4Hf27UXQpEScRCX5pT1r9bKanCXC4c92lLGhzNUjnv1koeXN2p6kA=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
+	t=1743497646; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=IKWd7/S8ecvupAPGxLPLAgyuVQEO8m2WiEs8ZQCSIDE=; 
+	b=hlU22wub2xiYbovhm07uqMVlsCNEyAoUUPqtQQIot5PjhY3bAwnFMJA0x6JTSLLxGoulyAHbGYTihj7xxJ2bd20r3PTM8AJrEdVK/lh+xLllJoKnwwNTk+6L+FHzzdOx+rTLohy+v8ZgDn3EGeKyZFM2j42/DpVRZfCsaQvI8NQ=
+ARC-Authentication-Results: i=1; mx.zohomail.eu;
+	dkim=pass  header.i=chir.rs;
+	spf=pass  smtp.mailfrom=lotte@chir.rs;
+	dmarc=pass header.from=<lotte@chir.rs>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1743497646;
+	s=zmail; d=chir.rs; i=lotte@chir.rs;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=IKWd7/S8ecvupAPGxLPLAgyuVQEO8m2WiEs8ZQCSIDE=;
+	b=UdyHWwB1/Sh3ODklYLF2YexzS6g3Vw+lkmkg5iR5lMQq4ou/hgMfChTIWoLlvMCu
+	W4REsTLWyOeI41rMYSm/EtUvTg7mDhjUqcI9SI4rhslVEm5FHKXRXP9InJntsKwc4aQ
+	dnooQFpJABkCcF3QSpNiisNjhtnKXeZ/h3JQC+aY=
+Received: by mx.zoho.eu with SMTPS id 1743497642823882.9940100806688;
+	Tue, 1 Apr 2025 10:54:02 +0200 (CEST)
+Message-ID: <5c9f59c3-2868-47c2-b2af-b515a8ec9349@chir.rs>
+Date: Tue, 1 Apr 2025 09:54:02 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20250401073527.1626-1-ming.qian@oss.nxp.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/3] dt-bindings: display: Add Clockwork CWD686 panel
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ neil.armstrong@linaro.org, quic_jesszhan@quicinc.com, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, max@maxfierke.com
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250401081852.283532-1-lotte@chir.rs>
+ <20250401081852.283532-3-lotte@chir.rs>
+ <abfea9d8-9992-44e6-975e-a18b01753aa5@linaro.org>
+Content-Language: en-US
+From: =?UTF-8?B?Q2hhcmxvdHRlIPCfpp0gRGVsZcWEa2Vj?= <lotte@chir.rs>
+In-Reply-To: <abfea9d8-9992-44e6-975e-a18b01753aa5@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 X-ZohoMailClient: External
 
-Hey Ming,
+On 4/1/25 09:34, Krzysztof Kozlowski wrote:
+> On 01/04/2025 10:18, Charlotte �leńkec wrote:
+>> From: Max Fierke <max@maxfierke.com>
+>>
+>> The CWD686 is a 6.86" IPS LCD panel used as the primary
+>> display in the ClockworkPi DevTerm portable (all cores)
+>>
+>> Co-authored-by: Charlotte Deleńkec <lotte@chir.rs>
+>> Signed-off-by: Charlotte Deleńkec <lotte@chir.rs>
+>> Signed-off-by: Max Fierke <max@maxfierke.com>
+> 
+> That's not a correct chain. If you co-authored, how can you sign off
+> before max did?
 
-thanks for the patches, unfortunatly our testing pipeline isn't happy
-with them yet.
+I missed that requirement in the patch submission guidelines.
 
-See below ...
+> 
+>> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>> ---
+> 
+> Best regards,
+> Krzysztof
 
-On 01.04.2025 15:35, ming.qian@oss.nxp.com wrote:
->From: Ming Qian <ming.qian@oss.nxp.com>
->
->The amphion decoder firmware supports a low latency flush mode for the
->HEVC format since v1.9.0. This feature, which is enabled when the
->display delay is set to 0, can help to reduce the decoding latency by
->appending some padding data to every frame.
->
->Signed-off-by: Ming Qian <ming.qian@oss.nxp.com>
->Reviewed-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
->---
->v5
->- Apply FIELD_PREP() and FIELD_GET() in CHECK_VERSION
->v4
->- Add CHECK_VERSION macro
->v3
->- Improve commit message as recommended
->v2
->- Improve commit message
->- Add firmware version check
->
-> drivers/media/platform/amphion/vpu_malone.c | 24 ++++++++++++++++++---
-> 1 file changed, 21 insertions(+), 3 deletions(-)
->
->diff --git a/drivers/media/platform/amphion/vpu_malone.c b/drivers/media/platform/amphion/vpu_malone.c
->index 5c6b2a841b6f..b6e4996c2d91 100644
->--- a/drivers/media/platform/amphion/vpu_malone.c
->+++ b/drivers/media/platform/amphion/vpu_malone.c
->@@ -68,6 +68,12 @@
->
-> #define MALONE_DEC_FMT_RV_MASK			BIT(21)
->
->+#define MALONE_VERSION_MASK			0xFFFFF
->+#define MALONE_VERSION(maj, min, inc)		\
->+		(FIELD_PREP(0xF0000, maj) | FIELD_PREP(0xFF00, min) | FIELD_PREP(0xFF, inc))
-
-drivers/media/platform/amphion/vpu_malone.c:675:52: error: call to undeclared function 'FIELD_GET'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-   675 |         if (params->codec_format == V4L2_PIX_FMT_HEVC && !CHECK_VERSION(iface, 1, 9))
-       |                                                           ^
-drivers/media/platform/amphion/vpu_malone.c:79:4: note: expanded from macro 'CHECK_VERSION'
-    79 |                 (FIELD_GET(MALONE_VERSION_MASK, (iface)->fw_version) >= MALONE_VERSION(maj, min, 0))
-       |                  ^
-drivers/media/platform/amphion/vpu_malone.c:675:52: error: call to undeclared function 'FIELD_PREP'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-drivers/media/platform/amphion/vpu_malone.c:79:59: note: expanded from macro 'CHECK_VERSION'
-    79 |                 (FIELD_GET(MALONE_VERSION_MASK, (iface)->fw_version) >= MALONE_VERSION(maj, min, 0))
-       |                                                                         ^
-drivers/media/platform/amphion/vpu_malone.c:77:4: note: expanded from macro 'MALONE_VERSION'
-    77 |                 (FIELD_PREP(0xF0000, maj) | FIELD_PREP(0xFF00, min) | FIELD_PREP(0xFF, inc))
-       |                  ^
-2 errors generated.
-
-https://linux-media.pages.freedesktop.org/-/users/sebastianfricke/-/jobs/73725346/artifacts/report.htm
-
-Regards,
-Sebastian
-
->+#define CHECK_VERSION(iface, maj, min)		\
->+		(FIELD_GET(MALONE_VERSION_MASK, (iface)->fw_version) >= MALONE_VERSION(maj, min, 0))
->+
-> enum vpu_malone_stream_input_mode {
-> 	INVALID_MODE = 0,
-> 	FRAME_LVL,
->@@ -332,6 +338,8 @@ struct vpu_dec_ctrl {
-> 	u32 buf_addr[VID_API_NUM_STREAMS];
-> };
->
->+static const struct malone_padding_scode *get_padding_scode(u32 type, u32 fmt);
->+
-> u32 vpu_malone_get_data_size(void)
-> {
-> 	return sizeof(struct vpu_dec_ctrl);
->@@ -654,9 +662,15 @@ static int vpu_malone_set_params(struct vpu_shared_addr *shared,
-> 		hc->jpg[instance].jpg_mjpeg_interlaced = 0;
-> 	}
->
->-	hc->codec_param[instance].disp_imm = params->display_delay_enable ? 1 : 0;
->-	if (malone_format != MALONE_FMT_AVC)
->+	if (params->display_delay_enable &&
->+	    get_padding_scode(SCODE_PADDING_BUFFLUSH, params->codec_format))
->+		hc->codec_param[instance].disp_imm = 1;
->+	else
-> 		hc->codec_param[instance].disp_imm = 0;
->+
->+	if (params->codec_format == V4L2_PIX_FMT_HEVC && !CHECK_VERSION(iface, 1, 9))
->+		hc->codec_param[instance].disp_imm = 0;
->+
-> 	hc->codec_param[instance].dbglog_enable = 0;
-> 	iface->dbglog_desc.level = 0;
->
->@@ -1024,6 +1038,7 @@ static const struct malone_padding_scode padding_scodes[] = {
-> 	{SCODE_PADDING_EOS,      V4L2_PIX_FMT_JPEG,        {0x0, 0x0}},
-> 	{SCODE_PADDING_BUFFLUSH, V4L2_PIX_FMT_H264,        {0x15010000, 0x0}},
-> 	{SCODE_PADDING_BUFFLUSH, V4L2_PIX_FMT_H264_MVC,    {0x15010000, 0x0}},
->+	{SCODE_PADDING_BUFFLUSH, V4L2_PIX_FMT_HEVC,        {0x3e010000, 0x20}},
-> };
->
-> static const struct malone_padding_scode padding_scode_dft = {0x0, 0x0};
->@@ -1058,8 +1073,11 @@ static int vpu_malone_add_padding_scode(struct vpu_buffer *stream_buffer,
-> 	int ret;
->
-> 	ps = get_padding_scode(scode_type, pixelformat);
->-	if (!ps)
->+	if (!ps) {
->+		if (scode_type == SCODE_PADDING_BUFFLUSH)
->+			return 0;
-> 		return -EINVAL;
->+	}
->
-> 	wptr = readl(&str_buf->wptr);
-> 	if (wptr < stream_buffer->phys || wptr > stream_buffer->phys + stream_buffer->length)
->-- 
->2.43.0-rc1
->
-Sebastian Fricke
-Consultant Software Engineer
-
-Collabora Ltd
-Platinum Building, St John's Innovation Park, Cambridge CB4 0DS, UK
-Registered in England & Wales no 5513718.
+Kind regards,
+Charlotte
