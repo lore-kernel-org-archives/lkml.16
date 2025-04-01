@@ -1,158 +1,89 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8E1C2EAF7
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 18:03:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 032D513AC1;
+	Tue,  1 Apr 2025 18:04:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743530632; cv=none; b=lxiDCWx8xZhgJLTpu3/fgzrVdbck1Yz8rI/brsQ1Vonl5C7OrvSs0aKK+dEVCNw16rHb6Od9+KDlh9elD4+iL3i014S+Cv2NTMObgfSCrkB8aNc2E7uO7M6qndF2jgVheG0lB60hIN8/vY3hyCiGT3x6tmc6tg5UM88ki/i7SIs=
+	t=1743530693; cv=none; b=kFEBDjHNKbQENj9dWSPw7mQzGJftteslkxaTWQdYFNgvRLfmycWxLmhMZ+iUeWZK6qXlDAmHSmp9kARSNTHDBR8CXxb6zfjfq/EY87zX3KhGTiFell9TBEgk202+mR6XJ1R4tSvpVBTEAveFmlxbV1+3nKts7UjOk4fE769e0Ck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743530632; c=relaxed/simple;
-	bh=fa9Yg66rJ5KL6eWvE5zAgPcslLj7QNNF1zTzQ1VFLIs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Oz4vHEPiDxmzPbXuQTPH1Fk5k8JpsRUHuXQi6JAt3gkRdIk2BQDYUFI38plYWkDzDUVYmVeHrpnJLY3gVh30j7XTQN4wVrOXCi6sfdce1UwzDLKiJEKGJ/UAqmu5Ps0mG+1UxOsZnDr3Y5RauAsbQgiFiYf3SHQG/GyEwOx/ZTQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=NlFRbqIe; arc=none smtp.client-ip=209.85.160.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1743530693; c=relaxed/simple;
+	bh=X3UWVR5FrAiTLHuUdqDGWuSjTyf0NcWGQa2Gmhjp7SI=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=Ou7YxxG9GLVWuhF/9ESvvglq/+TB+aeW9RICmMLKRJB3lFpBZxTDx5HcNbSmK1leSVxs4JqoI9h8SEwmUXuvY9Oc0fFIEZOM94M9Hqdkh0MIm4rLVTxyGUpfZBwEV5ZNTb/qRdSzOIDjHZ65Yl1RXD/9WLBuTzNrc8aM9Acn1oM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h/i+k9op; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="NlFRbqIe"
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-47663aeff1bso55582811cf.0
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 11:03:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1743530630; x=1744135430; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=w/pmtjLBaI1GK3c3R4g+2ziQwqKlgj707RNFDRmc4/E=;
-        b=NlFRbqIeLy8yKPn12gvadvigHbE/UrD4681/NkSew2XcBeUjbbDhjUEaoM1K/PeDuP
-         ciRgiclX7eWA/R0D7nrGbj63E09uajnn6mz53sL+/81goxmVX6rAm7wqVO8of3jg2fNn
-         FhwMxW1zStkz1yyusaOtfJx2OxtpaENZ+1duHkGvZwSB3bptlNX5PnxIIIsQoTo4xnG8
-         uaS8CTIGfQ4XBJw4kCtBREQBKPd7YQ39FuWZeRFtOKDFkC8Aji9juxaOalF/ylqDjymK
-         KL07SMXj48AFNZD72oxZO4lOTNGhCsLlxKwVOizyYUnXGAlbIGbS0ZjpORmWjgcE+h4U
-         xeAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743530630; x=1744135430;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=w/pmtjLBaI1GK3c3R4g+2ziQwqKlgj707RNFDRmc4/E=;
-        b=s6XOszOG4kADBfSy+GM0TboJdmLPbc1DDvL0QRB1d4PzEeD9iBKNEd5Bt+11rtZZ3z
-         vcSK3DQmTiDsaOlsK7zmVELDoaiMNRYdN/DqFTy2L2OqhUYNwmQNdG7WXEpVGNIqNL8a
-         NT3FO3W5zlGa3MVefaB8YOJDy7gVJ+ISRLTUSFNstjPkMwquCG/RHaiFFoqDl93tqou5
-         8FycLVaCGxKhJpWaqGCSpeQaDMGnxvJOLGCrw6EpgMCltZSW4Sou1uTAm+sIDqt6BGuU
-         V9yNJradL32cFFMY7cWNyK1DCFY652N7Chk8oz2GHEQYolq0ak2NBmUNHakj84E5rBTa
-         kNnA==
-X-Forwarded-Encrypted: i=1; AJvYcCUEJBhMa/05NXamOjhr95f/KbknVJKhfCnK3VgU7LCpY2849MV+40yft49CC85w/LOib8CelxrnfYA8Y74=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw4wsNIAkA5G7AXrVc/LAMc1iBSuFT5PcJS25JAA89alwwPepkj
-	LwZJzRL+Lp2U2diH5ldenYH3LiEChasSae0BzabaARyho3SMYPzlICm6InuKy0w=
-X-Gm-Gg: ASbGnct/WytT/mRIlz0vIpnrywrxuwe6CdW5Zbmnk5RYEYTS9qvcW4HUOAByv7wf52q
-	iGagLtRbyOX4740Rn39u2623rMLkxd9y/EQrsGTgOEyI/DK34F1AYI62pkH4sTHNrvLT8kVz48f
-	IY9QUUE1JwZW5MV8MfPUwzgd+zS4f2RROp47zKhmJwUiB1uvWjuxiJFqruiU2DXKaCyeXGcfZZg
-	RNlAAGfSrdhdmTjmgi93yMosVSyw+0oWkAE3MhVLfi0Eu8nwSda7+EhKlk/V1HN8yCMqruZGB52
-	3xgmTnlHiQFmQXEA5c+xaHdxjYDQkAvGKVnHUNJHqaUiOyoRg7a2cudq8PfNDgIiiwoe2qIwRwI
-	K1z9G+lsq6ykrRlysyJEL534C38gmYypJ5A55cg==
-X-Google-Smtp-Source: AGHT+IFWulk+PKL6z0sywIwGtZBfiIm2z+K2664jV7oKth7BWn/oo0zgj6aMDW6mSS6Zur5TnBRWhA==
-X-Received: by 2002:ac8:7dc8:0:b0:476:b02d:2b4a with SMTP id d75a77b69052e-477ed75af82mr200365901cf.27.1743530629711;
-        Tue, 01 Apr 2025 11:03:49 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-47782a10459sm68534151cf.4.2025.04.01.11.03.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Apr 2025 11:03:49 -0700 (PDT)
-Date: Tue, 1 Apr 2025 14:03:47 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Robert Richter <rrichter@amd.com>
-Cc: Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
-	Terry Bowman <terry.bowman@amd.com>
-Subject: Re: [PATCH v2 10/15] cxl/region: Use root decoders interleaving
- parameters to create a region
-Message-ID: <Z-wqg92rgqY1WY8v@gourry-fedora-PF4VCD3F>
-References: <20250218132356.1809075-1-rrichter@amd.com>
- <20250218132356.1809075-11-rrichter@amd.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h/i+k9op"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48C5DC4CEE4;
+	Tue,  1 Apr 2025 18:04:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743530692;
+	bh=X3UWVR5FrAiTLHuUdqDGWuSjTyf0NcWGQa2Gmhjp7SI=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=h/i+k9opvXNDV/viKgz+IkFJDV0Q/+srL6x1bADFHk/mNdi36uSTPuGv5g5wlUNOh
+	 6nTKRTXq6KItqyV8v9GzG52p1ttKL/MYNkyBNpj8uScFbZrEjS0bNcoGAg9RXnZGAo
+	 HDXCYaH9bFx5OIdBohOCn28yQ3WawNYDtNw47zX+kv7v2sdYPNQw+0wYns//VNVt+q
+	 L8I+jUstMjum93FaeEfdgxeeP2/kDfqmj3ZRRoJ3zFZnmyhc17xR6h7fJsP3l0ai6t
+	 4yZVNp2B0kHRdpLkiAOJsyBz7/9VtTlupu9J9HrsATz6sjr/RzT8V3wmwEDU3iRaiJ
+	 2FZWVFt4Om9qA==
+From: Mark Brown <broonie@kernel.org>
+To: shengjiu.wang@gmail.com, xiubo.lee@gmail.com, festevam@gmail.com, 
+ nicoleotsuka@gmail.com, lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com, 
+ shawnguo@kernel.org, s.hauer@pengutronix.de, 
+ Henry Martin <bsdhenrymartin@gmail.com>
+Cc: kernel@pengutronix.de, linux-sound@vger.kernel.org, 
+ linuxppc-dev@lists.ozlabs.org, imx@lists.linux.dev, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250401142510.29900-1-bsdhenrymartin@gmail.com>
+References: <20250401142510.29900-1-bsdhenrymartin@gmail.com>
+Subject: Re: [PATCH v1] ASoC: imx-card: Add NULL check in imx_card_probe()
+Message-Id: <174353068900.126969.2791062137526970115.b4-ty@kernel.org>
+Date: Tue, 01 Apr 2025 19:04:49 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250218132356.1809075-11-rrichter@amd.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-c25d1
 
-On Tue, Feb 18, 2025 at 02:23:51PM +0100, Robert Richter wrote:
-> Endpoints requiring address translation might not be aware of the
-> system's interleaving configuration. Instead, interleaving can be
-> configured on an upper memory domain (from an endpoint view) and thus
-> is not visible to the endpoint. For region creation this might cause
-> an invalid interleaving config that does not match the CFMWS entries.
+On Tue, 01 Apr 2025 22:25:10 +0800, Henry Martin wrote:
+> devm_kasprintf() returns NULL when memory allocation fails. Currently,
+> imx_card_probe() does not check for this case, which results in a NULL
+> pointer dereference.
 > 
-> Use the interleaving configuration of the root decoders to create a
-> region which bases on CFMWS entries. This always matches the system's
-> interleaving configuration and is independent of the underlying memory
-> topology.
+> Add NULL check after devm_kasprintf() to prevent this issue.
 > 
-> Signed-off-by: Robert Richter <rrichter@amd.com>
-... snip ...
-> @@ -1955,12 +1971,23 @@ static int cxl_port_calc_interleave(struct cxl_port *port,
->  	if (is_cxl_root(port))
->  		return 0;
->  
-> -	rc = find_pos_and_ways(port, ctx->hpa_range, &parent_pos, &parent_ways);
-> +	rc = find_pos_and_ways(port, ctx->hpa_range, &parent_pos, &parent_ways,
-> +			&parent_granularity);
->  	if (rc)
->  		return rc;
->  
->  	ctx->pos = ctx->pos * parent_ways + parent_pos;
->  
-> +	if (ctx->interleave_ways)
-> +		ctx->interleave_ways *= parent_ways;
-> +	else
-> +		ctx->interleave_ways = parent_ways;
-> +
-> +	if (ctx->interleave_granularity)
-> +		ctx->interleave_granularity *= ctx->interleave_ways;
-> +	else
-> +		ctx->interleave_granularity = parent_granularity;
-> +
->  	return ctx->pos;
->  }
+> 
+> [...]
 
+Applied to
 
-The root is always build from the CFMWS, so you don't need to do any
-math, you just need to take the root.  Since the logic calling this will
-always climb to the root, you'll always get the right value.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
-So I think you just want this
+Thanks!
 
---- 
+[1/1] ASoC: imx-card: Add NULL check in imx_card_probe()
+      commit: 93d34608fd162f725172e780b1c60cc93a920719
 
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index fe23dc106956..05b24b008a1b 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -1977,17 +1977,8 @@ static int cxl_port_calc_interleave(struct cxl_port *port,
-                return rc;
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
-        ctx->pos = ctx->pos * parent_ways + parent_pos;
--
--       if (ctx->interleave_ways)
--               ctx->interleave_ways *= parent_ways;
--       else
--               ctx->interleave_ways = parent_ways;
--
--       if (ctx->interleave_granularity)
--               ctx->interleave_granularity *= ctx->interleave_ways;
--       else
--               ctx->interleave_granularity = parent_granularity;
--
-+       ctx->interleave_ways = parent_ways;
-+       ctx->interleave_granularity = parent_granularity;
-        return ctx->pos;
- }
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
