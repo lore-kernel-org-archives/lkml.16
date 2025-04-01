@@ -1,62 +1,62 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5432820E03F
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 16:59:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 731E420E03F
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 17:00:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743526800; cv=none; b=XSc0/+f2+rP5j+9/Rod/RsFb+8CEJELuJDdk5KpWbHcWP23NMToKqvFxJRME6UUpvF0qpjTMCLWeZdg5GeWjb++87xLkY3/zS6562HMWAfnDsflVVy9329zQgrWpMuSCKfRsuKoRwOXc6WjMAxcVcB4ZipPzsPbiv8AUmDNc6wQ=
+	t=1743526806; cv=none; b=nG6W5fwbs/L57NAeP4uRzuCl9zVo3KS5H6st0/AHVYLoCpKfT6TSVxsvysdUWeFH4WGLJsf7grjItrLNdY9MG7pF4UXG9cIoxNRic5UE/ihQ4EHnuwRkt4poLds5V/lNtYoiBx78JsrU/MjB1tXkEwpOmhVWjU/Wg0LVPbC/PAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743526800; c=relaxed/simple;
-	bh=aOOWiCI3ZK6+dzDuMUQZ7ZuRMibgi+DohpZfmHWxiow=;
+	s=arc-20240116; t=1743526806; c=relaxed/simple;
+	bh=8Z/Q1Yqqxhozl8RrcKexRki6sw2jFiBNt//dnoasYvk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XBT5LEzECFIyed21xsstJcwPJau0J3o0rPFkRJqsnklIvhInwClb/bASL8LDTdZehBkrYdY0fLiLaX8q6huf5KkAjtNksYCZIa5I27Me0Vz/ouOEjTHXqEbsIoA7Cx4WdwM9xUIZBhDcdAcfX0wFf3IS/GaeP54g+t3KA4I5bZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ff/t4HHQ; arc=none smtp.client-ip=209.85.128.45
+	 MIME-Version; b=mjlomF13sBT5OikQeGCnQZfB2VAKiccOYjMfrsxrjE0INCeTw8Vz4sgKMJoZT9hhoq7qoag2DbK97IPBF3zlBG7MStChyhARzc5Tf/ufAzqQkDgQhPf2oUVJO5RbixkcjANOv91GDRnbDAWZteZ4dDeFBFFw0U8Dhit3C1/UXPM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L1Qkwdc+; arc=none smtp.client-ip=209.85.128.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ff/t4HHQ"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43cf3192f3bso58738765e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 09:59:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L1Qkwdc+"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43ea40a6e98so16966835e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 10:00:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743526795; x=1744131595; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1743526803; x=1744131603; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=pK/O4pDg7hGitdXCJDavzci3Ws7cE2OFjqh+I33m5qk=;
-        b=Ff/t4HHQOMXCokeyw0cgk9Xez2roAdZY8WkaDJfFtc6WMsZLiNCMhu1BAb2li181+s
-         eTis2JAhTpLrJW7Q6KnT58hUIFFnFLTBfglBLpARkdTTkcQuZFkJ3nE8lDetz8KwJoZ+
-         /cebKyvFaWZakgMGv8XLvIette+58kYxNkb0yPMd7vSRUmMkWts2JKvX4lmg4KEMpZTt
-         Kpm4+OEa2lmiCTcc/FvSNojWgP+urAJpi893UK3+Z4MahoemF7nRSR2p8fML3gkywvIF
-         tysboRe1ccp8vzbZkFjetOnKk0oQP6prL/PjFDodQp7qD6MY7/yg4DEZo4HUyGc4CYkE
-         SXnw==
+        bh=2gIv3lfUsZudSX+4KjXfNYnF9gzZiOWchSCAyXPUHRA=;
+        b=L1Qkwdc++hhYAYYo2HVzHFF0+rZ+4jBr8I6i8pmCCxOGtxq12vKjMhkYD06dL++7bw
+         WkINB0oRCR4+ovVnJiYKmNxYnTVLwt1yz03IlEcXVqacTDs5+tZayPGETwvzYhFv2ix5
+         Dx+VrPllT2Eg1W+S0qOJt7DV2Dz2kYUQV9IwWm7qjuwOFmETDzg4Y5S0VeOwAvBAQECP
+         /pkCa4YC4Wtujw5kwhEFcVm7lB7G7+e8uHrj/ceUJBM7c73cSsHw+6wJ2VZ6M+ZPd/Pg
+         c8ePTATP6qlsZitdcnboSriwAWw9fAWLVwVOFda0gLuwhZ81rWGZ4jH1Jt0l9UOTeDz4
+         9S0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743526795; x=1744131595;
+        d=1e100.net; s=20230601; t=1743526803; x=1744131603;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=pK/O4pDg7hGitdXCJDavzci3Ws7cE2OFjqh+I33m5qk=;
-        b=QsRMtg5xIicg7IgQUqU97NTBG30HbQUlA7zCqPwMXe+lregOKzBIhKgu5L6Fq9/8gn
-         fK9yQqOfW1z2646RusMhVnY3x1ZN2/wWcEbuAIODdiiZa0WfNsGGDUktjqQHAlHLendR
-         6HE6Rh+OWmh/oLQGOV8V0hDmUDOCk9SmbyQ/P5KvtanhaHQoFsxQez9yJHhdXkUwWG+K
-         dRYDi/moDq+5v7sLLIktIT3RQPrd62b2LlUpKTXnL5/f5EBpbDG/ZYj1jkpXJeTttOOv
-         vFwZf6ZDIvgNZq/R5WjTDljJnRvcvsJ7DtRGwtAkRHPYIdYrPGWUhu1GWsF8bzI+x33q
-         ewCg==
-X-Forwarded-Encrypted: i=1; AJvYcCVPVgu2Ii/HExRqfV3DNh3Euf/eBFoGW0WAkSYGT+0KGg14H+TyWALj2bat7V0zdG0v8eAQ8LzHQkzOUo4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyWFZo9m3zpiL9vemv+lZ2R7FB5v64KqYxqmb2qgWN2FatmLR+T
-	juP+bVQAmgq6cGEzrQzNkl+U9xOsLGcotpkbB9I5w+HYGvNQ66Cnr/8BIQK3c0A=
-X-Gm-Gg: ASbGncvuTQmySEx9QXecrqRAjZmafKYzyCCAn9IUFNdBNRp+6ZvOCfgiSQclsyWzTa5
-	25e6jr4iwvq1KDz+5ruo785MShP13jBUc10Bex8QsSQAumof3wng8IoUWhPoiHQ5nmcd7/s+w05
-	49CTMkHZREB1+jtcavf+yJ8YEH0jWPV1sBTKIV+deiyNCNxNgiEkovKcDAftxS+QqC+ezW/UG80
-	U54oh57p8WIXW+GUL1+BjUNR++7rseHJVsyxTfzzWn8QrnQohk3Hvf9uYY8ejU+cjh2ugA6Be8L
-	bmRXKRZ+cqE+BroDo1kHJ593P5AFaQgdKrO8xhc=
-X-Google-Smtp-Source: AGHT+IETbTzAYb/h3dIJZa9Z4oxluG5CHqg0acXlqJ9p0VnpANQt/7sWH8a0uAGyXN8MoYcjIgFbBw==
-X-Received: by 2002:a05:600c:3ca6:b0:43c:fa0e:471a with SMTP id 5b1f17b1804b1-43db61d9cf5mr142340485e9.5.1743526795566;
-        Tue, 01 Apr 2025 09:59:55 -0700 (PDT)
+        bh=2gIv3lfUsZudSX+4KjXfNYnF9gzZiOWchSCAyXPUHRA=;
+        b=aLQUgUdz/VgVqM5GLNyRqil4Yv5DzVnjk0Jt7+DoPRIaw4nZyWXjxw3k0++sE8SLUc
+         hWzjL18FLgTKptknyp3unJoDN/y2SW7Zpg+FIOfxJO2daiFEWNmniGiGI0YzgSgPwOT5
+         hZ8nJYkDUdLPCh3XEjeBCYKnQ/iEiahTRTrKqAJzcRyH+1K0zCSzs5v5gBGrwEWpkQ3c
+         IQiz4SfmpjrQCM/AGJFXr6SM8pEwx68pyb7XKPoMfotkUwIqXy+LNfBzcQusE0BTygD3
+         H/SSRuHfxa7+KcynjGqYGRuYDoF9690drWBLJpcfXPV+NeP3NJpHCmdmbA+t7C3O5so0
+         sx0A==
+X-Forwarded-Encrypted: i=1; AJvYcCXuEu51+kx1ADpAtnhGwQq9yeEgvhr3gYqu3hmI44e0weZfa1yhlusgUet9eN3KWzPK629/F1bZKNJJDMA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywwe5HC879937A0tTjTZfisvycvptsduD1swa1HxxeO8zz2I6rs
+	iQZi5xMdhgIQ8tVs4xn7LQ5SP2LkU2OcEeehrSi8FPXH/CWXPqMc
+X-Gm-Gg: ASbGncsIStdiPtHs8nk4KzSRtCpavlK6VbPrYLhNK+Mdw84bLt9zFNJ6PMRPPm0w9oK
+	S6PC07OTjjs+pdSPcz+xyonY4oIbhQ7LmJKMnTA6XWivm0ufuPewIYyT78Tl635eUOE8zKmLZlD
+	InCvnPEcPd3t6W8kjlXgza5EJzcSMtSSG2lfzGSO7fDrLRlH8/x8cBAynZHA3M3tJknLDDPFfd5
+	710g9bCcsYIteSiNEhZmJsF4Tw8f/ApnuqEE67FY/p5mVDHkEe6rYetsI++5HJ5CPlWBhahZ58Q
+	613R3p17FWfqDJi30m8o0qPXz6gdv8Mzy7m8p4Q=
+X-Google-Smtp-Source: AGHT+IFSgsTbCWtBoeDbXY6I9urDkDUv7DQvWlpcTV0hHI0IuTaiNzFmS1JTlnH4rFWfxvOkaBq/KQ==
+X-Received: by 2002:a05:600c:470d:b0:43c:f470:7605 with SMTP id 5b1f17b1804b1-43db622ade6mr116598445e9.12.1743526802414;
+        Tue, 01 Apr 2025 10:00:02 -0700 (PDT)
 Received: from pc.. ([41.206.42.66])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d8fccfe2fsm161520215e9.22.2025.04.01.09.59.53
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d8fccfe2fsm161520215e9.22.2025.04.01.09.59.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Apr 2025 09:59:55 -0700 (PDT)
+        Tue, 01 Apr 2025 10:00:02 -0700 (PDT)
 From: Erick Karanja <karanja99erick@gmail.com>
 To: gregkh@linuxfoundation.org,
 	outreachy@lists.linux.dev
@@ -64,9 +64,9 @@ Cc: karanja99erick@gmail.com,
 	philipp.g.hortmann@gmail.com,
 	linux-staging@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/5] staging: rtl8723bs: use preferred comparison order
-Date: Tue,  1 Apr 2025 19:59:33 +0300
-Message-ID: <128b2c78fe04c358c96bff4a2fae1de8e7a6839d.1743524096.git.karanja99erick@gmail.com>
+Subject: [PATCH v2 2/5] staging: rtl8723bs: add spaces between ternary and binary operators
+Date: Tue,  1 Apr 2025 19:59:34 +0300
+Message-ID: <a147e8cb87627fdc218bdc6df70c980df90fde29.1743524096.git.karanja99erick@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1743524096.git.karanja99erick@gmail.com>
 References: <cover.1743524096.git.karanja99erick@gmail.com>
@@ -78,101 +78,34 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Refactor  conditions check to follow the Linux kernel
-coding style, which prefers placing the variable on the left side
-of the comparison.
+Fix spacing around binary arithmetic (`+`) and shift (`>>`) operators
+to improve readability and adhere to the Linux kernel coding style.
 
 Reported by checkpatch:
 
-	WARNING: Comparisons should place the constant on the right side
-    of the test
+	CHECK: spaces needed around 'operator'
 
 Signed-off-by: Erick Karanja <karanja99erick@gmail.com>
 ---
- drivers/staging/rtl8723bs/hal/hal_btcoex.c | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+ drivers/staging/rtl8723bs/hal/odm_CfoTracking.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/staging/rtl8723bs/hal/hal_btcoex.c b/drivers/staging/rtl8723bs/hal/hal_btcoex.c
-index b72cf520d576..9105594d2dde 100644
---- a/drivers/staging/rtl8723bs/hal/hal_btcoex.c
-+++ b/drivers/staging/rtl8723bs/hal/hal_btcoex.c
-@@ -91,7 +91,7 @@ static void halbtcoutsrc_LeaveLowPower(struct btc_coexist *pBtCoexist)
- 	stime = jiffies;
- 	do {
- 		ready = rtw_register_task_alive(padapter, BTCOEX_ALIVE);
--		if (_SUCCESS == ready)
-+		if (ready == _SUCCESS)
- 			break;
+diff --git a/drivers/staging/rtl8723bs/hal/odm_CfoTracking.c b/drivers/staging/rtl8723bs/hal/odm_CfoTracking.c
+index 928c58be6c9b..3b43f8cfd6f4 100644
+--- a/drivers/staging/rtl8723bs/hal/odm_CfoTracking.c
++++ b/drivers/staging/rtl8723bs/hal/odm_CfoTracking.c
+@@ -155,9 +155,9 @@ void ODM_CfoTracking(void *pDM_VOID)
+ 		/* 4 1.6 Big jump */
+ 		if (pCfoTrack->bAdjust) {
+ 			if (CFO_ave > CFO_TH_XTAL_LOW)
+-				Adjust_Xtal = Adjust_Xtal+((CFO_ave-CFO_TH_XTAL_LOW)>>2);
++				Adjust_Xtal = Adjust_Xtal + ((CFO_ave-CFO_TH_XTAL_LOW) >> 2);
+ 			else if (CFO_ave < (-CFO_TH_XTAL_LOW))
+-				Adjust_Xtal = Adjust_Xtal+((CFO_TH_XTAL_LOW-CFO_ave)>>2);
++				Adjust_Xtal = Adjust_Xtal + ((CFO_TH_XTAL_LOW-CFO_ave) >> 2);
+ 		}
  
- 		utime = jiffies_to_msecs(jiffies - stime);
-@@ -668,7 +668,7 @@ static void halbtcoutsrc_WriteLocalReg1Byte(void *pBtcContext, u32 RegAddr, u8 D
- 	struct btc_coexist *pBtCoexist = (struct btc_coexist *)pBtcContext;
- 	struct adapter *Adapter = pBtCoexist->Adapter;
- 
--	if (BTC_INTF_SDIO == pBtCoexist->chipInterface)
-+	if (pBtCoexist->chipInterface == BTC_INTF_SDIO)
- 		rtw_write8(Adapter, SDIO_LOCAL_BASE | RegAddr, Data);
- 	else
- 		rtw_write8(Adapter, RegAddr, Data);
-@@ -894,7 +894,7 @@ void EXhalbtcoutsrc_IpsNotify(struct btc_coexist *pBtCoexist, u8 type)
- 	if (pBtCoexist->bManualControl)
- 		return;
- 
--	if (IPS_NONE == type)
-+	if (type == IPS_NONE)
- 		ipsType = BTC_IPS_LEAVE;
- 	else
- 		ipsType = BTC_IPS_ENTER;
-@@ -922,7 +922,7 @@ void EXhalbtcoutsrc_LpsNotify(struct btc_coexist *pBtCoexist, u8 type)
- 	if (pBtCoexist->bManualControl)
- 		return;
- 
--	if (PS_MODE_ACTIVE == type)
-+	if (type == PS_MODE_ACTIVE)
- 		lpsType = BTC_LPS_DISABLE;
- 	else
- 		lpsType = BTC_LPS_ENABLE;
-@@ -1000,7 +1000,7 @@ void EXhalbtcoutsrc_MediaStatusNotify(struct btc_coexist *pBtCoexist, enum
- 	if (pBtCoexist->bManualControl)
- 		return;
- 
--	if (RT_MEDIA_CONNECT == mediaStatus)
-+	if (mediaStatus == RT_MEDIA_CONNECT)
- 		mStatus = BTC_MEDIA_CONNECT;
- 	else
- 		mStatus = BTC_MEDIA_DISCONNECT;
-@@ -1026,11 +1026,11 @@ void EXhalbtcoutsrc_SpecialPacketNotify(struct btc_coexist *pBtCoexist, u8 pktTy
- 	if (pBtCoexist->bManualControl)
- 		return;
- 
--	if (PACKET_DHCP == pktType) {
-+	if (pktType == PACKET_DHCP) {
- 		packetType = BTC_PACKET_DHCP;
--	} else if (PACKET_EAPOL == pktType) {
-+	} else if (pktType == PACKET_EAPOL) {
- 		packetType = BTC_PACKET_EAPOL;
--	} else if (PACKET_ARP == pktType) {
-+	} else if (pktType == PACKET_ARP) {
- 		packetType = BTC_PACKET_ARP;
- 	} else {
- 		return;
-@@ -1114,13 +1114,13 @@ void EXhalbtcoutsrc_Periodical(struct btc_coexist *pBtCoexist)
- 
- void EXhalbtcoutsrc_SetAntNum(u8 type, u8 antNum)
- {
--	if (BT_COEX_ANT_TYPE_PG == type) {
-+	if (type == BT_COEX_ANT_TYPE_PG) {
- 		GLBtCoexist.boardInfo.pgAntNum = antNum;
- 		GLBtCoexist.boardInfo.btdmAntNum = antNum;
--	} else if (BT_COEX_ANT_TYPE_ANTDIV == type) {
-+	} else if (type == BT_COEX_ANT_TYPE_ANTDIV) {
- 		GLBtCoexist.boardInfo.btdmAntNum = antNum;
- 		/* GLBtCoexist.boardInfo.btdmAntPos = BTC_ANTENNA_AT_MAIN_PORT; */
--	} else if (BT_COEX_ANT_TYPE_DETECTED == type) {
-+	} else if (type == BT_COEX_ANT_TYPE_DETECTED) {
- 		GLBtCoexist.boardInfo.btdmAntNum = antNum;
- 		/* GLBtCoexist.boardInfo.btdmAntPos = BTC_ANTENNA_AT_MAIN_PORT; */
- 	}
+ 		/* 4 1.7 Adjust Crystal Cap. */
 -- 
 2.43.0
 
