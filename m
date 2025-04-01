@@ -1,217 +1,356 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from EUR03-DBA-obe.outbound.protection.outlook.com (mail-dbaeur03on2054.outbound.protection.outlook.com [40.107.104.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1B7B28E0F
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 14:37:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743518279; cv=none; b=pUCZXJfZju4U8V3FgyHEMcMd0xzAZNZPgiu1Y+LMuDTT44tJPZ2ng58Vh/soO0MPzxaTceWST56I4nHICN4/yjCqI1pwRJR59nqg+v6i0CEEOmh2Mn/xom6P8eX+YMn76TAfuk/vIu/ldjWLQU+Luh0Ui1KWiO7KiYvw2Yzh6sM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743518279; c=relaxed/simple;
-	bh=9sjsJsjLGr9rkOG4L6VmWLcBnyGz/+jDTfgrL1iU/dE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qoAVvL9VkIbhyI58VcqJ9W/3lxctrcelgUjdWVHq0xO9oD8mlDTmZqfejmlvR97Fs2A1hRBVSi17zPJAfa/dBt93IDU3T1GopBl9qgId0pZHOcMd+lLh92o4O6gOLJkLeUnUNLhXOX/6yRzMUWOqtsDfY25AMQTSwhFUzGJg0Dc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=M1CbpyvS; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 890F51C7006;
+	Tue,  1 Apr 2025 14:38:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.104.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743518290; cv=fail; b=S951JU7hNzV2Ed53C8rhbuggRXmAISSmDAZOuby0/CO/Sd6C7ffJAmBDK4smcNjx7keR+G4kipa1DWQMVP7K/MVnkcc5VZImKoCca57c/D39goQuo3L6+GV2uKBZD3ipEApi1eykSRXfvQ9zwNxane3pL8KTtphPdxWL+iEALYw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743518290; c=relaxed/simple;
+	bh=YFyzd5G0deVwXGp7X7/H3ogfHXLaWUGzX6Rx1Zqkd2c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=SvvNdlK+iybGiA8LwyAaO7m38rg8HOr+BqwNWA9DanwoeUTtBUBnFRp2zU04uwtkMc6skvh48PUEqnKCH1q+2/0uqPttDAWBMxwrbNtnLYeL/yIccsb54TcYhAhQ2h4WtmDUcPxAMFxLzH/9igqHIN6OtkxyVZzaX3IXHRE1teo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=cBo6sjE7; arc=fail smtp.client-ip=40.107.104.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M1CbpyvS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743518275;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=jtaMmTkvpTGuQMzCtvIStTbYkVLoTBzhP3WCAooIZak=;
-	b=M1CbpyvS2S9CLT8GlOf9KzDC9M36OYiWZEnlfijzZVp24K2G/4UTC62K99c2z1+1vDUsrz
-	Wxrmd7NDrRvcpIKX1O2StGIij0qHYTSG6OkjR+RjcJDnASN3plYyqtg2ffcQ/ohUQe9Ebc
-	S3aElejg8DOXCeHT2q7hTvik7rkX/38=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-217-181o3oTvP3yaawMC3dnj9g-1; Tue, 01 Apr 2025 10:37:54 -0400
-X-MC-Unique: 181o3oTvP3yaawMC3dnj9g-1
-X-Mimecast-MFC-AGG-ID: 181o3oTvP3yaawMC3dnj9g_1743518273
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-39c184b20a2so987839f8f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 07:37:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743518273; x=1744123073;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=jtaMmTkvpTGuQMzCtvIStTbYkVLoTBzhP3WCAooIZak=;
-        b=gts/FUygK2mCzzCWIb4JAwUfKEnaQoybnFF+ckDZ/wT+KLAOwvko+YLjgwUwjjG+uE
-         BMs67nxMG4yD1tVHxnh4eJnBz9bHHBcuEEhvmDHtD7X/w0eoXCMXLp/xHRyhwOPPepkw
-         mKgGpdF30BqUcHeawiwz/4LiBL4Aain3tArXluJLq4AXox/LPW3UDaXqCWOkvFCgQqND
-         MTGracu8LpGJKJ4BKhppkOY78kPB5kIpgERPXUJjOGU9KZjBjZbxNPEkng2H4avfpveC
-         jb6YgtQhzDyPdS7eXtme6k1nIBvk4q6Z3s/QeOyo4ATsaEXcn/osEu0RiRzLY3z4dqGQ
-         mOFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVuwp08CO6DF3pKoxWE4YrvtD8YuyBBpc8kEdHRphfKb84A/b5HqL6rLKC5WgZETXxlf/sugwQYBAVTqyI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyGtdHkEDvmKqE7KUVLoe+zTN8CqLqbmu0cj/WFl4fbh/6CmJFI
-	9JLKSVwIQUI6Rzk0Qxgm02jp9yVPARtJTlFWwqUBUW/WmNURtri4r+jpyTnWPBPuVbFDHcb95ht
-	MnqQrlMPltGqZo2sZCAaFDWD4ANJSNcTOy1g5Brpz80Iw3nTYQbwXvIlRZzFmDg==
-X-Gm-Gg: ASbGnctWy5kONureDrAKJqjvjUMr1dm5gUB4hVDW+XGK68Kxl6n8DhcLtk8fkuqDFTY
-	kuY1Q9Zks0mPnkyjMQlF5dI7atKoLD0IHEQeIc0SItwAbqVyuCy5MOESWMhBJ/yiBidqtdCuHJn
-	n8YVotruQjwQarROM2PPugh1oFyC2Ud4AXWMkaYEm/FjiAHzx8UwtfffnrGYySM6/e7DYFEwbtT
-	cA7At6rWyZDOoS7M6/fzt76GaUVgx0DFypWVO0MZxolZsNbrcikxgVw/1eNGq/6mfIwc87PPEOt
-	j8F2x0wuGR8bOsgSw7pQOFNVv71VCIoLQt9gwkz4mG9IaFa05GDb6Nb+r9JNk7r1g7Wf3Tu86LN
-	S4yLFSIC+nytEdqxgwjml2EIjfw1jfTJ6BeTELAD5
-X-Received: by 2002:a05:6000:1862:b0:391:40bd:6222 with SMTP id ffacd0b85a97d-39c120ded7bmr10720895f8f.22.1743518273197;
-        Tue, 01 Apr 2025 07:37:53 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGshwDbH2bn4T7SNV37LjEYiabfQQ4zstWoxVA0YKWzvmgKUjvqmtPtmUN4Lcc11Xrjnp8mWQ==
-X-Received: by 2002:a05:6000:1862:b0:391:40bd:6222 with SMTP id ffacd0b85a97d-39c120ded7bmr10720883f8f.22.1743518272849;
-        Tue, 01 Apr 2025 07:37:52 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c707:4d00:6ac5:30d:1611:918f? (p200300cbc7074d006ac5030d1611918f.dip0.t-ipconnect.de. [2003:cb:c707:4d00:6ac5:30d:1611:918f])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b66a8c9sm14117975f8f.47.2025.04.01.07.37.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Apr 2025 07:37:52 -0700 (PDT)
-Message-ID: <a504f547-dc3c-418b-acb0-111b372d88ce@redhat.com>
-Date: Tue, 1 Apr 2025 16:37:51 +0200
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="cBo6sjE7"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=NphyputStKp1FYmIAxgZ4lvJDDIhMIpzY3SrEzeK2ie43buTe3nJFhdT1/pIGd3mfI6qpnwO9rw5fKnPTzhtgLm1dkN1dK6ZfEhYDttWMD5c8wwuoiL4SbLMthOvdBXhv8Kms5KolAkgsomKqklJtVfqvhvHemztKYDdMaTGfdsWC0aJsviaTuLptzPJSDcRgbuS8ZBTHDPdFD9Is5eL5xANX9taKKMDG9w84ERu7hZHoNOQlcaPehyZWx4qrb7wxmRYnNOZYLEdh2KwOGW8i5ZYO8KQ7NO9PAfz/VBzxEyFP2f57T8XJ0I9CxT7+Sc8FLj2mtExrjVt06PKK1LyaA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=LGDz47CnKbQFJVmyszCG0gihemcCXvFjUvp404BXCaM=;
+ b=EpN49Y+NhoiG2gPfRqj1WMT99nZzhNjAaUuVjhco0ppcXudfYIXB7/Vlu2gr6wr3BC5HOfMaTEJUxOZdLmeQiXknRLshBPdobTPsP6amkkbXjfO7xYqT5ZpFFYORGcSHx6OTGijEUOGlXFiT2LHevQkrRSLsQ2i6/q5Qd5V9LAMFphFg74WnMA8YhsjNTA6AebMc83iVACCjRV9KeVhKwKe9AhtRknnJs4Cisz5dpEfjeoXRXRZ5Blp/WJdrk0EUq6ESpWHqbvXwkMrf4gO01BSro80YHAe4yW/U0LuKgorNSIu4gY/zcJ0Timhn6hCpZQfn+GtEggu7omIhR9GyVQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LGDz47CnKbQFJVmyszCG0gihemcCXvFjUvp404BXCaM=;
+ b=cBo6sjE7R0caBvH1WxhnL2Mh8lv5f4iSq6WczZZ6FbqIwEEfQzjxds0U0JM0aGhWfWlz/FOeb8W9d4gokoJ9i046dxolce0ynXj3sVtWrxnApJYjvmaI3r7slZAvNC7rqnQrQB/4GNTT8HVdovwYXcsgjuB5EWLde/TyPboEYQO1Ijuuznzia6VbfaojmV+ZtXR6S9eSzjuaYHhRmFJpxXFvXxLhOXN2v5JSk00XwewSNBPQCSRSDmOZc5C7wERhqeq73mtKQBUq89bPz80dq01jkHLz6x4eeIsYSEIiZK6M9Ebie4uGOKVSuph0VitsXVOQxlsNeh3y1ftp6h3YKQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by AM7PR04MB7190.eurprd04.prod.outlook.com (2603:10a6:20b:115::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.54; Tue, 1 Apr
+ 2025 14:38:05 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06%2]) with mapi id 15.20.8534.048; Tue, 1 Apr 2025
+ 14:38:05 +0000
+Date: Tue, 1 Apr 2025 10:37:55 -0400
+From: Frank Li <Frank.li@nxp.com>
+To: "Ming Qian(OSS)" <ming.qian@oss.nxp.com>
+Cc: mchehab@kernel.org, hverkuil-cisco@xs4all.nl,
+	mirela.rabulea@oss.nxp.com, shawnguo@kernel.org,
+	s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+	xiahong.bao@nxp.com, eagle.zhou@nxp.com, linux-imx@nxp.com,
+	imx@lists.linux.dev, linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 3/3] media: imx-jpeg: Check decoding is ongoing for
+ motion-jpeg
+Message-ID: <Z+v6Q1TRpJUkF2oh@lizhi-Precision-Tower-5810>
+References: <20250328063056.762-1-ming.qian@oss.nxp.com>
+ <20250328063056.762-4-ming.qian@oss.nxp.com>
+ <Z+a2G5We38cQw3UD@lizhi-Precision-Tower-5810>
+ <99aa5db6-eb75-4fcf-ada7-cc6d519a40cc@oss.nxp.com>
+ <Z+qnln8qbHCYVH+e@lizhi-Precision-Tower-5810>
+ <22fd3087-6832-4b61-8c78-bc8dd3ac808b@oss.nxp.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <22fd3087-6832-4b61-8c78-bc8dd3ac808b@oss.nxp.com>
+X-ClientProxiedBy: SJ0PR13CA0166.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c7::21) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/7] mm/gup: check if both GUP_GET and GUP_PIN are set
- in __get_user_pages() earlier
-To: Baoquan He <bhe@redhat.com>
-Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, yanjun.zhu@linux.dev
-References: <20250331081327.256412-1-bhe@redhat.com>
- <20250331081327.256412-3-bhe@redhat.com>
- <e6b8481f-0bf6-4acf-9ebc-9b4f28c0be08@redhat.com>
- <Z+v5fguHjl5DiaZm@MiWiFi-R3L-srv>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <Z+v5fguHjl5DiaZm@MiWiFi-R3L-srv>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AM7PR04MB7190:EE_
+X-MS-Office365-Filtering-Correlation-Id: e54c724c-fe56-4c93-cba8-08dd712acff2
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|366016|7416014|376014|52116014|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?oFf7HqTGbK5MW1pAyhPCqSpUBWDjVqnBhI1cPObUPzzwd6j/e+zFFy9+KBOz?=
+ =?us-ascii?Q?xfGuTZJqbOWoZDpxklC3J8QHYMl4H2U6jVoyAWoZHr02XF+bOvBvAM9azAOH?=
+ =?us-ascii?Q?9VtvKkJknzMKmnTbW//3j8omVUbIUwZPMzb9pKEIumpAWF8CGJ4CayckBTaR?=
+ =?us-ascii?Q?NBv27xgHTGu7+wht07vfyKXm5lTdBR4wNixmQjKPMuRH1v+7gvAP+z6Zu35X?=
+ =?us-ascii?Q?NvpvlyzE8bVvYoMi2A++zZIyV57FFKi8Ywp2KrV9MCMh0Ttkd8FJ3QhtQXKE?=
+ =?us-ascii?Q?8aZ++jN7GnQZRGIO6teV/jbAReawnNPE76kPtv98dMVwaWNELQlNmr4sqQTl?=
+ =?us-ascii?Q?e3AdlbcCi6qmY0XF3xhJdjLGl2uK1snyCYVYFR1BtJveugq+0bC0WAowotXD?=
+ =?us-ascii?Q?KMR6RZWNDpOOC2Z4cQyKYY/u/PyiBNI7YbDz1CK74hd0gNg9O/p6Dn+w5+/s?=
+ =?us-ascii?Q?Tvz30rm8swYKqvCU/xttErFiCEk3hqf6WRdp/eCVIopZYwcCt5mdTn4mTtHB?=
+ =?us-ascii?Q?YcdoQM8Qu/Eosjfr/w/Ut4WngFKVm2aS1gQ8IYx8Y/KW26HP0+gyDuuhWdkQ?=
+ =?us-ascii?Q?i0aEF5p4S0yK3GjZ3fXZ9ucZar2cBfO2SQIPYX04CWvJHGgGcwAGc2q9gnsD?=
+ =?us-ascii?Q?Yl98M8/p66A1twsIACCnROaCmUQimfRnOJ87wDgoFlsAVBcFIyIOP/GHH1QS?=
+ =?us-ascii?Q?Nh19xnB6K+cI9Tsv4uhfzFrWylEwgte9VRFs/fQwcSrxxNh2CaqZFgDEzmbF?=
+ =?us-ascii?Q?v/HIHjhFBue50qNKNCIiW5kxPtXdAQcGoX9XFmGFNpsyZ5XkXFG08V9FPm45?=
+ =?us-ascii?Q?uiDYebOdAIRMEf/WPePZsoxg48YC1PqqmLpje19YAO7E20olXsB0esghch8r?=
+ =?us-ascii?Q?mv9U7V9wTzZNlNiPAQhlz+2fi7pNi2criPaQyeymh/ZsMwD6W2z03u+YdmsC?=
+ =?us-ascii?Q?MguUww7OrJJk9fNEDpAbVErCopZQ2iCeSzHQ44hQW5G0j/UrjLWF7mF7PaaP?=
+ =?us-ascii?Q?ourdc5JqqZE9ihdH49qe0uGiDCinuftMwKUIrs3RcqTr0QAbdN2oyYjP6w8n?=
+ =?us-ascii?Q?M/jv4EXazDbh1H6WBvGKggXMnnfQ0lmoT+k0YXqEtUdPViP1d3JrbTdzfoXO?=
+ =?us-ascii?Q?xvFjzWfR2mSjVS75sCFSRJWp0mMDi4CZoc690P1EGpSgA5q13snDjP8cu88f?=
+ =?us-ascii?Q?X9iZeZJexw1VIs459RGfc18Hqigrmfr6wWU1yKCGv3fzZ39rtpFUGLWtf2yj?=
+ =?us-ascii?Q?N8R8wmyM9KwLVMmFA6uZRUKOq772TpXHhzEgaf35VKLiKfSGFTJXlVgpraMr?=
+ =?us-ascii?Q?4amkdsROQktpqzwvwjS0CK+2X8L4knS+sgGU9vH59g9wzVQcYJJO7kS7w2VE?=
+ =?us-ascii?Q?5cHtd91WM/NvfSywENiB7CZYyWd0K0WOsQBjtpn4w64YZM15XQWW5LXSb8tO?=
+ =?us-ascii?Q?3Rq0o0lfjxK/FgXlK3AwtIGkPiG8uOQv?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(52116014)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?jHdGbNtvAWvyxNMoMm1vBZis5N8NbqESZaxXW0fpAo6SRNowgX10S49qGhYe?=
+ =?us-ascii?Q?gHSPjftqV0Hb5VVjwVzUO1+uVyoJvTzEFKTmfKrN7golpAEYXDNh5/V8YMyL?=
+ =?us-ascii?Q?JyCAkJfQCbjmxu+KiJiN6ooDrphh+Cy8C8LbejUsTx0R/026Y5+3DfgfmfYE?=
+ =?us-ascii?Q?aIAj+vRPJhbisvvrAFrRcpfE3vm8dob5hi9Ej+muNFDBOLowSEWgtG1apJto?=
+ =?us-ascii?Q?2VzTWHqg42z46HfblWZwbmqUbFgipMtN5B0H/eRUgtW4XiAdenaVsFk4lByl?=
+ =?us-ascii?Q?yQU2PqKhEqPcka0vowz6fWF+7eKP7ZoMGVSLJLM2SEdead/UQkSxH4lQnJM0?=
+ =?us-ascii?Q?gxD66X8HIGIZWPNpmzmSVOHw6yQNmpJPs66B5970XJwJocWnKkaJNWGbT5Mf?=
+ =?us-ascii?Q?rvGJGmOqS/bKbJBZYj6Wtpe8rSxTu+Xulr37hpda2rHbSQNdJlDOdKYfZEbG?=
+ =?us-ascii?Q?k4ev4P9n5RLjhwYNrC/dSLGiAGzehS5DJrNasOW0IWoKMj9f2DgRWJjjsXR1?=
+ =?us-ascii?Q?Yc3p3EECKjzubv+1TWF26rqlc/45y/ZHE9EtK7vJtDRygkyDRapURxpsHoM4?=
+ =?us-ascii?Q?WkQdpnyxnclyFAqWid8fbxWYFleITo79PiDbHQRGfFjuiqO+Dhh6ZhTpoyD8?=
+ =?us-ascii?Q?mtdiF01iTeeCdYQewCmxopZSTiZQnbhX133iCHfxel8eZT7Ymsd5J7GHXHxv?=
+ =?us-ascii?Q?VIVP4PodH/yhQAd4piW2H5NCZ1N14ZQqIloxShuncbaAwD0XYZltbo6zQfqv?=
+ =?us-ascii?Q?fSmNnQDXqKyLnFjRvGJoIhdHh/j84MZzLOT6yePCKpPxUiKkSE86v0weRNxq?=
+ =?us-ascii?Q?DXroJMToADiAXPWEhnjygza/d//UmU1rsgzTCu3s6cJ+Fq3txycE5t/N0ov9?=
+ =?us-ascii?Q?Vlnm749sHcZBdis59V4E4y5BUtwHUAltCJmE2wZ22TB+INazf1y6TjALNXwk?=
+ =?us-ascii?Q?A5ww9U+WcvFmfsEDK3Q0edKLSLyBKSZeLCp3mmRYDqWH2+3O7PigIc/XhIh9?=
+ =?us-ascii?Q?UilfbbfX0d/iwoLJTdhsAvbDC1LVdDE5iBXcD2xVOCGfWV+Xh7eVjVenLsjG?=
+ =?us-ascii?Q?u/iYKdD/o/Zit8o/Hv/pB8rTWR4DpVbtPQP/qqC0Ag0cfFMGrQqFkk3gtF1z?=
+ =?us-ascii?Q?qnppSifxh+3ZHh1y6O4JefEEPB6RW/UreIuOw1h/0rwQK3mvEGfQrwqyluq1?=
+ =?us-ascii?Q?tW2+T5NJaYM1ceQp/3W8aRpmzxsfq15Azr8tgGc82ItJkYOU19+S+IuLNDqk?=
+ =?us-ascii?Q?m1Szdmm053HGu9/+mdepzLhbQEOw4S2ZiBc8RVCsjco9zS+FD9hlF6K42dyY?=
+ =?us-ascii?Q?eT/7eI3LWZBRBaCgi9fs8zfhCNT30IvxN2/do4KOBJ+LHX6oksjIjCY5OtSg?=
+ =?us-ascii?Q?gFZS822rIXYZEGVcO8t9BYKUXZ+VlRK1cAtzZwW++zJ1A4BetqHbJqKcTseK?=
+ =?us-ascii?Q?Gb/kgk6bMcLEkw4ITe/c6kn97S+pOcldvxJkwQXtJWWJAXVep8y3SkAkLQL2?=
+ =?us-ascii?Q?/tmqQ/Oc1SLRbNMGipbvfRJFrAzP2aw1noIoPIXu7uX13C68m1efsr4nEZJM?=
+ =?us-ascii?Q?XPeym6p4lhlxo6uqAm4=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e54c724c-fe56-4c93-cba8-08dd712acff2
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Apr 2025 14:38:05.0413
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: uZjJDUcbFIw0v5fxtyVUkOWiqGZ5jDmeClagu99WrMySfFZ3axhIy/K4VW27GU0Uevyzf4ZRYqiYAYZkG9GczA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR04MB7190
 
-On 01.04.25 16:34, Baoquan He wrote:
-> On 04/01/25 at 10:02am, David Hildenbrand wrote:
->> On 31.03.25 10:13, Baoquan He wrote:
->>> In __get_user_pages(), it will traverse page table and take a reference
->>> to the page the given user address corresponds to if GUP_GET or GUP_PIN
->>> is et. However, it's not supported both GUP_GET and GUP_PIN are set.
->>> This check should be done earlier, but not doing it till entering into
->>> follow_page_pte() and failed.
->>>
->>> Here move the checking to the beginning of __get_user_pages().
->>>
->>> Signed-off-by: Baoquan He <bhe@redhat.com>
->>> ---
->>> v1->v2:
->>> - Fix code bug caused by copy-and-paste error, this is reported by
->>>     lkp test robot.
->>>
->>>    mm/gup.c | 10 +++++-----
->>>    1 file changed, 5 insertions(+), 5 deletions(-)
->>>
->>> diff --git a/mm/gup.c b/mm/gup.c
->>> index 73777b1de679..f9bce14ed3cd 100644
->>> --- a/mm/gup.c
->>> +++ b/mm/gup.c
->>> @@ -847,11 +847,6 @@ static struct page *follow_page_pte(struct vm_area_struct *vma,
->>>    	pte_t *ptep, pte;
->>>    	int ret;
->>> -	/* FOLL_GET and FOLL_PIN are mutually exclusive. */
->>> -	if (WARN_ON_ONCE((flags & (FOLL_PIN | FOLL_GET)) ==
->>> -			 (FOLL_PIN | FOLL_GET)))
->>> -		return ERR_PTR(-EINVAL);
->>> -
->>>    	ptep = pte_offset_map_lock(mm, pmd, address, &ptl);
->>>    	if (!ptep)
->>>    		return no_page_table(vma, flags, address);
->>> @@ -1434,6 +1429,11 @@ static long __get_user_pages(struct mm_struct *mm,
->>>    	VM_BUG_ON(!!pages != !!(gup_flags & (FOLL_GET | FOLL_PIN)));
->>> +	/* FOLL_GET and FOLL_PIN are mutually exclusive. */
->>> +	if (WARN_ON_ONCE((gup_flags & (FOLL_PIN | FOLL_GET)) ==
->>> +			 (FOLL_PIN | FOLL_GET)))
->>> +		return -EINVAL;
->>> +
->>
->> We already have that check in is_valid_gup_args(), that catches all external
->> users that could possibly mess this up.
-> 
-> Right.
-> 
->>
->> So we can just convert that into a VM_WARN_ON_ONCE(), and while doing that,
->> we should convert the VM_BUG_ON() above to a VM_WARN_ON_ONCE() as well.
-> 
-> Sounds great to me, will put below change into this patch of v3 as suggested.
-> Thanks.
-> 
-> diff --git a/mm/gup.c b/mm/gup.c
-> index 9e4ed09c578b..d551da9549b1 100644
-> --- a/mm/gup.c
-> +++ b/mm/gup.c
-> @@ -1427,10 +1427,10 @@ static long __get_user_pages(struct mm_struct *mm,
->   
->   	start = untagged_addr_remote(mm, start);
->   
-> -	VM_BUG_ON(!!pages != !!(gup_flags & (FOLL_GET | FOLL_PIN)));
-> +	VM_WARN_ON_ONCE(!!pages != !!(gup_flags & (FOLL_GET | FOLL_PIN)));
->   
->   	/* FOLL_GET and FOLL_PIN are mutually exclusive. */
-> -	if (WARN_ON_ONCE((gup_flags & (FOLL_PIN | FOLL_GET)) ==
-> +	if (VM_WARN_ON_ONCE((gup_flags & (FOLL_PIN | FOLL_GET)) ==
->   			 (FOLL_PIN | FOLL_GET)))
+On Tue, Apr 01, 2025 at 11:17:36AM +0800, Ming Qian(OSS) wrote:
+>
+> Hi Frank,
+>
+> On 2025/3/31 22:32, Frank Li wrote:
+> > On Mon, Mar 31, 2025 at 11:10:20AM +0800, Ming Qian(OSS) wrote:
+> > >
+> > > Hi Frank,
+> > >
+> > > On 2025/3/28 22:45, Frank Li wrote:
+> > > > On Fri, Mar 28, 2025 at 02:30:52PM +0800, ming.qian@oss.nxp.com wrote:
+> > > > > From: Ming Qian <ming.qian@oss.nxp.com>
+> > > > >
+> > > > > To support decoding motion-jpeg without DHT, driver will try to decode a
+> > > > > pattern jpeg before actual jpeg frame by use of linked descriptors
+> > > > > (This is called "repeat mode"), then the DHT in the pattern jpeg can be
+> > > > > used for decoding the motion-jpeg.
+> > > > >
+> > > > > In other words, 2 frame done interrupts will be triggered, driver will
+> > > > > ignore the first interrupt,
+> > > >
+> > > > Does any field in linked descriptors to control if issue irq? Generally
+> > > > you needn't enable first descriptors's irq and only enable second one.
+> > > >
+> > >
+> > > Unfortunately, we cannot configure interrupts for each descriptor.
+> > > So we can't only enable the second irq.
+> > >
+> > >
+> > > > > and wait for the second interrupt.
+> > > > > If the resolution is small, and the 2 interrupts may be too close,
+> > > >
+> > > > It also possible two irqs combine to 1 irqs. If I understand correct, your
+> > > > irq handle only handle one descriptors per irq.
+> > > >
+> > > > Another words,
+> > > >
+> > > > If second irq already happen just before 1,
+> > > >
+> > > > 1. dec_ret = readl(reg + MXC_SLOT_OFFSET(slot, SLOT_STATUS));
+> > > > 2. writel(dec_ret, reg + MXC_SLOT_OFFSET(slot, SLOT_STATUS)); /* w1c */
+> > > >
+> > > > Does your driver wait forever because no second irq happen?
+> > > >
+> > > > Frank
+> > >
+> > > Before this patch, the answer is yes, the driver will wait 2 seconds
+> > > until timeout.
+> > > In fact, this is the problem that this patch wants to avoid.
+> > > Now I think there are 3 cases for motion-jpeg decoding:
+> > > 1. The second irq happens before the first irq status check, the on-going
+> > > check
+> > > help to hanle this case.
+> > > 2. The second irq happens after the first irq status check, but before
+> > > on-going check, this on-going check can help handle it, fisnish the
+> > > current decoding and reset the jpeg decoder.
+> > > 3. The second irq happens after the on-going check, this is the normal
+> > > process before. No additional processing required.
+> >
+> > Okay, not sure if hardware provide current_descript position. Generally
+> > descriptor queue irq handle is like
+> >
+> > cur = queue_header;
+> > while(cur != read_hardware_currunt_pos())
+> > {
+> > 	handle(cur);
+> > 	cur = cur->next;
+> > 	queue_header = cur;
+> > }
+> >
+> > with above logic, even you queue new request during irq handler, it should
+> > work correctly.
+> >
+> > But it is depend on if hardware can indicate current working queue
+> > position, some time, hardware stop last queue posistion when handle last
+> > one.
+> >
+> > Frank
+> >
+>
+> I think it doesn't matter, the 2 descriptors are the cfg descriptor and
+> then the image descriptor.
+> If the current descriptor register remains the last image descriptor,
+> the ongoing check works.
+>
+> And I guess your concern is as below.
+> If the current descriptor register is still the cfg descriptor, but the
+> hardware has finished decoding the next image descriptor.
+>
+> I confirmed with our hardware engineer. This can't happen.
+> The first cfg decriptor has a next_descpt_ptr that is pointing to the
+> image descriptor, when the hardware read tne next_descpt_ptr, the
+> current descriptor register is updated, before the actual decoding.
 
-That won't work (or shouldn't work :) ). Just drop the handling, it's a 
-sanity check we don't expect to ever trigger, just like the old 
-VM_BUG_ON above.
+Maybe off topic,
 
--- 
-Cheers,
+CFG->next = Image
 
-David / dhildenb
+Image->next = NULL;
 
+If hardware finish image descriptior, current descriptor is 'Image' or 'NULL'
+
+If it is 'Image', need extra status bit show 'done'
+
+1:	slot_status = readl(jpeg->base_reg + MXC_SLOT_OFFSET(ctx->slot, SLOT_STATUS));
+
+I suppose it should be DONE status if just finish CFG description.
+
+2: 	curr_desc = readl(jpeg->base_reg + MXC_SLOT_OFFSET(ctx->slot, SLOT_CUR_DESCPT_PTR));
+
+It is possible curr_desc already was 'Image' after 1.
+
+ if (curr_desc == jpeg->slot_data.cfg_desc_handle)  //not hit this
+        return true;
+
+ if (slot_status & SLOT_STATUS_ONGOING)  // not hit this
+        return true;
+
+fake false may return.
+
+check two aync condition "slot_status" and "curr_desc" always be risk. But
+I don't know what's happen if fake false return here.
+
+for this type check
+	do {
+		slot_status = readl();
+		curr_desc = readl();
+	} while (slot_status != read());
+
+to make sure slot_status and cur_desc indicate the hardware status
+correctly.
+
+Frank
+>
+> Thanks,
+> Ming
+>
+> > >
+> > > Thanks,
+> > > Ming
+> > >
+> > > > >
+> > > > > when driver is handling the first interrupt, two frames are done, then
+> > > > > driver will fail to wait for the second interrupt.
+> > > > >
+> > > > > In such case, driver can check whether the decoding is still ongoing,
+> > > > > if not, just done the current decoding.
+> > > > >
+> > > > > Signed-off-by: Ming Qian <ming.qian@oss.nxp.com>
+> > > > > ---
+> > > > >    .../media/platform/nxp/imx-jpeg/mxc-jpeg-hw.h |  1 +
+> > > > >    .../media/platform/nxp/imx-jpeg/mxc-jpeg.c    | 20 ++++++++++++++++++-
+> > > > >    2 files changed, 20 insertions(+), 1 deletion(-)
+> > > > >
+> > > > > diff --git a/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg-hw.h b/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg-hw.h
+> > > > > index d579c804b047..adb93e977be9 100644
+> > > > > --- a/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg-hw.h
+> > > > > +++ b/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg-hw.h
+> > > > > @@ -89,6 +89,7 @@
+> > > > >    /* SLOT_STATUS fields for slots 0..3 */
+> > > > >    #define SLOT_STATUS_FRMDONE			(0x1 << 3)
+> > > > >    #define SLOT_STATUS_ENC_CONFIG_ERR		(0x1 << 8)
+> > > > > +#define SLOT_STATUS_ONGOING			(0x1 << 31)
+> > > > >
+> > > > >    /* SLOT_IRQ_EN fields TBD */
+> > > > >
+> > > > > diff --git a/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c b/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c
+> > > > > index 45705c606769..e6bb45633a19 100644
+> > > > > --- a/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c
+> > > > > +++ b/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c
+> > > > > @@ -910,6 +910,23 @@ static u32 mxc_jpeg_get_plane_size(struct mxc_jpeg_q_data *q_data, u32 plane_no)
+> > > > >    	return size;
+> > > > >    }
+> > > > >
+> > > > > +static bool mxc_dec_is_ongoing(struct mxc_jpeg_ctx *ctx)
+> > > > > +{
+> > > > > +	struct mxc_jpeg_dev *jpeg = ctx->mxc_jpeg;
+> > > > > +	u32 curr_desc;
+> > > > > +	u32 slot_status;
+> > > > > +
+> > > > > +	slot_status = readl(jpeg->base_reg + MXC_SLOT_OFFSET(ctx->slot, SLOT_STATUS));
+> > > > > +	curr_desc = readl(jpeg->base_reg + MXC_SLOT_OFFSET(ctx->slot, SLOT_CUR_DESCPT_PTR));
+> > > > > +
+> > > > > +	if (curr_desc == jpeg->slot_data.cfg_desc_handle)
+> > > > > +		return true;
+> > > > > +	if (slot_status & SLOT_STATUS_ONGOING)
+> > > > > +		return true;
+> > > > > +
+> > > > > +	return false;
+> > > > > +}
+> > > > > +
+> > > > >    static irqreturn_t mxc_jpeg_dec_irq(int irq, void *priv)
+> > > > >    {
+> > > > >    	struct mxc_jpeg_dev *jpeg = priv;
+> > > > > @@ -979,7 +996,8 @@ static irqreturn_t mxc_jpeg_dec_irq(int irq, void *priv)
+> > > > >    		mxc_jpeg_enc_mode_go(dev, reg, mxc_jpeg_is_extended_sequential(q_data->fmt));
+> > > > >    		goto job_unlock;
+> > > > >    	}
+> > > > > -	if (jpeg->mode == MXC_JPEG_DECODE && jpeg_src_buf->dht_needed) {
+> > > > > +	if (jpeg->mode == MXC_JPEG_DECODE && jpeg_src_buf->dht_needed &&
+> > > > > +	    mxc_dec_is_ongoing(ctx)) {
+> > > > >    		jpeg_src_buf->dht_needed = false;
+> > > > >    		dev_dbg(dev, "Decoder DHT cfg finished. Start decoding...\n");
+> > > > >    		goto job_unlock;
+> > > > > --
+> > > > > 2.43.0-rc1
+> > > > >
