@@ -1,335 +1,210 @@
-Received: from mx.denx.de (mx.denx.de [89.58.32.78])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2041.outbound.protection.outlook.com [40.107.237.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ADFA1F09B6;
-	Tue,  1 Apr 2025 10:35:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743503723; cv=none; b=H1U61Ig+lf60V5h/TDoM0JhNxm0NlZcA6xcQyc7Rc9fKLAJSYdXLh2tmS6w+XcxxmsjA8NQTGB+npPmQ8YjMGjhjGWj+Z0whn1uWw5uvmGP/TdffMAQTsFEFF60u8yN9z0kQmJSKFLkPtjd5TufP/wA7b/fYyRE1Ce+K5RDsf64=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743503723; c=relaxed/simple;
-	bh=v9kSnKkZYZ8WOxxdEDKtjf+iuECm/3V8MlhXkQVOj30=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cNLgt1YIS2TSf3jkMFXTP+vg+4/4UZ9kbkONPQRqImHsCdWkOqg0RhPoUtne2MCqvBpYNaByTZyjBJUEq2d4yK/1sakdd83f3+0nCXwJy8D0nB0v4lyeC2TRt4GjPh1RIUExBBV2Hr9h6yZHLDJHCE1VJYF33KL7c4S91b7mLUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=Tprvait7; arc=none smtp.client-ip=89.58.32.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFEB41F03EA;
+	Tue,  1 Apr 2025 10:35:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.41
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743503737; cv=fail; b=QNPJfCwfbtC5pWaVqwGh7czmg72LBBign5MvjGl9nioCP450SCVfau+LAYjeAu79INNRBqmRmE6FdXwmtdKT84CGi2AbCy2kEG/7ufk8p9RNlMI2Qc0n+c6vZvQaIC1ADe/P4m6m6AkiHFMdpT0sLCsUWkldJn6tlJIKGGMKPT0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743503737; c=relaxed/simple;
+	bh=Y+epiSjVM/uZam1YSWcp5uhNJerI0uQQCNhJfpRf7IU=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=K3ls1SIaYxxSkjZbkC9dRXd4kvyVvWZT/nHbP2+lS634/x458yGBsd+wHKsiVNYQ5Ay4Zo7q+phNG11DXTgQv45YBBYzO0fqitxI6T5DSXst7kTrRhZ7sbIat3/4esf6arCtSkV/+/kh2a6u+DB8LdrmGf69gSU1e821cz8OY+k=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=fgRDtTx4; arc=fail smtp.client-ip=40.107.237.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="Tprvait7"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 0C57C101CA6E8;
-	Tue,  1 Apr 2025 12:35:08 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
-	t=1743503712; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 in-reply-to:references; bh=s7Poqe3mZVIgpU2JGC2x8jHFSjWgHlNoBHPst74G6xY=;
-	b=Tprvait7ezlgUnAVteDKrKb1PEx6byXSrNXb/HiG066infjz5H+UTJvCI6zLh9XeLH6MKU
-	MxkqTmCR6QkesCm39uIpLj4kXiXIH56ZhgtIsLMfHMDmI+28XrcmloOb9g2XzhJqnPNB66
-	WtXO/aqYSH8geX9cjsFOO1M6bbUn2lQYwNNWVud73LoU4hDW071gPsXenQRGv00jDZ6Kxl
-	eS/K1EqL162DFt++crqpY+cKc+lxs3ZB13GzUXpqlw/sMHEBMMWUwMq3m/uT2ZnYXlRkfL
-	WcmLG0/LhqHwh3iY7bgZr6pSCQWXGCctRUcx0i2Am6uMrzLULMijb5gL0lYoUA==
-Date: Tue, 1 Apr 2025 12:35:07 +0200
-From: Lukasz Majewski <lukma@denx.de>
-To: Rob Herring <robh@kernel.org>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>, davem@davemloft.net, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
- <pabeni@redhat.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
- <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, Richard Cochran
- <richardcochran@gmail.com>, netdev@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 1/4] dt-bindings: net: Add MTIP L2 switch description
-Message-ID: <20250401123507.2e3bf0a6@wsk>
-In-Reply-To: <20250331235518.GA2823373-robh@kernel.org>
-References: <20250331103116.2223899-1-lukma@denx.de>
-	<20250331103116.2223899-2-lukma@denx.de>
-	<20250331235518.GA2823373-robh@kernel.org>
-Organization: denx.de
-X-Mailer: Claws Mail 3.19.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="fgRDtTx4"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=DSNo9OeHiqtfpads+5RiNbGWPUjPhG7E4q0x+jVg34gTg1sljOy+ReS8Fnh6YS2qpHqemzVU4ERynS4v/cv0kisYNHF55h2lyZpPww32YB7xHarHKLifoyQkYHW0SH9lQjlHl2pBsYeZ+FaH7lKqSPx6kDoYj9cYvt/x7aQciLhG3pt5X7dC6p98sCcuNWhpFwu/ZLn/81pK1TGGbbKPid7MSoNvcDuk3XuzDUWgfPjipbmbCuHG8CLuB7abwbS+dzbNpm50i3JtKUkmei84wPGAy9tgaKL7/bf+Lbd5Dfy544vNkzwdnSR2QpNk99d07azo1aXG6yWnpu8m6cCT7A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=dcP+OkfZ8mYHJfisqbzhuWumbNIUy61Drf1eToVHAhM=;
+ b=OYpq5l09defhFR1Ual6c2PKPQ+yG1SNjPh6nHJdtiC8/sMKCTFL403z8HBQZpQeXEPPCpt40QCjyeVHVBSlQOQ7BJb41GW2sU8n3oq+aeLngfuQ+JHISyvlJQA8pnqMROeXcG8KUQ2Dm7JyBWAcQiDhv8jZpHXxekJ6RiYz6rifjJGKIQrz/NflcY+HJ7GMwDzHdhI8YHVh+ZfWUMwZ9JRr0af0AmSc7D45J+/BDqHceDUWyUZWLJZzLhNkNGo/yAHn3kBvetVDpoO/Lm5Iv6g6C2orwHt86fLtpmBhAJOy0gqBEwGX0A3fr8qnWMrmyjeu7bsgZzjTBRNTZuvzmNg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dcP+OkfZ8mYHJfisqbzhuWumbNIUy61Drf1eToVHAhM=;
+ b=fgRDtTx4ryZ53QsNAYlWvVrmJdJ1//NiREB51s4MxO1X3/116oKt7jWJMfKCFNcHGuT+W1jSfNjIkNuHs2h/Q0/tNgeqrGt4lL3LyOa1MWkqjunTOXPdf+dksYVug/y+MaBlc/z3eDKD8jihsil6m9IyYoCpE4hMJ9kEryMDsIc=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DS0PR12MB6608.namprd12.prod.outlook.com (2603:10b6:8:d0::10) by
+ CY8PR12MB8193.namprd12.prod.outlook.com (2603:10b6:930:71::22) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8534.50; Tue, 1 Apr 2025 10:35:33 +0000
+Received: from DS0PR12MB6608.namprd12.prod.outlook.com
+ ([fe80::b71d:8902:9ab3:f627]) by DS0PR12MB6608.namprd12.prod.outlook.com
+ ([fe80::b71d:8902:9ab3:f627%4]) with mapi id 15.20.8534.043; Tue, 1 Apr 2025
+ 10:35:33 +0000
+Message-ID: <be2c8047-fd68-4858-bb92-bf301d7967b4@amd.com>
+Date: Tue, 1 Apr 2025 16:05:22 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC v2 14/17] x86/apic: Add kexec support for Secure AVIC
+To: Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org
+Cc: bp@alien8.de, mingo@redhat.com, dave.hansen@linux.intel.com,
+ Thomas.Lendacky@amd.com, nikunj@amd.com, Santosh.Shukla@amd.com,
+ Vasant.Hegde@amd.com, Suravee.Suthikulpanit@amd.com, David.Kaplan@amd.com,
+ x86@kernel.org, hpa@zytor.com, peterz@infradead.org, seanjc@google.com,
+ pbonzini@redhat.com, kvm@vger.kernel.org, kirill.shutemov@linux.intel.com,
+ huibo.wang@amd.com, naveen.rao@amd.com
+References: <20250226090525.231882-1-Neeraj.Upadhyay@amd.com>
+ <20250226090525.231882-15-Neeraj.Upadhyay@amd.com> <87a59e2xms.ffs@tglx>
+Content-Language: en-US
+From: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
+In-Reply-To: <87a59e2xms.ffs@tglx>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN2PR01CA0213.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:ea::7) To DS0PR12MB6608.namprd12.prod.outlook.com
+ (2603:10b6:8:d0::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/RWGAJJQc9ifwwn2SMI2BeSX";
- protocol="application/pgp-signature"; micalg=pgp-sha512
-X-Last-TLS-Session-Version: TLSv1.3
-
---Sig_/RWGAJJQc9ifwwn2SMI2BeSX
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi Rob,
-
-> On Mon, Mar 31, 2025 at 12:31:13PM +0200, Lukasz Majewski wrote:
-> > This patch provides description of the MTIP L2 switch available in
-> > some NXP's SOCs - e.g. imx287.
-> >=20
-> > Signed-off-by: Lukasz Majewski <lukma@denx.de>
-> > ---
-> > Changes for v2:
-> > - Rename the file to match exactly the compatible
-> >   (nxp,imx287-mtip-switch)
-> >=20
-> > Changes for v3:
-> > - Remove '-' from const:'nxp,imx287-mtip-switch'
-> > - Use '^port@[12]+$' for port patternProperties
-> > - Drop status =3D "okay";
-> > - Provide proper indentation for 'example' binding (replace 8
-> >   spaces with 4 spaces)
-> > - Remove smsc,disable-energy-detect; property
-> > - Remove interrupt-parent and interrupts properties as not required
-> > - Remove #address-cells and #size-cells from required properties
-> > check
-> > - remove description from reg:
-> > - Add $ref: ethernet-switch.yaml#
-> > ---
-> >  .../bindings/net/nxp,imx287-mtip-switch.yaml  | 154
-> > ++++++++++++++++++ 1 file changed, 154 insertions(+)
-> >  create mode 100644
-> > Documentation/devicetree/bindings/net/nxp,imx287-mtip-switch.yaml
-> >=20
-> > diff --git
-> > a/Documentation/devicetree/bindings/net/nxp,imx287-mtip-switch.yaml
-> > b/Documentation/devicetree/bindings/net/nxp,imx287-mtip-switch.yaml
-> > new file mode 100644 index 000000000000..98eba3665f32 --- /dev/null
-> > +++
-> > b/Documentation/devicetree/bindings/net/nxp,imx287-mtip-switch.yaml
-> > @@ -0,0 +1,154 @@ +# SPDX-License-Identifier: (GPL-2.0-only OR
-> > BSD-2-Clause) +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/net/nxp,imx287-mtip-switch.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: NXP SoC Ethernet Switch Controller (L2 MoreThanIP switch)
-> > +
-> > +maintainers:
-> > +  - Lukasz Majewski <lukma@denx.de>
-> > +
-> > +description:
-> > +  The 2-port switch ethernet subsystem provides ethernet packet
-> > (L2)
-> > +  communication and can be configured as an ethernet switch. It
-> > provides the
-> > +  reduced media independent interface (RMII), the management data
-> > input
-> > +  output (MDIO) for physical layer device (PHY) management.
-> > +
-> > +$ref: ethernet-switch.yaml# =20
->=20
-> This needs to be: ethernet-switch.yaml#/$defs/ethernet-ports
->=20
-> With that, you can drop much of the below part. More below...
->=20
-> > +
-> > +properties:
-
-So it shall be after the "properties:"
-
-$ref: ethernet-switch.yaml#/$defs/ethernet-ports   [*]
-
-
-> > +  compatible:
-> > +    const: nxp,imx287-mtip-switch
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  phy-supply:
-> > +    description:
-> > +      Regulator that powers Ethernet PHYs.
-> > +
-> > +  clocks:
-> > +    items:
-> > +      - description: Register accessing clock
-> > +      - description: Bus access clock
-> > +      - description: Output clock for external device - e.g. PHY
-> > source clock
-> > +      - description: IEEE1588 timer clock
-> > +
-> > +  clock-names:
-> > +    items:
-> > +      - const: ipg
-> > +      - const: ahb
-> > +      - const: enet_out
-> > +      - const: ptp
-> > +
-> > +  interrupts:
-> > +    items:
-> > +      - description: Switch interrupt
-> > +      - description: ENET0 interrupt
-> > +      - description: ENET1 interrupt
-> > +
-> > +  pinctrl-names: true
-> > + =20
->=20
-> > +  ethernet-ports:
-
-And then this "node" can be removed as it has been referenced above [*]?
-
-(I shall only keep the properties, which are not standard to [*] if
-any).
-
-> > +    type: object
-> > +    additionalProperties: false
-> > +
-> > +    properties:
-> > +      '#address-cells':
-> > +        const: 1
-> > +      '#size-cells':
-> > +        const: 0
-> > +
-> > +    patternProperties:
-> > +      '^port@[12]+$': =20
->=20
-> Note that 'ethernet-port' is the preferred node name though 'port' is=20
-> allowed.
-
-Ok. That would be the correct define:
-
-ethernet-ports {
-     mtip_port1: ethernet-port@1 {
-               reg =3D <1>;
-               label =3D "lan0";
-               local-mac-address =3D [ 00 00 00 00 00 00 ];
-               phy-mode =3D "rmii";
-               phy-handle =3D <&ethphy0>;
-	       };
-
-               mtip_port2: port@2 {
-		....
-	       };
-
->=20
-> > +        type: object
-> > +        description: MTIP L2 switch external ports
-> > +
-> > +        $ref: ethernet-controller.yaml#
-> > +        unevaluatedProperties: false
-> > +
-> > +        properties:
-> > +          reg:
-> > +            items:
-> > +              - enum: [1, 2]
-> > +            description: MTIP L2 switch port number
-> > +
-> > +          label:
-> > +            description: Label associated with this port
-> > +
-> > +        required:
-> > +          - reg
-> > +          - label
-> > +          - phy-mode
-> > +          - phy-handle =20
->=20
-> All the above under 'ethernet-ports' can be dropped though you might=20
-> want to keep 'required' part.
-
-Ok, I will keep it.
-
->=20
-> > +
-> > +  mdio:
-> > +    type: object
-> > +    $ref: mdio.yaml#
-> > +    unevaluatedProperties: false
-> > +    description:
-> > +      Specifies the mdio bus in the switch, used as a container
-> > for phy nodes. +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - clocks
-> > +  - clock-names
-> > +  - interrupts
-> > +  - mdio
-> > +  - ethernet-ports
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    #include<dt-bindings/interrupt-controller/irq.h>
-> > +    switch@800f0000 {
-> > +        compatible =3D "nxp,imx287-mtip-switch";
-> > +        reg =3D <0x800f0000 0x20000>;
-> > +        pinctrl-names =3D "default";
-> > +        pinctrl-0 =3D <&mac0_pins_a>, <&mac1_pins_a>;
-> > +        phy-supply =3D <&reg_fec_3v3>;
-> > +        interrupts =3D <100>, <101>, <102>;
-> > +        clocks =3D <&clks 57>, <&clks 57>, <&clks 64>, <&clks 35>;
-> > +        clock-names =3D "ipg", "ahb", "enet_out", "ptp";
-> > +
-> > +        ethernet-ports {
-> > +            #address-cells =3D <1>;
-> > +            #size-cells =3D <0>;
-> > +
-> > +            mtip_port1: port@1 {
-> > +                reg =3D <1>;
-> > +                label =3D "lan0";
-> > +                local-mac-address =3D [ 00 00 00 00 00 00 ];
-> > +                phy-mode =3D "rmii";
-> > +                phy-handle =3D <&ethphy0>;
-> > +            };
-> > +
-> > +            mtip_port2: port@2 {
-> > +                reg =3D <2>;
-> > +                label =3D "lan1";
-> > +                local-mac-address =3D [ 00 00 00 00 00 00 ];
-> > +                phy-mode =3D "rmii";
-> > +                phy-handle =3D <&ethphy1>;
-> > +            };
-> > +        };
-> > +
-> > +        mdio_sw: mdio {
-> > +            #address-cells =3D <1>;
-> > +            #size-cells =3D <0>;
-> > +
-> > +            reset-gpios =3D <&gpio2 13 0>;
-> > +            reset-delay-us =3D <25000>;
-> > +            reset-post-delay-us =3D <10000>;
-> > +
-> > +            ethphy0: ethernet-phy@0 {
-> > +                reg =3D <0>;
-> > +            };
-> > +
-> > +            ethphy1: ethernet-phy@1 {
-> > +                reg =3D <1>;
-> > +            };
-> > +        };
-> > +    };
-> > --=20
-> > 2.39.5
-> >  =20
-
-Thanks for the hint.
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR12MB6608:EE_|CY8PR12MB8193:EE_
+X-MS-Office365-Filtering-Correlation-Id: 46523feb-8d3c-48eb-f738-08dd7108ee13
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?dnlCZUpjZS80QmNndFNHbldaazlPYlZiR1FTZVpmSGN5eWlNZWd4V0Yvd0ZM?=
+ =?utf-8?B?QTU4OSt0QzFDNHI1T1VUeE9oMVZ4eUZuWFVGM2tBcENnRW5NbW51VytWZXZi?=
+ =?utf-8?B?WlI4eXlqZklkWGozRGh3cGRld2k2WU1UcGd6RElZelNYMm5PZUpKa2FwMVUy?=
+ =?utf-8?B?K2ZwZUQzOWowTHducDdYVVVNSkp1b01ncWtsQkcwc0JTM0NteDZSTm5oOVo0?=
+ =?utf-8?B?cGloM0VKL1FBWFl0czFud3pqUXZqZEY5K3BJTG1STXN0ZHJHdFlNSGhra28y?=
+ =?utf-8?B?T1l3Zis4c2ZNSGgrcmFEY0lCemJyN3lORjZyMENSRkl3c3JuZUFzOEpzNUdS?=
+ =?utf-8?B?V3l1bGloQm9lcXhQY05yeGdSMzM4RjNTV0NXOWJmOVlLNWd1dUw0TS9PMzM3?=
+ =?utf-8?B?SHBNUmNOYWdHMTd2SmhwbXZKejR5SGlVNjVubHl5Y1VManZXRUp6UE1jRFVa?=
+ =?utf-8?B?bGRCdkJQRVJFOTVPNE5KUW1JL3AzR3pGSUtOWXBNZmNiOTJOWTlROXFGZWpE?=
+ =?utf-8?B?cS9WMkZkem0xdGhNenNqbXdFOFFzbnFKUkhqWXo1NHpKb1VPTWdCREFJNlZ2?=
+ =?utf-8?B?M0FzenZvNVJiVWdlOUsrQ0V1a3JYV21MbHFHY0Z5Rk9BTHU0MHF6T1hxZTBw?=
+ =?utf-8?B?MThoQTgzVmtZSW5aRUFmQUtkSHg0NnJqUDZxVlY3RDRvWWtWQjRzL2RTNGpN?=
+ =?utf-8?B?T0hpekMvS3AvOE1XRkNhZjF3eFZIS2lZQnZ5U2ZNOEhEaXpXZWNjQ05uQ3Av?=
+ =?utf-8?B?bGhET083NC9aVUhVbytINjV4R3RvMzhXZTlZeUh5T3dGVml3RkRjYk1EVlpw?=
+ =?utf-8?B?cFZLNnJVQmxlTjd5ZWppNnRqRU52NDdlUkVmT1QxcTZsQWtvMFAxZEkwOWQv?=
+ =?utf-8?B?SHZZaUVuZVFNeFd2NkU1bXBLTElFVmhlZEVVRVNFTXJldVhZazRidXJoZE4v?=
+ =?utf-8?B?L2s2ZFFKNGlhNkNiV3luT2NiMVdlZWwyQk04S2lXT09rU2gxcWV4ZFhpWGxM?=
+ =?utf-8?B?enhaakc5cGVsVHk2SjkwK1ByaDBteUlQNWxtSXl6QnJJUnk1QytLTnhjNGsv?=
+ =?utf-8?B?R3dNOStCQ2NkbldZczhIYk9qbXJhSXN5bllnU1ZCanBQczJZNU1FNnhRdDMx?=
+ =?utf-8?B?K1E3elFVU1o3VzdpcUk2cjNjcHJjdm1nZkVkM2tiNTdSZ0V5c25PWjVYODVO?=
+ =?utf-8?B?Rndmb0JHaVoyT1VtTkFqYnlNdGprL1hiNFJqbXh1Y0hMUXRwZGNMSEdOTFJk?=
+ =?utf-8?B?S3JUbUpxQlY4bVdyQ1RtSHp6NjFrN3VUMjJ5WVdqSHZxQmNaRWplazl6MmZs?=
+ =?utf-8?B?eGk5ellGUENGNk11NWhVYnBxcnJZaXhLaWI3ZTBSNnZlb1VubUJmWHUvQ0xF?=
+ =?utf-8?B?NU4wN2xYYW4rVi9Pd3BQb0JsOUw3U2N5ZnNDaXByV1ZEY1V1Mkt3Q0RaMXM4?=
+ =?utf-8?B?R1hIeCtsRTZtbFNtVVA1WGJnSGV6QkZTRXRDaWxONEJhL3k0Qnc2VFB4Mmw2?=
+ =?utf-8?B?UllhN0Z3TEtZazZMb3BpV0hLd1V1cHAvenNTVGlKZVkwU240WmlFaGVVM1Rw?=
+ =?utf-8?B?SmxGc0ZJTEs3MmkrNkFFQi9BTFBNSnNZc3A0S0tsakFtbitKQU96aUNyaWxz?=
+ =?utf-8?B?TCt0SDhmYVBXYituWHpiL1dDZWtrSTBtR1lONStMNzRxaE1SMjVVUnYvc0Ny?=
+ =?utf-8?B?TXhVeU5ERkl3SnRoSUI5MnQ5eTUxQ1k2MnozQjkwc2FZNmlZdWkxdHhvd3dP?=
+ =?utf-8?B?aGErOWpxOFNkbzZvelhwSkdmYUxvN3p0K2NOQVp2Q2pKV1h4Zm40b1Fsb1A3?=
+ =?utf-8?B?UWJ1aFpmbzZuaisrN3dNQVFxeGhqeWIyNEdFTmZPQlE3cWJibHZ6a2FaNGFW?=
+ =?utf-8?Q?GXobZmj0UIZ6I?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB6608.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?aGk1eENMOUYwMStCL0RZb2FDRm01RldhaEkvNkpOcHN2eGhnVEl5SUd0Y3NG?=
+ =?utf-8?B?T0xUN2dWYjlPOWh0RDRWNENpUUhuSGhuaHkraVBRR2drS2Z4SlBxUjNFRVB2?=
+ =?utf-8?B?dVVMSFRGNHR6U2NVc3YxZCtPUEErU0NUcFdXWEsrTHpoL0U0ZEs1QzArbkt5?=
+ =?utf-8?B?aWkvNHVEem9HRWJWVzhhTzAyMEd4NzZuMVR4emR5MjV5QUFPaWlDeGVCUGNC?=
+ =?utf-8?B?N3JTazJ2aTRyaGZkNHdsb0F3Qkc0T1prK2N1Y0lSbE84aHZYVXVxQmZZSDgv?=
+ =?utf-8?B?aHZGUzk1YTdpbXY4dkdETDF6V2FSSjd1aXFmMmxSOTljSlNRRUxTNEhqd0No?=
+ =?utf-8?B?SXJicFlUZ241WE9pS1ByN1RYOFY0QlhUYWo4RzZnTUNzcGhXSGdJclBoL042?=
+ =?utf-8?B?cWFvM0hEaXVQMlRXM3lTbkduOFdZRzNxUHFZc0ZEWi9wQWc0cXh2VEpTK2tr?=
+ =?utf-8?B?clV0QUhQaDRVK3NFb1dobjk4eC90ZGRETWtubEtpVHc0Q1BGZ2FVb3g3K2NN?=
+ =?utf-8?B?NWw4OTNLcTZsOEF3Um9pY3N0anJkU0RoSzZEcEZFR09Hb1h3dHJyM3dIdFhx?=
+ =?utf-8?B?TkV6bUNzTWUyblNCa0I2QUpRNko1Q0JxOVExZDNaaFlRYmgvek5BQ3hWSEVB?=
+ =?utf-8?B?VEV2YktiWXNwaVhFR1diMDlPQjZRd1NwZ1BMT2kvV1JFeEluZWdwTHFKWG9x?=
+ =?utf-8?B?N2FmY2tuRFFwNjF2UUJwdzRaWU9tSGx0cVNpMmwzV1dJSTg3NFdTZERNalZL?=
+ =?utf-8?B?WDVnY1RaVGNDZkdaMkRxSGJobjBTRENCYUNzaWVVdDVKR1Nna21Uc3JKZHpn?=
+ =?utf-8?B?RXhoTjFsZk4wejJCRjRZQWlrNEtYREFVSE44TjhWdHpPSTM5ZTM4WHV1ai9B?=
+ =?utf-8?B?NTI1bUdMUTRRMFVOQnFJd3VIN2luR0o2N05USjQ3TjREbmMxUzJGSytCTkVD?=
+ =?utf-8?B?aGlqbXJJc24za0FqeFJNdmZKUkQwS1ZzOGV4N3IySE10RSsrM1BqS0xPS1Bl?=
+ =?utf-8?B?SDJIQmkyNUE4Y0xxQUp1WXF2cktKVHFuZWFoUWxMdjczQi8wOFZGS3hyYnc5?=
+ =?utf-8?B?dE41cUt2UVEvWS9yMXBJaG8rZTB3OWRVUjY2WTZRUGs3UTJ1NVdxU2lWZHpT?=
+ =?utf-8?B?ZEUwU0MrU2IwRFlhcTBQTmFycWgwWmlmUXNkUC9DWkFQT29TSVQyd3lVcVBC?=
+ =?utf-8?B?VEpQVG1nd1B4d3hPRXZZdEd3STkrc1JYeHB0UmQxWEhEOG1FM1NTRnZFVUJp?=
+ =?utf-8?B?YzZEWXYvSDZOTE44QVZ3anF3VVp6MWM5dytWKzFPbS9JamRYc0hHdzhUOXBJ?=
+ =?utf-8?B?aXBQYVZaMndGY0RvSlU5aVI0ZGZ1WGtSY1VXRXFWd0NjeDhTd25DeDB3R1Qw?=
+ =?utf-8?B?TThXamhRWnRxQ1VYb3dQeFB3djZtM1JYa0ZxSFFuZHIxbHFkd1ptb1d3dHpZ?=
+ =?utf-8?B?VHBwTnVRWk56ZldJamV1cmxpTDNvbmI0OE4zbnhqMUoyblp1ZWMxTk1oa1d4?=
+ =?utf-8?B?NXRBZHA4VHlGMjZLM2RxeVoyeFIrcTJiUzN3blArT3dqbldlNFRKU1Fwc2ly?=
+ =?utf-8?B?dExrNmJyMWV0U1VkdHQ4QzJMQm0zMGFGaXJaQ01CU245ZTZxWEcxNkxoUmt1?=
+ =?utf-8?B?eDdOdHRCNzlrdUs3MU9VeEJ4aStybG1WL3VDNmRYc0xWVG1VcFg1ajliM2cy?=
+ =?utf-8?B?M2Z5Z2VHaXFSR1NWM0JvMmltNXVwYy9KTGdTQk8yUHduQ3JJNGNiNkRsSFVF?=
+ =?utf-8?B?MWpVamR6SFE2U0l3dUV5K1FPVFJ5akNrc0xNSTZsc0ZRejVTV21DOXB4UVVw?=
+ =?utf-8?B?Y3FqWlhQdDVOMnhQQTBob3QyeDBwZHNhaWRIQXRlVU13bWlVYXNSeDlCUDZj?=
+ =?utf-8?B?eGwxdHRMSzQrbjZBN2FJVUpOZVFabmRhYVUvMU8wTVM4aWFLUWgwYitvcGEy?=
+ =?utf-8?B?bXllWFZrb1dJemdRY2k4TjNQc21ybHhGNkdzWG91VVZZc1c0RmVibk04djUr?=
+ =?utf-8?B?YmgwSEY5RGRUWWtJQ09OZGduUWVLNXVmS1NyYUZjWm13eHBRQmxmR3lSVG1x?=
+ =?utf-8?B?VDRwY3hnUVZBazZTZysxUm5CWWV1c2VhTDgxNEo3bmNUTUNncXkrQllBNmpr?=
+ =?utf-8?Q?42AVGWvAAH8avExTK0Bj26aGX?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 46523feb-8d3c-48eb-f738-08dd7108ee13
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB6608.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Apr 2025 10:35:32.8980
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: gqnrwZ0tbPuviUS7B049EQmjahCZQIO2uldrWy/SA0Nz7FADP86hlqIdze/iziDw7xswspz6X8nE9WiUKTP0ow==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB8193
 
 
-Best regards,
 
-Lukasz Majewski
+On 3/21/2025 9:18 PM, Thomas Gleixner wrote:
+> On Wed, Feb 26 2025 at 14:35, Neeraj Upadhyay wrote:
+>>  
+>> +/*
+>> + * Unregister GPA of the Secure AVIC backing page.
+>> + *
+>> + * @apic_id: APIC ID of the vCPU. Use -1ULL for the current vCPU
+> 
+> Yes, -1ULL is really a sensible value - NOT. Ever thought about
+> signed/unsigned?
+> 
 
---
+In table "Table 7: List of Supported Non-Automatic Events" of GHCB spec [1],
+0xffff_ffff_ffff_ffff is used for Secure AVIC GHCB event
 
-DENX Software Engineering GmbH,      Managing Director: Erika Unter
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
+"RAX will have the APIC ID of the target vCPU or 0xffff_ffff_ffff_ffff
+ for the vCPU doing the call"
 
---Sig_/RWGAJJQc9ifwwn2SMI2BeSX
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+I am using -1ULL for that here.
 
------BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCgAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAmfrwVsACgkQAR8vZIA0
-zr24oQf/anBJOGl0tWgnq6LRJxzQ6T2tFRMS9KaTl/Yl6SF0MpjdSH1Wjw4HV+oV
-gfTYtA1SQiOTdgGUq4oM8BTfLLxjLpD12kjIOAEY4ObVyfkYCtTFjyA5S+NA80Zs
-tcAyZZa9TVHculFJliwKPe6/XuAPXLwdPMb63tQrokVOi4XmKBO/PC1i6mpRONei
-y+aBVCE3+j+CiqVkK9ZEwKpI3FWfcODNbAQQ+tXQoKSvrsFLlr9xUMqUZnR2vr0V
-+qdkD74tQDFVoEOd9BQCUP0sacxP9+pS4sIjRgq8t4gJv0W59RxNKssq8RgWN10t
-GEICbrn8XIbQCF2SyxmkwxbNAym54g==
-=siSa
------END PGP SIGNATURE-----
 
---Sig_/RWGAJJQc9ifwwn2SMI2BeSX--
+[1] https://www.amd.com/content/dam/amd/en/documents/epyc-technical-docs/specifications/56421.pdf
+
+
+>> + *           doing the call.
+> 
+> How would this function ever make sense to be invoked from a remote CPU?
+> 
+
+I will update the interface in next version. Remote CPU interface is not used.
+
+>> + * On success, returns previously registered GPA of the Secure AVIC
+>> + * backing page in gpa arg.
+> 
+> Please use proper kernel-doc formatting and not some made up thing which
+> looks like it.
+> 
+
+Ok. I will update this.
+
+
+- Neeraj
+
+> Thanks,
+> 
+>         tglx
+
