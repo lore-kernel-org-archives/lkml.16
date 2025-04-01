@@ -1,140 +1,112 @@
-Received: from hr2.samba.org (hr2.samba.org [144.76.82.148])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 237C51EC01F;
-	Tue,  1 Apr 2025 12:23:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.76.82.148
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D70F1EBA14;
+	Tue,  1 Apr 2025 12:24:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743510186; cv=none; b=kFtQzMQ4KIb/2CD3NkC8rES50yDZ7LNE4ldukAh9cnzVlrf5IRpJH3EiIiF+90B1htTg2kOlbCI1bR4E66YYI3jsotM88fvC7GaKwbxS/MoNpjzmcgtHF/RAOqCruWExcp1JnQ3UTq6sPP85fGVJQg74e29oMbMiXfrZyYQ9Xsg=
+	t=1743510243; cv=none; b=fLAPLYjNXb/+ogr5sVNhsHJfoG9/rVg4pYjCV+Hn9JajRTCm1b0malZXZHPb2pSU4+BImxz9TADtuN/iNAe6HYP4Tnn0w406nAoz14vHjz52uNn08Rc8GbDMnBqVFrjNwUt2zoE21TgFOm2CvZUueIM1ZN1T6PGInEUuQhpdXw4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743510186; c=relaxed/simple;
-	bh=nuFVkx1gSbh4qc7RrSJfuZzmwSyBRBVnMv6MbRTUtVo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=M+3CGc25SHpXV1eiiC/ujzSosyAZRhsFgPnqfapoSDb5nubHKQemvyLGzGmNIvRYsm/FFxC6LDLgYNQqFCBf9Hs22CYP54pjb0AofitVcdsCQm20kvF3J0o7PosJ1Y5FkpVWO0t0jNLDcEX11RapvoDkqbifa7JdU+F5dI6Jtc4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=samba.org; spf=pass smtp.mailfrom=samba.org; dkim=pass (3072-bit key) header.d=samba.org header.i=@samba.org header.b=NNx7X1Kg; arc=none smtp.client-ip=144.76.82.148
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=samba.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samba.org
+	s=arc-20240116; t=1743510243; c=relaxed/simple;
+	bh=9Q98KqvJA/ktaNjA4btZsY1SHLBRzDRkvw39WcCRzP0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=CxRBX0gQmxY8eKhGYacff2MJdR3DznCNzLwQpXoZ3f6xeKhZ+D1GdFF/QR/XMnb73HlLYy/6tLITKL0+shFj+g/4g3AaD0ZcqWXQwhdCa+gAVB0XOPx7ZjZqlaajmo9my1M2DCDjC6L/MFqJlmXM65GrWK8G176SiegMvU1CfTg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=YTUwn2V2; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (3072-bit key) header.d=samba.org header.i=@samba.org header.b="NNx7X1Kg"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=samba.org;
-	s=42; h=From:Cc:To:Date:Message-ID;
-	bh=fXdP5m0ZfPSz1DCg8m7bHCvssJrloz5WEMURjzb5wGU=; b=NNx7X1KgxaoNizApKT4nEGh0VL
-	TGXirsgcIpnzdque+dVehm+1Tms3SXSsd7iM+6q4mUCrukCWCzPb/kRCv/sWx7yfj1mHD9NU7X6oo
-	epSzGFjQ4i5pCNGDZ8QPQgJ2B6Re9BC6Ic1yBAfMTuxRJRIzF8JRwzrmeFYIpXjJOlTA4ZYCL5do8
-	ZXZfYvn8pBVK6gXe68FC77o8qpqw3oTmlW5HTc62MArhedoCnqSIkZItfNurjAp5ZL7aQ3vcj1isa
-	cpWbEDYpECNC8BStyIHEbTHmr+MyjMxWa/mLIsm5UpwuJKQZ9Oy6QjDb2MPF0QJFHSQyp46vgkHts
-	vSV/eLKzGqGbmWRDHFg2h9Gp/NLJlQ1p55u0hN8SVsl/TkKI6+b3vm5ZUkb0CeiPnAYUdAw0kygT+
-	g70lflOMXItrRQip5T+0JvwyCbtEkovTQg7l4G1+ZAUuzdVHJgcZf0MkUOq6EkXxnsRniPEgSIL2e
-	pp2AWQE9Cjwn43SOh2NEtikk;
-Received: from [127.0.0.2] (localhost [127.0.0.1])
-	by hr2.samba.org with esmtpsa (TLS1.3:ECDHE_SECP256R1__ECDSA_SECP256R1_SHA256__CHACHA20_POLY1305:256)
-	(Exim)
-	id 1tzadp-007fH3-2j;
-	Tue, 01 Apr 2025 12:22:53 +0000
-Message-ID: <90334e83-618b-41e0-a35c-9ce8b0d1d990@samba.org>
-Date: Tue, 1 Apr 2025 14:22:50 +0200
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="YTUwn2V2"
+Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 531B8cHM008240;
+	Tue, 1 Apr 2025 14:23:44 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	6+aM4v81IIJ0lXB9aqI4mX4YkHUFBD7dtY0uixMWUn8=; b=YTUwn2V2Rmy9Df2T
+	I4dA9j7MrfHxLvZkXkryjXRDP65ccBGfiWePeSNeyjmwMOJuEWht2sbKMc9fROoA
+	4eW97tmUmw29sjsNv+xayekyKBp9LOeEBJuxJ9FrZi2Y7Xh5xkdFKT/cf+HHtrgp
+	vPkypxnD8XZfLzjS3bcNELBNf+9JywvfjynG5HJafQBATCROssYFFcu/fQHYVUrd
+	/qXCN4XlyHUeey6iSHVdyDP3qBOpqMtClijnke7swLsnF+lBOdXWT2iAPiiDNUBM
+	8moC6ccVhFKbC0WUPHA9rKxfQk7sdPHUbRtak1U0Kj7sajuMDiUnyQCJ8xwtG7/0
+	kGKIMw==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 45p935w9jd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 01 Apr 2025 14:23:44 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 9A64040051;
+	Tue,  1 Apr 2025 14:22:36 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id DDBC78A0456;
+	Tue,  1 Apr 2025 14:21:48 +0200 (CEST)
+Received: from localhost (10.48.87.62) by SHFDAG1NODE1.st.com (10.75.129.69)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 1 Apr
+ 2025 14:21:48 +0200
+From: Patrice Chotard <patrice.chotard@foss.st.com>
+Date: Tue, 1 Apr 2025 14:21:45 +0200
+Subject: [PATCH v7 1/7] MAINTAINERS: add entry for STM32 OCTO MEMORY
+ MANAGER driver
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 1/4] net: introduce get_optlen() and put_optlen()
- helpers
-To: Breno Leitao <leitao@debian.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
- Jens Axboe <axboe@kernel.dk>, Pavel Begunkov <asml.silence@gmail.com>,
- Jakub Kicinski <kuba@kernel.org>, Christoph Hellwig <hch@lst.de>,
- Karsten Keil <isdn@linux-pingi.de>, Ayush Sawal <ayush.sawal@chelsio.com>,
- Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- Kuniyuki Iwashima <kuniyu@amazon.com>, Willem de Bruijn
- <willemb@google.com>, David Ahern <dsahern@kernel.org>,
- Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
- Xin Long <lucien.xin@gmail.com>, Neal Cardwell <ncardwell@google.com>,
- Joerg Reuter <jreuter@yaina.de>, Marcel Holtmann <marcel@holtmann.org>,
- Johan Hedberg <johan.hedberg@gmail.com>,
- Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
- Oliver Hartkopp <socketcan@hartkopp.net>,
- Marc Kleine-Budde <mkl@pengutronix.de>,
- Robin van der Gracht <robin@protonic.nl>,
- Oleksij Rempel <o.rempel@pengutronix.de>, kernel@pengutronix.de,
- Alexander Aring <alex.aring@gmail.com>,
- Stefan Schmidt <stefan@datenfreihafen.org>,
- Miquel Raynal <miquel.raynal@bootlin.com>,
- Alexandra Winter <wintera@linux.ibm.com>,
- Thorsten Winkler <twinkler@linux.ibm.com>,
- James Chapman <jchapman@katalix.com>, Jeremy Kerr <jk@codeconstruct.com.au>,
- Matt Johnston <matt@codeconstruct.com.au>,
- Matthieu Baerts <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>,
- Geliang Tang <geliang@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>,
- Remi Denis-Courmont <courmisch@gmail.com>,
- Allison Henderson <allison.henderson@oracle.com>,
- David Howells <dhowells@redhat.com>, Marc Dionne <marc.dionne@auristor.com>,
- Wenjia Zhang <wenjia@linux.ibm.com>, Jan Karcher <jaka@linux.ibm.com>,
- "D. Wythe" <alibuda@linux.alibaba.com>, Tony Lu <tonylu@linux.alibaba.com>,
- Wen Gu <guwen@linux.alibaba.com>, Jon Maloy <jmaloy@redhat.com>,
- Boris Pismenny <borisp@nvidia.com>, John Fastabend
- <john.fastabend@gmail.com>, Stefano Garzarella <sgarzare@redhat.com>,
- Martin Schiller <ms@dev.tdt.de>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?=
- <bjorn@kernel.org>, Magnus Karlsson <magnus.karlsson@intel.com>,
- Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
- Jonathan Lemon <jonathan.lemon@gmail.com>,
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Jesper Dangaard Brouer <hawk@kernel.org>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-sctp@vger.kernel.org,
- linux-hams@vger.kernel.org, linux-bluetooth@vger.kernel.org,
- linux-can@vger.kernel.org, dccp@vger.kernel.org, linux-wpan@vger.kernel.org,
- linux-s390@vger.kernel.org, mptcp@lists.linux.dev,
- linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com,
- linux-afs@lists.infradead.org, tipc-discussion@lists.sourceforge.net,
- virtualization@lists.linux.dev, linux-x25@vger.kernel.org,
- bpf@vger.kernel.org, isdn4linux@listserv.isdn4linux.de,
- io-uring@vger.kernel.org
-References: <cover.1743449872.git.metze@samba.org>
- <156e83128747b2cf7c755bffa68f2519bd255f78.1743449872.git.metze@samba.org>
- <Z+vZRcbvh6r1fnZL@gmail.com>
-Content-Language: en-US, de-DE
-From: Stefan Metzmacher <metze@samba.org>
-In-Reply-To: <Z+vZRcbvh6r1fnZL@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-ID: <20250401-upstream_ospi_v6-v7-1-0ef28513ed81@foss.st.com>
+References: <20250401-upstream_ospi_v6-v7-0-0ef28513ed81@foss.st.com>
+In-Reply-To: <20250401-upstream_ospi_v6-v7-0-0ef28513ed81@foss.st.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Maxime Coquelin
+	<mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon
+	<will@kernel.org>
+CC: <christophe.kerello@foss.st.com>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Patrice Chotard
+	<patrice.chotard@foss.st.com>
+X-Mailer: b4 0.14.2
+X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-01_05,2025-03-27_02,2024-11-22_01
 
-Hello Breno,
+Add myself as STM32 OCTO MEMORY MANAGER maintainer.
 
-> On Mon, Mar 31, 2025 at 10:10:53PM +0200, Stefan Metzmacher wrote:
->> --- a/include/linux/sockptr.h
->> +++ b/include/linux/sockptr.h
->> @@ -169,4 +169,26 @@ static inline int check_zeroed_sockptr(sockptr_t src, size_t offset,
->>   	return memchr_inv(src.kernel + offset, 0, size) == NULL;
->>   }
->>   
->> +#define __check_optlen_t(__optlen)				\
->> +({								\
->> +	int __user *__ptr __maybe_unused = __optlen; 		\
->> +	BUILD_BUG_ON(sizeof(*(__ptr)) != sizeof(int));		\
->> +})
-> 
-> I am a bit confused about this macro. I understand that this macro's
-> goal is to check that __optlen is a pointer to an integer, otherwise
-> failed to build.
-> 
-> It is unclear to me if that is what it does. Let's suppose that __optlen
-> is not an integer pointer. Then:
-> 
->> int __user *__ptr __maybe_unused = __optlen;
-> 
-> This will generate a compile failure/warning due invalid casting,
-> depending on -Wincompatible-pointer-types.
-> 
->> BUILD_BUG_ON(sizeof(*(__ptr)) != sizeof(int));
-> 
-> Then this comparison will always false, since __ptr is a pointer to int,
-> and you are comparing the size of its content with the sizeof(int).
+Signed-off-by: Patrice Chotard <patrice.chotard@foss.st.com>
+---
+ MAINTAINERS | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Yes, it redundant in the first patch, it gets little more useful in
-the 2nd and 3rd patch.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 5b7e1f9c30f3e45fb85b0d0f58b56db84d986061..830245c8d583c422e869dfe4b5a184faaf52b559 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -22766,6 +22766,12 @@ L:	linux-i2c@vger.kernel.org
+ S:	Maintained
+ F:	drivers/i2c/busses/i2c-stm32*
+ 
++ST STM32 OCTO MEMORY MANAGER
++M:	Patrice Chotard <patrice.chotard@foss.st.com>
++S:	Maintained
++F:	Documentation/devicetree/bindings/memory-controllers/st,stm32mp25-omm.yaml
++F:	drivers/memory/stm32_omm.c
++
+ ST STM32 SPI DRIVER
+ M:	Alain Volmat <alain.volmat@foss.st.com>
+ L:	linux-spi@vger.kernel.org
 
-metze
+-- 
+2.25.1
+
