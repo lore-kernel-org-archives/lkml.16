@@ -1,130 +1,178 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2715020458B
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 12:59:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743512361; cv=none; b=DYJdRoEmaE1Pk+g3U9snxEf1kdR1HtnRw7Fm5juMkuzSZrLrvOepuTSFT7L90nhzOV1DslhVt9GRCjz96DrtIywEzOqNy4L9Ggwe4UosKLrwILFvVrA/laXugn/IRXVZPCnZpmo7AJEAS5sgjy6YR0yPXJKq12UMQA7YWAHn0GY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743512361; c=relaxed/simple;
-	bh=vij+eg+HoIyKPFNQ6ksMWa1LqriM7MQpY38tfM+d7Vo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BYIAthGwyN9ZYH0AWEsMmzBGlPpNSyMsqbnJPr2NF7tja6DXFX9TwSu4zXkBB9XmKOcHlpU6ult+Na55hoq+lV7MBSIE+OCrS/pAb0IqzI6rdAxZqdnjR6F2pJPjESFtXxOEa3CSUKS0xgIjyFxQLJ3UZSYuNynjxpRCw4XnsHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HDtCAghC; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B22491519B8;
+	Tue,  1 Apr 2025 12:59:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743512389; cv=pass; b=uHW+NrvF9SSBYk5uyDyogsJj1rbiB8tvUFXCaFQkOQ3HLmMy+FoGEI6dX0xVxU2ldjCHYhCuzh1g9AJJX0vuGikM1wxqiTNNTgwtFEjMZrfrj8TTdnZVIwl+f0LRLb9FjWDq2qdKJru65L2AwXzGfLurdVk+bRy4X3LQ1MwkfPw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743512389; c=relaxed/simple;
+	bh=f6mLAQf6ewULXu0GR7bfELaoivoxdxwjFEP5/+g8KrU=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=hoUukwRY6SKLDS76HtLA2atAGS+y0VPGhMt7ZpNi5KNMqAKklsr2MGia1a4c2tjfAg3gIPQNisG+icMJFrGXJQGg+29SQFRIZot593pb5WjiUW3JTK9iHJqPjmppEXtJktLPBMfqXiysdxX1L37cR4UITOjpKCG+WV3hAt1A0+A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=Vc0m+rgi; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HDtCAghC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743512359;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4T5YZzFJVFoHxFGDPwj28D6xxyWc9uUCeJgRzddCMdE=;
-	b=HDtCAghC91tQqPWRGzIDfSF7WE/XhIZWDwQUiA96NTUVffx41Qo08ObwhyJ1zMVVUHYPCz
-	ynpv5jwlzH46eFpYamW4gLBWJJ5vC9M3vY82Jnwdch86PTQ+WFfqRMkoUx8C26X/w2zK7x
-	Mg73RwYtZiTyhq5Q0kTdQAy5bFGZXe4=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-54-WXLNX-uMPlipBAMXdygAJQ-1; Tue,
- 01 Apr 2025 08:59:15 -0400
-X-MC-Unique: WXLNX-uMPlipBAMXdygAJQ-1
-X-Mimecast-MFC-AGG-ID: WXLNX-uMPlipBAMXdygAJQ_1743512354
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 53B481956087;
-	Tue,  1 Apr 2025 12:59:14 +0000 (UTC)
-Received: from hydra.redhat.com (unknown [10.44.32.206])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id C64871956094;
-	Tue,  1 Apr 2025 12:59:08 +0000 (UTC)
-From: Jocelyn Falempe <jfalempe@redhat.com>
-To: Jani Nikula <jani.nikula@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	intel-gfx@lists.freedesktop.org,
-	intel-xe@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Cc: Jocelyn Falempe <jfalempe@redhat.com>
-Subject: [PATCH v6 8/8] drm/i915/display: Add drm_panic support for 4-tiling with DPT
-Date: Tue,  1 Apr 2025 14:51:14 +0200
-Message-ID: <20250401125818.333033-9-jfalempe@redhat.com>
-In-Reply-To: <20250401125818.333033-1-jfalempe@redhat.com>
-References: <20250401125818.333033-1-jfalempe@redhat.com>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="Vc0m+rgi"
+ARC-Seal: i=1; a=rsa-sha256; t=1743512357; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=GBtYm76tIuinjoE7owRCKgat8CjJ44vGLLpu70elbdQfmwNC/MEGhAh8Pl/zcw5RW7ZeEIlVEdrSsW91OzwLhhn0n9AY24WKps0LPG0eWGUuGIlCgSZ7980ObhPddqjotF7m4PkRosMiaESTtyYP9j25V5K2wAF5MeNbMWN7hvs=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1743512357; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=eVppIKvmTMpG1wI2U0Pa+9csa+B4U5fgzTpOMWMirjY=; 
+	b=MyF/VXeb1iPpnlJF0rRVMhk/yjVw1tnVj/ItwKgZMmbWJyZrhkGCU2U9B2JL+ODRjOYewT9A7+4UZiRP0t85+T4erwxbWZhcOpyIdaqF1g/SUKe0V2qfXfUoF26JGihZLbrZs4sS1Ow7eYamPD1YL60a7eHZ4QP2GqABleRyLEE=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
+	dmarc=pass header.from=<daniel.almeida@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1743512357;
+	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
+	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
+	bh=eVppIKvmTMpG1wI2U0Pa+9csa+B4U5fgzTpOMWMirjY=;
+	b=Vc0m+rgi44hW3Wp47u+sygY5LrN6TY2w+C+S/4k6kLSBtjkYNDaTI5KvmN1Ku3QY
+	rsBNYOvyPh4L59a3oyFBWhE4coD00NfLZJLfzmysZTtpArTWva3Pr/hS+9F7M4IGUZE
+	U/bzLuw93/whRo1xeXT8RT3zyy/GxYX8l33vm2mk=
+Received: by mx.zohomail.com with SMTPS id 1743512339761844.7601541518382;
+	Tue, 1 Apr 2025 05:58:59 -0700 (PDT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.400.131.1.6\))
+Subject: Re: [PATCH v5 07/13] scripts: generate_rust_analyzer.py: avoid
+ optional arguments
+From: Daniel Almeida <daniel.almeida@collabora.com>
+In-Reply-To: <20250325-rust-analyzer-host-v5-7-385e7f1e1e23@gmail.com>
+Date: Tue, 1 Apr 2025 09:58:40 -0300
+Cc: Miguel Ojeda <ojeda@kernel.org>,
+ Alex Gaynor <alex.gaynor@gmail.com>,
+ Boqun Feng <boqun.feng@gmail.com>,
+ Gary Guo <gary@garyguo.net>,
+ =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@kernel.org>,
+ Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>,
+ Danilo Krummrich <dakr@kernel.org>,
+ Boris-Chengbiao Zhou <bobo1239@web.de>,
+ Kees Cook <kees@kernel.org>,
+ Fiona Behrens <me@kloenk.dev>,
+ rust-for-linux@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ Lukas Wirth <lukas.wirth@ferrous-systems.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <CCB6D89D-D513-4514-8992-AC37313F5588@collabora.com>
+References: <20250325-rust-analyzer-host-v5-0-385e7f1e1e23@gmail.com>
+ <20250325-rust-analyzer-host-v5-7-385e7f1e1e23@gmail.com>
+To: Tamir Duberstein <tamird@gmail.com>
+X-Mailer: Apple Mail (2.3826.400.131.1.6)
+X-ZohoMailClient: External
 
-On Alder Lake and later, it's not possible to disable tiling when DPT
-is enabled.
-So this commit implements 4-Tiling support, to still be able to draw
-the panic screen.
+Hi Tamir,
 
-Signed-off-by: Jocelyn Falempe <jfalempe@redhat.com>
----
- .../gpu/drm/i915/display/intel_atomic_plane.c | 22 ++++++++++++++++++-
- 1 file changed, 21 insertions(+), 1 deletion(-)
+This patch looks good to me but,
 
-diff --git a/drivers/gpu/drm/i915/display/intel_atomic_plane.c b/drivers/gpu/drm/i915/display/intel_atomic_plane.c
-index 76c10555c10e..68deffe3aa9a 100644
---- a/drivers/gpu/drm/i915/display/intel_atomic_plane.c
-+++ b/drivers/gpu/drm/i915/display/intel_atomic_plane.c
-@@ -1289,6 +1289,25 @@ static void intel_ytile_set_pixel(struct drm_scanout_buffer *sb, unsigned int x,
- 	iosys_map_wr(&sb->map[0], offset, u32, color);
- }
- 
-+static void intel_4tile_set_pixel(struct drm_scanout_buffer *sb, unsigned int x, unsigned int y,
-+				  u32 color)
-+{
-+	u32 offset;
-+	unsigned int swizzle;
-+	unsigned int width_in_blocks = DIV_ROUND_UP(sb->width, 32);
-+
-+	/* Block offset */
-+	offset = ((y / YTILE_HEIGHT) * width_in_blocks + (x / YTILE_WIDTH)) * YTILE_SIZE;
-+
-+	x = x % YTILE_WIDTH;
-+	y = y % YTILE_HEIGHT;
-+
-+	/* bit order inside a block is y4 y3 x4 y2 x3 x2 y1 y0 x1 x0 */
-+	swizzle = (x & 3) | ((y & 3) << 2) | ((x & 0xc) << 2) | (y & 4) << 4 | ((x & 0x10) << 3) | ((y & 0x18) << 5);
-+	offset += swizzle * 4;
-+	iosys_map_wr(&sb->map[0], offset, u32, color);
-+}
-+
- static void intel_panic_flush(struct drm_plane *plane)
- {
- 	struct intel_plane_state *plane_state = to_intel_plane_state(plane->state);
-@@ -1323,7 +1342,6 @@ static void (*intel_get_tiling_func(u64 fb_modifier))(struct drm_scanout_buffer
- 	case I915_FORMAT_MOD_Y_TILED_GEN12_RC_CCS:
- 	case I915_FORMAT_MOD_Y_TILED_GEN12_MC_CCS:
- 		return intel_ytile_set_pixel;
--	case I915_FORMAT_MOD_X_TILED:
- 	case I915_FORMAT_MOD_4_TILED:
- 	case I915_FORMAT_MOD_4_TILED_DG2_RC_CCS:
- 	case I915_FORMAT_MOD_4_TILED_DG2_MC_CCS:
-@@ -1333,6 +1351,8 @@ static void (*intel_get_tiling_func(u64 fb_modifier))(struct drm_scanout_buffer
- 	case I915_FORMAT_MOD_4_TILED_MTL_MC_CCS:
- 	case I915_FORMAT_MOD_4_TILED_BMG_CCS:
- 	case I915_FORMAT_MOD_4_TILED_LNL_CCS:
-+		return intel_4tile_set_pixel;
-+	case I915_FORMAT_MOD_X_TILED:
- 	case I915_FORMAT_MOD_Yf_TILED:
- 	case I915_FORMAT_MOD_Yf_TILED_CCS:
- 	default:
--- 
-2.49.0
+> On 25 Mar 2025, at 17:06, Tamir Duberstein <tamird@gmail.com> wrote:
+>=20
+> Make all arguments required to reduce the probability of incorrect
+> implicit behavior. Use keyword arguments for clarity.
+>=20
+> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+> ---
+> scripts/generate_rust_analyzer.py | 90 =
++++++++++++++++++++++++++++------------
+> 1 file changed, 62 insertions(+), 28 deletions(-)
+>=20
+> diff --git a/scripts/generate_rust_analyzer.py =
+b/scripts/generate_rust_analyzer.py
+> index b37d8345486a..badcef4126cf 100755
+> --- a/scripts/generate_rust_analyzer.py
+> +++ b/scripts/generate_rust_analyzer.py
+> @@ -69,9 +69,10 @@ def generate_crates(
+>     def build_crate(
+>         display_name: str,
+>         root_module: pathlib.Path,
+> +        *,
+>         deps: List[str],
+> -        cfg: List[str] =3D [],
+> -        is_workspace_member: bool =3D True,
+> +        cfg: List[str],
+> +        is_workspace_member: bool,
+>     ) -> Crate:
+>         return {
+>             "display_name": display_name,
+> @@ -92,21 +93,34 @@ def generate_crates(
+>     def append_crate(
+>         display_name: str,
+>         root_module: pathlib.Path,
+> +        *,
+>         deps: List[str],
+> -        cfg: List[str] =3D [],
+> -        is_workspace_member: bool =3D True,
+> +        cfg: List[str],
+>     ) -> None:
+>         register_crate(
+> -            build_crate(display_name, root_module, deps, cfg, =
+is_workspace_member)
+> +            build_crate(
+> +                display_name,
+> +                root_module,
+> +                deps=3Ddeps,
+> +                cfg=3Dcfg,
+> +                is_workspace_member=3DTrue,
+> +            )
+>         )
+>=20
+>     def append_proc_macro_crate(
+>         display_name: str,
+>         root_module: pathlib.Path,
+> +        *,
+>         deps: List[str],
+> -        cfg: List[str] =3D [],
+> +        cfg: List[str],
+>     ) -> None:
+> -        crate =3D build_crate(display_name, root_module, deps, cfg)
+> +        crate =3D build_crate(
+> +            display_name,
+> +            root_module,
+> +            deps=3Ddeps,
+> +            cfg=3Dcfg,
+> +            is_workspace_member=3DTrue,
+> +        )
+>         proc_macro_dylib_name =3D (
+>             subprocess.check_output(
+>                 [
+> @@ -133,66 +147,75 @@ def generate_crates(
+>=20
+>     def append_sysroot_crate(
+>         display_name: str,
+> +        *,
+>         deps: List[str],
+> -        cfg: List[str] =3D [],
+> +        cfg: List[str],
+>     ) -> None:
+> -        append_crate(
+> -            display_name,
+> -            sysroot_src / display_name / "src" / "lib.rs",
+> -            deps,
+> -            cfg,
+> -            is_workspace_member=3DFalse,
+> +        register_crate(
+> +            build_crate(
+> +                display_name,
+> +                sysroot_src / display_name / "src" / "lib.rs",
+> +                deps=3Ddeps,
+> +                cfg=3Dcfg,
+> +                is_workspace_member=3DFalse,
+> +            )
+>         )
 
+Why the change from append to register+build here? Maybe this change
+should be in another patch?
+
+=E2=80=94 Daniel=
