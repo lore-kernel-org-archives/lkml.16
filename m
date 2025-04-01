@@ -1,178 +1,126 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B22491519B8;
-	Tue,  1 Apr 2025 12:59:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743512389; cv=pass; b=uHW+NrvF9SSBYk5uyDyogsJj1rbiB8tvUFXCaFQkOQ3HLmMy+FoGEI6dX0xVxU2ldjCHYhCuzh1g9AJJX0vuGikM1wxqiTNNTgwtFEjMZrfrj8TTdnZVIwl+f0LRLb9FjWDq2qdKJru65L2AwXzGfLurdVk+bRy4X3LQ1MwkfPw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743512389; c=relaxed/simple;
-	bh=f6mLAQf6ewULXu0GR7bfELaoivoxdxwjFEP5/+g8KrU=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=hoUukwRY6SKLDS76HtLA2atAGS+y0VPGhMt7ZpNi5KNMqAKklsr2MGia1a4c2tjfAg3gIPQNisG+icMJFrGXJQGg+29SQFRIZot593pb5WjiUW3JTK9iHJqPjmppEXtJktLPBMfqXiysdxX1L37cR4UITOjpKCG+WV3hAt1A0+A=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=Vc0m+rgi; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E9202040A1;
+	Tue,  1 Apr 2025 12:59:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743512394; cv=none; b=eVQn0jxAZggrhwayOfIB0yqqQDO0HMAflGZUBfkTfkpip5dTJ4zgaat0DgNR0FaBoTnIgB5ipspLmr4aDHFZwB3GU8gbht5XR0B5m7wooszuAxsXbEl8Yyp2hzDv7V8FDKlTWZzAo8jjnQ3xCyAiKg0ljIVaTaOZ0nDWD6CBrls=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743512394; c=relaxed/simple;
+	bh=j9Ea+bGDlsx72Z+0qw+iSlhE73mDYKtBDLMBr82GFeU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HuTitAubs9OL1VOOmZl9YxqnSe5n0fj3Ow6HTdQSUffnkGLNQo1qXNV9FA0+P4Rv+SNkLR7oi7+QNpEWbjvnITR5mWBv26VhDsLI7gX64WZxeb5GT+k+m/gh03B7g4xcMM/yiG27uQc2TPyZbGrz4s08geva8TEraN52x+zlW5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fMSCtp1l; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="Vc0m+rgi"
-ARC-Seal: i=1; a=rsa-sha256; t=1743512357; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=GBtYm76tIuinjoE7owRCKgat8CjJ44vGLLpu70elbdQfmwNC/MEGhAh8Pl/zcw5RW7ZeEIlVEdrSsW91OzwLhhn0n9AY24WKps0LPG0eWGUuGIlCgSZ7980ObhPddqjotF7m4PkRosMiaESTtyYP9j25V5K2wAF5MeNbMWN7hvs=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1743512357; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=eVppIKvmTMpG1wI2U0Pa+9csa+B4U5fgzTpOMWMirjY=; 
-	b=MyF/VXeb1iPpnlJF0rRVMhk/yjVw1tnVj/ItwKgZMmbWJyZrhkGCU2U9B2JL+ODRjOYewT9A7+4UZiRP0t85+T4erwxbWZhcOpyIdaqF1g/SUKe0V2qfXfUoF26JGihZLbrZs4sS1Ow7eYamPD1YL60a7eHZ4QP2GqABleRyLEE=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
-	dmarc=pass header.from=<daniel.almeida@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1743512357;
-	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
-	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
-	bh=eVppIKvmTMpG1wI2U0Pa+9csa+B4U5fgzTpOMWMirjY=;
-	b=Vc0m+rgi44hW3Wp47u+sygY5LrN6TY2w+C+S/4k6kLSBtjkYNDaTI5KvmN1Ku3QY
-	rsBNYOvyPh4L59a3oyFBWhE4coD00NfLZJLfzmysZTtpArTWva3Pr/hS+9F7M4IGUZE
-	U/bzLuw93/whRo1xeXT8RT3zyy/GxYX8l33vm2mk=
-Received: by mx.zohomail.com with SMTPS id 1743512339761844.7601541518382;
-	Tue, 1 Apr 2025 05:58:59 -0700 (PDT)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fMSCtp1l"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43d07ca6a80so29093005e9.1;
+        Tue, 01 Apr 2025 05:59:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743512391; x=1744117191; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=WTjMam3B4j2k7paZIQkl/YwqiiiVRaZIkBuTe1yGXLk=;
+        b=fMSCtp1la//8XkfKjvMyQM3+iZ6m7kNQadjd/0Sb+5FKf3JXEeaqY9KnbeWtcd2Kbg
+         RYHo9AiONZ9gsIiPko5V4ezKoudVFHLfhLdXoDRp4cOlzsyed/HxwcE+uuQ8d3wYVkWF
+         1t0Lr5l1+n11qXttqcibRQ20gBvpzNqWhQJy3cuhHqim2rekPb4Bm8HTt638cFQhkhi+
+         z5o6Mjl1BBn7D97clGzz1Fx4W34nFqBjMINDGudhbovnxE06XIlmz89NEYgFDRi6XF+s
+         VbPNSw78lP0Lh1XxUpWDU3zbKh3CTMXg56pS+0PqDw4T/f1A0ntLjq9wC54yrgdjzzag
+         G1yg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743512391; x=1744117191;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WTjMam3B4j2k7paZIQkl/YwqiiiVRaZIkBuTe1yGXLk=;
+        b=er9NaD/SGSjZwyF9YerYE/knydUumEEd7qk6yRmLVHLGxHeUc0fgr5Ir1rdKFIEHcg
+         OYHfjA/L9NrPprZ9t7RZnCKkqb05c9/LHI5l87yco99LkTCM6C3TIKJD6g7ql2cTPZBD
+         F7XYpQJv9IE4d7Ah5PSf4XlvU05vbH/GAtHhu9j7CXvW27sJl10DsQ6DtMOKywvO3t7B
+         mvxh/0f6zH3+aYV4fjSsMP1C3PElUvWtnP/VLkEeoEpSEi5I5Gp4OcRK9/0Xofwreq4K
+         Y+0EeLdqnurj9TZp8iCLNcSNxNYcgspDPSmm8SUsPkqz8Kr5lH0I3UqZwUfIQgKrjkEN
+         6k+w==
+X-Forwarded-Encrypted: i=1; AJvYcCW3T/IrUeVn5nJlJDNvup8LQlPzqISg+JWHx9dhuA3/fYZ3zDdko/Hgb+tjwjJXxctB2VGV1fAT@vger.kernel.org, AJvYcCWwhSRpvBYedsp5pSdmvxWfks0LTPUq2ZrxGyf5giPBdSS3SrezRXNwKcKDiftpyVe46AT/b2qxD2u1HF4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwpQS0BKNPyFavdjf7THgaAI09Ulcz+Zbf8Ll47QroMoUB7NOVL
+	NFgYTLCfYGmImZe2S0xCr82wjxlj8vLV1FYNyDV2VDv38LwsfgJX
+X-Gm-Gg: ASbGncvsSX7WvJPyvpQp/6RpJiVrbZn5krlKvq2pBCNIJbUiAF/3ZBHYKLpn2Wz3dMv
+	gxGnYUOBiIbggVBdxTFuXy94d/PiWz326CtEnCZEU1MH3OS3/gZ7y93m12XuLiIuXDf/fD2WNr3
+	ZOFhjpkmELb3ZTy4Eiy8jliuTEaCIe4Va7U4I8P5rXOQmxYlp/hbux+vM44jUAoHYo4f3jdPytG
+	TcGC7u0cDBt5GuCh8xYEWnecFXbwDdFPdE7A9hVzGcd83Bg87SnfXZpQHAMsVkxrM/MK4Li8VET
+	jki+VKr5PIhg+GD1oIdPX/6uKgDaxHd6XOyGUAaVA8kL5xpR4xr5CQ==
+X-Google-Smtp-Source: AGHT+IF418b6NVmuSPIOsaUq9V0yNXF5CwKyASr7hgcL1/aD11X/ysF6LRsihYCLdVncwG0TZ6ba9w==
+X-Received: by 2002:a05:600c:198f:b0:43b:ca39:6c7d with SMTP id 5b1f17b1804b1-43db61d8326mr124424215e9.3.1743512391249;
+        Tue, 01 Apr 2025 05:59:51 -0700 (PDT)
+Received: from qasdev.Home ([2a02:c7c:6696:8300:19:d895:ffa3:4fcf])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d8ff042bcsm154715445e9.28.2025.04.01.05.59.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Apr 2025 05:59:50 -0700 (PDT)
+From: Qasim Ijaz <qasdev00@gmail.com>
+To: ping.cheng@wacom.com,
+	jason.gerecke@wacom.com,
+	jikos@kernel.org,
+	bentiss@kernel.org
+Cc: linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	syzbot <syzbot+d5204cbbdd921f1f7cad@syzkaller.appspotmail.com>,
+	stable@vger.kernel.org
+Subject: [PATCH] HID: wacom: fix shift OOB in kfifo allocation for zero pktlen
+Date: Tue,  1 Apr 2025 13:59:12 +0100
+Message-Id: <20250401125912.73044-1-qasdev00@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.400.131.1.6\))
-Subject: Re: [PATCH v5 07/13] scripts: generate_rust_analyzer.py: avoid
- optional arguments
-From: Daniel Almeida <daniel.almeida@collabora.com>
-In-Reply-To: <20250325-rust-analyzer-host-v5-7-385e7f1e1e23@gmail.com>
-Date: Tue, 1 Apr 2025 09:58:40 -0300
-Cc: Miguel Ojeda <ojeda@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>,
- =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>,
- Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>,
- Danilo Krummrich <dakr@kernel.org>,
- Boris-Chengbiao Zhou <bobo1239@web.de>,
- Kees Cook <kees@kernel.org>,
- Fiona Behrens <me@kloenk.dev>,
- rust-for-linux@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- Lukas Wirth <lukas.wirth@ferrous-systems.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <CCB6D89D-D513-4514-8992-AC37313F5588@collabora.com>
-References: <20250325-rust-analyzer-host-v5-0-385e7f1e1e23@gmail.com>
- <20250325-rust-analyzer-host-v5-7-385e7f1e1e23@gmail.com>
-To: Tamir Duberstein <tamird@gmail.com>
-X-Mailer: Apple Mail (2.3826.400.131.1.6)
-X-ZohoMailClient: External
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Hi Tamir,
+During wacom_parse_and_register() the code calls wacom_devm_kfifo_alloc 
+to allocate a fifo. During this operation it passes kfifo_alloc a 
+fifo_size of 0. Kfifo attempts to round the size passed to it to the 
+next power of 2 via roundup_pow_of_two (queue-type data structures
+do this to maintain efficiency of operations). 
 
-This patch looks good to me but,
+However during this phase a problem arises when the roundup_pow_of_two() 
+function utilises a shift exponent of fls_long(n-1), where n is the 
+fifo_size. Since n is 0 in this case and n is also an unsigned long, 
+doing n-1 causes unsigned integer wrap-around to occur making the 
+fifo_size 4294967295. So the code effectively does fls_long(4294967295) 
+which results in 64. Returning back to roundup_pow_of_two(), the code 
+utilises a shift exponent of 64. When a shift exponent of 64 is used 
+on a 64-bit type such as 1UL it results in a shift-out-of-bounds.
 
-> On 25 Mar 2025, at 17:06, Tamir Duberstein <tamird@gmail.com> wrote:
->=20
-> Make all arguments required to reduce the probability of incorrect
-> implicit behavior. Use keyword arguments for clarity.
->=20
-> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
-> ---
-> scripts/generate_rust_analyzer.py | 90 =
-+++++++++++++++++++++++++++------------
-> 1 file changed, 62 insertions(+), 28 deletions(-)
->=20
-> diff --git a/scripts/generate_rust_analyzer.py =
-b/scripts/generate_rust_analyzer.py
-> index b37d8345486a..badcef4126cf 100755
-> --- a/scripts/generate_rust_analyzer.py
-> +++ b/scripts/generate_rust_analyzer.py
-> @@ -69,9 +69,10 @@ def generate_crates(
->     def build_crate(
->         display_name: str,
->         root_module: pathlib.Path,
-> +        *,
->         deps: List[str],
-> -        cfg: List[str] =3D [],
-> -        is_workspace_member: bool =3D True,
-> +        cfg: List[str],
-> +        is_workspace_member: bool,
->     ) -> Crate:
->         return {
->             "display_name": display_name,
-> @@ -92,21 +93,34 @@ def generate_crates(
->     def append_crate(
->         display_name: str,
->         root_module: pathlib.Path,
-> +        *,
->         deps: List[str],
-> -        cfg: List[str] =3D [],
-> -        is_workspace_member: bool =3D True,
-> +        cfg: List[str],
->     ) -> None:
->         register_crate(
-> -            build_crate(display_name, root_module, deps, cfg, =
-is_workspace_member)
-> +            build_crate(
-> +                display_name,
-> +                root_module,
-> +                deps=3Ddeps,
-> +                cfg=3Dcfg,
-> +                is_workspace_member=3DTrue,
-> +            )
->         )
->=20
->     def append_proc_macro_crate(
->         display_name: str,
->         root_module: pathlib.Path,
-> +        *,
->         deps: List[str],
-> -        cfg: List[str] =3D [],
-> +        cfg: List[str],
->     ) -> None:
-> -        crate =3D build_crate(display_name, root_module, deps, cfg)
-> +        crate =3D build_crate(
-> +            display_name,
-> +            root_module,
-> +            deps=3Ddeps,
-> +            cfg=3Dcfg,
-> +            is_workspace_member=3DTrue,
-> +        )
->         proc_macro_dylib_name =3D (
->             subprocess.check_output(
->                 [
-> @@ -133,66 +147,75 @@ def generate_crates(
->=20
->     def append_sysroot_crate(
->         display_name: str,
-> +        *,
->         deps: List[str],
-> -        cfg: List[str] =3D [],
-> +        cfg: List[str],
->     ) -> None:
-> -        append_crate(
-> -            display_name,
-> -            sysroot_src / display_name / "src" / "lib.rs",
-> -            deps,
-> -            cfg,
-> -            is_workspace_member=3DFalse,
-> +        register_crate(
-> +            build_crate(
-> +                display_name,
-> +                sysroot_src / display_name / "src" / "lib.rs",
-> +                deps=3Ddeps,
-> +                cfg=3Dcfg,
-> +                is_workspace_member=3DFalse,
-> +            )
->         )
+The root cause of the issue seems to stem from insufficient validation 
+of wacom_compute_pktlen(), since in this case the fifo_size comes 
+from wacom_wac->features.pktlen. During wacom_parse_and_register() 
+the wacom_compute_pktlen() function sets the pktlen as 0.
 
-Why the change from append to register+build here? Maybe this change
-should be in another patch?
+To fix this, we should handle cases where wacom_compute_pktlen() 
+results in 0.
 
-=E2=80=94 Daniel=
+Reported-by: syzbot <syzbot+d5204cbbdd921f1f7cad@syzkaller.appspotmail.com>
+Closes: https://syzkaller.appspot.com/bug?extid=d5204cbbdd921f1f7cad
+Tested-by: Qasim Ijaz <qasdev00@gmail.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Qasim Ijaz <qasdev00@gmail.com>
+---
+ drivers/hid/wacom_sys.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/hid/wacom_sys.c b/drivers/hid/wacom_sys.c
+index 97393a3083ca..9b2f3dbca467 100644
+--- a/drivers/hid/wacom_sys.c
++++ b/drivers/hid/wacom_sys.c
+@@ -2361,6 +2361,8 @@ static int wacom_parse_and_register(struct wacom *wacom, bool wireless)
+ 	unsigned int connect_mask = HID_CONNECT_HIDRAW;
+ 
+ 	features->pktlen = wacom_compute_pktlen(hdev);
++	if (!features->pktlen)
++		return -ENODEV;
+ 
+ 	if (!devres_open_group(&hdev->dev, wacom, GFP_KERNEL))
+ 		return -ENOMEM;
+-- 
+2.39.5
+
