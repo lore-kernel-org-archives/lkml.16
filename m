@@ -1,111 +1,133 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A2EF1E7C03
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 23:10:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE0DF1A5BB0;
+	Tue,  1 Apr 2025 23:20:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743549015; cv=none; b=ecH2J1rPh0RIhS+w1VbUUCcG4qHis2TvcU2fPlz4Hq20yX0n/zRLfoTK6ZDYqe5WvPw1MxsI5vWVNERcWBLhVR7wiC9BO7Istzv00JwX4znAtyjLTtt9YaXsMzYzDlr7S6b/bCZMhTfYmXbtSI4vCaOvpQ0DphzVi3LrOC2Q8z8=
+	t=1743549631; cv=none; b=P87Ha43dK02u7/RiTb4N/eX6iC/uwGA6wIaBOa55Ol1hrl6JS235hHfmczh8q7bq++cqJ87dHFq2errTrnQCn3u4WU2vebCRBpsFYe8kL7j0uMfVOIod/cUURd8Y/m8pwzwid+RXKbyA4/mRucZqUOMsOzech0gMfJnzzR43fNM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743549015; c=relaxed/simple;
-	bh=ArgquqCkjTlx8ZEocnVlllQn0k30tEKp0YZkXXMU5Gg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kKJ8vHPQkgvO3WT8vNWg1VjFf3X+2Nr03QQOTeTu/vta3MliHu7pHWdAlHF9+urpAOP4EySWkru4Sicy+x00WGvyLJutL2h32LNUnVfWJAi4UHKGVeK/hmx7OpMkpLuIizZFxOf7XXP4/RxItQ4DwiiA6FX+qzC+O9189+M0zp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wkennington.com; spf=none smtp.mailfrom=wkennington.com; dkim=pass (2048-bit key) header.d=wkennington-com.20230601.gappssmtp.com header.i=@wkennington-com.20230601.gappssmtp.com header.b=YM4XhsGl; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wkennington.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=wkennington.com
+	s=arc-20240116; t=1743549631; c=relaxed/simple;
+	bh=SdGfe4HdfJjIe9OI0mn7guY6sY3j7loryFLpiLoQOJM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YwX3M17ow6YiE99Hhoxw7wMQ9ScSd5RnctCod4y0WHJ0IrrVGisUc4EvOySXrNoWNRIDLSx5hkap49aYLjtTJZJDy0dGqLN0/14c+iAYcme4QnKDLGoBEZAeyn+OtlmHkLMb2sKRdTOXFEw9GeRvgr2YuTX7/TVw3akk98JqdPg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=BD3FPvlm; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wkennington-com.20230601.gappssmtp.com header.i=@wkennington-com.20230601.gappssmtp.com header.b="YM4XhsGl"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-22622ddcc35so47472625ad.2
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 16:10:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=wkennington-com.20230601.gappssmtp.com; s=20230601; t=1743549010; x=1744153810; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:reply-to:message-id:date
-         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=HJoGY0zt2NxjVkfzNkoD0uw5cIldUNLmTUrnr2dqKdI=;
-        b=YM4XhsGl5ojT8060Pjb4hlvOT8urcdXU97N2ktfMwmhUHrtJVT1vVZ+NLTc6gkwnia
-         aow23akao8z9lx2X01DCznb1Z4eaFwetgMdUrs03OAcQ/etvX8uI896DWclFj1PQl++X
-         mVduauIZgSOLIWPaKkGa4sKBPTk2kgjf+BedrclNNTjMZ7RFlTMWsKFf6rjpqN/EzmGd
-         q3km5tpwbRXKxidcN9i5DIs5U5+Pb6elAwGcE4RX7tfjoV7PThXH6Bj6bnXjMMOnQZoV
-         0YJ2bnLSj/jxda2R3RIBh4OS1rAxvn4/ynexf9Bj9kkZZrhUj8AjrmUFxBe4ew1IA/4w
-         mabA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743549010; x=1744153810;
-        h=content-transfer-encoding:mime-version:reply-to:message-id:date
-         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HJoGY0zt2NxjVkfzNkoD0uw5cIldUNLmTUrnr2dqKdI=;
-        b=k6QpuIZ7lwqzxuBSrdEV5C9grtkn3nOhW/gmSlTwOPxl88pUg3U+fs+/R3GoCjkanF
-         dvLUHZIqTHzHacrmKa++/wNacXYndxi+7xvSyZCZisvbCEGYjmHSkigWmV+W/thdKADj
-         5vuWRnjsQdMgJLHmebvRotdKzwGjWeB7GQph7rQJ1jK8tPQ5KXmMGiSKURdmV0XyS2PZ
-         Owiy84KLAj9HyKKFohondfHPO1fm/K5viTeJN6aMGgDXuheWdhPZMx2AUzPDYDO9FzSs
-         lvZZBuv6ep44BNf7YeNos9LBQqSDNjqm93ulcO3W4r7LaZAR/NoawtEZTDEcxuVbpUbn
-         3D/w==
-X-Forwarded-Encrypted: i=1; AJvYcCVpAZ6dMC5jp2mGt71ZyUg3WGgWfEghneUHLO9wBd5glBa0z8JuIWjzjH2OdnK71c3F2YFtryqT4Ss10oU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz2Owtlv5spPDnMEP/Z4iPAoSW3hfA2uh9mX9SHVjYCJ2wl1/XX
-	1M+0bc1TyFoinVe3hxeDnmqZEWfGxQNS7PpibDpvRwregGGHMQH7Br3nlR1aNB4=
-X-Gm-Gg: ASbGncvN2qH+O1pA5UlJ2NULAVqRw+dS6nFyncV9/jJ42m6A6gT9PgYr8/glcAZ8G6X
-	Gmv5iebnfUpcVG0dgcNa4mixiAfK24DF9q6qrjeV5bF19BHvWMTeGUxn4hdcXZ09aIgS8KVgaZw
-	+MFa2sKVeZEqx9xFEtvrUWPRldRvXCXLycdOlnAyPvN/eoExRRg90w9op+X7LZchgqUwIU1c5S+
-	9BDOvwmWDd8lbvVQrQcnvjC5vjgBSsY5yr34mgRJJkuC2K/TmhmWff6/q6uy0jPLzvhw23OZMQ3
-	5BdixPKo6ByDzFWOs16gWuKuBEHNwkKSjKqHuMrvvTeFuIEwGwq9g4Uepx7pMm4vJFRZZ8Yddjl
-	N280ge+i0EX0nbJOw/gyqFsccfSTpwn8=
-X-Google-Smtp-Source: AGHT+IG/6yrvEy0DucEk+7yGDoGxvKtVhd6CgHHuqZC1H0LHR/81r26V6cKIRQYMnCllxZ56ye797g==
-X-Received: by 2002:a17:902:db0d:b0:224:b60:3ce0 with SMTP id d9443c01a7336-2296c603927mr2757295ad.5.1743549010472;
-        Tue, 01 Apr 2025 16:10:10 -0700 (PDT)
-Received: from wak-linux.svl.corp.google.com ([2a00:79e0:2e5b:9:895:611e:1a61:85c1])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291f1cf170sm95176925ad.148.2025.04.01.16.10.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Apr 2025 16:10:10 -0700 (PDT)
-From: "William A. Kennington III" <william@wkennington.com>
-To: Tomer Maimon <tmaimon77@gmail.com>,
-	Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	openbmc@lists.ozlabs.org,
-	"William A. Kennington III" <william@wkennington.com>
-Subject: [PATCH v2] ARM: dts nuvoton: Add EDAC node
-Date: Tue,  1 Apr 2025 16:10:01 -0700
-Message-ID: <20250401231001.3202669-1-william@wkennington.com>
-X-Mailer: git-send-email 2.49.0.472.ge94155a9ec-goog
-Reply-To: 20240930214659.193376-1-william@wkennington.com
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="BD3FPvlm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1743549618;
+	bh=8Vs0Q1M7JCePHwzjAATmXva0xwwPXX+W8jZzUx7dQSs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=BD3FPvlmbMbRqOc5QymvffGVe6S+lZuRa0UuvGvimIT/GNaPvw7rdaKuKOO7AZQsq
+	 +B8K6c11JOXNOYrTn4nVVqizgW3eC27+hWv/qf8eIa88y8NK7epOjTvHeQ8OFaxtB6
+	 uBNdVYF1z/Ii4bHK56xlpvGNwfa/BvmuLIHjVpDpWAnNN7wy32fuyb6qSi/39x0Ys2
+	 OWcYCgdmIs+3ISXnPeR/rJpai9mW9E2ChmnkfYwgL6uptImUBh+CLdkebdNVH78UqZ
+	 3G9Jg56nmRsOfEPr0ZTY+CnVvnavAA9JTIhKxvY5T5tsm/Wo1xrTh2wAoVMlcXMFMK
+	 uHXMvVK5XImMA==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZS3rK6tgRz4wcT;
+	Wed,  2 Apr 2025 10:20:17 +1100 (AEDT)
+Date: Wed, 2 Apr 2025 10:20:16 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Richard Weinberger <richard@nod.at>, Andrew Morton
+ <akpm@linux-foundation.org>
+Cc: Johannes Berg <johannes.berg@intel.com>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>, "Mike Rapoport (Microsoft)"
+ <rppt@kernel.org>, Tiwei Bie <tiwei.btw@antgroup.com>
+Subject: Re: linux-next: manual merge of the uml tree with the mm-stable
+ tree
+Message-ID: <20250402102016.6ab2367d@canb.auug.org.au>
+In-Reply-To: <20250319105554.2e2f3aab@canb.auug.org.au>
+References: <20250319105554.2e2f3aab@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/6jRmPQ=VKeP4uWTcAj2n0_m";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-We have the driver support code, now we just need to expose the device
-node which can export the EDAC properties for the system memory
-controller. Tested on real hardware to verify that error counters show
-up.
+--Sig_/6jRmPQ=VKeP4uWTcAj2n0_m
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: William A. Kennington III <william@wkennington.com>
----
-V1 -> V2: Fixed compatible string that got truncated
+Hi all,
 
- arch/arm/boot/dts/nuvoton/nuvoton-common-npcm7xx.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+On Wed, 19 Mar 2025 10:55:54 +1100 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
+>
+> Today's linux-next merge of the uml tree got a conflict in:
+>=20
+>   arch/um/kernel/mem.c
+>=20
+> between commits:
+>=20
+>   0d98484ee333 ("arch, mm: introduce arch_mm_preinit")
+>   8afa901c147a ("arch, mm: make releasing of memory to page allocator mor=
+e explicit")
+>=20
+> from the mm-stable tree and commit:
+>=20
+>   e82cf3051e61 ("um: Update min_low_pfn to match changes in uml_reserved")
+>=20
+> from the uml tree.
+>=20
+> I fixed it up (I think - see below) and can carry the fix as
+> necessary. This is now fixed as far as linux-next is concerned, but any
+> non trivial conflicts should be mentioned to your upstream maintainer
+> when your tree is submitted for merging.  You may also want to consider
+> cooperating with the maintainer of the conflicting tree to minimise any
+> particularly complex conflicts.
+>=20
+>=20
+> diff --cc arch/um/kernel/mem.c
+> index 379f33a1babf,61b5a5ede01c..000000000000
+> --- a/arch/um/kernel/mem.c
+> +++ b/arch/um/kernel/mem.c
+> @@@ -66,11 -68,11 +68,12 @@@ void __init arch_mm_preinit(void
+>   	map_memory(brk_end, __pa(brk_end), uml_reserved - brk_end, 1, 1, 0);
+>   	memblock_free((void *)brk_end, uml_reserved - brk_end);
+>   	uml_reserved =3D brk_end;
+> + 	min_low_pfn =3D PFN_UP(__pa(uml_reserved));
+>  -
+>  -	/* this will put all low memory onto the freelists */
+>  -	memblock_free_all();
+>   	max_pfn =3D max_low_pfn;
+>  +}
+>  +
+>  +void __init mem_init(void)
+>  +{
+>   	kmalloc_ok =3D 1;
+>   }
+>  =20
 
-diff --git a/arch/arm/boot/dts/nuvoton/nuvoton-common-npcm7xx.dtsi b/arch/arm/boot/dts/nuvoton/nuvoton-common-npcm7xx.dtsi
-index 868454ae6bde..c7880126cc78 100644
---- a/arch/arm/boot/dts/nuvoton/nuvoton-common-npcm7xx.dtsi
-+++ b/arch/arm/boot/dts/nuvoton/nuvoton-common-npcm7xx.dtsi
-@@ -122,6 +122,13 @@ clk: clock-controller@f0801000 {
- 			clocks = <&clk_refclk>, <&clk_sysbypck>, <&clk_mcbypck>;
- 		};
- 
-+		mc: memory-controller@f0824000 {
-+			compatible = "nuvoton,npcm750-memory-controller";
-+			reg = <0xf0824000 0x1000>;
-+			interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
-+			status = "disabled";
-+		};
-+
- 		gmac0: eth@f0802000 {
- 			device_type = "network";
- 			compatible = "snps,dwmac";
--- 
-2.49.0.472.ge94155a9ec-goog
+This is nw a conflict between the uml tree and Linus' tree.
 
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/6jRmPQ=VKeP4uWTcAj2n0_m
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmfsdLAACgkQAVBC80lX
+0GzLFAgAjSvEglF9TcUJNM5ZgLelGVRac0nLh45FFPQ+AcKEbJnAl9xBLG6zrKsi
+zNm659QWp8jSNWyGrrAdlHrIOl/NaPLtIDOc6gcz0WuPzTk3o11PDCJg1bJl10KY
+wm8yq2/poMycvxqBflJjkEtnQFhs9FQWbCHQri3m+Uv9zrdUvIb6WJx/r2j+TaNU
+Nn3RzNspyl+f3MeHA7smCO5c3qe0qdKwIqYTx+7WXyMYSZNZBmLprCcCtmvMI7tg
+T6N9jn5ot9XSMrzCgqiNjdsV2hqkiasvOmBUWtGrFI+6BwvLObon0u6SJaMnAhei
+34fMgajwQFY3H4svOd6GrVh4qLcCJg==
+=xrW5
+-----END PGP SIGNATURE-----
+
+--Sig_/6jRmPQ=VKeP4uWTcAj2n0_m--
