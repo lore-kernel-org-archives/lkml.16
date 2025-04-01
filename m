@@ -1,303 +1,549 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CB35C2C6;
-	Tue,  1 Apr 2025 13:54:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6964DC2C6;
+	Tue,  1 Apr 2025 13:56:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743515696; cv=none; b=MVQ87UtqWV8aNygTcEqISf4gKd3uO0VC/80WcqCha3Ocfhb12+F+PCgWoto1CGnn92jMd/SGhiKUG8qwAR+1urubg3pSFrguUsDrenwwK3ka1shuvZ4woy0xM3htiErO+2ZAYPtKQTqnZoOCERuq99GGUgLUcHVJWaLhzvJb3oU=
+	t=1743515766; cv=none; b=WqEAveKG5Q1FcSb7at+UQd1fImuUHC0UmzYNPI70uQuqcJ0FFau0rHDkv/yBxQc8/Vc8M62ybaUO3+Z2gsNMCy9pqHHe/TA5zBwMeeMMTWLnzzy3taOMchcDwVx7x920PNUIQ+H0nWe2QaFjP5oPsjQOmMmA41tDLj+zIqaoBYs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743515696; c=relaxed/simple;
-	bh=1JeXX8dTrMj5iy7nBIKL7ZWyC7Mz2KiEEpDNh7CypLo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=PrWCq5qHQIzUivGu/CO0iLwUQAFTasvS8/flSvlMXsN6S5pPxjzftEUg04A/cji4PwnyWBnz8d5LMIvGmzOcGiuzShB+MwZQFtGvT4x3lC0+VQCpahGX6w5QFPkPx2bVWlf54FjhIqkZ/TgDtVYwLJESHCM5vZTSItxK7DkLpoA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.105])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4ZRqCF6dy6zvWqt;
-	Tue,  1 Apr 2025 21:50:49 +0800 (CST)
-Received: from kwepemg500010.china.huawei.com (unknown [7.202.181.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 6CC6814036D;
-	Tue,  1 Apr 2025 21:54:49 +0800 (CST)
-Received: from [10.174.178.209] (10.174.178.209) by
- kwepemg500010.china.huawei.com (7.202.181.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Tue, 1 Apr 2025 21:54:48 +0800
-Message-ID: <ac39f5a1-664a-4812-bb50-ceb9771d1d66@huawei.com>
-Date: Tue, 1 Apr 2025 21:54:47 +0800
+	s=arc-20240116; t=1743515766; c=relaxed/simple;
+	bh=vOJVAGJTEuAy1vm3ddszdLsD3QriX/nzRc5+pSlCs8E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=R9gaVHLMQJLnTayHaoDgo6kd9MxT0/rHWOk8YQpYnhOUknSJ38aA1IKjJd9SIEGFBMr123rEAMFTG+qEjSsggFcxpuvhb6zpI/j9uAKJ1eM+ZMKuCSvKWnuSoJXA3tbZI/XQcKQLXGXlmiR87xbdOvzXoWd8S/8JqirYlIPOO58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o7vdGmO5; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o7vdGmO5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CA44C4CEE4;
+	Tue,  1 Apr 2025 13:56:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743515765;
+	bh=vOJVAGJTEuAy1vm3ddszdLsD3QriX/nzRc5+pSlCs8E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=o7vdGmO5begJnV+11RKXwxfNoFckttAv6bpYAXo6O7e0SIal3YfNWFJx1zL7arTDI
+	 GGLFdXXBuxCbnOhN3RJJsMEOf6y+mvz4WFuPK86w8PAoN27ZkFEXD+qCQuBBnMaDBL
+	 rLLD/is2izh7sREvpuBdMFEvQ3Nf8xWGIXt6h8KbgpH9J1QNmpT0BflvJcFLJ8LI/9
+	 3R7v9iRyt9JQ0rRQOslh57IgWE1WSboFb/+vuf0yjrB38RHGQHoN0SVtheXma09cSd
+	 GgbE+ouoZ1v1luADVo+lkIumppiAn/OD6Aup93HVQpPtfKgJH+s06ThxLefnTVfexy
+	 +3pICuc63w+Cg==
+Date: Tue, 1 Apr 2025 15:56:03 +0200
+From: Lorenzo Bianconi <lorenzo@kernel.org>
+To: Christian Marangi <ansuelsmth@gmail.com>
+Cc: Sean Wang <sean.wang@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Benjamin Larsson <benjamin.larsson@genexis.eu>,
+	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH v2] pinctrl: airoha: fix wrong PHY LED mapping and PHY2
+ LED defines
+Message-ID: <Z-vwczLnmAkswNeD@lore-desk>
+References: <20250401135026.18018-1-ansuelsmth@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Fwd: [PATCH][SMB3 client] fix TCP timers deadlock after rmmod
-To: Steve French <smfrench@gmail.com>, linux-fsdevel
-	<linux-fsdevel@vger.kernel.org>, <linux-net@vger.kernel.org>, LKML
-	<linux-kernel@vger.kernel.org>, Enzo Matsumiya <ematsumiya@suse.de>,
-	<kuniyu@amazon.com>, <edumazet@google.com>
-CC: <zhangchangzhong@huawei.com>
-References: <CAH2r5msqxcvHcbDt0x_eNpbdPxUhgFoOAPchZ16EBZeFhCdAKA@mail.gmail.com>
- <CAH2r5mtoz+4RSDLJijNFD6dRiLTWKou8m3M2mTp2cy7oPsP=Qg@mail.gmail.com>
-From: Wang Zhaolong <wangzhaolong1@huawei.com>
-In-Reply-To: <CAH2r5mtoz+4RSDLJijNFD6dRiLTWKou8m3M2mTp2cy7oPsP=Qg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemg500010.china.huawei.com (7.202.181.71)
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="nRYz62PYEOHq01AT"
+Content-Disposition: inline
+In-Reply-To: <20250401135026.18018-1-ansuelsmth@gmail.com>
 
-Hi.
 
-My colleagues and I have been investigating the issue addressed by this patch
-and have discovered some significant concerns that require broader discussion.
+--nRYz62PYEOHq01AT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-### Socket Leak Issue
+> The current PHY2 LED define are wrong and actually set BITs outside the
+> related mask. Fix it and set the correct value. While at it, also use
+> FIELD_PREP_CONST macro to make it simple to understand what values are
+> actually applied for the mask.
+>=20
+> Also fix wrong PHY LED mapping. The SoC Switch supports up to 4 port but
+> the register define mapping for 5 PHY port, starting from 0. The mapping
+> was wrongly defined starting from PHY1. Reorder the function group to
+> start from PHY0. PHY4 is actually never supported as we don't have a
+> GPIO pin to assign.
+>=20
+> Cc: stable@vger.kernel.org
+> Fixes: 1c8ace2d0725 ("pinctrl: airoha: Add support for EN7581 SoC")
+> Reviewed-by: Benjamin Larsson <benjamin.larsson@genexis.eu>
+> Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
 
-After testing this patch extensively, I've confirmed it introduces a socket leak
-when TCP connections don't complete proper termination (e.g., when FIN packets
-are dropped). The leak manifests as a continuous increase in TCP slab usage:
+Acked-by: Lorenzo Bianconi <lorenzo@kernel.org>
 
-I've documented this issue with a reproducer in Bugzilla:
+> ---
+> Changes v2:
+> - Add Reviewed-by tag
+> - Use more symbolic macro
+>=20
+>  drivers/pinctrl/mediatek/pinctrl-airoha.c | 159 ++++++++++------------
+>  1 file changed, 70 insertions(+), 89 deletions(-)
+>=20
+> diff --git a/drivers/pinctrl/mediatek/pinctrl-airoha.c b/drivers/pinctrl/=
+mediatek/pinctrl-airoha.c
+> index 547a798b71c8..5d84a778683d 100644
+> --- a/drivers/pinctrl/mediatek/pinctrl-airoha.c
+> +++ b/drivers/pinctrl/mediatek/pinctrl-airoha.c
+> @@ -6,6 +6,7 @@
+>   */
+> =20
+>  #include <dt-bindings/pinctrl/mt65xx.h>
+> +#include <linux/bitfield.h>
+>  #include <linux/bits.h>
+>  #include <linux/cleanup.h>
+>  #include <linux/gpio/driver.h>
+> @@ -112,39 +113,19 @@
+>  #define REG_LAN_LED1_MAPPING			0x0280
+> =20
+>  #define LAN4_LED_MAPPING_MASK			GENMASK(18, 16)
+> -#define LAN4_PHY4_LED_MAP			BIT(18)
+> -#define LAN4_PHY2_LED_MAP			BIT(17)
+> -#define LAN4_PHY1_LED_MAP			BIT(16)
+> -#define LAN4_PHY0_LED_MAP			0
+> -#define LAN4_PHY3_LED_MAP			GENMASK(17, 16)
+> +#define LAN4_PHY_LED_MAP(_n)			FIELD_PREP_CONST(LAN4_LED_MAPPING_MASK, (=
+_n))
+> =20
+>  #define LAN3_LED_MAPPING_MASK			GENMASK(14, 12)
+> -#define LAN3_PHY4_LED_MAP			BIT(14)
+> -#define LAN3_PHY2_LED_MAP			BIT(13)
+> -#define LAN3_PHY1_LED_MAP			BIT(12)
+> -#define LAN3_PHY0_LED_MAP			0
+> -#define LAN3_PHY3_LED_MAP			GENMASK(13, 12)
+> +#define LAN3_PHY_LED_MAP(_n)			FIELD_PREP_CONST(LAN3_LED_MAPPING_MASK, (=
+_n))
+> =20
+>  #define LAN2_LED_MAPPING_MASK			GENMASK(10, 8)
+> -#define LAN2_PHY4_LED_MAP			BIT(12)
+> -#define LAN2_PHY2_LED_MAP			BIT(11)
+> -#define LAN2_PHY1_LED_MAP			BIT(10)
+> -#define LAN2_PHY0_LED_MAP			0
+> -#define LAN2_PHY3_LED_MAP			GENMASK(11, 10)
+> +#define LAN2_PHY_LED_MAP(_n)			FIELD_PREP_CONST(LAN2_LED_MAPPING_MASK, (=
+_n))
+> =20
+>  #define LAN1_LED_MAPPING_MASK			GENMASK(6, 4)
+> -#define LAN1_PHY4_LED_MAP			BIT(6)
+> -#define LAN1_PHY2_LED_MAP			BIT(5)
+> -#define LAN1_PHY1_LED_MAP			BIT(4)
+> -#define LAN1_PHY0_LED_MAP			0
+> -#define LAN1_PHY3_LED_MAP			GENMASK(5, 4)
+> +#define LAN1_PHY_LED_MAP(_n)			FIELD_PREP_CONST(LAN1_LED_MAPPING_MASK, (=
+_n))
+> =20
+>  #define LAN0_LED_MAPPING_MASK			GENMASK(2, 0)
+> -#define LAN0_PHY4_LED_MAP			BIT(3)
+> -#define LAN0_PHY2_LED_MAP			BIT(2)
+> -#define LAN0_PHY1_LED_MAP			BIT(1)
+> -#define LAN0_PHY0_LED_MAP			0
+> -#define LAN0_PHY3_LED_MAP			GENMASK(2, 1)
+> +#define LAN0_PHY_LED_MAP(_n)			FIELD_PREP_CONST(LAN0_LED_MAPPING_MASK, (=
+_n))
+> =20
+>  /* CONF */
+>  #define REG_I2C_SDA_E2				0x001c
+> @@ -1476,8 +1457,8 @@ static const struct airoha_pinctrl_func_group phy1_=
+led0_func_group[] =3D {
+>  		.regmap[1] =3D {
+>  			AIROHA_FUNC_MUX,
+>  			REG_LAN_LED0_MAPPING,
+> -			LAN1_LED_MAPPING_MASK,
+> -			LAN1_PHY1_LED_MAP
+> +			LAN0_LED_MAPPING_MASK,
+> +			LAN0_PHY_LED_MAP(0)
+>  		},
+>  		.regmap_size =3D 2,
+>  	}, {
+> @@ -1491,8 +1472,8 @@ static const struct airoha_pinctrl_func_group phy1_=
+led0_func_group[] =3D {
+>  		.regmap[1] =3D {
+>  			AIROHA_FUNC_MUX,
+>  			REG_LAN_LED0_MAPPING,
+> -			LAN2_LED_MAPPING_MASK,
+> -			LAN2_PHY1_LED_MAP
+> +			LAN1_LED_MAPPING_MASK,
+> +			LAN1_PHY_LED_MAP(0)
+>  		},
+>  		.regmap_size =3D 2,
+>  	}, {
+> @@ -1506,8 +1487,8 @@ static const struct airoha_pinctrl_func_group phy1_=
+led0_func_group[] =3D {
+>  		.regmap[1] =3D {
+>  			AIROHA_FUNC_MUX,
+>  			REG_LAN_LED0_MAPPING,
+> -			LAN3_LED_MAPPING_MASK,
+> -			LAN3_PHY1_LED_MAP
+> +			LAN2_LED_MAPPING_MASK,
+> +			LAN2_PHY_LED_MAP(0)
+>  		},
+>  		.regmap_size =3D 2,
+>  	}, {
+> @@ -1521,8 +1502,8 @@ static const struct airoha_pinctrl_func_group phy1_=
+led0_func_group[] =3D {
+>  		.regmap[1] =3D {
+>  			AIROHA_FUNC_MUX,
+>  			REG_LAN_LED0_MAPPING,
+> -			LAN4_LED_MAPPING_MASK,
+> -			LAN4_PHY1_LED_MAP
+> +			LAN3_LED_MAPPING_MASK,
+> +			LAN3_PHY_LED_MAP(0)
+>  		},
+>  		.regmap_size =3D 2,
+>  	},
+> @@ -1540,8 +1521,8 @@ static const struct airoha_pinctrl_func_group phy2_=
+led0_func_group[] =3D {
+>  		.regmap[1] =3D {
+>  			AIROHA_FUNC_MUX,
+>  			REG_LAN_LED0_MAPPING,
+> -			LAN1_LED_MAPPING_MASK,
+> -			LAN1_PHY2_LED_MAP
+> +			LAN0_LED_MAPPING_MASK,
+> +			LAN0_PHY_LED_MAP(1)
+>  		},
+>  		.regmap_size =3D 2,
+>  	}, {
+> @@ -1555,8 +1536,8 @@ static const struct airoha_pinctrl_func_group phy2_=
+led0_func_group[] =3D {
+>  		.regmap[1] =3D {
+>  			AIROHA_FUNC_MUX,
+>  			REG_LAN_LED0_MAPPING,
+> -			LAN2_LED_MAPPING_MASK,
+> -			LAN2_PHY2_LED_MAP
+> +			LAN1_LED_MAPPING_MASK,
+> +			LAN1_PHY_LED_MAP(1)
+>  		},
+>  		.regmap_size =3D 2,
+>  	}, {
+> @@ -1570,8 +1551,8 @@ static const struct airoha_pinctrl_func_group phy2_=
+led0_func_group[] =3D {
+>  		.regmap[1] =3D {
+>  			AIROHA_FUNC_MUX,
+>  			REG_LAN_LED0_MAPPING,
+> -			LAN3_LED_MAPPING_MASK,
+> -			LAN3_PHY2_LED_MAP
+> +			LAN2_LED_MAPPING_MASK,
+> +			LAN2_PHY_LED_MAP(1)
+>  		},
+>  		.regmap_size =3D 2,
+>  	}, {
+> @@ -1585,8 +1566,8 @@ static const struct airoha_pinctrl_func_group phy2_=
+led0_func_group[] =3D {
+>  		.regmap[1] =3D {
+>  			AIROHA_FUNC_MUX,
+>  			REG_LAN_LED0_MAPPING,
+> -			LAN4_LED_MAPPING_MASK,
+> -			LAN4_PHY2_LED_MAP
+> +			LAN3_LED_MAPPING_MASK,
+> +			LAN3_PHY_LED_MAP(1)
+>  		},
+>  		.regmap_size =3D 2,
+>  	},
+> @@ -1604,8 +1585,8 @@ static const struct airoha_pinctrl_func_group phy3_=
+led0_func_group[] =3D {
+>  		.regmap[1] =3D {
+>  			AIROHA_FUNC_MUX,
+>  			REG_LAN_LED0_MAPPING,
+> -			LAN1_LED_MAPPING_MASK,
+> -			LAN1_PHY3_LED_MAP
+> +			LAN0_LED_MAPPING_MASK,
+> +			LAN0_PHY_LED_MAP(2)
+>  		},
+>  		.regmap_size =3D 2,
+>  	}, {
+> @@ -1619,8 +1600,8 @@ static const struct airoha_pinctrl_func_group phy3_=
+led0_func_group[] =3D {
+>  		.regmap[1] =3D {
+>  			AIROHA_FUNC_MUX,
+>  			REG_LAN_LED0_MAPPING,
+> -			LAN2_LED_MAPPING_MASK,
+> -			LAN2_PHY3_LED_MAP
+> +			LAN1_LED_MAPPING_MASK,
+> +			LAN1_PHY_LED_MAP(2)
+>  		},
+>  		.regmap_size =3D 2,
+>  	}, {
+> @@ -1634,8 +1615,8 @@ static const struct airoha_pinctrl_func_group phy3_=
+led0_func_group[] =3D {
+>  		.regmap[1] =3D {
+>  			AIROHA_FUNC_MUX,
+>  			REG_LAN_LED0_MAPPING,
+> -			LAN3_LED_MAPPING_MASK,
+> -			LAN3_PHY3_LED_MAP
+> +			LAN2_LED_MAPPING_MASK,
+> +			LAN2_PHY_LED_MAP(2)
+>  		},
+>  		.regmap_size =3D 2,
+>  	}, {
+> @@ -1649,8 +1630,8 @@ static const struct airoha_pinctrl_func_group phy3_=
+led0_func_group[] =3D {
+>  		.regmap[1] =3D {
+>  			AIROHA_FUNC_MUX,
+>  			REG_LAN_LED0_MAPPING,
+> -			LAN4_LED_MAPPING_MASK,
+> -			LAN4_PHY3_LED_MAP
+> +			LAN3_LED_MAPPING_MASK,
+> +			LAN3_PHY_LED_MAP(2)
+>  		},
+>  		.regmap_size =3D 2,
+>  	},
+> @@ -1668,8 +1649,8 @@ static const struct airoha_pinctrl_func_group phy4_=
+led0_func_group[] =3D {
+>  		.regmap[1] =3D {
+>  			AIROHA_FUNC_MUX,
+>  			REG_LAN_LED0_MAPPING,
+> -			LAN1_LED_MAPPING_MASK,
+> -			LAN1_PHY4_LED_MAP
+> +			LAN0_LED_MAPPING_MASK,
+> +			LAN0_PHY_LED_MAP(3)
+>  		},
+>  		.regmap_size =3D 2,
+>  	}, {
+> @@ -1683,8 +1664,8 @@ static const struct airoha_pinctrl_func_group phy4_=
+led0_func_group[] =3D {
+>  		.regmap[1] =3D {
+>  			AIROHA_FUNC_MUX,
+>  			REG_LAN_LED0_MAPPING,
+> -			LAN2_LED_MAPPING_MASK,
+> -			LAN2_PHY4_LED_MAP
+> +			LAN1_LED_MAPPING_MASK,
+> +			LAN1_PHY_LED_MAP(3)
+>  		},
+>  		.regmap_size =3D 2,
+>  	}, {
+> @@ -1698,8 +1679,8 @@ static const struct airoha_pinctrl_func_group phy4_=
+led0_func_group[] =3D {
+>  		.regmap[1] =3D {
+>  			AIROHA_FUNC_MUX,
+>  			REG_LAN_LED0_MAPPING,
+> -			LAN3_LED_MAPPING_MASK,
+> -			LAN3_PHY4_LED_MAP
+> +			LAN2_LED_MAPPING_MASK,
+> +			LAN2_PHY_LED_MAP(3)
+>  		},
+>  		.regmap_size =3D 2,
+>  	}, {
+> @@ -1713,8 +1694,8 @@ static const struct airoha_pinctrl_func_group phy4_=
+led0_func_group[] =3D {
+>  		.regmap[1] =3D {
+>  			AIROHA_FUNC_MUX,
+>  			REG_LAN_LED0_MAPPING,
+> -			LAN4_LED_MAPPING_MASK,
+> -			LAN4_PHY4_LED_MAP
+> +			LAN3_LED_MAPPING_MASK,
+> +			LAN3_PHY_LED_MAP(3)
+>  		},
+>  		.regmap_size =3D 2,
+>  	},
+> @@ -1732,8 +1713,8 @@ static const struct airoha_pinctrl_func_group phy1_=
+led1_func_group[] =3D {
+>  		.regmap[1] =3D {
+>  			AIROHA_FUNC_MUX,
+>  			REG_LAN_LED1_MAPPING,
+> -			LAN1_LED_MAPPING_MASK,
+> -			LAN1_PHY1_LED_MAP
+> +			LAN0_LED_MAPPING_MASK,
+> +			LAN0_PHY_LED_MAP(0)
+>  		},
+>  		.regmap_size =3D 2,
+>  	}, {
+> @@ -1747,8 +1728,8 @@ static const struct airoha_pinctrl_func_group phy1_=
+led1_func_group[] =3D {
+>  		.regmap[1] =3D {
+>  			AIROHA_FUNC_MUX,
+>  			REG_LAN_LED1_MAPPING,
+> -			LAN2_LED_MAPPING_MASK,
+> -			LAN2_PHY1_LED_MAP
+> +			LAN1_LED_MAPPING_MASK,
+> +			LAN1_PHY_LED_MAP(0)
+>  		},
+>  		.regmap_size =3D 2,
+>  	}, {
+> @@ -1762,8 +1743,8 @@ static const struct airoha_pinctrl_func_group phy1_=
+led1_func_group[] =3D {
+>  		.regmap[1] =3D {
+>  			AIROHA_FUNC_MUX,
+>  			REG_LAN_LED1_MAPPING,
+> -			LAN3_LED_MAPPING_MASK,
+> -			LAN3_PHY1_LED_MAP
+> +			LAN2_LED_MAPPING_MASK,
+> +			LAN2_PHY_LED_MAP(0)
+>  		},
+>  		.regmap_size =3D 2,
+>  	}, {
+> @@ -1777,8 +1758,8 @@ static const struct airoha_pinctrl_func_group phy1_=
+led1_func_group[] =3D {
+>  		.regmap[1] =3D {
+>  			AIROHA_FUNC_MUX,
+>  			REG_LAN_LED1_MAPPING,
+> -			LAN4_LED_MAPPING_MASK,
+> -			LAN4_PHY1_LED_MAP
+> +			LAN3_LED_MAPPING_MASK,
+> +			LAN3_PHY_LED_MAP(0)
+>  		},
+>  		.regmap_size =3D 2,
+>  	},
+> @@ -1796,8 +1777,8 @@ static const struct airoha_pinctrl_func_group phy2_=
+led1_func_group[] =3D {
+>  		.regmap[1] =3D {
+>  			AIROHA_FUNC_MUX,
+>  			REG_LAN_LED1_MAPPING,
+> -			LAN1_LED_MAPPING_MASK,
+> -			LAN1_PHY2_LED_MAP
+> +			LAN0_LED_MAPPING_MASK,
+> +			LAN0_PHY_LED_MAP(1)
+>  		},
+>  		.regmap_size =3D 2,
+>  	}, {
+> @@ -1811,8 +1792,8 @@ static const struct airoha_pinctrl_func_group phy2_=
+led1_func_group[] =3D {
+>  		.regmap[1] =3D {
+>  			AIROHA_FUNC_MUX,
+>  			REG_LAN_LED1_MAPPING,
+> -			LAN2_LED_MAPPING_MASK,
+> -			LAN2_PHY2_LED_MAP
+> +			LAN1_LED_MAPPING_MASK,
+> +			LAN1_PHY_LED_MAP(1)
+>  		},
+>  		.regmap_size =3D 2,
+>  	}, {
+> @@ -1826,8 +1807,8 @@ static const struct airoha_pinctrl_func_group phy2_=
+led1_func_group[] =3D {
+>  		.regmap[1] =3D {
+>  			AIROHA_FUNC_MUX,
+>  			REG_LAN_LED1_MAPPING,
+> -			LAN3_LED_MAPPING_MASK,
+> -			LAN3_PHY2_LED_MAP
+> +			LAN2_LED_MAPPING_MASK,
+> +			LAN2_PHY_LED_MAP(1)
+>  		},
+>  		.regmap_size =3D 2,
+>  	}, {
+> @@ -1841,8 +1822,8 @@ static const struct airoha_pinctrl_func_group phy2_=
+led1_func_group[] =3D {
+>  		.regmap[1] =3D {
+>  			AIROHA_FUNC_MUX,
+>  			REG_LAN_LED1_MAPPING,
+> -			LAN4_LED_MAPPING_MASK,
+> -			LAN4_PHY2_LED_MAP
+> +			LAN3_LED_MAPPING_MASK,
+> +			LAN3_PHY_LED_MAP(1)
+>  		},
+>  		.regmap_size =3D 2,
+>  	},
+> @@ -1860,8 +1841,8 @@ static const struct airoha_pinctrl_func_group phy3_=
+led1_func_group[] =3D {
+>  		.regmap[1] =3D {
+>  			AIROHA_FUNC_MUX,
+>  			REG_LAN_LED1_MAPPING,
+> -			LAN1_LED_MAPPING_MASK,
+> -			LAN1_PHY3_LED_MAP
+> +			LAN0_LED_MAPPING_MASK,
+> +			LAN0_PHY_LED_MAP(2)
+>  		},
+>  		.regmap_size =3D 2,
+>  	}, {
+> @@ -1875,8 +1856,8 @@ static const struct airoha_pinctrl_func_group phy3_=
+led1_func_group[] =3D {
+>  		.regmap[1] =3D {
+>  			AIROHA_FUNC_MUX,
+>  			REG_LAN_LED1_MAPPING,
+> -			LAN2_LED_MAPPING_MASK,
+> -			LAN2_PHY3_LED_MAP
+> +			LAN1_LED_MAPPING_MASK,
+> +			LAN1_PHY_LED_MAP(2)
+>  		},
+>  		.regmap_size =3D 2,
+>  	}, {
+> @@ -1890,8 +1871,8 @@ static const struct airoha_pinctrl_func_group phy3_=
+led1_func_group[] =3D {
+>  		.regmap[1] =3D {
+>  			AIROHA_FUNC_MUX,
+>  			REG_LAN_LED1_MAPPING,
+> -			LAN3_LED_MAPPING_MASK,
+> -			LAN3_PHY3_LED_MAP
+> +			LAN2_LED_MAPPING_MASK,
+> +			LAN2_PHY_LED_MAP(2)
+>  		},
+>  		.regmap_size =3D 2,
+>  	}, {
+> @@ -1905,8 +1886,8 @@ static const struct airoha_pinctrl_func_group phy3_=
+led1_func_group[] =3D {
+>  		.regmap[1] =3D {
+>  			AIROHA_FUNC_MUX,
+>  			REG_LAN_LED1_MAPPING,
+> -			LAN4_LED_MAPPING_MASK,
+> -			LAN4_PHY3_LED_MAP
+> +			LAN3_LED_MAPPING_MASK,
+> +			LAN3_PHY_LED_MAP(2)
+>  		},
+>  		.regmap_size =3D 2,
+>  	},
+> @@ -1924,8 +1905,8 @@ static const struct airoha_pinctrl_func_group phy4_=
+led1_func_group[] =3D {
+>  		.regmap[1] =3D {
+>  			AIROHA_FUNC_MUX,
+>  			REG_LAN_LED1_MAPPING,
+> -			LAN1_LED_MAPPING_MASK,
+> -			LAN1_PHY4_LED_MAP
+> +			LAN0_LED_MAPPING_MASK,
+> +			LAN0_PHY_LED_MAP(3)
+>  		},
+>  		.regmap_size =3D 2,
+>  	}, {
+> @@ -1939,8 +1920,8 @@ static const struct airoha_pinctrl_func_group phy4_=
+led1_func_group[] =3D {
+>  		.regmap[1] =3D {
+>  			AIROHA_FUNC_MUX,
+>  			REG_LAN_LED1_MAPPING,
+> -			LAN2_LED_MAPPING_MASK,
+> -			LAN2_PHY4_LED_MAP
+> +			LAN1_LED_MAPPING_MASK,
+> +			LAN1_PHY_LED_MAP(3)
+>  		},
+>  		.regmap_size =3D 2,
+>  	}, {
+> @@ -1954,8 +1935,8 @@ static const struct airoha_pinctrl_func_group phy4_=
+led1_func_group[] =3D {
+>  		.regmap[1] =3D {
+>  			AIROHA_FUNC_MUX,
+>  			REG_LAN_LED1_MAPPING,
+> -			LAN3_LED_MAPPING_MASK,
+> -			LAN3_PHY4_LED_MAP
+> +			LAN2_LED_MAPPING_MASK,
+> +			LAN2_PHY_LED_MAP(3)
+>  		},
+>  		.regmap_size =3D 2,
+>  	}, {
+> @@ -1969,8 +1950,8 @@ static const struct airoha_pinctrl_func_group phy4_=
+led1_func_group[] =3D {
+>  		.regmap[1] =3D {
+>  			AIROHA_FUNC_MUX,
+>  			REG_LAN_LED1_MAPPING,
+> -			LAN4_LED_MAPPING_MASK,
+> -			LAN4_PHY4_LED_MAP
+> +			LAN3_LED_MAPPING_MASK,
+> +			LAN3_PHY_LED_MAP(3)
+>  		},
+>  		.regmap_size =3D 2,
+>  	},
+> --=20
+> 2.48.1
+>=20
 
-https://bugzilla.kernel.org/show_bug.cgi?id=219972#c0
+--nRYz62PYEOHq01AT
+Content-Type: application/pgp-signature; name=signature.asc
 
-The key issue appears to stem from the interaction between the SMB client and TCP
-socket lifecycle management:
+-----BEGIN PGP SIGNATURE-----
 
-1. Removing `sk->sk_net_refcnt = 1` causes TCP timers to be terminated early in
-    `tcp_close()` via the `inet_csk_clear_xmit_timers_sync()` call when
-    `!sk->sk_net_refcnt`
-2. This early timer termination prevents proper reference counting resolution
-    when connections don't complete the 4-way TCP termination handshake
-3. The resulting socket references are never fully released, leading to a leak
+iHUEABYKAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCZ+vwcwAKCRA6cBh0uS2t
+rNMvAQCC3qXkUGBbmTKpqXtmDpcfFfy2GUHnM7lnNIMj6NxI0QD+PpG0H5XNZ3VI
+kk0XQB0c2gUlQ6n+H1HB33xvyJTafAE=
+=u1TQ
+-----END PGP SIGNATURE-----
 
-#### Timeline of Related Changes
-
-1. v4.2-rc1 26abe14379f8 ("net: Modify sk_alloc to not reference count the netns of kernel sockets")
-    - Added `sk_net_refcnt` field to distinguish user sockets (=1) from kernel sockets (=0)
-    - Kernel sockets don't hold netns references, which can lead to potential UAF issues
-
-2. v6.9-rc2 151c9c724d05: ("tcp: properly terminate timers for kernel sockets")
-    - Modified `tcp_close()` to check `sk->sk_net_refcnt` and explicitly terminate timers for kernel sockets (=0)
-    - This prevents UAF when netns is destroyed before socket timers complete
-    - **Key change**: If `!sk->sk_net_refcnt`, call `inet_csk_clear_xmit_timers_sync()`
-
-3. v6.12-rc7 ef7134c7fc48: ("smb: client: Fix use-after-free of network namespace")
-    - Fixed netns UAF in CIFS by manually setting `sk->sk_net_refcnt = 1`
-    - Also called `maybe_get_net()` to maintain netns references
-    - This effectively made kernel sockets behave like user sockets for reference counting
-
-4. v6.13-rc4 e9f2517a3e18: ("smb: client: fix TCP timers deadlock after rmmod")
-    - Problem commit: Removed `sk->sk_net_refcnt = 1` setting
-    - Changed to using explicit `get_net()/put_net()` at CIFS layer
-    - This change leads to socket leaks because timers are terminated early
-
-### Lockdep Warning Analysis
-
-I've also investigated the lockdep warning mentioned in the patch. My analysis
-suggests it may be a false positive rather than an actual deadlock. The crash
-actually occurs in the lockdep subsystem itself (null pointer dereference in
-`check_wait_context()`), not in the CIFS or networking code directly.
-
-The procedure for the null pointer dereference is as follows:
-
-When lockdep is enabled, the lock class "slock-AF_INET-CIFS" is set when a socket
-connection is established.
-
-```
-cifs_do_mount
-   cifs_mount
-     mount_get_conns
-       cifs_get_tcp_session
-         ip_connect
-           generic_ip_connect
-             cifs_reclassify_socket4
-               sock_lock_init_class_and_name(sk, "slock-AF_INET-CIFS",
-                 lockdep_init_map
-                   lockdep_init_map_wait
-                     lockdep_init_map_type
-                       lockdep_init_map_type
-                         register_lock_class
-                           __set_bit(class - lock_classes, lock_classes_in_use);
-```
-
-When the module is unloaded, the lock class is cleaned up.
-
-```
-free_mod_mem
-   lockdep_free_key_range
-     __lockdep_free_key_range
-       zap_class
-         __clear_bit(class - lock_classes, lock_classes_in_use);
-```
-
-After the module is uninstalled and the network connection is restored, the
-timer is woken up.
-
-```
-run_timer_softirq
-   run_timer_base
-     __run_timers
-       call_timer_fn
-         tcp_write_timer
-           bh_lock_sock
-             spin_lock(&((__sk)->sk_lock.slock))
-               _raw_spin_lock
-                 lock_acquire
-                   __lock_acquire
-                     check_wait_context
-                       hlock_class
-                        if (!test_bit(class_idx, lock_classes_in_use)) {
-                           return NULL;
-                       hlock_class(next)->wait_type_inner; // Null pointer dereference
-```
-
-The problem lies within lockdep, as Kuniyuki says:
-
-> I tried the repro and confirmed it triggers null deref.
-> 
-> It happens in LOCKDEP internal, so for me it looks like a problem in
-> LOCKDEP rather than CIFS or TCP.
-> 
-> I think LOCKDEP should hold a module reference and prevent related
-> modules from being unloaded.
-
-Regarding the deadlock issue, it is clear that the locks mentioned in the deadlock warning
-do not belong to the same lock instance. A deadlock should not occur.
-
-### Discussion Points
-
-1. API Design Question: Is this fundamentally an issue with how CIFS uses the socket
-    API, or is it a networking layer issue that should handle socket cleanup differently?
-
-2. Approach to Resolution: Would it be better to:
-    - Revert to the original solution (setting `sk->sk_net_refcnt = 1`) from ef7134c7fc48?
-    - Work with networking subsystem maintainers on a more comprehensive solution that
-      handles socket cleanup properly?
-
-3.  CVE Process Question: Given that CVE-2024-54680 appears to "fix" a non-existent issue
-     while introducing an actual vulnerability, what's the appropriate way to address this?
-
-What's the best path forward?
-
-Best regards,
-Wang Zhaolong
-
-> Adding fsdevel and networking in case any thoughts on this fix for
-> network/namespaces refcount issue (that causes rmmod UAF).
-> 
-> Any opinions on Enzo's proposed Fix?
-> 
-> ---------- Forwarded message ---------
-> From: Steve French <smfrench@gmail.com>
-> Date: Tue, Dec 17, 2024 at 9:24 PM
-> Subject: [PATCH][SMB3 client] fix TCP timers deadlock after rmmod
-> To: CIFS <linux-cifs@vger.kernel.org>
-> Cc: Kuniyuki Iwashima <kuniyu@amazon.com>, Enzo Matsumiya <ematsumiya@suse.de>
-> 
-> 
-> Enzo had an interesting patch, that seems to fix an important problem.
-> 
-> Here was his repro scenario:
-> 
->       tw:~ # mount.cifs -o credentials=/root/wincreds,echo_interval=10
-> //someserver/target1 /mnt/test
->       tw:~ # ls /mnt/test
->       abc  dir1  dir3  target1_file.txt  tsub
->       tw:~ # iptables -A INPUT -s someserver -j DROP
-> 
-> Trigger reconnect and wait for 3*echo_interval:
-> 
->       tw:~ # cat /mnt/test/target1_file.txt
->       cat: /mnt/test/target1_file.txt: Host is down
-> 
-> Then umount and rmmod.  Note that rmmod might take several iterations
-> until it properly tears down everything, so make sure you see the "not
-> loaded" message before proceeding:
-> 
->       tw:~ # umount /mnt/*; rmmod cifs
->       umount: /mnt/az: not mounted.
->       umount: /mnt/dfs: not mounted.
->       umount: /mnt/local: not mounted.
->       umount: /mnt/scratch: not mounted.
->       rmmod: ERROR: Module cifs is in use
->       ...
->       tw:~ # rmmod cifs
->       rmmod: ERROR: Module cifs is not currently loaded
-> 
-> Then kickoff the TCP internals:
->       tw:~ # iptables -F
-> 
-> Gets the lockdep warning (requires CONFIG_LOCKDEP=y) + a NULL deref
-> later on.
-> 
-> 
-> Any thoughts on his patch?  See below (and attached)
-> 
->      Commit ef7134c7fc48 ("smb: client: Fix use-after-free of network
-> namespace.")
->      fixed a netns UAF by manually enabled socket refcounting
->      (sk->sk_net_refcnt=1 and sock_inuse_add(net, 1)).
-> 
->      The reason the patch worked for that bug was because we now hold
->      references to the netns (get_net_track() gets a ref internally)
->      and they're properly released (internally, on __sk_destruct()),
->      but only because sk->sk_net_refcnt was set.
-> 
->      Problem:
->      (this happens regardless of CONFIG_NET_NS_REFCNT_TRACKER and regardless
->      if init_net or other)
-> 
->      Setting sk->sk_net_refcnt=1 *manually* and *after* socket creation is not
->      only out of cifs scope, but also technically wrong -- it's set conditionally
->      based on user (=1) vs kernel (=0) sockets.  And net/ implementations
->      seem to base their user vs kernel space operations on it.
-> 
->      e.g. upon TCP socket close, the TCP timers are not cleared because
->      sk->sk_net_refcnt=1:
->      (cf. commit 151c9c724d05 ("tcp: properly terminate timers for
-> kernel sockets"))
-> 
->      net/ipv4/tcp.c:
->          void tcp_close(struct sock *sk, long timeout)
->          {
->              lock_sock(sk);
->              __tcp_close(sk, timeout);
->              release_sock(sk);
->              if (!sk->sk_net_refcnt)
->                      inet_csk_clear_xmit_timers_sync(sk);
->              sock_put(sk);
->          }
-> 
->      Which will throw a lockdep warning and then, as expected, deadlock on
->      tcp_write_timer().
-> 
->      A way to reproduce this is by running the reproducer from ef7134c7fc48
->      and then 'rmmod cifs'.  A few seconds later, the deadlock/lockdep
->      warning shows up.
-> 
->      Fix:
->      We shouldn't mess with socket internals ourselves, so do not set
->      sk_net_refcnt manually.
-> 
->      Also change __sock_create() to sock_create_kern() for explicitness.
-> 
->      As for non-init_net network namespaces, we deal with it the best way
->      we can -- hold an extra netns reference for server->ssocket and drop it
->      when it's released.  This ensures that the netns still exists whenever
->      we need to create/destroy server->ssocket, but is not directly tied to
->      it.
-> 
->      Fixes: ef7134c7fc48 ("smb: client: Fix use-after-free of network
-> namespace.")
-> 
-> 
-> --
-> Thanks,
-> 
-> Steve
-> 
-> 
-
+--nRYz62PYEOHq01AT--
