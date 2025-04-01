@@ -1,204 +1,143 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5F539461
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 19:28:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E82271E7C02;
+	Tue,  1 Apr 2025 19:28:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743535704; cv=none; b=MlX7w1vxnf0DQocYPtDD9af7zSGaA3XhnKoE4afUEJ1h9Th1Ky4LtYUKd0bfBAD6Qk4yrvjVlZSDhWaYSMuASi+cstMEeWqPKGeYf4k5LMY/BMku0CqFMWLMbGlJz2yrEU53zLMH9FBaiirpsURX0pfKGrRZndLOciSnUTtgql8=
+	t=1743535723; cv=none; b=h6HqXeEHvw11uSzzKYl7paJdd4f/lxbOZjlPwAidQR9vGn6mgmdbVqNSicI4QSpnkwnMnQKfTeV0LYwz1Qu73mTYUwVbKPtHYSZNuDDHOdYFU1aux2GRWDRMOF29CSjWbzXfHTS9pFEwQDEdHtoXfqLplYD/Nss9hhIes41ns9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743535704; c=relaxed/simple;
-	bh=BoO3X5sv35GYBzLBsKhBYN5I1B1lDr/gYUiTCSctubs=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=N0WxksLlxR0k64BIF9y/kulslGUtuwQC6Ju2hFNIJgl6TuUCfUJRexLzDWZBKL5rzYPj0kfOf2GScNyPam14duq00hWqsYTT4erO9EDKXvFLNimF5UZhvK7DIuAAHD0WEAxnduPN4dKuNGi1MCuV3SJ/jMg/ExiUEtrduvN3MWM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TBJs6vAc; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1743535723; c=relaxed/simple;
+	bh=MVpO4VaTcru+BmvxoHYy51uFa0XePQy4IVWWKC/dItU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=W6ISOwmoC4FFZPBS6NYPb7uq/+5KpswY4l3H3nMa9QfroGjw0ZM88rqLdwb/K7toe8kOtBV0zxqvWeiEZe6YhoSzhpuU66rLkwC7JrWyV71GbaINOFKWbIGhw9WJdvfIAuETnf0f13r6i1NZcG+Ob+DQXSdVYT7Fj+0Amh1lpU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=byeaJBNR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TBJs6vAc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743535703; x=1775071703;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version:content-transfer-encoding;
-  bh=BoO3X5sv35GYBzLBsKhBYN5I1B1lDr/gYUiTCSctubs=;
-  b=TBJs6vAcvrqq3P/0e5UnbcF64lFFwgq5Q8GznHpYcfN5nuk8tEo3Japo
-   7dwEUWvQxYrxAEcNTfkGRPGfDMb4x5KN5FDZuMwcCQ2Vh6g2HZEczAOyN
-   3Gy7+hTxDrn/LzhVr2gzjiKuBCCqOG6EvLmyF8EGJeDlQsuBKBTTyMP5E
-   On74F7flJWOw9nMwTQgBsER/xKDSjaqp7dDXQF82JKO4OgoxbguiW8xuY
-   hrXvbtUjQS7ZUcV3HoRTKsHz7f5286Z3xVhdmEPwvkduZ4eGxxXIfkqU6
-   SAGyqPgb/SGhr+z7vwLLoOh0aWecbz7peaD9X0LS+3YVjeIquF6CqJTuX
-   w==;
-X-CSE-ConnectionGUID: GciFQRfoREyPr2glI4iTjg==
-X-CSE-MsgGUID: aBFAfsNRS++biy4A9qIx/w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11391"; a="48746210"
-X-IronPort-AV: E=Sophos;i="6.14,294,1736841600"; 
-   d="scan'208";a="48746210"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2025 12:28:22 -0700
-X-CSE-ConnectionGUID: 7FkweBzBTBKclc8lK0FguA==
-X-CSE-MsgGUID: +7L/gaqXTxah024DgvSOig==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,294,1736841600"; 
-   d="scan'208";a="131678505"
-Received: from ncintean-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.246.7])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2025 12:28:19 -0700
-From: Jani Nikula <jani.nikula@linux.intel.com>
-To: Masahiro Yamada <masahiroy@kernel.org>, Linus Torvalds
- <torvalds@linux-foundation.org>
-Cc: Jason Gunthorpe <jgg@nvidia.com>, Dave Airlie <airlied@gmail.com>,
- dri-devel <dri-devel@lists.freedesktop.org>, LKML
- <linux-kernel@vger.kernel.org>
-Subject: Re: [git pull] drm for 6.15-rc1
-In-Reply-To: <CAK7LNAQThGkgtKgquRPv8Ysi_omedRthF1_++apKda-xWeWcbA@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <CAPM=9tyx=edsZ3ajuAUAv4vjfa=WNEzobqAsYbBTjCfLbuEeFQ@mail.gmail.com>
- <CAHk-=wjcdfrDTjzm6J6T-3fxtVyBG7a_0BXc2=mgOuM6KPFnCg@mail.gmail.com>
- <87h6394i87.fsf@intel.com> <Z-p2ii-N2-dd_HJ6@phenom.ffwll.local>
- <20250331133137.GA263675@nvidia.com> <87tt782htn.fsf@intel.com>
- <CAHk-=wiP0ea7xq2P3ryYs6xGWoqTw1E4jha67ZbJkaFrjqUdkQ@mail.gmail.com>
- <CAK7LNAQThGkgtKgquRPv8Ysi_omedRthF1_++apKda-xWeWcbA@mail.gmail.com>
-Date: Tue, 01 Apr 2025 22:28:16 +0300
-Message-ID: <87a58z3cmn.fsf@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="byeaJBNR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8892C4CEE5;
+	Tue,  1 Apr 2025 19:28:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743535720;
+	bh=MVpO4VaTcru+BmvxoHYy51uFa0XePQy4IVWWKC/dItU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=byeaJBNRrzh+RDHWOK3VOpW1obL/hnTlDiIvpTQ0a1s/wYR6PWSqBUzYXksg0eQid
+	 lgxY0Q0+sNREBFJKlhvruETVHYs2W3J4/XKTJpm9nh78TSQVAEa2XR8D5Cmdlb5cQy
+	 P7PYBizvRYC2a2Gtft/znwlhgxaVZtdaKEXC2mx1bSLWHOMLAcoI42BxOv76KPpRfO
+	 kFMfs6j2YnXGref7V8CP1vqJ19rKK1whdTrqHP5PRxlW6/vCZsOuvkdv79Wv4ufIIb
+	 FDDP/1hLsdPPncD7I+wZTM1oZwwUA9hkgRWXNLweHxGHTFHjzgMOHboZvnyLG/bKEg
+	 BYSo7CcVkjLFA==
+Date: Tue, 1 Apr 2025 12:28:33 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Charlie Jenkins <charlie@rivosinc.com>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Ben Dooks <ben.dooks@codethink.co.uk>,
+	Pasha Bouzarjomehri <pasha@rivosinc.com>,
+	Emil Renner Berthing <emil.renner.berthing@canonical.com>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Jason Baron <jbaron@akamai.com>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH v10 2/2] riscv: Add runtime constant support
+Message-ID: <20250401192833.GA3645424@ax162>
+References: <20250319-runtime_const_riscv-v10-0-745b31a11d65@rivosinc.com>
+ <20250319-runtime_const_riscv-v10-2-745b31a11d65@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250319-runtime_const_riscv-v10-2-745b31a11d65@rivosinc.com>
 
-On Wed, 02 Apr 2025, Masahiro Yamada <masahiroy@kernel.org> wrote:
-> On Wed, Apr 2, 2025 at 1:12=E2=80=AFAM Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
->>
->> On Tue, 1 Apr 2025 at 05:21, Jani Nikula <jani.nikula@linux.intel.com> w=
-rote:
->> >
->> > The header checks have existed for uapi headers before, including the,
->> > uh, turds, but apparently adding them in drm broke the camel's back.
->>
->> The uapi header test things never caused any problems for me [*],
->> because they don't actually pollute the source tree.
->>
->> Why? Because they all end up in that generated 'usr/include/' directory.
->>
->> So when I look at the source files, filename completion is entirely
->> unaffected, and it all works fine.
->>
->> Look, I can complete something like
->>
->>     include/uapi/asm-generic/poll.h
->>
->> perfectly fine, because there is *not* some generated turd that affects =
-it all.
->>
->> Because for the uapi files those hdrtest files end up being in
->>
->>     ./usr/include/asm-generic/poll.hdrtest
->>
->> and I never have any reason to really look at that subdirectory at
->> all, since it's all generated.
->>
->> Or put another way - if I _were_ to look at it, it would be exactly
->> because I want to see some generated file, in which case the 'hdrtest'
->> turd would be part of it.
->>
->> (Although I cannot recall that ever having actually happened, to be
->> honest - but looking at various header files is common, and I hit the
->> drm case immediately)
->>
->> Would you mind taking more of that uapi approach than creating that
->> hidden directory specific to the drm tree? Maybe this could *all* be
->> generalized?
->>
->>            Linus
->>
->> [*] I say "never caused any problems for me", but maybe it did way in
->> the past and it was fixed and I just don't recall. I have definitely
->> complained about pathname completion issues to people before.
->
-> I know you dislike this, and I NACKed this before (but too late):
-> https://lore.kernel.org/dri-devel/CAK7LNATHXwEkjJHP7b-ZmhzLfyyuOdsyimna-=
-=3Dr-sJk+DxigrA@mail.gmail.com/
->
-> Compile-testing UAPI headers is useful
-> (and I believe this is the only case where it is useful)
-> because userspace is independent of any CONFIG option,
-> and we have no control over the include order in
-> userspace programs.
->
-> In contrast, kernel-space headers are conditionally parsed,
-> depending on CONFIG options.
->
-> You dislike this feature for the reason of TAB-completion,
-> but I am negative about this feature from another perspective.
->
-> We cannot avoid a false-positive:
-> https://lore.kernel.org/all/20190718130835.GA28520@lst.de/
->
-> It is not <drm/*.h> but <linux/*.h>
-> However, it is annoying to make every header self-contained
-> "just because we are checking this".
+Hi Charlie,
 
-As I explained earlier in the thread, it's not *just* about the headers
-being self-contained. It's *also* about checking header guards and
-kernel-doc, maybe other things in the future.
+On Wed, Mar 19, 2025 at 11:35:20AM -0700, Charlie Jenkins wrote:
+> Implement the runtime constant infrastructure for riscv. Use this
+> infrastructure to generate constants to be used by the d_hash()
+> function.
+> 
+> This is the riscv variant of commit 94a2bc0f611c ("arm64: add 'runtime
+> constant' support") and commit e3c92e81711d ("runtime constants: add
+> x86 architecture support").
+> 
+> Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+> Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+...
+> diff --git a/arch/riscv/include/asm/runtime-const.h b/arch/riscv/include/asm/runtime-const.h
+...
+> +#define RISCV_RUNTIME_CONST_64_ZBA				\
+> +	".option push\n\t"					\
+> +	".option arch,+zba\n\t"					\
+> +	"slli	%[__tmp],%[__tmp],32\n\t"			\
+> +	"add.uw %[__ret],%[__ret],%[__tmp]\n\t"			\
+> +	"nop\n\t"						\
+> +	"nop\n\t"						\
+> +	".option pop\n\t"					\
+...
+> +#if defined(CONFIG_RISCV_ISA_ZBA) && defined(CONFIG_RISCV_ISA_ZBKB)
+...
+> +#elif defined(CONFIG_RISCV_ISA_ZBA)
+> +#define runtime_const_ptr(sym)						\
+> +({									\
+> +	typeof(sym) __ret, __tmp;					\
+> +	asm_inline(RISCV_RUNTIME_CONST_64_PREAMBLE			\
+> +		ALTERNATIVE(						\
+> +			RISCV_RUNTIME_CONST_64_BASE,			\
+> +			RISCV_RUNTIME_CONST_64_ZBA,			\
+> +			0, RISCV_ISA_EXT_ZBA, 1				\
+> +		)							\
+> +		RISCV_RUNTIME_CONST_64_POSTAMBLE(sym)			\
+> +		: [__ret] "=r" (__ret), [__tmp] "=r" (__tmp));		\
+> +	__ret;								\
+> +})
 
-If it's possible to do opt-in build checks for this, and catch all of
-these pre-merge, why shouldn't we? We can catch a whole class of build
-issues and bypass the subsequent fixes with this, and make life easier
-for us.
+This breaks the build for clang versions 16 and earlier because they do
+not support '.option arch' and it is used in CONFIG_RISCV_ISA_ZBA, which
+has no dependencies and it is default on.
 
-> Actually, it is not a real problem when the relevant
-> CONFIG option is disabled.
-> I did not interrupt him because he was doing this
-> checkunder drivers/gpu/drm/i915/.
-> ()
-> But, I am opposed to expanding it to more-global include/drm/,
-> or any other subsystem.
->
-> In my opinion, the right fix is
-> "git revert 62ae45687e43"
->
->
-> If we continue this, maybe leave a caution
-> in capital letters?
+  $ make -skj"$(nproc)" ARCH=riscv LLVM=1 mrproper defconfig fs/dcache.o
+  fs/dcache.c:117:9: warning: unknown option, expected 'push', 'pop', 'rvc', 'norvc', 'relax' or 'norelax' [-Winline-asm]
+          return runtime_const_ptr(dentry_hashtable) +
+                 ^
+  arch/riscv/include/asm/runtime-const.h:103:4: note: expanded from macro 'runtime_const_ptr'
+                          RISCV_RUNTIME_CONST_64_ZBA,                     \
+                          ^
+  arch/riscv/include/asm/runtime-const.h:57:17: note: expanded from macro 'RISCV_RUNTIME_CONST_64_ZBA'
+          ".option push\n\t"                                      \
+                         ^
+  <inline asm>:32:10: note: instantiated into assembly here
+          .option arch,+zba
+                  ^
+  fs/dcache.c:117:9: error: instruction requires the following: 'Zba' (Address Generation Instructions)
+          return runtime_const_ptr(dentry_hashtable) +
+                 ^
+  arch/riscv/include/asm/runtime-const.h:103:4: note: expanded from macro 'runtime_const_ptr'
+                          RISCV_RUNTIME_CONST_64_ZBA,                     \
+                          ^
+  arch/riscv/include/asm/runtime-const.h:59:30: note: expanded from macro 'RISCV_RUNTIME_CONST_64_ZBA'
+          "slli   %[__tmp],%[__tmp],32\n\t"                       \
+                                        ^
+  <inline asm>:34:2: note: instantiated into assembly here
+          add.uw a2,a2,a3
+          ^
+  ...
 
-Or maybe let the subsystem and driver maintainers decide?
+  $ rg 'OPTION_ARCH|ZBA' .config
+  364:CONFIG_RISCV_ISA_ZBA=y
 
-I don't think there's a *single* header under include/drm where them
-being self-contained depends on a config option. I'm sure there are
-plenty in include/linux, but I wouldn't say they *all* do.
+Should it grow a dependency on AS_HAS_OPTION_ARCH or should there be a
+different fix?
 
-Maybe help and support us in generalizing this in scripts/Makefile.build
-to avoid the boilerplate, and make Linus happy, instead of trying to
-block us from having nice things? Please?
-
-
-BR,
-Jani.
-
-
->
->
-> diff --git a/include/Kbuild b/include/Kbuild
-> index 5e76a599e2dd..4dff23ae51a4 100644
-> --- a/include/Kbuild
-> +++ b/include/Kbuild
-> @@ -1 +1,3 @@
-> +# The drm subsystem is strict about the self-containedness of header fil=
-es.
-> +# OTHER SUBSYSTEMS SHOULD NOT FOLLOW THIS PRACTICE.
->  obj-$(CONFIG_DRM_HEADER_TEST)  +=3D drm/
->
->
->
-> --
-> Best Regards
->
-> Masahiro Yamada
-
---=20
-Jani Nikula, Intel
+Cheers,
+Nathan
