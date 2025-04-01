@@ -1,259 +1,145 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1CE8204F6B;
-	Tue,  1 Apr 2025 22:03:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83122F4ED;
+	Tue,  1 Apr 2025 22:04:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743545001; cv=none; b=o7pb2VAhaeWH53cbIOz0XNYCC3yaK5utcuOGSFXeXmQQNrId0CxKGbJbgVLyQ0RerHl7byYcEsc318qHmkLznw40myo8gEzvmlNtcJTzXc0ylwOW1CVN15fcO7/X9/sqmYsnZCO0wsOsNWubD+iohV1szeqAIOw89iNI6NGMEqo=
+	t=1743545065; cv=none; b=aNIm+hjprvRmjPEKha2LurscRWghkQY+ZG8r8bdCw0WK1NukdXHdWcpaN7NdHMxn7Rn2Z5Jk0q58xzCIMdF6Uxgu+cPVP0eIaDNFUH26ZpxybsDWN09gDKrSt1eMbWu5jvmHR9PIhtg+yJJ124ivBpPy4iZGmt6/ZrpNrgNWB0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743545001; c=relaxed/simple;
-	bh=u/p4PqHWWDv4YOPhMDDi1O7bZreu7QjIV1UjU9GXshI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IJE4jKXnlqfa6ChBl9PuRTrdEZCUkttAwAwBv4/o0cUMAGLK/3BsMJAYzR3ynksxzB0XkWDft64+xCxpalqQbD+IDjOwsGQ5S0wo5EEQg/LLrFM66si+oli2JyMLjfT5VUJQ58wAb6g2Wx0kUj9OU6T616DvavEN0OWnIQkefEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Toh5IroY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743545065; c=relaxed/simple;
+	bh=kNeM3AfjvmVAgQkPZnV5x2QcbPKtM5Qu243dN60BN7w=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=h1l2flO/uVl9B+Ta2G3yOln73FYiJSiC2hC0frXFce/nyOw2DkyYs0Egu3EtJCa/aY0Y4vk1dCA8SLxToMy+a9qwkOJxN93FINfwp/UkPk7xcrsYrnD887ehalpUFMSoXjocFB040AtotFHACfEJpv6Ny9z71l6IZ1WfGBjfeYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eFuyc1Em; arc=none smtp.client-ip=209.85.216.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Toh5IroY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B546BC4CEE4;
-	Tue,  1 Apr 2025 22:03:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743545000;
-	bh=u/p4PqHWWDv4YOPhMDDi1O7bZreu7QjIV1UjU9GXshI=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Toh5IroYbHDD+2vBRQwub37S21UKmZ6Yt3v9SP9hdQVbDdxBDBoii5xppnmxqpbt1
-	 1f2OzXhhw4CQqwLopD1G2aIz/5ykZPO+qLd38LQ027wGSK/+EgFy21aDFPcMPSpjW7
-	 OWqKQlbF/nOd7cpf20oE7iP0p/t/sqyVMIqJHUUgoEFEI/SCZroyTPg3rsvMac2pCM
-	 UdIxs6zbIYnWgReTIngDqjdEK9kKbsaMo3L2ib0ap7aI2kjp+6FmqJ1l6ny9lJpj5z
-	 mjvfJ6zJxNEucDAJi28Ot3ifls66cje+qljKJdX7kx4p4a+FqCv5wSZTvk1yk1HiMo
-	 NpuVHCMNmQbNw==
-From: Eric Biggers <ebiggers@kernel.org>
-To: linux-nfs@vger.kernel.org,
-	Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>
-Cc: Neil Brown <neilb@suse.de>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] nfs: add missing selections of CONFIG_CRC32
-Date: Tue,  1 Apr 2025 15:02:21 -0700
-Message-ID: <20250401220221.22040-1-ebiggers@kernel.org>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eFuyc1Em"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-30549dacd53so474776a91.1;
+        Tue, 01 Apr 2025 15:04:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743545064; x=1744149864; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LYYJD7xkUBqu9ap/Y96qrO8h5YwCvqqRfC+EFJyEBAQ=;
+        b=eFuyc1Em0B5EQZUvQ5jprAr6RioGUozOJvEA5mARQyY1iFbo1jeF53tGmHW6QXdDI/
+         1D0q9iGu2WF7hdm7LWTEhgiWhU062ZeuoNrZP/3l/5mE2/87nPb/fXWQQ1XhuPvxmjWu
+         ADAPNF1Qzab1ULt4ggoMbPtQ4eoXyBmWGaamQandkEuQSp88rpubiqM9EMgyV2Ac8w4Z
+         L+/W13Hi7+1ayyE3M88yP6ZlOCf1kMLXPhsMuEc9Y+zX1BEbaSjW968PS+xRGW8TBUpL
+         +QZDa4z4Rd0iLPHG2q1VktP7T95Poq4QB26xJKCNBRTW6h8cA4WUkdG97vsAQsf5hfev
+         zD0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743545064; x=1744149864;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LYYJD7xkUBqu9ap/Y96qrO8h5YwCvqqRfC+EFJyEBAQ=;
+        b=M26urWfaNqYfUZ//AwhqK24M7TWeZcRIqipAnxBOxDPjBvCSVWie/uZ7iVHADcFRGl
+         sGbx9c8wVb7/id1VpP3rUEPqw3ZTmjpEoboaB/hqHpPlsEkH1+HzbWJqntwVY7EJ4xLc
+         3JK/WgYxI6LN8bKR2Hbk5Vbv3+WeYfqSl+s714RyKx+BDox+GBxT0uPlTez0gcoFoB8c
+         nTjowuC7cPAOvvMdSApHhWkKaN9sPBtIrFjhbTAfhy3/32SlbpNaLv9D9R6xlcVT4YKc
+         vd/P8bmtlifCnSdXYEeI9U1svOXNMcNsw2jmbPP5XO064sZaqmDPiBBZnSeZX/m9Gc9y
+         3fMg==
+X-Forwarded-Encrypted: i=1; AJvYcCU4knnvsneR3Iapm/8TDMnEnOCWyefEjJs4ne85VX/v4fKYUuv3EEZQUVjQpFXbPrr3iNCXkXZi15IqQq5a@vger.kernel.org, AJvYcCUfkdKHvEdKTAIOsaxtx4lZV6+Jx9TzNZ0bjbx0KMUvTfX55mpfp1foEDOs46Zh6sW6M6RyZhkZtwMlZzW0XNkWisoC@vger.kernel.org, AJvYcCWjB23GvB9xBRnDCA39cFiSQ6alZoKZpxCGbMhTa0dCC4JxM5hG9QFUGJPcIlE8sKEFIRI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJeptK1DfBArRhXX2BxsjS9ERKylWNggw4DcADI3SShlquRVLh
+	q/yKuOcxPsdPMJqBYegbl9fP+grlHfWIxNR6/48WmwiDi2WO06Ivcy8qyfUF8XVQsF8IUNzQ/UJ
+	nMOqa4nnT7gA7dBC0BjSPfUykKAQ=
+X-Gm-Gg: ASbGncuXKfjieZC5Us6ztaKZBSJDuOZvvEQ4cwYUMlexjbAJmb9MNihGjn5vK1JcfpD
+	R5CGr6l91aZGK5XSME4IoOBfln9UcJNwwv+D0UF4qBA/YfuxOD08LFEsrrxCd81AVosronrphIp
+	gOZtLD3pZBUDS0/kvrchsYKZR2nViY8459Pkq5xcfMNw==
+X-Google-Smtp-Source: AGHT+IH61ZC+ygiGLUwoWNS9qjFPvZFm8o+P28rd4NNUJn+1Mq/jAQo0sDEThx6KTrPqjsKiXrLNfDZkPmd/cVWkhRA=
+X-Received: by 2002:a17:90b:51cd:b0:2fa:603e:905c with SMTP id
+ 98e67ed59e1d1-3056b6b84c7mr2262676a91.2.1743545063643; Tue, 01 Apr 2025
+ 15:04:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250401184021.2591443-1-andrii@kernel.org> <20250401173249.42d43a28@gandalf.local.home>
+In-Reply-To: <20250401173249.42d43a28@gandalf.local.home>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Tue, 1 Apr 2025 15:04:11 -0700
+X-Gm-Features: AQ5f1Jr1cQJuU0xbDn4ROMgihO8o5vD3rAc_UvCumbOLWLOzqP9DNWn-HVzWBf4
+Message-ID: <CAEf4BzYB1dvFF=7x-H3UDo4=qWjdhOO1Wqo9iFyz235u+xp9+g@mail.gmail.com>
+Subject: Re: [PATCH] exit: add trace_task_exit() tracepoint before current->mm
+ is reset
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org, 
+	peterz@infradead.org, mingo@kernel.org, bpf@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, kernel-team@meta.com, mhocko@kernel.org, 
+	oleg@redhat.com, brauner@kernel.org, glider@google.com, mhiramat@kernel.org, 
+	mathieu.desnoyers@efficios.com, akpm@linux-foundation.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Eric Biggers <ebiggers@google.com>
+On Tue, Apr 1, 2025 at 2:31=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org>=
+ wrote:
+>
+> On Tue,  1 Apr 2025 11:40:21 -0700
+> Andrii Nakryiko <andrii@kernel.org> wrote:
+>
+> Hi Andrii,
+>
+> > It is useful to be able to access current->mm to, say, record a bunch o=
+f
+> > VMA information right before the task exits (e.g., for stack
+> > symbolization reasons when dealing with short-lived processes that exit
+> > in the middle of profiling session). We currently do have
+> > trace_sched_process_exit() in the exit path, but it is called a bit too
+> > late, after exit_mm() resets current->mm to NULL, which makes it
+> > unsuitable for inspecting and recording task's mm_struct-related data
+> > when tracing process lifetimes.
+>
+> My fear of adding another task exit trace event is that it will get a
+> bit confusing as that we now have trace_sched_process_exit() and also
+> trace_task_exit() with slightly different semantics.
+>
+> How about adding a trace_exit_mm()? Add that to the exit_mm() code?
 
-nfs.ko, nfsd.ko, and lockd.ko all use crc32_le(), which is available
-only when CONFIG_CRC32 is enabled.  But the only NFS kconfig option that
-selected CONFIG_CRC32 was CONFIG_NFS_DEBUG, which is client-specific and
-did not actually guard the use of crc32_le() even on the client.
+This is kind of the worst of both worlds, no? We still have a new
+tracepoint, but this one can't tell if it's a `group_dead` situation
+or not... I can pass group_dead into exit_mm(), but it will be just
+for the sake of that new tracepoint.
 
-The code worked around this bug by only actually calling crc32_le() when
-CONFIG_CRC32 is built-in, instead hard-coding '0' in other cases.  This
-avoided randconfig build errors, and in real kernels the fallback code
-was unlikely to be reached since CONFIG_CRC32 is 'default y'.  But, this
-really needs to just be done properly, especially now that I'm planning
-to update CONFIG_CRC32 to not be 'default y'.
+How bad would it be to just move trace_sched_process_exit() then? (and
+add group_dead there, as you mentioned)?
 
-Therefore, make CONFIG_NFS_FS, CONFIG_NFSD, and CONFIG_LOCKD select
-CONFIG_CRC32.  Then remove the fallback code that becomes unnecessary,
-as well as the selection of CONFIG_CRC32 from CONFIG_NFS_DEBUG.
-
-Fixes: 1264a2f053a3 ("NFS: refactor code for calculating the crc32 hash of a filehandle")
-Signed-off-by: Eric Biggers <ebiggers@google.com>
----
- fs/Kconfig           | 1 +
- fs/nfs/Kconfig       | 2 +-
- fs/nfs/internal.h    | 7 -------
- fs/nfs/nfs4session.h | 4 ----
- fs/nfsd/Kconfig      | 1 +
- fs/nfsd/nfsfh.h      | 7 -------
- include/linux/nfs.h  | 7 -------
- 7 files changed, 3 insertions(+), 26 deletions(-)
-
-diff --git a/fs/Kconfig b/fs/Kconfig
-index c718b2e2de0e..5b4847bd2fbb 100644
---- a/fs/Kconfig
-+++ b/fs/Kconfig
-@@ -366,10 +366,11 @@ config GRACE_PERIOD
- 	tristate
- 
- config LOCKD
- 	tristate
- 	depends on FILE_LOCKING
-+	select CRC32
- 	select GRACE_PERIOD
- 
- config LOCKD_V4
- 	bool
- 	depends on NFSD || NFS_V3
-diff --git a/fs/nfs/Kconfig b/fs/nfs/Kconfig
-index d3f76101ad4b..07932ce9246c 100644
---- a/fs/nfs/Kconfig
-+++ b/fs/nfs/Kconfig
-@@ -1,9 +1,10 @@
- # SPDX-License-Identifier: GPL-2.0-only
- config NFS_FS
- 	tristate "NFS client support"
- 	depends on INET && FILE_LOCKING && MULTIUSER
-+	select CRC32
- 	select LOCKD
- 	select SUNRPC
- 	select NFS_COMMON
- 	select NFS_ACL_SUPPORT if NFS_V3_ACL
- 	help
-@@ -194,11 +195,10 @@ config NFS_USE_KERNEL_DNS
- 	default y
- 
- config NFS_DEBUG
- 	bool
- 	depends on NFS_FS && SUNRPC_DEBUG
--	select CRC32
- 	default y
- 
- config NFS_DISABLE_UDP_SUPPORT
-        bool "NFS: Disable NFS UDP protocol support"
-        depends on NFS_FS
-diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
-index 1ac1d3eec517..0d6eb632dfcf 100644
---- a/fs/nfs/internal.h
-+++ b/fs/nfs/internal.h
-@@ -897,22 +897,15 @@ static inline
- u64 nfs_timespec_to_change_attr(const struct timespec64 *ts)
- {
- 	return ((u64)ts->tv_sec << 30) + ts->tv_nsec;
- }
- 
--#ifdef CONFIG_CRC32
- static inline u32 nfs_stateid_hash(const nfs4_stateid *stateid)
- {
- 	return ~crc32_le(0xFFFFFFFF, &stateid->other[0],
- 				NFS4_STATEID_OTHER_SIZE);
- }
--#else
--static inline u32 nfs_stateid_hash(nfs4_stateid *stateid)
--{
--	return 0;
--}
--#endif
- 
- static inline bool nfs_error_is_fatal(int err)
- {
- 	switch (err) {
- 	case -ERESTARTSYS:
-diff --git a/fs/nfs/nfs4session.h b/fs/nfs/nfs4session.h
-index 351616c61df5..f9c291e2165c 100644
---- a/fs/nfs/nfs4session.h
-+++ b/fs/nfs/nfs4session.h
-@@ -146,20 +146,16 @@ static inline void nfs4_copy_sessionid(struct nfs4_sessionid *dst,
- 		const struct nfs4_sessionid *src)
- {
- 	memcpy(dst->data, src->data, NFS4_MAX_SESSIONID_LEN);
- }
- 
--#ifdef CONFIG_CRC32
- /*
-  * nfs_session_id_hash - calculate the crc32 hash for the session id
-  * @session - pointer to session
-  */
- #define nfs_session_id_hash(sess_id) \
- 	(~crc32_le(0xFFFFFFFF, &(sess_id)->data[0], sizeof((sess_id)->data)))
--#else
--#define nfs_session_id_hash(session) (0)
--#endif
- #else /* defined(CONFIG_NFS_V4_1) */
- 
- static inline int nfs4_init_session(struct nfs_client *clp)
- {
- 	return 0;
-diff --git a/fs/nfsd/Kconfig b/fs/nfsd/Kconfig
-index 792d3fed1b45..731a88f6313e 100644
---- a/fs/nfsd/Kconfig
-+++ b/fs/nfsd/Kconfig
-@@ -2,10 +2,11 @@
- config NFSD
- 	tristate "NFS server support"
- 	depends on INET
- 	depends on FILE_LOCKING
- 	depends on FSNOTIFY
-+	select CRC32
- 	select LOCKD
- 	select SUNRPC
- 	select EXPORTFS
- 	select NFS_COMMON
- 	select NFS_ACL_SUPPORT if NFSD_V2_ACL
-diff --git a/fs/nfsd/nfsfh.h b/fs/nfsd/nfsfh.h
-index 876152a91f12..5103c2f4d225 100644
---- a/fs/nfsd/nfsfh.h
-+++ b/fs/nfsd/nfsfh.h
-@@ -265,11 +265,10 @@ static inline bool fh_fsid_match(const struct knfsd_fh *fh1,
- 	if (memcmp(fh1->fh_fsid, fh2->fh_fsid, key_len(fh1->fh_fsid_type)) != 0)
- 		return false;
- 	return true;
- }
- 
--#ifdef CONFIG_CRC32
- /**
-  * knfsd_fh_hash - calculate the crc32 hash for the filehandle
-  * @fh - pointer to filehandle
-  *
-  * returns a crc32 hash for the filehandle that is compatible with
-@@ -277,16 +276,10 @@ static inline bool fh_fsid_match(const struct knfsd_fh *fh1,
-  */
- static inline u32 knfsd_fh_hash(const struct knfsd_fh *fh)
- {
- 	return ~crc32_le(0xFFFFFFFF, fh->fh_raw, fh->fh_size);
- }
--#else
--static inline u32 knfsd_fh_hash(const struct knfsd_fh *fh)
--{
--	return 0;
--}
--#endif
- 
- /**
-  * fh_clear_pre_post_attrs - Reset pre/post attributes
-  * @fhp: file handle to be updated
-  *
-diff --git a/include/linux/nfs.h b/include/linux/nfs.h
-index 9ad727ddfedb..0906a0b40c6a 100644
---- a/include/linux/nfs.h
-+++ b/include/linux/nfs.h
-@@ -53,11 +53,10 @@ enum nfs3_stable_how {
- 
- 	/* used by direct.c to mark verf as invalid */
- 	NFS_INVALID_STABLE_HOW = -1
- };
- 
--#ifdef CONFIG_CRC32
- /**
-  * nfs_fhandle_hash - calculate the crc32 hash for the filehandle
-  * @fh - pointer to filehandle
-  *
-  * returns a crc32 hash for the filehandle that is compatible with
-@@ -65,12 +64,6 @@ enum nfs3_stable_how {
-  */
- static inline u32 nfs_fhandle_hash(const struct nfs_fh *fh)
- {
- 	return ~crc32_le(0xFFFFFFFF, &fh->data[0], fh->size);
- }
--#else /* CONFIG_CRC32 */
--static inline u32 nfs_fhandle_hash(const struct nfs_fh *fh)
--{
--	return 0;
--}
--#endif /* CONFIG_CRC32 */
- #endif /* _LINUX_NFS_H */
-
-base-commit: 91e5bfe317d8f8471fbaa3e70cf66cae1314a516
--- 
-2.49.0
-
+>
+> static void exit_mm(void)
+> {
+>         struct mm_struct *mm =3D current->mm;
+>
+>         exit_mm_release(current, mm);
+>         trace_exit_mm(mm);
+>
+> ??
+>
+> >
+> > There is a particularly suitable place, though, right after
+> > taskstats_exit() is called, but before we do exit_mm(). taskstats
+> > performs a similar kind of accounting that some applications do with
+> > BPF, and so co-locating them seems like a good fit.
+> >
+> > Moving trace_sched_process_exit() a bit earlier would solve this proble=
+m
+> > as well, and I'm open to that. But this might potentially change its
+> > semantics a little, and so instead of risking that, I went for adding
+> > a new trace_task_exit() tracepoint instead. Tracepoints have zero
+> > overhead at runtime, unless actively traced, so this seems acceptable.
+> >
+> > Also, existing trace_sched_process_exit() tracepoint is notoriously
+> > missing `group_dead` flag that is certainly useful in practice and some
+> > of our production applications have to work around this. So plumb
+> > `group_dead` through while at it, to have a richer and more complete
+> > tracepoint.
+>
+> There should be no problem adding group_dead to the
+> trace_sched_process_exit() trace event. Adding fields should never cause
+> any user API breakage.
+>
+> -- Steve
+>
