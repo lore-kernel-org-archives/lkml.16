@@ -1,25 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BC141E5B93;
-	Tue,  1 Apr 2025 21:52:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 333061EF390;
+	Tue,  1 Apr 2025 21:52:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743544352; cv=none; b=tFaNxF/QI+yf3utwwu3lpWbeFXNsbNxzKMtZonech6jX7VpO/s24gYRFaskzL1Mwusp4Gg0ewJvTanKSpRL0pDZDLcypDXNfUnkdKhLeVRER79Hq22OAkonHmzxWwg04mrarjhZnU5EAPGDFXgVMNraZdIFDU34SmiQ2VqDGgH4=
+	t=1743544352; cv=none; b=fv8NWvB2sxGib78lyGJ6WZlLeyscpnPJvt1fQSv3+4iXb1kIVC9ryd+WY8ocO14e/eaZv/XSIviHiT7BkaprTY2Il73WIkv1MEcrYSVl/VWqbWffKJj0NHJKb/B/bHTDTdrWAKJ7XWQIB3efoSZdFcC8Zz5kvcIV/Tj+br1Ahlk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1743544352; c=relaxed/simple;
-	bh=zTiEvmWuhZML2k/GukJVWo/rVOq+9i7uiMMvaK10dMo=;
-	h=Message-ID:Date:From:To:Cc:Subject; b=cgUlM0mcP598L6odDOOtRIG6Qk0HGFbI5ELMrEmFYlSOE0PMGuGi7XYT9CzT9euJzVUYRcBDeWltRdLqVNpkG9wInFaln4bvGZhy3leDGiavd0KfCajD37jhz8xn+LbgDUa266uyj2rzxhhbEzOYRsLk5JfmuK6mamrv4wV0qtw=
+	bh=VVGWqO0rzDMb+s8nP/lH2okTAPFnAxC1NyA5C3vFxbM=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=UF8zJW1kuGgDt5RHdCCm6C/2dpakx9v9mlk88MDZMDA2+GVxlTN2XfL77pv+cVs4K0pcpK8ZN9m7JvA17RWtFbxT0RfU0ZOQKSp1ZDLKgwWzMqfQpWhKPVWftw1p81FConHZ/aX1EbXtzV2ghUAnpo4q64Vg7DEDp2SvpfX61z0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8374CC4CEE4;
-	Tue,  1 Apr 2025 21:52:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18D3CC4CEF2;
+	Tue,  1 Apr 2025 21:52:32 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1tzjY5-00000006Jts-0xY5;
+	id 1tzjY5-00000006Jvq-3qPG;
 	Tue, 01 Apr 2025 17:53:33 -0400
-Message-ID: <20250401215115.602501043@goodmis.org>
+Message-ID: <20250401215333.766290625@goodmis.org>
 User-Agent: quilt/0.68
-Date: Tue, 01 Apr 2025 17:51:15 -0400
+Date: Tue, 01 Apr 2025 17:51:19 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -31,73 +32,70 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>,
  Vincent Donnefort <vdonnefort@google.com>,
  Vlastimil Babka <vbabka@suse.cz>,
  Mike Rapoport <rppt@kernel.org>,
- Jann Horn <jannh@google.com>
-Subject: [PATCH v4 0/4] tracing: Clean up persistent ring buffer code (was: ring-buffer: Allow persistent memory to be user space mmapped)
+ Jann Horn <jannh@google.com>,
+ stable@vger.kernel.org
+Subject: [PATCH v4 4/4] ring-buffer: Use flush_kernel_vmap_range() over flush_dcache_folio()
+References: <20250401215115.602501043@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 
+From: Steven Rostedt <rostedt@goodmis.org>
 
-[
-  Note, this does not include the update to allow the persistent
-  ring buffer to be memory mapped to user space. This is only the
-  4 patches that I feel makes the code more correct and also
-  has a bug fix.
-]
+Some architectures do not have data cache coherency between user and
+kernel space. For these architectures, the cache needs to be flushed on
+both the kernel and user addresses so that user space can see the updates
+the kernel has made.
 
-Now that I learned that the memory passed back from reserve_mem is part
-of the memory allocator and just "reserved" and the memory is already
-virtually mapped, it can simply use phys_to_virt() on the physical memory
-that is returned to get the virtual mapping for that memory!
-  (Thanks Mike!)
+Instead of using flush_dcache_folio() and playing with virt_to_folio()
+within the call to that function, use flush_kernel_vmap_range() which
+takes the virtual address and does the work for those architectures that
+need it.
 
-That makes things much easier, especially since it means that the memory
-returned by reserve_mem is no different than the memory retrieved by
-page_alloc(). This allows that memory to be memory mapped to user space
-no differently than it is mapped by the normal buffer.
+This also fixes a bug where the flush of the reader page only flushed one
+page. If the sub-buffer order is 1 or more, where the sub-buffer size
+would be greater than a page, it would miss the rest of the sub-buffer
+content, as the "reader page" is not just a page, but the size of a
+sub-buffer.
 
-This new series does the following:
+Link: https://lore.kernel.org/all/CAG48ez3w0my4Rwttbc5tEbNsme6tc0mrSN95thjXUFaJ3aQ6SA@mail.gmail.com/
 
-- Enforce the memory mapping is page aligned (both the address and the
-  size). If not, it errors out.
+Cc: stable@vger.kernel.org
+Fixes: 117c39200d9d7 ("ring-buffer: Introducing ring-buffer mapping functions");
+Suggested-by: Jann Horn <jannh@google.com>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/ring_buffer.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-- Use phys_to_virt() to get to the virtual memory from the reserve_mem
-  returned addresses. Also use free_reserved_area() to give it
-  back to the buddy allocator when it is freed.
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index d8d7b28e2c2f..c0f877d39a24 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -6016,7 +6016,7 @@ static void rb_update_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
+ 	meta->read = cpu_buffer->read;
+ 
+ 	/* Some archs do not have data cache coherency between kernel and user-space */
+-	flush_dcache_folio(virt_to_folio(cpu_buffer->meta_page));
++	flush_kernel_vmap_range(cpu_buffer->meta_page, PAGE_SIZE);
+ }
+ 
+ static void
+@@ -7319,7 +7319,8 @@ int ring_buffer_map_get_reader(struct trace_buffer *buffer, int cpu)
+ 
+ out:
+ 	/* Some archs do not have data cache coherency between kernel and user-space */
+-	flush_dcache_folio(virt_to_folio(cpu_buffer->reader_page->page));
++	flush_kernel_vmap_range(cpu_buffer->reader_page->page,
++				buffer->subbuf_size + BUF_PAGE_HDR_SIZE);
+ 
+ 	rb_update_meta_page(cpu_buffer);
+ 
+-- 
+2.47.2
 
-- Treat the buffer allocated via memmap differently. It still needs to
-  be virtually mapped (cannot use phys_to_virt) and it must not be
-  freed nor memory mapped to user space. A new flag is added when a buffer
-  is created this way to prevent it from ever being memory mapped to user
-  space and the ref count is upped so that it can never be freed.
-
-- Use vmap_page_range() instead of using kmalloc_array() to create an array
-  of struct pages for vmap().
-
-- Use flush_kernel_vmap_range() instead of flush_dcache_folio()
-
-Changes since v3: https://lore.kernel.org/linux-trace-kernel/20250401202549.409271454@goodmis.org/
-
-- Fix whitespace in patch 3
-
-- Updated change log of patch 4 to include bug fix comment
-
-- Removed the patch that enables persistent ring buffer from being
-  memory mapped to user space. That will be done in the next merge window.
-
-Steven Rostedt (4):
-      tracing: Enforce the persistent ring buffer to be page aligned
-      tracing: Have reserve_mem use phys_to_virt() and separate from memmap buffer
-      tracing: Use vmap_page_range() to map memmap ring buffer
-      ring-buffer: Use flush_kernel_vmap_range() over flush_dcache_folio()
-
-----
- Documentation/admin-guide/kernel-parameters.txt |  2 +
- Documentation/trace/debugging.rst               |  2 +
- kernel/trace/ring_buffer.c                      |  5 +-
- kernel/trace/trace.c                            | 73 +++++++++++++++++--------
- kernel/trace/trace.h                            |  1 +
- 5 files changed, 58 insertions(+), 25 deletions(-)
 
