@@ -1,308 +1,261 @@
-Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F19C9204C06
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 13:34:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40666204C22
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 13:34:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743514483; cv=none; b=tPD4dvzFLecGZ2mOr/Ywavm6nxwCANpGGllqev3Nm62jhfCFhimE1pe0xrOHhgfdY/91sMAui44czOHFQf68tqwV7tQ/RjZU5Pn6xZKgrUCOjkSO+gPRVbgParqvW4/sEWv3RHw/WTrDPwJKVfF3krtrGEHZFl20cVrFdyxulp4=
+	t=1743514487; cv=none; b=iUSmfE3n1Wi6Wjp6DEQVJY+EKJ+bOMYoghQMuvtE0mdVYfvQpfjNpZGEBEe1wy1q/XNffjkDLlDmU0LQu2Jiz67ka4VBoUXRkT1VzMYqNAQiy6RQcSFBxyvsG3GVmT3s2VP79pOLZJ2tYEPBoZVTGFBUvuNR+H3Q8J/+4m0IxHA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743514483; c=relaxed/simple;
-	bh=13dN6LyMDIRJPZtbLc4Qnlwfujaf8mnCxnGVXar+9i0=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=pazcEQkQJYUhlPAOz3fwPg49FrPTTAfpzltGZE62FI2LGEEx0HdTG8RcejraeT/WKz1xw/EYqA+cjIX1GnjGyIRcI9kAzl0mlwCPIqO8PGNHjssQokUDMyYzvUd6fukDRA4gXHorogudobW7YKPwkLQGJDES6n0HL2K3qMAAQag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QwueR8CX; arc=none smtp.client-ip=209.85.128.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
+	s=arc-20240116; t=1743514487; c=relaxed/simple;
+	bh=QuCzUjUOshwjUX4J/+q/WQAOdCCMqucsOFnCotlLctY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DvwBF9Yyjz9PiXu0AJId4qIcnG1UOiJkQ2gTR7Ly5AhOw6cgXL9HELqNMw3Ufe8hWnFJnWJH6itLo4fZSOjuHhbzLI0I4fKS58YPoMfrLipC7U/fc/rq4ipY53ZopYrCuq99ZkApsafgpjrBTzusX0dApZZAUY4Y5T0FvcuTyHw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gEEI45fi; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QwueR8CX"
-Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-43ceb011ea5so39710685e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 06:34:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743514479; x=1744119279; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=iwpNwL234IC9yWIvSwlZhIgKkylOGfUY/NpW29/ZOa0=;
-        b=QwueR8CXE1SHDXlMcssYhXj9RaibADn4mGnqJICY/KwI20FhSua7niARSlPKhVvhZp
-         zAUMeZC49YZ/KUhutUZDXFdMnk0Ekl3uKt1wsMctwtl/LUYQwD//quAS4M8JhFBU9Oqu
-         /yY+yoEu0T41n0gqQs/ZA+OFvUV7PS2REsLmpAmB6MO4AUSiljQ6raRsH2fhbakaY+Vz
-         45uehrYRKMmAWFBQUjtFviYl2AXZwsVwQVoe0bfCjiZnhhY6riwnd0BV6iamCN1meiPC
-         vAT98+qM6SkvENKDLrepy23uT40hksxvVdsj60/HCGNIG+FKLGXkNWcVduZnIOJ90LUJ
-         f2sA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gEEI45fi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743514484;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5+voR8HB3cFzC8hIZVmJtHdmZr9+pgk6E3+WKAMDtKw=;
+	b=gEEI45fiRDbYUx7DMFbVexz455v0mg1eSq0xfjGY4K7EjQN73w/ZsKJxPCvsoQLCWr/tyU
+	2sit8USmnIjYK2LpzxZb75aV3MtV/QVtemZF+2IJialztdKg9bQOeGavJIvVP8ibRRpBCD
+	3+Loc+dBRKB08QyDtrQKFXNpHIEDp1Y=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-264-ZhS8VEUdOrai6moVaifVwg-1; Tue, 01 Apr 2025 09:34:42 -0400
+X-MC-Unique: ZhS8VEUdOrai6moVaifVwg-1
+X-Mimecast-MFC-AGG-ID: ZhS8VEUdOrai6moVaifVwg_1743514482
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-ac3d89cc4f3so428407266b.2
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 06:34:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743514479; x=1744119279;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=iwpNwL234IC9yWIvSwlZhIgKkylOGfUY/NpW29/ZOa0=;
-        b=u28vQaBIYy0Ta4IzxY9nLqHZiOfhZiAdLqgqBqgXET2/z7LoaWgnJdJS1gKW3aadev
-         783/9ChXQKpbovn7IK3GnahNqZqGtVY4szcAx6D+Z5kuPICITYZTuBv+khT6h81w4KOA
-         3eV+nNkc4Jt1fwYJ0tzOQZu6lpqatiahlOeotTX1O7Lv6Xmh4vZHsm6t+ikmHsd6WhAn
-         cwUt4oN1tbhVSslIfWKCbt1H+ggnVVZZDlp9gzfR9yY551nH5YuV3zMABr3xyX/h3jCA
-         ARCoutZgpBJtkZiZ+8nm1mnItWh3Nmee/TIBIX+kb6ks0JiDKhx1BJPVH/vl6iMJxVDc
-         mLNQ==
-X-Gm-Message-State: AOJu0YwdssF5c3oJjkEM5u3NXnYYg6lGCx9DjSOC75shXykwTNjbDyQn
-	1WP6vEGN7G00cx4M3VXrD/Mkm4LlQU/K68eDtcKMfsF00sP/VSJdNAVMKYvIULMw7JwLcA==
-X-Google-Smtp-Source: AGHT+IG4QK2ZXVU8OaDJZrpd4jbGOh2SrGi1jhRE/dSVG0kTZPTHVEXeqFIKnFD0vg8+XQ7RAPuxGyya
-X-Received: from wmbhc8.prod.google.com ([2002:a05:600c:8708:b0:43d:8244:7f6d])
- (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:3c8a:b0:43d:45a:8fca
- with SMTP id 5b1f17b1804b1-43db62bf4e4mr119197335e9.30.1743514479363; Tue, 01
- Apr 2025 06:34:39 -0700 (PDT)
-Date: Tue,  1 Apr 2025 15:34:21 +0200
-In-Reply-To: <20250401133416.1436741-8-ardb+git@google.com>
+        d=1e100.net; s=20230601; t=1743514482; x=1744119282;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5+voR8HB3cFzC8hIZVmJtHdmZr9+pgk6E3+WKAMDtKw=;
+        b=SjJpDHBnDJOKMjdbUcWF68HREFmfoKpxTqXytFOJDgJuklkrnWUpXsirPwOqGuhZkk
+         5HKcBZG0kBzlbOaaJq8FvfdBgf4835lvPZ5H0/Rw6VFHsqo0vK+onCG/PwR8Bzyx1Kw5
+         vuuWrZOK4ubndBvJ5gRVwCkXntpZSsLNSguhJv88ipMYonBkZ6P0GNA/iy3HrriN6RoG
+         48WBJjW5YUV6YnHtUfuTbB7jfd9FHmIDQhvuDIKYnWcpD+aWm4+yHfz7aSemCma5ASjV
+         bz4zGlIw+1g4dkvmnbSBwX/hweWA2TQlB5WLDfYS8tRkhPo+wLa8//uDh8Blo9MYNwrU
+         GxrA==
+X-Forwarded-Encrypted: i=1; AJvYcCUONw6SsNxze4bX451fk+9NWqjfPfjPcwaGa9wOl5GHhfYewwbYFPegFkVaRRb1pQjlktf8uxrrv8j29c0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyLxEiUfE12DkWNqORUJ75dLBlne+AFVhgoous1dYlAtzbsc53J
+	j3WMuNJ1dulyxRe0u+h8i5n3TiM/lwGnalrgwKxLMTVSl1d/25cj3DxJkwvOmELZkc6ln36bf5t
+	oA9D1Nok0zjgADsjeDM7FDW7iGvdtuvLYB4wJrF977f9A6uJ8m6/UmIg+pQ8AUg==
+X-Gm-Gg: ASbGncvJzVc227yztuZMs/Sl18i+H+kujq8D2F/0rELKJINW0iXuMf1MDhQ6udSLlfc
+	g/6soy8xwiX+p6SfmtwiGFyrD8m/gitIQY7VXTqdFTYrNn+yYlxNKicxScbUgjrqR36zf2B/Adq
+	SaGo9hlqAq3eZMZd0LvmD1bCeb4g2dkl/AbVrjxt6TTeRm1noljYnCJJPXK0835I4J+3oQGN6Yi
+	IayUAA833t0wLh4L5uZjubgB6qTYscQLcXFHwMBTcA8+ZXclI7oo9vQ3WoIOv6+//tvDw7TTvl6
+	gJLlUNPVusVDSCRZxFukSzuuJ2LGduNiRdvqYwfkCiVepFNXv4iaQWZVdih7s6Yz7DepicGrIKK
+	DOYbMMCzpCKeq14yT16iZlA6BDMnN7yhTzj5327ZROfeCYXBPa+UreO6yad9pCBfpWw==
+X-Received: by 2002:a17:907:6095:b0:ac2:a50a:51ad with SMTP id a640c23a62f3a-ac738a3fb66mr1367135066b.14.1743514481492;
+        Tue, 01 Apr 2025 06:34:41 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEWc/PMTpv7KpTgLIObE3nweU3U3wlOcyKWQ2itqUjsaX7REIskVKPaI0rm24NIXU4h/zTp4w==
+X-Received: by 2002:a17:907:6095:b0:ac2:a50a:51ad with SMTP id a640c23a62f3a-ac738a3fb66mr1367131766b.14.1743514481009;
+        Tue, 01 Apr 2025 06:34:41 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac718f7159bsm767945766b.0.2025.04.01.06.34.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Apr 2025 06:34:40 -0700 (PDT)
+Message-ID: <6cf8d6db-c24e-461b-bd7d-a3dad25e4945@redhat.com>
+Date: Tue, 1 Apr 2025 15:34:39 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250401133416.1436741-8-ardb+git@google.com>
-X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7788; i=ardb@kernel.org;
- h=from:subject; bh=7CqWOqUn0owfJx93vqlZ0MaFHl2+UzXGIVwFFUz3Lwk=;
- b=owGbwMvMwCFmkMcZplerG8N4Wi2JIf3167hzdUZKs0sL7l6c+eF38RwBCUHBG/u/zop/KD77r
- c38xTwMHaUsDGIcDLJiiiwCs/++23l6olSt8yxZmDmsTCBDGLg4BWAiJxgZ/qnz/Ft1teKvVpBB
- YjCn2DvGlkkRuyR2btO1Nw99bLdoyQ6Gf1oK/bUCaofNbidkMIkt6b2Wtmy5vc02t19T3QVfyxy +wgEA
-X-Mailer: git-send-email 2.49.0.472.ge94155a9ec-goog
-Message-ID: <20250401133416.1436741-12-ardb+git@google.com>
-Subject: [RFC PATCH 4/6] x86/boot: Move early GDT/IDT setup code into startup/
-From: Ard Biesheuvel <ardb+git@google.com>
-To: linux-efi@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org, 
-	Ard Biesheuvel <ardb@kernel.org>, Tom Lendacky <thomas.lendacky@amd.com>, 
-	Dionna Amalie Glaze <dionnaglaze@google.com>, Kevin Loughlin <kevinloughlin@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] media: i2c: ov02e10: add OV02E10 image sensor
+ driver
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Bryan O'Donoghue <bod@kernel.org>,
+ Hans de Goede <hansg@kernel.org>, Jingjing Xiong <jingjing.xiong@intel.com>,
+ Hao Yao <hao.yao@intel.com>, Jim Lai <jim.lai@intel.com>,
+ You-Sheng Yang <vicamo.yang@canonical.com>,
+ Alan Stern <stern@rowland.harvard.edu>, linux-kernel@vger.kernel.org,
+ linux-media@vger.kernel.org, devicetree@vger.kernel.org
+References: <20250325-b4-media-comitters-next-25-03-13-ov02e10-v2-0-4d933ac8cff6@linaro.org>
+ <20250325-b4-media-comitters-next-25-03-13-ov02e10-v2-2-4d933ac8cff6@linaro.org>
+ <Z-UAFkshOgeytfB4@kekkonen.localdomain>
+ <47dd7daa-cce4-4ad0-ab57-4c76304b0aa6@linaro.org>
+ <5fd2253f-0acb-4c95-b3bb-e7e065c92dd5@redhat.com>
+ <Z-u09dfEYfjqKhDQ@kekkonen.localdomain>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <Z-u09dfEYfjqKhDQ@kekkonen.localdomain>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-From: Ard Biesheuvel <ardb@kernel.org>
+Hi Sakari,
 
-Move the early GDT/IDT setup code that runs long before the kernel
-virtual mapping is up into arch/x86/boot/startup/, and build it in a way
-that ensures that the code tolerates being called from the 1:1 mapping
-of memory.
+On 1-Apr-25 11:42 AM, Sakari Ailus wrote:
+> Hi Hans, Bryan,
+> 
+> On Tue, Apr 01, 2025 at 10:12:35AM +0200, Hans de Goede wrote:
+>> Hi Bryan, Sakari,
+>>
+>> On 1-Apr-25 2:34 AM, Bryan O'Donoghue wrote:
+>>> On 27/03/2025 07:36, Sakari Ailus wrote:
+>>>>> +static u64 to_pixel_rate(u32 f_index)
+>>>>> +{
+>>>>> +    u64 pixel_rate = link_freq_menu_items[f_index] * 2 * OV02E10_DATA_LANES;
+>>>>> +
+>>>>> +    do_div(pixel_rate, OV02E10_RGB_DEPTH);
+>>>> The pixel rate control is for the pixel rate on the pixel array, not on the
+>>>> CSI-2 interface. Without binning or sub-sampling these may the same still,
+>>>> but this only works in special cases really.
+>>>
+>>> Hmm computer says no, I don't think I have understood this comment..
+>>>
+>>> Looking at other drivers, I'd say the above pattern is pretty common - taking ov8856 as an example that's pretty much equivalent logic to the above, ov08x40 does something similar.
+>>>
+>>> =>
+>>>
+>>> pixel_rate == link_freq * 2 * #oflanes / RGB_DEPTH
+>>>            => 360MHz * 2 * 2 / 10
+>>>            => 360000000 * 2 * 2 / 10
+>>>            => 144000000
+>>>
+>>> If I'm understanding you though you mean the pixel rate for the control V4L2_CID_PIXEL_RATE expressed here should be the resolution * the FPS / bits_per_pixel
+>>
+>> I have to agree with Bryan here that the pixelrate typically is const
+>> and directly derived from the link-frequency. Even the
+>> __v4l2_get_link_freq_ctrl() helper from drivers/media/v4l2-core/v4l2-common.c
+>> assumes this.
+> 
+> That is there to support old drivers that don't use the LINK_FREQ control.
+> All new ones do.
+> 
+>>
+>> binning / subsampling does not change anything wrt the pixelrate it
+>> just means that either the blanking becomes much bigger keeping
+>> vts / hts the same, or that the FPS becomes much higher.
+>>
+>> It is not like the sensor is sending an empty pixel on the CSI
+>> link every other pixel when binning, since there is no such
+>> thing as an empty pixel. So the sensor must go faster when doing
+>> horizontal binning to keep the CSI link filled effectively
+>> doubling the FPS, or requiring a much larger hblank after having
+>> taken only half the time sending pixels.
+> 
+> Please see
+> <URL:https://hverkuil.home.xs4all.nl/spec/userspace-api/drivers/camera-sensor.html#raw-camera-sensors>
+> and
+> <URL:https://hverkuil.home.xs4all.nl/spec/userspace-api/v4l/ext-ctrls-image-process.html#image-process-control-ids>.
+> 
+> As noted, this may be correct if the sensor doesn't use binning or
+> sub-sampling, but conceptually pixel rate on the pixel array and on the
+> CSI-2 bus are different. The PIXEL_RATE control is for the former albeit in
+> the past some drivers have presumably used it for the latter as well.
 
-This allows the RIP_REL_REF() macro uses to be dropped, and removes the
-need for emitting the code into the special .head.text section.
+Ok, so here is what is written there:
 
-Also tweak the sed symbol matching pattern in the decompressor to match
-on lower case 't' or 'b', as these will be emitted by Clang for symbols
-with hidden linkage.
+"V4L2_CID_PIXEL_RATE (64-bit integer)
 
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
----
- arch/x86/boot/compressed/Makefile |  2 +-
- arch/x86/boot/startup/Makefile    | 15 ++++
- arch/x86/boot/startup/gdt_idt.c   | 82 ++++++++++++++++++++
- arch/x86/kernel/head64.c          | 74 ------------------
- 4 files changed, 98 insertions(+), 75 deletions(-)
+    Pixel sampling rate in the device’s pixel array. This control is read-only and its unit is pixels / second.
 
-diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
-index 468e135de88e..48541cf54790 100644
---- a/arch/x86/boot/compressed/Makefile
-+++ b/arch/x86/boot/compressed/Makefile
-@@ -74,7 +74,7 @@ LDFLAGS_vmlinux += -T
- hostprogs	:= mkpiggy
- HOST_EXTRACFLAGS += -I$(srctree)/tools/include
- 
--sed-voffset := -e 's/^\([0-9a-fA-F]*\) [ABCDGRSTVW] \(_text\|__start_rodata\|__bss_start\|_end\)$$/\#define VO_\2 _AC(0x\1,UL)/p'
-+sed-voffset := -e 's/^\([0-9a-fA-F]*\) [ABbCDGRSTtVW] \(_text\|__start_rodata\|__bss_start\|_end\)$$/\#define VO_\2 _AC(0x\1,UL)/p'
- 
- quiet_cmd_voffset = VOFFSET $@
-       cmd_voffset = $(NM) $< | sed -n $(sed-voffset) > $@
-diff --git a/arch/x86/boot/startup/Makefile b/arch/x86/boot/startup/Makefile
-index 73946a3f6b3b..34b324cbd5a4 100644
---- a/arch/x86/boot/startup/Makefile
-+++ b/arch/x86/boot/startup/Makefile
-@@ -1,6 +1,21 @@
- # SPDX-License-Identifier: GPL-2.0
- 
- KBUILD_AFLAGS		+= -D__DISABLE_EXPORTS
-+KBUILD_CFLAGS		+= -D__DISABLE_EXPORTS -mcmodel=small -fPIC \
-+			   -Os -DDISABLE_BRANCH_PROFILING \
-+			   $(DISABLE_STACKLEAK_PLUGIN) \
-+			   -fno-stack-protector -D__NO_FORTIFY \
-+			   -include $(srctree)/include/linux/hidden.h
-+
-+# disable ftrace hooks
-+KBUILD_CFLAGS	:= $(subst $(CC_FLAGS_FTRACE),,$(KBUILD_CFLAGS))
-+KASAN_SANITIZE	:= n
-+KCSAN_SANITIZE	:= n
-+KMSAN_SANITIZE	:= n
-+UBSAN_SANITIZE	:= n
-+KCOV_INSTRUMENT	:= n
-+
-+obj-$(CONFIG_X86_64)		+= gdt_idt.o
- 
- lib-$(CONFIG_X86_64)		+= la57toggle.o
- lib-$(CONFIG_EFI_MIXED)		+= efi-mixed.o
-diff --git a/arch/x86/boot/startup/gdt_idt.c b/arch/x86/boot/startup/gdt_idt.c
-new file mode 100644
-index 000000000000..b382d5db2586
---- /dev/null
-+++ b/arch/x86/boot/startup/gdt_idt.c
-@@ -0,0 +1,82 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <linux/linkage.h>
-+#include <linux/types.h>
-+
-+#include <asm/desc.h>
-+#include <asm/setup.h>
-+#include <asm/sev.h>
-+#include <asm/trapnr.h>
-+
-+/*
-+ * Data structures and code used for IDT setup in head_64.S. The bringup-IDT is
-+ * used until the idt_table takes over. On the boot CPU this happens in
-+ * x86_64_start_kernel(), on secondary CPUs in start_secondary(). In both cases
-+ * this happens in the functions called from head_64.S.
-+ *
-+ * The idt_table can't be used that early because all the code modifying it is
-+ * in idt.c and can be instrumented by tracing or KASAN, which both don't work
-+ * during early CPU bringup. Also the idt_table has the runtime vectors
-+ * configured which require certain CPU state to be setup already (like TSS),
-+ * which also hasn't happened yet in early CPU bringup.
-+ */
-+static gate_desc bringup_idt_table[NUM_EXCEPTION_VECTORS] __page_aligned_data;
-+
-+/* This may run while still in the direct mapping */
-+static void startup_64_load_idt(void *vc_handler)
-+{
-+	struct desc_ptr desc = {
-+		.address = (unsigned long)bringup_idt_table,
-+		.size    = sizeof(bringup_idt_table) - 1,
-+	};
-+	struct idt_data data;
-+	gate_desc idt_desc;
-+
-+	/* @vc_handler is set only for a VMM Communication Exception */
-+	if (vc_handler) {
-+		init_idt_data(&data, X86_TRAP_VC, vc_handler);
-+		idt_init_desc(&idt_desc, &data);
-+		native_write_idt_entry((gate_desc *)desc.address, X86_TRAP_VC, &idt_desc);
-+	}
-+
-+	native_load_idt(&desc);
-+}
-+
-+/* This is used when running on kernel addresses */
-+void early_setup_idt(void)
-+{
-+	void *handler = NULL;
-+
-+	if (IS_ENABLED(CONFIG_AMD_MEM_ENCRYPT)) {
-+		setup_ghcb();
-+		handler = vc_boot_ghcb;
-+	}
-+
-+	startup_64_load_idt(handler);
-+}
-+
-+/*
-+ * Setup boot CPU state needed before kernel switches to virtual addresses.
-+ */
-+void __init startup_64_setup_gdt_idt(void)
-+{
-+	void *handler = NULL;
-+
-+	struct desc_ptr startup_gdt_descr = {
-+		.address = (__force unsigned long)gdt_page.gdt,
-+		.size    = GDT_SIZE - 1,
-+	};
-+
-+	/* Load GDT */
-+	native_load_gdt(&startup_gdt_descr);
-+
-+	/* New GDT is live - reload data segment registers */
-+	asm volatile("movl %%eax, %%ds\n"
-+		     "movl %%eax, %%ss\n"
-+		     "movl %%eax, %%es\n" : : "a"(__KERNEL_DS) : "memory");
-+
-+	if (IS_ENABLED(CONFIG_AMD_MEM_ENCRYPT))
-+		handler = vc_no_ghcb;
-+
-+	startup_64_load_idt(handler);
-+}
-diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
-index fa9b6339975f..5b993b545c7e 100644
---- a/arch/x86/kernel/head64.c
-+++ b/arch/x86/kernel/head64.c
-@@ -512,77 +512,3 @@ void __init __noreturn x86_64_start_reservations(char *real_mode_data)
- 
- 	start_kernel();
- }
--
--/*
-- * Data structures and code used for IDT setup in head_64.S. The bringup-IDT is
-- * used until the idt_table takes over. On the boot CPU this happens in
-- * x86_64_start_kernel(), on secondary CPUs in start_secondary(). In both cases
-- * this happens in the functions called from head_64.S.
-- *
-- * The idt_table can't be used that early because all the code modifying it is
-- * in idt.c and can be instrumented by tracing or KASAN, which both don't work
-- * during early CPU bringup. Also the idt_table has the runtime vectors
-- * configured which require certain CPU state to be setup already (like TSS),
-- * which also hasn't happened yet in early CPU bringup.
-- */
--static gate_desc bringup_idt_table[NUM_EXCEPTION_VECTORS] __page_aligned_data;
--
--/* This may run while still in the direct mapping */
--static void __head startup_64_load_idt(void *vc_handler)
--{
--	struct desc_ptr desc = {
--		.address = (unsigned long)&RIP_REL_REF(bringup_idt_table),
--		.size    = sizeof(bringup_idt_table) - 1,
--	};
--	struct idt_data data;
--	gate_desc idt_desc;
--
--	/* @vc_handler is set only for a VMM Communication Exception */
--	if (vc_handler) {
--		init_idt_data(&data, X86_TRAP_VC, vc_handler);
--		idt_init_desc(&idt_desc, &data);
--		native_write_idt_entry((gate_desc *)desc.address, X86_TRAP_VC, &idt_desc);
--	}
--
--	native_load_idt(&desc);
--}
--
--/* This is used when running on kernel addresses */
--void early_setup_idt(void)
--{
--	void *handler = NULL;
--
--	if (IS_ENABLED(CONFIG_AMD_MEM_ENCRYPT)) {
--		setup_ghcb();
--		handler = vc_boot_ghcb;
--	}
--
--	startup_64_load_idt(handler);
--}
--
--/*
-- * Setup boot CPU state needed before kernel switches to virtual addresses.
-- */
--void __head startup_64_setup_gdt_idt(void)
--{
--	struct desc_struct *gdt = (void *)(__force unsigned long)gdt_page.gdt;
--	void *handler = NULL;
--
--	struct desc_ptr startup_gdt_descr = {
--		.address = (unsigned long)&RIP_REL_REF(*gdt),
--		.size    = GDT_SIZE - 1,
--	};
--
--	/* Load GDT */
--	native_load_gdt(&startup_gdt_descr);
--
--	/* New GDT is live - reload data segment registers */
--	asm volatile("movl %%eax, %%ds\n"
--		     "movl %%eax, %%ss\n"
--		     "movl %%eax, %%es\n" : : "a"(__KERNEL_DS) : "memory");
--
--	if (IS_ENABLED(CONFIG_AMD_MEM_ENCRYPT))
--		handler = &RIP_REL_REF(vc_no_ghcb);
--
--	startup_64_load_idt(handler);
--}
--- 
-2.49.0.472.ge94155a9ec-goog
+    Some devices use horizontal and vertical blanking to configure the frame rate. The frame rate can be calculated from the pixel rate, analogue crop rectangle as well as horizontal and vertical blanking. The pixel rate control may be present in a different sub-device than the blanking controls and the analogue crop rectangle configuration.
+
+    The configuration of the frame rate is performed by selecting the desired horizontal and vertical blanking. The unit of this control is Hz."
+
+So when not bin-/skip-/averag-ing this matches with my understanding
+which is that:
+
+FPS = pixelrate / ((mode.width + hblank) * (mode.height + vblank))
+
+and also pixelrate = link_freq * 2 * #oflanes / RGB_DEPTH.
+
+Since the ov02e10 driver does not do bin-/skip-/avera-ging,
+this definitely is correct for the ov02e10, so I don't really
+think there is an issue with the ov02e10 driver here.
+
+I've been assuming in drivers which do do binning like the ov2680
+that this also holds true when binning. But what I'm hearing
+you say here is that the reported pixelrate should change when
+binning?
+
+I see how the calculation of the FPS should change, reading
+the V4L2 API using mode.width / mode.height is wrong and instead
+the analog crop should be used which is e.g. (2 * mode.width) x
+(2 * mode.height) when doing binning and I can see how this is
+sensible because this way when just disabling/enabling binning
+without changing the blanks the fps does not change.
+
+Except that we don't have a proper API to select binning and
+instead is done transparently by drivers like the ov2680 driver ...
+
+And I believe that e.g. libcamera atm simply implements:
+
+FPS = pixelrate / ((mode.width + hblank) * (mode.height + vblank))
+
+and thus assumes that the driver updates the hblank / vblank
+values it reports by adding width/height to the reported value
+to compensate for binning but I might be mistaken there.
+
+This also begs the question what a driver with arbitrary mode
+support like the ov2680 driver should do on a set_fmt() call
+where fmt.width / height don't match (either 1:1 or 1:2)
+with the analog crop. Should the driver then update the analog
+crop? ATM for modes smaller then the current analog crop,
+the ov2680 code simply adds extra in driver cropping on top of
+the selection API crop, without updating the selection API crop.
+Since the driver clamps the max accepted fmt width/height to
+the crop updating the selection API crop would be troublesome
+and break non selection API users when they want to switch back
+to a higher resolution mode ...
+
+I don't think we really have properly specified (as in written down)
+how all this is supposed to work, especially as soon as binning comes
+into play. I think discussing all possible corner cases and trying
+to hammer out how this all is supposed to fit together would be
+a good summit for the media maintainers summit in Nice ?
+
+Eitherway I believe that the current code in ov02e10 is fine as
+is for now since the ov02e10 driver only supports a single fixed
+mode with no binning.
+
+BTW the last sentence of the control description clearly needs work,
+framerate indeed is in Hz, but framerate is indirectly controlled through
+setting the blanking times, which are in pixels not Hz, so that last
+sentence is confusing.
+
+Regards,
+
+Hans
+
+
+
+
+> 
+>>
+>> (and the same applies to vts when vertical binning)
+>>
+>>> pixel_rate = wdith x height x fps / bpp
+>>>            => 1928 * 1088 * 30 / 10
+>>>            => 6292992
+>>>
+>>> i.e. the pixel rate not related to the CSI2 link frequency ?
+>>
+>> No the pixel-rate control includes vblank + hblank "pixels"
+>> and is in pixels/sec so no dividing by bpp, iow it is:
+>>
+>> vts * hts * fps
+>>
+>> and this must match
+>>
+>> link_freq * 2 * #oflanes / RGB_DEPTH
+> 
 
