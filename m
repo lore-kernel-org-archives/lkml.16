@@ -1,118 +1,135 @@
-Received: from mout.web.de (mout.web.de [212.227.15.3])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 214481E8359
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 07:15:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 383B01E47A6;
+	Tue,  1 Apr 2025 07:17:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743491754; cv=none; b=Viqt7WSetnVWWuHEElYC2GlBl7nJxSXTOuSg0aQOCuEHaJ7cSITy3fzh+8/ui7qoguB969e3GIktjWidgiftwDxD6mc08XsVgE7BAJonnGsI2VLwFpLfDMLhNo83uUZGOzjNaiOrf5uLwye8F7PJ83tdClUqRQ/tHrkX4ASsigc=
+	t=1743491840; cv=none; b=E3qa/vSCTlgj6sEI5sndjy0JAP2zV+bkE+kU7zpdTHaAL7BdNqm9bXb/N/Vr0UeAfBZXC6rB74ZiXFIENIC2R/4FZ4DdIMX1C30Ny3K+VdK604D8j7DOER6JRzOI+Rhzaye8b7CF8QCHm56Vpd5uS9XGhwfecn2MUht2TDfZP5w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743491754; c=relaxed/simple;
-	bh=0LaPR3cdlZSaxBOc2xcd/StQhQeM+2Qmg8A2G9kUVIg=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=eVzhLaHBdl9QRo23YocavLvbmgGMiQzmZXMYewQ84GYv/dp8pfIB+jKbvT6wwtdaDgrL343KjVoks688zG/VOqfxhnvR1OPbdJqDyOIQEpWBhoSI9NqoL8Wt86Y8n4b/IZUUoOgNut06RHhVD9aPOriTTDg2lULq7+uEnT8pFeY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=widx1Zio; arc=none smtp.client-ip=212.227.15.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1743491840; c=relaxed/simple;
+	bh=yGVuOK8QsrbzJeHeZyfdHkem1uNLnG6KfYUZfHdCoG0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Jxz3SrmZYixJspEefoFgKYvoKxMfuu3npjn9Iz1v8YIh00W0rjAi4fsC7uwrIi+UOPGOBvcetXyTJRVxiPQkNaj0QeQ8uZKukvk0MEWGuB8rp783Kbammp0ANm+vj0+ovtc7FjKyH57c10u+wQ0d3u4xkJqzVYIevJU9ugXQFko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C7DEBEBh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="widx1Zio"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1743491730; x=1744096530; i=markus.elfring@web.de;
-	bh=Ufr8jWio+k3mAwH6vRZeNy2DQEzSjS0mBeDw/wYCdD4=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=widx1ZioDtdpjurlfr+BfKggyrhEV3NvwOhfEpEaNmlSPAycW4dDOnCqyp/n6u0m
-	 NaJBhau+ilht/YAgkmY0BGWDWCP9LQuDYjncCxavqwoWSDipP9sIjNcK9CSUjpa8W
-	 nlRKr9bL0ksDW8ktDGu5whUhW7YbCj78spJ5NV/Q/3jBhbyz12D4qWAojQ/HRYCN0
-	 dp04CgKlo+bgCfu9zuoUxeja1Ybpro8OHZll6FPQShAgFsOjTUAphurft3IOmtDF4
-	 I/Mf60Y8m9/cA197xNJha2JGnJ8YhxD2t7svPatYL52p8djsESoRahbTgfJxb3ocy
-	 ON/JDIdagvxOX4TfFg==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.70.54]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MAtwr-1toHKj15fl-00GGYs; Tue, 01
- Apr 2025 09:09:20 +0200
-Message-ID: <03d87a25-02ea-4e4a-8d3f-c2fcdc4d068e@web.de>
-Date: Tue, 1 Apr 2025 09:09:08 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C7DEBEBh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B8A2C4CEE8;
+	Tue,  1 Apr 2025 07:17:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743491839;
+	bh=yGVuOK8QsrbzJeHeZyfdHkem1uNLnG6KfYUZfHdCoG0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=C7DEBEBh3oAtCdSwwszho06IfxX1ZpBRXC5zlUlXBKZFKeOhDBre8bA+ZZ1c2ddBC
+	 H1BK6RQGj2Xd0hzjrS3LwxQ5PnF/XkEs1O89lq7MtqZ8Mux027RH2odhXsGtFa4mGx
+	 Gs3zKhetuLRgetKrsEQEu8ZXmZhuuA+aZ+s4sV7KO+46J+OgsmchRxn6QPDxeOh+FR
+	 RKIqeCbPzTS7JBXF3c9MT2VDrUblR2bj54usuPMZ+JK3xC7zyKN6RTKsfWD1WaGITO
+	 0ghMzNrJtEdTRQSNLJb1A6H8wLaiQlZcKjUiwvHB56SpQsUF4BqlvODqbQ0CCXcPNX
+	 UC383ZZOgMEuQ==
+Date: Tue, 1 Apr 2025 09:17:12 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Dave Chinner <david@fromorbit.com>
+Cc: linux-fsdevel@vger.kernel.org, jack@suse.cz, 
+	Ard Biesheuvel <ardb@kernel.org>, linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	James Bottomley <James.Bottomley@hansenpartnership.com>, mcgrof@kernel.org, hch@infradead.org, rafael@kernel.org, 
+	djwong@kernel.org, pavel@kernel.org, peterz@infradead.org, mingo@redhat.com, 
+	will@kernel.org, boqun.feng@gmail.com
+Subject: Re: [PATCH 3/6] xfs: replace kthread freezing with auto fs freezing
+Message-ID: <20250401-baubeginn-ausdehnen-3a7387b756aa@brauner>
+References: <20250401-work-freeze-v1-0-d000611d4ab0@kernel.org>
+ <20250401-work-freeze-v1-3-d000611d4ab0@kernel.org>
+ <Z-s9KG-URzB9DwUb@dread.disaster.area>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Henry Martin <bsdhenrymartin@gmail.com>, linux-aspeed@lists.ozlabs.org,
- linux-arm-kernel@lists.infradead.org
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Andrew Jeffery <andrew@codeconstruct.com.au>, Arnd Bergmann <arnd@arndb.de>,
- Bjorn Andersson <andersson@kernel.org>,
- Herve Codina <herve.codina@bootlin.com>, Joel Stanley <joel@jms.id.au>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-References: <20250401033935.17617-1-bsdhenrymartin@gmail.com>
-Subject: Re: [PATCH v3] drivers/misc: Add NULL check in
- aspeed_lpc_enable_snoop
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250401033935.17617-1-bsdhenrymartin@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:9ghQMBunowstGfr7Qbdl++g5f/BvUsX0AoqlPh8HYvKL8GZYMsX
- yZRQOWRRNANFr4jw2YfJLK5EUbUmnVuuo5hJwu5tRWtS9qgDOAmpFJN5ZUeZY3fAv1uXZub
- RMxnWZDvwUIR/Gk68FCUk72oaFPQdMhOFkgBxBjRH+6uf5v2boobf9GcQSk1/SnGrJuZqXW
- TZfhrRgSY8F1Rp7gXIaHA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:AVsIm+6RSYk=;PrlffSMgd7hpKDqnRezgtqkWjFw
- ZuXIDWOOhFXZRp/sE6CqYGeNWsWGVdJlbiv2FLmnBPHTESSttB+NbnYPrqABu+Dd9fMdMmyiJ
- RB/lF1Kn+JgOYgdyQG8qHKodS1Q2Mz8LULEGuO4E7HWRMiuPiC3dN5uc49Iz1ZWDF8Z+rO0HW
- WdpARtLj89PAtIS4mKeGqHk6JEiK/spI55Z6rXclNUkmX9kWV+DHVDdPPRYJj28SD29aRvCwI
- +Eek5lhq/Hy79CyZfnRz8CwACKaybIRXnKqxyfRnPRMdmci5zSq5lps9z5Xtcjau6oR7bbyXI
- 5zNmGLTsbduGfugEaRmiIcksmObTgCGX0m/Ko0M4vBJ//QCN9yw1EtdKpFx+UFoQKiD1566lG
- HVMcG2Np6cAIxaXq9hBYOaDVPLGEA7TLEBfzjme38hi2NyLyZUTEFFMBCOX6Y+jIzkOACl/O8
- x6T720TLEGyJKjdTJ54D3R7HQYjMXVE5TRkEnygFunNjhDlm4zmp9oQp8ij7wp9di1vEle+7f
- pZkkUigMVz0xYCoM4OaEaA6FlFoaxkZgkcl3KCgxcNaLQwUAwQ3aQz1AFILm4t38uIEDazCL/
- xM1UhF7g4B3qlfSwwE4cGehWN9LlPbOYfDFRkKsPcHWQQ39VCf25wQY/V4TSAj0eeKnG43EeS
- VHnvSSgWki8aDlK8qZXuvJJS7kT/uzGXvZTazGGI7hlZUc0/OqLrhYENi2AALgsawk185f5z8
- xtOH0YkInY0WKCDBXWblDzsgCz9AJ8xHZ2IXxni1Squu8ea7p7i9ddWEIgog4CBMFS0zNMDUz
- 7xu02iE1sTnuXRcsEaCckEavgYtp7l90+wDdG0FfJ24ng2IHqq2dkZXSOsMmYSw3Vx1QU/22q
- tXnyaKVhQdJ2QMwQKrrmOARzZWI4LDP8meNY2MbSDj2scPrI/l9iAhjI9XsNgyb9LJFd25Wlg
- zcvIZUuZ7EqtSKLYXWkDZ9KfHPImfz5Nvv2dGh9B7JoaK0L1OqLStiB9DQMY2jKRqqoY2qAoU
- qkjE5ghUZ2avqLE2gKEjdyetxl6dksR6KFrPSRw0zIzgWSsv2b18dnfqDX7niv33J6izTqLAX
- jBPB8/o7pIrGymY8Kts2xneb4oehzwIgcrffJ59Em+uao9KBK/rtPwIxYjvMAEKV6VhOOIp0s
- CYNCoCcYYGKfL8H4WroBxccw6R9KGe9BD2SHvVRGGWBNaS3ZSvW4B81tVYHh/MCMLMiKJLMcd
- i2+wek0mzvgyjzG9gHvlSqAc4P4gQ8cIj+rQjhwed56OXNwEi+O1Jyl5IO4MS7QPwDJqIHjqS
- fIUnSg1cMgpViH5m7nNqwVFbq+ZeZnEEdZC71c9CzipHoPAgOPTN0xHvXsvA/U6mTi04sGeDC
- dd6Y48FwROIn5rCGRhEtStxkS3PJsg9Bn5LvTILmqRE1UBkKnFVzATShRIkrtMFGnFyb3abMD
- 70wcHQ1A+SqC1OfJO2YS5UTaNgDsVPGhH8lVcJrAVSIaak2Wf
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <Z-s9KG-URzB9DwUb@dread.disaster.area>
 
-> devm_kasprintf() return NULL if memory allocation fails. Currently,
-=E2=80=A6
-                call?                               failed?
+On Tue, Apr 01, 2025 at 12:11:04PM +1100, Dave Chinner wrote:
+> On Tue, Apr 01, 2025 at 02:32:48AM +0200, Christian Brauner wrote:
+> > From: Luis Chamberlain <mcgrof@kernel.org>
+> > 
+> > The kernel power management now supports allowing the VFS
+> > to handle filesystem freezing freezes and thawing. Take advantage
+> > of that and remove the kthread freezing. This is needed so that we
+> > properly really stop IO in flight without races after userspace
+> > has been frozen. Without this we rely on kthread freezing and
+> > its semantics are loose and error prone.
+> > 
+> > The filesystem therefore is in charge of properly dealing with
+> > quiescing of the filesystem through its callbacks if it thinks
+> > it knows better than how the VFS handles it.
+> > 
+> .....
+> 
+> > diff --git a/fs/xfs/xfs_trans_ail.c b/fs/xfs/xfs_trans_ail.c
+> > index 0fcb1828e598..ad8183db0780 100644
+> > --- a/fs/xfs/xfs_trans_ail.c
+> > +++ b/fs/xfs/xfs_trans_ail.c
+> > @@ -636,7 +636,6 @@ xfsaild(
+> >  	unsigned int	noreclaim_flag;
+> >  
+> >  	noreclaim_flag = memalloc_noreclaim_save();
+> > -	set_freezable();
+> >  
+> >  	while (1) {
+> >  		/*
+> > @@ -695,8 +694,6 @@ xfsaild(
+> >  
+> >  		__set_current_state(TASK_RUNNING);
+> >  
+> > -		try_to_freeze();
+> > -
+> >  		tout = xfsaild_push(ailp);
+> >  	}
+> >  
+> 
+> So what about the TASK_FREEZABLE flag that is set in this code
+> before sleeping?
+> 
+> i.e. this code before we schedule():
+> 
+>                 if (tout && tout <= 20)
+>                         set_current_state(TASK_KILLABLE|TASK_FREEZABLE);
+>                 else
+>                         set_current_state(TASK_INTERRUPTIBLE|TASK_FREEZABLE);
+> 
+> Shouldn't TASK_FREEZABLE go away, too?
 
+Thanks for spotting! Yes, yesterday late at night I just took Luis
+patches as they are and had only gotten around to testing btrfs. The
+coccinelle scripts seemed to have missed those. I'll wait for comments
+and will do another pass and send out v2.
 
-> Add NULL check after devm_kasprintf() to prevent this issue.
+> > diff --git a/fs/xfs/xfs_zone_gc.c b/fs/xfs/xfs_zone_gc.c
+> > index c5136ea9bb1d..1875b6551ab0 100644
+> > --- a/fs/xfs/xfs_zone_gc.c
+> > +++ b/fs/xfs/xfs_zone_gc.c
+> > @@ -993,7 +993,6 @@ xfs_zone_gc_handle_work(
+> >  	}
+> >  
+> >  	__set_current_state(TASK_RUNNING);
+> > -	try_to_freeze();
+> >  
+> >  	if (reset_list)
+> >  		xfs_zone_gc_reset_zones(data, reset_list);
+> > @@ -1041,7 +1040,6 @@ xfs_zoned_gcd(
+> >  	unsigned int		nofs_flag;
+> >  
+> >  	nofs_flag = memalloc_nofs_save();
+> > -	set_freezable();
+> >  
+> >  	for (;;) {
+> >  		set_current_state(TASK_INTERRUPTIBLE | TASK_FREEZABLE);
+> 
+> Same question here for this newly merged code, too...
 
-Do you propose to improve this function implementation a bit more?
-
-
-=E2=80=A6
-> ---
-> V2 -> V3: Simplify the arrary access and correct commit message.
-=E2=80=A6
-
-* Would you like to avoid a typo here?
-
-* I imagine that there is a need to offer such adjustments
-  in separate update steps.
-  https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/t=
-ree/Documentation/process/submitting-patches.rst?h=3Dv6.14#n81
-
-* Please choose a more appropriate subsystem specification.
-  https://web.git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/=
-log/drivers/soc/aspeed/aspeed-lpc-snoop.c?h=3Dnext-20250331
-
-* How do you think about to append parentheses to a function name
-  also in the summary phrase?
-
-Regards,
-Markus
+I'm not sure if this is supposed to be a snipe or not but just in case
+this is a hidden question: This isn't merged. Per the cover letter this
+is in a work.* branch. Anything that is considered mergable is in
+vfs-6.16.* branches. But since we're pre -rc1 even those branches are
+not yet showing up in -next.
