@@ -1,238 +1,615 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0E551EDA2A;
-	Tue,  1 Apr 2025 09:36:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.11
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743500169; cv=fail; b=DGvuevwWxDxqkPnlLd+Fjr7jPyeTO8eRBrxKwTHkPaHn+VX5JY9XTBABb8sXaspkkSHZeNIPMM0dYTDLMN/dsdDSBkTMSQItPOP1F8koTC3HlaSSYXDtgg7CF5KO7iNmUzuygLtjWk2hYdnlnhggXrVNJXAVO7aa6Qkgp6Y/0v0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743500169; c=relaxed/simple;
-	bh=5nXI8WARV9SYhnBJ9+ki0cmckXX9Et/bs90D8K0JFlM=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=bfpFe2X0ngHP7ydiWqER7tDmKu8pvVyE1RTWXahYDtfHT+1/GNzbrLAmSuyfGPRNJTgyw/M4EHCNUWwT3C3AWdQWtQfVyMkJeW85kYyIRkqxCnxPCYbnc7AMHd9LiyPTMNJZT6kljroAnAZCx3OGnVF45MhtEToHhYWLzv/AgWs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f1Lv9sAa; arc=fail smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 591F51EB19A
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 09:36:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743500205; cv=none; b=OtjD1XcKJTbOSsTYj6rqqKsF1F9dJ7heav9bOJBsaabIyYje+nK4IrgI8P7I2nCSVixxDrSCfHvsCS/2MYUuludotqCbiccxAMFb6fLQp0yxoJEc7FbKwSa/iVgrKzX9usRTGM5nyyH+fmRnTHO4nk1td+0Gjr4pddobOHJ6exk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743500205; c=relaxed/simple;
+	bh=rMOFWXn3jfg3Zdxsjl6gpVa58m3wu65vUuJ+VLQESNI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=IUwqik4AcOPwLvvYKzWP6Sw7j1eep/DbhexkH8jqmyGL/EKhXuB2VbGWdLmJwodxyW4kRJXgjUBjbnvHdsio8Cdt2BhcQNT61EFAh8uS3vnQiF8vspIrHfDWkonit/BOrcwwCchb125t5HyNZhuyKZ74zUXOvPrGkAKFjMRM4B4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Q/AJLcEr; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f1Lv9sAa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743500169; x=1775036169;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=5nXI8WARV9SYhnBJ9+ki0cmckXX9Et/bs90D8K0JFlM=;
-  b=f1Lv9sAawkhvjAXWPghmFpEreiWhhJuzBV+hNnRCtUPv1+4Wm/nda7lz
-   /0/6/PTB9Sbb+EX2crdX6HV28vXFYNaW1CsYgoew2CreFP7FdJOqpEfRA
-   SU+4j3xMpVFWKiLKDZ/aMcDMLQHnAbounRqhmTHL/rKbEekXM31/8bMOB
-   uyFK5KKPUAkpxfJSs87R5Xgw+fLhGPQlaDQ7Jhk6LbiEErc4naVXEhwuW
-   1BnmoeULzF9YnhHXZR5xNm0on/e4QHtbi2bSyKUecRHdLzh4jpYJb1J97
-   7r9RpYlo4+r6mPCrjSXXQoru94lFsZhWA7UvRtgHsOD64ULLwnA2Cuc6m
-   A==;
-X-CSE-ConnectionGUID: 95tNxu8bTtO9OgoE/LMadA==
-X-CSE-MsgGUID: pIsSrvnfQ6OVIRqqf4TJXQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11390"; a="55008389"
-X-IronPort-AV: E=Sophos;i="6.14,293,1736841600"; 
-   d="scan'208";a="55008389"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2025 02:36:08 -0700
-X-CSE-ConnectionGUID: MWJcg+yMSHStTaKgDSrATw==
-X-CSE-MsgGUID: Di28wvf9SmaNkdMgns1YZg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,293,1736841600"; 
-   d="scan'208";a="163567421"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2025 02:36:07 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Tue, 1 Apr 2025 02:36:07 -0700
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Tue, 1 Apr 2025 02:36:07 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.46) by
- edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Tue, 1 Apr 2025 02:36:06 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=WkXuAB54aI50ay9RXTmPNXgj8974iDPlzx/m0H/mTSEIqhnj9aSvR+h7AAnTzsC0sEn5Y8cW/7vo8KSkvdMexlOlZaPn+rnV5DuNzdUdQpzm7x5UIBEOpZMLkgqVuPHkdnuD50jq+5OtPsis6H1hfZ3WeYQ+o+sO0L86NqTouPTeJv6n7yN/TojUhBYiJ3qt5uerlIAipDP/8LPJkCTGw4De6/Depz9PcRDhxqdmygSsU9ZVvPxKRFrvydapG0Dxu2XVi6aItWYCAy6JUBVz23tj+B728cP5c0QXUvpxPhGDPt/ukDciozY+YDKX/u4IAkyzYNPSjmTTwcAk1Q4otg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5nXI8WARV9SYhnBJ9+ki0cmckXX9Et/bs90D8K0JFlM=;
- b=qdGqH+GTHUbh2tszsCE/Ithfncf2Vc1NSXigOpJLZw6T4wJqbi4Aefbb6TjIRsfShz7jqb6DTiJ90raob2RlSLCHkltOjoXndktCB3T/0+1Z28W4IEt2Y7ZAEZM9x6/6zq5Yuh5fNhFLX7uhWFi6+Nf5cCxRMirwGXefEwqE92dNR/keU5e6IzZOn/cxx45o7isPw+agASlj/n8nCi0bVBbb6acW0YnTDCaGDsOX5vhuTTyT/1Gr7FIGktM1qqfi5UmsmcZtgAL/g/VnymH2c0xkmH8p0RsruYhgzEcZ1AYoizWZq1QimLKfsKMWtbVtv2ZheAa+Ee/HnRwLWl5glg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from DM8PR11MB5750.namprd11.prod.outlook.com (2603:10b6:8:11::17) by
- CH3PR11MB8467.namprd11.prod.outlook.com (2603:10b6:610:1bd::8) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8534.44; Tue, 1 Apr 2025 09:35:33 +0000
-Received: from DM8PR11MB5750.namprd11.prod.outlook.com
- ([fe80::4df9:c236:8b64:403a]) by DM8PR11MB5750.namprd11.prod.outlook.com
- ([fe80::4df9:c236:8b64:403a%4]) with mapi id 15.20.8534.048; Tue, 1 Apr 2025
- 09:35:33 +0000
-From: "Reshetova, Elena" <elena.reshetova@intel.com>
-To: Jarkko Sakkinen <jarkko@kernel.org>
-CC: "Hansen, Dave" <dave.hansen@intel.com>, "linux-sgx@vger.kernel.org"
-	<linux-sgx@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>, "Mallick,
- Asit K" <asit.k.mallick@intel.com>, "Scarlata, Vincent R"
-	<vincent.r.scarlata@intel.com>, "Cai, Chong" <chongc@google.com>, "Aktas,
- Erdem" <erdemaktas@google.com>, "Annapurve, Vishal" <vannapurve@google.com>,
-	"dionnaglaze@google.com" <dionnaglaze@google.com>, "bondarn@google.com"
-	<bondarn@google.com>, "Raynor, Scott" <scott.raynor@intel.com>
-Subject: RE: [PATCH v2 2/2] x86/sgx: Implement EUPDATESVN and
- opportunistically call it during first EPC page alloc
-Thread-Topic: [PATCH v2 2/2] x86/sgx: Implement EUPDATESVN and
- opportunistically call it during first EPC page alloc
-Thread-Index: AQHbn+FDiJjsRSw2cUyPYDKGfVHjnbOI1BeAgAAEgICABAKjsIAArrUAgAEIZUA=
-Date: Tue, 1 Apr 2025 09:35:33 +0000
-Message-ID: <DM8PR11MB5750A46718F899A43C52A984E7AC2@DM8PR11MB5750.namprd11.prod.outlook.com>
-References: <20250328125859.73803-1-elena.reshetova@intel.com>
- <20250328125859.73803-3-elena.reshetova@intel.com>
- <Z-bhczXA6aHdCYHq@kernel.org> <Z-blOQ94ymUsDwPn@kernel.org>
- <DM8PR11MB5750C88DFC518EB77B0D613FE7AD2@DM8PR11MB5750.namprd11.prod.outlook.com>
- <Z-rU_JXWn0vCdBr_@kernel.org>
-In-Reply-To: <Z-rU_JXWn0vCdBr_@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DM8PR11MB5750:EE_|CH3PR11MB8467:EE_
-x-ms-office365-filtering-correlation-id: a096d03a-5813-47cd-3f73-08dd71008cbf
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|366016|376014|1800799024|38070700018;
-x-microsoft-antispam-message-info: =?utf-8?B?NHBJV1BYSEN2aDZIUjF1eW1DcDA2b3BFK09UWEFHeGRzTk5EUnRKdzlVcFMz?=
- =?utf-8?B?Mllzdm5GZTd0MHFZb09KdXNYWFh6eDFYQThLZ0hTbEF3WEo5eTFiWkd2c0RH?=
- =?utf-8?B?aWhlNk01MzhCSjRYMVZacis0c1FTVzNOMmdhdkJIV05TWmd4dUV6Vk1GVmhJ?=
- =?utf-8?B?U3pBMHJTVmZnb2Y5RGlMcStraER4M09aaW5OWnl3VnRLWlplZndLTVk5bTVR?=
- =?utf-8?B?ZjdIdzVwTmlsbXg3cTdybHJhdnE5cDNMcVk1RzQ3SVdLa2kzUWQxeG45TXJW?=
- =?utf-8?B?aWdzdURpTUZ2OVgySkpQQWFHcjB5S01abURKY2FYMmtMRU1WMjQrVmxGOWxI?=
- =?utf-8?B?ZG13eTJHRU1IUHNiN3B2SnIvN1N3VTltb0pEa0FXdE9kSGtFNVVVd2JuSDNk?=
- =?utf-8?B?Z2t6RlBTN3BVUmtrNHNaUTMxYU1QUlkzRjczbnB1aFp4RWZKMlNtV1RJV2xT?=
- =?utf-8?B?bkg3aGFoRkRTRGpQNlhZcTFzR2QyN2lTY3BtZlB6ZWljdDloVjhpMlhWVHF4?=
- =?utf-8?B?LzczK05sQzhDTXRSMFdvUUE5M3hnYkpRQmZVcm9RQ09wWjBrZ29SUHE2VUdn?=
- =?utf-8?B?eFVEeW14RXBnL0NPZmdpc2thMEs3ODZTby80MHpuVW1BREV5WktTWEZjQmY0?=
- =?utf-8?B?Y1BYYTB3WmlwRjZZb2ZZaHR3WWhWYTNjVXBtS1NIZDVpWHdRcG1OYUE1V09q?=
- =?utf-8?B?cXlnOFkzcHlMRUxzT2djdjNjekZEa2hjbUFFbHhyd3BocDNxN05rUTh2Y2xB?=
- =?utf-8?B?NkwxdkdIT3ZiNGowTFVPVzUyRnk4SUxHa2t4UFVBeDI5bHI4elZSYklBWXlm?=
- =?utf-8?B?c1FqL2wwc0FnME5tOU5DYUR3b2xYSnZuVjI3SUxuY1BBWnhWU3ZDT21NNHFD?=
- =?utf-8?B?ZmtNUDQ1MzdnZ1hua2hOelFRTXlHdHBmKzVqRFJvZS9LbWZQR1piY25JYXJJ?=
- =?utf-8?B?YWRGS25IOG5nS1V5cUZvMGFiTTNYMHBvQjBVNmZ2aCtkcW9oWlkrdUU3ZWJw?=
- =?utf-8?B?VVBvYjNvMXVXV3pVY1BJTVBtbkkrVUN4bVoyd1NldmIxaUFpTmxIcnovYWo4?=
- =?utf-8?B?clljK3NydEpheFNpd1pPbUlTcGZobVhjWGpYWE1iRFBVeW9lc2J2NG5Gc0dI?=
- =?utf-8?B?ZG9OTlBBNEZkVzNvZ2pXZHYxRVNhUVFscmJBSjdFMUUxWFBSYWVpTlFjRDlE?=
- =?utf-8?B?cVhCTG0yV1R6Uzc1UjlTR2dNNVNkV1ozWGwyUEhzcllTQ1N1YTEvU3BKOGN6?=
- =?utf-8?B?dnhpdmJ0d1p2UWg1N3JiTElHRGtQTW55ckYwc0RxMVBRd1owYXR3WVJNS0lN?=
- =?utf-8?B?QUtvM3oxRDBvVitrS2k1UThlNkIxQTh5cWV6VDBuVUZMaXJOc00rdmNVSE9t?=
- =?utf-8?B?b3BYUXNoa2ZsU2xkY1BHNjJ5WlF5MmlWWTJWTE95SjErTTZ5OGV1Y2ZOSGdK?=
- =?utf-8?B?dHQvWC9iRWIyVEF6cmlsbDJPREtWWTF5QjVIQXM5VmV0QzJOZEEyb1JyOEMx?=
- =?utf-8?B?ZnBXVHpHajE1dzBVSExlUUVLZXNxMzdaZFJDZmk3Q1Z5cTMvV3JYVVBjaEd5?=
- =?utf-8?B?NW9VSVh5Yy80cUVyNjR5RFZxRXZFc3N6aTJkSURocnBENGswNGJ1cTgrdDUy?=
- =?utf-8?B?bm1qU1VMUmFVRjlMSWJIYnQzTmtKaTJxYm0zb1hIWmFGRGtwWVBWaVlNQmUr?=
- =?utf-8?B?YWRGeVVaYXRaWUEyMnZlc2JPUTd5bmFxa2lsZDg1ZkNOZTJwbHM0Y1dEL3NI?=
- =?utf-8?B?aDlwYmx2OTFadm9QdDlhYTVoa1lWdURvaFZhV0p3eWs4dlYvL0k3L0lLa3Ju?=
- =?utf-8?B?OW5BNnJkY3dvUE1BWXVoNENyakdSTjd0MU4xSFRZc3AwOGFsMGtUOXVoVUxI?=
- =?utf-8?B?dWF6aG96eElzem5HSzlHYjk1Qkx0ejJXbEhnQ0k0RjB6KzJCK042eEVSaklT?=
- =?utf-8?Q?gj9JJj6UHt7QL7TGNz9Ked2nxnW/2a+x?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM8PR11MB5750.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?MkV1cENmWS9HVWNWS3VNTW9mZlZrZnVMdDQrdUlxY1VROVA0VmFBYnA5WHB5?=
- =?utf-8?B?TUw1Uy9hOFJwaEdPRzBoQldjM2dsSE9zTitIZEtoQXYvck15dnRmL1g4R1o1?=
- =?utf-8?B?eEFZSy9LZDNHRkZWdk02dC9wYnlGTTZ1clhyVFUyZmVWMnlQbWJnVVJOaWkv?=
- =?utf-8?B?WG1tbEpsYzROM1krWGpxR3F4cGRuTi85eDUyS1d6ZWVLUENWdHJoU0hGbGh2?=
- =?utf-8?B?c2RTRmR5QTc5Y3NOMGRMQmZBOGVpY1Y5b3RBa2RON1hSVUtOZzN4bVJ0Z3ZY?=
- =?utf-8?B?cEcxeHF0Qk9qeEsxVkN2a2IzRW8zRFc5S256b2MxOS9jUEJaUWhwYWRXWHRQ?=
- =?utf-8?B?SitHUGZvY2ZvSFRtWE14emNKVkNOd2UrV3N6Qks5UEVyQjk3WFVEZ291Qm52?=
- =?utf-8?B?TXZGT2pxUk1uQVh4bzVkMUZsdk5kam5YVDg0VlNUTWJUcXY4QXN6TjJmN0VO?=
- =?utf-8?B?SUV4RktxOWJ4bDhCd1hhTmpXRlIxamFUcndVc0RmN3EreFFGRUhpdWxDWEF5?=
- =?utf-8?B?dUtsU0ZweEp1V0dTL0VWVTNpS2ZXL3lzR1hzVnpYTWo5SDI3U3FNUTBUWktl?=
- =?utf-8?B?VDRVeldUWW41NE5hcmZ4UUFZWGkwL3p1VW1LQmoxa3BRM0FGQnh0VGJFeVlo?=
- =?utf-8?B?YUV0YlNzSnNnNCtvVXpwS25wdXNOS3RsTGc3bTI3eUpUYWQ1U1ByL1dPSDFp?=
- =?utf-8?B?dmJoSnVKbWgzSGphS3A0bHBvREFvcyttOEpVSjd1LzFNczVadnlWVExPZUc1?=
- =?utf-8?B?bzNwN2RFWXFIdjhrbkdGbFArRmRFQis2UVpjVTA5ejJIMStDRGFpTWdUMkRJ?=
- =?utf-8?B?Mm43UEdNbk8vR0pHdzcwRUMrbllET0oxUG1LVk81WHFZY2dlTDNIWCsvQXNX?=
- =?utf-8?B?WXhJZ0V6WkxaWFJoMGtyYU1BRjlzSlFCZHpSRXlmTHY2QWcvZld6akRLb1Z4?=
- =?utf-8?B?dFNrZG1rU1RQN0VsRm5qenlHOXBDN1VQMGJVYTdCZUR0T00vY2RQbkFlWFNH?=
- =?utf-8?B?ZEZpSUcrVVdONEdhdnU0WHRJQVErS1R0T0dCUWpVVXFQaVRjT1dkR01WZTBO?=
- =?utf-8?B?bVN5WFl6UDBxblpNaGs4VVMxaDlKUFI4ODFyZm1ad1d3cTM5MUVlMmVJRWJB?=
- =?utf-8?B?UHE5alFZY0kxaVZyY0RBNGo4WnI4TkJJaWZhSlVrRGtiRHlaSm1OWHV3aG1B?=
- =?utf-8?B?Y3ZLc1cyT3RaUkpGeXNlbzUxWmx2QTZzUWJ2NkM3WENvM2hYV1ZnZnhTNjhN?=
- =?utf-8?B?RlFvTDJyNnF5TmZWRWp5UjI1SVc0em05RGpXdEhxN0FQOForVm9BZlZOeEM0?=
- =?utf-8?B?VXhnVkVpeXBDZzJhUW94cE9ibG55bTNyUE1CSGJwSkpKVFNjZ3IvL01RbGlB?=
- =?utf-8?B?eUJtc1lQeENTY1ZFem9oZXpDOVVUYWp4NzBUcGpONFFMWDNnTmdwSXJEOEF3?=
- =?utf-8?B?c3k4R2pCV3grb2tnemRQaDZLUFlNZ1h4ZExjVnByQTEwZWJFVzBDWkVwNkUw?=
- =?utf-8?B?TVNNbkVUWExGZVBoUGJlVCtWQS9MREpjNUZLL2dTekV3STI2amhYNFpCT0pa?=
- =?utf-8?B?WFA4dnNha3NSVUQxOWFTTzVVUG4yejhtMGtWOTNvNEZ4TE9JNDFkVHdEUXla?=
- =?utf-8?B?SnNEMUhzTVlaQ0d1QzlWemdpV3VpczA4RDc5V0pWb3VaOVQ5UnJycG1FVmxn?=
- =?utf-8?B?U1VzK2NIdWVaUWF5ODNIQ3hNYXZmSzdTWUliaWFtTFMyUnhrb1ZzSkdIeHhy?=
- =?utf-8?B?T29pZGpuSXdYY2RiT2dzTTZ2V2c4QmlQS0JkZ3ZxNXhpa3huaTQ1ZWNyNjF0?=
- =?utf-8?B?SCtDdFVzM0hpemdYTWFPNEk2VFlrYlBjYU9YVUNBMVNBaFJ5MGRIVjQ5QkRU?=
- =?utf-8?B?TGZ4WUF2bldyeUs0cTdCOGoxdEtkNDRKT1pZVmNYTGtCZlFacEpxRlRDSnBt?=
- =?utf-8?B?Z0syUlMxYTNVNzluMFdhQ3lWTzRzQ2VubmM3b3I4TWJuaVN0OUY0ZllzRElZ?=
- =?utf-8?B?NkF4WFpYVzRpYWJyQjJnbG5uVE43MDNFaVVBUHc2ZU9kSndWUkpuY0lwOUkz?=
- =?utf-8?B?K2pnb3B2WEdkSm9WOGxZelhEeVpMMUJUNWQrUHJENG1YYzV4Q0w1R0RRVDVN?=
- =?utf-8?Q?HafRsK2NFhL4bhJwyMiq8d8eR?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Q/AJLcEr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1743500200;
+	bh=rMOFWXn3jfg3Zdxsjl6gpVa58m3wu65vUuJ+VLQESNI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Q/AJLcEruqR2yd7kbAr9jBM0WjyxKhQteGycE5G7On4GNPJpSgEYd4VugkvnlnbGE
+	 asNxZ85m1ABq4TUGpU760CN1hP4DD89eatBXRfz2Soxx+2+hdDzsKwtbVvpGPqDZaK
+	 q5zEwOGNYuXoiv+p5yQhezfQDpPWfUSkLZFgKWsqTrLollyeIBcIB4Zo1Wv/F2C4+W
+	 25sqEerwzmYtXahfTniqX1K4ZuAX12f4JXZ1Iu45C6kEm1AXyKaSt39gjY8tXCDEEM
+	 yYOjcegCROdua84z9xJT/Uz6qdN7rgTt3dmh9/bIC5ey1601uLJNcSc47QRyheKXEU
+	 1yg8RazPCcUdA==
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bbrezillon)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id C750B17E0CD1;
+	Tue,  1 Apr 2025 11:36:39 +0200 (CEST)
+Date: Tue, 1 Apr 2025 11:36:36 +0200
+From: Boris Brezillon <boris.brezillon@collabora.com>
+To: =?UTF-8?B?QWRyacOhbg==?= Larumbe <adrian.larumbe@collabora.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Rob Herring <robh@kernel.org>, Steven
+ Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>,
+ kernel@collabora.com, linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org
+Subject: Re: [RFC PATCH v2 3/6] drm/shmem: Implement sparse allocation of
+ pages for shmem objects
+Message-ID: <20250401113636.0bd1de87@collabora.com>
+In-Reply-To: <20250326021433.772196-4-adrian.larumbe@collabora.com>
+References: <20250326021433.772196-1-adrian.larumbe@collabora.com>
+	<20250326021433.772196-4-adrian.larumbe@collabora.com>
+Organization: Collabora
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM8PR11MB5750.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a096d03a-5813-47cd-3f73-08dd71008cbf
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Apr 2025 09:35:33.1530
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: n9/A7OOl0ob1+AfInHJEk6opOCZNkP8hJJF4EHTTcKsANor3KfN1oD3Sn2ljDOOEb43RjLVZZFbmkbwvNSdAU0JzjWDVyrif+OjonX5fq5c=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR11MB8467
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-PiBPbiBNb24sIE1hciAzMSwgMjAyNSBhdCAwNzoyNjo0NUFNICswMDAwLCBSZXNoZXRvdmEsIEVs
-ZW5hIHdyb3RlOg0KPiA+ID4gPiA+ICsJZGVmYXVsdDoNCj4gPiA+ID4gPiArCQlwcl9lcnIoIkVV
-UERBVEVTVk46IHVua25vd24gZXJyb3IgJWRcbiIsIHJldCk7DQo+ID4gPiA+ID4gKwkJYnJlYWs7
-DQo+ID4gPiA+ID4gKwl9DQo+ID4gPiA+DQo+ID4gPiA+IE92ZXJhbGwsIEkgdGhpbmsgeW91J3Jl
-IHJpZ2h0IGluIHRoYXQgImludmVyc2lvbiIgZG9lcyBtYWtlIHNlbnNlLA0KPiA+ID4gPiBub3cg
-dGhhdCBvdGhlciBzdHVmZiBpcyBiZXR0ZXIgYWxpZ25lZC4NCj4gPiA+ID4NCj4gPiA+ID4gQXQg
-bGVhc3Qgd2hlbiB0aGVyZSBpcyBzcHVyaW91cyBlcnJvciwgSSB0aGluayBpb2N0bCdzIHNob3Vs
-ZCBzdG9wDQo+ID4gPiA+IHJlc3BvbmRpbmcgYW5kIGRyaXZlciBzaG91bGQgbm90IGRvIGFueXRo
-aW5nIHVzZWZ1bCBhbnltb3JlLiBJLmUuLA0KPiA+ID4gPiBpdCBzaG91bGQgZ28gb3V0LW9mLXNl
-cnZpY2UuDQo+ID4gPiA+DQo+ID4gPiA+IEkgZG9uJ3QgdGhpbmsgdGhlIGRyaXZlciBzaG91bGQg
-dGVhci1kb3duLCBqdXN0IHN0b3Agc2VydmljaW5nDQo+ID4gPiA+IFZNJ3MgYW5kIHJlc3BvbmRp
-bmcgaW9jdGwncy4NCj4gPiA+ID4NCj4gPiA+ID4gUG9zc2libHkgdGhpc2ggc2hvdWxkIGJlIGFs
-c28gcmlnaHQgYWN0aW9uIGZvciBvdGhlciBlcnJvcnMgdGhhbg0KPiA+ID4gPiAiaW5zdWZmaWNp
-ZW50IGVudHJvcHkiIGJ1dCBJJ20gb3BlbiBmb3IgY29tbWVudHMgZm9yIHRoaXMuDQo+ID4gPg0K
-PiA+ID4gT3IgYWN0dWFsbHkgYWN0dWFsbHkgSSB0YWtlIG9uZSBzdGVwIGJhY2sgd2l0aCBteSBz
-dWdnZXN0aW9ucw0KPiA+ID4gYmVjYXVzZSB0aGlzIHJlYWxseSBzaG91bGQgYmUgYSBxdWVzdGlv
-biBmb3Igd2hpY2ggSSBkb24ndCBoYXZlDQo+ID4gPiB0aGUgZGVmaW5pdGl2ZSBhbnN3ZXIuDQo+
-ID4gPg0KPiA+ID4gVGhlIGN1cnJlbnQgY29kZSB3b3JrcyBsaWtlIHRoaXM6IGlmIGFueXRoaW5n
-IHRoYXQgd2UgZG9uJ3QNCj4gPiA+IGxpa2UgaGFwcGVucywgd2UgcmUtaXRlcmF0ZS4NCj4gPiA+
-DQo+ID4gPiBTaG91bGQgc29tZSBvZiB0aGUgImV4Y2VwdGlvbmFsIGNvbmRpdGlvbnMiIGhhdmUg
-YSBkaWZmZXJlbnQNCj4gPiA+IHJlY292ZXJ5IG9yIG5vdD8NCj4gPg0KPiA+IE5vbmUgb2YgdGhl
-c2UgZXhjZXB0aW9uYWwgY29uZGl0aW9ucyBhcmUgZmF0YWwgb3IgcHJlc2VudCBhbg0KPiA+IGlt
-bWVkaWF0ZSBkYW5nZXIgdG8gdGhlIHN5c3RlbSBzZWN1cml0eS4gU28sIGFsbG93aW5nIHRoZSBy
-ZS10cmllcw0KPiA+IHNlZW1zIGxvZ2ljYWwgaW4gdGhpcyBjYXNlLiBJbiBjYXNlIHJlLXRyaWVz
-IGFsc28gZmFpbCwgdGhlIHN5c3RlbQ0KPiA+IGFkbWluIHdpbGwgaGF2ZSBhbiBvcHRpb24gb2Yg
-Z3JhY2VmdWxseSBzaHV0dGluZyBkb3duIGFsbCBlbmNsYXZlcw0KPiA+IGFuZCBkb2luZyBlaXRo
-ZXIgYSBmdWxsIHJlYm9vdCAoaWYgU1ZOIGlzIHRoZSBvbmx5IGNvbmNlcm4pIG9yIG90aGVyDQo+
-ID4gbmVjZXNzYXJ5IGFjdGlvbnMgbGlrZSB0YWtpbmcgdGhlIHBoeXNpY2FsIG5vZGUgb3V0IG9m
-IHVzZSwgZXRjLg0KPiA+DQo+ID4gRG9lcyB0aGlzIHNvdW5kIHJlYXNvbmFibGU/DQo+IA0KPiBV
-a25vd24gZXJyb3IgSSBkb24ndCB0aGluayB3b3VsZCBob2xkIHRoYXQgcHJlbWlzZS4NCg0KVHJ1
-ZSwgdW5rbm93biBpcyBhbiB1bmtub3duICkpDQpCdXQgdW5rbm93biBlcnJvcnMgc2hvdWxkIG5v
-dCBoYXBwZW4gKHBlciBTR1ggc3BlYyksIGFuZCB0aGUNCmN1cnJlbnQgU0dYIGtlcm5lbCBjb2Rl
-IGRvZXMgbm90IGhhbmRsZSBzdWNoIGVycm9ycyBpbiBhbnkgb3RoZXIgd2F5DQp0aGFuIG5vdGlm
-eWluZyB0aGF0IG9wZXJhdGlvbiBmYWlsZWQgZm9yIG90aGVyIEVOQ0xTIGxlYXZlcy4gU28sIEkg
-ZG9uJ3QNCnNlZSB3aHkgRU5DTFNbRVVQREFURVNWTl0gc2hvdWxkIGJlIGRpZmZlcmVudCBmcm9t
-IGV4aXN0aW5nIGJlaGF2aW91cj8NCg0KQmVzdCBSZWdhcmRzLA0KRWxlbmEuDQoNCg0K
+On Wed, 26 Mar 2025 02:14:23 +0000
+Adri=C3=A1n Larumbe <adrian.larumbe@collabora.com> wrote:
+
+> Add a new function that lets drivers allocate pages for a subset of the
+> shmem object's virtual address range, and another function for obtaining
+> an SG table from those pages, so that memory can be mapped onto an MMU.
+>=20
+> Add also a new function for putting the pages of a sparse page array.
+>=20
+> The sparse allocation function allowed a gfp argument to allow
+> allocations other than GFP_KERNEL, in cases where memory allocation can
+> race with the shrinker's memory reclaim path
+>=20
+> There is factorization potential with drm_gem_put_pages and
+> drm_get_pages_, but it is yet to be decided what this should look like.
+>=20
+> Signed-off-by: Adri=C3=A1n Larumbe <adrian.larumbe@collabora.com>
+> ---
+>  drivers/gpu/drm/drm_gem.c              | 117 ++++++++++++++++
+>  drivers/gpu/drm/drm_gem_shmem_helper.c | 182 ++++++++++++++++++++++++-
+>  include/drm/drm_gem.h                  |   6 +
+>  include/drm/drm_gem_shmem_helper.h     |   4 +
+
+Let's split this in two commits: one adding the drm_gem helpers, and
+the other one adding support for sparse shmem objects.
+
+>  4 files changed, 303 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/drivers/gpu/drm/drm_gem.c b/drivers/gpu/drm/drm_gem.c
+> index c6240bab3fa5..fa9b3f01f9ac 100644
+> --- a/drivers/gpu/drm/drm_gem.c
+> +++ b/drivers/gpu/drm/drm_gem.c
+> @@ -679,6 +679,123 @@ void drm_gem_put_pages(struct drm_gem_object *obj, =
+struct page **pages,
+>  }
+>  EXPORT_SYMBOL(drm_gem_put_pages);
+> =20
+> +/**
+> + * drm_get_pages_xarray - helper to allocate backing pages for a GEM obj=
+ect
+> + * from shmem, and store them in an xarray.
+> + * @obj: obj in question
+> + * @pa: xarray that holds the backing pages
+> + * @page_offset: shmem index of the very first page to allocate
+> + * @npages: number of consecutive shmem pages to allocate
+> + * @gfp: additional allocation flags
+> + *
+> + * This reads the page-array of the shmem-backing storage of the given g=
+em
+> + * object. The input xarray is where the pages are stored. If a page is =
+not
+> + * allocated or swapped-out, this will allocate/swap-in the required pag=
+es.
+> + * Only the requested range is covered with physical pages.
+> + *
+> + * Use drm_gem_put_xarray_page_range() to release the same xarray subset=
+ of pages.
+> + *
+> + * This uses the GFP-mask set on the shmem-mapping (see mapping_set_gfp_=
+mask()),
+> + * and any further mask bits set in the gfp input parameter.
+> + *
+> + * This function is only valid on objects initialized with
+> + * drm_gem_object_init(), but not for those initialized with
+> + * drm_gem_private_object_init() only.
+> + */
+> +int drm_get_pages_xarray(struct drm_gem_object *obj, struct xarray *pa,
+> +			 pgoff_t page_offset, unsigned int npages, gfp_t gfp)
+
+Can we make the names consistent, like drm_gem_{get,put}_page_range().
+Same for the arguments we pass to these helpers (same name, same order
+for common arguments).
+
+> +{
+> +	struct address_space *mapping;
+> +	struct page *page;
+> +	int ret =3D 0;
+> +	int i;
+> +
+> +	if (WARN_ON(!obj->filp))
+> +		return -EINVAL;
+> +
+> +	/* This is the shared memory object that backs the GEM resource */
+> +	mapping =3D obj->filp->f_mapping;
+> +
+> +	/* We already BUG_ON() for non-page-aligned sizes in
+> +	 * drm_gem_object_init(), so we should never hit this unless
+> +	 * driver author is doing something really wrong:
+> +	 */
+> +	WARN_ON((obj->size & (PAGE_SIZE - 1)) !=3D 0);
+> +
+> +	mapping =3D obj->filp->f_mapping;
+> +	mapping_set_unevictable(mapping);
+> +
+> +	for (i =3D 0; i < npages; i++) {
+> +		page  =3D shmem_read_mapping_page_gfp(mapping, page_offset + i,
+> +						    mapping_gfp_mask(mapping) | gfp);
+
+I don't think that works. For instance we need something like:
+
+		gfp_t page_gfp =3D mapping_gfp_constraint(mapping, ~__GFP_RECLAIM);
+		page_gfp |=3D __GFP_NORETRY | __GFP_WARN;
+
+for non-blocking allocation. But I'm not even sure we should
+let the user wants to modify the mapping flags. How about
+we just get a gfp_t page_flag from the caller.
+
+> +		if (IS_ERR(page)) {
+> +			ret =3D PTR_ERR(page);
+> +			goto err_free_pages;
+> +		}
+> +
+> +		/* Add the page into the xarray */
+> +		ret =3D xa_err(xa_store(pa, page_offset + i, page, gfp));
+
+We probably don't want the same flags for other allocations,
+so I'd recommend take a gfp_t other_gfp argument for anything
+that's not a shmem page allocation.
+
+> +		if (ret) {
+> +			put_page(page);
+> +			goto err_free_pages;
+> +		}
+> +	}
+> +
+> +	return ret;
+> +
+> +err_free_pages:
+> +	while (--i) {
+> +		page =3D xa_erase(pa, page_offset + i);
+> +		if (drm_WARN_ON(obj->dev, !page))
+> +			continue;
+> +		put_page(page);
+
+I'd rather use shmem_read_folio_gfp() with a folio_batch to
+release the folios that were acquired in the main loop, like we
+do in drm_gem_get_pages(). Actually, I'm not sure we want to
+release those pages when we populate a GEM range, because
+suddenly you have to check if the page was already present, and
+only release it if it's been added in this call. Or you have
+to reject requests to populate regions that overlap with already
+populated regions.
+
+It's simpler if we define a slightly different semantics for
+drm_gem_get_page_range(): in case of failure, the pages already
+populated are kept, and the user should call drm_gem_put_page_range()
+to release those.
+
+> +	}
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL(drm_get_pages_xarray);
+> +
+> +/**
+> + * drm_gem_put_xarray_page_range - helper to free some backing pages for=
+ a
+> + * sparse GEM object
+> + * @pa: xarray that holds the backing pages
+> + * @idx: xarray index of the first page tof ree
+> + * @npages: number of consecutive pages in the xarray to free
+> + * @dirty: if true, pages will be marked as dirty
+> + * @accessed: if true, the pages will be marked as accessed
+> + */
+> +void drm_gem_put_xarray_page_range(struct xarray *pa, unsigned long idx,
+> +				   unsigned int npages, bool dirty, bool accessed)
+
+void drm_gem_put_page_range(struct drm_gem_object *obj, struct xarray *pa,
+			    pgoff_t page_offset, unsigned int npages)
+
+To be consistent with the getter.
+
+
+> +{
+> +	struct folio_batch fbatch;
+> +	struct page *page;
+> +
+> +	folio_batch_init(&fbatch);
+> +
+
+You need to call mapping_clear_unevictable() if you want the folios
+you return to be evictable again. This becomes problematic because
+evictability is per-GEM, so, you can only flag the mapping as
+evictable if no page range remains active.
+
+Luckily, the xarray construct has a concept of marker which we can
+use to flag an entry as used, and only when the xarray as a whole
+has this marker cleared (!xa_marked(pa, PAGE_USED)), we consider the
+mapping as evictable again.
+
+The other option is to consider that all pages are always returned
+in one go, but that means we can't do partial reclaim of sparse BOs.
+Not sure how much we care about this case though.
+
+> +	xa_for_each(pa, idx, page) {
+
+If you only want to drop the pages in the idx:idx+npages, you need
+to use xa_for_each_range(), and if you want to drop all pages, you
+need to change the function name and drop the idx and pages arguments.
+
+> +		struct folio *folio =3D page_folio(page);
+> +
+> +		if (dirty)
+> +			folio_mark_dirty(folio);
+> +		if (accessed)
+> +			folio_mark_accessed(folio);
+> +
+> +		/* Undo the reference we took when populating the table */
+> +		if (!folio_batch_add(&fbatch, folio))
+> +			drm_gem_check_release_batch(&fbatch);
+> +
+> +		xa_erase(pa, idx);
+
+You're leaving pages behind if the folio contains more than one page. Not
+a big deal if the intent is to destroy the array, but given it's
+not something this function controls, I'd be tempted to not take that
+chance.
+
+> +
+> +		idx +=3D folio_nr_pages(folio) - 1;
+> +	}
+> +
+> +	if (folio_batch_count(&fbatch))
+> +		drm_gem_check_release_batch(&fbatch);
+> +
+> +	WARN_ON((idx+1) !=3D npages);
+
+How about we allow unmapping a sparsely populate range instead of
+complaining here? This would allow one to call
+drm_gem_put_page_range(0, UINT_MAX) to mean "drop all pages".
+
+> +}
+> +EXPORT_SYMBOL(drm_gem_put_xarray_page_range);
+> +
+>  static int objects_lookup(struct drm_file *filp, u32 *handle, int count,
+>  			  struct drm_gem_object **objs)
+>  {
+> diff --git a/drivers/gpu/drm/drm_gem_shmem_helper.c b/drivers/gpu/drm/drm=
+_gem_shmem_helper.c
+> index 5f75eb1230f6..1bf33e5a1c4c 100644
+> --- a/drivers/gpu/drm/drm_gem_shmem_helper.c
+> +++ b/drivers/gpu/drm/drm_gem_shmem_helper.c
+> @@ -174,6 +174,34 @@ struct drm_gem_shmem_object *drm_gem_shmem_create_wi=
+th_mnt(struct drm_device *de
+>  }
+>  EXPORT_SYMBOL_GPL(drm_gem_shmem_create_with_mnt);
+> =20
+> +static void drm_gem_shmem_put_pages_sparse(struct drm_gem_shmem_object *=
+shmem)
+> +{
+> +	struct page *page;
+> +	unsigned long idx;
+> +
+> +	if (drm_WARN_ON(shmem->base.dev, !shmem->sparse))
+> +		return;
+> +
+> +	idx =3D 0;
+> +	xa_for_each(&shmem->xapages, idx, page) {
+> +		unsigned long consecutive =3D 1;
+> +
+> +		if (!page)
+> +			continue;
+> +
+> +		while (xa_load(&shmem->xapages, idx + consecutive))
+> +			consecutive++;
+> +
+> +		drm_gem_put_xarray_page_range(&shmem->xapages, idx, consecutive,
+> +					      shmem->pages_mark_dirty_on_put,
+> +					      shmem->pages_mark_accessed_on_put);
+
+It really feels like something the drm_gem helper should deal with, instead
+of having the shmem helper iterate over the page array to figure out holes
+to skip.
+
+> +
+> +		idx +=3D consecutive;
+> +	}
+> +
+> +	drm_WARN_ON(shmem->base.dev, !xa_empty(&shmem->xapages));
+> +}
+> +
+>  /**
+>   * drm_gem_shmem_free - Free resources associated with a shmem GEM object
+>   * @shmem: shmem GEM object to free
+> @@ -266,8 +294,8 @@ void drm_gem_shmem_put_pages(struct drm_gem_shmem_obj=
+ect *shmem)
+>  		if (!shmem->pages)
+>  			return;
+>  	} else {
+> -		/* Not implemented yet */
+> -		return;
+> +		if (xa_empty(&shmem->xapages))
+> +			return;
+>  	}
+> =20
+>  	if (drm_WARN_ON_ONCE(obj->dev, !shmem->pages_use_count))
+> @@ -281,10 +309,15 @@ void drm_gem_shmem_put_pages(struct drm_gem_shmem_o=
+bject *shmem)
+>  		set_pages_array_wb(shmem->pages, obj->size >> PAGE_SHIFT);
+>  #endif
+> =20
+> -	drm_gem_put_pages(obj, shmem->pages,
+> -			  shmem->pages_mark_dirty_on_put,
+> -			  shmem->pages_mark_accessed_on_put);
+> -	shmem->pages =3D NULL;
+> +	if (!shmem->sparse) {
+> +		drm_gem_put_pages(obj, shmem->pages,
+> +				  shmem->pages_mark_dirty_on_put,
+> +				  shmem->pages_mark_accessed_on_put);
+> +		shmem->pages =3D NULL;
+> +	} else {
+> +		drm_gem_shmem_put_pages_sparse(shmem);
+> +		xa_destroy(&shmem->xapages);
+> +	}
+>  }
+>  EXPORT_SYMBOL(drm_gem_shmem_put_pages);
+> =20
+> @@ -797,6 +830,103 @@ static struct sg_table *drm_gem_shmem_get_pages_sgt=
+_locked(struct drm_gem_shmem_
+>  	return ERR_PTR(ret);
+>  }
+> =20
+> +static int
+> +drm_gem_shmem_sparse_populate_locked(struct drm_gem_shmem_object *shmem,
+> +				     unsigned int n_pages, pgoff_t page_offset,
+> +				     gfp_t gfp)
+> +{
+> +	bool first_alloc;
+> +	int ret;
+> +
+> +	if (!shmem->sparse)
+> +		return -EINVAL;
+> +
+> +	dma_resv_assert_held(shmem->base.resv);
+
+One of the use-case of sparse GEM is to allow alloc-on-fault, where we're
+not allowed to block on allocation, but also not allowed to take locks
+under which blocking allocations might happen. The GEM resv lock is one
+falls in that case, meaning locking around sparse gem population is
+something that should be left to the driver, not enforced here.
+
+> +
+> +	/* If the mapping exists, then bail out immediately */
+> +	if (xa_load(&shmem->xapages, page_offset) !=3D NULL)
+> +		return -EEXIST;
+> +
+> +	first_alloc =3D xa_empty(&shmem->xapages);
+> +
+> +	ret =3D drm_get_pages_xarray(&shmem->base, &shmem->xapages,
+> +				   page_offset, n_pages, gfp);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (first_alloc)
+> +		shmem->pages_use_count =3D 1;
+
+I highly recommend that the sparse_backing objects have their own
+refcounting, because of the lock issue I mentioned above, and also
+because if we decide that sparse GEMs can be used at regular GEMs,
+the sparse GEM use/pin_count won't encode the same thing:
+
+- regular GEM count: number of users of a fully mapped sparse GEM
+- sparse GEM count: number of users of the sparse GEM, plus one if
+  the GEM is also used as a regular GEM, because the regular GEM logic
+  is also considered a user of the sparse GEM resources
+
+> +
+> +	return 0;
+> +}
+> +
+> +static struct sg_table *
+> +drm_gem_shmem_sparse_get_sgt_range(struct drm_gem_shmem_object *shmem,
+> +				   unsigned int n_pages, pgoff_t page_offset,
+> +				   gfp_t gfp)
+> +{
+> +	struct drm_gem_object *obj =3D &shmem->base;
+> +	struct sg_table *sgt;
+> +	int ret;
+> +
+> +	if (drm_WARN_ON(obj->dev, !shmem->sparse))
+> +		return ERR_PTR(-EINVAL);
+> +
+> +	/* If the page range wasn't allocated, then bail out immediately */
+> +	if (xa_load(&shmem->xapages, page_offset) =3D=3D NULL)
+> +		return ERR_PTR(-EINVAL);
+> +
+> +	sgt =3D kzalloc(sizeof(*sgt), GFP_NOWAIT);
+> +	if (!sgt)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	ret =3D sg_alloc_table_from_xarray(sgt, &shmem->xapages, page_offset,
+> +					 n_pages, 0, n_pages * PAGE_SIZE, gfp);
+> +	if (ret)
+> +		goto err_free_sgtable;
+> +
+> +	ret =3D dma_map_sgtable(obj->dev->dev, sgt, DMA_BIDIRECTIONAL, 0);
+> +	if (ret)
+> +		goto err_free_sgtable;
+> +
+> +	return sgt;
+> +
+> +err_free_sgtable:
+> +	kfree(sgt);
+> +	return ERR_PTR(ret);
+> +}
+> +
+> +static struct sg_table *
+> +drm_gem_shmem_get_sparse_pages_locked(struct drm_gem_shmem_object *shmem,
+> +				      unsigned int n_pages, pgoff_t page_offset,
+> +				      gfp_t gfp)
+> +{
+> +	struct sg_table *sgt;
+> +	int ret;
+> +
+> +	if (!shmem->sparse)
+> +		return ERR_PTR(-EINVAL);
+> +
+> +	dma_resv_assert_held(shmem->base.resv);
+
+Same problem I mentioned for pages exist here, because the
+sparse sgt will be needed in a path where we not allowed
+to take that lock.
+
+> +
+> +	ret =3D drm_gem_shmem_sparse_populate_locked(shmem, n_pages, page_offse=
+t, gfp);
+> +	if (ret)
+> +		return ERR_PTR(ret);
+> +
+> +	sgt =3D drm_gem_shmem_sparse_get_sgt_range(shmem, n_pages, page_offset,=
+ gfp);
+> +	if (IS_ERR(sgt)) {
+> +		ret =3D PTR_ERR(sgt);
+> +		goto err_free_pages;
+> +	}
+> +
+> +	return sgt;
+> +
+> +err_free_pages:
+> +	drm_gem_put_xarray_page_range(&shmem->xapages, page_offset,
+> +				      n_pages, false, false);
+> +	return ERR_PTR(ret);
+> +}
+
+I'd be in favor of managing the sgts at the drm_gem_shmem_sparse_backing
+level too, because AFAICT, all potential sparse GEM users (panfrost,
+panthor and lima) need those, and that's probably good if we can
+standardize that too.=20
+
+> +
+>  /**
+>   * drm_gem_shmem_get_pages_sgt - Pin pages, dma map them, and return a
+>   *				 scatter/gather table for a shmem GEM object.
+> @@ -828,6 +958,46 @@ struct sg_table *drm_gem_shmem_get_pages_sgt(struct =
+drm_gem_shmem_object *shmem)
+>  }
+>  EXPORT_SYMBOL_GPL(drm_gem_shmem_get_pages_sgt);
+> =20
+> +/**
+> + * drm_gem_shmem_get_sparse_pages_sgt - Pin pages, dma map them, and ret=
+urn a
+> + *				 scatter/gather table for a sparse shmem GEM object.
+> + * @shmem: shmem GEM object
+> + * @n_pages: number of pages to pin and map
+> + * @page_offset: shmem file index of the first page to allocate and map
+> + * @gfp: Further allocation flags
+> + *
+> + * This function conceptually does the same thing as drm_gem_shmem_get_p=
+ages_sgt,
+> + * but only for a contiguous subset of pages from the underlying shmem f=
+ile.
+> + * The allocation flags allows users to allocate pages with a mask other=
+ than
+> + * GFP_KERNEL, in cases where it can race with shmem shrinkers.
+> + *
+> + * Returns:
+> + * A pointer to the scatter/gather table of pinned pages or errno on fai=
+lure.
+> + */
+> +struct sg_table *
+> +drm_gem_shmem_get_sparse_pages_sgt(struct drm_gem_shmem_object *shmem,
+> +				   unsigned int n_pages, pgoff_t page_offset,
+> +				   gfp_t gfp)
+> +{
+> +	struct drm_gem_object *obj =3D &shmem->base;
+> +	struct sg_table *sgt;
+> +	int ret;
+> +
+> +	if (drm_WARN_ON(obj->dev, !shmem->sparse))
+> +		return ERR_PTR(-EINVAL);
+> +
+> +	ret =3D dma_resv_lock(shmem->base.resv, NULL);
+> +	if (ret)
+> +		return ERR_PTR(ret);
+> +
+> +	sgt =3D drm_gem_shmem_get_sparse_pages_locked(shmem, n_pages, page_offs=
+et, gfp);
+> +
+> +	dma_resv_unlock(shmem->base.resv);
+> +
+> +	return sgt;
+> +}
+> +EXPORT_SYMBOL_GPL(drm_gem_shmem_get_sparse_pages_sgt);
+> +
+>  /**
+>   * drm_gem_shmem_prime_import_sg_table - Produce a shmem GEM object from
+>   *                 another driver's scatter/gather table of pinned pages
+> diff --git a/include/drm/drm_gem.h b/include/drm/drm_gem.h
+> index 2bf893eabb4b..d8288a119bc3 100644
+> --- a/include/drm/drm_gem.h
+> +++ b/include/drm/drm_gem.h
+> @@ -39,6 +39,7 @@
+>  #include <linux/dma-resv.h>
+>  #include <linux/list.h>
+>  #include <linux/mutex.h>
+> +#include <linux/xarray.h>
+> =20
+>  #include <drm/drm_vma_manager.h>
+> =20
+> @@ -534,6 +535,11 @@ struct page **drm_gem_get_pages(struct drm_gem_objec=
+t *obj);
+>  void drm_gem_put_pages(struct drm_gem_object *obj, struct page **pages,
+>  		bool dirty, bool accessed);
+> =20
+> +int drm_get_pages_xarray(struct drm_gem_object *obj, struct xarray *pa,
+> +			 pgoff_t page_offset, unsigned int npages, gfp_t gfp);
+> +void drm_gem_put_xarray_page_range(struct xarray *pa, unsigned long idx,
+> +				   unsigned int npages, bool dirty, bool accessed);
+> +
+>  void drm_gem_lock(struct drm_gem_object *obj);
+>  void drm_gem_unlock(struct drm_gem_object *obj);
+> =20
+> diff --git a/include/drm/drm_gem_shmem_helper.h b/include/drm/drm_gem_shm=
+em_helper.h
+> index 00e47512b30f..cbe4548e3ff6 100644
+> --- a/include/drm/drm_gem_shmem_helper.h
+> +++ b/include/drm/drm_gem_shmem_helper.h
+> @@ -138,6 +138,10 @@ void drm_gem_shmem_purge(struct drm_gem_shmem_object=
+ *shmem);
+>  struct sg_table *drm_gem_shmem_get_sg_table(struct drm_gem_shmem_object =
+*shmem);
+>  struct sg_table *drm_gem_shmem_get_pages_sgt(struct drm_gem_shmem_object=
+ *shmem);
+> =20
+> +struct sg_table *drm_gem_shmem_get_sparse_pages_sgt(struct drm_gem_shmem=
+_object *shmem,
+> +						     unsigned int n_pages, pgoff_t page_offset,
+> +						     gfp_t gfp);
+> +
+>  void drm_gem_shmem_print_info(const struct drm_gem_shmem_object *shmem,
+>  			      struct drm_printer *p, unsigned int indent);
+> =20
+
