@@ -1,168 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C48B53FBB3
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 13:20:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743513602; cv=none; b=cBfQySdVXOJzlyZkgqIeBu9linyunCzC0pkjlhvdRAsrfpbADuRKOYBiRG+0iSjEtSREh2pljQAuq1/RiAwxzrFgWEyI+zHg673DyKjd7AS5ZRBhIj8z4o49OvEm3x44lNOBNmi0ls3k8ZfSK+RtavcHmGp8nG1pg5v3tXC3xvI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743513602; c=relaxed/simple;
-	bh=9wSJvejkq5NxPrQKr0Jhsiek8qkHChwl57pzJsxs7qo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ab1iV8TmiG/Em0jgt8oY8geaVWLm49rDxPFZcP0j+0l9pj/49E8KlkbMyW5jRoG8yRNj8zJwhEI+UFuwCiTlE0DvMOkXvy51nydWSVlDVS15oKImfuQaX520S6EdbG47KmtUutuREYmQDio9G3Rq1f/BfbFs0MQVsLj2LbqRhQw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YIaDl7Mv; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C3E21EB5FC;
+	Tue,  1 Apr 2025 13:20:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743513622; cv=pass; b=eZGt8dX88LQpVjpWQfCh0MYZfSzQOYBJ+Fkn9AR7V0ZFELh0KUOsawPyu69eXp3Fr37mdllg2fPvwuWvliKSrhs68JDPmIa/6gqzFi1zqD5CmGctxKYIqpD+nId7S+c+TbpJc+foVjccjbvb+pft3F7FvGIzzBslf8vGNWd94gk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743513622; c=relaxed/simple;
+	bh=936t3Y62g/caIH2Gp0NwrIIseCHFNvnPEZQOPCayFj8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=c3zH7Fa4LAG8HM7Z4ssXvBFULJImzm8ePc4oWPi7NPvhcLhwti3KK2R9oRAZOADQbj30Jl6c09pkYoilm104ZKBBXeXBSPeVUiGlT/684DKqi8XjuXBvE6GnNHU/gu2FnP7sGqPnqM7Th8eLC08pSyWDEYLVCLspmfAST2iFca4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b=Nys/RrGN; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YIaDl7Mv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDE0CC4CEE4;
-	Tue,  1 Apr 2025 13:19:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743513602;
-	bh=9wSJvejkq5NxPrQKr0Jhsiek8qkHChwl57pzJsxs7qo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YIaDl7MvazjElWMG6+MRQRAKFy4pTiPH2Y5kKB+bwOeQGRBx28iNTxNhm+kBGiDtp
-	 4YKO8ZQVxGwwSlju1t7NgbfrcAPwjIo8gvofNVbWgUvO0GBU0+rwWFjhkT3apkAmJ4
-	 uY6pQqwyoDvqNlDYRZ6RCPga2q3TC6ojEw3OP+LuTxjk5AxZLRDTvJDoDvb6gOWS6h
-	 jWngKU0OhKMznLLv+XUMAgOMR4RZ/zSX670RxahSYlQ+eSNB6tA5K2+nNlGWzX4fN9
-	 HG0WNS17ib8DRY6FK3ZVY7oTA0kM7Eb5cnhK7WDEDKBVJRdkqT7xn73igeNcfTzWSk
-	 KgnRbPM3oyH6A==
-Date: Tue, 1 Apr 2025 16:19:54 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: David Woodhouse <dwmw2@infradead.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	"Sauerwein, David" <dssauerw@amazon.de>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	David Hildenbrand <david@redhat.com>, Marc Zyngier <maz@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mike Rapoport <rppt@linux.ibm.com>, Will Deacon <will@kernel.org>,
-	kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH v4 2/4] memblock: update initialization of reserved pages
-Message-ID: <Z-vn-sMtNfwyJ9VW@kernel.org>
-References: <20210511100550.28178-1-rppt@kernel.org>
- <20210511100550.28178-3-rppt@kernel.org>
- <9f33c0b4517eaf5f36c515b92bdcb6170a4a576a.camel@infradead.org>
- <Z-qrtJ6cs-kXpepR@kernel.org>
- <b47d5f5602573bd082be3729ceddb3d1dc374ef1.camel@infradead.org>
- <Z-vPBu5vAvFhYDzP@kernel.org>
- <1787b97c267b53127c60a61419d99751f8a66b1a.camel@infradead.org>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b="Nys/RrGN"
+ARC-Seal: i=1; a=rsa-sha256; t=1743513601; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=Vhf4ybQ9c+7td8sHscT0FqIyJF59/rLNs7j36dqudh8vVG/H+3KvyZ6I1jZxWRM8ifv0ytukTpKo+P31wUbeFuFDAg2gWoHs+K13PKxAJh9kEGOE4ZhHXXfCTTHC5cemijXkANMRnl4M5miQb1PqV3/6sJmhCLrx/A2k9Y//Bdk=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1743513601; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=HlqcrObXVb8wnKz6QZRhhTpIu3g5AsMKBRmqEwnSzLo=; 
+	b=HVqwWD3ocgVhPwjckDnO381DAvC5mpzPjOWQHFMaFocxD2IS8U2KiSvjat6LcsBV/nBTR68KItxalyDo4M8ujvLwOBjSTBiCkwZR+HhvvsQwTqK5Zld8ZPHXjEjZhbqYe5ROECpNfQEZqvbTKtC7JqqxdTRyvOeN6TllT3r6Dak=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=dmitry.osipenko@collabora.com;
+	dmarc=pass header.from=<dmitry.osipenko@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1743513601;
+	s=zohomail; d=collabora.com; i=dmitry.osipenko@collabora.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=HlqcrObXVb8wnKz6QZRhhTpIu3g5AsMKBRmqEwnSzLo=;
+	b=Nys/RrGNtw5ZpaKk+0t2PWkYx0HxvUjJspY90Jib1wV9UvDp9yP2DXlUjFxvi85A
+	ZvV5WKfDrxgyqpp3jALEsxinQYhJ35Xe0oT7IpdUZimnl3Lg4w2m+n7N30RXN6LZZkh
+	SJD0z/SNTtttpiF/J6079YbqMaLG+We49BRNwTSU=
+Received: by mx.zohomail.com with SMTPS id 174351359953037.89471879433961;
+	Tue, 1 Apr 2025 06:19:59 -0700 (PDT)
+Message-ID: <3fea4b5b-c4d1-4ac8-b351-692baad81a75@collabora.com>
+Date: Tue, 1 Apr 2025 16:19:55 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1787b97c267b53127c60a61419d99751f8a66b1a.camel@infradead.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5] drm/syncobj: Extend EXPORT_SYNC_FILE for timeline
+ syncobjs
+To: Rob Clark <robdclark@gmail.com>, dri-devel@lists.freedesktop.org
+Cc: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Rob Clark <robdclark@chromium.org>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Sumit Semwal <sumit.semwal@linaro.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ "open list:DMA BUFFER SHARING FRAMEWORK:Keyword:bdma_(?:buf|fence|resv)b"
+ <linux-media@vger.kernel.org>,
+ "moderated list:DMA BUFFER SHARING FRAMEWORK:Keyword:bdma_(?:buf|fence|resv)b"
+ <linaro-mm-sig@lists.linaro.org>
+References: <20250331212333.16029-1-robdclark@gmail.com>
+From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
+Content-Language: en-US
+In-Reply-To: <20250331212333.16029-1-robdclark@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ZohoMailClient: External
 
-On Tue, Apr 01, 2025 at 12:50:33PM +0100, David Woodhouse wrote:
-> On Tue, 2025-04-01 at 14:33 +0300, Mike Rapoport wrote:
-> > On Mon, Mar 31, 2025 at 04:13:56PM +0100, David Woodhouse wrote:
-> > > On Mon, 2025-03-31 at 17:50 +0300, Mike Rapoport wrote:
-> > > > On Mon, Mar 31, 2025 at 01:50:33PM +0100, David Woodhouse wrote:
-> > > > > On Tue, 2021-05-11 at 13:05 +0300, Mike Rapoport wrote:
-> > > > > 
-> > > > > On platforms with large NOMAP regions (e.g. which are actually reserved
-> > > > > for guest memory to keep it out of the Linux address map and allow for
-> > > > > kexec-based live update of the hypervisor), this pointless loop ends up
-> > > > > taking a significant amount of time which is visible as guest steal
-> > > > > time during the live update.
-> > > > > 
-> > > > > Can reserve_bootmem_region() skip the loop *completely* if no PFN in
-> > > > > the range from start to end is valid? Or tweak the loop itself to have
-> > > > > an 'else' case which skips to the next valid PFN? Something like
-> > > > > 
-> > > > >  for(...) {
-> > > > >     if (pfn_valid(start_pfn)) {
-> > > > >        ...
-> > > > >     } else {
-> > > > >        start_pfn = next_valid_pfn(start_pfn);
-> > > > >     }
-> > > > >  }
-> > > > 
-> > > > My understanding is that you have large reserved NOMAP ranges that don't
-> > > > appear as memory at all, so no memory map for them is created and so
-> > > > pfn_valid() is false for pfns in those ranges.
-> > > > 
-> > > > If this is the case one way indeed would be to make
-> > > > reserve_bootmem_region() skip ranges with no valid pfns.
-> > > > 
-> > > > Another way could be to memblock_reserved_mark_noinit() such ranges and
-> > > > then reserve_bootmem_region() won't even get called, but that would require
-> > > > firmware to pass that information somehow.
-> > > 
-> > > I was thinking along these lines (not even build tested)...
-> > > 
-> > > I don't much like the (unsigned long)-1 part. I might make the helper
-> > > 'static inline bool first_valid_pfn (unsigned long *pfn)' and return
-> > > success or failure. But that's an implementation detail.
-> > > 
-> > > index 6d1fb6162ac1..edd27ba3e908 100644
-> > > --- a/include/asm-generic/memory_model.h
-> > > +++ b/include/asm-generic/memory_model.h
-> > > @@ -29,8 +29,43 @@ static inline int pfn_valid(unsigned long pfn)
-> > >         return pfn >= pfn_offset && (pfn - pfn_offset) < max_mapnr;
-> > >  }
-> > >  #define pfn_valid pfn_valid
-> > > +
-> > > +static inline unsigned long first_valid_pfn(unsigned long pfn)
-> > > +{
-> > > +       /* avoid <linux/mm.h> include hell */
-> > > +       extern unsigned long max_mapnr;
-> > > +       unsigned long pfn_offset = ARCH_PFN_OFFSET;
-> > > +
-> > > +       if (pfn < pfn_offset)
-> > > +               return pfn_offset;
-> > > +
-> > > +       if ((pfn - pfn_offset) < max_mapnr)
-> > > +               return pfn;
-> > > +
-> > > +       return (unsigned long)(-1);
-> > > +}
-> > 
-> > This seems about right for FLATMEM. For SPARSEMEM it would be something
-> > along these lines (I kept dubious -1):
+On 4/1/25 00:23, Rob Clark wrote:
+> From: Rob Clark <robdclark@chromium.org>
 > 
-> Thanks. Is that right even with CONFIG_SPARSEMEM_VMEMMAP? It seems that
-> it's possible for pfn_valid() to be false for a given *page*, but there
-> may still be valid pages in the remainder of the same section in that
-> case? 
+> Add support for exporting a dma_fence fd for a specific point on a
+> timeline.  This is needed for vtest/vpipe[1][2] to implement timeline
+> syncobj support, as it needs a way to turn a point on a timeline back
+> into a dma_fence fd.  It also closes an odd omission from the syncobj
+> UAPI.
+> 
+> [1] https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/33433
+> [2] https://gitlab.freedesktop.org/virgl/virglrenderer/-/merge_requests/805
+> 
+> v2: Add DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_TIMELINE
+> v3: Add unstaged uabi header hunk
+> v4: Also handle IMPORT_SYNC_FILE case
+> v5: Address comments from Dmitry
+> 
+> Signed-off-by: Rob Clark <robdclark@chromium.org>
+> ---
+>  drivers/gpu/drm/drm_syncobj.c | 45 +++++++++++++++++++++++++++--------
+>  include/uapi/drm/drm.h        |  4 ++++
+>  2 files changed, 39 insertions(+), 10 deletions(-)
 
-Right, it might after memory hot-remove. At boot the entire section either
-valid or not.
- 
-> I think it should only skip to the next section if the current section
-> doesn't exist at all, not just when pfn_section_valid() return false?
-
-Yeah, when pfn_section_valid() returns false it should itereate pfns until
-the end of the section and check if they are valid. 
- 
-> I also wasn't sure how to cope with the rcu_read_lock_sched() that
-> happens in pfn_valid(). What's that protecting against? Does it mean
-> that by the time pfn_valid() returns true, that might not be the
-> correct answer any more?
- 
-That's protecting against kfree_rcu() in section_deactivate() so even if
-the answer is still correct, later access to apparently valid struct page
-may blow up :/ 
-
-> > static inline unsigned long first_valid_pfn(unsigned long pfn)
-> > {
-> > 	unsigned long nr = pfn_to_section_nr(pfn);
-> > 
-> > 	do {
-> > 		if (pfn_valid(pfn))
-> > 			return pfn;
-> > 		pfn = section_nr_to_pfn(nr++);
-> > 	} while (nr < NR_MEM_SECTIONS);
-> > 
-> > 	return (unsigned long)-1;
-> > }
+Reviewed-by: Dmitry Osipenko <dmitry.osipenko@collabora.com>
 
 -- 
-Sincerely yours,
-Mike.
+Best regards,
+Dmitry
