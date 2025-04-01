@@ -1,121 +1,172 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B60A41EE033
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 22:05:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA2D01E8854;
+	Tue,  1 Apr 2025 22:06:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743545115; cv=none; b=Uh4EkTR4ciFlkbmI16yyi8nffOGHWbDsJYK31L2+MMvj6ARLTHSVguc9uCipomKy4aumS0lZSdnkpOT9VuPQjN443KNcq1zAVuwSn+7sYSL33yKt7Se5Vzx0BmcmGs62RvvAm00y/vXe2OH9e5HMLABSMwsh8LXxpEbLUoSDItI=
+	t=1743545196; cv=none; b=WuqlFd+6udyafMW01qVkV3zgtjecYZNpb5pVI/adVmGiUAKXUCnxY9fk11gKowuf3Q9LKTRSaDNTLnJfPVCMZBnxJ74yU0WcdObc/3KQusa/0+92XI0Nb5/MRGrvN+iXEyVQJCYy+qBANWKhVQPk8EzktYzBm4xYc8uBC4lr94Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743545115; c=relaxed/simple;
-	bh=HlGfv4iz54EHzctztjZOLKN1PODK/B4a3a8b77wJGvg=;
+	s=arc-20240116; t=1743545196; c=relaxed/simple;
+	bh=8AQAvDyaMhMVY2j4SU5UMr5j7ffgLFtEfYWwHBYe7pI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=mYRHq9ZcogkLURFP0poWH/7HfNftLCXy26ADmR+4inoSXq+T2arB6taKPTP+DmVT2eZWlojhA3izhfI8iWzyxvNNu0GfoeK1ulA6kO1nf0ECEt5zNN9UDmVPVnLJOG5oQrOEicuH3yk7wmLwU5uYRaGYJnQMhCy50FRWYUE3b50=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Z4mgXXJe; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=cVrGUJ/v8327oazPzE2+Ub+jrYT1nR3RVduyjGkbZE+/bZxMQ07q84VHTtC5s/TMGmuu3A7DL8sLh2k9vfRJs1HLD9m7APXAG4QF74muxhzNuR3q3uoktSxkmON41rZOv3O+SAFjvxvKryhF3WteUZcBgBpbyXvymaTKCQbthrU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cjpasMac; arc=none smtp.client-ip=209.85.216.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Z4mgXXJe"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2264c9d0295so66105ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 15:05:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cjpasMac"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-303a66af07eso8343913a91.2;
+        Tue, 01 Apr 2025 15:06:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743545113; x=1744149913; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
+        d=gmail.com; s=20230601; t=1743545194; x=1744149994; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=qai9DMQZxsab9OWncJhs/lmdIQOyIQkiN593aFUVGd4=;
-        b=Z4mgXXJeZ5tRradS8rNrR7KnMefeP0pSmfDlGFWgQGC+q+WVsN0QCgIRfpsnIGGsxA
-         YZEbHGdh4BrSvcVjMuf0cQwD8JUZ1JnnXpCPnVEsBgLeFXkkmLvEfHMT1AqlMfu8I0CW
-         JlvAypGhBNarNM509hA5xqQkIAoc36+VXV2prp4hZgD6sUpy69yoBbk1cXU0amlhoi0S
-         5/VBYWjavbmm+XadowQdaNi2fPVtaf8dBWwvzvEx1tfcJv7t4rbytfmBXXnhzWD2luj7
-         SU6BJUvxLNTU6W/2uvU/xp3uyO39RMdb9rjyH1NwjrLUmDJ6P3fs3bgcysjcrepQuKc0
-         P2yQ==
+        bh=aYu6Zg/XFavoCXahu5FxZXJJfvgTGH8lEtVwhtwJVMg=;
+        b=cjpasMacNHor+E11k8iK0m+9AR6KX8Xf00PlYDQ9shIPDCPYMQgc5GD63fT6JJC4Du
+         r67+GgrqIDzsltZaSlitfDbG51Hn/jGQ95QO/6KAt1pj1lhbIuXr8jNG6CPPYOpTIi2C
+         TO/HhdiC528dciM5J8UOPl0vb9wgDQUn7r5Bvk5ovlwgtH/1lH2R1KTkdHoEOe4Gx/xL
+         SUtwFDOViPcVhdgZOpZwATnEY0CE+GZO9lwIublV5GA60UwEEyMhA9zLYq+YDiCsSERf
+         R9zbWfSSSnCmvrhBcBMsm8+O74833Vw0gaA8w84rRMG7j76qQRNu6jkCP+3iHNONdrMm
+         GT+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743545113; x=1744149913;
-        h=content-transfer-encoding:to:subject:message-id:date:from
+        d=1e100.net; s=20230601; t=1743545194; x=1744149994;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=qai9DMQZxsab9OWncJhs/lmdIQOyIQkiN593aFUVGd4=;
-        b=YFJBlYPUThDDp+A6sQR1JLVi/uRbfraW4Ic/NWDqpguYIynWdymvbTkvTQZGiHk/Mn
-         O9gsWrnyARU8lB/3MQe4cuQXOu/XmwySfV/J5AjMgHsbeYAeqW19ao4SCVktf7o0kahV
-         tbspLpBP/ZoVzP+2oFBdy54oejy6u1DgZQdo9qus+xJ2+22DWiZtve+BQD5s4UQHTv5t
-         AI4Iq8nn8iOOKnvIojXD09vvOYbcBQP5FD8C6/sxsrSMldFq5Zdha2StLIpQSUIcPR6g
-         VYNccl6sHTO7oKKLpy9Icd3fw3RFJS4NveMw5aXTr2hjNqzVjTfqe+zW3J5eMDcPEtpj
-         PBhQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW3VLxxQ5WsVXCPc1FW3BFAH0PR3u34SLW8r9mBmo6Iqa9bSePTrBQf/swPnKjpcC2MKcykyNGOlBJWPmA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxTN/ep8xYepAz9pgOg8Sbx/l4nBTpizMiLdvxmj6VSAEPYKGTq
-	rwcw6eNMVARkwYd2+xMWbDGZ0idJd0DPPSKaUTzKHWdaCSJ1eFuzKsGRzzip2n8BhnldNvXc7O9
-	6sMCU+PO9fwfBIZ7uooyhcBqNjENNEW0QhB77
-X-Gm-Gg: ASbGncuNolI4xqiLLIxZTzoNc1iRgpSqAquTunQbs+j0K36wcRGJXYboqng2VQgcgs0
-	ShVbXoXZJq4zhMwXytEvkxh3G0SQSjlMV6wMZVLWzxcTr6NFKQrPAIR40esN1Jx5gTuAkH5IYs0
-	Dl2U5kPbOeGd0heksMWbUiQiRdf8Mxa11nm44RbnjNlfGSpoA6+vvl3IEAvm08KrON
-X-Google-Smtp-Source: AGHT+IFVQpufgbLLA6YECN41K61P1pEGrmuIBYIE15m3wWzbXyC5CFZGk1U9guX3blOCJkUvw+PNymy7JiuwXiX3vwY=
-X-Received: by 2002:a17:903:2343:b0:216:201e:1b63 with SMTP id
- d9443c01a7336-2296bbaa3f4mr235505ad.11.1743545112407; Tue, 01 Apr 2025
- 15:05:12 -0700 (PDT)
+        bh=aYu6Zg/XFavoCXahu5FxZXJJfvgTGH8lEtVwhtwJVMg=;
+        b=iBsx9IVLbRJdPeziDUWa1rSuDMLwy4hg0F4TqleBUGtKM0h1rOBZghytfcayjfKuKm
+         kFm2t40/gRUw6FTZwtRJoLheLKnHoSlZqbicremyUa7Z0Y3hfDrdvIQabQbMf5D8o243
+         0IrSGHZ457dAvho3RrynwpcmBTvbTHIhDsT2RwuRfJcFrM30Is419OPEttDcejxhSRSu
+         KFJBd6TH4kS0GtlkCM4SRTmiAHciagF8wkulE9FFicqUgZge5PZerHjMThQBmPnzuEeo
+         TnuXvvmLNgZN7V5tlHN9JglUdJgLulzKXJ5NiGwTnqLuvzIuUaRScivw6gSoCmhAsLvN
+         Me4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUT7WjP91t1iuskR8bONkyLD26S5EZVxfRXFTgtWBlqq+zxK0XpHZ3EeeTj5B1dRbDWZU+DQNTpbS2bDxrA9mGGvAVJ@vger.kernel.org, AJvYcCUdcgb51eqRyaWojQH23J6v6xUItFJgo0IijODJllM8cCjB43Dn7w7JX71u22eFI62EkLs=@vger.kernel.org, AJvYcCWQ2iMtKUdr/xT1rDYmCpltfaqJ9uYXssl37n0OvjJSPIppgNu4/kx9MIGiwK5Twmc39GsHpU/7Uk3+0NSh@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4UyFLlQ+1Qm8Az7MrpkQ1rUl0weXXle3tzAc6pcQZ0D0MFWbf
+	kaMlFvMra3s+YiHSVI4pY5aHc1BSL37cO7S107uHkLa+Bkf0KhVhE1r/1kB8ME8ly77k6kOySBB
+	P8OqAMqto8DFxZ+qNiQ+HjUOkEWs=
+X-Gm-Gg: ASbGnctCIwxQYmwzXjiVYYu7QNZCvdNbPu6c2B5CVu7CAp1upDA0v3nF2GF+aZhp9o3
+	Zu8ySP2pDFjuAiUmFpyIidmdTkWUeu8iFF5YGnN6INDkSduxnsIhYc9/Yzvxda4bs12OnJhTnL2
+	LpP/zgjsOz+dzFwxxb1mFSmI5UIlhahy3OnUWOtVhZRQ==
+X-Google-Smtp-Source: AGHT+IERvPaxBrysC+e4JCILAIsd31ntmN6WeywrcyfH6dFJvTx3/pK+K72W5sGe0tkTAMO7WNYQtZ81EwwOZncae0Q=
+X-Received: by 2002:a17:90b:2882:b0:305:2d27:7c9f with SMTP id
+ 98e67ed59e1d1-3056ee486b4mr500672a91.16.1743545194043; Tue, 01 Apr 2025
+ 15:06:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250318041442.321230-1-irogers@google.com>
-In-Reply-To: <20250318041442.321230-1-irogers@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 1 Apr 2025 15:05:01 -0700
-X-Gm-Features: AQ5f1Jrm0n1hpopd8bYhxwuZIQuw9NdG27Q-sy1ltH8Ws2qq834WxY1YasF98-4
-Message-ID: <CAP-5=fX6FubpJeROoXa10jV8RnAD0LKS1GaAcidLzbwZgOmQXg@mail.gmail.com>
-Subject: Re: [PATCH v1 0/5] NMI warning and debug improvements
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Howard Chu <howardchu95@gmail.com>, 
-	Weilin Wang <weilin.wang@intel.com>, Levi Yun <yeoreum.yun@arm.com>, 
-	"Dr. David Alan Gilbert" <linux@treblig.org>, Andi Kleen <ak@linux.intel.com>, 
-	James Clark <james.clark@linaro.org>, Dominique Martinet <asmadeus@codewreck.org>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250331094745.336010-1-chen.dylane@linux.dev>
+ <20250331094745.336010-2-chen.dylane@linux.dev> <Z-vH_HiJhR3cwLhF@krava> <918395a6-122c-4fb0-9761-892b8020b95e@linux.dev>
+In-Reply-To: <918395a6-122c-4fb0-9761-892b8020b95e@linux.dev>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Tue, 1 Apr 2025 15:06:22 -0700
+X-Gm-Features: AQ5f1JoI5vh6vg03OkQDgd1VCZ65IlMVf5VqtxtJnJMul4apg8nLqtuyww6UCHg
+Message-ID: <CAEf4BzbOirQiAmowckX8OeiFUTR8yfkO6m+kY96VMy5f9rG26A@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 2/2] bpf: Check link_create parameter for multi_uprobe
+To: Tao Chen <chen.dylane@linux.dev>
+Cc: Jiri Olsa <olsajiri@gmail.com>, song@kernel.org, ast@kernel.org, 
+	daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev, 
+	eddyz87@gmail.com, yonghong.song@linux.dev, john.fastabend@gmail.com, 
+	kpsingh@kernel.org, sdf@fomichev.me, haoluo@google.com, rostedt@goodmis.org, 
+	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, laoar.shao@gmail.com, 
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 17, 2025 at 9:14=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
+On Tue, Apr 1, 2025 at 5:40=E2=80=AFAM Tao Chen <chen.dylane@linux.dev> wro=
 te:
 >
-> The NMI warning wouldn't fire even if all the events were for one PMU
-> type. Remove a nearby, and no longer useful, mixed hardware event
-> group function. Improve the evlist to string function and dump it in
-> verbose mode after the reordered events warning.
+> =E5=9C=A8 2025/4/1 19:03, Jiri Olsa =E5=86=99=E9=81=93:
+> > On Mon, Mar 31, 2025 at 05:47:45PM +0800, Tao Chen wrote:
+> >> The target_fd and flags in link_create no used in multi_uprobe
+> >> , return -EINVAL if they assigned, keep it same as other link
+> >> attach apis.
+> >>
+> >> Fixes: 89ae89f53d20 ("bpf: Add multi uprobe link")
+> >> Signed-off-by: Tao Chen <chen.dylane@linux.dev>
+> >> ---
+> >>   kernel/trace/bpf_trace.c | 3 +++
+> >>   1 file changed, 3 insertions(+)
+> >>
+> >> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> >> index 2f206a2a2..f7ebf17e3 100644
+> >> --- a/kernel/trace/bpf_trace.c
+> >> +++ b/kernel/trace/bpf_trace.c
+> >> @@ -3385,6 +3385,9 @@ int bpf_uprobe_multi_link_attach(const union bpf=
+_attr *attr, struct bpf_prog *pr
+> >>      if (sizeof(u64) !=3D sizeof(void *))
+> >>              return -EOPNOTSUPP;
+> >>
+> >> +    if (attr->link_create.target_fd || attr->link_create.flags)
+> >> +            return -EINVAL;
+> >
+> > I think the CI is failing because usdt code does uprobe multi detection
+> > with target_fd =3D -1 and it fails and perf-uprobe fallback will fail o=
+n
+> > not having enough file descriptors
+> >
 >
-> As commonly happens legacy events like instructions will be uniquified
-> to hybrid events like cpu_core/instructions/, even though the
-> encodings differ. To make this correct either:
-> https://lore.kernel.org/lkml/20250312211623.2495798-1-irogers@google.com/
-> or:
-> https://lore.kernel.org/linux-perf-users/20250109222109.567031-1-irogers@=
-google.com/
-> needs merging.
+> Hi jiri
 >
-> Ian Rogers (5):
->   perf stat: Better hybrid support for the NMI watchdog warning
->   perf stat: Remove print_mixed_hw_group_error
->   perf evlist: Refactor evlist__scnprintf_evsels
->   perf evlist: Add groups to evlist__format_evsels
->   perf parse-events: Add debug dump of evlist if reordered
+> As you said, i found it, thanks.
+>
+> static int probe_uprobe_multi_link(int token_fd)
+> {
+>          LIBBPF_OPTS(bpf_prog_load_opts, load_opts,
+>                  .expected_attach_type =3D BPF_TRACE_UPROBE_MULTI,
+>                  .token_fd =3D token_fd,
+>                  .prog_flags =3D token_fd ? BPF_F_TOKEN_FD : 0,
+>          );
+>          LIBBPF_OPTS(bpf_link_create_opts, link_opts);
+>          struct bpf_insn insns[] =3D {
+>                  BPF_MOV64_IMM(BPF_REG_0, 0),
+>                  BPF_EXIT_INSN(),
+>          };
+>          int prog_fd, link_fd, err;
+>          unsigned long offset =3D 0;
+>
+>          prog_fd =3D bpf_prog_load(BPF_PROG_TYPE_KPROBE, NULL, "GPL",
+>                                  insns, ARRAY_SIZE(insns), &load_opts);
+>          if (prog_fd < 0)
+>                  return -errno;
+>
+>          /* Creating uprobe in '/' binary should fail with -EBADF. */
+>          link_opts.uprobe_multi.path =3D "/";
+>          link_opts.uprobe_multi.offsets =3D &offset;
+>          link_opts.uprobe_multi.cnt =3D 1;
+>
+>          link_fd =3D bpf_link_create(prog_fd, -1, BPF_TRACE_UPROBE_MULTI,
+> &link_opts);
+>
+> > but I think at this stage we will brake some user apps by introducing
+> > this check, link ebpf go library, which passes 0
+> >
+>
+> So is it ok just check the flags?
 
-Ping.
+good catch, Jiri! Yep, let's validate just flags?
 
-Thanks,
-Ian
+pw-bot: cr
 
->  tools/perf/builtin-record.c    |  9 ++++---
->  tools/perf/util/evlist.c       | 32 +++++++++++++++---------
->  tools/perf/util/evlist.h       |  3 ++-
->  tools/perf/util/parse-events.c | 16 +++++++++---
->  tools/perf/util/stat-display.c | 45 ++++++++++------------------------
->  tools/perf/util/stat.h         |  1 -
->  6 files changed, 55 insertions(+), 51 deletions(-)
+>
+> > jirka
+> >
+> >
+> >> +
+> >>      if (!is_uprobe_multi(prog))
+> >>              return -EINVAL;
+> >>
+> >> --
+> >> 2.43.0
+> >>
+>
 >
 > --
-> 2.49.0.rc1.451.g8f38331e32-goog
+> Best Regards
+> Tao Chen
 >
