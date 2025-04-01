@@ -1,261 +1,385 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64A211E5B7E;
-	Tue,  1 Apr 2025 11:18:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19DFC1EFF8F
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 11:19:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743506315; cv=none; b=cXphUiOYTnUxiHxTdNKKaE9hlbtwgQ2L5e0BdMNhMEHpWJdr5gERN6wK/Pehnx++RFyf8W1/+BD9NqHBmRZlzPWeJkewQn8ezXP3S7/S4LezCKWvQj1ogVxb5MigkDcrrSFnlfC/aHaqE6Eq/qHfpmsDDZDKhFebjG6HjM1Um3w=
+	t=1743506346; cv=none; b=h5rJoSP6QrRUzBbtLjqhiDT2T8cA+xpnrgZtby6skeHjHo4iRSSEO8D/UcrstJsvcsSSehT4VHR0EcYlrUGK2EUQv9yvs3Ic7jfGQiE4FyiAQe9XCkwo24HFaox2j26oKg/LotM2jkhOb1iEc/hW8QbmThz3DRBueO1rXxzQl3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743506315; c=relaxed/simple;
-	bh=oLsWEROtM3VNERbcwSdXIndJfkcUD2LyFz5BAQhpfWg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KNn4noM1lWLnGjztIWmI6cgcq2g8ysGod/MZ5MU/2N/NX/8GEz2z+ca8hZbvlaO3fWJAAVa/UFI7qhBfq0q26pQ4e+S6QJjlJpvTaJ+o/MILAlUTK1HGOaeXvC5/Zftlv8PIt1yCPvUECPEzxwXvUvQ7jG7/PLWOOvQQ59Jf1ms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KHbCbSAw; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KHbCbSAw"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3912d2c89ecso4787461f8f.2;
-        Tue, 01 Apr 2025 04:18:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743506312; x=1744111112; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=MHjLXZJ1cnpvspCUUy5TO+Zanl0UIrIyQt6fEAo5S/E=;
-        b=KHbCbSAwuTTpKHqThyn93AbYCAJ9ZxGgGpHVa7n4OtOjQ61K06qYeJOreZ/Y5onl3R
-         xZhXauhFsUTn1Vh2l9IFx8ZpiAlvNsurUIOzwQQNfgSOAxhDCOh3NLBvf5ourI/JzOYX
-         0Ai2t+f4RT5FJcqSBVEq0tGrBDjHBLVdk8fMiVyVKq4SkMyyML/uZqe0RA4EnMUu0Jn6
-         3VZVJGjXeZGTx+P1kPOnJQHHmucVb5sMWWdATMB03t7+xpPAxuBxVCVNTs3JOf0Bzy23
-         bbsFP2LaEbyU1Vr3JKlvdQu6nr8Z+SjwgtiNv2+WSlTtjgPVCT26kjcDCI0f9oS6G5Nt
-         /oQw==
+	s=arc-20240116; t=1743506346; c=relaxed/simple;
+	bh=yOb7PBGy7bmMGaynXq1bTR94w9jcvrhND/ul/uTWvbg=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=AMfL6ymNkCUDIwlZ+A/VkDfQ5JxWbG1ulNLudHTznTNOQWJNjhCQl15DYocgniy/Pc9s/jFE+XeS7YrVzxG+o+Y6CmMvRx/K81lv1fPwoohC/9Uve1NdOsplXCgCqSqMCKzKtop/m5Z5xa04IlKMrXgCZZKRB0HQQ4AuWRm8Bj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3d5b3819ff6so53951965ab.2
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 04:19:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743506312; x=1744111112;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MHjLXZJ1cnpvspCUUy5TO+Zanl0UIrIyQt6fEAo5S/E=;
-        b=GPxoMG+s1qTA/z80YjqElYnCJHmnNO0mPa3oORXqAUE7tzNbKoUefDi7ger9kxq+jR
-         ILRuL8f9bWDHoftqdKFihQe+s+uGQVIZ1lmy31G17Txs1oyz9MThv8ZgLv84+IO54RsD
-         xbl7RJfLXGYsQam4PKvk8yvdsreY18w0vKJv9mZs3+T2iuqvfvUEd8hBvOQ6S4+YGif2
-         BFdhR0CvtBSH/uX6jnrP1IwXOnKs6pe7L7+9ThcWJrqArOJSIl8cWhi0LgnkGujIEBp6
-         4zTJrn9Bf3tzxYuoxZtd0qqAW5uJW861X6sT6+IhVyq3uP+UxGm+F4KHWjBCGJpD8vWs
-         GvDw==
-X-Forwarded-Encrypted: i=1; AJvYcCW14kPkMe9GHI4kKgdX7ifvi7/Y92jtDNomCk8esYCk0IDkJkrYh7LOR+QUlXJTixMyg+XAjLmLmn/jOYk=@vger.kernel.org, AJvYcCWH0CZcUG4BjFFK3JgqwQaF3gLL51d9GLCn6CKyrSHQOvOeQQqDpqmBMsDkOn2wTswTnnbElcip9slv234=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyfEeNPt2MUII8WnlVua4OuGLSnnj4NivYUcBrOrGZObU2KcUzL
-	0zCC3/Odx2TVXwFbToa2sMdJQ7INKuCamtRQUIPB+5PtIPM17JGE
-X-Gm-Gg: ASbGncuTxJQsxefu/C6qc8KTTx1dNzDRa2REUo0POT1eN1C4FIpKrzH8IL4dWLrag+9
-	Ab+5c616+wJ1VvS5yblKoKiPsi/VaR3+IgQkoNZ6sTNdsTOQeqbAQYRcgTV/InVNVk+P1RxwUBO
-	v+PH000jxZNQX/gmr4PBLysrm5tbWeO/2VCw9V2qn3R7hCOhKaluQNJ9xjMXYEV8NNbE1KiqrrQ
-	gpMK/lo6ODAylR9r95nm4i7R/nMuEuFy7chyi2ksrXySRucSwQxe8g6pQFxvcUboG3XM0nEgQJn
-	0kRVW8tPFvZvlJXszCts1oZANcY554yE9DcsqpvdOigDhoTPZdsd4f22uvNhtr0O+E5cMKjAxg=
-	=
-X-Google-Smtp-Source: AGHT+IHL7hdDkklKqbVxncDc8exnu0HuxmsEO5AkQ0x0L0l35X0qyjhrepIfjwYO28fP7NDX2ub+LQ==
-X-Received: by 2002:a5d:6daf:0:b0:391:4914:3c6a with SMTP id ffacd0b85a97d-39c120e34b1mr7985118f8f.29.1743506311481;
-        Tue, 01 Apr 2025 04:18:31 -0700 (PDT)
-Received: from [10.254.108.83] (munvpn.amd.com. [165.204.72.6])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b663470sm13778422f8f.27.2025.04.01.04.18.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Apr 2025 04:18:31 -0700 (PDT)
-Message-ID: <593b5915-7148-446a-a240-7f7939025a5f@gmail.com>
-Date: Tue, 1 Apr 2025 13:18:28 +0200
+        d=1e100.net; s=20230601; t=1743506343; x=1744111143;
+        h=content-transfer-encoding:to:from:subject:message-id:in-reply-to
+         :date:mime-version:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vMmni5w9P+VX0kDV2S0ljitdJ0RrP8o4Xny2vES6m6E=;
+        b=v2k9tZk8LK+5cijVOu/VEGcB2rT2KO3DQSo9lMGgljGdkJc5tV0I7WpkuGrhQHaPzI
+         dh+SlMYZTJco5ba3T+N25N52JdUt5zjHBhNIS+3/8yiGvfHSV0ZARMVvlxyv8nilagAR
+         HVDGVsfDcc5ZWMgj9kYe+zU43G8WwwbXIHgyx1zuKMVp7gYg1WxYIkGnWotJlJ/+9xYG
+         q74JKMFKBCE3ExWC0wVy11l6VYXFULe8/duT73/Ds5XKBcg/GNb41NGGxpHSvSOcqdPE
+         T5FfIqUS5ly6zFX2u1AkOagGNNeJnB30vzlPmXJKYPR+hMryJNWmgsW+9OZkTX126kue
+         EEjw==
+X-Gm-Message-State: AOJu0YyJ5azTx0Ni2Adlp3ggUG++HmEyv3VyAz9aAwVYo0BvuBatI20p
+	A3EEyof6Q4VtoXW6JyJXWl9wXmNHYlqX4FoB+LHlcVHGRSDKYMLNhQOevYBRSA1h5wMhgkiVJjO
+	X0u1z1Q7rX3JKj9lYpTuSduwY/1p6W41W8V5DlQcqKWH51FBIhsbY2WY=
+X-Google-Smtp-Source: AGHT+IEJmYgvCyWb9rAm5m7pnQrDB7SyK/AvgskYg46QubNUXhGpaNQw+3FVh75G8c+PD6sQGGR2k3jOp6ABXY0qvyXoJLMnf1KL
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Linaro-mm-sig] [PATCH v5] drm/syncobj: Extend EXPORT_SYNC_FILE
- for timeline syncobjs
-To: Rob Clark <robdclark@gmail.com>, dri-devel@lists.freedesktop.org
-Cc: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Dmitry Osipenko <dmitry.osipenko@collabora.com>,
- Rob Clark <robdclark@chromium.org>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- Simona Vetter <simona@ffwll.ch>, Sumit Semwal <sumit.semwal@linaro.org>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:DMA BUFFER SHARING FRAMEWORK:Keyword:bdma_?:buf|fence|resvb"
- <linux-media@vger.kernel.org>,
- "moderated list:DMA BUFFER SHARING FRAMEWORK:Keyword:bdma_?:buf|fence|resvb"
- <linaro-mm-sig@lists.linaro.org>
-References: <20250331212333.16029-1-robdclark@gmail.com>
-Content-Language: en-US
-From: =?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>
-In-Reply-To: <20250331212333.16029-1-robdclark@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:4401:10b0:3d6:d01e:7314 with SMTP id
+ e9e14a558f8ab-3d6d01e743fmr4546105ab.16.1743506343257; Tue, 01 Apr 2025
+ 04:19:03 -0700 (PDT)
+Date: Tue, 01 Apr 2025 04:19:03 -0700
+In-Reply-To: <Z-vILcVXrkIthMD0@qasdev.system>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67ebcba7.050a0220.297a31.000d.GAE@google.com>
+Subject: Re: [syzbot] [input?] [usb?] UBSAN: shift-out-of-bounds in __kfifo_alloc
+From: syzbot <syzbot+d5204cbbdd921f1f7cad@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, qasdev00@gmail.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Am 31.03.25 um 23:23 schrieb Rob Clark:
-> From: Rob Clark <robdclark@chromium.org>
->
-> Add support for exporting a dma_fence fd for a specific point on a
-> timeline.  This is needed for vtest/vpipe[1][2] to implement timeline
-> syncobj support, as it needs a way to turn a point on a timeline back
-> into a dma_fence fd.  It also closes an odd omission from the syncobj
-> UAPI.
->
-> [1] https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/33433
-> [2] https://gitlab.freedesktop.org/virgl/virglrenderer/-/merge_requests/805
->
-> v2: Add DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_TIMELINE
-> v3: Add unstaged uabi header hunk
-> v4: Also handle IMPORT_SYNC_FILE case
-> v5: Address comments from Dmitry
->
-> Signed-off-by: Rob Clark <robdclark@chromium.org>
-> ---
->  drivers/gpu/drm/drm_syncobj.c | 45 +++++++++++++++++++++++++++--------
->  include/uapi/drm/drm.h        |  4 ++++
->  2 files changed, 39 insertions(+), 10 deletions(-)
->
-> diff --git a/drivers/gpu/drm/drm_syncobj.c b/drivers/gpu/drm/drm_syncobj.c
-> index 4f2ab8a7b50f..b0a4c58fe726 100644
-> --- a/drivers/gpu/drm/drm_syncobj.c
-> +++ b/drivers/gpu/drm/drm_syncobj.c
-> @@ -741,7 +741,7 @@ static int drm_syncobj_fd_to_handle(struct drm_file *file_private,
->  }
->  
->  static int drm_syncobj_import_sync_file_fence(struct drm_file *file_private,
-> -					      int fd, int handle)
-> +					      int fd, int handle, u64 point)
->  {
->  	struct dma_fence *fence = sync_file_get_fence(fd);
->  	struct drm_syncobj *syncobj;
-> @@ -755,14 +755,22 @@ static int drm_syncobj_import_sync_file_fence(struct drm_file *file_private,
->  		return -ENOENT;
->  	}
->  
-> -	drm_syncobj_replace_fence(syncobj, fence);
-> +	if (point) {
-> +		struct dma_fence_chain *chain = dma_fence_chain_alloc();
-> +		if (!chain)
-> +			return -ENOMEM;
-> +		drm_syncobj_add_point(syncobj, chain, fence, point);
+Hello,
 
-Just a nit pick but checkpatch.pl will complain about it: Empty line between declaration and code please.
+syzbot tried to test the proposed patch but the build/boot failed:
 
-Maybe double check if checpatch.pl is otherwise happy with the patch.
+00000000 0000000000000031 0000726565666965
+ZMM26=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000021 0000000000000000 0000000000000031 00006d5f65636864
+ZMM27=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ bfbfbfbfbfbfbfbf bfbfbfbfbfbfbfbf bfbfbfbfbfbfbfbf bfbf2b313423342c
+ZMM28=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 262821df2e2e33df 3228df3232202b22 df312e232d2435bf 2324353124322431
+ZMM29=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 4141414141414141 4141414141414141 4141414141414141 4141414141414141
+ZMM30=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 1a1a1a1a1a1a1a1a 1a1a1a1a1a1a1a1a 1a1a1a1a1a1a1a1a 1a1a1a1a1a1a1a1a
+ZMM31=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 2020202020202020 2020202020202020 2020202020202020 2020202020202020
+info registers vcpu 2
 
-With that done feel free to add Reviewed-by: Christian König <christian.koenig@amd.com>.
+CPU#2
+RAX=3D0000000000026a64 RBX=3D0000000000000002 RCX=3Dffffffff8b6ba2d9 RDX=3D=
+ffffed100d4c65be
+RSI=3Dffffffff8bf43f60 RDI=3Dffffffff81918dd1 RBP=3Dffffed1003ad0910 RSP=3D=
+ffffc90000187e00
+R8 =3D0000000000000000 R9 =3Dffffed100d4c65bd R10=3Dffff88806a632deb R11=3D=
+0000000000000000
+R12=3D0000000000000002 R13=3Dffff88801d684880 R14=3Dffffffff9084a410 R15=3D=
+0000000000000000
+RIP=3Dffffffff8b6bb6cf RFL=3D00000246 [---Z-P-] CPL=3D0 II=3D0 A20=3D1 SMM=
+=3D0 HLT=3D1
+ES =3D0000 0000000000000000 ffffffff 00c00000
+CS =3D0010 0000000000000000 ffffffff 00a09b00 DPL=3D0 CS64 [-RA]
+SS =3D0018 0000000000000000 ffffffff 00c09300 DPL=3D0 DS   [-WA]
+DS =3D0000 0000000000000000 ffffffff 00c00000
+FS =3D0000 0000000000000000 ffffffff 00c00000
+GS =3D0000 ffff8880d6bf5000 ffffffff 00c00000
+LDT=3D0000 0000000000000000 ffffffff 00c00000
+TR =3D0040 fffffe0000091000 00004087 00008b00 DPL=3D0 TSS64-busy
+GDT=3D     fffffe000008f000 0000007f
+IDT=3D     fffffe0000000000 00000fff
+CR0=3D80050033 CR2=3D00007f1d928e7870 CR3=3D0000000029b16000 CR4=3D00352ef0
+DR0=3D0000000000000000 DR1=3D0000000000000000 DR2=3D0000000000000000 DR3=3D=
+0000000000000000=20
+DR6=3D00000000fffe0ff0 DR7=3D0000000000000400
+EFER=3D0000000000000d01
+FCW=3D037f FSW=3D0000 [ST=3D0] FTW=3D00 MXCSR=3D00001f80
+FPR0=3D0000000000000000 0000 FPR1=3D0000000000000000 0000
+FPR2=3D0000000000000000 0000 FPR3=3D0000000000000000 0000
+FPR4=3D0000000000000000 0000 FPR5=3D0000000000000000 0000
+FPR6=3D0000000000000000 0000 FPR7=3D0000000000000000 0000
+Opmask00=3D00000000fefffe00 Opmask01=3D0000000000000000 Opmask02=3D00000000=
+01ffffff Opmask03=3D0000000000000000
+Opmask04=3D00000000ffffffff Opmask05=3D00000000004007ff Opmask06=3D00000000=
+07ffe7ff Opmask07=3D0000000000000000
+ZMM00=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 4b5f5455504e495f 4449006b636f6c62
+ZMM01=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 00007fff42400a00 0000003000000018
+ZMM02=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 2f2f2f2f2f2f2f2f 2f2f2f2f2f2f2f2f
+ZMM03=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 000000ff00000000 ff000000ff000000
+ZMM04=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 00000000ff000000
+ZMM05=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM06=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM07=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM08=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM09=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM10=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM11=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM12=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM13=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM14=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM15=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM16=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM17=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000021 00005630bae71900 44455a494c414954 494e495f43455355
+ZMM18=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 6f6f742075712f37 7170622f74656e2f 6c6175747269762f 736563697665642f
+ZMM19=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 4a4a51055c445757 440540495057055c 5744574a55484051 000f1a005b1a0f00
+ZMM20=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000021 0000000000000000 00000000302d0030 2d78742f73657565
+ZMM21=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000251 0000000000000035 6c6c696b66722f33 7968702f31313230
+ZMM22=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 3a263b383a3a263a 383a3a26493b3a3a 26483b3a3a264b3b 3a0a00307f617930
+ZMM23=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM24=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 264c383a3a264f38 3a3a264e383a3a26 49383a3a2648383a 3a2633383a3a2632
+ZMM25=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 692054524f50202c 2064696c61696d20 0070253a20252054 524f504d49005452
+ZMM26=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 692020520050202c 2025204f504d4900 0061253a20252000 2527204d49005452
+ZMM27=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 282b2e2fdf37342d 280bbfbf23243324 26312033fc040f18 1317140d080b0412
+ZMM28=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 343133bffc121104 1214041204110814 100411bffc040f18 1317140d080b0412
+ZMM29=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 4141414141414141 4141414141414141 4141414141414141 4141414141414141
+ZMM30=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 1a1a1a1a1a1a1a1a 1a1a1a1a1a1a1a1a 1a1a1a1a1a1a1a1a 1a1a1a1a1a1a1a1a
+ZMM31=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 2020202020202020 2020202020202020 2020202020202020 2020202020202020
+info registers vcpu 3
 
-Let me know if I should push it to drm-misc-next.
+CPU#3
+RAX=3D0000000000036504 RBX=3D0000000000000003 RCX=3Dffffffff8b6ba2d9 RDX=3D=
+ffffed100d4e65be
+RSI=3Dffffffff8bf43f60 RDI=3Dffffffff81918dd1 RBP=3Dffffed1003bd2000 RSP=3D=
+ffffc90000197e00
+R8 =3D0000000000000000 R9 =3Dffffed100d4e65bd R10=3Dffff88806a732deb R11=3D=
+0000000000000000
+R12=3D0000000000000003 R13=3Dffff88801de90000 R14=3Dffffffff9084a410 R15=3D=
+0000000000000000
+RIP=3Dffffffff8b6bb6cf RFL=3D00000246 [---Z-P-] CPL=3D0 II=3D0 A20=3D1 SMM=
+=3D0 HLT=3D1
+ES =3D0000 0000000000000000 ffffffff 00c00000
+CS =3D0010 0000000000000000 ffffffff 00a09b00 DPL=3D0 CS64 [-RA]
+SS =3D0018 0000000000000000 ffffffff 00c09300 DPL=3D0 DS   [-WA]
+DS =3D0000 0000000000000000 ffffffff 00c00000
+FS =3D0000 0000000000000000 ffffffff 00c00000
+GS =3D0000 ffff8880d6cf5000 ffffffff 00c00000
+LDT=3D0000 0000000000000000 ffffffff 00c00000
+TR =3D0040 fffffe00000d8000 00004087 00008b00 DPL=3D0 TSS64-busy
+GDT=3D     fffffe00000d6000 0000007f
+IDT=3D     fffffe0000000000 00000fff
+CR0=3D80050033 CR2=3D00007f1d928b0be0 CR3=3D0000000027d24000 CR4=3D00352ef0
+DR0=3D0000000000000000 DR1=3D0000000000000000 DR2=3D0000000000000000 DR3=3D=
+0000000000000000=20
+DR6=3D00000000fffe0ff0 DR7=3D0000000000000400
+EFER=3D0000000000000d01
+FCW=3D037f FSW=3D0000 [ST=3D0] FTW=3D00 MXCSR=3D00001f80
+FPR0=3D0000000000000000 0000 FPR1=3D0000000000000000 0000
+FPR2=3D0000000000000000 0000 FPR3=3D0000000000000000 0000
+FPR4=3D0000000000000000 0000 FPR5=3D0000000000000000 0000
+FPR6=3D0000000000000000 0000 FPR7=3D0000000000000000 0000
+Opmask00=3D0000000000004080 Opmask01=3D0000000000000000 Opmask02=3D00000000=
+0fffffff Opmask03=3D0000000000000000
+Opmask04=3D00000000ffffffff Opmask05=3D00000000004007ff Opmask06=3D00000000=
+07ffe7ff Opmask07=3D0000000000000000
+ZMM00=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM01=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 00005630bae71e00 00005630bae70550
+ZMM02=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 2f2f2f2f2f2f2f2f 2f2f2f2f2f2f2f2f
+ZMM03=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000ff000000ff00 0000000000000000
+ZMM04=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 00ff000000000000
+ZMM05=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM06=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM07=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM08=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM09=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM10=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM11=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM12=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM13=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM14=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM15=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM16=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM17=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 00000000000002a1 0000000000000000 44455a494c414954 494e495f43455355
+ZMM18=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 6f6f742033687465 2f74656e2f306d69 7376656474656e2f 736563697665642f
+ZMM19=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 4a4a51055c445757 440540495057055c 5744574a55484051 000f1a005b1a0f00
+ZMM20=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 370a07495579ad27 00005635d9ee8846 0000000000000091 0000000000000000
+ZMM21=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000251 0000000000000035 6c6c696b66722f33 7968702f31313230
+ZMM22=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 3a263b383a3a263a 383a3a26493b3a3a 26483b3a3a264b3b 3a0a00307f617930
+ZMM23=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM24=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 264c383a3a264f38 3a3a264e383a3a26 49383a3a2648383a 3a2633383a3a2632
+ZMM25=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 692054524f50202c 2064696c61696d20 0070253a20252054 524f504d49005452
+ZMM26=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 692020520050202c 2025204f504d4900 0061253a20252000 2527204d49005452
+ZMM27=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 282b2e2fdf37342d 280bbfbf23243324 26312033fc040f18 1317140d080b0412
+ZMM28=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 343133bffc121104 1214041204110814 100411bffc040f18 1317140d080b0412
+ZMM29=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 4141414141414141 4141414141414141 4141414141414141 4141414141414141
+ZMM30=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 1a1a1a1a1a1a1a1a 1a1a1a1a1a1a1a1a 1a1a1a1a1a1a1a1a 1a1a1a1a1a1a1a1a
+ZMM31=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 2020202020202020 2020202020202020 2020202020202020 2020202020202020
 
-Regards,
-Christian.
 
-> +	} else {
-> +		drm_syncobj_replace_fence(syncobj, fence);
-> +	}
-> +
->  	dma_fence_put(fence);
->  	drm_syncobj_put(syncobj);
->  	return 0;
->  }
->  
->  static int drm_syncobj_export_sync_file(struct drm_file *file_private,
-> -					int handle, int *p_fd)
-> +					int handle, u64 point, int *p_fd)
->  {
->  	int ret;
->  	struct dma_fence *fence;
-> @@ -772,7 +780,7 @@ static int drm_syncobj_export_sync_file(struct drm_file *file_private,
->  	if (fd < 0)
->  		return fd;
->  
-> -	ret = drm_syncobj_find_fence(file_private, handle, 0, 0, &fence);
-> +	ret = drm_syncobj_find_fence(file_private, handle, point, 0, &fence);
->  	if (ret)
->  		goto err_put_fd;
->  
-> @@ -869,6 +877,9 @@ drm_syncobj_handle_to_fd_ioctl(struct drm_device *dev, void *data,
->  				   struct drm_file *file_private)
->  {
->  	struct drm_syncobj_handle *args = data;
-> +	unsigned valid_flags = DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_TIMELINE |
-> +			       DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_EXPORT_SYNC_FILE;
-> +	u64 point = 0;
->  
->  	if (!drm_core_check_feature(dev, DRIVER_SYNCOBJ))
->  		return -EOPNOTSUPP;
-> @@ -876,13 +887,18 @@ drm_syncobj_handle_to_fd_ioctl(struct drm_device *dev, void *data,
->  	if (args->pad)
->  		return -EINVAL;
->  
-> -	if (args->flags != 0 &&
-> -	    args->flags != DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_EXPORT_SYNC_FILE)
-> +	if (args->flags & ~valid_flags)
->  		return -EINVAL;
->  
-> +	if (args->flags & DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_TIMELINE)
-> +		point = args->point;
-> +
->  	if (args->flags & DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_EXPORT_SYNC_FILE)
->  		return drm_syncobj_export_sync_file(file_private, args->handle,
-> -						    &args->fd);
-> +						    point, &args->fd);
-> +
-> +	if (args->point)
-> +		return -EINVAL;
->  
->  	return drm_syncobj_handle_to_fd(file_private, args->handle,
->  					&args->fd);
-> @@ -893,6 +909,9 @@ drm_syncobj_fd_to_handle_ioctl(struct drm_device *dev, void *data,
->  				   struct drm_file *file_private)
->  {
->  	struct drm_syncobj_handle *args = data;
-> +	unsigned valid_flags = DRM_SYNCOBJ_FD_TO_HANDLE_FLAGS_TIMELINE |
-> +			       DRM_SYNCOBJ_FD_TO_HANDLE_FLAGS_IMPORT_SYNC_FILE;
-> +	u64 point = 0;
->  
->  	if (!drm_core_check_feature(dev, DRIVER_SYNCOBJ))
->  		return -EOPNOTSUPP;
-> @@ -900,14 +919,20 @@ drm_syncobj_fd_to_handle_ioctl(struct drm_device *dev, void *data,
->  	if (args->pad)
->  		return -EINVAL;
->  
-> -	if (args->flags != 0 &&
-> -	    args->flags != DRM_SYNCOBJ_FD_TO_HANDLE_FLAGS_IMPORT_SYNC_FILE)
-> +	if (args->flags & ~valid_flags)
->  		return -EINVAL;
->  
-> +	if (args->flags & DRM_SYNCOBJ_FD_TO_HANDLE_FLAGS_TIMELINE)
-> +		point = args->point;
-> +
->  	if (args->flags & DRM_SYNCOBJ_FD_TO_HANDLE_FLAGS_IMPORT_SYNC_FILE)
->  		return drm_syncobj_import_sync_file_fence(file_private,
->  							  args->fd,
-> -							  args->handle);
-> +							  args->handle,
-> +							  point);
-> +
-> +	if (args->point)
-> +		return -EINVAL;
->  
->  	return drm_syncobj_fd_to_handle(file_private, args->fd,
->  					&args->handle);
-> diff --git a/include/uapi/drm/drm.h b/include/uapi/drm/drm.h
-> index 7fba37b94401..e63a71d3c607 100644
-> --- a/include/uapi/drm/drm.h
-> +++ b/include/uapi/drm/drm.h
-> @@ -905,13 +905,17 @@ struct drm_syncobj_destroy {
->  };
->  
->  #define DRM_SYNCOBJ_FD_TO_HANDLE_FLAGS_IMPORT_SYNC_FILE (1 << 0)
-> +#define DRM_SYNCOBJ_FD_TO_HANDLE_FLAGS_TIMELINE         (1 << 1)
->  #define DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_EXPORT_SYNC_FILE (1 << 0)
-> +#define DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_TIMELINE         (1 << 1)
->  struct drm_syncobj_handle {
->  	__u32 handle;
->  	__u32 flags;
->  
->  	__s32 fd;
->  	__u32 pad;
-> +
-> +	__u64 point;
->  };
->  
->  struct drm_syncobj_transfer {
+syzkaller build log:
+go env (err=3D<nil>)
+GO111MODULE=3D'auto'
+GOARCH=3D'amd64'
+GOBIN=3D''
+GOCACHE=3D'/syzkaller/.cache/go-build'
+GOENV=3D'/syzkaller/.config/go/env'
+GOEXE=3D''
+GOEXPERIMENT=3D''
+GOFLAGS=3D''
+GOHOSTARCH=3D'amd64'
+GOHOSTOS=3D'linux'
+GOINSECURE=3D''
+GOMODCACHE=3D'/syzkaller/jobs/linux/gopath/pkg/mod'
+GONOPROXY=3D''
+GONOSUMDB=3D''
+GOOS=3D'linux'
+GOPATH=3D'/syzkaller/jobs/linux/gopath'
+GOPRIVATE=3D''
+GOPROXY=3D'https://proxy.golang.org,direct'
+GOROOT=3D'/syzkaller/jobs/linux/gopath/pkg/mod/golang.org/toolchain@v0.0.1-=
+go1.23.6.linux-amd64'
+GOSUMDB=3D'sum.golang.org'
+GOTMPDIR=3D''
+GOTOOLCHAIN=3D'auto'
+GOTOOLDIR=3D'/syzkaller/jobs/linux/gopath/pkg/mod/golang.org/toolchain@v0.0=
+.1-go1.23.6.linux-amd64/pkg/tool/linux_amd64'
+GOVCS=3D''
+GOVERSION=3D'go1.23.6'
+GODEBUG=3D''
+GOTELEMETRY=3D'local'
+GOTELEMETRYDIR=3D'/syzkaller/.config/go/telemetry'
+GCCGO=3D'gccgo'
+GOAMD64=3D'v1'
+AR=3D'ar'
+CC=3D'gcc'
+CXX=3D'g++'
+CGO_ENABLED=3D'1'
+GOMOD=3D'/syzkaller/jobs/linux/gopath/src/github.com/google/syzkaller/go.mo=
+d'
+GOWORK=3D''
+CGO_CFLAGS=3D'-O2 -g'
+CGO_CPPFLAGS=3D''
+CGO_CXXFLAGS=3D'-O2 -g'
+CGO_FFLAGS=3D'-O2 -g'
+CGO_LDFLAGS=3D'-O2 -g'
+PKG_CONFIG=3D'pkg-config'
+GOGCCFLAGS=3D'-fPIC -m64 -pthread -Wl,--no-gc-sections -fmessage-length=3D0=
+ -ffile-prefix-map=3D/tmp/go-build970112057=3D/tmp/go-build -gno-record-gcc=
+-switches'
+
+git status (err=3D<nil>)
+HEAD detached at 20510e8871
+nothing to commit, working tree clean
+
+
+tput: No value for $TERM and no -T specified
+tput: No value for $TERM and no -T specified
+Makefile:31: run command via tools/syz-env for best compatibility, see:
+Makefile:32: https://github.com/google/syzkaller/blob/master/docs/contribut=
+ing.md#using-syz-env
+go list -f '{{.Stale}}' ./sys/syz-sysgen | grep -q false || go install ./sy=
+s/syz-sysgen
+make .descriptions
+tput: No value for $TERM and no -T specified
+tput: No value for $TERM and no -T specified
+Makefile:31: run command via tools/syz-env for best compatibility, see:
+Makefile:32: https://github.com/google/syzkaller/blob/master/docs/contribut=
+ing.md#using-syz-env
+bin/syz-sysgen
+touch .descriptions
+GOOS=3Dlinux GOARCH=3Damd64 go build "-ldflags=3D-s -w -X github.com/google=
+/syzkaller/prog.GitRevision=3D20510e8871e31b24ba7dfd19ee03a482ae2ad722 -X '=
+github.com/google/syzkaller/prog.gitRevisionDate=3D20250326-130234'" -o ./b=
+in/linux_amd64/syz-execprog github.com/google/syzkaller/tools/syz-execprog
+mkdir -p ./bin/linux_amd64
+g++ -o ./bin/linux_amd64/syz-executor executor/executor.cc \
+	-m64 -O2 -pthread -Wall -Werror -Wparentheses -Wunused-const-variable -Wfr=
+ame-larger-than=3D16384 -Wno-stringop-overflow -Wno-array-bounds -Wno-forma=
+t-overflow -Wno-unused-but-set-variable -Wno-unused-command-line-argument -=
+static-pie -std=3Dc++17 -I. -Iexecutor/_include   -DGOOS_linux=3D1 -DGOARCH=
+_amd64=3D1 \
+	-DHOSTGOOS_linux=3D1 -DGIT_REVISION=3D\"20510e8871e31b24ba7dfd19ee03a482ae=
+2ad722\"
+/usr/bin/ld: /tmp/cceHMzFX.o: in function `Connection::Connect(char const*,=
+ char const*)':
+executor.cc:(.text._ZN10Connection7ConnectEPKcS1_[_ZN10Connection7ConnectEP=
+KcS1_]+0x104): warning: Using 'gethostbyname' in statically linked applicat=
+ions requires at runtime the shared libraries from the glibc version used f=
+or linking
+
+
+Error text is too large and was truncated, full error text is at:
+https://syzkaller.appspot.com/x/error.txt?x=3D131c094c580000
+
+
+Tested on:
+
+commit:         08733088 Merge tag 'rust-fixes-6.15-merge' of git://gi..
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3D670852ba0109a9f=
+6
+dashboard link: https://syzkaller.appspot.com/bug?extid=3Dd5204cbbdd921f1f7=
+cad
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Deb=
+ian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=3D126c094c5800=
+00
 
