@@ -1,582 +1,146 @@
-Received: from sender-op-o17.zoho.eu (sender-op-o17.zoho.eu [136.143.169.17])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E2621EB5C9
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 08:20:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.169.17
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743495606; cv=pass; b=ROgfgRbFkGYjzqgG/UNPCiKuyl9Yzm4PSzm1WVqBnNnEx4Q1j7ADFXwrsb+0T1dVlAWsFnCIOJ2CByBCx0wPkTUIRsPqkiI3QylLAeTH/pFNdt+FEqUWeI18LRo6vBX4vhzrdUyvFvSdeGNS4B1Ib/SdFQIOXMsjmogbeAOrx5A=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743495606; c=relaxed/simple;
-	bh=YZ4Jk6eqQC3bN1aK1Z3hLGmV0/PXuWGcY7UZp+YjW3o=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JmqW6ZI0mHCA8/r2hQemoT+YBDwjy4weAewC1JtWQn83UxhQvLfhIDwzJwLg+t4H6JSizNDBCKBkeRY48Tw9BM1dA1ZCk6NREyBAzCRYqUZYfCJ7e3P3Im/fmKQzwzvQq5za/T4CnoQySLzigys53kBzhGOTIcz6aQBTmBRovRg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=chir.rs; spf=pass smtp.mailfrom=chir.rs; dkim=pass (1024-bit key) header.d=chir.rs header.i=lotte@chir.rs header.b=U8M3tn+p; arc=pass smtp.client-ip=136.143.169.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=chir.rs
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chir.rs
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAF2F1E261F
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 08:21:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743495671; cv=none; b=BlZ2d7ddpEWGFMWsB4wdlNf8IrLfAlsC8kX2tHwT9BPZyRmPBNG7ZYzL3Gzuc51VCpHL8pTOex9Xzt5hGFR+JcvBm5vBN9fE8D3VNHvlVK93QsKU15qF4rsOYF3Lbhtdevm/yMCMLx9LIDC3YQRr5OkuhtZN1GW1BSPfHl8Wkjk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743495671; c=relaxed/simple;
+	bh=cg6PEShvzm28yYdBaMTTDyOvb6+deHPCt0F8zssiOnU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FW2nC7CYI7MfLApNrjBxI5JcHi0ot+nNhqYM8xrtyQns2hdVBpRJ/A13bYb8bAqMT2s9w7iGQJQXUSQAEUzxycXzvhrhkyzJbZElNK6GitekEMJwjEwDyG5OBLse3Ave+cgADiaziMiMGJa3hA0YWaLcfIyQmd+xp6hP9k9BEYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ek+WMyaq; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chir.rs header.i=lotte@chir.rs header.b="U8M3tn+p"
-ARC-Seal: i=1; a=rsa-sha256; t=1743495565; cv=none; 
-	d=zohomail.eu; s=zohoarc; 
-	b=guotI+g5B6t/bPgzIYn+ID5MdcybjDgmjmVKgFLvA6IGqLsHH/hGrID4cEfTg7urs/h2Vkf/IVDh67kdQ5nl9SSfCfd+FblOCjTrgolPpqM3V3n49/gYmXORab3AL/nS0ALz/YFPxiHXLu38+HErk5OS5lnUvLZb5+sPWfpyiK8=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
-	t=1743495565; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=UwqOHRUGmjXp66HlNVWld2Eeio7ErVQl0UVMqzdMIiI=; 
-	b=NccoCvAafYVGapcf8RiybmXW2m+9ynjZTbcJ/CEk9Y9PAcwt/TFWIRGveopbhWGGaKKOcVY6bV0YdiBHD+YZfpRozQ3edA08kMBXJ2h+9WcuApAHr+K8LQe3SAObCRynb2W1/upCvzcc514ni+p6cI3tB+nz8pY2zYguC7WgP98=
-ARC-Authentication-Results: i=1; mx.zohomail.eu;
-	dkim=pass  header.i=chir.rs;
-	spf=pass  smtp.mailfrom=lotte@chir.rs;
-	dmarc=pass header.from=<lotte@chir.rs>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1743495565;
-	s=zmail; d=chir.rs; i=lotte@chir.rs;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=UwqOHRUGmjXp66HlNVWld2Eeio7ErVQl0UVMqzdMIiI=;
-	b=U8M3tn+paRzAPK8E8uKnoQGL9kKUNDLTAqemvnWA5RUil5pW8t/t28oxU6q6qDWt
-	VoeB+dpn14QNLoeVeE5SMicjQEo6g0QvRGKEm1JiJa6VC3UCi89DkniPR3nOC2keS+b
-	3vBSvRDA6Yms4bW6Lrik/GJvcYAV5Y3I0v0+w8nw=
-Received: by mx.zoho.eu with SMTPS id 1743495561886571.3388221735572;
-	Tue, 1 Apr 2025 10:19:21 +0200 (CEST)
-From: =?UTF-8?q?Charlotte=20=Dele=C5=84kec?= <lotte@chir.rs>
-To: neil.armstrong@linaro.org,
-	quic_jesszhan@quicinc.com,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	max@maxfierke.com
-Cc: dri-devel@lists.freedesktop.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	=?UTF-8?q?Charlotte=20Dele=C5=84kec?= <lotte@chir.rs>
-Subject: [PATCH v4 1/3] drm: panel: Add driver for Clockwork cwd686 panel
-Date: Tue,  1 Apr 2025 09:18:31 +0100
-Message-ID: <20250401081852.283532-2-lotte@chir.rs>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250401081852.283532-1-lotte@chir.rs>
-References: <20250401081852.283532-1-lotte@chir.rs>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ek+WMyaq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743495668;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=6hh3sHQg1YPcmqC0I6nucOyyi71QpSx5LGkEOERvFPE=;
+	b=ek+WMyaq8ooCtEaa7ILGmcwotrDHpTyi+acKLFO8+RRhgSfEC/eIYI8l/TVXi03YGhz0rh
+	8Xgm3r+CDWechLlhIL/47Y0s+BlLW7xJvACohwH6+8uAzOJ1TLq+F20k+pM4xSb7IMFdwV
+	DJIyk1TW0tlFrQtnH9Ef6Osd9uuBGoo=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-501-1crAhz-3PkWdacmrsib4pg-1; Tue, 01 Apr 2025 04:21:07 -0400
+X-MC-Unique: 1crAhz-3PkWdacmrsib4pg-1
+X-Mimecast-MFC-AGG-ID: 1crAhz-3PkWdacmrsib4pg_1743495666
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3914bc0cc4aso2638926f8f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 01:21:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743495666; x=1744100466;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=6hh3sHQg1YPcmqC0I6nucOyyi71QpSx5LGkEOERvFPE=;
+        b=ktyuIF7XOxly+MLm+fpHRAFh7fK24NQcKErVKN2r/OrzEl36JWGDiOU0RrA860VKB2
+         WWA4mDtcNVUwfeg6mEJOJM9aSUzTI4FhV2Igt/B0q/AUHEH4iujkIJP07xC1JaqS7/GA
+         IdIIsaVJBBCi+qlm1WvmyVKoaOlxHIuiHgSnzErTb5raIUFgQkBcGb6sWseF4UQEIkAs
+         Pc0138AJMO2NirOHxKjCQs1v+3O24R2NvsiP9NLJwseSjzbNLRw9Tpk6TQlp831p1eaI
+         TLFFLKMvcz9tP/4Q+VxBfOzLMECBq7MUxJqFaBSc9gfalHPt/p+I48I3yAEB/dOp5SN4
+         EExg==
+X-Forwarded-Encrypted: i=1; AJvYcCUl5QvlHa64sJQdzYL4pTSFaAJEgNDx2ijgVINGLOBt0Mx4UGdwg6Yb0ie/PHod2oa3Pn4lJ6NysLsNzWo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzj9VgZsRG0ZVuCN+VHgiChL/ruM4c4MQkAJruS11qdnR6heW5o
+	HA4asD8UpW/RXn2Bv+K8PvLmCiwrdox5iWJnVnZ3ed4uuuzGjXF8j2/2lwXyZWSjyu6RdoXJDB9
+	7ZRtalzi2bwyebgxdTJDr6TfPpi1c0zYQSSSIYZ8c/AotmDpqfNApyxmo7O/YPw==
+X-Gm-Gg: ASbGnctaEW6TlgaPMenong4EO9b5hU+crOq5Tya4YiOdiSAqBgVYmBFa1AtpkTK7dtR
+	CXclFzY287bpwShz8VouQtcF8NzconiwaTU8wJsLF69CU8A1wozOMVYKCmw599vGUR4TeM1A+HT
+	ToC95MUJJvqMLh1dNH+vBLbJDLSrP/eX3qAq0gvnSw8zd9uVkhHVN2vAqR+4gR9Vu7wQTQRY3dd
+	JNSE5gigqQDbv0Xj9by1qJHucTxnZSApLcgs5e+SBANTeyokHXKAg5rOzsbpG6eSULQ6lcGNNcI
+	xG4B05SJUDsnSTMnHbNXSN15SRplOwryHxXGMnITkkfbP6uX6XzyEJAZgl2aM7GFQ6IksSO+RgE
+	rIUYN6aBxa39LrtBkLPjnKV3gRxFOM8PYD2dla/Oo
+X-Received: by 2002:a5d:588c:0:b0:390:eb50:37c3 with SMTP id ffacd0b85a97d-39c120e33a5mr8199381f8f.27.1743495666194;
+        Tue, 01 Apr 2025 01:21:06 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFXLqumgl6PPZ8Sqy2fhKqkRiYpMZaxMRMS31vgxVjkrlC30wGVZ/p/0Y6r7j4mbneSYczTHg==
+X-Received: by 2002:a5d:588c:0:b0:390:eb50:37c3 with SMTP id ffacd0b85a97d-39c120e33a5mr8199358f8f.27.1743495665888;
+        Tue, 01 Apr 2025 01:21:05 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c707:4d00:6ac5:30d:1611:918f? (p200300cbc7074d006ac5030d1611918f.dip0.t-ipconnect.de. [2003:cb:c707:4d00:6ac5:30d:1611:918f])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b66aeaasm13620785f8f.53.2025.04.01.01.21.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Apr 2025 01:21:05 -0700 (PDT)
+Message-ID: <d4f6c677-7944-4b27-a21c-819dccbfcb37@redhat.com>
+Date: Tue, 1 Apr 2025 10:21:04 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 7/7] mm/pgtable: remove unneeded pgd_devmap()
+To: Baoquan He <bhe@redhat.com>, akpm@linux-foundation.org
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, yanjun.zhu@linux.dev
+References: <20250331081327.256412-1-bhe@redhat.com>
+ <20250331081327.256412-8-bhe@redhat.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250331081327.256412-8-bhe@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Max Fierke <max@maxfierke.com>
+On 31.03.25 10:13, Baoquan He wrote:
+> There's no user of pgd_devmap() now, remove it from all ARCH-es
+> and linux/pgtable.h.
 
-The ClockworkPi DevTerm (all models) uses a 6.86" IPS display
-of unknown provenance, which uses the Chipone ICNL9707 IC driver.
+Drop this patch, Alistair will remove all that devmap stuff soon.
 
-The display panel I have has two model numbers: TXW686001 and WTL068601G,
-but cannot find any manufacturer associated with either, so opting for the
-ClockworkPi model number.
+https://lore.kernel.org/linux-mm/42a318bcbb65931958e52ce4b1334f3d012cbd6f.1736488799.git-series.apopple@nvidia.com/
 
-This driver is based on the GPL-licensed driver released by ClockworkPi,
-authored by Pinfan Zhu, with some additional cleanup, rotation support,
-and display sleep re-enabling done by me.
-
-Original driver here for reference: https://github.com/clockworkpi/DevTerm/blob/main/Code/patch/armbian_build_a06/patch/kernel-004-panel.patch
-Display IC datasheet provided here: https://github.com/clockworkpi/DevTerm/blob/main/Schematics/ICNL9707_Datasheet.pdf
-
-Co-authored-by: Charlotte Deleńkec <lotte@chir.rs>
-Signed-off-by: Charlotte Deleńkec <lotte@chir.rs>
-Signed-off-by: Max Fierke <max@maxfierke.com>
----
- drivers/gpu/drm/panel/Kconfig                 |  12 +
- drivers/gpu/drm/panel/Makefile                |   1 +
- .../gpu/drm/panel/panel-clockwork-cwd686.c    | 447 ++++++++++++++++++
- 3 files changed, 460 insertions(+)
- create mode 100644 drivers/gpu/drm/panel/panel-clockwork-cwd686.c
-
-diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
-index e059b06e0239..6fc23c10fa56 100644
---- a/drivers/gpu/drm/panel/Kconfig
-+++ b/drivers/gpu/drm/panel/Kconfig
-@@ -96,6 +96,18 @@ config DRM_PANEL_BOE_TV101WUM_LL2
- 	  Say Y here if you want to support for BOE TV101WUM-LL2
- 	  WUXGA PANEL DSI Video Mode panel
- 
-+config DRM_PANEL_CLOCKWORK_CWD686
-+	tristate "Clockwork CWD686 panel"
-+	depends on OF
-+	depends on DRM_MIPI_DSI
-+	depends on BACKLIGHT_CLASS_DEVICE
-+	help
-+	  Say Y here if you want to enable support for the Clockwork CWD686
-+	  ICNL9707-based panel, e.g. as used within the Clockwork DevTerm.
-+	  The panel has a 480x1280 resolution and uses 24 bit RGB per pixel.
-+
-+	  To compile this driver as a module, choose M here.
-+
- config DRM_PANEL_EBBG_FT8719
- 	tristate "EBBG FT8719 panel driver"
- 	depends on OF
-diff --git a/drivers/gpu/drm/panel/Makefile b/drivers/gpu/drm/panel/Makefile
-index 1bb8ae46b59b..9f5b8d2a86e4 100644
---- a/drivers/gpu/drm/panel/Makefile
-+++ b/drivers/gpu/drm/panel/Makefile
-@@ -8,6 +8,7 @@ obj-$(CONFIG_DRM_PANEL_BOE_HIMAX8279D) += panel-boe-himax8279d.o
- obj-$(CONFIG_DRM_PANEL_BOE_TH101MB31UIG002_28A) += panel-boe-th101mb31ig002-28a.o
- obj-$(CONFIG_DRM_PANEL_BOE_TV101WUM_LL2) += panel-boe-tv101wum-ll2.o
- obj-$(CONFIG_DRM_PANEL_BOE_TV101WUM_NL6) += panel-boe-tv101wum-nl6.o
-+obj-$(CONFIG_DRM_PANEL_CLOCKWORK_CWD686) += panel-clockwork-cwd686.o
- obj-$(CONFIG_DRM_PANEL_DSI_CM) += panel-dsi-cm.o
- obj-$(CONFIG_DRM_PANEL_LVDS) += panel-lvds.o
- obj-$(CONFIG_DRM_PANEL_SIMPLE) += panel-simple.o
-diff --git a/drivers/gpu/drm/panel/panel-clockwork-cwd686.c b/drivers/gpu/drm/panel/panel-clockwork-cwd686.c
-new file mode 100644
-index 000000000000..53d65e6df1b0
---- /dev/null
-+++ b/drivers/gpu/drm/panel/panel-clockwork-cwd686.c
-@@ -0,0 +1,447 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Copyright (c) 2021 Clockwork Tech LLC
-+ * Copyright (c) 2021-2022 Max Fierke <max@maxfierke.com>
-+ *
-+ * Based on Pinfan Zhu's work on panel-cwd686.c for Clockwork's 5.10 BSP
-+ */
-+
-+#include <linux/gpio/consumer.h>
-+#include <linux/regulator/consumer.h>
-+#include <linux/delay.h>
-+#include <linux/of_device.h>
-+#include <linux/module.h>
-+
-+#include <video/mipi_display.h>
-+
-+#include <drm/drm_modes.h>
-+#include <drm/drm_mipi_dsi.h>
-+#include <drm/drm_panel.h>
-+
-+struct cwd686 {
-+	struct device *dev;
-+	struct drm_panel panel;
-+	struct regulator *vci;
-+	struct regulator *iovcc;
-+	struct gpio_desc *reset_gpio;
-+	enum drm_panel_orientation orientation;
-+	bool prepared;
-+};
-+
-+static const struct drm_display_mode default_mode = {
-+	.clock = 54465,
-+	.hdisplay = 480,
-+	.hsync_start = 480 + 150,
-+	.hsync_end = 480 + 150 + 24,
-+	.htotal = 480 + 150 + 24 + 40,
-+	.vdisplay = 1280,
-+	.vsync_start = 1280 + 12,
-+	.vsync_end = 1280 + 12 + 6,
-+	.vtotal = 1280 + 12 + 6 + 10,
-+};
-+
-+static inline struct cwd686 *panel_to_cwd686(struct drm_panel *panel)
-+{
-+	return container_of(panel, struct cwd686, panel);
-+}
-+
-+#define ICNL9707_CMD_CGOUTL 0xB3
-+#define ICNL9707_CMD_CGOUTR 0xB4
-+#define ICNL9707_P_CGOUT_VGL 0x00
-+#define ICNL9707_P_CGOUT_VGH 0x01
-+#define ICNL9707_P_CGOUT_HZ 0x02
-+#define ICNL9707_P_CGOUT_GND 0x03
-+#define ICNL9707_P_CGOUT_GSP1 0x04
-+#define ICNL9707_P_CGOUT_GSP2 0x05
-+#define ICNL9707_P_CGOUT_GSP3 0x06
-+#define ICNL9707_P_CGOUT_GSP4 0x07
-+#define ICNL9707_P_CGOUT_GSP5 0x08
-+#define ICNL9707_P_CGOUT_GSP6 0x09
-+#define ICNL9707_P_CGOUT_GSP7 0x0A
-+#define ICNL9707_P_CGOUT_GSP8 0x0B
-+#define ICNL9707_P_CGOUT_GCK1 0x0C
-+#define ICNL9707_P_CGOUT_GCK2 0x0D
-+#define ICNL9707_P_CGOUT_GCK3 0x0E
-+#define ICNL9707_P_CGOUT_GCK4 0x0F
-+#define ICNL9707_P_CGOUT_GCK5 0x10
-+#define ICNL9707_P_CGOUT_GCK6 0x11
-+#define ICNL9707_P_CGOUT_GCK7 0x12
-+#define ICNL9707_P_CGOUT_GCK8 0x13
-+#define ICNL9707_P_CGOUT_GCK9 0x14
-+#define ICNL9707_P_CGOUT_GCK10 0x15
-+#define ICNL9707_P_CGOUT_GCK11 0x16
-+#define ICNL9707_P_CGOUT_GCK12 0x17
-+#define ICNL9707_P_CGOUT_GCK13 0x18
-+#define ICNL9707_P_CGOUT_GCK14 0x19
-+#define ICNL9707_P_CGOUT_GCK15 0x1A
-+#define ICNL9707_P_CGOUT_GCK16 0x1B
-+#define ICNL9707_P_CGOUT_DIR 0x1C
-+#define ICNL9707_P_CGOUT_DIRB 0x1D
-+#define ICNL9707_P_CGOUT_ECLK_AC 0x1E
-+#define ICNL9707_P_CGOUT_ECLK_ACB 0x1F
-+#define ICNL9707_P_CGOUT_ECLK_AC2 0x20
-+#define ICNL9707_P_CGOUT_ECLK_AC2B 0x21
-+#define ICNL9707_P_CGOUT_GCH 0x22
-+#define ICNL9707_P_CGOUT_GCL 0x23
-+#define ICNL9707_P_CGOUT_XDON 0x24
-+#define ICNL9707_P_CGOUT_XDONB 0x25
-+
-+#define ICNL9707_MADCTL_ML  0x10
-+#define ICNL9707_MADCTL_RGB 0x00
-+#define ICNL9707_MADCTL_BGR 0x08
-+#define ICNL9707_MADCTL_MH  0x04
-+
-+#define ICNL9707_CMD_PWRCON_VCOM 0xB6
-+#define ICNL9707_P_PWRCON_VCOM_0495V 0x0D
-+
-+#define ICNL9707_CMD_PWRCON_SEQ 0xB7
-+#define ICNL9707_CMD_PWRCON_CLK 0xB8
-+#define ICNL9707_CMD_PWRCON_BTA 0xB9
-+#define ICNL9707_CMD_PWRCON_MODE 0xBA
-+#define ICNL9707_CMD_PWRCON_REG 0xBD
-+
-+#define ICNL9707_CMD_TCON 0xC1
-+#define ICNL9707_CMD_TCON2 0xC2
-+#define ICNL9707_CMD_TCON3 0xC3
-+#define ICNL9707_CMD_SRC_TIM 0xC6
-+#define ICNL9707_CMD_SRCCON 0xC7
-+#define ICNL9707_CMD_SET_GAMMA 0xC8
-+
-+#define ICNL9707_CMD_ETC 0xD0
-+
-+#define ICNL9707_CMD_PASSWORD1 0xF0
-+#define ICNL9707_P_PASSWORD1_DEFAULT 0xA5
-+#define ICNL9707_P_PASSWORD1_ENABLE_LVL2 0x5A
-+
-+#define ICNL9707_CMD_PASSWORD2 0xF1
-+#define ICNL9707_P_PASSWORD2_DEFAULT 0x5A
-+#define ICNL9707_P_PASSWORD2_ENABLE_LVL2 0xA5
-+
-+static int cwd686_init_sequence(struct cwd686 *ctx)
-+{
-+	struct mipi_dsi_device *dsi = to_mipi_dsi_device(ctx->dev);
-+	int err;
-+
-+	/* Enable access to Level 2 registers */
-+	mipi_dsi_dcs_write_seq(dsi, ICNL9707_CMD_PASSWORD1,
-+		     ICNL9707_P_PASSWORD1_ENABLE_LVL2,
-+		     ICNL9707_P_PASSWORD1_ENABLE_LVL2);
-+	mipi_dsi_dcs_write_seq(dsi, ICNL9707_CMD_PASSWORD2,
-+		     ICNL9707_P_PASSWORD2_ENABLE_LVL2,
-+		     ICNL9707_P_PASSWORD2_ENABLE_LVL2);
-+
-+	/* Set PWRCON_VCOM (-0.495V, -0.495V) */
-+	mipi_dsi_dcs_write_seq(dsi, ICNL9707_CMD_PWRCON_VCOM,
-+		     ICNL9707_P_PWRCON_VCOM_0495V,
-+		     ICNL9707_P_PWRCON_VCOM_0495V);
-+
-+	/* Map ASG output signals */
-+	mipi_dsi_dcs_write_seq(dsi, ICNL9707_CMD_CGOUTR,
-+		     ICNL9707_P_CGOUT_GSP7, ICNL9707_P_CGOUT_GSP5,
-+		     ICNL9707_P_CGOUT_GCK7, ICNL9707_P_CGOUT_GCK5,
-+		     ICNL9707_P_CGOUT_GCK3, ICNL9707_P_CGOUT_GCK1,
-+		     ICNL9707_P_CGOUT_VGL, ICNL9707_P_CGOUT_VGL,
-+		     ICNL9707_P_CGOUT_VGL, ICNL9707_P_CGOUT_GND,
-+		     ICNL9707_P_CGOUT_VGL, ICNL9707_P_CGOUT_GND,
-+		     ICNL9707_P_CGOUT_GND, ICNL9707_P_CGOUT_GND,
-+		     ICNL9707_P_CGOUT_GND, ICNL9707_P_CGOUT_GND,
-+		     ICNL9707_P_CGOUT_GND, ICNL9707_P_CGOUT_GND,
-+		     ICNL9707_P_CGOUT_GSP1, ICNL9707_P_CGOUT_GSP3);
-+	mipi_dsi_dcs_write_seq(dsi, ICNL9707_CMD_CGOUTL,
-+		     ICNL9707_P_CGOUT_GSP8, ICNL9707_P_CGOUT_GSP6,
-+		     ICNL9707_P_CGOUT_GCK8, ICNL9707_P_CGOUT_GCK6,
-+		     ICNL9707_P_CGOUT_GCK4, ICNL9707_P_CGOUT_GCK2,
-+		     ICNL9707_P_CGOUT_VGL, ICNL9707_P_CGOUT_VGL,
-+		     ICNL9707_P_CGOUT_VGL, ICNL9707_P_CGOUT_GND,
-+		     ICNL9707_P_CGOUT_VGL, ICNL9707_P_CGOUT_GND,
-+		     ICNL9707_P_CGOUT_GND, ICNL9707_P_CGOUT_GND,
-+		     ICNL9707_P_CGOUT_GND, ICNL9707_P_CGOUT_GND,
-+		     ICNL9707_P_CGOUT_GND, ICNL9707_P_CGOUT_GND,
-+		     ICNL9707_P_CGOUT_GSP2, ICNL9707_P_CGOUT_GSP4);
-+
-+	/* Undocumented commands provided by the vendor */
-+	mipi_dsi_dcs_write_seq(dsi, 0xB0, 0x54, 0x32, 0x23, 0x45, 0x44, 0x44, 0x44, 0x44, 0x90, 0x01, 0x90, 0x01);
-+	mipi_dsi_dcs_write_seq(dsi, 0xB1, 0x32, 0x84, 0x02, 0x83, 0x30, 0x01, 0x6B, 0x01);
-+	mipi_dsi_dcs_write_seq(dsi, 0xB2, 0x73);
-+
-+	mipi_dsi_dcs_write_seq(dsi, ICNL9707_CMD_PWRCON_REG,
-+		     0x4E, 0x0E, 0x50, 0x50, 0x26,
-+		     0x1D, 0x00, 0x14, 0x42, 0x03);
-+	mipi_dsi_dcs_write_seq(dsi, ICNL9707_CMD_PWRCON_SEQ,
-+		     0x01, 0x01, 0x09, 0x11, 0x0D, 0x55,
-+		     0x19, 0x19, 0x21, 0x1D, 0x00, 0x00,
-+		     0x00, 0x00, 0x02, 0xFF, 0x3C);
-+	mipi_dsi_dcs_write_seq(dsi, ICNL9707_CMD_PWRCON_CLK, 0x23, 0x01, 0x30, 0x34, 0x63);
-+
-+	/* Disable abnormal power-off flag */
-+	mipi_dsi_dcs_write_seq(dsi, ICNL9707_CMD_PWRCON_BTA, 0xA0, 0x22, 0x00, 0x44);
-+
-+	mipi_dsi_dcs_write_seq(dsi, ICNL9707_CMD_PWRCON_MODE, 0x12, 0x63);
-+
-+	/* Set VBP, VFP, VSW, HBP, HFP, HSW */
-+	mipi_dsi_dcs_write_seq(dsi, ICNL9707_CMD_TCON, 0x0C, 0x16, 0x04, 0x0C, 0x10, 0x04);
-+
-+	/* Set resolution */
-+	mipi_dsi_dcs_write_seq(dsi, ICNL9707_CMD_TCON2, 0x11, 0x41);
-+
-+	/* Set frame blanking */
-+	mipi_dsi_dcs_write_seq(dsi, ICNL9707_CMD_TCON3, 0x22, 0x31, 0x04);
-+
-+	mipi_dsi_dcs_write_seq(dsi, ICNL9707_CMD_SRCCON, 0x05, 0x23, 0x6B, 0x49, 0x00);
-+
-+	/* Another undocumented command */
-+	mipi_dsi_dcs_write_seq(dsi, 0xC5, 0x00);
-+
-+	mipi_dsi_dcs_write_seq(dsi, ICNL9707_CMD_ETC, 0x37, 0xFF, 0xFF);
-+
-+	/* Another set of undocumented commands */
-+	mipi_dsi_dcs_write_seq(dsi, 0xD2, 0x63, 0x0B, 0x08, 0x88);
-+	mipi_dsi_dcs_write_seq(dsi, 0xD3, 0x01, 0x00, 0x00, 0x01, 0x01, 0x37, 0x25, 0x38, 0x31, 0x06, 0x07);
-+
-+	/* Set Gamma to 2.2 */
-+	mipi_dsi_dcs_write_seq(dsi, ICNL9707_CMD_SET_GAMMA,
-+		     0x7C, 0x6A, 0x5D, 0x53, 0x53, 0x45, 0x4B,
-+		     0x35, 0x4D, 0x4A, 0x49, 0x66, 0x53, 0x57,
-+		     0x4A, 0x48, 0x3B, 0x2A, 0x06, 0x7C, 0x6A,
-+		     0x5D, 0x53, 0x53, 0x45, 0x4B, 0x35, 0x4D,
-+		     0x4A, 0x49, 0x66, 0x53, 0x57, 0x4A, 0x48,
-+		     0x3B, 0x2A, 0x06);
-+
-+	mipi_dsi_dcs_write_seq(dsi, ICNL9707_CMD_SRC_TIM, 0x00, 0x00, 0xFF, 0x00, 0x00, 0xFF, 0x00, 0x00);
-+
-+	/* Another undocumented command */
-+	mipi_dsi_dcs_write_seq(dsi, 0xF4, 0x08, 0x77);
-+
-+	mipi_dsi_dcs_write_seq(dsi, MIPI_DCS_SET_ADDRESS_MODE,
-+		     ICNL9707_MADCTL_RGB | ICNL9707_MADCTL_ML | ICNL9707_MADCTL_MH);
-+
-+	/* Enable tearing mode at VBLANK */
-+	err = mipi_dsi_dcs_set_tear_on(dsi, MIPI_DSI_DCS_TEAR_MODE_VBLANK);
-+	if (err) {
-+		dev_err(ctx->dev, "failed to enable vblank TE (%d)\n", err);
-+		return err;
-+	}
-+
-+	/* Disable access to Level 2 registers */
-+	mipi_dsi_dcs_write_seq(dsi, ICNL9707_CMD_PASSWORD2,
-+		     ICNL9707_P_PASSWORD2_DEFAULT,
-+		     ICNL9707_P_PASSWORD2_DEFAULT);
-+	mipi_dsi_dcs_write_seq(dsi, ICNL9707_CMD_PASSWORD1,
-+		     ICNL9707_P_PASSWORD1_DEFAULT,
-+		     ICNL9707_P_PASSWORD1_DEFAULT);
-+
-+	return 0;
-+}
-+
-+static int cwd686_unprepare(struct drm_panel *panel)
-+{
-+	struct cwd686 *ctx = panel_to_cwd686(panel);
-+	struct mipi_dsi_device *dsi = to_mipi_dsi_device(ctx->dev);
-+	int err;
-+
-+	if (!ctx->prepared)
-+		return 0;
-+
-+	err = mipi_dsi_dcs_set_display_off(dsi);
-+	if (err) {
-+		dev_err(ctx->dev, "failed to turn display off (%d)\n", err);
-+		return err;
-+	}
-+
-+	err = mipi_dsi_dcs_enter_sleep_mode(dsi);
-+	if (err) {
-+		dev_err(ctx->dev, "failed to enter sleep mode (%d)\n", err);
-+		return err;
-+	}
-+
-+	msleep(120);
-+
-+	gpiod_set_value_cansleep(ctx->reset_gpio, 0);
-+
-+	regulator_disable(ctx->iovcc);
-+	regulator_disable(ctx->vci);
-+
-+	ctx->prepared = false;
-+
-+	return 0;
-+}
-+
-+static int cwd686_prepare(struct drm_panel *panel)
-+{
-+	struct cwd686 *ctx = panel_to_cwd686(panel);
-+	struct mipi_dsi_device *dsi = to_mipi_dsi_device(ctx->dev);
-+	int err;
-+
-+	if (ctx->prepared)
-+		return 0;
-+
-+	err = regulator_enable(ctx->vci);
-+	if (err < 0) {
-+		dev_err(ctx->dev, "failed to enable vci supply: %d\n", err);
-+		return err;
-+	}
-+	err = regulator_enable(ctx->iovcc);
-+	if (err < 0) {
-+		dev_err(ctx->dev, "failed to enable iovcc supply: %d\n", err);
-+		goto disable_vci;
-+	}
-+
-+	gpiod_set_value_cansleep(ctx->reset_gpio, 0);
-+	/* T2 */
-+	msleep(10);
-+
-+	gpiod_set_value_cansleep(ctx->reset_gpio, 1);
-+	/* T3 */
-+	msleep(20);
-+
-+	/* Exit sleep mode and power on */
-+
-+	err = cwd686_init_sequence(ctx);
-+	if (err) {
-+		dev_err(ctx->dev, "failed to initialize display (%d)\n", err);
-+		goto disable_iovcc;
-+	}
-+
-+	err = mipi_dsi_dcs_exit_sleep_mode(dsi);
-+	if (err) {
-+		dev_err(ctx->dev, "failed to exit sleep mode (%d)\n", err);
-+		goto disable_iovcc;
-+	}
-+	/* T6 */
-+	msleep(120);
-+
-+	err = mipi_dsi_dcs_set_display_on(dsi);
-+	if (err) {
-+		dev_err(ctx->dev, "failed to turn display on (%d)\n", err);
-+		goto disable_iovcc;
-+	}
-+	msleep(20);
-+
-+	ctx->prepared = true;
-+
-+	return 0;
-+disable_iovcc:
-+	regulator_disable(ctx->iovcc);
-+disable_vci:
-+	regulator_disable(ctx->vci);
-+	return err;
-+}
-+
-+static int cwd686_get_modes(struct drm_panel *panel, struct drm_connector *connector)
-+{
-+	struct cwd686 *ctx = panel_to_cwd686(panel);
-+	struct drm_display_mode *mode;
-+
-+	mode = drm_mode_duplicate(connector->dev, &default_mode);
-+	if (!mode) {
-+		dev_err(panel->dev, "bad mode or failed to add mode\n");
-+		return -EINVAL;
-+	}
-+	drm_mode_set_name(mode);
-+	mode->type = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED;
-+
-+	/* Set up connector's "panel orientation" property */
-+	drm_connector_set_panel_orientation(connector, ctx->orientation);
-+
-+	drm_mode_probed_add(connector, mode);
-+
-+	return 1; /* Number of modes */
-+}
-+
-+static const struct drm_panel_funcs cwd686_drm_funcs = {
-+	.unprepare = cwd686_unprepare,
-+	.prepare = cwd686_prepare,
-+	.get_modes = cwd686_get_modes,
-+};
-+
-+static int cwd686_probe(struct mipi_dsi_device *dsi)
-+{
-+	struct device *dev = &dsi->dev;
-+	struct cwd686 *ctx;
-+	int err;
-+
-+	ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
-+	if (!ctx)
-+		return -ENOMEM;
-+
-+	mipi_dsi_set_drvdata(dsi, ctx);
-+	ctx->dev = dev;
-+
-+	dsi->lanes = 4;
-+	dsi->format = MIPI_DSI_FMT_RGB888;
-+	dsi->mode_flags = MIPI_DSI_MODE_VIDEO |
-+			  MIPI_DSI_MODE_VIDEO_BURST |
-+			  MIPI_DSI_MODE_VIDEO_SYNC_PULSE;
-+
-+	ctx->reset_gpio = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_HIGH);
-+	if (IS_ERR(ctx->reset_gpio)) {
-+		err = PTR_ERR(ctx->reset_gpio);
-+		return dev_err_probe(dev, err, "Failed to request GPIO (%d)\n", err);
-+	}
-+
-+	ctx->vci = devm_regulator_get(dev, "vci");
-+	if (IS_ERR(ctx->vci)) {
-+		err = PTR_ERR(ctx->vci);
-+		return dev_err_probe(dev, err, "Failed to request vci regulator: %d\n", err);
-+	}
-+
-+	ctx->iovcc = devm_regulator_get(dev, "iovcc");
-+	if (IS_ERR(ctx->iovcc)) {
-+		err = PTR_ERR(ctx->iovcc);
-+		return dev_err_probe(dev, err, "Failed to request iovcc regulator: %d\n", err);
-+	}
-+
-+	err = of_drm_get_panel_orientation(dev->of_node, &ctx->orientation);
-+	if (err) {
-+		dev_err(dev, "%pOF: failed to get orientation %d\n", dev->of_node, err);
-+		return err;
-+	}
-+
-+	drm_panel_init(&ctx->panel, dev, &cwd686_drm_funcs, DRM_MODE_CONNECTOR_DSI);
-+
-+	err = drm_panel_of_backlight(&ctx->panel);
-+	if (err)
-+		return dev_err_probe(dev, err, "Failed to get backlight\n");
-+
-+	ctx->panel.prepare_prev_first = true;
-+	drm_panel_add(&ctx->panel);
-+
-+	err = mipi_dsi_attach(dsi);
-+	if (err < 0) {
-+		dev_err(dev, "mipi_dsi_attach() failed: %d\n", err);
-+		drm_panel_remove(&ctx->panel);
-+		return err;
-+	}
-+
-+	return 0;
-+}
-+
-+static void cwd686_remove(struct mipi_dsi_device *dsi)
-+{
-+	struct cwd686 *ctx = mipi_dsi_get_drvdata(dsi);
-+
-+	mipi_dsi_detach(dsi);
-+	drm_panel_remove(&ctx->panel);
-+}
-+
-+static const struct of_device_id cwd686_of_match[] = {
-+	{ .compatible = "clockwork,cwd686" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, cwd686_of_match);
-+
-+static struct mipi_dsi_driver cwd686_driver = {
-+	.probe = cwd686_probe,
-+	.remove = cwd686_remove,
-+	.driver = {
-+		.name = "panel-clockwork-cwd686",
-+		.of_match_table = cwd686_of_match,
-+	},
-+};
-+module_mipi_dsi_driver(cwd686_driver);
-+
-+MODULE_AUTHOR("Pinfan Zhu <zhu@clockworkpi.com>");
-+MODULE_AUTHOR("Max Fierke <max@maxfierke.com>");
-+MODULE_AUTHOR("Charlotte Deleńkec <lotte@chir.rs>");
-+MODULE_DESCRIPTION("Clockwork CWD686 panel driver");
-+MODULE_LICENSE("GPL");
 -- 
-2.48.1
+Cheers,
+
+David / dhildenb
 
