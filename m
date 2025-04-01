@@ -1,386 +1,115 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74F761D7E31
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 17:55:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2530A2040A4
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 17:56:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743530153; cv=none; b=FrHVQx7QvyPfRfACF8caMHVjm1++BPU46mmYORTtvVSsCe2k1RYT5dnCa0Nosa6EEi4GQuX3bXPbS6VPXUGV7RSPLXvnNYNHuYHrcIA5lLcADGh2ZfV37cuBVl+6/IVgAhg6I5Ot70w/vF3EdJ81/URUkL9Y6a3W3uyoJNCqOsM=
+	t=1743530165; cv=none; b=uZC+q8D9LINJ90TXB9ELafalf6UAXCkqAPT/4mRUCTUSg1IFoJj1YYNFDfs3ZociwOTdg7CCAUBMSe9/bfbWABoFqA38JwRA8XUHOoYZXSMqByTeUtQdOZ+kX0KlhDzuOAkzDEszsz3Wz3mHGkYF31kPTukWVuiZ8ac1P9dFYVU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743530153; c=relaxed/simple;
-	bh=7ZL45eO6oHpoyPVq90+nMlQSH41tVCESqt7gfL6dfBc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=R0TJ7ASsFpcNdJgHiCDNlZAGs3XgAHfHayHoPV9VPGVxBmaXcEzQfs4N/NGLpok2yMImqWaB09UuTMGTWyNYhOaR8byH4ObNwKpVS6Q16aP12DrmOcktEnKW0ruF4QwR8siVNbTFoEAiBg1SVeke8Z6eJ73h3RLXhx+3wvDRMJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=O+PyY+xP; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1743530165; c=relaxed/simple;
+	bh=i5hn9a8H/v3n4+W99nGhL574JuJveqR7/t6FjhRVuRE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EtBD6jaO4F1b+oTnFMlLjUtyhpjoxe21CTTtthLjaJg8Fn1td8WAa3bHLOMWo8MbnfraBGRf8NygDwiRQV2G+PB/v9ywll0PSd7ux/ZU0DZgRGZM4rtYFUrbqWRw7kFNHV9BTjzWsIcIG0Joy/Cpqsl2Wff/80UwcDheBe0oRmM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aSF8ZLfZ; arc=none smtp.client-ip=209.85.216.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="O+PyY+xP"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2240aad70f2so26215ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 10:55:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aSF8ZLfZ"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2ff69365e1dso7825591a91.3
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 10:56:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743530151; x=1744134951; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qwhXc+3Mv33awoyK00ZHq4pdn0DYvpiatBKGbcRAOA4=;
-        b=O+PyY+xPZ1DBJRTIMVw6IWWtb6gGQn9B7pjz7e2tmS0GVmnaUxZhIl3Kw+VdGgBBPE
-         nFe/BpqFip7Ok4kZRb7uph3RU31A77xvYsW59b4uY/f24xXJRwVTyYRFfrBEJxCEzQwg
-         7zUcTQW6jAR6c4zBzfyLDl5BqD9oa23CDogZzcMtGw14NSiZcdCEsUCSoPuww68tYebH
-         ZQqg4cRKSvU8+1TeMyZsRhPjEUEuiMqCwnWkcwJrIbjSfE8/yLbwGofBq5RXLK5lchrm
-         obI3DLQ/JGeB50GvSe9Z2uI+2iXRu5/XlH96N8XFgRhNSTVvook6ScgR5Gf4m5/9Uksz
-         JOIg==
+        d=gmail.com; s=20230601; t=1743530163; x=1744134963; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=VGSHngqKdQ6JAAV9PdN+ZqX5Z98Ode3U7b6CpgYXwAs=;
+        b=aSF8ZLfZFPFD0bpLrPB2ySz4WrnM6FBrsHgQxJJ83646EXnUE4rFpE6HDH6ixEN9Zm
+         xM5k+WwB1FXOLY5twEHZO+TVHrOGk5yB5e/+YGmbIw2mvS3CbATlqKz5n5huOs7xiOVd
+         DGcov2Bp8hiO6ITVkk3KujEeFoe68arn2eZDm61mLs7XBiJ1GGaPfzfI8+2s51jzsuqt
+         qDfHP9BUxaRxHMQBdMKa+y71mpvf2MBXzs6VU9YZHeSfJo03XhdT+kMcKpz4FNHgIdmb
+         O8dryywSe4sR9B29mioaY7YVmV2/MUy8wQ0AmxlwVwHd8Ykuu3dFTwzqwdu27ns29cNv
+         0BUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743530151; x=1744134951;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qwhXc+3Mv33awoyK00ZHq4pdn0DYvpiatBKGbcRAOA4=;
-        b=e9F/W3Jiz6FD8bX0eocTV3QiDY/cnn+xSJjsnGywMOfZTowllNJRWa8wS4YfjjSIhh
-         LiiMw6AwD8zoOrMNpbpbHf8gg/FGvsh0/1YKU4DR/EZ/x+TyGC85OCPgVJlR3cgOtNnO
-         TiljVsyrkrFXBm8wUFDlV6IQQ0caKU6h+MqfyoWdLrUwGRptzCeAIpeBqGzfEreh2Wh4
-         X7ld5qjGbu/2yiPJMc1oYRuwafDJJwvuBsVKYncqv7L+H/KW/D5ThE63EmP8Y4MusELT
-         N9mcxivBD6pL53dA7d4G52SUyUS6LBDJDBLDWn6JyQ/kCJgW/y++zpg8Pj+O0kw0Sn6U
-         PkVg==
-X-Forwarded-Encrypted: i=1; AJvYcCXuUjt4EgRsOVsaF2ayYaLzfIOVv81eh2Unvv/SGhAdEKwFDDz2d9S+KD5Y2ZesLmK8hHGS+SJoDoVcjq8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzsfLm3PLHJcIk+H4blzTQBkNq2vARHlVCsV2+TXMsZ+LwXHgQx
-	bQ4TWwSpFa8ny1oa/sBxhzvEhyNnAotTdgP/EpsdGSJXQ+TxoHeF44/kQQyd6hWmjBowHfmDXcR
-	lBRzvscxipHNIw6Ll7xMInCWN5gdnJjnsWibS
-X-Gm-Gg: ASbGncs4tJwM6K40st52xuffB30uEHkNUbHAw8bCWEuJtwlq9HP3KHgtDbcBPi7QQlo
-	RyjZp7wKyfNkfaZcyxtNc2dPMroodPG1480rV9VGkNcbLsNLGNMrZPWXbL4IDnVAOL/5uYg/s7f
-	ctGUJvNr4gjNNsSzg2thxJ6hRGP9pd/Zc7mC9vJljHELB4FpvCrl2OTfFF
-X-Google-Smtp-Source: AGHT+IE7+lugkQoCFTK/A+4GPe77QGElu8c0EADC3mRhCAQpzpeh+IouIII0n0V1WBWVNUBlMFPnDVuVctKpkGKQbWQ=
-X-Received: by 2002:a17:902:dace:b0:215:65f3:27ef with SMTP id
- d9443c01a7336-22969ddb1e2mr140565ad.12.1743530150219; Tue, 01 Apr 2025
- 10:55:50 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743530163; x=1744134963;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VGSHngqKdQ6JAAV9PdN+ZqX5Z98Ode3U7b6CpgYXwAs=;
+        b=RQJiovobup4tkR76GwnWa2bTayM0W3HUihiZwuZSTDa1xAp+Xhq7dbFUH3W148iHOZ
+         t+HdQcUX5rfrEYLOOAOXBWcZJeRd14VNQKu29jzRKBSQWvk0QNDWZSEQ7SfIzcuL0U09
+         ezKOFXmE42dG3XOv+GszByLbVgGsIIJDITmJ2i440uQYARX/Y5x2dp+fXeFRM5ZjMrng
+         dRVVaFW7E5z+n4PNYlpv1qFzqS80GSMxy111UrvJOpxuFv52r7YKPHFU8z7GonM/YZbj
+         Ub/0aCPwFqhyrL4zn8M7EPqoiC9LIsJDy2T4oG/whH831hIu0uop76V6A9zwUrmNxL2L
+         Csww==
+X-Forwarded-Encrypted: i=1; AJvYcCUZMGyoK/bREjMPR3uOqpIONaFw0phmopceohWuS5T3tNtbd+diPkLQLnLZfB2BVn4UMa5rsJdnjCSqvKs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxa/esbrKUqVjlmY1YuCBLkTLJrihpFhC/FIH4C2gR7rZ8fCpfE
+	L5dR26UYrPhfFrfQonPYEU1CrDsyYJxYqwM2u5XOq/+BvA4JBuOS
+X-Gm-Gg: ASbGncsWjzhRW1mDma+o9BVlzS9OSvU1gAR1i67eBoxhHRI7/6+ied2TouqsbENQsgg
+	UVcJeKgURxM4fFYmkSFVg1uJMffjkqPC6FOL4EkDYE2dOhO4MDwq+iy2ZEO/da3MFGE50yhuU/m
+	jqzNwXKc4ztTcHOxsV7WAUDgUDGebKfY6cpkb5g3miOQc+DcfwyHfvPoxseKqxWAOAPDdHUROFP
+	gYCCWC5Ut8dBMYnbmOSf3soLJrvhjBVz4fLqYJYj/buo4jMde+YWAGXa6entPDgUfDfQ9zIoI0y
+	VOk60TNTCdReyDlbz4Ube6sK16WJO5WkHivrTvvYHwvfp+K8EbYFcRwisBnJvBHfVBT6zFuRuQS
+	1
+X-Google-Smtp-Source: AGHT+IFzxtb6Up8TviTRMN1Nyki5B4XWY7+F8iD6e9OmgHWH22s1bsVdwRo8/VpoHce14lVmZji6DQ==
+X-Received: by 2002:a17:90b:4d0a:b0:2ee:f440:53ed with SMTP id 98e67ed59e1d1-3053215d85amr18235332a91.31.1743530163398;
+        Tue, 01 Apr 2025 10:56:03 -0700 (PDT)
+Received: from fedora (c-67-164-59-41.hsd1.ca.comcast.net. [67.164.59.41])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3039f6b2ebbsm11914226a91.41.2025.04.01.10.56.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Apr 2025 10:56:02 -0700 (PDT)
+Date: Tue, 1 Apr 2025 10:55:59 -0700
+From: "Vishal Moola (Oracle)" <vishal.moola@gmail.com>
+To: Oscar Salvador <osalvador@suse.de>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	akpm@linux-foundation.org, muchun.song@linux.dev,
+	Miaohe Lin <linmiaohe@huawei.com>
+Subject: Re: [PATCH] mm/compaction: Fix bug in hugetlb handling pathway
+Message-ID: <Z-wor4KyJ-var3kp@fedora>
+References: <20250401021025.637333-1-vishal.moola@gmail.com>
+ <Z-v_YnBV_XJ89NnO@localhost.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250327160700.1147155-1-ryan.roberts@arm.com>
- <Z-WAbWfZzG1GA-4n@casper.infradead.org> <5131c7ad-cc37-44fc-8672-5866ecbef65b@arm.com>
- <Z-b1FmZ5nHzh5huL@casper.infradead.org> <ee11907a-5bd7-44ec-844c-8f10ff406b46@arm.com>
- <CAC_TJveU2v+EcokLKJVVZ8Xje2nYmmUg8bvCD8KO1oC5MgmWCA@mail.gmail.com> <76f5ba9b-1a8c-4973-89ce-14f504819da1@arm.com>
-In-Reply-To: <76f5ba9b-1a8c-4973-89ce-14f504819da1@arm.com>
-From: Kalesh Singh <kaleshsingh@google.com>
-Date: Tue, 1 Apr 2025 10:55:38 -0700
-X-Gm-Features: AQ5f1Jr2CcyeaoQIJQrpxG5gMN7Sj5YaqmW2gOSH6C-Z8_Xxr2eNEVByBPGBvFo
-Message-ID: <CAC_TJvemG2XDky1HtA8g=SG0nv-sONOS-ssEchdymh-_xjBecw@mail.gmail.com>
-Subject: Re: [PATCH v3] mm/filemap: Allow arch to request folio size for exec memory
-To: Ryan Roberts <ryan.roberts@arm.com>
-Cc: Matthew Wilcox <willy@infradead.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	David Hildenbrand <david@redhat.com>, Dave Chinner <david@fromorbit.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z-v_YnBV_XJ89NnO@localhost.localdomain>
 
-On Tue, Apr 1, 2025 at 3:35=E2=80=AFAM Ryan Roberts <ryan.roberts@arm.com> =
-wrote:
->
-> On 01/04/2025 03:19, Kalesh Singh wrote:
-> > On Sat, Mar 29, 2025 at 3:08=E2=80=AFAM Ryan Roberts <ryan.roberts@arm.=
-com> wrote:
-> >>
-> >> On 28/03/2025 15:14, Matthew Wilcox wrote:
-> >>> On Thu, Mar 27, 2025 at 04:23:14PM -0400, Ryan Roberts wrote:
-> >>>> + Kalesh
-> >>>>
-> >>>> On 27/03/2025 12:44, Matthew Wilcox wrote:
-> >>>>> On Thu, Mar 27, 2025 at 04:06:58PM +0000, Ryan Roberts wrote:
-> >>>>>> So let's special-case the read(ahead) logic for executable mapping=
-s. The
-> >>>>>> trade-off is performance improvement (due to more efficient storag=
-e of
-> >>>>>> the translations in iTLB) vs potential read amplification (due to
-> >>>>>> reading too much data around the fault which won't be used), and t=
-he
-> >>>>>> latter is independent of base page size. I've chosen 64K folio siz=
-e for
-> >>>>>> arm64 which benefits both the 4K and 16K base page size configs an=
-d
-> >>>>>> shouldn't lead to any read amplification in practice since the old
-> >>>>>> read-around path was (usually) reading blocks of 128K. I don't
-> >>>>>> anticipate any write amplification because text is always RO.
-> >>>>>
-> >>>>> Is there not also the potential for wasted memory due to ELF alignm=
-ent?
-> >>>>
-> >>>> I think this is an orthogonal issue? My change isn't making that any=
- worse.
-> >>>
-> >>> To a certain extent, it is.  If readahead was doing order-2 allocatio=
-ns
-> >>> before and is now doing order-4, you're tying up 0-12 extra pages whi=
-ch
-> >>> happen to be filled with zeroes due to being used to cache the conten=
-ts
-> >>> of a hole.
-> >>
-> >> Well we would still have read them in before, nothing has changed ther=
-e. But I
-> >> guess your point is more about reclaim? Because those pages are now co=
-ntained in
-> >> a larger folio, if part of the folio is in use then all of it remains =
-active.
-> >> Whereas before, if the folio was fully contained in the pad area and n=
-ever
-> >> accessed, it would fall down the LRU quickly and get reclaimed.
-> >>
-> >
-> >
-> > Hi Ryan,
-> >
-> > I agree this was happening before and we don't need to completely
-> > address it here. Though with the patch it's more likely that the holes
-> > will be cached. I'd like to minimize it if possible. Since this is for
-> > EXEC mappings, a simple check we could use is to limit this to the
-> > VM_EXEC vma.
-> >
-> > + if (vm_flags & VM_EXEC) {
-> > + int order =3D arch_exec_folio_order();
-> > +
-> > + if (order >=3D 0 && ((end-address)*2) >=3D 1<<order) { /* Fault aroun=
-d case */
->
-> I think the intent of this extra check is to ensure the folio will be ful=
-ly
-> contained within the exec vma? Assuming end is the VA of the end of the v=
-ma and
-> address is the VA of the fault, I don't think the maths are quite right? =
-What's
-> the "*2" for? And you probably mean PAGE_SIZE<<order ? But this also does=
-n't
-> account for alignment; the folio will be aligned down to a natural bounda=
-ry in
-> the file.
+On Tue, Apr 01, 2025 at 04:59:46PM +0200, Oscar Salvador wrote:
+> On Mon, Mar 31, 2025 at 07:10:24PM -0700, Vishal Moola (Oracle) wrote:
+> > The compaction code doesn't take references on pages until we're certain
+> > we should attempt to handle it.
+> > 
+> > In the hugetlb case, isolate_or_dissolve_huge_page() may return -EBUSY
+> > without taking a reference to the folio associated with our pfn. If our
+> > folio's refcount drops to 0, compound_nr() becomes unpredictable, making
+> > low_pfn and nr_scanned unreliable.
+> > The user-visible effect is minimal - this should rarely happen (if ever).
+> 
+> So, with compound_order() we either return the real order of the
+> compound page or '0', right?
 
-Hi Ryan,
+Yup. There's a world in which that folio could be freed and reallocated
+as part of another large order page as well (where it would return the
+order of that folio).
 
-Sorry for the pseudocode. You are right it should be PAGE_SIZE. *2 is
-because I missed that this isn't centered around the faulting address
-as the usual fault around logic.
-
->
-> But more fundamentally, I thought I suggested reducing the VMA bounds to =
-exclude
-> padding pages the other day at LSF/MM and you said you didn't want to do =
-that
-> because you didn't want to end up with something else mapped in the gap? =
-So
-> doesn't that mean the padding pages are part of the VMA and this check wo=
-n't help?
-
-The intention was to check that we aren't reading past (more than we
-do today) into other subsequent segments (and holes) if the exec
-segment is small relative to 64K, in which case we fall back to the
-conventional readahead heuristics.
-
->
-> >
-> > For reference I found below (coincidentally? similar) distributions on
-> > my devices
-> >
-> > =3D=3D x86 Workstation =3D=3D
-> >
-> > Total unique exec segments:   906
-> >
-> > Exec segments >=3D 16 KB:   663 ( 73.18%)
-> > Exec segments >=3D 64 KB:   414 ( 45.70%)
->
-> What are those percentages? They don't add up to more than 100...
-
-The percent of segments with size >=3D16KB/64KB of the total number of
-exec mappings. "Exec segments >=3D 64 KB" is also a subset of "Exec
-segments >=3D 16 KB" it's why they don't add up to 100.
-
->
-> The numbers I included with the patch are caclulated based on actual mapp=
-ings so
-> if we end up with a partially mapped 64K folio (because it runs off the e=
-nd of
-> the VMA) it wouldn't have been counted as a 64K contiguous mapping. So I =
-don't
-> think this type of change would change my numbers at all.
-
-I don't think it should affect the results much (probably only a small
-benefit from the extra preread of other segments if we aren't under
-much memory pressure).
-
-Anyways I don't have a strong opinion, given that this shouldn't be an
-issue once we work out Matthew and Ted's idea for the holes. So we can
-keep it simple for now.
-
-Thanks,
-Kalesh
-
->
-> >
-> > =3D=3D arm64 Android Device =3D=3D
-> >
-> > Total unique exec segments:   2171
-> >
-> > Exec segments >=3D 16 KB:  1602 ( 73.79%)
-> > Exec segments >=3D 64 KB:   988 ( 45.51%)
-> >
-> > Result were using the below script:
-> >
-> > cat /proc/*/maps | grep 'r-xp' | \
-> > awk '
-> > BEGIN { OFS =3D "\t" }
-> > $NF ~ /^\// {
-> > path =3D $NF;
-> > split($1, addr, "-");
-> > size =3D strtonum("0x" addr[2]) - strtonum("0x" addr[1]);
-> > print size, path;
-> > }' | \
-> > sort -u | \
-> > awk '
-> > BEGIN {
-> > FS =3D "\t";
-> > total_segments =3D 0;
-> > segs_ge_16k =3D 0;
-> > segs_ge_64k =3D 0;
-> > }
-> > {
-> > total_segments++;
-> > size =3D $1;
-> > if (size >=3D 16384) segs_ge_16k++;
-> > if (size >=3D 65536) segs_ge_64k++;
-> > }
-> > END {
-> > if (total_segments > 0) {
-> > percent_gt_16k =3D (segs_ge_16k / total_segments) * 100;
-> > percent_gt_64k =3D (segs_ge_64k / total_segments) * 100;
-> >
-> > printf "Total unique exec segments: %d\n", total_segments;
-> > printf "\n";
-> > printf "Exec segments >=3D 16 KB: %5d (%6.2f%%)\n", segs_ge_16k, percen=
-t_gt_16k;
-> > printf "Exec segments >=3D 64 KB: %5d (%6.2f%%)\n", segs_ge_64k, percen=
-t_gt_64k;
-> > } else {
-> > print "No executable segments found.";
-> > }
-> > }'
-> >
-> >>>
-> >>>>> Kalesh talked about it in the MM BOF at the same time that Ted and =
-I
-> >>>>> were discussing it in the FS BOF.  Some coordination required (like
-> >>>>> maybe Kalesh could have mentioned it to me rathere than assuming I'=
-d be
-> >>>>> there?)
-> >>>>
-> >>>> I was at Kalesh's talk. David H suggested that a potential solution =
-might be for
-> >>>> readahead to ask the fs where the next hole is and then truncate rea=
-dahead to
-> >>>> avoid reading the hole. Given it's padding, nothing should directly =
-fault it in
-> >>>> so it never ends up in the page cache. Not sure if you discussed any=
-thing like
-> >>>> that if you were talking in parallel?
-> >>>
-> >>> Ted said that he and Kalesh had talked about that solution.  I have a
-> >>> more bold solution in mind which lifts the ext4 extent cache to the
-> >>> VFS inode so that the readahead code can interrogate it.
-> >>>
-> >
-> > Sorry about the hiccup in coordination, Matthew. It was my bad for not
-> > letting you know I planned to discuss it in the MM BoF. I'd like to
-> > hear Ted and your ideas on this when possible.
-> >
-> > Thanks,
-> > Kalesh
-> >
-> >>>> Anyway, I'm not sure if you're suggesting these changes need to be c=
-onsidered as
-> >>>> one somehow or if you're just mentioning it given it is loosely rela=
-ted? My view
-> >>>> is that this change is an improvement indepently and could go in muc=
-h sooner.
-> >>>
-> >>> This is not a reason to delay this patch.  It's just a downside which
-> >>> should be mentioned in the commit message.
-> >>
-> >> Fair point; I'll add a paragraph about the potential reclaim issue.
-> >>
-> >>>
-> >>>>>> +static inline int arch_exec_folio_order(void)
-> >>>>>> +{
-> >>>>>> +  return -1;
-> >>>>>> +}
-> >>>>>
-> >>>>> This feels a bit fragile.  I often expect to be able to store an or=
-der
-> >>>>> in an unsigned int.  Why not return 0 instead?
-> >>>>
-> >>>> Well 0 is a valid order, no? I think we have had the "is order signe=
-d or
-> >>>> unsigned" argument before. get_order() returns a signed int :)
-> >>>
-> >>> But why not always return a valid order?  I don't think we need a
-> >>> sentinel.  The default value can be 0 to do what we do today.
-> >>>
-> >>
-> >> But a single order-0 folio is not what we do today. Note that my chang=
-e as
-> >> currently implemented requests to read a *single* folio of the specifi=
-ed order.
-> >> And note that we only get the order we request to page_cache_ra_order(=
-) because
-> >> the size is limited to a single folio. If the size were bigger, that f=
-unction
-> >> would actually expand the requested order by 2. (although the paramete=
-r is
-> >> called "new_order", it's actually interpretted as "old_order").
-> >>
-> >> The current behavior is effectively to read 128K in order-2 folios (wi=
-th smaller
-> >> folios for boundary alignment).
-> >>
-> >> So I see a few options:
->
-> Matthew,
->
-> Did you have any thoughts on these options?
->
-> Thanks,
-> Ryan
->
-> >>
-> >>   - Continue to allow non-opted in arches to use the existing behaviou=
-r; in this
-> >> case we need a sentinel. This could be -1, UINT_MAX or 0. But in the l=
-atter case
-> >> you are preventing an opted-in arch from specifying that they want ord=
-er-0 -
-> >> it's meaning is overridden.
-> >>
-> >>   - Force all arches to use the new approach with a default folio orde=
-r (and
-> >> readahead size) of order-0. (The default can be overridden per-arch). =
-Personally
-> >> I'd be nervous about making this change.
-> >>
-> >>   - Decouple the read size from the folio order size; continue to use =
-the 128K
-> >> read size and only allow opting-in to a specific folio order. The defa=
-ult order
-> >> would be 2 (or 0). We would need to fix page_cache_async_ra() to call
-> >> page_cache_ra_order() with "order + 2" (the new order) and fix
-> >> page_cache_ra_order() to treat its order parameter as the *new* order.
-> >>
-> >> Perhaps we should do those fixes anyway (and then actually start with =
-a folio
-> >> order of 0 - which I think you said in the past was your original inte=
-ntion?).
-> >>
-> >> Thanks,
-> >> Ryan
-> >>
->
+> > Fix this by storing the folio statistics earlier on the stack (just like
+> > the THP and Buddy cases).
+> > 
+> > Also revert commit 66fe1cf7f581 ("mm: compaction: use helper compound_nr
+> > in isolate_migratepages_block")
+> > to make backporting easier.
+> > 
+> > Fixes: 369fa227c219 ("mm: make alloc_contig_range handle free hugetlb pages")
+> > Cc: Miaohe Lin <linmiaohe@huawei.com>
+> > Cc: Oscar Salvador <osalvador@suse.de>
+> > Signed-off-by: Vishal Moola (Oracle) <vishal.moola@gmail.com>
+> 
+> Acked-by: Oscar Salvador <osalvador@suse.de>
+> 
+> 
+> -- 
+> Oscar Salvador
+> SUSE Labs
