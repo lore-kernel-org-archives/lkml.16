@@ -1,130 +1,272 @@
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-fw-6002.amazon.com (smtp-fw-6002.amazon.com [52.95.49.90])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D48313212A
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 20:13:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E3B113212A;
+	Tue,  1 Apr 2025 20:13:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.95.49.90
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743538416; cv=none; b=N+mC/ykT54yQSLFwo82KbLx3tIwyP2F2vMW/Nph/Bvf0Dr9pFk8H8JwWCrdY7MaIe6/FSmYJG6lBP4kyl9lNyH+VpYLmFpjx2fRgAxV2Z4LGqVWqIKE5e56xEduWJ80DG3+5WiTJafoLvDvdDFaRKYjXsA2/+e86xygXQEcIDRk=
+	t=1743538440; cv=none; b=N143wvAXMgs5AnZDqKctovbSIe1jUK3vWZ+x1G7m8rzJl0EtMUKPsQrShNBy4UGiQu69QdxMeO6vTxGB74VXr1wLYf0rUDWCYqKmCHzGxl7VxQomJfIAK9urQVI040pwbkC8SmA/O2Tric1ascN6aeEUwR44i+9nCwpRqrH8EcU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743538416; c=relaxed/simple;
-	bh=rCt+/dpbAzzfA3GSyrd+8pnf+asH9uHiS96GGGoOkec=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=p4iVfQ5fsDP/aXju4xOmiNGeI37eiC9rp2KT/hG1/5F5TSJ5qcdUMGVYmy3wNIw5Gb0xR3st3d6z3+lvzhsp1d9SDa7RUSRu798mzv/2C/gdIXismp+6uIsiwE0y4i5uQ1OxCFTZl4QlD3CaodutrFZ9FIHLBhOuPaA5CWJIi1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=oTEHrQcm; arc=none smtp.client-ip=209.85.160.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1743538440; c=relaxed/simple;
+	bh=xIukMokWqGIO0Piiex8r6UKKugymvOTtUTqiK2HO3lY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=TTglVgpdsqgmpooJihcFyRodDPmDx8pIZYUPc72SDsdZdHs2AoprGxgQCFwZqu0ucYfrfym1yjCB28UQUwEGt/iaGj6ePJFRggIElb958KXpbJmCnJr/0qwx0P7VR0vScxdOD9gVuuhN0tWVZPz/X77/srwdHI7rBFnMbT6xvFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.de; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=a4v7bm8b; arc=none smtp.client-ip=52.95.49.90
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="oTEHrQcm"
-Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-4769f3e19a9so41756251cf.0
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 13:13:33 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="a4v7bm8b"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1743538412; x=1744143212; darn=vger.kernel.org;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=N6RcwdLwJHVSF6RfZ+AmDIydDmW/wAWUNS5MGoxg2aU=;
-        b=oTEHrQcm3JHuHPOuaaoW5whXJPKjFnAz2vsgVMxp0Ll1IyxdLEI7CIgQUhOOKqxoQP
-         SUETKgdgce6RggLzOPb7LSowjS9GthqhRtbam6ys1RJnRs5l6amssylFsEkF43GWTHFP
-         nXfbwtg95l8gj9bwpjT29kL2eqgqcee6Z9N/WVWxsOOJW5UreuTCQo4qwfMbbxvrsPOh
-         VdyRGci/tEztQ6kEMk17UaB0zsTvRS8aax+tDijiEPrx2q/FNmNX16WsAoGVKVv3N1Mv
-         Od1Ay/xwQXHcPiUvw6ofItMGn7+5Zveu87sFy/9Je/vgehucWTjERjYIyzMP6exWDB6B
-         7haA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743538412; x=1744143212;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=N6RcwdLwJHVSF6RfZ+AmDIydDmW/wAWUNS5MGoxg2aU=;
-        b=jwU7s6pMa1FGF6gky0vYDiBO4JHc5vOpZmWXwHduv0aErv7VxfiV2vczgSACtIULco
-         yyv+2Q4950HoODIIHfFwUn/4Ea2nfAf3lXiG7iJ3GhCMZGtKtXhpVSWOuHpoJZEMBwMS
-         LmHqT+lPVhs4HqV5anjbZV9V7EMUIIhkxd2jMU8ZOfGwqMKyppOK+uEWqf+oRSSKHVM1
-         32m1yJBnr0ryUqvoxBVHhhUQ+TVdMz3WzjkHo4h2jeBYTVu8BP0GJfQlSo1o3pXE1BtQ
-         qSqzW+WxR+AvZ7OnspAwp7ny+POXjQZH/UGlgIKH4bPhikgZoTv5DkZfLZpEl1MCEMSe
-         G4tQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVpy0akIFLJiKqWzFDFKNETuJGbqWlbpp1kYZgd0Yn1V17JEvRy6zxE76fhe9ul6YeG/Tcd3dyihOCvA1o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyC+vUcXvXp2NC4s8FdXWz0G54VfXdvA5Y8YF/ly6UTgzuIbLAy
-	omPfERcBk8jisQ5gMKgNqkZcFl5Zh1r07Ms4zLUzJboZ/Gh39W11/PvGZghIjqg=
-X-Gm-Gg: ASbGncsPZmaC5rKN63uLrKrCbcMW4xvRxklNKJIscKIF/4mCzzcpWVgh461NF4h5iSM
-	8OjoN8WfyiKzPmv5aFgw064UsqmOSEPKejoBBDbjCDjTpuLIwMQRi6MyUpuS0AVcYr7D3EebF5g
-	dqQlmxtkWkwg/hFSk3SNGdJJT4HiHN6vwhHEipJZk6KcKCpVsviJ8Ix8WiVMzrH/wSBglefR/Rw
-	s+ro9aG1TcAMqfmTQsg9C0mV3ocqTASwbuBOxwRj6YrGmGQwSXqRi7jQliO/PLrJt/oE9q4y8hz
-	7sky6DzptC9fRrQAz73avzuk/C9lb5r6aOSSabcvxmEjm8NbKgIjnZSFtfOxEwhCRh5GMOeAQt1
-	x2PHMrRA=
-X-Google-Smtp-Source: AGHT+IFYgofgHAQw8rbdbCHiTQbs4oIIQA0c5ewQmdB7tyEEX+drGyyHecRVU3eaajfdN7y1SVLcgQ==
-X-Received: by 2002:a05:6214:1d2f:b0:6ed:12b0:f181 with SMTP id 6a1803df08f44-6eed5f9c369mr176808776d6.14.1743538412134;
-        Tue, 01 Apr 2025 13:13:32 -0700 (PDT)
-Received: from xanadu (modemcable179.17-162-184.mc.videotron.ca. [184.162.17.179])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6eec965b24bsm65882606d6.63.2025.04.01.13.13.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Apr 2025 13:13:31 -0700 (PDT)
-Date: Tue, 1 Apr 2025 16:13:30 -0400 (EDT)
-From: Nicolas Pitre <npitre@baylibre.com>
-To: David Laight <david.laight.linux@gmail.com>
-cc: =?ISO-8859-15?Q?Uwe_Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>, 
-    Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] math64: Provide an uprounding variant of
- mul_u64_u64_div_u64()
-In-Reply-To: <20250401202640.13342a97@pumpkin>
-Message-ID: <15qr98n0-q1q0-or1r-7r32-36rrq93p9oq6@onlyvoer.pbz>
-References: <20250319171426.175460-2-u.kleine-koenig@baylibre.com> <20250321131813.6a332944@pumpkin> <epuk3zijp2jt6jh72z3xi2wxneeunf5xx2h77kvim6xmzminwj@4saalgxu3enu> <20250331195357.012c221f@pumpkin> <mjqzvj6pujv3b3gnvo5rwgrb62gopysosg4r7su6hcssvys6sz@dzo7hpzqrgg2>
- <20250401202640.13342a97@pumpkin>
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1743538439; x=1775074439;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=grg7HgwkYOsDDxkskMb2VZiR76/MifH64emaphfZUPg=;
+  b=a4v7bm8bZg3FSoZSx+WondL/GZxFtZRE285H2JptfxBF31hInkp+L/ef
+   Tsj27/4NGFLj2zyK7pA0TxNj9rkLMjy74EvEVme4/UA2c5v6HQbG6VowT
+   Kqapp9pHHDLKfAkhzGdr1E87r/g7vcvIeXAm+IvGTn6T9cGZZbxaIRHK9
+   M=;
+X-IronPort-AV: E=Sophos;i="6.14,294,1736812800"; 
+   d="scan'208";a="485691106"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
+  by smtp-border-fw-6002.iad6.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2025 20:13:55 +0000
+Received: from EX19MTAUWB001.ant.amazon.com [10.0.7.35:33099]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.62.254:2525] with esmtp (Farcaster)
+ id 4bfd118a-a928-41f8-95b5-a09364cefa05; Tue, 1 Apr 2025 20:13:53 +0000 (UTC)
+X-Farcaster-Flow-ID: 4bfd118a-a928-41f8-95b5-a09364cefa05
+Received: from EX19D020UWC004.ant.amazon.com (10.13.138.149) by
+ EX19MTAUWB001.ant.amazon.com (10.250.64.248) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Tue, 1 Apr 2025 20:13:53 +0000
+Received: from ip-10-253-83-51.amazon.com (10.253.83.51) by
+ EX19D020UWC004.ant.amazon.com (10.13.138.149) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Tue, 1 Apr 2025 20:13:51 +0000
+From: Alexander Graf <graf@amazon.com>
+To: <netdev@vger.kernel.org>
+CC: Stefano Garzarella <sgarzare@redhat.com>, Stefan Hajnoczi
+	<stefanha@redhat.com>, <linux-kernel@vger.kernel.org>,
+	<virtualization@lists.linux.dev>, <kvm@vger.kernel.org>, Asias He
+	<asias@redhat.com>, "Michael S . Tsirkin" <mst@redhat.com>, Paolo Abeni
+	<pabeni@redhat.com>, Jakub Kicinski <kuba@kernel.org>, Eric Dumazet
+	<edumazet@google.com>, "David S . Miller" <davem@davemloft.net>,
+	<nh-open-source@amazon.com>
+Subject: [PATCH v2] vsock/virtio: Remove queued_replies pushback logic
+Date: Tue, 1 Apr 2025 20:13:49 +0000
+Message-ID: <20250401201349.23867-1-graf@amazon.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="-1463781375-1171171549-1743538411=:3384153"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D043UWC004.ant.amazon.com (10.13.139.206) To
+ EX19D020UWC004.ant.amazon.com (10.13.138.149)
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Ever since the introduction of the virtio vsock driver, it included
+pushback logic that blocks it from taking any new RX packets until the
+TX queue backlog becomes shallower than the virtqueue size.
 
----1463781375-1171171549-1743538411=:3384153
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+This logic works fine when you connect a user space application on the
+hypervisor with a virtio-vsock target, because the guest will stop
+receiving data until the host pulled all outstanding data from the VM.
 
-On Tue, 1 Apr 2025, David Laight wrote:
+With Nitro Enclaves however, we connect 2 VMs directly via vsock:
 
-> On Tue, 1 Apr 2025 09:25:17 +0200
-> Uwe Kleine-König <u.kleine-koenig@baylibre.com> wrote:
-> 
-> > On Mon, Mar 31, 2025 at 07:53:57PM +0100, David Laight wrote:
-> > 
-> > > But you can rework the code to add in the offset between the multiply
-> > > and divide - just needs a 'tweak' to mul_u64_u64_div_u64().  
-> > 
-> > Yes, that would be a possibility, but I'm not convinced this gives an
-> > advantage. Yes it simplifies mul_u64_u64_div_u64_roundup() a bit, in
-> > return to making mul_u64_u64_div_u64() a bit more complicated (which is
-> > quite complicated already).
-> 
-> Adding in a 64bit offset isn't that much extra.
-> On most cpu it is an 'add' 'adc' pair.
-> Clearly it could be optimised away if a constant zero, but that will
-> be noise except for the x86-64 asm version.
+  Parent      Enclave
 
-You still have to ask:
+    RX -------- TX
+    TX -------- RX
 
-- How many users do need that version?
+This means we now have 2 virtio-vsock backends that both have the pushback
+logic. If the parent's TX queue runs full at the same time as the
+Enclave's, both virtio-vsock drivers fall into the pushback path and
+no longer accept RX traffic. However, that RX traffic is TX traffic on
+the other side which blocks that driver from making any forward
+progress. We're now in a deadlock.
 
-- For the zero case to be optimized away, you need some inlining which 
-  those functions aren't. This means either passing the (albeit tiny) 
-  overhead to everybody or duplicating the core division code meaning 
-  bigger footprint.
+To resolve this, let's remove that pushback logic altogether and rely on
+higher levels (like credits) to ensure we do not consume unbounded
+memory.
 
-- And this is not only about the extra 2 clocks. You need to account for 
-  passing an extra 64-bit argument which is most likely to be spilled to 
-  the stack especially on 32-bits systems as the 64x64=128 multiply has 
-  to be performed before adding the extra argument.
+RX and TX queues share the same work queue. To prevent starvation of TX
+by an RX flood and vice versa now that the pushback logic is gone, let's
+deliberately reschedule RX and TX work after a fixed threshold (256) of
+packets to process.
 
-Hence the proposed compromise.
+Fixes: 0ea9e1d3a9e3 ("VSOCK: Introduce virtio_transport.ko")
+Signed-off-by: Alexander Graf <graf@amazon.com>
+---
+ net/vmw_vsock/virtio_transport.c | 70 +++++++++-----------------------
+ 1 file changed, 19 insertions(+), 51 deletions(-)
 
-> Looking at the C version, I wonder if the two ilog2() calls are needed.
-> They may not be cheap, and are the same as checking 'n_hi == 0'.
+diff --git a/net/vmw_vsock/virtio_transport.c b/net/vmw_vsock/virtio_transport.c
+index f0e48e6911fc..54030c729767 100644
+--- a/net/vmw_vsock/virtio_transport.c
++++ b/net/vmw_vsock/virtio_transport.c
+@@ -26,6 +26,12 @@ static struct virtio_vsock __rcu *the_virtio_vsock;
+ static DEFINE_MUTEX(the_virtio_vsock_mutex); /* protects the_virtio_vsock */
+ static struct virtio_transport virtio_transport; /* forward declaration */
+ 
++/*
++ * Max number of RX packets transferred before requeueing so we do
++ * not starve TX traffic because they share the same work queue.
++ */
++#define VSOCK_MAX_PKTS_PER_WORK 256
++
+ struct virtio_vsock {
+ 	struct virtio_device *vdev;
+ 	struct virtqueue *vqs[VSOCK_VQ_MAX];
+@@ -44,8 +50,6 @@ struct virtio_vsock {
+ 	struct work_struct send_pkt_work;
+ 	struct sk_buff_head send_pkt_queue;
+ 
+-	atomic_t queued_replies;
+-
+ 	/* The following fields are protected by rx_lock.  vqs[VSOCK_VQ_RX]
+ 	 * must be accessed with rx_lock held.
+ 	 */
+@@ -158,7 +162,7 @@ virtio_transport_send_pkt_work(struct work_struct *work)
+ 		container_of(work, struct virtio_vsock, send_pkt_work);
+ 	struct virtqueue *vq;
+ 	bool added = false;
+-	bool restart_rx = false;
++	int pkts = 0;
+ 
+ 	mutex_lock(&vsock->tx_lock);
+ 
+@@ -172,6 +176,12 @@ virtio_transport_send_pkt_work(struct work_struct *work)
+ 		bool reply;
+ 		int ret;
+ 
++		if (++pkts > VSOCK_MAX_PKTS_PER_WORK) {
++			/* Allow other works on the same queue to run */
++			queue_work(virtio_vsock_workqueue, work);
++			break;
++		}
++
+ 		skb = virtio_vsock_skb_dequeue(&vsock->send_pkt_queue);
+ 		if (!skb)
+ 			break;
+@@ -184,17 +194,6 @@ virtio_transport_send_pkt_work(struct work_struct *work)
+ 			break;
+ 		}
+ 
+-		if (reply) {
+-			struct virtqueue *rx_vq = vsock->vqs[VSOCK_VQ_RX];
+-			int val;
+-
+-			val = atomic_dec_return(&vsock->queued_replies);
+-
+-			/* Do we now have resources to resume rx processing? */
+-			if (val + 1 == virtqueue_get_vring_size(rx_vq))
+-				restart_rx = true;
+-		}
+-
+ 		added = true;
+ 	}
+ 
+@@ -203,9 +202,6 @@ virtio_transport_send_pkt_work(struct work_struct *work)
+ 
+ out:
+ 	mutex_unlock(&vsock->tx_lock);
+-
+-	if (restart_rx)
+-		queue_work(virtio_vsock_workqueue, &vsock->rx_work);
+ }
+ 
+ /* Caller need to hold RCU for vsock.
+@@ -261,9 +257,6 @@ virtio_transport_send_pkt(struct sk_buff *skb)
+ 	 */
+ 	if (!skb_queue_empty_lockless(&vsock->send_pkt_queue) ||
+ 	    virtio_transport_send_skb_fast_path(vsock, skb)) {
+-		if (virtio_vsock_skb_reply(skb))
+-			atomic_inc(&vsock->queued_replies);
+-
+ 		virtio_vsock_skb_queue_tail(&vsock->send_pkt_queue, skb);
+ 		queue_work(virtio_vsock_workqueue, &vsock->send_pkt_work);
+ 	}
+@@ -277,7 +270,7 @@ static int
+ virtio_transport_cancel_pkt(struct vsock_sock *vsk)
+ {
+ 	struct virtio_vsock *vsock;
+-	int cnt = 0, ret;
++	int ret;
+ 
+ 	rcu_read_lock();
+ 	vsock = rcu_dereference(the_virtio_vsock);
+@@ -286,17 +279,7 @@ virtio_transport_cancel_pkt(struct vsock_sock *vsk)
+ 		goto out_rcu;
+ 	}
+ 
+-	cnt = virtio_transport_purge_skbs(vsk, &vsock->send_pkt_queue);
+-
+-	if (cnt) {
+-		struct virtqueue *rx_vq = vsock->vqs[VSOCK_VQ_RX];
+-		int new_cnt;
+-
+-		new_cnt = atomic_sub_return(cnt, &vsock->queued_replies);
+-		if (new_cnt + cnt >= virtqueue_get_vring_size(rx_vq) &&
+-		    new_cnt < virtqueue_get_vring_size(rx_vq))
+-			queue_work(virtio_vsock_workqueue, &vsock->rx_work);
+-	}
++	virtio_transport_purge_skbs(vsk, &vsock->send_pkt_queue);
+ 
+ 	ret = 0;
+ 
+@@ -367,18 +350,6 @@ static void virtio_transport_tx_work(struct work_struct *work)
+ 		queue_work(virtio_vsock_workqueue, &vsock->send_pkt_work);
+ }
+ 
+-/* Is there space left for replies to rx packets? */
+-static bool virtio_transport_more_replies(struct virtio_vsock *vsock)
+-{
+-	struct virtqueue *vq = vsock->vqs[VSOCK_VQ_RX];
+-	int val;
+-
+-	smp_rmb(); /* paired with atomic_inc() and atomic_dec_return() */
+-	val = atomic_read(&vsock->queued_replies);
+-
+-	return val < virtqueue_get_vring_size(vq);
+-}
+-
+ /* event_lock must be held */
+ static int virtio_vsock_event_fill_one(struct virtio_vsock *vsock,
+ 				       struct virtio_vsock_event *event)
+@@ -613,6 +584,7 @@ static void virtio_transport_rx_work(struct work_struct *work)
+ 	struct virtio_vsock *vsock =
+ 		container_of(work, struct virtio_vsock, rx_work);
+ 	struct virtqueue *vq;
++	int pkts = 0;
+ 
+ 	vq = vsock->vqs[VSOCK_VQ_RX];
+ 
+@@ -627,11 +599,9 @@ static void virtio_transport_rx_work(struct work_struct *work)
+ 			struct sk_buff *skb;
+ 			unsigned int len;
+ 
+-			if (!virtio_transport_more_replies(vsock)) {
+-				/* Stop rx until the device processes already
+-				 * pending replies.  Leave rx virtqueue
+-				 * callbacks disabled.
+-				 */
++			if (++pkts > VSOCK_MAX_PKTS_PER_WORK) {
++				/* Allow other works on the same queue to run */
++				queue_work(virtio_vsock_workqueue, work);
+ 				goto out;
+ 			}
+ 
+@@ -675,8 +645,6 @@ static int virtio_vsock_vqs_init(struct virtio_vsock *vsock)
+ 	vsock->rx_buf_max_nr = 0;
+ 	mutex_unlock(&vsock->rx_lock);
+ 
+-	atomic_set(&vsock->queued_replies, 0);
+-
+ 	ret = virtio_find_vqs(vdev, VSOCK_VQ_MAX, vsock->vqs, vqs_info, NULL);
+ 	if (ret < 0)
+ 		return ret;
+-- 
+2.47.1
 
-Which two calls? I see only one.
-
-And please explain how it can be the same as checking 'n_hi == 0'.
-
-
-Nicolas
----1463781375-1171171549-1743538411=:3384153--
