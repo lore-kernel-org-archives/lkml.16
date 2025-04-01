@@ -1,61 +1,91 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail5.25mail.st (mail5.25mail.st [74.50.62.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 602E32E3398
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 03:57:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 944C12E3398;
+	Tue,  1 Apr 2025 03:58:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.50.62.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743479846; cv=none; b=O+cwwaTOxNSJENF/TveTYtPH2lr8MWjk2j490R8VnxB3r7RjXai8M63rX359+zSGmKZxQ5I3U+mt9UJVt+vzwyDWzTMDZKego0Of03h2eIdaWVy1I5Nyah6VrfLLH0PRiVvFl4Y2aDEBu1PyOUicJagNQtSeOHwuZDdFMghHTQQ=
+	t=1743479884; cv=none; b=YPNkWfsBDeWtYPtGOoxtJsJuFu2un5n87lhsd0uAk5QFS1BHyCasLnviCLQSWMSshzFq5+Iw+lp5AgWfrhXaA+Ho1v+CI45Fz/Q/EElNgwi9xZqk7lnleq51cw4YEtYrQ2CWxnLHweQhq44nqGMvySMQwLNJOspq1LNPAnRxdOc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743479846; c=relaxed/simple;
-	bh=GYTNTPRHb0szdZm3V362NRjorFZ0i7ZAzwEIS9c33Uo=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=L7o3GO+gXXv8auld4Z/3E8Zkjon++Nf178+u5tmKBtGpgJiGt8Mki658jbq6vCSBf1qj5UXQqdkJnCJ0o/61AyhXWrNwmOGnu9TDp357WwNu8nPFFI8wT4vvWgaL3t+7cqTpCCFRRGmreCsqkAEV5s3ztPhU/UXZIkuNKLHZYRU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3d43d1df18bso53957295ab.0
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 20:57:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743479844; x=1744084644;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=eF1f2+DDUUOyeGQXtTzyNXKFtLFFswYwr0GYYA/wrBw=;
-        b=j/vLvqFB2Wb7sNuj8Lpquf5pef9Ou+/FBX74AOSu3MaMLh/J76xT6mlP1dNKLH61Yr
-         M++DiBG7YeSv4ibuGF1a09LTriyoRX/putgN7hhadv1vB2v9S1+z4O32b1Q43nabf9P0
-         wAoD/52wMA4XnbMcWqILFQFeDCaupqA/DYNO7LonEBw2ALiPEo8p7TABQfJU7bZhr9hM
-         0QPGBr8wqrOSpP+0ddm3f9HrIuZFhxlxrsk7Tj05j/PCkRDBAX6NJHRv6Dp/KgjsYTtw
-         /mgzXPzZzavEW2pr2B1OpWYX2x63V7zLTvdmgmlo+9x4cO2NBT3DkghCJtH9QDhVYNd5
-         9UPw==
-X-Gm-Message-State: AOJu0Yyd0d7tdncsA8kjhgeJ4izXCii9+nbYzrSG5s5z7LReS4Y5Ofvh
-	NpJnpxsO+hBix+5hLlRD8jqyFG2oR+H6vSDsX48lWDAQ9rmnVqJc8n+3b9qCBH/SqN5NWaYW4lH
-	v9ZgRU3guf63PYfZpf8I4OPsnxYYlKle6FHixWu0V/a49VP1Q0B29sZc=
-X-Google-Smtp-Source: AGHT+IEuHBtSSM/MkRCs+nNRQe8562DJEZmXwcgCzuev7cmNHiJxZhPfvHfhoU8x5HECobjtSmKNwEuGet+EwAVQa3aJzunpXqBZ
+	s=arc-20240116; t=1743479884; c=relaxed/simple;
+	bh=N4flpkYP/Za3/civSejaZvQGaHmDOPJeQQV2Y68IlpA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RrEy54F2mgQ0JTZGT2E8m4yuaOrZ+gQdTXw1Q6bBYQsixiXgQSutVl0f5999UDYWLwUkOSaCHrL9YDuJowbcFzdHod6bzy9Vfy6Z7QbFFJpkcKXgCTHQAuthuF9e3MoiicdaIFowfVHow++AzRZfxCh+dzmPqczpKeeH9ytihh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com; spf=fail smtp.mailfrom=atomide.com; dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b=DmoOT0ky; arc=none smtp.client-ip=74.50.62.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=atomide.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b="DmoOT0ky"
+Received: from localhost (91-158-86-216.elisa-laajakaista.fi [91.158.86.216])
+	by mail5.25mail.st (Postfix) with ESMTPSA id C5750604F7;
+	Tue,  1 Apr 2025 03:57:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=atomide.com;
+	s=25mailst; t=1743479881;
+	bh=N4flpkYP/Za3/civSejaZvQGaHmDOPJeQQV2Y68IlpA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DmoOT0ky1u9eyvTg1YhrribKaumYt8CKzHuuyKegEXX+HPaaqELpzW/DXTm5FYdWg
+	 3OYXsZYKWCq11s3Tshhp5npT6O6V9U77vKSYSwl93yN4fSftOakPJDO1C7X0rSBpkO
+	 c35rAv/8AoePcjw8s+4yBmjFUTj+qBbXKLg84HNl/LxH9pRJLJ4wAC+Z5W9huBNnPF
+	 jloplKJkYtDQ3f2LqVppq7lgbLDoi8CLv44QPlCewqXG2SuaODNpAfVdVZZEDi1VaF
+	 ti6OfyYyu/T40qjIxlqq6n7LOQNUtJMFuZ1/l+NAlUcj0/sver1mIoegjAT20iqfUf
+	 28kOmtKhVXLBw==
+Date: Tue, 1 Apr 2025 06:57:45 +0300
+From: Tony Lindgren <tony@atomide.com>
+To: Andreas Kemnade <andreas@kemnade.info>
+Cc: "A. Sverdlin" <alexander.sverdlin@siemens.com>,
+	linux-omap@vger.kernel.org, Aaro Koskinen <aaro.koskinen@iki.fi>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Roger Quadros <rogerq@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Revert "bus: ti-sysc: Probe for l4_wkup and l4_cfg
+ interconnect devices first"
+Message-ID: <20250401035745.GG4957@atomide.com>
+References: <20250313094708.1003092-1-alexander.sverdlin@siemens.com>
+ <20250331110017.2b0aa9ae@akair>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:18ca:b0:3cf:bc71:94f5 with SMTP id
- e9e14a558f8ab-3d5e09fdf61mr96406705ab.22.1743479844495; Mon, 31 Mar 2025
- 20:57:24 -0700 (PDT)
-Date: Mon, 31 Mar 2025 20:57:24 -0700
-In-Reply-To: <6799f224.050a0220.ac840.02cb.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67eb6424.050a0220.14623d.0002.GAE@google.com>
-Subject: Re: [syzbot] 
-From: syzbot <syzbot+de02219c78c082fe2f21@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250331110017.2b0aa9ae@akair>
 
-For archival purposes, forwarding an incoming command email to
-linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
+* Andreas Kemnade <andreas@kemnade.info> [250331 09:00]:
+> Am Thu, 13 Mar 2025 10:47:06 +0100
+> schrieb "A. Sverdlin" <alexander.sverdlin@siemens.com>:
+> 
+> > From: Alexander Sverdlin <alexander.sverdlin@siemens.com>
+> > 
+> > This reverts commit 4700a00755fb5a4bb5109128297d6fd2d1272ee6.
+> > 
+> > It brakes target-module@2b300050 ("ti,sysc-omap2") probe on AM62x in a case
+> > when minimally-configured system tries to network-boot:
+> > 
+> > [    6.888776] probe of 2b300050.target-module returned 517 after 258 usecs
+> > [   17.129637] probe of 2b300050.target-module returned 517 after 708 usecs
+> > [   17.137397] platform 2b300050.target-module: deferred probe pending: (reason unknown)
+> > [   26.878471] Waiting up to 100 more seconds for network.
+> > 
+> > Arbitrary 10 deferrals is really not a solution to any problem.
+> > Stable mmc enumeration can be achiever by filling /aliases node properly
+> > (4700a00755fb commit's rationale).
 
-***
+Would be nice to update the description to make it clear it breaks in all
+cases if there are not enough devices.
 
-Subject: 
-Author: kent.overstreet@linux.dev
+> > After revert:
+> > 
+> > [    9.006816] IP-Config: Complete:
+> > [    9.010058]      device=lan0, ...
+> > 
+> > Signed-off-by: Alexander Sverdlin <alexander.sverdlin@siemens.com>
+> 
+> No regressions seen on GTA04, Pandaboard and BT200.
+> So
+> 
+> Tested-by: Andreas Kemnade <andreas@kemnade.info> # GTA04, Panda, BT200
 
-#syz fix  bcachefs: Fix a KMSAN splat in btree_update_nodes_written()
+Good to hear, best that you or Kevin pick this up:
+
+Reviewed-by: Tony Lindgren <tony@atomide.com>
