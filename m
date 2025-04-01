@@ -1,39 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B28DC1C84D2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8DCA1C863F
 	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 04:27:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743481652; cv=none; b=dNDYkDs3TSJLskgDYM1q8K/UmCnyowwewuavLXXBn0AX+PlOrg59+n3evyGMdDWlnHalVsqaOTwwXAAI94XPBVw59bFfMRxNSEM1HL1h7SCQf/gZR2x8f5fLkDqd7EvcrMXURkPL/3slfFKwOOWLYwQ6OI/5jXCOUmdfro2GLMM=
+	t=1743481652; cv=none; b=js9RVs+eIpKc4QwWhlPUrdNSPODfDPR4iQLOgE/fvjF0IQCBeYkc4eMbB9e9zCNYnUFd3p6WXtxa9dLQ9wI6bpolQwBY54oQApzatN1HiSDauBdQmUbF5JIs/bNABhF9si2MLfskjdcvFPQySBuWsqW/TwQaxn+jUEEC2esa4V0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1743481652; c=relaxed/simple;
-	bh=bCx7geUMIOM3KKzXlGKmU1tmG38ls8IrUrBTI29be+c=;
+	bh=IjOKdxlBYugNhuleDznGFP9F/v+6SATan/Ji53JS+9M=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RWxPGFi45kr4YPUJhAXEJuo8F1U8VsyDL1EoYxUOoHjfibysg+qXwVwKeQbMXa2FIGlMO2u3gqHHQonKPkII9cwICwoajmR7DI06guUNRu7+OyR0nS2Au/1/bzur4DRT0mBTKdnUfROROqk9MVHzdIwuN0H3mri53FXcBXjpd+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A9KjLaaa; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=A2R/foFCPsntT/PRF2gWKh4tL6R+MxsNSdHw7kh5XgWRbZ753DYWvHM4UhigZOMuf2QUmC5Z3ym+fj050JbxhF7vHRkkZhG8UN6/DKb55jZJOu4T+v0VpBHB8h9Gm6nMFq6IyP0mC5HDazc2QmTXOL6HOqKTs0/ph0HxU8qu0Tw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UZ2qtfEO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A9KjLaaa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66103C4CEEB;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UZ2qtfEO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12AB8C4CEE8;
 	Tue,  1 Apr 2025 04:27:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1743481652;
-	bh=bCx7geUMIOM3KKzXlGKmU1tmG38ls8IrUrBTI29be+c=;
+	bh=IjOKdxlBYugNhuleDznGFP9F/v+6SATan/Ji53JS+9M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=A9KjLaaa9zmYt5ogUVCXxfbXwJjrrkCo62IEGRGpD2CaRKlm4OjAep8aZKUVntO3T
-	 hZAlWtxJFcUbiVAkLDzDbnH/67g4oDvMSZyB7H2ApC01xaiKMplLItagVRhjTGMAwL
-	 M+5Z+kqz3ArF32FcLzIP2146Jt2ryPtlvPOtj1FNZJgKvhYGerKtmXgWQLbQpP+5rb
-	 K9lRZXbdFXJpl0dDHcVCH4GN6ZN7XBwtAcu08SlMjZYiVg5th5u2JHDQsQd47yjxzA
-	 DoAyEBUm+sFm2wx8PJEVKAfI4JRyCqbcpqUzWzP0Wz5Xevz/uFEA6Dhj6Rp/q8Eo4c
-	 XqHYb3kSXkulA==
+	b=UZ2qtfEOT2yevbrixKL9g3TQwQt9eZMwv2yWjYYVaghMkDKZ4PhmDGZOOKchn+8G5
+	 3WtiyPUO0+stiHUNJcVb4goC6YGvjHa1EXVPDtpNSmoeGahp+ioU7AFdiwvpXYpxSU
+	 tlQxJclkpJUkGdI0inyBJxXkYuS8uriOhXvs2CI0f3kFCQoJKVjv3s+KhQr0S8wk8u
+	 MPVJlJnGtIOHJ9+vPGsd+1H0zf4zT02fWwrUbkCWnlbTbZ9ptTbUpIOWZTwcehvgIX
+	 gZ0W8FkhBz9CyUXXVxmJ+UNLlMeugkW40tIfDc8EsZGcURceUeO7agCGYQ0vFbSOOq
+	 gXOvgw7hhfdiQ==
 From: Josh Poimboeuf <jpoimboe@kernel.org>
 To: x86@kernel.org
 Cc: linux-kernel@vger.kernel.org,
 	Ingo Molnar <mingo@kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH 04/11] Revert "objtool: Increase per-function WARN_FUNC() rate limit"
-Date: Mon, 31 Mar 2025 21:26:39 -0700
-Message-ID: <e5abe5e858acf1a9207a5dfa0f37d17ac9dca872.1743481539.git.jpoimboe@kernel.org>
+Subject: [PATCH 03/11] objtool: Append "()" to function name in "unexpected end of section" warning
+Date: Mon, 31 Mar 2025 21:26:38 -0700
+Message-ID: <692e1e0d0b15a71bd35c6b4b87f3c75cd5a57358.1743481539.git.jpoimboe@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <cover.1743481539.git.jpoimboe@kernel.org>
 References: <cover.1743481539.git.jpoimboe@kernel.org>
@@ -45,90 +45,35 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This reverts commit 0a7fb6f07e3ad497d31ae9a2082d2cacab43d54a.
+Append with "()" to clarify it's a function.
 
-The "skipping duplicate warnings" warning is technically not an actual
-warning, which can cause confusion.  This feature isn't all that useful
-anyway.  It's exceedingly rare for a function to have more than one
-unrelated warning.
+Before:
 
-Suggested-by: Ingo Molnar <mingo@kernel.org>
+  vmlinux.o: warning: objtool: cdns_mrvl_xspi_setup_clock: unexpected end of section .text.cdns_mrvl_xspi_setup_clock
+
+After:
+
+  vmlinux.o: warning: objtool: cdns_mrvl_xspi_setup_clock(): unexpected end of section .text.cdns_mrvl_xspi_setup_clock
+
+Fixes: c5995abe1547 ("objtool: Improve error handling")
 Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 ---
- tools/objtool/check.c                |  4 ++--
- tools/objtool/include/objtool/elf.h  |  2 +-
- tools/objtool/include/objtool/warn.h | 14 +++-----------
- 3 files changed, 6 insertions(+), 14 deletions(-)
+ tools/objtool/check.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index bd0c78bfe90c..c8b3c8e7090c 100644
+index e6c4eefe295b..bd0c78bfe90c 100644
 --- a/tools/objtool/check.c
 +++ b/tools/objtool/check.c
-@@ -3545,7 +3545,7 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
+@@ -3761,7 +3761,7 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
+ 				return 0;
  
- 			WARN("%s() falls through to next function %s()",
- 			     func->name, insn_func(insn)->name);
--			func->warnings++;
-+			func->warned = 1;
- 
+ 			WARN("%s%sunexpected end of section %s",
+-			     func ? func->name : "", func ? ": " : "",
++			     func ? func->name : "", func ? "(): " : "",
+ 			     sec->name);
  			return 1;
  		}
-@@ -4576,7 +4576,7 @@ static void disas_warned_funcs(struct objtool_file *file)
- 	char *funcs = NULL, *tmp;
- 
- 	for_each_sym(file, sym) {
--		if (sym->warnings) {
-+		if (sym->warned) {
- 			if (!funcs) {
- 				funcs = malloc(strlen(sym->name) + 1);
- 				if (!funcs) {
-diff --git a/tools/objtool/include/objtool/elf.h b/tools/objtool/include/objtool/elf.h
-index eba04392c6fd..c7c4e87ebe88 100644
---- a/tools/objtool/include/objtool/elf.h
-+++ b/tools/objtool/include/objtool/elf.h
-@@ -65,11 +65,11 @@ struct symbol {
- 	u8 return_thunk      : 1;
- 	u8 fentry            : 1;
- 	u8 profiling_func    : 1;
-+	u8 warned	     : 1;
- 	u8 embedded_insn     : 1;
- 	u8 local_label       : 1;
- 	u8 frame_pointer     : 1;
- 	u8 ignore	     : 1;
--	u8 warnings	     : 2;
- 	struct list_head pv_target;
- 	struct reloc *relocs;
- };
-diff --git a/tools/objtool/include/objtool/warn.h b/tools/objtool/include/objtool/warn.h
-index b29ac144e4f5..e3ad9b2caf87 100644
---- a/tools/objtool/include/objtool/warn.h
-+++ b/tools/objtool/include/objtool/warn.h
-@@ -57,22 +57,14 @@ static inline char *offstr(struct section *sec, unsigned long offset)
- 	free(_str);					\
- })
- 
--#define WARN_LIMIT 2
--
- #define WARN_INSN(insn, format, ...)					\
- ({									\
- 	struct instruction *_insn = (insn);				\
--	BUILD_BUG_ON(WARN_LIMIT > 2);					\
--	if (!_insn->sym || _insn->sym->warnings < WARN_LIMIT) {		\
-+	if (!_insn->sym || !_insn->sym->warned)				\
- 		WARN_FUNC(format, _insn->sec, _insn->offset,		\
- 			  ##__VA_ARGS__);				\
--		if (_insn->sym)						\
--			_insn->sym->warnings++;				\
--	} else if (_insn->sym && _insn->sym->warnings == WARN_LIMIT) {	\
--		WARN_FUNC("skipping duplicate warning(s)",		\
--			  _insn->sec, _insn->offset);			\
--		_insn->sym->warnings++;					\
--	}								\
-+	if (_insn->sym)							\
-+		_insn->sym->warned = 1;					\
- })
- 
- #define BT_INSN(insn, format, ...)				\
 -- 
 2.48.1
 
