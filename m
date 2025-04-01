@@ -1,232 +1,250 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2052.outbound.protection.outlook.com [40.107.223.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD1B620C49C;
-	Tue,  1 Apr 2025 15:57:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.52
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743523062; cv=fail; b=o/ZpePQD4wb7GtTCpsxMhZ/AScP/wL0Axau/jElNTSlptevJLZvdann0/C3JVu192qxIaKoYYkd/lV4jeWsDRLZaF+CwtmyJCrpPLErRHLzv8hd+sBYX01DlN+mtpzmofpEbklYW8h048qyCu+HnqV5bKrLgBMmkNQ9HHgXK/aU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743523062; c=relaxed/simple;
-	bh=BiQOGv2FpRnGuaQH6kUl5waQkgFck5qfKwG2bZ+ieN8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=YgeK/j4lSO57dxKI7YLWSZgQEydX0ym7yZyOSdH0r/zkY2Wfl2qyMlB5tUJJKfC6K9wrbbJ+W9W/F18oXOAlW/SRVN2pMXcatwfPawmVfsdkolKKyJGYswx/NOt0s0DjF7KkmaKediRhP0cDSbHMCiHiiXSoZ9L/01bdu1cHkGM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=DlOfY528; arc=fail smtp.client-ip=40.107.223.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1279620C49C;
+	Tue,  1 Apr 2025 15:58:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743523086; cv=none; b=oOER72FmLX3gjuUhnIw2Id6HZn2W9Y0+dPcrmTh64P033NgnDWcoDIcr5b1VP2t5xFCae3as7qdzjbkahvg6FLlF/tbrOEJaEohGE8Yx9Kpk8kicLTBoXxkqrg7/gbIYgOUZVXjlgqoZ6aGJcPUO15TqUWPnhbLPP70JlKtcU9o=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743523086; c=relaxed/simple;
+	bh=8YeyYoNsMHeV1jtrId98WfFjQd/HCmB2Nlk+Q5SIJJA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=A2rwUGuKgqgOV45oJ+GXQkq/T1FBf31r7ErnGMgPtT/Tagi/gTGFCE1BP2aCMw+OaXCxo2tZ7K5Mx4eqlFDv0/S09biEci//QVCrN1rm8F6Y2ZUkLueaJYZlYS2huX6WUp1RbHobo924AIWBgkPU9GgEN29j9biWGE9axRw0DjU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TOgLhsQ8; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="DlOfY528"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Yr863sELSSmG5jK2qjuJmlF60thQ5GZdB/uitabHA14ZL8QuejgIqfAdEK9RUxbfyJzOxvBqpgvut3LWHhRvXSDgp1cHSLG/Wwm6E7bmXqQ/cMjXJzILPLnbRiAoMNXfQbZu25s8FnCQHAr4G82taXt/KEvG0g0VPYgGzH2lOTqQmBNkEZYKFnFg4X+741iLhKcVKckLBzPfAyhuFFEBq/xLROYkXW8jeeISaNzvS/Nsmh632tF7HHSfUpi+tzJZYeZ8Rdun1+c5/fmFnwain9b7tGVRKsTZMeYZ44xYPe5fEuOT8p9gEWQmUz3Sjjz96QLi1oqH+6DcDIJDixzBtQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=fkTzIAp2pAWzS6egOMUkwS5gDIZyg/BQmi0fO+sxP1U=;
- b=N6JZGg5/jj4goXtMH3lSB6YM9B7oXUE3piDXltRxC5CyW7PjRgSPQ3Au/wXWoG27TL5WEWPxK7+oAnwswFcmomwZIyilXrKkNqqm7gTm8GMniOc6DfSbxQxnddtCm/YtTg4PhXIiZiS9WHHSDeQ3QRBMMm2b6i1aJ17ceaYZC+dPO0ZhjwqGSLlaONKy5ueKNiFgFWbj5fQOaD3RSH1YjOavbZGyJZudwD2Z9TLx5amqZyhOg8CSjHiFx092uX8fd6rLzf6F7wIy4tfmnLOVwnLnRpeklcwgX1CKOWKY1f6UdWQBoflvIN8/Ra2ZmPtqUFzsiO8ShoHopV7v9M80xA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fkTzIAp2pAWzS6egOMUkwS5gDIZyg/BQmi0fO+sxP1U=;
- b=DlOfY528pvp74LCi6Fg27Z9ybRX8wntitGCegb7ySxrwXre6r6I/c/KaEHzlwvnbfWijiYbIYlZWv8Rc2Ucj/U+EnfEeaddXi8JdA2oXfCp9ybMaSnO2VqK2wwafO1/whgVF+ua25//y+/VkzkB6IbUD6mVr5fxmi9ycCeXyrprD0HFwuz22+BxOZBNosdHCrhvrg6mnquG8vMuE/UEru/C6C9x0w+PdSBbaNnDls5graFvhVDr5vWJOKYKBDDezzlzjQvSUQnq1D4yznYEFAMzfLtwyytgsY/FPaybAxfyTbAYAw7r9WEQJrJSFtXBT30N/RRRRI3REekQNSgUFCA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from PH7PR12MB8056.namprd12.prod.outlook.com (2603:10b6:510:269::21)
- by SA1PR12MB6947.namprd12.prod.outlook.com (2603:10b6:806:24e::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.52; Tue, 1 Apr
- 2025 15:57:37 +0000
-Received: from PH7PR12MB8056.namprd12.prod.outlook.com
- ([fe80::5682:7bec:7be0:cbd6]) by PH7PR12MB8056.namprd12.prod.outlook.com
- ([fe80::5682:7bec:7be0:cbd6%4]) with mapi id 15.20.8534.043; Tue, 1 Apr 2025
- 15:57:37 +0000
-Date: Tue, 1 Apr 2025 11:57:35 -0400
-From: Joel Fernandes <joelagnelf@nvidia.com>
-To: Daniel Almeida <daniel.almeida@collabora.com>
-Cc: Guangbo Cui <2407018371@qq.com>, Miguel Ojeda <ojeda@kernel.org>,
-	a.hindborg@kernel.org, alex.gaynor@gmail.com, aliceryhl@google.com,
-	benno.lossin@proton.me, bjorn3_gh@protonmail.mco,
-	boqun.feng@gmail.com, boris.brezillon@collabora.com,
-	dakr@kernel.org, gary@garyguo.net, gregkh@linuxfoundation.org,
-	linux-kernel@vger.kernel.org, rafael@kernel.org, robh@kernel.org,
-	rust-for-linux@vger.kernel.org, tmgross@umich.edu,
-	John Hubbard <jhubbard@nvidia.com>,
-	Alexandre Courbot <acourbot@nvidia.com>,
-	Alistair Popple <apopple@nvidia.com>
-Subject: Re: [PATCH v6 2/3] rust: io: mem: add a generic iomem abstraction
-Message-ID: <20250401155735.GA804471@joelnvbox>
-References: <20250130220529.665896-3-daniel.almeida@collabora.com>
- <tencent_2E2CD1359817A58BB51F59E790325CFA6A0A@qq.com>
- <67AB9311-3EDC-44A8-9C7C-ABF2ED6B632C@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <67AB9311-3EDC-44A8-9C7C-ABF2ED6B632C@collabora.com>
-X-ClientProxiedBy: BL0PR02CA0014.namprd02.prod.outlook.com
- (2603:10b6:207:3c::27) To PH7PR12MB8056.namprd12.prod.outlook.com
- (2603:10b6:510:269::21)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TOgLhsQ8"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2295d78b433so19590475ad.2;
+        Tue, 01 Apr 2025 08:58:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743523083; x=1744127883; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=fJH6ATFt5Un9kLuUVs0DY+xyNkxCSbS19/se7Ih7dOg=;
+        b=TOgLhsQ8xCZiRozd3mzeLLVHKuk1clB+dCSCIses2W4n+Ok85Z2uhq5XxFSzXG6k9i
+         PjZATV12YWvBgiW8Aav/CH7kdaSvMlDoqpv1xfIAovYPkY1I48xOnuCjTvRLIdJ0R52w
+         o+1PdPmNabGW29nUgbEHkyfXMbUQq1KBd7BMHx5hs3ZnFmHM+Geds0yQkDRc3TKOmBDG
+         clYu6UWNVHWcyjdII3hsJDLWDlkm4iofkWECcRMsX1T0FJFcsN3VYfYCFhe4TVbEB+8P
+         tgiNsDi8+4752Ul0QMWuf0+ywf0ZFiIgjks91T7hMn64iNOEXeQR84fJwSLs0oqeTTif
+         An9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743523083; x=1744127883;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fJH6ATFt5Un9kLuUVs0DY+xyNkxCSbS19/se7Ih7dOg=;
+        b=pOv+KoDQz3AivnUooaXOxl7LJABlMEGJnxgZGT3PA8ePBOMz60sNpGfPjOLVun5oBa
+         fQw6NV3wa+yVQwdD+l8U7VDQik3Ag8P+BoDFQzHFlDGd7YEI2HYsC+rgRFep1d6pE70w
+         VS9986bNAS85ee+/2AwNVX8WdvjS+Mr1iZwsgltvzkKKumnvd2EvX4YIYdkMxOuEThQ/
+         KXzmjbpMN2JbZea+QLzFc3xUd1HqSndBdjmzFTHAkp5mD1M+t1k35ab3EhPd5ImMTwSx
+         OBkxysS/pXXMlZNZDDHNXF0wIFFh+/4kdWXMvvtLwb6VGKfXvifizIMRVGXw8f4GcdXm
+         Q8xw==
+X-Forwarded-Encrypted: i=1; AJvYcCVZljuHEflcq3a0bxJjyWxTaGeR3INXwHXailiBBoGYAMRyVsgmF9mKUNSnRbPsV/iBMgKS9xz8oVj4jYg=@vger.kernel.org, AJvYcCVsZWZCuXR8mUDnK7wuSV5N/3KOGBj6/zJdC7CX38caUpRmneQ64WDTuXdJfud1gXpbkMIU1B/6/S0ODlI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YydZVIvA+6y5bpn5pyl2q2CtDde9SQkdj7REoqdmmOEO3xVANXY
+	vJ/hEYCaGLoYOZlUGnbMWb9KdPM/9g2iwjxkvLC1xB3cN2JPR86y
+X-Gm-Gg: ASbGncu5N7/QfLu7zPsh0LUQGAEVtwp2IA6WR1+I8bLGIlRUIDivOz5rQY2jC/OzrlC
+	Sj9tEJ91LqhoPkklPyeI3uNKuRrKaDl5JkgZ9HcaKmwQvT4V9ZfrExmI9t3+3Qw/js9MO3E6sR4
+	sgSssw6yqYJ+RHbx6lvUcByCL2FiiX8Ftjro4iEvmJ7XmEMolVHUEAmQG5gwA6twBhFsMWrX0yS
+	zMLlrAyf8Jlvy0JiwS2TIqYl0fszlCoRnYYaAQSZrVPULtJESQFGJUEd89QYzLQai/3rVghmYx5
+	9Q0YPY5C6X5uDUBynJGm3v6OG0tTZzpcl9fKn3VlkF0dyiNIuPCv4qAhvJak8wBD5W++FU9DZzX
+	Pv9q/RsS9/9oVI3ve7Nw=
+X-Google-Smtp-Source: AGHT+IEMQK5Uw8F9wEfsJTHQFcSwehiUaH4GbiWL58FJVcHeW3soaaFsqIizRSu/dHaDx3lBd1yIYQ==
+X-Received: by 2002:a17:902:cec3:b0:215:b473:1dc9 with SMTP id d9443c01a7336-2292f9fc071mr220976905ad.46.1743523083175;
+        Tue, 01 Apr 2025 08:58:03 -0700 (PDT)
+Received: from localhost ([2a00:79e0:3e00:2601:3afc:446b:f0df:eadc])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291f1f937bsm90014575ad.222.2025.04.01.08.58.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Apr 2025 08:58:02 -0700 (PDT)
+From: Rob Clark <robdclark@gmail.com>
+To: dri-devel@lists.freedesktop.org
+Cc: =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	Dmitry Osipenko <dmitry.osipenko@collabora.com>,
+	Rob Clark <robdclark@chromium.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	linux-kernel@vger.kernel.org (open list),
+	linux-media@vger.kernel.org (open list:DMA BUFFER SHARING FRAMEWORK:Keyword:\bdma_(?:buf|fence|resv)\b),
+	linaro-mm-sig@lists.linaro.org (moderated list:DMA BUFFER SHARING FRAMEWORK:Keyword:\bdma_(?:buf|fence|resv)\b)
+Subject: [PATCH v6] drm/syncobj: Extend EXPORT_SYNC_FILE for timeline syncobjs
+Date: Tue,  1 Apr 2025 08:57:58 -0700
+Message-ID: <20250401155758.48855-1-robdclark@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB8056:EE_|SA1PR12MB6947:EE_
-X-MS-Office365-Filtering-Correlation-Id: 73b98d92-1af5-4947-a8be-08dd7135ec93
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|7416014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?MlROcEJLTnYvOWdINm9mUWlUNVlUaXp3NFFmRFhoNms3a0paOWlON3dMMmU1?=
- =?utf-8?B?UWhtdGs1dktTTzBlb05lWjg5VzArRm1NeTRkR1cwVXk5Y1l1dzZJTTI1T25H?=
- =?utf-8?B?NUlPRWJGZ2JIVmlIbWF4TWNiTldrZE9yYUVNZUtHVWV3eDd2OS9KdVRKVFBj?=
- =?utf-8?B?R2pRamp4OFphdjNzYThoU3FsZkRKREsxdDZGOUJZbm1obnI2bnROMEFzZHpx?=
- =?utf-8?B?bkloSVBHenVNanIzS2I2RExrd0pNSXQ0Sm14U25RZjR1dFVOWmlpd3hvL0l2?=
- =?utf-8?B?dmNEd1FtSHBqOHlXSHBKM3NCWUx0bUlwcVVxTVFmYlNSdE91cy9nQkRzRTQz?=
- =?utf-8?B?cXhHQmJTeCsvMVB3WW1NRXJnQ05sd2xXMEoyUUNPaVhzK2RRS2JlL2V3clF2?=
- =?utf-8?B?ZSt1MXhZYWE4Ny9MZklIcXh2cEhpNFVzeGgzSTBMcHFqd0lUZStBbEM4WUdP?=
- =?utf-8?B?WkJlTU1KNXVhTE50RjNodDVvc1FLNWQxdEZEUEgzSWFVeTdLd1FSZ1R6ZjJG?=
- =?utf-8?B?dnBPNXN0WmdzTTZFc1Jrc3hJYVRaU0hNZDd6aVQyc3poRzZWZUNrMG9ZNFRC?=
- =?utf-8?B?eXJVRGF6OHkvWTJPYVZIaDROZzR6aGxRVjJsZlRrc1JVOXJicFU5OFVZZWxt?=
- =?utf-8?B?bk1STUUvdGZOWEJpNTVKbmxoVnIwNVptMFN4U3lnTXA2KzRueHRqdUlTNjdQ?=
- =?utf-8?B?QUl4dDJRbGZlclJaMU01RURYa3FrQWx1aE1YMTBoTysvRGxjT214eWxnSUVK?=
- =?utf-8?B?bVlTdmFWNUROQmFRTVpvbEdlcFB2OFJsQlF0YXBpazRwK1lJZVFpeEE3bEtn?=
- =?utf-8?B?VmpRdHBmQ21NSEVDeG9EZDVOTDFUQzUwS3k4NHMwYnpHTUxMeVMxMFNmY0J4?=
- =?utf-8?B?TWx4NWIzeVprUEw3ejk0VktQU1EyTjhrdThFUEMzYlVVL0Y1M3hpYko1Mm5O?=
- =?utf-8?B?K2o1dlppd25ZZ29tRVY0eFdFTXBHQ3dkTlBIc1pvak94OEpBNmY1UEZTNTd0?=
- =?utf-8?B?LzRDeTlseDBFc2Mvak9vMWFTVmdmWVRDWURzZXZ4MFZxU0trQXk4NlduZ3hw?=
- =?utf-8?B?RTB1ZHZqalJJdUdOZXBqSXJhVXp4N1JlcHBMZTZGdUFjbzZFK2l2Mi9zK3lq?=
- =?utf-8?B?M3A2UEF0ZDJ6ZDFvSGZCci9iWkxzaVJiTHVIZVFoaFZZZW52Y1AwUm5ncTRX?=
- =?utf-8?B?bW1DZlNaWisvN1pZZHMzSVdKelk2UFJ6MjBOUThKSmE0ZThKN2c3M3k5S0tL?=
- =?utf-8?B?d1BEMDJ2Sm9URW1XRGk5dmZBbXplS0dBckF2RGRjME91NEZnU3o3UnJUc2pP?=
- =?utf-8?B?cHFWaWo2YmppT0FmbERHblVmRXEvRUdhNEQzVndLN3dmVTJ6YSsvMURiR3FD?=
- =?utf-8?B?VjAxOFhyRitmektqTVh2UEZ5d0piQVgyQVBaekRvQVBTM0ZJNDE5Y0RMNEgv?=
- =?utf-8?B?NTRIaFpISHVCV3VCaTgwdENOQklZU25ZdDdLMzBDS014L1VyTWJ1S20vK2Jr?=
- =?utf-8?B?WTYrcTBLblRKOW5sNVdtZkl3NjRyTTBtb2FDTS9HWUQ4VndkT2dqR2ZxdllW?=
- =?utf-8?B?ZE1YZzZWQW12TEpOQnkzV1ZKOWFzWjNOREhOTm1aMDZZQTJTMGZHaHExUTU1?=
- =?utf-8?B?NVpnYmY4S0orc05yOC9rRVhRZ0RXeUlSSlJSVEQ5SFBZUlZtWXdTNlFuVldw?=
- =?utf-8?B?VFZseGplc0owdk4xZ2h3M1dybXFoLzdqU24xQkxiY0VPVzVBMHk0bXBLMDBZ?=
- =?utf-8?B?Ynh5UnJkdW55TFlUVEQ3YzVIVUhrNldGWlN2VW1UeGZtSGQwVU5pWFQxVTFx?=
- =?utf-8?B?SmZaTTRrb05Zd3h4MFJwQjlVUkxaOFdKeGMyZHJrM3ZUb3VZSktlUzNPcFE2?=
- =?utf-8?Q?jG3cChMvlHHCL?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB8056.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(7416014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?cFI1K0dnTEdZUjJlVDMrMWx6Zmc2VitvSnVtREdzaXN6Mm5SYzBiMlExRHA0?=
- =?utf-8?B?VjBPWVlrYllDYWNRbVNFN2tRSld3UXJ4WHlrWTc2ZXBaQ0NxV3lYMTNONlpL?=
- =?utf-8?B?SlBqdUxwczE3MTlxUDRMVlVwYmNpbFh3dGNWcG5ubkVTRGpDVjhPOFpjYzNq?=
- =?utf-8?B?U0R0d24vTUxkenRVdEoxcnNqMlNNLzI0aVA2RDh3RWM0QUV4UHNSdDRFRFNN?=
- =?utf-8?B?SjE4ZnVyM1lNcVloWVVRTVFNWGYzaUlIWmg2SWFUTTVaa2MzdmxuMUVUaEpn?=
- =?utf-8?B?Q0xMNEJ0dVIrR0s4QmVQcTUvOFI4aHEzcFRJdmt3Q1gzSXZuRVJrcFhFaFBE?=
- =?utf-8?B?aGRuRm1jSmZ0Tkl0UDJBcVZuNGszUzhrV1R4U1BkNDFOOFFlT2JlM2pGQ1oy?=
- =?utf-8?B?ak4zOUExSVJkQjNOQkJRcEZQYys4YkJDVmdvaWY0UTMxUGZKMnBqdUlmR2VU?=
- =?utf-8?B?MmlZL094cVJUMzJteHl0OEgrc1pmTitDRjd1OEU2Sm5IL0M2aUZKVmdTRStN?=
- =?utf-8?B?bkg3SEdtWjVyVEFnUk5hdEdjUG5kVUhuSE9DeHhyaXFhLzJlQ2phbyt6UWM1?=
- =?utf-8?B?dUd6cGNzOVJscmZJTkhxNHhHbG05YUExMFl3c2ZvY1FtSE9oSkZMNy90WGpk?=
- =?utf-8?B?TitNUHRnU3ZHbVR1amVRUWltMGJnUERUZG9ySXFueTFZWm8yRFdNWTcvYlNp?=
- =?utf-8?B?SDNvRjJvR1NZU2pPdTNkMENlNXJVbGVINUZ0b2ZVVGQzMmxEKzlmd0NwZFhw?=
- =?utf-8?B?Z01kTlYzUzZuQnhGVlJ6dkowZzF6dzl5S3N3ekozRVUrTE5icS9QajFCSk5T?=
- =?utf-8?B?RkxwS2EvZ1pVd3kyK2ZtbFNQMVdtdEp3b2tNdkpZNjErNS9aZ0RobDVveUgx?=
- =?utf-8?B?dUtZUGpQQ2NYNytwTXgzVnRaR3pSWFp3amlUWXBjbjhuMVhNcDBaYXNqSjRX?=
- =?utf-8?B?Qy9vRmt6L2JwbW1UVk8rUGsycmVZZjNKQzZNbW1KQVdmS2VHR2QwODQvL3JS?=
- =?utf-8?B?T2Z0QXpyOUN6QWprUTk4WXV4K2V1Nkw1cm5KK3lNdzJPakdnYjJ3UC95SFVX?=
- =?utf-8?B?TFllYTFJclc4Ni8xUnIrUHY5ZmlyZFJpd05veTM3Z0kzQlJqRGpVMXhNekpn?=
- =?utf-8?B?MnZCWVFNZE5nVkVFWU8xV3lrcFFOVnErd3dOY2x5RU1UNzdBWGhSUTFPd045?=
- =?utf-8?B?Wm1QbVRpbjlYUEV4VkNtUVJRYnhycGRjcG1hbjdycDdiZ21FQWFlN2tDVEQv?=
- =?utf-8?B?MGxydFZ2Ni9GM2FhV1FUOG9GdmN6R280cHRsNzVVU0RzUXZXa29ZVXViRFNm?=
- =?utf-8?B?Z3JVb04xTWptWGx1MmtSRWg3cFJwZm95OHZtTzZFK3BzaXFQWjlRUEJVT1d3?=
- =?utf-8?B?RmNEMjZmS3dUdHhQdDBUcHRyWW9NYTRJbGVKdncybWN6bG9yaG04VnlmeVhz?=
- =?utf-8?B?eUtjR1Z3TWwvYStRVmpGRkZmU0kvRTdPRGZPZlNqQ0FqbmJpeG92QVovTnZQ?=
- =?utf-8?B?Z1FGeWJ6Mk1QaVdydnAvdU9NaGd6MXV2N2hZTmE2MzR2VWEwRWN6c2RTelk3?=
- =?utf-8?B?VE5qS3JGaGNaeWlQbGhZUS9PclBxenJqZkgvb1dSakxBaDZ1S1VjZUtwMXds?=
- =?utf-8?B?Ukk1ZlhKc2srZ1BOcTJORFpaeXgxK2hwL0x5enBRWDdHa1lvTm1zZWgzcFda?=
- =?utf-8?B?eGozby9qWEdicEduam16MW1HaElTaUtPRytJK0N1T0owcFhNVyt1ZUpkck54?=
- =?utf-8?B?NXJySGtHbitRRlN0UUs3MzVEZnhzbG9PMUZzTW1XT0ZUVTE5akZIMnM2RE9V?=
- =?utf-8?B?V1ZEWmg2OTVCeElYT3hHM05hVHFNcVB0TkdEZ2djK2NyZEp2MmtkWnpsVWdI?=
- =?utf-8?B?dlJNQk5wYllvMmtrNTVoTE9NOGRmV09ab2J2UVdWb0Vndm80Ym9ZRFQyQktH?=
- =?utf-8?B?VldmRU5RZzRTcXRHVDNzWFpVZzBYMUFidXBERVpheGxlU2JoQmQ1aUNkbWZB?=
- =?utf-8?B?VVlNQlhZbUtEUnNlKzE0TzF3YWROZFlzMTJGZ1hLNHBUYTdUWlFTYVQxbWd5?=
- =?utf-8?B?RlFCZWVhZkRGcnFjQnc1NXNWaGFkaURsdC80TW1RbG1jbkI1VldqVkNtU3JN?=
- =?utf-8?Q?9ys2QD0Moz+c15B8mwUtnnLvL?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 73b98d92-1af5-4947-a8be-08dd7135ec93
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB8056.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Apr 2025 15:57:37.4800
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: OLq5KxygUae7djXTGZBc3eF81kCncO9ohTcXhwluBL3gxZRsW4RAs3u6qvfXocdQazSmysXwu8Cj+YHnxksE5A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB6947
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, Feb 06, 2025 at 12:57:30PM -0300, Daniel Almeida wrote:
-> Btw, Miguel & others,
-> 
-> IMHO, I think we should write a comment about this somewhere in the docs.
-> 
-> When I first came across this issue myself, it took me a while to understand that
-> the build_error was actually triggering.
-> 
-> That’s because the result is:
-> 
-> ```
-> ERROR: modpost: "rust_build_error" [rust_platform_uio_driver.ko] undefined!
-> ```
-> 
-> When a symbol is undefined, someone would be within their rights to assume that
-> something is broken in some KConfig somewhere, like this person did. It specifically
-> doesn’t tell them that the problem is their own code triggering a build_error because
-> they are misusing an API.
-> 
-> I know that we can’t really provide a message through build_error itself, hence my
-> suggestion about the docs.
-> 
-> I can send a patch if you agree, it will prevent this confusion from coming up in the
-> future.
+From: Rob Clark <robdclark@chromium.org>
 
-Interesting, I just ran into this. I am writing function as follows that
-reads bar0 in the nova driver, however not having the "if current_len + i"
-causes the same issue:
+Add support for exporting a dma_fence fd for a specific point on a
+timeline.  This is needed for vtest/vpipe[1][2] to implement timeline
+syncobj support, as it needs a way to turn a point on a timeline back
+into a dma_fence fd.  It also closes an odd omission from the syncobj
+UAPI.
 
-ERROR: modpost: "rust_build_error" [nova_core.ko] undefined!
+[1] https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/33433
+[2] https://gitlab.freedesktop.org/virgl/virglrenderer/-/merge_requests/805
 
-which did not help much about what the issue really is. I had to figure it
-out through tedious trial and error. Also what is the reason for this, the
-compiler is doing some checks in with_bar? Looking at with_bar
-implementation, I could not see any. Also enabling
-CONFIG_RUST_BUILD_ASSERT_ALLOW did not show more menaingful messages. Thanks
-for taking a look:
+v2: Add DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_TIMELINE
+v3: Add unstaged uabi header hunk
+v4: Also handle IMPORT_SYNC_FILE case
+v5: Address comments from Dmitry
+v6: checkpatch.pl nits
 
-    pub(crate) fn read_more(&mut self, bytes: u32) -> Result {
-        with_bar!(self.bar0, |bar0| {
-            // Get current length
-            let current_len = self.data.len();
+Signed-off-by: Rob Clark <robdclark@chromium.org>
+Reviewed-by: Christian König <christian.koenig@amd.com>
+Reviewed-by: Dmitry Osipenko <dmitry.osipenko@collabora.com>
+---
+ drivers/gpu/drm/drm_syncobj.c | 47 +++++++++++++++++++++++++++--------
+ include/uapi/drm/drm.h        |  4 +++
+ 2 files changed, 41 insertions(+), 10 deletions(-)
 
-            // Read ROM data bytes push directly to vector
-            for i in 0..bytes as usize {
-
-		// This check fixes:
-		// ERROR: modpost: "rust_build_error" [nova_core.ko] undefined!
-                if current_len + i >= 10000000 {
-                    return Err(EINVAL);
-                }
-
-                // Read a byte from the VBIOS ROM and push it to the data vector
-                let rom_addr = ROM_OFFSET + current_len + i;
-                let byte = bar0.readb(rom_addr);
-                self.data.push(byte, GFP_KERNEL)?;
-            }
-
-            Ok(())
-        })?
-    }
-
-thanks,
-
- - Joel
+diff --git a/drivers/gpu/drm/drm_syncobj.c b/drivers/gpu/drm/drm_syncobj.c
+index 4f2ab8a7b50f..636cd83ca29e 100644
+--- a/drivers/gpu/drm/drm_syncobj.c
++++ b/drivers/gpu/drm/drm_syncobj.c
+@@ -741,7 +741,7 @@ static int drm_syncobj_fd_to_handle(struct drm_file *file_private,
+ }
+ 
+ static int drm_syncobj_import_sync_file_fence(struct drm_file *file_private,
+-					      int fd, int handle)
++					      int fd, int handle, u64 point)
+ {
+ 	struct dma_fence *fence = sync_file_get_fence(fd);
+ 	struct drm_syncobj *syncobj;
+@@ -755,14 +755,24 @@ static int drm_syncobj_import_sync_file_fence(struct drm_file *file_private,
+ 		return -ENOENT;
+ 	}
+ 
+-	drm_syncobj_replace_fence(syncobj, fence);
++	if (point) {
++		struct dma_fence_chain *chain = dma_fence_chain_alloc();
++
++		if (!chain)
++			return -ENOMEM;
++
++		drm_syncobj_add_point(syncobj, chain, fence, point);
++	} else {
++		drm_syncobj_replace_fence(syncobj, fence);
++	}
++
+ 	dma_fence_put(fence);
+ 	drm_syncobj_put(syncobj);
+ 	return 0;
+ }
+ 
+ static int drm_syncobj_export_sync_file(struct drm_file *file_private,
+-					int handle, int *p_fd)
++					int handle, u64 point, int *p_fd)
+ {
+ 	int ret;
+ 	struct dma_fence *fence;
+@@ -772,7 +782,7 @@ static int drm_syncobj_export_sync_file(struct drm_file *file_private,
+ 	if (fd < 0)
+ 		return fd;
+ 
+-	ret = drm_syncobj_find_fence(file_private, handle, 0, 0, &fence);
++	ret = drm_syncobj_find_fence(file_private, handle, point, 0, &fence);
+ 	if (ret)
+ 		goto err_put_fd;
+ 
+@@ -869,6 +879,9 @@ drm_syncobj_handle_to_fd_ioctl(struct drm_device *dev, void *data,
+ 				   struct drm_file *file_private)
+ {
+ 	struct drm_syncobj_handle *args = data;
++	unsigned int valid_flags = DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_TIMELINE |
++				   DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_EXPORT_SYNC_FILE;
++	u64 point = 0;
+ 
+ 	if (!drm_core_check_feature(dev, DRIVER_SYNCOBJ))
+ 		return -EOPNOTSUPP;
+@@ -876,13 +889,18 @@ drm_syncobj_handle_to_fd_ioctl(struct drm_device *dev, void *data,
+ 	if (args->pad)
+ 		return -EINVAL;
+ 
+-	if (args->flags != 0 &&
+-	    args->flags != DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_EXPORT_SYNC_FILE)
++	if (args->flags & ~valid_flags)
+ 		return -EINVAL;
+ 
++	if (args->flags & DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_TIMELINE)
++		point = args->point;
++
+ 	if (args->flags & DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_EXPORT_SYNC_FILE)
+ 		return drm_syncobj_export_sync_file(file_private, args->handle,
+-						    &args->fd);
++						    point, &args->fd);
++
++	if (args->point)
++		return -EINVAL;
+ 
+ 	return drm_syncobj_handle_to_fd(file_private, args->handle,
+ 					&args->fd);
+@@ -893,6 +911,9 @@ drm_syncobj_fd_to_handle_ioctl(struct drm_device *dev, void *data,
+ 				   struct drm_file *file_private)
+ {
+ 	struct drm_syncobj_handle *args = data;
++	unsigned int valid_flags = DRM_SYNCOBJ_FD_TO_HANDLE_FLAGS_TIMELINE |
++				   DRM_SYNCOBJ_FD_TO_HANDLE_FLAGS_IMPORT_SYNC_FILE;
++	u64 point = 0;
+ 
+ 	if (!drm_core_check_feature(dev, DRIVER_SYNCOBJ))
+ 		return -EOPNOTSUPP;
+@@ -900,14 +921,20 @@ drm_syncobj_fd_to_handle_ioctl(struct drm_device *dev, void *data,
+ 	if (args->pad)
+ 		return -EINVAL;
+ 
+-	if (args->flags != 0 &&
+-	    args->flags != DRM_SYNCOBJ_FD_TO_HANDLE_FLAGS_IMPORT_SYNC_FILE)
++	if (args->flags & ~valid_flags)
+ 		return -EINVAL;
+ 
++	if (args->flags & DRM_SYNCOBJ_FD_TO_HANDLE_FLAGS_TIMELINE)
++		point = args->point;
++
+ 	if (args->flags & DRM_SYNCOBJ_FD_TO_HANDLE_FLAGS_IMPORT_SYNC_FILE)
+ 		return drm_syncobj_import_sync_file_fence(file_private,
+ 							  args->fd,
+-							  args->handle);
++							  args->handle,
++							  point);
++
++	if (args->point)
++		return -EINVAL;
+ 
+ 	return drm_syncobj_fd_to_handle(file_private, args->fd,
+ 					&args->handle);
+diff --git a/include/uapi/drm/drm.h b/include/uapi/drm/drm.h
+index 7fba37b94401..e63a71d3c607 100644
+--- a/include/uapi/drm/drm.h
++++ b/include/uapi/drm/drm.h
+@@ -905,13 +905,17 @@ struct drm_syncobj_destroy {
+ };
+ 
+ #define DRM_SYNCOBJ_FD_TO_HANDLE_FLAGS_IMPORT_SYNC_FILE (1 << 0)
++#define DRM_SYNCOBJ_FD_TO_HANDLE_FLAGS_TIMELINE         (1 << 1)
+ #define DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_EXPORT_SYNC_FILE (1 << 0)
++#define DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_TIMELINE         (1 << 1)
+ struct drm_syncobj_handle {
+ 	__u32 handle;
+ 	__u32 flags;
+ 
+ 	__s32 fd;
+ 	__u32 pad;
++
++	__u64 point;
+ };
+ 
+ struct drm_syncobj_transfer {
+-- 
+2.49.0
 
