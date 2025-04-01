@@ -1,132 +1,271 @@
-Received: from mail-oa1-f44.google.com (mail-oa1-f44.google.com [209.85.160.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 683DD1F0985
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 17:02:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7CD72EAF7;
+	Tue,  1 Apr 2025 17:04:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743526967; cv=none; b=HtTo6iMkZUIKodkcx0NbO7OSAZurQZh20HLcuKPI6V8GHaCCAafpLXy1mbEsyaSIgW5U12PCI7NTncvutuKWfL6Tv7BDO68BTtwup7I9MOBu7WEjY81030jHvqvfGqcKMZOTVOieMYJ2aM3v//fW4vFcyplWvdDj8knpLEMl3sI=
+	t=1743527055; cv=none; b=tpzjcX6ULNwo0EfiCJzxB0Ux1WX1fwS4h2lViLYOf35zo9VZ5PjuaM5sk/nlZ4wX9yOg/8ztC5YKyaRDtO6rQml+TWoFXb21RsqdY0o9Ym7EUZ4Z56walG93Vxcsk2Dyu2ic/0VK99V/OBogZvjMA8vgFddzBLV3Zg4jGBkuI4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743526967; c=relaxed/simple;
-	bh=+yY04wqEFOM+ZYrFth/D5yZY/advkKXOD7JuGCcg5LM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Cz+NnCVq/t5yb3yNtwg0Wj+XzKjAP7zkBv/usE54zSMy7GSOHZCcz/IJ8lfZavIy/uNQIHaen8h7VnjM5sEgCA04sPEhNZux7oA9RJfMsnLpAi4iUlQx5QJkVlMluw0Dx6mFfuCWlNO/wQYvbCP4bGWQN9SJJD4DA+rvlWSR3G0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=KBREUhl5; arc=none smtp.client-ip=209.85.160.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1743527055; c=relaxed/simple;
+	bh=QZkI/9nN8Pt2povYASNmI98sveqSrFcfVuZCi04/YzU=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=DLsF1FwL4uLPB1yPAM7nnmNMAo/vI2srggRCzD5jtD7JZrLfhTR5lviK17BZIDq2y4WdvDoqWasXdlTopHSy6DMMBaX511ggyEIRsvtATGYRKbU8nkavPb9F3MnEGdVuDHH51c/XuHS+85qyKjYVqctECt9z4E14Brb30qgsMUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=MoXjQ7PP; arc=none smtp.client-ip=67.231.148.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="KBREUhl5"
-Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-2c2504fa876so1496900fac.0
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 10:02:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1743526963; x=1744131763; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=NhYpDMqUMYzUiHimtNWCc62ZJOtzgSZhsmk4Mla9PsE=;
-        b=KBREUhl5LAl3P9+FDvqzWoQ1Y3//h14hlYYTWUf/A0i5onADIoTAjGvzILaZywpe3q
-         JQC/V0uBjqpC2nfHtAf4kEcO/QPfCaE+q78PdszU4saGxrXveVbiTrcFefvDwjcLlALj
-         osBel5ebQ4XjtnC/OJBY+UNwfCk3tGFPO7IThVVFhR8eWeld3TMUf58lewTdMi4QCzf/
-         gCanSIlmg0rK/KQu60Q0VwVkWLBSDU/75WkMpi6RO9NpN0IFpATNzacxBn1DiIMbyMkt
-         skK1K4N4bR6jfgzqY2AqxRVRvkEZ2zc54/9hcBVlnAYejQPn6GrMfA6iGhrlLz2+4Y3u
-         cjfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743526963; x=1744131763;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NhYpDMqUMYzUiHimtNWCc62ZJOtzgSZhsmk4Mla9PsE=;
-        b=R7nIidZg/f1WvPpOYfDQtauPYph9Av30npTos2VwlRu4fhRkDSxKH+CEhpGCQ1M7bP
-         Dv6ebtj4ClJ5Bx58iutypB/ZzoIcois/Q2LVQxea7/ZcdTD1JsIFE+hRxpnGxCf9hHPy
-         sep6rZXYQgPCC/SkMsSl2ngPIaznPuriXPEqZET41zv50dYu2i3Rn9TeA2VZYv6U1zp6
-         AWApiDGVXD+qFrx6uHqoOVY2Z00krh0Crsm/uqRDNv871UNW2fkOUVs9nH7Tn+Hnor0S
-         ayE7RG0Xs5vcXTEFWixs0BKyRMIOu4sECvd/5LLRA6XDri90hOQbKXx6N6h5kctu36dW
-         EASg==
-X-Forwarded-Encrypted: i=1; AJvYcCUmWSLyjnN62yEyu9itaRWu+TjOymSD/3obEtO9WIRPhc6LfcdvAByMJ+uzz7nZBpEQnbGAVhE7OQuH3LY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YweYQ1+hbvBvZTrLkAzwmSBLRpniVFYMJ9Rcp7+Dr57b12WpTkj
-	AUj6nP+qdcrWSoib4MSGM6uDKJVETxJftVaiU4e/R+eHUesi5lHu8Rz2P/rQv5c=
-X-Gm-Gg: ASbGncsmsb6B1XPm+6stz/Gp2E82SVPp/dLgjBlTHgpZj5mVZ1+TJAec9gZUhtchUOE
-	t96LmiOs/uAmwE3+PyX0SP/YCLtCKKX2pi00cjdEaid+1fr9zD1LWSHtNPkSifmu8olHxZR59De
-	QodSbcAmDYXyepipooia5vMM8fCTsTERmZitytwE79B1g8jn6GF81Xc3bHR1GOpcl2AEGYNm+EN
-	AMsqmuM9VQmNmxPT82WODUNHQ33XoyeUcvLidCA9Mth3Rh+122uVOFRZ50twlH2f+oqZbgw1Kbg
-	9kNMKmnUcH36nj6IG/Hy+b03DQ110O98/8iA2XyqOw/aShjOsRsuab8HJ9BVb5wTyM2Iw+NkReD
-	7H0S17w==
-X-Google-Smtp-Source: AGHT+IGTSq0pqqFQI3H0pT8LDtKLGZr8SAjBhx6TdK6GcdGs7Cr91zaRzfary3Xt+Dp2mNKM4qbHyg==
-X-Received: by 2002:a05:6870:548d:b0:2c1:62ba:cd7c with SMTP id 586e51a60fabf-2cbcf51167fmr7167818fac.15.1743526963436;
-        Tue, 01 Apr 2025 10:02:43 -0700 (PDT)
-Received: from [192.168.0.113] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2c86a4034e3sm2397020fac.9.2025.04.01.10.02.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Apr 2025 10:02:41 -0700 (PDT)
-Message-ID: <c5858d5d-687a-46f1-8447-e9c9d802f87f@baylibre.com>
-Date: Tue, 1 Apr 2025 12:02:40 -0500
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="MoXjQ7PP"
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 531A4Xqa025275;
+	Tue, 1 Apr 2025 09:59:07 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pfpt0220; bh=k
+	15Qz97sCZyxPGijF6bG8eZXzNEdvC6VQVKLILEpSFI=; b=MoXjQ7PP9I1YKS4z3
+	E7qlN+ghXTh6+7nVN9KRHcWIXh1SuHCDfPja9LvSvca76KRNH84A3ehRXFkHywDC
+	8cvpOJuQ85lLbRSrKOzYgYip9p9fhzRZjdqmKd4gTL8Vd4jyVBiSYt7BkiUNHOiL
+	Lo/lk6AwLQ6FPd+Fq2yUZ1VZ46W+Ed8M7plZJGrQXyzUJsljwecaEkn6VAl8+gPz
+	VOiSQM1szi1ePWR/s0sjKeluTC7clVpC62NREL/yHLvEyPX+CZ+SbLfciXiKXw4Q
+	4AtJ5IGxrF5m5jIs01MCMgHCAbDKJ8AEVEZTaFhCdD5xsnnxK8M1T9A8QZlT4YvC
+	4LCzw==
+Received: from dc5-exch05.marvell.com ([199.233.59.128])
+	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 45re27106d-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 01 Apr 2025 09:59:06 -0700 (PDT)
+Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
+ DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Tue, 1 Apr 2025 09:59:06 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
+ (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
+ Transport; Tue, 1 Apr 2025 09:59:06 -0700
+Received: from BG-LT92791.marvell.com (BG-LT92791.marvell.com [10.28.160.93])
+	by maili.marvell.com (Postfix) with ESMTP id 823E25C68EB;
+	Tue,  1 Apr 2025 09:59:01 -0700 (PDT)
+From: Tanmay Jagdale <tanmay@marvell.com>
+To: <leo.yan@arm.com>, Tanmay Jagdale <tanmay@marvell.com>
+CC: <suzuki.poulose@arm.com>, <mike.leach@linaro.org>,
+        <james.clark@linaro.org>, <john.g.garry@oracle.com>,
+        <leo.yan@linux.dev>, <will@kernel.org>, <acme@kernel.org>,
+        <adrian.hunter@intel.com>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-perf-users@vger.kernel.org>, <coresight@lists.linaro.org>,
+        <linux-kernel@vger.kernel.org>, <sgoutham@marvell.com>,
+        <gcherian@marvell.com>
+Subject: Re: [PATCH V3 1/2] perf: cs-etm: Fixes in instruction sample synthesis
+Date: Tue, 1 Apr 2025 22:28:45 +0530
+Message-ID: <20250327153530.GF604566@e132581.arm.com>
+X-Mailer: git-send-email 2.48.1.windows.1
+In-Reply-To: <20250327111149.461012-2-tanmay@marvell.com>
+References: <20250327111149.461012-1-tanmay@marvell.com> <20250327111149.461012-2-tanmay@marvell.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 14/17] iio: adc: ad7768-1: add support for
- Synchronization over SPI
-To: Jonathan Santos <Jonathan.Santos@analog.com>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-gpio@vger.kernel.org
-Cc: lars@metafoo.de, Michael.Hennerich@analog.com,
- marcelo.schmitt@analog.com, jic23@kernel.org, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, linus.walleij@linaro.org,
- brgl@bgdev.pl, lgirdwood@gmail.com, broonie@kernel.org,
- marcelo.schmitt1@gmail.com, jonath4nns@gmail.com
-References: <cover.1741268122.git.Jonathan.Santos@analog.com>
- <65bc11611c40d66858fb2ce5c1bbaf7e790a9f8f.1741268122.git.Jonathan.Santos@analog.com>
-Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <65bc11611c40d66858fb2ce5c1bbaf7e790a9f8f.1741268122.git.Jonathan.Santos@analog.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Authority-Analysis: v=2.4 cv=crybk04i c=1 sm=1 tr=0 ts=67ec1b5a cx=c_pps a=rEv8fa4AjpPjGxpoe8rlIQ==:117 a=rEv8fa4AjpPjGxpoe8rlIQ==:17 a=XR8D0OoHHMoA:10 a=7CQSdrXTAAAA:8 a=M5GUcnROAAAA:8 a=Z4zB58jBWo-q_rlER6QA:9 a=a-qgeE7W1pNrGK8U0ZQC:22
+ a=OBjm3rFKGHvpk9ecZwUJ:22
+X-Proofpoint-GUID: o7gZDp58OvZQYShkfzDARx0NziC33BKb
+X-Proofpoint-ORIG-GUID: o7gZDp58OvZQYShkfzDARx0NziC33BKb
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-01_06,2025-04-01_01,2024-11-22_01
+Message-ID: <20250401165845.FSFZOeApFpD3i5d47cIieM2-5QRNtNSGk5FIJMUC7Y8@z>
 
-On 3/6/25 3:03 PM, Jonathan Santos wrote:
-> The synchronization method using GPIO requires the generated pulse to be
-> truly synchronous with the base MCLK signal. When it is not possible to
-> do that in hardware, the datasheet recommends using synchronization over
-> SPI, where the generated pulse is already synchronous with MCLK. This
-> requires the SYNC_OUT pin to be connected to SYNC_IN pin.
+From: Leo Yan <leo.yan@arm.com>
+
+Hi Leo,
+
+I was on vacation so could not get back earlier.
 > 
-> Use trigger-sources property to enable device synchronization over SPI.
+> > Hi Tanmay,
+> > 
+> > On Thu, Mar 27, 2025 at 04:41:48PM +0530, Tanmay Jagdale wrote:
+>>> The existing method to synthesize instruction samples has the
+>>> following issues:
+>>> 1. Branch instruction mnemonics were being added to non-branch
+>>>    instructions too.
+>>> 2. Branch target address was missing
+>>> 
+>>> To fix the issues, start synthesizing the instructions from the
+>>> previous packet (tidq->prev_packet) instead of current packet
+>>> (tidq->packet). This way it's easy to figure out the target
+>>> address of the branch instruction in tidq->prev_packet which
+>>> is the current packet's (tidq->packet) first executed instruction.
+>>> 
+>>> Since we have now switched to processing the previous packet
+>>> first, we need not swap the packets during cs_etm__flush().
+>>> 
+>>> Signed-off-by: Tanmay Jagdale <tanmay@marvell.com>
+>>> Reviewed-by: James Clark <james.clark@arm.com>
+>>
+>> I saw James's reviewed tag.  However, I have several comments.
+>> 
+>> Sorry I jumped in too late.
+No problem, thanks for the review.
+
 > 
-> Signed-off-by: Jonathan Santos <Jonathan.Santos@analog.com>
-> ---
-...
+>>> ---
+>>>  tools/perf/util/cs-etm.c | 32 +++++++++++++++++++++++++-------
+>>>  1 file changed, 25 insertions(+), 7 deletions(-)
+>>> 
+>>> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+>>> index 0bf9e5c27b59..ebed5b98860e 100644
+>>> --- a/tools/perf/util/cs-etm.c
+>>> +++ b/tools/perf/util/cs-etm.c
+>>> @@ -1576,10 +1576,26 @@ static int cs_etm__synth_instruction_sample(struct cs_etm_queue *etmq,
+> 
+> Seems to me, the problem is cs_etm__synth_instruction_sample() is
+> invoked from multiple callers.
+> 
+> Both the previous packet and packet are valid fo the flow:
+>   cs_etm__sample()
+>     `> cs_etm__synth_instruction_sample()
+> 
+> Only the previous packet is valid and the current packet stores stale
+> data for the flows:
+> 
+>   cs_etm__flush()
+>     `> cs_etm__synth_instruction_sample()
+> 
+>  cs_etm__end_block()
+>    `> cs_etm__synth_instruction_sample()
+> 
+> First, as a prerequisite, I think we should resolve the stale data in
+> the packet.  So we need a fix like:
+Agree.
 
-> +static int ad7768_setup_spi_sync(struct device *dev, struct ad7768_state *st)
-> +{
-> +	struct fwnode_reference_args args;
-> +	int ret;
-> +
-> +	ret = fwnode_property_get_reference_args(dev_fwnode(dev),
-> +						 "trigger-sources",
-> +						 "#trigger-source-cells",
-> +						 0, 0, &args);
+> 
+> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c                
+> index 0bf9e5c27b59..b7b17c0e4806 100644                                         
+> --- a/tools/perf/util/cs-etm.c                                                  
+> +++ b/tools/perf/util/cs-etm.c                                                  
+> @@ -741,6 +741,9 @@ static void cs_etm__packet_swap(struct cs_etm_auxtrace *etm,
+>                                                                                 
+>         if (etm->synth_opts.branches || etm->synth_opts.last_branch ||          
+>             etm->synth_opts.instructions) {                                     
+> +               /* The previous packet will not be used, cleanup it */          
+> +               memset(tidq->prev_packet, 0x0, sizeof(*tidq->packet));          
+> +                                                                               
+>                 /*                                                              
+>                  * Swap PACKET with PREV_PACKET: PACKET becomes PREV_PACKET for 
+>                  * the next incoming packet.                                    
+> 
+Thanks for pointing out, I'll include this fix.
 
-As in the DT binding patch, we may need to allow an arg here to be
-able to tell the difference between /SYNC_OUT and /DRDY triggers.
+>>>  	sample.stream_id = etmq->etm->instructions_id;
+>>>  	sample.period = period;
+>>>  	sample.cpu = tidq->packet->cpu;
+> 
+> Should we use "prev_packet->cpu" at here?
+> 
+> Even for a branch instruction, as its IP address is from the previous
+> packet, we should use "prev_packet->cpu" for CPU ID as well.
+ACK.
 
-Also, in reviews on previous versions of this series, Jonathan and
-Conor both mentioned that it would be sensible to allow omitting
-the trigger-sources property when /SYNC_OUT is connected to /SYNC_IN
-if you want to consider that.
+> 
+>>> -	sample.flags = tidq->prev_packet->flags;
+>>>  	sample.cpumode = event->sample.header.misc;
+>>>  
+>>> -	cs_etm__copy_insn(etmq, tidq->trace_chan_id, tidq->packet, &sample);
+>>> +	cs_etm__copy_insn(etmq, tidq->trace_chan_id, tidq->prev_packet, &sample);
+>>> +
+>>> +	/* Populate branch target information only when we encounter
+>>> +	 * branch instruction, which is at the end of tidq->prev_packet.
+>>> +	 */
+>>> +	if (addr == (tidq->prev_packet->end_addr - 4)) {
+> 
+>   if (!addr && addr == cs_etm__last_executed_instr(tidq->prev_packet))
+> 
+>>> +		/* Update the perf_sample flags using the prev_packet
+>>> +		 * since that is the queue we are synthesizing.
+>>> +		 */
+>>> +		sample.flags = tidq->prev_packet->flags;
+>>> +
+>>> +		/* The last instruction of the previous queue would be a
+>>> +		 * branch operation. Get the target of that branch by looking
+>>> +		 * into the first executed instruction of the current packet
+>>> +		 * queue.
+>>> +		 */
+>>> +		sample.addr = cs_etm__first_executed_instr(tidq->packet);
+> 
+> If connected to the change suggested for cleaning up packet in
+> cs_etm__packet_swap(), when run at here, if "tidq->packet" is a valid
+> packet, then it will return a branch target address, otherwise, it
+> will return 0.
+> 
+>>> +	}
+>>>  
+>>>  	if (etm->synth_opts.last_branch)
+>>>  		sample.branch_stack = tidq->last_branch;
+>>> @@ -1771,7 +1787,7 @@ static int cs_etm__sample(struct cs_etm_queue *etmq,
+>>>  	/* Get instructions remainder from previous packet */
+>>>  	instrs_prev = tidq->period_instructions;
+>>>  
+>>> -	tidq->period_instructions += tidq->packet->instr_count;
+>>> +	tidq->period_instructions += tidq->prev_packet->instr_count;
+> 
+> A side effect for this change is we will defer to synthesize instruction
+> samples for _current_ packet, either the packet will be handled after
+> a new packet incoming, or at the end of a trace chunk.
+> 
+> The problem is for the later one, we can see cs_etm__end_block() and
+> cs_etm__flush() both only handle the previous packet. As a result, the
+> last packet will be ignored.
+Yes I agree, this is a side effect of the patch. The last packet's instructions
+are not handled.
 
-> +	if (ret)
-> +		return dev_err_probe(dev, ret, "Failed to get trigger-sources reference\n");
-> +
-> +	/*
-> +	 * Currently, the driver supports SPI-based synchronization only for
-> +	 * single-device setups, where the device's own SYNC_OUT is looped back
-> +	 * to its SYNC_IN. Only enable this feature if the trigger-sources
-> +	 * references the current device.
-> +	 */
-> +	st->en_spi_sync = args.fwnode->dev == dev;
-> +	fwnode_handle_put(args.fwnode);
-> +
-> +	return st->en_spi_sync ? 0 : -EOPNOTSUPP;
-> +}
+> 
+> I would suggest we need to firstly fix this issue in
+> cs_etm__end_block() and cs_etm__flush() (maybe we need to consider to
+> consolidate the code with cs_etm__sample()).
+Okay sure. I will take a look at consolidating the code and post them in
+the next version.
+
+> 
+>>>  	/*
+>>>  	 * Record a branch when the last instruction in
+>>> @@ -1851,8 +1867,11 @@ static int cs_etm__sample(struct cs_etm_queue *etmq,
+>>>  			 * been executed, but PC has not advanced to next
+>>>  			 * instruction)
+>>>  			 */
+>>> +			/* Get address from prev_packet since we are synthesizing
+>>> +			 * that in cs_etm__synth_instruction_sample()
+>>> +			 */
+>>>  			addr = cs_etm__instr_addr(etmq, trace_chan_id,
+>>> -						  tidq->packet, offset - 1);
+>>> +						  tidq->prev_packet, offset - 1);
+>>>  			ret = cs_etm__synth_instruction_sample(
+>>>  				etmq, tidq, addr,
+>>>  				etm->instructions_sample_period);
+>>> @@ -1916,7 +1935,7 @@ static int cs_etm__flush(struct cs_etm_queue *etmq,
+>>>  
+>>>  	/* Handle start tracing packet */
+>>>  	if (tidq->prev_packet->sample_type == CS_ETM_EMPTY)
+>>> -		goto swap_packet;
+>>> +		goto reset_last_br;
+>>>  
+>>>  	if (etmq->etm->synth_opts.last_branch &&
+>>>  	    etmq->etm->synth_opts.instructions &&
+>>> @@ -1952,8 +1971,7 @@ static int cs_etm__flush(struct cs_etm_queue *etmq,
+>>>  			return err;
+>>>  	}
+>>>  
+>>> -swap_packet:
+>>> -	cs_etm__packet_swap(etm, tidq);
+>>> +reset_last_br:
+> 
+> As said, if we consolidate cs_etm__flush() for processing both
+> previous packet and current packet, then we don't need to remove
+> cs_etm__packet_swap() at here, right?
+Yes I think so too.
+
+Thanks,
+Tanmay
+> 
+> Thanks,
+> Leo
+> 
