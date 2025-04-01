@@ -1,155 +1,174 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from hr2.samba.org (hr2.samba.org [144.76.82.148])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5244619D8AC;
-	Tue,  1 Apr 2025 08:17:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF2781E261F;
+	Tue,  1 Apr 2025 08:19:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.76.82.148
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743495436; cv=none; b=s2ADnPIg5z65B9KBG6LVjTXUyEdH0LLhCFSDggo77yEoUakSGT705biJisVs78t4996thloojc5krV7D5z6t5g1CzUp6H8y4H0T9IX9sJ54mT4asM4GG66rNJ52plRxLuLKnxKKOcpoumb9BZhnVELlfcjt6L6VStu1rQ4elq+8=
+	t=1743495560; cv=none; b=n+nNNrhEm/i30t4yqDoBPP8TVg4t84feV/cgPmcOdnJCaxYwgPnDF5aVbaFyPcD+ik26JA/vDNmnSieQhQ629qTfwvgvSnKX8V6HBnXWFple3x2SPkywFWjObvg4s5j8GVgA8rJoc70lNk5qPU6pSguAON/Auddyw2k44cfRpEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743495436; c=relaxed/simple;
-	bh=T5GbqVyZWC7IL24uFzvj8hAEL+GTO0rSO2sLy2qsudg=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=eQwh0dnbPaCjf9f5qvL2Vtd4ix0N9hTC2sb/oeix3xutAy+8C0mHvQuPjhwRJMpP6li7TnbzFSa/H/8U7WAtg6a7z00zh4dylCa3NrfxhOLS6GzTD4etgSN1QnRknW0IY3Xo+dicpKFsdojV8fGf0jLmTStxl2knJ7BHAoeJxUU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=WkROTV9K; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=eYKSIEQf; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1743495560; c=relaxed/simple;
+	bh=qlsGP9nYpg9ECwWOf+7L3C+s5nRg0js3AhgwMO+0GnI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WYKJJuzxEtWepFLwZN/Q37B3sKEBndoZLi2DNj37vrhJ3R7/q8L7Z8+b97YfGewB2ro8JpzZTvWIPnriDMjMPFlA99w1L4AKoSXmPXvHFN+Xu7DtRANP0Lo4Sf5HqbCz9xkcqvH+nuyZBU/P7nbbAunoEwCbp96hgBugHTud0ug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=samba.org; spf=pass smtp.mailfrom=samba.org; dkim=pass (3072-bit key) header.d=samba.org header.i=@samba.org header.b=RV7b9Dch; arc=none smtp.client-ip=144.76.82.148
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=samba.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samba.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WkROTV9K";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="eYKSIEQf"
-Date: Tue, 01 Apr 2025 08:17:03 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1743495433;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nz0PxVBRVLI4HeLZodBOM+7xTdYHJPIkiH8CFNMIFZM=;
-	b=WkROTV9K1NVOJR5cOe0tqJgp115MTOYC/lleDlhtwVHRi5eUddDaW0CHeVwtCqlSwXbyrz
-	Aioaq8nVqOPaTuOn7QWhIOS4dckWnrcvKaAQX8EDFkb28Pp2NXEL7d4XprIq8Lyz0FVnwr
-	hBIZ33RBHCFsu2g/xad18Q8fOsKwurtj70A/PX6nhJjX0ta1MTpGFQmCusAN96HVZv1tLp
-	bHE8iqC8WLsv0cq1CBOnaMKxO26kgGIwYHbHb8TAQX6vvyeg7vC/S6W+LWKNcmzUYmiKJg
-	NBS3TG6oeY6fviuf4wbD3OhTSnAUvBBTwbNDDvYYiNX8ziPeF96iquhkBZhXsA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1743495433;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nz0PxVBRVLI4HeLZodBOM+7xTdYHJPIkiH8CFNMIFZM=;
-	b=eYKSIEQfz4gJcB0bs9PiJIRVCxVWzPm2tv2qdTyFcL8izw2T7QAYR/VFK26BhivwYBxQZZ
-	RWMLeYXroepzvcDA==
-From: "tip-bot2 for Josh Poimboeuf" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: objtool/urgent] objtool/loongarch: Add unwind hints in
- prepare_frametrace()
-Cc: kernel test robot <lkp@intel.com>, Tiezhu Yang <yangtiezhu@loongson.cn>,
- Josh Poimboeuf <jpoimboe@kernel.org>, Ingo Molnar <mingo@kernel.org>,
- Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To:
- <270cadd8040dda74db2307f23497bb68e65db98d.1743481539.git.jpoimboe@kernel.org>
-References:
- <270cadd8040dda74db2307f23497bb68e65db98d.1743481539.git.jpoimboe@kernel.org>
+	dkim=pass (3072-bit key) header.d=samba.org header.i=@samba.org header.b="RV7b9Dch"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=samba.org;
+	s=42; h=From:Cc:To:Date:Message-ID;
+	bh=vJej1gym8PffvPJkpcAVY4oHxH7PtcR6PiojZNvFt9M=; b=RV7b9DchSX6L/1eGwqFQrmPoMe
+	hf0+MvUSe77ZEvXnOMKdaDfI72KNjrnBHp4+fOyw74E/OKn4qz/xPPhyS7jysMN32ED0nZFh+bSWt
+	qNTdeC9sUxWNSlUy3fPjumM8AyZcbA0ZmlEpLcU9V+2QwUoXZ7eQfcl2nXK+BF86z5eiOUe5W+1UA
+	0QlMB9Ew/iDDfZQz1e7CZjakP0NXtY+bs+HEsN/fv3tTiQvAZhGTsamRKtNDHQAO89fEIE3KeBJf8
+	xcd8vRDXXIUCf417uDpOhlMncOdHNgBrwgFPS3pKv66oe2Gxh7inZx1qK9sSIbFAyQV3hRiMvLECg
+	thVcgrdmcYk8AM8eIrag2xACAnicTWSHEjTexxvojrRysCeGDc29D6smjQ2phM7X9otv3Fm5Phnsk
+	JXkUjKNwFhUfQWuhXXq7lO+xH6aXarbwoeT3Oz7x9XbnXQJv7YBaLBY2zEYjoaVXXS037eARPx8fj
+	gfrHfFqPkn/4/n7sGmBOfAQs;
+Received: from [127.0.0.2] (localhost [127.0.0.1])
+	by hr2.samba.org with esmtpsa (TLS1.3:ECDHE_SECP256R1__ECDSA_SECP256R1_SHA256__CHACHA20_POLY1305:256)
+	(Exim)
+	id 1tzWpu-007dNX-35;
+	Tue, 01 Apr 2025 08:19:07 +0000
+Message-ID: <39515c76-310d-41af-a8b4-a814841449e3@samba.org>
+Date: Tue, 1 Apr 2025 10:19:05 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174349542583.14745.6124193536449922861.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 0/4] net/io_uring: pass a kernel pointer via optlen_t
+ to proto[_ops].getsockopt()
+To: Stanislav Fomichev <stfomichev@gmail.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+ Jens Axboe <axboe@kernel.dk>, Pavel Begunkov <asml.silence@gmail.com>,
+ Breno Leitao <leitao@debian.org>, Jakub Kicinski <kuba@kernel.org>,
+ Christoph Hellwig <hch@lst.de>, Karsten Keil <isdn@linux-pingi.de>,
+ Ayush Sawal <ayush.sawal@chelsio.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ Kuniyuki Iwashima <kuniyu@amazon.com>, Willem de Bruijn
+ <willemb@google.com>, David Ahern <dsahern@kernel.org>,
+ Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+ Xin Long <lucien.xin@gmail.com>, Neal Cardwell <ncardwell@google.com>,
+ Joerg Reuter <jreuter@yaina.de>, Marcel Holtmann <marcel@holtmann.org>,
+ Johan Hedberg <johan.hedberg@gmail.com>,
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+ Oliver Hartkopp <socketcan@hartkopp.net>,
+ Marc Kleine-Budde <mkl@pengutronix.de>,
+ Robin van der Gracht <robin@protonic.nl>,
+ Oleksij Rempel <o.rempel@pengutronix.de>, kernel@pengutronix.de,
+ Alexander Aring <alex.aring@gmail.com>,
+ Stefan Schmidt <stefan@datenfreihafen.org>,
+ Miquel Raynal <miquel.raynal@bootlin.com>,
+ Alexandra Winter <wintera@linux.ibm.com>,
+ Thorsten Winkler <twinkler@linux.ibm.com>,
+ James Chapman <jchapman@katalix.com>, Jeremy Kerr <jk@codeconstruct.com.au>,
+ Matt Johnston <matt@codeconstruct.com.au>,
+ Matthieu Baerts <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>,
+ Geliang Tang <geliang@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>,
+ Remi Denis-Courmont <courmisch@gmail.com>,
+ Allison Henderson <allison.henderson@oracle.com>,
+ David Howells <dhowells@redhat.com>, Marc Dionne <marc.dionne@auristor.com>,
+ Wenjia Zhang <wenjia@linux.ibm.com>, Jan Karcher <jaka@linux.ibm.com>,
+ "D. Wythe" <alibuda@linux.alibaba.com>, Tony Lu <tonylu@linux.alibaba.com>,
+ Wen Gu <guwen@linux.alibaba.com>, Jon Maloy <jmaloy@redhat.com>,
+ Boris Pismenny <borisp@nvidia.com>, John Fastabend
+ <john.fastabend@gmail.com>, Stefano Garzarella <sgarzare@redhat.com>,
+ Martin Schiller <ms@dev.tdt.de>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?=
+ <bjorn@kernel.org>, Magnus Karlsson <magnus.karlsson@intel.com>,
+ Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
+ Jonathan Lemon <jonathan.lemon@gmail.com>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Jesper Dangaard Brouer <hawk@kernel.org>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-sctp@vger.kernel.org,
+ linux-hams@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+ linux-can@vger.kernel.org, dccp@vger.kernel.org, linux-wpan@vger.kernel.org,
+ linux-s390@vger.kernel.org, mptcp@lists.linux.dev,
+ linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com,
+ linux-afs@lists.infradead.org, tipc-discussion@lists.sourceforge.net,
+ virtualization@lists.linux.dev, linux-x25@vger.kernel.org,
+ bpf@vger.kernel.org, isdn4linux@listserv.isdn4linux.de,
+ io-uring@vger.kernel.org
+References: <cover.1743449872.git.metze@samba.org>
+ <Z-sDc-0qyfPZz9lv@mini-arch>
+Content-Language: en-US, de-DE
+From: Stefan Metzmacher <metze@samba.org>
+In-Reply-To: <Z-sDc-0qyfPZz9lv@mini-arch>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-The following commit has been merged into the objtool/urgent branch of tip:
+Am 31.03.25 um 23:04 schrieb Stanislav Fomichev:
+> On 03/31, Stefan Metzmacher wrote:
+>> The motivation for this is to remove the SOL_SOCKET limitation
+>> from io_uring_cmd_getsockopt().
+>>
+>> The reason for this limitation is that io_uring_cmd_getsockopt()
+>> passes a kernel pointer as optlen to do_sock_getsockopt()
+>> and can't reach the ops->getsockopt() path.
+>>
+>> The first idea would be to change the optval and optlen arguments
+>> to the protocol specific hooks also to sockptr_t, as that
+>> is already used for setsockopt() and also by do_sock_getsockopt()
+>> sk_getsockopt() and BPF_CGROUP_RUN_PROG_GETSOCKOPT().
+>>
+>> But as Linus don't like 'sockptr_t' I used a different approach.
+>>
+>> @Linus, would that optlen_t approach fit better for you?
+> 
+> [..]
+> 
+>> Instead of passing the optlen as user or kernel pointer,
+>> we only ever pass a kernel pointer and do the
+>> translation from/to userspace in do_sock_getsockopt().
+> 
+> At this point why not just fully embrace iov_iter? You have the size
+> now + the user (or kernel) pointer. Might as well do
+> s/sockptr_t/iov_iter/ conversion?
 
-Commit-ID:     7c977393b8277ed319e92e4b598b26598c9d30c0
-Gitweb:        https://git.kernel.org/tip/7c977393b8277ed319e92e4b598b26598c9d30c0
-Author:        Josh Poimboeuf <jpoimboe@kernel.org>
-AuthorDate:    Mon, 31 Mar 2025 21:26:43 -07:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 01 Apr 2025 10:10:10 +02:00
+I think that would only be possible if we introduce
+proto[_ops].getsockopt_iter() and then convert the implementations
+step by step. Doing it all in one go has a lot of potential to break
+the uapi. I could try to convert things like socket, ip and tcp myself, but
+the rest needs to be converted by the maintainer of the specific protocol,
+as it needs to be tested. As there are crazy things happening in the existing
+implementations, e.g. some getsockopt() implementations use optval as in and out
+buffer.
 
-objtool/loongarch: Add unwind hints in prepare_frametrace()
+I first tried to convert both optval and optlen of getsockopt to sockptr_t,
+and that showed that touching the optval part starts to get complex very soon,
+see https://git.samba.org/?p=metze/linux/wip.git;a=commitdiff;h=141912166473bf8843ec6ace76dc9c6945adafd1
+(note it didn't converted everything, I gave up after hitting
+sctp_getsockopt_peer_addrs and sctp_getsockopt_local_addrs.
+sctp_getsockopt_context, sctp_getsockopt_maxseg, sctp_getsockopt_associnfo and maybe
+more are the ones also doing both copy_from_user and copy_to_user on optval)
 
-If 'regs' points to a local stack variable, prepare_frametrace() stores
-all registers to the stack.  This confuses objtool as it expects them to
-be restored from the stack later.
+I come also across one implementation that returned -ERANGE because *optlen was
+too short and put the required length into *optlen, which means the returned
+*optlen is larger than the optval buffer given from userspace.
 
-The stores don't affect stack tracing, so use unwind hints to hide them
-from objtool.
+Because of all these strange things I tried to do a minimal change
+in order to get rid of the io_uring limitation and only converted
+optlen and leave optval as is.
 
-Fixes the following warnings:
+In order to have a patchset that has a low risk to cause regressions.
 
-  arch/loongarch/kernel/traps.o: warning: objtool: show_stack+0xe0: stack state mismatch: reg1[22]=-1+0 reg2[22]=-2-160
-  arch/loongarch/kernel/traps.o: warning: objtool: show_stack+0xe0: stack state mismatch: reg1[23]=-1+0 reg2[23]=-2-152
+But as alternative introducing a prototype like this:
 
-Fixes: cb8a2ef0848c ("LoongArch: Add ORC stack unwinder support")
-Reported-by: kernel test robot <lkp@intel.com>
-Tested-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Link: https://lore.kernel.org/r/270cadd8040dda74db2307f23497bb68e65db98d.1743481539.git.jpoimboe@kernel.org
-Closes: https://lore.kernel.org/oe-kbuild-all/202503280703.OARM8SrY-lkp@intel.com/
----
- arch/loongarch/include/asm/stacktrace.h   |  3 +++
- arch/loongarch/include/asm/unwind_hints.h | 10 +++++++++-
- 2 files changed, 12 insertions(+), 1 deletion(-)
+         int (*getsockopt_iter)(struct socket *sock, int level, int optname,
+                                struct iov_iter *optval_iter);
 
-diff --git a/arch/loongarch/include/asm/stacktrace.h b/arch/loongarch/include/asm/stacktrace.h
-index f23adb1..fc8b647 100644
---- a/arch/loongarch/include/asm/stacktrace.h
-+++ b/arch/loongarch/include/asm/stacktrace.h
-@@ -8,6 +8,7 @@
- #include <asm/asm.h>
- #include <asm/ptrace.h>
- #include <asm/loongarch.h>
-+#include <asm/unwind_hints.h>
- #include <linux/stringify.h>
- 
- enum stack_type {
-@@ -43,6 +44,7 @@ int get_stack_info(unsigned long stack, struct task_struct *task, struct stack_i
- static __always_inline void prepare_frametrace(struct pt_regs *regs)
- {
- 	__asm__ __volatile__(
-+		UNWIND_HINT_SAVE
- 		/* Save $ra */
- 		STORE_ONE_REG(1)
- 		/* Use $ra to save PC */
-@@ -80,6 +82,7 @@ static __always_inline void prepare_frametrace(struct pt_regs *regs)
- 		STORE_ONE_REG(29)
- 		STORE_ONE_REG(30)
- 		STORE_ONE_REG(31)
-+		UNWIND_HINT_RESTORE
- 		: "=m" (regs->csr_era)
- 		: "r" (regs->regs)
- 		: "memory");
-diff --git a/arch/loongarch/include/asm/unwind_hints.h b/arch/loongarch/include/asm/unwind_hints.h
-index a01086a..2c68bc7 100644
---- a/arch/loongarch/include/asm/unwind_hints.h
-+++ b/arch/loongarch/include/asm/unwind_hints.h
-@@ -23,6 +23,14 @@
- 	UNWIND_HINT sp_reg=ORC_REG_SP type=UNWIND_HINT_TYPE_CALL
- .endm
- 
--#endif /* __ASSEMBLY__ */
-+#else /* !__ASSEMBLY__ */
-+
-+#define UNWIND_HINT_SAVE \
-+	UNWIND_HINT(UNWIND_HINT_TYPE_SAVE, 0, 0, 0)
-+
-+#define UNWIND_HINT_RESTORE \
-+	UNWIND_HINT(UNWIND_HINT_TYPE_RESTORE, 0, 0, 0)
-+
-+#endif /* !__ASSEMBLY__ */
- 
- #endif /* _ASM_LOONGARCH_UNWIND_HINTS_H */
+That returns a non-negative value which can be placed into *optlen
+or negative value as error and *optlen will not be changed on error.
+optval_iter will get direction ITER_DEST, so it can only be written to.
+
+Implementations could then opt in for the new interface and
+allow do_sock_getsockopt() work also for the io_uring case,
+while all others would still get -EOPNOTSUPP.
+
+So what should be the way to go?
+
+metze
