@@ -1,88 +1,78 @@
-Received: from mail-pl1-f194.google.com (mail-pl1-f194.google.com [209.85.214.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 460FA1E0DEB;
-	Tue,  1 Apr 2025 06:53:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 693671E521F;
+	Tue,  1 Apr 2025 06:53:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743490408; cv=none; b=PQ/+0Y+FtCZYwrjQE1Ln42eKOmKbp9ZiZv+XdATDNdlyVVWUaVO1yZinTDRwmL6az2gfyutxW5LPVQ9pyNwPfeYwaIiQ/pcga0yEUDMhWX35iKD+Vxu5Tynd5FO+ETjwvxYgPfmRjfv/Bb6hBSn5t7L8xyiudlaHrTh7n5p206I=
+	t=1743490418; cv=none; b=G5BxTUGtu4FyPv1/g55E2rC2sGthKmLfDLJClYEGDvoyZ0gdvQ4HVdbEivxRcEqv6CjEsGk/dXHrsz5UCIwhsISHywtIlI78wI7XNULQlYe5qUhLXFDly4IXEMK1M/RaDiCIz/LyqvM9/UXTLrQ7kZHRzCtGeSEmsxqR827w3OQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743490408; c=relaxed/simple;
-	bh=juV0t4V1e//0+gj1OVfhRcLHZvcbuEC/YXrhy/U7qi8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ZSJn7pHl9w5rbDa/HipxSWEP0MJ0nDlE3HLxx79HY8UzdTXB6Sl4ZexoFfT4xxQYBWjW1fkdudgqY08DT4eHtcdXoTxhkjVQLVEczpqhg1X2B+T+6wmpdgu4M8f1HcqbY4uwqeLDuI/3kyqu7Vr1pXMx1LMiyH8ZrbB1omRDzSs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ijlsr9mC; arc=none smtp.client-ip=209.85.214.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ijlsr9mC"
-Received: by mail-pl1-f194.google.com with SMTP id d9443c01a7336-2240b4de12bso77945505ad.2;
-        Mon, 31 Mar 2025 23:53:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743490406; x=1744095206; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=juV0t4V1e//0+gj1OVfhRcLHZvcbuEC/YXrhy/U7qi8=;
-        b=Ijlsr9mCx6Beib9aBhpcgo3+Q36kb/L1N0fnH7fwLXi5NDAMVI/A8xjbJmGZgN8ceJ
-         r9Y7WKvuKk32Dh5QU3dBRtHqWQGIeOWfKCgfbRV2VU7eOtjIhW3bTEKryMC4OaerhbpA
-         tCax5VY8DfUR+/OX0CVGyw0jGL86RiRfWtpm7ifhhfbg9OzrIN38CFdXamciH3GZQn8C
-         CZkeSfdQGeU35oapgf+eOczxgqaYdIFVvv3Rf7XQd6aae1/fJU+HeJJKbjPUUaw4XhC7
-         MzB8w232yY1hj3d9MY1eswc/MJkT2DgV2ZPzEOyCdZsZ1zpX1sDMNLZ4KlR+SCNHIQkS
-         BFdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743490406; x=1744095206;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=juV0t4V1e//0+gj1OVfhRcLHZvcbuEC/YXrhy/U7qi8=;
-        b=jAKbUxkZ8IRevI1Gh7cpg0Z+nXDArmmlBF3I02UzGwI4LejmLlrTsj5Mv81g3rPkXI
-         tQfjJfFmUrdUXEXkNfGI5r1m7uUxP5rKqDicsORw9m4oQ742WjUAquhOpIo8wueSk0WV
-         PEalBMhriEPx8qKMit1YfMGAuJmSuN7MReIimBitQjHc4B3e30rb3LsjMY3it5qBf2NH
-         m0dmikZAWTGKO041mjpR1zelVl1+HZYJnu9CkJwlL6419/AIDUwClqyZCnHsGwu9bzfi
-         NJvY1XONxBqdrcODCGNVWZISRWxIRN5Tw7nN640suNIh7hInP+e1pPHPODj7L3pPNivd
-         S6bA==
-X-Forwarded-Encrypted: i=1; AJvYcCVhzXYgOynar3c6bJvOHpXM/hFR2IQpV2C7N4up4Ca3lYX7t6lTp0j3qLJ+3QGzS5Ynn/WDrfpuMnZ5+Wo=@vger.kernel.org, AJvYcCVsW5HhuN11e4gr47SE18VTiqQAt40tBoIRFw/gnTURyXWCXRvLuFEa/9l75AdG7848UBHWHjhVMnsxzo7S@vger.kernel.org, AJvYcCVupU3BRKEBDh/Tvc8z9rttcksLQhaPb4d5iSRPKgQZxYqsg8qI3QLaP941aVRDn/AOSW/ggMcZptwxj8rg@vger.kernel.org
-X-Gm-Message-State: AOJu0YwliIbRqDWl+CNmyCa3F1fphfvmQyQFwbK3xqXv+hCRCmoeYonj
-	LPfmQHoR/Xx6av+W/RzxYB0F0M+KTHdTFJyyENw0kFUXTtgmy27s
-X-Gm-Gg: ASbGncsZHahf7k55LYJngFXGqe3zVBCC4Io53pltCAn9Tg0y9JYtEbQhFS3aGENwEuX
-	otXWIbFqOgftOCZ+CzICyubtvUqEnyUcBJevhQJJsoxlqfSKJt65WLMsCkWuWgKJhvGlNaXTcca
-	CVERGNNI8gnceQbv+z2if/SFxwzAw75MbgIVmvtk7hXwVh7qoIhbLdzOS5mqEn01p3ednPKahCu
-	Zlths8FqB/RFKHXNWAaQTkVGpOtfonalpjTVm6hTRlJUJSnYjv/qoCYaKcr2zDwwJRl2QOnVOUd
-	BaG99s33/q3k1bNul6nNeLWHLF/qy59ibgHSMmUW4iyUPHhGF4a00ivVX0clrTi2ZhOUQZk=
-X-Google-Smtp-Source: AGHT+IE8v+2soOjMZ/HxnufMSQX2TKoU0l9zv9vDPm095V1YC/l3ajgioV+dGEqKKpy3wthovX6FNg==
-X-Received: by 2002:a17:902:da91:b0:224:191d:8a79 with SMTP id d9443c01a7336-2292f973a1fmr160582675ad.27.1743490406432;
-        Mon, 31 Mar 2025 23:53:26 -0700 (PDT)
-Received: from henry.localdomain ([111.202.148.167])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291f1cf882sm80743815ad.123.2025.03.31.23.53.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Mar 2025 23:53:25 -0700 (PDT)
-From: Henry Martin <bsdhenrymartin@gmail.com>
-To: markus@kernel.org
-Cc: lee@kernel.org,
-	danielt@kernel.org,
-	jingoohan1@gmail.com,
-	deller@gmx.de,
-	linux-arm-msm@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linux-fbdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3] backlight: pm8941: Add NULL check in wled_configure()
-Date: Tue,  1 Apr 2025 14:53:20 +0800
-Message-Id: <20250401065320.20000-1-bsdhenrymartin@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <d5f2aa49-27e2-4cc1-91be-4e195ed5249e@web.de>
-References: <d5f2aa49-27e2-4cc1-91be-4e195ed5249e@web.de>
+	s=arc-20240116; t=1743490418; c=relaxed/simple;
+	bh=Z/JiWl6m6AmAp7HWDZOAQ4d1vXZwzy0vWUbyGyasr8g=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ob6szW4WcqRqWM873xLKSN9Tp8zMWf72Ll1qtj8C8cjsi/3ZGVW3FcWNl3PYwZU3LZH/+bTKIUfRVfMwa6fTJQ55XSdwV6rDbHh9x4siZqd44giUIlDZAU3oY5/HID22CfgqZ7jnj4+uS1Pd4VLjpYz46jSL/4wW99C+jrw56d4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com; spf=pass smtp.mailfrom=perches.com; arc=none smtp.client-ip=216.40.44.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=perches.com
+Received: from omf13.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay08.hostedemail.com (Postfix) with ESMTP id 0C3B8141518;
+	Tue,  1 Apr 2025 06:53:29 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf13.hostedemail.com (Postfix) with ESMTPA id CEF2C20013;
+	Tue,  1 Apr 2025 06:53:26 +0000 (UTC)
+Message-ID: <5588e91ab302e21bf4e30b5208cf3d387f8e7de4.camel@perches.com>
+Subject: Re: [PATCH v2 10/12] checkpatch: Deprecate srcu_read_lock_lite()
+ and srcu_read_unlock_lite()
+From: Joe Perches <joe@perches.com>
+To: "Paul E. McKenney" <paulmck@kernel.org>, rcu@vger.kernel.org, Joel
+ Fernandes <joelagnelf@nvidia.com>
+Cc: linux-kernel@vger.kernel.org, kernel-team@meta.com, rostedt@goodmis.org
+Date: Mon, 31 Mar 2025 23:53:25 -0700
+In-Reply-To: <20250331210314.590622-10-paulmck@kernel.org>
+References: <eea8d42f-6d2d-485b-9bb9-4eb77a0e1f95@paulmck-laptop>
+	 <20250331210314.590622-10-paulmck@kernel.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: CEF2C20013
+X-Stat-Signature: niz5i9ektetyr84ussoegaozkngtw18i
+X-Rspamd-Server: rspamout01
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-Session-ID: U2FsdGVkX19d/wOrO6ys9m7Y/fQ1C035mkLkvjuVOHc=
+X-HE-Tag: 1743490406-158160
+X-HE-Meta: U2FsdGVkX1+6HqO32Y6ezF9adgzOiPUdjxha4GerFw2KW4Y9s1QZ1zWc5yDCBRKYxQjI/DN2bZZlF99V6PfxPdqAXY7wYZpQ9+628wnlEwMWuhCLRb9dZAVbKBWL6gKGCseBx35OlmqnKmFdKjh33Bm9kT2Kg9eiHHKCO4ik+rDY8mOyVnI4zQeBhY80CZHMWzshxjjpjGojSUrNMZRCJYhJiLROlXAmip/MkyPJY23iMVM0y6xqsl27RTQZoiY+R/HoqJl8VIkiAXpHGmMH0mVtE3jmAgZ4QFW+WiDWrCaQ4ijTNY82YZN/GVJ3lrlZMoQWgyEYYLfdrfIvHFAdBGeUlLcFPB2D
 
-Thanks for your review. No further improvements needed for this implementation
-- it already handles all error cases appropriately.
+On Mon, 2025-03-31 at 14:03 -0700, Paul E. McKenney wrote:
+> Uses of srcu_read_lock_lite() and srcu_read_unlock_lite() are better
+> served by the new srcu_read_lock_fast() and srcu_read_unlock_fast() APIs.
+> As in srcu_read_lock_lite() and srcu_read_unlock_lite() would never have
+> happened had I thought a bit harder a few months ago.  Therefore, mark
+> them deprecated.
 
-Best regards,
-Henry
+Would it be better to convert the 3 existing instances?
+
+>=20
+> Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+> ---
+>  scripts/checkpatch.pl | 2 ++
+>  1 file changed, 2 insertions(+)
+>=20
+> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> index 7b28ad3317427..de8ed5efc5b16 100755
+> --- a/scripts/checkpatch.pl
+> +++ b/scripts/checkpatch.pl
+> @@ -838,6 +838,8 @@ our %deprecated_apis =3D (
+>  	"kunmap"				=3D> "kunmap_local",
+>  	"kmap_atomic"				=3D> "kmap_local_page",
+>  	"kunmap_atomic"				=3D> "kunmap_local",
+> +	"srcu_read_lock_lite"			=3D> "srcu_read_lock_fast",
+> +	"srcu_read_unlock_lite"			=3D> "srcu_read_unlock_fast",
+>  );
+> =20
+>  #Create a search pattern for all these strings to speed up a loop below
+
