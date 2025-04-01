@@ -1,135 +1,111 @@
-Received: from ida.uls.co.za (ida.uls.co.za [154.73.32.4])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5FFC204C30;
-	Tue,  1 Apr 2025 14:29:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=154.73.32.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A942C204C07;
+	Tue,  1 Apr 2025 14:29:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743517757; cv=none; b=ENRtIpN/gd8+oy2FvAd/fDlEQ3CW0mICmsN1maCQP+CLMLOnlx3Rqj+223ck1aYdWAm/FjkAw1V16n9U14GVpNbSRxj375jtpqTgcYc9Rs6XIPVLutlJmykenifQUF4sbVtZmcASEPuZmeNUU/zVrsfLbO7zBfWN67Q7IhrhZNw=
+	t=1743517790; cv=none; b=YXVelDyXxAaBnF09tha8a43F759pvXivHxyqcABSu6F0H8MN4RNFnqsNL/GLLq7QlXXM62ZAdXL0zrkrSbUD2nIZjI+IfRhfQlgYFPtrs0Lwagongmg1/QRJtH4Rn448OYUgLblVak5cWxycy0I0C5+fkXCh0P+9f91upode2iM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743517757; c=relaxed/simple;
-	bh=0yNPU7fR3KA5NeXuXtdDLJE2giSzHzCBTZjemcexo0Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bRKIaQd4vnTOk+1yRSQOyp8+an0lTUTpMTg8H2ITk/HR12ZeTposHW65h0lnJxnPFeB8o0ZLG5QFeG0/i0vyaa+kTR0jqwaRibA2kPaGkcCWAJO7t3diYJr6yILlSPNcw0hwlsDXjwwDDkc6obX0H4revq2WrBnSe/0HJPH3NOo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uls.co.za; spf=pass smtp.mailfrom=uls.co.za; arc=none smtp.client-ip=154.73.32.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uls.co.za
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uls.co.za
-Received: from [192.168.42.36] (helo=plastiekpoot)
-	by ida.uls.co.za with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.97.1)
-	(envelope-from <jkroon@uls.co.za>)
-	id 1tzcc1-000000000L0-1oDe;
-	Tue, 01 Apr 2025 16:29:09 +0200
-Received: from jkroon by plastiekpoot with local (Exim 4.97.1)
-	(envelope-from <jkroon@uls.co.za>)
-	id 1tzcbz-000000003Hl-0WOy;
-	Tue, 01 Apr 2025 16:29:07 +0200
-From: Jaco Kroon <jaco@uls.co.za>
-To: bernd.schubert@fastmail.fm,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	christophe.jaillet@wanadoo.fr,
-	joannelkoong@gmail.com
-Cc: miklos@szeredi.hu,
-	rdunlap@infradead.org,
-	trapexit@spawn.link,
-	david.laight.linux@gmail.com,
-	Jaco Kroon <jaco@uls.co.za>
-Subject: [PATCH 2/2] fuse: Adjust readdir() buffer to requesting buffer size.
-Date: Tue,  1 Apr 2025 16:18:17 +0200
-Message-ID: <20250401142831.25699-3-jaco@uls.co.za>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250401142831.25699-1-jaco@uls.co.za>
-References: <20250314221701.12509-1-jaco@uls.co.za>
- <20250401142831.25699-1-jaco@uls.co.za>
+	s=arc-20240116; t=1743517790; c=relaxed/simple;
+	bh=wlVU2YfmrjlqjXVg8SNfnOgR3nDw1BUVMZSLmdeVvLE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=llUrSlAobK948Y/KLz8qgjPzVZCUmJWf3XD5zLhdKsJkAVhTI8IZI+5/b0b4tLsHSN8wELUFgsU0WfKhsm1T44IhgbrMLvYqownGRrjWlmL4PkoO5q6/iwrXgViM3fMUGS5GGhZdd6dI5lYw/PIzzWeKKJVHo/RK4SoPPQ3l0bI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TcbfB/eu; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TcbfB/eu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B483C4CEE4;
+	Tue,  1 Apr 2025 14:29:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743517790;
+	bh=wlVU2YfmrjlqjXVg8SNfnOgR3nDw1BUVMZSLmdeVvLE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TcbfB/euuGlDXhcWN+svUyB7Q0cFXHTXFYtFI5nljZSHT7GYQ5eZf18bm6Q+IEUHe
+	 B9QfPPIvzdv9mOXDru8RZ5FoLkY9D/MQleFAHlZpcP+kAqDsRBIEbTc0UXbIPThwBu
+	 xXyoo2EDdLcW1JKhDUJVRhaemFJIj8g0iEcxzVeUI5Ez7XQIavG/tVoeKmovJ/c2zj
+	 9ZSF/8cGD+d/ms4RdbXKcNov6B+1SvpT5eO0rIT4l5KGohwX9qYf+Qeu+hjQEt4a0z
+	 ljpTynY+TrF/ruJ0XZps47jdt2vGOpH/PJc9BjYc6RXVvHKkCYg6B17kci2m+ViZCu
+	 CA3mS1nTEUWBA==
+Date: Tue, 1 Apr 2025 17:29:45 +0300
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: "Reshetova, Elena" <elena.reshetova@intel.com>
+Cc: "Hansen, Dave" <dave.hansen@intel.com>,
+	"linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"x86@kernel.org" <x86@kernel.org>,
+	"Mallick, Asit K" <asit.k.mallick@intel.com>,
+	"Scarlata, Vincent R" <vincent.r.scarlata@intel.com>,
+	"Cai, Chong" <chongc@google.com>,
+	"Aktas, Erdem" <erdemaktas@google.com>,
+	"Annapurve, Vishal" <vannapurve@google.com>,
+	"dionnaglaze@google.com" <dionnaglaze@google.com>,
+	"bondarn@google.com" <bondarn@google.com>,
+	"Raynor, Scott" <scott.raynor@intel.com>
+Subject: Re: [PATCH v2 2/2] x86/sgx: Implement EUPDATESVN and
+ opportunistically call it during first EPC page alloc
+Message-ID: <Z-v4WfcLhmXbYvaa@kernel.org>
+References: <20250328125859.73803-1-elena.reshetova@intel.com>
+ <20250328125859.73803-3-elena.reshetova@intel.com>
+ <Z-bhczXA6aHdCYHq@kernel.org>
+ <Z-blOQ94ymUsDwPn@kernel.org>
+ <DM8PR11MB5750C88DFC518EB77B0D613FE7AD2@DM8PR11MB5750.namprd11.prod.outlook.com>
+ <Z-rU_JXWn0vCdBr_@kernel.org>
+ <DM8PR11MB5750A46718F899A43C52A984E7AC2@DM8PR11MB5750.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-report: Relay access (ida.uls.co.za).
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DM8PR11MB5750A46718F899A43C52A984E7AC2@DM8PR11MB5750.namprd11.prod.outlook.com>
 
-Clamp to min 1 page (4KB) and max 128 pages (512KB).
+On Tue, Apr 01, 2025 at 09:35:33AM +0000, Reshetova, Elena wrote:
+> > > None of these exceptional conditions are fatal or present an
+> > > immediate danger to the system security. So, allowing the re-tries
+> > > seems logical in this case. In case re-tries also fail, the system
+> > > admin will have an option of gracefully shutting down all enclaves
+> > > and doing either a full reboot (if SVN is the only concern) or other
+> > > necessary actions like taking the physical node out of use, etc.
+> > >
+> > > Does this sound reasonable?
+> > 
+> > Uknown error I don't think would hold that premise.
+> 
+> True, unknown is an unknown ))
+> But unknown errors should not happen (per SGX spec), and the
 
-Glusterfs trial using strace ls -l.
+Thus if for some reason unknown error code would be returned something
+would be horribly wrong (e.g. bad emulation of the opcode or who knows
+what) and thus it would make sense disable the driver if this happens.
 
-Before:
+Or maybe even BUG_ON() in this situation?
 
-getdents64(3, 0x7f2d7d7a7040 /* 25 entries */, 131072) = 600
-getdents64(3, 0x7f2d7d7a7040 /* 25 entries */, 131072) = 616
-getdents64(3, 0x7f2d7d7a7040 /* 25 entries */, 131072) = 624
-getdents64(3, 0x7f2d7d7a7040 /* 25 entries */, 131072) = 600
-getdents64(3, 0x7f2d7d7a7040 /* 25 entries */, 131072) = 600
-getdents64(3, 0x7f2d7d7a7040 /* 25 entries */, 131072) = 624
-getdents64(3, 0x7f2d7d7a7040 /* 25 entries */, 131072) = 600
-getdents64(3, 0x7f2d7d7a7040 /* 25 entries */, 131072) = 600
-getdents64(3, 0x7f2d7d7a7040 /* 25 entries */, 131072) = 600
-getdents64(3, 0x7f2d7d7a7040 /* 25 entries */, 131072) = 600
-getdents64(3, 0x7f2d7d7a7040 /* 25 entries */, 131072) = 608
-getdents64(3, 0x7f2d7d7a7040 /* 1 entries */, 131072) = 24
-getdents64(3, 0x7f2d7d7a7040 /* 0 entries */, 131072) = 0
+> current SGX kernel code does not handle such errors in any other way
+> than notifying that operation failed for other ENCLS leaves. So, I don't
+> see why ENCLS[EUPDATESVN] should be different from existing behaviour?
 
-After:
+While not disagreeing fully (it depends on call site), in some
+situations it is more difficult to take more preventive actions.
 
-getdents64(3, 0x7ffae8eed040 /* 276 entries */, 131072) = 6696
-getdents64(3, 0x7ffae8eed040 /* 0 entries */, 131072) = 0
+This is a situation where we know that there are *zero* EPC pages in
+traffic so it is relatively easy to stop the madness, isn't it?
 
-Signed-off-by: Jaco Kroon <jaco@uls.co.za>
----
- fs/fuse/readdir.c | 19 +++++++++++++++----
- 1 file changed, 15 insertions(+), 4 deletions(-)
+I guess the best action would be make sgx_alloc_epc_page() return
+consistently -ENOMEM, if the unexpected happens.
 
-diff --git a/fs/fuse/readdir.c b/fs/fuse/readdir.c
-index 17ce9636a2b1..a13534f411b4 100644
---- a/fs/fuse/readdir.c
-+++ b/fs/fuse/readdir.c
-@@ -12,6 +12,7 @@
- #include <linux/posix_acl.h>
- #include <linux/pagemap.h>
- #include <linux/highmem.h>
-+#include <linux/minmax.h>
- 
- static bool fuse_use_readdirplus(struct inode *dir, struct dir_context *ctx)
- {
-@@ -337,11 +338,21 @@ static int fuse_readdir_uncached(struct file *file, struct dir_context *ctx)
- 	struct fuse_mount *fm = get_fuse_mount(inode);
- 	struct fuse_io_args ia = {};
- 	struct fuse_args_pages *ap = &ia.ap;
--	struct fuse_folio_desc desc = { .length = PAGE_SIZE };
-+	struct fuse_folio_desc desc = { .length = ctx->count };
- 	u64 attr_version = 0, evict_ctr = 0;
- 	bool locked;
-+	int order;
- 
--	folio = folio_alloc(GFP_KERNEL, 0);
-+	desc.length = clamp(desc.length, PAGE_SIZE, fm->fc->max_pages << PAGE_SHIFT);
-+	order = get_count_order(desc.length >> CONFIG_PAGE_SHIFT);
-+
-+	do {
-+		folio = folio_alloc(GFP_KERNEL, order);
-+		if (folio)
-+			break;
-+		--order;
-+		desc.length = PAGE_SIZE << order;
-+	} while (order >= 0);
- 	if (!folio)
- 		return -ENOMEM;
- 
-@@ -353,10 +364,10 @@ static int fuse_readdir_uncached(struct file *file, struct dir_context *ctx)
- 	if (plus) {
- 		attr_version = fuse_get_attr_version(fm->fc);
- 		evict_ctr = fuse_get_evict_ctr(fm->fc);
--		fuse_read_args_fill(&ia, file, ctx->pos, PAGE_SIZE,
-+		fuse_read_args_fill(&ia, file, ctx->pos, desc.length,
- 				    FUSE_READDIRPLUS);
- 	} else {
--		fuse_read_args_fill(&ia, file, ctx->pos, PAGE_SIZE,
-+		fuse_read_args_fill(&ia, file, ctx->pos, desc.length,
- 				    FUSE_READDIR);
- 	}
- 	locked = fuse_lock_inode(inode);
--- 
-2.48.1
+/* <- this
+ * Do not execute ENCLS[EUPDATESVN] if running in a VM since
+ * microcode updates are only meaningful to be applied on the host.
+ */
 
+According to https://www.kernel.org/doc/Documentation/kernel-doc-nano-HOWTO.txt
+
+> 
+> Best Regards,
+> Elena.
+> 
+> 
+
+BR, Jarkko
