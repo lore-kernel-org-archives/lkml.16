@@ -1,105 +1,111 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D673884039
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 19:54:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05DA484039
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 19:55:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743537266; cv=none; b=by5DyAYX0q73XONQWwcC/rSpIcMOMXnY90tjuy88h7VtdnK3IVK025nHyaLmK+2NRXXYSHmUx7liwfD8TG45k0GvWiiPABJk92Tcow0qtao7jmthxzrNlR24fH1unkDtUcjBSvpECMf82UfTmyZppVZYHsd3rDXiMIX3YcTdG2M=
+	t=1743537320; cv=none; b=cFtP18yzKHef9fUcx2svz0sTQnLdrU/MxpDh1ICLZRMb72YgF5JrPpd7PnMENl0N+EjfcQAqwGELaV7rCIrGhSZFnR6DfgOA2KerGb8T7ZCPtt2jKRsCItNTaa1ihZINWat/atsBBIZG9MXzhB8sR2TJKVNgevH2oUyc+cFjc1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743537266; c=relaxed/simple;
-	bh=de/BtIj5To60CHP517asQruuMVZmw7HGpY7NsHjlU38=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=U2lpJaAwhc9nAy+8n10RXExdXuZDu2E4iwSmM/RV/8ORhSgKJ5SQ2uxE0o/3ANYaG6ftpvnDhrhgH15/8ZxP90rieyS8PfGl/4JG+FZS+bufnkOFlxbMRCinS4jwhfArcVCwEPjHLvvLh6to80KQVr9/kR8dpJFAu4lUROBAAcw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RNt2fYjy; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1743537320; c=relaxed/simple;
+	bh=ytEdkfb9Cq6tZc0KOluGufNsxHHwxjPykXj8tPxkUhQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Fyj3WIvncJGirwYD2Kxu5I4kUwn/RQYtApY5nosgaf3Hrbfpssc4DjmBu6nMPDwgWxajVEaBCj8n9mrzdVi/cvLTTvp11HEK8TFF5eIM4VtJHLT5VnLXfGEAMniltOJBFt9M4U3SogJDEO8SJOE+9uJGXmvibtX1zJg3srv+/xA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ieee.org; spf=pass smtp.mailfrom=ieee.org; dkim=pass (1024-bit key) header.d=ieee.org header.i=@ieee.org header.b=g3vjsv9p; arc=none smtp.client-ip=209.85.166.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ieee.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ieee.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RNt2fYjy"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2263428c8baso3015ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 12:54:24 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ieee.org header.i=@ieee.org header.b="g3vjsv9p"
+Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-3d434c84b7eso46443255ab.1
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 12:55:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743537264; x=1744142064; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=de/BtIj5To60CHP517asQruuMVZmw7HGpY7NsHjlU38=;
-        b=RNt2fYjysvv6091cvCbVZTN0pSs9MX3rbcwS+FXf0TvTyPYMttWIIJvfak1180Ew41
-         iCfsUt0Uk0u1JnypaXVNgkoUSkA91yPeOxCxvcrfWJn6r8C+OhIGfWb5+KRMtcXC6q2f
-         /iKUHB7bRIMw1Qzx8vXfhjzDWAdVrpRPY4X/mEmezU+xLKMsc8cg820LJSKsd6b3mcYm
-         /OuiIYZxD2mTrhfbJtTEi6WZRVCI3pHtMoF4oB0ocoixH+mGpVb4ETNFvGkoLIA/HF8e
-         iTCs7v0bzEG+/Kyuu7jTFFieSfv+3f69F1RrwM2eNO7cah/89yGg5O80ptNEzvaAqkbx
-         sWpw==
+        d=ieee.org; s=google; t=1743537317; x=1744142117; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=p5BGxV995iPbNsm0G9OmkNVQGbzPtq/umLW+mNxhnvk=;
+        b=g3vjsv9pUvNO0Ih2y4CtgAatMsIEDR23JjcI6uSGlUgBNCVH8JNOhfJ/8F1A8CV+pY
+         N8PRprSgbFLhU0EFi5FW1a7saHDHm/dIvSqUUnfkPdYA1ZT01LP9vHxQigavU6Owvq3U
+         l25nE7o8AKPN5/HF1gPDgyWp5SeHaTZYpymsQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743537264; x=1744142064;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=de/BtIj5To60CHP517asQruuMVZmw7HGpY7NsHjlU38=;
-        b=vgRbOFziAcvvDEW+e9J2cG7XT3sSToj80xiKMiLvFpFt/umriWK+Tqsf+lH6uDXbZt
-         gtGSSvPL+yydNoM/Y6ZC+vAarm+nBbqj1Ngb30PkvtfR4HjuNhkZbRAPNK6vSHJ46Ntd
-         F8eB+G+D2XiNswKcH7YOw8t2wX5fQWNOWjrC7rQpCunrmCvfGChDG7Npjm/n6dqs6Ykx
-         EcbhRBG9Ak4YP6jMpu5kXDBLhVDYwNn7PE9mSyYcCiPJNYsdUvbolmizN2/els8/k0dW
-         03K5b8ecztc+a2WjNdXpI7ROXtMtPAeAGiv2qjj5Oi12TWTtPIRbBzUkJ5JXv4WnkXQl
-         U58A==
-X-Forwarded-Encrypted: i=1; AJvYcCVQBHPUT6gD1OV3Rlubqsoh4AxeD5dIRD9y/dK5MGOQ7y4347CBCgFCP3az/8tE2S/dVI2uNmRpuNDtC4k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwEz88Sco8/vGPSqLZ87hXbKTHwp4VlaVq+VsxK74BX6vP5kMds
-	ksoSQINumk6mX9A5N9lKyofNum8Hx0+UgzhlKbiV5L9y0gOZvP+iGPEMmkjs5LIqLzl55Vj19yL
-	yH/g7rV45o+isRAC1us+pcq1obu9IRVq3EEXl
-X-Gm-Gg: ASbGncvPdgLrn5ab4GcF8PKqDNwJYsAYNcOQQtCLq1rzbqBG4Q0tlWSV4I+0ajOdP4o
-	FBz5UqYszsHO2BdxhIU3kgY3wxA55C6Uz6l6ZnDtIteXwUmwveqoqqqnv+O+3zLq/lpjgTXMCk5
-	lHh7H/kY9tAgTfBdWD1pGUgftg49cdfuArHjFCi5TbiePhN+Tcv2Jd6DcH80oM4oFx5A==
-X-Google-Smtp-Source: AGHT+IHOs9BdqrTvFPQWqJzaQfsrpiXeP0qaabdPaOzhGdnfECmfbLNE+FP+wHg/1tSnxeoJnrwfErtVjaEBIcva9iE=
-X-Received: by 2002:a17:902:b68e:b0:224:1fb:7b65 with SMTP id
- d9443c01a7336-22969e99900mr464395ad.22.1743537263944; Tue, 01 Apr 2025
- 12:54:23 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743537317; x=1744142117;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=p5BGxV995iPbNsm0G9OmkNVQGbzPtq/umLW+mNxhnvk=;
+        b=BTDtFKZkZmb+Oj62uLLQGzqiqhN3TcbVEajGAiw2lDefw9u6HQinuJ06w6ruKIta+O
+         USOecSTWqcdpF6V6cnJBa6pSsasth6dGqBmna0MwK2+bOSRIlH38Y06cKSgEI/OjDNOU
+         yb2CdEruEMe6OvIv/+Cohd1DdL3AqXPr3X2t9GwT9ip5+6CS1oEYUqnSgT1JPfufWbep
+         fv0dVRYzJBXksiKqT4TpAeoMaXOMJoIlG/5+Zj+awVNf74CctZTELz2nwqidKA9NTNwR
+         9kV32YvxRGWCAY89C5Eq7ZwzunnbBRkny/49is2FidBZVrfEbd846Xz76h7frnMKdtGd
+         MkXQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWakflI+ymBXCYC6vehwaci80nb3FflXSC8+QHRQR3EuadCUOhex8/gPNCfBP5U7G8qvpmmWbmTdu25u+o=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz1/LbH9LMwptRLg9kJ+Kw9OxwGg9SgYcfZqgBxh0alVKxuDGLW
+	mA6Uxx5wGDz4rc6r48FY2jkXaxk5k3wlcsm4dl9CbAFNtWUGPvXmauNUJdGC7g==
+X-Gm-Gg: ASbGncuUcSPRiXHwqJU86Cn3ove6FIRnzsQp/10D7kKN3jxdNmeFp72D+49Wwl9s6kA
+	DVQhHt1M9ciFkEeTYNU7ZQrpI5Jy9bmaW+n3V/fLzZSzS2ATmuINAMO9EKifkjSN+JXhlZeOrVu
+	HvKk3SMitiCyivi1udpQRkWeH8Zn2SkXpVBkEpBg7dof0iCMPy3hzVGzena2xzD3lnY14NANYvl
+	S+K/okZEKsya9aH86wR5Es/YtC+inn364liCYpOrMZgfAT7sLPxXclVYrUoXCwQZZfVEGTianHe
+	QNsBpqAoKRtxJmwBsRC6zsImAuCTx4Ut8ACsV3AqX+NuEalnQl+yphvgpwHLY223ZbbmCfh20IC
+	lTrA=
+X-Google-Smtp-Source: AGHT+IE8Yzt70TZYcNhHaKZmfudRm9bqr4DZF9FrsdiV0SgnjyY2AA4L/NqUonhTzt1HtCqJmAo8IA==
+X-Received: by 2002:a05:6e02:378f:b0:3d5:eb10:1c3b with SMTP id e9e14a558f8ab-3d6ca5b4575mr55992685ab.5.1743537317009;
+        Tue, 01 Apr 2025 12:55:17 -0700 (PDT)
+Received: from [172.22.22.28] (c-73-228-159-35.hsd1.mn.comcast.net. [73.228.159.35])
+        by smtp.googlemail.com with ESMTPSA id 8926c6da1cb9f-4f46487159dsm2569433173.97.2025.04.01.12.55.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Apr 2025 12:55:15 -0700 (PDT)
+Message-ID: <bd773190-1cdd-4faf-be39-ea042d6e8124@ieee.org>
+Date: Tue, 1 Apr 2025 14:55:14 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250331172759.115604-1-leo.yan@arm.com> <CAP-5=fVsgahBhOEOac52PmL0V+n1jqAxzf7n9PVWgWsxq9TvgQ@mail.gmail.com>
- <20250401091422.GA115840@e132581.arm.com>
-In-Reply-To: <20250401091422.GA115840@e132581.arm.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 1 Apr 2025 12:54:12 -0700
-X-Gm-Features: AQ5f1JrOuWrNQZJezs0L3XR8GhYfLpTvpu06rrvr2p2w6K3tJeuVBfouNq8Z_vk
-Message-ID: <CAP-5=fUGLy9xGmMO+6PXvfviB4U8Q8O7H3iTSSqEf72vin8gDA@mail.gmail.com>
-Subject: Re: [PATCH] perf tests switch-tracking: Fix timestamp comparison
-To: Leo Yan <leo.yan@arm.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, 
-	James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] staging: greybus: Remove unnecessary NUL-termination
+ checks
+To: Thorsten Blum <thorsten.blum@linux.dev>
+Cc: Viresh Kumar <vireshk@kernel.org>, Johan Hovold <johan@kernel.org>,
+ Alex Elder <elder@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ greybus-dev@lists.linaro.org, linux-staging@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+References: <20250331183935.1880097-2-thorsten.blum@linux.dev>
+ <8a68ab78-cf18-4937-a8b7-fb0fa41c9d53@ieee.org>
+ <9288204E-F6B7-4C9D-AADB-511A845A2624@linux.dev>
+Content-Language: en-US
+From: Alex Elder <elder@ieee.org>
+In-Reply-To: <9288204E-F6B7-4C9D-AADB-511A845A2624@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 1, 2025 at 2:14=E2=80=AFAM Leo Yan <leo.yan@arm.com> wrote:
->
-> On Mon, Mar 31, 2025 at 01:18:31PM -0700, Ian Rogers wrote:
->
-> [...]
->
-> > I'm reminded of a Java check I wrote for this:
->
-> Nice short article.
->
-> > In clang -Wshorten-64-to-32 looks to cover this. I'll see if we can
-> > clean those warnings up a bit.
->
-> I checked a bit and seems GCC has no this flag, but it makes sense for
-> me to enable the flag for Clang.
->
-> > Reviewed-by: Ian Rogers <irogers@google.com>
->
-> Thanks a lot, Ian.
+On 4/1/25 2:51 PM, Thorsten Blum wrote:
+> On 1. Apr 2025, at 01:31, Alex Elder wrote:
+>> On 3/31/25 1:39 PM, Thorsten Blum wrote:
+>>> @@ -125,16 +125,6 @@ static int fw_mgmt_interface_fw_version_operation(struct fw_mgmt *fw_mgmt,
+>>>     	strscpy_pad(fw_info->firmware_tag, response.firmware_tag);
+>>>   -	/*
+>>> -	 * The firmware-tag should be NULL terminated, otherwise throw error but
+>>> -	 * don't fail.
+>>> -	 */
+>>> -	if (fw_info->firmware_tag[GB_FIRMWARE_TAG_MAX_SIZE - 1] != '\0') {
+>>> -		dev_err(fw_mgmt->parent,
+>>> -			"fw-version: firmware-tag is not NULL terminated\n");
+>>> -		fw_info->firmware_tag[GB_FIRMWARE_TAG_MAX_SIZE - 1] = '\0';
+>>> -	}
+>>
+>> Interesting this didn't return an error, while others below did.
+> 
+> Should I keep it that way when checking for a truncated firmware tag or
+> should this also fail like the others?
+> 
+> Thanks,
+> Thorsten
+> 
+I don't know the answer right now, and I don't have time at
+the moment to investigate.  Just keep that logic the way it
+is, and make your other fix.
 
-I made a small variation to the change in:
-https://lore.kernel.org/lkml/20250401182347.3422199-10-irogers@google.com/
-to avoid a subtract and just directly compare the values.
-
-Thanks,
-Ian
-
-> Leo
+					-Alex
