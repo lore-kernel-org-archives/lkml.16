@@ -1,137 +1,121 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B47CD172BD5;
-	Tue,  1 Apr 2025 15:00:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AEA2339A1
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 15:00:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743519627; cv=none; b=lD1+qpAopfuFRtglnDpaaIUd0DPfIKiOhLb5huiNtSSUAMbA0pAjAKE7iNuW9p/9OEsStOVq2pSPlN+Lh34jIUEdVPerv4Me92fofIMR0TPF/bdPHO+CgSAWU6o9QbNVfv8WhBFCODLwC4gvPSmjCnOhuQ0a2LPPC/SxfJGAzxI=
+	t=1743519650; cv=none; b=o5He4MjHMV3J3VgXL4aGiJvl0vJB9V23ufKGoCN6zPuxlLwyk427rN7sSTPYPph4umzOctCFAAa9lloLYu1DOHjFAOsfQLXzwtANDKOJ4KCWqH3rnJhsx2vpw+6W4gWYW0KqVmN7yOS3sTb8qkwImCzqT/hxzkcdBZcXEJdPO+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743519627; c=relaxed/simple;
-	bh=fBXXIgUZxFmimgmaRTg4iSAtET7JnUIu5QU0qR34zHY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jxah4mcUJ/6yktDM2V791NG5Ztk6puMiNPs9gzH6uXy56WdS7DGo5nj1aXomCri05POgc+uTkvA0LJZxtBsLWPx/ZSK2XlStDKtt8CWTyHosQD++FXNTxQpDLBC9n1+z1QD+ew6M5SrUaPGvUG5Wazu/1/wBma4Qvbyqs+GB19g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 52D4714BF;
-	Tue,  1 Apr 2025 08:00:28 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 994C03F694;
-	Tue,  1 Apr 2025 08:00:24 -0700 (PDT)
-Date: Tue, 1 Apr 2025 16:00:19 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: Mike Leach <mike.leach@linaro.org>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
-	James Clark <james.clark@linaro.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 4/6] coresight: perf: Support AUX trace pause and
- resume
-Message-ID: <20250401150019.GC115840@e132581.arm.com>
-References: <20250311170451.611389-1-leo.yan@arm.com>
- <20250311170451.611389-5-leo.yan@arm.com>
- <CAJ9a7VjqGbpPPeR3-PH5vYHNMwqnPLJ+Ouik017Qh717wFOJ0g@mail.gmail.com>
+	s=arc-20240116; t=1743519650; c=relaxed/simple;
+	bh=z6SUzGcMkPKel2Eccn/jYaKzkfn5nDr4VwnUJsYHcl0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Qj/ialVwYoar1HvzSZ8Bitq/Dxnkde0iNXUVyPRlMDCDRO1SGaUY7ubA2OxXfAuuPRxcYUf2ziKQ+SvFuYy0IhRJiJtR0hIaGdHzbgyVjwDoVKB/xRrQ51jfwBcKMI6/ZGaXM0GoI5742VfSRzkvgcGrSUveaoUabOx+bAyT9HI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=GMFYHBDm; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="GMFYHBDm"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 921F5441C8;
+	Tue,  1 Apr 2025 15:00:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1743519646;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=z6SUzGcMkPKel2Eccn/jYaKzkfn5nDr4VwnUJsYHcl0=;
+	b=GMFYHBDmkQqPnwkmOAvUpfp7X/+LmL7dcjdsCjsTdJynnH4itkSn1hQxCz5+SCHo1uaclf
+	DhgtZjY4wTeHh3eozM/vo5clyziidRAKCKFpzukdJ18oiayB6OHyD0IAd2+Luv1CSMp1gD
+	zY/JN/ez/OxbyQY0KoB1rJxDH4cgB5kVBny+R9Xqxu+BqgxnjIxQ7QpvHp8Jrrz21EIWBv
+	8JOX6UARWLuysU9uR3cJezATqmPZbdx1VtrBi/dHC/aKYZWjiGqymqvGJBV9Qw7YGDO25i
+	GAc2Rla0P/hRZ+f7DASVPsS87VlZylgntjN5l/aSlpNhYftOGqddTvQHiMmsfA==
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: Alexander Usyskin <alexander.usyskin@intel.com>
+Cc: Richard Weinberger <richard@nod.at>,  Vignesh Raghavendra
+ <vigneshr@ti.com>,  Lucas De Marchi <lucas.demarchi@intel.com>,  Thomas
+ =?utf-8?Q?Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,  Rodrigo
+ Vivi
+ <rodrigo.vivi@intel.com>,  Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>,  Maxime Ripard <mripard@kernel.org>,
+  Thomas Zimmermann <tzimmermann@suse.de>,  David Airlie
+ <airlied@gmail.com>,  Simona Vetter <simona@ffwll.ch>,  Jani Nikula
+ <jani.nikula@linux.intel.com>,  Joonas Lahtinen
+ <joonas.lahtinen@linux.intel.com>,  Tvrtko Ursulin <tursulin@ursulin.net>,
+  Karthik Poosa <karthik.poosa@intel.com>,  Reuven Abliyev
+ <reuven.abliyev@intel.com>,  Oren Weil <oren.jer.weil@intel.com>,
+  linux-mtd@lists.infradead.org,  dri-devel@lists.freedesktop.org,
+  intel-gfx@lists.freedesktop.org,  linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 01/12] mtd: core: always create master device
+In-Reply-To: <20250326152623.3897204-2-alexander.usyskin@intel.com> (Alexander
+	Usyskin's message of "Wed, 26 Mar 2025 17:26:12 +0200")
+References: <20250326152623.3897204-1-alexander.usyskin@intel.com>
+	<20250326152623.3897204-2-alexander.usyskin@intel.com>
+User-Agent: mu4e 1.12.7; emacs 29.4
+Date: Tue, 01 Apr 2025 17:00:43 +0200
+Message-ID: <87ecycrko4.fsf@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJ9a7VjqGbpPPeR3-PH5vYHNMwqnPLJ+Ouik017Qh717wFOJ0g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddukeeftdekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufgjfhgffffkgggtgfesthhqredttderjeenucfhrhhomhepofhiqhhuvghlucftrgihnhgrlhcuoehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeffgefhjedtfeeigeduudekudejkedtiefhleelueeiueevheekvdeludehiedvfeenucfkphepledvrddukeegrdduuddtrdduleefnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledvrddukeegrdduuddtrdduleefpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvuddprhgtphhtthhopegrlhgvgigrnhguvghrrdhushihshhkihhnsehinhhtvghlrdgtohhmpdhrtghpthhtoheprhhitghhrghrugesnhhougdrrghtpdhrtghpthhtohepvhhighhnvghshhhrsehtihdrtghomhdprhgtphhtthhopehluhgtrghsrdguvghmrghrtghhihesihhnthgvlhdrtghomhdprhgtphhtthhopehthhhomhgrshdrhhgvlhhlshhtrhhomheslhhinhhugidrihhnthgvl
+ hdrtghomhdprhgtphhtthhopehrohgurhhighhordhvihhvihesihhnthgvlhdrtghomhdprhgtphhtthhopehmrggrrhhtvghnrdhlrghnkhhhohhrshhtsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepmhhrihhprghrugeskhgvrhhnvghlrdhorhhg
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-Hi Mike,
+Hello Alexander,
 
-On Tue, Apr 01, 2025 at 01:50:52PM +0100, Mike Leach wrote:
+On 26/03/2025 at 17:26:12 +02, Alexander Usyskin <alexander.usyskin@intel.c=
+om> wrote:
 
-[...]
+> Create master device without partition when
+> CONFIG_MTD_PARTITIONED_MASTER flag is unset.
+>
+> This streamlines device tree and allows to anchor
+> runtime power management on master device in all cases.
+>
+> Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
 
-> >  static void etm_event_start(struct perf_event *event, int flags)
-> >  {
-> >         int cpu = smp_processor_id();
-> > @@ -463,6 +484,14 @@ static void etm_event_start(struct perf_event *event, int flags)
-> >         if (!csdev)
-> >                 goto fail;
-> >
-> 
-> Is it possible here that the first call to etm_event_start() also has
-> the PERF_EF_RESUME flag set?
+I successfully tested it, this patch will be applied at -rc1 to the
+mtd/next tree.
 
-The first call has a flow below, using flag 0 but not PERF_EF_RESUME.
+I was wondering, do you think it would be possible to keep the creation
+of mtd_master and make it a symbolic link to mtdx when
+MTD_PARTITIONED_MASTER=3Dy or when there is no partition? In short, always
+having mtd_masterx, because I fear at some point we'll have problems
+otherwise :-)
 
-  etm_event_add()
-    `>  etm_event_start(event, 0);
+Right now we have:
 
-Note: for the first call, the tracer should be disabled if
-'event->hw.aux_paused' is 1.  This is ensured by patch 03.
+- Without partition:
+mtd0 (mtd0ro mtdblock0)
+- With partition and MTD_PARTITIONED_MASTER=3Dn
+mtd0 (mtd0ro mtdblock0)
+mtd_master0
+- With partition and MTD_PARTITIONED_MASTER=3Dy
+mtd0 (mtd0ro mtdblock0) [this is the master]
+mtd1 (mtd1ro mtdblock1)
+
+I am suggesting:
+- Without partition:
+mtd0 (mtd0ro mtdblock0)
+mtd_master0 -> link to mtd0
+- With partition and MTD_PARTITIONED_MASTER=3Dn
+mtd0 (mtd0ro mtdblock0)
+mtd_master0
+- With partition and MTD_PARTITIONED_MASTER=3Dy
+mtd0 (mtd0ro mtdblock0) [this is the master]
+mtd1 (mtd1ro mtdblock1)
+mtd_master0 -> link to mtd0
+
+What do you think? Or maybe even always mtd_master in the first place.
+
+Richard, your point of view on this?
 
 Thanks,
-Leo
-
-> If so it looks like we need to fall through and do a "normal" start to
-> get all the ctxt->event_data set up.
-> 
-> > +       if (flags & PERF_EF_RESUME) {
-> > +               if (etm_event_resume(csdev, ctxt) < 0) {
-> > +                       dev_err(&csdev->dev, "Failed to resume ETM event.\n");
-> > +                       goto fail;
-> > +               }
-> > +               return;
-> > +       }
-> > +
-> >         /* Have we messed up our tracking ? */
-> >         if (WARN_ON(ctxt->event_data))
-> >                 goto fail;
-> > @@ -545,6 +574,16 @@ static void etm_event_start(struct perf_event *event, int flags)
-> >         return;
-> >  }
-> >
-> > +static void etm_event_pause(struct coresight_device *csdev,
-> > +                           struct etm_ctxt *ctxt)
-> > +{
-> > +       if (!ctxt->event_data)
-> > +               return;
-> > +
-> > +       /* Stop tracer */
-> > +       coresight_pause_source(csdev);
-> > +}
-> > +
-> >  static void etm_event_stop(struct perf_event *event, int mode)
-> >  {
-> >         int cpu = smp_processor_id();
-> > @@ -555,6 +594,9 @@ static void etm_event_stop(struct perf_event *event, int mode)
-> >         struct etm_event_data *event_data;
-> >         struct coresight_path *path;
-> >
-> > +       if (mode & PERF_EF_PAUSE)
-> > +               return etm_event_pause(csdev, ctxt);
-> > +
-> >         /*
-> >          * If we still have access to the event_data via handle,
-> >          * confirm that we haven't messed up the tracking.
-> > @@ -899,7 +941,8 @@ int __init etm_perf_init(void)
-> >         int ret;
-> >
-> >         etm_pmu.capabilities            = (PERF_PMU_CAP_EXCLUSIVE |
-> > -                                          PERF_PMU_CAP_ITRACE);
-> > +                                          PERF_PMU_CAP_ITRACE |
-> > +                                          PERF_PMU_CAP_AUX_PAUSE);
-> >
-> >         etm_pmu.attr_groups             = etm_pmu_attr_groups;
-> >         etm_pmu.task_ctx_nr             = perf_sw_context;
-> > --
-> > 2.34.1
-> >
-> 
-> If the possible issue above is prevented by perf internals
-> 
-> Reviewed-by: Mike Leach <mike.leach@linaro.org>
-> 
-> 
-> --
-> Mike Leach
-> Principal Engineer, ARM Ltd.
-> Manchester Design Centre. UK
+Miqu=C3=A8l
