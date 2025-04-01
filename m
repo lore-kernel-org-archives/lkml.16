@@ -1,56 +1,56 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 994B9213230
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 16:43:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82EE9215F56
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 16:43:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743525807; cv=none; b=P30ZQ37J2unvT4dRPJiSxzEWQmJJ4jhHD73XayBi9nz2OFyCbmTp1+PraDHgO8v6a4Z8nBe+2SVw/ZVW25Ts/aXjQfjyo66d9FalveA1QCAR2+1UjYmpyMLUQ93qfomXZAfH3uvrBCWpBP1Pt+ovt+qUJ6Eq9e6IfgcBIkHzmrQ=
+	t=1743525808; cv=none; b=exkU7oQwmM0486+3BxuI5YpV68w/fd9p4QZablGxUmArh/bGIlJevVchqo7Nv2rlqQbEL9MrzM5XRe0OQVDR5+DR4QsYX1R9YRNJeyAsbHtKvtQN6ZFvyEJfBhnnQnqV79XoiSkf/yw7+GQ2JEt4BR3N80fk1f4UNaK1k0OJsAQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743525807; c=relaxed/simple;
-	bh=5iq6Ej0JukMZOt4v5A++8d64xSPyqQ5v5er7/1iuZW4=;
+	s=arc-20240116; t=1743525808; c=relaxed/simple;
+	bh=+39fVy6ji7kbX1Wk79JiqH4KHEpEfCwzFOyM5dkWHVQ=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Wa3Jo+vUt0GU1ipq2PO9quXzc1i/qTqMHRZbrdMMQZHU6R/xHvavAmLqtCaCQp2HwGNH9n74F9fYVYmL/cOgkJCADK5KhiCR5Vvq7cjXw9OQ2mlpYUnDgczZ0Y3EyPJZjBalZHlySbili5tO5V8r6lmaeyswL+KLbEg9ZJkjjWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IB82jXoQ; arc=none smtp.client-ip=209.85.214.201
+	 To:Cc:Content-Type; b=g46m/4mgtghqxWsUHSSXF5comIuy12Q9Gj9fwAyT1DwhJZG0iAPRm2lSKeDmvIvFsmjJAuTEQIfghEAc9krU6s4IFG+CJtJ/KONkKG/FcT+tn9gy7EY++Z1ZQjtcrjRJAZFaxHmQPmCaD7AMnlXotP9hqq8+ZeT3peU4i9Ho8k4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=M/3oiPhQ; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IB82jXoQ"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2255ae39f8fso276975ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 09:43:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="M/3oiPhQ"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ff7f9a0b9bso9141048a91.0
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 09:43:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743525802; x=1744130602; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1743525807; x=1744130607; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=/XYYrhooXHNQcqBoobC7D5bK0XS2jFQGb7UC9bcI9h8=;
-        b=IB82jXoQ/BkQnpCN7Rnwso7yq0sh9Olsv/ISZOjrxCNXY38HN21itGuR8GTyHGf5QT
-         elKTjYZKc0bXe7hovNqFTEKchRz5UlBPzDilS+eSSz4Ek6pGZ+j8pDbPHD7rU/xm2IOp
-         FfFptLjn4aizDgbDhMESnlL8jF+KDt0ecpZnxYvi9AzUzt1XMMX/5oSc/UHa2owTPg/g
-         9jVjaJFdqd1DB7wZJHIg3/bY5u1INOUwXBLOlX+j7yuXxFNWOfK8uj53110xYeHxDJ+w
-         iyv0WPoY+M0BnIZRVGN1LSrtD9FctfBHdKZXyOhcomhuWmiWK6wC7DhjuD5O94ELMmIY
-         qjyA==
+        bh=7VeOo+YDl1ZaLAjoRUcMX3QDQbr2P1YpT08wmcSjNJ0=;
+        b=M/3oiPhQKMvRclF7Tg7m0qq5LBKoMhM5lQXQYVVYetodLxjm7HFHekmU6KfYUOM36f
+         6QA++ysoaTl/vfPcusN4EB1P8auXIoelQoGQl6r8C7fIpw3tgsLHLp9JrcmyocaIjdVo
+         r355KQ3l7fzZQXZuMSS3o3WP+VDZfvblbqyAypDSnWnhqnwM3bk5upeTqKy+eiU/ODa3
+         hinQXevTgYEO+nwmGwM4pX49ZVeKfz7ZLutwdQIUf0XP/3i3MXatUXCTbYCWcyp3A8QO
+         QHyKWvC9NIMg80R0yWffLxwzO1ujR3JOus2PHw09k+tZACEh2T52rMkVdpZppejy0yqO
+         ZRvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743525802; x=1744130602;
+        d=1e100.net; s=20230601; t=1743525807; x=1744130607;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=/XYYrhooXHNQcqBoobC7D5bK0XS2jFQGb7UC9bcI9h8=;
-        b=D2ji8HemsJ/+jv/jsK4wmYIg9IvMfs4vCfZY+fYHIEYrAndeLIMROPd5h5H7/zgBGi
-         RRPq/+KaJmhORj0mznWSP+YI74/q6jeMUSSrF28Ky9nMWETUKckkUhUtmFxYwfAQGXZo
-         p9Jmiw3Cw5IzjsDyP8kk94JAW7h2r3CxTYSAD+hcyzKf46ezSQQdODSlqKnBpYRkcmdH
-         FmqoEi87Z4EEqGpMFtYXzFzCsCSRVqjyMKK131vHcxj8sR67pyE4nuGJ33WiCnjv2LXw
-         Ml5wz2vq5P7j4WddqHFJ+eSaXym1H4t1/At6HzjxiVcbk+CcIRVpKD120+zfaqzmPhkv
-         NbBg==
-X-Gm-Message-State: AOJu0YyubQf35cp88tW9YP2mJAcoeAnNdYeTNOidRaa13TdGxkw961Zo
-	lGzTvsgNfBypcqYcJrtZ4yG7uQZkvrXzF4SrcdmKk3NOfMHaU87f+wxIWDYqKiNmWUAKnrr0/31
-	RKw==
-X-Google-Smtp-Source: AGHT+IFy0IhgEaHcg00977nQlGMuEOMnb3oYwKlOFTc/u3M4G7iMNsSXATt5UTOpWjp44DoW3ZbtcVNrt4s=
-X-Received: from pfbfo6.prod.google.com ([2002:a05:6a00:6006:b0:736:3cd5:ba36])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:8186:b0:736:b400:b58f
- with SMTP id d2e1a72fcca58-739c3f771bcmr873231b3a.0.1743525801845; Tue, 01
- Apr 2025 09:43:21 -0700 (PDT)
+        bh=7VeOo+YDl1ZaLAjoRUcMX3QDQbr2P1YpT08wmcSjNJ0=;
+        b=nW1YhuD+PL8z24fZpcahoF4rxh4WsiBI5mA5foFju8Nwx8Upnrrv7SFaZLAbeuHT1P
+         GyI3yRhD+yxGWWAaBWPREnODpSSqw1geyTj14Xr9pJHN+9cgu3PJTISR1Zwchd7FPArZ
+         Z+xzcBm744rSVRahgDzRCp5eO1MTpKyFuFonl8ghv4f0GDGFfRr/KfB1DFF1igyf3pZK
+         XFptuc15zoxpSm2ZfEZ/pGUda99N5vZB0956TzKS1RZhYbYKCmpMkz0ZqyHJnK5r+TlR
+         PyOIxHQQQQ8oTEHPecro4eI581dXDHCUxDPzjuAV1pFUIJKliX/dgNPn2oxWnsDyqh6J
+         yrwg==
+X-Gm-Message-State: AOJu0YzrH5XVvQE5RPBjS9cZUY//1uZzTPurbW4zoYam980Xjp1T7cuZ
+	bvbglxRkG2JE3LGuWHFHuUD9uF43mfsv6DGS0XgH6RIq98HS5I64SRyMYrf1z+tY+cFVe8l9rfL
+	MDQ==
+X-Google-Smtp-Source: AGHT+IEFM34tlug3Ergg9oOZ5ia6DKaSJuVy+JKjeggDch7iurgtwMeC43/CRt3s5ueDrR+9rtMhvbS0aMM=
+X-Received: from pjvf6.prod.google.com ([2002:a17:90a:da86:b0:2fc:2ee0:d38a])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3d45:b0:2fe:e9c6:689e
+ with SMTP id 98e67ed59e1d1-305608771admr5940492a91.8.1743525806882; Tue, 01
+ Apr 2025 09:43:26 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Tue,  1 Apr 2025 09:34:44 -0700
+Date: Tue,  1 Apr 2025 09:34:46 -0700
 In-Reply-To: <20250401163447.846608-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -60,8 +60,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250401163447.846608-1-seanjc@google.com>
 X-Mailer: git-send-email 2.49.0.472.ge94155a9ec-goog
-Message-ID: <20250401163447.846608-6-seanjc@google.com>
-Subject: [PATCH v2 5/8] KVM: VMX: Process PIR using 64-bit accesses on 64-bit kernels
+Message-ID: <20250401163447.846608-8-seanjc@google.com>
+Subject: [PATCH v2 7/8] KVM: VMX: Use arch_xchg() when processing PIR to avoid instrumentation
 From: Sean Christopherson <seanjc@google.com>
 To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
 	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
@@ -70,64 +70,29 @@ Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
 	Jim Mattson <jmattson@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Process the PIR at the natural kernel width, i.e. in 64-bit chunks on
-64-bit kernels, so that the worst case of having a posted IRQ in each
-chunk of the vIRR only requires 4 loads and xchgs from/to the PIR, not 8.
+Use arch_xchg() when moving IRQs from the PIR to the vIRR, purely to avoid
+instrumentation so that KVM is compatible with the needs of posted MSI.
+This will allow extracting the core PIR logic to common code and sharing
+it between KVM and posted MSI handling.
 
-Deliberately use a "continue" to skip empty entries so that the code is a
-carbon copy of handle_pending_pir(), in anticipation of deduplicating KVM
-and posted MSI logic.
-
-Suggested-by: Jim Mattson <jmattson@google.com>
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/x86/kvm/lapic.c | 20 +++++++++++++-------
- 1 file changed, 13 insertions(+), 7 deletions(-)
+ arch/x86/kvm/lapic.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-index 893e7d06e0e6..e4f182ee9340 100644
+index 0463e89376fb..13363327ad87 100644
 --- a/arch/x86/kvm/lapic.c
 +++ b/arch/x86/kvm/lapic.c
-@@ -657,26 +657,32 @@ static u8 count_vectors(void *bitmap)
+@@ -678,7 +678,7 @@ bool __kvm_apic_update_irr(unsigned long *pir, void *regs, int *max_irr)
+ 		if (!pir_vals[i])
+ 			continue;
  
- bool __kvm_apic_update_irr(unsigned long *pir, void *regs, int *max_irr)
- {
--	u32 *__pir = (void *)pir;
-+	unsigned long pir_vals[NR_PIR_WORDS];
-+	u32 *__pir = (void *)pir_vals;
- 	u32 i, vec;
--	u32 pir_val, irr_val, prev_irr_val;
-+	u32 irr_val, prev_irr_val;
- 	int max_updated_irr;
+-		pir_vals[i] = xchg(&pir[i], 0);
++		pir_vals[i] = arch_xchg(&pir[i], 0);
+ 	}
  
- 	max_updated_irr = -1;
- 	*max_irr = -1;
- 
-+	for (i = 0; i < NR_PIR_WORDS; i++) {
-+		pir_vals[i] = READ_ONCE(pir[i]);
-+		if (!pir_vals[i])
-+			continue;
-+
-+		pir_vals[i] = xchg(&pir[i], 0);
-+	}
-+
  	for (i = vec = 0; i <= 7; i++, vec += 32) {
- 		u32 *p_irr = (u32 *)(regs + APIC_IRR + i * 0x10);
- 
- 		irr_val = READ_ONCE(*p_irr);
--		pir_val = READ_ONCE(__pir[i]);
--
--		if (pir_val) {
--			pir_val = xchg(&__pir[i], 0);
- 
-+		if (__pir[i]) {
- 			prev_irr_val = irr_val;
- 			do {
--				irr_val = prev_irr_val | pir_val;
-+				irr_val = prev_irr_val | __pir[i];
- 			} while (prev_irr_val != irr_val &&
- 				 !try_cmpxchg(p_irr, &prev_irr_val, irr_val));
- 
 -- 
 2.49.0.472.ge94155a9ec-goog
 
