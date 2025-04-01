@@ -1,94 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48519209F31;
-	Tue,  1 Apr 2025 20:55:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B5F520C003;
+	Tue,  1 Apr 2025 20:56:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743540946; cv=none; b=CYpqYOHg4vq5fWgSl9sYfec2VRt1Vj59ticl40wG9wuXoPxj+ZkOR5HsUj+8qJVFsM5QEaTPoGzDiF/RcDmQXCEWoO4S6FG5VRj/3GniPo2MTM3OpjHFrJSgaPpeuKO3JEAzLsIeEWTrSd4R+X6r9ukup60VFlv4ekZYil+X08U=
+	t=1743540963; cv=none; b=VpCVPjrH4G2/q5eJ8qMjJwUjUUfRPCkaIVoT8Dl9FNQqDjFY0T0u7TH3TDxUCOidjq8FWw6ljnlpFl/5qayznkchjs/atzh39S1Vj13WCjThZtwrgTy87IJnyd5vVvp8Gf7orTswDOiHa/gHWVVSha3MKzMtZQk1dDYak2HmIng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743540946; c=relaxed/simple;
-	bh=TZ9Y5CWw5617/CTvl/A5AgM4bAqpWJNtdNir9YnP+V0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=bZImv5yq0y7UYQrrggpSARrD14RucK4kIS71ohMYuo4N+rRl5QyoL6ZQEMQDpzkiow9RjWTDhTf7wnwvTyfEDIwj5T+enzrVdtRkjnLpv2KM4EI0qTdethmrro2NObsJPP9fVZXGTWdU69VEB9N7mEDHn/Av7e6TVKFqtffc+gA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OapLdiEU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743540963; c=relaxed/simple;
+	bh=DS7CxZqeavF4OXW2TCP88/n+hyAV3CFH3t2LSqkUNRw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FWu2z5nN+VT0GJ42wlmlVBvECuGcNwbeH8n+0+K39fnMcQoNy+slLZ4vfIYSjdGHgU+FFiZfVBMcAEzeF9QKKlGrYbCi922rhakEoFIkj9feNdgELjKO5e9j4leEPzWiITwMBGfDSTGMHenPQtGic8J422iefXIZ8VfgWKJ0Hto=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Tn5KYiV/; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OapLdiEU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 962D8C4CEE4;
-	Tue,  1 Apr 2025 20:55:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743540945;
-	bh=TZ9Y5CWw5617/CTvl/A5AgM4bAqpWJNtdNir9YnP+V0=;
-	h=Date:From:To:Cc:Subject:From;
-	b=OapLdiEUCgN9698OkImKcFv8jiusMxs+x7oUZHNLOcy6JNt9qfYIQk1i0Z+x7Qvv6
-	 1Iqtf0EJLMcyOimsxupu3CUEnWQXywmtLGmMEfaab7KdZpkGMf/8GJF2Zw7ZigPDU8
-	 Vp/jLSWg/Liil/mka9uQttpJd6rk6ZrNxC0wYCALLnFzm9Fh8QM/pWDSMzD4YF7dCL
-	 yTcmr6dYqx78BhjReR1XxhAcNJ0uqqHCPTQFrBRLxG0MTbdUS9cxV8d56Fs1yo86SN
-	 zne05zwDxSYNaQaKObKzOckcdRyPDA8EZMG6GHcSZT9BhikMl9DwzWhx7Vr6dkpi4q
-	 2y/nG3CwWAzKw==
-Date: Tue, 1 Apr 2025 15:55:44 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Pavan Chebbi <pavan.chebbi@broadcom.com>,
-	Michael Chan <mchan@broadcom.com>,
-	Potnuri Bharat Teja <bharat@chelsio.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>
-Cc: netdev@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: PCI VPD checksum ambiguity
-Message-ID: <20250401205544.GA1620308@bhelgaas>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tn5KYiV/"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-39c1ef4ae3aso108223f8f.1;
+        Tue, 01 Apr 2025 13:56:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743540960; x=1744145760; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=o2NSR4UNAnB47pTdmCuqKUyvdzUoswTXZia5FOSskRM=;
+        b=Tn5KYiV/hRwLqZvRhxtxv9G2tST5qE++tPtz19OSMP/I6+WhgIwVJaxgkxsyPYaYIu
+         Q9gC5gRuVY727JZFP2VDQWZ7pRgK4WVUXUMv2WA5EiYgF9ajthzhabztMCaLPc2q/Qhn
+         hTTXHA85YhoXjAv83r9sG8+4ob7R3j9GldVBzpcCcoZnaEVLQvurFvylebW60JQskj5t
+         moCklKXYXczuAq6HOMF5wDxJ1Au/BbUKqBKal/3Pk5Bxcgm64E61dj5MQoPpj45UStwN
+         8lc6sms2u5tciUTB8tGCMMmbW6rjik2U59GKTbCluXdvVB7vow7njM0p6GCiOXNMXWRd
+         qRDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743540960; x=1744145760;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=o2NSR4UNAnB47pTdmCuqKUyvdzUoswTXZia5FOSskRM=;
+        b=XDYScjfayaQXPeKxvGivScxr/Nf0x/hfLwZKFXSA3Sj3pk95eUqwvPm0DhsqteyWpA
+         6VFqOptPV84z+gnl+fad2lMlEOPDvntW/Hp99Jdp53l1XC0KIpLmP04mk755Sxz0eZQ1
+         47L1V7hKeWGB1LkTTMCyhp1oh3A8rtULfft6gLXRF4uTImEd+uauu03dJ0Qf+tpkjQh0
+         zGTl2c9zU13nZEpUY2v/XeHRC4W7TpJORv1wK/yabqMGvghD5xxCkl6o2dQqtPwCHkjQ
+         kMHkQ5v2A34oiPKjYcGPZYT2tdCwdG/NGjaW25O42rkeASlaU1wd+YemhBkJn6GkK/qe
+         ULUQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVewa4Wq1jSVI45N+vvfIvcXiCp4xoHK9z026U5xtQQ2fsWtAClU6zrT+G7FznLHFIkq8g=@vger.kernel.org, AJvYcCWGH6iYeNING7wojztviprm0wb4srgUWlUJXUj4odZjXgG8+2ulSkfn2hZGacfZHGX+6NqfiU/toProjILy@vger.kernel.org
+X-Gm-Message-State: AOJu0YwNok6cAZ11OCZ2D1X97JhpkHO94IhPXpEIF3dP5xPHg3lhztHl
+	F8LC4KOlXymlrAbFhzXiHF0hrcji20c2G8DwDdA8OKXtwAPFha9TSbeLRfLAunr8hXI+KOmcEyC
+	q1QUZn+Mhsb1ev13lU8/EBcvIxUw=
+X-Gm-Gg: ASbGncuDK8A7uuVni/Px21w1WhO06MCvSz8j9i2F86TE5tAxY8eha5SVZJK0NrH0rCa
+	AxW4DDtuzvH1rhTGiY/GW+UCJAETm1tC/os1D3+I9yqXxh40OSAJS3XEqefW2ShTjrBTn6DysDP
+	vjJXB94H3xnwT3VyMaLN+se14sDnH400jzFTqtWIk6WmUbQzXQJIbK
+X-Google-Smtp-Source: AGHT+IGWteUsIVF3s2AwO2YVJcKGPh17tVztW/b9zgcwXsBDEyFHs48WWvXAg9YnsBcUlm7ACPNG03OiX26srIw/ShY=
+X-Received: by 2002:a05:6000:2281:b0:38d:dc03:a3d6 with SMTP id
+ ffacd0b85a97d-39c27ee3659mr1375732f8f.4.1743540959557; Tue, 01 Apr 2025
+ 13:55:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20250401005134.14433-1-alexei.starovoitov@gmail.com> <84d7adee-fa83-4a8b-8476-820212dc929e@suse.cz>
+In-Reply-To: <84d7adee-fa83-4a8b-8476-820212dc929e@suse.cz>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Tue, 1 Apr 2025 13:55:48 -0700
+X-Gm-Features: AQ5f1JoPlciPWKp7Yyn3YMwfDEkIxze3Y9_VXpZscRqAW1B-ZQ_8oAVtAbF70Do
+Message-ID: <CAADnVQ+5Mv7Pjb7qQxovKuiuuwYFZ+vgEWEzJuHy63BJwPY74Q@mail.gmail.com>
+Subject: Re: [PATCH] locking/local_lock, mm: Replace localtry_ helpers with
+ local_trylock_t type
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, bpf <bpf@vger.kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+	Martin KaFai Lau <martin.lau@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Sebastian Sewior <bigeasy@linutronix.de>, 
+	Steven Rostedt <rostedt@goodmis.org>, Shakeel Butt <shakeel.butt@linux.dev>, 
+	Michal Hocko <mhocko@suse.com>, linux-mm <linux-mm@kvack.org>, 
+	LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Tue, Apr 1, 2025 at 7:18=E2=80=AFAM Vlastimil Babka <vbabka@suse.cz> wro=
+te:
+>
+> > with newly introduced local_trylock_t type.
+> > Note that attempt to use local_trylock_irqsave() with local_lock_t
+> > will cause compilation failure.
+> >
+> > Usage and behavior in !PREEMPT_RT:
+> >
+> > local_lock_t lock;                     // sizeof(lock) =3D=3D 0
+>
+> local_lock(&lock, ...);                 // preempt disable
 
-The PCIe spec is ambiguous about how the VPD checksum should be
-computed, and resolving this ambiguity might break drivers.
+changed to local_lock(&lock);
 
-PCIe r6.0 sec 6.27 says only the VPD-R list should be included in the
-checksum:
+>
+> Acked-by: Vlastimil Babka <vbabka@suse.cz>
+>
+> Is there a chance this refactoring will make it to -rc1? It would make
+> basing the further usage of the lock in mm and slab trees much easier.
 
-  One VPD-R (10h) tag is used as a header for the read-only keywords.
-  The VPD-R list (including tag and length) must checksum to zero.
++1
 
-But sec 6.27.2.2 says "all bytes in VPD ... up to the checksum byte":
+> But squash in the following fixups please:
 
-  RV   The first byte of this item is a checksum byte. The checksum is
-       correct if the sum of all bytes in VPD (from VPD address 0 up
-       to and including this byte) is zero.
+Thanks a bunch. Folded.
 
-These are obviously different unless VPD-R happens to be the first
-item in VPD.  But sec 6.27 and 6.27.2.1 suggest that the Identifier
-String item should be the first item, preceding the VPD-R list:
+And sent v2:
+https://lore.kernel.org/bpf/20250401205245.70838-1-alexei.starovoitov@gmail=
+.com/
 
-  The first VPD tag is the Identifier String (02h) and provides the
-  product name of the device. [6.27]
-
-  Large resource type Identifier String (02h)
-
-    This tag is the first item in the VPD storage component. It
-    contains the name of the add-in card in alphanumeric characters.
-    [6.27.2.1, Table 6-23]
-
-I think pci_vpd_check_csum() follows sec 6.27.2.2: it sums all the
-bytes in the buffer up to and including the checksum byte of the RV
-keyword.  The range starts at 0, not at the beginning of the VPD-R
-read-only list, so it likely includes the Identifier String.
-
-As far as I can tell, only the broadcom/tg3 and chelsio/cxgb4/t4
-drivers use pci_vpd_check_csum().  Of course, other drivers might
-compute the checksum themselves.
-
-Any thoughts on how this spec ambiguity should be resolved?
-
-Any idea how devices in the field populate their VPD?
-
-Can you share any VPD dumps from devices that include an RV keyword
-item?
-
-Bjorn
+As soon as Sebastian acks it, I can send bpf PR with these 3 fixes
+and other bpf fixes.
