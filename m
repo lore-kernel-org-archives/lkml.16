@@ -1,178 +1,136 @@
-Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A29991E47A9
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 12:46:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5469926AF3
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 12:46:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743511584; cv=none; b=XgPB/gLgce4KdK8DfAzUNp2wXeF+J0up2Ktj5SRreH3poR8SWmBdlpDIn+fIr59HDoffXzjwT/C5GoY5qHwV5hMzP+/FWgoIejd/Ikv/2sgNu9/CvlbNFX4/ongUmfADDEBVSV9wcddZZtrWNxB6iz5VBf+UE0jPlO9UIOb1Atc=
+	t=1743511620; cv=none; b=IHf1b81V4y0gSOkAe1X0Nzc6bFi99RKwEroD/yYSwMgePS6sgh/CszvZ7ru7Kw9acB99A27MfogDW4a4AuDT6WAOETKFyW9lR8/P7Ne87WSyPCK4lBzvh7rxRO4ta6mamHuXC5cK610wnPaNmwnsIdkSt7guzwcIKuM3vV1ntnY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743511584; c=relaxed/simple;
-	bh=6kyb5Ns8Ql3Vo5mGo267gErIo68dUqtHfs2HzhFYq30=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bjKR6nLzTfR3FrKNOsbHuWn7JpV5F6bISmtLfixups9+L0IwqqTfYDzbhx7ArdHnxymHz0OUiGr6s1AVUE6UF3C7JXfzVQq4hn4066gCN0ghWbuwFXdVkXmjZz8OKsES07aJnchzIPtCEQLWSadxrxAkMTll6PeQn2urhFUUh3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mmM+RY7x; arc=none smtp.client-ip=209.85.128.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1743511620; c=relaxed/simple;
+	bh=y0KyE/mzSHT2YZl2aE20dg8G8KswIQGIUuGNjvfOkuM=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=i/K6S8LUdV3iAMWTYcmpAjGCjbCoqNgTRvHY4e5Xduq/C9oCfhCm7HKiAW1dT8H/zooEUndS7gkB8FK9LywWSxgjYOBhYeBbQVwLhiW9V1urUx4nSqW9X42H1nM4hZe4CjmTI9j1pXnO6riC5INH+z672Nc42WEZy1jq8fskyEE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=0mpDEv3t; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mmM+RY7x"
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-6f74b78df93so62552827b3.0
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 05:46:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="0mpDEv3t"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43cfdc2c8c9so31273125e9.2
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 05:46:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743511581; x=1744116381; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XMDDeez6kOoe0VuKaV7cMdRjNY74xD4dUkO4O1Q2miQ=;
-        b=mmM+RY7xlMNDRDKLSpwfBnlvU+LDTmbOhqHChM8RYHmriTljiO/hL344osxWqtvIsC
-         M2SGwWsigk50ZSc+oOzXEo6Y8tVxv+LjBHpoUUrZ7/6ica5kDXKOUL24zPBRTrybIf6D
-         VLoABaw+efeYbIUcA/vHukqd9GVslsM2LULTaQuXQE6fke3XKT/aew2ztNSz6CktU4T1
-         qHy86yyHiOovR+BMWH4jL/W59ymF/+cdLWbmIuXtRwI55dAbrnhLISXY9AcVe2ZnCv0L
-         4jJOUwN+6gwXBN8ucGX4Ju/0InXRXoe6uXIDPJVgN+Iu7DMUtJvRu9045Xsaw9W42D2K
-         sbtg==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1743511616; x=1744116416; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=RJUEJOvTfXgA4uD6cCmuNpuHsNFU7rS14fRYk2qFALg=;
+        b=0mpDEv3tBoYZTea7a9p4Rr04B6lPc2cEwqlk0VLJF66IkbhS0UH1x0wVt2NdAWXB2z
+         VidO0c7dBdVvVuVg/VyTOr1wj0/px5JclIJPVC/K/9XWBUG0iCcaAx37R1ij7dsefRUe
+         LXKJGlum/vIarxvf2J/7LQHAibCkpX5U/TqSsxPiCPM0J7Pf1VS9rNe4yyyCwV/jWYbB
+         5G1P4QM6sIfZh3OaoMvlNPeqpdNECBaMWt1sS7hwZfFmcjzYuyn/Vz1sjz+GsFfcLlV7
+         GKa4z0H7ZFyhxd+b8alLQ4nm7vi5FB/Az/TB69E7EZ1d//IRxd5TIJycA/VBXVs6+Oai
+         /CGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743511581; x=1744116381;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XMDDeez6kOoe0VuKaV7cMdRjNY74xD4dUkO4O1Q2miQ=;
-        b=s35BNX9BIxp2w/pjYRs+ud0+nx2B3GZlXY7qdxOVAoQ1MGkvZ5Xc4kAZ9SvdQATGKv
-         iswLbQ+iayBODEG9OiAYcTD5nL04YKx9vkRZUJSfih8NEWpuZwL326PARJMfnaP815ao
-         5lO1CCIbKpg59zHFnJXV+lnnqiLho1lxi0xrS26KfJIE2nJzZxMxN9y3f9XgA6Ua0G32
-         SzQ1pnZegkFb36NorDjHUOfA3LG7GgPd3Y2+Bff9v8wh8iIiB2uol1UKEkhxkg+MSkV0
-         Fyup16SOIy2T98o+BOcQcKcTSCYqBzKDCh+R0d5fSsngrAYTucJblWXEhaH1Rrkm9AeW
-         LHqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUxTXaflIjoPxZ/LZtoQ7UKRyghfmc0+IDz7ZfaH7pS5hDEPu15mOP3LvNpQTjCtUeEbo5YVsa2/p4W44Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx6Rlg5xneNQ7MURV9z98ARtqIJ2gmgdALRRkJzqv0ujx74yb2y
-	FklTx4gVlLvFQB31VZHdsETxIUx1Rv45LScLNP5rU1zCL7kwu3sRbqC+H4/kP3O9nlEX5Mc88wS
-	RLgM/l6hjUd3AR9BBV0NMPXZ/4CZThT9DXnmYbA==
-X-Gm-Gg: ASbGncuIhcxdK1UKFY6/RJ7PVFGv5/AmjXbDOp23Vmujhi/K9vGV6khTl0pKUrLlLHS
-	+R1n7EwIaynNFXkPZyaV3BLIf27z8PxjU618N3ge4URNdKr8SAm40fTabp/ow+D7rWCmr7oyS4J
-	0myAUNDPWfmVios+le3g7rS2eazqM=
-X-Google-Smtp-Source: AGHT+IGL9OSbja9iYeFzPJ+/gKIFplL+CL1DbY+6y+Uot/089lr6RvlMMypn+5FN141zeahQuPTrIh4o8rhbTIo5V3E=
-X-Received: by 2002:a05:690c:20a5:b0:702:627c:94ec with SMTP id
- 00721157ae682-702627c9619mr129434977b3.35.1743511581556; Tue, 01 Apr 2025
- 05:46:21 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743511616; x=1744116416;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RJUEJOvTfXgA4uD6cCmuNpuHsNFU7rS14fRYk2qFALg=;
+        b=YBQaIT6hs7rJdtW6VCstw9sF9CZMa7yQe2TxArNgqDZ0+s4dW6v+cEc18bP2GyT0tA
+         SV1lcsCJ9w3x8Qw7QJCjPSprfM4X4ZTXf/7VyBZ1+V/5YNzBBDEY16KHUvulIZXsa/FZ
+         4pdcIxX7TEDINJzg3Oi6mA4Vb3ZAsPNKYvWGNsFdlLWTolmn7m6SVqR6WWmHJ3Mum7hU
+         F0X3zxPl1ioqch9vlOvxIIXeDQefwn0IWRyh9A7o11EH8qL4OHuOwIZ2NTPyqMqE3flc
+         2hYqZEkRLwznZZut95s5l66jca2ec6yM6vZIZvBvncMMKQwpcFeSiTEdOFE8EPGKgThm
+         mrng==
+X-Forwarded-Encrypted: i=1; AJvYcCXx85+uk0OU3L4dYK+NuJamC5MAbb5YtrGlmACF6mZX8CjWe2Fh3g01F26lRAUYaKdV9u5aJC2DpGJj/9c=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz8F25Zj/CBZtasjXEArDcFVz2SWWsyzZHwat4jLTEbOSomFFuA
+	ohZNnq/ciYkhfhCyGCGr4W9pBalHD6v84HntS3/tspX9c/KEAxt02xHY8wVSGU6IaKr0mJgN5mE
+	5
+X-Gm-Gg: ASbGncvjz6mo7gn+jMegwdrHLO6CBMErK/rqCjDHls7XEh/IQn7I+w4PEmBkVx+caoJ
+	rcTgvmWMw9qeA9WfKY1bGb7rkwZZ5gs0fvLxlI+kttib5TGzMia7tLlkMSHHlXBYUN3WkYLPuyT
+	QTODMGfr0YCFKnB+ny37INp+RANeB57lycGEXyroLlkGnHaQtY/zfuKCGTWIBltVaNW9j5RPqVX
+	O2iYebdGKEJiFg4lvjH8STK2uj3dWo31w36wC/Hr5GakDJ+cQvVSr1HKUWXPF07CA2IBodxYk3n
+	5iVKOJLSy3Vvc9LmVktJZ/ebuNHH8CJu5sJZ
+X-Google-Smtp-Source: AGHT+IGb6pbzxnvoGzoDd9m3yG96NFGewZN/3m3P+C7hCU1HFdSRDNHFyI4h6xuxt+qVeIiOqLyGSw==
+X-Received: by 2002:a05:600c:1f8b:b0:43d:209:21fd with SMTP id 5b1f17b1804b1-43db85250famr132223545e9.30.1743511616057;
+        Tue, 01 Apr 2025 05:46:56 -0700 (PDT)
+Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:a1d1:bbb:e2a6:2a9c])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d8fbc1889sm154711095e9.16.2025.04.01.05.46.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Apr 2025 05:46:55 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH v2 0/4] gpio: deprecate and track the removal of GPIO
+ workarounds for regulators
+Date: Tue, 01 Apr 2025 14:46:41 +0200
+Message-Id: <20250401-gpio-todo-remove-nonexclusive-v2-0-7c1380797b0d@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CGME20250326030527epcas2p33aa30e62cc8a00c9e151c35bee71dac5@epcas2p3.samsung.com>
- <Z+Nv8U/4P3taDpUq@perf> <8634f0mall.wl-maz@kernel.org> <Z+TEa8CVAYnbD/Tu@perf>
- <86v7rulw2d.wl-maz@kernel.org>
-In-Reply-To: <86v7rulw2d.wl-maz@kernel.org>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Tue, 1 Apr 2025 14:45:43 +0200
-X-Gm-Features: AQ5f1JrXJtw8P-nNnlXkQzxE9Mof1YPkOE61sbdFVclhwvmQdRUQ4pvlCvXHd8U
-Message-ID: <CAPDyKFrxK3Mx055hx+a4SP3CWDpWP+CEHxz+WJfT+RficK0_Ag@mail.gmail.com>
-Subject: Re: [GICv3 ITS]S2IDLE framework does not invoke syscore_ops in GICv3
- ITS driver
-To: Marc Zyngier <maz@kernel.org>
-Cc: Youngmin Nam <youngmin.nam@samsung.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Saravana Kannan <saravanak@google.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	kernel-team@android.com, hajun.sung@samsung.com, d7271.choe@samsung.com, 
-	joonki.min@samsung.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIADHg62cC/43NQQ6CMBCF4auQrh1TCqXGFfcwLBAGmAQ7ZIoNh
+ nB3Kydw+b3F/3YVUAiDume7EowUiH2CuWSqm1o/IlCfrIw2VhdFDuNCDCv3DIIvjgiePW7d/A6
+ UgP3N2bJy+LSVSo1FcKDt7D+a5InCyvI572L+W/8txxw0GDs4Uzk7FLqsZ/Kt8JVlVM1xHF81x
+ 0ViywAAAA==
+To: Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, Mark Brown <broonie@kernel.org>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1623;
+ i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
+ bh=y0KyE/mzSHT2YZl2aE20dg8G8KswIQGIUuGNjvfOkuM=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBn6+A+YZHfEqRXZ3oZTBFYjfwJVAIRgLSTVGQD9
+ U9vvXh0tTuJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ+vgPgAKCRARpy6gFHHX
+ cvZkD/45xITkzjYfW8b20WXXTvMsJFj+g1LlFtAIL3y05xGx9AzIWq/bbAiA5vBObBZZVZkfEMd
+ xG8E4l50cJwn7Eh0mUtBO8Dg4B+hJo2swcN5oxTAf3gadkNEnP8VZYM0QFGE0M1LyKzDJ7tbo+v
+ 2xSVODyHZ45f62yMywim/ChK7h1N6yIeq2MWmL9ZG074ucN8+u0hsapswDgbT/IK9mifJBxP9nS
+ ZVpx9e6VKju6K5EOzfVvrpVK0I+bNYpDOBDfCfB+X7A5tafVsW/GfV3FXSYZYjaMT+v99E4n54r
+ 8U+2Sdx1tEY20hoXwqGhUHEd9bJAV9sf6TwL1+E4mFgTb+Hr6Vbtm38fcXa1n4Euy6G4rYwtqWX
+ +GLZlicDqmjjWj6SIDDoMnvNDd+384fMp2EAb1oHYofuKbREDQWyZ00dttkYFI3rtmy1bgmXSSI
+ Agnh3WmweQKqiXxHU0o3pEyJ9ri5PFKpxhdVp2korLw8ArXMD1OWMVwWxLawHKvDDu581YlBWtm
+ 5W2I4yP37r46lwxEtngMmbs6Wjw5NDHEsg/cLd6DHFDsClVEJKY6k9E3uAzpgWk+eS74qnMQ2sj
+ qGW+zLzIUmDE+hubJiv9uVxQaVc9p6iddpKkjK1rbkePvaYWrh/6t5wjsrLhkbT7HvSJK7N/bT+
+ 28QuutLY031cBiA==
+X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
+ fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
-On Thu, 27 Mar 2025 at 09:25, Marc Zyngier <maz@kernel.org> wrote:
->
-> On Thu, 27 Mar 2025 03:22:19 +0000,
-> Youngmin Nam <youngmin.nam@samsung.com> wrote:
-> >
-> > [1  <text/plain; utf-8 (8bit)>]
-> > On Wed, Mar 26, 2025 at 08:59:02AM +0000, Marc Zyngier wrote:
-> > > On Wed, 26 Mar 2025 03:09:37 +0000,
-> > > Youngmin Nam <youngmin.nam@samsung.com> wrote:
-> > > >
-> > > > Hi.
-> > > >
-> > > > On our SoC, we are using S2IDLE instead of S2R as a system suspend =
-mode.
-> > > > However, when I try to enable ARM GICv3 ITS driver (drivers/irqchip=
-/irq-gic-v3-its.c),
-> > > > I noticed that there is no proper way to invoke suspend/resume call=
-back,
-> > > > because it only uses syscore_ops, which is not called in an s2idle =
-scenario.
-> > >
-> > > This is *by design*.
->
-> [...]
->
-> > > > How should we handle this situation ?
-> > >
-> > > By implementing anything related to GIC power-management in your EL3
-> > > firmware. Only your firmware knows whether you are going into a state
-> > > where the GIC (and the ITS) is going to lose its state (because power
-> > > is going to be removed) or if the sleep period is short enough that
-> > > you can come back from idle without loss of context.
-> > >
-> > > Furthermore, there is a lot of things that non-secure cannot do when
-> > > it comes to GIC power management (most the controls are secure only),
-> > > so it is pretty clear that the kernel is the wrong place for this.
-> > >
-> > > I'd suggest you look at what TF-A provides, because this is not
-> > > exactly a new problem (it has been solved several years ago).
-> > >
-> > >     M.
-> > >
-> > > --
-> > > Without deviation from the norm, progress is not possible.
-> > >
-> >
-> > Hi Marc,
-> >
-> > First of all, I=E2=80=99d like to distinguish between the GICv3 driver =
-(irq-gic-v3.c)
-> > and the ITS driver (irq-gic-v3-its.c).
-> >
-> > I now understand why the GICv3 driver doesn=E2=80=99t implement suspend=
- and resume functions.
-> > However, unlike the GICv3 driver, the ITS driver currently provides
-> > suspend and resume functions via syscore_ops in the kernel.
->
-> For *suspend*. The real suspend. Not a glorified WFI. And that's only
-> for situations where we know for sure that we are going to suspend.
->
-> > And AFAIK, LPIs are always treated as non-secure. (Please correct me If=
- I'm wrong).
-> >
-> > The problem is that syscore_ops is not invoked during the S2IDLE scenar=
-io,
-> > so we cannot rely on it in that context.
-> > We would like to use these suspend/resume functions during S2IDLE as we=
-ll.
->
-> Again, this is *by design*. There is no semantic difference between
-> s2idle and normal idle. They are the same thing. Do you really want to
-> save/restore the whole ITS state on each and every call into idle?
-> Absolutely not.
+The GPIOD_FLAGS_BIT_NONEXCLUSIVE flag and devm_gpiod_unhinge() helpers
+were introduced as hacky workarounds for resource ownership issues in the
+regulator subsystem. Unfortunately, people started using the former in
+other places too and now it's in all kinds of drivers.
 
-I agree that we don't want to save/restore for every call to idle,
-that would simply be unnecessary and add latencies.
+Let's deprecate both symbols officially, add them to the MAINTAINERS
+keywords so that it pops up on our radars when used again, add a task to
+track it and I plan to use the power sequencing subsystem to handle the
+cases where non-exclusive access to GPIOs is required.
 
-Instead, I think the save/restore could depend on what idlestate we
-enter and whether it's a system-wide state (s2idle/s2ram) or just
-regular cpuidle-state.
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+Changes in v2:
+- reword the task description to focus more on the solution than the
+  problem description
+- add a task for removing devm_gpiod_unhinge() as well
+- Link to v1: https://lore.kernel.org/r/20250331-gpio-todo-remove-nonexclusive-v1-0-25f72675f304@linaro.org
 
-Today, we are pointing the callbacks for cpuidle and s2idle to the
-same functions (at least for PSCI PC mode), but it's easy to change
-that *if* we need some differentiation between s2idle and cpuidle.
+---
+Bartosz Golaszewski (4):
+      gpio: deprecate the GPIOD_FLAGS_BIT_NONEXCLUSIVE flag
+      gpio: deprecate devm_gpiod_unhinge()
+      MAINTAINERS: add more keywords for the GPIO subsystem entry
+      gpio: TODO: track the removal of regulator-related workarounds
 
->
-> Only your firmware knows how deep you will be suspended, and how long
-> you will be suspended for, and this is the right place for to perform
-> save/restore of the ITS state. Not in generic code that runs on every
-> arm64 platform on the planet.
+ MAINTAINERS                   |  2 ++
+ drivers/gpio/TODO             | 34 ++++++++++++++++++++++++++++++++++
+ drivers/gpio/gpiolib-devres.c |  6 +++++-
+ include/linux/gpio/consumer.h |  1 +
+ 4 files changed, 42 insertions(+), 1 deletion(-)
+---
+base-commit: 405e2241def89c88f008dcb899eb5b6d4be8b43c
+change-id: 20250331-gpio-todo-remove-nonexclusive-ed875467eb56
 
-Assuming we can make the code for saving/restoring generic (not in FW)
-and that we are able to make sure the code is only executed for those
-platforms and states that really need it. Do you think there would
-there be any other drawback for doing this?
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Kind regards
-Uffe
