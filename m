@@ -1,56 +1,75 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A942C204C07;
-	Tue,  1 Apr 2025 14:29:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F34EE1EF080
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 14:29:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743517790; cv=none; b=YXVelDyXxAaBnF09tha8a43F759pvXivHxyqcABSu6F0H8MN4RNFnqsNL/GLLq7QlXXM62ZAdXL0zrkrSbUD2nIZjI+IfRhfQlgYFPtrs0Lwagongmg1/QRJtH4Rn448OYUgLblVak5cWxycy0I0C5+fkXCh0P+9f91upode2iM=
+	t=1743517791; cv=none; b=lQAONkUZon4nkzaamwjI+88FnczCxAdkfs6Xc+KYl2XRUV7ikuzs9txgXhjRD6jGGGwM88HGLV8Sa/EIzWKiMkxg1NGT3XkxLUxICQun3a3YeTm/mxopomoijJoOmuPWdvh7QnpQ8BvZHlqGQ4M19EsFHVtU8WIGM9ygJCu2cbE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743517790; c=relaxed/simple;
-	bh=wlVU2YfmrjlqjXVg8SNfnOgR3nDw1BUVMZSLmdeVvLE=;
+	s=arc-20240116; t=1743517791; c=relaxed/simple;
+	bh=4+DXyGZpy3baMIIEpJypfdpYsotPYKsxA3mI/UuDijo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=llUrSlAobK948Y/KLz8qgjPzVZCUmJWf3XD5zLhdKsJkAVhTI8IZI+5/b0b4tLsHSN8wELUFgsU0WfKhsm1T44IhgbrMLvYqownGRrjWlmL4PkoO5q6/iwrXgViM3fMUGS5GGhZdd6dI5lYw/PIzzWeKKJVHo/RK4SoPPQ3l0bI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TcbfB/eu; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=U64679HS++K1BPgMk2yht0qiJyTeeFB3+zMYgfGfwj7AU2NXurg8yktFSpPoPbDftibpo1czVqKqaToA1tzjnXYaXNA5NMwnhVqBz6QjJLUddNOVEKZBIoWoUoPU9zQHbRHsZ83mq1pWkTpDbXNZLFfCv+iYtcxVcDUP747v+6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=mGTjgFrW; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=riscstar.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TcbfB/eu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B483C4CEE4;
-	Tue,  1 Apr 2025 14:29:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743517790;
-	bh=wlVU2YfmrjlqjXVg8SNfnOgR3nDw1BUVMZSLmdeVvLE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TcbfB/euuGlDXhcWN+svUyB7Q0cFXHTXFYtFI5nljZSHT7GYQ5eZf18bm6Q+IEUHe
-	 B9QfPPIvzdv9mOXDru8RZ5FoLkY9D/MQleFAHlZpcP+kAqDsRBIEbTc0UXbIPThwBu
-	 xXyoo2EDdLcW1JKhDUJVRhaemFJIj8g0iEcxzVeUI5Ez7XQIavG/tVoeKmovJ/c2zj
-	 9ZSF/8cGD+d/ms4RdbXKcNov6B+1SvpT5eO0rIT4l5KGohwX9qYf+Qeu+hjQEt4a0z
-	 ljpTynY+TrF/ruJ0XZps47jdt2vGOpH/PJc9BjYc6RXVvHKkCYg6B17kci2m+ViZCu
-	 CA3mS1nTEUWBA==
-Date: Tue, 1 Apr 2025 17:29:45 +0300
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: "Reshetova, Elena" <elena.reshetova@intel.com>
-Cc: "Hansen, Dave" <dave.hansen@intel.com>,
-	"linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"x86@kernel.org" <x86@kernel.org>,
-	"Mallick, Asit K" <asit.k.mallick@intel.com>,
-	"Scarlata, Vincent R" <vincent.r.scarlata@intel.com>,
-	"Cai, Chong" <chongc@google.com>,
-	"Aktas, Erdem" <erdemaktas@google.com>,
-	"Annapurve, Vishal" <vannapurve@google.com>,
-	"dionnaglaze@google.com" <dionnaglaze@google.com>,
-	"bondarn@google.com" <bondarn@google.com>,
-	"Raynor, Scott" <scott.raynor@intel.com>
-Subject: Re: [PATCH v2 2/2] x86/sgx: Implement EUPDATESVN and
- opportunistically call it during first EPC page alloc
-Message-ID: <Z-v4WfcLhmXbYvaa@kernel.org>
-References: <20250328125859.73803-1-elena.reshetova@intel.com>
- <20250328125859.73803-3-elena.reshetova@intel.com>
- <Z-bhczXA6aHdCYHq@kernel.org>
- <Z-blOQ94ymUsDwPn@kernel.org>
- <DM8PR11MB5750C88DFC518EB77B0D613FE7AD2@DM8PR11MB5750.namprd11.prod.outlook.com>
- <Z-rU_JXWn0vCdBr_@kernel.org>
- <DM8PR11MB5750A46718F899A43C52A984E7AC2@DM8PR11MB5750.namprd11.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="mGTjgFrW"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3996af42857so4453954f8f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 07:29:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1743517788; x=1744122588; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=4+DXyGZpy3baMIIEpJypfdpYsotPYKsxA3mI/UuDijo=;
+        b=mGTjgFrWukuCgEL1V89KWiCBAZVaAwkfyWfauRCvEJmnXY5lHfl+spBQxEiMyKK6fe
+         dkfqaWxw3weMe4lRZ0SyTzMNg2+nY4+ZD1YhiMH3lMXF9lFZ+WjvgJAWQbZKLK0wKZv1
+         EfzkhPpIHr93ggh6ADw0H6f0usvjyhd6tNThiu8VdrJWJVYOzrwCRYW0PmYONL/okXlV
+         otpSUU1h3Vz9Uffo0qLBoD85WV9FiQO8sAfyjCLv/X9mybzyJQShC0jtjElLthqPtO3r
+         L6bMncHQR5tCaQ5daeBc6i2fsB9T5lRyjfGfxnhRr9gu2yEjTe3TaqXzUrDWXvYcVhuo
+         sijQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743517788; x=1744122588;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4+DXyGZpy3baMIIEpJypfdpYsotPYKsxA3mI/UuDijo=;
+        b=ZWMLTugqOZelhki1NOMfkmz6Z8oHwfk1v5Z4VxNVxr0O8DFVd+yudmue3sna8/hjGV
+         OzBz64Xl96jl1oIrTNd+QmVHDef7obncz3KyRzyEACyJD94TrVCQ1VHJOPcGNaZPW9Ya
+         d1uyItBmqV7nO42Xgu92qE9h3zcPQIlGOznzdSUN5HAMnUojeAiu1yvVyLAxQCotwVmZ
+         1myurg5rHIzHeEj0S+8+4SSCLSr4+cznCBjo9TyfnDnzMqjk4refSxCyETrwNbHM//XJ
+         ciSqLCCMj8ElWGUOUQJjh/iEKaOgFxEvhrO8vbKAbHzisHcSd5H220+eqFLBKipIjYJ8
+         /BAQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW1VS7T8w/EttmWl2ih/DZRJT7KhmKdYNlymL+/Dga8p4Lp0351EdQK+ISdN4Ldi9dw5C4e250hkfkmIXg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YweUO34zUu+hZebopEaeSQ+ChJ1vg2W61cytX5yvBWSVqFwra7S
+	j7W1cRXhRggqYoje3qlJSxZJ8uWvygHo4fjGu4TiJrPLr/B5iub8oZM/To107cc=
+X-Gm-Gg: ASbGncvf9mCCCzm1nJiZr/i2quDI1JSW3NPAI/z5Q4CivYrA8MDNTNofZsBMLuvpwh6
+	ZivEaEpqyhWVz3IANowxLbH+8qLxgeNDAhFpLmC3ORGyixlS3VFKWhBBoIPgHay7sVymorwAiOG
+	zHq++3nHHABovgJ1JXbyamBc+o+AdTPgiad/fUzjvsqwnzOp3Fv2lmGM2FGaysfc0VCqfRbXqh6
+	bwYMzL245i2KglG2MAg431Wr3yjqquHs7uyhV3RHlvNaJZSteGgdKPAdq5ZES0lkRROrsKyhW87
+	4i6wIZVVxauwFzNL4CykYVLSsMkjO6PbFXJCqUk4ZbkSmkaYIgBFEQ9NIBqYRH90P+ZLd4V9tbS
+	8G8FCXZd0niPKoUYWDMfBx+LTchY=
+X-Google-Smtp-Source: AGHT+IHNx4vQ9HZX3k4j4jTP+pXfpW+zl8Y4RdgON0AYVMnFWqF1w5VQnDHa4fobYb4eHhHiNIy/Pg==
+X-Received: by 2002:a05:6000:18a2:b0:38d:ba8e:7327 with SMTP id ffacd0b85a97d-39c27ee84f2mr205051f8f.8.1743517788210;
+        Tue, 01 Apr 2025 07:29:48 -0700 (PDT)
+Received: from aspen.lan (aztw-34-b2-v4wan-166919-cust780.vm26.cable.virginm.net. [82.37.195.13])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b66a9d2sm14254936f8f.43.2025.04.01.07.29.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Apr 2025 07:29:47 -0700 (PDT)
+Date: Tue, 1 Apr 2025 15:29:45 +0100
+From: Daniel Thompson <daniel@riscstar.com>
+To: Haoyu Li <lihaoyu499@gmail.com>
+Cc: danielt@kernel.org, chenyuan0y@gmail.com, deller@gmx.de,
+	dri-devel@lists.freedesktop.org, jani.nikula@linux.intel.com,
+	jingoohan1@gmail.com, lee@kernel.org, linux-fbdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, robh@kernel.org,
+	stable@vger.kernel.org, zichenxie0106@gmail.com
+Subject: Re: [PATCH] drivers: video: backlight: Fix NULL Pointer Dereference
+ in backlight_device_register()
+Message-ID: <Z-v4WansLWJtv9CV@aspen.lan>
+References: <Z65fFRKgqk-33HXI@aspen.lan>
+ <20250219122950.7416-1-lihaoyu499@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,53 +78,23 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <DM8PR11MB5750A46718F899A43C52A984E7AC2@DM8PR11MB5750.namprd11.prod.outlook.com>
+In-Reply-To: <20250219122950.7416-1-lihaoyu499@gmail.com>
 
-On Tue, Apr 01, 2025 at 09:35:33AM +0000, Reshetova, Elena wrote:
-> > > None of these exceptional conditions are fatal or present an
-> > > immediate danger to the system security. So, allowing the re-tries
-> > > seems logical in this case. In case re-tries also fail, the system
-> > > admin will have an option of gracefully shutting down all enclaves
-> > > and doing either a full reboot (if SVN is the only concern) or other
-> > > necessary actions like taking the physical node out of use, etc.
-> > >
-> > > Does this sound reasonable?
-> > 
-> > Uknown error I don't think would hold that premise.
-> 
-> True, unknown is an unknown ))
-> But unknown errors should not happen (per SGX spec), and the
+Hi Haoyu
 
-Thus if for some reason unknown error code would be returned something
-would be horribly wrong (e.g. bad emulation of the opcode or who knows
-what) and thus it would make sense disable the driver if this happens.
+On Wed, Feb 19, 2025 at 08:29:50PM +0800, Haoyu Li wrote:
+> As per Jani and Daniel's feedback, I have updated the patch so that
+> the `wled->name` null check now occurs in the `wled_configure`
+> function, right after the `devm_kasprintf` callsite. This should
+> resolve the issue.
 
-Or maybe even BUG_ON() in this situation?
+I'm afraid this patch got swamped in my mailbox and I missed it.
 
-> current SGX kernel code does not handle such errors in any other way
-> than notifying that operation failed for other ENCLS leaves. So, I don't
-> see why ENCLS[EUPDATESVN] should be different from existing behaviour?
+Worse, we've just been discussing and reviewing a patch for the same
+issue from another developer:
+https://lore.kernel.org/all/20250401091647.22784-1-bsdhenrymartin@gmail.com/
 
-While not disagreeing fully (it depends on call site), in some
-situations it is more difficult to take more preventive actions.
+So, I just wanted to acknowlege the mistake. Sorry.
 
-This is a situation where we know that there are *zero* EPC pages in
-traffic so it is relatively easy to stop the madness, isn't it?
 
-I guess the best action would be make sgx_alloc_epc_page() return
-consistently -ENOMEM, if the unexpected happens.
-
-/* <- this
- * Do not execute ENCLS[EUPDATESVN] if running in a VM since
- * microcode updates are only meaningful to be applied on the host.
- */
-
-According to https://www.kernel.org/doc/Documentation/kernel-doc-nano-HOWTO.txt
-
-> 
-> Best Regards,
-> Elena.
-> 
-> 
-
-BR, Jarkko
+Daniel.
