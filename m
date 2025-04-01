@@ -1,134 +1,105 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1E751E9B3B
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 08:38:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 835261E47C9;
+	Tue,  1 Apr 2025 08:39:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743496739; cv=none; b=cgVQvTEqcFLcqP+Dq2MSCBJke9bbfERlsl9rOWZ2Sd+43zVr9fVnscUh+fn0ak+k7ihh7LuGI5bnQDzqLc2E4fC77p9kpTFTA17UuOitzo6L/Yvd1Zvmn4+tXsaUZ+ebyEKA3IQLp7kPSiZCEk5RokmGeBkaLl/7jvVfjgxI+zg=
+	t=1743496797; cv=none; b=falYdLFL1lhLbc71g3ODPjPH4fclwPBpV9Jhojejq96nZIT+SL4hCIhmNolRBhO3X5LgRUduTnPlaa7qDn8XElljTMcxFrDODubcpkzHL0KGAejVu7UVrQ2T4oFaDc7Fn0Y5DDR16yZl1hW1hL7RZeiQmAaUdSKGdOAtaK+EuPw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743496739; c=relaxed/simple;
-	bh=+UMzpq3/VcMiqNxd76Kwpr680rC1FTuJOdadFsqvWtY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o/6ru+fd3vmaS+JLMpcKMTiy0z+dlsTczeaBBFKBbv1l7Nv0uh/ThlOqLCGlXQh1A/Co8vZ1ZIHpSmRtmOrURZIDW+QkVpoZyXSydRtyeD9pfa+oNMtrbOyP1WY3LEUjR7QPKDEy88HAMB4EYQmlQVDkxCRN3lrukOIgmMxFOOg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Iecj2nKx; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Iecj2nKx"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-224171d6826so75958445ad.3
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 01:38:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743496737; x=1744101537; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=r1Taw2b+9DYZnr4u5cKg6Ys1jliSkhsn+4gby7I7olg=;
-        b=Iecj2nKx7pkwL6a5nvqnukg+FoyHOcwq1tiLJ8Bz1wnTCZahtFRXcOPBqFURSk+MA/
-         FUSv6rKaKe3INIi76xAW0FLT79lXxY+QvZm+ohOuHMRL9/J194KSffnYAsI1VL4oUtSQ
-         FzC8mHapRhUhKM/m0j1K52W78R8nAtsrbIM7357y0K0RLBd6z1r2OfuLf/AxpzwUdsDj
-         ua2QmMnAvAFc2Lb5Z32HSwjtdd3BIcjh8AHvoYk4g/f4FAIoV+cnt9AfLojkMjJ79wix
-         K+koxcn/CdRaCAeq3dmoXNHavu9LhMTFnxFsAzfDck2qu9+PuPJMR/DVI9vhlO1QQO9a
-         XJ9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743496737; x=1744101537;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=r1Taw2b+9DYZnr4u5cKg6Ys1jliSkhsn+4gby7I7olg=;
-        b=oHTQ0Hd982DuXcuSRHSt3/bD9e341tF4AZ90re4du2vPQV/oD7Ja2mM6Nofte31uXf
-         dF9eyTzMoK5LUjUo9Bfj1WvxO3qfpMXrxkYff0KX6Ie5y6v7d3gZVcpdzp27dhe2zguP
-         H3dTeOrjc7vum6Nf2Cw4YC/Dn6zNR2PTL4qrLB7xsqeY8iTclvtF/+kndVHTjbvLssrL
-         I7w2Jkq9mkMSAmiJjm2Ow0u8/DDJVpv8X6gjPI0fBqX4m2D4Sdz+dxaKjB1HYesZOSzK
-         Q7GMDE5X0JbvkE9lLXm7mJDwQIff6WuDq2HsX6PEs73Hqr7HzFFnqnXnaQnr9JVKIfnQ
-         X8Tg==
-X-Forwarded-Encrypted: i=1; AJvYcCVo8Xit2x0o1OKME3N40mCixgyhdECeMwWvI1fGVsAuLpEO4Pw3Mdc4Ti5bBUGa0w//u3WzxFsk31YHu/Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy00S575WyW/NJXyI+bu9ETI40OCt5O1/4EPWoLGVwh6qGZABDB
-	xOEtxYYzOXTAGLN1HUoErTl0xu/H3UasPK8K/1bG8ikAVNrdXTRHuP8+VPtDt40=
-X-Gm-Gg: ASbGncsfr2mKHMfdYxbmaMjOtCvZqpcKJiNC2lF+/qAnPqGJdHAEjjQ2jWj6t4so8Wd
-	0sfIbNMRFcX4aOC3vmw2JzcMZcRdOBSuscL56QDIVQyA9LmqG9F0mEHlwqkQKuPeItQd0yKQyHn
-	VtdXwgWj2M49162rReExBwD7xBV4OySFzyS3FDxEVKM1kTBWG4HOSkI8UaXVzFCdNeBRjqn6xzr
-	fjPPXRTJObv7a4mg6RQESR8zpa+qQZDVhtyWFqFxIfWQnFaM0DTx8dto0vXgfGj+edPVimMGQZc
-	qbEZtEf5WUXOFDVkNcrfvWAzlTPoab2gwEB0aqZxIcsNOA==
-X-Google-Smtp-Source: AGHT+IHOoPSYd39+s2P+I5W5gcza3K7JJCd5GqnM6mc219v8oqynZ5VFgBSd9yG4NA+PxlZ6utEL3g==
-X-Received: by 2002:a05:6a00:b90:b0:736:42a8:a742 with SMTP id d2e1a72fcca58-73980395331mr17654701b3a.11.1743496736959;
-        Tue, 01 Apr 2025 01:38:56 -0700 (PDT)
-Received: from localhost ([122.172.83.32])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73970e4cb56sm8319319b3a.77.2025.04.01.01.38.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Apr 2025 01:38:56 -0700 (PDT)
-Date: Tue, 1 Apr 2025 14:08:54 +0530
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Linux PM <linux-pm@vger.kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v1 03/10] cpufreq: Split cpufreq_online()
-Message-ID: <20250401083854.6cp2efo7wxvxjcdd@vireshk-i7>
-References: <4651448.LvFx2qVVIh@rjwysocki.net>
- <3354747.aeNJFYEL58@rjwysocki.net>
+	s=arc-20240116; t=1743496797; c=relaxed/simple;
+	bh=M+neyQM2i4qoH8h0avruc2kXdgJ2YHJWrKz+OdjGL7Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=C3+6Kn0NLUOagBkQbwiV2BXycDzLOfdS3ZOL9OkR++oPSHRwZTWlV9hJwq4tsAfcA2/M4LV8xaIpwdAkoHCulPmHEJPCcx6WtSRslppVpBC7Fx2MDFGzqK2760ot9l3vi+4eTgYzEVOIARPGLCKzAzFqFq8ND6McQwd9P8MESQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost.localdomain (unknown [124.16.141.245])
+	by APP-01 (Coremail) with SMTP id qwCowAA33f1AputnQ5eqBA--.451S2;
+	Tue, 01 Apr 2025 16:39:30 +0800 (CST)
+From: Wentao Liang <vulab@iscas.ac.cn>
+To: mareklindner@neomailbox.ch,
+	sw@simonwunderlich.de,
+	a@unstable.cc,
+	sven@narfation.org,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	horms@kernel.org
+Cc: b.a.t.m.a.n@lists.open-mesh.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Wentao Liang <vulab@iscas.ac.cn>,
+	stable@vger.kernel.org
+Subject: [PATCH] batman-adv: batman-adv: handle tvlv unicast send errors
+Date: Tue,  1 Apr 2025 16:39:00 +0800
+Message-ID: <20250401083901.2261-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.42.0.windows.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3354747.aeNJFYEL58@rjwysocki.net>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qwCowAA33f1AputnQ5eqBA--.451S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7Ww1rGF1DCrW8XrWUuw13CFg_yoW8XF17pF
+	Z5Gr15Gw1DJa1SqFyjq345Zr4Yyws7KrWj9FZ7A3W3ZFsxKrySgay8Z34jyF4rXay2ka1D
+	Xr4qgF9xAa4DCFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9014x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+	6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
+	n2kIc2xKxwCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7x
+	kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
+	67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
+	CI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1x
+	MIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIda
+	VFxhVjvjDU0xZFpf9x0JUd-B_UUUUU=
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiCQ8TA2frlbhKlQAAso
 
-On 28-03-25, 21:41, Rafael J. Wysocki wrote:
->  
-> +out_unlock:
->  	up_write(&policy->rwsem);
->  
-> +	return ret;
-> +
-> +out_destroy_policy:
-> +	for_each_cpu(j, policy->real_cpus)
-> +		remove_cpu_dev_symlink(policy, j, get_cpu_device(j));
-> +
-> +out_offline_policy:
-> +	if (cpufreq_driver->offline)
-> +		cpufreq_driver->offline(policy);
-> +
-> +out_exit_policy:
-> +	if (cpufreq_driver->exit)
-> +		cpufreq_driver->exit(policy);
-> +
-> +out_clear_policy:
-> +	cpumask_clear(policy->cpus);
-> +
-> +	goto out_unlock;
+In batadv_tvlv_unicast_send(), the return value of
+batadv_send_skb_to_orig() is ignored. This could silently
+drop send failures, making it difficult to detect connectivity
+issues.
 
-Instead of jumping back to the function, won't declaring the label here and
-jumping from the earlier code to the end of function more readable ?
+Add error checking for batadv_send_skb_to_orig() and log failures
+via batadv_dbg() to improve error visibility.
 
-                goto out_unlock;
-        
-        out_destroy_policy:
-        	for_each_cpu(j, policy->real_cpus)
-        		remove_cpu_dev_symlink(policy, j, get_cpu_device(j));
-        
-        out_offline_policy:
-        	if (cpufreq_driver->offline)
-        		cpufreq_driver->offline(policy);
-        
-        out_exit_policy:
-        	if (cpufreq_driver->exit)
-        		cpufreq_driver->exit(policy);
-        
-        out_clear_policy:
-        	cpumask_clear(policy->cpus);
-        
-        out_unlock:
-	up_write(&policy->rwsem);
-	return ret;
-        
-Either ways:
+Fixes: 1ad5bcb2a032 ("batman-adv: Consume skb in batadv_send_skb_to_orig")
+Cc: stable@vger.kernel.org # 4.10+
+Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+---
+ net/batman-adv/tvlv.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-
+diff --git a/net/batman-adv/tvlv.c b/net/batman-adv/tvlv.c
+index 2a583215d439..f081136cc5b7 100644
+--- a/net/batman-adv/tvlv.c
++++ b/net/batman-adv/tvlv.c
+@@ -625,6 +625,7 @@ void batadv_tvlv_unicast_send(struct batadv_priv *bat_priv, const u8 *src,
+ 	unsigned char *tvlv_buff;
+ 	unsigned int tvlv_len;
+ 	ssize_t hdr_len = sizeof(*unicast_tvlv_packet);
++	int r;
+ 
+ 	orig_node = batadv_orig_hash_find(bat_priv, dst);
+ 	if (!orig_node)
+@@ -657,7 +658,10 @@ void batadv_tvlv_unicast_send(struct batadv_priv *bat_priv, const u8 *src,
+ 	tvlv_buff += sizeof(*tvlv_hdr);
+ 	memcpy(tvlv_buff, tvlv_value, tvlv_value_len);
+ 
+-	batadv_send_skb_to_orig(skb, orig_node, NULL);
++	r = batadv_send_skb_to_orig(skb, orig_node, NULL);
++	if (r != NET_XMIT_SUCCESS)
++		batadv_dbg(BATADV_DBG_TP_METER, bat_priv,
++			   "Fail to send the ack.");
+ out:
+ 	batadv_orig_node_put(orig_node);
+ }
 -- 
-viresh
+2.42.0.windows.2
+
