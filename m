@@ -1,82 +1,194 @@
-Received: from mxct.zte.com.cn (mxct.zte.com.cn [183.62.165.209])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BA51C2C6;
-	Tue,  1 Apr 2025 13:10:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=183.62.165.209
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1077DC2C6
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 13:11:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743513028; cv=none; b=JmOBBnkQfI9jFSMVaPVWfduLk0K/LueMPyZYZnf1joxvBuNLzKyK7G0pKQUBT4E1wy16NW7IeIM371uXPp9MbrAgrBqmXRHONMcByqqTLqPQ5iJMrzkqZ7sroHcCac5ucEbiKgM3eInRKgDE+3GhaKvAjfLx1lKaxnh6ul4yMBc=
+	t=1743513073; cv=none; b=RGtt6Ik3QUGGjW4TdSoz5YwjdMBrlvzEpd8+CYg2Gd/Lv2SI1VwQ86CUf1u2pinWOb3agv2LoDzOFets/2R2XBDnfpOsGPw4B0revJZUgIXub3NXpt1GLo4sFaFSTKs07FipF6i3rgFnPfJFpESjX4ublEp6y8Zmao4RQDw7wNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743513028; c=relaxed/simple;
-	bh=bZuhi5tp57vT1KrIZMO2TFV5Dty6u7hau5PtT9IEqvc=;
-	h=Date:Message-ID:In-Reply-To:References:Mime-Version:From:To:Cc:
-	 Subject:Content-Type; b=AFWQfbI3JX2X5Y4Al3B7t+BIYXfQeZUfusBjPW/rFstkiM/eG3NldPVWRYK5hVxBZLcdbDJ1i23bua5jf3/iRUGqUrbn8RCeRc6GD0vbD74Y445rUcyBu7zw92/howFg6VHAWEiOr0tYxfH4V2IS7o3S3nEwA0N79xuYTWISLWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=183.62.165.209
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxct.zte.com.cn (FangMail) with ESMTPS id 4ZRpJW1cMZz501bv;
-	Tue,  1 Apr 2025 21:10:19 +0800 (CST)
-Received: from xaxapp02.zte.com.cn ([10.88.97.241])
-	by mse-fl1.zte.com.cn with SMTP id 531DABTE052557;
-	Tue, 1 Apr 2025 21:10:11 +0800 (+08)
-	(envelope-from shao.mingyin@zte.com.cn)
-Received: from mapi (xaxapp01[null])
-	by mapi (Zmail) with MAPI id mid32;
-	Tue, 1 Apr 2025 21:10:15 +0800 (CST)
-Date: Tue, 1 Apr 2025 21:10:15 +0800 (CST)
-X-Zmail-TransId: 2af967ebe5b7478-18370
-X-Mailer: Zmail v1.0
-Message-ID: <20250401211015750qxOfU9XZ8QgKizM1Lcyq2@zte.com.cn>
-In-Reply-To: <20250401210730615ULucEmQClX13Q7svZwHsD@zte.com.cn>
-References: 20250401210730615ULucEmQClX13Q7svZwHsD@zte.com.cn
+	s=arc-20240116; t=1743513073; c=relaxed/simple;
+	bh=eFj1UtKjWSXUv/IED2cgaAtIRcrA4Zbbbpt7I7dajA0=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WWqc/0Ks+I4BQL7CKdloFEZLaNDPTGHJUZA+r6WOnJFg+vaXl/I7AjclgOF3qNuNKZjtu8a1n0sRLOj7FXxyc59gnNVvJyE3yrxEQLvCcPogtdQQXKRI550Q0xhajyhCQX8E+BhkmEkIWB7u8g9EwIy1yh9HcwdAx3NZ/ou3wv8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R8s4/DS4; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R8s4/DS4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86B57C4CEE4;
+	Tue,  1 Apr 2025 13:11:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743513072;
+	bh=eFj1UtKjWSXUv/IED2cgaAtIRcrA4Zbbbpt7I7dajA0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=R8s4/DS4YxcOEWSzlM3EE8vMNdgInvDagqB0HhLPdwt0aoPX7rxBf0I6Kpc64GT8C
+	 UUTWbxd+xYJhVopEXrXBgG8HTMB7uZTES/sW5bKL9BwW2rs4GSHajMsPPlDBZF4Aqf
+	 qNuhLIasqKX5evNv6IFIdMNHVe92B290frTpNumgISwIcHvDISWflIPzzrpKZO1sAk
+	 t1W4COqnyH9xXfZj7MTfNJSckuianb+sMptS2E0oXYGr2pS8XIl+LmhVKTsmJHrC9I
+	 yOGKbUNPH6el2Kq6/CMN5PJnPNjtH1TF/00cUlSrQpUtGrj1/PxDUm+vj0v7jIiFTK
+	 XXan03RgCy69A==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=lobster-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1tzbOY-001L1O-Bf;
+	Tue, 01 Apr 2025 14:11:10 +0100
+Date: Tue, 01 Apr 2025 14:11:11 +0100
+Message-ID: <87o6xgyqkw.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Youngmin Nam <youngmin.nam@samsung.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Saravana Kannan <saravanak@google.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	kernel-team@android.com,
+	hajun.sung@samsung.com,
+	d7271.choe@samsung.com,
+	joonki.min@samsung.com
+Subject: Re: [GICv3 ITS]S2IDLE framework does not invoke syscore_ops in GICv3 ITS driver
+In-Reply-To: <CAPDyKFrxK3Mx055hx+a4SP3CWDpWP+CEHxz+WJfT+RficK0_Ag@mail.gmail.com>
+References: <CGME20250326030527epcas2p33aa30e62cc8a00c9e151c35bee71dac5@epcas2p3.samsung.com>
+	<Z+Nv8U/4P3taDpUq@perf>
+	<8634f0mall.wl-maz@kernel.org>
+	<Z+TEa8CVAYnbD/Tu@perf>
+	<86v7rulw2d.wl-maz@kernel.org>
+	<CAPDyKFrxK3Mx055hx+a4SP3CWDpWP+CEHxz+WJfT+RficK0_Ag@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-From: <shao.mingyin@zte.com.cn>
-To: <jgg@ziepe.ca>
-Cc: <leon@kernel.org>, <li.haoran7@zte.com.cn>, <linux-rdma@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <viro@zeniv.linux.org.uk>,
-        <brauner@kernel.org>, <agoldberger@nvidia.com>, <cmeiohas@nvidia.com>,
-        <msanalla@nvidia.com>, <dan.carpenter@linaro.org>,
-        <mrgolin@amazon.com>, <phaddad@nvidia.com>, <ynachum@amazon.com>,
-        <mgurtovoy@nvidia.com>, <yang.yang29@zte.com.cn>,
-        <xu.xin16@zte.com.cn>, <ye.xingchen@zte.com.cn>
-Subject: =?UTF-8?B?W1BBVENIIDMvM10gUkRNQS9jb3JlOiBDb252ZXJ0IHRvIHVzZSBFUlJfQ0FTVCgp?=
-Content-Type: text/plain;
-	charset="UTF-8"
-X-MAIL:mse-fl1.zte.com.cn 531DABTE052557
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 67EBE5BB.000/4ZRpJW1cMZz501bv
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: ulf.hansson@linaro.org, youngmin.nam@samsung.com, tglx@linutronix.de, saravanak@google.com, vincent.guittot@linaro.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel-team@android.com, hajun.sung@samsung.com, d7271.choe@samsung.com, joonki.min@samsung.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-From: Li Haoran <li.haoran7@zte.com.cn>
+On Tue, 01 Apr 2025 13:45:43 +0100,
+Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>=20
+> On Thu, 27 Mar 2025 at 09:25, Marc Zyngier <maz@kernel.org> wrote:
+> >
+> > On Thu, 27 Mar 2025 03:22:19 +0000,
+> > Youngmin Nam <youngmin.nam@samsung.com> wrote:
+> > >
+> > > [1  <text/plain; utf-8 (8bit)>]
+> > > On Wed, Mar 26, 2025 at 08:59:02AM +0000, Marc Zyngier wrote:
+> > > > On Wed, 26 Mar 2025 03:09:37 +0000,
+> > > > Youngmin Nam <youngmin.nam@samsung.com> wrote:
+> > > > >
+> > > > > Hi.
+> > > > >
+> > > > > On our SoC, we are using S2IDLE instead of S2R as a system suspen=
+d mode.
+> > > > > However, when I try to enable ARM GICv3 ITS driver (drivers/irqch=
+ip/irq-gic-v3-its.c),
+> > > > > I noticed that there is no proper way to invoke suspend/resume ca=
+llback,
+> > > > > because it only uses syscore_ops, which is not called in an s2idl=
+e scenario.
+> > > >
+> > > > This is *by design*.
+> >
+> > [...]
+> >
+> > > > > How should we handle this situation ?
+> > > >
+> > > > By implementing anything related to GIC power-management in your EL3
+> > > > firmware. Only your firmware knows whether you are going into a sta=
+te
+> > > > where the GIC (and the ITS) is going to lose its state (because pow=
+er
+> > > > is going to be removed) or if the sleep period is short enough that
+> > > > you can come back from idle without loss of context.
+> > > >
+> > > > Furthermore, there is a lot of things that non-secure cannot do when
+> > > > it comes to GIC power management (most the controls are secure only=
+),
+> > > > so it is pretty clear that the kernel is the wrong place for this.
+> > > >
+> > > > I'd suggest you look at what TF-A provides, because this is not
+> > > > exactly a new problem (it has been solved several years ago).
+> > > >
+> > > >     M.
+> > > >
+> > > > --
+> > > > Without deviation from the norm, progress is not possible.
+> > > >
+> > >
+> > > Hi Marc,
+> > >
+> > > First of all, I=E2=80=99d like to distinguish between the GICv3 drive=
+r (irq-gic-v3.c)
+> > > and the ITS driver (irq-gic-v3-its.c).
+> > >
+> > > I now understand why the GICv3 driver doesn=E2=80=99t implement suspe=
+nd and resume functions.
+> > > However, unlike the GICv3 driver, the ITS driver currently provides
+> > > suspend and resume functions via syscore_ops in the kernel.
+> >
+> > For *suspend*. The real suspend. Not a glorified WFI. And that's only
+> > for situations where we know for sure that we are going to suspend.
+> >
+> > > And AFAIK, LPIs are always treated as non-secure. (Please correct me =
+If I'm wrong).
+> > >
+> > > The problem is that syscore_ops is not invoked during the S2IDLE scen=
+ario,
+> > > so we cannot rely on it in that context.
+> > > We would like to use these suspend/resume functions during S2IDLE as =
+well.
+> >
+> > Again, this is *by design*. There is no semantic difference between
+> > s2idle and normal idle. They are the same thing. Do you really want to
+> > save/restore the whole ITS state on each and every call into idle?
+> > Absolutely not.
+>=20
+> I agree that we don't want to save/restore for every call to idle,
+> that would simply be unnecessary and add latencies.
+>=20
+> Instead, I think the save/restore could depend on what idlestate we
+> enter and whether it's a system-wide state (s2idle/s2ram) or just
+> regular cpuidle-state.
+>=20
+> Today, we are pointing the callbacks for cpuidle and s2idle to the
+> same functions (at least for PSCI PC mode), but it's easy to change
+> that *if* we need some differentiation between s2idle and cpuidle.
+>=20
+> >
+> > Only your firmware knows how deep you will be suspended, and how long
+> > you will be suspended for, and this is the right place for to perform
+> > save/restore of the ITS state. Not in generic code that runs on every
+> > arm64 platform on the planet.
+>=20
+> Assuming we can make the code for saving/restoring generic (not in FW)
+> and that we are able to make sure the code is only executed for those
+> platforms and states that really need it. Do you think there would
+> there be any other drawback for doing this?
 
-As opposed to open-code, using the ERR_CAST macro clearly indicates that
-this is a pointer to an error value and a type conversion was performed.
+Yes. We'd end-up having to implement all sort of split PM schemes
+depending on the GIC implementation, what the firmware does, the
+various braindead assumptions that the integration makes, and other
+parameters I don't even want to consider.
 
-Signed-off-by: Li Haoran <li.haoran7@zte.com.cn>
-Signed-off-by: Shao Mingyin <shao.mingyin@zte.com.cn>
----
- drivers/infiniband/core/verbs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+The GIC power management is, for better or worse, *outside* of the
+scope of the architecture. Most of it is implementation defined,
+because each and every implementer/vendor sees it as added value to
+invent their own particular flavour of crap. For example, there is no
+provision for wake-up interrupts, because nobody can agree on how
+that's supposed to work.
 
-diff --git a/drivers/infiniband/core/verbs.c b/drivers/infiniband/core/verbs.c
-index c5e78bbefbd0..75fde0fe9989 100644
---- a/drivers/infiniband/core/verbs.c
-+++ b/drivers/infiniband/core/verbs.c
-@@ -572,7 +572,7 @@ struct ib_ah *rdma_create_ah(struct ib_pd *pd, struct rdma_ah_attr *ah_attr,
- 					   GFP_KERNEL : GFP_ATOMIC);
- 	if (IS_ERR(slave)) {
- 		rdma_unfill_sgid_attr(ah_attr, old_sgid_attr);
--		return (void *)slave;
-+		return ERR_CAST(slave);
- 	}
- 	ah = _rdma_create_ah(pd, ah_attr, flags, NULL, slave);
- 	rdma_lag_put_ah_roce_slave(slave);
--- 
-2.25.1
+Do we want to deal with this in the various GIC drivers? No. It is the
+job of firmware to manage this mess, because this clearly delineates
+where the responsibilities lie.
+
+	M.
+
+--=20
+Jazz isn't dead. It just smells funny.
