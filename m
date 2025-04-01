@@ -1,149 +1,94 @@
-Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97CC81EEA3E
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 13:00:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.66
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743512415; cv=none; b=tsBze1fWPrzDDX4eZ12STHxJ/MHeIDK994Z527H3oLQiF8pv6ufhiXvoQVFifsrBrNRcZ9ETbk7ScHkHeXbso0uX7P8ZaEqSe6pt/sw21E8VuSM/xcZ3VeL4OLHpPk8uBctM2kZZ7Cust4DJz8r/drM+awG0D5RHD4hAaHPnoW0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743512415; c=relaxed/simple;
-	bh=DzC9bukHy47TjGfwcug8gM7evmzmuBLiRPZ4FYnSoOU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VWm/QlXgkxArttqzbwfVIeu/7Zq78gfIrhEsNEreyU15h9wpyaphO/dm5F66DyyUliVDgPy6kL04RX6sT+dO3wHILCfUcxFSBAjipA2myDVeOsEZFNgRcG2uvgq/W7IYOwD2BF/CommFK34mMEllp01WK+gahrIIV4+QbUYJcUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=LOKHmYAD; arc=none smtp.client-ip=185.67.36.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09B9B1519B8;
+	Tue,  1 Apr 2025 13:01:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743512520; cv=pass; b=P5Wxxu313xMdSZAWNqlQg/+GB9Juf4NYVFo0ad4XNA1gO8MuyJYrD5/dvmuoE2vWyxmpuWf3wJMx//jxqWg1VZ8RViQTscMN6vlwsiIpXX+tQ4dX9Lz6Mn9qjn/xspjQc6Tu0R3GSQghfKzjcdjs4Bw93lzAPridfdDskNuRauU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743512520; c=relaxed/simple;
+	bh=3zbii5dIIWakMYL6/HmtVA9itZdrTHHqMBWHuHOlCi0=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=OE2Qbdzce3xbE9ml7XuZfsvx4FsxRC7M0teYAk7zmniaWGC+fGAXC6nMUPGV/+cYEDflWH62k4GMwF+CRNG+3tqXdoBgbLTHbO9XS83CDOL2OO8llwYXNKHIRDmPZPE0h31p6mb3aSgurdKGIzHC/62HtEk3IWAavHOEx/rX3QQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=caTR4Gtb; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="LOKHmYAD"
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout02.posteo.de (Postfix) with ESMTPS id 38BDA240103
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 15:00:10 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
-	t=1743512410; bh=DzC9bukHy47TjGfwcug8gM7evmzmuBLiRPZ4FYnSoOU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:Content-Transfer-Encoding:From;
-	b=LOKHmYAD92WGXRYddpx9klsLdIa724JsAZvgeQYdDVzxgFeVHQVircrF0Jg2GRDRO
-	 t20sTFLJqDPmw9155QtOZ1Q4Z1roVmL/RFOxMYkrif9+oqi6cMHJIWxu3N9+12bTtX
-	 70ioAt5Wez9Fissvl4aWiIy1WpaNucvTzDkLqv4uwiGB2r22uKxDeZMHgdFo365xUD
-	 Z2oXanIvf0eGai3JG8orStMdKbhIoRk6CojNipN0QaP8u2o8XQENAmeJWpuaJ9Q53O
-	 2RFwDOD5ESxHtEvKCG0gTnhG39w2EHSWkvM1LqPeHcPUkFXpapc09WOtwn4O75CtF0
-	 Jmkng6GGUxR/g==
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4ZRp4m3h9Mz9rxQ;
-	Tue,  1 Apr 2025 15:00:08 +0200 (CEST)
-Date: Tue,  1 Apr 2025 13:00:08 +0000
-From: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: j.ne@posteo.net, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Jerome Brunet <jbrunet@baylibre.com>,
-	Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-amlogic@lists.infradead.org
-Subject: Re: [PATCH 3/3] ARM: dts: amlogic: Add TCU Fernsehfee 3.0
-Message-ID: <Z-vjWFFWvo1gesCe@probook>
-References: <20250323-fernsehfee-v1-0-2621341cd37a@posteo.net>
- <20250323-fernsehfee-v1-3-2621341cd37a@posteo.net>
- <CAFBinCD13CNuxRkrSoPXUMNQ9AJH7UV0gsOfdgeRKhkXsANgnw@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="caTR4Gtb"
+ARC-Seal: i=1; a=rsa-sha256; t=1743512478; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=dA8AM9eafn6zU/LhzQqg3GKKNZc1i8vfgfC+APtx7OskUQpSADUL+LXyZusWdIapU0c16eA3dj6Ed49RFEUoW8KRj6PMx4LAXGeXtYrGQJWgSzLeRnaDNyRzUaBULdXqVffXCwja4YcskOWHQpRSh2Jkp2x2Cy8cmonzeMTdwXs=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1743512478; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=3zbii5dIIWakMYL6/HmtVA9itZdrTHHqMBWHuHOlCi0=; 
+	b=iQO/cm0Y03SQBefRGMGq6ri2P6YfNhpiuxcRnK4jiKI9B7ylBBiD4gV3iQX/ixRJ5k7JdThaQmW0owejnuC+Gt+oEBmh+sSGXjTfnWwEt6sZxkuxpZQXW887TwwC9JWWDCdqeOElQs0ndpswQcd8rBA4BBNjQ+Vhp0U2LWDRnWQ=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
+	dmarc=pass header.from=<daniel.almeida@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1743512478;
+	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
+	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
+	bh=3zbii5dIIWakMYL6/HmtVA9itZdrTHHqMBWHuHOlCi0=;
+	b=caTR4GtbQNRnfynd6Jb2LtEqYx/+9wsXbKWv7eTOinNEpS0FqJg0YBPTZVV1Tt9T
+	5ujBL/4EpDPjyTm3dtcWvu6r3IKYKuVe+K8ES6CzkH/Z6pArPy/3m3aFYOnRX9H59X4
+	8N2iqc5kVvvZv0Bc0MGytX1CKyiB0UI4T/ekzxGg=
+Received: by mx.zohomail.com with SMTPS id 174351247702681.5996379232995;
+	Tue, 1 Apr 2025 06:01:17 -0700 (PDT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAFBinCD13CNuxRkrSoPXUMNQ9AJH7UV0gsOfdgeRKhkXsANgnw@mail.gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.400.131.1.6\))
+Subject: Re: [PATCH v5 06/13] scripts: generate_rust_analyzer.py: add type
+ hints
+From: Daniel Almeida <daniel.almeida@collabora.com>
+In-Reply-To: <CAJ-ks9mNZWrAaHChU6kXHOKcwUkL4MJ1ENjuTPBaE8CKrEYQPA@mail.gmail.com>
+Date: Tue, 1 Apr 2025 10:01:01 -0300
+Cc: Miguel Ojeda <ojeda@kernel.org>,
+ Alex Gaynor <alex.gaynor@gmail.com>,
+ Boqun Feng <boqun.feng@gmail.com>,
+ Gary Guo <gary@garyguo.net>,
+ =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@kernel.org>,
+ Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>,
+ Danilo Krummrich <dakr@kernel.org>,
+ Boris-Chengbiao Zhou <bobo1239@web.de>,
+ Kees Cook <kees@kernel.org>,
+ Fiona Behrens <me@kloenk.dev>,
+ rust-for-linux@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ Lukas Wirth <lukas.wirth@ferrous-systems.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <37B638D3-969F-4834-9948-22FCFFEEF62E@collabora.com>
+References: <20250325-rust-analyzer-host-v5-0-385e7f1e1e23@gmail.com>
+ <20250325-rust-analyzer-host-v5-6-385e7f1e1e23@gmail.com>
+ <1B186177-16B9-4D2D-9603-F713F0FE9BEC@collabora.com>
+ <CAJ-ks9mNZWrAaHChU6kXHOKcwUkL4MJ1ENjuTPBaE8CKrEYQPA@mail.gmail.com>
+To: Tamir Duberstein <tamird@gmail.com>
+X-Mailer: Apple Mail (2.3826.400.131.1.6)
+X-ZohoMailClient: External
 
-On Sun, Mar 30, 2025 at 11:10:28PM +0200, Martin Blumenstingl wrote:
-> Thanks for your patch!
-> 
-> On Sun, Mar 23, 2025 at 1:38 PM J. Neuschäfer via B4 Relay
-> <devnull+j.ne.posteo.net@kernel.org> wrote:
-> [...]
-> > +               eth_phy0: ethernet-phy@0 {
-> > +                       /* IC Plus IP101A (0x02430c54) */
-> > +                       reg = <0>;
-> Does reg = <1> also work on your board?
-> 0 is the broadcast address. It's unfortunately something that we still
-> have incorrect in a lot of .dts files.
+Hi Tamir,
 
-Unfortunately not. I tried addresses 1 to 31 without success, which
-seems strange; my guess was that the PHY should respond to one of them.
-I get this error:
+>>=20
+>> I found `args_crates_cfgs()` a lot easier to understand, but I guess =
+this is a
+>> matter of taste. I also find that this `defaultdict()` call slightly =
+pollutes
+>> the surrounding code, but again, that might be just me.
+>=20
+> Would extracting a local variable suffice?
+>=20
 
-# ip l set eth0 up
-[    6.806847] meson6-dwmac c9410000.ethernet eth0: Register MEM_TYPE_PAGE_POOL RxQ-0
-[    6.810609] meson6-dwmac c9410000.ethernet eth0: __stmmac_open: Cannot attach to PHY (error: -19)
+Yeah, that would make it less crowded.
 
-
-> 
-> [...]
-> > +&i2c_AO {
-> > +       status = "okay";
-> > +       pinctrl-0 = <&i2c_ao_pins>;
-> > +       pinctrl-names = "default";
-> > +
-> > +       pmic@32 {
-> > +               compatible = "ricoh,rn5t618";
-> > +               reg = <0x32>;
-> > +               system-power-controller;
-> Here I'm a bit surprised:
-> Aren't some of the outputs used to drive VCCK (CPU power rail) and
-> VDDEE (everything else power rail, which also powers the GPU)?
-
-Unfortunately I don't have schematics and I wasn't able to trace the
-connections on the board because they're so tiny. So it's quite possible that
-you're right, but I can't be sure.
-
-Are there voltage sensors in the Meson8 SoC that I could use to establishs the
-relation between PMIC outputs and SoC supplies?
-
-> 
-> [...]
-> > +&usb1 {
-> > +       status = "okay";
-> > +       dr_mode = "host";
-> > +       /*
-> > +        * This bus features a Realtek RTL8188 2.4GHz WiFi module, with a
-> > +        * 3.3V supply voltage that must be enabled before use.
-> > +        */
-> > +       vbus-supply = <&wifi_3v3>;
-> If you want to go for perfection then you can use
-> Documentation/devicetree/bindings/sound/xmos,xvf3500.yaml as
-> reference.
-> It's also an "onboard" USB device which requires toggling a GPIO and regulators.
-> The driver side is super easy to manage as it's generic (meaning: it
-> parses any GPIO and regulator as long as the USB ID is registered):
-> drivers/usb/misc/onboard_usb_dev.c
-
-I considered using onboard_usb_dev, but then came to the conclusion that
-I don't need it because I don't need reset sequencing, only power.
-
-> That way you can just describe the RTL8188 on the USB bus and assign
-> it's vd33-supply without having to (ab)use vbus-supply of the USB
-> controller.
-
-This does sound reasonable. I'll reconsider the onboard_usb_dev
-approach.
-
-> 
-> [...]
-> > +               sdxc_c_pins: sdxc-c {
-> > +                       mux {
-> > +                               groups = "sdxc_d0_c", "sdxc_d13_c",
-> > +                                       "sdxc_clk_c", "sdxc_cmd_c",
-> > +                                       "sdxc_d47_c";
-> > +                               function = "sdxc_c";
-> > +                               bias_pull_up;
-> This has to be bias-pull-up (dashes instead of underscores).
-
-Oh, good catch, I'll fix it.
+=E2=80=94 Daniel
 
 
-Thanks for your review,
-J. Neuschäfer
