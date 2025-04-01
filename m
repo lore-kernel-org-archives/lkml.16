@@ -1,137 +1,110 @@
-Received: from lamorak.hansenpartnership.com (lamorak.hansenpartnership.com [198.37.111.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A92703595D;
-	Tue,  1 Apr 2025 01:13:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.37.111.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A53C313C67C;
+	Tue,  1 Apr 2025 01:13:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743470004; cv=none; b=UTVlv0k9aJIZqC9mauI5it/BcT49rheZFQsxPkpizyVSpUxekt6KDsyOMS2W5G4MWOV17UhGC3nSnlv1SHKAgzVMb1P2UmNGu4r9EoahZIMHVoS6ek+Cg99XhiWKHHFk1z6XMusH/D/z+Vy1+I378wT3Snu9lSo8utClfZUEzAU=
+	t=1743470035; cv=none; b=Ppymt5knpGiIYqQkno2IjwrkW9+29ygVLHk7SkhVT+v7X2MKYODLG0gutsChF5v9H35dbGWgZow5ERv1i77+8S5ij7CF56Y3LB0cw8MN7qo7Ebki62pEmg+rm5srXhtu0TNyt/AxTGDYOJU+62f5Kv4gswr4rcoUDwraRvZowjo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743470004; c=relaxed/simple;
-	bh=QP5gEX50FzK2JrT4MFEc+PyIHBEsTY90wmY5nB4a8H0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Z+QBL7rBl8E1HigR+YshQVk4O8S7vCpPR7kO/dCRaVtdKLi5lSLjmaGIaXOESi03FWsyU7wSkp/5i/46Yy43MtrbyCE6jlv++8uFLx6dSElJ+8Og1FW57hxHDH8/vJFRLFUMAO/qgpI0TrJ+4tr8ulD6uY0NoQ+cmhZz0WkUS+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com; spf=pass smtp.mailfrom=HansenPartnership.com; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=e13eO9aB; arc=none smtp.client-ip=198.37.111.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=HansenPartnership.com
+	s=arc-20240116; t=1743470035; c=relaxed/simple;
+	bh=9V6gALXQNYdhz5TmaBOH6ma6nrpJil+JKlbs8/kqK/s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RCA2e8Xnb0xi7tkn7kuSrHOIXpPqmvDoeZtrPsDxJ0bB/KV6E2GwERdplJCN0WK/BP+EW0Jw6R5ZVC0oabEQJFjOeUGvq0NVN9foWYsY8bm2EH5OsmsriTvxNJVTC3jj5DYIKZyFmmDZu6WqJSl/ywYylTAs3m1dIZyznNpo1NQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aySm72MF; arc=none smtp.client-ip=209.85.219.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="e13eO9aB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=hansenpartnership.com; s=20151216; t=1743470001;
-	bh=QP5gEX50FzK2JrT4MFEc+PyIHBEsTY90wmY5nB4a8H0=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
-	b=e13eO9aBWdTEZMzh+jf6uhJ4hFy21yAu/Fb8EiBiKTIDnd9UCfvrICqbJ4KexQbzh
-	 GYj+lFHrCGSjtbQ5bcAeBK5UVOGmty0doUrZ4ht5I0T/5Q1vL56XamxZIZgdmMXOOv
-	 AYtaGyd4YzVkA62LDCsHQ57yPgTLXX8kIXhVgPhE=
-Received: from lingrow.int.hansenpartnership.com (unknown [IPv6:2601:5c4:4302:c21::a774])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by lamorak.hansenpartnership.com (Postfix) with ESMTPSA id 06AEA1C0059;
-	Mon, 31 Mar 2025 21:13:21 -0400 (EDT)
-Message-ID: <f6bdfa23b9f54055f8a539ce396f1134b0921417.camel@HansenPartnership.com>
-Subject: Re: [RFC PATCH 1/4] locking/percpu-rwsem: add freezable alternative
- to down_read
-From: James Bottomley <James.Bottomley@HansenPartnership.com>
-To: Christian Brauner <brauner@kernel.org>, jack@suse.cz
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
- mcgrof@kernel.org, hch@infradead.org, david@fromorbit.com,
- rafael@kernel.org,  djwong@kernel.org, pavel@kernel.org,
- peterz@infradead.org, mingo@redhat.com,  will@kernel.org,
- boqun.feng@gmail.com
-Date: Mon, 31 Mar 2025 21:13:20 -0400
-In-Reply-To: <20250401-anwalt-dazugeben-18d8c3efd1fd@brauner>
-References: <20250327140613.25178-1-James.Bottomley@HansenPartnership.com>
-	 <20250327140613.25178-2-James.Bottomley@HansenPartnership.com>
-	 <77774eb380e343976de3de681204e2c7f3ab1926.camel@HansenPartnership.com>
-	 <20250401-anwalt-dazugeben-18d8c3efd1fd@brauner>
-Autocrypt: addr=James.Bottomley@HansenPartnership.com;
- prefer-encrypt=mutual;
- keydata=mQENBE58FlABCADPM714lRLxGmba4JFjkocqpj1/6/Cx+IXezcS22azZetzCXDpm2MfNElecY3qkFjfnoffQiw5rrOO0/oRSATOh8+2fmJ6el7naRbDuh+i8lVESfdlkoqX57H5R8h/UTIp6gn1mpNlxjQv6QSZbl551zQ1nmkSVRbA5TbEp4br5GZeJ58esmYDCBwxuFTsSsdzbOBNthLcudWpJZHURfMc0ew24By1nldL9F37AktNcCipKpC2U0NtGlJjYPNSVXrCd1izxKmO7te7BLP+7B4DNj1VRnaf8X9+VIApCi/l4Kdx+ZR3aLTqSuNsIMmXUJ3T8JRl+ag7kby/KBp+0OpotABEBAAG0N0phbWVzIEJvdHRvbWxleSA8SmFtZXMuQm90dG9tbGV5QEhhbnNlblBhcnRuZXJzaGlwLmNvbT6JAVgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAhkBFiEE1WBuc8i0YnG+rZrfgUrkfCFIVNYFAmBLmY0FCRs1hL0ACgkQgUrkfCFIVNaEiQgAg18F4G7PGWQ68xqnIrccke7Reh5thjUz6kQIii6Dh64BDW6/UvXn20UxK2uSs/0TBLO81k1mV4c6rNE+H8b7IEjieGR9frBsp/+Q01JpToJfzzMUY7ZTDV1IXQZ+AY9L7vRzyimnJHx0Ba4JTlAyHB+Ly5i4Ab2+uZcnNfBXquWrG3oPWz+qPK88LJLya5Jxse1m1QT6R/isDuPivBzntLOooxPk+Cwf5sFAAJND+idTAzWzslexr9j7rtQ1UW6FjO4CvK9yVNz7dgG6FvEZl6J/HOr1rivtGgpCZTBzKNF8jg034n49zGfKkkzWLuXbPUOp3/oGfsKv8pnEu1c2GbQpSmFtZXMgQm90dG9tbGV5IDxqZWpiQGxpbnV4LnZuZXQuaWJtLmNvbT6JAVYEEwEIAEACGwMHCwkIBwMCAQYVC
-	AIJCgsEFgIDAQIeAQIXgBYhBNVgbnPItGJxvq2a34FK5HwhSFTWBQJgS5mXBQkbNYS9AAoJEIFK5HwhSFTWEYEH/1YZpV+1uCI2MVz0wTRlnO/3OW/xnyigrw+K4cuO7MToo0tHJb/qL9CBJ2ddG6q+GTnF5kqUe87t7M7rSrIcAkIZMbJmtIbKk0j5EstyYqlE1HzvpmssGpg/8uJBBuWbU35af1ubKCjUs1+974mYXkfLmS0a6h+cG7atVLmyClIc2frd3o0zHF9+E7BaB+HQzT4lheQAXv9KI+63ksnbBpcZnS44t6mi1lzUE65+Am1z+1KJurF2Qbj4AkICzJjJa0bXa9DmFunjPhLbCU160LppaG3OksxuNOTkGCo/tEotDOotZNBYejWaXN2nr9WrH5hDfQ5zLayfKMtLSd33T9u0IUphbWVzIEJvdHRvbWxleSA8amVqYkBrZXJuZWwub3JnPokBVQQTAQgAPwIbAwYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AWIQTVYG5zyLRicb6tmt+BSuR8IUhU1gUCYEuZmAUJGzWEvQAKCRCBSuR8IUhU1gacCAC+QZN+RQd+FOoh5g884HQm8S07ON0/2EMiaXBiL6KQb5yP3w2PKEhug3+uPzugftUfgPEw6emRucrFFpwguhriGhB3pgWJIrTD4JUevrBgjEGOztJpbD73bLLyitSiPQZ6OFVOqIGhdqlc3n0qoNQ45n/w3LMVj6yP43SfBQeQGEdq4yHQxXPs0XQCbmr6Nf2p8mNsIKRYf90fCDmABH1lfZxoGJH/frQOBCJ9bMRNCNy+aFtjd5m8ka5M7gcDvM7TAsKhD5O5qFs4aJHGajF4gCGoWmXZGrISQvrNl9kWUhgsvoPqb2OTTeAQVRuV8C4FQamxzE3MRNH25j6s/qujtCRKYW1lcyBCb3R0b21sZXkgPGplamJAbGludXguaWJtLmNvbT6JAVQEEwEIAD
-	4CGwMFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AWIQTVYG5zyLRicb6tmt+BSuR8IUhU1gUCYEuZmQUJGzWEvQAKCRCBSuR8IUhU1kyHB/9VIOkf8RapONUdZ+7FgEpDgESE/y3coDeeb8jrtJyeefWCA0sWU8GSc9KMcMoSUetUreB+fukeVTe/f2NcJ87Bkq5jUEWff4qsbqf5PPM+wlD873StFc6mP8koy8bb7QcH3asH9fDFXUz7Oz5ubI0sE8+qD+Pdlk5qmLY5IiZ4D98V239nrKIhDymcuL7VztyWfdFSnbVXmumIpi79Ox536P2aMe3/v+1jAsFQOIjThMo/2xmLkQiyacB2veMcBzBkcair5WC7SBgrz2YsMCbC37X7crDWmCI3xEuwRAeDNpmxhVCb7jEvigNfRWQ4TYQADdC4KsilPfuW8Edk/8tPtCVKYW1lcyBCb3R0b21sZXkgPEpCb3R0b21sZXlAT2Rpbi5jb20+iQEfBDABAgAJBQJXI+B0Ah0gAAoJEIFK5HwhSFTWzkwH+gOg1UG/oB2lc0DF3lAJPloSIDBW38D3rezXTUiJtAhenWrH2Cl/ejznjdTukxOcuR1bV8zxR9Zs9jhUin2tgCCxIbrdvFIoYilMMRKcue1q0IYQHaqjd7ko8BHn9UysuX8qltJFar0BOClIlH95gdKWJbK46mw7bsXeD66N9IhAsOMJt6mSJmUdIOMuKy4dD4X3adegKMmoTRvHOndZQClTZHiYt5ECRPO534Lb/gyKAKQkFiwirsgx11ZSx3zGlw28brco6ohSLMBylna/Pbbn5hII86cjrCXWtQ4mE0Y6ofeFjpmMdfSRUxy6LHYd3fxVq9PoAJTv7vQ6bLTDFNa0KkphbWVzIEJvdHRvbWxleSA8SkJvdHRvbWxleUBQYXJhbGxlbHMuY29tPokBHwQwAQIACQUCVyPgjAIdIAAKCRCBSuR8IUhU1tXiB/9D9OOU8qB
-	CZPxkxB6ofp0j0pbZppRe6iCJ+btWBhSURz25DQzQNu5GVBRQt1Us6v3PPGU1cEWi5WL935nw+1hXPIVB3x8hElvdCO2aU61bMcpFd138AFHMHJ+emboKHblnhuY5+L1OlA1QmPw6wQooCor1h113lZiBZGrPFxjRYbWYVQmVaM6zhkiGgIkzQw/g9v57nAzYuBhFjnVHgmmu6/B0N8z6xD5sSPCZSjYSS38UG9w189S8HVr4eg54jReIEvLPRaxqVEnsoKmLisryyaw3EpqZcYAWoX0Am+58CXq3j5OvrCvbyqQIWFElba3Ka/oT7CnTdo/SUL/jPNobtCxKYW1lcyBCb3R0b21sZXkgPGplamJAaGFuc2VucGFydG5lcnNoaXAuY29tPokBVwQTAQgAQRYhBNVgbnPItGJxvq2a34FK5HwhSFTWBQJjg2eQAhsDBQkbNYS9BQsJCAcCAiICBhUKCQgLAgQWAgMBAh4HAheAAAoJEIFK5HwhSFTWbtAH/087y9vzXYAHMPbjd8etB/I3OEFKteFacXBRBRDKXI9ZqK5F/xvd1fuehwQWl2Y/sivD4cSAP0iM/rFOwv9GLyrr82pD/GV/+1iXt9kjlLY36/1U2qoyAczY+jsS72aZjWwcO7Og8IYTaRzlqif9Zpfj7Q0Q1e9SAefMlakI6dcZTSlZWaaXCefdPBCc7BZ0SFY4kIg0iqKaagdgQomwW61nJZ+woljMjgv3HKOkiJ+rcB/n+/moryd8RnDhNmvYASheazYvUwaF/aMj5rIb/0w5p6IbFax+wGF5RmH2U5NeUlhIkTodUF/P7g/cJf4HCL+RA1KU/xS9o8zrAOeut2+4UgRaZ7bmEwgqhkjOPQMBBwIDBH4GsIgL0yQij5S5ISDZmlR7qDQPcWUxMVx6zVPsAoITdjKFjaDmUATkS+l5zmiCrUBcJ6MBavPiYQ4kqn4/xwaJAbMEGAEIACYCGwIWIQTVYG5zyLRi
-	cb6tmt+BSuR8IUhU1gUCZag0LwUJDwLkSQCBdiAEGRMIAB0WIQTnYEDbdso9F2cI+arnQslM7pishQUCWme25gAKCRDnQslM7pishdi9AQDyOvLYOBkylBqiTlJrMnGCCsWgGZwPpKq3e3s7JQ/xBAEAlx29pPY5z0RLyIDUsjf9mtkSNTaeaQ6TIjDrFa+8XH8JEIFK5HwhSFTWkasH/j7LL9WH9dRfwfTwuMMj1/KGzjU/4KFIu4uKxDaevKpGS7sDx4F56mafCdGD8u4+ri6bJr/3mmuzIdyger0vJdRlTrnpX3ONXvR57p1JHgCljehE1ZB0RCzIk0vKhdt8+CDBQWfKbbKBTmzA7wR68raMQb2D7nQ9d0KXXbtr7Hag29yj92aUAZ/sFoe9RhDOcRUptdYyPKU1JHgJyc0Z7HwNjRSJ4lKJSKP+Px0/XxT3gV3LaDLtHuHa2IujLEAKcPzTr5DOV+xsgA3iSwTYI6H5aEe+ZRv/rA4sdjqRiVpo2d044aCUFUNQ3PiIHPAZR3KK5O64m6+BJMDXBvgSsMy4VgRaZ7clEggqhkjOPQMBBwIDBMfuMuE+PECbOoYjkD0Teno7TDbcgxJNgPV7Y2lQbNBnexMLOEY6/xJzRi1Xm/o9mOyZ+VIj8h4G5V/eWSntNkwDAQgHiQE8BBgBCAAmAhsMFiEE1WBuc8i0YnG+rZrfgUrkfCFIVNYFAmWoNBwFCQ8C4/cACgkQgUrkfCFIVNZs4AgAnIjU1QEPLdpotiy3X01sKUO+hvcT3/Cd6g55sJyKJ5/U0o3f8fdSn6MWPhi1m62zbAxcLJFiTZ3OWNCZAMEvwHrXFb684Ey6yImQ9gm2dG2nVuCzr1+9gIaMSBeZ+4kUJqhdWSJjrNLQG38GbnBuYOJUD+x6oJ2AT10/mQfBVZ3qWDQXr/je2TSf0OIXaWyG6meG5yTqOEv0eaTH22yBb1nbodoZkmlMMb56jzRGZuorhFE06
-	N0Eb0kiGz5cCIrHZoH10dHWoa7/Z+AzfL0caOKjcmsnUPcmcrqmWzJTEibLA81z15GBCrldfQVt+dF7Us2kc0hKUgaWeI8Gv4CzwLkCDQRUdhaZARAApeF9gbNSBBudW8xeMQIiB/CZwK4VOEP7nGHZn3UsWemsvE9lvjbFzbqcIkbUp2V6ExM5tyEgzio2BavLe1ZJGHVaKkL3cKLABoYi/yBLEnogPFzzYfK2fdipm2G+GhLaqfDxtAQ7cqXeo1TCsZLSvjD+kLVV1TvKlaHS8tUCh2oUyR7fTbv6WHi5H8DLyR0Pnbt9E9/Gcs1j11JX+MWJ7jset2FVDsB5U1LM70AjhXiDiQCtNJzKaqKdMei8zazWS50iMKKeo4m/adWBjG/8ld3fQ7/Hcj6Opkh8xPaCnmgDZovYGavw4Am2tjRqE6G6rPQpS0we5I6lSsKNBP/2FhLmI9fnsBnZC1l1NrASRSX1BK0xf4LYB2Ww3fYQmbbApAUBbWZ/1aQoc2ECKbSK9iW0gfZ8rDggfMw8nzpmEEExl0hU6wtJLymyDV+QGoPx5KwYK/6qAUNJQInUYz8z2ERM/HOI09Zu3jiauFBDtouSIraX/2DDvTf7Lfe1+ihARFSlp64kEMAsjKutNBK2u5oj4H7hQ7zD+BvWLHxMgysOtYYtwggweOrM/k3RndsZ/z3nsGqF0ggct1VLuH2eznDksI+KkZ3Bg0WihQyJ7Z9omgaQAyRDFct+jnJsv2Iza+xIvPei+fpbGNAyFvj0e+TsZoQGcC34/ipGwze651UAEQEAAYkBHwQoAQIACQUCVT6BaAIdAwAKCRCBSuR8IUhU1p5QCAC7pgjOM17Hxwqz9mlGELilYqjzNPUoZt5xslcTFGxj/QWNzu0K8gEQPePnc5dTfumzWL077nxhdKYtoqwm2C6fOmXiJBZx6khBfRqctUvN2DlOB6dFf5I+1QT9TRBvceGzw01E4Gi0xjWKAB6OII
-	MAdnPcDVFzaXJdlAAJdjfg/lyJtAyxifflG8NnXJ3elwGqoBso84XBNWWzbc5VKmatzhYLOvXtfzDhu4mNPv/z7S1HTtRguI0NlH5RVBzSvfzybin9hysE3/+r3C0HJ2xiOHzucNAmG03aztzZYDMTbKQW4bQqeD5MJxT68vBYu8MtzfIe41lSLpb/qlwq1qg0iQElBBgBAgAPBQJUdhaZAhsMBQkA7U4AAAoJEIFK5HwhSFTW3YgH/AyJL2rlCvGrkLcas94ND9Pmn0cUlVrPl7wVGcIV+6I4nrw6u49TyqNMmsYam2YpjervJGgbvIbMzoHFCREi6R9XyUsw5w7GCRoWegw2blZYi5A52xe500+/RruG//MKfOtVUotu3N+u7FcXaYAg9gbYeGNZCV70vI+cnFgq0AEJRdjidzfCWVKPjafTo7jHeFxX7Q22kUfWOkMzzhoDbFg0jPhVYNiEXpNyXCwirzvKA7bvFwZPlRkbfihaiXDE7QKIUtQ10i5kw4C9rqDKwx8F0PaWDRF9gGaKd7/IJGHJaac/OcSJ36zxgkNgLsVX5GUroJ2GaZcR7W9Vppj5H+C4UgRkuRyTEwgqhkjOPQMBBwIDBOySomnsW2SkApXv1zUBaD38dFEj0LQeDEMdSE7bm1fnrdjAYt0f/CtbUUiDaPodQk2qeHzOP6wA/2K6rrjwNIWJAT0EGAEIACcDGyAEFiEE1WBuc8i0YnG+rZrfgUrkfCFIVNYFAmWoM/gFCQSxfmUACgkQgUrkfCFIVNZhTgf/VQxtQ5rgu2aoXh2KOH6naGzPKDkYDJ/K7XCJAq3nJYEpYN8G+F8mL/ql0hrihAsHfjmoDOlt+INa3AcG3v0jDZIMEzmcjAlu7g5NcXS3kntcMHgw3dCgE9eYDaKGipUCubdXvBaZWU6AUlTldaB8FE6u7It7+UO+IW4/L+KpLYKs8V5POInu2rqahlm7vgxY5iv4Txz4EvCW2e4dAlG
-	8mT2Eh9SkH+YVOmaKsajgZgrBxA7fWmGoxXswEVxJIFj3vW7yNc0C5HaUdYa5iGOMs4kg2ht4s7yy7NRQuh7BifWjo6BQ6k4S1H+6axZucxhSV1L6zN9d+lr3Xo/vy1unzA==
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.3 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aySm72MF"
+Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-6e90b8d4686so44796356d6.2;
+        Mon, 31 Mar 2025 18:13:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743470032; x=1744074832; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9V6gALXQNYdhz5TmaBOH6ma6nrpJil+JKlbs8/kqK/s=;
+        b=aySm72MFisC48aB3IdkH+0yxD5OPMLxW35pGWX7DRs3FRaSzOBOD2cKNXBrjbiFApv
+         xHCJwPrZBq3IxYS6YNHcKczP8mQaiAxhSQpsUIW0uTsBR0fuokAVPAPmQknike7ywk1I
+         E1edDyJreLpd5u14SJae8wMXqi5/5WunBxsEkSMLkvtTn0jcza6+4VcDPrxvEyKRjZ+G
+         uA7IGuvV1XXkAXMJDG7CpQAmmPemhHnDLWdlKh86tckQt8RKsnUMdxB1aWIK99cOJjhy
+         tIdf1rIFmDC9Wtcu3w1YxU8rwcot5CV++aFtTQMykMBo2CzmmRrQccM9QktYVqxGMr4e
+         SzHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743470032; x=1744074832;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9V6gALXQNYdhz5TmaBOH6ma6nrpJil+JKlbs8/kqK/s=;
+        b=JMPMul2SHqYSTCSjKiXSdzOiMYUkzwLgVNHAnIaXObz0FamfAXI365zg158IDAS/Nq
+         zO+nIoOXENtr0YwasYFsjDZNtCGdH0i/0gHeNnh1MCaY5jpAmTg5JJFve/ynZtp3EhAr
+         PMhn/Asy8XKQhSHf8n3vVAaGWJpdYbQ481GTBDR3qQ8q/vXzBcYHl/8ChlHE9wge7rEL
+         2tf1H8NYSUPEabPbu+MKfzGq1R3mHnH+6mBCqzZuFWdXBKTNNVO99cHILRpryBcw0LNb
+         I6wyrGGEXo88USXPBDFp3nNnEju+AiVmFNHLhb/ryA2dn4NoOpmcJbA91zDnH5MH1EJp
+         /zzw==
+X-Forwarded-Encrypted: i=1; AJvYcCUHYe0899zhYW9yfqPaSyOmmIhhc9nU8dA0kqJliUD0sBhCJJlJWaYR/A5bGiB1U1qjpcToOI6qdhATfcDH@vger.kernel.org, AJvYcCVjR0Csgb4vO8V9U29DQlCL5SjAvhQgNziDUNoQE++Akx4fiH0zDT9AypuV6UofD1mJki29Jq5KCxI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyYqFNIp8uF/D1xIVRnAHIlzvO7AUTbPS+0T6uZINZUR/opLmLX
+	L355/7kJ8pm7OvpP89AzTLU8RwnllRjpj0eyr3/3g4gx5wfHlIr7q+xXfTlsKXMncAvY26fZzJG
+	xtY0xyUi+Q4AOOQ4z/rIcFisF4d/hkcwO
+X-Gm-Gg: ASbGncvFHoNx4YghKXTyO/pBg5ck0xwTk370d0/u2e0GeOc87yoyPrK8M8dpyXzqbYO
+	tpoz3YrM0qCft41X/J+wW2QhcBEs9umShGSNLvdEV8kTJ8IbZ1eS5O/ZHLsOZbTeUX8ty4Ikc2o
+	GKbxr9dp0fVozKoOhEBpX0rQN/Rg==
+X-Google-Smtp-Source: AGHT+IGczQt7n85+GajfuJEx43dpr5UsqwDzByhTbFO0RDOS1lkyVzr0+4hyaEsExSpG06CA7ZTG4IFeeibLL8dcmeA=
+X-Received: by 2002:a05:6214:5185:b0:6e4:269f:60fd with SMTP id
+ 6a1803df08f44-6eef5e45d14mr20185076d6.23.1743470032357; Mon, 31 Mar 2025
+ 18:13:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20250329110230.2459730-1-nphamcs@gmail.com> <20250329110230.2459730-2-nphamcs@gmail.com>
+ <67eb148e1f818_7baf294b9@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+ <CAKEwX=OEQKdoWbyAO=LKE--ssLzBH0UVhz3EYaCiodpbMtQvKw@mail.gmail.com> <67eb23cbcd0b7_11987294fd@dwillia2-xfh.jf.intel.com.notmuch>
+In-Reply-To: <67eb23cbcd0b7_11987294fd@dwillia2-xfh.jf.intel.com.notmuch>
+From: Nhat Pham <nphamcs@gmail.com>
+Date: Mon, 31 Mar 2025 18:13:41 -0700
+X-Gm-Features: AQ5f1JrJGOvy-PDvwAtqA3caAgZR_fWoNj40h_LFmhLE_INmWOy5f2BIOtp8Vgw
+Message-ID: <CAKEwX=OpOrV+Vy1QV1wpX6QypVmP5wkjtQ7-5PMoF0FRuVD=zQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/2] zsmalloc: let callers select NUMA node to store
+ the compressed objects
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: linux-mm@kvack.org, akpm@linux-foundation.org, hannes@cmpxchg.org, 
+	yosry.ahmed@linux.dev, chengming.zhou@linux.dev, sj@kernel.org, 
+	kernel-team@meta.com, linux-kernel@vger.kernel.org, gourry@gourry.net, 
+	willy@infradead.org, ying.huang@linux.alibaba.com, 
+	jonathan.cameron@huawei.com, linux-cxl@vger.kernel.org, minchan@kernel.org, 
+	senozhatsky@chromium.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2025-04-01 at 01:32 +0200, Christian Brauner wrote:
-> On Mon, Mar 31, 2025 at 03:51:43PM -0400, James Bottomley wrote:
-> > On Thu, 2025-03-27 at 10:06 -0400, James Bottomley wrote:
-> > [...]
-> > > -static void percpu_rwsem_wait(struct percpu_rw_semaphore *sem,
-> > > bool
-> > > reader)
-> > > +static void percpu_rwsem_wait(struct percpu_rw_semaphore *sem,
-> > > bool
-> > > reader,
-> > > +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bool freeze)
-> > > =C2=A0{
-> > > =C2=A0	DEFINE_WAIT_FUNC(wq_entry, percpu_rwsem_wake_function);
-> > > =C2=A0	bool wait;
-> > > @@ -156,7 +157,8 @@ static void percpu_rwsem_wait(struct
-> > > percpu_rw_semaphore *sem, bool reader)
-> > > =C2=A0	spin_unlock_irq(&sem->waiters.lock);
-> > > =C2=A0
-> > > =C2=A0	while (wait) {
-> > > -		set_current_state(TASK_UNINTERRUPTIBLE);
-> > > +		set_current_state(TASK_UNINTERRUPTIBLE |
-> > > +				=C2=A0 freeze ? TASK_FREEZABLE : 0);
-> >=20
-> > This is a bit embarrassing, the bug I've been chasing is here: the
-> > ?
-> > operator is lower in precedence than | meaning this expression
-> > always
-> > evaluates to TASK_FREEZABLE and nothing else (which is why the
-> > process
-> > goes into R state and never wakes up).
-> >=20
-> > Let me fix that and redo all the testing.
->=20
-> I don't think that's it. I think you're missing making pagefault
-> writers such
-> as systemd-journald freezable:
->=20
-> diff --git a/include/linux/fs.h b/include/linux/fs.h
-> index b379a46b5576..528e73f192ac 100644
-> --- a/include/linux/fs.h
-> +++ b/include/linux/fs.h
-> @@ -1782,7 +1782,8 @@ static inline void __sb_end_write(struct
-> super_block *sb, int level)
-> =C2=A0static inline void __sb_start_write(struct super_block *sb, int
-> level)
-> =C2=A0{
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 percpu_down_read_freezable(sb-=
->s_writers.rw_sem + level - 1,
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 level =3D=3D SB_FREEZE_=
-WRITE);
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 (level =3D=3D SB_FREEZE=
-_WRITE ||
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 level =3D=3D SB_F=
-REEZE_PAGEFAULT));
-> =C2=A0}
+On Mon, Mar 31, 2025 at 4:23=E2=80=AFPM Dan Williams <dan.j.williams@intel.=
+com> wrote:
+>
+> Nhat Pham wrote:
+> [..]
+> > That still leaves zram though. zram is more complicated than zswap -
+> > it has multiple allocation paths, so I don't want to touch it quite
+> > yet (and preferably a zram maintainer/developer should do it). :) Or
+> > if zram maintainers are happy with NUMA_NO_NODE, then we can
+> > completely get rid of the pointer arguments etc.
+>
+> At a minimum make the argument a "const int *" so it does not look like
+> the value can be changed by the leaf functions.
 
-Yes, I was about to tell Jan that the condition here simply needs to be
-true.  All our rwsem levels need to be freezable to avoid a hibernation
-failure.
+That's a good idea! I'll incorporate it into the next version.
 
-Regards,
+>
+> ...but I would challenge zram folks to ack/nak that change rather than
+> maintain old behavior based purely on momentum. I.e. add to the commit
+> message an "exclude zswap from this policy for $explicit_reason"
+> statement rather than the current $implicit_guess that the old behavior
+> is there for "reasons".
 
-James
-
+Yeah I'll take a look at the zram code. There's no conceptual reason
+why zram can not or should not adopt the same behavior, from my POV -
+it's just a bit more complicated than zswap, and as such would require
+more hacking. So I'm leaning towards making the minimal change
+required to support zswap first, and letting the zram
+maintainers/developers work it out on the zram side :) We'll see!
