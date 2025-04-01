@@ -1,110 +1,241 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2074.outbound.protection.outlook.com [40.107.22.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6209F213E7B
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 23:36:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743550604; cv=none; b=MvDJdbun0QI+jcoELEHvp/Q23OwJIZ1+A/GLEkORmRDDMNEOh0+094HKBn75fBhzouQudqQJV/8jrpe9stie1QjzCdaJH48j4GrUSJs4yDIC/Xjmdr+hWs3YD1LSqeNB8VGxniwcDhP18JMMAzfCY75xHOmvtI1e7wXEH+mpDcg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743550604; c=relaxed/simple;
-	bh=f1LW7wArLTH/O3nNwH0Ut5ahqANxTwb+PDOdiPH7gGk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qAItM4+BD/xfj98rowpSHGmo4btcrGlDb6US4erwyN9+tF9c1gdEodPHwaTMPN1OkWHKEitYjbXzujndbLiDmtBHigbWLXcBb1p2+sWBRuWTIlExv4rd/dOBjZS1Ln7Yi7Usf8vunqhDDol/FsvBdekvUNaRiusZf7M+etnkV7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wkennington.com; spf=none smtp.mailfrom=wkennington.com; dkim=pass (2048-bit key) header.d=wkennington-com.20230601.gappssmtp.com header.i=@wkennington-com.20230601.gappssmtp.com header.b=2NPAObjB; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wkennington.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=wkennington.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A86520766A;
+	Tue,  1 Apr 2025 23:38:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.74
+ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743550725; cv=fail; b=l9JkvDC78dNyJVxbrdng/bV5kWXZM/RMpGzGeUN9PwzzAnUTKjMi7nLNdROF8YvwgkF4S1IXJf7O7QRSs6mgemfmuUiA13IrrNbilbnm1Uj244523f18+ahWDpVuuFosrLfzfwQSqkoOyrgFKQk4Bzd5TERM0T4pGeWUDl47b4s=
+ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743550725; c=relaxed/simple;
+	bh=NdUgP2DKp+B+1uQzfxibKbjbLH9+ForSGzONMgU0oEs=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=eH3RJyU7ee+aGcfQa8RiptYnqxBg5IraJmbNlCNiN7bnu1yeEUr68oLzM/ZEyq24H142p+cKV5ocOxif1/TPgp1+cyMSkjO85oqoPlFtZY3CmpCorYds8gELBY3o9bV3OjavwWF2C04TNpWi2Rq7skmDRrKABffHK1QZ2+gPfJI=
+ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=KbMi0Vny; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=KbMi0Vny; arc=fail smtp.client-ip=40.107.22.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wkennington-com.20230601.gappssmtp.com header.i=@wkennington-com.20230601.gappssmtp.com header.b="2NPAObjB"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-225df540edcso6581685ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 16:36:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=wkennington-com.20230601.gappssmtp.com; s=20230601; t=1743550601; x=1744155401; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:reply-to:message-id:date
-         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=1W2Oez/Sw08kez7PZLuhoXC3i+XpY3chBoG0Mg2u1RE=;
-        b=2NPAObjB2BhnBu3q/M1VrmAcMkdkh2AgrVtiCnugyITfM639LSqBjj3F02oXoqTkXJ
-         1TIO0pZVzzbpQTzN2hoB0LE20aL7xGEM/MUcGXU3GMfW3dUd39x02ZA7++QW4Sn8Vb60
-         Le3JNBAiuyqJTKzLs2Qz87thdDD0nsj3rteV6w2fmYcClVOEaKJLPpGDfDsdOIEJ/eBI
-         Rnvs2+/FTfQeWB0skAiSgZDaHLRv2xd66THhMoAjJ4tm/fI0Bkdg6XpWE7iRQ4H3sYz9
-         wgp7vBBfvJVQLfQYnLttj+A/yI4WICECuxpn/ZpdiwMH/+HTtN9Fsm4v44jvFpxGfVEW
-         ndZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743550601; x=1744155401;
-        h=content-transfer-encoding:mime-version:reply-to:message-id:date
-         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1W2Oez/Sw08kez7PZLuhoXC3i+XpY3chBoG0Mg2u1RE=;
-        b=BJ50IFS9WRoYcM5BX+nkI9Fd86wxezS0NTRBoqnuGLGmhKWHtlLNhyjrJ+D0f4VluZ
-         kfqX72NJuWmzoqMa79pQ94rOSLwqm2rMEVKLnspIc7juBvt+MyPO6ir4SfxXH2R4LbCc
-         ctMf55PtaGXmlvZ3z6M8sv71TzQV1gGLHF0Hp9nh2Jv2fra60g4PthG8VC+1X6PZ+R/W
-         SCMeo9sDwHVeCOT741zhoy7DK87Xii7h6zmk2kfOrEqeV0KgKXI6xtroNtDhV47zPxg6
-         TVm3XsfoKSCOslEZd69ktwE8/ElW93QzBUvpWsrV0oEh5bqxsQ7WbrOAbQkK190YCYBM
-         wpiA==
-X-Forwarded-Encrypted: i=1; AJvYcCUAVL56W41t+AdFuOIMtmzfGpTp0JwsLUz0j+dbBTKm/7J8ERbYmSXBcu7Fj26nox+JpuHdRVvaVnf5sJM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxGjKIQVEg4jqySsxG4WQGM5TtqCHfDOHIWeNGzt6DBlF5bFH8a
-	wkiSpBiFd1Jn2DSCAGKLz3zZ0AiWTQ43Wn73LX+mcNYpykHUqWE6ACXDzi4WTQA=
-X-Gm-Gg: ASbGnct00s5nkUfVAb23oQUTf4nUsXOcCBpHc68Q4uQkXr5ny5bAFJBxfhI1Hjfpdoc
-	885uKUK9VtgA35NHiUEYrhkY/uwuN8f9697GAGrfFWdhdBb9e5my9iCZSGnaT3ghsdRcVGCZ36/
-	zHl7MPDwUizBkruXQZsx1moEEDKI2a+5R7HOOewHIkTTINVgLGMu5yz0hysMihBJmClUjqMKQxa
-	fTTykiOn4A/wUI3E8UsGLYsmaMqnBGPCQxjixcTbndDH4vEdB0NjN/FT0Vir82hZ0QfHY4j2evS
-	l1q5BAcO4sFG5vrs3+2ihrYr+cDYFzNfSFfYiDa8ZcHX6velfH6hpNaILSE2Rp7OofyZG3h4mM+
-	2aM+IPCmbv+FFRcxDmuf7u9OApgcqM0fa7LVaYIt2Gg==
-X-Google-Smtp-Source: AGHT+IEVaEftCDieEpS7ZkP41WX9Cr6Tw3+DC3MPmN07cO7H+9fJKbzk/i15pVNXyrYe+e1tH7GluA==
-X-Received: by 2002:a17:90a:e18d:b0:2e2:c2b0:d03e with SMTP id 98e67ed59e1d1-3056b714b87mr2357429a91.5.1743550601625;
-        Tue, 01 Apr 2025 16:36:41 -0700 (PDT)
-Received: from wak-linux.svl.corp.google.com ([2a00:79e0:2e5b:9:895:611e:1a61:85c1])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291f1dee47sm95153755ad.180.2025.04.01.16.36.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Apr 2025 16:36:41 -0700 (PDT)
-From: "William A. Kennington III" <william@wkennington.com>
-To: Tomer Maimon <tmaimon77@gmail.com>,
-	Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	openbmc@lists.ozlabs.org,
-	"William A. Kennington III" <william@wkennington.com>
-Subject: [PATCH v2] ARM: dts: nuvoton: Add OHCI node
-Date: Tue,  1 Apr 2025 16:34:09 -0700
-Message-ID: <20250401233409.3215091-1-william@wkennington.com>
-X-Mailer: git-send-email 2.49.0.472.ge94155a9ec-goog
-Reply-To: 20240930214329.192587-1-william@wkennington.com
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="KbMi0Vny";
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="KbMi0Vny"
+ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
+ b=Kive/wAwXHILsWj9LjTlipG3fPhMz/fmvMV+eLxk4/nkVVGlUvL83vRWDN9ENWFlS+Cz3Mq32peml7M4JztVngeL/c6935q0zJ+iBuM7qtrd3Bs8lA0PfQpRxuHiwfBO2KgqgjRl27N9diGhGg6vEdpt4Tj/tuf8AXXSEjKELp9Z0mWEXpc0wV9PhCecMfDihQ7dpUXIQGDzb4x33MyVh6dYp2A59RTohlciIIqcV3NR7QwGAser8c2PAMd0gCqMT5zxhL9PlSHHOSimLYvYeVaz2aXfHkirJOUHM8T3PgpN9Sx6OT/LygbbwvcebbvAEC9cP6qoqjtM4YJoN9vIyA==
+ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=NdUgP2DKp+B+1uQzfxibKbjbLH9+ForSGzONMgU0oEs=;
+ b=YORXIP5YVlE9jxVNrtdvPcG1OW/CAGJW6IRjJm8kNgyvilNAdzpr7/hw26n5kDYbCMYkH5MhFs9poed7mW6/CFyclHYswiIdGmtAD/sp9EBsw5om5pCGMqyWDineF2dF0u6ycQi9wBnuLLdMoD4G78nxZIweDF6iTd/EcSXrIVATCPfpQlb3+3EDZ06ZeNrw+zCsj0qR3mmbfQR0QbOpSZxeXU7gNGEolluJGhgy7bi9X4siBpkh4t1ver/uPH5TOHmeeS68Nbdn/UPUk1IO9dNQCivf24nkh5PK8CBOw3DcAdpwIfjDycKTSnIuHZUPMmWLaSwG8lUeNdp65p4SGA==
+ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=fail (sender ip is
+ 4.158.2.129) smtp.rcpttodomain=ziepe.ca smtp.mailfrom=arm.com; dmarc=pass
+ (p=none sp=none pct=100) action=none header.from=arm.com; dkim=pass
+ (signature was verified) header.d=arm.com; arc=pass (0 oda=1 ltdi=1
+ spf=[1,1,smtp.mailfrom=arm.com] dkim=[1,1,header.d=arm.com]
+ dmarc=[1,1,header.from=arm.com])
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NdUgP2DKp+B+1uQzfxibKbjbLH9+ForSGzONMgU0oEs=;
+ b=KbMi0Vnyq+XmoZ8Ne0WheK2y5g7EI0PdaDr2R+EmVuu0x/AZ0r/DadPz4aquq5U3prJwYkw5dCyLpZkzFX8BpC9+TW+cyzF3EpMRbzesGyIFFWMnC5XqEAgEVMJEYS4IwxXZe4dhCisOJ5c2oYRIbPRRwLb/oVqXm1/haXT9TYg=
+Received: from DUZPR01CA0323.eurprd01.prod.exchangelabs.com
+ (2603:10a6:10:4ba::24) by DU5PR08MB10823.eurprd08.prod.outlook.com
+ (2603:10a6:10:528::20) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8583.41; Tue, 1 Apr
+ 2025 23:38:34 +0000
+Received: from DU2PEPF00028D09.eurprd03.prod.outlook.com
+ (2603:10a6:10:4ba:cafe::eb) by DUZPR01CA0323.outlook.office365.com
+ (2603:10a6:10:4ba::24) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8583.41 via Frontend Transport; Tue,
+ 1 Apr 2025 23:38:34 +0000
+X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 4.158.2.129)
+ smtp.mailfrom=arm.com; dkim=pass (signature was verified)
+ header.d=arm.com;dmarc=pass action=none header.from=arm.com;
+Received-SPF: Fail (protection.outlook.com: domain of arm.com does not
+ designate 4.158.2.129 as permitted sender) receiver=protection.outlook.com;
+ client-ip=4.158.2.129; helo=outbound-uk1.az.dlp.m.darktrace.com;
+Received: from outbound-uk1.az.dlp.m.darktrace.com (4.158.2.129) by
+ DU2PEPF00028D09.mail.protection.outlook.com (10.167.242.169) with Microsoft
+ SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8606.22
+ via Frontend Transport; Tue, 1 Apr 2025 23:38:34 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=lV68Fon8igUu3E8547FbB31lvUWoopsbaipGsR1ihTIYTjFuUUPJDNZQjdxva9LyNxaIV/X2KLRrIWRoNfzKOPn/wFI58vKYWV8VQBXsT+BgaMTnPNYFWj6lpHZHp0UZLgoJCipM2ZvZM7InPO0QT6ad6pvbflUGVKOJkxd+Lm9xbHev/BaIpJQE+neT/toVxPNbcg7RBX+xzCPpizCBGr6xdYGhORcj9uo20Ilf2BYNQjWp20kuMHHOEIl0z4Oks7C4AsOSsAg/b9FW6UHdEjbkfGDtIECv7sqoBTUeBBn4q9cb268bbmEdlFMA9KvE3Q26QjwSyTw0BBVUw5iGOA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=NdUgP2DKp+B+1uQzfxibKbjbLH9+ForSGzONMgU0oEs=;
+ b=DmAbMtK7CE62LZaB2Hu9Hi9BwpARuqxQDRTv+UZyZr/Ft7ACNK4eWwkXVy4X7WU802FF/kPqa3n5yFbDyyAgjV8993c2P1x9JYf7mWWvZwBxVBVfa2j9vYxb/TiCAbJY4ywjuT6jVnaZR8+OWRxt2ngEFlkPKCZcA38hGTQZ8V8hcoETM0mAQaxMqF4UTCyvsCmxoC96j60GpwTbxGgJqqOw1nfMXQ3rNXVssT/MGWcLbXcWoHDcmCFfDO/Z0gy6VyBstod0mfob77Ti/+15Y5Jgi5ntsUng66mXs51n+jvkXY5y0cX1/PqeG+NlxGtTmK7rSBCBqOR4XWVpwYh8Sw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NdUgP2DKp+B+1uQzfxibKbjbLH9+ForSGzONMgU0oEs=;
+ b=KbMi0Vnyq+XmoZ8Ne0WheK2y5g7EI0PdaDr2R+EmVuu0x/AZ0r/DadPz4aquq5U3prJwYkw5dCyLpZkzFX8BpC9+TW+cyzF3EpMRbzesGyIFFWMnC5XqEAgEVMJEYS4IwxXZe4dhCisOJ5c2oYRIbPRRwLb/oVqXm1/haXT9TYg=
+Received: from PAWPR08MB8909.eurprd08.prod.outlook.com (2603:10a6:102:33a::19)
+ by DBBPR08MB10602.eurprd08.prod.outlook.com (2603:10a6:10:52c::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.52; Tue, 1 Apr
+ 2025 23:38:01 +0000
+Received: from PAWPR08MB8909.eurprd08.prod.outlook.com
+ ([fe80::613d:8d51:60e5:d294]) by PAWPR08MB8909.eurprd08.prod.outlook.com
+ ([fe80::613d:8d51:60e5:d294%5]) with mapi id 15.20.8534.043; Tue, 1 Apr 2025
+ 23:38:01 +0000
+From: Wathsala Wathawana Vithanage <wathsala.vithanage@arm.com>
+To: Jason Gunthorpe <jgg@ziepe.ca>, "Tian, Kevin" <kevin.tian@intel.com>
+CC: Alex Williamson <alex.williamson@redhat.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, nd
+	<nd@arm.com>, Philipp Stanner <pstanner@redhat.com>, Yunxiang Li
+	<Yunxiang.Li@amd.com>, "Dr. David Alan Gilbert" <linux@treblig.org>, Ankit
+ Agrawal <ankita@nvidia.com>, "open list:VFIO DRIVER" <kvm@vger.kernel.org>,
+	Dhruv Tripathi <Dhruv.Tripathi@arm.com>, Honnappa Nagarahalli
+	<Honnappa.Nagarahalli@arm.com>, Jeremy Linton <Jeremy.Linton@arm.com>
+Subject: RE: [RFC PATCH] vfio/pci: add PCIe TPH to device feature ioctl
+Thread-Topic: [RFC PATCH] vfio/pci: add PCIe TPH to device feature ioctl
+Thread-Index:
+ AQHbhLKEApVfqCfEsEO/VXZQklRIvLNjFiyAgACJGACAADH7gIAAQ1nQgAsppICAH9hWAIAAlytg
+Date: Tue, 1 Apr 2025 23:38:01 +0000
+Message-ID:
+ <PAWPR08MB8909781BE207255E830DE1589FAC2@PAWPR08MB8909.eurprd08.prod.outlook.com>
+References: <20250221224638.1836909-1-wathsala.vithanage@arm.com>
+ <20250304141447.GY5011@ziepe.ca>
+ <PAWPR08MB89093BBC1C7F725873921FB79FC82@PAWPR08MB8909.eurprd08.prod.outlook.com>
+ <20250304182421.05b6a12f.alex.williamson@redhat.com>
+ <PAWPR08MB89095339DEAC58C405A0CF8F9FCB2@PAWPR08MB8909.eurprd08.prod.outlook.com>
+ <BN9PR11MB5276468F5963137D5E734CB78CD02@BN9PR11MB5276.namprd11.prod.outlook.com>
+ <20250401141138.GE186258@ziepe.ca>
+In-Reply-To: <20250401141138.GE186258@ziepe.ca>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Authentication-Results-Original: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=arm.com;
+x-ms-traffictypediagnostic:
+	PAWPR08MB8909:EE_|DBBPR08MB10602:EE_|DU2PEPF00028D09:EE_|DU5PR08MB10823:EE_
+X-MS-Office365-Filtering-Correlation-Id: 02057611-a697-4f77-6e2f-08dd717651b0
+x-checkrecipientrouted: true
+nodisclaimer: true
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam-Untrusted:
+ BCL:0;ARA:13230040|1800799024|376014|366016|38070700018;
+X-Microsoft-Antispam-Message-Info-Original:
+ =?us-ascii?Q?f5UyNBDRRMatjJ3yYGYMBQbGF9Ns71KJAhFyal5wjW1q0GLY4b2ehyAsx1+g?=
+ =?us-ascii?Q?KI0fUmH3c3htE1Na3Izi+a8QlrGZVBniUEdTQqwfIfu21bF7ndZ5aqTg/G+o?=
+ =?us-ascii?Q?Mva+AaW0ufz8OzaeMM0KBxSnn28XaNSx7/jrcfzxb0VZfJzRda2Ba1nmvMeD?=
+ =?us-ascii?Q?hgv2d+Jzq6a8UuvmFc/dO3LQ2z8/Ihrpgo6cYjKeVHdBh9xmj5H6Fp8la8GV?=
+ =?us-ascii?Q?IOEIb9vhLi4LKnOONiZ2bzd1THBmdJiZDP7ea+Fq5jXKFltPzjnnH2n/pAD/?=
+ =?us-ascii?Q?wh9cRcPJYAD7CxN+lBeowly1Yuetm0btSeqXz/fvnCQIuNCOFzhsCHGi22TS?=
+ =?us-ascii?Q?jrWKoEC471TZCmrhTypMpm67X3JTBLLwWGt7E7y0t04M8q3A5bkPoff2aLaI?=
+ =?us-ascii?Q?QIqNNp1jWAXwAhOHAdAitW6LU2qSQhsD3quuaa9RdA9gj+cTOIh0wQ0QCr5Z?=
+ =?us-ascii?Q?q1MPNvBK7/i2r/3dZC0gt5FSNAc5nWX6mVSMqwl53R0EDjJlM9rudU46kTtH?=
+ =?us-ascii?Q?X5+OKoECbAg7Lpe3WvtOsZ02d6l8kyCVzj2utSov0ODBNIxIPNLsqCl56ow7?=
+ =?us-ascii?Q?qA7mvG4aQRVHqiKwE7I9WuFDsX9Apvr/KE6zwL891Ew1yeuLBjJ7BJaFqlgc?=
+ =?us-ascii?Q?WsrSQZlEHUygVIPIB6CljxPYhQ9hDvHtzB94qpsSafaOC4rpwAbgAE4l7YQ3?=
+ =?us-ascii?Q?RR75vF4SG+mJy6nu5/Vz/XUJWU+em6UZclkfoeqKQBM0mGwXvYlaL5NxXmKF?=
+ =?us-ascii?Q?IeTiNhPK1HK7TzVR4nIAINWuUoYjood0TICwpD6tVMgxzKAC6lm+vlttYQd2?=
+ =?us-ascii?Q?V+s86QvjHvRvbexxc90MUIR07VgPYZHX5frd8Hgwfy+MHHTKR//F2yDOK5bA?=
+ =?us-ascii?Q?X4O3nB2zTepL+JAtUaati0YoliB1LmIh0jq9i2mEM23evQMatHuhi89AZwsn?=
+ =?us-ascii?Q?Hq+sL5SwQ9fbVfHUnjl4sUZxLIpjRkNH2VSwovsn0R8u9q1IEiwUKKCddAg3?=
+ =?us-ascii?Q?8NJD9Ls7Gc0BkJEqgZ9JnTOpNrJI7vn01kmOF6j8MKZNUek+cm/CE7gwL0kK?=
+ =?us-ascii?Q?FCZspzqPoUyS0H0Bt+0bfi+QyfOm8au9ZS4NgbtUVZVF89r5zLsrKnsyzwms?=
+ =?us-ascii?Q?tEg17pI/CWYnJZ0usrMrRwHIDHEuN4aEHucHJz/oBKlf4wUnoWdOf9QtBHhA?=
+ =?us-ascii?Q?134pJO9mBi6v5B1eT9jTHBBwdWcXVfk5jCIJvugdCNoh4iXW/omthHWDOSom?=
+ =?us-ascii?Q?1XKiEoK+Dp5ST2wjx+tk8i5/0unCxKlgHV2MVmGqwrjv9EVKNrc43YNn6a4X?=
+ =?us-ascii?Q?hfn8FklPuaSt77aXJGHOBV9wSsVAuAtXB3+OmR1aPUy7iB7Wln00AxGazlMa?=
+ =?us-ascii?Q?78aR9AaDNhPNYX7e8WloxQS6rc4A9OPzQ3COvk8EDtQG8KSuPxqnff0tPof/?=
+ =?us-ascii?Q?6iI3ptkFuAuyEvVSQtRHaiJS3b7HEqtq?=
+X-Forefront-Antispam-Report-Untrusted:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAWPR08MB8909.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(38070700018);DIR:OUT;SFP:1101;
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR08MB10602
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped:
+ DU2PEPF00028D09.eurprd03.prod.outlook.com
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id-Prvs:
+	0c577c22-ee81-46ca-939a-08dd71763dc1
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|35042699022|14060799003|1800799024|376014|82310400026|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?aQ7vFCDc5kdNVPTuUiQyGCBiLyhgJdLhIL2ClLLQkROn82QxJwF86zVRdp95?=
+ =?us-ascii?Q?27MUC1X6UpyyQSu+WC9Zpz8UXK9UmJzZzJAmFAhQlcV13US1ypzuAwJnijOK?=
+ =?us-ascii?Q?2DzIts5MJ4L6MBb/vFtAmG8EGDvF92Mg7kJQ6Lwj3i8PDWpio/33Y/mU7XRR?=
+ =?us-ascii?Q?KOkvbKMUGX64kv2hkRycBHU+lOdNKFu46r/1LK/dVNA3JRGZY1ZvDCaC0x0J?=
+ =?us-ascii?Q?7i4T6Xzj1IkTmXuQJSSiK7+0LMOQtwYEtWQzZsVaUkUZzbN57jNGmKUEwbf+?=
+ =?us-ascii?Q?1DW5NuNpfIBtxb24dxPDegrNSzwwYvxeTaQR6r9v871XuTSdECFuwTRdWoi1?=
+ =?us-ascii?Q?pbU4j/vI9g6TBShrDVMxfIbZANr6nbcXBefYRsNZsPaUVFCnh02GHZXnct7r?=
+ =?us-ascii?Q?+0MDK9MuGGEZWwl2r/uqpGSp1BTQV5gQsjEFW2zWLIWU+jAt+w4UAeOSLtc4?=
+ =?us-ascii?Q?gZWAXUgoBV99AlNHLkqm2XnY2EuKrF9+FNjq+EHg5E1o0C+4CTFFHPAsxX4H?=
+ =?us-ascii?Q?ifHC/M10zCQzy715ipMza5y9NBzIEy+nUndeAFHFSQdfZGtiM8qQEPPGu+ue?=
+ =?us-ascii?Q?//lLpq/v9NpFHG64ouahw42P5kPptlTuEeukN2YsOTXYhE3Y8S7Dc9aA2okN?=
+ =?us-ascii?Q?+StXF9JIpgPgCOqapMBGuzInnFmJZfbjAjuthh3p2AU4L0jeGAPBneGbHHsL?=
+ =?us-ascii?Q?+m8QRhR9CLFAMIrzkKJE75SDi6bmlQgrR1DgpPmXRgYrg7povBJPGlPJLSok?=
+ =?us-ascii?Q?JGKhboM9w7rekXBrySXsitRa0qa+zWY6bef3Z4FsDPLupI3XXpCJdANz66Cj?=
+ =?us-ascii?Q?OagO2XFC4/52Sfb+pxyeSCSnPxXpfOr+PnLm8HPWCZuPT8YTZyTmYwx7D2t9?=
+ =?us-ascii?Q?u/VWm8htRy+l2366hFk1jr8g3Jjin4D52wYFjcEZaLGlZNmPZanCibdz5hrR?=
+ =?us-ascii?Q?ymLoP49gAFqEbEcjos0wrjmkzgIZw0hW3lhAaap6d8BtsrRjoiT9nQp5HWT8?=
+ =?us-ascii?Q?wS3HtRn9Vp8NeOO70vgtxjMrLhAeqMiKeTLuuhBOispJOz85WUnhj/Hh8XsQ?=
+ =?us-ascii?Q?kRha0ogsrw86bEIHJ+dWbter2ldq5gR6SSsdtyiki+fOZVObrh39VJy2qTlb?=
+ =?us-ascii?Q?Wh+XOvxvUU+rBk5N4Vo/t7L2yqVTRAUqV9Ig4Bfdg6CCTRF014rCTikrvEGH?=
+ =?us-ascii?Q?4ZXiHxqDI9Hl30HeIw/+3dR2s4JDsmAbASgtSvqWkOTWFZC2PoLEpkjpHJK3?=
+ =?us-ascii?Q?vOkqBcNPDnvueuMnTw6Ey3xnJIpnKIbHULyU1VtY6Ms61yQUj6CmqMYxjnn+?=
+ =?us-ascii?Q?uMcB1m6EEvhXKhieGH1oY8s6XBrh3uEQo1sZQuJi0ANBHMmU7UCmnX9oRlSg?=
+ =?us-ascii?Q?TSdVfBO+T7OjL9KIFjiktAfSmSpMCInDs5yyT7S91H59YaPTcMYjcX6BZDUO?=
+ =?us-ascii?Q?uWj6ymAiFQzuFqG/cvi6EqL7YRgKId/FBBLiNYIu06fFEdT0pNYah3cG+vfR?=
+ =?us-ascii?Q?FYfq7B0K0AG+cco=3D?=
+X-Forefront-Antispam-Report:
+	CIP:4.158.2.129;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:outbound-uk1.az.dlp.m.darktrace.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(35042699022)(14060799003)(1800799024)(376014)(82310400026)(7053199007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Apr 2025 23:38:34.5981
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 02057611-a697-4f77-6e2f-08dd717651b0
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[4.158.2.129];Helo=[outbound-uk1.az.dlp.m.darktrace.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DU2PEPF00028D09.eurprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU5PR08MB10823
 
-The EHCI peripheral already exists in the devicetree, but the hardware
-also supports a discrete OHCI unit on the same USB PHY. Generic OHCI
-works fine for this device already and has been tested on real hardware.
 
-Signed-off-by: William A. Kennington III <william@wkennington.com>
----
-V1 -> V2: Fixed nodename from ohci -> usb
 
- arch/arm/boot/dts/nuvoton/nuvoton-common-npcm7xx.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+> -----Original Message-----
+> From: Jason Gunthorpe <jgg@ziepe.ca>
+> Sent: Tuesday, April 1, 2025 9:12 AM
+> To: Tian, Kevin <kevin.tian@intel.com>
+> Cc: Wathsala Wathawana Vithanage <wathsala.vithanage@arm.com>; Alex
+> Williamson <alex.williamson@redhat.com>; linux-kernel@vger.kernel.org; nd
+> <nd@arm.com>; Philipp Stanner <pstanner@redhat.com>; Yunxiang Li
+> <Yunxiang.Li@amd.com>; Dr. David Alan Gilbert <linux@treblig.org>; Ankit
+> Agrawal <ankita@nvidia.com>; open list:VFIO DRIVER <kvm@vger.kernel.org>;
+> Dhruv Tripathi <Dhruv.Tripathi@arm.com>; Honnappa Nagarahalli
+> <Honnappa.Nagarahalli@arm.com>; Jeremy Linton <Jeremy.Linton@arm.com>
+> Subject: Re: [RFC PATCH] vfio/pci: add PCIe TPH to device feature ioctl
+>=20
+> On Wed, Mar 12, 2025 at 07:53:17AM +0000, Tian, Kevin wrote:
+>=20
+> > Probably we should not allow device-specific mode unless the user is
+> > capable of CAP_SYS_RAWIO? It allows an user to pollute caches on CPUs
+> > which its processes are not affined to, hence could easily break SLAs
+> > which CSPs try to achieve...
+>=20
+> I'm not sure this is within the threat model for VFIO though..
+>=20
+> qemu or the operator needs to deal with this by not permiting such HW to =
+go into
+> a VM.
+>=20
+> Really we can't block device specific mode anyhow because we can't even
+> discover it on the kernel side..
+>=20
 
-diff --git a/arch/arm/boot/dts/nuvoton/nuvoton-common-npcm7xx.dtsi b/arch/arm/boot/dts/nuvoton/nuvoton-common-npcm7xx.dtsi
-index c7880126cc78..5a466e97955a 100644
---- a/arch/arm/boot/dts/nuvoton/nuvoton-common-npcm7xx.dtsi
-+++ b/arch/arm/boot/dts/nuvoton/nuvoton-common-npcm7xx.dtsi
-@@ -151,6 +151,13 @@ ehci1: usb@f0806000 {
- 			status = "disabled";
- 		};
- 
-+		ohci1: usb@f0807000 {
-+			compatible = "generic-ohci";
-+			reg = <0xf0807000 0x1000>;
-+			interrupts = <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>;
-+			status = "disabled";
-+		};
-+
- 		fiu0: spi@fb000000 {
- 			compatible = "nuvoton,npcm750-fiu";
- 			#address-cells = <1>;
--- 
-2.49.0.472.ge94155a9ec-goog
+We cannot block users from writing a steering-tag to a device specific loca=
+tion, but
+can we use a capability to prevent users from enabling device specific mode=
+ on the device?
 
