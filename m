@@ -1,184 +1,124 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 721D2204F6E;
-	Tue,  1 Apr 2025 14:43:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED676204F66
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 14:44:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743518642; cv=none; b=JHmnvdHaFAqmMlv/d20zudcv1apjiJVN3l1cYKeYczs+LLLhiqWUj0hxTsV78LuHi57vbr+EZQyoMpc0kgQLJwlf/XQ7FYk1y/adMwa/3/erwRyngvCN21iSHR6n7Y/vlS+1xt2BIWizKq2ncsHNgz8yM4W8ee5B51CmurEw+jU=
+	t=1743518662; cv=none; b=cf9MjkA0qpIJtdK2HQ3vqwTqabj/oH3VQuTbmvlIqa3Z9tGdPga/8/IL6kz1yH+Z1lYfu7M7bz5hMGke0ZU2eSXRe7HXCu3JXBDiDijABGu/3six97vwiLbfLikQ+COW5OgSLPFx4lgO57zoYIZpNOxY2zFtLVgUArJeyc9tJzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743518642; c=relaxed/simple;
-	bh=Ox/5eYi4GlhBdnBXV0M9N+R+ObV+LJoTiX5br973HpQ=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=tEMu8dpiZkPqYL8KJyrUFw4iVpsJDE2SOTC4NJzhlVXgUQOymfBsGyaRG4LcVG1yKlnosqppKWYtU/CYfWfyGjfu3BEyZV48QWggXZHHfnCX+pG5kX8b7G3UAL9qLoAIgNlbiOD6JmmTQZkI+RMR1CSHrc12vQ4siZwxMyiAOnk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XIuyo36o; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743518662; c=relaxed/simple;
+	bh=eiIdxMyFX8RWJTV9imHd+E2JMVAxGUjJHomwrwPuLMs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ytw/j3/ey/k2Yu7yTCg2pnFEm3QKumggE7/EJpXQxYjZ+YA4ECtuzEmo1CNzsgPPriCQ312iT3XqdL3gOy9KvTjurtmNmLYTUcn0ouS/pLyCvAifQgJg4OEZVCwKlax1EbC+tY6NO+nediC+voTwVHM/QHITcdfJdtnOSp0+uLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=VUnYkLWm; arc=none smtp.client-ip=209.85.222.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XIuyo36o"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-223fb0f619dso105887615ad.1;
-        Tue, 01 Apr 2025 07:43:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="VUnYkLWm"
+Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-7c5e39d1db2so331654485a.3
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 07:44:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743518637; x=1744123437; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=spmdYh5iTMHiWJde+8Fl/6vRQmlnAOCyfRLFHTdbiq4=;
-        b=XIuyo36oJCpnd31Y+oRB9/mOM/F1pbrNOKoVF7qHmnu9ycC/aJMePzbm2mScq9IhsI
-         kvtF5xbanFxolljmlBC+gwxM2/XXwq8OB9ujIQ7WUxS1mDcWi+2lVM8bMp7UGfuZkSfp
-         8EEhJjqPiN5d3fulkGHkldUGQrcgCDok3YckDNaev75vZQ0ycljmUuD9Ef3V0LqVQTXk
-         i6UA5sBCtXMhZ2m4PtRi+ZXsRs8cQpx22POUTF3MWCyNCBY2o5fJxwPNh75KjgFNmV+C
-         tzk1VGqo62Npx8jeG3/B6o1kn05Ggvf5RLO7l5HmBedYSMmNjLSD3cXleXmCF/q9v2rJ
-         TLUg==
+        d=gourry.net; s=google; t=1743518660; x=1744123460; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=7FWXvvIBXjd612osNxdIWGLZO1JiputvQXiNVM/ceGs=;
+        b=VUnYkLWmn8QDgsZ+Nc8mjvjH224Hz+qQkdxk1pv3o3plsYGLdJeEimY3rjvGUrfALo
+         9eN6IHxSkodixx6gbRmAnNvwPmTf5NrcMfzuuaevFw/N3ZDqSG1fQNTCTAzU2C//fKKZ
+         Zf4B6xQMAEp1R75FmS6j6g1bqjippmaRH/nRARNr/HsiFPnfpknMb9OqvF9nNLwFy6fU
+         zx3a+fqEB+92AIyzJTuk+ms/HUyAh0hLofkdmtfVNkEsRO5X1X2SGPG0kERPfDAght98
+         LNrrDy0o5pBegSgj53wijsBwj4TxCXaefQWFsEMdNR2u4ohtYiwqOziDEhgnAb4GDBWG
+         nP3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743518637; x=1744123437;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=spmdYh5iTMHiWJde+8Fl/6vRQmlnAOCyfRLFHTdbiq4=;
-        b=Hg2ZTOyWcfCyomEiNfotQubckG15OlksM8z69sBmtfSezjVwFlaYUVOYMXfrUrq6U8
-         Lr7tTkaLlek08LlH5DvRHy6LvMd71bCJoJoQmG1WB0ziRxPp8PNQAdwlw4mMdKKL1po0
-         SehrSABBJDMaBkqQY5hWoDBYmkx1SePW+6BdOuQDrOCm74ImDJub4l60qFnYX8kHGK49
-         PGlWvk/JsDsk+BfoRUQCJEjdzdyEt6RTT6r1P8xdhSQ/eVOLPrVnscVeaJfSXg1LjUjm
-         SYbWBdfLLWaACmbSTruECHbfAPryqyW7doEm3cWa+q/50vhvDaCIuzjR3AG0ApkVLO6t
-         vWRA==
-X-Forwarded-Encrypted: i=1; AJvYcCU7gbJ+r9PY9kqKK6YDDIEu4Svd9dM3vZmPSQQW8CHHt7LkVa2u2pmcCfLjkfrJUop2UJImc3sHnuuo89I=@vger.kernel.org, AJvYcCVVrT/OLKzI70UY7JBJRfG50SG1CwnsuQsOC7bQEHQ83u2ChHauyI2eE8kLJLOVzjHqQYM7DAHVzIaYsJM8o8WcFzKIJQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwlOq2fZEKlo2Jj/+3DUatt/JAZuPF9H9ktnf+Ocer1ZG50OKTa
-	3IugPN/6pQdoRKXst0nNqm+Gc9FwlrFYg53xzsb1u7rpDXm+OBo8mtUW9g==
-X-Gm-Gg: ASbGncskHL7TaWyDsMANlLAuKMPAy8G5atry9f26KODkM+3t8LPaiyrDcM8S2TZTX3f
-	rsjIjbLbhJIN9CQ5oqe+40mNr9p8aGDqhfsDUQl37C4GXSczxclrzNie7UaOPk7NMobiqT3WnJK
-	B5dH14aS9Se5ygBv55G9nsXYANp5TFpEj6Jy07EGYElodaH13nRq4zUo4k5xHMgFc78bX1BhlUR
-	tiiNroqAtkjC7P8GiCRwn8WbECt+mGNLcKSIsk3kppsHtfQeQOFLr3GFLEcAG3uCHVxti7O52u5
-	kSJIs8hdbWp+O5rviwYHEleeKLsBPxY8uNFHyg==
-X-Google-Smtp-Source: AGHT+IGsbUh6DxXIIDAIc+hYNcWrRaxqqBY9nNJl1ZK31CCY9lO+b/4ITi+8JpWodsXphv4cIkxwaA==
-X-Received: by 2002:a17:902:ce12:b0:226:3781:379d with SMTP id d9443c01a7336-2295c0ed130mr48778565ad.33.1743518637565;
-        Tue, 01 Apr 2025 07:43:57 -0700 (PDT)
-Received: from localhost ([181.91.133.137])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291f1db99esm89014855ad.159.2025.04.01.07.43.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Apr 2025 07:43:57 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743518660; x=1744123460;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7FWXvvIBXjd612osNxdIWGLZO1JiputvQXiNVM/ceGs=;
+        b=w9RBOvLW5q7hXhY0hJus42RGsZlZSEJcmxLsJgHllKHsQkE/HAXgCJ86AslS0f9nLp
+         zAKD8zV6R2DeXPEElezCWHVC0IKL1Byea9Bmcg9o1yoi14wcFuZvCAl6gdOAO4eaa02J
+         I0VzIXU/4qU+rPqTMvlWAwe5cjb2ifklsxV4tAIM0FkD8xlm8lGVFo2jBDKQpf3Q83Dx
+         1eaJAbPXuB1fhwHjYEc5bkfUX2Z+kmIOtv8o3Bb9IiTTFVm8jjMQgtZPg/PH2XlqEtOE
+         5v6z5BnXMpa4KYPO52pzWgkCzLN8LP+vprTqVp1xZt5onEWvoOQ4ncEfQblHn4tZ1I2R
+         uWlQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWiLEMxfzH8CIzDqboTrQN5BNhGaQjt7MSLL3IKPhvdhkmea2gliWaF3lQ+cHAy2d/+DsLO2PNT/Ax/EAE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz/tUFjf+fEmMojK2Ak2w40/C70V58KahNoYIIxAvCm9dLR+fGh
+	AanQr6qWOsxPbDYPTQ9TjjYTOqoWtmQzobPAXzanoGtvM3hqhz8M7ahkDX7JNJA=
+X-Gm-Gg: ASbGncuWQQMUhmAsftKYQq2JOiz29YUUz9DeRrAMsOrPt4IaSJ7HKKsmn9WtC6uhDpk
+	D5RLMhlUKo6xA3vx+PIoMXFapENW072RvlTOxM/rkW4QdjFg/AN55rsAlNd+AtSwoL/yJicvZH8
+	9GQIf5oIpcBZrCkQF6TJWaYqefCyAjtOOYPa07WkRJjtdljaM06kPrE4zVOOxDEigVuP1QLhErX
+	4ljeOpCNruhL/bE5fp54DIUlOLAyY6j+IUodzOUWFeMjRzGwNObpvjv1SVePCIGzqa8TO2BgpuH
+	3ibSLD3HdX/o1HZYH/Y+/Z35wTPZTUjMyclaRb8nObmG5nhxh2DwkmjX8p/erKN6e26tQHSPPQG
+	2sYf3IcgR6UkvHbhDQUw3xQbr6019pxHeBBkuPw==
+X-Google-Smtp-Source: AGHT+IHWAViNpa9KNwFeFv6Mk2L5a71FCOjF9YatoVlMWR+lTPKcPhRsuUJPd37s2vaScZLIZyzR/g==
+X-Received: by 2002:a05:620a:4492:b0:7c5:5286:4369 with SMTP id af79cd13be357-7c69072eecemr1663920685a.28.1743518659907;
+        Tue, 01 Apr 2025 07:44:19 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6eec9627e9bsm62509246d6.15.2025.04.01.07.44.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Apr 2025 07:44:19 -0700 (PDT)
+Date: Tue, 1 Apr 2025 10:44:17 -0400
+From: Gregory Price <gourry@gourry.net>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
+	linux-kernel@vger.kernel.org, kernel-team@meta.com,
+	dan.j.williams@intel.com, vishal.l.verma@intel.com,
+	dave.jiang@intel.com
+Subject: Re: [PATCH] DAX: warn when kmem regions are truncated for memory
+ block alignment.
+Message-ID: <Z-v7waimV3OZq_1H@gourry-fedora-PF4VCD3F>
+References: <20250321180731.568460-1-gourry@gourry.net>
+ <88bce46e-a703-4935-b10e-638e33ea91b3@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 01 Apr 2025 11:43:54 -0300
-Message-Id: <D8VDRV58EWSK.MKGI5JBD8RX6@gmail.com>
-Cc: "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>, "Hans de Goede"
- <hdegoede@redhat.com>, "Mark Pearson" <mpearson-lenovo@squebb.ca>,
- <ibm-acpi-devel@lists.sourceforge.net>,
- <platform-driver-x86@vger.kernel.org>, "LKML"
- <linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>, "Damian
- Tometzki" <damian@riscv-rocks.de>
-Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Fix NULL pointer
- dereferences while probing
-From: "Kurt Borja" <kuurtb@gmail.com>
-To: =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250330-thinkpad-fix-v1-1-4906b3fe6b74@gmail.com>
- <455d5e7d-6f1e-a0a0-773b-85c26418bf54@linux.intel.com>
-In-Reply-To: <455d5e7d-6f1e-a0a0-773b-85c26418bf54@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <88bce46e-a703-4935-b10e-638e33ea91b3@redhat.com>
 
-Hi Ilpo,
+On Tue, Apr 01, 2025 at 11:47:32AM +0200, David Hildenbrand wrote:
+> 
+> Can't that be done a bit simpler?
 
-On Tue Apr 1, 2025 at 8:24 AM -03, Ilpo J=C3=A4rvinen wrote:
-> On Sun, 30 Mar 2025, Kurt Borja wrote:
->
->> Some subdrivers make use of the global reference tpacpi_pdev during
->> initialization, which is called from the platform driver's probe.
->> However, after
->>=20
->> commit 38b9ab80db31 ("platform/x86: thinkpad_acpi: Move subdriver initia=
-lization to tpacpi_pdriver's probe.")
->>=20
->
-> Next time, please include these into the paragraph flow normally obeying=
-=20
-> the normal paragraph formatting. I changed them in this case.
+Yes, this is better, lets do this.  Thank you!
 
-Thanks, won't happen next time.
-
->
->> this variable is only properly initialized *after* probing and this can
->> result in a NULL pointer dereference.
->>=20
->> In order to fix this without reverting the commit, register the platform
->> bundle in two steps, first create and initialize tpacpi_pdev, then
->> register the driver synchronously with platform_driver_probe(). This way
->> the benefits of commit 38b9ab80db31 are preserved.
->>=20
->> Additionally,
->>=20
->> commit 43fc63a1e8f6 ("platform/x86: thinkpad_acpi: Move HWMON initializa=
-tion to tpacpi_hwmon_pdriver's probe")
->>=20
->> introduced a similar problem, however tpacpi_sensors_pdev is only used
->> once inside the probe, so replace the global reference with the one
->> given by the probe.
->>=20
->> Reported-by: Damian Tometzki <damian@riscv-rocks.de>
->> Closes: https://lore.kernel.org/r/CAL=3DB37kdL1orSQZD2A3skDOevRXBzF__cJJ=
-gY_GFh9LZO3FMsw@mail.gmail.com/
->> Fixes: 38b9ab80db31 ("platform/x86: thinkpad_acpi: Move subdriver initia=
-lization to tpacpi_pdriver's probe.")
->> Fixes: 43fc63a1e8f6 ("platform/x86: thinkpad_acpi: Move HWMON initializa=
-tion to tpacpi_hwmon_pdriver's probe")
->> Tested-by: Damian Tometzki <damian@riscv-rocks.de>
->> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
->
-> Applied to the review-ilpo-fixes branch.
-
-Thank you!
-
->
->> ---
->> Hi all,
->>=20
->> The commit message is pretty self-explanatory. I have one question
->> though. As you can see in the crash dump of the original report:
->>=20
->> Mar 29 17:43:16.180758 fedora kernel:  ? asm_exc_page_fault+0x26/0x30
->> Mar 29 17:43:16.180769 fedora kernel:  ? __pfx_klist_children_get+0x10/0=
-x10
->> Mar 29 17:43:16.180781 fedora kernel:  ? kobject_get+0xd/0x70
->> Mar 29 17:43:16.180792 fedora kernel:  device_add+0x8f/0x6e0
->> Mar 29 17:43:16.180804 fedora kernel:  rfkill_register+0xbc/0x2c0 [rfkil=
-l]
->> Mar 29 17:43:16.180813 fedora kernel:  tpacpi_new_rfkill+0x185/0x230 [th=
-inkpad_acpi]
->>=20
->> The NULL dereference happens in device_add(), inside rfkill_register().
->> This bothers me because, as you can see here:
->>=20
->>  1198                 atp_rfk->rfkill =3D rfkill_alloc(name,
->>  1199                                                 &tpacpi_pdev->dev,
->>  1200                                                 rfktype,
->>  1201                                                 &tpacpi_rfk_rfkill=
-_ops,
->>  1202                                                 atp_rfk);
->>=20
->> the NULL deference happens in line 1199, inside tpacpi_new_rfkill(). I
->> think this disagreement might be due to compile time optimizations?
->
-> How did you map it to line numbers? Is it just about difference in the=20
-> compiled binaries that results in different line numbers?
-
-Oh - I just manually followed the dump trace in search of the first
-instance of a NULL derefence. If I understand correctly, inside
-thinkpad_acpi we do reach rfkill_register(), which is line
-
- 1227         res =3D rfkill_register(atp_rfk->rfkill);
-
-and I imagine the RIP happens when device_add() tries to get a reference
-to the parent of the allocated rfkill device. But it's weird because we
-shouldn't even reach 1227, as the NULL deref first happens at 1199.
-
-NULL deref is UB so I guess it makes sense?
-
-BTW I got all these line numbers using the base commit.
-
---=20
- ~ Kurt
+> 
+> diff --git a/drivers/dax/kmem.c b/drivers/dax/kmem.c
+> index e97d47f42ee2e..23a68ff809cdf 100644
+> --- a/drivers/dax/kmem.c
+> +++ b/drivers/dax/kmem.c
+> @@ -67,8 +67,8 @@ static void kmem_put_memory_types(void)
+>  static int dev_dax_kmem_probe(struct dev_dax *dev_dax)
+>  {
+> +       unsigned long total_len = 0, orig_len = 0;
+>         struct device *dev = &dev_dax->dev;
+> -       unsigned long total_len = 0;
+>         struct dax_kmem_data *data;
+>         struct memory_dev_type *mtype;
+>         int i, rc, mapped = 0;
+> @@ -97,6 +97,7 @@ static int dev_dax_kmem_probe(struct dev_dax *dev_dax)
+>         for (i = 0; i < dev_dax->nr_range; i++) {
+>                 struct range range;
+> +               orig_len += range_len(&dev_dax->ranges[i].range);
+>                 rc = dax_kmem_range(dev_dax, i, &range);
+>                 if (rc) {
+>                         dev_info(dev, "mapping%d: %#llx-%#llx too small after alignment\n",
+> @@ -109,6 +110,9 @@ static int dev_dax_kmem_probe(struct dev_dax *dev_dax)
+>         if (!total_len) {
+>                 dev_warn(dev, "rejecting DAX region without any memory after alignment\n");
+>                 return -EINVAL;
+> +       } else if (total_len != orig_len) {
+> +               dev_warn(dev, "DAX region truncated by %lu bytes due to alignment\n",
+> +                        orig_len - total_len);
+>         }
+>         init_node_memory_type(numa_node, mtype);
+> 
+> 
+> -- 
+> Cheers,
+> 
+> David / dhildenb
+> 
