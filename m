@@ -1,101 +1,113 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f195.google.com (mail-pl1-f195.google.com [209.85.214.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFD3763B9;
-	Tue,  1 Apr 2025 10:45:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BD9126AE4;
+	Tue,  1 Apr 2025 10:45:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743504323; cv=none; b=fd6wGLVgJr3zaLPkJqlx/G4tY0cQ91a93wG5JrnWpM2CKaSnJTYeEEvBFfOA2a+jXy61dU7G8A39j7rWyguhmeOkYtW3+HWhw3IO2s3dPpS79Oy4Ak1WZsUaPQHN1Yr31/yEZWhD+v/8QhZA+2kh1WQ06mmQ7goqM81ldIy6pQs=
+	t=1743504335; cv=none; b=P5zhlwVdxOKcJ+2qwcrcYNrvto29TP0rJ9veGwlFYMom+dVp2oeC1tGcQ5xBffPxKPcByrAa294FlBG4JH4f0pqTokRso/0Oqi2T21KaKU9rATeynFpVFvpUe55DyACFDw81G3hCAdZB7NEhAUibuPjNHPSZbt8N/4b9nCHIBAw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743504323; c=relaxed/simple;
-	bh=adZ9mRpavm1pB0ubmDN+IN+zH2OYxifh+epKKPut1LU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QM8v7Bs26lDUHuGuUg2BzhvLB8m409W24hQZ6Y0+RDPgKabwQlYWTlN5RWJxD92tu8wVAECP/AILmB19FVJohu5+ASd46l7w8bOGJ7xPXdLUxYQ9zMw5olhVG04S2y0QUjmiT5DgRr6pHALEyVg3nI4msbnj65QA5PLUcrOfOSA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=cHj5CGqy; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1743504335; c=relaxed/simple;
+	bh=1J2qbwEWhTOM+i9p0aZch6e63TdcFavMP/FTEsA4tBE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=f6petCBvo5C/DApjKyfGMlvVW/YtbGyXsM2VWSnTka8JhY5vABgAVS0mgmOOH1Hx5GIvayc+cEjkqy8DkopMEWxIcq18Qa0nkhbmgRglrmhQOdqqjhNuW/3Tyeca0Tgp9KUMB4KyJ+2XR067d26jiIToVtf6dz3qJyU8grLG4io=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SNt1VGjK; arc=none smtp.client-ip=209.85.214.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="cHj5CGqy"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 0BC0040E0215;
-	Tue,  1 Apr 2025 10:45:17 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id fLg6liKhuFDQ; Tue,  1 Apr 2025 10:45:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1743504311; bh=RRAgkPYoGHRjKzNdm1bx2i45J/dfbIchU3cMFNdnerM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cHj5CGqyUdl4tknOqR9W9Hcd2b4SvEaBoapEmRteuSq4blZlptbT8R94WFyyVPe2K
-	 rLDewSl+wkVSquxErOe/xT2VU2v34FubSBeQVVXcm+p47/2yIOgP69kUrkHoMJJgnR
-	 /vpSILPxx7aLAPZ6NhfYw1/R1hJ7JxLG/diH7A7MSHvPftvEReq0M4EOxaDiwnBGyT
-	 dTNApj9fQRPokK6pNlXFqcYOqJuQSbo6kkPyl1wsnbpwsZ/W9186eVbGJO79cFrSnD
-	 xFxOlJoA5WaRjI0k4PbFrvrdnNh8x/u4wlS43JDfx5m2ipu2T+aDbrbOZJ40tumDKT
-	 veXujTmkLjWwX/fsXLxPuqtdQoaZLYLMxEq1rFrDHVGeEnOf2GmS4qX20LBasa+spI
-	 wY600hV1RBRNWx72ybsdN8hns+HuIfgQ54v/hoLQy7tONl81K4YRUFUgsWGpU21WYx
-	 /ugvor7jnz+ecAS+kisAR2d6UOXgAci3CmTJqfwBPAV3WA5vYozMoMz5BSFcNt9Go+
-	 ByKPxBZoMWA4kWZBM0TVNm1DMqTrl6Du89HhCSMjJ4LmGHDbp4F8BstkEcVZN7gegC
-	 3AqHp+Lk5NLYendv/6Zn57x6I9N02VMZyW8Bf3oIR9pM7nw4NKKOEw1xcT9EUCtGDc
-	 xKnfu7wo3H16qwss2i5N7MQo=
-Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B6EC040E021E;
-	Tue,  1 Apr 2025 10:45:04 +0000 (UTC)
-Date: Tue, 1 Apr 2025 12:44:57 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Shiju Jose <shiju.jose@huawei.com>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>,
-	Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-	Tony Luck <tony.luck@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: linux-next: build warning after merge of the edac tree
-Message-ID: <20250401104457.GBZ-vDqbrZVOlEzhgf@fat_crate.local>
-References: <20250228185102.15842f8b@canb.auug.org.au>
- <20250401153941.517aac17@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SNt1VGjK"
+Received: by mail-pl1-f195.google.com with SMTP id d9443c01a7336-22548a28d0cso144586025ad.3;
+        Tue, 01 Apr 2025 03:45:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743504333; x=1744109133; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=S+ws8im8ohTlJQtEnzDmiWkVTfAf613mtu+yQQ/ls+Y=;
+        b=SNt1VGjKyEF3kjHqcAa8rBPsOAW+B7VegczyqzKfEgH7gmZAewsgzZukbr1XntLhyd
+         myq7lk0mb4p/2K2Ma5G7zQHGPJy/I4IDKknRfMVnU47v+EECaMM+2bJZJ9vBoMPceRPd
+         Z9g3CLwQesbgZIALw4PWH1fhoaoG/kcbp3+NWWU0btHcOwSC0DcsuSmnmM5juTFg50mF
+         G8orYVpJNLNZ258jIl77QE7IenNy1fgfmmchLbf2up7FJN/1ppVWbIJeWUmUQo0fIftf
+         5x+fZftSF7gGMj9j2qb1Qvc4AtWQqHrfefI5WkaZqK6PxBbse5IFaPFNfmIXCeWK+LDc
+         gr9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743504333; x=1744109133;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=S+ws8im8ohTlJQtEnzDmiWkVTfAf613mtu+yQQ/ls+Y=;
+        b=CL8mVoZO+icqTR0SgFXSd16cwsoTzJ3TwdMOKUCiT7759w/3gCga6iO+lFN6/D8KK+
+         zn5pCFEoaHuN14suR/Cj8EQH+RNwb6IGwMRiZ3URxugHtxNG2BYbIluBg01X07C12eA9
+         iyfG75wUHegzr0qNXbVc1LoNzm1/qoyXLs97Qsk+c0vHgp4uvMMhhHFkiJAAAZiFJSrx
+         g09efICpWklNHqG+LgSLyNdBD9h7ZbVonnsj601lerq3RWf4BKfr1waIfjeKIwvvqz1M
+         nieqX3F0YGdkofCS41N5C+FbC4Z36Mnf8PI5FOjTuiFOIVAZQ9ivt9Pv7zwCBS/WhNKP
+         Iifg==
+X-Forwarded-Encrypted: i=1; AJvYcCU28Fo3a+btYBYaq8rwVfP69RJ6IQdUne73E5tNdYq2w7+k32N9g8NXD0tqjGnEzC0qBH0UzDcNEgXxyoJh6bgB0xA=@vger.kernel.org, AJvYcCUhPvRvPZdIhdv+ABeAuK2z2/Fd2k7I6xNgxqFJcaCTa/ScytdyYEGHLEj4gTVikTvNssnLXEL8PxrkXaE=@vger.kernel.org, AJvYcCXJNG5KNLmngJnrPizt5WhfxkOhb0OR06r2f4lCxqslEmunmMVoXYQHHYnQDoTxKAovTyWzB55VRDY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxvHh0P5CocPo7Dg2pLQTMWbvxBWsM3oEUG9qNPvwXG0Og8eXxd
+	lnB0Mb2mf9DktjO94HJIq0xrrQev7oPBdxs0E/u6gHufWUciRVus
+X-Gm-Gg: ASbGnctiFO7zoLfqGKd0k0xIB01TdY2S1R/U4J15UxiZtORUAlQ3kxiErYwK27GtezC
+	VNFZ5QutL8eI1vBDDOfF1UTKS5v/uXqOkmYln6yHmrtu2/DuqLXkuGRTUkzBtm2fOQu23B1Vssv
+	eG9ry8mHnGRcbEVTyfEV0KxwcvYRaWvlOYBdYCKHbL4/XFZlTw7ZQ5DrptTRA4xrr4XHXPhzMsk
+	wtqdJQ3ihBPCZSJoAdjMiWiy9VRoyOO+C5BIlNvaQ37RH3cx/ollcx4jeUFxO8b11NQgryi6EFf
+	U97hyxcmMk+QRQNFE/7W9Hq94y6MN/CxBxNB3W1z5V9wVTV+Je+jYdK465MhTKdmofymtE4=
+X-Google-Smtp-Source: AGHT+IFiE33VzXMHFadbE/k13q7hzIvU2xHpjvXzKZJeSnDxESI91BfikXodcenS9QgtP0ShUFDirQ==
+X-Received: by 2002:a17:902:da88:b0:223:f408:c3f7 with SMTP id d9443c01a7336-2292f96232amr175133745ad.16.1743504333420;
+        Tue, 01 Apr 2025 03:45:33 -0700 (PDT)
+Received: from henry.localdomain ([111.202.148.167])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291f1cf4ebsm84926285ad.155.2025.04.01.03.45.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Apr 2025 03:45:32 -0700 (PDT)
+From: Henry Martin <bsdhenrymartin@gmail.com>
+To: georgi.djakov@linaro.org,
+	krzk@kernel.org
+Cc: s.nawrocki@samsung.com,
+	a.swigon@samsung.com,
+	alim.akhtar@samsung.com,
+	linux-pm@vger.kernel.org,
+	linux-samsung-soc@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Henry Martin <bsdhenrymartin@gmail.com>
+Subject: [PATCH v2] backlight: pm8941: Add NULL check in exynos_generic_icc_probe()
+Date: Tue,  1 Apr 2025 18:45:18 +0800
+Message-Id: <20250401104518.25391-1-bsdhenrymartin@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250401153941.517aac17@canb.auug.org.au>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 01, 2025 at 03:39:41PM +1100, Stephen Rothwell wrote:
-> Hi all,
-> 
-> On Fri, 28 Feb 2025 18:51:02 +1100 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> >
-> > After merging the edac tree, today's linux-next build (htmldocs) produced
-> > this warning:
-> > 
-> > Documentation/edac/index.rst: WARNING: document isn't included in any toctree
-> > 
-> > Introduced by commit
-> > 
-> >   db99ea5f2c03 ("EDAC: Add support for EDAC device features control")
-> 
-> I am still getting this warning, but that commit is now in Linus' tree :-(
+devm_kasprintf() returns NULL when memory allocation fails. Currently,
+exynos_generic_icc_probe() does not check for this case, which results
+in a NULL pointer dereference.
 
-Shiju,
+Add NULL check after devm_kasprintf() to prevent this issue.
 
-please send this:
+Fixes: 2f95b9d5cf0b ("interconnect: Add generic interconnect driver for Exynos SoCs")
+Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
+---
+V1 -> V2: The fix ensures icc_node cleanup on devm_kasprintf() failure
+without restructuring the proven error handling workflow.
 
-https://lore.kernel.org/r/af3e1e183b034ea89ed6582a5382e5c3@huawei.com
+ drivers/interconnect/samsung/exynos.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-as a proper patch.
-
-Thx.
-
+diff --git a/drivers/interconnect/samsung/exynos.c b/drivers/interconnect/samsung/exynos.c
+index 9e041365d909..57e779b3e942 100644
+--- a/drivers/interconnect/samsung/exynos.c
++++ b/drivers/interconnect/samsung/exynos.c
+@@ -134,6 +134,10 @@ static int exynos_generic_icc_probe(struct platform_device *pdev)
+ 	priv->node = icc_node;
+ 	icc_node->name = devm_kasprintf(&pdev->dev, GFP_KERNEL, "%pOFn",
+ 					bus_dev->of_node);
++	if (!icc_node->name) {
++		ret = -ENOMEM;
++		goto err_node_del;
++	}
+ 	if (of_property_read_u32(bus_dev->of_node, "samsung,data-clock-ratio",
+ 				 &priv->bus_clk_ratio))
+ 		priv->bus_clk_ratio = EXYNOS_ICC_DEFAULT_BUS_CLK_RATIO;
 -- 
-Regards/Gruss,
-    Boris.
+2.34.1
 
-https://people.kernel.org/tglx/notes-about-netiquette
