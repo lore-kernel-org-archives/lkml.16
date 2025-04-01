@@ -1,125 +1,140 @@
-Received: from vern.gendns.com (vern.gendns.com [98.142.107.122])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79605189F56;
-	Tue,  1 Apr 2025 14:24:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=98.142.107.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D253204C0F
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 14:24:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743517486; cv=none; b=jJExMM8uo+CagnVkOADaK0EQ8zuy+HU44BV4qkRy+kphEEcVMEy0uRDRiUmboWXeF9OKRBGn+GT8p7VNPi3NMk0b6kcwSsWJFpFGp5cOrrJEsefOGf1V3NlDPEp/YFQk/BhjlGEQV6iJVgHQxOXaDf8QHT0pVaqTHeOmMB+VddU=
+	t=1743517489; cv=none; b=MccqiubWU79CeDpdg/yy3nEKWQ653ul0z/sNvzwKE9ud01h+v49ZUE7FidJZ7EgquOeDWMuoZwWmnrZCYSOH4IFnbWs99zOB0iXzit7i5ECAUg0zLHjPp/rJeuwQ1al0t/nC23Rqt/WjfCm7+IxZ3GoXD15TQA8R39g+r3BOFek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743517486; c=relaxed/simple;
-	bh=UEwhfsnRmdNrlpCAYZKSnEloif6NrMNWguTi4XBkR/k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UdqlDMd8v9XqI0ztqokosRXvsVOL7GsLQjlqhazw7RUEpnUTZ5OwbPtqoU5YT+++e0KaPyqCD1iDpUfIEyWY88NKgSBKKV90Pc17WqmbBSGNEmTJYmkmQLX1N5ULzF8YGQ3F9rQZiUBI5vyab+g1ZTyeo2KF8zC8xehwHAQUXjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lechnology.com; spf=pass smtp.mailfrom=lechnology.com; dkim=pass (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b=Hj5njTlZ; arc=none smtp.client-ip=98.142.107.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lechnology.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lechnology.com
+	s=arc-20240116; t=1743517489; c=relaxed/simple;
+	bh=ruRQP+NALzlaps2YWcoiJXAJEk0o6bPMKOX1fg7yeVA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fTYCtBzF1efT1pTiu0GZfy1+j22BbZcpZQUaF5irVg6Z5DgdgZ5z1vZ719lVqdK34aoDCis4kPRBB0Ov6OnwhQ9xjrE9C4DK2bHALWRe/cue8fkUFAnmawTJq/p9ERvMycBQ8+kMCpM0uAl4MghzBo9kCz1g+h1ctn+vi7Qm/l8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu; spf=fail smtp.mailfrom=g.harvard.edu; dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b=M75HErG7; arc=none smtp.client-ip=209.85.219.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=g.harvard.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="Hj5njTlZ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lechnology.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=nyoNBGkZ/SvbWg6/7VkY8tnH5nK8aXreynxludftxRs=; b=Hj5njTlZyw29UjEq9ufWY6IQqS
-	+BTPdR9qp5fBzzyZxLjb5cnfuYsX/kq2s9+7/0VqSTY0rgH/KYykvZDGILggKPSYXqKJMkRGvF6kH
-	Az0rHZ2EPh+H5kaL8aUBDIDJYa9bhvJx3zcACLs5StNJvYF1z9DrQ1t0nJWdyXnhxYxgo7b+X2z1s
-	rGOlnou6COwSzW0igrksph46ghfws3puz3jumymQPfrZatjvQV40YZcmDvVzitk+9V1C+KA/ABrFL
-	SoOD514rjslnw5xcQHVp9Sx8IEls5hmzOGSVG7KvSvAMclWQ9Lf38ztUbxN351nxJWsHfQNW1Q29y
-	EbrGGzFg==;
-Received: from ip98-183-112-25.ok.ok.cox.net ([98.183.112.25]:42244 helo=[192.168.0.113])
-	by vern.gendns.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <david@lechnology.com>)
-	id 1tzcGf-000000006K1-3v06;
-	Tue, 01 Apr 2025 10:05:34 -0400
-Message-ID: <b79bda63-79bf-47b6-8ac1-1444ed101423@lechnology.com>
-Date: Tue, 1 Apr 2025 09:05:34 -0500
+	dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b="M75HErG7"
+Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-6e8f43c1fa0so66224426d6.3
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 07:24:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rowland.harvard.edu; s=google; t=1743517484; x=1744122284; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=KalA4225oBl3ZvNYyeXZv8udkfU/6CXUOgPRtBpVF98=;
+        b=M75HErG7nlQueEr/I5yNgtPRsq7Dbop8Rp8hB3KzqRncY4IUY5IWdMOyv5edBrRv/S
+         nD5VejQGsw3BAujgvlnJzS7bvtEFeF00T69B4IgRLWWD6GeiVzagfFhNSMkTvrHRbZz6
+         bdD4lSaoVlsr0ynDBlrsFJEDW7zuiJu/7PdUG/KPgeiOZiBOw3BZGNxlhrzBKrHkxiM2
+         o3vf0hpt05fFt3Hyih3f9jqO7WrTSJdeFOPttxaW3SURz2AqXtJaRlCh3BWkjhDz0P11
+         gCWlBamIAnK3g9ACfgyVDud1EW3ukShDQ6flyyLZ/Jj/pPtAvl7fAxti99aNe/JwOCLo
+         zQjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743517484; x=1744122284;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KalA4225oBl3ZvNYyeXZv8udkfU/6CXUOgPRtBpVF98=;
+        b=EniEPtiXTucRAOQklHv8iiDNRyN7ldD3UHfKR5rD2LqHLz3lvcAaNlTC+Yd4Xls7R8
+         Co9bX53dLIk0SDE7iNyuIFrsUovqjFHi0x1zXImwWrBgUjRLKBKyKaDfWwQtz6C+25Sb
+         YcYR9UFe+EOlOw8H5N8OHDosVzjks60Y/FP3ANoDy9OlctUSZLQNQO/Qywa6DB2ZgvKH
+         dEYwDkHDSQe0EMf3ZzpLgQZBkVCLAkTqVNGyGmu8YEU3Bgct0b/Yar15UuAgNACcbKGc
+         T9MVUHPZgxLEeHoyur+EkP/aW3EAqDRPjAMoeT2QF6/P7zbDHUq/UFqsBXXrk35E5z78
+         mFiQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXAnBL+9U50epebGDza9uR0lRDYnhcQZg2F4nSjcrER+w0rMnek+quRQktqaSS06mVeFWbSOceyaGkqzgc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YypL8xOX9KefQdD/a3oFhWXX3S6R9T9UqXuOVLubnOm4R99ghOG
+	K2nnSenS9HdIxOpp7KHLvanA44tixbwX6kWCrJ3e+/HVispzCZq/IPXH7mbp8A==
+X-Gm-Gg: ASbGncsE4gjnzRRcdggxriwyuLDZbCq2nEKmJaDfUiVADHCdw8/TbOpUxyYS0iLSDWH
+	Wk90j5kEIIQZqYLhgDmKMxtl6LahXqWUHUl4dzjUP8F0UiKqVpk53eIKc7A4suPLJEOhjMXVYcW
+	KZlomYoA3Yq8pi7qANL+asyo8Dqjd5k/hVncJ3JPnhTZM0FpXBg0dV3IdRVwgnQ6cnaE7iPhxFE
+	TsGkoGzppyi9XfwT1SCngy+RiJrRcJ/S0SyJJ5i288m9JD5wVmfmGd+mBY0zuEAnr2Efnn/0h0k
+	yvzVIUu99673AZ++pYbM9+vgFZPLcoI2IjnWAPHyK39/IIc5UD/UXLia6HNTS1E=
+X-Google-Smtp-Source: AGHT+IHM51nyniYqK5T/X7rJ6xKvSn4u9N4XA6OP1lkcVAxyNAwhavhEPDkoCbRJzJPfgL1uJjnDug==
+X-Received: by 2002:a05:6214:202c:b0:6ee:ba5b:d8d1 with SMTP id 6a1803df08f44-6eed61c3606mr265124296d6.16.1743517484138;
+        Tue, 01 Apr 2025 07:24:44 -0700 (PDT)
+Received: from rowland.harvard.edu ([140.247.181.15])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c5f76824d5sm663280885a.30.2025.04.01.07.24.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Apr 2025 07:24:43 -0700 (PDT)
+Date: Tue, 1 Apr 2025 10:24:41 -0400
+From: Alan Stern <stern@rowland.harvard.edu>
+To: Guan-Yu Lin <guanyulin@google.com>
+Cc: gregkh@linuxfoundation.org, mathias.nyman@intel.com,
+	sumit.garg@kernel.org, kekrby@gmail.com,
+	jeff.johnson@oss.qualcomm.com, elder@kernel.org,
+	quic_zijuhu@quicinc.com, ben@decadent.org.uk,
+	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v10 2/4] usb: add apis for offload usage tracking
+Message-ID: <fd54ab58-1357-462a-8e3f-a785f7b56813@rowland.harvard.edu>
+References: <20250401062951.3180871-1-guanyulin@google.com>
+ <20250401062951.3180871-3-guanyulin@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] clk: davinci: Add NULL check in
- davinci_lpsc_clk_register()
-To: Henry Martin <bsdhenrymartin@gmail.com>, mturquette@baylibre.com,
- sboyd@kernel.org
-Cc: linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250401131341.26800-1-bsdhenrymartin@gmail.com>
-Content-Language: en-US
-From: David Lechner <david@lechnology.com>
-Autocrypt: addr=david@lechnology.com; keydata=
- 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
-In-Reply-To: <20250401131341.26800-1-bsdhenrymartin@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - vern.gendns.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lechnology.com
-X-Get-Message-Sender-Via: vern.gendns.com: authenticated_id: davidmain+lechnology.com/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: vern.gendns.com: davidmain@lechnology.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250401062951.3180871-3-guanyulin@google.com>
 
-On 4/1/25 8:13 AM, Henry Martin wrote:
-> devm_kasprintf() returns NULL when memory allocation fails. Currently,
-> davinci_lpsc_clk_register() does not check for this case, which results
-> in a NULL pointer dereference.
+On Tue, Apr 01, 2025 at 06:22:40AM +0000, Guan-Yu Lin wrote:
+> Introduce offload_usage and corresponding apis to track offload usage
+> on each USB device. Offload denotes that there is another co-processor
+> accessing the USB device via the same USB host controller. To optimize
+> power usage, it's essential to monitor whether the USB device is
+> actively used by other co-processor. This information is vital when
+> determining if a USB device can be safely suspended during system power
+> state transitions.
 > 
-> Add NULL check after devm_kasprintf() to prevent this issue and ensuring
-> no resources are left allocated.
-> 
-> Fixes: c6ed4d734bc7 ("clk: davinci: New driver for davinci PSC clocks")
-> Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
+> Signed-off-by: Guan-Yu Lin <guanyulin@google.com>
 > ---
 
-Reviewed-by: David Lechner <david@lechnology.com>
+> --- a/drivers/usb/core/driver.c
+> +++ b/drivers/usb/core/driver.c
+> @@ -2036,6 +2036,114 @@ int usb_disable_usb2_hardware_lpm(struct usb_device *udev)
+>  
+>  #endif /* CONFIG_PM */
+>  
+> +#if IS_ENABLED(CONFIG_USB_XHCI_SIDEBAND_SUSPEND)
+> +
+> +/**
+> + * usb_offload_get - increment the offload_usage of a USB device
+> + * @udev: the USB device to increment its offload_usage
+> + *
+> + * Incrementing the offload_usage of a usb_device indicates that offload is
+> + * enabled on this usb_device; that is, another entity is actively handling USB
+> + * transfers. This information allows the USB driver to adjust its power
+> + * management policy based on offload activity.
+> + *
+> + * The caller must hold @udev's device lock.
+> + *
+> + * Return: 0 on success. A negative error code otherwise.
+> + */
+> +int usb_offload_get(struct usb_device *udev)
+> +{
+> +	int ret;
+> +
+> +	if (udev->state == USB_STATE_NOTATTACHED ||
+> +			udev->state == USB_STATE_SUSPENDED)
+> +		return -EAGAIN;
+> +
+> +	/*
+> +	 * offload_usage could only be modified when the device is active, since
+> +	 * it will alter the suspend flow of the device.
+> +	 */
+> +	ret = pm_runtime_resume_and_get(&udev->dev);
+> +
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	refcount_inc(&udev->offload_usage);
+> +	pm_runtime_put_sync(&udev->dev);
 
+The USB subsystem has wrappers: usb_autoresume_device() and 
+usb_autosuspend_device().  You should use them instead of calling the 
+runtime PM routines directly.
+
+The same advice applies to usb_offload_put().
+
+Alan Stern
