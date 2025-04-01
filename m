@@ -1,70 +1,69 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A15FB1A2390
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 06:05:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CC791372;
+	Tue,  1 Apr 2025 06:06:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743487511; cv=none; b=a/KApQsN3vf09+nQSbSnINa0I6PoLB3PCcLp/HqZArP2RBPvUWaytq//QQPl7rHcyX9LUG8FdRw1W+OkRSXGQuNDFx41auPlrB+exlhdT5zHvDC8qTLjkKqd+VetixB8/Jd9wRhh5EyrRXqTkVO0K7qXh6koVyv/w+NOy+sMR98=
+	t=1743487602; cv=none; b=CnaZVPc+DwUnjN1Vnb9/oyQISEHNf6HBb6YViXz/3hzZkfmXbabCyOSXdAgprHXCdgQt2EfPeQZL0I8AvVM/hwY3zm8fcJM+Ka/kfiSZDCyMPYgBFvTQcDdJZs1aihHQIiHeHxY+/axiTA0iEUmFZYEpgUVRtIuqtTXjINeAshE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743487511; c=relaxed/simple;
-	bh=m05TQ3Jo1HDQW91S8oa0OW0B51ZhejqU0yzaIdKEdFk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VSjwnD2MRGmAYJdfg+Y7tMOI4WO+c/50U4V5CJoxDw6wPAXLpkGa5Jj3WCD2BXHIRnzzix3oIOD/oyfMSJ3bmjr9+27AdbXtoJrims4IHS3fJuUMMv0aiWU+RslKS1Ld2OvNKKOiY9D4Lr8O15yQv5IaWL6kvFjdBa9dxcWA06c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ECA1E150C;
-	Mon, 31 Mar 2025 23:05:11 -0700 (PDT)
-Received: from [10.162.16.153] (unknown [10.162.16.153])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8A14F3F63F;
-	Mon, 31 Mar 2025 23:05:06 -0700 (PDT)
-Message-ID: <17de4426-8263-4ccb-8420-f6913d478ae9@arm.com>
-Date: Tue, 1 Apr 2025 11:35:03 +0530
+	s=arc-20240116; t=1743487602; c=relaxed/simple;
+	bh=oLzH5RkSicuMVNftyvLlNjjRZ70ibDG36k7ChxEokbQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZqFbbrTgt/4vLyjIAWmwznEsjwnOt64VxQM5oj+MaW5MJKtzgDpw133fOi+Qmq0l7fipwn2x2yJFnUqCm9HOCG55govI5xkUqOVUQCch/qwbfv1nmjtudOEiTn/mhMztW92Wla/edkhYrkoV4hhTx/x2fcfcDGW8rdn3vcAD5Bk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YlbyM+re; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YlbyM+re"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2ECC0C4CEE8;
+	Tue,  1 Apr 2025 06:06:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743487602;
+	bh=oLzH5RkSicuMVNftyvLlNjjRZ70ibDG36k7ChxEokbQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=YlbyM+reilMLWDp1hOkToL15MKp3RlG7mm7J+8Y/Z5KNotQYHe6yrnielSmpmknQM
+	 QxigIlTn9FKn0e46cZIiVtB5VNgMRPXZQzeWS7jYj12kEkGa8YMIHYVAS+WFbayUYR
+	 PzRlVHCmrVUz3Cs564m7WAQpWm+PSaZkZvEcSACVrwMUbfQUe8usjUqC3+/rDj//bi
+	 Cd8WixEmJqDtAHMbN69h0i6qQF2BKUuAAwD6YYo2b3bh706TzRgTUeWqxsVz+/gQEh
+	 Ya8bsQZ2Efn6+a9jYQexhwrkDch+tKsHfjEHTkpS3fCW5sn043fa1XbizeaO30HRTW
+	 PdjVz8I4fQ9pQ==
+Date: Tue, 1 Apr 2025 08:06:38 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Cathy Xu <ot_cathy.xu@mediatek.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Sean Wang <sean.wang@kernel.org>, Lei Xue <lei.xue@mediatek.com>, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, yong.mao@mediatek.com, 
+	Axe.Yang@mediatek.com, Jimin.Wang@mediatek.com, Wenbin.Mei@mediatek.com, 
+	Andy-ld.Lu@mediatek.com, Guodong Liu <guodong.liu@mediatek.com>
+Subject: Re: [PATCH v6 1/3] dt-bindings: pinctrl: mediatek: Add support for
+ mt8196
+Message-ID: <20250401-glittering-bouncy-yak-7e63ee@krzk-bin>
+References: <20250401054837.1551-1-ot_cathy.xu@mediatek.com>
+ <20250401054837.1551-2-ot_cathy.xu@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: Don't call NULL in do_compat_alignment_fixup
-To: Angelos Oikonomopoulos <angelos@igalia.com>,
- linux-arm-kernel@lists.infradead.org
-Cc: catalin.marinas@arm.com, will@kernel.org, linux-kernel@vger.kernel.org,
- kernel-dev@igalia.com
-References: <20250331085415.122409-1-angelos@igalia.com>
-Content-Language: en-US
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <20250331085415.122409-1-angelos@igalia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250401054837.1551-2-ot_cathy.xu@mediatek.com>
 
-On 3/31/25 14:24, Angelos Oikonomopoulos wrote:
-> do_alignment_t32_to_handler only fixes up alignment faults for specific
-> instructions; it returns NULL otherwise. When that's the case, signal to
-> the caller that it needs to proceed with the regular alignment fault
-> handling (i.e. SIGBUS).
+On Tue, Apr 01, 2025 at 01:48:10PM +0800, Cathy Xu wrote:
+> Add the new binding document for pinctrl on MediaTek mt8196.
 > 
-> Signed-off-by: Angelos Oikonomopoulos <angelos@igalia.com>
+> Signed-off-by: Guodong Liu <guodong.liu@mediatek.com>
+> Signed-off-by: Cathy Xu <ot_cathy.xu@mediatek.com>
 > ---
->  arch/arm64/kernel/compat_alignment.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/arch/arm64/kernel/compat_alignment.c b/arch/arm64/kernel/compat_alignment.c
-> index deff21bfa680..b68e1d328d4c 100644
-> --- a/arch/arm64/kernel/compat_alignment.c
-> +++ b/arch/arm64/kernel/compat_alignment.c
-> @@ -368,6 +368,8 @@ int do_compat_alignment_fixup(unsigned long addr, struct pt_regs *regs)
->  		return 1;
->  	}
->  
-> +	if (!handler)
-> +		return 1;
+>  .../pinctrl/mediatek,mt8196-pinctrl.yaml      | 220 ++++++++++++++++++
+>  1 file changed, 220 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/mediatek,mt8196-pinctrl.yaml
 
-do_alignment_t32_to_handler() could return NULL, returning 1 seems to be
-the right thing to do here and consistent. Otherwise does this cause a
-kernel crash during subsequent call into handler() ?
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
->  	type = handler(addr, instr, regs);
->  
->  	if (type == TYPE_ERROR || type == TYPE_FAULT)
+Best regards,
+Krzysztof
+
