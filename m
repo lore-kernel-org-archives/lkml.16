@@ -1,143 +1,135 @@
-Received: from vern.gendns.com (vern.gendns.com [98.142.107.122])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23C561C8612;
-	Tue,  1 Apr 2025 17:21:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=98.142.107.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CACD31C8612
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 17:23:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743528101; cv=none; b=Nv3t34ITdTUltGuezdTPIpdVJBarmwKSpixxzfiBxT+VDTNN1AJAwFjWe1Si7bpOzq645Xm88lHP9JMZ4p40wKY8oAY6/+uFi1+Qc8hw2YOKPymZgzD4zoD/TPvHDgMgPSC8xIu/OOhCMKEfeAJ1A3LnIz9PsE3sw9PeYyBO3L4=
+	t=1743528202; cv=none; b=iyIS5Sj2+ecwTRRkAgi0CxZ5rCk2YdtQW9EwRdy6TZ3wWiCjHFJGX7wm1hGjlziIQpivCn33gmZGcv4xBOW7HOGJyOX4JrLuRk8UKC3UGrYyA+yyD5rZnnotJvzK1pZBQKfSheRsXOZBPOpUNgNtKqaGbpP5yGdIB0lhmbBLzDM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743528101; c=relaxed/simple;
-	bh=w11IGACrChvN5h9qvFXuxbYJFturzczFTb0ewPiQf8Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KpIBnQ/gaaQSczB2fg/ubLHGgMqty+fJe1Rb9UyEc+TBrOTAjln7Pept7W8qG96Exm9KpjM5/cNwABupmlOem6sutfuXoW9hWF6fEhlkjV8BqJdsNvsjhKRG5ELJqOHkar+APdWoBx29y5I8Gd7SnBk/UASg6mOGBWA+LMf36Rs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lechnology.com; spf=pass smtp.mailfrom=lechnology.com; dkim=pass (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b=WFJURWel; arc=none smtp.client-ip=98.142.107.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lechnology.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lechnology.com
+	s=arc-20240116; t=1743528202; c=relaxed/simple;
+	bh=Y2NVahqoWXbrwHtxeCMK+uMCUCqvZjwCroDdCq/+QLk=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=AE46TZUqvD9bFcvzfiP5+yHiPYJEhdxn2YhnnhcQwrcCcrY5iesltN4LOde0ftwbB9z/CPSb6k0MDX2I7YXY0709PiUvK9jqJ5NRmAcNUT0cqWT5n1oJoyiob1W89BZ/blqgYWljpODCqcixk8l9UlSo71rZTZ5hIrXloHQFFdk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pcn3R1Kc; arc=none smtp.client-ip=209.85.214.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="WFJURWel"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lechnology.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=vsU7s/UMazXBgdqWSRo/9CWN1D/POxYAe2IXD6Jx6pI=; b=WFJURWel1LzhHk0lTeDkSkFar5
-	htLUUBzf7Yh7dQppa3LZG0Yvjp7BnT6O9AUBT3B430jZP0Tpll/lKlnXkXxDNF5Dr3K4N7xaKdnuL
-	1HOjSxX0W+nOwT+fS5RRMiOCD0wX3IjsXKZHGsf2cFd9LjcGlV9hf9yxWwHQXK0CZQfRsHIwRHC2W
-	bphiy80p3tnvs22r0xtECfnHW2K4+++phIhqeC1LfD310Z/yeBWmL4FCsHKKurqGd4cKI7SmcFwGn
-	VCYq07BPbX3YbsOSiJNoMQX32LiNNYOsvdtrd5LAbpaSKb3xK2uR5FKMtKU32zwWosr2atJZCxVID
-	C60dngmA==;
-Received: from ip98-183-112-25.ok.ok.cox.net ([98.183.112.25]:56528 helo=[192.168.0.113])
-	by vern.gendns.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <david@lechnology.com>)
-	id 1tzfKT-000000006yD-2DyG;
-	Tue, 01 Apr 2025 13:21:37 -0400
-Message-ID: <7513fb2c-3abe-4c29-aa94-42f0efe93396@lechnology.com>
-Date: Tue, 1 Apr 2025 12:21:36 -0500
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pcn3R1Kc"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-224364f2492so100603235ad.3
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 10:23:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1743528200; x=1744133000; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=QyQc1obK807oGm0cfb/LDMQ0LSKhQg0xMePPIJKuS8c=;
+        b=pcn3R1KcVM9TcevdCch3Kcg9lr31ors9WVdlRpWmg6844kjP3vCyLo5c8pD/ZR3//e
+         kg3Rm3t/zpy7lkeE36s7g00lr52UYETnJCdL8YdyM5aNyH94jny1oqGihJlcJcv8ycFd
+         z2qHD1lKLtFcO7r/dEzOm18AzbzQUywjOzP1RYT6uTmo1ZNr43GMBjh8gd1PqPWs6OE6
+         b5X2H6SXK1oyVTnGeThXUjTA96ALCOFesLHjHz7h4adA+bzKLidVTzRP5gRxShcpmAen
+         kOXc0pjzbBRhUk0r5f5faQ7TnTsFAnyKdb3ujoLfg9dGIACLXr86smYpwrg+7iGijdmO
+         42Fw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743528200; x=1744133000;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=QyQc1obK807oGm0cfb/LDMQ0LSKhQg0xMePPIJKuS8c=;
+        b=tpOF2YqQQPwzEF+NcmCczYXrcr/AszZJd07sezNEer9pKAgV3AJx5iDwynScCOt0BP
+         aPvidTozPnkaaH/vV4NAZ4owjkpfxHV9jTGHIGuFTzV/yCupYjfwznzXwa5YzgYruizg
+         P4bUtp4oHsrtHJ1vCqqqHqipGnvtEbYyEM5VpGREfQGV1TQ6xF/BndV2cPzy+b/P+sdU
+         s3UunZopGgiuxWuudhWAz9XHZQMCnDFi46YUlm5jMq4MMcrpo9J9ueQjcuv3hNLlc2PV
+         Z+2jQVUNeoG7/rIt/61SpVb9G33jbG50Clq7JYaiM8ekEmjBpiKWXUhl0vmydsL+uOqP
+         0jbg==
+X-Gm-Message-State: AOJu0YyxNYlAIxwjCqe2PbDWYxFYZXDVhHwWeyeVVpagbUT/+A5Ep5IJ
+	T/aWPwjYrYtkh94Bfluuk7OMfE5yr9nPLr0Ilm1s1ARZpx5ufiX1Vnx1bk3FG421UwsQjSWJGTo
+	+uR+l6B8HnhFFqkZ+cuGj67brrra17FOVHh+lB05XlUCTk1qBRXobwTI6EwJVr613npqFmRB2OH
+	uZMLkOBMUKimB9ElxFsZPV16fgiEApWH9oulmhnpa3
+X-Google-Smtp-Source: AGHT+IGn+uWDpPJQ9Q1BejGtkWcrh2IzP2FyqV2ddY2F5XEVXCBFVJjOzAB/x4JxfBcyHKprrZEnk1kDv/k=
+X-Received: from plbkq8.prod.google.com ([2002:a17:903:2848:b0:21f:14cc:68b0])
+ (user=ctshao job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:e74e:b0:229:1619:ab58
+ with SMTP id d9443c01a7336-2292f9fb8f1mr231063535ad.43.1743528200018; Tue, 01
+ Apr 2025 10:23:20 -0700 (PDT)
+Date: Tue,  1 Apr 2025 10:22:39 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] clk: davinci: Add NULL check in
- davinci_lpsc_clk_register()
-To: Markus Elfring <Markus.Elfring@web.de>,
- Henry Martin <bsdhenrymartin@gmail.com>, linux-clk@vger.kernel.org
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
-References: <20250401131341.26800-1-bsdhenrymartin@gmail.com>
- <57fac291-6d7b-40e8-a4bf-8b8704662b9f@web.de>
-Content-Language: en-US
-From: David Lechner <david@lechnology.com>
-Autocrypt: addr=david@lechnology.com; keydata=
- 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
-In-Reply-To: <57fac291-6d7b-40e8-a4bf-8b8704662b9f@web.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - vern.gendns.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lechnology.com
-X-Get-Message-Sender-Via: vern.gendns.com: authenticated_id: davidmain+lechnology.com/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: vern.gendns.com: davidmain@lechnology.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.472.ge94155a9ec-goog
+Message-ID: <20250401172302.1442092-1-ctshao@google.com>
+Subject: [PATCH v1] perf test: Allow tolerance for leader sampling test
+From: Chun-Tse Shao <ctshao@google.com>
+To: linux-kernel@vger.kernel.org
+Cc: Chun-Tse Shao <ctshao@google.com>, Ian Rogers <irogers@google.com>, 
+	Thomas Richter <tmricht@linux.ibm.com>, peterz@infradead.org, mingo@redhat.com, 
+	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, adrian.hunter@intel.com, 
+	kan.liang@linux.intel.com, james.clark@linaro.org, dapeng1.mi@linux.intel.com, 
+	vmolnaro@redhat.com, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 4/1/25 11:46 AM, Markus Elfring wrote:
->> devm_kasprintf() return NULL if memory allocation fails. Currently,
-> …
->                 call?                               failed?
-> 
-> 
->> Add NULL check after devm_kasprintf() to prevent this issue.
-> 
-> I propose to avoid duplicate source code also for the completion of
-> the corresponding exception handling.
-> 
-> * You may avoid repeated function calls by using another label instead.
->   https://wiki.sei.cmu.edu/confluence/display/c/MEM12-C.+Consider+using+a+goto+chain+when+leaving+a+function+on+error+when+using+and+releasing+resources#MEM12C.Considerusingagotochainwhenleavingafunctiononerrorwhenusingandreleasingresources-CompliantSolution(copy_process()fromLinuxkernel)
+There is a known issue that the leader sampling is inconsistent, since
+throttle only affect leader, not the slave. The detail is in [1]. To
+maintain test coverage, this patch sets a tolerance rate of 80% to
+accommodate the throttled samples and prevent test failures due to
+throttling.
 
-That would be OK too. I didn't worry about it in this case though
-since we are only duplicating 1 very short line of code. And the
-smaller diff has a better chance of successfully backporting to older
-stable kernels that will also pick up this patch.
+[1] lore.kernel.org/20250328182752.769662-1-ctshao@google.com
 
-> 
-> * How do you think about to benefit any more from the application of the attribute “__free”?
->   https://elixir.bootlin.com/linux/v6.14-rc6/source/include/linux/slab.h#L472
+Signed-off-by: Chun-Tse Shao <ctshao@google.com>
+Suggested-by: Ian Rogers <irogers@google.com>
+Suggested-by: Thomas Richter <tmricht@linux.ibm.com>
+Tested-by: Thomas Richter <tmricht@linux.ibm.com>
+---
+ tools/perf/tests/shell/record.sh | 25 +++++++++++++++++++------
+ 1 file changed, 19 insertions(+), 6 deletions(-)
 
-Not a good fit for this specific use case.
+diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
+index ba8d873d3ca7..1bbe16fb3420 100755
+--- a/tools/perf/tests/shell/record.sh
++++ b/tools/perf/tests/shell/record.sh
+@@ -238,22 +238,35 @@ test_leader_sampling() {
+     err=1
+     return
+   fi
++  perf script -i "${perfdata}" | grep brstack > $script_output
++  # Check if the two instruction counts are equal in each record.
++  # However, the throttling code doesn't consider event grouping. During throttling, only the
++  # leader is stopped, causing the slave's counts significantly higher. To temporarily solve this,
++  # let's set the tolerance rate to 80%.
++  # TODO: Revert the code for tolerance once the throttling mechanism is fixed.
+   index=0
+-  perf script -i "${perfdata}" > $script_output
++  valid_counts=0
++  invalid_counts=0
++  tolerance_rate=0.8
+   while IFS= read -r line
+   do
+-    # Check if the two instruction counts are equal in each record
+     cycles=$(echo $line | awk '{for(i=1;i<=NF;i++) if($i=="cycles:") print $(i-1)}')
+     if [ $(($index%2)) -ne 0 ] && [ ${cycles}x != ${prev_cycles}x ]
+     then
+-      echo "Leader sampling [Failed inconsistent cycles count]"
+-      err=1
+-      return
++      invalid_counts=$(($invalid_counts+1))
++    else
++      valid_counts=$(($valid_counts+1))
+     fi
+     index=$(($index+1))
+     prev_cycles=$cycles
+   done < $script_output
+-  echo "Basic leader sampling test [Success]"
++  if [[ "$(echo "scale=2; $invalid_counts/($invalid_counts+$valid_counts)" | bc)" > 1-$tolerance_rate ]]
++  then
++      echo "Leader sampling [Failed inconsistent cycles count]"
++      err=1
++  else
++    echo "Basic leader sampling test [Success]"
++  fi
+ }
 
-> 
-> 
-> Regards,
-> Markus
+ test_topdown_leader_sampling() {
+--
+2.49.0.472.ge94155a9ec-goog
 
