@@ -1,80 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.crpt.ru (mail1.crpt.ru [91.236.205.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CC161D8A10;
-	Tue,  1 Apr 2025 06:13:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A50D44690;
+	Tue,  1 Apr 2025 06:16:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.236.205.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743488033; cv=none; b=jytVXtNP6kSt4NDEBTG5jSGyrenyhv5qLSWgcVzDKArfcqNLen+Ppofz87lg/RzJ0xvwl7F1bFMwanvMJ+heJaPwinmU4PJ1fj65LJ9yh00YPz9sB5kP7+wJIQ+JZ1KNCwGb19cuF50t4TG/xl8bTkclz5GkRcEQCsdAME0biW4=
+	t=1743488199; cv=none; b=pnAXOzD7wP2n1tb8y4Eyc31xzImojNiPxwa/9vxECZCo2IiEZWIMIb5IGOW2nYrruzrtmLG31JIvCaVuKpw/ueRZMTi2AI/PvpcBiROCJ1bqY7eqIZf1MDllN7eOrxXaf+7m2daSic0tZjqYWVPuKbCLW79Ei66pqEzLK8lPrEQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743488033; c=relaxed/simple;
-	bh=a/WBWaI1GRijiNVhX5FXEpnwkrIb9sOyftFgp32l9+0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MCBoaMy06sE0GNEuS1D+QUktZ9Gn5xxl8dNZWe3qsVZ8HEfVXzIb314nPMa/zEdo9xXDIBdqS/8mSdIBg1+M4yQ4ujqvxSxnlMvcSSa6fDtnHzGHKutqlyZIM9TuhEcOdPfnPaDcIIjavg8erw85vtEx2aN5vUPjP8ORZxayZNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jNymlsUa; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743488199; c=relaxed/simple;
+	bh=Z8NqerlcGoOG+aaVto1jZC3JJTU9M/lUypli3aT8rjg=;
+	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=GRRnCQSpwRuPCnEgxNhZc+PquolynGTiDn6VfA8i/cU/Jgnzh/1crcGoSpuRCcXuToQAvOK3EORciMjqR7nFNWZ1Joonhb/EA50/KPPihzynE1zeah0TNS9jCKi4UdXJmhIH6EvzL2Qm9ta2vv0aYWWM1BvCilJdGaeQCLgXpn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=crpt.ru; spf=pass smtp.mailfrom=crpt.ru; dkim=pass (2048-bit key) header.d=crpt.ru header.i=@crpt.ru header.b=kBJe710r; arc=none smtp.client-ip=91.236.205.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=crpt.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crpt.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jNymlsUa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42742C4CEE8;
-	Tue,  1 Apr 2025 06:13:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743488033;
-	bh=a/WBWaI1GRijiNVhX5FXEpnwkrIb9sOyftFgp32l9+0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jNymlsUa/smbZNP5cRJtDeGbNZjsIVNja4x7dB9r+sVZdWnd5hWwiKB9CRvQsFeJe
-	 Zp2BVuP5TDBpX+8K4PJ6IlnjXD23NVrptNeVecJQtqHl8LIwNdlF4feRJHDEjq3G4J
-	 4/fSDq6auzVqB8pY1se8oupuPSaxBsDNH6RT87HikgM9BDj+IqWlb21+hYu9KOh3sK
-	 aIw+G163YeCtXjUrdu1LmKGBOQPOzNd7B5yxhmrM5zMnxgyiWorK7NYeR9a1D/XGcW
-	 8djMi/ZIcjD3UPkdjNV+6dVMi3F4GPqjvzUYfcQD8lJIOZtC9PAn1r87ZIyrgtthxO
-	 0pFvcrsHWlSUg==
-Date: Tue, 1 Apr 2025 08:13:49 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Xianwei Zhao <xianwei.zhao@amlogic.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-amlogic@lists.infradead.org, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, Conor Dooley <conor.dooley@microchip.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: pinctl: amlogic,pinctrl-a4: Add
- compatible string for A5
-Message-ID: <20250401-meteoric-perfect-cuttlefish-abd62d@krzk-bin>
-References: <20250401-a5-pinctrl-v2-0-a136c1058379@amlogic.com>
- <20250401-a5-pinctrl-v2-1-a136c1058379@amlogic.com>
+	dkim=pass (2048-bit key) header.d=crpt.ru header.i=@crpt.ru header.b="kBJe710r"
+Received: from mail.crpt.ru ([192.168.60.3])
+	by mail.crpt.ru  with ESMTP id 5316FqG3023749-5316FqG5023749
+	(version=TLSv1.2 cipher=AES256-SHA256 bits=256 verify=OK);
+	Tue, 1 Apr 2025 09:15:52 +0300
+Received: from EX2.crpt.local (192.168.60.4) by ex1.crpt.local (192.168.60.3)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.44; Tue, 1 Apr
+ 2025 09:15:53 +0300
+Received: from EX2.crpt.local ([192.168.60.4]) by EX2.crpt.local
+ ([192.168.60.4]) with mapi id 15.01.2507.044; Tue, 1 Apr 2025 09:15:53 +0300
+From: =?koi8-r?B?98HUz9LP0MnOIOHOxNLFyg==?= <a.vatoropin@crpt.ru>
+To: Tariq Toukan <tariqt@nvidia.com>
+CC: =?koi8-r?B?98HUz9LP0MnOIOHOxNLFyg==?= <a.vatoropin@crpt.ru>, Andrew Lunn
+	<andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, "Eric
+ Dumazet" <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+	<pabeni@redhat.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"lvc-project@linuxtesting.org" <lvc-project@linuxtesting.org>
+Subject: [PATCH] net/mlx4_en: Remove the redundant NULL check for the 'my_ets'
+ object
+Thread-Topic: [PATCH] net/mlx4_en: Remove the redundant NULL check for the
+ 'my_ets' object
+Thread-Index: AQHbos2F9RohqMpRK0mdORQAbVJ5/g==
+Date: Tue, 1 Apr 2025 06:15:52 +0000
+Message-ID: <20250401061439.9978-1-a.vatoropin@crpt.ru>
+Accept-Language: ru-RU, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-kse-serverinfo: EX1.crpt.local, 9
+x-kse-antivirus-interceptor-info: scan successful
+x-kse-antivirus-info: Clean, bases: 2/17/2025 9:52:00 AM
+x-kse-attachment-filter-triggered-rules: Clean
+x-kse-attachment-filter-triggered-filters: Clean
+x-kse-bulkmessagesfiltering-scan-result: protection disabled
+Content-Type: text/plain; charset="koi8-r"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250401-a5-pinctrl-v2-1-a136c1058379@amlogic.com>
+X-FEAS-Client-IP: 192.168.60.3
+X-FE-Policy-ID: 2:4:0:SYSTEM
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; d=crpt.ru; s=crpt.ru; c=relaxed/relaxed;
+ h=from:to:cc:subject:date:message-id:content-type:mime-version;
+ bh=X+FeLn4yQ3EuUGa91ttWBxCVvRzj24Ap0XyairhLOG8=;
+ b=kBJe710rNp6XE77GRLslW/h5oCWwYT963XzfEx3vzgnEw0c/ycheVu3EiX6DEredBQEOw9xgJ231
+	H8GOsKetqxvVxXGh2lmh9S6zUorJUiLzQ8nbT8rVSuSoUwKuRJIiV8+NC8Rb9vt6QbSs7iT2mpMI
+	ONI0tht/5K77fDn0AprIdI6Bjp5VWYxVSvbBLYR4q9VfFSB5qZPxp+Clp4aucl3O/jVQfV1uuILu
+	ZBr/UwxQ03jA+0K1zzAEEfPFb1lsqV72HAsKeXE8SVSC/soRAWvNQ2tAPJnNTR274d18ABlmOlkB
+	jkJWqY3grNBhAXZy8GhG1ZDSq3EnOFzhQ58AtA==
 
-On Tue, Apr 01, 2025 at 10:06:21AM +0800, Xianwei Zhao wrote:
-> Amlogic A5 SoCs uses the same pintrl controller as A4 SoCs. There is
-> no need for an extra compatible line in the driver, but add A5
-> compatible line for documentation.
-> 
-> Acked-by: Conor Dooley <conor.dooley@microchip.com>
-> Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
-> ---
->  Documentation/devicetree/bindings/pinctrl/amlogic,pinctrl-a4.yaml | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/amlogic,pinctrl-a4.yaml b/Documentation/devicetree/bindings/pinctrl/amlogic,pinctrl-a4.yaml
-> index 8eb50cad61d5..3bebccaf0c9f 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/amlogic,pinctrl-a4.yaml
-> +++ b/Documentation/devicetree/bindings/pinctrl/amlogic,pinctrl-a4.yaml
-> @@ -14,8 +14,12 @@ allOf:
->  
->  properties:
->    compatible:
-> -    const: amlogic,pinctrl-a4
-> -
+From: Andrey Vatoropin <a.vatoropin@crpt.ru>
 
-Do not remove blank line.
+Static analysis shows that pointer "my_ets" cannot be NULL because it=20
+points to the object "struct ieee_ets".
 
-Best regards,
-Krzysztof
+Remove the extra NULL check. It is meaningless and harms the readability
+of the code.
 
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
+
+Signed-off-by: Andrey Vatoropin <a.vatoropin@crpt.ru>
+---
+ drivers/net/ethernet/mellanox/mlx4/en_dcb_nl.c | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/drivers/net/ethernet/mellanox/mlx4/en_dcb_nl.c b/drivers/net/e=
+thernet/mellanox/mlx4/en_dcb_nl.c
+index 752a72499b4f..be80da03a594 100644
+--- a/drivers/net/ethernet/mellanox/mlx4/en_dcb_nl.c
++++ b/drivers/net/ethernet/mellanox/mlx4/en_dcb_nl.c
+@@ -290,9 +290,6 @@ static int mlx4_en_dcbnl_ieee_getets(struct net_device =
+*dev,
+ 	struct mlx4_en_priv *priv =3D netdev_priv(dev);
+ 	struct ieee_ets *my_ets =3D &priv->ets;
+=20
+-	if (!my_ets)
+-		return -EINVAL;
+-
+ 	ets->ets_cap =3D IEEE_8021QAZ_MAX_TCS;
+ 	ets->cbs =3D my_ets->cbs;
+ 	memcpy(ets->tc_tx_bw, my_ets->tc_tx_bw, sizeof(ets->tc_tx_bw));
+--=20
+2.43.0
