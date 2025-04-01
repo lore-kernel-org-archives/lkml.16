@@ -1,149 +1,95 @@
-Received: from mail-pl1-f196.google.com (mail-pl1-f196.google.com [209.85.214.196])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [212.227.15.4])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF8032AF14;
-	Tue,  1 Apr 2025 06:32:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27E7B1DB55C;
+	Tue,  1 Apr 2025 06:32:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743489127; cv=none; b=e0YORsyCRKfKqFJTA3Qp90ymZGc5V+3ldc5uqvGdmnb5GPhxJGg4kQlEwOomS5S6ZXxmsqc1QezGeOCvXm/tpjnr6URX51/ifyUGtuwQOoLOFfX2BAvGwwvTbvTg+dPPiwKOB0CXXYCP/szfujB/oqi0hlNli9N8URsYa+UgIDY=
+	t=1743489162; cv=none; b=nYCh8flr5qpupkG6C8BXTrpulumLIrC/qlyjOLCUW4d74lLFQXo2oBqYQ7rkQZMDaAQEGbUMHIoEKGPiLbCXg1MfzSE+SksSvvEQ6FnZps7ECHo0auZirPob96XnU0uTMZhdmKVSbm9JXFtDlp7sVMUcmHV5Y6kAhLoWtJG3Ke0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743489127; c=relaxed/simple;
-	bh=BDxF424ruMiZKsGkmqb60vQyLRBj+6kdl6qq3sR8Hgg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pf8jJhL+SsJKi/kIVpoX/5IGo4kwHmNPi0DUYIOMtnGsnqlenBRpYMi3PSMbmI+04Bnxfq3h/+SSrCHKipCGXyFKQrTDVyRZTg1MsQUt45HZR0cX5oB5NyRkRvGeOADsym3sjqX2Qb7X52uqd4oEprWuYiNNRqwWpVvL0/dNRmI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Yf+KqDdv; arc=none smtp.client-ip=209.85.214.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743489162; c=relaxed/simple;
+	bh=Z3TWmIlEniRqULTMH6pCpJTJm/AArQf/z43T2jywDvA=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=VcW9KRdUupsqAZ3Ytgu7qkl/pID5od4pr0jEVst/O5b/moEf/iL1XQGnSegrt0aJicy3tiChxqekuyShH4lZSj/OUcfHTI8mnDUPDFncuIXYYBs8IE5iBZNmXP+J+i/cNSGamA/tVakph3ASLOepm8mYQl25VxIhn2UBHHWMbwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=KE/GD+1q; arc=none smtp.client-ip=212.227.15.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yf+KqDdv"
-Received: by mail-pl1-f196.google.com with SMTP id d9443c01a7336-2295d78b45cso9301955ad.0;
-        Mon, 31 Mar 2025 23:32:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743489125; x=1744093925; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=wGw7xyNBu03x37lDi5ltAIq1oMX8Xxz184y1gqG3/+Y=;
-        b=Yf+KqDdvtGhtPzCirnM55MIAmI87SdsdIxlzi7KW2G2zfuAV1GDijdNkP6g3soew8S
-         QMAraQxclgHXObHdIlHVe4nCHoB7r2L7t0zESK8Mck0VQe2R9UfJTPIwprZ7SBeEq6RN
-         5QH7SfThzwWJdtyBsV3bn8tB+n6pvEjJuHsTxeAWbnGHpFOk6g2rCIZlosdmIvQ5sLgg
-         KJGeol8SNpKOKNSOign52hCaXoxrpzV6bb7PRShJ+C11aVlDwA5o9X9Q0rUqmUQjslAK
-         7856xYOfcxMlEJDZY17DlHP/Sp1OB3poTzDIziOX8cyGupilaaVXsTS+l0q80kCTnhe2
-         NPpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743489125; x=1744093925;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wGw7xyNBu03x37lDi5ltAIq1oMX8Xxz184y1gqG3/+Y=;
-        b=Iog9ANoCBphbVo8frTP4OhY1oWInarymuHouS+SVjPrXLVn7WuX3ASahxaAya2d/Jf
-         bmyTfaqLj22GHpsx5g2f/RxM1pVd1KjrODgvWXqZt5RAabmsVH3ngJZWqXg1xUrkouPQ
-         /1yGQEMy9PG85k7eCG6hzaK91hF3QO8o0irLYrRJhg4ZO0hf1uWOGyX1t7R2pvGWed93
-         vzS3t6f2exruqmTPC4LpDaGxYHdMSJ9lq6Nqh1c15kgHm4cyb4z5wgURhImNVzj8xioc
-         UYAj9gOKF1Y+JTwQyNZkLrlsNYJzkIB0lO1NhX/nIs0OwGdaufkabAgEpAqth9xKWroJ
-         HUBg==
-X-Forwarded-Encrypted: i=1; AJvYcCXva2+EPPjP1WT2QgpXF7cqadlmrY/Psa0gOOZtyCBChIJ6y+slNJ7titxZM+31I4TfCe1bh1ialtY1R/w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyDQWPYilpjKLHQnU43Ybv4oZaeMTZmNGX2Wa4QT7BymbTeh/Ym
-	BK1/tsyvC5beG4o7w6VYNnQ6SrDdAgyXEDg3JsRaiskPptoaX7Q8pTi6HD8WUapllg==
-X-Gm-Gg: ASbGncs0ZQmJxrQGuMc5wCOuHP4/NXGnobgEIiE6lnfNuvlnG8BJJwuK8JxY+Md7wRq
-	4fRPflOHsJaDQVwkgRwBLv2nAnAr8KSF0n0eamBa+RedcikY75VqZ/BkX43p/3dOuSdRYsiLuue
-	kr2YKsRrPovtN7u5TkowBNYCUb/qGh5eOoDAbovSxhpBUhy31wTzFEJGjh04oBZRkmvgY1jpkSc
-	Xlqm4MS9lxPs5MYNWJ+xm7EGutavKGoeLviEMo7Tbw5rL+VAfzq8S4UpPlZNahHIu3XQBsqjmLl
-	VlbjelhQuWWlt0qoD8zrJeOhjsBBrI6g0iNzLc2RXCJcRgVGIbr0C5NqyAdS5Cspss+bJGU=
-X-Google-Smtp-Source: AGHT+IGJZEoqdwoeD23IjdthzmCGqvPXU4bgqGnajntJb6l7Akmfn++TOcm98QTRwEuaNF9iCAzftA==
-X-Received: by 2002:a17:903:40cb:b0:220:be86:a421 with SMTP id d9443c01a7336-2292f9e521bmr216475685ad.38.1743489125268;
-        Mon, 31 Mar 2025 23:32:05 -0700 (PDT)
-Received: from henry.localdomain ([111.202.148.167])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291f1cec2fsm80478415ad.117.2025.03.31.23.32.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Mar 2025 23:32:04 -0700 (PDT)
-From: Henry Martin <bsdhenrymartin@gmail.com>
-To: jikos@kernel.org,
-	bentiss@kernel.org
-Cc: linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Henry Martin <bsdhenrymartin@gmail.com>
-Subject: [PATCH v2] HID: uclogic: Add NULL check in uclogic_input_configured
-Date: Tue,  1 Apr 2025 14:31:57 +0800
-Message-Id: <20250401063157.19655-1-bsdhenrymartin@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="KE/GD+1q"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1743489158; x=1744093958; i=markus.elfring@web.de;
+	bh=mLFMFxxnB4HFSX6cDRqMCxHvEjCtGqBL4hrLzV0ECUE=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=KE/GD+1qz4wm6lPInNTNHmMuDrLeb+eWlU3zoOYK07EUiOgyWCiujJoZ+zAJFUQj
+	 yT561FxTP3RmkSJII5rQEEAdjsOvvjOJkgwq/dWooBrDM4lHPEcd4trHqMbPPnbzR
+	 X2jDmsogzir+wJZKoSWmKGtSSM7wpgANT6DqzCi5DtF0zN9Ya67LynoHR10kwWYcK
+	 EiCmVV3MzHE/V8vLBwnHPiSkJ7dtO5pw9dyailC2VB4Y1WmkFYhAz28lqEGW114wC
+	 V4mJFrA91TmdjN5dJtkGrMy3v3o/5T5zclG/o8s6SPaA6L11e7AUl+4Ln8A4Xrodu
+	 iAOPbvoGMLOdnocFKQ==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.70.54]) by smtp.web.de (mrweb005
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1MC0PR-1tpMUQ30kX-00HN8H; Tue, 01
+ Apr 2025 08:18:43 +0200
+Message-ID: <d5f2aa49-27e2-4cc1-91be-4e195ed5249e@web.de>
+Date: Tue, 1 Apr 2025 08:18:17 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+To: Henry Martin <bsdhenrymartin@gmail.com>, linux-fbdev@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org
+Cc: LKML <linux-kernel@vger.kernel.org>, Daniel Thompson
+ <danielt@kernel.org>, Helge Deller <deller@gmx.de>,
+ Jingoo Han <jingoohan1@gmail.com>, Lee Jones <lee@kernel.org>
+References: <20250401025737.16753-1-bsdhenrymartin@gmail.com>
+Subject: Re: [PATCH v3] backlight: pm8941: Add NULL check in wled_configure()
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20250401025737.16753-1-bsdhenrymartin@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:fE8a327Xw3HBuN0WBwRxTiZD/qUsUvAEGdxo9UcXdU5HnFaYLaI
+ +FoMTSCp8Lg7iDnfCBbuNl1sE1pLfKHC4xozs+wJZ8huc67ozhOpwGyPYxxMPzp80k7ZqiE
+ bH/yd+EwqIVCMOpQC18ultCSGDlsUGk4jwxcsSdT1IQ3YSYyJqao/27E4nUY5tqi1fBHiJg
+ /LH9gnCVJNtzEMfEzqysA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:gz2tuASMJTw=;BRKaTYjbX80tcujhLK/LqYTO2BB
+ fgmKqhSeOCs13v6cl7tJILD3sQc1RQjFVGsC0Nn1lV4tSmZGUrNRO6/PAxXu+dusnPCWc36+6
+ /B4u1wWDgR2zm8/7mYqi6xy0qMnLC1FBE4gRU9/hDZJyhM0Z8foglzesQrhCdw1YpPz1AUMMl
+ dkp1ZHvraknxfzEt0qM126zK1K6gcIwGR3SM2h4t9CB0l7hghenGE+6yiDAVnmCWNi+8PItUt
+ 5kSqOmashQKWqFcVoWOa7jGVbODMiQnpZ14dlG6JaWGoJ/QgbQk/5jpmylxZ0EQP2AJ81eDhs
+ C7XAChGMLGzpetRlwSNUAkjous+nHhipWSR4d18fTwBTmDaYAioKbLXfY23HcIJALgszaEB3R
+ ZfOsTmLuWOXFIw0fmdSjLumg9CqPe5GzwIBevbBVjJ2GIlDKUz47QuoC4wBiOfQezEpP03kc8
+ tgPnF3k+0VUwnEoIYJx2lBHBE8+S3cwRMb0DVWSuJeAjy/eFcu/o9/Nv6Zd3dtk4fhOkWx+6x
+ izob7tWBc2g3/xcaQxD5MrBER+bY5hGIrzOFm3NHCYLzkb2J/lTl62oHKgBsUPnTNyLd9jkEw
+ vAvmY6gxl7mBM4slUlqwua5/C/ZUXp2qFSmbQry+3HcySzScQw1AAVz1jV10Dio1HGBX1F63/
+ mZtFAKQBEYEyMr5fZXRw+dAAJDdex8VWgTzraX+OKhvUZM9D9LeQJ3aEl70Cndao1gZqnCwz0
+ muNxfGzbI8UfMzpKAWy8tvzYNbWcSfJhNVEyAAFNo0C2GKS/wzWF6U/wWozrPOOQZJFIK5Aj6
+ ubI03ZBfoRmX1zbJ8d+C+Vca9UIl3cAtv3Duru1Y96UTAIgfeoYYHyibaQO7tCifYEDF8HZCx
+ WESqdGWiNhk8gHSjtfNj74/F20F+MvyYXnanyScHOiHvbOYGPlzBf7QwdobuEBH0AKydU75Kw
+ dKpT+h90z7N0QZ37jmVnwMoLKWAXVrev31+uL0Ty9KyJTkNd6nckXfxjqcbojcdBmCKahW1lM
+ 8bch4IWqzE172L/7fhOHEWV6SV22MZom8meHrR8rdJeV5oGbsZ7EWawrG+UFZVc+5WfaU1TPm
+ 5nbusk0z7E3C+QDQJsUFracY1CxLwAPP/BWXkjqMsFg320eXN9ORbTMlXrNit3BvzNdBQamvR
+ VgCf+lE7naRmtOL5qXWVLRp5/XlLawYpNHL8YwlZNoZwKS6OUqOh/PneB8UikIvV4qgGFQRWs
+ QgGzg0mPWHQ7RxSuSNZx+/Pa0eLt9/8hhu/Xsu2VXAU+RUWAZuZdGIf7ZGwWQ6ONryaVfHQBo
+ 76OFLiA8VHj6X/3yO3W6ZMfFY2lG1Psm45EN7eGoHdh6mjg3+9DMEsNRuxsIHKYqsLObYDgeE
+ NC3ODwJwJQo0G7s+KF4k3gsL4Y1lbgCVy9ZrksZa1Rkh7iQIK9LlhqZd4jul8KVEEWhUVFcC9
+ 3wbXjfHKDY9BN9CzL8MKBIdPFPxIGG8qXtsObgUI4OugxrmLDzXIMRLtRUIwIYFPIjPPgMA==
 
-devm_kasprintf() returns NULL when memory allocation fails. Currently,
-uclogic_input_configured() does not check for this case, which results in a
-NULL pointer dereference.
+> devm_kasprintf() return NULL if memory allocation fails. Currently,
+=E2=80=A6
+                call?                               failed?
 
-Add NULL check after devm_kasprintf() to prevent this issue.
 
-Fixes: dd613a4e45f8 ("HID: uclogic: Correct devm device reference for hidinput input_dev name")
-Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
----
-V1 -> V2: 
-Simplify the handing of the condition "suffix" with if/else suggested by
-Markus. 
-The current implementation (directly returning -ENOMEM) is reasonable because:
-1. pen_input is just a cached pointer - no resources are allocated
-2. evbit modification is a software-only configuration (hardware-independent)
-3. No critical state needs rollback on memory allocation failure
+> Add NULL check after devm_kasprintf() to prevent this issue.
 
- drivers/hid/hid-uclogic-core.c | 28 +++++++++++-----------------
- 1 file changed, 11 insertions(+), 17 deletions(-)
+Do you propose to improve this function implementation a bit more?
 
-diff --git a/drivers/hid/hid-uclogic-core.c b/drivers/hid/hid-uclogic-core.c
-index d8008933c052..83625ec6a55a 100644
---- a/drivers/hid/hid-uclogic-core.c
-+++ b/drivers/hid/hid-uclogic-core.c
-@@ -118,35 +118,29 @@ static int uclogic_input_configured(struct hid_device *hdev,
- 		}
- 	}
- 
--	if (!suffix) {
-+	if (!suffix && hi->report->maxfield > 0) {
- 		field = hi->report->field[0];
- 
--		switch (field->application) {
--		case HID_GD_KEYBOARD:
-+		if (field->application == HID_GD_KEYBOARD)
- 			suffix = "Keyboard";
--			break;
--		case HID_GD_MOUSE:
-+		else if (field->application == HID_GD_MOUSE)
- 			suffix = "Mouse";
--			break;
--		case HID_GD_KEYPAD:
-+		else if (field->application == HID_GD_KEYPAD)
- 			suffix = "Pad";
--			break;
--		case HID_DG_PEN:
--		case HID_DG_DIGITIZER:
-+		else if (field->application == HID_DG_PEN || field->application == HID_DG_DIGITIZER)
- 			suffix = "Pen";
--			break;
--		case HID_CP_CONSUMER_CONTROL:
-+		else if (field->application == HID_CP_CONSUMER_CONTROL)
- 			suffix = "Consumer Control";
--			break;
--		case HID_GD_SYSTEM_CONTROL:
-+		else if (field->application == HID_GD_SYSTEM_CONTROL)
- 			suffix = "System Control";
--			break;
--		}
- 	}
- 
--	if (suffix)
-+	if (suffix) {
- 		hi->input->name = devm_kasprintf(&hdev->dev, GFP_KERNEL,
- 						 "%s %s", hdev->name, suffix);
-+		if (!hi->input->name)
-+			return -ENOMEM;
-+	}
- 
- 	return 0;
- }
--- 
-2.34.1
-
+Regards,
+Markus
