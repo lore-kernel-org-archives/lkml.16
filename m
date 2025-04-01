@@ -1,674 +1,292 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa6.hgst.iphmx.com (esa6.hgst.iphmx.com [216.71.154.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49213218ADD
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 22:47:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743547641; cv=none; b=oGANIbxFmLgQ1XtKasxjvAPOWF7siRBETQe2hWYKC2wziyhKlE8LJGfQx6m5flrDZvUzUTawsyAkWRgeB4HUn3be6MYtoOANDrvEzEITJ173XpXy1Pyh+4nU3DD0SSC7VVeke1pZqAp9ToFlpqmW+ZiK36S8pEow+PC0MNtNFcM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743547641; c=relaxed/simple;
-	bh=JUlO8jprC/JRl0mEVp/+YJSR7b4roLtT4ggVEFjFQoQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AhNUutvDC5w/uUfacrdcv88BvButS8ghEh4kcE8N1t/MRFVDLxhMoOCYu7zJt71Lxt/0iT1KFk5pk1Fe/8qSp6x7rBSb3wbV8C2NeUEUrsHkc4iAOHrE8a70Grt0XIccOYsoeLBAf+aBqimjVsNxmOCgA7BL9XMi5Pf3rajDEbo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=asr8fltK; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DD981E9B20
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 22:47:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=216.71.154.45
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743547655; cv=fail; b=s0FcQBHWZDWutV+BZfETQaCF94rhZ3RmT3KkZtc7dZckRUq3a8n3v2TUnrk7Dx+7v7Y3OuYuo8kfWk5i4dXkUfvqrfKhmrYzsiPWHgHMcRNJFqzKNTeHU73OBTJt7VHeVteM9gALuzo3uXv+7ZTzI3XLpuAHSdCIcY7KfBabcNE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743547655; c=relaxed/simple;
+	bh=4Wd4T3nw/dYnS1ErC9vXJdoMnro1bemZtWkZ470emnU=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=Rv0wzjcgv4MLoJzq2VDQKetIE/lxf3D7UbJ3futE27b9kAHr3imMX7Q1m0AmPHV/IYdVCVpDv5JAa7e41rtCqFeEk1klwwQzWyyEPY+71mF3d2iLzJUkKGAW1GnRRly1V3phOkzzgTLOYYQ1V/rjsqlyuvQLsIMTf1HNu5obIVg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=WI9zDoh8; dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b=gV5J08qb; arc=fail smtp.client-ip=216.71.154.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="asr8fltK"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-399737f4fa4so3023738f8f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 15:47:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="WI9zDoh8";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="gV5J08qb"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1743547653; x=1775083653;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=4Wd4T3nw/dYnS1ErC9vXJdoMnro1bemZtWkZ470emnU=;
+  b=WI9zDoh8eJKEbrQWQXRAadEdrzVFKzVuAddz3X9ZZZJpD7XLOIbJffDS
+   TC3Z6CS3GIDU8yvQSSLpfL1JpkWmTSdismSOY0mUYaXfo6yKRXFxYbGMH
+   hWroXkiYap+5K2KbHxU3DZucIaRrvmpXoV9Te++ZcI3L7+xEjRQuUa1U+
+   aTPVjXb1qXZJkuDfqT0p6w02VsFE+9wN4OsqrAP3cc6YdIhltzTKuPCZE
+   IUAaWaN1PJHmhhOOWwrK5shCD6Cq+6hZd352C4eSIOoaZgnAexWebHm2D
+   pwhXp5KaD29O+tlFnIJ9mH9ehlUk22uodf3TuPJMHuB7lbDhLkaOU5+To
+   w==;
+X-CSE-ConnectionGUID: uXmKIBJgRgmH8xLEJlLTjQ==
+X-CSE-MsgGUID: lNmiz+iFQ9ajIMmd7qgw2Q==
+X-IronPort-AV: E=Sophos;i="6.14,294,1736784000"; 
+   d="scan'208";a="70962284"
+Received: from mail-mw2nam04lp2171.outbound.protection.outlook.com (HELO NAM04-MW2-obe.outbound.protection.outlook.com) ([104.47.73.171])
+  by ob1.hgst.iphmx.com with ESMTP; 02 Apr 2025 06:47:31 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=mweFsznCJs4/dp4pyvIgOh7d8kpxyUkcFUWK2SM9rSk3hKjN8CyKhYY0Mi1ahY/B7Ib/Ms2/zl4FMB5qZhSfgh9DWHeHs7eMBBaYz+q/AvKTAe8rD+kgfVz9XO2PqEEDHva90s2qCqj37rq3HIw6L2uFrUNVxlZ6MTRYzP14ycf1EBtjntG6xH4Jc7DMonuYSQQJzWr79i5onOzwYRaiqkv1ytKMeXDZX4qRrTUOv2bYaTk/3Q/m1WUvL+CL5sfRk2kxkUffMWYD+tSAenpr0ke7gU4dmi26VqFtdnM3laY9zV/QthgO4dr8um6TLOWU5/LqPohQpC17RprrSipdDg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=cHs5W9Agx7nnPQHFBLM0m8yp6t9xN8mS1lfVhguB2kw=;
+ b=HAyV1fIA13ZeJYPZZatyKK+UHgcK0IiNoKh+QuR34xUl9AEJ6Krr9icy/1SVKUbTog5SlxkOpqjnubjKD+oYpzlqwaLj8lGfJqf6rEvyBYNd631U+J6lgb2VxDHOBRzGJqbpixk2qkqVgle6RVvWXEQf4xgJiAObs9pvlw15O6hxCVQyqHoGX3bZWptBqHV4DjvLCmEClp7tGw7jG/m6yqwlghToHIFJplSY4DMSri+MfbW9r8ss1Twp0JtQvXeBHp+QJcam5r9J+EiMI8nx2FhDOWzLdIt4J/q/uXGnnmpuCPvHfoE4xlYyPRdiw+XfOqohpItdLQyB5afimW5fbA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743547637; x=1744152437; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zl1UM1wPeNnzYdFKCwRGQYM+x7Yew5geMOrmVYVkLUE=;
-        b=asr8fltKTnRjDN8HR233mXwCJtzwO/kiOdX18z1Y6mlQFAXXiutcAnUK0TJNngySsM
-         fJFiQl8XAdVJ/aTU75NCe5b9nNy1lCg0f7XFO7TxhFgbMlsIp+eSj5P8NGnzCfTkoT7s
-         HvXwmnWeSLMSoX35zTHy88qw/gIK3BVmaYTW+MwlT49LFzn1EdkwUl2uB2waE04Nsqyf
-         SYTnWK4hHlNpO6FFsSINXyle+nTxzMeY6sz51R7xvdhd++CTE9Ivl/4vad08nckEW8hr
-         x55chU68EeFaPDI9z2NdOPGbjrb4B8eNHAczfKKUI9oUbtFMz6lzUVUbMS+eN/BNSdj2
-         79cg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743547637; x=1744152437;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zl1UM1wPeNnzYdFKCwRGQYM+x7Yew5geMOrmVYVkLUE=;
-        b=uIl39JsbK1i+2FqnoCT6kmLt0SRlacje/kjmweruXX1BNiVQxJ7IKr0YNcWv3s3drZ
-         17aI8Nj0+qnoDyCUDG3cwNAEif4jWWqD4gZpLqGodcn8630YnB0kKODAMPD3xxrg+y9k
-         xshbyvRdgcF4ridorI/2pLfgjHOnsPem3tmndA2cIJJ0qpMZM1HXc9CRd0yv10xTRvwq
-         CghOhxZQLy5tbIVU9Yq49UeXNjElPv0PeZZMmzvpnK3Z7xK6qD13i9yHUbT2zbc06rbA
-         dgA0j5NywAf4ix84dRkQFBt2x/U+D91xLyXnLxKYzkJFkOdZAghwrOyawsjN2lZktHuD
-         B8Jw==
-X-Gm-Message-State: AOJu0YwmJRXTUf3kuOqRuVrZX8Z+UmcXQjvhXZ1rLFk+w82yU842zoyh
-	xa6QPc/ot0xTz/rajQE/5lifjI08niSlrk3716SuHmkDxt6xJysfVPDAXs7sS0Y=
-X-Gm-Gg: ASbGncvLHZmRqYH8Mq+3a/7ulsPbomKtHsPTmrbSk1lRl4lboWAmGWFyjmmwoKOFtRL
-	KNX4pYVGlMSQtH5yHe/OTKS9j/SkHYRuW1UHmz6L3y1fMOlcYYDoC6ZxsKXzHGHANHvoiHrW1VR
-	BFC3wT2O+mQghjGjZLS0LHFWw4g1Hl5qObK8PfLLFTcumGeJh32DaL2JZ1wGan5PuWbOPjcepMR
-	gCfps9j1UNef0JIGPDH6SaoUgApikpax0MtEzk2c4+id60qP3B5Mi4LCyo2gLTgAQ+ydjC0/DGi
-	a6a5letRjNUxcKK3OqlG9CW8PIy7JBw1ElAUyJ8KKuYrUJ7SdQt67NjEo8U6PMtXTrb0zVY=
-X-Google-Smtp-Source: AGHT+IGwPmxLsKtCDLCr2r0h+7T5tHu4lofQmxuR6DYKMHShLF3e2H8j/OLfm91Hi9E6Tf2WeKKmOw==
-X-Received: by 2002:a05:6000:188c:b0:391:41c9:7a87 with SMTP id ffacd0b85a97d-39c1211d424mr12661016f8f.51.1743547637484;
-        Tue, 01 Apr 2025 15:47:17 -0700 (PDT)
-Received: from mai.. (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b7a42a3sm15488862f8f.91.2025.04.01.15.47.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Apr 2025 15:47:17 -0700 (PDT)
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-To: daniel.lezcano@linaro.org,
-	tglx@linutronix.de
-Cc: linux-kernel@vger.kernel.org,
-	thomas.fossati@linaro.org,
-	Larisa.Grigore@nxp.com,
-	ghennadi.procopciuc@nxp.com,
-	krzysztof.kozlowski@linaro.org,
-	S32@nxp.com,
-	Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	linux-stm32@st-md-mailman.stormreply.com (moderated list:ARM/STM32 ARCHITECTURE),
-	linux-arm-kernel@lists.infradead.org (moderated list:ARM/STM32 ARCHITECTURE)
-Subject: [PATCH v3 2/2] clocksource/drivers/nxp-timer: Add the System Timer Module for the s32gx platforms
-Date: Wed,  2 Apr 2025 00:46:42 +0200
-Message-ID: <20250401224644.3389181-3-daniel.lezcano@linaro.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250401224644.3389181-1-daniel.lezcano@linaro.org>
-References: <20250401224644.3389181-1-daniel.lezcano@linaro.org>
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cHs5W9Agx7nnPQHFBLM0m8yp6t9xN8mS1lfVhguB2kw=;
+ b=gV5J08qbqlXiDbIlcz9vxQpSegSj8qyVUP/+JGc+uaMUqsqOzROZcYsFYWlXCkQC7REVNBMo4pSInU+fByt86QEy8zals/dyuUWcY9Sw7pIGZa6Rm0D7HkLUQ+oUWIuHegvP99mHVwls+e+nfKa2+qqWm/Pa0wTHplJg9Il2dhc=
+Received: from MN2PR04MB6862.namprd04.prod.outlook.com (2603:10b6:208:1ed::18)
+ by SA0PR04MB7404.namprd04.prod.outlook.com (2603:10b6:806:e9::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Tue, 1 Apr
+ 2025 22:47:29 +0000
+Received: from MN2PR04MB6862.namprd04.prod.outlook.com
+ ([fe80::67d7:8033:78e7:9eb8]) by MN2PR04MB6862.namprd04.prod.outlook.com
+ ([fe80::67d7:8033:78e7:9eb8%4]) with mapi id 15.20.8534.043; Tue, 1 Apr 2025
+ 22:47:29 +0000
+From: Kamaljit Singh <Kamaljit.Singh1@wdc.com>
+To: Damien Le Moal <dlemoal@kernel.org>, "kbusch@kernel.org"
+	<kbusch@kernel.org>, "axboe@kernel.dk" <axboe@kernel.dk>, hch <hch@lst.de>,
+	"sagi@grimberg.me" <sagi@grimberg.me>, "linux-nvme@lists.infradead.org"
+	<linux-nvme@lists.infradead.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+CC: Niklas Cassel <cassel@kernel.org>
+Subject: Re: [PATCH v1 1/1] nvme: add admin controller support. prohibit ioq
+ creation for admin & disco ctrlrs
+Thread-Topic: [PATCH v1 1/1] nvme: add admin controller support. prohibit ioq
+ creation for admin & disco ctrlrs
+Thread-Index: AQHboCmElT3ixkj0uEiWsWJv1g7nM7OJG8CAgARc5iCAAfUvCw==
+Date: Tue, 1 Apr 2025 22:47:29 +0000
+Message-ID:
+ <MN2PR04MB68620030DBBDB25900DE3E82BCAC2@MN2PR04MB6862.namprd04.prod.outlook.com>
+References: <20250328213640.798910-1-kamaljit.singh1@wdc.com>
+ <20250328213640.798910-2-kamaljit.singh1@wdc.com>
+ <ca53c3a8-8af2-4e34-b0e6-3571cbec4bee@kernel.org>
+ <BY5PR04MB6849189D63EBB6EF4B66AD42BCAD2@BY5PR04MB6849.namprd04.prod.outlook.com>
+In-Reply-To:
+ <BY5PR04MB6849189D63EBB6EF4B66AD42BCAD2@BY5PR04MB6849.namprd04.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=wdc.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: MN2PR04MB6862:EE_|SA0PR04MB7404:EE_
+x-ms-office365-filtering-correlation-id: 10a80a03-82f7-4c54-eb89-08dd716f2e91
+x-ld-processed: b61c8803-16f3-4c35-9b17-6f65f441df86,ExtAddr
+wdcipoutbound: EOP-TRUE
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|366016|376014|38070700018;
+x-microsoft-antispam-message-info:
+ =?Windows-1252?Q?AOUJyAnuHSpWCyquKH2ssZ+Q2rPaGekoGkh03PLWmWwfhE/hAZMsV08B?=
+ =?Windows-1252?Q?9ir1GNw4hJe1DLUEcW4796TeTNn8C2oEeOcnmoZlROINAaV3R0PlIrko?=
+ =?Windows-1252?Q?BgpgosNHm6rMNneWLB47lxldHoZSdmwlbf+q3Yo5ZVJW9PluosUVIYN0?=
+ =?Windows-1252?Q?qYcT+a/LwtFgPrXtV8lFMlDphhUV/M6f7NRzDLIAAzLsuzU1v3wNgIrn?=
+ =?Windows-1252?Q?woFAhR/qVCEN6wb0VPSuzukjjl922uUvPHcf8Cp+zMtqNKHkPSSyP91Z?=
+ =?Windows-1252?Q?61jK/h/06hjx2qzqE74OgxEYbbPDv3cBeALMNAVYocGf8uGI0JEQH/GY?=
+ =?Windows-1252?Q?iqdamMNEUwP1LhaNythWsmfB7TH3J1nRL1OxiHfgoeZk+ui0qPJZoIVQ?=
+ =?Windows-1252?Q?5vxiKwyVFmjkl1IdzeMjUFVtjIBW1OxktxLEnYTsmyX+H0uxtGj28F/Q?=
+ =?Windows-1252?Q?wA02G8rbbShZ4UYWdiU79Lux+/OFA9hiAH5WVrLwSka+C8dH2bRj9hSj?=
+ =?Windows-1252?Q?WnRBWK7vNXYbAfpmSKng7XsGpXyKD9Y8QC/ZfHZo9dsHgMSeOzKVI7vV?=
+ =?Windows-1252?Q?718mLlaDkEnWtvFinFRWmnMVmDbGS0w9Q7V40YWEhc9sndZl28Bn6FDD?=
+ =?Windows-1252?Q?6qYP2XzNi0rRm4OXaJjsefTfniDcVa3Q09LIRXCTQSUjaX2T/fvPgJhI?=
+ =?Windows-1252?Q?lkqq6tEe+JgW9dLQTHgLrdUclpXiAZ+l1qj1/sAbkGPcyR9ZH4dWf2En?=
+ =?Windows-1252?Q?LG2vUNSWtn+VzW3ZRv7F4UR18c6pXaBmX2X8q4SS3o/ZM+81zoXbUQdH?=
+ =?Windows-1252?Q?+ONbtaqd6BKIe2cgV7fPG/C4OEiC9KGbFCaP1qM+JBiiqH3G+BdtlYRS?=
+ =?Windows-1252?Q?fO63iZO7DPdF0ct8TTlNGKRmBTrQNHktZ9uXnnj2AaErtFKf9WtSQLEX?=
+ =?Windows-1252?Q?RN2UxRHtvRzmLJO/Ox0rjbZrbaGb879Z8xU8XEjiboJ8Nt3xKfvqTdq6?=
+ =?Windows-1252?Q?s0TetRSHi8VkKyDKy86To2ZjxXyzgvKxaa0QL1UbtAm2T42Fh9Eyu6XT?=
+ =?Windows-1252?Q?T4e3/4NwxKu2msRzR8KnCt7odiPr5ggU0QDzJY7JvC0WoOrAGM4Gahcx?=
+ =?Windows-1252?Q?oIddjj+5TPE/4t3BUmE2KUXY0DRC19rV0FN9c2N+zZFcz4Vj7lHZFJ64?=
+ =?Windows-1252?Q?i+RXr/x16mn4scKhNmbxHYU0T4tDgTjBj/KblNJfEhFigc/rbysG1hwV?=
+ =?Windows-1252?Q?TZkhcec6CSizGp6xKJCywvCUSp1T0PohlPrkQ5yNHA7gJ8E4T+82s35D?=
+ =?Windows-1252?Q?U0A/7pLLtqbfar39Wkfhp9AKlqI86rYCKt6FkBVZOYSBe7mHo/yx5yVm?=
+ =?Windows-1252?Q?Y+mpUY0QpspWRFk4K8IYDe3FEKjx1OCn9ish6iXHTqvndUQutDaP2UUy?=
+ =?Windows-1252?Q?Xzes6fGYR3x+AOwtvsg8jrL8eEXJzpJbgOvhKPtAOIb20NFpqCKjIcmR?=
+ =?Windows-1252?Q?/AJKMvIRRAm2DeW//mqWNcBWdbtU4qYZUzog5OfhLenpfnfYXrEpLnCY?=
+ =?Windows-1252?Q?EmHbrXYeQgbz/ra7?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR04MB6862.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?Windows-1252?Q?ZCwmkY/hFHFTOaN14MDnELrF3Ff7kRh/m8cMteC8sAQYX86y7Exm2vhz?=
+ =?Windows-1252?Q?WzS6zr0vwCqXJEoXQA0GqPQKUMA2zDy3qL5PY/83RbkCCKXfPQYihgFE?=
+ =?Windows-1252?Q?oazy6EPwRRKgCfBdlhFdaq+zF8mbXRLs4676qa7tYKhA+cNFv+tjntRj?=
+ =?Windows-1252?Q?P6VmJ10PhZm7OJhW0OgWqGad5HErctHK/HzmqJyZBCNF24hdpFzMI67f?=
+ =?Windows-1252?Q?B2kphtE2IDHMp/V6z19OlAdARRYi6PU5hFStydHSzwWF2yDXdF8eCRxe?=
+ =?Windows-1252?Q?K15PJJbN6i5049+Z3afPzyR0EqhIEz5AektPI5cayXFBckzkU8BHpPk8?=
+ =?Windows-1252?Q?nbcXfRU1XgCWvYTfg0ufAoYcP2ZhBpZFKtkPnvnT4smhWaBQ/TmLfTJm?=
+ =?Windows-1252?Q?0C6+YGSzU6As2+oH2zEHmUlAeBhnXIUVzFRMWkUvueQeeO21v1lYUeZ5?=
+ =?Windows-1252?Q?fxhbzhX47Nif+FbH7yAiFb8qgKmCtRJs7EE2T769GtCb1EIxs6tY98kS?=
+ =?Windows-1252?Q?w1CaWLCi7qiVQGjaNQymrKykrokTZuon3+nAhRsu5qgMsJyaRFK8Yn6X?=
+ =?Windows-1252?Q?Dr/dsXsbM0QWT8KTxuJXqEtiT311yZY1bPIomjY7iG5YHRXnDBaV6wDK?=
+ =?Windows-1252?Q?yHGpDY8XYN5wP2LCOUJdoiscgd8DRA90oxiif5xVvt+MrJlhv0vgat+c?=
+ =?Windows-1252?Q?r41AtOs32xC7UtPAdiLF/D8xsnsNQq/If/aSc/da5x4HyU3AowNWLRlP?=
+ =?Windows-1252?Q?iDaVudhumZYYp6LPyVEu+R6I/x2JNnlxBuBDZh9DviLFgXjwdDpxQWME?=
+ =?Windows-1252?Q?P2w+mxdt9Bv6nzzCjU67xRE99LdaNxalRUq4qSG2DlkuX1G0F9GfEbp5?=
+ =?Windows-1252?Q?49nP7bvmilISlLn/b8+PH9PF+4olpV1bnMouHpFRRPpH0WzVzxZXoXZg?=
+ =?Windows-1252?Q?SdWAtZ9bZLbAqTBAaG5yUjt7jn/OTDmCxkGoqad2u+T3kri1UWrYctcL?=
+ =?Windows-1252?Q?LpdzEpzp/BcpiyO8OoPlhBCTDl80p904q4fXSZ2FAi0eUHwVnoffWT/N?=
+ =?Windows-1252?Q?aAb88gMLPDwaz4zXTkWFJUmD+qx07jGm58G6k5yhpm4xuqGtZ1qxqLVf?=
+ =?Windows-1252?Q?ZP9vkgDz0Y6QTqNIC9tnR2oFlaCPrAeTZiMUNrr6spePQbnua+NWUtXv?=
+ =?Windows-1252?Q?idOl8EC9+g0k0+Fnlh1imRc3dejmL1qG2LniZEYdxeCRmIk5cNlzwcEx?=
+ =?Windows-1252?Q?HESPV0px9Q/hnEM/8lLrcJwTO8y70V66Kav/5BxdULQJHSAA1hrP3/XB?=
+ =?Windows-1252?Q?DrL7755toGyItGNFgTv6UsLhwZINwjD0SquhEC/4TiBm15GAHVgYUHgK?=
+ =?Windows-1252?Q?Tq765CzKmRhqoY8vUhqXRCttVyV/RMIcxQ+ULScg5ncZcz3MMZShOb1t?=
+ =?Windows-1252?Q?wyLPIlds1pW6h4F+ahW4rHCKqqO+q2ojMXv4eprdBSVnfuLr+xSaPMxD?=
+ =?Windows-1252?Q?gJpkJY0+q2i39GOA90vFogMCVBCorb9jI+4PijZoznUJRcbRNwyATgOH?=
+ =?Windows-1252?Q?GYRSQLFS2Li278B78+GXDiajq/KYdHi4/Wrldj2YyOkbunIDTsbFMgWw?=
+ =?Windows-1252?Q?nWedYlNTrRUZHuu9oArmMO7hFGM2+TxmJ2GfHSL8QBT3cfogMHeWZHcQ?=
+ =?Windows-1252?Q?zvZIooRCDfi2/LTyZNvpeaJo00z2LU0s?=
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	+WQOpQUXJcXVdhHrI1byhlD/idbcleB7PxLk/v60RRLDQX2VsxsKPLO6ydNTRl9rcEtv07kphCDCsAJr2KnbOWfwMWTtcktLOokm+WqcmxDT03clHuwnkFBWpbWYKYEDRvZ8dDqhnnUqjBXYAQiSRPqaf7zY574/TQ3MK3IWwiNkVrovAGnILnL8TErR2OgfAjZfxBjG9baQt2MINLKhlYzGPFNkzz+fugsTDHvOnQpiKg92f7ucTCaY0VdcDGCcd+7mTRL8fYNkVU4zQR6m+eHYOKQPAOlyFWapff4Oxd0T1Yk4ecWDldXypa2zcw9FspV8cmeCrwYFFUJSuS3CupD2cuXiZS5IAUPX9fwv1ZPRmFOeRlm0o1OhpWNZNrGeq/jksBqjqvNJYK7gAwdxD4C0iKKz4iaH6eqrKU+DplOfCf89ieySWTSTg/PUXBfLVFU+qtSObHwmVz6/5gIZkAtrmTRHM2GYVF6B7tUkB7jvFpK40QZTJvpfjt8q20gSAG/yF1s3j2TFp7f3ja4CLP/hJ9w2yrVUsHzevXPRG0JiAXxL9JpQnHCb8wtm8IcrSL9S65DW43IPYLbkNFuPjR0w5k1smJbwq7eeXq5w6NMY4OHwGN9r+4GE1JYIrIot
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR04MB6862.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 10a80a03-82f7-4c54-eb89-08dd716f2e91
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Apr 2025 22:47:29.2770
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 4g+jR5//apAwIBNMebrMRk6PG/LTLecDg/YmNBLOXdPJ4NPFO0b6RFDvfOnMwzw9UCX3cC+KoIi8/9K817QLQA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR04MB7404
 
-STM supports commonly required system and application software timing
-functions. STM includes a 32-bit count-up timer and four 32-bit
-compare channels with a separate interrupt source for each
-channel. The timer is driven by the STM module clock divided by an
-8-bit prescale value (1 to 256).
-
-STM has the following features:
-    • One 32-bit count-up timer with an 8-bit prescaler
-    • Four 32-bit compare channels
-    • An independent interrupt source for each channel
-    • Ability to stop the timer in Debug mode
-
-The s32g platform is declined into two versions, the s32g2 and the
-s32g3. The former has a STM block with 8 timers and the latter has 12
-timers.
-
-The platform is designed to have one usable STM instance per core on
-the system which is composed of 3 x Cortex-M3 + 4 Cortex-A53 for the
-s32g2 and 3 x Cortex-M3 + 8 Cortex-A53 for the s32g3.
-
-There is a special STM instance called STM_TS which is dedicated to
-the timestamp. The 7th STM instance STM_07 is directly tied to the
-STM_TS which means it is not usable as a clockevent.
-
-The driver instantiate each STM described in the device tree as a
-clocksource and a clockevent conforming to the reference manual even
-if the Linux system does not use all of the clocksource. Each
-clockevent will have a cpumask set for a specific CPU.
-
-Given the counter is shared between the clocksource and the
-clockevent, the STM module can not be disabled by one or another so
-the refcounting mechanism is used to stop the counter when it reaches
-zero and to start it when it is one. The suspend and resume relies on
-the refcount to stop the module.
-
-As the device tree will have multiple STM entries, the driver can be
-probed in parallel with the async option but it is not enabled
-yet. However, the driver code takes care of preventing a race by
-putting a lock to protect the number of STM instances global variable
-which means it is ready to support the option when enough testing will
-be done with the underlying time framework.
-
-Cc: Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Thomas Fossati <thomas.fossati@linaro.org>
-Suggested-by: Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
----
- drivers/clocksource/Kconfig         |   9 +
- drivers/clocksource/Makefile        |   2 +
- drivers/clocksource/timer-nxp-stm.c | 496 ++++++++++++++++++++++++++++
- 3 files changed, 507 insertions(+)
- create mode 100644 drivers/clocksource/timer-nxp-stm.c
-
-diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-index 487c85259967..e86e327392af 100644
---- a/drivers/clocksource/Kconfig
-+++ b/drivers/clocksource/Kconfig
-@@ -763,4 +763,13 @@ config RALINK_TIMER
- 	  Enables support for system tick counter present on
- 	  Ralink SoCs RT3352 and MT7620.
- 
-+config NXP_STM_TIMER
-+	bool "NXP System Timer Module driver"
-+	depends on ARCH_S32 || COMPILE_TEST
-+	select CLKSRC_MMIO
-+	help
-+	  Support for NXP System Timer Module. It will create, in this
-+	  order, a clocksource, a broadcast clockevent and a per cpu
-+	  clockevent.
-+
- endmenu
-diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
-index 43ef16a4efa6..c3a92e6b9f94 100644
---- a/drivers/clocksource/Makefile
-+++ b/drivers/clocksource/Makefile
-@@ -92,3 +92,5 @@ obj-$(CONFIG_GXP_TIMER)			+= timer-gxp.o
- obj-$(CONFIG_CLKSRC_LOONGSON1_PWM)	+= timer-loongson1-pwm.o
- obj-$(CONFIG_EP93XX_TIMER)		+= timer-ep93xx.o
- obj-$(CONFIG_RALINK_TIMER)		+= timer-ralink.o
-+obj-$(CONFIG_NXP_STM_TIMER)		+= timer-nxp-stm.o
-+
-diff --git a/drivers/clocksource/timer-nxp-stm.c b/drivers/clocksource/timer-nxp-stm.c
-new file mode 100644
-index 000000000000..cf007688922e
---- /dev/null
-+++ b/drivers/clocksource/timer-nxp-stm.c
-@@ -0,0 +1,496 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Copyright 2016 Freescale Semiconductor, Inc.
-+ * Copyright 2018,2021-2025 NXP
-+ *
-+ * NXP System Timer Module:
-+ *
-+ *  STM supports commonly required system and application software
-+ *  timing functions. STM includes a 32-bit count-up timer and four
-+ *  32-bit compare channels with a separate interrupt source for each
-+ *  channel. The timer is driven by the STM module clock divided by an
-+ *  8-bit prescale value (1 to 256). It has ability to stop the timer
-+ *  in Debug mode
-+ */
-+#include <linux/clk.h>
-+#include <linux/clockchips.h>
-+#include <linux/cpuhotplug.h>
-+#include <linux/interrupt.h>
-+#include <linux/module.h>
-+#include <linux/of_irq.h>
-+#include <linux/platform_device.h>
-+#include <linux/sched_clock.h>
-+#include <linux/units.h>
-+
-+#define STM_CR(__base)		(__base)
-+
-+#define STM_CR_TEN		BIT(0)
-+#define STM_CR_FRZ		BIT(1)
-+#define STM_CR_CPS_OFFSET	8u
-+#define STM_CR_CPS_MASK		GENMASK(15, STM_CR_CPS_OFFSET)
-+
-+#define STM_CNT(__base)		((__base) + 0x04)
-+
-+#define STM_CCR0(__base)	((__base) + 0x10)
-+#define STM_CCR1(__base)	((__base) + 0x20)
-+#define STM_CCR2(__base)	((__base) + 0x30)
-+#define STM_CCR3(__base)	((__base) + 0x40)
-+
-+#define STM_CCR_CEN		BIT(0)
-+
-+#define STM_CIR0(__base)	((__base) + 0x14)
-+#define STM_CIR1(__base)	((__base) + 0x24)
-+#define STM_CIR2(__base)	((__base) + 0x34)
-+#define STM_CIR3(__base)	((__base) + 0x44)
-+
-+#define STM_CIR_CIF		BIT(0)
-+
-+#define STM_CMP0(__base)	((__base) + 0x18)
-+#define STM_CMP1(__base)	((__base) + 0x28)
-+#define STM_CMP2(__base)	((__base) + 0x38)
-+#define STM_CMP3(__base)	((__base) + 0x48)
-+
-+#define STM_ENABLE_MASK	(STM_CR_FRZ | STM_CR_TEN)
-+
-+struct stm_timer {
-+	void __iomem *base;
-+	unsigned long rate;
-+	unsigned long delta;
-+	unsigned long counter;
-+	struct clock_event_device ced;
-+	struct clocksource cs;
-+	atomic_t refcnt;
-+};
-+
-+static DEFINE_PER_CPU(struct stm_timer *, stm_timers);
-+
-+static struct stm_timer *stm_sched_clock;
-+
-+/*
-+ * Global structure for multiple STMs initialization
-+ */
-+static int stm_instances;
-+
-+/*
-+ * This global lock is used to prevent race conditions with the
-+ * stm_instances in case the driver is using the ASYNC option
-+ */
-+static DEFINE_MUTEX(stm_instances_lock);
-+
-+DEFINE_GUARD(stm_instances, struct mutex *, mutex_lock(_T), mutex_unlock(_T))
-+
-+static struct stm_timer *cs_to_stm(struct clocksource *cs)
-+{
-+	return container_of(cs, struct stm_timer, cs);
-+}
-+
-+static struct stm_timer *ced_to_stm(struct clock_event_device *ced)
-+{
-+	return container_of(ced, struct stm_timer, ced);
-+}
-+
-+static u64 notrace nxp_stm_read_sched_clock(void)
-+{
-+	return readl(STM_CNT(stm_sched_clock->base));
-+}
-+
-+static u32 nxp_stm_clocksource_getcnt(struct stm_timer *stm_timer)
-+{
-+	return readl(STM_CNT(stm_timer->base));
-+}
-+
-+static void nxp_stm_clocksource_setcnt(struct stm_timer *stm_timer, u32 cnt)
-+{
-+	writel(cnt, STM_CNT(stm_timer->base));
-+}
-+
-+static u64 nxp_stm_clocksource_read(struct clocksource *cs)
-+{
-+	struct stm_timer *stm_timer = cs_to_stm(cs);
-+
-+	return (u64)nxp_stm_clocksource_getcnt(stm_timer);
-+}
-+
-+static void nxp_stm_module_enable(struct stm_timer *stm_timer)
-+{
-+	u32 reg;
-+
-+	reg = readl(STM_CR(stm_timer->base));
-+
-+	reg |= STM_ENABLE_MASK;
-+
-+	writel(reg, STM_CR(stm_timer->base));
-+}
-+
-+static void nxp_stm_module_disable(struct stm_timer *stm_timer)
-+{
-+	u32 reg;
-+
-+	reg = readl(STM_CR(stm_timer->base));
-+
-+	reg &= ~STM_ENABLE_MASK;
-+
-+	writel(reg, STM_CR(stm_timer->base));
-+}
-+
-+static void nxp_stm_module_put(struct stm_timer *stm_timer)
-+{
-+	if (atomic_dec_and_test(&stm_timer->refcnt))
-+		nxp_stm_module_disable(stm_timer);
-+}
-+
-+static void nxp_stm_module_get(struct stm_timer *stm_timer)
-+{
-+	if (atomic_inc_return(&stm_timer->refcnt) == 1)
-+		nxp_stm_module_enable(stm_timer);
-+}
-+
-+static int nxp_stm_clocksource_enable(struct clocksource *cs)
-+{
-+	struct stm_timer *stm_timer = cs_to_stm(cs);
-+
-+	nxp_stm_module_get(stm_timer);
-+
-+	return 0;
-+}
-+
-+static void nxp_stm_clocksource_disable(struct clocksource *cs)
-+{
-+	struct stm_timer *stm_timer = cs_to_stm(cs);
-+
-+	nxp_stm_module_put(stm_timer);
-+}
-+
-+static void nxp_stm_clocksource_suspend(struct clocksource *cs)
-+{
-+	struct stm_timer *stm_timer = cs_to_stm(cs);
-+
-+	nxp_stm_clocksource_disable(cs);
-+	stm_timer->counter = nxp_stm_clocksource_getcnt(stm_timer);
-+}
-+
-+static void nxp_stm_clocksource_resume(struct clocksource *cs)
-+{
-+	struct stm_timer *stm_timer = cs_to_stm(cs);
-+
-+	nxp_stm_clocksource_setcnt(stm_timer, stm_timer->counter);
-+	nxp_stm_clocksource_enable(cs);
-+}
-+
-+static void __init devm_clocksource_unregister(void *data)
-+{
-+	struct stm_timer *stm_timer = data;
-+
-+	clocksource_unregister(&stm_timer->cs);
-+}
-+
-+static int __init nxp_stm_clocksource_init(struct device *dev, struct stm_timer *stm_timer,
-+					   const char *name, void __iomem *base, struct clk *clk)
-+{
-+	int ret;
-+
-+	stm_timer->base = base;
-+	stm_timer->rate = clk_get_rate(clk);
-+
-+	stm_timer->cs.name = name;
-+	stm_timer->cs.rating = 460;
-+	stm_timer->cs.read = nxp_stm_clocksource_read;
-+	stm_timer->cs.enable = nxp_stm_clocksource_enable;
-+	stm_timer->cs.disable = nxp_stm_clocksource_disable;
-+	stm_timer->cs.suspend = nxp_stm_clocksource_suspend;
-+	stm_timer->cs.resume = nxp_stm_clocksource_resume;
-+	stm_timer->cs.mask = CLOCKSOURCE_MASK(32);
-+	stm_timer->cs.flags = CLOCK_SOURCE_IS_CONTINUOUS;
-+
-+	ret = clocksource_register_hz(&stm_timer->cs, stm_timer->rate);
-+	if (ret)
-+		return ret;
-+
-+	ret = devm_add_action_or_reset(dev, devm_clocksource_unregister, stm_timer);
-+	if (ret) {
-+		clocksource_unregister(&stm_timer->cs);
-+		return ret;
-+	}
-+
-+	stm_sched_clock = stm_timer;
-+
-+	sched_clock_register(nxp_stm_read_sched_clock, 32, stm_timer->rate);
-+
-+	dev_dbg(dev, "Registered clocksource %s\n", name);
-+
-+	return 0;
-+}
-+
-+static int nxp_stm_clockevent_read_counter(struct stm_timer *stm_timer)
-+{
-+	return readl(STM_CNT(stm_timer->base));
-+}
-+
-+static void nxp_stm_clockevent_disable(struct stm_timer *stm_timer)
-+{
-+	writel(0, STM_CCR0(stm_timer->base));
-+}
-+
-+static void nxp_stm_clockevent_enable(struct stm_timer *stm_timer)
-+{
-+	writel(STM_CCR_CEN, STM_CCR0(stm_timer->base));
-+}
-+
-+static int nxp_stm_clockevent_shutdown(struct clock_event_device *ced)
-+{
-+	struct stm_timer *stm_timer = ced_to_stm(ced);
-+
-+	nxp_stm_clockevent_disable(stm_timer);
-+
-+	return 0;
-+}
-+
-+static int nxp_stm_clockevent_set_next_event(unsigned long delta, struct clock_event_device *ced)
-+{
-+	struct stm_timer *stm_timer = ced_to_stm(ced);
-+	u32 val;
-+
-+	nxp_stm_clockevent_disable(stm_timer);
-+
-+	stm_timer->delta = delta;
-+
-+	val = nxp_stm_clockevent_read_counter(stm_timer) + delta;
-+
-+	writel(val, STM_CMP0(stm_timer->base));
-+
-+	/*
-+	 * The counter is shared across the channels and can not be
-+	 * stopped while we are setting the next event. If the delta
-+	 * is very small it is possible the counter increases above
-+	 * the computed 'val'. The min_delta value specified when
-+	 * registering the clockevent will prevent that. The second
-+	 * case is if the counter wraps while we compute the 'val' and
-+	 * before writing the comparator register. We read the counter,
-+	 * check if we are back in time and abort the timer with -ETIME.
-+	 */
-+	if (val > nxp_stm_clockevent_read_counter(stm_timer) + delta)
-+		return -ETIME;
-+
-+	nxp_stm_clockevent_enable(stm_timer);
-+
-+	return 0;
-+}
-+
-+static int nxp_stm_clockevent_set_periodic(struct clock_event_device *ced)
-+{
-+	struct stm_timer *stm_timer = ced_to_stm(ced);
-+
-+	return nxp_stm_clockevent_set_next_event(stm_timer->rate, ced);
-+}
-+
-+static void nxp_stm_clockevent_suspend(struct clock_event_device *ced)
-+{
-+	struct stm_timer *stm_timer = ced_to_stm(ced);
-+
-+	nxp_stm_module_put(stm_timer);
-+}
-+
-+static void nxp_stm_clockevent_resume(struct clock_event_device *ced)
-+{
-+	struct stm_timer *stm_timer = ced_to_stm(ced);
-+
-+	nxp_stm_module_get(stm_timer);
-+}
-+
-+static int __init nxp_stm_clockevent_per_cpu_init(struct device *dev, struct stm_timer *stm_timer,
-+						  const char *name, void __iomem *base, int irq,
-+						  struct clk *clk, int cpu)
-+{
-+	stm_timer->base = base;
-+	stm_timer->rate = clk_get_rate(clk);
-+
-+	stm_timer->ced.name = name;
-+	stm_timer->ced.features = CLOCK_EVT_FEAT_PERIODIC | CLOCK_EVT_FEAT_ONESHOT;
-+	stm_timer->ced.set_state_shutdown = nxp_stm_clockevent_shutdown;
-+	stm_timer->ced.set_state_periodic = nxp_stm_clockevent_set_periodic;
-+	stm_timer->ced.set_next_event = nxp_stm_clockevent_set_next_event;
-+	stm_timer->ced.suspend = nxp_stm_clockevent_suspend;
-+	stm_timer->ced.resume = nxp_stm_clockevent_resume;
-+	stm_timer->ced.cpumask = cpumask_of(cpu);
-+	stm_timer->ced.rating = 460;
-+	stm_timer->ced.irq = irq;
-+
-+	per_cpu(stm_timers, cpu) = stm_timer;
-+
-+	nxp_stm_module_get(stm_timer);
-+
-+	dev_dbg(dev, "Initialized per cpu clockevent name=%s, irq=%d, cpu=%d\n", name, irq, cpu);
-+
-+	return 0;
-+}
-+
-+static int nxp_stm_clockevent_starting_cpu(unsigned int cpu)
-+{
-+	struct stm_timer *stm_timer = per_cpu(stm_timers, cpu);
-+	int ret;
-+
-+	if (WARN_ON(!stm_timer))
-+		return -EFAULT;
-+
-+	ret = irq_force_affinity(stm_timer->ced.irq, cpumask_of(cpu));
-+	if (ret)
-+		return ret;
-+
-+	/*
-+	 * The timings measurement show reading the counter register
-+	 * and writing to the comparator register takes as a maximum
-+	 * value 1100 ns at 133MHz rate frequency. The timer must be
-+	 * set above this value and to be secure we set the minimum
-+	 * value equal to 2000ns, so 2us.
-+	 *
-+	 * minimum ticks = (rate / MICRO) * 2
-+	 */
-+	clockevents_config_and_register(&stm_timer->ced, stm_timer->rate,
-+					(stm_timer->rate / MICRO) * 2, 0xffffffff);
-+
-+	return 0;
-+}
-+
-+static irqreturn_t nxp_stm_module_interrupt(int irq, void *dev_id)
-+{
-+	struct stm_timer *stm_timer = dev_id;
-+	struct clock_event_device *ced = &stm_timer->ced;
-+	u32 val;
-+
-+	/*
-+	 * The interrupt is shared across the channels in the
-+	 * module. But this one is configured to run only one channel,
-+	 * consequently it is pointless to test the interrupt flags
-+	 * before and we can directly reset the channel 0 irq flag
-+	 * register.
-+	 */
-+	writel(STM_CIR_CIF, STM_CIR0(stm_timer->base));
-+
-+	/*
-+	 * Update STM_CMP value using the counter value
-+	 */
-+	val = nxp_stm_clockevent_read_counter(stm_timer) + stm_timer->delta;
-+
-+	writel(val, STM_CMP0(stm_timer->base));
-+
-+	/*
-+	 * stm hardware doesn't support oneshot, it will generate an
-+	 * interrupt and start the counter again so software need to
-+	 * disable the timer to stop the counter loop in ONESHOT mode.
-+	 */
-+	if (likely(clockevent_state_oneshot(ced)))
-+		nxp_stm_clockevent_disable(stm_timer);
-+
-+	ced->event_handler(ced);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int __init nxp_stm_timer_probe(struct platform_device *pdev)
-+{
-+	struct stm_timer *stm_timer;
-+	struct device *dev = &pdev->dev;
-+	struct device_node *np = dev->of_node;
-+	const char *name = of_node_full_name(np);
-+	struct clk *clk;
-+	void __iomem *base;
-+	int irq, ret;
-+
-+	/*
-+	 * The device tree can have multiple STM nodes described, so
-+	 * it makes this driver a good candidate for the async probe.
-+	 * It is still unclear if the time framework does correctly
-+	 * handle a parallel loading of the timers but at least this
-+	 * driver is ready to support the option.
-+	 */
-+	guard(stm_instances)(&stm_instances_lock);
-+
-+	/*
-+	 * The S32Gx are SoCs featuring a diverse set of cores. Linux
-+	 * is expected to run on Cortex-A53 cores, while other
-+	 * software stacks will operate on Cortex-M cores. The number
-+	 * of STM instances has been sized to include at most one
-+	 * instance per core.
-+	 *
-+	 * As we need a clocksource and a clockevent per cpu, we
-+	 * simply initialize a clocksource per cpu along with the
-+	 * clockevent which makes the resulting code simpler.
-+	 *
-+	 * However if the device tree is describing more STM instances
-+	 * than the number of cores, then we ignore them.
-+	 */
-+	if (stm_instances >= num_possible_cpus())
-+		return 0;
-+
-+	base = devm_of_iomap(dev, np, 0, NULL);
-+	if (IS_ERR(base))
-+		return dev_err_probe(dev, PTR_ERR(base), "Failed to iomap %pOFn\n", np);
-+
-+	irq = platform_get_irq(pdev, 0);
-+	if (irq < 0)
-+		return dev_err_probe(dev, irq, "Failed to get IRQ\n");
-+
-+	clk = devm_clk_get_enabled(dev, NULL);
-+	if (IS_ERR(clk))
-+		return dev_err_probe(dev, PTR_ERR(clk), "Clock not found\n");
-+
-+	stm_timer = devm_kzalloc(dev, sizeof(*stm_timer), GFP_KERNEL);
-+	if (!stm_timer)
-+		return -ENOMEM;
-+
-+	ret = devm_request_irq(dev, irq, nxp_stm_module_interrupt,
-+			       IRQF_TIMER | IRQF_NOBALANCING, name, stm_timer);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Unable to allocate interrupt line\n");
-+
-+	ret = nxp_stm_clocksource_init(dev, stm_timer, name, base, clk);
-+	if (ret)
-+		return ret;
-+
-+	/*
-+	 * Next probed STM will be a per CPU clockevent, until
-+	 * we probe as much as we have CPUs available on the
-+	 * system, we do a partial initialization
-+	 */
-+	ret = nxp_stm_clockevent_per_cpu_init(dev, stm_timer, name,
-+					      base, irq, clk,
-+					      stm_instances);
-+	if (ret)
-+		return ret;
-+
-+	stm_instances++;
-+
-+	/*
-+	 * The number of probed STM for per CPU clockevent is
-+	 * equal to the number of available CPUs on the
-+	 * system. We install the cpu hotplug to finish the
-+	 * initialization by registering the clockevents
-+	 */
-+	if (stm_instances == num_possible_cpus()) {
-+		ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "STM timer:starting",
-+					nxp_stm_clockevent_starting_cpu, NULL);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id nxp_stm_of_match[] = {
-+	{ .compatible = "nxp,s32g2-stm" },
-+	{ .compatible = "nxp,s32g3-stm" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, nxp_stm_of_match);
-+
-+static struct platform_driver nxp_stm_probe = {
-+	.probe	= nxp_stm_timer_probe,
-+	.driver	= {
-+		.name		= "nxp-stm",
-+		.of_match_table	= of_match_ptr(nxp_stm_of_match),
-+	},
-+};
-+module_platform_driver(nxp_stm_probe);
-+
-+MODULE_DESCRIPTION("NXP System Timer Module driver");
-+MODULE_LICENSE("GPL");
--- 
-2.43.0
-
+Hi Damien,=0A=
+ =0A=
+On 2025/03/28 15:09, Damien Le Moal wrote:=0A=
+>> Added capability to connect to an administrative controller by=0A=
+> =0A=
+>s/Added/Add=0A=
+Done=0A=
+ =0A=
+>> preventing ioq creation for admin-controllers. Also prevent ioq creation=
+=0A=
+>> for discovery-controllers as the spec prohibits them.=0A=
+ =0A=
+>This second part should be a different (preparatory) patch.=0A=
+I've separated it as its own patch. Sorry took a while to procure the setup=
+=0A=
+But I=92ve tested it now. Will share updated patch-set.=0A=
+ =0A=
+You were right, it is a pain using Outlook for kernel work :(=0A=
+Vim to the rescue for now.=0A=
+ =0A=
+>> =0A=
+>> * Added nvme_admin_ctrl() to check for an administrative controller=0A=
+ =0A=
+>s/Added/Add=0A=
+>And this should be a different preparatory patch.=0A=
+Sounds good.=0A=
+ =0A=
+>> =0A=
+>> * Renamed nvme_discovery_ctrl() to nvmf_discovery_ctrl() as discovery is=
+=0A=
+>>   more relevant to fabrics=0A=
+ =0A=
+>I do not think that is necessary since this is testing the controller type=
+,=0A=
+>which may be limited to fabrics or not.=0A=
+I undid that rename and moved the function as Niklas suggested, to core.c.=
+=0A=
+I tried moving nvme_discovery_ctrl(), nvme_admin_ctrl &=0A=
+nvme_update_ctrl_queue_count() to host/nvme.h but couldn't since target/=0A=
+passthru.c includes that host header & fails compilation.=0A=
+ =0A=
+To make it work that way we would have to include host/fabrics.h in target/=
+=0A=
+passthru.c but that's causing a lot of unresolved symbols and requires a=0A=
+different/larger commit. Also, it may not even be desirable as it will furt=
+her=0A=
+pollute the target code with host specific header.  Please comment.=0A=
+ =0A=
+ =0A=
+>> @@ -2863,13 +2858,19 @@ static int nvme_init_subsystem(struct nvme_ctrl =
+*ctrl, struct nvme_id_ctrl *id)=0A=
+>>       else=0A=
+>>               subsys->subtype =3D NVME_NQN_NVME;=0A=
+>> =0A=
+>> -     if (nvme_discovery_ctrl(ctrl) && subsys->subtype !=3D NVME_NQN_DIS=
+C) {=0A=
+>> +     if (nvmf_discovery_ctrl(ctrl) && subsys->subtype !=3D NVME_NQN_DIS=
+C) {=0A=
+>>               dev_err(ctrl->device,=0A=
+>>                       "Subsystem %s is not a discovery controller",=0A=
+>>                       subsys->subnqn);=0A=
+>>               kfree(subsys);=0A=
+>>               return -EINVAL;=0A=
+>>       }=0A=
+>> +     if (nvme_admin_ctrl(ctrl)) {=0A=
+>> +             dev_info(ctrl->device,=0A=
+>> +                     "Subsystem %s is an administrative controller",=0A=
+>> +                     subsys->subnqn);=0A=
+>> +     }=0A=
+ =0A=
+>Is this really necessary ? In any case, please remove the curly brackets.=
+=0A=
+I've removed it. I had started off by adding a dev_err check similar to=0A=
+the one for discovery ctrl above it but since there is no unique identifier=
+=0A=
+(like the SUBNQN or unique port) for an admin controller, I turned it into=
+=0A=
+a dev_info to at least announce the presence of an admin controller. Any=0A=
+suggestions for error validation at init time?=0A=
+ =0A=
+ =0A=
+>> diff --git a/drivers/nvme/host/rdma.c b/drivers/nvme/host/rdma.c=0A=
+>> index 299e3c19df9d..0f3150411bd5 100644=0A=
+>> --- a/drivers/nvme/host/rdma.c=0A=
+>> +++ b/drivers/nvme/host/rdma.c=0A=
+>> @@ -1030,6 +1030,17 @@ static int nvme_rdma_setup_ctrl(struct nvme_rdma_=
+ctrl *ctrl, bool new)=0A=
+>>               goto destroy_admin;=0A=
+>>       }=0A=
+>> =0A=
+>> +     /* An admin or discovery controller has one admin queue, but no I/=
+O queues */=0A=
+>> +     if (nvme_admin_ctrl(&ctrl->ctrl) || nvmf_discovery_ctrl(&ctrl->ctr=
+l)) {=0A=
+>> +             ctrl->ctrl.queue_count =3D 1;=0A=
+>> +     } else if (ctrl->ctrl.queue_count < 2) {=0A=
+>> +             /* I/O controller with no I/O queues is not allowed */=0A=
+>> +             ret =3D -EOPNOTSUPP;=0A=
+>> +             dev_err(ctrl->ctrl.device,=0A=
+>> +                     "I/O controller doesn't allow zero I/O queues!\n")=
+;=0A=
+>> +             goto destroy_admin;=0A=
+>> +     }=0A=
+ =0A=
+>This is identical to the change for tcp, so maybe make this a helper funct=
+ion ?=0A=
+I've converted it into nvme_update_ctrl_queue_count() and added it to host/=
+nvme.h.=0A=
+Will be in the next patch-set.=0A=
+ =
