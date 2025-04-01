@@ -1,55 +1,55 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+Received: from mail-oo1-f73.google.com (mail-oo1-f73.google.com [209.85.161.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E65B22370D
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 18:25:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95CAA224236
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 18:25:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743531935; cv=none; b=inqSZ9fFf9wALmyQgwnAsI39PsJJOV6WYDhdbuUlUhx5BMQ3tUPaMGSDiR3XlVmRU3Ipvokslms659zomYVBIl8kIpsnCXB5qXTUM+QNApw47Mro6dr+nD6fDXbqLfNn/7MEOR8I2d6YXWaVDqj4JjViHWFGlnwQ+W5vv2QvC78=
+	t=1743531937; cv=none; b=mjxpEsiKzZP0HkoIHujkgO2acTAcI13zt8rwnXhAgk2kCmOnXCfGkZrxNhKDFUR3iGXz0MmvoPdd8ivhZM9BsVKjnTogHol98QthDVgH7ppfPvTy3kIw5etgVUzCq8wdi0uERjZMRpXa3WZcoQV+uerLiUVF9A/R6XZrGygoHLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743531935; c=relaxed/simple;
-	bh=6iSRMZZj3v5z7XPvnu1Z2u1YsIqNAF8ssFyQ2+0Z+Rc=;
+	s=arc-20240116; t=1743531937; c=relaxed/simple;
+	bh=TA9MBJKZGnM8bN2F3H667zTwUG3oMX/UHc/LW06bLSE=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=OxELUYz+YIocA0FrqxQZwtH/WHbM9Awr1VbYtRoOVEVnKD6hWPP7tXMoMzrxw32+3FxYOZeb/6p/cqR6tZv7cyUSMI9T0iR6qBwwiDRX2bHKNPZ5YH7dO3JbcpkGvtpdq6H98oMOCHYR9Gigv+QIGH192bumzybQavDDD+O5OoM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HUMwJKE5; arc=none smtp.client-ip=209.85.214.202
+	 To:Content-Type; b=MRFr4+QiYikX5r9BX+opbBeKs8teRqHj3YePane1LbaU3fjuA9o+YBIJLQPYNbiXZLct5x9Ww3N7BI30eQp8s1E+6TXa2nPd6PexLd2zGxC6dhbd+Y5pAb2fKIKubPdTtDV6j1vU2eQcZ9ZZ2wucXUIcU0Hx2xz3nPOvIipQXio=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pWwfKJ8f; arc=none smtp.client-ip=209.85.161.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HUMwJKE5"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-227ea16b03dso166701935ad.3
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 11:25:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pWwfKJ8f"
+Received: by mail-oo1-f73.google.com with SMTP id 006d021491bc7-5fc0058d68eso1710798eaf.0
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 11:25:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743531933; x=1744136733; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1743531935; x=1744136735; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=az0IuCUiWa/ckJI17G7Uo5hKOqaliVyKlYqJwWzsWPo=;
-        b=HUMwJKE5ehVtRk7II8imEDsX7r7G+KYAw+N2X9RJwuipdxqUtSfHH5KHWqj38z1k9u
-         B+vmS5psPpRMz3XEyKsIowO4AsbTOyZWBM9T+N6QICkejp5HkoX9L5QU9G3yzPXa/DdI
-         QgUMziLOAup3j8xwX2YQduNp1YI06Knhhi2O6tFKO7sEhWCiWOSQI6JN6oK6sGZoVozg
-         ov+H4ChARSrMC/fEieb9RJMHrlDYPD4YS8Nyh7TbTJoQKPmD+9ZURgTy6qW8zMdJ8fYz
-         FfhIrIT6vKAx1A/bAIdYlTfKZ2W26NuoYCAjI4vj0MUjoQr8tC0HPQsMD9jjrim6VhXs
-         U4nw==
+        bh=3QC+vjZ+uxGeny3upI0J2RrDdb+/2bXijdeBhXiDIiY=;
+        b=pWwfKJ8fCmN0wtEC5f+Ezggf3fYRDPtOAGJryzgyjIThYQW9S9bJypm7uzPjOlEoaK
+         t87yFuu+bgpNBrI94t4+kwSnZHPVgTYop4tWw6epQRaA+NF2a3cY/VYIV3t5NkySU8Xf
+         8Vr8WSOn1KKW595FPW1G76h8rjtos8OXZqVaGIax2yzfi7h9kLPAfkzPfJOXpsvt0vtA
+         rpLHsYvKfKoPruijBu3NXG7GUoRoUqHKtz6hRVKT1Lq5tSfU244+lKjkK6Mh23sLnNne
+         AyVoJYC4DTV3d9ggLD6r1IFVrnUMpR4yK/RjEOR901Lc0p5QY74C5DaLVXoNd+Nex4KH
+         GcIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743531933; x=1744136733;
+        d=1e100.net; s=20230601; t=1743531935; x=1744136735;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=az0IuCUiWa/ckJI17G7Uo5hKOqaliVyKlYqJwWzsWPo=;
-        b=sDG64hG77tQyEsA/lEGe3xxcAmQh9PiEqBS0LNJi450Mpoj6w5LSxNVtO2RcX1jRSo
-         XBbiIp3NamAhHm51OzHy4aNjDsjqMpmDpVSGxWH/e303gs/w4cw4lMU6fYUHYRT+acin
-         BjdJeG3nb/ah0dKbrp6Hoki4Jvw5180Nt/2ZMKG1YElAaN6taqn23ukrq9jTsumfHXbv
-         FQPbfU1b8Oy8DEkC69ZARDnIXjrYGaTpjyJg0sCPdZrMii2f+bT6Fp7dnimMBU6yIRJF
-         tz8eSzOUMe/J9y4JgDEUjMigHCBIesm7zn9s0rv7K8EZ7HxViN+ZftBkcCKdENaG/qgO
-         H2lQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVgixXbie9YzHFWAVS7svHl8/PVDGZIkoc6JLqZeSjMotKotcZdTY4ASpaU5+QFKcvbxUiIrh5x91vWvPc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyYs4eOs2Heivxu4HKixdew+KlrMkw1AIf+MEP0YxjE4XWxtbx/
-	cnhHuC+bQGiWMCG/q7nbH7gDrnrdSgttypNujLyF5ZNTh3+kFKrkSRZJOvozDQZXxj08A5OJFDA
-	nohELtQ==
-X-Google-Smtp-Source: AGHT+IHFPEAwrg2tiCWHHOiMEW4gbtvOV2RAPznerXo6Udh5LKZ1f2eE8NP4qr792/A9GrRaC2p4ssXFKeT3
-X-Received: from pjbsp3.prod.google.com ([2002:a17:90b:52c3:b0:301:a339:b558])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:e541:b0:221:7b4a:475a
- with SMTP id d9443c01a7336-2292fa0af62mr156948135ad.52.1743531932510; Tue, 01
- Apr 2025 11:25:32 -0700 (PDT)
-Date: Tue,  1 Apr 2025 11:23:26 -0700
+        bh=3QC+vjZ+uxGeny3upI0J2RrDdb+/2bXijdeBhXiDIiY=;
+        b=dKwFNbK5ydc3gVCk2Has0GJnwO5gUc9W5SUEpDlyYcy0NcKT3bMCa0RbJChSssFRQh
+         VdcP9y3qMSbGe6W4Pocb8/XhkNH0Mft+ivIuozu58T15rX9if9EQTu+DMwHaYen6AEaF
+         619F35aC3bflDr1zIQVIS8DSdrcbTxXllH4ajT942XOyLo7jjfEHyACPnIr94Qhyk62i
+         nhzFZI9ocqZ2AyTkAUOZT0FOKG2pTQDkKC42EyGf87pweJNRP15xLISNM+iNfa6W/70j
+         4nFEDE55dfp0ZmNvWq1BwTYcq7rk5PDEEiYINAIVzCTQ32EgHRgT9uZW9NpGm7gIXCIs
+         OQ5g==
+X-Forwarded-Encrypted: i=1; AJvYcCXSC+pP1cSKY/5qSIKKdiIsupGIdl/dD5qYI+jh7Y/lfQLOzCMs+DQP85M+hFqlLY926l1aW4WeEyKsrDQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxWJj53xch5Xe+1ipt4bDUpHNWZkTAD7cZDN0cpJaRQz+FzdPzH
+	xwwot0jy1AW32uka53k2iGu8SoHDjNxidwpIih4WtKwul+eJ/RLiJF/gD7bOfee83b5UgTIcGNy
+	jlgnyCQ==
+X-Google-Smtp-Source: AGHT+IExn2cUPsKHag87+ixWWT8lIhcsbUX86fXDEHLuW52QwQ4G2bpj9G8hgmkcPun76Arl4dDyofdwGznJ
+X-Received: from oabhl24.prod.google.com ([2002:a05:6870:1b18:b0:289:d40:52c])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6870:b149:b0:2c2:5c26:2d8e
+ with SMTP id 586e51a60fabf-2cbcf51534cmr8318955fac.16.1743531934478; Tue, 01
+ Apr 2025 11:25:34 -0700 (PDT)
+Date: Tue,  1 Apr 2025 11:23:27 -0700
 In-Reply-To: <20250401182347.3422199-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250401182347.3422199-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
-Message-ID: <20250401182347.3422199-29-irogers@google.com>
-Subject: [PATCH v1 28/48] perf kwork: Silence -Wshorten-64-to-32 warnings
+Message-ID: <20250401182347.3422199-30-irogers@google.com>
+Subject: [PATCH v1 29/48] perf buildid: Silence -Wshorten-64-to-32 warnings
 From: Ian Rogers <irogers@google.com>
 To: Yury Norov <yury.norov@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
 	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -114,66 +114,50 @@ truncation explicit.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-kwork.c      | 11 +++++------
- tools/perf/util/bpf_kwork_top.c |  2 +-
- 2 files changed, 6 insertions(+), 7 deletions(-)
+ tools/perf/builtin-buildid-cache.c | 2 +-
+ tools/perf/builtin-buildid-list.c  | 2 +-
+ tools/perf/util/build-id.c         | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/builtin-kwork.c b/tools/perf/builtin-kwork.c
-index c41a68d073de..cc5488cb98e4 100644
---- a/tools/perf/builtin-kwork.c
-+++ b/tools/perf/builtin-kwork.c
-@@ -1574,8 +1574,7 @@ static void top_print_per_cpu_load(struct perf_kwork *kwork)
- 		load = stat->cpus_runtime[i].load;
- 		if (test_bit(i, stat->all_cpus_bitmap) && total) {
- 			load_ratio = load * 10000 / total;
--			load_width = PRINT_CPU_USAGE_HIST_WIDTH *
--				load_ratio / 10000;
-+			load_width = (int)(PRINT_CPU_USAGE_HIST_WIDTH * load_ratio / 10000);
+diff --git a/tools/perf/builtin-buildid-cache.c b/tools/perf/builtin-buildid-cache.c
+index b0511d16aeb6..7f7ebd625ed6 100644
+--- a/tools/perf/builtin-buildid-cache.c
++++ b/tools/perf/builtin-buildid-cache.c
+@@ -450,7 +450,7 @@ int cmd_buildid_cache(int argc, const char **argv)
  
- 			printf("%%Cpu%-*d[%.*s%.*s %*.*f%%]\n",
- 			       PRINT_CPU_WIDTH, i,
-@@ -1595,7 +1594,7 @@ static void top_print_cpu_usage(struct perf_kwork *kwork)
- 	u64 idle_time = stat->cpus_runtime[MAX_NR_CPUS].idle;
- 	u64 hardirq_time = stat->cpus_runtime[MAX_NR_CPUS].irq;
- 	u64 softirq_time = stat->cpus_runtime[MAX_NR_CPUS].softirq;
--	int cpus_nr = bitmap_weight(stat->all_cpus_bitmap, MAX_NR_CPUS);
-+	int cpus_nr = (int)bitmap_weight(stat->all_cpus_bitmap, MAX_NR_CPUS);
- 	u64 cpus_total_time = stat->cpus_runtime[MAX_NR_CPUS].total;
- 
- 	printf("Total  : %*.*f ms, %d cpus\n",
-@@ -1801,7 +1800,7 @@ static int perf_kwork__read_events(struct perf_kwork *kwork)
- 	session = perf_session__new(&data, &kwork->tool);
- 	if (IS_ERR(session)) {
- 		pr_debug("Error creating perf session\n");
--		return PTR_ERR(session);
-+		return (int)PTR_ERR(session);
+ 		session = perf_session__new(&data, NULL);
+ 		if (IS_ERR(session))
+-			return PTR_ERR(session);
++			return (int)PTR_ERR(session);
  	}
  
- 	symbol__init(&session->header.env);
-@@ -2088,8 +2087,8 @@ static void top_calc_cpu_usage(struct perf_kwork *kwork)
+ 	if (symbol__init(session ? &session->header.env : NULL) < 0)
+diff --git a/tools/perf/builtin-buildid-list.c b/tools/perf/builtin-buildid-list.c
+index 52dfacaff8e3..ef84d1adb98f 100644
+--- a/tools/perf/builtin-buildid-list.c
++++ b/tools/perf/builtin-buildid-list.c
+@@ -109,7 +109,7 @@ static int perf_session__list_build_ids(bool force, bool with_hits)
  
- 		top_subtract_irq_runtime(kwork, work);
+ 	session = perf_session__new(&data, &build_id__mark_dso_hit_ops);
+ 	if (IS_ERR(session))
+-		return PTR_ERR(session);
++		return (int)PTR_ERR(session);
  
--		work->cpu_usage = work->total_runtime * 10000 /
--			stat->cpus_runtime[work->cpu].total;
-+		work->cpu_usage = (u32)(work->total_runtime *
-+					10000 / stat->cpus_runtime[work->cpu].total);
+ 	/*
+ 	 * We take all buildids when the file contains AUX area tracing data
+diff --git a/tools/perf/util/build-id.c b/tools/perf/util/build-id.c
+index e763e8d99a43..6a3ae17b1ccf 100644
+--- a/tools/perf/util/build-id.c
++++ b/tools/perf/util/build-id.c
+@@ -81,7 +81,7 @@ int build_id__sprintf(const struct build_id *build_id, char *bf)
+ 		bid += 2;
+ 	}
  
- 		top_calc_idle_time(kwork, work);
- next:
-diff --git a/tools/perf/util/bpf_kwork_top.c b/tools/perf/util/bpf_kwork_top.c
-index b6f187dd9136..808d0c84d26d 100644
---- a/tools/perf/util/bpf_kwork_top.c
-+++ b/tools/perf/util/bpf_kwork_top.c
-@@ -219,7 +219,7 @@ static void read_task_info(struct kwork_work *work)
- 	int fd;
- 	struct task_data data;
- 	struct task_key key = {
--		.pid = work->id,
-+		.pid = (__u32)work->id,
- 		.cpu = work->cpu,
- 	};
+-	return (bid - bf) + 1;
++	return (int)(bid - bf) + 1;
+ }
  
+ int sysfs__sprintf_build_id(const char *root_dir, char *sbuild_id)
 -- 
 2.49.0.504.g3bcea36a83-goog
 
