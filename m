@@ -1,126 +1,149 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E9202040A1;
-	Tue,  1 Apr 2025 12:59:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97CC81EEA3E
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 13:00:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743512394; cv=none; b=eVQn0jxAZggrhwayOfIB0yqqQDO0HMAflGZUBfkTfkpip5dTJ4zgaat0DgNR0FaBoTnIgB5ipspLmr4aDHFZwB3GU8gbht5XR0B5m7wooszuAxsXbEl8Yyp2hzDv7V8FDKlTWZzAo8jjnQ3xCyAiKg0ljIVaTaOZ0nDWD6CBrls=
+	t=1743512415; cv=none; b=tsBze1fWPrzDDX4eZ12STHxJ/MHeIDK994Z527H3oLQiF8pv6ufhiXvoQVFifsrBrNRcZ9ETbk7ScHkHeXbso0uX7P8ZaEqSe6pt/sw21E8VuSM/xcZ3VeL4OLHpPk8uBctM2kZZ7Cust4DJz8r/drM+awG0D5RHD4hAaHPnoW0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743512394; c=relaxed/simple;
-	bh=j9Ea+bGDlsx72Z+0qw+iSlhE73mDYKtBDLMBr82GFeU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HuTitAubs9OL1VOOmZl9YxqnSe5n0fj3Ow6HTdQSUffnkGLNQo1qXNV9FA0+P4Rv+SNkLR7oi7+QNpEWbjvnITR5mWBv26VhDsLI7gX64WZxeb5GT+k+m/gh03B7g4xcMM/yiG27uQc2TPyZbGrz4s08geva8TEraN52x+zlW5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fMSCtp1l; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743512415; c=relaxed/simple;
+	bh=DzC9bukHy47TjGfwcug8gM7evmzmuBLiRPZ4FYnSoOU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VWm/QlXgkxArttqzbwfVIeu/7Zq78gfIrhEsNEreyU15h9wpyaphO/dm5F66DyyUliVDgPy6kL04RX6sT+dO3wHILCfUcxFSBAjipA2myDVeOsEZFNgRcG2uvgq/W7IYOwD2BF/CommFK34mMEllp01WK+gahrIIV4+QbUYJcUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=LOKHmYAD; arc=none smtp.client-ip=185.67.36.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fMSCtp1l"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43d07ca6a80so29093005e9.1;
-        Tue, 01 Apr 2025 05:59:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743512391; x=1744117191; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=WTjMam3B4j2k7paZIQkl/YwqiiiVRaZIkBuTe1yGXLk=;
-        b=fMSCtp1la//8XkfKjvMyQM3+iZ6m7kNQadjd/0Sb+5FKf3JXEeaqY9KnbeWtcd2Kbg
-         RYHo9AiONZ9gsIiPko5V4ezKoudVFHLfhLdXoDRp4cOlzsyed/HxwcE+uuQ8d3wYVkWF
-         1t0Lr5l1+n11qXttqcibRQ20gBvpzNqWhQJy3cuhHqim2rekPb4Bm8HTt638cFQhkhi+
-         z5o6Mjl1BBn7D97clGzz1Fx4W34nFqBjMINDGudhbovnxE06XIlmz89NEYgFDRi6XF+s
-         VbPNSw78lP0Lh1XxUpWDU3zbKh3CTMXg56pS+0PqDw4T/f1A0ntLjq9wC54yrgdjzzag
-         G1yg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743512391; x=1744117191;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=WTjMam3B4j2k7paZIQkl/YwqiiiVRaZIkBuTe1yGXLk=;
-        b=er9NaD/SGSjZwyF9YerYE/knydUumEEd7qk6yRmLVHLGxHeUc0fgr5Ir1rdKFIEHcg
-         OYHfjA/L9NrPprZ9t7RZnCKkqb05c9/LHI5l87yco99LkTCM6C3TIKJD6g7ql2cTPZBD
-         F7XYpQJv9IE4d7Ah5PSf4XlvU05vbH/GAtHhu9j7CXvW27sJl10DsQ6DtMOKywvO3t7B
-         mvxh/0f6zH3+aYV4fjSsMP1C3PElUvWtnP/VLkEeoEpSEi5I5Gp4OcRK9/0Xofwreq4K
-         Y+0EeLdqnurj9TZp8iCLNcSNxNYcgspDPSmm8SUsPkqz8Kr5lH0I3UqZwUfIQgKrjkEN
-         6k+w==
-X-Forwarded-Encrypted: i=1; AJvYcCW3T/IrUeVn5nJlJDNvup8LQlPzqISg+JWHx9dhuA3/fYZ3zDdko/Hgb+tjwjJXxctB2VGV1fAT@vger.kernel.org, AJvYcCWwhSRpvBYedsp5pSdmvxWfks0LTPUq2ZrxGyf5giPBdSS3SrezRXNwKcKDiftpyVe46AT/b2qxD2u1HF4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwpQS0BKNPyFavdjf7THgaAI09Ulcz+Zbf8Ll47QroMoUB7NOVL
-	NFgYTLCfYGmImZe2S0xCr82wjxlj8vLV1FYNyDV2VDv38LwsfgJX
-X-Gm-Gg: ASbGncvsSX7WvJPyvpQp/6RpJiVrbZn5krlKvq2pBCNIJbUiAF/3ZBHYKLpn2Wz3dMv
-	gxGnYUOBiIbggVBdxTFuXy94d/PiWz326CtEnCZEU1MH3OS3/gZ7y93m12XuLiIuXDf/fD2WNr3
-	ZOFhjpkmELb3ZTy4Eiy8jliuTEaCIe4Va7U4I8P5rXOQmxYlp/hbux+vM44jUAoHYo4f3jdPytG
-	TcGC7u0cDBt5GuCh8xYEWnecFXbwDdFPdE7A9hVzGcd83Bg87SnfXZpQHAMsVkxrM/MK4Li8VET
-	jki+VKr5PIhg+GD1oIdPX/6uKgDaxHd6XOyGUAaVA8kL5xpR4xr5CQ==
-X-Google-Smtp-Source: AGHT+IF418b6NVmuSPIOsaUq9V0yNXF5CwKyASr7hgcL1/aD11X/ysF6LRsihYCLdVncwG0TZ6ba9w==
-X-Received: by 2002:a05:600c:198f:b0:43b:ca39:6c7d with SMTP id 5b1f17b1804b1-43db61d8326mr124424215e9.3.1743512391249;
-        Tue, 01 Apr 2025 05:59:51 -0700 (PDT)
-Received: from qasdev.Home ([2a02:c7c:6696:8300:19:d895:ffa3:4fcf])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d8ff042bcsm154715445e9.28.2025.04.01.05.59.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Apr 2025 05:59:50 -0700 (PDT)
-From: Qasim Ijaz <qasdev00@gmail.com>
-To: ping.cheng@wacom.com,
-	jason.gerecke@wacom.com,
-	jikos@kernel.org,
-	bentiss@kernel.org
-Cc: linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	syzbot <syzbot+d5204cbbdd921f1f7cad@syzkaller.appspotmail.com>,
-	stable@vger.kernel.org
-Subject: [PATCH] HID: wacom: fix shift OOB in kfifo allocation for zero pktlen
-Date: Tue,  1 Apr 2025 13:59:12 +0100
-Message-Id: <20250401125912.73044-1-qasdev00@gmail.com>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="LOKHmYAD"
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout02.posteo.de (Postfix) with ESMTPS id 38BDA240103
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 15:00:10 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
+	t=1743512410; bh=DzC9bukHy47TjGfwcug8gM7evmzmuBLiRPZ4FYnSoOU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:Content-Transfer-Encoding:From;
+	b=LOKHmYAD92WGXRYddpx9klsLdIa724JsAZvgeQYdDVzxgFeVHQVircrF0Jg2GRDRO
+	 t20sTFLJqDPmw9155QtOZ1Q4Z1roVmL/RFOxMYkrif9+oqi6cMHJIWxu3N9+12bTtX
+	 70ioAt5Wez9Fissvl4aWiIy1WpaNucvTzDkLqv4uwiGB2r22uKxDeZMHgdFo365xUD
+	 Z2oXanIvf0eGai3JG8orStMdKbhIoRk6CojNipN0QaP8u2o8XQENAmeJWpuaJ9Q53O
+	 2RFwDOD5ESxHtEvKCG0gTnhG39w2EHSWkvM1LqPeHcPUkFXpapc09WOtwn4O75CtF0
+	 Jmkng6GGUxR/g==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4ZRp4m3h9Mz9rxQ;
+	Tue,  1 Apr 2025 15:00:08 +0200 (CEST)
+Date: Tue,  1 Apr 2025 13:00:08 +0000
+From: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: j.ne@posteo.net, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Jerome Brunet <jbrunet@baylibre.com>,
+	Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-amlogic@lists.infradead.org
+Subject: Re: [PATCH 3/3] ARM: dts: amlogic: Add TCU Fernsehfee 3.0
+Message-ID: <Z-vjWFFWvo1gesCe@probook>
+References: <20250323-fernsehfee-v1-0-2621341cd37a@posteo.net>
+ <20250323-fernsehfee-v1-3-2621341cd37a@posteo.net>
+ <CAFBinCD13CNuxRkrSoPXUMNQ9AJH7UV0gsOfdgeRKhkXsANgnw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAFBinCD13CNuxRkrSoPXUMNQ9AJH7UV0gsOfdgeRKhkXsANgnw@mail.gmail.com>
 
-During wacom_parse_and_register() the code calls wacom_devm_kfifo_alloc 
-to allocate a fifo. During this operation it passes kfifo_alloc a 
-fifo_size of 0. Kfifo attempts to round the size passed to it to the 
-next power of 2 via roundup_pow_of_two (queue-type data structures
-do this to maintain efficiency of operations). 
+On Sun, Mar 30, 2025 at 11:10:28PM +0200, Martin Blumenstingl wrote:
+> Thanks for your patch!
+> 
+> On Sun, Mar 23, 2025 at 1:38 PM J. Neuschäfer via B4 Relay
+> <devnull+j.ne.posteo.net@kernel.org> wrote:
+> [...]
+> > +               eth_phy0: ethernet-phy@0 {
+> > +                       /* IC Plus IP101A (0x02430c54) */
+> > +                       reg = <0>;
+> Does reg = <1> also work on your board?
+> 0 is the broadcast address. It's unfortunately something that we still
+> have incorrect in a lot of .dts files.
 
-However during this phase a problem arises when the roundup_pow_of_two() 
-function utilises a shift exponent of fls_long(n-1), where n is the 
-fifo_size. Since n is 0 in this case and n is also an unsigned long, 
-doing n-1 causes unsigned integer wrap-around to occur making the 
-fifo_size 4294967295. So the code effectively does fls_long(4294967295) 
-which results in 64. Returning back to roundup_pow_of_two(), the code 
-utilises a shift exponent of 64. When a shift exponent of 64 is used 
-on a 64-bit type such as 1UL it results in a shift-out-of-bounds.
+Unfortunately not. I tried addresses 1 to 31 without success, which
+seems strange; my guess was that the PHY should respond to one of them.
+I get this error:
 
-The root cause of the issue seems to stem from insufficient validation 
-of wacom_compute_pktlen(), since in this case the fifo_size comes 
-from wacom_wac->features.pktlen. During wacom_parse_and_register() 
-the wacom_compute_pktlen() function sets the pktlen as 0.
+# ip l set eth0 up
+[    6.806847] meson6-dwmac c9410000.ethernet eth0: Register MEM_TYPE_PAGE_POOL RxQ-0
+[    6.810609] meson6-dwmac c9410000.ethernet eth0: __stmmac_open: Cannot attach to PHY (error: -19)
 
-To fix this, we should handle cases where wacom_compute_pktlen() 
-results in 0.
 
-Reported-by: syzbot <syzbot+d5204cbbdd921f1f7cad@syzkaller.appspotmail.com>
-Closes: https://syzkaller.appspot.com/bug?extid=d5204cbbdd921f1f7cad
-Tested-by: Qasim Ijaz <qasdev00@gmail.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Qasim Ijaz <qasdev00@gmail.com>
----
- drivers/hid/wacom_sys.c | 2 ++
- 1 file changed, 2 insertions(+)
+> 
+> [...]
+> > +&i2c_AO {
+> > +       status = "okay";
+> > +       pinctrl-0 = <&i2c_ao_pins>;
+> > +       pinctrl-names = "default";
+> > +
+> > +       pmic@32 {
+> > +               compatible = "ricoh,rn5t618";
+> > +               reg = <0x32>;
+> > +               system-power-controller;
+> Here I'm a bit surprised:
+> Aren't some of the outputs used to drive VCCK (CPU power rail) and
+> VDDEE (everything else power rail, which also powers the GPU)?
 
-diff --git a/drivers/hid/wacom_sys.c b/drivers/hid/wacom_sys.c
-index 97393a3083ca..9b2f3dbca467 100644
---- a/drivers/hid/wacom_sys.c
-+++ b/drivers/hid/wacom_sys.c
-@@ -2361,6 +2361,8 @@ static int wacom_parse_and_register(struct wacom *wacom, bool wireless)
- 	unsigned int connect_mask = HID_CONNECT_HIDRAW;
- 
- 	features->pktlen = wacom_compute_pktlen(hdev);
-+	if (!features->pktlen)
-+		return -ENODEV;
- 
- 	if (!devres_open_group(&hdev->dev, wacom, GFP_KERNEL))
- 		return -ENOMEM;
--- 
-2.39.5
+Unfortunately I don't have schematics and I wasn't able to trace the
+connections on the board because they're so tiny. So it's quite possible that
+you're right, but I can't be sure.
 
+Are there voltage sensors in the Meson8 SoC that I could use to establishs the
+relation between PMIC outputs and SoC supplies?
+
+> 
+> [...]
+> > +&usb1 {
+> > +       status = "okay";
+> > +       dr_mode = "host";
+> > +       /*
+> > +        * This bus features a Realtek RTL8188 2.4GHz WiFi module, with a
+> > +        * 3.3V supply voltage that must be enabled before use.
+> > +        */
+> > +       vbus-supply = <&wifi_3v3>;
+> If you want to go for perfection then you can use
+> Documentation/devicetree/bindings/sound/xmos,xvf3500.yaml as
+> reference.
+> It's also an "onboard" USB device which requires toggling a GPIO and regulators.
+> The driver side is super easy to manage as it's generic (meaning: it
+> parses any GPIO and regulator as long as the USB ID is registered):
+> drivers/usb/misc/onboard_usb_dev.c
+
+I considered using onboard_usb_dev, but then came to the conclusion that
+I don't need it because I don't need reset sequencing, only power.
+
+> That way you can just describe the RTL8188 on the USB bus and assign
+> it's vd33-supply without having to (ab)use vbus-supply of the USB
+> controller.
+
+This does sound reasonable. I'll reconsider the onboard_usb_dev
+approach.
+
+> 
+> [...]
+> > +               sdxc_c_pins: sdxc-c {
+> > +                       mux {
+> > +                               groups = "sdxc_d0_c", "sdxc_d13_c",
+> > +                                       "sdxc_clk_c", "sdxc_cmd_c",
+> > +                                       "sdxc_d47_c";
+> > +                               function = "sdxc_c";
+> > +                               bias_pull_up;
+> This has to be bias-pull-up (dashes instead of underscores).
+
+Oh, good catch, I'll fix it.
+
+
+Thanks for your review,
+J. Neuschäfer
