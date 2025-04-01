@@ -1,391 +1,180 @@
-Received: from invmail3.skhynix.com (exvmail3.skhynix.com [166.125.252.90])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67333EEDE
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 01:51:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.90
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87770EEDE
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 01:52:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743472326; cv=none; b=h+BuRPD9deHOVWOMPQKDV04Yt5YEdlouss4NNG/y31gwKjFhDElIx2UYhFqgSTjbBc1qgqftNg8cNyA19iEs0K4rm3Tmd9wp2ig0yg0z42cIrDg8LXzrm8EzKEdBnM+GAqRj3GLTQBghE3/h7rtZRFipacIsUqH2FCqCQ2LmB5k=
+	t=1743472350; cv=none; b=b5KNAQVJSjE0chTfQRp/w9gun/XE39EJHcFkLhPEtPfjw1pT3wlIKa4iZD0VUGT1Wwg587i+cftZui0Pw+dTv3L2Ux41VlArkjazE3PFdhp84+OKF78c0NKK7c3+VR9X/iuPKbS08fi0wvjIUO3rAewxym/f7fzaXvX51fLjgGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743472326; c=relaxed/simple;
-	bh=Rtu+lzSxHYIzfxZhpxrptVIdvqDz+gsIioSXkRVtGgA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CW0tScuAblVO2hnYdHpLyE/REiOXaS5mq+yfLv+m8mseTyXVgokImr7FtA60Me/Yb3qWWdw9s/8HOAVZOgWr0WP7icTX1wKztMkWUT4JVhDg3sN+EqtcLn3d5Sur+h7wbw+5zNaSYcSHoUiT/ikHexsD/voxz+xJ3HqVceBJF70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.90
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc59-03fff7000000aab6-28-67eb46bd9342
-From: "yohan.joung" <yohan.joung@sk.com>
-To: linux-f2fs-devel@lists.sourceforge.net
-Cc: chao@kernel.org,
-	jaegeuk@kernel.org,
-	jyh429@gmail.com,
-	linux-kernel@vger.kernel.org,
-	pilhyun.kim@sk.com,
-	yohan.joung@sk.com
-Subject: [External Mail] Re: [f2fs-dev] [External Mail] Re: [External Mail] Re: [PATCH] f2fs: prevent the current section from being selected as a victim during garbage collection
-Date: Tue,  1 Apr 2025 10:51:52 +0900
-Message-ID: <20250401015156.2623-1-yohan.joung@sk.com>
-X-Mailer: git-send-email 2.49.0.windows.1
-In-Reply-To: <b51283c6-ec5b-48ba-a1a1-b16911a5c5c8@kernel.org>
-References: <b51283c6-ec5b-48ba-a1a1-b16911a5c5c8@kernel.org>
+	s=arc-20240116; t=1743472350; c=relaxed/simple;
+	bh=zMnjRabBm+EBDaRJErWJR9/mmndaECogdzQ4qMX6pno=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FjZCyF1rgFgZ244RXh8BXSMOaSXJSRbn/Gbf5ALlArcY1NVhOgKfLx2NiAA6+p+xg6q9KyfFk9smMxjnrnLhQmaZ6uHL1ZWyiwh12x0cOSFj/Sso9bI0eD/5sQ3Sr3gaLDpBlIAkPUz/jS96cYoHlHyzwGOP6u5Me03Xt2e5hDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=XEX1ePXa; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="XEX1ePXa"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52VKGXi4008461
+	for <linux-kernel@vger.kernel.org>; Tue, 1 Apr 2025 01:52:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	KkmvufDkyFM8TbOcd8xfOYX+yJYpC83DnPb8liBX77k=; b=XEX1ePXavfZlFRPn
+	b1mJ7V32PodL/X4wT1j1BfpSaEJfHeVviyfLuwnt/9A68l42cJl7h2bQyaar75Z5
+	CYkjVypVPOk6/BVW4TL4F/MOXu0l8iagOxDLgxpwoR5yekCV4FT88sUBarF41BuZ
+	SrsmU+lpeTaHtK3lQQ0EbV/Wf0bNfwsu1bGsENZB3c5cOWVBUIrKHZ/xfmsrjwJR
+	PMw+Q8hWPvUcdywn/D2jpF1O99SF53ASc7SW4gdW1xjy6FCRXQXIevXKPwamaXNU
+	pdmvvOc+cRFqo2CrZcRH+ojhZQv6KlTYAG67wiOQZLBwzL7lxoChIwcK1SFxDdtj
+	dy1Uig==
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com [209.85.219.72])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45r1xngkc2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 01:52:27 +0000 (GMT)
+Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6e8ed78717eso83863756d6.2
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 18:52:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743472346; x=1744077146;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KkmvufDkyFM8TbOcd8xfOYX+yJYpC83DnPb8liBX77k=;
+        b=PgVztNa+k8woa36iQyLKQEvtWTiT2GFC/QzyxmCtBMNxgzxgu4+h6TEfjVUrfWGtKf
+         LM+jBFiUBc+h3JpMCLn0z+I/OWVp3RD50OslsB8vVMab9aPtKgYwbOVYSDj+O76g9r0/
+         Nj8xLDBAkkbdsr5VT07EnC9e1fNMx8hmGRYlGBcV+U9FGKX4/P26Yvule0Ey4D4Paluf
+         6vGz4azy5bcknhIf+oPpwlRNG1vBhcTHAQYKmx+htt69lJ7OerJbbDWMs99UQ3ZRXgnP
+         evlMW3hkk7VPgLtXAq/JuRfWZ/WB1e/olqnK/B1+0ykkU4bUCMPp1g+Bu16fgVI9gkf5
+         E0IA==
+X-Forwarded-Encrypted: i=1; AJvYcCVkJ/kCIs2Mhh2ZBh4kQJBKIRrPzWA6rsooW+nvutOefjNulbyniGWNb4dqeoPw2MNTlATLW9mewLfp8vY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyoF2vPofuD4N55U9LcAHsojSysM7vkGbP6vMZR4feegP2Y4xw5
+	jsH5td20IWXV5iAjam5hkN1MaLxYqPZ+jHXeLZXx5qpkvXjgnVDeWj5BIXTJRhRc2YuDffp/81Y
+	520I8hJyvNPd/XyR7ZTIWsTed8p23S88sJ1iJbD6Cmq/Gst9emzITzD8kbv7Y3Eg=
+X-Gm-Gg: ASbGncvoohUtQYN/3UG7GnckNp5gY7benqUTeC2/58ENq8gKUiDDy74DQeHf9cuzsuT
+	xM/7QimsZk77aIrFdSPdsrfKHwL0X77es2i2+A2WyqPFOwiXyOuUqZgg97ZVskFFi2Ikd7gr6Ai
+	8/Y2Kjgmcy3A5p93mGVozay/DyCopurydQvszsdXPgNvzoOQWguexWEh5Ds9Mz9qYYjxFnMPG21
+	j9X9vhq3BuIaNzU+A9koqJlge62+/fmBofA+dKR0g0lAMCINLqRuIPRYNsUkpEPxYVgqWWf2ny1
+	RccETuEQvcFrtCPHpbEvjTYCPabL4ntOCwT9OVmdwtOWV6bT6e/m0JZPbRCC8ICz2zL0df0+fV3
+	wKsg=
+X-Received: by 2002:ad4:5ae7:0:b0:6ed:22ef:19b6 with SMTP id 6a1803df08f44-6eef5d9d0e0mr23303786d6.14.1743472346431;
+        Mon, 31 Mar 2025 18:52:26 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFdLHhF5AGVHH/2gDMMGVxACUr3BKovVYKx68WKwJC04elu+jzwzyQYLStuMh2K7a7bC5dbmA==
+X-Received: by 2002:ad4:5ae7:0:b0:6ed:22ef:19b6 with SMTP id 6a1803df08f44-6eef5d9d0e0mr23303546d6.14.1743472346094;
+        Mon, 31 Mar 2025 18:52:26 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30dd2b8f92dsm15560831fa.114.2025.03.31.18.52.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Mar 2025 18:52:23 -0700 (PDT)
+Date: Tue, 1 Apr 2025 04:52:20 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Doug Anderson <dianders@chromium.org>
+Cc: Tejas Vipin <tejasvipin76@gmail.com>, neil.armstrong@linaro.org,
+        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+        tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch,
+        quic_jesszhan@quicinc.com, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, asrivats@redhat.com
+Subject: Re: [PATCH v2] drm/panel: boe-bf060y8m-aj0: transition to mipi_dsi
+ wrapped functions
+Message-ID: <mz4axwltt6zhm2hykenerz2k6hp5qb4tqa3seui2vnztsldpoo@hejaeukdu2tg>
+References: <20250331061838.167781-1-tejasvipin76@gmail.com>
+ <CAD=FV=UbUqNf4WoWzqMe5bDQmxiT+bRG_cn0n1dBrkFRijx0Cw@mail.gmail.com>
+ <jlqxx47vzlp6rmwpi3tskig4qu4bgyqd7vletxbzzn7xdpep72@42tzrjkg65lh>
+ <CAD=FV=XeHeed5KhHPVVQoF1YPS1-ysmyPu-AAyHRjBLrfqa_aA@mail.gmail.com>
+ <y5l6gr7gdrz6syc3kxortl4p52bpygs2cqzkgayhnbsvrjcbcw@hxhel54zw372>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrFLMWRmVeSWpSXmKPExsXC9ZZnoe5et9fpBms3KFicnnqWyeLJ+lnM
-	Fl+uXmO3uLTI3eLyrjlsDqweO2fdZffYtKqTzWP3gs9MHp83yQWwRHHZpKTmZJalFunbJXBl
-	tN+YyFbwPqni7bsHzA2Mk/27GDk5JARMJGZ9XMsKYz87/pgdxGYT0JD409vLDGKLCGhJTGz4
-	y9jFyMXBLNDJKLH+4GdWEEdYYDOjxN/XE8GqWARUJT6uesoIYvMKmEnsXXSYCWKqpsSOL+fB
-	bE4BO4ln9++C2UICthL3Jn9lgqgXlDg58wlLFyMH0AZ1ifXzhEDCzALyEs1bZzOD7JIQWMAm
-	cfpsD9RMSYmDK26wTGAUmIWkfRZC+ywk7QsYmVcximTmleUmZuYY6xVnZ1TmZVboJefnbmIE
-	hvCy2j+ROxi/XQg+xCjAwajEw7uh9FW6EGtiWXFl7iFGCQ5mJRHeiK8v04V4UxIrq1KL8uOL
-	SnNSiw8xSnOwKInzGn0rTxESSE8sSc1OTS1ILYLJMnFwSjUwyvfsrfM68jTv06aX0erTnvzN
-	7z2iELlZUV/oWNXaDyn/l1vP+/Dwm0WTv+RGsfPR7AknNJXDcy6W/thSsNc84Ic2v/XHbyF6
-	y437LsutU4vk354w7/9tj/hQ601XrzSsUl4t5Oln8zZf7qLCubL7AcEsRUo2qxb8jZb/d+Lo
-	ca61Emdeq9/UVmIpzkg01GIuKk4EAB3hplxdAgAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrMLMWRmVeSWpSXmKPExsXCNUNlju5et9fpBi9/ilmcnnqWyeLJ+lnM
-	Fl+uXmO3uLTI3eLyrjlsFhPmXmWyeL/1HqMDu8fOWXfZPTat6mTz2L3gM5PHt9seHp83yQWw
-	RnHZpKTmZJalFunbJXBltN+YyFbwPqni7bsHzA2Mk/27GDk5JARMJJ4df8wOYrMJaEj86e1l
-	BrFFBLQkJjb8Zexi5OJgFuhklFh/8DMriCMssJlR4u/riWBVLAKqEh9XPWUEsXkFzCT2LjrM
-	BDFVU2LHl/NgNqeAncSz+3fBbCEBW4l7k78yQdQLSpyc+YSli5EDaIO6xPp5QiBhZgF5ieat
-	s5knMPLOQlI1C6FqFpKqBYzMqxhFMvPKchMzc8z0irMzKvMyK/SS83M3MQKDclntn0k7GL9d
-	dj/EKMDBqMTDu6H0VboQa2JZcWXuIUYJDmYlEd6Iry/ThXhTEiurUovy44tKc1KLDzFKc7Ao
-	ifN6hacmCAmkJ5akZqemFqQWwWSZODilGhhDTt2c/0WzqOjuQS//pHkT4gW2GNoZB7L1hH82
-	2P0p9/XlkAdzBX616gb8ElyW/ubi1pVL98clp7V5Xj0zs57p+CQxvurbOZ/bo8UWKImuPZdw
-	qerTefvQNNFth/sWLGFmPKsutGTBjF9OXQ27Ul3XNZ6z7/y2vUdpdrrEJ47N+9X6Geqfz5mj
-	xFKckWioxVxUnAgAxsNS+0YCAAA=
-X-CFilter-Loop: Reflected
+In-Reply-To: <y5l6gr7gdrz6syc3kxortl4p52bpygs2cqzkgayhnbsvrjcbcw@hxhel54zw372>
+X-Proofpoint-GUID: WgulhC5QmINCtXW4-ZywYCw6VDBil9by
+X-Proofpoint-ORIG-GUID: WgulhC5QmINCtXW4-ZywYCw6VDBil9by
+X-Authority-Analysis: v=2.4 cv=Qv1e3Uyd c=1 sm=1 tr=0 ts=67eb46db cx=c_pps a=7E5Bxpl4vBhpaufnMqZlrw==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=pGLkceISAAAA:8 a=a_HvFp4BeVyG9yXqjdkA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=pJ04lnu7RYOZP9TFuWaZ:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-01_01,2025-03-27_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
+ mlxscore=0 impostorscore=0 adultscore=0 priorityscore=1501 bulkscore=0
+ phishscore=0 malwarescore=0 mlxlogscore=999 lowpriorityscore=0
+ clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504010011
 
->From: Chao Yu <chao@kernel.org>
->Sent: Monday, March 31, 2025 8:36 PM
->To: 정요한(JOUNG YOHAN) Mobile AE <yohan.joung@sk.com>; linux-f2fs-
->devel@lists.sourceforge.net
->Cc: chao@kernel.org; jaegeuk@kernel.org; jyh429@gmail.com; linux-
->kernel@vger.kernel.org; 김필현(KIM PILHYUN) Mobile AE <pilhyun.kim@sk.com>
->Subject: [External Mail] Re: [External Mail] Re: [f2fs-dev] [External Mail]
->Re: [External Mail] Re: [PATCH] f2fs: prevent the current section from
->being selected as a victim during garbage collection
->
->On 3/31/25 13:13, yohan.joung wrote:
->>> On 2025/3/28 15:25, yohan.joung wrote:
->>>>> On 2025/3/28 11:40, yohan.joung wrote:
->>>>>>> From: Chao Yu <chao@kernel.org>
->>>>>>> Sent: Thursday, March 27, 2025 10:48 PM
->>>>>>> To: 정요한(JOUNG YOHAN) Mobile AE <yohan.joung@sk.com>; Yohan Joung
->>>>>>> <jyh429@gmail.com>; jaegeuk@kernel.org; daeho43@gmail.com
->>>>>>> Cc: chao@kernel.org; linux-f2fs-devel@lists.sourceforge.net;
->>>>>>> linux- kernel@vger.kernel.org; 김필현(KIM PILHYUN) Mobile AE
->>>>>>> <pilhyun.kim@sk.com>
->>>>>>> Subject: [External Mail] Re: [External Mail] Re: [External Mail] Re:
->>>>>>> [PATCH] f2fs: prevent the current section from being selected as
->>>>>>> a victim during garbage collection
->>>>>>>
->>>>>>> On 2025/3/27 16:00, yohan.joung@sk.com wrote:
->>>>>>>>> From: Chao Yu <chao@kernel.org>
->>>>>>>>> Sent: Thursday, March 27, 2025 4:30 PM
->>>>>>>>> To: 정요한(JOUNG YOHAN) Mobile AE <yohan.joung@sk.com>; Yohan
->>>>>>>>> Joung <jyh429@gmail.com>; jaegeuk@kernel.org; daeho43@gmail.com
->>>>>>>>> Cc: chao@kernel.org; linux-f2fs-devel@lists.sourceforge.net;
->>>>>>>>> linux- kernel@vger.kernel.org; 김필현(KIM PILHYUN) Mobile AE
->>>>>>>>> <pilhyun.kim@sk.com>
->>>>>>>>> Subject: [External Mail] Re: [External Mail] Re: [PATCH] f2fs:
->>>>>>>>> prevent the current section from being selected as a victim
->>>>>>>>> during garbage collection
->>>>>>>>>
->>>>>>>>> On 3/27/25 14:43, yohan.joung@sk.com wrote:
->>>>>>>>>>> From: Chao Yu <chao@kernel.org>
->>>>>>>>>>> Sent: Thursday, March 27, 2025 3:02 PM
->>>>>>>>>>> To: Yohan Joung <jyh429@gmail.com>; jaegeuk@kernel.org;
->>>>>>>>>>> daeho43@gmail.com
->>>>>>>>>>> Cc: chao@kernel.org; linux-f2fs-devel@lists.sourceforge.net;
->>>>>>>>>>> linux- kernel@vger.kernel.org; 정요한(JOUNG YOHAN) Mobile AE
->>>>>>>>>>> <yohan.joung@sk.com>
->>>>>>>>>>> Subject: [External Mail] Re: [PATCH] f2fs: prevent the
->>>>>>>>>>> current section from being selected as a victim during
->>>>>>>>>>> garbage collection
->>>>>>>>>>>
->>>>>>>>>>> On 3/26/25 22:14, Yohan Joung wrote:
->>>>>>>>>>>> When selecting a victim using next_victim_seg in a large
->>>>>>>>>>>> section, the selected section might already have been
->>>>>>>>>>>> cleared and designated as the new current section, making it
->>>>>>>>>>>> actively in
->>>>> use.
->>>>>>>>>>>> This behavior causes inconsistency between the SIT and SSA.
->>>>>>>>>>>
->>>>>>>>>>> Hi, does this fix your issue?
->>>>>>>>>>
->>>>>>>>>> This is an issue that arises when dividing a large section
->>>>>>>>>> into segments for garbage collection.
->>>>>>>>>> caused by the background GC (garbage collection) thread in
->>>>>>>>>> large section
->>>>>>>>>> f2fs_gc(victim_section) ->
->>>>>>>>>> f2fs_clear_prefree_segments(victim_section)->
->>>>>>>>>> cursec(victim_section) -> f2fs_gc(victim_section by
->>>>>>>>>> next_victim_seg)
->>>>>>>>>
->>>>>>>>> I didn't get it, why f2fs_get_victim() will return section
->>>>>>>>> which is used by curseg? It should be avoided by checking w/
->>> sec_usage_check().
->>>>>>>>>
->>>>>>>>> Or we missed to check gcing section which next_victim_seg
->>>>>>>>> points to during get_new_segment()?
->>>>>>>>>
->>>>>>>>> Can this happen?
->>>>>>>>>
->>>>>>>>> e.g.
->>>>>>>>> - bggc selects sec #0
->>>>>>>>> - next_victim_seg: seg #0
->>>>>>>>> - migrate seg #0 and stop
->>>>>>>>> - next_victim_seg: seg #1
->>>>>>>>> - checkpoint, set sec #0 free if sec #0 has no valid blocks
->>>>>>>>> - allocate seg #0 in sec #0 for curseg
->>>>>>>>> - curseg moves to seg #1 after allocation
->>>>>>>>> - bggc tries to migrate seg #1
->>>>>>>>>
->>>>>>>>> Thanks,
->>>>>>>> That's correct
->>>>>>>> In f2fs_get_victim, we use next_victim_seg to directly jump to
->>>>>>>> got_result, thereby bypassing sec_usage_check What do you think
->>>>>>>> about this change?
->>>>>>>>
->>>>>>>> @@ -850,15 +850,20 @@ int f2fs_get_victim(struct f2fs_sb_info
->>>>>>>> *sbi,
->>>>>>> unsigned int *result,
->>>>>>>>                            p.min_segno = sbi->next_victim_seg[BG_GC];
->>>>>>>>                            *result = p.min_segno;
->>>>>>>>                            sbi->next_victim_seg[BG_GC] = NULL_SEGNO;
->>>>>>>> -                       goto got_result;
->>>>>>>>                    }
->>>>>>>>                    if (gc_type == FG_GC &&
->>>>>>>>                                    sbi->next_victim_seg[FG_GC]
->>>>>>>> != NULL_SEGNO)
->>> {
->>>>>>>>                            p.min_segno = sbi->next_victim_seg[FG_GC];
->>>>>>>>                            *result = p.min_segno;
->>>>>>>>                            sbi->next_victim_seg[FG_GC] = NULL_SEGNO;
->>>>>>>> -                       goto got_result;
->>>>>>>>                    }
->>>>>>>> +
->>>>>>>> +               secno = GET_SEC_FROM_SEG(sbi, segno);
->>>>>>>> +
->>>>>>>> +               if (sec_usage_check(sbi, secno))
->>>>>>>> +                       goto next;
->>>>>>>> +
->>>>>>>> +               goto got_result;
->>>>>>>>            }
->>>>>>>
->>>>>>> But still allocator can assign this segment after
->>>>>>> sec_usage_check() in race condition, right?
->>>>>> Since the BG GC using next_victim  takes place after the SIT
->>>>>> update in do_checkpoint, it seems unlikely that a race condition
->>>>>> with
->>>>> sec_usage_check will occur.
->>>>>
->>>>> I mean this:
->>>>>
->>>>> - gc_thread
->>>>>    - f2fs_gc
->>>>>     - f2fs_get_victim
->>>>>      - sec_usage_check --- segno #1 is not used in any cursegs
->>>>> 					- f2fs_allocate_data_block
->>>>> 					 - new_curseg
->>>>> 					  - get_new_segment find segno #1
->>>>>
->>>>>     - do_garbage_collect
->>>>>
->>>>> Thanks,
->>>>
->>>> 						  do_checkpoint sec0 free
->>>> 						  If sec0 is not freed, then
->>> segno1 within sec0 cannot be
->>>> allocated
->>>> - gc_thread
->>>>    - f2fs_gc
->>>>     - f2fs_get_victim
->>>>      - sec_usage_check  --- segno #1 is not used in any cursegs (but
->>>> sec0
->>> is already used)
->>>> 							- f2fs_allocate_data_block
->>>> 							- new_curseg
->>>> 							- get_new_segment find
->>> segno #1
->>>>
->>>>     - do_garbage_collect
->>>>
->>>> I appreciate your patch, it is under testing.
->>>> but I'm wondering if there's a risk of a race condition in this
->>>> situation
->>>
->>> Oh, yes, I may missed that get_new_segment can return a free segment
->>> in partial used section.
->>>
->>> So what do you think of this?
->>> - check CURSEG() in do_garbage_collect() and get_victim()
->>> - reset next_victim_seg[] in get_new_segment() and
->>> __set_test_and_free() during checkpoint.
->>>
->>> Thanks,
->>
->> How about using victim_secmap?
->> gc_thread
->> 				mutex_lock(&DIRTY_I(sbi)->seglist_lock);
->> 				__set_test_and_free
->> 				check cur section next_victim clear
->> 				mutex_unlock(&dirty_i->seglist_lock);
->>
->> mutex_lock(&dirty->seglist_lock);
->> f2fs_get_victim
->> mutex_unlock(&dirty_i->seglist_lock);
->>
->> static inline void __set_test_and_free(struct f2fs_sb_info *sbi,
->>                 if (next >= start_segno + usable_segs) {
->>                         if (test_and_clear_bit(secno, free_i->free_secmap))
->>                                 free_i->free_sections++;
->> +
->> +                       if (test_and_clear_bit(secno, dirty_i->victim_secmap))
->> +                               sbi->next_victim_seg[BG_GC] =
->> + NULL_SEGNO;
->
->Can this happen?
->
->segs_per_sec=2
->
->- seg#0 and seg#1 are all dirty
->- all valid blocks are removed in seg#1
->- checkpoint -> seg#1 becomes free
->- gc select this sec and next_victim_seg=seg#0
->- migrate seg#0, next_victim_seg=seg#1
->- allocator assigns seg#1 to curseg
->- gc tries to migrate seg#1
->
->Thanks,
-The detailed scenario
-segs_per_sec=2
-- seg#0 and seg#1 are all dirty
-- all valid blocks are removed in seg#1
-- gc select this sec and next_victim_seg=seg#0
-- migrate seg#0, next_victim_seg=seg#1
-- checkpoint -> sec(seg#0, seg#1)  becomes free
-- allocator assigns sec(seg#0, seg#1) to curseg
-- gc tries to migrate seg#1
->
->>                 }
->>         }
->>>
->>>>
->>>>
->>>>>
->>>>>>>
->>>>>>> IMO, we can clear next_victim_seg[] once section is free in
->>>>>>> __set_test_and_free()? something like this:
->>>>>> I will test it according to your suggestion.
->>>>>> If there are no issues, can I submit it again with the patch?
->>>>>> Thanks
->>>>>>>
->>>>>>> ---
->>>>>>>     fs/f2fs/segment.h | 13 ++++++++++---
->>>>>>>     1 file changed, 10 insertions(+), 3 deletions(-)
->>>>>>>
->>>>>>> diff --git a/fs/f2fs/segment.h b/fs/f2fs/segment.h index
->>>>>>> 0465dc00b349..826e37999085 100644
->>>>>>> --- a/fs/f2fs/segment.h
->>>>>>> +++ b/fs/f2fs/segment.h
->>>>>>> @@ -473,9 +473,16 @@ static inline void
->>>>>>> __set_test_and_free(struct f2fs_sb_info *sbi,
->>>>>>>     			goto skip_free;
->>>>>>>     		next = find_next_bit(free_i->free_segmap,
->>>>>>>     				start_segno + SEGS_PER_SEC(sbi),
->>> start_segno);
->>>>>>> -		if (next >= start_segno + usable_segs) {
->>>>>>> -			if (test_and_clear_bit(secno, free_i-
->>free_secmap))
->>>>>>> -				free_i->free_sections++;
->>>>>>> +		if ((next >= start_segno + usable_segs) &&
->>>>>>> +			test_and_clear_bit(secno, free_i->free_secmap))
->{
->>>>>>> +			free_i->free_sections++;
->>>>>>> +
->>>>>>> +			if (GET_SEC_FROM_SEG(sbi->next_victim_seg[BG_GC])
->==
->>>>>>> +									secno)
->>>>>>> +				sbi->next_victim_seg[BG_GC] = NULL_SEGNO;
->>>>>>> +			if (GET_SEC_FROM_SEG(sbi->next_victim_seg[FG_GC])
->==
->>>>>>> +									secno)
->>>>>>> +				sbi->next_victim_seg[FG_GC] = NULL_SEGNO;
->>>>>>>     		}
->>>>>>>     	}
->>>>>>>     skip_free:
->>>>>>> --
->>>>>>> 2.40.1
->>>>>>>
->>>>>>>>>
->>>>>>>>>>
->>>>>>>>>> Because the call stack is different, I think that in order to
->>>>>>>>>> handle everything at once, we need to address it within
->>>>>>>>>> do_garbage_collect, or otherwise include it on both sides.
->>>>>>>>>> What do you think?
->>>>>>>>>>
->>>>>>>>>> [30146.337471][ T1300] F2FS-fs (dm-54): Inconsistent segment
->>>>>>>>>> (70961) type [0, 1] in SSA and SIT [30146.346151][ T1300] Call
->>> trace:
->>>>>>>>>> [30146.346152][ T1300]  dump_backtrace+0xe8/0x10c
->>>>>>>>>> [30146.346157][ T1300]  show_stack+0x18/0x28 [30146.346158][
->>>>>>>>>> T1300] dump_stack_lvl+0x50/0x6c [30146.346161][ T1300]
->>>>>>>>>> dump_stack+0x18/0x28 [30146.346162][ T1300]
->>>>>>>>>> f2fs_stop_checkpoint+0x1c/0x3c [30146.346165][ T1300]
->>>>>>>>>> do_garbage_collect+0x41c/0x271c [30146.346167][ T1300]
->>>>>>>>>> f2fs_gc+0x27c/0x828 [30146.346168][ T1300]
->>>>>>>>>> gc_thread_func+0x290/0x88c [30146.346169][ T1300]
->>>>>>>>>> kthread+0x11c/0x164 [30146.346172][ T1300]
->>>>>>>>>> ret_from_fork+0x10/0x20
->>>>>>>>>>
->>>>>>>>>> struct curseg_info : 0xffffff803f95e800 {
->>>>>>>>>> 	segno        : 0x11531 : 70961
->>>>>>>>>> }
->>>>>>>>>>
->>>>>>>>>> struct f2fs_sb_info : 0xffffff8811d12000 {
->>>>>>>>>> 	next_victim_seg[0] : 0x11531 : 70961 }
->>>>>>>>>>
->>>>>>>>>>>
->>>>>>>>>>> https://lore.kernel.org/linux-f2fs-devel/20250325080646.32919
->>>>>>>>>>> 47
->>>>>>>>>>> -2
->>>>>>>>>>> -
->>>>>>>>>>> chao@kernel.org
->>>>>>>>>>>
->>>>>>>>>>> Thanks,
->>>>>>>>>>>
->>>>>>>>>>>>
->>>>>>>>>>>> Signed-off-by: Yohan Joung <yohan.joung@sk.com>
->>>>>>>>>>>> ---
->>>>>>>>>>>>     fs/f2fs/gc.c | 4 ++++
->>>>>>>>>>>>     1 file changed, 4 insertions(+)
->>>>>>>>>>>>
->>>>>>>>>>>> diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c index
->>>>>>>>>>>> 2b8f9239bede..4b5d18e395eb 100644
->>>>>>>>>>>> --- a/fs/f2fs/gc.c
->>>>>>>>>>>> +++ b/fs/f2fs/gc.c
->>>>>>>>>>>> @@ -1926,6 +1926,10 @@ int f2fs_gc(struct f2fs_sb_info *sbi,
->>>>>>>>>>>> struct
->>>>>>>>>>> f2fs_gc_control *gc_control)
->>>>>>>>>>>>     		goto stop;
->>>>>>>>>>>>     	}
->>>>>>>>>>>>
->>>>>>>>>>>> +	if (__is_large_section(sbi) &&
->>>>>>>>>>>> +			IS_CURSEC(sbi, GET_SEC_FROM_SEG(sbi, segno)))
->>>>>>>>>>>> +		goto stop;
->>>>>>>>>>>> +
->>>>>>>>>>>>     	seg_freed = do_garbage_collect(sbi, segno, &gc_list,
->gc_type,
->>>>>>>>>>>>     				gc_control->should_migrate_blocks,
->>>>>>>>>>>>     				gc_control->one_time);
->>>>>>>>>>
->>>>>>>>
->>>>>>
->>>>
+On Tue, Apr 01, 2025 at 04:01:03AM +0300, Dmitry Baryshkov wrote:
+> On Mon, Mar 31, 2025 at 03:40:27PM -0700, Doug Anderson wrote:
+> > Hi,
+> > 
+> > On Mon, Mar 31, 2025 at 1:28 PM Dmitry Baryshkov
+> > <dmitry.baryshkov@oss.qualcomm.com> wrote:
+> > >
+> > > On Mon, Mar 31, 2025 at 08:06:36AM -0700, Doug Anderson wrote:
+> > > > Hi,
+> > > >
+> > > > On Sun, Mar 30, 2025 at 11:18 PM Tejas Vipin <tejasvipin76@gmail.com> wrote:
+> > > > >
+> > > > > @@ -157,7 +137,6 @@ static int boe_bf060y8m_aj0_prepare(struct drm_panel *panel)
+> > > > >
+> > > > >         ret = boe_bf060y8m_aj0_on(boe);
+> > > > >         if (ret < 0) {
+> > > > > -               dev_err(dev, "Failed to initialize panel: %d\n", ret);
+> > > > >                 gpiod_set_value_cansleep(boe->reset_gpio, 1);
+> > > > >                 return ret;
+> > > >
+> > > > It's not new, but the error handling here looks wrong to me. Instead
+> > > > of just returning after setting the GPIO, this should be turning off
+> > > > the regulators, shouldn't it? That would mean adding a new error label
+> > > > for turning off "BF060Y8M_VREG_VCI" and then jumping to that.
+> > >
+> > > We should not be turning off the regulator in _prepare(), there will be
+> > > an unmatched regulator disable call happening in _unprepare(). Of course
+> > > it can be handled by adding a boolean, etc, but I think keeping them on
+> > > is a saner thing.
+> > 
+> > Hrmmmm.
+> > 
+> > The issue is that if we're returning an error from a function the
+> > caller should expect that the function undid anything that it did
+> > partially. It _has_ to work that way, right? Otherwise we've lost the
+> > context of exactly how far we got through the function so we don't
+> > know which things to later undo and which things to later not undo.
+> 
+> Kind of yes. I'd rather make drm_panel functions return void here, as
+> that matches panel bridge behaviour. The only driver that actually uses
+> return values of those functions is analogix_dp, see
+> analogix_dp_prepare_panel(). However most of invocations of that
+> function can go away. I'll send a patchset.
+> 
+> > 
+> > ...although I think you said that the DRM framework ignores errors
+> > from prepare() and still calls unprepare(). I guess this is in
+> > panel_bridge_atomic_pre_enable() where drm_panel_prepare()'s error
+> > code is ignored?
+> 
 
+Hmm... Most of the drivers ignore the results of the drm_panel_prepare()
+/ _unprepare() / _enable() / _disable(), but then the framework handles
+error values of the callbacks and skips calling the corresponding
+en/dis callback if the previous call has failed. Which means I was
+incorrect here.
 
+> 
+> > This feels like a bug waiting to happen. Are you
+> > saying that boe_bf060y8m_aj0_unprepare() has to be written such that
+> > it doesn't hit regulator underflows no matter which fail path
+> > boe_bf060y8m_aj0_prepare() hit? That feels wrong.
+> 
+> Let me try to fix that.
+> 
+> -- 
+> With best wishes
+> Dmitry
+
+-- 
+With best wishes
+Dmitry
