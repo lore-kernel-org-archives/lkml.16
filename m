@@ -1,160 +1,200 @@
-Received: from fhigh-a4-smtp.messagingengine.com (fhigh-a4-smtp.messagingengine.com [103.168.172.155])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59CAC2054E9;
-	Tue,  1 Apr 2025 14:58:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.155
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6794202F62
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 14:58:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743519513; cv=none; b=pYRrmFeesyG137CEyiOze7oVvJJEMPrgIWWtdniN+LgaJHfPeaP/cJCK+mZyTAgiTpplaZndUXAMvhPy+wzRBUcZs/axwxMnJpd64fCEpLa908xDw8CDRC4xIdy8jDUsGRxc0qT7mcx6pYFzMPDp4V5UeVCM7isXxGgyVuDeAeI=
+	t=1743519528; cv=none; b=OrC93mJT72b8uA4CUCSQlvyEaTZTU3vf25pfVHDzqDeLudwKGEnl+NT5bog/jTJyKFgDG2y08Ad+xEObuU1/7lL+E0qthig+8EjwBpLgZe/AjbvtDGivh17oGQ2vrOI8/YGQBx0d54MYbbK0Gw8i71/1P1+JgROYlP1dN18a8GU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743519513; c=relaxed/simple;
-	bh=kKrSJRKxG6Oo8a53ImmPS1bX1Mb/wo/W9WNq1FTLY8w=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=L3CC76wfx24Art4Mx1s9DIghRTwIlj7jrTcLuuhMcPuNp3jdL7UnBb+pO/zs/mqpnUhTvJ007Zp/nvErCMxg0vwPYA5fz2mDG8xcNI77/aQ0avodsDXtpMiTYvf0aD2ieskgI0/MqDzYfOiRmCWOBRnzBRS9MXwmtLh4gOvf3I0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se; spf=pass smtp.mailfrom=ragnatech.se; dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b=pjCS6mef; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=OTP42og4; arc=none smtp.client-ip=103.168.172.155
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ragnatech.se
+	s=arc-20240116; t=1743519528; c=relaxed/simple;
+	bh=rBVnj2kuzsRspIon17V404bxRfeiAFpj5cERNHMyoSA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
+	 In-Reply-To:Content-Type; b=F5kxpfFtW7JmnllYTIzerbJHwPMDwvKI/jjPlVzJmSNSZyrKghKtAZ4djm0dUC4zIh4lx0HFKj+ZDWQsgW6K3VXKxxcOdTaLKVwe02BYtSu8xQJgBKZJu09kAGkY4KGJftQ5ICQS/ZB2Rp7HIlzH2i4tIMgNW0Unl0WeDu+G/8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gLxc3NJa; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b="pjCS6mef";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="OTP42og4"
-Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 6D89C1140228;
-	Tue,  1 Apr 2025 10:58:30 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-10.internal (MEProxy); Tue, 01 Apr 2025 10:58:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ragnatech.se; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:message-id:mime-version:reply-to
-	:subject:subject:to:to; s=fm1; t=1743519510; x=1743605910; bh=KC
-	7mtGUrl9eJOorNVhvs5IRYDxTtF1iPCLypMstgG1M=; b=pjCS6mef6g09gX95WZ
-	jBXTy/wLyOHduNKnSK3N5s4fGRN29gF3uvFtOwQM0kuicutS+T4avobqYPwGOofV
-	iyLOMyxyvCYVkoO+44arqlsmIKRP3OyzJz0SKfb4Fgfd7CPOs2aneZixLCKhtDuL
-	RuzwiXGPW+Z3eZ1OSq5UoXQ2JEISpdAZ4+MC9b7q1ZndjObLiZfiY7m7kIubq13G
-	2lAvpfo20MjeI5TawaKwQQ1P21EyprmAivtMiKUgrWA9RkRvorRz1ufvJ7qIkIQc
-	s7CfDfq98pazwNVjCAVFD46JqKIbcZfxuN620m2oeOkd1EWPmnyYN+W5s8rxw+/H
-	su+w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
-	:subject:to:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm2; t=1743519510; x=1743605910; bh=KC7mtGUrl9eJOorNVhvs5IRYDxTt
-	F1iPCLypMstgG1M=; b=OTP42og402cI82T+4HldBJdTdKEAkUREAlQH+T4HsUBi
-	8OsjyrJNyhTZ1T3tF2cNDiSsNML4YGsLEXWxnwIon1gQcilbYRzf2w4sM1NBKf17
-	NJQOzlhzUFKIDmCY8eW6t1h9cjyYAt7huivyMaTGl5fKhpcvaF8zYt6c1Cy9WFlN
-	4PY/nPUSqbvJGRV1flX08EfJ6cykryGR8ofe91XaBdXqVxd55Pqfv65m2BXYeV0p
-	ACMgXWaqIaBjS4rJZ8mpwa/PyZHPWbbu7MQSvwswDQll65sXt2qLtZXsFtU9EEIM
-	t9ssjj6pJNoHD4v2NVd4HsZziX9V/nkZP9VDzLDV3A==
-X-ME-Sender: <xms:Ff_rZ3QhDKVzEwqFZBsHX9mDIEWLsHB58IUi4Ocs5UuQHoVqyP5tTA>
-    <xme:Ff_rZ4ySHuMzXcRBQiZGoKQrpCZhjbwpLz9GDpldJDalhbv8ppHK-_i63J0TlqKBL
-    7VoLOv34NDlPimgY1M>
-X-ME-Received: <xmr:Ff_rZ82FHqSchCBN2RO86CLdbYde3CS0sFF8Vh8NgJnk_5oQ4iukIkUNUiKhUoK2aIfexXRCFspxaIt2DMEj_ilu5Q>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddukeeftdekucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhephffvvefufffkofggtgfgsehtkeertdertdej
-    necuhfhrohhmpefpihhklhgrshcuufpnuggvrhhluhhnugcuoehnihhklhgrshdrshhoug
-    gvrhhluhhnugdorhgvnhgvshgrshesrhgrghhnrghtvggthhdrshgvqeenucggtffrrght
-    thgvrhhnpeehudelteetkefgffefudefuedvjeeivdekhfevieefgeffheeltddvvefhfe
-    etgeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehn
-    ihhklhgrshdrshhouggvrhhluhhnugesrhgrghhnrghtvggthhdrshgvpdhnsggprhgtph
-    htthhopedugedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepuggrvhgvrdhsthgv
-    vhgvnhhsohhnsehrrghsphgsvghrrhihphhirdgtohhmpdhrtghpthhtohepmhgthhgvhh
-    grsgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhr
-    ghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhope
-    gtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshhhrgifnhhguhho
-    sehkvghrnhgvlhdrohhrghdprhgtphhtthhopehsrdhhrghuvghrsehpvghnghhuthhroh
-    hnihigrdguvgdprhgtphhtthhopehkvghrnhgvlhesphgvnhhguhhtrhhonhhigidruggv
-    pdhrtghpthhtohepfhgvshhtvghvrghmsehgmhgrihhlrdgtohhm
-X-ME-Proxy: <xmx:Ff_rZ3CSFLEkejZ_FDMs1pFhiblXqSiZGk5j5mI3joXiAW5s7DIivA>
-    <xmx:Ff_rZwi-1jyDXUfpl12NKeFhecoNaOWq3IqBBLQ-NrE4hDpLyxGzdg>
-    <xmx:Ff_rZ7q1cHbfXjm2atFOF3EkE_y12kpetl9gBt6NZcTwg56eZhatNw>
-    <xmx:Ff_rZ7gNWPeyil3TiqemXrziJH8XLPoP4AV5y40kJELG-A1XeU0Skg>
-    <xmx:Fv_rZw6Vj5Mo1aNJo0S3unYucQho7l_Mj96jOA9_rmAaD7wMuRbinGtQ>
-Feedback-ID: i80c9496c:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 1 Apr 2025 10:58:29 -0400 (EDT)
-From: =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
-To: Dave Stevenson <dave.stevenson@raspberrypi.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	linux-media@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Cc: =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
-Subject: [PATCH] dt-bindings: media: i2c: imx219: Remove redundant description of data-lanes
-Date: Tue,  1 Apr 2025 16:57:58 +0200
-Message-ID: <20250401145759.3253736-1-niklas.soderlund+renesas@ragnatech.se>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gLxc3NJa"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-39c1efbefc6so1078804f8f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 07:58:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1743519524; x=1744124324; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:cc:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=+jl7X3iQxImIxVd58oOGBnN/Rmp3bj8jAHM40t4xGMY=;
+        b=gLxc3NJazrC60Llc9KE9ta4WjoPqKUm48kB/+RVWCoBKA3CrmRhm9VhpmVvo0PrBTa
+         zxKNFA/grpfSW41Y9IPdzdNAFUcLuFuoXoq26D5269kQnFtpjZqCtBoGjk1hZ8+26hP1
+         +LFfYRX/IgqyivDASr8d9gC15H1+u9l1Nt74NM5WJMTzYuaRNO3TNseLQ+fpqv5dKf5C
+         MwMjJ8PHC3PEvgh2xi9feF4sxXDjCaJEksvxqQvm0a/UxeoKAPACxBBu0FJl9lmjF9Xx
+         scRElNKXomgK/OqUUfVwtzWzLVOcJzUIiZ/d0a9cMGnJc0/1nt7HMhb1oGRWUHjjVd3T
+         a7VA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743519524; x=1744124324;
+        h=content-transfer-encoding:in-reply-to:from:cc:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+jl7X3iQxImIxVd58oOGBnN/Rmp3bj8jAHM40t4xGMY=;
+        b=tGvJk08+fSia4X3DounzcjQ1b33pbiRyhAa43oClyWyS+zTw0tmex4JjbvJdLTZrwV
+         jU8bYIymGFSsGFMnUz5D8DyzjB/kTZScV9B3E/lm5s64SnrWLhQtE9BjknnF6bgstSfp
+         Bt/RV7RWA00fT7Ty3cavxwZCeTXQfRXz96KyH4IeA+SWylMOXNZUcedsTKwzv9AbZFHp
+         lQpZsWTTYL10SErbCNMh7H4CFarbKm0rf+ZyYb1x5AHbDtSRzH+DuMcdHTi/7jdTL7ch
+         Oolv9hABgrQ/lnKP/R2KDbSFnwI2ViJ30i5NFEIeEIbfWlNeHJP8QoJNCZK28HA/coGd
+         WGvQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXllYNNor7P8+w3gif29rbJGAXYjvrCHOxjVj5jazvqE7hWUtGheog+M3J3WYFJFHAa7m/595PE9FXC53k=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz8jmISzQpuiWMsa+3TwfhprfGf69n47ayVvQ5HXU7EJS2ud23m
+	HeOxny+m8OHm1IWVBQeMQiTPG34lsy//z4Pvfw0LNh1+bBs5wiE8SQNo5XqMPZ0=
+X-Gm-Gg: ASbGnctjv1tTPNB2k+N5OjVb+t3V/kWAHT7o1/prfoPQng3yXfHErrmmHT2MbT0RZL1
+	1NdtZx0Axn6w4YcBObikZFjV1BRjlAth4Oo9JO9tlkNedzL7KkwPlG0BGyOnTbGvrIQ5y8ukhdU
+	Y+iaVf5ge44Lmlabq+5wMkHq+2FPqhAT8RDvCLgvfETHGMDXIaHteT8sP899L3YSqsmRSWeM61F
+	uqAECSUSJleLuuY2P+kpJyJjvZm9hKpORNRSnnARudyoGCfTXo24P8LYiDTRJY2xYcj3Velgzm/
+	eOKP48eYG1RSJ7W0FLlyn/3VB1RnIBJI80LqB4RepD7fw8c=
+X-Google-Smtp-Source: AGHT+IHmaBSITLZ/nWSNzRwiZLgYFNFiImcV/f5eO9VLZjha2iCbgxMcIRSjTXFGC5eZY6835gq0pA==
+X-Received: by 2002:a5d:64c9:0:b0:39c:119f:27c4 with SMTP id ffacd0b85a97d-39c120e3b98mr9530355f8f.30.1743519524130;
+        Tue, 01 Apr 2025 07:58:44 -0700 (PDT)
+Received: from [192.168.1.3] ([77.81.75.81])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b66a991sm14273812f8f.49.2025.04.01.07.58.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Apr 2025 07:58:43 -0700 (PDT)
+Message-ID: <b9046586-c884-484f-a308-9f256d3d99f5@linaro.org>
+Date: Tue, 1 Apr 2025 15:58:42 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 9/9] coresight: Consolidate clock enabling
+To: Leo Yan <leo.yan@arm.com>, Jie Gan <quic_jiegan@quicinc.com>
+References: <20250327113803.1452108-1-leo.yan@arm.com>
+ <20250327113803.1452108-10-leo.yan@arm.com>
+Content-Language: en-US
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
+ Mike Leach <mike.leach@linaro.org>,
+ Anshuman Khandual <anshuman.khandual@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, coresight@lists.linaro.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20250327113803.1452108-10-leo.yan@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The bindings already reference video-interfaces.yaml in the endpoint
-node, there is no need to duplicate the description of the data-lanes
-property.
 
-  An array of physical data lane indexes. Position of an entry determines
-  the logical lane number, while the value of an entry indicates physical
-  lane, e.g. for 2-lane MIPI CSI-2 bus we could have "data-lanes = <1 2>;",
-  assuming the clock lane is on hardware lane 0. If the hardware does not
-  support lane reordering, monotonically incremented values shall be used
-  from 0 or 1 onwards, depending on whether or not there is also a clock
-  lane. This property is valid for serial busses only (e.g. MIPI CSI-2).
 
-What the generic binding do not cover is the behavior if the property
-would be omitted. But the imx219 driver have never agreed with the
-description neither. Before commit ceddfd4493b3 ("media: i2c: imx219:
-Support four-lane operation") the driver errored out if not 2 lanes
-where used, and after it if not 2 or 4 lanes where used.
+On 27/03/2025 11:38 am, Leo Yan wrote:
+> CoreSight drivers enable pclk and atclk conditionally.  For example,
+> pclk is only enabled in the static probe, while atclk is an optional
+> clock that it is enabled for both dynamic and static probes, if it is
+> present.  In the current CoreSight drivers, these two clocks are
+> initialized separately.  This causes complex and duplicate codes.
+> 
+> This patch consolidates clock enabling into a central place.  It renames
+> coresight_get_enable_apb_pclk() to coresight_get_enable_clocks() and
+> encapsulates clock initialization logic:
+> 
+>   - If a clock is initialized successfully, its clock pointer is assigned
+>     to the double pointer passed as an argument.
+>   - If pclk is skipped for an AMBA device, or if atclk is not found, the
+>     corresponding double pointer is set to NULL.  The function returns
+>     Success (0) to guide callers can proceed with no error.
+>   - Otherwise, an error number is returned for failures.
+> 
+> CoreSight drivers are refined so that clocks are initialized in one go.
+> As a result, driver data no longer needs to be allocated separately in
+> the static and dynamic probes.  Moved the allocation into a low-level
+> function to avoid code duplication.
+> 
+> Suggested-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Signed-off-by: Leo Yan <leo.yan@arm.com>
+> ---
+>   drivers/hwtracing/coresight/coresight-catu.c       | 30 ++++++++++--------------------
+>   drivers/hwtracing/coresight/coresight-cpu-debug.c  | 29 +++++++++++------------------
+>   drivers/hwtracing/coresight/coresight-ctcu-core.c  |  8 ++++----
+>   drivers/hwtracing/coresight/coresight-etm4x-core.c | 11 ++++-------
+>   drivers/hwtracing/coresight/coresight-funnel.c     | 11 ++++-------
+>   drivers/hwtracing/coresight/coresight-replicator.c | 11 ++++-------
+>   drivers/hwtracing/coresight/coresight-stm.c        |  9 +++------
+>   drivers/hwtracing/coresight/coresight-tmc-core.c   | 30 ++++++++++--------------------
+>   drivers/hwtracing/coresight/coresight-tpiu.c       | 10 ++++------
+>   include/linux/coresight.h                          | 38 +++++++++++++++++++++++++++-----------
+>   10 files changed, 81 insertions(+), 106 deletions(-)
+> 
+[...]
+> diff --git a/include/linux/coresight.h b/include/linux/coresight.h
+> index 26eb4a61b992..cf3fbbc0076a 100644
+> --- a/include/linux/coresight.h
+> +++ b/include/linux/coresight.h
+> @@ -471,25 +471,41 @@ static inline bool is_coresight_device(void __iomem *base)
+>   }
+>   
+>   /*
+> - * Attempt to find and enable "APB clock" for the given device
+> + * Attempt to find and enable programming clock (pclk) and trace clock (atclk)
+> + * for the given device.
+>    *
+> - * Returns:
+> + * The AMBA bus driver will cover the pclk, to avoid duplicate operations,
+> + * skip to get and enable the pclk for an AMBA device.
+>    *
+> - * clk   - Clock is found and enabled
+> - * NULL  - Clock is not needed as it is managed by the AMBA bus driver
+> - * ERROR - Clock is found but failed to enable
+> + * atclk is an optional clock, it will be only enabled when it is existed.
+> + * Otherwise, a NULL pointer will be returned to caller.
+> + *
+> + * Returns: '0' on Success; Error code otherwise.
+>    */
+> -static inline struct clk *coresight_get_enable_apb_pclk(struct device *dev)
+> +static inline int coresight_get_enable_clocks(struct device *dev,
+> +					      struct clk **pclk,
+> +					      struct clk **atclk)
 
-Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
----
-Hello,
+This function has grown a bit now, probably best to remove it from the 
+header and export it instead.
 
-The data-lanes property is a common property and the driver have always
-operated as the common description, it seemed silly to break the driver
-to adhere to odd specification, then to correct the bindings. However a
-more correct solution would be to do the work on the driver of course.
+>   {
+> -	struct clk *pclk = NULL;
+> +	WARN_ON(!pclk);
+>   
+>   	if (!dev_is_amba(dev)) {
+> -		pclk = devm_clk_get_enabled(dev, "apb_pclk");
+> -		if (IS_ERR(pclk))
+> -			pclk = devm_clk_get_enabled(dev, "apb");
+> +		*pclk = devm_clk_get_enabled(dev, "apb_pclk");
+> +		if (IS_ERR(*pclk))
+> +			*pclk = devm_clk_get_enabled(dev, "apb");
+> +		if (IS_ERR(*pclk))
+> +			return PTR_ERR(*pclk);
+> +	} else {
+> +		/* Don't enable pclk for an AMBA device */
+> +		*pclk = NULL;
 
-This is just a drive-by fix in the hope of sparing others the time to
-discover this oddity themself. This is only tested by using the bindings
-themself and by 'make dt_binding_check'.
----
- Documentation/devicetree/bindings/media/i2c/imx219.yaml | 9 ---------
- 1 file changed, 9 deletions(-)
+Now the "apb" clock won't be enabled for amba devices. I'm assuming 
+that's fine if the clock was always called "apb_pclk" for them, but the 
+commit that added the new clock name didn't specify any special casing 
+either.
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/imx219.yaml b/Documentation/devicetree/bindings/media/i2c/imx219.yaml
-index 07d088cf66e0..31beeb2be2ea 100644
---- a/Documentation/devicetree/bindings/media/i2c/imx219.yaml
-+++ b/Documentation/devicetree/bindings/media/i2c/imx219.yaml
-@@ -55,15 +55,6 @@ properties:
-         unevaluatedProperties: false
- 
-         properties:
--          data-lanes:
--            description: |-
--              The sensor supports either two-lane, or four-lane operation.
--              If this property is omitted four-lane operation is assumed.
--              For two-lane operation the property must be set to <1 2>.
--            items:
--              - const: 1
--              - const: 2
--
-           clock-noncontinuous: true
-           link-frequencies: true
- 
--- 
-2.49.0
+Can we have a comment that says it's deliberate? But the more I think 
+about it the more I'm confused why CTCU needed a different clock name to 
+be defined, when all the other Coresight devices use "apb_pclk".
+
+>   	}
+>   
+> -	return pclk;
+> +	if (atclk) {
+> +		*atclk = devm_clk_get_optional_enabled(dev, "atclk");
+> +		if (IS_ERR(*atclk))
+> +			return PTR_ERR(*atclk);
+> +	}
+> +
+> +	return 0;
+>   }
+>   
+>   #define CORESIGHT_PIDRn(i)	(0xFE0 + ((i) * 4))
 
