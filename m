@@ -1,249 +1,114 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B29EA1EB5FA
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 09:09:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30EA61EBFE3;
+	Tue,  1 Apr 2025 09:10:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743498547; cv=none; b=Acs4WSM98rM3Z+/I2EXGesdh0uG2sC9audeN7vNq8LkZ/2CoBEpmU2AEUt0ckBc1QMqGGLcH5FWk5VR5icvFItUuqscvn/uAvZnTpq8uh9Mx8mD3zQLIElXIYb8kNLpUJS25+bktX578yX6qgHtkaWPOPUfAaDJyM1bCOHdMk6o=
+	t=1743498642; cv=none; b=NPWl710f0Kydm9G5o8nRDdDeNp9MDzpC562Chgd4uO1GcINeY6YEd9ewMxlVr7X/LJX41XM2MRKsCBrNOOHQQYuch11uyUIsF2/zoDdcpAo0cLUmBEGXYqrp2cmd3FBDAR5E3Eea0AjFW8nT2iQAxecDhRR6UfytAehQw9uyHVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743498547; c=relaxed/simple;
-	bh=5lTTCkykjVc+615pYDm1tbKWHUbWbcIp/OskVyTpKYI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J3sdFKxi5pKYbRCa0PpNulRbEa4Hh0EQNpmBaKU8dJS+k5Pzx2j7eqn94PJm5xZn67qTr3CSBe0eb/+gHvj3kkH4Q64CmtBDm/nDH1+BrRLOfYW/tuwO6Rxsmk6dOx+U4Cf3mR2s+0B7dviBqYwSSj+u6DVOOeGccDYnxK1dO9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SXOlptPD; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SXOlptPD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743498544;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0B6FdBNadbiO8NrMKuIJpxZXOJgUgdhTXk2/bZ2vOoc=;
-	b=SXOlptPDWRbL6PCkmwAgj9jZesyg71ZouegtFKqohhFNXkf0lmb58EC2C8KoKLfp2r4evd
-	1VYW1ed7b9g/AD1bSpUiJyqFmlGvDx0T/XUhUll2XZmITMwwo89elTGi9bv9T4koOm6z8M
-	eQBFSdGnlz8tYifb/uoEXa/PlvmZcyo=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-530-qf-RtZAcP1iGaM-Mnn0Lwg-1; Tue, 01 Apr 2025 05:09:03 -0400
-X-MC-Unique: qf-RtZAcP1iGaM-Mnn0Lwg-1
-X-Mimecast-MFC-AGG-ID: qf-RtZAcP1iGaM-Mnn0Lwg_1743498542
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43ceeaf1524so27645745e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 02:09:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743498542; x=1744103342;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0B6FdBNadbiO8NrMKuIJpxZXOJgUgdhTXk2/bZ2vOoc=;
-        b=F0L6a9Q0jPIVIychq+Mhef3ob5f2gebO8GzlG7kS52s0otBloWUNIZuyw5Ot0mIGHj
-         ExNIxO8l6YRTXCskxXm/Q8zKia3vqq5XZa4hUwsaeBCPjoZUYhPxwHpFhGfj9isI1R4k
-         wFDOxNx33BslDZ8iVQ8k1Q/KOqNgpYWMS6zi3vMjiPnDyOOcYyL6pvOFjLtSMiRnoHtD
-         lv27c0R5ZF/SFt7sjWdjkfiuPSOiNCaEp54PrQv5l9IcLPbus/KcQ7j9WmhiA/USZlnM
-         yJDnssUEvRkANHRSLI3XruvTYzQ8zyC4urYvOCXv7SW8eEG8H+ggZv5i6itGVE80rT/A
-         nUsA==
-X-Gm-Message-State: AOJu0Yyyck+I+PsfgJ5SSXxYlZHQTQBLN1Ir2awd1ae488yNit1/CFXy
-	VBkmJZC30XbaU0ptdFCQWyDyFlus+R+r5WyYulltmzPGphrxF6kRk2JF/ZIRoBCW/Y8IAiqwaO9
-	jGJz6+2FqY3ti417gGFYjgOC+n83usXItqao3ZAMI39GXKO2iY2tAEyB1TXAECg==
-X-Gm-Gg: ASbGnctOkMzYgqznOeWaq9Jfyo5nxUeVDgQdypYcF4Culg05x76i++uO6VekAFjdiVp
-	wL5UGD7qaLqYxk2uQzuM9W4uS5hssZPhdyCVvnHYKvXUZHpTb4IOuqvfAd2zHHjKK0/aMKlfXzK
-	kQvz6br+p+niRLhIfVdnUHkRPEti3IodY8ks1IuOKXuGRmpZKJp76H8Hn036qHs2KO0JVFvfRSK
-	H/fZ6ulQzIHYqiP+znc8Vt0quYUtVky9cxBKMvn3knm8XOs/3KAQ2hEyjRIgbqan7jgBn6alr9d
-	Q0oppBxubLXfX8bpVVKBOvIdk1AP2d0Rw4iFpTXNDc4/jJKQOdKbJWjnVcE=
-X-Received: by 2002:a05:600c:4306:b0:43b:baf7:76e4 with SMTP id 5b1f17b1804b1-43d91017c92mr119546835e9.1.1743498542234;
-        Tue, 01 Apr 2025 02:09:02 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEFEpGEjpxOXXUrYEHRdUPBQW/kee6tDCG39RsZAEC8EYpXL93ZfovfEJh92VuUYNLO3OsVPA==
-X-Received: by 2002:a05:600c:4306:b0:43b:baf7:76e4 with SMTP id 5b1f17b1804b1-43d91017c92mr119546475e9.1.1743498541626;
-        Tue, 01 Apr 2025 02:09:01 -0700 (PDT)
-Received: from sgarzare-redhat (host-87-11-6-59.retail.telecomitalia.it. [87.11.6.59])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d82dedc88sm192190275e9.1.2025.04.01.02.08.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Apr 2025 02:09:00 -0700 (PDT)
-Date: Tue, 1 Apr 2025 11:08:49 +0200
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Jarkko Sakkinen <jarkko@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Jason Gunthorpe <jgg@ziepe.ca>, 
-	James Bottomley <James.Bottomley@hansenpartnership.com>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	Borislav Petkov <bp@alien8.de>, linux-integrity@vger.kernel.org, Peter Huewe <peterhuewe@gmx.de>, 
-	Ingo Molnar <mingo@redhat.com>, linux-coco@lists.linux.dev, Dov Murik <dovmurik@linux.ibm.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Joerg Roedel <jroedel@suse.de>, x86@kernel.org, 
-	Dionna Glaze <dionnaglaze@google.com>, Tom Lendacky <thomas.lendacky@amd.com>, 
-	Claudio Carvalho <cclaudio@linux.ibm.com>, "H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [PATCH v5 3/4] tpm: add SNP SVSM vTPM driver
-Message-ID: <lzcasqfgrdoicwqnvecqppy4ikhcv7rqxc6huvlzyltvb6cgdj@wclvoes5g4yq>
-References: <20250331103900.92701-1-sgarzare@redhat.com>
- <20250331103900.92701-4-sgarzare@redhat.com>
- <Z-rSMi2uCvShLbLS@kernel.org>
+	s=arc-20240116; t=1743498642; c=relaxed/simple;
+	bh=2kqYhZb9zupAFA1/dYlWUgmRW/D4OL/sskjnsBtWyCg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=S4v2ES0MhxoKUOWwQ6etRNPYlLSAmNsw2dbis+oNa4oIvHXz1OA+BXeHbA00sA1eRunInDNJVE9DCkVXGTSEFNMDud5xIllGnALRBSIWqTYlfIvPm4UhptH8Fdq/xxlFSVCQVUTsOXfRKyd7j+AbUHrOFJo/mD3XOdNvxU3BglQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-669ff7000002311f-2d-67ebad85c490
+From: Rakie Kim <rakie.kim@sk.com>
+To: gourry@gourry.net
+Cc: akpm@linux-foundation.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	joshua.hahnjy@gmail.com,
+	dan.j.williams@intel.com,
+	ying.huang@linux.alibaba.com,
+	david@redhat.com,
+	Jonathan.Cameron@huawei.com,
+	kernel_team@skhynix.com,
+	honggyu.kim@sk.com,
+	yunjeong.mun@sk.com,
+	rakie.kim@sk.com
+Subject: [PATCH v4 0/3] Enhance sysfs handling for memory hotplug in weighted interleave
+Date: Tue,  1 Apr 2025 18:08:56 +0900
+Message-ID: <20250401090901.1050-1-rakie.kim@sk.com>
+X-Mailer: git-send-email 2.48.1.windows.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <Z-rSMi2uCvShLbLS@kernel.org>
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrBLMWRmVeSWpSXmKPExsXC9ZZnkW7r2tfpBpvPS1nMWb+GzWL61AuM
+	Fl/X/2K2+Hn3OLvFqoXX2CyOb53HbnF+1ikWi8u75rBZ3Fvzn9Vi9ZoMBy6PnbPusnt0t11m
+	92g58pbVY/Gel0wemz5NYvc4MeM3i8fOh5Ye7/ddZfP4vEkugDOKyyYlNSezLLVI3y6BK2P3
+	pdPMBVOEKzoOXmFtYHzC38XIySEhYCJx+nEnK4x97PYkIJuDg01ASeLY3hiQsIiAqMS8o7NZ
+	uhi5OJgFrjFJHPh8kwUkISwQIbH26ip2kHoWAVWJ7t82IGFeoDGL7uxnhxipKdFw6R4TRFxQ
+	4uTMJ2CtzALyEs1bZzODzJQQOMMm8eXoczaIBkmJgytusExg5J2FpGcWkp4FjEyrGIUy88py
+	EzNzTPQyKvMyK/SS83M3MQLDd1ntn+gdjJ8uBB9iFOBgVOLh3VD6Kl2INbGsuDL3EKMEB7OS
+	CG/E15fpQrwpiZVVqUX58UWlOanFhxilOViUxHmNvpWnCAmkJ5akZqemFqQWwWSZODilGhj5
+	2D75vnObKGacbbwmh/HOBq2sl2zGPM6HvB+oHPi34JCrXWisauKeCwvqbHOEpOba7BdY/XlP
+	WPw+XdUA/2kvslVDUnjvaH/znV2Y+PDewsDn2p9Pu9RFc81MTstMMo59x8OUYHAv0k61cu6H
+	ogkBWxSqzz2sPGzP8l4uWszlwJ6ID85aNUosxRmJhlrMRcWJAJoxs1VbAgAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrELMWRmVeSWpSXmKPExsXCNUNNS7d17et0g55lQhZz1q9hs5g+9QKj
+	xdf1v5gtft49zm7x+dlrZotVC6+xWRzfOo/d4vDck6wW52edYrG4vGsOm8W9Nf9ZLQ5de85q
+	sXpNhsXvbSvYHPg8ds66y+7R3XaZ3aPlyFtWj8V7XjJ5bPo0id3jxIzfLB47H1p6vN93lc3j
+	220Pj8UvPjB5fN4kF8AdxWWTkpqTWZZapG+XwJWx+9Jp5oIpwhUdB6+wNjA+4e9i5OSQEDCR
+	OHZ7EmsXIwcHm4CSxLG9MSBhEQFRiXlHZ7N0MXJxMAtcY5I48PkmC0hCWCBCYu3VVewg9SwC
+	qhLdv21AwrxAYxbd2c8OMVJTouHSPSaIuKDEyZlPwFqZBeQlmrfOZp7AyDULSWoWktQCRqZV
+	jCKZeWW5iZk5pnrF2RmVeZkVesn5uZsYgSG7rPbPxB2MXy67H2IU4GBU4uHdUPoqXYg1say4
+	MvcQowQHs5IIb8TXl+lCvCmJlVWpRfnxRaU5qcWHGKU5WJTEeb3CUxOEBNITS1KzU1MLUotg
+	skwcnFINjHl5rUYXXObpiE0rXBTsNvXiOmvP6gfrvCv5e0VW7hcoL1ZKXKqkXKV3ZYZE7o6X
+	u81zpqmt7Wq6cq/7jc3s9g6Zfk4NEZWdrfq1/VoPwuZ4yyb+iyzrr13/VHXRpsQqt1bD8j+p
+	8z1zZrLv+u9y9mbv/fNXEo1S9zn3BHAf+9J7517JvtOBSizFGYmGWsxFxYkAfEhAf1UCAAA=
+X-CFilter-Loop: Reflected
 
-On Mon, Mar 31, 2025 at 08:34:42PM +0300, Jarkko Sakkinen wrote:
->On Mon, Mar 31, 2025 at 12:38:56PM +0200, Stefano Garzarella wrote:
->> From: Stefano Garzarella <sgarzare@redhat.com>
->>
->> Add driver for the vTPM defined by the AMD SVSM spec [1].
->>
->> The specification defines a protocol that a SEV-SNP guest OS can use to
->> discover and talk to a vTPM emulated by the Secure VM Service Module (SVSM)
->> in the guest context, but at a more privileged level (VMPL0).
->>
->> The new tpm-svsm platform driver uses two functions exposed by x86/sev
->> to verify that the device is actually emulated by the platform and to
->> send commands and receive responses.
->>
->> The device cannot be hot-plugged/unplugged as it is emulated by the
->> platform, so we can use module_platform_driver_probe(). The probe
->> function will only check whether in the current runtime configuration,
->> SVSM is present and provides a vTPM.
->>
->> This device does not support interrupts and sends responses to commands
->> synchronously. In order to have .recv() called just after .send() in
->> tpm_try_transmit(), the .status() callback returns 0, and both
->> .req_complete_mask and .req_complete_val are set to 0.
->>
->> [1] "Secure VM Service Module for SEV-SNP Guests"
->>     Publication # 58019 Revision: 1.00
->>
->> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
->> ---
->> v5:
->> - removed cancel/status/req_* ops after rebase on master that cotains
->>   commit 980a573621ea ("tpm: Make chip->{status,cancel,req_canceled} opt")
->> v4:
->> - moved "asm" includes after the "linux" includes [Tom]
->> - allocated buffer separately [Tom/Jarkko/Jason]
->> v3:
->> - removed send_recv() ops and followed the ftpm driver implementing .status,
->>   .req_complete_mask, .req_complete_val, etc. [Jarkko]
->> - removed link to the spec because those URLs are unstable [Borislav]
->> ---
->>  drivers/char/tpm/tpm_svsm.c | 135 ++++++++++++++++++++++++++++++++++++
->>  drivers/char/tpm/Kconfig    |  10 +++
->>  drivers/char/tpm/Makefile   |   1 +
->>  3 files changed, 146 insertions(+)
->>  create mode 100644 drivers/char/tpm/tpm_svsm.c
->>
->> diff --git a/drivers/char/tpm/tpm_svsm.c b/drivers/char/tpm/tpm_svsm.c
->> new file mode 100644
->> index 000000000000..04c532421ff2
->> --- /dev/null
->> +++ b/drivers/char/tpm/tpm_svsm.c
->> @@ -0,0 +1,135 @@
->> +// SPDX-License-Identifier: GPL-2.0-only
->> +/*
->> + * Copyright (C) 2025 Red Hat, Inc. All Rights Reserved.
->> + *
->> + * Driver for the vTPM defined by the AMD SVSM spec [1].
->> + *
->> + * The specification defines a protocol that a SEV-SNP guest OS can use to
->> + * discover and talk to a vTPM emulated by the Secure VM Service Module (SVSM)
->> + * in the guest context, but at a more privileged level (usually VMPL0).
->> + *
->> + * [1] "Secure VM Service Module for SEV-SNP Guests"
->> + *     Publication # 58019 Revision: 1.00
->> + */
->> +
->> +#include <linux/module.h>
->> +#include <linux/kernel.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/tpm_svsm.h>
->> +
->> +#include <asm/sev.h>
->> +
->> +#include "tpm.h"
->> +
->> +struct tpm_svsm_priv {
->> +	void *buffer;
->> +	u8 locality;
->> +};
->> +
->> +static int tpm_svsm_send(struct tpm_chip *chip, u8 *buf, size_t len)
->> +{
->> +	struct tpm_svsm_priv *priv = dev_get_drvdata(&chip->dev);
->> +	int ret;
->> +
->> +	ret = svsm_vtpm_cmd_request_fill(priv->buffer, priv->locality, buf, len);
->> +	if (ret)
->> +		return ret;
->> +
->> +	/*
->> +	 * The SVSM call uses the same buffer for the command and for the
->> +	 * response, so after this call, the buffer will contain the response
->> +	 * that can be used by .recv() op.
->> +	 */
->> +	return snp_svsm_vtpm_send_command(priv->buffer);
->> +}
->> +
->> +static int tpm_svsm_recv(struct tpm_chip *chip, u8 *buf, size_t len)
->> +{
->> +	struct tpm_svsm_priv *priv = dev_get_drvdata(&chip->dev);
->> +
->> +	/*
->> +	 * The internal buffer contains the response after we send the command
->> +	 * to SVSM.
->> +	 */
->> +	return svsm_vtpm_cmd_response_parse(priv->buffer, buf, len);
->> +}
->> +
->> +static struct tpm_class_ops tpm_chip_ops = {
->> +	.flags = TPM_OPS_AUTO_STARTUP,
->> +	.recv = tpm_svsm_recv,
->> +	.send = tpm_svsm_send,
->> +};
->> +
->> +static int __init tpm_svsm_probe(struct platform_device *pdev)
->> +{
->> +	struct device *dev = &pdev->dev;
->> +	struct tpm_svsm_priv *priv;
->> +	struct tpm_chip *chip;
->> +	int err;
->> +
->> +	if (!snp_svsm_vtpm_probe())
->> +		return -ENODEV;
->> +
->> +	priv = devm_kmalloc(dev, sizeof(*priv), GFP_KERNEL);
->> +	if (!priv)
->> +		return -ENOMEM;
->> +
->> +	/*
->> +	 * The maximum buffer supported is one page (see SVSM_VTPM_MAX_BUFFER
->> +	 * in tpm_svsm.h).
->> +	 */
->> +	priv->buffer = (void *)devm_get_free_pages(dev, GFP_KERNEL, 0);
->> +	if (!priv->buffer)
->> +		return -ENOMEM;
->> +
->> +	/*
->> +	 * FIXME: before implementing locality we need to agree what it means
->> +	 * for the SNP SVSM vTPM
->> +	 */
->> +	priv->locality = 0;
->
->I don't think we want FIXME's to mainline. Instead, don't declare the
->field at all if you don't use it. Just pass zero to *_request_fill().
->
->Maybe "not have the field" is even a better reminder than a random fixme
->comment?
+The following patch series enhances the weighted interleave policy in the
+memory management subsystem by improving sysfs handling, fixing memory leaks,
+and introducing dynamic sysfs updates for memory hotplug support.
 
-Yeah, I had thought the same, but then I left it that way because it was 
-there from the first RFC and I saw several FIXME in the codebase, but I 
-agree with you, I'll remove the field completely in v6.
+### Background
+The weighted interleave policy distributes memory allocations across multiple
+NUMA nodes based on their performance weight, thereby optimizing memory
+bandwidth utilization. The weight values are configured through sysfs.
 
-That said, `struct tpm_svsm_priv` with this change will only contain the 
-pointer to the buffer, does it make sense to have that structure (maybe 
-for the future it's easier to add new fields), or do I remove it and use 
-dev_set_drvdata() to store the pointer to the buffer directly?
+Previously, sysfs entries for weighted interleave were managed statically
+at initialization. This led to several issues:
+- Memory Leaks: Improper `kobject` deallocation caused memory leaks
+  when initialization failed or when nodes were removed.
+- Lack of Dynamic Updates: Sysfs attributes were created only during
+  initialization, preventing nodes added at runtime from being recognized.
+- Handling of Unusable Nodes: Sysfs entries were generated for all
+  possible nodes (`N_POSSIBLE`), including memoryless or unavailable nodes,
+  leading to sysfs entries for unusable nodes and potential
+  misconfigurations.
 
-Thanks,
-Stefano
+### Patch Overview
+1. [PATCH 1/3] Fix memory leaks in weighted interleave sysfs
+   - Ensures proper cleanup of `kobject` allocations.
+   - Replaces unnecessary `kfree()` calls with `kobject_put()`, preventing
+     memory leaks and improving system stability.
+
+2. [PATCH 2/3] Enable dynamic updates for weighted interleave sysfs
+   - Restructures sysfs handling to allow runtime updates.
+   - The sysfs attributes are now globally accessible, enabling external
+     modules to manage interleave settings dynamically.
+
+3. [PATCH 3/3] Support memory hotplug in weighted interleave
+   - Modifies sysfs creation logic to restrict entries to nodes that are
+     online and have memory, excluding unusable nodes.
+   - Introduces a memory hotplug mechanism to dynamically add and remove
+     sysfs attributes when nodes transition into or out of the `N_MEMORY` set.
+   - Ensures that sysfs attributes are properly removed when nodes go offline,
+     preventing stale or redundant entries from persisting.
+
+These patches have been tested under CXL-based memory configurations,
+including hotplug scenarios, to ensure proper behavior and stability.
+
+ mm/mempolicy.c | 195 ++++++++++++++++++++++++++++++++-----------------
+ 1 file changed, 127 insertions(+), 68 deletions(-)
+
+
+base-commit: 38fec10eb60d687e30c8c6b5420d86e8149f7557
+-- 
+2.34.1
 
