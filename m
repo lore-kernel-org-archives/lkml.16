@@ -1,108 +1,91 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F266937160
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 15:17:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 715C0204875;
+	Tue,  1 Apr 2025 15:19:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743520624; cv=none; b=PaxVco05Ehfgou6WRbG9uiIj9t92Y8UUZJCP2Ey9iJC4mOznts3pXzVw5CmO53/PslBvM49CLWjbpo+2uUXMfWtO/O0rn5KOmJ5I+8x7WjWs7R88diP7QkDeWWZalJEEOfcWpL1B0h4OMIf3QVmusOEoDr6pSOzqK89ZGIEy6ZA=
+	t=1743520765; cv=none; b=HrrG0v3GK6RIWps/+y3Mu+CWxAmUb70TTQOZjt7q3Q8whr4SsjnvKWDIcLLuChwm+qdTlj7Nc2k38StflVKTfivK1hx5i5U78XNTDz2MrwtuDZwHxQwZ3rINiuybFj7knnDA+4Y447hC4RAtHS95CEVuy+MYDHJGXzs1tDR+H44=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743520624; c=relaxed/simple;
-	bh=dQiiCWw0gJL3pM8AURs73NsIreNo5plvxy7k2Sp5/Ig=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C7fGCHJqZR7W0k516NtOYbzZcbVVyg47jIK/H12JyqwHZmmMCOa8GU4WdKNa5pzhefpVO/uNjP8lDAubKN9xifS136mjYVq82Bp9KdN6BdQA3/NKxy6xGrzcy3F78kN99cf9Kik5c7yxzNTdEkRpNp5MDVBiM9OO4K71ILF3Yck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=X+gejdf0; arc=none smtp.client-ip=209.85.160.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="X+gejdf0"
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-47662449055so29320461cf.1
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 08:17:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1743520622; x=1744125422; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=oMrBJmHxMmocbV+bbsiTIdh0Ur8L8QCQ53gPPEe2fCY=;
-        b=X+gejdf0tXX6mWVpXXz59sDwuqpn9AlKFNsFBWWMmVge3Tq/O3C32MhKIJNWw9tjs8
-         4uTLRZnV8PKfCGuUrfVCRxbzei1IflOjO09tCX03k4HNK9YV7LRmBB4jFB9m7wksTkc+
-         60q6ouovEhloQk1ywn+bKEuZwN6jD82fgVafbZI/aVl++6nKlSQ/ssH7SSFUHBwwYWuU
-         QBOXrMHuBg5e2OZj9zjwmlCKGgiCWc5TwmIsMJf//knQOGmSHTm568PwKaYWv9mwQHVi
-         YiqRsJYpq2z8wmUOgQhgaxCkz9HP7kURFQ3TBjWB5rBgw1UEAOX4c+pnpU3PqBDlt9Jw
-         DwBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743520622; x=1744125422;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oMrBJmHxMmocbV+bbsiTIdh0Ur8L8QCQ53gPPEe2fCY=;
-        b=hh+8ED83YFIGAGun4Vlqe0ByXoIGDnfQ4cQMqMY4As5L7SOol8OJgybtlPAnnfmb4q
-         59+pkPWskYfRz+vDIiTHhbKRFZb2dMxFj+Pow4U+DoHT+hzOs28ZzIzODYJIFCihWtzF
-         AsA6o1X6mIWtX+n/Tz+L0KaiEZBEjAWCd0TEAAjIpPspD/pPtl4tzZK6Bz/pnPClTvsF
-         FdROWyIkbesFI109SpJ2mvrPysZrn0TMniXq2ZibUFfHAkB0lZaZ3nV16mvNygC7jAji
-         XZKM5oDwELxe1NNJhNC+7YRVb1pIcSnz3g0ItpS46z4R3URDlYdnW/D+B/IOMYqeHu0u
-         yp4w==
-X-Forwarded-Encrypted: i=1; AJvYcCWtGcAy2pKK1MFEMtcK2CcUV7Nkdls0cMd8l9nD4zNPxsDT1QC4LFkecNfBMOa36x8Wtlk+IkDtgnMATww=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyGvmYuDv1CxwvYf4MyWInCXhcSBLmly9wOJ9F+Q7GVL4DxJoYZ
-	o6kggKHTmfsy7+uCSCHy1Omb+3hfmjCJ9gKZ6d40BYYWFejuwCAp5x5XmsjwDHw=
-X-Gm-Gg: ASbGncu/KWgzy8N9Ump5OaMnZUh5tA3ikppWRM/gk254uLVcLrnHZmJOC5jqMR/CxEk
-	+JCqPvOfoioKtV8/iDGl0zTJLKq23ypLb2Zf8KbKCod/VToSQ/Ik+gGvfIP14TThlauVW7MXZ4I
-	4i3RQDwNtJYEms88HObLSDRn7f+yWNRkA3lv5iGtnmziHE+J03EhsCCROkAOlbCPW9viElXswD1
-	S3Ydq4ZD8iZKx4zPJUyGJmfFBUo5YywmTm89VzfypsCkHzFLoFRYLTyOP8ue+Fwhy13h/xCGw4K
-	bwD5+bMyOG46gsiNwfmmz06dHF9Yg42UHnN0rnREcgOtyJquYXznxyLbq+fn5szkl16VbCEEyNS
-	0FteBbVQKyhXfA+kBmtA65O7mSLjozqGPFoziHA==
-X-Google-Smtp-Source: AGHT+IHIy9M0MoItUdMIpylHvPXfzLOBmJq2T30poREcLIQ7vfJ8f7SMSyY6atAj0Wc7wGiOXe7vUQ==
-X-Received: by 2002:a05:6214:c2f:b0:6e8:ddf6:d136 with SMTP id 6a1803df08f44-6eed627788cmr186283296d6.45.1743520621884;
-        Tue, 01 Apr 2025 08:17:01 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c5f765ad89sm667321785a.16.2025.04.01.08.17.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Apr 2025 08:17:01 -0700 (PDT)
-Date: Tue, 1 Apr 2025 11:16:59 -0400
-From: Gregory Price <gourry@gourry.net>
-To: David Hildenbrand <david@redhat.com>
-Cc: dan.j.williams@intel.com, nvdimm@lists.linux.dev,
-	linux-kernel@vger.kernel.org, kernel-team@meta.com,
-	vishal.l.verma@intel.com, dave.jiang@intel.com,
-	linux-cxl@vger.kernel.org
-Subject: Re: [PATCH] DAX: warn when kmem regions are truncated for memory
- block alignment.
-Message-ID: <Z-wDa2aLDKQeetuG@gourry-fedora-PF4VCD3F>
-References: <20250321180731.568460-1-gourry@gourry.net>
- <Z-remBNWEej6KX3-@gourry-fedora-PF4VCD3F>
- <3e3115c0-c3a2-4ec2-8aea-ee1b40057dd6@redhat.com>
- <Z-v7mMZcP1JPIuj4@gourry-fedora-PF4VCD3F>
- <4d051167-9419-43fe-ab80-701c3f46b19f@redhat.com>
+	s=arc-20240116; t=1743520765; c=relaxed/simple;
+	bh=UDBLdp3G5XLl9adnfAstrrZW/PBho8d/rc6SWcjR6WE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cYRnwv5fSopt8ncrwlVkYbcRjKBQSdUdObmPckJRCfOpGLRrXSHvRDQ9frQjb8e2S2+LtcP0ElSpq7wwt6VEU6AvFMSOPQ2M+pnZ7Sb2mHz55BMlJrP5mNvJt6FUZhT6NJhqcdXiam6pEWh83gEtrp/WLA609XS3vPCkdn79rY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost.localdomain (unknown [124.16.141.245])
+	by APP-05 (Coremail) with SMTP id zQCowADnIwz0A+xnSRjGBA--.10747S2;
+	Tue, 01 Apr 2025 23:19:18 +0800 (CST)
+From: Wentao Liang <vulab@iscas.ac.cn>
+To: gregkh@linuxfoundation.org,
+	tj@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Wentao Liang <vulab@iscas.ac.cn>,
+	stable@vger.kernel.org
+Subject: [PATCH] kernfs: fix potential NULL dereference in mmap handler
+Date: Tue,  1 Apr 2025 23:18:59 +0800
+Message-ID: <20250401151859.2842-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.42.0.windows.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4d051167-9419-43fe-ab80-701c3f46b19f@redhat.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:zQCowADnIwz0A+xnSRjGBA--.10747S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrtr4DKFWkAF1fJFWrCr45KFg_yoWkurc_Jr
+	95CrZ8Wr4UXF1avF1ayws3Zr9aqaykZr1Fya15t3yUtws8t3s7Gr95u3Zrur4DJrWUGr4D
+	Aw1DCr90vr17CjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbcAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Jr0_
+	Gr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s
+	1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0
+	cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8Jw
+	ACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7CjxVAaw2AFwI0_JF0_
+	Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxV
+	WUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI
+	7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r
+	1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI
+	42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfU8miiUUUUU
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiBwsTA2fr2Gl+eQAAsm
 
-On Tue, Apr 01, 2025 at 04:50:40PM +0200, David Hildenbrand wrote:
-> 
-> Oh, you mean with the whole memmap_on_memory thing. Even with that, using
-> 2GB memory blocks would only fit a single 1GB memory block ... and it
-> requires ZONE_NORMAL.
-> 
-> For ordinary boot memory, the 1GB behavior should be independent of the
-> memory block size (a 1GB page can span multiple blocks as long as they are
-> in the same zone), which is the most important thing.
-> 
-> So I don't think it's a concern for DAX right now. Whoever needs that, can
-> disable the memmap_on_memory option.
->
+The kernfs_fop_mmap() invokes the '->mmap' callback without verifying its
+existence. This leads to a NULL pointer dereference when the kernfs node
+does not define the operation, resulting in an invalid memory access.
 
-If we think it's not a major issue then I'll rebase onto latest and push
-a v9.  I think there was one minor nit left.
+Add a check to ensure the '->mmap' callback is present before invocation.
+Return -EINVAL when uninitialized to prevent the invalid access.
 
-I suppose folks can complain to their vendors about alignment if they
-don't want 60000 memoryN entries on their huge-memory-systems.
+Fixes: 324a56e16e44 ("kernfs: s/sysfs_dirent/kernfs_node/ and rename its friends accordingly")
+Cc: stable@vger.kernel.org # 3.14+
+Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+---
+ fs/kernfs/file.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-Probably we still want this warning?  Silent truncation still seems
-undesirable.
+diff --git a/fs/kernfs/file.c b/fs/kernfs/file.c
+index 8502ef68459b..7d8434a97487 100644
+--- a/fs/kernfs/file.c
++++ b/fs/kernfs/file.c
+@@ -459,9 +459,14 @@ static int kernfs_fop_mmap(struct file *file, struct vm_area_struct *vma)
+ 		goto out_unlock;
+ 
+ 	ops = kernfs_ops(of->kn);
+-	rc = ops->mmap(of, vma);
+-	if (rc)
++	if (ops->mmap) {
++		rc = ops->mmap(of, vma);
++		if (rc)
++			goto out_put;
++	} else {
++		rc = -EINVAL;
+ 		goto out_put;
++	}
+ 
+ 	/*
+ 	 * PowerPC's pci_mmap of legacy_mem uses shmem_zero_setup()
+-- 
+2.42.0.windows.2
 
-~Gregory
