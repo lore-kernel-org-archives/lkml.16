@@ -1,124 +1,134 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 532A91EFF99
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 12:34:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BD541F0E3A
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 12:34:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743510868; cv=none; b=i/5lbcV2XKn/7tPkdu8WD7bsFfHM1hKyqH2Qtsx6MCAhEFgf6t7Ov0PQ17Xs6KK4SeoBFNCciiVo34CTF9P7/j/v84ZQuhDlo4bc09Znx8FT3+60rrLyko3GESl6/DlaYfwydZpRCUnW9lsDw0rwU8w6jspJVpV6YcKfp/6w8qQ=
+	t=1743510892; cv=none; b=PvFVKj1X2QfN9SfiMXWdH4M9y50P4N/jMwtO7PeIlVddXeJ8rr3MPgfIuFCMRHpsheMSVrODzvqivjgQvz4ivdp1PImub156o9NtTICUzlHCYVT+gX/sy/DCCh9roQShhj8untLOXoG1TpCY4J8FNrkzpJ70OUI7kW6Di0Cz40w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743510868; c=relaxed/simple;
-	bh=WpDvcGC95FdqXMwYCtR6rzRwchjYHGN+FRT/YTcwsfM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=GhL5MfUjbRKZVjJc7ePMMA+nIyJPkR2x7bMSkpiizHVn4+ct9zI4CZ1CKZcxUmaJO5+ZRsIV5urO6LUFRMu3wf/FotEHthXHPe5/ShZI2XkUKhStSVwlJNL+wpaBn9x4BaU+mfQSyNxBtafLboZiCCeBpxy3V354cvcvDzvHIVI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cVepWIEW; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1743510892; c=relaxed/simple;
+	bh=VEaRDqyDtJkimhCoGryHOz5n52bnkCWw+iDYB3KM1rE=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=BB37mytubH8AfFNN260fieQXouOJ0jxR9KOuvEo5shJ57XZ3C9FS7fk6rh1cNAFGc3056sLT2XoWK4pUo37lr5lhfi2Tfiym/rG5v/RuilwnlfBA+z+EDRO/AELEQPFbkUJ8s4L4Zi0lDw/kJY17GDDGBy6GtwDYDd53H1HjR8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=T+3/vF3B; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cVepWIEW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743510866; x=1775046866;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=WpDvcGC95FdqXMwYCtR6rzRwchjYHGN+FRT/YTcwsfM=;
-  b=cVepWIEWJKEo3NAOShTJ98G6aeqGxL0fAq1fC2ja/ropOh7KbG5JtQtB
-   EB9qsFHtB0GYVPauoicAKmhaD4FFyxT2BNdgouzMyd5O0hPfXJdY7a4/t
-   hT5tZel/7x4mHKptXdudJKj5spbSkIDPM9dj8n9uPI8pid5HlFX3fU5Qe
-   /POsDBWYDYtSLFDdLiDyDfyRBRMcXvuFEEGyrt2nfNnePnjSzOf1ERzYc
-   xwwzMvov7c2WltHnk38MvQ+BchmnBXQCsFyLY9Q0NVrQYYmmre98k/Dd8
-   CFcexG2PtctwgCGhQg/O8x8CIXVsf0dMLWwBU+m2ma99/jPJoNu12oXqF
-   w==;
-X-CSE-ConnectionGUID: 4g3yefA6T/y96Z1REsxqFg==
-X-CSE-MsgGUID: Vhy9Z7+MQD2BdQV/iS9R9w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11391"; a="55468741"
-X-IronPort-AV: E=Sophos;i="6.14,293,1736841600"; 
-   d="scan'208";a="55468741"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2025 05:34:25 -0700
-X-CSE-ConnectionGUID: Xk03fOLUR8mypOoBYImmPA==
-X-CSE-MsgGUID: 6u7+0urFQVeqnH8RBPzTvw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,293,1736841600"; 
-   d="scan'208";a="131509185"
-Received: from ncintean-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.246.7])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2025 05:34:23 -0700
-From: Jani Nikula <jani.nikula@linux.intel.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Dave Airlie <airlied@gmail.com>, simona.vetter@ffwll.ch, dri-devel
- <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>,
- Jason Gunthorpe <jgg@nvidia.com>
-Subject: Re: [git pull] drm for 6.15-rc1
-In-Reply-To: <CAHk-=wjMrqzuUmH-mFbR_46EWEFS=bB=J7h9ABMVy56Vi81PKQ@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <CAPM=9tyx=edsZ3ajuAUAv4vjfa=WNEzobqAsYbBTjCfLbuEeFQ@mail.gmail.com>
- <CAHk-=wjcdfrDTjzm6J6T-3fxtVyBG7a_0BXc2=mgOuM6KPFnCg@mail.gmail.com>
- <87h6394i87.fsf@intel.com>
- <CAHk-=wjMrqzuUmH-mFbR_46EWEFS=bB=J7h9ABMVy56Vi81PKQ@mail.gmail.com>
-Date: Tue, 01 Apr 2025 15:34:20 +0300
-Message-ID: <87r02c2h83.fsf@intel.com>
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="T+3/vF3B"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
+	s=default; t=1743510888;
+	bh=VEaRDqyDtJkimhCoGryHOz5n52bnkCWw+iDYB3KM1rE=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=T+3/vF3BMizRLMfkXws9EWGyu1uSGndtShkJotqFGA6cRlavaZepCLMk+YVZiZ8Cr
+	 mztTE9WPmFG0P8Kyk8Y8ivj6y72nTvb4OpcnqLvlIK9oVCAsNIZtz8yI9wPXkFeu8M
+	 v8kPjJ3sEZXLk3ZZ51nZ65k2aM+IgfgDEzZJEWMI=
+Received: from [127.0.0.1] (unknown [IPv6:2001:470:683e::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 7F247659C8;
+	Tue,  1 Apr 2025 08:34:47 -0400 (EDT)
+Message-ID: <92d0a120d3303243d7bd72188c4f5974f525975a.camel@xry111.site>
+Subject: Re: [PATCH] arm64: Add overrride for MPAM
+From: Xi Ruoyao <xry111@xry111.site>
+To: Marc Zyngier <maz@kernel.org>
+Cc: Anshuman Khandual <anshuman.khandual@arm.com>, James Morse
+	 <james.morse@arm.com>, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, Shameer Kolothum
+	 <shameerali.kolothum.thodi@huawei.com>, Mingcong Bai <jeffbai@aosc.io>
+Date: Tue, 01 Apr 2025 20:34:43 +0800
+In-Reply-To: <87plhwytgf.wl-maz@kernel.org>
+References: <20250401055650.22542-1-xry111@xry111.site>
+		<409f6d27-3efe-4c45-8319-d360ded80f16@arm.com>
+		<46ed31b37b4b92720b26be66f3e6366a714024cf.camel@xry111.site>
+	 <87plhwytgf.wl-maz@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.0 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
 
-On Mon, 31 Mar 2025, Linus Torvalds <torvalds@linux-foundation.org> wrote:
-> On Mon, 31 Mar 2025 at 03:17, Jani Nikula <jani.nikula@linux.intel.com> wrote:
->>
->> I suggest a Kconfig knob to truly make this opt-in, only for developers
->> who actually want it.
->
-> So honestly, the thing I *really* hated was the horrendous naming.
->
-> I live in auto-complete. I basically never type out file-names, and I
-> replace keyboards every once in a while because my TAB key has worn
-> down (not really, but you get the idea).
->
-> And *if* this feature is useful - and while I disagree about the whole
-> "header files have to be self-sufficient" as a general rule, I can see
-> it being useful for uapi headers - then dammit, the file naming needs
-> to *DIE*. It needs to be taken out behind the shed and shot in the
-> head, because it messes with TAB-completion.
->
-> Having "this has been checked" turds that live in the same name-space
-> as real files is wrong.
->
-> In the kernel, we often hide them explicitly (ie using the dot prefix
-> to make them hide, but also to make them not mess with auto-complete).
-> That's an option. But some people hate the hiding, and if that's an
-> issue, just put it all in a different subdirectory entirely.
->
-> Yes, I realize that you guys may live in the whole "different
-> subdirectory entirely" world of doing the whole build in a separate
-> build directory, and might say "why are you working in the same tree
-> as the generated files in the first place if auto-complete is so
-> important to you".
->
-> And to that I say "because I equally often look at the generated
-> files". When they make *sense* to look at, not when they are
-> auto-generated makefile checking crap.
->
-> So please. This feature needs to be done completely differently.
+On Tue, 2025-04-01 at 13:09 +0100, Marc Zyngier wrote:
+> On Tue, 01 Apr 2025 12:47:03 +0100,
+> Xi Ruoyao <xry111@xry111.site> wrote:
+> >=20
+> > On Tue, 2025-04-01 at 14:04 +0530, Anshuman Khandual wrote:
+> > > On 4/1/25 11:26, Xi Ruoyao wrote:
+> > > > As the message of the commit 09e6b306f3ba ("arm64: cpufeature: disc=
+over
+> > > > CPU support for MPAM") already states, if a buggy firmware fails to
+> > > > either enable MPAM or emulate the trap as if it were disabled, the
+> > > > kernel will just fail to boot.=C2=A0 While upgrading the firmware s=
+hould be
+> > > > the best solution, we have some hardware of which the vender have m=
+ade
+> > > > no response 2 months after we requested a firmware update.=C2=A0 Al=
+low
+> > > > overriding it so our devices don't become some e-waste.
+> > >=20
+> > > There could be similar problems, where firmware might not enable arch
+> > > features as required. Just wondering if there is a platform policy in
+> > > place for enabling id-reg overrides for working around such scenarios
+> > > to prevent a kernel crash etc ?
+> >=20
+> > In https://lore.kernel.org/all/87jzcfsuep.wl-maz@kernel.org/:
+> >=20
+> > =C2=A0=C2=A0 > For such cases, when MPAM is incorrectly advertised, can=
+ we have kernel
+> > =C2=A0=C2=A0 > command line parameter like mpam=3D0 to override it's de=
+tection?
+> > =C2=A0=C2=A0=20
+> > =C2=A0=C2=A0 We could, but only when we can confirm what the problem is=
+.
+> >=20
+> > And there was prior arts like:
+> >=20
+> > commit 892f7237b3ffb090f1b1f1e55fe7c50664405aed
+> > Author: Marc Zyngier <maz@kernel.org>
+> > Date:=C2=A0=C2=A0 Wed Jul 20 11:52:19 2022 +0100
+> >=20
+> > =C2=A0=C2=A0=C2=A0 arm64: Delay initialisation of cpuinfo_arm64::reg_{z=
+cr,smcr}
+> > =C2=A0=C2=A0=C2=A0=20
+> > =C2=A0=C2=A0=C2=A0 Even if we are now able to tell the kernel to avoid =
+exposing SVE/SME
+> > =C2=A0=C2=A0=C2=A0 from the command line, we still have a couple of pla=
+ces where we
+> > =C2=A0=C2=A0=C2=A0 unconditionally access the ZCR_EL1 (resp. SMCR_EL1) =
+registers.
+> > =C2=A0=C2=A0=C2=A0=20
+> > =C2=A0=C2=A0=C2=A0 On systems with broken firmwares, this results in a =
+crash even if
+> > =C2=A0=C2=A0=C2=A0 arm64.nosve (resp. arm64.nosme) was passed on the co=
+mmand-line.
+> > =C2=A0=C2=A0=C2=A0=20
+> > =C2=A0=C2=A0=C2=A0 To avoid this, only update cpuinfo_arm64::reg_{zcr,s=
+mcr} once
+> > =C2=A0=C2=A0=C2=A0 we have computed the sanitised version for the corre=
+sponding
+> > =C2=A0=C2=A0=C2=A0 feature registers (ID_AA64PFR0 for SVE, and ID_AA64P=
+FR1 for
+> > =C2=A0=C2=A0=C2=A0 SME). This results in some minor refactoring.
+>=20
+> That particular patch has caused quite a few issues, see d3c7c48d004f.
+> So don't use it as a reference.
+>=20
+> Now, while I think an option is probably acceptable in the face of an
+> unresponsive vendor, I don't think the way you implement it is the
+> correct approach.
+>=20
+> It should be possible to handle the override in the assembly code,
+> like we do for other bits and pieces, and deal with MPAMIDR_EL1 later
+> down the line, once the sanitised ID registers are known to be valid.
 
-I've polished, or, more accurately, hidden the disgusting turds [1]. I
-hope this is an acceptable approach.
+Ok I'll try it.
 
-I've never claimed this feature is universally useful, certainly not for
-all of include/linux, but I think it has been more helpful than not in
-i915 and xe drivers. And now hopefully drm more widely. I wish kbuild
-had support for it in a way that drivers could opt-in *if* they wanted
-it, but without copy-pasting the boilerplate.
-
-
-BR,
-Jani.
-
-
-[1] https://lore.kernel.org/r/20250401121830.21696-1-jani.nikula@intel.com
-
-
--- 
-Jani Nikula, Intel
+--=20
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
