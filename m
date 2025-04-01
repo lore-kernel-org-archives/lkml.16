@@ -1,124 +1,149 @@
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED676204F66
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 14:44:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DC2420408A
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 14:47:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743518662; cv=none; b=cf9MjkA0qpIJtdK2HQ3vqwTqabj/oH3VQuTbmvlIqa3Z9tGdPga/8/IL6kz1yH+Z1lYfu7M7bz5hMGke0ZU2eSXRe7HXCu3JXBDiDijABGu/3six97vwiLbfLikQ+COW5OgSLPFx4lgO57zoYIZpNOxY2zFtLVgUArJeyc9tJzQ=
+	t=1743518857; cv=none; b=lq0nnN8jfaJ4HNrNiUwg9i9s2VSwPgqYBT5rzuCsNPOGYXAF6/wxEVA7l5d/qXuRCpXNTPBm5E3LwlDRmoiY1Ok8OjOhDEwri/SrjH7e3hFfjR7zHEu3unn2+gdRY6q6mgryI42lrbUMtLm2pp+5/wX8Ex0/7mhlKRuMQhjuYPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743518662; c=relaxed/simple;
-	bh=eiIdxMyFX8RWJTV9imHd+E2JMVAxGUjJHomwrwPuLMs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ytw/j3/ey/k2Yu7yTCg2pnFEm3QKumggE7/EJpXQxYjZ+YA4ECtuzEmo1CNzsgPPriCQ312iT3XqdL3gOy9KvTjurtmNmLYTUcn0ouS/pLyCvAifQgJg4OEZVCwKlax1EbC+tY6NO+nediC+voTwVHM/QHITcdfJdtnOSp0+uLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=VUnYkLWm; arc=none smtp.client-ip=209.85.222.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1743518857; c=relaxed/simple;
+	bh=qxxn22A+TWwz7W7O83WXc2hBsRRs8xbjPxTiDcaQkjc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mjOOHwXmdXcUU4yTgT/EIUca09/SsDMVroyL9yn2l8eR7vy/tGamaNwQbTmi6xdH4NYcv1rnAYR8CYysG7XPoNW6OzMb50rXQKb7niy8kXKT3MyCy3UxNvGqkOBThASg7Ojpt++ea5TvJXH4XGsQOPWQCIpPCFYpNeE8P7EvF7M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gKF6fG8h; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="VUnYkLWm"
-Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-7c5e39d1db2so331654485a.3
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 07:44:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gKF6fG8h"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-3012a0c8496so7498306a91.2
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 07:47:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1743518660; x=1744123460; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=7FWXvvIBXjd612osNxdIWGLZO1JiputvQXiNVM/ceGs=;
-        b=VUnYkLWmn8QDgsZ+Nc8mjvjH224Hz+qQkdxk1pv3o3plsYGLdJeEimY3rjvGUrfALo
-         9eN6IHxSkodixx6gbRmAnNvwPmTf5NrcMfzuuaevFw/N3ZDqSG1fQNTCTAzU2C//fKKZ
-         Zf4B6xQMAEp1R75FmS6j6g1bqjippmaRH/nRARNr/HsiFPnfpknMb9OqvF9nNLwFy6fU
-         zx3a+fqEB+92AIyzJTuk+ms/HUyAh0hLofkdmtfVNkEsRO5X1X2SGPG0kERPfDAght98
-         LNrrDy0o5pBegSgj53wijsBwj4TxCXaefQWFsEMdNR2u4ohtYiwqOziDEhgnAb4GDBWG
-         nP3g==
+        d=gmail.com; s=20230601; t=1743518856; x=1744123656; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=8oI6DPpyJYi5fACjQLTchVPFFOS5/gnF91U27CkBiJc=;
+        b=gKF6fG8hLbWnd93mNbXAfiWygyswlfjj4HpUj6OsAO2sNleyHKCNgwQ6WVGwhEGDyh
+         3YWxy3jfLHqKLuDIFWZwfe725zaLikinl6RSLA1cLGa+8zeA6xrCyzZp68w2/d1KktbW
+         aUe7OSlP2pKfKshix2+1ZL7jJUwstJkXi6GQ5wZ9t7Q/Y9GqgM51/QrPwT3lBQ9wPnPc
+         AOOoPI09MX4F5IMQxA3cuXy/WPztAOG5DXkA7v/uA5xQT0joI+QhuA7t/HbvBoETeONz
+         D60NwmhkNXjr1ulthD81QWygDJd6tN5RFfvtPcTSDCvzuMlxdD9DQDA7/rcsgve4KTp+
+         rtQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743518660; x=1744123460;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7FWXvvIBXjd612osNxdIWGLZO1JiputvQXiNVM/ceGs=;
-        b=w9RBOvLW5q7hXhY0hJus42RGsZlZSEJcmxLsJgHllKHsQkE/HAXgCJ86AslS0f9nLp
-         zAKD8zV6R2DeXPEElezCWHVC0IKL1Byea9Bmcg9o1yoi14wcFuZvCAl6gdOAO4eaa02J
-         I0VzIXU/4qU+rPqTMvlWAwe5cjb2ifklsxV4tAIM0FkD8xlm8lGVFo2jBDKQpf3Q83Dx
-         1eaJAbPXuB1fhwHjYEc5bkfUX2Z+kmIOtv8o3Bb9IiTTFVm8jjMQgtZPg/PH2XlqEtOE
-         5v6z5BnXMpa4KYPO52pzWgkCzLN8LP+vprTqVp1xZt5onEWvoOQ4ncEfQblHn4tZ1I2R
-         uWlQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWiLEMxfzH8CIzDqboTrQN5BNhGaQjt7MSLL3IKPhvdhkmea2gliWaF3lQ+cHAy2d/+DsLO2PNT/Ax/EAE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/tUFjf+fEmMojK2Ak2w40/C70V58KahNoYIIxAvCm9dLR+fGh
-	AanQr6qWOsxPbDYPTQ9TjjYTOqoWtmQzobPAXzanoGtvM3hqhz8M7ahkDX7JNJA=
-X-Gm-Gg: ASbGncuWQQMUhmAsftKYQq2JOiz29YUUz9DeRrAMsOrPt4IaSJ7HKKsmn9WtC6uhDpk
-	D5RLMhlUKo6xA3vx+PIoMXFapENW072RvlTOxM/rkW4QdjFg/AN55rsAlNd+AtSwoL/yJicvZH8
-	9GQIf5oIpcBZrCkQF6TJWaYqefCyAjtOOYPa07WkRJjtdljaM06kPrE4zVOOxDEigVuP1QLhErX
-	4ljeOpCNruhL/bE5fp54DIUlOLAyY6j+IUodzOUWFeMjRzGwNObpvjv1SVePCIGzqa8TO2BgpuH
-	3ibSLD3HdX/o1HZYH/Y+/Z35wTPZTUjMyclaRb8nObmG5nhxh2DwkmjX8p/erKN6e26tQHSPPQG
-	2sYf3IcgR6UkvHbhDQUw3xQbr6019pxHeBBkuPw==
-X-Google-Smtp-Source: AGHT+IHWAViNpa9KNwFeFv6Mk2L5a71FCOjF9YatoVlMWR+lTPKcPhRsuUJPd37s2vaScZLIZyzR/g==
-X-Received: by 2002:a05:620a:4492:b0:7c5:5286:4369 with SMTP id af79cd13be357-7c69072eecemr1663920685a.28.1743518659907;
-        Tue, 01 Apr 2025 07:44:19 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6eec9627e9bsm62509246d6.15.2025.04.01.07.44.19
+        d=1e100.net; s=20230601; t=1743518856; x=1744123656;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8oI6DPpyJYi5fACjQLTchVPFFOS5/gnF91U27CkBiJc=;
+        b=HbqiHWHI3prYR+lNhOMlVbcY0ngfC8XA4FadMnBsVwVD4do3lltD0zqV4P8S0pRNjo
+         oL1i/3m2GLNwMhQA3I/eJuEyTzvU+wp6q1N95yUfvtZPOfbyrHg5lcMVU5Qr0bWjIMta
+         cYZlTRMqyIuB2zMsp0MQ+3AgvrFw1q5ZKHzm4NnPvZfHDq438fJRReYJlmO3hjUQZzbT
+         IjWrLgOLhSRLvRQVrF4PjbntY++TOdpXkgSKwGw9+MP2un/PFxE5xcVPEeXxSxm808vG
+         jj5cEzUS+qN9nGvY+9/5gbA84aDY/PcnmOitWXeMcFveJQ4ZC+tZI0xF0CnwOGTWLntx
+         a+iw==
+X-Gm-Message-State: AOJu0YxSEDarb/2RdgddF+11mIupBb1yQClEzYtym7yPSe2smOIYtj86
+	1F2TbUOQywUd4YsC6nJIC0yZ/LRS82rl0HQ11l3pepZ6n4bI7wqQxcXADQ==
+X-Gm-Gg: ASbGncvOU5+tPnur3bP0yNjmWgHMZIr/yCs5wgF+N5V26FfpiDOfGXXVCFR4uyafFrP
+	gYQ5WqtSwT4n14geTTvJ6S8b7WQehwvmVcolSS4DM6ouctaIUExhzqEckNi/EA4gz3gR9uw8PgB
+	0pAIx9swTBVLUWRgegFD0syaewqTCZ1R4O50guUqi+Y605RgQD8QNOUmpwUrd32tQm83AlQyIjp
+	0H4TnU3cUGib+RiKGyR38FUvP9+lzCIcvhvmqQ4tYPcH5/PlUXznR9HE2O3xwyQ9I6C/0+ZFEER
+	9F6eqXH7f2WbQoM3r6ftOBNhP5GbhebQwWg0qPUI3/Y0980+//BU1Sz6FVwsww==
+X-Google-Smtp-Source: AGHT+IF0xi1C9KtgpWzs57BfZ+flnHBJZGfJE5KoTCEGX7/3wPYGkwpDSHZpMmM+KebA8Wi5wGLzZw==
+X-Received: by 2002:a17:90b:1b08:b0:2ee:ed1c:e451 with SMTP id 98e67ed59e1d1-305320af3aamr18886779a91.15.1743518855696;
+        Tue, 01 Apr 2025 07:47:35 -0700 (PDT)
+Received: from PC.mioffice.cn ([43.224.245.227])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291f1ded6asm89445595ad.184.2025.04.01.07.47.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Apr 2025 07:44:19 -0700 (PDT)
-Date: Tue, 1 Apr 2025 10:44:17 -0400
-From: Gregory Price <gourry@gourry.net>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
-	linux-kernel@vger.kernel.org, kernel-team@meta.com,
-	dan.j.williams@intel.com, vishal.l.verma@intel.com,
-	dave.jiang@intel.com
-Subject: Re: [PATCH] DAX: warn when kmem regions are truncated for memory
- block alignment.
-Message-ID: <Z-v7waimV3OZq_1H@gourry-fedora-PF4VCD3F>
-References: <20250321180731.568460-1-gourry@gourry.net>
- <88bce46e-a703-4935-b10e-638e33ea91b3@redhat.com>
+        Tue, 01 Apr 2025 07:47:35 -0700 (PDT)
+From: Sheng Yong <shengyong2021@gmail.com>
+X-Google-Original-From: Sheng Yong <shengyong1@xiaomi.com>
+To: akpm@linux-foundation.org,
+	willy@infradead.org,
+	vbabka@suse.cz
+Cc: linux-kernel@vger.kernel.org,
+	linux-mm@archiver.kernel.org,
+	Sheng Yong <shengyong1@xiaomi.com>
+Subject: [PATCH v2] lib/iov_iter: fix to increase non slab folio refcount
+Date: Tue,  1 Apr 2025 22:47:12 +0800
+Message-ID: <20250401144712.1377719-1-shengyong1@xiaomi.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <88bce46e-a703-4935-b10e-638e33ea91b3@redhat.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 01, 2025 at 11:47:32AM +0200, David Hildenbrand wrote:
-> 
-> Can't that be done a bit simpler?
+From: Sheng Yong <shengyong1@xiaomi.com>
 
-Yes, this is better, lets do this.  Thank you!
+When testing EROFS file-backed mount over v9fs on qemu, I encountered
+a folio UAF issue. The page sanity check reports the following call
+trace. The root cause is that pages in bvec are coalesced across a folio
+bounary. The refcount of all non-slab folios should be increased to
+ensure p9_releas_pages can put them correctly.
 
-> 
-> diff --git a/drivers/dax/kmem.c b/drivers/dax/kmem.c
-> index e97d47f42ee2e..23a68ff809cdf 100644
-> --- a/drivers/dax/kmem.c
-> +++ b/drivers/dax/kmem.c
-> @@ -67,8 +67,8 @@ static void kmem_put_memory_types(void)
->  static int dev_dax_kmem_probe(struct dev_dax *dev_dax)
->  {
-> +       unsigned long total_len = 0, orig_len = 0;
->         struct device *dev = &dev_dax->dev;
-> -       unsigned long total_len = 0;
->         struct dax_kmem_data *data;
->         struct memory_dev_type *mtype;
->         int i, rc, mapped = 0;
-> @@ -97,6 +97,7 @@ static int dev_dax_kmem_probe(struct dev_dax *dev_dax)
->         for (i = 0; i < dev_dax->nr_range; i++) {
->                 struct range range;
-> +               orig_len += range_len(&dev_dax->ranges[i].range);
->                 rc = dax_kmem_range(dev_dax, i, &range);
->                 if (rc) {
->                         dev_info(dev, "mapping%d: %#llx-%#llx too small after alignment\n",
-> @@ -109,6 +110,9 @@ static int dev_dax_kmem_probe(struct dev_dax *dev_dax)
->         if (!total_len) {
->                 dev_warn(dev, "rejecting DAX region without any memory after alignment\n");
->                 return -EINVAL;
-> +       } else if (total_len != orig_len) {
-> +               dev_warn(dev, "DAX region truncated by %lu bytes due to alignment\n",
-> +                        orig_len - total_len);
->         }
->         init_node_memory_type(numa_node, mtype);
-> 
-> 
-> -- 
-> Cheers,
-> 
-> David / dhildenb
-> 
+BUG: Bad page state in process md5sum  pfn:18300
+page: refcount:0 mapcount:0 mapping:00000000d5ad8e4e index:0x60 pfn:0x18300
+head: order:0 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
+aops:z_erofs_aops ino:30b0f dentry name(?):"GoogleExtServicesCn.apk"
+flags: 0x100000000000041(locked|head|node=0|zone=1)
+raw: 0100000000000041 dead000000000100 dead000000000122 ffff888014b13bd0
+raw: 0000000000000060 0000000000000020 00000000ffffffff 0000000000000000
+head: 0100000000000041 dead000000000100 dead000000000122 ffff888014b13bd0
+head: 0000000000000060 0000000000000020 00000000ffffffff 0000000000000000
+head: 0100000000000000 0000000000000000 ffffffffffffffff 0000000000000000
+head: 0000000000000010 0000000000000000 00000000ffffffff 0000000000000000
+page dumped because: PAGE_FLAGS_CHECK_AT_FREE flag(s) set
+Call Trace:
+ dump_stack_lvl+0x53/0x70
+ bad_page+0xd4/0x220
+ __free_pages_ok+0x76d/0xf30
+ __folio_put+0x230/0x320
+ p9_release_pages+0x179/0x1f0
+ p9_virtio_zc_request+0xa2a/0x1230
+ p9_client_zc_rpc.constprop.0+0x247/0x700
+ p9_client_read_once+0x34d/0x810
+ p9_client_read+0xf3/0x150
+ v9fs_issue_read+0x111/0x360
+ netfs_unbuffered_read_iter_locked+0x927/0x1390
+ netfs_unbuffered_read_iter+0xa2/0xe0
+ vfs_iocb_iter_read+0x2c7/0x460
+ erofs_fileio_rq_submit+0x46b/0x5b0
+ z_erofs_runqueue+0x1203/0x21e0
+ z_erofs_readahead+0x579/0x8b0
+ read_pages+0x19f/0xa70
+ page_cache_ra_order+0x4ad/0xb80
+ filemap_readahead.isra.0+0xe7/0x150
+ filemap_get_pages+0x7aa/0x1890
+ filemap_read+0x320/0xc80
+ vfs_read+0x6c6/0xa30
+ ksys_read+0xf9/0x1c0
+ do_syscall_64+0x9e/0x1a0
+ entry_SYSCALL_64_after_hwframe+0x71/0x79
+
+Fixes: b9c0e49abfca ("mm: decline to manipulate the refcount on a slab page")
+Signed-off-by: Sheng Yong <shengyong1@xiaomi.com>
+---
+ lib/iov_iter.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+---
+v2:
+  * update commit message
+  * update coding style
+
+diff --git a/lib/iov_iter.c b/lib/iov_iter.c
+index 8c7fdb7d8c8f..bc9391e55d57 100644
+--- a/lib/iov_iter.c
++++ b/lib/iov_iter.c
+@@ -1191,7 +1191,7 @@ static ssize_t __iov_iter_get_pages_alloc(struct iov_iter *i,
+ 			return -ENOMEM;
+ 		p = *pages;
+ 		for (int k = 0; k < n; k++) {
+-			struct folio *folio = page_folio(page);
++			struct folio *folio = page_folio(page + k);
+ 			p[k] = page + k;
+ 			if (!folio_test_slab(folio))
+ 				folio_get(folio);
+-- 
+2.43.0
+
