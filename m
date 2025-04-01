@@ -1,96 +1,84 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D7D4204F6B
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 14:40:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48331204F65;
+	Tue,  1 Apr 2025 14:40:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743518416; cv=none; b=htnDj8Grw/kE5+vR9UpR8QWBssEzS1gWoKoOeXsY/IT4ST0eoa48x2EkcpeBEqEVY9l6wOD8x/gQxXKWUsXeOXK0ghvHcwscGhRawF2Z/xbuvxRhYM6pK6RrFJYNsfB2dVKfOXYMfFRQ63y/ozd5qm0T+r7ge7XvwYi4G88j44M=
+	t=1743518443; cv=none; b=phHUWqDMGvala0Fnrmwk/MBrOk1RRLE8ghNNoPi0x+kbL52iLb/LiedFjnVFzjmehtw8dGFJMSmyt9nxfn5aUUcPcBFrcPiIQOMmwxNz9gUFWo4Jg3TnOVeyL8g3rYcSCDy371ikt5Zz8qCtJUX0mmMvwScIKBxZQaJNhTYqxQQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743518416; c=relaxed/simple;
-	bh=kPSrZSO5uXb7Ygzi222UIaBngtdCzXsdIfgQldd5lok=;
+	s=arc-20240116; t=1743518443; c=relaxed/simple;
+	bh=u+GoIqV+fjeT7z+mFVcbtJXhmpOHnpXRH54YzZYQbKA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aE01hJwQNx8MBMkc87k7f9CrJDN++qBMmgZuYap++zg5e9qlgDZzRJx3wAHp/uMLVoM1rf2RpAFbIC3jFSyXEh9jBCWkm71vm85Oxen9x0RRgIL/mKlxu2VDPalCxP1HGaLq+jqngB0haHuJn43Hx8m8K8TdYtVxEqpAetlb82Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=s2nZb0fw; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=Pj99mJICV5NeBZQnrePXe2erAAc/httIZzHq2nifxCJtSyj0sOamRDiRyKl0Cq1Oo0fw9FNqy+Z8eyWW3MIDJIemT03DswBKIcfIPBKubx8tr95IuXl3VnPxneFKZcbE+uLNhVvLA/kOsyLRO2DvW5+Mjqu8QNdtHw5JseeNlgg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D+MxI1w6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="s2nZb0fw"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=XYu1a0TXcpv657pmLoQBWrtbVTDUIF0CEiw/elnfVXs=; b=s2nZb0fwKYdxLrD9t5nT94UQ4R
-	OiEIa947fKkAW0h72ztMp2cbMpqAYI6F7P40EJ2B/uHVVbtV7usDcIfc7pudiW+k2TR+L0baUUodU
-	VjwL+Vm/eJwTsHKURk3erFtRT4dGGklVpQflrCazZ5tUDUu/bKNUqg581TOgWxLSpWQa9MxNz6Dup
-	UpaDkTj0jpgeW5H5hTGvo78Khzq1aLJXJF7YMusUGshN0B+HdVGHdw3rS+efCrZDI/QrEjhWJhXsz
-	so2HZsupXPOQ+uXk12mLOosM/qeC0XffdgxJTnpCskeV6GKNVimJc9FjQ4sRUoSeqpQJ1te8zw3uL
-	maXKiBYQ==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1tzcmh-00000007TxW-1XiU;
-	Tue, 01 Apr 2025 14:40:11 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id E551F3003FA; Tue,  1 Apr 2025 16:40:10 +0200 (CEST)
-Date: Tue, 1 Apr 2025 16:40:10 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Juergen Gross <jgross@suse.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH 23/49] x86/alternatives: Simplify smp_text_poke_single()
- by using tp_vec and existing APIs
-Message-ID: <20250401144010.GJ5880@noisy.programming.kicks-ass.net>
-References: <20250328132704.1901674-1-mingo@kernel.org>
- <20250328132704.1901674-24-mingo@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D+MxI1w6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14F6BC4CEE4;
+	Tue,  1 Apr 2025 14:40:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743518440;
+	bh=u+GoIqV+fjeT7z+mFVcbtJXhmpOHnpXRH54YzZYQbKA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=D+MxI1w6UD4FjVaB2IKN1ytV1rYCOD1i65vy0QScvgGG07MwjSnNOfkfD9a8fB8Ty
+	 84YFO1uBWW2teT17JKiBs5FMxSnT8EnnX6dHFXv0fRmnGzSw8CKzjBD7ciU0ulj4Hf
+	 Nlxpnlnmk9U8lSD9MZkfRZ825X061HAGCBAfk6uiTx2Gpjua4kSENYMErDdi2FxVZT
+	 B1SxF2x8j8aLcKZX4s6rw/UDbcNdqCh8/v881SVWZjUGfoGWdaqNGtT0gKOhDotjXI
+	 YW4IC95G+xlIfSB9aWiaHPJ5XTBHU9yfKjS8SF+Qhl6RpKJkfL/yaBQm2pf+T/+r2Z
+	 TEDfG2wycXd+g==
+Date: Tue, 1 Apr 2025 16:40:33 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: linux-fsdevel@vger.kernel.org, jack@suse.cz, rafael@kernel.org, 
+	Ard Biesheuvel <ardb@kernel.org>, linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	James Bottomley <James.Bottomley@hansenpartnership.com>, mcgrof@kernel.org, hch@infradead.org, david@fromorbit.com, 
+	djwong@kernel.org, pavel@kernel.org, mingo@redhat.com, will@kernel.org, 
+	boqun.feng@gmail.com
+Subject: Re: [PATCH 0/6] power: wire-up filesystem freeze/thaw with
+ suspend/resume
+Message-ID: <20250401-ballen-eulen-8d074cd8ca78@brauner>
+References: <20250331-work-freeze-v1-0-6dfbe8253b9f@kernel.org>
+ <20250401-work-freeze-v1-0-d000611d4ab0@kernel.org>
+ <20250401141407.GE5880@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250328132704.1901674-24-mingo@kernel.org>
+In-Reply-To: <20250401141407.GE5880@noisy.programming.kicks-ass.net>
 
-On Fri, Mar 28, 2025 at 02:26:38PM +0100, Ingo Molnar wrote:
-> Instead of constructing a vector on-stack, just use the already
-> available batch-patching vector - which should always be empty
-> at this point.
+On Tue, Apr 01, 2025 at 04:14:07PM +0200, Peter Zijlstra wrote:
+> On Tue, Apr 01, 2025 at 02:32:45AM +0200, Christian Brauner wrote:
+> > The whole shebang can also be found at:
+> > https://web.git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git/log/?h=work.freeze
+> > 
+> > I know nothing about power or hibernation. I've tested it as best as I
+> > could. Works for me (TM).
+> > 
+> > I need to catch some actual sleep now...
+> > 
+> > ---
+> > 
+> > Now all the pieces are in place to actually allow the power subsystem to
+> > freeze/thaw filesystems during suspend/resume. Filesystems are only
+> > frozen and thawed if the power subsystem does actually own the freeze.
 > 
-> This will allow subsequent simplifications.
-
-This should go before patch 20, otherwise you'll have this intermediate
-state where we trip the WARN, no?
-
-> Signed-off-by: Ingo Molnar <mingo@kernel.org>
-> ---
->  arch/x86/kernel/alternative.c | 11 ++++++++---
->  1 file changed, 8 insertions(+), 3 deletions(-)
+> Urgh, I was relying on all kthreads to be freezable for live-patching:
 > 
-> diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-> index ffffec4597b7..70abc636b87c 100644
-> --- a/arch/x86/kernel/alternative.c
-> +++ b/arch/x86/kernel/alternative.c
-> @@ -2906,8 +2906,13 @@ void __ref smp_text_poke_batch_add(void *addr, const void *opcode, size_t len, c
->   */
->  void __ref smp_text_poke_single(void *addr, const void *opcode, size_t len, const void *emulate)
->  {
-> -	struct smp_text_poke_loc tp;
-> +	struct smp_text_poke_loc *tp;
-> +
-> +	/* Batch-patching should not be mixed with single-patching: */
-> +	WARN_ON_ONCE(tp_vec_nr != 0);
-> +
-> +	tp = &tp_vec[tp_vec_nr++];
-> +	text_poke_int3_loc_init(tp, addr, opcode, len, emulate);
->  
-> -	text_poke_int3_loc_init(&tp, addr, opcode, len, emulate);
-> -	smp_text_poke_batch_process(&tp, 1);
-> +	smp_text_poke_batch_finish();
->  }
-> -- 
-> 2.45.2
+>   https://lkml.kernel.org/r/20250324134909.GA14718@noisy.programming.kicks-ass.net
+> 
+> So I understand the problem with freezing filesystems, but can't we
+> leave the TASK_FREEZABLE in the kthreads? The way I understand it, the
+
+Yeah, we can.
+
+> power subsystem will first freeze the filesystems before it goes freeze
+> threads anyway. So them remaining freezable should not affect anything,
+> right?
+
+Yes. I've dropped the other patches. I've discussed this later
+downthread with Jan.
 > 
