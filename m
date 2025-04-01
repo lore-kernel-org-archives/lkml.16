@@ -1,55 +1,55 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AD3921C19A
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 18:24:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C942221D3D2
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 18:24:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743531897; cv=none; b=jRyW21ycdReg6V6d65CgHHb5RogymIn6kudG83VyOlNwcAhYHiZ6mkA0Jl44eV17PCWnbPiZRfh9lkyFBkW4lwG1Klifz6FzPBOLeocDHGToCjI4cyDSosP3cLJluzJyqG+NGcoNTFkmMjKJ/KhlP3/lSk61jkouFkDVgfKN7NA=
+	t=1743531902; cv=none; b=uKgY4vwTrmsYViha9d4HNB3WQVJUyULy1JvfFT+q3RbLXxUj7qF36EXnH68H4H2HFhkgcODfdRAdI8bnHXE+I/eea45eIxpn77qNLXexAG2/B3kVjHrrPRdos8CUamnWUM7USyg6sSQGQsdaj8ebJ9LFbbxEVyYOoaJxY4zzqsY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743531897; c=relaxed/simple;
-	bh=AORnD1om4C2sypJLzjCz8efPFZxPS6C3udp8jTr5i34=;
+	s=arc-20240116; t=1743531902; c=relaxed/simple;
+	bh=G1beShr2OJE3B99IVVRLG7JvNtyE0vRd7w9ReDXBJPQ=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=fkjc3MoyEVGkLc0AgbM2DpYhOJur9kLcUivuNej/SM44FwDTLrKOo2pPmPlG33aQRijwcIhIamKaTOXnCvn/p0WasjGI4IubZHZgNBwqpxB+HlQ0asyzwMLUPc+s+QbfO5sJMcXrcGXvr+BzRpd1oRP7Nq7Clp6WMFyXr9DbQEs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=etnY6pWf; arc=none smtp.client-ip=209.85.214.202
+	 To:Content-Type; b=cRmCDWA92C10aRY9AATsp6EBHJmuj5UiBUUeW3hjNksLj38+ZWaX2GaDUv8Ob8//MLrni7brl6ppSh+2jIQw0+8kqcrNlT3QnA+hy6qNszhC6TXWQEs6M4zV+VbGYemDUK0zDiEjso83amb8zfzqAvii2S/AmBxsn1CKjQj8wYo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=m+ofP6MR; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="etnY6pWf"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2240c997059so134714385ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 11:24:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="m+ofP6MR"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ff7cf599beso10929924a91.0
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 11:24:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743531895; x=1744136695; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1743531899; x=1744136699; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=1ougT7jDU8A9cudDjFwokt57F5i+izAS3bT+Nyxperg=;
-        b=etnY6pWfB4PNfoe/W0mWeQxb0Uj4HpUj4DitoagiherBLjvNEG17F0xK3W6uv17P3U
-         mnMAYTjVf/Mm0QjgbT6pwQFm/f7Iq8eKqvq4P5eq/K7EeMlpoTFS8bDvp62BneWQdPvk
-         xCduFf6toPfK8vA07XxhTf6s1rFhQxJQhhbLtw+a7pwRmxde93K3bgIijXO0g3KrL/in
-         DVkOeUpwKL6TbIjZi6QVvjd3JWYVi75Ns4hIyhAVpio/UGxvHJc5URiHny98Sp2FvSnz
-         Ov5zdaJjRxWs+yZiopv7aQwWPuIw7pJ+NovItkPGEbcadZ+E5s7g8rBANNnkY0aNh/jL
-         cmeQ==
+        bh=xyvB/hrRudd3aX9cJ1p0ixiv1zuMhB3nN0i+ysTn1DI=;
+        b=m+ofP6MRgfMxiChrBfeWbzDsNgYFkZvhVkKbEQ4M/+yZfml7Bhxg40y+sllyTIXUFO
+         OYPLxjdkSfy39vefCO9CRSHd9aBO03tmUV79iQyCwKvZweHs/1yCL65l6zwk1oyJw1AT
+         PNzqkBM1Y+K4xjy0qXE3qNK9nioSgrblytWYpF43Os2NN5ocBAv58KC2Cbe/Z8EYEwxO
+         utOncuPB9M8F1wexYeSeD3tH8RJS/2vWeLp8/CrSnAlFqoDWkOGynxyldcxxBC8aknfZ
+         OKrfGzhEggF4jj2EXGYwpBIm9jILd00bdO42U2b6btGP/jtu8jAVzZvKSIorq3uajDti
+         whbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743531895; x=1744136695;
+        d=1e100.net; s=20230601; t=1743531899; x=1744136699;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1ougT7jDU8A9cudDjFwokt57F5i+izAS3bT+Nyxperg=;
-        b=brjD7imMLj9Df5KDdt7oIG2lCPdJMU+8PhRZ09tpYj4sw6sGpAcyCqnhFm8o3Tfpj/
-         2mZYamhUSy6ECLanyC2yEnRsAxVJE/EguatTqtPecJnOWvF0NdiIHdGiC0d95BoUZ7E6
-         cdmz+das5reqFIW5YyONLjpbulqUlVrq82GHxQpWT4wk1y8gbjIG1fnbzv5MPVtKR8v1
-         +XdvcV6Sp+dpfaP7LXyFjnCCMAssqpmUofiwam9GVaEsnWbbSYp6nccqHxDxJeEwZxdO
-         TDMg6TkHfFZGbBx+2PYaqpCoBpxoYmDGSr/J3Eoo+MyE0k04ZGV0GaBjG3rGr/+coOn/
-         pBBg==
-X-Forwarded-Encrypted: i=1; AJvYcCXycxEo0xK01XipW3+AwYFESQD3Xxv0YwmFfloKOvzidmLg45/k6bT70ZBETJ6eTO0H6fgL8CTDJU/uLuk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzQrKot9kgyS/Y+jTHxguA7kuAcfkPDzbMbNY7dzKJ1Q1eXQ5+/
-	Nwq7rP2ODctnuC7jCOUnI8ohZC69rEwnXzhA9ryhauqOCPuWMKpwW3+aJVyg7MVyD5WIIYDEnwQ
-	PlX2B9Q==
-X-Google-Smtp-Source: AGHT+IHJykACnjjgWPAWibGCmtd45+SU33aGZAT7wMdq/fqMroEpb2uj9+hf6s6MhADeGdU+pE8Kf/7i45Xn
-X-Received: from plble11.prod.google.com ([2002:a17:902:fb0b:b0:220:e7dc:350d])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:daca:b0:223:6180:1bea
- with SMTP id d9443c01a7336-2292f9e601emr208087855ad.37.1743531895008; Tue, 01
- Apr 2025 11:24:55 -0700 (PDT)
-Date: Tue,  1 Apr 2025 11:23:07 -0700
+        bh=xyvB/hrRudd3aX9cJ1p0ixiv1zuMhB3nN0i+ysTn1DI=;
+        b=KSjygVVcl4GeOFFyn7Op+o+Py3iXIlUKfrmIYuBLWTDH8HFCf4GUbjyp9np1z4J2eR
+         mdpFu5ZBhPC3cQrOBIfGGlTMd0FEnc5Hj0J4WQhxGUR2wT7MjwNcer+WZHkvLau1VKCV
+         TEtO+6rSskFWUHZIutwXMyvjfj1+SxuWYPjmPuQSjU4ij3NHfMMgNWveQMtt62j/pVn1
+         hIcHkHsLrG8kk87m6yTHljIprMtRlqFbrACXuDhf0O20jDlHef2pyVcpSZW+bXAXFNoW
+         FoSrZDXc6BRgz1WgEXuKpSoGEnDIso+G1xWcTWtF1pPRN3O2w4S0biAOguI9t9updMQy
+         rk2g==
+X-Forwarded-Encrypted: i=1; AJvYcCVw9Rn3kFZEIWlnSCfiKIjWyuJ0duhWFJW5Y8SnA1MGVUMGnPfHrDdgRLuVaanCCZMhtpm4Bu3llD3k1uA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YziW3N5cgG7bj5MVBfKeG3bevxK1kD443FpktxSxnjkdY6o79b0
+	jTn43YGEFP4LqxaTC/E6AlaVaIN/JUa+aWSyy+2u6f2Mfmf13fyQm28DBKeK0OpmQO6Fr3dBnBF
+	b0p1a7Q==
+X-Google-Smtp-Source: AGHT+IFqNyoO9wg1AcwskU/SqQSwLTGoj2ZZZrlovJNkz+5uOGhYMYbqeQpgsHNNLM6uCXnMYqikFnYyzlT6
+X-Received: from pfbmc41.prod.google.com ([2002:a05:6a00:76a9:b0:736:4313:e6bc])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:1701:b0:736:a8db:93bb
+ with SMTP id d2e1a72fcca58-7398034e617mr15291484b3a.5.1743531899092; Tue, 01
+ Apr 2025 11:24:59 -0700 (PDT)
+Date: Tue,  1 Apr 2025 11:23:09 -0700
 In-Reply-To: <20250401182347.3422199-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250401182347.3422199-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
-Message-ID: <20250401182347.3422199-10-irogers@google.com>
-Subject: [PATCH v1 09/48] perf tests: Silence -Wshorten-64-to-32 warnings
+Message-ID: <20250401182347.3422199-12-irogers@google.com>
+Subject: [PATCH v1 11/48] perf arm-spe: Silence -Wshorten-64-to-32 warnings
 From: Ian Rogers <irogers@google.com>
 To: Yury Norov <yury.norov@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
 	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -114,325 +114,138 @@ truncation explicit.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/api-io.c                   |  2 +-
- tools/perf/tests/bp_signal.c                |  6 +++---
- tools/perf/tests/bp_signal_overflow.c       |  6 +++---
- tools/perf/tests/builtin-test.c             |  9 +++++----
- tools/perf/tests/code-reading.c             |  4 ++--
- tools/perf/tests/dso-data.c                 | 10 +++++-----
- tools/perf/tests/mmap-thread-lookup.c       |  2 +-
- tools/perf/tests/openat-syscall-tp-fields.c |  2 +-
- tools/perf/tests/pmu-events.c               |  2 +-
- tools/perf/tests/sigtrap.c                  |  4 ++--
- tools/perf/tests/switch-tracking.c          | 11 ++++++-----
- tools/perf/tests/vmlinux-kallsyms.c         |  4 ++--
- tools/perf/tests/wp.c                       |  4 ++--
- 13 files changed, 34 insertions(+), 32 deletions(-)
+ .../util/arm-spe-decoder/arm-spe-decoder.c    |  4 ++--
+ .../arm-spe-decoder/arm-spe-pkt-decoder.c     |  2 +-
+ tools/perf/util/arm-spe.c                     | 24 +++++++++----------
+ 3 files changed, 15 insertions(+), 15 deletions(-)
 
-diff --git a/tools/perf/tests/api-io.c b/tools/perf/tests/api-io.c
-index 0ba3d5ccebcf..4aee1cff062e 100644
---- a/tools/perf/tests/api-io.c
-+++ b/tools/perf/tests/api-io.c
-@@ -74,7 +74,7 @@ static int setup_test(char path[PATH_MAX], const char *contents,
- 		unlink(path);
- 		return -1;
- 	}
--	io__init(io, io->fd, io->buf, buf_size);
-+	io__init(io, io->fd, io->buf, (unsigned int)buf_size);
- 	return 0;
+diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
+index 688fe6d75244..58107970b215 100644
+--- a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
++++ b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
+@@ -117,7 +117,7 @@ static int arm_spe_get_data(struct arm_spe_decoder *decoder)
+ 	if (!decoder->len)
+ 		pr_debug("No more data\n");
+ 
+-	return decoder->len;
++	return (int)decoder->len;
  }
  
-diff --git a/tools/perf/tests/bp_signal.c b/tools/perf/tests/bp_signal.c
-index 3faeb5b6fe0b..5ecac6c2d8b6 100644
---- a/tools/perf/tests/bp_signal.c
-+++ b/tools/perf/tests/bp_signal.c
-@@ -64,7 +64,7 @@ static noinline int test_function(void)
- {
- 	__test_function(&the_var);
- 	the_var++;
--	return time(NULL);
-+	return (int)time(NULL);
- }
- 
- static void sig_handler_2(int signum __maybe_unused,
-@@ -151,11 +151,11 @@ static int wp_event(void *addr, int sig)
- static long long bp_count(int fd)
- {
- 	long long count;
--	int ret;
-+	ssize_t ret;
- 
- 	ret = read(fd, &count, sizeof(long long));
- 	if (ret != sizeof(long long)) {
--		pr_debug("failed to read: %d\n", ret);
-+		pr_debug("failed to read: %zd\n", ret);
- 		return TEST_FAIL;
+ static int arm_spe_get_next_packet(struct arm_spe_decoder *decoder)
+@@ -187,7 +187,7 @@ static int arm_spe_read_record(struct arm_spe_decoder *decoder)
+ 			break;
+ 		case ARM_SPE_COUNTER:
+ 			if (idx == SPE_CNT_PKT_HDR_INDEX_TOTAL_LAT)
+-				decoder->record.latency = payload;
++				decoder->record.latency = (u32)payload;
+ 			break;
+ 		case ARM_SPE_CONTEXT:
+ 			decoder->record.context_id = payload;
+diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c b/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c
+index 13cadb2f1cea..a6d04ad50db6 100644
+--- a/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c
++++ b/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c
+@@ -63,7 +63,7 @@ static int arm_spe_get_payload(const unsigned char *buf, size_t len,
+ 	default: return ARM_SPE_BAD_PACKET;
  	}
  
-diff --git a/tools/perf/tests/bp_signal_overflow.c b/tools/perf/tests/bp_signal_overflow.c
-index ee560e156be6..eb9021ad8177 100644
---- a/tools/perf/tests/bp_signal_overflow.c
-+++ b/tools/perf/tests/bp_signal_overflow.c
-@@ -33,7 +33,7 @@ static int overflows;
- 
- static noinline int test_function(void)
- {
--	return time(NULL);
-+	return (int)time(NULL);
+-	return 1 + ext_hdr + payload_len;
++	return 1 + ext_hdr + (int)payload_len;
  }
  
- static void sig_handler(int signum __maybe_unused,
-@@ -46,11 +46,11 @@ static void sig_handler(int signum __maybe_unused,
- static long long bp_count(int fd)
- {
- 	long long count;
--	int ret;
-+	ssize_t ret;
- 
- 	ret = read(fd, &count, sizeof(long long));
- 	if (ret != sizeof(long long)) {
--		pr_debug("failed to read: %d\n", ret);
-+		pr_debug("failed to read: %zd\n", ret);
- 		return TEST_FAIL;
+ static int arm_spe_get_pad(struct arm_spe_pkt *packet)
+diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
+index 2a9775649cc2..561bef7b4628 100644
+--- a/tools/perf/util/arm-spe.c
++++ b/tools/perf/util/arm-spe.c
+@@ -786,7 +786,7 @@ static bool arm_spe__synth_ds(struct arm_spe_queue *speq,
  	}
  
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index 14d30a5053be..4ea840580876 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -301,7 +301,7 @@ static int print_test_result(struct test_suite *t, int curr_suite, int curr_test
- 	return 0;
- }
- 
--static void finish_test(struct child_test **child_tests, int running_test, int child_test_num,
-+static void finish_test(struct child_test **child_tests, size_t running_test, size_t child_test_num,
- 		int width)
- {
- 	struct child_test *child_test = child_tests[running_test];
-@@ -349,7 +349,7 @@ static void finish_test(struct child_test **child_tests, int running_test, int c
- 		if (perf_use_color_default) {
- 			int running = 0;
- 
--			for (int y = running_test; y < child_test_num; y++) {
-+			for (size_t y = running_test; y < child_test_num; y++) {
- 				if (child_tests[y] == NULL)
- 					continue;
- 				if (check_if_command_finished(&child_tests[y]->process) == 0)
-@@ -478,13 +478,14 @@ static int __cmd_test(struct test_suite **suites, int argc, const char *argv[],
- 	int err = 0;
- 
- 	for (struct test_suite **t = suites; *t; t++) {
--		int i, len = strlen(test_description(*t, -1));
-+		int i;
-+		int len = (int)strlen(test_description(*t, -1));
- 
- 		if (width < len)
- 			width = len;
- 
- 		test_suite__for_each_test_case(*t, i) {
--			len = strlen(test_description(*t, i));
-+			len = (int)strlen(test_description(*t, i));
- 			if (width < len)
- 				width = len;
- 			num_tests += runs_per_test;
-diff --git a/tools/perf/tests/code-reading.c b/tools/perf/tests/code-reading.c
-index cf6edbe697b2..0c31d5ff77e2 100644
---- a/tools/perf/tests/code-reading.c
-+++ b/tools/perf/tests/code-reading.c
-@@ -188,7 +188,7 @@ static int objdump_version(void)
- 	char *line = NULL;
- 	const char *fmt;
- 	FILE *f;
--	int ret;
-+	ssize_t ret;
- 
- 	int version_tmp, version_num = 0;
- 	char *version = 0, *token;
-@@ -295,7 +295,7 @@ static int read_via_objdump(const char *filename, u64 addr, void *buf,
- 	if (len) {
- 		pr_debug("objdump read too few bytes: %zd\n", len);
- 		if (!ret)
--			ret = len;
-+			ret = (int)len;
- 	}
- 
- 	pclose(f);
-diff --git a/tools/perf/tests/dso-data.c b/tools/perf/tests/dso-data.c
-index a1fff4203b75..2954e06ae5b3 100644
---- a/tools/perf/tests/dso-data.c
-+++ b/tools/perf/tests/dso-data.c
-@@ -233,14 +233,14 @@ static int dsos__create(int cnt, int size, struct dsos *dsos)
- 	return 0;
- }
- 
--static int set_fd_limit(int n)
-+static int set_fd_limit(long n)
- {
- 	struct rlimit rlim;
- 
- 	if (getrlimit(RLIMIT_NOFILE, &rlim))
- 		return -1;
- 
--	pr_debug("file limit %ld, new %d\n", (long) rlim.rlim_cur, n);
-+	pr_debug("file limit %ld, new %ld\n", (long) rlim.rlim_cur, n);
- 
- 	rlim.rlim_cur = n;
- 	return setrlimit(RLIMIT_NOFILE, &rlim);
-@@ -249,8 +249,8 @@ static int set_fd_limit(int n)
- static int test__dso_data_cache(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
- {
- 	struct machine machine;
--	long nr_end, nr = open_files_cnt();
--	int dso_cnt, limit, i, fd;
-+	long dso_cnt, limit, nr_end, nr = open_files_cnt();
-+	int i, fd;
- 
- 	/* Rest the internal dso open counter limit. */
- 	reset_fd_limit();
-@@ -264,7 +264,7 @@ static int test__dso_data_cache(struct test_suite *test __maybe_unused, int subt
- 	/* and this is now our dso open FDs limit */
- 	dso_cnt = limit / 2;
- 	TEST_ASSERT_VAL("failed to create dsos\n",
--			!dsos__create(dso_cnt, TEST_FILE_SIZE, &machine.dsos));
-+			!dsos__create((int)dso_cnt, TEST_FILE_SIZE, &machine.dsos));
- 
- 	for (i = 0; i < (dso_cnt - 1); i++) {
- 		struct dso *dso = machine.dsos.dsos[i];
-diff --git a/tools/perf/tests/mmap-thread-lookup.c b/tools/perf/tests/mmap-thread-lookup.c
-index 446a3615d720..b328ad6973a3 100644
---- a/tools/perf/tests/mmap-thread-lookup.c
-+++ b/tools/perf/tests/mmap-thread-lookup.c
-@@ -45,7 +45,7 @@ static int thread_init(struct thread_data *td)
- 	}
- 
- 	td->map = map;
--	td->tid = syscall(SYS_gettid);
-+	td->tid = (pid_t)syscall(SYS_gettid);
- 
- 	pr_debug("tid = %d, map = %p\n", td->tid, map);
- 	return 0;
-diff --git a/tools/perf/tests/openat-syscall-tp-fields.c b/tools/perf/tests/openat-syscall-tp-fields.c
-index 0ef4ba7c1571..68f1498d0a47 100644
---- a/tools/perf/tests/openat-syscall-tp-fields.c
-+++ b/tools/perf/tests/openat-syscall-tp-fields.c
-@@ -119,7 +119,7 @@ static int test__syscall_openat_tp_fields(struct test_suite *test __maybe_unused
- 					goto out_delete_evlist;
- 				}
- 
--				tp_flags = evsel__intval(evsel, &sample, "flags");
-+				tp_flags = (int)evsel__intval(evsel, &sample, "flags");
- 				perf_sample__exit(&sample);
- 				if (flags != tp_flags) {
- 					pr_debug("%s: Expected flags=%#x, got %#x\n",
-diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
-index db004d26fcb0..2762794827ce 100644
---- a/tools/perf/tests/pmu-events.c
-+++ b/tools/perf/tests/pmu-events.c
-@@ -609,7 +609,7 @@ static int __test_uncore_pmu_event_aliases(struct perf_pmu_test_pmu *test_pmu)
- 	pmu_add_sys_aliases(pmu);
- 
- 	/* Count how many aliases we generated */
--	alias_count = perf_pmu__num_events(pmu);
-+	alias_count = (int)perf_pmu__num_events(pmu);
- 
- 	/* Count how many aliases we expect from the known table */
- 	for (table = &test_pmu->aliases[0]; *table; table++)
-diff --git a/tools/perf/tests/sigtrap.c b/tools/perf/tests/sigtrap.c
-index a67c756f90b8..b7d7735f8a72 100644
---- a/tools/perf/tests/sigtrap.c
-+++ b/tools/perf/tests/sigtrap.c
-@@ -154,13 +154,13 @@ sigtrap_handler(int signum __maybe_unused, siginfo_t *info, void *ucontext __may
- {
- 	if (!__atomic_fetch_add(&ctx.signal_count, 1, __ATOMIC_RELAXED))
- 		ctx.first_siginfo = *info;
--	__atomic_fetch_sub(&ctx.tids_want_signal, syscall(SYS_gettid), __ATOMIC_RELAXED);
-+	__atomic_fetch_sub(&ctx.tids_want_signal, (pid_t)syscall(SYS_gettid), __ATOMIC_RELAXED);
- }
- 
- static void *test_thread(void *arg)
- {
- 	pthread_barrier_t *barrier = (pthread_barrier_t *)arg;
--	pid_t tid = syscall(SYS_gettid);
-+	pid_t tid = (pid_t)syscall(SYS_gettid);
- 	int i;
- 
- 	pthread_barrier_wait(barrier);
-diff --git a/tools/perf/tests/switch-tracking.c b/tools/perf/tests/switch-tracking.c
-index 8df3f9d9ffd2..1f0f8321ae40 100644
---- a/tools/perf/tests/switch-tracking.c
-+++ b/tools/perf/tests/switch-tracking.c
-@@ -140,8 +140,8 @@ static int process_sample_event(struct evlist *evlist,
- 
- 	evsel = evlist__id2evsel(evlist, sample.id);
- 	if (evsel == switch_tracking->switch_evsel) {
--		next_tid = evsel__intval(evsel, &sample, "next_pid");
--		prev_tid = evsel__intval(evsel, &sample, "prev_pid");
-+		next_tid = (int)evsel__intval(evsel, &sample, "next_pid");
-+		prev_tid = (int)evsel__intval(evsel, &sample, "prev_pid");
- 		cpu = sample.cpu;
- 		pr_debug3("sched_switch: cpu: %d prev_tid %d next_tid %d\n",
- 			  cpu, prev_tid, next_tid);
-@@ -262,9 +262,10 @@ static int compar(const void *a, const void *b)
- {
- 	const struct event_node *nodea = a;
- 	const struct event_node *nodeb = b;
--	s64 cmp = nodea->event_time - nodeb->event_time;
- 
--	return cmp;
-+	if (nodea->event_time == nodeb->event_time)
-+		return 0;
-+	return nodea->event_time < nodeb->event_time ? -1 : 1;
- }
- 
- static int process_events(struct evlist *evlist,
-@@ -398,7 +399,7 @@ static int test__switch_tracking(struct test_suite *test __maybe_unused, int sub
- 
- 	switch_evsel = evlist__add_sched_switch(evlist, true);
- 	if (IS_ERR(switch_evsel)) {
--		err = PTR_ERR(switch_evsel);
-+		err = (int)PTR_ERR(switch_evsel);
- 		pr_debug("Failed to create event %s\n", sched_switch);
- 		goto out_err;
- 	}
-diff --git a/tools/perf/tests/vmlinux-kallsyms.c b/tools/perf/tests/vmlinux-kallsyms.c
-index 74cdbd2ce9d0..fbdb463e965d 100644
---- a/tools/perf/tests/vmlinux-kallsyms.c
-+++ b/tools/perf/tests/vmlinux-kallsyms.c
-@@ -82,7 +82,7 @@ static bool is_ignored_symbol(const char *name, char type)
+ 	for (i = 0; i < ARRAY_SIZE(data_source_handles); i++) {
+-		if (is_midr_in_range_list(midr, data_source_handles[i].midr_ranges)) {
++		if (is_midr_in_range_list((u32)midr, data_source_handles[i].midr_ranges)) {
+ 			data_source_handles[i].ds_synth(record, data_src);
  			return true;
+ 		}
+@@ -956,7 +956,7 @@ static int arm_spe_run_decoder(struct arm_spe_queue *speq, u64 *timestamp)
+ 		 */
+ 		record = &speq->decoder->record;
+ 		if (!spe->timeless_decoding && record->context_id != (u64)-1) {
+-			ret = arm_spe_set_tid(speq, record->context_id);
++			ret = arm_spe_set_tid(speq, (pid_t)record->context_id);
+ 			if (ret)
+ 				return ret;
  
- 	for (p = ignored_suffixes; *p; p++) {
--		int l = strlen(name) - strlen(*p);
-+		ssize_t l = strlen(name) - strlen(*p);
- 
- 		if (l >= 0 && !strcmp(name + l, *p))
- 			return true;
-@@ -313,7 +313,7 @@ static int test__vmlinux_matches_kallsyms(struct test_suite *test __maybe_unused
- 				 * _really_ have a problem.
- 				 */
- 				s64 skew = mem_end - UM(pair->end);
--				if (llabs(skew) >= page_size)
-+				if (llabs(skew) >= (s64)page_size)
- 					pr_debug("WARN: %#" PRIx64 ": diff end addr for %s v: %#" PRIx64 " k: %#" PRIx64 "\n",
- 						 mem_start, sym->name, mem_end,
- 						 UM(pair->end));
-diff --git a/tools/perf/tests/wp.c b/tools/perf/tests/wp.c
-index 6c178985e37f..d5dd17eb5c05 100644
---- a/tools/perf/tests/wp.c
-+++ b/tools/perf/tests/wp.c
-@@ -31,10 +31,10 @@ volatile u8 data2[3];
- #ifndef __s390x__
- static int wp_read(int fd, long long *count, int size)
- {
--	int ret = read(fd, count, size);
-+	ssize_t ret = read(fd, count, size);
- 
- 	if (ret != size) {
--		pr_debug("failed to read: %d\n", ret);
-+		pr_debug("failed to read: %zd\n", ret);
- 		return -1;
+@@ -1344,8 +1344,8 @@ static u64 **arm_spe__alloc_metadata(struct perf_record_auxtrace_info *info,
  	}
- 	return 0;
+ 
+ 	*ver = ptr[ARM_SPE_HEADER_VERSION];
+-	hdr_sz = ptr[ARM_SPE_HEADER_SIZE];
+-	*nr_cpu = ptr[ARM_SPE_CPUS_NUM];
++	hdr_sz = (int)ptr[ARM_SPE_HEADER_SIZE];
++	*nr_cpu = (int)ptr[ARM_SPE_CPUS_NUM];
+ 
+ 	metadata = calloc(*nr_cpu, sizeof(*metadata));
+ 	if (!metadata)
+@@ -1353,7 +1353,7 @@ static u64 **arm_spe__alloc_metadata(struct perf_record_auxtrace_info *info,
+ 
+ 	/* Locate the start address of per CPU metadata */
+ 	ptr += hdr_sz;
+-	per_cpu_sz = (metadata_size - (hdr_sz * sizeof(u64))) / (*nr_cpu);
++	per_cpu_sz = (int)((metadata_size - (hdr_sz * sizeof(u64))) / (*nr_cpu));
+ 
+ 	for (i = 0; i < *nr_cpu; i++) {
+ 		metadata[i] = arm_spe__alloc_per_cpu_metadata(ptr, per_cpu_sz);
+@@ -1405,7 +1405,7 @@ static void arm_spe_free(struct perf_session *session)
+ 	auxtrace_heap__free(&spe->heap);
+ 	arm_spe_free_events(session);
+ 	session->auxtrace = NULL;
+-	arm_spe__free_metadata(spe->metadata, spe->metadata_nr_cpu);
++	arm_spe__free_metadata(spe->metadata, (int)spe->metadata_nr_cpu);
+ 	free(spe);
+ }
+ 
+@@ -1451,8 +1451,8 @@ static void arm_spe_print_info(struct arm_spe *spe, __u64 *arr)
+ 		hdr_size = ARM_SPE_AUXTRACE_V1_PRIV_MAX;
+ 		hdr_fmts = metadata_hdr_v1_fmts;
+ 	} else {
+-		cpu_num = arr[ARM_SPE_CPUS_NUM];
+-		hdr_size = arr[ARM_SPE_HEADER_SIZE];
++		cpu_num = (unsigned int)arr[ARM_SPE_CPUS_NUM];
++		hdr_size = (unsigned int)arr[ARM_SPE_HEADER_SIZE];
+ 		hdr_fmts = metadata_hdr_fmts;
+ 	}
+ 
+@@ -1466,7 +1466,7 @@ static void arm_spe_print_info(struct arm_spe *spe, __u64 *arr)
+ 		 * are fixed. The sequential parameter size is decided by the
+ 		 * field 'ARM_SPE_CPU_NR_PARAMS'.
+ 		 */
+-		cpu_size = (ARM_SPE_CPU_NR_PARAMS + 1) + arr[ARM_SPE_CPU_NR_PARAMS];
++		cpu_size = (unsigned int)((ARM_SPE_CPU_NR_PARAMS + 1) + arr[ARM_SPE_CPU_NR_PARAMS]);
+ 		for (i = 0; i < cpu_size; i++)
+ 			fprintf(stdout, metadata_per_cpu_fmts[i], arr[i]);
+ 		arr += cpu_size;
+@@ -1731,9 +1731,9 @@ int arm_spe_process_auxtrace_info(union perf_event *event,
+ 	spe->machine = &session->machines.host; /* No kvm support */
+ 	spe->auxtrace_type = auxtrace_info->type;
+ 	if (metadata_ver == 1)
+-		spe->pmu_type = auxtrace_info->priv[ARM_SPE_PMU_TYPE];
++		spe->pmu_type = (u32)auxtrace_info->priv[ARM_SPE_PMU_TYPE];
+ 	else
+-		spe->pmu_type = auxtrace_info->priv[ARM_SPE_PMU_TYPE_V2];
++		spe->pmu_type = (u32)auxtrace_info->priv[ARM_SPE_PMU_TYPE_V2];
+ 	spe->metadata = metadata;
+ 	spe->metadata_ver = metadata_ver;
+ 	spe->metadata_nr_cpu = nr_cpu;
+@@ -1752,7 +1752,7 @@ int arm_spe_process_auxtrace_info(union perf_event *event,
+ 	 * "time_cycles" only if they are contained in the event.
+ 	 */
+ 	spe->tc.time_shift = tc->time_shift;
+-	spe->tc.time_mult = tc->time_mult;
++	spe->tc.time_mult = (u32)tc->time_mult;
+ 	spe->tc.time_zero = tc->time_zero;
+ 
+ 	if (event_contains(*tc, time_cycles)) {
 -- 
 2.49.0.504.g3bcea36a83-goog
 
