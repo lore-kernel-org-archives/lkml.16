@@ -1,247 +1,255 @@
-Received: from whm50.louhi.net (whm50.louhi.net [77.240.19.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 209682E339C
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 13:27:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=77.240.19.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D17F3204089;
+	Tue,  1 Apr 2025 13:28:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743514068; cv=none; b=kOFOLAtSwFh2+MxJaYoWg0oHNRaox+3AFkTegjR2LVk0YczKdEUsjxSyzz9edDEf0/KhyNlKRpSXJp81jucUQcGV9fwqSlYQpHdKOY33c2tQCERO5lBgsdvQiejzIzu70cZCEN+zJ7t0jVL9Ot6wecYVbooDZj69kqqDINfxTFg=
+	t=1743514135; cv=none; b=cDiWKQF8vyNI9e6rlCSTrT4+YBBO753xzM4FopFIi9VRLOKVOmK7meLYAVcxPCplAnfv3fSKJk4PzgE3qSjyl0ItcmZMo150vwhgmIJ6aDe0xK9K1fwzATG6d/ZQjHrochSQ9nDZHEN9V1BY/v9zCPanLXr7ELlmdC0Md82h2/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743514068; c=relaxed/simple;
-	bh=yWml8y2u5zm0r64M1MCkrKnnq+7678zkuFHTswN1918=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LHIMOTfUGntCBpLIl1xyZyenXc21r1BioGXYfYVj1JYIzU+3XqJPjMu6n8ggtfoGDsTOIXMtkk0PX+YQXKTsAUzd0o7U8PyE0Ps8q2l1ppyM7i5lCeHiH0Rs3dPaf4/1T6fH7UB0JrdBYF0rCDvtGh6V9mDOVdH4jVx3NL7zmBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=haloniitty.fi; spf=pass smtp.mailfrom=haloniitty.fi; dkim=pass (2048-bit key) header.d=haloniitty.fi header.i=@haloniitty.fi header.b=fxULT5/r; arc=none smtp.client-ip=77.240.19.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=haloniitty.fi
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=haloniitty.fi
+	s=arc-20240116; t=1743514135; c=relaxed/simple;
+	bh=LRUD8Nzyi9W7a4tbKtk1hsca0RI3QWp1jje0ZMgNtSI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OdDoehsOUBccYa8CnQiLdH2S58ivNfwHHPh0qmKEAcH50HznxL/GO3nmkGEpi8kffcHpQDPJGK5TFxyb5FRDZclSVYusdjpih8CSKOViySikQY/Z8//oQylYRHMhnvKWIH3yE8ypYV+03UiRfeDLee5/yKCoeK2S68Xhs/pISCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LKTDNNcG; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=haloniitty.fi header.i=@haloniitty.fi header.b="fxULT5/r"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=haloniitty.fi; s=default; h=Content-Type:MIME-Version:References:
-	In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=7ZhFowZYPb/ehWe3WI9YDzdqsWQBq6iqxIFEK20hOv0=; b=fxULT5/ryE6nrW7IvM++sEHUGg
-	/Zgyu+03x5TWoOgeVWdoSCY3VlGGOuncrqGNHBNAkY67Dy1JwhjeWDi8tuq9ysnWJBHq440I7C/mb
-	tS+1rFRf8nDyBParFYzVkoAR8/btiBW3xVe6awJGw9NvNTJuqNIRFxpaXCMMFLaYeH8qFErvn6Wza
-	YUldOi+0pjK62jO0oWxpVlnECPuavByutr1Xmlf/ZuDwsJ2MBSe0mOXJummZv82XoSwTeuXCHZJ2N
-	hTCga/344qp+GS4dg603VcRDqlDkXxS8wjzSrZ5tApQun0mN4eaR4lo6zQQphPYuZYIKs+VOT5jIp
-	18qOXvEg==;
-Received: from [194.136.85.206] (port=49796 helo=eldfell)
-	by whm50.louhi.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.98.1)
-	(envelope-from <pekka.paalanen@haloniitty.fi>)
-	id 1tzbeS-000000004cW-0byF;
-	Tue, 01 Apr 2025 16:27:36 +0300
-Date: Tue, 1 Apr 2025 16:27:32 +0300
-From: Pekka Paalanen <pekka.paalanen@haloniitty.fi>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Tomi Valkeinen
- <tomi.valkeinen@ideasonboard.com>, Vishal Sagar <vishal.sagar@amd.com>,
- Anatoliy Klymenko <anatoliy.klymenko@amd.com>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Michal Simek <michal.simek@amd.com>,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, Dmitry Baryshkov
- <dmitry.baryshkov@oss.qualcomm.com>
-Subject: Re: [PATCH v4 03/11] drm/fourcc: Add DRM_FORMAT_Y8
-Message-ID: <20250401162732.731ef774@eldfell>
-In-Reply-To: <20250331135337.61934003@eldfell>
-References: <20250326-xilinx-formats-v4-0-322a300c6d72@ideasonboard.com>
-	<20250326-xilinx-formats-v4-3-322a300c6d72@ideasonboard.com>
-	<CAMuHMdXM1B1c=62EpcuUdpdpaBRZSJLXb1GBB0egzp7Fyeo5-w@mail.gmail.com>
-	<b195971c-52e6-463e-a440-83dde4346e65@ideasonboard.com>
-	<20250327112009.6b4dc430@eldfell>
-	<b5cf15a4-7c65-4718-9c39-a4c86179ba4c@ideasonboard.com>
-	<20250327175842.130c0386@eldfell>
-	<CAMuHMdVEpTVWmwrYt+G-QSWucT91goUcFor9qbo5rZ+X2jnRog@mail.gmail.com>
-	<20250331105446.098f0fbe@eldfell>
-	<20250331082135.GB13690@pendragon.ideasonboard.com>
-	<20250331135337.61934003@eldfell>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LKTDNNcG"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-226185948ffso106816305ad.0;
+        Tue, 01 Apr 2025 06:28:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743514133; x=1744118933; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=x7pqqNqLdsO7AFB2RRAVziq6nIvwLDvTSY85H4YFNog=;
+        b=LKTDNNcG1cPQZvyfzkD0hFNWUMqj+amBJUX1kuLvD+Ym7wEoFY9O5uVAHu0Ii5qMqM
+         AOGAmwFEfJJamzW3qmu16P9s1Oe8UoKmmKdMvEweqrg4VqqciyHePFZeFdg5SEnZe2++
+         cnvYeyI9ynQU+cySOCPRI77b3vM04qLcj6nWIcttWDjfS9+hueR7T0lrHebI7Zvwcsik
+         bUBNVlX+UyM3M1Kz2YbhpeGvVM8Ibuwf9wj2MCQ/FDz0l5JAsfRPVHTtsVvkTFMdxt1r
+         9t6pqcoDmUolSj22Do1/3IBr3SYEPL0N6RLD1mUefQbw6oYNA+Y+ktFPHhfnryUnVSTO
+         o4hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743514133; x=1744118933;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=x7pqqNqLdsO7AFB2RRAVziq6nIvwLDvTSY85H4YFNog=;
+        b=QpRD5eGX2QkH3SqS6e2NdNLk9MILaFRS9mHqfgi+quwZZfPAjwDFvFcTsIJwAI50eV
+         YAVU63u3p3wWjom2oFOT0oiL1v3bh5ChM7ZIozMfVZ/JoCnbtLPCX7Gv6bQNLfp8vi8Q
+         rrqF1MG/MGlSI/zUjmvuB+UvhttLUV5TjjlkliLEeQcoPEa4xinpMpjN0joSQYzv7ARD
+         mynog9wcWfQh+AjlleV89dCazGbA1cEWXKlfrBRMDiLUcY6LUoVROVJusXqae16a706w
+         WZ/h1eMhZS0cERKnNJ3167CaQlwq4+UZUUuRixAkiw6BBeORkRtceerUlKtJh+rMfeTA
+         dspw==
+X-Forwarded-Encrypted: i=1; AJvYcCUjqaDWeU0CuQbzAfS2X0+XkjWT5wyNICnugCRxj8Eagxa3IO+JVkF8iHy9w+G0lFiiK6CFTdHLwGINh2o=@vger.kernel.org, AJvYcCW/VF1InIW5LDguVVAQ88+buqzeOdor90rGkEYCOyiRSOjBmileU3RvAhJsVR8+Z1KI3Ua9Mho5Lqkt@vger.kernel.org
+X-Gm-Message-State: AOJu0YwFSnSPg65Zlrn3iqGcj12JOUcXrOsOsBFgdrmkTNesbznyDD1x
+	qtsTMSd/Hy6UQEoWgnc89UGOXqeF4//Ss+06BgKg4TetzwCww1cF
+X-Gm-Gg: ASbGnctu25OgWehfR8ZdNP0u8QUam3X8vRNTdZUXeBddlmlaanUGQwcPuHev/P1Ovgy
+	47sj1RtKsE0NFLf6pnr7HA1Q2Ftnky4x2KlB7cYs7n6EA3XLYKY4oKRAX/O2C8+Vk/fJKZ/U5FK
+	ihuREG92Ol8rwoQJh2/hJTpGA3G+FbNe7HwXvX8Yz4XxFRktR6KxlJrNFpMXI+esF7sgJCCOd80
+	z1TtRmaLKR69BicR89/61fKOzl7ebmHd1+vpWySpz6nGos8mqgQfWvfyrmFwvAFbMSOzMwXKdXT
+	AlHlFORwP/dRETeqm8Yz8pE7a2aDCWsKZI2P0HGJwZEuSplTm64QJor1/Q2DjiAE7naOBEDOth7
+	tTi3Vgb+nUCYHEq4mlQ==
+X-Google-Smtp-Source: AGHT+IErc+jYYI2mveDqcDFVaMlPhYKS6RgfSxTuNffIzFrB71vBmH4dFtQozhG41bbPH4PCFLQGmQ==
+X-Received: by 2002:a05:6a00:ac3:b0:736:5544:7ad7 with SMTP id d2e1a72fcca58-739803c0672mr15799848b3a.14.1743514132894;
+        Tue, 01 Apr 2025 06:28:52 -0700 (PDT)
+Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73970deed76sm9113085b3a.11.2025.04.01.06.28.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Apr 2025 06:28:52 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <e54e87cb-5f40-4e7e-8f88-fb08746b701b@roeck-us.net>
+Date: Tue, 1 Apr 2025 06:28:51 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/OLA4PRd4W1=pfOT/_baNr+x";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - whm50.louhi.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - haloniitty.fi
-X-Get-Message-Sender-Via: whm50.louhi.net: authenticated_id: pekka.paalanen@haloniitty.fi
-X-Authenticated-Sender: whm50.louhi.net: pekka.paalanen@haloniitty.fi
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 24/25] PCI: Perform reset_resource() and build fail list
+ in sync
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+ =?UTF-8?Q?Micha=C5=82_Winiarski?= <michal.winiarski@intel.com>,
+ Igor Mammedov <imammedo@redhat.com>, LKML <linux-kernel@vger.kernel.org>,
+ Mika Westerberg <mika.westerberg@linux.intel.com>
+References: <20241216175632.4175-1-ilpo.jarvinen@linux.intel.com>
+ <20241216175632.4175-25-ilpo.jarvinen@linux.intel.com>
+ <01eb7d40-f5b5-4ec5-b390-a5c042c30aff@roeck-us.net>
+ <75f74b48-edd8-7d1c-d303-1222d12e3812@linux.intel.com>
+Content-Language: en-US
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+In-Reply-To: <75f74b48-edd8-7d1c-d303-1222d12e3812@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
---Sig_/OLA4PRd4W1=pfOT/_baNr+x
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 4/1/25 03:18, Ilpo Järvinen wrote:
+> On Mon, 31 Mar 2025, Guenter Roeck wrote:
+>> On Mon, Dec 16, 2024 at 07:56:31PM +0200, Ilpo Järvinen wrote:
+>>> Resetting resource is problematic as it prevent attempting to allocate
+>>> the resource later, unless something in between restores the resource.
+>>> Similarly, if fail_head does not contain all resources that were reset,
+>>> those resource cannot be restored later.
+>>>
+>>> The entire reset/restore cycle adds complexity and leaving resources
+>>> into reseted state causes issues to other code such as for checks done
+>>> in pci_enable_resources(). Take a small step towards not resetting
+>>> resources by delaying reset until the end of resource assignment and
+>>> build failure list (fail_head) in sync with the reset to avoid leaving
+>>> behind resources that cannot be restored (for the case where the caller
+>>> provides fail_head in the first place to allow restore somewhere in the
+>>> callchain, as is not all callers pass non-NULL fail_head).
+>>>
+>>> The Expansion ROM check is temporarily left in place while building the
+>>> failure list until the upcoming change which reworks optional resource
+>>> handling.
+>>>
+>>> Ideally, whole resource reset could be removed but doing that in a big
+>>> step would make the impact non-tractable due to complexity of all
+>>> related code.
+>>>
+>>> Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+>>
+>> With this patch in the mainline kernel, all mips:boston qemu emulations
+>> fail when running a 64-bit little endian configuration (64r6el_defconfig).
+>>
+>> The problem is that the PCI based IDE/ATA controller is not initialized.
+>> There are a number of pci error messages.
+>>
+>> pci_bus 0002:01: extended config space not accessible
+>> pci 0002:01:00.0: [8086:2922] type 00 class 0x010601 conventional PCI endpoint
+>> pci 0002:01:00.0: BAR 4 [io  0x0000-0x001f]
+>> pci 0002:01:00.0: BAR 5 [mem 0x00000000-0x00000fff]
+>> pci 0002:00:00.0: PCI bridge to [bus 01-ff]
+>> pci_bus 0002:01: busn_res: [bus 01-ff] end is updated to 01
+>> pci 0002:00:00.0: bridge window [mem 0x16000000-0x160fffff]: assigned
+>> pci 0002:00:00.0: bridge window [mem size 0x00100000 64bit pref]: can't assign; no space
+>> pci 0002:00:00.0: bridge window [mem size 0x00100000 64bit pref]: failed to assign
+>> pci 0002:00:00.0: bridge window [io  size 0x1000]: can't assign; no space
+>> pci 0002:00:00.0: bridge window [io  size 0x1000]: failed to assign
+>> pci 0002:00:00.0: bridge window [mem size 0x00100000]: can't assign; bogus alignment
+>> pci 0002:00:00.0: bridge window [mem 0x16000000-0x160fffff 64bit pref]: assigned
+>> pci 0002:00:00.0: bridge window [io  size 0x1000]: can't assign; no space
+>> pci 0002:00:00.0: bridge window [io  size 0x1000]: failed to assign
+>> pci 0002:01:00.0: BAR 5 [mem size 0x00001000]: can't assign; no space
+>> pci 0002:01:00.0: BAR 5 [mem size 0x00001000]: failed to assign
+>> pci 0002:01:00.0: BAR 4 [io  size 0x0020]: can't assign; no space
+>> pci 0002:01:00.0: BAR 4 [io  size 0x0020]: failed to assign
+>> pci 0002:01:00.0: BAR 5 [mem size 0x00001000]: can't assign; no space
+>> pci 0002:01:00.0: BAR 5 [mem size 0x00001000]: failed to assign
+>> pci 0002:01:00.0: BAR 4 [io  size 0x0020]: can't assign; no space
+>> pci 0002:01:00.0: BAR 4 [io  size 0x0020]: failed to assign
+>> pci 0002:00:00.0: PCI bridge to [bus 01]
+>> pci 0002:00:00.0:   bridge window [mem 0x16000000-0x160fffff 64bit pref]
+>> pci_bus 0002:00: Some PCI device resources are unassigned, try booting with pci=realloc
+>> pci_bus 0002:00: resource 4 [mem 0x16000000-0x160fffff]
+>> pci_bus 0002:01: resource 2 [mem 0x16000000-0x160fffff 64bit pref]
+>> ...
+>> pci 0002:00:00.0: enabling device (0000 -> 0002)
+>> ahci 0002:01:00.0: probe with driver ahci failed with error -12
+>>
+>> Bisect points to this patch. Reverting it together with "PCI: Rework
+>> optional resource handling" fixes the problem. For comparison, after
+>> reverting the offending patches, the log messages are as follows.
+>>
+>> pci_bus 0002:00: root bus resource [bus 00-ff]
+>> pci_bus 0002:00: root bus resource [mem 0x16000000-0x160fffff]
+>> pci 0002:00:00.0: [10ee:7021] type 01 class 0x060400 PCIe Root Complex Integrated Endpoint
+>> pci 0002:00:00.0: PCI bridge to [bus 00]
+>> pci 0002:00:00.0:   bridge window [io  0x0000-0x0fff]
+>> pci 0002:00:00.0:   bridge window [mem 0x00000000-0x000fffff]
+>> pci 0002:00:00.0:   bridge window [mem 0x00000000-0x000fffff 64bit pref]
+>> pci 0002:00:00.0: enabling Extended Tags
+>> pci 0002:00:00.0: bridge configuration invalid ([bus 00-00]), reconfiguring
+>> pci_bus 0002:01: extended config space not accessible
+>> pci 0002:01:00.0: [8086:2922] type 00 class 0x010601 conventional PCI endpoint
+>> pci 0002:01:00.0: BAR 4 [io  0x0000-0x001f]
+>> pci 0002:01:00.0: BAR 5 [mem 0x00000000-0x00000fff]
+>> pci 0002:00:00.0: PCI bridge to [bus 01-ff]
+>> pci_bus 0002:01: busn_res: [bus 01-ff] end is updated to 01
+>> pci 0002:00:00.0: bridge window [mem 0x16000000-0x160fffff]: assigned
+>> pci 0002:00:00.0: bridge window [mem size 0x00100000 64bit pref]: can't assign; no space
+>> pci 0002:00:00.0: bridge window [mem size 0x00100000 64bit pref]: failed to assign
+>> pci 0002:00:00.0: bridge window [io  size 0x1000]: can't assign; no space
+>> pci 0002:00:00.0: bridge window [io  size 0x1000]: failed to assign
+>> pci 0002:01:00.0: BAR 5 [mem 0x16000000-0x16000fff]: assigned
+>> pci 0002:01:00.0: BAR 4 [io  size 0x0020]: can't assign; no space
+>> pci 0002:01:00.0: BAR 4 [io  size 0x0020]: failed to assign
+>> pci 0002:00:00.0: PCI bridge to [bus 01]
+>> pci 0002:00:00.0:   bridge window [mem 0x16000000-0x160fffff]
+>> pci_bus 0002:00: Some PCI device resources are unassigned, try booting with pci=realloc
+>> pci_bus 0002:00: resource 4 [mem 0x16000000-0x160fffff]
+>> pci_bus 0002:01: resource 1 [mem 0x16000000-0x160fffff]
+>> ...
+>> pci 0002:00:00.0: enabling device (0000 -> 0002)
+>> ahci 0002:01:00.0: enabling device (0000 -> 0002)
+>> ahci 0002:01:00.0: AHCI vers 0001.0000, 32 command slots, 1.5 Gbps, SATA mode
+>> ahci 0002:01:00.0: 6/6 ports implemented (port mask 0x3f)
+>> ahci 0002:01:00.0: flags: 64bit ncq only
+> 
+> Hi,
+> 
+> Thanks for reporting. Please add this to the command line to get the
+> resource releasing between the steps to show:
+> 
+> dyndbg="file drivers/pci/setup-bus.c +p"
+> 
+> Also, the log snippet just shows it fails but it is impossible to know
+> from it why the resource assigments do not fit so could you please provide
+> a complete dmesg logs. Also providing the contents of /proc/iomem from the
+> working case would save me quite a bit of decoding the iomem layout from
+> the dmesgs.
+> 
 
-On Mon, 31 Mar 2025 13:53:37 +0300
-Pekka Paalanen <pekka.paalanen@haloniitty.fi> wrote:
-
-> On Mon, 31 Mar 2025 11:21:35 +0300
-> Laurent Pinchart <laurent.pinchart@ideasonboard.com> wrote:
->=20
-> > On Mon, Mar 31, 2025 at 10:54:46AM +0300, Pekka Paalanen wrote: =20
-> > > On Thu, 27 Mar 2025 17:35:39 +0100
-> > > Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > >    =20
-> > > > Hi Pekka,
-> > > >=20
-> > > > On Thu, 27 Mar 2025 at 16:59, Pekka Paalanen
-> > > > <pekka.paalanen@haloniitty.fi> wrote:   =20
-> > > > > On Thu, 27 Mar 2025 16:21:16 +0200
-> > > > > Tomi Valkeinen <tomi.valkeinen@ideasonboard.com> wrote:     =20
-> > > > > > On 27/03/2025 11:20, Pekka Paalanen wrote:     =20
-> > > > > > > On Wed, 26 Mar 2025 15:55:18 +0200
-> > > > > > > Tomi Valkeinen <tomi.valkeinen@ideasonboard.com> wrote:     =
-=20
-> > > > > > >> On 26/03/2025 15:52, Geert Uytterhoeven wrote:     =20
-> > > > > > >>> On Wed, 26 Mar 2025 at 14:23, Tomi Valkeinen
-> > > > > > >>> <tomi.valkeinen@ideasonboard.com> wrote:     =20
-> > > > > > >>>> Add greyscale Y8 format.
-> > > > > > >>>>
-> > > > > > >>>> Acked-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> > > > > > >>>> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard=
-.com>     =20
-> > > > > > >>>
-> > > > > > >>> Thanks for your patch!
-> > > > > > >>>     =20
-> > > > > > >>>> --- a/include/uapi/drm/drm_fourcc.h
-> > > > > > >>>> +++ b/include/uapi/drm/drm_fourcc.h
-> > > > > > >>>> @@ -405,6 +405,9 @@ extern "C" {
-> > > > > > >>>>    #define DRM_FORMAT_YUV444      fourcc_code('Y', 'U', '2=
-', '4') /* non-subsampled Cb (1) and Cr (2) planes */
-> > > > > > >>>>    #define DRM_FORMAT_YVU444      fourcc_code('Y', 'V', '2=
-', '4') /* non-subsampled Cr (1) and Cb (2) planes */
-> > > > > > >>>>
-> > > > > > >>>> +/* Greyscale formats */
-> > > > > > >>>> +
-> > > > > > >>>> +#define DRM_FORMAT_Y8          fourcc_code('G', 'R', 'E',=
- 'Y')  /* 8-bit Y-only */     =20
-> > > > > > >>>
-> > > > > > >>> This format differs from e.g. DRM_FORMAT_R8, which encodes
-> > > > > > >>> the number of bits in the FOURCC format. What do you envisi=
-on
-> > > > > > >>> for e.g. DRM_FORMAT_Y16? fourcc_code('G', 'R', '1', '6')?  =
-   =20
-> > > > > > >>
-> > > > > > >> I wanted to use the same fourcc as on V4L2 side. Strictly sp=
-eaking it's
-> > > > > > >> not required, but different fourccs for the same formats do =
-confuse.
-> > > > > > >>
-> > > > > > >> So, generally speaking, I'd pick an existing fourcc from v4l=
-2 side if
-> > > > > > >> possible, and if not, invent a new one.     =20
-> > > > > > >
-> > > > > > > what's the actual difference between DRM_FORMAT_R8 and DRM_FO=
-RMAT_Y8?
-> > > > > > >
-> > > > > > > Is the difference that when R8 gets expanded to RGB, it becom=
-es (R, 0,
-> > > > > > > 0), but Y8 gets expanded to (c1 * Y, c2 * Y, c3 * Y) where c1=
-..c3 are
-> > > > > > > defined by MatrixCoefficients (H.273 terminology)?
-> > > > > > >
-> > > > > > > That would be my intuitive assumption following how YCbCr is =
-handled.
-> > > > > > > Is it obvious enough, or should there be a comment to that ef=
-fect?     =20
-> > > > > >
-> > > > > > You raise an interesting point. Is it defined how a display dri=
-ver, that
-> > > > > > supports R8 as a format, shows R8 on screen? I came into this i=
-n the
-> > > > > > context of grayscale formats, so I thought R8 would be handled =
-as (R, R,
-> > > > > > R) in RGB. But you say (R, 0, 0), which... also makes sense.   =
-  =20
-> > > > >
-> > > > > That is a good question too. I based my assumption on OpenGL beha=
-vior
-> > > > > of R8.
-> > > > >
-> > > > > Single channel displays do exist I believe, but being single-chan=
-nel,
-> > > > > expansion on the other channels is likely meaningless. Hm, but fo=
-r the
-> > > > > KMS color pipeline, it would be meaningful, like with a CTM.
-> > > > > Interesting.
-> > > > >
-> > > > > I don't know. Maybe Geert does?     =20
-> > > >=20
-> > > > I did some digging, and was a bit surprised that it was you who told
-> > > > me to use R8 instead of Y8?
-> > > > https://lore.kernel.org/all/20220202111954.6ee9a10c@eldfell   =20
-> > >=20
-> > > Hi Geert,
-> > >=20
-> > > indeed I did. I never thought of the question of expansion to R,G,B
-> > > before. Maybe that expansion is what spells R8 and Y8 apart?
-> > >=20
-> > > I do think that expansion needs to be specified, so that the KMS color
-> > > pipeline computations are defined. There is a big difference between
-> > > multiplying these with an arbitrary 3x3 matrix (e.g. CTM):
-> > >=20
-> > > - (R, 0, 0)
-> > > - (R, R, R)
-> > > - (c1 * Y, c2 * Y, c3 * Y)   =20
-> >=20
-> > I'd be very surprised by an YUV to RGB conversion matrix where the first
-> > column would contain different values. What we need to take into account
-> > though is quantization (full vs. limited range). =20
-
-Quantization range is indeed good to note. R8 would be always full
-range, but Y8 would follow COLOR_RANGE property.
-
-> That makes Y8 produce (Y, Y, Y), and we have our answer: R8 should be
-> (R, 0, 0), so we have both variants.
->=20
-> Can we specify Y, R, G and B be nominal values in the range 0.0 - 1.0
-> in the KMS color processing?
-
-I think this 0.0 - 1.0 nominal range definition for the abstract KMS
-color processing is necessary.
-
-It also means that limited range Y8 data, when containing values 0-15
-or 240-255, would produce negative and greater than 1.0 values,
-respectively. They might get immediately clamped to 0.0 - 1.0 with the
-first color operation they face, though, but the concept seems
-important and carrying over to the new color pipelines UAPI which might
-choose not to clamp.
-
+You should find everything you need at http://server.roeck-us.net/qemu/mipsel64/.
+Please let me know if you need anything else.
 
 Thanks,
-pq
+Guenter
 
---Sig_/OLA4PRd4W1=pfOT/_baNr+x
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEJQjwWQChkWOYOIONI1/ltBGqqqcFAmfr6cQACgkQI1/ltBGq
-qqcyAg/7B5M9LjzwSycaieCw4rY2vce9hzdBsGuTQ9VLRFvXZF/OhbeaTsYJCg6j
-NGDDcGHOq0SV25e6I8YvaSUfb7n+MbW+l8Xjo3Ivoz0S9Uy5aUeo58ZsjM3GO2yu
-7JlWxw4cAJge22SukdPef5qmGa37+Lkl0HyowrjbIAJYUqdEzRKrqLZRl3EVG+98
-SKR2Z4ZZhysT2lrlDCJaAz8UfYDXO7FoZ0qcDqYbl6tzSKv6kIizymb9RGrywcel
-5Bsm3Y8ynnXVtZc02TMWswXpoCDPn3VxdOCz6D2pQkcgdB0cZjigAuiDtOXbnA7L
-iQPJECcDK1vlSFpNk7Xa24SN3FNiCGpiGKpZp/vobDL8aDtOWvcburh+VZ6yq3WL
-Pi1RDaePaCr5/vxJ8+Aw+tgWtx5kaSUEN5kCkQQ4ujVaeRsyE3qx/mITMEEx6LgJ
-o23+CS7EmbM0Q3XLByu4MvzgerWz2kBpgBSRZ8bwFpwns3kAG6YCKjoE1sguj+qI
-xTj7NH9zfRq9jIz8Td6Tix/jVPzqAEKUcwb2N9SCoJyc4eV0wLjp0xmyEL65soGg
-ZqVyXyfhwtHemGOEQt37MQOmxEs+lclEhh8+Cg+LKCyMyrWrbSFlSqJp7ohmT8fd
-S4N12JsErxzbtTtGsZETiaYc+tqrC9yoqW/x0IUQKZHHl7jeyyA=
-=flgN
------END PGP SIGNATURE-----
-
---Sig_/OLA4PRd4W1=pfOT/_baNr+x--
