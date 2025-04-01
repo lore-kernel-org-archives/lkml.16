@@ -1,44 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B55321D8A10;
-	Tue,  1 Apr 2025 06:13:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CC161D8A10;
+	Tue,  1 Apr 2025 06:13:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743487999; cv=none; b=Eeb6YzX3qdEkbd3ShPVO0ko+V/rwWi8pR+x1/pat6d3IH07B+CVjIT3b49x0UIcxD85MSHaBRtJ7jTzxt1r8KFzX64XKT/UgYj54GDFDwoW2peJszwNKECtxcSfqA+AxGRR9vBGNi/+0Eh6g5mL1Ef0pSxyE4YINRHPqJYFP0rE=
+	t=1743488033; cv=none; b=jytVXtNP6kSt4NDEBTG5jSGyrenyhv5qLSWgcVzDKArfcqNLen+Ppofz87lg/RzJ0xvwl7F1bFMwanvMJ+heJaPwinmU4PJ1fj65LJ9yh00YPz9sB5kP7+wJIQ+JZ1KNCwGb19cuF50t4TG/xl8bTkclz5GkRcEQCsdAME0biW4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743487999; c=relaxed/simple;
-	bh=+7e7yU5H/NuIchhcMj3L76DexybYnv4KBiK/p47KTFM=;
+	s=arc-20240116; t=1743488033; c=relaxed/simple;
+	bh=a/WBWaI1GRijiNVhX5FXEpnwkrIb9sOyftFgp32l9+0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AFQ6+C+l+QR9BvqSjqAFl6uCpEcBt40AZKb2eNgrKSPl91qPKDQ6ZECEp+/jwUTFNpbjaGW9Pian0zsiLD0kB3ZDjQoYb5cZD4YyvJz9fJ1gT2nqTN21QhoSujdLgJqnp+X2lsxgKhprD/QbTrHNw5w5OV9UAeWJ2aiCtrbGEJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r2nJTj8j; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=MCBoaMy06sE0GNEuS1D+QUktZ9Gn5xxl8dNZWe3qsVZ8HEfVXzIb314nPMa/zEdo9xXDIBdqS/8mSdIBg1+M4yQ4ujqvxSxnlMvcSSa6fDtnHzGHKutqlyZIM9TuhEcOdPfnPaDcIIjavg8erw85vtEx2aN5vUPjP8ORZxayZNk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jNymlsUa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r2nJTj8j"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40883C4CEEA;
-	Tue,  1 Apr 2025 06:13:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jNymlsUa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42742C4CEE8;
+	Tue,  1 Apr 2025 06:13:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743487998;
-	bh=+7e7yU5H/NuIchhcMj3L76DexybYnv4KBiK/p47KTFM=;
+	s=k20201202; t=1743488033;
+	bh=a/WBWaI1GRijiNVhX5FXEpnwkrIb9sOyftFgp32l9+0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=r2nJTj8j0OYgv+n+pbSS90uOlMOWhZMmOiL6k94nbzgmiq6XLYo14Gx+wFu6rbOxA
-	 1BPkVTI4F87e9Olz3mPQzqRrGBHNVE95YGGXqVCiIghjJH3Xf963efwPVuh9VrwROc
-	 YUgntKp07i5NnTtQx4/zpm6KUOij1V3asEH05gX32efQrbLEqnzYR+6aviGU6JxNMr
-	 ECGmPuaUu/6GOGPqIE+bZU8voAqvK1ecg+biZbxUDrbqczwtHSta4ZdahfBQf9FwwT
-	 OTiylc7HXoFUBTo5+mx5INLcf+QLffhl9C9/LRm6EtnUfHNWS74Y3aCMGTHZaGvlq2
-	 ZcXf9Ug2D4tFA==
-Date: Tue, 1 Apr 2025 08:13:14 +0200
+	b=jNymlsUa/smbZNP5cRJtDeGbNZjsIVNja4x7dB9r+sVZdWnd5hWwiKB9CRvQsFeJe
+	 Zp2BVuP5TDBpX+8K4PJ6IlnjXD23NVrptNeVecJQtqHl8LIwNdlF4feRJHDEjq3G4J
+	 4/fSDq6auzVqB8pY1se8oupuPSaxBsDNH6RT87HikgM9BDj+IqWlb21+hYu9KOh3sK
+	 aIw+G163YeCtXjUrdu1LmKGBOQPOzNd7B5yxhmrM5zMnxgyiWorK7NYeR9a1D/XGcW
+	 8djMi/ZIcjD3UPkdjNV+6dVMi3F4GPqjvzUYfcQD8lJIOZtC9PAn1r87ZIyrgtthxO
+	 0pFvcrsHWlSUg==
+Date: Tue, 1 Apr 2025 08:13:49 +0200
 From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Francesco Dolcini <francesco@dolcini.it>
-Cc: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, 
+To: Xianwei Zhao <xianwei.zhao@amlogic.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, 
 	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Farouk Bouabid <farouk.bouabid@cherry.de>, 
-	Quentin Schulz <quentin.schulz@cherry.de>, Francesco Dolcini <francesco.dolcini@toradex.com>, 
-	linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] dt-bindings: hwmon: amc6821: add fan and PWM
- output
-Message-ID: <20250401-boisterous-teal-bison-533b01@krzk-bin>
-References: <20250331155229.147879-1-francesco@dolcini.it>
- <20250331155229.147879-2-francesco@dolcini.it>
+	Conor Dooley <conor+dt@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-amlogic@lists.infradead.org, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, Conor Dooley <conor.dooley@microchip.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: pinctl: amlogic,pinctrl-a4: Add
+ compatible string for A5
+Message-ID: <20250401-meteoric-perfect-cuttlefish-abd62d@krzk-bin>
+References: <20250401-a5-pinctrl-v2-0-a136c1058379@amlogic.com>
+ <20250401-a5-pinctrl-v2-1-a136c1058379@amlogic.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,41 +49,31 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250331155229.147879-2-francesco@dolcini.it>
+In-Reply-To: <20250401-a5-pinctrl-v2-1-a136c1058379@amlogic.com>
 
-On Mon, Mar 31, 2025 at 05:52:28PM +0200, Francesco Dolcini wrote:
-> From: Francesco Dolcini <francesco.dolcini@toradex.com>
+On Tue, Apr 01, 2025 at 10:06:21AM +0800, Xianwei Zhao wrote:
+> Amlogic A5 SoCs uses the same pintrl controller as A4 SoCs. There is
+> no need for an extra compatible line in the driver, but add A5
+> compatible line for documentation.
 > 
-> Add properties to describe the fan and the PWM controller output.
-> 
-> Link: https://www.ti.com/lit/gpn/amc6821
-> Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
+> Acked-by: Conor Dooley <conor.dooley@microchip.com>
+> Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
 > ---
-> v3:
->  - explicitly describe the fan, use standard PWM and FAN bindings
->  - pwm.yaml cannot be referenced, because of the $nodename pattern that is
->    enforced there
-> v2: https://lore.kernel.org/all/20250224180801.128685-2-francesco@dolcini.it/
->  - no changes
-> v1: https://lore.kernel.org/all/20250218165633.106867-2-francesco@dolcini.it/
-> ---
->  .../devicetree/bindings/hwmon/ti,amc6821.yaml      | 14 +++++++++++++-
->  1 file changed, 13 insertions(+), 1 deletion(-)
+>  Documentation/devicetree/bindings/pinctrl/amlogic,pinctrl-a4.yaml | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/hwmon/ti,amc6821.yaml b/Documentation/devicetree/bindings/hwmon/ti,amc6821.yaml
-> index 5d33f1a23d03..94aca9c378e6 100644
-> --- a/Documentation/devicetree/bindings/hwmon/ti,amc6821.yaml
-> +++ b/Documentation/devicetree/bindings/hwmon/ti,amc6821.yaml
-> @@ -28,6 +28,13 @@ properties:
->    i2c-mux:
->      type: object
+> diff --git a/Documentation/devicetree/bindings/pinctrl/amlogic,pinctrl-a4.yaml b/Documentation/devicetree/bindings/pinctrl/amlogic,pinctrl-a4.yaml
+> index 8eb50cad61d5..3bebccaf0c9f 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/amlogic,pinctrl-a4.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/amlogic,pinctrl-a4.yaml
+> @@ -14,8 +14,12 @@ allOf:
 >  
-> +  fan:
-> +    $ref: fan-common.yaml#
-> +    unevaluatedProperties: false
+>  properties:
+>    compatible:
+> -    const: amlogic,pinctrl-a4
+> -
 
-Why do you need the child, instead of referencing fan-common in the top
-level?
+Do not remove blank line.
 
 Best regards,
 Krzysztof
