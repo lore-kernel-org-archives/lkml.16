@@ -1,62 +1,80 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F23FD3595D;
-	Tue,  1 Apr 2025 01:09:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E3503595D
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 01:11:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743469771; cv=none; b=uK4+O16uJDGrjLCVE4zwPpu1nSVSSs8vP+vAI/wDg7G0lnSzXJXHo+6wxBMhcIU7E+fn7aFmbRitH6Tl0b6rpO56GG8t9LoQE1RD3aTsw7b5i6xdnNYfonZVkbJjoQD5EK/tNsBYnAdYEucrG8pYG3HMHl2j+5J740VswEIE0s0=
+	t=1743469870; cv=none; b=rrDc1uMtkEMTbA0c0b3rExZFy3jhaXjCTmrpvGiBHGN29rGXs5n9fNuEymuvnK8yyE3ZyUrCAea/TB69Rpmgi91iOG6EJlQm+wmaOsHP+dicYyia7Vrg+aHARQpb4R9SEphp14JSLApDErPFo4P+YS1fbCl50Tw2dm8ZTItUFPc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743469771; c=relaxed/simple;
-	bh=xnDKz4hdm/kkZqcWSzvYO96l5CqeHbCretys4W9iu2o=;
+	s=arc-20240116; t=1743469870; c=relaxed/simple;
+	bh=c4VRjFgdPHYVEXSgwVTJK9NOPjH1pvGIrhY1YvoLmpg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JGihU/Z7m0/tO7rJ8ZFFvjo3RML6cRJoR/drLSBkZ6Jj2bq1t8exDUHY17iPyUswYt/u8kgmRo/Ikz76bOzsa7uarfjfNTDHyFGUnom8Li/N3u3FBEi4HQ2jg15tLIyy2wyCskXJxQiU2axPpwOBctliM38vveLhxG5RieF/WNU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ce0nhRfs; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=sv9uB3QsBI0M4zpKezlgQ8DVhTyB7sI6B4izBL7qR0tjQ6d8er+jUoCZfDvSqqPmn/2ufokJ2noHrPaaCfHwv/AJO4+zfyZ3AaVeM/S70VhsQMMnjtz2rJsEjIbJ5ESA7U8VgCxba+5wVxz0SOkGkGl+eTabJY0wC4aEgLG+YPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=vEZCj0z3; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ce0nhRfs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 978F4C4CEE3;
-	Tue,  1 Apr 2025 01:09:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743469769;
-	bh=xnDKz4hdm/kkZqcWSzvYO96l5CqeHbCretys4W9iu2o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ce0nhRfsh4foP8kliSiSC0eCyy1P530wNZv1yXlz0fhnntdzc2pHj8ehJ73sKloVM
-	 C0cw7cUj+BIc9kmwIU3OVnx2X/5KZolUkXS2nrcBmOD80XEOnwWEu+qaNld4IC1Lbz
-	 ktTwM4BKKx5FIv7O9NfsPq2v7mz23KDqI6mFjPh6003pPohStRGfOcfyHzqdAMOVmD
-	 1gOusmiwUbvZzBP/fZDRftY7IT+SckUkPyIVGM5JFjlw/2fk+9/Ns880REt1nFz5Or
-	 pRuSFvVxXKUnth/AX3auD+qu9VK2N7OyoDzrtCOl5aOlD0WNxZyXTU1dmfK4K2DInq
-	 5BLO5MT41pJgw==
-Date: Mon, 31 Mar 2025 18:09:27 -0700
-From: Luis Chamberlain <mcgrof@kernel.org>
-To: Leon Romanovsky <leon@kernel.org>, Daniel Gomez <da.gomez@samsung.com>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>, Robin Murphy <robin.murphy@arm.com>,
-	Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-	Sagi Grimberg <sagi@grimberg.me>, Keith Busch <kbusch@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-	linux-rdma@vger.kernel.org, iommu@lists.linux.dev,
-	linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
-	kvm@vger.kernel.org, linux-mm@kvack.org,
-	Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH v7 00/17] Provide a new two step DMA mapping API
-Message-ID: <Z-s8x_YyGEYTz8BJ@bombadil.infradead.org>
-References: <cover.1738765879.git.leonro@nvidia.com>
- <20250220124827.GR53094@unreal>
- <1166a5f5-23cc-4cce-ba40-5e10ad2606de@arm.com>
- <20250302085717.GO53094@unreal>
- <e024fe3d-bddf-4006-8535-656fd0a3fada@arm.com>
- <Z+KjVVpPttE3Ci62@ziepe.ca>
- <20250325144158.GA4558@unreal>
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="vEZCj0z3"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2243803b776so21408105ad.0
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 18:11:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1743469868; x=1744074668; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=lSOCXG/bLgDc7ME6ApTEkqOXZXXVJMqkGl0AyQAQOxU=;
+        b=vEZCj0z3Tjcqz6RBOsS5Whdq4AUiNMkctqwkdVKEg9yxZRxzC9Fg6Fv8JMfs9r8UZd
+         ACKrNII4bULPCYXSEzFsSaJVb4w/HQdFnBCnU7tkDkjQAzVebmotcu57DI3ERsmlFIK8
+         zPZmEPznvvXHGU/lXDLh+yXxyiXZ3CDvxz7iu0C0VkVlAd4dNCAKoxAK2DOSJF+uUThh
+         lfFgJSpUENtqATDkE0sSFfAD8R6QceelfQk4Gbtz1RHDpebBHJcO8kTPOcU97Kqo9QBo
+         +E6FLFqi/PZdguLMv0Kqa81aNLkAZmqFwkoxGWe820fP5ZN99ld60s+eFFx0lkZO7pVY
+         HU5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743469868; x=1744074668;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lSOCXG/bLgDc7ME6ApTEkqOXZXXVJMqkGl0AyQAQOxU=;
+        b=HUfxeeR+x3iUGritqN4SmPOD52aaJ6phTMP+I/DcUg6DxC3MSxmiGUzLaxzzIQOZOt
+         Gd+rz7K9Al6y1dPSK4sLE+CDBo6xT6Ml6iwHLcrDb03OGPqjbpA+3q+5cX+LFVZhZFU0
+         73X+TpUpSxKJK+VppcWAgB6tehwZQcCaE0sH/PDy6ENV3zbCZGPCZivbKpfjkISS75tn
+         qkzQLV18rXYJNskD59xv2JA3pQyXQb0uiNFZ6c/4752FqDq2pyFdDLHQgCR3UNUD4BL2
+         CNtvmgKvbLkft/IV+1Im5EM/AYSSobPFgNgH2BCqAdvs5pFaONpy6FgvGYOns6tXa0BZ
+         Bi3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXBL5Oh8mVcU2fQk9jx9ynaRsi0EFe1Q0NazcXxhUSpmoxpmQAIYsf3l6LI2kNohJC7ZUSbR4C+LQRER2w=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx+HY8TgjpqR0pZxoTYSeKO3sRQyEvf2KFzjuzZAfDea3RvvOpw
+	8n5ADP49M/ruqaG7vMGtqFysW+eKROO9p7/kfp9OQHYU/hXuiqU0JPPWUVyn6x8=
+X-Gm-Gg: ASbGncuNT3G5OZGbJwF3oVFhY5EDJ7s503suiPzZUehJxWc1hXc/Jnb+uAmc9H67xra
+	L/20j/BY/j7ywHBhb7lPSKZUuPoQ1AAo5FRpr0p4SsG0r2MI1+2l500C3VyqrvKINIh9kAOE9z8
+	aHb7OhDrY3T3Fvh1SZG605OwhiwXw6SrF9VsRgrf+GeHUpYTyOcyHzOUuiCXaY8kGKrogEyJsQ3
+	W0Diq8vQDjPjhHyCnXd4vmEdcB0eoy2DXUY/NgTB5NpIDFgZ+iet+MWLgVYGDK7/KTXDm6Zdgmd
+	5QzGii6L7i0CG5qRI5C/be+u4eYP2ISMz7bG1BOpAwC3tFhZc9KgaS+S52uhoXIWcev478YQzUv
+	izg00UCDvr0IbxLbR/PpxUE2ZR8u7
+X-Google-Smtp-Source: AGHT+IFLfpDROybDyATP4hEqXJeYrPhcFQxWBwYKhCahugcasGxplhhifiK5A1Cetc20wuxbo6MSnA==
+X-Received: by 2002:a17:902:9689:b0:224:584:6f04 with SMTP id d9443c01a7336-2292f95d89bmr122418275ad.18.1743469868573;
+        Mon, 31 Mar 2025 18:11:08 -0700 (PDT)
+Received: from dread.disaster.area (pa49-181-60-96.pa.nsw.optusnet.com.au. [49.181.60.96])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73971063d24sm7614688b3a.86.2025.03.31.18.11.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Mar 2025 18:11:08 -0700 (PDT)
+Received: from dave by dread.disaster.area with local (Exim 4.98)
+	(envelope-from <david@fromorbit.com>)
+	id 1tzQ9g-00000002u8k-2xKY;
+	Tue, 01 Apr 2025 12:11:04 +1100
+Date: Tue, 1 Apr 2025 12:11:04 +1100
+From: Dave Chinner <david@fromorbit.com>
+To: Christian Brauner <brauner@kernel.org>
+Cc: linux-fsdevel@vger.kernel.org, jack@suse.cz,
+	Ard Biesheuvel <ardb@kernel.org>, linux-efi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	James Bottomley <James.Bottomley@hansenpartnership.com>,
+	mcgrof@kernel.org, hch@infradead.org, rafael@kernel.org,
+	djwong@kernel.org, pavel@kernel.org, peterz@infradead.org,
+	mingo@redhat.com, will@kernel.org, boqun.feng@gmail.com
+Subject: Re: [PATCH 3/6] xfs: replace kthread freezing with auto fs freezing
+Message-ID: <Z-s9KG-URzB9DwUb@dread.disaster.area>
+References: <20250401-work-freeze-v1-0-d000611d4ab0@kernel.org>
+ <20250401-work-freeze-v1-3-d000611d4ab0@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,39 +83,82 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250325144158.GA4558@unreal>
+In-Reply-To: <20250401-work-freeze-v1-3-d000611d4ab0@kernel.org>
 
-On Tue, Mar 25, 2025 at 04:41:58PM +0200, Leon Romanovsky wrote:
-> On Tue, Mar 25, 2025 at 09:36:37AM -0300, Jason Gunthorpe wrote:
-> > On Fri, Mar 21, 2025 at 04:05:22PM +0000, Robin Murphy wrote:
+On Tue, Apr 01, 2025 at 02:32:48AM +0200, Christian Brauner wrote:
+> From: Luis Chamberlain <mcgrof@kernel.org>
 > 
-> <...>
+> The kernel power management now supports allowing the VFS
+> to handle filesystem freezing freezes and thawing. Take advantage
+> of that and remove the kthread freezing. This is needed so that we
+> properly really stop IO in flight without races after userspace
+> has been frozen. Without this we rely on kthread freezing and
+> its semantics are loose and error prone.
 > 
-> > > So what is it now, a layering violation in a hat with still no clear path to
-> > > support SWIOTLB?
-> > 
-> > I was under the impression Leon had been testing SWIOTLB?
+> The filesystem therefore is in charge of properly dealing with
+> quiescing of the filesystem through its callbacks if it thinks
+> it knows better than how the VFS handles it.
 > 
-> Yes, SWIOTLB works
+.....
 
-We will double check too.
+> diff --git a/fs/xfs/xfs_trans_ail.c b/fs/xfs/xfs_trans_ail.c
+> index 0fcb1828e598..ad8183db0780 100644
+> --- a/fs/xfs/xfs_trans_ail.c
+> +++ b/fs/xfs/xfs_trans_ail.c
+> @@ -636,7 +636,6 @@ xfsaild(
+>  	unsigned int	noreclaim_flag;
+>  
+>  	noreclaim_flag = memalloc_noreclaim_save();
+> -	set_freezable();
+>  
+>  	while (1) {
+>  		/*
+> @@ -695,8 +694,6 @@ xfsaild(
+>  
+>  		__set_current_state(TASK_RUNNING);
+>  
+> -		try_to_freeze();
+> -
+>  		tout = xfsaild_push(ailp);
+>  	}
+>  
 
-> and Christoph said it more than once that he tested
-> NVMe conversion patches and they worked.
+So what about the TASK_FREEZABLE flag that is set in this code
+before sleeping?
 
-We've taken this entire series and the NVMe patches and have built on
-top of them. The nvme-pci driver does not have scatter list chaining
-support, and we don't want to support that because it is backwards.
-Instead, the two step DMA API lets us actually remove all that scatter
-list cruft and provide a single solution for direct IO and io-uring
-command passthrough to support large IOs [0] [1] and logical block sizes
-up to 2 MiB.
+i.e. this code before we schedule():
 
-We continue to plan to work on this and are happy to test this further.
+                if (tout && tout <= 20)
+                        set_current_state(TASK_KILLABLE|TASK_FREEZABLE);
+                else
+                        set_current_state(TASK_INTERRUPTIBLE|TASK_FREEZABLE);
 
-Clearly, we don't want any regressions on NVMe.
+Shouldn't TASK_FREEZABLE go away, too?
 
-[0] https://lore.kernel.org/all/20250320111328.2841690-1-mcgrof@kernel.org/
-[1] https://lore.kernel.org/all/Z9v-1xjl7dD7Tr-H@bombadil.infradead.org/
+> diff --git a/fs/xfs/xfs_zone_gc.c b/fs/xfs/xfs_zone_gc.c
+> index c5136ea9bb1d..1875b6551ab0 100644
+> --- a/fs/xfs/xfs_zone_gc.c
+> +++ b/fs/xfs/xfs_zone_gc.c
+> @@ -993,7 +993,6 @@ xfs_zone_gc_handle_work(
+>  	}
+>  
+>  	__set_current_state(TASK_RUNNING);
+> -	try_to_freeze();
+>  
+>  	if (reset_list)
+>  		xfs_zone_gc_reset_zones(data, reset_list);
+> @@ -1041,7 +1040,6 @@ xfs_zoned_gcd(
+>  	unsigned int		nofs_flag;
+>  
+>  	nofs_flag = memalloc_nofs_save();
+> -	set_freezable();
+>  
+>  	for (;;) {
+>  		set_current_state(TASK_INTERRUPTIBLE | TASK_FREEZABLE);
 
-  Luis
+Same question here for this newly merged code, too...
+
+-Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
