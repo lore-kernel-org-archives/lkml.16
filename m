@@ -1,149 +1,154 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mta-64-225.siemens.flowmailer.net (mta-64-225.siemens.flowmailer.net [185.136.64.225])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 723A51EB184;
-	Tue,  1 Apr 2025 09:06:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56A3B1EB184
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 09:06:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.136.64.225
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743498403; cv=none; b=IvC3EnsRgFprDabgUgP2MdgxLTNqBzs29/ARFvERYZgm6a9FU5THxEP0bTB5pk66Kj6IIaLZ6qDa79LO7VAvHEWDQXZoXFBb9sOJlMwVQIgu/Ffgsk14jlCSrm/TNXo/s6wJOAwenADSekhKXc8C4RJz/Kv02FWfj65rt7eWHX8=
+	t=1743498415; cv=none; b=o4WdorAF1h7xO2+reJZGjaKojH3FPj1GZ+Rgo/vh5ECfESXCXmfhllcnG/kL50NFPiYxgXbJ9YnDYiGXyW6os2mYaAr/xM0by/dmt+y/O/eKALbYUSIafKl306LKYXcsajlMdOS56hudVZoEtsqJXCLq8V/tph9xnePV4/fIrGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743498403; c=relaxed/simple;
-	bh=bBVMwoBL8LR8zOwYGi5TeDtaPBOUxSmU0D75RDFB+V4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=MJImIZjaZM83/yyTizPZUuGClO3CUVP4YOO2BYbs6OV2S4tMl+Hxbj2m6mzUM3xa/1HH5KwpJ9h7RcxsqivwwJRqHaceLK4Q3rkjkEKO9AP7564ITdHWFRAx4cMpqWKV+fFq2s1I+dt7CYEz38OWeonnx1YwmJUCzNavI5Owq5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NVwlp5Q2; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743498415; c=relaxed/simple;
+	bh=kKr/tIt2LCEu9owDBfn3bQojzZ0WnrYrGhqQqPDytWQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gzEK63lQKqv0uLtbio7sUt1bCpI+riOJlIo1UntOaYFtJBpxpxIJO+PLgrC073eVuS4HYhYX70wRE9s/sTa2DS8rl+59xLNmA/lFVf5Q7FPz+T5Xm4Iwil96IU+SP7Y68wsM6IRMb8grzUzGvNxAryuqNwT3aUIFx9Mf2DYTCHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com; dkim=pass (2048-bit key) header.d=siemens.com header.i=alexander.sverdlin@siemens.com header.b=VHSoDJGB; arc=none smtp.client-ip=185.136.64.225
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NVwlp5Q2"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-227cf12df27so74929875ad.0;
-        Tue, 01 Apr 2025 02:06:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743498401; x=1744103201; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=lZeibnPf6F/j2ao9xre27sq9y+syyRAsUdBCPrAKj20=;
-        b=NVwlp5Q22qhtVgAgEZAfoGpcYNEeReK0Xk/CTEORkV67rS1r61/Xh8pUrh3yDPPvNp
-         JeTRLLe9lM7sBLzSPW+llZ1DJtLnAN9OvSFFXEd2q6HtKrOwLlBAsEV0ss90fmgfhCfG
-         Q6Tp2H+mSFoiY1/h83lWLGM7RMdRwlJH+JtxglruSqCaqMG2DZF9/40CHhOKtAMtw4SA
-         PjmimfdPj27V3iODODFcG4X28/lZEwuyt1m6W8QvQ/rXMe//v7kDuhIzhm0/uVMWjivg
-         ou5R5cNFnJwy5FoBCbj/r5ft36hpNcLvHkHnwvpE789jhnS6gA4NTXJPs0nZ2rrFg7e6
-         4waA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743498401; x=1744103201;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=lZeibnPf6F/j2ao9xre27sq9y+syyRAsUdBCPrAKj20=;
-        b=AKmP61SnhwckoP5Z3C43NhTCH9GSZRABNaVqBOqrc/SkV1UVFA0tAr1l0s4ZHya0X2
-         4W56qOCpQ+WkFelSPf0/CCPShk6nAslqWdWptcyZxPhhtLCFeWk5Shhcir58bCJNbcRL
-         j7rrYSY8Qyjg5CpUiR7t+81MNJn6CDZ386WJdusZeaky6Vuk9iDET7Tnmz2tkpnEv5Y3
-         53n5q6L4vMHlCDQe42BiK/a+DnvmF46gsCT39rCzDGAQQ+fx9LXuP8w2fDG7TDolGlM9
-         er6RU13GRwoVbpgHmMcr8/YuGK2hBSBWagD7nFvIJ0OBNSkYvmPCAZBgO/9Ow0ou9V29
-         J9Fw==
-X-Forwarded-Encrypted: i=1; AJvYcCWUmMf3OKYc/MI+Cy5Fne6/MXUJ5mhy8qkaFwQYfSBPXEcyS6SYXB0y48qS4ZiF19QBrjixU50xQCiNM4g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxluH4BftDIcy10yZ+mgmZoFA8Bf//BJqKlTaW75ymjFovN/VqE
-	sC0G14fp5zmG1UnQV/2poKqiRNrzg8zp/+y7Q4sjC4QeVarmRq40hewq+KEI8is=
-X-Gm-Gg: ASbGncvpHlYy/E5E3Ljd0jkygWubxdvavRVNgHHRi4UzQEMpfCEkNq4vRxzZR7LSIh1
-	2QF49h3PBHu7SCTFilzGrUW9Q3YMs4TYc0RLw1HA8paOW61rhfwsYS/uqny4YP29rgEh8ujHcN5
-	NPkcEhCNsyt1Gd/X2zV9rzKJeZZFXutaD7RJUnC8g7vE68npyq/yrvbo+b6j0sDanpGuPtADs/2
-	ure/0kBRMEvtwFbi2H9Bdy7iHKwIrLAtcgSewOd66xxqjs8FOiJ71azhWZHJLDe13AYGx6GJ4xQ
-	oEAt1etN6UO2redPitwsd1Wj99SSUur0MU6CuTWjhuTPtcsG1f3SkdMztnauNIoamh36x4zKDyQ
-	=
-X-Google-Smtp-Source: AGHT+IG0bnk3kuG045+To5X7Apkw1uxbIVmYAPpm8jfEhLoa/xUxQ6HYwKkOQY476h55fgBRW3mzWg==
-X-Received: by 2002:a17:902:f545:b0:215:ba2b:cd55 with SMTP id d9443c01a7336-2292ec073d0mr205536655ad.2.1743498401286;
-        Tue, 01 Apr 2025 02:06:41 -0700 (PDT)
-Received: from fedora.dns.podman ([43.228.180.230])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291f1f7cc2sm82791875ad.258.2025.04.01.02.06.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Apr 2025 02:06:40 -0700 (PDT)
-From: Hangbin Liu <liuhangbin@gmail.com>
-To: netdev@vger.kernel.org
-Cc: Jay Vosburgh <jv@jvosburgh.net>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Nikolay Aleksandrov <razor@blackwall.org>,
-	Simon Horman <horms@kernel.org>,
-	Cosmin Ratiu <cratiu@nvidia.com>,
-	linux-kernel@vger.kernel.org,
-	Hangbin Liu <liuhangbin@gmail.com>
-Subject: [PATCHv2 net] bonding: use permanent address for MAC swapping if device address is same
-Date: Tue,  1 Apr 2025 09:06:31 +0000
-Message-ID: <20250401090631.8103-1-liuhangbin@gmail.com>
-X-Mailer: git-send-email 2.46.0
+	dkim=pass (2048-bit key) header.d=siemens.com header.i=alexander.sverdlin@siemens.com header.b="VHSoDJGB"
+Received: by mta-64-225.siemens.flowmailer.net with ESMTPSA id 20250401090647c4296a87fa35f2cbfa
+        for <linux-kernel@vger.kernel.org>;
+        Tue, 01 Apr 2025 11:06:47 +0200
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm2;
+ d=siemens.com; i=alexander.sverdlin@siemens.com;
+ h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc;
+ bh=WL92Zqa9pFjA8RNRarusWwAsiJfwqAlo3KLnH3r3wI0=;
+ b=VHSoDJGBuAminTb59v2NFyXwPHMG5YDp8mtNd9BQeOTZqNfoqD7VgqHHN52gy0fIucDJrE
+ E/UzAfGa4PDpaksnwnZ2DjnDpL8Ix6n0xzD0azh/fzqz0nvxybrQpQ9sTqGrPkld1f26SxhZ
+ yXV1i2g/toTcBgqw0JEK72qxxuSRQJtma8zMyt9Xx0D9aVj7OCKbP/1oLyzFBXgBjKZ5mN3W
+ vHrFwV4v2k0a0naQb09w90WiYxRqMQT+jk4Grt3ilbwWdd/9vJbNieWGvdii+dtkLzVTt6Jn
+ jzZN3d2nt5/evXvGbQ1Wglq0LIY6pdtDOX6L1z1YQ115f0YEBjr7IMWw==;
+From: "A. Sverdlin" <alexander.sverdlin@siemens.com>
+To: Tony Lindgren <tony@atomide.com>,
+	linux-omap@vger.kernel.org
+Cc: Alexander Sverdlin <alexander.sverdlin@siemens.com>,
+	Aaro Koskinen <aaro.koskinen@iki.fi>,
+	Andreas Kemnade <andreas@kemnade.info>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Roger Quadros <rogerq@kernel.org>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] Revert "bus: ti-sysc: Probe for l4_wkup and l4_cfg interconnect devices first"
+Date: Tue,  1 Apr 2025 11:06:34 +0200
+Message-ID: <20250401090643.2776793-1-alexander.sverdlin@siemens.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Flowmailer-Platform: Siemens
+Feedback-ID: 519:519-456497:519-21489:flowmailer
 
-Similar with a951bc1e6ba5 ("bonding: correct the MAC address for "follow"
-fail_over_mac policy"). The fail_over_mac follow mode requires the formerly
-active slave to swap MAC addresses with the newly active slave during
-failover. However, the slave's MAC address can be same under certain
-conditions:
+From: Alexander Sverdlin <alexander.sverdlin@siemens.com>
 
-1) ip link set eth0 master bond0
-   bond0 adopts eth0's MAC address (MAC0).
+This reverts commit 4700a00755fb5a4bb5109128297d6fd2d1272ee6.
 
-1) ip link set eth1 master bond0
-   eth1 is added as a backup with its own MAC (MAC1).
+It breaks target-module@2b300050 ("ti,sysc-omap2") probe on AM62x in a case
+when minimally-configured system tries to network-boot:
 
-3) ip link set eth0 nomaster
-   eth0 is released and restores its MAC (MAC0).
-   eth1 becomes the active slave, and bond0 assigns MAC0 to eth1.
+[    6.888776] probe of 2b300050.target-module returned 517 after 258 usecs
+[   17.129637] probe of 2b300050.target-module returned 517 after 708 usecs
+[   17.137397] platform 2b300050.target-module: deferred probe pending: (reason unknown)
+[   26.878471] Waiting up to 100 more seconds for network.
 
-4) ip link set eth0 master bond0
-   eth0 is re-added to bond0, but both eth0 and eth1 now have MAC0,
-   breaking the follow policy.
+There are minimal configurations possible when the deferred device is not
+being probed any more (because everything else has been successfully
+probed) and deferral lists are not processed any more.
 
-To resolve this issue, we need to swap the new active slave’s permanent
-MAC address with the old one. The new active slave then uses the old
-dev_addr, ensuring that it matches the bond address. After the fix:
+Stable mmc enumeration can be achieved by filling /aliases node properly
+(4700a00755fb commit's rationale).
 
-5) ip link set bond0 type bond active_slave eth0
-   dev_addr is the same, swap old active eth1's MAC (MAC0) with eth0.
-   Swap new active eth0's permanent MAC (MAC0) to eth1.
-   MAC addresses remain unchanged.
+After revert:
 
-6) ip link set bond0 type bond active_slave eth1
-   dev_addr is the same, swap the old active eth0's MAC (MAC0) with eth1.
-   Swap new active eth1's permanent MAC (MAC1) to eth0.
-   The MAC addresses are now correctly differentiated.
+[    9.006816] IP-Config: Complete:
+[    9.010058]      device=lan0, ...
 
-Fixes: 3915c1e8634a ("bonding: Add "follow" option to fail_over_mac")
-Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
+Tested-by: Andreas Kemnade <andreas@kemnade.info> # GTA04, Panda, BT200
+Reviewed-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Alexander Sverdlin <alexander.sverdlin@siemens.com>
 ---
-v2: use memcmp directly instead of adding a redundant helper (Jakub Kicinski)
----
- drivers/net/bonding/bond_main.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+v2: Massaged the commit message.
 
-diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
-index e45bba240cbc..1e343d8fafa0 100644
---- a/drivers/net/bonding/bond_main.c
-+++ b/drivers/net/bonding/bond_main.c
-@@ -1107,8 +1107,13 @@ static void bond_do_fail_over_mac(struct bonding *bond,
- 			old_active = bond_get_old_active(bond, new_active);
+ drivers/bus/ti-sysc.c | 49 -------------------------------------------
+ 1 file changed, 49 deletions(-)
+
+diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
+index f67b927ae4caa..e5c02e950f2c1 100644
+--- a/drivers/bus/ti-sysc.c
++++ b/drivers/bus/ti-sysc.c
+@@ -677,51 +677,6 @@ static int sysc_parse_and_check_child_range(struct sysc *ddata)
+ 	return 0;
+ }
  
- 		if (old_active) {
--			bond_hw_addr_copy(tmp_mac, new_active->dev->dev_addr,
--					  new_active->dev->addr_len);
-+			if (memcmp(old_active->dev->dev_addr, new_active->dev->dev_addr,
-+				   new_active->dev->addr_len) == 0)
-+				bond_hw_addr_copy(tmp_mac, new_active->perm_hwaddr,
-+						  new_active->dev->addr_len);
-+			else
-+				bond_hw_addr_copy(tmp_mac, new_active->dev->dev_addr,
-+						  new_active->dev->addr_len);
- 			bond_hw_addr_copy(ss.__data,
- 					  old_active->dev->dev_addr,
- 					  old_active->dev->addr_len);
+-/* Interconnect instances to probe before l4_per instances */
+-static struct resource early_bus_ranges[] = {
+-	/* am3/4 l4_wkup */
+-	{ .start = 0x44c00000, .end = 0x44c00000 + 0x300000, },
+-	/* omap4/5 and dra7 l4_cfg */
+-	{ .start = 0x4a000000, .end = 0x4a000000 + 0x300000, },
+-	/* omap4 l4_wkup */
+-	{ .start = 0x4a300000, .end = 0x4a300000 + 0x30000,  },
+-	/* omap5 and dra7 l4_wkup without dra7 dcan segment */
+-	{ .start = 0x4ae00000, .end = 0x4ae00000 + 0x30000,  },
+-};
+-
+-static atomic_t sysc_defer = ATOMIC_INIT(10);
+-
+-/**
+- * sysc_defer_non_critical - defer non_critical interconnect probing
+- * @ddata: device driver data
+- *
+- * We want to probe l4_cfg and l4_wkup interconnect instances before any
+- * l4_per instances as l4_per instances depend on resources on l4_cfg and
+- * l4_wkup interconnects.
+- */
+-static int sysc_defer_non_critical(struct sysc *ddata)
+-{
+-	struct resource *res;
+-	int i;
+-
+-	if (!atomic_read(&sysc_defer))
+-		return 0;
+-
+-	for (i = 0; i < ARRAY_SIZE(early_bus_ranges); i++) {
+-		res = &early_bus_ranges[i];
+-		if (ddata->module_pa >= res->start &&
+-		    ddata->module_pa <= res->end) {
+-			atomic_set(&sysc_defer, 0);
+-
+-			return 0;
+-		}
+-	}
+-
+-	atomic_dec_if_positive(&sysc_defer);
+-
+-	return -EPROBE_DEFER;
+-}
+-
+ static struct device_node *stdout_path;
+ 
+ static void sysc_init_stdout_path(struct sysc *ddata)
+@@ -947,10 +902,6 @@ static int sysc_map_and_check_registers(struct sysc *ddata)
+ 	if (error)
+ 		return error;
+ 
+-	error = sysc_defer_non_critical(ddata);
+-	if (error)
+-		return error;
+-
+ 	sysc_check_children(ddata);
+ 
+ 	if (!of_property_present(np, "reg"))
 -- 
-2.46.0
+2.48.1
 
