@@ -1,149 +1,77 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DC2420408A
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 14:47:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47239204851;
+	Tue,  1 Apr 2025 14:48:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743518857; cv=none; b=lq0nnN8jfaJ4HNrNiUwg9i9s2VSwPgqYBT5rzuCsNPOGYXAF6/wxEVA7l5d/qXuRCpXNTPBm5E3LwlDRmoiY1Ok8OjOhDEwri/SrjH7e3hFfjR7zHEu3unn2+gdRY6q6mgryI42lrbUMtLm2pp+5/wX8Ex0/7mhlKRuMQhjuYPE=
+	t=1743518910; cv=none; b=CQ6VVXMMvLE8dD1/5LmOOV25LvG0KpbHxol6EjzWfOIcyoxgHT5jIdUVopoz596wgNNFwJPyEdJREwN68Gj56WycisQ5Sms9bhrVPUYNFJXJhN3a3Tk9IPho+/XPsEybJEH8B6PhsiWWnmI5eZSXdmYC1MUAy59F9pgaIEamfW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743518857; c=relaxed/simple;
-	bh=qxxn22A+TWwz7W7O83WXc2hBsRRs8xbjPxTiDcaQkjc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mjOOHwXmdXcUU4yTgT/EIUca09/SsDMVroyL9yn2l8eR7vy/tGamaNwQbTmi6xdH4NYcv1rnAYR8CYysG7XPoNW6OzMb50rXQKb7niy8kXKT3MyCy3UxNvGqkOBThASg7Ojpt++ea5TvJXH4XGsQOPWQCIpPCFYpNeE8P7EvF7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gKF6fG8h; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gKF6fG8h"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-3012a0c8496so7498306a91.2
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 07:47:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743518856; x=1744123656; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=8oI6DPpyJYi5fACjQLTchVPFFOS5/gnF91U27CkBiJc=;
-        b=gKF6fG8hLbWnd93mNbXAfiWygyswlfjj4HpUj6OsAO2sNleyHKCNgwQ6WVGwhEGDyh
-         3YWxy3jfLHqKLuDIFWZwfe725zaLikinl6RSLA1cLGa+8zeA6xrCyzZp68w2/d1KktbW
-         aUe7OSlP2pKfKshix2+1ZL7jJUwstJkXi6GQ5wZ9t7Q/Y9GqgM51/QrPwT3lBQ9wPnPc
-         AOOoPI09MX4F5IMQxA3cuXy/WPztAOG5DXkA7v/uA5xQT0joI+QhuA7t/HbvBoETeONz
-         D60NwmhkNXjr1ulthD81QWygDJd6tN5RFfvtPcTSDCvzuMlxdD9DQDA7/rcsgve4KTp+
-         rtQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743518856; x=1744123656;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8oI6DPpyJYi5fACjQLTchVPFFOS5/gnF91U27CkBiJc=;
-        b=HbqiHWHI3prYR+lNhOMlVbcY0ngfC8XA4FadMnBsVwVD4do3lltD0zqV4P8S0pRNjo
-         oL1i/3m2GLNwMhQA3I/eJuEyTzvU+wp6q1N95yUfvtZPOfbyrHg5lcMVU5Qr0bWjIMta
-         cYZlTRMqyIuB2zMsp0MQ+3AgvrFw1q5ZKHzm4NnPvZfHDq438fJRReYJlmO3hjUQZzbT
-         IjWrLgOLhSRLvRQVrF4PjbntY++TOdpXkgSKwGw9+MP2un/PFxE5xcVPEeXxSxm808vG
-         jj5cEzUS+qN9nGvY+9/5gbA84aDY/PcnmOitWXeMcFveJQ4ZC+tZI0xF0CnwOGTWLntx
-         a+iw==
-X-Gm-Message-State: AOJu0YxSEDarb/2RdgddF+11mIupBb1yQClEzYtym7yPSe2smOIYtj86
-	1F2TbUOQywUd4YsC6nJIC0yZ/LRS82rl0HQ11l3pepZ6n4bI7wqQxcXADQ==
-X-Gm-Gg: ASbGncvOU5+tPnur3bP0yNjmWgHMZIr/yCs5wgF+N5V26FfpiDOfGXXVCFR4uyafFrP
-	gYQ5WqtSwT4n14geTTvJ6S8b7WQehwvmVcolSS4DM6ouctaIUExhzqEckNi/EA4gz3gR9uw8PgB
-	0pAIx9swTBVLUWRgegFD0syaewqTCZ1R4O50guUqi+Y605RgQD8QNOUmpwUrd32tQm83AlQyIjp
-	0H4TnU3cUGib+RiKGyR38FUvP9+lzCIcvhvmqQ4tYPcH5/PlUXznR9HE2O3xwyQ9I6C/0+ZFEER
-	9F6eqXH7f2WbQoM3r6ftOBNhP5GbhebQwWg0qPUI3/Y0980+//BU1Sz6FVwsww==
-X-Google-Smtp-Source: AGHT+IF0xi1C9KtgpWzs57BfZ+flnHBJZGfJE5KoTCEGX7/3wPYGkwpDSHZpMmM+KebA8Wi5wGLzZw==
-X-Received: by 2002:a17:90b:1b08:b0:2ee:ed1c:e451 with SMTP id 98e67ed59e1d1-305320af3aamr18886779a91.15.1743518855696;
-        Tue, 01 Apr 2025 07:47:35 -0700 (PDT)
-Received: from PC.mioffice.cn ([43.224.245.227])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291f1ded6asm89445595ad.184.2025.04.01.07.47.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Apr 2025 07:47:35 -0700 (PDT)
-From: Sheng Yong <shengyong2021@gmail.com>
-X-Google-Original-From: Sheng Yong <shengyong1@xiaomi.com>
-To: akpm@linux-foundation.org,
-	willy@infradead.org,
-	vbabka@suse.cz
-Cc: linux-kernel@vger.kernel.org,
-	linux-mm@archiver.kernel.org,
-	Sheng Yong <shengyong1@xiaomi.com>
-Subject: [PATCH v2] lib/iov_iter: fix to increase non slab folio refcount
-Date: Tue,  1 Apr 2025 22:47:12 +0800
-Message-ID: <20250401144712.1377719-1-shengyong1@xiaomi.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1743518910; c=relaxed/simple;
+	bh=KTKT+e6/5PMJLr9Kt/jAdOG27oe2Q8pkPJ5m8d4qnHM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rp1Il0Ao5+dzp/pPpuqp+M8bhnGeFpq+Untp9K9H3MvLGal+WkPpFI38tddJqmnqleBTl8gVpm2cDQzdD/BHKs0NMR6CLyu24f9Fi24dWZc1TR5ThW+lydLVcZcZTMR5NiwPXl+RoXcRj5jcU3Q/kkmNjrDPk6XKzTS216TZT9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ECA6A14BF;
+	Tue,  1 Apr 2025 07:48:31 -0700 (PDT)
+Received: from bogus (e133711.arm.com [10.1.196.55])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 083323F63F;
+	Tue,  1 Apr 2025 07:48:25 -0700 (PDT)
+Date: Tue, 1 Apr 2025 15:48:23 +0100
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: Cristian Marussi <cristian.marussi@arm.com>
+Cc: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	<linux-kernel@vger.kernel.org>, <arm-scmi@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <imx@lists.linux.dev>,
+	<devicetree@vger.kernel.org>, Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH v3 3/7] firmware: arm_scmi: imx: Add i.MX95 LMM protocol
+Message-ID: <20250401-accurate-quixotic-coua-86aed0@sudeepholla>
+References: <20250303-imx-lmm-cpu-v3-0-7695f6f61cfc@nxp.com>
+ <20250303-imx-lmm-cpu-v3-3-7695f6f61cfc@nxp.com>
+ <20250401-magnetic-spaniel-of-influence-f3ee90@sudeepholla>
+ <Z-v579n5wuAqTuUW@pluto>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z-v579n5wuAqTuUW@pluto>
 
-From: Sheng Yong <shengyong1@xiaomi.com>
+On Tue, Apr 01, 2025 at 03:36:31PM +0100, Cristian Marussi wrote:
+> On Tue, Apr 01, 2025 at 03:21:51PM +0100, Sudeep Holla wrote:
+> > On Mon, Mar 03, 2025 at 10:53:24AM +0800, Peng Fan (OSS) wrote:
+> > > From: Peng Fan <peng.fan@nxp.com>
+> > > 
+> > > Add Logical Machine Management(LMM) protocol which is intended for boot,
+> > > shutdown, and reset of other logical machines (LM). It is usually used to
+> > > allow one LM to manager another used as an offload or accelerator engine.
+> > >
+> > 
+> > This and next patch LGTM. Just curious as why Cristian has given tags only
+> > for the drivers using these but not these changes.
+> > 
+> > Cristian, any specific concerns you had that had to be addressed or addressed
+> > in this version ?
+> 
+> I think I had some review comments on the previous version of this
+> series for Documentation and protocol....let me see wth I said about
+> this :D and if they have been addressed...
+> 
 
-When testing EROFS file-backed mount over v9fs on qemu, I encountered
-a folio UAF issue. The page sanity check reports the following call
-trace. The root cause is that pages in bvec are coalesced across a folio
-bounary. The refcount of all non-slab folios should be increased to
-ensure p9_releas_pages can put them correctly.
+Thanks that would be great. I can't recall which version I had a look,
+hence thought of asking.
 
-BUG: Bad page state in process md5sum  pfn:18300
-page: refcount:0 mapcount:0 mapping:00000000d5ad8e4e index:0x60 pfn:0x18300
-head: order:0 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
-aops:z_erofs_aops ino:30b0f dentry name(?):"GoogleExtServicesCn.apk"
-flags: 0x100000000000041(locked|head|node=0|zone=1)
-raw: 0100000000000041 dead000000000100 dead000000000122 ffff888014b13bd0
-raw: 0000000000000060 0000000000000020 00000000ffffffff 0000000000000000
-head: 0100000000000041 dead000000000100 dead000000000122 ffff888014b13bd0
-head: 0000000000000060 0000000000000020 00000000ffffffff 0000000000000000
-head: 0100000000000000 0000000000000000 ffffffffffffffff 0000000000000000
-head: 0000000000000010 0000000000000000 00000000ffffffff 0000000000000000
-page dumped because: PAGE_FLAGS_CHECK_AT_FREE flag(s) set
-Call Trace:
- dump_stack_lvl+0x53/0x70
- bad_page+0xd4/0x220
- __free_pages_ok+0x76d/0xf30
- __folio_put+0x230/0x320
- p9_release_pages+0x179/0x1f0
- p9_virtio_zc_request+0xa2a/0x1230
- p9_client_zc_rpc.constprop.0+0x247/0x700
- p9_client_read_once+0x34d/0x810
- p9_client_read+0xf3/0x150
- v9fs_issue_read+0x111/0x360
- netfs_unbuffered_read_iter_locked+0x927/0x1390
- netfs_unbuffered_read_iter+0xa2/0xe0
- vfs_iocb_iter_read+0x2c7/0x460
- erofs_fileio_rq_submit+0x46b/0x5b0
- z_erofs_runqueue+0x1203/0x21e0
- z_erofs_readahead+0x579/0x8b0
- read_pages+0x19f/0xa70
- page_cache_ra_order+0x4ad/0xb80
- filemap_readahead.isra.0+0xe7/0x150
- filemap_get_pages+0x7aa/0x1890
- filemap_read+0x320/0xc80
- vfs_read+0x6c6/0xa30
- ksys_read+0xf9/0x1c0
- do_syscall_64+0x9e/0x1a0
- entry_SYSCALL_64_after_hwframe+0x71/0x79
-
-Fixes: b9c0e49abfca ("mm: decline to manipulate the refcount on a slab page")
-Signed-off-by: Sheng Yong <shengyong1@xiaomi.com>
----
- lib/iov_iter.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
----
-v2:
-  * update commit message
-  * update coding style
-
-diff --git a/lib/iov_iter.c b/lib/iov_iter.c
-index 8c7fdb7d8c8f..bc9391e55d57 100644
---- a/lib/iov_iter.c
-+++ b/lib/iov_iter.c
-@@ -1191,7 +1191,7 @@ static ssize_t __iov_iter_get_pages_alloc(struct iov_iter *i,
- 			return -ENOMEM;
- 		p = *pages;
- 		for (int k = 0; k < n; k++) {
--			struct folio *folio = page_folio(page);
-+			struct folio *folio = page_folio(page + k);
- 			p[k] = page + k;
- 			if (!folio_test_slab(folio))
- 				folio_get(folio);
 -- 
-2.43.0
-
+Regards,
+Sudeep
