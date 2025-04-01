@@ -1,121 +1,116 @@
-Received: from mail-pl1-f196.google.com (mail-pl1-f196.google.com [209.85.214.196])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F33C1E9B00
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 10:02:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C97F21F03C8;
+	Tue,  1 Apr 2025 10:02:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743501774; cv=none; b=Vx4yWNgmdoItmuVrYB/iVzaXndkn99HSPDhQkwBgVOjVOm0/ZtOnZXPu62YjzYZPj1pK5yv1BWUv2Zj9NZffVp0ILuLDyOjNF1TIy4XDkpJYzWsZdsWh0rG3CYclFaLEgqO9lCEdccCul+PHZ3dYEkhwBhBU53WO5jeyqu+SW7g=
+	t=1743501778; cv=none; b=PJWdgjB0HUkQKAo0Hy2q2VNaJO303p781cLgvwg5DqWyuY4X0wbk7aPG/nIEUr6AylhTuI5y+49o6zDh7c79dDcWvTNAYyd9Zu9dL+NGqbDbGw4AfHV1qYadd3OESAOgylFA8UOrqbng9ISV77mFmqPXfFSKg+tG1oMJ0LatumQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743501774; c=relaxed/simple;
-	bh=S+7hhUZKaGzXZ5Vb5J0IkFiuEjwhAk0z0It+X1BlMcg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=c94o2pOoRkUaDiOsWxkjHG39m5pig1x8cA4bZHi3LcKz/eFVXN2mQopDh2pvCmO7+T3gTmBIq+S//ZEbYC+Utz1lfFVWKHIEMweO5PKds3BVKWb1FpKES4btARiwrfqqIbKbR69XM6UX1Myuw2cx5pFUfGHxbJEnTqOvz1vmpF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GM5knO0n; arc=none smtp.client-ip=209.85.214.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743501778; c=relaxed/simple;
+	bh=u2i4mlN/0Dmrd2yO9FNTt299FDdaLIVxK3E6+jXa8Yg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=RepM4OP6gthjsgz+3RArZBB0VObAIiHjxDYgauvbAoGJYSKk5w/iYItMWJsaMGAZjb7efO2n8IDZQNmqvMx+axEsucyQ2NaJDCHp2foQt05PbFDmxp18mZS4WvbXOAbOGxMiR/neClxIELoWHS/ym6dUrEKJta6WjQwFXXN7A7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=UetnMjUU; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GM5knO0n"
-Received: by mail-pl1-f196.google.com with SMTP id d9443c01a7336-227d6b530d8so96583925ad.3
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 03:02:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743501773; x=1744106573; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wd5IXp6Alm3J0K89bEX0kQvQEDTN0Qjl8kmVaD0oCvY=;
-        b=GM5knO0nWyOyncn54+S5cnKbik3cNudyTOG7f/8fD9E177QEknPbziMccv7lhokwBb
-         YIOUX50NshaXc42+QIiVl1j64GRKuUb2APyxWTcAW0kyBYlakxB3LTmtHsZdXKPPMaDp
-         U7GhR5d02bk8sTxzaT43o82jAci6KSYTSqtqAnK909c9k5ijdqiu7lytbBghxDpa59lL
-         ZQ15QtKQGCtcBof1QaTLV6wNAniYjKTNoDLAUTw9SuhsMFhfP/KuehX6dPLeOMwMnWpZ
-         mQyHE9dB7fcQiCQKexNKNElQKXgWpfLwTfnC1J0cCSgn4RcqRNwHIZp1Ky8l1rvsH/Yo
-         Z0LA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743501773; x=1744106573;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wd5IXp6Alm3J0K89bEX0kQvQEDTN0Qjl8kmVaD0oCvY=;
-        b=GaUfAORucJdPj3vaZCi/hqyKRL7qSAp52Kl71j0BwvaATMkWMqrJES+GmFXvNt82m5
-         QyOIM6spbZVHSNfaobju8uRLaLotHEqnbuyphVN9dQz54rt+7frKLrf44FjWygALnTio
-         +18rC+//vR+0rMZWTCide/hiDTckPzIcVlmIKX/dC0y/sdI8TpIyDc66R+1HwyAvHSs3
-         vVb3//u8SyPY3PFWCCSWW4JCwgBO3W/13gxwxcDs/wB4wt9OGCvMdQg84+aHhGfG11Bb
-         lt9f7WpeRrvb3+ntcylVK93iylvSjFK+8yitEF8STMaN34gd+to37UOg+LNJy4NEVMAq
-         K3Lw==
-X-Forwarded-Encrypted: i=1; AJvYcCU7cjhJkJvNsd8nZplrXAk7urzgnpue3/YhgN1OwAihbTDsaUP/DTqQ3fx7qVHELEKmoGoJNNhcyVkl4yY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwCkoWZle/FRn5Uzh4nW9vwvwJhWlO8fmWWfAftWuuNotT/Sur1
-	5Dp0T6uMIeRcBspSi4WPX0bTaAy8kmQ+OYjb9VHcOdfQM5/wAub/
-X-Gm-Gg: ASbGncukw7lOSjfPRjoP2gvTztyIwHmT3vlPJxgk1hNx1raF1bG2/KwOPgfWSZaVNm3
-	Dlrr6072RsmGIFFGy1zOVQ1CTIl+FMhnt3+HxYyaqa43W6in1QLyp2i+elXV+DlO/mTbN3nIdKH
-	j3ccu0IYdU6BRitey5pPuEhJB9ILKhQ9Itd5hoJbRmlCKOV8JjIOfpz/ITLqHBRyXJsj5YjTvts
-	4anKNlcjYEQXeFS9tXec7F+1MbTLSwLCXQZTjPEU8Kg8nMhbyTQibMjJC1mKqM4kAu5JWPd0C9Z
-	aBmpJxqb+u2k5C22K8k5lSu3uugy4t/drJxg69nxQV8iaxsCyNEoDTKN3P4cDI88hkMJ1riEAxg
-	V/5HL7g==
-X-Google-Smtp-Source: AGHT+IHfzKJCMxsQquxwIgBkGA4++Ea4IQ3SceFSFB7WeKJfY/LrgJPN1njTkSCir0N1ITkrL5lWCQ==
-X-Received: by 2002:a17:90b:50c3:b0:2f6:dcc9:38e0 with SMTP id 98e67ed59e1d1-305606a4adamr4922602a91.0.1743501772570;
-        Tue, 01 Apr 2025 03:02:52 -0700 (PDT)
-Received: from henry.localdomain ([111.202.148.167])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30516d3cdf9sm8856799a91.7.2025.04.01.03.02.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Apr 2025 03:02:52 -0700 (PDT)
-From: Henry Martin <bsdhenrymartin@gmail.com>
-To: krzk@kernel.org
-Cc: gregkh@linuxfoundation.org,
-	linux-kernel@vger.kernel.org,
-	Henry Martin <bsdhenrymartin@gmail.com>
-Subject: [PATCH v2] uio: uio_fsl_elbc_gpcm: Add NULL check in the uio_fsl_elbc_gpcm_probe()
-Date: Tue,  1 Apr 2025 18:02:40 +0800
-Message-Id: <20250401100240.24439-1-bsdhenrymartin@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <0b99b7e5-a035-4a15-8389-dcb3ca81f96d@kernel.org>
-References: <0b99b7e5-a035-4a15-8389-dcb3ca81f96d@kernel.org>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="UetnMjUU"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 531A2aVu3072633
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 1 Apr 2025 05:02:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1743501756;
+	bh=X9wRt7wss9ZrIeV++Wc1A527R0EIL7GzO7MaVVI+mas=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=UetnMjUUWQlCq4LcsKytSq2lLWX3IoLwG4tblaahnNh2LP+X7YZhMLe2yBnKGA4Ge
+	 pfR3ZIk4ebPEQ2WyHm7ELCbJ58TxG2pKC/k6RL1cczYVpm4RSHPF+HqLJ4K/NEjuMx
+	 yqhGCaN7okaMjI4Wg3DLIXXP4y4Zt9a0YihVVfRQ=
+Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 531A2Z4b116224
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 1 Apr 2025 05:02:35 -0500
+Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 1
+ Apr 2025 05:02:35 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 1 Apr 2025 05:02:35 -0500
+Received: from [172.24.18.65] (lt5cd2489kgj.dhcp.ti.com [172.24.18.65])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 531A2VZq127627;
+	Tue, 1 Apr 2025 05:02:32 -0500
+Message-ID: <e2a37e72-d9c8-4329-8a5a-f2c9865cdb5d@ti.com>
+Date: Tue, 1 Apr 2025 15:32:31 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64: dts: ti: k3-am62p-j722s: add rng node
+To: Michael Walle <mwalle@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Vignesh
+ Raghavendra <vigneshr@ti.com>,
+        Tero Kristo <kristo@kernel.org>, Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>, <u-kumar1@ti.com>
+CC: <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20250313144155.2382316-1-mwalle@kernel.org>
+ <837cba5f-f49e-4cbf-9cbe-2b25f7c9d4b8@ti.com>
+ <D8UECOJ2NMCU.3ALYIKSODJ479@kernel.org>
+ <1ad2d8c2-6a0d-419d-984d-4974adb0e1f0@ti.com>
+ <D8V323NBB32P.3P8H103L83HZK@kernel.org>
+Content-Language: en-US
+From: "Kumar, Udit" <u-kumar1@ti.com>
+In-Reply-To: <D8V323NBB32P.3P8H103L83HZK@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-devm_kasprintf() returns NULL when memory allocation fails. Currently,
-uio_fsl_elbc_gpcm_probe() does not check for this case, which results in
-a NULL pointer dereference.
+Hi Michael
 
-Add NULL check after devm_kasprintf() to prevent this issue and ensuring
-no resources are left allocated.
+On 4/1/2025 11:50 AM, Michael Walle wrote:
+> Hi Udit,
+>
+>>>>> --- a/arch/arm64/boot/dts/ti/k3-am62p-j722s-common-main.dtsi
+>>>>> [..]
+>>>> For completeness , this is ok to add this node but should be kept disabled
+>>> Shouldn't it be "reserved" then, see [1].
+>> yes, should be reserved.
+>>
+>> With marking status as reserved.
+>>
+>> Please use Reviewed-by: Udit Kumar <u-kumar1@ti.com>
+> Thanks.
+>
+>>>> similar to
+>>>>
+>>>> https://github.com/torvalds/linux/blob/master/arch/arm64/boot/dts/ti/k3-j7200-mcu-wakeup.dtsi#L662
+>>> j784s4, j721e and j721s2 have them enabled. What is the rule here?
+>> J784s4, j721e and j721s2 SOCs has two TRNG blocks,
+>>
+>> example for j721e, one is used by kernel [0] and another by optee [1].
+>>
+>>
+>>> You also disable the hwrng in optee in your evm according to [2]:
+>>> CFG_WITH_SOFTWARE_PRNG=y
+>> We are planning to use this hardware block by secure firmware.
+>>
+>> Therefore request not to use by optee as well
+> How will you be able to access the RNG from linux and u-boot? I'm
+> asking because I'll need it in u-boot for the lwip stack and the
+> HTTPS protocol.
 
-Fixes: d57801c45f53 ("uio: uio_fsl_elbc_gpcm: use device-managed allocators")
-Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
----
-V1 -> V2: Remove printk after memory failure and add proper resource
-cleanup.
+For now,  If you need TRNG then I can suggest to use optee TRNG (ie 
+build optee with HW TRNG).
 
- drivers/uio/uio_fsl_elbc_gpcm.c | 5 +++++
- 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/uio/uio_fsl_elbc_gpcm.c b/drivers/uio/uio_fsl_elbc_gpcm.c
-index 81454c3e2484..26be556d956c 100644
---- a/drivers/uio/uio_fsl_elbc_gpcm.c
-+++ b/drivers/uio/uio_fsl_elbc_gpcm.c
-@@ -384,6 +384,10 @@ static int uio_fsl_elbc_gpcm_probe(struct platform_device *pdev)
- 
- 	/* set all UIO data */
- 	info->mem[0].name = devm_kasprintf(&pdev->dev, GFP_KERNEL, "%pOFn", node);
-+	if (!info->mem[0].name) {
-+		ret = -ENOMEM;
-+		goto out_err3;
-+	}
- 	info->mem[0].addr = res.start;
- 	info->mem[0].size = resource_size(&res);
- 	info->mem[0].memtype = UIO_MEM_PHYS;
-@@ -423,6 +427,7 @@ static int uio_fsl_elbc_gpcm_probe(struct platform_device *pdev)
- out_err2:
- 	if (priv->shutdown)
- 		priv->shutdown(info, true);
-+out_err3:
- 	iounmap(info->mem[0].internal_addr);
- 	return ret;
- }
--- 
-2.34.1
-
+>
+> -michael
