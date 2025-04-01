@@ -1,241 +1,270 @@
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2074.outbound.protection.outlook.com [40.107.22.74])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A86520766A;
-	Tue,  1 Apr 2025 23:38:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.74
-ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743550725; cv=fail; b=l9JkvDC78dNyJVxbrdng/bV5kWXZM/RMpGzGeUN9PwzzAnUTKjMi7nLNdROF8YvwgkF4S1IXJf7O7QRSs6mgemfmuUiA13IrrNbilbnm1Uj244523f18+ahWDpVuuFosrLfzfwQSqkoOyrgFKQk4Bzd5TERM0T4pGeWUDl47b4s=
-ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743550725; c=relaxed/simple;
-	bh=NdUgP2DKp+B+1uQzfxibKbjbLH9+ForSGzONMgU0oEs=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=eH3RJyU7ee+aGcfQa8RiptYnqxBg5IraJmbNlCNiN7bnu1yeEUr68oLzM/ZEyq24H142p+cKV5ocOxif1/TPgp1+cyMSkjO85oqoPlFtZY3CmpCorYds8gELBY3o9bV3OjavwWF2C04TNpWi2Rq7skmDRrKABffHK1QZ2+gPfJI=
-ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=KbMi0Vny; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=KbMi0Vny; arc=fail smtp.client-ip=40.107.22.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 554022AF04;
+	Tue,  1 Apr 2025 23:48:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743551286; cv=none; b=RriGrfXxO1cGPJmvwJP1rta3RpWiExLljk0wHMNg42nA8Nkh/Bku9SkgxA122TuzzvEZOkHUp+GSIxPK4pdRB9sHgLXcisHvKn0lB5lYJzVoHX1HV1xxkdljWP25R0UFzKzQDSxnyt/UDxPBE6Mkb+OW1XsLrF0FU1mB6/cAHzQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743551286; c=relaxed/simple;
+	bh=yxw4GAsxTIz0ZPwzILFfeGiNouSunPSCuDEUVEeVHeo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=HcU9GDxM2P0fWIhgtkCaiXUqNNC9XCAxVbMg5wdlQZl6HMeSq0jVSfl3VTtT0xGSem0FSJS8kxie0IxlxmtSTz4qjlDpELGxMDoYhu4crF+QZzAj8l/+lMgJGXR2RwrHyEAWWwrfHg9GWGu16BSPhus1y1BHbtQsuoev7m7ixDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=VwGC9kIS; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="KbMi0Vny";
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="KbMi0Vny"
-ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
- b=Kive/wAwXHILsWj9LjTlipG3fPhMz/fmvMV+eLxk4/nkVVGlUvL83vRWDN9ENWFlS+Cz3Mq32peml7M4JztVngeL/c6935q0zJ+iBuM7qtrd3Bs8lA0PfQpRxuHiwfBO2KgqgjRl27N9diGhGg6vEdpt4Tj/tuf8AXXSEjKELp9Z0mWEXpc0wV9PhCecMfDihQ7dpUXIQGDzb4x33MyVh6dYp2A59RTohlciIIqcV3NR7QwGAser8c2PAMd0gCqMT5zxhL9PlSHHOSimLYvYeVaz2aXfHkirJOUHM8T3PgpN9Sx6OT/LygbbwvcebbvAEC9cP6qoqjtM4YJoN9vIyA==
-ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NdUgP2DKp+B+1uQzfxibKbjbLH9+ForSGzONMgU0oEs=;
- b=YORXIP5YVlE9jxVNrtdvPcG1OW/CAGJW6IRjJm8kNgyvilNAdzpr7/hw26n5kDYbCMYkH5MhFs9poed7mW6/CFyclHYswiIdGmtAD/sp9EBsw5om5pCGMqyWDineF2dF0u6ycQi9wBnuLLdMoD4G78nxZIweDF6iTd/EcSXrIVATCPfpQlb3+3EDZ06ZeNrw+zCsj0qR3mmbfQR0QbOpSZxeXU7gNGEolluJGhgy7bi9X4siBpkh4t1ver/uPH5TOHmeeS68Nbdn/UPUk1IO9dNQCivf24nkh5PK8CBOw3DcAdpwIfjDycKTSnIuHZUPMmWLaSwG8lUeNdp65p4SGA==
-ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=fail (sender ip is
- 4.158.2.129) smtp.rcpttodomain=ziepe.ca smtp.mailfrom=arm.com; dmarc=pass
- (p=none sp=none pct=100) action=none header.from=arm.com; dkim=pass
- (signature was verified) header.d=arm.com; arc=pass (0 oda=1 ltdi=1
- spf=[1,1,smtp.mailfrom=arm.com] dkim=[1,1,header.d=arm.com]
- dmarc=[1,1,header.from=arm.com])
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NdUgP2DKp+B+1uQzfxibKbjbLH9+ForSGzONMgU0oEs=;
- b=KbMi0Vnyq+XmoZ8Ne0WheK2y5g7EI0PdaDr2R+EmVuu0x/AZ0r/DadPz4aquq5U3prJwYkw5dCyLpZkzFX8BpC9+TW+cyzF3EpMRbzesGyIFFWMnC5XqEAgEVMJEYS4IwxXZe4dhCisOJ5c2oYRIbPRRwLb/oVqXm1/haXT9TYg=
-Received: from DUZPR01CA0323.eurprd01.prod.exchangelabs.com
- (2603:10a6:10:4ba::24) by DU5PR08MB10823.eurprd08.prod.outlook.com
- (2603:10a6:10:528::20) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8583.41; Tue, 1 Apr
- 2025 23:38:34 +0000
-Received: from DU2PEPF00028D09.eurprd03.prod.outlook.com
- (2603:10a6:10:4ba:cafe::eb) by DUZPR01CA0323.outlook.office365.com
- (2603:10a6:10:4ba::24) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8583.41 via Frontend Transport; Tue,
- 1 Apr 2025 23:38:34 +0000
-X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 4.158.2.129)
- smtp.mailfrom=arm.com; dkim=pass (signature was verified)
- header.d=arm.com;dmarc=pass action=none header.from=arm.com;
-Received-SPF: Fail (protection.outlook.com: domain of arm.com does not
- designate 4.158.2.129 as permitted sender) receiver=protection.outlook.com;
- client-ip=4.158.2.129; helo=outbound-uk1.az.dlp.m.darktrace.com;
-Received: from outbound-uk1.az.dlp.m.darktrace.com (4.158.2.129) by
- DU2PEPF00028D09.mail.protection.outlook.com (10.167.242.169) with Microsoft
- SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8606.22
- via Frontend Transport; Tue, 1 Apr 2025 23:38:34 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=lV68Fon8igUu3E8547FbB31lvUWoopsbaipGsR1ihTIYTjFuUUPJDNZQjdxva9LyNxaIV/X2KLRrIWRoNfzKOPn/wFI58vKYWV8VQBXsT+BgaMTnPNYFWj6lpHZHp0UZLgoJCipM2ZvZM7InPO0QT6ad6pvbflUGVKOJkxd+Lm9xbHev/BaIpJQE+neT/toVxPNbcg7RBX+xzCPpizCBGr6xdYGhORcj9uo20Ilf2BYNQjWp20kuMHHOEIl0z4Oks7C4AsOSsAg/b9FW6UHdEjbkfGDtIECv7sqoBTUeBBn4q9cb268bbmEdlFMA9KvE3Q26QjwSyTw0BBVUw5iGOA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NdUgP2DKp+B+1uQzfxibKbjbLH9+ForSGzONMgU0oEs=;
- b=DmAbMtK7CE62LZaB2Hu9Hi9BwpARuqxQDRTv+UZyZr/Ft7ACNK4eWwkXVy4X7WU802FF/kPqa3n5yFbDyyAgjV8993c2P1x9JYf7mWWvZwBxVBVfa2j9vYxb/TiCAbJY4ywjuT6jVnaZR8+OWRxt2ngEFlkPKCZcA38hGTQZ8V8hcoETM0mAQaxMqF4UTCyvsCmxoC96j60GpwTbxGgJqqOw1nfMXQ3rNXVssT/MGWcLbXcWoHDcmCFfDO/Z0gy6VyBstod0mfob77Ti/+15Y5Jgi5ntsUng66mXs51n+jvkXY5y0cX1/PqeG+NlxGtTmK7rSBCBqOR4XWVpwYh8Sw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NdUgP2DKp+B+1uQzfxibKbjbLH9+ForSGzONMgU0oEs=;
- b=KbMi0Vnyq+XmoZ8Ne0WheK2y5g7EI0PdaDr2R+EmVuu0x/AZ0r/DadPz4aquq5U3prJwYkw5dCyLpZkzFX8BpC9+TW+cyzF3EpMRbzesGyIFFWMnC5XqEAgEVMJEYS4IwxXZe4dhCisOJ5c2oYRIbPRRwLb/oVqXm1/haXT9TYg=
-Received: from PAWPR08MB8909.eurprd08.prod.outlook.com (2603:10a6:102:33a::19)
- by DBBPR08MB10602.eurprd08.prod.outlook.com (2603:10a6:10:52c::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.52; Tue, 1 Apr
- 2025 23:38:01 +0000
-Received: from PAWPR08MB8909.eurprd08.prod.outlook.com
- ([fe80::613d:8d51:60e5:d294]) by PAWPR08MB8909.eurprd08.prod.outlook.com
- ([fe80::613d:8d51:60e5:d294%5]) with mapi id 15.20.8534.043; Tue, 1 Apr 2025
- 23:38:01 +0000
-From: Wathsala Wathawana Vithanage <wathsala.vithanage@arm.com>
-To: Jason Gunthorpe <jgg@ziepe.ca>, "Tian, Kevin" <kevin.tian@intel.com>
-CC: Alex Williamson <alex.williamson@redhat.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, nd
-	<nd@arm.com>, Philipp Stanner <pstanner@redhat.com>, Yunxiang Li
-	<Yunxiang.Li@amd.com>, "Dr. David Alan Gilbert" <linux@treblig.org>, Ankit
- Agrawal <ankita@nvidia.com>, "open list:VFIO DRIVER" <kvm@vger.kernel.org>,
-	Dhruv Tripathi <Dhruv.Tripathi@arm.com>, Honnappa Nagarahalli
-	<Honnappa.Nagarahalli@arm.com>, Jeremy Linton <Jeremy.Linton@arm.com>
-Subject: RE: [RFC PATCH] vfio/pci: add PCIe TPH to device feature ioctl
-Thread-Topic: [RFC PATCH] vfio/pci: add PCIe TPH to device feature ioctl
-Thread-Index:
- AQHbhLKEApVfqCfEsEO/VXZQklRIvLNjFiyAgACJGACAADH7gIAAQ1nQgAsppICAH9hWAIAAlytg
-Date: Tue, 1 Apr 2025 23:38:01 +0000
-Message-ID:
- <PAWPR08MB8909781BE207255E830DE1589FAC2@PAWPR08MB8909.eurprd08.prod.outlook.com>
-References: <20250221224638.1836909-1-wathsala.vithanage@arm.com>
- <20250304141447.GY5011@ziepe.ca>
- <PAWPR08MB89093BBC1C7F725873921FB79FC82@PAWPR08MB8909.eurprd08.prod.outlook.com>
- <20250304182421.05b6a12f.alex.williamson@redhat.com>
- <PAWPR08MB89095339DEAC58C405A0CF8F9FCB2@PAWPR08MB8909.eurprd08.prod.outlook.com>
- <BN9PR11MB5276468F5963137D5E734CB78CD02@BN9PR11MB5276.namprd11.prod.outlook.com>
- <20250401141138.GE186258@ziepe.ca>
-In-Reply-To: <20250401141138.GE186258@ziepe.ca>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Authentication-Results-Original: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=arm.com;
-x-ms-traffictypediagnostic:
-	PAWPR08MB8909:EE_|DBBPR08MB10602:EE_|DU2PEPF00028D09:EE_|DU5PR08MB10823:EE_
-X-MS-Office365-Filtering-Correlation-Id: 02057611-a697-4f77-6e2f-08dd717651b0
-x-checkrecipientrouted: true
-nodisclaimer: true
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam-Untrusted:
- BCL:0;ARA:13230040|1800799024|376014|366016|38070700018;
-X-Microsoft-Antispam-Message-Info-Original:
- =?us-ascii?Q?f5UyNBDRRMatjJ3yYGYMBQbGF9Ns71KJAhFyal5wjW1q0GLY4b2ehyAsx1+g?=
- =?us-ascii?Q?KI0fUmH3c3htE1Na3Izi+a8QlrGZVBniUEdTQqwfIfu21bF7ndZ5aqTg/G+o?=
- =?us-ascii?Q?Mva+AaW0ufz8OzaeMM0KBxSnn28XaNSx7/jrcfzxb0VZfJzRda2Ba1nmvMeD?=
- =?us-ascii?Q?hgv2d+Jzq6a8UuvmFc/dO3LQ2z8/Ihrpgo6cYjKeVHdBh9xmj5H6Fp8la8GV?=
- =?us-ascii?Q?IOEIb9vhLi4LKnOONiZ2bzd1THBmdJiZDP7ea+Fq5jXKFltPzjnnH2n/pAD/?=
- =?us-ascii?Q?wh9cRcPJYAD7CxN+lBeowly1Yuetm0btSeqXz/fvnCQIuNCOFzhsCHGi22TS?=
- =?us-ascii?Q?jrWKoEC471TZCmrhTypMpm67X3JTBLLwWGt7E7y0t04M8q3A5bkPoff2aLaI?=
- =?us-ascii?Q?QIqNNp1jWAXwAhOHAdAitW6LU2qSQhsD3quuaa9RdA9gj+cTOIh0wQ0QCr5Z?=
- =?us-ascii?Q?q1MPNvBK7/i2r/3dZC0gt5FSNAc5nWX6mVSMqwl53R0EDjJlM9rudU46kTtH?=
- =?us-ascii?Q?X5+OKoECbAg7Lpe3WvtOsZ02d6l8kyCVzj2utSov0ODBNIxIPNLsqCl56ow7?=
- =?us-ascii?Q?qA7mvG4aQRVHqiKwE7I9WuFDsX9Apvr/KE6zwL891Ew1yeuLBjJ7BJaFqlgc?=
- =?us-ascii?Q?WsrSQZlEHUygVIPIB6CljxPYhQ9hDvHtzB94qpsSafaOC4rpwAbgAE4l7YQ3?=
- =?us-ascii?Q?RR75vF4SG+mJy6nu5/Vz/XUJWU+em6UZclkfoeqKQBM0mGwXvYlaL5NxXmKF?=
- =?us-ascii?Q?IeTiNhPK1HK7TzVR4nIAINWuUoYjood0TICwpD6tVMgxzKAC6lm+vlttYQd2?=
- =?us-ascii?Q?V+s86QvjHvRvbexxc90MUIR07VgPYZHX5frd8Hgwfy+MHHTKR//F2yDOK5bA?=
- =?us-ascii?Q?X4O3nB2zTepL+JAtUaati0YoliB1LmIh0jq9i2mEM23evQMatHuhi89AZwsn?=
- =?us-ascii?Q?Hq+sL5SwQ9fbVfHUnjl4sUZxLIpjRkNH2VSwovsn0R8u9q1IEiwUKKCddAg3?=
- =?us-ascii?Q?8NJD9Ls7Gc0BkJEqgZ9JnTOpNrJI7vn01kmOF6j8MKZNUek+cm/CE7gwL0kK?=
- =?us-ascii?Q?FCZspzqPoUyS0H0Bt+0bfi+QyfOm8au9ZS4NgbtUVZVF89r5zLsrKnsyzwms?=
- =?us-ascii?Q?tEg17pI/CWYnJZ0usrMrRwHIDHEuN4aEHucHJz/oBKlf4wUnoWdOf9QtBHhA?=
- =?us-ascii?Q?134pJO9mBi6v5B1eT9jTHBBwdWcXVfk5jCIJvugdCNoh4iXW/omthHWDOSom?=
- =?us-ascii?Q?1XKiEoK+Dp5ST2wjx+tk8i5/0unCxKlgHV2MVmGqwrjv9EVKNrc43YNn6a4X?=
- =?us-ascii?Q?hfn8FklPuaSt77aXJGHOBV9wSsVAuAtXB3+OmR1aPUy7iB7Wln00AxGazlMa?=
- =?us-ascii?Q?78aR9AaDNhPNYX7e8WloxQS6rc4A9OPzQ3COvk8EDtQG8KSuPxqnff0tPof/?=
- =?us-ascii?Q?6iI3ptkFuAuyEvVSQtRHaiJS3b7HEqtq?=
-X-Forefront-Antispam-Report-Untrusted:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAWPR08MB8909.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(38070700018);DIR:OUT;SFP:1101;
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="VwGC9kIS"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 531ExFEA019655;
+	Tue, 1 Apr 2025 23:47:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	OHda8XH1oJ2eqz4sJm2zLaKcdfTXTUhtDKaiIjH1Qic=; b=VwGC9kISpZMEa3HP
+	iMzIBg4OV9hlbxLcAVeu/lXJb3jAJan8KDV4F54+UuLrnFLzLfxgp2lVAwD8k7T1
+	jBsU3s1Bvo1sqGF46qdpIZkPYbME7wnBg945k117sCYPbKMBKPDW9rvgtKgJV2Iu
+	w+mBQqwUpiKirvSl8GD6kvO7J0vvbBNdt7eTZXTx0oUgLop+29nmOxJJYOX+C9Qe
+	BjvwRkfW6DmjMvuzlpbKah+MRh0SlmcQXHB44ghfUl/6sllPj9KiByB0p3qKGk6u
+	hWRe31qVbcceAT+VQgLvjguyHx7cbq6SEvF2kjrMeU/lzmj7m9KxQclNkDMwaqN8
+	FGgRJw==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45r1vnc29h-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 01 Apr 2025 23:47:43 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 531NlgPa007398
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 1 Apr 2025 23:47:42 GMT
+Received: from [10.110.126.171] (10.80.80.8) by nalasex01b.na.qualcomm.com
+ (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 1 Apr 2025
+ 16:47:41 -0700
+Message-ID: <378af3f1-b5b0-4f7a-ab62-f5c891feb7b5@quicinc.com>
+Date: Tue, 1 Apr 2025 16:47:41 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR08MB10602
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped:
- DU2PEPF00028D09.eurprd03.prod.outlook.com
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id-Prvs:
-	0c577c22-ee81-46ca-939a-08dd71763dc1
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|35042699022|14060799003|1800799024|376014|82310400026|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?aQ7vFCDc5kdNVPTuUiQyGCBiLyhgJdLhIL2ClLLQkROn82QxJwF86zVRdp95?=
- =?us-ascii?Q?27MUC1X6UpyyQSu+WC9Zpz8UXK9UmJzZzJAmFAhQlcV13US1ypzuAwJnijOK?=
- =?us-ascii?Q?2DzIts5MJ4L6MBb/vFtAmG8EGDvF92Mg7kJQ6Lwj3i8PDWpio/33Y/mU7XRR?=
- =?us-ascii?Q?KOkvbKMUGX64kv2hkRycBHU+lOdNKFu46r/1LK/dVNA3JRGZY1ZvDCaC0x0J?=
- =?us-ascii?Q?7i4T6Xzj1IkTmXuQJSSiK7+0LMOQtwYEtWQzZsVaUkUZzbN57jNGmKUEwbf+?=
- =?us-ascii?Q?1DW5NuNpfIBtxb24dxPDegrNSzwwYvxeTaQR6r9v871XuTSdECFuwTRdWoi1?=
- =?us-ascii?Q?pbU4j/vI9g6TBShrDVMxfIbZANr6nbcXBefYRsNZsPaUVFCnh02GHZXnct7r?=
- =?us-ascii?Q?+0MDK9MuGGEZWwl2r/uqpGSp1BTQV5gQsjEFW2zWLIWU+jAt+w4UAeOSLtc4?=
- =?us-ascii?Q?gZWAXUgoBV99AlNHLkqm2XnY2EuKrF9+FNjq+EHg5E1o0C+4CTFFHPAsxX4H?=
- =?us-ascii?Q?ifHC/M10zCQzy715ipMza5y9NBzIEy+nUndeAFHFSQdfZGtiM8qQEPPGu+ue?=
- =?us-ascii?Q?//lLpq/v9NpFHG64ouahw42P5kPptlTuEeukN2YsOTXYhE3Y8S7Dc9aA2okN?=
- =?us-ascii?Q?+StXF9JIpgPgCOqapMBGuzInnFmJZfbjAjuthh3p2AU4L0jeGAPBneGbHHsL?=
- =?us-ascii?Q?+m8QRhR9CLFAMIrzkKJE75SDi6bmlQgrR1DgpPmXRgYrg7povBJPGlPJLSok?=
- =?us-ascii?Q?JGKhboM9w7rekXBrySXsitRa0qa+zWY6bef3Z4FsDPLupI3XXpCJdANz66Cj?=
- =?us-ascii?Q?OagO2XFC4/52Sfb+pxyeSCSnPxXpfOr+PnLm8HPWCZuPT8YTZyTmYwx7D2t9?=
- =?us-ascii?Q?u/VWm8htRy+l2366hFk1jr8g3Jjin4D52wYFjcEZaLGlZNmPZanCibdz5hrR?=
- =?us-ascii?Q?ymLoP49gAFqEbEcjos0wrjmkzgIZw0hW3lhAaap6d8BtsrRjoiT9nQp5HWT8?=
- =?us-ascii?Q?wS3HtRn9Vp8NeOO70vgtxjMrLhAeqMiKeTLuuhBOispJOz85WUnhj/Hh8XsQ?=
- =?us-ascii?Q?kRha0ogsrw86bEIHJ+dWbter2ldq5gR6SSsdtyiki+fOZVObrh39VJy2qTlb?=
- =?us-ascii?Q?Wh+XOvxvUU+rBk5N4Vo/t7L2yqVTRAUqV9Ig4Bfdg6CCTRF014rCTikrvEGH?=
- =?us-ascii?Q?4ZXiHxqDI9Hl30HeIw/+3dR2s4JDsmAbASgtSvqWkOTWFZC2PoLEpkjpHJK3?=
- =?us-ascii?Q?vOkqBcNPDnvueuMnTw6Ey3xnJIpnKIbHULyU1VtY6Ms61yQUj6CmqMYxjnn+?=
- =?us-ascii?Q?uMcB1m6EEvhXKhieGH1oY8s6XBrh3uEQo1sZQuJi0ANBHMmU7UCmnX9oRlSg?=
- =?us-ascii?Q?TSdVfBO+T7OjL9KIFjiktAfSmSpMCInDs5yyT7S91H59YaPTcMYjcX6BZDUO?=
- =?us-ascii?Q?uWj6ymAiFQzuFqG/cvi6EqL7YRgKId/FBBLiNYIu06fFEdT0pNYah3cG+vfR?=
- =?us-ascii?Q?FYfq7B0K0AG+cco=3D?=
-X-Forefront-Antispam-Report:
-	CIP:4.158.2.129;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:outbound-uk1.az.dlp.m.darktrace.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(35042699022)(14060799003)(1800799024)(376014)(82310400026)(7053199007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Apr 2025 23:38:34.5981
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 02057611-a697-4f77-6e2f-08dd717651b0
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[4.158.2.129];Helo=[outbound-uk1.az.dlp.m.darktrace.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DU2PEPF00028D09.eurprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU5PR08MB10823
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v36 22/31] ASoC: qcom: qdsp6: Introduce USB AFE port to
+ q6dsp
+To: Stephan Gerhold <stephan.gerhold@linaro.org>
+CC: <srinivas.kandagatla@linaro.org>, <mathias.nyman@intel.com>,
+        <perex@perex.cz>, <conor+dt@kernel.org>, <dmitry.torokhov@gmail.com>,
+        <corbet@lwn.net>, <broonie@kernel.org>, <lgirdwood@gmail.com>,
+        <krzk+dt@kernel.org>, <pierre-louis.bossart@linux.intel.com>,
+        <Thinh.Nguyen@synopsys.com>, <tiwai@suse.com>, <robh@kernel.org>,
+        <gregkh@linuxfoundation.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-sound@vger.kernel.org>,
+        <linux-input@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        Luca Weiss
+	<luca.weiss@fairphone.com>
+References: <20250319005141.312805-1-quic_wcheng@quicinc.com>
+ <20250319005141.312805-23-quic_wcheng@quicinc.com>
+ <Z-J2WnrZHP6iMIhT@linaro.org>
+ <871827f0-94ba-4565-865f-775cab9501eb@quicinc.com>
+ <Z-PPlRD7gcUcNvNv@linaro.org>
+ <200c08f7-3637-c2fb-2caa-002604b957ed@quicinc.com>
+ <Z-ug3YFwff8hWIRl@linaro.org>
+Content-Language: en-US
+From: Wesley Cheng <quic_wcheng@quicinc.com>
+In-Reply-To: <Z-ug3YFwff8hWIRl@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=UL3dHDfy c=1 sm=1 tr=0 ts=67ec7b1f cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=Mbssl0DwhmBr3ji8NNQA:9 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: G8dCmmV6Gxne8J_LUri8VCFWEzqj2R8g
+X-Proofpoint-GUID: G8dCmmV6Gxne8J_LUri8VCFWEzqj2R8g
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-01_10,2025-04-01_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
+ malwarescore=0 mlxlogscore=999 phishscore=0 impostorscore=0
+ lowpriorityscore=0 priorityscore=1501 spamscore=0 bulkscore=0
+ clxscore=1015 suspectscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502280000 definitions=main-2504010147
 
+Hi Stephan,
 
+On 4/1/2025 1:16 AM, Stephan Gerhold wrote:
+> Hi Wesley,
+> 
+> On Mon, Mar 31, 2025 at 12:52:19PM -0700, Wesley Cheng wrote:
+>> On 3/26/2025 2:57 AM, Stephan Gerhold wrote:
+>>> On Tue, Mar 25, 2025 at 04:18:03PM -0700, Wesley Cheng wrote:
+>>>> On 3/25/2025 2:24 AM, Stephan Gerhold wrote:
+>>>>> On Tue, Mar 18, 2025 at 05:51:32PM -0700, Wesley Cheng wrote:
+>>>>>> The QC ADSP is able to support USB playback endpoints, so that the main
+>>>>>> application processor can be placed into lower CPU power modes.  This adds
+>>>>>> the required AFE port configurations and port start command to start an
+>>>>>> audio session.
+>>>>>>
+>>>>>> Specifically, the QC ADSP can support all potential endpoints that are
+>>>>>> exposed by the audio data interface.  This includes isochronous data
+>>>>>> endpoints, in either synchronous mode or asynchronous mode. In the latter
+>>>>>> case both implicit or explicit feedback endpoints are supported.  The size
+>>>>>> of audio samples sent per USB frame (microframe) will be adjusted based on
+>>>>>> information received on the feedback endpoint.
+>>>>>>
+>>>>>> Some pre-requisites are needed before issuing the AFE port start command,
+>>>>>> such as setting the USB AFE dev_token.  This carries information about the
+>>>>>> available USB SND cards and PCM devices that have been discovered on the
+>>>>>> USB bus.  The dev_token field is used by the audio DSP to notify the USB
+>>>>>> offload driver of which card and PCM index to enable playback on.
+>>>>>>
+>>>>>> Signed-off-by: Wesley Cheng <quic_wcheng@quicinc.com>
+>>>>>> ---
+>>>>>>  sound/soc/qcom/qdsp6/q6afe-dai.c         |  60 +++++++
+>>>>>>  sound/soc/qcom/qdsp6/q6afe.c             | 192 ++++++++++++++++++++++-
+>>>>>>  sound/soc/qcom/qdsp6/q6afe.h             |  36 ++++-
+>>>>>>  sound/soc/qcom/qdsp6/q6dsp-lpass-ports.c |  23 +++
+>>>>>>  sound/soc/qcom/qdsp6/q6dsp-lpass-ports.h |   1 +
+>>>>>>  sound/soc/qcom/qdsp6/q6routing.c         |  32 +++-
+>>>>>>  6 files changed, 341 insertions(+), 3 deletions(-)
+>>>>>>
+>>>> [...]
+>>>>>> diff --git a/sound/soc/qcom/qdsp6/q6routing.c b/sound/soc/qcom/qdsp6/q6routing.c
+>>>>>> index 90228699ba7d..b7439420b425 100644
+>>>>>> --- a/sound/soc/qcom/qdsp6/q6routing.c
+>>>>>> +++ b/sound/soc/qcom/qdsp6/q6routing.c
+>>>>>> @@ -435,6 +435,26 @@ static struct session_data *get_session_from_id(struct msm_routing_data *data,
+>>>>>>  	return NULL;
+>>>>>>  }
+>>>>>> +
+>>>>>> +static bool is_usb_routing_enabled(struct msm_routing_data *data)
+>>>>>> +{
+>>>>>> +	int i;
+>>>>>> +
+>>>>>> +	/*
+>>>>>> +	 * Loop through current sessions to see if there are active routes
+>>>>>> +	 * to the USB_RX backend DAI.  The USB offload routing is designed
+>>>>>> +	 * similarly to the non offload path.  If there are multiple PCM
+>>>>>> +	 * devices associated with the ASoC platform card, only one active
+>>>>>> +	 * path can be routed to the USB offloaded endpoint.
+>>>>>> +	 */
+>>>>>> +	for (i = 0; i < MAX_SESSIONS; i++) {
+>>>>>> +		if (data->sessions[i].port_id == USB_RX)
+>>>>>> +			return true;
+>>>>>> +	}
+>>>>>> +
+>>>>>> +	return false;
+>>>>>> +}
+>>>>>
+>>>>> What is different about USB_RX compared to other output ports we have in
+>>>>> Q6AFE? Obviously, we can only play one stream on an output port. But
+>>>>> doesn't the ADSP mix streams together when you have multiple routes?
+>>>>>
+>>>>
+>>>> This patch will limit the USB_RX from being able to be mixed to multiple
+>>>> q6adm paths.
+>>>>
+>>>>> Also, this doesn't actually check for *active* routes only. It just
+>>>>> looks if any other MultiMedia DAI is configured to output to USB_RX.
+>>>>> That doesn't mean they will ever be active at the same time.
+>>>>>
+>>>>
+>>>> Yes, the main reason being that that is the mechanism we use to populate
+>>>> the active offload path within the USB SND card mixer.
+>>>>
+>>>>> I might for example want to have MultiMedia1 and MultiMedia2 both
+>>>>> configured to output to USB_RX. Let's assume MultiMedia1 is a normal PCM
+>>>>> DAI, MultiMedia2 is a compress offload DAI. When I want to playback
+>>>>> normal audio, I go through MultiMedia1, when I want to play compressed
+>>>>> audio, I go through MultiMedia2. Only one of them active at a time.
+>>>>> Why can't I set this up statically in the mixers?
+>>>>>
+>>>>> If you confirm that it is really impossible to have multiple streams
+>>>>> mixed together to the USB_RX output in the ADSP, then this should be a
+>>>>> runtime check instead when starting the stream IMO.
+>>>>>
+>>>>
+>>>> We can have multiple streams being mixed together, but it will get
+>>>> confusing because it changes the definition that we had discussed about in
+>>>> the past about the overall design for the interaction w/ userspace.
+>>>> Although we (QC) only support a single USB audio device for offloading,
+>>>> there could be other situations where the audio DSP can support multiple
+>>>> devices.  The assumption is that each MM path is assigned to a USB device.
+>>>>
+>>>
+>>> Are you referring to the "USB Offload Playback Route PCM#*" mixers here?
+>>> They could just refer to first of the configured MM paths, if someone
+>>> decides to route multiple paths to the USB backend. Looking at
+>>> q6usb_update_offload_route(), I think the implementation does that
+>>> already.
+>>>
+>>> I think it's fine that the userspace API for automatically "probing" the
+>>> PCM device supports only a single path to the USB backend. But if
+>>> someone wants to bypass the automatic probing and configure a more
+>>> advanced setup, do we need to forbid that?
+>>>
+>>> Asked differently: what would happen if we remove this check here and
+>>> handle USB_RX like any other Q6AFE output port? Would anything break for
+>>> the userspace interface?
+>>>
+>>
+>> So I took a look at seeing how the Q6ADM/ASM interactions would work for
+>> the situation where if user tried to start both MM1/2 streams at the same
+>> time over the USB offload path.  In this scenario, we see that the Q6USB BE
+>> DAI operations, ie startup, hw_params, etc... gets called one time for the
+>> initial stream.  For example, if I start playback on MM1, then that
+>> triggers the USB BE DAI to be brought up.
+>>
+>> When I start playback on MM2, since MM1 already called
+>> dpcm_be_dai_startup(), then be->dpcm[stream].users will be greater than
+>> zero.  This would cause the __soc_pcm_open() to be skipped for the USB BE
+>> DAI, so I wouldn't be able to check the runtime status at the Q6USB backend
+>> DAI.  However, we do track current streaming sessions done over Q6 ADM and
+>> it does save the AFE port associated to each COPP allocation, so I think its
+>> reasonable to see if there is already a COPP entry for the USB AFE port, to
+>> fail the open() call associated to the FE DAI.
+>>
+> 
+> This sounds like a reasonable approach *if* we have to prevent multiple
+> MM DAIs from streaming to the USB AFE port at the same time.
+> 
+> It's still unclear to me why we have to introduce this limitation in the
+> first place. I think the questions from my previous email are still
+> open. Can you check them again?
+> 
 
-> -----Original Message-----
-> From: Jason Gunthorpe <jgg@ziepe.ca>
-> Sent: Tuesday, April 1, 2025 9:12 AM
-> To: Tian, Kevin <kevin.tian@intel.com>
-> Cc: Wathsala Wathawana Vithanage <wathsala.vithanage@arm.com>; Alex
-> Williamson <alex.williamson@redhat.com>; linux-kernel@vger.kernel.org; nd
-> <nd@arm.com>; Philipp Stanner <pstanner@redhat.com>; Yunxiang Li
-> <Yunxiang.Li@amd.com>; Dr. David Alan Gilbert <linux@treblig.org>; Ankit
-> Agrawal <ankita@nvidia.com>; open list:VFIO DRIVER <kvm@vger.kernel.org>;
-> Dhruv Tripathi <Dhruv.Tripathi@arm.com>; Honnappa Nagarahalli
-> <Honnappa.Nagarahalli@arm.com>; Jeremy Linton <Jeremy.Linton@arm.com>
-> Subject: Re: [RFC PATCH] vfio/pci: add PCIe TPH to device feature ioctl
->=20
-> On Wed, Mar 12, 2025 at 07:53:17AM +0000, Tian, Kevin wrote:
->=20
-> > Probably we should not allow device-specific mode unless the user is
-> > capable of CAP_SYS_RAWIO? It allows an user to pollute caches on CPUs
-> > which its processes are not affined to, hence could easily break SLAs
-> > which CSPs try to achieve...
->=20
-> I'm not sure this is within the threat model for VFIO though..
->=20
-> qemu or the operator needs to deal with this by not permiting such HW to =
-go into
-> a VM.
->=20
-> Really we can't block device specific mode anyhow because we can't even
-> discover it on the kernel side..
->=20
+So I checked with our audio DSP folks, and they mentioned there isn't
+technically a limitation from mixing multiple ADM streams from their end.
+My observations are as follows:
+- Using tinyplay to open and play on different FE PCM devices (ie MM1 and
+MM2), both streams are audible on the USB headset (intermixed).
+- If starting playback on MM1 first, before MM2, then once playback is
+complete on MM1, the ADM close is also affecting the MM2 stream.
+Basically, MM2 stops when the MM1 audio file is completed.
+- Due to the abrupt/incomplete closing of the MM2 ADM stream, looks like
+the audio DSP is not handling that case well, so subsequent playbacks fail.
 
-We cannot block users from writing a steering-tag to a device specific loca=
-tion, but
-can we use a capability to prevent users from enabling device specific mode=
- on the device?
+I did find a possible reason for this, and it seems to be due to some code
+unrelated to the USB offload path directly.  It looks like the Q6ADM is
+currently built in a way that you can only route streams to a single
+endpoint, even though we do have reference counting for each COPP profile.
+So even after the first MM1 ADM stream completes and the PCM device is
+closed, the MM1 ADM close callback will issue a q6adm_device_close() for
+the USB AFE port.
 
+I made some test changes to account for the refcount before issuing the
+q6adm_device_close(), and that seemed to work.  Once the MM1 stream closes,
+it allows for the MM2 stream to close/finish before issuing the command,
+and that allows for proper cleanup of the audio data.
+
+IMO, I would like to keep the initial behavior (ie, blocking the additional
+stream open from the kernel) until I can get some more testing done, and
+figure out if this is the correct approach.  If it is, I can submit a
+follow up series to address it.
+
+Thanks
+Wesley Cheng
