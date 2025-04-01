@@ -1,74 +1,37 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-m49197.qiye.163.com (mail-m49197.qiye.163.com [45.254.49.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5544B1E51E7;
-	Tue,  1 Apr 2025 11:58:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85D091EC01F;
+	Tue,  1 Apr 2025 12:00:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743508701; cv=none; b=DBTMOcPCBzIRNct6F+519GN5DlJ+APFqrjTSmc7NABf1cyfi9JrF36pEwiwsjLukexgyIMXEiifZlpSpcSvusBVazeCVCLJNxUc3gBmn4JrkioHLdUxGl8WzlMALMmEuOjRHgnjvG5KVB6vfbiXvcMzKFujmHuG4q8nZWGO0zZg=
+	t=1743508831; cv=none; b=SaAv0FP0I/WhLNFSdRmzyAJfvx4iomM6+CUCUF3KkpfBNOtleW7Iq55wg0k7PHIOxeEn4yvDaxe35NwoWtGL/B7wbO+p4FzJk3MV10CdHc8HrWbXVjM8PwE7wM/+mxYriVwcEnoVwRpFe76/GMGCoSVwaCkIBQv6LbaNavmLRPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743508701; c=relaxed/simple;
-	bh=7jGgpK8qQ9n6fLGlDYchkwfaXEMrN1dXXUgorto3Ylc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cuhcjq0Qu08PlrDQINsa/GoYYbOEe8DprL2piQW5F7dDiBdrZWRGUssorudUUPZBuCPqQiz9GaF09TgvajwdSTz9NDbe0bat5hn+7sb70NXlvmfbH2Jot/Ej9DQ//IghldJ3T2l401q/tH0KAXI35uZfpd9StGC0co3b1Bf0VeE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UCJRBMoc; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UCJRBMoc"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43d0782d787so36200375e9.0;
-        Tue, 01 Apr 2025 04:58:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743508698; x=1744113498; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=KanvA1m7FW/GqYde50MUMIMfUtRewOSi+lWetCQJygM=;
-        b=UCJRBMocR/5KQQUa8CMgVEiQist6dKsu+I2Yv+v2TEb33+pwJvcyk068N7bh3XtAx3
-         k2/qI/1IwIydcKvzWy2rtAhKz06jS4Z3JS+7+VsQv/TbPATLhyWDQFI7xFlNHRT/TEfj
-         iJzPGKKXslAE1NwOO6Wi5lJkIUhwnICYd5HgGQq/okGdikz34vHNn0UvqqlWqy8xfKAq
-         yoRmTHW2F6UeUQtDtPhd1q4nBmdNyqtTdWhFcl6Nxcs0SN388vcNkoukupnZFtCumqq+
-         d5E1nvNWpdlcfzeuGzOYGiIj942MI2DxIVdWKOIIDtrq/djkSDRQLrM0IztFEUivL3/9
-         oUrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743508698; x=1744113498;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=KanvA1m7FW/GqYde50MUMIMfUtRewOSi+lWetCQJygM=;
-        b=T4ClJgadLZ1bJNnGQi7im+CtP/Q9PS5ywE9lhI+xRhKMp/0E0FiSuQPK0iPs+yXTJT
-         cFUSXE96SQmgAhCAmwuAtX2gYn+2ZkHXhw0JlCYkGODp9sQN3eIzrL9v4471aUjEiut0
-         PlGGijHOsoYsxVhKTQKG+Hs3uSUclS9R2m/p3kZmKXgZ95rYTzqLUMgWooW8IN/Zw+bG
-         EYeBlkLvoD/X4NpUdevmgaFrTbYUhgQc4RiHS+3lwFLlZMnufU9qcKy1cQcJGz4yyjEJ
-         Irokj4QVg3/jftsQpNFxIBT7ogVCBwoQyHZi49j57UT4p7pTQl/YyXD5eP537uhquGod
-         pxXg==
-X-Forwarded-Encrypted: i=1; AJvYcCWiD7G25Mqe+l4JmibDPEvDIyH+cW9rQNrByOlLtPZy0LydOdwV9Jc7bIxtF5b2G75bOEOWKzOZL5pdykWN@vger.kernel.org, AJvYcCX8zCsMg5kFSm8pGDve3wvguRle0D93e12TL/VEifA1nNBigeMFrE9LAc56AJdJU/kBMp/7UfBF+KtSVFE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxSrtikY58nq3Sxpww7x2OR5O8CJTyEvJ3qNEmmsXIiGv+65YKo
-	X+q4y0m+wys8C1UMlt2A339SZFgCdxINJvWrmSWwuZs660sUtbHY
-X-Gm-Gg: ASbGncvFooq1+KAK9UdoZ1FX4HjBItNJvHb76j1LP433BzEVddd4qxAigIKUrhVuc5j
-	kjhn01EAWQfsW3LXStrgl3zgpm4vdu5b/BWKzzHr8eQNKkwf5UYkxB4Mk7mUrauwImeTlCV0lp0
-	YIbQGgxkZhNoQHS00pw/zKY9TiIZ+UlNMgYX8SI346cmcmSJ6XSGb0ijdElkUysffzTwAMPJGzJ
-	BX0tY4nze36IknUI1HKyZkRvpr4UZVMbLsNq+YJp97zJUgxB61ezYrv/akfZv6KF4DnbgMS+spv
-	6uRkIk8+PAzFUj1rL/SquuuzQbkwTAxdAZN7LMaXdT0+fKqff/ZF85wUxJCYjhqXy6V4tkrWLfD
-	hLVC4GdIaGtHnRQrtxukX7P31
-X-Google-Smtp-Source: AGHT+IECBNFX7PtxksIsQVDrR2DK+8zzgrgJQHq8DTNdbyhMlqJF7qUTFeCUtlbUOTo6/APJ7Ut5Ag==
-X-Received: by 2002:a05:600c:3489:b0:43d:aed:f7de with SMTP id 5b1f17b1804b1-43db62b7a0cmr109300545e9.21.1743508698338;
-        Tue, 01 Apr 2025 04:58:18 -0700 (PDT)
-Received: from localhost.localdomain (93-34-88-225.ip49.fastwebnet.it. [93.34.88.225])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-43d82efeacasm197565095e9.23.2025.04.01.04.58.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Apr 2025 04:58:18 -0700 (PDT)
-From: Christian Marangi <ansuelsmth@gmail.com>
-To: Christian Marangi <ansuelsmth@gmail.com>,
-	Antoine Tenart <atenart@kernel.org>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	Richard van Schagen <vschagen@icloud.com>,
-	linux-crypto@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: stable@vger.kernel.org
-Subject: [PATCH] crypto: inside-secure/eip93 - acquire lock on eip93_put_descriptor hash
-Date: Tue,  1 Apr 2025 13:57:30 +0200
-Message-ID: <20250401115735.11726-1-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.48.1
+	s=arc-20240116; t=1743508831; c=relaxed/simple;
+	bh=I8dvb9lL/6jU+u8XkzlgOGRv5ZHFgs4L6aRWHau1HJ0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=kRYYBQ1+2PypILTkcfVAEZMiUCcYgFepkN70AXW3a1J2WhJh69G/vPtc/uoHubp1ji6uHie6hPRhmj46IY2ZyrHdYRxxIcBvqUP7Ge/4Wd9D7xihDKfBx13v1uf2MkVAyOL8VwsE5gADzgrQNbG9U14EAdbeu2pGIEyN+du/OZo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn; spf=pass smtp.mailfrom=jmu.edu.cn; arc=none smtp.client-ip=45.254.49.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jmu.edu.cn
+Received: from amadeus-Vostro-3710.lan (unknown [IPV6:240e:3b3:2c00:430:ae31:3177:4f09:da96])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 1053fa3ed;
+	Tue, 1 Apr 2025 20:00:23 +0800 (GMT+08:00)
+From: Chukun Pan <amadeus@jmu.edu.cn>
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: Yao Zi <ziyao@disroot.org>,
+	Rob Herring <robh@kernel.org>,
+	Chukun Pan <amadeus@jmu.edu.cn>,
+	Jonas Karlman <jonas@kwiboo.se>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: [PATCH v3 0/2] arm64: dts: rockchip: Add pwm nodes for RK3528
+Date: Tue,  1 Apr 2025 20:00:18 +0800
+Message-Id: <20250401120020.976343-1-amadeus@jmu.edu.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,36 +39,48 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlDTENMVh5NSR5PHU4aSRhCGlYeHw5VEwETFhoSFy
+	QUDg9ZV1kYEgtZQVlJT0seQUgZSEFJGEtLQU9IS0EaHkhKQUhKTExBTx1LQkEfGkJNWVdZFhoPEh
+	UdFFlBWU9LSFVKS0hKTkxOVUpLS1VKQktLWQY+
+X-HM-Tid: 0a95f1395ecd03a2kunm1053fa3ed
+X-HM-MType: 10
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6KzI6NRw*EDJIHwoiTDM5MA02
+	CTlPCilVSlVKTE9ITktDQ0lPT0xLVTMWGhIXVRoWGh8eDgg7ERYOVR4fDlUYFUVZV1kSC1lBWUlP
+	Sx5BSBlIQUkYS0tBT0hLQRoeSEpBSEpMTEFPHUtCQR8aQk1ZV1kIAVlBSkxJSTcG
 
-In the EIP93 HASH functions, the eip93_put_descriptor is called without
-acquiring lock. This is problematic when multiple thread execute hash
-operations.
+Add pwm nodes for RK3528. Most rk3528 boards use pwm-regulator to
+supply to CPU, add node to enable them. The PWM core on RK3528 is
+the same as RK3328, but the driver doesn't support interrupts yet.
 
-Correctly acquire ring write lock on calling eip93_put_descriptor to
-prevent concurrent access and mess with the ring pointers.
+Note that pwm regulator needs to be initialized in U-Boot:
+```
+&vdd_arm {
+	regulator-init-microvolt = <953000>;
+};
 
-Cc: stable@vger.kernel.org
-Fixes: 9739f5f93b78 ("crypto: eip93 - Add Inside Secure SafeXcel EIP-93 crypto engine support")
-Reported-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
----
- drivers/crypto/inside-secure/eip93/eip93-hash.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+&vdd_logic {
+	regulator-init-microvolt = <900000>;
+};
+```
 
-diff --git a/drivers/crypto/inside-secure/eip93/eip93-hash.c b/drivers/crypto/inside-secure/eip93/eip93-hash.c
-index 5e9627467a42..df1b05ac5a57 100644
---- a/drivers/crypto/inside-secure/eip93/eip93-hash.c
-+++ b/drivers/crypto/inside-secure/eip93/eip93-hash.c
-@@ -260,7 +260,8 @@ static int eip93_send_hash_req(struct crypto_async_request *async, u8 *data,
- 	}
- 
- again:
--	ret = eip93_put_descriptor(eip93, &cdesc);
-+	scoped_guard(spinlock_irqsave, &eip93->ring->write_lock)
-+		ret = eip93_put_descriptor(eip93, &cdesc);
- 	if (ret) {
- 		usleep_range(EIP93_RING_BUSY_DELAY,
- 			     EIP93_RING_BUSY_DELAY * 2);
+Changes in v3:
+  Adjust regulators order of E20C dts nodes
+  Use PWM_POLARITY_INVERTED in pwm-regulator
+
+Changes in v2:
+  Remove merged bindings patch
+  Remove pwm pinctrl in rk3528.dtsi
+  Enable pwm regulator for Radxa E20C
+
+Chukun Pan (2):
+  arm64: dts: rockchip: Add pwm nodes for RK3528
+  arm64: dts: rockchip: Enable regulators for Radxa E20C
+
+ .../boot/dts/rockchip/rk3528-radxa-e20c.dts   | 73 +++++++++++++++++
+ arch/arm64/boot/dts/rockchip/rk3528.dtsi      | 80 +++++++++++++++++++
+ 2 files changed, 153 insertions(+)
+
 -- 
-2.48.1
+2.25.1
 
