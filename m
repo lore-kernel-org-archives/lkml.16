@@ -1,289 +1,223 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from PA4PR04CU001.outbound.protection.outlook.com (mail-francecentralazon11013011.outbound.protection.outlook.com [40.107.162.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C13C2040BD
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 13:44:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743515072; cv=none; b=JSLI9+EsXLV7r1C+0xIc9aFUppVRSxAJXk8VnTVlKsEXW7ePZWCC9iimHa62f1xiZ250as1w51nWPLrvgwjwKVGt54K3V4LGHJ+cYlg7tGKcWH0uFo0Ojg5zXlME8jRrlUwSflQWVYGmLm+uTfsxMOXCj1W+Vsasye3j/WQrzl0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743515072; c=relaxed/simple;
-	bh=8bpp/MaW8+ZTtpUqf2IhtZcsfdQiRx/Eafa08qoqHbo=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=Q0U5jw7XftZNR4E7pKmSwFLzD792K/Dy873OkA5roDp1uxI4IOd7qJ+vGdcUoy3BXZ+hfbxtui3/6B+jQqQVVVr1xmO2G9xHEas3MCIep1DueIT19SdBJLo0wBjO2ViRd7GyX4mGKOrOm5iM85SWcIUJ/A9Psbz/xtABMknp1h8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--chharry.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=U2OyV5Rq; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--chharry.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6A142AF00;
+	Tue,  1 Apr 2025 13:45:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.162.11
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743515125; cv=fail; b=gsIg3dZkjVSLBgtIE5hGN8wGDuJ24991Q63ZgcMSy293OeIZCdlDoB9HaFlfao37zQcVBwYygumkebZhwt/zPemjVtXtji09xvydNylS6n4OIB0Q6YOOiBxmG/KuANorMW+h17Qewz5cvvwpmxkBJfkb1JFHpeO7NtCFYOKPpJQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743515125; c=relaxed/simple;
+	bh=JfBwt+YFeLTLSowSf+MGyNdNWtpNrZkQJ4OPTn8El34=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WmEkWjzRuReoFIPA7SfPd09mMFk1Qp8JVlgsmr2qZTmYxHISg2li2xJ0WHNBFwQZQ1sUkXrAWY6F37kOtUC6q7O7TsRjHnxXO2y3TuG9fUKb1dJGLWyEU7j/g6VmW6i35fArTHmOfGttlgVkC1bA0o0lpp5egW/Mmkchl9u7yFU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arri.de; spf=pass smtp.mailfrom=arri.de; dkim=pass (1024-bit key) header.d=arri.de header.i=@arri.de header.b=swKMPhpL; arc=fail smtp.client-ip=40.107.162.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arri.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arri.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="U2OyV5Rq"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-3054210ce06so8683923a91.2
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 06:44:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743515070; x=1744119870; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=ZyEbqOkrSD6TU4NwMw2CtJ+zlTXsk1fSPsK0Ogdp3/c=;
-        b=U2OyV5Rqw8FO3nK2Kw6mr0+FS0XOL2u/CvjZ0uwKKRWZb17Cs5xuqJ465s6hFQ66Bl
-         K7R30hUZez+z3LX5FPn5UueO6tFMvJULtD49dHxbm8nwjOo7MeI9Np/6TYZ+827HIyia
-         H1MW4iPPWsxfvJ5ZlaVOjF8i42Qamwj2U3e841Uu7mdKAl/hZ2P/CFkJPtqYE5EgrtzF
-         d17VRfSNnfqiVHQccqG1lGI8VnDmv+WC0wTLnVd+dF+OijM62VVIreoOnYjqvNl016SV
-         UxoVFVYmEql3rdsnGZyeWRfxOMOxT8OHplycNT/IU/hDtQM7GTUDoCCrDzmTwuAfj3jm
-         sUXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743515070; x=1744119870;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ZyEbqOkrSD6TU4NwMw2CtJ+zlTXsk1fSPsK0Ogdp3/c=;
-        b=Pctp8kedRD23noTStnIwvEq4Ax716+lcsbjves4uGdhg9Z1Ew8nSmMmS6WyN9CUNtj
-         BuoXz46eGuaa/hk3hbzmYlwqoDEMF0ORF0Yyp6b2YH8DOoqEC+tZoToYirrGRYDtI6VA
-         XICv269c7quqP1Vi2urA4Vvt+nL8Kvrp+3921Jp47m4OaVMzjgoYpApwqdWtgKSQ9ORy
-         U9Myc8n2fNi/29qGqRDLWZY3L/0SJWOKuh4rbRepad9w30n2dwGT/NQShuAicEWm3g0F
-         hWw3lWuQRs4IxbzXFLtFdVh+oKTek4NyAgBYuOv3WWLMXLvnqHLoImUYhZA9zGY9NmQQ
-         wiNQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVQIarBqY1403AGdIGbsFu9dfCj76kw84cucRvpwvmEo39O59eazmPOpguvfgkcvug7GeH5zEY3UvENe9Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyjNu5kJ9SfMSfx56Da7gtpVmE6RR6IIDNvjI6QHzimLVpreQmT
-	SsQqd20p7x4EYACzeraUnfj+qzmeXRvRFi65v/tXOoM4hj8O78pjzwrBbOqrT6+9dFfpAqVq056
-	iOUQJxw==
-X-Google-Smtp-Source: AGHT+IHdNj17IzfPxuNN9wWBGf+SCwwzrruftH70/zxd2bKdhdb2VT0VeYc7kAxS7tGQlGM1MK8F7pOfJkAn
-X-Received: from pjp4.prod.google.com ([2002:a17:90b:55c4:b0:2ea:3a1b:f493])
- (user=chharry job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5243:b0:2fe:a515:4a98
- with SMTP id 98e67ed59e1d1-3053217848bmr18928134a91.31.1743515069900; Tue, 01
- Apr 2025 06:44:29 -0700 (PDT)
-Date: Tue,  1 Apr 2025 21:44:03 +0800
+	dkim=pass (1024-bit key) header.d=arri.de header.i=@arri.de header.b="swKMPhpL"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=UQ5MC2QlNALH4dUg5qo3Dz+QQPPJMRt1Nw6vNA8ZIwKe0feMXZf7csUI3LVrai1rYvnRNudXSVEr5S5YZaHXZMFYMH+/VnXfLjiv5vgw1XbQ2CXRuDE0zGS3KRkmQirTswVsn07wdjtAFxLfMvhm7Ix7ObDMXnv9tG7zzcSjPrM3BEyc2jtlVhb5m7eqs0vqyLLkR9aOMbhC/MkP1n/uhwTIhcjl5EkhqKldCF5fXfl5YbvxXvtUIaAIvNBhMBadbHIfK1Gp9hdKsDvcfPFpe5FGgzuWxK8sI9KoQc3+plvu3KrabHzX3WnG6eoNFX5xgxOAhHYYTSWDVDg6OtnDLg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=cKseY4LmRe0ts5dd3i47X+7Kky4h/VpDZYlxh83jiyc=;
+ b=FZpTAH3sItnjGZEZFrZTTCy+CkXq0fbfHdcihozLrknUiFzvlslFMDUbXsJbOOd2WApeMEXp0HylGp1BGafsMLEKvb+zcp7ix0rB38ayxgbAl4riH/VPxcO6QVpMmdEjTFAELxwzWLpjqgDzFrt6GP1arT2H5UsNDhjuj8oI12ppo/OZ5psi60v6PrBO1L5J04fuVE25ObCOhGRVERErw6kQyt+3yEzLqYPZDfs0yzGUGDe8gztYhRBQYnqUW1iO/vSUODH0mBQheyR0iIjyysY1sMU0nkof54uUnXTIB3+a0Khr3ngfVeB4qk/7ms/6ilr0m9L36V0j0xTkMd8VnA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
+ 217.111.95.7) smtp.rcpttodomain=arndb.de smtp.mailfrom=arri.de; dmarc=fail
+ (p=none sp=none pct=100) action=none header.from=arri.de; dkim=none (message
+ not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arri.de; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cKseY4LmRe0ts5dd3i47X+7Kky4h/VpDZYlxh83jiyc=;
+ b=swKMPhpLJmdZIKqbeohIjsUJ+DiRig8RpuBrxKVCA+WslI4JbX3La+jkrW6+fd/zOYtBNbAQwTeWrY6mmwz/5SRC1pS7mRWdIMz5p/Pgv0dCwAXfRCuxCEIWFZbSLXlHgATVakjhALnnVBQ0k5LX18v4rkw5Lm3c9m0jSffgqM8=
+Received: from DB8PR09CA0008.eurprd09.prod.outlook.com (2603:10a6:10:a0::21)
+ by DU0PR03MB9684.eurprd03.prod.outlook.com (2603:10a6:10:44f::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.50; Tue, 1 Apr
+ 2025 13:45:16 +0000
+Received: from DU2PEPF00028D03.eurprd03.prod.outlook.com
+ (2603:10a6:10:a0:cafe::dd) by DB8PR09CA0008.outlook.office365.com
+ (2603:10a6:10:a0::21) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8534.54 via Frontend Transport; Tue,
+ 1 Apr 2025 13:45:16 +0000
+X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 217.111.95.7)
+ smtp.mailfrom=arri.de; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=none header.from=arri.de;
+Received-SPF: Fail (protection.outlook.com: domain of arri.de does not
+ designate 217.111.95.7 as permitted sender) receiver=protection.outlook.com;
+ client-ip=217.111.95.7; helo=mta.arri.de;
+Received: from mta.arri.de (217.111.95.7) by
+ DU2PEPF00028D03.mail.protection.outlook.com (10.167.242.187) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8606.22 via Frontend Transport; Tue, 1 Apr 2025 13:45:15 +0000
+Received: from n9w6sw14.localnet (10.30.5.38) by mta.arri.de (10.10.18.5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.38; Tue, 1 Apr
+ 2025 15:45:15 +0200
+From: Christian Eggers <ceggers@arri.de>
+To: Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Markus
+ Heidelberg <m.heidelberg@cab.de>
+CC: Markus Heidelberg <m.heidelberg@cab.de>, Jiri Prchal
+	<jiri.prchal@aksignal.cz>, <linux-kernel@vger.kernel.org>,
+	<devicetree@vger.kernel.org>
+Subject: Re: [RFC PATCH 0/2] eeprom: at25: support Cypress FRAMs without device ID
+Date: Tue, 1 Apr 2025 15:45:14 +0200
+Message-ID: <2759958.vuYhMxLoTh@n9w6sw14>
+Organization: Arnold & Richter Cine Technik GmbH & Co. Betriebs KG
+In-Reply-To: <20250401133148.38330-1-m.heidelberg@cab.de>
+References: <20250401133148.38330-1-m.heidelberg@cab.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.49.0.472.ge94155a9ec-goog
-Message-ID: <20250401134424.3725875-1-chharry@google.com>
-Subject: [PATCH] Bluetooth: Add driver command BTUSB_DRV_CMD_SWITCH_ALT_SETTING
-From: Hsin-chen Chuang <chharry@google.com>
-To: luiz.dentz@gmail.com
-Cc: Hsin-chen Chuang <chharry@chromium.org>, chromeos-bluetooth-upstreaming@chromium.org, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Johan Hedberg <johan.hedberg@gmail.com>, 
-	Marcel Holtmann <marcel@holtmann.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-	Ying Hsu <yinghsu@chromium.org>, linux-bluetooth@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset="UTF-8"
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DU2PEPF00028D03:EE_|DU0PR03MB9684:EE_
+X-MS-Office365-Filtering-Correlation-Id: 66cd0fd9-f327-4df8-2463-08dd71236f06
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|1800799024|376014|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?djZSalVHNUphVytQWnV0d2k3b3JMTGdwdm91ZlZBUXEvQWFVQ1ZhUThHSUpJ?=
+ =?utf-8?B?RVFQaXBKVEdIT0xtTkx6Tkg4cFZpVTllUzhKQnh4UGlXVHF5aVFEeTc0ZEdS?=
+ =?utf-8?B?UkZGYjZVczI1eW55WU41RGRPcWVFdnV6OUQxWjdrTVd6YmdiTDFEWlJ2LzZO?=
+ =?utf-8?B?T3FUeWZIRmFqakhiYjdnaHJIVTlvcFNyT3VBLzVFYU9rejcvK2l5b212enlr?=
+ =?utf-8?B?TWExSTgzRUN5TGNEa3BUQmZLTG5PM3dySEN5S05nVkMxRGpIdjNmanFaSDVE?=
+ =?utf-8?B?eEZrQzN0SDd0R0NXMi9MbmdOZ0VJNGtoQTZFSCtKT2FuNDY0YU9RazFYSlhu?=
+ =?utf-8?B?dkg2a0FIbXFzZW5EcUZSUWNCNkxlQ21SWFg1b0Y5Nld1OWx5bENteCtXdFZL?=
+ =?utf-8?B?bDdCVGRkVC82dVFyR3RZSHJvRG56MWVXRzBWdmlIaWVnSVpzZmtIKzIvYVAy?=
+ =?utf-8?B?UWU2RGJxeERqTGdoQ0UyRXZuR3BFWVBaVVRNMzFvOUZvQUludXZObVBENWMy?=
+ =?utf-8?B?ZVo1TXowRXNXNFRRYlB3WEpuMVlVN1RjVGxtYi9FVmRDQzMrR1dGYnN5cmU1?=
+ =?utf-8?B?RUZ2MVRPa1VwVmpwQlhuUVRHek84ZmJlOEFPdWVIUlQveFZYWUJ3cFRpandC?=
+ =?utf-8?B?VFZ0QkdCZWQxaEVQWFk4NnJiaTBYQ2toL3BxRjVnRmdDZW1LUG12NmhRL2Ex?=
+ =?utf-8?B?NVY1OXBTWDI3WGMvY1pkV1dwVjJrSnRkc0NhSGoycEwrc295TklrcUYwQ3JF?=
+ =?utf-8?B?dDcxbElvV3FVdjliNHF5V0FRWGhHR3l2TlJkVUp2QmE4aVYvOW9sR2N6YU5J?=
+ =?utf-8?B?b3dUeXdXak13QWZYS05sQy9CTEFPRHNzYTBPVXBzbXljSTV0T04zU0lZOEww?=
+ =?utf-8?B?bmJyOE9mOFRuNlpuS3dXMGNFcE42RkR5YXd5eEd2V0ZmQmMyVUllRVZENWps?=
+ =?utf-8?B?cFE3VnJ4K1ljWTcrOGNIeWx1Nm1oRDRObUMwNEl0WXFaaGNKSVUwelNTVGZE?=
+ =?utf-8?B?MWxJUmdMYmRPeUhpUUpLdTYvMXlnRGF4alFORjRqUHN5Y2dqQlVQOUFaNDZo?=
+ =?utf-8?B?SnVvYmFwUzZnaEFwTUlwd3dNanBNV2J0cEZvblJqMGJza1FEVklJRU12RnVs?=
+ =?utf-8?B?bDZkWWUrQW0yRlAzTG1ubkNVUndCcDA5MjVWa1lGRE01WEJONjlUN1lYOXN3?=
+ =?utf-8?B?bWNOZytYaExqN2d0Qm9TZUxOMEkvcHVnbDl5VG0xZFBhNU9jUXQwOE1HcjNj?=
+ =?utf-8?B?WHJvWjliaVZWaUQwL0gyUWNJZjZyVDJ5end1NlVUL2hMaTRCWWdOc1RRVXpL?=
+ =?utf-8?B?WlE3cnNiODlmSk5XTWVZNzQzS0FPTFBjNnlWZEV4ZlMyY1BHRmZuMlhXU2JY?=
+ =?utf-8?B?aGl3TGxqSDI1WkRxZ2p5TFk2WWVXSGZUTDArQStoUFV6ZjByZHYwUHZtd0J2?=
+ =?utf-8?B?QlNxbzNrWDVEbGFnS0V6OWJZbUJmVjUySDhsdVp3Ty9NSkNNaWg4WEVMSXU3?=
+ =?utf-8?B?T0wveDJtcEJsUnFHNmkwaSt0MzNaTjhtb3NtejBGTzZ6eHExSks1WjVqL2xQ?=
+ =?utf-8?B?anpBbzNjeC9XaG1OUHBZS0dMN3IrY3oyN0tmeXZUWFN1dWV6cUxHUTBpa1Ry?=
+ =?utf-8?B?eW9BOW1scGtMRU5nNlB1NUhJemNzWlVDVG16M1ZxbnptbzFob0RNTDBqeXIz?=
+ =?utf-8?B?T1NwL29lbk1tV3lmT3M1ZnJZUmtSNURSVTZ0emtnazYxQUVCeGVmQ3RLMkow?=
+ =?utf-8?B?WTVMcFM5SEVpZ20vYU05bVBYL2R5b0VqQ2tuN213VlBhUDhhR3pXOWVpWGVQ?=
+ =?utf-8?B?M1JsOUVGMzlMdzVQVmE4WWxpbEV0WjFHUko1WG1mc1pEeGFsaWhrU1plUURT?=
+ =?utf-8?B?NGk2N2NzWGxzbnJqMEp3WUxNYTY1QW5RMWxucmoxNjRsMFQ5OU0vSEJhQWpT?=
+ =?utf-8?B?ck5ZQnYrU25TelA4T2JEVm0zd1Q1cjNUL25jeWhRb1lPdW51Q2twV01wOWlq?=
+ =?utf-8?Q?o1Rb0vKRP5DvJzW8T/srjXdv5Of9as=3D?=
+X-Forefront-Antispam-Report:
+	CIP:217.111.95.7;CTRY:DE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mta.arri.de;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(376014)(36860700013);DIR:OUT;SFP:1101;
+X-OriginatorOrg: arri.de
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Apr 2025 13:45:15.6321
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 66cd0fd9-f327-4df8-2463-08dd71236f06
+X-MS-Exchange-CrossTenant-Id: e6a73a5a-614d-4c51-b3e3-53b660a9433a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=e6a73a5a-614d-4c51-b3e3-53b660a9433a;Ip=[217.111.95.7];Helo=[mta.arri.de]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DU2PEPF00028D03.eurprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0PR03MB9684
 
-From: Hsin-chen Chuang <chharry@chromium.org>
+Hi Markus,
 
-Although commit 75ddcd5ad40e ("Bluetooth: btusb: Configure altsetting
-for HCI_USER_CHANNEL") has enabled the HCI_USER_CHANNEL user to send out
-SCO data through USB Bluetooth chips, it's observed that with the patch
-HFP is flaky on most of the existing USB Bluetooth controllers: Intel
-chips sometimes send out no packet for Transparent codec; MTK chips may
-generate SCO data with a wrong handle for CVSD codec; RTK could split
-the data with a wrong packet size for Transparent codec; ... etc.
+I use the following FRAM device: Fujitsu mb85rs1mt.=20
 
-To address the issue above one needs to reset the altsetting back to
-zero when there is no active SCO connection, which is the same as the
-BlueZ behavior, and another benefit is the bus doesn't need to reserve
-bandwidth when no SCO connection.
+This FRAM is also not able to report its size (at least I didn't
+try). I can use this FRAM with the following (Eeeprom) settings:
 
-This patch introduces a fundamental solution that lets the user space
-program to configure the altsetting freely:
-- Define the new packet type HCI_DRV_PKT which is specifically used for
-  communication between the user space program and the Bluetooth drviers
-- Define the btusb driver command BTUSB_DRV_CMD_SWITCH_ALT_SETTING which
-  indicates the expected altsetting from the user space program
-- btusb intercepts the command and adjusts the Isoc endpoint
-  correspondingly
+		compatible =3D "fujitsu,mb85rs1mt", "atmel,at25";
+		reg =3D <0>;
+		spi-max-frequency =3D <30000000>;
+		/* mode0, uncomment for mode3 */
+		/*spi-cpha;
+		spi-cpol;*/
 
-This patch is tested on ChromeOS devices. The USB Bluetooth models
-(CVSD, TRANS alt3, and TRANS alt6) could pass the stress HFP test narrow
-band speech and wide band speech.
+		/* from the datasheet it seems that there is no page size for FRAM */
+		pagesize =3D <131072>;
+		size =3D <131072>;
+		address-width =3D <24>;
 
-Cc: chromeos-bluetooth-upstreaming@chromium.org
-Fixes: b16b327edb4d ("Bluetooth: btusb: add sysfs attribute to control USB alt setting")
-Signed-off-by: Hsin-chen Chuang <chharry@chromium.org>
----
+Is this what you are looking for? Of course, the "type" attribute=20
+reports "EEPROM" with this configuration, but my application don't care
+about this.
 
- drivers/bluetooth/btusb.c       | 67 +++++++++++++++++++++++++++++++++
- include/net/bluetooth/hci.h     |  1 +
- include/net/bluetooth/hci_mon.h |  2 +
- net/bluetooth/hci_core.c        |  2 +
- net/bluetooth/hci_sock.c        | 14 +++++--
- 5 files changed, 83 insertions(+), 3 deletions(-)
+regards,
+Christian
 
-diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
-index 5012b5ff92c8..a7bc64e86661 100644
---- a/drivers/bluetooth/btusb.c
-+++ b/drivers/bluetooth/btusb.c
-@@ -2151,6 +2151,67 @@ static int submit_or_queue_tx_urb(struct hci_dev *hdev, struct urb *urb)
- 	return 0;
- }
- 
-+static struct sk_buff *btusb_drv_response(u8 opcode, size_t data_len)
-+{
-+	struct sk_buff *skb;
-+
-+	/* btusb driver response starts with 1 oct of the opcode,
-+	 * and followed by the command specific data.
-+	 */
-+	skb = bt_skb_alloc(1 + data_len, GFP_KERNEL);
-+	if (!skb)
-+		return NULL;
-+
-+	skb_put_u8(skb, opcode);
-+	hci_skb_pkt_type(skb) = HCI_DRV_PKT;
-+
-+	return skb;
-+}
-+
-+static int btusb_switch_alt_setting(struct hci_dev *hdev, int new_alts);
-+
-+#define BTUSB_DRV_CMD_SWITCH_ALT_SETTING 0x35
-+
-+static int btusb_drv_cmd(struct hci_dev *hdev, struct sk_buff *skb)
-+{
-+	/* btusb driver command starts with 1 oct of the opcode,
-+	 * and followed by the command specific data.
-+	 */
-+	if (!skb->len)
-+		return -EILSEQ;
-+
-+	switch (skb->data[0]) {
-+	case BTUSB_DRV_CMD_SWITCH_ALT_SETTING: {
-+		struct sk_buff *resp;
-+		int status;
-+
-+		/* Response data: Total 1 Oct
-+		 *   Status: 1 Oct
-+		 *     0 = Success
-+		 *     1 = Invalid command
-+		 *     2 = Other errors
-+		 */
-+		resp = btusb_drv_response(BTUSB_DRV_CMD_SWITCH_ALT_SETTING, 1);
-+		if (!resp)
-+			return -ENOMEM;
-+
-+		if (skb->len != 2 || skb->data[1] > 6) {
-+			status = 1;
-+		} else {
-+			status = btusb_switch_alt_setting(hdev, skb->data[1]);
-+			if (status)
-+				status = 2;
-+		}
-+		skb_put_u8(resp, status);
-+
-+		kfree_skb(skb);
-+		return hci_recv_frame(hdev, resp);
-+	}
-+	}
-+
-+	return -EILSEQ;
-+}
-+
- static int btusb_send_frame(struct hci_dev *hdev, struct sk_buff *skb)
- {
- 	struct urb *urb;
-@@ -2192,6 +2253,9 @@ static int btusb_send_frame(struct hci_dev *hdev, struct sk_buff *skb)
- 			return PTR_ERR(urb);
- 
- 		return submit_or_queue_tx_urb(hdev, urb);
-+
-+	case HCI_DRV_PKT:
-+		return btusb_drv_cmd(hdev, skb);
- 	}
- 
- 	return -EILSEQ;
-@@ -2669,6 +2733,9 @@ static int btusb_send_frame_intel(struct hci_dev *hdev, struct sk_buff *skb)
- 			return PTR_ERR(urb);
- 
- 		return submit_or_queue_tx_urb(hdev, urb);
-+
-+	case HCI_DRV_PKT:
-+		return btusb_drv_cmd(hdev, skb);
- 	}
- 
- 	return -EILSEQ;
-diff --git a/include/net/bluetooth/hci.h b/include/net/bluetooth/hci.h
-index a8586c3058c7..e297b312d2b7 100644
---- a/include/net/bluetooth/hci.h
-+++ b/include/net/bluetooth/hci.h
-@@ -494,6 +494,7 @@ enum {
- #define HCI_EVENT_PKT		0x04
- #define HCI_ISODATA_PKT		0x05
- #define HCI_DIAG_PKT		0xf0
-+#define HCI_DRV_PKT		0xf1
- #define HCI_VENDOR_PKT		0xff
- 
- /* HCI packet types */
-diff --git a/include/net/bluetooth/hci_mon.h b/include/net/bluetooth/hci_mon.h
-index 082f89531b88..bbd752494ef9 100644
---- a/include/net/bluetooth/hci_mon.h
-+++ b/include/net/bluetooth/hci_mon.h
-@@ -51,6 +51,8 @@ struct hci_mon_hdr {
- #define HCI_MON_CTRL_EVENT	17
- #define HCI_MON_ISO_TX_PKT	18
- #define HCI_MON_ISO_RX_PKT	19
-+#define HCI_MON_DRV_TX_PKT	20
-+#define HCI_MON_DRV_RX_PKT	21
- 
- struct hci_mon_new_index {
- 	__u8		type;
-diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
-index 5eb0600bbd03..bb4e1721edc2 100644
---- a/net/bluetooth/hci_core.c
-+++ b/net/bluetooth/hci_core.c
-@@ -2911,6 +2911,8 @@ int hci_recv_frame(struct hci_dev *hdev, struct sk_buff *skb)
- 		break;
- 	case HCI_ISODATA_PKT:
- 		break;
-+	case HCI_DRV_PKT:
-+		break;
- 	default:
- 		kfree_skb(skb);
- 		return -EINVAL;
-diff --git a/net/bluetooth/hci_sock.c b/net/bluetooth/hci_sock.c
-index 022b86797acd..0bc4f77ed17b 100644
---- a/net/bluetooth/hci_sock.c
-+++ b/net/bluetooth/hci_sock.c
-@@ -234,7 +234,8 @@ void hci_send_to_sock(struct hci_dev *hdev, struct sk_buff *skb)
- 			if (hci_skb_pkt_type(skb) != HCI_EVENT_PKT &&
- 			    hci_skb_pkt_type(skb) != HCI_ACLDATA_PKT &&
- 			    hci_skb_pkt_type(skb) != HCI_SCODATA_PKT &&
--			    hci_skb_pkt_type(skb) != HCI_ISODATA_PKT)
-+			    hci_skb_pkt_type(skb) != HCI_ISODATA_PKT &&
-+			    hci_skb_pkt_type(skb) != HCI_DRV_PKT)
- 				continue;
- 		} else {
- 			/* Don't send frame to other channel types */
-@@ -391,6 +392,12 @@ void hci_send_to_monitor(struct hci_dev *hdev, struct sk_buff *skb)
- 		else
- 			opcode = cpu_to_le16(HCI_MON_ISO_TX_PKT);
- 		break;
-+	case HCI_DRV_PKT:
-+		if (bt_cb(skb)->incoming)
-+			opcode = cpu_to_le16(HCI_MON_DRV_RX_PKT);
-+		else
-+			opcode = cpu_to_le16(HCI_MON_DRV_TX_PKT);
-+		break;
- 	case HCI_DIAG_PKT:
- 		opcode = cpu_to_le16(HCI_MON_VENDOR_DIAG);
- 		break;
-@@ -1806,7 +1813,7 @@ static int hci_sock_sendmsg(struct socket *sock, struct msghdr *msg,
- 	if (flags & ~(MSG_DONTWAIT | MSG_NOSIGNAL | MSG_ERRQUEUE | MSG_CMSG_COMPAT))
- 		return -EINVAL;
- 
--	if (len < 4 || len > hci_pi(sk)->mtu)
-+	if (len > hci_pi(sk)->mtu)
- 		return -EINVAL;
- 
- 	skb = bt_skb_sendmsg(sk, msg, len, len, 0, 0);
-@@ -1860,7 +1867,8 @@ static int hci_sock_sendmsg(struct socket *sock, struct msghdr *msg,
- 		if (hci_skb_pkt_type(skb) != HCI_COMMAND_PKT &&
- 		    hci_skb_pkt_type(skb) != HCI_ACLDATA_PKT &&
- 		    hci_skb_pkt_type(skb) != HCI_SCODATA_PKT &&
--		    hci_skb_pkt_type(skb) != HCI_ISODATA_PKT) {
-+		    hci_skb_pkt_type(skb) != HCI_ISODATA_PKT &&
-+		    hci_skb_pkt_type(skb) != HCI_DRV_PKT) {
- 			err = -EINVAL;
- 			goto drop;
- 		}
--- 
-2.49.0.472.ge94155a9ec-goog
+On Tuesday, 1 April 2025, 15:30:46 CEST, Markus Heidelberg wrote:
+> Hello,
+>=20
+> this patch series is marked as RFC because I'm unsure if it
+> should rather be implemented with an adaption in this binding:
+>=20
+>   Documentation/devicetree/bindings/eeprom/at25.yaml
+>=20
+> Currently supported FRAMs use compatible=3D"cypress,fm25","atmel,at25" in
+> Devicetree, the memory size is read from its device ID.
+> For FRAMs without device ID this is not possible, so the "size" property
+> has to be set manually as it is done for EEPROMs.
+>=20
+> I had a few solutions for implementation in mind, but opted for the
+> simplest one as base for discussion:
+>=20
+> - Use the existing "compatible" string and additionally set "size". Only
+>   read the device ID if "size" is not set.
+>=20
+>   But this way there is already the problem that "size" is required for
+>   FRAMs without device ID, but I cannot specify that in the binding
+>   because of the reused "compatible" string.
+>=20
+> Other ideas that came to mind:
+>=20
+> - Add "cypress,fm25l16b" (chip is named FM25L16B) and define "size" as
+>   required property. Use that instead of "cypress,fm25".
+>=20
+>   According to Documentation/devicetree/bindings/writing-bindings.rst
+>   this might even be necessary regarding this statement:
+>=20
+>     "DO add new compatibles in case there are new features or bugs."
+>=20
+>   The existing "cypress,fm25" ("FM25" is not the real name of a chip,
+>   but the common prefix) also doesn't seem chosen right regarding this
+>   statement:
+>=20
+>     "DO make =E2=80=98compatible=E2=80=99 properties specific. DON'T use =
+wildcards in
+>     compatible strings."
+>=20
+> - Add a boolean property "no-device-id" to the existing "compatible"
+>   string and in case this boolean is set, define "size" as required.
+>=20
+>   This seems a bit awkward at first sight. Also, would this really solve
+>   the above mentioned problem with specification of the binding?
+>=20
+> Bye!
+>=20
+> Markus Heidelberg (2):
+>   eeprom: at25: support Cypress FRAMs without device ID
+>   eeprom: at25: make FRAM device ID error message more precise
+>=20
+>  drivers/misc/eeprom/at25.c | 42 ++++++++++++++++++++++----------------
+>  1 file changed, 24 insertions(+), 18 deletions(-)
+>=20
+>=20
+
+
+
 
