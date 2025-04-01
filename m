@@ -1,53 +1,53 @@
-Received: from mail-wr1-f74.google.com (mail-wr1-f74.google.com [209.85.221.74])
+Received: from mail-wr1-f73.google.com (mail-wr1-f73.google.com [209.85.221.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9AA42040AD
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 13:34:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABDE62046AF
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 13:34:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743514478; cv=none; b=BOe+R0M7n4HJb4ap5327h5TvO0NA14dy3ghd+jytIi6N1izhaPSC1ajstAtCrzRmOrGR76bELwAiAhyovkikmtR7g1idzNhoGJqk0In/Is33nFhCbXInFkCpeiTbN8L94UZSjtxnonEkwOUvE4RjvwRcxRJr9ppEIbacnRt7/+Y=
+	t=1743514480; cv=none; b=bxXKypHOjii72HMhh8oyCwqyZCdoiA+WjcTq3y5uSZN+uRNShJmIGS5wZlubqN6yyE0xcz5zlSCqW6IKF+OGJD6tNxjo4ufXXNrWo7tZvSbyEsVGwGYZvGlLW4ZxAwQ5lZED3fGuX+PN6sW0cBYhOviRqZkenEgFqVJyD8Rgeyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743514478; c=relaxed/simple;
-	bh=jVv82q0VAwBPvYZ5/rIuosPXebvdrL2vHJ8IsDzi2y8=;
+	s=arc-20240116; t=1743514480; c=relaxed/simple;
+	bh=Dja8KUvxraXjphff+I7V+sxjjRAswa3snLgGDyWKopQ=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Ch2HvKQNXAKLVwzmcLx/vwxVc9X4JVJJ7TYha96ySjtr8BC15wHaHN7SKTO6Q3WYOywgNIHLVmo0aKrAdQ9UgYPtMx0bh3A4Ebneon3CXo5zVCJPrXNAWSo0ADUDJAzhwZ1TGgGHdE56G461N+xgYy0ZoqjupHGiV+gmkfhYjFA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=G3NJwlJO; arc=none smtp.client-ip=209.85.221.74
+	 To:Cc:Content-Type; b=pkIMKJ3MaBI+W/dwtwDDLw/OSrOQbiF/aBy5c2L2i30djCedtIzgNjaEU2x6jIJNu9VJYjTfE7skhg3zB0uC//gWIdWpxnwaxrK9IdAng1utkoIQzI1aFixEMap/q+Yyd0pfMBIKI3XqdOfRuaHQG/Y7BLkqnwWHl+nPo7MQ6qA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=142by7MQ; arc=none smtp.client-ip=209.85.221.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G3NJwlJO"
-Received: by mail-wr1-f74.google.com with SMTP id ffacd0b85a97d-3912b54611dso2979889f8f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 06:34:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="142by7MQ"
+Received: by mail-wr1-f73.google.com with SMTP id ffacd0b85a97d-3913b2d355fso2136978f8f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 06:34:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743514475; x=1744119275; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1743514477; x=1744119277; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=KkkgdoQS7XsAFt9UmFe68Xk/ys+reCGu9v6By+aRdFc=;
-        b=G3NJwlJOSAQKohRI0zN9krFZa3FmDcluaJKAgvN1g8FyI0ApEtnH0LBhSZrGffrpea
-         Tu0/n3UMX2doH+oIWFJ4tWXAfznTW8lms1NaXFQ6ld/yraNm+B/+EkvPMgytkUIjDvyn
-         6SDKgV5Ru82mVumNNfVj6BXeXBZUXbFeRjxoYQYkdAS400Aut2hE6OzB7b3gs5xfw1Dd
-         oe0M+HpNP1rj1vVZsHVwvDgO12DjJSfUMt4nBc+6ZbwYFiNi1yaif3imZhC/8I/XIT1P
-         kdfh6MR1o25QdbPMKg/abyXJyoZOgqtcHZKWsPzc4HI3mgVxGka+J+McDzV9hcwWK3aw
-         AQwA==
+        bh=SSnzu6xO+PITgBehw1ovPMVaSeDKcwED7ou+XOmk1EU=;
+        b=142by7MQLtDaAxSMOJKuro4MmGKCqEpUgAT0Vi6f9HgCzIFEySs57V3/s3MbafQUQN
+         yAlIrSW/4FUtRRldkxq2/XY7WQDuZNUwwYyFuFRscyJN/kFaAvV1cwVqdIeYprF8Agdd
+         cHXrYCmB9FNgXkiJr6sHaMjfVN5COWEZ6fSVdnu9PJKU/EA8mm0lOLtDz5Lc65e9bYOQ
+         VgBDm3s7LfHZ3tJznHXPTPOw5dQoCDcDlaVMdyNiM7mCweJPbv2t/xJsB5rHOPbFnqXR
+         ltKOgcb0fLit5sS9XCV0W4b044YmhkTEUVr0jEji9lv0IyEdf6KpVYkA8vWHWIWeZL+x
+         N/8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743514475; x=1744119275;
+        d=1e100.net; s=20230601; t=1743514477; x=1744119277;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KkkgdoQS7XsAFt9UmFe68Xk/ys+reCGu9v6By+aRdFc=;
-        b=bZRORK7N1RK1nNkIa5IlYmn32VeLGZD1i5WNPc5i5gJQZmrY3oxsvh4vHXeaRLyWLQ
-         DhacbW3/7PWtRUSGb5mtCDM9pBhO5P00HJyCbhnN6CZ6HWZooe6mKGDYbRzhBFFym89d
-         HDiPWXyDp5F5++Ts3eTB9OpieiWCzEMHpcdo2eHiCtNRrI++ZN1cevZQRYULMwmHz3Dg
-         CXE+n2J8xBN7XmZtsv7UG2p3u7OAZioV2otghZ3Tt9M0Doj/nf88MvCww5TqTi7CkLnQ
-         a1psbnsbT8aqyInNinNojIvM/02cRCIiSljkyIbtiUV3T6INRoD9Vv7ShUGxXtEgpFcy
-         GHIA==
-X-Gm-Message-State: AOJu0YzPXjytmo4hZqr/g7CFN1JavfwyLWY4KdQsSWCVrjlcAGtGoyey
-	BnGkb2v2tgaTvL1mq5PO3J+IzL0efDgpXZeBxwIi3DU6tn6iyXEGT/3scoewmqou88gcgg==
-X-Google-Smtp-Source: AGHT+IH1Rwf0SPfvTDMLTXKr8r2VF8laxDRTirFJIzh3OocUBKb+W0dll+mMOctsSfKR+qI/IAtXpqrI
-X-Received: from wmco22.prod.google.com ([2002:a05:600c:a316:b0:43d:40ea:764d])
- (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6000:250f:b0:39c:1f10:d294
- with SMTP id ffacd0b85a97d-39c1f10d4e4mr4825842f8f.26.1743514475045; Tue, 01
- Apr 2025 06:34:35 -0700 (PDT)
-Date: Tue,  1 Apr 2025 15:34:19 +0200
+        bh=SSnzu6xO+PITgBehw1ovPMVaSeDKcwED7ou+XOmk1EU=;
+        b=Xrv0mmLE66zIkBG5TBaceW8WWUs5is3IeLbkkO6aZVcuHDyhMnCamYzrlLq9pkuv5A
+         EGE88HgmQXK/gjKhH3/no8Z6Xhtya+FFr6BYaU4ptCiWgNxLL9uv2NDLCzpKGf7aNpax
+         H4t4Yju5vvsJRLFsWW46EZHS1f4rK+eMGkm+jl2GEyPoZlDwTbTgtoefvhZjWxuzeRHo
+         NNrJQOvpUszYWZKyOUvNMpTMdOcW2BNgA0EHHOMGX+uNxMeFppgUrfyDK5OjZcOjo1Y/
+         TQX5G5wc+fHXOLB2t+gf97onGNa4zlD6aEaq0NGCuu9h72LwmjmVwvtQOxkNYq3esv3o
+         qZsw==
+X-Gm-Message-State: AOJu0Yw7xpGQ2F+5cfgNG7i6n79CMYrIy2RqRD8LzwAVcI8sZfgFGrDM
+	lFj9LrzG13hhb1108LeUisY/xQUphy7YCb38eAWRZaITFbp6Xt9KlRytpZFnQO9Y6kGnrw==
+X-Google-Smtp-Source: AGHT+IFjiaIDe4SdAmblJ6QP/93wu83vTH7+Yt+H5LymjrIx+mS8SStIVJUrIHaoPRfFDn3l5SseO91N
+X-Received: from wmbbi15.prod.google.com ([2002:a05:600c:3d8f:b0:43d:1873:dbaf])
+ (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a5d:64ec:0:b0:39a:ca05:5232
+ with SMTP id ffacd0b85a97d-39c120c7ccemr10348788f8f.5.1743514477097; Tue, 01
+ Apr 2025 06:34:37 -0700 (PDT)
+Date: Tue,  1 Apr 2025 15:34:20 +0200
 In-Reply-To: <20250401133416.1436741-8-ardb+git@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -57,14 +57,14 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250401133416.1436741-8-ardb+git@google.com>
 X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2642; i=ardb@kernel.org;
- h=from:subject; bh=Rg+9UesfDX7KMCl1WWKPr+VDxB1ApETGwnITWSbmCXE=;
- b=owGbwMvMwCFmkMcZplerG8N4Wi2JIf3165iHHY4uD/afSnKPszOfHrj0WLV0h5/xr5jp/9fL/
- hfe86qio5SFQYyDQVZMkUVg9t93O09PlKp1niULM4eVCWQIAxenAEzEOJmR4WbK2rN+i8pqm1+u
- 5Ty+lHNTx/7ty24JfU27l7xzopd2+3OGfxq2ZvoFgR7zv5R8WvRAlHmLamzcifaAktn3uVdt0Hn iwgkA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1936; i=ardb@kernel.org;
+ h=from:subject; bh=2ckatkKp0na78sWZkNAH6LE50dNZokOehx4dKsaghFc=;
+ b=owGbwMvMwCFmkMcZplerG8N4Wi2JIf3169gPrqefP6/76BO5ufD00Rt+FpkR3G3ip9W15u1Ze
+ /H78YrfHaUsDGIcDLJiiiwCs/++23l6olSt8yxZmDmsTCBDGLg4BWAirucY/oe8Ujjq1M47N3fz
+ tsDpXMYyc2b02j+8ve6NlkKx2uYi836G/6Vi1m3ZXPfZPR+dKrgwecJjptchdd+Ffh/TmX2qP7m GlRsA
 X-Mailer: git-send-email 2.49.0.472.ge94155a9ec-goog
-Message-ID: <20250401133416.1436741-10-ardb+git@google.com>
-Subject: [RFC PATCH 2/6] x86/boot: Move 5-level paging trampoline into startup code
+Message-ID: <20250401133416.1436741-11-ardb+git@google.com>
+Subject: [RFC PATCH 3/6] x86/boot: Move EFI mixed mode startup code back under arch/x86
 From: Ard Biesheuvel <ardb+git@google.com>
 To: linux-efi@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org, x86@kernel.org, 
@@ -74,69 +74,47 @@ Content-Type: text/plain; charset="UTF-8"
 
 From: Ard Biesheuvel <ardb@kernel.org>
 
-The 5-level paging trampoline is used by both the EFI stub and the
-traditional decompressor. Move it out of the decompressor sources into
-the newly minted arch/x86/boot/startup/ sub-directory which will hold
-startup code that may be shared between the decompressor, the EFI stub
-and the kernel proper, and needs to tolerate being called during early
-boot, before the kernel virtual mapping has been created.
+Linus expressed a strong preference for arch-specific asm code (i.e.,
+virtually all of it) to reside under arch/ rather than anywhere else.
 
-This will allow the 5-level paging trampoline to be used by EFI boot
-images such as zboot that omit the traditional decompressor entirely.
+So move the EFI mixed mode startup code back, and put it under
+arch/x86/boot/startup/ where all shared x86 startup code is going to
+live.
 
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- arch/x86/Makefile                                  | 1 +
- arch/x86/boot/compressed/Makefile                  | 2 +-
- arch/x86/boot/startup/Makefile                     | 3 +++
- arch/x86/boot/{compressed => startup}/la57toggle.S | 0
- 4 files changed, 5 insertions(+), 1 deletion(-)
+ arch/x86/boot/startup/Makefile                                                | 3 +++
+ drivers/firmware/efi/libstub/x86-mixed.S => arch/x86/boot/startup/efi-mixed.S | 0
+ drivers/firmware/efi/libstub/Makefile                                         | 1 -
+ 3 files changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/Makefile b/arch/x86/Makefile
-index 27efe2dc2aa8..c8703276e3e7 100644
---- a/arch/x86/Makefile
-+++ b/arch/x86/Makefile
-@@ -287,6 +287,7 @@ archprepare: $(cpufeaturemasks.hdr)
- ###
- # Kernel objects
- 
-+core-y  += arch/x86/boot/startup/
- libs-y  += arch/x86/lib/
- 
- # drivers-y are linked after core-y
-diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
-index 2eb63536c5d0..468e135de88e 100644
---- a/arch/x86/boot/compressed/Makefile
-+++ b/arch/x86/boot/compressed/Makefile
-@@ -98,7 +98,6 @@ ifdef CONFIG_X86_64
- 	vmlinux-objs-$(CONFIG_AMD_MEM_ENCRYPT) += $(obj)/mem_encrypt.o
- 	vmlinux-objs-y += $(obj)/pgtable_64.o
- 	vmlinux-objs-$(CONFIG_AMD_MEM_ENCRYPT) += $(obj)/sev.o
--	vmlinux-objs-y += $(obj)/la57toggle.o
- endif
- 
- vmlinux-objs-$(CONFIG_ACPI) += $(obj)/acpi.o
-@@ -107,6 +106,7 @@ vmlinux-objs-$(CONFIG_UNACCEPTED_MEMORY) += $(obj)/mem.o
- 
- vmlinux-objs-$(CONFIG_EFI) += $(obj)/efi.o
- vmlinux-libs-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
-+vmlinux-libs-$(CONFIG_X86_64)	+= $(objtree)/arch/x86/boot/startup/lib.a
- 
- $(obj)/vmlinux: $(vmlinux-objs-y) $(vmlinux-libs-y) FORCE
- 	$(call if_changed,ld)
 diff --git a/arch/x86/boot/startup/Makefile b/arch/x86/boot/startup/Makefile
-new file mode 100644
-index 000000000000..03519ef4869d
---- /dev/null
+index 03519ef4869d..73946a3f6b3b 100644
+--- a/arch/x86/boot/startup/Makefile
 +++ b/arch/x86/boot/startup/Makefile
-@@ -0,0 +1,3 @@
-+# SPDX-License-Identifier: GPL-2.0
+@@ -1,3 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0
+ 
++KBUILD_AFLAGS		+= -D__DISABLE_EXPORTS
 +
-+lib-$(CONFIG_X86_64)		+= la57toggle.o
-diff --git a/arch/x86/boot/compressed/la57toggle.S b/arch/x86/boot/startup/la57toggle.S
+ lib-$(CONFIG_X86_64)		+= la57toggle.o
++lib-$(CONFIG_EFI_MIXED)		+= efi-mixed.o
+diff --git a/drivers/firmware/efi/libstub/x86-mixed.S b/arch/x86/boot/startup/efi-mixed.S
 similarity index 100%
-rename from arch/x86/boot/compressed/la57toggle.S
-rename to arch/x86/boot/startup/la57toggle.S
+rename from drivers/firmware/efi/libstub/x86-mixed.S
+rename to arch/x86/boot/startup/efi-mixed.S
+diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
+index d23a1b9fed75..2f173391b63d 100644
+--- a/drivers/firmware/efi/libstub/Makefile
++++ b/drivers/firmware/efi/libstub/Makefile
+@@ -85,7 +85,6 @@ lib-$(CONFIG_EFI_GENERIC_STUB)	+= efi-stub.o string.o intrinsics.o systable.o \
+ lib-$(CONFIG_ARM)		+= arm32-stub.o
+ lib-$(CONFIG_ARM64)		+= kaslr.o arm64.o arm64-stub.o smbios.o
+ lib-$(CONFIG_X86)		+= x86-stub.o smbios.o
+-lib-$(CONFIG_EFI_MIXED)		+= x86-mixed.o
+ lib-$(CONFIG_X86_64)		+= x86-5lvl.o
+ lib-$(CONFIG_RISCV)		+= kaslr.o riscv.o riscv-stub.o
+ lib-$(CONFIG_LOONGARCH)		+= loongarch.o loongarch-stub.o
 -- 
 2.49.0.472.ge94155a9ec-goog
 
