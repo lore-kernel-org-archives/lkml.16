@@ -1,242 +1,187 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from EUR03-VI1-obe.outbound.protection.outlook.com (mail-vi1eur03on2050.outbound.protection.outlook.com [40.107.103.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D4F61E47A8;
-	Tue,  1 Apr 2025 07:01:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743490911; cv=none; b=lgFFsMICB7+9dF0A2kK8+jObuEOZEKNCebjZAUHVETzM9GKPqD3xLhmE4O+A4DDIQZm370m3CffOSIixoTzgWi35uoYNLDKkL1Cnz48pB/HFkoW6aeaQgKec0wf82xLSqv/Kokg2KdWJSwq2vPG9Ima/wNY/mHhucnjz/8ViSlU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743490911; c=relaxed/simple;
-	bh=Xyj9fy0t+j9yqXvpzxTBsevb37aXQjn4WdDr6SgaL1E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TTJmJaSneL8kUmeSWFSpYT3OrguR7gkpB2DDd6+0qZl4e6OT9Tr6NHEmWQ5QjD8fGfM8o6U3MlSJhejti7wpQQ5+uEz+Agm+KMYEhVfHweq3b+ZAuC+15jBSc703CtMLcLQLN2/VTwu5B0XwtGXRQs5REHsg2oalMiQo3dYlEWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=qFxX2zRw; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AA042111;
+	Tue,  1 Apr 2025 07:06:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.103.50
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743491188; cv=fail; b=pIP+EpXv4asSRzUpbrKWTyfTWJyJbS1oDmnm4naLwyCZJ4Z8fsxL3fixXobaVyYkok+9RQJjwkl5Ancvhz9ZiREPkGhfG0NSdjypY8crhDx4xDeXOrXAb99PUhHOApXwZXAldlwP6Vkn05we9sdOVew/dhz2ZJgljQx7QJIH+f4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743491188; c=relaxed/simple;
+	bh=2unR3Nx0657iQanx5IgoOjwqxgVrw1DQ7PibQ08RrM8=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=mqaNpXZMXIJdVhAH1ODxS7X6hRyrPJ7b0sxL420BQCCROw3Pm1HbDH+aW4LhF75vkA5LjH28DlCwclky18EQ+EbdrGH/WtGHsjIVQCDhIBFvgay8xSUw5b91RfbfSVH+GnLv71JQZxFPUM4es7nLf8QEsrAuK6u7YRbyRjVXP6A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com; spf=pass smtp.mailfrom=siemens.com; dkim=pass (2048-bit key) header.d=siemens.com header.i=@siemens.com header.b=L9f2KzIk; arc=fail smtp.client-ip=40.107.103.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=siemens.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="qFxX2zRw"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5310Ytdb007912;
-	Tue, 1 Apr 2025 07:01:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=DZwEJ2
-	EdSPqEmxgJ44h6Rc6DHX40NZXvgEZD3qSDd0g=; b=qFxX2zRwSgWQrAgXNbjs4m
-	NZL3kqLo1HTyX50l7iNT/v1i+dPvPmTziJ7kGX+ov9xEqI+XBWNXpcqNwXl76xpN
-	YkhtJ0QNdpUdY3OQLA7/d4G4trJ6qVeqXHD569YjnsgsXMfpc7LduioRCc/cgtbU
-	wLMkRyhoROidqPHcXPgq3eq+/XIavbRp+ui2vsyyF/10O82zhdfec0Y8IPgP+nyb
-	RC5W8ENGJaL4xBfpm73zuNOQRn6XXhxQIISABMmHUxTgwD4C9lm56dGu+1sHc1XG
-	1oyhLsfrGzXMxa+qF30fSGrUqSGWYDC4kweGmIypSJJDyoU6GcbyDyG4/EPnPCPQ
-	==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45qvfpuwd7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 01 Apr 2025 07:01:28 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5314HdhL009999;
-	Tue, 1 Apr 2025 07:01:27 GMT
-Received: from smtprelay06.dal12v.mail.ibm.com ([172.16.1.8])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45pv6nsakj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 01 Apr 2025 07:01:27 +0000
-Received: from smtpav05.dal12v.mail.ibm.com (smtpav05.dal12v.mail.ibm.com [10.241.53.104])
-	by smtprelay06.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53171Q2Y53149962
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 1 Apr 2025 07:01:26 GMT
-Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 71D965805D;
-	Tue,  1 Apr 2025 07:01:26 +0000 (GMT)
-Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 12BD758067;
-	Tue,  1 Apr 2025 07:01:22 +0000 (GMT)
-Received: from [9.204.204.161] (unknown [9.204.204.161])
-	by smtpav05.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Tue,  1 Apr 2025 07:01:21 +0000 (GMT)
-Message-ID: <4641ce2f-74eb-45ea-a2f8-c7d0db905b7a@linux.ibm.com>
-Date: Tue, 1 Apr 2025 12:31:20 +0530
+	dkim=pass (2048-bit key) header.d=siemens.com header.i=@siemens.com header.b="L9f2KzIk"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=GYZKr1DjAx1QIZUtuFBBAPe0k0U0YQCgasjDD/PgSCcFVoy6WKpKkkchbP1PM+uM9qCTy/xZFYkipxRznVMbqmCdKpVBm3Hi9XJVEo7hUIAhIamX4mMV6gfwTO4TlBSLLGDKvGCdDigLb3WrSPxMxc1QBEyRYGKIX+JMGyF/0qVxpQV8GzzokZR/9DuloHpHQps2OFqfmY0CNu22MPXfqSysvhIwwJxFaaQjajLtUyQh7hz83DjQ/nGvjEbpBMR+Zmdz43XfSzeks0y5EZcACQlBdTjCez7kaGxY9gEPEwDb7nKwTFKNAwrfUw8Rf4fHRGydp2iMJVvjzb3GUMKOaA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=2unR3Nx0657iQanx5IgoOjwqxgVrw1DQ7PibQ08RrM8=;
+ b=cwHTrLsGZErAiNj+8oCDK/XTPRxd3moXSgNBidlZJjMLcmC2EuZAQio/RjGbNezJGwLjzrYix1uZ73mphBUaXMVG7nwMJ032H2AOn6vE79uAB6C0zoVQHMJdb3B6cZcGkAMy6vAzKwo3wmkWBNXvhUhwHIAfFYPvV+7Ako2Iiab1ov0WtJOgzErIB/DoLM3n+HGuHw1tuujbZLJ4BmdnuIZEKA6U6jWhs+bYEbVj3Ts/FRfPy3ZbKRH0WOFbnYqCPGImOY7R7T6MOZyaVES8x4Wf64Yv6eQ4C8Y1mz44Y1rzK6Q1STSkNib32hLKdcvkdHD6IDdoN/r+9hEaCeSPZA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=siemens.com; dmarc=pass action=none header.from=siemens.com;
+ dkim=pass header.d=siemens.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=siemens.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2unR3Nx0657iQanx5IgoOjwqxgVrw1DQ7PibQ08RrM8=;
+ b=L9f2KzIkj9rM7FJbS3pV1NkShpt2nlgP46cIj39mwsUXMvScnnHNLhh+zMsXLg9SDWNuDqw+sLNVuW/bm8d5v36J+ANL6DSNbq3jVIaOr3drQQ8lohO3+tpe3BcqiXJRrPAtReuflrZoqg/0pg5dV//+ATRJrD98cBBVEAS6Gjtn3qjkcjde0sHjK1wdQhUmpre+ETfR3xsvSTRP7TNNQfqcjFAwtTbmmHwfAwRotPNzzOVU98bNVs2kVrv9hKux19NsAKpEybTuqWLgOxlysvlqF2BofXFuuv/H//8qIu1LPVuca4qoDVdkJy4hBRgGuoh9awYahKCoxwAOXk+C0Q==
+Received: from AS8PR10MB6867.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:5b6::22)
+ by DB9PR10MB8213.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:4c8::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8583.39; Tue, 1 Apr
+ 2025 07:06:22 +0000
+Received: from AS8PR10MB6867.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::baa6:3ada:fbe6:98f4]) by AS8PR10MB6867.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::baa6:3ada:fbe6:98f4%4]) with mapi id 15.20.8583.038; Tue, 1 Apr 2025
+ 07:06:22 +0000
+From: "Sverdlin, Alexander" <alexander.sverdlin@siemens.com>
+To: "tony@atomide.com" <tony@atomide.com>, "andreas@kemnade.info"
+	<andreas@kemnade.info>
+CC: "rogerq@kernel.org" <rogerq@kernel.org>, "aaro.koskinen@iki.fi"
+	<aaro.koskinen@iki.fi>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org"
+	<linux-omap@vger.kernel.org>, "khilman@baylibre.com" <khilman@baylibre.com>
+Subject: Re: [PATCH] Revert "bus: ti-sysc: Probe for l4_wkup and l4_cfg
+ interconnect devices first"
+Thread-Topic: [PATCH] Revert "bus: ti-sysc: Probe for l4_wkup and l4_cfg
+ interconnect devices first"
+Thread-Index: AQHbk/znYu6FpepAZ06TMJZ5wavTxbONDquAgAE9zoCAADSwAA==
+Date: Tue, 1 Apr 2025 07:06:22 +0000
+Message-ID: <34dc1291866a2035e5827e7ff3e267b90c6b121e.camel@siemens.com>
+References: <20250313094708.1003092-1-alexander.sverdlin@siemens.com>
+	 <20250331110017.2b0aa9ae@akair> <20250401035745.GG4957@atomide.com>
+In-Reply-To: <20250401035745.GG4957@atomide.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+user-agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=siemens.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: AS8PR10MB6867:EE_|DB9PR10MB8213:EE_
+x-ms-office365-filtering-correlation-id: 4b2b2922-9f3f-4cf6-61df-08dd70ebb586
+x-ms-exchange-atpmessageproperties: SA
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|376014|1800799024|366016|38070700018;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?TUE0NFg5L1o4R2l0bWZQUGVaN2hsT091U1NXNjdvcnVNbVdmMFYwQXE5YzNv?=
+ =?utf-8?B?MDdQOW9wdWVhdmhFTTQ3M3RkdUoraVpoZ2FjRUplWU9CaFBXeURoSkI5Smhj?=
+ =?utf-8?B?ak9CWGpCYVI4WjVkSUFuMkMwVUdTL3FrdVlwZ0tucER1UU9WY3M3aUhoZ3p0?=
+ =?utf-8?B?VEhhQnpINGtWMlpTaitEMGs0eHV3NWhuajRFRHNpejI1R2EzOTBxRTZoMTdZ?=
+ =?utf-8?B?bEdxWTBnMFpJS3kvWVhDanhJeG1pU0dvdnpBZXVZblc1VnlKNkdLVTdua1R5?=
+ =?utf-8?B?a0pHV2lnMUxKbE0xZTVDSWVjMytpOW1tLzZHRjlXaHEzdjJiMzdpZ3pIb2JP?=
+ =?utf-8?B?SlhJbzIvcU1FSDgyN2pnSCtjcmhxNGZKS3MvcThmZVJKK3NIR2MzV1hQU2NZ?=
+ =?utf-8?B?WXFTV1pWWEI5ZTliNlJkZ1hVQXdCRXdic1RjOXhvc2xxODE1UlBkamlWTE5v?=
+ =?utf-8?B?WHlEaWZheDNGWUZuQU1RZzR5c0MzcWRRMnRaZGdadjZDWlhYSjJKRWxIZVNr?=
+ =?utf-8?B?U0E4eXpPaFhNZzlwWEVBV2YxRTZLMkJ4NmliS3A3am8wVjIzN0psdFhGcEo2?=
+ =?utf-8?B?dWtwNGtFTThUZGs5NUYyVjFwMWZuMlNTUjhFdFU1a3Brd05nWFB3eG1UVW9R?=
+ =?utf-8?B?L3NHbmthOG9IQ3JUUFB4OWh1STF0V25KL0EvaTd5RTlhY28rZWZnaEJVdWo0?=
+ =?utf-8?B?cXNPNEw5UkxBNlc3ZnVvSXB4MXRyMEo1blNuR0V0bnNSRWFBZS8wb3orRFBG?=
+ =?utf-8?B?dURZYjY3RmxWTVpCSUNEOTBJMWJPNFRQdEpYRjkrYlI4ZkR1WFo1WnBobTg5?=
+ =?utf-8?B?YkNDcG9yVUtUMXBDWnhOTkNWWCs1a1NYZDdaL2R1YlVPZENsS09paGRDcW9J?=
+ =?utf-8?B?VkFJNHJDTkppYmVCSG5EaVlvYjdXemZQL0xHSFlTMkp1QVJLV1RqR2d2c3Iw?=
+ =?utf-8?B?Q25NLzdBNlVuaytiRTk2S2V3eGxlQVc5L0RrVGMzTmdIcTNnY05MUFpuTnZw?=
+ =?utf-8?B?bkY2VGh1V1RsWmp4aUVQbmt2K011cXBVcXNnV1ptSHIveE5LeWxSUkRaQlZE?=
+ =?utf-8?B?VzhHMzVTcVVaSUNHU0lyVWZodXBWZFJkRjdNN1VKbWh2WHBYVEJES3JoNGdo?=
+ =?utf-8?B?SlhOdlVoYUtHcGI5WWJXUmZvSXVvaHRFcGNZV2Z0SS9ZVVN1aTV2VFd4bmdS?=
+ =?utf-8?B?dVoyb0svRnVYcEJ0YzVYNDIvMnRySnd5eEZETStqZ2ZHbEVpNzQ4b2I5dFlL?=
+ =?utf-8?B?K2pvS05nUTBoS0FXZW9DRFoxYStnVDNSUFArWkNNV1hRSzhOMmFtYVErZjhC?=
+ =?utf-8?B?WGsxYnF3V1ZSOEdOMHFPdzVuaG5oNFZYWERlWXVzZXp1aFAvZEc4L285dUl0?=
+ =?utf-8?B?cG5EY2FqSjkxdGFwZ2xwbS9VMWc5Y0lKcUFEcFp6K2xFTHBpTzgzNlhyTU1n?=
+ =?utf-8?B?dFJaZk4xOUx3dDRhanhMUjVqdm9UejhKSHNwc0t0b0dJREZ6UFpuWEp1WDRB?=
+ =?utf-8?B?cnBLZnEzS1NIaXJYTHhFVTU0ZjBUUExodmE5akxHVVFiS2VFYjRYM25lM1pH?=
+ =?utf-8?B?VDRrd3FXdmQxN2RhRGw5bFNYUVBRWU5vZUtYZmRJaldIQksxaTd1TStaOTVN?=
+ =?utf-8?B?aG8vMzNsaGZrWFpHUWQ1TGdHYTZlTFNzRUcvQVVWaGtKWmZNbDd1UnhvNmdr?=
+ =?utf-8?B?TnpoVWFzbXNuZ3JuMFZ3MXNFQ1E0aXhtYjA5RktmNlAwT3JsYWlmSUJ2YktU?=
+ =?utf-8?B?R3M1MzJnemJwRlBwSnZ5SGNqTkpEY1UzbEZWQWprVzJDTllqZndPNlZlUlI1?=
+ =?utf-8?B?VE5KRUk5ZVBmRlBkMFMwTXFZc1pTSTdUWXJ2T3dnQW9YcEFFUVB5bnFCKzk5?=
+ =?utf-8?Q?+I4Ke5cEkM8Pd?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR10MB6867.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?KzdZN1c3dzN6V1N5bVVLTHZlWmhHVktFYi9YYmZ2RzhKZk5JUlgxMDBSejB4?=
+ =?utf-8?B?bHZGOElxYm5iRWk5dEVFNnhZd3FNV1N5STNKajlZa2JrbHdUWDhsMU5MeUpN?=
+ =?utf-8?B?RlkvTHc2elV6VFdRcjVNcnlqQWFTcDBFTFhQbk5URGkzUmhKTjRMRVhUQXhR?=
+ =?utf-8?B?dXorc0plaUU5SHc0NzFvN01LV1UvWGpGdWdKc01ncUhxK0JNbTBVS2JqTmdm?=
+ =?utf-8?B?d3psZXhtVEgyWTdJOStIZkdEYXMrbENBeTQ3TWZoR0NUY3VSeHdtd1M3djIw?=
+ =?utf-8?B?dFN0WXZJdlVSdERRQjNackZoeHlsWnFPSElUeStkRFlkVC9iRkYvUGIvTVFC?=
+ =?utf-8?B?cXJkMitJRmJDRXI4Z3JmT1FMaENCdENnUWZtWUZqTHdFTXBwMml2M1hhK0xH?=
+ =?utf-8?B?a1dEQTRYVlh2WUhwVTFMQnNaamVtb0pRbWVHZE1oeWpMY1VWR2V0c3dCeEE1?=
+ =?utf-8?B?SkNNOXhaWU1jT3dVOHZlbUZyOXVZNytDT24rU1dQcXZqMG1qdFUzdU9jekpt?=
+ =?utf-8?B?eWJMSDdFWnlRL1BCYWpZUHNXZWt1Um5LU0FKN0dRZkpFUkNSTHdFajJjMjB2?=
+ =?utf-8?B?eXdtYktjNEZRbE5IV1JlSjZLbjZXNnBsTUpNcVBRMkpZaHFzOVZDYzBWK1pK?=
+ =?utf-8?B?TFZjLy8zNVdFZkZHVXh5VGkxZmZySEVyWitjT0FIaHBCUzN2OTBtUjlva3RR?=
+ =?utf-8?B?anI2djVVYkc2WGRocDNUTW1oLzk1dytJb1htMHhnTjFsa3ZFYkNBQVJ3VmQ3?=
+ =?utf-8?B?cytISDZLb0V4bVdVUk9YSmtvOGVONVVGemd1UjBWbkU4VUZubFEzRXE3eWdx?=
+ =?utf-8?B?aFJabnduS2VUb2tkcXdmbDV4OG9vSFBCM2Fpcmc1cXdCWEEyNDhDSWV4Sks0?=
+ =?utf-8?B?OUprS2EzNEpzSllYNjVCeDZod2RWbUtZRVEvUGZ1TkNXV1ZzSkpmZ0s4Nkoz?=
+ =?utf-8?B?VlAyOTVDU1RCMW1kUzAvTWFJc3NOM2tKT2JHMllHWWl0WmZnTmY0NUdMREhV?=
+ =?utf-8?B?OW9LQllBK253TkNabHJiTGJ2Tkt3M3hzSWtGbHVYVlZBWUREMGxaMWNvdTIy?=
+ =?utf-8?B?UW5pYy82QnpkMU96VCtTVE5IVGZpOGFDNU5SS2tHZ1FGeEIxeDhOVE8rVUtr?=
+ =?utf-8?B?MmlpZ1E1M25oMVVVRU9YR0NxdmMyaEptVVNkRnB0T3dib2hsTjNFcGFxN1ZX?=
+ =?utf-8?B?VTFkTVZlZGpXTFZJb04waDRySnExSnc5QUlRMnAxS2wyYlZrNFIwUnFRUlc2?=
+ =?utf-8?B?SnhrYmk4T20rZ2krK2t6Y05GeFhlNjk1SFlnT0RUcmRBNExjNVlTWXdKWUtF?=
+ =?utf-8?B?dVp3Zm5Ednd4bTZuam9aQ0VkVjcrSEEybDFtRHNPVGJ4NktPL09WOU54c09s?=
+ =?utf-8?B?azR3Qk9tUkpOYWpmT2VORE5BaENIeVVZOCtacldXVW9kdmJWMUI2eUpxVXNZ?=
+ =?utf-8?B?V3VuVTI5RDBiLzI4aTlRdm1aVzNpdmR1d0VYVWxUQmZZNlo2eFJaejJKcnJz?=
+ =?utf-8?B?YmNEY3B3NnloRmZKbDFXMktCTDRzMkpoejJYbXVPTkswc2w4OVRyRmFGZmdl?=
+ =?utf-8?B?NUlsc2IzT0ZXVzR4VlAxSXJlQ1BrdUQwcVQ1UTlrODU4RUY2b3g4bkNIcEhX?=
+ =?utf-8?B?aVROaHZtUUpFcTNhYjNseENLaC9ObElhY2dpeFR0bkJqQXlJSTIxZE1kaE5H?=
+ =?utf-8?B?UVppNDFGajVRNHA5M296Z2JIa2srSUFjMTc2aFk1U3RDRHFSWFVwMWN2VVpw?=
+ =?utf-8?B?RnVFMzlmc0lVSjYxNHN2UW8zQjgwNGhOUE84Q2lUWUJEOGxmcnM5RTVRY1V2?=
+ =?utf-8?B?b3lwckhTM0ZIaXVHRUFGZERWN1JaRDQ5Y0VYVlRjS1I4aHNveGltUGg0MUY5?=
+ =?utf-8?B?NmdGSENXM1NGem9QdVNPc3pSMnhoWHNkYzlybWpMZ2lYaVFtelFqcjI2bFI3?=
+ =?utf-8?B?eGlsNVliYms1V21idmtydWVLcVh1bGNtaFhJL1hRRTB3cE1DbzlvcmxuMzJT?=
+ =?utf-8?B?ekxjT1R1N3V3V3dpeDRESGg3YnNkcFQ1YkhibVhVZjQvQURBbFhlc2FtTHJP?=
+ =?utf-8?B?S09VQ3ZiVDN4cU9QclZyM1Y0NUlzdjYrd01hbStReVFKVksrcnJuRkZGWkM1?=
+ =?utf-8?B?MVBod1pQZUNva2ZSZ2hhaHF2dHFjZFE0UnlOYkFmVEQ3eU9oLzdSNy9lNEM2?=
+ =?utf-8?Q?SMt/Ww0eJkd1xOUya2QuBUQ=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <42FE450DDC64D649B2C693DF1485CE2C@EURPRD10.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [BUG -next] ./usr/include/cxl/features.h:11:10: fatal error:
- uuid/uuid.h: No such file or directory
-Content-Language: en-GB
-To: Dan Williams <dan.j.williams@intel.com>, Jason Gunthorpe <jgg@nvidia.com>
-Cc: Dave Jiang <dave.jiang@intel.com>,
-        "Paul E. McKenney"
- <paulmck@kernel.org>, linux-cxl@vger.kernel.org,
-        dave@stgolabs.net, jonathan.cameron@huawei.com,
-        alison.schofield@intel.com, vishal.l.verma@intel.com,
-        ira.weiny@intel.com, gourry@gourry.net, linux-kernel@vger.kernel.org,
-        linux-next@vger.kernel.org, sfr@canb.auug.org.au,
-        Madhavan Srinivasan <maddy@linux.ibm.com>
-References: <f6489337-67c7-48c8-b48a-58603ec15328@paulmck-laptop>
- <14bfcfa0-5999-49e4-854e-ff8810d6df3c@intel.com>
- <52a34c97-88d2-415e-a899-6583ae3ba620@paulmck-laptop>
- <30a7f782-4388-45b6-bb3c-a0faf85b7445@intel.com>
- <51e9823c-784c-4b91-99d4-0500aaf5cec0@paulmck-laptop>
- <67e7301dc8ad7_201f0294a5@dwillia2-xfh.jf.intel.com.notmuch>
- <1f48ba3b-9ba8-44e5-98c7-4c9abf95a935@intel.com>
- <20250331132439.GD10839@nvidia.com>
- <67eac8df3e217_201f02948d@dwillia2-xfh.jf.intel.com.notmuch>
- <20250331171755.GC289482@nvidia.com>
- <67eaf14b7c611_201f0294ba@dwillia2-xfh.jf.intel.com.notmuch>
-From: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-In-Reply-To: <67eaf14b7c611_201f0294ba@dwillia2-xfh.jf.intel.com.notmuch>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 6XmQSx-ez0iC_pP1npL9XVksmZMGgIvy
-X-Proofpoint-GUID: 6XmQSx-ez0iC_pP1npL9XVksmZMGgIvy
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-01_02,2025-03-27_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 suspectscore=0
- priorityscore=1501 clxscore=1011 adultscore=0 bulkscore=0
- lowpriorityscore=0 spamscore=0 mlxlogscore=999 mlxscore=0 impostorscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2504010046
+X-OriginatorOrg: siemens.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: AS8PR10MB6867.EURPRD10.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4b2b2922-9f3f-4cf6-61df-08dd70ebb586
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Apr 2025 07:06:22.1532
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 38ae3bcd-9579-4fd4-adda-b42e1495d55a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: avm3bDizYIh/q7VQe4Y3uGmodY00k0o79gNr422/Rq51U2CKtDMe0N99RTdyvpBq4umYKPyWinPs1L4qYRRXPRv281g+xR0/x9KrARbdQfk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR10MB8213
 
-
-On 01/04/25 1:17 am, Dan Williams wrote:
-> Jason Gunthorpe wrote:
->> On Mon, Mar 31, 2025 at 09:54:55AM -0700, Dan Williams wrote:
->>> Jason Gunthorpe wrote:
->>>> On Fri, Mar 28, 2025 at 05:26:42PM -0700, Dave Jiang wrote:
->>>>>> For now the following builds for me, but it is a quite a mess to undo
->>>>>> the assumption that that the hardware object definitions can not use
->>>>>> uuid_t:
->>>>> +Jason.
->>>> Seems invasive?
->>> Yeah, it left a bad taste for me as well.
->>>
->>>> Maybe just like below?
->>> I like that this avoids converting to the kernel's uuid API, however,
->>> not quite happy that it forces userspace to contend with the
->>> type-conflict with uuid/uuid.h.
->> Oh I see
->>   
->>> So how about one more riff on your idea?
->> Sure, works for me, please post it..
-> b4 am supports scissors lines, so:
->
-> b4 am -P _  67eac8df3e217_201f02948d@dwillia2-xfh.jf.intel.com.notmuch
->
-> ...works for me. Do you still need a separate posting?
->
-
-This issue got introduced in next-20250307 and got fixed in 
-next-20250311(not sure what fixed).
-
-But again got re-introduced in  next-20250318. I tried bisection, below 
-are the logs.
-
-One of the things I tried is to install the UUID packages on my set up 
-and after installing those packages, issue is not seen.
-
-rpm -qa | grep uuid
-
-libuuid-2.37.4-20.el9.ppc64le
-uuid-1.6.2-55.el9.ppc64le
-uuid-c++-1.6.2-55.el9.ppc64le
-uuid-dce-1.6.2-55.el9.ppc64le
-uuid-devel-1.6.2-55.el9.ppc64le
-uuidd-2.37.4-20.el9.ppc64le
-libuuid-devel-2.37.4-20.el9.ppc64le
-
-So wondering is this not a setup issue?  Please advice.
-
-
-Bisect Log:
-
-git bisect log
-git bisect start
-# status: waiting for both good and bad commits
-# bad: [c4d4884b67802c41fd67399747165d65c770621a] Add linux-next 
-specific files for 20250318
-git bisect bad c4d4884b67802c41fd67399747165d65c770621a
-# status: waiting for good commit(s), bad commit known
-# good: [4701f33a10702d5fc577c32434eb62adde0a1ae1] Linux 6.14-rc7
-git bisect good 4701f33a10702d5fc577c32434eb62adde0a1ae1
-# good: [cda4d1b29991d4500e9f65c6936b5d3ccd99ecbb] Merge branch 
-'spi-nor/next' of 
-git://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git
-git bisect good cda4d1b29991d4500e9f65c6936b5d3ccd99ecbb
-# good: [9b22611592aa21d10f7d1b89352a618436dea7ac] Merge branch 'next' 
-of git://git.kernel.org/pub/scm/linux/kernel/git/jarkko/linux-tpmdd.git
-git bisect good 9b22611592aa21d10f7d1b89352a618436dea7ac
-# good: [264791f7669a8246d129cbb935c861debba2f116] Merge branch 
-'driver-core-next' of 
-git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git
-git bisect good 264791f7669a8246d129cbb935c861debba2f116
-# good: [3c51cb2d6ec7cecf724cd5d78a0633f61f31e726] Merge branch 
-'for-next' of 
-git://git.kernel.org/pub/scm/linux/kernel/git/remoteproc/linux.git
-git bisect good 3c51cb2d6ec7cecf724cd5d78a0633f61f31e726
-# good: [612481dbc16505cf5e940809ebf36d8460d174cf] Merge branch 'main' 
-of git://git.infradead.org/users/willy/xarray.git
-git bisect good 612481dbc16505cf5e940809ebf36d8460d174cf
-# bad: [892715be4379deb333376e573113fd75672eca6c] Merge branch 
-'rust-next' of https://github.com/Rust-for-Linux/linux.git
-git bisect bad 892715be4379deb333376e573113fd75672eca6c
-# bad: [b33f4167a8a2b9b9cc6b3e06f79b030db82cf530] Merge branch 'next' of 
-git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git
-git bisect bad b33f4167a8a2b9b9cc6b3e06f79b030db82cf530
-# good: [3b5d43245f0a56390baaa670e1b6d898772266b3] Merge branch 
-'for-6.15/features' into cxl-for-next
-git bisect good 3b5d43245f0a56390baaa670e1b6d898772266b3
-# good: [d11af4ae2169672b690a4d07a9dfdfd76c082683] Merge branch 
-'for-next' of 
-git://git.kernel.org/pub/scm/linux/kernel/git/andy/linux-auxdisplay.git
-git bisect good d11af4ae2169672b690a4d07a9dfdfd76c082683
-# bad: [5908f3ed6dc209e5c824e63afda7545805f75a7e] cxl: Add support to 
-handle user feature commands for get feature
-git bisect bad 5908f3ed6dc209e5c824e63afda7545805f75a7e
-# good: [18285acc2c047cda2449f426c09fc8969b04b8b1] fwctl: Add documentation
-git bisect good 18285acc2c047cda2449f426c09fc8969b04b8b1
-# good: [15a26c223fff58d9fa4ada12a8c35697f8ecdf6c] Merge branch 
-'for-6.15/features' into fwctl
-git bisect good 15a26c223fff58d9fa4ada12a8c35697f8ecdf6c
-# bad: [9b8e73cdb1418f7c251c43b2082218ed9c0d0fee] cxl: Move cxl feature 
-command structs to user header
-git bisect bad 9b8e73cdb1418f7c251c43b2082218ed9c0d0fee
-# good: [858ce2f56b5253063f61f6b1c58a6dbf5d71da0b] cxl: Add FWCTL 
-support to CXL
-git bisect good 858ce2f56b5253063f61f6b1c58a6dbf5d71da0b
-# first bad commit: [9b8e73cdb1418f7c251c43b2082218ed9c0d0fee] cxl: Move 
-cxl feature command structs to user header
-
-9b8e73cdb1418f7c251c43b2082218ed9c0d0fee is the first bad commit
-commit 9b8e73cdb1418f7c251c43b2082218ed9c0d0fee
-Author: Dave Jiang <dave.jiang@intel.com>
-Date:  Fri Mar 7 13:55:32 2025 -0700
-
-   cxl: Move cxl feature command structs to user header
-
-   In preparation for cxl fwctl enabling, move data structures related to
-   cxl feature commands to a user header file.
-
-   Reviewed-by; Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
-   Link: 
-https://patch.msgid.link/r/20250307205648.1021626-3-dave.jiang@intel.com
-   Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-   Reviewed-by: Li Ming <ming.li@zohomail.com>
-   Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-   Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
-
-  include/cxl/features.h   | 112 +----------------------------
-  include/uapi/cxl/features.h | 169 
-++++++++++++++++++++++++++++++++++++++++++++
-  2 files changed, 170 insertions(+), 111 deletions(-)
-  create mode 100644 include/uapi/cxl/features.h
-
-
-Regards,
-
-Venkat.
-
+VGhhbmtzIGZvciByZXZpZXcsIFRvbnkhDQoNCk9uIFR1ZSwgMjAyNS0wNC0wMSBhdCAwNjo1NyAr
+MDMwMCwgVG9ueSBMaW5kZ3JlbiB3cm90ZToNCj4gPiA+IFRoaXMgcmV2ZXJ0cyBjb21taXQgNDcw
+MGEwMDc1NWZiNWE0YmI1MTA5MTI4Mjk3ZDZmZDJkMTI3MmVlNi4NCj4gPiA+IA0KPiA+ID4gSXQg
+YnJha2VzIHRhcmdldC1tb2R1bGVAMmIzMDAwNTAgKCJ0aSxzeXNjLW9tYXAyIikgcHJvYmUgb24g
+QU02MnggaW4gYSBjYXNlDQo+ID4gPiB3aGVuIG1pbmltYWxseS1jb25maWd1cmVkIHN5c3RlbSB0
+cmllcyB0byBuZXR3b3JrLWJvb3Q6DQo+ID4gPiANCj4gPiA+IFvCoMKgwqAgNi44ODg3NzZdIHBy
+b2JlIG9mIDJiMzAwMDUwLnRhcmdldC1tb2R1bGUgcmV0dXJuZWQgNTE3IGFmdGVyIDI1OCB1c2Vj
+cw0KPiA+ID4gW8KgwqAgMTcuMTI5NjM3XSBwcm9iZSBvZiAyYjMwMDA1MC50YXJnZXQtbW9kdWxl
+IHJldHVybmVkIDUxNyBhZnRlciA3MDggdXNlY3MNCj4gPiA+IFvCoMKgIDE3LjEzNzM5N10gcGxh
+dGZvcm0gMmIzMDAwNTAudGFyZ2V0LW1vZHVsZTogZGVmZXJyZWQgcHJvYmUgcGVuZGluZzogKHJl
+YXNvbiB1bmtub3duKQ0KPiA+ID4gW8KgwqAgMjYuODc4NDcxXSBXYWl0aW5nIHVwIHRvIDEwMCBt
+b3JlIHNlY29uZHMgZm9yIG5ldHdvcmsuDQo+ID4gPiANCj4gPiA+IEFyYml0cmFyeSAxMCBkZWZl
+cnJhbHMgaXMgcmVhbGx5IG5vdCBhIHNvbHV0aW9uIHRvIGFueSBwcm9ibGVtLg0KPiA+ID4gU3Rh
+YmxlIG1tYyBlbnVtZXJhdGlvbiBjYW4gYmUgYWNoaWV2ZXIgYnkgZmlsbGluZyAvYWxpYXNlcyBu
+b2RlIHByb3Blcmx5DQo+ID4gPiAoNDcwMGEwMDc1NWZiIGNvbW1pdCdzIHJhdGlvbmFsZSkuDQo+
+IA0KPiBXb3VsZCBiZSBuaWNlIHRvIHVwZGF0ZSB0aGUgZGVzY3JpcHRpb24gdG8gbWFrZSBpdCBj
+bGVhciBpdCBicmVha3MgaW4gYWxsDQo+IGNhc2VzIGlmIHRoZXJlIGFyZSBub3QgZW5vdWdoIGRl
+dmljZXMuDQoNCkknbGwgcmUtc3BpbiB3aXRoIG1vcmUgY2xlYXIgZGVzY3JpcHRpb24hDQoNCi0t
+IA0KQWxleGFuZGVyIFN2ZXJkbGluDQpTaWVtZW5zIEFHDQp3d3cuc2llbWVucy5jb20NCg==
