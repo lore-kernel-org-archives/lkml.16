@@ -1,180 +1,275 @@
-Received: from fout-a5-smtp.messagingengine.com (fout-a5-smtp.messagingengine.com [103.168.172.148])
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC4FC1E9B32;
-	Tue,  1 Apr 2025 07:44:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.148
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8A571EA7EC
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 07:44:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743493467; cv=none; b=WYDw/QFaCWwJ0NO9yPvEHXnaubidiD6ZIO/16xlkh5O+cksvCJz9MLg3lqv514wcu2p2yFEqw28DXDtUKElE2irhuBttNcqe6UubxX6mGqX90eQKLfZADdvt+5+Hu6zR8WWHmh6OqbvxEmeFACGb82GCRkWkX8k9G/U/0jwIB8I=
+	t=1743493476; cv=none; b=WQmnrRfphIgsOE7opVFJK0IX+d4tzqnFXevMyXp5DKqawjTqrGK1VAVgT0+tyC6PNisRhfst1PlvlJrgDHD2PFSY3Jvai3etdPk3Gh/a+DdKqEpIDfC3V2JUSCnMo+1XgnvlLIL07S1YO4mDNtiTJwFUduGjA/B15CghGc0P7pU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743493467; c=relaxed/simple;
-	bh=AmmDVvNi5dUbIT7C5bbti693/xc8nSbVjPiErpkXIaw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rMDVuWeNSh8btTuohYfdd0vAJ4l1hQkHVRHX0uF/jyzyLoe7eYRec9UJRUorTmJ/LnDbipN+KQfqP5CQnvratEGmVlU+tu6w5WPit9PJ1X5zWzxQjpUBp4GDaS4J4oEQlEwV32liPyYkKS9bQdTCgdG9cq8ynKcQhrPV483cZX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com; spf=pass smtp.mailfrom=kroah.com; dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b=qzPej9P0; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=YC7CEe3x; arc=none smtp.client-ip=103.168.172.148
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kroah.com
+	s=arc-20240116; t=1743493476; c=relaxed/simple;
+	bh=StWgNhbVT74w+4EPNqqZDZapxDxdpKZBSeEPruykYxs=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
+	 Content-Type:References; b=j43RV1G1s0oNU/fmDjqCT8hFVAGd0qOorG21dLfvpj1xDoMdFEWhLauqngYIjL31ALBcCIl3x9bv+S9vkT/Mm6mzjv//7qhB6hj95/AFXEFfJjGvgq4UgeYVYBS6mSnPn97vjx4npIU3fidTn8ZGpws/zGNKNeCb6sWFdENLF20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=nT3j/ui2; arc=none smtp.client-ip=203.254.224.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="qzPej9P0";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="YC7CEe3x"
-Received: from phl-compute-04.internal (phl-compute-04.phl.internal [10.202.2.44])
-	by mailfout.phl.internal (Postfix) with ESMTP id B731F1382D13;
-	Tue,  1 Apr 2025 03:44:23 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-04.internal (MEProxy); Tue, 01 Apr 2025 03:44:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1743493463; x=1743579863; bh=N3XLkCWVDT
-	ZLVCH6BsDAQxYTNal1m2sMxq815aRphRI=; b=qzPej9P0Cpjf6qLjB/9fUndGFZ
-	F3VNEm3hbSvecuLfg9odO2CLwy/3HbmsIrAodrRIBR+eiREukEZFlFaF4TPhCV+Y
-	nQsO1rwP5Bc4fwg7c77T1ZMdCV861HpfN5XzTKW8tsciprl61oWpHmVw2axMjMos
-	KcHcKlyEEnf0QDJHbXaZeNHI4t3L/zf5XTj/OTbC/ArG0gyxPmxI5TnUCCz2pqEG
-	9TIGvad3bhWCgedZLvOM4zTLJBw9yFInnsJdHiEQLhNRfudIhxWzj8FzdzeYwKWp
-	WTAU1Llc+gQUccXYQrECx3fyCmIFovSD7JjVw6rtsmfx+jgFe5vfwlFoT7dQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
-	1743493463; x=1743579863; bh=N3XLkCWVDTZLVCH6BsDAQxYTNal1m2sMxq8
-	15aRphRI=; b=YC7CEe3xYPPfyWxJQGzpE/SeuxkPW7cLjwM8kuQ466RrpXZeIcz
-	blqnekVw8yMI7nZZti5UYEANCVyzPbZs4Fi8bFZzGKJtZqSd07Bp5Qzu1Y77eMtb
-	ZyYs9JI5dk/wXs1p59CHg9FaJiaQUjLhDCFTTh2QWgp/vA5hV3yW2CXbCeGUtncQ
-	iwTILdC88FynRKwf6DWh1u3ytAkZYw80mbD5zGyjZxKHr+xvNa3+8/lobaDkkIaD
-	7NP0mBHG2h28ULCeTRqxn3TSw88f10DC41pMfucJhxS5qIDRQIv6NT58VT4kPDbN
-	wJaKi2ERBisY/BcEXSEAsS5zfylikWdiwuQ==
-X-ME-Sender: <xms:VpnrZ-Q5G0zN6nkPZpwkxhfKnpz38cisloQiG7Ex9shXPcsd7A013Q>
-    <xme:VpnrZzyawDvhhWSGIA5REmTgiL51c-iGYytapGFUdjK43anqKuWbyTleBn0S5Vq3K
-    OCPfoBcRnF2AQ>
-X-ME-Received: <xmr:VpnrZ73rQ6rDy_KJviwtnjF5GGLDTWfoB9dZtmdVoql-0jXf3QyPW80_Y5i5>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddukedvvdefucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddt
-    vdenucfhrhhomhepifhrvghgucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecugg
-    ftrfgrthhtvghrnhepheegvdevvdeljeeugfdtudduhfekledtiefhveejkeejuefhtdeu
-    fefhgfehkeetnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrh
-    homhepghhrvghgsehkrhhorghhrdgtohhmpdhnsggprhgtphhtthhopeduvddpmhhouggv
-    pehsmhhtphhouhhtpdhrtghpthhtohepshhfrhestggrnhgsrdgruhhughdrohhrghdrrg
-    hupdhrtghpthhtohepohhjvggurgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprggs
-    ughivghlrdhjrghnuhhlghhuvgesghhmrghilhdrtghomhdprhgtphhtthhopegurghkrh
-    eskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgv
-    rhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqnhgvgihtsehvghgvrh
-    drkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:VpnrZ6CZ1gE5M17iV3Xe5klEyQmkXBk6Gt5buKD5FTQTCeWwgzh9VA>
-    <xmx:VpnrZ3jtKDLZmImLRHBHTc5sjmUR_wNCZqTirgTOWj4FRgmlu4WF6w>
-    <xmx:VpnrZ2qITZxwSpCG59LkWy5mbFyffMM_PB0YEct3MHbySen1vu-NJw>
-    <xmx:VpnrZ6ji51Vy9Jz8LFjcCngH37v3qW1gqw85U1VIwYyTdB4XCduidg>
-    <xmx:V5nrZwbdcfqM5NPRgylc6NdK0ri3GtYuMfegh1lG73xPONpzlf0dLxb8>
-Feedback-ID: i787e41f1:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 1 Apr 2025 03:44:22 -0400 (EDT)
-Date: Tue, 1 Apr 2025 08:42:57 +0100
-From: Greg KH <greg@kroah.com>
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Miguel Ojeda <ojeda@kernel.org>,
-	Abdiel Janulgue <abdiel.janulgue@gmail.com>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: linux-next: manual merge of the rust tree with the driver-core
- tree
-Message-ID: <2025040140-postage-upchuck-34cd@gregkh>
-References: <20250321185630.566dc075@canb.auug.org.au>
- <20250401142159.6f468edf@canb.auug.org.au>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="nT3j/ui2"
+Received: from epcas2p1.samsung.com (unknown [182.195.41.53])
+	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20250401074433epoutp02e66652f28c23acbf9fdd5a3c332b9cbb~yIhOHuqTV1007810078epoutp02u
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 07:44:33 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20250401074433epoutp02e66652f28c23acbf9fdd5a3c332b9cbb~yIhOHuqTV1007810078epoutp02u
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1743493473;
+	bh=3MRdpHtIiwqvpeVCVz9txam/iHAkLYLHB9+ipflqPm0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=nT3j/ui21EcOYOu8iHrktmJ6y6KQg/ktKC117MqoWsTWo2NNNtV8XNvHfP53u1+dx
+	 O4H4rrk3UPzV8gQwDitIYtuYsIxUPg3rtn2JF/wI4ib6t3YISt7f7aNX+xxpB1UvhR
+	 Uui31XKB2l4FeeL7FK4R5/yaBHs38cg4QDnupriQ=
+Received: from epsnrtp02.localdomain (unknown [182.195.42.154]) by
+	epcas2p3.samsung.com (KnoxPortal) with ESMTPS id
+	20250401074432epcas2p399089231d6e73929f4f34e67435ba024~yIhNagNzU1639316393epcas2p3f;
+	Tue,  1 Apr 2025 07:44:32 +0000 (GMT)
+Received: from epsmges2p3.samsung.com (unknown [182.195.36.102]) by
+	epsnrtp02.localdomain (Postfix) with ESMTP id 4ZRg4b4QVrz2SSKm; Tue,  1 Apr
+	2025 07:44:31 +0000 (GMT)
+Received: from epcas2p2.samsung.com ( [182.195.41.54]) by
+	epsmges2p3.samsung.com (Symantec Messaging Gateway) with SMTP id
+	95.D3.09856.F599BE76; Tue,  1 Apr 2025 16:44:31 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas2p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250401074430epcas2p27a19d0e3e53983d091af2258cdc7f2bc~yIhMMA1c60193401934epcas2p2b;
+	Tue,  1 Apr 2025 07:44:30 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20250401074430epsmtrp20fd71249e8a69512d5458a68d548d10a~yIhMK8c1z1633316333epsmtrp2H;
+	Tue,  1 Apr 2025 07:44:30 +0000 (GMT)
+X-AuditID: b6c32a47-c1fdf70000002680-35-67eb995f9907
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	11.33.08805.E599BE76; Tue,  1 Apr 2025 16:44:30 +0900 (KST)
+Received: from ubuntu (unknown [10.229.95.128]) by epsmtip2.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20250401074430epsmtip27caa53a02145fc3cbf40da4e67594d6f~yIhL41JY21086710867epsmtip2F;
+	Tue,  1 Apr 2025 07:44:30 +0000 (GMT)
+Date: Tue, 1 Apr 2025 16:53:43 +0900
+From: Jung Daehwan <dh10.jung@samsung.com>
+To: Puma Hsu <pumahsu@google.com>
+Cc: Wesley Cheng <quic_wcheng@quicinc.com>, srinivas.kandagatla@linaro.org,
+	mathias.nyman@intel.com, perex@perex.cz, conor+dt@kernel.org,
+	dmitry.torokhov@gmail.com, corbet@lwn.net, broonie@kernel.org,
+	lgirdwood@gmail.com, krzk+dt@kernel.org,
+	pierre-louis.bossart@linux.intel.com, Thinh.Nguyen@synopsys.com,
+	tiwai@suse.com, robh@kernel.org, gregkh@linuxfoundation.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-sound@vger.kernel.org, linux-input@vger.kernel.org,
+	linux-usb@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Subject: Re: [PATCH v36 12/31] ALSA: usb-audio: Introduce USB SND platform
+ op callbacks
+Message-ID: <20250401075343.GI98772@ubuntu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <CAGCq0LYvXsRpfhWrvWu0=hQHBVYqJ2ifnv0wEbPWtmTw7j6-CQ@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Te0xTdxTer7e9vRi73VWcP9mYtewRugAtj3JFMPhA7+I2a0aGI8u6jl5b
+	Rmm7Pqagc2YgpZiBBHTQgYJlYBiIFNyglIflbZDp2HwQYCGjlceYUwZbHMhaLi78953vnO87
+	5+TkYAj3LNsPS1YbKJ1apuKj65jfdwaKg6TFMwph03l/4uz4BErUtA4yiIkOEyAudA2yiM6L
+	k4DIsNahxJRlDCUWfs5mEPntN9hEeVYFk7j3aIFFDNlLUKLUXYgQFytPIUSGrZBFmO15LOLx
+	sptBFNcGELaWXBax7GhiE1k9PSyiuqyDTVz5uxbEbiKbLaNsssxmJK2OKQZpqzaj5MhtB0qe
+	7z9ItpfWsElrbgGLbJutRMl8xwmyrvEXJtnYPgfIOdvLEk5iSrSSkskpHY9SJ2nkyWpFDH//
+	u9Ld0gixUBQk2kZE8nlqWSoVw9/zliRob7LKszqf95lMZfRQEplezw/ZEa3TGA0UT6nRG2L4
+	lFau0kZqg/WyVL1RrQhWU4YokVAYGuEp/ChF2bQo0I4IjrYUDDBPgl95OcAHg3g4nBltYOeA
+	dRgXbwIwO7cWoYNHAJqv3mDRwQKAP07nIk8lk6a+VUkrgPcLsgEdTAB4ab6O6a1i4q/A05P1
+	bC9GcQEc+6dvRe2Lb4V/uUwMrwDB+5mwz9kNvIkN+PtwaXQM9WIO/gZscN4ENH4e9hdPeEwx
+	zAc/CPuvS7xwo8d/+toXXhuI/+AD75S0A3q6PbDgznWUxhvgdG8jm8Z+cO6P1lVeD4fvuxFa
+	nOkZejpzdbUwaHGbVowQXAkfmLsRbzOIB8CuYSZNPwuzO5fYNM2B2VlcWhkAvx46w6LxZnht
+	ZnDVkYT2ecdKWy7+FQOaZpVnwBbLmsUsa5pZPK4IHgjr7CE0vQVmXP1mlX4RVj3B1lSUAbQa
+	vEBp9akKSh+qDfv/7EmaVBtY+Q/BviZQNPtnsBMwMOAEEEP4vpxD81MKLkcuS0undBqpzqii
+	9E4Q4blYPuK3MUnjeTC1QSoK3yYMF4tFkaERwkj+Jo7zoUvBxRUyA5VCUVpK91THwHz8TjIw
+	i6vgk93HdoZ0W81pec+JP/TvPFX1MEF60/fb1vK4N7fvnAAf1yqSmiUxIvflDyyZF14bWY8O
+	X4o1HREvsIy9CS/t49w4rEhs0EXbC40lxzTvZM1slXxZ/a/pAHrF/LtwuPS7vJHx+ENm/hH1
+	/t6GLtfl6l1xI6+7ih6HyZ+pL28+rtnFdMzLnORtVzp5oOUwHphi0DS32BtuJVCVUUU1C/lv
+	1/ykLftUaFUNFW2HuW13UyqCBIuxmTtyel4tky+5g+MNv0Xxjr7HG08MP7F+eW9PSXOFf9yt
+	z9Mw8+TsWKWz/65/hyP2wTm/c23T9zCr+3iVKH5xoH7zk44Baig9QcNn6pUykQDR6WX/Aaio
+	SKKoBAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrOIsWRmVeSWpSXmKPExsWy7bCSvG7czNfpBp2rDCymPnzCZrFm7zkm
+	iycH2hkt5h85x2pxeNELRovmxevZLF7Ousdm8e1KB5PFxP1n2S0Wti1hsbj56RurxeVdc9gs
+	5j6bwmyxaFkrs0XzpimsFp27+lktfv1/xmQxc62yxabdfawW//fsYLdoO3aM1WLVggPsFhu+
+	r2V0EPfYOesuu8eCTaUei/e8ZPLYtKqTzePOtT1sHvNOBnrsn7uG3WNx32RWj31vl7F5TNxT
+	57F+y1UWjy37PzN6fN4kF8AbxWWTkpqTWZZapG+XwJWx+v8epoJ/6hW7jrE0MM6V62Lk5JAQ
+	MJF40X6CvYuRi0NIYDejxJSWRWwQCUmJpXNvsEPYwhL3W46wQhQ9YpT4uLGJCSTBIqAi0f1i
+	I1gRm4CWxL0fJ5hBbBEBRYkvT9uZQBqYBU6ySJw4dJSxi5GDQ1ggUmL3cnuQGl4BbYnNhy4w
+	QgztZZI4/OM9C0RCUOLkzCdgNrOAusSfeZeYQXqZBaQllv/jgAjLSzRvnQ0W5hQIlDh5KgDE
+	FAU659XB+gmMQrOQzJmFZM4shDmzkMxZwMiyilEytaA4Nz232LDAKC+1XK84Mbe4NC9dLzk/
+	dxMjOC1oae1g3LPqg94hRiYOxkOMEhzMSiK8EV9fpgvxpiRWVqUW5ccXleakFh9ilOZgURLn
+	/fa6N0VIID2xJDU7NbUgtQgmy8TBKdXANOWmfeSX3SfOJXRc5f40R4Jvy8f5T9NeCc9PkdnR
+	4xt4mG9WouncGUsXLCrYpNNVEnJ4vr2nwyYlRyNhxT36B4+E21h9VqgJUPuj4/A6yPkQswNL
+	oOLtJ9XF1rte/maw/FySw2i3/7dfc9Ic6SaeiytrtwrNeJ5ZefO1q80Fl+/qC7ttPJ5Ps9V5
+	0VmiGMyzZ5fsLD2FmCfpIu6lNuw/FnxZalAad63/hF6zZZjK9axZIkrdCvva/N19r6w9HHb+
+	Xo3Zpo9Nk/nXH50UovhVN/lb6dSidkb1kPMiET98arqaPqolpBR1/U95tIQpbM7fS9Lz9q3l
+	sr4ct9ng7/OEdYE2txawd+yoiYveppOhxFKckWioxVxUnAgA66cdSnoDAAA=
+X-CMS-MailID: 20250401074430epcas2p27a19d0e3e53983d091af2258cdc7f2bc
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+	boundary="----ieZh69edyBxzv2Y5Ggo8207PwRbI2z7mQ5FWfU8PsFoZKj2n=_6a803_"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250328074841epcas2p43e82d8eba2aa584a1034a7206ffb2e4d
+References: <20250319005141.312805-1-quic_wcheng@quicinc.com>
+	<20250319005141.312805-13-quic_wcheng@quicinc.com>
+	<CGME20250328074841epcas2p43e82d8eba2aa584a1034a7206ffb2e4d@epcas2p4.samsung.com>
+	<CAGCq0LYvXsRpfhWrvWu0=hQHBVYqJ2ifnv0wEbPWtmTw7j6-CQ@mail.gmail.com>
+
+------ieZh69edyBxzv2Y5Ggo8207PwRbI2z7mQ5FWfU8PsFoZKj2n=_6a803_
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Content-Disposition: inline
-In-Reply-To: <20250401142159.6f468edf@canb.auug.org.au>
 
-On Tue, Apr 01, 2025 at 02:21:59PM +1100, Stephen Rothwell wrote:
-> Hi all,
-> 
-> On Fri, 21 Mar 2025 18:56:30 +1100 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+On Fri, Mar 28, 2025 at 03:48:00PM +0800, Puma Hsu wrote:
+> On Wed, Mar 19, 2025 at 8:56 AM Wesley Cheng <quic_wcheng@quicinc.com> wrote:
 > >
-> > Today's linux-next merge of the rust tree got a semantic conflict in:
-> > 
-> >   samples/rust/rust_dma.rs
-> > 
-> > between commit:
-> > 
-> >   7b948a2af6b5 ("rust: pci: fix unrestricted &mut pci::Device")
-> > 
-> > from the driver-core tree and commit:
-> > 
-> >   9901addae63b ("samples: rust: add Rust dma test sample driver")
-> > 
-> > from the rust tree.
-> > 
-> > I fixed it up (I applied the following supplied resolution, thanks Danilo)
-> > and can carry the fix as necessary. This is now fixed as far as linux-next
-> > is concerned, but any non trivial conflicts should be mentioned to your
-> > upstream maintainer when your tree is submitted for merging.  You may
-> > also want to consider cooperating with the maintainer of the conflicting
-> > tree to minimise any particularly complex conflicts.
-> > 
-> > From: Stephen Rothwell <sfr@canb.auug.org.au>
-> > Date: Fri, 21 Mar 2025 18:21:27 +1100
-> > Subject: [PATCH] fix up for "samples: rust: add Rust dma test sample driver"
-> > 
-> > interacting with commit
-> > 
-> >   7b948a2af6b5 ("rust: pci: fix unrestricted &mut pci::Device")
-> > 
-> > from the driver-core tree.
-> > 
-> > Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> > ---
-> >  samples/rust/rust_dma.rs | 8 ++++----
-> >  1 file changed, 4 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/samples/rust/rust_dma.rs b/samples/rust/rust_dma.rs
-> > index 908acd34b8db..874c2c964afa 100644
-> > --- a/samples/rust/rust_dma.rs
-> > +++ b/samples/rust/rust_dma.rs
-> > @@ -4,10 +4,10 @@
-> >  //!
-> >  //! To make this driver probe, QEMU must be run with `-device pci-testdev`.
-> >  
-> > -use kernel::{bindings, dma::CoherentAllocation, pci, prelude::*};
-> > +use kernel::{bindings, device::Core, dma::CoherentAllocation, pci, prelude::*, types::ARef};
-> >  
-> >  struct DmaSampleDriver {
-> > -    pdev: pci::Device,
-> > +    pdev: ARef<pci::Device>,
-> >      ca: CoherentAllocation<MyStruct>,
-> >  }
-> >  
-> > @@ -48,7 +48,7 @@ impl pci::Driver for DmaSampleDriver {
-> >      type IdInfo = ();
-> >      const ID_TABLE: pci::IdTable<Self::IdInfo> = &PCI_TABLE;
-> >  
-> > -    fn probe(pdev: &mut pci::Device, _info: &Self::IdInfo) -> Result<Pin<KBox<Self>>> {
-> > +    fn probe(pdev: &pci::Device<Core>, _info: &Self::IdInfo) -> Result<Pin<KBox<Self>>> {
-> >          dev_info!(pdev.as_ref(), "Probe DMA test driver.\n");
-> >  
-> >          let ca: CoherentAllocation<MyStruct> =
-> > @@ -64,7 +64,7 @@ fn probe(pdev: &mut pci::Device, _info: &Self::IdInfo) -> Result<Pin<KBox<Self>>
-> >  
-> >          let drvdata = KBox::new(
-> >              Self {
-> > -                pdev: pdev.clone(),
-> > +                pdev: pdev.into(),
-> >                  ca,
-> >              },
-> >              GFP_KERNEL,
-> > -- 
-> > 2.45.2
+> > Allow for different platforms to be notified on USB SND connect/disconnect
+> > sequences.  This allows for platform USB SND modules to properly initialize
+> > and populate internal structures with references to the USB SND chip
+> > device.
+> >
+> > Signed-off-by: Wesley Cheng <quic_wcheng@quicinc.com>
 > 
-> This is now a conflict between the driver-core tree and Linus' tree.
+> Tested-by: Puma Hsu <pumahsu@google.com>
+> 
 
-Thanks, I've sent the pull request to Linus right after the rust one,
-and warned him about this conflict.
+Tested-by: Daehwan Jung <dh10.jung@samsung.com>
 
-greg k-h
+> > ---
+> >  sound/usb/card.c | 49 ++++++++++++++++++++++++++++++++++++++++++++++++
+> >  sound/usb/card.h | 10 ++++++++++
+> >  2 files changed, 59 insertions(+)
+> >
+> > diff --git a/sound/usb/card.c b/sound/usb/card.c
+> > index 6c5b0e02e57b..4ac7f2b8309a 100644
+> > --- a/sound/usb/card.c
+> > +++ b/sound/usb/card.c
+> > @@ -118,6 +118,42 @@ MODULE_PARM_DESC(skip_validation, "Skip unit descriptor validation (default: no)
+> >  static DEFINE_MUTEX(register_mutex);
+> >  static struct snd_usb_audio *usb_chip[SNDRV_CARDS];
+> >  static struct usb_driver usb_audio_driver;
+> > +static struct snd_usb_platform_ops *platform_ops;
+> > +
+> > +/*
+> > + * Register platform specific operations that will be notified on events
+> > + * which occur in USB SND.  The platform driver can utilize this path to
+> > + * enable features, such as USB audio offloading, which allows for audio data
+> > + * to be queued by an audio DSP.
+> > + *
+> > + * Only one set of platform operations can be registered to USB SND.  The
+> > + * platform register operation is protected by the register_mutex.
+> > + */
+> > +int snd_usb_register_platform_ops(struct snd_usb_platform_ops *ops)
+> > +{
+> > +       guard(mutex)(&register_mutex);
+> > +       if (platform_ops)
+> > +               return -EEXIST;
+> > +
+> > +       platform_ops = ops;
+> > +       return 0;
+> > +}
+> > +EXPORT_SYMBOL_GPL(snd_usb_register_platform_ops);
+> > +
+> > +/*
+> > + * Unregisters the current set of platform operations.  This allows for
+> > + * a new set to be registered if required.
+> > + *
+> > + * The platform unregister operation is protected by the register_mutex.
+> > + */
+> > +int snd_usb_unregister_platform_ops(void)
+> > +{
+> > +       guard(mutex)(&register_mutex);
+> > +       platform_ops = NULL;
+> > +
+> > +       return 0;
+> > +}
+> > +EXPORT_SYMBOL_GPL(snd_usb_unregister_platform_ops);
+> >
+> >  /*
+> >   * Checks to see if requested audio profile, i.e sample rate, # of
+> > @@ -954,7 +990,11 @@ static int usb_audio_probe(struct usb_interface *intf,
+> >         chip->num_interfaces++;
+> >         usb_set_intfdata(intf, chip);
+> >         atomic_dec(&chip->active);
+> > +
+> > +       if (platform_ops && platform_ops->connect_cb)
+> > +               platform_ops->connect_cb(chip);
+> >         mutex_unlock(&register_mutex);
+> > +
+> >         return 0;
+> >
+> >   __error:
+> > @@ -991,6 +1031,9 @@ static void usb_audio_disconnect(struct usb_interface *intf)
+> >         card = chip->card;
+> >
+> >         mutex_lock(&register_mutex);
+> > +       if (platform_ops && platform_ops->disconnect_cb)
+> > +               platform_ops->disconnect_cb(chip);
+> > +
+> >         if (atomic_inc_return(&chip->shutdown) == 1) {
+> >                 struct snd_usb_stream *as;
+> >                 struct snd_usb_endpoint *ep;
+> > @@ -1138,6 +1181,9 @@ static int usb_audio_suspend(struct usb_interface *intf, pm_message_t message)
+> >                 chip->system_suspend = chip->num_suspended_intf;
+> >         }
+> >
+> > +       if (platform_ops && platform_ops->suspend_cb)
+> > +               platform_ops->suspend_cb(intf, message);
+> > +
+> >         return 0;
+> >  }
+> >
+> > @@ -1178,6 +1224,9 @@ static int usb_audio_resume(struct usb_interface *intf)
+> >
+> >         snd_usb_midi_v2_resume_all(chip);
+> >
+> > +       if (platform_ops && platform_ops->resume_cb)
+> > +               platform_ops->resume_cb(intf);
+> > +
+> >   out:
+> >         if (chip->num_suspended_intf == chip->system_suspend) {
+> >                 snd_power_change_state(chip->card, SNDRV_CTL_POWER_D0);
+> > diff --git a/sound/usb/card.h b/sound/usb/card.h
+> > index cdafc9e9cecd..d8b8522e1613 100644
+> > --- a/sound/usb/card.h
+> > +++ b/sound/usb/card.h
+> > @@ -209,7 +209,17 @@ struct snd_usb_stream {
+> >         struct list_head list;
+> >  };
+> >
+> > +struct snd_usb_platform_ops {
+> > +       void (*connect_cb)(struct snd_usb_audio *chip);
+> > +       void (*disconnect_cb)(struct snd_usb_audio *chip);
+> > +       void (*suspend_cb)(struct usb_interface *intf, pm_message_t message);
+> > +       void (*resume_cb)(struct usb_interface *intf);
+> > +};
+> > +
+> >  struct snd_usb_stream *
+> >  snd_usb_find_suppported_substream(int card_idx, struct snd_pcm_hw_params *params,
+> >                                   int direction);
+> > +
+> > +int snd_usb_register_platform_ops(struct snd_usb_platform_ops *ops);
+> > +int snd_usb_unregister_platform_ops(void);
+> >  #endif /* __USBAUDIO_CARD_H */
+> >
+> 
+> 
+
+------ieZh69edyBxzv2Y5Ggo8207PwRbI2z7mQ5FWfU8PsFoZKj2n=_6a803_
+Content-Type: text/plain; charset="utf-8"
+
+
+------ieZh69edyBxzv2Y5Ggo8207PwRbI2z7mQ5FWfU8PsFoZKj2n=_6a803_--
