@@ -1,197 +1,111 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 305981EB5FC
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 08:57:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61C101D7E52;
+	Tue,  1 Apr 2025 08:58:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743497874; cv=none; b=kxswVwH/VGkPPRBg/AmTzIW/GaOLVuVdSSNLhr4fo57R/6G/H+tmZ3xLjbOiqpUdNCNBhYKLQkx0au40LwGnPEoDOLLTCoXe3M3PL4bRipCP4nsx9ta87qdQr+gIRlXBx9ytGNBj2oBYzfuoYu9F41KriLfc0Cr7X7n8HDC9enA=
+	t=1743497901; cv=none; b=I/qCSxt1Yca2ugiJZuQMe52xA1Q/0Z8F4IokyNVuKrzgNHAZ7ooeel7wygqbiEzI+JiBQiV6Q+XWZeyf6Niy1RNXQD1vJsyPWeb5yPJ/mEVaYKFjt5gGqw+yylb31MOBAsUZvfQIDRlfLj+YavXszfJjWQGATyKCCBFo9ywiaQM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743497874; c=relaxed/simple;
-	bh=moSrvCxTIsu/1H4kAJprDurFwFaqiLT+mpfF+2Nc9m8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sbvIRCVYPeWTkYlkMBW0eEKoxbTyX03w1M6nc8It8FUpr7YrtxHMOUBDBN/e8ww1YxbvIo/9HQqdXEMCrKxADud4JQnsIgp1HEwSJGtfdSr4H/xqGzGpYP141AIqx1I84SNPbIqIFhZ+grDWk5tJzhvw6AK5S6x70M6z9APC0S4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=zVos/QVm; arc=none smtp.client-ip=209.85.167.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1743497901; c=relaxed/simple;
+	bh=t936lpg6lmBc/X8Bym05vY2nu5vTXDbTMcpPetbLpEs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FIXunaIMfzc7E//qpWohsbezDZhDMmxThRQzHmU47HS8GLS49kwsUjgHG8zh6bVTDIh98Ixw+KbW1cF/5ejPyWqcqbhNvs16uEomV7p9ER4lVRcjlOSycInP7zlucNb8DzaGJNmpeZMAWqLubqGve9I73qDzZUfGvTKdM4t0+Vs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YPHaS3Yp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="zVos/QVm"
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-5498d2a8b89so6253126e87.1
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 01:57:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1743497870; x=1744102670; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=moSrvCxTIsu/1H4kAJprDurFwFaqiLT+mpfF+2Nc9m8=;
-        b=zVos/QVmf7NUTuIZNhrnYHACVlfD3R5S5BnEOccjBhEZmJfpxVOegpsJ8ghVGQ91n3
-         qlGF7qCTyBNNmQKAPu+t9AhbFWxOPSAhXjIDplm0RhsCrSXhodXVNMhpX0xlzdiD6eQN
-         +g14tZ+K6ILOOu+JnCAZM8bog3iajgKUAUAenL9pQ4XSJtxOQkT2t3MHi5rquMLc5a5Q
-         jJWcNiMy8lkYr5gt2kUDKOj2GhjqUAh0IyeMxeAWNxIbcNgIGa7iLrdMAx9xiYLEHzIk
-         0b7cCerLUGdWHjuGYmnifDbtTMroGrMdGv5gg/dh8Uc+bMWbl3sKgT45MBc6FNfOPPxE
-         jycQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743497870; x=1744102670;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=moSrvCxTIsu/1H4kAJprDurFwFaqiLT+mpfF+2Nc9m8=;
-        b=FrwCG04hhk/LuuVALF0ctPzkFp7cGcike8Su/B0emhsNYeI2Xnow1F7fw8KKAavB62
-         XaR23yrHtiwDIQnbrJV16IdTUuB7MOWXbWx4hcECPNcorkJ6rUd8m4qFusgomuL5XSDE
-         yu5h3hrcUWV9VKXPgF3grdMY2u9UNugsRngqwAmXOU12pYDXTq77zl3Cj0nRfTtiTSui
-         GMgokKWyvy7NMptpSRQ1vB3Fld7Ix4PO4eXC//6A7Jdc9JDgNumlcQbn53TuQYG+OwxU
-         w5W5A40AzR5dZ+1I07Ivx+/943zhvBRr275s5o/2u3EaK7ZLiTXF1Qqd0K+uWoKN2TmL
-         iatg==
-X-Forwarded-Encrypted: i=1; AJvYcCWAPN+mE1gm9/pAjCjCU5R7idDfqVpLEtVZRuymqT2n00di9Ik+ODbYfVcz3VVzlm5/qk8WJPPePXXU95M=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw8HBBRLZhE9Bj+h3FgNrqgFv/Y9Mm1FehLssKcTesg+YGiWGpH
-	mq9J2HFBnDS1AX1c8UV4xemFAaK3S5S9ilnS8fFfLXLUgB8wFNxz55xhZyflqCF9FlDOjuvNET+
-	mU/NZ18hFP/CyEaoCTbkSgUkn7n/7TFZ/CChO5w==
-X-Gm-Gg: ASbGncshCadjBQoXWaKmlnws4DBis6TStwDp0TZMBRW5VqZphzJlOqZGawb406Aepv4
-	jFwbeKFlHhA93zw72pFWD+aOSjuCNJh1poaQ6FHtlFcmHg/mIKTIdlylmblPiYkXMgjlGOOq7OA
-	d613r075v3fYchhUQUJg2Lb71pqj+qcrAYpDpe8BJO7isRZO/TCmZ6jMON
-X-Google-Smtp-Source: AGHT+IHVNE4vFyWCtv3mtcDXTW/DYArpMM5S90tEQJgnM/ljbfBvnuRVpFWic4vIzaVU1d1vfWv1Xl3Q3KQvEjtMUlM=
-X-Received: by 2002:a05:6512:2508:b0:54b:102b:af56 with SMTP id
- 2adb3069b0e04-54b10d93684mr4424889e87.4.1743497870091; Tue, 01 Apr 2025
- 01:57:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YPHaS3Yp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D917AC4CEE4;
+	Tue,  1 Apr 2025 08:58:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743497900;
+	bh=t936lpg6lmBc/X8Bym05vY2nu5vTXDbTMcpPetbLpEs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=YPHaS3Ypb7ttO4k2FKtQOY6hFUF11P11Sx6s3zsZItIYqfsCfnMS/cwVM5ME1CTal
+	 NtEQPyAGqdG+U6pEMAyTv/g4P7gIKsT3k8VjHVyVFesBtw634TZARcIXqUswn19sAr
+	 bLCv8Wl13ies/KHRzLspJR+bvN8LowMRzI9ezi+k+iLsZK/MjPBVJTfaGdkLZjHrwp
+	 2gRc13j+KMEdVQwKaozA+zi/HxDe/odLlRQG+sL4hV0fJkfkmRFQebl0XLmgpc8wMZ
+	 IPPkOICZIHgyRtcwaer0oal9dZrXEGb5ur246E4jn9hNP+Y7FS64oIikvusN0gGTar
+	 9Duk3C0WY+ENQ==
+Date: Tue, 1 Apr 2025 09:58:15 +0100
+From: Daniel Thompson <danielt@kernel.org>
+To: Henry Martin <bsdhenrymartin@gmail.com>
+Cc: Markus.Elfring@web.de, lee@kernel.org, jingoohan1@gmail.com,
+	deller@gmx.de, linux-arm-msm@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Subject: Re: [PATCH v3] backlight: pm8941: Add NULL check in wled_configure()
+Message-ID: <Z-uqpxcge0J99IPI@aspen.lan>
+References: <d5f2aa49-27e2-4cc1-91be-4e195ed5249e@web.de>
+ <20250401082950.21698-1-bsdhenrymartin@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250331-gpio-todo-remove-nonexclusive-v1-0-25f72675f304@linaro.org>
- <20250331-gpio-todo-remove-nonexclusive-v1-3-25f72675f304@linaro.org> <CACRpkdYMRnmYD1YRavZs7MHEVFM42bOL2=6s4rJzFDnfLJ4fAQ@mail.gmail.com>
-In-Reply-To: <CACRpkdYMRnmYD1YRavZs7MHEVFM42bOL2=6s4rJzFDnfLJ4fAQ@mail.gmail.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 1 Apr 2025 10:57:39 +0200
-X-Gm-Features: AQ5f1JoeyDHZT3nRgIi26c7fEQx15tO8O2w3Mtv49X-LBE_RrWPzOPezefjryZ8
-Message-ID: <CAMRc=McBWncrCcX87a3pYeZ3=uYGNhpSrK74hDP-XNYrT8WMMg@mail.gmail.com>
-Subject: Re: [PATCH 3/3] gpio: TODO: track the removal of GPIOD_FLAGS_BIT_NONEXCLUSIVE
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250401082950.21698-1-bsdhenrymartin@gmail.com>
 
-On Tue, Apr 1, 2025 at 12:49=E2=80=AFAM Linus Walleij <linus.walleij@linaro=
-.org> wrote:
+On Tue, Apr 01, 2025 at 04:29:50PM +0800, Henry Martin wrote:
+> The function wled_configure() uses devm_kasprintf() without checking for
+> allocation failures, which could lead to NULL pointer dereferences.
 >
-> On Mon, Mar 31, 2025 at 11:00=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.=
-pl> wrote:
->
-> > +Remove GPIOD_FLAGS_BIT_NONEXCLUSIVE
-> > +
-> > +This flag is an awful workaround that was created for some regulator
-> > +corner-cases but got out of hand and is now used in at least 33 places
-> > +treewide. Unlike what the intuition may tell users, it's not a referen=
-ce
-> > +counted mechanisms like what clocks or regulators use but just a raw a=
-ccess
-> > +to the same GPIO descriptor from multiple places with no synchronizati=
-on (other
-> > +than what the underying driver offers). It doesn't even correctly supp=
-ort
-> > +releasing the supposedly non-exclusive GPIOs. This whole thing should =
-go and be
-> > +replaced with a better solution - for exampe: using the relatively new=
- power
-> > +sequencing subsystem.
->
-> Try to focus on the solution instead of writing so much about the problem=
-.
-> We mostly get the information that the GPIO maintainer dislikes them,
-> not so much about why they exist and what can be done about them.
->
+> Add proper error handling when devm_kasprintf() fails by:
+> - Returning -ENOMEM immediately
+> - Ensuring no resources are left allocated (none need cleanup in this case)
 
-I'm sorry, after a second thought this does indeed sound too harsh but
-when I realized that people started slapping this non-exclusive flag
-on every problem - like when the GPIO ACPI code requests some GPIOs
-(possibly erroneously), so driver authors just request it as
-non-exclusive instead of investigating the actual problem, or some
-codec drivers in sound/ which seem to not even need it and it looks
-like a bad copy-paste, I got really frustrated that it's another thing
-on the pile of stuff to fix. I will reword this entry.
+Two things have gone wrong here:
 
-> I would describe the actual problem and the actual solution,
-> something like:
->
-> "A problematic usecase for GPIOs is when two consumers want to use
-> the same descriptor independently, as a consumer (in Linux a struct
-> device) is generally assumed to have exclusive access to all of its
-> resources, with a resource being defined as anything obtained behind
-> a devm_* managed resource API such as devm_gpiod_get().
->
+1. This patch has been incorrectly posted with the wrong patch number.
+2. You've let Markus bully you into adding some pointless text in the
+   patch description ;-). I think the original v3 was better worded.
+   IMHO the bulleted list adds nothing useful.
 
-This is not a devres issue though. I don't think we should mention it
-here. The real problem about this flag is that it effectively allows
-two users to "fight" over a line's state. It would be better if it
-would count the enable operations but this would go against the spirit
-of the "gpiod_set_value()" interface, where you expect the value to be
-actually set to what you request it to be. GPIOs should remain
-exclusive and any "packaging" should happen in a higher layer.
+When you get the chance please send a v4 of the patch so we can pick it
+up without any confusion (I suspect it might be a week or two before
+this gets pulled so clean mail threads help a lot). It's up to you but
+I'd recommend keeping the original v3 wording and label it something
+like:
+V3 -> V4: No functional changes, just correcting the version number
 
-This is one of those pesky resource ownership issues really.
 
-> Providers such as regulators pose a special problem here since
-> regulators instantiate several struct regulator_dev instances containing
-> a struct device but using the *same* enable GPIO line: i.e. from a Linux
-> point of view this enable line has a many-to-one ownership. You can
-> imagine a 12V and a 5V regulator being turned on by the same GPIO
-> line for example. The regulator resources need to have two different
-> devices in Linux because they have different voltages, but they are enabl=
-ed
-> by the same GPIO.
->
-> This breaks the devres resource assumptions:
->
+Daniel.
 
-The same thing would happen without devres. I think the regulator
-framework should have some way of mediating GPIO use. There should
-only really be a single gpiod_get() call for all enable-gpios of a
-single regulator provider. I have it on my roadmap to look into it.
-Whether the right approach is a GPIO quirk or a power sequence
-provider binding to the top-level regulator provider, I don't know
-yet.
 
-> If several providers with their own struct device is using one
-> and the same GPIO line, the devres consumer is unclear: which
-> struct device should own the GPIO line?
->
-
-Well, other subsystems just use reference-counted resources in this
-case but see above - this is not a good fit for GPIOs.
-
-> A hack allows GPIO lines to be shared between several consumers
-> with the flag GPIOD_FLAGS_BIT_NONEXCLUSIVE but this API is
-> confusing and prone to abuse, as is the related devm_gpiod_unhinge() API.
-
-This is another thing that should most likely be deprecated and
-removed. It's clearly a case of papering over unclear ownership of a
-resource. I believe that any "hand-over" of ownership is really asking
-for trouble. The entity that does the "get" should also do the "put"
-in almost all cases. Fortunately it's only limited to a few use-cases
-in drivers/regulator/ so it's not nearly as bad. However, I don't
-really see a close relationship between these two issues. How about
-adding a task for that as well?
 
 >
-> A better solution to some of the problems is to use approaches such as
-> the power sequencing subsystem, which avoids having several owners of
-> a resource by strictly sequencing the order in which they are obtained
-> and activated.
+> Fixes: f86b77583d88 ("backlight: pm8941: Convert to using %pOFn instead of device_node.name")
+> Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
+> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+> ---
+> V2 -> V3: Fix commit message and verify proper error handling with
+> resource cleanup.
+> V1 -> V2: Fix commit message to use imperative mood and wrap lines to 75
+> characters.
 >
-> For example a GPIO turning on the power for both wireless and bluetooth
-> chips can be obtained and turned on in a power sequence such that this
-> problem never occurs: it is always active when when it needs to be, it ha=
-s
-> just one owner (the power sequence itself, struct pwrseq_device, which
-> contains a struct device) and the GPIO regulator driver is not used in th=
-is
-> scenario."
+>  drivers/video/backlight/qcom-wled.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
 >
-
-So this bit is also unrelated - in the case of the wcn pwrseq driver,
-there are two separate GPIOs for wifi and bluetooth. They just need a
-delay between toggling one and the other. I would skip it.
-
-Bart
+> diff --git a/drivers/video/backlight/qcom-wled.c b/drivers/video/backlight/qcom-wled.c
+> index 9afe701b2a1b..a63bb42c8f8b 100644
+> --- a/drivers/video/backlight/qcom-wled.c
+> +++ b/drivers/video/backlight/qcom-wled.c
+> @@ -1406,9 +1406,11 @@ static int wled_configure(struct wled *wled)
+>  	wled->ctrl_addr = be32_to_cpu(*prop_addr);
+>
+>  	rc = of_property_read_string(dev->of_node, "label", &wled->name);
+> -	if (rc)
+> +	if (rc) {
+>  		wled->name = devm_kasprintf(dev, GFP_KERNEL, "%pOFn", dev->of_node);
+> -
+> +		if (!wled->name)
+> +			return -ENOMEM;
+> +	}
+>  	switch (wled->version) {
+>  	case 3:
+>  		u32_opts = wled3_opts;
+> --
+> 2.34.1
+>
