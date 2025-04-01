@@ -1,73 +1,103 @@
-Received: from ssh247.corpemail.net (ssh247.corpemail.net [210.51.61.247])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57AEF1372
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 01:07:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.51.61.247
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F23FD3595D;
+	Tue,  1 Apr 2025 01:09:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743469671; cv=none; b=RZWW0dkV4gCWVUvtk2/t5nPj7CwOx9//PhuwQ5hDiCMu1S2wxErUhJTaScl0E8d+8rvShnHfTAf+5U53uA3J6XX6sZz80fcx4OJd/sTSV9y15NH4nvJn4N74KM/cxf+lDgfV7/B/poyIFctrBuFZUZ7bFtvslTpXeVYfQCZbmFI=
+	t=1743469771; cv=none; b=uK4+O16uJDGrjLCVE4zwPpu1nSVSSs8vP+vAI/wDg7G0lnSzXJXHo+6wxBMhcIU7E+fn7aFmbRitH6Tl0b6rpO56GG8t9LoQE1RD3aTsw7b5i6xdnNYfonZVkbJjoQD5EK/tNsBYnAdYEucrG8pYG3HMHl2j+5J740VswEIE0s0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743469671; c=relaxed/simple;
-	bh=Hp83HSM8SEsfIHYJ8LWG/Kw/Ivvyb0P0gG90teU0WmE=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=iab09gwuiyjHAc0/MZg7g7pa70BVCNMfBVSL2TbeB1iBojUoUOttSdsXqmru0W/HuNndfQh+x4+D8Llpd6DGCTY+/p41SkC979x/FiQ+huweJFRbsRdD6z2jwpFvSofl6bxSdUNLoj7yu3SiCg0In9wOzo85ofhNtWFXztqdO3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com; spf=pass smtp.mailfrom=inspur.com; arc=none smtp.client-ip=210.51.61.247
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inspur.com
-Received: from jtjnmail201602.home.langchao.com
-        by ssh247.corpemail.net ((D)) with ASMTP (SSL) id 202504010906338410;
-        Tue, 01 Apr 2025 09:06:33 +0800
-Received: from jtjnmail201604.home.langchao.com (10.100.2.4) by
- jtjnmail201602.home.langchao.com (10.100.2.2) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Tue, 1 Apr 2025 09:06:32 +0800
-Received: from jtjnmail201604.home.langchao.com ([fe80::2830:53ee:1228:5322])
- by jtjnmail201604.home.langchao.com ([fe80::2830:53ee:1228:5322%5]) with mapi
- id 15.01.2507.039; Tue, 1 Apr 2025 09:06:32 +0800
-From: =?utf-8?B?U2ltb24gV2FuZyAo546L5Lyg5Zu9KQ==?= <wangchuanguo@inspur.com>
-To: Oscar Salvador <osalvador@suse.de>
-CC: "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-	"mhiramat@kernel.org" <mhiramat@kernel.org>, "linux-mm@kvack.org"
-	<linux-mm@kvack.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] mm: migrate: restore the nmask after successfully
- allocating on the  target node
-Thread-Topic: [PATCH] mm: migrate: restore the nmask after successfully
- allocating on the  target node
-Thread-Index: AduinxdVBTRWTLySS1i0fmPidD2b/A==
-Date: Tue, 1 Apr 2025 01:06:32 +0000
-Message-ID: <80bbb67e8d524aad97fecc99d1eebd52@inspur.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	s=arc-20240116; t=1743469771; c=relaxed/simple;
+	bh=xnDKz4hdm/kkZqcWSzvYO96l5CqeHbCretys4W9iu2o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JGihU/Z7m0/tO7rJ8ZFFvjo3RML6cRJoR/drLSBkZ6Jj2bq1t8exDUHY17iPyUswYt/u8kgmRo/Ikz76bOzsa7uarfjfNTDHyFGUnom8Li/N3u3FBEi4HQ2jg15tLIyy2wyCskXJxQiU2axPpwOBctliM38vveLhxG5RieF/WNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ce0nhRfs; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ce0nhRfs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 978F4C4CEE3;
+	Tue,  1 Apr 2025 01:09:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743469769;
+	bh=xnDKz4hdm/kkZqcWSzvYO96l5CqeHbCretys4W9iu2o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ce0nhRfsh4foP8kliSiSC0eCyy1P530wNZv1yXlz0fhnntdzc2pHj8ehJ73sKloVM
+	 C0cw7cUj+BIc9kmwIU3OVnx2X/5KZolUkXS2nrcBmOD80XEOnwWEu+qaNld4IC1Lbz
+	 ktTwM4BKKx5FIv7O9NfsPq2v7mz23KDqI6mFjPh6003pPohStRGfOcfyHzqdAMOVmD
+	 1gOusmiwUbvZzBP/fZDRftY7IT+SckUkPyIVGM5JFjlw/2fk+9/Ns880REt1nFz5Or
+	 pRuSFvVxXKUnth/AX3auD+qu9VK2N7OyoDzrtCOl5aOlD0WNxZyXTU1dmfK4K2DInq
+	 5BLO5MT41pJgw==
+Date: Mon, 31 Mar 2025 18:09:27 -0700
+From: Luis Chamberlain <mcgrof@kernel.org>
+To: Leon Romanovsky <leon@kernel.org>, Daniel Gomez <da.gomez@samsung.com>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>, Robin Murphy <robin.murphy@arm.com>,
+	Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+	Sagi Grimberg <sagi@grimberg.me>, Keith Busch <kbusch@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	Yishai Hadas <yishaih@nvidia.com>,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+	linux-rdma@vger.kernel.org, iommu@lists.linux.dev,
+	linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
+	kvm@vger.kernel.org, linux-mm@kvack.org,
+	Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH v7 00/17] Provide a new two step DMA mapping API
+Message-ID: <Z-s8x_YyGEYTz8BJ@bombadil.infradead.org>
+References: <cover.1738765879.git.leonro@nvidia.com>
+ <20250220124827.GR53094@unreal>
+ <1166a5f5-23cc-4cce-ba40-5e10ad2606de@arm.com>
+ <20250302085717.GO53094@unreal>
+ <e024fe3d-bddf-4006-8535-656fd0a3fada@arm.com>
+ <Z+KjVVpPttE3Ci62@ziepe.ca>
+ <20250325144158.GA4558@unreal>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-tUid: 2025401090633dcf6ba47edfaddd902fdc7edd8521fd7
-X-Abuse-Reports-To: service@corp-email.com
-Abuse-Reports-To: service@corp-email.com
-X-Complaints-To: service@corp-email.com
-X-Report-Abuse-To: service@corp-email.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250325144158.GA4558@unreal>
 
-DQoNCj4gDQo+IE9uIFdlZCwgTWFyIDI2LCAyMDI1IGF0IDExOjEyOjE4QU0gKzA4MDAsIHdhbmdj
-aHVhbmd1byB3cm90ZToNCj4gPiBJZiBtZW1vcnkgaXMgc3VjY2Vzc2Z1bGx5IGFsbG9jYXRlZCBv
-biB0aGUgdGFyZ2V0IG5vZGUgYW5kIHRoZQ0KPiA+IGZ1bmN0aW9uIGRpcmVjdGx5IHJldHVybnMg
-d2l0aG91dCB2YWx1ZSByZXN0b3JlIGZvciBubWFzaywgbm9uLWZpcnN0DQo+ID4gbWlncmF0aW9u
-IG9wZXJhdGlvbnMgaW4gbWlncmF0ZV9wYWdlcygpIGJ5IGFnYWluIGxhYmVsIG1heSBpZ25vcmUg
-dGhlDQo+ID4gbm1hc2sgc2V0dGluZ3MsIHRoZXJlYnkgYWxsb3dpbmcgbmV3IG1lbW9yeSBhbGxv
-Y2F0aW9ucyBmb3IgbWlncmF0aW9uDQo+ID4gb24gYW55IG5vZGUuDQo+ID4NCj4gPiBTaWduZWQt
-b2ZmLWJ5OiB3YW5nY2h1YW5ndW8gPHdhbmdjaHVhbmd1b0BpbnNwdXIuY29tPg0KPiANCj4gVW5s
-ZXNzIEkgYW0gbWlzc2luZyBzb21ldGhpbmcgdGhpcyBsb29rcyByZWFzb25hYmxlLCBidXQgSSB3
-aG9uZGVyIHdoeQ0KPiBub2JvZHkgbm90aWNlZCBpdCBiZWZvcmUuDQo+IEl0IGlzIGEgcGF0aCB0
-aGF0IHNob3VsZCBiZSBwcmV0dHkgZXhlcmNpc2VkLg0KPiANCj4gDQo+IC0tDQo+IE9zY2FyIFNh
-bHZhZG9yDQo+IFNVU0UgTGFicw0KSSB0ZXN0ZWQgaXQsIGFuZCBldmVuIHdoZW4gdGhlIG5tYXNr
-IGlzIHNldCB0byBhbGwgemVyb3MsIG1lbW9yeSBhbGxvY2F0aW9uIHN0aWxsIG9jY3VycyBvbiBv
-dGhlciBub2Rlcy4gDQpJIHN1c3BlY3QgdGhpcyBpcyBiZWNhdXNlIHRoZSBidWcg4oCLZXhwYW5k
-cyB0aGUgcmFuZ2Ugb2YgZWxpZ2libGUgbm9kZXMgZm9yIG1lbW9yeSBhbGxvY2F0aW9uIGluc3Rl
-YWQgb2YgY2F1c2luZyBhbGxvY2F0aW9uIGZhaWx1cmVzLCB3aGljaCBpcyB3aHkgaXQgaGFzIGdv
-bmUgdW5ub3RpY2VkLg0K
+On Tue, Mar 25, 2025 at 04:41:58PM +0200, Leon Romanovsky wrote:
+> On Tue, Mar 25, 2025 at 09:36:37AM -0300, Jason Gunthorpe wrote:
+> > On Fri, Mar 21, 2025 at 04:05:22PM +0000, Robin Murphy wrote:
+> 
+> <...>
+> 
+> > > So what is it now, a layering violation in a hat with still no clear path to
+> > > support SWIOTLB?
+> > 
+> > I was under the impression Leon had been testing SWIOTLB?
+> 
+> Yes, SWIOTLB works
+
+We will double check too.
+
+> and Christoph said it more than once that he tested
+> NVMe conversion patches and they worked.
+
+We've taken this entire series and the NVMe patches and have built on
+top of them. The nvme-pci driver does not have scatter list chaining
+support, and we don't want to support that because it is backwards.
+Instead, the two step DMA API lets us actually remove all that scatter
+list cruft and provide a single solution for direct IO and io-uring
+command passthrough to support large IOs [0] [1] and logical block sizes
+up to 2 MiB.
+
+We continue to plan to work on this and are happy to test this further.
+
+Clearly, we don't want any regressions on NVMe.
+
+[0] https://lore.kernel.org/all/20250320111328.2841690-1-mcgrof@kernel.org/
+[1] https://lore.kernel.org/all/Z9v-1xjl7dD7Tr-H@bombadil.infradead.org/
+
+  Luis
