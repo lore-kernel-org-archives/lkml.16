@@ -1,80 +1,61 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 347AE2E3398;
-	Tue,  1 Apr 2025 03:55:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A5C133F6
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 03:55:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743479716; cv=none; b=PVQF13tC8Ih48D11xQre0F/H6bpRWaz1RQOYTfEhAlSO4WVpa3X+RjNIuoI+pvq8kvKjwHrCsk1rpjmYl8PPHIAkL/kA9hxYODABxrHJ6pjLbOpmP86up2sP0bg+KJxL0Z7cmnr6Acu/qnHujIlhlttsCMRrYAvB49+C4vKFS7w=
+	t=1743479754; cv=none; b=WfStUDvS5vhVib4bSlZz+6L4qeUrY/W/HM6fPDnX4xIwvS6H4FATtl6JhvAD6K5oT0YGDS0SDhxu87oQVSaoYUUH6LJ6yY8kGaofhiZ2Fm020cnNsrW2BD+uGtSNStWMpSHL8ErZjcGo884pF084Bgug10Q/BM19xtpYMIh+1Lg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743479716; c=relaxed/simple;
-	bh=4DI89Kdnjj6kSPWKEchqMVObf0VVVoyCkBWmJoxsySA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V/oQwHar2ZXtiIPH6W+17CNFCzvrQP8/3ExDjK4h82LOd+9wyM8QR4vJ45iKVopkixNkoZoKTU0lTkzJNeUf4s/HHYFgMkCdr83ichS0/1q4e069vZ2ZRo89pNRYvClZAbVNlRS/KIz0uzLn+7rgNtCtqfV8yFbV5mOU+ZcN3f4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=E10MYRBV; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="E10MYRBV"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=A8PlVwBjraGpOwYIdORUctCRcKdyBQF4w3RWiSehy7U=; b=E10MYRBVXR7JCggA6d1sYwiVj1
-	4esJXk/3UsvOuao2XHUbDyhOVOseJuT3iAV30i3b6YoKFCmIT4JnN8JJXuqeEXC0PUaBnrhN8KhZA
-	rVmquPes9BAOvcdiE6RB2m7tFQsYuT7TZNpREYTy2w/OYZuyoYX7oYvBO+VCuzzvLAtyk72suaLmg
-	J4BF8TRXHx1ozFuzGg3LZYhgiNQto6yzDtucBysUijOCMPKbO8b4lPvz6vm4eKtRplHxCZqntcSOK
-	3NPXX3zCmNnLV+dDi7W2+Nq7GS/34lUMd2Li6pWcXH/fyUdMybqmNBnbauEcW1zjjSSDv2QdzcLZy
-	hYJ7Dktw==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1tzSiM-00BjrM-1y;
-	Tue, 01 Apr 2025 11:55:03 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Tue, 01 Apr 2025 11:55:02 +0800
-Date: Tue, 1 Apr 2025 11:55:02 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
-Subject: Re: Chaining is dead
-Message-ID: <Z-tjluCx71ti6Ngq@gondor.apana.org.au>
-References: <Z-JE2HNY-Tj8qwQw@gondor.apana.org.au>
- <20250325152541.GA1661@sol.localdomain>
- <Z-NdGvErMGS5OT7X@gondor.apana.org.au>
- <Z-NjarWmWSmQ97K0@gondor.apana.org.au>
- <20250326033404.GD1661@sol.localdomain>
- <Z-N55Yjve6wTnPqm@gondor.apana.org.au>
- <Z-itc_Qd5LLn19pH@gondor.apana.org.au>
- <20250331165630.GA3893920@google.com>
- <Z-tTEjCzpgDr9a-3@gondor.apana.org.au>
- <20250401033303.GA56851@sol.localdomain>
+	s=arc-20240116; t=1743479754; c=relaxed/simple;
+	bh=CQdfz0cY8sbPhkKTFmP3cKdGCtZfGe14WPlZY7ayloc=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=a5eIb9ns8xAXSSdd6hNev4gd29JKMypxI3OJ3i7j8Ibya1JI0ztE9Q+CT7tbzV7vrYjFDUJfMroi7ZusziXLiZ1ev4E/Dl0Wqbiw1FSEeOnG1yyAlHkTDBGHoSCAgDdw1Af67rj0npSKZJKTG/lOHbjufWspdco+/lFYfJdM660=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3d5b3819ff9so46244875ab.0
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 20:55:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743479751; x=1744084551;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=V+WIyrV8nuKd/Q4jVGl04PVsNAqCSqjz5Gk2uUolHFA=;
+        b=e5lqp8hkI1BtXIkDwdPbpOfVsYxO27OlzFekR9coDN9foogrYgg4dfr8R0DRfhAL2j
+         wM6YfX/ld82smdVksHomRSzNjs2/XqK9eJhpvPQRWWsqrScagdGO36vfoQhCJ8pVrr4T
+         xW0ABeWmq1c6ZiQIME/AeB4sYgfihLvA+BmJwC76ZtssWODHDJ92IW+qxrofpCxU2luA
+         3aZp3RtFCh6tMhUPlEJlkI3O2LX8he+VQ0w2aJsraAgqySUQnL1jbRBA2LaiP69CjIbe
+         iExyBtBMKYd/A6G/8DKc4qw9KIPunmvGghKh+sOI5BOpfOkgaVYT3lKUg8mB1tWrgTv6
+         w8Qg==
+X-Gm-Message-State: AOJu0YxRGW7AACe1TtRUVfTqYmnaXgwuAfwz3cfgntA8GUyFBm+UOaiP
+	MAwXYkAiQPRnf/J0E0wyFJNSyuP4ZITolu4sSGcVpYFVLGFyRe6i033Lm8XyBBWbpz69Z66sfwM
+	gbtBOIwN0ibIkFS2pt7PRENzttFJWDa4JlgIbs+REB6fq1tnp/uDTMNQ=
+X-Google-Smtp-Source: AGHT+IEsb2fQAT9OBhiv4O/sVhYLMpWEGFKxBsIGRLat3c+/By5m99xSpy+7pr8WgB7Kwa8dOcu5cu0+EQVU1o4+OKrIk818tpb0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250401033303.GA56851@sol.localdomain>
+X-Received: by 2002:a05:6e02:1569:b0:3d3:ff09:432c with SMTP id
+ e9e14a558f8ab-3d5e08ea12emr110158675ab.4.1743479751772; Mon, 31 Mar 2025
+ 20:55:51 -0700 (PDT)
+Date: Mon, 31 Mar 2025 20:55:51 -0700
+In-Reply-To: <67cd170b.050a0220.23b02d.0000.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67eb63c7.050a0220.3a8a08.0001.GAE@google.com>
+Subject: Re: [syzbot] 
+From: syzbot <syzbot+79e4e34c2a37d5a9c1f7@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Mar 31, 2025 at 08:33:03PM -0700, Eric Biggers wrote:
->
-> - It would add the overhead of keyslot management to software crypto
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
 
-That seems to be a design error in blk_crypto.  Why should we
-model the inadequacies of hardware in software?
+***
 
-If we're going through the software crypto path in blk_crypto,
-it should be done as a first-clsas citizen, and not as a poor
-man's version of hardware crypto.
+Subject: 
+Author: kent.overstreet@linux.dev
 
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+#syz fix bcachefs: Fix kmsan warnings in bch2_extent_crc_pack()
