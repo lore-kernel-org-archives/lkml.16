@@ -1,207 +1,259 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 858711DF258;
-	Tue,  1 Apr 2025 21:55:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1CE8204F6B;
+	Tue,  1 Apr 2025 22:03:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743544559; cv=none; b=utN6W38V40Rl+iHXK/TdYnTxLUJW0E7Thy533tijPEW71hfRJkFkQfPXDfBS+gjaUInqGHi2w+YESBWdC321HLpo3POcsTpKIUStUwwK7hlmbQq2TPAJBj/K05YHrbliCXhAx/e/g3A3AgMXL57JDJbVCyETUxp8V1l/xddEKl8=
+	t=1743545001; cv=none; b=o7pb2VAhaeWH53cbIOz0XNYCC3yaK5utcuOGSFXeXmQQNrId0CxKGbJbgVLyQ0RerHl7byYcEsc318qHmkLznw40myo8gEzvmlNtcJTzXc0ylwOW1CVN15fcO7/X9/sqmYsnZCO0wsOsNWubD+iohV1szeqAIOw89iNI6NGMEqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743544559; c=relaxed/simple;
-	bh=/awk8q2VzVHMPUKfx/9Iif66Moo4kkMLhitLsXMH/d4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HnNd5eSrgKyp1IDIx6OHqLv7JdTSGqLkcD2k/iA0CFXUmzhZzystZkgyvObj8ryCcOFT80rEUfTuv9QphQ4XufqoOgAdgeuemq9rh4btJf28v5+bH+r+U9+GoN6TfsYXOFcH4FDBJI8WFsD5N5CtksivXwguURX7S3rarW+c5fU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DBMYtr5U; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743545001; c=relaxed/simple;
+	bh=u/p4PqHWWDv4YOPhMDDi1O7bZreu7QjIV1UjU9GXshI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IJE4jKXnlqfa6ChBl9PuRTrdEZCUkttAwAwBv4/o0cUMAGLK/3BsMJAYzR3ynksxzB0XkWDft64+xCxpalqQbD+IDjOwsGQ5S0wo5EEQg/LLrFM66si+oli2JyMLjfT5VUJQ58wAb6g2Wx0kUj9OU6T616DvavEN0OWnIQkefEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Toh5IroY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DBMYtr5U"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB007C4CEE4;
-	Tue,  1 Apr 2025 21:55:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Toh5IroY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B546BC4CEE4;
+	Tue,  1 Apr 2025 22:03:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743544559;
-	bh=/awk8q2VzVHMPUKfx/9Iif66Moo4kkMLhitLsXMH/d4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DBMYtr5U579nX4MhY2RhPddY/KOzTWxbjRZlNC1nQhGlovGuO55rjlQ5ykBTqLuT5
-	 JfmkkwIPBalaGo0hEdOfj2jiZ0q5k57dzmUVoxtEDC8wbOv7cQ87CLNDH5wJ7yHL7X
-	 f7Fn8ncayHWS2Hu8/8WCuM1YFyT4u+iSVuxWHYTkqJstK72rTquZ0RxWvC2VRMNtPr
-	 RCEQuPWLCaafnVxSoFAq0DFZ7dcJpyI7AYYkMEyDVpzDe8HKfr6oc/+IURT35n9VLX
-	 AYLZtq2imwU3vIt7E+ep0HlkraIpAhsUciXcmfyHM5/OjC9VZCM83sWwtmMGI5FsSc
-	 tDxpd6ZI9s2CA==
-Date: Tue, 1 Apr 2025 22:55:55 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v2 0/4] gpio: deprecate and track the removal of GPIO
- workarounds for regulators
-Message-ID: <c3bb82f9-5a2f-4a14-9726-f3e10bf5d427@sirena.org.uk>
-References: <20250401-gpio-todo-remove-nonexclusive-v2-0-7c1380797b0d@linaro.org>
- <c8ca3c8a-3201-4dde-9050-69bc2c9152c4@sirena.org.uk>
- <CAMRc=Mcq9yag6yBswhW0OJ8MKzGBpscwo+UGpfCo2aha93LzXA@mail.gmail.com>
- <846010c0-7dc1-421c-8136-9ae2894c9acd@sirena.org.uk>
- <CAMRc=Mff0TkeiHbM3TAJLJ2HYU_nnPFUpUjbWsdCnW6O4E=+gQ@mail.gmail.com>
+	s=k20201202; t=1743545000;
+	bh=u/p4PqHWWDv4YOPhMDDi1O7bZreu7QjIV1UjU9GXshI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Toh5IroYbHDD+2vBRQwub37S21UKmZ6Yt3v9SP9hdQVbDdxBDBoii5xppnmxqpbt1
+	 1f2OzXhhw4CQqwLopD1G2aIz/5ykZPO+qLd38LQ027wGSK/+EgFy21aDFPcMPSpjW7
+	 OWqKQlbF/nOd7cpf20oE7iP0p/t/sqyVMIqJHUUgoEFEI/SCZroyTPg3rsvMac2pCM
+	 UdIxs6zbIYnWgReTIngDqjdEK9kKbsaMo3L2ib0ap7aI2kjp+6FmqJ1l6ny9lJpj5z
+	 mjvfJ6zJxNEucDAJi28Ot3ifls66cje+qljKJdX7kx4p4a+FqCv5wSZTvk1yk1HiMo
+	 NpuVHCMNmQbNw==
+From: Eric Biggers <ebiggers@kernel.org>
+To: linux-nfs@vger.kernel.org,
+	Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>
+Cc: Neil Brown <neilb@suse.de>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] nfs: add missing selections of CONFIG_CRC32
+Date: Tue,  1 Apr 2025 15:02:21 -0700
+Message-ID: <20250401220221.22040-1-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="zFQ5n9y7oHfzGRRF"
-Content-Disposition: inline
-In-Reply-To: <CAMRc=Mff0TkeiHbM3TAJLJ2HYU_nnPFUpUjbWsdCnW6O4E=+gQ@mail.gmail.com>
-X-Cookie: 15% gratuity added for parties over 8.
+Content-Transfer-Encoding: 8bit
 
+From: Eric Biggers <ebiggers@google.com>
 
---zFQ5n9y7oHfzGRRF
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+nfs.ko, nfsd.ko, and lockd.ko all use crc32_le(), which is available
+only when CONFIG_CRC32 is enabled.  But the only NFS kconfig option that
+selected CONFIG_CRC32 was CONFIG_NFS_DEBUG, which is client-specific and
+did not actually guard the use of crc32_le() even on the client.
 
-On Tue, Apr 01, 2025 at 08:57:56PM +0200, Bartosz Golaszewski wrote:
-> On Tue, Apr 1, 2025 at 6:00=E2=80=AFPM Mark Brown <broonie@kernel.org> wr=
-ote:
-> > On Tue, Apr 01, 2025 at 04:42:40PM +0200, Bartosz Golaszewski wrote:
+The code worked around this bug by only actually calling crc32_le() when
+CONFIG_CRC32 is built-in, instead hard-coding '0' in other cases.  This
+avoided randconfig build errors, and in real kernels the fallback code
+was unlikely to be reached since CONFIG_CRC32 is 'default y'.  But, this
+really needs to just be done properly, especially now that I'm planning
+to update CONFIG_CRC32 to not be 'default y'.
 
-> > > You have two users and one goes gpiod_set_value(desc, 0), the other:
-> > > gpiod_set_value(desc, 1). Who is right? Depending on the timing the
-> > > resulting value may be either.
+Therefore, make CONFIG_NFS_FS, CONFIG_NFSD, and CONFIG_LOCKD select
+CONFIG_CRC32.  Then remove the fallback code that becomes unnecessary,
+as well as the selection of CONFIG_CRC32 from CONFIG_NFS_DEBUG.
 
-> > That's why we need to figure out if there's sharing - the usage here is
-> > that we have some number of regulators all of which share the same GPIO
-> > and we want to know that this is the case, provide our own reference
-> > counting and use that to decide when to both update the GPIO and do the
-> > additional stuff like delays that are required.  When the API was number
-> > based we could look up the GPIO numbers for each regulator, compare them
-> > with other GPIOs we've already got to identify sharing and then request
-> > only once.
+Fixes: 1264a2f053a3 ("NFS: refactor code for calculating the crc32 hash of a filehandle")
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+---
+ fs/Kconfig           | 1 +
+ fs/nfs/Kconfig       | 2 +-
+ fs/nfs/internal.h    | 7 -------
+ fs/nfs/nfs4session.h | 4 ----
+ fs/nfsd/Kconfig      | 1 +
+ fs/nfsd/nfsfh.h      | 7 -------
+ include/linux/nfs.h  | 7 -------
+ 7 files changed, 3 insertions(+), 26 deletions(-)
 
-> That's not a good design though either, is it? For one: it relies on
-> an implementation detail for which there's no API contract, namely the
+diff --git a/fs/Kconfig b/fs/Kconfig
+index c718b2e2de0e..5b4847bd2fbb 100644
+--- a/fs/Kconfig
++++ b/fs/Kconfig
+@@ -366,10 +366,11 @@ config GRACE_PERIOD
+ 	tristate
+ 
+ config LOCKD
+ 	tristate
+ 	depends on FILE_LOCKING
++	select CRC32
+ 	select GRACE_PERIOD
+ 
+ config LOCKD_V4
+ 	bool
+ 	depends on NFSD || NFS_V3
+diff --git a/fs/nfs/Kconfig b/fs/nfs/Kconfig
+index d3f76101ad4b..07932ce9246c 100644
+--- a/fs/nfs/Kconfig
++++ b/fs/nfs/Kconfig
+@@ -1,9 +1,10 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ config NFS_FS
+ 	tristate "NFS client support"
+ 	depends on INET && FILE_LOCKING && MULTIUSER
++	select CRC32
+ 	select LOCKD
+ 	select SUNRPC
+ 	select NFS_COMMON
+ 	select NFS_ACL_SUPPORT if NFS_V3_ACL
+ 	help
+@@ -194,11 +195,10 @@ config NFS_USE_KERNEL_DNS
+ 	default y
+ 
+ config NFS_DEBUG
+ 	bool
+ 	depends on NFS_FS && SUNRPC_DEBUG
+-	select CRC32
+ 	default y
+ 
+ config NFS_DISABLE_UDP_SUPPORT
+        bool "NFS: Disable NFS UDP protocol support"
+        depends on NFS_FS
+diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
+index 1ac1d3eec517..0d6eb632dfcf 100644
+--- a/fs/nfs/internal.h
++++ b/fs/nfs/internal.h
+@@ -897,22 +897,15 @@ static inline
+ u64 nfs_timespec_to_change_attr(const struct timespec64 *ts)
+ {
+ 	return ((u64)ts->tv_sec << 30) + ts->tv_nsec;
+ }
+ 
+-#ifdef CONFIG_CRC32
+ static inline u32 nfs_stateid_hash(const nfs4_stateid *stateid)
+ {
+ 	return ~crc32_le(0xFFFFFFFF, &stateid->other[0],
+ 				NFS4_STATEID_OTHER_SIZE);
+ }
+-#else
+-static inline u32 nfs_stateid_hash(nfs4_stateid *stateid)
+-{
+-	return 0;
+-}
+-#endif
+ 
+ static inline bool nfs_error_is_fatal(int err)
+ {
+ 	switch (err) {
+ 	case -ERESTARTSYS:
+diff --git a/fs/nfs/nfs4session.h b/fs/nfs/nfs4session.h
+index 351616c61df5..f9c291e2165c 100644
+--- a/fs/nfs/nfs4session.h
++++ b/fs/nfs/nfs4session.h
+@@ -146,20 +146,16 @@ static inline void nfs4_copy_sessionid(struct nfs4_sessionid *dst,
+ 		const struct nfs4_sessionid *src)
+ {
+ 	memcpy(dst->data, src->data, NFS4_MAX_SESSIONID_LEN);
+ }
+ 
+-#ifdef CONFIG_CRC32
+ /*
+  * nfs_session_id_hash - calculate the crc32 hash for the session id
+  * @session - pointer to session
+  */
+ #define nfs_session_id_hash(sess_id) \
+ 	(~crc32_le(0xFFFFFFFF, &(sess_id)->data[0], sizeof((sess_id)->data)))
+-#else
+-#define nfs_session_id_hash(session) (0)
+-#endif
+ #else /* defined(CONFIG_NFS_V4_1) */
+ 
+ static inline int nfs4_init_session(struct nfs_client *clp)
+ {
+ 	return 0;
+diff --git a/fs/nfsd/Kconfig b/fs/nfsd/Kconfig
+index 792d3fed1b45..731a88f6313e 100644
+--- a/fs/nfsd/Kconfig
++++ b/fs/nfsd/Kconfig
+@@ -2,10 +2,11 @@
+ config NFSD
+ 	tristate "NFS server support"
+ 	depends on INET
+ 	depends on FILE_LOCKING
+ 	depends on FSNOTIFY
++	select CRC32
+ 	select LOCKD
+ 	select SUNRPC
+ 	select EXPORTFS
+ 	select NFS_COMMON
+ 	select NFS_ACL_SUPPORT if NFSD_V2_ACL
+diff --git a/fs/nfsd/nfsfh.h b/fs/nfsd/nfsfh.h
+index 876152a91f12..5103c2f4d225 100644
+--- a/fs/nfsd/nfsfh.h
++++ b/fs/nfsd/nfsfh.h
+@@ -265,11 +265,10 @@ static inline bool fh_fsid_match(const struct knfsd_fh *fh1,
+ 	if (memcmp(fh1->fh_fsid, fh2->fh_fsid, key_len(fh1->fh_fsid_type)) != 0)
+ 		return false;
+ 	return true;
+ }
+ 
+-#ifdef CONFIG_CRC32
+ /**
+  * knfsd_fh_hash - calculate the crc32 hash for the filehandle
+  * @fh - pointer to filehandle
+  *
+  * returns a crc32 hash for the filehandle that is compatible with
+@@ -277,16 +276,10 @@ static inline bool fh_fsid_match(const struct knfsd_fh *fh1,
+  */
+ static inline u32 knfsd_fh_hash(const struct knfsd_fh *fh)
+ {
+ 	return ~crc32_le(0xFFFFFFFF, fh->fh_raw, fh->fh_size);
+ }
+-#else
+-static inline u32 knfsd_fh_hash(const struct knfsd_fh *fh)
+-{
+-	return 0;
+-}
+-#endif
+ 
+ /**
+  * fh_clear_pre_post_attrs - Reset pre/post attributes
+  * @fhp: file handle to be updated
+  *
+diff --git a/include/linux/nfs.h b/include/linux/nfs.h
+index 9ad727ddfedb..0906a0b40c6a 100644
+--- a/include/linux/nfs.h
++++ b/include/linux/nfs.h
+@@ -53,11 +53,10 @@ enum nfs3_stable_how {
+ 
+ 	/* used by direct.c to mark verf as invalid */
+ 	NFS_INVALID_STABLE_HOW = -1
+ };
+ 
+-#ifdef CONFIG_CRC32
+ /**
+  * nfs_fhandle_hash - calculate the crc32 hash for the filehandle
+  * @fh - pointer to filehandle
+  *
+  * returns a crc32 hash for the filehandle that is compatible with
+@@ -65,12 +64,6 @@ enum nfs3_stable_how {
+  */
+ static inline u32 nfs_fhandle_hash(const struct nfs_fh *fh)
+ {
+ 	return ~crc32_le(0xFFFFFFFF, &fh->data[0], fh->size);
+ }
+-#else /* CONFIG_CRC32 */
+-static inline u32 nfs_fhandle_hash(const struct nfs_fh *fh)
+-{
+-	return 0;
+-}
+-#endif /* CONFIG_CRC32 */
+ #endif /* _LINUX_NFS_H */
 
-There is an API contract as far as I'm concerned, this was discussed
-when Russell was converting things over to use descriptors since we need
-something to maintain functionality.  I agree that this is an interface
-that is more convenient than elegant but it's what was on offer, I think
-the enthusiasm for converting to gpiod was such people were OK with it
-since it does actually do the right thing.
+base-commit: 91e5bfe317d8f8471fbaa3e70cf66cae1314a516
+-- 
+2.49.0
 
-> idea that the address of the struct gpiod_descr handed out by the call
-> to gpiod_get() is the same for the same hardware offset on the same
-> chip. It does work like that at the moment but it's a fragile
-> assumption. The way pwrseq is implemented for instance, the
-> "descriptor" obtained from the call to pwrseq_get() is instantiated
-> per-user, meaning that each user of the same sequence has their own,
-> unique descriptor. I don't see why such an approach could not be used
-> in GPIOLIB one day. IOW: nobody ever said that there's a single struct
-> gpiod_desc per GPIO line.
-
-If gpiolib were to change this API we'd need some other way of getting
-the same functionality, I'd be totally fine with that happening.  For
-regulators we don't really want the pwrseq behaviour, we want to know
-that there's a single underlying GPIO that we're updating.
-
-> > That's exactly what the regulator code was doing, as far as the GPIO API
-> > saw there was only ever one user at once.  Since we can't look up
-> > numbers any more what we now do is use non-exclusive requests and check
-> > to see if we already have the GPIO descriptor, if we do then we group
-> > together like we were doing based on the GPIO numbers.  The multiple
-> > gets are just there because that's how the gpiod API tells us if we've
-> > got two references to the same underlying GPIO, only one thing ever
-> > actually configures the GPIO.
-
-> That's not an unusual situation. For reset-gpios we now have the
-> implicit wrapper in the form of the reset-gpio.c driver. Unfortunately
-> we cannot just make it the fallback for all kinds of shared GPIOs so I
-> suggested a bit more generalized approach with pwrseq. In any case:
-> having this logic in the regulator core is not only wonky but also
-> makes it impossible to unduplicate similar use-cases in audio and
-> networking where shared GPIOs have nothing to do with regulators.
-
-Impossible seems pretty strong here?  Part of the thing here is that the
-higher level users want to understand that there is GPIO sharing going
-on and do something about it, the working out that the thing is shared
-isn't really the interesting bit it's rather the part where we do
-something about that.  It's not that you can't share some code but it
-feels more like a library than an opaque abstraction.
-
-> > The sound use cases are roughly the same one - there's a bunch of audio
-> > designs where we've got shared reset lines, they're not actually doing
-> > the reference counting since the use cases mean that practically
-> > speaking all the users will make the same change at the same time (or at
-> > least never have actively conflicting needs) so practically it all ends
-> > up working fine.  IIRC the long term plan was to move over to the reset
-> > API to clean this up rather than redoing the reference counting, if
-> > we're doing this properly we do want to get the thing the regulator API
-> > has where we know and can control when an actual transition happens.
-
-> If they actually exist as "reset-gpios" in DT then they could probably
-> use the reset-gpio.c driver. I will take a look.
-
-Yes, that was the idea - there was some issue I can't remember that
-meant it needed a bit of work on the reset API the last time someone
-looked at it.  The properties might have different names reflecting the
-pins or something but that seems like a readily solvable problem.
-
-Though now I think again some of them might be closer to the regulator
-enables rather than resets so those ones would not fit there and would
-more want to librify what regulator is doing...  Something like that
-would definitely not feel right being described as a power sequence.
-
-> > > 3. Use pwrseq where drivers really need non-exclusive GPIOs.
-
-> > > The power sequencing subsystem seems like a good candidate to fix the
-> > > issue. I imagine a faux_bus pwrseq driver that would plug into the
-> > > right places and provide pwrseq handles which the affected drivers
-> > > could either call directly via the pwrseq_get(), pwrseq_power_on/off()
-> > > interfaces, or we could have this pwrseq provider register as a GPIO
-> > > chip through which the gpiod_ calls from these consumers would go and
-> > > the sharing mediated by pwrseq.
-
-> > This seems complicated, and I'm not sure that obscuring the concrete
-> > thing we're dealing with isn't going to store up surprises for
-> > ourselves.
-
-> IMO It would be equally as obscured if you used a shared GPIO wrapped
-> in a reset driver.
-
-Yeah, it's a bit indirected but it's at least clear that it's just the
-reset and not also any other aspect of the power management so you don't
-have to worry about timing requirements around enabling supplies or
-whatever.
-
-> > It's also not clear to me that pwrseq doesn't just have the same problem
-> > with trying to figure out if two GPIO properties are actually pointing
-> > to the same underlying GPIO that everything else does?  It seems like
-> > the base issue you've got here is that we can't figure out if we've got
-> > two things referencing the same GPIO without fully requesting it.
-
-> Whether that's feasible (I think it is but I'll have a definite answer
-> once I spend more time on this) is one question. Another is: do you
-> have anything against removing this flag given it's replaced with a
-> better solution? If not, then I'd still like to apply this series and
-> we can discuss the actual solution once I send out the code. I hope
-> this will at least start happening this release cycle.
-
-I'm in no way attached to this specific solution, from my point of view
-the important thing is that given two devices using GPIOs we have some
-reasonably convenient way of telling if they're using the same underlying=
-=20
-GPIO and can coordinate between the devices appropriately.
-
---zFQ5n9y7oHfzGRRF
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmfsYOoACgkQJNaLcl1U
-h9DvVAgAgrtmuzz6y9yhOh6n73oARM50aP0pffMcbGXM7V9C+f0QLL/h8nX7nN5M
-t605uPAIsGalR/qPDCOttruX03WDaD4qfBqezw9/VbgCy0itTGTibsGk3DaPp+N+
-6o+yK9H/4lT8nS7HGrb0sdM5Wv4QTX4NByazDggTf3F5I4aaDxoroEXw+ipbSvT0
-+8jQlH1FGuHUsKBD8twJA9tWlQJZJwQnl6hFS7QozEj6HrL1zOwM+MzKqL6sotoz
-p/yVxF2eZ8BvKSPQyN07W0M85WQY/20rE1gExJFBAPU9A/Pq5TiuCGl8kJ4+4CoF
-F5EE+Z2Oeo4/3fgXWbpSlGb2PVd7Sw==
-=0vo/
------END PGP SIGNATURE-----
-
---zFQ5n9y7oHfzGRRF--
