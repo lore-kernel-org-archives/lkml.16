@@ -1,161 +1,244 @@
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBD011E98F9;
-	Tue,  1 Apr 2025 07:43:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE9D51E835B
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 07:43:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743493442; cv=none; b=UUoy43ALCEGkKRm5XrXtF9H8PKlo6WW4JqNosf688K70T9Wuwu3ix8ftThyLrW/du3RPM3uH1WqV7L5APC6LvMwrEII4N082YsXT2Fu/za2pIu85MNfCSe+6gfI3LaigvHaw3ag0Zjv6G0Mot+V6qEbVy1wf4URCrarXkzvO7O4=
+	t=1743493441; cv=none; b=NjdrEbZ5IY+QLXyVtiMYX7H/KLjBd48HIsffooA6mKkYqjtxfSf59e4pGPTgcRSEPhoOjzId65F04Tey2L+Hu/x348BDPbw7oXEJtygRn8Zvmgs014040b6h+lKGDQXptFWVSIUeAYu+bvjJINYPnNEdR0M6kr3crcMymtLdzWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743493442; c=relaxed/simple;
-	bh=THngXZIhQioKCrZCm1xvnaDv2uQrZPu+UxuNcjKLAD8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=X93YDxZREl349oXhhA+pipBoK0Jft49fcj/aalNGax2+ZH6DAtqLFtaHvLcExRsq+LIaqA+cMKTLV3Zbaf7FbV76+R8M+krGCVGOHfySn+HS+4yubHbO00XZgHaQprBztbr0F5A3UiRAPTfmu50FDtHxawuiOirEZQOTUBXszpY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4ZRg050xggzHrJW;
-	Tue,  1 Apr 2025 15:40:37 +0800 (CST)
-Received: from kwepemg200005.china.huawei.com (unknown [7.202.181.32])
-	by mail.maildlp.com (Postfix) with ESMTPS id EE786180080;
-	Tue,  1 Apr 2025 15:43:56 +0800 (CST)
-Received: from [10.174.176.70] (10.174.176.70) by
- kwepemg200005.china.huawei.com (7.202.181.32) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Tue, 1 Apr 2025 15:43:55 +0800
-Message-ID: <ed10eea2-0bf2-4747-b519-f9b9089e434e@huawei.com>
-Date: Tue, 1 Apr 2025 15:43:54 +0800
+	s=arc-20240116; t=1743493441; c=relaxed/simple;
+	bh=lusxiB4Bjaj8R/c9BU47G8MCvRdyFszKY/L+YTNPDwU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
+	 Content-Type:References; b=KiTbIq1rWa7dpgEaO1vRmKmLyUJJHYVDFn4GPzwz29Fb0h08yV2+19FPuUsOUATeTBJoghL66DwexvELdoUdgSXQ3BbWQq0ed4Y1QohgebGJAEZlO4tZLsk204zcCtvHHZZiZjzGwYeLGCvfqtNRU8lw8gYpw8mKpW8ns1Fw/KY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=Hal1TquI; arc=none smtp.client-ip=203.254.224.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Hal1TquI"
+Received: from epcas2p4.samsung.com (unknown [182.195.41.56])
+	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20250401074357epoutp03d10349a0df2c0fd291512590b13db5a4~yIgs1dMn21726717267epoutp03j
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 07:43:57 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20250401074357epoutp03d10349a0df2c0fd291512590b13db5a4~yIgs1dMn21726717267epoutp03j
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1743493437;
+	bh=q9tZFNfIbQkwSbFLLr9QuHBwTgnp8/iAM+LYD9NLzUw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Hal1TquIwAUwF/ycGoKLQIy2gw7C2FC8iNda8Wmuy6j85oSBLQUmnaLHwbAYBqtv+
+	 WZzlm+KAPrRIFgyHWZ7P3CgPwS8GgV5F1P4BO98ryl5PkWY+ajjjKkrCROwrrSECRA
+	 a4ZRKp7O5NtAgIKuAr1U5lL/jp2MLqXNi68wZ87c=
+Received: from epsnrtp01.localdomain (unknown [182.195.42.153]) by
+	epcas2p4.samsung.com (KnoxPortal) with ESMTPS id
+	20250401074356epcas2p4fc3e4e2f20ad12b7894c5fb6be31624d~yIgr3_c5W0326403264epcas2p4r;
+	Tue,  1 Apr 2025 07:43:56 +0000 (GMT)
+Received: from epsmgec2p1.samsung.com (unknown [182.195.36.69]) by
+	epsnrtp01.localdomain (Postfix) with ESMTP id 4ZRg3v46Brz6B9m9; Tue,  1 Apr
+	2025 07:43:55 +0000 (GMT)
+Received: from epcas2p4.samsung.com ( [182.195.41.56]) by
+	epsmgec2p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+	F0.BA.09780.B399BE76; Tue,  1 Apr 2025 16:43:55 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+	epcas2p4.samsung.com (KnoxPortal) with ESMTPA id
+	20250401074354epcas2p46dd378281a462056317a4e265b54cbbb~yIgqkoVwR0326403264epcas2p4l;
+	Tue,  1 Apr 2025 07:43:54 +0000 (GMT)
+Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
+	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20250401074354epsmtrp19c5f4a69aef175a0e8b61bf5a7467b29~yIgqjhLBD3075130751epsmtrp1J;
+	Tue,  1 Apr 2025 07:43:54 +0000 (GMT)
+X-AuditID: b6c32a43-9b7fe70000002634-f6-67eb993b11e1
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	2C.DA.07818.A399BE76; Tue,  1 Apr 2025 16:43:54 +0900 (KST)
+Received: from ubuntu (unknown [10.229.95.128]) by epsmtip1.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20250401074354epsmtip14840f27b62e47e71aa24c0c0836242c6~yIgqSjJul1529515295epsmtip1j;
+	Tue,  1 Apr 2025 07:43:54 +0000 (GMT)
+Date: Tue, 1 Apr 2025 16:53:07 +0900
+From: Jung Daehwan <dh10.jung@samsung.com>
+To: Puma Hsu <pumahsu@google.com>
+Cc: Wesley Cheng <quic_wcheng@quicinc.com>, srinivas.kandagatla@linaro.org,
+	mathias.nyman@intel.com, perex@perex.cz, conor+dt@kernel.org,
+	dmitry.torokhov@gmail.com, corbet@lwn.net, broonie@kernel.org,
+	lgirdwood@gmail.com, krzk+dt@kernel.org,
+	pierre-louis.bossart@linux.intel.com, Thinh.Nguyen@synopsys.com,
+	tiwai@suse.com, robh@kernel.org, gregkh@linuxfoundation.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-sound@vger.kernel.org, linux-input@vger.kernel.org,
+	linux-usb@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Subject: Re: [PATCH v36 06/31] usb: dwc3: Specify maximum number of XHCI
+ interrupters
+Message-ID: <20250401075307.GG98772@ubuntu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net] xsk: correct tx_ring_empty_descs count statistics
-To: Magnus Karlsson <magnus.karlsson@gmail.com>
-CC: Stanislav Fomichev <stfomichev@gmail.com>, <bjorn@kernel.org>,
-	<magnus.karlsson@intel.com>, <maciej.fijalkowski@intel.com>,
-	<jonathan.lemon@gmail.com>, <davem@davemloft.net>, <edumazet@google.com>,
-	<kuba@kernel.org>, <pabeni@redhat.com>, <horms@kernel.org>, <ast@kernel.org>,
-	<daniel@iogearbox.net>, <hawk@kernel.org>, <john.fastabend@gmail.com>,
-	<yuehaibing@huawei.com>, <zhangchangzhong@huawei.com>,
-	<netdev@vger.kernel.org>, <bpf@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-References: <20250329061548.1357925-1-wangliang74@huawei.com>
- <Z-qzLyGKskaqgFh5@mini-arch> <Z-sRF0G43HpGiGwH@mini-arch>
- <0d1b689c-c0ef-460a-9969-ff5aebbb8fac@huawei.com>
- <CAJ8uoz1JxhXFkzW8n_Dud8SR-4zE7gim5vS_UZHELiA7d0k+wQ@mail.gmail.com>
-From: Wang Liang <wangliang74@huawei.com>
-In-Reply-To: <CAJ8uoz1JxhXFkzW8n_Dud8SR-4zE7gim5vS_UZHELiA7d0k+wQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+In-Reply-To: <CAGCq0LaDzCVau0jZ8WydSFF7FVAAXuUHaR=3gPcteew6X4kP=g@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Tf1CTdRjvu/fdu4GhL6DyDS3G4K5EGBsy+EKAelC8JF5w1QUdhq/jdeMY
+	Y26jE8pagoDECZTibUQSoCjxIxEQYQQMRdAgCrLENLyQHyOvBQqWCQ1e6vzv83ye5/P8vIeP
+	OZ3kufKTVTpGo6KVQsIeb+nZgnxeNszIxfq/nkcn7o4TqLZjkIPGu3IBOnV5kIt6KqYAyqps
+	INC08Q6B5kfyOKi4c4CHvsypwtHN2XkuGm77nEBlE8cxVHHmCIayGo9z0dG2Qi76e2mCgwx1
+	Hqix/RgXLZlaeSint5eLasq7eOjrhTqww4W6ZLzNo8ob06lK0zSHaqw5SlC/3DAR1Bf9sVRn
+	WS2Pqjz2GZf65v4Zgio2fUg1NP2IU02dc4Caa3whxuGdlBAFQycxGgGjkqUlJavkocJdbySG
+	J0oDxBIfSRAKFApUdCoTKoyIjvF5NVlpG10oeI9WptuoGFqrFfqGhWjS0nWMQJGm1YUKGXWS
+	Uh2oFmnpVG26Si5SMbpgiVjsJ7UF7k1R5I4N4+r6Fw/OjMxx9OD85nzA50PSHxpOJOcDe74T
+	2QpgVunPOGvMAtg88ivBGvMA9llzefnAbkVh1D/AWEcHgKZb9wFrjANo+GESW47CSU9YMXQB
+	LGOC9IJ3HvWt8OtJd/jgXi5nWYCR/TjsM19ZCXIm34bm7w7jy9iB3Aobqn4DLHaE/YbxFd6O
+	jIWTnQPEcuMbbAUs3R8t54HkRTu4UDdMsO1FwILqEcBiZ2i52rTatiucLsxZxVo4OjmBseJs
+	AM9asjHWsQ0aJ3JXxBipgKN9Yzi7JQ94eRRn6bUwr+cJj6UdYF6OE6v0gCeHi7gsfg52zwyu
+	ZqTgkMW0usYCDqzTnyOKgJvxqdGMT1Uz2tJi5BbY0ObL0m4wq7kUY+lNsHqR/1REOSBqwEZG
+	rU2VMzI/teT/w8vSUhvByod4hbeCkVOLIjPg8IEZQD4mXO8Q93Ba7uSQRGdkMpq0RE26ktGa
+	gdR2s2LMdYMszfZiKl2ixD9I7B8QIAn0k4oDhS4O5j/vyZ1IOa1jUhhGzWj+03H4dq56zoDp
+	pU0Zjn6cyHUFReFTQ70d+qh3g8WG+IuiLK6i8PuMhHP9Q57bH3vVH5S+ZQTh05bYrfvQ1ddK
+	ftoWIO3KkT+Mev/uzV1B5/dm4KLX29+0ChZkVp/oa7fKCoMFGo6dS3WP77WdlGKNc6TM230h
+	r8q7ub9id1gpKn3lUXKITO4yP2vVl0ij3PeXebaIIsd8Z/Txt51arL097Yeo65e2Z368Y+dU
+	9oXOb29020ePlUy6XfeO/uBw8ZHY01bmkHNgAR8rodf+kb9uY4m67Nlget+TGUfl75Znvup8
+	vEd0trbpdBz4JDMirD5u8+IiMOzf8+mBhH/WWKoTpuIP5JeXXzEm714S4loFLfHCNFr6X80v
+	fn2qBAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SfVDLcRzHfX9P+9WZfi30TadYcxHSnD++59kfzs/JnegoD6dZPxNbamvS
+	zsOU8lw6605TSSVKXUwoRlmUzjV5yDEhylhRKHnK0rZz+u9978/r8/p8//jSuMBGjKNjYhM4
+	ZaxELqTciat1Qr/ps7O7ZCFZr6eirDcdFCq7acZQR+0BgE7fMZOoruADQCmFFRSy6V9RqP/J
+	QQxl1jTx0Jm0IgI9/9pPosfXcyiUa9XhqKA4FUcpBh2JDl3PINGvQSuGsssDkOFGOokGjVU8
+	lFZfT6LS/Foeuvi9HCz0Zqv1L3lsvkHNFhptGGsoPUSxrU+NFJvXGMbW5Jbx2ML0EyR761Mx
+	xWYa97AVlS0EW1nTC9heg98K/lr3udGcPGYHp5wxP8p9y2DXF15cs2hnw77nQAt6fA4DNxoy
+	s6Be24cfBu60gLkBYG13A+ka+MCzuc94ruwFX++/Q7qgtwDmNvU4IYIRwYLmy8CRKSYIvvpx
+	D3fk0cxE2PfuAOZYwJlGAt4z3XVCXswaaHqQTDgyn5kKK4ranb2AOYrBinMert4TNmZ3OBmc
+	CYQDeY+GpPRQ9oXn7LSr9ocpV045b7kxYfB9TRPlQMYMvafz9t7jQKAfJtIPE+n/i/TDRPmA
+	KAU+XJxKIVNIxXHiWC4xWCVRqNSxsmDpdoUBOH9D0OQq0N2fPMMEMBqYAKRx4Wh+xDebTMCP
+	liRpOOX2jUq1nFOZgC9NCL35JeIImYCRSRK4bRwXxyn/TTHabZwWozb1ZT6Kx1LvXzPHVI6V
+	i1fr382J1oZebY3a/PFtfq0uYCDQXsJZ+DrlBovVt5VsDzw9R3vJsnZk3sI8LxDgf5O6HWyn
+	Ty6JJ3b1R7bNfBCpafOwLFq67PEf0adOaG2OCEmgBr6cpDyPpTXEfw2SRu3uzAqGiZ/9fodU
+	tytHccYFGct9H07ZKNZJwi8WBq57olpgFbXAcLX0yKkJluJJuhFtt3beTeyRfm6ZV52UMwKT
+	Y8szpnsr1OnJl2yXPRJWhsX4nxesGj95Wkt55w7cXqYwM1Wa1N/pUy5ozCvWd9kzXyT97K3T
+	5LSN2esRqe02hh5jS+zYYtEVYuLWovokIaHaIhEH4UqV5C/Qe2kdfAMAAA==
+X-CMS-MailID: 20250401074354epcas2p46dd378281a462056317a4e265b54cbbb
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+	boundary="----caUwc_dC5aEw_I.xGS0GMYyTEPKysFRHRKa1IoFNAgiy-i3F=_6aabf_"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250328074801epcas2p2e7ee72ce6b89d36681558ecce65ba71f
+References: <20250319005141.312805-1-quic_wcheng@quicinc.com>
+	<20250319005141.312805-7-quic_wcheng@quicinc.com>
+	<CGME20250328074801epcas2p2e7ee72ce6b89d36681558ecce65ba71f@epcas2p2.samsung.com>
+	<CAGCq0LaDzCVau0jZ8WydSFF7FVAAXuUHaR=3gPcteew6X4kP=g@mail.gmail.com>
+
+------caUwc_dC5aEw_I.xGS0GMYyTEPKysFRHRKa1IoFNAgiy-i3F=_6aabf_
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemg200005.china.huawei.com (7.202.181.32)
+Content-Disposition: inline
+
+On Fri, Mar 28, 2025 at 03:46:00PM +0800, Puma Hsu wrote:
+> On Wed, Mar 19, 2025 at 8:53 AM Wesley Cheng <quic_wcheng@quicinc.com> wrote:
+> >
+> > Allow for the DWC3 host driver to pass along XHCI property that defines
+> > how many interrupters to allocate.  This is in relation for the number of
+> > event rings that can be potentially used by other processors within the
+> > system.
+> >
+> > Acked-by: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+> > Signed-off-by: Wesley Cheng <quic_wcheng@quicinc.com>
+> 
+> Tested-by: Puma Hsu <pumahsu@google.com>
+> 
+
+Tested-by: Daehwan Jung <dh10.jung@samsung.com>
+
+> > ---
+> >  drivers/usb/dwc3/core.c | 12 ++++++++++++
+> >  drivers/usb/dwc3/core.h |  2 ++
+> >  drivers/usb/dwc3/host.c |  3 +++
+> >  3 files changed, 17 insertions(+)
+> >
+> > diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+> > index 66a08b527165..17ae5c13fe36 100644
+> > --- a/drivers/usb/dwc3/core.c
+> > +++ b/drivers/usb/dwc3/core.c
+> > @@ -1699,6 +1699,7 @@ static void dwc3_get_properties(struct dwc3 *dwc)
+> >         u8                      tx_thr_num_pkt_prd = 0;
+> >         u8                      tx_max_burst_prd = 0;
+> >         u8                      tx_fifo_resize_max_num;
+> > +       u16                     num_hc_interrupters;
+> >
+> >         /* default to highest possible threshold */
+> >         lpm_nyet_threshold = 0xf;
+> > @@ -1719,6 +1720,9 @@ static void dwc3_get_properties(struct dwc3 *dwc)
+> >          */
+> >         tx_fifo_resize_max_num = 6;
+> >
+> > +       /* default to a single XHCI interrupter */
+> > +       num_hc_interrupters = 1;
+> > +
+> >         dwc->maximum_speed = usb_get_maximum_speed(dev);
+> >         dwc->max_ssp_rate = usb_get_maximum_ssp_rate(dev);
+> >         dwc->dr_mode = usb_get_dr_mode(dev);
+> > @@ -1765,6 +1769,12 @@ static void dwc3_get_properties(struct dwc3 *dwc)
+> >                                 &tx_thr_num_pkt_prd);
+> >         device_property_read_u8(dev, "snps,tx-max-burst-prd",
+> >                                 &tx_max_burst_prd);
+> > +       device_property_read_u16(dev, "num-hc-interrupters",
+> > +                                &num_hc_interrupters);
+> > +       /* DWC3 core allowed to have a max of 8 interrupters */
+> > +       if (num_hc_interrupters > 8)
+> > +               num_hc_interrupters = 8;
+> > +
+> >         dwc->do_fifo_resize = device_property_read_bool(dev,
+> >                                                         "tx-fifo-resize");
+> >         if (dwc->do_fifo_resize)
+> > @@ -1851,6 +1861,8 @@ static void dwc3_get_properties(struct dwc3 *dwc)
+> >         dwc->tx_max_burst_prd = tx_max_burst_prd;
+> >
+> >         dwc->tx_fifo_resize_max_num = tx_fifo_resize_max_num;
+> > +
+> > +       dwc->num_hc_interrupters = num_hc_interrupters;
+> >  }
+> >
+> >  /* check whether the core supports IMOD */
+> > diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
+> > index aaa39e663f60..fbe83914d9f9 100644
+> > --- a/drivers/usb/dwc3/core.h
+> > +++ b/drivers/usb/dwc3/core.h
+> > @@ -1083,6 +1083,7 @@ struct dwc3_scratchpad_array {
+> >   * @tx_max_burst_prd: max periodic ESS transmit burst size
+> >   * @tx_fifo_resize_max_num: max number of fifos allocated during txfifo resize
+> >   * @clear_stall_protocol: endpoint number that requires a delayed status phase
+> > + * @num_hc_interrupters: number of host controller interrupters
+> >   * @hsphy_interface: "utmi" or "ulpi"
+> >   * @connected: true when we're connected to a host, false otherwise
+> >   * @softconnect: true when gadget connect is called, false when disconnect runs
+> > @@ -1330,6 +1331,7 @@ struct dwc3 {
+> >         u8                      tx_max_burst_prd;
+> >         u8                      tx_fifo_resize_max_num;
+> >         u8                      clear_stall_protocol;
+> > +       u16                     num_hc_interrupters;
+> >
+> >         const char              *hsphy_interface;
+> >
+> > diff --git a/drivers/usb/dwc3/host.c b/drivers/usb/dwc3/host.c
+> > index b48e108fc8fe..1c513bf8002e 100644
+> > --- a/drivers/usb/dwc3/host.c
+> > +++ b/drivers/usb/dwc3/host.c
+> > @@ -182,6 +182,9 @@ int dwc3_host_init(struct dwc3 *dwc)
+> >         if (DWC3_VER_IS_WITHIN(DWC3, ANY, 300A))
+> >                 props[prop_idx++] = PROPERTY_ENTRY_BOOL("quirk-broken-port-ped");
+> >
+> > +       props[prop_idx++] = PROPERTY_ENTRY_U16("num-hc-interrupters",
+> > +                                              dwc->num_hc_interrupters);
+> > +
+> >         if (prop_idx) {
+> >                 ret = device_create_managed_software_node(&xhci->dev, props, NULL);
+> >                 if (ret) {
+> >
+> 
+> 
+
+------caUwc_dC5aEw_I.xGS0GMYyTEPKysFRHRKa1IoFNAgiy-i3F=_6aabf_
+Content-Type: text/plain; charset="utf-8"
 
 
-在 2025/4/1 14:57, Magnus Karlsson 写道:
-> On Tue, 1 Apr 2025 at 04:36, Wang Liang <wangliang74@huawei.com> wrote:
->>
->> 在 2025/4/1 6:03, Stanislav Fomichev 写道:
->>> On 03/31, Stanislav Fomichev wrote:
->>>> On 03/29, Wang Liang wrote:
->>>>> The tx_ring_empty_descs count may be incorrect, when set the XDP_TX_RING
->>>>> option but do not reserve tx ring. Because xsk_poll() try to wakeup the
->>>>> driver by calling xsk_generic_xmit() for non-zero-copy mode. So the
->>>>> tx_ring_empty_descs count increases once the xsk_poll()is called:
->>>>>
->>>>>     xsk_poll
->>>>>       xsk_generic_xmit
->>>>>         __xsk_generic_xmit
->>>>>           xskq_cons_peek_desc
->>>>>             xskq_cons_read_desc
->>>>>               q->queue_empty_descs++;
-> Sorry, but I do not understand how to reproduce this error. So you
-> first issue a setsockopt with the XDP_TX_RING option and then you do
-> not "reserve tx ring". What does that last "not reserve tx ring" mean?
-> No mmap() of that ring, or something else? I guess you have bound the
-> socket with a bind()? Some pseudo code on how to reproduce this would
-> be helpful. Just want to understand so I can help. Thank you.
-Sorry, the last email is garbled, and send again.
-
-Ok. Some pseudo code like below:
-
-     fd = socket(AF_XDP, SOCK_RAW, 0);
-     setsockopt(fd, SOL_XDP, XDP_UMEM_REG, &mr, sizeof(mr));
-
-     setsockopt(fd, SOL_XDP, XDP_UMEM_FILL_RING, &fill_size, 
-sizeof(fill_size));
-     setsockopt(fd, SOL_XDP, XDP_UMEM_COMPLETION_RING, &comp_size, 
-sizeof(comp_size));
-     mmap(NULL, off.fr.desc + fill_size * sizeof(__u64), ..., 
-XDP_UMEM_PGOFF_FILL_RING);
-     mmap(NULL, off.cr.desc + comp_size * sizeof(__u64), ..., 
-XDP_UMEM_PGOFF_COMPLETION_RING);
-
-     setsockopt(fd, SOL_XDP, XDP_RX_RING, &rx_size, sizeof(rx_size));
-     setsockopt(fd, SOL_XDP, XDP_TX_RING, &tx_size, sizeof(tx_size));
-     mmap(NULL, off.rx.desc + rx_size * sizeof(struct xdp_desc), ..., 
-XDP_PGOFF_RX_RING);
-     mmap(NULL, off.tx.desc + tx_size * sizeof(struct xdp_desc), ..., 
-XDP_PGOFF_TX_RING);
-
-     bind(fd, (struct sockaddr *)&sxdp, sizeof(sxdp));
-     bpf_map_update_elem(xsk_map_fd, &queue_id, &fd, 0);
-
-     while(!global_exit) {
-         poll(fds, 1, -1);
-         handle_receive_packets(...);
-     }
-
-The xsk is created success, and xs->tx is initialized.
-
-The "not reserve tx ring" means user app do not update tx ring producer.
-Like:
-
-     xsk_ring_prod__reserve(tx, 1, &tx_idx);
-     xsk_ring_prod__tx_desc(tx, tx_idx)->addr = frame;
-     xsk_ring_prod__tx_desc(tx, tx_idx)->len = pkg_length;
-     xsk_ring_prod__submit(tx, 1);
-
-These functions (xsk_ring_prod__reserve, etc.) is provided by libxdp.
-
-The tx->producer is not updated, so the xs->tx->cached_cons and
-xs->tx->cached_prod are always zero.
-
-When receive packets and user app call poll(), xsk_generic_xmit() will be
-triggered by xsk_poll(), leading to this issue.
->>>>> To avoid this count error, add check for tx descs before send msg in poll.
->>>>>
->>>>> Fixes: df551058f7a3 ("xsk: Fix crash in poll when device does not support ndo_xsk_wakeup")
->>>>> Signed-off-by: Wang Liang <wangliang74@huawei.com>
->>>> Acked-by: Stanislav Fomichev <sdf@fomichev.me>
->>> Hmm, wait, I stumbled upon xskq_has_descs again and it looks only at
->>> cached prod/cons. How is it supposed to work when the actual tx
->>> descriptor is posted? Is there anything besides xskq_cons_peek_desc from
->>> __xsk_generic_xmit that refreshes cached_prod?
->>
->> Yes, you are right!
->>
->> How about using xskq_cons_nb_entries() to check free descriptors?
->>
->> Like this:
->>
->>
->> diff --git a/net/xdp/xsk.c b/net/xdp/xsk.c
->> index e5d104ce7b82..babb7928d335 100644
->> --- a/net/xdp/xsk.c
->> +++ b/net/xdp/xsk.c
->> @@ -993,7 +993,7 @@ static __poll_t xsk_poll(struct file *file, struct
->> socket *sock,
->>           if (pool->cached_need_wakeup) {
->>                   if (xs->zc)
->>                           xsk_wakeup(xs, pool->cached_need_wakeup);
->> -               else if (xs->tx)
->> +               else if (xs->tx && xskq_cons_nb_entries(xs->tx, 1))
->>                           /* Poll needs to drive Tx also in copy mode */
->>                           xsk_generic_xmit(sk);
->>           }
->>
->>
+------caUwc_dC5aEw_I.xGS0GMYyTEPKysFRHRKa1IoFNAgiy-i3F=_6aabf_--
