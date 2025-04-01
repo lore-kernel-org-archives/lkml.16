@@ -1,79 +1,148 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+Received: from fout-b5-smtp.messagingengine.com (fout-b5-smtp.messagingengine.com [202.12.124.148])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FD9F1E8329;
-	Tue,  1 Apr 2025 09:29:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A6CC2AEFE;
+	Tue,  1 Apr 2025 09:31:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.148
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743499764; cv=none; b=H5JPboLPLM+7oGx/V02be5pqqd0nhWzIplq2lODUR8l5KB1vZMc2M6rkepKoNEWSZoFvMPUKGOqZM9RYc4P/DDlPvrVWhKbHzdBUbdsrBew8zScZZ6vYnA9IZDcgGlCC4lMYN8VByzPxGRNYUyNhwlJdq0z8Anr2JzM/VHJllXg=
+	t=1743499903; cv=none; b=I76yoFQpECqcqaev9ELla1x0IqHiCBpJERhmOPkaWhtlhKYXQomEXXkuLhKyaKXMS91e+uBDT5hpa1M9X6EFTv8Ez5N3+vkyul6qx2x9M0GROpRo1iaDqT3OgzH2AQbdn7LzNS9htGy0JHpjfWdtG1OWRY3Q1SKPRNLOD2HUb7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743499764; c=relaxed/simple;
-	bh=Qj/or2Q04KTYGRZ5J888CDL0Vg3escwFqeWvt4Cko3E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=scHdFJgULbqS5J4IwTXfjRiesMfwp7hQtwQmo66JxrJ72ZQcsizE6lncZOrAg3Nn/dPgbfYCIoLLlnhB/3pySHxRt8Br1JfkKo1aahd6dojZYxLcrUrHtuu8oJPU2yubXnVh2aRo2/HL3781fL05Zqszc8DHBitYM9OJafq9juE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=XCi+bjs0; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1743499903; c=relaxed/simple;
+	bh=jgYjzSXiFeavvI5uH2ljfh8Oel3js0wYnlAOFC3ySJo=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=Ovo1Biv8LSFDT8ChWpxWZGQOkvEyZJSWI2FNnG2feyKf4nOCnzAU1xAfZ07ekL2sPldRj+7cXf/umSlG/hRlZfEB0iLvJV4EW0wOYRIC06OeC0xaL345o22q69xN0iCcVvlFPJ5x+rVlSvDS1Xg3qLpwLqQROyUezMHciZWdDmw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=lDte6dqE; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=V22fAY53; arc=none smtp.client-ip=202.12.124.148
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="XCi+bjs0"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 232E4432BB;
-	Tue,  1 Apr 2025 09:29:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1743499759;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=avzwe/WKgAbUoML1SJxa9bofRpw84w3MBJ+tnYJfR3Y=;
-	b=XCi+bjs0BWxvuQ40hNsMrAQ85Ad65NPwcxwG/ImqODzd8CfpgLywYRKK7TVpCQfYqSGuXy
-	ptosRr39u5zx0BuyhH8a6717ubXjDgZ5aDaShR4PsCC50diZoQTcPDqEq7jBGNa17f1AjW
-	kuyWd0WiPzFQW+DYAmUN3vxmZCyGT3BlE4NLApFa07v0NDPskVCd2RJ2DFNBDNsKfK78/4
-	Sr94ZiooaR1b7dtBBvBzzOKqGrOKZaQo0l6ELK/5CWPJmiB2dUdMHoIl96aQDhC+LwD/MA
-	APvYi83h/+Zbmbx81WFCCOYQQCz9Yn8P3p7UgmDZ9CvDzlqaOCcC1PJvMTfuHQ==
-Date: Tue, 1 Apr 2025 11:29:18 +0200
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-To: linux-rtc@vger.kernel.org,
-	"A. Sverdlin" <alexander.sverdlin@siemens.com>
-Cc: Lukas Stockmann <lukas.stockmann@siemens.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] rtc: pcf85063: do a SW reset if POR failed
-Message-ID: <174349973787.1865724.9911990020381072512.b4-ty@bootlin.com>
-References: <20250120093451.30778-1-alexander.sverdlin@siemens.com>
+	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="lDte6dqE";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="V22fAY53"
+Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
+	by mailfout.stl.internal (Postfix) with ESMTP id B21871140099;
+	Tue,  1 Apr 2025 05:31:39 -0400 (EDT)
+Received: from phl-imap-12 ([10.202.2.86])
+  by phl-compute-02.internal (MEProxy); Tue, 01 Apr 2025 05:31:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1743499899;
+	 x=1743586299; bh=26kfGnH2Kam8l8xczFEl8FkUmZLoeycEawM0qxbDrrQ=; b=
+	lDte6dqEaKhiXV0GQB4jdq388VWaTiXgYA+enf1NrgNXR/afXU3QPaok+s2QZq0E
+	rByr8dpL3k0343fCVF1cLiYPgIILKmMe+GJisMlt6IbC5jks/dSbAF8EnBDmzkcD
+	RsMjHFvWLIV/O2zs9CQqPPbQV1GUYRZdlzXbktefszZAXgBFvc7JdAtEK529Zf1y
+	9ZjGiDJH/bdoZAhhxBJD81VAhzvySqwSzTA3iXK2SEaBFltuS7Bzhlk70A+ByY4v
+	CgEPwJk+tjRh3YEKOvFwNUuoSfLhd7QtOEGBPNSwP01Y+XYe/7HtYj78j6i+uVQ3
+	ESculMzgiyBB327DdsvtFg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1743499899; x=
+	1743586299; bh=26kfGnH2Kam8l8xczFEl8FkUmZLoeycEawM0qxbDrrQ=; b=V
+	22fAY53qAtNJ51n08velihowB8lDUYILoef72sobNhVMrg+K79zc58XCXOCbRMsi
+	YeSX9EXQTBlwNluoG1FvWOSGzVyG97nuz35e5DAElYbt5UjA92ABNDvvn9Kf/pem
+	hd1hJOgVYyuyYU0ZyBfUHXKNy/VKzwsfmSH0bSuNNiT4tydc0/FJEuYQw3NlAeIm
+	K32BI7E9Zp588HJog1l8AJ4yzCTru5QNdx2hbV9p0luYTCstz46mzRDWQqqRMgbU
+	AifO0H/yrEgng1o9vsu6e4KssIBobzOYGIRQJfIdZw2N4/AV6qaKXICPJfO702ZH
+	zFsynNRzXEeOPM64v7iKQ==
+X-ME-Sender: <xms:erLrZxJy_3ycICMYvWA0SbTJEMz-6Y34RrZR48rG8tthqpLQIZC6bA>
+    <xme:erLrZ9LZzcVBUhsCnVEAPiESEadIWSrq3sELP2srRfcYRa3uEd8E-_q-DHD42rrW7
+    WYxSMaYwXbDSxl_SXU>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddukedvgeegucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtqhertder
+    tdejnecuhfhrohhmpedflfhirgiguhhnucgjrghnghdfuceojhhirgiguhhnrdihrghngh
+    esfhhlhihgohgrthdrtghomheqnecuggftrfgrthhtvghrnhepjeehfeduvddtgffgvdff
+    keethefhlefgvdevvdekuefffeekheehgeevhfevteejnecuvehluhhsthgvrhfuihiivg
+    eptdenucfrrghrrghmpehmrghilhhfrhhomhepjhhirgiguhhnrdihrghnghesfhhlhihg
+    ohgrthdrtghomhdpnhgspghrtghpthhtohepuddtpdhmohguvgepshhmthhpohhuthdprh
+    gtphhtthhopehtshgsohhgvghnugesrghlphhhrgdrfhhrrghnkhgvnhdruggvpdhrtghp
+    thhtohepphgvthgvrhiisehinhhfrhgruggvrggurdhorhhgpdhrtghpthhtoheptghhvg
+    hnhhhurggtrghisehkvghrnhgvlhdrohhrghdprhgtphhtthhopehfrhgvuggvrhhitges
+    khgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghnnhgrqdhmrghrihgrsehlihhnuhhtrh
+    honhhigidruggvpdhrtghpthhtohepthhglhigsehlihhnuhhtrhhonhhigidruggvpdhr
+    tghpthhtohepmhgrtghrohesohhrtggrmhdrmhgvrdhukhdprhgtphhtthhopehmrghrtg
+    hordgtrhhivhgvlhhlrghrihesshhushgvrdgtohhmpdhrtghpthhtoheplhhinhhugidq
+    khgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:erLrZ5vCUAu-I0p9qAgpi-PDmIwnocSr2raCFhwEW-_BjJB59r1nBQ>
+    <xmx:erLrZyaKAXaSFOVUT_q1FXy8HLt2U-mrCVPleGZNDdwnHfyk27ph8g>
+    <xmx:erLrZ4a6ESz0wt0LqlxlhHxDXBHQ7UPLBCbACSVb5ntI12oApAg3rA>
+    <xmx:erLrZ2Brj1kav_pWJWU7zXHqup0VtbVYR85Z6QqHtFSkQm-yILDHyQ>
+    <xmx:e7LrZ2mAxe_ZFIPCpFOF7w21Gp0nSGXjwzGhxfmpg70GCP7blgmnK-xk>
+Feedback-ID: ifd894703:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 8E34F1C20068; Tue,  1 Apr 2025 05:31:38 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250120093451.30778-1-alexander.sverdlin@siemens.com>
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddukedvgeegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeetlhgvgigrnhgurhgvuceuvghllhhonhhiuceorghlvgigrghnughrvgdrsggvlhhlohhnihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepieejfefhffekjeeuheevueevjedvleevjeetudffheeutdffudefjeduffeuvddtnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmegrugdtfeemgehflegtmeeffeejfhemfheffegunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmegrugdtfeemgehflegtmeeffeejfhemfheffegupdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpegrlhgvgigrnhgurhgvrdgsvghllhhonhhisegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeegpdhrtghpthhtoheplhhinhhugidqrhhttgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegrlhgvgigrnhguvghrrdhsvhgvrhgulhhin
- hesshhivghmvghnshdrtghomhdprhgtphhtthhopehluhhkrghsrdhsthhotghkmhgrnhhnsehsihgvmhgvnhhsrdgtohhmpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-GND-Sasl: alexandre.belloni@bootlin.com
+X-ThreadId: Tf2d86106c131fe8c
+Date: Tue, 01 Apr 2025 10:31:17 +0100
+From: "Jiaxun Yang" <jiaxun.yang@flygoat.com>
+To: "Maciej W. Rozycki" <macro@orcam.me.uk>,
+ "Marco Crivellari" <marco.crivellari@suse.com>
+Cc: "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+ linux-kernel@vger.kernel.org,
+ "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
+ "Frederic Weisbecker" <frederic@kernel.org>,
+ "Anna-Maria Behnsen" <anna-maria@linutronix.de>,
+ "Thomas Gleixner" <tglx@linutronix.de>,
+ "Peter Zijlstra" <peterz@infradead.org>,
+ "Huacai Chen" <chenhuacai@kernel.org>
+Message-Id: <3f7f6ced-98e8-4101-aa83-3692e14222ca@app.fastmail.com>
+In-Reply-To: <alpine.DEB.2.21.2503311348560.47733@angie.orcam.me.uk>
+References: <20250315194002.13778-1-marco.crivellari@suse.com>
+ <20250315194002.13778-2-marco.crivellari@suse.com>
+ <alpine.DEB.2.21.2503211146001.35806@angie.orcam.me.uk>
+ <CAAofZF4gy6WJKLK4TzF5aV7+ca3gob5jVz3XQZyGrTpfnCsn_Q@mail.gmail.com>
+ <alpine.DEB.2.21.2503211747150.35806@angie.orcam.me.uk>
+ <CAAofZF5yaGMG0Kyax+ksfGngQ0T6AxvN5-60SnasQh7=OabaOg@mail.gmail.com>
+ <alpine.DEB.2.21.2503260300290.29685@angie.orcam.me.uk>
+ <alpine.DEB.2.21.2503281345010.47733@angie.orcam.me.uk>
+ <CAAofZF65p+DnH8xA0+sfuZv=VO63Zgv4rQ6frrdEzQYoZ0MaWA@mail.gmail.com>
+ <alpine.DEB.2.21.2503311348560.47733@angie.orcam.me.uk>
+Subject: Re: [PATCH v6 1/1] MIPS: Fix idle VS timer enqueue
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 20 Jan 2025 10:34:49 +0100, A. Sverdlin wrote:
-> Power-on Reset has a documented issue in PCF85063, refer to its datasheet,
-> section "Software reset":
-> 
-> "There is a low probability that some devices will have corruption of the
-> registers after the automatic power-on reset if the device is powered up
-> with a residual VDD level. It is required that the VDD starts at zero volts
-> at power up or upon power cycling to ensure that there is no corruption of
-> the registers. If this is not possible, a reset must be initiated after
-> power-up (i.e. when power is stable) with the software reset command"
-> 
-> [...]
 
-Applied, thanks!
 
-[1/1] rtc: pcf85063: do a SW reset if POR failed
-      https://git.kernel.org/abelloni/c/2b7cbd98495f
+=E5=9C=A82025=E5=B9=B43=E6=9C=8831=E6=97=A5=E6=98=9F=E6=9C=9F=E5=91=A8=E4=
+=B8=80 =E4=B8=8B=E5=8D=889:09=EF=BC=8CMaciej W. Rozycki=E5=86=99=E9=81=93=
+=EF=BC=9A
+[...]
+>
+>  FAOD I have one MIPS32r2 system wired for testing, but that might not=
+ be=20
+> the most interesting configuration to verify as it'll now just use EI/=
+EHB=20
+> to enable interrupts ahead of WAIT.  I could try an R1 kernel instead,=
+ but=20
+> I'm not sure if it can be made to work owing to the differences in the=
+ FPU=20
+> between R1 and R2 for the MIPS32 ISA.  I used to have a MIPS64 (R1) sy=
+stem=20
+> there, but the CPU daughtercard sadly stopped working 3 years ago and =
+I=20
+> wasn't able to repair it, owing to the lack of available spare parts (=
+it's=20
+> most likely a dead CPU).
 
-Best regards,
+I can test on legacy (R1 version) 4Kc RTL simulator if you wish. Is ther=
+e any
+thing specific you want to test? I think I can try interrupt flood and s=
+ee if
+there is any deadlock.
 
--- 
-Alexandre Belloni, co-owner and COO, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+The simulation is painfully slow, so I'd wish to minimize test vector.
+
+Thanks
+
+
+--=20
+- Jiaxun
