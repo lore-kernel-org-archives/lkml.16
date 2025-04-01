@@ -1,63 +1,66 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F4011E47A3;
-	Tue,  1 Apr 2025 21:03:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F4803234;
+	Tue,  1 Apr 2025 21:03:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743541431; cv=none; b=CjM8uULUPoGcQ7L8M0/b9JD2FFlS/2lKNN5MO3HI4ABwhDFWvSH/Z/4+0iy0e781H685R5Csw0+184YDIECKYvZNTZyHvz/i3pdL7mAvDHo46x1v6BM8Ec7ujpt7ipyhBRKRJuyFzzmTavbLGF3VD3nxo6MLRHpVqUxrJz/t5uk=
+	t=1743541431; cv=none; b=SsS2v88X/D4nxcNtaW26sKvJ1fDn2R9Q6yOgnlGFvhNXoqrzZmxUL/biso8I9dyuVtDvXDHEhRSGEEOtE7Spi46Edc6IqwNKHkhDGu+KumCxVt1gv4jDra6mzttPKmyegha/q2pah60Gc68RkPHaAfJ36dieCI7pNwK9dFE0O90=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1743541431; c=relaxed/simple;
-	bh=9dWdtc4zXUg2PP+2Iow0OcXh1hUTtgpvb4c27FypMY4=;
+	bh=RHG5mnA4Pa5+KcHBkPJkMWJyRYQ6/9Uh4ZMdzI7Rs7s=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=ic7/7RVryLO34FE/vBwqPmFaOJEo9SYjTVr2RGXFvr1QuJQx9jV/Qz1W2cRNYtz2+zgjdtHzfCvVsy5AqVEKkji6mwBOJl/P3b7qZXKLdVqmQIgKON8j+Xn7o+f6SMwuabTX7GgiRKV4Q82jsOBuBQ3tig4ezqGIzzUtO+6WwjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qug6wspX; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Ga9wTF1L; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=Lu3JWerUT9ASehn6qXBYjdQINv6Av8n5UeM5gyZa6CP9/d1edSio3v0xT34JXNFuYdz1y5Ak7sDrG5rP7UPop7JuITYKm3oE/16zDy2WH+wvSvq2ehYFjDXv59tmHuqGnjEAuTBXM7tFtdlspLgtBUCjPRMRXOV7C0gKTyLZpx8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DcPJs6he; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=zK+DAdKg; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qug6wspX";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Ga9wTF1L"
-Date: Tue, 01 Apr 2025 21:03:47 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DcPJs6he";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zK+DAdKg"
+Date: Tue, 01 Apr 2025 21:03:45 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1743541427;
+	s=2020; t=1743541426;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=2RnSvnUEqj/lY7Ix4/vg70IOY9aPOGIeQ4ZETy8Zrek=;
-	b=qug6wspXLbG41ofdJFVNM+nxSYmyN0O3cnaWUBi5ghqTZDSo9q9QHTerRfYpnVtzZra1Wz
-	1Q8rEfCUmQ5odsw/10E/Fiecqqyi1Tz7P6l9yyKSkqhRlcorDjUWhOC5eTqTTuZk+ruoPC
-	L9bAv0gTwz9UaNpM+RrVDHGV+OqGLLfP/W4511V4AojMNmzgCU4abGLW3H8UNCZWGkTxYb
-	gr7tgf9JD1fVHtTTUzyt6cNvVNo+0Sy7pZ2Bz02o9nbRAOVYeyzcrhasRIcLjqqLV+4y6Z
-	2/6DFYJXoDeWIX4eaPKk0kx+SFTM+HYxnB66u/kyVU+ypbf3b0rBiY1trtBPRA==
+	bh=FOOtHtZokLDTphOetkEBkEV1ez5v2HtE8u/QzNWrwmY=;
+	b=DcPJs6helbJ/oNtwDX3qUU7wHhgfhwnlNMHw9kLAtwV6eeJfHLFHHMhQfCTMrxgX/e+n2y
+	hTl91mhtlvY46nDZAvtAdCjXrhLfuw6mbtsQQbBeujH6OH3BpmWx4DW1aCbCxJ/lnzWZIb
+	xzM/dL2dIExU2xlzJKMltGx5MnetQTigQwZXmI5OhUoOCcu6SziPXJwy4cizOEfWIBOgUu
+	oX6882DkqJAGLDSshyz7LEHcko4PqaG2VGXpwMRvjPWZFKX3VIoz26EgvA68oIi1i2TtoC
+	nIjPlcU6qnUEIgFfDpnMllvNqb19FotM7NSMy6+/MXNhT31EnIAKgVD1YIvPPQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1743541427;
+	s=2020e; t=1743541426;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=2RnSvnUEqj/lY7Ix4/vg70IOY9aPOGIeQ4ZETy8Zrek=;
-	b=Ga9wTF1LNdb0zn8EfEij2bHkbMq9vG8fkSMIXcbxKIZGY2p0dL6+QX9DCwMgTQkhTHzRCM
-	+cWgZnyeESjhh5BQ==
-From: "tip-bot2 for Baoquan He" <tip-bot2@linutronix.de>
+	bh=FOOtHtZokLDTphOetkEBkEV1ez5v2HtE8u/QzNWrwmY=;
+	b=zK+DAdKgrGUKzm6fEvFjC9XzniRoRGZCEAF5Z9F/8OsrSM1p6v1xMXAB2gDl4DP38McqZ3
+	ApAV0BEm+Cyn+jCg==
+From: "tip-bot2 for Mateusz Guzik" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/mm] x86/mm: Remove the arch-specific p4d_leaf() definition
-Cc: Baoquan He <bhe@redhat.com>, Ingo Molnar <mingo@kernel.org>,
- Oscar Salvador <osalvador@suse.de>, x86@kernel.org,
+Subject:
+ [tip: x86/mm] x86/mm: Stop prefetching current->mm->mmap_lock on page faults
+Cc: Mateusz Guzik <mjguzik@gmail.com>, Ingo Molnar <mingo@kernel.org>,
+ Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Rik van Riel <riel@surriel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20250331081327.256412-7-bhe@redhat.com>
-References: <20250331081327.256412-7-bhe@redhat.com>
+In-Reply-To: <20250401143520.1113572-1-mjguzik@gmail.com>
+References: <20250401143520.1113572-1-mjguzik@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174354142718.14745.14768504678768643905.tip-bot2@tip-bot2>
+Message-ID: <174354142522.14745.424930535016495945.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -67,43 +70,56 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/mm branch of tip:
 
-Commit-ID:     c083eff324edd73eb23f4bd3f40f388a3e7c2cd2
-Gitweb:        https://git.kernel.org/tip/c083eff324edd73eb23f4bd3f40f388a3e7c2cd2
-Author:        Baoquan He <bhe@redhat.com>
-AuthorDate:    Mon, 31 Mar 2025 16:13:26 +08:00
+Commit-ID:     1701771d3069fbee154ca48e882e227fdcfbb583
+Gitweb:        https://git.kernel.org/tip/1701771d3069fbee154ca48e882e227fdcfbb583
+Author:        Mateusz Guzik <mjguzik@gmail.com>
+AuthorDate:    Tue, 01 Apr 2025 16:35:20 +02:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 01 Apr 2025 22:48:51 +02:00
+CommitterDate: Tue, 01 Apr 2025 22:48:56 +02:00
 
-x86/mm: Remove the arch-specific p4d_leaf() definition
+x86/mm: Stop prefetching current->mm->mmap_lock on page faults
 
-P4D huge pages are not supported yet, let's use the generic definition
-in <linux/pgtable.h>.
+The prefetchw() dates back decades and the fundamental notion of doing
+something like this on a lock is shady.
 
-[ mingo: Cleaned up the changelog. ]
+Moreover, for a few years now in the fast path faults are handled with RCU
++ per-vma locking, hopefully not even looking at the lock to begin with.
 
-Signed-off-by: Baoquan He <bhe@redhat.com>
+As such just remove it.
+
+I did not see a point benchmarking this. Given that it is not expected
+to be looked at by default justifies not doing the prefetch.
+
+Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Reviewed-by: Oscar Salvador <osalvador@suse.de>
-Link: https://lore.kernel.org/r/20250331081327.256412-7-bhe@redhat.com
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Rik van Riel <riel@surriel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Link: https://lore.kernel.org/r/20250401143520.1113572-1-mjguzik@gmail.com
 ---
- arch/x86/include/asm/pgtable.h | 7 -------
- 1 file changed, 7 deletions(-)
+ arch/x86/mm/fault.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
-index 5f4fcc0..5ddba36 100644
---- a/arch/x86/include/asm/pgtable.h
-+++ b/arch/x86/include/asm/pgtable.h
-@@ -292,13 +292,6 @@ static inline unsigned long pgd_pfn(pgd_t pgd)
- 	return (pgd_val(pgd) & PTE_PFN_MASK) >> PAGE_SHIFT;
- }
+diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
+index 296d294..697432f 100644
+--- a/arch/x86/mm/fault.c
++++ b/arch/x86/mm/fault.c
+@@ -13,7 +13,6 @@
+ #include <linux/mmiotrace.h>		/* kmmio_handler, ...		*/
+ #include <linux/perf_event.h>		/* perf_sw_event		*/
+ #include <linux/hugetlb.h>		/* hstate_index_to_shift	*/
+-#include <linux/prefetch.h>		/* prefetchw			*/
+ #include <linux/context_tracking.h>	/* exception_enter(), ...	*/
+ #include <linux/uaccess.h>		/* faulthandler_disabled()	*/
+ #include <linux/efi.h>			/* efi_crash_gracefully_on_page_fault()*/
+@@ -1496,8 +1495,6 @@ DEFINE_IDTENTRY_RAW_ERRORCODE(exc_page_fault)
  
--#define p4d_leaf p4d_leaf
--static inline bool p4d_leaf(p4d_t p4d)
--{
--	/* No 512 GiB pages yet */
--	return 0;
--}
+ 	address = cpu_feature_enabled(X86_FEATURE_FRED) ? fred_event_data(regs) : read_cr2();
+ 
+-	prefetchw(&current->mm->mmap_lock);
 -
- #define pte_page(pte)	pfn_to_page(pte_pfn(pte))
- 
- #define pmd_leaf pmd_leaf
+ 	/*
+ 	 * KVM uses #PF vector to deliver 'page not present' events to guests
+ 	 * (asynchronous page fault mechanism). The event happens when a
