@@ -1,190 +1,195 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7160F70820;
-	Tue,  1 Apr 2025 02:06:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D357EACE;
+	Tue,  1 Apr 2025 02:08:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743473183; cv=none; b=u8g3k7Xi1q6VNcnBd3O5Vm3t8Z7t05f4shAmJdOM+63AC0+ALGEALOp31zdBUJTY6n+/KoErXGJyF5tKMaZ6NItJEqOfQKfwY4rRFmcy28fhIrNDiDq5776AkQqeyOLi/qV5u2RJUz253etctmgiwsED4/o/nUj2/rBZwnyriPs=
+	t=1743473293; cv=none; b=M5CVG5yz/fG6KZ3hH4Ckchqc7OEeVedjOPoE1T7IpenGyGSA9G8IQF9Cs6Q7ETjOAOYVv2nrjESqTF2hM+py+Sw3eD2TVKf+Tx/99YFglobzwTsjoIc84e55eQEsMUOlbfMLBRz7PggIv7xskhAWLxmUii4p3DI3VojPXyKQnUw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743473183; c=relaxed/simple;
-	bh=cYPE4hxj2E/+XBZrJpUbI6pIfd/alhO++G3MPN6trQY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Y/b5vYizErpwaoo4UP0N5p/iMaOuHC41Lge5jwoJEVjT/zo5tnrsb3t7eAFpRi+WeMik5DuFE98SFev5u51Cp51YCIBNrWG9h344mRHk9H/IwheO/INHXMv0q8MlJt9fIeGTGZOPrfHzsTHJSarLdY3YZfxbLSWBFrqr8b0YGOk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AqPMWzwl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743473293; c=relaxed/simple;
+	bh=lCssQdZbCquHUtvBNwAYmoP4TXmIpPQYUK8Wv0tAJiY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RZ1I0y7mxJi19hi+66c8He1cyDIudNaWkxKL1EGopjc2NjhiXg6DrV5kyvk9XKZelktqz0GimtCEh+kbqWqdhtnGWzoHRzi0LW/kiOGF06nVxiN6B1DB6jR4Zgy/XxoA5m/WzhcT0Jip5RyY559JPLXJwasF4U+Pl7BbJko3nws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jMF71JTL; arc=none smtp.client-ip=209.85.219.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AqPMWzwl"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 113FAC4CEEB;
-	Tue,  1 Apr 2025 02:06:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743473183;
-	bh=cYPE4hxj2E/+XBZrJpUbI6pIfd/alhO++G3MPN6trQY=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=AqPMWzwlWsUqmZy83x3slIc6sQteWFh83eKySr9JZg6qzB1ouy0uNnggC20Ak5FMo
-	 O44zo+zJokKWYXyNdudv2Bq5l/OMohhp+jqPdyoRSCRPl1yzJHosGdOjYcPaRU3G2a
-	 F6lCnIDzMAIUmF+93vY/beKvHW4ZWesMqnRduM0tAWwtDtQ4xxfreYJ0MmNOIDX3lv
-	 ibrXZc5PnRSwSbFoDfbxK3FufRWGaeJqAeCut2orc2kWG4/qxVTZ3o66jTJ4ROcS4b
-	 +2D/0E///XqJ1jlmFZftXAYkEpt3QFoY8X5D1YzoQx3N+OUOPOZ+WbuIuvlG0z2a0U
-	 Eeg677g9SCClw==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01306C36018;
-	Tue,  1 Apr 2025 02:06:23 +0000 (UTC)
-From: Xianwei Zhao via B4 Relay <devnull+xianwei.zhao.amlogic.com@kernel.org>
-Date: Tue, 01 Apr 2025 10:06:22 +0800
-Subject: [PATCH v2 2/2] dts: arm64: amlogic: add a5 pinctrl node
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jMF71JTL"
+Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6df83fd01cbso24762056d6.2;
+        Mon, 31 Mar 2025 19:08:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743473291; x=1744078091; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ms0+har1C2wQOkI4KlWfLkswK693L/k5CGR6bBU56S4=;
+        b=jMF71JTLjftCdg1qAKo173fCZUSB1GCB9KmL8YbtkYL4oQdy7sFZbCe37qWoelNw44
+         AYWMsnpW4BdjcXiC70OvE/xS4ttYdaxWDt4OdRtLRNFUUDsJVCBCo0hG52N5V4413DYu
+         Yh1ZjIh9uTHI9m6LGOi2fiRiWR3cfXfHHSKOwVGhJmyS+OY1X2vM8HI7O5Zp+SdxEGAu
+         s4cMwX95a/FLN5FlorquBubevT4Jl8RJMMv3xcIC/75lWY+xS/l7vlLr5IQO3bIxGok3
+         8Hsiuwawu9TLNUQ071UJ0KMYlrrPjHCpJYbvWWIzF6nQssaVVUVx1dIEKibG1J8ySxbq
+         BtiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743473291; x=1744078091;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Ms0+har1C2wQOkI4KlWfLkswK693L/k5CGR6bBU56S4=;
+        b=AqMAYvHJiggNzO/VFWd+H6pzRK5Z/tfWljFoIvRLyUxGm1UTDHGCYb/4b82q7H6vu9
+         AJotx5/A9yVu0bDRASsRVfSZvQnBNLJoKVC5e7eecbOpuyB6l76zGhagSZZZHC1Vk2+G
+         hWN5cAzzD2UiFa2NhABWxZUKb/+V2kf/FQgyv2EJXqGQQoL1pFkYMa5DJX16NZpt3v3z
+         yPOi8EkqDL2T1r69QeFDDbP/LV+CtEKbGofpq7e4YpOHC4vHryqGtzDr/bjBWGkvDS4G
+         iTeAQwd2zEJslAL125VEmuLSXenHuHQs/pMD5Yq58sdD80oJwwAvCnT7phFIj81aAgK4
+         nbbw==
+X-Forwarded-Encrypted: i=1; AJvYcCUdpLuS0k2Q73boVKJO4DwIQqCHi06Wcse3oVQMt89pFYPCytwjhjM9DEauvTTYFnAIQMk=@vger.kernel.org, AJvYcCWSVlnEt2S8nhF5q7PKPRaZ4Ucq7POdaeizLi2SUJtaKBlFwuRXoJIs7u5rLHIgoGALV4AypWTr9wYCPiIwYQ==@vger.kernel.org, AJvYcCWiEsEBy0fZd1waMQOPsd/1KmNALiOA7me8D9bcqJd3HFwBYJUBjB9OGjO+g+mbaKzCCYZRoN4PiEmvDJF5KIhsbw==@vger.kernel.org, AJvYcCXXgCQLxt2IJwUzVBp1EqgFGZgDrkVllHx3qj0+XJLc/DVCZ4Ya4ADTFl0aG7LfnA91/Jb0cryv2rgJbxT0@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/6yPRF9fJCJqMmmm86IlLXsc+CHFjXwrs4fGO6/UKaGikqKcK
+	FXADhDiYY9MdMX6EyQWoK7u6h9lcrdvM9Yl97wDc/p0KjY4ySFD9EYv/uHL+hKbn8PO27LiR825
+	9RdO6jRmOZzHkRuIkrfTzcRTOsHM=
+X-Gm-Gg: ASbGncudYgBUrr88ebnw38owqbfYa4opTUO2KGLpt46UzQ/qlYkc25INaK4RSS+mJTK
+	rxUAgSfVtiP2nATAjPGaDWYfX5aI95176unMagKSygHcwEFsdUCwjCW2cFBpz22Q4Z/9qdFcGrJ
+	e6nkN4UftE7baAwmMOjvluAoLsIM0=
+X-Google-Smtp-Source: AGHT+IEwVwo9jlkAbUXTU14Qfh3LA01iPKDDWMjUrm4tnGQHU4i3QsPK8QEDaJfFZ5Z8PEovYhXsWbFiclds5IHQi9M=
+X-Received: by 2002:ad4:4ea8:0:b0:6e8:9a55:824f with SMTP id
+ 6a1803df08f44-6eed5f60fddmr145906786d6.6.1743473290823; Mon, 31 Mar 2025
+ 19:08:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250401-a5-pinctrl-v2-2-a136c1058379@amlogic.com>
-References: <20250401-a5-pinctrl-v2-0-a136c1058379@amlogic.com>
-In-Reply-To: <20250401-a5-pinctrl-v2-0-a136c1058379@amlogic.com>
-To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Neil Armstrong <neil.armstrong@linaro.org>, 
- Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: linux-amlogic@lists.infradead.org, linux-gpio@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, 
- Xianwei Zhao <xianwei.zhao@amlogic.com>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1743473181; l=3211;
- i=xianwei.zhao@amlogic.com; s=20231208; h=from:subject:message-id;
- bh=zTXCd3mjrQB2UAQ+DUxS9Et3VYgrEbPO04Lv0RVd3Dc=;
- b=NexDqmE4GpUbjiTbbLNR2qLQAsmCioHre9r9chGGwjRm9ULldqqOwImf0F8J+gzlrHik+F1CA
- ERHpBOEyZRnBEQE5MIpElVYAw2cvS8U6Z1Z1icqyRl4iW7LJi2o5hdC
-X-Developer-Key: i=xianwei.zhao@amlogic.com; a=ed25519;
- pk=o4fDH8ZXL6xQg5h17eNzRljf6pwZHWWjqcOSsj3dW24=
-X-Endpoint-Received: by B4 Relay for xianwei.zhao@amlogic.com/20231208 with
- auth_id=107
-X-Original-From: Xianwei Zhao <xianwei.zhao@amlogic.com>
-Reply-To: xianwei.zhao@amlogic.com
+References: <20250331121820.455916-1-bhupesh@igalia.com> <20250331121820.455916-2-bhupesh@igalia.com>
+In-Reply-To: <20250331121820.455916-2-bhupesh@igalia.com>
+From: Yafang Shao <laoar.shao@gmail.com>
+Date: Tue, 1 Apr 2025 10:07:34 +0800
+X-Gm-Features: AQ5f1Jogo27TUblm0QChMfxpov615glFLI-myzoObvnllqhLHnsXspUqCVEi74w
+Message-ID: <CALOAHbB51b-reG6+ypr43sBJ-QpQhF39r5WPjuEp5rgabgRmoA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] exec: Dynamically allocate memory to store task's
+ full name
+To: Bhupesh <bhupesh@igalia.com>, Linus Torvalds <torvalds@linux-foundation.org>
+Cc: akpm@linux-foundation.org, kernel-dev@igalia.com, 
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-mm@kvack.org, oliver.sang@intel.com, lkp@intel.com, pmladek@suse.com, 
+	rostedt@goodmis.org, mathieu.desnoyers@efficios.com, arnaldo.melo@gmail.com, 
+	alexei.starovoitov@gmail.com, andrii.nakryiko@gmail.com, 
+	mirq-linux@rere.qmqm.pl, peterz@infradead.org, willy@infradead.org, 
+	david@redhat.com, viro@zeniv.linux.org.uk, keescook@chromium.org, 
+	ebiederm@xmission.com, brauner@kernel.org, jack@suse.cz, mingo@redhat.com, 
+	juri.lelli@redhat.com, bsegall@google.com, mgorman@suse.de, 
+	vschneid@redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+On Mon, Mar 31, 2025 at 8:18=E2=80=AFPM Bhupesh <bhupesh@igalia.com> wrote:
+>
+> Provide a parallel implementation for get_task_comm() called
+> get_task_full_name() which allows the dynamically allocated
+> and filled-in task's full name to be passed to interested
+> users such as 'gdb'.
+>
+> Currently while running 'gdb', the 'task->comm' value of a long
+> task name is truncated due to the limitation of TASK_COMM_LEN.
+>
+> For example using gdb to debug a simple app currently which generate
+> threads with long task names:
+>   # gdb ./threadnames -ex "run info thread" -ex "detach" -ex "quit" > log
+>   # cat log
+>
+>   NameThatIsTooLo
+>
+> This patch does not touch 'TASK_COMM_LEN' at all, i.e.
+> 'TASK_COMM_LEN' and the 16-byte design remains untouched. Which means
+> that all the legacy / existing ABI, continue to work as before using
+> '/proc/$pid/task/$tid/comm'.
+>
+> This patch only adds a parallel, dynamically-allocated
+> 'task->full_name' which can be used by interested users
+> via '/proc/$pid/task/$tid/full_name'.
+>
+> After this change, gdb is able to show full name of the task:
+>   # gdb ./threadnames -ex "run info thread" -ex "detach" -ex "quit" > log
+>   # cat log
+>
+>   NameThatIsTooLongForComm[4662]
+>
+> Signed-off-by: Bhupesh <bhupesh@igalia.com>
+> ---
+>  fs/exec.c             | 21 ++++++++++++++++++---
+>  include/linux/sched.h |  9 +++++++++
+>  2 files changed, 27 insertions(+), 3 deletions(-)
+>
+> diff --git a/fs/exec.c b/fs/exec.c
+> index f45859ad13ac..4219d77a519c 100644
+> --- a/fs/exec.c
+> +++ b/fs/exec.c
+> @@ -1208,6 +1208,9 @@ int begin_new_exec(struct linux_binprm * bprm)
+>  {
+>         struct task_struct *me =3D current;
+>         int retval;
+> +       va_list args;
+> +       char *name;
+> +       const char *fmt;
+>
+>         /* Once we are committed compute the creds */
+>         retval =3D bprm_creds_from_file(bprm);
+> @@ -1348,11 +1351,22 @@ int begin_new_exec(struct linux_binprm * bprm)
+>                  * detecting a concurrent rename and just want a terminat=
+ed name.
+>                  */
+>                 rcu_read_lock();
+> -               __set_task_comm(me, smp_load_acquire(&bprm->file->f_path.=
+dentry->d_name.name),
+> -                               true);
+> +               fmt =3D smp_load_acquire(&bprm->file->f_path.dentry->d_na=
+me.name);
+> +               name =3D kvasprintf(GFP_KERNEL, fmt, args);
+> +               if (!name)
+> +                       return -ENOMEM;
+> +
+> +               me->full_name =3D name;
+> +               __set_task_comm(me, fmt, true);
+>                 rcu_read_unlock();
+>         } else {
+> -               __set_task_comm(me, kbasename(bprm->filename), true);
+> +               fmt =3D kbasename(bprm->filename);
+> +               name =3D kvasprintf(GFP_KERNEL, fmt, args);
+> +               if (!name)
+> +                       return -ENOMEM;
+> +
+> +               me->full_name =3D name;
+> +               __set_task_comm(me, fmt, true);
+>         }
+>
+>         /* An exec changes our domain. We are no longer part of the threa=
+d
+> @@ -1399,6 +1413,7 @@ int begin_new_exec(struct linux_binprm * bprm)
+>         return 0;
+>
+>  out_unlock:
+> +       kfree(me->full_name);
+>         up_write(&me->signal->exec_update_lock);
+>         if (!bprm->cred)
+>                 mutex_unlock(&me->signal->cred_guard_mutex);
+> diff --git a/include/linux/sched.h b/include/linux/sched.h
+> index 56ddeb37b5cd..053b52606652 100644
+> --- a/include/linux/sched.h
+> +++ b/include/linux/sched.h
+> @@ -1166,6 +1166,9 @@ struct task_struct {
+>          */
+>         char                            comm[TASK_COMM_LEN];
+>
+> +       /* To store the full name if task comm is truncated. */
+> +       char                            *full_name;
+> +
 
-Add pinctrl device to support Amlogic A5.
+Adding another field to store the task name isn=E2=80=99t ideal. What about
+combining them into a single field, as Linus suggested [0]?
 
-Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
----
- arch/arm64/boot/dts/amlogic/amlogic-a5.dtsi | 90 +++++++++++++++++++++++++++++
- 1 file changed, 90 insertions(+)
+[0]. https://lore.kernel.org/all/CAHk-=3DwjAmmHUg6vho1KjzQi2=3DpsR30+CogFd4=
+aXrThr2gsiS4g@mail.gmail.com/
 
-diff --git a/arch/arm64/boot/dts/amlogic/amlogic-a5.dtsi b/arch/arm64/boot/dts/amlogic/amlogic-a5.dtsi
-index 32ed1776891b..844302db2133 100644
---- a/arch/arm64/boot/dts/amlogic/amlogic-a5.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/amlogic-a5.dtsi
-@@ -4,6 +4,7 @@
-  */
- 
- #include "amlogic-a4-common.dtsi"
-+#include <dt-bindings/pinctrl/amlogic,pinctrl.h>
- #include <dt-bindings/power/amlogic,a5-pwrc.h>
- / {
- 	cpus {
-@@ -50,6 +51,95 @@ pwrc: power-controller {
- };
- 
- &apb {
-+	periphs_pinctrl: pinctrl@4000 {
-+		compatible = "amlogic,pinctrl-a5",
-+			     "amlogic,pinctrl-a4";
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges = <0x0 0x0 0x0 0x4000 0x0 0x300>;
-+
-+		gpioz: gpio@c0 {
-+			reg = <0x0 0xc0 0x0 0x40>,
-+			      <0x0 0x18 0x0 0x8>;
-+			reg-names = "gpio", "mux";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_Z<<8) 16>;
-+		};
-+
-+		gpiox: gpio@100 {
-+			reg = <0x0 0x100 0x0 0x40>,
-+			      <0x0 0xc   0x0 0xc>;
-+			reg-names = "gpio", "mux";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_X<<8) 20>;
-+		};
-+
-+		gpiot: gpio@140 {
-+			reg = <0x0 0x140 0x0 0x40>,
-+			      <0x0 0x2c  0x0 0x8>;
-+			reg-names = "gpio", "mux";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_T<<8) 14>;
-+		};
-+
-+		gpiod: gpio@180 {
-+			reg = <0x0 0x180 0x0 0x40>,
-+			      <0x0 0x40  0x0 0x8>;
-+			reg-names = "gpio", "mux";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_D<<8) 16>;
-+		};
-+
-+		gpioe: gpio@1c0 {
-+			reg = <0x0 0x1c0 0x0 0x40>,
-+			      <0x0 0x48  0x0 0x4>;
-+			reg-names = "gpio", "mux";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_E<<8) 2>;
-+		};
-+
-+		gpioc: gpio@200 {
-+			reg = <0x0 0x200 0x0 0x40>,
-+			      <0x0 0x24  0x0 0x8>;
-+			reg-names = "gpio", "mux";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_C<<8) 11>;
-+		};
-+
-+		gpiob: gpio@240 {
-+			reg = <0x0 0x240 0x0 0x40>,
-+			      <0x0 0x0   0x0 0x8>;
-+			reg-names = "gpio", "mux";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_B<<8) 14>;
-+		};
-+
-+		gpioh: gpio@280 {
-+			reg = <0x0 0x280 0x0 0x40>,
-+			      <0x0 0x4c  0x0 0x4>;
-+			reg-names = "gpio", "mux";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_H<<8) 5>;
-+		};
-+
-+		gpio_test_n: gpio@2c0 {
-+			reg = <0x0 0x2c0 0x0 0x40>,
-+			      <0x0 0x3c  0x0 0x4>;
-+			reg-names = "gpio", "mux";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_TEST_N<<8) 1>;
-+		};
-+	};
-+
- 	gpio_intc: interrupt-controller@4080 {
- 		compatible = "amlogic,a5-gpio-intc",
- 			     "amlogic,meson-gpio-intc";
-
--- 
-2.37.1
-
-
+--=20
+Regards
+Yafang
