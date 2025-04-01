@@ -1,206 +1,136 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB1E71F152F
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 11:20:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4738D1F09A1;
+	Tue,  1 Apr 2025 11:20:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743506441; cv=none; b=rdifAJZ8vhdtS6yJz6LEVQXsjqacXeXx/DF66cTF3ortG/ZBpbqEsRU7uVggQxQjqXCutuIbkI+JzRwCYM5/KwBIl8KsV2nww27zEdfk72NoLYfk9YDVjZSc3Ig6KxxowcrNh1MKQZ34JlKuqdgvZLBsVzxaLOjfSR6qCJqysNI=
+	t=1743506457; cv=none; b=my0LL14LU09E5RE1jkWsAs6pcLbDD6cARSz0RF+ymNWWOaKrOY3GwnDeXS/4Wt1dq7w1IpV+bRTUa3f1emtF7TtY9f/Bp5e5wT89p6KXmUzO4+Nd7VtyerPkf+9ofW23jmOv0i6EdGX2huj8yb7zwtDTEZ9wxOoDvH2wMdiKurQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743506441; c=relaxed/simple;
-	bh=4z0yWuovovzT4P0Rx5n7A0VZ8Le5ZD/+97cst0pdcGU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O4+XsmpPVv4Oje+bynJYUodkdTq7lMRhcuAowQ8Ghm5ez1JCDFofn6d2BUTu2Pim7sDpQTrhpTV67AG2x4T0k/Ly8k3mtvqb96i9KvRU8NMSi5RpM09kL+1sFnhGpi2xOcfTUck6rUsO/cnqnBUK5OJJXvywuwDG6oi7taInysE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=LQCzv7lw; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=+zx+wweq; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=LQCzv7lw; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=+zx+wweq; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1743506457; c=relaxed/simple;
+	bh=eiGtsQFzAxF57nNUAs9/1Tr4sRdk24379Nfq9qrZFco=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YFbZjz0rLDujkf9EklyII8YdXl39WyMjj5lWakprNh1DRPj1+qyLTrWiAQ1YZBUouesUwgRxrsAeUMWStPfY/shJmRiPtwo+unEliIr3YL3do2bySOVH3iUbs/sPDXqTLD9rdBNIwh0jfXU6tNoJd+hDz6od7k8WAjga53zGpS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F9KT85Q6; arc=none smtp.client-ip=209.85.219.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="LQCzv7lw";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="+zx+wweq";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="LQCzv7lw";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="+zx+wweq"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id CF393211E8;
-	Tue,  1 Apr 2025 11:20:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1743506437; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9Qm5ZIzmgsTH99+u6cTQsdFe97BWstocOSAgLAVKl+0=;
-	b=LQCzv7lw82pO8LAxuMgGur/XBrzsFQciXqJfRsQ/W2/02rA+j3khv6i2XoaYJKItUoBq1O
-	z2nFygqtd2f8f5K87Cc/UX3f0ricKqsk+XIkh7KwpXMLype29Q+FrpPZUk6tQda8eu3zl/
-	EXN8nW0/IhKReCadq4AYnt7JdVyS+vY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1743506437;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9Qm5ZIzmgsTH99+u6cTQsdFe97BWstocOSAgLAVKl+0=;
-	b=+zx+wweqdmixvCE8O9nYTmgqZMsAcc+QjZJy85pfSYKYmRvDaXx2fx3llWMYBTAyIr7fbE
-	d686O1ZWJZOsXoBw==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1743506437; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9Qm5ZIzmgsTH99+u6cTQsdFe97BWstocOSAgLAVKl+0=;
-	b=LQCzv7lw82pO8LAxuMgGur/XBrzsFQciXqJfRsQ/W2/02rA+j3khv6i2XoaYJKItUoBq1O
-	z2nFygqtd2f8f5K87Cc/UX3f0ricKqsk+XIkh7KwpXMLype29Q+FrpPZUk6tQda8eu3zl/
-	EXN8nW0/IhKReCadq4AYnt7JdVyS+vY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1743506437;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9Qm5ZIzmgsTH99+u6cTQsdFe97BWstocOSAgLAVKl+0=;
-	b=+zx+wweqdmixvCE8O9nYTmgqZMsAcc+QjZJy85pfSYKYmRvDaXx2fx3llWMYBTAyIr7fbE
-	d686O1ZWJZOsXoBw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C18DB13691;
-	Tue,  1 Apr 2025 11:20:37 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id kYs7LwXM62d9JQAAD6G6ig
-	(envelope-from <jack@suse.cz>); Tue, 01 Apr 2025 11:20:37 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 76DF4A07E6; Tue,  1 Apr 2025 13:20:37 +0200 (CEST)
-Date: Tue, 1 Apr 2025 13:20:37 +0200
-From: Jan Kara <jack@suse.cz>
-To: James Bottomley <James.Bottomley@hansenpartnership.com>
-Cc: Christian Brauner <brauner@kernel.org>, jack@suse.cz, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, mcgrof@kernel.org, 
-	hch@infradead.org, david@fromorbit.com, rafael@kernel.org, djwong@kernel.org, 
-	pavel@kernel.org, peterz@infradead.org, mingo@redhat.com, will@kernel.org, 
-	boqun.feng@gmail.com
-Subject: Re: [RFC PATCH 1/4] locking/percpu-rwsem: add freezable alternative
- to down_read
-Message-ID: <3bfnds6nsvxy5jfbcoy62uva6kebhacjuavqxvelbfs6ut6rqf@m4pzsudbqg6l>
-References: <20250327140613.25178-1-James.Bottomley@HansenPartnership.com>
- <20250327140613.25178-2-James.Bottomley@HansenPartnership.com>
- <77774eb380e343976de3de681204e2c7f3ab1926.camel@HansenPartnership.com>
- <20250401-anwalt-dazugeben-18d8c3efd1fd@brauner>
- <f6bdfa23b9f54055f8a539ce396f1134b0921417.camel@HansenPartnership.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F9KT85Q6"
+Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-6e8f254b875so50166026d6.1;
+        Tue, 01 Apr 2025 04:20:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743506455; x=1744111255; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=zyYvK18sL7Sms9HOD6wLOj02iesaKqNDYnihADT8IVI=;
+        b=F9KT85Q6V+sNoeUC3pzzb5pRvIueA2JYa15FUzTnKXwgG5qANt3Wh/JGheAYECvRbN
+         qPCPht0dXWwFkCWwAoEEz0wRVB1a3ahomS7NOZck2q9b5fTPy6GW+PliQBQ3zoi9LBr4
+         lUl8bgMMyY91PaQLQEtlvokkxCH9sXzlibl8r7Heyb3RUp7cPInh0S9xuKv7go1iRrUx
+         VH2eHDFEWidKIz1r+Kvw1UGi+jkzyrIMoGhjvOzafQ5Wt/BjAW7EvOf5EZc5BB59h2gH
+         i8Vzs2rsuZrvsnob/13jFY9mGQnRlHWDcG831B+ACF3HmpNm9D0nC70kmankjG7pBVoC
+         fn7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743506455; x=1744111255;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zyYvK18sL7Sms9HOD6wLOj02iesaKqNDYnihADT8IVI=;
+        b=R+adh4t+bbH5GGiHHy0qXvt7j3zROeGgq7ufi1xlpF9UtPFszSp0ZReojdpwrYeCUx
+         UX2QDk+vzJICqjqR74iwCclxVsHF6dYeKv9JVLdsKcIlcYpwqxVgAk5MHV8MihibXpF3
+         Jo/qn7YaEGDp1bBiKse/UciZNdmqaxpuDRLmFtgzrOfOiCOvss5drx44yfG1byEjiOue
+         SdLcDMUEdILAe3ZTwiO6V5giB+ZyP9YUZWNpL7mnXKv3flcq2yRtGul9Uh2JaZAl9NIv
+         mX1m3UUIiUjFJ4HC8ugTB3888FZ8gp1vIhznOzyoaTenZdH9Q1UH9WD70IKYmld3NF6T
+         DfaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU6Ivgy6EwfCmW+GyPAW40EyJjRThLU9MHhhrvw3j2b8s4a2jlnqaBveeckfmD0hUsMZsQ56JscWMe0OHlM@vger.kernel.org, AJvYcCWCSX9jqpUFDUs8kqHuqaQLPG5JEW6/l+SgHCLlTC+CsMljLe5NRKzBYeUcKVJHN2utvSmzLFmWydsf@vger.kernel.org, AJvYcCXsvcfVsFJE1yqV0lHfw8kEePpLMmp/dECiFCTOcFeMx8v56Y2hQgGeyxGtwbV0TG76hcM45zGYD0YGZht8@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw/vCzV+Ka8CQukFLy/j63bpn2KlYMV+W0Xk/qod8GvsfFVey6B
+	JLTW8/ih3MD3VbIZhvQrLp0VL+z+jmoP0vxz5wvN5mOQznUOtZeTk3fhtli5lOZTIek3EH3NZyV
+	TNaCwx1K9uT7CVJDf2tLj6OeDR/s=
+X-Gm-Gg: ASbGncsn4lkNqpuz1cHK6hsHyQ+MHjejtEdjghdJfMOXyJwh9jPIWv/NbuKMLHH/hc9
+	uR/TxZcR/427TV2Z9UrqJK1C6/MH1wpu7Pxzi5eOw1C9zzEfDOcTEDd7yL1cmfJrj+CkM1QEryp
+	gd8/NR1mo+jP06PnqKpNXv8yMj
+X-Google-Smtp-Source: AGHT+IGVM4NtvvnMjwPf4ND9jwxgAPzQn9QkZGxSalUZQi1yrmLRglBW7qsxWQ8Z6yPKdl0LpoUdx6JaHEwNgvl0CuI=
+X-Received: by 2002:a05:6214:29e3:b0:6e6:6aa5:2326 with SMTP id
+ 6a1803df08f44-6eed60a792fmr158786426d6.24.1743506455223; Tue, 01 Apr 2025
+ 04:20:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <f6bdfa23b9f54055f8a539ce396f1134b0921417.camel@HansenPartnership.com>
-X-Spam-Score: -2.30
-X-Spamd-Result: default: False [-2.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	RCVD_COUNT_THREE(0.00)[3];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[15];
-	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FREEMAIL_CC(0.00)[kernel.org,suse.cz,vger.kernel.org,infradead.org,fromorbit.com,redhat.com,gmail.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
-X-Spam-Flag: NO
-X-Spam-Level: 
+References: <20250114123935.18346-1-ansuelsmth@gmail.com> <20250114123935.18346-4-ansuelsmth@gmail.com>
+ <Z-u67D7xl2_SR-hg@gondor.apana.org.au> <CA+_ehUzZruhT7Bko2Xm2kyOaZxUPA4vNLQhq_5V30gfjgmfcng@mail.gmail.com>
+ <Z-vGkbmX2PQ_gt7Z@gondor.apana.org.au>
+In-Reply-To: <Z-vGkbmX2PQ_gt7Z@gondor.apana.org.au>
+From: "Christian Marangi (Ansuel)" <ansuelsmth@gmail.com>
+Date: Tue, 1 Apr 2025 13:20:44 +0200
+X-Gm-Features: AQ5f1JrP9iCrauxAuRFhrzBH1SFUJTtI1qP7DuS86ze821f3jbX2JZfIFOSBW1M
+Message-ID: <CA+_ehUxCD1+CUJ_6rXa8ra=tZ1Nr1LCZVYQ0X9RhDndJ33F=ug@mail.gmail.com>
+Subject: Re: [PATCH v11 3/3] crypto: Add Inside Secure SafeXcel EIP-93 crypto
+ engine support
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: "David S. Miller" <davem@davemloft.net>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Antoine Tenart <atenart@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, linux-crypto@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	llvm@lists.linux.dev, upstream@airoha.com, 
+	Richard van Schagen <vschagen@icloud.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon 31-03-25 21:13:20, James Bottomley wrote:
-> On Tue, 2025-04-01 at 01:32 +0200, Christian Brauner wrote:
-> > On Mon, Mar 31, 2025 at 03:51:43PM -0400, James Bottomley wrote:
-> > > On Thu, 2025-03-27 at 10:06 -0400, James Bottomley wrote:
-> > > [...]
-> > > > -static void percpu_rwsem_wait(struct percpu_rw_semaphore *sem,
-> > > > bool
-> > > > reader)
-> > > > +static void percpu_rwsem_wait(struct percpu_rw_semaphore *sem,
-> > > > bool
-> > > > reader,
-> > > > +			      bool freeze)
-> > > >  {
-> > > >  	DEFINE_WAIT_FUNC(wq_entry, percpu_rwsem_wake_function);
-> > > >  	bool wait;
-> > > > @@ -156,7 +157,8 @@ static void percpu_rwsem_wait(struct
-> > > > percpu_rw_semaphore *sem, bool reader)
-> > > >  	spin_unlock_irq(&sem->waiters.lock);
-> > > >  
-> > > >  	while (wait) {
-> > > > -		set_current_state(TASK_UNINTERRUPTIBLE);
-> > > > +		set_current_state(TASK_UNINTERRUPTIBLE |
-> > > > +				  freeze ? TASK_FREEZABLE : 0);
-> > > 
-> > > This is a bit embarrassing, the bug I've been chasing is here: the
-> > > ?
-> > > operator is lower in precedence than | meaning this expression
-> > > always
-> > > evaluates to TASK_FREEZABLE and nothing else (which is why the
-> > > process
-> > > goes into R state and never wakes up).
-> > > 
-> > > Let me fix that and redo all the testing.
-> > 
-> > I don't think that's it. I think you're missing making pagefault
-> > writers such
-> > as systemd-journald freezable:
-> > 
-> > diff --git a/include/linux/fs.h b/include/linux/fs.h
-> > index b379a46b5576..528e73f192ac 100644
-> > --- a/include/linux/fs.h
-> > +++ b/include/linux/fs.h
-> > @@ -1782,7 +1782,8 @@ static inline void __sb_end_write(struct
-> > super_block *sb, int level)
-> >  static inline void __sb_start_write(struct super_block *sb, int
-> > level)
-> >  {
-> >         percpu_down_read_freezable(sb->s_writers.rw_sem + level - 1,
-> > -                                  level == SB_FREEZE_WRITE);
-> > +                                  (level == SB_FREEZE_WRITE ||
-> > +                                   level == SB_FREEZE_PAGEFAULT));
-> >  }
-> 
-> Yes, I was about to tell Jan that the condition here simply needs to be
-> true.  All our rwsem levels need to be freezable to avoid a hibernation
-> failure.
+Il giorno mar 1 apr 2025 alle ore 12:57 Herbert Xu
+<herbert@gondor.apana.org.au> ha scritto:
+>
+> On Tue, Apr 01, 2025 at 12:54:05PM +0200, Christian Marangi (Ansuel) wrote:
+> > Il giorno mar 1 apr 2025 alle ore 12:08 Herbert Xu
+> > <herbert@gondor.apana.org.au> ha scritto:
+> > >
+> > > On Tue, Jan 14, 2025 at 01:36:36PM +0100, Christian Marangi wrote:
+> > > >
+> > > > +static int eip93_send_hash_req(struct crypto_async_request *async, u8 *data,
+> > > > +                            dma_addr_t *data_dma, u32 len, bool last)
+> > > > +{
+> > >
+> > > ...
+> > >
+> > > > +again:
+> > > > +     ret = eip93_put_descriptor(eip93, &cdesc);
+> > > > +     if (ret) {
+> > > > +             usleep_range(EIP93_RING_BUSY_DELAY,
+> > > > +                          EIP93_RING_BUSY_DELAY * 2);
+> > > > +             goto again;
+> > > > +     }
+> > > > +
+> > > > +     /* Writing new descriptor count starts DMA action */
+> > > > +     writel(1, eip93->base + EIP93_REG_PE_CD_COUNT);
+> > >
+> > > Why is there no locking here? Shouldn't this be under ring->write_lock?
+> > >
+> >
+> > Hi Herbert,
+> > this is really to tell DMA that there is new packet to process and
+> > gets decreased instantly.
+> > The lock is used to track what descriptor index should be used in the
+> > ring in the put and get
+> > functions.
+>
+> AFAICS it's not safe to call eip93_put_descriptor simultaneously
+> since it doesn't use atomics.  Without locking in eip93_send_hash_req
+> two threads hashing into two separate eip93 requests will be calling
+> eip93_put_descriptor at the same time.
+>
 
-So there is one snag with this. SB_FREEZE_PAGEFAULT level is acquired under
-mmap_sem, SB_FREEZE_INTERNAL level is possibly acquired under some other
-filesystem locks. So if you freeze the filesystem, a task can block on
-frozen filesystem with e.g. mmap_sem held and if some other task then
-blocks on grabbing that mmap_sem, hibernation fails because we'll be unable
-to hibernate the task waiting for mmap_sem. So if you'd like to completely
-avoid these hibernation failures, you'd have to make a slew of filesystem
-related locks use freezable sleeping. I don't think that's feasible.
+Sorry but isn't it enough to acquire lock before eip93_put_descriptor to
+prevent 2 thread?
 
-I was hoping that failures due to SB_FREEZE_PAGEFAULT level not being
-freezable would be rare enough but you've proven they are quite frequent.
-We can try making SB_FREEZE_PAGEFAULT level (or even SB_FREEZE_INTERNAL)
-freezable and see whether that works good enough...
+Or you are suggesting that also
 
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+writel(1, eip93->base + EIP93_REG_PE_CD_COUNT);
+
+should be done atomically?
+
+Maybe I can better handle that writel(1) by using atomic_t
+value and atomic_inc/dec?
