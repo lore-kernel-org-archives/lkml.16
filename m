@@ -1,184 +1,249 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A1B11EC011;
-	Tue,  1 Apr 2025 09:08:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B29EA1EB5FA
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 09:09:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743498502; cv=none; b=WJ4o6ei6eNssU763XqZpGhvMgCy6zP7PTHghNZpV34Rhez6xZWyTekoici/lts0/QtFxLsKe5+0N31hQFEoo61eBlp65UQe7RqDZu2XWsaouoxg1qgSzTmHQK1GASOuPQ9oglM2WKGl6f5RV63VUf+fPCXNku/BDaparUtb6mBI=
+	t=1743498547; cv=none; b=Acs4WSM98rM3Z+/I2EXGesdh0uG2sC9audeN7vNq8LkZ/2CoBEpmU2AEUt0ckBc1QMqGGLcH5FWk5VR5icvFItUuqscvn/uAvZnTpq8uh9Mx8mD3zQLIElXIYb8kNLpUJS25+bktX578yX6qgHtkaWPOPUfAaDJyM1bCOHdMk6o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743498502; c=relaxed/simple;
-	bh=0upvQT4yoyliZTAQA6IssiES6vabnF4mIc7Mjn5f8/0=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=IPxhFhqsy36XP6ih7kT5mwRBvQh3BtdSKeNvjD/rUrHe6PqSREmmareyoFNjZUQJNUSpqMKxoDMREArwB+s1MnCEhm3qUfkP3dzFT8UE6OEvk7UhQFu82nci0CHUyP3MU79Aj1nw2j0B5cwTbNpv8k/NrnltmWDJm5eqi61KbGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=krMHCop7; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1P/8/keG; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1743498547; c=relaxed/simple;
+	bh=5lTTCkykjVc+615pYDm1tbKWHUbWbcIp/OskVyTpKYI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=J3sdFKxi5pKYbRCa0PpNulRbEa4Hh0EQNpmBaKU8dJS+k5Pzx2j7eqn94PJm5xZn67qTr3CSBe0eb/+gHvj3kkH4Q64CmtBDm/nDH1+BrRLOfYW/tuwO6Rxsmk6dOx+U4Cf3mR2s+0B7dviBqYwSSj+u6DVOOeGccDYnxK1dO9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SXOlptPD; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="krMHCop7";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1P/8/keG"
-Date: Tue, 01 Apr 2025 09:08:13 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1743498498;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SXOlptPD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743498544;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=s5E6LoPkxiu2Jk3blFNbujvrPWS6ozc+6s71eXcSeAA=;
-	b=krMHCop7PWJWRLVtaW13i+oLTZfP1s1pBZ1xziZ0M25iSvm8gKCSdiyZwuMi6HiOz7NgAi
-	jvFMW6YN2/1o23K4nnU0BM5iwxiAg2fCk2MYXBjk+57Htek3U3bXaDv5ZL/afj2/5fRK8z
-	oY6d/UEL4I8Hd8oqs8FPuvOpFNxoyQPEHfwgpbX0fwhvuQJL7zVATbpmS1GH0YDtabNZVS
-	WsBdmjUHaJLE0hCiu6Rmr+/NGLXp8pAJrLS3H8cabz0LTfCW08k8fXFQXksIoHsUTfJsY9
-	IzdGFGRtWAh6m9SKHIlidoGpzMDPbIsgRYOtgws+l6i9o0GojbAznMnbWakoGw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1743498498;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=s5E6LoPkxiu2Jk3blFNbujvrPWS6ozc+6s71eXcSeAA=;
-	b=1P/8/keG2m7VqAGGxC9its2EW1F0ZaPG15gzEpaUh03JAHShOPzh4Dr7c6b0cZxCxN1Xm3
-	b4jqPcfh6yHBAwAA==
-From: "tip-bot2 for Balbir Singh" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/mm/init: Handle the special case of device
- private pages in add_pages(), to not increase max_pfn and trigger
- dma_addressing_limited() bounce buffers
-Cc: Bert Karwatzki <spasswolf@web.de>, Balbir Singh <balbirs@nvidia.com>,
- Ingo Molnar <mingo@kernel.org>, Brian Gerst <brgerst@gmail.com>,
- Juergen Gross <jgross@suse.com>, "H. Peter Anvin" <hpa@zytor.com>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Andrew Morton <akpm@linux-foundation.org>, Christoph Hellwig <hch@lst.de>,
- "Pierre-Eric Pelloux-Prayer" <pierre-eric.pelloux-prayer@amd.com>,
- Alex Deucher <alexander.deucher@amd.com>, christian.koenig@amd.com,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250401000752.249348-1-balbirs@nvidia.com>
-References: <20250401000752.249348-1-balbirs@nvidia.com>
+	bh=0B6FdBNadbiO8NrMKuIJpxZXOJgUgdhTXk2/bZ2vOoc=;
+	b=SXOlptPDWRbL6PCkmwAgj9jZesyg71ZouegtFKqohhFNXkf0lmb58EC2C8KoKLfp2r4evd
+	1VYW1ed7b9g/AD1bSpUiJyqFmlGvDx0T/XUhUll2XZmITMwwo89elTGi9bv9T4koOm6z8M
+	eQBFSdGnlz8tYifb/uoEXa/PlvmZcyo=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-530-qf-RtZAcP1iGaM-Mnn0Lwg-1; Tue, 01 Apr 2025 05:09:03 -0400
+X-MC-Unique: qf-RtZAcP1iGaM-Mnn0Lwg-1
+X-Mimecast-MFC-AGG-ID: qf-RtZAcP1iGaM-Mnn0Lwg_1743498542
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43ceeaf1524so27645745e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 02:09:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743498542; x=1744103342;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0B6FdBNadbiO8NrMKuIJpxZXOJgUgdhTXk2/bZ2vOoc=;
+        b=F0L6a9Q0jPIVIychq+Mhef3ob5f2gebO8GzlG7kS52s0otBloWUNIZuyw5Ot0mIGHj
+         ExNIxO8l6YRTXCskxXm/Q8zKia3vqq5XZa4hUwsaeBCPjoZUYhPxwHpFhGfj9isI1R4k
+         wFDOxNx33BslDZ8iVQ8k1Q/KOqNgpYWMS6zi3vMjiPnDyOOcYyL6pvOFjLtSMiRnoHtD
+         lv27c0R5ZF/SFt7sjWdjkfiuPSOiNCaEp54PrQv5l9IcLPbus/KcQ7j9WmhiA/USZlnM
+         yJDnssUEvRkANHRSLI3XruvTYzQ8zyC4urYvOCXv7SW8eEG8H+ggZv5i6itGVE80rT/A
+         nUsA==
+X-Gm-Message-State: AOJu0Yyyck+I+PsfgJ5SSXxYlZHQTQBLN1Ir2awd1ae488yNit1/CFXy
+	VBkmJZC30XbaU0ptdFCQWyDyFlus+R+r5WyYulltmzPGphrxF6kRk2JF/ZIRoBCW/Y8IAiqwaO9
+	jGJz6+2FqY3ti417gGFYjgOC+n83usXItqao3ZAMI39GXKO2iY2tAEyB1TXAECg==
+X-Gm-Gg: ASbGnctOkMzYgqznOeWaq9Jfyo5nxUeVDgQdypYcF4Culg05x76i++uO6VekAFjdiVp
+	wL5UGD7qaLqYxk2uQzuM9W4uS5hssZPhdyCVvnHYKvXUZHpTb4IOuqvfAd2zHHjKK0/aMKlfXzK
+	kQvz6br+p+niRLhIfVdnUHkRPEti3IodY8ks1IuOKXuGRmpZKJp76H8Hn036qHs2KO0JVFvfRSK
+	H/fZ6ulQzIHYqiP+znc8Vt0quYUtVky9cxBKMvn3knm8XOs/3KAQ2hEyjRIgbqan7jgBn6alr9d
+	Q0oppBxubLXfX8bpVVKBOvIdk1AP2d0Rw4iFpTXNDc4/jJKQOdKbJWjnVcE=
+X-Received: by 2002:a05:600c:4306:b0:43b:baf7:76e4 with SMTP id 5b1f17b1804b1-43d91017c92mr119546835e9.1.1743498542234;
+        Tue, 01 Apr 2025 02:09:02 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEFEpGEjpxOXXUrYEHRdUPBQW/kee6tDCG39RsZAEC8EYpXL93ZfovfEJh92VuUYNLO3OsVPA==
+X-Received: by 2002:a05:600c:4306:b0:43b:baf7:76e4 with SMTP id 5b1f17b1804b1-43d91017c92mr119546475e9.1.1743498541626;
+        Tue, 01 Apr 2025 02:09:01 -0700 (PDT)
+Received: from sgarzare-redhat (host-87-11-6-59.retail.telecomitalia.it. [87.11.6.59])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d82dedc88sm192190275e9.1.2025.04.01.02.08.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Apr 2025 02:09:00 -0700 (PDT)
+Date: Tue, 1 Apr 2025 11:08:49 +0200
+From: Stefano Garzarella <sgarzare@redhat.com>
+To: Jarkko Sakkinen <jarkko@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Jason Gunthorpe <jgg@ziepe.ca>, 
+	James Bottomley <James.Bottomley@hansenpartnership.com>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	Borislav Petkov <bp@alien8.de>, linux-integrity@vger.kernel.org, Peter Huewe <peterhuewe@gmx.de>, 
+	Ingo Molnar <mingo@redhat.com>, linux-coco@lists.linux.dev, Dov Murik <dovmurik@linux.ibm.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Joerg Roedel <jroedel@suse.de>, x86@kernel.org, 
+	Dionna Glaze <dionnaglaze@google.com>, Tom Lendacky <thomas.lendacky@amd.com>, 
+	Claudio Carvalho <cclaudio@linux.ibm.com>, "H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [PATCH v5 3/4] tpm: add SNP SVSM vTPM driver
+Message-ID: <lzcasqfgrdoicwqnvecqppy4ikhcv7rqxc6huvlzyltvb6cgdj@wclvoes5g4yq>
+References: <20250331103900.92701-1-sgarzare@redhat.com>
+ <20250331103900.92701-4-sgarzare@redhat.com>
+ <Z-rSMi2uCvShLbLS@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174349849358.14745.17615225659857776438.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <Z-rSMi2uCvShLbLS@kernel.org>
 
-The following commit has been merged into the x86/urgent branch of tip:
+On Mon, Mar 31, 2025 at 08:34:42PM +0300, Jarkko Sakkinen wrote:
+>On Mon, Mar 31, 2025 at 12:38:56PM +0200, Stefano Garzarella wrote:
+>> From: Stefano Garzarella <sgarzare@redhat.com>
+>>
+>> Add driver for the vTPM defined by the AMD SVSM spec [1].
+>>
+>> The specification defines a protocol that a SEV-SNP guest OS can use to
+>> discover and talk to a vTPM emulated by the Secure VM Service Module (SVSM)
+>> in the guest context, but at a more privileged level (VMPL0).
+>>
+>> The new tpm-svsm platform driver uses two functions exposed by x86/sev
+>> to verify that the device is actually emulated by the platform and to
+>> send commands and receive responses.
+>>
+>> The device cannot be hot-plugged/unplugged as it is emulated by the
+>> platform, so we can use module_platform_driver_probe(). The probe
+>> function will only check whether in the current runtime configuration,
+>> SVSM is present and provides a vTPM.
+>>
+>> This device does not support interrupts and sends responses to commands
+>> synchronously. In order to have .recv() called just after .send() in
+>> tpm_try_transmit(), the .status() callback returns 0, and both
+>> .req_complete_mask and .req_complete_val are set to 0.
+>>
+>> [1] "Secure VM Service Module for SEV-SNP Guests"
+>>     Publication # 58019 Revision: 1.00
+>>
+>> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+>> ---
+>> v5:
+>> - removed cancel/status/req_* ops after rebase on master that cotains
+>>   commit 980a573621ea ("tpm: Make chip->{status,cancel,req_canceled} opt")
+>> v4:
+>> - moved "asm" includes after the "linux" includes [Tom]
+>> - allocated buffer separately [Tom/Jarkko/Jason]
+>> v3:
+>> - removed send_recv() ops and followed the ftpm driver implementing .status,
+>>   .req_complete_mask, .req_complete_val, etc. [Jarkko]
+>> - removed link to the spec because those URLs are unstable [Borislav]
+>> ---
+>>  drivers/char/tpm/tpm_svsm.c | 135 ++++++++++++++++++++++++++++++++++++
+>>  drivers/char/tpm/Kconfig    |  10 +++
+>>  drivers/char/tpm/Makefile   |   1 +
+>>  3 files changed, 146 insertions(+)
+>>  create mode 100644 drivers/char/tpm/tpm_svsm.c
+>>
+>> diff --git a/drivers/char/tpm/tpm_svsm.c b/drivers/char/tpm/tpm_svsm.c
+>> new file mode 100644
+>> index 000000000000..04c532421ff2
+>> --- /dev/null
+>> +++ b/drivers/char/tpm/tpm_svsm.c
+>> @@ -0,0 +1,135 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only
+>> +/*
+>> + * Copyright (C) 2025 Red Hat, Inc. All Rights Reserved.
+>> + *
+>> + * Driver for the vTPM defined by the AMD SVSM spec [1].
+>> + *
+>> + * The specification defines a protocol that a SEV-SNP guest OS can use to
+>> + * discover and talk to a vTPM emulated by the Secure VM Service Module (SVSM)
+>> + * in the guest context, but at a more privileged level (usually VMPL0).
+>> + *
+>> + * [1] "Secure VM Service Module for SEV-SNP Guests"
+>> + *     Publication # 58019 Revision: 1.00
+>> + */
+>> +
+>> +#include <linux/module.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/tpm_svsm.h>
+>> +
+>> +#include <asm/sev.h>
+>> +
+>> +#include "tpm.h"
+>> +
+>> +struct tpm_svsm_priv {
+>> +	void *buffer;
+>> +	u8 locality;
+>> +};
+>> +
+>> +static int tpm_svsm_send(struct tpm_chip *chip, u8 *buf, size_t len)
+>> +{
+>> +	struct tpm_svsm_priv *priv = dev_get_drvdata(&chip->dev);
+>> +	int ret;
+>> +
+>> +	ret = svsm_vtpm_cmd_request_fill(priv->buffer, priv->locality, buf, len);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	/*
+>> +	 * The SVSM call uses the same buffer for the command and for the
+>> +	 * response, so after this call, the buffer will contain the response
+>> +	 * that can be used by .recv() op.
+>> +	 */
+>> +	return snp_svsm_vtpm_send_command(priv->buffer);
+>> +}
+>> +
+>> +static int tpm_svsm_recv(struct tpm_chip *chip, u8 *buf, size_t len)
+>> +{
+>> +	struct tpm_svsm_priv *priv = dev_get_drvdata(&chip->dev);
+>> +
+>> +	/*
+>> +	 * The internal buffer contains the response after we send the command
+>> +	 * to SVSM.
+>> +	 */
+>> +	return svsm_vtpm_cmd_response_parse(priv->buffer, buf, len);
+>> +}
+>> +
+>> +static struct tpm_class_ops tpm_chip_ops = {
+>> +	.flags = TPM_OPS_AUTO_STARTUP,
+>> +	.recv = tpm_svsm_recv,
+>> +	.send = tpm_svsm_send,
+>> +};
+>> +
+>> +static int __init tpm_svsm_probe(struct platform_device *pdev)
+>> +{
+>> +	struct device *dev = &pdev->dev;
+>> +	struct tpm_svsm_priv *priv;
+>> +	struct tpm_chip *chip;
+>> +	int err;
+>> +
+>> +	if (!snp_svsm_vtpm_probe())
+>> +		return -ENODEV;
+>> +
+>> +	priv = devm_kmalloc(dev, sizeof(*priv), GFP_KERNEL);
+>> +	if (!priv)
+>> +		return -ENOMEM;
+>> +
+>> +	/*
+>> +	 * The maximum buffer supported is one page (see SVSM_VTPM_MAX_BUFFER
+>> +	 * in tpm_svsm.h).
+>> +	 */
+>> +	priv->buffer = (void *)devm_get_free_pages(dev, GFP_KERNEL, 0);
+>> +	if (!priv->buffer)
+>> +		return -ENOMEM;
+>> +
+>> +	/*
+>> +	 * FIXME: before implementing locality we need to agree what it means
+>> +	 * for the SNP SVSM vTPM
+>> +	 */
+>> +	priv->locality = 0;
+>
+>I don't think we want FIXME's to mainline. Instead, don't declare the
+>field at all if you don't use it. Just pass zero to *_request_fill().
+>
+>Maybe "not have the field" is even a better reminder than a random fixme
+>comment?
 
-Commit-ID:     7170130e4c72ce0caa0cb42a1627c635cc262821
-Gitweb:        https://git.kernel.org/tip/7170130e4c72ce0caa0cb42a1627c635cc2=
-62821
-Author:        Balbir Singh <balbirs@nvidia.com>
-AuthorDate:    Tue, 01 Apr 2025 11:07:52 +11:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 01 Apr 2025 10:52:38 +02:00
+Yeah, I had thought the same, but then I left it that way because it was 
+there from the first RFC and I saw several FIXME in the codebase, but I 
+agree with you, I'll remove the field completely in v6.
 
-x86/mm/init: Handle the special case of device private pages in add_pages(), =
-to not increase max_pfn and trigger dma_addressing_limited() bounce buffers
+That said, `struct tpm_svsm_priv` with this change will only contain the 
+pointer to the buffer, does it make sense to have that structure (maybe 
+for the future it's easier to add new fields), or do I remove it and use 
+dev_set_drvdata() to store the pointer to the buffer directly?
 
-As Bert Karwatzki reported, the following recent commit causes a
-performance regression on AMD iGPU and dGPU systems:
+Thanks,
+Stefano
 
-  7ffb791423c7 ("x86/kaslr: Reduce KASLR entropy on most x86 systems")
-
-It exposed a bug with nokaslr and zone device interaction.
-
-The root cause of the bug is that, the GPU driver registers a zone
-device private memory region. When KASLR is disabled or the above commit
-is applied, the direct_map_physmem_end is set to much higher than 10 TiB
-typically to the 64TiB address. When zone device private memory is added
-to the system via add_pages(), it bumps up the max_pfn to the same
-value. This causes dma_addressing_limited() to return true, since the
-device cannot address memory all the way up to max_pfn.
-
-This caused a regression for games played on the iGPU, as it resulted in
-the DMA32 zone being used for GPU allocations.
-
-Fix this by not bumping up max_pfn on x86 systems, when pgmap is passed
-into add_pages(). The presence of pgmap is used to determine if device
-private memory is being added via add_pages().
-
-More details:
-
-devm_request_mem_region() and request_free_mem_region() request for
-device private memory. iomem_resource is passed as the base resource
-with start and end parameters. iomem_resource's end depends on several
-factors, including the platform and virtualization. On x86 for example
-on bare metal, this value is set to boot_cpu_data.x86_phys_bits.
-boot_cpu_data.x86_phys_bits can change depending on support for MKTME.
-By default it is set to the same as log2(direct_map_physmem_end) which
-is 46 to 52 bits depending on the number of levels in the page table.
-The allocation routines used iomem_resource's end and
-direct_map_physmem_end to figure out where to allocate the region.
-
-[ arch/powerpc is also impacted by this problem, but this patch does not fix
-  the issue for PowerPC. ]
-
-Testing:
-
- 1. Tested on a virtual machine with test_hmm for zone device inseration
-
- 2. A previous version of this patch was tested by Bert, please see:
-    https://lore.kernel.org/lkml/d87680bab997fdc9fb4e638983132af235d9a03a.cam=
-el@web.de/
-
-[ mingo: Clarified the comments and the changelog. ]
-
-Reported-by: Bert Karwatzki <spasswolf@web.de>
-Tested-by: Bert Karwatzki <spasswolf@web.de>
-Fixes: 7ffb791423c7 ("x86/kaslr: Reduce KASLR entropy on most x86 systems")
-Signed-off-by: Balbir Singh <balbirs@nvidia.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Brian Gerst <brgerst@gmail.com>
-Cc: Juergen Gross <jgross@suse.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>
-Cc: Alex Deucher <alexander.deucher@amd.com>
-Cc: Christian K=C3=B6nig <christian.koenig@amd.com>
-Cc: David Airlie <airlied@gmail.com>
-Cc: Simona Vetter <simona@ffwll.ch>
-Link: https://lore.kernel.org/r/20250401000752.249348-1-balbirs@nvidia.com
----
- arch/x86/mm/init_64.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
-
-diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
-index 519aa53..821a0b5 100644
---- a/arch/x86/mm/init_64.c
-+++ b/arch/x86/mm/init_64.c
-@@ -959,9 +959,18 @@ int add_pages(int nid, unsigned long start_pfn, unsigned=
- long nr_pages,
- 	ret =3D __add_pages(nid, start_pfn, nr_pages, params);
- 	WARN_ON_ONCE(ret);
-=20
--	/* update max_pfn, max_low_pfn and high_memory */
--	update_end_of_memory_vars(start_pfn << PAGE_SHIFT,
--				  nr_pages << PAGE_SHIFT);
-+	/*
-+	 * Special case: add_pages() is called by memremap_pages() for adding device
-+	 * private pages. Do not bump up max_pfn in the device private path,
-+	 * because max_pfn changes affect dma_addressing_limited().
-+	 *
-+	 * dma_addressing_limited() returning true when max_pfn is the device's
-+	 * addressable memory can force device drivers to use bounce buffers
-+	 * and impact their performance negatively:
-+	 */
-+	if (!params->pgmap)
-+		/* update max_pfn, max_low_pfn and high_memory */
-+		update_end_of_memory_vars(start_pfn << PAGE_SHIFT, nr_pages << PAGE_SHIFT);
-=20
- 	return ret;
- }
