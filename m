@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAE5720C002;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF319214221;
 	Tue,  1 Apr 2025 20:32:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743539550; cv=none; b=RKxCS7KhNkPOjE5Rf/e8pXVbnnDPONXCvG8tGJMgGAUXykFT0WmnpTdXMYICmX4M4R8URRaPw4KF1uSHGwh1W6E9EI90YIGwm3m7A4J9hFOj/tnLRNQvWc2a4YfZBUl1FxHUIvkKC/+Fn+FZfLDsEz/C61jlLLe+PIpskNIytqU=
+	t=1743539550; cv=none; b=TaXtyx4HU6N171CHkg5KNF1eRiJfPV6VCF90nDPXLnk5DPtdRd1pnVMqvdBpZuUBzkjA4EJw6/qzCSQ2tO5mQhULTWyuQSQoU1KDuln4b3FRqZE8BbD8N46h4iqcsKkE2AkC5yVFagAB5hKEWRqmyoV/LhGDzzMii1Uei7b9hCo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1743539550; c=relaxed/simple;
-	bh=eWruYTEMFqsg9MgWbzhFWe9qMXUyoTYzvL3kERLjFFU=;
+	bh=Gp13WAunse4VyJM266TXO63VppQOLLyoxgk8UnWLdwU=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=uaEkP320qQ+pbdC8OMJF99ipun1+6jocmMzePq4ZavxZHA2u/PcS3PivTv+N+Sj/NsCyluQpIFmDTCz1zNIJFF2OPBi/PWzAqpUMpsGWGu+DkRN1XQx7JRQkrIbNWfEBSFBVJYNzD/NaSSBDB4oyNCF5CQuLqyxwb1T4W8bahFk=
+	 Content-Type; b=bNByDEs1OSwv1/71huR0jAsDIEu3AMD1brlomXgPKAN4Aq7Pnz065OpbQMZt2kfJXMdWltEPqVk4majIDLZaPtse0C/GQVTENignWsgKKQjmh3eECUayzP6aWy+bHoErRC2trXMcca4Vb2na9Rv7zqWLVTzS4GHqsgvk8bCaUVs=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42F91C4CEED;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5F47C4CEE4;
 	Tue,  1 Apr 2025 20:32:30 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1tziId-00000006Ido-3guf;
-	Tue, 01 Apr 2025 16:33:31 -0400
-Message-ID: <20250401203331.728113626@goodmis.org>
+	id 1tziIe-00000006IfI-1fDZ;
+	Tue, 01 Apr 2025 16:33:32 -0400
+Message-ID: <20250401203332.246646011@goodmis.org>
 User-Agent: quilt/0.68
-Date: Tue, 01 Apr 2025 16:25:51 -0400
+Date: Tue, 01 Apr 2025 16:25:54 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -33,8 +33,7 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>,
  Vlastimil Babka <vbabka@suse.cz>,
  Mike Rapoport <rppt@kernel.org>,
  Jann Horn <jannh@google.com>
-Subject: [PATCH v3 2/5] tracing: Have reserve_mem use phys_to_virt() and separate from memmap
- buffer
+Subject: [PATCH v3 5/5] ring-buffer: Allow reserve_mem persistent ring buffers to be mmapped
 References: <20250401202549.409271454@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -46,123 +45,144 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Steven Rostedt <rostedt@goodmis.org>
 
-The reserve_mem kernel command line option may pass back a physical
-address, but the memory is still part of the normal memory just like
-using memblock_reserve() would be. This means that the physical memory
-returned by the reserve_mem command line option can be converted directly
-to virtual memory by simply using phys_to_virt().
+When the persistent ring buffer is created from the memory returned by
+reserve_mem there is nothing prohibiting it to be memory mapped to user
+space. The memory is the same as the pages allocated by alloc_page().
 
-When freeing the buffer allocated by reserve_mem, use free_reserved_area().
+The way the memory is managed by the ring buffer code is slightly
+different though and needs to be addressed.
 
-Because the persistent ring buffer can also be allocated via the memmap
-option, which *is* different than normal memory as it cannot be added back
-to the buddy system, it must be treated differently. It still needs to be
-virtually mapped to have access to it. It also can not be freed nor can it
-ever be memory mapped to user space.
+The persistent memory uses the page->id for its own purpose where as the
+user mmap buffer currently uses that for the subbuf array mapped to user
+space. If the buffer is a persistent buffer, use the page index into that
+buffer as the identifier instead of the page->id.
 
-Create a new trace_array flag called TRACE_ARRAY_FL_MEMMAP which gets set
-if the buffer is created by the memmap option, and this will prevent the
-buffer from being memory mapped by user space.
+That is, the page->id for a persistent buffer, represents the order of the
+buffer is in the link list. ->id == 0 means it is the reader page.
+When a reader page is swapped, the new reader page's ->id gets zero, and
+the old reader page gets the ->id of the page that it swapped with.
 
-Also increment the ref count for memmap'ed buffers so that they can never
-be freed.
+The user space mapping has the ->id is the index of where it was mapped in
+user space and does not change while it is mapped.
 
-Link: https://lore.kernel.org/all/Z-wFszhJ_9o4dc8O@kernel.org/
+Since the persistent buffer is fixed in its location, the index of where
+a page is in the memory range can be used as the "id" to put in the meta
+page array, and it can be mapped in the same order to user space as it is
+in the persistent memory.
 
-Suggested-by: Mike Rapoport <rppt@kernel.org>
+A new rb_page_id() helper function is used to get and set the id depending
+on if the page is a normal memory allocated buffer or a physical memory
+mapped buffer.
+
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/trace.c | 28 ++++++++++++++++++++++------
- kernel/trace/trace.h |  1 +
- 2 files changed, 23 insertions(+), 6 deletions(-)
+ kernel/trace/ring_buffer.c | 49 ++++++++++++++++++++++++++++++++++----
+ kernel/trace/trace.c       |  4 ----
+ 2 files changed, 45 insertions(+), 8 deletions(-)
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 1288e0aaadf8..e33f3b092e2e 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -8492,6 +8492,10 @@ static int tracing_buffers_mmap(struct file *filp, struct vm_area_struct *vma)
- 	struct trace_iterator *iter = &info->iter;
- 	int ret = 0;
- 
-+	/* A memmap'ed buffer is not supported for user space mmap */
-+	if (iter->tr->flags & TRACE_ARRAY_FL_MEMMAP)
-+		return -ENODEV;
-+
- 	/* Currently the boot mapped buffer is not supported for mmap */
- 	if (iter->tr->flags & TRACE_ARRAY_FL_BOOT)
- 		return -ENODEV;
-@@ -9601,8 +9605,12 @@ static void free_trace_buffers(struct trace_array *tr)
- 	free_trace_buffer(&tr->max_buffer);
- #endif
- 
--	if (tr->range_addr_start)
--		vunmap((void *)tr->range_addr_start);
-+	if (tr->range_addr_start) {
-+		void *start = (void *)tr->range_addr_start;
-+		void *end = start + tr->range_addr_size;
-+
-+		free_reserved_area(start, end, 0, tr->range_name);
-+	}
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index d4b0f7b55cce..f7a10f754066 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -6000,6 +6000,39 @@ static void rb_clear_buffer_page(struct buffer_page *page)
+ 	page->read = 0;
  }
  
- static void init_trace_flags_index(struct trace_array *tr)
-@@ -10696,6 +10704,7 @@ static inline void do_allocate_snapshot(const char *name) { }
- __init static void enable_instances(void)
- {
- 	struct trace_array *tr;
-+	bool memmap_area = false;
- 	char *curr_str;
- 	char *name;
- 	char *str;
-@@ -10764,6 +10773,7 @@ __init static void enable_instances(void)
- 					name);
- 				continue;
- 			}
-+			memmap_area = true;
- 		} else if (tok) {
- 			if (!reserve_mem_find_by_name(tok, &start, &size)) {
- 				start = 0;
-@@ -10786,7 +10796,10 @@ __init static void enable_instances(void)
- 				continue;
- 			}
- 
--			addr = map_pages(start, size);
-+			if (memmap_area)
-+				addr = map_pages(start, size);
-+			else
-+				addr = (unsigned long)phys_to_virt(start);
- 			if (addr) {
- 				pr_info("Tracing: mapped boot instance %s at physical memory %pa of size 0x%lx\n",
- 					name, &start, (unsigned long)size);
-@@ -10813,10 +10826,13 @@ __init static void enable_instances(void)
- 			update_printk_trace(tr);
- 
- 		/*
--		 * If start is set, then this is a mapped buffer, and
--		 * cannot be deleted by user space, so keep the reference
--		 * to it.
-+		 * memmap'd buffers can not be freed.
- 		 */
-+		if (memmap_area) {
-+			tr->flags |= TRACE_ARRAY_FL_MEMMAP;
-+			tr->ref++;
-+		}
++/*
++ * When the buffer is memory mapped to user space, each sub buffer
++ * has a unique id that is used by the meta data to tell the user
++ * where the current reader page is.
++ *
++ * For a normal allocated ring buffer, the id is saved in the buffer page
++ * id field, and updated via this function.
++ *
++ * But for a fixed memory mapped buffer, the id is already assigned for
++ * fixed memory ording in the memory layout and can not be used. Instead
++ * the index of where the page lies in the memory layout is used.
++ *
++ * For the normal pages, set the buffer page id with the passed in @id
++ * value and return that.
++ *
++ * For fixed memory mapped pages, get the page index in the memory layout
++ * and return that as the id.
++ */
++static int rb_page_id(struct ring_buffer_per_cpu *cpu_buffer,
++		      struct buffer_page *bpage, int id)
++{
++	/*
++	 * For boot buffers, the id is the index,
++	 * otherwise, set the buffer page with this id
++	 */
++	if (cpu_buffer->ring_meta)
++		id = rb_meta_subbuf_idx(cpu_buffer->ring_meta, bpage->page);
++	else
++		bpage->id = id;
 +
- 		if (start) {
- 			tr->flags |= TRACE_ARRAY_FL_BOOT | TRACE_ARRAY_FL_LAST_BOOT;
- 			tr->range_name = no_free_ptr(rname);
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index ab7c7a1930cc..9d9dcfad6269 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -446,6 +446,7 @@ enum {
- 	TRACE_ARRAY_FL_BOOT		= BIT(1),
- 	TRACE_ARRAY_FL_LAST_BOOT	= BIT(2),
- 	TRACE_ARRAY_FL_MOD_INIT		= BIT(3),
-+	TRACE_ARRAY_FL_MEMMAP		= BIT(4),
- };
++	return id;
++}
++
+ static void rb_update_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
+ {
+ 	struct trace_buffer_meta *meta = cpu_buffer->meta_page;
+@@ -6008,7 +6041,9 @@ static void rb_update_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
+ 		return;
  
- #ifdef CONFIG_MODULES
+ 	meta->reader.read = cpu_buffer->reader_page->read;
+-	meta->reader.id = cpu_buffer->reader_page->id;
++	meta->reader.id = rb_page_id(cpu_buffer, cpu_buffer->reader_page,
++				     cpu_buffer->reader_page->id);
++
+ 	meta->reader.lost_events = cpu_buffer->lost_events;
+ 
+ 	meta->entries = local_read(&cpu_buffer->entries);
+@@ -6924,23 +6959,29 @@ static void rb_setup_ids_meta_page(struct ring_buffer_per_cpu *cpu_buffer,
+ 	struct trace_buffer_meta *meta = cpu_buffer->meta_page;
+ 	unsigned int nr_subbufs = cpu_buffer->nr_pages + 1;
+ 	struct buffer_page *first_subbuf, *subbuf;
++	int cnt = 0;
+ 	int id = 0;
+ 
+-	subbuf_ids[id] = (unsigned long)cpu_buffer->reader_page->page;
+-	cpu_buffer->reader_page->id = id++;
++	id = rb_page_id(cpu_buffer, cpu_buffer->reader_page, id);
++	subbuf_ids[id++] = (unsigned long)cpu_buffer->reader_page->page;
++	cnt++;
+ 
+ 	first_subbuf = subbuf = rb_set_head_page(cpu_buffer);
+ 	do {
++		id = rb_page_id(cpu_buffer, subbuf, id);
++
+ 		if (WARN_ON(id >= nr_subbufs))
+ 			break;
+ 
+ 		subbuf_ids[id] = (unsigned long)subbuf->page;
+-		subbuf->id = id;
+ 
+ 		rb_inc_page(&subbuf);
+ 		id++;
++		cnt++;
+ 	} while (subbuf != first_subbuf);
+ 
++	WARN_ON(cnt != nr_subbufs);
++
+ 	/* install subbuf ID to kern VA translation */
+ 	cpu_buffer->subbuf_ids = subbuf_ids;
+ 
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 1d7d2b772a74..5e7f8113c024 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -8497,10 +8497,6 @@ static int tracing_buffers_mmap(struct file *filp, struct vm_area_struct *vma)
+ 	if (iter->tr->flags & TRACE_ARRAY_FL_MEMMAP)
+ 		return -ENODEV;
+ 
+-	/* Currently the boot mapped buffer is not supported for mmap */
+-	if (iter->tr->flags & TRACE_ARRAY_FL_BOOT)
+-		return -ENODEV;
+-
+ 	ret = get_snapshot_map(iter->tr);
+ 	if (ret)
+ 		return ret;
 -- 
 2.47.2
 
