@@ -1,191 +1,116 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48B042D05E
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 07:53:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EB521E47CA
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 07:54:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743494032; cv=none; b=WQPTDmQedZq8Cwu1uBHgfGHuue3brrDlP4ctY+l5nFt/vWzZXCtPiMKwT2FBWvSCFR7+x8N37We6XWkj3gIIfxlIlI/QbL+KDuV9SUWdyVAs2n8dN3oeV2arlSk7qrEPbUKXvcEPbHtzNhPjo8wYwiBpXE8IAhBLq4k5dWDpO3U=
+	t=1743494050; cv=none; b=AIyJdcKUlW2RywoXzxKO2hILkS2E1dRo526LUEccSydzHMTS2MpKD2XrHwBcsBlAGkRZ9FRn8guRKJQgmFodfLddoF9EpACBVZdMdgTDfPtRif6A+ct3fz87G0tRGFnjjiiP8UnIU1nvb9mhQnmLnQnEZ3q8NIRBD4YiFJ/oFSY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743494032; c=relaxed/simple;
-	bh=HCEFYwh9m7hmPPqIb8SX2sunnNwMfn2DohlZBDBQQB8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ii06OfRgRqzxmItgzLAfASsD8OlCWGoILcPSKPbPXpH1YEXokfiIBgB5u04TPwOLnLn2WourBqTnsjw4bBhZDOJMPbQ7cvTZ33mlRoZiDkOUIO4gT+/EOzWowMqAqRhUzeRgl6h/vIo/IPl5MA/bsuPkrNqkJYQYvMojj78H460=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=dxOwidK0; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1743494050; c=relaxed/simple;
+	bh=zEgF7zl+qaVDn5TiUTBaHD0fanWnAVJNnO4sgNc2+7E=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=ch+A4mC3VwZ3godavoGOn+VV90S6qffcCmagGyNJs65c1/S/V41L8NdVyiKVjA814UiXHpt6L6spKxRJCljvcG1WMkfizIqrq5rd8e+HXHp1INlW9ArnDrYagWmszMslxpI2p1BGoEfAEDCixq/VXocxnMEjS2QQMpSTFWZNSBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qau5xGl6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="dxOwidK0"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43948f77f1aso36342315e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 00:53:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1743494027; x=1744098827; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=aVezXcmNjFvGeePsLEgaeOZHIg/Ype94xcgrgvPHBWQ=;
-        b=dxOwidK0G7Zfsp9REUR9or/xsoQD9okJy+J5WVWExkAwgJkpuniEvB/pfxYSRdeENu
-         VqbjmuIF8vgibHQQf/K7wIP5N9JJkpSnx2w4ynyyoW7Vcrlhl19FmrbjDsY0gb8hWyoX
-         wlBehcmyarmyrbs5cjvc6JZyp2PG/jXe0OYs5/oJa2GyyWVKbuLSX5GhCzILW1REsJpc
-         1483kzbC2TtjihoPu+RX0uDSsEWbYY9ac98cmHiNA244gxFNgGXHwgeJDMK53yAUy2Kr
-         9swYcTLtG5a7u0r3qLwrXf9BUVMtQGGcwKD9oXHiXoYEeP6XM6fAMwQ9UOZ1O6PxxdyB
-         xSGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743494027; x=1744098827;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=aVezXcmNjFvGeePsLEgaeOZHIg/Ype94xcgrgvPHBWQ=;
-        b=Q1bkafg/fcdITjBjLgxhjF+XYq3ACBbHfpEE+HRjms4Vl6ioR3TGICeQM9fLuwo+Sf
-         axrAghmert+G05wmvHrj5dOZuVZ6fokfjLsTaDeWi/gZt3UWQXSGTRSOC7EEosU2m77V
-         d+HUKlweRe43lDf3m49KyONh8TyzFNpuxfrgNBQ7jcrFkotOwX1gc/JoPaZMZcYcOiyE
-         fjIjCMXDjeV2mBTJN0BJhvKdxHpCb0cInHbN6axcppoX+Yeo3XgqU+RAwtfsVF5/beAk
-         SxVbf+SeKu7vQIYFQhR5fUVj2jdz8Mu4rZHIksqmVgnJ36ObywE/tNd81L7B4EGBa0G+
-         /j/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVV2T2j4Hff7Ol8zaTAt61DloKAIXtP8X9mJXb/ip9j2/I5MHQG4JN3vHnxPSXmVdftQGZNa6ilkM5KZ7A=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxe9Tv2owq/z2Od2x3KjQciVyE/IF3DRaLS9Oi+Yav8HL+R62V3
-	xi9hD7crsVgwQtVrF2qzYtvgaXtqbDA6MYdz4LyZ7v56zdKvNkLqE9cybtzy0Eg=
-X-Gm-Gg: ASbGncuRf6gcQT2soaI2v/9BJ7b4D0v7Lpxzbw//oJvriOAuTVQ5Ueg6VS8H5BC1IN3
-	AJId/Zt9Np2JKCVv0C2CBRCu4I3cB6NQ5j/qcyOhrldyNd6yrDX3y0Bp3/IDujCTsI22qpNpAc2
-	H+bqdCXhXknRTntO3rVcZdxJrgkOv8MvEqPClFke3XqjfYKAYIsn8fA+fXaH1korAlrI1G3+VcN
-	EnLfE+CTQAQBp+nWgtUUtWg2fbbIJiMwTyPMKx1yLlshtsJklAALZAGKj5XJqcZGLMvWAIWMwL8
-	5K0jKF7j1TZJzgkG2KLjiFtENTlp9ytWRr1CsO8qZkKbaUF96JO9qtOstLFizqM5HhHPJA5HMkD
-	8Ia06o7LTSHtjZckW
-X-Google-Smtp-Source: AGHT+IFCND4u4ER45buQyky5h/GbyTChDOldIH58BGtyz/UpO8YtBkFCcjfe/V7hEIN/QlaCchOJmQ==
-X-Received: by 2002:a05:6000:40cd:b0:390:e7c1:59d3 with SMTP id ffacd0b85a97d-39c120cb878mr8447965f8f.2.1743494027213;
-        Tue, 01 Apr 2025 00:53:47 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:355:6b90:e24f:43ff:fee6:750f? ([2a01:e0a:355:6b90:e24f:43ff:fee6:750f])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b66d56csm13573413f8f.59.2025.04.01.00.53.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Apr 2025 00:53:46 -0700 (PDT)
-Message-ID: <ffddb84a-e1ca-4a8a-81c6-448688b1c531@baylibre.com>
-Date: Tue, 1 Apr 2025 09:53:45 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qau5xGl6"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id EFDF2C4CEE5;
+	Tue,  1 Apr 2025 07:54:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743494050;
+	bh=zEgF7zl+qaVDn5TiUTBaHD0fanWnAVJNnO4sgNc2+7E=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=qau5xGl6OB9AKddGdNpG6XVR0zwA2OQz5l+Em49VJjJE/vWVaRhN7lEuzRsMVzzYE
+	 qd6J2jvsDJkYapT6lTchrye3wCthU6ZoGYZ+NVDfUNFgeoHJh+P5XHgw2pzfBlNV3y
+	 WceeH/C5l5R0GKUxyQ/eFlx1xurPhz5e29OW/OHOJxTYTDHnRFlv5IYZKUwDTLC47y
+	 +bvXhm/oQF/046pwtBhhGH7n8484EECLT6Hpa0H5wvHu3YftNsRRl5qLbbLmVqI+By
+	 dIPIrehjBxBLqLY4GJupIf+UsrSBjRg6tP0tillx0NHZctm8rp0HNO0S8TvRKRowq4
+	 5+G6IVfxTZfIQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB778C36018;
+	Tue,  1 Apr 2025 07:54:09 +0000 (UTC)
+From: Hermes Wu via B4 Relay <devnull+Hermes.wu.ite.com.tw@kernel.org>
+Date: Tue, 01 Apr 2025 15:54:55 +0800
+Subject: [PATCH v3 1/5] drm/bridge: it6505: fix link training state HW
+ register reset
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] binder: do not crash on bad transaction in
- binder_thread_release()
-To: Carlos Llamas <cmllamas@google.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- =?UTF-8?Q?Arve_Hj=C3=B8nnev=C3=A5g?= <arve@android.com>,
- Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>,
- Joel Fernandes <joel@joelfernandes.org>,
- Christian Brauner <brauner@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Frode Isaksen <frode@meta.com>,
- linux-kernel@vger.kernel.org
-References: <20250331152515.113421-1-fisaksen@baylibre.com>
- <Z-tXhrdTtV5t_P5p@google.com>
-Content-Language: en-US
-From: Frode Isaksen <fisaksen@baylibre.com>
-In-Reply-To: <Z-tXhrdTtV5t_P5p@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250401-fix-link-training-v3-1-7f60f2ab7b8c@ite.com.tw>
+References: <20250401-fix-link-training-v3-0-7f60f2ab7b8c@ite.com.tw>
+In-Reply-To: <20250401-fix-link-training-v3-0-7f60f2ab7b8c@ite.com.tw>
+To: Andrzej Hajda <andrzej.hajda@intel.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
+Cc: Pet.Weng@ite.com.tw, Kenneth.Hung@ite.com.tw, treapking@chromium.org, 
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ Hermes Wu <Hermes.wu@ite.com.tw>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1743494115; l=1768;
+ i=Hermes.wu@ite.com.tw; s=20241230; h=from:subject:message-id;
+ bh=L0iJ7cK8igir/+LkaX0VG1u/Z4JkZspdyQ1kUW040to=;
+ b=3ZeAjApBbdwUWtMUrKLUV1ulA0WRkCQpNpD6DDC5ha8kUO1G867Jt6ap/VMWoIpEtk31xTf/J
+ WBUmO6lxMOKDf05sT8nNeku+/xueuidinyq4rQh19OeBkCUDIIx09Px
+X-Developer-Key: i=Hermes.wu@ite.com.tw; a=ed25519;
+ pk=qho5Dawp2WWj9CGyjtJ6/Y10xH8odjRdS6SXDaDAerU=
+X-Endpoint-Received: by B4 Relay for Hermes.wu@ite.com.tw/20241230 with
+ auth_id=310
+X-Original-From: Hermes Wu <Hermes.wu@ite.com.tw>
+Reply-To: Hermes.wu@ite.com.tw
 
-On 4/1/25 5:03 AM, Carlos Llamas wrote:
-> On Mon, Mar 31, 2025 at 05:24:14PM +0200, Frode Isaksen wrote:
->> From: Frode Isaksen <frode@meta.com>
->>
->> Instead of calling BUG(), set the binder_thread to NULL,
-> Yeap, not crashing the kernel is a good idea.
->
->> as is done in other parts of the code.
->> Log if it is a bad transaction (other than in or out).
->> The BUG in binder_thread_release() was preceded by
->> these warning logs:
->> binder: 1198:1217 got reply transaction with bad transaction stack,
->>   transaction 49693 has target 1198:0
-> So tid 1217 is sending a reply to an incoming sync transaction. However,
-> its transaction_stack shows that t->to_thread is NULL. I have no idea
-> how can this be possible. When the transaction was picked up by 1217,
-> its info was recorded in its transaction_stack as such:
->
-> 	if (cmd != BR_REPLY && !(t->flags & TF_ONE_WAY)) {
-> 		binder_inner_proc_lock(thread->proc);
-> 		t->to_parent = thread->transaction_stack;
-> 		t->to_thread = thread;            <----- HERE
-> 		thread->transaction_stack = t;
-> 		binder_inner_proc_unlock(thread->proc);
-> 	}
->
-> I don't understand how 't->to_thread' later becomes NULL, maybe memory
-> corruption?
->
->> binder: 1198:1217 transaction failed 29201/-71, size 4-0 line 3065
->> ...
->> binder: release 954:1333 transaction 49693 out, still active
->> ...
->> binder: release 1198:1217 transaction 49693 out, still active
->> kernel BUG at drivers/android/binder.c:5070!
->>
->> Signed-off-by: Frode Isaksen <frode@meta.com>
->> ---
->> This bug was discovered, tested and fixed (no more crashes seen) on Meta Quest 3 device.
-> Do you have a way to reproduce this? It sounds like there is something
-> else going wrong before and we probably want to fix that.
+From: Hermes Wu <Hermes.wu@ite.com.tw>
 
-I was never able to reproduce this locally and it happens very seldom.
+When connect to a DP-to-HDMI device which does not connect
+to HDMI sink, it will report DPCD 00200h with SINK_COUNT = "0",
+and issue HPD_IRQ when SINK_COUNT change to "1".
 
-As you can see in the log, there was a "bad transaction" 17 secs before 
-the crash.
-<6>[   13.664167] binder: 1198:1217 got reply transaction with bad 
-transaction stack, transaction 49693 has target 1198:0
-<6>[   13.664174] binder: 1198:1217 transaction failed 29201/-71, size 
-4-0 line 3065
-...
-<6>[   40.793299] binder: release 954:1333 transaction 49693 out, still 
-active
-...
-<6>[   41.624171] binder: release 1198:1217 transaction 49693 out, still 
-active
-<6>[   41.624197] ------------[ cut here ]------------
-<2>[   41.624198] kernel BUG at drivers/android/binder.c:5070!
+IT6505 can not recive HPD_IRQ before training done and driver will
+force HW enter training done state when connect to such devices.
 
->
->>   drivers/android/binder.c | 5 +++--
->>   1 file changed, 3 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/android/binder.c b/drivers/android/binder.c
->> index 76052006bd87..c21d7806e42b 100644
->> --- a/drivers/android/binder.c
->> +++ b/drivers/android/binder.c
->> @@ -5302,7 +5302,8 @@ static int binder_thread_release(struct binder_proc *proc,
->>   			     "release %d:%d transaction %d %s, still active\n",
->>   			      proc->pid, thread->pid,
->>   			     t->debug_id,
->> -			     (t->to_thread == thread) ? "in" : "out");
->> +			     (t->to_thread == thread) ? "in" :
->> +			     (t->from == thread) ? "out" : "bad");
->>   
->>   		if (t->to_thread == thread) {
->>   			thread->proc->outstanding_txns--;
->> @@ -5317,7 +5318,7 @@ static int binder_thread_release(struct binder_proc *proc,
->>   			t->from = NULL;
->>   			t = t->from_parent;
->>   		} else
->> -			BUG();
->> +			t = NULL;
-> Dropping BUG() is nice but this could use en error message.
+When HW is force to training done state and restart link training,
+bits FORCE_RETRAIN and MANUAL_TRAIN at REG_TRAIN_CTRL1 must be set
+at the same time to reset HW state.
 
-The binder_debug() will log it as "bad" transaction instead of "out", so 
-there will be a trace of this happening.
+Signed-off-by: Hermes Wu <Hermes.wu@ite.com.tw>
+---
+ drivers/gpu/drm/bridge/ite-it6505.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-Thanks,
+diff --git a/drivers/gpu/drm/bridge/ite-it6505.c b/drivers/gpu/drm/bridge/ite-it6505.c
+index 88ef76a37fe6accacdd343839ff2569b31b18ceb..b47042dc06bb1e1dfd92bc0dc6d69dc918a140ba 100644
+--- a/drivers/gpu/drm/bridge/ite-it6505.c
++++ b/drivers/gpu/drm/bridge/ite-it6505.c
+@@ -1806,7 +1806,9 @@ static bool it6505_link_start_auto_train(struct it6505 *it6505)
+ 	mutex_lock(&it6505->aux_lock);
+ 	it6505_set_bits(it6505, REG_TRAIN_CTRL0,
+ 			FORCE_CR_DONE | FORCE_EQ_DONE, 0x00);
+-	it6505_write(it6505, REG_TRAIN_CTRL1, FORCE_RETRAIN);
++	/* reset link state machine and re start training*/
++	it6505_write(it6505, REG_TRAIN_CTRL1,
++		     FORCE_RETRAIN | MANUAL_TRAIN);
+ 	it6505_write(it6505, REG_TRAIN_CTRL1, AUTO_TRAIN);
+ 
+ 	while (timeout > 0) {
+@@ -2377,7 +2379,7 @@ static void it6505_stop_link_train(struct it6505 *it6505)
+ {
+ 	it6505->link_state = LINK_IDLE;
+ 	cancel_work_sync(&it6505->link_works);
+-	it6505_write(it6505, REG_TRAIN_CTRL1, FORCE_RETRAIN);
++	it6505_write(it6505, REG_TRAIN_CTRL1, FORCE_RETRAIN | MANUAL_TRAIN);
+ }
+ 
+ static void it6505_link_train_ok(struct it6505 *it6505)
 
-Frode
-
->
->>   		spin_unlock(&last_t->lock);
->>   		if (t)
->>   			spin_lock(&t->lock);
->> -- 
->> 2.49.0
->>
-> Regards,
-> --
-> Carlos Llamas
+-- 
+2.34.1
 
 
