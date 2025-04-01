@@ -1,39 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 196CD215F76;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3447321C167;
 	Tue,  1 Apr 2025 22:16:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743545782; cv=none; b=GgOh8conE8Fdr71V2pc4XHZIt8E+ltlkzSdt+knOYpR18cEiCl6NXR/0VtX2Sn739+BbZoDmBx4jca1uGBUVeNlU3sXj37rd/bfM83zgBV5GXIORSeHH5T9/2kxJGCBxfW7/kKQw7FAzYq7/qb0PDmQaVryVdl/xaNYx6CWMmQg=
+	t=1743545783; cv=none; b=eO+Zh/1XL6EzE7g6C25yR06PCKhX+EiQqamOmyeIWuoJKRYoXp312Xd7i8Qn38SVi/THECv1XgoNhqF8UL8ZvpFrJc1l5UYvj+eF0VbUGbxTAzptNp6ikNKujtO8qOWY1U7N/Zmfrpl2ZwJZyxLU4SPGFckYTZXTGvFk3XOHAxo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743545782; c=relaxed/simple;
-	bh=wMxGKCu9zqWOb1Hlq6/iwlTdCJ7+Gvd/pZBDj9jxjOI=;
+	s=arc-20240116; t=1743545783; c=relaxed/simple;
+	bh=tZ4f4oIS03YFlExpJPn1KRNKl8FMes2FWEzmVkaMISE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=e7KQGL+x1uRg3OLbkTFfBUwYGru4LyFZBEbLnktv8au9heQ22dIf4XBWtmTGHOPRFP2QP1kMi6uYGQwsxmf2e/3xllmsicFVgeMp+rCi64wNpPkCCEya7xjtA03uYbetqC/7oMGzxjxKov2ook6F1j+PQE7ihb3gNhi2T6xAOzU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ucYtp+Gi; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=S0d5gu7vQgVNMoibhcIOhiDweaR7TQC1omoaOElI7a5SQl+xzf6FU7DrPRquUzWsrFweHTnXv7WBOR96GPOYjluU+QQjUCFSgGVR+59GBVEFpFQbT71D8/AQQCVOi9Llc0PM7nT8y3E5B9ARpUisMnCtZyHYGpybW7lst0uptps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CcdYx4PW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ucYtp+Gi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8ED9C4CEF1;
-	Tue,  1 Apr 2025 22:16:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CcdYx4PW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1C85C4CEF7;
+	Tue,  1 Apr 2025 22:16:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743545781;
-	bh=wMxGKCu9zqWOb1Hlq6/iwlTdCJ7+Gvd/pZBDj9jxjOI=;
+	s=k20201202; t=1743545782;
+	bh=tZ4f4oIS03YFlExpJPn1KRNKl8FMes2FWEzmVkaMISE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ucYtp+Giu84Gcqog8+/VOZKUxI0E/EN2+8LWptsBD/5DD4qX4aDW2GE9q2a58Crcm
-	 V1gNPcS67+RxD+Pln2TTNbQTI0U4rDRdDU0o4vCWL5oKRoXVgDu5sVSANHD/GHOaIZ
-	 LZT19q+KsaxuqiCe9GuZ0yZi9xrBaHyYuETLTyVYhusRcBw4YGPg2xjCpb9X33kQvc
-	 edG5mp2gnnqqDcAEfIGiD1B+obP+TGUSybswGtHrYtp9ES5Lc7tTptrMKwcXHtBt7X
-	 uSMg9zdqV2Sb3xl/2fIbqKNslbLyXm7XfYWhgxu8CTE+lh5bqbiUK2uh3ZdSJNF+PR
-	 XAj0ditWKTHdg==
+	b=CcdYx4PWMzJrs8ZFUAVWQBRi2YL7hfeUsAIa1GgJL63qh5bg1IhsxKWFLfPQtMeU1
+	 vN24/OkRox4Obd11Y/rYpO8pm43bov+6jRDLPBj9QtAjIMpg9Xs3/OB4pKFYZr3h0I
+	 eCa3zFUy8WPUOoNj5BHzdxeW2n12hhVbHgb8bE/+AEdGZaFgjPOkQ9PL6zGD+xVHau
+	 THfQWepSLurUwd2n0pqRSUocJ3weSeuza7WGhuE4RJb0eULybrDdqaQW2lQJFloJCR
+	 1+ySSq6Vwn/EyGKtqpGHXkDozhih/4t35i0mPwSS/5UolDhElKP4z5Aa2qtrDl9Ifu
+	 mgwtvIaqKVUlA==
 From: Eric Biggers <ebiggers@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: Ard Biesheuvel <ardb@kernel.org>,
 	linux-crypto@vger.kernel.org,
 	linux-arch@vger.kernel.org
-Subject: [PATCH 3/7] lib/crc: remove unnecessary prompt for CONFIG_CRC16
-Date: Tue,  1 Apr 2025 15:15:56 -0700
-Message-ID: <20250401221600.24878-4-ebiggers@kernel.org>
+Subject: [PATCH 6/7] lib/crc: document all the CRC library kconfig options
+Date: Tue,  1 Apr 2025 15:15:59 -0700
+Message-ID: <20250401221600.24878-7-ebiggers@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250401221600.24878-1-ebiggers@kernel.org>
 References: <20250401221600.24878-1-ebiggers@kernel.org>
@@ -47,220 +47,111 @@ Content-Transfer-Encoding: 8bit
 
 From: Eric Biggers <ebiggers@google.com>
 
-All modules that need CONFIG_CRC16 already select it, so there is no
-need to bother users about the option.
+Previous commits removed all the original CRC kconfig help text, since
+it was oriented towards people configuring the kernel, and the options
+are no longer user-selectable.  However, it's still useful for there to
+be help text for kernel developers.  Add this.
 
 Signed-off-by: Eric Biggers <ebiggers@google.com>
 ---
- arch/hexagon/configs/comet_defconfig     | 1 -
- arch/m68k/configs/amcore_defconfig       | 1 -
- arch/mips/configs/omega2p_defconfig      | 1 -
- arch/mips/configs/rb532_defconfig        | 1 -
- arch/mips/configs/sb1250_swarm_defconfig | 1 -
- arch/mips/configs/vocore2_defconfig      | 1 -
- arch/powerpc/configs/skiroot_defconfig   | 1 -
- arch/sh/configs/hp6xx_defconfig          | 1 -
- arch/sh/configs/magicpanelr2_defconfig   | 1 -
- arch/sh/configs/se7206_defconfig         | 1 -
- arch/sh/configs/sh2007_defconfig         | 1 -
- arch/sh/configs/titan_defconfig          | 1 -
- arch/sparc/configs/sparc64_defconfig     | 1 -
- lib/Kconfig                              | 7 +------
- 14 files changed, 1 insertion(+), 19 deletions(-)
+ lib/Kconfig | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-diff --git a/arch/hexagon/configs/comet_defconfig b/arch/hexagon/configs/comet_defconfig
-index fed4a64b36fb..902cf30cf54b 100644
---- a/arch/hexagon/configs/comet_defconfig
-+++ b/arch/hexagon/configs/comet_defconfig
-@@ -70,11 +70,10 @@ CONFIG_INET=y
- # CONFIG_INET_DIAG is not set
- # CONFIG_IPV6 is not set
- CONFIG_CRYPTO_MD5=y
- # CONFIG_CRYPTO_ANSI_CPRNG is not set
- # CONFIG_CRYPTO_HW is not set
--CONFIG_CRC16=y
- CONFIG_CRC_T10DIF=y
- CONFIG_FRAME_WARN=0
- CONFIG_MAGIC_SYSRQ=y
- CONFIG_DEBUG_FS=y
- # CONFIG_SCHED_DEBUG is not set
-diff --git a/arch/m68k/configs/amcore_defconfig b/arch/m68k/configs/amcore_defconfig
-index 67a0d157122d..110279a64aa4 100644
---- a/arch/m68k/configs/amcore_defconfig
-+++ b/arch/m68k/configs/amcore_defconfig
-@@ -87,6 +87,5 @@ CONFIG_PANIC_ON_OOPS=y
- # CONFIG_SCHED_DEBUG is not set
- # CONFIG_DEBUG_BUGVERBOSE is not set
- # CONFIG_CRYPTO_ECHAINIV is not set
- CONFIG_CRYPTO_ANSI_CPRNG=y
- # CONFIG_CRYPTO_HW is not set
--CONFIG_CRC16=y
-diff --git a/arch/mips/configs/omega2p_defconfig b/arch/mips/configs/omega2p_defconfig
-index 128f9abab7fc..e2bcdfd290a1 100644
---- a/arch/mips/configs/omega2p_defconfig
-+++ b/arch/mips/configs/omega2p_defconfig
-@@ -109,11 +109,10 @@ CONFIG_NLS_ISO8859_15=y
- CONFIG_NLS_KOI8_R=y
- CONFIG_NLS_KOI8_U=y
- CONFIG_NLS_UTF8=y
- CONFIG_CRYPTO_DEFLATE=y
- CONFIG_CRYPTO_LZO=y
--CONFIG_CRC16=y
- CONFIG_XZ_DEC=y
- CONFIG_PRINTK_TIME=y
- CONFIG_DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT=y
- CONFIG_STRIP_ASM_SYMS=y
- CONFIG_DEBUG_FS=y
-diff --git a/arch/mips/configs/rb532_defconfig b/arch/mips/configs/rb532_defconfig
-index 0261969a6e45..42b161d587c7 100644
---- a/arch/mips/configs/rb532_defconfig
-+++ b/arch/mips/configs/rb532_defconfig
-@@ -153,7 +153,6 @@ CONFIG_JFFS2_FS=y
- CONFIG_JFFS2_SUMMARY=y
- CONFIG_JFFS2_COMPRESSION_OPTIONS=y
- CONFIG_SQUASHFS=y
- CONFIG_CRYPTO_TEST=m
- # CONFIG_CRYPTO_HW is not set
--CONFIG_CRC16=m
- CONFIG_STRIP_ASM_SYMS=y
-diff --git a/arch/mips/configs/sb1250_swarm_defconfig b/arch/mips/configs/sb1250_swarm_defconfig
-index ce855b644bb0..ae2afff00e01 100644
---- a/arch/mips/configs/sb1250_swarm_defconfig
-+++ b/arch/mips/configs/sb1250_swarm_defconfig
-@@ -97,6 +97,5 @@ CONFIG_CRYPTO_FCRYPT=m
- CONFIG_CRYPTO_SERPENT=m
- CONFIG_CRYPTO_TWOFISH=m
- CONFIG_CRYPTO_DEFLATE=m
- CONFIG_CRYPTO_LZO=m
- # CONFIG_CRYPTO_HW is not set
--CONFIG_CRC16=m
-diff --git a/arch/mips/configs/vocore2_defconfig b/arch/mips/configs/vocore2_defconfig
-index 917967fed45f..2a9a9b12847d 100644
---- a/arch/mips/configs/vocore2_defconfig
-+++ b/arch/mips/configs/vocore2_defconfig
-@@ -109,11 +109,10 @@ CONFIG_NLS_ISO8859_15=y
- CONFIG_NLS_KOI8_R=y
- CONFIG_NLS_KOI8_U=y
- CONFIG_NLS_UTF8=y
- CONFIG_CRYPTO_DEFLATE=y
- CONFIG_CRYPTO_LZO=y
--CONFIG_CRC16=y
- CONFIG_XZ_DEC=y
- CONFIG_PRINTK_TIME=y
- CONFIG_DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT=y
- CONFIG_STRIP_ASM_SYMS=y
- CONFIG_DEBUG_FS=y
-diff --git a/arch/powerpc/configs/skiroot_defconfig b/arch/powerpc/configs/skiroot_defconfig
-index 1eb446452fc0..6c0517961eee 100644
---- a/arch/powerpc/configs/skiroot_defconfig
-+++ b/arch/powerpc/configs/skiroot_defconfig
-@@ -277,11 +277,10 @@ CONFIG_SECURITY_LOCKDOWN_LSM=y
- CONFIG_SECURITY_LOCKDOWN_LSM_EARLY=y
- CONFIG_LOCK_DOWN_KERNEL_FORCE_INTEGRITY=y
- # CONFIG_INTEGRITY is not set
- CONFIG_LSM="yama,loadpin,safesetid,integrity"
- # CONFIG_CRYPTO_HW is not set
--CONFIG_CRC16=y
- CONFIG_CRC_ITU_T=y
- # CONFIG_XZ_DEC_X86 is not set
- # CONFIG_XZ_DEC_IA64 is not set
- # CONFIG_XZ_DEC_ARM is not set
- # CONFIG_XZ_DEC_ARMTHUMB is not set
-diff --git a/arch/sh/configs/hp6xx_defconfig b/arch/sh/configs/hp6xx_defconfig
-index 77e3185f63e4..3b7525510f7c 100644
---- a/arch/sh/configs/hp6xx_defconfig
-+++ b/arch/sh/configs/hp6xx_defconfig
-@@ -54,7 +54,6 @@ CONFIG_CRYPTO_CBC=y
- CONFIG_CRYPTO_ECB=y
- CONFIG_CRYPTO_PCBC=y
- CONFIG_CRYPTO_MD5=y
- # CONFIG_CRYPTO_ANSI_CPRNG is not set
- # CONFIG_CRYPTO_HW is not set
--CONFIG_CRC16=y
- CONFIG_CRC_T10DIF=y
-diff --git a/arch/sh/configs/magicpanelr2_defconfig b/arch/sh/configs/magicpanelr2_defconfig
-index a1109762c8ec..93b9aa32dc7c 100644
---- a/arch/sh/configs/magicpanelr2_defconfig
-+++ b/arch/sh/configs/magicpanelr2_defconfig
-@@ -84,6 +84,5 @@ CONFIG_MAGIC_SYSRQ=y
- CONFIG_DEBUG_KERNEL=y
- # CONFIG_SCHED_DEBUG is not set
- CONFIG_DEBUG_KOBJECT=y
- CONFIG_DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT=y
- CONFIG_FRAME_POINTER=y
--CONFIG_CRC16=m
-diff --git a/arch/sh/configs/se7206_defconfig b/arch/sh/configs/se7206_defconfig
-index bdd29e817ff7..d881fccbe6f0 100644
---- a/arch/sh/configs/se7206_defconfig
-+++ b/arch/sh/configs/se7206_defconfig
-@@ -99,7 +99,6 @@ CONFIG_FRAME_POINTER=y
- CONFIG_DEBUG_STACK_USAGE=y
- CONFIG_CRYPTO_DEFLATE=y
- CONFIG_CRYPTO_LZO=y
- # CONFIG_CRYPTO_ANSI_CPRNG is not set
- # CONFIG_CRYPTO_HW is not set
--CONFIG_CRC16=y
- CONFIG_CRC_ITU_T=y
-diff --git a/arch/sh/configs/sh2007_defconfig b/arch/sh/configs/sh2007_defconfig
-index 61bc391d443c..cc6292b3235a 100644
---- a/arch/sh/configs/sh2007_defconfig
-+++ b/arch/sh/configs/sh2007_defconfig
-@@ -191,6 +191,5 @@ CONFIG_CRYPTO_TEA=y
- CONFIG_CRYPTO_TWOFISH=y
- CONFIG_CRYPTO_DEFLATE=y
- CONFIG_CRYPTO_LZO=y
- # CONFIG_CRYPTO_ANSI_CPRNG is not set
- # CONFIG_CRYPTO_HW is not set
--CONFIG_CRC16=y
-diff --git a/arch/sh/configs/titan_defconfig b/arch/sh/configs/titan_defconfig
-index 11ff5fd510de..f3fad19b3059 100644
---- a/arch/sh/configs/titan_defconfig
-+++ b/arch/sh/configs/titan_defconfig
-@@ -263,6 +263,5 @@ CONFIG_CRYPTO_CAST6=m
- CONFIG_CRYPTO_KHAZAD=m
- CONFIG_CRYPTO_SERPENT=m
- CONFIG_CRYPTO_TEA=m
- CONFIG_CRYPTO_TWOFISH=m
- # CONFIG_CRYPTO_ANSI_CPRNG is not set
--CONFIG_CRC16=m
-diff --git a/arch/sparc/configs/sparc64_defconfig b/arch/sparc/configs/sparc64_defconfig
-index 01b2bdfbf9a8..f1ba0fefe1f9 100644
---- a/arch/sparc/configs/sparc64_defconfig
-+++ b/arch/sparc/configs/sparc64_defconfig
-@@ -227,11 +227,10 @@ CONFIG_CRYPTO_KHAZAD=m
- CONFIG_CRYPTO_SEED=m
- CONFIG_CRYPTO_SERPENT=m
- CONFIG_CRYPTO_TEA=m
- CONFIG_CRYPTO_TWOFISH=m
- # CONFIG_CRYPTO_ANSI_CPRNG is not set
--CONFIG_CRC16=m
- CONFIG_VCC=m
- CONFIG_PATA_CMD64X=y
- CONFIG_IP_PNP=y
- CONFIG_IP_PNP_DHCP=y
- CONFIG_DEVTMPFS=y
 diff --git a/lib/Kconfig b/lib/Kconfig
-index 81d8ff429dca..372e07c5e31d 100644
+index 89470bb24519..4e796eaea2f4 100644
 --- a/lib/Kconfig
 +++ b/lib/Kconfig
-@@ -140,16 +140,11 @@ source "lib/crypto/Kconfig"
+@@ -138,63 +138,90 @@ config TRACE_MMIO_ACCESS
+ 
+ source "lib/crypto/Kconfig"
  
  config CRC_CCITT
  	tristate
++	help
++	  The CRC-CCITT library functions.  Select this if your module uses any
++	  of the functions from <linux/crc-ccitt.h>.
  
  config CRC16
--	tristate "CRC16 functions"
--	help
--	  This option is provided for the case where no in-kernel-tree
--	  modules require CRC16 functions, but a module built outside
--	  the kernel tree does. Such modules that use library CRC16
--	  functions require M here.
-+	tristate
+ 	tristate
++	help
++	  The CRC16 library functions.  Select this if your module uses any of
++	  the functions from <linux/crc16.h>.
  
  config CRC_T10DIF
- 	tristate "CRC calculation for the T10 Data Integrity Field"
+ 	tristate
++	help
++	  The CRC-T10DIF library functions.  Select this if your module uses
++	  any of the functions from <linux/crc-t10dif.h>.
+ 
+ config ARCH_HAS_CRC_T10DIF
+ 	bool
+ 
+ config CRC_T10DIF_ARCH
+ 	tristate
+ 	default CRC_T10DIF if ARCH_HAS_CRC_T10DIF && CRC_OPTIMIZATIONS
+ 
+ config CRC_ITU_T
+ 	tristate
++	help
++	  The CRC-ITU-T library functions.  Select this if your module uses
++	  any of the functions from <linux/crc-itu-t.h>.
+ 
+ config CRC32
+ 	tristate
+ 	select BITREVERSE
++	help
++	  The CRC32 library functions.  Select this if your module uses any of
++	  the functions from <linux/crc32.h> or <linux/crc32c.h>.
+ 
+ config ARCH_HAS_CRC32
+ 	bool
+ 
+ config CRC32_ARCH
+ 	tristate
+ 	default CRC32 if ARCH_HAS_CRC32 && CRC_OPTIMIZATIONS
+ 
+ config CRC64
+ 	tristate
++	help
++	  The CRC64 library functions.  Select this if your module uses any of
++	  the functions from <linux/crc64.h>.
+ 
+ config ARCH_HAS_CRC64
+ 	bool
+ 
+ config CRC64_ARCH
+ 	tristate
+ 	default CRC64 if ARCH_HAS_CRC64 && CRC_OPTIMIZATIONS
+ 
+ config CRC4
+ 	tristate
++	help
++	  The CRC4 library functions.  Select this if your module uses any of
++	  the functions from <linux/crc4.h>.
+ 
+ config CRC7
+ 	tristate
++	help
++	  The CRC7 library functions.  Select this if your module uses any of
++	  the functions from <linux/crc7.h>.
+ 
+ config LIBCRC32C
+ 	tristate
+ 	select CRC32
  	help
- 	  This option is only needed if a module that's not in the
+ 	  This option just selects CRC32 and is provided for compatibility
+ 	  purposes until the users are updated to select CRC32 directly.
+ 
+ config CRC8
+ 	tristate
++	help
++	  The CRC8 library functions.  Select this if your module uses any of
++	  the functions from <linux/crc8.h>.
+ 
+ config CRC_OPTIMIZATIONS
+ 	bool "Enable optimized CRC implementations" if EXPERT
+ 	default y
+ 	help
 -- 
 2.49.0
 
