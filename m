@@ -1,115 +1,94 @@
-Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC804131E2D;
-	Tue,  1 Apr 2025 06:17:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1297131E2D;
+	Tue,  1 Apr 2025 06:17:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743488261; cv=none; b=riSZMFJVzBwaVufzRBJkVZSx2IsWWluJSw0YVDiL2JedyvAXiQ2TIAh81GGxWlepfwgsDSfsYALCpxJAg6C86k/GLDXkh644l8+xCP/Xme2OdjQQUKh/l1mtoCxzNEENhLyi8I+wCUBPYb7GXDFpQUaTc/tax5zNPdLkR5qR/7Y=
+	t=1743488280; cv=none; b=DCn+kKuLVXOPFuyzUWCl85uRiZQR6KvsdPAgHoCR/PFzeK6EO5/7FkYPZCk04OeD89wfUoJBFnnd4P1PkBt2E5wQ7b++SqRDHy6iusqeLQaMPaP8hq5jjrY6eCrb8cNyBK+VRjh6yUsIjgA620+XqtwK2eftd/55MTsUxJfFjSA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743488261; c=relaxed/simple;
-	bh=L6I6mgr2VPoIYZD2sGpQ4Y2PmWqo7xJmAmKe2BECYRQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=LNNTitC1MH4viFwEm51dVUGycwst6OGd/E968lLSyiV1aI4tpC2eiyJJTSdfTqY+fkPCDV41iVrY5dTnxZ+scRbb13HUxUgO2aF4lw3++p9bj8MT3faxA/acKCQKIuQrZsta9ZKFKvJet9vXsebKKzYDXyNU29H1Nq/z/OQxDRQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost (unknown [124.16.138.129])
-	by APP-05 (Coremail) with SMTP id zQCowACn3wfchOtn05WcBA--.19358S2;
-	Tue, 01 Apr 2025 14:17:02 +0800 (CST)
-From: Chen Ni <nichen@iscas.ac.cn>
-To: andrii@kernel.org,
-	eddyz87@gmail.com,
-	mykolal@fb.com,
-	ast@kernel.org,
-	daniel@iogearbox.net,
-	martin.lau@linux.dev,
-	song@kernel.org,
-	yonghong.song@linux.dev,
-	john.fastabend@gmail.com,
-	kpsingh@kernel.org,
-	sdf@fomichev.me,
-	haoluo@google.com,
-	jolsa@kernel.org,
-	shuah@kernel.org,
-	mcoquelin.stm32@gmail.com,
-	alexandre.torgue@foss.st.com,
-	peterz@infradead.org,
-	ameryhung@gmail.com,
-	juntong.deng@outlook.com,
-	oleg@redhat.com
-Cc: bpf@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Chen Ni <nichen@iscas.ac.cn>
-Subject: [PATCH] selftests/bpf: Convert comma to semicolon
-Date: Tue,  1 Apr 2025 14:15:46 +0800
-Message-Id: <20250401061546.1990156-1-nichen@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1743488280; c=relaxed/simple;
+	bh=KnEDjwzU7f+yS42V6ce7fa3bnnh/T4X0uQ0vYcQujSU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HgrWC1l2Z0cGC9oOqVSF7j+PYrb75cnN+0FbWPuciuKnmtwaEyGKGxLoSmfaGeZigL/UjI3oBw2C2mlgok6t6/WYGbJ6guBrsy7vjDaBN69pJ8LTsOseOrImWTuMtgK2KtNZq74ztEjc2/M+Lv4abfV+gWcEJzRVXWKGluu2Lcg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qqsPBV6Z; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qqsPBV6Z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EA6BC4CEE8;
+	Tue,  1 Apr 2025 06:17:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743488279;
+	bh=KnEDjwzU7f+yS42V6ce7fa3bnnh/T4X0uQ0vYcQujSU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qqsPBV6ZDjA4JXFCcrEZ63438y/20vB2mvHM3E8CAfefaN/roeihqcnBpj4gL6fHt
+	 9/T50ZfHic0p24x1YYnVJa663OpTSmjaHIHVvXiOG5tv/Z4dTOqC0zeFQ6ZNA0+iPe
+	 7FWOerDBjRrtbWN9DbBZ79Bco+tjFDaYU0nJvmtwZAvmKCsUCd33QelYSFp3YDvgs7
+	 1ew6Ye5Q9HFLThkniDCATefPUbhcE7ZL5m5/pUFrBmJ3XU0UFZ75F+j9IzrZcqbYDl
+	 p4vhmBOM+SRRGSWXMfdL/391h1gCMGdZs977xO0b9bABOUcT4WVbaWzyjjUS8nk7Vl
+	 WHhhcegmHDJ3w==
+Date: Tue, 1 Apr 2025 08:17:55 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Sam Winchenbach <sam.winchenbach@framepointer.org>
+Cc: linux-kernel@vger.kernel.org, mdf@kernel.org, hao.wu@intel.com, 
+	yilun.xu@intel.com, trix@redhat.com, robh@kernel.org, krzk+dt@kernel.org, 
+	conor+dt@kernel.org, michal.simek@amd.com, linux-fpga@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	Sam Winchenbach <swinchenbach@arka.org>
+Subject: Re: [PATCH 1/2] dt-bindings: fpga: zynq: Document ICAP on boot
+Message-ID: <20250401-helpful-bronze-gazelle-4d8e25@krzk-bin>
+References: <20250328141944.119504-1-sam.winchenbach@framepointer.org>
+ <02496a88-3d9c-49ee-93ab-8f1400fc0c6b@kernel.org>
+ <p4bujnmgkcvsu4qipmgh2j2loedepmwgp7zlaxrurhaveb6tbc@ibqtbjnbzdzj>
+ <14b12882-119d-4c24-9634-e4cc37a39212@kernel.org>
+ <2ccsnpv67gsu354uo7xe7syrxs265ncj6hl26v3cwf2dfm7hyu@ihkemyajuiag>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:zQCowACn3wfchOtn05WcBA--.19358S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7KF17ur4DKrWUZF4kWFyrtFb_yoW8Cr47pa
-	4fXw1DAr1xJa1UJa1xKa9Fqr1S9rsIq3y7Jas3Kr93Xa13t3W3XryUtr18twnxXF4rXa15
-	uw1YvFyv9an7ZrDanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUBj14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-	6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUAVWUtwAv7VC2z280aVAFwI0_Gr1j6F4UJwAm72CE4IkC6x0Yz7v_Jr
-	0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E
-	8cxan2IY04v7MxkF7I0En4kS14v26r4a6rW5MxkIecxEwVAFwVW8AwCF04k20xvY0x0EwI
-	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
-	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7
-	IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k2
-	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxV
-	AFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0pRzMKAUUUUU=
-X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <2ccsnpv67gsu354uo7xe7syrxs265ncj6hl26v3cwf2dfm7hyu@ihkemyajuiag>
 
-Replace comma between expressions with semicolons.
+On Mon, Mar 31, 2025 at 09:07:03AM -0400, Sam Winchenbach wrote:
+> On Mon, Mar 31, 2025 at 02:43:59PM +0200, Krzysztof Kozlowski wrote:
+> > Not sure yet. Can't you check the status of ICAP before programming and
+> > then enable it only if was enabled before?
+> 
+> I am having a bit of difficulty understanding this so let's talk about cases
+> where the ICAP is enabled/disabled -
+> 
+> 1. When writing the fabric from the driver
+>    In this situation it might make sense to read the state of the ICAP
+>    interface when preparing the fabric, before enabling PCAP. When the write
+>    completes you could re-enable the ICAP if it was previously enabled.
+> 
+>    This might be outside the scope of this change - and I am not comfortable
+>    enough with this use-case to understand potential side effects from doing
+>    this. Logically it makes sense, but there may be a very specific reason that
+>    the ICAP must be enabled after doing a fabric load or partial
+>    reconfiguration.
+> 
+> 2. When the FPGA driver loads and is probed by the DTS
+>    In this situation, which is covered by this patch, the FPGA is loaded by
+>    BootROM/FSBL but contains functionality that requires the ICAP. Unless the
+>    user has made modifications to the FSBL or 3rd stage bootloader there is no
+>    clear way to enable the ICAP interface. Checking to see if it had been
+>    enabled prior to loading this driver does not (in my opinion) make a lot of
+>    sense here.
+> 
+>    Perhaps the name of the DTS is confusing? The suffix '-on-load' was meant to
+>    indicate when the driver was loaded, not the fabric. Would the suffix
+>    '-on-probe' be more clear?
 
-Using a ',' in place of a ';' can have unintended side effects.
-Although that is not the case here, it is seems best to use ';'
-unless ',' is intended.
+Neither on-load nor on-probe, because again you instruct the OS what it
+should do. You should instead describe the hardware (or other parts of
+software stack). Describe the condition, the hardware feature, the
+characteristic observed. With proper phrasing the property should be
+fine, but I still do not see that its name and description match actual
+hardware.
 
-Found by inspection.
-No functional change intended.
-Compile tested only.
-
-Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
----
- tools/testing/selftests/bpf/test_kmods/bpf_testmod.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c b/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
-index 3220f1d28697..f38eaf0d35ef 100644
---- a/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
-+++ b/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
-@@ -1340,7 +1340,7 @@ static int st_ops_gen_prologue_with_kfunc(struct bpf_insn *insn_buf, bool direct
- 	*insn++ = BPF_STX_MEM(BPF_DW, BPF_REG_6, BPF_REG_7, offsetof(struct st_ops_args, a));
- 	*insn++ = BPF_JMP_IMM(BPF_JA, 0, 0, 2);
- 	*insn++ = BPF_MOV64_REG(BPF_REG_1, BPF_REG_0);
--	*insn++ = BPF_CALL_KFUNC(0, bpf_cgroup_release_id),
-+	*insn++ = BPF_CALL_KFUNC(0, bpf_cgroup_release_id);
- 	*insn++ = BPF_MOV64_REG(BPF_REG_1, BPF_REG_8);
- 	*insn++ = prog->insnsi[0];
- 
-@@ -1379,7 +1379,7 @@ static int st_ops_gen_epilogue_with_kfunc(struct bpf_insn *insn_buf, const struc
- 	*insn++ = BPF_STX_MEM(BPF_DW, BPF_REG_1, BPF_REG_6, offsetof(struct st_ops_args, a));
- 	*insn++ = BPF_JMP_IMM(BPF_JA, 0, 0, 2);
- 	*insn++ = BPF_MOV64_REG(BPF_REG_1, BPF_REG_0);
--	*insn++ = BPF_CALL_KFUNC(0, bpf_cgroup_release_id),
-+	*insn++ = BPF_CALL_KFUNC(0, bpf_cgroup_release_id);
- 	*insn++ = BPF_MOV64_REG(BPF_REG_0, BPF_REG_6);
- 	*insn++ = BPF_ALU64_IMM(BPF_MUL, BPF_REG_0, 2);
- 	*insn++ = BPF_EXIT_INSN();
--- 
-2.25.1
+Best regards,
+Krzysztof
 
