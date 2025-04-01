@@ -1,118 +1,104 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D3A71EB1A7
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 08:40:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3571C1A83E4
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 08:42:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743496837; cv=none; b=mZiHLvEtwgMUrnGNfDJYvRE2TAuBB+iqhGwHvsg4lHLRS9vx/8Se64KzyJf0y26mdKiFpC/a25ACQOq8utsodckK9jKi56/qFaD5qT65sm6rzgk0nNMwrnx+0k4K+pDKhgQwpbojyAGwRJMsz50POLM3ZXRg6H1APQe6DFjHW/0=
+	t=1743496939; cv=none; b=CLaxmVj+V3QoLAV3s+OBJ2wOiXEY1EFiUh+jafTOL7JSHvdfASwG7nkmbhDEZMhFW+tj+GALxGOj0ZI/RAlrC9cLDzx5xWrdWXIWvx6p0g5N2huzIcgUHKDwozWRxV2Mw3+jatsOkUz0eGN2CjAXtVZecgexFyf3xtatOL638CI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743496837; c=relaxed/simple;
-	bh=XN7QInH4oZtUqk5DB14x/7ud6otDLi5WJCgAWF/KC5c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ojRSvj3yr5VxQZezvtxzXTtaD9DlEviGCzkB4psgNgfyZSmaflF/rVml7TsksDvhcntoU8iH8Jo8LtjNKYN12WUWWESkmt8jaBJ5arcC2Vng4tzFn6spkKR8fX7ikukDENOdUOsA27KcmayHmiAPwByVnkkG+McKksjJJ0kjYxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Hl70XH19; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1743496939; c=relaxed/simple;
+	bh=YZaFGvCMIQsb9PiOlDNBsJxEnKn9JVZ42AOxSWiOBio=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QrRNqy9ak0ld5ZkTtsd4qntgs5YvgzSiZyKNnAWkLqofwM2Zi3N4thvHkeRZaGvOCm5PTcgNI46W+mj9osoSufoc2kxBZPEoOcAfBOAJjhvxVDSWbFsc6KFK/Om40l6LNPjZ2qrbQKRYoOt6OMiyCP3k6yx37akJIoY6p8IxnLQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=cWjLRqC6; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Hl70XH19"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3996af42857so4142321f8f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 01:40:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="cWjLRqC6"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5e614da8615so5759696a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 01:42:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743496833; x=1744101633; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=QAK5bGqbHLPZStc3akH3qUwD0OFzOTA3rRJ3Mg3wBUA=;
-        b=Hl70XH195giJugC0j9Qx0xVCTs/0bA5+lCaAiQXlOB3rW7MBuGl8ZCeZl4D5saOXUA
-         ORekelsa61ABae4ohSM3cu248lAsZvzSExb6UXs3ltS0WJSOxWtMMhxUQIxMeVVbfmJQ
-         67VCBh3iYb6EhgBj9YdxYyyzUGDDVVTmPqAKl8cdyxdBzmPrZ1ZnhhpJ4WHxSexg5FrQ
-         jzdxNviHzRx14eXd1CxD91WYGuoq+/IElVG9y89uPoSvB5/cH0fULiHfRCrNBmtuxjnn
-         /syoHW6tBLWFdyOhD1/oYbkT3UvBjPTdLt/RSdH2LdBPZwlmB96XtZLtdNflXFhttzNC
-         onRw==
+        d=suse.com; s=google; t=1743496934; x=1744101734; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=T/o5XWa4l5gUPNjznvgYeaHUgYy/EIx7woUA0k2Kxd4=;
+        b=cWjLRqC6ixAcOGJxfdXoRS/I/MNJGbf9o/JnezkRCs3AG96uJ82EBjOxUYA8+L/sGH
+         mASoRU4SsCfzTcGB/uBGcvRRBgPdCIbp/IDmqaCQbLZLj5UgO/kkKm2vJF5jKE2pvBAE
+         zvygyzQQQMOGsnhlEO8glXA/R9LYo0TTtaDR1T5o7l/5m4VtUknK3admVC7nAkbUu6DH
+         rtKuJD2lDZ96P3v/6lLr0JHa9Uf0xmoXp3ckz3kiSAbZ+0isarp9Pn579pZHy80bNYce
+         lI7sp6/czGmbzuJwCSV/GPrgPH6ny8DJU0p9uVgpD67GgRxWkY8UhkgiXpXiyyzl8F+Z
+         TLnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743496833; x=1744101633;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QAK5bGqbHLPZStc3akH3qUwD0OFzOTA3rRJ3Mg3wBUA=;
-        b=uhaj5YMQcyrc8Z3c7rSVW2dm/X93G/u7hbo9A6Gv9jXFNRIchr14q5wdRkm6bKUvUm
-         64k2OrUltG/hqBLebJU7nN8DhWGjslK0YB8OjCCD/VuLQQQjOQHJ9/0uGWBd1E2EO3Wq
-         uUcVrtlwCdPZdjeJdTxab/7Hh7DvIHoHOBedJa7ofe9zP0ubom4+DgLWbjdOuv1RKjUj
-         H4Pz/b/ck7baUlnbX4F4mwjEwn1shsxTtrswv6AIGf+oXZl5/s94DNhqGEqtOzAUTuf7
-         HsFMjDYFHlRL+aKoBEluQSl6oYHda25ECDa4lh6c+tBhHHfK/g4tbundJhqb/bOARYkD
-         J3dw==
-X-Forwarded-Encrypted: i=1; AJvYcCXOPLdAeQZM5yNG0Z2btW8gAVWR2LFiGXJQlJYAlWVCN2PHz/wqJLw/sc/RKo/FHM4eeSM+BTHNPlrO5Ok=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwGMrqVAOdBk6S8t/H3TMw9QL3v3B6Cdsw0LaF54wRKhBeLntkA
-	DUqtR73FRQrs50NeMGVJ3f3BPWECiyPI+gjscXlm6HhEroRU9g/f5d2q7v1iTpk=
-X-Gm-Gg: ASbGncuNa5qKUvXArvqLhjwp4NnmNTbdg3O1YbTQJimDlLXEKju4wfx9fCBCRTTq0jx
-	D/sWVzN7CvfsGJ23iqS2UPXXc7x9kHoQIhihhDVL2rxPTNr++uPYtFpESboqxbW5DSU0m+xCnXU
-	cIiCYL6gisPJMsm2B5IJcac+bt00cIzjaiuq0n9cASNd/aXo464cNSKQKJxSMmkpQ+OVopnVxyu
-	C2KXCEO3SUy43oc7s5zfbMsHz8VqUgUkmGDnhVaW8l6aKro1Y4r0cvlANwyKBLAjDtsWJKLTEJU
-	X6sdNsUgZjwCxT9fyCMkjes7cl8jhyzBFsU7AhSN37d7nRSEWmpzO9EZ0Tm93VUO0HhfeRRuciP
-	FrMJta8rQSUtHsynFyMuO
-X-Google-Smtp-Source: AGHT+IGsGLZEWhtkiVdbEty9JUgRguBjdThHJUgiYsWeC0RRt/L2+R/RFctKxKdLxoC212I4HzJVSg==
-X-Received: by 2002:a05:6000:4188:b0:39c:12ce:105c with SMTP id ffacd0b85a97d-39c12ce10f0mr5887061f8f.6.1743496832719;
-        Tue, 01 Apr 2025 01:40:32 -0700 (PDT)
-Received: from [192.168.0.35] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b6588dbsm13291530f8f.2.2025.04.01.01.40.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Apr 2025 01:40:32 -0700 (PDT)
-Message-ID: <2d2e64cf-2bc9-403d-98ed-c9150d1973c4@linaro.org>
-Date: Tue, 1 Apr 2025 09:40:31 +0100
+        d=1e100.net; s=20230601; t=1743496934; x=1744101734;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=T/o5XWa4l5gUPNjznvgYeaHUgYy/EIx7woUA0k2Kxd4=;
+        b=n5H3AtDNcooa5clbQkmKqOJ041ahrPcxGM2+l6J0gfl/pg8tsgjAEes5+cOROHICx/
+         50gJ/i3NXHsiJc9+EEf9LwCqhsR1O7wBN5hlRmRUeHb6wwN1I5Zu2IH/JwJONAHkB6aN
+         SgEyhTxF2WZBeehV7S76Dng674YZ1yelXVUkuZirx4JBlfj27Gv0ABqFytfOq7U1CNNZ
+         l0j5RPq4r5ZK13uuz45T4/+6AoqYvWYSXm4hjtM+Y2SzY4VOpCKKoznmfXXJ2dim4f4U
+         QeFqFLKH+F9iTMLeSliNvpizDzMmYchx1lwYvD7C/ToNnVBEIVgxyPAZbiPtXMALzaya
+         94pg==
+X-Forwarded-Encrypted: i=1; AJvYcCUmqDsUUh7n/Ia1zJ70QimSmGNxDfbpEQsY1gdESMuTsZNuQ2NUdyxRp0IK8vYLu9CgpnaS5AIMZra+BWg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVRDEbTRXWdpju5iU6XF/qv0AaBFxc5j8RJTPMoQS86po1zDaa
+	EXkuybIvHPNi0KOZhhw2vfkTItNCDZtpIdsHJHtqvB5ShAvoOJ/wOJmEUErqadrkehTsXkYVJ6b
+	T
+X-Gm-Gg: ASbGncubK3HWGcjAKKgZ/vImcszaF4j00ccmVBS/1QEg9HU3lECCxzHBvdlwf7W1UNj
+	87oCu9RFyK0FzhEkuHNN5E46fFu1blWK/vtkH8BAHgewxLy2LUWcjL1CZPr0z7RDHEH3K1+A7tx
+	Zr1ocI9LGFh9prZMJcb1FLTF76IOm0lYQFMVqXHEtGJx1F2Va6uPVE0cVsb6F/YRyP2zws01CJV
+	WESGc01yCbe1/w8TJZr0HQX3ZiJf9YxMUN5ODnNqUfF2TGF+6WVVNfKjDANzVdniLTe5SERS0Va
+	ProSWmwAUeODNHHeVLLGSLKkEQ4rUEngItOl6/UbQESomg==
+X-Google-Smtp-Source: AGHT+IE4hKhywGcQobvbzoNbXf8Bq4/ZS+8/xXWXD5AUQUwrxFzCZds5ecBjzn/9IMrH/IQA23YLQg==
+X-Received: by 2002:a05:6402:84f:b0:5e7:87ea:b18c with SMTP id 4fb4d7f45d1cf-5edf6033e1amr9834137a12.15.1743496934489;
+        Tue, 01 Apr 2025 01:42:14 -0700 (PDT)
+Received: from localhost ([193.86.92.181])
+        by smtp.gmail.com with UTF8SMTPSA id 4fb4d7f45d1cf-5edc16d5077sm6779970a12.32.2025.04.01.01.42.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Apr 2025 01:42:14 -0700 (PDT)
+Date: Tue, 1 Apr 2025 10:42:13 +0200
+From: Michal Hocko <mhocko@suse.com>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, bpf@vger.kernel.org,
+	daniel@iogearbox.net, andrii@kernel.org, martin.lau@kernel.org,
+	akpm@linux-foundation.org, peterz@infradead.org, vbabka@suse.cz,
+	bigeasy@linutronix.de, rostedt@goodmis.org, shakeel.butt@linux.dev,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm/page_alloc: Fix try_alloc_pages
+Message-ID: <Z-um5bWEjfmH5XHT@tiehlicka>
+References: <20250401032336.39657-1-alexei.starovoitov@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] media: qcom: camss: csiphy-3ph: Make non-Gen2 PHY work
- again
-To: Yassine Oudjana <y.oudjana@protonmail.com>, Robert Foss
- <rfoss@kernel.org>, Todor Tomov <todor.too@gmail.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil
- <hverkuil@xs4all.nl>, Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>,
- Depeng Shao <quic_depengs@quicinc.com>
-Cc: Yassine Oudjana <yassine.oudjana@gmail.com>, linux-media@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250401083329.314863-1-y.oudjana@protonmail.com>
-Content-Language: en-US
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <20250401083329.314863-1-y.oudjana@protonmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250401032336.39657-1-alexei.starovoitov@gmail.com>
 
-On 01/04/2025 09:33, Yassine Oudjana wrote:
-> Commit fbce0ca24c3a ("media: qcom: camss: csiphy-3ph: Move CSIPHY variables
-> to data field inside csiphy struct") moved a version check that was
-> previously guarded by a check for Gen2 to csiphy_init without moving the
-> Gen2 check along with it. Since it was guarded by the Gen2 check, it was
-> only handling versions that were Gen2 and returned -ENODEV for others since
-> they shouldn't pass the Gen2 check to begin with.
+On Mon 31-03-25 20:23:36, Alexei Starovoitov wrote:
+> From: Alexei Starovoitov <ast@kernel.org>
 > 
-> Check if the CSIPHY is Gen2 before running this version check and assigning
-> Gen2 lane regs array.
+> Fix an obvious bug. try_alloc_pages() should set_page_refcounted.
 > 
-> Fixes: fbce0ca24c3a ("media: qcom: camss: csiphy-3ph: Move CSIPHY variables to data field inside csiphy struct")
-> Signed-off-by: Yassine Oudjana <y.oudjana@protonmail.com>
+> Fixes: 97769a53f117 ("mm, bpf: Introduce try_alloc_pages() for opportunistic page allocation")
+> Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+
+Acked-by: Michal Hocko <mhocko@suse.com>
+
 > ---
->   drivers/media/platform/qcom/camss/camss-csiphy-3ph-1-0.c | 3 +++
->   1 file changed, 3 insertions(+)
 > 
-> diff --git a/drivers/media/platform/qcom/camss/camss-csiphy-3ph-1-0.c b/drivers/media/platform/qcom/camss/camss-csiphy-3ph-1-0.c
-> index a6cc957b986e..17762aee6dba 100644
-> --- a/drivers/media/platform/qcom/camss/camss-csiphy-3ph-1-0.c
-> +++ b/drivers/media/platform/qcom/camss/camss-csiphy-3ph-1-0.c
-> @@ -700,6 +700,9 @@ static int csiphy_init(struct csiphy_device *csiphy)
->   	csiphy->regs = regs;
->   	regs->offset = 0x800;
->   
-> +	if (!csiphy_is_gen2(csiphy->camss->res->version))
-> +		return 0;
-> +
->   	switch (csiphy->camss->res->version) {
->   	case CAMSS_845:
->   		regs->lane_regs = &lane_regs_sdm845[0];
+> As soon as I fast forwarded and rerun the tests the bug was
+> seen immediately.
+> I'm completely baffled how I managed to lose this hunk.
+> I'm pretty sure I manually tested various code paths of
+> trylock logic with CONFIG_DEBUG_VM=y.
+> Pure incompetence :(
 
-Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+I believe Vlastimil is right. This seems to be an unfortunate mismatch
+in the final tree when this got merged.
+-- 
+Michal Hocko
+SUSE Labs
