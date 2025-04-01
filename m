@@ -1,63 +1,25 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72970A95C
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 04:47:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A306EACE
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 04:50:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743482877; cv=none; b=kjGPxAKgM2Yw4A+HqT1G87/FBQwyMToHv2K1AtdtCsQRoREo8bp45nvbgfBAXNTRWhA+dNLD56CmRvIjdBsoBtIG+ln+iq9jBHlIMU8YjWBKpuQ8ijyhdqtJXkZnkSy9mvl/azf+GRuX96+zvR3B9KP+vm8qCXSWr66prDNssNQ=
+	t=1743483042; cv=none; b=dW2mnBFFyJgCVJvLjGCJQ8wrZTOURgcVAS4dKBfOABXHiOG8cRrffa1Azp9gI7ncgnbKpSX94CT5/OI3NonGKRFCEQQv94RV49cdouurCx0ilvCumZ/7WMIljQzq8MB5uROOVS33rVqSDclVx+z86ekOkNi1xi+uyHVi9co2yd8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743482877; c=relaxed/simple;
-	bh=pdRlylRtWscqEnVbh/Va6IKnH/B2Bw87mJrwkBXsEno=;
+	s=arc-20240116; t=1743483042; c=relaxed/simple;
+	bh=YMqeGFEfZuafwnrB5kJbEH3IDII0/ZT08GZH7KupvlE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=juGnNScAQJzGlxvQdqT61q82PET/ei8ZGQyHU7zNWOkor3qx0x1UhwdGPdz5WH2DDKgK0UsC1cztp08KF+YdGB6ySNv2HhL/on7GleYQxaiLMCGFYwqSqk7r9XHE4syLkDEleXZUOTd2cMap/aNQMjYlhzgfL0a4eGqE0R1ibik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=R2jKweL6; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="R2jKweL6"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-391295490c8so506230f8f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 21:47:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1743482873; x=1744087673; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=pdRlylRtWscqEnVbh/Va6IKnH/B2Bw87mJrwkBXsEno=;
-        b=R2jKweL6Bc6pzvdfssx0bmPfsAEsripY1pI9Ax9SjJQsOH9heu98R6N/zNTSmwNvbq
-         ziMSgFacC5Xu7wmrDwtJkVy6hjw6aCIoFsf7u+Tlqy0ZTYfXCbTkOGh1rlMwMPa82DsX
-         H/egGpyYIsvwDCF0Gr/aMnRiyiC3aSi2N+t33Pha/RJ1bz6RJWoHE5ss6aAuoQu6oBwz
-         LzA8QOWniTtqou7iD1Q4qdb+exd5mbOohL6Wyw2D69tJKjOh76jPDmLRcQqQxmxQrWL9
-         eBtgp93A89dfKkvcO2QkjuDtl8Y4LgIFnyf0McZrLuvvb2unTjjuwONv0G2CX8xDuvLz
-         w3fg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743482873; x=1744087673;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pdRlylRtWscqEnVbh/Va6IKnH/B2Bw87mJrwkBXsEno=;
-        b=O5CSFaf0Buy8stjfKog3DH5GcS9WTjOqoqZYoMZ5km4RySMc7DrXMucZEa1ATb9mh+
-         tye5iK9Lmj4SGFOLJhznSDBCqZ61fbvAg9KhXmNXdFbWOMFpWf/BU/T/5Kpc/p4irR9v
-         mvTEgd+AjEUwtkJmzVAgrWfB6vJQfacqESey7V6GV70/+2PNRWGLXyRI5Wd8GNRfKrjM
-         6jvboBNXyafbNo3/7sKEAEOVMlbCxxv/FevjTjfAkS69neuR7E2prmIDKY7qWWClBkeZ
-         kMcDzo2edy877hv6qZ7Jqo90TaLoXmFvrf16PWl0WC7YRwz2iBFrCeZv/1h9SR0QaIps
-         VtWA==
-X-Gm-Message-State: AOJu0Yz+LSzyMKPQDBzxJyEeZtAkRGavn2p8ivqxQ+Xgk5GiTQi76lf1
-	EgKUgByc83iYsttZnGqydfGHA9NXrHYKJ93qWUSWGRashUSL1mfR5b9bi7WIvX0=
-X-Gm-Gg: ASbGnctZa4rhgd3Em2lQI2ZhlKBdVwajvVf2tYFkJCoKvww9OvzaJ/PdRgO0InR8vCf
-	jbErEbV8hTO6/+ByGsNfgwRYYtOaQU3VQ1IPu96R3CMc3k+4nOhIm/s3MF7XIuEP8YPClZc7z9T
-	hUs0TPhquif1/N8Z0eVkSI3ufkpsXefBrjr4kotkbXmuqx/vPwZX9JSZ34rF/VtIDnhURsICzYG
-	T2DMniYxlQ6TfpaXvPXYLPdKaO2JKZVJg3AfyGomV1Hb9Ak1H81PbSuNtvw+XlEOZXy5ewjxOXP
-	V8gs9/vLMsQI7W0UOdmwBRv3kOTI/OcT8Hjcifj8CpNAIXslHNs=
-X-Google-Smtp-Source: AGHT+IEeY2bNytPb3ihsugWoNW8hGrlgWaIes48R1sCfv8Mlmy6uP59V7H9Zdjiarts27iYBmLepKA==
-X-Received: by 2002:a05:600c:1f10:b0:439:90f5:3919 with SMTP id 5b1f17b1804b1-43ea93c960dmr2921125e9.4.1743482872710;
-        Mon, 31 Mar 2025 21:47:52 -0700 (PDT)
-Received: from [10.202.112.30] ([202.127.77.110])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af93b6a093bsm7074323a12.28.2025.03.31.21.47.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 31 Mar 2025 21:47:52 -0700 (PDT)
-Message-ID: <895c59e3-01ab-46e1-b02b-7e65a8484e1c@suse.com>
-Date: Tue, 1 Apr 2025 12:47:48 +0800
+	 In-Reply-To:Content-Type; b=geDs9HTGOKwzbYk2MHhBB/2DpPdcsFHXr+CSuj0syRmBSSike1nT2mKmEGCoNMKPLpCfLO7ukjCACraR5fDCACHUwbrjODe0rQ81R/h/s/vLbX+3pRQBriLE0irgX2VuUrcOMqFIBTTKbqtpPN5sF7KYVpPnmYTzHG25vox08Fc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77] helo=[127.0.0.1])
+	by metis.whiteo.stw.pengutronix.de with esmtp (Exim 4.92)
+	(envelope-from <a.fatoum@pengutronix.de>)
+	id 1tzTa7-0006yV-IQ; Tue, 01 Apr 2025 06:50:35 +0200
+Message-ID: <059003d1-d725-4439-a6d7-cb354fba161b@pengutronix.de>
+Date: Tue, 1 Apr 2025 06:50:33 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,139 +27,131 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC 1/1] ocfs2: fix write IO performance improvement for
- high fragmentation
-To: "joseph.qi@linux.alibaba.com" <joseph.qi@linux.alibaba.com>,
- Gautham Ananthakrishna <gautham.ananthakrishna@oracle.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "ocfs2-devel@lists.linux.dev" <ocfs2-devel@lists.linux.dev>,
- Rajesh Sivaramasubramaniom <rajesh.sivaramasubramaniom@oracle.com>,
- Junxiao Bi <junxiao.bi@oracle.com>,
- "akpm@linux-foundation.org" <akpm@linux-foundation.org>
-References: <20250324054851.2509325-1-gautham.ananthakrishna@oracle.com>
- <199205d8-20fb-463d-9065-8021b3cf7cb8@suse.com>
- <DS7PR10MB48784AA2A065605733B79499F7A12@DS7PR10MB4878.namprd10.prod.outlook.com>
- <bcce4e5c-d739-4b1c-86bd-d165ec0780be@suse.com>
- <DS7PR10MB48780B38CDE017917218F22CF7AC2@DS7PR10MB4878.namprd10.prod.outlook.com>
-From: Heming Zhao <heming.zhao@suse.com>
+Subject: Re: [PATCH] counter: interrupt-cnt: Protect enable/disable OPs with
+ mutex
+To: "A. Sverdlin" <alexander.sverdlin@siemens.com>, linux-iio@vger.kernel.org
+Cc: Oleksij Rempel <o.rempel@pengutronix.de>, linux-kernel@vger.kernel.org,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ William Breathitt Gray <wbg@kernel.org>
+References: <20250331163642.2382651-1-alexander.sverdlin@siemens.com>
 Content-Language: en-US
-In-Reply-To: <DS7PR10MB48780B38CDE017917218F22CF7AC2@DS7PR10MB4878.namprd10.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+From: Ahmad Fatoum <a.fatoum@pengutronix.de>
+In-Reply-To: <20250331163642.2382651-1-alexander.sverdlin@siemens.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:900:1d::77
+X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-VGhhbmsgR2F1dGhhbSBmb3IgdGhlIHRlc3Rpbmcgam9iLg0KDQpQaW5nIEpvc2VwaC4uLg0K
-TGV0J3MgcXVpY2tseSBmaXggdGhpcyBidWcuDQpUaGVyZSBhcmUgdHdvIHdheXMgdG8gZml4
-IHRoZSBpc3N1ZSBpbiBjb21taXQgNGViN2I5M2UwMzEwOg0KLSBBYXV0aGFtOiBodHRwczov
-L2xvcmUua2VybmVsLm9yZy9vY2ZzMi1kZXZlbC9iY2NlNGU1Yy1kNzM5LTRiMWMtODZiZC1k
-MTY1ZWMwNzgwYmVAc3VzZS5jb20vVC8jdA0KLSBIZW1pbmc6IGh0dHBzOi8vbG9yZS5rZXJu
-ZWwub3JnL29jZnMyLWRldmVsL2ZhZWY4MTJmLTBhZGMtNGE0Ni05NTFhLTU0NTM5MjdjMjgx
-OUBzdXNlLmNvbS9ULyN0DQoNCkluIG15IHZpZXcsIG15IHBhdGNoIGlzIG1vcmUgYmV0dGVy
-Lg0KDQotIEhlbWluZw0KDQpPbiA0LzEvMjUgMTI6MzIsIEdhdXRoYW0gQW5hbnRoYWtyaXNo
-bmEgd3JvdGU6DQo+IEhJIEhlbWluZywNCj4gDQo+IEkgcmFuIHRoZSB0ZXN0cyBvbiB5b3Vy
-IHBhdGNoLCBhbmQgaXQgaXMgd29ya2luZyBmaW5lLiBUaGUgZGlzY29udGlnX3J1bm5lci5z
-aCB3YXMgZmFpbGluZyBlYXJsaWVyIGluICJJbm9kZXMgQmxvY2sgR3JvdXAgVGVzdCIuDQo+
-IA0KPiBUaGFua3MsDQo+IEdhdXRoYW0uDQo+IC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiAqRnJv
-bToqIEhlbWluZyBaaGFvIDxoZW1pbmcuemhhb0BzdXNlLmNvbT4NCj4gKlNlbnQ6KiBUaHVy
-c2RheSwgTWFyY2ggMjcsIDIwMjUgMTI6MjMgUE0NCj4gKlRvOiogR2F1dGhhbSBBbmFudGhh
-a3Jpc2huYSA8Z2F1dGhhbS5hbmFudGhha3Jpc2huYUBvcmFjbGUuY29tPjsgam9zZXBoLnFp
-QGxpbnV4LmFsaWJhYmEuY29tIDxqb3NlcGgucWlAbGludXguYWxpYmFiYS5jb20+DQo+ICpD
-YzoqIGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcgPGxpbnV4LWtlcm5lbEB2Z2VyLmtl
-cm5lbC5vcmc+OyBvY2ZzMi1kZXZlbEBsaXN0cy5saW51eC5kZXYgPG9jZnMyLWRldmVsQGxp
-c3RzLmxpbnV4LmRldj47IFJhamVzaCBTaXZhcmFtYXN1YnJhbWFuaW9tIDxyYWplc2guc2l2
-YXJhbWFzdWJyYW1hbmlvbUBvcmFjbGUuY29tPjsgSnVueGlhbyBCaSA8anVueGlhby5iaUBv
-cmFjbGUuY29tPjsgYWtwbUBsaW51eC1mb3VuZGF0aW9uLm9yZyA8YWtwbUBsaW51eC1mb3Vu
-ZGF0aW9uLm9yZz4NCj4gKlN1YmplY3Q6KiBSZTogW1BBVENIIFJGQyAxLzFdIG9jZnMyOiBm
-aXggd3JpdGUgSU8gcGVyZm9ybWFuY2UgaW1wcm92ZW1lbnQgZm9yIGhpZ2ggZnJhZ21lbnRh
-dGlvbg0KPiBPbiAzLzI3LzI1IDE0OjIxLCBHYXV0aGFtIEFuYW50aGFrcmlzaG5hIHdyb3Rl
-Og0KPj4gSEkgSGVtaW5nLA0KPj4gDQo+PiBTaGFyaW5nIHRoZSB0ZXN0IHN1aXRlIG1heSBu
-b3QgYmUgcHJhY3RpY2FsIChpdCBoYXMgc2hlbGwgc2NyaXB0cywgcHl0aG9uIGFuZCBDIGJp
-bmFyaWVzKS4gSG93ZXZlciwgSSBjYW4gdGFrZSBhIGxvb2sgaW50byB5b3VyIHBhdGNoIGFu
-ZCBydW4gYSBxdWljayB0ZXN0Lg0KPj4gDQo+PiBUaGFua3MsDQo+PiBHYXV0aGFtLg0KPj4g
-DQo+IA0KPiBUaGFuayB5b3UgZm9yIHlvdXIgcXVpY2sgcmVwbHkgYW5kIHdpbGxpbmduZXNz
-IHRvIGhlbHAuDQo+IA0KPiAtIEhlbWluZw0KPiAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4+ICpG
-cm9tOiogSGVtaW5nIFpoYW8gPGhlbWluZy56aGFvQHN1c2UuY29tPg0KPj4gKlNlbnQ6KiBU
-aHVyc2RheSwgTWFyY2ggMjcsIDIwMjUgMTE6MzkgQU0NCj4+ICpUbzoqIEdhdXRoYW0gQW5h
-bnRoYWtyaXNobmEgPGdhdXRoYW0uYW5hbnRoYWtyaXNobmFAb3JhY2xlLmNvbT47IGpvc2Vw
-aC5xaUBsaW51eC5hbGliYWJhLmNvbSA8am9zZXBoLnFpQGxpbnV4LmFsaWJhYmEuY29tPg0K
-Pj4gKkNjOiogbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZyA8bGludXgta2VybmVsQHZn
-ZXIua2VybmVsLm9yZz47IG9jZnMyLWRldmVsQGxpc3RzLmxpbnV4LmRldiA8b2NmczItZGV2
-ZWxAbGlzdHMubGludXguZGV2PjsgUmFqZXNoIFNpdmFyYW1hc3VicmFtYW5pb20gPHJhamVz
-aC5zaXZhcmFtYXN1YnJhbWFuaW9tQG9yYWNsZS5jb20+OyBKdW54aWFvIEJpIDxqdW54aWFv
-LmJpQG9yYWNsZS5jb20+OyBha3BtQGxpbnV4LWZvdW5kYXRpb24ub3JnIDxha3BtQGxpbnV4
-LWZvdW5kYXRpb24ub3JnPg0KPj4gKlN1YmplY3Q6KiBSZTogW1BBVENIIFJGQyAxLzFdIG9j
-ZnMyOiBmaXggd3JpdGUgSU8gcGVyZm9ybWFuY2UgaW1wcm92ZW1lbnQgZm9yIGhpZ2ggZnJh
-Z21lbnRhdGlvbg0KPj4gSGVsbG8gR2F1dGhhbSwNCj4+IA0KPj4gVGhhbmtzIGZvciBsb2Nh
-dGluZyB0aGUgaXNzdWUgYW5kIHN1Ym1pdHRpbmcgYSBwYXRjaC4NCj4+IElzIGl0IHBvc3Np
-YmxlIHRvIHNoYXJlIHlvdXIgdGVzdCBjYXNlIGZvciB0aGlzIGJ1Zz8NCj4+IA0KPj4gVGhl
-IGtleSBvZiB0aGlzIGJ1ZyBpcyBvY2ZzMl9jbHVzdGVyX2dyb3VwX3NlYXJjaCgpIGNvbXBh
-cmluZyB3aXRoIHdyb25nDQo+PiBiaXRzIHNpemUuIEkgaGF2ZSBhbm90aGVyIGZpeCBmb3Ig
-dGhpcyBidWcgYW5kIHdpbGwgc2VuZCBpdCB0byB0aGlzIG1haWxpbmcNCj4+IGxpc3QgbGF0
-ZXIuDQo+PiANCj4+IFRoYW5rcywNCj4+IEhlbWluZw0KPj4gDQo+PiBPbiAzLzI0LzI1IDEz
-OjQ4LCBHYXV0aGFtIEFuYW50aGFrcmlzaG5hIHdyb3RlOg0KPj4+IFRoZSBjb21taXQgNGVi
-N2I5M2UwMzEwMWZkM2YzNWU2OWFmZmU1NjZlNGIxZTNlM2RjYSBjYXVzZWQgYSByZWdyZXNz
-aW9uDQo+Pj4gaW4gb3VyIHRlc3Qgc3VpdGUgaW4gZGlzY29udGlnIGV4dGVudCB0ZXN0cy4g
-VXBvbiB0cm91Ymxlc2hvb3RpbmcgSSBmb3VuZA0KPj4+IFRoZSBmb2xsb3dpbmcgaXNzdWVz
-Lg0KPj4+IA0KPj4+IDEuIFRoZSBmdW5jdGlvbiBvY2ZzMl9jbHVzdGVyX2dyb3VwX3NlYXJj
-aCgpIHdhcyBjYWxsZWQgZm9yIGRpc2NvbnRpZyBhbGxvY2F0aW9ucw0KPj4+IGFzIHdlbGwu
-IEJ1dCBpdCBjaGVja3Mgb25seSB0aGUgY29udGlndW91cyBiaXRzICdiZ19jb250aWdfZnJl
-ZV9iaXRzJy4NCj4+PiBJdCBoaXQgdGhlIEVOT1NQQyBpbiB0aGUgZm9sbG93aW5nIGNhc2Ug
-aW4gb25lIG9mIHRoZSB0ZXN0cy4NCj4+PiANCj4+PiBvY2ZzMl9ta2RpcigpDQo+Pj7CoMKg
-IG9jZnMyX3Jlc2VydmVfbmV3X2lub2RlKCkNCj4+PsKgwqDCoCBvY2ZzMl9yZXNlcnZlX3N1
-YmFsbG9jX2JpdHMoKQ0KPj4+wqDCoMKgwqAgb2NmczJfYmxvY2tfZ3JvdXBfYWxsb2MoKQ0K
-Pj4+wqDCoMKgwqDCoCBvY2ZzMl9ibG9ja19ncm91cF9hbGxvY19kaXNjb250aWcoKQ0KPj4+
-wqDCoMKgwqDCoMKgIF9fb2NmczJfY2xhaW1fY2x1c3RlcnMoKQ0KPj4+wqDCoMKgwqDCoMKg
-wqAgb2NmczJfY2xhaW1fc3ViYWxsb2NfYml0cygpDQo+Pj7CoMKgwqDCoMKgwqDCoMKgIG9j
-ZnMyX3NlYXJjaF9jaGFpbigpDQo+Pj7CoMKgwqDCoMKgwqDCoMKgwqAgb2NmczJfY2x1c3Rl
-cl9ncm91cF9zZWFyY2goKQ0KPj4+IA0KPj4+IExvb2tlZCBsaWtlIHRoZSBjb21taXQgZGlk
-IG5vdCBjb25zaWRlciBkaXNjb250aWcgc2VhcmNoZXMuIFRvIGZpeCB0aGlzLA0KPj4+IEkg
-aGF2ZSBzcGxpdCBvY2ZzMl9jbHVzdGVyX2dyb3VwX3NlYXJjaCgpIGludG8gKl9jb21tb24o
-KSwgKl9jb250aWcoKSBhbmQNCj4+PiAqX2Rpc2NvbnRpZygpDQo+Pj4gDQo+Pj4gMi4gVGhh
-dCBjb21taXQgZW5mb3JjZWQgb2NmczJfY2x1c3Rlcl9ncm91cF9zZWFyY2goKSB0byBzZWFy
-Y2ggb25seSB0aGUNCj4+PiAnYml0c193YW50ZWQnIG51bWJlciBvZiBiaXRzIHdoZXJlYXMg
-b2NmczJfYmxvY2tfZ3JvdXBfZmluZF9jbGVhcl9iaXRzKCkNCj4+PiBmaWxscyB0aGUgYmVz
-dCBhdmFpbGFibGUgc2l6ZSBhbmQgdGhlIGZ1bmN0aW9uIG9jZnMyX2NsdXN0ZXJfZ3JvdXBf
-c2VhcmNoKCkNCj4+PiBpdHNlbGYgaXMgc3VwcG9zZWQgdG8gc2VhcmNoICdtaW5fYml0cycg
-YXQgdGhlIG1pbmltdW0gYW5kIG5lZWQgbm90IGJlDQo+Pj4gJ2JpdHNfd2FudGVkJyBhbHdh
-eXMuDQo+Pj4gDQo+Pj4gRml4ZWQgdGhlIGFib3ZlIGlzc3VlcyBpbiB0aGlzIHBhdGNoLg0K
-Pj4+IFRoaXMgcGF0Y2ggZml4ZXMgNGViN2I5M2UwMzEwMWZkM2YzNWU2OWFmZmU1NjZlNGIx
-ZTNlM2RjYQ0KPj4+IA0KPj4+IFNpZ25lZC1vZmYtYnk6IEdhdXRoYW0gQW5hbnRoYWtyaXNo
-bmEgPGdhdXRoYW0uYW5hbnRoYWtyaXNobmFAb3JhY2xlLmNvbT4NCj4+PiAtLS0NCj4+PsKg
-wqAgZnMvb2NmczIvc3ViYWxsb2MuYyB8IDE0NiArKysrKysrKysrKysrKysrKysrKysrKysr
-KysrLS0tLS0tLS0tLS0tLS0tLQ0KPj4+wqDCoCAxIGZpbGUgY2hhbmdlZCwgOTUgaW5zZXJ0
-aW9ucygrKSwgNTEgZGVsZXRpb25zKC0pDQo+Pj4gDQo+IA0KDQo=
+Hello Alexander,
+
+On 31.03.25 18:36, A. Sverdlin wrote:
+> From: Alexander Sverdlin <alexander.sverdlin@siemens.com>
+> 
+> Enable/disable seems to be racy on SMP, consider the following scenario:
+> 
+> CPU0					CPU1
+> 
+> interrupt_cnt_enable_write(true)
+> {
+> 	if (priv->enabled == enable)
+> 		return 0;
+> 
+> 	if (enable) {
+> 		priv->enabled = true;
+> 					interrupt_cnt_enable_write(false)
+> 					{
+> 						if (priv->enabled == enable)
+> 							return 0;
+> 
+> 						if (enable) {
+> 							priv->enabled = true;
+> 							enable_irq(priv->irq);
+> 						} else {
+> 							disable_irq(priv->irq)
+> 							priv->enabled = false;
+> 						}
+> 		enable_irq(priv->irq);
+> 	} else {
+> 		disable_irq(priv->irq);
+> 		priv->enabled = false;
+> 	}
+> 
+> The above would result in priv->enabled == false, but IRQ left enabled.
+> Protect both write (above race) and read (to propagate the value on SMP)
+> callbacks with a mutex.
+
+Doesn't sysfs/kernfs already ensure that the ops may not be called concurrently
+on the same open file?
+
+Thanks,
+Ahmad
+
+> 
+> Signed-off-by: Alexander Sverdlin <alexander.sverdlin@siemens.com>
+> ---
+>  drivers/counter/interrupt-cnt.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
+> diff --git a/drivers/counter/interrupt-cnt.c b/drivers/counter/interrupt-cnt.c
+> index 949598d51575a..d83848d0fe2af 100644
+> --- a/drivers/counter/interrupt-cnt.c
+> +++ b/drivers/counter/interrupt-cnt.c
+> @@ -3,12 +3,14 @@
+>   * Copyright (c) 2021 Pengutronix, Oleksij Rempel <kernel@pengutronix.de>
+>   */
+>  
+> +#include <linux/cleanup.h>
+>  #include <linux/counter.h>
+>  #include <linux/gpio/consumer.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/irq.h>
+>  #include <linux/mod_devicetable.h>
+>  #include <linux/module.h>
+> +#include <linux/mutex.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/types.h>
+>  
+> @@ -19,6 +21,7 @@ struct interrupt_cnt_priv {
+>  	struct gpio_desc *gpio;
+>  	int irq;
+>  	bool enabled;
+> +	struct mutex lock;
+>  	struct counter_signal signals;
+>  	struct counter_synapse synapses;
+>  	struct counter_count cnts;
+> @@ -41,6 +44,8 @@ static int interrupt_cnt_enable_read(struct counter_device *counter,
+>  {
+>  	struct interrupt_cnt_priv *priv = counter_priv(counter);
+>  
+> +	guard(mutex)(&priv->lock);
+> +
+>  	*enable = priv->enabled;
+>  
+>  	return 0;
+> @@ -51,6 +56,8 @@ static int interrupt_cnt_enable_write(struct counter_device *counter,
+>  {
+>  	struct interrupt_cnt_priv *priv = counter_priv(counter);
+>  
+> +	guard(mutex)(&priv->lock);
+> +
+>  	if (priv->enabled == enable)
+>  		return 0;
+>  
+> @@ -227,6 +234,8 @@ static int interrupt_cnt_probe(struct platform_device *pdev)
+>  	if (ret)
+>  		return ret;
+>  
+> +	mutex_init(&priv->lock);
+> +
+>  	ret = devm_counter_add(dev, counter);
+>  	if (ret < 0)
+>  		return dev_err_probe(dev, ret, "Failed to add counter\n");
+
+
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
