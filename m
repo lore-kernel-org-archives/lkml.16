@@ -1,108 +1,287 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C0A31E7C07;
-	Tue,  1 Apr 2025 11:00:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A688926AE4;
+	Tue,  1 Apr 2025 11:00:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743505218; cv=none; b=FBYGUplL1TVNWuy5NQu4w2Momzh9BGStUQWAOmNs07UMATzwguTOKDjT1CdMTQWDma6DEG5K91oDvkjaD/ALRfyT4fDaOTor7ViTA6JWFXZE5prNUpIGnA3y4UgEMqRF131JJ7wAXjYZ0Z2AUhGjAZLQGg2DTqD+OM3wNZMvYHA=
+	t=1743505254; cv=none; b=CKxSozBMHxGXli/FyMVT8rV+85N5vs8vJ4F7fGSl0mUgPJYiYsYAYSCr2VbV29YURQV+QK5QvnbwGW8iURoRIrOIwAjVyW1HYosogH0tc8A6TfIkya8wRRPbyH1y4r1rerhkkGYV5Ggx1QEJ4hmX3hI2kzhkrrL8p35YOgkX4gM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743505218; c=relaxed/simple;
-	bh=qWyx6JaicvUMSDl3rJ9lq4nU3wRLwv+Zso9ILN7y1nc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QNyQvh+iGM92POGfimTrxDB9bjlv1j2eTQk216BLu4p82g8l8G7+sFWAwm0bQnFhmQqIS+1BICxcU4dvu5CRrB8P8hWxlFx0K2wwYXQj+MhZBI0D6MXzf/LyatRmicjeuiEoBf/NW/n9Z3FzT03VNyYS52G+MSzVtpotdtoGfIY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IFKlv0RR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743505254; c=relaxed/simple;
+	bh=bTiJ78JbeOMDcZQX/uIbIFXh2P+1V9ywUirG6sG5vR8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=R4UOX/hpdZ7CzR/OqBx0SjkNmDKx0de1NNdoBvs+IM5yLdVJMtafQqy4tl3YxrMFNcX7wkSDf/FQj+jpahUBFTN9xWIlHLHlR72ezlPYDmowKKq9BwiXm3bumd1amuFRC6vGgRq1pEmJ7A7b0zeNWpFKDnsUxAzQkP1mcbFNQnE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bXCrPygz; arc=none smtp.client-ip=209.85.219.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IFKlv0RR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48820C4CEE4;
-	Tue,  1 Apr 2025 11:00:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743505216;
-	bh=qWyx6JaicvUMSDl3rJ9lq4nU3wRLwv+Zso9ILN7y1nc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=IFKlv0RR0iKUzOpu8CjUJ3W0VXjSlceuMXQaarGF0MckP9tOwG0q/CiXFLuqf400d
-	 vGQhc98xM1C9FfLRslr/gaUYy9E1zs3vP+lOJhAolEzrkra7aP0hsU0HlHYX1+zBaE
-	 YRIIOjyn1fgzUuDiFR+67TR97B2GwlSGm/gmzPUuGv5mQ143S7Y2Bf3f2J06rO+Zsj
-	 XxF0iHy3aS0AYLqzi2/8HzYpGI5Hr+PcHmQ7lQTQZmJHDz6bQOb6P1ihhqLb/0gO7u
-	 4+5DHLO8N+WhSqHMWSjyB++krjnHERACw85LG4TGWc/ZWhIapD8omhyghKYlxZjUef
-	 78lJs2C2je4Kg==
-Message-ID: <f59af2ac-a7a2-4490-8858-30c7f98e4149@kernel.org>
-Date: Tue, 1 Apr 2025 13:00:11 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bXCrPygz"
+Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6eaf1b6ce9aso55870626d6.2;
+        Tue, 01 Apr 2025 04:00:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743505250; x=1744110050; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5Y1SHtLZ5xBQTVg2DqgLWxnEjq7LoaCecytPGBCq3l0=;
+        b=bXCrPygzeW3jAtve1WRIt1uUp42X0PQzBl1+bMH30dz2qZeUKTrgoR1k7OODtU2moN
+         n3I9eyqfxgrtKW7fOjJcb3txxFMHTpiC4vjn+kH3jIW+vDxz7M+iym5QqVduKlA4/1Ue
+         2H/T2JsLSmw70z0qbUFmbxw/rlyEgLxUDlwQMYAEc38yCAjdUfEi6BmUdhw97uyEXTf8
+         Tn46DkCiyrr+KwijRYEe6h4mWob2HPEjBJKlDnGbWqGmKdlkGYIVP/p2x9dVTWdHxnM7
+         jXC69W8gPGsWJJGTbnhfMVtQEfFJwTBVBIZLXXFBDobaP0h/qYb36Z+ok+gZHckHLor4
+         Aa0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743505250; x=1744110050;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5Y1SHtLZ5xBQTVg2DqgLWxnEjq7LoaCecytPGBCq3l0=;
+        b=ffV6lP4xOMOdpm+CyW2G4yzU0iv9ZkRUldPM1mBPuHQaicJHxwfnTg0J2Qa2Fn/m4J
+         rxVEOUAKwXYN1XjAqN/M8oh4r0DmYR0UUmUd1O1giQXac6+rgwn7pvpc6YKhQSoyYQ24
+         6tYVt9i0v4Y1GNxOF4NfRQRDIlZ7SQghKZyVECtZXMP+MX5dcBXiUpV9033waorSeqm/
+         Ovkc3fvUZkVAbn98mnWITcAoYM/+ZiMPFUZdpUIYI57PWo8tipOKuokLxSui+up764wL
+         1EBwxve1dROzRX8zcmUEHzVbdjktswBvO9488gkufu1WGO5hFvqSY8OY0DZ87PBh2KM3
+         /Yhw==
+X-Forwarded-Encrypted: i=1; AJvYcCVY2qvXzyXrZ7JpOgG1Yfe33f6lSqwfBhD4GS7QNFFSyPgz2j7s29nVNLxCVQfFnLuMIJQq820B@vger.kernel.org, AJvYcCWZ1sKjfs2Edpt6Ljoj6Xr4rRcAOeluTy2tebbW8SI3qNH6mtKaJUy2ABW8cBkh3mp6w8Y=@vger.kernel.org, AJvYcCX/yaFDq/VdNkhWObkWlGOxFn+X8+onuMxbyPsaerbwhIuJ5Ta5WbixQlv1OMhCTvC7ZXfsMG4I7gUmU8pn@vger.kernel.org
+X-Gm-Message-State: AOJu0Yymx66NfXeV33FJwpRwDBBjklDzOFx9Wq30YXVd8nmm0epfSBU/
+	hkafUBa6HhCJo0TYgGW1V/hi67J4/4DOk7bBOxRktY88a2HoYmG9FomcfAyYeT8Av7oONYtG8DM
+	PW0G3GJ1DyDySuKvUkPNnnWiqZo0=
+X-Gm-Gg: ASbGncuJW+g1g05JU3HilqvQB5XyeAK7to2x8BWGDmC4b8td9/WFh3FnBMFHoUuZ0Sn
+	9z1DoM0S+FRlQniKuZvWI8lExR652DUa3yKj0bEQfxGaHwKa2SyneWQBHmnPGtXRs+G7PMbCjXc
+	VbtDVVFASqDpDjFszwbIvAprWbqCPmtKI10ltHCfs=
+X-Google-Smtp-Source: AGHT+IErYsKUVjZ/6d91309ojFYwNUdo/Z1MGFCRD5nS6Spzau8We9OZbO/XqDE8PoRtMorgFNEPvsqz4DDo1JhGcz0=
+X-Received: by 2002:ad4:5c62:0:b0:6e8:96f4:733 with SMTP id
+ 6a1803df08f44-6eed5f8913cmr238815656d6.8.1743505250404; Tue, 01 Apr 2025
+ 04:00:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] backlight: pm8941: Add NULL check in
- exynos_generic_icc_probe()
-To: Henry Martin <bsdhenrymartin@gmail.com>, georgi.djakov@linaro.org
-Cc: s.nawrocki@samsung.com, a.swigon@samsung.com, alim.akhtar@samsung.com,
- linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20250401104518.25391-1-bsdhenrymartin@gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250401104518.25391-1-bsdhenrymartin@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250329061548.1357925-1-wangliang74@huawei.com>
+ <Z-qzLyGKskaqgFh5@mini-arch> <Z-sRF0G43HpGiGwH@mini-arch> <0d1b689c-c0ef-460a-9969-ff5aebbb8fac@huawei.com>
+ <CAJ8uoz1JxhXFkzW8n_Dud8SR-4zE7gim5vS_UZHELiA7d0k+wQ@mail.gmail.com>
+ <ed10eea2-0bf2-4747-b519-f9b9089e434e@huawei.com> <CAJ8uoz2QXNN4so-EgR8sU8A86E_AeYx1w_b+BSVeCgzr1kaR+g@mail.gmail.com>
+ <ffc84696-f9c6-4869-9f1e-7faf45d99060@huawei.com>
+In-Reply-To: <ffc84696-f9c6-4869-9f1e-7faf45d99060@huawei.com>
+From: Magnus Karlsson <magnus.karlsson@gmail.com>
+Date: Tue, 1 Apr 2025 13:00:39 +0200
+X-Gm-Features: AQ5f1JofBG8n90XzSIs_Hwdmznp7MT2d6l4fbpyGTawGS0bPjc0azhU2h0HqNmA
+Message-ID: <CAJ8uoz127WoEFbm1Gg7OquYJCLigg03N1XrKDcXejsUmVuQ3PA@mail.gmail.com>
+Subject: Re: [PATCH net] xsk: correct tx_ring_empty_descs count statistics
+To: Wang Liang <wangliang74@huawei.com>
+Cc: Stanislav Fomichev <stfomichev@gmail.com>, bjorn@kernel.org, magnus.karlsson@intel.com, 
+	maciej.fijalkowski@intel.com, jonathan.lemon@gmail.com, davem@davemloft.net, 
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org, 
+	ast@kernel.org, daniel@iogearbox.net, hawk@kernel.org, 
+	john.fastabend@gmail.com, yuehaibing@huawei.com, zhangchangzhong@huawei.com, 
+	netdev@vger.kernel.org, bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 01/04/2025 12:45, Henry Martin wrote:
-> devm_kasprintf() returns NULL when memory allocation fails. Currently,
-> exynos_generic_icc_probe() does not check for this case, which results
-> in a NULL pointer dereference.
-> 
-> Add NULL check after devm_kasprintf() to prevent this issue.
-> 
-> Fixes: 2f95b9d5cf0b ("interconnect: Add generic interconnect driver for Exynos SoCs")
-> Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
-> ---
+On Tue, 1 Apr 2025 at 11:33, Wang Liang <wangliang74@huawei.com> wrote:
+>
+>
+> =E5=9C=A8 2025/4/1 16:12, Magnus Karlsson =E5=86=99=E9=81=93:
+> > On Tue, 1 Apr 2025 at 09:44, Wang Liang <wangliang74@huawei.com> wrote:
+> >>
+> >> =E5=9C=A8 2025/4/1 14:57, Magnus Karlsson =E5=86=99=E9=81=93:
+> >>> On Tue, 1 Apr 2025 at 04:36, Wang Liang <wangliang74@huawei.com> wrot=
+e:
+> >>>> =E5=9C=A8 2025/4/1 6:03, Stanislav Fomichev =E5=86=99=E9=81=93:
+> >>>>> On 03/31, Stanislav Fomichev wrote:
+> >>>>>> On 03/29, Wang Liang wrote:
+> >>>>>>> The tx_ring_empty_descs count may be incorrect, when set the XDP_=
+TX_RING
+> >>>>>>> option but do not reserve tx ring. Because xsk_poll() try to wake=
+up the
+> >>>>>>> driver by calling xsk_generic_xmit() for non-zero-copy mode. So t=
+he
+> >>>>>>> tx_ring_empty_descs count increases once the xsk_poll()is called:
+> >>>>>>>
+> >>>>>>>      xsk_poll
+> >>>>>>>        xsk_generic_xmit
+> >>>>>>>          __xsk_generic_xmit
+> >>>>>>>            xskq_cons_peek_desc
+> >>>>>>>              xskq_cons_read_desc
+> >>>>>>>                q->queue_empty_descs++;
+> >>> Sorry, but I do not understand how to reproduce this error. So you
+> >>> first issue a setsockopt with the XDP_TX_RING option and then you do
+> >>> not "reserve tx ring". What does that last "not reserve tx ring" mean=
+?
+> >>> No mmap() of that ring, or something else? I guess you have bound the
+> >>> socket with a bind()? Some pseudo code on how to reproduce this would
+> >>> be helpful. Just want to understand so I can help. Thank you.
+> >> Sorry, the last email is garbled, and send again.
+> >>
+> >> Ok. Some pseudo code like below:
+> >>
+> >>       fd =3D socket(AF_XDP, SOCK_RAW, 0);
+> >>       setsockopt(fd, SOL_XDP, XDP_UMEM_REG, &mr, sizeof(mr));
+> >>
+> >>       setsockopt(fd, SOL_XDP, XDP_UMEM_FILL_RING, &fill_size,
+> >> sizeof(fill_size));
+> >>       setsockopt(fd, SOL_XDP, XDP_UMEM_COMPLETION_RING, &comp_size,
+> >> sizeof(comp_size));
+> >>       mmap(NULL, off.fr.desc + fill_size * sizeof(__u64), ...,
+> >> XDP_UMEM_PGOFF_FILL_RING);
+> >>       mmap(NULL, off.cr.desc + comp_size * sizeof(__u64), ...,
+> >> XDP_UMEM_PGOFF_COMPLETION_RING);
+> >>
+> >>       setsockopt(fd, SOL_XDP, XDP_RX_RING, &rx_size, sizeof(rx_size));
+> >>       setsockopt(fd, SOL_XDP, XDP_TX_RING, &tx_size, sizeof(tx_size));
+> >>       mmap(NULL, off.rx.desc + rx_size * sizeof(struct xdp_desc), ...,
+> >> XDP_PGOFF_RX_RING);
+> >>       mmap(NULL, off.tx.desc + tx_size * sizeof(struct xdp_desc), ...,
+> >> XDP_PGOFF_TX_RING);
+> >>
+> >>       bind(fd, (struct sockaddr *)&sxdp, sizeof(sxdp));
+> >>       bpf_map_update_elem(xsk_map_fd, &queue_id, &fd, 0);
+> >>
+> >>       while(!global_exit) {
+> >>           poll(fds, 1, -1);
+> >>           handle_receive_packets(...);
+> >>       }
+> >>
+> >> The xsk is created success, and xs->tx is initialized.
+> >>
+> >> The "not reserve tx ring" means user app do not update tx ring produce=
+r.
+> >> Like:
+> >>
+> >>       xsk_ring_prod__reserve(tx, 1, &tx_idx);
+> >>       xsk_ring_prod__tx_desc(tx, tx_idx)->addr =3D frame;
+> >>       xsk_ring_prod__tx_desc(tx, tx_idx)->len =3D pkg_length;
+> >>       xsk_ring_prod__submit(tx, 1);
+> >>
+> >> These functions (xsk_ring_prod__reserve, etc.) is provided by libxdp.
+> >>
+> >> The tx->producer is not updated, so the xs->tx->cached_cons and
+> >> xs->tx->cached_prod are always zero.
+> >>
+> >> When receive packets and user app call poll(), xsk_generic_xmit() will=
+ be
+> >> triggered by xsk_poll(), leading to this issue.
+> > Thanks, that really helped. The problem here is that the kernel cannot
+> > guess your intent. Since you created a socket with both Rx and Tx, it
+> > thinks you will use it for both, so it should increase
+> > queue_empty_descs in this case as you did not provide any Tx descs.
+> > Your proposed patch will break this. Consider this Tx case with the
+> > exact same init code as you have above but with this send loop:
+> >
+> > while(!global_exit) {
+> >         maybe_send_packets(...);
+> >         poll(fds, 1, -1);
+> > }
+> >
+> > With your patch, the queue_empty_descs will never be increased in the
+> > case when I do not submit any Tx descs, even though we would like it
+> > to be so.
+> >
+> > So in my mind, you have a couple of options:
+> >
+> > * Create two sockets, one rx only and one tx only and use the
+> > SHARED_UMEM mode to bind them to the same netdev and queue id. In your
+> > loop above, you would use the Rx socket. This might have the drawback
+> > that you need to call poll() twice if you are both sending and
+> > receiving in the same loop. But the stats will be the way you want
+> > them to be.
+> >
+> > * Introduce a new variable in user space that you increase every time
+> > you do poll() in your loop above. When displaying the statistics, just
+> > deduct this variable from the queue_empty_descs that the kernel
+> > reports using the XDP_STATISTICS getsockopt().
+> >
+> > Hope this helps.
+>
+>
+> Thank you for the advices.
+>
+>  From user view, queue_empty_descs increases when the app only receive
+> packets and call poll(), it is some confusing.
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+But if the only thing you are doing in the app is receive packets, you
+should create an Rx only socket.
 
-Best regards,
-Krzysztof
+> In your Tx case, if user app use sendto() to send packets, the
+> queue_empty_descs will increase. This is reasonably.
+>
+> In linux manual, poll() waits for some event on a file descriptor. But
+> in af_xdp, poll() has a side effect of send msg.
+
+If I remember correctly, we did this so that zero-copy mode and copy
+mode should have the same behavior from an app point of view. But I do
+not remember why we implemented this behavior in zero-copy in the
+first place. Maybe out of necessity since zero-copy Tx is driven by
+the driver.
+
+> Previous commit 77cd0d7b3f25 ("xsk: add support for need_wakeup flag in
+> AF_XDP rings") add need_wakeup flag. It mainly work in rx process. When
+> the application and driver run on the same core, if the fill ring is
+> empty, the driver can set the need_wakeup flag and return, so the
+> application could be scheduled to produce entries of the fill ring.
+>
+> The commit df551058f7a3 ("xsk: Fix crash in poll when device does not
+> support ndo_xsk_wakeup") add sendmsg function in xsk_poll(), considering
+> some devices donot define ndo_xsk_wakeup.
+>
+> At present the value of need_wakeup & XDP_WAKEUP_TX is always true,
+> except the mlx5 driver. If the mlx5 driver queued some packets for tx,
+> it may clear XDP_WAKEUP_TX by xsk_clear_tx_need_wakeup(). So when user
+> app use sendto() to send packets, __xsk_sendmsg() will return without
+> calling xsk_generic_xmit().
+
+Mellanox is doing it in the correct way. The Intel drivers had it like
+this too in the beginning, until we discovered a race condition in the
+HW in which the interrupt was not armed at the same time as the
+need_wakeup flag was cleared. This would then lead to packets not
+being sent and user-space not knowing about it. As to why all other
+drivers copied this unfortunate fall-back, I do not know.
+
+> So I have a bold suggestion, how about removing xsk_generic_xmit() in
+> xsk_poll()?
+
+That would indeed be bold :-)! But we cannot do this since it would
+break existing applications that rely on this. I think you have to use
+one of the workarounds I pitched in the previous mail. If you are
+really just receiving, you should create an Rx only socket.
+
+> >>>>>>> To avoid this count error, add check for tx descs before send msg=
+ in poll.
+> >>>>>>>
+> >>>>>>> Fixes: df551058f7a3 ("xsk: Fix crash in poll when device does not=
+ support ndo_xsk_wakeup")
+> >>>>>>> Signed-off-by: Wang Liang <wangliang74@huawei.com>
+> >>>>>> Acked-by: Stanislav Fomichev <sdf@fomichev.me>
+> >>>>> Hmm, wait, I stumbled upon xskq_has_descs again and it looks only a=
+t
+> >>>>> cached prod/cons. How is it supposed to work when the actual tx
+> >>>>> descriptor is posted? Is there anything besides xskq_cons_peek_desc=
+ from
+> >>>>> __xsk_generic_xmit that refreshes cached_prod?
+> >>>> Yes, you are right!
+> >>>>
+> >>>> How about using xskq_cons_nb_entries() to check free descriptors?
+> >>>>
+> >>>> Like this:
+> >>>>
+> >>>>
+> >>>> diff --git a/net/xdp/xsk.c b/net/xdp/xsk.c
+> >>>> index e5d104ce7b82..babb7928d335 100644
+> >>>> --- a/net/xdp/xsk.c
+> >>>> +++ b/net/xdp/xsk.c
+> >>>> @@ -993,7 +993,7 @@ static __poll_t xsk_poll(struct file *file, stru=
+ct
+> >>>> socket *sock,
+> >>>>            if (pool->cached_need_wakeup) {
+> >>>>                    if (xs->zc)
+> >>>>                            xsk_wakeup(xs, pool->cached_need_wakeup);
+> >>>> -               else if (xs->tx)
+> >>>> +               else if (xs->tx && xskq_cons_nb_entries(xs->tx, 1))
+> >>>>                            /* Poll needs to drive Tx also in copy mo=
+de */
+> >>>>                            xsk_generic_xmit(sk);
+> >>>>            }
+> >>>>
+> >>>>
