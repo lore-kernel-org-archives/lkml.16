@@ -1,42 +1,42 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1762FFC08
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 14:21:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF307202F67;
+	Tue,  1 Apr 2025 14:21:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743517264; cv=none; b=gvPxTeEtp9Ba1yhPLWZ3dhlbGIbePfB9XmEGzDIBPROGAt23ndnr4A3opBAHee3jta20H52CVtQSU5UcDXtLeBNjkdC75A7/OBhbeDQD0jB6DE8Csb3hmhK0OHB1z6JkNk5fC0o2pdedlqDFv2fbRfaXYRBQ/LRGSB1Rm93jpEU=
+	t=1743517319; cv=none; b=OlPMBc+gNaBN2k2XDFVDM1ltpL2yp5ph7QNjPoPr7M24Y7rtzhnUzIsV0NC8+VFKrilqYhEdQK4CQid0sb9pr++rGladdUC7JbkXXQd3kzJNwiO0gUx2q2nObTAOWp5nBFCmKd94QUk9giEW5crTBsWkCoyPGBeB6nBN2iqJ5kE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743517264; c=relaxed/simple;
-	bh=Lj8cpPI4mAvrrNdSYlxR82GzFBselQ6y+YLSJNP8QUA=;
+	s=arc-20240116; t=1743517319; c=relaxed/simple;
+	bh=XG/M81OnKMz5F1Sz0ii3CjCybFUjAhNnS3CApfaG5OA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B7gpaLwgA9PdLDTlnlfrznzN4LK/2wB/NjiavXsVajUBuQ1ZOG7Z4xviuHPfVBxmZBwO+oT2pg6nRCBbyJVyYdUUuX6LnE4fHUjz3d/VE9/pZQ0KhBAWZcoWqzcEkWcB8LuGitBv79mqcWjqnLtIJNa66NYHnLMcgTqBDyMQcFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Drz4ajBp; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Drz4ajBp"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=ltOtCaRPgpct1suR55MyDOdCq8oY5KhavoZoWUOxPjs=; b=Drz4ajBplB3SoAKnze7cFgI/4L
-	a+mwBCOvx5VcySfJsI0lxy35udhVN4D0ofscY/ulqgsceZfwcMn1uSy1qHPH/jLvl0mZ8DrDk4vdn
-	3oBmKh6/T+a0JK2sxOI9W1Yey61nHszednnu6EUA2+5BslM48W/zL44mA1OM0Xsp3UZqbDnHT63bu
-	UZOAU07HBwMQqiDQ48L3Tf2V9McojE/bVVDfmS+qbPF0MegrMyMKfIiKI7ZbdWenXozQYX2oJJN0E
-	y93AY8Myyd04E1thm8hSZIsCGebmUIL6ljQrbI0Sd5XQr6aZ2HgMIaSYc0O2DDmnPxgwy/U0yUla8
-	l/zVtYjA==;
-Received: from willy by casper.infradead.org with local (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1tzcU1-00000007SmX-3tmE;
-	Tue, 01 Apr 2025 14:20:54 +0000
-Date: Tue, 1 Apr 2025 15:20:53 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Sheng Yong <shengyong2021@gmail.com>
-Cc: akpm@linux-foundation.org, vbabka@suse.cz, linux-kernel@vger.kernel.org,
-	linux-mm@archiver.kernel.org, Sheng Yong <shengyong1@xiaomi.com>
-Subject: Re: [PATCH] lib/iov_iter: fix to increase non slab folio refcount
-Message-ID: <Z-v2ReHKyFIXQlKs@casper.infradead.org>
-References: <20250401140255.1249264-1-shengyong1@xiaomi.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=KHcqSzEADOuRP2vWc2FfRqUf+97zFc0C0GCCewb3FIUULoEQmtr6zfZGO9V4hMh5tFsv80gLO/EcnPLv1IbR8QctvWKvcNBJri1ojL8CCRktpTrE3nYGSZvb1kZi1v3SBr+OmtTYPYtiyhydfNabLQUzCj5vKS+elhVsOxKh+9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ACC0714BF;
+	Tue,  1 Apr 2025 07:22:00 -0700 (PDT)
+Received: from bogus (e133711.arm.com [10.1.196.55])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 397603F63F;
+	Tue,  1 Apr 2025 07:21:54 -0700 (PDT)
+Date: Tue, 1 Apr 2025 15:21:51 +0100
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc: Cristian Marussi <cristian.marussi@arm.com>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	<linux-kernel@vger.kernel.org>, <arm-scmi@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <imx@lists.linux.dev>,
+	<devicetree@vger.kernel.org>, Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH v3 3/7] firmware: arm_scmi: imx: Add i.MX95 LMM protocol
+Message-ID: <20250401-magnetic-spaniel-of-influence-f3ee90@sudeepholla>
+References: <20250303-imx-lmm-cpu-v3-0-7695f6f61cfc@nxp.com>
+ <20250303-imx-lmm-cpu-v3-3-7695f6f61cfc@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,30 +45,22 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250401140255.1249264-1-shengyong1@xiaomi.com>
+In-Reply-To: <20250303-imx-lmm-cpu-v3-3-7695f6f61cfc@nxp.com>
 
-On Tue, Apr 01, 2025 at 10:02:55PM +0800, Sheng Yong wrote:
-> When testing EROFS file-backed mount over v9fs on qemu, I encounter
-> a folio UAF and page sanity check reports the following call trace.
-> Fix it by increasing non slab folio refcount correctly.
+On Mon, Mar 03, 2025 at 10:53:24AM +0800, Peng Fan (OSS) wrote:
+> From: Peng Fan <peng.fan@nxp.com>
+> 
+> Add Logical Machine Management(LMM) protocol which is intended for boot,
+> shutdown, and reset of other logical machines (LM). It is usually used to
+> allow one LM to manager another used as an offload or accelerator engine.
+>
 
-This report needs to say what the problem _is_, which is that pages may
-be coalesced across a folio boundary.
+This and next patch LGTM. Just curious as why Cristian has given tags only
+for the drivers using these but not these changes.
 
-> +++ b/lib/iov_iter.c
-> @@ -1191,8 +1191,7 @@ static ssize_t __iov_iter_get_pages_alloc(struct iov_iter *i,
->  			return -ENOMEM;
->  		p = *pages;
->  		for (int k = 0; k < n; k++) {
-> -			struct folio *folio = page_folio(page);
-> -			p[k] = page + k;
-> +			struct folio *folio = page_folio(p[k] = page + k);
+Cristian, any specific concerns you had that had to be addressed or addressed
+in this version ?
 
-Never write code this ugly.
-
--			struct folio *folio = page_folio(page);
-+			struct folio *folio = page_folio(page + k);
-			p[k] = page + k;
-
-is much more readable.
-
+-- 
+Regards,
+Sudeep
