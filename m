@@ -1,266 +1,107 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-pl1-f232.google.com (mail-pl1-f232.google.com [209.85.214.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C104221DBC
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 20:47:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DC4A211711
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 20:49:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743540430; cv=none; b=FG+DmG6SeQSrmt5+sa1NTeDKZ8wXXBX3ZOD0bQVxKxBZQykAOEkR8j3WXoJ2dfkJTCoWbUopntF0wTMGI+yK6EhaBjpCUG5p+oCIv7MyJdBmU9p4BBy+L6MlkoR6oUYLpY2VBrqhBC8qKOwPwczyykBQ5Z3YoBNcjHPTgLG9laM=
+	t=1743540559; cv=none; b=HIrqMyS2N+BsiBylXcNu8ajwiCXybY6C/OQSb5vxCMreyi64EYtTX6jJ2DfpSL3cqQ/BRE9kAoxtrm1ivvpd3zqJQBp81fNBi/ahO/WA96UGNzzILYaRd5zXDL4mq7fCvaODEvTY5UgRmhA0QMhpRzZA2rHwJdgGdVJMAxw2reU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743540430; c=relaxed/simple;
-	bh=fUs07VOggshpPVb5iKIZY5UPq/g/qmxhlixbhOP2Vg0=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=G41/rc+EdTUk8npKFN3Jx2EUG9KxttysCUm3OuIqu7o+0V1tYIRzlP3K6tcDGFr3abXYgebbXrsfYN4QRxsEElMg1psH6Ky2dqCykU2tuqXKi36fu1InAs+7IGYtCo+FImYtnpaq+WhJgKUFkWbr6dEhOOvkYI+6omSYgCoeL0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zxwvX8bz; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1743540559; c=relaxed/simple;
+	bh=30PV2+70FCQMUCz+gunbFAvwdSKP+yMM0OGPlJ/I0uY=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Ugr1xJr6AcqJI+SukgERouCdtRvjW72U9VOFu5WqgK2OYGH6UFt7RYVE/QAzY87Vsu7mIjAfYY+BtJ662o6kVpL9SAFwJBqric2//ohX77KKw7WvZv0DbKFI+j7S+7hX8eRo3VaoFaVBL3oyKdGYlXlA98E63zqma4kopXC9ucs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=eOe4Qc5Z; arc=none smtp.client-ip=209.85.214.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zxwvX8bz"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ff854a2541so9883786a91.0
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 13:47:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="eOe4Qc5Z"
+Received: by mail-pl1-f232.google.com with SMTP id d9443c01a7336-2241053582dso100451695ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 13:49:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743540428; x=1744145228; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=m2Nlc70kYoEVZE2tPVykbAae+uvb1zAI7sPIwdhW1oA=;
-        b=zxwvX8bztPmDuoJqe4yW5FSqwAy9wE9NIkV0IBRBTYRj3mXSPpN72m7XO+rZjRM0Ip
-         VgDy2sU1rY2dQhjr8U4ceO8oNxI2Zrd5bBOV5X9WTLZdt+mDiTeG/Mom2LvB2MWFBsa3
-         RYyK883pPqu8JnYKz5FsZ5XdhRlK1rkZVYNI2gxfyZfvZscnEYmNK9lGoqiuMzI3qZxs
-         xWHY/jnAhcdOffGVkaQ4LGaBMtccO3tl9USqg/Mof83IXsSJsf/4oO5mDSQmJDLODlp/
-         UnYQbX87FI5+PSthUuYtipU8KDYm3rwJiDqr2HsoAqzqnJkvQKe+Psp0lhbryfR4t6rQ
-         CICw==
+        d=purestorage.com; s=google2022; t=1743540557; x=1744145357; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=mstT9j25mjz8aUy9IpCZAB9h1zoQsbNBC0c7IzzYKmM=;
+        b=eOe4Qc5ZL6PxBdceX4WZA0jY4bi3HOOTm0/symgIiB4WNyTjHs3G47jdkpEJZ4bZ/E
+         Mq1sg2WjUcPDnuGgHYCiviD2KBTt6RG+8SEqUlKlyq7Sn22CbkFRJkb26Nn5aeIYCCtw
+         txeJg+gN+1U70zPMXe2vLzJGsjybG0V3lJB6uKE5/nwpv2FZrZl7u6tNswAt2Sa38ter
+         +4wkb89FRx/+L4vqAC+Xcm/a44TyjUjRfsDwFhs4yiLNvcvXU9NTE0qJ4dkqXUkLcYzG
+         Vn+1OdI+dZ5NLL6LkwzX+N/VjVy94zX1GknIiLYko4Nkm4Bh3N+xiXOhG2zUAZK2tRUM
+         eRaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743540428; x=1744145228;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1743540557; x=1744145357;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=m2Nlc70kYoEVZE2tPVykbAae+uvb1zAI7sPIwdhW1oA=;
-        b=As1Oe8Xo9jYbhyB6Vn6c6t7RoKwIojyVd0/KWcw+UEgMMt4MBU76/0WTOCoKHrUEtv
-         TEZqyOsjzWAoXwfn9P+KHFsJjPGfzoO88al3DHL1nPZc5JF8gPbNVHLVVrMTb0PAUmsF
-         S1jIqzPZ4ZeoCHmH3oMH6ghEe/WYIfMpsLqTHCtYOmTUOHxrci0Rk/TXGZm34QpKcqZd
-         bJU9pPG4Okmx4qx2B/IdvNxJfXt4CwXfMXYbDyGzEIIOlNu3nUC/AxShPDt8fktxQulH
-         7ewdacWMuD17W6kqgHbecVIxAS7kwViN0PPFvNexc8s+yh8+JAiuz1+Eq4vwuVfyxujy
-         hiiQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXI14gZwpTcjSYeQvugjtK2m3Sm5ZadXGjVYEpO/TxFDwdRZrPQUXBnwSvATWEYW5kYVhJDd4HWAt276vQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwYhjNUGZ2VrnBMWa3oy2tkQ33DuYlsR7e4xXGlEzu2wAk7uTx5
-	7YmP8RpEVCnM6ssvly8S3Fh7i+mA0BuoPEaKm78qt0pWcxYyGQ9JJElk7yhk31wn5cJjyaglSAW
-	vrA==
-X-Google-Smtp-Source: AGHT+IGsvgxu0cKjG5RuKP235RGuqLz8GTYqfRRM08+3tGkeZ2vVqfJM8i9w8mVMsttD6aUmHocD7/45nSY=
-X-Received: from pfbdh1.prod.google.com ([2002:a05:6a00:4781:b0:730:8e17:ed13])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:1410:b0:725:96f2:9e63
- with SMTP id d2e1a72fcca58-73980477740mr24146728b3a.24.1743540428601; Tue, 01
- Apr 2025 13:47:08 -0700 (PDT)
-Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Tue,  1 Apr 2025 13:44:24 -0700
-In-Reply-To: <20250401204425.904001-1-seanjc@google.com>
+        bh=mstT9j25mjz8aUy9IpCZAB9h1zoQsbNBC0c7IzzYKmM=;
+        b=F2rk2tBinhCXMFHlDUUv+rx+EmRLbPGej9dDfg0f6e03YoMSzFNicdoDU53sMBDmL7
+         6J7QSvowC6mfLm4RvX7JIphiAabmCvP8gDfmj6hGE1aaV/zha4ElWMyPPitSQM8pPsrZ
+         jFjcyjOpPwPyUAj2nbGURhkx3dNUUzPS+bEOXNordAZS+JPXc7n1geBbwzTz75zKuzDW
+         iuS8Xb0I79nBoc4+29GZE6mmYxK4NPOoKAL1id8psIRc/0j+Kmh22yfSrg8oXMu/GhfR
+         CYTfEPZmQT1NDeUt4SkNqxrDXl75S71gZDqZ/vNfVFjPXOlPFuO8MP7YY7QoDH+8WaaO
+         aB/g==
+X-Forwarded-Encrypted: i=1; AJvYcCX+ule42CqLq3Rq2CKkH5lIm1GUPdUZ9Yg4bcv0ek8/Q42hy2rsNH6kHHN+wDkBMUotpBbaChEr2cIwjtA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyZoDHSPjayy/KhAqpaW+sK5bUks4rW/Ri7dcoUghasWQby+UEm
+	jbGlhjKiiRpeRMEl7UzHQs4xDUN8PhZvoKucmLwzABQ2ES0mhTKjBI7d9H5OgB12/SK+1J3pgb4
+	mEhOobZEe1SkqvBR+Q6sWEGcUCMOjhAnoxIBxVGYLIPA0h/aV
+X-Gm-Gg: ASbGncszJWq79+sjAhRHR+ZDy+fBu1xdNjIkAVTC7zJ2r933FsFAWukkVKFNMVJm2rh
+	V1VcXGQ3PNROoNCim4msEScP4YiqTiwIy+maCsh90H0jl0rky5zSASqwOKI/XZ2c1MYqdu/blP2
+	8kCI3i5efRbFnBJ1mXkyGRVc3CGBLxXkcyXTTGHducxUv4zOCFAwV1yB4wl/icM36hyYZeiO6cV
+	DohJFpRctl0I8ZDjhS7zN/CsOFPjxk0ESz4GlahjnWaiXet+sJSeRkzWN59LWsg9Lej2IYYm7Rb
+	ibbnZBJj+0mTF5Dts9A5kyIAQQkE1dHPJOA=
+X-Google-Smtp-Source: AGHT+IGs2poYi76n3mLJWXhUA0XPnz0aQSm3PIe6uqP21P4f4eb9jq7kzrwsD2tGzgMq7M/2nrRv9Bzd3IVu
+X-Received: by 2002:a05:6a00:3a1d:b0:736:3d7c:236c with SMTP id d2e1a72fcca58-739803990admr19199141b3a.14.1743540556836;
+        Tue, 01 Apr 2025 13:49:16 -0700 (PDT)
+Received: from c7-smtp-2023.dev.purestorage.com ([2620:125:9017:12:36:3:5:0])
+        by smtp-relay.gmail.com with ESMTPS id d2e1a72fcca58-739710cb596sm757975b3a.20.2025.04.01.13.49.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Apr 2025 13:49:16 -0700 (PDT)
+X-Relaying-Domain: purestorage.com
+Received: from dev-ushankar.dev.purestorage.com (dev-ushankar.dev.purestorage.com [10.7.70.36])
+	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 104C43400D7;
+	Tue,  1 Apr 2025 14:49:16 -0600 (MDT)
+Received: by dev-ushankar.dev.purestorage.com (Postfix, from userid 1557716368)
+	id 038EAE4034D; Tue,  1 Apr 2025 14:49:15 -0600 (MDT)
+From: Uday Shankar <ushankar@purestorage.com>
+Subject: [PATCH 0/2] ublk: fixes for selftests
+Date: Tue, 01 Apr 2025 14:49:07 -0600
+Message-Id: <20250401-ublk_selftests-v1-0-98129c9bc8bb@purestorage.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250401204425.904001-1-seanjc@google.com>
-X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
-Message-ID: <20250401204425.904001-13-seanjc@google.com>
-Subject: [PATCH 12/12] KVM: selftests: Add a KVM_IRQFD test to verify
- uniqueness requirements
-From: Sean Christopherson <seanjc@google.com>
-To: Paolo Bonzini <pbonzini@redhat.com>, Ingo Molnar <mingo@redhat.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, 
-	Vincent Guittot <vincent.guittot@linaro.org>, Marc Zyngier <maz@kernel.org>, 
-	Oliver Upton <oliver.upton@linux.dev>, Sean Christopherson <seanjc@google.com>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	linux-riscv@lists.infradead.org, David Matlack <dmatlack@google.com>, 
-	Juergen Gross <jgross@suse.com>, Stefano Stabellini <sstabellini@kernel.org>, 
-	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAENR7GcC/x3MQQqAIBBA0avErBPMmBZdJSIyxxoSC6ciiO6et
+ HyL/x8QSkwCbfFAoouFt5hRlQVMyxhnUuyywWiDujaoThvWQSj4g+QQ1Ywa0Xk7IVrI0Z7I8/0
+ Pu/59P8Y+ip1gAAAA
+X-Change-ID: 20250325-ublk_selftests-6a055dfbc55b
+To: Jens Axboe <axboe@kernel.dk>, Ming Lei <ming.lei@redhat.com>, 
+ Shuah Khan <shuah@kernel.org>
+Cc: linux-block@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Uday Shankar <ushankar@purestorage.com>
+X-Mailer: b4 0.14.2
 
-Add a selftest to verify that eventfd+irqfd bindings are globally unique,
-i.e. that KVM doesn't allow multiple irqfds to bind to a single eventfd,
-even across VMs.
+Fix a couple of issues I saw when developing selftests for ublk. These
+patches are split out from the following series:
 
-Signed-off-by: Sean Christopherson <seanjc@google.com>
+https://lore.kernel.org/linux-block/20250325-ublk_timeout-v1-0-262f0121a7bd@purestorage.com/T/#t
+
+Signed-off-by: Uday Shankar <ushankar@purestorage.com>
 ---
- tools/testing/selftests/kvm/Makefile.kvm |   4 +
- tools/testing/selftests/kvm/irqfd_test.c | 130 +++++++++++++++++++++++
- 2 files changed, 134 insertions(+)
- create mode 100644 tools/testing/selftests/kvm/irqfd_test.c
+Uday Shankar (2):
+      selftests: ublk: kublk: use ioctl-encoded opcodes
+      selftests: ublk: kublk: fix an error log line
 
-diff --git a/tools/testing/selftests/kvm/Makefile.kvm b/tools/testing/selftests/kvm/Makefile.kvm
-index f773f8f99249..9e5128d9f22c 100644
---- a/tools/testing/selftests/kvm/Makefile.kvm
-+++ b/tools/testing/selftests/kvm/Makefile.kvm
-@@ -125,6 +125,7 @@ TEST_GEN_PROGS_x86 += dirty_log_perf_test
- TEST_GEN_PROGS_x86 += guest_memfd_test
- TEST_GEN_PROGS_x86 += guest_print_test
- TEST_GEN_PROGS_x86 += hardware_disable_test
-+TEST_GEN_PROGS_x86 += irqfd_test
- TEST_GEN_PROGS_x86 += kvm_create_max_vcpus
- TEST_GEN_PROGS_x86 += kvm_page_table_test
- TEST_GEN_PROGS_x86 += memslot_modification_stress_test
-@@ -163,6 +164,7 @@ TEST_GEN_PROGS_arm64 += dirty_log_test
- TEST_GEN_PROGS_arm64 += dirty_log_perf_test
- TEST_GEN_PROGS_arm64 += guest_print_test
- TEST_GEN_PROGS_arm64 += get-reg-list
-+TEST_GEN_PROGS_arm64 += irqfd_test
- TEST_GEN_PROGS_arm64 += kvm_create_max_vcpus
- TEST_GEN_PROGS_arm64 += kvm_page_table_test
- TEST_GEN_PROGS_arm64 += memslot_modification_stress_test
-@@ -185,6 +187,7 @@ TEST_GEN_PROGS_s390 += s390/ucontrol_test
- TEST_GEN_PROGS_s390 += demand_paging_test
- TEST_GEN_PROGS_s390 += dirty_log_test
- TEST_GEN_PROGS_s390 += guest_print_test
-+TEST_GEN_PROGS_s390 += irqfd_test
- TEST_GEN_PROGS_s390 += kvm_create_max_vcpus
- TEST_GEN_PROGS_s390 += kvm_page_table_test
- TEST_GEN_PROGS_s390 += rseq_test
-@@ -199,6 +202,7 @@ TEST_GEN_PROGS_riscv += demand_paging_test
- TEST_GEN_PROGS_riscv += dirty_log_test
- TEST_GEN_PROGS_riscv += get-reg-list
- TEST_GEN_PROGS_riscv += guest_print_test
-+TEST_GEN_PROGS_riscv += irqfd_test
- TEST_GEN_PROGS_riscv += kvm_binary_stats_test
- TEST_GEN_PROGS_riscv += kvm_create_max_vcpus
- TEST_GEN_PROGS_riscv += kvm_page_table_test
-diff --git a/tools/testing/selftests/kvm/irqfd_test.c b/tools/testing/selftests/kvm/irqfd_test.c
-new file mode 100644
-index 000000000000..286f2b15fde6
---- /dev/null
-+++ b/tools/testing/selftests/kvm/irqfd_test.c
-@@ -0,0 +1,130 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+#include <errno.h>
-+#include <pthread.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <signal.h>
-+#include <stdint.h>
-+#include <sys/sysinfo.h>
-+
-+#include "kvm_util.h"
-+
-+static struct kvm_vm *vm1;
-+static struct kvm_vm *vm2;
-+static int __eventfd;
-+static bool done;
-+
-+/*
-+ * KVM de-assigns based on eventfd *and* GSI, but requires unique eventfds when
-+ * assigning (the API isn't symmetrical).  Abuse the oddity and use a per-task
-+ * GSI base to avoid false failures due to cross-task de-assign, i.e. so that
-+ * the secondary doesn't de-assign the primary's eventfd and cause assign to
-+ * unexpectedly succeed on the primary.
-+ */
-+#define GSI_BASE_PRIMARY	0x20
-+#define GSI_BASE_SECONDARY	0x30
-+
-+static void juggle_eventfd_secondary(struct kvm_vm *vm, int eventfd)
-+{
-+	int r, i;
-+
-+	/*
-+	 * The secondary task can encounter EBADF since the primary can close
-+	 * the eventfd at any time.  And because the primary can recreate the
-+	 * eventfd, at the safe fd in the file table, the secondary can also
-+	 * encounter "unexpected" success, e.g. if the close+recreate happens
-+	 * between the first and second assignments.  The secondary's role is
-+	 * mostly to antagonize KVM, not to detect bugs.
-+	 */
-+	for (i = 0; i < 2; i++) {
-+		r = __kvm_irqfd(vm, GSI_BASE_SECONDARY, eventfd, 0);
-+		TEST_ASSERT(!r || errno == EBUSY || errno == EBADF,
-+			    "Wanted success, EBUSY, or EBADF, r = %d, errno = %d",
-+			    r, errno);
-+
-+		/* De-assign should succeed unless the eventfd was closed. */
-+		r = __kvm_irqfd(vm, GSI_BASE_SECONDARY + i, eventfd, KVM_IRQFD_FLAG_DEASSIGN);
-+		TEST_ASSERT(!r || errno == EBADF,
-+			    "De-assign should succeed unless the fd was closed");
-+	}
-+}
-+
-+static void *secondary_irqfd_juggler(void *ign)
-+{
-+	while (!READ_ONCE(done)) {
-+		juggle_eventfd_secondary(vm1, READ_ONCE(__eventfd));
-+		juggle_eventfd_secondary(vm2, READ_ONCE(__eventfd));
-+	}
-+
-+	return NULL;
-+}
-+
-+static void juggle_eventfd_primary(struct kvm_vm *vm, int eventfd)
-+{
-+	int r1, r2;
-+
-+	/*
-+	 * At least one of the assigns should fail.  KVM disallows assigning a
-+	 * single eventfd to multiple GSIs (or VMs), so it's possible that both
-+	 * assignments can fail, too.
-+	 */
-+	r1 = __kvm_irqfd(vm, GSI_BASE_PRIMARY, eventfd, 0);
-+	TEST_ASSERT(!r1 || errno == EBUSY,
-+		    "Wanted success or EBUSY, r = %d, errno = %d", r1, errno);
-+
-+	r2 = __kvm_irqfd(vm, GSI_BASE_PRIMARY + 1, eventfd, 0);
-+	TEST_ASSERT(r1 || (r2 && errno == EBUSY),
-+		    "Wanted failure (EBUSY), r1 = %d, r2 = %d, errno = %d",
-+		    r1, r2, errno);
-+
-+	/*
-+	 * De-assign should always succeed, even if the corresponding assign
-+	 * failed.
-+	 */
-+	kvm_irqfd(vm, GSI_BASE_PRIMARY, eventfd, KVM_IRQFD_FLAG_DEASSIGN);
-+	kvm_irqfd(vm, GSI_BASE_PRIMARY + 1, eventfd, KVM_IRQFD_FLAG_DEASSIGN);
-+}
-+
-+int main(int argc, char *argv[])
-+{
-+	pthread_t racing_thread;
-+	int r, i;
-+
-+	/* Create "full" VMs, as KVM_IRQFD requires an in-kernel IRQ chip. */
-+	vm1 = vm_create(1);
-+	vm2 = vm_create(1);
-+
-+	WRITE_ONCE(__eventfd, kvm_new_eventfd());
-+
-+	kvm_irqfd(vm1, 10, __eventfd, 0);
-+
-+	r = __kvm_irqfd(vm1, 11, __eventfd, 0);
-+	TEST_ASSERT(r && errno == EBUSY,
-+		    "Wanted EBUSY, r = %d, errno = %d", r, errno);
-+
-+	r = __kvm_irqfd(vm2, 12, __eventfd, 0);
-+	TEST_ASSERT(r && errno == EBUSY,
-+		    "Wanted EBUSY, r = %d, errno = %d", r, errno);
-+
-+	kvm_irqfd(vm1, 11, READ_ONCE(__eventfd), KVM_IRQFD_FLAG_DEASSIGN);
-+	kvm_irqfd(vm1, 12, READ_ONCE(__eventfd), KVM_IRQFD_FLAG_DEASSIGN);
-+	kvm_irqfd(vm1, 13, READ_ONCE(__eventfd), KVM_IRQFD_FLAG_DEASSIGN);
-+	kvm_irqfd(vm1, 14, READ_ONCE(__eventfd), KVM_IRQFD_FLAG_DEASSIGN);
-+	kvm_irqfd(vm1, 10, READ_ONCE(__eventfd), KVM_IRQFD_FLAG_DEASSIGN);
-+
-+	close(__eventfd);
-+
-+	pthread_create(&racing_thread, NULL, secondary_irqfd_juggler, vm2);
-+
-+	for (i = 0; i < 10000; i++) {
-+		WRITE_ONCE(__eventfd, kvm_new_eventfd());
-+
-+		juggle_eventfd_primary(vm1, __eventfd);
-+		juggle_eventfd_primary(vm2, __eventfd);
-+		close(__eventfd);
-+	}
-+
-+	WRITE_ONCE(done, true);
-+	pthread_join(racing_thread, NULL);
-+}
+ tools/testing/selftests/ublk/kublk.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+---
+base-commit: 4cfcc398357b0fb3d4c97d47d4a9e3c0653b7903
+change-id: 20250325-ublk_selftests-6a055dfbc55b
+
+Best regards,
 -- 
-2.49.0.504.g3bcea36a83-goog
+Uday Shankar <ushankar@purestorage.com>
 
