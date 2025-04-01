@@ -1,38 +1,38 @@
 Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 032762139C8;
-	Tue,  1 Apr 2025 16:13:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBB65214A80;
+	Tue,  1 Apr 2025 16:13:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743524011; cv=none; b=ZB5BSPHbJHPWCawvnHXAGeahTpuLwMYyKZkbrZu00lyGX5+RPh8l3F2cWnRRW+4kHjmH+npAZdIsATLPMv5Bb3GSASg3uZrsDQT+GUjdWEOAKIF1Kh88CG+HBXxYsntTYwhnFdrBlkTUZgyKu7iKuKNnZem9Oa+y9g4b2GZjUg0=
+	t=1743524013; cv=none; b=lavQPDz0tNpF4hip2NOP3gX0X33I3o56GcMY3GxUjMn387UaqFLvtO4jTkvMRZN1D8piht9qOyuMlHkrxPQsOyD5qc1FZqL03zNot/I7TJhC9KBWPvwWPH3qKsIXfmz9TFb0o6YFJMXQSabD2QtfYoj/9dKrd2aEw7dySM/e4ls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743524011; c=relaxed/simple;
-	bh=R+dvFcKSVcqqUDpItH268Ej1pZUEkDrwiH4aY6Td5JY=;
+	s=arc-20240116; t=1743524013; c=relaxed/simple;
+	bh=yIQlV+xSWp6m0A0vkyE28xWvYegA9yXQmu6qD2GvGss=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JxXUNXIlzMFc/MxV2ePGpvgIPQQA9ar7ij0+ac6vVoxOPRi7kU/7+E6h6to4mGg4NV0y08Woz/0ZH8FrIbZ12roO/15Pq3A1cetzMroPwMCpbwOclqjHLadF66DgGMssRMrp2TUnAssqMj6JdwzgHeGYQw59YAxrjmqszTCAe3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=t2W+rIeS; arc=none smtp.client-ip=68.232.154.123
+	 MIME-Version:Content-Type; b=QifFcOZ6fHCuiBlX6WX4YtOB0XI10YkfrV6Z2gnXR3zEA79oBbqUIuj6WtSKUbQwzJQRBomnxrB6Axy8COMpy5tZQi7+Wn06zc8LnIrhvw6DmIv4lfqiZpm8SFNM0nRtHRP/vvMRWc4u0XRmSkdXdmXH8wq6/h94T70FLUjbrtI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=WrJMMAkM; arc=none smtp.client-ip=68.232.154.123
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="t2W+rIeS"
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="WrJMMAkM"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1743524009; x=1775060009;
+  t=1743524011; x=1775060011;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=R+dvFcKSVcqqUDpItH268Ej1pZUEkDrwiH4aY6Td5JY=;
-  b=t2W+rIeSrOB5+JvDtmQbkWYbXiB/XFwIEi2ppJcXsle6AKtpMwHx4gMr
-   WP0gJZlp69NTPfaXY/oZMBOiUShoxs8K4FB056nNLhIVpnVPUWyTfdMjn
-   jSgfp+mjiwEn7OtuBXVWG/wUQ14tLqLbDvwixaevR0Tt+QgPXJyZZwQuc
-   Fwv32uE6vsp/GmuFwyoEyiQx9h83Ga5LKhvazOUvq664G/lw5VjguH6DI
-   bHqjyq52KsrG+h5gz7eJUnBfi6XibqaXxVEqIAcV/kSAOKJSJM+ksOmTG
-   I/jsT779UgZuclXvnJXIxxFf4R1D07sO1T2ihkmcOiuhESINg26/uVQPO
-   g==;
+  bh=yIQlV+xSWp6m0A0vkyE28xWvYegA9yXQmu6qD2GvGss=;
+  b=WrJMMAkMMj3BnRGSmbw4hQH2YpZckssG6N3Ln84ylN3HqiQILkvb8HCB
+   BeaVagxgRYr/6g3rsC3vJmbettupWf/dYQTP9bX1R2ZqIypdxdblOaaiF
+   5oF0W4v47dymgtt4ytRfiClEUQXrP3ABxfxXmdq/suu8bpOx5u1AjxLTz
+   vn/VCiEH1PKO9FiO4wxrfV9q3VRngu+xe+gBHRI1fjNw0O21HI3CkbrNn
+   I4NB/zTPBpHgnrjflvNNJXSDQkD1jSdjcY7d0JxSfW8fcoKC2PAB8Dcnc
+   oFv+2ZQAp+E71KFBC/O7RY7OLc/E7Fo8gJ61qcQyFgmqlpPqLzZvzr7w0
+   w==;
 X-CSE-ConnectionGUID: ggLzNIpETriZ0zPViMY9HA==
-X-CSE-MsgGUID: pl7XT+nXRGqhxAxzXvgSmQ==
+X-CSE-MsgGUID: 2gYnf6TSRa2gsktm+Ip4hg==
 X-IronPort-AV: E=Sophos;i="6.14,293,1736838000"; 
-   d="scan'208";a="39512777"
+   d="scan'208";a="39512780"
 X-Amp-Result: SKIPPED(no attachment in message)
 Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
   by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 01 Apr 2025 09:13:22 -0700
@@ -52,9 +52,9 @@ CC: <nicolas.ferre@microchip.com>, <netdev@vger.kernel.org>,
 	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
 	<linux-arm-kernel@lists.infradead.org>, Ryan Wanner
 	<Ryan.Wanner@microchip.com>
-Subject: [PATCH 2/6] ARM: dts: microchip: sama7d65: Add gmac interfaces for sama7d65 SoC
-Date: Tue, 1 Apr 2025 09:13:18 -0700
-Message-ID: <05b107796b6f3a173d0dd0a5b2107b675cfd994e.1743523114.git.Ryan.Wanner@microchip.com>
+Subject: [PATCH 4/6] ARM: dts: microchip: sama7d65: Enable GMAC interface
+Date: Tue, 1 Apr 2025 09:13:20 -0700
+Message-ID: <fca0c1deb74006cdedbdd71061dec9dabf1e9b9a.1743523114.git.Ryan.Wanner@microchip.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1743523114.git.Ryan.Wanner@microchip.com>
 References: <cover.1743523114.git.Ryan.Wanner@microchip.com>
@@ -69,56 +69,76 @@ Content-Type: text/plain
 
 From: Ryan Wanner <Ryan.Wanner@microchip.com>
 
-Add support for GMAC interfaces on SAMA7D65 SoC.
+Enable GMAC0 interface for sama7d65_curiosity board.
 
 Signed-off-by: Ryan Wanner <Ryan.Wanner@microchip.com>
 ---
- arch/arm/boot/dts/microchip/sama7d65.dtsi | 32 +++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
+ .../dts/microchip/at91-sama7d65_curiosity.dts | 51 +++++++++++++++++++
+ 1 file changed, 51 insertions(+)
 
-diff --git a/arch/arm/boot/dts/microchip/sama7d65.dtsi b/arch/arm/boot/dts/microchip/sama7d65.dtsi
-index b6710ccd4c36..cd17b838e179 100644
---- a/arch/arm/boot/dts/microchip/sama7d65.dtsi
-+++ b/arch/arm/boot/dts/microchip/sama7d65.dtsi
-@@ -169,6 +169,38 @@ dma1: dma-controller@e1614000 {
- 			status = "disabled";
- 		};
+diff --git a/arch/arm/boot/dts/microchip/at91-sama7d65_curiosity.dts b/arch/arm/boot/dts/microchip/at91-sama7d65_curiosity.dts
+index 30fdc4f55a3b..441370dbb4c2 100644
+--- a/arch/arm/boot/dts/microchip/at91-sama7d65_curiosity.dts
++++ b/arch/arm/boot/dts/microchip/at91-sama7d65_curiosity.dts
+@@ -105,7 +105,58 @@ &main_xtal {
+ 	clock-frequency = <24000000>;
+ };
  
-+		gmac0: ethernet@e1618000 {
-+			compatible = "microchip,sama7d65-gem", "microchip,sama7g5-gem";
-+			reg = <0xe1618000 0x2000>;
-+			interrupts = <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&pmc PMC_TYPE_PERIPHERAL 46>, <&pmc PMC_TYPE_PERIPHERAL 46>, <&pmc PMC_TYPE_GCK 46>, <&pmc PMC_TYPE_GCK 49>;
-+			clock-names = "pclk", "hclk", "tx_clk", "tsu_clk";
-+			assigned-clocks = <&pmc PMC_TYPE_GCK 46>, <&pmc PMC_TYPE_GCK 49>;
-+			assigned-clock-rates = <125000000>, <200000000>;
-+			status = "disabled";
-+		};
++&gmac0 {
++	#address-cells = <1>;
++	#size-cells = <0>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_gmac0_default
++		     &pinctrl_gmac0_mdio_default
++		     &pinctrl_gmac0_txck_default
++		     &pinctrl_gmac0_phy_irq>;
++	phy-mode = "rgmii-id";
++	status = "okay";
 +
-+		gmac1: ethernet@e161c000 {
-+			compatible = "microchip,sama7d65-gem", "microchip,sama7g5-gem";
-+			reg = <0xe161c000 0x2000>;
-+			interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 151 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 152 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 154 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 155 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&pmc PMC_TYPE_PERIPHERAL 47>, <&pmc PMC_TYPE_PERIPHERAL 47>,<&pmc PMC_TYPE_GCK 47>, <&pmc PMC_TYPE_GCK 50>;
-+			clock-names = "pclk", "hclk", "tx_clk", "tsu_clk";
-+			assigned-clocks = <&pmc PMC_TYPE_GCK 47>, <&pmc PMC_TYPE_GCK 50>;
-+			assigned-clock-rates = <125000000>, <200000000>;
-+			status = "disabled";
-+		};
++	ethernet-phy@7 {
++		reg = <0x7>;
++		interrupt-parent = <&pioa>;
++		interrupts = <PIN_PC1 IRQ_TYPE_LEVEL_LOW>;
++		status = "okay";
++	};
++};
+ &pioa {
++	pinctrl_gmac0_default: gmac0-default {
++		pinmux = <PIN_PA26__G0_TX0>,
++			 <PIN_PA27__G0_TX1>,
++			 <PIN_PB4__G0_TX2>,
++			 <PIN_PB5__G0_TX3>,
++			 <PIN_PA29__G0_RX0>,
++			 <PIN_PA30__G0_RX1>,
++			 <PIN_PB2__G0_RX2>,
++			 <PIN_PB6__G0_RX3>,
++			 <PIN_PA25__G0_TXCTL>,
++			 <PIN_PB3__G0_RXCK>,
++			 <PIN_PA28__G0_RXCTL>;
++		slew-rate = <0>;
++		bias-disable;
++	};
 +
- 		pit64b0: timer@e1800000 {
- 			compatible = "microchip,sama7d65-pit64b", "microchip,sam9x60-pit64b";
- 			reg = <0xe1800000 0x100>;
++	pinctrl_gmac0_mdio_default: gmac0-mdio-default {
++		pinmux = <PIN_PA31__G0_MDC>,
++			 <PIN_PB0__G0_MDIO>;
++		bias-disable;
++	};
++
++	pinctrl_gmac0_phy_irq: gmac0-phy-irq {
++		pinmux = <PIN_PC1__GPIO>;
++		bias-disable;
++	};
++
++	pinctrl_gmac0_txck_default: gmac0-txck-default {
++		pinmux = <PIN_PB1__G0_REFCK>;
++		slew-rate = <0>;
++		bias-pull-up;
++	};
++
+ 	pinctrl_i2c10_default: i2c10-default{
+ 		pinmux = <PIN_PB19__FLEXCOM10_IO1>,
+ 			 <PIN_PB20__FLEXCOM10_IO0>;
 -- 
 2.43.0
 
