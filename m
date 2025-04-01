@@ -1,149 +1,134 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDE2A203703;
-	Tue,  1 Apr 2025 12:19:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3CCB01EC01F
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 12:20:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743509961; cv=none; b=SCh/IxsFiBLqnopHiBhXDYOKakBtAjfHWWnrzCWKfU2nkcILjTdj/A0OuUSrlEhPn4RD5x8E8PiKPiycdigpBepE87Qcqi5oco+1SNKJSegiEP12ln1jF/Kl40WqgC2q2K3rbPNI9GkGJGheEyHArXP+WxDCEuCvWEze2lQmH4M=
+	t=1743510009; cv=none; b=f8NELhuMPQx/3FrbNkVefGnIDchFbHBqzcP4vWr9dBuYwlmGiJRHALL5u7CSxqRbgbZL1ReliWBoSD3mWLFXJeixC3NBt7+Lw+WqLn6aY4GzFESLpx33t1hpQzIBZmBgBPXTpinMXTactVNXyG4ImZUrAqZ5TVBXL62LNKg8OeA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743509961; c=relaxed/simple;
-	bh=k+JFvSQ26FarxrRAOquTbPWkCD8Pzve2Gh9zf2uf7Ew=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=IOFKtBily58FAsPmyhcNVGkxevjbOl+sQWRYA9MhEw44E+QnyygYS4pOvO6DOTdrcpR1YWN7nwprAzeYrtO5DGrK/WEG4xjHmRVYkAv9dPSGvxzZOoLRxSOQnfxUWks2kalLkrEcAW3vs0qu2vcQuT+fBp00+hlRpHHfg8RlAAA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jbX1VpJy; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jbX1VpJy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743509960; x=1775045960;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=k+JFvSQ26FarxrRAOquTbPWkCD8Pzve2Gh9zf2uf7Ew=;
-  b=jbX1VpJy3JZalOIPMZ67A88AXrC4zSXIw0WCCsV+MigyAVAtRAmzwObw
-   dO6eEyDy4M/C7IPtS+T4ysDSZ4UHU65sTA8KqvOPZk8KlyulBmL+rvfOT
-   k2wcr/Rfy1ilyFBT2Dg7sgupFvjjOcm5irmvETIMclu/hZuHwd9OSkrsw
-   ve7MaWvdlAbQCD2cfPpU1cAzCONKdnYkpxjFL3CGKnrToeIPm2nglXfLL
-   +u6fNXulV3Vq2wfh9QTfnaObbe1FZJBu6eiLW1axJy5fVkf0/k5uMBUQ7
-   117LWJZ7jXu2gkY30uzG2fzhgTBQUpeoUlC4T2XtAXBnos9BJTjeS9eNq
-   A==;
-X-CSE-ConnectionGUID: XpDjFH4nT5aorGRAWtuzug==
-X-CSE-MsgGUID: FqyWUx5CSCy3JFHZdm5Dzg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11391"; a="44981761"
-X-IronPort-AV: E=Sophos;i="6.14,293,1736841600"; 
-   d="scan'208";a="44981761"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2025 05:19:20 -0700
-X-CSE-ConnectionGUID: O3fed8/ISRavwWB0+7AiGA==
-X-CSE-MsgGUID: X3cpC3b2Skq3VReLpCGmUQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,293,1736841600"; 
-   d="scan'208";a="157365168"
-Received: from ncintean-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.246.7])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2025 05:19:16 -0700
-From: Jani Nikula <jani.nikula@intel.com>
+	s=arc-20240116; t=1743510009; c=relaxed/simple;
+	bh=DpGxsgVgr/Xpff/beTHEZQp3I9HuOTYslzz02JBPytQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=lzB7Qj0ZptW5FaFZYapvs3tWrETyoq534sGqzZGwxlGtk2j0zb+mSmtfxuZ6stRDKXzbi5ZLqNEroUqtj9xLAUjPCaGHQmnnpk33XjRy+6JVFaFfvFXLLfdH6rs6IOf3WfJoHf/1nx29T7Dh9hjPMhGIB8pLqWsleoHwsyow8Pk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.198])
+	by gateway (Coremail) with SMTP id _____8AxGHHz2etnUMCtAA--.29558S3;
+	Tue, 01 Apr 2025 20:20:03 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.68.198])
+	by front1 (Coremail) with SMTP id qMiowMBxGcTp2etnLbhqAA--.28868S2;
+	Tue, 01 Apr 2025 20:20:01 +0800 (CST)
+From: Huacai Chen <chenhuacai@loongson.cn>
 To: Linus Torvalds <torvalds@linux-foundation.org>,
-	linux-kernel@vger.kernel.org
-Cc: jani.nikula@intel.com,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	linux-kbuild@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	intel-xe@lists.freedesktop.org,
-	intel-gfx@lists.freedesktop.org
-Subject: [PATCH 5/5] drm: add config option for extra build-time checks
-Date: Tue,  1 Apr 2025 15:18:30 +0300
-Message-Id: <20250401121830.21696-6-jani.nikula@intel.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250401121830.21696-1-jani.nikula@intel.com>
-References: <20250401121830.21696-1-jani.nikula@intel.com>
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [GIT PULL] LoongArch changes for v6.15
+Date: Tue,  1 Apr 2025 20:19:44 +0800
+Message-ID: <20250401121945.3814892-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMBxGcTp2etnLbhqAA--.28868S2
+X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxXFy7uw47XrWrJF1DAF47GFX_yoW5XF1xpr
+	y3uFnxGr4DGr9xJwnrK343Wr1DtF1fGr1xXa13G348Cr1UZr1UWr1xGFZ5XFyUt3yktr10
+	qr1rG3ZxKF1UA3cCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUvKb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
+	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17
+	McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr4
+	1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_
+	JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17
+	CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0
+	I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I
+	8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU
+	0xZFpf9x07jepB-UUUUU=
 
-The DRM subsystem contains additional build-time checks, primarily aimed
-at DRM developers and CI systems. The checks may be overzealous. They
-may slow down or fail the build altogether. They may create excessive
-dependency files in the build tree. They should not be enabled for
-regular builds, and certainly not forced on unsuspecting developers
-running an allyesconfig or allmodconfig build.
+The following changes since commit 38fec10eb60d687e30c8c6b5420d86e8149f7557:
 
-Add config DRM_DISABLE_EXTRA_BUILD_CHECKS, enabled by default as well as
-by allyesconfig/allmodconfig, hiding the extra checks from anyone but
-people who intentionally opt-in for the checks.
+  Linux 6.14 (2025-03-24 07:02:41 -0700)
 
-For example, to enable header tests:
+are available in the Git repository at:
 
-$ scripts/config --disable CONFIG_DRM_DISABLE_EXTRA_BUILD_CHECKS --enable CONFIG_DRM_HEADER_TEST
-$ make olddefconfig
+  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-6.15
 
-Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
-Closes: https://lore.kernel.org/r/CAHk-=wjcdfrDTjzm6J6T-3fxtVyBG7a_0BXc2=mgOuM6KPFnCg@mail.gmail.com
-Fixes: 62ae45687e43 ("drm: ensure drm headers are self-contained and pass kernel-doc")
-Cc: Masahiro Yamada <masahiroy@kernel.org>
-Cc: David Airlie <airlied@gmail.com>
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Signed-off-by: Jani Nikula <jani.nikula@intel.com>
+for you to fetch changes up to 17ba839c3c6c95562f329340e67da432309dd0d4:
 
----
+  LoongArch: Update Loongson-3 default config file (2025-03-30 16:31:16 +0800)
 
-Cc: linux-kbuild@vger.kernel.org
-Cc: dri-devel@lists.freedesktop.org
-Cc: intel-xe@lists.freedesktop.org
-Cc: intel-gfx@lists.freedesktop.org
----
- drivers/gpu/drm/Kconfig | 21 +++++++++++++++++++--
- 1 file changed, 19 insertions(+), 2 deletions(-)
+----------------------------------------------------------------
+LoongArch changes for v6.15
 
-diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
-index 2cba2b6ebe1c..5a3fce9ef998 100644
---- a/drivers/gpu/drm/Kconfig
-+++ b/drivers/gpu/drm/Kconfig
-@@ -489,9 +489,26 @@ config DRM_PRIVACY_SCREEN
- 	bool
- 	default n
- 
-+# Reversed option to disable on allyesconfig/allmodconfig builds
-+config DRM_DISABLE_EXTRA_BUILD_CHECKS
-+	bool "Disable DRM subsystem extra build-time checks"
-+	default y
-+	help
-+	  The DRM subsystem contains additional build-time checks, primarily
-+	  aimed at DRM developers and CI systems. The checks may be
-+	  overzealous. They may slow down or fail the build altogether. They may
-+	  create excessive dependency files in the tree. They should not be
-+	  enabled for regular builds, and thus they are disabled by default.
-+
-+# Proxy config to allow simple "depends on DRM_EXTRA_BUILD_CHECKS"
-+config DRM_EXTRA_BUILD_CHECKS
-+	bool
-+	depends on DRM && EXPERT && DRM_DISABLE_EXTRA_BUILD_CHECKS=n
-+	default !DRM_DISABLE_EXTRA_BUILD_CHECKS
-+
- config DRM_WERROR
- 	bool "Compile the drm subsystem with warnings as errors"
--	depends on DRM && EXPERT
-+	depends on DRM_EXTRA_BUILD_CHECKS
- 	depends on !WERROR
- 	default n
- 	help
-@@ -505,7 +522,7 @@ config DRM_WERROR
- 
- config DRM_HEADER_TEST
- 	bool "Ensure DRM headers are self-contained and pass kernel-doc"
--	depends on DRM && EXPERT && BROKEN
-+	depends on DRM_EXTRA_BUILD_CHECKS
- 	default n
- 	help
- 	  Ensure the DRM subsystem headers both under drivers/gpu/drm and
--- 
-2.39.5
+1, Add jump table support for objtool;
+2, Always select HAVE_VIRT_CPU_ACCOUNTING_GEN;
+3, Enable UBSAN (Undefined Behavior Sanitizer);
+4, Increase MAX_IO_PICS up to 8;
+5, Increase ARCH_DMA_MINALIGN up to 16;
+6, Fix and improve BPF JIT;
+7, Fix and improve vDSO implementation;
+8, Update the default config file;
+9, Some bug fixes and other small changes.
+
+Note: There is conflicts in arch/loongarch/Kconfig and rust/Makefile,
+but can be simply fixed by adjusting context as Stephen Rothwell done
+in linux-next.
+
+----------------------------------------------------------------
+Bibo Mao (1):
+      LoongArch: Always select HAVE_VIRT_CPU_ACCOUNTING_GEN
+
+Hengqi Chen (3):
+      LoongArch: BPF: Fix off-by-one error in build_prologue()
+      LoongArch: BPF: Use move_addr() for BPF_PSEUDO_FUNC
+      LoongArch: BPF: Don't override subprog's return value
+
+Huacai Chen (4):
+      Merge Merge tag 'objtool-core-2025-03-22' into loongarch-next
+      LoongArch: Increase MAX_IO_PICS up to 8
+      LoongArch: Increase ARCH_DMA_MINALIGN up to 16
+      LoongArch: Update Loongson-3 default config file
+
+Miaoqian Lin (1):
+      LoongArch: Fix device node refcount leak in fdt_cpu_clk_init()
+
+WANG Rui (1):
+      rust: Fix enabling Rust and building with GCC for LoongArch
+
+Xi Ruoyao (2):
+      LoongArch: vDSO: Remove --hash-style=sysv
+      LoongArch: vDSO: Make use of the t8 register for vgetrandom-chacha
+
+Yuli Wang (2):
+      LoongArch: Enable UBSAN (Undefined Behavior Sanitizer)
+      LoongArch: Rework the arch_kgdb_breakpoint() implementation
+
+谢致邦 (XIE Zhibang) (1):
+      LoongArch: Fix help text of CMDLINE_EXTEND in Kconfig
+
+ arch/loongarch/Kconfig                     |  7 ++++---
+ arch/loongarch/configs/loongson3_defconfig | 11 ++++++++++-
+ arch/loongarch/include/asm/cache.h         |  2 ++
+ arch/loongarch/include/asm/irq.h           |  2 +-
+ arch/loongarch/kernel/env.c                |  2 ++
+ arch/loongarch/kernel/kgdb.c               |  5 +++--
+ arch/loongarch/net/bpf_jit.c               | 12 ++++++++++--
+ arch/loongarch/net/bpf_jit.h               |  5 +++++
+ arch/loongarch/vdso/Makefile               |  3 +--
+ arch/loongarch/vdso/vgetrandom-chacha.S    | 13 +++----------
+ rust/Makefile                              |  4 +++-
+ 11 files changed, 44 insertions(+), 22 deletions(-)
 
