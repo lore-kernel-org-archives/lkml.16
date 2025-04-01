@@ -1,69 +1,69 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C7E82206BF
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 16:11:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97771221703
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 16:12:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743523920; cv=none; b=AllMgTmFYm1kM5DOD3u1gFMuUNq1nZ7jE4IsbSOdaYBtgTatDRTIjl8O21yeJPqYXoa/7EcKXAw19E4XydlfsaBIXR9khEBmyls3nnSZanytDMLniaq9Kz87CURtYsdBrFlHHtvGhgQFdg33tgJo/51LpioNOjjttYQctG+AKTY=
+	t=1743523923; cv=none; b=OR3x+8vAc47FovmIVugug3XrFr+0VFvCEPV9eACoZ44PYAbgjZSRBcLbsL5uW25ySnyRVkx7IPMmJc/Hca3Ug6ezl/1sDef5rYkG8TKV1S8S2vbuMN4mY8Xo3rpDlkIiwxUB5diZiDwGN+HuarOB4gfE6B1H9NGB3jwlKMEYANQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743523920; c=relaxed/simple;
-	bh=aUHeMAtza3lALIkrYa7Cju0Ow+Rzlcu6X1bDd+6rBGE=;
+	s=arc-20240116; t=1743523923; c=relaxed/simple;
+	bh=2CI/mkWBrTgnbik9OCHRAn1y+W1g2QV9UjWHcVB514o=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ir/zaJXcpJs6RleLqnYjHy3qj7sW+mB71c3OzHgNT30aOtULRC34ayGNnZopnW3XfMXeemFMPJwVTOT6jAl8RiwU5A5N5ocw7w9bBw2OmWhtVJ5Li1UFp/GnKFAz3htIQEoi/ahgep65bubbX5YtcktIIOerKDGhysCJrdpYvAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KfXaY4Or; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=XhcMEApsptTeJynU3Gu7NZApijbWziQNncwEeS85Qocv9P/22etPxqJPqYCDi8tMNP1XpB9CUnZ+q57Me0sVdujXyGrKjXbQ/3vpi8aUfp+wj9VY5s0e+kR7ib5ULdfoT3KxlaULnIzhO0qNd9a5kcsEfqzfd2xdVg60rWej9Dw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=L5+R+PkQ; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KfXaY4Or"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L5+R+PkQ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743523917;
+	s=mimecast20190719; t=1743523920;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=DC/nMXHGZlSx0sJ7rLf3alDuDl6Zb/0M1re23sBSw4g=;
-	b=KfXaY4OrTh5qNkXM2uPRt8LL+xurGk1bB5cyjc11brzhi0R7eHPWzrSUbk2FpU5bErMLOe
-	sdZlzbHfbedhxAQ4cUnO7I73QmEjINqDi6HswCEM489QWhIn4xZVJDfWCsbM6ClPSF21K3
-	JxOLZ5tLSqWxwhh5po/Er5CqP/+tfts=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=jloFR1LDGvNeXK6NZWVsMX9b3AeMl8ttvkfYFFUhR2s=;
+	b=L5+R+PkQBVIojOOAGNx8XWaJ/sB5vhxU4ca2PQ7fHXyfsr4D/BFHogDf5OkNp2DV0+QA9M
+	DEoiNwBweEuvGZ4rd/BTMQEZMunrXaPk2yIFdHL4FaNoHBoXZvATCdWpscf1yRwjGaSFBd
+	sPPLEcRzFGOA2Xvl/LevGIN6Lut6OXA=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-330-JHOL8XskNqSl2ex-hmMmhw-1; Tue, 01 Apr 2025 12:11:55 -0400
-X-MC-Unique: JHOL8XskNqSl2ex-hmMmhw-1
-X-Mimecast-MFC-AGG-ID: JHOL8XskNqSl2ex-hmMmhw_1743523912
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43d51bd9b41so51390285e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 09:11:55 -0700 (PDT)
+ us-mta-448-HcHhYcCzPyOF83xDi8NCJw-1; Tue, 01 Apr 2025 12:11:59 -0400
+X-MC-Unique: HcHhYcCzPyOF83xDi8NCJw-1
+X-Mimecast-MFC-AGG-ID: HcHhYcCzPyOF83xDi8NCJw_1743523917
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43d0830c3f7so47371935e9.2
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 09:11:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743523911; x=1744128711;
+        d=1e100.net; s=20230601; t=1743523916; x=1744128716;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=DC/nMXHGZlSx0sJ7rLf3alDuDl6Zb/0M1re23sBSw4g=;
-        b=EqbuA8G0DRPOoHTLoqaqT48MDIlY6mZJNMRggre12leMIKFaIPiQlA7COJCBPRbH2W
-         EJQNbzS7DTXWHaSRLRWVxvUFKIT5vHboswVW6j4VFLiUgvfp+SHNa4jKWiJjxSnOPH2k
-         hMthzzXO+55WRgp1bJ0+Q4KxQKVDK/alpHig1UNhLb2PJHo0ecxAz6Wikt1D88cwL8XU
-         Oki8XpSTVk8TeTBCiOmLU/3t+DVvpirwz5m2UiHbWIAt879pY5oLyOwn11vE7slzyr2x
-         Bgx3MgarkeXz6NOxvTJNpJJB8Ht2Dz5HQCR0LweYNlS7PyDMGVBLy3+STx61zMr2flrm
-         1naQ==
-X-Gm-Message-State: AOJu0Yw6b9ju4wi3o/pqUHvxeo24jvZ9hODDR0uZhwphFEYU8fqB8cnE
-	O0rCuB+MIGbodENqAidQeIqldM9yfAQUrF099adIkaKDtvdxLhcprVXrd0juwfhfHuj9C59YzE+
-	lCUmojLoBqQnQF61ZVTwUUyp8rTZ3E6a1wFYgVUYFKhGuuPwtx2JyhQwdy8kaPO3PrOr/l9M5yN
-	fXFgoFmD0F519aOzOrjRJO1zRu5ERv6B06/fYI16IYtlTRjA==
-X-Gm-Gg: ASbGncvDKhziXboGGd/KEjzgum7GAWSsYHrj3f8Vp0qNO8ptwVnHcKhFhRuIJP1f5E3
-	tQBPsaoeup8005aNwhi0aBpbvlexiZuo/orYhxYAou2CYg6wzbQ/NP8AOmdoIKvxW/vPHlUhV5A
-	+UQ3dNAAIVhtFOCb6SGMk9IayPr+EOLePrcQpF1abaxYGC8qo7W26Kv/T8yxXJeS2x4QD3fmQG0
-	NXdqlkJJ00qhtzHwDFnMeQxkXsaWC2S5BX/IO5kYxSSJ+x9UyM4MYVQ/6ik42aGZPOGb9hYM3ll
-	VaXkHE9dG0m/uF/BLFK/Hw==
-X-Received: by 2002:a05:600c:444d:b0:43c:fe85:e4ba with SMTP id 5b1f17b1804b1-43db6248f51mr106824795e9.15.1743523910868;
-        Tue, 01 Apr 2025 09:11:50 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE6cteiO2nE177KrCSu7vAEZTo6A+KIZLn6H0SoIEEXCGg9tK9PGpoiT8WxAi5lNC52sLjZ4w==
-X-Received: by 2002:a05:600c:444d:b0:43c:fe85:e4ba with SMTP id 5b1f17b1804b1-43db6248f51mr106824335e9.15.1743523910433;
-        Tue, 01 Apr 2025 09:11:50 -0700 (PDT)
+        bh=jloFR1LDGvNeXK6NZWVsMX9b3AeMl8ttvkfYFFUhR2s=;
+        b=dF8z8gnP0qXb86pp2ENL5Pw1U2h09yrd6pf8ID72Jq/nXxneoqKXQdtMu8eaZsim+P
+         axGxVq6JpjpFUzpBkkQdQl+gczy2cHtBDCq8zcGaleP9IHfGgPGeEubbbK+lfUXNfJfT
+         oAMYkrZg+UcJijtNCCSmk4Lx24t01OHai72Kzn5/zyV/0zGSAt5RitCz3t7MHitO5Wl0
+         qlEImjc6cMokFLv77o7YJy8rb1oHNoEe1niU+4GszNvqFAgm4sVpIE0oh7DTsrSTZHtl
+         lNSKlAb0FxitHaWKR2gbLaVxUYTtkHv77mUnsMJKYWPjXLe/2pwxksdxiIIUBFHR6xrj
+         5aNA==
+X-Gm-Message-State: AOJu0Yw8f2nj3icGhIqpypx/CaPvrJKHCHPzP4Av9POAAeVYw3t4ldTI
+	YcCPyWvXQIksMSaR+XpJav+j+b4XdViSrfaI5jqamOHjj46QGW44ZEbGOZjsg7X11O1zMJ6G9U8
+	flC9I7Mp9xqbFL7Ut8UXRm+jJVZef6bcy8NcYLDeXyiweY5sY1x4yfN2zf2r9JMHKQ4mhCjiWRa
+	jR/m+afSATJNQ9FxzkkUIrWkh8iDhTwtEo95SVceEK889tug==
+X-Gm-Gg: ASbGnct+4TsJm4MrYY801nc2QMnkUqSx3gVlcolhF808UpxW86FT78mBmZY3cnBquMB
+	kYJAJA1f+yOKzYc0rTnAOfJHU5v5j4/SssQdcEGhHqQSAmQ2BRO06/s8mRgHhIPy+M4ZkoVkdjR
+	TpoSrhGJ3FBgHGc9tlUN1MANRp/1nVLj2UpqdD4HlGmnA/igRsRHoCUmCUcFh4kc2BPrapuWah5
+	IVOy2CXrZKkSIqrfQJIC96fF8lvY48VhrZPusGnMeQJzhqJ7wnuOb7L9DrMJSbIiQi8oVQDTSJp
+	eoUHxcsoY0lYwi9mkfV3YA==
+X-Received: by 2002:a05:600c:3b9d:b0:43c:fe15:41c9 with SMTP id 5b1f17b1804b1-43db6227a09mr118810675e9.9.1743523916436;
+        Tue, 01 Apr 2025 09:11:56 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGeSHmn91hmeZ7x284dZn+qQrcC5V3D8Ul3VDkKtIvDkX2ROgQp+v6dSPuSJJ1Vzfw+gbjPKg==
+X-Received: by 2002:a05:600c:3b9d:b0:43c:fe15:41c9 with SMTP id 5b1f17b1804b1-43db6227a09mr118810055e9.9.1743523915943;
+        Tue, 01 Apr 2025 09:11:55 -0700 (PDT)
 Received: from [192.168.10.48] ([176.206.111.201])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b6588d0sm14276926f8f.7.2025.04.01.09.11.48
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d82efe9d1sm203529975e9.24.2025.04.01.09.11.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Apr 2025 09:11:48 -0700 (PDT)
+        Tue, 01 Apr 2025 09:11:53 -0700 (PDT)
 From: Paolo Bonzini <pbonzini@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
@@ -76,9 +76,9 @@ Cc: roy.hopkins@suse.com,
 	nsaenz@amazon.com,
 	anelkz@amazon.de,
 	James.Bottomley@HansenPartnership.com
-Subject: [PATCH 15/29] KVM: x86: pass vcpu to kvm_pv_send_ipi()
-Date: Tue,  1 Apr 2025 18:10:52 +0200
-Message-ID: <20250401161106.790710-16-pbonzini@redhat.com>
+Subject: [PATCH 17/29] KVM: x86: block creating irqchip if planes are active
+Date: Tue,  1 Apr 2025 18:10:54 +0200
+Message-ID: <20250401161106.790710-18-pbonzini@redhat.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250401161106.790710-1-pbonzini@redhat.com>
 References: <20250401161106.790710-1-pbonzini@redhat.com>
@@ -90,61 +90,87 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
+Force creating the irqchip before planes, so that APICV_INHIBIT_REASON_ABSENT
+only needs to be removed from plane 0.
+
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- arch/x86/include/asm/kvm_host.h | 2 +-
- arch/x86/kvm/lapic.c            | 4 ++--
- arch/x86/kvm/x86.c              | 2 +-
- 3 files changed, 4 insertions(+), 4 deletions(-)
+ Documentation/virt/kvm/api.rst | 6 ++++--
+ arch/x86/kvm/x86.c             | 4 ++--
+ include/linux/kvm_host.h       | 1 +
+ virt/kvm/kvm_main.c            | 1 +
+ 4 files changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 8240f565a764..e29694a97a19 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -2334,7 +2334,7 @@ int kvm_cpu_get_extint(struct kvm_vcpu *v);
- int kvm_cpu_get_interrupt(struct kvm_vcpu *v);
- void kvm_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event);
+diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+index e1c67bc6df47..16d836b954dc 100644
+--- a/Documentation/virt/kvm/api.rst
++++ b/Documentation/virt/kvm/api.rst
+@@ -882,6 +882,8 @@ On s390, a dummy irq routing table is created.
+ Note that on s390 the KVM_CAP_S390_IRQCHIP vm capability needs to be enabled
+ before KVM_CREATE_IRQCHIP can be used.
  
--int kvm_pv_send_ipi(struct kvm *kvm, unsigned long ipi_bitmap_low,
-+int kvm_pv_send_ipi(struct kvm_vcpu *source, unsigned long ipi_bitmap_low,
- 		    unsigned long ipi_bitmap_high, u32 min,
- 		    unsigned long icr, int op_64_bit);
++The interrupt controller must be created before any extra VM planes.
++
  
-diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-index d8d11d9fd30a..c078269f7b1d 100644
---- a/arch/x86/kvm/lapic.c
-+++ b/arch/x86/kvm/lapic.c
-@@ -861,7 +861,7 @@ static int __pv_send_ipi(unsigned long *ipi_bitmap, struct kvm_apic_map *map,
- 	return count;
- }
+ 4.25 KVM_IRQ_LINE
+ -----------------
+@@ -7792,8 +7794,8 @@ used in the IRQ routing table.  The first args[0] MSI routes are reserved
+ for the IOAPIC pins.  Whenever the LAPIC receives an EOI for these routes,
+ a KVM_EXIT_IOAPIC_EOI vmexit will be reported to userspace.
  
--int kvm_pv_send_ipi(struct kvm *kvm, unsigned long ipi_bitmap_low,
-+int kvm_pv_send_ipi(struct kvm_vcpu *source, unsigned long ipi_bitmap_low,
- 		    unsigned long ipi_bitmap_high, u32 min,
- 		    unsigned long icr, int op_64_bit)
- {
-@@ -879,7 +879,7 @@ int kvm_pv_send_ipi(struct kvm *kvm, unsigned long ipi_bitmap_low,
- 	irq.trig_mode = icr & APIC_INT_LEVELTRIG;
+-Fails if VCPU has already been created, or if the irqchip is already in the
+-kernel (i.e. KVM_CREATE_IRQCHIP has already been called).
++Fails if VCPUs or planes have already been created, or if the irqchip is
++already in the kernel (i.e. KVM_CREATE_IRQCHIP has already been called).
  
- 	rcu_read_lock();
--	map = rcu_dereference(kvm->arch.apic_map);
-+	map = rcu_dereference(source->kvm->arch.apic_map);
- 
- 	count = -EOPNOTSUPP;
- 	if (likely(map)) {
+ 7.6 KVM_CAP_S390_RI
+ -------------------
 diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 9f699f056ce6..a527a425c55d 100644
+index f70d9a572455..653886e6e1c8 100644
 --- a/arch/x86/kvm/x86.c
 +++ b/arch/x86/kvm/x86.c
-@@ -10101,7 +10101,7 @@ int ____kvm_emulate_hypercall(struct kvm_vcpu *vcpu, int cpl,
- 		if (!guest_pv_has(vcpu, KVM_FEATURE_PV_SEND_IPI))
- 			break;
+@@ -6561,7 +6561,7 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
+ 		r = -EEXIST;
+ 		if (irqchip_in_kernel(kvm))
+ 			goto split_irqchip_unlock;
+-		if (kvm->created_vcpus)
++		if (kvm->created_vcpus || kvm->has_planes)
+ 			goto split_irqchip_unlock;
+ 		/* Pairs with irqchip_in_kernel. */
+ 		smp_wmb();
+@@ -7087,7 +7087,7 @@ int kvm_arch_vm_ioctl(struct file *filp, unsigned int ioctl, unsigned long arg)
+ 			goto create_irqchip_unlock;
  
--		ret = kvm_pv_send_ipi(vcpu->kvm, a0, a1, a2, a3, op_64_bit);
-+		ret = kvm_pv_send_ipi(vcpu, a0, a1, a2, a3, op_64_bit);
- 		break;
- 	case KVM_HC_SCHED_YIELD:
- 		if (!guest_pv_has(vcpu, KVM_FEATURE_PV_SCHED_YIELD))
+ 		r = -EINVAL;
+-		if (kvm->created_vcpus)
++		if (kvm->created_vcpus || kvm->has_planes)
+ 			goto create_irqchip_unlock;
+ 
+ 		r = kvm_pic_init(kvm);
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index 16a8b3adb76d..152dc5845309 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -883,6 +883,7 @@ struct kvm {
+ 	bool dirty_ring_with_bitmap;
+ 	bool vm_bugged;
+ 	bool vm_dead;
++	bool has_planes;
+ 
+ #ifdef CONFIG_HAVE_KVM_PM_NOTIFIER
+ 	struct notifier_block pm_notifier;
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index cb04fe6f8a2c..db38894f6fa3 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -5316,6 +5316,7 @@ static int kvm_vm_ioctl_create_plane(struct kvm *kvm, unsigned id)
+ 		return fd;
+ 
+ 	plane = kvm_create_vm_plane(kvm, id);
++	kvm->has_planes = true;
+ 	if (IS_ERR(plane)) {
+ 		r = PTR_ERR(plane);
+ 		goto put_fd;
 -- 
 2.49.0
 
