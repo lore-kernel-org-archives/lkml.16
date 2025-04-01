@@ -1,119 +1,173 @@
-Received: from mail-pl1-f195.google.com (mail-pl1-f195.google.com [209.85.214.195])
+Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com [209.85.221.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA5761EBA08;
-	Tue,  1 Apr 2025 09:49:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11A291EF394;
+	Tue,  1 Apr 2025 09:49:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743500948; cv=none; b=tVLdgE1cf3AroYV7s6ocYMXEEBB/0zZePxjmH5hMaCe2NClSKl4ZndR2TubKSr8Y8ErbLDv2azOD3K5j6Qt0fhDx/Ww9yYmi1hvuqLxQOwl1LQQzqQjaoNj9AdEuGBCWM1RW4szNzguT7ryCoKPd8edkhRgia303B6dmTNKoQYE=
+	t=1743500989; cv=none; b=YbocYjCJTQ85j8kdqO03pMqrWcu/7I0rvHWxytpODgLvsjNS9pqG7Y41gdYbwchgiafIZw2XfLsg5G0bGPmCOB8UsEV+RJj584w/BhZ5M/KKGgYpb7nv8Q54tBJ69QX2j8+vLiq0Q3r5qrS5K86X8hfmOov2fLXYbsMOIlrcRzA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743500948; c=relaxed/simple;
-	bh=6UIHKpioFCSDTBZJdoaNau7nO3dOAZCBegSe948qaZU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=XsqpAIWggPJWu3XoaGX3/FU7VHscDywuEGTYyYTvXhNbqV0fWKpUUrQDaqFUWkXq70sUgMGYY331BjjRxHg3F+xTS5eVTOXFgguG9VCxgkd3vaH9PgBRz+nrvBXCT7ZgGSDsP6t7lt7hF+GWtWNO/Pa4ezTAe0NoIBmyhB4YwHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iy94/jXc; arc=none smtp.client-ip=209.85.214.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1743500989; c=relaxed/simple;
+	bh=c0/2Il+HKMHe/1KYQsOXrQrqmLFvTc+vMlTSyj4HAAk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gvMv25j46cIlJlL12SAmpjMiqvuH+wmEXZBdPu8vpLMg5Rdy4NF4oGuD6fVH9E4CbtnvVIK+g63YVZXRBdYNUn1MP1ek+KSL0r601ly72uD1rQP5gWjggmzKZB6YXhPtFE7NtFqsrNgMdTX7wm4oUg2GBtytdP8nbaf3F3cU+fU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iy94/jXc"
-Received: by mail-pl1-f195.google.com with SMTP id d9443c01a7336-2295d78b433so9995005ad.2;
-        Tue, 01 Apr 2025 02:49:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743500946; x=1744105746; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8nEv9T0J1M02Dgy0xMLGwijEFtNEDHB5qZ41sJwwoY8=;
-        b=iy94/jXcW4CzvB9xWFa7hvHbcjRnwFqAbVNSB31WSGrCou3upyE32Nk7YVy1tpaJg4
-         9biZ4VKEn3leI4rW6Ac3LqjCEy94kHzZV+2lD4ndl1Qa53JDpMXoEYyPTkp6UQgXkhhp
-         dNjYEAZIsrwS304/FqUzoQPgWDWrfelYR7qAulVjxkLqH8h6/h/tUOd4z/5bQmAN+wlG
-         Z/lXKXU/kOTPeLTJKJxvjOJXGAo+M0WmjDuL0KQwJYbF3lxpd3KmYRdP0FKYQi6GVS1h
-         RAZppm+SvsH7j+o7GrCgf5R5XuUdRaKYWyheg/JXFDFEu6izjTrfP4ls8q2j+3oNbmEa
-         YzMA==
+Received: by mail-vk1-f169.google.com with SMTP id 71dfb90a1353d-523dc190f95so2658689e0c.1;
+        Tue, 01 Apr 2025 02:49:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743500946; x=1744105746;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8nEv9T0J1M02Dgy0xMLGwijEFtNEDHB5qZ41sJwwoY8=;
-        b=Kig8LQP+//XZi8PpgDAeG1v5HGi0xJElc02EvjTTwowhT1qaonx3S6tu/Nc6Bke8Uj
-         +JMA1DJC4cCasocxvRLLXtz4KTPjNXEFX4+j8gmta8O7OekANEhkAenvp0qyYOMczan6
-         y0iucsrexiuZgN6HmrFOAB5/57pyHohwm8CJdAhc1RxooomxJJYU/OTgxFy8+AXSt4wr
-         KhOqJ7rOyw4IY1FRPTBdkY4MoLf2DHtR6ipGDLf+MoMJZq/2i6Vcl1SoPgUXuvPTwxMh
-         Jng2T6kYvl8llZ2JoatTrJfko2Yi2Hwf1OO2dVyJgj37k96D9h7iu/INk+9lvLuTROnQ
-         G3zg==
-X-Forwarded-Encrypted: i=1; AJvYcCU7QdFHhWMAd0k1830d+Syzt9imH4+MN/7hc8Qx4B/2xtJcs5c98GrA4ZUetYPDSdLIfj/3cdZv+pgkqX7b@vger.kernel.org, AJvYcCUi2pEY3tpv+QzrAVpaALvlQRp8HBzZH4axD3rC2Tao4l5pBlH8cqwq09nSXRMf6rJh2eVn8bvK0cDJ2A==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwdtIR2GBRholL45JfJ/s3pvD/DTxc8PQl+i9Xee/FF1a7YQLMF
-	JiI+NUhNikGelM9VA3aeIF3WFSA62/FB27QpLrtUybt0iENGbflu
-X-Gm-Gg: ASbGnctLXH3JFeuALey9rI50tD10Z/wZ+NUxxMkjSzXOVv5h+CjxkQYGnYydMMibXsK
-	BUBYniN70JxRrN8kq+g57HWoqJcs4CdJsX/ntpAOGLMEfnE+9DElOVMYSaZ6yA8rWXL3uWEzZLZ
-	wAc+8K96/a09aVTWulUUaQXMR6IXTgw4OwcSKpbzrxRYlHPcaGVATFVN0sTHcf4RDOn08eYBSUp
-	dA9Sx3X0PKbvaVIhVQbwaD64L37rvP9rXfbhULUlPJh+677MPLMw6YrslN21dVLRCfvjMghHfJ8
-	i/wZxLo83C/BanpXRinfIYSfOvPeKeCcp/lc2DuPOv9r8f62vP/Bg/bo/sgawDho5rsPzRw=
-X-Google-Smtp-Source: AGHT+IGjgIR0WZz2Z5CMj8dSWpejQg5NiXCOS7Xfiw2NFywEclG7UN2EGDZ0wYQQ5AtwTEsRZZzpig==
-X-Received: by 2002:a17:903:2311:b0:227:eb61:34b8 with SMTP id d9443c01a7336-2292f9777d6mr179473385ad.25.1743500945891;
-        Tue, 01 Apr 2025 02:49:05 -0700 (PDT)
-Received: from henry.localdomain ([111.202.148.167])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291f1f84fcsm84327575ad.228.2025.04.01.02.49.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Apr 2025 02:49:04 -0700 (PDT)
-From: Henry Martin <bsdhenrymartin@gmail.com>
-To: Markus.Elfring@web.de
-Cc: jikos@kernel.org,
-	bentiss@kernel.org,
-	linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Henry Martin <bsdhenrymartin@gmail.com>
-Subject: [PATCH v3] HID: uclogic: Add NULL check in uclogic_input_configured()
-Date: Tue,  1 Apr 2025 17:48:53 +0800
-Message-Id: <20250401094853.24143-1-bsdhenrymartin@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <a73250f0-8fbd-40a7-b4b6-bc45050c9289@web.de>
-References: <a73250f0-8fbd-40a7-b4b6-bc45050c9289@web.de>
+        d=1e100.net; s=20230601; t=1743500985; x=1744105785;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=y1zyMwtR40qQQhixsawu3/3AN+ghiZjIje47Qoy6I1M=;
+        b=oZvJ9Fjv40X1s/MMKjJ8Diqr+jgsvji/gGTa0muG/8JMayWID8fjagF6kvx4NdD0WF
+         koSjjAP5zROZHRADDphgkKaNYy5r4a55x8aBzwho5pCR1DAXm8yI/4C5xwcuhSSeuDMF
+         hjebH/QA1QrQpKWAGOU1G0GZAad2alWnCL1n1Z1foG5Wbw2X+NdcSaJCmQhmu4qdaPMN
+         V1afdcf26dp82yBeIqavMGbrQsjFDwyL/II5qRt1WR+t+QxkG+pipqUGzm0PZ0Y+iWeN
+         GPiO55z+E0VTSw1C0nKEmaNs1cuNjcnixhzIzPNVyocmapSx+VSHi2aP0P+jEEAja47d
+         fk6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUWJYExMEXuDPagURBiBvJKHrj5WcCZWUnC8pw69ziuapdfUOiX56eIQZvsELrMo9XsXSm9BQg+3ruKGtfo@vger.kernel.org, AJvYcCUvvyulFnfgp3CH79ufB79Ma73B0cm4KZv6FLJ0IJJKRznO3gCA8YFJzZcMFD6ACaBZSTA7rwMLOC4y@vger.kernel.org, AJvYcCV9sc0wf3HsON5U/QUlCMNvsjVTij5YigQFvu8pWguB6NQdfgz6TTtlTtMfEbuQtabys7qRFX5g728a@vger.kernel.org, AJvYcCWfYqP0dGxVBQB9SB036kef5FAAwvMw4tGESCraM6M9XnFfWTc8lGprWZarHsKpLpd1ZG5x5YukwwGm7oWq8IzSoow=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxF4wMR1mlJyEqloTsX3+aVQfs1AWWrpIgea9Sd+xod50OGj+sp
+	x1L2d1AccvdpXGjF1BbRMUAAfX//Bcvfwwp70hFLjZX/EBAlxMlfYy/N49in
+X-Gm-Gg: ASbGncsJg7aHI2osM8d8wU38X587otOxSjkm29ppYH03YOMAofXcLRrCRNAAtDJP8zR
+	uf1XhWB1i2EQDrs4iqbqExF038SKg7GPed+AiIff37Ck9C6qUEVCgN9rQguKrU3uU1aDJpMIHUx
+	dh26TA94uAAoKW6KvzvcOa+gxIPTYwBUggY/Xi2+iLx/uoWI+pGKNICTdEJgHmuX2A+hp5umrm0
+	lBHBJbqXgr2PJnSjYOGti+Ea9wqR2UIBndzSLhgtwqt76j6/jQWdblWcjPzsnurIv2AnyGx17gU
+	oJiRB/4OasAZupmqG4lGpUL4WLHes3iSrQ0J0w1WAEpNMDo02/YTp2c8w3s7c85LaJ5PrpGDyFi
+	z8ib1xT7UxYM=
+X-Google-Smtp-Source: AGHT+IH31MtTwEUy6Sj9tAhyj3bsRTSR/sK9B29+yGr3THhtU70h34iDwk+FjGtm0fNvN8lXzleXAw==
+X-Received: by 2002:a05:6122:2a4c:b0:50d:a31c:678c with SMTP id 71dfb90a1353d-5261d357a48mr7733493e0c.2.1743500984732;
+        Tue, 01 Apr 2025 02:49:44 -0700 (PDT)
+Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com. [209.85.221.174])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5260e6a0afcsm1939593e0c.6.2025.04.01.02.49.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Apr 2025 02:49:44 -0700 (PDT)
+Received: by mail-vk1-f174.google.com with SMTP id 71dfb90a1353d-523dc190f95so2658679e0c.1;
+        Tue, 01 Apr 2025 02:49:44 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUvmYzg31/a0xdzzctdsd4enlaH5dXhJb/gIMO7kRXpH7IufWIlw2Ei2jPo5x0SuAEYzIxQDLXiiZLr@vger.kernel.org, AJvYcCVbowwVgfKh7xJao6XC359jGDimY0cDaX0jz4cvLHYtCNYJcbO0nNkzLmYT2dOw5YpuT2/6qZqwc+nxqRk6WGCg5/w=@vger.kernel.org, AJvYcCVdYhtN9R1fFQMxteHCy4J/Tfw59xiJYlktKFlA9IFxWj/adviM/H8KJkkLNegpUOPeEj1c/wOozaNJ@vger.kernel.org, AJvYcCWHcj/U5hzDm/lmEGRuvQUT9+klTuJ/ldCUCGe21gOt77c/GJF6btyAMWRkFw3n7ZztFk1PDkHwx2UOg6LW@vger.kernel.org
+X-Received: by 2002:a05:6102:14a8:b0:4c5:1bea:1c29 with SMTP id
+ ada2fe7eead31-4c6d39af686mr8115053137.19.1743500983709; Tue, 01 Apr 2025
+ 02:49:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250330195715.332106-1-marek.vasut+renesas@mailbox.org> <20250330195715.332106-5-marek.vasut+renesas@mailbox.org>
+In-Reply-To: <20250330195715.332106-5-marek.vasut+renesas@mailbox.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 1 Apr 2025 11:49:32 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUx31WHW+fUP0Qbfs-Si2+cLmxC=YRUKWvSudn7CBZ4Fg@mail.gmail.com>
+X-Gm-Features: AQ5f1JoeIvYp6dxZPMkSZCvf_rs3MuLZLQfoBSTfTx3w9rvwfJ19pgmFQ3EdrXU
+Message-ID: <CAMuHMdUx31WHW+fUP0Qbfs-Si2+cLmxC=YRUKWvSudn7CBZ4Fg@mail.gmail.com>
+Subject: Re: [PATCH 4/4] arm64: dts: renesas: r8a779g3: Add Renesas R-Car V4H
+ Sparrow Hawk board support
+To: Marek Vasut <marek.vasut+renesas@mailbox.org>
+Cc: linux-arm-kernel@lists.infradead.org, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	=?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, 
+	Aradhya Bhatia <a-bhatia1@ti.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Conor Dooley <conor+dt@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Heiko Stuebner <heiko@sntech.de>, Junhao Xie <bigfoot@classfun.cn>, 
+	Kever Yang <kever.yang@rock-chips.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Rob Herring <robh@kernel.org>, 
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-devm_kasprintf() returns NULL when memory allocation fails. Currently,
-uclogic_input_configured() does not check for this case, which results
-in a NULL pointer dereference.
+Hi Marek,
 
-Add NULL check after devm_kasprintf() to prevent this issue.
+Thanks for your patch!
 
-Fixes: dd613a4e45f8 ("HID: uclogic: Correct devm device reference for hidinput input_dev name")
-Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
----
-V2 -> V3: Kept the original switch structure, only optimized the outer
-conditional checks while maintaining safety requirements.
-V1 -> V2: Simplify the handing of the condition "suffix" with if/else.
+On Sun, 30 Mar 2025 at 21:58, Marek Vasut
+<marek.vasut+renesas@mailbox.org> wrote:
+> Add Renesas R-Car V4H Sparrow Hawk board based on R-Car V4H ES3.0 (R8A779G3)
 
- drivers/hid/hid-uclogic-core.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+Retronix
 
-diff --git a/drivers/hid/hid-uclogic-core.c b/drivers/hid/hid-uclogic-core.c
-index d8008933c052..321c43fb06ae 100644
---- a/drivers/hid/hid-uclogic-core.c
-+++ b/drivers/hid/hid-uclogic-core.c
-@@ -142,11 +142,12 @@ static int uclogic_input_configured(struct hid_device *hdev,
- 			suffix = "System Control";
- 			break;
- 		}
--	}
--
--	if (suffix)
-+	} else {
- 		hi->input->name = devm_kasprintf(&hdev->dev, GFP_KERNEL,
- 						 "%s %s", hdev->name, suffix);
-+		if (!hi->input->name)
-+			return -ENOMEM;
-+	}
- 
- 	return 0;
- }
--- 
-2.34.1
+> SoC. This is a single-board computer with single gigabit ethernet, DSI-to-eDP
+> bridge, DSI and two CSI2 interfaces, audio codec, two CANFD ports, micro SD
+> card slot, USB PD supply, USB 3.0 ports, M.2 Key-M slot for NVMe SSD, debug
+> UART and JTAG.
+>
+> Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
 
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/renesas/r8a779g3-sparrow-hawk.dts
+> @@ -0,0 +1,671 @@
+> +// SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +/*
+> + * Device Tree Source for the R-Car V4H ES3.0 Sparrow Hawk board
+> + *
+> + * Copyright (C) 2025 Marek Vasut <marek.vasut+renesas@mailbox.org>
+> + */
+> +
+> +/dts-v1/;
+> +#include <dt-bindings/gpio/gpio.h>
+> +
+> +#include "r8a779g3.dtsi"
+> +
+> +/ {
+> +       model = "Retronix Sparrow Hawk board based on r8a779g3";
+> +       compatible = "retronix,sparrow-hawk", "renesas,r8a779g3",
+> +                    "renesas,r8a779g0";
+> +
+> +       aliases {
+> +               ethernet0 = &avb0;
+> +               i2c0 = &i2c0;
+> +               i2c1 = &i2c1;
+> +               i2c2 = &i2c2;
+> +               i2c3 = &i2c3;
+> +               i2c4 = &i2c4;
+> +               i2c5 = &i2c5;
+> +               serial0 = &hscif0;
+
+This assumes HSCIF0 is the main console.
+
+As you also have a second debug console on USB:
+
+    serial1 = &hscif1;
+
+And the serial port on the RPI I/O connector:
+
+    serial2 = &hscif3;
+
+> +               spi0 = &rpc;
+
+Do you need the spi0 alias?
+
+> +&pfc {
+> +       pinctrl-0 = <&scif_clk_pins>;
+> +       pinctrl-names = "default";
+> +
+> +       /* Page 22 / Ether_AVB0 */
+> +       avb0_pins: avb0 {
+> +               mux {
+> +                       groups = "avb0_link", "avb0_mdio", "avb0_rgmii",
+> +                                "avb0_txcrefclk";
+> +                       function = "avb0";
+> +               };
+> +
+> +               pins_mdio {
+
+Please no underscores in node names (everywhere).
+
+The rest LGTM.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
