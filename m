@@ -1,125 +1,94 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6369204875;
-	Tue,  1 Apr 2025 20:53:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48519209F31;
+	Tue,  1 Apr 2025 20:55:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743540808; cv=none; b=pN3q10Okotvme0VaFIdRsCN4kPTyG1q41ITZLWHDOMeAZXAcqe1PYWW969GZSzezCpoi6ZQrFzOtUsBU7VxrZYQQndm8yDuuAUPvUY0rclFLYU63JX+7NKA5wkOLj1mXfnFvyk/JIr3qq2b05kNlMX1al8GucP8JhXT+jo9H59M=
+	t=1743540946; cv=none; b=CYpqYOHg4vq5fWgSl9sYfec2VRt1Vj59ticl40wG9wuXoPxj+ZkOR5HsUj+8qJVFsM5QEaTPoGzDiF/RcDmQXCEWoO4S6FG5VRj/3GniPo2MTM3OpjHFrJSgaPpeuKO3JEAzLsIeEWTrSd4R+X6r9ukup60VFlv4ekZYil+X08U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743540808; c=relaxed/simple;
-	bh=rezkbcoOFKwTz7C5NqmHCDUWOf4SRkyuFzLRBTFOe6s=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=EBGps19eXfoXByTOVOhcpgMSsADa8UzUKGLjUV7xY91JVeAZ6n1hJt0KiOyyzYlazqvm20pacQSPOcL0cRUklVpJehfQtCfQWInUBMuRlQu+XwQnYNnyPZ1uJ5rADcymkpnCly5wiS6iW82lYez46f84R51+GIhMGA4i2l1I4pc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=oZ3VY7jH; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=wjYez3Yh; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1743540946; c=relaxed/simple;
+	bh=TZ9Y5CWw5617/CTvl/A5AgM4bAqpWJNtdNir9YnP+V0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=bZImv5yq0y7UYQrrggpSARrD14RucK4kIS71ohMYuo4N+rRl5QyoL6ZQEMQDpzkiow9RjWTDhTf7wnwvTyfEDIwj5T+enzrVdtRkjnLpv2KM4EI0qTdethmrro2NObsJPP9fVZXGTWdU69VEB9N7mEDHn/Av7e6TVKFqtffc+gA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OapLdiEU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="oZ3VY7jH";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wjYez3Yh"
-Date: Tue, 01 Apr 2025 20:53:21 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1743540802;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bbyYn80ysDKfOOOUjXfZJIarNJI5LVfzzo9T/D0gY9k=;
-	b=oZ3VY7jHlzLSikDR1jV9je6T+X3ysta8EaGsu2EMYEE5oIxWSGt9I0N+8wZmiYmJOE03Fs
-	ROlUpkoHov9TOVlgOM0PNFFMYOg44PBqKtBXzKGiG4ifdlFq3g1EehMgYWxXFiB0G84CsJ
-	Yl5+EQyHYP/TeBR+CpyIYNSn5aEsbIFE3VspMnGYF41EMk8Ts9QIddNTmHtFDVRGwHnShJ
-	0dwksgnwJODiBSU3L+6zAs4HKxDWeAt3E4TxldWlMx1jj2jYKP2gOurqg2VAN1gwV9qEua
-	P46ac8IuI0yLz+Th8dTr7TvOT+zStBHSFEk5pwFB4iYZ19YulmNRRrO0+mj1xw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1743540802;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bbyYn80ysDKfOOOUjXfZJIarNJI5LVfzzo9T/D0gY9k=;
-	b=wjYez3Yhz6bDhiEDkPtYo2zt2cRHNGuM5b9zq30OcbQ33pUyr5mfZcSnimBLa9G99dnU4D
-	Lx4CNjKmXe/JNYCw==
-From: "tip-bot2 for Mateusz Guzik" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: x86/mm] x86/mm: Stop prefetching current->mm->mmap_lock on page faults
-Cc: Mateusz Guzik <mjguzik@gmail.com>, Ingo Molnar <mingo@kernel.org>,
- Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Rik van Riel <riel@surriel.com>, "H. Peter Anvin" <hpa@zytor.com>,
- Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250401143520.1113572-1-mjguzik@gmail.com>
-References: <20250401143520.1113572-1-mjguzik@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OapLdiEU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 962D8C4CEE4;
+	Tue,  1 Apr 2025 20:55:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743540945;
+	bh=TZ9Y5CWw5617/CTvl/A5AgM4bAqpWJNtdNir9YnP+V0=;
+	h=Date:From:To:Cc:Subject:From;
+	b=OapLdiEUCgN9698OkImKcFv8jiusMxs+x7oUZHNLOcy6JNt9qfYIQk1i0Z+x7Qvv6
+	 1Iqtf0EJLMcyOimsxupu3CUEnWQXywmtLGmMEfaab7KdZpkGMf/8GJF2Zw7ZigPDU8
+	 Vp/jLSWg/Liil/mka9uQttpJd6rk6ZrNxC0wYCALLnFzm9Fh8QM/pWDSMzD4YF7dCL
+	 yTcmr6dYqx78BhjReR1XxhAcNJ0uqqHCPTQFrBRLxG0MTbdUS9cxV8d56Fs1yo86SN
+	 zne05zwDxSYNaQaKObKzOckcdRyPDA8EZMG6GHcSZT9BhikMl9DwzWhx7Vr6dkpi4q
+	 2y/nG3CwWAzKw==
+Date: Tue, 1 Apr 2025 15:55:44 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Pavan Chebbi <pavan.chebbi@broadcom.com>,
+	Michael Chan <mchan@broadcom.com>,
+	Potnuri Bharat Teja <bharat@chelsio.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>
+Cc: netdev@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: PCI VPD checksum ambiguity
+Message-ID: <20250401205544.GA1620308@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174354080164.14745.16617051817056445612.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-The following commit has been merged into the x86/mm branch of tip:
+Hi,
 
-Commit-ID:     0b2695d58e800ad53e718d003310829db492a39c
-Gitweb:        https://git.kernel.org/tip/0b2695d58e800ad53e718d003310829db492a39c
-Author:        Mateusz Guzik <mjguzik@gmail.com>
-AuthorDate:    Tue, 01 Apr 2025 16:35:20 +02:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 01 Apr 2025 22:47:02 +02:00
+The PCIe spec is ambiguous about how the VPD checksum should be
+computed, and resolving this ambiguity might break drivers.
 
-x86/mm: Stop prefetching current->mm->mmap_lock on page faults
+PCIe r6.0 sec 6.27 says only the VPD-R list should be included in the
+checksum:
 
-The prefetchw() dates back decades and the fundamental notion of doing
-something like this on a lock is shady.
+  One VPD-R (10h) tag is used as a header for the read-only keywords.
+  The VPD-R list (including tag and length) must checksum to zero.
 
-Moreover, for a few years now in the fast path faults are handled with RCU
-+ per-vma locking, hopefully not even looking at the lock to begin with.
+But sec 6.27.2.2 says "all bytes in VPD ... up to the checksum byte":
 
-As such just remove it.
+  RV   The first byte of this item is a checksum byte. The checksum is
+       correct if the sum of all bytes in VPD (from VPD address 0 up
+       to and including this byte) is zero.
 
-I did not see a point benchmarking this. Given that it is not expected
-to be looked at by default justifies not doing the prefetch.
+These are obviously different unless VPD-R happens to be the first
+item in VPD.  But sec 6.27 and 6.27.2.1 suggest that the Identifier
+String item should be the first item, preceding the VPD-R list:
 
-Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Rik van Riel <riel@surriel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Link: https://lore.kernel.org/r/20250401143520.1113572-1-mjguzik@gmail.com
----
- arch/x86/mm/fault.c | 3 ---
- 1 file changed, 3 deletions(-)
+  The first VPD tag is the Identifier String (02h) and provides the
+  product name of the device. [6.27]
 
-diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
-index 296d294..697432f 100644
---- a/arch/x86/mm/fault.c
-+++ b/arch/x86/mm/fault.c
-@@ -13,7 +13,6 @@
- #include <linux/mmiotrace.h>		/* kmmio_handler, ...		*/
- #include <linux/perf_event.h>		/* perf_sw_event		*/
- #include <linux/hugetlb.h>		/* hstate_index_to_shift	*/
--#include <linux/prefetch.h>		/* prefetchw			*/
- #include <linux/context_tracking.h>	/* exception_enter(), ...	*/
- #include <linux/uaccess.h>		/* faulthandler_disabled()	*/
- #include <linux/efi.h>			/* efi_crash_gracefully_on_page_fault()*/
-@@ -1496,8 +1495,6 @@ DEFINE_IDTENTRY_RAW_ERRORCODE(exc_page_fault)
- 
- 	address = cpu_feature_enabled(X86_FEATURE_FRED) ? fred_event_data(regs) : read_cr2();
- 
--	prefetchw(&current->mm->mmap_lock);
--
- 	/*
- 	 * KVM uses #PF vector to deliver 'page not present' events to guests
- 	 * (asynchronous page fault mechanism). The event happens when a
+  Large resource type Identifier String (02h)
+
+    This tag is the first item in the VPD storage component. It
+    contains the name of the add-in card in alphanumeric characters.
+    [6.27.2.1, Table 6-23]
+
+I think pci_vpd_check_csum() follows sec 6.27.2.2: it sums all the
+bytes in the buffer up to and including the checksum byte of the RV
+keyword.  The range starts at 0, not at the beginning of the VPD-R
+read-only list, so it likely includes the Identifier String.
+
+As far as I can tell, only the broadcom/tg3 and chelsio/cxgb4/t4
+drivers use pci_vpd_check_csum().  Of course, other drivers might
+compute the checksum themselves.
+
+Any thoughts on how this spec ambiguity should be resolved?
+
+Any idea how devices in the field populate their VPD?
+
+Can you share any VPD dumps from devices that include an RV keyword
+item?
+
+Bjorn
