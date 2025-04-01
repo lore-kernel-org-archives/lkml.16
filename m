@@ -1,165 +1,210 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8D5A7081C
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 18:47:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AF471494DB
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 18:47:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743533233; cv=none; b=Y+LtQ8gDkFu1jtX3M5fhEOoNqPa6pGOv2c8NQQKsFOi2bEeIWTTlwoUEK8h/bqGfC1yI//w8Fr2cwcAmL7KMHYZm+nz8jIOy6R+HyE7cG6uqCu7trd+LBVPYvONGXr4hxBFTDkUasTfZNBlf6+bjrJG7Cy3XZyoF9+u+VI24wtw=
+	t=1743533245; cv=none; b=h65E34VssNXyp7IqTLh9lXB4x6rkVKzq1ygX068Y+MAg8vRYecWps3xIW7CXb+UZ6teOmnOz4sE16zNkC6+zO4y0kxCxLv2qRsU+G906uulRo6n/Np/R85Kn7LEzy5VtGYVrLnCYPt+23vdmQqc+ZtF24Nuix7HF/QOAsi3aKTA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743533233; c=relaxed/simple;
-	bh=3EN8DJcs7vuHrjbWwCn5R8YyQjIag3YYATPkbn9N4q8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=A9eZdvMmz7ab/UsHNLABabUhUSoTxuzVgzCa9bSjlsg8dh7ZwJefPyRl0W5jApA1QOJhujLsyMFSGYNxNO0kBpLgVEbLCqSmJo4XmeDoepO1MayZdmKe9GCgFk5hy408K0jQqsUN41JsRT08eXR+FoZ3oL3zHzLfQ+q7wi8OHl4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=njS3Clqr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743533245; c=relaxed/simple;
+	bh=44HNRj6Jv8oETcBw3g3gA5P119b7d5iU/7EuwTzsSaI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=LdRx9g9N2hMoqjcxxqhYOqej+FWIhjLzBotrG2U95eUMscSCVHVHJaTblXLvV7iFNQ4yLCF9Zqg++bMmMt2r7/mWUWwzBnvlh2QZJPD7//kH3L2jtOkOQyo6ySBrMNdL0TfK3LNxK2ckgSxtUjMVWmcikUzQiaiUL9O3V9vGhxw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IGpQZa5A; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="njS3Clqr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0C33C4CEE5
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 18:47:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743533233;
-	bh=3EN8DJcs7vuHrjbWwCn5R8YyQjIag3YYATPkbn9N4q8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=njS3ClqrxAwUbF4yEnK0hSlwuD8pke6+aclY1bvdFoign+ox83MQzL0zkf/xHlt7F
-	 8gIQd6jQP7+KH+wl4i+LMPAmdCRYuAs8VhO9/fPhwwMBlipjrP4CYDAayPp12cOyf6
-	 D5Vf/dOXpgrO1XXIt9nPe47LF/BZH3d19y+Gxw7B50PB2apsCFsNawu9Dai/wOIyNs
-	 7lNcVyt/xI+KiwVopJfKMHbmsv2hVe+VdTw9f0HxfHV7d8+8BFMmG3jVl/a0U/tvsd
-	 tipvav+4fehvAW3dszhjFwq9SmM8N7680prbeVQ0YJUZB+tEPRT1mu8VWSHZVg7iIf
-	 epKYMJBGL0y6A==
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-30db1bd3bddso57371721fa.3
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 11:47:13 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWQ5J/wRQUi8GTQnrsjAnN53EW+hZbDt6ld0sBgAPPk/aeW3d8GeBaj+qAUQxkCPYFmoDkZBwujL7o8/Ys=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwhuphsFOM3PCx0Eh+CqYSun6uMuPlUQVvUg5d5wmeVCSD1+Dje
-	VDjU/NQFqqr61Zbz1LzkR0ttTL9B0d2J1Iobm2Nq3l2szNF7j1RdZbI/S6ZkDujhDd1x5NN+sUq
-	9pKIVsx6goXyJhi9G02WF75/nEyk=
-X-Google-Smtp-Source: AGHT+IFr3N20dboMCQNSF1kAFSfln2FgL3bYPKR5XWRvW3QXmxUfL8Uy/4klpXIcJMEO9FFaB3/1p5pp0rQ4zS5ed3s=
-X-Received: by 2002:a05:651c:2209:b0:30c:189d:a169 with SMTP id
- 38308e7fff4ca-30de03286edmr44217501fa.25.1743533232123; Tue, 01 Apr 2025
- 11:47:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IGpQZa5A"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743533243; x=1775069243;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=44HNRj6Jv8oETcBw3g3gA5P119b7d5iU/7EuwTzsSaI=;
+  b=IGpQZa5ACrmLVzUfCsOho+24mPCo7ce8GrR496x7KnA3vfR+ZJ3LdD+2
+   tglhniNIhqumDrPCGGowD+SBycQfq+MR5WmZjlaHFaE0SdEfuDJiDTNYW
+   midf6dz1yGxGSaS0MJRsqeuKUQJQ77MP5gNTZ3S4Al3ok+UNogJg2dApt
+   hbXDYauNSLCtcMsoTULRGblHygBYEDbi/r0ySx3Rq/g7T7Z6FayHD2Fme
+   oooE4qxwOKYlK5Toojza9rDVBi9QslKuA6NV6WVDYlxlvvhzaexGxP6sQ
+   hfHi68Lm7jbkV7ONdvZhpPfLFeZ+1h8C1XFZZlERjsa2Jldf+yc3QsYIk
+   g==;
+X-CSE-ConnectionGUID: ni5a5RI/Sru6PkzSnpIX0A==
+X-CSE-MsgGUID: dUI0kbAkTyqnQiPEVFHGVw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11391"; a="44999473"
+X-IronPort-AV: E=Sophos;i="6.14,294,1736841600"; 
+   d="scan'208";a="44999473"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2025 11:47:21 -0700
+X-CSE-ConnectionGUID: kkJExfyuS/2/ft5ESIe9iQ==
+X-CSE-MsgGUID: Z8J4R3cwRk+jnZKqaP5cJQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,294,1736841600"; 
+   d="scan'208";a="157457092"
+Received: from lkp-server02.sh.intel.com (HELO e98e3655d6d2) ([10.239.97.151])
+  by fmviesa001.fm.intel.com with ESMTP; 01 Apr 2025 11:47:19 -0700
+Received: from kbuild by e98e3655d6d2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tzgdp-000A4O-2A;
+	Tue, 01 Apr 2025 18:47:17 +0000
+Date: Wed, 2 Apr 2025 02:46:38 +0800
+From: kernel test robot <lkp@intel.com>
+To: Brett Creeley <brett.creeley@amd.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leonro@nvidia.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Shannon Nelson <shannon.nelson@amd.com>
+Subject: drivers/fwctl/pds/main.c:113:65: sparse: sparse: restricted __le32
+ degrades to integer
+Message-ID: <202504020246.Dfbhxoo9-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAPM=9tyx=edsZ3ajuAUAv4vjfa=WNEzobqAsYbBTjCfLbuEeFQ@mail.gmail.com>
- <CAHk-=wjcdfrDTjzm6J6T-3fxtVyBG7a_0BXc2=mgOuM6KPFnCg@mail.gmail.com>
- <87h6394i87.fsf@intel.com> <Z-p2ii-N2-dd_HJ6@phenom.ffwll.local>
- <20250331133137.GA263675@nvidia.com> <87tt782htn.fsf@intel.com> <CAHk-=wiP0ea7xq2P3ryYs6xGWoqTw1E4jha67ZbJkaFrjqUdkQ@mail.gmail.com>
-In-Reply-To: <CAHk-=wiP0ea7xq2P3ryYs6xGWoqTw1E4jha67ZbJkaFrjqUdkQ@mail.gmail.com>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Wed, 2 Apr 2025 03:46:34 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQThGkgtKgquRPv8Ysi_omedRthF1_++apKda-xWeWcbA@mail.gmail.com>
-X-Gm-Features: AQ5f1JpWfavKws9pXp40pkcWPQBFSZDj0KKmDcek7l7jzydxtf6KAS-HGpcXERE
-Message-ID: <CAK7LNAQThGkgtKgquRPv8Ysi_omedRthF1_++apKda-xWeWcbA@mail.gmail.com>
-Subject: Re: [git pull] drm for 6.15-rc1
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Jani Nikula <jani.nikula@linux.intel.com>, Jason Gunthorpe <jgg@nvidia.com>, 
-	Dave Airlie <airlied@gmail.com>, dri-devel <dri-devel@lists.freedesktop.org>, 
-	LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Wed, Apr 2, 2025 at 1:12=E2=80=AFAM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Tue, 1 Apr 2025 at 05:21, Jani Nikula <jani.nikula@linux.intel.com> wr=
-ote:
-> >
-> > The header checks have existed for uapi headers before, including the,
-> > uh, turds, but apparently adding them in drm broke the camel's back.
->
-> The uapi header test things never caused any problems for me [*],
-> because they don't actually pollute the source tree.
->
-> Why? Because they all end up in that generated 'usr/include/' directory.
->
-> So when I look at the source files, filename completion is entirely
-> unaffected, and it all works fine.
->
-> Look, I can complete something like
->
->     include/uapi/asm-generic/poll.h
->
-> perfectly fine, because there is *not* some generated turd that affects i=
-t all.
->
-> Because for the uapi files those hdrtest files end up being in
->
->     ./usr/include/asm-generic/poll.hdrtest
->
-> and I never have any reason to really look at that subdirectory at
-> all, since it's all generated.
->
-> Or put another way - if I _were_ to look at it, it would be exactly
-> because I want to see some generated file, in which case the 'hdrtest'
-> turd would be part of it.
->
-> (Although I cannot recall that ever having actually happened, to be
-> honest - but looking at various header files is common, and I hit the
-> drm case immediately)
->
-> Would you mind taking more of that uapi approach than creating that
-> hidden directory specific to the drm tree? Maybe this could *all* be
-> generalized?
->
->            Linus
->
-> [*] I say "never caused any problems for me", but maybe it did way in
-> the past and it was fixed and I just don't recall. I have definitely
-> complained about pathname completion issues to people before.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   08733088b566b58283f0f12fb73f5db6a9a9de30
+commit: 92c66ee829b99a860a90f62ef16df3e42f92edac pds_fwctl: add rpc and query support
+date:   11 days ago
+config: loongarch-randconfig-r111-20250401 (https://download.01.org/0day-ci/archive/20250402/202504020246.Dfbhxoo9-lkp@intel.com/config)
+compiler: loongarch64-linux-gcc (GCC) 14.2.0
+reproduce: (https://download.01.org/0day-ci/archive/20250402/202504020246.Dfbhxoo9-lkp@intel.com/reproduce)
 
-I know you dislike this, and I NACKed this before (but too late):
-https://lore.kernel.org/dri-devel/CAK7LNATHXwEkjJHP7b-ZmhzLfyyuOdsyimna-=3D=
-r-sJk+DxigrA@mail.gmail.com/
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504020246.Dfbhxoo9-lkp@intel.com/
 
-Compile-testing UAPI headers is useful
-(and I believe this is the only case where it is useful)
-because userspace is independent of any CONFIG option,
-and we have no control over the include order in
-userspace programs.
+sparse warnings: (new ones prefixed by >>)
+>> drivers/fwctl/pds/main.c:113:65: sparse: sparse: restricted __le32 degrades to integer
+>> drivers/fwctl/pds/main.c:202:50: sparse: sparse: incorrect type in assignment (different base types) @@     expected unsigned int [usertype] endpoint @@     got restricted __le32 [usertype] id @@
+   drivers/fwctl/pds/main.c:202:50: sparse:     expected unsigned int [usertype] endpoint
+   drivers/fwctl/pds/main.c:202:50: sparse:     got restricted __le32 [usertype] id
+   drivers/fwctl/pds/main.c:250:29: sparse: sparse: restricted __le32 degrades to integer
+   drivers/fwctl/pds/main.c:288:39: sparse: sparse: restricted __le32 degrades to integer
+   drivers/fwctl/pds/main.c:294:40: sparse: sparse: restricted __le32 degrades to integer
+   drivers/fwctl/pds/main.c:300:41: sparse: sparse: restricted __le32 degrades to integer
+   drivers/fwctl/pds/main.c:329:44: sparse: sparse: restricted __le32 degrades to integer
+>> drivers/fwctl/pds/main.c:330:21: sparse: sparse: cast to restricted __le32
+   drivers/fwctl/pds/main.c:330:21: sparse: sparse: restricted __le32 degrades to integer
+   drivers/fwctl/pds/main.c:330:21: sparse: sparse: restricted __le32 degrades to integer
+>> drivers/fwctl/pds/main.c:330:21: sparse: sparse: cast to restricted __le32
+   drivers/fwctl/pds/main.c:330:21: sparse: sparse: restricted __le32 degrades to integer
+   drivers/fwctl/pds/main.c:330:21: sparse: sparse: restricted __le32 degrades to integer
+>> drivers/fwctl/pds/main.c:405:56: sparse: sparse: incorrect type in initializer (different base types) @@     expected restricted __le16 [usertype] flags @@     got int @@
+   drivers/fwctl/pds/main.c:405:56: sparse:     expected restricted __le16 [usertype] flags
+   drivers/fwctl/pds/main.c:405:56: sparse:     got int
 
-In contrast, kernel-space headers are conditionally parsed,
-depending on CONFIG options.
+vim +113 drivers/fwctl/pds/main.c
 
-You dislike this feature for the reason of TAB-completion,
-but I am negative about this feature from another perspective.
+   104	
+   105	static void pdsfc_free_endpoints(struct pdsfc_dev *pdsfc)
+   106	{
+   107		struct device *dev = &pdsfc->fwctl.dev;
+   108		int i;
+   109	
+   110		if (!pdsfc->endpoints)
+   111			return;
+   112	
+ > 113		for (i = 0; pdsfc->endpoint_info && i < pdsfc->endpoints->num_entries; i++)
+   114			mutex_destroy(&pdsfc->endpoint_info[i].lock);
+   115		vfree(pdsfc->endpoint_info);
+   116		pdsfc->endpoint_info = NULL;
+   117		dma_free_coherent(dev->parent, PAGE_SIZE,
+   118				  pdsfc->endpoints, pdsfc->endpoints_pa);
+   119		pdsfc->endpoints = NULL;
+   120		pdsfc->endpoints_pa = DMA_MAPPING_ERROR;
+   121	}
+   122	
+   123	static void pdsfc_free_operations(struct pdsfc_dev *pdsfc)
+   124	{
+   125		struct device *dev = &pdsfc->fwctl.dev;
+   126		u32 num_endpoints;
+   127		int i;
+   128	
+   129		num_endpoints = le32_to_cpu(pdsfc->endpoints->num_entries);
+   130		for (i = 0; i < num_endpoints; i++) {
+   131			struct pdsfc_rpc_endpoint_info *ei = &pdsfc->endpoint_info[i];
+   132	
+   133			if (ei->operations) {
+   134				dma_free_coherent(dev->parent, PAGE_SIZE,
+   135						  ei->operations, ei->operations_pa);
+   136				ei->operations = NULL;
+   137				ei->operations_pa = DMA_MAPPING_ERROR;
+   138			}
+   139		}
+   140	}
+   141	
+   142	static struct pds_fwctl_query_data *pdsfc_get_endpoints(struct pdsfc_dev *pdsfc,
+   143								dma_addr_t *pa)
+   144	{
+   145		struct device *dev = &pdsfc->fwctl.dev;
+   146		union pds_core_adminq_comp comp = {0};
+   147		struct pds_fwctl_query_data *data;
+   148		union pds_core_adminq_cmd cmd;
+   149		dma_addr_t data_pa;
+   150		int err;
+   151	
+   152		data = dma_alloc_coherent(dev->parent, PAGE_SIZE, &data_pa, GFP_KERNEL);
+   153		if (!data) {
+   154			dev_err(dev, "Failed to map endpoint list\n");
+   155			return ERR_PTR(-ENOMEM);
+   156		}
+   157	
+   158		cmd = (union pds_core_adminq_cmd) {
+   159			.fwctl_query = {
+   160				.opcode = PDS_FWCTL_CMD_QUERY,
+   161				.entity = PDS_FWCTL_RPC_ROOT,
+   162				.version = 0,
+   163				.query_data_buf_len = cpu_to_le32(PAGE_SIZE),
+   164				.query_data_buf_pa = cpu_to_le64(data_pa),
+   165			}
+   166		};
+   167	
+   168		err = pds_client_adminq_cmd(pdsfc->padev, &cmd, sizeof(cmd), &comp, 0);
+   169		if (err) {
+   170			dev_err(dev, "Failed to send adminq cmd opcode: %u entity: %u err: %d\n",
+   171				cmd.fwctl_query.opcode, cmd.fwctl_query.entity, err);
+   172			dma_free_coherent(dev->parent, PAGE_SIZE, data, data_pa);
+   173			return ERR_PTR(err);
+   174		}
+   175	
+   176		*pa = data_pa;
+   177	
+   178		return data;
+   179	}
+   180	
+   181	static int pdsfc_init_endpoints(struct pdsfc_dev *pdsfc)
+   182	{
+   183		struct pds_fwctl_query_data_endpoint *ep_entry;
+   184		u32 num_endpoints;
+   185		int i;
+   186	
+   187		pdsfc->endpoints = pdsfc_get_endpoints(pdsfc, &pdsfc->endpoints_pa);
+   188		if (IS_ERR(pdsfc->endpoints))
+   189			return PTR_ERR(pdsfc->endpoints);
+   190	
+   191		num_endpoints = le32_to_cpu(pdsfc->endpoints->num_entries);
+   192		pdsfc->endpoint_info = vcalloc(num_endpoints,
+   193					       sizeof(*pdsfc->endpoint_info));
+   194		if (!pdsfc->endpoint_info) {
+   195			pdsfc_free_endpoints(pdsfc);
+   196			return -ENOMEM;
+   197		}
+   198	
+   199		ep_entry = (struct pds_fwctl_query_data_endpoint *)pdsfc->endpoints->entries;
+   200		for (i = 0; i < num_endpoints; i++) {
+   201			mutex_init(&pdsfc->endpoint_info[i].lock);
+ > 202			pdsfc->endpoint_info[i].endpoint = ep_entry[i].id;
+   203		}
+   204	
+   205		return 0;
+   206	}
+   207	
 
-We cannot avoid a false-positive:
-https://lore.kernel.org/all/20190718130835.GA28520@lst.de/
-
-It is not <drm/*.h> but <linux/*.h>
-However, it is annoying to make every header self-contained
-"just because we are checking this".
-Actually, it is not a real problem when the relevant
-CONFIG option is disabled.
-I did not interrupt him because he was doing this
-checkunder drivers/gpu/drm/i915/.
-()
-But, I am opposed to expanding it to more-global include/drm/,
-or any other subsystem.
-
-In my opinion, the right fix is
-"git revert 62ae45687e43"
-
-
-If we continue this, maybe leave a caution
-in capital letters?
-
-
-diff --git a/include/Kbuild b/include/Kbuild
-index 5e76a599e2dd..4dff23ae51a4 100644
---- a/include/Kbuild
-+++ b/include/Kbuild
-@@ -1 +1,3 @@
-+# The drm subsystem is strict about the self-containedness of header files=
-.
-+# OTHER SUBSYSTEMS SHOULD NOT FOLLOW THIS PRACTICE.
- obj-$(CONFIG_DRM_HEADER_TEST)  +=3D drm/
-
-
-
---
-Best Regards
-
-Masahiro Yamada
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
