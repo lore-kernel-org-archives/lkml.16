@@ -1,70 +1,61 @@
-Received: from mx.swemel.ru (mx.swemel.ru [95.143.211.150])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 692161EFFA6;
-	Tue,  1 Apr 2025 10:23:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.143.211.150
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60B421EDA35
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 10:24:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743503022; cv=none; b=syGPQFjmH4lxehrsotZeS2/SL1CJ3B3dkyj1hcskSqzbseDQ+Zsw0/BZdlV1ym4FDAmKobWt+ggvBKOrdxYTOwlsjwVAuEZtQlP+utlGf8wXnetrKnse60P9oBRYTLQjX1Q96yzZUG9J0/RhKCdVRf8tKol+mcoEod62pSrUNxM=
+	t=1743503081; cv=none; b=O+PqGzFCOg8Sm33ozayIJvz6fKuUeH/wzH71lAcVGfzsUjk2XUFsPS4byN673omchQPw0pc1Q13UlIXh3a43/xnYFywi9BhzJwtzjA4IN3dOFAtCFWVSZoLW0Dkh9NW+t1jusGbsX/szfsDh7bTBYLluodrB4POG4vDsRJmcXzU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743503022; c=relaxed/simple;
-	bh=jXpDLeX8YckBusCALW0+v36m5It5YYxf80HKSDlDrcE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Q7FvvepYk7rhHm1Kh1Yae1x6LeHQYPWlncE8T8uvcpySq+uclc6XPYXQXB+95EQLdgnFApyCuZTsOmUpJXxaPTUfGgdLSIl+j/pdCmTiJ8larn07tyybuBZeB/bBVxNGcYdrFzHzr+8L0Pt6q+yvh3pHwkkAzVLZ/7UET+cBkyU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=swemel.ru; spf=pass smtp.mailfrom=swemel.ru; dkim=pass (1024-bit key) header.d=swemel.ru header.i=@swemel.ru header.b=NIPG1LGp; arc=none smtp.client-ip=95.143.211.150
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=swemel.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=swemel.ru
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=swemel.ru header.i=@swemel.ru header.b="NIPG1LGp"
-From: Denis Arefev <arefev@swemel.ru>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=swemel.ru; s=mail;
-	t=1743503010;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BVQCdjXGU5FONNoMrHgE92TVvqfU4Ncashfmh1tdRCs=;
-	b=NIPG1LGpmkf27pacGyKPjcTpm1iVXFR9MLSPebAlb1sXiLvbOZJgE+ayqwX7DJamCjzZkk
-	s7bpqManxChYpYeCAC1eyQfaGadYymC8Q52uHvCV1NhGc3ABuj8p0ok40qYROyWrTe0vj6
-	HaGr0YrX7VhDeyxZxVAN/kHD/tYqF/4=
-To: deller@gmx.de
-Cc: arefev@swemel.ru,
-	dri-devel@lists.freedesktop.org,
-	jani.nikula@intel.com,
-	linux-fbdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org,
-	tzimmermann@suse.de,
-	ville.syrjala@linux.intel.com
-Subject: Re: [PATCH 1/1] fbdev: atyfb: Fix buffer overflow
-Date: Tue,  1 Apr 2025 13:23:30 +0300
-Message-ID: <20250401102330.7759-1-arefev@swemel.ru>
-In-Reply-To: <e04f012b-cf10-4a84-8fbe-ece1a06f0f66@gmx.de>
-References: <e04f012b-cf10-4a84-8fbe-ece1a06f0f66@gmx.de>
+	s=arc-20240116; t=1743503081; c=relaxed/simple;
+	bh=yBO6AIJ9HHlZi2gVVUcQ5GTHpfKmff9t97vsnL8Guwo=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=OIgzP0Y+a/UgZDFzQEhr7f6AmYtpoIwvvUf50nvAAtgwTpq2wZygK7osY/8/yjoypncMZeiON7OdLgF1O7WpKMptA01Ad/uhAQ7rLjlHzkC1c/1lHAAp/v+Qwjd8YIyI202VfPCLFEBD4j5oOZUCTBpfTqshN2/loANTFSuQwEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-85e15e32379so476119439f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 03:24:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743503079; x=1744107879;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hCMyHAFSBUg3/FvAK+7HAV0zKvgB7Cxwor2EeXLPwWY=;
+        b=r8DnBfw2t5HU/YMHDtV6Z/RXHlqLU4mUIL865fDhXol8L68mv0qnfvPBh2m3cxkuW6
+         0SveTiaN9ULwqZCv6HY5Kqk6m1YmGEmBDnXVM+yV/DXNkMsIoFjGJ2LLkToO+uU2lWyD
+         i4+c7wr/L05eSp0+/sOrBUg8aC/3nrxRUllpHCbBdCl6Wae9jkvNMcac1dkoJvxDo//9
+         B21LKU5CcY+A3fmS7YzoE7PpPVM9f2qD+ayWyDDV+wfbX2fSKuW7EKU0FuG3XkqaRNMr
+         SFqErzomMpxexj5nhjKSCYU6O+T2Km09ZW3GTKRGE38MBpjSF3cHyL/Y9hkTR5WkBVfh
+         0rxw==
+X-Gm-Message-State: AOJu0YyhH/KMJ3+FsIkwyvWVEZ3cjx+NsoX+FbuIx+d/X5SocHm5qMwu
+	2G4iTvjHMSoB3Sz5XTru3ZBsaxxMwUGFUQSk/mN7taWUbAMEAR1YRcQVBwrBKEKh1H8rJekOpvp
+	WPROPcSuTVB8q1vvlJ+PoQuBImLzbSu9oG2wqOkuxlQw297vHNKeS1Ak=
+X-Google-Smtp-Source: AGHT+IEiHRcsn5rsIJD4mDQZ83Nf6u7kOpKhJ7KqQWksQfalLzn3fd98YJukYfQS03g2dE3k7iItFg9pR2KE8E+MWdav99aLxdaf
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:3802:b0:3d1:79ec:bef2 with SMTP id
+ e9e14a558f8ab-3d5e0908ff3mr89333355ab.6.1743503079508; Tue, 01 Apr 2025
+ 03:24:39 -0700 (PDT)
+Date: Tue, 01 Apr 2025 03:24:39 -0700
+In-Reply-To: <67e9fa82.050a0220.1547ec.00e8.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67ebbee7.050a0220.3a8a08.0010.GAE@google.com>
+Subject: Re: [syzbot] 
+From: syzbot <syzbot+d5204cbbdd921f1f7cad@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-> It's old, but still runs in some configurations and people
-> still (although probably not on daily bases) use it.
-> Also don't forget about the various old non-x86 hardware machines
-> which often used ATI cards too, and those machines are still
-> supported by Linux as well.
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
 
-Hi Helge.
-Thanks for the reply.
+***
 
- Ok. Everyone agrees that there is an error (buffer overflow 
-lt_lcd_regs[LCD_MISC_CNTL]).
- Ok. Everyone agrees that this code is still needed.
+Subject: 
+Author: qasdev00@gmail.com
 
-Then I propose to fix this error.  :)
-
-Unfortunately, I can't do everything by the rules, I didn't save
-the chip datasheet. (I didn't think I would ever need it again.). 
-
-Regards Denis.
+#syz test
