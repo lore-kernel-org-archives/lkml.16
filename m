@@ -1,112 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 473B41B0F20;
-	Tue,  1 Apr 2025 06:20:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from smtp.cecloud.com (unknown [1.203.97.240])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B029C1DFE00
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 06:20:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=1.203.97.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743488409; cv=none; b=k/qdttJ45QYr7Iw8DOIaFrcRogWEIUoD0XFIUxZscCOQpmQeF/37CRiQX9y/v7wVoLunOzZsqECqCg3zMi79iru3HIE5jyypq03C5bH5WkeGZ/lX0b0PpyI59MYbDbw0Vviyf8M3KYFsLk7kcbq9YY/gGccaC9hht6OrbB/V7Xk=
+	t=1743488437; cv=none; b=e9gHtknL4vyp+cCCl/fkwzXbmymDpnprgADMn8JmPD1qgvB705vqVn2w3axwZQFe9A49snBOBei6fXY04LTR304o+BSNq9IgSoBCSeF0bX9+y7C4q96irOhqKknBsirs9H7M9p29Qy1I9irV/o/g4947JZpDJaMi6dMS6l6hqkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743488409; c=relaxed/simple;
-	bh=dTB1LkdaHYhKeBp8RW+H8cwXDQYd31I062iUErSVSVY=;
-	h=Content-Type:Date:Message-Id:Subject:Cc:From:To:References:
-	 In-Reply-To; b=tAYaq0fq1nY7hbFuS1fCWaneDJb9k6+RWBlSpy+vNFTQK3aLgsEYKNwAx9dsmJItrGjsT/EWhvcAjaAlqUEgN4qNff2NSg1Tr3eEOb3Rxe04GxrxWKSzL41FsR5bxlr/lmnKM+4HPsWqcY6GypcLPIfJs3mmff/X4AAm1HBJKzo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gz7wAA6U; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gz7wAA6U"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68046C4CEE8;
-	Tue,  1 Apr 2025 06:20:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743488408;
-	bh=dTB1LkdaHYhKeBp8RW+H8cwXDQYd31I062iUErSVSVY=;
-	h=Date:Subject:Cc:From:To:References:In-Reply-To:From;
-	b=Gz7wAA6USP8ewDFFeflTH5OPGhu3BdQrL61rJoUMluPZ6qAdN0fTn72GgyLQjLUuy
-	 wTHyz2n/xWJHxjkWVrZLNmV/3YpZNKH3uDcPeJ/4vN6oRJCzQyJ8EYmp2WvZBR1DRf
-	 qdnwR00ZR6UU00NotYdO0BPr0SHC87MFdbIl7PMhmfmzR+O+pvqq/tLBouD+BDTnga
-	 8DGRgMWOWL6LGz1OnO7kq7W3Smto1Ko7do+93L9aMHOlskb/trMKRt7eoSTZvZFWbc
-	 +QPoMwa5Q2HtTK4ZnaYiMrzDzAveXnZsTCAoRIRZZ2nOJnRLXt64wT79ZeBdwqt5Wl
-	 yNhb7sAVj7L6A==
-Content-Type: multipart/signed;
- boundary=469ce2c5ee7b2eb876e9826f3995ee5ce86afad1f0f363e3357fd49a768e;
- micalg=pgp-sha384; protocol="application/pgp-signature"
-Date: Tue, 01 Apr 2025 08:20:04 +0200
-Message-Id: <D8V323NBB32P.3P8H103L83HZK@kernel.org>
-Subject: Re: [PATCH] arm64: dts: ti: k3-am62p-j722s: add rng node
-Cc: <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>
-From: "Michael Walle" <mwalle@kernel.org>
-To: "Kumar, Udit" <u-kumar1@ti.com>, "Nishanth Menon" <nm@ti.com>, "Vignesh
- Raghavendra" <vigneshr@ti.com>, "Tero Kristo" <kristo@kernel.org>, "Rob
- Herring" <robh@kernel.org>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
- "Conor Dooley" <conor+dt@kernel.org>
-X-Mailer: aerc 0.16.0
-References: <20250313144155.2382316-1-mwalle@kernel.org>
- <837cba5f-f49e-4cbf-9cbe-2b25f7c9d4b8@ti.com>
- <D8UECOJ2NMCU.3ALYIKSODJ479@kernel.org>
- <1ad2d8c2-6a0d-419d-984d-4974adb0e1f0@ti.com>
-In-Reply-To: <1ad2d8c2-6a0d-419d-984d-4974adb0e1f0@ti.com>
+	s=arc-20240116; t=1743488437; c=relaxed/simple;
+	bh=jmV99yArrBPA/nnfmylI1MioIzoi0+3j4hedDcV0kNs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=WgGuPNDpHGGC7WTBvCORTTb0xfu8vpdB9qiwjdYkywmBQoGqNK4ewNQZrhhAVfBBRRg8CWYrz4uxMgDdiyiN6/E3dpKEox8odRHlHMR5sYPES5t2W77Uw8kChBM41PibAnEN9Lfiq4Rg3SsDs+XAETLS/nu+WrLud5n3UOq5/XM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cestc.cn; spf=pass smtp.mailfrom=cestc.cn; arc=none smtp.client-ip=1.203.97.240
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cestc.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cestc.cn
+Received: from localhost (localhost [127.0.0.1])
+	by smtp.cecloud.com (Postfix) with ESMTP id 5B2EA900113;
+	Tue,  1 Apr 2025 14:20:25 +0800 (CST)
+X-MAIL-GRAY:0
+X-MAIL-DELIVERY:1
+X-SKE-CHECKED:1
+X-ANTISPAM-LEVEL:2
+Received: from localhost.localdomain (unknown [111.48.58.12])
+	by smtp.cecloud.com (postfix) whith ESMTP id P3907747T281458888339824S1743488424274530_;
+	Tue, 01 Apr 2025 14:20:25 +0800 (CST)
+X-IP-DOMAINF:1
+X-RL-SENDER:shaopeijie@cestc.cn
+X-SENDER:shaopeijie@cestc.cn
+X-LOGIN-NAME:shaopeijie@cestc.cn
+X-FST-TO:kbusch@kernel.org
+X-RCPT-COUNT:9
+X-LOCAL-RCPT-COUNT:3
+X-MUTI-DOMAIN-COUNT:0
+X-SENDER-IP:111.48.58.12
+X-ATTACHMENT-NUM:0
+X-UNIQUE-TAG:<d5211473a6f7e9d5e0070690dcad5376>
+X-System-Flag:0
+From: shaopeijie@cestc.cn
+To: kbusch@kernel.org,
+	sagi@grimberg.me,
+	axboe@kernel.dk,
+	hch@lst.de
+Cc: linux-nvme@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	gechangzhong@cestc.cn,
+	zhang.guanghui@cestc.cn,
+	Peijie Shao <shaopeijie@cestc.cn>
+Subject: [PATCH] Fix netns UAF introduced by commit 1be52169c348
+Date: Tue,  1 Apr 2025 14:19:34 +0800
+Message-ID: <20250401061934.2304210-1-shaopeijie@cestc.cn>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <1f55b71d-8e28-4eac-b14e-d32a7e704578@cestc.cn>
+References: <1f55b71d-8e28-4eac-b14e-d32a7e704578@cestc.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
---469ce2c5ee7b2eb876e9826f3995ee5ce86afad1f0f363e3357fd49a768e
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
+From: Peijie Shao <shaopeijie@cestc.cn>
 
-Hi Udit,
+The patch is for nvme-tcp host side.
 
-> >>> --- a/arch/arm64/boot/dts/ti/k3-am62p-j722s-common-main.dtsi
-> >>> [..]
-> >> For completeness , this is ok to add this node but should be kept disa=
-bled
-> > Shouldn't it be "reserved" then, see [1].
->
-> yes, should be reserved.
->
-> With marking status as reserved.
->
-> Please use Reviewed-by: Udit Kumar <u-kumar1@ti.com>
+commit 1be52169c348
+("nvme-tcp: fix selinux denied when calling sock_sendmsg")
+uses sock_create_kern instead of sock_create to solve SELinux
+problem, however sock_create_kern does not take a reference of
+given netns, which results in a use-after-freewhen the
+non-init_net netns is destroyed before sock_release.
 
-Thanks.
+For example: a container not share with host's network namespace
+doing a 'nvme connect', and is stopped without 'nvme disconnect'.
 
-> >> similar to
-> >>
-> >> https://github.com/torvalds/linux/blob/master/arch/arm64/boot/dts/ti/k=
-3-j7200-mcu-wakeup.dtsi#L662
-> > j784s4, j721e and j721s2 have them enabled. What is the rule here?
->
-> J784s4, j721e and j721s2 SOCs has two TRNG blocks,
->
-> example for j721e, one is used by kernel [0] and another by optee [1].
->
->
-> >
-> > You also disable the hwrng in optee in your evm according to [2]:
-> > CFG_WITH_SOFTWARE_PRNG=3Dy
->
-> We are planning to use this hardware block by secure firmware.
->
-> Therefore request not to use by optee as well
+The patch changes parameter current->nsproxy->net_ns to init_net,
+makes the socket always belongs to the host. It also naturally
+avoids changing sock's netns from previous creator's netns to
+init_net when sock is re-created by nvme recovery path
+(workqueue is in init_net namespace).
 
-How will you be able to access the RNG from linux and u-boot? I'm
-asking because I'll need it in u-boot for the lwip stack and the
-HTTPS protocol.
+Signed-off-by: Peijie Shao <shaopeijie@cestc.cn>
+---
 
--michael
+Hi all,
+This is the v1 patch. Before this version, I tried to
+get_net(current->nsproxy->net_ns) in nvme_tcp_alloc_queue() to
+fix the issue, but failed to find a suitable placeto do
+put_net(). Because the socket is released by fput() internally.
+I think code like below:
+    nvme_tcp_free_queue() {
+        fput()
+        put_net()
+    }
+can not ensure the socket was released before put_net, since
+someone is still holding the file.
 
---469ce2c5ee7b2eb876e9826f3995ee5ce86afad1f0f363e3357fd49a768e
-Content-Type: application/pgp-signature; name="signature.asc"
+So I prefer using the 'init_net' net namespace.
 
------BEGIN PGP SIGNATURE-----
+---
+ drivers/nvme/host/tcp.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-iKgEABMJADAWIQTIVZIcOo5wfU/AngkSJzzuPgIf+AUCZ+uFlBIcbXdhbGxlQGtl
-cm5lbC5vcmcACgkQEic87j4CH/huuAGA6VxJSqcfwEyp/l9Eacmq8DPaOSDcw5jB
-HiLqus4Fg9DFl1wj0Zb6OF3HAbHYx/b/AYDCesqMKY8du6brSiVP+2172bjOgXHc
-VLGr5Zn13LMKzakCwP54O+nZSy0OjYhrx2o=
-=MziH
------END PGP SIGNATURE-----
+diff --git a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c
+index 26c459f0198d..1b2d3d37656d 100644
+--- a/drivers/nvme/host/tcp.c
++++ b/drivers/nvme/host/tcp.c
+@@ -1789,7 +1789,13 @@ static int nvme_tcp_alloc_queue(struct nvme_ctrl *nctrl, int qid,
+ 		queue->cmnd_capsule_len = sizeof(struct nvme_command) +
+ 						NVME_TCP_ADMIN_CCSZ;
+ 
+-	ret = sock_create_kern(current->nsproxy->net_ns,
++	/* sock_create_kern() does not take a reference to
++	 * current->nsproxy->net_ns, use init_net instead.
++	 * This also avoid changing sock's netns from previous
++	 * creator's netns to init_net when sock is re-created
++	 * by nvme recovery path.
++	 */
++	ret = sock_create_kern(&init_net,
+ 			ctrl->addr.ss_family, SOCK_STREAM,
+ 			IPPROTO_TCP, &queue->sock);
+ 	if (ret) {
+-- 
+2.43.0
 
---469ce2c5ee7b2eb876e9826f3995ee5ce86afad1f0f363e3357fd49a768e--
+
+
