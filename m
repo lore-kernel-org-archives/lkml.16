@@ -1,415 +1,103 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 102F11E47B3
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 08:28:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1B681EA7C9
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 08:30:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743496090; cv=none; b=MDqJhRjep2etxKYLothimBvoqvkEzcP2+GBBWPKPn7i2fafG4VF51OA11Ld+EJIwrKtfdLFBo+0gFCQ9IeIOPjVxRuq3MlOd3O0kPydNQebpWS0WJ8sWk7Js2Dskl5vznXGxxpgKZrnGAlJhrcqSQTOqrbHdFlW6/mgOitGMbZA=
+	t=1743496207; cv=none; b=JQl1XeICIeGyqkKR+a3bp4qpwxr2M9JHXYcjFXEh3dyHv2QJMf87472rIklYeH++GxVfVe5b3xjmakpW7tcw9S71IquhI8vSCTPaOu9nkujD/6L9TPvVYVq7lbjwFzmaAAxfw8+NMoFTu/vlZfNa2KfzjGtII/Jpl9mNGUzvTk8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743496090; c=relaxed/simple;
-	bh=pDihNCCDma+VlIuv63KxjPYHmQWJzFHn62ZZzs4AjKo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Za3U5la0j2xrypoLX+hdCYhUdC98hUietr1Gdw0dLSxpBxjGj15Q2w8/PlJRaJWYglsEPgHhEDmLoPJVfH9IUYNwPzIR/Wp7zByH6neAg84/DC7BGRkWzofNRbDI+Al/UBCcb7YCb/pKD6Gh/sAEMP/xAH/a/sLL0f0iPOQLSsI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=NnyeM8D+; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="NnyeM8D+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1743496086;
-	bh=pDihNCCDma+VlIuv63KxjPYHmQWJzFHn62ZZzs4AjKo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=NnyeM8D+/BeY/vcbfIo13k9HBGBKlO3DKxzRA1PSrBxweQyvyKE3WLR5P8zgE81+X
-	 8i3M7hVIB6U8kY5SnLo68duDjD9MTyJhGtbmu9rnmK2UejwRMFkNhFi8kIJOkCqvjn
-	 83QCfsB4IRZBs6/YOxXKAKPEMDRCcQ1W1ojqY56oT2D4nn7PizyytNmyqXZiy7hRdr
-	 c5JrqC2J5DaMPlm0i5xWNLnWp1dKBAb6d/6qV8Q0SPhecZy0a76M2jzbBmKI/Fp9sz
-	 szLFkptT4B0mFdsZ4t3NuztwmExcsePbAqpI6H2cvNpBgEb2OSbDuwUToU8U/FysH7
-	 W41Ja0e/5qIVQ==
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bbrezillon)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 7E17C17E0FAF;
-	Tue,  1 Apr 2025 10:28:05 +0200 (CEST)
-Date: Tue, 1 Apr 2025 10:28:02 +0200
-From: Boris Brezillon <boris.brezillon@collabora.com>
-To: =?UTF-8?B?QWRyacOhbg==?= Larumbe <adrian.larumbe@collabora.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Rob Herring <robh@kernel.org>, Steven
- Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>,
- kernel@collabora.com, linux-kernel@vger.kernel.org,
- dri-devel@lists.freedesktop.org
-Subject: Re: [RFC PATCH v2 1/6] lib/scatterlist.c: Support constructing sgt
- from page xarray
-Message-ID: <20250401102802.07519073@collabora.com>
-In-Reply-To: <20250326021433.772196-2-adrian.larumbe@collabora.com>
-References: <20250326021433.772196-1-adrian.larumbe@collabora.com>
-	<20250326021433.772196-2-adrian.larumbe@collabora.com>
-Organization: Collabora
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1743496207; c=relaxed/simple;
+	bh=3mt5Skfu6TniMgoKHzDUuqtneTpb2TY4fxM0WZWtyNY=;
+	h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=HqyY9wvXK2kA/IFH3U6nVA1j5jnbRiEoLEtOB5OQjk1up4/GloR9S0TGBsW6Vd+Ip95dFUky2GMoIQ1HCWu/3r9OG+USLC8DY+cCqnu8yG8fGfiLctejPG0OAV8lM7QmPOITf1bZNjo0sv35RBSHrk6wj6y6OEAfOyNUjfQNriw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8DxWOEIpOtnHIitAA--.27167S3;
+	Tue, 01 Apr 2025 16:30:00 +0800 (CST)
+Received: from [10.130.0.149] (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowMBxLscFpOtn1XtqAA--.61059S3;
+	Tue, 01 Apr 2025 16:29:57 +0800 (CST)
+Subject: Re: [PATCH 08/11] objtool/loongarch: Add unwind hints in
+ prepare_frametrace()
+To: Ingo Molnar <mingo@kernel.org>
+References: <cover.1743481539.git.jpoimboe@kernel.org>
+ <270cadd8040dda74db2307f23497bb68e65db98d.1743481539.git.jpoimboe@kernel.org>
+ <Z-uQ7NqMzqAShWcH@gmail.com>
+ <2e25fe84-f772-5d87-c7a7-bf40055fb4bc@loongson.cn>
+ <Z-ufkGy0hPbwMUYI@gmail.com>
+Cc: Josh Poimboeuf <jpoimboe@kernel.org>, x86@kernel.org,
+ linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+ kernel test robot <lkp@intel.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <10d45fa8-d1f7-28be-9fc6-9c8a244601ec@loongson.cn>
+Date: Tue, 1 Apr 2025 16:29:57 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <Z-ufkGy0hPbwMUYI@gmail.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:qMiowMBxLscFpOtn1XtqAA--.61059S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7ZF15GrW5JFWkAF15XF1DurX_yoW8Xw1Upa
+	y7JanF9r48tryxtanrKwnF9F9xtw4DJr17Wr1kAry8Gr4qvrnavr1rKa18uFyjga4FgFy8
+	Jr98ur9Fqa1jqabCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUPFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6rxl6s0DM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
+	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWU
+	AwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
+	k0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l
+	4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jw0_GFylx2IqxVAqx4xG67AKxV
+	WUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI
+	7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r
+	1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI
+	42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUxUGYDUUUU
 
-On Wed, 26 Mar 2025 02:14:21 +0000
-Adri=C3=A1n Larumbe <adrian.larumbe@collabora.com> wrote:
+On 04/01/2025 04:10 PM, Ingo Molnar wrote:
+>
+> * Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+>
+>> On 04/01/2025 03:08 PM, Ingo Molnar wrote:
+>>>
+>>> * Josh Poimboeuf <jpoimboe@kernel.org> wrote:
+>>>
+>>>> If 'regs' points to a local stack variable, prepare_frametrace() stores
+>>>> all registers to the stack.  This confuses objtool as it expects them to
+>>>> be restored from the stack later.
+>>>>
+>>>> The stores don't affect stack tracing, so use unwind hints to hide them
+>>>> from objtool.
+>>>>
+>>>> Fixes the following warnings:
+>>>>
+>>>>   arch/loongarch/kernel/traps.o: warning: objtool: show_stack+0xe0: stack state mismatch: reg1[22]=-1+0 reg2[22]=-2-160
+>>>>   arch/loongarch/kernel/traps.o: warning: objtool: show_stack+0xe0: stack state mismatch: reg1[23]=-1+0 reg2[23]=-2-152
+>>>>
+>>>> Cc: Tiezhu Yang <yangtiezhu@loongson.cn>
+>>>> Fixes: cb8a2ef0848c ("LoongArch: Add ORC stack unwinder support")
+>>>> Reported-by: kernel test robot <lkp@intel.com>
+>>>> Closes: https://lore.kernel.org/oe-kbuild-all/202503280703.OARM8SrY-lkp@intel.com/
+>>>> Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
+>>>
+>>> Note, I skipped this fix from tip:objtool/urgent for the time being,
+>>> because Tiezhu Yang indicated that he'd be reviewing and testing this
+>>> patch.
+>>
+>> Tested-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+>
+> Thank you! Is it fine with you if I send this fix with tonight's
+> objtool/urgent pull request to Linus?
 
-> In preparation for a future commit that will introduce sparse allocation
-> of pages in DRM shmem, a scatterlist function that knows how to deal
-> with an xarray collection of memory pages had to be introduced.
->=20
-> Because the new function is identical to the existing one that deals
-> with a page array, the page_array abstraction is also introduced, which
-> hides the way pages are retrieved from a collection.
-
-Let's see how things look/work with an xarray -> array copy step for sgt
-building, and we can consider adding an helper for direct xarray array
-to the scatterlist lib later on. The reasoning here is to limit the
-number of dependencies on non-DRM stuff at first.
-
->=20
-> Signed-off-by: Adri=C3=A1n Larumbe <adrian.larumbe@collabora.com>
-> ---
->  include/linux/scatterlist.h |  17 ++++
->  lib/scatterlist.c           | 175 +++++++++++++++++++++++++-----------
->  2 files changed, 142 insertions(+), 50 deletions(-)
->=20
-> diff --git a/include/linux/scatterlist.h b/include/linux/scatterlist.h
-> index d836e7440ee8..cffb0cffcda0 100644
-> --- a/include/linux/scatterlist.h
-> +++ b/include/linux/scatterlist.h
-> @@ -447,6 +447,11 @@ int sg_alloc_table_from_pages_segment(struct sg_tabl=
-e *sgt, struct page **pages,
->  				      unsigned int n_pages, unsigned int offset,
->  				      unsigned long size,
->  				      unsigned int max_segment, gfp_t gfp_mask);
-> +int sg_alloc_table_from_xarray_segment(struct sg_table *sgt, struct xarr=
-ay *pages,
-> +				       unsigned int idx, unsigned int n_pages,
-> +				       unsigned int offset, unsigned long size,
-> +				       unsigned int max_segment, gfp_t gfp_mask);
-> +
-> =20
->  /**
->   * sg_alloc_table_from_pages - Allocate and initialize an sg table from
-> @@ -478,6 +483,18 @@ static inline int sg_alloc_table_from_pages(struct s=
-g_table *sgt,
->  						 size, UINT_MAX, gfp_mask);
->  }
-> =20
-> +static inline int sg_alloc_table_from_xarray(struct sg_table *sgt,
-> +					     struct xarray *pages,
-> +					     unsigned int idx,
-> +					     unsigned int n_pages,
-> +					     unsigned int offset,
-> +					     unsigned long size, gfp_t gfp_mask)
-> +{
-> +	return sg_alloc_table_from_xarray_segment(sgt, pages, idx, n_pages, off=
-set,
-> +						  size, UINT_MAX, gfp_mask);
-> +}
-> +
-> +
->  #ifdef CONFIG_SGL_ALLOC
->  struct scatterlist *sgl_alloc_order(unsigned long long length,
->  				    unsigned int order, bool chainable,
-> diff --git a/lib/scatterlist.c b/lib/scatterlist.c
-> index 5bb6b8aff232..08b9ed51324e 100644
-> --- a/lib/scatterlist.c
-> +++ b/lib/scatterlist.c
-> @@ -423,43 +423,53 @@ static bool pages_are_mergeable(struct page *a, str=
-uct page *b)
->  	return true;
->  }
-> =20
-> -/**
-> - * sg_alloc_append_table_from_pages - Allocate and initialize an append =
-sg
-> - *                                    table from an array of pages
-> - * @sgt_append:  The sg append table to use
-> - * @pages:       Pointer to an array of page pointers
-> - * @n_pages:     Number of pages in the pages array
-> - * @offset:      Offset from start of the first page to the start of a b=
-uffer
-> - * @size:        Number of valid bytes in the buffer (after offset)
-> - * @max_segment: Maximum size of a scatterlist element in bytes
-> - * @left_pages:  Left pages caller have to set after this call
-> - * @gfp_mask:	 GFP allocation mask
-> - *
-> - * Description:
-> - *    In the first call it allocate and initialize an sg table from a li=
-st of
-> - *    pages, else reuse the scatterlist from sgt_append. Contiguous rang=
-es of
-> - *    the pages are squashed into a single scatterlist entry up to the m=
-aximum
-> - *    size specified in @max_segment.  A user may provide an offset at a=
- start
-> - *    and a size of valid data in a buffer specified by the page array. =
-The
-> - *    returned sg table is released by sg_free_append_table
-> - *
-> - * Returns:
-> - *   0 on success, negative error on failure
-> - *
-> - * Notes:
-> - *   If this function returns non-0 (eg failure), the caller must call
-> - *   sg_free_append_table() to cleanup any leftover allocations.
-> - *
-> - *   In the fist call, sgt_append must by initialized.
-> - */
-> -int sg_alloc_append_table_from_pages(struct sg_append_table *sgt_append,
-> -		struct page **pages, unsigned int n_pages, unsigned int offset,
-> -		unsigned long size, unsigned int max_segment,
-> -		unsigned int left_pages, gfp_t gfp_mask)
-> +struct page_array {
-> +	union {
-> +		struct page **array;
-> +		struct xarray *xarray;
-> +	};
-> +
-> +	struct page * (* const get_page)(struct page_array, unsigned int);
-> +};
-> +
-> +static inline struct page *page_array_get_page(struct page_array a,
-> +					       unsigned int index)
->  {
-> -	unsigned int chunks, cur_page, seg_len, i, prv_len =3D 0;
-> +	return a.array[index];
-> +}
-> +
-> +static inline struct page *page_xarray_get_page(struct page_array a,
-> +						unsigned int index)
-> +{
-> +	return xa_load(a.xarray, index);
-> +}
-> +
-> +#define PAGE_ARRAY(pages)				\
-> +	((struct page_array) {				\
-> +		.array =3D pages,				\
-> +		.get_page =3D page_array_get_page,	\
-> +	})
-> +
-> +#define PAGE_XARRAY(pages)				\
-> +	((struct page_array) {				\
-> +		.xarray =3D pages,			\
-> +		.get_page =3D page_xarray_get_page,	\
-> +	})
-> +
-> +static inline int
-> +sg_alloc_append_table_from_page_array(struct sg_append_table *sgt_append,
-> +				      struct page_array pages,
-> +				      unsigned int first_page,
-> +				      unsigned int n_pages,
-> +				      unsigned int offset, unsigned long size,
-> +				      unsigned int max_segment,
-> +				      unsigned int left_pages, gfp_t gfp_mask)
-> +{
-> +	unsigned int chunks, seg_len, i, prv_len =3D 0;
->  	unsigned int added_nents =3D 0;
->  	struct scatterlist *s =3D sgt_append->prv;
-> +	unsigned int cur_pg_index =3D first_page;
-> +	unsigned int last_pg_index =3D first_page + n_pages - 1;
->  	struct page *last_pg;
-> =20
->  	/*
-> @@ -475,24 +485,26 @@ int sg_alloc_append_table_from_pages(struct sg_appe=
-nd_table *sgt_append,
-> =20
->  	if (sgt_append->prv) {
->  		unsigned long next_pfn;
-> +		struct page *page;
-> =20
->  		if (WARN_ON(offset))
->  			return -EINVAL;
-> =20
->  		/* Merge contiguous pages into the last SG */
-> +		page =3D pages.get_page(pages, cur_pg_index);
->  		prv_len =3D sgt_append->prv->length;
->  		next_pfn =3D (sg_phys(sgt_append->prv) + prv_len) / PAGE_SIZE;
-> -		if (page_to_pfn(pages[0]) =3D=3D next_pfn) {
-> +		if (page_to_pfn(page) =3D=3D next_pfn) {
->  			last_pg =3D pfn_to_page(next_pfn - 1);
-> -			while (n_pages && pages_are_mergeable(pages[0], last_pg)) {
-> +			while (cur_pg_index <=3D last_pg_index &&
-> +			       pages_are_mergeable(page, last_pg)) {
->  				if (sgt_append->prv->length + PAGE_SIZE > max_segment)
->  					break;
->  				sgt_append->prv->length +=3D PAGE_SIZE;
-> -				last_pg =3D pages[0];
-> -				pages++;
-> -				n_pages--;
-> +				last_pg =3D page;
-> +				cur_pg_index++;
->  			}
-> -			if (!n_pages)
-> +			if (cur_pg_index > last_pg_index)
->  				goto out;
->  		}
->  	}
-> @@ -500,26 +512,27 @@ int sg_alloc_append_table_from_pages(struct sg_appe=
-nd_table *sgt_append,
->  	/* compute number of contiguous chunks */
->  	chunks =3D 1;
->  	seg_len =3D 0;
-> -	for (i =3D 1; i < n_pages; i++) {
-> +	for (i =3D cur_pg_index + 1; i <=3D last_pg_index; i++) {
->  		seg_len +=3D PAGE_SIZE;
->  		if (seg_len >=3D max_segment ||
-> -		    !pages_are_mergeable(pages[i], pages[i - 1])) {
-> +		    !pages_are_mergeable(pages.get_page(pages, i),
-> +					 pages.get_page(pages, i - 1))) {
->  			chunks++;
->  			seg_len =3D 0;
->  		}
->  	}
-> =20
->  	/* merging chunks and putting them into the scatterlist */
-> -	cur_page =3D 0;
->  	for (i =3D 0; i < chunks; i++) {
->  		unsigned int j, chunk_size;
-> =20
->  		/* look for the end of the current chunk */
->  		seg_len =3D 0;
-> -		for (j =3D cur_page + 1; j < n_pages; j++) {
-> +		for (j =3D cur_pg_index + 1; j <=3D last_pg_index; j++) {
->  			seg_len +=3D PAGE_SIZE;
->  			if (seg_len >=3D max_segment ||
-> -			    !pages_are_mergeable(pages[j], pages[j - 1]))
-> +			    !pages_are_mergeable(pages.get_page(pages, j),
-> +						 pages.get_page(pages, j - 1)))
->  				break;
->  		}
-> =20
-> @@ -535,13 +548,13 @@ int sg_alloc_append_table_from_pages(struct sg_appe=
-nd_table *sgt_append,
->  				sgt_append->prv->length =3D prv_len;
->  			return PTR_ERR(s);
->  		}
-> -		chunk_size =3D ((j - cur_page) << PAGE_SHIFT) - offset;
-> -		sg_set_page(s, pages[cur_page],
-> +		chunk_size =3D ((j - cur_pg_index) << PAGE_SHIFT) - offset;
-> +		sg_set_page(s, pages.get_page(pages, cur_pg_index),
->  			    min_t(unsigned long, size, chunk_size), offset);
->  		added_nents++;
->  		size -=3D chunk_size;
->  		offset =3D 0;
-> -		cur_page =3D j;
-> +		cur_pg_index =3D j;
->  	}
->  	sgt_append->sgt.nents +=3D added_nents;
->  	sgt_append->sgt.orig_nents =3D sgt_append->sgt.nents;
-> @@ -551,6 +564,46 @@ int sg_alloc_append_table_from_pages(struct sg_appen=
-d_table *sgt_append,
->  		sg_mark_end(s);
->  	return 0;
->  }
-> +
-> +/**
-> + * sg_alloc_append_table_from_pages - Allocate and initialize an append =
-sg
-> + *                                    table from an array of pages
-> + * @sgt_append:  The sg append table to use
-> + * @pages:       Pointer to an array of page pointers
-> + * @n_pages:     Number of pages in the pages array
-> + * @offset:      Offset from start of the first page to the start of a b=
-uffer
-> + * @size:        Number of valid bytes in the buffer (after offset)
-> + * @max_segment: Maximum size of a scatterlist element in bytes
-> + * @left_pages:  Left pages caller have to set after this call
-> + * @gfp_mask:	 GFP allocation mask
-> + *
-> + * Description:
-> + *    In the first call it allocate and initialize an sg table from a li=
-st of
-> + *    pages, else reuse the scatterlist from sgt_append. Contiguous rang=
-es of
-> + *    the pages are squashed into a single scatterlist entry up to the m=
-aximum
-> + *    size specified in @max_segment.  A user may provide an offset at a=
- start
-> + *    and a size of valid data in a buffer specified by the page array. =
-The
-> + *    returned sg table is released by sg_free_append_table
-> + *
-> + * Returns:
-> + *   0 on success, negative error on failure
-> + *
-> + * Notes:
-> + *   If this function returns non-0 (eg failure), the caller must call
-> + *   sg_free_append_table() to cleanup any leftover allocations.
-> + *
-> + *   In the fist call, sgt_append must by initialized.
-> + */
-> +int sg_alloc_append_table_from_pages(struct sg_append_table *sgt_append,
-> +		struct page **pages, unsigned int n_pages, unsigned int offset,
-> +		unsigned long size, unsigned int max_segment,
-> +		unsigned int left_pages, gfp_t gfp_mask)
-> +{
-> +	struct page_array parray =3D PAGE_ARRAY(pages);
-> +
-> +	return sg_alloc_append_table_from_page_array(sgt_append, parray, 0, n_p=
-ages, offset,
-> +						    size, max_segment, left_pages, gfp_mask);
-> +}
->  EXPORT_SYMBOL(sg_alloc_append_table_from_pages);
-> =20
->  /**
-> @@ -582,10 +635,11 @@ int sg_alloc_table_from_pages_segment(struct sg_tab=
-le *sgt, struct page **pages,
->  				gfp_t gfp_mask)
->  {
->  	struct sg_append_table append =3D {};
-> +	struct page_array parray =3D PAGE_ARRAY(pages);
->  	int err;
-> =20
-> -	err =3D sg_alloc_append_table_from_pages(&append, pages, n_pages, offse=
-t,
-> -					       size, max_segment, 0, gfp_mask);
-> +	err =3D sg_alloc_append_table_from_page_array(&append, parray, 0, n_pag=
-es, offset,
-> +						    size, max_segment, 0, gfp_mask);
->  	if (err) {
->  		sg_free_append_table(&append);
->  		return err;
-> @@ -596,6 +650,27 @@ int sg_alloc_table_from_pages_segment(struct sg_tabl=
-e *sgt, struct page **pages,
->  }
->  EXPORT_SYMBOL(sg_alloc_table_from_pages_segment);
-> =20
-> +int sg_alloc_table_from_xarray_segment(struct sg_table *sgt, struct xarr=
-ay *pages,
-> +				       unsigned int idx, unsigned int n_pages,
-> +				       unsigned int offset, unsigned long size,
-> +				       unsigned int max_segment, gfp_t gfp_mask)
-> +{
-> +	struct sg_append_table append =3D {};
-> +	struct page_array parray =3D PAGE_XARRAY(pages);
-> +	int err;
-> +
-> +	err =3D sg_alloc_append_table_from_page_array(&append, parray, idx, n_p=
-ages, offset,
-> +						    size, max_segment, 0, gfp_mask);
-> +	if (err) {
-> +		sg_free_append_table(&append);
-> +		return err;
-> +	}
-> +	memcpy(sgt, &append.sgt, sizeof(*sgt));
-> +	WARN_ON(append.total_nents !=3D sgt->orig_nents);
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL(sg_alloc_table_from_xarray_segment);
-> +
->  #ifdef CONFIG_SGL_ALLOC
-> =20
->  /**
+Yes, no problem, thank you for doing this.
 
