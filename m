@@ -1,59 +1,104 @@
-Received: from bsdbackstore.eu (128-116-240-228.dyn.eolo.it [128.116.240.228])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F19FE42A94;
-	Tue,  1 Apr 2025 12:18:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.116.240.228
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 433CC202F7C;
+	Tue,  1 Apr 2025 12:18:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743509926; cv=none; b=YKIlu0VxZOdoxhj51Qs80O6FyF3BZOZ94d349bpCf6kCP9BqTzQYk56lR/uNCCmH1tv6lCQuGz8mBitAvitzdsRcULGuegS6mUPiGW9y76QcGIHYulnZ07GUraarv5f4jEoM/N0U8GiAAWwJVt+y1nPPlDpjZGuRCfQvTMmwOCY=
+	t=1743509928; cv=none; b=obEC6eWAX3kZfd5dIO3JwiR2rVsDo2RYuW9JJNVaQq8OENF2/KbwWPHClIC+RfuOcsE0sVhotsleenSC+B2Wx8IGJVwLsjVG3SUgZLws1EwebCoVDHMf8V32hHjmMioDeGym3DcewadPoTFu/4YZAwaZp/iuofEX+OUkd8WVSQU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743509926; c=relaxed/simple;
-	bh=gkAaGi/6KaXfz/ElIKiar3CIw41j0EtK1W6A5DY6Gw4=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=WeoJcXkkeYKhpTQHdrglRiIv8ZQPQ9n1B9N4luUts4BO3kyeZN+Pen7VHJjrnLtufg/DOWny+QeHuV0LR43v60qTopw8dqmMjIQnX4kFmP4hZ7gDGvgycCqMV9YeCgX23ZYPMoWd5NKUnScNzA2mnYFfRW1PkGwiREWPsWeoM7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bsdbackstore.eu; spf=pass smtp.mailfrom=bsdbackstore.eu; arc=none smtp.client-ip=128.116.240.228
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bsdbackstore.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bsdbackstore.eu
-Received: from localhost (<unknown> [193.207.112.45])
-	by bsdbackstore.eu (OpenSMTPD) with ESMTPSA id c7aa2f3d (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-	Tue, 1 Apr 2025 14:12:01 +0200 (CEST)
+	s=arc-20240116; t=1743509928; c=relaxed/simple;
+	bh=HaiOBqHuFiJ6ixd05DvNz+WuwX4gzteShKVoCBENbV8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nm7hm4JpwFR3ZAozfR+0nLhdJq2kK3yEWLuEqsyfNZfITB0w8N+YJhT0xw1jET+WppzJ51F8uroqRTzCSbiLNrbfeheCcZ8h0ieUfLohgFE3je8y+Udj08GKGzBchY1ab1mqS6M2TOUzCc0b+xVADpYpY1XBi7bdPO8czdBBddI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X5fZgBTO; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X5fZgBTO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743509927; x=1775045927;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=HaiOBqHuFiJ6ixd05DvNz+WuwX4gzteShKVoCBENbV8=;
+  b=X5fZgBTOn6oQO2GM8w5QxphREPEFus4w/rfGmGuF1pEAmppTbMSh0RqM
+   bXGSIysp1lHFlr+6ShOQhLoHkXDURRReG65x8tvf1RldqOQzn1oS0Bnml
+   PEIOMLNIGC4ltx0gAib789Va5apGnVhuL4M4WXNtJIoFDBL81/zrHbVSQ
+   4xhU0LnIyjstM5bRGgGIn2Vhr1kEfQ/YHUOCQmWzE90SNFNbgRwcK+0mv
+   H5w22/2/DRCQbZ5WwY//U381VC1R8344slQ/cGbQdGMyIPzzWtjtbGy4H
+   nV5YSNyK22IyN4j4BDaKoDNeoxQPkjsurcSagOwL3gG6GnPXSmog0Gd3E
+   A==;
+X-CSE-ConnectionGUID: hxgFSAx6SUS8tw/GIhu2XQ==
+X-CSE-MsgGUID: D4GVx5eyTSCUAEx8ZWXXOQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11391"; a="70186925"
+X-IronPort-AV: E=Sophos;i="6.14,293,1736841600"; 
+   d="scan'208";a="70186925"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2025 05:18:46 -0700
+X-CSE-ConnectionGUID: ivyA8vynRjex5Iyoi33rAg==
+X-CSE-MsgGUID: KAbHE6hJTWmHsvsLvmC7BQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,293,1736841600"; 
+   d="scan'208";a="131373404"
+Received: from ncintean-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.246.7])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2025 05:18:43 -0700
+From: Jani Nikula <jani.nikula@intel.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+	linux-kernel@vger.kernel.org
+Cc: jani.nikula@intel.com,
+	linux-kbuild@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	intel-xe@lists.freedesktop.org,
+	intel-gfx@lists.freedesktop.org,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Lucas De Marchi <lucas.demarchi@intel.com>
+Subject: [PATCH 0/5] hdrtest: hide the disgusting turds
+Date: Tue,  1 Apr 2025 15:18:25 +0300
+Message-Id: <20250401121830.21696-1-jani.nikula@intel.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 01 Apr 2025 14:11:59 +0200
-Message-Id: <D8VAJJYPMVA3.284EXKCVRJVPU@bsdbackstore.eu>
-Cc: "linux-kernel" <linux-kernel@vger.kernel.org>, "linux-nvme"
- <linux-nvme@lists.infradead.org>, "linux-block"
- <linux-block@vger.kernel.org>
-Subject: Re: nvme-tcp: fix a possible UAF when failing to send request
-From: "Maurizio Lombardi" <mlombard@bsdbackstore.eu>
-To: "zhang.guanghui@cestc.cn" <zhang.guanghui@cestc.cn>, "sagi"
- <sagi@grimberg.me>, "mgurtovoy" <mgurtovoy@nvidia.com>, "kbusch"
- <kbusch@kernel.org>, "sashal" <sashal@kernel.org>, "chunguang.xu"
- <chunguang.xu@shopee.com>
-X-Mailer: aerc 0.20.1
-References: <2025021015413817916143@cestc.cn>
- <aed9dde7-3271-4b97-9632-8380d37505d9@grimberg.me>
- <202503071810452687957@cestc.cn>
- <D8DDP6LIPOKB.2ACTHLE9FPI2A@bsdbackstore.eu>
- <2025032817241899538928@cestc.cn>
-In-Reply-To: <2025032817241899538928@cestc.cn>
+MIME-Version: 1.0
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 
-On Fri Mar 28, 2025 at 10:24 AM CET, zhang.guanghui@cestc.cn wrote:
-> Hi,=20
->
->       So far,  the UAF issue have not been occcurred during testing this =
-patch in the same situation.=20
-> Additionally, the patch triggers a compilation warning,  nvme_tcp_fail_re=
-quest is declared but not defined, please also review. =20
->
+Hide all the disgusting turds in .hdrtest subdirectories in the build
+tree, and put the extra drm build-time checks behind a kconfig option.
 
-Ok, I am going to submit a formal patch.
 
-Thanks for testing it,
-Maurizio
+BR,
+Jani.
+
+
+Cc: linux-kbuild@vger.kernel.org
+Cc: dri-devel@lists.freedesktop.org
+Cc: intel-xe@lists.freedesktop.org
+Cc: intel-gfx@lists.freedesktop.org
+Cc: Masahiro Yamada <masahiroy@kernel.org>
+Cc: David Airlie <airlied@gmail.com>
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: Lucas De Marchi <lucas.demarchi@intel.com>
+
+Jani Nikula (5):
+  drm: place header test files in .hdrtest subdirectories
+  drm/xe: place header test files in .hdrtest subdirectories
+  drm/i915: place header test files in .hdrtest subdirectories
+  kbuild: hdrtest: place header test files in .hdrtest subdirectories
+  drm: add config option for extra build-time checks
+
+ drivers/gpu/drm/Kconfig       | 21 +++++++++++++++++++--
+ drivers/gpu/drm/Makefile      |  6 +++---
+ drivers/gpu/drm/i915/Makefile |  6 +++---
+ drivers/gpu/drm/xe/Makefile   |  6 +++---
+ include/drm/Makefile          |  6 +++---
+ usr/include/Makefile          |  4 ++--
+ 6 files changed, 33 insertions(+), 16 deletions(-)
+
+-- 
+2.39.5
+
