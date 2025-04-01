@@ -1,182 +1,124 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2785420E32B
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 20:43:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CC9220E32B;
+	Tue,  1 Apr 2025 20:43:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743540197; cv=none; b=ttnhUb73dddL+73S1dOSpt+3YOU83uYdlsJ9AdpJx7WnPVbDNWWRJrYCAypSqojQVTQWt+hK4fynHN9H+3IQCGZeknwH9gVlOVMOtD+nw4+SaIv1n3LG0bLyNk4nyLLaDg5YAzjexqClCN6YqYdhMjKNyBMT563jr8OHqF1PyBI=
+	t=1743540208; cv=none; b=YIIyrUED0iIL1tbvA05BNKV8eD3ByuIU9rgR20eedpgORRdf9XQWH7aJarBNCKpkD0Um5U7pyYkdTM0dGKAfESldHd4rDoSRiKs8VWoXoovyTmZAnEY8H4cUbHwVtJTn8vRz3EQP/5QfygINikYqdlHOdE6Aeu9VZr5gLNI7p6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743540197; c=relaxed/simple;
-	bh=dnaPgtw+uOGzBc9Q8I5K46IpAnL+zbk7+D3CpS8e/LA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Cn3kKGhXpMN4Gz2iRg/DfCfdpc7k2rrT3AGhj2dfVbmrjfmVzl1Go5amixb4H0VHbyl7uRPjikFqkBcYJ3/mx3yaFQcKYS0GH/WI5WN0SuoEDn7US47ckROpOetCkroHzXcpwR5qioSBS8j6M0zOdXHT25Tr7G+26ZNoV3f/DXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=fZFpWTWS; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1743540208; c=relaxed/simple;
+	bh=zQhKR8kVOAEtr8R3vm7SqBVF3sJt9l6H/kz5zrldLtk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DO96ICoYCqIZ/y+Bpbd2GlBAS8FQw7LjKI1FPt69T33i9PmHJ3ILRvNaM+yrm8SLQhhDQsdFH5N9dSuxIsXfQzgXM4EUM1y0u/Lc/+SaAD7EmBrelQFNj6rww1v+gMieHS46BR+0373OBefvo8BWYs2IQVHFnA0Boi2x5toMFMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EtIJ4ee8; arc=none smtp.client-ip=209.85.208.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="fZFpWTWS"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-223fb0f619dso113824945ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 13:43:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EtIJ4ee8"
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-30dd5a93b49so40446891fa.0;
+        Tue, 01 Apr 2025 13:43:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1743540193; x=1744144993; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=4N9bSikoL2WjOyo56gwXGKLK2uNMMUkoiqCVV5Eb9wg=;
-        b=fZFpWTWS8HhwdI5Ym/mjDljw9C1hqCwbk4YdfL/HpVQpc0Pt6EF0JvWNjJT57bING6
-         fT/pZYPaDZ6VqCRcAtDSZueS5vg1m4cvgaCj0PEvTvI6orMQXEvrfnDTqgZLEjWw7maq
-         40QDtAoMGeAxnAoLlOL6RlLZoU3G34Uwi1lLo3Bu0zjHojKck9dkLF4xbQWO/+CebJns
-         1kksfmMiBuKREqswVQrsHm/2k3OwTDs3wPzyxGIyWTz6NkqfVTv0U4QIQViJNgjB/KVS
-         ZANaRHoBVnc58D65EfLAKkvCw+V9Z/OqnTcD/7+OTxpvPJ8xfn9wZLlmIdjhl5gQoE8x
-         VMXA==
+        d=gmail.com; s=20230601; t=1743540204; x=1744145004; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ncjIuT5qgvMbEBzrNid23ot35c1++uRBRoVD3rabhTU=;
+        b=EtIJ4ee8pUdS5iu5UvRHsMuLig308qB3C9KbcsQLS8MSP8t9nwIx00+t67F62KEEBO
+         cWM0PrJXffgonT8C26Yma1py09wL3M45IOc3P5sCFkp1i78IFBCuGynzzPCbv/ndfc57
+         msrZTSYCVWgahRVXs5tKJcTljiiUsshP6BF6EfFNxka2X6RFylsBkPpqrIiwkwER7k8U
+         mTOkba/j1G3+LlRmxjtmLWC+z7l8kSb/WrvfvNLd3OcPtnQh8y6ydqdQwHFh3rOOQpEO
+         oHH6oioD0geCseQ3rUxLrwLamxE4/KwZA6x0dRmgf/r1hdiYSNPROfi4/G6UOWncaRHd
+         kPlA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743540193; x=1744144993;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4N9bSikoL2WjOyo56gwXGKLK2uNMMUkoiqCVV5Eb9wg=;
-        b=b7puWjJiFoirDcpaGPj7xoK78aSsJURVGpleom5JulZqwdcNjFZbwaKuQlveUbWgdf
-         IywkSS6UIec4FgPp/xEKdVXjVZJhp7dNfimIGs3p30TgxPtGD1l2vNnLidIF6imKEI0x
-         ThGqHg78o/nVSjN3g/ZgYEknA+Tf07QPd2AIgiD6Y9ldrbyh/u97d7dhfdVI+eukiyTm
-         i3BvSr4cUt6zFsZ+TpS6y1kQb2X8zcCMDTNYUdh4bENGsV4yD9WRXUkVaMB/JNmdy1Oa
-         ojLmIzVeH2SCKeLKF8MF0qITbbG5KPSqCumZmQwr3hX2i3edUdFhg4oGb3fLYk5tH3Ud
-         pNeQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXCkHcWp86vs51GfWQxZp5B25TcDpNb3DgqcHd7Py1IJQ1Bim4b5zJDoA1Yax2WoyoqHjtKYN8QTZGzhCI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyckx7v+TtarVNvtbCW2hupJnYV0+/dDM9L31twRK0UrCA3HfyE
-	dig1Q23IsDZC0zajL5Cy+T81N1yyoKm09wBZput3KfpBPndqFOmKrfUTYc2eunM=
-X-Gm-Gg: ASbGnct96wJPAX1Gpzik8LJyzih/pR+SEGSWiqAOdnlKOWZIhT4s9VdKmTAwXshpJaF
-	K17TUF5tIH0/AgBX6ohFQumQNtgjocCgkeMDcVaFgSXXZc6R1Z2TwfJhhHXM51N8tEXJ44RUj3O
-	UcpxH+qp75+dUANIxMC792FdFBnrBVaBKD0xO5CM19zl3zthF1FqMazHJDs/wk+WlYoNJd200kB
-	a5i6m+nCjkXK7MNXN3hWPEZIRWujKLURUMQf3ZnNC5uxINOavLuAj2ku+sgscrkwbhJQRpO8zhH
-	9wJ33rgmca+2KJy5bsTaS6VVtabTLxLrwFo=
-X-Google-Smtp-Source: AGHT+IEK/OL+9Kd9LZbi6kJp9eomm5A9lXwmWj+SEPjmTfabDnSjH/xtw6UkP02pfgtMx4rN8zRqyg==
-X-Received: by 2002:a17:902:c411:b0:220:f7bb:842 with SMTP id d9443c01a7336-2295c0ed243mr67067595ad.42.1743540193373;
-        Tue, 01 Apr 2025 13:43:13 -0700 (PDT)
-Received: from ghost ([50.145.13.30])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291f1cde55sm93609305ad.132.2025.04.01.13.43.11
+        d=1e100.net; s=20230601; t=1743540204; x=1744145004;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ncjIuT5qgvMbEBzrNid23ot35c1++uRBRoVD3rabhTU=;
+        b=nkIFohfO8zOeO5KxsiphauVcHRMRUAIbBhVxHZigKHSjKqQgi5dzJCmE0SFVHca5rz
+         3FQ72fhe1UgKvadtePzaVztaNZCBXmgffdlJBeWKt2AhWVBTBfZmmajZODJWOZ18sT6c
+         5BmHnFtK0BAV0vF8e5OYHinALPd7h0+QSAJVzoWSYE6JXSwCd56xT7hBd61byWrwwoe3
+         uAkkoJmfBmxYh9wuYzmOAIwLi6U1edRh2HHVGZNuOkX8PJ9G5Xyt7uVXczJZwP3ifJzc
+         aOe2nVhoY0PzGLAUQE/OHxl18m3/qzPOP007C+nwb28pSfA6l7fayD/H/2wuaCwqKdrt
+         VGNA==
+X-Forwarded-Encrypted: i=1; AJvYcCV1s4sdO5uNd/xm41H3+b052sfitkYkXK80sQmUrmlwQvYAkWdAGY6gz4N1kMNoWPkPvLZpWNQDgKqS7edL@vger.kernel.org, AJvYcCVEfKxjSTAp6klBX9+d/SVZt6vZkkGZZjMXuMgR8k4HjhnnOsCyPLYEd8W2zsCrLXjB6VG7ehDLPsp6zLg=@vger.kernel.org, AJvYcCVPzJGFJI0Add/pvuvF5w7vzJsMIMvTGOHBcRTVrll2zMq0bWcTbNTlGqrZmjLEIF6pFb4BUEHxgVyhTshq@vger.kernel.org, AJvYcCWlw+nAgPMeUOxFgMwvO1C/ZzoengDq3STafb+0D/CDWcfnsFJ52hSuYybSEY6BMlo3ni29yAAt@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJ5MmyjkI6NdhP8u1Jo4aC/2bzuk33fDtQrHGDnpBRoejO7Ozk
+	pFzUIde4aXUprYC7sYsNeanY5b1H7OyYxEMV2t6y0lE0FKk19nUz
+X-Gm-Gg: ASbGncuulTOyEU4bwklovXrVn+5RUqiRoE81LhAjD9aUkrqEw021ejy8IRWaBHOOK4L
+	U98I3vfNsBD9wh5qjJmpJrBYDFHBgINJt52WnZAWRw7QrmrHsH6f/A0bDsD2eEwx9aTosyAm0oP
+	USKI9nSUpg/Cmy0598VtnT4dVo3MEnL54cp90syiIMO3yCyHmiAzvHD2cuLUbFypsv+Xrooloh/
+	m4sojEWno1uaNjSUdmjEC1BhoL4hm/b0+Qwxx3YOk+p2jgAHIjylQnc1pQQw0jw7jy7Dbk2+PoB
+	Q64gDz/oA9gCh0LD3OP5x+Rhfnk4hxak1ZXWlpqPrPgkd3uH9zvrIdbeO/LFTDMxi6jjnw==
+X-Google-Smtp-Source: AGHT+IELNpGF2l/VAeH0aVpMUHnDd9JFi7xa5NDaI1mW4wUTHj9x8t8WdiqPNbT5mJBgMSpH5VHtxQ==
+X-Received: by 2002:a05:651c:1602:b0:30b:b184:a8ef with SMTP id 38308e7fff4ca-30de024b43cmr43726451fa.14.1743540203883;
+        Tue, 01 Apr 2025 13:43:23 -0700 (PDT)
+Received: from localhost.localdomain ([87.249.25.136])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30dd2ab8581sm18308161fa.25.2025.04.01.13.43.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Apr 2025 13:43:12 -0700 (PDT)
-Date: Tue, 1 Apr 2025 13:43:08 -0700
-From: Charlie Jenkins <charlie@rivosinc.com>
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Ben Dooks <ben.dooks@codethink.co.uk>,
-	Pasha Bouzarjomehri <pasha@rivosinc.com>,
-	Emil Renner Berthing <emil.renner.berthing@canonical.com>,
-	Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Jason Baron <jbaron@akamai.com>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v10 2/2] riscv: Add runtime constant support
-Message-ID: <Z-xP3M7-GSUCHQkb@ghost>
-References: <20250319-runtime_const_riscv-v10-0-745b31a11d65@rivosinc.com>
- <20250319-runtime_const_riscv-v10-2-745b31a11d65@rivosinc.com>
- <20250401192833.GA3645424@ax162>
+        Tue, 01 Apr 2025 13:43:22 -0700 (PDT)
+From: Evgeny Pimenov <pimenoveu12@gmail.com>
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Evgeny Pimenov <pimenoveu12@gmail.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Venkata Prasad Potturu <quic_potturu@quicinc.com>,
+	Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>,
+	linux-sound@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	lvc-patches@linuxtesting.org,
+	Fedor Pchelkin <pchelkin@ispras.ru>,
+	Mikhail Kobuk <m.kobuk@ispras.ru>,
+	Alexey Khoroshilov <khoroshilov@ispras.ru>,
+	stable@vger.kernel.org
+Subject: [PATCH] ASoC: qcom: Fix sc7280 lpass potential buffer overflow
+Date: Tue,  1 Apr 2025 23:40:58 +0300
+Message-Id: <20250401204058.32261-1-pimenoveu12@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250401192833.GA3645424@ax162>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 01, 2025 at 12:28:33PM -0700, Nathan Chancellor wrote:
-> Hi Charlie,
-> 
-> On Wed, Mar 19, 2025 at 11:35:20AM -0700, Charlie Jenkins wrote:
-> > Implement the runtime constant infrastructure for riscv. Use this
-> > infrastructure to generate constants to be used by the d_hash()
-> > function.
-> > 
-> > This is the riscv variant of commit 94a2bc0f611c ("arm64: add 'runtime
-> > constant' support") and commit e3c92e81711d ("runtime constants: add
-> > x86 architecture support").
-> > 
-> > Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
-> > Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
-> ...
-> > diff --git a/arch/riscv/include/asm/runtime-const.h b/arch/riscv/include/asm/runtime-const.h
-> ...
-> > +#define RISCV_RUNTIME_CONST_64_ZBA				\
-> > +	".option push\n\t"					\
-> > +	".option arch,+zba\n\t"					\
-> > +	"slli	%[__tmp],%[__tmp],32\n\t"			\
-> > +	"add.uw %[__ret],%[__ret],%[__tmp]\n\t"			\
-> > +	"nop\n\t"						\
-> > +	"nop\n\t"						\
-> > +	".option pop\n\t"					\
-> ...
-> > +#if defined(CONFIG_RISCV_ISA_ZBA) && defined(CONFIG_RISCV_ISA_ZBKB)
-> ...
-> > +#elif defined(CONFIG_RISCV_ISA_ZBA)
-> > +#define runtime_const_ptr(sym)						\
-> > +({									\
-> > +	typeof(sym) __ret, __tmp;					\
-> > +	asm_inline(RISCV_RUNTIME_CONST_64_PREAMBLE			\
-> > +		ALTERNATIVE(						\
-> > +			RISCV_RUNTIME_CONST_64_BASE,			\
-> > +			RISCV_RUNTIME_CONST_64_ZBA,			\
-> > +			0, RISCV_ISA_EXT_ZBA, 1				\
-> > +		)							\
-> > +		RISCV_RUNTIME_CONST_64_POSTAMBLE(sym)			\
-> > +		: [__ret] "=r" (__ret), [__tmp] "=r" (__tmp));		\
-> > +	__ret;								\
-> > +})
-> 
-> This breaks the build for clang versions 16 and earlier because they do
-> not support '.option arch' and it is used in CONFIG_RISCV_ISA_ZBA, which
-> has no dependencies and it is default on.
-> 
->   $ make -skj"$(nproc)" ARCH=riscv LLVM=1 mrproper defconfig fs/dcache.o
->   fs/dcache.c:117:9: warning: unknown option, expected 'push', 'pop', 'rvc', 'norvc', 'relax' or 'norelax' [-Winline-asm]
->           return runtime_const_ptr(dentry_hashtable) +
->                  ^
->   arch/riscv/include/asm/runtime-const.h:103:4: note: expanded from macro 'runtime_const_ptr'
->                           RISCV_RUNTIME_CONST_64_ZBA,                     \
->                           ^
->   arch/riscv/include/asm/runtime-const.h:57:17: note: expanded from macro 'RISCV_RUNTIME_CONST_64_ZBA'
->           ".option push\n\t"                                      \
->                          ^
->   <inline asm>:32:10: note: instantiated into assembly here
->           .option arch,+zba
->                   ^
->   fs/dcache.c:117:9: error: instruction requires the following: 'Zba' (Address Generation Instructions)
->           return runtime_const_ptr(dentry_hashtable) +
->                  ^
->   arch/riscv/include/asm/runtime-const.h:103:4: note: expanded from macro 'runtime_const_ptr'
->                           RISCV_RUNTIME_CONST_64_ZBA,                     \
->                           ^
->   arch/riscv/include/asm/runtime-const.h:59:30: note: expanded from macro 'RISCV_RUNTIME_CONST_64_ZBA'
->           "slli   %[__tmp],%[__tmp],32\n\t"                       \
->                                         ^
->   <inline asm>:34:2: note: instantiated into assembly here
->           add.uw a2,a2,a3
->           ^
->   ...
-> 
->   $ rg 'OPTION_ARCH|ZBA' .config
->   364:CONFIG_RISCV_ISA_ZBA=y
-> 
-> Should it grow a dependency on AS_HAS_OPTION_ARCH or should there be a
-> different fix?
+Case values introduced in commit
+5f78e1fb7a3e ("ASoC: qcom: Add driver support for audioreach solution")
+cause out of bounds access in arrays of sc7280 driver data (e.g. in case
+of RX_CODEC_DMA_RX_0 in sc7280_snd_hw_params()).
 
-This should have been fixed by Alex's patch [1]. Zba is in an awkward
-state because BPF generates Zba code without the need for toolchain
-support.
+Redefine LPASS_MAX_PORTS to consider the maximum possible port id for
+q6dsp as sc7280 driver utilizes some of those values.
 
-[1] https://lore.kernel.org/all/20250328115422.253670-1-alexghiti@rivosinc.com/
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
 
-> 
-> Cheers,
-> Nathan
+Fixes: 77d0ffef793d ("ASoC: qcom: Add macro for lpass DAI id's max limit")
+Cc: stable@vger.kernel.org # v6.0+
+Suggested-by: Mikhail Kobuk <m.kobuk@ispras.ru>
+Suggested-by: Alexey Khoroshilov <khoroshilov@ispras.ru>
+Signed-off-by: Evgeny Pimenov <pimenoveu12@gmail.com>
+---
+ sound/soc/qcom/lpass.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/sound/soc/qcom/lpass.h b/sound/soc/qcom/lpass.h
+index 27a2bf9a6613..de3ec6f594c1 100644
+--- a/sound/soc/qcom/lpass.h
++++ b/sound/soc/qcom/lpass.h
+@@ -13,10 +13,11 @@
+ #include <linux/platform_device.h>
+ #include <linux/regmap.h>
+ #include <dt-bindings/sound/qcom,lpass.h>
++#include <dt-bindings/sound/qcom,q6afe.h>
+ #include "lpass-hdmi.h"
+ 
+ #define LPASS_AHBIX_CLOCK_FREQUENCY		131072000
+-#define LPASS_MAX_PORTS			(LPASS_CDC_DMA_VA_TX8 + 1)
++#define LPASS_MAX_PORTS			(DISPLAY_PORT_RX_7 + 1)
+ #define LPASS_MAX_MI2S_PORTS			(8)
+ #define LPASS_MAX_DMA_CHANNELS			(8)
+ #define LPASS_MAX_HDMI_DMA_CHANNELS		(4)
+-- 
+2.39.5
