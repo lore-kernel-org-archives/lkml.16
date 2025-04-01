@@ -1,83 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 578671DBB2E
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 20:43:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D1BD14AD20
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 20:46:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743540233; cv=none; b=HjBWZgJ5dc15EmEWQERKT6PsRPzLJV5GbwRqDTqqeTE25fK//OUVXGxs6jWF7D37UMtnpS/cHl3I3Bu+JU/iVgZTeA7OsthIZ52VkOliVaoP9QGAkhBRQo0O4F/6O/3b8G0V/fu8XhxTyqJI2APmEfAN72s87fCiLkiKvmtgTv8=
+	t=1743540410; cv=none; b=Hq4gFJx3v6X3vxUV8Avn3KCplKJoSfCtytTNKggsRymOWcphe4IZC9JXO5duViCyZvFoJHDxipcFv/uf9C3BicJLueNxnTcxrnDk9yZNibKOSA8kzJsbGQaPgoN1kS8MANjw+V6cWPm44qcXDwXMbvgY+xQrzk3h2A3YaCehoyo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743540233; c=relaxed/simple;
-	bh=bxyJ0jm80x+23shdlsiqZktOEhqH/Xwg39wGtJJIclg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Dy5KzmpjEGiy4FdKFv27EqpedD9sZ1EiIZ+OwOc6YbkbJJrC+8y9gM+6Fb2pHRb92m9dBnCGwPVBFeG4hNhopISLh6KO0P3MkvF7agJ27xeMiOnwiXHGuS2f2YsWw/Zffbt8u7aL2HK2k316Sb3FTMG70zbbjCR2p1eKfhyAIjI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SBcsO2oX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743540410; c=relaxed/simple;
+	bh=HguwUdRio9Y+H4KEWTlofD2YbvLXz+Jv8pweJItO0h0=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=Ze9I+qMO21xrKHa2EriU0zsB754R+Dfer3P8+TYvRKnT0UdbbabI7wLBEahqEK8Lp29wy/DiZ3nnLtUwjz/EsnSCeqSTuFoTFtG1SvHlr6LKZ321WumzoQ3DQN+iZammnus96uGjfm82SdmjKB7g7eBYj8lZdCH7FdOLYYJF2a4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GQK+h8Gf; arc=none smtp.client-ip=209.85.214.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SBcsO2oX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9D03C4CEE4;
-	Tue,  1 Apr 2025 20:43:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743540232;
-	bh=bxyJ0jm80x+23shdlsiqZktOEhqH/Xwg39wGtJJIclg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SBcsO2oXOhdtq+/FXdC+YtfpA96biVKM8pFYbTrR8uHCiFhPUxKu0QLfJTun1RBrs
-	 ZcJvk5f8qt6N1fkuu0xGIgjp0LzmS1fz8/cXHCTDd0YGTVcTJL4jT2lnGpN8ZDpGld
-	 nPIi4SymERxa8h5gFur9oeEvNRE59L5pu2sIrvu/7ugnpuVO3kEcfcJwsg87p43Hp/
-	 Ei85FdtEFVmWIShE3FTUpRu2pY3M9hgPWTX68ZBKMFylozj5Kxv2vZKWqUDiUuS4Yi
-	 PSmar83uwY4ND0jDwj7DtQatb/Ccj98Ezr8XGWK4FBQW4I/u9a1vBIFA8rfIiTaxDi
-	 8GuKhmWMAFcyQ==
-Date: Tue, 1 Apr 2025 22:43:47 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Mateusz Guzik <mjguzik@gmail.com>
-Cc: mingo@redhat.com, x86@kernel.org, linux-kernel@vger.kernel.org,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Uros Bizjak <ubizjak@gmail.com>, "H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [PATCH] x86: predict __access_ok() returning true
-Message-ID: <Z-xQAyPxQGvlg_hd@gmail.com>
-References: <20250401203029.1132135-1-mjguzik@gmail.com>
- <Z-xOFuT9Sl6VuFYi@gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GQK+h8Gf"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-22651aca434so112599175ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 13:46:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1743540408; x=1744145208; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4MHpp6KQzpe5YT4W+dH4Yie0ZZwtXZwZK/jMYGNOWeg=;
+        b=GQK+h8GfJAFn38LojnQONdRXGomd60Wn7D6+JLNdev+VT7Cqc0KAXRfuMQrcomWoPl
+         EQM0grp80jTV0AtTPUGhI/6oo+d09w9oVALMgWF1i83/1C6FAIATHjAspWy+C6dRFmXD
+         S2t1BKGH1Ta+H4YJOrTpEsgKTtu0veZqb3Qc5WWnni2m9kmQH9PECJ1C4qhkElsldDgU
+         r4C7+EFMmzgtFVLhScWYU9CjBoMTiGrKyv6Gu55pfOYNJVJSdRcOSV/rDG9wado3LWyE
+         Nty3LXCl868mFn61yuN0m5KcZ9+rW0iYU1kwPXIYqUPWXdgtR3RvXJUGXQLaUN7MUEQg
+         gO5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743540408; x=1744145208;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4MHpp6KQzpe5YT4W+dH4Yie0ZZwtXZwZK/jMYGNOWeg=;
+        b=A5so7sbKMnoYZi+b9ghULOcAEFoWfA48pXsO/NzOSgWOPAXrwc97DxZSkPorQgprBW
+         qmtRtVbJQkc3e0UB6UxVo7W5//2zQJ4BXhM9CWPRbJIP+q5D4ss8KveS7b+rgcFwYfS9
+         85cEr8MVXYkY4hQha6H6/9dhE4MPWrmovqcy990lknjSTyiOygidin9XkyR85wVdCRdo
+         v5JwDcl6vH6DcjXuF2vQr/2PUmgE9/al/YEyLYBNYWarQke5mdwdK+lPvF+8d8jzYrCI
+         T924TB9oc6JtIl1mcmPVfu4SDQpWnKnsbvx8CB8ozxaLmvS/vnhRuM87tqskKaBxXLyU
+         kZVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX9jXN6RUtYCEirXhadwGnbdlYoGC2Wld67+wCv1jX106N2CxW+BjjZJIJiQPf3pmXVAvAmvlsmL3vRCPw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwROxDR0kStYUbQLbjLib6a+AIfe04KTxMQFtgppSf8+jCFWqG4
+	k0XIFD5U6sm3QIZY1Z6PBsTRvmQZzIl4uRm4wEKV1MLEeUEWz4/xAj8VPKhc0U/D2X4YLwpcgcA
+	s4Q==
+X-Google-Smtp-Source: AGHT+IHAsBNwKlX/xhMaBjKbVn5TdC1aApjFgyzFqGqs5j7Zym3fz03OLRDWDWGVCV86OCx3ObyBflUf12E=
+X-Received: from pfbls13.prod.google.com ([2002:a05:6a00:740d:b0:737:5ee8:8403])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:3d51:b0:739:50c0:b3fe
+ with SMTP id d2e1a72fcca58-73980380c52mr22298727b3a.8.1743540407837; Tue, 01
+ Apr 2025 13:46:47 -0700 (PDT)
+Reply-To: Sean Christopherson <seanjc@google.com>
+Date: Tue,  1 Apr 2025 13:44:12 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z-xOFuT9Sl6VuFYi@gmail.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
+Message-ID: <20250401204425.904001-1-seanjc@google.com>
+Subject: [PATCH 00/12] KVM: Make irqfd registration globally unique
+From: Sean Christopherson <seanjc@google.com>
+To: Paolo Bonzini <pbonzini@redhat.com>, Ingo Molnar <mingo@redhat.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, 
+	Vincent Guittot <vincent.guittot@linaro.org>, Marc Zyngier <maz@kernel.org>, 
+	Oliver Upton <oliver.upton@linux.dev>, Sean Christopherson <seanjc@google.com>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
+	linux-riscv@lists.infradead.org, David Matlack <dmatlack@google.com>, 
+	Juergen Gross <jgross@suse.com>, Stefano Stabellini <sstabellini@kernel.org>, 
+	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
+Content-Type: text/plain; charset="UTF-8"
+
+Xen folks, I Cc'd y'all because "sched/wait: Drop WQ_FLAG_EXCLUSIVE from
+add_wait_queue_priority()" changes the behavior of add_wait_queue_priority(),
+which Xen's privcmd uses.  Unless I've misread the code, the Xen behavior
+isn't actually affected, but extra eyeballs and any testing you can provide
+would be much appreciated.
 
 
-* Ingo Molnar <mingo@kernel.org> wrote:
+Rework KVM's irqfd registration to require that an eventfd is bound to at
+most one irqfd throughout the entire system.  KVM currently disallows
+binding an eventfd to multiple irqfds for a single VM, but doesn't reject
+attempts to bind an eventfd to multiple VMs.
 
-> It's also the right place to have the hint: that user addresses are 
-> valid is the common case we optimize for.
-> 
-> Thanks,
-> 
-> 	Ingo
-> 
->  arch/x86/include/asm/uaccess_64.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/include/asm/uaccess_64.h b/arch/x86/include/asm/uaccess_64.h
-> index c52f0133425b..4c13883371aa 100644
-> --- a/arch/x86/include/asm/uaccess_64.h
-> +++ b/arch/x86/include/asm/uaccess_64.h
-> @@ -54,7 +54,7 @@ static inline unsigned long __untagged_addr_remote(struct mm_struct *mm,
->  #endif
->  
->  #define valid_user_address(x) \
-> -	((__force unsigned long)(x) <= runtime_const_ptr(USER_PTR_MAX))
-> +	likely((__force unsigned long)(x) <= runtime_const_ptr(USER_PTR_MAX))
+This is obvious an ABI change, but I'm fairly confident that it won't
+break userspace, because binding an eventfd to multiple irqfds hasn't
+truly worked since commit e8dbf19508a1 ("kvm/eventfd: Use priority waitqueue
+to catch events before userspace").  A somewhat undocumented, and perhaps
+even unintentional, side effect of suppressing eventfd notifications for
+userspace is that the priority+exclusive behavior also suppresses eventfd
+notifications for any subsequent waiters, even if they are priority waiters.
+I.e. only the first VM with an irqfd+eventfd binding will get notifications.
 
-Should we go this way, this is the safe macro variant:
+And for IRQ bypass, a.k.a. device posted interrupts, globally unique
+bindings are a hard requirement (at least on x86; I assume other archs are
+the same).  KVM and the IRQ bypass manager kinda sorta handle this, but in
+the absolute worst way possible (IMO).  Instead of surfacing an error to
+userspace, KVM silently ignores IRQ bypass registration errors.
 
-   #define valid_user_address(x) \
-	(likely((__force unsigned long)(x) <= runtime_const_ptr(USER_PTR_MAX)))
+The motivation for this series is to harden against userspace goofs.  AFAIK,
+we (Google) have never actually had a bug where userspace tries to assign
+an eventfd to multiple VMs, but the possibility has come up in more than one
+bug investigation (our intra-host, a.k.a. copyless, migration scheme
+transfers eventfds from the old to the new VM when updating the host VMM).
 
-But this compiler bug sounds weird ...
+Sean Christopherson (12):
+  KVM: Use a local struct to do the initial vfs_poll() on an irqfd
+  KVM: Acquire SCRU lock outside of irqfds.lock during assignment
+  KVM: Initialize irqfd waitqueue callback when adding to the queue
+  KVM: Add irqfd to KVM's list via the vfs_poll() callback
+  KVM: Add irqfd to eventfd's waitqueue while holding irqfds.lock
+  sched/wait: Add a waitqueue helper for fully exclusive priority
+    waiters
+  KVM: Disallow binding multiple irqfds to an eventfd with a priority
+    waiter
+  sched/wait: Drop WQ_FLAG_EXCLUSIVE from add_wait_queue_priority()
+  KVM: Drop sanity check that per-VM list of irqfds is unique
+  KVM: selftests: Assert that eventfd() succeeds in Xen shinfo test
+  KVM: selftests: Add utilities to create eventfds and do KVM_IRQFD
+  KVM: selftests: Add a KVM_IRQFD test to verify uniqueness requirements
 
-Thanks,
+ include/linux/kvm_irqfd.h                     |   1 -
+ include/linux/wait.h                          |   2 +
+ kernel/sched/wait.c                           |  24 +++-
+ tools/testing/selftests/kvm/Makefile.kvm      |   4 +
+ tools/testing/selftests/kvm/arm64/vgic_irq.c  |  12 +-
+ .../testing/selftests/kvm/include/kvm_util.h  |  40 ++++++
+ tools/testing/selftests/kvm/irqfd_test.c      | 130 ++++++++++++++++++
+ .../selftests/kvm/x86/xen_shinfo_test.c       |  21 +--
+ virt/kvm/eventfd.c                            | 130 +++++++++++++-----
+ 9 files changed, 299 insertions(+), 65 deletions(-)
+ create mode 100644 tools/testing/selftests/kvm/irqfd_test.c
 
-	Ingo
+
+base-commit: 782f9feaa9517caf33186dcdd6b50a8f770ed29b
+-- 
+2.49.0.504.g3bcea36a83-goog
+
