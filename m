@@ -1,142 +1,161 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A960A20469A
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 16:00:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD82F59B71;
+	Tue,  1 Apr 2025 16:00:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743523227; cv=none; b=qzDnTMFjyXG43lLYI0y/MN/9VMdvyZJXdfYRw5hyevQOoO2J5K3/wr9sR19pMq++GF3YiMawE0J462Bm140OEbgU0JVdjmoc4Xe8y6muoXp7wEEzFGSI9lYp42swNbPdCMiNjHAGR0cwHX8GbpZe0N16LUm0vtk+6/mBZyAapLE=
+	t=1743523227; cv=none; b=GsUuwUMrcFNNHs+6xX9+TiFnY0kaveJzFXBWjPNmvXcu+6kWmSkVL0nqbwreoiMcp+a+jRN2uCsBcUFicAGSr47KAtrB+YV9ZgDYEOyZ4yZbhwkf8p2akr9AZg+0IK0ygjazwGAKj4StqE4Z7ybrNGhLo5rzY1U4pfiX1I1ehyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1743523227; c=relaxed/simple;
-	bh=QqEUdEqyZaXoYp93bkORWrF73OCbCV+oWE3RpPznNDc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NwgwAXQfNM/rAmz5XImMBhE70is3+tQPM/XR/TSfv7c5VINCoZ0TJ+sl2P8KxsHkQ/sZTHGyczluPbUE4KiCsRI+4FK8rCoeGu696MAoikGfES06ty8WFXg0oYnEsWlp3beKSzQVEBKPOFmiRBoyLtLlbZeZYd0/+HUx+4GE944=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=LNlR9ENf; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	bh=lzXvjhNF+5uNT5xjvOP/ET44+QdV0rVIa5hvDb0wIVE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LlWNAco109P85cGWI11eH37nB2gDr42rGoFLTT2U3c8S6Zirf9zWBa9zNS2jD/aWv+jlLeOttdcF+6DFuE8TS60bg+fdMaVAP2Oj3lg504MhwNkwBm2N6XhhdNNC6MckrnlQNvyJ2dE0ZnoCLiEbPX6EMpf+d8KL9boEK5WOVFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BxRDrn/Q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="LNlR9ENf"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ac29af3382dso909214466b.2
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 09:00:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1743523224; x=1744128024; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=8GiPjzGtcKFBBJ6BxSCUQklK8yGDaLBUf6bpExJ4Ry8=;
-        b=LNlR9ENfTcbIJy0HtXJp8vmCsQNi1QLCrVjPD1nG1wN+4B1atIQ8J7P8NNrTXgmXI3
-         CiMHz0ebjWwU95SsNA2b9ZgMBSA0saIy/dZF+G13YSpv5DGCmg9NBNQMe5d9Hkf84E89
-         zMOyt75I1nB2unvmhU+iMq10/D6hl9Ub+QuSNxL1s32S59g7uUFXp5OW2pSrLyQcPOMA
-         yEKb6aAOtJRvEhUCp1ftCqcBCuZcngM6tnLR8Iarmm5QGWb67KwCr/FLS+19FwSM94Si
-         KxYbWiWYq4d1ljT/H9l9mFYEsH7Xl4gnHGJ6HDaKWcc7ouOpmptt5eRuBzd7ndzoE0Zv
-         hghw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743523224; x=1744128024;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8GiPjzGtcKFBBJ6BxSCUQklK8yGDaLBUf6bpExJ4Ry8=;
-        b=YlOtknkSoFdlcDAqUYSLsZLdLQsPIvMd0wtkYAFdz9xtIfEYJg0HkeMV7gnZj+Zlsg
-         f5gWswRhp4+kSpilSWkqdFMAEzt/kdNFi8tLUAezhCPV2bEJX+N772CThXmMCrpmLGYH
-         +27OGVBT+ss80vbdhsqt4Y2wiA4x5qnllzuaTdBALXcRwvCe45nSrPkTgUNy9dIA8DaT
-         XrzeM5D3pvQIrov4gtSfzhsEE8RodLNpjG2/rResDoYMTrUw2A/+KSwxaNGrh2y/FKLq
-         LzqPZd1wa+yOB6A+yUW9Ni2cGKpw2SJmmqe1Yl7ztZxPkDhmtM9pRYh0M7BW7QwcYMs+
-         XLvA==
-X-Forwarded-Encrypted: i=1; AJvYcCXnUZ7FzQo41UR3r/ras+zHCbnUwF+X7I2bexsw3IbNJNKwXhkVgDJovfEAacSVyLJ6TKStbQbTspS3d1k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YztOt6qIcBx0cZXyk/TSbu7DFo+evrR3WPBBdsWe1ubnkJCAFWg
-	vvjvFxS2Lodug2W6mJpFaqzcZuWQ0p2OUtbEk7Lhjzfy5+wQ4/RPTypqXzCo+Ps=
-X-Gm-Gg: ASbGncuy+Obv9FXYaPrBCs/IWE8Xz/VgfqTqMzLk+xxNL91KrFXvsYEJ0Z3eUx7MTYr
-	mHrayaFYxdi72NLC5hlYmnORT5PAUmdAWMCxPDsH6LWLof+WMtNNoScvI5LxQnuLYbNMYyr/wjZ
-	a3OwMHGTF/hoDeCLGDU5+rgskt32CeULydWklMQb+MvmXIwga5CEMZyttoft6ejcGKMe97gLe9D
-	o1MsDaHuPxellH59jjxDHa3Y+LVV4dTOmgVrnuSiMdhScy/LO1lkwNGlJ+90XBs1Zp3P6VWef/x
-	qNiqmYZWINvenmeTYmpWRIGx55CcsQXRI/1NKNfWdmCs92NTsCy0EIx/1juL
-X-Google-Smtp-Source: AGHT+IGGhiXNqRzyHtTj0NAIXIGvE9xMerOYHkQi/TV8Lg/UZ3Deb1FG5nKQNXm8mF8W2zKnsNuGYA==
-X-Received: by 2002:a17:907:d89:b0:abf:75d7:72a2 with SMTP id a640c23a62f3a-ac738be70a3mr1082249266b.38.1743523223808;
-        Tue, 01 Apr 2025 09:00:23 -0700 (PDT)
-Received: from [192.168.0.20] ([212.21.159.224])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac71971bf3fsm777015766b.182.2025.04.01.09.00.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Apr 2025 09:00:23 -0700 (PDT)
-Message-ID: <b98a0890-dbe1-42c9-a43e-2f30a06ca21c@suse.com>
-Date: Tue, 1 Apr 2025 19:00:21 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BxRDrn/Q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE326C4CEE4;
+	Tue,  1 Apr 2025 16:00:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743523227;
+	bh=lzXvjhNF+5uNT5xjvOP/ET44+QdV0rVIa5hvDb0wIVE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BxRDrn/Q8Kaph31oYCfXPN6BlF3YCUn+rWWyuIaTRlMwZdKF77jkEId/5eBqdzxAU
+	 11Qf+jtAyzT1ETEMcrDmeQPFzu+/FgZEFRJdKzjLza3d4TdLnhHvUCRczaZ94nxKaG
+	 gjM4nJkOz9Bd+BvQvWsTgHlY9+oLcwTbVk7SdcONzU6qlHVmoYfea4/snA+M9pRrBn
+	 XxcLPuvAo5EkVDnxEjzeSm927iPWO1rnyfwP6zkI+nC7C1ZOteMV64goLaKRcmdvth
+	 9Bnt/byJtc72AOdVvCTG3ukJyEiNOaDaWasRWNKZjXU0Vv8pWKJaaWtWUD5n8QUBjs
+	 3RXF9kqoVXXwQ==
+Date: Tue, 1 Apr 2025 17:00:23 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v2 0/4] gpio: deprecate and track the removal of GPIO
+ workarounds for regulators
+Message-ID: <846010c0-7dc1-421c-8136-9ae2894c9acd@sirena.org.uk>
+References: <20250401-gpio-todo-remove-nonexclusive-v2-0-7c1380797b0d@linaro.org>
+ <c8ca3c8a-3201-4dde-9050-69bc2c9152c4@sirena.org.uk>
+ <CAMRc=Mcq9yag6yBswhW0OJ8MKzGBpscwo+UGpfCo2aha93LzXA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/9] x86: Cleanup NMI handling
-To: Sohil Mehta <sohil.mehta@intel.com>, x86@kernel.org,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>, Dave Hansen
- <dave.hansen@linux.intel.com>, "H . Peter Anvin" <hpa@zytor.com>,
- Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
- Kai Huang <kai.huang@intel.com>,
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- Mike Rapoport <rppt@kernel.org>, Petr Mladek <pmladek@suse.com>,
- Jani Nikula <jani.nikula@intel.com>, Tony Luck <tony.luck@intel.com>,
- Xin Li <xin@zytor.com>, linux-kernel@vger.kernel.org
-References: <20250327234629.3953536-1-sohil.mehta@intel.com>
-From: Nikolay Borisov <nik.borisov@suse.com>
-Content-Language: en-US
-In-Reply-To: <20250327234629.3953536-1-sohil.mehta@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="A+b6PC0Mfhf4pWwa"
+Content-Disposition: inline
+In-Reply-To: <CAMRc=Mcq9yag6yBswhW0OJ8MKzGBpscwo+UGpfCo2aha93LzXA@mail.gmail.com>
+X-Cookie: 15% gratuity added for parties over 8.
 
 
+--A+b6PC0Mfhf4pWwa
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 28.03.25 г. 1:46 ч., Sohil Mehta wrote:
-> While reworking the NMI-source patches[1], I spent quite a few days
-> understanding the existing NMI handling code. The intention of this series is
-> to fix the inconsistencies and redundancies that I encountered.
-> 
-> This series also includes improved documentation to make the code easier to
-> follow. It does not introduce any significant functional changes.
-> 
-> I have tried to split the patches logically to make them easier to review. Let
-> me know if some of them should be combined. The patches are in no particular
-> order and can be picked up independently.
-> 
-> The documentation updates in patches (5, 6, 7) are to the best of my ability.
-> However, I would really appreciate extra eyes to ensure it is precise.
-> 
-> The updated NMI-source patches will follow this series sometime later.
-> 
-> @Ingo, I tried to format the commit references the way you prefer:
-> 
->    Commit:
->      feeaf5512947 ("x86: Move sysctls into arch/x86")
-> 
-> However, checkpatch seems to dislike it, so I reformatted them as below:
-> 
->    Commit feeaf5512947 ("x86: Move sysctls into arch/x86")
-> 
-> Is there a specific guideline for x86?
-> 
-> [1]: https://lore.kernel.org/lkml/20240709143906.1040477-1-jacob.jun.pan@linux.intel.com/
-> 
-> Sohil Mehta (9):
->    x86/nmi: Simplify unknown NMI panic handling
->    x86/nmi: Consolidate NMI panic variables
->    x86/nmi: Use a macro to initialize NMI descriptors
->    x86/nmi: Remove export of local_touch_nmi()
->    x86/nmi: Fix comment in unknown NMI handling
->    x86/nmi: Improve and relocate NMI handler comments
->    x86/nmi: Improve NMI header documentation
->    x86/nmi: Clean up NMI selftest
->    x86/nmi: Improve NMI duration console print
-> 
->   arch/x86/include/asm/nmi.h      | 49 +++++++++++++++++--
->   arch/x86/include/asm/x86_init.h |  1 +
->   arch/x86/kernel/dumpstack.c     |  2 -
->   arch/x86/kernel/nmi.c           | 87 ++++++++++++++++-----------------
->   arch/x86/kernel/nmi_selftest.c  | 52 ++++++--------------
->   arch/x86/kernel/setup.c         | 37 ++++++--------
->   include/linux/panic.h           |  2 -
->   7 files changed, 122 insertions(+), 108 deletions(-)
-> 
+On Tue, Apr 01, 2025 at 04:42:40PM +0200, Bartosz Golaszewski wrote:
+> On Tue, Apr 1, 2025 at 3:27=E2=80=AFPM Mark Brown <broonie@kernel.org> wr=
+ote:
+> > On Tue, Apr 01, 2025 at 02:46:41PM +0200, Bartosz Golaszewski wrote:
 
-Reviewed-by: Nikolay Borisov <nik.borisov@suse.com>
+> > > Let's deprecate both symbols officially, add them to the MAINTAINERS
+> > > keywords so that it pops up on our radars when used again, add a task=
+ to
+> > > track it and I plan to use the power sequencing subsystem to handle t=
+he
+> > > cases where non-exclusive access to GPIOs is required.
 
+> > What exactly is the plan here?  The regulator (and reset) usage seems
+> > like a reasonable one TBH - the real problem is having an API from the
+> > GPIO subsystem to discover sharing, at the minute you can't resolve a
+> > binding enough to find out if there's sharing without actually
+> > requesting the GPIO.
+
+> Hard disagree on the reasonable usage. Let's consider the following:
+
+> You have two users and one goes gpiod_set_value(desc, 0), the other:
+> gpiod_set_value(desc, 1). Who is right? Depending on the timing the
+> resulting value may be either.
+
+That's why we need to figure out if there's sharing - the usage here is
+that we have some number of regulators all of which share the same GPIO
+and we want to know that this is the case, provide our own reference
+counting and use that to decide when to both update the GPIO and do the
+additional stuff like delays that are required.  When the API was number
+based we could look up the GPIO numbers for each regulator, compare them
+with other GPIOs we've already got to identify sharing and then request
+only once.
+
+> For it to make sense, you'd have to add new interfaces:
+> gpiod_enable(desc) and gpiod_disable(), that would keep track of the
+> enable count. However you can't remove the hundreds of existing users
+> of gpiod_set_value() so the problem doesn't go away. But even if you
+> did introduce these new routines, what about
+> gpiod_direction_input/output()? My point is: the GPIO consumer API is
+> designed with exclusive usage in mind and it makes no sense to try to
+> ram shared GPIOs into the GPIO core.
+
+That's exactly what the regulator code was doing, as far as the GPIO API
+saw there was only ever one user at once.  Since we can't look up
+numbers any more what we now do is use non-exclusive requests and check
+to see if we already have the GPIO descriptor, if we do then we group
+together like we were doing based on the GPIO numbers.  The multiple
+gets are just there because that's how the gpiod API tells us if we've
+got two references to the same underlying GPIO, only one thing ever
+actually configures the GPIO.
+
+> 1. Audit all users of GPIOD_FLAGS_BIT_NONEXCLUSIVE
+
+> Outside of drivers/regulator/ it seems that there are several users
+> who don't really needs this (especially under sound/) and where using
+> this flag is just a result of a copy-paste.
+
+The sound use cases are roughly the same one - there's a bunch of audio
+designs where we've got shared reset lines, they're not actually doing
+the reference counting since the use cases mean that practically
+speaking all the users will make the same change at the same time (or at
+least never have actively conflicting needs) so practically it all ends
+up working fine.  IIRC the long term plan was to move over to the reset
+API to clean this up rather than redoing the reference counting, if
+we're doing this properly we do want to get the thing the regulator API
+has where we know and can control when an actual transition happens.
+
+> 3. Use pwrseq where drivers really need non-exclusive GPIOs.
+
+> The power sequencing subsystem seems like a good candidate to fix the
+> issue. I imagine a faux_bus pwrseq driver that would plug into the
+> right places and provide pwrseq handles which the affected drivers
+> could either call directly via the pwrseq_get(), pwrseq_power_on/off()
+> interfaces, or we could have this pwrseq provider register as a GPIO
+> chip through which the gpiod_ calls from these consumers would go and
+> the sharing mediated by pwrseq.
+
+This seems complicated, and I'm not sure that obscuring the concrete
+thing we're dealing with isn't going to store up surprises for
+ourselves.
+
+It's also not clear to me that pwrseq doesn't just have the same problem
+with trying to figure out if two GPIO properties are actually pointing
+to the same underlying GPIO that everything else does?  It seems like
+the base issue you've got here is that we can't figure out if we've got
+two things referencing the same GPIO without fully requesting it.
+
+--A+b6PC0Mfhf4pWwa
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmfsDZYACgkQJNaLcl1U
+h9Bqjgf/RTmzdMDrGAN+FvUOHg34iBCjtDkd4r7H06CU6PebbIW6rBmNdnK9nAKV
+Msl7D6435UhRJlDdAWgGQ1ldGMeubfVwNqZ44EECz6013F2vHCkID+JWUFSYI0G1
+W/6S9zAuZZ80Eft8YyWayH3/dEItAKKu1dxbGoMGX8xX+0Xny2K8WnCKIkB4D7dB
+j4orisgnkMV2k2BnwQimO5j3xmFe54WtHy6H1EXuPpoxvY/SbC47m8UM8nbWnsUE
+0VCy9JJ+eNe/fJSETzpu73Y4KJHqEwZACDfRa+MMYdIEED5ruyzM731r7u/ex6I/
+iYmcrZ/BIFiMH+q1uOWs1tGHgs3hnw==
+=trmI
+-----END PGP SIGNATURE-----
+
+--A+b6PC0Mfhf4pWwa--
