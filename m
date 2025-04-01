@@ -1,93 +1,120 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAB161EB5F8
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 08:51:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF69F1EA7E6;
+	Tue,  1 Apr 2025 08:52:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743497513; cv=none; b=RLQkWRZRQ9AM8Xg2WC/347hknvcq+tcdup51wmWt3lCdR4CuCI4xtaMAHZgb7r3tNtn9k5vOQFXMW5P4ZpoLRTAUte2jH674wmiuECVkAAYNOIcM7iw17+P0km+RXBzClvKJzVvZDuBZ54LC9z3E9ddmzZk+08uC1KjFy+hmbu4=
+	t=1743497546; cv=none; b=I2luPcxt2S8UFOc5qf//whTMYTp3A4eROtMnPLJLNt94xGeANzXiRIoicgtEvx1nMuZ6TnMgCBCdfWzah7sapZLfIlBNMH2D2xGaAD8qSXwTPXnLx5+GxaVhzdjxrjO98ikrfmhW/SRdYbDq4BGGQnqB0dMUpqSCmv7dVTknHHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743497513; c=relaxed/simple;
-	bh=sT/syqU8YMLAnTu43NP8SZRj+CiVHsm9BolDYyoETH0=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iEl7SHXvKl6C8/I5ba5eHPzRbgfvDeN0By5zVcxWii7KkrL/f0MX+Ro9/8uxmauIK6wxvOPDovx84RX0ib5L/rDdPFPVb8ZfwZN4hmbOTjnyg024af0Vu/I5cJ5zN3Xk/rflYmM0efUG1akcZXdxoW4JsKm9Cdxg1ujQ9JDtQ2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=RwZLWwp4; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	s=arc-20240116; t=1743497546; c=relaxed/simple;
+	bh=uknq8KkrbpOwWJEI8kUyHYAvI1ygoW33zrV/LkyDiaY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EYfCG5j9CUQS05yQ8vKS8TKV/aMkHFFIIHHFPwKu8Up7HDmbp3FsInBQMu065ei6D2Fbc4i20XvQ1yQ5r/oxCsAD+qwu0i4d5Ria7+K9690RZk2IyMM2UQNIKyJqiS+YqS1uCJGrr4e3QrmtEMkPBpF5NpCxbJdAHM2S11N2uKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=G4swfDbX; arc=none smtp.client-ip=178.60.130.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="RwZLWwp4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=sT/s
-	yqU8YMLAnTu43NP8SZRj+CiVHsm9BolDYyoETH0=; b=RwZLWwp4fkl8Qh9ZeFKx
-	1DPmewsGaNd0TM3IR/d0p/UiJAKysRN/EK0UEFPOnyhe3UWww7VVMzfJmMoOMnYn
-	Ju4+NxOlFvp88sbYxQulLKum24fXtkx6tU28RkXwZE0a2GiVdK1Kfl9sr9lDjBQq
-	Jnbko/bQLIJghrvF8p85FHBFpPlgsAFxfnMGDav0y60+B8/SVNzRgRgT+uJ/Hk4K
-	7WHMs90yqICsCj3h6wpwKwvXs+DTJFD9p+A4EG8RZy1VALl0GC/3MS6+XzzNm6zA
-	FVLydtPJ0Hfsfz5FJnwX+mDnBPUZCx0/trOBcNfAeCzLt+Lmp8zHB4irVTkn+cSy
-	Ng==
-Received: (qmail 1535216 invoked from network); 1 Apr 2025 10:51:49 +0200
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 1 Apr 2025 10:51:49 +0200
-X-UD-Smtp-Session: l3s3148p1@4o22pbMxdJYgAwDPXwSgADIEZgbhJYA3
-Date: Tue, 1 Apr 2025 10:51:49 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/5] mmc: core: Add support for graceful host removal for
- SD
-Message-ID: <Z-upJTp3ykMqvSAl@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250320140040.162416-1-ulf.hansson@linaro.org>
- <20250320140040.162416-6-ulf.hansson@linaro.org>
- <Z-pSq5e9MXTX3qfe@shikoro>
- <Z-uou73DUQoceMj5@shikoro>
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="G4swfDbX"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:
+	Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=kFFvVb7pyRd1m9PwZr3OgHd+El34mFJ6WcuuSCpuExo=; b=G4swfDbX/nywfj0pb7hMY5OgFh
+	oRL2Vu1aq3y/bodsb6MSs1ZZFgbPKkrI4Ez9PwCq9btHC2q2xEvVmUj2ANerr87coc+ngWcfPfVvU
+	QwlzA8an/OuG8KZ50NcFCX8dAoPMhv86ub8QrfD0tq+/a0dZTN9SXBRebkTFvZ6m0BnV6vd8YpV1U
+	l5HC1OJvAeJLgjDTbxCiBvmRdv6ASeQiVeM/xZCfAWhNWQ/lpE+DDdIijxgy6CFr254aGzizoArFt
+	l8of9psQPK+wW02zD+/79v7+u/9cgeqWcqDdxuEIdaxJE0lX8ADaOj4t1H7TOkDcI20ju5pMJX4tc
+	kBzJVjwQ==;
+Received: from i59f7adb8.versanet.de ([89.247.173.184] helo=localhost.localdomain)
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
+	id 1tzXLz-009Zsi-UM; Tue, 01 Apr 2025 10:52:16 +0200
+From: Angelos Oikonomopoulos <angelos@igalia.com>
+To: linux-arm-kernel@lists.infradead.org
+Cc: angelos@igalia.com,
+	catalin.marinas@arm.com,
+	will@kernel.org,
+	linux-kernel@vger.kernel.org,
+	kernel-dev@igalia.com,
+	anshuman.khandual@arm.com,
+	stable@vger.kernel.org
+Subject: [PATCH v3] arm64: Don't call NULL in do_compat_alignment_fixup
+Date: Tue,  1 Apr 2025 10:51:50 +0200
+Message-ID: <20250401085150.148313-1-angelos@igalia.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="XFNsiknX4j2/k/nI"
-Content-Disposition: inline
-In-Reply-To: <Z-uou73DUQoceMj5@shikoro>
+Content-Transfer-Encoding: 8bit
 
+do_alignment_t32_to_handler only fixes up alignment faults for specific
+instructions; it returns NULL otherwise. When that's the case, signal to
+the caller that it needs to proceed with the regular alignment fault
+handling (i.e. SIGBUS). Without this patch, we get:
 
---XFNsiknX4j2/k/nI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+  Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
+  Mem abort info:
+    ESR = 0x0000000086000006
+    EC = 0x21: IABT (current EL), IL = 32 bits
+    SET = 0, FnV = 0
+    EA = 0, S1PTW = 0
+    FSC = 0x06: level 2 translation fault
+  user pgtable: 4k pages, 48-bit VAs, pgdp=00000800164aa000
+  [0000000000000000] pgd=0800081fdbd22003, p4d=0800081fdbd22003, pud=08000815d51c6003, pmd=0000000000000000
+  Internal error: Oops: 0000000086000006 [#1] SMP
+  Modules linked in: cfg80211 rfkill xt_nat xt_tcpudp xt_conntrack nft_chain_nat xt_MASQUERADE nf_nat nf_conntrack_netlink nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 xfrm_user xfrm_algo xt_addrtype nft_compat br_netfilter veth nvme_fa>
+   libcrc32c crc32c_generic raid0 multipath linear dm_mod dax raid1 md_mod xhci_pci nvme xhci_hcd nvme_core t10_pi usbcore igb crc64_rocksoft crc64 crc_t10dif crct10dif_generic crct10dif_ce crct10dif_common usb_common i2c_algo_bit i2c>
+  CPU: 2 PID: 3932954 Comm: WPEWebProcess Not tainted 6.1.0-31-arm64 #1  Debian 6.1.128-1
+  Hardware name: GIGABYTE MP32-AR1-00/MP32-AR1-00, BIOS F18v (SCP: 1.08.20211002) 12/01/2021
+  pstate: 80400009 (Nzcv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+  pc : 0x0
+  lr : do_compat_alignment_fixup+0xd8/0x3dc
+  sp : ffff80000f973dd0
+  x29: ffff80000f973dd0 x28: ffff081b42526180 x27: 0000000000000000
+  x26: 0000000000000000 x25: 0000000000000000 x24: 0000000000000000
+  x23: 0000000000000004 x22: 0000000000000000 x21: 0000000000000001
+  x20: 00000000e8551f00 x19: ffff80000f973eb0 x18: 0000000000000000
+  x17: 0000000000000000 x16: 0000000000000000 x15: 0000000000000000
+  x14: 0000000000000000 x13: 0000000000000000 x12: 0000000000000000
+  x11: 0000000000000000 x10: 0000000000000000 x9 : ffffaebc949bc488
+  x8 : 0000000000000000 x7 : 0000000000000000 x6 : 0000000000000000
+  x5 : 0000000000400000 x4 : 0000fffffffffffe x3 : 0000000000000000
+  x2 : ffff80000f973eb0 x1 : 00000000e8551f00 x0 : 0000000000000001
+  Call trace:
+   0x0
+   do_alignment_fault+0x40/0x50
+   do_mem_abort+0x4c/0xa0
+   el0_da+0x48/0xf0
+   el0t_32_sync_handler+0x110/0x140
+   el0t_32_sync+0x190/0x194
+  Code: bad PC value
+  ---[ end trace 0000000000000000 ]---
 
+Signed-off-by: Angelos Oikonomopoulos <angelos@igalia.com>
+Fixes: 3fc24ef32d3b93 ("arm64: compat: Implement misalignment fixups for multiword loads")
+Cc: stable@vger.kernel.org
+---
+ arch/arm64/kernel/compat_alignment.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-> Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+diff --git a/arch/arm64/kernel/compat_alignment.c b/arch/arm64/kernel/compat_alignment.c
+index deff21bfa680..b68e1d328d4c 100644
+--- a/arch/arm64/kernel/compat_alignment.c
++++ b/arch/arm64/kernel/compat_alignment.c
+@@ -368,6 +368,8 @@ int do_compat_alignment_fixup(unsigned long addr, struct pt_regs *regs)
+ 		return 1;
+ 	}
+ 
++	if (!handler)
++		return 1;
+ 	type = handler(addr, instr, regs);
+ 
+ 	if (type == TYPE_ERROR || type == TYPE_FAULT)
+-- 
+2.49.0
 
-Which also means that I tested the whole series on a Renesas Salvator-X
-board with a R-Car M3-W SoC (Gen3).
-
-
---XFNsiknX4j2/k/nI
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmfrqSUACgkQFA3kzBSg
-KbZJyw//U676OEICFaV1RZ5E4SCVs1CNM5vAcwGy37jJfaHteR+ivuTgGPvd2uS+
-eVPJkwtrzezzcDf4gYTk3Eg5YpnZ8LQyZJ3vzVvGGmOtdxXrm7wdF43dSln/6Q/N
-v7ia4MIR26kUukCUwLpEUdcJMk14SvMbO2Wm6BsnRpjYFR63DqRaKZXf2GRHCXRK
-TJCaZvXloULd9vTRHDMe215yDqKcmvEV86wcC6lKxtgBwqvhbK46YR/nu5cu4JFB
-6mVOFn0njjJv4TX5g4U6bTBI2hU6eZXsltgJ1jpGm3m8xiu9mOZw/g/WKvjQgb2t
-a5tY49RQKLyG+aLJRYSmEhKGPyALwlJt+16fSaVqjA3D70qd4C4/cjmGWyHBkJqi
-KF8DX5DM0sSOFLsU1KKRPiSZ2VFHPIhBxYq1dlGga6LYFdBrTeNdhIHnFRnfAAsx
-vZlReSzZBQP1bBqYeAtP4K5H4qAguV8YWoCRaCRTOrToZQy+HFWRO8Lzm+Z3MIOJ
-s/AaqsE1DTrEEX/6BCaOsNORlS5Qyh50qPK3m78RMrn5XxUolqMHBxBY+S8DSSvH
-JwqJSVSdxujvAwhhSUJDAZZWUo+33rHqAJeuxBnwDGtJd0b3o2kuCVoVXegN7LlY
-5RzOQ21vt91XyyyWS9N6lFxHIydZqgn3oDatzvJycbWONZej3Rg=
-=0Tb2
------END PGP SIGNATURE-----
-
---XFNsiknX4j2/k/nI--
