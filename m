@@ -1,125 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f195.google.com (mail-pl1-f195.google.com [209.85.214.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 667853BBC9;
-	Tue,  1 Apr 2025 07:46:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 778BA2F3B
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 07:47:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743493582; cv=none; b=qQ3vRDHhK/mIHL+hmPmoivL9ZIMJXaClZPlr7Q+1FSAqSml556dpoOulUpw4J2iPZL/tZBcCjVolm6h8bccMTgWT2xrqM+b2A4MebujX/jZJ3XuRb9fz8gfP1TfOxUAgoyFf1F63xiV5UNdxJinuW9trD8wYvcMoohE5LcTg+rM=
+	t=1743493624; cv=none; b=pVCY243Nxa5i+XnDHmxm7bjxNNM3Z2QxeU6XWaFeKm+fRdeQOvuPFxrW+PTykHqrxIn7qp/jxxBUJ8AvYnvXnDWii/6oqJirm8TRJxzv+qRDVWPRlUfZcNGpkl0KA8AXPZ6xlEO7yXIBK6UpTHMBGUz15PPY0e4lF0pvR3nbWwE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743493582; c=relaxed/simple;
-	bh=wGhR/ueehFFaaFJztWCiZyH0YoQdMwksOLr5XIVJq8Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HgYAGGO0FjGe0EAfnvlPOd/NWdfdal3CEN0ySvzN3HiGIilMODodSjTTNtMZ4buVb0uTnasQVFpsHn3Lf3XDmmncpjbENS0ZoPYIB9CtkihOEqLLAuz5GN+wU68Vm9iwcaJ/eJIoBvLOeNnwTMimwxmd1sJHszkUofBPq46vKmA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 022C2C4CEE8;
-	Tue,  1 Apr 2025 07:46:19 +0000 (UTC)
-Message-ID: <0017bba6-0c46-4c74-9bd1-3b0e3ea9877a@xs4all.nl>
-Date: Tue, 1 Apr 2025 09:46:18 +0200
+	s=arc-20240116; t=1743493624; c=relaxed/simple;
+	bh=BNA6pnBT4GwDo7X7zysViZN7As2tgaZVzyz413BtaXA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PhBoRQA5ca1LmuaPETVhNGv8uLZqa7n6hJPsKd0U4KVezSKWBx1ZOGoVp4BFeyBHcP12sIFSqfB/wmH1fpkAEmqp4FMuR1CTnjLN59sLbIEtQoaZb4NT8bUXPSwO5Tuoj7VS9wUK+n1HGv9GLbMzvMc77nmc8/lQJO+ZLz0CUh8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Sx7X2gge; arc=none smtp.client-ip=209.85.214.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sx7X2gge"
+Received: by mail-pl1-f195.google.com with SMTP id d9443c01a7336-22438c356c8so102426595ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 00:47:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743493623; x=1744098423; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=MOOc99waxVZabi2Ytb5QxIM6jcyNAh7G14JWyJa6TT4=;
+        b=Sx7X2ggepYwwclatZGlYzwYyJCaL6WLjcQsWFUqdxXkebKZ5F41bQXd/zxJqjeqPl3
+         COqHT0LAdLgHp5WE54QPFp2Pf8U8CY4zB0t5VuSwKobZYSdJjl1ZjrgWZpRPvMSuB9+3
+         FFFNktiP29EWyNnkYky6KPdZY5u+oCNM5XeEiDW7hCEr9/4d2kJ1/NsLAOVtCgrpAA3m
+         0qnxFOkJBJWkg8ZrabseyJd5pn1lxlyldyE3GeJDf1rrpsmxbkfcCgOJ+m6iWaO0Vl4Y
+         kIpLv3e3YMyt0MpM4qM2MLN0+fuZekOGMuDkknSJzIr/D+7fWhLwINNu1MtlWHalwWbz
+         aBGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743493623; x=1744098423;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=MOOc99waxVZabi2Ytb5QxIM6jcyNAh7G14JWyJa6TT4=;
+        b=neXwTlbVLxhsHEBc3qIZWZTaTS8i1BCmr+mvr6RuCsfEVYgcf9Jm19mL6y4X5wtD7a
+         Tt2KtOlWHjJXhylvG/lUbeoEzJ/vGyDm+kip9H/8X3uAmT1gJ5Bzo+vIBrbS0asPOUGw
+         CceNBaJUl74pnH2gljsLMF1fCCkGoz1YIFIYLjcNC0IApAebbipL5P8yKhrdxDRBO62V
+         56Z9NXwCiSbFGlTsAX0EOt9zEIa+6Q08xF+D9wgRQIXxjvM73a1b9f74JTiAhz+hofMz
+         u/dIUaUVeGCCXKQuCjLPhK1t3CeMqIVNPBiAD1nVIQhxZcxaz06+7va45wHFQTUGwR+C
+         zavA==
+X-Forwarded-Encrypted: i=1; AJvYcCWwY4OcraIUjM8eFPCkMN4TYdwOqHSSakWpUMQ3/Un6XIw1U5aJASDK7LHloKqGPrj/ymvi2wrR+N++hyY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwGIrGei2KAkffQo6TvpclDcF9h9lRF7LWJuIf+A5NisiF5nNeA
+	QFhcoICIsUkNFcPy8zn/ufwXGUpx8wOrm8AF8HYazwUeKzdavaAT
+X-Gm-Gg: ASbGncv7QMbK4MC4LU3AXJJoG7M2seHO02glpUcygMQDmD57W3I9mypuQ2S7qVb/+ac
+	C+SS8fKrzHKfw5chLHKRtkPTzbYN3i3X2PLQG3R0DVZdKUJEH0x7yw1jNZ4skeH9QLCh09dMw1S
+	Pwy2PWuy14rFlSdoQRyMxv4d/5dCLbuCr042Xr7mqEkSa781pVVMEiORy4/XtOLYoMnvvbU21Rh
+	n/Ij9Si9C8vSNijXPL80u6hds9i4ZoNwaOOgJdcCCF1XOXHzMiau4e4BbyVoJT3soVmoHX7RVmE
+	Ni4t6xBDZACr5WnCif8FIO6Bth1HgPSR16kwspz2+UcpQLxq7bxXi8tAxdpfITo7AXnnbhs=
+X-Google-Smtp-Source: AGHT+IFZy01sSWuQIVITMC/7GCZ0VOUQ9l5P25t3PEDAJzmDMq/S0RjaavN8GMJVclcwJerUhN7Uuw==
+X-Received: by 2002:a05:6a00:a93:b0:730:95a6:375f with SMTP id d2e1a72fcca58-7398033f039mr19324112b3a.3.1743493622478;
+        Tue, 01 Apr 2025 00:47:02 -0700 (PDT)
+Received: from henry.localdomain ([111.202.148.167])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73970e2a0e2sm8512745b3a.67.2025.04.01.00.46.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Apr 2025 00:47:02 -0700 (PDT)
+From: Henry Martin <bsdhenrymartin@gmail.com>
+To: joel@jms.id.au,
+	andrew@codeconstruct.com.au,
+	gsomlo@gmail.com,
+	heiko@sntech.de,
+	arnd@arndb.de,
+	herve.codina@bootlin.com,
+	andersson@kernel.org,
+	u.kleine-koenig@baylibre.com
+Cc: linux-arm-kernel@lists.infradead.org,
+	linux-aspeed@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org,
+	Henry Martin <bsdhenrymartin@gmail.com>
+Subject: [PATCH v4] soc: aspeed: Add NULL check in aspeed_lpc_enable_snoop()
+Date: Tue,  1 Apr 2025 15:46:47 +0800
+Message-Id: <20250401074647.21300-1-bsdhenrymartin@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] media: cec: extron-da-hd-4k-plus: Fix
- Wformat-truncation
-To: Ricardo Ribalda <ribalda@chromium.org>,
- Mauro Carvalho Chehab <mchehab@kernel.org>,
- Hans de Goede <hdegoede@redhat.com>,
- Sakari Ailus <sakari.ailus@linux.intel.com>,
- Andy Shevchenko <andy@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-staging@lists.linux.dev
-References: <20250331-v614-v1-0-9bc69a873720@chromium.org>
- <20250331-v614-v1-1-9bc69a873720@chromium.org>
-Content-Language: en-US, nl
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Autocrypt: addr=hverkuil@xs4all.nl; keydata=
- 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
-In-Reply-To: <20250331-v614-v1-1-9bc69a873720@chromium.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 31/03/2025 18:38, Ricardo Ribalda wrote:
-> Convince gcc8 that the port, initiator and destination fits in a single
-> char, despite the fact that they are 4 bits wide.
-> 
-> drivers/media/cec/usb/extron-da-hd-4k-plus/extron-da-hd-4k-plus.c:1014:44: warning: 'DCEC' directive output may be truncated writing 4 bytes into a region of size between 0 and 53 [-Wformat-truncation=]
-> 
-> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
-> ---
->  drivers/media/cec/usb/extron-da-hd-4k-plus/extron-da-hd-4k-plus.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/media/cec/usb/extron-da-hd-4k-plus/extron-da-hd-4k-plus.c b/drivers/media/cec/usb/extron-da-hd-4k-plus/extron-da-hd-4k-plus.c
-> index cfbfc4c1b2e67fec9434aa6852ab465ad8c11225..e1a2a676bcaf9c313041ce8074c85636cfe4b2da 100644
-> --- a/drivers/media/cec/usb/extron-da-hd-4k-plus/extron-da-hd-4k-plus.c
-> +++ b/drivers/media/cec/usb/extron-da-hd-4k-plus/extron-da-hd-4k-plus.c
-> @@ -1012,8 +1012,9 @@ static int extron_cec_adap_transmit(struct cec_adapter *adap, u8 attempts,
->  	for (i = 0; i < msg->len - 1; i++)
->  		sprintf(buf + i * 3, "%%%02X", msg->msg[i + 1]);
->  	snprintf(cmd, sizeof(cmd), "W%c%u*%u*%u*%sDCEC",
-> -		 port->direction, port->port.port,
-> -		 cec_msg_initiator(msg), cec_msg_destination(msg), buf);
-> +		 port->direction, port->port.port % 10,
-> +		 cec_msg_initiator(msg) % 10, cec_msg_destination(msg) % 10,
+devm_kasprintf() returns NULL when memory allocation fails. Currently,
+aspeed_lpc_enable_snoop() does not check for this case, which results in a
+NULL pointer dereference.
 
-This is definitely wrong, since initiator/destination is a value from 0-15.
-So % 10 will mess that up.
+Add NULL check after devm_kasprintf() to prevent this issue.
 
-I'm preparing a patch of my own for this.
+Fixes: 3772e5da4454 ("soc: aspeed: Aspeed LPC snoop output using misc chardev")
+Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
+---
+V3 -> V4: 
+- Add proper cleanup when devm_kasprintf() fails
+- Ensure kfifo and miscdevice get released on error
+V2 -> V3: 
+- Simplify the array access and correct commit message.
+V1 -> V2: 
+- Remove blank line between tags.
 
-Regards,
+ drivers/soc/aspeed/aspeed-lpc-snoop.c | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
 
-	Hans
-
-> +		 buf);
->  	return extron_send_and_wait(port->extron, port, cmd, NULL);
->  }
->  
-> 
+diff --git a/drivers/soc/aspeed/aspeed-lpc-snoop.c b/drivers/soc/aspeed/aspeed-lpc-snoop.c
+index 9ab5ba9cf1d6..3e3f178b1226 100644
+--- a/drivers/soc/aspeed/aspeed-lpc-snoop.c
++++ b/drivers/soc/aspeed/aspeed-lpc-snoop.c
+@@ -200,11 +200,15 @@ static int aspeed_lpc_enable_snoop(struct aspeed_lpc_snoop *lpc_snoop,
+ 	lpc_snoop->chan[channel].miscdev.minor = MISC_DYNAMIC_MINOR;
+ 	lpc_snoop->chan[channel].miscdev.name =
+ 		devm_kasprintf(dev, GFP_KERNEL, "%s%d", DEVICE_NAME, channel);
++	if (!lpc_snoop->chan[channel].miscdev.name) {
++		rc = -ENOMEM;
++		goto err_free_fifo;
++	}
+ 	lpc_snoop->chan[channel].miscdev.fops = &snoop_fops;
+ 	lpc_snoop->chan[channel].miscdev.parent = dev;
+ 	rc = misc_register(&lpc_snoop->chan[channel].miscdev);
+ 	if (rc)
+-		return rc;
++		goto err_free_fifo;
+ 
+ 	/* Enable LPC snoop channel at requested port */
+ 	switch (channel) {
+@@ -221,7 +225,8 @@ static int aspeed_lpc_enable_snoop(struct aspeed_lpc_snoop *lpc_snoop,
+ 		hicrb_en = HICRB_ENSNP1D;
+ 		break;
+ 	default:
+-		return -EINVAL;
++		rc = -EINVAL;
++		goto err_misc_deregister;
+ 	}
+ 
+ 	regmap_update_bits(lpc_snoop->regmap, HICR5, hicr5_en, hicr5_en);
+@@ -231,6 +236,12 @@ static int aspeed_lpc_enable_snoop(struct aspeed_lpc_snoop *lpc_snoop,
+ 		regmap_update_bits(lpc_snoop->regmap, HICRB,
+ 				hicrb_en, hicrb_en);
+ 
++	return 0;
++
++err_misc_deregister:
++	misc_deregister(&lpc_snoop->chan[channel].miscdev);
++err_free_fifo:
++	kfifo_free(&lpc_snoop->chan[channel].fifo);
+ 	return rc;
+ }
+ 
+-- 
+2.34.1
 
