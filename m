@@ -1,111 +1,177 @@
-Received: from fhigh-a8-smtp.messagingengine.com (fhigh-a8-smtp.messagingengine.com [103.168.172.159])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D9364C85
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 20:30:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53ADC21420C
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 20:30:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743539438; cv=none; b=XmlSD6B5/gRk5w+44Cxa0M/Z2NK271NwI16GS6T4GncGknOL+eTcevwQx7XrHWjlgILBNc9OlkPKJonuPY+YH626qPnL4x7H/I9VjqV+1NqbHpT6kHnt4qAimhz17mNYrkHfOAQNJEfe3l14858myMddN6itUlBetMYPhUB21io=
+	t=1743539444; cv=none; b=okM7tYERqDK8aUk1oSDCn4dm84zV7t8PXLCJCRH7W7Qj1VI+7ehqdZXLBWQG7IqxwQ4f3tDkEFmADLhiosSR/PCH+yGLjKHd83OVzYNUt2x5Z5WDy7wHgQy/VV9GboOgIontJMPz4lXgC/p5X0N4FUunflvD/m41/GXrhSqMJqk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743539438; c=relaxed/simple;
-	bh=4gpdqAfUNOfyHaSzy+oL6c35oIBJqrMwk9W09sffOhs=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=K/hDSMn6V3ECXNfs4ZWsCJ8xVF28gAuZt0CHslM2WpV1MhpkjALOdkZWqdvmaoaeNtAx/E/I3+30Vh/sWyqgOtDideMltvMdtacR8E4zp1S9lpPQ9JUIbGpZZpS31/MWnVgLssrjUlDfo9Fjin4k+RwtjadY47SdZYgecUXlqVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fluxnic.net; spf=pass smtp.mailfrom=fluxnic.net; dkim=pass (2048-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b=Kp3qrwzK; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=bw8BCDbF; arc=none smtp.client-ip=103.168.172.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fluxnic.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fluxnic.net
+	s=arc-20240116; t=1743539444; c=relaxed/simple;
+	bh=e1ShIkamowVUA9eVIDtAHBesCYliDssvEraQvEbebDw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZudrjbVZ/Bd1RClvt2PHkou+sBHJX6kpZXybKt8SkVh0nfCqsNXXwZCHMh5MevTgH7sbSCQuiuglOishy6l9820TmosHPvm0SnulN76wySwBT3s0eUQOKDpo7IJQc8SMB+8PEWoHgHp9mXTffn1lL6HNRR0WQFwjuRekbCgK3c4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dtcL+eRZ; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="Kp3qrwzK";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="bw8BCDbF"
-Received: from phl-compute-13.internal (phl-compute-13.phl.internal [10.202.2.53])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 64CBD114026F;
-	Tue,  1 Apr 2025 16:30:35 -0400 (EDT)
-Received: from phl-frontend-02 ([10.202.2.161])
-  by phl-compute-13.internal (MEProxy); Tue, 01 Apr 2025 16:30:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fluxnic.net; h=
-	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1743539435; x=1743625835; bh=qSZxOh1JXE
-	hTopJuYEoTNy4J5eI7vnzSDzPPKuRU/KM=; b=Kp3qrwzKt44pQBmVDP0P1R75II
-	S80HmU7tw8PoyrszRw4J7L+v8AMAyWstg+FJJN4ooxm1jjvm5bZr/jRVoDaNKMUI
-	kQm8MO7lXmgf7RBf09s6VGe4fDOQJOp1kMQ5+xSV6e5rZX1AvaGGTHkxX1T9EcuA
-	dmXoDuF7SocJyrpKP+40e9i4V1WQ41frzZKHZjIJho0e/doRc5FVWNGcdxO+TP+H
-	89WqgOGUmccoeSujeaZOb36sS9SZ96T2yRWQMkKw6YKXfGfyN7O4uxdScVgH8C5B
-	PKwNiqd6fPM2bWT4Hf5sKHzdToBLk0XA2rP0nVPI29pqVLU4cNeIuiga0yig==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
-	1743539435; x=1743625835; bh=qSZxOh1JXEhTopJuYEoTNy4J5eI7vnzSDzP
-	PKuRU/KM=; b=bw8BCDbFrVHmhOY22ca4u0SNPqqxUHMe3lyQfhggadRNqwcqNCR
-	4IvRKiHs6JS9hP6gSoCSyAWphpp99bCLWExZ4bLNxaE2FiXKUuMgQ8C9TeIwMypP
-	M69x1IkhQ5NZx7FckEvqCkEcfRYZCA9FFjrCBTvbA6RbEUWfvqS8hXsFX37QVYGc
-	CXBHIBvmRF3LVCz3ll2B5E4dFDpPdSssOOCgUtRXnP2HXOxXMGFIpKu9qGqg9muw
-	dOXvHAhFtkhXXam3ZxV8Cz5ujHmT9Zl6O6PEW25GvwT1cCTYJnENh52B3DqONEQt
-	pAMVB3iTWAV289X2FCS1ZfNsq5/RJZXdoFQ==
-X-ME-Sender: <xms:60zsZ0rgfY0GMgzh44Pqe6u5KroE208xM0u03r5HBc8onysfyl-Z1A>
-    <xme:60zsZ6oXSY4IP-OY7jIy6-BA5_UMgDlqJO-n7AER6-k85xa_QmN1W1R5c5gvm32Lt
-    e5DhHSeuURnxXy6sBQ>
-X-ME-Received: <xmr:60zsZ5MnenTPs7gBh_SXJsFqburyrK3jO4sYWBM3RCinVW-qxWeFz2NcIEgV8uZ6RGXdvpBuc_-KFA5rY3B7TWfrZfNdBURXMT4lytRvodh0oL0ybg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddukeefjeegucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucenucfjughrpeffhf
-    fvvefujgfkfhggtgesthdtredttddtvdenucfhrhhomheppfhitgholhgrshcurfhithhr
-    vgcuoehnihgtohesfhhluhignhhitgdrnhgvtheqnecuggftrfgrthhtvghrnhepgfevvd
-    fhfeeujeeggffgfefhleffieeiuddvheffudehudffkeekhfegfffhfeevnecuvehluhhs
-    thgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepnhhitghosehflhhugi
-    hnihgtrdhnvghtpdhnsggprhgtphhtthhopeegpdhmohguvgepshhmthhpohhuthdprhgt
-    phhtthhopehurdhklhgvihhnvgdqkhhovghnihhgsegsrgihlhhisghrvgdrtghomhdprh
-    gtphhtthhopegurghvihgurdhlrghighhhthdrlhhinhhugiesghhmrghilhdrtghomhdp
-    rhgtphhtthhopegrkhhpmheslhhinhhugidqfhhouhhnuggrthhiohhnrdhorhhgpdhrtg
-    hpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:60zsZ75X-JECDy_A2xBcdj0AJtQzsiIR43NtpnB9c-kFPc4roH72xQ>
-    <xmx:60zsZz7U_ShEgLoY_KvM7k1L-knzeCyYzMaBSBXSrA2i3EFhrPBzqw>
-    <xmx:60zsZ7iu0W6xOG6xyVNmF7Pbo44d6ELBiM894BHYeawlUThN3nXcvg>
-    <xmx:60zsZ95FfqZmTds6LAegKzSQk1wMKwS__KMnj7ZtDdKiO76-Jh-ceQ>
-    <xmx:60zsZ21yszMtvlD3cQr9BuZ_ykYh4lbJH_NfixaChjKyLsN0zmeKYNdy>
-Feedback-ID: i58514971:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 1 Apr 2025 16:30:35 -0400 (EDT)
-Received: from xanadu (xanadu.lan [192.168.1.120])
-	by yoda.fluxnic.net (Postfix) with ESMTPSA id 27F4110BE327;
-	Tue,  1 Apr 2025 16:30:34 -0400 (EDT)
-Date: Tue, 1 Apr 2025 16:30:34 -0400 (EDT)
-From: Nicolas Pitre <nico@fluxnic.net>
-To: David Laight <david.laight.linux@gmail.com>
-cc: =?ISO-8859-15?Q?Uwe_Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>, 
-    Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] math64: Provide an uprounding variant of
- mul_u64_u64_div_u64()
-In-Reply-To: <15qr98n0-q1q0-or1r-7r32-36rrq93p9oq6@onlyvoer.pbz>
-Message-ID: <46368602-13n7-s878-s7o2-76sr0q67n9q4@syhkavp.arg>
-References: <20250319171426.175460-2-u.kleine-koenig@baylibre.com> <20250321131813.6a332944@pumpkin> <epuk3zijp2jt6jh72z3xi2wxneeunf5xx2h77kvim6xmzminwj@4saalgxu3enu> <20250331195357.012c221f@pumpkin> <mjqzvj6pujv3b3gnvo5rwgrb62gopysosg4r7su6hcssvys6sz@dzo7hpzqrgg2>
- <20250401202640.13342a97@pumpkin> <15qr98n0-q1q0-or1r-7r32-36rrq93p9oq6@onlyvoer.pbz>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dtcL+eRZ"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43cef035a3bso43778655e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 13:30:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743539440; x=1744144240; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=6QHmwB4LgIc5d8nRTjkH67nVHdKKt8PlUfNNTxoySLI=;
+        b=dtcL+eRZzFCDBJQVI5m6Efwnp7/ynd6J9D3DP0uNQpb4sR5uDCjuqEMg3B24aq+2/s
+         kJ0ieaxum3mq8r5I2mbzSb5tpRMvA0sWZS/KeR/U6tKuCjbNgsfbWI7V16UDHW1OAg8+
+         aMmip0rCaQCR29kBFkUTbzro1uAimOrMsHeVNUmmJFAAgZ+4NBTkL1aPpriUqa4VQ3Mp
+         KljWzz00SPmHJoeC1GnFBRdm3hc0PTjguEmTUp7wqAlJIV0gzZ9Qp5KxJqYN3em5m+Nw
+         VFFb+5GpUYRUPsMwArFOV2Dh1wij+KoiwsHlRR9VpNobsegK4pM+TN34Y9Kz8fgZAOPd
+         3BZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743539440; x=1744144240;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6QHmwB4LgIc5d8nRTjkH67nVHdKKt8PlUfNNTxoySLI=;
+        b=Gpid4dnk9T7Fw/I11MB8ZmVe2jkZBsuTH1ImxBug9N9pzFPnSZACAqyjs0oTbw+idy
+         wIqpF/1mp8XEGkd3MG9Am0dNFN74dX+RrNI6hRFY1H0Tnjgi9JvElRBEaQ9yQtagi58M
+         q+O+wBfDDpw68Oaz2DJCParycDOUnrUPSSu2kuEQ+lEbtJYvqoRpXuSyibCyZTkmGB2a
+         sut4aXJXHt3oUQv0r6IzXYyp2rdkYfD/8/qByEKsUGGQCa8hltSdj/JnJOQ+/F3fWL28
+         JnIg6b5za/1eLhvleKOxpjirQ1u71lOKQR1bQ1KKKwLmuKQZ7OPuAl32lnHio75w7U82
+         vUAA==
+X-Forwarded-Encrypted: i=1; AJvYcCV2M92404gnsje+OTVCZBn51SCpKh3+4B+2bLstVYK4tjQJQY5yohSj5n+rL40C7fmQQs7Nu+LScqiUcbA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz0343KkdxuUQgQgueKy2E6WTk6BU2ntNi2autT7FEjw3f7+975
+	N8bL97XWGP6Mn7seEAGZbD3nvtuya4gosDG/C0BY9Zqc6Wh7b8LO
+X-Gm-Gg: ASbGncuNUTmOqo1XENrULB3qWNnXIc4L/SUvRRDeA2UXqJmDKIKamFe91bgyVpT/pW5
+	6G7EIMMnT1hm1gYZyFsxJ1kuCFSsTTP3ZryjBUHQlsw32i19Y0kw/jeYWJdOvk0lHXqFJUHReb7
+	P+QkRwklUZHkLlr7dwCWkzxoSHX/ujXUYDbaPRruVjpp1Q6qmANSKdCHlfppTRDxddaIwSvOt63
+	zmK6QKPK4ZChY/CwZVYJv12xPngc6vF14WoFYcYDoAPFjTQF0nx9uczkqDqSvcx5J4zczzybPpF
+	qc88mGJkEesZbVzCGgUZ6SKWAkOVX4R+CI9vCScaYWEn7K6GOSmpmetWL/2G
+X-Google-Smtp-Source: AGHT+IF6WoA924thzyiezlrUcswx4u2tIuuRHX0f73idiC4a4c+coVG5HBcFiOVXH22mv/K63QVGoQ==
+X-Received: by 2002:a05:600c:1e1f:b0:43c:fd27:a216 with SMTP id 5b1f17b1804b1-43db62b7121mr131833025e9.23.1743539440203;
+        Tue, 01 Apr 2025 13:30:40 -0700 (PDT)
+Received: from f.. (cst-prg-92-82.cust.vodafone.cz. [46.135.92.82])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d8ff02f9csm168010325e9.26.2025.04.01.13.30.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Apr 2025 13:30:39 -0700 (PDT)
+From: Mateusz Guzik <mjguzik@gmail.com>
+To: mingo@redhat.com
+Cc: x86@kernel.org,
+	linux-kernel@vger.kernel.org,
+	Mateusz Guzik <mjguzik@gmail.com>
+Subject: [PATCH] x86: predict __access_ok() returning true
+Date: Tue,  1 Apr 2025 22:30:29 +0200
+Message-ID: <20250401203029.1132135-1-mjguzik@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 
-On Tue, 1 Apr 2025, Nicolas Pitre wrote:
+This works around what seems to be an optimization bug in gcc (at least
+13.3.0), where it predicts access_ok() to fail despite the hint to the
+contrary.
 
-> On Tue, 1 Apr 2025, David Laight wrote:
-> 
-> > Looking at the C version, I wonder if the two ilog2() calls are needed.
-> > They may not be cheap, and are the same as checking 'n_hi == 0'.
-> 
-> Which two calls? I see only one.
+_copy_to_user contains:
+	if (access_ok(to, n)) {
+		instrument_copy_to_user(to, from, n);
+		n = raw_copy_to_user(to, from, n);
+	}
 
-Hmmm, sorry. If by ilog2() you mean the clz's then those are cheap. Most 
-CPUs have a dedicated instruction for that. The ctz, though, is more 
-expensive (unless it is ARMv7 and above with an RBIT instruction).
+Where access_ok is likely(__access_ok(addr, size)), yet the compiler
+emits conditional jumps forward for the case where it succeeds:
 
-> And please explain how it can be the same as checking 'n_hi == 0'.
+<+0>:     endbr64
+<+4>:     mov    %rdx,%rcx
+<+7>:     mov    %rdx,%rax
+<+10>:    xor    %edx,%edx
+<+12>:    add    %rdi,%rcx
+<+15>:    setb   %dl
+<+18>:    movabs $0x123456789abcdef,%r8
+<+28>:    test   %rdx,%rdx
+<+31>:    jne    0xffffffff81b3b7c6 <_copy_to_user+38>
+<+33>:    cmp    %rcx,%r8
+<+36>:    jae    0xffffffff81b3b7cb <_copy_to_user+43>
+<+38>:    jmp    0xffffffff822673e0 <__x86_return_thunk>
+<+43>:    nop
+<+44>:    nop
+<+45>:    nop
+<+46>:    mov    %rax,%rcx
+<+49>:    rep movsb %ds:(%rsi),%es:(%rdi)
+<+51>:    nop
+<+52>:    nop
+<+53>:    nop
+<+54>:    mov    %rcx,%rax
+<+57>:    nop
+<+58>:    nop
+<+59>:    nop
+<+60>:    jmp    0xffffffff822673e0 <__x86_return_thunk>
 
-This question still stands.
+Patching _copy_to_user() to likely() around the access_ok() use does
+not change the asm.
 
+However, spelling out the prediction *within* __access_ok() does the
+trick:
+<+0>:     endbr64
+<+4>:     xor    %eax,%eax
+<+6>:     mov    %rdx,%rcx
+<+9>:     add    %rdi,%rdx
+<+12>:    setb   %al
+<+15>:    movabs $0x123456789abcdef,%r8
+<+25>:    test   %rax,%rax
+<+28>:    jne    0xffffffff81b315e6 <_copy_to_user+54>
+<+30>:    cmp    %rdx,%r8
+<+33>:    jb     0xffffffff81b315e6 <_copy_to_user+54>
+<+35>:    nop
+<+36>:    nop
+<+37>:    nop
+<+38>:    rep movsb %ds:(%rsi),%es:(%rdi)
+<+40>:    nop
+<+41>:    nop
+<+42>:    nop
+<+43>:    nop
+<+44>:    nop
+<+45>:    nop
+<+46>:    mov    %rcx,%rax
+<+49>:    jmp    0xffffffff82255ba0 <__x86_return_thunk>
+<+54>:    mov    %rcx,%rax
+<+57>:    jmp    0xffffffff82255ba0 <__x86_return_thunk>
 
-Nicolas
+Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
+---
+
+I did not investigate what's going on here. It may be other spots are
+also suffering.
+
+If someone commits to figuring out what went wrong I'll be happy to drop
+this patch. Otherwise this can be worked around at least for access_ok()
+consumers.
+
+ arch/x86/include/asm/uaccess_64.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/include/asm/uaccess_64.h b/arch/x86/include/asm/uaccess_64.h
+index c52f0133425b..30c912375260 100644
+--- a/arch/x86/include/asm/uaccess_64.h
++++ b/arch/x86/include/asm/uaccess_64.h
+@@ -98,11 +98,11 @@ static inline void __user *mask_user_address(const void __user *ptr)
+ static inline bool __access_ok(const void __user *ptr, unsigned long size)
+ {
+ 	if (__builtin_constant_p(size <= PAGE_SIZE) && size <= PAGE_SIZE) {
+-		return valid_user_address(ptr);
++		return likely(valid_user_address(ptr));
+ 	} else {
+ 		unsigned long sum = size + (__force unsigned long)ptr;
+ 
+-		return valid_user_address(sum) && sum >= (__force unsigned long)ptr;
++		return likely(valid_user_address(sum) && sum >= (__force unsigned long)ptr);
+ 	}
+ }
+ #define __access_ok __access_ok
+-- 
+2.43.0
+
