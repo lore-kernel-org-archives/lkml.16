@@ -1,196 +1,172 @@
-Received: from out203-205-221-164.mail.qq.com (out203-205-221-164.mail.qq.com [203.205.221.164])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C6552AEFE
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 09:32:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.164
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FA231EBA1E
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 09:32:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743499943; cv=none; b=Me79sUCsPEnOXtwMdXUF3uzY3KKR0TmgAc9h80k0wQN262BkTdIr4+b1ej/uI5Z+6fa6DaGX+mc7xL6l+GC5d9rHVRTcK4E09x0aoTZGTa1Hz617l8h/s6ZTmWf1ldaZLtBVYa481cC+LHBzNmP5w3bmYFjpPtg0c4cMxMdcirs=
+	t=1743499962; cv=none; b=L9R0ynlsPnPC33X46SoCTFAuFzY9HPr2gg4j9J1r7C/XYOCW879mJhmoMUeGfWmxr3P4DSAQEP2fBgELg7HedzdKavwdluH50gz0tLDCOLKuCpkm06muh1C+lq18pYeNyRJwzpDmAra5vUZ7O0YKzp6eHfY6wUW2BgS5fufwC5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743499943; c=relaxed/simple;
-	bh=OAKVSvRwfQi5FNmnLndFBbj2HUDr15x02ukw7LAYHkY=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=EG/KGKVGflTB/ptEReA1ot14CumNRvo47aBRsXon9umUoouBpNpCNE9P3E90IxXV+9QTm9CnJAZu+WlTrwnsqGkKfZMmwNkSk3YcD47FND9gmECvTWb4BblCUOz5U6wP/mNqczFooTj3H/8TL8Xqa5NorSgMqlgFT/OxP/sDAzc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=yzJjk7lv; arc=none smtp.client-ip=203.205.221.164
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1743499962; c=relaxed/simple;
+	bh=N1MnFFisJ8cMoy9BLzrQr7gNzud5JLemazDWM0tzY0g=;
+	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
+	 References:In-Reply-To; b=SfIgP7GX5VN7+ZwI2V95yLB9zViwqpezWcD6qbOik1nM9t9yiHABUtLLk8HSwpp+eXTHOj6jnSinpA3dwP1t1/ihXnhonKGIr16fPfkFAqEQm9ot0K6JlC4ABJroYElIWJODdNfi/fk5bV4ozC95WaZuYecc+aZRl/UOzY2ItjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=Q+/vI1Sw; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="yzJjk7lv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1743499626; bh=rHnNmt3+i6+Fmmxq3LKb4Rz5gmJ6NIMisYM0ZQcKssA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=yzJjk7lvm4rMAyz3Fuf3CKntuGeNeE6UGeKvFpTQWZh/sW92MKYKH5WYanzQDhKz8
-	 i1kWs40Pf15vKlYCi5m5dT3BaAhI19fXVhduwcEprzCmK6D4MpNM2VjuIp2JdaCdRZ
-	 6xx3BT3xwlMtsF8/g16CwfrAccjvPv3393U+fKbU=
-Received: from localhost.localdomain ([116.128.244.169])
-	by newxmesmtplogicsvrszc16-0.qq.com (NewEsmtp) with SMTP
-	id 6C41646E; Tue, 01 Apr 2025 17:27:04 +0800
-X-QQ-mid: xmsmtpt1743499624txlq3fgvi
-Message-ID: <tencent_46894AB4C702852846EC72D26C273B817E09@qq.com>
-X-QQ-XMAILINFO: NbgegmlEc3JuPn2KFxiEiDoj/jELAQe4blJkXPNJwF33bp2e/1jHKrg4+l/tpb
-	 +FNG6swqazzHmsJ7vA8SZ0ez7lULzJc/kX1EqGyjlDD6WLwfenzEv0Tapnn2ZrzmBcL0CJOWnW/c
-	 2ZJCGYFTKN7/UgvON1GePZmqSvRXki4jDPsFwvLm0Sk4wOe3giuG/WVfqcQAJGkISXVZknD3nXoC
-	 X9qu3L+217VWL88XNpGXOMDx5onruI7ObrzHnGJXF64Wbve4oL1QbcjL9/XkzacxKhY2qQIXJai+
-	 NXZGH2q7XQ/DmbAreNQRtr7lN3Io/NH7UNNI7L3/AQdjlLoDwd5jqI4l4x7r61kWR9VR44asJ5Va
-	 6W8mjNIaDQcqQxeXy0gaiKM6O7QSCwTOJZk3mfoZmMaCm0zBP8yvubcjSnohY0jW5a0oBQPgltYC
-	 0bT0tsL7qVNRDB4UxnXjEfrfajOXX1qJs0SW+icYXNymIkJRh34rXf4swG8ez7hROl96i7lgnPIX
-	 Zy6xshhtYLeGsOVZ4HpEDPNB+3ur2H8K7Bx2akuPlTvRglHxL5r2TSWduWz2Ry+n3663aZ9U/eop
-	 kqUDjtVmqgG3rWQwsJCfvBOAbGe1kLqjcBV2M7Qd95s/uu7EJlwqbvi/puEFxDKQbPILInN4ZvqV
-	 ZplKy7AUoxPjoR/VOW1zsv8Kx64JJe1irFhpBypaHIFJb7BapReEixHPmJpVoSCQUXtouVLLksOh
-	 LSBTEbp9VMDrYpHsCQHUJ/Ec9Qc2UODqdID5vIgYuHXZ30b/wlOEurkcM3BxtjlE9GMU12ldDn+8
-	 ro1KNzMRPB7tz6wYc4ZacJ/koQGoLYA7cxx2wkALt7DeaTHNEe5EMSlclkGEVAJGJlrMHyfpuN1p
-	 t3gtF3YHDRAyb3F761TAdy5Z10XX+lG0Wxd4p33YcUWyux1ws736wVl+EAkIoU7QbYz+8FZtML3b
-	 7MHpEodAS1O2JuF3gY+WoX0m1UvP0s83Rzlq5oTfFQEgA/9YEfUQIJRbO1wbrLIkOHdkcMU5/CCn
-	 kxv5nYuhsnr12eWbiU
-X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
-From: Yaxiong Tian <iambestgod@qq.com>
-To: kbusch@kernel.org,
-	axboe@kernel.dk,
-	hch@lst.de,
-	sagi@grimberg.me,
-	chaitanyak@nvidia.com
-Cc: linux-nvme@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Yaxiong Tian <tianyaxiong@kylinos.cn>
-Subject: [PATCH v3 2/3] nvme: add sysfs interface for APST table updates
-Date: Tue,  1 Apr 2025 17:27:02 +0800
-X-OQ-MSGID: <20250401092702.1558230-1-iambestgod@qq.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <tencent_4612952C8C5109058CD8E688D81276A2FD0A@qq.com>
-References: <tencent_4612952C8C5109058CD8E688D81276A2FD0A@qq.com>
+	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="Q+/vI1Sw"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ac2bfcd2a70so701674266b.0
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 02:32:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fairphone.com; s=fair; t=1743499957; x=1744104757; darn=vger.kernel.org;
+        h=in-reply-to:references:subject:cc:to:from:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OZBzvWcIsDBo3G9LnKcTDplA9cLCR7b0coAB89MP6E0=;
+        b=Q+/vI1SwRfZWQwoY93Fy51LnPDjMgpLxg7Fx5/i/+OcCPOLJTd2S5rRZCcHmWAudRv
+         q0UckMmJLRxFRPC7WUHc2fnEWhQCg3HO/sWTSFkXHnpyO/aabcc/w2tAfdirEaSMBAWQ
+         STYR0fzRQpRyPgsI9SoZnWGFlatiNT7VyM1/DWCh9G4GnIOpJ3m6zWPHPES15A51UjEF
+         +D/bxbOosb60o6frKyXoJOVS8mmJZZlKJcvKZOuIuS5pNffzCYzD35xPr26c/esIEKzK
+         vJrBkHtJ4yCrpPZ7r1MP852RJOOoEpbScRfHMTGCVPvQQE4serwScgJ21sog3UWp0i6S
+         V7Zg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743499957; x=1744104757;
+        h=in-reply-to:references:subject:cc:to:from:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=OZBzvWcIsDBo3G9LnKcTDplA9cLCR7b0coAB89MP6E0=;
+        b=nyhKssDMlHDUps8OBjx7Nard0WxoueSU/j/wLLof12X9QwgrZQhlP2VUXqDAWhdyD4
+         LQ3KvmDYr244pu/n5UZxKWXOEDNTPKAltFNbG3aYYvkOcHj+qe/TsmxgE8o/RH5d367Q
+         x2LqOXL2r9Ehzt9QgvCXDEZDHiuW/2W6VwVJ+WBgwC427OrVXf0CG4QKqOcK97QrC4xR
+         RUHNAf/bvzqZDaEiLO5UMkzwTxi0rAIplszdtiSwDO8gokOzjIj8MSRakm8GGcrO8ncu
+         6k6xG4DVhamWG6R1Fze++lqzV19MnCcILFyUffhQ2WjWS26ibFM8RNhVSJhUiuneCqP0
+         H0WA==
+X-Forwarded-Encrypted: i=1; AJvYcCWHO740kRSyHq34RU7iLWJf79JiusMRWXcBuDll6PE1jptmUkmQmpNcr4ShACCVza2UwIXDZ/gAev/UXiQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4wHjRXWxc0uOa6QNJczYm9QdQAxA7auuFAwkY9NyRYQJhjucV
+	XNjGBVhSicEbn0RnMDV/qm6tlUOKV8o3pquSaROmIFt6egARrMIHhxYzvsqtuq4=
+X-Gm-Gg: ASbGncu9SBphImCqR6oqdRjYTqdG1Bs2pw7TVejnJUbnZxdn2out7GH42f+42/69qrv
+	g1TqTnzbc5qH+/38cnwmzCF4fRiZhyFiUZ5U4yL1btHtHJfmLmAyppwJicj/MW0Bm8HWHgkW4fO
+	M8OZddPvJzsfTt0saJOMpiKqtkom5JFXUL5SSa73aii0oBHgos7S/W0uHuWU2X3J1p9cUAS5DZd
+	S9CdEis2jf1Y1+T5Sg8jdLYTXbmRy9bMRCco8Sp5h+OfT5l0kfIpDA0/d2za16xQTO3zKdZ/upy
+	EhlFs8AsLneGqVvRfY5QT4SUwYcQArLzq3OO38sCFiAmaA==
+X-Google-Smtp-Source: AGHT+IFiDVwfIgbHWBVxHJV1fUXGWM172/jD8Iw3qWJRy89QsLVtEytv5j6FHvB1CN3xyra++dE96w==
+X-Received: by 2002:a17:907:7214:b0:ac6:d9cb:58c0 with SMTP id a640c23a62f3a-ac738b82b65mr902203166b.50.1743499957495;
+        Tue, 01 Apr 2025 02:32:37 -0700 (PDT)
+Received: from localhost ([41.66.98.107])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac78bdd54a7sm47785366b.22.2025.04.01.02.32.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Apr 2025 02:32:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 01 Apr 2025 11:32:34 +0200
+Message-Id: <D8V75HO8O4CO.33RMUJLKQ7UG5@fairphone.com>
+From: "Luca Weiss" <luca.weiss@fairphone.com>
+To: "Dmitry Baryshkov" <lumag@kernel.org>
+Cc: "Bjorn Andersson" <andersson@kernel.org>, "Konrad Dybcio"
+ <konradybcio@kernel.org>, "Rob Herring" <robh@kernel.org>, "Krzysztof
+ Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>,
+ <cros-qcom-dts-watchers@chromium.org>,
+ <~postmarketos/upstreaming@lists.sr.ht>, <phone-devel@vger.kernel.org>,
+ <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, "Konrad Dybcio"
+ <konrad.dybcio@oss.qualcomm.com>
+Subject: Re: [PATCH v2 0/3] Fairphone 5 DisplayPort over USB-C support
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250312-fp5-pmic-glink-dp-v2-0-a55927749d77@fairphone.com>
+ <y7dfv4mmtzkv2umvverkn6qvjt3tg7cz4jj4zsb4t6vu4heh4d@64zpkjihjc23>
+In-Reply-To: <y7dfv4mmtzkv2umvverkn6qvjt3tg7cz4jj4zsb4t6vu4heh4d@64zpkjihjc23>
 
-From: Yaxiong Tian <tianyaxiong@kylinos.cn>
+Hi Dmitry,
 
-In desktop systems, users can choose between power-saving mode and
-performance mode. These two modes involve different trade-offs between
-NVMe performance and power efficiency, thus requiring dynamic updates to APST.
+On Wed Mar 12, 2025 at 8:06 PM CET, Dmitry Baryshkov wrote:
+> On Wed, Mar 12, 2025 at 01:05:07PM +0100, Luca Weiss wrote:
+>> This series adds all the necessary bits to enable DisplayPort-out over
+>> USB-C on Fairphone 5.
+>>=20
+>> There's currently a dt validation error with this, not quite sure how to
+>> resolve this:
+>>=20
+>>   arch/arm64/boot/dts/qcom/qcm6490-fairphone-fp5.dtb: typec-mux@42: port=
+:endpoint: Unevaluated properties are not allowed ('data-lanes' was unexpec=
+ted)
+>>           from schema $id: http://devicetree.org/schemas/usb/fcs,fsa4480=
+.yaml#
+>
+> This comes from usb-switch.yaml, it requires that 'port' adheres to the
+> /schemas/graph.yaml#/properties/port (which forbids extra properties).
+> The usb-switch.yaml needs to be fixed to use port-base for that node.
 
-Currently, the APST (Autonomous Power State Transition) table can only be
-updated during module initialization via module parameters or indirectly
-by setting QoS latency requirements. This patch adds a direct sysfs
-interface to allow dynamic updates to the APST table at runtime.
+Thanks, do you think the attached patch would be suitable? It does fix
+the warning for me, but not sure if it's too lax or doing the wrong
+thing.
 
-The new sysfs entry is created at:
-/sys/class/nvme/<controller>/apst_update
-
-This provides more flexibility in power management tuning without
-requiring module reload or QoS latency changes.
-
-Example usage:
-update nvme module parameters.
-echo 1  > /sys/class/nvme/nvme0/apst_update
-
-Signed-off-by: Yaxiong Tian  <tianyaxiong@kylinos.cn>
----
- drivers/nvme/host/core.c  |  9 +++++++--
- drivers/nvme/host/nvme.h  |  2 ++
- drivers/nvme/host/sysfs.c | 24 ++++++++++++++++++++++++
- 3 files changed, 33 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index fb0404fee551..9dea1046b8b4 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -2654,7 +2654,7 @@ static bool nvme_apst_get_transition_time(u64 total_latency,
-  *
-  * Users can set ps_max_latency_us to zero to turn off APST.
-  */
--static int nvme_configure_apst(struct nvme_ctrl *ctrl)
-+int nvme_configure_apst(struct nvme_ctrl *ctrl)
- {
- 	struct nvme_feat_auto_pst *table;
- 	unsigned apste = 0;
-@@ -2778,8 +2778,11 @@ static void nvme_set_latency_tolerance(struct device *dev, s32 val)
- 
- 	if (ctrl->ps_max_latency_us != latency) {
- 		ctrl->ps_max_latency_us = latency;
--		if (nvme_ctrl_state(ctrl) == NVME_CTRL_LIVE)
-+		if (nvme_ctrl_state(ctrl) == NVME_CTRL_LIVE) {
-+			mutex_lock(&ctrl->apst_lock);
- 			nvme_configure_apst(ctrl);
-+			mutex_unlock(&ctrl->apst_lock);
-+		}
- 	}
- }
- 
-@@ -4852,6 +4855,8 @@ int nvme_init_ctrl(struct nvme_ctrl *ctrl, struct device *dev,
- 	ctrl->ka_cmd.common.opcode = nvme_admin_keep_alive;
- 	ctrl->ka_last_check_time = jiffies;
- 
-+	mutex_init(&ctrl->apst_lock);
+diff --git a/Documentation/devicetree/bindings/usb/usb-switch.yaml b/Docume=
+ntation/devicetree/bindings/usb/usb-switch.yaml
+index da76118e73a5..9598c1748d35 100644
+--- a/Documentation/devicetree/bindings/usb/usb-switch.yaml
++++ b/Documentation/devicetree/bindings/usb/usb-switch.yaml
+@@ -26,11 +26,15 @@ properties:
+     type: boolean
+=20
+   port:
+-    $ref: /schemas/graph.yaml#/properties/port
++    $ref: /schemas/graph.yaml#/$defs/port-base
+     description:
+       A port node to link the device to a TypeC controller for the purpose=
+ of
+       handling altmode muxing and orientation switching.
+=20
++    patternProperties:
++      "^endpoint(@[0-9a-f]+)?$":
++        $ref: /schemas/graph.yaml#/$defs/endpoint-base
 +
- 	BUILD_BUG_ON(NVME_DSM_MAX_RANGES * sizeof(struct nvme_dsm_range) >
- 			PAGE_SIZE);
- 	ctrl->discard_page = alloc_page(GFP_KERNEL);
-diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
-index 51e078642127..7f8e10f5bf7a 100644
---- a/drivers/nvme/host/nvme.h
-+++ b/drivers/nvme/host/nvme.h
-@@ -385,6 +385,7 @@ struct nvme_ctrl {
- 	key_serial_t tls_pskid;
- 
- 	/* Power saving configuration */
-+	struct mutex apst_lock;
- 	u64 ps_max_latency_us;
- 	bool apst_enabled;
- 
-@@ -828,6 +829,7 @@ void nvme_unfreeze(struct nvme_ctrl *ctrl);
- void nvme_wait_freeze(struct nvme_ctrl *ctrl);
- int nvme_wait_freeze_timeout(struct nvme_ctrl *ctrl, long timeout);
- void nvme_start_freeze(struct nvme_ctrl *ctrl);
-+int nvme_configure_apst(struct nvme_ctrl *ctrl);
- 
- static inline enum req_op nvme_req_op(struct nvme_command *cmd)
- {
-diff --git a/drivers/nvme/host/sysfs.c b/drivers/nvme/host/sysfs.c
-index 6d31226f7a4f..20146eb4c671 100644
---- a/drivers/nvme/host/sysfs.c
-+++ b/drivers/nvme/host/sysfs.c
-@@ -684,6 +684,29 @@ static DEVICE_ATTR(dhchap_ctrl_secret, S_IRUGO | S_IWUSR,
- 	nvme_ctrl_dhchap_ctrl_secret_show, nvme_ctrl_dhchap_ctrl_secret_store);
- #endif
- 
-+static ssize_t apst_update_store(struct device *dev,
-+					      struct device_attribute *attr,
-+					      const char *buf, size_t size)
-+{
-+	struct nvme_ctrl *ctrl = dev_get_drvdata(dev);
-+	bool bool_data = false;
-+	int err;
-+
-+	err = kstrtobool(buf, &bool_data);
-+
-+	if (err)
-+		return err;
-+
-+	if (bool_data && nvme_ctrl_state(ctrl) == NVME_CTRL_LIVE) {
-+		mutex_lock(&ctrl->apst_lock);
-+		nvme_configure_apst(ctrl);
-+		mutex_unlock(&ctrl->apst_lock);
-+	}
-+
-+	return size;
-+}
-+static DEVICE_ATTR_WO(apst_update);
-+
- static struct attribute *nvme_dev_attrs[] = {
- 	&dev_attr_reset_controller.attr,
- 	&dev_attr_rescan_controller.attr,
-@@ -712,6 +735,7 @@ static struct attribute *nvme_dev_attrs[] = {
- 	&dev_attr_dhchap_ctrl_secret.attr,
- #endif
- 	&dev_attr_adm_passthru_err_log_enabled.attr,
-+	&dev_attr_apst_update.attr,
- 	NULL
- };
- 
--- 
-2.25.1
+   ports:
+     $ref: /schemas/graph.yaml#/properties/ports
+     properties:
+
+
+Regards
+Luca
+
+>
+>>=20
+>> See also this mail plus replies:
+>> * https://lore.kernel.org/linux-arm-msm/D0H3VE6RLM2I.MK2NT1P9N02O@fairph=
+one.com/
+>>=20
+>> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+>> ---
+>> Changes in v2:
+>> - Move adding "*-switch;" properties already in earlier patches
+>> - Move wiring up SS USB & DP to SoC instead of being done in device
+>> - Pick up tags
+>> - Link to v1: https://lore.kernel.org/r/20250226-fp5-pmic-glink-dp-v1-0-=
+e6661d38652c@fairphone.com
+>>=20
+>> ---
+>> Luca Weiss (3):
+>>       arm64: dts: qcom: qcm6490-fairphone-fp5: Add PTN36502 redriver
+>>       arm64: dts: qcom: qcm6490-fairphone-fp5: Add OCP96011 audio switch
+>>       arm64: dts: qcom: qcm6490-fairphone-fp5: Hook up DisplayPort over =
+USB-C
+>>=20
+>>  arch/arm64/boot/dts/qcom/qcm6490-fairphone-fp5.dts | 103 ++++++++++++++=
++++++--
+>>  arch/arm64/boot/dts/qcom/sc7280.dtsi               |   9 +-
+>>  2 files changed, 104 insertions(+), 8 deletions(-)
+>> ---
+>> base-commit: dcb11dc4740372cd4cce0b763a4a8ec4e9f347a6
+>> change-id: 20231208-fp5-pmic-glink-dp-216b76084bee
+>>=20
+>> Best regards,
+>> --=20
+>> Luca Weiss <luca.weiss@fairphone.com>
+>>=20
 
