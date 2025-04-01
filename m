@@ -1,114 +1,167 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A383B673;
-	Tue,  1 Apr 2025 03:21:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8783CB673;
+	Tue,  1 Apr 2025 03:22:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743477719; cv=none; b=Tyn56S114ZHqy8Xvo9qr0CCM62j9LyaW4/Gdtq11Be3zWFwtrAgiYZuOzZ+K1cb0Th3pElRiuTHoqvPwUlxSQznuJ+EP044GhO2T3mq0KnKWVqJV5ZUBTe65CTAMdW3Bt7h8FTOrqIy9Dv7D9vTYl+N08VpGgktXdFxPD+dbEjA=
+	t=1743477726; cv=none; b=H1Gl1E58ohUvWi0lKFMqCLopFtATZY13OyBFhN0efsmB3xpePcdYC12p+CIjVSjRZ8RAoM/cOpCL+s+mzWpX4+/mL0qoORObYUbnYLgHgRpYyXFVqJ4ZxvbmCJiFpesUp3Pr5m9o4lOLVVoqJGOc5ZZzVnbZ/wbbYmBv9x+Wqgg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743477719; c=relaxed/simple;
-	bh=+gwKMPJps5DpIekGmbPk0xDMYavisjDBStAFLyDSkFs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=O9E+i+XGN5onwrFVQS/+Wm0yokwvfWR+4FxSbcV7iCcOyAOp3/IqtK+CWA48UxwSMelwru8N73YEXVlDQ7J5ngkv6r9l0tEKjh4Koki3cYRlEZ7veKRd+ysyNQWzveqn6yvkBR0lxm15XeAzmZCUPW8u5ZCsA/E+cjvXMrCMOdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Hf1HA0NS; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743477726; c=relaxed/simple;
+	bh=VZw2pYV3IXXQg2xhNsRRQIyVlevcvBLgPaL//dheS5A=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PP0Snl6EFibFlrjug2oSzoMtxEzDZOZV7OhoeNRKTgpc5lfuPhjZ7dklYfMQM8pD3wYHtJQb83RdnrlhzjAUpZQ8c4g1XZSsZ0kTsibhX3ipWch24QYDyIerGph3m1+8AXpPB/M8zJGcCuaU4jW088s4zqbmtMXMs97+O1OwCus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=BVoJLmb7; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hf1HA0NS"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-224341bbc1dso86468465ad.3;
-        Mon, 31 Mar 2025 20:21:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743477717; x=1744082517; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=rBNDRxJpdNfAaoBULUFIoplDqDZ0d3rCl6nASZbW4Hc=;
-        b=Hf1HA0NS7bpGEUqdK+QQh5FvxLTEAwBQP9LPaANXf78kWC9PXSZgrwSLjEXe5DcV71
-         wyVnGnsMMpgd7PuWMvezzbGlgWOnvxsiL7Hl9EtwoNlW6YAKh4h7tqKqX5rtzUO2EumH
-         Nb8Z9W812c8d48DtU2F1FUUSB6HchOhqpytvl24RwODwL3B2HVYtUV3VDqAVz61wow3F
-         kldKRq4YZVxoWMn63B/S2mGxc0Jjm7rCcLV/XHT5FsXNuMEVlkPVBDFZr3kRDsZp/uFJ
-         VzguZ1G5umCMg7j3Q642+AhU8NQ7fJi+13GmcpGdpxZ4ZVqS+j1KrGvbRlqFRIymXN/b
-         ZOGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743477717; x=1744082517;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rBNDRxJpdNfAaoBULUFIoplDqDZ0d3rCl6nASZbW4Hc=;
-        b=Id/zJbNatmrdyGPRZI0rsU4Mereld7s03rLZwPSvQ0k/1ltdSTpc2m4/qqja32iSF8
-         i2ZDoQwInPRIn/XDZJoAOZrAA2Qcq8HqjQHDbNKc7GRvCpgXlFMqlTDxIhuGX2hS2ZAM
-         jVxduso+2zekUuOFxzb2oDwrOqUZKWiOADlxK7sgvLzWnrpJ8a0cuCGRNzR9uzmRSiS4
-         p74kpCpf8tlGNYzW1NgSTuXP2p96xiJnkgDU/tm6OUgsoU8hRPHBJbdOE0NJDx9WYjhg
-         XzmV9JMXny/o42vcoHHUyTL0Xj1fbJfxyZ59HJ/bvwmwU8aHHoJYH4Gsp4Ao2XkKSPCk
-         0uow==
-X-Forwarded-Encrypted: i=1; AJvYcCVghkLx1EGCBpjIeb8SgiTv/fM+5UUYier+x6fg0e7fAdT2u1llXkroexopX2ixRXSgcABevVPBsd9gpPM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YymXuyLIxAZ+AE4c8Z46lgTJhchOuwSoNcYzVzHaLHDB79iBPKh
-	L+9aLiyTTh6qvJrkvfFlLh2g4AnDRQd3gcB7K3ALatnHygMAFlrK
-X-Gm-Gg: ASbGncspi3rYoqTXRaiOQ/cw11Ca9a9zqyLNd13NOxvFaWxB43b3TX88/XC+2NWUCDD
-	Gb3lP3JyBJ/esg+WFsDQ2zQxZoAxXeUmh5oUM95ZoH+YJVtDXQwKP+faZ94U3UfYPJ5VkC9QA3s
-	MRfQx3FkZNR487IwOBg8XL1iUkrTkCkv4LFFyxOxCHWhzqbfkEweapcJIkYd4G1DPRrH04xDkFH
-	W2Bhq7P9JGs06OyPU9fqJd4bM1AF2wEcMwOoqd36sFASuZ0qVaoq3wwn3Q20hwMdjUI3jtEsqIs
-	UX7+GKY11Fm4OPlO/PKxn1w/ARRuBWQKCigjq6eMK8VwGvky+98lWPYEww==
-X-Google-Smtp-Source: AGHT+IHqryERmUniKJ6IdPCSTNAV/fFTqs4RC2vnzjOBEfzVozkSrV/z7rsplwxpNIvAgd/VAgfCrQ==
-X-Received: by 2002:a05:6a00:1a89:b0:739:4a93:a5df with SMTP id d2e1a72fcca58-739803ac1f9mr19141112b3a.12.1743477716585;
-        Mon, 31 Mar 2025 20:21:56 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7397106b01asm8027166b3a.102.2025.03.31.20.21.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Mar 2025 20:21:56 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-From: Guenter Roeck <linux@roeck-us.net>
-To: Johannes Berg <johannes.berg@intel.com>
-Cc: linux-wireless@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Guenter Roeck <linux@roeck-us.net>,
-	Miri Korenblit <miriam.rachel.korenblit@intel.com>,
-	Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH] wifi: iwlwifi: mld: Fix build with CONFIG_PM disabled
-Date: Mon, 31 Mar 2025 20:21:53 -0700
-Message-ID: <20250401032153.2896424-1-linux@roeck-us.net>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="BVoJLmb7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1743477721;
+	bh=6kz1VwHKILsWDlid7TS14Nwv5qyWGtTI62w3/+MpU0U=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=BVoJLmb7NjtBy76umJa0nqqJWk8bbTfGJ86VonXS8apBz7wwB8o3w3yLeGJQfybdn
+	 9wxm5JuDaDHlQ2yxL7BntkLjN2KVDYMRn645mF+nrJTeo95e4BQOFvYLkbg2BcGNOs
+	 wYX96zZkaKVj3L6UF9RGhAOswI2jArlR+dGElCnOwE66lKMJ3jWD+zbBLZJDEOz14L
+	 MmLB1PWWBpU6r43zUydmiBFzEaWVT0PjAMKSW05zIG7nPNS4vKcIjMtqvZW9kRslFS
+	 ce8q5wIkx6Y7+1Cnfr0UJYo7rNt/iX46mdHF8OAF8rO/gjhV8uM1Bl0m9MJvUJUl8j
+	 l/qpHLnkzlj7w==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZRYFh4jbtz4x2g;
+	Tue,  1 Apr 2025 14:22:00 +1100 (AEDT)
+Date: Tue, 1 Apr 2025 14:21:59 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Miguel Ojeda <ojeda@kernel.org>, Greg KH <greg@kroah.com>
+Cc: Abdiel Janulgue <abdiel.janulgue@gmail.com>, Danilo Krummrich
+ <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linux
+ Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: Re: linux-next: manual merge of the rust tree with the driver-core
+ tree
+Message-ID: <20250401142159.6f468edf@canb.auug.org.au>
+In-Reply-To: <20250321185630.566dc075@canb.auug.org.au>
+References: <20250321185630.566dc075@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/i08cdZDqBePamcHQk8DzCXY";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-If CONFIG_PM is disabled, the CONFIG_PM symbol is not defined.
-This results in
+--Sig_/i08cdZDqBePamcHQk8DzCXY
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-drivers/net/wireless/intel/iwlwifi/mld/iface.h:169:5: error:
-	"CONFIG_PM_SLEEP" is not defined, evaluates to 0
+Hi all,
 
-because the conditional uses #if instead of #ifdef. Using #ifdef
-fixes the problem.
+On Fri, 21 Mar 2025 18:56:30 +1100 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
+>
+> Today's linux-next merge of the rust tree got a semantic conflict in:
+>=20
+>   samples/rust/rust_dma.rs
+>=20
+> between commit:
+>=20
+>   7b948a2af6b5 ("rust: pci: fix unrestricted &mut pci::Device")
+>=20
+> from the driver-core tree and commit:
+>=20
+>   9901addae63b ("samples: rust: add Rust dma test sample driver")
+>=20
+> from the rust tree.
+>=20
+> I fixed it up (I applied the following supplied resolution, thanks Danilo)
+> and can carry the fix as necessary. This is now fixed as far as linux-next
+> is concerned, but any non trivial conflicts should be mentioned to your
+> upstream maintainer when your tree is submitted for merging.  You may
+> also want to consider cooperating with the maintainer of the conflicting
+> tree to minimise any particularly complex conflicts.
+>=20
+> From: Stephen Rothwell <sfr@canb.auug.org.au>
+> Date: Fri, 21 Mar 2025 18:21:27 +1100
+> Subject: [PATCH] fix up for "samples: rust: add Rust dma test sample driv=
+er"
+>=20
+> interacting with commit
+>=20
+>   7b948a2af6b5 ("rust: pci: fix unrestricted &mut pci::Device")
+>=20
+> from the driver-core tree.
+>=20
+> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> ---
+>  samples/rust/rust_dma.rs | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/samples/rust/rust_dma.rs b/samples/rust/rust_dma.rs
+> index 908acd34b8db..874c2c964afa 100644
+> --- a/samples/rust/rust_dma.rs
+> +++ b/samples/rust/rust_dma.rs
+> @@ -4,10 +4,10 @@
+>  //!
+>  //! To make this driver probe, QEMU must be run with `-device pci-testde=
+v`.
+> =20
+> -use kernel::{bindings, dma::CoherentAllocation, pci, prelude::*};
+> +use kernel::{bindings, device::Core, dma::CoherentAllocation, pci, prelu=
+de::*, types::ARef};
+> =20
+>  struct DmaSampleDriver {
+> -    pdev: pci::Device,
+> +    pdev: ARef<pci::Device>,
+>      ca: CoherentAllocation<MyStruct>,
+>  }
+> =20
+> @@ -48,7 +48,7 @@ impl pci::Driver for DmaSampleDriver {
+>      type IdInfo =3D ();
+>      const ID_TABLE: pci::IdTable<Self::IdInfo> =3D &PCI_TABLE;
+> =20
+> -    fn probe(pdev: &mut pci::Device, _info: &Self::IdInfo) -> Result<Pin=
+<KBox<Self>>> {
+> +    fn probe(pdev: &pci::Device<Core>, _info: &Self::IdInfo) -> Result<P=
+in<KBox<Self>>> {
+>          dev_info!(pdev.as_ref(), "Probe DMA test driver.\n");
+> =20
+>          let ca: CoherentAllocation<MyStruct> =3D
+> @@ -64,7 +64,7 @@ fn probe(pdev: &mut pci::Device, _info: &Self::IdInfo) =
+-> Result<Pin<KBox<Self>>
+> =20
+>          let drvdata =3D KBox::new(
+>              Self {
+> -                pdev: pdev.clone(),
+> +                pdev: pdev.into(),
+>                  ca,
+>              },
+>              GFP_KERNEL,
+> --=20
+> 2.45.2
 
-Fixes: d1e879ec600f9 ("wifi: iwlwifi: add iwlmld sub-driver")
-Cc: Miri Korenblit <miriam.rachel.korenblit@intel.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
----
-Maybe this has already been addressed. If so, sorry, I did not find it.
-I did not see thos fixed in Arnd's patch addressing the other PM_SLEEP
-related issues in the driver.
+This is now a conflict between the driver-core tree and Linus' tree.
 
- drivers/net/wireless/intel/iwlwifi/mld/iface.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+--=20
+Cheers,
+Stephen Rothwell
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/mld/iface.h b/drivers/net/wireless/intel/iwlwifi/mld/iface.h
-index d1d56b081bf6..ec14d0736cee 100644
---- a/drivers/net/wireless/intel/iwlwifi/mld/iface.h
-+++ b/drivers/net/wireless/intel/iwlwifi/mld/iface.h
-@@ -166,7 +166,7 @@ struct iwl_mld_vif {
- 
- 	struct iwl_mld_emlsr emlsr;
- 
--#if CONFIG_PM_SLEEP
-+#ifdef CONFIG_PM_SLEEP
- 	struct iwl_mld_wowlan_data wowlan_data;
- #endif
- #ifdef CONFIG_IWLWIFI_DEBUGFS
--- 
-2.45.2
+--Sig_/i08cdZDqBePamcHQk8DzCXY
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmfrW9cACgkQAVBC80lX
+0GzwFgf8CHfegwu2VpWF7Hc87eAsNBn5N2yrHmYcxyK7d5rV9WimuByxKpt3EJ+9
+9qgCnKtaOA0hQ0M8y4rcnv5AkDVaKrG/w/Rayfa4EweX8PpgpO67TBHbUpx7GZyW
+7YpsvL50XbtVSvpMxXLGI+HLY66HPdsXKZ9wQGrdU3KUv6IrtAx+xA/7EBZX/qKt
+MxoQfd2bW4LI/B8NrB+r3E/0R3NnQTHDm6r9a7NSbZD8Rzvmc+asZAJucPxOAwIK
+iMZUANfSKfmCayP1mbitU0zIfY8cfS5rehfGjByfGnxaYxONxNasFQmktHiWS0td
+xopvwyYnfXoMr90GsFT1Xn4+wn9ppQ==
+=R2pX
+-----END PGP SIGNATURE-----
+
+--Sig_/i08cdZDqBePamcHQk8DzCXY--
