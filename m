@@ -1,36 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B2FC156653;
-	Tue,  1 Apr 2025 09:17:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A2B11EE7B9;
+	Tue,  1 Apr 2025 09:17:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743499057; cv=none; b=F16og6Yed0FTTtZKEIsd35WkdI5tgxN7BZHDEXqi+Mutimv+xhYmqkMaf754R115rbyh1S0trQOOiUeg110xSIevFE2sCC6ew45BBTdSjrMNetOsrWqF9cj6BOy/79eeazD+7AASh8hzbxUlPhjZrZi0WYIqAiKz+I7G27yPX48=
+	t=1743499058; cv=none; b=lBHaB1qUCmABJY6cKM2BSBeR9DxG7sjQtlNj6oqRBwBzeUwm3+hR2toa8+pEZhvB4B6HuOrWvp+bX/Y3uD9YLtEX3zg9g5KFDApsc/s8YC0ccOkMqQCTumD/2M7K6XOb0Zkrqfs9GpUKXACOBYE2g6qSU9qK+NiK9ro6/U16NcE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743499057; c=relaxed/simple;
-	bh=J0L3Um0GRQp3OOt5WA3u+E6KwaB9/4HhItKzHfizai8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OE5Keh8FoqnOi6aKsHnzd9CjmKRleY2+mdsaRaF0Y7cy6QkGGKqzML1BN5mwRMKMj7IWSFhIJGvaIOuhNk2J/PPtmgH9B69C7voHCIekARowNyRqV5wkggNDroWE4/VIP9qZ8wfhvho8eIwW3HKVq2pUbyg6PqSWNhMBhB6MUD8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PSL72YDS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743499058; c=relaxed/simple;
+	bh=hY7d5l/jzCYASueLws6Rz29Q9HtgzeMl7jBFbrlIdNA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=RI4GzJNMvpvBDz5E+d9Yud8JTDEvmTrHaUS/54b+z4tUAIDHtk/iIJKWvRWt5koIJeHybEIengybWkP17TKcBO3C53FN7Ma3Dmn9bhw+eGX+QIwWCw60c16B0kJhM6OzY8tkV20Sgtc2MOTkJ2MhZwciym3jVpE4OonzT4wbVYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ORx/WcXp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PSL72YDS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB891C4CEE5;
-	Tue,  1 Apr 2025 09:17:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ORx/WcXp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D40C4C4CEEF;
+	Tue,  1 Apr 2025 09:17:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1743499057;
-	bh=J0L3Um0GRQp3OOt5WA3u+E6KwaB9/4HhItKzHfizai8=;
-	h=From:To:Cc:Subject:Date:From;
-	b=PSL72YDSphuHVNiRVQPhKnAlDu25lss3jTft7Ftm6/j3r4+h5NlPPNNnmZLcLOcDW
-	 KZn4m4M2jNsleaMzuAx56MzaG599Rk6H04X/FlGq+EVjtvCepELZ9mMDjbwEUKATsF
-	 q3oraUMaj+fEZlmcOmxPMGu9wDdRyy/l+m/cK06B77bqFZBD1NJoAuHMdPrY+Z3cv7
-	 eAWYzJsjUi+qZkI2uXBo/rWmFy65fVCsatgi71ti1JJZKaVhNEMQIZBe+D5o8hL74X
-	 X7AWDBnILkEURZjXsxXQw7B0YrU9jetOuYPp3EdsLxleBuneELlqEelkIWlxaj2WrY
-	 8no/VKQhDwXIQ==
+	bh=hY7d5l/jzCYASueLws6Rz29Q9HtgzeMl7jBFbrlIdNA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=ORx/WcXpgEBwhh0nSpDDQpENeE+uxDM7FwEXObBLzzjGDpc6GdlwD2j6Kkk3ayZml
+	 7o4JCFr2t713RmSFpGFBTjzVYPRVEtO/9N0N1RceRQZHylYs1V8MK5dAkd20vE8MQW
+	 6OYidH92Vuv3QLr7NJthrMdgDlgnF2FZBfrwEBa/BRzSlxcgUloRt3GxDHhbbjbOoo
+	 UQdQSvSHWXHxZ4ISfYdE0GlN/iI1/D9wVIHtwjhwBN4ybw6y+qZvMvTwIlDftZaB5U
+	 9qPhcUdvFcD0Zkn1TY1qmuxxbiGJVXCRZ6UtxqjD4LFPnE+yNSNxFCuIcD2f7p3mE4
+	 6ud/22QNq8dQw==
 Received: from sofa.misterjones.org ([185.219.108.64] helo=valley-girl.lan)
 	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.95)
 	(envelope-from <maz@kernel.org>)
-	id 1tzXkU-001GqU-JG;
-	Tue, 01 Apr 2025 10:17:34 +0100
+	id 1tzXkV-001GqU-Mt;
+	Tue, 01 Apr 2025 10:17:35 +0100
 From: Marc Zyngier <maz@kernel.org>
 To: linux-arm-kernel@lists.infradead.org,
 	linux-pci@vger.kernel.org,
@@ -48,10 +49,12 @@ Cc: Alyssa Rosenzweig <alyssa@rosenzweig.io>,
 	Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Mark Kettenis <mark.kettenis@xs4all.nl>
-Subject: [PATCH v3 00/13] PCI: apple: Add support for t6020
-Date: Tue,  1 Apr 2025 10:17:00 +0100
-Message-Id: <20250401091713.2765724-1-maz@kernel.org>
+Subject: [PATCH v3 04/13] PCI: ecam: Allow cfg->priv to be pre-populated from the root port device
+Date: Tue,  1 Apr 2025 10:17:04 +0100
+Message-Id: <20250401091713.2765724-5-maz@kernel.org>
 X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20250401091713.2765724-1-maz@kernel.org>
+References: <20250401091713.2765724-1-maz@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,91 +67,37 @@ X-SA-Exim-Rcpt-To: linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.o
 X-SA-Exim-Mail-From: maz@kernel.org
 X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-As Alyssa didn't have the bandwidth to deal with this series, I have
-taken it over. All bugs are therefore mine.
+In order to decouple ecam config space creation from probing via
+pci_host_common_probe(), allow the private pointer to be populated
+via the device drvdata pointer.
 
-The initial series [1] stated:
+Crucially, this is set before calling ops->init(), allowing that
+particular callback to have access to probe data.
 
-"This series adds T6020 support to the Apple PCIe controller. Mostly
- Apple shuffled registers around (presumably to accommodate the larger
- configurations on those machines). So there's a bit of churn here but
- not too much in the way of functional changes."
+This should have no impact on existing code which ignores the
+current value of cfg->priv.
 
-The biggest change is affecting the ECAM layer, allowing an ECAM
-driver to provide its own probe function instead of relying on the
-.init() callback to do the work. The ECAM layer can therefore be used
-as a library instead of a convoluted driver.
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+Acked-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+Tested-by: Janne Grunau <j@jannau.net>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+---
+ drivers/pci/ecam.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-The rest is a mix of bug fixes, cleanups, and required abstraction.
-
-This has been tested on T6020 (M2-Pro mini) and T8103 (M1 mini).
-
-* From v2[2]:
-
-  - Fixed the DT binding with new constraints specific to t6020
-
-  - Moved the "for_each_available_node()" fix to the head of the series
-
-  - Collected, RBs, TBs, ABs (thanks!)
-
-* From v1[1]:
-
-  - Described the PHY registers in the DT binding
-
-  - Extracted a ecam bridge creation helper from the host-common layer
-
-  - Moved probing into its own function instead of pci_host_common_probe()
-    
-  - Moved host-specific data to the of_device_id[] table
-
-  - Added dynamic allocation of the RID/SID bitmap
-
-  - Fixed latent bug in RC-generated interrupts
-
-  - Renamed reg_info to hw_info
-
-  - Dropped useless max_msimap
-
-  - Dropped code being moved around without justification
-
-  - Re-split some of the patches to follow a more logical progression
-
-  - General cleanup to fit my own taste
-
-[1] https://lore.kernel.org/r/20250211-pcie-t6-v1-0-b60e6d2501bb@rosenzweig.io
-[2] https://lore.kernel.org/r/20250325102610.2073863-1-maz@kernel.org
-
-Alyssa Rosenzweig (1):
-  dt-bindings: pci: apple,pcie: Add t6020 compatible string
-
-Hector Martin (6):
-  PCI: apple: Fix missing OF node reference in apple_pcie_setup_port
-  PCI: apple: Move port PHY registers to their own reg items
-  PCI: apple: Drop poll for CORE_RC_PHYIF_STAT_REFCLK
-  PCI: apple: Use gpiod_set_value_cansleep in probe flow
-  PCI: apple: Abstract register offsets via a SoC-specific structure
-  PCI: apple: Add T602x PCIe support
-
-Janne Grunau (1):
-  PCI: apple: Set only available ports up
-
-Marc Zyngier (5):
-  PCI: host-generic: Extract an ecam bridge creation helper from
-    pci_host_common_probe()
-  PCI: ecam: Allow cfg->priv to be pre-populated from the root port
-    device
-  PCI: apple: Move over to standalone probing
-  PCI: apple: Dynamically allocate RID-to_SID bitmap
-  PCI: apple: Move away from INTMSK{SET,CLR} for INTx and private
-    interrupts
-
- .../devicetree/bindings/pci/apple,pcie.yaml   |  33 ++-
- drivers/pci/controller/pci-host-common.c      |  24 +-
- drivers/pci/controller/pcie-apple.c           | 241 +++++++++++++-----
- drivers/pci/ecam.c                            |   2 +
- include/linux/pci-ecam.h                      |   2 +
- 5 files changed, 220 insertions(+), 82 deletions(-)
-
+diff --git a/drivers/pci/ecam.c b/drivers/pci/ecam.c
+index 260b7de2dbd57..2c5e6446e00ee 100644
+--- a/drivers/pci/ecam.c
++++ b/drivers/pci/ecam.c
+@@ -84,6 +84,8 @@ struct pci_config_window *pci_ecam_create(struct device *dev,
+ 			goto err_exit_iomap;
+ 	}
+ 
++	cfg->priv = dev_get_drvdata(dev);
++
+ 	if (ops->init) {
+ 		err = ops->init(cfg);
+ 		if (err)
 -- 
 2.39.2
 
