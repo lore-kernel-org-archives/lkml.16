@@ -1,205 +1,75 @@
-Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C07D41C84AB
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 16:15:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBFE720DD7D
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 16:16:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743524127; cv=none; b=GboFH1AqvG/mzxgQOSPVBGHn2af9qY+Q1R4l+kBRVQrugF8ta7xYyH/jO9d8AlqZRxVQI+NG7cF9A3C2LHHPWchF44wqHCAe2+CbLOKha3tbgM7+g2eM/RRbBJA0udXbHNTMI2P4/2Rl4J4GBrOEkl/nco9KbwfBHzRaNDHGz3k=
+	t=1743524195; cv=none; b=m8ISXZtw190iljyK5lHt87Gnnzl+FJfPxULAHD0hX176DhzFW6eaEZ6DGuYuBctTpAru6lluFkRxKLTXlUrikyI+mSSYiyN920pQxF9CvPBVMj/IFS/HjQh11gfPW/om4zzx7hTrBd6c/l0NjvLDsofm9FJSqMr+X7IMcqep5xE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743524127; c=relaxed/simple;
-	bh=MCDRrc6gITw7ILHOzJNTmL2BGOeoJlccEAeGN1hnyDY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XYZkVZ16gNI1JCqRoqxD2dFp1cF4r55mqhVOwc1tzSy5G2PWBNFwJbYoQMGKOH9PPyKLAJAFg+7iuNihdV01e7PrUrUzIdjEK+Giv+esv93YRV0R18PRUfuTKWy7JJhzeSgwZw0DdfP1StXfEAkCfBr34xThoLjCwNI50lzIZYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Ox2cgNtr; arc=none smtp.client-ip=209.85.210.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1743524195; c=relaxed/simple;
+	bh=ACojNPPcLx+riOgoNOBywycd9KS0V2VINRTWkpxHi/Q=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=FkfujjW+6W3vVCZNO5oqSGY2BjtFK+cXrxtUf9VDKbOYUC2oRFxFewXyEKzTeNAxm97ptZPHDOI/dPI29mjz3dzSk6+CldHSomLyPaAzzaDh9nSLnKxATdHGLd9eGVCQc0T4uRPZPlhQ3yXUcpm26RK2HF+UD62ir3/gMjtQ+qI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xTEbOMbw; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Ox2cgNtr"
-Received: by mail-ot1-f41.google.com with SMTP id 46e09a7af769-7272f9b4132so4171662a34.0
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 09:15:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xTEbOMbw"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-30566e34290so1008495a91.3
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 09:16:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1743524124; x=1744128924; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=KV6A6SkFyjP45lT34VumuzTtupTmw14mZAo1pKWFBns=;
-        b=Ox2cgNtrnIxNz8aG0aUMSR2rosHJfCY+GQRSrNdUVCK6mGUQ3XxVu878TmVFCE5+jR
-         EUe9x2BdE+QnpP+rMy1/D0VSOy32zu7KOHDXRnw3hvogEiiaBLIxici2yC1eV12j+LtR
-         saUsDBFjalGxEbzSzgdvjv9JQKWMYSxe6/j83Jld7scNrZJpHjLMcG2MK1v//VQ33F4o
-         1mtSlwX6s/4fGOhhQ99QiR5HaVF+umven+BKDy0nIzOEr7oJhv5hW64vYYDHftUqFJ1b
-         WnZX7m1kxcuZl9o0WB6Ri0OyF78rC1VJsb/MnA3Y/gPtufXeykZSqLNtOTLGZa8D7MXB
-         Jfbw==
+        d=google.com; s=20230601; t=1743524193; x=1744128993; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ACojNPPcLx+riOgoNOBywycd9KS0V2VINRTWkpxHi/Q=;
+        b=xTEbOMbwOMOxUWy0QipHbk/hHo014Ndrc3rYa4NRxRTfww5Q5CgGT3dgmFaVdDDB6V
+         p7y4/yb/4Gha1JB6JE5wuB9AygbCrExj4WX7zfqnyytW1zwFmLkJWbphwrmlhQyNmdsC
+         1dgajP70/Afl26qlrbjgU9x3aH+uVGmNrSf+Rhmiop7aDacPQ3sdGcGexKaR6OIIcmg2
+         T4nW9UXbP34y8W/nRLNkN0kJ5UesAkck5qcyouGboYckl9YfUQjHnME4iku2PR+9gG0T
+         nUOKCikQv6xQi26m5RE3xcl6OGmUbsKPL7xYyqBAXmiuc/85xL1abIF6/mmtCMqZAHL0
+         nzNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743524124; x=1744128924;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KV6A6SkFyjP45lT34VumuzTtupTmw14mZAo1pKWFBns=;
-        b=uGI3OssxvBod/dZzafzDErgyBK0rRyGbBJilQZ7pWq8QJXE9knZtjQcL5MhD7xsDFv
-         nakwplxsrN8yNrX6ourTKNLB38Rm8zP+r2P47M2JjyAUCd3xL9u3ziMOhS/GbbhKlPDV
-         wYANm2qoH4Qe2mjnmEE7a9G3JgJT/uYZGPx9fEufvFbcKmG/raPk74G8gIIgDIfWFlVO
-         wsvTHzmYUoLTsgYIQyTgChkyLLgD0FpfryfLgUZ0UfPpWWzP8h/pJ/NgAqhKD/LNxBNd
-         YM1XSc4sNwkNuH7cDoXWBEf2TtaKwyOyfvuXCEfxhGhRDE6q8nIFnVNf+BYEHgizROg8
-         owAQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV1sdHZ7W3R+grShTwriomUYZP2dZlUTdqLa7SVp9R3vq13bfS+uOPH6qJ2O1MRVXC1BkRx8FK8n0AhG1s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzzSD+p3/bbCnmE5SYK+yROd+khAqz+sZNCnhfAQ/ThTcYPQdou
-	Bp1f/3726qGWXrNOhwfZMwdNo85m2Xln8r0vo9/tf4ZQlyhbxx5yVcqhtC6/eMI4PyBGJ+VJ5VD
-	9A3U=
-X-Gm-Gg: ASbGncuyunCibaU/KgNY+j8acABYGN+Bzpt0OT8dhAUOFQbba3z67rNDQBOH1L4KWKh
-	X85h7sppFC2HgmP6YTw0sPqjIgTy1W1Ygo87rVE7xRjpLmhQeMwLsbbVsAHzbzZgnoSH7aVUtWW
-	zcXqjXkoE6F4CJjMGiwe/8Ola0hoMYHFzGGJ1fvHkJ7PNvLsj0PFVaI9ygjz0JQyvW2GLGc20XT
-	CaIT6UyFqxjbZqX6ltp0dktII5bzADlmG2EXZ+gGiW69vlibF42Z0OzSjKq+vCVAb1CJG1xVZtQ
-	jpnJ+GlIfdK8baKHdASvkGcIuHw/dmlrX8sPH3gSMN4ryQ7jYYrK+lBuqefnburNiV2dysM3sxX
-	MOHZVyQ==
-X-Google-Smtp-Source: AGHT+IHkFB1qErKdOP/R3+n0pyHcdkpWGJYkUI8OIJLr5yCsfzswBCRj23kPPNNelf6fm+HG+W8KGA==
-X-Received: by 2002:a05:6830:3152:b0:729:ff76:5166 with SMTP id 46e09a7af769-72c637c450dmr8141400a34.14.1743524123806;
-        Tue, 01 Apr 2025 09:15:23 -0700 (PDT)
-Received: from [192.168.0.113] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-72c58092589sm1914991a34.2.2025.04.01.09.15.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Apr 2025 09:15:22 -0700 (PDT)
-Message-ID: <e609fff8-9fc8-425a-8362-9205c17ffc4d@baylibre.com>
-Date: Tue, 1 Apr 2025 11:15:21 -0500
+        d=1e100.net; s=20230601; t=1743524193; x=1744128993;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ACojNPPcLx+riOgoNOBywycd9KS0V2VINRTWkpxHi/Q=;
+        b=BnkP1osZvo2VCWzS1/OQapAayZf7Mls8kAowDzvJ64HYnMGvdgb+richIlfaf1d8sn
+         EvgUbg6cLPt7l8mWfbLLbvxrEaDyavWzyPanAB1DVRP/y9kaMoGOD+uck63WXhw2Un17
+         brynTj7NDxEcfxQG7CpHNkad5hpFd2ZTkGAUKhpewhyWif9ymjFQILZsGX9zeJXONHLP
+         e8vTdGjluZWNY3ZwVBzlE0zpj+HrdzKmRyCFCtCcWcl/ooYgs1Ay7Mu+YZtQBt/G2sFi
+         0gjZRJYyvaLdmoaat+/wxJVSnVuEuRQQg6So10A1TrctmQrCPq2zQnIAET8j4vHXtzRd
+         +q8A==
+X-Gm-Message-State: AOJu0YyGg5lfezrOs+KhNo1kjK2JPfEazL1cdgi0xHV5r0kob2QHGfNw
+	i4C3hYOghxEKlSU1e0U/Zncug/Ka+XbPQYtEZVN6+IdWce8ZE0E/lx2chbf/fWpC4HGjQP/nXVc
+	XYQ==
+X-Google-Smtp-Source: AGHT+IHJPhtYxZuKDmgPcRQkJsHfOASSMbRV5HJyG+H3tF3h3o6vlYLvER6i1U7FUEsFVIndNR6h+3JOSiY=
+X-Received: from pjkk7.prod.google.com ([2002:a17:90b:57e7:b0:2ff:6e58:8a03])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:d007:b0:2fa:157e:c790
+ with SMTP id 98e67ed59e1d1-30531f71811mr20666131a91.5.1743524193217; Tue, 01
+ Apr 2025 09:16:33 -0700 (PDT)
+Date: Tue, 1 Apr 2025 09:16:31 -0700
+In-Reply-To: <20250401161106.790710-1-pbonzini@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 03/17] dt-bindings: iio: adc: ad7768-1: add
- trigger-sources property
-To: Jonathan Santos <Jonathan.Santos@analog.com>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-gpio@vger.kernel.org
-Cc: lars@metafoo.de, Michael.Hennerich@analog.com,
- marcelo.schmitt@analog.com, jic23@kernel.org, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, linus.walleij@linaro.org,
- brgl@bgdev.pl, lgirdwood@gmail.com, broonie@kernel.org,
- marcelo.schmitt1@gmail.com, jonath4nns@gmail.com
-References: <cover.1741268122.git.Jonathan.Santos@analog.com>
- <4136b5259df75221fc314bcd4a57ecaeeab41a45.1741268122.git.Jonathan.Santos@analog.com>
-Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <4136b5259df75221fc314bcd4a57ecaeeab41a45.1741268122.git.Jonathan.Santos@analog.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <20250401161106.790710-1-pbonzini@redhat.com>
+Message-ID: <Z-wRXy4ajK79pxKH@google.com>
+Subject: Re: [RFC PATCH 00/29] KVM: VM planes
+From: Sean Christopherson <seanjc@google.com>
+To: Paolo Bonzini <pbonzini@redhat.com>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, roy.hopkins@suse.com, 
+	thomas.lendacky@amd.com, ashish.kalra@amd.com, michael.roth@amd.com, 
+	jroedel@suse.de, nsaenz@amazon.com, anelkz@amazon.de, 
+	James.Bottomley@hansenpartnership.com
+Content-Type: text/plain; charset="us-ascii"
 
-On 3/6/25 3:00 PM, Jonathan Santos wrote:
-> In addition to GPIO synchronization, The AD7768-1 also supports
-> synchronization over SPI, which use is recommended when the GPIO
-> cannot provide a pulse synchronous with the base MCLK signal. It
-> consists of looping back the SYNC_OUT to the SYNC_IN pin and send
-> a command via SPI to trigger the synchronization.
-> 
-> Add a new trigger-sources property to enable synchronization over SPI
-> and future multiple devices support. This property references the
-> main device (or trigger provider) responsible for generating the
-> SYNC_OUT pulse to drive the SYNC_IN of device.
-> 
-> While at it, add description to the interrupts property.
-> 
-> Signed-off-by: Jonathan Santos <Jonathan.Santos@analog.com>
-> ---
-> v4 Changes:
-> * none
-> 
-> v3 Changes:
-> * Fixed dt-bindings errors.
-> * Trigger-source is set as an alternative to sync-in-gpios, so we
->   don't break the previous ABI.
-> * increased maxItems from trigger-sources to 2.
-> 
-> v2 Changes:
-> * Patch added as replacement for adi,sync-in-spi patch.
-> * addressed the request for a description to interrupts property.
-> ---
->  .../bindings/iio/adc/adi,ad7768-1.yaml        | 28 +++++++++++++++++--
->  1 file changed, 25 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7768-1.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7768-1.yaml
-> index 3ce59d4d065f..4bcc9e20fab9 100644
-> --- a/Documentation/devicetree/bindings/iio/adc/adi,ad7768-1.yaml
-> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7768-1.yaml
-> @@ -26,7 +26,19 @@ properties:
->    clock-names:
->      const: mclk
->  
-> +  trigger-sources:
-> +    description:
-> +      Specifies the device responsible for driving the synchronization pin,
-> +      as an alternative to adi,sync-in-gpios. If the own device node is
-> +      referenced, The synchronization over SPI is enabled and the SYNC_OUT
-> +      output will drive the SYNC_IN pin.
-> +    maxItems: 2
+On Tue, Apr 01, 2025, Paolo Bonzini wrote:
+> I guess April 1st is not the best date to send out such a large series
+> after months of radio silence, but here we are.
 
-This says maxItems: 2 but the description only describes one, namely /SYNC_IN.
-IIRC, the 2nd one is for the optional /START input.
-
-> +
->    interrupts:
-> +    description:
-> +      Specifies the interrupt line associated with the ADC. This refers
-> +      to the DRDY (Data Ready) pin, which signals when conversion results are
-> +      available.
->      maxItems: 1
->  
->    '#address-cells':
-> @@ -57,6 +69,9 @@ properties:
->    "#io-channel-cells":
->      const: 1
->  
-> +  "#trigger-source-cells":
-> +    const: 0
-> +
->  required:
->    - compatible
->    - reg
-> @@ -65,7 +80,6 @@ required:
->    - vref-supply
->    - spi-cpol
->    - spi-cpha
-> -  - adi,sync-in-gpios
->  
->  patternProperties:
->    "^channel@([0-9]|1[0-5])$":
-> @@ -89,6 +103,13 @@ patternProperties:
->  allOf:
->    - $ref: /schemas/spi/spi-peripheral-props.yaml#
->  
-> +  - oneOf:
-> +      - required:
-> +          - trigger-sources
-> +          - "#trigger-source-cells"
-> +      - required:
-> +          - adi,sync-in-gpios
-> +
->  unevaluatedProperties: false
->  
->  examples:
-> @@ -99,7 +120,7 @@ examples:
->          #address-cells = <1>;
->          #size-cells = <0>;
->  
-> -        adc@0 {
-> +        adc0: adc@0 {
->              compatible = "adi,ad7768-1";
->              reg = <0>;
->              spi-max-frequency = <2000000>;
-> @@ -108,7 +129,8 @@ examples:
->              vref-supply = <&adc_vref>;
->              interrupts = <25 IRQ_TYPE_EDGE_RISING>;
->              interrupt-parent = <&gpio>;
-> -            adi,sync-in-gpios = <&gpio 22 GPIO_ACTIVE_LOW>;
-> +            trigger-sources = <&adc0 0>;
-
-# cells is 0 but this has one cell specified. So one or the other is incorrect.
-Since there are other outputs that could be used as triggers, e.g. /DRDY could
-be used as a SPI offload trigger, having 1 cell seems prudent.
-
-> +            #trigger-source-cells = <0>;
->              reset-gpios = <&gpio 27 GPIO_ACTIVE_LOW>;
->              clocks = <&ad7768_mclk>;
->              clock-names = "mclk";
-
+Heh, you missed an opportunity to spell it "plains" and then spend the entire
+cover letter justifying the name :-)
