@@ -1,268 +1,134 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71FC11EBA14
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 12:49:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D950A1EC01F;
+	Tue,  1 Apr 2025 12:50:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743511783; cv=none; b=h2Y/f1LNgeZdym3qV+t4oseirMer2O4HDMsxo6qS2Uk5HuFtFys/UEKWPl4DA8XtOlwBuEdbMf41WbK66W+dW/cRyRXeqSG0ksJ0oq4EHTRyB5G0ifseG1qQ4P/MjFH/zwxlShLK5f2sOjAua3haeAu7PmSToXP4ixFkMQKOqRY=
+	t=1743511806; cv=none; b=sl8sdu39nENdaYdhVKQiDGFgn7toxSCuOZVIGmOpuDbWo0J/9wgAl1P8ctDRkty1HjLp72sGxFYG70fAVIVE2BFSW3c4B3lkTwVvgQNUyZscSb+Nr9ORjObyCfGXw6xIJGhvmIU971a0oY5iHCKZe0UmNs5lNKuDzXfoIkSUjFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743511783; c=relaxed/simple;
-	bh=hFhlgY9LULJ7D0UdU47cRObFp8n/dGLqOpwamAVat/0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=t+3/x1rp2xCoUk60JQADArNYN+ne8sLg7x0MZS/TtlKNTM2BbYYHYwG0iiAJOSac1COcVN2wtNpd5bf98EZm3siCl81DLCteLQsM1VIY5aADc8w3nu0L9nvXUEe6l65hEo5aYPlMgGpqiTyBGfPn/rSX2Fx7cNW1xdqWtYvkZ30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org; spf=none smtp.mailfrom=blackwall.org; dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b=wjX0pBTv; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=blackwall.org
+	s=arc-20240116; t=1743511806; c=relaxed/simple;
+	bh=l8DS0pBZzqAHtujG932plENYbefs0MpGtb/A8hNqdIM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bUoLQT9WXj5lrO8BwdqfpfhG74cvX8zIhR89g/upomBJACfFcmxe4I0LipLSXGR9ouyuAj8EmxtsZGe2FMnL7HaTIV5zefTS3e7R5G9GZ0EX4ntdecsEycBTnc5EvpeZOwc2Ktg6kGHwBt1Ld+lmymIJQIhsfslCwM8r9bIedXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sAyO0gDu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b="wjX0pBTv"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-aaecf50578eso954809966b.2
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 05:49:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=blackwall-org.20230601.gappssmtp.com; s=20230601; t=1743511779; x=1744116579; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=eyZLAkPMASU5JOY7VbTqXC3hb3mRoOc8aSxuHfahcL4=;
-        b=wjX0pBTvGGsVQe90rk9yokC3dfjkyMBskuQSR8wNF9MgmtXeLSoCp3EPjcIpb0jny6
-         rvp3hWZSP5gI+6fvxxiww90Qv6rZiwOCODQE9deHsIhWa/bpcqO+e9NiyFuHDQvJ5ojR
-         7fLMe3WYxgNgNVj1iWhmvwGFrNBgwQKHV4eYXkZSd44HrAZ9bsTHQ1VcLP0ZjIKvy8fq
-         Rq8Aq0odWq1lLwiNrexzxDiSruu5PPa4M0994nNkjF3DOsb6/Wq5x7WEMo+QGvozodEQ
-         w8y09B8LLl9k8EnWkNaKIaw2f/IsATUDveIuXrTsf213236oLnlzW0K5DMJwUXAemnfP
-         7zqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743511779; x=1744116579;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=eyZLAkPMASU5JOY7VbTqXC3hb3mRoOc8aSxuHfahcL4=;
-        b=LR9kDGesFx6fREkpquc/FCQ2SBFb2LlNP7kEDITCHcD4XD0BjrK5ODmrlV2DNuZqmq
-         /pO1TewFdRXGdnf8gT+6g0IdrIpf1FNoLnbI4zW3DvxdhEXU2jrQTt5vyalpHy88Q3Ge
-         T1NebHVtly5IiXhghuOYc71B36f+kxpf8APt2JP5SydEWUoyAGAra/Lc3yyKQfS8oAwv
-         WpdVA267soOnes8l+hYyd1Ed51vhDTgPuQnNiRPB1lAEICW2YdnW2Gg5XaP3otaXLjQH
-         5XqBB7q6lQ0f7H98uK4gLiHpjbVhc1YW7RYexA/IhjxDd655IAylaWp+vAx5b5TzO6T3
-         /K8A==
-X-Forwarded-Encrypted: i=1; AJvYcCUokTb4r3gM7cI22jmfvPrHuMKjn6v9T4fEnNMum25PXx4vdY+459f4ivF+jKwOoBpTpC0QTFpFQNMcIVE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxFTn4SRegwEHAuSpq+F8P0DEd/Idwti0JMM/x2X5i1udVGilb/
-	fEn46R3RNYBtDVU3CDIRnFJCl6u8YcnepyxXUsxipwFS6cNcLF1/BCIIY850Ea8=
-X-Gm-Gg: ASbGnctadF/wD9bSvRqfio1Hr3hAZF3X1IlgNAsquC2VQCUWN3hLQzBNNNypy36BHqv
-	2e4A2dphJYnwM0NM3yD5JS33heSgbZWX0+cKfi1S9UwcfGySKEoYIc05AtLdBS0fw7/bhNKdDNc
-	cYN4dcX5XE0pfB+DTlsrUbfCP6AMPKyAdjsX/2bQBgOuFWjKJzCLnyxieTJgn0iOGzRcZBanvIp
-	eTcO9cKwSSxwPXAWg1zVzVwkCFoI4gbzvzX3T9zqxlOoKDhh+VIRwqJQZq50dQi7r4sEHZNKwd1
-	dyMHtEy8zCyMKsC7adLG1QCcHVBlm8REIhaywySGMZwXdT1KLY0=
-X-Google-Smtp-Source: AGHT+IG/Kb51o+xFUenOrqg7v/LSXfkndI7kuUbRqS59M+w6EB1lKXEJSo9+uGbDQm2Paooelr9dHw==
-X-Received: by 2002:a17:907:2ce6:b0:ac3:413b:69c7 with SMTP id a640c23a62f3a-ac738be07f4mr1054149166b.39.1743511778543;
-        Tue, 01 Apr 2025 05:49:38 -0700 (PDT)
-Received: from [100.115.92.205] ([109.160.74.194])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac719278d40sm756428766b.43.2025.04.01.05.49.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Apr 2025 05:49:38 -0700 (PDT)
-Message-ID: <7eb3164c-7288-4b3b-9cee-75525607bead@blackwall.org>
-Date: Tue, 1 Apr 2025 15:49:35 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sAyO0gDu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27D2AC4CEE4;
+	Tue,  1 Apr 2025 12:50:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743511806;
+	bh=l8DS0pBZzqAHtujG932plENYbefs0MpGtb/A8hNqdIM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sAyO0gDuVdOe0WRth80ZyFeJdlL2egix6OCNyQmWnotsN5AWmg0KlzH6YC33B0KPW
+	 0O4gFhFZjRTWNDDe4aSUh9zVR4hHmSoT6i5p2TpGS/ssl8FTaerXDnDbmfYrjItTRE
+	 g9q5vHkT1ljJZ7dJh5d3NlSgzau65ME4gs4Uq6GALpJ82L4IcAo41treGJpO+warca
+	 bgnvzTJRHi9l4REPeRaJUPb6kADqWR5s5Rf7p4ol8Zp0TiXAifq+IGacSnjF+THkt0
+	 1iDLczWeIo9X3z5dBeETFn3BLhANOK5fjp88x+hlfbVfWLxb9lCWIAO5rMHgxifvRY
+	 N6nU6mRzoWZ+Q==
+Date: Tue, 1 Apr 2025 14:50:00 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Jan Kara <jack@suse.cz>
+Cc: James Bottomley <James.Bottomley@hansenpartnership.com>, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, mcgrof@kernel.org, 
+	hch@infradead.org, david@fromorbit.com, rafael@kernel.org, djwong@kernel.org, 
+	pavel@kernel.org, peterz@infradead.org, mingo@redhat.com, will@kernel.org, 
+	boqun.feng@gmail.com
+Subject: Re: [RFC PATCH 1/4] locking/percpu-rwsem: add freezable alternative
+ to down_read
+Message-ID: <20250401-entkernen-revitalisieren-fac4b67109e5@brauner>
+References: <20250327140613.25178-1-James.Bottomley@HansenPartnership.com>
+ <20250327140613.25178-2-James.Bottomley@HansenPartnership.com>
+ <77774eb380e343976de3de681204e2c7f3ab1926.camel@HansenPartnership.com>
+ <20250401-anwalt-dazugeben-18d8c3efd1fd@brauner>
+ <f6bdfa23b9f54055f8a539ce396f1134b0921417.camel@HansenPartnership.com>
+ <3bfnds6nsvxy5jfbcoy62uva6kebhacjuavqxvelbfs6ut6rqf@m4pzsudbqg6l>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch net-next 2/3] net: bridge: mcast: Notify on offload flag
- change
-To: Joseph Huang <joseph.huang.2024@gmail.com>,
- Joseph Huang <Joseph.Huang@garmin.com>, netdev@vger.kernel.org
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Roopa Prabhu <roopa@nvidia.com>, Simon Horman <horms@kernel.org>,
- linux-kernel@vger.kernel.org, bridge@lists.linux.dev
-References: <20250318224255.143683-1-Joseph.Huang@garmin.com>
- <20250318224255.143683-3-Joseph.Huang@garmin.com>
- <d9a8d030-7cac-4f5f-b422-1bae7f08c74f@blackwall.org>
- <5d93f576-1d27-4d3f-8b37-0b2127260cca@gmail.com>
-Content-Language: en-US
-From: Nikolay Aleksandrov <razor@blackwall.org>
-In-Reply-To: <5d93f576-1d27-4d3f-8b37-0b2127260cca@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <3bfnds6nsvxy5jfbcoy62uva6kebhacjuavqxvelbfs6ut6rqf@m4pzsudbqg6l>
 
-On 3/31/25 23:11, Joseph Huang wrote:
-> On 3/21/2025 4:47 AM, Nikolay Aleksandrov wrote:
->>> diff --git a/net/bridge/br_switchdev.c b/net/bridge/br_switchdev.c
->>> index 68dccc2ff7b1..5b09cfcdf3f3 100644
->>> --- a/net/bridge/br_switchdev.c
->>> +++ b/net/bridge/br_switchdev.c
->>> @@ -504,20 +504,41 @@ static void br_switchdev_mdb_complete(struct 
->>> net_device *dev, int err, void *pri
->>>       struct net_bridge_mdb_entry *mp;
->>>       struct net_bridge_port *port = data->port;
->>>       struct net_bridge *br = port->br;
->>> +    bool offload_changed = false;
->>> +    bool failed_changed = false;
->>> +    u8 notify;
->>>       spin_lock_bh(&br->multicast_lock);
->>>       mp = br_mdb_ip_get(br, &data->ip);
->>>       if (!mp)
->>>           goto out;
->>> +
->>> +    notify = br->multicast_ctx.multicast_mdb_notify_on_flag_change;
->>
->> let's not waste cycles if there was an error and notify == 0, please 
->> keep the original
->> code path and avoid walking over the group ports.
+On Tue, Apr 01, 2025 at 01:20:37PM +0200, Jan Kara wrote:
+> On Mon 31-03-25 21:13:20, James Bottomley wrote:
+> > On Tue, 2025-04-01 at 01:32 +0200, Christian Brauner wrote:
+> > > On Mon, Mar 31, 2025 at 03:51:43PM -0400, James Bottomley wrote:
+> > > > On Thu, 2025-03-27 at 10:06 -0400, James Bottomley wrote:
+> > > > [...]
+> > > > > -static void percpu_rwsem_wait(struct percpu_rw_semaphore *sem,
+> > > > > bool
+> > > > > reader)
+> > > > > +static void percpu_rwsem_wait(struct percpu_rw_semaphore *sem,
+> > > > > bool
+> > > > > reader,
+> > > > > +			      bool freeze)
+> > > > >  {
+> > > > >  	DEFINE_WAIT_FUNC(wq_entry, percpu_rwsem_wake_function);
+> > > > >  	bool wait;
+> > > > > @@ -156,7 +157,8 @@ static void percpu_rwsem_wait(struct
+> > > > > percpu_rw_semaphore *sem, bool reader)
+> > > > >  	spin_unlock_irq(&sem->waiters.lock);
+> > > > >  
+> > > > >  	while (wait) {
+> > > > > -		set_current_state(TASK_UNINTERRUPTIBLE);
+> > > > > +		set_current_state(TASK_UNINTERRUPTIBLE |
+> > > > > +				  freeze ? TASK_FREEZABLE : 0);
+> > > > 
+> > > > This is a bit embarrassing, the bug I've been chasing is here: the
+> > > > ?
+> > > > operator is lower in precedence than | meaning this expression
+> > > > always
+> > > > evaluates to TASK_FREEZABLE and nothing else (which is why the
+> > > > process
+> > > > goes into R state and never wakes up).
+> > > > 
+> > > > Let me fix that and redo all the testing.
+> > > 
+> > > I don't think that's it. I think you're missing making pagefault
+> > > writers such
+> > > as systemd-journald freezable:
+> > > 
+> > > diff --git a/include/linux/fs.h b/include/linux/fs.h
+> > > index b379a46b5576..528e73f192ac 100644
+> > > --- a/include/linux/fs.h
+> > > +++ b/include/linux/fs.h
+> > > @@ -1782,7 +1782,8 @@ static inline void __sb_end_write(struct
+> > > super_block *sb, int level)
+> > >  static inline void __sb_start_write(struct super_block *sb, int
+> > > level)
+> > >  {
+> > >         percpu_down_read_freezable(sb->s_writers.rw_sem + level - 1,
+> > > -                                  level == SB_FREEZE_WRITE);
+> > > +                                  (level == SB_FREEZE_WRITE ||
+> > > +                                   level == SB_FREEZE_PAGEFAULT));
+> > >  }
+> > 
+> > Yes, I was about to tell Jan that the condition here simply needs to be
+> > true.  All our rwsem levels need to be freezable to avoid a hibernation
+> > failure.
 > 
-> But we do want to keep the error flag so that the error shows up in 
-> 'bridge mdb show', right? Notify should only affect the real-time 
-> notifications, and not the error status itself.
+> So there is one snag with this. SB_FREEZE_PAGEFAULT level is acquired under
+> mmap_sem, SB_FREEZE_INTERNAL level is possibly acquired under some other
+> filesystem locks. So if you freeze the filesystem, a task can block on
+> frozen filesystem with e.g. mmap_sem held and if some other task then
+
+Yeah, I wondered about that yesterday.
+
+> blocks on grabbing that mmap_sem, hibernation fails because we'll be unable
+> to hibernate the task waiting for mmap_sem. So if you'd like to completely
+> avoid these hibernation failures, you'd have to make a slew of filesystem
+> related locks use freezable sleeping. I don't think that's feasible.
 > 
+> I was hoping that failures due to SB_FREEZE_PAGEFAULT level not being
+> freezable would be rare enough but you've proven they are quite frequent.
+> We can try making SB_FREEZE_PAGEFAULT level (or even SB_FREEZE_INTERNAL)
+> freezable and see whether that works good enough...
 
-Fair enough, sounds good.
-
->>
->>> +
->>>       for (pp = &mp->ports; (p = mlock_dereference(*pp, br)) != NULL;
->>>            pp = &p->next) {
->>>           if (p->key.port != port)
->>>               continue;
->>> -        if (err)
->>> +        if (err) {
->>> +            if (!(p->flags & MDB_PG_FLAGS_OFFLOAD_FAILED))
->>> +                failed_changed = true;
->>>               p->flags |= MDB_PG_FLAGS_OFFLOAD_FAILED;
->>> -        else
->>> +        } else {
->>> +            if (!(p->flags & MDB_PG_FLAGS_OFFLOAD))
->>> +                offload_changed = true;
->>>               p->flags |= MDB_PG_FLAGS_OFFLOAD;
->>> +        }
->>> +
->>> +        if (notify == MDB_NOTIFY_ON_FLAG_CHANGE_DISABLE ||
->>> +            (!offload_changed && !failed_changed))
->>> +            continue;
->>> +
->>> +        if (notify == MDB_NOTIFY_ON_FLAG_CHANGE_FAIL_ONLY &&
->>> +            !failed_changed)
->>> +            continue;
->>> +
->>> +        br_mdb_flag_change_notify(br->dev, mp, p);
->>
->> This looks like a mess.. First you need to manage these flags properly 
->> as I wrote in my
->> other reply, they must be mutually exclusive and you can do this in a 
->> helper. Also
->> please read the old flags in the beginning, then check what flags 
->> changed, make a mask
->> what flags are for notifications (again can come from a helper, it can 
->> be generated when
->> the option changes so you don't compute it every time) and decide what 
->> to do if any of
->> those flags changed.
->> Note you have to keep proper flags state regardless of the notify option.
->>
->>>       }
->>>   out:
->>>       spin_unlock_bh(&br->multicast_lock);
->>
-> 
-> How does this look:
-> 
-> --- a/net/bridge/br_switchdev.c
-> +++ b/net/bridge/br_switchdev.c
-> @@ -496,6 +496,21 @@ struct br_switchdev_mdb_complete_info {
->          struct br_ip ip;
->   };
->
-
-#define MDB_NOTIFY_FLAGS MDB_PG_FLAGS_OFFLOAD_FAILED
-
-> +static void br_multicast_set_pg_offload_flags(int err,
-> +                                             struct 
-> net_bridge_port_group *p)
-
-swap these two arguments please, since we don't use err you can probably
-rename it to "failed" and make it a bool
-
-alternatively if you prefer maybe rename it to
-br_multicast_set_pg_offload_flag() and pass the correct flag from the
-caller
-e.g. br_multicast_set_pg_offload_flag(pg, err ?
-MDB_PG_FLAGS_OFFLOAD_FAILED :  MDB_PG_FLAGS_OFFLOAD)
-
-I don't mind either way.
-
-> +{
-> +       p->flags &= ~(MDB_PG_FLAGS_OFFLOAD | MDB_PG_FLAGS_OFFLOAD_FAILED);
-> +       p->flags |= (err ? MDB_PG_FLAGS_OFFLOAD_FAILED : 
-> MDB_PG_FLAGS_OFFLOAD);
-> +}
-> +
-> +static bool br_multicast_should_notify(struct net_bridge *br,
-
-hmm perhaps br_mdb_should_notify() to be more specific? I don't mind the
-current name, just a thought.
-
-also const br
-
-> +                                      u8 old_flags, u8 new_flags)
-
-u8 changed_flags should suffice
-
-> +{
-> +       return (br_boolopt_get(br, 
-> BR_BOOLOPT_FAILED_OFFLOAD_NOTIFICATION) &&
-> +               ((old_flags & MDB_PG_FLAGS_OFFLOAD_FAILED) !=
-> +               (new_flags & MDB_PG_FLAGS_OFFLOAD_FAILED)));
-
-if (changed_flags & MDB_NOTIFY_FLAGS)
-
-also no need for the extra () around the whole statement
-
-> +}
-> +
-
-both of these helpers should go into br_private.h
-
->   static void br_switchdev_mdb_complete(struct net_device *dev, int err, 
-> void *priv)
->   {
->          struct br_switchdev_mdb_complete_info *data = priv;
-> @@ -504,23 +519,25 @@ static void br_switchdev_mdb_complete(struct 
-> net_device *dev, int err, void *pri
->          struct net_bridge_mdb_entry *mp;
->          struct net_bridge_port *port = data->port;
->          struct net_bridge *br = port->br;
-> -
-> -       if (err)
-> -               goto err;
-> +       u8 old_flags;
-> 
->          spin_lock_bh(&br->multicast_lock);
->          mp = br_mdb_ip_get(br, &data->ip);
->          if (!mp)
->                  goto out;
->          for (pp = &mp->ports; (p = mlock_dereference(*pp, br)) != NULL;
->               pp = &p->next) {
->                  if (p->key.port != port)
->                          continue;
-> -               p->flags |= MDB_PG_FLAGS_OFFLOAD;
-> +
-> +               old_flags = p->flags;
-> +               br_multicast_set_pg_offload_flags(err, p);
-> +               if (br_multicast_should_notify(br, old_flags, p->flags))
-
-and here it would become:
-br_multicast_should_notify(br, old_flags ^ p->flags)
-
-> +                       br_mdb_flag_change_notify(br->dev, mp, p);
->          }
->   out:
->          spin_unlock_bh(&br->multicast_lock);
-> -err:
->          kfree(priv);
->   }
-> 
-> Thanks,
-> Joseph
-
-Cheers,
-  Nik
-
+I think that's fine and we'll see whether this causes a lot of issues.
+I've got the patchset written in a way now that userspace can just
+enable or disable freeze during migration.
