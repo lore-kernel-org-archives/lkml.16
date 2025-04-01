@@ -1,40 +1,46 @@
-Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mx.swemel.ru (mx.swemel.ru [95.143.211.150])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 835261E47C9;
-	Tue,  1 Apr 2025 08:39:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 889AD1A83E4;
+	Tue,  1 Apr 2025 08:40:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.143.211.150
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743496797; cv=none; b=falYdLFL1lhLbc71g3ODPjPH4fclwPBpV9Jhojejq96nZIT+SL4hCIhmNolRBhO3X5LgRUduTnPlaa7qDn8XElljTMcxFrDODubcpkzHL0KGAejVu7UVrQ2T4oFaDc7Fn0Y5DDR16yZl1hW1hL7RZeiQmAaUdSKGdOAtaK+EuPw=
+	t=1743496819; cv=none; b=GoKV/35+gk1zPXhDXQsipXSBRlIlbGlKz6epI3OmiJXTfq2OnYdhPaS3vDKducqy00Tc4YjdTQWKyNOBHQm5ooAmUcv/uBLZWsyq2n07dS86E8SNSn4vICjc6qFWH0BsvxsNF6g6z2HqmwW/KFK9lAb+FfwYE+P+Wm57fcE6KDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743496797; c=relaxed/simple;
-	bh=M+neyQM2i4qoH8h0avruc2kXdgJ2YHJWrKz+OdjGL7Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=C3+6Kn0NLUOagBkQbwiV2BXycDzLOfdS3ZOL9OkR++oPSHRwZTWlV9hJwq4tsAfcA2/M4LV8xaIpwdAkoHCulPmHEJPCcx6WtSRslppVpBC7Fx2MDFGzqK2760ot9l3vi+4eTgYzEVOIARPGLCKzAzFqFq8ND6McQwd9P8MESQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost.localdomain (unknown [124.16.141.245])
-	by APP-01 (Coremail) with SMTP id qwCowAA33f1AputnQ5eqBA--.451S2;
-	Tue, 01 Apr 2025 16:39:30 +0800 (CST)
-From: Wentao Liang <vulab@iscas.ac.cn>
-To: mareklindner@neomailbox.ch,
-	sw@simonwunderlich.de,
-	a@unstable.cc,
-	sven@narfation.org,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	horms@kernel.org
-Cc: b.a.t.m.a.n@lists.open-mesh.org,
-	netdev@vger.kernel.org,
+	s=arc-20240116; t=1743496819; c=relaxed/simple;
+	bh=oSXQoDk5rnHxTGq0QwglgYgL8weJwwWigb4+0jYl/Cg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=b15sJC7B08pkHG6MECVb11vc+Q6jG/8ne04jkYN1u+07LUiKcOk4AtEnKeyUS1JHu0P5n1r6gLnxEofOWHgtZfnCxXxhODAm4SxL4Ldw7KVYWAoLRCgDvqP+8HcUA3c1ZDcmD4Zx+pObHVEKSJLWFKY9ZDJgWmJMY0cO0gHFTUw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=swemel.ru; spf=pass smtp.mailfrom=swemel.ru; dkim=pass (1024-bit key) header.d=swemel.ru header.i=@swemel.ru header.b=SjWDIs9N; arc=none smtp.client-ip=95.143.211.150
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=swemel.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=swemel.ru
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=swemel.ru header.i=@swemel.ru header.b="SjWDIs9N"
+From: Denis Arefev <arefev@swemel.ru>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=swemel.ru; s=mail;
+	t=1743496810;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=70J3qbqUkhpGfcXlW2ynPrpc/c8CjZPQmWcMnQ7zHgc=;
+	b=SjWDIs9N+nxAtJw5mMhsl6F0LJ9DBEVxQ2zXCX+TwQTUnNH9sq/DvmXxBW7d5kM7GEvUg5
+	o2D9ah2UfPkm/pCmqQqemJvyoe/lsKVnvn7ve5c2SNs0lyFf18apuYNN5WXz6YBo8UnkBE
+	qq/f5dV/d9MU9ILlm9SFmd3GHRWqu4E=
+To: ville.syrjala@linux.intel.com
+Cc: arefev@swemel.ru,
+	deller@gmx.de,
+	dri-devel@lists.freedesktop.org,
+	jani.nikula@intel.com,
+	linux-fbdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Wentao Liang <vulab@iscas.ac.cn>,
-	stable@vger.kernel.org
-Subject: [PATCH] batman-adv: batman-adv: handle tvlv unicast send errors
-Date: Tue,  1 Apr 2025 16:39:00 +0800
-Message-ID: <20250401083901.2261-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.42.0.windows.2
+	lvc-project@linuxtesting.org,
+	tzimmermann@suse.de
+Subject: Re: [PATCH 1/1] fbdev: atyfb: Fix buffer overflow
+Date: Tue,  1 Apr 2025 11:40:10 +0300
+Message-ID: <20250401084010.5886-1-arefev@swemel.ru>
+In-Reply-To: <Z-rzIfUMmOq1UZY1@intel.com>
+References: <Z-rzIfUMmOq1UZY1@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,64 +48,12 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qwCowAA33f1AputnQ5eqBA--.451S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7Ww1rGF1DCrW8XrWUuw13CFg_yoW8XF17pF
-	Z5Gr15Gw1DJa1SqFyjq345Zr4Yyws7KrWj9FZ7A3W3ZFsxKrySgay8Z34jyF4rXay2ka1D
-	Xr4qgF9xAa4DCFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9014x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-	6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
-	n2kIc2xKxwCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7x
-	kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
-	67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
-	CI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1x
-	MIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIda
-	VFxhVjvjDU0xZFpf9x0JUd-B_UUUUU=
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiCQ8TA2frlbhKlQAAso
 
-In batadv_tvlv_unicast_send(), the return value of
-batadv_send_skb_to_orig() is ignored. This could silently
-drop send failures, making it difficult to detect connectivity
-issues.
+Hi Ville. Hi Jani.
+Thank you for your answers.
 
-Add error checking for batadv_send_skb_to_orig() and log failures
-via batadv_dbg() to improve error visibility.
+One small question. 
+This chip (3D RAGE LT (Mach64 LG)) is very old it is 25 or 
+maybe 30 years old, why is it not removed from the core?
 
-Fixes: 1ad5bcb2a032 ("batman-adv: Consume skb in batadv_send_skb_to_orig")
-Cc: stable@vger.kernel.org # 4.10+
-Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
----
- net/batman-adv/tvlv.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/net/batman-adv/tvlv.c b/net/batman-adv/tvlv.c
-index 2a583215d439..f081136cc5b7 100644
---- a/net/batman-adv/tvlv.c
-+++ b/net/batman-adv/tvlv.c
-@@ -625,6 +625,7 @@ void batadv_tvlv_unicast_send(struct batadv_priv *bat_priv, const u8 *src,
- 	unsigned char *tvlv_buff;
- 	unsigned int tvlv_len;
- 	ssize_t hdr_len = sizeof(*unicast_tvlv_packet);
-+	int r;
- 
- 	orig_node = batadv_orig_hash_find(bat_priv, dst);
- 	if (!orig_node)
-@@ -657,7 +658,10 @@ void batadv_tvlv_unicast_send(struct batadv_priv *bat_priv, const u8 *src,
- 	tvlv_buff += sizeof(*tvlv_hdr);
- 	memcpy(tvlv_buff, tvlv_value, tvlv_value_len);
- 
--	batadv_send_skb_to_orig(skb, orig_node, NULL);
-+	r = batadv_send_skb_to_orig(skb, orig_node, NULL);
-+	if (r != NET_XMIT_SUCCESS)
-+		batadv_dbg(BATADV_DBG_TP_METER, bat_priv,
-+			   "Fail to send the ack.");
- out:
- 	batadv_orig_node_put(orig_node);
- }
--- 
-2.42.0.windows.2
-
+Regards Denis.
