@@ -1,84 +1,102 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B4C11F236E;
-	Tue,  1 Apr 2025 11:19:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06F2A1F03C5
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 11:20:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743506349; cv=none; b=Hgb1GEDYeDUzkigMpWeLb3AJxJFZ0cCRLMf39i8FFtMS/dtcK20cBt+nu3ZXYrIIw5Zgkpf/Wx1nh+VhjKsZlrpRHZQvP9E7GRb52UvW4S9kTv2goB15h3aiv03T7IaRfdbUzHztn6Y70OZaTy0p02DIPTVOZebwHzingHjoMA8=
+	t=1743506409; cv=none; b=ok0PNSiCcZxIkWdlVo19XTmcyjQmdWR+488XzGfvJbClPq4Tfu1N0o2jPdb8Ze8mVexxziduZlzmHelEQbSvchmmRPimSVVOvO5da9mgwkqEDICzydJLxwAVWe4l92PSFpLasYJhtBxxpcx1V6Ic56SkSiMIs4CYhxx2ESUtaxU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743506349; c=relaxed/simple;
-	bh=130fS+pjMEoLm9UTm6FGySgpJVShC7ByY0ePlMWPIAs=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=pNwEfTc0WKNtsxdyqU9DHrqKKacs8Z6SFCkdQOLWLCskT29ssR/6fAQMsgUa37d6h2nNQxKle9jnd+GH8JkhlabGNYWv8f511HG78MezR3xGccW3qvliKHBcw2Ck7d0RXVydSpjPReOPicMYQcH+cWYkO8OCRjyrmoxDjVzZmis=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zz5ZUDem; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743506409; c=relaxed/simple;
+	bh=sCjvl7izauThsYwNFbnNKf9NZ42TJuZNSgB3wjxKjJc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=D7mcxGdXjvvJ80+SlujWYVU+wiSOzCrmK4YnK/goitBmNlNMBf1XgUSnT5N2KP484mjPOjghvU+P8VCG9Z+/R/gCRknqfl/oNU2qAcHZqP/Q23P9ILTVdx9ESOB3BInISUxckEkN03zIfk92eafCbMEYHhBoqwxN2goAAN5oL8I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hACLBpIX; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zz5ZUDem"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-54afb5fcebaso6633441e87.3;
-        Tue, 01 Apr 2025 04:19:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743506346; x=1744111146; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=YKD52zm+gVaoIUanOq+CrDkg3TSttqWRUAHG2kVxgsU=;
-        b=Zz5ZUDemn5uD2mGvKGi5KzrmmsXA5Z3HYmp20j69hzpQiBLu1C5V8SFozsAlsSJ55C
-         /MjjtYBYIlZKciFgQpyNIN/g2EKtMrWfc9Fu2Y421PWIoXXGhh8y24HP7H5TcQlrZ9Qm
-         HoVxIBDf8IB9LN4lZXgoOSpeZcg9Kggum2Bi8xpunB8rf/6Yt0aDxaaDu3nUHaZNJYs2
-         qZHiCHrN4Z5Q8gH9pU8UyHWTgQAoONp9tNk+15WVr9XMGNyKkrKH9n6SKW1lQ0kfHRpY
-         EzxRz0vQyerhT8fR5n9ZS6puoi9fAHjobBvZDmoqrSAExAowwTJVQ7vjJWq6NDlbuY05
-         UXeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743506346; x=1744111146;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=YKD52zm+gVaoIUanOq+CrDkg3TSttqWRUAHG2kVxgsU=;
-        b=LR3Ejji+ZfKIv/KH/eGoWKh0OQfPEEObwC7qP86JRluNSsbsi3epR11tn14DD1tC9i
-         cx+Ej4BrG+Nt26mLziyJsNowwqJv1UIhmWIwVzEFsh/4gVDvkBKGrM2iot5P+QMuCc8A
-         SM3S59SV/Wu8PO00j3IualEVFiM+NHX2+BOeo3qXK/zIkkCLXitGAlgt0vR2hh1KV3+O
-         XOmq06fwkuZh1emEs3QKSN0cOZWsL+abdh/IY479QLUQnV3iX6cIok91slm3scMTrVnf
-         Af5kEJO53FqdG9Mlyujt80BbEPc7AOvF4yBlGeOlrU8Za6htmMv79vzVF/Rh1cDcLiXI
-         Gr5w==
-X-Forwarded-Encrypted: i=1; AJvYcCUd83DGY312gQq08mqlIeTqhZt57Xrh9Qo+us2/1XKR4PdtLW4pt36UPlVjM26eOPPh5js/ZLpm7DZpFSQo@vger.kernel.org, AJvYcCVbeCHqt+b1hxCZ7+9seuK9BESXC78K1kI31P8Z61/clkwnuux39uzAcSOoUUpyRUgtaLAalXEmqtk5lau+@vger.kernel.org
-X-Gm-Message-State: AOJu0YwlXCwpSb61njYf0UoLtpqDsOPTgvgazppq8pVGK5eVDogdFPV7
-	5p6JvyCRj9ENT/BAyiiQBufhoB2/mphhq7AXh8tw1DG86k9b0KAg+/NcJGEO00nnIoXvT235Oa7
-	QWDh7PSI17k3y1JOFgSWWCdoQ/w==
-X-Gm-Gg: ASbGncsHwWcalaqRwEcKNdtshg8mwybNEVteeFYrM/BbV9+u2hLtDfNQ0UpqiEG/+pk
-	RJV190swpqVrgnlu7ZGBC6781wrQNE9Ww77SdUmyrfbIH3smQ4IO8SJRCIldmirsdgZttwNLa4S
-	HXPNHJkt0C1kJmCG04VlGfc6M=
-X-Google-Smtp-Source: AGHT+IHotLV8ha5asbhxquKWjZjYfeN4kY8EE7hc8DSh12SIfaKyzzOFond3b+xwwkIhiCk9vSQ46F31pgZX4W6+wyo=
-X-Received: by 2002:a05:6512:39ca:b0:545:2f0d:8836 with SMTP id
- 2adb3069b0e04-54b11010797mr3577310e87.40.1743506346144; Tue, 01 Apr 2025
- 04:19:06 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hACLBpIX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743506406;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OLK5xMu00RCz/CjhdjrD5oqQm053cd7+2VWl0bjzUcQ=;
+	b=hACLBpIXGDQjXoWhGEbSADLwp1iGxHX+rdj3JCQzlCSIb7lZGNrc4O2qP/Qf5yDXZBXlbC
+	4VlukUSsvYhju06TGPx+sTC0d6dhJzq18D9Ct45EUYnIMJ35ZaMiZ/ukZqR/6zGEOcq/Q5
+	GQiQdjaWVhSD9jpMswvB5ILTzmGI9ys=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-561-rPaSlO7TNKe6qaCGaenIBw-1; Tue,
+ 01 Apr 2025 07:20:05 -0400
+X-MC-Unique: rPaSlO7TNKe6qaCGaenIBw-1
+X-Mimecast-MFC-AGG-ID: rPaSlO7TNKe6qaCGaenIBw_1743506404
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A69BA180899B;
+	Tue,  1 Apr 2025 11:20:03 +0000 (UTC)
+Received: from localhost (unknown [10.43.135.229])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6BF6A1955BEF;
+	Tue,  1 Apr 2025 11:20:00 +0000 (UTC)
+Date: Tue, 1 Apr 2025 13:19:57 +0200
+From: Miroslav Lichvar <mlichvar@redhat.com>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: John Stultz <jstultz@google.com>, LKML <linux-kernel@vger.kernel.org>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
+	kernel-team@android.com, Lei Chen <lei.chen@smartx.com>
+Subject: Re: [PATCH v2 1/2] time/timekeeping: Fix possible inconsistencies in
+ _COARSE clockids
+Message-ID: <Z-vL3cVZuQ8XQXhG@localhost>
+References: <20250320200306.1712599-1-jstultz@google.com>
+ <Z-KURRE_Gr72Xv_n@localhost>
+ <874izezv3c.ffs@tglx>
+ <Z-Vx8kV4M3khPknC@localhost>
+ <Z-qsg6iDGlcIJulJ@localhost>
+ <87o6xgwftc.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Alexey Dobriyan <adobriyan@gmail.com>
-Date: Tue, 1 Apr 2025 14:18:55 +0300
-X-Gm-Features: AQ5f1JoxDz6pgQoqfz8XSlOm5nLyhbCSjz0u2-yrYhLPhovDisMXIQUrHSAfsG0
-Message-ID: <CACVxJT_eXRNjp-2sEfuxYmzTMPvu7U1R2bsKYjadVfR-W691og@mail.gmail.com>
-Subject: Re: [PATCH 1/2] proc: add a helper for marking files as permanent by
- external consumers
-To: Mateusz Guzik <mjguzik@gmail.com>
-Cc: Christian Brauner <brauner@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
-	Linux Kernel <linux-kernel@vger.kernel.org>, 
-	linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87o6xgwftc.ffs@tglx>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
->  static int __init proc_filesystems_init(void)
->  {
-> - proc_create_single("filesystems", 0, NULL, filesystems_proc_show);
-> + struct proc_dir_entry *pde;
-> +
-> + pde = proc_create_single("filesystems", 0, NULL, filesystems_proc_show);
-> + proc_make_permanent(pde);
+On Tue, Apr 01, 2025 at 08:34:23AM +0200, Thomas Gleixner wrote:
+> On Mon, Mar 31 2025 at 16:53, Miroslav Lichvar wrote:
+> > Mult reduction	Updates/sec	Skew before	Skew after
+> > 16		4		0.004		0.009
+> > 16		16		0.011		0.069
+> > 16		64		0.020		0.117
+> > 64		4		0.013		0.012
+> > 64		16		0.030		0.107
+> > 64		64		0.058		0.879
+> 
+> Hrm.
+> 
+> Can you try the delta patch below?
 
-The only function which should be used is pde_make_permanent()
-so that the flag is silently turned off when the code is modular.
+It seems to improve the worst cases, but overall it's still
+a regression.
 
-Code is fine as-is in this very case but when people start copying it
-to real modules
-they will start mark PDEs as permanent when it is not true!
+Mult reduction	Updates/sec	Skew
+16		4		0.012
+16		16		0.014
+16		64	        0.033
+64		4		0.012
+64		16		0.105
+64		64		0.138
+
+Thanks,
+
+-- 
+Miroslav Lichvar
+
