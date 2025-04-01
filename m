@@ -1,140 +1,88 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f194.google.com (mail-pl1-f194.google.com [209.85.214.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C86201E520B
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 06:51:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 460FA1E0DEB;
+	Tue,  1 Apr 2025 06:53:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743490276; cv=none; b=a+7jJNfk9vXRm2sklB6egZsOdgDcSkJQU7nEbHXW7/2dzx4rialedx+Nc8nx8Z2mOYySITHLki/Ssa7yMYaUpMv/cC8cOBWtoV43xUl4S68AV5h1GarAMT4Xb1ipgmC3XAR1Wnyblvev4zZ0U9tY+IHRDPpTNNv1qgB4dm/n0xY=
+	t=1743490408; cv=none; b=PQ/+0Y+FtCZYwrjQE1Ln42eKOmKbp9ZiZv+XdATDNdlyVVWUaVO1yZinTDRwmL6az2gfyutxW5LPVQ9pyNwPfeYwaIiQ/pcga0yEUDMhWX35iKD+Vxu5Tynd5FO+ETjwvxYgPfmRjfv/Bb6hBSn5t7L8xyiudlaHrTh7n5p206I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743490276; c=relaxed/simple;
-	bh=9xHfiiQ9CX/HzzEktMu5A0iEolf+MXYZ8jH5pD27M+k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pjjjwtxbJlf3DKu+knnqLHrC18oTv9Bzw/2EgwnkFZaoYAxBBDG+DUF2QB1BxwXxUCHbQerTJUb/I2iR/bRPR6llFavsoldCLN/i21ftT/ISgU8hOJ0IXNwe1hEvwU8DImIQy9OkuLyHAIAQJnRloAvngFx0L/F/f6tcQAqlrcQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=N+tfkURP; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	s=arc-20240116; t=1743490408; c=relaxed/simple;
+	bh=juV0t4V1e//0+gj1OVfhRcLHZvcbuEC/YXrhy/U7qi8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ZSJn7pHl9w5rbDa/HipxSWEP0MJ0nDlE3HLxx79HY8UzdTXB6Sl4ZexoFfT4xxQYBWjW1fkdudgqY08DT4eHtcdXoTxhkjVQLVEczpqhg1X2B+T+6wmpdgu4M8f1HcqbY4uwqeLDuI/3kyqu7Vr1pXMx1LMiyH8ZrbB1omRDzSs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ijlsr9mC; arc=none smtp.client-ip=209.85.214.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="N+tfkURP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=THTQ
-	R1f0JeUKwgUzH7GEQ9rpKrrl1aXZPwMMMZGyJlU=; b=N+tfkURP5dpWHsuUgxo2
-	6WRFKkYiKA+mpBv//xsFUkGM9WQgcBkG41DkLXGozTJ5drKRBqQIQNKLSfpgGqFz
-	XkcKRoxX5q8iXF2sJnJFH8mYFk1mUBJkkArAFjSOsqU2IRB+6Vw4MpbXRfRdYAPI
-	bIsbTBVmEGZ06TfljVchVJ55wZEiYbxmtZ4q5nJ60xoBpj6BhmfPVBCgWIJ8tsIG
-	d2CJqlv96tY9xyKKYEQrpgOowMzIA9hd7BHikMZ8vbbAxusCZ6yzyssTtNDeoOSb
-	aihRwkNJEKjMZCbKVHeL4Jx6Oi2+FRHYKB7xTPVjHp+Rx6DeuMx8IO8vnG3TkvQw
-	8Q==
-Received: (qmail 1493694 invoked from network); 1 Apr 2025 08:51:09 +0200
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 1 Apr 2025 08:51:09 +0200
-X-UD-Smtp-Session: l3s3148p1@iGUw9rExupMgAwDPXwSgADIEZgbhJYA3
-Date: Tue, 1 Apr 2025 08:51:09 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Avri Altman <Avri.Altman@sandisk.com>,
-	"linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/5] mmc: core: Further avoid re-storing power to the
- eMMC before a shutdown
-Message-ID: <Z-uM3aRHJ_8bwu0W@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Avri Altman <Avri.Altman@sandisk.com>,
-	"linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20250320140040.162416-1-ulf.hansson@linaro.org>
- <20250320140040.162416-3-ulf.hansson@linaro.org>
- <PH7PR16MB6196C3AC7A7B7CA99A70E7DDE5A02@PH7PR16MB6196.namprd16.prod.outlook.com>
- <Z-pQj6ynnfMa77fM@shikoro>
- <CAPDyKFr0MvQDxsi-Qd0F=1KuR4Gy6s5bhVdOXRt9K14Z9sO2Kw@mail.gmail.com>
- <Z-pyfv_7gJ72YWhz@shikoro>
- <CAPDyKFqW92wJ9P5cyO0vcV14dU5Q-JRGR=oKOS362crFy6y2Pw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ijlsr9mC"
+Received: by mail-pl1-f194.google.com with SMTP id d9443c01a7336-2240b4de12bso77945505ad.2;
+        Mon, 31 Mar 2025 23:53:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743490406; x=1744095206; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=juV0t4V1e//0+gj1OVfhRcLHZvcbuEC/YXrhy/U7qi8=;
+        b=Ijlsr9mCx6Beib9aBhpcgo3+Q36kb/L1N0fnH7fwLXi5NDAMVI/A8xjbJmGZgN8ceJ
+         r9Y7WKvuKk32Dh5QU3dBRtHqWQGIeOWfKCgfbRV2VU7eOtjIhW3bTEKryMC4OaerhbpA
+         tCax5VY8DfUR+/OX0CVGyw0jGL86RiRfWtpm7ifhhfbg9OzrIN38CFdXamciH3GZQn8C
+         CZkeSfdQGeU35oapgf+eOczxgqaYdIFVvv3Rf7XQd6aae1/fJU+HeJJKbjPUUaw4XhC7
+         MzB8w232yY1hj3d9MY1eswc/MJkT2DgV2ZPzEOyCdZsZ1zpX1sDMNLZ4KlR+SCNHIQkS
+         BFdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743490406; x=1744095206;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=juV0t4V1e//0+gj1OVfhRcLHZvcbuEC/YXrhy/U7qi8=;
+        b=jAKbUxkZ8IRevI1Gh7cpg0Z+nXDArmmlBF3I02UzGwI4LejmLlrTsj5Mv81g3rPkXI
+         tQfjJfFmUrdUXEXkNfGI5r1m7uUxP5rKqDicsORw9m4oQ742WjUAquhOpIo8wueSk0WV
+         PEalBMhriEPx8qKMit1YfMGAuJmSuN7MReIimBitQjHc4B3e30rb3LsjMY3it5qBf2NH
+         m0dmikZAWTGKO041mjpR1zelVl1+HZYJnu9CkJwlL6419/AIDUwClqyZCnHsGwu9bzfi
+         NJvY1XONxBqdrcODCGNVWZISRWxIRN5Tw7nN640suNIh7hInP+e1pPHPODj7L3pPNivd
+         S6bA==
+X-Forwarded-Encrypted: i=1; AJvYcCVhzXYgOynar3c6bJvOHpXM/hFR2IQpV2C7N4up4Ca3lYX7t6lTp0j3qLJ+3QGzS5Ynn/WDrfpuMnZ5+Wo=@vger.kernel.org, AJvYcCVsW5HhuN11e4gr47SE18VTiqQAt40tBoIRFw/gnTURyXWCXRvLuFEa/9l75AdG7848UBHWHjhVMnsxzo7S@vger.kernel.org, AJvYcCVupU3BRKEBDh/Tvc8z9rttcksLQhaPb4d5iSRPKgQZxYqsg8qI3QLaP941aVRDn/AOSW/ggMcZptwxj8rg@vger.kernel.org
+X-Gm-Message-State: AOJu0YwliIbRqDWl+CNmyCa3F1fphfvmQyQFwbK3xqXv+hCRCmoeYonj
+	LPfmQHoR/Xx6av+W/RzxYB0F0M+KTHdTFJyyENw0kFUXTtgmy27s
+X-Gm-Gg: ASbGncsZHahf7k55LYJngFXGqe3zVBCC4Io53pltCAn9Tg0y9JYtEbQhFS3aGENwEuX
+	otXWIbFqOgftOCZ+CzICyubtvUqEnyUcBJevhQJJsoxlqfSKJt65WLMsCkWuWgKJhvGlNaXTcca
+	CVERGNNI8gnceQbv+z2if/SFxwzAw75MbgIVmvtk7hXwVh7qoIhbLdzOS5mqEn01p3ednPKahCu
+	Zlths8FqB/RFKHXNWAaQTkVGpOtfonalpjTVm6hTRlJUJSnYjv/qoCYaKcr2zDwwJRl2QOnVOUd
+	BaG99s33/q3k1bNul6nNeLWHLF/qy59ibgHSMmUW4iyUPHhGF4a00ivVX0clrTi2ZhOUQZk=
+X-Google-Smtp-Source: AGHT+IE8v+2soOjMZ/HxnufMSQX2TKoU0l9zv9vDPm095V1YC/l3ajgioV+dGEqKKpy3wthovX6FNg==
+X-Received: by 2002:a17:902:da91:b0:224:191d:8a79 with SMTP id d9443c01a7336-2292f973a1fmr160582675ad.27.1743490406432;
+        Mon, 31 Mar 2025 23:53:26 -0700 (PDT)
+Received: from henry.localdomain ([111.202.148.167])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291f1cf882sm80743815ad.123.2025.03.31.23.53.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Mar 2025 23:53:25 -0700 (PDT)
+From: Henry Martin <bsdhenrymartin@gmail.com>
+To: markus@kernel.org
+Cc: lee@kernel.org,
+	danielt@kernel.org,
+	jingoohan1@gmail.com,
+	deller@gmx.de,
+	linux-arm-msm@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linux-fbdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3] backlight: pm8941: Add NULL check in wled_configure()
+Date: Tue,  1 Apr 2025 14:53:20 +0800
+Message-Id: <20250401065320.20000-1-bsdhenrymartin@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <d5f2aa49-27e2-4cc1-91be-4e195ed5249e@web.de>
+References: <d5f2aa49-27e2-4cc1-91be-4e195ed5249e@web.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="zVeRWPMKjtJM9KFf"
-Content-Disposition: inline
-In-Reply-To: <CAPDyKFqW92wJ9P5cyO0vcV14dU5Q-JRGR=oKOS362crFy6y2Pw@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 
+Thanks for your review. No further improvements needed for this implementation
+- it already handles all error cases appropriately.
 
---zVeRWPMKjtJM9KFf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi Ulf,
-
-> mmc_card_can_poweroff_notify() would not be consistent with all the
-> other mmc_can_* helpers, so I rather stay with
-> mmc_can_poweroff_notify(), for now. If you think a rename makes sense,
-> I suggest we do that as a follow up and rename all the helpers.
-
-I vageuly recall that the commit I mentioned below (renaming hw_reset to
-card_hw_reset) should have been a start to do exactly this, renaming
-more of the helpers. I drifted away. Yet, I still think this would make
-MMC core code a lot easier to understand. I'll work on it today, timing
-seems good with rc1 on the horizon...
-
-> mmc_host_can_poweroff_notify() seems fine to me!
-
-Great!
-
-> > I do understand that. I don't see why this needs a change in the
-> > existing logic as Alan pointed out above.
->=20
-> Aha. I get your point now. As stated in the commit message:
->=20
-> Due to an earlier suspend request the eMMC may already have been properly
-> powered-off, hence we are sometimes leaving the eMMC in its current state.
-> However, in one case when the host has MMC_CAP2_FULL_PWR_CYCLE_IN_SUSPEND
-> set we may unnecessarily restore the power to the eMMC, let's avoid this.
-
-Oookay, now I see what you are aiming at. It seems I got the PWR_CYCLE
-flags wrong? I thought MMC_CAP2_FULL_PWR_CYCLE_IN_SUSPEND is only a
-subset of MMC_CAP2_FULL_PWR_CYCLE. The former can do the power cycles
-only in suspend, while the latter can do them in suspend and shutdown.
-So, in my thinking, full power cycle might also have the eMMC
-powered-off during shutdown. This is wrong?
-
-> Let me try to clarify the commit message a bit with this information.
-
-Whatever is the final outcome, it needs a comment in the code, I am
-quite sure.
-
-Happy hacking,
-
-   Wolfram
-
-
---zVeRWPMKjtJM9KFf
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmfrjNkACgkQFA3kzBSg
-KbalwBAAqyPr4ILqZMo6pF5dzx0TjS8qXy6FH2SsS1yDhe8R1Jlk6UNekm4QXAyp
-MR54odIhIHBUZdr8eejiCRv2kjs9gSmFSdup/USNdaDFOQ2+mgvhjwCUO+SwIIOh
-Y7A1ql3am1FY0uYQxeLhLPPF9Qr0CbeduInimJrnRHqiXzE0ashrg538yEYPypeH
-F5/2XjxPM7ISLeK/UZXhwcMNCN9Ae3ri55/ev8c8/BblCFacUS/JKlSvnadblW1g
-eKIdIXb0EckLZuPODLbkuJbX4VrHDf3N9cUp1eVA0ukSoSVXFsev6gzWMet29Iq+
-fBCRHVfnqggwShILKl/+FTJZtF0bBc2kGJ4ohQ6ltU8m5adpJQoRy7LBbgkb6WoW
-dHCj7d+WFddUh2377zsCm2erZnpWDiuQ7PObDqhfLkNEqaM27VYBEF4STZnpLON9
-EeSFETSWS4WrQb7qfw9n8N+dOBxcMhWTNirumVKVx+HnTSwXKdgNrmExeTmngjtf
-QQbjb4m6n9huJFnPB+YkPzr31dIEwOJSemAJmOHFlmxGUl64aVLV/UBcTTOkepb1
-nZPq6hWwpmz31CWPUAq7Ux6mye2fxUMesqyrT3W13ywf7Lr18iqbvM12QdTsqXcO
-TLc3YIkkuNorG7TH1wG2TrbiSW3Q339VMXwShIMAE1m/Flh5Gus=
-=7MEe
------END PGP SIGNATURE-----
-
---zVeRWPMKjtJM9KFf--
+Best regards,
+Henry
