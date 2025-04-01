@@ -1,290 +1,136 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 399531EF080
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 14:33:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D7F9156677
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 14:34:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743518009; cv=none; b=S57p/1w6rGAAoUUU1+QCQoqEXxv09/ab3pBgWbFErtiY02Xw8WBq/KdM40QGXtWF7e7jwAGC7YI0rvpdQ7NyZeavl4Fli+5uFBh0V5MPnF338usA3yGT8hQ0mk4D6BYNbFA+s3maulil3juhE9RpL3SEjzZfsi7+2mh/gR2bFXo=
+	t=1743518090; cv=none; b=Ig2LLkQUOlrqFve9DYVAVXQU2DB8u74Z0qxGgFpKe5JMaRricv3PAKzGzlf9DtUdUfVuZ/q5o+LIJ/1m8G2rXDfbiFwhacXNyl2juqZew26B/vgj76bV5xKGpowKIbzUD0Y5njqiBR0G0YSCOWcP/od0LMnHLXTyhfMOhbdVqZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743518009; c=relaxed/simple;
-	bh=1qV+NGwYbZPu0XItFUpoWENdE3DurPgEaHJba+V/ZL0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TOh2CgGchUOq8vSk6Y13Z7jCsaTGgoA4JQ5DWhJl9LmwTr4WYBGveCm1zuktntRV96P3VEhAOvdK3phzjVXUcuy1N1qg6LkCn7M9hGFsq0YI/KmlqkuwjjnCg6uNjk5pn7/145DP3OusHgBQi7A/i2DrgtR/0T2sE1yWhwGQF9w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=W9m5Pb5e; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1743518090; c=relaxed/simple;
+	bh=+oVMCTnKGGB1IvnXZTphKRV0saQlY6sd9zIB39VDNio=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q6qKcX/ctXckx6sIjuc4/K5mQoMULOqesK1+nBL4C2H9VAcnTkZgWbfxRXhPhufk3EKURRfW1brj+DLCzRmxrqBmeSEkB3ozQsm3GW8tzcRrdU70iwmz4juPxIc5wq4CTF/JjD7czCEcGb33o0VkdNOq6n8WXbfGRdMtjnPq9JA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QxSZhWMO; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W9m5Pb5e"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QxSZhWMO"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743518005;
+	s=mimecast20190719; t=1743518087;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=rLhS4YZ2gbexqMjUMzexxo96ApT7iR1NdQR/sJS2UMs=;
-	b=W9m5Pb5ebKMEGqpWe3ggAYFbyP+8vREXnzi+2xRleXWLyt2Ajipd6WTVHajUCd8hSuPqGb
-	NleRYqgj9ijwXrNLo3D2h8zikZJ/J38vBqo9fJRxoy9ji+8Ksca9hZtNhWKZgpRjF97kR7
-	hLEGSrR+tTlwszgBj3q+RwiaBHyo2mQ=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-569-g8ObIuWGMWiVCoHmrG5w1g-1; Tue, 01 Apr 2025 10:33:23 -0400
-X-MC-Unique: g8ObIuWGMWiVCoHmrG5w1g-1
-X-Mimecast-MFC-AGG-ID: g8ObIuWGMWiVCoHmrG5w1g_1743518003
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43941ad86d4so29332415e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 07:33:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743518002; x=1744122802;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rLhS4YZ2gbexqMjUMzexxo96ApT7iR1NdQR/sJS2UMs=;
-        b=hUPGQKVI1VzswJSJG+YhLoyoBKiwhk83Ua8YCpWg4Z5ZidMChsMwpiWUxz7focozrU
-         0m1R/JcW2cf+xZ7buwVjj+EeDu2MW/jRu6t6PmzMXoBuUdI6Nu9d1tu/m0+1lRGfN2OF
-         a/mGxCkl9I2NA4wjUYg3lWKfCnXzK530mgkjSEwACru0qhZRxhH4HvMDoAeaftA4Jevb
-         K7L41ytA5hXcJfuuBkC4LckQ6k23n2xYaVLUrZjDfCktRvSw2wZz1uko2a3/Tn/uH/6p
-         Nefd0HFCF3vgqaCnKJx/k4JzpjKBZSSioPZksddLmNxDxEr/w7cwia66aTuJjQAP/sXb
-         Ly8g==
-X-Forwarded-Encrypted: i=1; AJvYcCUd1ZC3JTTi+WHFlF+zKBiLeDBsYXo+u+536QF2O13kB3j4dj5J2yZYCmTzg8pLYOhxDISaIb0jMmAxetQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywefgg7TZvV0je5PrVQtl82i8Es6w98zORh5U5P0sO2ykFzIwPB
-	ytDA8MEekC+0GLLzo25+VooiFtmn+nsB2mxLH3PpwH8c2eucfBOce27QR2NQFqPFCGWLraeBbMN
-	BXlAR9WAoRPIhao8HiNp2DFBnuO1ZVmVPnJs5dI83FI6v838gMutqslYDY+b6oA==
-X-Gm-Gg: ASbGncvobf1PxlATikjeYFOjWxoDn1JDZYfgYpDHumA/whjNnmgQGEBKiTuUcLXgsv1
-	z0pN5A6hZ5S8zuLs73cZkWG/4W58IQSls23s5HLbf11yUTjYQBNs+rAszck1LlfTCo1tMmQAlHw
-	BWn3NjwgL/oxS6Vz6K7BCPcRq4yjQEEsxpInrvga3awuPqEr5CWVZD6CAY+kVuVYRDS+kANRDQU
-	uzqFqs8ASb7Zh6viWXvjRaW7SBrQZB/5/XlzIoOmsGhzumISnuPIfqgNijwRyipw03jGsUfUyEM
-	BBOd1vDgCV/D2uOXg5Pj0wXHiCtMrIzbNZeHeVjVh0hBU/906RgpNKj9nk+PPcNWktPOY7EIK2g
-	vwWCA94kWlBVnr7qUFuC2DelKLiOA5FDics2BmkeX
-X-Received: by 2002:a05:600c:6748:b0:43c:eea9:f438 with SMTP id 5b1f17b1804b1-43db6247dd7mr145919445e9.15.1743518002604;
-        Tue, 01 Apr 2025 07:33:22 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFNhzaVlgu9DU/geLuwD47lPxBtoCagRnXFrCfvHssM2drvLkFRwfHnuIV1F5YdQjnlbSU6zQ==
-X-Received: by 2002:a05:600c:6748:b0:43c:eea9:f438 with SMTP id 5b1f17b1804b1-43db6247dd7mr145918915e9.15.1743518002159;
-        Tue, 01 Apr 2025 07:33:22 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c707:4d00:6ac5:30d:1611:918f? (p200300cbc7074d006ac5030d1611918f.dip0.t-ipconnect.de. [2003:cb:c707:4d00:6ac5:30d:1611:918f])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d82efeb11sm203009095e9.22.2025.04.01.07.33.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Apr 2025 07:33:21 -0700 (PDT)
-Message-ID: <26870d6f-8bb9-44de-9d1f-dcb1b5a93eae@redhat.com>
-Date: Tue, 1 Apr 2025 16:33:20 +0200
+	 in-reply-to:in-reply-to:references:references;
+	bh=KQr7Spkn5jgMIpaUUK0pwqzc54g+Diw9wD954oFdkTg=;
+	b=QxSZhWMOlOWJGMK5ay+wejSn212N/tBeJJFJKlgCtxDKPk5byjEQ30dStu3Rao2HUALQvQ
+	e1MKxVDBRKxPwiP/jzPyaE8NzmFvE8EN39/QZ01SHum3MMQ6GBSLlFzuZN7ivCGiXzVSVX
+	+XM8xVHKLVI+6mvovjMm4wColAYV26c=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-654-aSxuQ6FfNIm2jgE3tKnyzQ-1; Tue,
+ 01 Apr 2025 10:34:46 -0400
+X-MC-Unique: aSxuQ6FfNIm2jgE3tKnyzQ-1
+X-Mimecast-MFC-AGG-ID: aSxuQ6FfNIm2jgE3tKnyzQ_1743518085
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EBFA718001FC;
+	Tue,  1 Apr 2025 14:34:44 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.12])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 90425195DF83;
+	Tue,  1 Apr 2025 14:34:42 +0000 (UTC)
+Date: Tue, 1 Apr 2025 22:34:38 +0800
+From: Baoquan He <bhe@redhat.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, yanjun.zhu@linux.dev
+Subject: Re: [PATCH v2 2/7] mm/gup: check if both GUP_GET and GUP_PIN are set
+ in __get_user_pages() earlier
+Message-ID: <Z+v5fguHjl5DiaZm@MiWiFi-R3L-srv>
+References: <20250331081327.256412-1-bhe@redhat.com>
+ <20250331081327.256412-3-bhe@redhat.com>
+ <e6b8481f-0bf6-4acf-9ebc-9b4f28c0be08@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V4] mm/gup: Clear the LRU flag of a page before adding to
- LRU batch
-To: Jinjiang Tu <tujinjiang@huawei.com>, yangge1116@126.com,
- akpm@linux-foundation.org
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org,
- 21cnbao@gmail.com, baolin.wang@linux.alibaba.com,
- aneesh.kumar@linux.ibm.com, liuzixing@hygon.cn,
- Kefeng Wang <wangkefeng.wang@huawei.com>
-References: <1720075944-27201-1-git-send-email-yangge1116@126.com>
- <4119c1d0-5010-b2e7-3f1c-edd37f16f1f2@huawei.com>
- <91ac638d-b2d6-4683-ab29-fb647f58af63@redhat.com>
- <076babae-9fc6-13f5-36a3-95dde0115f77@huawei.com>
-Content-Language: en-US
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <076babae-9fc6-13f5-36a3-95dde0115f77@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e6b8481f-0bf6-4acf-9ebc-9b4f28c0be08@redhat.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-On 27.03.25 12:16, Jinjiang Tu wrote:
+On 04/01/25 at 10:02am, David Hildenbrand wrote:
+> On 31.03.25 10:13, Baoquan He wrote:
+> > In __get_user_pages(), it will traverse page table and take a reference
+> > to the page the given user address corresponds to if GUP_GET or GUP_PIN
+> > is et. However, it's not supported both GUP_GET and GUP_PIN are set.
+> > This check should be done earlier, but not doing it till entering into
+> > follow_page_pte() and failed.
+> > 
+> > Here move the checking to the beginning of __get_user_pages().
+> > 
+> > Signed-off-by: Baoquan He <bhe@redhat.com>
+> > ---
+> > v1->v2:
+> > - Fix code bug caused by copy-and-paste error, this is reported by
+> >    lkp test robot.
+> > 
+> >   mm/gup.c | 10 +++++-----
+> >   1 file changed, 5 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/mm/gup.c b/mm/gup.c
+> > index 73777b1de679..f9bce14ed3cd 100644
+> > --- a/mm/gup.c
+> > +++ b/mm/gup.c
+> > @@ -847,11 +847,6 @@ static struct page *follow_page_pte(struct vm_area_struct *vma,
+> >   	pte_t *ptep, pte;
+> >   	int ret;
+> > -	/* FOLL_GET and FOLL_PIN are mutually exclusive. */
+> > -	if (WARN_ON_ONCE((flags & (FOLL_PIN | FOLL_GET)) ==
+> > -			 (FOLL_PIN | FOLL_GET)))
+> > -		return ERR_PTR(-EINVAL);
+> > -
+> >   	ptep = pte_offset_map_lock(mm, pmd, address, &ptl);
+> >   	if (!ptep)
+> >   		return no_page_table(vma, flags, address);
+> > @@ -1434,6 +1429,11 @@ static long __get_user_pages(struct mm_struct *mm,
+> >   	VM_BUG_ON(!!pages != !!(gup_flags & (FOLL_GET | FOLL_PIN)));
+> > +	/* FOLL_GET and FOLL_PIN are mutually exclusive. */
+> > +	if (WARN_ON_ONCE((gup_flags & (FOLL_PIN | FOLL_GET)) ==
+> > +			 (FOLL_PIN | FOLL_GET)))
+> > +		return -EINVAL;
+> > +
 > 
-> 在 2025/3/26 20:46, David Hildenbrand 写道:
->> On 26.03.25 13:42, Jinjiang Tu wrote:
->>> Hi,
->>>
->>
->> Hi!
->>
->>> We notiched a 12.3% performance regression for LibMicro pwrite
->>> testcase due to
->>> commit 33dfe9204f29 ("mm/gup: clear the LRU flag of a page before
->>> adding to LRU batch").
->>>
->>> The testcase is executed as follows, and the file is tmpfs file.
->>>       pwrite -E -C 200 -L -S -W -N "pwrite_t1k" -s 1k -I 500 -f $TFILE
->>
->> Do we know how much that reflects real workloads? (IOW, how much
->> should we care)
+> We already have that check in is_valid_gup_args(), that catches all external
+> users that could possibly mess this up.
+
+Right.
+
 > 
-> No, it's hard to say.
-> 
->>
->>>
->>> this testcase writes 1KB (only one page) to the tmpfs and repeats
->>> this step for many times. The Flame
->>> graph shows the performance regression comes from
->>> folio_mark_accessed() and workingset_activation().
->>>
->>> folio_mark_accessed() is called for the same page for many times.
->>> Before this patch, each call will
->>> add the page to cpu_fbatches.activate. When the fbatch is full, the
->>> fbatch is drained and the page
->>> is promoted to active list. And then, folio_mark_accessed() does
->>> nothing in later calls.
->>>
->>> But after this patch, the folio clear lru flags after it is added to
->>> cpu_fbatches.activate. After then,
->>> folio_mark_accessed will never call folio_activate() again due to the
->>> page is without lru flag, and
->>> the fbatch will not be full and the folio will not be marked active,
->>> later folio_mark_accessed()
->>> calls will always call workingset_activation(), leading to
->>> performance regression.
->>
->> Would there be a good place to drain the LRU to effectively get that
->> processed? (we can always try draining if the LRU flag is not set)
-> 
-> Maybe we could drain the search the cpu_fbatches.activate of the local cpu in __lru_cache_activate_folio()? Drain other fbatches is meaningless .
+> So we can just convert that into a VM_WARN_ON_ONCE(), and while doing that,
+> we should convert the VM_BUG_ON() above to a VM_WARN_ON_ONCE() as well.
 
-So the current behavior is that folio_mark_accessed() will end up calling folio_activate()
-once, and then __lru_cache_activate_folio() until the LRU was drained (which can
-take a looong time).
+Sounds great to me, will put below change into this patch of v3 as suggested.
+Thanks.
 
-The old behavior was that folio_mark_accessed() would keep calling folio_activate() until
-the LRU was drained simply because it was full of "all the same pages" ?. Only *after*
-the LRU was drained, folio_mark_accessed() would actually not do anything (desired behavior).
-
-So the overhead comes primarily from __lru_cache_activate_folio() searching through
-the list "more" repeatedly because the LRU does get drained less frequently; and
-it would never find it in there in this case.
-
-So ... it used to be suboptimal before, now it's more suboptimal I guess?! :)
-
-We'd need a way to better identify "this folio is already queued for activation". Searching
-that list as well would be one option, but the hole "search the list" is nasty.
-
-Maybe we can simply set the folio as active when staging it for activation, after having
-cleared the LRU flag? We already do that during folio_add.
-
-As the LRU flag was cleared, nobody should be messing with that folio until the cache was
-drained and the move was successful.
-
-
-Pretty sure this doesn't work, but just to throw out an idea:
-
- From c26e1c0ceda6c818826e5b89dc7c7c9279138f80 Mon Sep 17 00:00:00 2001
-From: David Hildenbrand <david@redhat.com>
-Date: Tue, 1 Apr 2025 16:31:56 +0200
-Subject: [PATCH] test
-
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
-  mm/swap.c | 21 ++++++++++++++++-----
-  1 file changed, 16 insertions(+), 5 deletions(-)
-
-diff --git a/mm/swap.c b/mm/swap.c
-index fc8281ef42415..bbf9aa76db87f 100644
---- a/mm/swap.c
-+++ b/mm/swap.c
-@@ -175,6 +175,8 @@ static void folio_batch_move_lru(struct folio_batch *fbatch, move_fn_t move_fn)
-  	folios_put(fbatch);
-  }
-  
-+static void lru_activate(struct lruvec *lruvec, struct folio *folio);
-+
-  static void __folio_batch_add_and_move(struct folio_batch __percpu *fbatch,
-  		struct folio *folio, move_fn_t move_fn,
-  		bool on_lru, bool disable_irq)
-@@ -191,6 +193,10 @@ static void __folio_batch_add_and_move(struct folio_batch __percpu *fbatch,
-  	else
-  		local_lock(&cpu_fbatches.lock);
-  
-+	/* We'll only perform the actual list move deferred. */
-+	if (move_fn == lru_activate)
-+		folio_set_active(folio);
-+
-  	if (!folio_batch_add(this_cpu_ptr(fbatch), folio) || folio_test_large(folio) ||
-  	    lru_cache_disabled())
-  		folio_batch_move_lru(this_cpu_ptr(fbatch), move_fn);
-@@ -299,12 +305,14 @@ static void lru_activate(struct lruvec *lruvec, struct folio *folio)
-  {
-  	long nr_pages = folio_nr_pages(folio);
-  
--	if (folio_test_active(folio) || folio_test_unevictable(folio))
--		return;
--
-+	/*
-+	 * We set the folio active after clearing the LRU flag, and set the
-+	 * LRU flag only after moving it to the right list.
-+	 */
-+	VM_WARN_ON_ONCE(!folio_test_active(folio));
-+	VM_WARN_ON_ONCE(folio_test_unevictable(folio));
-  
-  	lruvec_del_folio(lruvec, folio);
--	folio_set_active(folio);
-  	lruvec_add_folio(lruvec, folio);
-  	trace_mm_lru_activate(folio);
-  
-@@ -342,7 +350,10 @@ void folio_activate(struct folio *folio)
-  		return;
-  
-  	lruvec = folio_lruvec_lock_irq(folio);
--	lru_activate(lruvec, folio);
-+	if (!folio_test_unevictable(folio)) {
-+		folio_set_active(folio);
-+		lru_activate(lruvec, folio);
-+	}
-  	unlock_page_lruvec_irq(lruvec);
-  	folio_set_lru(folio);
-  }
--- 
-2.48.1
-
-
--- 
-Cheers,
-
-David / dhildenb
+diff --git a/mm/gup.c b/mm/gup.c
+index 9e4ed09c578b..d551da9549b1 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -1427,10 +1427,10 @@ static long __get_user_pages(struct mm_struct *mm,
+ 
+ 	start = untagged_addr_remote(mm, start);
+ 
+-	VM_BUG_ON(!!pages != !!(gup_flags & (FOLL_GET | FOLL_PIN)));
++	VM_WARN_ON_ONCE(!!pages != !!(gup_flags & (FOLL_GET | FOLL_PIN)));
+ 
+ 	/* FOLL_GET and FOLL_PIN are mutually exclusive. */
+-	if (WARN_ON_ONCE((gup_flags & (FOLL_PIN | FOLL_GET)) ==
++	if (VM_WARN_ON_ONCE((gup_flags & (FOLL_PIN | FOLL_GET)) ==
+ 			 (FOLL_PIN | FOLL_GET)))
+ 		return -EINVAL;
 
