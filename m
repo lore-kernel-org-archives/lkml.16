@@ -1,31 +1,73 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 552911624D5;
-	Tue,  1 Apr 2025 09:33:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB1C51EDA2A
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 09:34:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743500025; cv=none; b=gaZv8hwk7SeS9v66Bm5EDJ8w/44wd2hmvbXUXyyC5xtG6BRp6fe0CElqav2FQIKmvyjUNGAgpMdjiVGHb7lpqa4AYqZhq7FCnVygP0YLin+VjqxiwaAGMojKhVUY7nIwe5Bn3HhvNbGon2S2RzCnB/WneuQvUw69s8ivCtHWuI0=
+	t=1743500048; cv=none; b=G6FXr4NBUPOlkeHq+AYs+h3jgp8XanhQUSvhI8ofXbEKViy1/awySeKHqbph5WfFTgnUCqkiOPeaMj05YWMYJuxKaX7R4R2CVJHqxd45v8ZVsyXymKFvEqmBk0Iw9vryzCUNnGZCgy4PycUo0JIIDnyGleZCV+ebe5saOco7W7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743500025; c=relaxed/simple;
-	bh=jPe2NtHiYqWwzbQU/mfy1WhcfYq0+olPLKklzEkcNjQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=u9en4OHSseFTyR13sBQmRKPKJvzCdRDmpxVDWIkdjUrEjIhv6RDRjzNzveNOC/kvoxqReM+jq7eWJy4efUBdkC7ozc4C7S6g/QW9J6Z7qpq5A4sxWxiB/L9PAHd1I/hfIend2QXUqvOp1uGx4tlfSnv4GoJr/6L0aZ70wuiQ/pY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.194])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4ZRjTw1vpgz1d0sR;
-	Tue,  1 Apr 2025 17:33:08 +0800 (CST)
-Received: from kwepemg200005.china.huawei.com (unknown [7.202.181.32])
-	by mail.maildlp.com (Postfix) with ESMTPS id 93C9F140203;
-	Tue,  1 Apr 2025 17:33:38 +0800 (CST)
-Received: from [10.174.176.70] (10.174.176.70) by
- kwepemg200005.china.huawei.com (7.202.181.32) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Tue, 1 Apr 2025 17:33:37 +0800
-Message-ID: <ffc84696-f9c6-4869-9f1e-7faf45d99060@huawei.com>
-Date: Tue, 1 Apr 2025 17:33:35 +0800
+	s=arc-20240116; t=1743500048; c=relaxed/simple;
+	bh=iMKn0ausjfwYR6lIOx0cH6PZ301JCLh8GZ6gFWn89o8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=n1r+JU6SYtTv3n1NWmgF2tc1Qj/YnsvsNgSuMJGE8iHyi/7dprrMk/Elgd/10gZfbJ3gUAnAZsQSI446MltY8Jb4Aj483FGBjFRu092Ty+KV0Blu3myoLFuk+C7nA0q8Ov763AH5SWcxemBsK6H1eY79A2a7lx1n0w4SgM9HbpA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=E7eSRj92; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E7eSRj92"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743500045;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=yLW4M7GQepknRN85JoLE8ZSwVeAqp3fUrjLO1RbXEVY=;
+	b=E7eSRj92i5sxMfz7BnjawTb6mWeP29QoNOM7MUGYT8jIPVFQ6oNCR633lC6CHvydXI70Ta
+	HI9vr82vAJPMsDKvO3j6Ita6IWNAs9MLUwUm5fQqPksmudeP0q+m6rSmKWEMy+82J+VQ1m
+	MF7ASQ/L+ifCa60xnDj3Yr3kIqy345A=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-477-J1JyhJWiOQKbv0V1XH4--w-1; Tue, 01 Apr 2025 05:34:02 -0400
+X-MC-Unique: J1JyhJWiOQKbv0V1XH4--w-1
+X-Mimecast-MFC-AGG-ID: J1JyhJWiOQKbv0V1XH4--w_1743500041
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43d51bd9b41so47423195e9.3
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 02:34:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743500041; x=1744104841;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=yLW4M7GQepknRN85JoLE8ZSwVeAqp3fUrjLO1RbXEVY=;
+        b=esY4B63PThixPGqKQHDZlYTh3aLLhMgdbLn+uZR7esYG+qFZfMnxBenmewHAHkUwJd
+         bEwB6AFVovC2LC63/w1RZkt7UD8DYh7r04+AB/6zPPg5Ve9ysfaqEBUX2iivtWWRqiJE
+         PODBYARIkmdfAwvfq5c+EZmaQ5pdE+BOLRU0IfrxiD2B3wuxHL7mJM9wAtaLq/hhbDy2
+         /kYc2tUaDs6wD3WncWAPU3pC1s8F3Qzp9q/vDgWfido2qZIhVj4Fy+qIHUyPddw3wrWU
+         qCNOMuSbYqlyA8q/Nx4aGyCCcC6BqtCi3gSalD8bfCd2USep4YxOBwasCf8qx6y5eu6u
+         1Azw==
+X-Forwarded-Encrypted: i=1; AJvYcCVtNCGN3UnHsmeBWmCxmdbLusmIVsU1Mn1KcJcGyVSFAzE8ncm3V7uLCwHhVbnVyPP+DTZDtrKm4SGvVCM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzkH1CPsMcel8iEep98MnhuZZl5tK0pmETGu2aIkGT+Gbk+ORbW
+	B3Or3zTtzwDxQBQ5Q/r0UNhU/Pz+Pvr7fTViyUN1aHdd83rXqd2aGiCJHvepwznO0CSZGQRnU47
+	6+c/GlWcOVdxIjIT7av+HyaIEnmIuvjqmcQOgawSxadqUOssYhHmuBE2mjb2A6w==
+X-Gm-Gg: ASbGncs1MCvXE+FkUSgX0+HTIkzifAq50PFitLMTrqzGTw8tPamRxZtvaMxI+1kuaPD
+	1emc8JEpRmTYxUMZFLmWVOy8t6qKm0pgmwzGs07cyWQ+vx2f5gBDjUQLDLhDozCVjFi/unAM8Ko
+	U4QtcJDTlgPzRTL8H7o5zesicDRDZzFPXQSKTprifRBRLgKwof7UBLxSh8QGyjp201TtwW7FJ+u
+	xEy8TlUsMOo9/p32b8s0AxaVO7JiDCq0dITyLLWYr9/mqZ8cAfUe5/1py5Zxg0Zzxt3E5PkyChN
+	Phz3LdWaoiQTmRSidpBrMqcLB0DUix5qXXHqElEAU3PrR58+oqyTwXtMQdF5sVCDqt7sBpmwqnQ
+	MnHUgSAg3FQYDNaqwpMLdEIkN5adh3CD2wor87XfQ
+X-Received: by 2002:a05:6000:1447:b0:391:466f:314e with SMTP id ffacd0b85a97d-39c120dba55mr9972732f8f.16.1743500041382;
+        Tue, 01 Apr 2025 02:34:01 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHuhOY4h3uniqh8t2ORHDry92nujdtgLRHvSyISYtelPiE+fYAhj7bnHs3IyJZqGbkWb7WXIA==
+X-Received: by 2002:a05:6000:1447:b0:391:466f:314e with SMTP id ffacd0b85a97d-39c120dba55mr9972710f8f.16.1743500041060;
+        Tue, 01 Apr 2025 02:34:01 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c707:4d00:6ac5:30d:1611:918f? (p200300cbc7074d006ac5030d1611918f.dip0.t-ipconnect.de. [2003:cb:c707:4d00:6ac5:30d:1611:918f])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b79e136sm13665091f8f.67.2025.04.01.02.34.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Apr 2025 02:34:00 -0700 (PDT)
+Message-ID: <3e3115c0-c3a2-4ec2-8aea-ee1b40057dd6@redhat.com>
+Date: Tue, 1 Apr 2025 11:33:59 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -33,195 +75,125 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net] xsk: correct tx_ring_empty_descs count statistics
-To: Magnus Karlsson <magnus.karlsson@gmail.com>
-CC: Stanislav Fomichev <stfomichev@gmail.com>, <bjorn@kernel.org>,
-	<magnus.karlsson@intel.com>, <maciej.fijalkowski@intel.com>,
-	<jonathan.lemon@gmail.com>, <davem@davemloft.net>, <edumazet@google.com>,
-	<kuba@kernel.org>, <pabeni@redhat.com>, <horms@kernel.org>, <ast@kernel.org>,
-	<daniel@iogearbox.net>, <hawk@kernel.org>, <john.fastabend@gmail.com>,
-	<yuehaibing@huawei.com>, <zhangchangzhong@huawei.com>,
-	<netdev@vger.kernel.org>, <bpf@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-References: <20250329061548.1357925-1-wangliang74@huawei.com>
- <Z-qzLyGKskaqgFh5@mini-arch> <Z-sRF0G43HpGiGwH@mini-arch>
- <0d1b689c-c0ef-460a-9969-ff5aebbb8fac@huawei.com>
- <CAJ8uoz1JxhXFkzW8n_Dud8SR-4zE7gim5vS_UZHELiA7d0k+wQ@mail.gmail.com>
- <ed10eea2-0bf2-4747-b519-f9b9089e434e@huawei.com>
- <CAJ8uoz2QXNN4so-EgR8sU8A86E_AeYx1w_b+BSVeCgzr1kaR+g@mail.gmail.com>
-From: Wang Liang <wangliang74@huawei.com>
-In-Reply-To: <CAJ8uoz2QXNN4so-EgR8sU8A86E_AeYx1w_b+BSVeCgzr1kaR+g@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemg200005.china.huawei.com (7.202.181.32)
+Subject: Re: [PATCH] DAX: warn when kmem regions are truncated for memory
+ block alignment.
+To: Gregory Price <gourry@gourry.net>, dan.j.williams@intel.com
+Cc: nvdimm@lists.linux.dev, linux-kernel@vger.kernel.org,
+ kernel-team@meta.com, vishal.l.verma@intel.com, dave.jiang@intel.com,
+ linux-cxl@vger.kernel.org
+References: <20250321180731.568460-1-gourry@gourry.net>
+ <Z-remBNWEej6KX3-@gourry-fedora-PF4VCD3F>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
+ dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
+ QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
+ XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
+ Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
+ PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
+ WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
+ UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
+ jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
+ B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
+ ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
+ AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl8Ox4kFCRKpKXgACgkQTd4Q
+ 9wD/g1oHcA//a6Tj7SBNjFNM1iNhWUo1lxAja0lpSodSnB2g4FCZ4R61SBR4l/psBL73xktp
+ rDHrx4aSpwkRP6Epu6mLvhlfjmkRG4OynJ5HG1gfv7RJJfnUdUM1z5kdS8JBrOhMJS2c/gPf
+ wv1TGRq2XdMPnfY2o0CxRqpcLkx4vBODvJGl2mQyJF/gPepdDfcT8/PY9BJ7FL6Hrq1gnAo4
+ 3Iv9qV0JiT2wmZciNyYQhmA1V6dyTRiQ4YAc31zOo2IM+xisPzeSHgw3ONY/XhYvfZ9r7W1l
+ pNQdc2G+o4Di9NPFHQQhDw3YTRR1opJaTlRDzxYxzU6ZnUUBghxt9cwUWTpfCktkMZiPSDGd
+ KgQBjnweV2jw9UOTxjb4LXqDjmSNkjDdQUOU69jGMUXgihvo4zhYcMX8F5gWdRtMR7DzW/YE
+ BgVcyxNkMIXoY1aYj6npHYiNQesQlqjU6azjbH70/SXKM5tNRplgW8TNprMDuntdvV9wNkFs
+ 9TyM02V5aWxFfI42+aivc4KEw69SE9KXwC7FSf5wXzuTot97N9Phj/Z3+jx443jo2NR34XgF
+ 89cct7wJMjOF7bBefo0fPPZQuIma0Zym71cP61OP/i11ahNye6HGKfxGCOcs5wW9kRQEk8P9
+ M/k2wt3mt/fCQnuP/mWutNPt95w9wSsUyATLmtNrwccz63XOwU0EVcufkQEQAOfX3n0g0fZz
+ Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
+ T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
+ 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
+ CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
+ NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
+ 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
+ 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
+ lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
+ AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
+ N7eop7uh+6bezi+rugUI+w6DABEBAAHCwXwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
+ AP+DWgUCXw7HsgUJEqkpoQAKCRBN3hD3AP+DWrrpD/4qS3dyVRxDcDHIlmguXjC1Q5tZTwNB
+ boaBTPHSy/Nksu0eY7x6HfQJ3xajVH32Ms6t1trDQmPx2iP5+7iDsb7OKAb5eOS8h+BEBDeq
+ 3ecsQDv0fFJOA9ag5O3LLNk+3x3q7e0uo06XMaY7UHS341ozXUUI7wC7iKfoUTv03iO9El5f
+ XpNMx/YrIMduZ2+nd9Di7o5+KIwlb2mAB9sTNHdMrXesX8eBL6T9b+MZJk+mZuPxKNVfEQMQ
+ a5SxUEADIPQTPNvBewdeI80yeOCrN+Zzwy/Mrx9EPeu59Y5vSJOx/z6OUImD/GhX7Xvkt3kq
+ Er5KTrJz3++B6SH9pum9PuoE/k+nntJkNMmQpR4MCBaV/J9gIOPGodDKnjdng+mXliF3Ptu6
+ 3oxc2RCyGzTlxyMwuc2U5Q7KtUNTdDe8T0uE+9b8BLMVQDDfJjqY0VVqSUwImzTDLX9S4g/8
+ kC4HRcclk8hpyhY2jKGluZO0awwTIMgVEzmTyBphDg/Gx7dZU1Xf8HFuE+UZ5UDHDTnwgv7E
+ th6RC9+WrhDNspZ9fJjKWRbveQgUFCpe1sa77LAw+XFrKmBHXp9ZVIe90RMe2tRL06BGiRZr
+ jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <Z-remBNWEej6KX3-@gourry-fedora-PF4VCD3F>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
+On 31.03.25 20:27, Gregory Price wrote:
+> On Fri, Mar 21, 2025 at 02:07:31PM -0400, Gregory Price wrote:
+>> Device capacity intended for use as system ram should be aligned to the
+>> architecture-defined memory block size or that capacity will be silently
+>> truncated and capacity stranded.
+>>
+>> As hotplug dax memory becomes more prevelant, the memory block size
+>> alignment becomes more important for platform and device vendors to
+>> pay attention to - so this truncation should not be silent.
+>>
+>> This issue is particularly relevant for CXL Dynamic Capacity devices,
+>> whose capacity may arrive in spec-aligned but block-misaligned chunks.
+>>
+>> Example:
+>>   [...] kmem dax0.0: dax region truncated 2684354560 bytes - alignment
+>>   [...] kmem dax1.0: dax region truncated 1610612736 bytes - alignment
+>>
+>> Signed-off-by: Gregory Price <gourry@gourry.net>
+> 
+> Gentle pokes.  There were a couple questions last week whether we should
+> warn here or actually fix something in memory-hotplug.
+> 
+> Notes from CXL Boot to Bash session discussions:
+> 
+> 
+> We discussed [1] how this auto-sizing can cause 1GB huge page
+> allocation failures (assuming you online as ZONE_NORMAL). That means
+> ACPI-informed sizing by default would potentially be harmful to existing
+> systems and adding yet-another-boot-option just seems nasty.
+> 
+> I've since dropped acpi-informed block size patch[2].  If there are opinions
+> otherwise, I can continue pushing it.
 
-在 2025/4/1 16:12, Magnus Karlsson 写道:
-> On Tue, 1 Apr 2025 at 09:44, Wang Liang <wangliang74@huawei.com> wrote:
->>
->> 在 2025/4/1 14:57, Magnus Karlsson 写道:
->>> On Tue, 1 Apr 2025 at 04:36, Wang Liang <wangliang74@huawei.com> wrote:
->>>> 在 2025/4/1 6:03, Stanislav Fomichev 写道:
->>>>> On 03/31, Stanislav Fomichev wrote:
->>>>>> On 03/29, Wang Liang wrote:
->>>>>>> The tx_ring_empty_descs count may be incorrect, when set the XDP_TX_RING
->>>>>>> option but do not reserve tx ring. Because xsk_poll() try to wakeup the
->>>>>>> driver by calling xsk_generic_xmit() for non-zero-copy mode. So the
->>>>>>> tx_ring_empty_descs count increases once the xsk_poll()is called:
->>>>>>>
->>>>>>>      xsk_poll
->>>>>>>        xsk_generic_xmit
->>>>>>>          __xsk_generic_xmit
->>>>>>>            xskq_cons_peek_desc
->>>>>>>              xskq_cons_read_desc
->>>>>>>                q->queue_empty_descs++;
->>> Sorry, but I do not understand how to reproduce this error. So you
->>> first issue a setsockopt with the XDP_TX_RING option and then you do
->>> not "reserve tx ring". What does that last "not reserve tx ring" mean?
->>> No mmap() of that ring, or something else? I guess you have bound the
->>> socket with a bind()? Some pseudo code on how to reproduce this would
->>> be helpful. Just want to understand so I can help. Thank you.
->> Sorry, the last email is garbled, and send again.
->>
->> Ok. Some pseudo code like below:
->>
->>       fd = socket(AF_XDP, SOCK_RAW, 0);
->>       setsockopt(fd, SOL_XDP, XDP_UMEM_REG, &mr, sizeof(mr));
->>
->>       setsockopt(fd, SOL_XDP, XDP_UMEM_FILL_RING, &fill_size,
->> sizeof(fill_size));
->>       setsockopt(fd, SOL_XDP, XDP_UMEM_COMPLETION_RING, &comp_size,
->> sizeof(comp_size));
->>       mmap(NULL, off.fr.desc + fill_size * sizeof(__u64), ...,
->> XDP_UMEM_PGOFF_FILL_RING);
->>       mmap(NULL, off.cr.desc + comp_size * sizeof(__u64), ...,
->> XDP_UMEM_PGOFF_COMPLETION_RING);
->>
->>       setsockopt(fd, SOL_XDP, XDP_RX_RING, &rx_size, sizeof(rx_size));
->>       setsockopt(fd, SOL_XDP, XDP_TX_RING, &tx_size, sizeof(tx_size));
->>       mmap(NULL, off.rx.desc + rx_size * sizeof(struct xdp_desc), ...,
->> XDP_PGOFF_RX_RING);
->>       mmap(NULL, off.tx.desc + tx_size * sizeof(struct xdp_desc), ...,
->> XDP_PGOFF_TX_RING);
->>
->>       bind(fd, (struct sockaddr *)&sxdp, sizeof(sxdp));
->>       bpf_map_update_elem(xsk_map_fd, &queue_id, &fd, 0);
->>
->>       while(!global_exit) {
->>           poll(fds, 1, -1);
->>           handle_receive_packets(...);
->>       }
->>
->> The xsk is created success, and xs->tx is initialized.
->>
->> The "not reserve tx ring" means user app do not update tx ring producer.
->> Like:
->>
->>       xsk_ring_prod__reserve(tx, 1, &tx_idx);
->>       xsk_ring_prod__tx_desc(tx, tx_idx)->addr = frame;
->>       xsk_ring_prod__tx_desc(tx, tx_idx)->len = pkg_length;
->>       xsk_ring_prod__submit(tx, 1);
->>
->> These functions (xsk_ring_prod__reserve, etc.) is provided by libxdp.
->>
->> The tx->producer is not updated, so the xs->tx->cached_cons and
->> xs->tx->cached_prod are always zero.
->>
->> When receive packets and user app call poll(), xsk_generic_xmit() will be
->> triggered by xsk_poll(), leading to this issue.
-> Thanks, that really helped. The problem here is that the kernel cannot
-> guess your intent. Since you created a socket with both Rx and Tx, it
-> thinks you will use it for both, so it should increase
-> queue_empty_descs in this case as you did not provide any Tx descs.
-> Your proposed patch will break this. Consider this Tx case with the
-> exact same init code as you have above but with this send loop:
->
-> while(!global_exit) {
->         maybe_send_packets(...);
->         poll(fds, 1, -1);
-> }
->
-> With your patch, the queue_empty_descs will never be increased in the
-> case when I do not submit any Tx descs, even though we would like it
-> to be so.
->
-> So in my mind, you have a couple of options:
->
-> * Create two sockets, one rx only and one tx only and use the
-> SHARED_UMEM mode to bind them to the same netdev and queue id. In your
-> loop above, you would use the Rx socket. This might have the drawback
-> that you need to call poll() twice if you are both sending and
-> receiving in the same loop. But the stats will be the way you want
-> them to be.
->
-> * Introduce a new variable in user space that you increase every time
-> you do poll() in your loop above. When displaying the statistics, just
-> deduct this variable from the queue_empty_descs that the kernel
-> reports using the XDP_STATISTICS getsockopt().
->
-> Hope this helps.
+Oh, I thought we would be going forward with that. What's the reason we 
+would not want to do that?
 
+> 
+> 
+> We also discussed[3] variable-sized blocks having some nasty corner cases.
+> Not unsolvable, but doesn't help users in the short term.
+> 
+> 
+> There was some brief discussion about whether a hotplug memblock with a
+> portion as offline pages would be possible.  This seems hacky?  There
+> was another patch set discussing this, but I can't seem to find it.
 
-Thank you for the advices.
+Yeah, I proposed something like that as well when I started working on 
+virtio-mem and did not really understand the whole hot(un)plug model in 
+Linux properly. Someone else proposed it again a couple of years ago, 
+but it's just wrong and should not be done that way.
 
- From user view, queue_empty_descs increases when the app only receive 
-packets and call poll(), it is some confusing.
+One could implement something like virtio-mem, whereby parts of a Linux 
+memory block can be added/removed independently ("fake offlined"). But 
+the whole idea of virtio-mem is that all memory in the Linux memory 
+block range belongs to it. So it doesn't quite apply to DAX where parts 
+of a Linux memory block might be from something completely different 
+(e.g., boot memory etc).
 
-In your Tx case, if user app use sendto() to send packets, the 
-queue_empty_descs will increase. This is reasonably.
+-- 
+Cheers,
 
-In linux manual, poll() waits for some event on a file descriptor. But 
-in af_xdp, poll() has a side effect of send msg.
+David / dhildenb
 
-Previous commit 77cd0d7b3f25 ("xsk: add support for need_wakeup flag in 
-AF_XDP rings") add need_wakeup flag. It mainly work in rx process. When 
-the application and driver run on the same core, if the fill ring is 
-empty, the driver can set the need_wakeup flag and return, so the 
-application could be scheduled to produce entries of the fill ring.
-
-The commit df551058f7a3 ("xsk: Fix crash in poll when device does not 
-support ndo_xsk_wakeup") add sendmsg function in xsk_poll(), considering 
-some devices donot define ndo_xsk_wakeup.
-
-At present the value of need_wakeup & XDP_WAKEUP_TX is always true, 
-except the mlx5 driver. If the mlx5 driver queued some packets for tx, 
-it may clear XDP_WAKEUP_TX by xsk_clear_tx_need_wakeup(). So when user 
-app use sendto() to send packets, __xsk_sendmsg() will return without 
-calling xsk_generic_xmit().
-
-So I have a bold suggestion, how about removing xsk_generic_xmit() in 
-xsk_poll()?
-
->>>>>>> To avoid this count error, add check for tx descs before send msg in poll.
->>>>>>>
->>>>>>> Fixes: df551058f7a3 ("xsk: Fix crash in poll when device does not support ndo_xsk_wakeup")
->>>>>>> Signed-off-by: Wang Liang <wangliang74@huawei.com>
->>>>>> Acked-by: Stanislav Fomichev <sdf@fomichev.me>
->>>>> Hmm, wait, I stumbled upon xskq_has_descs again and it looks only at
->>>>> cached prod/cons. How is it supposed to work when the actual tx
->>>>> descriptor is posted? Is there anything besides xskq_cons_peek_desc from
->>>>> __xsk_generic_xmit that refreshes cached_prod?
->>>> Yes, you are right!
->>>>
->>>> How about using xskq_cons_nb_entries() to check free descriptors?
->>>>
->>>> Like this:
->>>>
->>>>
->>>> diff --git a/net/xdp/xsk.c b/net/xdp/xsk.c
->>>> index e5d104ce7b82..babb7928d335 100644
->>>> --- a/net/xdp/xsk.c
->>>> +++ b/net/xdp/xsk.c
->>>> @@ -993,7 +993,7 @@ static __poll_t xsk_poll(struct file *file, struct
->>>> socket *sock,
->>>>            if (pool->cached_need_wakeup) {
->>>>                    if (xs->zc)
->>>>                            xsk_wakeup(xs, pool->cached_need_wakeup);
->>>> -               else if (xs->tx)
->>>> +               else if (xs->tx && xskq_cons_nb_entries(xs->tx, 1))
->>>>                            /* Poll needs to drive Tx also in copy mode */
->>>>                            xsk_generic_xmit(sk);
->>>>            }
->>>>
->>>>
