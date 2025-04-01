@@ -1,152 +1,101 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB48426AE4
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 10:45:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFD3763B9;
+	Tue,  1 Apr 2025 10:45:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743504316; cv=none; b=DZkYWZ3OfIsGpK/xJuddVx2hb41Lv+Jwn9XVPEJHEwmPq7TpiR7WnTQB1hcrUGW7goVfmO4xiOWyGV99fMV0CppqxD3Im9ivIIZtGdOqznVJGLQJMv0Msiq35mK9EdK6Em7gcnmRkkhhp8BKoICh3wYjPtZmtHhqD7yPJiT5nuI=
+	t=1743504323; cv=none; b=fd6wGLVgJr3zaLPkJqlx/G4tY0cQ91a93wG5JrnWpM2CKaSnJTYeEEvBFfOA2a+jXy61dU7G8A39j7rWyguhmeOkYtW3+HWhw3IO2s3dPpS79Oy4Ak1WZsUaPQHN1Yr31/yEZWhD+v/8QhZA+2kh1WQ06mmQ7goqM81ldIy6pQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743504316; c=relaxed/simple;
-	bh=VXH8zJvP+aGOa7itc8KQpCHT2DgLf2h5HVqT7bEkBsI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nPxsvDnEojAik0RlIcWdQFO3fj1nkEhK9w1frNum7tg/2NfcQH8dOIhrgtMHBnH1FuzSpdzA+FUKZXTDuUz16L0m9QJjtERseZZ5zVCBeP9QThA1+/GMYuHJi10O0Y5HDuWdmH1W+Jy1ffesjhmOJyfNlEAucI7gtf/BmZy5c/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 68CD214BF;
-	Tue,  1 Apr 2025 03:45:16 -0700 (PDT)
-Received: from [10.1.28.189] (XHFQ2J9959.cambridge.arm.com [10.1.28.189])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8A8A13F63F;
-	Tue,  1 Apr 2025 03:45:11 -0700 (PDT)
-Message-ID: <145ec273-7223-45b8-a7f6-4e593a3cc8ee@arm.com>
-Date: Tue, 1 Apr 2025 11:45:09 +0100
+	s=arc-20240116; t=1743504323; c=relaxed/simple;
+	bh=adZ9mRpavm1pB0ubmDN+IN+zH2OYxifh+epKKPut1LU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QM8v7Bs26lDUHuGuUg2BzhvLB8m409W24hQZ6Y0+RDPgKabwQlYWTlN5RWJxD92tu8wVAECP/AILmB19FVJohu5+ASd46l7w8bOGJ7xPXdLUxYQ9zMw5olhVG04S2y0QUjmiT5DgRr6pHALEyVg3nI4msbnj65QA5PLUcrOfOSA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=cHj5CGqy; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="cHj5CGqy"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 0BC0040E0215;
+	Tue,  1 Apr 2025 10:45:17 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id fLg6liKhuFDQ; Tue,  1 Apr 2025 10:45:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1743504311; bh=RRAgkPYoGHRjKzNdm1bx2i45J/dfbIchU3cMFNdnerM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cHj5CGqyUdl4tknOqR9W9Hcd2b4SvEaBoapEmRteuSq4blZlptbT8R94WFyyVPe2K
+	 rLDewSl+wkVSquxErOe/xT2VU2v34FubSBeQVVXcm+p47/2yIOgP69kUrkHoMJJgnR
+	 /vpSILPxx7aLAPZ6NhfYw1/R1hJ7JxLG/diH7A7MSHvPftvEReq0M4EOxaDiwnBGyT
+	 dTNApj9fQRPokK6pNlXFqcYOqJuQSbo6kkPyl1wsnbpwsZ/W9186eVbGJO79cFrSnD
+	 xFxOlJoA5WaRjI0k4PbFrvrdnNh8x/u4wlS43JDfx5m2ipu2T+aDbrbOZJ40tumDKT
+	 veXujTmkLjWwX/fsXLxPuqtdQoaZLYLMxEq1rFrDHVGeEnOf2GmS4qX20LBasa+spI
+	 wY600hV1RBRNWx72ybsdN8hns+HuIfgQ54v/hoLQy7tONl81K4YRUFUgsWGpU21WYx
+	 /ugvor7jnz+ecAS+kisAR2d6UOXgAci3CmTJqfwBPAV3WA5vYozMoMz5BSFcNt9Go+
+	 ByKPxBZoMWA4kWZBM0TVNm1DMqTrl6Du89HhCSMjJ4LmGHDbp4F8BstkEcVZN7gegC
+	 3AqHp+Lk5NLYendv/6Zn57x6I9N02VMZyW8Bf3oIR9pM7nw4NKKOEw1xcT9EUCtGDc
+	 xKnfu7wo3H16qwss2i5N7MQo=
+Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B6EC040E021E;
+	Tue,  1 Apr 2025 10:45:04 +0000 (UTC)
+Date: Tue, 1 Apr 2025 12:44:57 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Shiju Jose <shiju.jose@huawei.com>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>,
+	Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+	Tony Luck <tony.luck@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>
+Subject: Re: linux-next: build warning after merge of the edac tree
+Message-ID: <20250401104457.GBZ-vDqbrZVOlEzhgf@fat_crate.local>
+References: <20250228185102.15842f8b@canb.auug.org.au>
+ <20250401153941.517aac17@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] mm: mincore: use folio_pte_batch() to batch process
- large folios
-Content-Language: en-GB
-To: Baolin Wang <baolin.wang@linux.alibaba.com>, akpm@linux-foundation.org,
- hughd@google.com
-Cc: willy@infradead.org, david@redhat.com, 21cnbao@gmail.com, ziy@nvidia.com,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <cover.1742960003.git.baolin.wang@linux.alibaba.com>
- <7ad05bc9299de5d954fb21a2da57f46dd6ec59d0.1742960003.git.baolin.wang@linux.alibaba.com>
- <54886038-3707-4ea0-bd84-00a8f4a19a6a@arm.com>
- <f6f4f4ff-0074-4ba7-b2a5-02727661843c@linux.alibaba.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <f6f4f4ff-0074-4ba7-b2a5-02727661843c@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250401153941.517aac17@canb.auug.org.au>
 
-On 30/03/2025 15:57, Baolin Wang wrote:
+On Tue, Apr 01, 2025 at 03:39:41PM +1100, Stephen Rothwell wrote:
+> Hi all,
 > 
+> On Fri, 28 Feb 2025 18:51:02 +1100 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> >
+> > After merging the edac tree, today's linux-next build (htmldocs) produced
+> > this warning:
+> > 
+> > Documentation/edac/index.rst: WARNING: document isn't included in any toctree
+> > 
+> > Introduced by commit
+> > 
+> >   db99ea5f2c03 ("EDAC: Add support for EDAC device features control")
 > 
-> On 2025/3/27 22:08, Ryan Roberts wrote:
->> On 25/03/2025 23:38, Baolin Wang wrote:
->>> When I tested the mincore() syscall, I observed that it takes longer with
->>> 64K mTHP enabled on my Arm64 server. The reason is the mincore_pte_range()
->>> still checks each PTE individually, even when the PTEs are contiguous,
->>> which is not efficient.
->>>
->>> Thus we can use folio_pte_batch() to get the batch number of the present
->>> contiguous PTEs, which can improve the performance. I tested the mincore()
->>> syscall with 1G anonymous memory populated with 64K mTHP, and observed an
->>> obvious performance improvement:
->>>
->>> w/o patch        w/ patch        changes
->>> 6022us            1115us            +81%
->>>
->>> Moreover, I also tested mincore() with disabling mTHP/THP, and did not
->>> see any obvious regression.
->>>
->>> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
->>> ---
->>>   mm/mincore.c | 27 ++++++++++++++++++++++-----
->>>   1 file changed, 22 insertions(+), 5 deletions(-)
->>>
->>> diff --git a/mm/mincore.c b/mm/mincore.c
->>> index 832f29f46767..88be180b5550 100644
->>> --- a/mm/mincore.c
->>> +++ b/mm/mincore.c
->>> @@ -21,6 +21,7 @@
->>>     #include <linux/uaccess.h>
->>>   #include "swap.h"
->>> +#include "internal.h"
->>>     static int mincore_hugetlb(pte_t *pte, unsigned long hmask, unsigned long
->>> addr,
->>>               unsigned long end, struct mm_walk *walk)
->>> @@ -105,6 +106,7 @@ static int mincore_pte_range(pmd_t *pmd, unsigned long
->>> addr, unsigned long end,
->>>       pte_t *ptep;
->>>       unsigned char *vec = walk->private;
->>>       int nr = (end - addr) >> PAGE_SHIFT;
->>> +    int step, i;
->>>         ptl = pmd_trans_huge_lock(pmd, vma);
->>>       if (ptl) {
->>> @@ -118,16 +120,31 @@ static int mincore_pte_range(pmd_t *pmd, unsigned long
->>> addr, unsigned long end,
->>>           walk->action = ACTION_AGAIN;
->>>           return 0;
->>>       }
->>> -    for (; addr != end; ptep++, addr += PAGE_SIZE) {
->>> +    for (; addr != end; ptep += step, addr += step * PAGE_SIZE) {
->>>           pte_t pte = ptep_get(ptep);
->>>   +        step = 1;
->>>           /* We need to do cache lookup too for pte markers */
->>>           if (pte_none_mostly(pte))
->>>               __mincore_unmapped_range(addr, addr + PAGE_SIZE,
->>>                            vma, vec);
->>> -        else if (pte_present(pte))
->>> -            *vec = 1;
->>> -        else { /* pte is a swap entry */
->>> +        else if (pte_present(pte)) {
->>> +            if (pte_batch_hint(ptep, pte) > 1) {
->>> +                struct folio *folio = vm_normal_folio(vma, addr, pte);
->>> +
->>> +                if (folio && folio_test_large(folio)) {
->>> +                    const fpb_t fpb_flags = FPB_IGNORE_DIRTY |
->>> +                                FPB_IGNORE_SOFT_DIRTY;
->>> +                    int max_nr = (end - addr) / PAGE_SIZE;
->>> +
->>> +                    step = folio_pte_batch(folio, addr, ptep, pte,
->>> +                            max_nr, fpb_flags, NULL, NULL, NULL);
->>> +                }
->>> +            }
->>
->> You could simplify to the following, I think, to avoid needing to grab the folio
->> and call folio_pte_batch():
->>
->>             else if (pte_present(pte)) {
->>                 int max_nr = (end - addr) / PAGE_SIZE;
->>                 step = min(pte_batch_hint(ptep, pte), max_nr);
->>             } ...
->>
->> I expect the regression you are seeing here is all due to calling ptep_get() for
->> every pte in the contpte batch, which will cause 16 memory reads per pte (to
->> gather the access/dirty bits). For small folios its just 1 read per pte.
-> 
-> Right.
-> 
->> pte_batch_hint() will skip forward in blocks of 16 so you now end up with the
->> same number as for the small folio case. You don't need all the fancy extras
->> that folio_pte_batch() gives you here.
-> 
-> Sounds reasonable. Your suggestion looks simple, but my method can batch the
-> whole large folio (such as large folios containing more than 16 contiguous PTEs)
-> at once. 
+> I am still getting this warning, but that commit is now in Linus' tree :-(
 
-Sure but folio_pte_batch() just implements that with another loop that calls
-pte_batch_hint(), so it all amounts to the same thing. In fact there are some
-extra checks in folio_pte_batch() that you don't need so it might be a bit slower.
+Shiju,
 
-Thanks,
-Ryan
+please send this:
 
-> Anyway, let me do some performance measurements for your suggestion.
-> Thanks.
+https://lore.kernel.org/r/af3e1e183b034ea89ed6582a5382e5c3@huawei.com
 
+as a proper patch.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
