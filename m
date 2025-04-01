@@ -1,121 +1,242 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A874113C9C4
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 07:14:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3F471DEFE1;
+	Tue,  1 Apr 2025 07:14:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743491651; cv=none; b=B9j10f8GwrNP3INjjvgQdprj4kJx0+DmTRzzINLRL2f74Ke9q64idVU07HwF4Y0KOJLxG+QgAubgX9UMoPXjHKARZj0lYMJnZ/AoIhZkY4A4kxpoxph82cZKghxdTnG0urp5yr5h43vqqbeW7XZ7ay6r6TfiHHSu01wkJV0A2WI=
+	t=1743491680; cv=none; b=jLWGFaFBQJp9yt5O4eNMgDaPt8KMy4IIZ6J3JwqEjFg7OPhu5vWsy686B5k2We9Zw0oiygTPB3UfndJmNAN8qmQCPGhsOY6gfWK1bzIZfJQLR39lfS+7KXoeecm0t8uQoAMQcaBGssXHC1IYBVVp60ROOlXeukmXlqvYHboWA2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743491651; c=relaxed/simple;
-	bh=AAf425N8KsUmddjLc2zOGmGqGnniXXVbBNQ+ErWpFuI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=I20+/7SFXhfPRWfq3NhFUk/fAv9Uf4la5ayEWGsUAhecv23v9GcVfxXyuLsoC7cQtm0P2PC1GuMrN64vcg3uMxregWeqO0xcvy3ief8kgqy9rOMm+nRpd7TSus1kZ6cfRDC5uPVK5vVR7o60oxtZ3Au8ogIwZscmx/xAg2JvJls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=S5Wu5xcR; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1743491680; c=relaxed/simple;
+	bh=nUOHroF+0XkPQGstjVhmf/WCBbJVGo1d8cH+vjBRrzs=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=BzLpte9dm8fg9YAgB8SOIwgw6hZpyPrL0pFR/7HyVWIwAwzP8SCeBoRZNIHSdNTZsxsLcfdVut4V0tvZIwaC6HctXMxOpvhqn2wAiWv7x2nfa4yFzEmRW7lLfJFvku73eSAHpetJdDID1KY4UEeZp0pZz/zHUgwy/IXfhTvZZuY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dgtT31HH; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=rEug0PAm; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="S5Wu5xcR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743491650; x=1775027650;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=AAf425N8KsUmddjLc2zOGmGqGnniXXVbBNQ+ErWpFuI=;
-  b=S5Wu5xcRaLAE3YD3cZxYWYBfY7R0wB1yJDpcABqnG5Vz/sMpm7aeKbP+
-   bVvFuWJFsolA6Z3W7J5o/L7v9T3ILfkU529BcCsRefJh0bUfDF3PuiIjH
-   aJZUmAVprMbkUhbwl/0WIzGCEX3YV5Edu7yUBNX8sIAMZr6vIwPY4j6o+
-   3fplI1ywsSrHCVFTt4s44xPeAqHOPEmui8HCktI7CYbLe/N0vKWJSWnXn
-   DFgeyxxdhANlw5hADSmTdFy1dd77MUhjvYbQm70XGrzIZZy3vzcVHTRZb
-   EtBiDfuLUlG894MYc9hiKvLk6f31CmpqUtmg/Vk7Ty4Rgs42vRdUwbXL7
-   Q==;
-X-CSE-ConnectionGUID: rZU1EKQvQN+qqoSoWWU+FA==
-X-CSE-MsgGUID: gIaRAMIaQbClqnMcNccF0w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11390"; a="62194764"
-X-IronPort-AV: E=Sophos;i="6.14,292,1736841600"; 
-   d="scan'208";a="62194764"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2025 00:14:09 -0700
-X-CSE-ConnectionGUID: QsXycjGSRF2ApIHPHVIkgg==
-X-CSE-MsgGUID: IVdaTdZrQW+SrgApdc4h3w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,292,1736841600"; 
-   d="scan'208";a="130438010"
-Received: from lkp-server02.sh.intel.com (HELO e98e3655d6d2) ([10.239.97.151])
-  by fmviesa003.fm.intel.com with ESMTP; 01 Apr 2025 00:14:08 -0700
-Received: from kbuild by e98e3655d6d2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tzVoz-0009hS-2E;
-	Tue, 01 Apr 2025 07:14:05 +0000
-Date: Tue, 1 Apr 2025 15:13:08 +0800
-From: kernel test robot <lkp@intel.com>
-To: Jens Axboe <axboe@kernel.dk>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: include/trace/events/initcall.h:48:(.text+0x98): relocation
- truncated to fit: R_ARC_S25W_PCREL against symbol `__st_r13_to_r15' defined
- in .text section in
- ../lib/gcc/arc-linux/12.4.0/hs38/libgcc.a(_millicodethunk_st.o)
-Message-ID: <202504011540.dQnvkIZE-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dgtT31HH";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rEug0PAm"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1743491677;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5Sun3c8Lmw+e7fjJdrqY5kBivpZpnMD3xstjmCGLqhE=;
+	b=dgtT31HHMoeFC3XSjNmCmMSuz9dNEUuYJALN6paPNVygBkbePdkVzk9iI5oBd9Xvdgs+xh
+	6qsXGzoyOUjbbaYvmk6e23GFL1P8dlodC3q2/sVQXTKq4ISAlcQfuMlmglWSrad9Ktd77t
+	7/W3/wHY3MctOvsE4xdvGNH+S/eYyCY7QLRiDHB61r40wZYPg2/b4DCPbYF/HFfvPmGht4
+	iPZZ+ZYB22RHGtNnJq2UYXAaHU3ioxe9uhyZKbu99Vkh5LBCIUF8dVoQZ+lXkUaD59qqNp
+	fqRC7yQch13KrZJDmzXpHCRpjQfL7tq0/mYuEy5ZBEV3JbFmOcGEncBBtXWwBw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1743491677;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5Sun3c8Lmw+e7fjJdrqY5kBivpZpnMD3xstjmCGLqhE=;
+	b=rEug0PAmwMI7u9bdtbI9ACTshakfWHarFbbRfNN+IGF3W4DpwjKcCSLhmT9gKRY29+ykwy
+	q9XDKStsmjEUjOAg==
+To: Tianyang Zhang <zhangtianyang@loongson.cn>, chenhuacai@kernel.org,
+ kernel@xen0n.name, corbet@lwn.net, alexs@kernel.org, si.yanteng@linux.dev,
+ jiaxun.yang@flygoat.com, peterz@infradead.org, wangliupu@loongson.cn,
+ lvjianmin@loongson.cn, maobibo@loongson.cn, siyanteng@cqsoftware.com.cn,
+ gaosong@loongson.cn, yangtiezhu@loongson.cn
+Cc: loongarch@lists.linux.dev, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Tianyang Zhang <zhangtianyang@loongson.cn>
+Subject: Re: [PATCH v2 2/2] irq/irq-loongarch-ir:Add Redirect irqchip support
+In-Reply-To: <20250331064116.32540-3-zhangtianyang@loongson.cn>
+References: <20250331064116.32540-1-zhangtianyang@loongson.cn>
+ <20250331064116.32540-3-zhangtianyang@loongson.cn>
+Date: Tue, 01 Apr 2025 09:14:36 +0200
+Message-ID: <87ldskwdyb.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   08733088b566b58283f0f12fb73f5db6a9a9de30
-commit: 1802656ef8906cc949f58b64cb6d8d400326e163 io_uring: add GCOV_PROFILE_URING Kconfig option
-date:   7 months ago
-config: arc-randconfig-001-20250401 (https://download.01.org/0day-ci/archive/20250401/202504011540.dQnvkIZE-lkp@intel.com/config)
-compiler: arc-linux-gcc (GCC) 12.4.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250401/202504011540.dQnvkIZE-lkp@intel.com/reproduce)
+On Mon, Mar 31 2025 at 14:41, Tianyang Zhang wrote:
+>  	irq_data_update_effective_affinity(data, cpumask_of(cpu));
+> @@ -242,6 +233,7 @@ static void avecintc_irq_dispatch(struct irq_desc *desc)
+>  		d = this_cpu_read(irq_map[vector]);
+>  		if (d) {
+>  			generic_handle_irq_desc(d);
+> +
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504011540.dQnvkIZE-lkp@intel.com/
+Stray newline.
 
-All errors (new ones prefixed by >>):
+>  		} else {
 
-   init/main.o: in function `__traceiter_initcall_finish':
->> include/trace/events/initcall.h:48:(.text+0x98): relocation truncated to fit: R_ARC_S25W_PCREL against symbol `__st_r13_to_r15' defined in .text section in ../lib/gcc/arc-linux/12.4.0/hs38/libgcc.a(_millicodethunk_st.o)
+> +
+> +static void invalid_enqueue(struct redirect_queue *rqueue, struct irde_inv_cmd *cmd)
+> +{
+> +	struct irde_inv_cmd *inv_addr;
+> +	u32 tail;
+> +
+> +	guard(raw_spinlock_irqsave)(&rqueue->lock);
+> +
+> +	while (invalid_queue_is_full(rqueue->node, &tail))
+> +		cpu_relax();
+> +
+> +	inv_addr = (struct irde_inv_cmd *)(rqueue->base + tail * sizeof(struct irde_inv_cmd));
+> +	memcpy(inv_addr, cmd, sizeof(struct irde_inv_cmd));
+> +	tail = (tail + 1) % INVALID_QUEUE_SIZE;
+> +
+> +	wmb();
+
+Undocumented memory barrier.
+
+> +
+> +	iocsr_write32(tail, LOONGARCH_IOCSR_REDIRECT_CQT);
+> +}
+> +
+> +static void smp_call_invalid_enqueue(void *arg)
+> +{
+> +	struct smp_invalid_arg *s_arg = (struct smp_invalid_arg *)arg;
+> +
+> +	invalid_enqueue(s_arg->queue, s_arg->cmd);
+> +}
+> +
+> +static void irde_invlid_entry_node(struct redirect_item *item)
+> +{
+> +	struct redirect_queue *rqueue;
+> +	struct smp_invalid_arg arg;
+> +	struct irde_inv_cmd cmd;
+> +	volatile u64 raddr = 0;
+> +	int node = item->table->node, cpu;
+> +
+> +	rqueue = &(irde_descs[node].inv_queue);
+> +	cmd.cmd_info = 0;
+> +	cmd.index.type = INVALID_INDEX;
+> +	cmd.index.need_notice = 1;
+> +	cmd.index.index = item->index;
+> +	cmd.notice_addr = (u64)(__pa(&raddr));
+> +
+> +	if (cpu_to_node(smp_processor_id()) == node)
+> +		invalid_enqueue(rqueue, &cmd);
+> +	else {
+
+if () lacks brackets
+
+> +		for_each_cpu(cpu, cpumask_of_node(node)) {
+> +			if (cpu_online(cpu))
+> +				break;
+> +		}
+> +		arg.queue = rqueue;
+> +		arg.cmd = &cmd;
+> +		smp_call_function_single(cpu, smp_call_invalid_enqueue, &arg, 0);
+> +	}
+> +
+> +	while (!raddr)
+> +		cpu_relax();
+> +
+> +}
 
 
-vim +48 include/trace/events/initcall.h
+> +static int redirect_table_free(struct redirect_item *item)
+> +{
+> +	struct redirect_table *ird_table;
+> +	struct redirect_entry *entry;
+> +	unsigned long flags;
+> +
+> +	ird_table = item->table;
+> +
+> +	entry = item->entry;
+> +	memset(entry, 0, sizeof(struct redirect_entry));
+> +
+> +	raw_spin_lock_irqsave(&ird_table->lock, flags);
+> +	bitmap_release_region(ird_table->bitmap, item->index, 0);
+> +	raw_spin_unlock_irqrestore(&ird_table->lock, flags);
 
-4ee7c60de83ac0 Steven Rostedt (VMware  2018-03-23  47) 
-4ee7c60de83ac0 Steven Rostedt (VMware  2018-03-23 @48) TRACE_EVENT(initcall_finish,
-4ee7c60de83ac0 Steven Rostedt (VMware  2018-03-23  49) 
-4ee7c60de83ac0 Steven Rostedt (VMware  2018-03-23  50) 	TP_PROTO(initcall_t func, int ret),
-4ee7c60de83ac0 Steven Rostedt (VMware  2018-03-23  51) 
-4ee7c60de83ac0 Steven Rostedt (VMware  2018-03-23  52) 	TP_ARGS(func, ret),
-4ee7c60de83ac0 Steven Rostedt (VMware  2018-03-23  53) 
-4ee7c60de83ac0 Steven Rostedt (VMware  2018-03-23  54) 	TP_STRUCT__entry(
-0566e40ce7c493 Rishabh Bhatnagar       2018-04-25  55  		/*
-0566e40ce7c493 Rishabh Bhatnagar       2018-04-25  56  		 * Use field_struct to avoid is_signed_type()
-0566e40ce7c493 Rishabh Bhatnagar       2018-04-25  57  		 * comparison of a function pointer
-0566e40ce7c493 Rishabh Bhatnagar       2018-04-25  58  		 */
-0566e40ce7c493 Rishabh Bhatnagar       2018-04-25  59  		__field_struct(initcall_t,	func)
-4ee7c60de83ac0 Steven Rostedt (VMware  2018-03-23  60) 		__field(int,			ret)
-4ee7c60de83ac0 Steven Rostedt (VMware  2018-03-23  61) 	),
-4ee7c60de83ac0 Steven Rostedt (VMware  2018-03-23  62) 
-4ee7c60de83ac0 Steven Rostedt (VMware  2018-03-23  63) 	TP_fast_assign(
-4ee7c60de83ac0 Steven Rostedt (VMware  2018-03-23  64) 		__entry->func = func;
-4ee7c60de83ac0 Steven Rostedt (VMware  2018-03-23  65) 		__entry->ret = ret;
-4ee7c60de83ac0 Steven Rostedt (VMware  2018-03-23  66) 	),
-4ee7c60de83ac0 Steven Rostedt (VMware  2018-03-23  67) 
-4ee7c60de83ac0 Steven Rostedt (VMware  2018-03-23  68) 	TP_printk("func=%pS ret=%d", __entry->func, __entry->ret)
-4ee7c60de83ac0 Steven Rostedt (VMware  2018-03-23  69) );
-4ee7c60de83ac0 Steven Rostedt (VMware  2018-03-23  70) 
+	scoped_guard(raw_spinlock_irqsave, &ird_table->lock)
+		bitmap_release_region(ird_table->bitmap, item->index, 0);
 
-:::::: The code at line 48 was first introduced by commit
-:::::: 4ee7c60de83ac01fa4c33c55937357601631e8ad init, tracing: Add initcall trace events
+> +static int redirect_set_affinity(struct irq_data *data, const struct cpumask *dest, bool force)
+> +{
+> +	struct redirect_item *item = data->chip_data;
+> +	struct avecintc_data *adata;
+> +	int ret;
+> +
+> +	ret = irq_chip_set_affinity_parent(data, dest, force);
+> +	if (ret == IRQ_SET_MASK_OK_DONE)
+> +		return IRQ_SET_MASK_OK;
 
-:::::: TO: Steven Rostedt (VMware) <rostedt@goodmis.org>
-:::::: CC: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Again bracket rules. Also what is this return value translation about?
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> +	else if (ret) {
+> +		pr_err("IRDE:set_affinity error %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	adata = irq_data_get_avec_data(data);
+> +
+> +	redirect_domain_prepare_entry(item, adata);
+> +
+> +	irde_invlid_entry_node(item);
+
+This cannot work when irde_invlid_entry_node() goes into the SMP
+function call path, because smp_call_function_single() cannot be invoked
+with interrupts disabled.
+
+> +
+> +static void redirect_free_resources(struct irq_domain *domain,
+> +						unsigned int virq, unsigned int nr_irqs)
+
+Please align the arguments as documented.
+
+> +{
+> +	struct irq_data *irq_data;
+> +	struct redirect_item *item;
+> +
+
+Please move the variables into the scope where they are used
+
+> +	for (int i = 0; i < nr_irqs; i++) {
+> +		irq_data = irq_domain_get_irq_data(domain, virq  + i);
+> +		if (irq_data && irq_data->chip_data) {
+> +			item = irq_data->chip_data;
+> +			redirect_table_free(item);
+> +			kfree(item);
+> +		}
+> +	}
+> +}
+> +
+> +static int redirect_alloc(struct irq_domain *domain,
+> +					unsigned int virq, unsigned int nr_irqs,
+> +					 void *arg)
+
+More random coding style
+
+> +{
+> +	struct redirect_table *ird_table;
+> +	struct avecintc_data *avec_data;
+> +	struct irq_data *irq_data;
+> +	int ret, i, node;
+> +
+> +#ifdef CONFIG_NUMA
+> +	node = ((msi_alloc_info_t *)arg)->desc->dev->numa_node;
+
+Bah.
+
+> +#else
+> +	node = 0;
+> +#endif
+
+        msi_alloc_info_t *info = arg;
+
+        node = dev_to_node(info->desc->dev);
+
+> +static int redirect_table_init(int node)
+> +{
+> +	struct redirect_table *ird_table = &(irde_descs[node].ird_table);
+> +	struct page *pages;
+> +	unsigned long *bitmap;
+
+Use proper reverse fir tree ordering
+
+Thanks,
+
+        tglx
