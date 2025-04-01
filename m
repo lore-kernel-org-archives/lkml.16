@@ -1,243 +1,103 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F54B20100C
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 11:45:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AE2D200BB2;
+	Tue,  1 Apr 2025 11:46:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743507962; cv=none; b=DcSbq+bUq9mgCBI+8zi6reM0PKidi1hyoc5iHTldx/+fHNqHa1gfwdeFnRsgM1OOsFQWowSD9fS8Y9GeV3u77TPGz5OOYybauizFo187rTFplP1qi+mvKai727J0g9el7awn0OJFt2qIJM9YAl8WVOvSB06z2UtYMgWEoD7Ys50=
+	t=1743508007; cv=none; b=gFyv4U0mMLYrHsbiY8FiUABYXerOalJnRclUOft4KkTcCRNbvxeUfw/haHENnVugO1BFzzOv+A9/lHCUE19prsz7bZewoylWYQPQuTlfQdO4dLT9SFBnAkfJxxngCdMNdJrWNKy9iOB30MyNmJVK/VqCGzDjEcKJ8inw09twZ70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743507962; c=relaxed/simple;
-	bh=tJ/nY5DmjGkUEyUIKawES06pKMf+xtUebkpWoQY+V7E=;
+	s=arc-20240116; t=1743508007; c=relaxed/simple;
+	bh=XqdnbW6pAeCpwOdRwLilImT/OKAIai64/QacKoT+his=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ST7n6mOwXqYMhiXmJ6DT77kmi5g2nERhv6pTCg42u/OHKpKyxz40RkY4JbhVS1RkVDDJI0P1xLuh/Qg7MK7kmT/J9yUnQtO2/YByUyUY1TQs2BVWPrRRXqcFgLCxhNYQtpKZ+TxNkAHvAoyQv7rGOkUEf17tHWl/Uj0ruU1fpFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=BI8ZYVDD; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=c/vgTDgHNefuqiyh0m3qTpoVP+6SoTARXUTlm9IXYozIefgQP0vxmgEV1MAmlZOZaU5u2g+T7KDQjc9/2AFFHhexOIV/eO0NZ8Lou6x3+2yDaAF5eCFtXxnnPAzPpELL30GIV0TtmA/p6wQT3PQ0j9bnG1hytaBEpnKn+7Zp6s0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jhE0JL2z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="BI8ZYVDD"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=Content-Type:MIME-Version:Message-ID:Subject:From:Date:From
-	:Subject; bh=cpHa3hRcyYE+oveSMpWWau+9FeOL1orHAEbMAeTSCY0=; b=BI8ZYVDD+A/bplQt
-	Lxzx6WknmOncFAkzbg2GZCQjMX0EAq3hUE9F4Aes1QlpQGYc2jv803aIWQnkSeu1SB4HcnYScO+yg
-	vxZPEWAte1PAaam76hgaooRGKH/oYX6y6tnP4nfGIO/WmayF48Jf/Y+bbe+FDkYOV0L7ozJaO7fF4
-	cxqDUiRvIoIGCHx3CjyqPfvSEXQ/zYYbs4d642O+Op3BWzlkgU8N8wRfC0Bt6yr30AMrT3jketCEJ
-	sRmONLJWJkJ+tiAsl0gyRjWasE+3VPQ2kYY994EuQop1SvJlb/h7dGwe9C/0e3Ijd/HG6FuSc006A
-	tJHj4XYIBZWId1R7kw==;
-Received: from dg by mx.treblig.org with local (Exim 4.96)
-	(envelope-from <dg@treblig.org>)
-	id 1tzZpw-008Jmf-0j;
-	Tue, 01 Apr 2025 11:31:20 +0000
-Date: Tue, 1 Apr 2025 11:31:20 +0000
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
-To: arnd@arndb.de, lee@kernel.org, dmitry.torokhov@gmail.com,
-	sre@kernel.org, lgirdwood@gmail.com, broonie@kernel.org,
-	alexandre.belloni@bootlin.com, danielt@kernel.org,
-	jingoohan1@gmail.com, deller@gmx.de, linus.walleij@linaro.org,
-	brgl@bgdev.pl, tsbogend@alpha.franken.de
-Cc: linux-mips@vger.kernel.org, linux-input@vger.kernel.org,
-	linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 4/9] Input: pcf50633-input - Remove
-Message-ID: <Z-vOiJ9tdovS-Guq@gallifrey>
-References: <20250311014959.743322-1-linux@treblig.org>
- <20250311014959.743322-5-linux@treblig.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jhE0JL2z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA3E3C4CEEE;
+	Tue,  1 Apr 2025 11:46:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743508006;
+	bh=XqdnbW6pAeCpwOdRwLilImT/OKAIai64/QacKoT+his=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jhE0JL2zRfEGDWmOoV5UfVpPRtv7w90asCz4oq8Ou2jJddm1jKMgkNMSwHl0AbDww
+	 5mlEq62AAHifxna0K901IybOxpxnyaZ4cgKWVHKOZOvqmBQyOXohBRrxTXCoSnmdwv
+	 v2M/L7jGDv7DteWTAAy4gZ8i8E6HvlVhkzG98k3gL2MbTk4iHZyvsKxHhxdBuqddl+
+	 JVGsDZDaMWgq1qhcWizdM/FItdIeN5RXiO3jW/25jZb6TIUS9h+hVU78QgkqtNxfZY
+	 Q61PsHEYt3LxNfFrbCBl9spaiT8U6QZFyPGFqnavX96jrEF0/2G74KzhJkrBLFbcE5
+	 b2lnmuYr+iWBA==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1tza4w-000000001Qx-137t;
+	Tue, 01 Apr 2025 13:46:50 +0200
+Date: Tue, 1 Apr 2025 13:46:50 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Cc: Johan Hovold <johan+linaro@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jens Glathe <jens.glathe@oldschoolsolutions.biz>,
+	Abel Vesa <abel.vesa@linaro.org>,
+	Stephan Gerhold <stephan.gerhold@linaro.org>,
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: qcom: x1e80100-hp-x14: drop bogus USB retimer
+Message-ID: <Z-vSKlA8MjNFk3Xh@hovoldconsulting.com>
+References: <20250328084154.16759-1-johan+linaro@kernel.org>
+ <707db3e3-b380-4db4-96e9-50e66b0be595@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250311014959.743322-5-linux@treblig.org>
-X-Chocolate: 70 percent or better cocoa solids preferably
-X-Operating-System: Linux/6.1.0-21-amd64 (x86_64)
-X-Uptime: 11:28:53 up 327 days, 22:42,  1 user,  load average: 0.00, 0.00,
- 0.00
-User-Agent: Mutt/2.2.12 (2023-09-09)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <707db3e3-b380-4db4-96e9-50e66b0be595@oss.qualcomm.com>
 
-* linux@treblig.org (linux@treblig.org) wrote:
-> From: "Dr. David Alan Gilbert" <linux@treblig.org>
+On Tue, Apr 01, 2025 at 12:27:55PM +0200, Konrad Dybcio wrote:
+> On 3/28/25 9:41 AM, Johan Hovold wrote:
+> > Jens reported that the sanity checks added to the new ps883x USB retimer
+> > driver breaks USB and display on the HP X14. Turns out the X14 only has
+> > a retimer on one of the ports, but this initially went unnoticed due to
+> > the missing sanity check (and error handling) in the retimer driver.
+> > 
+> > Drop the non-existing retimer from the devicetree to enable the second
+> > USB port and the display subsystem.
+> > 
+> > Note that this also matches the ACPI tables.
+> > 
+> > Fixes: 6f18b8d4142c ("arm64: dts: qcom: x1e80100-hp-x14: dt for HP Omnibook X Laptop 14")
+> > Cc: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
+> > Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+> > ---
+> > 
+> > The devicetree went upstream before the retimer driver so the display
+> > would already be broken in 6.14 and there's no need to backport this
+> > one (but it should go into 6.15).
+> > 
+> > Note that the SBU mux can be added later when/if someone figures out how
+> > it is connected.
 > 
-> The pcf50633 was used as part of the OpenMoko devices but
-> the support for its main chip was recently removed in:
-> commit 61b7f8920b17 ("ARM: s3c: remove all s3c24xx support")
-> 
-> See https://lore.kernel.org/all/Z8z236h4B5A6Ki3D@gallifrey/
-> 
-> Remove it.
-> 
-> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+> I am shocked, but this product photo [1] (is this the right laptop? there's a
+> bunch with similar naming) on the HP website suggests that indeed only one port
+> has a USB-40Gbps marking on it, with the other type-C only being supposed to do
+> 10Gbps
 
-Has anyone got this input patch lined up?
-I think most of the other parts are there; the rtc I see in next.
-Then once those go there is a core.h that needs nuking.
+Yeah, I found a photo like that on their web page too, and the specs
+also mention it:
 
-Dave
+	1 USB Type-C® 10Gbps signaling rate (USB Power Delivery,
+	DisplayPort™ 1.4a, HP Sleep and Charge); 1 USB Type-C® 40Gbps
+	signaling rate (USB Power Delivery, DisplayPort™ 1.4a, HP Sleep
+	and Charge)
 
-> ---
->  drivers/input/misc/Kconfig          |   7 --
->  drivers/input/misc/Makefile         |   1 -
->  drivers/input/misc/pcf50633-input.c | 113 ----------------------------
->  3 files changed, 121 deletions(-)
->  delete mode 100644 drivers/input/misc/pcf50633-input.c
-> 
-> diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
-> index 13d135257e06..62819144bd8c 100644
-> --- a/drivers/input/misc/Kconfig
-> +++ b/drivers/input/misc/Kconfig
-> @@ -584,13 +584,6 @@ config INPUT_PALMAS_PWRBUTTON
->  	  To compile this driver as a module, choose M here. The module will
->  	  be called palmas_pwrbutton.
->  
-> -config INPUT_PCF50633_PMU
-> -	tristate "PCF50633 PMU events"
-> -	depends on MFD_PCF50633
-> -	help
-> -	 Say Y to include support for delivering  PMU events via  input
-> -	 layer on NXP PCF50633.
-> -
->  config INPUT_PCF8574
->  	tristate "PCF8574 Keypad input device"
->  	depends on I2C
-> diff --git a/drivers/input/misc/Makefile b/drivers/input/misc/Makefile
-> index 6d91804d0a6f..d468c8140b93 100644
-> --- a/drivers/input/misc/Makefile
-> +++ b/drivers/input/misc/Makefile
-> @@ -59,7 +59,6 @@ obj-$(CONFIG_INPUT_MC13783_PWRBUTTON)	+= mc13783-pwrbutton.o
->  obj-$(CONFIG_INPUT_MMA8450)		+= mma8450.o
->  obj-$(CONFIG_INPUT_PALMAS_PWRBUTTON)	+= palmas-pwrbutton.o
->  obj-$(CONFIG_INPUT_PCAP)		+= pcap_keys.o
-> -obj-$(CONFIG_INPUT_PCF50633_PMU)	+= pcf50633-input.o
->  obj-$(CONFIG_INPUT_PCF8574)		+= pcf8574_keypad.o
->  obj-$(CONFIG_INPUT_PCSPKR)		+= pcspkr.o
->  obj-$(CONFIG_INPUT_PM8941_PWRKEY)	+= pm8941-pwrkey.o
-> diff --git a/drivers/input/misc/pcf50633-input.c b/drivers/input/misc/pcf50633-input.c
-> deleted file mode 100644
-> index 6d046e236ba6..000000000000
-> --- a/drivers/input/misc/pcf50633-input.c
-> +++ /dev/null
-> @@ -1,113 +0,0 @@
-> -// SPDX-License-Identifier: GPL-2.0-or-later
-> -/* NXP PCF50633 Input Driver
-> - *
-> - * (C) 2006-2008 by Openmoko, Inc.
-> - * Author: Balaji Rao <balajirrao@openmoko.org>
-> - * All rights reserved.
-> - *
-> - * Broken down from monstrous PCF50633 driver mainly by
-> - * Harald Welte, Andy Green and Werner Almesberger
-> - */
-> -
-> -#include <linux/kernel.h>
-> -#include <linux/module.h>
-> -#include <linux/device.h>
-> -#include <linux/platform_device.h>
-> -#include <linux/input.h>
-> -#include <linux/slab.h>
-> -
-> -#include <linux/mfd/pcf50633/core.h>
-> -
-> -#define PCF50633_OOCSTAT_ONKEY	0x01
-> -#define PCF50633_REG_OOCSTAT	0x12
-> -#define PCF50633_REG_OOCMODE	0x10
-> -
-> -struct pcf50633_input {
-> -	struct pcf50633 *pcf;
-> -	struct input_dev *input_dev;
-> -};
-> -
-> -static void
-> -pcf50633_input_irq(int irq, void *data)
-> -{
-> -	struct pcf50633_input *input;
-> -	int onkey_released;
-> -
-> -	input = data;
-> -
-> -	/* We report only one event depending on the key press status */
-> -	onkey_released = pcf50633_reg_read(input->pcf, PCF50633_REG_OOCSTAT)
-> -						& PCF50633_OOCSTAT_ONKEY;
-> -
-> -	if (irq == PCF50633_IRQ_ONKEYF && !onkey_released)
-> -		input_report_key(input->input_dev, KEY_POWER, 1);
-> -	else if (irq == PCF50633_IRQ_ONKEYR && onkey_released)
-> -		input_report_key(input->input_dev, KEY_POWER, 0);
-> -
-> -	input_sync(input->input_dev);
-> -}
-> -
-> -static int pcf50633_input_probe(struct platform_device *pdev)
-> -{
-> -	struct pcf50633_input *input;
-> -	struct input_dev *input_dev;
-> -	int ret;
-> -
-> -
-> -	input = kzalloc(sizeof(*input), GFP_KERNEL);
-> -	if (!input)
-> -		return -ENOMEM;
-> -
-> -	input_dev = input_allocate_device();
-> -	if (!input_dev) {
-> -		kfree(input);
-> -		return -ENOMEM;
-> -	}
-> -
-> -	platform_set_drvdata(pdev, input);
-> -	input->pcf = dev_to_pcf50633(pdev->dev.parent);
-> -	input->input_dev = input_dev;
-> -
-> -	input_dev->name = "PCF50633 PMU events";
-> -	input_dev->id.bustype = BUS_I2C;
-> -	input_dev->evbit[0] = BIT(EV_KEY) | BIT(EV_PWR);
-> -	set_bit(KEY_POWER, input_dev->keybit);
-> -
-> -	ret = input_register_device(input_dev);
-> -	if (ret) {
-> -		input_free_device(input_dev);
-> -		kfree(input);
-> -		return ret;
-> -	}
-> -	pcf50633_register_irq(input->pcf, PCF50633_IRQ_ONKEYR,
-> -				pcf50633_input_irq, input);
-> -	pcf50633_register_irq(input->pcf, PCF50633_IRQ_ONKEYF,
-> -				pcf50633_input_irq, input);
-> -
-> -	return 0;
-> -}
-> -
-> -static void pcf50633_input_remove(struct platform_device *pdev)
-> -{
-> -	struct pcf50633_input *input  = platform_get_drvdata(pdev);
-> -
-> -	pcf50633_free_irq(input->pcf, PCF50633_IRQ_ONKEYR);
-> -	pcf50633_free_irq(input->pcf, PCF50633_IRQ_ONKEYF);
-> -
-> -	input_unregister_device(input->input_dev);
-> -	kfree(input);
-> -}
-> -
-> -static struct platform_driver pcf50633_input_driver = {
-> -	.driver = {
-> -		.name = "pcf50633-input",
-> -	},
-> -	.probe = pcf50633_input_probe,
-> -	.remove = pcf50633_input_remove,
-> -};
-> -module_platform_driver(pcf50633_input_driver);
-> -
-> -MODULE_AUTHOR("Balaji Rao <balajirrao@openmoko.org>");
-> -MODULE_DESCRIPTION("PCF50633 input driver");
-> -MODULE_LICENSE("GPL");
-> -MODULE_ALIAS("platform:pcf50633-input");
-> -- 
-> 2.48.1
-> 
--- 
- -----Open up your eyes, open up your mind, open up your code -------   
-/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
-\        dave @ treblig.org |                               | In Hex /
- \ _________________________|_____ http://www.treblig.org   |_______/
+	https://www.hp.com/us-en/shop/pdp/hp-omnibook-x-laptop-ai-pc-14-fe000-14-9j1h6av-1#techSpecs
+
+> [1] https://ssl-product-images.www8-hp.com/digmedialib/prodimg/lowres/c08993265.png
+
+Johan
