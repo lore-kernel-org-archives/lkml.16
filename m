@@ -1,149 +1,360 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B26220AF75
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 15:27:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 581D020AF88
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 15:27:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743521232; cv=none; b=UJc7GYuGDbRQR4yFwjVpA9Vzijy3DTk67vdvxBNzIg4oF95arjZcvcF8II3T5RK5Tj5dquMECDFIXTvmzwJELJ+IOqrZ5f38jwuxwbUCvOX3jsFFSGSsLq2SN5r71HawGrAHD8rQtBAdbIkEibKuSsDSob5mnlW2c0rR2WM12dw=
+	t=1743521259; cv=none; b=UyF3tNqx805oa+OsaCMC7pLacKDruWXdOl3yxj4s2eu0qZBSxzeBC2R17TqeQuLO9hXl9wphpAppYk0R/mXO3wYti7AliexLfg0Kol1fO4Af+1cCnHASnU2CAmfwBmacBRzkf+jnjMbyrsSMCJ9iF+R7M5TRua+Aw0roAARIHvo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743521232; c=relaxed/simple;
-	bh=Qgct0ez16hwhs3O2wDOEibGqXsNDr2ST+s/XMe0kZXU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=upn7c7LshhyMdfwxxVwCFzZdx76AzCC4z6WlM/mVx8vqKSxsNV66AClyz5CjzaOqCb47RtolYsI4VyFNLb7j4wsG7D0nugsRqO6zSvbuHlSVrm3TxRldrR/8hj57vY5ANXQE3e1yCPJuZgO84FpLaDS7S+xj330YRI5B8bt+h3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=cnl18lK+; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1743521259; c=relaxed/simple;
+	bh=Hc0JBTwcblF9exbzjWcnb6VWqPc+E1BTIFbOZZXNqbs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=i9uK5Q35ELNKKSrIg0bq4NaaPjZi1YTeXKSyyFmtaDlyGYcrlnRUcMWGJ2Mdk15Z4j6UZMMjlXmuxYvsMCIkbcjegH4qRrVN9CPdXed+wUaO4+LLgMJ4Iud6zFW35ggG2pTc+C6CeMsVTF7129zaRHlQFR15QG6WQcdn27arQl0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LcNDXGoo; arc=none smtp.client-ip=209.85.128.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="cnl18lK+"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 531CJrYf024673
-	for <linux-kernel@vger.kernel.org>; Tue, 1 Apr 2025 15:27:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	CESq9DXG+qVF7TbZ7Hqg6qV+YzHe7hj1ycltHpfG4nw=; b=cnl18lK+oaKnNdVW
-	XosNMs+ZSFVFjaOjRQ/zUlor/D3o91Lp1Z5h8rpLddNF5LVq6xhnL/lONPihLVod
-	t+iPu2lYqAj8e5DEdve5CIFX7e8fV3Rbuh76DI8g63aUgL/Od9bIniGPTMPK+Stz
-	YEgUWdyKzb+rG2yrHaKKVVLR8VfIpZZq3sCugsZdMqYE3r2B58Gw/HGa9J++DqcN
-	ddzOY+zBZOSqcBFb4croB9zmrmi/MNcDvzosFvgL1SQPDavc0qlzc7T/iRwGvE6H
-	OG1B9XU25G4tscxvc0oG75F3+bJ+OYa2CO2JIIXMLFWfEXu0NLr8J+lTW/ktMGGA
-	meMRyg==
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45p86krhuy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 15:27:10 +0000 (GMT)
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c5841ae28eso175232785a.1
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 08:27:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LcNDXGoo"
+Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-6febbd3b75cso51906337b3.0
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 08:27:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1743521256; x=1744126056; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YrTAT73/pytPO5BDqSRBwDug9yOh7SSsAyZQaMHt+8I=;
+        b=LcNDXGoo1/14bwqIr6BqiNbGMGciIpqqwfec7r1lMpdLwaE+8kE3Bhd2+Ds6bQvj7B
+         agaTRiB01p0eWsYoMaBf+/sn5C/oTSwzOAxLTtb0U/24Sl5USQ0sn/nuWPM0DetTrO4P
+         gj0l0x98Tey/r7HfelNjXfJz75BP7P/dEX1XXouC4WjpERDmCpsPtpEqhk2Hq1X5QmBx
+         ApHFF8z1COI5WqD22PuSMjhmnLbtNq9TqpsJ/5hfrisupMdcMEotkAzDfJBLTLuxaFbc
+         nNnK2O7KAdShcmLW7P8NUHfS2hfkQ6e2b0wu/ewiXbZL8Vld2FQBnJFYuqGhaKD3Knyy
+         ucaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743521229; x=1744126029;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CESq9DXG+qVF7TbZ7Hqg6qV+YzHe7hj1ycltHpfG4nw=;
-        b=mbugIzTmpAqIje3socTZBFnk8vBmD6gUsDJm0OT6nXF5oW4ryiq6F5e6xQV5jcyyuS
-         Un7pGMlw2DWug5inxq8cp4JNT1KTwoEVAAE8wfkV1aNlcze0mfxM6dmU8lSK3Rj2wQJs
-         24wlPeKcMUssKJmfwaHsCVu22DC2ggZmzFKsR5QpdoIx4yQIZEudpEbbA7J+BrFFtZz3
-         E6jfbgjObwkmWyIa2OqGXtMBuV44Sv2dQ2c6uFysPUgWg2XacUnKv0pU/spL462LAgpp
-         FHis3noieAp3pi8ZzcESDiAFUw+10JJkNxtyNoWjik+X98nJmCrLcPgVs5myHCPnN4yA
-         nrLw==
-X-Forwarded-Encrypted: i=1; AJvYcCXULlaaoEKpuyxnzJ2wihR5CDBm5YqoFSOlDsNSIwKACjBT4ZK2adLYhNkZyreV1gGiclHXoT9MuJoxHYw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwLgpU1Luj0IVP3xuMUieHamENlS3LiWM8v0EKQHvuKPwovvP8K
-	V74tdxCAhvOQ4MZZBV6MmuIIVhaRik1hSF/CBf9POCoTbJ+WX2RWF8OPj/tVakD3ZZMSCpDD9v5
-	R9eEhIAeMmxl0w9k0CNayTLkxzrPwCCtTlSeQAD25Y28r0ygIMwF/0xfBvZnTumU=
-X-Gm-Gg: ASbGncvSdoORuUbxt89ViJVbABr7sSYMfNV1GuazHqL73dvlHsIBVDHEUY2Gizhd7pb
-	VSJ3DT3jMV0TdC9ZZ1rdDn5vnalm7VybVnrc0Hat5aDnCJqnr4MdiUqWzpiQrjLLPiq8WM1ChpM
-	p1S4o5kzUybWQlCX8+WYxBQ3W7uE4qEFNOLljniqkRM/4HgFt7ms3PvR55TYTAWzS0v/dK0xZ8T
-	x0kNHWEv2c8jq6MfJdxRLBJsMImcEKcyNfgHvyFwJ3xJ0+tUedSJsdXjONvW6CB6LQGoK/q2erw
-	bJqpmGIwBdw2odjNgesHWjBt6RSYdt3FuixAswRmMbWzmrB217WBcrjB7ZYt1+MHs+P93g==
-X-Received: by 2002:a05:620a:2951:b0:7c3:cccc:8790 with SMTP id af79cd13be357-7c69073e0bcmr731864685a.5.1743521229188;
-        Tue, 01 Apr 2025 08:27:09 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG+GaHshC3cNLj1Z7gyYwDLBH9N8bomcJCm0FfDDw16BCmXoUAh+skUHMJ7I5LGOMOMRT6rxg==
-X-Received: by 2002:a05:620a:2951:b0:7c3:cccc:8790 with SMTP id af79cd13be357-7c69073e0bcmr731862385a.5.1743521228814;
-        Tue, 01 Apr 2025 08:27:08 -0700 (PDT)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac719279ceasm786869266b.39.2025.04.01.08.27.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Apr 2025 08:27:08 -0700 (PDT)
-Message-ID: <12986cda-99eb-4a1b-a97b-544ea01e2dbb@oss.qualcomm.com>
-Date: Tue, 1 Apr 2025 17:27:06 +0200
+        d=1e100.net; s=20230601; t=1743521256; x=1744126056;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YrTAT73/pytPO5BDqSRBwDug9yOh7SSsAyZQaMHt+8I=;
+        b=GUXoXXIvjgxeO2t3r4J3M8yUaQibkd53NUJ0btBHGjObII2rlxUMN5YSuR/YzhEJ5q
+         J3zaMli/7IbTo6RYp1S5vWaJMyWzWDWiui+S5C81R4pGMzWlVJ0uW+vI6C0dMW40cNp+
+         awv7mhiIijGvCYJN5DYU3zvqYlSA0KgqyYvToUu9qcZawoVTiFVFJad/6Uo5SgpQAx3l
+         bDqUCPonikANMCqEcWJYYV3nwAcsgEKCjYfsHzaVEyg0ytcdmtJp1UKRb5ORhcrhKA9r
+         fbpFRfJvbRbbHp+uQz5X1MDo5Avo2YmyxLnv6PEFvMY0H28K1J4ZQEwFH/TJpJHuB4g+
+         RXlw==
+X-Forwarded-Encrypted: i=1; AJvYcCXAsyR5uyMKF9GU0jQFrP0o7IXyOPsGcJS7SaDovlhbqqTpt7RMiYy8yu8T8GN8BLV9oW0NDAa8GHDJbc0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyvGpSW1JkZHcMO6ryAyhSPX0qbnNyspEqqhI6RUl6l7Qd4Xy47
+	OMtXIyCsG+n3kRttoe1nHfomtCm1l9RQ2/y8WHB6d/BzVEmh8VANbgeeE0N8pUNrMYO61Zc7Mhs
+	Qt4RBL70oxP76I4WOyZjHww1V7ZutjAWkEZOB
+X-Gm-Gg: ASbGncu5bSXAngHCshw9VxnqOwUODv4RDEs3Lge00fP2hskxSicLn6I5oGFDyZxF63c
+	lVHdEBpyT+2z58PjZXatR1vphmNaheI8Qru+xb8c5j6bubW6jb/oOw14u3mkJDNHXD+jl5LeT2g
+	vz8r94/GDgUFdIgbW78MrUwIbu
+X-Google-Smtp-Source: AGHT+IEjX/jjY8IHxq9srXQvt2Ttjh0zWE7Q87FlLz3zplPodhA9JDcKoR+aISyyJLiyJEMASpHY8zS7u8oRwVeU+TU=
+X-Received: by 2002:a05:690c:6c82:b0:6fd:474a:60a8 with SMTP id
+ 00721157ae682-7025710afc9mr197129247b3.11.1743521255933; Tue, 01 Apr 2025
+ 08:27:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 15/18] arm64: dts: qcom: Add MXC power domain to
- videocc node on SM8650
-To: Jagadeesh Kona <quic_jkona@quicinc.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd
- <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>,
-        Dmitry Baryshkov <lumag@kernel.org>
-Cc: Ajit Pandey <quic_ajipan@quicinc.com>,
-        Imran Shaik <quic_imrashai@quicinc.com>,
-        Taniya Das <quic_tdas@quicinc.com>,
-        Satya Priya Kakitapalli <quic_skakitap@quicinc.com>,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-References: <20250327-videocc-pll-multi-pd-voting-v3-0-895fafd62627@quicinc.com>
- <20250327-videocc-pll-multi-pd-voting-v3-15-895fafd62627@quicinc.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250327-videocc-pll-multi-pd-voting-v3-15-895fafd62627@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Authority-Analysis: v=2.4 cv=W8g4VQWk c=1 sm=1 tr=0 ts=67ec05ce cx=c_pps a=HLyN3IcIa5EE8TELMZ618Q==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=KKAkSRfTAAAA:8 a=ZLyFKkHq2fKehN92aLAA:9 a=QEXdDO2ut3YA:10
- a=bTQJ7kPSJx9SKPbeHEYW:22 a=TjNXssC_j7lpFel5tvFf:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-GUID: qgva4sO23ZxpEaSchMWUocoSl2vI2i-N
-X-Proofpoint-ORIG-GUID: qgva4sO23ZxpEaSchMWUocoSl2vI2i-N
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-01_06,2025-04-01_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- priorityscore=1501 lowpriorityscore=0 bulkscore=0 suspectscore=0
- mlxlogscore=963 mlxscore=0 clxscore=1015 malwarescore=0 adultscore=0
- phishscore=0 impostorscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2504010096
+References: <20250401134424.3725875-1-chharry@google.com> <CABBYNZKu_jRm4b-gBT=DRtn0c_svgxyM7tc_u3HDRCUAwvABnQ@mail.gmail.com>
+In-Reply-To: <CABBYNZKu_jRm4b-gBT=DRtn0c_svgxyM7tc_u3HDRCUAwvABnQ@mail.gmail.com>
+From: Hsin-chen Chuang <chharry@google.com>
+Date: Tue, 1 Apr 2025 23:26:59 +0800
+X-Gm-Features: AQ5f1JqKHimVqd6cxraxMet6vAte91WjpA6TRIa_BXNcv9HJ6LM7mbljvPf2jcU
+Message-ID: <CADg1FFePfuOmHE+s9Fks8LvPY5dt9gcxrULn+X5wM9S3J57H7A@mail.gmail.com>
+Subject: Re: [PATCH] Bluetooth: Add driver command BTUSB_DRV_CMD_SWITCH_ALT_SETTING
+To: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Cc: Hsin-chen Chuang <chharry@chromium.org>, chromeos-bluetooth-upstreaming@chromium.org, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Johan Hedberg <johan.hedberg@gmail.com>, 
+	Marcel Holtmann <marcel@holtmann.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	Ying Hsu <yinghsu@chromium.org>, linux-bluetooth@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 3/27/25 10:52 AM, Jagadeesh Kona wrote:
-> Videocc requires both MMCX and MXC rails to be powered ON to configure
-> the video PLLs on SM8650 platform. Hence add MXC power domain to videocc
-> node on SM8650.
-> 
-> Signed-off-by: Jagadeesh Kona <quic_jkona@quicinc.com>
-> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-> ---
->  arch/arm64/boot/dts/qcom/sm8650.dtsi | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sm8650.dtsi b/arch/arm64/boot/dts/qcom/sm8650.dtsi
-> index 818db6ba3b3be99c187512ea4acf2004422f6a18..ad60596b71d25bb0198b26660dc41195a1210a23 100644
-> --- a/arch/arm64/boot/dts/qcom/sm8650.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sm8650.dtsi
-> @@ -4959,7 +4959,8 @@ videocc: clock-controller@aaf0000 {
->  			reg = <0 0x0aaf0000 0 0x10000>;
->  			clocks = <&bi_tcxo_div2>,
->  				 <&gcc GCC_VIDEO_AHB_CLK>;
-> -			power-domains = <&rpmhpd RPMHPD_MMCX>;
-> +			power-domains = <&rpmhpd RPMHPD_MMCX>,
-> +					<&rpmhpd RPMHPD_MXC>;
+Hi Luiz,
 
-So all other DTs touched in this series reference low_svs in required-opps
+On Tue, Apr 1, 2025 at 11:03=E2=80=AFPM Luiz Augusto von Dentz
+<luiz.dentz@gmail.com> wrote:
+>
+> Hi Hsin-chen,
+>
+> On Tue, Apr 1, 2025 at 9:44=E2=80=AFAM Hsin-chen Chuang <chharry@google.c=
+om> wrote:
+> >
+> > From: Hsin-chen Chuang <chharry@chromium.org>
+> >
+> > Although commit 75ddcd5ad40e ("Bluetooth: btusb: Configure altsetting
+> > for HCI_USER_CHANNEL") has enabled the HCI_USER_CHANNEL user to send ou=
+t
+> > SCO data through USB Bluetooth chips, it's observed that with the patch
+> > HFP is flaky on most of the existing USB Bluetooth controllers: Intel
+> > chips sometimes send out no packet for Transparent codec; MTK chips may
+> > generate SCO data with a wrong handle for CVSD codec; RTK could split
+> > the data with a wrong packet size for Transparent codec; ... etc.
+> >
+> > To address the issue above one needs to reset the altsetting back to
+> > zero when there is no active SCO connection, which is the same as the
+> > BlueZ behavior, and another benefit is the bus doesn't need to reserve
+> > bandwidth when no SCO connection.
+> >
+> > This patch introduces a fundamental solution that lets the user space
+> > program to configure the altsetting freely:
+> > - Define the new packet type HCI_DRV_PKT which is specifically used for
+> >   communication between the user space program and the Bluetooth drvier=
+s
+> > - Define the btusb driver command BTUSB_DRV_CMD_SWITCH_ALT_SETTING whic=
+h
+> >   indicates the expected altsetting from the user space program
+> > - btusb intercepts the command and adjusts the Isoc endpoint
+> >   correspondingly
+> >
+> > This patch is tested on ChromeOS devices. The USB Bluetooth models
+> > (CVSD, TRANS alt3, and TRANS alt6) could pass the stress HFP test narro=
+w
+> > band speech and wide band speech.
+> >
+> > Cc: chromeos-bluetooth-upstreaming@chromium.org
+> > Fixes: b16b327edb4d ("Bluetooth: btusb: add sysfs attribute to control =
+USB alt setting")
+> > Signed-off-by: Hsin-chen Chuang <chharry@chromium.org>
+> > ---
+> >
+> >  drivers/bluetooth/btusb.c       | 67 +++++++++++++++++++++++++++++++++
+> >  include/net/bluetooth/hci.h     |  1 +
+> >  include/net/bluetooth/hci_mon.h |  2 +
+> >  net/bluetooth/hci_core.c        |  2 +
+> >  net/bluetooth/hci_sock.c        | 14 +++++--
+> >  5 files changed, 83 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
+> > index 5012b5ff92c8..a7bc64e86661 100644
+> > --- a/drivers/bluetooth/btusb.c
+> > +++ b/drivers/bluetooth/btusb.c
+> > @@ -2151,6 +2151,67 @@ static int submit_or_queue_tx_urb(struct hci_dev=
+ *hdev, struct urb *urb)
+> >         return 0;
+> >  }
+> >
+> > +static struct sk_buff *btusb_drv_response(u8 opcode, size_t data_len)
+> > +{
+> > +       struct sk_buff *skb;
+> > +
+> > +       /* btusb driver response starts with 1 oct of the opcode,
+> > +        * and followed by the command specific data.
+> > +        */
+> > +       skb =3D bt_skb_alloc(1 + data_len, GFP_KERNEL);
+> > +       if (!skb)
+> > +               return NULL;
+> > +
+> > +       skb_put_u8(skb, opcode);
+> > +       hci_skb_pkt_type(skb) =3D HCI_DRV_PKT;
+> > +
+> > +       return skb;
+> > +}
+> > +
+> > +static int btusb_switch_alt_setting(struct hci_dev *hdev, int new_alts=
+);
+> > +
+> > +#define BTUSB_DRV_CMD_SWITCH_ALT_SETTING 0x35
+>
+> Any particular reason why you are starting with 0x35? We may need to
+> add something like Read Supported Driver Commands to begin with.
 
-Is that an actual requirement? Otherwise since Commit e3e56c050ab6
-("soc: qcom: rpmhpd: Make power_on actually enable the domain") we get the
-first nonzero state, which can be something like low_svs_d2
+Um, it's just my lucky number. No particular reason in terms of the design.
+And sure Read Supported Driver Commands seems good, but does that
+indicate that the meaning of the opcodes is shared across different
+driver modules? That's fine but we would need to move these
+definitions somewhere else.
 
-Konrad
+>
+> > +static int btusb_drv_cmd(struct hci_dev *hdev, struct sk_buff *skb)
+> > +{
+> > +       /* btusb driver command starts with 1 oct of the opcode,
+> > +        * and followed by the command specific data.
+> > +        */
+> > +       if (!skb->len)
+> > +               return -EILSEQ;
+>
+> We might need to define a struct header, and I'd definitely recommend
+> using skb_pull_data for parsing.
+
+So far the header has only 1 oct of the opcode. Would you suggest
+something similar to HCI command e.g. 2 oct of the opcode + 1 oct of
+the param length?
+
+>
+> > +       switch (skb->data[0]) {
+> > +       case BTUSB_DRV_CMD_SWITCH_ALT_SETTING: {
+> > +               struct sk_buff *resp;
+> > +               int status;
+> > +
+> > +               /* Response data: Total 1 Oct
+> > +                *   Status: 1 Oct
+> > +                *     0 =3D Success
+> > +                *     1 =3D Invalid command
+> > +                *     2 =3D Other errors
+> > +                */
+> > +               resp =3D btusb_drv_response(BTUSB_DRV_CMD_SWITCH_ALT_SE=
+TTING, 1);
+> > +               if (!resp)
+> > +                       return -ENOMEM;
+> > +
+> > +               if (skb->len !=3D 2 || skb->data[1] > 6) {
+> > +                       status =3D 1;
+> > +               } else {
+> > +                       status =3D btusb_switch_alt_setting(hdev, skb->=
+data[1]);
+> > +                       if (status)
+> > +                               status =3D 2;
+> > +               }
+> > +               skb_put_u8(resp, status);
+> > +
+> > +               kfree_skb(skb);
+> > +               return hci_recv_frame(hdev, resp);
+> > +       }
+> > +       }
+> > +
+> > +       return -EILSEQ;
+> > +}
+> > +
+> >  static int btusb_send_frame(struct hci_dev *hdev, struct sk_buff *skb)
+> >  {
+> >         struct urb *urb;
+> > @@ -2192,6 +2253,9 @@ static int btusb_send_frame(struct hci_dev *hdev,=
+ struct sk_buff *skb)
+> >                         return PTR_ERR(urb);
+> >
+> >                 return submit_or_queue_tx_urb(hdev, urb);
+> > +
+> > +       case HCI_DRV_PKT:
+> > +               return btusb_drv_cmd(hdev, skb);
+> >         }
+> >
+> >         return -EILSEQ;
+> > @@ -2669,6 +2733,9 @@ static int btusb_send_frame_intel(struct hci_dev =
+*hdev, struct sk_buff *skb)
+> >                         return PTR_ERR(urb);
+> >
+> >                 return submit_or_queue_tx_urb(hdev, urb);
+> > +
+> > +       case HCI_DRV_PKT:
+> > +               return btusb_drv_cmd(hdev, skb);
+> >         }
+> >
+> >         return -EILSEQ;
+> > diff --git a/include/net/bluetooth/hci.h b/include/net/bluetooth/hci.h
+> > index a8586c3058c7..e297b312d2b7 100644
+> > --- a/include/net/bluetooth/hci.h
+> > +++ b/include/net/bluetooth/hci.h
+> > @@ -494,6 +494,7 @@ enum {
+> >  #define HCI_EVENT_PKT          0x04
+> >  #define HCI_ISODATA_PKT                0x05
+> >  #define HCI_DIAG_PKT           0xf0
+> > +#define HCI_DRV_PKT            0xf1
+> >  #define HCI_VENDOR_PKT         0xff
+> >
+> >  /* HCI packet types */
+> > diff --git a/include/net/bluetooth/hci_mon.h b/include/net/bluetooth/hc=
+i_mon.h
+> > index 082f89531b88..bbd752494ef9 100644
+> > --- a/include/net/bluetooth/hci_mon.h
+> > +++ b/include/net/bluetooth/hci_mon.h
+> > @@ -51,6 +51,8 @@ struct hci_mon_hdr {
+> >  #define HCI_MON_CTRL_EVENT     17
+> >  #define HCI_MON_ISO_TX_PKT     18
+> >  #define HCI_MON_ISO_RX_PKT     19
+> > +#define HCI_MON_DRV_TX_PKT     20
+> > +#define HCI_MON_DRV_RX_PKT     21
+>
+> Are you planning to write some btmon decoding for these packets?
+
+Yeah, I believe this is helpful for debugging. ChromeOS still uses
+btmon for btsnoop capturing.
+
+>
+> >  struct hci_mon_new_index {
+> >         __u8            type;
+> > diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
+> > index 5eb0600bbd03..bb4e1721edc2 100644
+> > --- a/net/bluetooth/hci_core.c
+> > +++ b/net/bluetooth/hci_core.c
+> > @@ -2911,6 +2911,8 @@ int hci_recv_frame(struct hci_dev *hdev, struct s=
+k_buff *skb)
+> >                 break;
+> >         case HCI_ISODATA_PKT:
+> >                 break;
+> > +       case HCI_DRV_PKT:
+> > +               break;
+> >         default:
+> >                 kfree_skb(skb);
+> >                 return -EINVAL;
+> > diff --git a/net/bluetooth/hci_sock.c b/net/bluetooth/hci_sock.c
+> > index 022b86797acd..0bc4f77ed17b 100644
+> > --- a/net/bluetooth/hci_sock.c
+> > +++ b/net/bluetooth/hci_sock.c
+> > @@ -234,7 +234,8 @@ void hci_send_to_sock(struct hci_dev *hdev, struct =
+sk_buff *skb)
+> >                         if (hci_skb_pkt_type(skb) !=3D HCI_EVENT_PKT &&
+> >                             hci_skb_pkt_type(skb) !=3D HCI_ACLDATA_PKT =
+&&
+> >                             hci_skb_pkt_type(skb) !=3D HCI_SCODATA_PKT =
+&&
+> > -                           hci_skb_pkt_type(skb) !=3D HCI_ISODATA_PKT)
+> > +                           hci_skb_pkt_type(skb) !=3D HCI_ISODATA_PKT =
+&&
+> > +                           hci_skb_pkt_type(skb) !=3D HCI_DRV_PKT)
+> >                                 continue;
+> >                 } else {
+> >                         /* Don't send frame to other channel types */
+> > @@ -391,6 +392,12 @@ void hci_send_to_monitor(struct hci_dev *hdev, str=
+uct sk_buff *skb)
+> >                 else
+> >                         opcode =3D cpu_to_le16(HCI_MON_ISO_TX_PKT);
+> >                 break;
+> > +       case HCI_DRV_PKT:
+> > +               if (bt_cb(skb)->incoming)
+> > +                       opcode =3D cpu_to_le16(HCI_MON_DRV_RX_PKT);
+> > +               else
+> > +                       opcode =3D cpu_to_le16(HCI_MON_DRV_TX_PKT);
+> > +               break;
+> >         case HCI_DIAG_PKT:
+> >                 opcode =3D cpu_to_le16(HCI_MON_VENDOR_DIAG);
+> >                 break;
+> > @@ -1806,7 +1813,7 @@ static int hci_sock_sendmsg(struct socket *sock, =
+struct msghdr *msg,
+> >         if (flags & ~(MSG_DONTWAIT | MSG_NOSIGNAL | MSG_ERRQUEUE | MSG_=
+CMSG_COMPAT))
+> >                 return -EINVAL;
+> >
+> > -       if (len < 4 || len > hci_pi(sk)->mtu)
+> > +       if (len > hci_pi(sk)->mtu)
+> >                 return -EINVAL;
+> >
+> >         skb =3D bt_skb_sendmsg(sk, msg, len, len, 0, 0);
+> > @@ -1860,7 +1867,8 @@ static int hci_sock_sendmsg(struct socket *sock, =
+struct msghdr *msg,
+> >                 if (hci_skb_pkt_type(skb) !=3D HCI_COMMAND_PKT &&
+> >                     hci_skb_pkt_type(skb) !=3D HCI_ACLDATA_PKT &&
+> >                     hci_skb_pkt_type(skb) !=3D HCI_SCODATA_PKT &&
+> > -                   hci_skb_pkt_type(skb) !=3D HCI_ISODATA_PKT) {
+> > +                   hci_skb_pkt_type(skb) !=3D HCI_ISODATA_PKT &&
+> > +                   hci_skb_pkt_type(skb) !=3D HCI_DRV_PKT) {
+> >                         err =3D -EINVAL;
+> >                         goto drop;
+> >                 }
+> > --
+> > 2.49.0.472.ge94155a9ec-goog
+> >
+>
+>
+> --
+> Luiz Augusto von Dentz
+
+--=20
+Best Regards,
+Hsin-chen
