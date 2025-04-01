@@ -1,130 +1,82 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BFBB81F152F
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 11:27:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A78651F12FC;
+	Tue,  1 Apr 2025 11:28:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743506828; cv=none; b=kM1ZDkWqIvQ/9J/cip3Z+H5fUN1q3yhiTItxOlPcJw+QmYkii4FeGtAOYvn46upPATmcbhDwZcaD/D7NSNIMddNMFJQbP3GKnZUPAHkFm8bmExTGfHwYl/7H5z2GhCNRvhPrNTcSxmn1eoSJ9nGoEy05tcdlzEK/SpJEoyFxVtA=
+	t=1743506937; cv=none; b=cEXybUdEBWPD4OZxRXlOLw9cF7YnYuv++6H2n/MH+9cPPTTUGYPh/SE0zVdVYDC1/JOaqmZplHb807dic/i67DUs1Z94zByj/42M/A4UJtlEpfFnOXM2ZNZq21zKk2sHofrJ8OgSrhZTt037LkFK2an8FufxbcC27O7skh1JpOI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743506828; c=relaxed/simple;
-	bh=KwiEpF1/WiyMcICvDmlCgwF4Wd5Y0RydDfYY/VEhfL4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pH7hFv9s5ANzqGl8yBPdcDVcSOn0AfCFJW27GUtNtVdJdTxNNRdcQMVulsSxY/vRaOCawhuLaEBLHHbv7e+3Z5qFVeMzpAlp7I3ROFfMEKlPl3SRUJR4m6Eja0emJ6Jit1RyjXyQ+nwQcQodwR0t0XeBzBpmB2oot2yOAtQ8ebk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5881C14BF;
-	Tue,  1 Apr 2025 04:27:09 -0700 (PDT)
-Received: from [10.57.40.234] (unknown [10.57.40.234])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D00B53F694;
-	Tue,  1 Apr 2025 04:27:02 -0700 (PDT)
-Message-ID: <df70e7da-20b3-4d56-b9ac-87352b0874e3@arm.com>
-Date: Tue, 1 Apr 2025 12:26:58 +0100
+	s=arc-20240116; t=1743506937; c=relaxed/simple;
+	bh=DaYueR7dUNDwVsECkuaNXT3p5/kpPUyydXjCO2RALyE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fSF4C7ki+hP2FyOw9gNrxhbU7dexKVWxLJayHpWf5BGSb6NwhwGeojIUiE8COXa3APxcDfl0NxLauYVLQ57399CMM8MnaFklBoZXSWk3nWlYun6ZEZuVLhYLMvbkx5mOyms3dFIurIJ2JDjKke6hxYdY4MrsC8ftlJmQF6l5LyY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kOLLDg30; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kOLLDg30"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C312DC4CEE4;
+	Tue,  1 Apr 2025 11:28:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743506937;
+	bh=DaYueR7dUNDwVsECkuaNXT3p5/kpPUyydXjCO2RALyE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kOLLDg30OXhbK+MphiB+Vy7bXzP49h1ihSXmPB+if7qbiGShHOuINIHjb9tM4eYzU
+	 DcyX3Kz63c0TfWGqlLbmunZBbr8cfomlCkx+8wS/HNOrbQmNs5CQcw/43hjjQQA/+n
+	 HevMxNXzIU3r1qADvSUNDuc0QHoT2lBql2cK/PH2HG2386R+jQ6kk0SsGKCdD2mJ76
+	 sRk8NYdSX3YjtQy1xdyEyUpfT/V/3wYjs1Zz+IaGLtRQauKhHPRqYAvbjZxacMBJXn
+	 NtUQlDRjrDhMIfQ8nd3j88d9gp0/ysHZnFVt1bfjSsiCx+/ASu0+QdU8oe2vfKOCFx
+	 yRksKLjmWRFaA==
+Date: Tue, 1 Apr 2025 13:28:51 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Siddharth Vadapalli <s-vadapalli@ti.com>, lpieralisi@kernel.org,
+	kw@linux.com, robh@kernel.org, bhelgaas@google.com, vigneshr@ti.com,
+	kishon@kernel.org, wojciech.jasko-EXT@continental-corporation.com,
+	thomas.richard@bootlin.com, bwawrzyn@cisco.com,
+	linux-pci@vger.kernel.org, linux-omap@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	srk@ti.com, dlemoal@kernel.org
+Subject: Re: [PATCH 3/4] PCI: cadence-ep: Introduce cdns_pcie_ep_disable
+ helper for cleanup
+Message-ID: <Z-vN8_-HJ0K1-1mH@ryzen>
+References: <20250307103128.3287497-1-s-vadapalli@ti.com>
+ <20250307103128.3287497-4-s-vadapalli@ti.com>
+ <20250318080304.jsmrxqil6pn74nzh@thinkpad>
+ <20250318081239.rvbk3rqud7wcj5pj@uda0492258>
+ <20250319103217.aaoxpzk2baqna5vc@thinkpad>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [GIT PULL] ftrace: Updates for 6.15
-To: "pr-tracker-bot@kernel.org" <pr-tracker-bot@kernel.org>,
- Steven Rostedt <rostedt@goodmis.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
- Hongyan Xia <Hongyan.Xia2@arm.com>, LKML <linux-kernel@vger.kernel.org>,
- Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <Mark.Rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>, Haiyue Wang <haiyuewa@163.com>,
- Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
- Sasha Levin <sashal@kernel.org>, Sven Schnelle <svens@linux.ibm.com>,
- Tengda Wu <wutengda@huaweicloud.com>
-References: <20250325193935.66020aa3@gandalf.local.home>
- <174312059712.2290382.15769886213616422661.pr-tracker-bot@kernel.org>
- <DB9PR08MB75820599801BAD118D123D7D93AD2@DB9PR08MB7582.eurprd08.prod.outlook.com>
-Content-Language: en-US
-From: Christian Loehle <christian.loehle@arm.com>
-In-Reply-To: <DB9PR08MB75820599801BAD118D123D7D93AD2@DB9PR08MB7582.eurprd08.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250319103217.aaoxpzk2baqna5vc@thinkpad>
 
-On 3/31/25 17:57, Christian Loehle wrote:
-> 
-> 
-> ________________________________________
-> From: pr-tracker-bot@kernel.org <pr-tracker-bot@kernel.org>
-> Sent: 28 March 2025 00:09
-> To: Steven Rostedt <rostedt@goodmis.org>
-> Cc: Linus Torvalds <torvalds@linux-foundation.org>; LKML <linux-kernel@vger.kernel.org>; Masami Hiramatsu <mhiramat@kernel.org>; Mark Rutland <Mark.Rutland@arm.com>; Mathieu Desnoyers <mathieu.desnoyers@efficios.com>; Andrew Morton <akpm@linux-foundation.org>; Haiyue Wang <haiyuewa@163.com>; Jiapeng Chong <jiapeng.chong@linux.alibaba.com>; Sasha Levin <sashal@kernel.org>; Sven Schnelle <svens@linux.ibm.com>; Tengda Wu <wutengda@huaweicloud.com>
-> Subject: Re: [GIT PULL] ftrace: Updates for 6.15
-> 
-> 
->> The pull request you sent on Tue, 25 Mar 2025 19:39:35 -0400:
->>
->>> git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git ftrace-v6.15
->>
->> has been merged into torvalds/linux.git:
->> https://git.kernel.org/torvalds/c/31eb415bf6f06c90fdd9b635caf3a6c5110a38b6
->>
->> Thank you!
->>
->> --
->> Deet-doot-dot, I am a bot.
->> https://korg.docs.kernel.org/prtracker.html
-> 
-> Hi Steven,
-> I'm pretty sure this causes the build to fail on linus' tree and next:
-> 4e82c87058f4 (HEAD -> master, origin/master, origin/HEAD) Merge tag 'rust-6.15' of git://git.kernel.org/pub/scm/linux/kernel/git/ojeda/linux
-> 
-> aarch64-linux-gnu-ld: Unexpected GOT/PLT entries detected!
-> aarch64-linux-gnu-ld: Unexpected run-time procedure linkages detected!
-> aarch64-linux-gnu-ld: kernel/trace/trace_output.o: in function `print_function_args':
-> /home/chrloe01/development/linux-mainline/kernel/trace/trace_output.c:712: undefined reference to `btf_find_func_proto'
-> aarch64-linux-gnu-ld: /home/chrloe01/development/linux-mainline/kernel/trace/trace_output.c:716: undefined reference to `btf_get_func_param'
-> make[2]: *** [scripts/Makefile.vmlinux:77: vmlinux] Error 1
-> make[1]: *** [/data_nvme1n1/chrloe01/development/linux-mainline/Makefile:1234: vmlinux] Error 2
-> make: *** [Makefile:251: __sub-make] Error 2
-> 
-> Sound familiar?
-> grep BTF .config
-> CONFIG_DEBUG_INFO_BTF=y
-> CONFIG_PAHOLE_HAS_SPLIT_BTF=y
-> CONFIG_DEBUG_INFO_BTF_MODULES=y
-> # CONFIG_MODULE_ALLOW_BTF_MISMATCH is not set
-> 
-> Enabling CONFIG_PROBE_EVENTS_BTF_ARGS passes the build.
-> 
+Hello Mani,
 
-In linus' tree we have:
-76fe0337c219 ftrace: Add arguments to function tracer
-c7a60a733c37 ftrace: Have funcgraph-args take affect during tracing
-ff5c9c576e75 ftrace: Add support for function argument to graph tracer
-533c20b062d7 ftrace: Add print_function_args()
-3d44e1d1575a md: switch personalities to use md_submodule_head
+On Wed, Mar 19, 2025 at 04:02:17PM +0530, Manivannan Sadhasivam wrote:
+> > 
+> > While I don't intend to justify dropping pci_epc_deinit_notify() in the
+> > cleanup path, I wanted to check if this should be added to
+> > dw_pcie_ep_deinit() as well. Or is it the case that dw_pcie_ep_deinit()
+> > is different from cdns_pcie_ep_disable()? Please let me know.
+> > 
+> 
+> Reason why it was not added to dw_pcie_ep_deinit() because, deinit_notify() is
+> supposed to be called while performing the resource cleanup with active refclk.
+> 
+> Some plaforms (Tegra, Qcom) depend on refclk from host. So if deinit_notify() is
+> called when there is no refclk, it will crash the endpoint SoC. But since
+> cadence endpoint platforms seem to generate their own refclk, you can call
+> deinit_notify() during deinit phase.
+> 
+> That said, I noticed some issues in the DWC cleanup path while checking the code
+> now. Will submit fixes for them.
 
-3d44e1d1575a md: switch personalities to use md_submodule_head
-builds fine.
+Could you please elaborate quickly what issues you found?
 
-533c20b062d7 ftrace: Add print_function_args()
-is the first one to fail but with:
-kernel/trace/trace_output.c: In function ‘print_function_args’:
-kernel/trace/trace_output.c:724:26: error: ‘FTRACE_REGS_MAX_ARGS’ undeclared (first use in this function)
-  724 |                 if (a == FTRACE_REGS_MAX_ARGS) {
-      |                          ^~~~~~~~~~~~~~~~~~~~
-kernel/trace/trace_output.c:724:26: note: each undeclared identifier is reported only once for each function it appears in
 
-then 
-ff5c9c576e75 ftrace: Add support for function argument to graph tracer
-shows
-
-aarch64-linux-gnu-ld: Unexpected GOT/PLT entries detected!
-aarch64-linux-gnu-ld: Unexpected run-time procedure linkages detected!
-aarch64-linux-gnu-ld: kernel/trace/trace_output.o: in function `print_function_args':
-/home/chrloe01/development/linux-mainline/kernel/trace/trace_output.c:711: undefined reference to `btf_find_func_proto'
-aarch64-linux-gnu-ld: /home/chrloe01/development/linux-mainline/kernel/trace/trace_output.c:715: undefined reference to `btf_get_func_param'
-make[2]: *** [scripts/Makefile.vmlinux:77: vmlinux] Error 1
-make[1]: *** [/data_nvme1n1/chrloe01/development/linux-mainline/Makefile:1226: vmlinux] Error 2
-make: *** [Makefile:251: __sub-make] Error 2
-make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- -j16 -s Image  5747.92s user 554.69s system 830% cpu 12:38.50 total
-
-fails just like reported linus' tree.
-
+Kind regards,
+Niklas
