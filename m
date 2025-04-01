@@ -1,77 +1,67 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEF3C204684
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 14:09:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEFA11FAC55;
+	Tue,  1 Apr 2025 14:10:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743516598; cv=none; b=hXFydkhIBwW/JZo2gKiHYU6LCbsqBxdUrn0MWWWiHl6fjg3Vmm2jbxiUYYrte/1IYhDb7XptF1NS3kJ+8wS9dI2/pYhAuGzALxI2uu93NkIvEvNgSf8JIe9F9h17LjAtFZGUW4SeBMEaTJGliYs8cIvbPft2jGDdLYv7G3kwee4=
+	t=1743516626; cv=none; b=rQ+hjpygVQ7pHtwusmN8IcoK2JBhwa5LZ4YtbvghrJGEB7zLD2jrMG7/iU+d7xTsO5cS0FczADRwO6VGPDXiDPLCGvd/U7xgW00gre1JBvYQ4cuJQMjV3DWRayJb2XFhm+6mHgDpAwPfzBtgmQXzG5GfDO1aobk927zfZ36k15o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743516598; c=relaxed/simple;
-	bh=t4ERt79E1MKZVCOHESPXrWSpOLzU2ctlJAkZUDmfa28=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=lxRWMP6MW+EfS5Kc0BVVoEWhahHgfuuCUqgT/qGp3MRgVye91UOjpqWJGA6jrLL+M+maSbb6xnvBElNhioFoeVXGFKDSa6UDy0OpCR5v52ulF4JSgidjh2PAcpd6qm5GAHfh+l7kWV880VJkqFzPXkFPnTz2TwcA1MWlNcLu06s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hqDS994r; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743516626; c=relaxed/simple;
+	bh=jLjkyOQuOzBl4oTWHSyJ7vkYp1bKwM67FwX5cSCD6vs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WOwvwiPMe8q7/HFWLXgNm5sZKcfbWGGgi/egP2Qrypt8Hb2XVLwpPVsuezeLVnY55/1/SdaRO4GiSf3Unu4P4QVYz+Jkidd2f+ofqs+7jNgiWl+lvN4agngQb+O3TJhMp68NTZa+W9mGreGodgjFfyQko0sleUZrIbe/THuIxuI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VoxX2dIb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hqDS994r"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42E85C4CEE4;
-	Tue,  1 Apr 2025 14:09:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VoxX2dIb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F457C4CEE4;
+	Tue,  1 Apr 2025 14:10:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743516598;
-	bh=t4ERt79E1MKZVCOHESPXrWSpOLzU2ctlJAkZUDmfa28=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=hqDS994r9kCSuabYQox5+Z2L/OVBL82B1F+BkcOOzXa0tGwnEyZWyYOyBks0mSbs1
-	 DBBlxOyRfW3OnRQ8qwxcH8jn5qTvIGYOsOApcEf0V8pY0wV9yWDq0piT+i9AYtP71I
-	 PZJIPWiHaqCdrI2p7keBnxpxEk4Lete3whbtS5L43CalXmwJImHF8oj8+pqg4iKH2G
-	 NIZ4cIq4PLbZT62viCxmg2kKJWTO2PAZRhMt3ERiTFM15sT9oXcTEVZv+16ORcyCTy
-	 FFP/yrGVgaLY94ZfQtuFAwwZuekBK/ar6jg6nxmuLN3ioniYXeNh8tF8d977jQyvD8
-	 O/IuWwqW9sIFQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 34926380AA7A;
-	Tue,  1 Apr 2025 14:10:36 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1743516625;
+	bh=jLjkyOQuOzBl4oTWHSyJ7vkYp1bKwM67FwX5cSCD6vs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VoxX2dIbEW9bqMjkL0WMPeD4YIvXgphDS0TT/yVI4schin0F26yJ+22HXWV4eklIZ
+	 M6F/ldkGjXQPYKtCr8rRe/pEPJqJaBm+FK+xOztmRAFJWEe3gYKGG0ovI1h4iwE9+E
+	 uU4WRHZmn+2fXWyGtnqIAdH0KoDsurqBqCxoSxwB6XmtJsSL+6phAAgepkpyAGO68z
+	 4Qg/lGuvQgGkkE0HC5UcB7CeMjr4jbqLH7ICgNMSJ9XQf4kbiUhphLuo+6u+/wRwBM
+	 Sm3JICUecmw4FSscPUTFhVw8Xw+k+EGKKGYhaBPvtHfdkS2HH1rHw1V/JZkE2p3Y9K
+	 waV3H39f/bsZw==
+Date: Tue, 1 Apr 2025 09:10:24 -0500
+From: Rob Herring <robh@kernel.org>
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-i2c@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	devicetree-spec@vger.kernel.org,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH 1/2] schemas: i2c: Avoid extra characters in i2c nodename
+ pattern
+Message-ID: <20250401141024.GA3313904-robh@kernel.org>
+References: <20250401081041.114333-1-herve.codina@bootlin.com>
+ <20250401081041.114333-2-herve.codina@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH FOR-NEXT] riscv: Add norvc after .option arch in runtime
- const
-From: patchwork-bot+linux-riscv@kernel.org
-Message-Id: 
- <174351663474.777137.11029884560691390580.git-patchwork-notify@kernel.org>
-Date: Tue, 01 Apr 2025 14:10:34 +0000
-References: <20250331-fix_runtime_const_norvc-v1-1-89bc62687ab8@rivosinc.com>
-In-Reply-To: <20250331-fix_runtime_const_norvc-v1-1-89bc62687ab8@rivosinc.com>
-To: Charlie Jenkins <charlie@rivosinc.com>
-Cc: linux-riscv@lists.infradead.org, paul.walmsley@sifive.com,
- palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
- klarasmodin@gmail.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250401081041.114333-2-herve.codina@bootlin.com>
 
-Hello:
-
-This patch was applied to riscv/linux.git (for-next)
-by Palmer Dabbelt <palmer@rivosinc.com>:
-
-On Mon, 31 Mar 2025 11:45:24 -0700 you wrote:
-> .option arch clobbers .option norvc. Prevent gas from emitting
-> compressed instructions in the runtime const alternative blocks by
-> setting .option norvc after .option arch. This issue starts appearing on
-> gcc 15, which adds zca to the march.
+On Tue, Apr 01, 2025 at 10:10:39AM +0200, Herve Codina wrote:
+> Current nodename pattern doesn't limit the end of name for an i2c node.
+> It can match 'i2c@10-foo'.
 > 
-> Reported by: Klara Modin <klarasmodin@gmail.com>
+> In order to avoid matching to an incorrect name, avoid any extra
+> characters in nodename pattern.
 > 
-> [...]
+> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+> ---
+>  dtschema/schemas/i2c/i2c-controller.yaml | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Here is the summary with links:
-  - [FOR-NEXT] riscv: Add norvc after .option arch in runtime const
-    https://git.kernel.org/riscv/c/95c18b7ccdd1
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Applied.
