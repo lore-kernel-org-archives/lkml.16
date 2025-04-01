@@ -1,114 +1,118 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93E2E20B7E1;
-	Tue,  1 Apr 2025 16:39:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3F2220DD47
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 16:40:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743525551; cv=none; b=cAq8o6o4yrRWVeUg3mo0vBVCL2E3bxpC1nIXZucum7IL1ODOg4S97E9K4VWoyjJ0FoiCxtzHAoN25ZWTExANeOy+zDnOdEVQ8maYwZ14gMNT9zO11LGzbRPh3acOsjH/7ocWWWssDnPsO8pzm688riIzC17zYSNAw7NsGf6NIjQ=
+	t=1743525641; cv=none; b=KTzHg58Rh6vWSWH0lE23DgZPHIu89WE5gp5C2t04THqFZxVYY/V1eyh/6SYhUBvGH5aksfLWdWS0M7hd/9/4M4G5PeVYjdOT1bB1GzuI4B0MBUEtF6wS5Lc85zsdceIrRn47HLKdGouVPQuJ3pBp765hYbzhhqvVykALL8uGvSE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743525551; c=relaxed/simple;
-	bh=1+HPiGJkMYpy6pkR8X3utQL9ZJoe9RZZqaoc8k5B2kE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V+IvThasitlz/D7KKObm84MHFQ79KR20aEmdnPHJwApF6VwZQs8TPeznNB6WrCCFxUgSkQkRMUAz0CDINPoTutv6ft8OPQippd0rDeis3CiPaOkghrXc6D4/c9YCKCOVik7VH55/Hlncu/+6Gmcf92+FbRpXXf2PSNEMV9FXK5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bqK9tW2l; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743525641; c=relaxed/simple;
+	bh=UHpWWs+DyipNZHEV2Nkr4YRS5WpwRh+UNqWpXhbSsXI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=reX8jTjNgn2hkCKqwC9TqdYj0P6FEbBtmheIyy6Op7CAb+kC9V9CQK/sUllWO7LY42AbBh8oZ9Sm+Eu+2ZGjHvi1w0p3Fc80l53h7W/z8YPzLWvwSXNDCOlGa4Pt8bJZ5daNRmRWK3TxCK9cUcIW07M2Aa6s+ID2d+FvKiMEpYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=a70nKcpy; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bqK9tW2l"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-227c7e57da2so87249355ad.0;
-        Tue, 01 Apr 2025 09:39:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743525550; x=1744130350; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=fXxG8/KJLq5lQeA9/oOuwtl3Ja9SvkQ3rvJPvyidBdk=;
-        b=bqK9tW2lTAa51Kq8/qdCnctS8/Vu+yFBojtutV6ApEhINk2HKyLG0vkUPpCQ5wWpSz
-         rYWfHh/+FNacXejJLC4T/Nnt0D63ziOnE6KiViCc4zQD+PPWmdK2KROI/dkj7ZoChuAZ
-         JS3ve7t3HyjwN+10jXPj+8DHnckE5uQZHJ3EyemvYLHlHoCX6N3+K4I6m0isx4UcZiDE
-         PmosCozMXQjoP+MVIkSr50Awu6ctj9gABa0BhwCtFhmCxwMq3lcbgXJj/DsP9RXKCm8z
-         +mUbuCG8P8cLJBmUuzqjFsN59h7wLh5UjYUNEIWRfOmmZDpbUtQMJeVPY1P9joeF6+Ee
-         ZMwA==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="a70nKcpy"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 531DeG3o007206
+	for <linux-kernel@vger.kernel.org>; Tue, 1 Apr 2025 16:40:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	/379CuoW3tzmnDJsyDy/0ujjjwBPjP0Zru4t6cZwrYI=; b=a70nKcpyHh8Ft3MK
+	dAD1X5izfpBIhtoGopYSOCahmi0n/Sq6Nkx0hsZlFYduFuTaETSouFmSZjc1AZRl
+	V8xXi1mMY+bsO86eCY+XYoKBOwdmMXaWGW7XRGrDRAZV8ud2Sfemshdks444K2vo
+	TpKaeqxWM5f1Yuo49+LWgWJr/MbdgaSYD9UCDNGB2y5GQlFel6gOn3skxSyAvo60
+	ruOzjxomi9pBdxTKhTpduCIXfzjl7FsG1KjkjeZ93YqL0QF+1d8umK/JpQSLrHIE
+	6k7uwa3BW7PJyaWjbJ62qeWSvkfjx2cLZTkh57ej9u+8lWJw6urK+hHaUyy5SUs7
+	4R52yA==
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com [209.85.219.71])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45rh7ygh03-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 16:40:38 +0000 (GMT)
+Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6e8ff8c9dcfso11123176d6.3
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 09:40:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743525550; x=1744130350;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
+        d=1e100.net; s=20230601; t=1743525632; x=1744130432;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fXxG8/KJLq5lQeA9/oOuwtl3Ja9SvkQ3rvJPvyidBdk=;
-        b=bj9QwE4pc+IhfLgfjx3YCUiIuWKK8E9jXif7HPMPGDguRNjJYkknsKbttV8zGg+Fc8
-         JWAUXM1JOnwOFufpXuQns1lE2UvPVGGve/p/tUqifDHYahdsKA7cQ/oVP0NuOJD8hFk5
-         mhs0wk0vYs07CA52eejet5hR/oFoG3GmeSv/BgSU0EpXm9MtkpE2JoPb83oVurVPp8Vm
-         yP++mg7Q1K7E5sOiGIxeolF+/YGzs/x7IZ7wzgRVl/hHSfEN0U8oV+V5CLBX/W0q6Rk6
-         CXBlkb0shQpmbZBJ585CrtRSsL7vBz19LJHvhvf53+nRxwPt6mpGwNYTc6X8kRwe8WCK
-         qubg==
-X-Forwarded-Encrypted: i=1; AJvYcCU/bMQVNzlBZfrrTjqyT8xJmqm6Ka4bNpTZy++lRrdGjSfSdohf7HCkayUscxLk2Jdp2V8=@vger.kernel.org, AJvYcCVrgQbI19iHlh6KiGd3WGhRR25opbUoLria7SWMfPlMBtKsF9DTB6NvJEzje1/XC1msrdBDjYIcIUu8pnvI@vger.kernel.org, AJvYcCWkky9fASzIZu/2nen66G+4KlMfJgpCmGk+2sOyBTMen/+L+FCmdXtCM+NuJ1tdjhd/BeAO+dHh@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw9seV/LUXHbTzLkonQojp2duG1IGmqS2A8VJAXkUs8aJZuZv2i
-	FrJSwHBBZg/W2YWBm1uIWlKdkP6py+ZJJQ2vl0M8BsxHCm03LnZGwNbTRlRG9w==
-X-Gm-Gg: ASbGncvoLofLhN5ynb+loJUNTD0LK68nBG3qA8QyUxQGmiHf3DzBHzSJ2SHKc3smSCq
-	NLLOR+i1i5XKCUdajaU7z8/ztu2cCdg/NoYMY4wJjVOzChTsUNAWOVABLKtyJESFOnUrWRhl7Qf
-	1SOGLDKb3x8EOAWjxz6ZIvrFncwe0YWlKetc3c91v0PijLaK6RCF+YkHLk7DTB3YITEgKsUSVGv
-	gTWlzJtrzn9xfmS0mCRDrRhcZPGGzvzDxKYgNZKKPIQ/PcA48OLklZRxpp290Hd0nxPiaEol103
-	fwIjy9pWS/VCF+Z6sEfSaJjyF2HST60NgGCeEglWDaR0
-X-Google-Smtp-Source: AGHT+IFjFplP/VCj1K4hdj1XXuXFukTUKN/Y7r7TPX+q/ahHctFj6US+a3x6n/bezkuEQqYB8kG+jg==
-X-Received: by 2002:a17:902:d507:b0:216:794f:6d7d with SMTP id d9443c01a7336-2292fa058c5mr244283035ad.48.1743525549716;
-        Tue, 01 Apr 2025 09:39:09 -0700 (PDT)
-Received: from localhost ([2601:646:9e00:f56e:123b:cea3:439a:b3e3])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-2291eec73b6sm90853395ad.43.2025.04.01.09.39.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Apr 2025 09:39:09 -0700 (PDT)
-Date: Tue, 1 Apr 2025 09:39:08 -0700
-From: Stanislav Fomichev <stfomichev@gmail.com>
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Paolo Abeni <pabeni@redhat.com>, Stanislav Fomichev <sdf@fomichev.me>,
-	bpf <bpf@vger.kernel.org>,
-	Network Development <netdev@vger.kernel.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>, Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	syzbot+08936936fe8132f91f1a@syzkaller.appspotmail.com
-Subject: Re: [PATCH bpf] bpf: add missing ops lock around dev_xdp_attach_link
-Message-ID: <Z-wWrMfsUtfrnMiU@mini-arch>
-References: <20250331142814.1887506-1-sdf@fomichev.me>
- <d2914c9f-5fc6-4719-bf6b-bc48991cd563@redhat.com>
- <CAADnVQJJFPD2X1enPCa-0D7RG6SraRFTdMj1bsKkzFuz6Nighw@mail.gmail.com>
+        bh=/379CuoW3tzmnDJsyDy/0ujjjwBPjP0Zru4t6cZwrYI=;
+        b=JsSQaT5Op96zNu7pI4c2lKs7Xq4qpcvFcpjiDpSk5mbSZNYKdnPys5iZswRj4uRmfV
+         LrjJ+iegOhN2hEnkFML7smRIETMh6TSrFXYY7U0c5Y4SLswR3/sRoZpSTwL/gmL1Hinr
+         WlHQVJBg9et+zjw62D39gRzehGMYC73HHqm1L9Env01DtYrsD9E5JZuqPwHjpiQq3/EJ
+         4q58Ssx22dY2d5afb0Tu4Cvcof/UZi9CTRp9f4Z+zG+xxS+eopof+JefGX5szGvYJDKf
+         nxsX//CZ1tiHH641oIPrIInTIoZMXGi0FiHQCrpVzxHYON53+bceRJ4Wt7QCQBtHbwMX
+         3SOg==
+X-Forwarded-Encrypted: i=1; AJvYcCWhUncmYq6S8/2dgp/U8kZtAjQSF1vpU0IYW83xhJAhgKid1t++8ZfY9lqdtm4KDsLcw7UrTsN2og59OsI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwUFd10ZtdM7HR/9clHT0rUOr7SxjdaznUS5MmTddFL3Re4xJYU
+	J+oNsnHtLrWFwJ3rmtEo+tdRpjiaEATQN5vARpE6l7jeejlMULfSAL7YVKaHXhgBm0uT9f8eWNp
+	/hEeD2sBowc5Ip6Flk4QZOqiJsPLAzwP1XNVy4FmYVVxDBc91IdA4q4a/SzIBgfk=
+X-Gm-Gg: ASbGncsCA5Q7/pdRTZPZq+eFp94LCs0NJUhMyZmNc/7I9TvKJBi7UedBEmH2Vidmvuv
+	IB1FtXkGUuzzLTW2Jt2Phhk84JebKDy9Q4soxvaAn9d55CLWI+bukFsIgv3flQyQ0rdqnlsqmLH
+	KwZt0ZEafGASo/d4Oy4b6a6WZEjuukoEOJgG4aXxZIKa8c8QqHmjh2ioQ1KXiU+nKoRn/2u7KkF
+	H1e6eaTe7Uwc4alHnTcZqfalnLrxEQ6z0ricJbf0wBYWBxG1B1zo806tGSXz9PUqNGc0d4owWoh
+	F2O7+oEjawg31rjYMxiwzvgI3XTA7RKpy7b8vrOiYhgBWsjtAdaSqSaMJQRNQB8OI5XQ8A==
+X-Received: by 2002:a05:620a:2806:b0:7c5:8f40:3316 with SMTP id af79cd13be357-7c75c904636mr166846385a.6.1743525632708;
+        Tue, 01 Apr 2025 09:40:32 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHKdu3svWPD4gijx0TLoynI97bgyGfAj18omhMqo9yqcZrBylhTXjcw7OpbvttjPcNFzPQb6Q==
+X-Received: by 2002:a05:620a:2806:b0:7c5:8f40:3316 with SMTP id af79cd13be357-7c75c904636mr166844285a.6.1743525632324;
+        Tue, 01 Apr 2025 09:40:32 -0700 (PDT)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7192ea05fsm784381966b.86.2025.04.01.09.40.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Apr 2025 09:40:31 -0700 (PDT)
+Message-ID: <25bd3c63-5231-437d-8e81-9e2198dfa0d3@oss.qualcomm.com>
+Date: Tue, 1 Apr 2025 18:40:29 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAADnVQJJFPD2X1enPCa-0D7RG6SraRFTdMj1bsKkzFuz6Nighw@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] arm64: dts: qcom: qcs615: add QCrypto nodes
+To: Abhinaba Rakshit <quic_arakshit@quicinc.com>,
+        Thara Gopinath <thara.gopinath@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-crypto@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250318-enable-qce-for-qcs615-v2-0-c5e05fe22572@quicinc.com>
+ <20250318-enable-qce-for-qcs615-v2-2-c5e05fe22572@quicinc.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250318-enable-qce-for-qcs615-v2-2-c5e05fe22572@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Authority-Analysis: v=2.4 cv=IYWHWXqa c=1 sm=1 tr=0 ts=67ec1706 cx=c_pps a=UgVkIMxJMSkC9lv97toC5g==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=EUspDBNiAAAA:8 a=rugxzkDQvrqM6iDmQMkA:9 a=QEXdDO2ut3YA:10
+ a=cf2_AmsjeD8A:10 a=1HOtulTD9v-eNWfpl4qZ:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: ug5KUFHD2qSWPcOu9nF227wKyP9Yl-7A
+X-Proofpoint-ORIG-GUID: ug5KUFHD2qSWPcOu9nF227wKyP9Yl-7A
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-01_06,2025-04-01_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=722
+ priorityscore=1501 mlxscore=0 malwarescore=0 bulkscore=0 suspectscore=0
+ lowpriorityscore=0 adultscore=0 impostorscore=0 clxscore=1015 spamscore=0
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504010103
 
-On 04/01, Alexei Starovoitov wrote:
-> On Tue, Apr 1, 2025 at 3:33 AM Paolo Abeni <pabeni@redhat.com> wrote:
-> >
-> > On 3/31/25 4:28 PM, Stanislav Fomichev wrote:
-> > > Syzkaller points out that create_link path doesn't grab ops lock,
-> > > add it.
-> > >
-> > > Cc: Jakub Kicinski <kuba@kernel.org>
-> > > Reported-by: syzbot+08936936fe8132f91f1a@syzkaller.appspotmail.com
-> > > Closes: https://lore.kernel.org/bpf/67e6b3e8.050a0220.2f068f.0079.GAE@google.com/
-> > > Fixes: 97246d6d21c2 ("net: hold netdev instance lock during ndo_bpf")
-> > > Signed-off-by: Stanislav Fomichev <sdf@fomichev.me>
-> >
-> > LGTM, but are there any special reasons to get this via the bpf tree? It
-> > looks like 'net' material to me?!?
+On 3/18/25 10:43 AM, Abhinaba Rakshit wrote:
+> Add the QCE and Crypto BAM DMA nodes.
 > 
-> Pls take it through net.
+> Signed-off-by: Abhinaba Rakshit <quic_arakshit@quicinc.com>
+> ---
 
-SG! LMK if I should repost to make it happen. (it's always hard for me,
-with xdp, to figure out the proper tree)
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+
+Konrad
