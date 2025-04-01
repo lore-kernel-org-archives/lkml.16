@@ -1,132 +1,159 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AC6A1F0986;
-	Tue,  1 Apr 2025 10:18:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05BEC1F0987
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 10:19:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743502721; cv=none; b=pwlmRVwzJzBG9tpSSkPUydYxZuo1q0ZZY8mmY7tRh4lEHia5EZ9MYCumhMxIkNsyngRI3oxAn+060yClFQJ2GDCwt5UMbQhXFXDudHDaWc4LyQ6gPbwrHJI6NmFspK4YKbq1nPyar0rEkkBBTVcsksxUUpVA2O5F5sqCHCnDI+g=
+	t=1743502770; cv=none; b=Y2+2IpIDAO0Y1hy5X3b+JRa9nONssg6kgpkTSh77cUVBfslfUZy30bW5ZcgCGfwRpu9YCaEkAneuuMUY4TsfFXO/ib4+p/rtkhvSRg24L6jFZ/NJPsCyxRtIeRMUVpzoAaKFOymZbsEstBG0FgFQa89B2Kp5WiMT36pFhMbLS48=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743502721; c=relaxed/simple;
-	bh=c50V6tQVBqAf9hFBVQTLRlrMxI4we7B1IjHR9mZdbbw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HIkyQVETBwUYgUU3LRGFKZF7j6VP/9UtdM2VF52MyNy8xNgrtK3EOFyPVmRWcMR7EN75GJC1HYxesNQ7+eWsIGkggl/GtPABglvhT8VN+PjjnGwudGI/8yvqQEFuwY4rHj8weUeg5v2NRbkVQgtC1gUS0B0qqxxRwmmP/7q5hcc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Kb1AqoYL; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743502770; c=relaxed/simple;
+	bh=VLndyfSBwsI92OgxkgucYvEjqkkt/ZCVDRe+KPbDQio=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ay2YkvOynFy6hBWgTzZdGIjvgZD8uIv0I1ksp8dvGjVmRgZb+Ey4GOBX3XQRjHB0rg8tQLCbfC6n0sCyArBnYrdr5trZ9WtOQO9C182NQJHD63yZR7vR9nbIdsn8QZ5kAHtzMGjhVwbq82yEJxdmoD5jMWexTkOEy2DA0ZaNaFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=kezNLTyo; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kb1AqoYL"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2255003f4c6so96363005ad.0;
-        Tue, 01 Apr 2025 03:18:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743502719; x=1744107519; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=52Yyy6tKNAW68e/IV+CVhMLgP7UMspcJa+7anxM/WEc=;
-        b=Kb1AqoYLJOX6XfCvFlRVhlDjYoj9yRrZIXnKYi3JBCx1l7Ol2m4v9l8nsngANsI8sl
-         VLOj/6wiq5i2htMksfKZgaMSL0HbqoPsNe0/nSS4CIPEMkZ4lVD9MJ4M1dylU+3ueuNO
-         Wr6nFz5QEqwqh8jNfzv0XoIRS3/ER1utZRHzPFwRkBzHks4Cq87io982L5KgTLSFZEd2
-         237gJo469an1TPRKjoC20q29RZlUfO8WT5NGjK2saCNqoitc5n22sDu1Ac0Ho5ghI662
-         1grXLm7J6xUhG4NQekbIuC5TqsLdExWD5sc29HXE71mXKY3ZU9e6hFrAX2G0ml6p+avr
-         Arfg==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="kezNLTyo"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5315mapu027938
+	for <linux-kernel@vger.kernel.org>; Tue, 1 Apr 2025 10:19:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	2DOPs8qVr8I70ztM6rWE5VLdIGBtlthQzmw040FJiSQ=; b=kezNLTyod0Rfl4kQ
+	eCeOAyLIBXdZAYqjmEWxfbPtTouMkt1hAjJSWdaeQTVAKA5CONG2aTyu4wgOucpU
+	VLgo/wx5qlvOuKO3eQs+1Jgsd0wwC4t7QiS6FEOGYL27+GG3zPUKu5mSCycPlWW3
+	AX/2ZXHAcfxsFNaE8OAQb9FNJqKPOcuLwOI/4oMWj4nEQOCNN5oD6+2C1SKIAB7J
+	hlXV3EcuwT7pF5Gxg3jolRNS62V2+pmZfIyfGZlLs9XWW68wnEiqyvBrmkVoeFlP
+	MlI8Cj7tYuXCNaHoMd0B8GVbxtqDGAXFuRy3j+0leZb4QL+KxN/W6y/ZfX12oeBZ
+	MsH2cg==
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45p7v8fpqc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 10:19:27 +0000 (GMT)
+Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-4775bdbcdc3so11981041cf.2
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 03:19:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743502719; x=1744107519;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=52Yyy6tKNAW68e/IV+CVhMLgP7UMspcJa+7anxM/WEc=;
-        b=JQFmi+SZkIeZi9AemMoNz87A6sWqzI1SWIm3TPz2dHCyHd3YH4kJNKwXEllnWvhSu+
-         G5UlvzJz6i3pHGSv5Ctg+K4DOfd+XbqeTuUOcOlC+RUAVIEZPDpE3/Y3A/YNNmgjyIsP
-         9Il+Rt4PkUIw9I35H7LEVOBc0AbDD4Hu4d1RUdiEhwp7dDVpfJ9JT/8Lznp29j0VCBDk
-         wr/642hWwAy8I+QIf9skQ/9w2fTP4EzKm+BBUoddIJLIcBNby+/8Uad10wOF02R3bjdp
-         BjGcDyVVOhYs26whnTq2VmUtP0g/1K0D4MreYLCChAzIKmBmeE9fOtP+ZL1uVkOVzHhg
-         JFmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVbRwbZHwGr+cSU4nI66hz5HERCA0kCgahFmQMomqO16xIbVxg3pq9MSea5vGijaxcYCL6EWVwC5ypemCQ=@vger.kernel.org, AJvYcCWjeLIXBXnKA2lC3dp2NwssKjXrkaGX4tEXWTQtt3EyoZ3ixGK+Q/1ktwWCt5FBqOqZasRdWYpmTgjZ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz3qnKafNKeXGtLjWrA89vLpntIoInKZfAH+sb9aT43RbunzjKx
-	keeNAGw6aNR+/rva/MpwicgzEoiLDLk7ucBl7ugl4+MUQZwx4yZvm2QJ89bk
-X-Gm-Gg: ASbGncvUzno/Ub1o/vOBM9Z+1e+IkHmFmlWQ9jVvo2BqR1dH/1oqTgXZ+2yd1jZNmDP
-	yA3rWcZelkjzBXxV1HH4oZGx2QogpAotGvFSJCflniLylJA9+1ajnTnEUEjm8N3HM+ObOqOH8qE
-	zHHOqHMSzq+MPYfLtydjiSfrs145zTNEePXf/52uiP+spKEtL1ULvGNz5qc3+YUIOpPPmTAtfY4
-	hnmXY469d3F+j53IQtHUs52DKQzZMUOyAD6e1uvGQxZ5QCNYsxekIJXHJzTkzTkhIfMDo5l9VHS
-	kuwGfPGEjWzTTcohhwxJuvQFz2MSVXQPzLaSqbKaiyxrip4hW/Y5T4Vk6bsh4CloNkFW
-X-Google-Smtp-Source: AGHT+IG8E+nX/g9arCxFT9vcimbEEY6MEhX7K2Zyy7L+8Tm9Z+wZnUc/i/1mUf+iHWktCq32FC3BRg==
-X-Received: by 2002:a17:902:f606:b0:220:eade:d77e with SMTP id d9443c01a7336-2295c0ebb1cmr39150275ad.40.1743502718774;
-        Tue, 01 Apr 2025 03:18:38 -0700 (PDT)
-Received: from mi-ThinkStation-K.mioffice.cn ([43.224.245.231])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291f1f8badsm84595835ad.246.2025.04.01.03.18.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Apr 2025 03:18:38 -0700 (PDT)
-From: Ying Lu <luying526@gmail.com>
-To: oneukum@suse.com,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com
-Cc: netdev@vger.kernel.org,
-	linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	luying1 <luying1@xiaomi.com>
-Subject: [PATCH v1 1/1] usbnet:fix NPE during rx_complete
-Date: Tue,  1 Apr 2025 18:18:01 +0800
-Message-ID: <e3646459ea67f10135ab821f90f66d8b6e74456c.1743497376.git.luying1@xiaomi.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <cover.1743497376.git.luying1@xiaomi.com>
-References: <cover.1743497376.git.luying1@xiaomi.com>
+        d=1e100.net; s=20230601; t=1743502767; x=1744107567;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2DOPs8qVr8I70ztM6rWE5VLdIGBtlthQzmw040FJiSQ=;
+        b=jrfbGzw/RT9jQH8ehRSadHgwlU9I/5qGuQ129Z4bt2f6s/P4IY+Wb+ZN0VgR8iAYZi
+         rvMJBf+g1lkeOZ9ehSxAhSi5kykemdtd5tYwJfMTkIChaq6rnnPlFOmJLDjWaBeMa9qB
+         trfqt7IzgBozR/dupcck8oxTRf+aPQ5FMZKfw5wvB6edvLVRrukSxbYZJheBbeU6QlE3
+         +aUBcIAKXmiS0y9N9zM3H3QQB8tSCCD5S/PfpkwhcPEWV0h8liAPM4cytsOcK71tlNrl
+         zamnK7B1MnNTMZK5l7Z/VEsHqM+RD3XWoCw4Gtu1iE+DmPKcHjOCHmd/Gm64dfHVIxVw
+         f3dQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXNxO1dolJA3c+jaKltNSr5L6Xt4huMobGeIAZVSw0MklzDJKUMchjhc7oobNwG0wEtd+7pCdgs1bi1Nh0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzqh4RhMsf+h2Q2GTTE8NBT6wBN1p8RVmqgcSM9ZMYnkZbl/XQL
+	1wA0vhyfg5+dxmCgd9DTzyWrMcfWCJq1M22mZE1OpqJQIhnZQJp9NcYtD3YYlnIySpKW4CUwDHC
+	FsmvmLf9MtIJLmIf9zg+0RtlFDnrXOgw20QAH4kwqBilw1NLOBgA+DwTWYZQAiVg=
+X-Gm-Gg: ASbGncsnqa94wkqntcsWCSfXh8/74NenBIYBVVSvXxtcyxhTuttLAEeHeKTLzKWjyhJ
+	8tL6JcC/CUBkmxau0I12FfC0iaJQ2th+H+xcUIYkHYYpNCVUx0QGwCqXkdNJ74MNUOf4Zm0hQO7
+	/5/jw61VGGwTh3H6fJwktwmc55Rbio6/b8neLxVmBbuNewLGosS5KyoPIYWEpf3xyISYn0eK+1C
+	S/pL+tZnPaD0p7mIWT3iCefva88vctUSkKTqp7Vt4UmaxGGWJeXS1mVJZm2AVqFprRmsmPuRve2
+	LeLgC/bVrQO/HPsRgYa788FjMPWTa/FfBqU01A+HgAcxKQ+T7mtwKCep7NJ8gJUKQx5JIA==
+X-Received: by 2002:ac8:5743:0:b0:472:15be:54ad with SMTP id d75a77b69052e-478f8caaa3emr8015341cf.14.1743502766794;
+        Tue, 01 Apr 2025 03:19:26 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHVCXq1wEZzeuviNZFWjwRTsD/J2nl2Zsg5QfwBRNLIyCOjFWs9y0I9oOKP+u8l03W7oJ4KfA==
+X-Received: by 2002:ac8:5743:0:b0:472:15be:54ad with SMTP id d75a77b69052e-478f8caaa3emr8015221cf.14.1743502766458;
+        Tue, 01 Apr 2025 03:19:26 -0700 (PDT)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5edc16aae6fsm6857889a12.16.2025.04.01.03.19.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Apr 2025 03:19:25 -0700 (PDT)
+Message-ID: <219c03ee-4440-4452-94c8-f8b32c147db5@oss.qualcomm.com>
+Date: Tue, 1 Apr 2025 12:19:24 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/6] arm64: dts: qcom: move pcie6a type change from
+ X1P42100 to X1P42100-crd
+To: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Dmitry Baryshkov <lumag@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Abel Vesa <abel.vesa@linaro.org>,
+        Johan Hovold <johan+linaro@kernel.org>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org
+Cc: Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+References: <20250331215720.19692-1-alex.vinarskis@gmail.com>
+ <20250331215720.19692-2-alex.vinarskis@gmail.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250331215720.19692-2-alex.vinarskis@gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: ygxlwLmJO1vK0OWQ1EvuljOl_6tHjn_t
+X-Authority-Analysis: v=2.4 cv=fdaty1QF c=1 sm=1 tr=0 ts=67ebbdaf cx=c_pps a=WeENfcodrlLV9YRTxbY/uA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=pGLkceISAAAA:8 a=umw4QfNw0YT-tJYoN0AA:9
+ a=QEXdDO2ut3YA:10 a=kacYvNCVWA4VmyqE58fU:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: ygxlwLmJO1vK0OWQ1EvuljOl_6tHjn_t
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-01_04,2025-03-27_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 bulkscore=0
+ malwarescore=0 suspectscore=0 spamscore=0 impostorscore=0
+ priorityscore=1501 mlxscore=0 mlxlogscore=931 clxscore=1015 adultscore=0
+ lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504010066
 
-From: luying1 <luying1@xiaomi.com>
+On 3/31/25 11:53 PM, Aleksandrs Vinarskis wrote:
+> It appears at least on some devices (Asus Zenbook A14, x1-26-100) change
+> of pcie6a_phy's compatible breaks the controller. Move compatible change
+> from generic x1p42100.dtsi to CRD's specific x1p42100-crd.dts instead.
+> 
+> Signed-off-by: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
+> ---
+>  arch/arm64/boot/dts/qcom/x1p42100-crd.dts | 4 ++++
+>  arch/arm64/boot/dts/qcom/x1p42100.dtsi    | 4 ----
+>  2 files changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/x1p42100-crd.dts b/arch/arm64/boot/dts/qcom/x1p42100-crd.dts
+> index cf07860a63e9..a2a212b31556 100644
+> --- a/arch/arm64/boot/dts/qcom/x1p42100-crd.dts
+> +++ b/arch/arm64/boot/dts/qcom/x1p42100-crd.dts
+> @@ -15,3 +15,7 @@ / {
+>  	model = "Qualcomm Technologies, Inc. X1P42100 CRD";
+>  	compatible = "qcom,x1p42100-crd", "qcom,x1p42100";
+>  };
+> +
+> +&pcie6a_phy {
+> +	compatible = "qcom,x1p42100-qmp-gen4x4-pcie-phy";
+> +};
+> diff --git a/arch/arm64/boot/dts/qcom/x1p42100.dtsi b/arch/arm64/boot/dts/qcom/x1p42100.dtsi
+> index 27f479010bc3..4424a8708d39 100644
+> --- a/arch/arm64/boot/dts/qcom/x1p42100.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/x1p42100.dtsi
+> @@ -37,10 +37,6 @@ &pcie3 {
+>  	num-lanes = <4>;
+>  };
+>  
+> -&pcie6a_phy {
+> -	compatible = "qcom,x1p42100-qmp-gen4x4-pcie-phy";
+> -};
 
-Missing usbnet_going_away Check in Critical Path.
-The usb_submit_urb function lacks a usbnet_going_away
-validation, whereas __usbnet_queue_skb includes this check.
 
-This inconsistency creates a race condition where:
-A URB request may succeed, but the corresponding SKB data
-fails to be queued.
+This is not correct. The hardware is different in all SoCs, not just the
+ones put in the CRD.
 
-Subsequent processes:
-(e.g., rx_complete → defer_bh → __skb_unlink(skb, list))
-attempt to access skb->next, triggering a NULL pointer
-dereference (Kernel Panic).
+You're probably missing this change [1], please test it out and leave a t-b
+if it's confirmed working for you.
 
-Signed-off-by: luying1 <luying1@xiaomi.com>
----
- drivers/net/usb/usbnet.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Konrad
 
-diff --git a/drivers/net/usb/usbnet.c b/drivers/net/usb/usbnet.c
-index 44179f4e807f..5161bb5d824b 100644
---- a/drivers/net/usb/usbnet.c
-+++ b/drivers/net/usb/usbnet.c
-@@ -519,7 +519,8 @@ static int rx_submit (struct usbnet *dev, struct urb *urb, gfp_t flags)
- 	    netif_device_present (dev->net) &&
- 	    test_bit(EVENT_DEV_OPEN, &dev->flags) &&
- 	    !test_bit (EVENT_RX_HALT, &dev->flags) &&
--	    !test_bit (EVENT_DEV_ASLEEP, &dev->flags)) {
-+	    !test_bit (EVENT_DEV_ASLEEP, &dev->flags) &&
-+	    !usbnet_going_away(dev)) {
- 		switch (retval = usb_submit_urb (urb, GFP_ATOMIC)) {
- 		case -EPIPE:
- 			usbnet_defer_kevent (dev, EVENT_RX_HALT);
-@@ -540,8 +541,7 @@ static int rx_submit (struct usbnet *dev, struct urb *urb, gfp_t flags)
- 			tasklet_schedule (&dev->bh);
- 			break;
- 		case 0:
--			if (!usbnet_going_away(dev))
--				__usbnet_queue_skb(&dev->rxq, skb, rx_start);
-+			__usbnet_queue_skb(&dev->rxq, skb, rx_start);
- 		}
- 	} else {
- 		netif_dbg(dev, ifdown, dev->net, "rx: stopped\n");
--- 
-2.40.1
-
+[1] https://lore.kernel.org/linux-arm-msm/4c7059a0-46a0-424d-9068-60894c6cec1c@quicinc.com/T/#m9675593a62b2334ab2afd4269da6938464a03fa6
