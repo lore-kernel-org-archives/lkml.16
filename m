@@ -1,88 +1,84 @@
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA22D1FAC55
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 14:11:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 135C92046BB
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 14:11:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743516703; cv=none; b=bt/c3K9Pp5DJbtKPnNA+KJdvRvKtN0K+lELclINiZmeTvc/fohzn72kofqQGwa3+hgKSOwLf/3hC9nGg5zJv8v6Pc01Hwhq9Wq8LSoqyz/9aGdHVhQnMvX0V0aWTDY8h5+g8DOna7pufJsJZ0jSEkELdS1q7NZ6gm9F5NXdg3iA=
+	t=1743516714; cv=none; b=Ob1pd2L3WIK8/aoXhB33GpfwjOVQC6Q5BHJSAN35MpHFCQbkVL54mHy44CbbF95iAZvPpgshv0yC8Yk7Ca/TEBJ6XDio5pyq24IT8eVFW1hgl5R0hxNyfM58YQb82mVoLL1L01tk4D+pBbdCtFTReGc9JDMzbBhzSJUwqCplUnA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743516703; c=relaxed/simple;
-	bh=0trOQh+jrJl3FmJf61aJ7jvlRp+qH/hSBjq7p2l8A8I=;
+	s=arc-20240116; t=1743516714; c=relaxed/simple;
+	bh=YbunYiIfPtvKAcY2+sn82S8+Oomzphi+OmkpdLWSus8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j08Y2LevJhnH4wHfDonA1YuarpWcu4FJoH3okBUfsl8WVcqr/7aC8OljaaFMX4X9C4i3u4jc/StwCjhTXPbY5p3XvpGZnlZV7mV0M4RsfY56HSCpvH6nZrM/TKzA+HIuryayqfcX3kITP0eMUhHWaA2AIepJe2AGw3JGwe3ngVc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=Yc7TqD+r; arc=none smtp.client-ip=209.85.160.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+	 Content-Type:Content-Disposition:In-Reply-To; b=my79vrbLqVZ1ocEPjrStHYdUaB23alfqr0lu0HahmRMVOgsCbsYUEZaJaWk4P5AFDYQfojrJIHo8yMkhiAAEsTT6LedPaoIjngLOXNWDXfUz8yAMUe7kgGZCDR6Y0GWOarQddgi3aUJxw2tP46SWPzyoz7CvmQe7Wsk6YiDx65g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=aMhIagR6; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=fQ6Fn7IO; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=aMhIagR6; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=fQ6Fn7IO; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Yc7TqD+r"
-Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-47688ae873fso56854091cf.0
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 07:11:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1743516699; x=1744121499; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=0trOQh+jrJl3FmJf61aJ7jvlRp+qH/hSBjq7p2l8A8I=;
-        b=Yc7TqD+rnF2D4uO+5IYqM0hZHyoGRt5eCy3t/VEno38WkiIEXr8IscWlCQeDVu/0Rm
-         BRKhn40XfReOuNvUyUqZWR2CSfOQpCl3Qzg1A4f3pL4PmNYJMgJWzu9UFOZxsMU9hpUA
-         yUwDhUuAaS1zNCSg0rgmUmyp70yR6eUBasKdZfjto6dOmSALa7lSzXc8Q9rBvRUBjPM0
-         puDVIwa2rbite5Ej2r9C8uVBseQ0czZML1QFxjr7bLQyeJgMyTLr6RL+VQlkyFoMIEup
-         3LSZ3RsjFc3reJmntwjrw3FGwPnzlfe6ZJBFRGNl6FVQN/ffqXljxQnSP4td5vztXkaR
-         s+jQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743516699; x=1744121499;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0trOQh+jrJl3FmJf61aJ7jvlRp+qH/hSBjq7p2l8A8I=;
-        b=JJFGGvc1R1WW7NDbakfyqJqfBZMR0Cw28KLiFIGB4T16GRrEo1ifyqH7iTOW5lvI8n
-         XbKDqSxutY++JYD1GIybeKImqL5lJzKAOuDAzIfuIYArEmlo+y5HQNZjTzfhZBFhDSP1
-         E4Gbh5t2gvYHsPIF5EUQredutYRDZA+23MC+1m2UgclJLLVQzdCkTLOYIjBc0zw0ANwe
-         J7YQnEyreZoGJEpahkoyQaLLSJWkl5ItCyRMkcjJMqfZE1RWrXYMk8z9VNX1x8AjTou6
-         JZKdbcZmqbLR1gogaaRR1sjfOZA13JPUNLiMidJVDWjRXRBSicguL2FOoO1WNmZ6JfqZ
-         GWmg==
-X-Forwarded-Encrypted: i=1; AJvYcCVF1uuByS1pUxjFeiWzJmDbvrYwyDw6g7XKPbonoz5HZYHjaksAKVw1ALmRmGH3XIKATV73opSDpZZ1kSU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywqelji/xPRrWrWhIzFLIuz/N+tQZmHxMDruJpqPlXjbNQMKwSi
-	5MOeE/d9FC1L1dBwlVeKRhc6JSuaAf4Dl4K1dIw+r1aoY/7fPKd/Z4in4fUjM6E=
-X-Gm-Gg: ASbGnctzwIS6gBkYOaBRBXun4L6AM7Yd6nEKp5NbfhRZnvRgz6NKN5gLzqlT+7PRni6
-	K7TWyyQi23mh8jFvb5I1D1NJrKc1+M7ElWMpTujI4ZZ6zv1xN+kjCaRSsiluFge19flwH/HGgMe
-	3Ir/hjESycHSVYPHjMiXgbP7S6i0FPIIfNhNjyKWenpfWjqgwQwxeW86U1e1oGVmsaAVtnh33OY
-	ctIq7BZ5YZgSRlijcQpbhMV6FrO5c1utPGq1ro5dfRcBNbCpOhRZoTCvNNMFknFyRuKgFAs97PC
-	/8MpAN0k0y0XFbrT/unhKbQF+lT8XgCFltksNgYScKco1k0GGhI4OuihwEYsO7EAKoI+y17vq6q
-	5n5WSpxrSDx+Us1Umprz1Bdk=
-X-Google-Smtp-Source: AGHT+IGuee4s3yxDEPSINUAFtQsa9ux8jxq1OoSPRsoWojLLXuG6p9Io2ozsOuCD3yEeRFQ6PGF9AQ==
-X-Received: by 2002:a05:6214:e48:b0:6ea:d604:9e59 with SMTP id 6a1803df08f44-6eed5f89c29mr176486186d6.9.1743516699490;
-        Tue, 01 Apr 2025 07:11:39 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-167-219-86.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.219.86])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c5f77804a9sm658374285a.112.2025.04.01.07.11.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Apr 2025 07:11:38 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1tzcL4-00000001LLA-0nQB;
-	Tue, 01 Apr 2025 11:11:38 -0300
-Date: Tue, 1 Apr 2025 11:11:38 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: "Tian, Kevin" <kevin.tian@intel.com>
-Cc: Wathsala Wathawana Vithanage <wathsala.vithanage@arm.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	nd <nd@arm.com>, Philipp Stanner <pstanner@redhat.com>,
-	Yunxiang Li <Yunxiang.Li@amd.com>,
-	"Dr. David Alan Gilbert" <linux@treblig.org>,
-	Ankit Agrawal <ankita@nvidia.com>,
-	"open list:VFIO DRIVER" <kvm@vger.kernel.org>,
-	Dhruv Tripathi <Dhruv.Tripathi@arm.com>,
-	"Nagarahalli, Honnappa" <Honnappa.Nagarahalli@arm.com>,
-	Jeremy Linton <Jeremy.Linton@arm.com>
-Subject: Re: [RFC PATCH] vfio/pci: add PCIe TPH to device feature ioctl
-Message-ID: <20250401141138.GE186258@ziepe.ca>
-References: <20250221224638.1836909-1-wathsala.vithanage@arm.com>
- <20250304141447.GY5011@ziepe.ca>
- <PAWPR08MB89093BBC1C7F725873921FB79FC82@PAWPR08MB8909.eurprd08.prod.outlook.com>
- <20250304182421.05b6a12f.alex.williamson@redhat.com>
- <PAWPR08MB89095339DEAC58C405A0CF8F9FCB2@PAWPR08MB8909.eurprd08.prod.outlook.com>
- <BN9PR11MB5276468F5963137D5E734CB78CD02@BN9PR11MB5276.namprd11.prod.outlook.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="aMhIagR6";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="fQ6Fn7IO";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="aMhIagR6";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="fQ6Fn7IO"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 423B3211F3;
+	Tue,  1 Apr 2025 14:11:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1743516711; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=K75sT1uOE2o2JxpuzJK0ApZypw9om3Mo5Rbs9DxBWvg=;
+	b=aMhIagR6HcL2s1dNtPineA2kIKgnebcZC6J5FJ2AE87CDn+j47OISMOq7ASVn+8iZB7WHM
+	kMaZPxe1K+MmHE4z912HZcnpvkUZjf88hAApOa8PU1o94kK9gRTiD2/+Nj4BnNTsunXyxv
+	djrt78yTTrJW+wYpfMa44tpuP3UYGCM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1743516711;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=K75sT1uOE2o2JxpuzJK0ApZypw9om3Mo5Rbs9DxBWvg=;
+	b=fQ6Fn7IOyJLaoFncWAx4DD5C2/UvUox1o1Lg+YsHn9Irntk+D/M2MeTbr84D3vi0fmttT/
+	vCM8Y8oLMaaz2uDA==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1743516711; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=K75sT1uOE2o2JxpuzJK0ApZypw9om3Mo5Rbs9DxBWvg=;
+	b=aMhIagR6HcL2s1dNtPineA2kIKgnebcZC6J5FJ2AE87CDn+j47OISMOq7ASVn+8iZB7WHM
+	kMaZPxe1K+MmHE4z912HZcnpvkUZjf88hAApOa8PU1o94kK9gRTiD2/+Nj4BnNTsunXyxv
+	djrt78yTTrJW+wYpfMa44tpuP3UYGCM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1743516711;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=K75sT1uOE2o2JxpuzJK0ApZypw9om3Mo5Rbs9DxBWvg=;
+	b=fQ6Fn7IOyJLaoFncWAx4DD5C2/UvUox1o1Lg+YsHn9Irntk+D/M2MeTbr84D3vi0fmttT/
+	vCM8Y8oLMaaz2uDA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E09AB138A5;
+	Tue,  1 Apr 2025 14:11:50 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id aKUmNCb062frXwAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Tue, 01 Apr 2025 14:11:50 +0000
+Date: Tue, 1 Apr 2025 16:11:45 +0200
+From: Oscar Salvador <osalvador@suse.de>
+To: Baoquan He <bhe@redhat.com>
+Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, yanjun.zhu@linux.dev
+Subject: Re: [PATCH v2 4/7] mm/gup: remove gup_fast_pgd_leaf() and clean up
+ the relevant codes
+Message-ID: <Z-v0IRYjisOuNnMZ@localhost.localdomain>
+References: <20250331081327.256412-1-bhe@redhat.com>
+ <20250331081327.256412-5-bhe@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -91,21 +87,45 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <BN9PR11MB5276468F5963137D5E734CB78CD02@BN9PR11MB5276.namprd11.prod.outlook.com>
+In-Reply-To: <20250331081327.256412-5-bhe@redhat.com>
+X-Spam-Score: -4.30
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.990];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[5];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:email,localhost.localdomain:mid]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On Wed, Mar 12, 2025 at 07:53:17AM +0000, Tian, Kevin wrote:
+On Mon, Mar 31, 2025 at 04:13:24PM +0800, Baoquan He wrote:
+> In the current kernel, only pud huge page is supported in some
+> architectures. P4d and pgd huge pages haven't been supported yet.
+> And in mm/gup.c, there's no pgd huge page handling in the
+> follow_page_mask() code path. Hence it doesn't make sense to have
+> gup_fast_pgd_leaf() in gup_fast code path.
+> 
+> Here remove gup_fast_pgd_leaf() and clean up the relevant codes.
+> 
+> Signed-off-by: Baoquan He <bhe@redhat.com>
 
-> Probably we should not allow device-specific mode unless the user is
-> capable of CAP_SYS_RAWIO? It allows an user to pollute caches on
-> CPUs which its processes are not affined to, hence could easily break
-> SLAs which CSPs try to achieve...
+Reviewed-by: Oscar Salvador <osalvador@suse.de>
 
-I'm not sure this is within the threat model for VFIO though..
+ 
 
-qemu or the operator needs to deal with this by not permiting such
-HW to go into a VM.
-
-Really we can't block device specific mode anyhow because we can't
-even discover it on the kernel side..
-
-Jason
+-- 
+Oscar Salvador
+SUSE Labs
