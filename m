@@ -1,199 +1,148 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7622E21B91F;
-	Tue,  1 Apr 2025 20:46:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743540418; cv=pass; b=qg37rgxXHV93bQdY9Qt7M1913LL6Vd+LXoTjvzZ8xkFtwS9E05r+IfEWainkq+ReZCP2wx97ktKPg8uPZzK6hPqymUWtRd4jmJjiG+V3U7wIFJPE4TqMn2HeaSOXnkSN+HTQJMl4RMLtFQ8zKmckCsBiDsGXHFKDKGnQ6S/LA5E=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743540418; c=relaxed/simple;
-	bh=ykNK66j1CazBrZP9CHPI3BUzn02GTKCILRduWrU/G7Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Yl/DM9Avoddm/FxroLQT4EW4f4dcqqwjnLAzAPXSXZENroDkVsWSRoxXqAar4X8739uvK2k86+X1wg6K5JUYFbAQDaXKU+4MjfIxP3LucIFK2rai/of1XQUctN0dtKT3s17v7anK6+SEHOCW8X5FuZ2RORa/lDLVXblWmOA7aE0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b=DqhOAfP7; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E863D21CC79
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 20:46:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743540420; cv=none; b=TnukqSovK2kIcfkgzgnUZegndKS25wc86OtY17lHnab4JJ+sCcW70t8qtrSIctjUQY0EpHQpZ+Ci9KUhBgGJofwFafPTl3hQjskyXWmtUpWotuJ7bSeIIKU9aV675b/av7DYQMPUNx9CLwhR3kpn5remvH6cKGXfVD7v0FpqZrE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743540420; c=relaxed/simple;
+	bh=9Y4jQuNr81blf0kL+x4SZ577lsTpKSVZZgUjgP8+H94=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=E1IILmiQxPhyWep/icPUkMch8kESeMW0CG9YBRybMkpdpxW8RY93RsfNadJxN0okyFIt6uH/weXord9wK6sswTwlottt0DEeztvPAemFWoCkwKHdhAdUVSbS3Ypi391FOWPE7zY/haRqwLfwjp9zSGX6p4HBaBFY2udtUvqQp1c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DyouEwtd; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b="DqhOAfP7"
-ARC-Seal: i=1; a=rsa-sha256; t=1743540398; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=PN5bYGeqXLvmp2/TycPIAPO5A62oJmUbeSau36lmUibgJRei9L0BGXG4mOEMt0pRJmOz2NaF7fa7fhqtLonPLzkECyUiPnNMww8DplzKRec0tYRLEnLtRbnxmuSuhoO9feoTWcks1DERJen7ch52U8lDOMFqCIh4sQSkba+oGQE=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1743540398; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=Nwoofyd9hzvVQbQplsmXjWgL9RWGfB+EP1jAWvqqixw=; 
-	b=hjhWbEITx355cUzmz/Lz4w1lug59q2FlhYbFrvR4L12EaC9hiorFdDxrom7mKWRBZZnRxuq4O++O/R+pfYTr51O6DyBTTGPZvzfCpT6kirr3e72ydJi0sQZVgKA4sonQLCZUDpIpEuNBxEplETT1pAOYc8a0gZinQJWvzK83TWA=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=dmitry.osipenko@collabora.com;
-	dmarc=pass header.from=<dmitry.osipenko@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1743540398;
-	s=zohomail; d=collabora.com; i=dmitry.osipenko@collabora.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=Nwoofyd9hzvVQbQplsmXjWgL9RWGfB+EP1jAWvqqixw=;
-	b=DqhOAfP7s+x3awV10qSgOHGLpEl+4TV62M+3VSQI7W2enL3XCajX+9LpKk4kZUw6
-	WtNRlWYZt9XnfPoUJZwIJL7vwlMYybQABEzwJmbKgta84eNlCZzhbVDA4ghz7P9JNEP
-	CZ6g3toZEkl2qtQIm1cIZuH5ePUJy68KDXktQs1Y=
-Received: by mx.zohomail.com with SMTPS id 1743540396592221.6940754924799;
-	Tue, 1 Apr 2025 13:46:36 -0700 (PDT)
-Message-ID: <ff614cb7-94ca-4d74-9bbb-f97c95893113@collabora.com>
-Date: Tue, 1 Apr 2025 23:46:32 +0300
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DyouEwtd"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-3032ea03448so11185575a91.2
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 13:46:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1743540418; x=1744145218; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
+        bh=XAZ6HcZyPVHZNs/NiQeU2YPtsx7wIdUpIqdNXxdK3gA=;
+        b=DyouEwtdq9yHvK0FwVUiAsw9Dozv6SbcJPwqoqEuYa1kyrPC5COKuksUahOSqDZM7N
+         wm2c6flS7j8aczykkShGZSGuR/Bea3iEqkd54eQnJQQP0uQ1tXuRZGViFsrrUJ1pdQI8
+         d4rYi4e5YbiRBLEdlL4nZ0hiGLfKwQ9tZqVleXm66N7rLnSMXFDhJ75vRHIp4SNSFx02
+         Xgk3GwQ6VmF/YsBJ7vf1zG7prF1MT7wweHeg5ic9+bJvUjgE3lbD+6ME+bEohWKHufKe
+         ennvaLaPtuSgfuM785vTewTt9qwneaKZwIbvo6djhNCWYVNIHHsx2HTvFun0IHfPwTcY
+         5iCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743540418; x=1744145218;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XAZ6HcZyPVHZNs/NiQeU2YPtsx7wIdUpIqdNXxdK3gA=;
+        b=JKL6PDN7oXDLCmTbrmvhGuVkpqBJzd6bDnD3KXthvf1NgoLnhL+hES4gYoBybpV0g/
+         5HPLMldGM9BJ9KYCZc4+24e3VjH/spCfI9X+AKqeDxG+ZTLOXzmhvonLA5IuNp9ZX2MV
+         SNJmC6G3SbTVsi6kH4mi9hEK4AqXVXPSmDCrawj3/5Bk8ChXvxIjMv0jMK4+FHaO7PYC
+         MjWnwdHB9w9oGDLfenwlK+BswO4XwlHeE+sYJtcD6S8/2DluqYSRn7sn5KvRBN3qq5Jn
+         rTGdpPxMBgwt4+uVahLu1wrIF9Uf8aHTpiSynnbWtDnoCP+aRp7ErbN95Mrzd/B9btiT
+         JpNQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWqp4FQYbYR8G/HctAb4fVB1qyOfpA9RyPopl9CHOaiejd8JHLfEQOdYcEpwr8JPSmy70juy6RlZhNu+8g=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywjn7yiMoV8iAzk2jhW3mn3vjwelvI8vPlhahP55L6qoWKENVbz
+	XxuxflQH7x1CCiWAEFYu2rl/LthZwPRqm11gBWQZSE+2lCPYdwG/mE/eRqIrkJKfFYYTnv8zVt2
+	kvg==
+X-Google-Smtp-Source: AGHT+IFdQSCduwNTHLV/nec9/i/BvW+thtXD97niBCIJ/k+4mEqw+xFFVLw5YdqLnoDpAq+BRV3lhigqiIM=
+X-Received: from pjk16.prod.google.com ([2002:a17:90b:5590:b0:2ea:5084:5297])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:574b:b0:2ee:9b09:7d3d
+ with SMTP id 98e67ed59e1d1-305320af3e0mr18907665a91.19.1743540418245; Tue, 01
+ Apr 2025 13:46:58 -0700 (PDT)
+Reply-To: Sean Christopherson <seanjc@google.com>
+Date: Tue,  1 Apr 2025 13:44:18 -0700
+In-Reply-To: <20250401204425.904001-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6] drm/syncobj: Extend EXPORT_SYNC_FILE for timeline
- syncobjs
-To: Rob Clark <robdclark@gmail.com>, dri-devel@lists.freedesktop.org
-Cc: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Rob Clark <robdclark@chromium.org>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Sumit Semwal <sumit.semwal@linaro.org>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:DMA BUFFER SHARING FRAMEWORK:Keyword:bdma_(?:buf|fence|resv)b"
- <linux-media@vger.kernel.org>,
- "moderated list:DMA BUFFER SHARING FRAMEWORK:Keyword:bdma_(?:buf|fence|resv)b"
- <linaro-mm-sig@lists.linaro.org>
-References: <20250401155758.48855-1-robdclark@gmail.com>
- <CAF6AEGsKbjq_q7ezQTn5vyAF1cjXahgbv84uYK35BJH1KBXSpw@mail.gmail.com>
-Content-Language: en-US
-From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-In-Reply-To: <CAF6AEGsKbjq_q7ezQTn5vyAF1cjXahgbv84uYK35BJH1KBXSpw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+Mime-Version: 1.0
+References: <20250401204425.904001-1-seanjc@google.com>
+X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
+Message-ID: <20250401204425.904001-7-seanjc@google.com>
+Subject: [PATCH 06/12] sched/wait: Add a waitqueue helper for fully exclusive
+ priority waiters
+From: Sean Christopherson <seanjc@google.com>
+To: Paolo Bonzini <pbonzini@redhat.com>, Ingo Molnar <mingo@redhat.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, 
+	Vincent Guittot <vincent.guittot@linaro.org>, Marc Zyngier <maz@kernel.org>, 
+	Oliver Upton <oliver.upton@linux.dev>, Sean Christopherson <seanjc@google.com>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
+	linux-riscv@lists.infradead.org, David Matlack <dmatlack@google.com>, 
+	Juergen Gross <jgross@suse.com>, Stefano Stabellini <sstabellini@kernel.org>, 
+	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On 4/1/25 23:40, Rob Clark wrote:
-> On Tue, Apr 1, 2025 at 8:58 AM Rob Clark <robdclark@gmail.com> wrote:
->>
->> From: Rob Clark <robdclark@chromium.org>
->>
->> Add support for exporting a dma_fence fd for a specific point on a
->> timeline.  This is needed for vtest/vpipe[1][2] to implement timeline
->> syncobj support, as it needs a way to turn a point on a timeline back
->> into a dma_fence fd.  It also closes an odd omission from the syncobj
->> UAPI.
->>
->> [1] https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/33433
->> [2] https://gitlab.freedesktop.org/virgl/virglrenderer/-/merge_requests/805
->>
->> v2: Add DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_TIMELINE
->> v3: Add unstaged uabi header hunk
->> v4: Also handle IMPORT_SYNC_FILE case
->> v5: Address comments from Dmitry
->> v6: checkpatch.pl nits
->>
->> Signed-off-by: Rob Clark <robdclark@chromium.org>
->> Reviewed-by: Christian König <christian.koenig@amd.com>
->> Reviewed-by: Dmitry Osipenko <dmitry.osipenko@collabora.com>
->> ---
->>  drivers/gpu/drm/drm_syncobj.c | 47 +++++++++++++++++++++++++++--------
->>  include/uapi/drm/drm.h        |  4 +++
->>  2 files changed, 41 insertions(+), 10 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/drm_syncobj.c b/drivers/gpu/drm/drm_syncobj.c
->> index 4f2ab8a7b50f..636cd83ca29e 100644
->> --- a/drivers/gpu/drm/drm_syncobj.c
->> +++ b/drivers/gpu/drm/drm_syncobj.c
->> @@ -741,7 +741,7 @@ static int drm_syncobj_fd_to_handle(struct drm_file *file_private,
->>  }
->>
->>  static int drm_syncobj_import_sync_file_fence(struct drm_file *file_private,
->> -                                             int fd, int handle)
->> +                                             int fd, int handle, u64 point)
->>  {
->>         struct dma_fence *fence = sync_file_get_fence(fd);
->>         struct drm_syncobj *syncobj;
->> @@ -755,14 +755,24 @@ static int drm_syncobj_import_sync_file_fence(struct drm_file *file_private,
->>                 return -ENOENT;
->>         }
->>
->> -       drm_syncobj_replace_fence(syncobj, fence);
->> +       if (point) {
->> +               struct dma_fence_chain *chain = dma_fence_chain_alloc();
->> +
->> +               if (!chain)
->> +                       return -ENOMEM;
->> +
->> +               drm_syncobj_add_point(syncobj, chain, fence, point);
->> +       } else {
->> +               drm_syncobj_replace_fence(syncobj, fence);
->> +       }
->> +
->>         dma_fence_put(fence);
->>         drm_syncobj_put(syncobj);
->>         return 0;
->>  }
->>
->>  static int drm_syncobj_export_sync_file(struct drm_file *file_private,
->> -                                       int handle, int *p_fd)
->> +                                       int handle, u64 point, int *p_fd)
->>  {
->>         int ret;
->>         struct dma_fence *fence;
->> @@ -772,7 +782,7 @@ static int drm_syncobj_export_sync_file(struct drm_file *file_private,
->>         if (fd < 0)
->>                 return fd;
->>
->> -       ret = drm_syncobj_find_fence(file_private, handle, 0, 0, &fence);
->> +       ret = drm_syncobj_find_fence(file_private, handle, point, 0, &fence);
->>         if (ret)
->>                 goto err_put_fd;
->>
->> @@ -869,6 +879,9 @@ drm_syncobj_handle_to_fd_ioctl(struct drm_device *dev, void *data,
->>                                    struct drm_file *file_private)
->>  {
->>         struct drm_syncobj_handle *args = data;
->> +       unsigned int valid_flags = DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_TIMELINE |
->> +                                  DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_EXPORT_SYNC_FILE;
->> +       u64 point = 0;
->>
->>         if (!drm_core_check_feature(dev, DRIVER_SYNCOBJ))
->>                 return -EOPNOTSUPP;
->> @@ -876,13 +889,18 @@ drm_syncobj_handle_to_fd_ioctl(struct drm_device *dev, void *data,
->>         if (args->pad)
->>                 return -EINVAL;
->>
->> -       if (args->flags != 0 &&
->> -           args->flags != DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_EXPORT_SYNC_FILE)
->> +       if (args->flags & ~valid_flags)
->>                 return -EINVAL;
->>
->> +       if (args->flags & DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_TIMELINE)
->> +               point = args->point;
->> +
->>         if (args->flags & DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_EXPORT_SYNC_FILE)
->>                 return drm_syncobj_export_sync_file(file_private, args->handle,
->> -                                                   &args->fd);
->> +                                                   point, &args->fd);
->> +
->> +       if (args->point)
->> +               return -EINVAL;
->>
->>         return drm_syncobj_handle_to_fd(file_private, args->handle,
->>                                         &args->fd);
->> @@ -893,6 +911,9 @@ drm_syncobj_fd_to_handle_ioctl(struct drm_device *dev, void *data,
->>                                    struct drm_file *file_private)
->>  {
->>         struct drm_syncobj_handle *args = data;
->> +       unsigned int valid_flags = DRM_SYNCOBJ_FD_TO_HANDLE_FLAGS_TIMELINE |
->> +                                  DRM_SYNCOBJ_FD_TO_HANDLE_FLAGS_IMPORT_SYNC_FILE;
->> +       u64 point = 0;
->>
->>         if (!drm_core_check_feature(dev, DRIVER_SYNCOBJ))
->>                 return -EOPNOTSUPP;
-> 
-> oh, I suppose I should add a check for DRIVER_SYNCOBJ_TIMELINE?  I'll
-> send a v7 a bit later
+Add a waitqueue helper to add a priority waiter that requires exclusive
+wakeups, i.e. that requires that it be the _only_ priority waiter.  The
+API will be used by KVM to ensure that at most one of KVM's irqfds is
+bound to a single eventfd (across the entire kernel).
 
-Christian already applied to misc-test, please rebase and make it as a
-new patch
+Open code the helper instead of using __add_wait_queue() so that the
+common path doesn't need to "handle" impossible failures.
 
+Note, the priority_exclusive() name is obviously confusing as the plain
+priority() API also sets WQ_FLAG_EXCLUSIVE.  This will be remedied once
+KVM switches to add_wait_queue_priority_exclusive(), as the only other
+user of add_wait_queue_priority(), Xen's privcmd, doesn't actually operate
+in exclusive mode (more than likely, the detail was overlooked when privcmd
+copy-pasted (sorry, "was inspired by") KVM's implementation).
+
+Signed-off-by: Sean Christopherson <seanjc@google.com>
+---
+ include/linux/wait.h |  2 ++
+ kernel/sched/wait.c  | 20 ++++++++++++++++++++
+ 2 files changed, 22 insertions(+)
+
+diff --git a/include/linux/wait.h b/include/linux/wait.h
+index 6d90ad974408..5fe082c9e52b 100644
+--- a/include/linux/wait.h
++++ b/include/linux/wait.h
+@@ -164,6 +164,8 @@ static inline bool wq_has_sleeper(struct wait_queue_head *wq_head)
+ extern void add_wait_queue(struct wait_queue_head *wq_head, struct wait_queue_entry *wq_entry);
+ extern void add_wait_queue_exclusive(struct wait_queue_head *wq_head, struct wait_queue_entry *wq_entry);
+ extern void add_wait_queue_priority(struct wait_queue_head *wq_head, struct wait_queue_entry *wq_entry);
++extern int add_wait_queue_priority_exclusive(struct wait_queue_head *wq_head,
++					     struct wait_queue_entry *wq_entry);
+ extern void remove_wait_queue(struct wait_queue_head *wq_head, struct wait_queue_entry *wq_entry);
+ 
+ static inline void __add_wait_queue(struct wait_queue_head *wq_head, struct wait_queue_entry *wq_entry)
+diff --git a/kernel/sched/wait.c b/kernel/sched/wait.c
+index 51e38f5f4701..80d90d1dc24d 100644
+--- a/kernel/sched/wait.c
++++ b/kernel/sched/wait.c
+@@ -47,6 +47,26 @@ void add_wait_queue_priority(struct wait_queue_head *wq_head, struct wait_queue_
+ }
+ EXPORT_SYMBOL_GPL(add_wait_queue_priority);
+ 
++int add_wait_queue_priority_exclusive(struct wait_queue_head *wq_head,
++				      struct wait_queue_entry *wq_entry)
++{
++	struct list_head *head = &wq_head->head;
++	unsigned long flags;
++	int r = 0;
++
++	wq_entry->flags |= WQ_FLAG_EXCLUSIVE | WQ_FLAG_PRIORITY;
++	spin_lock_irqsave(&wq_head->lock, flags);
++	if (!list_empty(head) &&
++	    (list_first_entry(head, typeof(*wq_entry), entry)->flags & WQ_FLAG_PRIORITY))
++		r = -EBUSY;
++	else
++		list_add(&wq_entry->entry, head);
++	spin_unlock_irqrestore(&wq_head->lock, flags);
++
++	return r;
++}
++EXPORT_SYMBOL(add_wait_queue_priority_exclusive);
++
+ void remove_wait_queue(struct wait_queue_head *wq_head, struct wait_queue_entry *wq_entry)
+ {
+ 	unsigned long flags;
 -- 
-Best regards,
-Dmitry
+2.49.0.504.g3bcea36a83-goog
+
