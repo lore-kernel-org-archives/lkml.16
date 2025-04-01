@@ -1,336 +1,133 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FBD113AC1;
-	Tue,  1 Apr 2025 18:05:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FDD81DDC28;
+	Tue,  1 Apr 2025 18:05:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743530720; cv=none; b=WPni3LOSwMnTpLNuBx/ifd5gGcXO2CkqJnFNzN+yP/5ux/sF7bofS7uIG6FuDLfqn/yuWvZMDhJsqaFmWJCdO9dFZe0+ikyiPufMyK9amByTYu5pQVDxDE3E7fWiYR/SsEf6y9Og3FopA8blhW/oqsRT/g8rN2OnMoult73A7lE=
+	t=1743530747; cv=none; b=FkSB8jH/hyGqH349sw90/QrEcOvJOCJwx+kc+ybhL1yS3bfIglPlZ+vJdmhirdtJ20lmUmvB6N+tN+3UmikqXMe9jfcNlzcNI2pOgcBdT053ZEeW4BIIe6FKQtDXadkCr+9HytKAZ3tUu6cR+ZaCTi0VIqjrD5/RXGYoLuMwAdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743530720; c=relaxed/simple;
-	bh=XDpRdAgxRwuqM46f3uVQQuYMPlOEdc3e738FDjjOW9w=;
+	s=arc-20240116; t=1743530747; c=relaxed/simple;
+	bh=j2ItC74CeCbbouvYFRtSAcPYoXQuBDkBa+rmnRCUvxg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fWjQSJX3/Vom6PjY6sPhPinahZi+zbCS3hLXgqoI8GR5HzYhwLb61ZjWKfYVY5t6rufijQmqpW0Np5tfwJ3ezaHFkQ5biwdwo0Ya8SwRAI8XDogM8ecEhbXRmW8KyHipidGajXTN1xh7UkHCAdROa4KiSyZ64HS6FJdUH/u9uFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eLM54CXL; arc=none smtp.client-ip=209.85.221.51
+	 To:Cc:Content-Type; b=aNb+m8bO1ODQI9O4teyPlHO3PYhfxK1/Q8ZbHm67osihkfqbi3cZcx5M656p/6Zw4AoPCjUHRCKoYiMEdI/F6fPg887Zro5yenLnjtXRQIdyUZ4MS+9US8GvuSjqVi/6tJjbDkxeX56W9Mthx0iMjGKcD4wVPvlpNGRdk/YaAdg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V6m9HUo5; arc=none smtp.client-ip=209.85.128.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eLM54CXL"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3914bc3e01aso3324935f8f.2;
-        Tue, 01 Apr 2025 11:05:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V6m9HUo5"
+Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-6f768e9be1aso1178137b3.0;
+        Tue, 01 Apr 2025 11:05:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743530716; x=1744135516; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=nryfUWPwtMdkFx5KsN4d3gQF17UlPWaIg+fR9d/GUbs=;
-        b=eLM54CXLNxiS2mxEAm4eW6q9KMDazR9j7YdYCUtHz2eA8SPWNWU++kgU9oQfe7uMzg
-         YH39aCLDrqfOfMDJf8p2WOcwh94Gvo4pOQgB//hJ9KprD/I8ii1f3t85NKxC9XB5ayVL
-         BBaFwdDq+IvxnJ2fevAvJMrcwG2vvXeLkF4O48OEjSJD5zgPJA5WzjKr8pCLHx8bCQ1F
-         zju52Pvz7F4s+Sr6ctXWVMivojXe+5FW4RZ4dvMqK8jyKbxr+mYdgqf+9VHU18E80AzJ
-         Rt47zgbKsQiVGOxwQwH0wXkMx6S4ugyFVHSLJLl38vvDNnDmemehghD/j4rtU6Xi4irB
-         HMVw==
+        d=gmail.com; s=20230601; t=1743530744; x=1744135544; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BoYrBmUYS1Fjt2+nydhXunhJyD1+jrRmHYe/TGOnFFw=;
+        b=V6m9HUo5QtlwnncsBN2a+dve0mRJ7Jm+z6zVKmaBZWv9XLbNmYnuzTyHKmJBN1nBAI
+         fXAMwb9BquR7v9ui552zr7zwkszwk8+Ioon33VBiX7E65OiwIRzEFVw/S588Xc52tsXj
+         Pwzo1RjU5eD1reN1YTxFmnvtXqZmACxt4pS38zpO8RohGG4LBIxf8MLzpcsffxAFisKw
+         tyr/TV7rlL05L5P3O8w3OTF44MkijQUKHfmf9oF7/8ZTapTz7OuAcKAQrCYCa9NRbelg
+         +eaKcbz436Pyd0a4h48E9u2TlXP8AS+WH26skeKxW3BVbENuEGp3hT6i2OgaUFvnHjw9
+         DNfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743530716; x=1744135516;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=nryfUWPwtMdkFx5KsN4d3gQF17UlPWaIg+fR9d/GUbs=;
-        b=LX6qK+EtZbTXefH3SMgKGZCXB9l7uX4U9vJkDvKD2w0CXfocv/xSAgB1zEFHBFDEsx
-         Qr3Ys37PLVuwjRi2jHl4xTAl3F0gsTxMb8UqdZ9HxqEVrBEWN/RmrpTBh8SVCg+OhvHr
-         Y8mYOn7ITdukUPuGM4NUo1x9z9y0Bg15dPWdcS4UUQ79oLo1gZsNSYbVoOkgM6ErGMX7
-         9MZMg5lcNC6sqibtouey9v0bHbNCs3QPaErH3GJFDjtPSeQOcageC1EcyNCipIJwNGcN
-         9/CyQrT4B+SRXnb3Fss2xLyQT9DCX/wgwOAMt7XK0U+c752OL3upZ/GJ39XSoz3BizZ3
-         U8AA==
-X-Forwarded-Encrypted: i=1; AJvYcCV2Gx6EwOVqqMTD0GCgSOLncq7UVHWlI9ph8ojgtQTId5qTAop2PeEgz3vkY7Lcmc+gXD5ydLXlz2pV@vger.kernel.org, AJvYcCVlpSR9SOROm+OvkWyyXWz7AOgKh308qKeBWNbeomjYE/wIeuxn8CJothY59RK4S8wSAdI72/FVfTDIWbDG@vger.kernel.org, AJvYcCXhNiUsi1qNRIXnDkANNuL53h5GPOuZfXNshQn5gU1pWgPZRx9YD9K03cUfmQIzaUXFwLOX3zI7DK2T@vger.kernel.org, AJvYcCXl3e5csaMoALnwsVgsTcL2pSic6r5xJo7UiPviLNJFDPgaAS+llaHMnm/ItYEDqM9WwiUq+y/HNPpQ2kYf2Q==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx+R+PFF9PS9LtAQ3expxrFEUDzvfFVcmVGnGInIB0cTZCWiov/
-	qdvvM1Y4aWy5plzGPIYC3QVOIA67DgBbqjjpHg+BiW6GOPfGEugqXYn78vvWa9RMFwUbxFbTTcn
-	uZ/qZrVw3LyA37oDiSRPw2ZXDuA==
-X-Gm-Gg: ASbGncslyg6ztH9KBRtlTMMLgClpf8Et0xqGmQoC6m9RCKgfk6ZYF5383XGw48tAsgv
-	uJuiAvc0tOWZPQiu+NbPcHqZskBIp7shG1nUDDwwlqK48wPRQegSK/gambjrdflc6g3amUdTFqU
-	UmdgleWEUFMC8bwC8E7BdTnqmumA==
-X-Google-Smtp-Source: AGHT+IH+QK+V24kJEIVldO9Zr767vV+GPNMIA5c/QiCee+ngvYUMVWmvMhk8SNbKMcOOMcyMGwoQbLw76VeQFb35H9M=
-X-Received: by 2002:a05:6000:210d:b0:39c:1257:dbab with SMTP id
- ffacd0b85a97d-39c1257dd00mr8319119f8f.59.1743530715991; Tue, 01 Apr 2025
- 11:05:15 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743530744; x=1744135544;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BoYrBmUYS1Fjt2+nydhXunhJyD1+jrRmHYe/TGOnFFw=;
+        b=IL9uXmEYyx8R7M5zH72NjYxgB/EBWU1i8RllcD/MJJy8zxk5aGHVNq9aovPZekpoSN
+         L/0RxJP9Ehmr29HocPrUIT5csWU1NLtA2wycNkWoyfI34M+cTkPpw6Ao3CgoCm6banm3
+         uqJc6hGdszqEIJkwR8LK7xCTbkWBq5hUoduQSAFVkoI0A7MG2tgudtDw81Yk2vwI0Ml7
+         oL+5bezjLZppQGKB5BuSksdQ+7RcxCaKPohkH5rb7zl91Z+tRY0U63HmlOTLtZNpx9a1
+         rHD7WQCDmKNPB0yHYQ8nucyL1GvUNzradiGk2UxaPrT7TXDx2gLfEdEvgQCg2wN7ZVjJ
+         /Eeg==
+X-Forwarded-Encrypted: i=1; AJvYcCUOVaFd2/blGxUt3qUgO838E5EGCAn3mGJ7Z6TAv1v47VWD0LrB30glHBgs2chf7fGmc9qdV7bbQ8zsiqv5YoZX@vger.kernel.org, AJvYcCUvmestSby/KlXmGMPmbj6fvFI51cqnxwioOD+n/oObo4NHPK///bd7/H/SRlHcxcJMMqba9AJLi3/6MUur@vger.kernel.org, AJvYcCVflJoGEku45pYnUJXKojnQZDc8PDNMPHV4U2bcEcKYf52/3UAg8OtAPl/dLzEuFeiDwkQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxe9fUBehoqPLnoz1fmBP30Gnl/NWeg8IwITZehqV3gE1SOybyB
+	iBWt8JZ7jHtq5KzsmbwmV34e9i1HdisASsr5HooGHKJkbC4Ti/tmETx36AR9NUaXbRIeQNZG4DM
+	6E3b9tEFm80y363sFg9DlcJAnHTA=
+X-Gm-Gg: ASbGncuLDCb/d/91Wgv8EgjTmK/TLU5cuf53tIgxZhT4/vKmAXMezNVcUAb6qgdTqjB
+	taJqdDTPkGrxhPQAx6JFpfrhxOwcEbus1oSNeBKJ5WaekIv6Y/2wgbOxrCnzf0b1l7awoCRFlhq
+	mhTIoeM9D+aev5X073FU2uE3ObgNAxSysH3lboW2q0sw==
+X-Google-Smtp-Source: AGHT+IGMVbGaGvOYTg9+RQ9IAGG98GOlapvtbp7KooxcYZhgqUbq/MrtYvN7WFBm50vXzage8iz9PVqJmEAJFgznsZo=
+X-Received: by 2002:a05:690c:6913:b0:6f9:47ad:f5f1 with SMTP id
+ 00721157ae682-703b66ed874mr14693837b3.17.1743530744515; Tue, 01 Apr 2025
+ 11:05:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250331215720.19692-1-alex.vinarskis@gmail.com>
- <20250331215720.19692-7-alex.vinarskis@gmail.com> <ef783edb-c966-4ef7-b496-564420c1b852@oss.qualcomm.com>
-In-Reply-To: <ef783edb-c966-4ef7-b496-564420c1b852@oss.qualcomm.com>
-From: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
-Date: Tue, 1 Apr 2025 20:05:05 +0200
-X-Gm-Features: AQ5f1Jo4ffJQTJBbHce2plaeHSYQtIvqK9UIjt3b6wewix3gePp0cy-0zeYgJGE
-Message-ID: <CAMcHhXq8kjsbDGHBn=63JutD1TcD6=KVxCQtPHRoLOwE+FY-sA@mail.gmail.com>
-Subject: Re: [PATCH v1 6/6] arm64: dts: qcom: Add support for X1-based Asus
- Zenbook A14
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Dmitry Baryshkov <lumag@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Abel Vesa <abel.vesa@linaro.org>, 
-	Johan Hovold <johan+linaro@kernel.org>, linux-arm-msm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-usb@vger.kernel.org, Konrad Dybcio <konradybcio@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>
+References: <20250401061546.1990156-1-nichen@iscas.ac.cn>
+In-Reply-To: <20250401061546.1990156-1-nichen@iscas.ac.cn>
+From: Amery Hung <ameryhung@gmail.com>
+Date: Tue, 1 Apr 2025 11:05:33 -0700
+X-Gm-Features: AQ5f1JpOwg2Qo4yi4MGTCZ1zyArShoCogVd4mypKFbNMujca6CF07ZTLq3Qc6vY
+Message-ID: <CAMB2axOa6D757_FGsW2i4xCDzNP7h+QUGMDvRtnx6EyNfjRBFA@mail.gmail.com>
+Subject: Re: [PATCH] selftests/bpf: Convert comma to semicolon
+To: Chen Ni <nichen@iscas.ac.cn>
+Cc: andrii@kernel.org, eddyz87@gmail.com, mykolal@fb.com, ast@kernel.org, 
+	daniel@iogearbox.net, martin.lau@linux.dev, song@kernel.org, 
+	yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org, 
+	sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org, shuah@kernel.org, 
+	mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com, peterz@infradead.org, 
+	juntong.deng@outlook.com, oleg@redhat.com, bpf@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 1 Apr 2025 at 17:59, Konrad Dybcio
-<konrad.dybcio@oss.qualcomm.com> wrote:
+On Mon, Mar 31, 2025 at 11:17=E2=80=AFPM Chen Ni <nichen@iscas.ac.cn> wrote=
+:
 >
-> On 3/31/25 11:53 PM, Aleksandrs Vinarskis wrote:
-> > Initial support for Asus Zenbook A14. Particular moddel exists
-> > in X1-26-100, X1P-42-100 (UX3407QA) and X1E-78-100 (UX3407RA).
-> >
-> > Mostly similar to other X1-based laptops. Notable differences are:
-> > * Wifi/Bluetooth combo being Qualcomm FastConnect 6900 on UX3407QA
-> >   and Qualcomm FastConnect 7800 on UX3407RA
-> > * USB Type-C retimers are Parade PS8833, appear to behave identical
-> >   to Parade PS8830
-> > * gpio90 is TZ protected
+> Replace comma between expressions with semicolons.
 >
-> [...]
+> Using a ',' in place of a ';' can have unintended side effects.
+> Although that is not the case here, it is seems best to use ';'
+> unless ',' is intended.
 >
-> > +     leds {
-> > +             compatible = "gpio-leds";
-> > +
-> > +             pinctrl-names = "default";
-> > +             pinctrl-0 = <&cam_indicator_en>;
->
-> property-n
-> property-names
->
-> please, we're trying to unify such small things even though we know
-> it's "wrong" in a lot of places
+> Found by inspection.
+> No functional change intended.
+> Compile tested only.
 >
 
-will do.
+Oopsie. Thanks for fixing it.
 
-> > +
-> > +&i2c0 {
-> > +     clock-frequency = <400000>;
-> > +     status = "okay";
-> > +
-> > +     /* ELAN, 04F3:3315 */
-> > +     touchpad@15 {
-> > +             compatible = "hid-over-i2c";
-> > +             reg = <0x15>;
-> > +
-> > +             hid-descr-addr = <0x1>;
-> > +             interrupts-extended = <&tlmm 3 IRQ_TYPE_LEVEL_LOW>;
-> > +
-> > +             pinctrl-0 = <&tpad_default>;
-> > +             pinctrl-names = "default";
-> > +
-> > +             wakeup-source;
-> > +     };
-> > +};
-> > +
-> > +&i2c3 {
-> > +     clock-frequency = <400000>;
-> > +     status = "okay";
+Reviewed-by: Amery Hung <ameryhung@gmail.com>
+
+> Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+> ---
+>  tools/testing/selftests/bpf/test_kmods/bpf_testmod.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 >
-> It's also customary to leave a newline before 'status'
-
-will do.
-
+> diff --git a/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c b/tools=
+/testing/selftests/bpf/test_kmods/bpf_testmod.c
+> index 3220f1d28697..f38eaf0d35ef 100644
+> --- a/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
+> +++ b/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
+> @@ -1340,7 +1340,7 @@ static int st_ops_gen_prologue_with_kfunc(struct bp=
+f_insn *insn_buf, bool direct
+>         *insn++ =3D BPF_STX_MEM(BPF_DW, BPF_REG_6, BPF_REG_7, offsetof(st=
+ruct st_ops_args, a));
+>         *insn++ =3D BPF_JMP_IMM(BPF_JA, 0, 0, 2);
+>         *insn++ =3D BPF_MOV64_REG(BPF_REG_1, BPF_REG_0);
+> -       *insn++ =3D BPF_CALL_KFUNC(0, bpf_cgroup_release_id),
+> +       *insn++ =3D BPF_CALL_KFUNC(0, bpf_cgroup_release_id);
+>         *insn++ =3D BPF_MOV64_REG(BPF_REG_1, BPF_REG_8);
+>         *insn++ =3D prog->insnsi[0];
 >
-> > +&pm8550_gpios {
-> > +     rtmr0_default: rtmr0-reset-n-active-state {
-> > +             pins = "gpio10";
-> > +             function = "normal";
-> > +             power-source = <1>; /* 1.8V */
+> @@ -1379,7 +1379,7 @@ static int st_ops_gen_epilogue_with_kfunc(struct bp=
+f_insn *insn_buf, const struc
+>         *insn++ =3D BPF_STX_MEM(BPF_DW, BPF_REG_1, BPF_REG_6, offsetof(st=
+ruct st_ops_args, a));
+>         *insn++ =3D BPF_JMP_IMM(BPF_JA, 0, 0, 2);
+>         *insn++ =3D BPF_MOV64_REG(BPF_REG_1, BPF_REG_0);
+> -       *insn++ =3D BPF_CALL_KFUNC(0, bpf_cgroup_release_id),
+> +       *insn++ =3D BPF_CALL_KFUNC(0, bpf_cgroup_release_id);
+>         *insn++ =3D BPF_MOV64_REG(BPF_REG_0, BPF_REG_6);
+>         *insn++ =3D BPF_ALU64_IMM(BPF_MUL, BPF_REG_0, 2);
+>         *insn++ =3D BPF_EXIT_INSN();
+> --
+> 2.25.1
 >
-> Drop the 1.8v comments please
-
-will do.
-
->
-> [...]
->
-> > +&spi10 {
-> > +     status = "disabled";
-> > +
-> > +     /* Unknown device */
-> > +};
->
-> Does the device crash if you enable this bus? Keeping it 'okay' would
-> make it easier for folks to poke at it
-
-It does boot just fine, but does not initialize:
-```
-geni_spi a88000.spi: Invalid proto 9
-...
-qnoc-x1e80100 interconnect-1: sync_state() pending due to a88000.spi
-...
-```
-
-I only quickly checked that 9 is indeed invalid state, iirc should've
-been 2. But haven't looked deeper into it, so left it disabled. So I
-thought best to leave it off for now. Unless you prefer to drop it
-altogether?
-
->
-> > +
-> > +&tlmm {
-> > +     gpio-reserved-ranges = <44 4>,  /* SPI11, TZ Protected */
-> > +                            <90 1>;  /* Unknown, TZ Protected */
-> > +
-> > +     bt_en_default: bt-en-sleep {
-> > +             pins = "gpio116";
-> > +             function = "gpio";
-> > +             output-low;
-> > +             bias-disable;
-> > +             qcom,drive-strength = <16>;
->
-> drop "qcom," and please keep the order of:
->
-> pins
-> function
-> drive-strength
-> bias
-> output/input
->
-> as you did below
-
-Will do.
-
-Should I also drop 'qcom,' from the 'misc_3p3_reg_en' and adjust order
-the same way, or that one is somehow special?
-
->
-> > +
-> > +/ {
-> > +     model = "ASUS Zenbook A14 UX3407RA";
->
-> There's no strict policy, but variants usually go in braces
-
-Parenthesis I guess, "ASUS Zenbook A14 (UX3407RA)" ?
-
->
-> > +     compatible = "asus,x1e80100-zenbook-a14", "qcom,x1e80100";
-> > +};
-> > +
-> > +&gpu_zap_shader {
-> > +     firmware-name = "qcom/x1e80100/ASUSTeK/zenbook-a14/qcdxkmsuc8380.mbn";
-> > +};
-> > +
-> > +&remoteproc_adsp {
-> > +     firmware-name = "qcom/x1e80100/ASUSTeK/zenbook-a14/qcadsp8380.mbn",
-> > +                     "qcom/x1e80100/ASUSTeK/zenbook-a14/adsp_dtbs.elf";
-> > +
-> > +     status = "okay";
-> > +};
-> > +
-> > +&remoteproc_cdsp {
-> > +     firmware-name = "qcom/x1e80100/ASUSTeK/zenbook-a14/qccdsp8380.mbn",
-> > +                     "qcom/x1e80100/ASUSTeK/zenbook-a14/cdsp_dtbs.elf";
-> > +
-> > +     status = "okay";
-> > +};
-> > +
-> > +&uart14 {
-> > +     status = "okay";
-> > +
-> > +     bluetooth {
-> > +             compatible = "qcom,wcn7850-bt";
-> > +             pinctrl-names = "default";
-> > +             pinctrl-0 = <&bt_en_default>;
-> > +             enable-gpios = <&tlmm 116 GPIO_ACTIVE_HIGH>;
-> > +             max-speed = <3000000>;
-> > +     };
-> > +};
-> > diff --git a/arch/arm64/boot/dts/qcom/x1p42100-asus-zenbook-a14.dts b/arch/arm64/boot/dts/qcom/x1p42100-asus-zenbook-a14.dts
-> > new file mode 100644
-> > index 000000000000..b6c9a707090f
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/qcom/x1p42100-asus-zenbook-a14.dts
-> > @@ -0,0 +1,48 @@
-> > +// SPDX-License-Identifier: BSD-3-Clause
-> > +/*
-> > + * Copyright (c) 2025 Qualcomm Innovation Center, Inc. All rights reserved.
-> > + * Copyright (c) 2025 Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
-> > + */
-> > +
-> > +/dts-v1/;
-> > +
-> > +#include "x1p42100.dtsi"
-> > +#include "x1-zenbook-a14.dtsi"
-> > +
-> > +/delete-node/ &pmc8380_6;
-> > +/delete-node/ &pmc8380_6_thermal;
-> > +
-> > +/ {
-> > +     model = "ASUS Zenbook A14 UX3407QA";
-> > +     compatible = "asus,x1p42100-zenbook-a14", "qcom,x1p42100";
-> > +};
-> > +
-> > +&gpu_zap_shader {
-> > +     firmware-name = "qcom/x1p42100/ASUSTeK/zenbook-a14/qcdxkmsuc8380.mbn";
-> > +};
->
-> This file is not going to work on this SoC, you can drop it
-
-I guess it would need a different firmware name? If yes, can we
-already add the new name, such that once x1p42100 gains GPU support it
-will get enabled 'automatically'?
-
-Otherwise, I will just drop it.
-
->
-> > +
-> > +&remoteproc_adsp {
-> > +     firmware-name = "qcom/x1p42100/ASUSTeK/zenbook-a14/qcadsp8380.mbn",
-> > +                     "qcom/x1p42100/ASUSTeK/zenbook-a14/adsp_dtbs.elf";
-> > +
-> > +     status = "okay";
-> > +};
-> > +
-> > +&remoteproc_cdsp {
-> > +     firmware-name = "qcom/x1p42100/ASUSTeK/zenbook-a14/qccdsp8380.mbn",
-> > +                     "qcom/x1p42100/ASUSTeK/zenbook-a14/cdsp_dtbs.elf";
-> > +
-> > +     status = "okay";
->
-> Are the DSP firmware files actually different between the two?
-
-CDSP is the same. ADSP blobs to my surprise are different, both '.elf'
-and '.mbn'. But like I wrote in the cover letter, perhaps Asus just
-forgot to update adsp firmware? Though according to changelong on
-device pages [2],[4] both have "ADSP Driver : 2.0.4135.0200"
-
-Compared by:
-* Downloading UX3407QA's drivers [1], from the device page [2] and
-UX3407RA'a drivers [3] from the device page [4]
-* Extract and flatten with `7z e filename.exe`
-* Compare via `md5sum *dsp*elf *dsp*mbn *dsp*jsn`
-
-Though, even if the blobs would be/will be the same, I think it is
-still beneficial to define firmware path per model, as this makes
-firmware extraction from driver/Windows partition and placement much
-easier. Unfortunately, as it seems so far, most of the devices besides
-Lenovos are not having firmware upstreamed, so this is pretty
-relevant. Eg. Ubuntu already has 'firmware extracting tool' [5] (draft
-MR to include Zenbook as well), I'm guessing other distros have
-something similar, though I haven't followed up.
-
-On the other hand, these tools could of course get path from device
-tree directly, eg. via `cat
-/sys/firmware/devicetree/base/soc@0/remoteproc@32300000/firmware-name`,
-then having all the blobs for the device in one location is less
-relevant...
-
-Thanks for reviewing,
-Alex
-
-[1] https://dlcdnets.asus.com/pub/ASUS/nb/Image/Driver/DriverPackage/42706/SOCPackage_forWebSite_Qualcomm_Z_V1.305.7550.2_42706.exe?model=UX3407QA
-[2] https://www.asus.com/ch-en/laptops/for-home/zenbook/asus-zenbook-a14-ux3407/helpdesk_download?model2Name=UX3407QA
-[3] https://dlcdnets.asus.com/pub/ASUS/nb/Image/Driver/DriverPackage/42705/SOCPackage_forWebSite_Qualcomm_Z_V1.305.7550.2_42705.exe?model=UX3407RA
-[4] https://www.asus.com/ch-en/laptops/for-home/zenbook/asus-zenbook-a14-ux3407/helpdesk_download?model2Name=UX3407RA
-[5] https://git.launchpad.net/~alexvinarskis/ubuntu/+source/qcom-firmware-extract/tree/qcom-firmware-extract?h=asus-zenbook-a14
-
->
-> Konrad
