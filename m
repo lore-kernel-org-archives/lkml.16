@@ -1,103 +1,181 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AE2D200BB2;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F74F1FAC50;
 	Tue,  1 Apr 2025 11:46:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743508007; cv=none; b=gFyv4U0mMLYrHsbiY8FiUABYXerOalJnRclUOft4KkTcCRNbvxeUfw/haHENnVugO1BFzzOv+A9/lHCUE19prsz7bZewoylWYQPQuTlfQdO4dLT9SFBnAkfJxxngCdMNdJrWNKy9iOB30MyNmJVK/VqCGzDjEcKJ8inw09twZ70=
+	t=1743508009; cv=none; b=g7dhOAFaSp+BYExD/j3dnSzjhq7BpCnTwwf9aaksjyO4sIF1K4IA/pRZMz0LAlsBkkD6MLgWR2nnC0ahO0hybKSQmaTS9Yi0fgELuWRF8JyCVYwUbn127PB3NhuA7+KpwpexLjJWoQMtT7WrauxVGwwqjkU/6GF/V1D21JgB3PM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743508007; c=relaxed/simple;
-	bh=XqdnbW6pAeCpwOdRwLilImT/OKAIai64/QacKoT+his=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c/vgTDgHNefuqiyh0m3qTpoVP+6SoTARXUTlm9IXYozIefgQP0vxmgEV1MAmlZOZaU5u2g+T7KDQjc9/2AFFHhexOIV/eO0NZ8Lou6x3+2yDaAF5eCFtXxnnPAzPpELL30GIV0TtmA/p6wQT3PQ0j9bnG1hytaBEpnKn+7Zp6s0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jhE0JL2z; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743508009; c=relaxed/simple;
+	bh=ceoqctLKCcbnOajnu47CcnpUXs373ivSmAbLGEWNX98=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=C8e9xBiQqdPIWPQqGMqmspendvdIvPYDr3KqD8RAIBbraCeLS0VXHe0tZl2omuqljm2l1jtNu2aJmN0ES0SVRTrYvskCU/SjgOERF6DCfjimOMucgtEmdQs0RaTiDk/A/8o++0pFHoV1OY1lMOjGDb+pFu7r6OC5iH6vpOF6R8I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ACaxnbrC; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jhE0JL2z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA3E3C4CEEE;
-	Tue,  1 Apr 2025 11:46:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743508006;
-	bh=XqdnbW6pAeCpwOdRwLilImT/OKAIai64/QacKoT+his=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jhE0JL2zRfEGDWmOoV5UfVpPRtv7w90asCz4oq8Ou2jJddm1jKMgkNMSwHl0AbDww
-	 5mlEq62AAHifxna0K901IybOxpxnyaZ4cgKWVHKOZOvqmBQyOXohBRrxTXCoSnmdwv
-	 v2M/L7jGDv7DteWTAAy4gZ8i8E6HvlVhkzG98k3gL2MbTk4iHZyvsKxHhxdBuqddl+
-	 JVGsDZDaMWgq1qhcWizdM/FItdIeN5RXiO3jW/25jZb6TIUS9h+hVU78QgkqtNxfZY
-	 Q61PsHEYt3LxNfFrbCBl9spaiT8U6QZFyPGFqnavX96jrEF0/2G74KzhJkrBLFbcE5
-	 b2lnmuYr+iWBA==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1tza4w-000000001Qx-137t;
-	Tue, 01 Apr 2025 13:46:50 +0200
-Date: Tue, 1 Apr 2025 13:46:50 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Cc: Johan Hovold <johan+linaro@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ACaxnbrC"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43ce71582e9so38690325e9.1;
+        Tue, 01 Apr 2025 04:46:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743508006; x=1744112806; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=CCF3/Qv9Ekc9KpUGlNmFhgd8mAsoihUePrT98r2Qqv8=;
+        b=ACaxnbrCqfdZl+cc6tYdPBQFLz0rLP5R5c5md4wfFOXl9c592iYq26mxy4Peh+PHbv
+         fdSiEiWBJSXMETWxBrHH+HMfQU/zP0PBXP3iY3JfMqQRl1PnroENAGzACnNPsyr/yIMN
+         8MSba6no3Hcq+XNMNlELbzwfmtWYI01bNsTNW56aAXt+/2CFvrVddeA96XLVs8qQ1lS1
+         6B2x54rJBD21J3dEJO9irz7KnyfEiS5xy+ZZLXbEqnRqXUP2PAw2VJWgoGNTuTdbDOhg
+         hl3Ds7zrwsMNfxbibT3PVk8UJt6v/YouZi+Ze9oMsuJv5GTtGCGPpf3pzCMzVyzIV6yw
+         lGiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743508006; x=1744112806;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=CCF3/Qv9Ekc9KpUGlNmFhgd8mAsoihUePrT98r2Qqv8=;
+        b=IMkt1MujyXmX9KOk6H3YdLMii6b1ZNdlg/IyLtQRAkH6yYUjJaYbiDgduQI0Fzp2bC
+         RfXEK5L3Hbj1pO+mS+tvYSNHk0XOEjqHGIWOgM9FMXQucsoxHfiSzaO7nWQXp7VL2QOk
+         3RkGNNymI418t+RKsHRf6gHDnuVm/U0xKYZ9LbpaePH143/ABE3hdw4UDyWdSIHEjiQm
+         kzK8b6S9Hj4dSA9rfTy8JCgvr2YoX06w8+xksZ7yVDV5u+quc3xIphvn7JGqT8LFyKzX
+         0CdJhYiVkGrn/wQxbqDet4QtB3TSYRZy+QNqX9yWpu0QdUauQND98/leGiRyeFiiW29L
+         p7pw==
+X-Forwarded-Encrypted: i=1; AJvYcCUDhMqI8xEHTVndIHW33uH/WiFrS2P/BkBxj5pBgIUkRrdUO+PyRIYdjzbWHz07ih+Fp4BOuHfmSo88@vger.kernel.org, AJvYcCUDwVX84seePegmoZudRyNxSEmJqvSQI9+ncj1It2+WMTPi8eA/jHw0Po2EQZCjPrvNOhBHbrtA@vger.kernel.org, AJvYcCXVcb2tusMgFqZ8SnjLGt36nofUYGZlpHPVO1HtOguA4GqOxgXGSkEQLR6E2bZG7Wx7wR0wnzQ/oivwu2eE@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy3zCYnFoY1EZLAWkm/ZFUr3ALLtsVNKH7WHs6BLk/BtT4yLngL
+	ZaVR9QcePGRZge7Jkq2xt0np3XN0J2Bh+xpYZuHMyAMxh5LQNQI5
+X-Gm-Gg: ASbGncu6eZyb5euHxBZaB39yGV9YbW029wzOrgSicQjJfYLGk+5pyLmPDV5ymxtSVXI
+	kkexEEFA8b96dIN6yn5duBqbZsQWcDMsqeVAYDvRS5itvVYwMhLtDazBKbkG8YIgTKusR4KWxbQ
+	zpBalDH5YzcY/LTuZ/61UQN4tZgjg5RmjBUIznxvCVqBFH6W48T1MLE6hin84/vFDv13/qSdxLY
+	bSt7T43ySYZsWUUSRT9dt6bVUutHG68rFu6WYYryssB269rOfNQ9GYMx0WTVrqHtMwjumwqWiaI
+	huQ9d6R1HjN3qtaZZqqDLCrLEAriZo7ljt17q+0y+WITpyAU9vqsu8Lv5DOymaImM1dh/C+J++1
+	1OMm5mDzHWUhcrzFLwytsy5wF
+X-Google-Smtp-Source: AGHT+IECBdGy0veigc4dKDxdqeIRbDAyoVZxmglOTHF5tsWKDtaGPfK2VbavW3AsceadqMj/Ll0N2Q==
+X-Received: by 2002:a05:600c:548c:b0:43d:97ea:2f4 with SMTP id 5b1f17b1804b1-43db61d3924mr119814325e9.12.1743508005651;
+        Tue, 01 Apr 2025 04:46:45 -0700 (PDT)
+Received: from localhost.localdomain (93-34-88-225.ip49.fastwebnet.it. [93.34.88.225])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-43ead679894sm8148175e9.40.2025.04.01.04.46.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Apr 2025 04:46:45 -0700 (PDT)
+From: Christian Marangi <ansuelsmth@gmail.com>
+To: Christian Marangi <ansuelsmth@gmail.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
 	Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Jens Glathe <jens.glathe@oldschoolsolutions.biz>,
-	Abel Vesa <abel.vesa@linaro.org>,
-	Stephan Gerhold <stephan.gerhold@linaro.org>,
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	=?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>,
+	Andrei Botila <andrei.botila@oss.nxp.com>,
+	Sabrina Dubroca <sd@queasysnail.net>,
+	Daniel Golle <daniel@makrotopia.org>,
+	Eric Woudstra <ericwouds@gmail.com>,
+	netdev@vger.kernel.org,
+	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: qcom: x1e80100-hp-x14: drop bogus USB retimer
-Message-ID: <Z-vSKlA8MjNFk3Xh@hovoldconsulting.com>
-References: <20250328084154.16759-1-johan+linaro@kernel.org>
- <707db3e3-b380-4db4-96e9-50e66b0be595@oss.qualcomm.com>
+Subject: [net-next RFC PATCH v5 0/6] net: phy: Add support for new Aeonsemi PHYs
+Date: Tue,  1 Apr 2025 13:46:01 +0200
+Message-ID: <20250401114611.4063-1-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <707db3e3-b380-4db4-96e9-50e66b0be595@oss.qualcomm.com>
 
-On Tue, Apr 01, 2025 at 12:27:55PM +0200, Konrad Dybcio wrote:
-> On 3/28/25 9:41 AM, Johan Hovold wrote:
-> > Jens reported that the sanity checks added to the new ps883x USB retimer
-> > driver breaks USB and display on the HP X14. Turns out the X14 only has
-> > a retimer on one of the ports, but this initially went unnoticed due to
-> > the missing sanity check (and error handling) in the retimer driver.
-> > 
-> > Drop the non-existing retimer from the devicetree to enable the second
-> > USB port and the display subsystem.
-> > 
-> > Note that this also matches the ACPI tables.
-> > 
-> > Fixes: 6f18b8d4142c ("arm64: dts: qcom: x1e80100-hp-x14: dt for HP Omnibook X Laptop 14")
-> > Cc: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
-> > Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
-> > ---
-> > 
-> > The devicetree went upstream before the retimer driver so the display
-> > would already be broken in 6.14 and there's no need to backport this
-> > one (but it should go into 6.15).
-> > 
-> > Note that the SBU mux can be added later when/if someone figures out how
-> > it is connected.
-> 
-> I am shocked, but this product photo [1] (is this the right laptop? there's a
-> bunch with similar naming) on the HP website suggests that indeed only one port
-> has a USB-40Gbps marking on it, with the other type-C only being supposed to do
-> 10Gbps
+Add support for new Aeonsemi 10G C45 PHYs. These PHYs intergate an IPC
+to setup some configuration and require special handling to sync with
+the parity bit. The parity bit is a way the IPC use to follow correct
+order of command sent.
 
-Yeah, I found a photo like that on their web page too, and the specs
-also mention it:
+Supported PHYs AS21011JB1, AS21011PB1, AS21010JB1, AS21010PB1,
+AS21511JB1, AS21511PB1, AS21510JB1, AS21510PB1, AS21210JB1,
+AS21210PB1 that all register with the PHY ID 0x7500 0x7500
+before the firmware is loaded.
 
-	1 USB Type-C® 10Gbps signaling rate (USB Power Delivery,
-	DisplayPort™ 1.4a, HP Sleep and Charge); 1 USB Type-C® 40Gbps
-	signaling rate (USB Power Delivery, DisplayPort™ 1.4a, HP Sleep
-	and Charge)
+The big special thing about this PHY is that it does provide
+a generic PHY ID in C45 register that change to the correct one
+one the firmware is loaded.
 
-	https://www.hp.com/us-en/shop/pdp/hp-omnibook-x-laptop-ai-pc-14-fe000-14-9j1h6av-1#techSpecs
+In practice:
+- MMD 0x7 ID 0x7500 0x9410 -> FW LOAD -> ID 0x7500 0x9422
 
-> [1] https://ssl-product-images.www8-hp.com/digmedialib/prodimg/lowres/c08993265.png
+To handle this, we operate on .match_phy_device where
+we check the PHY ID, if the ID match the generic one,
+we load the firmware and we return 0 (PHY driver doesn't
+match). Then PHY core will try the next PHY driver in the list
+and this time the PHY is correctly filled in and we register
+for it.
 
-Johan
+To help in the matching and not modify part of the PHY device
+struct, .match_phy_device is extended to provide also the
+current phy_driver is trying to match for. This add the
+extra benefits that some other PHY can simplify their
+.match_phy_device OP.
+
+Changes v5:
+- Add Reviewed-by tag from Rob
+- Fix subject in DT patch
+- Fix wrong Suggested-by tag in patch 1
+- Rework nxp patch to 80 column
+Changes v4:
+- Add Reviewed-by tag
+- Better handle PHY ID scan in as21xxx
+- Also simplify nxp driver and fix .match_phy_device
+Changes v3:
+- Correct typo intergate->integrate
+- Try to reduce to 80 column (where possible... define become
+  unreasable if split)
+- Rework to new .match_phy_device implementation
+- Init active_low_led and fix other minor smatch war
+- Drop inline tag (kbot doesn't like it but not reported by checkpatch???)
+Changes v2:
+- Move to RFC as net-next closed :(
+- Add lock for IPC command
+- Better check size values from IPC
+- Add PHY ID for all supported PHYs
+- Drop .get_feature (correct values are exported by standard
+  regs)
+- Rework LED event to enum
+- Update .yaml with changes requested (firmware-name required
+  for generic PHY ID)
+- Better document C22 in C45
+- Document PHY name logic
+- Introduce patch to load PHY 2 times
+
+Christian Marangi (6):
+  net: phy: pass PHY driver to .match_phy_device OP
+  net: phy: bcm87xx: simplify .match_phy_device OP
+  net: phy: nxp-c45-tja11xx: simplify .match_phy_device OP
+  net: phy: introduce genphy_match_phy_device()
+  net: phy: Add support for Aeonsemi AS21xxx PHYs
+  dt-bindings: net: Document support for Aeonsemi PHYs
+
+ .../bindings/net/aeonsemi,as21xxx.yaml        |  122 ++
+ MAINTAINERS                                   |    7 +
+ drivers/net/phy/Kconfig                       |   12 +
+ drivers/net/phy/Makefile                      |    1 +
+ drivers/net/phy/as21xxx.c                     | 1067 +++++++++++++++++
+ drivers/net/phy/bcm87xx.c                     |   14 +-
+ drivers/net/phy/icplus.c                      |    6 +-
+ drivers/net/phy/marvell10g.c                  |   12 +-
+ drivers/net/phy/micrel.c                      |    6 +-
+ drivers/net/phy/nxp-c45-tja11xx.c             |   41 +-
+ drivers/net/phy/nxp-tja11xx.c                 |    6 +-
+ drivers/net/phy/phy_device.c                  |   52 +-
+ drivers/net/phy/realtek/realtek_main.c        |   27 +-
+ drivers/net/phy/teranetics.c                  |    3 +-
+ include/linux/phy.h                           |    6 +-
+ 15 files changed, 1316 insertions(+), 66 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/aeonsemi,as21xxx.yaml
+ create mode 100644 drivers/net/phy/as21xxx.c
+
+-- 
+2.48.1
+
