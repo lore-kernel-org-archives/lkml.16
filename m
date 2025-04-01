@@ -1,96 +1,106 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30AB51E1C22
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 10:51:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A3CE1F0E25;
+	Tue,  1 Apr 2025 10:53:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743504669; cv=none; b=JSI5vq4sD4lWXyaayNDKep6pxdJvtr49t2vKL5LzDJlSEdU1Cthpedg5RNppckrq3PnYGZKYnY66AT3GVBoghuhzdXsHY09qd2QbTcC4OzIxEEji5AFpHElNtzHsaSI+Kd625VEIC/foUGTU8yixa71KFzzrkrsymEmZXN+VZAo=
+	t=1743504806; cv=none; b=Fc5i1XPWByQimGmOlfnXuceqPGJRhiKBg+4W0na0SWSw2Vt7FkhAjJAk02PU5lbbQu6jUYyz4It62H7lPFgFtLeXMWnuvvymPCqRf8CL+EH/eoBSOxRJN0bfcfUE1MK8gvEi2NsoDG/RxvJtUUPLWBGqXhjuAjbj7fxWMg2Ywoc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743504669; c=relaxed/simple;
-	bh=QzIc/QYQHzbOuFE+Hsi17MAplRrjr/VhCsmlPvZN0ds=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=T1a0d1e1qGfn1I1n8z7DChrDxYpaBqvsoOh37slP31Xlt84fDEjNchKPSKiN4mMMbeSoalVYApA7qAe7V7UR+KO86JT1M+PuQG5+WRpCNK7JMpj6hy9Q9vflwbPmN3YdDco3GNENvVytm+syZAmgUbroHrob/fUGV4QknLTJvUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=S5t7cJ0S; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1743504806; c=relaxed/simple;
+	bh=HdTgkz2qKeSPHguJUOKjN1z7xAhj6zw9hjYP+nHhEvM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QuvYROuJsqbd3njmrM9jH3iKHrBgzJHdjksXWxZJlgnsvPtvyO9BHGm6FYg5X1V2T38EfqqJs11xVgVsi10YvwaXmYLJh6jDreI/nD6LF6cUo9bx1UHyVnQLKPMZ8x5ydwlL3LaU5LX1OJ+TY77C+xS9ZnfXRhtBtjMdaQFiCHk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=c1cFC/Kn; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="S5t7cJ0S"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743504667; x=1775040667;
-  h=date:from:to:cc:subject:message-id;
-  bh=QzIc/QYQHzbOuFE+Hsi17MAplRrjr/VhCsmlPvZN0ds=;
-  b=S5t7cJ0S0oXsERhNVaG71pJ4/9vhFO4NtFda3+BKPVS6oz1Jb2AJPkcH
-   QTP2zzL/IPP0Qw+pQhMvURShZYz3Pd+VFifKUOs50UjzNToNqWh2omt9I
-   bNvEbKHCvs22xtFbQf4QP3p8EQZVEXX48j0UbrCkk7q8y/mzplxn9IczH
-   pPoUt1ciMygkv7Pob4Wlg1Y16mpBnbY1BIRmYJXrM1qJitnx3coLUFpIi
-   pPqPx4+Pviqyg/NgpUYCyPr2cgoZFzatbJEmHZsB2OCeyXG+OGXdjpMPL
-   em2WHBCr/1KSMTpcYiiqWb5mgbPtSUCdut75hKC4ZOMVkhOyzzXhmTd9t
-   Q==;
-X-CSE-ConnectionGUID: ugJ1DKXRR/2R0caNM41gEg==
-X-CSE-MsgGUID: dNhF2D/FTQ6/59mzWq3D8A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11390"; a="48690530"
-X-IronPort-AV: E=Sophos;i="6.14,293,1736841600"; 
-   d="scan'208";a="48690530"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2025 03:51:05 -0700
-X-CSE-ConnectionGUID: wrio75a3QUykEoLQMQKpkg==
-X-CSE-MsgGUID: PdY8WDheT+emf4v53PdYRA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,293,1736841600"; 
-   d="scan'208";a="126818802"
-Received: from lkp-server02.sh.intel.com (HELO e98e3655d6d2) ([10.239.97.151])
-  by fmviesa010.fm.intel.com with ESMTP; 01 Apr 2025 03:51:05 -0700
-Received: from kbuild by e98e3655d6d2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tzZCw-0009nC-1l;
-	Tue, 01 Apr 2025 10:51:02 +0000
-Date: Tue, 01 Apr 2025 18:50:55 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:x86/mm] BUILD SUCCESS
- e62c7a4bd1d1e99e1ddd947cb526f833992c5bd4
-Message-ID: <202504011845.LsPQ5xQ9-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="c1cFC/Kn"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=fkeBrjJdGHBg0K6rKMRdv9J8Bb9dqInOgDKuuQTww8Y=; b=c1cFC/KnEfozmWHJWYvVhgO/Qx
+	WMgtdtKm+kY5BSbNgEcaDkEeuLsUIGMhipt8ExYy/++EcC1Pl2ZmIXgK3gG+9pQ9NaTTdVst4AqlQ
+	3lxlC/BORtY5rH4QRV2STsmihD5JGrk87GPgIqubgFGv321wZiPXAv4yENeo2aJlR0yvZ+5q0w+DZ
+	ti9PthJq2Z/PhpLnMZqFEkfoIq6GMHxCxzmrk/XPGsGQAL6tmrA/nSCYRNEKX3/nY5ntZX7asiRRc
+	Yqyvz8wRPHWx8H5cqUH0dTeKlL1sl90xmAi/FXGnwhlX37xSyj4rF+i85rzXYaeEpsvLGCL6SW9X2
+	Hx/HGBIA==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1tzZEv-00BoMD-2J;
+	Tue, 01 Apr 2025 18:53:06 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Tue, 01 Apr 2025 18:53:05 +0800
+Date: Tue, 1 Apr 2025 18:53:05 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Christian Marangi <ansuelsmth@gmail.com>
+Cc: "David S. Miller" <davem@davemloft.net>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Antoine Tenart <atenart@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+	Waiman Long <longman@redhat.com>, Boqun Feng <boqun.feng@gmail.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>, linux-crypto@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev, upstream@airoha.com,
+	Richard van Schagen <vschagen@icloud.com>
+Subject: Re: [PATCH v11 3/3] crypto: Add Inside Secure SafeXcel EIP-93 crypto
+ engine support
+Message-ID: <Z-vFkUmd6vgciU6V@gondor.apana.org.au>
+References: <20250114123935.18346-1-ansuelsmth@gmail.com>
+ <20250114123935.18346-4-ansuelsmth@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250114123935.18346-4-ansuelsmth@gmail.com>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/mm
-branch HEAD: e62c7a4bd1d1e99e1ddd947cb526f833992c5bd4  x86/mm: Simplify the pgd_leaf() and p4d_leaf() checks a bit
+On Tue, Jan 14, 2025 at 01:36:36PM +0100, Christian Marangi wrote:
+>
+> +static void eip93_hash_export_sa_state(struct ahash_request *req,
+> +				       struct eip93_hash_export_state *state)
+> +{
+> +	struct eip93_hash_reqctx *rctx = ahash_request_ctx_dma(req);
+> +	struct sa_state *sa_state = &rctx->sa_state;
+> +
+> +	/*
+> +	 * EIP93 have special handling for state_byte_cnt in sa_state.
+> +	 * Even if a zero packet is passed (and a BADMSG is returned),
+> +	 * state_byte_cnt is incremented to the digest handled (with the hash
+> +	 * primitive). This is problematic with export/import as EIP93
+> +	 * expect 0 state_byte_cnt for the very first iteration.
+> +	 */
+> +	if (!rctx->len)
+> +		memset(state->state_len, 0, sizeof(u32) * 2);
 
-elapsed time: 1451m
+I don't understand when this can occur.  As far as I can see,
+zero-length packets are never passed to the hardware for hashing.
 
-configs tested: 19
-configs skipped: 127
+> +	else
+> +		memcpy(state->state_len, sa_state->state_byte_cnt,
+> +		       sizeof(u32) * 2);
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+I need to know the endianness of state_byte_cnt, which I presume
+is the number of bytes that have been hashed into the partial
+hash state.
 
-tested configs:
-i386                         allmodconfig    gcc-12
-i386                          allnoconfig    gcc-12
-i386                         allyesconfig    gcc-12
-i386    buildonly-randconfig-001-20250331    clang-20
-i386    buildonly-randconfig-002-20250331    gcc-12
-i386    buildonly-randconfig-003-20250331    clang-20
-i386    buildonly-randconfig-004-20250331    clang-20
-i386    buildonly-randconfig-005-20250331    clang-20
-i386    buildonly-randconfig-006-20250331    clang-20
-i386                            defconfig    clang-20
-x86_64                        allnoconfig    clang-20
-x86_64                       allyesconfig    clang-20
-x86_64  buildonly-randconfig-001-20250331    clang-20
-x86_64  buildonly-randconfig-002-20250331    gcc-12
-x86_64  buildonly-randconfig-003-20250331    clang-20
-x86_64  buildonly-randconfig-004-20250331    clang-20
-x86_64  buildonly-randconfig-005-20250331    clang-20
-x86_64  buildonly-randconfig-006-20250331    clang-20
-x86_64                          defconfig    gcc-11
+I need this because I'm changing the export format of all ahash
+algorithms to match that of the generic implementation.  This is
+so that you can seamlessly switch between an async ahash and its
+sync fallback.
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thanks,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
