@@ -1,106 +1,140 @@
-Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54B261E47CC;
-	Tue,  1 Apr 2025 06:49:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C86201E520B
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 06:51:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743490203; cv=none; b=M6huXftEPmj7fWsrEf9wtKJYAvCZmnVEjfqFZTJOdrrfK+j8dEKsPO/AfjzvsFPLljATqrxX4p1fMKZNB5CoH07eVDz8V2iXpNHeazMRDCIvCDAAqHxK+rdJg28fN9vN+S9MPlqEarsX6xgzp6cj3dCouf8PGxT3gHCRcF2cmmg=
+	t=1743490276; cv=none; b=a+7jJNfk9vXRm2sklB6egZsOdgDcSkJQU7nEbHXW7/2dzx4rialedx+Nc8nx8Z2mOYySITHLki/Ssa7yMYaUpMv/cC8cOBWtoV43xUl4S68AV5h1GarAMT4Xb1ipgmC3XAR1Wnyblvev4zZ0U9tY+IHRDPpTNNv1qgB4dm/n0xY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743490203; c=relaxed/simple;
-	bh=27r4/iX848xmdLPdCysAlfe1sp3aFeG1lAN98CF8X74=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CzYCrTNLjQG2pjGoZglKvRU7438Rx1jTl21o67KsbADnkPv+/IxUEYIhd1fSPOl79bkStdzZKK8F6XXTcYroAcCj2rX5aXEnKOAM9GMfb1xKIUZFVz10oGBOFirLNt2iaZ1d73XQC7cuDxKgLqHKWTsvgZNzBa/ujfz5jGBCkqY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost.localdomain (unknown [124.16.141.245])
-	by APP-03 (Coremail) with SMTP id rQCowAD3njuMjOtnyJWqBA--.16943S2;
-	Tue, 01 Apr 2025 14:49:50 +0800 (CST)
-From: Wentao Liang <vulab@iscas.ac.cn>
-To: mchehab@kernel.org
-Cc: yujiaoliang@vivo.com,
-	hverkuil@xs4all.nl,
-	linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Wentao Liang <vulab@iscas.ac.cn>,
-	stable@vger.kernel.org
-Subject: [PATCH v2] media: dvb: Add error checking for bcm3510_writeB()
-Date: Tue,  1 Apr 2025 14:49:31 +0800
-Message-ID: <20250401064931.2104-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.42.0.windows.2
+	s=arc-20240116; t=1743490276; c=relaxed/simple;
+	bh=9xHfiiQ9CX/HzzEktMu5A0iEolf+MXYZ8jH5pD27M+k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pjjjwtxbJlf3DKu+knnqLHrC18oTv9Bzw/2EgwnkFZaoYAxBBDG+DUF2QB1BxwXxUCHbQerTJUb/I2iR/bRPR6llFavsoldCLN/i21ftT/ISgU8hOJ0IXNwe1hEvwU8DImIQy9OkuLyHAIAQJnRloAvngFx0L/F/f6tcQAqlrcQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=N+tfkURP; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="N+tfkURP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=THTQ
+	R1f0JeUKwgUzH7GEQ9rpKrrl1aXZPwMMMZGyJlU=; b=N+tfkURP5dpWHsuUgxo2
+	6WRFKkYiKA+mpBv//xsFUkGM9WQgcBkG41DkLXGozTJ5drKRBqQIQNKLSfpgGqFz
+	XkcKRoxX5q8iXF2sJnJFH8mYFk1mUBJkkArAFjSOsqU2IRB+6Vw4MpbXRfRdYAPI
+	bIsbTBVmEGZ06TfljVchVJ55wZEiYbxmtZ4q5nJ60xoBpj6BhmfPVBCgWIJ8tsIG
+	d2CJqlv96tY9xyKKYEQrpgOowMzIA9hd7BHikMZ8vbbAxusCZ6yzyssTtNDeoOSb
+	aihRwkNJEKjMZCbKVHeL4Jx6Oi2+FRHYKB7xTPVjHp+Rx6DeuMx8IO8vnG3TkvQw
+	8Q==
+Received: (qmail 1493694 invoked from network); 1 Apr 2025 08:51:09 +0200
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 1 Apr 2025 08:51:09 +0200
+X-UD-Smtp-Session: l3s3148p1@iGUw9rExupMgAwDPXwSgADIEZgbhJYA3
+Date: Tue, 1 Apr 2025 08:51:09 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Avri Altman <Avri.Altman@sandisk.com>,
+	"linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/5] mmc: core: Further avoid re-storing power to the
+ eMMC before a shutdown
+Message-ID: <Z-uM3aRHJ_8bwu0W@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Avri Altman <Avri.Altman@sandisk.com>,
+	"linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20250320140040.162416-1-ulf.hansson@linaro.org>
+ <20250320140040.162416-3-ulf.hansson@linaro.org>
+ <PH7PR16MB6196C3AC7A7B7CA99A70E7DDE5A02@PH7PR16MB6196.namprd16.prod.outlook.com>
+ <Z-pQj6ynnfMa77fM@shikoro>
+ <CAPDyKFr0MvQDxsi-Qd0F=1KuR4Gy6s5bhVdOXRt9K14Z9sO2Kw@mail.gmail.com>
+ <Z-pyfv_7gJ72YWhz@shikoro>
+ <CAPDyKFqW92wJ9P5cyO0vcV14dU5Q-JRGR=oKOS362crFy6y2Pw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:rQCowAD3njuMjOtnyJWqBA--.16943S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxJryfCw45Xw17tFyktrW3trb_yoW8Cry8pr
-	sFy395Z34jya1xGFnxtw18KFyrKw1rJ3yrKF93CF1xZr15Way7Xr1qqw43ta45AFWfJa13
-	Xw47JFWxCF9FyF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkC14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7CjxVAaw2AFwI0_
-	JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67
-	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIY
-	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14
-	v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8
-	JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUYCJmUU
-	UUU
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiDAUTA2frSE7cowAAss
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="zVeRWPMKjtJM9KFf"
+Content-Disposition: inline
+In-Reply-To: <CAPDyKFqW92wJ9P5cyO0vcV14dU5Q-JRGR=oKOS362crFy6y2Pw@mail.gmail.com>
 
-In  bcm3510_bert_reset(), the function performed multiple writes
-without checking the return value of bcm3510_writeB(). This could
-result in silent failures if the writes failed, leaving the BER
-counter in an undefined state.
 
-Add error checking for each bcm3510_writeB call and propagate any
-errors immediately. This ensures proper error handling and prevents
-silent failures during BER counter initialization.
+--zVeRWPMKjtJM9KFf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Fixes: 55f51efdb696 ("[PATCH] dvb: flexcop: add BCM3510 ATSC frontend support for Air2PC card")
-Cc: stable@vger.kernel.org
-Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
----
- drivers/media/dvb-frontends/bcm3510.c | 20 ++++++++++++++++----
- 1 file changed, 16 insertions(+), 4 deletions(-)
+Hi Ulf,
 
-diff --git a/drivers/media/dvb-frontends/bcm3510.c b/drivers/media/dvb-frontends/bcm3510.c
-index d935fb10e620..9e60020a8fea 100644
---- a/drivers/media/dvb-frontends/bcm3510.c
-+++ b/drivers/media/dvb-frontends/bcm3510.c
-@@ -270,10 +270,22 @@ static int bcm3510_bert_reset(struct bcm3510_state *st)
- 	if ((ret = bcm3510_readB(st,0xfa,&b)) < 0)
- 		return ret;
- 
--	b.BERCTL_fa.RESYNC = 0; bcm3510_writeB(st,0xfa,b);
--	b.BERCTL_fa.RESYNC = 1; bcm3510_writeB(st,0xfa,b);
--	b.BERCTL_fa.RESYNC = 0; bcm3510_writeB(st,0xfa,b);
--	b.BERCTL_fa.CNTCTL = 1; b.BERCTL_fa.BITCNT = 1; bcm3510_writeB(st,0xfa,b);
-+	b.BERCTL_fa.RESYNC = 0;
-+	ret = bcm3510_writeB(st, 0xfa, b);
-+	if (ret < 0)
-+		return ret;
-+	b.BERCTL_fa.RESYNC = 1;
-+	ret = bcm3510_writeB(st, 0xfa, b);
-+	if (ret < 0)
-+		return ret;
-+	b.BERCTL_fa.RESYNC = 0;
-+	ret = bcm3510_writeB(st, 0xfa, b);
-+	if (ret < 0)
-+		return ret;
-+	b.BERCTL_fa.CNTCTL = 1; b.BERCTL_fa.BITCNT = 1;
-+	ret = bcm3510_writeB(st, 0xfa, b);
-+	if (ret < 0)
-+		return ret;
- 
- 	/* clear residual bit counter TODO  */
- 	return 0;
--- 
-2.42.0.windows.2
+> mmc_card_can_poweroff_notify() would not be consistent with all the
+> other mmc_can_* helpers, so I rather stay with
+> mmc_can_poweroff_notify(), for now. If you think a rename makes sense,
+> I suggest we do that as a follow up and rename all the helpers.
 
+I vageuly recall that the commit I mentioned below (renaming hw_reset to
+card_hw_reset) should have been a start to do exactly this, renaming
+more of the helpers. I drifted away. Yet, I still think this would make
+MMC core code a lot easier to understand. I'll work on it today, timing
+seems good with rc1 on the horizon...
+
+> mmc_host_can_poweroff_notify() seems fine to me!
+
+Great!
+
+> > I do understand that. I don't see why this needs a change in the
+> > existing logic as Alan pointed out above.
+>=20
+> Aha. I get your point now. As stated in the commit message:
+>=20
+> Due to an earlier suspend request the eMMC may already have been properly
+> powered-off, hence we are sometimes leaving the eMMC in its current state.
+> However, in one case when the host has MMC_CAP2_FULL_PWR_CYCLE_IN_SUSPEND
+> set we may unnecessarily restore the power to the eMMC, let's avoid this.
+
+Oookay, now I see what you are aiming at. It seems I got the PWR_CYCLE
+flags wrong? I thought MMC_CAP2_FULL_PWR_CYCLE_IN_SUSPEND is only a
+subset of MMC_CAP2_FULL_PWR_CYCLE. The former can do the power cycles
+only in suspend, while the latter can do them in suspend and shutdown.
+So, in my thinking, full power cycle might also have the eMMC
+powered-off during shutdown. This is wrong?
+
+> Let me try to clarify the commit message a bit with this information.
+
+Whatever is the final outcome, it needs a comment in the code, I am
+quite sure.
+
+Happy hacking,
+
+   Wolfram
+
+
+--zVeRWPMKjtJM9KFf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmfrjNkACgkQFA3kzBSg
+KbalwBAAqyPr4ILqZMo6pF5dzx0TjS8qXy6FH2SsS1yDhe8R1Jlk6UNekm4QXAyp
+MR54odIhIHBUZdr8eejiCRv2kjs9gSmFSdup/USNdaDFOQ2+mgvhjwCUO+SwIIOh
+Y7A1ql3am1FY0uYQxeLhLPPF9Qr0CbeduInimJrnRHqiXzE0ashrg538yEYPypeH
+F5/2XjxPM7ISLeK/UZXhwcMNCN9Ae3ri55/ev8c8/BblCFacUS/JKlSvnadblW1g
+eKIdIXb0EckLZuPODLbkuJbX4VrHDf3N9cUp1eVA0ukSoSVXFsev6gzWMet29Iq+
+fBCRHVfnqggwShILKl/+FTJZtF0bBc2kGJ4ohQ6ltU8m5adpJQoRy7LBbgkb6WoW
+dHCj7d+WFddUh2377zsCm2erZnpWDiuQ7PObDqhfLkNEqaM27VYBEF4STZnpLON9
+EeSFETSWS4WrQb7qfw9n8N+dOBxcMhWTNirumVKVx+HnTSwXKdgNrmExeTmngjtf
+QQbjb4m6n9huJFnPB+YkPzr31dIEwOJSemAJmOHFlmxGUl64aVLV/UBcTTOkepb1
+nZPq6hWwpmz31CWPUAq7Ux6mye2fxUMesqyrT3W13ywf7Lr18iqbvM12QdTsqXcO
+TLc3YIkkuNorG7TH1wG2TrbiSW3Q339VMXwShIMAE1m/Flh5Gus=
+=7MEe
+-----END PGP SIGNATURE-----
+
+--zVeRWPMKjtJM9KFf--
