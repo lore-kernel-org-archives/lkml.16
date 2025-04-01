@@ -1,84 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48331204F65;
-	Tue,  1 Apr 2025 14:40:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6AFB204F6A;
+	Tue,  1 Apr 2025 14:40:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743518443; cv=none; b=phHUWqDMGvala0Fnrmwk/MBrOk1RRLE8ghNNoPi0x+kbL52iLb/LiedFjnVFzjmehtw8dGFJMSmyt9nxfn5aUUcPcBFrcPiIQOMmwxNz9gUFWo4Jg3TnOVeyL8g3rYcSCDy371ikt5Zz8qCtJUX0mmMvwScIKBxZQaJNhTYqxQQ=
+	t=1743518449; cv=none; b=JvLveu9IQJPb6AURcCYWc7Zvb/7mOjNTfaOizVjfiuQ8EevM6/Urg6SSdGak53DwCPwPgrLb9OTFp/IgXqVteeacBZzrjGEHsoqSp6gClK7tEC0yOS9xphL62UpQKZQu9UseDaCBym9g82VwwQ0TJPH3l4os1MrJGQ07LpmipjI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743518443; c=relaxed/simple;
-	bh=u+GoIqV+fjeT7z+mFVcbtJXhmpOHnpXRH54YzZYQbKA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Pj99mJICV5NeBZQnrePXe2erAAc/httIZzHq2nifxCJtSyj0sOamRDiRyKl0Cq1Oo0fw9FNqy+Z8eyWW3MIDJIemT03DswBKIcfIPBKubx8tr95IuXl3VnPxneFKZcbE+uLNhVvLA/kOsyLRO2DvW5+Mjqu8QNdtHw5JseeNlgg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D+MxI1w6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743518449; c=relaxed/simple;
+	bh=Mu9MHZa3fft97on/5nyitcoLVmWrL9uWsEPwIreNy8A=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=XL6ngi2WR62ZOX5/N1jYthNTf/QYsXbD/YykwAa1lCus5mzC9LZvOyxMPiVY316CYEwjkvrSkifuukEJOi9hQy68XLam8idhYjphghnAoVBAC0GeOhPiOHpWHTkvU2M2A+aPQn8R2Xp3kIv6R3gawNBm0Gl+FbHMWCxtVuIaRzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=Jz7A4Din; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D+MxI1w6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14F6BC4CEE4;
-	Tue,  1 Apr 2025 14:40:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743518440;
-	bh=u+GoIqV+fjeT7z+mFVcbtJXhmpOHnpXRH54YzZYQbKA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=D+MxI1w6UD4FjVaB2IKN1ytV1rYCOD1i65vy0QScvgGG07MwjSnNOfkfD9a8fB8Ty
-	 84YFO1uBWW2teT17JKiBs5FMxSnT8EnnX6dHFXv0fRmnGzSw8CKzjBD7ciU0ulj4Hf
-	 Nlxpnlnmk9U8lSD9MZkfRZ825X061HAGCBAfk6uiTx2Gpjua4kSENYMErDdi2FxVZT
-	 B1SxF2x8j8aLcKZX4s6rw/UDbcNdqCh8/v881SVWZjUGfoGWdaqNGtT0gKOhDotjXI
-	 YW4IC95G+xlIfSB9aWiaHPJ5XTBHU9yfKjS8SF+Qhl6RpKJkfL/yaBQm2pf+T/+r2Z
-	 TEDfG2wycXd+g==
-Date: Tue, 1 Apr 2025 16:40:33 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: linux-fsdevel@vger.kernel.org, jack@suse.cz, rafael@kernel.org, 
-	Ard Biesheuvel <ardb@kernel.org>, linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	James Bottomley <James.Bottomley@hansenpartnership.com>, mcgrof@kernel.org, hch@infradead.org, david@fromorbit.com, 
-	djwong@kernel.org, pavel@kernel.org, mingo@redhat.com, will@kernel.org, 
-	boqun.feng@gmail.com
-Subject: Re: [PATCH 0/6] power: wire-up filesystem freeze/thaw with
- suspend/resume
-Message-ID: <20250401-ballen-eulen-8d074cd8ca78@brauner>
-References: <20250331-work-freeze-v1-0-6dfbe8253b9f@kernel.org>
- <20250401-work-freeze-v1-0-d000611d4ab0@kernel.org>
- <20250401141407.GE5880@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Jz7A4Din"
+Received: from [127.0.0.1] ([76.133.66.138])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 531Edwfb3790452
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Tue, 1 Apr 2025 07:39:58 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 531Edwfb3790452
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025032001; t=1743518399;
+	bh=ZcgxQiKrDYB/GpBLGYEzKqgEh7UmE7j84JDP2jnMUIY=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=Jz7A4DinHGlQDcHQcNzNjsQopdBFsBQ7QUgSGXfKBsLhOGsq7mA8gv1rXwCFVS/Mg
+	 3HpHcFgEu7wLsCmPzMMIYUdsFbrSO6E1SQWqCu3eg1YhfuI3psqy9zmXT9M57TG/rw
+	 +0LvJkVNxTMwPWC0cYpvvyQj0Fc3RpmLVm5h7OAE+L6WCfmGPgpZff661s9zCmb0Wo
+	 ES6YqJpgUXXGCb1ZxYA+05YjHAbwrqUx72zaxCmQsKTlnOXJyi2zK8Oi4PIb82zl9a
+	 3JJfvEXa8iQg2SKYnL+qJHwHt+ly0vUL6rJD8fhrxhYUShn7QeNSB9fUeLGt+DOFn/
+	 jZVYMbG7KGklQ==
+Date: Tue, 01 Apr 2025 07:39:56 -0700
+From: "H. Peter Anvin" <hpa@zytor.com>
+To: "Xin Li (Intel)" <xin@zytor.com>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+CC: rafael@kernel.org, pavel@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+        luto@kernel.org, brgerst@gmail.com, jgross@suse.com,
+        torvalds@linux-foundation.org, xi.pardee@intel.com,
+        todd.e.brandt@intel.com, xin@zytor.com
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v2_1/1=5D_x86/fred=3A_Fix_system?=
+ =?US-ASCII?Q?_hang_during_S4_resume_with_FRED_enabled?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20250401075728.3626147-1-xin@zytor.com>
+References: <20250401075728.3626147-1-xin@zytor.com>
+Message-ID: <2C7E3D1D-0391-43DF-8D72-02C4C742573F@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250401141407.GE5880@noisy.programming.kicks-ass.net>
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 01, 2025 at 04:14:07PM +0200, Peter Zijlstra wrote:
-> On Tue, Apr 01, 2025 at 02:32:45AM +0200, Christian Brauner wrote:
-> > The whole shebang can also be found at:
-> > https://web.git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git/log/?h=work.freeze
-> > 
-> > I know nothing about power or hibernation. I've tested it as best as I
-> > could. Works for me (TM).
-> > 
-> > I need to catch some actual sleep now...
-> > 
-> > ---
-> > 
-> > Now all the pieces are in place to actually allow the power subsystem to
-> > freeze/thaw filesystems during suspend/resume. Filesystems are only
-> > frozen and thawed if the power subsystem does actually own the freeze.
-> 
-> Urgh, I was relying on all kthreads to be freezable for live-patching:
-> 
->   https://lkml.kernel.org/r/20250324134909.GA14718@noisy.programming.kicks-ass.net
-> 
-> So I understand the problem with freezing filesystems, but can't we
-> leave the TASK_FREEZABLE in the kthreads? The way I understand it, the
+On April 1, 2025 12:57:27 AM PDT, "Xin Li (Intel)" <xin@zytor=2Ecom> wrote:
+>Upon a wakeup from S4, the restore kernel starts and initializes the
+>FRED MSRs as needed from its perspective=2E  It then loads a hibernation
+>image, including the image kernel, and attempts to load image pages
+>directly into their original page frames used before hibernation unless
+>those frames are currently in use=2E  Once all pages are moved to their
+>original locations, it jumps to a "trampoline" page in the image kernel=
+=2E
+>
+>At this point, the image kernel takes control, but the FRED MSRs still
+>contain values set by the restore kernel, which may differ from those
+>set by the image kernel before hibernation=2E  Therefore, the image kerne=
+l
+>must ensure the FRED MSRs have the same values as before hibernation=2E
+>Since these values depend only on the location of the kernel text and
+>data, they can be recomputed from scratch=2E
+>
+>Reported-by: Xi Pardee <xi=2Epardee@intel=2Ecom>
+>Reported-by: Todd Brandt <todd=2Ee=2Ebrandt@intel=2Ecom>
+>Suggested-by: H=2E Peter Anvin (Intel) <hpa@zytor=2Ecom>
+>Signed-off-by: Xin Li (Intel) <xin@zytor=2Ecom>
+>Tested-by: Todd Brandt <todd=2Ee=2Ebrandt@intel=2Ecom>
+>Cc: Andy Lutomirski <luto@kernel=2Eorg>
+>Cc: Brian Gerst <brgerst@gmail=2Ecom>
+>Cc: Juergen Gross <jgross@suse=2Ecom>
+>Cc: Linus Torvalds <torvalds@linux-foundation=2Eorg>
+>Cc: stable@vger=2Ekernel=2Eorg # 6=2E9+
+>---
+>
+>Change in v2:
+>* Rewrite the change log and in-code comments based on Rafael's feedback=
+=2E
+>---
+> arch/x86/power/cpu=2Ec | 14 ++++++++++++++
+> 1 file changed, 14 insertions(+)
+>
+>diff --git a/arch/x86/power/cpu=2Ec b/arch/x86/power/cpu=2Ec
+>index 63230ff8cf4f=2E=2E08e76a5ca155 100644
+>--- a/arch/x86/power/cpu=2Ec
+>+++ b/arch/x86/power/cpu=2Ec
+>@@ -27,6 +27,7 @@
+> #include <asm/mmu_context=2Eh>
+> #include <asm/cpu_device_id=2Eh>
+> #include <asm/microcode=2Eh>
+>+#include <asm/fred=2Eh>
+>=20
+> #ifdef CONFIG_X86_32
+> __visible unsigned long saved_context_ebx;
+>@@ -231,6 +232,19 @@ static void notrace __restore_processor_state(struct=
+ saved_context *ctxt)
+> 	 */
+> #ifdef CONFIG_X86_64
+> 	wrmsrl(MSR_GS_BASE, ctxt->kernelmode_gs_base);
+>+
+>+	/*
+>+	 * Reinitialize FRED to ensure the FRED MSRs contain the same values
+>+	 * as before hibernation=2E
+>+	 *
+>+	 * Note, the setup of FRED RSPs requires access to percpu data
+>+	 * structures=2E  Therefore, FRED reinitialization can only occur after
+>+	 * the percpu access pointer (i=2Ee=2E, MSR_GS_BASE) is restored=2E
+>+	 */
+>+	if (ctxt->cr4 & X86_CR4_FRED) {
+>+		cpu_init_fred_exceptions();
+>+		cpu_init_fred_rsps();
+>+	}
+> #else
+> 	loadsegment(fs, __KERNEL_PERCPU);
+> #endif
+>
+>base-commit: 535bd326c5657fe570f41b1f76941e449d9e2062
 
-Yeah, we can.
-
-> power subsystem will first freeze the filesystems before it goes freeze
-> threads anyway. So them remaining freezable should not affect anything,
-> right?
-
-Yes. I've dropped the other patches. I've discussed this later
-downthread with Jan.
-> 
+Reviewed-by: H=2E Peter Anvin (Intel) <hpa@zytor=2Ecom>
