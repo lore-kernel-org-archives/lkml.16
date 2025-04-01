@@ -1,124 +1,83 @@
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CC9220E32B;
-	Tue,  1 Apr 2025 20:43:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 578671DBB2E
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 20:43:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743540208; cv=none; b=YIIyrUED0iIL1tbvA05BNKV8eD3ByuIU9rgR20eedpgORRdf9XQWH7aJarBNCKpkD0Um5U7pyYkdTM0dGKAfESldHd4rDoSRiKs8VWoXoovyTmZAnEY8H4cUbHwVtJTn8vRz3EQP/5QfygINikYqdlHOdE6Aeu9VZr5gLNI7p6M=
+	t=1743540233; cv=none; b=HjBWZgJ5dc15EmEWQERKT6PsRPzLJV5GbwRqDTqqeTE25fK//OUVXGxs6jWF7D37UMtnpS/cHl3I3Bu+JU/iVgZTeA7OsthIZ52VkOliVaoP9QGAkhBRQo0O4F/6O/3b8G0V/fu8XhxTyqJI2APmEfAN72s87fCiLkiKvmtgTv8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743540208; c=relaxed/simple;
-	bh=zQhKR8kVOAEtr8R3vm7SqBVF3sJt9l6H/kz5zrldLtk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DO96ICoYCqIZ/y+Bpbd2GlBAS8FQw7LjKI1FPt69T33i9PmHJ3ILRvNaM+yrm8SLQhhDQsdFH5N9dSuxIsXfQzgXM4EUM1y0u/Lc/+SaAD7EmBrelQFNj6rww1v+gMieHS46BR+0373OBefvo8BWYs2IQVHFnA0Boi2x5toMFMI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EtIJ4ee8; arc=none smtp.client-ip=209.85.208.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743540233; c=relaxed/simple;
+	bh=bxyJ0jm80x+23shdlsiqZktOEhqH/Xwg39wGtJJIclg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Dy5KzmpjEGiy4FdKFv27EqpedD9sZ1EiIZ+OwOc6YbkbJJrC+8y9gM+6Fb2pHRb92m9dBnCGwPVBFeG4hNhopISLh6KO0P3MkvF7agJ27xeMiOnwiXHGuS2f2YsWw/Zffbt8u7aL2HK2k316Sb3FTMG70zbbjCR2p1eKfhyAIjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SBcsO2oX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EtIJ4ee8"
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-30dd5a93b49so40446891fa.0;
-        Tue, 01 Apr 2025 13:43:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743540204; x=1744145004; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ncjIuT5qgvMbEBzrNid23ot35c1++uRBRoVD3rabhTU=;
-        b=EtIJ4ee8pUdS5iu5UvRHsMuLig308qB3C9KbcsQLS8MSP8t9nwIx00+t67F62KEEBO
-         cWM0PrJXffgonT8C26Yma1py09wL3M45IOc3P5sCFkp1i78IFBCuGynzzPCbv/ndfc57
-         msrZTSYCVWgahRVXs5tKJcTljiiUsshP6BF6EfFNxka2X6RFylsBkPpqrIiwkwER7k8U
-         mTOkba/j1G3+LlRmxjtmLWC+z7l8kSb/WrvfvNLd3OcPtnQh8y6ydqdQwHFh3rOOQpEO
-         oHH6oioD0geCseQ3rUxLrwLamxE4/KwZA6x0dRmgf/r1hdiYSNPROfi4/G6UOWncaRHd
-         kPlA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743540204; x=1744145004;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ncjIuT5qgvMbEBzrNid23ot35c1++uRBRoVD3rabhTU=;
-        b=nkIFohfO8zOeO5KxsiphauVcHRMRUAIbBhVxHZigKHSjKqQgi5dzJCmE0SFVHca5rz
-         3FQ72fhe1UgKvadtePzaVztaNZCBXmgffdlJBeWKt2AhWVBTBfZmmajZODJWOZ18sT6c
-         5BmHnFtK0BAV0vF8e5OYHinALPd7h0+QSAJVzoWSYE6JXSwCd56xT7hBd61byWrwwoe3
-         uAkkoJmfBmxYh9wuYzmOAIwLi6U1edRh2HHVGZNuOkX8PJ9G5Xyt7uVXczJZwP3ifJzc
-         aOe2nVhoY0PzGLAUQE/OHxl18m3/qzPOP007C+nwb28pSfA6l7fayD/H/2wuaCwqKdrt
-         VGNA==
-X-Forwarded-Encrypted: i=1; AJvYcCV1s4sdO5uNd/xm41H3+b052sfitkYkXK80sQmUrmlwQvYAkWdAGY6gz4N1kMNoWPkPvLZpWNQDgKqS7edL@vger.kernel.org, AJvYcCVEfKxjSTAp6klBX9+d/SVZt6vZkkGZZjMXuMgR8k4HjhnnOsCyPLYEd8W2zsCrLXjB6VG7ehDLPsp6zLg=@vger.kernel.org, AJvYcCVPzJGFJI0Add/pvuvF5w7vzJsMIMvTGOHBcRTVrll2zMq0bWcTbNTlGqrZmjLEIF6pFb4BUEHxgVyhTshq@vger.kernel.org, AJvYcCWlw+nAgPMeUOxFgMwvO1C/ZzoengDq3STafb+0D/CDWcfnsFJ52hSuYybSEY6BMlo3ni29yAAt@vger.kernel.org
-X-Gm-Message-State: AOJu0YwJ5MmyjkI6NdhP8u1Jo4aC/2bzuk33fDtQrHGDnpBRoejO7Ozk
-	pFzUIde4aXUprYC7sYsNeanY5b1H7OyYxEMV2t6y0lE0FKk19nUz
-X-Gm-Gg: ASbGncuulTOyEU4bwklovXrVn+5RUqiRoE81LhAjD9aUkrqEw021ejy8IRWaBHOOK4L
-	U98I3vfNsBD9wh5qjJmpJrBYDFHBgINJt52WnZAWRw7QrmrHsH6f/A0bDsD2eEwx9aTosyAm0oP
-	USKI9nSUpg/Cmy0598VtnT4dVo3MEnL54cp90syiIMO3yCyHmiAzvHD2cuLUbFypsv+Xrooloh/
-	m4sojEWno1uaNjSUdmjEC1BhoL4hm/b0+Qwxx3YOk+p2jgAHIjylQnc1pQQw0jw7jy7Dbk2+PoB
-	Q64gDz/oA9gCh0LD3OP5x+Rhfnk4hxak1ZXWlpqPrPgkd3uH9zvrIdbeO/LFTDMxi6jjnw==
-X-Google-Smtp-Source: AGHT+IELNpGF2l/VAeH0aVpMUHnDd9JFi7xa5NDaI1mW4wUTHj9x8t8WdiqPNbT5mJBgMSpH5VHtxQ==
-X-Received: by 2002:a05:651c:1602:b0:30b:b184:a8ef with SMTP id 38308e7fff4ca-30de024b43cmr43726451fa.14.1743540203883;
-        Tue, 01 Apr 2025 13:43:23 -0700 (PDT)
-Received: from localhost.localdomain ([87.249.25.136])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30dd2ab8581sm18308161fa.25.2025.04.01.13.43.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Apr 2025 13:43:22 -0700 (PDT)
-From: Evgeny Pimenov <pimenoveu12@gmail.com>
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Evgeny Pimenov <pimenoveu12@gmail.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Venkata Prasad Potturu <quic_potturu@quicinc.com>,
-	Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>,
-	linux-sound@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	lvc-patches@linuxtesting.org,
-	Fedor Pchelkin <pchelkin@ispras.ru>,
-	Mikhail Kobuk <m.kobuk@ispras.ru>,
-	Alexey Khoroshilov <khoroshilov@ispras.ru>,
-	stable@vger.kernel.org
-Subject: [PATCH] ASoC: qcom: Fix sc7280 lpass potential buffer overflow
-Date: Tue,  1 Apr 2025 23:40:58 +0300
-Message-Id: <20250401204058.32261-1-pimenoveu12@gmail.com>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SBcsO2oX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9D03C4CEE4;
+	Tue,  1 Apr 2025 20:43:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743540232;
+	bh=bxyJ0jm80x+23shdlsiqZktOEhqH/Xwg39wGtJJIclg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SBcsO2oXOhdtq+/FXdC+YtfpA96biVKM8pFYbTrR8uHCiFhPUxKu0QLfJTun1RBrs
+	 ZcJvk5f8qt6N1fkuu0xGIgjp0LzmS1fz8/cXHCTDd0YGTVcTJL4jT2lnGpN8ZDpGld
+	 nPIi4SymERxa8h5gFur9oeEvNRE59L5pu2sIrvu/7ugnpuVO3kEcfcJwsg87p43Hp/
+	 Ei85FdtEFVmWIShE3FTUpRu2pY3M9hgPWTX68ZBKMFylozj5Kxv2vZKWqUDiUuS4Yi
+	 PSmar83uwY4ND0jDwj7DtQatb/Ccj98Ezr8XGWK4FBQW4I/u9a1vBIFA8rfIiTaxDi
+	 8GuKhmWMAFcyQ==
+Date: Tue, 1 Apr 2025 22:43:47 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Mateusz Guzik <mjguzik@gmail.com>
+Cc: mingo@redhat.com, x86@kernel.org, linux-kernel@vger.kernel.org,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Uros Bizjak <ubizjak@gmail.com>, "H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [PATCH] x86: predict __access_ok() returning true
+Message-ID: <Z-xQAyPxQGvlg_hd@gmail.com>
+References: <20250401203029.1132135-1-mjguzik@gmail.com>
+ <Z-xOFuT9Sl6VuFYi@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z-xOFuT9Sl6VuFYi@gmail.com>
 
-Case values introduced in commit
-5f78e1fb7a3e ("ASoC: qcom: Add driver support for audioreach solution")
-cause out of bounds access in arrays of sc7280 driver data (e.g. in case
-of RX_CODEC_DMA_RX_0 in sc7280_snd_hw_params()).
 
-Redefine LPASS_MAX_PORTS to consider the maximum possible port id for
-q6dsp as sc7280 driver utilizes some of those values.
+* Ingo Molnar <mingo@kernel.org> wrote:
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
+> It's also the right place to have the hint: that user addresses are 
+> valid is the common case we optimize for.
+> 
+> Thanks,
+> 
+> 	Ingo
+> 
+>  arch/x86/include/asm/uaccess_64.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/include/asm/uaccess_64.h b/arch/x86/include/asm/uaccess_64.h
+> index c52f0133425b..4c13883371aa 100644
+> --- a/arch/x86/include/asm/uaccess_64.h
+> +++ b/arch/x86/include/asm/uaccess_64.h
+> @@ -54,7 +54,7 @@ static inline unsigned long __untagged_addr_remote(struct mm_struct *mm,
+>  #endif
+>  
+>  #define valid_user_address(x) \
+> -	((__force unsigned long)(x) <= runtime_const_ptr(USER_PTR_MAX))
+> +	likely((__force unsigned long)(x) <= runtime_const_ptr(USER_PTR_MAX))
 
-Fixes: 77d0ffef793d ("ASoC: qcom: Add macro for lpass DAI id's max limit")
-Cc: stable@vger.kernel.org # v6.0+
-Suggested-by: Mikhail Kobuk <m.kobuk@ispras.ru>
-Suggested-by: Alexey Khoroshilov <khoroshilov@ispras.ru>
-Signed-off-by: Evgeny Pimenov <pimenoveu12@gmail.com>
----
- sound/soc/qcom/lpass.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Should we go this way, this is the safe macro variant:
 
-diff --git a/sound/soc/qcom/lpass.h b/sound/soc/qcom/lpass.h
-index 27a2bf9a6613..de3ec6f594c1 100644
---- a/sound/soc/qcom/lpass.h
-+++ b/sound/soc/qcom/lpass.h
-@@ -13,10 +13,11 @@
- #include <linux/platform_device.h>
- #include <linux/regmap.h>
- #include <dt-bindings/sound/qcom,lpass.h>
-+#include <dt-bindings/sound/qcom,q6afe.h>
- #include "lpass-hdmi.h"
- 
- #define LPASS_AHBIX_CLOCK_FREQUENCY		131072000
--#define LPASS_MAX_PORTS			(LPASS_CDC_DMA_VA_TX8 + 1)
-+#define LPASS_MAX_PORTS			(DISPLAY_PORT_RX_7 + 1)
- #define LPASS_MAX_MI2S_PORTS			(8)
- #define LPASS_MAX_DMA_CHANNELS			(8)
- #define LPASS_MAX_HDMI_DMA_CHANNELS		(4)
--- 
-2.39.5
+   #define valid_user_address(x) \
+	(likely((__force unsigned long)(x) <= runtime_const_ptr(USER_PTR_MAX)))
+
+But this compiler bug sounds weird ...
+
+Thanks,
+
+	Ingo
