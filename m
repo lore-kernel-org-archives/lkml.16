@@ -1,162 +1,118 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-b5-smtp.messagingengine.com (fhigh-b5-smtp.messagingengine.com [202.12.124.156])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DBF7CA4B
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 10:02:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DA991EEA32;
+	Tue,  1 Apr 2025 10:02:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743501723; cv=none; b=XeM6hkzpJRzrYjhqZdyouzHp6+uwTEbO4Chs8WvsYeyvE39oGcr35v+E/AGQH0ZentVvQkJN+9Y2rrsspnS2LcjLAOxeGgQ/RvGHNt+EmkUmR5L7Y0+2gbtvgeRzm9gGd/ti6EFuFFk0UK7llc9+lzqCOLD8iHJ8sVfYp+Au/YA=
+	t=1743501741; cv=none; b=Ta7PxhFo9sPQmO41DVPTHL+NpQETg9c5lO9RzDRrMb5UMrS3m8EFSaVET9BrwJeCCsn+c8E+gl1hX1nFUdkretXOGjSMUmKs5Vgp0PvRGhd2K2ioZDQzll7ff1O57XndlyFtuFaphhGFTG/MMdv19I+kSZZOojy86tFJrlWn2tY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743501723; c=relaxed/simple;
-	bh=uYBajC+qlLcOjYg/yPgPNCAySkmNxl6At4OkNFko640=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RQQPoOq48Uwr+/LspVffKCIPaKKFNGevSHVWMt6wPn0p6sYdxWt9/neIgYMX1KTPaUJNkQV38KHPUPpUkdvLUrK1KqR6tNPoXM2ogwVJFZjsRvhmRv+vCp5pxcjitN5i22ouV8ffUegB+8lPocvwqsbYMqNUaILwWokjAQO6d80=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DFIXgANC; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1743501741; c=relaxed/simple;
+	bh=0G+OT2pQwUNKSHab5Fy4mnmlGrelRgXgUBd1aoOUvP0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BUeD7g/odjocHf0yMpRNKUo6hFLqAgIZ2NeesZOLF7IXFCo5OV5AZOU4VpzZ1DjTWscYfxAexcICgotfH0uyqPI0i2jU0qjT8drN+Ip5kssrnsGOCEZ+pENpszAFp/VFC6O7TFLyG0EWHwKykvwMKYVLkqHsTTkyfuaC4OFX6yU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=queasysnail.net; spf=pass smtp.mailfrom=queasysnail.net; dkim=pass (2048-bit key) header.d=queasysnail.net header.i=@queasysnail.net header.b=Qnit6ZkA; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=I1bf62y+; arc=none smtp.client-ip=202.12.124.156
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=queasysnail.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=queasysnail.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DFIXgANC"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2240b4de12bso81375785ad.2
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 03:02:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743501721; x=1744106521; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=wyjemxHYQVfV2RAp28JZowO/OFLohCsOjkUOahPABvs=;
-        b=DFIXgANCByvmXJTM1Wsq0wKHCmT6KdRLSydKrc1cDoyf6gw3GgDfk9YHXgd/u6HI1A
-         KeTeoRAFvKMFFqhG0ZHBDE0xdXLlpLrs/jH3cFe9YUnpSRPQYmyk5gH8jxoB1Fr5BIcQ
-         bw5UR0eeHcHyFdfSb9K7FM/1mVA+QREC5j0D/R9XcA5yG3FxfhHl4SaHrrGCGg9Y+XOS
-         mQ4ypb5mwVGX+uCMlWqgLafUFDiGW/DvS1HHLeDXSn/9zTKAVkR2ML6lwblW1fThwK5Z
-         dGr2/r1RrTXzz6DeujIhuv7+PnaC5dCjv9QqXlZ/kcfRvidmx3lq/4AvBcmmAhYho+Ii
-         XRmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743501721; x=1744106521;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wyjemxHYQVfV2RAp28JZowO/OFLohCsOjkUOahPABvs=;
-        b=VHbzEqLfpNf+2XZn3vh2yM9lvmaaBq2ihEUoKyG1TELvhnOzIyd/h0YhJqWGxrp72+
-         uWoWOS+Nu28REAp3ptGk6QW+7NJBYPDCyQQVxTxHeZzUI9QBU0ZydFoGUehEktUttpKg
-         +nvv8xh5c1gYa+AMeoKRcmVXkDKFfwEwdDNqF0fEFABxvVbaRdpYSINuBGdSQXMQCYel
-         su00N+QOi5aqORC9jb2GHryXBmaV5GOQS4cOqxxxaYrdzyysGRKznX3OwpJfVGSyDdUE
-         yrorPUzppiZ7iRtPxWK/7nD1040rFBixZwWtQayKCj0PjuvJ1zuYYtx9AlQD+i47uzf+
-         /+Hg==
-X-Forwarded-Encrypted: i=1; AJvYcCXG/+mncD3ieblSArJfTCEkdOsWvxmy/IT8m54NtUfxKVkYLtpUunHr4STXZTNulAMMxTqQ6GMGt1eUnyY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw/P8MSuMwVpnB6vtroH5nXKXABdSpbevxfJBoljXLc3+8vWGN9
-	ba280TjR0/27xX+y3EjbBFSRC37dbhOZKM0czZK2DLD8qynWgvcSukbjLNoU+hWN7Onuv9x1ean
-	jq/AqsX4gbcpVohBdysyjLzrt/ZZLHhIsZGv6kA==
-X-Gm-Gg: ASbGncvDecY0VzXNjUTWosP4Uf8jCNL4Pg4z3Kac6fdZSyrgWOO3oPTt+I9g9XRYwrB
-	2fp31Atrv2aX6mkMNBe5T+s+WsLAQRbbF7Ss+gkU0YPG4BFEjEJ6OQ7D0P2ULiKylcQkjcJfXTO
-	gtGQpFTa/DNJVXR2mg+LTzJdeovSs=
-X-Google-Smtp-Source: AGHT+IH4yoC0IXNJC0YNilNe/ARbknkDvKtfRQS06TMmC8WC5ANOsA0AGY+eH2ffVNsMurol4yN7DGOyBc3sRAf0eSo=
-X-Received: by 2002:aa7:88d2:0:b0:736:3be3:3d76 with SMTP id
- d2e1a72fcca58-7398041dafdmr16611300b3a.17.1743501720739; Tue, 01 Apr 2025
- 03:02:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=queasysnail.net header.i=@queasysnail.net header.b="Qnit6ZkA";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="I1bf62y+"
+Received: from phl-compute-07.internal (phl-compute-07.phl.internal [10.202.2.47])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id A9470254015C;
+	Tue,  1 Apr 2025 06:02:18 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-07.internal (MEProxy); Tue, 01 Apr 2025 06:02:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=queasysnail.net;
+	 h=cc:cc:content-type:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm3; t=1743501738; x=
+	1743588138; bh=naKOvTTnyh/Yn6zwyw/B/wVoUWu8X7hEjoOiqbRrAeY=; b=Q
+	nit6ZkA8iHx7Mn48PHhyEvKdumdVge8QJmXbVOL4C5/+TF0cL/hEe+PI36qlQ3v0
+	6MG7IL/rKBbp0ZaV1ulQhFJytOdQ5JZZ1Z9ZYoih8m109lhdfwIxjDT4uAnWqChU
+	uH9GN08pwFTvE+FX3NOMdmQXz3WQ5c+w3G+uOhpjlVAo4Tdxeta799JvdCfRKoUX
+	HwmWf/zOKOevymTamh3nHeVw+LZZ3D6jrGYMXuOITP4ZmWJk7n/LrKcJvyaoP5G/
+	gKxQFuVoCzpZgveWkYKzsd+YlttnFwcEaPVTObH8i1Ipfa0rNieiKm9ReueLsljT
+	3rjVrxTzoWxVyGyh7lPDA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+	1743501738; x=1743588138; bh=naKOvTTnyh/Yn6zwyw/B/wVoUWu8X7hEjoO
+	iqbRrAeY=; b=I1bf62y+BB6FEA6WzhMAvqoEIWoC6bKTPgHfdNy9p4yvyM5ZnhP
+	JjwNNSqto6qfIPbz4HfqfLI2sd8XLlo0oWh5UzQv2d00D9OFExCJamav1gwOieyJ
+	+U4k1i7tzrIJX3lk3cXlA/W++Xx8xFqNpykI/PB6tnoTNvbCrSX93ZjI7rrg2uAt
+	n5xW3tSa/U4jOP4gzu9PpubCHAx92GZXuwA7EkN+qwHy/n/73GUbOASgBUy4UL6x
+	fnStn3zCFoKLiqosopfnlWwNdfCI1GpizdDqsHlaqvSZQjV/GnQBCSLJRZRtZCLh
+	ZQFwoDsMvng4/ZWHi4wtwrrc4CPHqzJ5iHQ==
+X-ME-Sender: <xms:qrnrZ5BRn5c6Nf6IGBbup6Gzu98wgU5FNNCwg3QQKRBoyZpYyd3wAw>
+    <xme:qrnrZ3g20wqlTmIHjTB7kZBQ6K-roxoXNlNDETPZyZ0rK0lBtb0Y1xab-4LGgNtMF
+    NXsRLf_y_o1PQLu-fo>
+X-ME-Received: <xmr:qrnrZ0lZ3pwGYOZB3onQH8yOMEfAUt6Rja_iV-zVzJicIGLl1X_qer1KheTC>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddukedvheduucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddt
+    jeenucfhrhhomhepufgrsghrihhnrgcuffhusghrohgtrgcuoehsugesqhhuvggrshihsh
+    hnrghilhdrnhgvtheqnecuggftrfgrthhtvghrnhepuefhhfffgfffhfefueeiudegtdef
+    hfekgeetheegheeifffguedvuefffefgudffnecuvehluhhsthgvrhfuihiivgeptdenuc
+    frrghrrghmpehmrghilhhfrhhomhepshgusehquhgvrghshihsnhgrihhlrdhnvghtpdhn
+    sggprhgtphhtthhopedugedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheprghnth
+    honhhiohesohhpvghnvhhpnhdrnhgvthdprhgtphhtthhopehnvghtuggvvhesvhhgvghr
+    rdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrd
+    gtohhmpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehp
+    rggsvghnihesrhgvughhrghtrdgtohhmpdhrtghpthhtohepughonhgrlhgurdhhuhhnth
+    gvrhesghhmrghilhdrtghomhdprhgtphhtthhopehshhhurghhsehkvghrnhgvlhdrohhr
+    ghdprhgtphhtthhopehrhigriigrnhhovhdrshdrrgesghhmrghilhdrtghomhdprhgtph
+    htthhopegrnhgurhgvfidonhgvthguvghvsehluhhnnhdrtghh
+X-ME-Proxy: <xmx:qrnrZzwGE3HVSm-s5eWnY69wBxKE8Bk0UpFfO_vVmJtOcJtR8UJNdg>
+    <xmx:qrnrZ-RTR0BQAVYHsBPgYhx6G3YwxiIUuqCnqI8ZnCxFyJG78PGcIw>
+    <xmx:qrnrZ2Ys1ALpmj9bojQqmbs_TgR2g9UiHc8h0h5Xq6oXyUu1vc60Ow>
+    <xmx:qrnrZ_Qc4KhnYyJNbJS-5QqhGfiQfSsgbbyC4YlGzrdJL79luwoOmQ>
+    <xmx:qrnrZ6pL-5RsRoLjbDzjG6MOgtWHQqodR5W1I8fpAJwM9-NnBBundA0h>
+Feedback-ID: i934648bf:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 1 Apr 2025 06:02:17 -0400 (EDT)
+Date: Tue, 1 Apr 2025 12:02:15 +0200
+From: Sabrina Dubroca <sd@queasysnail.net>
+To: Antonio Quartulli <antonio@openvpn.net>
+Cc: netdev@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Donald Hunter <donald.hunter@gmail.com>,
+	Shuah Khan <shuah@kernel.org>, ryazanov.s.a@gmail.com,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Simon Horman <horms@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, Xiao Liang <shaw.leon@gmail.com>,
+	David Ahern <dsahern@kernel.org>
+Subject: Re: [PATCH net-next v24 11/23] ovpn: implement TCP transport
+Message-ID: <Z-u5p_QLkLKtcxsb@krikkit>
+References: <20250318-b4-ovpn-v24-0-3ec4ab5c4a77@openvpn.net>
+ <20250318-b4-ovpn-v24-11-3ec4ab5c4a77@openvpn.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250311170451.611389-1-leo.yan@arm.com> <20250311170451.611389-3-leo.yan@arm.com>
-In-Reply-To: <20250311170451.611389-3-leo.yan@arm.com>
-From: Mike Leach <mike.leach@linaro.org>
-Date: Tue, 1 Apr 2025 11:01:49 +0100
-X-Gm-Features: AQ5f1Jp1RW5fkG8Kbz_MFd1dM6zqYns3yVh04MaQfoZg_wzQM8iHEY3uu07DATc
-Message-ID: <CAJ9a7VjcWHiRQmWW3sWTf8iBWMr5K3zCCJ6RF=i6bU+qO154qA@mail.gmail.com>
-Subject: Re: [PATCH v3 2/6] coresight: Introduce pause and resume APIs for source
-To: Leo Yan <leo.yan@arm.com>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>, James Clark <james.clark@linaro.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250318-b4-ovpn-v24-11-3ec4ab5c4a77@openvpn.net>
 
-On Tue, 11 Mar 2025 at 17:05, Leo Yan <leo.yan@arm.com> wrote:
->
-> Introduce APIs for pausing and resuming trace source and export as GPL
-> symbols.
->
-> Signed-off-by: Leo Yan <leo.yan@arm.com>
-> ---
->  drivers/hwtracing/coresight/coresight-core.c | 22 ++++++++++++++++++++
->  drivers/hwtracing/coresight/coresight-priv.h |  2 ++
->  include/linux/coresight.h                    |  4 ++++
->  3 files changed, 28 insertions(+)
->
-> diff --git a/drivers/hwtracing/coresight/coresight-core.c b/drivers/hwtracing/coresight/coresight-core.c
-> index fb43ef6a3b1f..d4c3000608f2 100644
-> --- a/drivers/hwtracing/coresight/coresight-core.c
-> +++ b/drivers/hwtracing/coresight/coresight-core.c
-> @@ -367,6 +367,28 @@ void coresight_disable_source(struct coresight_device *csdev, void *data)
->  }
->  EXPORT_SYMBOL_GPL(coresight_disable_source);
->
-> +void coresight_pause_source(struct coresight_device *csdev)
+2025-03-18, 02:40:46 +0100, Antonio Quartulli wrote:
+> +static void ovpn_tcp_rcv(struct strparser *strp, struct sk_buff *skb)
 > +{
-> +       if (!coresight_is_percpu_source(csdev))
-> +               return;
-> +
-> +       if (source_ops(csdev)->pause_perf)
-> +               source_ops(csdev)->pause_perf(csdev);
-> +}
-> +EXPORT_SYMBOL_GPL(coresight_pause_source);
-> +
-> +int coresight_resume_source(struct coresight_device *csdev)
-> +{
-> +       if (!coresight_is_percpu_source(csdev))
-> +               return -EOPNOTSUPP;
-> +
-> +       if (!source_ops(csdev)->resume_perf)
-> +               return -EOPNOTSUPP;
-> +
-> +       return source_ops(csdev)->resume_perf(csdev);
-> +}
-> +EXPORT_SYMBOL_GPL(coresight_resume_source);
-> +
->  /*
->   * coresight_disable_path_from : Disable components in the given path beyond
->   * @nd in the list. If @nd is NULL, all the components, except the SOURCE are
-> diff --git a/drivers/hwtracing/coresight/coresight-priv.h b/drivers/hwtracing/coresight/coresight-priv.h
-> index 82644aff8d2b..2d9baa9d8228 100644
-> --- a/drivers/hwtracing/coresight/coresight-priv.h
-> +++ b/drivers/hwtracing/coresight/coresight-priv.h
-> @@ -249,5 +249,7 @@ void coresight_add_helper(struct coresight_device *csdev,
->  void coresight_set_percpu_sink(int cpu, struct coresight_device *csdev);
->  struct coresight_device *coresight_get_percpu_sink(int cpu);
->  void coresight_disable_source(struct coresight_device *csdev, void *data);
-> +void coresight_pause_source(struct coresight_device *csdev);
-> +int coresight_resume_source(struct coresight_device *csdev);
->
->  #endif
-> diff --git a/include/linux/coresight.h b/include/linux/coresight.h
-> index d79a242b271d..c95c72e07e02 100644
-> --- a/include/linux/coresight.h
-> +++ b/include/linux/coresight.h
-> @@ -398,6 +398,8 @@ struct coresight_ops_link {
->   *             is associated to.
->   * @enable:    enables tracing for a source.
->   * @disable:   disables tracing for a source.
-> + * @resume_perf: resumes tracing for a source in perf session.
-> + * @pause_perf:        pauses tracing for a source in perf session.
->   */
->  struct coresight_ops_source {
->         int (*cpu_id)(struct coresight_device *csdev);
-> @@ -405,6 +407,8 @@ struct coresight_ops_source {
->                       enum cs_mode mode, struct coresight_path *path);
->         void (*disable)(struct coresight_device *csdev,
->                         struct perf_event *event);
-> +       int (*resume_perf)(struct coresight_device *csdev);
-> +       void (*pause_perf)(struct coresight_device *csdev);
->  };
->
->  /**
-> --
-> 2.34.1
->
+[...]
+> +	/* we need the first byte of data to be accessible
 
-Reviewed-by: Mike Leach <mike.leach@linaro.org>
+nit: and "first byte" here too (that comment could maybe just be dropped?)
+
+> +	 * to extract the opcode and the key ID later on
+> +	 */
+> +	if (!pskb_may_pull(skb, OVPN_OPCODE_SIZE)) {
+> +		net_warn_ratelimited("%s: packet too small to fetch opcode for peer %u\n",
+> +				     netdev_name(peer->ovpn->dev), peer->id);
+> +		goto err;
+> +	}
+
 -- 
-Mike Leach
-Principal Engineer, ARM Ltd.
-Manchester Design Centre. UK
+Sabrina
