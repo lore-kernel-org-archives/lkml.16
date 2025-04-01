@@ -1,205 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 089111F91CD;
-	Tue,  1 Apr 2025 12:14:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5336C202F9A
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 12:14:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743509648; cv=none; b=odbC3U4GVkP1U3P+PwuGJoFnh6kSqWBDMv9OZ8yIlmJtBoMQmZZGqxWrfF54aoDQyIQn/R/QLzdZIMPi5KRGHVBkEihp+kBhmZ86N+2z20seRfMI9oqVqiXuyV+cb5hIJjp9WDvVgbK7VTLZ2v1p1xiCur66FX6gpH5WahUFAB0=
+	t=1743509652; cv=none; b=O8Kg261JKziIIn1z9NLG84GMziRPPqgs2Dv9vSx1VsZadtUhA+3KvD5R9/j8tdIJaaI4kEEZVesbACS0wf2CcoBWjIuZ5Zue4vT/PncpgEsjBaVgDhLmQNHnwRILw0bAvtOsAneZWFzyiMOcy3XF/mry01jhfZjiGK3axJuw/1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743509648; c=relaxed/simple;
-	bh=cW+SgWG4t5icqmSDD5B28BvPyfh8yfBleexRLseF73k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Z7IduuxXE6+B03ZWxDxhXZtOyxF3EIh21tfOgn8mOSIk85iQCpleZZI+Ut1KJV68ChvdRIbf3Th+PBJCuY9oGRsfj0cTp/PeqcpmTvAwZMHm1XVXihkFeXQXgDhZvORfffnRwn/2KRsB5Mtvfk69uqXh1+BrOumBBZal1qg+LsM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m/m2p2JW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743509652; c=relaxed/simple;
+	bh=YGXFqr4IfFV6Vu7eYniP5uzR9SdS+C3yWU1Sa7ToHIo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Gr+QGGp5OBzCh9YdusPFeMvFypaaSpQJovSvbazIkBR6FoDeq02KzPBhwnM9DStMm43AStWFF08DNMO/ObJZHNpnz08jz0QJa/IUwGGzJNT5CV0930069hme6DAmmCW2oq4UTzsvulzN1QkEL6IJC+FZO2qynvUisA6Vt2UYMa4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=A2EDj0IM; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m/m2p2JW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C69DC4CEED;
-	Tue,  1 Apr 2025 12:14:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743509646;
-	bh=cW+SgWG4t5icqmSDD5B28BvPyfh8yfBleexRLseF73k=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=m/m2p2JWYS9MkVHRFy5prVSfpIMH5SY3jiiWZrPRgGhfd0KNH/PA1tOg7S+KrJxkk
-	 JSX0cD90OB4srHDpp2NCGpyjzGIwACeD0oMeDEI8FNeU3Te/nSYZJ7IQ8PWzdUMktP
-	 CDXdXN96p45hx7W98t9osxv7ohk1bS66TN+4GeSI2mFN8/2rYf0/Ma6kRPhVynCyUW
-	 70E0A1eIbNihkaJVcogpm4i7xO3+1O18jP3ZXUGFwY/oCWWK2b3Xjxd35+2ElDER5Q
-	 hbUeOONMmPAY/FcwTQ0BwB/gJZhc+EhEcCLduC0klRJrH0mL52uS+E/hvi0irNyREs
-	 YZcmhVD7KYUvA==
-Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-2c818343646so3537995fac.3;
-        Tue, 01 Apr 2025 05:14:06 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUMrZQzrAu7UkbdnV/sC/nmXueENngvryKfXSR8c7+lxXDHT3/NNRI306Q0JNOctq+FympXMSN+I4U=@vger.kernel.org, AJvYcCWFhajWfdqvZaYPT/zH0Vj5js9X4Gqa3IKNn6/w1fTswFzj2pOvnSLz3y5vXLCJkglVOlxLJTJ5yAfn@vger.kernel.org, AJvYcCXI9bZWAUzTvzL4n7lb4DLNJNkiNwFK/d3j1sy3icOgrgAySbVKKbZJouOVn+rBnfGRttABtWWjQLF+zjJB@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywhi0w1DlNHixMHdFhSJxS3ibbmRy8phzYa/n0PS+XwaunhDKAn
-	1DNa2yJFo6P/dnsAxSytlBRcrjQlEqvvIFjok9RRooez/jvxpMNmigIwnjQiLXyG2DZz3lY3gHi
-	krl3gTgaVXEMh12dBaLf00FNzqnE=
-X-Google-Smtp-Source: AGHT+IGOlogupRrW1ILu3k/BWzEUrlfnOQdl3bgoOraLGfT5cXQwFCdTo4dpWOe+YYaMJLSMdHaLzj7VnVnNwllSJKU=
-X-Received: by 2002:a05:6870:330a:b0:29e:69a9:8311 with SMTP id
- 586e51a60fabf-2cbcf7e09acmr7956746fac.36.1743509645617; Tue, 01 Apr 2025
- 05:14:05 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A2EDj0IM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743509649;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=bobstMjPMV8DhfUNqC1sgNZKJxQFcOqPnhEWn4RzBRc=;
+	b=A2EDj0IMDQneKmVvVrctFKC9v7sIsHQRZmF0BmosiRvaFrCgStTAd+o2bgaZvg98SDM1OD
+	B/GKLhM7UG1w5YE3hOGRwCJ87O++4yn6gmXmHPw3R11cnMYSJqRHEKypS5kkRazGweHudh
+	gpFZJvEV6XRiLVuinljrWAjZ2JODunA=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-474-KiF_w3H7M9-DhaM6JA8xSg-1; Tue, 01 Apr 2025 08:14:06 -0400
+X-MC-Unique: KiF_w3H7M9-DhaM6JA8xSg-1
+X-Mimecast-MFC-AGG-ID: KiF_w3H7M9-DhaM6JA8xSg_1743509645
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-ac2db121f95so443885166b.1
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 05:14:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743509645; x=1744114445;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=bobstMjPMV8DhfUNqC1sgNZKJxQFcOqPnhEWn4RzBRc=;
+        b=cte75OxQmHTuc28OQBNoFI1xfW5+IbGW35WxwsCUulpnfIPydjYCorf/yn6I1vcQzB
+         SAMpws1tavX/XmgHa3BlMiUiGFxG65Yy4gwMqdxF/wp4EQe0TBKT17I3PG4IWi4HhsnR
+         JNTThdlMCKKxAg0sDP8WdFjYZQh43Dud+t4QnEMiYmKZ8hSho5DUPMb85H+hsUjnFtsJ
+         8UTKuKWN5afry7to7aF7Xu86BuKJ1FeBQ+xCA00lGdi7Wv9/jV5BBf5FuPUxI24Ca7T5
+         CTQN2G9cyQW0xLTZEM7OgVbB8vI/vYnpBkQ41IvkQ+YP3xh6L2J/odd5DhpDjdnu26zU
+         fSgA==
+X-Forwarded-Encrypted: i=1; AJvYcCXQBIp4p7a+uHJeaVkpFUc3jvoSWjB74wfwDNhkoFExzSQwJf4bm8LuDvd0ZjmEhVjdaKRDlTG4c1hsUqo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YziYUFxnvLqWvsF1UkqeqqBkhCG3DclX9D8buSxuusDFi+QFC+m
+	6a78BBelh7xDgBasKG3IFLpr1MHZVUZ9iGdwLizFV+8FrI8gh5ixKEqo7uOZVGd9Et4WX3Rx97e
+	EDyJuw7BsdLbtCsFFt7Me/gdWEK3m+lyMYqsF8WuplX1PnqCjn69O5tMbzCSKAQ==
+X-Gm-Gg: ASbGncvATdjZ29CXSiRWEsl5Vujyk4ZCZZBq0sAR2GVtrVMvCJcVDR4IojZSHwP+pY1
+	LPSOBTmB7mM6LFeKg6kvsN2WCA4DkHcCq8WI2p05VWr795e1PFyTSXT6wHPohvSn17SHJ1aLOZ9
+	xtKifzXqZZ+s5az38XqL6dqMbHJt3ZzhP2cwch4N/ZXzYQodAdc6/IttkO03EW8VbL2ZeeF6D0p
+	xf2BLIBz2GN4X3uebz8K5MZWP0zx7dkrbTh1nns81KxW1Nq3uxgqIZZPC2IFMYe1A8mhnpF5DL6
+	O180S5GwR02XoB7FaJwyEqWO320bDbjyHXd9jgokPO1kCae7BE/kDp4w+XVY3kM=
+X-Received: by 2002:a17:907:7f0d:b0:ac7:150b:57b2 with SMTP id a640c23a62f3a-ac738b61acfmr1115335066b.41.1743509644914;
+        Tue, 01 Apr 2025 05:14:04 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHAUNzsyCaoMuUKp8KrX5TmH5LqHQTBd4duJrOAEcTk1GtfF5/Q9pgFHfstQ4EV56ENzCLV9A==
+X-Received: by 2002:a17:907:7f0d:b0:ac7:150b:57b2 with SMTP id a640c23a62f3a-ac738b61acfmr1115332366b.41.1743509644468;
+        Tue, 01 Apr 2025 05:14:04 -0700 (PDT)
+Received: from lbulwahn-thinkpadx1carbongen9.rmtde.csb ([2a02:810d:7e01:ef00:bf5b:f273:a506:f71f])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7192ea03esm753963866b.84.2025.04.01.05.14.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Apr 2025 05:14:03 -0700 (PDT)
+From: Lukas Bulwahn <lbulwahn@redhat.com>
+X-Google-Original-From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+To: Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S . Miller" <davem@davemloft.net>,
+	Hannes Reinecke <hare@kernel.org>,
+	Keith Busch <kbusch@kernel.org>,
+	Eric Biggers <ebiggers@kernel.org>,
+	linux-crypto@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Lukas Bulwahn <lukas.bulwahn@redhat.com>
+Subject: [PATCH] crypto: Kconfig - correct references in config CRYPTO_HKDF
+Date: Tue,  1 Apr 2025 14:13:54 +0200
+Message-ID: <20250401121354.20897-1-lukas.bulwahn@redhat.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250328143040.9348-1-ggherdovich@suse.cz> <20250328143040.9348-2-ggherdovich@suse.cz>
- <SJ0PR11MB66228319834B1C7B48FCE52EF5AD2@SJ0PR11MB6622.namprd11.prod.outlook.com>
- <CAJZ5v0gC3DzanSdPqQiJ4JQppgNeRA7Z9Cge7NxmTO_shoUyOA@mail.gmail.com> <7a14ea42462a346958954f328933f583dcf9cb52.camel@intel.com>
-In-Reply-To: <7a14ea42462a346958954f328933f583dcf9cb52.camel@intel.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Tue, 1 Apr 2025 14:13:54 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0juH2kYx-fyyfoFLBTjg30y59Dwj1wBYXxuHvU2c7X31w@mail.gmail.com>
-X-Gm-Features: AQ5f1JqInvfmF-dEU2O33yfuIWE_7Znqodgm49GlPYWEkfdKphYD_-K3cc_SD6g
-Message-ID: <CAJZ5v0juH2kYx-fyyfoFLBTjg30y59Dwj1wBYXxuHvU2c7X31w@mail.gmail.com>
-Subject: Re: [PATCH 2/2] ACPI: processor: idle: Remove obsolete comment
-To: "Zhang, Rui" <rui.zhang@intel.com>
-Cc: "rafael@kernel.org" <rafael@kernel.org>, "ggherdovich@suse.cz" <ggherdovich@suse.cz>, 
-	"linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "lenb@kernel.org" <lenb@kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 1, 2025 at 2:25=E2=80=AFAM Zhang, Rui <rui.zhang@intel.com> wro=
-te:
->
-> On Mon, 2025-03-31 at 14:07 +0200, Rafael J. Wysocki wrote:
-> > On Mon, Mar 31, 2025 at 9:38=E2=80=AFAM Zhang, Rui <rui.zhang@intel.com=
-> wrote:
-> > >
-> > > > -----Original Message-----
-> > > > From: Giovanni Gherdovich <ggherdovich@suse.cz>
-> > > > Sent: Friday, March 28, 2025 10:31 PM
-> > > > To: Rafael J . Wysocki <rafael@kernel.org>; Zhang, Rui
-> > > > <rui.zhang@intel.com>
-> > > > Cc: Len Brown <lenb@kernel.org>; Giovanni Gherdovich
-> > > > <ggherdovich@suse.cz>; linux-acpi@vger.kernel.org; linux-
-> > > > kernel@vger.kernel.org; linux-pm@vger.kernel.org
-> > > > Subject: [PATCH 2/2] ACPI: processor: idle: Remove obsolete comment
-> > > > Importance: High
-> > > >
-> > > > Since commit 496121c02127e9c460b436244c38260b044cc45a ("ACPI:
-> > > > processor:
-> > > > idle: Allow probing on platforms with one ACPI C-state"), the
-> > > > comment
-> > > > doesn't reflect the code anymore; remove it.
-> > > >
-> > > > Signed-off-by: Giovanni Gherdovich <ggherdovich@suse.cz>
-> > > > ---
-> > > >  drivers/acpi/processor_idle.c | 4 ----
-> > > >  1 file changed, 4 deletions(-)
-> > > >
-> > > > diff --git a/drivers/acpi/processor_idle.c
-> > > > b/drivers/acpi/processor_idle.c
-> > > > index b181f7fc2090..2a076c7a825a 100644
-> > > > --- a/drivers/acpi/processor_idle.c
-> > > > +++ b/drivers/acpi/processor_idle.c
-> > > > @@ -482,10 +482,6 @@ static int
-> > > > acpi_processor_get_cstate_info(struct
-> > > > acpi_processor *pr)
-> > > >
-> > > >       pr->power.count =3D acpi_processor_power_verify(pr);
-> > > >
-> > > > -     /*
-> > > > -      * if one state of type C2 or C3 is available, mark this
-> > > > -      * CPU as being "idle manageable"
-> > > > -      */
-> > > >       for (i =3D 1; i < ACPI_PROCESSOR_MAX_POWER; i++) {
-> > > >               if (pr->power.states[i].valid) {
-> > > >                       pr->power.count =3D i;
-> > > > --
-> > > > 2.43.0
-> > >
-> > > I think we can clean up a bit more. How about the patch below?
-> > >
-> > > From 115d3a07febff32eed49f9343ef111e7e1452f9d Mon Sep 17 00:00:00
-> > > 2001
-> > > From: "Zhang, Rui" <rui.zhang@intel.com>
-> > > Date: Mon, 31 Mar 2025 07:29:57 +0000
-> > > Subject: [PATCH] ACPI: processor: idle: Simplify
-> > >  acpi_processor_get_cstate_info() logic
-> > >
-> > > Since commit 496121c02127 ("ACPI: processor: idle: Allow probing on
-> > > platforms with one ACPI C-state"), acpi_idle driver can be probed
-> > > with
-> > > C1 only.
-> > >
-> > > Optimize the logic for setting pr->power.count and pr->flags.power by
-> > > 1. unconditionally set pr->flags.power leveraging the fact that C1 is
-> > >    always valid after acpi_processor_get_power_info_default().
-> > > 2. update acpi_processor_power_verify() to return the highest valid
-> > >    C-state directly.
-> > >
-> > > No functional change intended.
-> > >
-> > > Signed-off-by: Zhang Rui <rui.zhang@intel.com>
-> > > ---
-> > >  drivers/acpi/processor_idle.c | 15 ++-------------
-> > >  1 file changed, 2 insertions(+), 13 deletions(-)
-> > >
-> > > diff --git a/drivers/acpi/processor_idle.c
-> > > b/drivers/acpi/processor_idle.c
-> > > index 698897b29de2..7ce8c3802937 100644
-> > > --- a/drivers/acpi/processor_idle.c
-> > > +++ b/drivers/acpi/processor_idle.c
-> > > @@ -442,7 +442,7 @@ static int acpi_processor_power_verify(struct
-> > > acpi_processor *pr)
-> > >
-> > >                 lapic_timer_check_state(i, pr, cx);
-> > >                 tsc_check_state(cx->type);
-> > > -               working++;
-> > > +               working =3D i;
-> >
-> > What if some states are skipped because they are invalid?  'working'
-> > can be less than 'i' then AFAICS.
->
-> yes, but please refer to my comments here and below,
->
-> 1. 'working' is used as return value only in acpi_processor_power_verify(=
-).
->
-> >
-> > >         }
-> > >
-> > >         if (buggy_latency) {
-> > > @@ -457,7 +457,6 @@ static int acpi_processor_power_verify(struct
-> > > acpi_processor *pr)
-> > >
-> > >  static int acpi_processor_get_cstate_info(struct acpi_processor *pr)
-> > >  {
-> > > -       unsigned int i;
-> > >         int result;
-> > >
-> > >
-> > > @@ -477,17 +476,7 @@ static int acpi_processor_get_cstate_info(struct
-> > > acpi_processor *pr)
-> > >         acpi_processor_get_power_info_default(pr);
-> > >
-> > >         pr->power.count =3D acpi_processor_power_verify(pr);
->
-> 2. acpi_processor_get_cstate_info(), which is the only caller of
-> acpi_processor_power_verify(), use this return value to set
-> pr->power.count.
+From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
 
-So far so good.
+Commit 3241cd0c6c17 ("crypto,fs: Separate out hkdf_extract() and
+hkdf_expand()") adds the new config option CRYPTO_HKDF, which intends to
+select further hash algorithms when crypto manager tests are enabled.
 
-> > > -
-> > > -       /*
-> > > -        * if one state of type C2 or C3 is available, mark this
-> > > -        * CPU as being "idle manageable"
-> > > -        */
-> > > -       for (i =3D 1; i < ACPI_PROCESSOR_MAX_POWER; i++) {
-> > > -               if (pr->power.states[i].valid) {
-> > > -                       pr->power.count =3D i;
->
-> 3. use a loop to override pr->power.count with the index of the highest
-> valid state
+However, the select command accidentally refers to
+CONFIG_CRYPTO_MANAGER_DISABLE_TESTS with the CONFIG prefix, whereas the
+references here in the Kconfig file work without the CONFIG prefix.
 
-I see.
+Correct the references here to its proper form.
 
-> So I'm proposing to return the index of the highest valid state directly
-> in acpi_processor_power_verify() and then we don't need this loop any
-> more.
+Fixes: 3241cd0c6c17 ("crypto,fs: Separate out hkdf_extract() and hkdf_expand()")
+Signed-off-by: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+---
+ crypto/Kconfig | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-OK, so I'd prefer to first rename power.count to power.max_index
-(which it really is) and then make the changes you have proposed.
+diff --git a/crypto/Kconfig b/crypto/Kconfig
+index dbf97c4e7c59..f601a4ec6d1a 100644
+--- a/crypto/Kconfig
++++ b/crypto/Kconfig
+@@ -143,8 +143,8 @@ config CRYPTO_ACOMP
+ 
+ config CRYPTO_HKDF
+ 	tristate
+-	select CRYPTO_SHA256 if !CONFIG_CRYPTO_MANAGER_DISABLE_TESTS
+-	select CRYPTO_SHA512 if !CONFIG_CRYPTO_MANAGER_DISABLE_TESTS
++	select CRYPTO_SHA256 if !CRYPTO_MANAGER_DISABLE_TESTS
++	select CRYPTO_SHA512 if !CRYPTO_MANAGER_DISABLE_TESTS
+ 	select CRYPTO_HASH2
+ 
+ config CRYPTO_MANAGER
+-- 
+2.49.0
+
