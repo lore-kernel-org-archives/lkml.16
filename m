@@ -1,97 +1,218 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA5D51F930;
-	Tue,  1 Apr 2025 13:30:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D7B61F930
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 13:31:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743514251; cv=none; b=iRRQPn2z6TP0WryxBpwNccY480mT95cUU41pLydxvi/msgAu9bFuo1pIhBDBK+F3tz+L59uRUlc5mkZtegMWzeODvgbfRDUsDMzmIUwZO68qhmsnbY7pND7VjYZO1hp2Gs7qt+6ZXC0XCtWQb20/z/HH01auw/wHTSb7gQg09vI=
+	t=1743514315; cv=none; b=m2Apt1ptN4jLLWpLbTluloidvmctNVpuNx6e/B7LlMRQUWBdxWlsQP5HbFfb0DKbsMiljYIHvJVHYu+jX4BleemdLm6kqAHiWS0jROFx0SMZzAf2ZH9YUUHtwb1JNZLPQF4h4w4RS3gg8KmoOdSUkkta8UUfSeSIrVN7oqwUFPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743514251; c=relaxed/simple;
-	bh=Ul6lJvNEHBV/pZeVWxl97I6QputJg4xYguuegwagemc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=pvM819CeKKrmCxS7j1GG+CSKBk0l6V0H+FdyNS8ByRjyotnOTdFbIsn3u8/1TCTdrf9UeABjjWebbU6j8EEAIOBiHPj4zT6ktlXrXgHA2VZVjy3sGLJpv5DyRZwA7Im0mTctipmCG9Sq/WOTWFhpY4DsIlwf0XaBPBg/z+RlrrI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R0nXnBHK; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R0nXnBHK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2996C4CEE4;
-	Tue,  1 Apr 2025 13:30:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743514251;
-	bh=Ul6lJvNEHBV/pZeVWxl97I6QputJg4xYguuegwagemc=;
-	h=From:Date:Subject:To:Cc:From;
-	b=R0nXnBHK+h56PKjMT/5qxNKseT3aIYCEfkg+iICdVnAYkSyVf+/sLwKvt+lgp7A6j
-	 21z3BlE6WMo64ddo54dH/lQBUyTaUC4+skd/Bi4vgl5mzyfE6ot6BQVQfRxqeI1blC
-	 LTILvkFOt/nMDIVd3zOUeBLOLA7nIq9Nw9OB2z5Kt7iD5yFCl9yHzFMeruBRdCw8S0
-	 4NqI/VlEitmpQ0b+XHJJF+G8Ks31zJCKYwg1eChqc6dWoqu/JrnoZ7tyNXzYsjDfDY
-	 AP2U1OFkVXY7tQ+IGjEcszhGRQ+AzTjLr76qgoqv6hgjjnoP6WPMBbqf98H0k7j1pB
-	 zioIngRf90MEA==
-From: Mattijs Korpershoek <mkorpershoek@kernel.org>
-Date: Tue, 01 Apr 2025 15:30:37 +0200
-Subject: [PATCH] dt-bindings: mediatek,mt6779-keypad: Update Mattijs' email
- address
+	s=arc-20240116; t=1743514315; c=relaxed/simple;
+	bh=Q1h3J1lMlqtTxeUWZ2nmb72vQCNud+YGGXy7C5Z3tuQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jIPIHFqu3wL/r+Gjtwg6c8VX4vDXafd3rvMUXqghO50YaWdwLEQmj1Neyitd7FhhtYYBPfi6eiNrD07QYcJe4XGgl5hn0hLiXYPAOv5Pvdbl9DEqbTWmvZLL0HQ9E9zejehuxdiKMgblDM7Exbp50m3iXzoajC1xGK0JguL/+OU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BF3D61424;
+	Tue,  1 Apr 2025 06:31:54 -0700 (PDT)
+Received: from [10.1.197.1] (ewhatever.cambridge.arm.com [10.1.197.1])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5E1723F694;
+	Tue,  1 Apr 2025 06:31:50 -0700 (PDT)
+Message-ID: <cf88ccd7-a95e-455e-a194-895dcc393c5b@arm.com>
+Date: Tue, 1 Apr 2025 14:31:49 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250401-mattijs-dts-korg-v1-1-0f8d96bf8a99@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAHzq62cC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDEwND3dzEkpLMrGLdlJJi3ez8onRdQ4vUNEtzSwsLIxMzJaC2gqLUtMw
- KsJHRsbW1ABsjdO5iAAAA
-X-Change-ID: 20250401-mattijs-dts-korg-18ef97988246
-To: Mattijs Korpershoek <mkorpershoek@baylibre.com>, 
- Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-mediatek@lists.infradead.org, 
- Mattijs Korpershoek <mkorpershoek@kernel.org>
-X-Mailer: b4 0.14.3-dev-94c79
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1074;
- i=mkorpershoek@kernel.org; h=from:subject:message-id;
- bh=Ul6lJvNEHBV/pZeVWxl97I6QputJg4xYguuegwagemc=;
- b=owEBbQGS/pANAwAIARkNHbRmThk1AcsmYgBn6+qIuKsPabzv/RSvLVVc64fSuzem7BVylb01dply
- PyvhJXaJATMEAAEIAB0WIQQu6UKnth9qvlMTrQAZDR20Zk4ZNQUCZ+vqiAAKCRAZDR20Zk4ZNbvXCA
- CJy+j4InTSuxmwJ0+YwXmooqhVHpiX5qNSmoiOGWB5L9p7+KtQPUq7HFvyg+NY6VlzVycvggb4WmHn
- J+8es2yRg3QFdORFSfoTxGfPCeClajHC8TKmZ5gMmA1X9lzP1IzbGVVcF/9xlZ5aGH5X5pSDNU1x4q
- a6hT5S9ForxGyuKHgwqMorY+CapbkDiYe+opCzp3XeBFfpVuBWvtPXIKzbdBrydalHk9OjuEAH79EN
- S43cmUIYvLyNhSZSnRbIfpwxfkLhUZgx8+oa7XIawEj5TFjjNPzAjKhWj9HSHe9zOGPBmgphhrS1V6
- 50Zm2XB1BtHJeXJnZ/va5BDtuVTMvj
-X-Developer-Key: i=mkorpershoek@kernel.org; a=openpgp;
- fpr=8234A35B45C0D26B31C1A2DA570338B018144F28
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] coresight: catu: Introduce refcount and spinlock for
+ enabling/disabling
+To: James Clark <james.clark@linaro.org>, Yabin Cui <yabinc@google.com>
+Cc: coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, Mike Leach <mike.leach@linaro.org>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Leo Yan <leo.yan@arm.com>
+References: <20250328223837.2314277-1-yabinc@google.com>
+ <ea366793-4c27-44af-9b6b-8964c4151416@linaro.org>
+Content-Language: en-US
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <ea366793-4c27-44af-9b6b-8964c4151416@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Update Mattijs Korpershoek's email address to @kernel.org.
+On 31/03/2025 15:24, James Clark wrote:
+> 
+> 
+> On 28/03/2025 10:38 pm, Yabin Cui wrote:
+>> When tracing ETM data on multiple CPUs concurrently via the
+>> perf interface, the CATU device is shared across different CPU
+>> paths. This can lead to race conditions when multiple CPUs attempt
+>> to enable or disable the CATU device simultaneously.
+>>
+>> To address these race conditions, this patch introduces the
+>> following changes:
+>>
+>> 1. The enable and disable operations for the CATU device are not
+>>     reentrant. Therefore, a spinlock is added to ensure that only
+>>     one CPU can enable or disable a given CATU device at any point
+>>     in time.
+>>
+>> 2. A reference counter is used to manage the enable/disable state
+>>     of the CATU device. The device is enabled when the first CPU
+>>     requires it and is only disabled when the last CPU finishes
+>>     using it. This ensures the device remains active as long as at
+>>     least one CPU needs it.
+>>
+>> Signed-off-by: Yabin Cui <yabinc@google.com>
+>> ---
+>>   drivers/hwtracing/coresight/coresight-catu.c | 29 ++++++++++++++------
+>>   drivers/hwtracing/coresight/coresight-catu.h |  1 +
+>>   2 files changed, 22 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/drivers/hwtracing/coresight/coresight-catu.c b/drivers/ 
+>> hwtracing/coresight/coresight-catu.c
+>> index 275cc0d9f505..834a7ffbbdbc 100644
+>> --- a/drivers/hwtracing/coresight/coresight-catu.c
+>> +++ b/drivers/hwtracing/coresight/coresight-catu.c
+>> @@ -458,12 +458,19 @@ static int catu_enable_hw(struct catu_drvdata 
+>> *drvdata, enum cs_mode cs_mode,
+>>   static int catu_enable(struct coresight_device *csdev, enum cs_mode 
+>> mode,
+>>                  void *data)
+>>   {
+>> -    int rc;
+>> +    int rc = 0;
+>> +    unsigned long flags;
+>>       struct catu_drvdata *catu_drvdata = csdev_to_catu_drvdata(csdev);
+>> -    CS_UNLOCK(catu_drvdata->base);
+>> -    rc = catu_enable_hw(catu_drvdata, mode, data);
+>> -    CS_LOCK(catu_drvdata->base);
+>> +    spin_lock_irqsave(&catu_drvdata->spinlock, flags);
+> 
+> Hi Yabin,
+> 
+> This needs to be a raw_spinlock since [1]. Also you might as well use 
+> the new guard() thing to save someone find-and-replacing it later.
+> 
+> But I'm wondering if this is accurate. The ETR's refcount is dependent 
+> on the pid of the owner of the trace session:
+> 
+>    /* Do not proceed if this device is associated with another session */
+>    if (drvdata->pid != -1 && drvdata->pid != pid) {
+>      rc = -EBUSY;
+>      goto unlock_out;
+>    }
+> 
+>    /*
+>     * No HW configuration is needed if the sink is already in
+>     * use for this session.
+>     */
+>    if (drvdata->pid == pid) {
+>      csdev->refcnt++;
+>      goto unlock_out;
+>    }
+> 
+> If the helpers get enabled first, could this mean that CATU gets 
+> associated with a different session than the ETR? 
 
-Signed-off-by: Mattijs Korpershoek <mkorpershoek@kernel.org>
----
- Documentation/devicetree/bindings/input/mediatek,mt6779-keypad.yaml | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thats a good point, I looked at the code and :
 
-diff --git a/Documentation/devicetree/bindings/input/mediatek,mt6779-keypad.yaml b/Documentation/devicetree/bindings/input/mediatek,mt6779-keypad.yaml
-index 517a4ac1bea3..e365413732e7 100644
---- a/Documentation/devicetree/bindings/input/mediatek,mt6779-keypad.yaml
-+++ b/Documentation/devicetree/bindings/input/mediatek,mt6779-keypad.yaml
-@@ -7,7 +7,7 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
- title: Mediatek's Keypad Controller
- 
- maintainers:
--  - Mattijs Korpershoek <mkorpershoek@baylibre.com>
-+  - Mattijs Korpershoek <mkorpershoek@kernel.org>
- 
- allOf:
-   - $ref: /schemas/input/matrix-keymap.yaml#
+I think we have a bug here, w.r.t helpers and Sinks. We enable the
+helpers (e.g. CATU) and then we try the actual sink (e.g. ETR). And
+if we fail to enable ETR, we don't disable the helpers.
 
----
-base-commit: 08733088b566b58283f0f12fb73f5db6a9a9de30
-change-id: 20250401-mattijs-dts-korg-18ef97988246
 
-Best regards,
--- 
-Mattijs Korpershoek <mkorpershoek@kernel.org>
+We have this today :
+
+	case CORESIGHT_DEV_TYPE_SINK:
+		ret = coresight_enable_sink(csdev, mode, sink_data);
+		/*
+		 * Sink is the first component turned on. If we
+		 * failed to enable the sink, there are no components
+		 * that need disabling. Disabling the path here
+		 * would mean we could disrupt an existing session.
+		 */
+		if (ret)
+			goto out;
+
+...
+
+out: 
+
+         return ret; 
+
+err: 
+
+         coresight_disable_path_from(path, nd); 
+
+         goto out; 
+
+}
+
+Suzuki
+
+
+Maybe not, but it
+> would be easier to understand if the core code handled the refcounting 
+> and locking for linked devices.
+> 
+> [1]: https://lore.kernel.org/all/20250306121110.1647948-3- 
+> yeoreum.yun@arm.com/
+> 
+> Thanks
+> James
+> 
+>> +    if (csdev->refcnt == 0) {
+>> +        CS_UNLOCK(catu_drvdata->base);
+>> +        rc = catu_enable_hw(catu_drvdata, mode, data);
+>> +        CS_LOCK(catu_drvdata->base);
+>> +    }
+>> +    if (!rc)
+>> +        csdev->refcnt++;
+>> +    spin_unlock_irqrestore(&catu_drvdata->spinlock, flags);
+>>       return rc;
+>>   }
+>> @@ -486,12 +493,17 @@ static int catu_disable_hw(struct catu_drvdata 
+>> *drvdata)
+>>   static int catu_disable(struct coresight_device *csdev, void *__unused)
+>>   {
+>> -    int rc;
+>> +    int rc = 0;
+>> +    unsigned long flags;
+>>       struct catu_drvdata *catu_drvdata = csdev_to_catu_drvdata(csdev);
+>> -    CS_UNLOCK(catu_drvdata->base);
+>> -    rc = catu_disable_hw(catu_drvdata);
+>> -    CS_LOCK(catu_drvdata->base);
+>> +    spin_lock_irqsave(&catu_drvdata->spinlock, flags);
+>> +    if (--csdev->refcnt == 0) {
+>> +        CS_UNLOCK(catu_drvdata->base);
+>> +        rc = catu_disable_hw(catu_drvdata);
+>> +        CS_LOCK(catu_drvdata->base);
+>> +    }
+>> +    spin_unlock_irqrestore(&catu_drvdata->spinlock, flags);
+>>       return rc;
+>>   }
+>> @@ -550,6 +562,7 @@ static int __catu_probe(struct device *dev, struct 
+>> resource *res)
+>>       dev->platform_data = pdata;
+>>       drvdata->base = base;
+>> +    spin_lock_init(&drvdata->spinlock);
+>>       catu_desc.access = CSDEV_ACCESS_IOMEM(base);
+>>       catu_desc.pdata = pdata;
+>>       catu_desc.dev = dev;
+>> diff --git a/drivers/hwtracing/coresight/coresight-catu.h b/drivers/ 
+>> hwtracing/coresight/coresight-catu.h
+>> index 141feac1c14b..663282ec6381 100644
+>> --- a/drivers/hwtracing/coresight/coresight-catu.h
+>> +++ b/drivers/hwtracing/coresight/coresight-catu.h
+>> @@ -65,6 +65,7 @@ struct catu_drvdata {
+>>       void __iomem *base;
+>>       struct coresight_device *csdev;
+>>       int irq;
+>> +    spinlock_t spinlock;
+>>   };
+>>   #define CATU_REG32(name, offset)                    \
+> 
 
