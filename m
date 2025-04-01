@@ -1,64 +1,73 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7143E1E9B12
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 08:12:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90A4B2CCDB
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 08:14:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743495165; cv=none; b=B6mF9UonWnqNm0HtCD9A7uJm0nf8xtBgIzM5VV1ngyQkEqk6WJQV2jmGhNFO0AjBVUkHaXslj+G30n5zPXaXKfLWgauCOLqH8RuquelbPsXA9p8KjHM7NeuYt50fiS1kx1K77l2kPUCTO2t7l9Btdx9wcsH/fWk8OUmXcselzzM=
+	t=1743495287; cv=none; b=I/AfnK+maAG6XCosc2Caww8G2TPYqcXtGGdGZ5LsA49ZhFpMlqzTgQ7Wmya3Fey6pSYL/vHkhnkoEU7bIninztW/dgL0N/SvSodOH4rxyEXdJ8C+abWW3Ya9n4uauWgxOMd6eEPbS/2VIRvzIawRVdUvaoWD5DfZ4zPPa/goXqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743495165; c=relaxed/simple;
-	bh=Q7BKqapfD6AxdJDkjzeoVlhT6jorL6pZj/n+hnRVzrc=;
+	s=arc-20240116; t=1743495287; c=relaxed/simple;
+	bh=4s7vULaN9rSgdO9p50hweE6LF+ECu4rJVDl7iAYGeYk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SciPKocoImbGxVo7bY2vas1MuKVPCX3v0Fx/gsGgX2z75bjnqKAksaT2777opJh6Sl7p9er7qvkFWHsnrH/lP3rjp8GMsWopB1MLpVRPA2GKBvDEht0cbyU+CPqncb7p0MeyUKzAjyFl2SfvC4vFEOzUVUZPLOsqTKS4iqjmMZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sigma-star.at; spf=pass smtp.mailfrom=sigma-star.at; dkim=pass (2048-bit key) header.d=sigma-star.at header.i=@sigma-star.at header.b=Pa9GrgQY; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sigma-star.at
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sigma-star.at
+	 In-Reply-To:Content-Type; b=gkmjyWZiZH4poQO0zEpj3M33oyv+0VYyAf7UrZj2qXMbDpXFD2prrP3sbccybKPGA3rExPFbRUdYVudQFhQjFGpuNg28zvS88SxvVX0JHcLeSqn+4Ob4TutfHyl5F0PCaSKphVPcJ7ZIt8X3PD5Vf8iZySHpNNxvHhNlmKW/osg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IFbugVBs; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sigma-star.at header.i=@sigma-star.at header.b="Pa9GrgQY"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43cfa7e7f54so31622085e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 01:12:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sigma-star.at; s=google; t=1743495160; x=1744099960; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=4p3P+1/911O4XZnCq9FVI9Zjtz1ACANtbEDZFOoYNIQ=;
-        b=Pa9GrgQYV0vw/MfwYWGt780JsX0dxDwb9VSjc3BptMrPdypWT4MOTQYcdaT3hr6P75
-         e/n7NqfsyvNP4qKvbeAiTncdMVIQetF1fw+5vIHEwx5FstZ2zwJY2z62y3fqzbLgNRkQ
-         BZBLJGJhA+41MwCoPp/cMHJiVRqcP+w1BiRRTaHkE0/bGjYH0FtN2TkUd/MwIV0hCC7H
-         WH/A/+tCRQmKYSxtktGwRw6c2ztmP0fBLaMVyNYOGwNJOuPqKJ5u/x6p+1LKXoIEpI1K
-         g/QkvxSEoJyXiLNcr3+tKkiCNZnYHMFcwLJK9Nuq9Pkj8igyknuffjyiL7zw70j7YSU3
-         fjBg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IFbugVBs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743495283;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=ZMrw/hF4iYRv8xEz3Y+x6UfdccDXIACsT6AaEq2CDuE=;
+	b=IFbugVBs8ynOgoCFQlrAveAEvU7ze8SFtWJ1GfPM8PeX8daXiY3evJSIPDhLtio7Gt2hhN
+	27NrSZILkXc0ajfJwgOlmkqtLfY8ieEWKdFcbWPVKU9XnA4iNERvp3U6oUbJPmsAv9gs5g
+	Wdn96cVU6b4d3R4SsMyKJYuLscqDzxM=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-621-G1pg5d2NNxOKSE9wMYONnw-1; Tue, 01 Apr 2025 04:14:42 -0400
+X-MC-Unique: G1pg5d2NNxOKSE9wMYONnw-1
+X-Mimecast-MFC-AGG-ID: G1pg5d2NNxOKSE9wMYONnw_1743495281
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43cf5196c25so25255375e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 01:14:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743495160; x=1744099960;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4p3P+1/911O4XZnCq9FVI9Zjtz1ACANtbEDZFOoYNIQ=;
-        b=PhZSVDh25YoRJ5+83bz4xu6xpiOgL3rf6vSq44bt/jx+1r2TOtYIzFAZ5zZnQoxCxj
-         hrsjYa/XKuUNxh7EvMrIkqvLCHkQfoMakH4FRUIo2BqF0beEyF6L94514cQuWGlco+N6
-         Eqrt6I/CJqAMqb7STJHyhqRQWWwc9bPGRmmem2ni3PsgSHL7dRASdNmHGcr7pcpgwqnb
-         0dSxJsMKd1mnvOnz4xu+W5+adm5r4X0G1TLqsvlnabukGoU18fVzpZLuyb/9ogIWhajD
-         ZMTf8J6DoUmXP2tk6KviVhtoQAw91JtHGVe4ZGRR2uasJRcxG9xQugr12rvDPpNBuLiH
-         CdGQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWGrDFbM8LdszyJx5QFDz3uPDObcIuuE3g38g0gJTvSco3F0TrLRDLoYxnKWbjlZZnPXQQAnKG7EtxOjhk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzKkf37hly78shiQ1C6NSS8/OriAPP7PRlsJyoHdsO7MclJQpv4
-	p0xEeM4n1QjoLX8VchZ7v4ZTDBjiCEJdT9yYGd0ZcHy4XR9PE7VmwZAmJsl4GFA=
-X-Gm-Gg: ASbGnct64xVAZuHttFE97JRsnquDv2yCHU/q3UgxOUoZAIcW/djoeTytrEx5ThhnvPa
-	SyBmSZkbD1/ystPRieKqHI17OsbW4TT0EPELRp0UrDuZfLNsbBVFnRMX/5g+NpoMtJ/fQjRAF9N
-	YkSjT6xaohKWnVVEnJa0JaXotTXAhc8XDIEaYJ1H/q/dqubrUu5uYWxbw2mtjkbWqI5pJ4D0rKk
-	CgfJAD5jqXIkxh0IIxq5HJkl4sNERGVE/sG/vuS/VPLBNTZP0RHpgKzrRzvigxf4qNPjuf4/TXC
-	zmr6CukJviYiADE3kqtYsb22mBpzOkrs/JugY9+R+U8AEl7cNoD570nBrSfOH5k5U9U=
-X-Google-Smtp-Source: AGHT+IHPsofN0L3NqyV7NNJjLnBN+caNMjZHK7Rek25KHBJOQORDn/np2fxXKpMa9Y0VNxWPeQRZFw==
-X-Received: by 2002:a05:600c:1912:b0:43d:fa5f:7d04 with SMTP id 5b1f17b1804b1-43dfa5f7d37mr109437685e9.16.1743495160467;
-        Tue, 01 Apr 2025 01:12:40 -0700 (PDT)
-Received: from [10.115.255.165] ([82.150.214.1])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d830f5f56sm195318935e9.26.2025.04.01.01.12.39
+        d=1e100.net; s=20230601; t=1743495281; x=1744100081;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ZMrw/hF4iYRv8xEz3Y+x6UfdccDXIACsT6AaEq2CDuE=;
+        b=diRPG0EvcsxLBJ+vzph/mQo2ZrYptxSU7j6KtTRN1PdsDX+zNubNXnHfJdFwM5o6oR
+         7W6IePK06KA/b/E6MRSDzRf7ZqnEHAWcqrF03A5rgxwLS8LvIYrdBRzwkci5YGILmILd
+         T0zxZASAeVDxDqfOdc1hLDWn8PBCg4pMsTNwfNQu2qJTw6xl6CBygrOqiuUBqmxw5YRh
+         8QF94CxtK7WJkZV9FKQq+u66IGuU+kmz+dI9gmHBVbA1P+XKfuoB2pERUTwi/goyy774
+         qFNb3YxQx4Dx3wN08mvrZXaPsc59iR69B7Kik9TBAlM+0Xam0ftyXIEd7ckoF2P9AhuD
+         AgzA==
+X-Forwarded-Encrypted: i=1; AJvYcCUjVyUghLdz2xMQ5nZfVH+MyFDWAPIsR27sZTyahYv9+1MWs5gnPn+v5bzjIiAoidSJAZJ/g8+1tQEc+b0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzL/ewU9ktlxk6O8iXvqUQb08T+463TWi3tFrP03sDFhMJsy7hk
+	pCNHw3nPZ4sU260GY4lowqN95udq+SAQ+jGvat1L1BQz/Df6jSKMEgK/k2Zo/Oj7OjQdF/Nf+Jl
+	/Gl6HTTu7QVlF/zaw8HYqLBdZar7ZxyOv2IqudLDIVuJIkKCJeJ80/sph5m+beQ==
+X-Gm-Gg: ASbGncvBO2ujMSPA8c8Squ2taBv15Bdx8CubFnSFra72R+E6gclwDhaN3XEILSN7mm8
+	c1uBsCQ4W3YWJCCIvtFJVjvAvOStBvhZoGZLqYo1yVjYDHSUeRqMGv64f8d3Isxzn+ikgD41mqJ
+	TZKmu9hwlcqbwiYwt5xjjo+l62kmGCP6FUZH+ZV2jfNF0ddf/fWtUSSJ4Be9CfQ7GZjKke5YRlU
+	htDtx7s3RlKlf7OPHDY0bMvIT32DxhmjWk0Ahid8GJPEoxdcD8TuIVjGP7YLxGFnfvoKIIVzuBF
+	BOtbwK7gvQhiTVTrlFESgh1fsYYQeE+YPBIatJSMFzvafxXLb8NdfMyluwVUCqROU+1Pd0U4KFn
+	qrKnWegel7W/ZybsKd3l36VUwj6vHLPSq6SofDKOQ
+X-Received: by 2002:a7b:c85a:0:b0:43d:fa59:cc8f with SMTP id 5b1f17b1804b1-43dfa59cd30mr76161235e9.33.1743495281284;
+        Tue, 01 Apr 2025 01:14:41 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEPD6Zz8lOr7UQtRkeT40hSJsdY+e1kLD46TaF45a3fZZvcvdNjyBA+fg2ymnWHHAcglU+MXQ==
+X-Received: by 2002:a7b:c85a:0:b0:43d:fa59:cc8f with SMTP id 5b1f17b1804b1-43dfa59cd30mr76161055e9.33.1743495280936;
+        Tue, 01 Apr 2025 01:14:40 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c707:4d00:6ac5:30d:1611:918f? (p200300cbc7074d006ac5030d1611918f.dip0.t-ipconnect.de. [2003:cb:c707:4d00:6ac5:30d:1611:918f])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d82dede5csm195587865e9.8.2025.04.01.01.14.40
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Apr 2025 01:12:40 -0700 (PDT)
-Message-ID: <9187e9a3-fb93-4927-b02f-7f41176f844d@sigma-star.at>
-Date: Tue, 1 Apr 2025 10:12:38 +0200
+        Tue, 01 Apr 2025 01:14:40 -0700 (PDT)
+Message-ID: <6203a9e6-8dc1-4b36-aa2c-41c29487812c@redhat.com>
+Date: Tue, 1 Apr 2025 10:14:39 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,56 +75,77 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] net: dsa: mv88e6xxx: propperly shutdown PPU re-enable
- timer on destroy
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: netdev@vger.kernel.org, andrew@lunn.ch, Julian.FRIEDRICH@frequentis.com,
- f.fainelli@gmail.com, olteanv@gmail.com, davem@davemloft.net,
- edumazet@google.com, pabeni@redhat.com, linux-kernel@vger.kernel.org,
- upstream+netdev@sigma-star.at
-References: <20250113084912.16245-1-david.oberhollenzer@sigma-star.at>
- <20250114152729.4307e3a8@kernel.org>
+Subject: Re: [PATCH v2 3/7] mm/gup: Fix the outdated code comments above
+ get_user_pages_unlocked()
+To: Baoquan He <bhe@redhat.com>, akpm@linux-foundation.org
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, yanjun.zhu@linux.dev
+References: <20250331081327.256412-1-bhe@redhat.com>
+ <20250331081327.256412-4-bhe@redhat.com>
+From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
-From: David Oberhollenzer <david.oberhollenzer@sigma-star.at>
-In-Reply-To: <20250114152729.4307e3a8@kernel.org>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250331081327.256412-4-bhe@redhat.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-Hi,
+On 31.03.25 10:13, Baoquan He wrote:
+> Since commit f0818f472d8d ("mm: gup: add get_user_pages_locked
+> and get_user_pages_unlocked"), get_user_pages() doesn't need to have
+> mmap_lock held anymore. It calls __get_user_pages_locked() which
+> can acquire and drop the mmap_lock internaly.
 
-I did some further re-testing on the fix, regarding the the similar race
-in remove() as well as the previous question regarding the locking and
-cancellation order. V3 already expands on this, and the point still stands,
-the nested timer+queue+trylock mechanism is somewhat tricky and I manage
-to hit the race window with just cancel_work_sync(), without the lock or
-a different order for tear down.
+s/internaly/internally/
 
-On 1/15/25 12:27 AM, Jakub Kicinski wrote:
-> On Mon, 13 Jan 2025 09:49:12 +0100 David Oberhollenzer wrote:
->> @@ -7323,6 +7323,8 @@ static int mv88e6xxx_probe(struct mdio_device *mdiodev)
->>   		mv88e6xxx_g1_irq_free(chip);
->>   	else
->>   		mv88e6xxx_irq_poll_free(chip);
->> +out_phy:
->> +	mv88e6xxx_phy_destroy(chip);
->>   out:
->>   	if (pdata)
->>   		dev_put(pdata->netdev);
-> 
-> If this is the right ordering the order in mv88e6xxx_remove()
-> looks suspicious. We call mv88e6xxx_phy_destroy() pretty early
-> and then unregister from DSA. Isn't there a window where DSA
-> callbacks can reschedule the timer?
+But your statement is wrong. get_user_pages() must be called with the 
+mmap_lock held, because it sets "int locked = 1;" when calling 
+__get_user_pages_locked().
 
-yes, this does looks suspicious, mv88e6xxx_phy_destroy() should be done
-after the switch is unregistered, otherwise it should logically cause
-the same issue.
+-- 
+Cheers,
 
-However, I did not manage to trigger this during testing, and this also
-did not fix the original issue I saw, but I will fix the order in a
-followup v4 patch.
-
-Greetings,
-
-David
+David / dhildenb
 
