@@ -1,136 +1,115 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D7F9156677
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 14:34:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF0511ACED1
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 14:35:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743518090; cv=none; b=Ig2LLkQUOlrqFve9DYVAVXQU2DB8u74Z0qxGgFpKe5JMaRricv3PAKzGzlf9DtUdUfVuZ/q5o+LIJ/1m8G2rXDfbiFwhacXNyl2juqZew26B/vgj76bV5xKGpowKIbzUD0Y5njqiBR0G0YSCOWcP/od0LMnHLXTyhfMOhbdVqZ8=
+	t=1743518135; cv=none; b=ojv3iSgrHlRzD7k+3BfophmGvQkyh/032OTxx8nhYvKRdJrdYgEr841qIxh5/2a85N877KSom/gs9rti5D9ov/24ebriUCfC4wmLQndDj3wexrtFcRik4KFdNtDVry6X5VUuHrUSHYJzT6nFv6Zs7qZKmTzsb7BQ14pP01tqoK4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743518090; c=relaxed/simple;
-	bh=+oVMCTnKGGB1IvnXZTphKRV0saQlY6sd9zIB39VDNio=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q6qKcX/ctXckx6sIjuc4/K5mQoMULOqesK1+nBL4C2H9VAcnTkZgWbfxRXhPhufk3EKURRfW1brj+DLCzRmxrqBmeSEkB3ozQsm3GW8tzcRrdU70iwmz4juPxIc5wq4CTF/JjD7czCEcGb33o0VkdNOq6n8WXbfGRdMtjnPq9JA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QxSZhWMO; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1743518135; c=relaxed/simple;
+	bh=LfylgwBhk6V7+u8CK4F4KYKTKh+JdpgBkzpYisiy34g=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=g2ekEqNhs6qCUWkCZ5hYZ2A7cJoPi6kkmXLr5TRNt/LmmCjWkOAfcTj8FdApHojuBrmoldL+YCAU/etSkQenVjUUeza2wCtlogHWLHmFAYX+Xj992UeS9Td6Z88m/+TWF5CDHoc3oAVkSadnwkcDHWsvXB4nzn7IF+FrlFBETwk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mJFT0ieM; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QxSZhWMO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743518087;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KQr7Spkn5jgMIpaUUK0pwqzc54g+Diw9wD954oFdkTg=;
-	b=QxSZhWMOlOWJGMK5ay+wejSn212N/tBeJJFJKlgCtxDKPk5byjEQ30dStu3Rao2HUALQvQ
-	e1MKxVDBRKxPwiP/jzPyaE8NzmFvE8EN39/QZ01SHum3MMQ6GBSLlFzuZN7ivCGiXzVSVX
-	+XM8xVHKLVI+6mvovjMm4wColAYV26c=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-654-aSxuQ6FfNIm2jgE3tKnyzQ-1; Tue,
- 01 Apr 2025 10:34:46 -0400
-X-MC-Unique: aSxuQ6FfNIm2jgE3tKnyzQ-1
-X-Mimecast-MFC-AGG-ID: aSxuQ6FfNIm2jgE3tKnyzQ_1743518085
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EBFA718001FC;
-	Tue,  1 Apr 2025 14:34:44 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.12])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 90425195DF83;
-	Tue,  1 Apr 2025 14:34:42 +0000 (UTC)
-Date: Tue, 1 Apr 2025 22:34:38 +0800
-From: Baoquan He <bhe@redhat.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, yanjun.zhu@linux.dev
-Subject: Re: [PATCH v2 2/7] mm/gup: check if both GUP_GET and GUP_PIN are set
- in __get_user_pages() earlier
-Message-ID: <Z+v5fguHjl5DiaZm@MiWiFi-R3L-srv>
-References: <20250331081327.256412-1-bhe@redhat.com>
- <20250331081327.256412-3-bhe@redhat.com>
- <e6b8481f-0bf6-4acf-9ebc-9b4f28c0be08@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mJFT0ieM"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-399744f74e9so3676473f8f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 07:35:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743518132; x=1744122932; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=BZyefUB9KxdHlktsqY/xqs14rudVRci25F3JTS7wlgs=;
+        b=mJFT0ieM7bV+n4gBIgLMLs6XLftyrZYtC3Q/xzJkqFLLld5zIrx77onP3WHl8AZ/tP
+         zq3kV1ZQmdN/gsmfvP6egByANS+R42E3NtOge3yR/IJmPN+b8o2hEwpru/O6vQtlPwwV
+         1mq1NXP9iaHZfRSevZiyjea2uGW4Nj5oJ8JWpSIbyeHObScA8ncxs7D0luJDw6RjehUr
+         aRmKxeCW2pzHVtwN8Mt7jyI6Htuy/FiaC+Ta6MQomHMhRtbFGr9Xs+4KGNnX+ExZP2yw
+         mToINO0KwJg4U1PZ0a2ix8H4d9FY08jn8eaumJRrhBMtZsAe+3+/qiq9eMJcaLKGDEPp
+         e8GQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743518132; x=1744122932;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BZyefUB9KxdHlktsqY/xqs14rudVRci25F3JTS7wlgs=;
+        b=dU8bQ81EbaFqsMR6GC/4x9kwttlWZYo7LMMlCbJijit9bsEcUURMy5f7MHvgrhEnq4
+         +MXjmOAlJce3MT7GkH7MwV43bkL0h6mlfRq9xa+OrTYG8sC5dXPjjRZE4O/fgVi0jeJp
+         cKu3U/ZqB0SaXUBf+hAmSrvuDnGbXdfWvIO4O6HItjzDBpxuGCTuwJnjk9tDS17hfUC/
+         w2DmbdOa6wy88Ngw60zem602EEBRGjnoP9LEhQZ1w5V2mCzURWbljEorRemxMmfzIQfm
+         gPjw2IIh5GHQS3fcibBIG3TRAVC8U3xF+Q5OPlGo96g19K2+KjCtv1upLpZ9l/yyR3oa
+         cPcg==
+X-Forwarded-Encrypted: i=1; AJvYcCU3Z+7xMfMh0EjWh8yg+onOsbLgBHtLOgvDrT4OXe1C+xyH59QGW1oRewPt4XFVq2Y8maKXOEjQJThZneA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwGRg5UDd05wRp5bN6U5xgLrKU9/A9m/W5YZOmqUlXCb+xS4jWo
+	E+pjPcnDnwEyxbw/mByNt97tr2Ndj5Gro5pZMzeSIGT6IdytpkYn7HtcRg==
+X-Gm-Gg: ASbGncs9p+uiQLo46GNU6FDiLB0VbJNAd+QzpFCkUTOUiewH4sVp62yJKL789/6lUrU
+	sA8LO/jVVWYMqgkQCIR13T/e+U/apI4pZnhtSrGUU6UcEpcuBCJy/pElwQOwz10p9mN2BuSgqoj
+	PN0KlqcZpymWPhAVwvhxfg82m76oaCrDTA6vbxgcpTwmnppyGKxgueTzwln20PzTR/DmwTZz1Gj
+	PqHR7iJFjXW7vH8s8Kd0IHX0umxzryAz2hp9F7qG7rX/4KKAICKcJCRz41lxK7feXlxSMqShZRT
+	f/vAcGRkFM2rAkwC8qseBWDwGe+CfSnMR/yxC6FDwqafwtgYoR7KQW05uStt
+X-Google-Smtp-Source: AGHT+IHhBDh1ohT1evya9ki0/u7U88oAEymPVw6ey8QRvgZWUTKQYWRrpJZRb7KTrGDiRVJVhiiiYQ==
+X-Received: by 2002:a05:6000:144e:b0:391:47d8:de3d with SMTP id ffacd0b85a97d-39c120db49bmr10278754f8f.16.1743518131768;
+        Tue, 01 Apr 2025 07:35:31 -0700 (PDT)
+Received: from f.. (cst-prg-92-82.cust.vodafone.cz. [46.135.92.82])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d8fba4b4fsm161194865e9.1.2025.04.01.07.35.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Apr 2025 07:35:30 -0700 (PDT)
+From: Mateusz Guzik <mjguzik@gmail.com>
+To: dave.hansen@linux.intel.com
+Cc: linux-mm@kvack.org,
+	x86@kernel.org,
+	linux-kernel@vger.kernel.org,
+	Mateusz Guzik <mjguzik@gmail.com>
+Subject: [PATCH] x86/mm: stop prefetching the mmap semaphore on page faults
+Date: Tue,  1 Apr 2025 16:35:20 +0200
+Message-ID: <20250401143520.1113572-1-mjguzik@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e6b8481f-0bf6-4acf-9ebc-9b4f28c0be08@redhat.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+Content-Transfer-Encoding: 8bit
 
-On 04/01/25 at 10:02am, David Hildenbrand wrote:
-> On 31.03.25 10:13, Baoquan He wrote:
-> > In __get_user_pages(), it will traverse page table and take a reference
-> > to the page the given user address corresponds to if GUP_GET or GUP_PIN
-> > is et. However, it's not supported both GUP_GET and GUP_PIN are set.
-> > This check should be done earlier, but not doing it till entering into
-> > follow_page_pte() and failed.
-> > 
-> > Here move the checking to the beginning of __get_user_pages().
-> > 
-> > Signed-off-by: Baoquan He <bhe@redhat.com>
-> > ---
-> > v1->v2:
-> > - Fix code bug caused by copy-and-paste error, this is reported by
-> >    lkp test robot.
-> > 
-> >   mm/gup.c | 10 +++++-----
-> >   1 file changed, 5 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/mm/gup.c b/mm/gup.c
-> > index 73777b1de679..f9bce14ed3cd 100644
-> > --- a/mm/gup.c
-> > +++ b/mm/gup.c
-> > @@ -847,11 +847,6 @@ static struct page *follow_page_pte(struct vm_area_struct *vma,
-> >   	pte_t *ptep, pte;
-> >   	int ret;
-> > -	/* FOLL_GET and FOLL_PIN are mutually exclusive. */
-> > -	if (WARN_ON_ONCE((flags & (FOLL_PIN | FOLL_GET)) ==
-> > -			 (FOLL_PIN | FOLL_GET)))
-> > -		return ERR_PTR(-EINVAL);
-> > -
-> >   	ptep = pte_offset_map_lock(mm, pmd, address, &ptl);
-> >   	if (!ptep)
-> >   		return no_page_table(vma, flags, address);
-> > @@ -1434,6 +1429,11 @@ static long __get_user_pages(struct mm_struct *mm,
-> >   	VM_BUG_ON(!!pages != !!(gup_flags & (FOLL_GET | FOLL_PIN)));
-> > +	/* FOLL_GET and FOLL_PIN are mutually exclusive. */
-> > +	if (WARN_ON_ONCE((gup_flags & (FOLL_PIN | FOLL_GET)) ==
-> > +			 (FOLL_PIN | FOLL_GET)))
-> > +		return -EINVAL;
-> > +
-> 
-> We already have that check in is_valid_gup_args(), that catches all external
-> users that could possibly mess this up.
+The prefetchw dates back decades and the fundamental notion of doing
+something like this on a lock is shady.
 
-Right.
+Moreover, for few years now in the fast path faults are handled with RCU
++ per-vma locking, hopefully not even looking at the lock to begin with.
 
-> 
-> So we can just convert that into a VM_WARN_ON_ONCE(), and while doing that,
-> we should convert the VM_BUG_ON() above to a VM_WARN_ON_ONCE() as well.
+As such just remove it.
 
-Sounds great to me, will put below change into this patch of v3 as suggested.
-Thanks.
+I did not see a point benchmarking this. Given that it is not expected
+to be looked at by default justifies not doing the prefetch.
 
-diff --git a/mm/gup.c b/mm/gup.c
-index 9e4ed09c578b..d551da9549b1 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -1427,10 +1427,10 @@ static long __get_user_pages(struct mm_struct *mm,
+Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
+---
+ arch/x86/mm/fault.c | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
+index 296d294142c8..697432f63c59 100644
+--- a/arch/x86/mm/fault.c
++++ b/arch/x86/mm/fault.c
+@@ -13,7 +13,6 @@
+ #include <linux/mmiotrace.h>		/* kmmio_handler, ...		*/
+ #include <linux/perf_event.h>		/* perf_sw_event		*/
+ #include <linux/hugetlb.h>		/* hstate_index_to_shift	*/
+-#include <linux/prefetch.h>		/* prefetchw			*/
+ #include <linux/context_tracking.h>	/* exception_enter(), ...	*/
+ #include <linux/uaccess.h>		/* faulthandler_disabled()	*/
+ #include <linux/efi.h>			/* efi_crash_gracefully_on_page_fault()*/
+@@ -1496,8 +1495,6 @@ DEFINE_IDTENTRY_RAW_ERRORCODE(exc_page_fault)
  
- 	start = untagged_addr_remote(mm, start);
+ 	address = cpu_feature_enabled(X86_FEATURE_FRED) ? fred_event_data(regs) : read_cr2();
  
--	VM_BUG_ON(!!pages != !!(gup_flags & (FOLL_GET | FOLL_PIN)));
-+	VM_WARN_ON_ONCE(!!pages != !!(gup_flags & (FOLL_GET | FOLL_PIN)));
- 
- 	/* FOLL_GET and FOLL_PIN are mutually exclusive. */
--	if (WARN_ON_ONCE((gup_flags & (FOLL_PIN | FOLL_GET)) ==
-+	if (VM_WARN_ON_ONCE((gup_flags & (FOLL_PIN | FOLL_GET)) ==
- 			 (FOLL_PIN | FOLL_GET)))
- 		return -EINVAL;
+-	prefetchw(&current->mm->mmap_lock);
+-
+ 	/*
+ 	 * KVM uses #PF vector to deliver 'page not present' events to guests
+ 	 * (asynchronous page fault mechanism). The event happens when a
+-- 
+2.43.0
 
