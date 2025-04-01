@@ -1,133 +1,100 @@
-Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FDD81DDC28;
-	Tue,  1 Apr 2025 18:05:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6336A1DAC95;
+	Tue,  1 Apr 2025 18:07:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743530747; cv=none; b=FkSB8jH/hyGqH349sw90/QrEcOvJOCJwx+kc+ybhL1yS3bfIglPlZ+vJdmhirdtJ20lmUmvB6N+tN+3UmikqXMe9jfcNlzcNI2pOgcBdT053ZEeW4BIIe6FKQtDXadkCr+9HytKAZ3tUu6cR+ZaCTi0VIqjrD5/RXGYoLuMwAdE=
+	t=1743530841; cv=none; b=Yauis5VQ2QxsfNWrv7qmsvUDJ57ND+Sk9jqIIeAG/AqAFQrHevD8k2LUiFlsz1GtbXnRWRUq8PfoHIY3lLwpVqRCdXhNYFxUJC5JzjCSk0mDQihc0J1dcHLxqkylEX01z6wIv7PIiHA0I96Zr51ih5aBO9yaVuW4t0E0xON0Db8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743530747; c=relaxed/simple;
-	bh=j2ItC74CeCbbouvYFRtSAcPYoXQuBDkBa+rmnRCUvxg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aNb+m8bO1ODQI9O4teyPlHO3PYhfxK1/Q8ZbHm67osihkfqbi3cZcx5M656p/6Zw4AoPCjUHRCKoYiMEdI/F6fPg887Zro5yenLnjtXRQIdyUZ4MS+9US8GvuSjqVi/6tJjbDkxeX56W9Mthx0iMjGKcD4wVPvlpNGRdk/YaAdg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V6m9HUo5; arc=none smtp.client-ip=209.85.128.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V6m9HUo5"
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-6f768e9be1aso1178137b3.0;
-        Tue, 01 Apr 2025 11:05:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743530744; x=1744135544; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BoYrBmUYS1Fjt2+nydhXunhJyD1+jrRmHYe/TGOnFFw=;
-        b=V6m9HUo5QtlwnncsBN2a+dve0mRJ7Jm+z6zVKmaBZWv9XLbNmYnuzTyHKmJBN1nBAI
-         fXAMwb9BquR7v9ui552zr7zwkszwk8+Ioon33VBiX7E65OiwIRzEFVw/S588Xc52tsXj
-         Pwzo1RjU5eD1reN1YTxFmnvtXqZmACxt4pS38zpO8RohGG4LBIxf8MLzpcsffxAFisKw
-         tyr/TV7rlL05L5P3O8w3OTF44MkijQUKHfmf9oF7/8ZTapTz7OuAcKAQrCYCa9NRbelg
-         +eaKcbz436Pyd0a4h48E9u2TlXP8AS+WH26skeKxW3BVbENuEGp3hT6i2OgaUFvnHjw9
-         DNfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743530744; x=1744135544;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BoYrBmUYS1Fjt2+nydhXunhJyD1+jrRmHYe/TGOnFFw=;
-        b=IL9uXmEYyx8R7M5zH72NjYxgB/EBWU1i8RllcD/MJJy8zxk5aGHVNq9aovPZekpoSN
-         L/0RxJP9Ehmr29HocPrUIT5csWU1NLtA2wycNkWoyfI34M+cTkPpw6Ao3CgoCm6banm3
-         uqJc6hGdszqEIJkwR8LK7xCTbkWBq5hUoduQSAFVkoI0A7MG2tgudtDw81Yk2vwI0Ml7
-         oL+5bezjLZppQGKB5BuSksdQ+7RcxCaKPohkH5rb7zl91Z+tRY0U63HmlOTLtZNpx9a1
-         rHD7WQCDmKNPB0yHYQ8nucyL1GvUNzradiGk2UxaPrT7TXDx2gLfEdEvgQCg2wN7ZVjJ
-         /Eeg==
-X-Forwarded-Encrypted: i=1; AJvYcCUOVaFd2/blGxUt3qUgO838E5EGCAn3mGJ7Z6TAv1v47VWD0LrB30glHBgs2chf7fGmc9qdV7bbQ8zsiqv5YoZX@vger.kernel.org, AJvYcCUvmestSby/KlXmGMPmbj6fvFI51cqnxwioOD+n/oObo4NHPK///bd7/H/SRlHcxcJMMqba9AJLi3/6MUur@vger.kernel.org, AJvYcCVflJoGEku45pYnUJXKojnQZDc8PDNMPHV4U2bcEcKYf52/3UAg8OtAPl/dLzEuFeiDwkQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxe9fUBehoqPLnoz1fmBP30Gnl/NWeg8IwITZehqV3gE1SOybyB
-	iBWt8JZ7jHtq5KzsmbwmV34e9i1HdisASsr5HooGHKJkbC4Ti/tmETx36AR9NUaXbRIeQNZG4DM
-	6E3b9tEFm80y363sFg9DlcJAnHTA=
-X-Gm-Gg: ASbGncuLDCb/d/91Wgv8EgjTmK/TLU5cuf53tIgxZhT4/vKmAXMezNVcUAb6qgdTqjB
-	taJqdDTPkGrxhPQAx6JFpfrhxOwcEbus1oSNeBKJ5WaekIv6Y/2wgbOxrCnzf0b1l7awoCRFlhq
-	mhTIoeM9D+aev5X073FU2uE3ObgNAxSysH3lboW2q0sw==
-X-Google-Smtp-Source: AGHT+IGMVbGaGvOYTg9+RQ9IAGG98GOlapvtbp7KooxcYZhgqUbq/MrtYvN7WFBm50vXzage8iz9PVqJmEAJFgznsZo=
-X-Received: by 2002:a05:690c:6913:b0:6f9:47ad:f5f1 with SMTP id
- 00721157ae682-703b66ed874mr14693837b3.17.1743530744515; Tue, 01 Apr 2025
- 11:05:44 -0700 (PDT)
+	s=arc-20240116; t=1743530841; c=relaxed/simple;
+	bh=bYSc/XUhMhIZapsAeukPRJTKzEqlcxiv3DU6gTye0Es=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FrDhdrC0O2AJNDtRJmQqyWv65tt6TLG98IIToQli0N+sARh76kzW1JY7f9sqP6WzZVMckWCART6T/YJdcylGNO0s6xQFXfYe39bYpAw8Gyc3Ri+bLYgwo+MQJlVImpgeYfgBgB6f7MCfYqd8zqKcjQQh+Kosu7m0vNwfLL8htEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9BC3312FC;
+	Tue,  1 Apr 2025 11:07:20 -0700 (PDT)
+Received: from e132581.cambridge.arm.com (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id CF6B23F59E;
+	Tue,  1 Apr 2025 11:07:15 -0700 (PDT)
+From: Leo Yan <leo.yan@arm.com>
+To: Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	James Clark <james.clark@linaro.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	coresight@lists.linaro.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Leo Yan <leo.yan@arm.com>
+Subject: [PATCH v4 0/7] Arm CoreSight: Support AUX pause and resume
+Date: Tue,  1 Apr 2025 19:07:01 +0100
+Message-Id: <20250401180708.385396-1-leo.yan@arm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250401061546.1990156-1-nichen@iscas.ac.cn>
-In-Reply-To: <20250401061546.1990156-1-nichen@iscas.ac.cn>
-From: Amery Hung <ameryhung@gmail.com>
-Date: Tue, 1 Apr 2025 11:05:33 -0700
-X-Gm-Features: AQ5f1JpOwg2Qo4yi4MGTCZ1zyArShoCogVd4mypKFbNMujca6CF07ZTLq3Qc6vY
-Message-ID: <CAMB2axOa6D757_FGsW2i4xCDzNP7h+QUGMDvRtnx6EyNfjRBFA@mail.gmail.com>
-Subject: Re: [PATCH] selftests/bpf: Convert comma to semicolon
-To: Chen Ni <nichen@iscas.ac.cn>
-Cc: andrii@kernel.org, eddyz87@gmail.com, mykolal@fb.com, ast@kernel.org, 
-	daniel@iogearbox.net, martin.lau@linux.dev, song@kernel.org, 
-	yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org, 
-	sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org, shuah@kernel.org, 
-	mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com, peterz@infradead.org, 
-	juntong.deng@outlook.com, oleg@redhat.com, bpf@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, Mar 31, 2025 at 11:17=E2=80=AFPM Chen Ni <nichen@iscas.ac.cn> wrote=
-:
->
-> Replace comma between expressions with semicolons.
->
-> Using a ',' in place of a ';' can have unintended side effects.
-> Although that is not the case here, it is seems best to use ';'
-> unless ',' is intended.
->
-> Found by inspection.
-> No functional change intended.
-> Compile tested only.
->
+This series is to enable AUX pause and resume on Arm CoreSight.
 
-Oopsie. Thanks for fixing it.
+The first patch extracts the trace unit controlling operations to two
+functions.  These two functions will be used by AUX pause and resume.
 
-Reviewed-by: Amery Hung <ameryhung@gmail.com>
+Patches 02 and 03 change the ETMv4 driver to prepare callback functions
+for AUX pause and resume.
 
-> Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
-> ---
->  tools/testing/selftests/bpf/test_kmods/bpf_testmod.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c b/tools=
-/testing/selftests/bpf/test_kmods/bpf_testmod.c
-> index 3220f1d28697..f38eaf0d35ef 100644
-> --- a/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
-> +++ b/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
-> @@ -1340,7 +1340,7 @@ static int st_ops_gen_prologue_with_kfunc(struct bp=
-f_insn *insn_buf, bool direct
->         *insn++ =3D BPF_STX_MEM(BPF_DW, BPF_REG_6, BPF_REG_7, offsetof(st=
-ruct st_ops_args, a));
->         *insn++ =3D BPF_JMP_IMM(BPF_JA, 0, 0, 2);
->         *insn++ =3D BPF_MOV64_REG(BPF_REG_1, BPF_REG_0);
-> -       *insn++ =3D BPF_CALL_KFUNC(0, bpf_cgroup_release_id),
-> +       *insn++ =3D BPF_CALL_KFUNC(0, bpf_cgroup_release_id);
->         *insn++ =3D BPF_MOV64_REG(BPF_REG_1, BPF_REG_8);
->         *insn++ =3D prog->insnsi[0];
->
-> @@ -1379,7 +1379,7 @@ static int st_ops_gen_epilogue_with_kfunc(struct bp=
-f_insn *insn_buf, const struc
->         *insn++ =3D BPF_STX_MEM(BPF_DW, BPF_REG_1, BPF_REG_6, offsetof(st=
-ruct st_ops_args, a));
->         *insn++ =3D BPF_JMP_IMM(BPF_JA, 0, 0, 2);
->         *insn++ =3D BPF_MOV64_REG(BPF_REG_1, BPF_REG_0);
-> -       *insn++ =3D BPF_CALL_KFUNC(0, bpf_cgroup_release_id),
-> +       *insn++ =3D BPF_CALL_KFUNC(0, bpf_cgroup_release_id);
->         *insn++ =3D BPF_MOV64_REG(BPF_REG_0, BPF_REG_6);
->         *insn++ =3D BPF_ALU64_IMM(BPF_MUL, BPF_REG_0, 2);
->         *insn++ =3D BPF_EXIT_INSN();
-> --
-> 2.25.1
->
+Patch 04 changes the ETM perf layer to support AUX pause and resume in a
+perf session.  The patch 05 re-enables sinks after buffer update, based
+on it, the patch 06 updates buffer on AUX pause occasion, which can
+mitigate the trace data lose issue.
+
+Patch 07 documents the AUX pause usages with Arm CoreSight.
+
+This patch set has been verified on the Hikey960 board.
+
+It is suggested to disable CPUIdle (add `nohlt` option in Linux command
+line) when verifying this series.  ETM and funnel drivers are found
+issues during CPU suspend and resume which will be addressed separately.
+
+Changes from v3:
+- Re-enabled sink in buffer update callbacks (Suzuki).
+
+Changes from v2:
+- Rebased on CoreSight next branch.
+- Dropped the uAPI 'update_buf_on_pause' and updated document
+  respectively (Suzuki).
+- Renamed ETM callbacks to .pause_perf() and .resume_perf() (Suzuki).
+- Minor improvement for error handling in the AUX resume flow.
+
+Changes from v1:
+- Added validation function pointers in pause and resume APIs (Mike).
+
+
+Leo Yan (7):
+  coresight: etm4x: Extract the trace unit controlling
+  coresight: Introduce pause and resume APIs for source
+  coresight: etm4x: Hook pause and resume callbacks
+  coresight: perf: Support AUX trace pause and resume
+  coresight: tmc: Re-enable sink after buffer update
+  coresight: perf: Update buffer on AUX pause
+  Documentation: coresight: Document AUX pause and resume
+
+ Documentation/trace/coresight/coresight-perf.rst   |  31 +++++++++
+ drivers/hwtracing/coresight/coresight-core.c       |  22 +++++++
+ drivers/hwtracing/coresight/coresight-etm-perf.c   |  84 +++++++++++++++++++++++-
+ drivers/hwtracing/coresight/coresight-etm4x-core.c | 143 +++++++++++++++++++++++++++++------------
+ drivers/hwtracing/coresight/coresight-etm4x.h      |   2 +
+ drivers/hwtracing/coresight/coresight-priv.h       |   2 +
+ drivers/hwtracing/coresight/coresight-tmc-etf.c    |   9 +++
+ drivers/hwtracing/coresight/coresight-tmc-etr.c    |  10 +++
+ include/linux/coresight.h                          |   4 ++
+ 9 files changed, 265 insertions(+), 42 deletions(-)
+
+-- 
+2.34.1
+
