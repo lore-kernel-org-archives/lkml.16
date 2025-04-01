@@ -1,146 +1,182 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A298214213
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 20:42:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2785420E32B
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 20:43:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743540124; cv=none; b=Hee074kSQ3piknC8jZysqi3TBF6xKtGh2X3+KJuPWRfRK8pLv8J5/Z8sxY3l7qcyyrbJ9rJBDpRPfc6QMW3vEzjSMBC6X09bUFkzQDeI0YkvFe/Eun8oa+Y/vmkOXunrMSFcduBGJw712sJfQAEeHNwMVtaxQawSNNSZBVsl/SM=
+	t=1743540197; cv=none; b=ttnhUb73dddL+73S1dOSpt+3YOU83uYdlsJ9AdpJx7WnPVbDNWWRJrYCAypSqojQVTQWt+hK4fynHN9H+3IQCGZeknwH9gVlOVMOtD+nw4+SaIv1n3LG0bLyNk4nyLLaDg5YAzjexqClCN6YqYdhMjKNyBMT563jr8OHqF1PyBI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743540124; c=relaxed/simple;
-	bh=DQqNytcES03RM+rHoX7X/MIHXjVFtwm514rcdrui4L4=;
-	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=MftcJYCNY55BMWNLam3lFrVJteFe3pyjvJS+gwUZ7qPdw85j6b7bKe3wvaCaKcOa6bqyuMigpEido/X520XRHaWA2oa9sI437iEM2cqMG9kLpyr4lXpLMdni19aQfGgtW3ws7q7QPKm2GnKySMOPvErf50pVgUYJ4rrXo99xOBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BS5vT8fH; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1743540197; c=relaxed/simple;
+	bh=dnaPgtw+uOGzBc9Q8I5K46IpAnL+zbk7+D3CpS8e/LA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Cn3kKGhXpMN4Gz2iRg/DfCfdpc7k2rrT3AGhj2dfVbmrjfmVzl1Go5amixb4H0VHbyl7uRPjikFqkBcYJ3/mx3yaFQcKYS0GH/WI5WN0SuoEDn7US47ckROpOetCkroHzXcpwR5qioSBS8j6M0zOdXHT25Tr7G+26ZNoV3f/DXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=fZFpWTWS; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BS5vT8fH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743540121;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Owge253k5OvzgMZCm8XexlvQc59vpIkP2hnOZmugbZE=;
-	b=BS5vT8fH1aSN5oEMWfFD39xw4Fbso+NiTVqs4KtI2Hr7onLUdv1u9bNq24z6DfaxvxuK5R
-	HL60fz6x192dpw2hN6QndbcsGMj4OG7oUEDQXWOIeBVsg19KVUjKm+nLJvqFGZUhle1Xr9
-	Vo5f0R7KNSphEGDrYkwzUxREJqiJfh4=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-418-a009eiMoNXWW0cXA9RSQgQ-1; Tue, 01 Apr 2025 16:41:59 -0400
-X-MC-Unique: a009eiMoNXWW0cXA9RSQgQ-1
-X-Mimecast-MFC-AGG-ID: a009eiMoNXWW0cXA9RSQgQ_1743540119
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7c5c77aff78so113877385a.0
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 13:41:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="fZFpWTWS"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-223fb0f619dso113824945ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 13:43:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1743540193; x=1744144993; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=4N9bSikoL2WjOyo56gwXGKLK2uNMMUkoiqCVV5Eb9wg=;
+        b=fZFpWTWS8HhwdI5Ym/mjDljw9C1hqCwbk4YdfL/HpVQpc0Pt6EF0JvWNjJT57bING6
+         fT/pZYPaDZ6VqCRcAtDSZueS5vg1m4cvgaCj0PEvTvI6orMQXEvrfnDTqgZLEjWw7maq
+         40QDtAoMGeAxnAoLlOL6RlLZoU3G34Uwi1lLo3Bu0zjHojKck9dkLF4xbQWO/+CebJns
+         1kksfmMiBuKREqswVQrsHm/2k3OwTDs3wPzyxGIyWTz6NkqfVTv0U4QIQViJNgjB/KVS
+         ZANaRHoBVnc58D65EfLAKkvCw+V9Z/OqnTcD/7+OTxpvPJ8xfn9wZLlmIdjhl5gQoE8x
+         VMXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743540117; x=1744144917;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Owge253k5OvzgMZCm8XexlvQc59vpIkP2hnOZmugbZE=;
-        b=m2f6Wl4tGhzBvlH71PcDSQ3rEa4BbzkebQ6suQZ4p1se6s8B64A8SNwEEtvgXHkyZF
-         lRFGnOkF8K5jviu7tx8Nq6Jbg5RCq12zJhvIiQiIAPrqS4iJKbslj9yRRjIepJ7acgun
-         krTYhq0CFgi3X4KUffpvHYe7dM5NnaHqLlilsPEzio8TFnxb5UW+GdXD366hyDCHegL0
-         u4YQUeK64kDWWEzK8yI/E2DSX/I524Q6RG3bd9ADZmMJ+8r4RY4Vty6xYSPHxKLN0P25
-         ejbKeg4M5m+8G/VJHk4ltbJDc40YD0nCgCy3aiN5QDvQuujkuvX6rpEoAkJ0gtwUnJKP
-         S0XQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXnSDtg/Ng5InS9ske36CYbJHvQRT4ouYATTkl5P8ZjvYtIELTxcTahzvM6Xhc0imTKsBL0Q/EBUVg/yGg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxZdAOKUnKqm5CqIQClGi+qSZKOO+6pIqzxTLWznMjUoEwZjAkz
-	yaR9FOhv86eiQt856Bio2pY1seCa/e2JmV8SYzcCD7iSs+Jc37cjY7Cnx4aXfIU7xIL55n/4t0q
-	Zs06L+guEZJ9i3ZHE1RVstLGLPYRQ1YFjQzRIhCsKiZhMRN5GcOnLRfZQJJe4hLhWuvBh0g==
-X-Gm-Gg: ASbGncuSf9zP2Kv2wBA+kilUA9+uhQh25+it13xMiu4X0kV0CBTNGE19FSbMmHsFXEx
-	pbsheT6ZNMQyTKG4/VaZYo077YVXRCdTo1LqFajtWk4mruNtwlgoqbIdomLTvfe6/wz2dLh88o8
-	+miN8kRrOH/ZZ5zBkNdAWtC3ZgT6WRlt+6hypaMujAsl3zTvmUnRkUd2ydhuds9qIK/aVepxewN
-	HJpRo3NaP+kwq/OU40PKUDGSOHSCez9N7mgdH3QKAjWwXhAZGK1JLPFTWKskaxNafjSj5dwLONq
-	h6Bfju+Hlqbo280bSIjNuGgLC55WoUW7RjLcS45goM4k5PRozhBXcwC0oz7i8g==
-X-Received: by 2002:a05:620a:4013:b0:7c5:5276:1db7 with SMTP id af79cd13be357-7c6908974d4mr2076453785a.52.1743540117629;
-        Tue, 01 Apr 2025 13:41:57 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH27u1JuY0yEa8uyZ7v4MsZRRq+k/qsw1NKT26VcX+0iVdXSIzNmBeyfSP31h9rLTX0UGAbFQ==
-X-Received: by 2002:a05:620a:4013:b0:7c5:5276:1db7 with SMTP id af79cd13be357-7c6908974d4mr2076451385a.52.1743540117322;
-        Tue, 01 Apr 2025 13:41:57 -0700 (PDT)
-Received: from ?IPV6:2601:188:c100:5710:315f:57b3:b997:5fca? ([2601:188:c100:5710:315f:57b3:b997:5fca])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c5f768b70esm699208885a.43.2025.04.01.13.41.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Apr 2025 13:41:56 -0700 (PDT)
-From: Waiman Long <llong@redhat.com>
-X-Google-Original-From: Waiman Long <longman@redhat.com>
-Message-ID: <d9c96490-98bf-406b-8324-6cf86a536433@redhat.com>
-Date: Tue, 1 Apr 2025 16:41:55 -0400
+        d=1e100.net; s=20230601; t=1743540193; x=1744144993;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4N9bSikoL2WjOyo56gwXGKLK2uNMMUkoiqCVV5Eb9wg=;
+        b=b7puWjJiFoirDcpaGPj7xoK78aSsJURVGpleom5JulZqwdcNjFZbwaKuQlveUbWgdf
+         IywkSS6UIec4FgPp/xEKdVXjVZJhp7dNfimIGs3p30TgxPtGD1l2vNnLidIF6imKEI0x
+         ThGqHg78o/nVSjN3g/ZgYEknA+Tf07QPd2AIgiD6Y9ldrbyh/u97d7dhfdVI+eukiyTm
+         i3BvSr4cUt6zFsZ+TpS6y1kQb2X8zcCMDTNYUdh4bENGsV4yD9WRXUkVaMB/JNmdy1Oa
+         ojLmIzVeH2SCKeLKF8MF0qITbbG5KPSqCumZmQwr3hX2i3edUdFhg4oGb3fLYk5tH3Ud
+         pNeQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXCkHcWp86vs51GfWQxZp5B25TcDpNb3DgqcHd7Py1IJQ1Bim4b5zJDoA1Yax2WoyoqHjtKYN8QTZGzhCI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyckx7v+TtarVNvtbCW2hupJnYV0+/dDM9L31twRK0UrCA3HfyE
+	dig1Q23IsDZC0zajL5Cy+T81N1yyoKm09wBZput3KfpBPndqFOmKrfUTYc2eunM=
+X-Gm-Gg: ASbGnct96wJPAX1Gpzik8LJyzih/pR+SEGSWiqAOdnlKOWZIhT4s9VdKmTAwXshpJaF
+	K17TUF5tIH0/AgBX6ohFQumQNtgjocCgkeMDcVaFgSXXZc6R1Z2TwfJhhHXM51N8tEXJ44RUj3O
+	UcpxH+qp75+dUANIxMC792FdFBnrBVaBKD0xO5CM19zl3zthF1FqMazHJDs/wk+WlYoNJd200kB
+	a5i6m+nCjkXK7MNXN3hWPEZIRWujKLURUMQf3ZnNC5uxINOavLuAj2ku+sgscrkwbhJQRpO8zhH
+	9wJ33rgmca+2KJy5bsTaS6VVtabTLxLrwFo=
+X-Google-Smtp-Source: AGHT+IEK/OL+9Kd9LZbi6kJp9eomm5A9lXwmWj+SEPjmTfabDnSjH/xtw6UkP02pfgtMx4rN8zRqyg==
+X-Received: by 2002:a17:902:c411:b0:220:f7bb:842 with SMTP id d9443c01a7336-2295c0ed243mr67067595ad.42.1743540193373;
+        Tue, 01 Apr 2025 13:43:13 -0700 (PDT)
+Received: from ghost ([50.145.13.30])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291f1cde55sm93609305ad.132.2025.04.01.13.43.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Apr 2025 13:43:12 -0700 (PDT)
+Date: Tue, 1 Apr 2025 13:43:08 -0700
+From: Charlie Jenkins <charlie@rivosinc.com>
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Ben Dooks <ben.dooks@codethink.co.uk>,
+	Pasha Bouzarjomehri <pasha@rivosinc.com>,
+	Emil Renner Berthing <emil.renner.berthing@canonical.com>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Jason Baron <jbaron@akamai.com>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH v10 2/2] riscv: Add runtime constant support
+Message-ID: <Z-xP3M7-GSUCHQkb@ghost>
+References: <20250319-runtime_const_riscv-v10-0-745b31a11d65@rivosinc.com>
+ <20250319-runtime_const_riscv-v10-2-745b31a11d65@rivosinc.com>
+ <20250401192833.GA3645424@ax162>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 01/10] cgroup/cpuset: Fix race between newly created
- partition and dying one
-To: Tejun Heo <tj@kernel.org>, Waiman Long <llong@redhat.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>, =?UTF-8?Q?Michal_Koutn=C3=BD?=
- <mkoutny@suse.com>, Shuah Khan <shuah@kernel.org>, cgroups@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-References: <20250330215248.3620801-1-longman@redhat.com>
- <20250330215248.3620801-2-longman@redhat.com>
- <Z-shjD2OwHJPI0vG@slm.duckdns.org>
- <915d1261-ee9f-4080-a338-775982e1c48d@redhat.com>
- <Z-xFqkBsh640l5j0@mtj.duckdns.org>
-Content-Language: en-US
-In-Reply-To: <Z-xFqkBsh640l5j0@mtj.duckdns.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250401192833.GA3645424@ax162>
 
+On Tue, Apr 01, 2025 at 12:28:33PM -0700, Nathan Chancellor wrote:
+> Hi Charlie,
+> 
+> On Wed, Mar 19, 2025 at 11:35:20AM -0700, Charlie Jenkins wrote:
+> > Implement the runtime constant infrastructure for riscv. Use this
+> > infrastructure to generate constants to be used by the d_hash()
+> > function.
+> > 
+> > This is the riscv variant of commit 94a2bc0f611c ("arm64: add 'runtime
+> > constant' support") and commit e3c92e81711d ("runtime constants: add
+> > x86 architecture support").
+> > 
+> > Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+> > Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+> ...
+> > diff --git a/arch/riscv/include/asm/runtime-const.h b/arch/riscv/include/asm/runtime-const.h
+> ...
+> > +#define RISCV_RUNTIME_CONST_64_ZBA				\
+> > +	".option push\n\t"					\
+> > +	".option arch,+zba\n\t"					\
+> > +	"slli	%[__tmp],%[__tmp],32\n\t"			\
+> > +	"add.uw %[__ret],%[__ret],%[__tmp]\n\t"			\
+> > +	"nop\n\t"						\
+> > +	"nop\n\t"						\
+> > +	".option pop\n\t"					\
+> ...
+> > +#if defined(CONFIG_RISCV_ISA_ZBA) && defined(CONFIG_RISCV_ISA_ZBKB)
+> ...
+> > +#elif defined(CONFIG_RISCV_ISA_ZBA)
+> > +#define runtime_const_ptr(sym)						\
+> > +({									\
+> > +	typeof(sym) __ret, __tmp;					\
+> > +	asm_inline(RISCV_RUNTIME_CONST_64_PREAMBLE			\
+> > +		ALTERNATIVE(						\
+> > +			RISCV_RUNTIME_CONST_64_BASE,			\
+> > +			RISCV_RUNTIME_CONST_64_ZBA,			\
+> > +			0, RISCV_ISA_EXT_ZBA, 1				\
+> > +		)							\
+> > +		RISCV_RUNTIME_CONST_64_POSTAMBLE(sym)			\
+> > +		: [__ret] "=r" (__ret), [__tmp] "=r" (__tmp));		\
+> > +	__ret;								\
+> > +})
+> 
+> This breaks the build for clang versions 16 and earlier because they do
+> not support '.option arch' and it is used in CONFIG_RISCV_ISA_ZBA, which
+> has no dependencies and it is default on.
+> 
+>   $ make -skj"$(nproc)" ARCH=riscv LLVM=1 mrproper defconfig fs/dcache.o
+>   fs/dcache.c:117:9: warning: unknown option, expected 'push', 'pop', 'rvc', 'norvc', 'relax' or 'norelax' [-Winline-asm]
+>           return runtime_const_ptr(dentry_hashtable) +
+>                  ^
+>   arch/riscv/include/asm/runtime-const.h:103:4: note: expanded from macro 'runtime_const_ptr'
+>                           RISCV_RUNTIME_CONST_64_ZBA,                     \
+>                           ^
+>   arch/riscv/include/asm/runtime-const.h:57:17: note: expanded from macro 'RISCV_RUNTIME_CONST_64_ZBA'
+>           ".option push\n\t"                                      \
+>                          ^
+>   <inline asm>:32:10: note: instantiated into assembly here
+>           .option arch,+zba
+>                   ^
+>   fs/dcache.c:117:9: error: instruction requires the following: 'Zba' (Address Generation Instructions)
+>           return runtime_const_ptr(dentry_hashtable) +
+>                  ^
+>   arch/riscv/include/asm/runtime-const.h:103:4: note: expanded from macro 'runtime_const_ptr'
+>                           RISCV_RUNTIME_CONST_64_ZBA,                     \
+>                           ^
+>   arch/riscv/include/asm/runtime-const.h:59:30: note: expanded from macro 'RISCV_RUNTIME_CONST_64_ZBA'
+>           "slli   %[__tmp],%[__tmp],32\n\t"                       \
+>                                         ^
+>   <inline asm>:34:2: note: instantiated into assembly here
+>           add.uw a2,a2,a3
+>           ^
+>   ...
+> 
+>   $ rg 'OPTION_ARCH|ZBA' .config
+>   364:CONFIG_RISCV_ISA_ZBA=y
+> 
+> Should it grow a dependency on AS_HAS_OPTION_ARCH or should there be a
+> different fix?
 
-On 4/1/25 3:59 PM, Tejun Heo wrote:
-> Hello, Waiman.
->
-> On Mon, Mar 31, 2025 at 11:12:06PM -0400, Waiman Long wrote:
->> The problem is the RCU delay between the time a cgroup is killed and is in a
->> dying state and when the partition is deactivated when cpuset_css_offline()
->> is called. That delay can be rather lengthy depending on the current
->> workload.
-> If we don't have to do it too often, synchronize_rcu_expedited() may be
-> workable too. What do you think?
+This should have been fixed by Alex's patch [1]. Zba is in an awkward
+state because BPF generates Zba code without the need for toolchain
+support.
 
-I don't think we ever call synchronize_rcu() in the cgroup code except 
-for rstat flush. In fact, we didn't use to have an easy way to know if 
-there were dying cpusets hanging around. Now we can probably use the 
-root cgroup's nr_dying_subsys[cpuset_cgrp_id] to know if we need to use 
-synchronize_rcu*() call to wait for it. However, I still need to check 
-if there is any racing window that will cause us to miss it.
+[1] https://lore.kernel.org/all/20250328115422.253670-1-alexghiti@rivosinc.com/
 
->
->> Another alternative that I can think of is to scan the remote partition list
->> for remote partition and sibling cpusets for local partition whenever some
->> kind of conflicts are detected when enabling a partition. When a dying
->> cpuset partition is detected, deactivate it immediately to resolve the
->> conflict. Otherwise, the dying partition will still be deactivated at
->> cpuset_css_offline() time.
->>
->> That will be a bit more complex and I think can still get the problem solved
->> without adding a new method. What do you think? If you are OK with that, I
->> will send out a new patch later this week.
-> If synchronize_rcu_expedited() won't do, let's go with the original patch.
-> The operation does make general sense in that it's for a distinctive step in
-> the destruction process although I'm a bit curious why it's called before
-> DYING is set.
-
-Again, we have to synchronize between the css_is_dying() call in 
-is_cpuset_online() which is used by cpuset_for_each_child() against the 
-calling of cpuset_css_killed(). Since setting of the CSS_DYING flag is 
-protected by cgroup_mutex() while most of the cpuset code is protected 
-by cpuset_mutex. The two operations can be asynchronous with each other. 
-So I have to make sure that by the time CSS_DYING is set, the 
-cpuset_css_killed() call has been invoked. I need to do similar check if 
-we decide to use synchronize_rcu*() to wait for the completion of 
-cpuset_css_offline() call.
-
-As I am also dealing with a lot of locking related issues, I am more 
-attuned to this kind of racing conditions to make sure nothing bad will 
-happen.
-
-Cheers,
-Longman
-
-
+> 
+> Cheers,
+> Nathan
