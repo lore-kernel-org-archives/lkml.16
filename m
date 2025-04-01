@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EB521E47CA
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EAFA126BFA
 	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 07:54:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743494050; cv=none; b=AIyJdcKUlW2RywoXzxKO2hILkS2E1dRo526LUEccSydzHMTS2MpKD2XrHwBcsBlAGkRZ9FRn8guRKJQgmFodfLddoF9EpACBVZdMdgTDfPtRif6A+ct3fz87G0tRGFnjjiiP8UnIU1nvb9mhQnmLnQnEZ3q8NIRBD4YiFJ/oFSY=
+	t=1743494050; cv=none; b=Be7kxId0T4kPsFdw/qYIP8OC2J/SP5foKwuw3aLlv+o9xfl0zCV7zEeW575grxwqIA79Ly+u4rO+iJreGPrCgYjmciDeAxlFMA20vRGULvfkCqIYZpXJ++koel8cMMZuFt0UrGcTC+O5zQ7YvIb3rfwqSYnDPF/fAfUsb3sqzNE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1743494050; c=relaxed/simple;
-	bh=zEgF7zl+qaVDn5TiUTBaHD0fanWnAVJNnO4sgNc2+7E=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ch+A4mC3VwZ3godavoGOn+VV90S6qffcCmagGyNJs65c1/S/V41L8NdVyiKVjA814UiXHpt6L6spKxRJCljvcG1WMkfizIqrq5rd8e+HXHp1INlW9ArnDrYagWmszMslxpI2p1BGoEfAEDCixq/VXocxnMEjS2QQMpSTFWZNSBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qau5xGl6; arc=none smtp.client-ip=10.30.226.201
+	bh=LP3b15IRlpCPLwb6oO8pnHVW44JCkcP1KqMqvoLVt8A=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=KWVoRWKrwD/d0FhKr2oq8WlaeH8wI5+8NhUWkysRQSkkonPvNEKu4uor6Fl3gpkpSvlO14ri3hx/0TD3OEOmz8wjfcleoe941U29sL6C+dYjV/I/5tpetN2HeKcd8b0TCn2sLfbmiyEHNV8C8OdJUzUxik0CojUrtyBKCSb7OEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gAhdre+k; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qau5xGl6"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id EFDF2C4CEE5;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gAhdre+k"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D9592C4CEE4;
 	Tue,  1 Apr 2025 07:54:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743494050;
-	bh=zEgF7zl+qaVDn5TiUTBaHD0fanWnAVJNnO4sgNc2+7E=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=qau5xGl6OB9AKddGdNpG6XVR0zwA2OQz5l+Em49VJjJE/vWVaRhN7lEuzRsMVzzYE
-	 qd6J2jvsDJkYapT6lTchrye3wCthU6ZoGYZ+NVDfUNFgeoHJh+P5XHgw2pzfBlNV3y
-	 WceeH/C5l5R0GKUxyQ/eFlx1xurPhz5e29OW/OHOJxTYTDHnRFlv5IYZKUwDTLC47y
-	 +bvXhm/oQF/046pwtBhhGH7n8484EECLT6Hpa0H5wvHu3YftNsRRl5qLbbLmVqI+By
-	 dIPIrehjBxBLqLY4GJupIf+UsrSBjRg6tP0tillx0NHZctm8rp0HNO0S8TvRKRowq4
-	 5+G6IVfxTZfIQ==
+	s=k20201202; t=1743494049;
+	bh=LP3b15IRlpCPLwb6oO8pnHVW44JCkcP1KqMqvoLVt8A=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=gAhdre+k58gGWMBJrHlHd+2fNXWiI/OmxrsRxfqujeLma3PwYQL7AcjrvxpXByky9
+	 l5MZlrWZXSy2JtzfUx8I5EzJSKbKcJ8u5rMJ27rjJtrC/g8BrfG+f2m424K1s9Vrbk
+	 WoVEDF5n4L1koEK9frCiwJLOQp5fGG+RoeserBoha0egT88BUMOY8kHC6EdmgGWuiM
+	 kx0MNtigGb74LkX8tG92i3CfvaATdtXSET4uXKpg+gJbGltIqjYqP2Zo7YfR+I90b8
+	 QULeFP/PtJoRU9QwPbUi1/0ikZCLhEO5mo1Z+QyDJxu7dhXKNzyB6Q1odgK/dFg6KS
+	 fzbdCfTaXS6Ig==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB778C36018;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7B4AC36014;
 	Tue,  1 Apr 2025 07:54:09 +0000 (UTC)
 From: Hermes Wu via B4 Relay <devnull+Hermes.wu.ite.com.tw@kernel.org>
-Date: Tue, 01 Apr 2025 15:54:55 +0800
-Subject: [PATCH v3 1/5] drm/bridge: it6505: fix link training state HW
- register reset
+Subject: [PATCH v3 0/5] drm/bridge: it6505: fix DP link traning and improve
+ compatibility
+Date: Tue, 01 Apr 2025 15:54:54 +0800
+Message-Id: <20250401-fix-link-training-v3-0-7f60f2ab7b8c@ite.com.tw>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,9 +41,11 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250401-fix-link-training-v3-1-7f60f2ab7b8c@ite.com.tw>
-References: <20250401-fix-link-training-v3-0-7f60f2ab7b8c@ite.com.tw>
-In-Reply-To: <20250401-fix-link-training-v3-0-7f60f2ab7b8c@ite.com.tw>
+X-B4-Tracking: v=1; b=H4sIAM6b62cC/22NOw7CMBBErxJtzUb+Q6i4B0oRGSdZATayLQOKc
+ ndMaCnfaObNAslFcgmOzQLRFUoUfAW5a8DOg58c0qUyCCY044LjSC+8kb9ijgN58hMqw1WnVae
+ M1lB3j+hqaXOe+8ozpRzie7so4pv+bFKYP7YikOFeG3uQzIyasRNl19pwb/MT+nVdP1qohU2zA
+ AAA
+X-Change-ID: 20250121-fix-link-training-461495494655
 To: Andrzej Hajda <andrzej.hajda@intel.com>, 
  Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
  Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
@@ -55,11 +57,11 @@ Cc: Pet.Weng@ite.com.tw, Kenneth.Hung@ite.com.tw, treapking@chromium.org,
  dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
  Hermes Wu <Hermes.wu@ite.com.tw>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1743494115; l=1768;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1743494115; l=1714;
  i=Hermes.wu@ite.com.tw; s=20241230; h=from:subject:message-id;
- bh=L0iJ7cK8igir/+LkaX0VG1u/Z4JkZspdyQ1kUW040to=;
- b=3ZeAjApBbdwUWtMUrKLUV1ulA0WRkCQpNpD6DDC5ha8kUO1G867Jt6ap/VMWoIpEtk31xTf/J
- WBUmO6lxMOKDf05sT8nNeku+/xueuidinyq4rQh19OeBkCUDIIx09Px
+ bh=LP3b15IRlpCPLwb6oO8pnHVW44JCkcP1KqMqvoLVt8A=;
+ b=hOHci6erGeiK2XIgs8hBQ/43rZThwuHNpxAa4C+6/Zhy4ag1h+NIgmyklNI3DNvCspQjzmAJM
+ GgMoWBE6Is4A/dxTd/zEfAbesW0/R/9nq8fmI1fVKl0X+MKUMS1bQWW
 X-Developer-Key: i=Hermes.wu@ite.com.tw; a=ed25519;
  pk=qho5Dawp2WWj9CGyjtJ6/Y10xH8odjRdS6SXDaDAerU=
 X-Endpoint-Received: by B4 Relay for Hermes.wu@ite.com.tw/20241230 with
@@ -67,50 +69,46 @@ X-Endpoint-Received: by B4 Relay for Hermes.wu@ite.com.tw/20241230 with
 X-Original-From: Hermes Wu <Hermes.wu@ite.com.tw>
 Reply-To: Hermes.wu@ite.com.tw
 
-From: Hermes Wu <Hermes.wu@ite.com.tw>
+IT6505 supports HW auto link training which will write DPCD and check
+training status automatically. Some DP device can not pass
+HW auto link training and must set link training step by step.
 
-When connect to a DP-to-HDMI device which does not connect
-to HDMI sink, it will report DPCD 00200h with SINK_COUNT = "0",
-and issue HPD_IRQ when SINK_COUNT change to "1".
+when HW auto link training fail, it may trigger video FIFO error,
+and link training process will reset to beginning, and never try
+step training method.
 
-IT6505 can not recive HPD_IRQ before training done and driver will
-force HW enter training done state when connect to such devices.
-
-When HW is force to training done state and restart link training,
-bits FORCE_RETRAIN and MANUAL_TRAIN at REG_TRAIN_CTRL1 must be set
-at the same time to reset HW state.
+Modify training method improve compatibility to these DP devices.
 
 Signed-off-by: Hermes Wu <Hermes.wu@ite.com.tw>
 ---
- drivers/gpu/drm/bridge/ite-it6505.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+Changes in v3:
+- Patch 1/5 : add commit message for detial about changes
+- Patch 2/5 : fix lost variable struct device *dev;
+- Patch 3/5 : keep changes and remove refactoring
+- Patch 5/5 : merge condition "it6505->step_train_only" check form if condiction into for loop.
+- Link to v2: https://lore.kernel.org/r/20250326-fix-link-training-v2-0-756c8306f500@ite.com.tw
 
-diff --git a/drivers/gpu/drm/bridge/ite-it6505.c b/drivers/gpu/drm/bridge/ite-it6505.c
-index 88ef76a37fe6accacdd343839ff2569b31b18ceb..b47042dc06bb1e1dfd92bc0dc6d69dc918a140ba 100644
---- a/drivers/gpu/drm/bridge/ite-it6505.c
-+++ b/drivers/gpu/drm/bridge/ite-it6505.c
-@@ -1806,7 +1806,9 @@ static bool it6505_link_start_auto_train(struct it6505 *it6505)
- 	mutex_lock(&it6505->aux_lock);
- 	it6505_set_bits(it6505, REG_TRAIN_CTRL0,
- 			FORCE_CR_DONE | FORCE_EQ_DONE, 0x00);
--	it6505_write(it6505, REG_TRAIN_CTRL1, FORCE_RETRAIN);
-+	/* reset link state machine and re start training*/
-+	it6505_write(it6505, REG_TRAIN_CTRL1,
-+		     FORCE_RETRAIN | MANUAL_TRAIN);
- 	it6505_write(it6505, REG_TRAIN_CTRL1, AUTO_TRAIN);
- 
- 	while (timeout > 0) {
-@@ -2377,7 +2379,7 @@ static void it6505_stop_link_train(struct it6505 *it6505)
- {
- 	it6505->link_state = LINK_IDLE;
- 	cancel_work_sync(&it6505->link_works);
--	it6505_write(it6505, REG_TRAIN_CTRL1, FORCE_RETRAIN);
-+	it6505_write(it6505, REG_TRAIN_CTRL1, FORCE_RETRAIN | MANUAL_TRAIN);
- }
- 
- static void it6505_link_train_ok(struct it6505 *it6505)
+Changes in v2:
+- 1. Split [PATCH 1/3] into 3 commits
+- 2. Drop non necessary variable auto_ttrain_retry
+- Link to v1: https://lore.kernel.org/all/20250318-fix-link-training-v1-0-19266711142c@ite.com.tw/
 
+---
+Hermes Wu (5):
+      drm/bridge: it6505: fix link training state HW register reset
+      drm/bridge: it6505: check INT_LINK_TRAIN_FAIL while link auto training
+      drm/bridge: it6505: modify DP link auto training
+      drm/bridge: it6505: modify DP link training work
+      drm/bridge: it6505: skip auto training when previous try fail
+
+ drivers/gpu/drm/bridge/ite-it6505.c | 88 +++++++++++++++++++++----------------
+ 1 file changed, 50 insertions(+), 38 deletions(-)
+---
+base-commit: 938fbb16aba8f7b88e0fdcf56f315a5bbad41aad
+change-id: 20250121-fix-link-training-461495494655
+
+Best regards,
 -- 
-2.34.1
+Hermes Wu <Hermes.wu@ite.com.tw>
 
 
