@@ -1,275 +1,352 @@
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8A571EA7EC
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 07:44:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEC241E378C;
+	Tue,  1 Apr 2025 07:45:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743493476; cv=none; b=WQmnrRfphIgsOE7opVFJK0IX+d4tzqnFXevMyXp5DKqawjTqrGK1VAVgT0+tyC6PNisRhfst1PlvlJrgDHD2PFSY3Jvai3etdPk3Gh/a+DdKqEpIDfC3V2JUSCnMo+1XgnvlLIL07S1YO4mDNtiTJwFUduGjA/B15CghGc0P7pU=
+	t=1743493512; cv=none; b=Ei7hd16Xc1aqD6w8Cw16ZS9WZpLIsWzzvVKa/Y2hpIZf3PhcEira8Jd31QsOdva3sVDNnYZR2P2VCzg2aENb/rOOLfkLj1Le7+Exn0dp+zdXLlsoqoKdy7JpwdIm166poQk+nA5CBgBOfzw1UNUiAn5kM5k+R6YenyE+pN3N9sY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743493476; c=relaxed/simple;
-	bh=StWgNhbVT74w+4EPNqqZDZapxDxdpKZBSeEPruykYxs=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
-	 Content-Type:References; b=j43RV1G1s0oNU/fmDjqCT8hFVAGd0qOorG21dLfvpj1xDoMdFEWhLauqngYIjL31ALBcCIl3x9bv+S9vkT/Mm6mzjv//7qhB6hj95/AFXEFfJjGvgq4UgeYVYBS6mSnPn97vjx4npIU3fidTn8ZGpws/zGNKNeCb6sWFdENLF20=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=nT3j/ui2; arc=none smtp.client-ip=203.254.224.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1743493512; c=relaxed/simple;
+	bh=SofK/qgO3oGGAhoxi5BPMFCOhLKCern8tfuGuSRaP0w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tnhoYeBNtuyjj9lEzWRuwnOT2dSFTB4xw/+wByxfLtCh4sCUpgVOAobu3KdYILwkXzH7yTdPOGLEALizYf3xNA8WYbDUTqD+oiBAowbFh1M50ASWaNMEcX/o7fQ1fCyYGp8YF/3rRP+7MYBh/XnwziUh1uc/LucLbRCaFj6J8YY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=idrjwmCh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="nT3j/ui2"
-Received: from epcas2p1.samsung.com (unknown [182.195.41.53])
-	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20250401074433epoutp02e66652f28c23acbf9fdd5a3c332b9cbb~yIhOHuqTV1007810078epoutp02u
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 07:44:33 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20250401074433epoutp02e66652f28c23acbf9fdd5a3c332b9cbb~yIhOHuqTV1007810078epoutp02u
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1743493473;
-	bh=3MRdpHtIiwqvpeVCVz9txam/iHAkLYLHB9+ipflqPm0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=nT3j/ui21EcOYOu8iHrktmJ6y6KQg/ktKC117MqoWsTWo2NNNtV8XNvHfP53u1+dx
-	 O4H4rrk3UPzV8gQwDitIYtuYsIxUPg3rtn2JF/wI4ib6t3YISt7f7aNX+xxpB1UvhR
-	 Uui31XKB2l4FeeL7FK4R5/yaBHs38cg4QDnupriQ=
-Received: from epsnrtp02.localdomain (unknown [182.195.42.154]) by
-	epcas2p3.samsung.com (KnoxPortal) with ESMTPS id
-	20250401074432epcas2p399089231d6e73929f4f34e67435ba024~yIhNagNzU1639316393epcas2p3f;
-	Tue,  1 Apr 2025 07:44:32 +0000 (GMT)
-Received: from epsmges2p3.samsung.com (unknown [182.195.36.102]) by
-	epsnrtp02.localdomain (Postfix) with ESMTP id 4ZRg4b4QVrz2SSKm; Tue,  1 Apr
-	2025 07:44:31 +0000 (GMT)
-Received: from epcas2p2.samsung.com ( [182.195.41.54]) by
-	epsmges2p3.samsung.com (Symantec Messaging Gateway) with SMTP id
-	95.D3.09856.F599BE76; Tue,  1 Apr 2025 16:44:31 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas2p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250401074430epcas2p27a19d0e3e53983d091af2258cdc7f2bc~yIhMMA1c60193401934epcas2p2b;
-	Tue,  1 Apr 2025 07:44:30 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20250401074430epsmtrp20fd71249e8a69512d5458a68d548d10a~yIhMK8c1z1633316333epsmtrp2H;
-	Tue,  1 Apr 2025 07:44:30 +0000 (GMT)
-X-AuditID: b6c32a47-c1fdf70000002680-35-67eb995f9907
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	11.33.08805.E599BE76; Tue,  1 Apr 2025 16:44:30 +0900 (KST)
-Received: from ubuntu (unknown [10.229.95.128]) by epsmtip2.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20250401074430epsmtip27caa53a02145fc3cbf40da4e67594d6f~yIhL41JY21086710867epsmtip2F;
-	Tue,  1 Apr 2025 07:44:30 +0000 (GMT)
-Date: Tue, 1 Apr 2025 16:53:43 +0900
-From: Jung Daehwan <dh10.jung@samsung.com>
-To: Puma Hsu <pumahsu@google.com>
-Cc: Wesley Cheng <quic_wcheng@quicinc.com>, srinivas.kandagatla@linaro.org,
-	mathias.nyman@intel.com, perex@perex.cz, conor+dt@kernel.org,
-	dmitry.torokhov@gmail.com, corbet@lwn.net, broonie@kernel.org,
-	lgirdwood@gmail.com, krzk+dt@kernel.org,
-	pierre-louis.bossart@linux.intel.com, Thinh.Nguyen@synopsys.com,
-	tiwai@suse.com, robh@kernel.org, gregkh@linuxfoundation.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-sound@vger.kernel.org, linux-input@vger.kernel.org,
-	linux-usb@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-doc@vger.kernel.org
-Subject: Re: [PATCH v36 12/31] ALSA: usb-audio: Introduce USB SND platform
- op callbacks
-Message-ID: <20250401075343.GI98772@ubuntu>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="idrjwmCh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45912C4CEE8;
+	Tue,  1 Apr 2025 07:45:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743493511;
+	bh=SofK/qgO3oGGAhoxi5BPMFCOhLKCern8tfuGuSRaP0w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=idrjwmChf3GIY+1hsociXR5F6Ji82J6F1vKLRzz5UGwVla9rgFAdWZdLLud3Zw5+W
+	 K9He3vgkgsI0r0lgYAGT8lvhje6Vz4qUAtRq4gkcNRiJRnym6rFFbvepuaietsC9Bw
+	 DCTCFhnLeBieJ4UyUwAmvDkA9EOGGw165dkuzBqPBbRnDfKIgc3vrvmet93h/N5pq4
+	 inbUx/eYt428PcX7swN0AtMCO4oQ5cUZC35Qd1QBgdH/HvcK4FQyVD2ubXd1ffYxhQ
+	 D+RpzOh1owvwnbXZa8LT+8fIlFCLrCBD7h/GK3id+yEyvXniDztnR1aeWR0PsVUvHS
+	 A6mV5swZfZUdg==
+Date: Tue, 1 Apr 2025 13:15:01 +0530
+From: Sumit Garg <sumit.garg@kernel.org>
+To: Jens Wiklander <jens.wiklander@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+	op-tee@lists.trustedfirmware.org,
+	linux-arm-kernel@lists.infradead.org,
+	Olivier Masse <olivier.masse@nxp.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Yong Wu <yong.wu@mediatek.com>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
+	Brian Starkey <Brian.Starkey@arm.com>,
+	John Stultz <jstultz@google.com>,
+	"T . J . Mercier" <tjmercier@google.com>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	azarrabi@qti.qualcomm.com, Simona Vetter <simona.vetter@ffwll.ch>,
+	Daniel Stone <daniel@fooishbar.org>
+Subject: Re: [PATCH v6 03/10] optee: account for direction while converting
+ parameters
+Message-ID: <Z-uZfdU94J5yPU78@sumit-X1>
+References: <20250305130634.1850178-1-jens.wiklander@linaro.org>
+ <20250305130634.1850178-4-jens.wiklander@linaro.org>
+ <Z9K2RQYuXSJc8Y1E@sumit-X1>
+ <CAHUa44H5Zc_POJ_RWaVd4iFVagRkFaN+8Ajs=19FKboZapbQHw@mail.gmail.com>
+ <Z9vfD4UWSrqSTPnP@sumit-X1>
+ <CAHUa44HY-jZCoDXKnx-f4gBoABRVdh1+6PA1AYHSva9aL=rDAA@mail.gmail.com>
+ <Z-JFagmbZBQd0hoM@sumit-X1>
+ <CAHUa44HXHwR1_LbjG6T5OqnafXiS4-kHeKjV9TurGORx3SsprQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CAGCq0LYvXsRpfhWrvWu0=hQHBVYqJ2ifnv0wEbPWtmTw7j6-CQ@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Te0xTdxTer7e9vRi73VWcP9mYtewRugAtj3JFMPhA7+I2a0aGI8u6jl5b
-	Rmm7Pqagc2YgpZiBBHTQgYJlYBiIFNyglIflbZDp2HwQYCGjlceYUwZbHMhaLi78953vnO87
-	5+TkYAj3LNsPS1YbKJ1apuKj65jfdwaKg6TFMwph03l/4uz4BErUtA4yiIkOEyAudA2yiM6L
-	k4DIsNahxJRlDCUWfs5mEPntN9hEeVYFk7j3aIFFDNlLUKLUXYgQFytPIUSGrZBFmO15LOLx
-	sptBFNcGELaWXBax7GhiE1k9PSyiuqyDTVz5uxbEbiKbLaNsssxmJK2OKQZpqzaj5MhtB0qe
-	7z9ItpfWsElrbgGLbJutRMl8xwmyrvEXJtnYPgfIOdvLEk5iSrSSkskpHY9SJ2nkyWpFDH//
-	u9Ld0gixUBQk2kZE8nlqWSoVw9/zliRob7LKszqf95lMZfRQEplezw/ZEa3TGA0UT6nRG2L4
-	lFau0kZqg/WyVL1RrQhWU4YokVAYGuEp/ChF2bQo0I4IjrYUDDBPgl95OcAHg3g4nBltYOeA
-	dRgXbwIwO7cWoYNHAJqv3mDRwQKAP07nIk8lk6a+VUkrgPcLsgEdTAB4ab6O6a1i4q/A05P1
-	bC9GcQEc+6dvRe2Lb4V/uUwMrwDB+5mwz9kNvIkN+PtwaXQM9WIO/gZscN4ENH4e9hdPeEwx
-	zAc/CPuvS7xwo8d/+toXXhuI/+AD75S0A3q6PbDgznWUxhvgdG8jm8Z+cO6P1lVeD4fvuxFa
-	nOkZejpzdbUwaHGbVowQXAkfmLsRbzOIB8CuYSZNPwuzO5fYNM2B2VlcWhkAvx46w6LxZnht
-	ZnDVkYT2ecdKWy7+FQOaZpVnwBbLmsUsa5pZPK4IHgjr7CE0vQVmXP1mlX4RVj3B1lSUAbQa
-	vEBp9akKSh+qDfv/7EmaVBtY+Q/BviZQNPtnsBMwMOAEEEP4vpxD81MKLkcuS0undBqpzqii
-	9E4Q4blYPuK3MUnjeTC1QSoK3yYMF4tFkaERwkj+Jo7zoUvBxRUyA5VCUVpK91THwHz8TjIw
-	i6vgk93HdoZ0W81pec+JP/TvPFX1MEF60/fb1vK4N7fvnAAf1yqSmiUxIvflDyyZF14bWY8O
-	X4o1HREvsIy9CS/t49w4rEhs0EXbC40lxzTvZM1slXxZ/a/pAHrF/LtwuPS7vJHx+ENm/hH1
-	/t6GLtfl6l1xI6+7ih6HyZ+pL28+rtnFdMzLnORtVzp5oOUwHphi0DS32BtuJVCVUUU1C/lv
-	1/ykLftUaFUNFW2HuW13UyqCBIuxmTtyel4tky+5g+MNv0Xxjr7HG08MP7F+eW9PSXOFf9yt
-	z9Mw8+TsWKWz/65/hyP2wTm/c23T9zCr+3iVKH5xoH7zk44Baig9QcNn6pUykQDR6WX/Aaio
-	SKKoBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrOIsWRmVeSWpSXmKPExsWy7bCSvG7czNfpBp2rDCymPnzCZrFm7zkm
-	iycH2hkt5h85x2pxeNELRovmxevZLF7Ousdm8e1KB5PFxP1n2S0Wti1hsbj56RurxeVdc9gs
-	5j6bwmyxaFkrs0XzpimsFp27+lktfv1/xmQxc62yxabdfawW//fsYLdoO3aM1WLVggPsFhu+
-	r2V0EPfYOesuu8eCTaUei/e8ZPLYtKqTzePOtT1sHvNOBnrsn7uG3WNx32RWj31vl7F5TNxT
-	57F+y1UWjy37PzN6fN4kF8AbxWWTkpqTWZZapG+XwJWx+v8epoJ/6hW7jrE0MM6V62Lk5JAQ
-	MJF40X6CvYuRi0NIYDejxJSWRWwQCUmJpXNvsEPYwhL3W46wQhQ9YpT4uLGJCSTBIqAi0f1i
-	I1gRm4CWxL0fJ5hBbBEBRYkvT9uZQBqYBU6ySJw4dJSxi5GDQ1ggUmL3cnuQGl4BbYnNhy4w
-	QgztZZI4/OM9C0RCUOLkzCdgNrOAusSfeZeYQXqZBaQllv/jgAjLSzRvnQ0W5hQIlDh5KgDE
-	FAU659XB+gmMQrOQzJmFZM4shDmzkMxZwMiyilEytaA4Nz232LDAKC+1XK84Mbe4NC9dLzk/
-	dxMjOC1oae1g3LPqg94hRiYOxkOMEhzMSiK8EV9fpgvxpiRWVqUW5ccXleakFh9ilOZgURLn
-	/fa6N0VIID2xJDU7NbUgtQgmy8TBKdXANOWmfeSX3SfOJXRc5f40R4Jvy8f5T9NeCc9PkdnR
-	4xt4mG9WouncGUsXLCrYpNNVEnJ4vr2nwyYlRyNhxT36B4+E21h9VqgJUPuj4/A6yPkQswNL
-	oOLtJ9XF1rte/maw/FySw2i3/7dfc9Ic6SaeiytrtwrNeJ5ZefO1q80Fl+/qC7ttPJ5Ps9V5
-	0VmiGMyzZ5fsLD2FmCfpIu6lNuw/FnxZalAad63/hF6zZZjK9axZIkrdCvva/N19r6w9HHb+
-	Xo3Zpo9Nk/nXH50UovhVN/lb6dSidkb1kPMiET98arqaPqolpBR1/U95tIQpbM7fS9Lz9q3l
-	sr4ct9ng7/OEdYE2txawd+yoiYveppOhxFKckWioxVxUnAgA66cdSnoDAAA=
-X-CMS-MailID: 20250401074430epcas2p27a19d0e3e53983d091af2258cdc7f2bc
-X-Msg-Generator: CA
-Content-Type: multipart/mixed;
-	boundary="----ieZh69edyBxzv2Y5Ggo8207PwRbI2z7mQ5FWfU8PsFoZKj2n=_6a803_"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250328074841epcas2p43e82d8eba2aa584a1034a7206ffb2e4d
-References: <20250319005141.312805-1-quic_wcheng@quicinc.com>
-	<20250319005141.312805-13-quic_wcheng@quicinc.com>
-	<CGME20250328074841epcas2p43e82d8eba2aa584a1034a7206ffb2e4d@epcas2p4.samsung.com>
-	<CAGCq0LYvXsRpfhWrvWu0=hQHBVYqJ2ifnv0wEbPWtmTw7j6-CQ@mail.gmail.com>
-
-------ieZh69edyBxzv2Y5Ggo8207PwRbI2z7mQ5FWfU8PsFoZKj2n=_6a803_
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHUa44HXHwR1_LbjG6T5OqnafXiS4-kHeKjV9TurGORx3SsprQ@mail.gmail.com>
 
-On Fri, Mar 28, 2025 at 03:48:00PM +0800, Puma Hsu wrote:
-> On Wed, Mar 19, 2025 at 8:56 AM Wesley Cheng <quic_wcheng@quicinc.com> wrote:
+On Tue, Mar 25, 2025 at 09:50:35AM +0100, Jens Wiklander wrote:
+> On Tue, Mar 25, 2025 at 6:56 AM Sumit Garg <sumit.garg@kernel.org> wrote:
 > >
-> > Allow for different platforms to be notified on USB SND connect/disconnect
-> > sequences.  This allows for platform USB SND modules to properly initialize
-> > and populate internal structures with references to the USB SND chip
-> > device.
+> > On Thu, Mar 20, 2025 at 02:00:57PM +0100, Jens Wiklander wrote:
+> > > Hi Sumit,
+> > >
+> > > On Thu, Mar 20, 2025 at 10:25 AM Sumit Garg <sumit.garg@kernel.org> wrote:
+> > > >
+> > > > Hi Jens,
+> > > >
+> > > > On Mon, Mar 17, 2025 at 08:42:01AM +0100, Jens Wiklander wrote:
+> > > > > Hi Sumit,
+> > > > >
+> > > > > On Thu, Mar 13, 2025 at 11:41 AM Sumit Garg <sumit.garg@kernel.org> wrote:
+> > > > > >
+> > > > > > Hi Jens,
+> > > > > >
+> > > > > > On Wed, Mar 05, 2025 at 02:04:09PM +0100, Jens Wiklander wrote:
+> > > > > > > The OP-TEE backend driver has two internal function pointers to convert
+> > > > > > > between the subsystem type struct tee_param and the OP-TEE type struct
+> > > > > > > optee_msg_param.
+> > > > > > >
+> > > > > > > The conversion is done from one of the types to the other, which is then
+> > > > > > > involved in some operation and finally converted back to the original
+> > > > > > > type. When converting to prepare the parameters for the operation, all
+> > > > > > > fields must be taken into account, but then converting back, it's enough
+> > > > > > > to update only out-values and out-sizes. So, an update_out parameter is
+> > > > > > > added to the conversion functions to tell if all or only some fields
+> > > > > > > must be copied.
+> > > > > > >
+> > > > > > > This is needed in a later patch where it might get confusing when
+> > > > > > > converting back in from_msg_param() callback since an allocated
+> > > > > > > restricted SHM can be using the sec_world_id of the used restricted
+> > > > > > > memory pool and that doesn't translate back well.
+> > > > > > >
+> > > > > > > Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
+> > > > > > > ---
+> > > > > > >  drivers/tee/optee/call.c          | 10 ++--
+> > > > > > >  drivers/tee/optee/ffa_abi.c       | 43 +++++++++++++----
+> > > > > > >  drivers/tee/optee/optee_private.h | 42 +++++++++++------
+> > > > > > >  drivers/tee/optee/rpc.c           | 31 +++++++++----
+> > > > > > >  drivers/tee/optee/smc_abi.c       | 76 +++++++++++++++++++++++--------
+> > > > > > >  5 files changed, 144 insertions(+), 58 deletions(-)
+> > > > > > >
+> > > > > > > diff --git a/drivers/tee/optee/call.c b/drivers/tee/optee/call.c
+> > > > > > > index 16eb953e14bb..f1533b894726 100644
+> > > > > > > --- a/drivers/tee/optee/call.c
+> > > > > > > +++ b/drivers/tee/optee/call.c
+> > > > > > > @@ -400,7 +400,8 @@ int optee_open_session(struct tee_context *ctx,
+> > > > > > >       export_uuid(msg_arg->params[1].u.octets, &client_uuid);
+> > > > > > >
+> > > > > > >       rc = optee->ops->to_msg_param(optee, msg_arg->params + 2,
+> > > > > > > -                                   arg->num_params, param);
+> > > > > > > +                                   arg->num_params, param,
+> > > > > > > +                                   false /*!update_out*/);
+> > > > > > >       if (rc)
+> > > > > > >               goto out;
+> > > > > > >
+> > > > > > > @@ -427,7 +428,8 @@ int optee_open_session(struct tee_context *ctx,
+> > > > > > >       }
+> > > > > > >
+> > > > > > >       if (optee->ops->from_msg_param(optee, param, arg->num_params,
+> > > > > > > -                                    msg_arg->params + 2)) {
+> > > > > > > +                                    msg_arg->params + 2,
+> > > > > > > +                                    true /*update_out*/)) {
+> > > > > > >               arg->ret = TEEC_ERROR_COMMUNICATION;
+> > > > > > >               arg->ret_origin = TEEC_ORIGIN_COMMS;
+> > > > > > >               /* Close session again to avoid leakage */
+> > > > > > > @@ -541,7 +543,7 @@ int optee_invoke_func(struct tee_context *ctx, struct tee_ioctl_invoke_arg *arg,
+> > > > > > >       msg_arg->cancel_id = arg->cancel_id;
+> > > > > > >
+> > > > > > >       rc = optee->ops->to_msg_param(optee, msg_arg->params, arg->num_params,
+> > > > > > > -                                   param);
+> > > > > > > +                                   param, false /*!update_out*/);
+> > > > > > >       if (rc)
+> > > > > > >               goto out;
+> > > > > > >
+> > > > > > > @@ -551,7 +553,7 @@ int optee_invoke_func(struct tee_context *ctx, struct tee_ioctl_invoke_arg *arg,
+> > > > > > >       }
+> > > > > > >
+> > > > > > >       if (optee->ops->from_msg_param(optee, param, arg->num_params,
+> > > > > > > -                                    msg_arg->params)) {
+> > > > > > > +                                    msg_arg->params, true /*update_out*/)) {
+> > > > > > >               msg_arg->ret = TEEC_ERROR_COMMUNICATION;
+> > > > > > >               msg_arg->ret_origin = TEEC_ORIGIN_COMMS;
+> > > > > > >       }
+> > > > > > > diff --git a/drivers/tee/optee/ffa_abi.c b/drivers/tee/optee/ffa_abi.c
+> > > > > > > index 4ca1d5161b82..e4b08cd195f3 100644
+> > > > > > > --- a/drivers/tee/optee/ffa_abi.c
+> > > > > > > +++ b/drivers/tee/optee/ffa_abi.c
+> > > > > > > @@ -122,15 +122,21 @@ static int optee_shm_rem_ffa_handle(struct optee *optee, u64 global_id)
+> > > > > > >   */
+> > > > > > >
+> > > > > > >  static void from_msg_param_ffa_mem(struct optee *optee, struct tee_param *p,
+> > > > > > > -                                u32 attr, const struct optee_msg_param *mp)
+> > > > > > > +                                u32 attr, const struct optee_msg_param *mp,
+> > > > > > > +                                bool update_out)
+> > > > > > >  {
+> > > > > > >       struct tee_shm *shm = NULL;
+> > > > > > >       u64 offs_high = 0;
+> > > > > > >       u64 offs_low = 0;
+> > > > > > >
+> > > > > > > +     if (update_out) {
+> > > > > > > +             if (attr == OPTEE_MSG_ATTR_TYPE_FMEM_INPUT)
+> > > > > > > +                     return;
+> > > > > > > +             goto out;
+> > > > > > > +     }
+> > > > > > > +
+> > > > > > >       p->attr = TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INPUT +
+> > > > > > >                 attr - OPTEE_MSG_ATTR_TYPE_FMEM_INPUT;
+> > > > > > > -     p->u.memref.size = mp->u.fmem.size;
+> > > > > > >
+> > > > > > >       if (mp->u.fmem.global_id != OPTEE_MSG_FMEM_INVALID_GLOBAL_ID)
+> > > > > > >               shm = optee_shm_from_ffa_handle(optee, mp->u.fmem.global_id);
+> > > > > > > @@ -141,6 +147,8 @@ static void from_msg_param_ffa_mem(struct optee *optee, struct tee_param *p,
+> > > > > > >               offs_high = mp->u.fmem.offs_high;
+> > > > > > >       }
+> > > > > > >       p->u.memref.shm_offs = offs_low | offs_high << 32;
+> > > > > > > +out:
+> > > > > > > +     p->u.memref.size = mp->u.fmem.size;
+> > > > > > >  }
+> > > > > > >
+> > > > > > >  /**
+> > > > > > > @@ -150,12 +158,14 @@ static void from_msg_param_ffa_mem(struct optee *optee, struct tee_param *p,
+> > > > > > >   * @params:  subsystem internal parameter representation
+> > > > > > >   * @num_params:      number of elements in the parameter arrays
+> > > > > > >   * @msg_params:      OPTEE_MSG parameters
+> > > > > > > + * @update_out: update parameter for output only
+> > > > > > >   *
+> > > > > > >   * Returns 0 on success or <0 on failure
+> > > > > > >   */
+> > > > > > >  static int optee_ffa_from_msg_param(struct optee *optee,
+> > > > > > >                                   struct tee_param *params, size_t num_params,
+> > > > > > > -                                 const struct optee_msg_param *msg_params)
+> > > > > > > +                                 const struct optee_msg_param *msg_params,
+> > > > > > > +                                 bool update_out)
+> > > > > > >  {
+> > > > > > >       size_t n;
+> > > > > > >
+> > > > > > > @@ -166,18 +176,20 @@ static int optee_ffa_from_msg_param(struct optee *optee,
+> > > > > > >
+> > > > > > >               switch (attr) {
+> > > > > > >               case OPTEE_MSG_ATTR_TYPE_NONE:
+> > > > > > > +                     if (update_out)
+> > > > > > > +                             break;
+> > > > > > >                       p->attr = TEE_IOCTL_PARAM_ATTR_TYPE_NONE;
+> > > > > > >                       memset(&p->u, 0, sizeof(p->u));
+> > > > > > >                       break;
+> > > > > > >               case OPTEE_MSG_ATTR_TYPE_VALUE_INPUT:
+> > > > > > >               case OPTEE_MSG_ATTR_TYPE_VALUE_OUTPUT:
+> > > > > > >               case OPTEE_MSG_ATTR_TYPE_VALUE_INOUT:
+> > > > > > > -                     optee_from_msg_param_value(p, attr, mp);
+> > > > > > > +                     optee_from_msg_param_value(p, attr, mp, update_out);
+> > > > > > >                       break;
+> > > > > > >               case OPTEE_MSG_ATTR_TYPE_FMEM_INPUT:
+> > > > > > >               case OPTEE_MSG_ATTR_TYPE_FMEM_OUTPUT:
+> > > > > > >               case OPTEE_MSG_ATTR_TYPE_FMEM_INOUT:
+> > > > > > > -                     from_msg_param_ffa_mem(optee, p, attr, mp);
+> > > > > > > +                     from_msg_param_ffa_mem(optee, p, attr, mp, update_out);
+> > > > > > >                       break;
+> > > > > > >               default:
+> > > > > > >                       return -EINVAL;
+> > > > > > > @@ -188,10 +200,16 @@ static int optee_ffa_from_msg_param(struct optee *optee,
+> > > > > > >  }
+> > > > > > >
+> > > > > > >  static int to_msg_param_ffa_mem(struct optee_msg_param *mp,
+> > > > > > > -                             const struct tee_param *p)
+> > > > > > > +                             const struct tee_param *p, bool update_out)
+> > > > > > >  {
+> > > > > > >       struct tee_shm *shm = p->u.memref.shm;
+> > > > > > >
+> > > > > > > +     if (update_out) {
+> > > > > > > +             if (p->attr == TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INPUT)
+> > > > > > > +                     return 0;
+> > > > > > > +             goto out;
+> > > > > > > +     }
+> > > > > > > +
+> > > > > > >       mp->attr = OPTEE_MSG_ATTR_TYPE_FMEM_INPUT + p->attr -
+> > > > > > >                  TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INPUT;
+> > > > > > >
+> > > > > > > @@ -211,6 +229,7 @@ static int to_msg_param_ffa_mem(struct optee_msg_param *mp,
+> > > > > > >               memset(&mp->u, 0, sizeof(mp->u));
+> > > > > > >               mp->u.fmem.global_id = OPTEE_MSG_FMEM_INVALID_GLOBAL_ID;
+> > > > > > >       }
+> > > > > > > +out:
+> > > > > > >       mp->u.fmem.size = p->u.memref.size;
+> > > > > > >
+> > > > > > >       return 0;
+> > > > > > > @@ -222,13 +241,15 @@ static int to_msg_param_ffa_mem(struct optee_msg_param *mp,
+> > > > > > >   * @optee:   main service struct
+> > > > > > >   * @msg_params:      OPTEE_MSG parameters
+> > > > > > >   * @num_params:      number of elements in the parameter arrays
+> > > > > > > - * @params:  subsystem itnernal parameter representation
+> > > > > > > + * @params:  subsystem internal parameter representation
+> > > > > > > + * @update_out: update parameter for output only
+> > > > > > >   * Returns 0 on success or <0 on failure
+> > > > > > >   */
+> > > > > > >  static int optee_ffa_to_msg_param(struct optee *optee,
+> > > > > > >                                 struct optee_msg_param *msg_params,
+> > > > > > >                                 size_t num_params,
+> > > > > > > -                               const struct tee_param *params)
+> > > > > > > +                               const struct tee_param *params,
+> > > > > > > +                               bool update_out)
+> > > > > > >  {
+> > > > > > >       size_t n;
+> > > > > > >
+> > > > > > > @@ -238,18 +259,20 @@ static int optee_ffa_to_msg_param(struct optee *optee,
+> > > > > > >
+> > > > > > >               switch (p->attr) {
+> > > > > > >               case TEE_IOCTL_PARAM_ATTR_TYPE_NONE:
+> > > > > > > +                     if (update_out)
+> > > > > > > +                             break;
+> > > > > > >                       mp->attr = TEE_IOCTL_PARAM_ATTR_TYPE_NONE;
+> > > > > > >                       memset(&mp->u, 0, sizeof(mp->u));
+> > > > > > >                       break;
+> > > > > > >               case TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_INPUT:
+> > > > > > >               case TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_OUTPUT:
+> > > > > > >               case TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_INOUT:
+> > > > > > > -                     optee_to_msg_param_value(mp, p);
+> > > > > > > +                     optee_to_msg_param_value(mp, p, update_out);
+> > > > > > >                       break;
+> > > > > > >               case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INPUT:
+> > > > > > >               case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_OUTPUT:
+> > > > > > >               case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INOUT:
+> > > > > > > -                     if (to_msg_param_ffa_mem(mp, p))
+> > > > > > > +                     if (to_msg_param_ffa_mem(mp, p, update_out))
+> > > > > > >                               return -EINVAL;
+> > > > > > >                       break;
+> > > > > > >               default:
+> > > > > >
+> > > > > > Can we rather handle it as follows to improve code readability and
+> > > > > > maintainence long term? Ditto for all other places.
+> > > > > >
+> > > > > > static int optee_ffa_to_msg_param(struct optee *optee,
+> > > > > >                                   struct optee_msg_param *msg_params,
+> > > > > >                                   size_t num_params,
+> > > > > >                                   const struct tee_param *params,
+> > > > > >                                   bool update_out)
+> > > > > > {
+> > > > > >         size_t n;
+> > > > > >
+> > > > > >         for (n = 0; n < num_params; n++) {
+> > > > > >                 const struct tee_param *p = params + n;
+> > > > > >                 struct optee_msg_param *mp = msg_params + n;
+> > > > > >
+> > > > > >                 if (update_out && (p->attr == TEE_IOCTL_PARAM_ATTR_TYPE_NONE ||
+> > > > > >                      p->attr == TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_INPUT ||
+> > > > > >                      p->attr == TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INPUT))
+> > > > > >                     continue;
+> > > > >
+> > > > > You're missing updating the length field for memrefs.
+> > > > >
+> > > >
+> > > > Do we need to update length field for input memrefs when update_out is
+> > > > set? I don't see that happening in your existing patch too.
+> > >
+> > > I'm sorry, I was unclear. The update_out parameter means only the
+> > > output fields should be updated, not the attribute, offsets, ids, etc.
+> > > That is, the length field for memrefs, and the value fields a, b, c
+> > > for value params. Some of the memrefs aren't translated one-to-one
+> > > with SDP, but the length field can and must be updated.
 > >
-> > Signed-off-by: Wesley Cheng <quic_wcheng@quicinc.com>
+> > Isn't it rather better to add another attribute type to handled SDP
+> > special handling?
 > 
-> Tested-by: Puma Hsu <pumahsu@google.com>
+> This isn't special handling, all parameters get the same treatment.
+> When updating a parameter after it has been used, this is all that
+> needs to be done, regardless of whether it's an SDP buffer. The
+> updates we did before this patch were redundant.
 > 
+> This patch was introduced in the v3 of this patch set, but I don't
+> think it's strictly needed any longer since SDP buffers are allocated
+> differently now. I think it's nice to only update what's needed when
+> translating back a parameter (just as in params_to_user() in
+> drivers/tee/tee_core.c), but if you don't like it, we can drop this
+> patch.
 
-Tested-by: Daehwan Jung <dh10.jung@samsung.com>
+params_to_user() doesn't take any additional parameter like "update_out"
+which is complicating the program flow here. Can't we rather follow
+similar practice for {to/from}_msg_param() APIs?
 
-> > ---
-> >  sound/usb/card.c | 49 ++++++++++++++++++++++++++++++++++++++++++++++++
-> >  sound/usb/card.h | 10 ++++++++++
-> >  2 files changed, 59 insertions(+)
-> >
-> > diff --git a/sound/usb/card.c b/sound/usb/card.c
-> > index 6c5b0e02e57b..4ac7f2b8309a 100644
-> > --- a/sound/usb/card.c
-> > +++ b/sound/usb/card.c
-> > @@ -118,6 +118,42 @@ MODULE_PARM_DESC(skip_validation, "Skip unit descriptor validation (default: no)
-> >  static DEFINE_MUTEX(register_mutex);
-> >  static struct snd_usb_audio *usb_chip[SNDRV_CARDS];
-> >  static struct usb_driver usb_audio_driver;
-> > +static struct snd_usb_platform_ops *platform_ops;
-> > +
-> > +/*
-> > + * Register platform specific operations that will be notified on events
-> > + * which occur in USB SND.  The platform driver can utilize this path to
-> > + * enable features, such as USB audio offloading, which allows for audio data
-> > + * to be queued by an audio DSP.
-> > + *
-> > + * Only one set of platform operations can be registered to USB SND.  The
-> > + * platform register operation is protected by the register_mutex.
-> > + */
-> > +int snd_usb_register_platform_ops(struct snd_usb_platform_ops *ops)
-> > +{
-> > +       guard(mutex)(&register_mutex);
-> > +       if (platform_ops)
-> > +               return -EEXIST;
-> > +
-> > +       platform_ops = ops;
-> > +       return 0;
-> > +}
-> > +EXPORT_SYMBOL_GPL(snd_usb_register_platform_ops);
-> > +
-> > +/*
-> > + * Unregisters the current set of platform operations.  This allows for
-> > + * a new set to be registered if required.
-> > + *
-> > + * The platform unregister operation is protected by the register_mutex.
-> > + */
-> > +int snd_usb_unregister_platform_ops(void)
-> > +{
-> > +       guard(mutex)(&register_mutex);
-> > +       platform_ops = NULL;
-> > +
-> > +       return 0;
-> > +}
-> > +EXPORT_SYMBOL_GPL(snd_usb_unregister_platform_ops);
-> >
-> >  /*
-> >   * Checks to see if requested audio profile, i.e sample rate, # of
-> > @@ -954,7 +990,11 @@ static int usb_audio_probe(struct usb_interface *intf,
-> >         chip->num_interfaces++;
-> >         usb_set_intfdata(intf, chip);
-> >         atomic_dec(&chip->active);
-> > +
-> > +       if (platform_ops && platform_ops->connect_cb)
-> > +               platform_ops->connect_cb(chip);
-> >         mutex_unlock(&register_mutex);
-> > +
-> >         return 0;
-> >
-> >   __error:
-> > @@ -991,6 +1031,9 @@ static void usb_audio_disconnect(struct usb_interface *intf)
-> >         card = chip->card;
-> >
-> >         mutex_lock(&register_mutex);
-> > +       if (platform_ops && platform_ops->disconnect_cb)
-> > +               platform_ops->disconnect_cb(chip);
-> > +
-> >         if (atomic_inc_return(&chip->shutdown) == 1) {
-> >                 struct snd_usb_stream *as;
-> >                 struct snd_usb_endpoint *ep;
-> > @@ -1138,6 +1181,9 @@ static int usb_audio_suspend(struct usb_interface *intf, pm_message_t message)
-> >                 chip->system_suspend = chip->num_suspended_intf;
-> >         }
-> >
-> > +       if (platform_ops && platform_ops->suspend_cb)
-> > +               platform_ops->suspend_cb(intf, message);
-> > +
-> >         return 0;
-> >  }
-> >
-> > @@ -1178,6 +1224,9 @@ static int usb_audio_resume(struct usb_interface *intf)
-> >
-> >         snd_usb_midi_v2_resume_all(chip);
-> >
-> > +       if (platform_ops && platform_ops->resume_cb)
-> > +               platform_ops->resume_cb(intf);
-> > +
-> >   out:
-> >         if (chip->num_suspended_intf == chip->system_suspend) {
-> >                 snd_power_change_state(chip->card, SNDRV_CTL_POWER_D0);
-> > diff --git a/sound/usb/card.h b/sound/usb/card.h
-> > index cdafc9e9cecd..d8b8522e1613 100644
-> > --- a/sound/usb/card.h
-> > +++ b/sound/usb/card.h
-> > @@ -209,7 +209,17 @@ struct snd_usb_stream {
-> >         struct list_head list;
-> >  };
-> >
-> > +struct snd_usb_platform_ops {
-> > +       void (*connect_cb)(struct snd_usb_audio *chip);
-> > +       void (*disconnect_cb)(struct snd_usb_audio *chip);
-> > +       void (*suspend_cb)(struct usb_interface *intf, pm_message_t message);
-> > +       void (*resume_cb)(struct usb_interface *intf);
-> > +};
-> > +
-> >  struct snd_usb_stream *
-> >  snd_usb_find_suppported_substream(int card_idx, struct snd_pcm_hw_params *params,
-> >                                   int direction);
-> > +
-> > +int snd_usb_register_platform_ops(struct snd_usb_platform_ops *ops);
-> > +int snd_usb_unregister_platform_ops(void);
-> >  #endif /* __USBAUDIO_CARD_H */
-> >
-> 
-> 
-
-------ieZh69edyBxzv2Y5Ggo8207PwRbI2z7mQ5FWfU8PsFoZKj2n=_6a803_
-Content-Type: text/plain; charset="utf-8"
-
-
-------ieZh69edyBxzv2Y5Ggo8207PwRbI2z7mQ5FWfU8PsFoZKj2n=_6a803_--
+-Sumit
