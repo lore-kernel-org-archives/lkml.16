@@ -1,103 +1,125 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1B681EA7C9
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 08:30:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53F2B1DA617
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 08:30:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743496207; cv=none; b=JQl1XeICIeGyqkKR+a3bp4qpwxr2M9JHXYcjFXEh3dyHv2QJMf87472rIklYeH++GxVfVe5b3xjmakpW7tcw9S71IquhI8vSCTPaOu9nkujD/6L9TPvVYVq7lbjwFzmaAAxfw8+NMoFTu/vlZfNa2KfzjGtII/Jpl9mNGUzvTk8=
+	t=1743496218; cv=none; b=h+MTwrEnB7Py3hsQQEpYFWxR8G2ouxx6zpjF/YIevwwvfuDv9cvT/frqTChoyfsg+T80rWVVdIVBCiCz69fv/vfipzH6fj0chtO76E26caqeW7xKShEatKgKX/SzFHf85NHQvqc3a8eMT72wava5G9yWE2YwaXw7VCjq5gAGPrs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743496207; c=relaxed/simple;
-	bh=3mt5Skfu6TniMgoKHzDUuqtneTpb2TY4fxM0WZWtyNY=;
-	h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=HqyY9wvXK2kA/IFH3U6nVA1j5jnbRiEoLEtOB5OQjk1up4/GloR9S0TGBsW6Vd+Ip95dFUky2GMoIQ1HCWu/3r9OG+USLC8DY+cCqnu8yG8fGfiLctejPG0OAV8lM7QmPOITf1bZNjo0sv35RBSHrk6wj6y6OEAfOyNUjfQNriw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8DxWOEIpOtnHIitAA--.27167S3;
-	Tue, 01 Apr 2025 16:30:00 +0800 (CST)
-Received: from [10.130.0.149] (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowMBxLscFpOtn1XtqAA--.61059S3;
-	Tue, 01 Apr 2025 16:29:57 +0800 (CST)
-Subject: Re: [PATCH 08/11] objtool/loongarch: Add unwind hints in
- prepare_frametrace()
-To: Ingo Molnar <mingo@kernel.org>
-References: <cover.1743481539.git.jpoimboe@kernel.org>
- <270cadd8040dda74db2307f23497bb68e65db98d.1743481539.git.jpoimboe@kernel.org>
- <Z-uQ7NqMzqAShWcH@gmail.com>
- <2e25fe84-f772-5d87-c7a7-bf40055fb4bc@loongson.cn>
- <Z-ufkGy0hPbwMUYI@gmail.com>
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>, x86@kernel.org,
- linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
- kernel test robot <lkp@intel.com>,
- Linus Torvalds <torvalds@linux-foundation.org>
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <10d45fa8-d1f7-28be-9fc6-9c8a244601ec@loongson.cn>
-Date: Tue, 1 Apr 2025 16:29:57 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+	s=arc-20240116; t=1743496218; c=relaxed/simple;
+	bh=+PdOQY9G4Z+V6nM+cOHShiUAWSWzkcANFdjWh390aHk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QQotHt1x0ZY+h5eAxiHj1J04YF8tcDazlgqYQdbv6jTmJZOOjnGNa+UdjDSJGgc2PMJ0qKdUbjCc/RGWpFsRN+T5p6YaTHAWoieDjI2UNBLnlXH48etxZKFj5k3gCu+WgcWV31ynww8k5W+qcC5v2EJF8IzGUztzhqNXoci6/1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RdB9YS7V; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RdB9YS7V"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-227cf12df27so74571285ad.0
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 01:30:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1743496215; x=1744101015; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=NVkJHao0eWoC+KfJ0cgjojVWmT2IzBUFiYW5OYDGp1w=;
+        b=RdB9YS7VqY2nHJqeUpRh2TAMJKw4VGicu5mNDVuCviRPu1ma2upOejqYQUai7YNQY0
+         K7ZUM8y/Xb0qDyUGFRhnANWqfKc+7SO4CQxkhNUNSM15A7gCoRKtIVNufogbjd67JKut
+         V2QfKHo3GPLfQCmGtnD/59vwl+1mpC67Oz22wCugFxd9vamJ16rC1rzP/2OTSWLLEGL4
+         r1Cc5rrobh1juqPBNNWkrWkC78q6Q+W9kIxVHFf4r6iEkpU7aE1VgIo82jnp0nCz2hqe
+         OVl3zCm8QtuzbfiaU5WRuwug4c2WOM8uYV8vmMHHD7AwGyVMIpZ1u5FVYDICuuxO5VDV
+         08aw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743496215; x=1744101015;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=NVkJHao0eWoC+KfJ0cgjojVWmT2IzBUFiYW5OYDGp1w=;
+        b=jF29YnHmj1EvWZ0R8Y+3zRq5Pyjuaie1Nn7M1xuk+hMgUjHmvVkj/pFzw0sSmpaEQy
+         7oApMuDufyMxn/iNLb/hcZgkF/YoSNsNPBFPuub3WJlkv4XcGYn7lP+xV6YxiIRLpLJ1
+         G2V38I8g4r51KilfTytGjHsdwi/xtDKZD1kfDVslSQDNpR4lYuMbe/qi7WpdyxUIN/tX
+         13ezMDczVmCA3C+VFar6dDt3df1JKodU2tMfByPb9Mtad+YV9SB3rEk9kIssAeYEDAob
+         E6PUkj/pv3WkwsxucCx0BnfNHjNMH9Nki/hwqTQg4FgXE/VQRtvmh2HBFEuFf0v4tlpT
+         SAlg==
+X-Forwarded-Encrypted: i=1; AJvYcCU7hNil9y1ng16m2YB/uAAbWzs7Y9cosEnUSX9X16+/iDxEWSCBpdfd6cGPGwKCwZXOP/48l26lFq0AgIg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwwGeROH6FXD34p4Fykn+DCzqgK8EUn98jV2UZi9LlIpkpBMPlH
+	EcWr8NkuU2epMoVq9gmt8eMByYbwoxoLmWDbf3ArAiaQgGOfFQdgNVMVWCQfjnw=
+X-Gm-Gg: ASbGncucxDcTE5dm8WcEMhgf2PEZJ9G6eGa57QRsAgzAwjD8v9jMpzxQMksFz++UACk
+	2ysRXIf+q1IT7QxRN0c4zlTPaanl2Z+pmFFAcMnoPqyR8z9kgtxsp8apoAuWTBD0gOUf31WCivZ
+	QVH+L4/cVsiIlm4MrS9pIuvC9gsSJd5dUaB+HUCYwl1k3VbbwjlPGk3pIvyJiaQTTCvzwCUyhp5
+	Sz+0qegJJJfjxJJKu7p2EuKLA28Ty47YCl8CXU8rPgJTASKI5kQOQJgwe3J/dWzFy1eP82JrwRL
+	FdWRI8kuXcggVBFRjMnjLgBw5maVT1wWl78xfE0eVQsll4Y/3fz/Gito
+X-Google-Smtp-Source: AGHT+IFcco3jmVd5+UMh72jl4ZYzaglj69gHooBlOcDmi7HxtLW7NW9Xm2Hy0zPWOtCvcc2s0O+1tg==
+X-Received: by 2002:a17:903:40cc:b0:21f:40de:ae4e with SMTP id d9443c01a7336-2292ee6363dmr168754105ad.9.1743496215410;
+        Tue, 01 Apr 2025 01:30:15 -0700 (PDT)
+Received: from localhost ([122.172.83.32])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291f1df12csm82615935ad.191.2025.04.01.01.30.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Apr 2025 01:30:14 -0700 (PDT)
+Date: Tue, 1 Apr 2025 14:00:12 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Linux PM <linux-pm@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
+Subject: Re: [PATCH v1 01/10] cpufreq: Reference count policy in
+ cpufreq_update_limits()
+Message-ID: <20250401083012.vjwkxjkmd5afyqjt@vireshk-i7>
+References: <4651448.LvFx2qVVIh@rjwysocki.net>
+ <1928789.tdWV9SEqCh@rjwysocki.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <Z-ufkGy0hPbwMUYI@gmail.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:qMiowMBxLscFpOtn1XtqAA--.61059S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7ZF15GrW5JFWkAF15XF1DurX_yoW8Xw1Upa
-	y7JanF9r48tryxtanrKwnF9F9xtw4DJr17Wr1kAry8Gr4qvrnavr1rKa18uFyjga4FgFy8
-	Jr98ur9Fqa1jqabCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUPFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6rxl6s0DM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
-	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWU
-	AwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
-	k0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l
-	4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jw0_GFylx2IqxVAqx4xG67AKxV
-	WUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI
-	7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r
-	1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI
-	42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUxUGYDUUUU
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1928789.tdWV9SEqCh@rjwysocki.net>
 
-On 04/01/2025 04:10 PM, Ingo Molnar wrote:
->
-> * Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
->
->> On 04/01/2025 03:08 PM, Ingo Molnar wrote:
->>>
->>> * Josh Poimboeuf <jpoimboe@kernel.org> wrote:
->>>
->>>> If 'regs' points to a local stack variable, prepare_frametrace() stores
->>>> all registers to the stack.  This confuses objtool as it expects them to
->>>> be restored from the stack later.
->>>>
->>>> The stores don't affect stack tracing, so use unwind hints to hide them
->>>> from objtool.
->>>>
->>>> Fixes the following warnings:
->>>>
->>>>   arch/loongarch/kernel/traps.o: warning: objtool: show_stack+0xe0: stack state mismatch: reg1[22]=-1+0 reg2[22]=-2-160
->>>>   arch/loongarch/kernel/traps.o: warning: objtool: show_stack+0xe0: stack state mismatch: reg1[23]=-1+0 reg2[23]=-2-152
->>>>
->>>> Cc: Tiezhu Yang <yangtiezhu@loongson.cn>
->>>> Fixes: cb8a2ef0848c ("LoongArch: Add ORC stack unwinder support")
->>>> Reported-by: kernel test robot <lkp@intel.com>
->>>> Closes: https://lore.kernel.org/oe-kbuild-all/202503280703.OARM8SrY-lkp@intel.com/
->>>> Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
->>>
->>> Note, I skipped this fix from tip:objtool/urgent for the time being,
->>> because Tiezhu Yang indicated that he'd be reviewing and testing this
->>> patch.
->>
->> Tested-by: Tiezhu Yang <yangtiezhu@loongson.cn>
->
-> Thank you! Is it fine with you if I send this fix with tonight's
-> objtool/urgent pull request to Linus?
+On 28-03-25, 21:39, Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> 
+> Since acpi_processor_notify() can be called before registering a cpufreq
+> driver or even in cases when a cpufreq driver is not registered at all,
+> cpufreq_update_limits() needs to check if a cpufreq driver is present
+> and prevent it from being unregistered.
+> 
+> For this purpose, make it call cpufreq_cpu_get() to obtain a cpufreq
+> policy pointer for the given CPU and reference count the corresponding
+> policy object, if present.
+> 
+> Fixes: 5a25e3f7cc53 ("cpufreq: intel_pstate: Driver-specific handling of _PPC updates")
+> Closes: https://lore.kernel.org/linux-acpi/Z-ShAR59cTow0KcR@mail-itl
+> Reporetd-by: Marek Marczykowski-Górecki <marmarek@invisiblethingslab.com> 
+> Cc: All applicable <stable@vger.kernel.org>
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+>  drivers/cpufreq/cpufreq.c |    6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> --- a/drivers/cpufreq/cpufreq.c
+> +++ b/drivers/cpufreq/cpufreq.c
+> @@ -2781,6 +2781,12 @@
+>   */
+>  void cpufreq_update_limits(unsigned int cpu)
+>  {
+> +	struct cpufreq_policy *policy __free(put_cpufreq_policy);
+> +
+> +	policy = cpufreq_cpu_get(cpu);
+> +	if (!policy)
+> +		return;
+> +
+>  	if (cpufreq_driver->update_limits)
+>  		cpufreq_driver->update_limits(cpu);
+>  	else
 
-Yes, no problem, thank you for doing this.
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
+-- 
+viresh
