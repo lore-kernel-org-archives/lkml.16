@@ -1,25 +1,50 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 90ED62080C7;
-	Tue,  1 Apr 2025 15:15:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C765337160;
+	Tue,  1 Apr 2025 15:15:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743520512; cv=none; b=kwwYMPgdUeKEacWKE7Q/6HtcO5neFtCgUUEAU1qEg6lE3NGs6Kb0mpKqmOQXDFTxxXSCJPSJQIgGSnoSe34FUdutpEasXQEqqJwTbFKS1r0ueA24Nvxajxipar8/hg7xCbENlYs3NH9bZ1JtdGEC2c7qLy+RN3MQMvf2SDQsBg4=
+	t=1743520561; cv=none; b=gULucK95c5XqbUjwU0ZXhSFH+F/cO+2VG2Wms8QAG+xIsVCwYqf2NxmqnJ1C7bPdncF7paw/ThxKRA4xqWhJRIRji4v0sV3AvBXEMUSRSlhzdwVjC2p8ZgCmsRhldeK9uguYaEQVdA3ldqdeqGeWb5ruP0p6mgtnddgs9fjXBIk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743520512; c=relaxed/simple;
-	bh=rwl5oV58wmFMXgEw4y5Os/5OTv1cLl8IW2Vh6yov/Z8=;
+	s=arc-20240116; t=1743520561; c=relaxed/simple;
+	bh=sPjeVLoACA9nT+XZ0DB/7pvZa67WgLdOEm5FeaamAi8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=G6FWWQ+/CBxym+x1kDgDOSKctQuSlzQaBSBzDqg85RKmwPO2rPfoUWeXB8nCZg1t67rYo01VzU1X+DBuS+OCEF6xK5MX6dDcElkZj7SgKBGXmNQ4qo7wQ5Yh4O8Yqr+iEwRwnGa1Zg2CnNY1JFJyhM2qY+z42CIBijcC2jG6oJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 46F3014BF;
-	Tue,  1 Apr 2025 08:15:13 -0700 (PDT)
-Received: from [10.57.40.234] (unknown [10.57.40.234])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 624673F694;
-	Tue,  1 Apr 2025 08:15:08 -0700 (PDT)
-Message-ID: <743b3472-e1a4-4fdc-ac2d-6e74c51022c4@arm.com>
-Date: Tue, 1 Apr 2025 16:15:06 +0100
+	 In-Reply-To:Content-Type; b=rmloIMFYpSvWJ5+omWVdF73e5EzSIf70UTOERHNqFMKploasEgMKOYbHWomkoSlyfzRKd3XOsgvogFJpN0JpYv/wUx9KkVvv/DT1ajsdiODKL3dCg2TtJIII6cxukY2Qo89JJuacYuNsaWXcETt/UnvVdhw8corrob4DByOSxbs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PIlDMtQz; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PIlDMtQz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743520559; x=1775056559;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=sPjeVLoACA9nT+XZ0DB/7pvZa67WgLdOEm5FeaamAi8=;
+  b=PIlDMtQzrCBixXE+TBLupag3xbrgWU5TsACgFC+iwJAQ2OddMjFuXBQJ
+   jhdZVNzJZe+pElHxMFnIZezgEft0Jz/PyAnYVV+s11t6NEf/DwHlwLjdn
+   jz3+vXHU8Wq58z2GI4Ttsd9rBarpqJsH9E7w6SmzPOKOv8zBCmAb9E6L+
+   OhLQXkjH7czcyeJ3O0lbWqSRrqprJb6kyGwaM3H8dycqxQay/ND33Jw89
+   nFn1lktHmz9K/9OqpKLIZkUMzhKux1XZDNLtZ2Fgp1rHnTTzD0HvcA2IW
+   5E6t/SCLTuZSfAC0L8BZL4LaF1dVOqgok/+PViZyVbTMS1X+1UJXbq0Au
+   w==;
+X-CSE-ConnectionGUID: m3yU6hRUSe+6OaAtGvVN4Q==
+X-CSE-MsgGUID: 9c9GC9ETSj+fyGmk53aipw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11391"; a="56218808"
+X-IronPort-AV: E=Sophos;i="6.14,293,1736841600"; 
+   d="scan'208";a="56218808"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2025 08:15:58 -0700
+X-CSE-ConnectionGUID: zkOkx39dQEidkLb3ObxHXQ==
+X-CSE-MsgGUID: b04GmepJQQKw0Y7IdhMVxg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,293,1736841600"; 
+   d="scan'208";a="127233634"
+Received: from inaky-mobl1.amr.corp.intel.com (HELO [10.125.109.176]) ([10.125.109.176])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2025 08:15:56 -0700
+Message-ID: <79a032b5-b13d-43fd-b56e-01098122e104@intel.com>
+Date: Tue, 1 Apr 2025 08:15:55 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,131 +52,154 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] cpuidle: psd: add power sleep demotion prevention for
- fast I/O devices
-To: "King, Colin" <colin.king@intel.com>, Bart Van Assche
- <bvanassche@acm.org>, Jens Axboe <axboe@kernel.dk>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Daniel Lezcano <daniel.lezcano@linaro.org>,
- "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
- "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <33882f284ac6e6d1ec766ca4bb2f3b88@intel.com>
- <f18607ca-30dc-43de-be77-fec69968aeec@arm.com>
- <SJ2PR11MB7670F63C7052C88637D305DF8DDF2@SJ2PR11MB7670.namprd11.prod.outlook.com>
- <1ae51ccc-66cc-4551-b649-2f5883e2f5a2@acm.org>
- <SJ2PR11MB7670B2AEFF7C0DABE6856F258DA62@SJ2PR11MB7670.namprd11.prod.outlook.com>
- <ad852ef9-5207-4b70-8834-2db6aa5e1a51@arm.com>
- <SJ2PR11MB7670E05E066CCC16AFEA16A18DAC2@SJ2PR11MB7670.namprd11.prod.outlook.com>
+Subject: Re: [BUG -next] ./usr/include/cxl/features.h:11:10: fatal error:
+ uuid/uuid.h: No such file or directory
+To: Venkat Rao Bagalkote <venkat88@linux.ibm.com>,
+ Dan Williams <dan.j.williams@intel.com>, Jason Gunthorpe <jgg@nvidia.com>
+Cc: "Paul E. McKenney" <paulmck@kernel.org>, linux-cxl@vger.kernel.org,
+ dave@stgolabs.net, jonathan.cameron@huawei.com, alison.schofield@intel.com,
+ vishal.l.verma@intel.com, ira.weiny@intel.com, gourry@gourry.net,
+ linux-kernel@vger.kernel.org, linux-next@vger.kernel.org,
+ sfr@canb.auug.org.au, Madhavan Srinivasan <maddy@linux.ibm.com>
+References: <f6489337-67c7-48c8-b48a-58603ec15328@paulmck-laptop>
+ <14bfcfa0-5999-49e4-854e-ff8810d6df3c@intel.com>
+ <52a34c97-88d2-415e-a899-6583ae3ba620@paulmck-laptop>
+ <30a7f782-4388-45b6-bb3c-a0faf85b7445@intel.com>
+ <51e9823c-784c-4b91-99d4-0500aaf5cec0@paulmck-laptop>
+ <67e7301dc8ad7_201f0294a5@dwillia2-xfh.jf.intel.com.notmuch>
+ <1f48ba3b-9ba8-44e5-98c7-4c9abf95a935@intel.com>
+ <20250331132439.GD10839@nvidia.com>
+ <67eac8df3e217_201f02948d@dwillia2-xfh.jf.intel.com.notmuch>
+ <20250331171755.GC289482@nvidia.com>
+ <67eaf14b7c611_201f0294ba@dwillia2-xfh.jf.intel.com.notmuch>
+ <4641ce2f-74eb-45ea-a2f8-c7d0db905b7a@linux.ibm.com>
 Content-Language: en-US
-From: Christian Loehle <christian.loehle@arm.com>
-In-Reply-To: <SJ2PR11MB7670E05E066CCC16AFEA16A18DAC2@SJ2PR11MB7670.namprd11.prod.outlook.com>
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <4641ce2f-74eb-45ea-a2f8-c7d0db905b7a@linux.ibm.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 4/1/25 16:03, King, Colin wrote:
-> Hi,
+
+
+On 4/1/25 12:01 AM, Venkat Rao Bagalkote wrote:
 > 
-> Reply at end..
-> 
->> -----Original Message-----
->> From: Christian Loehle <christian.loehle@arm.com>
->> Sent: 26 March 2025 16:27
->> To: King, Colin <colin.king@intel.com>; Bart Van Assche
->> <bvanassche@acm.org>; Jens Axboe <axboe@kernel.dk>; Rafael J. Wysocki
->> <rafael@kernel.org>; Daniel Lezcano <daniel.lezcano@linaro.org>; linux-
->> block@vger.kernel.org; linux-pm@vger.kernel.org
->> Cc: linux-kernel@vger.kernel.org
->> Subject: Re: [PATCH] cpuidle: psd: add power sleep demotion prevention for
->> fast I/O devices
+> On 01/04/25 1:17 am, Dan Williams wrote:
+>> Jason Gunthorpe wrote:
+>>> On Mon, Mar 31, 2025 at 09:54:55AM -0700, Dan Williams wrote:
+>>>> Jason Gunthorpe wrote:
+>>>>> On Fri, Mar 28, 2025 at 05:26:42PM -0700, Dave Jiang wrote:
+>>>>>>> For now the following builds for me, but it is a quite a mess to undo
+>>>>>>> the assumption that that the hardware object definitions can not use
+>>>>>>> uuid_t:
+>>>>>> +Jason.
+>>>>> Seems invasive?
+>>>> Yeah, it left a bad taste for me as well.
+>>>>
+>>>>> Maybe just like below?
+>>>> I like that this avoids converting to the kernel's uuid API, however,
+>>>> not quite happy that it forces userspace to contend with the
+>>>> type-conflict with uuid/uuid.h.
+>>> Oh I see
+>>>  
+>>>> So how about one more riff on your idea?
+>>> Sure, works for me, please post it..
+>> b4 am supports scissors lines, so:
 >>
->> On 3/26/25 15:04, King, Colin wrote:
->>> Hi,
->>>
->>>> -----Original Message-----
->>>> From: Bart Van Assche <bvanassche@acm.org>
->>>> Sent: 23 March 2025 12:36
->>>> To: King, Colin <colin.king@intel.com>; Christian Loehle
->>>> <christian.loehle@arm.com>; Jens Axboe <axboe@kernel.dk>; Rafael J.
->>>> Wysocki <rafael@kernel.org>; Daniel Lezcano
->>>> <daniel.lezcano@linaro.org>; linux-block@vger.kernel.org;
->>>> linux-pm@vger.kernel.org
->>>> Cc: linux-kernel@vger.kernel.org
->>>> Subject: Re: [PATCH] cpuidle: psd: add power sleep demotion
->>>> prevention for fast I/O devices
->>>>
->>>> On 3/17/25 3:03 AM, King, Colin wrote:
->>>>> This code is optional, one can enable it or disable it via the
->>>>> config option. Also, even when it is built-in one can disable it by
->>>>> writing 0 to the
->>>> sysfs file
->>>>>    /sys/devices/system/cpu/cpuidle/psd_cpu_lat_timeout_ms
->>>>
->>>> I'm not sure we need even more configuration knobs in sysfs.
->>>
->>> It's useful for enabling / disabling the functionality, as well as some form of
->> tuning for slower I/O devices, so I think it is justifiable.
->>>
->>>> How are users
->>>> expected to find this configuration option? How should they decide
->>>> whether to enable or to disable it?
->>>
->>> I can send a V2 with some documentation if that's required.
->>>
->>>>
->>>> Please take a look at this proposal and let me know whether this
->>>> would solve the issue that you are looking into: "[LSF/MM/BPF Topic]
->> Energy- Efficient I/O"
->>>> (https://lore.kernel.org/linux-block/ad1018b6-7c0b-4d70-
->>>> b845-c869287d3cf3@acm.org/). The only disadvantage of this approach
->>>> compared to the cpuidle patch is that it requires RPM (runtime power
->>>> management) to be enabled. Maybe I should look into modifying the
->>>> approach such that it does not rely on RPM.
->>>
->>> I've had a look, the scope of my patch is a bit wider.  If my patch
->>> gets accepted I'm going to also look at putting the psd call into
->>> other devices (such as network devices) to also stop deep states while
->>> these devices are busy.  Since the code is very lightweight I was hoping this
->> was going to be relatively easy and simple to use in various devices in the
->> future.
+>> b4 am -P _  67eac8df3e217_201f02948d@dwillia2-xfh.jf.intel.com.notmuch
 >>
->> IMO this needs to be a lot more fine-grained then, both in terms of which
->> devices or even IO is affected (Surely some IO is fine with at least *some*
->> latency) but also how aggressive we are in blocking.
->> Just looking at some common latency/residency of idle states out there I don't
->> think it's reasonable to force polling for a 3-10ms (rounding up with the jiffie)
->> period.
-> 
-> The current solution by a customer is that they are resorting to disabling C6/C6P and hence
-> all the CPUs are essentially in a non-low power state all the time.  The opt-in solution 
-> provided in the patch provides nearly the same performance and will re-enable deeper
-> C-states once the I/O is completed.
-> 
-> As I mentioned earlier, the jiffies are used because it's low-touch and very fast with negligible
-> impact on the I/O paths. Using finer grained timing is far more an expensive operation and
-> is a huge overhead on very fast I/O devices.
-> 
-> Also, this is a user config and tune-able choice. Users can opt-in to using this if they want
-> to pay for the extra CPU overhead for a bit more I/O performance. If they don't want it, they
-> don't need to enable it.
-> 
->> Playing devil's advocate if the system is under some thermal/power pressure
->> we might actually reduce throughput by burning so much power on this.
->> This seems like the stuff that is easily convincing because it improves
->> throughput and then taking care of power afterwards is really hard. :/
+>> ...works for me. Do you still need a separate posting?
 >>
 > 
-> The current solution is when the user is trying to get maximum bandwidth and disabling C6/C6P 
-> so they are already keeping the system busy. This solution at least will save power when I/O is idling.
+> This issue got introduced in next-20250307 and got fixed in next-20250311(not sure what fixed).
+> 
+> But again got re-introduced in  next-20250318. I tried bisection, below are the logs.
+> 
+> One of the things I tried is to install the UUID packages on my set up and after installing those packages, issue is not seen.
+> 
+> rpm -qa | grep uuid
+> 
+> libuuid-2.37.4-20.el9.ppc64le
+> uuid-1.6.2-55.el9.ppc64le
+> uuid-c++-1.6.2-55.el9.ppc64le
+> uuid-dce-1.6.2-55.el9.ppc64le
+> uuid-devel-1.6.2-55.el9.ppc64le
+> uuidd-2.37.4-20.el9.ppc64le
+> libuuid-devel-2.37.4-20.el9.ppc64le
+> 
+> So wondering is this not a setup issue?  Please advice.
+
+uuid/uuid.h only exists if the libuuid-devel package gets installed. And it seems that's where it resides in userspace.
+
+DJ
+
+> 
+> 
+> Bisect Log:
+> 
+> git bisect log
+> git bisect start
+> # status: waiting for both good and bad commits
+> # bad: [c4d4884b67802c41fd67399747165d65c770621a] Add linux-next specific files for 20250318
+> git bisect bad c4d4884b67802c41fd67399747165d65c770621a
+> # status: waiting for good commit(s), bad commit known
+> # good: [4701f33a10702d5fc577c32434eb62adde0a1ae1] Linux 6.14-rc7
+> git bisect good 4701f33a10702d5fc577c32434eb62adde0a1ae1
+> # good: [cda4d1b29991d4500e9f65c6936b5d3ccd99ecbb] Merge branch 'spi-nor/next' of git://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git
+> git bisect good cda4d1b29991d4500e9f65c6936b5d3ccd99ecbb
+> # good: [9b22611592aa21d10f7d1b89352a618436dea7ac] Merge branch 'next' of git://git.kernel.org/pub/scm/linux/kernel/git/jarkko/linux-tpmdd.git
+> git bisect good 9b22611592aa21d10f7d1b89352a618436dea7ac
+> # good: [264791f7669a8246d129cbb935c861debba2f116] Merge branch 'driver-core-next' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git
+> git bisect good 264791f7669a8246d129cbb935c861debba2f116
+> # good: [3c51cb2d6ec7cecf724cd5d78a0633f61f31e726] Merge branch 'for-next' of git://git.kernel.org/pub/scm/linux/kernel/git/remoteproc/linux.git
+> git bisect good 3c51cb2d6ec7cecf724cd5d78a0633f61f31e726
+> # good: [612481dbc16505cf5e940809ebf36d8460d174cf] Merge branch 'main' of git://git.infradead.org/users/willy/xarray.git
+> git bisect good 612481dbc16505cf5e940809ebf36d8460d174cf
+> # bad: [892715be4379deb333376e573113fd75672eca6c] Merge branch 'rust-next' of https://github.com/Rust-for-Linux/linux.git
+> git bisect bad 892715be4379deb333376e573113fd75672eca6c
+> # bad: [b33f4167a8a2b9b9cc6b3e06f79b030db82cf530] Merge branch 'next' of git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git
+> git bisect bad b33f4167a8a2b9b9cc6b3e06f79b030db82cf530
+> # good: [3b5d43245f0a56390baaa670e1b6d898772266b3] Merge branch 'for-6.15/features' into cxl-for-next
+> git bisect good 3b5d43245f0a56390baaa670e1b6d898772266b3
+> # good: [d11af4ae2169672b690a4d07a9dfdfd76c082683] Merge branch 'for-next' of git://git.kernel.org/pub/scm/linux/kernel/git/andy/linux-auxdisplay.git
+> git bisect good d11af4ae2169672b690a4d07a9dfdfd76c082683
+> # bad: [5908f3ed6dc209e5c824e63afda7545805f75a7e] cxl: Add support to handle user feature commands for get feature
+> git bisect bad 5908f3ed6dc209e5c824e63afda7545805f75a7e
+> # good: [18285acc2c047cda2449f426c09fc8969b04b8b1] fwctl: Add documentation
+> git bisect good 18285acc2c047cda2449f426c09fc8969b04b8b1
+> # good: [15a26c223fff58d9fa4ada12a8c35697f8ecdf6c] Merge branch 'for-6.15/features' into fwctl
+> git bisect good 15a26c223fff58d9fa4ada12a8c35697f8ecdf6c
+> # bad: [9b8e73cdb1418f7c251c43b2082218ed9c0d0fee] cxl: Move cxl feature command structs to user header
+> git bisect bad 9b8e73cdb1418f7c251c43b2082218ed9c0d0fee
+> # good: [858ce2f56b5253063f61f6b1c58a6dbf5d71da0b] cxl: Add FWCTL support to CXL
+> git bisect good 858ce2f56b5253063f61f6b1c58a6dbf5d71da0b
+> # first bad commit: [9b8e73cdb1418f7c251c43b2082218ed9c0d0fee] cxl: Move cxl feature command structs to user header
+> 
+> 9b8e73cdb1418f7c251c43b2082218ed9c0d0fee is the first bad commit
+> commit 9b8e73cdb1418f7c251c43b2082218ed9c0d0fee
+> Author: Dave Jiang <dave.jiang@intel.com>
+> Date:  Fri Mar 7 13:55:32 2025 -0700
+> 
+>   cxl: Move cxl feature command structs to user header
+> 
+>   In preparation for cxl fwctl enabling, move data structures related to
+>   cxl feature commands to a user header file.
+> 
+>   Reviewed-by; Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> 
+>   Link: https://patch.msgid.link/r/20250307205648.1021626-3-dave.jiang@intel.com
+>   Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+>   Reviewed-by: Li Ming <ming.li@zohomail.com>
+>   Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>   Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+> 
+>  include/cxl/features.h   | 112 +----------------------------
+>  include/uapi/cxl/features.h | 169 ++++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 170 insertions(+), 111 deletions(-)
+>  create mode 100644 include/uapi/cxl/features.h
+> 
+> 
+> Regards,
+> 
+> Venkat.
 > 
 
-No. They can set the pm qos latency constraint when they care about 'maximum bandwidth'
-and remove the constraint when they don't.
-If they just disable the idle states at boot and never enable them at least they have no
-grounds to complain to kernel people about, they should know what they're doing is detrimental
-to power.
-
-Furthermore we might be better off disabling C6/C6P than staying in a polling state (whenever we've
-completed an IO in the last ~5 to 20ms, depending on the HZ setting).
-Again, the wastefulness of a polling state can hardly be overestimated, especially given
-that it doesn't seem to be necessary at all here?
