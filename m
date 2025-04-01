@@ -1,95 +1,131 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01B0F1C860D
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 16:27:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D88EA1E5B8B
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 16:28:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743524869; cv=none; b=t03XE4jTC+mN1bMsfB5UzT3kjXmfzO7eFMUinHaUv/GYHWSQViQttS4/OKo+0xAUuALmlSK1ruR/ls+9ZM0vjuIvidCbFTqMZT3c9SAwAj+1cFIflxwyZ3oGm8/AUlA50J8+UVII5WUbQGV3I0bPrwleiOi0MTfnHSXjX4WP8MI=
+	t=1743524886; cv=none; b=uecc5F/WYDM3fZNHI/Vc+Yiyr/W6EyrByQWDYZMyuU8js0/n+qLtECI79+q33viccVCcgHLeFqQw26I4xuMujGuARACPwm+4Sa7fXr1aP2rvzlRQvn1nhb+x4nqpcdwDwd0Q6v8t+bOupZMfpsOJSQivXWmP8zAxzAsEHEvP6ww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743524869; c=relaxed/simple;
-	bh=ZMW460j4yvUXHsvkTIv+BD8ZfXx82a8vjtmTL9t/URQ=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=f952hNddWvlBpS/0UzaTBbJnvEk/CyzybsiSUJdikCggprPCG3I+DfcBmsSbkrUk5yyV/Wxl3/Rv+iScGgIUwXsMo45M+gxZHSTmmj4/yecANJd58O8dCX0ekVvo7PklAOVR9+cVOYE/Dxiw8VoSQAt3uWR63+6Hv6dh6n+DHMA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FrmSTm08; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743524886; c=relaxed/simple;
+	bh=QyvPwe2n7SMJQvY20lH5qrJm2IZrAH6H92ENM40f7x4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=m3jUS0UmtxZfzfsZXKkAWTbjItuibAHZfK/Z0awyPgAhxK7h/CcrtsXkkHU0nJ7ZtYb+2i+MHVv7F6xAqTi8kN2xJDD/FaYBf0skMB77TYwR9uQl0RRtu3sVTjCAgF9+oteTOYY+oJBQ2gUvpOFPf/ru7ZwiwJIU7iRta3u+RUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=G/Tl31CL; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FrmSTm08"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2260c915749so81262755ad.3
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 09:27:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G/Tl31CL"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-224341bbc1dso98481435ad.3
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 09:28:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743524867; x=1744129667; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=uUJVpyhXXl0R+Y6u4P5cxjoPTeSqrUrRSHznwsddnWE=;
-        b=FrmSTm08YsJgexGokuMqyf7j4+KYtBqzq+n7R0IlGUuotrYrXUFsH5IPczx25A8agJ
-         IfKEgMQHNEQ7L4gs/Fec16+Gf+kAWSvfm3JHabRhqzm7nBJecigThkG9vMC6QexsIFV2
-         5pqim+Yj+7BcTm5V9fJEg1PymM+ySmBn8cHrcmGBizB9fUg2zPyZO06C7H9T0s8mKejy
-         i48GK5K633PcSwxxM/M9MtRoPKgQDOG++mNhASvqFVV6xnVVGRl8jyOe+yf9V6ZS8Gq3
-         gJM8A6nCVIwy7sbBeXMFmEPCP1eYZeX6Y+G/mxSdVCKVhC6VGzc+P85uLI+BMY0TIe7F
-         XvdA==
+        d=google.com; s=20230601; t=1743524884; x=1744129684; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=sEr9LMvpLbHE893cIqhG/JU8h0Dt2xG4p+araqhsX+g=;
+        b=G/Tl31CLaQf9aFz7+CTDTug+UVm1CNVsHhLnpWq57mdwnmnAOORtjDSe5bqeniH/Li
+         61CeBh6vIylSUqtFueMX0T1ZzVommA5WRDHoLCxy8wPi+T2+/zeKt1KWsYsWtewxEND5
+         56OdweU6OmmQv9R9YLsYJf4FLnq9r9n0dW2RKIU71IFJKiThjMYj48ZvR7mbvapRBK92
+         9xAzRBM0YT0dTAtHdOyhC0eGJOd1u/nFOHnSYTauAzEQ3ZFqsGV6pS+rAHLwI+R5Urq5
+         1XhMfrcA+nddSbsFs5fBXLKkHvuuLgdieZbPQmt43fMHKg1HaJuKNAwtBCyXHRgoY4Lk
+         G9ig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743524867; x=1744129667;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uUJVpyhXXl0R+Y6u4P5cxjoPTeSqrUrRSHznwsddnWE=;
-        b=hOr/WEt/tDU3+/SzTavDfr1tzR09ao5OVKyIKoo2DcRasuwgDPPYIrXF4GC4znpNQH
-         Lb9jjSx1Yvegsevx/D/OQTAYPFe2A+9mYNmN488FCk4fDzJTSRPxnyXORa/CNNCUOR6k
-         vM4BZUOXELYNltrJytDq6IKEAqz8rDqOLh+ZLT3EY9w8+fullpheWykdtbH8/N5yfejK
-         stFRUHABMX2fJjTTeR3xrO5y3qqnFCZR8m7iZRdTnhUEYlNCeA3Yz9aSJpozbuor9AC2
-         ValiPKKv5IdOknDsYZQgPEnNie1lxDlaVnHLAGEKo5YUkV7S61wcW1JWPRKUKPSs2Syg
-         L9XA==
-X-Gm-Message-State: AOJu0YxKk9TtsUwZ78N7gq26lOtMMbM1enb05Lo3tchWZr0drxevlkGl
-	HKV/8kQMpJaZZJedjZEeuXkuSbM+bqZcqemzFoVl5x6qdtdY3BOWWA3y+aD7
-X-Gm-Gg: ASbGnctQS896TAYyq5unpkriAIztlkjkmm1P2Py8IfjshJ7lwxmkUI1wsoJcdwEBK1Z
-	IG8hfuYu74OIi2kgCK6MA4r3b5XuYqzmuL201WBARqXGSw0v+QxilbT6k1fqNUjcwu3qgOY+NiN
-	kOCXQTinXoiy5U3u/BJ9zWEcsStRxXfGnd8CpZ5H+0/7fyFgoJT96NcoEfF6qTku7iBRmJAgjyS
-	WQ0jT8OwJkhIDHTiCx98NagquegNID5O00s/ci2lqeTxqJHZlM/9Xt8691Mu2F8YTS5fMOOR7wB
-	2DIKnv/zeM6jTO0ixHvAnsPt1IM80L/46C+GDu6D3Kus
-X-Google-Smtp-Source: AGHT+IFbvSbuYksS0cUFpnTJ1cNnFU1NZdZ1aRECup4b97Lc3hkwOzBF/Jh86Tgca6Dfc44Z5bm9fg==
-X-Received: by 2002:a17:902:f643:b0:224:249f:9734 with SMTP id d9443c01a7336-2292f943ec9mr216630845ad.4.1743524867308;
-        Tue, 01 Apr 2025 09:27:47 -0700 (PDT)
-Received: from localhost ([216.228.125.129])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291f1ded78sm90544625ad.197.2025.04.01.09.27.46
+        d=1e100.net; s=20230601; t=1743524884; x=1744129684;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sEr9LMvpLbHE893cIqhG/JU8h0Dt2xG4p+araqhsX+g=;
+        b=i7lLyMuPyd3j8yzO2H0H6nrmjr8gSNu1DsrY6SDmgtwgJ4CFD7d1zpJLkNnbmrhREJ
+         kleIhbpSibjcwsMbAT8h5qQtvDEXyRuh5YmjN7rAdWBam9MPEuOsHGxbJq9sSW+pemhg
+         4qshvVDCcQ500XUBATJHlrcd/RO1Rz5LBOkeNn/WUeTwwqwONTGo+xUvyWIQXVohOJwO
+         Ch8FFvKxahxB68pWaoCBvEXAylUzn9jm9BEzKTVIG+KC1AyQJscG5XXlygQ1Q5pdIIlq
+         bEwMQ/O4pwC7r5TlsBlt1iNvxGep7B/KTc42Z+3MoeTYwkOiP6t6rfXvlNIleSjt+27f
+         SLJg==
+X-Forwarded-Encrypted: i=1; AJvYcCXe09+jEZkzOL3bfPtM3HbQPz8YblUnsbj1X3kHX6lkNasFuEGn456q+wW5nUrB0UBMkDqFlx+FtcZEtcA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwSX2jnfS44sPdzoq0g9nrxDHwSJ1TOUwM711HC5CJuHQKogr3o
+	fAwERvbbr4oO3Od4NEHbSBU2lGSD+ne1rbt5QP9JDGAyo3UKlitwL5qNMeWM+g==
+X-Gm-Gg: ASbGncui0BmfgfykEpfy1FLOnvmfXxaBt0P8W8oPukfoqAomlPUbC3S9MEFvtVmZKIN
+	oH2XtqX5KCF9gDns8K9Zaq7p7z1XRCx3JO1vUMxkFJmn0b52e+8s/AQUBSE7d/FSa8apzzISg2M
+	AlNRG+EK4Zu8PU26B4hECBclzwU6Q1iPrezOqhuONYFhCRnzCapCqxsRr2Dq3enkOhjmC0dpNFZ
+	Sr1SnLnlJXKmIQOpYcltHTEZ4sFAaCxquKOliSPSWP3dGxHmzEynbwVWZELxbmZEDTu+PwWylX6
+	SPEdeTl4hxgKFkqXRigR3/TbHl55y4u9DqDb/p4RW4rmkypxpo/YF8zq4h6n9zwHv1jSxO5GWW7
+	kdzRKBfXwPqevirA=
+X-Google-Smtp-Source: AGHT+IEyaXPv9oHXzdX7kp5aOc8Pw45evlmKNFGJN69UA0/YokAg60Q/XphIOEUon7k6t8bnNWSYvA==
+X-Received: by 2002:a17:902:ea02:b0:224:216e:332f with SMTP id d9443c01a7336-2292f9fc054mr220540675ad.48.1743524883898;
+        Tue, 01 Apr 2025 09:28:03 -0700 (PDT)
+Received: from google.com (198.103.247.35.bc.googleusercontent.com. [35.247.103.198])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291f1f7376sm89939395ad.245.2025.04.01.09.28.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Apr 2025 09:27:46 -0700 (PDT)
-From: Yury Norov <yury.norov@gmail.com>
-To: linux-kernel@vger.kernel.org,
-	Yury Norov <yury.norov@gmail.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Subject: [PATCH] cpumask: fox comment for cpumask_any_distribute()
-Date: Tue,  1 Apr 2025 12:27:40 -0400
-Message-ID: <20250401162743.10445-1-yury.norov@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        Tue, 01 Apr 2025 09:28:03 -0700 (PDT)
+Date: Tue, 1 Apr 2025 09:27:59 -0700
+From: William McVicker <willmcvicker@google.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Peter Griffin <peter.griffin@linaro.org>,
+	=?iso-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>,
+	Tudor Ambarus <tudor.ambarus@linaro.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Alim Akhtar <alim.akhtar@samsung.com>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Saravana Kannan <saravanak@google.com>,
+	Krzysztof Kozlowski <krzk@kernel.org>, kernel-team@android.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
+	Donghoon Yu <hoony.yu@samsung.com>,
+	Youngmin Nam <youngmin.nam@samsung.com>
+Subject: Re: [PATCH v1 5/6] clocksource/drivers/exynos_mct: Add module support
+Message-ID: <Z-wUD2GGMRfJwhSu@google.com>
+References: <20250331230034.806124-1-willmcvicker@google.com>
+ <20250331230034.806124-6-willmcvicker@google.com>
+ <20250401023001.GA3186122-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250401023001.GA3186122-robh@kernel.org>
 
-The 'Return' part is copypasted from the cpumask_any_and_distribute()
-and refers to a non-existing intersection. Fix the wording.
+On 03/31/2025, Rob Herring wrote:
+> On Mon, Mar 31, 2025 at 04:00:27PM -0700, Will McVicker wrote:
+> > From: Donghoon Yu <hoony.yu@samsung.com>
+> > 
+> > On Arm64 platforms the Exynos MCT driver can be built as a module. On
+> > boot (and even after boot) the arch_timer is used as the clocksource and
+> > tick timer. Once the MCT driver is loaded, it can be used as the wakeup
+> > source for the arch_timer.
+> > 
+> > Signed-off-by: Donghoon Yu <hoony.yu@samsung.com>
+> > Signed-off-by: Youngmin Nam <youngmin.nam@samsung.com>
+> > [Original commit from https://android.googlesource.com/kernel/gs/+/8a52a8288ec7d88ff78f0b37480dbb0e9c65bbfd]
+> > Signed-off-by: Will McVicker <willmcvicker@google.com>
+> > ---
+> >  drivers/clocksource/Kconfig      |  3 +-
+> >  drivers/clocksource/exynos_mct.c | 47 +++++++++++++++++++++++++++-----
+> >  2 files changed, 42 insertions(+), 8 deletions(-)
+> 
+> [...]
+> 
+> > +#ifdef MODULE
+> > +static int exynos4_mct_probe(struct platform_device *pdev)
+> > +{
+> > +	struct device_node *np = pdev->dev.of_node;
+> > +
+> > +	if (of_machine_is_compatible("samsung,exynos4412-mct"))
+> 
+> Your root node compatible has "samsung,exynos4412-mct"!?
+> 
+> In any case, add a data ptr to of_device_id table and then use the match 
+> data rather than comparing compatible strings again.
 
-Signed-off-by: Yury Norov <yury.norov@gmail.com>
----
- lib/cpumask.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Ah yes, you're right. Thanks for the suggestion! I'll update on v2.
 
-diff --git a/lib/cpumask.c b/lib/cpumask.c
-index 5adb9874fbd0..81f5d2522eba 100644
---- a/lib/cpumask.c
-+++ b/lib/cpumask.c
-@@ -151,7 +151,7 @@ EXPORT_SYMBOL(cpumask_any_and_distribute);
-  * cpumask_any_distribute - Return an arbitrary cpu from srcp
-  * @srcp: &cpumask for selection
-  *
-- * Return: >= nr_cpu_ids if the intersection is empty.
-+ * Return: >= nr_cpu_ids if @srcp is empty.
-  */
- unsigned int cpumask_any_distribute(const struct cpumask *srcp)
- {
--- 
-2.43.0
+Regards,
+Will
 
+[...]
