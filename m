@@ -1,138 +1,102 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D4C7205AC5
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 18:53:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 995211494DB
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 18:55:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743533633; cv=none; b=RpsNS9zmnMjZOr1hlmZqY1UZnF2dt4Fx79D9blXtWnm6xwEp9Glnk+DhMJXKq75Pq8zKR34l9rw4/w4f1jbeuV7M3uvzo5cmd+Qm2Pke968ijOgUeyWTx2rd6lvRzgrCaV3s2I5w7NtiTIfv4qVqMlxz+vrEGfjs9kL9zZGsg+U=
+	t=1743533746; cv=none; b=Knp20oVzgY8xCtwt/AkGARAKS4Osp6w9vh+riqkM+xaPYVr08tux1csYKRV9k5CKsmnkDmUiWRFcidsbxOJvVMsOvjwmX/Eb15r92R+adwnxKN3Qm7a0OpPugrprZGPPLO7dya9upOUXoQRPO95VfceLXdc3NdENHV2X6z6Mx2Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743533633; c=relaxed/simple;
-	bh=heqNyjvA9uGAnz29bWAyOedN4AS4qurH6YzH2fF2COA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nm9N7zVZ+4XEOBCRs94QLs0ReqI/HkftxhU8EjWPMAACD3sDZXqvu2OJ/7vQUYsL4i3uNNcMUniDpR2ddCgh7qdIgaVrzLB0hqiXYaawLRcjQ3g4dOmBYnRB2MO2cJLs9YXxTZwhtcdadT3lKxATqmLRc2/z59POmDSHID6IE0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=tnh25DIO; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=8A/I2243; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=tnh25DIO; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=8A/I2243; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1743533746; c=relaxed/simple;
+	bh=q88Z0hpaKO/s0/y89gLb9wPyioMiCONl8yd9LT10Tec=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UtBcTszGv5Kt5EHxfT5Mr4A8xsjvXSqzkc6CtDT8ksqTpDvyvdjINNlKYEKynBlfbb+qzJE8A1x9yMtn2Iboj00Xp6zhXtagBD1YGzNcY0azRjk3+1BPXcjHsD7PYeDxPmfx2UvMxkrHSVkUv02xbuN5obz9u8gX/TiWCZrYNJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CL45kJjQ; arc=none smtp.client-ip=209.85.160.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="tnh25DIO";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="8A/I2243";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="tnh25DIO";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="8A/I2243"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 92E24210F6;
-	Tue,  1 Apr 2025 18:53:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1743533630; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9nR803xm38t00s8Uk04qRbIbe//Ye+5t8z2qfY1LQwI=;
-	b=tnh25DIOM1ZJvm/WC78xWIr/1HHcJWPEUdZpIZ1nqXOIhKjIbrr2qSr/JDO9jf3rnU1XZY
-	6mWFCuQX/08q4oH78MWelRoqzb61KgMj4fISb5wJtLIOqFH2APmQ71wG1Bu4M2f4jtuQKi
-	tXZVlBWN/1kK1xz8s54ZqnoY4geRXVU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1743533630;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9nR803xm38t00s8Uk04qRbIbe//Ye+5t8z2qfY1LQwI=;
-	b=8A/I2243KWLse33QR15t1Aj/IoifNLH0/AXQjFt9AFIQ68OzoN/N29FcTcPGXSLCfgvt/7
-	UFOtC4qjKARyk3BA==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1743533630; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9nR803xm38t00s8Uk04qRbIbe//Ye+5t8z2qfY1LQwI=;
-	b=tnh25DIOM1ZJvm/WC78xWIr/1HHcJWPEUdZpIZ1nqXOIhKjIbrr2qSr/JDO9jf3rnU1XZY
-	6mWFCuQX/08q4oH78MWelRoqzb61KgMj4fISb5wJtLIOqFH2APmQ71wG1Bu4M2f4jtuQKi
-	tXZVlBWN/1kK1xz8s54ZqnoY4geRXVU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1743533630;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9nR803xm38t00s8Uk04qRbIbe//Ye+5t8z2qfY1LQwI=;
-	b=8A/I2243KWLse33QR15t1Aj/IoifNLH0/AXQjFt9AFIQ68OzoN/N29FcTcPGXSLCfgvt/7
-	UFOtC4qjKARyk3BA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2B7D513691;
-	Tue,  1 Apr 2025 18:53:49 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id XGLpBz027GcPOAAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Tue, 01 Apr 2025 18:53:49 +0000
-Date: Tue, 1 Apr 2025 20:53:47 +0200
-From: Oscar Salvador <osalvador@suse.de>
-To: Gregory Price <gourry@gourry.net>
-Cc: linux-mm@kvack.org, linux-acpi@vger.kernel.org, kernel-team@meta.com,
-	x86@kernel.org, linux-kernel@vger.kernel.org,
-	dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-	rafael@kernel.org, lenb@kernel.org, david@redhat.com,
-	gregkh@linuxfoundation.org, akpm@linux-foundation.org,
-	dan.j.williams@intel.com, Jonathan.Cameron@huawei.com,
-	alison.schofield@intel.com, rrichter@amd.com, rppt@kernel.org,
-	bfaccini@nvidia.com, haibo1.xu@intel.com, dave.jiang@intel.com,
-	Ira Weiny <ira.weiny@intel.com>, Fan Ni <fan.ni@samsung.com>
-Subject: Re: [PATCH v8 0/3] memory,x86,acpi: hotplug memory alignment
- advisement
-Message-ID: <Z-w2O8O9MGJ1Ok78@localhost.localdomain>
-References: <20250127153405.3379117-1-gourry@gourry.net>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CL45kJjQ"
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-477296dce8dso58188271cf.3
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 11:55:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743533742; x=1744138542; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9Q9uOC43r/9w7VdgkgSAIWaOsjrV/IhDIvRZfNVDIJE=;
+        b=CL45kJjQCVZ17aDccAmQgPtJdrVdurSfiWD+TCF6cd4R9vcydw8DUzn6fI6M+pRzmr
+         VkPT/2dRkrv3sirBBgGt1E/gGlDu/87wfoGSG4lLHAW9N96PNcYr28OJCafDqkjxdhdZ
+         BG+Ste3JHrSFzFNYduNHG20HRBI+lEIRSPhXgADOmy7NiSz/YNZAcKWE1oPHqZg3T/3f
+         cd9mkppPvJUC+cp9bG6ogVhXLjfmtIEFXRg650JLJX5Zl9tD6O3NVkeUx+c8BezmHLKx
+         B27+5FxdOudI8UiNa6xeqDTT0rk6prSE3krPc43WwkwzPLawo1kUqbaX1677plRd7603
+         4lMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743533742; x=1744138542;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9Q9uOC43r/9w7VdgkgSAIWaOsjrV/IhDIvRZfNVDIJE=;
+        b=DXcbx3PfN0zN5yQw2Gt+Fay0mA8e+9dXVmUX+NR4TKdk/AvR2ooDauURWf5VVOcF7N
+         4vxlfSpDqsWVGV/T8vjQDkLQxpiazU69AWfkPGCNVelsmB6x5ddQTfcHxH/Eexw84yL3
+         GVZh/AfoOCbIJngBeaGnSg6l9ln598xMESc7KI8FFKeD/nOCF1oaFHDwzrFKGW6UksgF
+         5hBZN0ddmc91bLdaMT7QEpXtM2FHUikDrIEFLdpHPRcurbxRe3FEHEPYBknQuqPRSe1R
+         K5F0dCmH379ry4RNW0E6HMs24LH03wS1sYMlyUFjMxaon4JiHPgyPohUcHYnUduIw1nf
+         X0fw==
+X-Forwarded-Encrypted: i=1; AJvYcCVfgk7Ahcq+7WoFulItKmM2hyrL+vCDyBGFVI0bYpoOLv2v5QwvNrlP8Ofp5nmxQ2wzST+w3TiiAIjnAoY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwxZ9b+aIYQdVPMxyGKMridO7ssjUZGwbcJMZrslPbh/a32IvXb
+	CXnwlolC+b/cBA89hfFNzmgT8zwzvvTnREz3xN7BMbgJefLjgM3/zsvIkY8f6kFbFT2JD3jZrEG
+	4Xd5s/CR6ObNwzG7dqDqOxrvYyfg=
+X-Gm-Gg: ASbGnct9E23RDf1UGM1x9d8m8/TmF3FwjcK3Nn3zJa44w2bNHpQtLu/12WTYgo6CXDa
+	WQ9TOdxgB5NnXnZKMz1bXZUfcU/mNz4lPHc+itsqBI5oggAfPiof5nPPnd+IdtwL82X5j4BEoZw
+	kouLgzinpDdRcajrMlUawYcwy4dgYDIR+yiaSFdc21ZQ==
+X-Google-Smtp-Source: AGHT+IFnu2+L6M9/jMcN/WMSFnMO0o304vss+SI8PfVCPL4VqXbrE5Ld+sLK7fpk0gDBEv357bnG/lQZ8KxPgToEfSo=
+X-Received: by 2002:a05:6214:1cc7:b0:6e8:feae:929c with SMTP id
+ 6a1803df08f44-6eef5e03c9cmr67441426d6.21.1743533742419; Tue, 01 Apr 2025
+ 11:55:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250127153405.3379117-1-gourry@gourry.net>
-X-Spam-Score: -4.30
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.999];
-	MIME_GOOD(-0.10)[text/plain];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	R_RATELIMIT(0.00)[to_ip_from(RLj6zumtikrrmnnbmzkety5zmd)];
-	RCPT_COUNT_TWELVE(0.00)[28];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[]
-X-Spam-Flag: NO
-X-Spam-Level: 
+References: <20250306230015.1456794-1-nphamcs@gmail.com>
+In-Reply-To: <20250306230015.1456794-1-nphamcs@gmail.com>
+From: Nhat Pham <nphamcs@gmail.com>
+Date: Tue, 1 Apr 2025 11:55:31 -0700
+X-Gm-Features: AQ5f1Jpqb4LGQmN1IeGxg07gpgFgPdxEt7PZxoeyxHEsv2aAY8GuoW4vp3YJT3U
+Message-ID: <CAKEwX=Njxjg+G6H4X77YPnZ=mQJaR-K8du1VP6voDLZ55ZaepA@mail.gmail.com>
+Subject: Re: [PATCH] page_io: return proper error codes for swap_read_folio_zeromap()
+To: akpm@linux-foundation.org
+Cc: hannes@cmpxchg.org, yosryahmed@google.com, yosry.ahmed@linux.dev, 
+	chengming.zhou@linux.dev, linux-mm@kvack.org, kernel-team@meta.com, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jan 27, 2025 at 10:34:02AM -0500, Gregory Price wrote:
-> v8: nits and tag pickups
-> 
-> When physical address regions are not aligned to memory block size,
-> the misaligned portion is lost (stranded capacity).
-> 
-> Block size (min/max/selected) is architecture defined. Most architectures
-> tend to use the minimum block size or some simplistic heurist. On x86,
-> memory block size increases up to 2GB, and is otherwise fitted to the
-> alignment of non-hotplug (i.e. not special purpose memory).
+On Thu, Mar 6, 2025 at 3:00=E2=80=AFPM Nhat Pham <nphamcs@gmail.com> wrote:
+>
+> Similar to zswap_load(), also return proper error codes for
+> swap_read_folio_zeromap():
+>
+> * 0 on success. The folio is unlocked and marked up-to-date.
+> * -ENOENT, if the folio is entirely not zeromapped.
+> * -EINVAL (with the follio unlocked but not marked to date), if the
+>   folio is partially zeromapped. This is not supported, and will SIGBUS
+>   the faulting process.
+>
+> This patch is purely a clean-up, and should not have any behavioral
+> change. It is based on (and should be applied on top of) [1].
+>
+> [1]: https://lore.kernel.org/linux-mm/20250306205011.784787-1-nphamcs@gma=
+il.com/
+>
+> Suggested-by: Yosry Ahmed <yosry.ahmed@linux.dev>
+> Suggested-by: Johannes Weiner <hannes@cmpxchg.org>
+> Signed-off-by: Nhat Pham <nphamcs@gmail.com>
 
-I wonder if something like this could help us in improving the
-ridiculous situation of having 16MB memory-block size on powerpc.
- 
+Hi Andrew, I think Yosry and Johannes signed off on this patch (with
+the fixlet). Looks like it was not merged for 6.15-rc1 - let me know
+if there is something I need to do.
 
--- 
-Oscar Salvador
-SUSE Labs
+It's mostly a clean up with no (intended) behavioral change, so no
+rush of course.
