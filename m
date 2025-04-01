@@ -1,205 +1,275 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD3821E571A;
-	Tue,  1 Apr 2025 21:50:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF59B1EE034;
+	Tue,  1 Apr 2025 21:50:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743544241; cv=none; b=tk0B3zPUCX6qfstdLZvmiVBaIAIT0NesPLYV4XSA0C2TLc0qmMQ0yw4WpdobsDi67+1zjfm2/eOrjDMbXVCsZ6PJ+77zAePf4s/8DExX9tH6iatHg5BkPyN3Oes+HBfW2y5AdruL188fPeSjvTmUA9yCymiFFRgqfC6+n3fe26w=
+	t=1743544257; cv=none; b=jjhITPYvxUb4J50cEwS4XgFlef4wF1DZGRv9awEONy7ttIMfgADV2vUbLjRwxODhjYgHrIwObTt7/Q7EQxR/LIt0L3QVY3XUKPpvGFomDSkvv9ZPZgSkzQre92ZVt9SC2bE7o7y6hUTH4mHnTYsDocsqHZmkiKu2mmasSioHSYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743544241; c=relaxed/simple;
-	bh=0bHJkuaxrPpTEFxxHbou9jaHnQg7M1F2cklQwab28n0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NqiEWTWk7dhaG0zpJYeCMx8R1pR7nABUPpCd9PLM0L8G5Fjj1CUnP6tHKU6l4UfKngQPNaT5UYOv25rWcFicVvOWsRvsVROcPfxSGYsod4+c3M6V0EfqJyD3gyC9KSBD2kgB0KWBtEra+RH4sBFVAV4T4pRMVZxrenOgLhyNqwU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=npplZUrZ; arc=none smtp.client-ip=209.85.218.53
+	s=arc-20240116; t=1743544257; c=relaxed/simple;
+	bh=gmcrgRP4fA6+lKBgGEJyMoZHH6u64n1CPOLGacIyvps=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HVXP7S9CJ/mUih6scfprJ++eAGdPUD/UQk536aeD9xZxi5Fq5iZMmtbmcqmTGAhmLX71D3ByuHCJgoUjDbpjduxyFOmBzyWX/85j8RJqa6ber4ge4Q3WVvjp2W1YY+Iw9dj6aHU9zsnSYbHq5UdgJqHnizYylY4arg1he7oaIe0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dtcXzen6; arc=none smtp.client-ip=209.85.221.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="npplZUrZ"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ac345bd8e13so1013566866b.0;
-        Tue, 01 Apr 2025 14:50:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dtcXzen6"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-38f2f391864so3638438f8f.3;
+        Tue, 01 Apr 2025 14:50:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743544237; x=1744149037; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=3S0YzyTLyxubq2gCXJ73TBG5EBDT2YJnQ9lVn/xP6m8=;
-        b=npplZUrZLQmJaGsf4Ypa6cy4aDLX7AZyp7Xfe0eDoVNdAdY8ECGg9KppZtZ4bfelaJ
-         IRtykUhmD2ld6j2OgNRDnkVxNGLayyXs/9zOczT60tFPDpIqV/JSpIw56ucscREwJZss
-         7c/+c6qOZkhAWd7dLO58n6JIARDVLjxU/Q0LD/pm4xbuA0mpNTFlnJ9N6s/5HxmGEEi7
-         ItnnMgkCT4jNjR9v81WzUDQgiZz/IM7N5/ITgK6ODU81jn1gfJeY807TpUdPTyYmOhZ/
-         k/+ihmMFIIAFtBk3lJ8u90O6DnvDiXy3a1X4IaYnEhm1ICkWkCo5whVP7D/MZKOLAN/Y
-         FeAA==
+        d=gmail.com; s=20230601; t=1743544254; x=1744149054; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=bj1Qrbt7flnOfY4sCj4gZ44wqy0H0z7fYnmzu+9/yJs=;
+        b=dtcXzen6cVf0TKY/zFHV+w+B6W5PAo0kiSRrM90PiQ+rwieeksTU0U25ZvCSKyinBi
+         0ONROyUOlG7fuY/8IOw01ljqsKS5QKwfQPLRRRYv1gEK22aVpqrd5i8mj2R+KOLd3ODx
+         +FVKuHrO0wpXhbllNXyBG4YStlRxVQSwbby3a4ZQnecilR4tcBEkWmT4tjxgmCzpx2YH
+         az8SaZG4zCITlQs6Hb49fNHvyoRAusVXAYNtSkP++xjKzFFaLMiYdsmgdtIrZn4+sjuy
+         Zb+2kvQf6ANQCtvSMt5hIJ3/4sHa+uwN1bnRUq310GQ3ho3nmmE6Ei4QbWypFk2YHLpS
+         Mz0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743544237; x=1744149037;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3S0YzyTLyxubq2gCXJ73TBG5EBDT2YJnQ9lVn/xP6m8=;
-        b=bQUTDe2zS+2qYTz7hzsZtpjbklsn0zVSwXhWqfSBnTeciYakbtvmKg+DPly8+pw0oO
-         D+kJRHzUO0XeFBpx6HxRtu8MRAM1CC/snMVfO3VQzSCABlXXYEQgbjXtHXKV43MeNaWf
-         OQmdHaHMf4cR4bWta95N3vBdmK9Ypazmwdaw6xz9U5hM/JUSEeDZPyrQU13BGDPimOtP
-         PaK17knxFycfQjCeR501WNpxIUN2mRqb12j4nGEvqzGNmmEvUzIH0PaeZeC1LOdp1bBE
-         JnXBvJfl5iDnlUJiB2DoCxy//F+cXr9rS4fvgyA780LNx8yyHDOYvgTzW+7M6NgOmh2K
-         Jliw==
-X-Forwarded-Encrypted: i=1; AJvYcCVLdSEjy9Cu+wRZ/jQrr3+XcPYh39MJOW5h/CeEyThTcbihsywflwPDkVvVa7NLMus+MNA4uOcpCT6FBho=@vger.kernel.org, AJvYcCVje6VpRRaVNokt8quxUOCqwzdIgHlJznXEn+s9gyIklIWSBuOX839MgzvGcCQAVLt6CTxDPJ7VSydj@vger.kernel.org
-X-Gm-Message-State: AOJu0YwfNnBeQ0qKR+PGsLcJyheTbKjj+XkQMk5Nx8z287BLQDNCsbo2
-	mpnRwBKMowAjcrkVXz8AJdI+a47Y+S+BkvCMj7NqE2403SFMxcTR
-X-Gm-Gg: ASbGncvuF+sOfMNuO3sZApcpKKZzMTWtrOWNv4R+VU2g2J7KeXf2FLPWByN5jNaqrK4
-	FyXo5R2lqEiXrfr7mjp8DHRl9/fRrPeL2XepYX6DEoFiP6DHMtXKoEiTW5P4OWilK+Bl3wWkvIM
-	VLdompPK/rm1PdiTw47i7D21GhtpAUlMKfraeG4hPl0uSlSaqLqISJ1wAbbk4oABpLyUv0PR0Tz
-	X0O9gt189lWC7tauMJlbRK5a1BYG1mPvwHIXqltmEND6BXzgTTKClpklFXXj7c0nkZxHxa4KDI9
-	1Rz2zUf3tCa8DiXMM6526GzgKaXeNlSQQ0PASMU/v3LG7JWUWqQnZFgb0iMQ5hNbHGkCmxeX5xV
-	yBeQnnLW8JSK4SzDMCKB+rCryrmVno2vxOAVxijq/T7J4iTwpYTHDvMlSHhbcFHeIt3X9JSwlU9
-	dMPVhVQZ6DHWUQAme1XilW1u5qwsODgsuzPQ==
-X-Google-Smtp-Source: AGHT+IEWB7aBQCtTaCyJTTXsXAljyXb7sUoqMsYhh97/3p8dB/tEp5YdCjaS2D73xDdc2ZVvex/Row==
-X-Received: by 2002:a17:906:6a16:b0:ac4:3cd:2cb2 with SMTP id a640c23a62f3a-ac7a166daf9mr7262166b.1.1743544236765;
-        Tue, 01 Apr 2025 14:50:36 -0700 (PDT)
-Received: from ?IPV6:2a02:3100:b371:b100:1948:369:4ff8:2106? (dynamic-2a02-3100-b371-b100-1948-0369-4ff8-2106.310.pool.telefonica.de. [2a02:3100:b371:b100:1948:369:4ff8:2106])
-        by smtp.googlemail.com with ESMTPSA id a640c23a62f3a-ac7196c8174sm829080666b.148.2025.04.01.14.50.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Apr 2025 14:50:36 -0700 (PDT)
-Message-ID: <b37b02ec-59fb-4b3b-8e51-ae866eb8ecc9@gmail.com>
-Date: Tue, 1 Apr 2025 23:51:07 +0200
+        d=1e100.net; s=20230601; t=1743544254; x=1744149054;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=bj1Qrbt7flnOfY4sCj4gZ44wqy0H0z7fYnmzu+9/yJs=;
+        b=oLzg5ztnGGFuGPM7fG4Jnue/pG+F7GaVGE9fWdylRA3fiRJX18Dqixn+S/m63YSLf2
+         VoliM9SSbziSPyKALQDTFfyI+MQogu4r0b0DXTyc7loYV4YYfBR/d9Psd2whNw5lr3Au
+         iMBOdB7UT307JK1EhlvkKQDre62wzdMPdCYqgjTdxdv+9Mkho2acvCUgSuBG9TbIF2wN
+         NqGYICILPEKxF5GQiX7LWkZbkx8NXhFmeyawm8aauTXWt3RAF4EdRFwlVRcwUEaleex/
+         BvdKdb3RBf8v791mo9lFHEptRz5NOhtnnGe47FIfupc6FK9w3DdtpdT2LWYiT238rwGK
+         /FVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUIIDBcyPiWvMZwwP4BYQxdIPpwOLKPw7DolemY2/uUq6vTOGM/FssR8VkFmeOvB7G9mhUKfgQC2Z5h8NXFdA==@vger.kernel.org, AJvYcCVP8fVsZJqK4OVqb4GeaXvFqcMfYZ0pYbLyIJ4yDoNSqM5ivdJd+fJREVwRdqu5Zf/xNYHeJTbGoi5n@vger.kernel.org, AJvYcCVZaFM1RnzUY1FV3fRK/HWeu6u4zMcabs2VEPMEL6odZv0MKJ6wbZrZDb5WtN21o5TNLo3rXqbbPCrO@vger.kernel.org, AJvYcCWrzP5SAO5Rznvo1UYwKeCNxY6DNAfeyKJbuz1XYDOjorzuzFUxpxoQlErWbwctM0VsCbl28rYIpzGR2wED@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz/C/Z30k6R68dAu1UZll/z72yrwPJn7Rg0d+izhtNc29ygG4Vk
+	4Tget743iqYfHMv1RxaRz5Lx3R/e4xBwvZ6kfbqLJZjxBqK3OEiUHkskX4oNhJF7VcB3jMdNHVc
+	UlhhQuNT8RWlYZ7PhxlG+pYMOcQ==
+X-Gm-Gg: ASbGncso8YeHeHuZoH1hjeEP9i9vyp58YIn6QG552gNgPIfABHvXrcaNjlYziwzZt7O
+	WhjbgcNc1b81iQJ294FUlRIGpyCcQgAdSEybB+aWItIVi6NB130cnxMBEWlXGM3Jq2u6Svbs59l
+	Yf9llceFCfvmnLsr+9c42p7tAKdQ==
+X-Google-Smtp-Source: AGHT+IH+nE3yYY238SmLUlr5Tf6eAoBkJh1OEpYZbPxT6Fmyg5IdupbyKe8C8Et2YT7E9ZscBJPT6cw5hsyNbp0w8VY=
+X-Received: by 2002:a5d:6d8a:0:b0:39c:dcc:f589 with SMTP id
+ ffacd0b85a97d-39c120dd036mr13002419f8f.20.1743544253818; Tue, 01 Apr 2025
+ 14:50:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: PCI VPD checksum ambiguity
-To: Bjorn Helgaas <helgaas@kernel.org>,
- Pavan Chebbi <pavan.chebbi@broadcom.com>, Michael Chan <mchan@broadcom.com>,
- Potnuri Bharat Teja <bharat@chelsio.com>
-Cc: netdev@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250401205544.GA1620308@bhelgaas>
-Content-Language: en-US
-From: Heiner Kallweit <hkallweit1@gmail.com>
-Autocrypt: addr=hkallweit1@gmail.com; keydata=
- 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
-In-Reply-To: <20250401205544.GA1620308@bhelgaas>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250331215720.19692-1-alex.vinarskis@gmail.com>
+ <20250331215720.19692-7-alex.vinarskis@gmail.com> <ef783edb-c966-4ef7-b496-564420c1b852@oss.qualcomm.com>
+ <CAMcHhXq8kjsbDGHBn=63JutD1TcD6=KVxCQtPHRoLOwE+FY-sA@mail.gmail.com> <93f916d1-83b9-41c0-bb05-a785fb730088@oss.qualcomm.com>
+In-Reply-To: <93f916d1-83b9-41c0-bb05-a785fb730088@oss.qualcomm.com>
+From: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
+Date: Tue, 1 Apr 2025 23:50:42 +0200
+X-Gm-Features: AQ5f1JrU_u_uQLps4ycNd1PU0smu4anSzKOXyBaWJwfxWAxm7Svz7wvxve828dc
+Message-ID: <CAMcHhXqbQ-6SLotNfQDStr5B0KAMxFRuSiLnjdg+UrtqA1phXw@mail.gmail.com>
+Subject: Re: [PATCH v1 6/6] arm64: dts: qcom: Add support for X1-based Asus
+ Zenbook A14
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Dmitry Baryshkov <lumag@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Abel Vesa <abel.vesa@linaro.org>, 
+	Johan Hovold <johan+linaro@kernel.org>, linux-arm-msm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-usb@vger.kernel.org, Konrad Dybcio <konradybcio@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On 01.04.2025 22:55, Bjorn Helgaas wrote:
-> Hi,
-> 
-> The PCIe spec is ambiguous about how the VPD checksum should be
-> computed, and resolving this ambiguity might break drivers.
-> 
-> PCIe r6.0 sec 6.27 says only the VPD-R list should be included in the
-> checksum:
-> 
->   One VPD-R (10h) tag is used as a header for the read-only keywords.
->   The VPD-R list (including tag and length) must checksum to zero.
-> 
+On Tue, 1 Apr 2025 at 23:15, Konrad Dybcio
+<konrad.dybcio@oss.qualcomm.com> wrote:
+>
+> On 4/1/25 8:05 PM, Aleksandrs Vinarskis wrote:
+> > On Tue, 1 Apr 2025 at 17:59, Konrad Dybcio
+> > <konrad.dybcio@oss.qualcomm.com> wrote:
+> >>
+> >> On 3/31/25 11:53 PM, Aleksandrs Vinarskis wrote:
+> >>> Initial support for Asus Zenbook A14. Particular moddel exists
+> >>> in X1-26-100, X1P-42-100 (UX3407QA) and X1E-78-100 (UX3407RA).
+> >>>
+> >>> Mostly similar to other X1-based laptops. Notable differences are:
+> >>> * Wifi/Bluetooth combo being Qualcomm FastConnect 6900 on UX3407QA
+> >>>   and Qualcomm FastConnect 7800 on UX3407RA
+> >>> * USB Type-C retimers are Parade PS8833, appear to behave identical
+> >>>   to Parade PS8830
+> >>> * gpio90 is TZ protected
+> >>
+>
+> [...]
+>
+> >>
+> >>> +&spi10 {
+> >>> +     status = "disabled";
+> >>> +
+> >>> +     /* Unknown device */
+> >>> +};
+> >>
+> >> Does the device crash if you enable this bus? Keeping it 'okay' would
+> >> make it easier for folks to poke at it
+> >
+> > It does boot just fine, but does not initialize:
+> > ```
+> > geni_spi a88000.spi: Invalid proto 9
+> > ...
+> > qnoc-x1e80100 interconnect-1: sync_state() pending due to a88000.spi
+> > ...
+> > ```
+> >
+> > I only quickly checked that 9 is indeed invalid state, iirc should've
+> > been 2. But haven't looked deeper into it, so left it disabled. So I
+> > thought best to leave it off for now. Unless you prefer to drop it
+> > altogether?
+>
+> That means this QUP is configured to work as a QSPI host, which is not yet
+> supported upstream. I looked at the DSDT you submitted to aa64-laptops, but
+> there doesn't seem to be anything connected there, perhaps it's loaded at
+> runtime. Since your keyboard and touchpad work, maybe it's a touchscreen?
+>
 
-This requirement I don't find in the PCI 3.0 spec, not sure with which
-version it was added. Interestingly this doesn't even require the
-presence of a RV keyword. Or the presence of the RV keyword is
-implicitly assumed.
+Indeed it is just defined without anything attached. I am suspecting
+it also may be just leftover, won't be the first one...
+No, this particular laptop doesn't have a touchscreen in any of the
+three screen configurations announced.
 
-Maybe this part isn't meant literally. I can imagine they wanted to
-clarify that checksum calculation excludes the VPD-W area.
-And unfortunately they weren't precise enough, and introduced the
-ambiguity you found.
+It also does not have a fingerprint reader, nor hardware TPM2.0 (yet
+SPI11 typically used for it is still TZ protected :). EC seems to be
+over i2c5. Asus's touchpad supports some fancy gesture controls, but
+there is in fact another 'extra' hidraw device 'hdtl', I assume that's
+the one. No sdcard reader.
+Only other still unsupported features are audio (i guess unlikely that
+they used different smart amp?), camera (ov02c01, pm8010, so also no)
+and DP-HDMI bridge PS185HDM, which from what I can guesstimate is i2c.
 
+So I am a bit out of ideas of what it could be...only thing that comes
+to my mind is headphone jack smart amp, ifff they did not use qcom amp
+one there as well?
 
-> But sec 6.27.2.2 says "all bytes in VPD ... up to the checksum byte":
-> 
->   RV   The first byte of this item is a checksum byte. The checksum is
->        correct if the sum of all bytes in VPD (from VPD address 0 up
->        to and including this byte) is zero.
-> 
+>
+> >
+> >>
+> >>> +
+> >>> +&tlmm {
+> >>> +     gpio-reserved-ranges = <44 4>,  /* SPI11, TZ Protected */
+> >>> +                            <90 1>;  /* Unknown, TZ Protected */
+> >>> +
+> >>> +     bt_en_default: bt-en-sleep {
+> >>> +             pins = "gpio116";
+> >>> +             function = "gpio";
+> >>> +             output-low;
+> >>> +             bias-disable;
+> >>> +             qcom,drive-strength = <16>;
+> >>
+> >> drop "qcom," and please keep the order of:
+> >>
+> >> pins
+> >> function
+> >> drive-strength
+> >> bias
+> >> output/input
+> >>
+> >> as you did below
+> >
+> > Will do.
+> >
+> > Should I also drop 'qcom,' from the 'misc_3p3_reg_en' and adjust order
+> > the same way, or that one is somehow special?
+>
+> Sort of. &tlmm and &pm8xxx_gpios use two different drivers, each one
+> of which has slightly different expectations about their subnodes.
 
-This one can be found identically in the PCI v3.0 spec already:
+Ah I see. Okay, will fix the order, but will leave `qcom,` as is.
 
-The checksum is correct if the sum of all bytes in VPD (from
-VPD address 0 up to and including this byte) is zero.
+>  >
+> >>
+> >>> +
+> >>> +/ {
+> >>> +     model = "ASUS Zenbook A14 UX3407RA";
+> >>
+> >> There's no strict policy, but variants usually go in braces
+> >
+> > Parenthesis I guess, "ASUS Zenbook A14 (UX3407RA)" ?
+>
+> Ugh, yes!
 
-I don't think they want to break backwards-compatibility, therefore
-this requirement should still be valid.
+Sounds reasonable and looks a bit better, will update.
 
-> These are obviously different unless VPD-R happens to be the first
-> item in VPD.  But sec 6.27 and 6.27.2.1 suggest that the Identifier
-> String item should be the first item, preceding the VPD-R list:
-> 
->   The first VPD tag is the Identifier String (02h) and provides the
->   product name of the device. [6.27]
-> 
->   Large resource type Identifier String (02h)
-> 
->     This tag is the first item in the VPD storage component. It
->     contains the name of the add-in card in alphanumeric characters.
->     [6.27.2.1, Table 6-23]
-> 
-> I think pci_vpd_check_csum() follows sec 6.27.2.2: it sums all the
-> bytes in the buffer up to and including the checksum byte of the RV
-> keyword.  The range starts at 0, not at the beginning of the VPD-R
-> read-only list, so it likely includes the Identifier String.
-> 
-> As far as I can tell, only the broadcom/tg3 and chelsio/cxgb4/t4
-> drivers use pci_vpd_check_csum().  Of course, other drivers might
-> compute the checksum themselves.
-> 
-> Any thoughts on how this spec ambiguity should be resolved?
-> 
-> Any idea how devices in the field populate their VPD?
-> 
-> Can you share any VPD dumps from devices that include an RV keyword
-> item?
-> 
+>
+> [...]
+>
+> >>> +
+> >>> +&gpu_zap_shader {
+> >>> +     firmware-name = "qcom/x1p42100/ASUSTeK/zenbook-a14/qcdxkmsuc8380.mbn";
+> >>> +};
+> >>
+> >> This file is not going to work on this SoC, you can drop it
+> >
+> > I guess it would need a different firmware name? If yes, can we
+> > already add the new name, such that once x1p42100 gains GPU support it
+> > will get enabled 'automatically'?
+>
+> The filename is different indeed. You can add it, as currently this
+> property is not yet consumed by anything, anyway.
 
-I have only very dated devices which likely date back to before
-the existence of PCIe r6.0. So their VPD dump may not really help.
+Just checked, should be the `qcdxkmsucpurwa.mbn` then. Will update it,
+thanks for confirmation.
 
-IIRC there's an ongoing discussion regarding making VPD content
-user-readable on mlx5 devices. Maybe check with the Mellanox/Nvidia
-guys how they interpret the spec and implemented VPD checksumming.
+>
+> [...]
+>
+> >>
+> >>> +
+> >>> +&remoteproc_adsp {
+> >>> +     firmware-name = "qcom/x1p42100/ASUSTeK/zenbook-a14/qcadsp8380.mbn",
+> >>> +                     "qcom/x1p42100/ASUSTeK/zenbook-a14/adsp_dtbs.elf";
+> >>> +
+> >>> +     status = "okay";
+> >>> +};
+> >>> +
+> >>> +&remoteproc_cdsp {
+> >>> +     firmware-name = "qcom/x1p42100/ASUSTeK/zenbook-a14/qccdsp8380.mbn",
+> >>> +                     "qcom/x1p42100/ASUSTeK/zenbook-a14/cdsp_dtbs.elf";
+> >>> +
+> >>> +     status = "okay";
+> >>
+> >> Are the DSP firmware files actually different between the two?
+> >
+> > CDSP is the same. ADSP blobs to my surprise are different, both '.elf'
+> > and '.mbn'. But like I wrote in the cover letter, perhaps Asus just
+> > forgot to update adsp firmware? Though according to changelong on
+> > device pages [2],[4] both have "ADSP Driver : 2.0.4135.0200"
+> >
+> > Compared by:
+> > * Downloading UX3407QA's drivers [1], from the device page [2] and
+> > UX3407RA'a drivers [3] from the device page [4]
+> > * Extract and flatten with `7z e filename.exe`
+> > * Compare via `md5sum *dsp*elf *dsp*mbn *dsp*jsn`
+> >
+> > Though, even if the blobs would be/will be the same, I think it is
+> > still beneficial to define firmware path per model, as this makes
+> > firmware extraction from driver/Windows partition and placement much
+> > easier. Unfortunately, as it seems so far, most of the devices besides
+> > Lenovos are not having firmware upstreamed, so this is pretty
+> > relevant. Eg. Ubuntu already has 'firmware extracting tool' [5] (draft
+> > MR to include Zenbook as well), I'm guessing other distros have
+> > something similar, though I haven't followed up.
+> >
+> > On the other hand, these tools could of course get path from device
+> > tree directly, eg. via `cat
+> > /sys/firmware/devicetree/base/soc@0/remoteproc@32300000/firmware-name`,
+> > then having all the blobs for the device in one location is less
+> > relevant...
+>
+> More importantly, different blobs may (but don't necessarily have to) include
+> different, hardcoded expectations about the board (or platform) they run on.
+> So let's keep them separate.
 
-> Bjorn
+Ah okay. Perfect, keeping as is.
 
+Thanks,
+Alex
+
+>
+> Konrad
