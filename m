@@ -1,173 +1,119 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mail.cab.de (mail.cab.de [46.232.229.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7B37204581
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 13:41:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FF9220408C
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 13:42:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.232.229.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743514917; cv=none; b=HIJV8yqumEjJupX5n+uDkkuNptcmlaANB9SNAt4AWpZYxibKrIVwGT2cbVf0yyuppXuqo/lZF1LbyNPckoHWcgYnQTgNEw8AaShsIk3EIgPji/dj50tdQD2jQ6+J+I7A1G+ZaWaLX+4L6MWa6CWbmUrSi4aY5Xkop7gu/V+qQ6E=
+	t=1743514975; cv=none; b=ZAiZhqh08CY0U+0zbvd2VyvWRmV0281iqHi/B8PtyiYvUyubhV5MdIS8KgI/ne/zGm238oJ5Kd9HOyg6jhy8TVbTz4onXchH8c2pmtdIOG+gU4Ijifc2ZmXIy6B0kOjJcDnuLGUdqVGku2gZMi7d+MeLRiqRUhd1kKb6crEaMvY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743514917; c=relaxed/simple;
-	bh=9DmKSKgpRK/Ghoozm0xXZsix9t8rCDXOdYOtPeAD78E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rOOpNhbD31lhfx3rEFbeszvxpUdi5nyDEWvbEnWwV5F9Hnbpv7bGcnrh4sN6cGwxoNqvd4aZh/J3g1uvN5DxwViCDJWX3kevRcLtx2hCq0IrqVjPiEOQQOIMzOMm7ogSH1u83tPtHN2moBzvMKGI1hqY28uNMql2VLh85egYV5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Xlc5F694; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1743514975; c=relaxed/simple;
+	bh=hCkca38QdSmhO6cjGfNf7pfjb4NUxK6bwuRScCq8GiA=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=CDZmZwQxZPaUJwTmIGYAYEE0AlCVaXA0JJDZ7flRxw1dVb+qF4KQm4q05PLkaDRN29vZUrejg13zl7pTv8OeIqExbIquCTAthbMUEUezCacwHTGFxJp/AkuoTMA63o/+q3S9HUXkcnNvyC2+Wwx2uqdNW+K32u184+koltb6peY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cab.de; spf=pass smtp.mailfrom=cab.de; dkim=pass (1024-bit key) header.d=cab.de header.i=@cab.de header.b=QJI3+YKp; arc=none smtp.client-ip=46.232.229.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cab.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cab.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Xlc5F694"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743514914;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JT/1HJ7j1dGnCuukkfDvHYvyoCmZ0J/ymsOhodchoIw=;
-	b=Xlc5F694PXS4yqHeNWpHfzQJEoX7L21ad5fcrONdVDOVkbiNWYZ5HQ2ncPL36RWymfL6Cd
-	VHw4wB7JViYnwr8+/ZXtXOLT5Ag/VahD6GTPoL2lqejWTwWqN8vWcGR6iIeKvVPt8FlGX2
-	YHWfOnkU374ECoq7See9A9USgXyDm8I=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-630-SdYERicnO-CvxunDbzgGkg-1; Tue, 01 Apr 2025 09:41:52 -0400
-X-MC-Unique: SdYERicnO-CvxunDbzgGkg-1
-X-Mimecast-MFC-AGG-ID: SdYERicnO-CvxunDbzgGkg_1743514911
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43d209dc2d3so32813375e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 06:41:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743514911; x=1744119711;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JT/1HJ7j1dGnCuukkfDvHYvyoCmZ0J/ymsOhodchoIw=;
-        b=m6jG6SfU5VAsr7f1redXkbdT6I9FZP0chxEfy2mQQukWr7u+KhHPGUZ418CqIqt8fF
-         mhrI5YqmviGYqeCCc1VXzoA2G42ASMddat5dK/1MAbXFPmfH6KeYcHEyLXBMzfk6yO0J
-         t/LplB8yNNC0/jeLHBruiiA7uErN++cBDh5iLsM++KfF8hUX+utxH+y8tcIRszzMdgSG
-         /AMs7VLXV5RRm61QgjdnAl7L8rz4jaVGFmtIt/FCribogQ9OGQDOn3KbEVrWbfyp1r9A
-         GL6o1TmUlxhYQqpCcr8yVrl2KDK0A2dXMqHbEKs1VQ2f9uElhnA4MeK5i3DBxVUhQmGA
-         5x1A==
-X-Forwarded-Encrypted: i=1; AJvYcCUPpYurAQE+2NPI+57DLANt4AIO8vLJLY/r2mVOmRDrw2zFobUiH+SDh59RfHdDXW28WVi3wfzdBnhjXfQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyYIwBUzNwQzwATuZjUCL5hwe+1d0XSWjexL95EK71CfIE2/bLg
-	UEv3aTLJowATP5xTA4+srVuPV+a5Ldu3ZafE3I6chHtiTtPDySLBRngyoBvVsKbZyvHo7juM1YT
-	5bTTGRZ5nn5PC4j35hFTBIPoNK+jcdkIR8pbGKNs6BXnHj9EcKU3cMqUHpPl4jk4kE9OIPffr
-X-Gm-Gg: ASbGnctD7kV9iX8DbtarmFc9MfX4r0mcC4/vSBkRJ1NT9FA/dQiM1KLm22js23SdrOc
-	zmtsZIYjsqc+xbMBVrv344C3KON9Jzy93iFTBWrieV58FB3SGR5Lr1fOaUXlg5PWMt5BiS586aF
-	Dmz3/LXwlqh+En48dD7F9tusNxLYq8JnZfMFAuFDJXFD1v86/G/BFz7q18zasbZalN8rjpGC0WD
-	aITRGkz0bRPNc8lak06oRHRO0YzBmxbJUAOsULgfwf0m2cphi7piFoHHLj2u4j7vPFvMbRdZwLj
-	FqSE/agLSR5z1zV8tqo9lQR3DR+8m0b0XDEbyH9Cp+YWQFeE7EU4BwCHIvQ=
-X-Received: by 2002:a05:600c:4705:b0:43d:79:ae1b with SMTP id 5b1f17b1804b1-43db6247e03mr130604265e9.14.1743514910754;
-        Tue, 01 Apr 2025 06:41:50 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFOonQsa/shEuP0wDgfiH+HuLEzgbTbno+i+to8l7EiHyrr/1tPYY8WHBx9YFeKuuzvpEHoDA==
-X-Received: by 2002:a05:600c:4705:b0:43d:79:ae1b with SMTP id 5b1f17b1804b1-43db6247e03mr130603935e9.14.1743514910230;
-        Tue, 01 Apr 2025 06:41:50 -0700 (PDT)
-Received: from sgarzare-redhat (host-87-11-6-59.retail.telecomitalia.it. [87.11.6.59])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b79e33asm14333177f8f.66.2025.04.01.06.41.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Apr 2025 06:41:49 -0700 (PDT)
-Date: Tue, 1 Apr 2025 15:41:42 +0200
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Cindy Lu <lulu@redhat.com>
-Cc: jasowang@redhat.com, mst@redhat.com, michael.christie@oracle.com, 
-	linux-kernel@vger.kernel.org, virtualization@lists.linux-foundation.org, 
-	netdev@vger.kernel.org
-Subject: Re: [PATCH v8 3/8] vhost: Add the cgroup related function
-Message-ID: <qucbuuwmqlrjhm7t7onoedzldrb2cvixjbjezmcovpo24ttzdx@sde275drep5u>
-References: <20250328100359.1306072-1-lulu@redhat.com>
- <20250328100359.1306072-4-lulu@redhat.com>
+	dkim=pass (1024-bit key) header.d=cab.de header.i=@cab.de header.b="QJI3+YKp"
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.cab.de 4ZRppv3PwBzMvb0G
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cab.de; s=default;
+	t=1743514391; bh=1jAXo92M2vDykbLqik4FdebMpzLAgChBKSnJhUXHPI8=;
+	h=From:To:CC:Subject:Date:From;
+	b=QJI3+YKpeCZ3qjvgXHPZg2lZYfr27+Ac86OoDEYPbabldeuaYkZw/qnOQHu4R9L2z
+	 CZN3y8f+n/nrrsg8cSbSdINVIYBSc/FCCHApBxVcAMhB7a7v4m1xCeW3ltXlSJgWqw
+	 WVNL+f+ruFegvGqL9ScwsSlpogVGOHGVmt1fBvTc=
+X-cab-MailScanner-Watermark: 1744119190.42409@Z+ageB+9BNAKE10EAT91yg
+X-cab-MailScanner-From: m.heidelberg@cab.de
+X-cab-MailScanner: Found to be clean
+X-cab-MailScanner-ID: 4ZRpps0WDGzMvb08
+X-cab-MailScanner-Information: Please contact it@cab.de for more information
+Received: from Adranos.cab.de ([10.10.1.54] [10.10.1.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(no client certificate requested)
+	by hephaistos.cab.de (MailScanner Milter) with SMTP id 4ZRpps0WDGzMvb08;
+	Tue,  1 Apr 2025 15:33:09 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.cab.de 4ZRpps0WDGzMvb08
+Received: from KAN23-025.cab.de (10.10.3.178) by Adranos.cab.de (10.10.1.54)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Tue, 1 Apr
+ 2025 15:33:17 +0200
+From: Markus Heidelberg <m.heidelberg@cab.de>
+To: Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Christian
+ Eggers <ceggers@arri.de>
+CC: Markus Heidelberg <m.heidelberg@cab.de>, Jiri Prchal
+	<jiri.prchal@aksignal.cz>, <linux-kernel@vger.kernel.org>,
+	<devicetree@vger.kernel.org>
+Subject: [RFC PATCH 0/2] eeprom: at25: support Cypress FRAMs without device ID
+Date: Tue, 1 Apr 2025 15:30:46 +0200
+Message-ID: <20250401133148.38330-1-m.heidelberg@cab.de>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20250328100359.1306072-4-lulu@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: Adranos.cab.de (10.10.1.54) To Adranos.cab.de (10.10.1.54)
 
-On Fri, Mar 28, 2025 at 06:02:47PM +0800, Cindy Lu wrote:
->Add back the previously removed cgroup function to support the kthread
+Hello,
 
-nit: Missing . at the end
+this patch series is marked as RFC because I'm unsure if it
+should rather be implemented with an adaption in this binding:
 
->The biggest change for this part is in vhost_attach_cgroups() and
->vhost_attach_task_to_cgroups().
->
->The old function was remove in
+  Documentation/devicetree/bindings/eeprom/at25.yaml
 
-nit: s/remove/removed
+Currently supported FRAMs use compatible="cypress,fm25","atmel,at25" in
+Devicetree, the memory size is read from its device ID.
+For FRAMs without device ID this is not possible, so the "size" property
+has to be set manually as it is done for EEPROMs.
 
->commit 6e890c5d5021 ("vhost: use vhost_tasks for worker threads")
->
->Signed-off-by: Cindy Lu <lulu@redhat.com>
->---
-> drivers/vhost/vhost.c | 41 +++++++++++++++++++++++++++++++++++++++++
-> 1 file changed, 41 insertions(+)
+I had a few solutions for implementation in mind, but opted for the
+simplest one as base for discussion:
 
-As I mentioned, this patch also has unused functions, but LGTM.
+- Use the existing "compatible" string and additionally set "size". Only
+  read the device ID if "size" is not set.
 
-Thanks,
-Stefano
+  But this way there is already the problem that "size" is required for
+  FRAMs without device ID, but I cannot specify that in the binding
+  because of the reused "compatible" string.
 
->
->diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
->index 9500e85b42ce..20571bd6f7bd 100644
->--- a/drivers/vhost/vhost.c
->+++ b/drivers/vhost/vhost.c
->@@ -22,6 +22,7 @@
-> #include <linux/slab.h>
-> #include <linux/vmalloc.h>
-> #include <linux/kthread.h>
->+#include <linux/cgroup.h>
-> #include <linux/module.h>
-> #include <linux/sort.h>
-> #include <linux/sched/mm.h>
->@@ -620,6 +621,46 @@ long vhost_dev_check_owner(struct vhost_dev *dev)
-> }
-> EXPORT_SYMBOL_GPL(vhost_dev_check_owner);
->
->+struct vhost_attach_cgroups_struct {
->+	struct vhost_work work;
->+	struct task_struct *owner;
->+	int ret;
->+};
->+
->+static void vhost_attach_cgroups_work(struct vhost_work *work)
->+{
->+	struct vhost_attach_cgroups_struct *s;
->+
->+	s = container_of(work, struct vhost_attach_cgroups_struct, work);
->+	s->ret = cgroup_attach_task_all(s->owner, current);
->+}
->+
->+static int vhost_attach_task_to_cgroups(struct vhost_worker *worker)
->+{
->+	struct vhost_attach_cgroups_struct attach;
->+	int saved_cnt;
->+
->+	attach.owner = current;
->+
->+	vhost_work_init(&attach.work, vhost_attach_cgroups_work);
->+	vhost_worker_queue(worker, &attach.work);
->+
->+	mutex_lock(&worker->mutex);
->+
->+	/*
->+	 * Bypass attachment_cnt check in __vhost_worker_flush:
->+	 * Temporarily change it to INT_MAX to bypass the check
->+	 */
->+	saved_cnt = worker->attachment_cnt;
->+	worker->attachment_cnt = INT_MAX;
->+	__vhost_worker_flush(worker);
->+	worker->attachment_cnt = saved_cnt;
->+
->+	mutex_unlock(&worker->mutex);
->+
->+	return attach.ret;
->+}
->+
-> /* Caller should have device mutex */
-> bool vhost_dev_has_owner(struct vhost_dev *dev)
-> {
->-- 
->2.45.0
->
+Other ideas that came to mind:
+
+- Add "cypress,fm25l16b" (chip is named FM25L16B) and define "size" as
+  required property. Use that instead of "cypress,fm25".
+
+  According to Documentation/devicetree/bindings/writing-bindings.rst
+  this might even be necessary regarding this statement:
+
+    "DO add new compatibles in case there are new features or bugs."
+
+  The existing "cypress,fm25" ("FM25" is not the real name of a chip,
+  but the common prefix) also doesn't seem chosen right regarding this
+  statement:
+
+    "DO make ‘compatible’ properties specific. DON'T use wildcards in
+    compatible strings."
+
+- Add a boolean property "no-device-id" to the existing "compatible"
+  string and in case this boolean is set, define "size" as required.
+
+  This seems a bit awkward at first sight. Also, would this really solve
+  the above mentioned problem with specification of the binding?
+
+Bye!
+
+Markus Heidelberg (2):
+  eeprom: at25: support Cypress FRAMs without device ID
+  eeprom: at25: make FRAM device ID error message more precise
+
+ drivers/misc/eeprom/at25.c | 42 ++++++++++++++++++++++----------------
+ 1 file changed, 24 insertions(+), 18 deletions(-)
+
+-- 
+2.43.0
+
 
