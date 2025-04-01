@@ -1,222 +1,171 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mail.cab.de (mail.cab.de [46.232.229.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 058281EF37C
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 13:32:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFEC11F930
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 13:33:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.232.229.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743514354; cv=none; b=SIDY7EgzVAuCBGijLiI2+hfpmuzFP+Wb5LNnbgxN9PtKhDGhM2/OcHf0soBGqVvxlgm3SmIgVEgR93n6zZACXLY9WYN1HpBbugppk+mDzpLJqntXZ3zsV0/EN+jy2YiB3tDmN7fm3HNmvCk9Y7qnrbjixHVcKMXTqrU8rFyEv1s=
+	t=1743514404; cv=none; b=t0rOsiXH/kwr9HmVqNxp7RMXCN+j4hKL96n21VdLDTiXbv8BuBKiaJbJthyHBEXhm2f9AJnUHvoY6RE+lNX2EZeGn6MF5K2kJSTLQAXSlQ4CwW2FOveVvl+UG1+kQjKySpOC/d6Yx24UP3w/2wxMM1d3I74rS2khHhahwtmnR5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743514354; c=relaxed/simple;
-	bh=xPQG1B8KdWhswqF8rapZb7Pq4nt61/rIHGV/iSPiZoA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=F+CkcXi8mzy3CpHmDUO95trmFo8lTsvwUnmOUQ2zRfTxGY4dC5dv+1fgVuJ38MyPRXlaK+nmGhMmQVjmklPrdnqFG+erszsWK0NZsgNTFV5wx+R6th2b4Og35JH49MnwLg5l2jKLl3wQ63dQrzV7On9f9jmzatJ8URBsZ5wz1Qk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=jUnLRLn/; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1743514404; c=relaxed/simple;
+	bh=jMMC+wm6vXcF1DkhT8g6MXmLjOdtu1T9dhA3en6FymE=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=cjvkjaJajAUaPq9EoKfUZ1ZyawQMOYkOKCz/liEDK/atWoeIaFNIXQ7p+yf5BLxSHiU1r9r55VcF66vxlpXIU7VTOMVkEugXqBqNFM/21is3TGgWAk3BszyA1yTEIccmJZR2f03SNZVQImE23ewZ16gj6d8sQvEoEutj4fR9n3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cab.de; spf=pass smtp.mailfrom=cab.de; dkim=pass (1024-bit key) header.d=cab.de header.i=@cab.de header.b=TjkIegWK; arc=none smtp.client-ip=46.232.229.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cab.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cab.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="jUnLRLn/"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 531D3nwX026740;
-	Tue, 1 Apr 2025 13:32:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=UB+Tl1
-	HycxRo03uQvmeNmgSx1fpNzOY9ad+JlydmGrk=; b=jUnLRLn/usOTK+/SEweGIK
-	/Y6L+qXSHhtfdYFL/YGMznnt/Tk85EuK1N0pJkLNLBc2HIHPDK5TE5kARri/qkej
-	88HIhl1I1a0REioEr1iqURJooF8q4+B1N6ee/drrnUicwucYT7nucDlWxSCklHqS
-	u40p05TAFEdZ5vBBwAFPfeVgu14RIUwNVBys827xrOdZwv7IrOvFug7m82ZNVZ90
-	EPGtQSekjGcW40dWvw3BwDyiBVI4bTJysuKcqrMqCaLcsqSTH7n72bYI/dmLTSTC
-	M6hAEkXIBXJ3uR7xYeCqLr7JMY+h8CF+tmzq7hSRuhUm2YKPpG+ZJ4Y5mnUPi87A
-	==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45r8h9tk4n-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 01 Apr 2025 13:32:18 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 531A2v0O005404;
-	Tue, 1 Apr 2025 13:32:17 GMT
-Received: from smtprelay07.dal12v.mail.ibm.com ([172.16.1.9])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 45pww2acdx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 01 Apr 2025 13:32:17 +0000
-Received: from smtpav01.wdc07v.mail.ibm.com (smtpav01.wdc07v.mail.ibm.com [10.39.53.228])
-	by smtprelay07.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 531DWGcF19333824
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 1 Apr 2025 13:32:17 GMT
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B5B945805B;
-	Tue,  1 Apr 2025 13:32:16 +0000 (GMT)
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id ED67C58059;
-	Tue,  1 Apr 2025 13:32:12 +0000 (GMT)
-Received: from [9.109.198.185] (unknown [9.109.198.185])
-	by smtpav01.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Tue,  1 Apr 2025 13:32:12 +0000 (GMT)
-Message-ID: <7cb33ebe-2ff6-4c3a-82f0-c4ed547e8a25@linux.ibm.com>
-Date: Tue, 1 Apr 2025 19:02:11 +0530
+	dkim=pass (1024-bit key) header.d=cab.de header.i=@cab.de header.b="TjkIegWK"
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.cab.de 4ZRpq40P9dzMvZsd
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cab.de; s=default;
+	t=1743514400; bh=wnt780oLccvGGA06d4dBzhYIn/GiO4i1xcNjf5ih2p4=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References:From;
+	b=TjkIegWKGkeuJpE+oToDmA5LAC1QbnP1tkqqXcR0wp5/hBAIYJEzRV5S79KI/6sK6
+	 3QaDSvXZMS1Lniv7MlqiqHLu0PRCM+rEd7ETKuLaMlr8iAXeVy3ukbUKlC27uKAO/9
+	 tMY87qOEa1Jc25HE6NiwkFEIlvraKcY+NbHcvwzE=
+X-cab-MailScanner-Watermark: 1744119195.55986@ypLX5Y4JCgHJBEtHSayM+Q
+X-cab-MailScanner-From: m.heidelberg@cab.de
+X-cab-MailScanner: Found to be clean
+X-cab-MailScanner-ID: 4ZRppv53YRzMvb0J
+X-cab-MailScanner-Information: Please contact it@cab.de for more information
+Received: from Adranos.cab.de ([10.10.1.54] [10.10.1.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(no client certificate requested)
+	by hephaistos.cab.de (MailScanner Milter) with SMTP id 4ZRppv53YRzMvb0J;
+	Tue,  1 Apr 2025 15:33:12 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.cab.de 4ZRppv53YRzMvb0J
+Received: from KAN23-025.cab.de (10.10.3.178) by Adranos.cab.de (10.10.1.54)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Tue, 1 Apr
+ 2025 15:33:20 +0200
+From: Markus Heidelberg <m.heidelberg@cab.de>
+To: Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Christian
+ Eggers <ceggers@arri.de>
+CC: Markus Heidelberg <m.heidelberg@cab.de>, Jiri Prchal
+	<jiri.prchal@aksignal.cz>, <linux-kernel@vger.kernel.org>,
+	<devicetree@vger.kernel.org>
+Subject: [RFC PATCH 1/2] eeprom: at25: support Cypress FRAMs without device ID
+Date: Tue, 1 Apr 2025 15:30:47 +0200
+Message-ID: <20250401133148.38330-2-m.heidelberg@cab.de>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250401133148.38330-1-m.heidelberg@cab.de>
+References: <20250401133148.38330-1-m.heidelberg@cab.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC 3/3] nvme: delay failover by command quiesce timeout
-To: Daniel Wagner <wagi@kernel.org>, Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>, Keith Busch <kbusch@kernel.org>,
-        Hannes Reinecke <hare@suse.de>, John Meneghini <jmeneghi@redhat.com>,
-        randyj@purestorage.com, Mohamed Khalfella <mkhalfella@purestorage.com>
-Cc: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20250324-tp4129-v1-0-95a747b4c33b@kernel.org>
- <20250324-tp4129-v1-3-95a747b4c33b@kernel.org>
-Content-Language: en-US
-From: Nilay Shroff <nilay@linux.ibm.com>
-In-Reply-To: <20250324-tp4129-v1-3-95a747b4c33b@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 43Qqq5eKFUOoAm97BJPLd403o6HbNLgV
-X-Proofpoint-GUID: 43Qqq5eKFUOoAm97BJPLd403o6HbNLgV
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-01_05,2025-03-27_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
- bulkscore=0 spamscore=0 mlxlogscore=999 lowpriorityscore=0 impostorscore=0
- mlxscore=0 clxscore=1011 phishscore=0 priorityscore=1501 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504010083
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: Adranos.cab.de (10.10.1.54) To Adranos.cab.de (10.10.1.54)
 
+Not all FRAM chips have a device ID and implement the corresponding read
+command. For such chips this led to the following error on module
+loading:
 
+    at25 spi2.0: Error: no Cypress FRAM (id 00)
 
-On 3/24/25 5:37 PM, Daniel Wagner wrote:
-> The TP4129 mendates that the failover should be delayed by CQT.  Thus when
-> nvme_decide_disposition returns FAILOVER do not immediately re-queue it on
-> the namespace level instead queue it on the ctrl's request_list and
-> moved later to the namespace's requeue_list.
-> 
-> Signed-off-by: Daniel Wagner <wagi@kernel.org>
-> ---
->  drivers/nvme/host/core.c      | 19 ++++++++++++++++
->  drivers/nvme/host/fc.c        |  4 ++++
->  drivers/nvme/host/multipath.c | 52 ++++++++++++++++++++++++++++++++++++++++---
->  drivers/nvme/host/nvme.h      | 15 +++++++++++++
->  drivers/nvme/host/rdma.c      |  2 ++
->  drivers/nvme/host/tcp.c       |  1 +
->  6 files changed, 90 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-> index 135045528ea1c79eac0d6d47d5f7f05a7c98acc4..f3155c7735e75e06c4359c26db8931142c067e1d 100644
-> --- a/drivers/nvme/host/core.c
-> +++ b/drivers/nvme/host/core.c
-> @@ -239,6 +239,7 @@ static void nvme_do_delete_ctrl(struct nvme_ctrl *ctrl)
->  
->  	flush_work(&ctrl->reset_work);
->  	nvme_stop_ctrl(ctrl);
-> +	nvme_flush_failover(ctrl);
->  	nvme_remove_namespaces(ctrl);
->  	ctrl->ops->delete_ctrl(ctrl);
->  	nvme_uninit_ctrl(ctrl);
-> @@ -1310,6 +1311,19 @@ static void nvme_queue_keep_alive_work(struct nvme_ctrl *ctrl)
->  	queue_delayed_work(nvme_wq, &ctrl->ka_work, delay);
->  }
->  
-> +void nvme_schedule_failover(struct nvme_ctrl *ctrl)
-> +{
-> +	unsigned long delay;
-> +
-> +	if (ctrl->cqt)
-> +		delay = msecs_to_jiffies(ctrl->cqt);
-> +	else
-> +		delay = ctrl->kato * HZ;
-> +
-> +	queue_delayed_work(nvme_wq, &ctrl->failover_work, delay);
-> +}
-> +EXPORT_SYMBOL_GPL(nvme_schedule_failover);
-> +
->  static enum rq_end_io_ret nvme_keep_alive_end_io(struct request *rq,
->  						 blk_status_t status)
->  {
-> @@ -1336,6 +1350,8 @@ static enum rq_end_io_ret nvme_keep_alive_end_io(struct request *rq,
->  		dev_err(ctrl->device,
->  			"failed nvme_keep_alive_end_io error=%d\n",
->  				status);
-> +
-> +		nvme_schedule_failover(ctrl);
->  		return RQ_END_IO_NONE;
->  	}
->  
-> @@ -4716,6 +4732,7 @@ EXPORT_SYMBOL_GPL(nvme_remove_io_tag_set);
->  
->  void nvme_stop_ctrl(struct nvme_ctrl *ctrl)
->  {
-> +	nvme_schedule_failover(ctrl);
->  	nvme_mpath_stop(ctrl);
->  	nvme_auth_stop(ctrl);
->  	nvme_stop_failfast_work(ctrl);
-> @@ -4842,6 +4859,8 @@ int nvme_init_ctrl(struct nvme_ctrl *ctrl, struct device *dev,
->  
->  	INIT_DELAYED_WORK(&ctrl->ka_work, nvme_keep_alive_work);
->  	INIT_DELAYED_WORK(&ctrl->failfast_work, nvme_failfast_work);
-> +	INIT_DELAYED_WORK(&ctrl->failover_work, nvme_failover_work);
-> +	INIT_LIST_HEAD(&ctrl->failover_list);
->  	memset(&ctrl->ka_cmd, 0, sizeof(ctrl->ka_cmd));
->  	ctrl->ka_cmd.common.opcode = nvme_admin_keep_alive;
->  	ctrl->ka_last_check_time = jiffies;
-> diff --git a/drivers/nvme/host/fc.c b/drivers/nvme/host/fc.c
-> index cdc1ba277a5c23ef1afd26e6911b082f3d12b215..bd897b29cd286008b781bbcb4230e08019da6b6b 100644
-> --- a/drivers/nvme/host/fc.c
-> +++ b/drivers/nvme/host/fc.c
-> @@ -2553,6 +2553,8 @@ nvme_fc_error_recovery(struct nvme_fc_ctrl *ctrl, char *errmsg)
->  {
->  	enum nvme_ctrl_state state = nvme_ctrl_state(&ctrl->ctrl);
->  
-> +	nvme_schedule_failover(&ctrl->ctrl);
-> +
->  	/*
->  	 * if an error (io timeout, etc) while (re)connecting, the remote
->  	 * port requested terminating of the association (disconnect_ls)
-> @@ -3378,6 +3380,8 @@ nvme_fc_reset_ctrl_work(struct work_struct *work)
->  	/* will block will waiting for io to terminate */
->  	nvme_fc_delete_association(ctrl);
->  
-> +	nvme_schedule_failover(&ctrl->ctrl);
-> +
->  	if (!nvme_change_ctrl_state(&ctrl->ctrl, NVME_CTRL_CONNECTING))
->  		dev_err(ctrl->ctrl.device,
->  			"NVME-FC{%d}: error_recovery: Couldn't change state "
-> diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
-> index 2a7635565083046c575efe1793362ae10581defd..a14b055796b982df96609f53174a5d1334c1c0c4 100644
-> --- a/drivers/nvme/host/multipath.c
-> +++ b/drivers/nvme/host/multipath.c
-> @@ -86,9 +86,11 @@ void nvme_mpath_start_freeze(struct nvme_subsystem *subsys)
->  void nvme_failover_req(struct request *req)
->  {
->  	struct nvme_ns *ns = req->q->queuedata;
-> +	struct nvme_ctrl *ctrl = nvme_req(req)->ctrl;
->  	u16 status = nvme_req(req)->status & NVME_SCT_SC_MASK;
->  	unsigned long flags;
->  	struct bio *bio;
-> +	enum nvme_ctrl_state state = nvme_ctrl_state(ctrl);
->  
->  	nvme_mpath_clear_current_path(ns);
->  
-> @@ -121,9 +123,53 @@ void nvme_failover_req(struct request *req)
->  	blk_steal_bios(&ns->head->requeue_list, req);
->  	spin_unlock_irqrestore(&ns->head->requeue_lock, flags);
->  
-> -	nvme_req(req)->status = 0;
-> -	nvme_end_req(req);
-> -	kblockd_schedule_work(&ns->head->requeue_work);
-> +	spin_lock_irqsave(&ctrl->lock, flags);
-> +	list_add_tail(&req->queuelist, &ctrl->failover_list);
-> +	spin_unlock_irqrestore(&ctrl->lock, flags);
-> +
+The device ID contains the memory size, so devices without this ID are
+supported now by setting the size manually in Devicetree using the
+"size" property.
 
-Why do we need to wait until error_recovery for scheduling failover? 
-Can't we schedule failover as soon as we get path error? Also can't
-we avoid failover_list? 
+Tested with FM25L16B.
 
-Thanks,
---Nilay 
+According to Infineon/Cypress datasheets, these FRAMs have a device ID:
+
+    FM25V01A
+    FM25V02A
+    FM25V05
+    FM25V10
+    FM25V20A
+    FM25VN10
+
+but these do not:
+
+    FM25040B
+    FM25640B
+    FM25C160B
+    FM25CL64B
+    FM25L04B
+    FM25L16B
+    FM25W256
+
+So all "FM25V*" FRAMs and only these have a device ID. The letter after
+"FM25" (V/C/L/W) only describes the voltage range, though.
+
+Signed-off-by: Markus Heidelberg <m.heidelberg@cab.de>
+---
+ drivers/misc/eeprom/at25.c | 42 ++++++++++++++++++++++----------------
+ 1 file changed, 24 insertions(+), 18 deletions(-)
+
+diff --git a/drivers/misc/eeprom/at25.c b/drivers/misc/eeprom/at25.c
+index 595ceb9a7126..16ce36c02ed4 100644
+--- a/drivers/misc/eeprom/at25.c
++++ b/drivers/misc/eeprom/at25.c
+@@ -382,35 +382,41 @@ static int at25_fram_to_chip(struct device *dev, struct spi_eeprom *chip)
+ 	struct at25_data *at25 = container_of(chip, struct at25_data, chip);
+ 	u8 sernum[FM25_SN_LEN];
+ 	u8 id[FM25_ID_LEN];
++	u32 val;
+ 	int i;
+ 
+ 	strscpy(chip->name, "fm25", sizeof(chip->name));
+ 
+-	/* Get ID of chip */
+-	fm25_aux_read(at25, id, FM25_RDID, FM25_ID_LEN);
+-	if (id[6] != 0xc2) {
+-		dev_err(dev, "Error: no Cypress FRAM (id %02x)\n", id[6]);
+-		return -ENODEV;
+-	}
+-	/* Set size found in ID */
+-	if (id[7] < 0x21 || id[7] > 0x26) {
+-		dev_err(dev, "Error: unsupported size (id %02x)\n", id[7]);
+-		return -ENODEV;
++	if (!device_property_read_u32(dev, "size", &val)) {
++		chip->byte_len = val;
++	} else {
++		/* Get ID of chip */
++		fm25_aux_read(at25, id, FM25_RDID, FM25_ID_LEN);
++		if (id[6] != 0xc2) {
++			dev_err(dev, "Error: no Cypress FRAM (id %02x)\n", id[6]);
++			return -ENODEV;
++		}
++		/* Set size found in ID */
++		if (id[7] < 0x21 || id[7] > 0x26) {
++			dev_err(dev, "Error: unsupported size (id %02x)\n", id[7]);
++			return -ENODEV;
++		}
++
++		chip->byte_len = BIT(id[7] - 0x21 + 4) * 1024;
++
++		if (id[8]) {
++			fm25_aux_read(at25, sernum, FM25_RDSN, FM25_SN_LEN);
++			/* Swap byte order */
++			for (i = 0; i < FM25_SN_LEN; i++)
++				at25->sernum[i] = sernum[FM25_SN_LEN - 1 - i];
++		}
+ 	}
+ 
+-	chip->byte_len = BIT(id[7] - 0x21 + 4) * 1024;
+ 	if (chip->byte_len > 64 * 1024)
+ 		chip->flags |= EE_ADDR3;
+ 	else
+ 		chip->flags |= EE_ADDR2;
+ 
+-	if (id[8]) {
+-		fm25_aux_read(at25, sernum, FM25_RDSN, FM25_SN_LEN);
+-		/* Swap byte order */
+-		for (i = 0; i < FM25_SN_LEN; i++)
+-			at25->sernum[i] = sernum[FM25_SN_LEN - 1 - i];
+-	}
+-
+ 	chip->page_size = PAGE_SIZE;
+ 	return 0;
+ }
+-- 
+2.43.0
+
 
