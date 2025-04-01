@@ -1,88 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 545FF1C5D77
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 21:25:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9972C1E9B3F;
+	Tue,  1 Apr 2025 21:29:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743542742; cv=none; b=ItSm1HTAamuyVJhir8BarJ9jN7LwAdCvBNIh03ou78J69hTgzsiZkix9477wRW+Eggqtyuw1r4M0u2iZGzC22h3WiME01Pr8eFxWEWqoK/B6Dmy3fukd0gPIVi17fp+ajFq6crTyxK7ecDt0lz2lwIK/5JYcfHW++uMJb3HvkJQ=
+	t=1743542976; cv=none; b=kDMs7+uDy/POKF4tIyZnY23FwaHKyzMtuPjHKxqBDj0NeSJhRvCqEcVKxoXSlFUklcqStgCr4AwbppqF1fGgTkE4iTbdhOV4rrHP84g1wzqx//ZtKl/CyxbhaxrgpfTmLy5i+p85R8JmG2hFumllGLwU1EWqH6TSATgd0MIKXp8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743542742; c=relaxed/simple;
-	bh=54QxVgX0vDgvicMblfreJzIuov/RdbPVNpgnc9nMHSk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=bV9FqN5eGmhDjLQLMfB5Bq6OCKdfPXA4zGauS0DdVBtLgaspTvwg88veC12GGxsWas5Vx1rRnD5OYyH3udr3+jyen/aclhnaeBonDbk8S4tv4E89AJbtpU1L380YeBiEEqhU5KdBxVl6UKkyg7YDBVTpPiyRKdTKRWvbR8hr8W0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kJ9rhkQj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743542976; c=relaxed/simple;
+	bh=T2+JYAx+5D8Ym3OvFmztopFF5kmSridBqxQ38Di4z5U=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=prwchdsW35vw4d7C/JbKkx7qIIjMJ410+kaqH54Q5/iitZCBudGIWNVMzjiKNN0DZPlkbu+Fm6VQVGRSa9BCW1Rr2GBWJLrpW+ZIj71PmzYpKzkHagdl+aX22dK+Sz5wGWUAcdAcMgbmLwgwjNLjce+8h2AjdAv+SkCRfiKuGaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=VedkH4cJ; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kJ9rhkQj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE845C4CEE4;
-	Tue,  1 Apr 2025 21:25:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743542741;
-	bh=54QxVgX0vDgvicMblfreJzIuov/RdbPVNpgnc9nMHSk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kJ9rhkQjgwJy0Dry2MVrr4QfT7FfqvpyEf0tbrkkSgLZH1G9ckBp0PbsRTk9pgz1A
-	 5oXxfDkwigT1IltLDjnpEax5Vpei3gqcmaC6/3S+jexySZ7u9WjxUrtjdihpVcxn3F
-	 bTxMtrBTz/yVsIuBG+SH+6eh8pCN9w5qvEaRtzvAx7nQ2uPmEdv8XCC8reVEGeS2iz
-	 w980o91j5s5fvEiT/EQXfEt9AZ16j2k5Ff9qcHcuFAON7e7ZjF+eKDdC4XPFNcIaGO
-	 grlDVRRfCvern+cx57xbv0xqpxlMv5ZOncFKv5mJH1h5uvPsiZAeQcA57ps4QMTQhx
-	 V47XETGvzUsdw==
-From: SeongJae Park <sj@kernel.org>
-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>
-Cc: SeongJae Park <sj@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Liam R. Howlett" <howlett@gmail.com>,
-	David Hildenbrand <david@redhat.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	kernel-team@meta.com,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: Re: [PATCH 6/9] mm/memory: split non-tlb flushing part from zap_page_range_single()
-Date: Tue,  1 Apr 2025 14:25:38 -0700
-Message-Id: <20250401212538.81728-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <bybnnqb4fyr4odgwa5qcgcysgjqjsilptreljgamt7ocb5ue7k@s3lvdf52csbk>
-References: 
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="VedkH4cJ"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id C20FF40E0219;
+	Tue,  1 Apr 2025 21:29:25 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id kljK5XvfnCw9; Tue,  1 Apr 2025 21:29:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1743542961; bh=D7jq3FrBQpu6BWFdVkFPOJihlBYfKM2JylTeULktWSU=;
+	h=Date:From:To:Cc:Subject:From;
+	b=VedkH4cJ0a0EABWSXsoaE/tG2KTOq/A4x6BubxBd7p6aBiqFnPO6IrmdlET+C6Ufd
+	 0jZrfdpSEsinANBAqwRSxULPEUP30s+f9gxmT9wKpAyPb+if3as0HoSI5Z8N1UnESG
+	 u39f6/6v4pNFv619dijj15L5gISXvUWKzw0Zl5loIsFf02mAO7llkOs32RZ2kgXa8o
+	 7Ev3jQZa2v3L4aPvf9okKP4yUdeFvUrH4LNP7VOxA9yZSPm2bLIz8B/UGYSLGJOf36
+	 +RzBRxx81rP76XZ9DhnCmd8p4CwNmg7IpQQMUuqdNxWFhFuOacIFUQ5xwY/f2paUrr
+	 o3ES9IvCYl2qMK6tc/p+qKJ8HNOhtInPpF7SUKkSxLL9GQWKCmDOyuGYOJqMMZd4Vq
+	 o2YdX6mZoWxRIqdHaz6kCnAf0s1LNocR5FFZoDPYBmkCq7b/Z4ioft2lD2ubPoBVLS
+	 En9FWyL15f8ET/5ovfGSxVKnrdu+q6ScBOPGOY/q6ir5b0Au+yXl20kpwQroL1jh2y
+	 0JSbSkFR9JY04Yh0a22uTUWiSypL6Sx3uwTg4O/n5i2/rKgWtPKHJnR/oUZP+u/s3r
+	 faefYm8NM6LN4amVyFE7WbCI0oas1IxWCXJQqyqPl46Bhi5GI3nfzuQ4FKRt3WdJkn
+	 RcKvluNhearA5gnvCLoGIeKI=
+Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id BE73740E0215;
+	Tue,  1 Apr 2025 21:29:18 +0000 (UTC)
+Date: Tue, 1 Apr 2025 23:29:07 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-edac <linux-edac@vger.kernel.org>,
+	lkml <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] EDAC urgent for v6.15-rc1
+Message-ID: <20250401212907.GAZ-xao52zj3Enjy8W@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-On Tue, 1 Apr 2025 10:03:17 -0400 "Liam R. Howlett" <Liam.Howlett@oracle.com> wrote:
+Hi Linus,
 
-> * SeongJae Park <sj@kernel.org> [250331 22:48]:
-> > On Mon, 31 Mar 2025 21:45:40 -0400 "Liam R. Howlett" <Liam.Howlett@oracle.com> wrote:
-> > 
-> > > * SeongJae Park <sj@kernel.org> [250310 13:24]:
-[...] 
-> Thanks.  I don't really mind if you have anything else to name it, as
-> long as it reduces the confusion.
+please pull an urgent EDAC fix for v6.15-rc1.
 
-Fully agreed and thanks again for the nice name suggestion.
+Thx.
 
-[...]
-> > That makes sense.  In the next revision, I will add the kernel-doc comment
-> > here, but not as a valid kernel-doc comment (maybe wtarts with /* instead of
-> > /**) since this function is a static function as of this patch.  On the next
-> > patch that makes this non-static, I will make the comment a valid kernel-doc
-> > comment with a minimum change.
-> > 
-> > I prefer not having a valid kernel-doc comment for static function, but that's
-> > just a personal preferrence and I have no strong reason to object other way.
-> > Please feel free to let me know if you prefer making it valid kernel doc
-> > comment starting from this patch.
-> > 
-> 
-> Yes, that was what I was thinking as well.
+---
 
-Thanks for kindly clarifying, Liam :)
+The following changes since commit ae8371a46e59d768a5540a237309962b50b8bec7:
+
+  Merge tag 'edac_updates_for_v6.15' of git://git.kernel.org/pub/scm/linux/kernel/git/ras/ras (2025-03-25 14:00:26 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/ras/ras.git edac_urgent_for_v6.15_rc1
+
+for you to fetch changes up to 212120a164d59fd534148d315f13db3d296efb0f:
+
+  Documentation/EDAC: Fix warning document isn't included in any toctree (2025-04-01 22:26:47 +0200)
+
+----------------------------------------------------------------
+- A single fix making sure the EDAC subtree is included in the
+  documentation table of contents
+
+----------------------------------------------------------------
+Shiju Jose (1):
+      Documentation/EDAC: Fix warning document isn't included in any toctree
+
+ Documentation/subsystem-apis.rst | 1 +
+ 1 file changed, 1 insertion(+)
 
 
-Thanks,
-SJ
+-- 
+Regards/Gruss,
+    Boris.
 
-[...]
+https://people.kernel.org/tglx/notes-about-netiquette
