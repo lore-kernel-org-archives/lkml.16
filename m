@@ -1,189 +1,223 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5B2C6A33B;
-	Tue,  1 Apr 2025 00:52:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5E1B6A33B
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 00:52:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743468726; cv=none; b=R8YZswt3S9qE1w0CrBrv/eJVt2079hiepwGODxBjI44kxUSkMkEbeKSY1fszMdW6yvFVSq6OT574799IE0zxHp2Uef0sykE+0shimySiY8ve6dsMoA/eyFOX+1cdGgrKH14BWBKg6v/3UbpAeUOv3rCnWMw7g5P2L2IHp/9mJbQ=
+	t=1743468775; cv=none; b=ZuOrIsPkCU8d3C1P7705uf6frRC6l7TNn9uNea3boPmSdKVRqFUQSpkATqjlU3pDaY8uohX4tiekbXgn9X6cVjlz1uCnNnVqn7J2gxIOGWn/8HFdwndJrAoUv5R3kHV+zSr0q8czIpElK4ZCuJ7/9bBkUCyoSqWQKsgd/m4Rlqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743468726; c=relaxed/simple;
-	bh=/UQ39MEbWY36jpENTddWVVKMd6edVfgsykRn4iYNpqk=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=Htt7YFCh6BFQ7ngtl2ozLlYoe3Z+FPBktMk8kx9zEgWObdVU9I2JQ35pG9vjTESORCtNvWkhkXHy4Pm2McyOiIepFCi1zYykjloDWLW2do1B1bhZJ5DAOf4BVyUzJC/vQoyso0aQBgMMjfGCv24lNoWQN8G3cJl56TDKPD3ajrM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZAgSoRiP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743468775; c=relaxed/simple;
+	bh=CMpSQHq3iF7V7TCw9C/Cs1GU8XUOe2N2XNb6odHDafY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZNsh7AH5TFuS0SUTZ7eBhLMjkPOYJ0IhiVH8gjVsxT6PVQJ9zOf6dlfx0Xy94ix/iSWyPUKL6gu59DkPQ6q5rF3p1GNf5keBBrqt5srjL7r8baYZ2vCYZ3oFFCr0m5LpynXtMPz5irHkbvZd8btdH9zVfy8ClgO0yyLXTIH09nU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=T3UewMlG; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZAgSoRiP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E618C4CEE3;
-	Tue,  1 Apr 2025 00:52:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743468726;
-	bh=/UQ39MEbWY36jpENTddWVVKMd6edVfgsykRn4iYNpqk=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=ZAgSoRiP2/Glqa3apm0OrrYFKu2FP+QosSu5o8Q3NNEYzYaqT2whGzwArkmSizEwH
-	 O8OrwiAoceVgsukjMyIaXguA4CDAGUM7i43iR03n/PogVYIc5t7XiKAZ4qFlTN3T9i
-	 uhR5Q1HeMh7jggQnOQAfScEduaumf8nc+SVewgTMvGXztUyPngz2nSwxPFgw+raTT8
-	 9CVbD7xzKl9U3WwP76bt9jppbb4wb4BjEfvogpf6PV38Cv4OBJFgcZc0KhNIue5v2I
-	 oB+PQzfODYWMyyORLDxQRGxxbqYoBbJQoj0UkhQRieEl4AgsHlfX4AA8ynOMuJpkXK
-	 G5a/ehf+XwGKQ==
-Date: Mon, 31 Mar 2025 19:52:04 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="T3UewMlG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743468774; x=1775004774;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=CMpSQHq3iF7V7TCw9C/Cs1GU8XUOe2N2XNb6odHDafY=;
+  b=T3UewMlG0D/qiaNV86Iy3iygPVo8JXY5+s4dAQgtu8OZbKzVsEJvluOZ
+   undFSTAetGiumn0bhT/lHpsV0rCRRkADRXRpdsBPaOX+N7L5feiVBOuv4
+   gLFlUKDeP9TzCDHcKg9xE3PtvApJxlpRiNGW7n3NRt5YUYTwkoIBkFmwJ
+   Phmv+TWCCme1DewKRfZhnSuo6GYSAdtJFhJWic5g2fag7grtfVMwmx36N
+   8gMDWe0ZyGosB3JtoNNZCkbj2ETT6tI8xxxhSo+GQ7ia4irg6Lou08KBe
+   TZtCMBFg/Xq/j2A/y4Km1eoqS48VHyndakl8wbfBlfJO7n2OYvRp/uSVy
+   w==;
+X-CSE-ConnectionGUID: Cd19MVExQeyWp6ml9E9sFw==
+X-CSE-MsgGUID: il6CWJbDQH+SSmK7P7P86w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11390"; a="32375147"
+X-IronPort-AV: E=Sophos;i="6.14,291,1736841600"; 
+   d="scan'208";a="32375147"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2025 17:52:53 -0700
+X-CSE-ConnectionGUID: abTSWexGQ++Mu1J4er3vWg==
+X-CSE-MsgGUID: uL8l00A8Q4yl6FeaFQH8UA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,291,1736841600"; 
+   d="scan'208";a="126701732"
+Received: from lkp-server02.sh.intel.com (HELO e98e3655d6d2) ([10.239.97.151])
+  by fmviesa010.fm.intel.com with ESMTP; 31 Mar 2025 17:52:50 -0700
+Received: from kbuild by e98e3655d6d2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tzPrz-0009Wi-2U;
+	Tue, 01 Apr 2025 00:52:47 +0000
+Date: Tue, 1 Apr 2025 08:52:00 +0800
+From: kernel test robot <lkp@intel.com>
+To: gpittala <ganeshkpittala@gmail.com>, johan@kernel.org, elder@kernel.org,
+	gregkh@linuxfoundation.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	hvaibhav.linux@gmail.com, vaibhav.sr@gmail.com,
+	mgreer@animalcreek.com, rmfrfs@gmail.com,
+	pure.logic@nexus-software.ie, greybus-dev@lists.linaro.org,
+	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org,
+	ganeshkpittala@gmail.com
+Subject: Re: [PATCH] staging: greybus: Multiple cleanups and refactors
+Message-ID: <202504010829.vIzweYue-lkp@intel.com>
+References: <20250331213337.6171-1-ganeshkpittala@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Bjorn Andersson <andersson@kernel.org>, 
- Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
- Johan Hovold <johan+linaro@kernel.org>, Dmitry Baryshkov <lumag@kernel.org>, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Konrad Dybcio <konradybcio@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-usb@vger.kernel.org, 
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Abel Vesa <abel.vesa@linaro.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
- linux-arm-msm@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>
-To: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
-In-Reply-To: <20250331215720.19692-1-alex.vinarskis@gmail.com>
-References: <20250331215720.19692-1-alex.vinarskis@gmail.com>
-Message-Id: <174346870483.3093611.16142139479166173068.robh@kernel.org>
-Subject: Re: [PATCH v1 0/6] X1E Asus Zenbook A14 support
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250331213337.6171-1-ganeshkpittala@gmail.com>
+
+Hi gpittala,
+
+kernel test robot noticed the following build warnings:
+
+[auto build test WARNING on staging/staging-testing]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/gpittala/staging-greybus-Multiple-cleanups-and-refactors/20250401-053719
+base:   staging/staging-testing
+patch link:    https://lore.kernel.org/r/20250331213337.6171-1-ganeshkpittala%40gmail.com
+patch subject: [PATCH] staging: greybus: Multiple cleanups and refactors
+config: i386-buildonly-randconfig-004-20250401 (https://download.01.org/0day-ci/archive/20250401/202504010829.vIzweYue-lkp@intel.com/config)
+compiler: clang version 20.1.1 (https://github.com/llvm/llvm-project 424c2d9b7e4de40d0804dd374721e6411c27d1d1)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250401/202504010829.vIzweYue-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504010829.vIzweYue-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> drivers/staging/greybus/loopback.c:272:1: warning: invalid conversion specifier '\x0a' [-Wformat-invalid-specifier]
+     272 | gb_loopback_stats_attrs(latency);
+         | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/staging/greybus/loopback.c:167:2: note: expanded from macro 'gb_loopback_stats_attrs'
+     167 |         gb_loopback_ro_stats_attr(field, min, u);               \
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/staging/greybus/loopback.c:142:27: note: expanded from macro 'gb_loopback_ro_stats_attr'
+     142 |         return sysfs_emit(buf, "%\n" #type "\n", gb->name.field);               \
+         |                                 ~^
+>> drivers/staging/greybus/loopback.c:272:1: warning: invalid conversion specifier '\x0a' [-Wformat-invalid-specifier]
+     272 | gb_loopback_stats_attrs(latency);
+         | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/staging/greybus/loopback.c:168:2: note: expanded from macro 'gb_loopback_stats_attrs'
+     168 |         gb_loopback_ro_stats_attr(field, max, u);               \
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/staging/greybus/loopback.c:142:27: note: expanded from macro 'gb_loopback_ro_stats_attr'
+     142 |         return sysfs_emit(buf, "%\n" #type "\n", gb->name.field);               \
+         |                                 ~^
+   drivers/staging/greybus/loopback.c:274:1: warning: invalid conversion specifier '\x0a' [-Wformat-invalid-specifier]
+     274 | gb_loopback_stats_attrs(requests_per_second);
+         | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/staging/greybus/loopback.c:167:2: note: expanded from macro 'gb_loopback_stats_attrs'
+     167 |         gb_loopback_ro_stats_attr(field, min, u);               \
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/staging/greybus/loopback.c:142:27: note: expanded from macro 'gb_loopback_ro_stats_attr'
+     142 |         return sysfs_emit(buf, "%\n" #type "\n", gb->name.field);               \
+         |                                 ~^
+   drivers/staging/greybus/loopback.c:274:1: warning: invalid conversion specifier '\x0a' [-Wformat-invalid-specifier]
+     274 | gb_loopback_stats_attrs(requests_per_second);
+         | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/staging/greybus/loopback.c:168:2: note: expanded from macro 'gb_loopback_stats_attrs'
+     168 |         gb_loopback_ro_stats_attr(field, max, u);               \
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/staging/greybus/loopback.c:142:27: note: expanded from macro 'gb_loopback_ro_stats_attr'
+     142 |         return sysfs_emit(buf, "%\n" #type "\n", gb->name.field);               \
+         |                                 ~^
+   drivers/staging/greybus/loopback.c:276:1: warning: invalid conversion specifier '\x0a' [-Wformat-invalid-specifier]
+     276 | gb_loopback_stats_attrs(throughput);
+         | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/staging/greybus/loopback.c:167:2: note: expanded from macro 'gb_loopback_stats_attrs'
+     167 |         gb_loopback_ro_stats_attr(field, min, u);               \
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/staging/greybus/loopback.c:142:27: note: expanded from macro 'gb_loopback_ro_stats_attr'
+     142 |         return sysfs_emit(buf, "%\n" #type "\n", gb->name.field);               \
+         |                                 ~^
+   drivers/staging/greybus/loopback.c:276:1: warning: invalid conversion specifier '\x0a' [-Wformat-invalid-specifier]
+     276 | gb_loopback_stats_attrs(throughput);
+         | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/staging/greybus/loopback.c:168:2: note: expanded from macro 'gb_loopback_stats_attrs'
+     168 |         gb_loopback_ro_stats_attr(field, max, u);               \
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/staging/greybus/loopback.c:142:27: note: expanded from macro 'gb_loopback_ro_stats_attr'
+     142 |         return sysfs_emit(buf, "%\n" #type "\n", gb->name.field);               \
+         |                                 ~^
+   drivers/staging/greybus/loopback.c:278:1: warning: invalid conversion specifier '\x0a' [-Wformat-invalid-specifier]
+     278 | gb_loopback_stats_attrs(apbridge_unipro_latency);
+         | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/staging/greybus/loopback.c:167:2: note: expanded from macro 'gb_loopback_stats_attrs'
+     167 |         gb_loopback_ro_stats_attr(field, min, u);               \
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/staging/greybus/loopback.c:142:27: note: expanded from macro 'gb_loopback_ro_stats_attr'
+     142 |         return sysfs_emit(buf, "%\n" #type "\n", gb->name.field);               \
+         |                                 ~^
+   drivers/staging/greybus/loopback.c:278:1: warning: invalid conversion specifier '\x0a' [-Wformat-invalid-specifier]
+     278 | gb_loopback_stats_attrs(apbridge_unipro_latency);
+         | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/staging/greybus/loopback.c:168:2: note: expanded from macro 'gb_loopback_stats_attrs'
+     168 |         gb_loopback_ro_stats_attr(field, max, u);               \
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/staging/greybus/loopback.c:142:27: note: expanded from macro 'gb_loopback_ro_stats_attr'
+     142 |         return sysfs_emit(buf, "%\n" #type "\n", gb->name.field);               \
+         |                                 ~^
+   drivers/staging/greybus/loopback.c:280:1: warning: invalid conversion specifier '\x0a' [-Wformat-invalid-specifier]
+     280 | gb_loopback_stats_attrs(gbphy_firmware_latency);
+         | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/staging/greybus/loopback.c:167:2: note: expanded from macro 'gb_loopback_stats_attrs'
+     167 |         gb_loopback_ro_stats_attr(field, min, u);               \
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/staging/greybus/loopback.c:142:27: note: expanded from macro 'gb_loopback_ro_stats_attr'
+     142 |         return sysfs_emit(buf, "%\n" #type "\n", gb->name.field);               \
+         |                                 ~^
+   drivers/staging/greybus/loopback.c:280:1: warning: invalid conversion specifier '\x0a' [-Wformat-invalid-specifier]
+     280 | gb_loopback_stats_attrs(gbphy_firmware_latency);
+         | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/staging/greybus/loopback.c:168:2: note: expanded from macro 'gb_loopback_stats_attrs'
+     168 |         gb_loopback_ro_stats_attr(field, max, u);               \
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/staging/greybus/loopback.c:142:27: note: expanded from macro 'gb_loopback_ro_stats_attr'
+     142 |         return sysfs_emit(buf, "%\n" #type "\n", gb->name.field);               \
+         |                                 ~^
+   drivers/staging/greybus/loopback.c:301:1: warning: invalid conversion specifier '\x0a' [-Wformat-invalid-specifier]
+     301 | gb_dev_loopback_rw_attr(type, d);
+         | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/staging/greybus/loopback.c:213:27: note: expanded from macro 'gb_dev_loopback_rw_attr'
+     213 |         return sysfs_emit(buf, "%\n" #type "\n", gb->field);                    \
+         |                                 ~^
+   drivers/staging/greybus/loopback.c:303:1: warning: invalid conversion specifier '\x0a' [-Wformat-invalid-specifier]
+     303 | gb_dev_loopback_rw_attr(size, u);
+         | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/staging/greybus/loopback.c:213:27: note: expanded from macro 'gb_dev_loopback_rw_attr'
+     213 |         return sysfs_emit(buf, "%\n" #type "\n", gb->field);                    \
+         |                                 ~^
+   drivers/staging/greybus/loopback.c:305:1: warning: invalid conversion specifier '\x0a' [-Wformat-invalid-specifier]
+     305 | gb_dev_loopback_rw_attr(us_wait, d);
+         | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/staging/greybus/loopback.c:213:27: note: expanded from macro 'gb_dev_loopback_rw_attr'
+     213 |         return sysfs_emit(buf, "%\n" #type "\n", gb->field);                    \
+         |                                 ~^
+   drivers/staging/greybus/loopback.c:307:1: warning: invalid conversion specifier '\x0a' [-Wformat-invalid-specifier]
+     307 | gb_dev_loopback_rw_attr(iteration_max, u);
 
 
-On Mon, 31 Mar 2025 23:53:34 +0200, Aleksandrs Vinarskis wrote:
-> Introduce support for the mentioned laptop.
-> 
-> Particular device exists in two model numbers:
-> * UX3407QA: X1P-42-100 or X1-26-100 (as tested)
-> * UX3407RA: X1E-78-100
-> 
-> Mostly similar to other X1-based laptops. Notable differences are:
-> * Wifi/Bluetooth combo being Qualcomm FastConnect 6900 on UX3407QA
->   and Qualcomm FastConnect 7800 on UX3407RA
-> * USB Type-C retimers are Parade PS8833, appear to behave identical
->   to Parade PS8830
-> * gpio90 is TZ protected
-> 
-> Document new Parade PS883x variant. Move pcie6a_phy's compatible change
-> from X1P-42-100's dtsi to be CRD specific, at it seems it does not
-> apply to all machines - on X1-26-100 phy times-out when using new x1p
-> compatible.
-> 
-> When comparing device firmware between UX3407QA, UX3407RA, it seems
-> that only ADSP firmware is different, CDSP and GPU firmware appears to
-> be the same. (At least assuming the GPU firmware name in both cases is
-> `qcdxkmsuc8380.mbn`). Since at least some blobs are different betweeen
-> X1E and X1/X1P, define new firmware directory for `qcom/x1p42100`. This
-> also makes it easier for distros to automatically extract firmware from
-> Windows and place all blobs for the model under the same path. If/When
-> firmware blobs make it to linux-firmware, same blobs can be easily
-> symlinked between `qcom/x1e80100` and `qcom/x1p42100`.
-> 
-> Qualcomm FastConnect 6900 on UX3407QA did not work out of the box, and
-> additionally required both newer firmware and patches to `board-2.bin`.
-> I added a short how-to [1], as it is not exactly trivial.
-> 
-> ACPI dumps can be found on aarch64-laptops' github [2]. HWids on
-> dtbloader's github [3].
-> 
-> [1] https://github.com/alexVinarskis/linux-x1e80100-zenbook-a14?tab=readme-ov-file#wcn688x-wifi
-> [2] https://github.com/aarch64-laptops/build/pull/134/files
-> [3] https://github.com/TravMurav/dtbloader/pull/4/files
-> 
-> Aleksandrs Vinarskis (6):
->   arm64: dts: qcom: move pcie6a type change from X1P42100 to
->     X1P42100-crd
->   usb: typec: Add Parade PS8833 Type-C Retimer variant
->   dt-bindings: usb: Add Parade PS8833 Type-C retimer variant
->   dt-bindings: arm: qcom: Add Asus Zenbook A14
->   firmware: qcom: scm: Allow QSEECOM on Asus Zenbook A14
->   arm64: dts: qcom: Add support for X1-based Asus Zenbook A14
-> 
->  .../devicetree/bindings/arm/qcom.yaml         |    2 +
->  .../bindings/usb/parade,ps8830.yaml           |    1 +
->  arch/arm64/boot/dts/qcom/Makefile             |    2 +
->  arch/arm64/boot/dts/qcom/x1-zenbook-a14.dtsi  | 1251 +++++++++++++++++
->  .../dts/qcom/x1e80100-asus-zenbook-a14.dts    |   45 +
->  .../dts/qcom/x1p42100-asus-zenbook-a14.dts    |   48 +
->  arch/arm64/boot/dts/qcom/x1p42100-crd.dts     |    4 +
->  arch/arm64/boot/dts/qcom/x1p42100.dtsi        |    4 -
->  drivers/firmware/qcom/qcom_scm.c              |    2 +
->  drivers/usb/typec/mux/ps883x.c                |    1 +
->  10 files changed, 1356 insertions(+), 4 deletions(-)
->  create mode 100644 arch/arm64/boot/dts/qcom/x1-zenbook-a14.dtsi
->  create mode 100644 arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dts
->  create mode 100644 arch/arm64/boot/dts/qcom/x1p42100-asus-zenbook-a14.dts
-> 
-> --
-> 2.45.2
-> 
-> 
-> 
+vim +/x0a +272 drivers/staging/greybus/loopback.c
 
+355a7058153e04b Alexandre Bailon 2015-03-31  270  
+355a7058153e04b Alexandre Bailon 2015-03-31  271  /* Time to send and receive one message */
+8e1d6c336d74977 Bryan O'Donoghue 2015-12-03 @272  gb_loopback_stats_attrs(latency);
+583cbf50e0a4c89 Bryan O'Donoghue 2015-07-21  273  /* Number of requests sent per second on this cport */
+8e1d6c336d74977 Bryan O'Donoghue 2015-12-03  274  gb_loopback_stats_attrs(requests_per_second);
+355a7058153e04b Alexandre Bailon 2015-03-31  275  /* Quantity of data sent and received on this cport */
+8e1d6c336d74977 Bryan O'Donoghue 2015-12-03  276  gb_loopback_stats_attrs(throughput);
+1ec5843ee988991 Bryan O'Donoghue 2015-10-15  277  /* Latency across the UniPro link from APBridge's perspective */
+8e1d6c336d74977 Bryan O'Donoghue 2015-12-03  278  gb_loopback_stats_attrs(apbridge_unipro_latency);
+1ec5843ee988991 Bryan O'Donoghue 2015-10-15  279  /* Firmware induced overhead in the GPBridge */
+e54b106dd1be503 Sandeep Patil    2016-05-19  280  gb_loopback_stats_attrs(gbphy_firmware_latency);
+8e1d6c336d74977 Bryan O'Donoghue 2015-12-03  281  
 
-My bot found new DTB warnings on the .dts files added or changed in this
-series.
-
-Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
-are fixed by another series. Ultimately, it is up to the platform
-maintainer whether these warnings are acceptable or not. No need to reply
-unless the platform maintainer has comments.
-
-If you already ran DT checks and didn't see these error(s), then
-make sure dt-schema is up to date:
-
-  pip3 install dtschema --upgrade
-
-
-This patch series was applied (using b4) to base:
- Base: attempting to guess base-commit...
- Base: tags/next-20250331 (exact match)
-
-If this is not the correct base, please add 'base-commit' tag
-(or use b4 which does this automatically)
-
-New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/qcom/' for 20250331215720.19692-1-alex.vinarskis@gmail.com:
-
-arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dtb: bluetooth: 'vddrfacmn-supply' is a required property
-	from schema $id: http://devicetree.org/schemas/net/bluetooth/qualcomm-bluetooth.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dtb: bluetooth: 'vddaon-supply' is a required property
-	from schema $id: http://devicetree.org/schemas/net/bluetooth/qualcomm-bluetooth.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dtb: bluetooth: 'vddwlcx-supply' is a required property
-	from schema $id: http://devicetree.org/schemas/net/bluetooth/qualcomm-bluetooth.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dtb: bluetooth: 'vddwlmx-supply' is a required property
-	from schema $id: http://devicetree.org/schemas/net/bluetooth/qualcomm-bluetooth.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dtb: bluetooth: 'vddrfa0p8-supply' is a required property
-	from schema $id: http://devicetree.org/schemas/net/bluetooth/qualcomm-bluetooth.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dtb: bluetooth: 'vddrfa1p2-supply' is a required property
-	from schema $id: http://devicetree.org/schemas/net/bluetooth/qualcomm-bluetooth.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dtb: bluetooth: 'vddrfa1p8-supply' is a required property
-	from schema $id: http://devicetree.org/schemas/net/bluetooth/qualcomm-bluetooth.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dtb: pinctrl@f100000: Unevaluated properties are not allowed ('bt-en-sleep' was unexpected)
-	from schema $id: http://devicetree.org/schemas/pinctrl/qcom,x1e80100-tlmm.yaml#
-arch/arm64/boot/dts/qcom/x1p42100-asus-zenbook-a14.dtb: bluetooth: 'vddrfacmn-supply' is a required property
-	from schema $id: http://devicetree.org/schemas/net/bluetooth/qualcomm-bluetooth.yaml#
-arch/arm64/boot/dts/qcom/x1p42100-asus-zenbook-a14.dtb: bluetooth: 'vddaon-supply' is a required property
-	from schema $id: http://devicetree.org/schemas/net/bluetooth/qualcomm-bluetooth.yaml#
-arch/arm64/boot/dts/qcom/x1p42100-asus-zenbook-a14.dtb: bluetooth: 'vddwlcx-supply' is a required property
-	from schema $id: http://devicetree.org/schemas/net/bluetooth/qualcomm-bluetooth.yaml#
-arch/arm64/boot/dts/qcom/x1p42100-asus-zenbook-a14.dtb: bluetooth: 'vddwlmx-supply' is a required property
-	from schema $id: http://devicetree.org/schemas/net/bluetooth/qualcomm-bluetooth.yaml#
-arch/arm64/boot/dts/qcom/x1p42100-asus-zenbook-a14.dtb: bluetooth: 'vddbtcmx-supply' is a required property
-	from schema $id: http://devicetree.org/schemas/net/bluetooth/qualcomm-bluetooth.yaml#
-arch/arm64/boot/dts/qcom/x1p42100-asus-zenbook-a14.dtb: bluetooth: 'vddrfa0p8-supply' is a required property
-	from schema $id: http://devicetree.org/schemas/net/bluetooth/qualcomm-bluetooth.yaml#
-arch/arm64/boot/dts/qcom/x1p42100-asus-zenbook-a14.dtb: bluetooth: 'vddrfa1p2-supply' is a required property
-	from schema $id: http://devicetree.org/schemas/net/bluetooth/qualcomm-bluetooth.yaml#
-arch/arm64/boot/dts/qcom/x1p42100-asus-zenbook-a14.dtb: bluetooth: 'vddrfa1p8-supply' is a required property
-	from schema $id: http://devicetree.org/schemas/net/bluetooth/qualcomm-bluetooth.yaml#
-arch/arm64/boot/dts/qcom/x1p42100-asus-zenbook-a14.dtb: pinctrl@f100000: Unevaluated properties are not allowed ('bt-en-sleep' was unexpected)
-	from schema $id: http://devicetree.org/schemas/pinctrl/qcom,x1e80100-tlmm.yaml#
-
-
-
-
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
