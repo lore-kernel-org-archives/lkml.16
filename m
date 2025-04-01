@@ -1,156 +1,99 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 288571DC9B0
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 08:42:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83AA01DC9B0
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 08:43:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743496976; cv=none; b=W+yYzZ3XMHZ1JxI15+a8+CDRzDGjoAc3fGZJT5mgH1O1+m6StQiA20VcI3LF1GuJORab5RTA4ajOdcyH2DKRs7cfjvfl+UbL1o2AJvhgZqxgY1gT/WE2SYKHXYalvzyqeDd3F49eC8Q3dXeQWcSfnhOb1cuvfm4Pow7hpH69Vfo=
+	t=1743496990; cv=none; b=Dtp6RhfdqfBxdtIvcCR6nqtMlwEzHNteZM/zB+3ThBfeuvu7W3Mqfw/xsr8Tm1iRtFmsD9R7a0xQBHTojqnnC3gP9d++56fYpkPKfAf2kgVUavqblMN3fNlJVnP7/RpKe9rQFxhHUDMDhbxfsR4QkvTzFyvGTO7OuMfArq7AX5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743496976; c=relaxed/simple;
-	bh=8VJP0n/RE23QDNlKEjqeR8n1Dj+FG94SvmQIlMrlp6U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=H6qRgOoj7OtZrzWOgan6esWY9lAFfRXFwGm5qlXU4P9ycDD9+CmOOvOIPlTRvDcHj/npz0e9GDqCLou79Ou8AvPHaPCyokmMOkY2rnQSM+vrGPe+jaiEM9Cb/kDZJhU4hBxJbnrYrBV2vxkaDA38cx0U9qIgM4oI5sdNeCwsYIU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77] helo=[127.0.0.1])
-	by metis.whiteo.stw.pengutronix.de with esmtp (Exim 4.92)
-	(envelope-from <a.fatoum@pengutronix.de>)
-	id 1tzXCm-0007bS-51; Tue, 01 Apr 2025 10:42:44 +0200
-Message-ID: <f1079411-0188-4b0b-9cc9-7e0c0130d69a@pengutronix.de>
-Date: Tue, 1 Apr 2025 10:42:43 +0200
+	s=arc-20240116; t=1743496990; c=relaxed/simple;
+	bh=eAyulgNwDugXHRNPeWxQlca5IJS6fxeG7RYNHW4gZNk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kJDy9hE0Mprq47Q3PHrTlL+ZWdbSig8HrsQxsqqA2lL9oWE8qk+QfXumY5oTe1wqXdFR+eI1vgFVO8PO3Nwi6kTbfBbYxH3PYa+Ew3+AEGQtKVY/oPGOtpA8FZLYXh4SWMnjqVIMxrIHP+3QDyDuAU0NmAiNeK+Xs6LzwKX4Obk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ldqhGzSy; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ldqhGzSy"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-227a8cdd241so14791815ad.3
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 01:43:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1743496988; x=1744101788; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZW4RptpbO/MsEel2xtnMMoJ2QXkHyUdyfTKR4GsWHh0=;
+        b=ldqhGzSy6RaU4Om1Bfn4pChhNBfj+NzRZ4fDCh5eAphzaUvsWD325OOJb4seEKTt5i
+         FNIOg+CtS/dB/XCrgGf1G8e6MIiDkKYY5jC/mthp2BmTYGiGVEfpde8QeSNGm5OLuuvG
+         426p9IdzyP4Umy/MHbd430GABj0j4qOCZDghEqV84ibj+puB9hey0fVRUYh4zuiDweSr
+         Av4No17P2vypwWM4KM4wx0zi+HoGLHJeRnMpO52OPozDR67x9p0am9W15URl9EthfkaG
+         qJ0qUHhCC/3ebfMVFb+8/3sZUtmQNMGxNwOl7rtcQ5OHACKPwgTeF+QPu2IhMnviSMly
+         Lk+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743496988; x=1744101788;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZW4RptpbO/MsEel2xtnMMoJ2QXkHyUdyfTKR4GsWHh0=;
+        b=B7l82MvAxFL8B3aOxrXMf99VOVj6zFkT/63r8gnyZ7Rony3GpOhBu+JMOVnqAWmSX5
+         h7ycHf3kz/HNg2iPQ3pi8yFV3HkAg1OB+uHunSZkZ40ug4w8v65gTn322FmDJ6wu/lxf
+         6iKFnEWQhpla0i65+nLpaSmq/DA/rLOhQvt+T2o+8CEqWud4DDrljutTgVCSwt9B6Uc6
+         arhTNBGg3D+umBWsf5/5mbLyXqjvK/saH5cIA1BdgMPMh+hVg+Lw2lWUlZ2DGT41FRMU
+         5tQmmj2E/eMG10ipEwg5FWuXeRxktRKgiSMbvsZjtJbP2yP2kcE0NTiJznuCtzBdnlds
+         kxHA==
+X-Forwarded-Encrypted: i=1; AJvYcCVRyU74kvP8HIat210O/iIsli+TjoqyhXgcPwJvED+6DCk6AtYbRYzIxixBfCxLEaBk22d+CHbN9oHyS/s=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywyw4GQMXWZ7KDqdvwTCdcLpS9Qx9WP6ScTr6NKhSDA/7aLnTFS
+	RbO2k9lkY/ih2IrprUS1kepBPCB7LxPhDbC96TgE+k1lmnLCgmQORxckRC2NP3E=
+X-Gm-Gg: ASbGncvlNz41QDScG646fF2vNPUwAGW/TGa5p5+Bs6a3F51eD/5wks4E6w/lS0D8MhY
+	qO4ME+i4s3wXALeeishfFf5zqhshm93xfoKyjhB1ejji6dFHcH3aJGGrcdeppztctKAbZt4NA84
+	2zN26aJKSfvMUcear9lIlJHSZccV7i1CxdrJSO5pilLDpx3h0R32HNYYFs1LCTRiETzmKfhwwJ4
+	DjJLSR2bDxkXaJKj7IE4M6aWskj4PAl2hsQUYcNWzgzBnDqAIejdr1S7vCWUVq9V8kx+7g8qfCL
+	VJUSzXcGc+GUhoA2OOzIYk+npu3IEZ5vf3aFVU/PAqJLfg==
+X-Google-Smtp-Source: AGHT+IGfWZI0lHW9gqmfyGE0TUy3057d/eSS3S8FL2AMcp3BOyfnLTFlpo4ryW3cDKuDszcFg3ziVA==
+X-Received: by 2002:a05:6a20:9e4a:b0:1f5:730b:e09a with SMTP id adf61e73a8af0-2009f644c21mr19182247637.20.1743496987833;
+        Tue, 01 Apr 2025 01:43:07 -0700 (PDT)
+Received: from localhost ([122.172.83.32])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af93ba10da3sm7574276a12.66.2025.04.01.01.43.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Apr 2025 01:43:07 -0700 (PDT)
+Date: Tue, 1 Apr 2025 14:13:05 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Linux PM <linux-pm@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH v1 04/10] cpufreq: Add and use cpufreq policy locking
+ guards
+Message-ID: <20250401084305.setqyk765dwo6jqk@vireshk-i7>
+References: <4651448.LvFx2qVVIh@rjwysocki.net>
+ <8518682.T7Z3S40VBb@rjwysocki.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] counter: interrupt-cnt: Protect enable/disable OPs with
- mutex
-To: "Sverdlin, Alexander" <alexander.sverdlin@siemens.com>,
- "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
-Cc: "o.rempel@pengutronix.de" <o.rempel@pengutronix.de>,
- "kernel@pengutronix.de" <kernel@pengutronix.de>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "wbg@kernel.org" <wbg@kernel.org>
-References: <20250331163642.2382651-1-alexander.sverdlin@siemens.com>
- <059003d1-d725-4439-a6d7-cb354fba161b@pengutronix.de>
- <91e5c0dd0b71e5fbf441b7a6f2a8937a7bfc366f.camel@siemens.com>
-Content-Language: en-US, de-DE, de-BE
-From: Ahmad Fatoum <a.fatoum@pengutronix.de>
-In-Reply-To: <91e5c0dd0b71e5fbf441b7a6f2a8937a7bfc366f.camel@siemens.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:900:1d::77
-X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8518682.T7Z3S40VBb@rjwysocki.net>
 
-Hello Alexander,
+On 28-03-25, 21:42, Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> 
+> Introduce "read" and "write" locking guards for cpufreq policies and use
+> them where applicable in the cpufreq core.
+> 
+> No intentional functional impact.
+> 
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+>  drivers/cpufreq/cpufreq.c |  121 ++++++++++++++++++++--------------------------
+>  include/linux/cpufreq.h   |    6 ++
+>  2 files changed, 60 insertions(+), 67 deletions(-)
 
-On 4/1/25 10:38, Sverdlin, Alexander wrote:
-> On Tue, 2025-04-01 at 06:50 +0200, Ahmad Fatoum wrote:
->>> Enable/disable seems to be racy on SMP, consider the following scenario:
->>>
->>> CPU0					CPU1
->>>
->>> interrupt_cnt_enable_write(true)
->>> {
->>>  	if (priv->enabled == enable)
->>>  		return 0;
->>>
->>>  	if (enable) {
->>>  		priv->enabled = true;
->>>  					interrupt_cnt_enable_write(false)
->>>  					{
->>>  						if (priv->enabled == enable)
->>>  							return 0;
->>>
->>>  						if (enable) {
->>>  							priv->enabled = true;
->>>  							enable_irq(priv->irq);
->>>  						} else {
->>>  							disable_irq(priv->irq)
->>>  							priv->enabled = false;
->>>  						}
->>>  		enable_irq(priv->irq);
->>>  	} else {
->>>  		disable_irq(priv->irq);
->>>  		priv->enabled = false;
->>>  	}
->>>
->>> The above would result in priv->enabled == false, but IRQ left enabled.
->>> Protect both write (above race) and read (to propagate the value on SMP)
->>> callbacks with a mutex.
->>
->> Doesn't sysfs/kernfs already ensure that the ops may not be called concurrently
->> on the same open file?
-> 
-> as I understand the code, the operations on the same FD will be serialized, i.e.
-> if you open an entry and access it concurrently within the same process.
-
-Thanks for checking! I agree now that we indeed need synchronization here.
-
-Cheers,
-Ahmad
-
-> 
-> If you apply the following patch on top of the proposed patch:
-> 
-> --- a/drivers/counter/interrupt-cnt.c
-> +++ b/drivers/counter/interrupt-cnt.c
-> @@ -3,6 +3,7 @@
->   * Copyright (c) 2021 Pengutronix, Oleksij Rempel <kernel@pengutronix.de>
->   */
->  
-> +#include <linux/delay.h>
->  #include <linux/cleanup.h>
->  #include <linux/counter.h>
->  #include <linux/gpio/consumer.h>
-> @@ -56,6 +57,9 @@ static int interrupt_cnt_enable_write(struct counter_device *counter,
->  {
->  	struct interrupt_cnt_priv *priv = counter_priv(counter);
->  
-> +	WARN_ON(!mutex_trylock(&priv->lock));
-> +	mutex_unlock(&priv->lock);
-> +
->  	guard(mutex)(&priv->lock);
->  
->  	if (priv->enabled == enable)
-> @@ -69,6 +73,8 @@ static int interrupt_cnt_enable_write(struct counter_device *counter,
->  		priv->enabled = false;
->  	}
->  
-> +	msleep(1000);
-> +
->  	return 0;
->  }
->  
-> 
-> And would run `while true; do echo 0 > /sys/.../enable; echo 1 > /sys/.../enable; done &`
-> twice, you'd see the following quickly:
-> 
-> WARNING: CPU: 1 PID: 754 at /drivers/counter/interrupt-cnt.c:60 interrupt_cnt_enable_write+0xa0/0xb0 [interrupt_cnt]
-> CPU: 1 UID: 0 PID: 754 Comm: sh
-> pc : interrupt_cnt_enable_write+0xa0/0xb0 [interrupt_cnt]
-> lr : interrupt_cnt_enable_write+0x34/0xb0 [interrupt_cnt]
-> Call trace:
->  interrupt_cnt_enable_write+0xa0/0xb0 [interrupt_cnt] (P)
->  counter_comp_u8_store+0xcc/0x118 [counter]
->  dev_attr_store+0x20/0x40
->  sysfs_kf_write+0x84/0xa8
->  kernfs_fop_write_iter+0x128/0x1e0
->  vfs_write+0x248/0x388
->  ksys_write+0x78/0x118
->  __arm64_sys_write+0x24/0x38
->  invoke_syscall+0x50/0x120
-> 
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
 -- 
-Pengutronix e.K.                  |                             |
-Steuerwalder Str. 21              | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany         | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686  | Fax:   +49-5121-206917-5555 |
-
+viresh
