@@ -1,157 +1,142 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A306EACE
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 04:50:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AD5DEACE
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 04:57:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743483042; cv=none; b=dW2mnBFFyJgCVJvLjGCJQ8wrZTOURgcVAS4dKBfOABXHiOG8cRrffa1Azp9gI7ncgnbKpSX94CT5/OI3NonGKRFCEQQv94RV49cdouurCx0ilvCumZ/7WMIljQzq8MB5uROOVS33rVqSDclVx+z86ekOkNi1xi+uyHVi9co2yd8=
+	t=1743483423; cv=none; b=QPd54RkMaUsdQWPUKqxwAsahYknSHGARjF7b03iDC8t3i48D/w70Tcd3aJp5ujJHdS0ZGBxRdhIKyM9OdnS7VosSnqaFcvzw8KYF7t14uKzdL2D9i8qRZncf14vas5oVQGF4gJXvkq1O18an6xC0GpYOD2eWcqQ4VTCv929j9/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743483042; c=relaxed/simple;
-	bh=YMqeGFEfZuafwnrB5kJbEH3IDII0/ZT08GZH7KupvlE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=geDs9HTGOKwzbYk2MHhBB/2DpPdcsFHXr+CSuj0syRmBSSike1nT2mKmEGCoNMKPLpCfLO7ukjCACraR5fDCACHUwbrjODe0rQ81R/h/s/vLbX+3pRQBriLE0irgX2VuUrcOMqFIBTTKbqtpPN5sF7KYVpPnmYTzHG25vox08Fc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77] helo=[127.0.0.1])
-	by metis.whiteo.stw.pengutronix.de with esmtp (Exim 4.92)
-	(envelope-from <a.fatoum@pengutronix.de>)
-	id 1tzTa7-0006yV-IQ; Tue, 01 Apr 2025 06:50:35 +0200
-Message-ID: <059003d1-d725-4439-a6d7-cb354fba161b@pengutronix.de>
-Date: Tue, 1 Apr 2025 06:50:33 +0200
+	s=arc-20240116; t=1743483423; c=relaxed/simple;
+	bh=qnYgWrD2Wju8aW8wo2RjMKGRXIT97J+roFA8SXksdAk=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:References; b=CG9YzsDKIBEtCEvjEwAe9xaGZktqXXoQNJedL9JGZxT6PdD7rExkplaA+pCRX9Cwt4FNndqLj+x9Wpa4BufLi7f3sRZiiezOGFbRH4oIc+w909168x8eXiZYq6oncWcltltFY2uau1aWTPCsz5juEc3Nbl5FlmPII29ulmWuM/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=TFPsURDg; arc=none smtp.client-ip=203.254.224.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="TFPsURDg"
+Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250401045658epoutp014053c3c39cacd315bb3ca07af347abf7~yGO6G-V5_0050500505epoutp01I
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 04:56:58 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250401045658epoutp014053c3c39cacd315bb3ca07af347abf7~yGO6G-V5_0050500505epoutp01I
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1743483418;
+	bh=5+9ZbOoug1XdAoMWkPai1W3CpmGY96zj5C7fW1Y95lw=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=TFPsURDgbRUESlllUcs05onJG/AHELSUmiY1Lum8BFhBo25Z1x8I95qj1sTmMEDv+
+	 h0urWEKnklokdEBnQFwu0H2aFS+Lg38LoSqDiKoOjhSpfsrqkC5DWpAnDqEnmXk5IW
+	 jyblXohExRlFXqFP2JxAhH8dtS+wTtYbLj1NKsaA=
+Received: from epsnrtp03.localdomain (unknown [182.195.42.155]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTPS id
+	20250401045657epcas5p412ae99a12d33b31423753a026716fb2d~yGO5mTYfM1515815158epcas5p4y;
+	Tue,  1 Apr 2025 04:56:57 +0000 (GMT)
+Received: from epsmges5p2new.samsung.com (unknown [182.195.38.181]) by
+	epsnrtp03.localdomain (Postfix) with ESMTP id 4ZRbMD2KyPz3hhT7; Tue,  1 Apr
+	2025 04:56:56 +0000 (GMT)
+Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
+	epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	AC.5A.09853.4127BE76; Tue,  1 Apr 2025 13:56:52 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
+	20250401045256epcas5p47d761c5029394f165bf39e84e1cbbbc9~yGLYqyRkG1618916189epcas5p49;
+	Tue,  1 Apr 2025 04:52:56 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20250401045256epsmtrp12a041dcf829e27fadd7ee6e51700ec0c~yGLYqM2f82635926359epsmtrp1D;
+	Tue,  1 Apr 2025 04:52:56 +0000 (GMT)
+X-AuditID: b6c32a4a-048e07000000267d-53-67eb72144261
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	E6.C3.08766.8217BE76; Tue,  1 Apr 2025 13:52:56 +0900 (KST)
+Received: from green245.sa.corp.samsungelectronics.net (unknown
+	[107.99.41.245]) by epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250401045255epsmtip1d9a91cd9b670faae1e94088714d7d5ae~yGLXs3te30552105521epsmtip1e;
+	Tue,  1 Apr 2025 04:52:55 +0000 (GMT)
+From: Nitesh Shetty <nj.shetty@samsung.com>
+To: Jens Axboe <axboe@kernel.dk>
+Cc: gost.dev@samsung.com, nitheshshetty@gmail.com, Nitesh Shetty
+	<nj.shetty@samsung.com>, linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] block: remove unused nseg parameter
+Date: Tue,  1 Apr 2025 10:13:47 +0530
+Message-Id: <20250401044348.15588-1-nj.shetty@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrBKsWRmVeSWpSXmKPExsWy7bCmhq5I0et0g9ezlS1W3+1ns7h5YCeT
+	xd5b2haXd81hs9jxpJHRYtvv+cwObB47Z91l97h8ttSjb8sqRo/Pm+QCWKKybTJSE1NSixRS
+	85LzUzLz0m2VvIPjneNNzQwMdQ0tLcyVFPISc1NtlVx8AnTdMnOAVisplCXmlAKFAhKLi5X0
+	7WyK8ktLUhUy8otLbJVSC1JyCkwK9IoTc4tL89L18lJLrAwNDIxMgQoTsjO+rtjDVLCGo+LF
+	w63sDYwH2LoYOTkkBEwklve+Zuli5OIQEtjNKPHnxzdWCOcTo8Sul8vYIJxvjBIzH1xhhml5
+	cnIbVNVeRonJe79DOa1MEheevwKq4uBgE9CWOP2fA6RBREBBouf3SrBJzALTGSU+LvoOtlwY
+	aNKRqRPAbBYBVYnJX1tZQGxeASuJLX/WskJsk5dYveEAM0izhMA8doknn+ezQyRcJKZ+WAhV
+	JCzx6vgWqLiUxMv+Nii7XGLllBVQn5ZIPP/TC2XbS7Se6gc7lFlAU2L9Ln2IsKzE1FPrmEBs
+	ZgE+id7fT5gg4rwSO+bB2MoSa9YvgBojKXHteyOU7SGx4X4v2FohgViJ4w8bWCcwys5C2LCA
+	kXEVo2RqQXFuemqxaYFRXmo5PKaS83M3MYKTlJbXDsaHDz7oHWJk4mA8xCjBwawkwhvx9WW6
+	EG9KYmVValF+fFFpTmrxIUZTYJhNZJYSTc4Hpsm8knhDE0sDEzMzMxNLYzNDJXHe5p0t6UIC
+	6YklqdmpqQWpRTB9TBycUg1M5vuZnjNlHo35X+B0Tr/7+Z66F5LPn+7dk5vUcu3EedYNFx9z
+	99iXO/MkL9swNVaV4+LMQzE6pg/LgyZfnnY3vNHyQ9pGK6EF/JPXLVszVy0h6NWfg6FcfBYi
+	+/cd+nlh3aaqjDj7HYJHZ28QydE/lW/XOeVK45G9C25/e53K9DGrRXN/s62C3od7D9dfzFc9
+	f8qy7+jjr1yPZOaZNc34Y9Sau2tOpBLH5sXO23xzu/VP5PEsm/3telxT9OXuuOkrgwQLmGz3
+	nz/6T8lb9qa+0zGLLl+F6ZIeX9UOF6+ayPqbkyUkoq9+0d+JsvdnGxbkycy67yPT7bZDZt2e
+	P7+03evW/kls6rjgNzvwneWGBiWW4oxEQy3mouJEAHrT4MLbAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrMJMWRmVeSWpSXmKPExsWy7bCSnK5G4et0g6UbRCxW3+1ns7h5YCeT
+	xd5b2haXd81hs9jxpJHRYtvv+cwObB47Z91l97h8ttSjb8sqRo/Pm+QCWKK4bFJSczLLUov0
+	7RK4Mr6u2MNUsIaj4sXDrewNjAfYuhg5OSQETCSenNzG2sXIxSEksJtR4vP7dYwQCUmJZX+P
+	MEPYwhIr/z1nhyhqZpI43XoFqIiDg01AW+L0fw6QGhEBBYme3yvZQGqYBWYzSkzb1QXWLAy0
+	4cjUCWDbWARUJSZ/bWUBsXkFrCS2/FnLCrFAXmL1hgPMExh5FjAyrGKUTC0ozk3PLTYsMMxL
+	LdcrTswtLs1L10vOz93ECA4XLc0djNtXfdA7xMjEwXiIUYKDWUmEN+Lry3Qh3pTEyqrUovz4
+	otKc1OJDjNIcLErivOIvelOEBNITS1KzU1MLUotgskwcnFINTNXL1c7OCq8I+Vi6QfS5uGng
+	rKlLDNwNnT8wcGTUhhZOe9D8/tSicsEfIlLcr9ze7Gp7uKfqSFLrq1vfZf4X2EY5+k1ZeY9r
+	3mm2Wds76+ZHh9/ZOG3LnImt3kw72c/4e9w5wb7+asPz1rN5Sg/sXPyrjp2vjEn30/D8XXnU
+	iHO6UGTt8nuCjnL/Yx6uT/HWrCixNKt1MT4vUTSpNvKOXiuX2bxkrVPH8y/q2nBY71m9P+zZ
+	v2jvEP1v1stbBEQmTcp6MSP+/Np76mcPJ31T3Gb8WJqHaYFJ9wFurcbuzefPtZzbNL3EdOoF
+	Cw/O9cu/Ce8O2qew94yez8orNmfFqgvZ+OVuqbvF/vyhOmHvSSWW4oxEQy3mouJEADx2b5OG
+	AgAA
+X-CMS-MailID: 20250401045256epcas5p47d761c5029394f165bf39e84e1cbbbc9
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250401045256epcas5p47d761c5029394f165bf39e84e1cbbbc9
+References: <CGME20250401045256epcas5p47d761c5029394f165bf39e84e1cbbbc9@epcas5p4.samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] counter: interrupt-cnt: Protect enable/disable OPs with
- mutex
-To: "A. Sverdlin" <alexander.sverdlin@siemens.com>, linux-iio@vger.kernel.org
-Cc: Oleksij Rempel <o.rempel@pengutronix.de>, linux-kernel@vger.kernel.org,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- William Breathitt Gray <wbg@kernel.org>
-References: <20250331163642.2382651-1-alexander.sverdlin@siemens.com>
-Content-Language: en-US
-From: Ahmad Fatoum <a.fatoum@pengutronix.de>
-In-Reply-To: <20250331163642.2382651-1-alexander.sverdlin@siemens.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:900:1d::77
-X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Hello Alexander,
+We are no longer using nr_segs, after blk_mq_attempt_bio_merge was moved
+out of blk_mq_get_new_request.
 
-On 31.03.25 18:36, A. Sverdlin wrote:
-> From: Alexander Sverdlin <alexander.sverdlin@siemens.com>
-> 
-> Enable/disable seems to be racy on SMP, consider the following scenario:
-> 
-> CPU0					CPU1
-> 
-> interrupt_cnt_enable_write(true)
-> {
-> 	if (priv->enabled == enable)
-> 		return 0;
-> 
-> 	if (enable) {
-> 		priv->enabled = true;
-> 					interrupt_cnt_enable_write(false)
-> 					{
-> 						if (priv->enabled == enable)
-> 							return 0;
-> 
-> 						if (enable) {
-> 							priv->enabled = true;
-> 							enable_irq(priv->irq);
-> 						} else {
-> 							disable_irq(priv->irq)
-> 							priv->enabled = false;
-> 						}
-> 		enable_irq(priv->irq);
-> 	} else {
-> 		disable_irq(priv->irq);
-> 		priv->enabled = false;
-> 	}
-> 
-> The above would result in priv->enabled == false, but IRQ left enabled.
-> Protect both write (above race) and read (to propagate the value on SMP)
-> callbacks with a mutex.
+Signed-off-by: Nitesh Shetty <nj.shetty@samsung.com>
+---
+ block/blk-mq.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-Doesn't sysfs/kernfs already ensure that the ops may not be called concurrently
-on the same open file?
-
-Thanks,
-Ahmad
-
-> 
-> Signed-off-by: Alexander Sverdlin <alexander.sverdlin@siemens.com>
-> ---
->  drivers/counter/interrupt-cnt.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/drivers/counter/interrupt-cnt.c b/drivers/counter/interrupt-cnt.c
-> index 949598d51575a..d83848d0fe2af 100644
-> --- a/drivers/counter/interrupt-cnt.c
-> +++ b/drivers/counter/interrupt-cnt.c
-> @@ -3,12 +3,14 @@
->   * Copyright (c) 2021 Pengutronix, Oleksij Rempel <kernel@pengutronix.de>
->   */
->  
-> +#include <linux/cleanup.h>
->  #include <linux/counter.h>
->  #include <linux/gpio/consumer.h>
->  #include <linux/interrupt.h>
->  #include <linux/irq.h>
->  #include <linux/mod_devicetable.h>
->  #include <linux/module.h>
-> +#include <linux/mutex.h>
->  #include <linux/platform_device.h>
->  #include <linux/types.h>
->  
-> @@ -19,6 +21,7 @@ struct interrupt_cnt_priv {
->  	struct gpio_desc *gpio;
->  	int irq;
->  	bool enabled;
-> +	struct mutex lock;
->  	struct counter_signal signals;
->  	struct counter_synapse synapses;
->  	struct counter_count cnts;
-> @@ -41,6 +44,8 @@ static int interrupt_cnt_enable_read(struct counter_device *counter,
->  {
->  	struct interrupt_cnt_priv *priv = counter_priv(counter);
->  
-> +	guard(mutex)(&priv->lock);
-> +
->  	*enable = priv->enabled;
->  
->  	return 0;
-> @@ -51,6 +56,8 @@ static int interrupt_cnt_enable_write(struct counter_device *counter,
->  {
->  	struct interrupt_cnt_priv *priv = counter_priv(counter);
->  
-> +	guard(mutex)(&priv->lock);
-> +
->  	if (priv->enabled == enable)
->  		return 0;
->  
-> @@ -227,6 +234,8 @@ static int interrupt_cnt_probe(struct platform_device *pdev)
->  	if (ret)
->  		return ret;
->  
-> +	mutex_init(&priv->lock);
-> +
->  	ret = devm_counter_add(dev, counter);
->  	if (ret < 0)
->  		return dev_err_probe(dev, ret, "Failed to add counter\n");
-
-
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index ae8494d88897..0cfd1a149f64 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -2965,8 +2965,7 @@ static bool blk_mq_attempt_bio_merge(struct request_queue *q,
+ 
+ static struct request *blk_mq_get_new_requests(struct request_queue *q,
+ 					       struct blk_plug *plug,
+-					       struct bio *bio,
+-					       unsigned int nsegs)
++					       struct bio *bio)
+ {
+ 	struct blk_mq_alloc_data data = {
+ 		.q		= q,
+@@ -3125,7 +3124,7 @@ void blk_mq_submit_bio(struct bio *bio)
+ 	if (rq) {
+ 		blk_mq_use_cached_rq(rq, plug, bio);
+ 	} else {
+-		rq = blk_mq_get_new_requests(q, plug, bio, nr_segs);
++		rq = blk_mq_get_new_requests(q, plug, bio);
+ 		if (unlikely(!rq)) {
+ 			if (bio->bi_opf & REQ_NOWAIT)
+ 				bio_wouldblock_error(bio);
 -- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+2.43.0
+
