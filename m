@@ -1,206 +1,303 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CDEA2046AC
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 13:51:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CB35C2C6;
+	Tue,  1 Apr 2025 13:54:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743515516; cv=none; b=RI9pyiR5NsvL0YKPb+dhwHeYCoWBOEHlZmhkJGDO8kUkN+Sv4GcQE0Fwg4mxnK35xKbeHBkje3slxzCV7q5oO1RyMQCaD/tjIcChy3CpVaTYT2U+qA86prfCPzdH7FUinDiePqTfx5AmCMFn4HJT7QRNPEME8FjnkoLgadd5+to=
+	t=1743515696; cv=none; b=MVQ87UtqWV8aNygTcEqISf4gKd3uO0VC/80WcqCha3Ocfhb12+F+PCgWoto1CGnn92jMd/SGhiKUG8qwAR+1urubg3pSFrguUsDrenwwK3ka1shuvZ4woy0xM3htiErO+2ZAYPtKQTqnZoOCERuq99GGUgLUcHVJWaLhzvJb3oU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743515516; c=relaxed/simple;
-	bh=fyJnXBrOut1qI3iVOlrjftIknLYmdN5T3FQdk35b5Ao=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Pn7iKztKsf+OawO8KesGllsadQ3oM1fq57DRxA1+Hj93/OfAUTv4XpQd45LMAXM3/48NxSRXEBZoVwK7ztPRMc55HRyr5HuWtsC2M9cXMbzVsbmKLHqAzrj3M7n/X8dLleC81OIaYvWaVzdov7OAxXdvs6BNG98+aUIZQjpedCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DXUh2oCq; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DXUh2oCq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743515513;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yd713vKppQHQbjGvhffkowOQ35Ux0lbgZmPhSE6rLE4=;
-	b=DXUh2oCqO1ROUWPH9FsOCb2vIi7aEw9cFXs8Wd2MT//ewVMR1qzWvxWhArg1aEIv+yxneX
-	wlr6CmaPzWfj4M8Jz77xLWVIiP7RH2ZQtVWfnI/pkm8yml/cLTKR+Xjrb3mRnCuD61H393
-	t/ee6bw7ZWLxrE6cgoPts4yAlnqCFBo=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-434-hYkVQnpgOeOvhzPi_pk8Og-1; Tue, 01 Apr 2025 09:51:51 -0400
-X-MC-Unique: hYkVQnpgOeOvhzPi_pk8Og-1
-X-Mimecast-MFC-AGG-ID: hYkVQnpgOeOvhzPi_pk8Og_1743515510
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43cfda30a3cso35914365e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 06:51:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743515510; x=1744120310;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yd713vKppQHQbjGvhffkowOQ35Ux0lbgZmPhSE6rLE4=;
-        b=qdggxKAmvbv8b876akWM21Cv7R9HYJVWWaCad6dYDmWRX6TCoY0G4fkJ5fTlZch9PD
-         sFN+G8GXftIY8vOayR0z/9zZS/Ye9cls/JRSJxGInSPR0slEcdlkf+Dd8NR3IX4rqfj8
-         K2eNP4R/rxv2J/iqVUBcGL5ymbHjYIMtkuwC9Um1RiPI1jMzidjmtu21Xa0BtQDakshP
-         5HdFzFF0iwg3uni74PYiEZBFDIKr8KG3RcezgdBLSqqPHsKvKCczP1iOyr7EFtkNZue8
-         gM+BX+vju2zEBwPhR8KA3sgG62Krew+ceTtp7T3k9APY5yUe4c/pTno+LR+kXD5IHT/i
-         zsug==
-X-Forwarded-Encrypted: i=1; AJvYcCWflDspAAfoXwjHrJmMOXkK0pCWP1BanYjvpl2TP3p0uxzQt85uW+VmNJpHMncnNUFOAy2SrQOjym/qJ+o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwtiEnQDi5tbVebIKvAMn7Au6a1xqqB8Z+/J7nUnX9sIFlp5i2S
-	niPxBzM4haV4i7UX4HwTlznT65sm7BR8zqDlk/DxExyIGygHIy8eRzPQgmpldoJDnq3bIcfoIgv
-	6Eq3Ninema4G7cpJFtEx0xltt+CXSXjNz4a2VP4dwbLVChYl0OwXioNVkcsiV7g==
-X-Gm-Gg: ASbGnctFABhq7EZgAcWMQ0mgGQ6ml09ptt4HYIlFfmBJGZkM9ytBPXrpq3mdbS2wVCa
-	L4I7KXkKWRXd2qLUSBOQlf2KrQhTTXdKTu2r1KrW7z22DSWLbwMBdyE+THOB+WjdEtqQ2NSiLx9
-	Fbc40SDhJYj2PDUneKwIyCAIFk0e4K66tkUVVaZKvG14VYUZieAq+d2hw1B7rUlYYyRwNan6dKb
-	qHgYBleJeZdLKAGK3LeKfT+SFGOg4a6rh+Ssx1xeI+xQwF0NDSRqEhVkW3w8CqU5+QAJTYYjRWg
-	6eEHTiIzWXGsN4hrbKDXrLWi5rtAGy+5JggZVGZDLAcghQSRSnyY1O3lrgU=
-X-Received: by 2002:a5d:5984:0:b0:391:4095:49b7 with SMTP id ffacd0b85a97d-39c120e079amr10530779f8f.25.1743515509942;
-        Tue, 01 Apr 2025 06:51:49 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHsBMqSUaVpvZcub9DerZUyAcDAdWPbokGx4MrEDvZ1V89a1sJp60yqYaFeSZ3uq31KHnaDGQ==
-X-Received: by 2002:a5d:5984:0:b0:391:4095:49b7 with SMTP id ffacd0b85a97d-39c120e079amr10530760f8f.25.1743515509455;
-        Tue, 01 Apr 2025 06:51:49 -0700 (PDT)
-Received: from sgarzare-redhat (host-87-11-6-59.retail.telecomitalia.it. [87.11.6.59])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b7a4318sm13937042f8f.87.2025.04.01.06.51.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Apr 2025 06:51:48 -0700 (PDT)
-Date: Tue, 1 Apr 2025 15:51:42 +0200
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Cindy Lu <lulu@redhat.com>
-Cc: jasowang@redhat.com, mst@redhat.com, michael.christie@oracle.com, 
-	linux-kernel@vger.kernel.org, virtualization@lists.linux-foundation.org, 
-	netdev@vger.kernel.org
-Subject: Re: [PATCH v8 5/8] vhost: Reintroduce kthread mode support in vhost
-Message-ID: <qtii7gazb52fuvkeiymllkapnd3l3ji6ht7y7cfegybreavmit@h6bvfhwpghg6>
-References: <20250328100359.1306072-1-lulu@redhat.com>
- <20250328100359.1306072-6-lulu@redhat.com>
+	s=arc-20240116; t=1743515696; c=relaxed/simple;
+	bh=1JeXX8dTrMj5iy7nBIKL7ZWyC7Mz2KiEEpDNh7CypLo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=PrWCq5qHQIzUivGu/CO0iLwUQAFTasvS8/flSvlMXsN6S5pPxjzftEUg04A/cji4PwnyWBnz8d5LMIvGmzOcGiuzShB+MwZQFtGvT4x3lC0+VQCpahGX6w5QFPkPx2bVWlf54FjhIqkZ/TgDtVYwLJESHCM5vZTSItxK7DkLpoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.105])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4ZRqCF6dy6zvWqt;
+	Tue,  1 Apr 2025 21:50:49 +0800 (CST)
+Received: from kwepemg500010.china.huawei.com (unknown [7.202.181.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 6CC6814036D;
+	Tue,  1 Apr 2025 21:54:49 +0800 (CST)
+Received: from [10.174.178.209] (10.174.178.209) by
+ kwepemg500010.china.huawei.com (7.202.181.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Tue, 1 Apr 2025 21:54:48 +0800
+Message-ID: <ac39f5a1-664a-4812-bb50-ceb9771d1d66@huawei.com>
+Date: Tue, 1 Apr 2025 21:54:47 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20250328100359.1306072-6-lulu@redhat.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: Fwd: [PATCH][SMB3 client] fix TCP timers deadlock after rmmod
+To: Steve French <smfrench@gmail.com>, linux-fsdevel
+	<linux-fsdevel@vger.kernel.org>, <linux-net@vger.kernel.org>, LKML
+	<linux-kernel@vger.kernel.org>, Enzo Matsumiya <ematsumiya@suse.de>,
+	<kuniyu@amazon.com>, <edumazet@google.com>
+CC: <zhangchangzhong@huawei.com>
+References: <CAH2r5msqxcvHcbDt0x_eNpbdPxUhgFoOAPchZ16EBZeFhCdAKA@mail.gmail.com>
+ <CAH2r5mtoz+4RSDLJijNFD6dRiLTWKou8m3M2mTp2cy7oPsP=Qg@mail.gmail.com>
+From: Wang Zhaolong <wangzhaolong1@huawei.com>
+In-Reply-To: <CAH2r5mtoz+4RSDLJijNFD6dRiLTWKou8m3M2mTp2cy7oPsP=Qg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemg500010.china.huawei.com (7.202.181.71)
 
-On Fri, Mar 28, 2025 at 06:02:49PM +0800, Cindy Lu wrote:
->This commit restores the previously removed functions kthread
->wake/stop/create, and use ops structure vhost_worker_ops to
->manage worker wakeup, stop and creation. The function
->vhost_worker_create initializes these ops pointers based on
->the value of inherit_owner
->
->The old function was remove in
+Hi.
 
-nit: s/remove/removed
+My colleagues and I have been investigating the issue addressed by this patch
+and have discovered some significant concerns that require broader discussion.
 
->commit 6e890c5d5021 ("vhost: use vhost_tasks for worker threads")
->
->Signed-off-by: Cindy Lu <lulu@redhat.com>
->---
-> drivers/vhost/vhost.c | 48 ++++++++++++++++++++++++++++++++++++++++++-
-> drivers/vhost/vhost.h |  1 +
-> 2 files changed, 48 insertions(+), 1 deletion(-)
->
->diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
->index c162ad772f8f..be97028a8baf 100644
->--- a/drivers/vhost/vhost.c
->+++ b/drivers/vhost/vhost.c
->@@ -734,11 +734,21 @@ static void vhost_task_wakeup(struct vhost_worker *worker)
-> 	return vhost_task_wake(worker->vtsk);
-> }
->
->+static void vhost_kthread_wakeup(struct vhost_worker *worker)
->+{
->+	wake_up_process(worker->kthread_task);
->+}
->+
-> static void vhost_task_do_stop(struct vhost_worker *worker)
-> {
-> 	return vhost_task_stop(worker->vtsk);
-> }
->
->+static void vhost_kthread_do_stop(struct vhost_worker *worker)
->+{
->+	kthread_stop(worker->kthread_task);
->+}
->+
-> static int vhost_task_worker_create(struct vhost_worker *worker,
-> 				    struct vhost_dev *dev, const char *name)
-> {
->@@ -762,6 +772,41 @@ static int vhost_task_worker_create(struct vhost_worker *worker,
-> 	return 0;
-> }
->
->+static int vhost_kthread_worker_create(struct vhost_worker *worker,
->+				       struct vhost_dev *dev, const char *name)
->+{
->+	struct task_struct *task;
->+	u32 id;
->+	int ret;
->+
->+	task = kthread_create(vhost_run_work_kthread_list, worker, "%s", name);
->+	if (IS_ERR(task))
->+		return PTR_ERR(task);
->+
->+	worker->kthread_task = task;
->+	wake_up_process(task);
->+	ret = xa_alloc(&dev->worker_xa, &id, worker, xa_limit_32b, GFP_KERNEL);
->+	if (ret < 0)
->+		goto stop_worker;
->+
->+	ret = vhost_attach_task_to_cgroups(worker);
->+	if (ret)
->+		goto stop_worker;
->+
->+	worker->id = id;
->+	return 0;
->+
->+stop_worker:
->+	vhost_kthread_do_stop(worker);
->+	return ret;
->+}
->+
->+static const struct vhost_worker_ops kthread_ops = {
->+	.create = vhost_kthread_worker_create,
->+	.stop = vhost_kthread_do_stop,
->+	.wakeup = vhost_kthread_wakeup,
->+};
->+
-> static const struct vhost_worker_ops vhost_task_ops = {
-> 	.create = vhost_task_worker_create,
-> 	.stop = vhost_task_do_stop,
->@@ -773,7 +818,8 @@ static struct vhost_worker *vhost_worker_create(struct vhost_dev *dev)
-> 	struct vhost_worker *worker;
-> 	char name[TASK_COMM_LEN];
-> 	int ret;
->-	const struct vhost_worker_ops *ops = &vhost_task_ops;
->+	const struct vhost_worker_ops *ops =
->+		dev->inherit_owner ? &vhost_task_ops : &kthread_ops;
->
-> 	worker = kzalloc(sizeof(*worker), GFP_KERNEL_ACCOUNT);
-> 	if (!worker)
->diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
->index 98895e299efa..af4b2f7d3b91 100644
->--- a/drivers/vhost/vhost.h
->+++ b/drivers/vhost/vhost.h
->@@ -37,6 +37,7 @@ struct vhost_worker_ops {
-> };
->
-> struct vhost_worker {
->+	struct task_struct *kthread_task;
-                           ^
-nit: I'm not a fan of tabs, but here all the other fields have it, so I 
-would put it in.
+### Socket Leak Issue
 
-> 	struct vhost_task	*vtsk;
-> 	struct vhost_dev	*dev;
-> 	/* Used to serialize device wide flushing with worker swapping. */
->-- 
->2.45.0
->
+After testing this patch extensively, I've confirmed it introduces a socket leak
+when TCP connections don't complete proper termination (e.g., when FIN packets
+are dropped). The leak manifests as a continuous increase in TCP slab usage:
 
-The patch LGTM:
+I've documented this issue with a reproducer in Bugzilla:
 
-Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
+https://bugzilla.kernel.org/show_bug.cgi?id=219972#c0
+
+The key issue appears to stem from the interaction between the SMB client and TCP
+socket lifecycle management:
+
+1. Removing `sk->sk_net_refcnt = 1` causes TCP timers to be terminated early in
+    `tcp_close()` via the `inet_csk_clear_xmit_timers_sync()` call when
+    `!sk->sk_net_refcnt`
+2. This early timer termination prevents proper reference counting resolution
+    when connections don't complete the 4-way TCP termination handshake
+3. The resulting socket references are never fully released, leading to a leak
+
+#### Timeline of Related Changes
+
+1. v4.2-rc1 26abe14379f8 ("net: Modify sk_alloc to not reference count the netns of kernel sockets")
+    - Added `sk_net_refcnt` field to distinguish user sockets (=1) from kernel sockets (=0)
+    - Kernel sockets don't hold netns references, which can lead to potential UAF issues
+
+2. v6.9-rc2 151c9c724d05: ("tcp: properly terminate timers for kernel sockets")
+    - Modified `tcp_close()` to check `sk->sk_net_refcnt` and explicitly terminate timers for kernel sockets (=0)
+    - This prevents UAF when netns is destroyed before socket timers complete
+    - **Key change**: If `!sk->sk_net_refcnt`, call `inet_csk_clear_xmit_timers_sync()`
+
+3. v6.12-rc7 ef7134c7fc48: ("smb: client: Fix use-after-free of network namespace")
+    - Fixed netns UAF in CIFS by manually setting `sk->sk_net_refcnt = 1`
+    - Also called `maybe_get_net()` to maintain netns references
+    - This effectively made kernel sockets behave like user sockets for reference counting
+
+4. v6.13-rc4 e9f2517a3e18: ("smb: client: fix TCP timers deadlock after rmmod")
+    - Problem commit: Removed `sk->sk_net_refcnt = 1` setting
+    - Changed to using explicit `get_net()/put_net()` at CIFS layer
+    - This change leads to socket leaks because timers are terminated early
+
+### Lockdep Warning Analysis
+
+I've also investigated the lockdep warning mentioned in the patch. My analysis
+suggests it may be a false positive rather than an actual deadlock. The crash
+actually occurs in the lockdep subsystem itself (null pointer dereference in
+`check_wait_context()`), not in the CIFS or networking code directly.
+
+The procedure for the null pointer dereference is as follows:
+
+When lockdep is enabled, the lock class "slock-AF_INET-CIFS" is set when a socket
+connection is established.
+
+```
+cifs_do_mount
+   cifs_mount
+     mount_get_conns
+       cifs_get_tcp_session
+         ip_connect
+           generic_ip_connect
+             cifs_reclassify_socket4
+               sock_lock_init_class_and_name(sk, "slock-AF_INET-CIFS",
+                 lockdep_init_map
+                   lockdep_init_map_wait
+                     lockdep_init_map_type
+                       lockdep_init_map_type
+                         register_lock_class
+                           __set_bit(class - lock_classes, lock_classes_in_use);
+```
+
+When the module is unloaded, the lock class is cleaned up.
+
+```
+free_mod_mem
+   lockdep_free_key_range
+     __lockdep_free_key_range
+       zap_class
+         __clear_bit(class - lock_classes, lock_classes_in_use);
+```
+
+After the module is uninstalled and the network connection is restored, the
+timer is woken up.
+
+```
+run_timer_softirq
+   run_timer_base
+     __run_timers
+       call_timer_fn
+         tcp_write_timer
+           bh_lock_sock
+             spin_lock(&((__sk)->sk_lock.slock))
+               _raw_spin_lock
+                 lock_acquire
+                   __lock_acquire
+                     check_wait_context
+                       hlock_class
+                        if (!test_bit(class_idx, lock_classes_in_use)) {
+                           return NULL;
+                       hlock_class(next)->wait_type_inner; // Null pointer dereference
+```
+
+The problem lies within lockdep, as Kuniyuki says:
+
+> I tried the repro and confirmed it triggers null deref.
+> 
+> It happens in LOCKDEP internal, so for me it looks like a problem in
+> LOCKDEP rather than CIFS or TCP.
+> 
+> I think LOCKDEP should hold a module reference and prevent related
+> modules from being unloaded.
+
+Regarding the deadlock issue, it is clear that the locks mentioned in the deadlock warning
+do not belong to the same lock instance. A deadlock should not occur.
+
+### Discussion Points
+
+1. API Design Question: Is this fundamentally an issue with how CIFS uses the socket
+    API, or is it a networking layer issue that should handle socket cleanup differently?
+
+2. Approach to Resolution: Would it be better to:
+    - Revert to the original solution (setting `sk->sk_net_refcnt = 1`) from ef7134c7fc48?
+    - Work with networking subsystem maintainers on a more comprehensive solution that
+      handles socket cleanup properly?
+
+3.  CVE Process Question: Given that CVE-2024-54680 appears to "fix" a non-existent issue
+     while introducing an actual vulnerability, what's the appropriate way to address this?
+
+What's the best path forward?
+
+Best regards,
+Wang Zhaolong
+
+> Adding fsdevel and networking in case any thoughts on this fix for
+> network/namespaces refcount issue (that causes rmmod UAF).
+> 
+> Any opinions on Enzo's proposed Fix?
+> 
+> ---------- Forwarded message ---------
+> From: Steve French <smfrench@gmail.com>
+> Date: Tue, Dec 17, 2024 at 9:24 PM
+> Subject: [PATCH][SMB3 client] fix TCP timers deadlock after rmmod
+> To: CIFS <linux-cifs@vger.kernel.org>
+> Cc: Kuniyuki Iwashima <kuniyu@amazon.com>, Enzo Matsumiya <ematsumiya@suse.de>
+> 
+> 
+> Enzo had an interesting patch, that seems to fix an important problem.
+> 
+> Here was his repro scenario:
+> 
+>       tw:~ # mount.cifs -o credentials=/root/wincreds,echo_interval=10
+> //someserver/target1 /mnt/test
+>       tw:~ # ls /mnt/test
+>       abc  dir1  dir3  target1_file.txt  tsub
+>       tw:~ # iptables -A INPUT -s someserver -j DROP
+> 
+> Trigger reconnect and wait for 3*echo_interval:
+> 
+>       tw:~ # cat /mnt/test/target1_file.txt
+>       cat: /mnt/test/target1_file.txt: Host is down
+> 
+> Then umount and rmmod.  Note that rmmod might take several iterations
+> until it properly tears down everything, so make sure you see the "not
+> loaded" message before proceeding:
+> 
+>       tw:~ # umount /mnt/*; rmmod cifs
+>       umount: /mnt/az: not mounted.
+>       umount: /mnt/dfs: not mounted.
+>       umount: /mnt/local: not mounted.
+>       umount: /mnt/scratch: not mounted.
+>       rmmod: ERROR: Module cifs is in use
+>       ...
+>       tw:~ # rmmod cifs
+>       rmmod: ERROR: Module cifs is not currently loaded
+> 
+> Then kickoff the TCP internals:
+>       tw:~ # iptables -F
+> 
+> Gets the lockdep warning (requires CONFIG_LOCKDEP=y) + a NULL deref
+> later on.
+> 
+> 
+> Any thoughts on his patch?  See below (and attached)
+> 
+>      Commit ef7134c7fc48 ("smb: client: Fix use-after-free of network
+> namespace.")
+>      fixed a netns UAF by manually enabled socket refcounting
+>      (sk->sk_net_refcnt=1 and sock_inuse_add(net, 1)).
+> 
+>      The reason the patch worked for that bug was because we now hold
+>      references to the netns (get_net_track() gets a ref internally)
+>      and they're properly released (internally, on __sk_destruct()),
+>      but only because sk->sk_net_refcnt was set.
+> 
+>      Problem:
+>      (this happens regardless of CONFIG_NET_NS_REFCNT_TRACKER and regardless
+>      if init_net or other)
+> 
+>      Setting sk->sk_net_refcnt=1 *manually* and *after* socket creation is not
+>      only out of cifs scope, but also technically wrong -- it's set conditionally
+>      based on user (=1) vs kernel (=0) sockets.  And net/ implementations
+>      seem to base their user vs kernel space operations on it.
+> 
+>      e.g. upon TCP socket close, the TCP timers are not cleared because
+>      sk->sk_net_refcnt=1:
+>      (cf. commit 151c9c724d05 ("tcp: properly terminate timers for
+> kernel sockets"))
+> 
+>      net/ipv4/tcp.c:
+>          void tcp_close(struct sock *sk, long timeout)
+>          {
+>              lock_sock(sk);
+>              __tcp_close(sk, timeout);
+>              release_sock(sk);
+>              if (!sk->sk_net_refcnt)
+>                      inet_csk_clear_xmit_timers_sync(sk);
+>              sock_put(sk);
+>          }
+> 
+>      Which will throw a lockdep warning and then, as expected, deadlock on
+>      tcp_write_timer().
+> 
+>      A way to reproduce this is by running the reproducer from ef7134c7fc48
+>      and then 'rmmod cifs'.  A few seconds later, the deadlock/lockdep
+>      warning shows up.
+> 
+>      Fix:
+>      We shouldn't mess with socket internals ourselves, so do not set
+>      sk_net_refcnt manually.
+> 
+>      Also change __sock_create() to sock_create_kern() for explicitness.
+> 
+>      As for non-init_net network namespaces, we deal with it the best way
+>      we can -- hold an extra netns reference for server->ssocket and drop it
+>      when it's released.  This ensures that the netns still exists whenever
+>      we need to create/destroy server->ssocket, but is not directly tied to
+>      it.
+> 
+>      Fixes: ef7134c7fc48 ("smb: client: Fix use-after-free of network
+> namespace.")
+> 
+> 
+> --
+> Thanks,
+> 
+> Steve
+> 
+> 
 
