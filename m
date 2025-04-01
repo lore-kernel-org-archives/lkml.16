@@ -1,102 +1,160 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 995211494DB
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 18:55:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 920F51F09B8;
+	Tue,  1 Apr 2025 18:56:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743533746; cv=none; b=Knp20oVzgY8xCtwt/AkGARAKS4Osp6w9vh+riqkM+xaPYVr08tux1csYKRV9k5CKsmnkDmUiWRFcidsbxOJvVMsOvjwmX/Eb15r92R+adwnxKN3Qm7a0OpPugrprZGPPLO7dya9upOUXoQRPO95VfceLXdc3NdENHV2X6z6Mx2Q=
+	t=1743533812; cv=none; b=ri6zdFOCHpaGek3SCddGsZNG+a2z73I2YAqhS7AsBSZfZx4rF2pcdtSPTCkc4iPfuIa2hi5+eUWCNvk+hjrOyyJ5x4fQO02TY5XVUA4zPmNTKPLp3MS7QRqYnOEzPNL69NveDvFrGSSL6mzy4uZi0UhIuHTJCCbpMv7PskZ/6Ew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743533746; c=relaxed/simple;
-	bh=q88Z0hpaKO/s0/y89gLb9wPyioMiCONl8yd9LT10Tec=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UtBcTszGv5Kt5EHxfT5Mr4A8xsjvXSqzkc6CtDT8ksqTpDvyvdjINNlKYEKynBlfbb+qzJE8A1x9yMtn2Iboj00Xp6zhXtagBD1YGzNcY0azRjk3+1BPXcjHsD7PYeDxPmfx2UvMxkrHSVkUv02xbuN5obz9u8gX/TiWCZrYNJI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CL45kJjQ; arc=none smtp.client-ip=209.85.160.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743533812; c=relaxed/simple;
+	bh=bzA5yQlxM5CYAzByNShEGHGrcQhOK5tsk1smItcbPvw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=dRbhQBPZItq3GylKxd8EgGzKQD3OzKY/Fcui8lYvjJuiju3N/RLPacnpOAdnsTfdICJFCI1yNGvEA4byZBlVRYpYU6+IuRVbQvQswQl8oDz2OHvq/LZPs/9BsOaXaiyMlJWJSPiu3abQLir5Yy1o1tXKConZbAx1YoRJpGq6SLg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=QapRp3OK; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CL45kJjQ"
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-477296dce8dso58188271cf.3
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 11:55:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743533742; x=1744138542; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9Q9uOC43r/9w7VdgkgSAIWaOsjrV/IhDIvRZfNVDIJE=;
-        b=CL45kJjQCVZ17aDccAmQgPtJdrVdurSfiWD+TCF6cd4R9vcydw8DUzn6fI6M+pRzmr
-         VkPT/2dRkrv3sirBBgGt1E/gGlDu/87wfoGSG4lLHAW9N96PNcYr28OJCafDqkjxdhdZ
-         BG+Ste3JHrSFzFNYduNHG20HRBI+lEIRSPhXgADOmy7NiSz/YNZAcKWE1oPHqZg3T/3f
-         cd9mkppPvJUC+cp9bG6ogVhXLjfmtIEFXRg650JLJX5Zl9tD6O3NVkeUx+c8BezmHLKx
-         B27+5FxdOudI8UiNa6xeqDTT0rk6prSE3krPc43WwkwzPLawo1kUqbaX1677plRd7603
-         4lMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743533742; x=1744138542;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9Q9uOC43r/9w7VdgkgSAIWaOsjrV/IhDIvRZfNVDIJE=;
-        b=DXcbx3PfN0zN5yQw2Gt+Fay0mA8e+9dXVmUX+NR4TKdk/AvR2ooDauURWf5VVOcF7N
-         4vxlfSpDqsWVGV/T8vjQDkLQxpiazU69AWfkPGCNVelsmB6x5ddQTfcHxH/Eexw84yL3
-         GVZh/AfoOCbIJngBeaGnSg6l9ln598xMESc7KI8FFKeD/nOCF1oaFHDwzrFKGW6UksgF
-         5hBZN0ddmc91bLdaMT7QEpXtM2FHUikDrIEFLdpHPRcurbxRe3FEHEPYBknQuqPRSe1R
-         K5F0dCmH379ry4RNW0E6HMs24LH03wS1sYMlyUFjMxaon4JiHPgyPohUcHYnUduIw1nf
-         X0fw==
-X-Forwarded-Encrypted: i=1; AJvYcCVfgk7Ahcq+7WoFulItKmM2hyrL+vCDyBGFVI0bYpoOLv2v5QwvNrlP8Ofp5nmxQ2wzST+w3TiiAIjnAoY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwxZ9b+aIYQdVPMxyGKMridO7ssjUZGwbcJMZrslPbh/a32IvXb
-	CXnwlolC+b/cBA89hfFNzmgT8zwzvvTnREz3xN7BMbgJefLjgM3/zsvIkY8f6kFbFT2JD3jZrEG
-	4Xd5s/CR6ObNwzG7dqDqOxrvYyfg=
-X-Gm-Gg: ASbGnct9E23RDf1UGM1x9d8m8/TmF3FwjcK3Nn3zJa44w2bNHpQtLu/12WTYgo6CXDa
-	WQ9TOdxgB5NnXnZKMz1bXZUfcU/mNz4lPHc+itsqBI5oggAfPiof5nPPnd+IdtwL82X5j4BEoZw
-	kouLgzinpDdRcajrMlUawYcwy4dgYDIR+yiaSFdc21ZQ==
-X-Google-Smtp-Source: AGHT+IFnu2+L6M9/jMcN/WMSFnMO0o304vss+SI8PfVCPL4VqXbrE5Ld+sLK7fpk0gDBEv357bnG/lQZ8KxPgToEfSo=
-X-Received: by 2002:a05:6214:1cc7:b0:6e8:feae:929c with SMTP id
- 6a1803df08f44-6eef5e03c9cmr67441426d6.21.1743533742419; Tue, 01 Apr 2025
- 11:55:42 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="QapRp3OK"
+Received: from narnia (unknown [167.220.2.28])
+	by linux.microsoft.com (Postfix) with ESMTPSA id DE23920412F8;
+	Tue,  1 Apr 2025 11:56:42 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com DE23920412F8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1743533810;
+	bh=nghUxCgd3Rj3zORPScI3SKHVRg60ZkC2fKZvDytP/2E=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=QapRp3OKW3zygfnH/WRQRfu0u/vCRTJXMpGbSZvyiA818p11IAQoJN61iog+1P/sm
+	 gCtLH8qYoJ9tTiU7yIgFxpeZVYM05PLTHgDXbzkOmyZI4Tp/r5hR1VF4NeerLlWozD
+	 qUVTlal3A+XPQ8mlFolSwwPpKu7U/qXbdRRRDGhs=
+From: Blaise Boscaccy <bboscaccy@linux.microsoft.com>
+To: Jarkko Sakkinen <jarkko@kernel.org>
+Cc: Jonathan Corbet <corbet@lwn.net>, David Howells <dhowells@redhat.com>,
+ Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller"
+ <davem@davemloft.net>, Paul Moore <paul@paul-moore.com>, James Morris
+ <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, Masahiro Yamada
+ <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nicolas
+ Schier <nicolas@fjasle.eu>, Shuah Khan <shuah@kernel.org>, =?utf-8?Q?Mick?=
+ =?utf-8?Q?a=C3=ABl_Sala=C3=BCn?=
+ <mic@digikod.net>, =?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>, Nick
+ Desaulniers
+ <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>,
+ Justin Stitt <justinstitt@google.com>, Jan Stancek <jstancek@redhat.com>,
+ Neal Gompa <neal@gompa.dev>, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, keyrings@vger.kernel.org,
+ linux-crypto@vger.kernel.org, linux-security-module@vger.kernel.org,
+ linux-kbuild@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ bpf@vger.kernel.org, llvm@lists.linux.dev, nkapron@google.com,
+ teknoraver@meta.com, roberto.sassu@huawei.com, xiyou.wangcong@gmail.com
+Subject: Re: [RFC PATCH security-next 0/4] Introducing Hornet LSM
+In-Reply-To: <Z-wLKhlfJ5EQqvJC@kernel.org>
+References: <20250321164537.16719-1-bboscaccy@linux.microsoft.com>
+ <Z97xvUul1ObkmulE@kernel.org> <871puc7wb8.fsf@microsoft.com>
+ <Z-wLKhlfJ5EQqvJC@kernel.org>
+Date: Tue, 01 Apr 2025 11:56:40 -0700
+Message-ID: <87friru2vr.fsf@microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250306230015.1456794-1-nphamcs@gmail.com>
-In-Reply-To: <20250306230015.1456794-1-nphamcs@gmail.com>
-From: Nhat Pham <nphamcs@gmail.com>
-Date: Tue, 1 Apr 2025 11:55:31 -0700
-X-Gm-Features: AQ5f1Jpqb4LGQmN1IeGxg07gpgFgPdxEt7PZxoeyxHEsv2aAY8GuoW4vp3YJT3U
-Message-ID: <CAKEwX=Njxjg+G6H4X77YPnZ=mQJaR-K8du1VP6voDLZ55ZaepA@mail.gmail.com>
-Subject: Re: [PATCH] page_io: return proper error codes for swap_read_folio_zeromap()
-To: akpm@linux-foundation.org
-Cc: hannes@cmpxchg.org, yosryahmed@google.com, yosry.ahmed@linux.dev, 
-	chengming.zhou@linux.dev, linux-mm@kvack.org, kernel-team@meta.com, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-On Thu, Mar 6, 2025 at 3:00=E2=80=AFPM Nhat Pham <nphamcs@gmail.com> wrote:
->
-> Similar to zswap_load(), also return proper error codes for
-> swap_read_folio_zeromap():
->
-> * 0 on success. The folio is unlocked and marked up-to-date.
-> * -ENOENT, if the folio is entirely not zeromapped.
-> * -EINVAL (with the follio unlocked but not marked to date), if the
->   folio is partially zeromapped. This is not supported, and will SIGBUS
->   the faulting process.
->
-> This patch is purely a clean-up, and should not have any behavioral
-> change. It is based on (and should be applied on top of) [1].
->
-> [1]: https://lore.kernel.org/linux-mm/20250306205011.784787-1-nphamcs@gma=
-il.com/
->
-> Suggested-by: Yosry Ahmed <yosry.ahmed@linux.dev>
-> Suggested-by: Johannes Weiner <hannes@cmpxchg.org>
-> Signed-off-by: Nhat Pham <nphamcs@gmail.com>
+Jarkko Sakkinen <jarkko@kernel.org> writes:
 
-Hi Andrew, I think Yosry and Johannes signed off on this patch (with
-the fixlet). Looks like it was not merged for 6.15-rc1 - let me know
-if there is something I need to do.
+> On Mon, Mar 31, 2025 at 01:57:15PM -0700, Blaise Boscaccy wrote:
+>> There are two flavors of skeletons, normal skeletons, and light
+>> skeletons. Normal skeletons utilize relocation logic that lives in
+>> libbpf, and the relocations/instruction rewriting happen in userspace.
+>> The second flavor, light skeletons, uses a small eBPF program that
+>> contains the relocation lookup logic. As it's running in in the kernel,
+>> it unpacks the target program, peforms the instruction rewriting, and
+>> loads the target program. Light skeletons are currently utilized for
+>> some drivers, and BPF_PRELOAD functionionality since they can operate
+>> without userspace.
+>> 
+>> Light skeletons were recommended on various mailing list discussions as
+>> the preffered path to performing signature verification. There are some
+>> PoCs floating around that used light-skeletons in concert with
+>> fs-verity/IMA and eBPF LSMs. We took a slightly different approach to
+>> Hornet, by utilizing the existing PCKS#7 signing scheme that is used for
+>> kernel modules.
+>
+> Right, because in the normal skeletons relocation logic remains
+> unsigned?
+>
 
-It's mostly a clean up with no (intended) behavioral change, so no
-rush of course.
+Yup, Exactly. 
+
+> I have to admit I don't fully cope how the relocation process translates
+> into eBPF program but I do get how it is better for signatures if it
+> does :-)
+>
+>> 
+>> >> verification. Signature data can be easily generated for the binary
+>> >
+>> > s/easily//
+>> >
+>> > Useless word having no measure.
+>> >
+>> 
+>> Ack, thanks.
+>> 
+>> 
+>> >> data that is generated via bpftool gen -L. This signature can be
+>> >
+>> > I have no idea what that command does.
+>> >
+>> > "Signature data can be generated for the binary data as follows:
+>> >
+>> > bpftool gen -L
+>> >
+>> > <explanation>"
+>> >
+>> > Here you'd need to answer to couple of unknowns:
+>> >
+>> > 1. What is in exact terms "signature data"?
+>> 
+>> That is a PKCS#7 signature of a data buffer containing the raw
+>> instructions of an eBPF program, followed by the initial values of any
+>> maps used by the program. 
+>
+> Got it, thanks. This motivates to refine my TPM2 asymmetric keys
+> series so that TPM2 could anchor these :-)
+>
+> https://lore.kernel.org/linux-integrity/20240528210823.28798-1-jarkko@kernel.org/
+>
+>
+
+Oooh. That would be very nice :) 
+
+>> 
+>> > 2. What does "bpftool gen -L" do?
+>> >
+>> 
+>> eBPF programs often have 2 parts. An orchestrator/loader program that
+>> provides load -> attach/run -> i/o -> teardown logic and the in-kernel
+>> program.
+>> 
+>> That command is used to generate a skeleton which can be used by the
+>> orchestrator prgoram. Skeletons get generated as a C header file, that
+>> contains various autogenerated functions that open and load bpf programs
+>> as decribed above. That header file ends up being included in a
+>> userspace orchestrator program or possibly a kernel module.
+>
+> I did read the man page now too, but thanks for the commentary!
+>
+>> 
+>> > This feedback maps to other examples too in the cover letter.
+>> >
+>> > BR, Jarkko
+>> 
+>> 
+>> I'll rework this with some definitions of the eBPF subsystem jargon
+>> along with your suggestions.
+>
+> Yeah, you should be able to put the gist a factor better to nutshell :-)
+>
+>> 
+>> -blaise
+>
+> BR, Jarkko
