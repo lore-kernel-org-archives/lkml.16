@@ -1,73 +1,81 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB1C51EDA2A
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 09:34:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 229BC1EE7BE
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 09:34:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743500048; cv=none; b=G6FXr4NBUPOlkeHq+AYs+h3jgp8XanhQUSvhI8ofXbEKViy1/awySeKHqbph5WfFTgnUCqkiOPeaMj05YWMYJuxKaX7R4R2CVJHqxd45v8ZVsyXymKFvEqmBk0Iw9vryzCUNnGZCgy4PycUo0JIIDnyGleZCV+ebe5saOco7W7c=
+	t=1743500077; cv=none; b=bclibts0DPulCvz0bySyWX0OjBU19EV45pgDjM9ja7h0HYJxhxEq9N/f8gfk/6jdfLN8RaeQ1giTYZaXRfx3JASDUeNFQxXxbegd252I3PWwAZwJbL+OHd1DfO0l59e6NdVu64Qcwz04BZkzj0nZqFKr9uDS1VTyJLS2T/z8XSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743500048; c=relaxed/simple;
-	bh=iMKn0ausjfwYR6lIOx0cH6PZ301JCLh8GZ6gFWn89o8=;
+	s=arc-20240116; t=1743500077; c=relaxed/simple;
+	bh=+WDSPE0EAmEf5D/hBDJ0WtmwIdlXQ9kqmthezPrPsLU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=n1r+JU6SYtTv3n1NWmgF2tc1Qj/YnsvsNgSuMJGE8iHyi/7dprrMk/Elgd/10gZfbJ3gUAnAZsQSI446MltY8Jb4Aj483FGBjFRu092Ty+KV0Blu3myoLFuk+C7nA0q8Ov763AH5SWcxemBsK6H1eY79A2a7lx1n0w4SgM9HbpA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=E7eSRj92; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=XT5+f9lPzfoJ21LZ8Ep7Qhk8WWXmsIYRnyW5n8iLsUKLJ3dDNnDAqmEyurRwnVo6WfsfWLl2z72WMFvb7ENzK4eZN4f6YazjTBclULG/9gvK2820Xyude75r6Xqwir5OMlAzV9HIzjsqSDVRiGhTDhYauFVeCum8GwL34dQkTc0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=KQtfQ09l; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=GEelP56n; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=KQtfQ09l; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=GEelP56n; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E7eSRj92"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743500045;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="KQtfQ09l";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="GEelP56n";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="KQtfQ09l";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="GEelP56n"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 1992B2118C;
+	Tue,  1 Apr 2025 09:34:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1743500074; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=yLW4M7GQepknRN85JoLE8ZSwVeAqp3fUrjLO1RbXEVY=;
-	b=E7eSRj92i5sxMfz7BnjawTb6mWeP29QoNOM7MUGYT8jIPVFQ6oNCR633lC6CHvydXI70Ta
-	HI9vr82vAJPMsDKvO3j6Ita6IWNAs9MLUwUm5fQqPksmudeP0q+m6rSmKWEMy+82J+VQ1m
-	MF7ASQ/L+ifCa60xnDj3Yr3kIqy345A=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-477-J1JyhJWiOQKbv0V1XH4--w-1; Tue, 01 Apr 2025 05:34:02 -0400
-X-MC-Unique: J1JyhJWiOQKbv0V1XH4--w-1
-X-Mimecast-MFC-AGG-ID: J1JyhJWiOQKbv0V1XH4--w_1743500041
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43d51bd9b41so47423195e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 02:34:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743500041; x=1744104841;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=yLW4M7GQepknRN85JoLE8ZSwVeAqp3fUrjLO1RbXEVY=;
-        b=esY4B63PThixPGqKQHDZlYTh3aLLhMgdbLn+uZR7esYG+qFZfMnxBenmewHAHkUwJd
-         bEwB6AFVovC2LC63/w1RZkt7UD8DYh7r04+AB/6zPPg5Ve9ysfaqEBUX2iivtWWRqiJE
-         PODBYARIkmdfAwvfq5c+EZmaQ5pdE+BOLRU0IfrxiD2B3wuxHL7mJM9wAtaLq/hhbDy2
-         /kYc2tUaDs6wD3WncWAPU3pC1s8F3Qzp9q/vDgWfido2qZIhVj4Fy+qIHUyPddw3wrWU
-         qCNOMuSbYqlyA8q/Nx4aGyCCcC6BqtCi3gSalD8bfCd2USep4YxOBwasCf8qx6y5eu6u
-         1Azw==
-X-Forwarded-Encrypted: i=1; AJvYcCVtNCGN3UnHsmeBWmCxmdbLusmIVsU1Mn1KcJcGyVSFAzE8ncm3V7uLCwHhVbnVyPP+DTZDtrKm4SGvVCM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzkH1CPsMcel8iEep98MnhuZZl5tK0pmETGu2aIkGT+Gbk+ORbW
-	B3Or3zTtzwDxQBQ5Q/r0UNhU/Pz+Pvr7fTViyUN1aHdd83rXqd2aGiCJHvepwznO0CSZGQRnU47
-	6+c/GlWcOVdxIjIT7av+HyaIEnmIuvjqmcQOgawSxadqUOssYhHmuBE2mjb2A6w==
-X-Gm-Gg: ASbGncs1MCvXE+FkUSgX0+HTIkzifAq50PFitLMTrqzGTw8tPamRxZtvaMxI+1kuaPD
-	1emc8JEpRmTYxUMZFLmWVOy8t6qKm0pgmwzGs07cyWQ+vx2f5gBDjUQLDLhDozCVjFi/unAM8Ko
-	U4QtcJDTlgPzRTL8H7o5zesicDRDZzFPXQSKTprifRBRLgKwof7UBLxSh8QGyjp201TtwW7FJ+u
-	xEy8TlUsMOo9/p32b8s0AxaVO7JiDCq0dITyLLWYr9/mqZ8cAfUe5/1py5Zxg0Zzxt3E5PkyChN
-	Phz3LdWaoiQTmRSidpBrMqcLB0DUix5qXXHqElEAU3PrR58+oqyTwXtMQdF5sVCDqt7sBpmwqnQ
-	MnHUgSAg3FQYDNaqwpMLdEIkN5adh3CD2wor87XfQ
-X-Received: by 2002:a05:6000:1447:b0:391:466f:314e with SMTP id ffacd0b85a97d-39c120dba55mr9972732f8f.16.1743500041382;
-        Tue, 01 Apr 2025 02:34:01 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHuhOY4h3uniqh8t2ORHDry92nujdtgLRHvSyISYtelPiE+fYAhj7bnHs3IyJZqGbkWb7WXIA==
-X-Received: by 2002:a05:6000:1447:b0:391:466f:314e with SMTP id ffacd0b85a97d-39c120dba55mr9972710f8f.16.1743500041060;
-        Tue, 01 Apr 2025 02:34:01 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c707:4d00:6ac5:30d:1611:918f? (p200300cbc7074d006ac5030d1611918f.dip0.t-ipconnect.de. [2003:cb:c707:4d00:6ac5:30d:1611:918f])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b79e136sm13665091f8f.67.2025.04.01.02.34.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Apr 2025 02:34:00 -0700 (PDT)
-Message-ID: <3e3115c0-c3a2-4ec2-8aea-ee1b40057dd6@redhat.com>
-Date: Tue, 1 Apr 2025 11:33:59 +0200
+	 in-reply-to:in-reply-to:references:references;
+	bh=pjQmAlOnlXRvWyqEdc4jhoeoVjmOcozSBo3JK0Y2ZXw=;
+	b=KQtfQ09lLwRwmhyg/hj7Tvqh5Zmnj9xIwwYp4s/IawsEIesqy1x/QA9rYBx+jX9tBpige5
+	2HUgN7CHF8/uEMXu9ZvcA/IzlvYW1o7W8O/YQ4UFzqW1CD9WWNTPBuU4ty7DyWwdb4eDWM
+	rFE6Jz9W/VGD8gfiNzAdDnh4xW59Mxo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1743500074;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pjQmAlOnlXRvWyqEdc4jhoeoVjmOcozSBo3JK0Y2ZXw=;
+	b=GEelP56n/Ip/4eaitvMKHlPiYSE9o93D8oQ6wF7KbABzDCfSocJqVTkt+gswOGsYOpNuAE
+	oI8wOz+4DjBwBnDw==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=KQtfQ09l;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=GEelP56n
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1743500074; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pjQmAlOnlXRvWyqEdc4jhoeoVjmOcozSBo3JK0Y2ZXw=;
+	b=KQtfQ09lLwRwmhyg/hj7Tvqh5Zmnj9xIwwYp4s/IawsEIesqy1x/QA9rYBx+jX9tBpige5
+	2HUgN7CHF8/uEMXu9ZvcA/IzlvYW1o7W8O/YQ4UFzqW1CD9WWNTPBuU4ty7DyWwdb4eDWM
+	rFE6Jz9W/VGD8gfiNzAdDnh4xW59Mxo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1743500074;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pjQmAlOnlXRvWyqEdc4jhoeoVjmOcozSBo3JK0Y2ZXw=;
+	b=GEelP56n/Ip/4eaitvMKHlPiYSE9o93D8oQ6wF7KbABzDCfSocJqVTkt+gswOGsYOpNuAE
+	oI8wOz+4DjBwBnDw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id F2FF2138A5;
+	Tue,  1 Apr 2025 09:34:33 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id XAvoOimz62fiAgAAD6G6ig
+	(envelope-from <hare@suse.de>); Tue, 01 Apr 2025 09:34:33 +0000
+Message-ID: <5d0df457-f19e-450f-9073-3f83a091b69a@suse.de>
+Date: Tue, 1 Apr 2025 11:34:33 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,125 +83,95 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] DAX: warn when kmem regions are truncated for memory
- block alignment.
-To: Gregory Price <gourry@gourry.net>, dan.j.williams@intel.com
-Cc: nvdimm@lists.linux.dev, linux-kernel@vger.kernel.org,
- kernel-team@meta.com, vishal.l.verma@intel.com, dave.jiang@intel.com,
- linux-cxl@vger.kernel.org
-References: <20250321180731.568460-1-gourry@gourry.net>
- <Z-remBNWEej6KX3-@gourry-fedora-PF4VCD3F>
-From: David Hildenbrand <david@redhat.com>
+Subject: Re: [PATCH RFC 2/3] nvme: store cqt value into nvme ctrl object
+To: Daniel Wagner <wagi@kernel.org>, Christoph Hellwig <hch@lst.de>,
+ Sagi Grimberg <sagi@grimberg.me>, Keith Busch <kbusch@kernel.org>,
+ John Meneghini <jmeneghi@redhat.com>, randyj@purestorage.com,
+ Mohamed Khalfella <mkhalfella@purestorage.com>
+Cc: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250324-tp4129-v1-0-95a747b4c33b@kernel.org>
+ <20250324-tp4129-v1-2-95a747b4c33b@kernel.org>
 Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <Z-remBNWEej6KX3-@gourry-fedora-PF4VCD3F>
+From: Hannes Reinecke <hare@suse.de>
+In-Reply-To: <20250324-tp4129-v1-2-95a747b4c33b@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 1992B2118C
+X-Spam-Score: -4.51
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:mid,suse.de:email];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On 31.03.25 20:27, Gregory Price wrote:
-> On Fri, Mar 21, 2025 at 02:07:31PM -0400, Gregory Price wrote:
->> Device capacity intended for use as system ram should be aligned to the
->> architecture-defined memory block size or that capacity will be silently
->> truncated and capacity stranded.
->>
->> As hotplug dax memory becomes more prevelant, the memory block size
->> alignment becomes more important for platform and device vendors to
->> pay attention to - so this truncation should not be silent.
->>
->> This issue is particularly relevant for CXL Dynamic Capacity devices,
->> whose capacity may arrive in spec-aligned but block-misaligned chunks.
->>
->> Example:
->>   [...] kmem dax0.0: dax region truncated 2684354560 bytes - alignment
->>   [...] kmem dax1.0: dax region truncated 1610612736 bytes - alignment
->>
->> Signed-off-by: Gregory Price <gourry@gourry.net>
+On 3/24/25 13:07, Daniel Wagner wrote:
+> Signed-off-by: Daniel Wagner <wagi@kernel.org>
+> ---
+>   drivers/nvme/host/core.c | 1 +
+>   drivers/nvme/host/nvme.h | 1 +
+>   2 files changed, 2 insertions(+)
 > 
-> Gentle pokes.  There were a couple questions last week whether we should
-> warn here or actually fix something in memory-hotplug.
+> diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+> index 40046770f1bf0b98261d8b80e21aa0cc04ebb7a0..135045528ea1c79eac0d6d47d5f7f05a7c98acc4 100644
+> --- a/drivers/nvme/host/core.c
+> +++ b/drivers/nvme/host/core.c
+> @@ -3380,6 +3380,7 @@ static int nvme_init_identify(struct nvme_ctrl *ctrl)
+>   	ctrl->kas = le16_to_cpu(id->kas);
+>   	ctrl->max_namespaces = le32_to_cpu(id->mnan);
+>   	ctrl->ctratt = le32_to_cpu(id->ctratt);
+> +	ctrl->cqt = le16_to_cpu(id->cqt);
+>   
+>   	ctrl->cntrltype = id->cntrltype;
+>   	ctrl->dctype = id->dctype;
+> diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
+> index 7be92d07430e950c3faa764514daf3808009e223..7563332b5b7b76fc6165ec8c6f2d144737d4fe85 100644
+> --- a/drivers/nvme/host/nvme.h
+> +++ b/drivers/nvme/host/nvme.h
+> @@ -344,6 +344,7 @@ struct nvme_ctrl {
+>   	u32 oaes;
+>   	u32 aen_result;
+>   	u32 ctratt;
+> +	u16 cqt;
+>   	unsigned int shutdown_timeout;
+>   	unsigned int kato;
+>   	bool subsystem;
 > 
-> Notes from CXL Boot to Bash session discussions:
-> 
-> 
-> We discussed [1] how this auto-sizing can cause 1GB huge page
-> allocation failures (assuming you online as ZONE_NORMAL). That means
-> ACPI-informed sizing by default would potentially be harmful to existing
-> systems and adding yet-another-boot-option just seems nasty.
-> 
-> I've since dropped acpi-informed block size patch[2].  If there are opinions
-> otherwise, I can continue pushing it.
+Hmm. I would squash it with the next patch, but I'm sure others have
+other opinions.
 
-Oh, I thought we would be going forward with that. What's the reason we 
-would not want to do that?
+So:
 
-> 
-> 
-> We also discussed[3] variable-sized blocks having some nasty corner cases.
-> Not unsolvable, but doesn't help users in the short term.
-> 
-> 
-> There was some brief discussion about whether a hotplug memblock with a
-> portion as offline pages would be possible.  This seems hacky?  There
-> was another patch set discussing this, but I can't seem to find it.
+Reviewed-by: Hannes Reinecke <hare@suse.de>
 
-Yeah, I proposed something like that as well when I started working on 
-virtio-mem and did not really understand the whole hot(un)plug model in 
-Linux properly. Someone else proposed it again a couple of years ago, 
-but it's just wrong and should not be done that way.
-
-One could implement something like virtio-mem, whereby parts of a Linux 
-memory block can be added/removed independently ("fake offlined"). But 
-the whole idea of virtio-mem is that all memory in the Linux memory 
-block range belongs to it. So it doesn't quite apply to DAX where parts 
-of a Linux memory block might be from something completely different 
-(e.g., boot memory etc).
-
--- 
 Cheers,
 
-David / dhildenb
-
+Hannes
+-- 
+Dr. Hannes Reinecke                  Kernel Storage Architect
+hare@suse.de                                +49 911 74053 688
+SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
+HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
