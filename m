@@ -1,188 +1,211 @@
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2048.outbound.protection.outlook.com [40.107.101.48])
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DC301DF73B
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 06:38:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.48
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743489503; cv=fail; b=DYLlInUOSY+WTXpq93LoNfsh8E4NuuwMlYBWOjmpddSqKVhnYOxrp1jSnpz/YTm6Z43+pymiAHqvLqSKhsex8B2AbYGZihkw9kurkKhkBbsd5I0QZP2gQLHWk7kGGCdc+Z2x6zHl/tdLs0koneDahNn+UL6lw0PsaZuRkDwwFA4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743489503; c=relaxed/simple;
-	bh=YB+IE4m9Gvs2u+ReMfZeUUZnr9/BvhepYGVOgAIGMWo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=ZePAzPMzrpu23a6XawoNnpzzAMYUOwApsBRHR54MG5l9r2tK0WmxXg4ey2+scjO96jO8Eg03Ejjngf8C59DncL3LkkFoNCjzVVkl2/pHflwW2CGIpheYvoclb0taLG+pAPqgXGVa8Bz5ZF5HO8fM0wwhRAJCKd8CzoXiw/3UyRI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=QkbyWk3U; arc=fail smtp.client-ip=40.107.101.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D7D5155382;
+	Tue,  1 Apr 2025 06:45:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743489949; cv=none; b=YZrfYgMttH5Q38Ur5S0A2KrOMLpTunujzgmTd5Ncds0JjE25OS5vfm2B5Ve9FZU9ReOtIVmNSMT3/dlP+K3YSWJbDfpz7kdU4XX8CLcWhfALpEUhV2qxJSyRrdwZnplytWTqyhI+n76tKCkJUHWGQbB12KbzX623Nz7UWz0fyt0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743489949; c=relaxed/simple;
+	bh=/yzplqdAPDSpRgvysGBcyb70oiqT6p+pK2C0nxnbMGo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bskyiv63FgqVQ3S9to+wiypDY+BhXZMez/28Oq5YIo/k7+UTr4u0CYGW2lt39YhLCAjgo+2rvHAVCUu7igeoSP3tUdXX9NxUhXY1Em4PDifSkVjToNtz85dcKPaB1qvmZ4WuD8y4ZzyAzijUWmIhGRhb254ZEKhMfa2ISEGwLFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Ob65MilM; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="QkbyWk3U"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=vgbdRGbT6WG0gcqHTUSy2E+lp0GgJ6cHXZXXdojLpZ0+PIRvwyYZ5Mn/M0ZkkO8I8SNOsK6rkYwoBaOr8oaG8GO08nOQEzbw/oLWMYnY/yNwTllGw3fhrEFF674NcyrM+n7QmwrTcbDaBCssZsXl3nnbmHW2W2QcdiMiGwvJuoVmDe9yDByFUMIlWbBsPMPVDxuBBH0dMVqBcXQ/shVX50F4U0HHw4iTOHg8mc5prtXouMVNgbkG4JoT9saX9lV3/p+zS0JSXJwYECimUUv7HJHYlQ/38drZ3rm4rwt0ml7rFFKj5AmeiHu0wKexbNfmH+Mg0zBsV7a08QVDEL+WIw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3PS64bhlx0b2A3SmllP54jg/y4hz/Y1LokAdkxCJgjw=;
- b=o6vYQRaetOgkiuLinA9GpsPf11WGV0wptZ8pdTI3FrDGhN8H1ao4axkuHdto/Wz/jD90H6M+SGTDIbtrpyURRvw6/15cbNlFRe4GBu78DG3WxWMKYlhtnbOcTzjPeVufzMbG3gAJQQVOWr7v4vIm1q6Y4HIrE2ddSFeuMa/eXau6pzc7HoLxVXA6VF+Uic5/JGzD3pfPOp+03WyK5oH0kYdu5BSc6j+NkUMMsjMgYiELUCPS2cYwVOaU41j+mH4q48JFh4wchRIaU7oOEx7nGLn0NHjukWjePm7Ob68g4wkHs3DXIc+oL7lnJCfX78PgeXMEr3VCXvy5p/HCSEhlYA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3PS64bhlx0b2A3SmllP54jg/y4hz/Y1LokAdkxCJgjw=;
- b=QkbyWk3UKmXRJ2cvwtgKNmgTwnR6BJ3KjJdLULhbtdaKLgZ3XVsd+Axy0V1GCPmFpSXVvNZN0kNIhx9duZhbLfaGakfjjLEYAJSNv4MrCmSo+Z2JU9nHbOETeRxgC9zTP9ujjQ0HlapG6hx3U78Bh62YBWoJ0ubabMMRmqZBjWQ7FmMyR9E19JTdKTv0/b73HyvocX9OoS+Fjk/Ucr+uITFbIHWL9GSRkFftVXbSe8/Lrr54xANzy6kax+A9ATyZSpXefqe9Ygc1GGu7gPw1BSn1m+BUCSw2yoYLd4tQDGSfJcCZdoUK5CzcIeQAceS4jKgvPH57SVSz2jdTd6v7BQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CY5PR12MB6405.namprd12.prod.outlook.com (2603:10b6:930:3e::17)
- by LV8PR12MB9112.namprd12.prod.outlook.com (2603:10b6:408:184::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Tue, 1 Apr
- 2025 06:38:19 +0000
-Received: from CY5PR12MB6405.namprd12.prod.outlook.com
- ([fe80::2119:c96c:b455:53b5]) by CY5PR12MB6405.namprd12.prod.outlook.com
- ([fe80::2119:c96c:b455:53b5%6]) with mapi id 15.20.8534.043; Tue, 1 Apr 2025
- 06:38:18 +0000
-Date: Tue, 1 Apr 2025 08:38:10 +0200
-From: Andrea Righi <arighi@nvidia.com>
-To: Tejun Heo <tj@kernel.org>
-Cc: David Vernet <void@manifault.com>, Changwoo Min <changwoo@igalia.com>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 6/6] sched_ext: idle: Deprecate scx_bpf_select_cpu_dfl()
-Message-ID: <Z-uJ0m_bs4VXoDqQ@gpd3>
-References: <20250321221454.298202-1-arighi@nvidia.com>
- <20250321221454.298202-7-arighi@nvidia.com>
- <Z-sQsqt6kKLqJfJf@slm.duckdns.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z-sQsqt6kKLqJfJf@slm.duckdns.org>
-X-ClientProxiedBy: MI1P293CA0019.ITAP293.PROD.OUTLOOK.COM
- (2603:10a6:290:3::16) To CY5PR12MB6405.namprd12.prod.outlook.com
- (2603:10b6:930:3e::17)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Ob65MilM"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id BD8ED443CF;
+	Tue,  1 Apr 2025 06:45:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1743489943;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/yzplqdAPDSpRgvysGBcyb70oiqT6p+pK2C0nxnbMGo=;
+	b=Ob65MilMRjUX+n6NZqEAUTKZafOYUIEGrdrF2QgtWmsQhjAChUtmi+qwu6Qd7yudVc0ZzG
+	ieCZTzcZ7L5KPcdp8mAH/0SGAaYGVn/4M+OOq9k3K+mcCHuNcw+4YlkrC4PKo4DeKs8SQQ
+	+iO1vJ2BAjuKe40dFoj10+PhpEZip5WOLdfkgCA86/DoRXLansw9fqJWppkCxsIXYG+ES/
+	c5P2miWICh4PQTVvhtBAZIt4YurWWcygZfxKmAbF8gL48S9InRf/3KxQUU66CKTGgTnXQH
+	BrzyOy02d0aC/XPgo5cAIAvBIKFXPI5Ipq3mWH+0xYqgTEVphDXX4L0+/lleqA==
+Date: Tue, 1 Apr 2025 09:41:53 +0200
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+To: Alexander Duyck <alexander.duyck@gmail.com>
+Cc: "Russell King (Oracle)" <linux@armlinux.org.uk>, Andrew Lunn
+ <andrew@lunn.ch>, davem@davemloft.net, Jakub Kicinski <kuba@kernel.org>,
+ Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Heiner
+ Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
+ linux-arm-kernel@lists.infradead.org, Christophe Leroy
+ <christophe.leroy@csgroup.eu>, Herve Codina <herve.codina@bootlin.com>,
+ Florian Fainelli <f.fainelli@gmail.com>, Vladimir Oltean
+ <vladimir.oltean@nxp.com>, =?UTF-8?B?S8O2cnk=?= Maincent
+ <kory.maincent@bootlin.com>, Oleksij Rempel <o.rempel@pengutronix.de>,
+ Simon Horman <horms@kernel.org>, Romain Gantois
+ <romain.gantois@bootlin.com>
+Subject: Re: [PATCH net-next v5 09/13] net: phylink: Use phy_caps_lookup for
+ fixed-link configuration
+Message-ID: <20250401094153.43974af2@fedora.home>
+In-Reply-To: <CAKgT0UdJHkGRh5S4hHg0V=Abd7UizH49F+V2QJJQxguHvCYhMg@mail.gmail.com>
+References: <20250307173611.129125-1-maxime.chevallier@bootlin.com>
+	<20250307173611.129125-10-maxime.chevallier@bootlin.com>
+	<8d3a9c9bb76b1c6bc27d2bd01f4831b2cac83f7f.camel@gmail.com>
+	<20250328090621.2d0b3665@fedora-2.home>
+	<CAKgT0Ue_JzmJAPKBhe6XaMkDCy+YNNg5_5VvzOR6CCbqcaQg3Q@mail.gmail.com>
+	<12e3b86d-27aa-420b-8676-97b603abb760@lunn.ch>
+	<CAKgT0UcZRi1Eg2PbBnx0pDG_pCSV8tfELinNoJ-WH4g3CJOh2A@mail.gmail.com>
+	<02c401a4-d255-4f1b-beaf-51a43cc087c5@lunn.ch>
+	<Z-qsnN4umaz0QrG0@shell.armlinux.org.uk>
+	<20250331182000.0d94902a@fedora.home>
+	<CAKgT0UdJHkGRh5S4hHg0V=Abd7UizH49F+V2QJJQxguHvCYhMg@mail.gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY5PR12MB6405:EE_|LV8PR12MB9112:EE_
-X-MS-Office365-Filtering-Correlation-Id: 80c6938d-f81c-42f3-9df3-08dd70e7c9db
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?4dIZ3J1JVO1Ulo/o6bniSSOSGPhBt9lLh/jXVcI/MIqrFlH/RLSjQboMRRKD?=
- =?us-ascii?Q?2dHMzGwVgh6kPeQyd20Gu9R7vLm9izpXY1UAb8pTzKbq2qAiwPtrm5I8fAMI?=
- =?us-ascii?Q?TKdK12bIKGdFPewoOG+rnKc5DI4RniQAjAbNh5dPmvPzWUpEVURgFuFI4mNq?=
- =?us-ascii?Q?xNZ66oH1nBVFkOLai+P8ghQAXiF1WG7mIrZbAKRst/QoQNQoYCPD/Djn8DYa?=
- =?us-ascii?Q?b7fDrcAyK909WEa5EXKshUKhAERnMMDclyqwEdSQj0vnVkCrx6SfEhFXK4TE?=
- =?us-ascii?Q?a9kLXjZ/muXBMfVErjxOWUnGKHb9+PQyfm+ZLRWVAVQtN3UkjV7ZQ/nfyXdY?=
- =?us-ascii?Q?xNx6pqR4o7KgH5EBMikoxvjZcL22Wl16X13yQfvIoJmAPfJt05aOESjIRys8?=
- =?us-ascii?Q?GRrjz2GHzBMmfEo8fp+atl6hpPhblTrchPGrDIB9LD0WdSN8+nR17YKccuo3?=
- =?us-ascii?Q?nrBwSvoAA9GzRtKsLfEiAP9LEQcZ1aTUA3ZZK2dBy+fBmm5TJi0ipQOEOFgs?=
- =?us-ascii?Q?+uu8C6Yu1Xd32m3dpqqvwzlQC2DdzIpq9aWEwsJQNUeMuvodkpNlLFwAqbWh?=
- =?us-ascii?Q?MQgTiTCrnHHSpCGE3FIZkt5yGAVUJKrIS4JNiJATgb4eFKTNR8q413932xAz?=
- =?us-ascii?Q?XVUpQ7+Ud18xPJu4YLoRuDsAyQReVv8x5LlHi8pG9OagMs13KKsCs9McqaDe?=
- =?us-ascii?Q?6KQdScfLmZhiYE9wYTYCbPRpa0+r7y3T3cxk2gJ4rcY+q3HUCdjyXYjDdIJ+?=
- =?us-ascii?Q?lZMX1hOqhpP3fzuAfejKX0u23T8Yu2kEjdTKfCInFNLgp/tKd25xF3K6Q4bq?=
- =?us-ascii?Q?ozPRq7rsl+XvKx8yira2YuQFxEasPgvEI6uVPSbLuQBH84l5GBrm72sVTFBz?=
- =?us-ascii?Q?tuJ+xhHcZBR9mZ3Mdt1fjx84sulm0QVUHioC/x7YgmJINCAxR1zIoxugrMAr?=
- =?us-ascii?Q?08956CxAhMK8AHXwvCmxA0L5rVttom/fLoI1crG/nq8apeivlqUvOPxIlZIY?=
- =?us-ascii?Q?guZL1IANJsrN5/Ytf5OLxwWPQBwI5g9R992asi1/NQrTlbWwrgHmyIaIUJI8?=
- =?us-ascii?Q?gevAgJvDTPw+j/DY2vfxlJYvrzKqJ0a6vmuZeILKKT5zZ1uLcXqFJFDG+5pr?=
- =?us-ascii?Q?kX5izGqZkzpkaTa9fkr2fWfOBfKm155+OB6ItEmQYezBmoZKjCCksCYhsDK6?=
- =?us-ascii?Q?Yx3bEYfA21QJj4Ct65w0ojHm4mpoYjsuQ3pjVJLREOn0aRHvD1ihpL+j1Gt9?=
- =?us-ascii?Q?5Glk1ikTFtYbTvlvEkSv836ZIVXUKB6DaRG3vN82Zsxp78VBwDs8e1CZBbkX?=
- =?us-ascii?Q?1tvBlyafQbGw0AMoeh0sK5tyqN8dEYs26gZXmzZkNDinBa21eerT6+GYAPgr?=
- =?us-ascii?Q?elBnlEAIGFP3YUSNrSzIsYN8F3IZbnVskFpw7v99ctcvkpxNZ4GnU9z5MwP4?=
- =?us-ascii?Q?76mfac1jwZ4=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR12MB6405.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?LsFEbGNJh9fkuNfajDu4rLorBCv54PwXkdxFZ7GTpWiqUF3xV7uEmE2wq8re?=
- =?us-ascii?Q?k32C7tvhGxsKGl+VLW/LjR9QCT5J3w7ftvT+Av75Y4gecu/+qfhLnrN6Oq4K?=
- =?us-ascii?Q?d4LS0CaXgZ0LbitHTmriF3eQi9QzT9lvgiIF0396i58kx5I7ZO4VzNJXBDGT?=
- =?us-ascii?Q?TOE342d3SIjReBIosTONRrZaEanLouebI6vuPtzHZUTHrWGZYZX8vUCmLZHR?=
- =?us-ascii?Q?4iIjD/9yHA28SbVJlhyCHBufvrwl8gaogcwXAhZ50xCb6EQ/EcUkUzAFTiZd?=
- =?us-ascii?Q?rTWw32FOfVNJ11TeQtVh1ZeaIbeYuCOh4SB85vGOQ/MKslRj6r+wFJaFk5sO?=
- =?us-ascii?Q?r4GVgpWSvqPXxI1zcBBUFc/rYSsp1Vj5PFF1a/DuE4c1l7eLkBG/eGjvTx5g?=
- =?us-ascii?Q?JcUaCndUOrn/iO7+HTZd3mG+vrha/IetPMjkmflMU60vR+jh6YVgrDWsh+Sm?=
- =?us-ascii?Q?HVwS5+6VDXEgDaMMNtQrrhplMxd5bSAYpERh3qh80pTc41CFDAEsamSQ6pb8?=
- =?us-ascii?Q?sENT3PpoGgjCNONSVm+uQ5y3LWcWzgwHwyudY0iunUoqvp2+/ajwuzI/DlIc?=
- =?us-ascii?Q?yu3iI1dviVkd1h8k1T0/MyfwYEWgUpW9kj72t2OxIOhIze3fe1r9VcD2ExD/?=
- =?us-ascii?Q?ko1QUQnP6UMwZuRhDpg5ydJAwsaf0f6jgwKKN2/+vTVbdmGeX0GcGxvOT+xj?=
- =?us-ascii?Q?G43CsERwu5WyfiqHPf1MDnkQHqjSCknZYEjTfjdY1JIdDMiO89RHvGe8eDR9?=
- =?us-ascii?Q?xvtYYs4spDdmBwd4OLhewEv/5OmFkH3jw+ra6XqMgTaLld7lJexlfYvGFbXi?=
- =?us-ascii?Q?OFGtWiY8HDQcjZu4ZXX195GdjM78WWJ9CNYlkhLVPkAhN8B+1KgYZu6VWdIh?=
- =?us-ascii?Q?xtgJ5DS2ccrHiALIeKVsG9lKPzCUp1k03B5O0xhN8JqNkxcB2tPS82pNVSxC?=
- =?us-ascii?Q?KZCjyiEBkmgcMkrLpzwoihT/jUYLRm1cH6Wm/Vts+4Gwxb/UGO7GE6r1W6HJ?=
- =?us-ascii?Q?93EIcuXHWFQOvraYbjx1UMofXkR5WDgO0x+u56JCO83C9SY629Rr/PPQGZ6R?=
- =?us-ascii?Q?PWG9/V/BywF5V8LoPb+TV0Kn5fB63/ZuKtNvKsaxGZHr+eZMOt8Rdmi0wf5Q?=
- =?us-ascii?Q?306WLTq6H88pQi/SOdBw/MaF15V4wZ0y42evENyZzEr+lzhl74oS5hBuG6K0?=
- =?us-ascii?Q?TgSvW0d2rHsnKcI1JxKticrRA5i6rhWmjIE5kDoq0RL6Ojv1UP5u4vMX1sZC?=
- =?us-ascii?Q?do2Y8/yskyLmA+hxGPtvDzR6HQzBvkAFvSQFaZIf2qCVi+9K9wn/iJZSP6ib?=
- =?us-ascii?Q?dwMDzcbKw4jL9OQ+9hZjNC4ZIg+qznzhA3Bh53m0lyKV3ClsrPEmslCb9Fsq?=
- =?us-ascii?Q?pO+MLh8uYgBdZENMTj25HBZHUUUEcAZojY3bUnFUxV8mY4kIWSZ3IQVuTbYJ?=
- =?us-ascii?Q?EI++XfVO4ik7TS5HnWUoJpYldPEOppsHwVQYB3pAMpY/gJyKlcDsOrccFaFc?=
- =?us-ascii?Q?fa27WpEHGFYWuywoKGtX3t+4bAuw/YoM8/PqR5dcNNoXi5ZN5Jqz0lOn5rI1?=
- =?us-ascii?Q?hQEsLUmlPBgaE7XGttiwEZFxa6Iij/bRmLKcBj9q?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 80c6938d-f81c-42f3-9df3-08dd70e7c9db
-X-MS-Exchange-CrossTenant-AuthSource: CY5PR12MB6405.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Apr 2025 06:38:18.3704
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: lDbbNF0rLucIU7+QuCQp/De++fo3EmMCdBwvq5YX+EeSHA2giZBvSsvsLyRGUVgveowX/zzjdl4BtiZX7+Fmig==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR12MB9112
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddukedvudduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtqhertdertdejnecuhfhrohhmpeforgigihhmvgcuvehhvghvrghllhhivghruceomhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepkeehgeeijeekteffhfelheetffeghfffhfeufeeifeffjeeftefhveduteduueeunecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepvdgrtddumegtsgduleemkegugeehmeegledttdemieehieekmedvlegsudemlegvfhehmegvkegtjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudelmeekugegheemgeeltddtmeeiheeikeemvdelsgdumeelvghfheemvgektgejpdhhvghlohepfhgvughorhgrrdhhohhmvgdpmhgrihhlfhhrohhmpehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvtddprhgtphhtthhopegrlhgvgigrnhguvghrrdguuhihtghksehgmhgrihhlrdgtohhmpdhrtghpthhtoheplhhinhhugiesrghrmhhlihhnuhigrdhorhhgrdhukhdpr
+ hgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopehhkhgrlhhlfigvihhtudesghhmrghilhdrtghomh
+X-GND-Sasl: maxime.chevallier@bootlin.com
 
-On Mon, Mar 31, 2025 at 12:01:22PM -1000, Tejun Heo wrote:
-> Hello,
-> 
-> On Fri, Mar 21, 2025 at 11:10:52PM +0100, Andrea Righi wrote:
-> > With the introduction of scx_bpf_select_cpu_and(), we can deprecate
-> > scx_bpf_select_cpu_dfl(), as it offers only a subset of features and
-> > it's also more consistent with other idle-related APIs (returning a
-> > negative value when no idle CPU is found).
-> > 
-> > Therefore, mark scx_bpf_select_cpu_dfl() as deprecated (printing a
-> > warning when it's used), update all the scheduler examples and
-> > kselftests to adopt the new API, and ensure backward (source and binary)
-> > compatibility by providing the necessary macros and hooks.
-> > 
-> > Support for scx_bpf_select_cpu_dfl() can be maintained until v6.17.
-> 
-> Do we need to deprecate it?
-> 
-> ...
-> > @@ -43,10 +39,13 @@ s32 BPF_STRUCT_OPS(select_cpu_dfl_nodispatch_select_cpu, struct task_struct *p,
-> >  		return -ESRCH;
-> >  	}
-> >  
-> > -	cpu = scx_bpf_select_cpu_dfl(p, prev_cpu, wake_flags,
-> > -				     &tctx->force_local);
-> > +	cpu = scx_bpf_select_cpu_and(p, prev_cpu, wake_flags, p->cpus_ptr, 0);
-> > +	if (cpu >= 0) {
-> > +		tctx->force_local = true;
-> > +		return cpu;
-> > +	}
-> >  
-> > -	return cpu;
-> > +	return prev_cpu;
-> >  }
-> 
-> scx_bpf_select_cpu_dfl() is simpler for simple cases. I don't see a pressing
-> need to convert everybody to _and().
+On Mon, 31 Mar 2025 09:38:34 -0700
+Alexander Duyck <alexander.duyck@gmail.com> wrote:
 
-Yeah, I don't have strong opinions on this, I included this patch mostly to
-show that we can get rid of a kfunc if we want, but we don't really have to
-and it's probably less work to just keep it. I'll drop this patch in the
-next version.
+> On Mon, Mar 31, 2025 at 9:20=E2=80=AFAM Maxime Chevallier
+> <maxime.chevallier@bootlin.com> wrote:
+> >
+> > On Mon, 31 Mar 2025 15:54:20 +0100
+> > "Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
+> > =20
+> > > On Mon, Mar 31, 2025 at 04:17:02PM +0200, Andrew Lunn wrote: =20
+> > > > On Fri, Mar 28, 2025 at 04:26:04PM -0700, Alexander Duyck wrote: =20
+> > > > > A serdes PHY is part of it, but not a traditional twisted pair PH=
+Y as
+> > > > > we are talking about 25R, 50R(50GAUI & LAUI), and 100P interfaces=
+. I
+> > > > > agree it is a different beast, but are we saying that the fixed-l=
+ink
+> > > > > is supposed to be a twisted pair PHY only? =20
+> > > >
+> > > > With phylink, the PCS enumerates its capabilities, the PHY enumerat=
+es
+> > > > its capabilities, and the MAC enumerates it capabilities. phylink t=
+hen
+> > > > finds the subset which all support.
+> > > >
+> > > > As i said, historically, fixed_link was used in place of a PHY, sin=
+ce
+> > > > it emulated a PHY. phylinks implementation of fixed_link is however
+> > > > different. Can it be used in place of both a PCS and a PHY? I don't
+> > > > know. =20
+> > >
+> > > In fixed-link mode, phylink will use a PCS if the MAC driver says the=
+re
+> > > is one, but it will not look for a PHY. =20
+>=20
+> Admittedly the documentation does reference much lower speeds as being
+> the use case. I was a bit of an eager beaver and started assembling
+> things without really reading the directions. I just kind of assumed
+> what I could or couldn't get away with within the interface.
+>=20
+> > > > You are pushing the envelope here, and maybe we need to take a step
+> > > > back and consider what is a fixed link, how does it fit into the MA=
+C,
+> > > > PCS, PHY model of enumeration? Maybe fixed link should only represe=
+nt
+> > > > the PHY and we need a second sort of fixed_link object to represent
+> > > > the PCS? I don't know? =20
+> > >
+> > > As I previously wrote today in response to an earlier email, the
+> > > link modes that phylink used were the first-match from the old
+> > > settings[] array in phylib which is now gone. This would only ever
+> > > return _one_ link mode, which invariably was a baseT link mode for
+> > > the slower speeds.
+> > >
+> > > Maxime's first approach at adapting this to his new system was to
+> > > set every single link mode that corresponded with the speed. I
+> > > objected to that, because it quickly gets rediculous when we end
+> > > up with lots of link modes being indicated for e.g. 10, 100M, 1G
+> > > but the emulated PHY for these speeds only indicates baseT. That's
+> > > just back-compatibility but... in principle changing the link modes
+> > > that are reported to userspace for a fixed link is something we
+> > > should not be doing - we don't know if userspace tooling has come
+> > > to rely on that.
+> > >
+> > > Yes, it's a bit weird to be reporting 1000baseT for a 1000BASE-X
+> > > interface mode, but that's what we've always done in the past and
+> > > phylink was coded to maintain that (following the principle that
+> > > we shouldn't do gratuitous changes to the information exposed to
+> > > userspace.)
+> > >
+> > > Maxime's replacement approach is to just expose baseT, which
+> > > means that for the speeds which do not have a baseT mode, we go
+> > > from supporting it but with a weird link mode (mostly baseCR*)
+> > > based on first-match in the settings[] table, to not supporting the
+> > > speed. =20
+> >
+> > I very wrongfully considered that there was no >10G fixed-link users, I
+> > plan to fix that with something like the proposed patch in the
+> > discussion, that reports all linkmodes for speeds above 10G (looks less
+> > like a randomly selected mode, you can kind-of see what's going on as
+> > you get all the linkmodes) but is a change in what we expose to
+> > userspace. =20
+>=20
+> I am not sure if there are any >10G users. I haven't landed anything
+> in the kernel yet and like I said what I was doing was more of a hack
+> to enable backwards compatibility on older kernels w/ the correct
+> supported and advertised modes. If I have to patch one kernel to make
+> it work for me that would be manageable.
+>=20
+> One thing I was thinking about that it looks like this code might
+> prevent would be reinterpreting the meaning of duplex. Currently we
+> only have 3 values for it 0 (half), 1 (Full), and ~0 (Unknown). One
+> thought I had is that once we are over 1G we don't really care about
+> that anymore as everything is Full duplex and instead care about
+> lanes. As it turns out the duplex values currently used would work
+> well to be extended out to lanes. Essentially 0 would still be half, 1
+> would be 1 lane full duplex, 2-8 could be the number of full duplex
+> lanes the interface is using, and unknown lane count would still be ~0
+> since it is unlikely we will end up with anything other than a power
+> of 2 number of lanes anyway. With that you could greatly sort out a
+> number of modes in your setup. We would then have to do some cleanups
+> here and there to do something like "duplex =3D=3D DUPLEX_UNKNOWN ? duplex
+> : !!duplex" to clean up any cases where the legacy values are
+> expected.
 
-Thanks for the review!
+Funny you say that, the phy_port work I was referring to with the
+mediums introduction also tracks the lanes for a given port=20
 
--Andrea
+previous outdated iteration here
+: https://lore.kernel.org/netdev/20250213101606.1154014-4-maxime.chevallier=
+@bootlin.com/
+
+The idea is to represent physical interfaces to a NIC, as NICs can have
+multiple ports for different types of connectors. Ports would be driven
+by either a PHY, a NIC directly or an SFP.
+
+The port contains, among other things, speed, duplex, n_lanes, and the
+medium (with more granularity than just TP/Backplane/Fiber, as we list
+the 802.3 media : BaseS / BaseC / BaseK / BaseT ...)
+
+We already have information about whickh linkmode uses how many lanes,
+but we don't do much with that information besides reporting it to
+userspace.
+
+I'll revamp the whole thing for the next iteration, however I really
+only have a deep-ish understanding of embedded usecases, and I lack
+insights on other classes of devices such as what your working on.
+
+I'll be very happy to get your feedback on it, I plan to send that when
+net-next reopens.
+
+Maxime
+
