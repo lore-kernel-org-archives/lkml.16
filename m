@@ -1,395 +1,113 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84DFE132103
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 05:48:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FD8235966;
+	Tue,  1 Apr 2025 05:49:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743486526; cv=none; b=dcV39ofoRMBAlEjoHclJC6ADllaMhyICupwZA3q2XGTbyvju4yaydPcHVXm5Qcz92Z7DElENNQAnsnL/cR2i6C9zZtnnfHAOVrH/dDHccr2c8D4I+s/HNfjfCPvdvztthe9AIdxL9/x7Z/d0p2CRD1pBzDEx6FFpsJkg35rZrqI=
+	t=1743486546; cv=none; b=JFxjLXGCh2JdgtB9PYrf+M0cuqzDrK+LnKobJh9HxiDiSwgemWkKUxg+6v7ChacWUQSsTdoaL1mJJMp+OZrc4OasfJ36BgL8YsZA8iU/J/a3QSyN2EG0Nob731554zra9a5H6uPKjwBysEB03bTTHxm6oVHHEJwekPMh5+lYEVM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743486526; c=relaxed/simple;
-	bh=/GPkXXLez8BoplEZ8tPkqQgZsZycCPWCjMvUWWxm+zE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CVMkCebza3cCwbpi0b5WTTVsasG8SAq0+qRYXPqsf/ugwsO+EHzkqbMCSfdeOVt5bkXGICxkntwLIZX+5rflB7T7mPIz6SECbMZhb7gu4niwCCmm+xBGmkUuW4Yuu1aktXbKBaAJEXLpQwhSHBA4F8XSBW5ExrP3+e9NidZF6fs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=In3r31RV; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1743486546; c=relaxed/simple;
+	bh=4ck3CYGW3Vg+HHDmnKzNFjxEDklhvy/u2mK3FYu2Rrs=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=odgYQWe2h2QMG8KLo2r9RUy6H5jwanzNGa80+LuSIM21cq4G2+if+xjN72NQCnk51wUdgpH1O+TRpFGLW8XZyaVQNBWWpBgSHwbahKQbp05Iv5wdUZWpJM8bjGJnoj/VgV/KmkX79gUBcKgw/EHsNJRuxVm3PnR2caND6lF3REA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=aUS77l+6; arc=none smtp.client-ip=210.61.82.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="In3r31RV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743486523; x=1775022523;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=/GPkXXLez8BoplEZ8tPkqQgZsZycCPWCjMvUWWxm+zE=;
-  b=In3r31RVzVgpSO+GZCgjPY4PSc41aavwTOahFcOF9/d7xQUSO/gxHmhA
-   rd3P+SEc9N0xOG1xkZ6v4xnKobAnBwEW3fuxDFmdffOlaUFIAl1/tT4f2
-   Y4PTHzVrJ2vAzHc3lwMK2UdXeJjXh9zfQA+C2jRHtoUuHUQ4YFH3NG2kG
-   JGAigDHDihNeKSOB5lGeX/c6y3+zE3wnlYuz/ay4S5Qi5ApKqCjNB6ky9
-   pLgBy2SULYoeFCyX52c/2KkUf/yhVMebqPlUDPdjAAac0WxXucbZs9/xI
-   xk6NtDUQ6ckKGeJxWNGwATD6buQ7QoNgKRY87iPl6yrZj0ytXgKnEI3CH
-   g==;
-X-CSE-ConnectionGUID: Vz3NEfQoQJihHORjufVzag==
-X-CSE-MsgGUID: 0YkahKMZT3+yoR0GLnIQjw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11390"; a="55453070"
-X-IronPort-AV: E=Sophos;i="6.14,292,1736841600"; 
-   d="scan'208";a="55453070"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2025 22:48:42 -0700
-X-CSE-ConnectionGUID: yKHD5nPyRdC7ytu8Lva51A==
-X-CSE-MsgGUID: AduYCZPRRB+Vz2Bv0wHzWg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,292,1736841600"; 
-   d="scan'208";a="163510259"
-Received: from lkp-server02.sh.intel.com (HELO e98e3655d6d2) ([10.239.97.151])
-  by orviesa001.jf.intel.com with ESMTP; 31 Mar 2025 22:48:39 -0700
-Received: from kbuild by e98e3655d6d2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tzUUC-0009ds-0D;
-	Tue, 01 Apr 2025 05:48:35 +0000
-Date: Tue, 1 Apr 2025 13:48:22 +0800
-From: kernel test robot <lkp@intel.com>
-To: gpittala <ganeshkpittala@gmail.com>, johan@kernel.org, elder@kernel.org,
-	gregkh@linuxfoundation.org
-Cc: oe-kbuild-all@lists.linux.dev, hvaibhav.linux@gmail.com,
-	vaibhav.sr@gmail.com, mgreer@animalcreek.com, rmfrfs@gmail.com,
-	pure.logic@nexus-software.ie, greybus-dev@lists.linaro.org,
-	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org,
-	ganeshkpittala@gmail.com
-Subject: Re: [PATCH] staging: greybus: Multiple cleanups and refactors
-Message-ID: <202504011217.iRb2Bbls-lkp@intel.com>
-References: <20250331213337.6171-1-ganeshkpittala@gmail.com>
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="aUS77l+6"
+X-UUID: ffed9f6a0ebc11f08eb9c36241bbb6fb-20250401
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=oLzSObFZ8GWkeA06gsbil9g+nG95as4Jy0XV74XNVOs=;
+	b=aUS77l+67qTKhG9GL93v3Hy3MSGOpMdhYeOiO077pRuC3h0AFHyo+qBvQolnngilnZOp9QA8fLmnyIvvaF8DyHGpZelq8Kamk6GzeiSh/ZJTh0zX5DVv+5g5Oh6atiUEvClZYJGHLN2bo6aYkUd1OyO6Z8iBGCMv2R9zkw1ExwA=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.2.1,REQID:a8dac336-6607-4da1-8401-9dab92325dca,IP:0,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
+	elease,TS:0
+X-CID-META: VersionHash:0ef645f,CLOUDID:70c50ac7-16da-468a-87f7-8ca8d6b3b9f7,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:-3,IP:ni
+	l,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
+	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: ffed9f6a0ebc11f08eb9c36241bbb6fb-20250401
+Received: from mtkmbs09n2.mediatek.inc [(172.21.101.94)] by mailgw02.mediatek.com
+	(envelope-from <ot_cathy.xu@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 630762457; Tue, 01 Apr 2025 13:48:55 +0800
+Received: from mtkmbs13n1.mediatek.inc (172.21.101.193) by
+ mtkmbs13n2.mediatek.inc (172.21.101.108) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.39; Tue, 1 Apr 2025 13:48:54 +0800
+Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
+ mtkmbs13n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1258.39 via Frontend Transport; Tue, 1 Apr 2025 13:48:53 +0800
+From: Cathy Xu <ot_cathy.xu@mediatek.com>
+To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
+	<angelogioacchino.delregno@collabora.com>, Sean Wang <sean.wang@kernel.org>,
+	Lei Xue <lei.xue@mediatek.com>
+CC: <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-mediatek@lists.infradead.org>, <yong.mao@mediatek.com>,
+	<Axe.Yang@mediatek.com>, <Jimin.Wang@mediatek.com>,
+	<Wenbin.Mei@mediatek.com>, <Andy-ld.Lu@mediatek.com>, Cathy Xu
+	<ot_cathy.xu@mediatek.com>
+Subject: [PATCH v6 0/3] pinctrl: mediatek: Add pinctrl driver on mt8196
+Date: Tue, 1 Apr 2025 13:48:09 +0800
+Message-ID: <20250401054837.1551-1-ot_cathy.xu@mediatek.com>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250331213337.6171-1-ganeshkpittala@gmail.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-Hi gpittala,
+Changes in v6:
+- Simplify the register description and adjust the order of properties
+  in dt-binding.
 
-kernel test robot noticed the following build warnings:
+Changes in v5:
+- Remove header file to fix dt-binding check error.
+- Add /* sentinel */ in pinctrl-mt8196.c.
 
-[auto build test WARNING on staging/staging-testing]
+Changes in v4:
+- Add rsel-resistence-in-si-unit and remove RSEL macro magic
+  number in mediatek,mt8196-pinctrl.yaml.
+- Add values in SI units option to |struct mtk_pin_soc| in
+  pinctrl-mt8196.c.
+- Move pinmux macro header file to arch/arm64/boot/dts/mediatek.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/gpittala/staging-greybus-Multiple-cleanups-and-refactors/20250401-053719
-base:   staging/staging-testing
-patch link:    https://lore.kernel.org/r/20250331213337.6171-1-ganeshkpittala%40gmail.com
-patch subject: [PATCH] staging: greybus: Multiple cleanups and refactors
-config: sparc-randconfig-002-20250401 (https://download.01.org/0day-ci/archive/20250401/202504011217.iRb2Bbls-lkp@intel.com/config)
-compiler: sparc64-linux-gcc (GCC) 7.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250401/202504011217.iRb2Bbls-lkp@intel.com/reproduce)
+Changes in v3:
+- Remove drive-strength-microamp & rsel-resistence-in-si-unit
+  related description in mediatek,mt8196-pinctrl.yaml.
+- Use pm_sleep_ptr() in pinctrl-mt8196.c to fix build error.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504011217.iRb2Bbls-lkp@intel.com/
+Changes in v2:
+- Fix driver file's coding style.
+- Add pinctrl binding document.
 
-All warnings (new ones prefixed by >>):
+Cathy Xu (3):
+  dt-bindings: pinctrl: mediatek: Add support for mt8196
+  arm64: dts: mediatek: mt8196: Add pinmux macro header file
+  pinctrl: mediatek: Add pinctrl driver on mt8196
 
-   drivers/staging/greybus/loopback.c: In function 'latency_min_show':
->> drivers/staging/greybus/loopback.c:142:25: warning: unknown conversion type character '\x0a' in format [-Wformat=]
-     return sysfs_emit(buf, "%\n" #type "\n", gb->name.field);  \
-                            ^
-   drivers/staging/greybus/loopback.c:167:2: note: in expansion of macro 'gb_loopback_ro_stats_attr'
-     gb_loopback_ro_stats_attr(field, min, u);  \
-     ^~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/staging/greybus/loopback.c:272:1: note: in expansion of macro 'gb_loopback_stats_attrs'
-    gb_loopback_stats_attrs(latency);
-    ^~~~~~~~~~~~~~~~~~~~~~~
->> drivers/staging/greybus/loopback.c:142:25: warning: too many arguments for format [-Wformat-extra-args]
-     return sysfs_emit(buf, "%\n" #type "\n", gb->name.field);  \
-                            ^
-   drivers/staging/greybus/loopback.c:167:2: note: in expansion of macro 'gb_loopback_ro_stats_attr'
-     gb_loopback_ro_stats_attr(field, min, u);  \
-     ^~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/staging/greybus/loopback.c:272:1: note: in expansion of macro 'gb_loopback_stats_attrs'
-    gb_loopback_stats_attrs(latency);
-    ^~~~~~~~~~~~~~~~~~~~~~~
-   drivers/staging/greybus/loopback.c: In function 'latency_max_show':
->> drivers/staging/greybus/loopback.c:142:25: warning: unknown conversion type character '\x0a' in format [-Wformat=]
-     return sysfs_emit(buf, "%\n" #type "\n", gb->name.field);  \
-                            ^
-   drivers/staging/greybus/loopback.c:168:2: note: in expansion of macro 'gb_loopback_ro_stats_attr'
-     gb_loopback_ro_stats_attr(field, max, u);  \
-     ^~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/staging/greybus/loopback.c:272:1: note: in expansion of macro 'gb_loopback_stats_attrs'
-    gb_loopback_stats_attrs(latency);
-    ^~~~~~~~~~~~~~~~~~~~~~~
->> drivers/staging/greybus/loopback.c:142:25: warning: too many arguments for format [-Wformat-extra-args]
-     return sysfs_emit(buf, "%\n" #type "\n", gb->name.field);  \
-                            ^
-   drivers/staging/greybus/loopback.c:168:2: note: in expansion of macro 'gb_loopback_ro_stats_attr'
-     gb_loopback_ro_stats_attr(field, max, u);  \
-     ^~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/staging/greybus/loopback.c:272:1: note: in expansion of macro 'gb_loopback_stats_attrs'
-    gb_loopback_stats_attrs(latency);
-    ^~~~~~~~~~~~~~~~~~~~~~~
-   drivers/staging/greybus/loopback.c: In function 'requests_per_second_min_show':
->> drivers/staging/greybus/loopback.c:142:25: warning: unknown conversion type character '\x0a' in format [-Wformat=]
-     return sysfs_emit(buf, "%\n" #type "\n", gb->name.field);  \
-                            ^
-   drivers/staging/greybus/loopback.c:167:2: note: in expansion of macro 'gb_loopback_ro_stats_attr'
-     gb_loopback_ro_stats_attr(field, min, u);  \
-     ^~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/staging/greybus/loopback.c:274:1: note: in expansion of macro 'gb_loopback_stats_attrs'
-    gb_loopback_stats_attrs(requests_per_second);
-    ^~~~~~~~~~~~~~~~~~~~~~~
->> drivers/staging/greybus/loopback.c:142:25: warning: too many arguments for format [-Wformat-extra-args]
-     return sysfs_emit(buf, "%\n" #type "\n", gb->name.field);  \
-                            ^
-   drivers/staging/greybus/loopback.c:167:2: note: in expansion of macro 'gb_loopback_ro_stats_attr'
-     gb_loopback_ro_stats_attr(field, min, u);  \
-     ^~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/staging/greybus/loopback.c:274:1: note: in expansion of macro 'gb_loopback_stats_attrs'
-    gb_loopback_stats_attrs(requests_per_second);
-    ^~~~~~~~~~~~~~~~~~~~~~~
-   drivers/staging/greybus/loopback.c: In function 'requests_per_second_max_show':
->> drivers/staging/greybus/loopback.c:142:25: warning: unknown conversion type character '\x0a' in format [-Wformat=]
-     return sysfs_emit(buf, "%\n" #type "\n", gb->name.field);  \
-                            ^
-   drivers/staging/greybus/loopback.c:168:2: note: in expansion of macro 'gb_loopback_ro_stats_attr'
-     gb_loopback_ro_stats_attr(field, max, u);  \
-     ^~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/staging/greybus/loopback.c:274:1: note: in expansion of macro 'gb_loopback_stats_attrs'
-    gb_loopback_stats_attrs(requests_per_second);
-    ^~~~~~~~~~~~~~~~~~~~~~~
->> drivers/staging/greybus/loopback.c:142:25: warning: too many arguments for format [-Wformat-extra-args]
-     return sysfs_emit(buf, "%\n" #type "\n", gb->name.field);  \
-                            ^
-   drivers/staging/greybus/loopback.c:168:2: note: in expansion of macro 'gb_loopback_ro_stats_attr'
-     gb_loopback_ro_stats_attr(field, max, u);  \
-     ^~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/staging/greybus/loopback.c:274:1: note: in expansion of macro 'gb_loopback_stats_attrs'
-    gb_loopback_stats_attrs(requests_per_second);
-    ^~~~~~~~~~~~~~~~~~~~~~~
-   drivers/staging/greybus/loopback.c: In function 'throughput_min_show':
->> drivers/staging/greybus/loopback.c:142:25: warning: unknown conversion type character '\x0a' in format [-Wformat=]
-     return sysfs_emit(buf, "%\n" #type "\n", gb->name.field);  \
-                            ^
-   drivers/staging/greybus/loopback.c:167:2: note: in expansion of macro 'gb_loopback_ro_stats_attr'
-     gb_loopback_ro_stats_attr(field, min, u);  \
-     ^~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/staging/greybus/loopback.c:276:1: note: in expansion of macro 'gb_loopback_stats_attrs'
-    gb_loopback_stats_attrs(throughput);
-    ^~~~~~~~~~~~~~~~~~~~~~~
->> drivers/staging/greybus/loopback.c:142:25: warning: too many arguments for format [-Wformat-extra-args]
-     return sysfs_emit(buf, "%\n" #type "\n", gb->name.field);  \
-                            ^
-   drivers/staging/greybus/loopback.c:167:2: note: in expansion of macro 'gb_loopback_ro_stats_attr'
-     gb_loopback_ro_stats_attr(field, min, u);  \
-     ^~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/staging/greybus/loopback.c:276:1: note: in expansion of macro 'gb_loopback_stats_attrs'
-    gb_loopback_stats_attrs(throughput);
-    ^~~~~~~~~~~~~~~~~~~~~~~
-   drivers/staging/greybus/loopback.c: In function 'throughput_max_show':
->> drivers/staging/greybus/loopback.c:142:25: warning: unknown conversion type character '\x0a' in format [-Wformat=]
-     return sysfs_emit(buf, "%\n" #type "\n", gb->name.field);  \
-                            ^
-   drivers/staging/greybus/loopback.c:168:2: note: in expansion of macro 'gb_loopback_ro_stats_attr'
-     gb_loopback_ro_stats_attr(field, max, u);  \
-     ^~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/staging/greybus/loopback.c:276:1: note: in expansion of macro 'gb_loopback_stats_attrs'
-    gb_loopback_stats_attrs(throughput);
-    ^~~~~~~~~~~~~~~~~~~~~~~
->> drivers/staging/greybus/loopback.c:142:25: warning: too many arguments for format [-Wformat-extra-args]
-     return sysfs_emit(buf, "%\n" #type "\n", gb->name.field);  \
-                            ^
-   drivers/staging/greybus/loopback.c:168:2: note: in expansion of macro 'gb_loopback_ro_stats_attr'
-     gb_loopback_ro_stats_attr(field, max, u);  \
-     ^~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/staging/greybus/loopback.c:276:1: note: in expansion of macro 'gb_loopback_stats_attrs'
-    gb_loopback_stats_attrs(throughput);
-    ^~~~~~~~~~~~~~~~~~~~~~~
-   drivers/staging/greybus/loopback.c: In function 'apbridge_unipro_latency_min_show':
->> drivers/staging/greybus/loopback.c:142:25: warning: unknown conversion type character '\x0a' in format [-Wformat=]
-     return sysfs_emit(buf, "%\n" #type "\n", gb->name.field);  \
-                            ^
-   drivers/staging/greybus/loopback.c:167:2: note: in expansion of macro 'gb_loopback_ro_stats_attr'
-     gb_loopback_ro_stats_attr(field, min, u);  \
-     ^~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/staging/greybus/loopback.c:278:1: note: in expansion of macro 'gb_loopback_stats_attrs'
-    gb_loopback_stats_attrs(apbridge_unipro_latency);
-    ^~~~~~~~~~~~~~~~~~~~~~~
->> drivers/staging/greybus/loopback.c:142:25: warning: too many arguments for format [-Wformat-extra-args]
-     return sysfs_emit(buf, "%\n" #type "\n", gb->name.field);  \
-                            ^
-   drivers/staging/greybus/loopback.c:167:2: note: in expansion of macro 'gb_loopback_ro_stats_attr'
-     gb_loopback_ro_stats_attr(field, min, u);  \
-     ^~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/staging/greybus/loopback.c:278:1: note: in expansion of macro 'gb_loopback_stats_attrs'
-    gb_loopback_stats_attrs(apbridge_unipro_latency);
-    ^~~~~~~~~~~~~~~~~~~~~~~
-   drivers/staging/greybus/loopback.c: In function 'apbridge_unipro_latency_max_show':
->> drivers/staging/greybus/loopback.c:142:25: warning: unknown conversion type character '\x0a' in format [-Wformat=]
-     return sysfs_emit(buf, "%\n" #type "\n", gb->name.field);  \
-                            ^
-   drivers/staging/greybus/loopback.c:168:2: note: in expansion of macro 'gb_loopback_ro_stats_attr'
-     gb_loopback_ro_stats_attr(field, max, u);  \
-     ^~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/staging/greybus/loopback.c:278:1: note: in expansion of macro 'gb_loopback_stats_attrs'
-    gb_loopback_stats_attrs(apbridge_unipro_latency);
-    ^~~~~~~~~~~~~~~~~~~~~~~
->> drivers/staging/greybus/loopback.c:142:25: warning: too many arguments for format [-Wformat-extra-args]
-     return sysfs_emit(buf, "%\n" #type "\n", gb->name.field);  \
-                            ^
-   drivers/staging/greybus/loopback.c:168:2: note: in expansion of macro 'gb_loopback_ro_stats_attr'
-     gb_loopback_ro_stats_attr(field, max, u);  \
-     ^~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/staging/greybus/loopback.c:278:1: note: in expansion of macro 'gb_loopback_stats_attrs'
-    gb_loopback_stats_attrs(apbridge_unipro_latency);
-    ^~~~~~~~~~~~~~~~~~~~~~~
-   drivers/staging/greybus/loopback.c: In function 'gbphy_firmware_latency_min_show':
->> drivers/staging/greybus/loopback.c:142:25: warning: unknown conversion type character '\x0a' in format [-Wformat=]
-     return sysfs_emit(buf, "%\n" #type "\n", gb->name.field);  \
-                            ^
-   drivers/staging/greybus/loopback.c:167:2: note: in expansion of macro 'gb_loopback_ro_stats_attr'
-     gb_loopback_ro_stats_attr(field, min, u);  \
-     ^~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/staging/greybus/loopback.c:280:1: note: in expansion of macro 'gb_loopback_stats_attrs'
-    gb_loopback_stats_attrs(gbphy_firmware_latency);
-    ^~~~~~~~~~~~~~~~~~~~~~~
->> drivers/staging/greybus/loopback.c:142:25: warning: too many arguments for format [-Wformat-extra-args]
-     return sysfs_emit(buf, "%\n" #type "\n", gb->name.field);  \
-                            ^
-   drivers/staging/greybus/loopback.c:167:2: note: in expansion of macro 'gb_loopback_ro_stats_attr'
-     gb_loopback_ro_stats_attr(field, min, u);  \
-     ^~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/staging/greybus/loopback.c:280:1: note: in expansion of macro 'gb_loopback_stats_attrs'
-    gb_loopback_stats_attrs(gbphy_firmware_latency);
-    ^~~~~~~~~~~~~~~~~~~~~~~
-   drivers/staging/greybus/loopback.c: In function 'gbphy_firmware_latency_max_show':
->> drivers/staging/greybus/loopback.c:142:25: warning: unknown conversion type character '\x0a' in format [-Wformat=]
-     return sysfs_emit(buf, "%\n" #type "\n", gb->name.field);  \
-                            ^
-   drivers/staging/greybus/loopback.c:168:2: note: in expansion of macro 'gb_loopback_ro_stats_attr'
-     gb_loopback_ro_stats_attr(field, max, u);  \
-     ^~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/staging/greybus/loopback.c:280:1: note: in expansion of macro 'gb_loopback_stats_attrs'
-    gb_loopback_stats_attrs(gbphy_firmware_latency);
-    ^~~~~~~~~~~~~~~~~~~~~~~
->> drivers/staging/greybus/loopback.c:142:25: warning: too many arguments for format [-Wformat-extra-args]
-     return sysfs_emit(buf, "%\n" #type "\n", gb->name.field);  \
-                            ^
-   drivers/staging/greybus/loopback.c:168:2: note: in expansion of macro 'gb_loopback_ro_stats_attr'
-     gb_loopback_ro_stats_attr(field, max, u);  \
-     ^~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/staging/greybus/loopback.c:280:1: note: in expansion of macro 'gb_loopback_stats_attrs'
-    gb_loopback_stats_attrs(gbphy_firmware_latency);
-    ^~~~~~~~~~~~~~~~~~~~~~~
-   drivers/staging/greybus/loopback.c: In function 'type_show':
-   drivers/staging/greybus/loopback.c:213:25: warning: unknown conversion type character '\x0a' in format [-Wformat=]
-     return sysfs_emit(buf, "%\n" #type "\n", gb->field);   \
-                            ^
-   drivers/staging/greybus/loopback.c:301:1: note: in expansion of macro 'gb_dev_loopback_rw_attr'
-    gb_dev_loopback_rw_attr(type, d);
-    ^~~~~~~~~~~~~~~~~~~~~~~
-   drivers/staging/greybus/loopback.c:213:25: warning: too many arguments for format [-Wformat-extra-args]
-     return sysfs_emit(buf, "%\n" #type "\n", gb->field);   \
-                            ^
-   drivers/staging/greybus/loopback.c:301:1: note: in expansion of macro 'gb_dev_loopback_rw_attr'
-    gb_dev_loopback_rw_attr(type, d);
-    ^~~~~~~~~~~~~~~~~~~~~~~
-   drivers/staging/greybus/loopback.c: In function 'size_show':
-   drivers/staging/greybus/loopback.c:213:25: warning: unknown conversion type character '\x0a' in format [-Wformat=]
-     return sysfs_emit(buf, "%\n" #type "\n", gb->field);   \
-                            ^
-   drivers/staging/greybus/loopback.c:303:1: note: in expansion of macro 'gb_dev_loopback_rw_attr'
-    gb_dev_loopback_rw_attr(size, u);
-    ^~~~~~~~~~~~~~~~~~~~~~~
-   drivers/staging/greybus/loopback.c:213:25: warning: too many arguments for format [-Wformat-extra-args]
-     return sysfs_emit(buf, "%\n" #type "\n", gb->field);   \
-                            ^
-   drivers/staging/greybus/loopback.c:303:1: note: in expansion of macro 'gb_dev_loopback_rw_attr'
-    gb_dev_loopback_rw_attr(size, u);
-    ^~~~~~~~~~~~~~~~~~~~~~~
-   drivers/staging/greybus/loopback.c: In function 'us_wait_show':
-   drivers/staging/greybus/loopback.c:213:25: warning: unknown conversion type character '\x0a' in format [-Wformat=]
-     return sysfs_emit(buf, "%\n" #type "\n", gb->field);   \
-                            ^
-   drivers/staging/greybus/loopback.c:305:1: note: in expansion of macro 'gb_dev_loopback_rw_attr'
-    gb_dev_loopback_rw_attr(us_wait, d);
-    ^~~~~~~~~~~~~~~~~~~~~~~
-   drivers/staging/greybus/loopback.c:213:25: warning: too many arguments for format [-Wformat-extra-args]
-     return sysfs_emit(buf, "%\n" #type "\n", gb->field);   \
-                            ^
-   drivers/staging/greybus/loopback.c:305:1: note: in expansion of macro 'gb_dev_loopback_rw_attr'
-    gb_dev_loopback_rw_attr(us_wait, d);
-    ^~~~~~~~~~~~~~~~~~~~~~~
-   drivers/staging/greybus/loopback.c: In function 'iteration_max_show':
-   drivers/staging/greybus/loopback.c:213:25: warning: unknown conversion type character '\x0a' in format [-Wformat=]
-     return sysfs_emit(buf, "%\n" #type "\n", gb->field);   \
-                            ^
-   drivers/staging/greybus/loopback.c:307:1: note: in expansion of macro 'gb_dev_loopback_rw_attr'
-    gb_dev_loopback_rw_attr(iteration_max, u);
-    ^~~~~~~~~~~~~~~~~~~~~~~
-   drivers/staging/greybus/loopback.c:213:25: warning: too many arguments for format [-Wformat-extra-args]
-     return sysfs_emit(buf, "%\n" #type "\n", gb->field);   \
-                            ^
-   drivers/staging/greybus/loopback.c:307:1: note: in expansion of macro 'gb_dev_loopback_rw_attr'
-    gb_dev_loopback_rw_attr(iteration_max, u);
-    ^~~~~~~~~~~~~~~~~~~~~~~
-   drivers/staging/greybus/loopback.c: In function 'async_show':
-   drivers/staging/greybus/loopback.c:213:25: warning: unknown conversion type character '\x0a' in format [-Wformat=]
-     return sysfs_emit(buf, "%\n" #type "\n", gb->field);   \
-                            ^
-   drivers/staging/greybus/loopback.c:311:1: note: in expansion of macro 'gb_dev_loopback_rw_attr'
-    gb_dev_loopback_rw_attr(async, u);
-    ^~~~~~~~~~~~~~~~~~~~~~~
-   drivers/staging/greybus/loopback.c:213:25: warning: too many arguments for format [-Wformat-extra-args]
-     return sysfs_emit(buf, "%\n" #type "\n", gb->field);   \
-                            ^
-   drivers/staging/greybus/loopback.c:311:1: note: in expansion of macro 'gb_dev_loopback_rw_attr'
-    gb_dev_loopback_rw_attr(async, u);
-    ^~~~~~~~~~~~~~~~~~~~~~~
-   drivers/staging/greybus/loopback.c: In function 'timeout_show':
-   drivers/staging/greybus/loopback.c:213:25: warning: unknown conversion type character '\x0a' in format [-Wformat=]
-     return sysfs_emit(buf, "%\n" #type "\n", gb->field);   \
-                            ^
-   drivers/staging/greybus/loopback.c:313:1: note: in expansion of macro 'gb_dev_loopback_rw_attr'
-    gb_dev_loopback_rw_attr(timeout, u);
-    ^~~~~~~~~~~~~~~~~~~~~~~
-   drivers/staging/greybus/loopback.c:213:25: warning: too many arguments for format [-Wformat-extra-args]
-     return sysfs_emit(buf, "%\n" #type "\n", gb->field);   \
-                            ^
-   drivers/staging/greybus/loopback.c:313:1: note: in expansion of macro 'gb_dev_loopback_rw_attr'
-    gb_dev_loopback_rw_attr(timeout, u);
-    ^~~~~~~~~~~~~~~~~~~~~~~
-   drivers/staging/greybus/loopback.c: In function 'outstanding_operations_max_show':
-   drivers/staging/greybus/loopback.c:213:25: warning: unknown conversion type character '\x0a' in format [-Wformat=]
-     return sysfs_emit(buf, "%\n" #type "\n", gb->field);   \
-                            ^
-   drivers/staging/greybus/loopback.c:315:1: note: in expansion of macro 'gb_dev_loopback_rw_attr'
-    gb_dev_loopback_rw_attr(outstanding_operations_max, u);
-    ^~~~~~~~~~~~~~~~~~~~~~~
-   drivers/staging/greybus/loopback.c:213:25: warning: too many arguments for format [-Wformat-extra-args]
-     return sysfs_emit(buf, "%\n" #type "\n", gb->field);   \
-                            ^
-   drivers/staging/greybus/loopback.c:315:1: note: in expansion of macro 'gb_dev_loopback_rw_attr'
-    gb_dev_loopback_rw_attr(outstanding_operations_max, u);
-    ^~~~~~~~~~~~~~~~~~~~~~~
-
-
-vim +/x0a +142 drivers/staging/greybus/loopback.c
-
-   132	
-   133	#define gb_loopback_ro_stats_attr(name, field, type)		\
-   134	static ssize_t name##_##field##_show(struct device *dev,	\
-   135				    struct device_attribute *attr,		\
-   136				    char *buf)					\
-   137	{									\
-   138		struct gb_loopback *gb = dev_get_drvdata(dev);			\
-   139		/* Report 0 for min and max if no transfer succeeded */		\
-   140		if (!gb->requests_completed)					\
-   141			return sysfs_emit(buf, "0\n");				\
- > 142		return sysfs_emit(buf, "%\n" #type "\n", gb->name.field);		\
-   143	}									\
-   144	static DEVICE_ATTR_RO(name##_##field)
-   145	
+ .../pinctrl/mediatek,mt8196-pinctrl.yaml      |  220 ++
+ arch/arm64/boot/dts/mediatek/mt8196-pinfunc.h | 1574 ++++++++++
+ drivers/pinctrl/mediatek/Kconfig              |   12 +
+ drivers/pinctrl/mediatek/Makefile             |    1 +
+ drivers/pinctrl/mediatek/pinctrl-mt8196.c     | 1859 +++++++++++
+ drivers/pinctrl/mediatek/pinctrl-mtk-mt8196.h | 2789 +++++++++++++++++
+ 6 files changed, 6455 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/mediatek,mt8196-pinctrl.yaml
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8196-pinfunc.h
+ create mode 100644 drivers/pinctrl/mediatek/pinctrl-mt8196.c
+ create mode 100644 drivers/pinctrl/mediatek/pinctrl-mtk-mt8196.h
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.45.2
+
