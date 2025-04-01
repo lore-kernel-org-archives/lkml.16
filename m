@@ -1,59 +1,61 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80436131E2D
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 22:47:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 144EC1E9B20
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 22:47:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743547626; cv=none; b=YfZl9n+yYyUWyXHnr9mgCCB33hZrRmno7uGmB1N3O68egdaoT7CHs5Dr+EsJEMbO9G42PG1BDeWXoH6XBkbP2YTmgpANA6sq1vLTXkxRd178hjGlqLKoQaQsOA3UgOh59WVmVcv5DC4AUYB6NPcH2ZTagqyJMK6Y8Pt00KLGFN4=
+	t=1743547635; cv=none; b=kMcl/hqsVpuE7IvapZ2Td0MnIhHmefNWw3/F9tfklOYv4Ue8CRSahXDd75ZU9UlJ9FAyKI9t81Y5+qABpRGhB42qVYLebYviAN4p/0D90HcVoyDr/4MyHvDz0Oo0R/RQG5hVF9A1UAZ+w7ftghDuo7aDFcQYvpyEDz3vpxvNYfs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743547626; c=relaxed/simple;
-	bh=mxxIEprYEvdtWSONJg9ldoMSY2Ps6beOPYol0c4a2pU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=vC6dtRBSQYDQbunMRpsDhdJeIiEmMO+qxsxOU6cEvsBwVNFvT1vcLZh33GllcE+FgBI/67AWVf9KsV0KUJxy+UEXAptRtN60IU+dDVK1gvv9jGlBslUHekJqLh7P3PhWxEI//WoBE9skpZjOdiwy2qsV1SYCPaLkemmob3SEEZg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EuCgSrlr; arc=none smtp.client-ip=209.85.221.48
+	s=arc-20240116; t=1743547635; c=relaxed/simple;
+	bh=RgFlJsnTIvdVDvIE9N9PHEKhYOH3uTflC6iJyoSy2zA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=N472h7D409rbKXeh+IFtgsfKSkcBtgfY3WD9HwPkroinjXEtP0TLvNt/kLH2st7ZGz8AEsm9jNnmv5yiSctoMdWjpu6FEkqOH7SpoC+8GTbkXWkYJALZyjXOvIdNdFSNCdUD+pfxtbcZxAEKhVqXko7+vBsD+L3UBs2U1Im2gyg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cNXnRAQ1; arc=none smtp.client-ip=209.85.221.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EuCgSrlr"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-399744f74e9so3946921f8f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 15:47:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cNXnRAQ1"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-39c266c1389so648246f8f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 15:47:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743547623; x=1744152423; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=rMiriZZ58z+P+I9wSKFjX4MW14qQGjO+dBvbrym1kn0=;
-        b=EuCgSrlrGvNJQwhZ20Y1eyeb5ppyxzzZOHxFsPNOQakyWdsfu0jHak/mSaDF6IuBmN
-         T1y4aMYTJKa2BUSzDnM5SbXzaeIInoTYvTNj4jLe/fZQahmbt3gRM+ZTyJOzmCK9IeVE
-         WQkFDN4szxLpwcLI34DmVxpD9FSO2Z1Na79MwxT8V6AJEeuBp/FNB8kF/JjncjCM6cYW
-         PmEfMBUVMEH64LtLjJ/pBU10hKgEzbosH64XaBSt3D0su+WcpSa6DL635W+MaSjjmfia
-         OroKpeVFXATmJHGGZPCsw+BU8KH5D+lkfjoTbNk06SNQPF+m/VKmCKPeWJpZ1bd/Sbkp
-         Z38Q==
+        d=linaro.org; s=google; t=1743547630; x=1744152430; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=98NQySuN2mSdiaqDA1MOqkdPIYgJtZlP7a7zDH1HO5E=;
+        b=cNXnRAQ1Ud5LAZiKKFcuLxMjNDb68hqEv7Tv/rujua6yn5q3m2EjXGA8PimvLgBpHk
+         3nf3aps7UG75hj9W+1U+KZMPKi9qW80YuYSSzommED09m6pD/7DOXyLSBqZtx2sBwpXb
+         m64MTxJ86lCJpAZkRe0BSMU7pGri8ocnqOfXMw0pNMKG4NPwsqyNjAAkIFQySaVtTxd8
+         2ZEDkF6lxedouBVU1bTYMAGIsIRfVn6941Mv6C/R8225q3cgL94h+5WEGHbl9EyI16Qr
+         PTDhhc6hNq+NEHaap6S6ReUb6Lmgf1mwZ2ypfoN7KBDSiurtJb3njrwd91GTPsatokII
+         ZHYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743547623; x=1744152423;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=rMiriZZ58z+P+I9wSKFjX4MW14qQGjO+dBvbrym1kn0=;
-        b=FO3CNxeNEWBZYO1W7VHsfbdpvWXU8hziukDd7D/5IJJCpX9GuHbXHAT+4Suk+XDPAu
-         gX6UNMXF3H6gdQEM2S8j6fXyEh1DP9a8lrSBr0+/IKil9pbvUrfwjV6BBiG1b0jaK6Zz
-         /LUYIeeDdJOBojbo/cQ9+krXDJN9TAsgJzsU0TV+/+ax9K9ehwVF8GB7mTTu57JFO3Jm
-         nEkEnGITK8ycrxm33c/Hz3uVbH04/BR+L9AkQTkQexlNiYhBE0trzlXRzHn/6/puCUj1
-         3ITelSTH6yiYGdmZgzA/EJuZvv2RrH9AVOZV6b79VNroSMfNS+/yo5esly6gKlI5kW54
-         21pg==
-X-Gm-Message-State: AOJu0YzkUd9HgpwTqPhrcS9lq9ucs48Qh2/YFzua9MG2h50jzVQirjMv
-	pOpKaX3OhKqLb7dNADEAWutjfvUMYehUyyLMWdND3umdR/7pHxKGikez+r1WOH8=
-X-Gm-Gg: ASbGncv3v2htpVpR4TEwvq9vDLPz8M2vlG5GiUnnThm4ZQtthoTSABAr4I13U9SofqS
-	jH2h8/+/xg1uOb8YQk4RrKOnmvL23OOAETmobzfkwgXlxdUIp3Z1c+QJnROeBbIT9L3ZdqhV+tF
-	xxGVLxnf4JT3FvKPl2yEFY5pud1gAojH654VTDYEVDVQ1GuSiY2HvhAtLDbwlxP3aamgSNWa8pF
-	QX302vXfDVm7Kyyzf2I9k4agOu7GHtXB8nF5OCniwaFMmBH5yoCxqikxEerOgDGtrYeH8VBL3Zf
-	wguCdHxiIhzAcVR+rtD76JQohZg3sUVEVl40axe9sVfqA7TCPYbUHZrkVlSphrWH+GFyLsc=
-X-Google-Smtp-Source: AGHT+IHXDJNo8fxkFVHDFbOXrhkQ3gaoy9OEBCnzu/hTDy4EuBz0PL7w+tWgwa6E1opkIfmN1J/58A==
-X-Received: by 2002:a05:6000:381:b0:39c:1f0a:ee0 with SMTP id ffacd0b85a97d-39c1f0a0f69mr6100756f8f.2.1743547622790;
-        Tue, 01 Apr 2025 15:47:02 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743547630; x=1744152430;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=98NQySuN2mSdiaqDA1MOqkdPIYgJtZlP7a7zDH1HO5E=;
+        b=hoQjmE+cBkXezXUvzAFgRSQm2ztcdyX8AYxDk0Zb9hBCiBPD6r16GqfAWyHLiDY7oS
+         Q4o8Gw00d3s0eAGlOqhUnYHCn5xaeuw4nKfMjjsoRqOk5SvkIl6h6cJ51pbKAspoTNFg
+         hwvkhOqwvgtfx/Xcp6q+T/Pm7EBUcSqW3EQtC4evpfVH56QCUWhxELBLj4VZO6aEQG6t
+         qMoIn6xVBGk08mguS93H67Vbj/sLfWaZqTo8HBTn4rTkfJxpN1aPn2fBrvtOlwJIIwSw
+         9VF1DnAGOxGN8c2XEWE4k59vtmlwwFh6fxbHYLEkaVSP9NQ0dPZuBzmhSoCxojmHpu3l
+         kKMA==
+X-Gm-Message-State: AOJu0YxfDySXKcITSA0uhnx485LjbZXt7jeQqwaRvmxxs+S+1GEGwulZ
+	ZKX2uEIlTuTIe4z2I14e8ARywyT3yyXQ7xOdtBR0V/5cpT9VuldtjYHaEsYVsA4=
+X-Gm-Gg: ASbGncsOoH3CS/COJPIRpWSdzp0inOwaDy30RKK6fvlyxSa2K8AHFM5uszQDyiqXP8N
+	G2TNh/bIRlEyIE2nf9neK+kIL25FxniMlhkcaxcG9Jym0ISFamBRTwYxAeb72vrSz7sp/ycemL2
+	5ZqLFVLm5CMC9QL3vNtS16heyJX13vZgwfZFSr1Av1GH2TOZi6MmfkoX2gW50Sr69AARF1gnqpv
+	u0NpKZCm3+cooNcd3PcYdcW6kRJGNRjw22XGG7nZYDD+RIYVLUIY9tk38BDBYO9/uefwJ0H4ArG
+	4h840fO+EkXWBbpZMFqkercggVn3D+Lmkq1HqJWdNwnEeqpmafmHxYwT/tyN7wdIqdNV5bk=
+X-Google-Smtp-Source: AGHT+IF2NzzZ6KCw87M2RGUntEuVmQwVlLWQh94Xf93+H3tQqSaCHSKYTBuIHsPytXFa9/kFxPYH9A==
+X-Received: by 2002:a05:6000:1789:b0:391:4999:778b with SMTP id ffacd0b85a97d-39c120e1bedmr12286234f8f.28.1743547630343;
+        Tue, 01 Apr 2025 15:47:10 -0700 (PDT)
 Received: from mai.. (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b7a42a3sm15488862f8f.91.2025.04.01.15.47.01
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b7a42a3sm15488862f8f.91.2025.04.01.15.47.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Apr 2025 15:47:01 -0700 (PDT)
+        Tue, 01 Apr 2025 15:47:09 -0700 (PDT)
 From: Daniel Lezcano <daniel.lezcano@linaro.org>
 To: daniel.lezcano@linaro.org,
 	tglx@linutronix.de
@@ -62,90 +64,101 @@ Cc: linux-kernel@vger.kernel.org,
 	Larisa.Grigore@nxp.com,
 	ghennadi.procopciuc@nxp.com,
 	krzysztof.kozlowski@linaro.org,
-	S32@nxp.com
-Subject: [PATCH v3 0/2] Add the System Timer Module for the NXP S32 architecture
-Date: Wed,  2 Apr 2025 00:46:40 +0200
-Message-ID: <20250401224644.3389181-1-daniel.lezcano@linaro.org>
+	S32@nxp.com,
+	Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS),
+	linux-stm32@st-md-mailman.stormreply.com (moderated list:ARM/STM32 ARCHITECTURE),
+	linux-arm-kernel@lists.infradead.org (moderated list:ARM/STM32 ARCHITECTURE)
+Subject: [PATCH v3 1/2] dt-bindings: timer: Add NXP System Timer Module
+Date: Wed,  2 Apr 2025 00:46:41 +0200
+Message-ID: <20250401224644.3389181-2-daniel.lezcano@linaro.org>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250401224644.3389181-1-daniel.lezcano@linaro.org>
+References: <20250401224644.3389181-1-daniel.lezcano@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-These couple of changes bring the System Timer Module - STM which is
-part of the NXP S32 architecture.
+Add the System Timer Module description found on the NXP s32 platform
+and the compatible for the s32g2 variant.
 
-The timer module has one counter and four comparators, an interrupt
-line when one of the comparator matches the counter. That means the
-interrupt is shared across the comparator.
-
-The number of STM is equal to the number of core available on the
-system. For the s32g2 variant, there are three Cortex-M3 and four
-Cortex-A53, consequently there are seven STM modules dedicated to
-those.
-
-In addition, there is a STM variant which is read-only, so the counter
-can not be set because it is tied to another STM module dedicated to
-timestamp. These special STM modules are apart and will be handled
-differently as they can not be used as a clockevent. They are not part
-of these changes.
-
-The choice is to have one STM instance, aka one STM description in the
-device tree, which initialize a clocksource and a clockevent per
-CPU. The latter is assigned to a CPU given the order of their
-description. First is CPU0, second is CPU1, etc ...
-
-Changelog:
-
- - v3
-   - Fixed bindings, compatible description and name (Krzysztof Kozlowski)
-   - Fixed bindings filename to fit the compatible (Krzysztof Kozlowski)
-   - Fixed a couple of typos in the driver changelog (Ghennadi Procopciuc)
-   - Enclosed macro into parenthesis (Ghennadi Procopciuc)
-   - Replaced irq_of_parse_and_map() by platform_get_irq() (Ghennadi Procopciuc)
-   - Fixed checkpatch --script reports
-   - Removed debugfs as the driver is not considered complex enough (Arnd Bergmann)
-
- - v2:
-   - Fixed errors reported by 'make dt_binding_check' (Rob Herring)
-   - Removed unneeded '|' symbol (Rob Herring)
-   - Removed 'clocks' description (Rob Herring)
-   - Removed 'clock-names' because there is only one description (Rob Herring)
-   - Renamed 'stm@' to 'timer@' in the DT binding example (Rob Herring)
-   - Fixed dt bindings patch subject (Krzysztof Kozlowski)
-   - Dropped 'OneOf' in the DT bindings (Krzysztof Kozlowski)
-   - Dropped the STM instances structure
-   - Use the dev_err_probe() helper (Krzysztof Kozlowski)
-   - Use the dev_err_probe() helper (Krzysztof Kozlowski)
-   - Use devm_clk_get_enabled() (Krzysztof Kozlowski)
-   - Removed unneeded headers (Ghennadi Procopciuc)
-   - Removed unused macro (Ghennadi Procopciuc)
-   - Replaced 'int' by 'unsigned int' (Ghennadi Procopciuc)
-   - Removed dev_set_drvdata() (Ghennadi Procopciuc)
-   - Prevent disabling the entire module and set min delta (Ghennadi Procopciuc)
-   - Factored out the clocksource / clockevent init routine (Ghennadi Procopciuc)
-   - Use devm_request_irq() (Ghennadi Procopciuc.)
-   - Use irq_dispose_mapping() for error rollbacking (Ghennadi Procopciuc)
-
- - v1: initial post
-
-Daniel Lezcano (2):
-  dt-bindings: timer: Add NXP System Timer Module
-  clocksource/drivers/nxp-timer: Add the System Timer Module for the
-    s32gx platforms
-
- .../bindings/timer/nxp,s32g2-stm.yaml         |  53 ++
- drivers/clocksource/Kconfig                   |   9 +
- drivers/clocksource/Makefile                  |   2 +
- drivers/clocksource/timer-nxp-stm.c           | 496 ++++++++++++++++++
- 4 files changed, 560 insertions(+)
+Cc: Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Thomas Fossati <thomas.fossati@linaro.org>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+---
+ .../bindings/timer/nxp,s32g2-stm.yaml         | 53 +++++++++++++++++++
+ 1 file changed, 53 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/timer/nxp,s32g2-stm.yaml
- create mode 100644 drivers/clocksource/timer-nxp-stm.c
 
+diff --git a/Documentation/devicetree/bindings/timer/nxp,s32g2-stm.yaml b/Documentation/devicetree/bindings/timer/nxp,s32g2-stm.yaml
+new file mode 100644
+index 000000000000..2016f346b2ee
+--- /dev/null
++++ b/Documentation/devicetree/bindings/timer/nxp,s32g2-stm.yaml
+@@ -0,0 +1,53 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/timer/nxp,s32g2-stm.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: NXP System Timer Module (STM)
++
++maintainers:
++  - Daniel Lezcano <daniel.lezcano@kernel.org>
++
++description:
++  The System Timer Module supports commonly required system and application
++  software timing functions. STM includes a 32-bit count-up timer and four
++  32-bit compare channels with a separate interrupt source for each channel.
++  The timer is driven by the STM module clock divided by an 8-bit prescale
++  value.
++
++properties:
++  compatible:
++    oneOf:
++      - const: nxp,s32g2-stm
++      - items:
++          - const: nxp,s32g3-stm
++          - const: nxp,s32g2-stm
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    timer@4011c000 {
++        compatible = "nxp,s32g2-stm";
++        reg = <0x4011c000 0x3000>;
++        interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
++        clocks = <&clks 0x3b>;
++    };
 -- 
 2.43.0
 
