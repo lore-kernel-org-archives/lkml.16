@@ -1,123 +1,187 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5336C202F9A
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 12:14:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8472542A94
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 12:16:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743509652; cv=none; b=O8Kg261JKziIIn1z9NLG84GMziRPPqgs2Dv9vSx1VsZadtUhA+3KvD5R9/j8tdIJaaI4kEEZVesbACS0wf2CcoBWjIuZ5Zue4vT/PncpgEsjBaVgDhLmQNHnwRILw0bAvtOsAneZWFzyiMOcy3XF/mry01jhfZjiGK3axJuw/1M=
+	t=1743509796; cv=none; b=ai4BPI8RMeXWRUB3m5YWWdyKUZhrAhNe9LAbdyyc6iU+0sSwcrV3JPVmWREVXhXIfIBi/iT82GF1dkMOt+8GoYz8TsCfCFaVcCpIHHxOPo4xCVFMdHC0mXdK3KL6lTfJvNYFBK5ATWuPGafqQ32FFwqfNhQKM3v73+qp5v4LOrw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743509652; c=relaxed/simple;
-	bh=YGXFqr4IfFV6Vu7eYniP5uzR9SdS+C3yWU1Sa7ToHIo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Gr+QGGp5OBzCh9YdusPFeMvFypaaSpQJovSvbazIkBR6FoDeq02KzPBhwnM9DStMm43AStWFF08DNMO/ObJZHNpnz08jz0QJa/IUwGGzJNT5CV0930069hme6DAmmCW2oq4UTzsvulzN1QkEL6IJC+FZO2qynvUisA6Vt2UYMa4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=A2EDj0IM; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1743509796; c=relaxed/simple;
+	bh=N35vb5cdNr3EyVaPJIc3XYLhIENIrpdB/OABpH2s+28=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XI4lOvRcxpvt/XUZciXT2RJ36844TNwDeGLKUXce7RkiIgvvcbpqV48iqLkq60328+DEEZD14MNLkx1yDQQ/gzTZptQ+xcJResI8fyyPb0VVipWG2SZWpiN1xofKsBzCYFCcTxeohLnfaRbro1Rx8WKBskD8Hd6OMdItEXb0Uw8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RsSWmaqI; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A2EDj0IM"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RsSWmaqI"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743509649;
+	s=mimecast20190719; t=1743509793;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=bobstMjPMV8DhfUNqC1sgNZKJxQFcOqPnhEWn4RzBRc=;
-	b=A2EDj0IMDQneKmVvVrctFKC9v7sIsHQRZmF0BmosiRvaFrCgStTAd+o2bgaZvg98SDM1OD
-	B/GKLhM7UG1w5YE3hOGRwCJ87O++4yn6gmXmHPw3R11cnMYSJqRHEKypS5kkRazGweHudh
-	gpFZJvEV6XRiLVuinljrWAjZ2JODunA=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-474-KiF_w3H7M9-DhaM6JA8xSg-1; Tue, 01 Apr 2025 08:14:06 -0400
-X-MC-Unique: KiF_w3H7M9-DhaM6JA8xSg-1
-X-Mimecast-MFC-AGG-ID: KiF_w3H7M9-DhaM6JA8xSg_1743509645
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-ac2db121f95so443885166b.1
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 05:14:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743509645; x=1744114445;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=bobstMjPMV8DhfUNqC1sgNZKJxQFcOqPnhEWn4RzBRc=;
-        b=cte75OxQmHTuc28OQBNoFI1xfW5+IbGW35WxwsCUulpnfIPydjYCorf/yn6I1vcQzB
-         SAMpws1tavX/XmgHa3BlMiUiGFxG65Yy4gwMqdxF/wp4EQe0TBKT17I3PG4IWi4HhsnR
-         JNTThdlMCKKxAg0sDP8WdFjYZQh43Dud+t4QnEMiYmKZ8hSho5DUPMb85H+hsUjnFtsJ
-         8UTKuKWN5afry7to7aF7Xu86BuKJ1FeBQ+xCA00lGdi7Wv9/jV5BBf5FuPUxI24Ca7T5
-         CTQN2G9cyQW0xLTZEM7OgVbB8vI/vYnpBkQ41IvkQ+YP3xh6L2J/odd5DhpDjdnu26zU
-         fSgA==
-X-Forwarded-Encrypted: i=1; AJvYcCXQBIp4p7a+uHJeaVkpFUc3jvoSWjB74wfwDNhkoFExzSQwJf4bm8LuDvd0ZjmEhVjdaKRDlTG4c1hsUqo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YziYUFxnvLqWvsF1UkqeqqBkhCG3DclX9D8buSxuusDFi+QFC+m
-	6a78BBelh7xDgBasKG3IFLpr1MHZVUZ9iGdwLizFV+8FrI8gh5ixKEqo7uOZVGd9Et4WX3Rx97e
-	EDyJuw7BsdLbtCsFFt7Me/gdWEK3m+lyMYqsF8WuplX1PnqCjn69O5tMbzCSKAQ==
-X-Gm-Gg: ASbGncvATdjZ29CXSiRWEsl5Vujyk4ZCZZBq0sAR2GVtrVMvCJcVDR4IojZSHwP+pY1
-	LPSOBTmB7mM6LFeKg6kvsN2WCA4DkHcCq8WI2p05VWr795e1PFyTSXT6wHPohvSn17SHJ1aLOZ9
-	xtKifzXqZZ+s5az38XqL6dqMbHJt3ZzhP2cwch4N/ZXzYQodAdc6/IttkO03EW8VbL2ZeeF6D0p
-	xf2BLIBz2GN4X3uebz8K5MZWP0zx7dkrbTh1nns81KxW1Nq3uxgqIZZPC2IFMYe1A8mhnpF5DL6
-	O180S5GwR02XoB7FaJwyEqWO320bDbjyHXd9jgokPO1kCae7BE/kDp4w+XVY3kM=
-X-Received: by 2002:a17:907:7f0d:b0:ac7:150b:57b2 with SMTP id a640c23a62f3a-ac738b61acfmr1115335066b.41.1743509644914;
-        Tue, 01 Apr 2025 05:14:04 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHAUNzsyCaoMuUKp8KrX5TmH5LqHQTBd4duJrOAEcTk1GtfF5/Q9pgFHfstQ4EV56ENzCLV9A==
-X-Received: by 2002:a17:907:7f0d:b0:ac7:150b:57b2 with SMTP id a640c23a62f3a-ac738b61acfmr1115332366b.41.1743509644468;
-        Tue, 01 Apr 2025 05:14:04 -0700 (PDT)
-Received: from lbulwahn-thinkpadx1carbongen9.rmtde.csb ([2a02:810d:7e01:ef00:bf5b:f273:a506:f71f])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7192ea03esm753963866b.84.2025.04.01.05.14.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Apr 2025 05:14:03 -0700 (PDT)
-From: Lukas Bulwahn <lbulwahn@redhat.com>
-X-Google-Original-From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
-To: Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S . Miller" <davem@davemloft.net>,
-	Hannes Reinecke <hare@kernel.org>,
-	Keith Busch <kbusch@kernel.org>,
-	Eric Biggers <ebiggers@kernel.org>,
-	linux-crypto@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Lukas Bulwahn <lukas.bulwahn@redhat.com>
-Subject: [PATCH] crypto: Kconfig - correct references in config CRYPTO_HKDF
-Date: Tue,  1 Apr 2025 14:13:54 +0200
-Message-ID: <20250401121354.20897-1-lukas.bulwahn@redhat.com>
-X-Mailer: git-send-email 2.49.0
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yqpsL6oK/qQwqmu8rOHD+0YUpbKB9lezEyKO6Au+xus=;
+	b=RsSWmaqIf+wSG9XHw/R+8rIoZCRy67WmFzDS3lBTC3ii35BkvPPoahc9b3nv6IOiZM1Kzb
+	NGe4D8HhGesbpp8wU2OvOpVQDqmHA3EetLt7rwrbKcsVubP1s1h/EvMLBU+R7qPUj91H6B
+	BnRAYS6nRxR8fN4yr33Qz+EUQfV6k/g=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-484-mWh5sp33OFuT6qyLNqdnog-1; Tue,
+ 01 Apr 2025 08:16:32 -0400
+X-MC-Unique: mWh5sp33OFuT6qyLNqdnog-1
+X-Mimecast-MFC-AGG-ID: mWh5sp33OFuT6qyLNqdnog_1743509791
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 73D3619560BD;
+	Tue,  1 Apr 2025 12:16:30 +0000 (UTC)
+Received: from fedora (unknown [10.72.120.6])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8A6EB180A803;
+	Tue,  1 Apr 2025 12:16:25 +0000 (UTC)
+Date: Tue, 1 Apr 2025 20:16:19 +0800
+From: Ming Lei <ming.lei@redhat.com>
+To: Nilay Shroff <nilay@linux.ibm.com>
+Cc: syzbot <syzbot+4c7e0f9b94ad65811efb@syzkaller.appspotmail.com>,
+	axboe@kernel.dk, linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [block?] possible deadlock in elv_iosched_store
+Message-ID: <Z-vZE2pyrg4_I2SV@fedora>
+References: <67e6b425.050a0220.2f068f.007b.GAE@google.com>
+ <Z-dUCLvf06SfTOHy@fedora>
+ <462d4e8a-dd95-48fe-b9fe-a558057f9595@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <462d4e8a-dd95-48fe-b9fe-a558057f9595@linux.ibm.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+On Tue, Apr 01, 2025 at 05:23:56PM +0530, Nilay Shroff wrote:
+> 
+> 
+> On 3/29/25 7:29 AM, Ming Lei wrote:
+> > On Fri, Mar 28, 2025 at 07:37:25AM -0700, syzbot wrote:
+> >> Hello,
+> >>
+> >> syzbot found the following issue on:
+> >>
+> >> HEAD commit:    1a9239bb4253 Merge tag 'net-next-6.15' of git://git.kernel..
+> >> git tree:       upstream
+> >> console output: https://syzkaller.appspot.com/x/log.txt?x=1384b43f980000
+> >> kernel config:  https://syzkaller.appspot.com/x/.config?x=c7163a109ac459a8
+> >> dashboard link: https://syzkaller.appspot.com/bug?extid=4c7e0f9b94ad65811efb
+> >> compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+> >> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=178cfa4c580000
+> >> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11a8ca4c580000
+> >>
+> >> Downloadable assets:
+> >> disk image: https://storage.googleapis.com/syzbot-assets/fc7dc9f0d9a7/disk-1a9239bb.raw.xz
+> >> vmlinux: https://storage.googleapis.com/syzbot-assets/f555a3ae03d3/vmlinux-1a9239bb.xz
+> >> kernel image: https://storage.googleapis.com/syzbot-assets/55f6ea74eaf2/bzImage-1a9239bb.xz
+> >>
+> >> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> >> Reported-by: syzbot+4c7e0f9b94ad65811efb@syzkaller.appspotmail.com
+> >>
+> > 
+> > ...
+> > 
+> >>
+> >> If you want syzbot to run the reproducer, reply with:
+> >> #syz test: git://repo/address.git branch-or-commit-hash
+> >> If you attach or paste a git patch, syzbot will apply it before testing.
+> > 
+> > 
+> > diff --git a/block/blk-mq.c b/block/blk-mq.c
+> > index ae8494d88897..d7a103dc258b 100644
+> > --- a/block/blk-mq.c
+> > +++ b/block/blk-mq.c
+> > @@ -4465,14 +4465,12 @@ static struct blk_mq_hw_ctx *blk_mq_alloc_and_init_hctx(
+> >  	return NULL;
+> >  }
+> >  
+> > -static void blk_mq_realloc_hw_ctxs(struct blk_mq_tag_set *set,
+> > -						struct request_queue *q)
+> > +static void __blk_mq_realloc_hw_ctxs(struct blk_mq_tag_set *set,
+> > +				     struct request_queue *q)
+> >  {
+> >  	struct blk_mq_hw_ctx *hctx;
+> >  	unsigned long i, j;
+> >  
+> > -	/* protect against switching io scheduler  */
+> > -	mutex_lock(&q->elevator_lock);
+> >  	for (i = 0; i < set->nr_hw_queues; i++) {
+> >  		int old_node;
+> >  		int node = blk_mq_get_hctx_node(set, i);
+> > @@ -4505,7 +4503,19 @@ static void blk_mq_realloc_hw_ctxs(struct blk_mq_tag_set *set,
+> >  
+> >  	xa_for_each_start(&q->hctx_table, j, hctx, j)
+> >  		blk_mq_exit_hctx(q, set, hctx, j);
+> > -	mutex_unlock(&q->elevator_lock);
+> > +}
+> > +
+> > +static void blk_mq_realloc_hw_ctxs(struct blk_mq_tag_set *set,
+> > +				   struct request_queue *q, bool lock)
+> > +{
+> > +	if (lock) {
+> > +		/* protect against switching io scheduler  */
+> > +		mutex_lock(&q->elevator_lock);
+> > +		__blk_mq_realloc_hw_ctxs(set, q);
+> > +		mutex_unlock(&q->elevator_lock);
+> > +	} else {
+> > +		__blk_mq_realloc_hw_ctxs(set, q);
+> > +	}
+> >  
+> >  	/* unregister cpuhp callbacks for exited hctxs */
+> >  	blk_mq_remove_hw_queues_cpuhp(q);
+> > @@ -4537,7 +4547,7 @@ int blk_mq_init_allocated_queue(struct blk_mq_tag_set *set,
+> >  
+> >  	xa_init(&q->hctx_table);
+> >  
+> > -	blk_mq_realloc_hw_ctxs(set, q);
+> > +	blk_mq_realloc_hw_ctxs(set, q, false);
+> >  	if (!q->nr_hw_queues)
+> >  		goto err_hctxs;
+> >  
+> > @@ -5033,7 +5043,7 @@ static void __blk_mq_update_nr_hw_queues(struct blk_mq_tag_set *set,
+> >  fallback:
+> >  	blk_mq_update_queue_map(set);
+> >  	list_for_each_entry(q, &set->tag_list, tag_set_list) {
+> > -		blk_mq_realloc_hw_ctxs(set, q);
+> > +		blk_mq_realloc_hw_ctxs(set, q, true);
+> >  
+> >  		if (q->nr_hw_queues != set->nr_hw_queues) {
+> >  			int i = prev_nr_hw_queues;
+> > 
+> 
+> This patch looks good to me, however after we fix this one, I found another splat. 
+> I see that these new splats are side effect of commit ffa1e7ada456 ("block: Make 
+> request_queue lockdep splats show up earlier").
+> 
+> IMO in the block layer code (unless it's in an IO submission path or a path where we 
+> have already frozen queue) we may still want to allow memory allocation with GFP_KERNEL. 
+> So in that sense, for example, we may acquire ->elevator_lock followed by fs_reclaim. 
 
-Commit 3241cd0c6c17 ("crypto,fs: Separate out hkdf_extract() and
-hkdf_expand()") adds the new config option CRYPTO_HKDF, which intends to
-select further hash algorithms when crypto manager tests are enabled.
+If any memory GFP_KERNEL allocation grabs ->elevator_lock, it is one real
+deadlock risk.
 
-However, the select command accidentally refers to
-CONFIG_CRYPTO_MANAGER_DISABLE_TESTS with the CONFIG prefix, whereas the
-references here in the Kconfig file work without the CONFIG prefix.
+> Or in another words, shouldn't it be legitimate to acquire blk layer specific lock and 
+> then allocate memory using GFP_KERNEL assuming we haven't freezed queue or we're not in 
+> IO submission path. But this commit ffa1e7ada456 ("block: Make request_queue lockdep
+> splats show up earlier") now showing up some false-positive splat as well, please see
+> below:
 
-Correct the references here to its proper form.
+It depends if we may run GFP_KERNEL allocation with ->elevator_lock.
 
-Fixes: 3241cd0c6c17 ("crypto,fs: Separate out hkdf_extract() and hkdf_expand()")
-Signed-off-by: Lukas Bulwahn <lukas.bulwahn@redhat.com>
----
- crypto/Kconfig | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I feel ->elevator_lock is still used too many...
 
-diff --git a/crypto/Kconfig b/crypto/Kconfig
-index dbf97c4e7c59..f601a4ec6d1a 100644
---- a/crypto/Kconfig
-+++ b/crypto/Kconfig
-@@ -143,8 +143,8 @@ config CRYPTO_ACOMP
- 
- config CRYPTO_HKDF
- 	tristate
--	select CRYPTO_SHA256 if !CONFIG_CRYPTO_MANAGER_DISABLE_TESTS
--	select CRYPTO_SHA512 if !CONFIG_CRYPTO_MANAGER_DISABLE_TESTS
-+	select CRYPTO_SHA256 if !CRYPTO_MANAGER_DISABLE_TESTS
-+	select CRYPTO_SHA512 if !CRYPTO_MANAGER_DISABLE_TESTS
- 	select CRYPTO_HASH2
- 
- config CRYPTO_MANAGER
--- 
-2.49.0
+
+thanks,
+Ming
 
