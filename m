@@ -1,55 +1,55 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEAE51E5B88
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 06:30:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AAC619D8AC
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 06:30:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743489031; cv=none; b=Lo6grVvVRZlP1RID6lU2ONI3W5sK5boSN1QhMmXcCcikQSpUPfkI+OCIL+bd+q8955EcU375b1WqDH1l8JF8y+whssYAT4ABr3ZN94I58Dm1+1k6veRRJDq9YV16RhHY7r/LsG+Z0y3HSpcn5EgUb2Vx4h4rzqmDVGVxrGQltEo=
+	t=1743489038; cv=none; b=iSuTvuAh0cK6LHb5vc5eqzftyUXi/1m1TkgWuqZhJioFP/zXzjjcIQG4TK3eV1T8GFLnQISTFJ2dnB5CUb9HXrY9ilXzoL73XdeOna03v9Gej53NMLP5JHJE4EMwKfr89OHic1cEb7aYzw1nU4UH2ZN6fdxluZqSx/lAvC4+9dI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743489031; c=relaxed/simple;
-	bh=F/qmGUFeMu9XvOZI7bo6qPejjKCgMa/4Q+1+JmF0sio=;
+	s=arc-20240116; t=1743489038; c=relaxed/simple;
+	bh=J/M6ym/3HaB2IbGY1t1wGYKVKwUFdldUw+cz1/kEueA=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=UfzUIA2htvl6+S7QB2/E2am4Kh8v91hqJLci3FhsHdf8jcrILmWiVWB1sQF0HVOy+Q9ulTCbQ/fznlfZx9FE8QQDQ6IKpMGjHY6PPmVtTZkOpL9RaIhJvSALhW6Amqb6y0pgOWxzqOPNb42uEb6w98J4EBlq3d5S9LMfyDvXQSk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--guanyulin.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PL61WlRr; arc=none smtp.client-ip=209.85.214.202
+	 To:Cc:Content-Type; b=CiguxD9kafk01pAxNjJmoC+5gDv2pWEvZEeiZit6Sitkln2FBR0hwGjdeF4y9fH85HBz0hdJsv1p/hmfiwsQ5rxEno+CxIr6qXtqvwJXqxU9IGcuXcJn3id5xd/Th+8TlKtZvYkExT00A8dNyvlRl2cf3QweyOtlN9c4Y07xRnM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--guanyulin.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZsQMq8Yw; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--guanyulin.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PL61WlRr"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2241ae15dcbso123747175ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 23:30:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZsQMq8Yw"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ff8119b436so9510721a91.0
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 23:30:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743489029; x=1744093829; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1743489036; x=1744093836; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=e/hhe8fHtkZGRjGoinV849CiQfAtFCFjSq4JrlJQc5o=;
-        b=PL61WlRrBZ83k5vthPHOnDy5CRxNcTHEc83Z+zb/sYjaLZDwaKC/JI0MQNNow2tyui
-         uYcAL6q96NOM+8wvzxcxq8OoTcLP6S93Kd2XyHiTw4YNmTD6hL+nphYZGmL2zv5vX6tq
-         IXYilGI0To2P1gAavP+Lb2PfbZtMx8IXgxVmbQxUFiiseQXHinThxFSfaO876aRXwoLA
-         hrs0p3baHpWpmrIcWG1KDhvX4F2KVjqRHB+MDw2/CfMa/Od/lVa1wdOGXlNFG80JD0Wt
-         Ondy9h6iK/qe3ajS0xnWcqHZqulzUmAC8GFETEdwKV8EQ4AGXHHDxS0H52XZrflnaJMO
-         YESw==
+        bh=jiFiSExmIpswe63JqhLJ7F3T/vXcNa8/l4kRqI6BHnI=;
+        b=ZsQMq8YwldqdPww2aNNCtLvgl8PDT8tmJiIUQ1Y+v5kcO5/3+yiDquHKfU9TvvSrIS
+         9o+MpZnuwTdxFExXq4WShoHwDscjDk+56zIorLOk4BAgedSwI/tgBgcif/j838Wij1Fb
+         kHXKjkoPnsLLc50iQ+3dHPdbuN0NI1riP4wKYltSI1eDh3cZbXwmefwu0boPugjN8eNI
+         t+7bRq5wrVYlBe3sobaRgbWy0zFEgsxDRnXXzXvoHwptMQnbJxlES8r9DNpAUJHUGzRz
+         93NuCAz6qkf0lPlJ6DebT0ribC8VkiFRFfdvFt3A8Tv6cPCE5GmTLy78pH0u5gK0LERD
+         Z1+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743489029; x=1744093829;
+        d=1e100.net; s=20230601; t=1743489036; x=1744093836;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=e/hhe8fHtkZGRjGoinV849CiQfAtFCFjSq4JrlJQc5o=;
-        b=JfQ3RyjPrdjLEXK7wX30RGl3hU4T07FJT/FupsKoZak/marnvzin46NQF2g8SoGEb2
-         ix3clo/JP05+0UcOTk7Fl/UW7cFhB7497UiZwSzRx2LjVJ9lY6LkALE6lilYiQsXU6mS
-         1TWn0v8dkbr+tStrGUoWkwWYuV49FHSjPCoASTW7xeYx+pj4I9vzveNe12swSQtBV+w5
-         al26PQ5MfOIfrjuC9c9DNMyoJcdPJQsy7JH55cJGKgx5vdYZ3fCoiXe+XMqFtds8Tp5R
-         ejJGkXyP7xvmm9Mo1o1lqDTo+Y+hTcThvSadv1vac8aYpT/R5Z/XvwTqJrEiNFasFp/g
-         tu4w==
-X-Forwarded-Encrypted: i=1; AJvYcCXG69izqp8hZxchF0JOasDJ1ejVtvrWwJulitxe822jAh+xDxEzNyIxVaBg34lEc/tzY3DW7aiWs7yr4Ek=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxaB0YOEzzHtOxi+tOWVUgyNsMs9PTIpJARuDlmc5jpxA9pY6gW
-	0EweE3rXJQ2tluwRYa2W8LzSH1BnkaVuKOvFp5AKVxGAHyWcjiVy9zjjFMh1RQTW2KDyp4vVGnQ
-	rLGG/rBK+od/Wxw==
-X-Google-Smtp-Source: AGHT+IH3sCEbiKXIhGq2v8KwoCB9c5CbhGko+7CXLOcauVYSMPBKmJVj1my29zrE/bSpoaO8NACdEeVe5spWsCE=
-X-Received: from plbjj22.prod.google.com ([2002:a17:903:496:b0:225:8a27:cd41])
+        bh=jiFiSExmIpswe63JqhLJ7F3T/vXcNa8/l4kRqI6BHnI=;
+        b=NcNS6ATfTE6QOTmFxVv2joBW/nLmQEWp5Upz3brofiqoAkWYVzafUeeE/O9zeuaIcO
+         C/wphG9/wbL6cXFRFxVG3l4m4meeuoxBgnEDb7cgxG/00lhuMJg7y+wfnIE1JzT9tZYY
+         xjMZSfMTnXDvN85pBaZqhuTMP2XAsHvwtHOitcSBQE+e4HZoJ7hechKKT6qkp6Xid2dZ
+         q/8P5ZEE/fqeOJ7B/yVAj16nGt2ElWBdKdS9N8pDz60oiunNQdOutbRp+qHWITuiHiAm
+         wDPLLQfu6icWH9aHiwYsryBn0qPDiAup+71EAor2UWKf+JT3f1ykxBCRxLwB34BluJ7h
+         DOVw==
+X-Forwarded-Encrypted: i=1; AJvYcCVsH/6BvOeDka7DWWrlxIXw0v4XmxXtDa1Re1GMLTPd+o907OCBV2+k0o2REMPEKUbAVQK6N97oLUO/DsE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzv7fXJbIbGoAkYh+h9PX+Gi4XOSAqhIATrfzezOmLCQSxnjLqr
+	TgpD9gjurVi/pTTeaOAHgEBsdwZznZbO9azfnvCDNe9tpYEryFJPiWolk1hO3a5Jabi0/ZEPT0R
+	hpQzITpmwBQo4lw==
+X-Google-Smtp-Source: AGHT+IGxI/ecbNMCBfYfN5C+BPG5kYRSq6a1FOzanRyj9Idz2E8lANjOYdUW6OJTmUG8JPe4h77qtxE+xQa7zhg=
+X-Received: from pgbg26.prod.google.com ([2002:a63:521a:0:b0:aee:900e:e3d6])
  (user=guanyulin job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:903:1cb:b0:223:f928:4553 with SMTP id d9443c01a7336-2292f9f7646mr224444685ad.44.1743489029111;
- Mon, 31 Mar 2025 23:30:29 -0700 (PDT)
-Date: Tue,  1 Apr 2025 06:22:41 +0000
+ 2002:a05:6a20:3953:b0:1f6:6539:e026 with SMTP id adf61e73a8af0-2009f5fe141mr16978771637.15.1743489035752;
+ Mon, 31 Mar 2025 23:30:35 -0700 (PDT)
+Date: Tue,  1 Apr 2025 06:22:42 +0000
 In-Reply-To: <20250401062951.3180871-1-guanyulin@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250401062951.3180871-1-guanyulin@google.com>
 X-Mailer: git-send-email 2.49.0.472.ge94155a9ec-goog
-Message-ID: <20250401062951.3180871-4-guanyulin@google.com>
-Subject: [PATCH v10 3/4] xhci: sideband: add api to trace sideband usage
+Message-ID: <20250401062951.3180871-5-guanyulin@google.com>
+Subject: [PATCH v10 4/4] usb: host: enable USB offload during system sleep
 From: Guan-Yu Lin <guanyulin@google.com>
 To: gregkh@linuxfoundation.org, mathias.nyman@intel.com, 
 	stern@rowland.harvard.edu, sumit.garg@kernel.org, kekrby@gmail.com, 
@@ -70,127 +70,191 @@ Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
 	Guan-Yu Lin <guanyulin@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-The existing sideband driver only registers sidebands without tracking
-their active usage. To address this, sideband will now record its active
-usage when it creates/removes interrupters. In addition, a new api is
-introduced to provide a means for other dirvers to fetch sideband
-activity information on a USB host controller.
+Sharing a USB controller with another entity via xhci-sideband driver
+creates power management complexities. To prevent the USB controller
+from being inadvertently deactivated while in use by the other entity, a
+usage-count based mechanism is implemented. This allows the system to
+manage power effectively, ensuring the controller remains available
+whenever needed.
+In order to maintain full functionality of an offloaded USB devices,
+several changes are made within the suspend flow of such devices:
+- skip usb_suspend_device() so that the port/hub are still active for
+  USB transfers via offloaded path.
+- not suspending the endpoints which are used by USB interfaces marked
+  with needs_remote_wakeup. Namely, skip usb_suspend_interface() and
+  usb_hcd_flush_endpoint() on associated USB interfaces. This reserves a
+  pending interrupt urb during system suspend for handling the interrupt
+  transfer, which is necessary since remote wakeup doesn't apply in the
+  offloaded USB devices when controller is still active.
+- not flushing the endpoints of actively offloaded USB devices. Given
+  that the USB devices is used by another entity, unilaterally flush the
+  endpoint might lead to unexpected behavior on another entity.
+- not suspending the xhci controller. This is done by skipping the
+  suspend/resume callbacks in the xhci platform driver.
 
 Signed-off-by: Guan-Yu Lin <guanyulin@google.com>
 ---
- drivers/usb/host/xhci-sideband.c  | 43 +++++++++++++++++++++++++++++++
- include/linux/usb/xhci-sideband.h |  9 +++++++
- 2 files changed, 52 insertions(+)
+ drivers/usb/core/driver.c    | 33 +++++++++++++++++++++++++++------
+ drivers/usb/host/xhci-plat.c | 19 +++++++++++++++++++
+ drivers/usb/host/xhci-plat.h |  1 +
+ include/linux/usb.h          |  2 ++
+ 4 files changed, 49 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/usb/host/xhci-sideband.c b/drivers/usb/host/xhci-sideband.c
-index d49f9886dd84..67f31b0ec726 100644
---- a/drivers/usb/host/xhci-sideband.c
-+++ b/drivers/usb/host/xhci-sideband.c
-@@ -266,6 +266,31 @@ xhci_sideband_get_event_buffer(struct xhci_sideband *sb)
- }
- EXPORT_SYMBOL_GPL(xhci_sideband_get_event_buffer);
+diff --git a/drivers/usb/core/driver.c b/drivers/usb/core/driver.c
+index 2ba033bf7e4e..678106e1c520 100644
+--- a/drivers/usb/core/driver.c
++++ b/drivers/usb/core/driver.c
+@@ -1420,11 +1420,20 @@ static int usb_suspend_both(struct usb_device *udev, pm_message_t msg)
+ 			udev->state == USB_STATE_SUSPENDED)
+ 		goto done;
  
-+#if IS_ENABLED(CONFIG_USB_XHCI_SIDEBAND_SUSPEND)
-+/**
-+ * xhci_sideband_check - check the existence of active sidebands
-+ * @hcd: the host controller driver associated with the target host controller
-+ *
-+ * Allow other drivers, such as usb controller driver, to check if there are
-+ * any sideband activity on the host controller. This information could be used
-+ * for power management or other forms of resource management.
-+ *
-+ * Returns true on any active sideband existence, false otherwise.
-+ */
-+bool xhci_sideband_check(struct usb_hcd *hcd)
-+{
-+	struct usb_device *udev = hcd->self.root_hub;
-+	bool active;
-+
-+	device_lock(&udev->dev);
-+	active = usb_offload_check(udev);
-+	device_unlock(&udev->dev);
-+
-+	return active;
-+}
-+EXPORT_SYMBOL_GPL(xhci_sideband_check);
-+#endif /* IS_ENABLED(CONFIG_USB_XHCI_SIDEBAND_SUSPEND) */
-+
- /**
-  * xhci_sideband_create_interrupter - creates a new interrupter for this sideband
-  * @sb: sideband instance for this usb device
-@@ -286,6 +311,7 @@ xhci_sideband_create_interrupter(struct xhci_sideband *sb, int num_seg,
- 				 bool ip_autoclear, u32 imod_interval, int intr_num)
- {
- 	int ret = 0;
-+	struct usb_device *udev;
- 
- 	if (!sb || !sb->xhci)
- 		return -ENODEV;
-@@ -304,6 +330,11 @@ xhci_sideband_create_interrupter(struct xhci_sideband *sb, int num_seg,
- 		goto out;
- 	}
- 
-+	udev = sb->vdev->udev;
-+	device_lock(&udev->dev);
-+	ret = usb_offload_get(udev);
-+	device_unlock(&udev->dev);
-+
- 	sb->ir->ip_autoclear = ip_autoclear;
- 
- out:
-@@ -323,6 +354,8 @@ EXPORT_SYMBOL_GPL(xhci_sideband_create_interrupter);
- void
- xhci_sideband_remove_interrupter(struct xhci_sideband *sb)
- {
-+	struct usb_device *udev;
-+
- 	if (!sb || !sb->ir)
- 		return;
- 
-@@ -330,6 +363,16 @@ xhci_sideband_remove_interrupter(struct xhci_sideband *sb)
- 	xhci_remove_secondary_interrupter(xhci_to_hcd(sb->xhci), sb->ir);
- 
- 	sb->ir = NULL;
-+	udev = sb->vdev->udev;
-+
-+	if (udev->state == USB_STATE_NOTATTACHED) {
-+		usb_offload_put(udev);
-+	} else {
-+		device_lock(&udev->dev);
-+		usb_offload_put(udev);
-+		device_unlock(&udev->dev);
++	if (msg.event == PM_EVENT_SUSPEND && usb_offload_check(udev)) {
++		dev_dbg(&udev->dev, "device offload active, skip suspend.\n");
++		udev->offload_at_suspend = 1;
 +	}
 +
- 	mutex_unlock(&sb->mutex);
+ 	/* Suspend all the interfaces and then udev itself */
+ 	if (udev->actconfig) {
+ 		n = udev->actconfig->desc.bNumInterfaces;
+ 		for (i = n - 1; i >= 0; --i) {
+ 			intf = udev->actconfig->interface[i];
++			if (udev->offload_at_suspend && intf->needs_remote_wakeup) {
++				dev_dbg(&intf->dev, "active interface on offloaded devices\n");
++				continue;
++			}
+ 			status = usb_suspend_interface(udev, intf, msg);
+ 
+ 			/* Ignore errors during system sleep transitions */
+@@ -1435,7 +1444,8 @@ static int usb_suspend_both(struct usb_device *udev, pm_message_t msg)
+ 		}
+ 	}
+ 	if (status == 0) {
+-		status = usb_suspend_device(udev, msg);
++		if (!udev->offload_at_suspend)
++			status = usb_suspend_device(udev, msg);
+ 
+ 		/*
+ 		 * Ignore errors from non-root-hub devices during
+@@ -1480,9 +1490,11 @@ static int usb_suspend_both(struct usb_device *udev, pm_message_t msg)
+ 	 */
+ 	} else {
+ 		udev->can_submit = 0;
+-		for (i = 0; i < 16; ++i) {
+-			usb_hcd_flush_endpoint(udev, udev->ep_out[i]);
+-			usb_hcd_flush_endpoint(udev, udev->ep_in[i]);
++		if (!udev->offload_at_suspend) {
++			for (i = 0; i < 16; ++i) {
++				usb_hcd_flush_endpoint(udev, udev->ep_out[i]);
++				usb_hcd_flush_endpoint(udev, udev->ep_in[i]);
++			}
+ 		}
+ 	}
+ 
+@@ -1524,17 +1536,26 @@ static int usb_resume_both(struct usb_device *udev, pm_message_t msg)
+ 	udev->can_submit = 1;
+ 
+ 	/* Resume the device */
+-	if (udev->state == USB_STATE_SUSPENDED || udev->reset_resume)
+-		status = usb_resume_device(udev, msg);
++	if (udev->state == USB_STATE_SUSPENDED || udev->reset_resume) {
++		if (!udev->offload_at_suspend)
++			status = usb_resume_device(udev, msg);
++		else
++			dev_dbg(&udev->dev, "device offload active, skip resume.\n");
++	}
+ 
+ 	/* Resume the interfaces */
+ 	if (status == 0 && udev->actconfig) {
+ 		for (i = 0; i < udev->actconfig->desc.bNumInterfaces; i++) {
+ 			intf = udev->actconfig->interface[i];
++			if (udev->offload_at_suspend) {
++				dev_dbg(&intf->dev, "active interface on offloaded devices\n");
++				continue;
++			}
+ 			usb_resume_interface(udev, intf, msg,
+ 					udev->reset_resume);
+ 		}
+ 	}
++	udev->offload_at_suspend = 0;
+ 	usb_mark_last_busy(udev);
+ 
+  done:
+diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
+index 9843d3ad5cf4..598f1b974347 100644
+--- a/drivers/usb/host/xhci-plat.c
++++ b/drivers/usb/host/xhci-plat.c
+@@ -20,6 +20,7 @@
+ #include <linux/acpi.h>
+ #include <linux/usb/of.h>
+ #include <linux/reset.h>
++#include <linux/usb/xhci-sideband.h>
+ 
+ #include "xhci.h"
+ #include "xhci-plat.h"
+@@ -483,6 +484,15 @@ static int xhci_plat_suspend_common(struct device *dev)
+ 
+ static int xhci_plat_suspend(struct device *dev)
+ {
++	struct usb_hcd	*hcd = dev_get_drvdata(dev);
++	struct xhci_plat_priv *priv = hcd_to_xhci_priv(hcd);
++
++	if (xhci_sideband_check(hcd)) {
++		priv->sideband_at_suspend = 1;
++		dev_dbg(dev, "sideband instance active, skip suspend.\n");
++		return 0;
++	}
++
+ 	return xhci_plat_suspend_common(dev);
  }
- EXPORT_SYMBOL_GPL(xhci_sideband_remove_interrupter);
-diff --git a/include/linux/usb/xhci-sideband.h b/include/linux/usb/xhci-sideband.h
-index 45288c392f6e..5174cc5afc98 100644
---- a/include/linux/usb/xhci-sideband.h
-+++ b/include/linux/usb/xhci-sideband.h
-@@ -11,6 +11,7 @@
  
- #include <linux/scatterlist.h>
- #include <linux/usb.h>
-+#include <linux/usb/hcd.h>
+@@ -535,6 +545,15 @@ static int xhci_plat_resume_common(struct device *dev, bool power_lost)
  
- #define	EP_CTX_PER_DEV		31	/* FIXME defined twice, from xhci.h */
- 
-@@ -83,6 +84,14 @@ xhci_sideband_get_endpoint_buffer(struct xhci_sideband *sb,
- 				  struct usb_host_endpoint *host_ep);
- struct sg_table *
- xhci_sideband_get_event_buffer(struct xhci_sideband *sb);
+ static int xhci_plat_resume(struct device *dev)
+ {
++	struct usb_hcd	*hcd = dev_get_drvdata(dev);
++	struct xhci_plat_priv *priv = hcd_to_xhci_priv(hcd);
 +
-+#if IS_ENABLED(CONFIG_USB_XHCI_SIDEBAND_SUSPEND)
-+bool xhci_sideband_check(struct usb_hcd *hcd);
-+#else
-+static inline bool xhci_sideband_check(struct usb_hcd *hcd)
-+{ return false; }
-+#endif /* IS_ENABLED(CONFIG_USB_XHCI_SIDEBAND_SUSPEND) */
++	if (priv->sideband_at_suspend) {
++		priv->sideband_at_suspend = 0;
++		dev_dbg(dev, "sideband instance active, skip resume.\n");
++		return 0;
++	}
 +
- int
- xhci_sideband_create_interrupter(struct xhci_sideband *sb, int num_seg,
- 				 bool ip_autoclear, u32 imod_interval, int intr_num);
+ 	return xhci_plat_resume_common(dev, false);
+ }
+ 
+diff --git a/drivers/usb/host/xhci-plat.h b/drivers/usb/host/xhci-plat.h
+index fe4f95e690fa..cd07b22adc60 100644
+--- a/drivers/usb/host/xhci-plat.h
++++ b/drivers/usb/host/xhci-plat.h
+@@ -15,6 +15,7 @@ struct usb_hcd;
+ struct xhci_plat_priv {
+ 	const char *firmware_name;
+ 	unsigned long long quirks;
++	unsigned sideband_at_suspend:1;
+ 	bool power_lost;
+ 	void (*plat_start)(struct usb_hcd *);
+ 	int (*init_quirk)(struct usb_hcd *);
+diff --git a/include/linux/usb.h b/include/linux/usb.h
+index f3a4064c729c..bc3a84870907 100644
+--- a/include/linux/usb.h
++++ b/include/linux/usb.h
+@@ -648,6 +648,7 @@ struct usb3_lpm_parameters {
+  *	Will be used as wValue for SetIsochDelay requests.
+  * @use_generic_driver: ask driver core to reprobe using the generic driver.
+  * @offload_usage: number of offload activities happening on this usb device.
++ * @offload_at_suspend: offload activities during suspend is enabled.
+  *
+  * Notes:
+  * Usbcore drivers should not set usbdev->state directly.  Instead use
+@@ -736,6 +737,7 @@ struct usb_device {
+ 	unsigned use_generic_driver:1;
+ 
+ 	refcount_t offload_usage;
++	unsigned offload_at_suspend:1;
+ };
+ 
+ #define to_usb_device(__dev)	container_of_const(__dev, struct usb_device, dev)
 -- 
 2.49.0.472.ge94155a9ec-goog
 
