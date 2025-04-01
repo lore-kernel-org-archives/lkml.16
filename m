@@ -1,123 +1,130 @@
-Received: from mout.web.de (mout.web.de [212.227.15.3])
+Received: from relayaws-01.paragon-software.com (relayaws-01.paragon-software.com [35.157.23.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4172D1A239B;
-	Tue,  1 Apr 2025 10:14:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F08B1E0E13;
+	Tue,  1 Apr 2025 10:15:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.157.23.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743502449; cv=none; b=CAsUvRSgwYba8jH89aNE77cftwXpIVbWkYbahxl/1sHVAjqGgRlZns8v4prmotFm17lDZtsQib8nvBBObwPmez/280sDxFqANI8dkJmkNAMT8m2wrVsSZ4cbOKUKZb9iRe1XKI2tO1iMUIXXa+eKlkvYcr2W1aOfVceWSF1VCdY=
+	t=1743502511; cv=none; b=BgpEkBDGtkV1KAWigBM158L4f9b5RwBv1oYmR7OQqOVUZyQmdWpd2y0dIvRZrkciKOLiwBOVzkjXVoKd6xOS3F5KQvHoiJNJmVV5YKTDfgLw4FA7Fee5/pLJX7tX+XLXm/9zCEWPQ1cfnqERPFgqAFy5mRBtdeh6lkBKD0ZW2X0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743502449; c=relaxed/simple;
-	bh=McKwnExrQrNih0CSUm4L3NSUFStkSLEldMO8dlJEkFQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FDFAVdyl80xNNQqWZgPXsQqZbQ5en/LaCvRX4dsqtvWHJJwdY6XklcgjxckQn4WO+riDa38oZ0E8/5Ol0AS9zZvSniX/Q9ijOMmNZlpvmp5F8f3CEkMpliEXQl0DGaa0rtOlN1GwAUhOhgC+Zgwb6ECqzlTURSUcGdpdVLm1qlU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=RkWi3gZ6; arc=none smtp.client-ip=212.227.15.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1743502511; c=relaxed/simple;
+	bh=F2vsjXDI66wiWMktYwJdPzRHIUvzmNJpS21AxKHlksE=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=YwYt2X2IlfvM0lBLSNXdKw7Dq6nM/pL+FONcnfRE5o+Q12bI6L2AWVQitD+zmfLxcSA74Qu4cnXQXPlnEUY1xGpNo+NC6T88C5su/610MrET3rcXv1CJjuolGy5U95rZ1BxBHvjsVGy9OeSccZzoyJro2Rg+d1uG9yYeWZL5h7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=paragon-software.com; spf=pass smtp.mailfrom=paragon-software.com; dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b=SVbcjRmk; dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b=U9sHrC78; arc=none smtp.client-ip=35.157.23.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=paragon-software.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paragon-software.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="RkWi3gZ6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1743502445; x=1744107245; i=markus.elfring@web.de;
-	bh=x2hA+nymOs+xOz+5YmWPZmixDzfVS70Y3aDJ9V65nT4=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=RkWi3gZ63zmfjU3Ej7UAXXIyCDdOrmkIJCQJVfLk3mUdmqbs69/HxrgWvUXYlExJ
-	 Bi1j0VOu/dTVbRB8CarInq+nxo+5rC2lKvejqzd/PNLyctbTbRsJpg2XVvpcdpxqF
-	 TuJycSExL0beuLfTTVCFTkkOqAVs7wKzEdplFZzTlvzmhhava/s4b0KQLWlQZIZsM
-	 TWFPiNfAnfhKHpLjXTagkNVeRztrJTTM7QCT3PckOwnODQlMvkNVlQViT6R9w0sZ2
-	 f1ebYXEanvoP3kHorko2KkLNogdommGda/1OJfZ1uBE1tOyOw+RQnBqZ7oH/T0pS/
-	 vz3PT5L6gY+0oroMKw==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.70.54]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1Mi537-1tUKcO0sJV-00jUeG; Tue, 01
- Apr 2025 12:14:05 +0200
-Message-ID: <bf3ff4a5-e8e0-4d25-b878-1ee2308befcc@web.de>
-Date: Tue, 1 Apr 2025 12:14:04 +0200
+	dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b="SVbcjRmk";
+	dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b="U9sHrC78"
+Received: from relayfre-01.paragon-software.com (unknown [172.30.72.12])
+	by relayaws-01.paragon-software.com (Postfix) with ESMTPS id AD80D212F;
+	Tue,  1 Apr 2025 10:06:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=paragon-software.com; s=mail; t=1743501997;
+	bh=DsaYEb2nVtRuXrpsaOjMkKiSqaCyerjUxjRkdWT/QIE=;
+	h=From:To:CC:Subject:Date;
+	b=SVbcjRmk0v+p81nQYTrHsDqOw4sB68NfiaiS7vQTtas9YnSkSIxrdnRoixhYJxKgP
+	 Sxo9p3rddh4luaQkP4djQ5SKLvi8CQXTlkNG4GGMCREUWgSy6rWaq5de6kwQTtpKn9
+	 wroUd7ErWN/hasuD1sQiSMwpXpQ3XPQYR5q9GeXg=
+Received: from dlg2.mail.paragon-software.com (vdlg-exch-02.paragon-software.com [172.30.1.105])
+	by relayfre-01.paragon-software.com (Postfix) with ESMTPS id 6E78A25C5;
+	Tue,  1 Apr 2025 10:08:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=paragon-software.com; s=mail; t=1743502123;
+	bh=DsaYEb2nVtRuXrpsaOjMkKiSqaCyerjUxjRkdWT/QIE=;
+	h=From:To:CC:Subject:Date;
+	b=U9sHrC78BSVZ/eVDUxCts0ocSBo+monJg7oaO6lj+swHxijFk0mIlJo9yqquiTQWq
+	 j3ip7hMhgdAxM9jn0JrFdG6d6Jf5Sl9TampSrjIIrBRApKIeE8iBJSIxWYjpp2AwEk
+	 OIAXOwNSVRvHNA3y7mw0ITx5ad84sMtRAlc/Uuw8=
+Received: from ntfs3vm.localdomain (192.168.211.33) by
+ vdlg-exch-02.paragon-software.com (172.30.1.105) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.7; Tue, 1 Apr 2025 13:08:42 +0300
+From: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
+To: <torvalds@linux-foundation.org>
+CC: <ntfs3@lists.linux.dev>, <linux-fsdevel@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] ntfs3: bugfixes for 6.15
+Date: Tue, 1 Apr 2025 13:08:22 +0300
+Message-ID: <20250401100822.40050-1-almaz.alexandrovich@paragon-software.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] HID: uclogic: Add NULL check in
- uclogic_input_configured()
-To: Henry Martin <bsdhenrymartin@gmail.com>, linux-input@vger.kernel.org
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Benjamin Tissoires <bentiss@kernel.org>, Jiri Kosina <jikos@kernel.org>
-References: <a73250f0-8fbd-40a7-b4b6-bc45050c9289@web.de>
- <20250401094853.24143-1-bsdhenrymartin@gmail.com>
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250401094853.24143-1-bsdhenrymartin@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:NDWXv86MNViM2Vfh8kvfUGfxKkEqT7mQgKjlyQoHBnNpj+rdxZg
- SevV+6SQdXqJ7mCiN0eAZO57dRYobsEW0TE98iki5bH/Pdtw3kH3T7QzWm/9liGZJHUvzOI
- /nWiS7G2+yK/Sw/hZJPetGxy09qz6WjRfkQeO3hZat44ahknGkh7+Nk5IjoHKLj2J7joT4T
- zN5CZfZ+gT2uy+zkSHJbQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:G1NXvm2GDQ4=;xXUadcyKMYMsqLezndAMRKd6ewR
- XSdNINu3XbpqZnlvO4hAW57UlKUwjHFGtrIsbEyUDGhmk0rkht+jlDjTfNKaJzXG4Lm6gxVVe
- 0jXW48PvQ69FJFXXhi7YlgAVqHpt5/QTk0HuyfJcftX7UgO+YXmTvOsQZS7xlLmfLdPsuRFKT
- Gzw56ri7sZSshq9ysFx6nHDLhyfzeuyLtILbR1fDpBzi3eDvD2RbRLGONCG9eIwfZWm0ae/p5
- d+AsTLVEH/CTFAYXQsOMgcPo6BG0GBtYvh8lw9RltBS7hxsoxYKM9KXq2sk8a/EPOeaUJ5jxh
- M7R3kGRz1a7qsMkSTVd+O7i9ZR7xoGlZdfDIJMCOcUm3RNeZYZ+7+NgsoW36qCTdt6OYiLJ1z
- cClaUV0RBhLihuNlcxVNfSnmUzj1P6/75xRXnuyXF1JmT97mqRslw7GTi2pPPCoLlY5HRJ6mu
- ZllYfbGNA0rF4OH+TSXlINAenkhx9UQkFORMxE4ZIioeENIDdiRMws53Yoo8BxeEsf+2riIN2
- Vi62a7Wh67RrVHfKGe+wvj1miPZ9m45oaEkwv1FIlPyEh7du5DEHKSOpUDOAS7IHtfZB7LZiC
- 2PbL5WIcfRePsxDH3Hf8HeGtMnMD2C2xlk7l1CU+7H2DefRDjGl6gQcPYtNQQNiqf1xduZ3BL
- Bo9WSFZhFLxUt0K3tsZcV79LVvdfDsAcCseUm3fOzOPIlSuXM9AemNkSOgGFEVvSUTVgquO9Z
- 1wfep9+4UluRWaETsF4BgqP8lO6YcRMU3cRHkd7jqdWjgzgID4SpIsgSZ2ujzBLm9q79CjETb
- CUzcALAKIN3AkRfvj5ljNdtA8KdslQsJodz40G6CUPt++IAb1jQdWIb/3r1w5bo5Kn7DhQgd1
- sQvrZVS3YAX7gv4WX6e1/VlxvSp7RzSb8v5ofy2Nh3VS8Id8hv2RToLSX9rlY4vCD+Dz8ItSp
- JPdbtlxIr61VDERk33SIrKzMa80PeGDU+p3xS9heHIiUh845nKMqxI2QN0o72PI9qWm4gdqUU
- 6x9KoKy4rQm5wo8+CRZ/MOSiisBxCMydXidCLXWtmEKAnOi9dEt5bifOjGnKWkELemAG9CRPD
- 9JhPsrKabYRrweEUtpV864E83B68sPV5VJCt3Fh3eQZYz6xtCWSoFemqx2VS1bxDWqFCtcya8
- 6yGF50vFMNRntfk3iLeM9K/dpDg+lnGf6JGywLUunfL2t0vp89s/tfTqEaz0P51cDSucOFXOR
- O7Ra2iEOeTXF0clVmrjmS5OvIWWopsFbfZU0w3HYKfaTn1d9e6hXs4pyHPzKa93pfONFMk0UQ
- r+SyXL6t1oLmEZRPumdGq0pNn4eVp7K0nBIshmUBVcWLjPZTzGPAsqyIpFDoDjMVlZAHY5yQI
- 8A1NtVRF7nDUr+Ng/jyea23ONTKiGimaqbW80DzfPrVg0nETBhwzgXH6a8rQ9RuLeI+ZD74PP
- xCYrSRi2WeUdSvDsOdLdVTJxe4GhOkylyc97Cy2boiCdfOzjs
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: vdlg-exch-02.paragon-software.com (172.30.1.105) To
+ vdlg-exch-02.paragon-software.com (172.30.1.105)
 
-> devm_kasprintf() return NULL if memory allocation fails. Currently,
-=E2=80=A6
-                call?                               failed?
-
-
-> Add NULL check after devm_kasprintf() to prevent this issue.
-
-Do you propose to improve this function implementation a bit more?
-
-
-=E2=80=A6
-> ---
-> V2 -> V3: Kept the original switch structure, only optimized the outer
-> conditional checks while maintaining safety requirements.
-> V1 -> V2: Simplify the handing of the condition "suffix" with if/else.
-
-* Under which circumstances will you begin to care more to offer such adju=
-stments
-  in separate update steps?
-  https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/t=
-ree/Documentation/process/submitting-patches.rst?h=3Dv6.14#n81
-
-* Can another tag become more helpful?
-  https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/t=
-ree/Documentation/process/submitting-patches.rst?h=3Dv6.14#n598
-
-
-Can an other control flow variant be a bit nicer finally?
-
-	if (suffix) {
-=E2=80=A6
-	} else {
-=E2=80=A6
-	}
-
+Please pull this branch containing ntfs3 code for 6.15.
 
 Regards,
-Markus
+Konstantin
+
+----------------------------------------------------------------
+The following changes since commit 2014c95afecee3e76ca4a56956a936e23283f05b:
+
+  Linux 6.14-rc1 (2025-02-02 15:39:26 -0800)
+
+are available in the Git repository at:
+
+  https://github.com/Paragon-Software-Group/linux-ntfs3.git tags/ntfs3_for_6.15
+
+for you to fetch changes up to 8b12017c1b9582db8c5833cf08d610e8f810f4b3:
+
+  fs/ntfs3: Remove unused ntfs_flush_inodes (2025-03-06 19:53:28 +0300)
+
+----------------------------------------------------------------
+Changes for 6.15-rc1
+
+Fixed:
+  integer overflows on 32-bit systems;
+  integer overflow in hdr_first_de();
+  'proc_info_root' leak when NTFS initialization failed.
+
+Removed:
+  unused functions ni_load_attr, ntfs_sb_read, ntfs_flush_inodes.
+
+Changed:
+  updated inode->i_mapping->a_ops on compression state;
+  ensured atomicity of write operations;
+  refactored ntfs_{create/remove}_procdir();
+  refactored ntfs_{create/remove}_proc_root().
+
+----------------------------------------------------------------
+Dan Carpenter (2):
+      fs/ntfs3: Fix a couple integer overflows on 32bit systems
+      fs/ntfs3: Prevent integer overflow in hdr_first_de()
+
+Dr. David Alan Gilbert (3):
+      fs/ntfs3: Remove unused ni_load_attr
+      fs/ntfs3: Remove unused ntfs_sb_read
+      fs/ntfs3: Remove unused ntfs_flush_inodes
+
+Edward Adam Davis (1):
+      fs/ntfs3: Fix WARNING in ntfs_extend_initialized_size
+
+Konstantin Komarov (1):
+      fs/ntfs3: Update inode->i_mapping->a_ops on compression state
+
+Lizhi Xu (1):
+      fs/ntfs3: Keep write operations atomic
+
+Ye Bin (3):
+      fs/ntfs3: Factor out ntfs_{create/remove}_procdir()
+      fs/ntfs3: Factor out ntfs_{create/remove}_proc_root()
+      fs/ntfs3: Fix 'proc_info_root' leak when init ntfs failed
+
+ fs/ntfs3/attrib.c  |  3 +-
+ fs/ntfs3/file.c    | 42 +++++++++++++++++++-------
+ fs/ntfs3/frecord.c | 63 +++-----------------------------------
+ fs/ntfs3/fsntfs.c  | 28 -----------------
+ fs/ntfs3/index.c   |  4 +--
+ fs/ntfs3/inode.c   | 40 ------------------------
+ fs/ntfs3/ntfs.h    |  2 +-
+ fs/ntfs3/ntfs_fs.h |  6 ----
+ fs/ntfs3/super.c   | 89 ++++++++++++++++++++++++++++++++++--------------------
+ 9 files changed, 96 insertions(+), 181 deletions(-)
