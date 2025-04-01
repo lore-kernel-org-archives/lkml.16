@@ -1,485 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.web.de (mout.web.de [212.227.15.3])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 579D41A239B;
-	Tue,  1 Apr 2025 10:13:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4172D1A239B;
+	Tue,  1 Apr 2025 10:14:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743502397; cv=none; b=HvJUS3zWWE+9RyrJkbLm6q+mmIMP3dAZ7xSAz5ygTzwS+X4ORkJMMZg5NJKBAjkOB501+Bccd+XV08Ck1arbOg6RanfJtVfnP1t35RvwnQ/tBGexDcWoIQdUtNvjpToWjCJj1VPPV8N1lkJh0Im7uzdJQqUnvnjNXdbbtMTLk5M=
+	t=1743502449; cv=none; b=CAsUvRSgwYba8jH89aNE77cftwXpIVbWkYbahxl/1sHVAjqGgRlZns8v4prmotFm17lDZtsQib8nvBBObwPmez/280sDxFqANI8dkJmkNAMT8m2wrVsSZ4cbOKUKZb9iRe1XKI2tO1iMUIXXa+eKlkvYcr2W1aOfVceWSF1VCdY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743502397; c=relaxed/simple;
-	bh=ivTxn0hTBNFRHrw5B9krJdw5mAWDPBuasN1FU6mUvdY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=vCbUoA4Zb3Dxvj8H6QhqQXPl5cdhT/oRWu7uCfI/xhKm9k8bq1tEYPwhIw/p0R1V30S55nKiNt0KWroh8ko1bY34tbYKCYg43RYVN7evnb10m635kB1/7Kqzf+5HTqxq+s5YBraPB+qEvisOmiLYDdF3cTczzLDf6zK6faITiVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D5TMxz2L; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743502449; c=relaxed/simple;
+	bh=McKwnExrQrNih0CSUm4L3NSUFStkSLEldMO8dlJEkFQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FDFAVdyl80xNNQqWZgPXsQqZbQ5en/LaCvRX4dsqtvWHJJwdY6XklcgjxckQn4WO+riDa38oZ0E8/5Ol0AS9zZvSniX/Q9ijOMmNZlpvmp5F8f3CEkMpliEXQl0DGaa0rtOlN1GwAUhOhgC+Zgwb6ECqzlTURSUcGdpdVLm1qlU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=RkWi3gZ6; arc=none smtp.client-ip=212.227.15.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D5TMxz2L"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81ADAC4CEE4;
-	Tue,  1 Apr 2025 10:13:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743502395;
-	bh=ivTxn0hTBNFRHrw5B9krJdw5mAWDPBuasN1FU6mUvdY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=D5TMxz2LblaZOefkG+9mPTYiuHkfkNeDbTm3jWhTmBJlInjkb54B21tBEAgtRETiI
-	 E/MngD31JIK7Han0wAFx49L4O6hZMK1DDAgNEK/z/7PPjgykXzABeEdVn5g9vOI1nH
-	 22pfQ5qgAHbaDAzx5ZbZ2r52FVSIm1Z6oINugS6bChXCaqRteoQfIxJFkbz/uF6xMp
-	 /ebT/o71NNZp4daFLmc708qT2TaFzHkw1wcx8nGtkC1oJ5NLu8ITK7oNRYhKccMN7/
-	 oOQwlfIud5AIFa7kZMEXpwmRrogpvW05QaiX3PfK5GuJdN1znlvVWSE0mF1D5ylVry
-	 vW52CKGxaIzXg==
-Date: Tue, 1 Apr 2025 15:43:05 +0530
-From: Sumit Garg <sumit.garg@kernel.org>
-To: Jens Wiklander <jens.wiklander@linaro.org>, akpm@linux-foundation.org,
-	david@redhat.com, rppt@linux.ibm.com
-Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-	op-tee@lists.trustedfirmware.org,
-	linux-arm-kernel@lists.infradead.org,
-	Olivier Masse <olivier.masse@nxp.com>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Yong Wu <yong.wu@mediatek.com>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
-	Brian Starkey <Brian.Starkey@arm.com>,
-	John Stultz <jstultz@google.com>,
-	"T . J . Mercier" <tjmercier@google.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	azarrabi@qti.qualcomm.com, Simona Vetter <simona.vetter@ffwll.ch>,
-	Daniel Stone <daniel@fooishbar.org>, linux-mm@kvack.org
-Subject: Re: [PATCH v6 09/10] optee: FF-A: dynamic restricted memory
- allocation
-Message-ID: <Z-u8MWNVNy9lLbkK@sumit-X1>
-References: <20250305130634.1850178-1-jens.wiklander@linaro.org>
- <20250305130634.1850178-10-jens.wiklander@linaro.org>
- <Z-JePo6yGlUgrZkw@sumit-X1>
- <CAHUa44H1MzBLBM+Oeawca52C8PF3uAT0ggbL-zRdnBqj4LYrZg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="RkWi3gZ6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1743502445; x=1744107245; i=markus.elfring@web.de;
+	bh=x2hA+nymOs+xOz+5YmWPZmixDzfVS70Y3aDJ9V65nT4=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=RkWi3gZ63zmfjU3Ej7UAXXIyCDdOrmkIJCQJVfLk3mUdmqbs69/HxrgWvUXYlExJ
+	 Bi1j0VOu/dTVbRB8CarInq+nxo+5rC2lKvejqzd/PNLyctbTbRsJpg2XVvpcdpxqF
+	 TuJycSExL0beuLfTTVCFTkkOqAVs7wKzEdplFZzTlvzmhhava/s4b0KQLWlQZIZsM
+	 TWFPiNfAnfhKHpLjXTagkNVeRztrJTTM7QCT3PckOwnODQlMvkNVlQViT6R9w0sZ2
+	 f1ebYXEanvoP3kHorko2KkLNogdommGda/1OJfZ1uBE1tOyOw+RQnBqZ7oH/T0pS/
+	 vz3PT5L6gY+0oroMKw==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.70.54]) by smtp.web.de (mrweb005
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1Mi537-1tUKcO0sJV-00jUeG; Tue, 01
+ Apr 2025 12:14:05 +0200
+Message-ID: <bf3ff4a5-e8e0-4d25-b878-1ee2308befcc@web.de>
+Date: Tue, 1 Apr 2025 12:14:04 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHUa44H1MzBLBM+Oeawca52C8PF3uAT0ggbL-zRdnBqj4LYrZg@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] HID: uclogic: Add NULL check in
+ uclogic_input_configured()
+To: Henry Martin <bsdhenrymartin@gmail.com>, linux-input@vger.kernel.org
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Benjamin Tissoires <bentiss@kernel.org>, Jiri Kosina <jikos@kernel.org>
+References: <a73250f0-8fbd-40a7-b4b6-bc45050c9289@web.de>
+ <20250401094853.24143-1-bsdhenrymartin@gmail.com>
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20250401094853.24143-1-bsdhenrymartin@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:NDWXv86MNViM2Vfh8kvfUGfxKkEqT7mQgKjlyQoHBnNpj+rdxZg
+ SevV+6SQdXqJ7mCiN0eAZO57dRYobsEW0TE98iki5bH/Pdtw3kH3T7QzWm/9liGZJHUvzOI
+ /nWiS7G2+yK/Sw/hZJPetGxy09qz6WjRfkQeO3hZat44ahknGkh7+Nk5IjoHKLj2J7joT4T
+ zN5CZfZ+gT2uy+zkSHJbQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:G1NXvm2GDQ4=;xXUadcyKMYMsqLezndAMRKd6ewR
+ XSdNINu3XbpqZnlvO4hAW57UlKUwjHFGtrIsbEyUDGhmk0rkht+jlDjTfNKaJzXG4Lm6gxVVe
+ 0jXW48PvQ69FJFXXhi7YlgAVqHpt5/QTk0HuyfJcftX7UgO+YXmTvOsQZS7xlLmfLdPsuRFKT
+ Gzw56ri7sZSshq9ysFx6nHDLhyfzeuyLtILbR1fDpBzi3eDvD2RbRLGONCG9eIwfZWm0ae/p5
+ d+AsTLVEH/CTFAYXQsOMgcPo6BG0GBtYvh8lw9RltBS7hxsoxYKM9KXq2sk8a/EPOeaUJ5jxh
+ M7R3kGRz1a7qsMkSTVd+O7i9ZR7xoGlZdfDIJMCOcUm3RNeZYZ+7+NgsoW36qCTdt6OYiLJ1z
+ cClaUV0RBhLihuNlcxVNfSnmUzj1P6/75xRXnuyXF1JmT97mqRslw7GTi2pPPCoLlY5HRJ6mu
+ ZllYfbGNA0rF4OH+TSXlINAenkhx9UQkFORMxE4ZIioeENIDdiRMws53Yoo8BxeEsf+2riIN2
+ Vi62a7Wh67RrVHfKGe+wvj1miPZ9m45oaEkwv1FIlPyEh7du5DEHKSOpUDOAS7IHtfZB7LZiC
+ 2PbL5WIcfRePsxDH3Hf8HeGtMnMD2C2xlk7l1CU+7H2DefRDjGl6gQcPYtNQQNiqf1xduZ3BL
+ Bo9WSFZhFLxUt0K3tsZcV79LVvdfDsAcCseUm3fOzOPIlSuXM9AemNkSOgGFEVvSUTVgquO9Z
+ 1wfep9+4UluRWaETsF4BgqP8lO6YcRMU3cRHkd7jqdWjgzgID4SpIsgSZ2ujzBLm9q79CjETb
+ CUzcALAKIN3AkRfvj5ljNdtA8KdslQsJodz40G6CUPt++IAb1jQdWIb/3r1w5bo5Kn7DhQgd1
+ sQvrZVS3YAX7gv4WX6e1/VlxvSp7RzSb8v5ofy2Nh3VS8Id8hv2RToLSX9rlY4vCD+Dz8ItSp
+ JPdbtlxIr61VDERk33SIrKzMa80PeGDU+p3xS9heHIiUh845nKMqxI2QN0o72PI9qWm4gdqUU
+ 6x9KoKy4rQm5wo8+CRZ/MOSiisBxCMydXidCLXWtmEKAnOi9dEt5bifOjGnKWkELemAG9CRPD
+ 9JhPsrKabYRrweEUtpV864E83B68sPV5VJCt3Fh3eQZYz6xtCWSoFemqx2VS1bxDWqFCtcya8
+ 6yGF50vFMNRntfk3iLeM9K/dpDg+lnGf6JGywLUunfL2t0vp89s/tfTqEaz0P51cDSucOFXOR
+ O7Ra2iEOeTXF0clVmrjmS5OvIWWopsFbfZU0w3HYKfaTn1d9e6hXs4pyHPzKa93pfONFMk0UQ
+ r+SyXL6t1oLmEZRPumdGq0pNn4eVp7K0nBIshmUBVcWLjPZTzGPAsqyIpFDoDjMVlZAHY5yQI
+ 8A1NtVRF7nDUr+Ng/jyea23ONTKiGimaqbW80DzfPrVg0nETBhwzgXH6a8rQ9RuLeI+ZD74PP
+ xCYrSRi2WeUdSvDsOdLdVTJxe4GhOkylyc97Cy2boiCdfOzjs
 
-+ MM folks to seek guidance here.
+> devm_kasprintf() return NULL if memory allocation fails. Currently,
+=E2=80=A6
+                call?                               failed?
 
-On Thu, Mar 27, 2025 at 09:07:34AM +0100, Jens Wiklander wrote:
-> Hi Sumit,
-> 
-> On Tue, Mar 25, 2025 at 8:42 AM Sumit Garg <sumit.garg@kernel.org> wrote:
-> >
-> > On Wed, Mar 05, 2025 at 02:04:15PM +0100, Jens Wiklander wrote:
-> > > Add support in the OP-TEE backend driver dynamic restricted memory
-> > > allocation with FF-A.
-> > >
-> > > The restricted memory pools for dynamically allocated restrict memory
-> > > are instantiated when requested by user-space. This instantiation can
-> > > fail if OP-TEE doesn't support the requested use-case of restricted
-> > > memory.
-> > >
-> > > Restricted memory pools based on a static carveout or dynamic allocation
-> > > can coexist for different use-cases. We use only dynamic allocation with
-> > > FF-A.
-> > >
-> > > Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
-> > > ---
-> > >  drivers/tee/optee/Makefile        |   1 +
-> > >  drivers/tee/optee/ffa_abi.c       | 143 ++++++++++++-
-> > >  drivers/tee/optee/optee_private.h |  13 +-
-> > >  drivers/tee/optee/rstmem.c        | 329 ++++++++++++++++++++++++++++++
-> > >  4 files changed, 483 insertions(+), 3 deletions(-)
-> > >  create mode 100644 drivers/tee/optee/rstmem.c
-> > >
 
-<snip>
+> Add NULL check after devm_kasprintf() to prevent this issue.
 
-> > > diff --git a/drivers/tee/optee/rstmem.c b/drivers/tee/optee/rstmem.c
-> > > new file mode 100644
-> > > index 000000000000..ea27769934d4
-> > > --- /dev/null
-> > > +++ b/drivers/tee/optee/rstmem.c
-> > > @@ -0,0 +1,329 @@
-> > > +// SPDX-License-Identifier: GPL-2.0-only
-> > > +/*
-> > > + * Copyright (c) 2025, Linaro Limited
-> > > + */
-> > > +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> > > +
-> > > +#include <linux/errno.h>
-> > > +#include <linux/genalloc.h>
-> > > +#include <linux/slab.h>
-> > > +#include <linux/string.h>
-> > > +#include <linux/tee_core.h>
-> > > +#include <linux/types.h>
-> > > +#include "optee_private.h"
-> > > +
-> > > +struct optee_rstmem_cma_pool {
-> > > +     struct tee_rstmem_pool pool;
-> > > +     struct gen_pool *gen_pool;
-> > > +     struct optee *optee;
-> > > +     size_t page_count;
-> > > +     u16 *end_points;
-> > > +     u_int end_point_count;
-> > > +     u_int align;
-> > > +     refcount_t refcount;
-> > > +     u32 use_case;
-> > > +     struct tee_shm *rstmem;
-> > > +     /* Protects when initializing and tearing down this struct */
-> > > +     struct mutex mutex;
-> > > +};
-> > > +
-> > > +static struct optee_rstmem_cma_pool *
-> > > +to_rstmem_cma_pool(struct tee_rstmem_pool *pool)
-> > > +{
-> > > +     return container_of(pool, struct optee_rstmem_cma_pool, pool);
-> > > +}
-> > > +
-> > > +static int init_cma_rstmem(struct optee_rstmem_cma_pool *rp)
-> > > +{
-> > > +     int rc;
-> > > +
-> > > +     rp->rstmem = tee_shm_alloc_cma_phys_mem(rp->optee->ctx, rp->page_count,
-> > > +                                             rp->align);
-> > > +     if (IS_ERR(rp->rstmem)) {
-> > > +             rc = PTR_ERR(rp->rstmem);
-> > > +             goto err_null_rstmem;
-> > > +     }
-> > > +
-> > > +     /*
-> > > +      * TODO unmap the memory range since the physical memory will
-> > > +      * become inaccesible after the lend_rstmem() call.
-> > > +      */
-> >
-> > What's your plan for this TODO? I think we need a CMA allocator here
-> > which can allocate un-mapped memory such that any cache speculation
-> > won't lead to CPU hangs once the memory restriction comes into picture.
-> 
-> What happens is platform-specific. For some platforms, it might be
-> enough to avoid explicit access. Yes, a CMA allocator with unmapped
-> memory or where memory can be unmapped is one option.
+Do you propose to improve this function implementation a bit more?
 
-Did you get a chance to enable real memory protection on RockPi board?
-This will atleast ensure that mapped restricted memory without explicit
-access works fine. Since otherwise once people start to enable real
-memory restriction in OP-TEE, there can be chances of random hang ups
-due to cache speculation.
 
-MM folks,
+=E2=80=A6
+> ---
+> V2 -> V3: Kept the original switch structure, only optimized the outer
+> conditional checks while maintaining safety requirements.
+> V1 -> V2: Simplify the handing of the condition "suffix" with if/else.
 
-Basically what we are trying to achieve here is a "no-map" DT behaviour
-[1] which is rather dynamic in  nature. The use-case here is that a memory
-block allocated from CMA can be marked restricted at runtime where we
-would like the Linux not being able to directly or indirectly (cache
-speculation) access it. Once memory restriction use-case has been
-completed, the memory block can be marked as normal and freed for
-further CMA allocation.
+* Under which circumstances will you begin to care more to offer such adju=
+stments
+  in separate update steps?
+  https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/t=
+ree/Documentation/process/submitting-patches.rst?h=3Dv6.14#n81
 
-It will be apprciated if you can guide us regarding the appropriate APIs
-to use for un-mapping/mamping CMA allocations for this use-case.
+* Can another tag become more helpful?
+  https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/t=
+ree/Documentation/process/submitting-patches.rst?h=3Dv6.14#n598
 
-[1] https://github.com/devicetree-org/dt-schema/blob/main/dtschema/schemas/reserved-memory/reserved-memory.yaml#L79
 
--Sumit
+Can an other control flow variant be a bit nicer finally?
 
-> 
-> >
-> > > +     rc = rp->optee->ops->lend_rstmem(rp->optee, rp->rstmem, rp->end_points,
-> > > +                                      rp->end_point_count, rp->use_case);
-> > > +     if (rc)
-> > > +             goto err_put_shm;
-> > > +     rp->rstmem->flags |= TEE_SHM_DYNAMIC;
-> > > +
-> > > +     rp->gen_pool = gen_pool_create(PAGE_SHIFT, -1);
-> > > +     if (!rp->gen_pool) {
-> > > +             rc = -ENOMEM;
-> > > +             goto err_reclaim;
-> > > +     }
-> > > +
-> > > +     rc = gen_pool_add(rp->gen_pool, rp->rstmem->paddr,
-> > > +                       rp->rstmem->size, -1);
-> > > +     if (rc)
-> > > +             goto err_free_pool;
-> > > +
-> > > +     refcount_set(&rp->refcount, 1);
-> > > +     return 0;
-> > > +
-> > > +err_free_pool:
-> > > +     gen_pool_destroy(rp->gen_pool);
-> > > +     rp->gen_pool = NULL;
-> > > +err_reclaim:
-> > > +     rp->optee->ops->reclaim_rstmem(rp->optee, rp->rstmem);
-> > > +err_put_shm:
-> > > +     tee_shm_put(rp->rstmem);
-> > > +err_null_rstmem:
-> > > +     rp->rstmem = NULL;
-> > > +     return rc;
-> > > +}
-> > > +
-> > > +static int get_cma_rstmem(struct optee_rstmem_cma_pool *rp)
-> > > +{
-> > > +     int rc = 0;
-> > > +
-> > > +     if (!refcount_inc_not_zero(&rp->refcount)) {
-> > > +             mutex_lock(&rp->mutex);
-> > > +             if (rp->gen_pool) {
-> > > +                     /*
-> > > +                      * Another thread has already initialized the pool
-> > > +                      * before us, or the pool was just about to be torn
-> > > +                      * down. Either way we only need to increase the
-> > > +                      * refcount and we're done.
-> > > +                      */
-> > > +                     refcount_inc(&rp->refcount);
-> > > +             } else {
-> > > +                     rc = init_cma_rstmem(rp);
-> > > +             }
-> > > +             mutex_unlock(&rp->mutex);
-> > > +     }
-> > > +
-> > > +     return rc;
-> > > +}
-> > > +
-> > > +static void release_cma_rstmem(struct optee_rstmem_cma_pool *rp)
-> > > +{
-> > > +     gen_pool_destroy(rp->gen_pool);
-> > > +     rp->gen_pool = NULL;
-> > > +
-> > > +     rp->optee->ops->reclaim_rstmem(rp->optee, rp->rstmem);
-> > > +     rp->rstmem->flags &= ~TEE_SHM_DYNAMIC;
-> > > +
-> > > +     WARN(refcount_read(&rp->rstmem->refcount) != 1, "Unexpected refcount");
-> > > +     tee_shm_put(rp->rstmem);
-> > > +     rp->rstmem = NULL;
-> > > +}
-> > > +
-> > > +static void put_cma_rstmem(struct optee_rstmem_cma_pool *rp)
-> > > +{
-> > > +     if (refcount_dec_and_test(&rp->refcount)) {
-> > > +             mutex_lock(&rp->mutex);
-> > > +             if (rp->gen_pool)
-> > > +                     release_cma_rstmem(rp);
-> > > +             mutex_unlock(&rp->mutex);
-> > > +     }
-> > > +}
-> > > +
-> > > +static int rstmem_pool_op_cma_alloc(struct tee_rstmem_pool *pool,
-> > > +                                 struct sg_table *sgt, size_t size,
-> > > +                                 size_t *offs)
-> > > +{
-> > > +     struct optee_rstmem_cma_pool *rp = to_rstmem_cma_pool(pool);
-> > > +     size_t sz = ALIGN(size, PAGE_SIZE);
-> > > +     phys_addr_t pa;
-> > > +     int rc;
-> > > +
-> > > +     rc = get_cma_rstmem(rp);
-> > > +     if (rc)
-> > > +             return rc;
-> > > +
-> > > +     pa = gen_pool_alloc(rp->gen_pool, sz);
-> > > +     if (!pa) {
-> > > +             rc = -ENOMEM;
-> > > +             goto err_put;
-> > > +     }
-> > > +
-> > > +     rc = sg_alloc_table(sgt, 1, GFP_KERNEL);
-> > > +     if (rc)
-> > > +             goto err_free;
-> > > +
-> > > +     sg_set_page(sgt->sgl, phys_to_page(pa), size, 0);
-> > > +     *offs = pa - rp->rstmem->paddr;
-> > > +
-> > > +     return 0;
-> > > +err_free:
-> > > +     gen_pool_free(rp->gen_pool, pa, size);
-> > > +err_put:
-> > > +     put_cma_rstmem(rp);
-> > > +
-> > > +     return rc;
-> > > +}
-> > > +
-> > > +static void rstmem_pool_op_cma_free(struct tee_rstmem_pool *pool,
-> > > +                                 struct sg_table *sgt)
-> > > +{
-> > > +     struct optee_rstmem_cma_pool *rp = to_rstmem_cma_pool(pool);
-> > > +     struct scatterlist *sg;
-> > > +     int i;
-> > > +
-> > > +     for_each_sgtable_sg(sgt, sg, i)
-> > > +             gen_pool_free(rp->gen_pool, sg_phys(sg), sg->length);
-> > > +     sg_free_table(sgt);
-> > > +     put_cma_rstmem(rp);
-> > > +}
-> > > +
-> > > +static int rstmem_pool_op_cma_update_shm(struct tee_rstmem_pool *pool,
-> > > +                                      struct sg_table *sgt, size_t offs,
-> > > +                                      struct tee_shm *shm,
-> > > +                                      struct tee_shm **parent_shm)
-> > > +{
-> > > +     struct optee_rstmem_cma_pool *rp = to_rstmem_cma_pool(pool);
-> > > +
-> > > +     *parent_shm = rp->rstmem;
-> > > +
-> > > +     return 0;
-> > > +}
-> > > +
-> > > +static void pool_op_cma_destroy_pool(struct tee_rstmem_pool *pool)
-> > > +{
-> > > +     struct optee_rstmem_cma_pool *rp = to_rstmem_cma_pool(pool);
-> > > +
-> > > +     mutex_destroy(&rp->mutex);
-> > > +     kfree(rp);
-> > > +}
-> > > +
-> > > +static struct tee_rstmem_pool_ops rstmem_pool_ops_cma = {
-> > > +     .alloc = rstmem_pool_op_cma_alloc,
-> > > +     .free = rstmem_pool_op_cma_free,
-> > > +     .update_shm = rstmem_pool_op_cma_update_shm,
-> > > +     .destroy_pool = pool_op_cma_destroy_pool,
-> > > +};
-> > > +
-> > > +static int get_rstmem_config(struct optee *optee, u32 use_case,
-> > > +                          size_t *min_size, u_int *min_align,
-> > > +                          u16 *end_points, u_int *ep_count)
-> >
-> > I guess this end points terminology is specific to FF-A ABI. Is there
-> > any relevance for this in the common APIs?
-> 
-> Yes, endpoints are specific to FF-A ABI. The list of end-points must
-> be presented to FFA_MEM_LEND. We're relying on the secure world to
-> know which endpoints are needed for a specific use case.
-> 
-> Cheers,
-> Jens
-> 
-> >
-> > -Sumit
-> >
-> > > +{
-> > > +     struct tee_param params[2] = {
-> > > +             [0] = {
-> > > +                     .attr = TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_INOUT,
-> > > +                     .u.value.a = use_case,
-> > > +             },
-> > > +             [1] = {
-> > > +                     .attr = TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_OUTPUT,
-> > > +             },
-> > > +     };
-> > > +     struct optee_shm_arg_entry *entry;
-> > > +     struct tee_shm *shm_param = NULL;
-> > > +     struct optee_msg_arg *msg_arg;
-> > > +     struct tee_shm *shm;
-> > > +     u_int offs;
-> > > +     int rc;
-> > > +
-> > > +     if (end_points && *ep_count) {
-> > > +             params[1].u.memref.size = *ep_count * sizeof(*end_points);
-> > > +             shm_param = tee_shm_alloc_priv_buf(optee->ctx,
-> > > +                                                params[1].u.memref.size);
-> > > +             if (IS_ERR(shm_param))
-> > > +                     return PTR_ERR(shm_param);
-> > > +             params[1].u.memref.shm = shm_param;
-> > > +     }
-> > > +
-> > > +     msg_arg = optee_get_msg_arg(optee->ctx, ARRAY_SIZE(params), &entry,
-> > > +                                 &shm, &offs);
-> > > +     if (IS_ERR(msg_arg)) {
-> > > +             rc = PTR_ERR(msg_arg);
-> > > +             goto out_free_shm;
-> > > +     }
-> > > +     msg_arg->cmd = OPTEE_MSG_CMD_GET_RSTMEM_CONFIG;
-> > > +
-> > > +     rc = optee->ops->to_msg_param(optee, msg_arg->params,
-> > > +                                   ARRAY_SIZE(params), params,
-> > > +                                   false /*!update_out*/);
-> > > +     if (rc)
-> > > +             goto out_free_msg;
-> > > +
-> > > +     rc = optee->ops->do_call_with_arg(optee->ctx, shm, offs, false);
-> > > +     if (rc)
-> > > +             goto out_free_msg;
-> > > +     if (msg_arg->ret && msg_arg->ret != TEEC_ERROR_SHORT_BUFFER) {
-> > > +             rc = -EINVAL;
-> > > +             goto out_free_msg;
-> > > +     }
-> > > +
-> > > +     rc = optee->ops->from_msg_param(optee, params, ARRAY_SIZE(params),
-> > > +                                     msg_arg->params, true /*update_out*/);
-> > > +     if (rc)
-> > > +             goto out_free_msg;
-> > > +
-> > > +     if (!msg_arg->ret && end_points &&
-> > > +         *ep_count < params[1].u.memref.size / sizeof(u16)) {
-> > > +             rc = -EINVAL;
-> > > +             goto out_free_msg;
-> > > +     }
-> > > +
-> > > +     *min_size = params[0].u.value.a;
-> > > +     *min_align = params[0].u.value.b;
-> > > +     *ep_count = params[1].u.memref.size / sizeof(u16);
-> > > +
-> > > +     if (msg_arg->ret == TEEC_ERROR_SHORT_BUFFER) {
-> > > +             rc = -ENOSPC;
-> > > +             goto out_free_msg;
-> > > +     }
-> > > +
-> > > +     if (end_points)
-> > > +             memcpy(end_points, tee_shm_get_va(shm_param, 0),
-> > > +                    params[1].u.memref.size);
-> > > +
-> > > +out_free_msg:
-> > > +     optee_free_msg_arg(optee->ctx, entry, offs);
-> > > +out_free_shm:
-> > > +     if (shm_param)
-> > > +             tee_shm_free(shm_param);
-> > > +     return rc;
-> > > +}
-> > > +
-> > > +struct tee_rstmem_pool *optee_rstmem_alloc_cma_pool(struct optee *optee,
-> > > +                                                 enum tee_dma_heap_id id)
-> > > +{
-> > > +     struct optee_rstmem_cma_pool *rp;
-> > > +     u32 use_case = id;
-> > > +     size_t min_size;
-> > > +     int rc;
-> > > +
-> > > +     rp = kzalloc(sizeof(*rp), GFP_KERNEL);
-> > > +     if (!rp)
-> > > +             return ERR_PTR(-ENOMEM);
-> > > +     rp->use_case = use_case;
-> > > +
-> > > +     rc = get_rstmem_config(optee, use_case, &min_size, &rp->align, NULL,
-> > > +                            &rp->end_point_count);
-> > > +     if (rc) {
-> > > +             if (rc != -ENOSPC)
-> > > +                     goto err;
-> > > +             rp->end_points = kcalloc(rp->end_point_count,
-> > > +                                      sizeof(*rp->end_points), GFP_KERNEL);
-> > > +             if (!rp->end_points) {
-> > > +                     rc = -ENOMEM;
-> > > +                     goto err;
-> > > +             }
-> > > +             rc = get_rstmem_config(optee, use_case, &min_size, &rp->align,
-> > > +                                    rp->end_points, &rp->end_point_count);
-> > > +             if (rc)
-> > > +                     goto err_kfree_eps;
-> > > +     }
-> > > +
-> > > +     rp->pool.ops = &rstmem_pool_ops_cma;
-> > > +     rp->optee = optee;
-> > > +     rp->page_count = min_size / PAGE_SIZE;
-> > > +     mutex_init(&rp->mutex);
-> > > +
-> > > +     return &rp->pool;
-> > > +
-> > > +err_kfree_eps:
-> > > +     kfree(rp->end_points);
-> > > +err:
-> > > +     kfree(rp);
-> > > +     return ERR_PTR(rc);
-> > > +}
-> > > --
-> > > 2.43.0
-> > >
+	if (suffix) {
+=E2=80=A6
+	} else {
+=E2=80=A6
+	}
+
+
+Regards,
+Markus
