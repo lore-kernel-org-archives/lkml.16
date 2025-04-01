@@ -1,120 +1,156 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f52.google.com (mail-oa1-f52.google.com [209.85.160.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DCF4B673;
-	Tue,  1 Apr 2025 08:33:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60976B673
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 08:33:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743496396; cv=none; b=eZ7VOve9TpATL7f+rujdJyArGIiffoOz4c1ZAUSX3qUY8ubpjR7thqtuFHFpwSj67IbWc1MRsyNwnMPSYJgBfolfWCV2ZEJVfSvNK8oF0Y78OJ80Y/NJ0ZBBmlO1DZaDBhVpBREvqs9LG0sJsCMrkmIVqjFp4rFy+U2cb+W0iMs=
+	t=1743496400; cv=none; b=KEP4zY4nn8ptwz56C3paCpVRPNaqtIDuXlpeOzChxmfhm1eaI5Obqh9IkVQq2tukcPoPQNt7p6ETm6qf9X4fcufXSfyEmTz5AjBpgC/eW4pxGhW1okYU6kDaS/VregbG1VREpJ+fqKkh6yKLP1E2MRTYXmKjLlpp3AurI0ahuko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743496396; c=relaxed/simple;
-	bh=incx8YXt6LT5Xyx37376Dpv/QY1ZxEBASrAUYm6ZVCQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=W0DL/1W2iTzBX1FWAuuvtN1ZHwoVrtSNEA9juSEyJZ3gUQLw0AjLiGHTEFIBGvjoRuY1OBj4QpmNUbl0gw6I3VdKtiCSfso9sZzbn/S76MH5XFj33sqlR+hh/gJGcUT3UYQf/8MICFvWD7lMJCVBcBDKGRpy0zhqxXqEe6FfZow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=CK/qyI2g; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1743496400; c=relaxed/simple;
+	bh=JzfIVhXtNLBrllzd82BMkqO/jFC8JCvh+Wx0t5e1bfA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZnlGQZ7b/tWw49SnGrTzRs920S+w649KVQQ3s46XoQhqFOoNRYHoKI+YP0Q4qS6eyizhSXgSrXzYeZqWSugkWDoabdOxbq0pJ2qJHNhAyEAz3xnl4la/+WozrbTovZlicT6MkMc74G712ab32uNtV+J/zmruhBK9KkINRePitWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mJM9Db3N; arc=none smtp.client-ip=209.85.160.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="CK/qyI2g"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5315fsSS032586;
-	Tue, 1 Apr 2025 08:33:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	IzZtvraCQnXn6VHBW2LMAGZQxrrkrRkSHNCyWULzO7g=; b=CK/qyI2gIa8BpQb8
-	lsNeDYUpk2ypN+GmiRowoj1efNHeIlYdty7tOToFw74tMECfrqeiSdm1XhPBNPT4
-	PCtj++QLgEXJTi9TXCbeKKWU0z3dBoEDNLe4yZPLVemDFGAhK+KAOSSqtj4ty9j9
-	E8zv1ErDvlGW+JOBAfNxHTRJl7bM+GDton/5/GqWHqtQssEqXgPmM/KXH9+J3XIQ
-	tAKfWjLKD21w2b6c3VmcZWuU+mE77w3FhIBDO5ewaPPWGN3iJ318BI1ldbqm2O6U
-	7F52r2pK1UR4uryR2vJSAR6IdSKICYMhWGYKIFJnUTjvZZoNcu6wldBN+3Uj4Peg
-	pkOq9A==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45p67qfh1f-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 01 Apr 2025 08:33:08 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5318X7hQ007939
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 1 Apr 2025 08:33:07 GMT
-Received: from [10.216.27.117] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 1 Apr 2025
- 01:33:03 -0700
-Message-ID: <cbcf0265-1e62-4c5f-832d-68c15ff21d70@quicinc.com>
-Date: Tue, 1 Apr 2025 14:03:00 +0530
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mJM9Db3N"
+Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-2c82007eaadso1606781fac.1
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 01:33:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1743496396; x=1744101196; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/CPeJtNEQsuzyZj1LWzpLz2qGETWIvRqRfnm4VRDQlo=;
+        b=mJM9Db3N38DN1o5vQBAtSjiqDgtGdIT9dRNL2RBvOR2HLhUYxM6Ikji/m1+XXp3VcG
+         m6K29tPguvhKNSONgZdkxI+/g7YMbjoIijlhqvtU6qJAcal9S8O5u/YwJQVIISVX5gWw
+         EkWDx4zqprKKhG4FHYXL0vq88PCLlnis3CDK22DOXk64Rdz6UTMuszJeKu/9XwwoMTKE
+         ZTlqoX24my/IlNF6K9CP2mhxmHTtlG812T32HdKm/ajZ23Hzw1UfWYg9TTKjFVP/HWam
+         tygxpKiDuHs7qEYUkxFLq9LljB4TKC8+tCKOg2JzOkGEm8LrpFUlO1pzbyPjuoTf0lXT
+         XvxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743496396; x=1744101196;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/CPeJtNEQsuzyZj1LWzpLz2qGETWIvRqRfnm4VRDQlo=;
+        b=scfJXuN0fEX/Aqe2pmTXCdgjRatvGsRM1Cuke4Wz//jL+9GSlTATvsKmiM3BIWXuPk
+         4MBKygBCFk6vvQ/oVOb9NnmK9sW6LMjfsMIFT9MfmdLQHMEjnBi2TaxpN1DOIZrJbe7C
+         pKih/entrTSxwfzGBuS4xajGN7EogIyi6HyxtsjUgag1XVGTnttrNPRtuRZa9OapaIOz
+         UOads1cohPZsapbXBYr4drDce0sOU+P7/2aj2Gkqqm/kblcYOzGkSpUt7EanuSMJvPyy
+         wbT2YMxFZL+obyQ09BmDSisvsoGOzGPpEE6yw6q5/7xo8z1KPMqBfd620xrQn/u/KzRG
+         AVvw==
+X-Gm-Message-State: AOJu0Yygci1f6QUV4KIKU0FusAfobnWIXEPcS9odnQfwOsKX4CqsJasK
+	D/NX4G9gaxC3Q1gMR5iPSzfkldAuzqgrWALi5k5qlN3bxb2/FJCeHg8Zb+uM+yrK85LvOYQvz3O
+	9Kbb0gHqoHf2DXS8quScSgPhhBSuz40pUnPZN7A==
+X-Gm-Gg: ASbGncsHZhSWTgNpNto9OW9ds/O+8CtrWmH/PSXtmn6cxN/XDmHc/gZYzr2gApilll7
+	Rizi+5i1U3RvcL4XzFOki7UrKVEu8Pqxo9RaO1sUleHPxevRW+gZeGaF3PW+zppWS9CNCoLaDw0
+	CaLVhaEDycsS6R7HWzKC+YNV6g+AA=
+X-Google-Smtp-Source: AGHT+IH9KoU4vUjjPFFl/HpklAnLrv8QnpnI/vnq7QrGKUOSlwBJn74UzBQjYlMDiU71pl/whujtfshDhL1bJanCT0o=
+X-Received: by 2002:a05:6870:7815:b0:2c1:9a53:83c4 with SMTP id
+ 586e51a60fabf-2cbcf755a40mr7187474fac.26.1743496396402; Tue, 01 Apr 2025
+ 01:33:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V4 1/2] dt-bindings: mailbox: Document qcom,ipq5424-tmel
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-CC: <jassisinghbrar@gmail.com>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <andersson@kernel.org>, <konradybcio@kernel.org>,
-        <manivannan.sadhasivam@linaro.org>, <dmitry.baryshkov@linaro.org>
-References: <20250327181750.3733881-1-quic_srichara@quicinc.com>
- <20250327181750.3733881-2-quic_srichara@quicinc.com>
- <ru37oebencfqbepop6ka5i2fc64ifk4nnwqmb4o52nwccpplkp@b7xxxpp5snip>
-Content-Language: en-US
-From: Sricharan Ramabadhran <quic_srichara@quicinc.com>
-In-Reply-To: <ru37oebencfqbepop6ka5i2fc64ifk4nnwqmb4o52nwccpplkp@b7xxxpp5snip>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=fMI53Yae c=1 sm=1 tr=0 ts=67eba4c4 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=slvfVLusu6YaaKTZB2QA:9 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: bmjCYU9-JNGiNldJIeMe-K0vtNvWNn-5
-X-Proofpoint-GUID: bmjCYU9-JNGiNldJIeMe-K0vtNvWNn-5
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-01_03,2025-03-27_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxscore=0
- priorityscore=1501 phishscore=0 spamscore=0 impostorscore=0 clxscore=1015
- mlxlogscore=883 bulkscore=0 malwarescore=0 suspectscore=0
- lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504010054
+References: <20250305130634.1850178-1-jens.wiklander@linaro.org>
+ <20250305130634.1850178-6-jens.wiklander@linaro.org> <Z-JOPgcWlpTlskgd@sumit-X1>
+ <CAHUa44GjpHT5Nqo+Ar5jNYNPV-YJQYpLTCf=7oJ1o0VjP-t0nA@mail.gmail.com> <Z-ucuPzwz4IqVTgb@sumit-X1>
+In-Reply-To: <Z-ucuPzwz4IqVTgb@sumit-X1>
+From: Jens Wiklander <jens.wiklander@linaro.org>
+Date: Tue, 1 Apr 2025 10:33:04 +0200
+X-Gm-Features: AQ5f1JrwSW9AJKXv4JPdCzTC-p9MDUHywS1_JUmGEaiaPvfsks0gIEo3VJPjUog
+Message-ID: <CAHUa44FpsCVrbwj1=nsJVJFVJSF1kzKdWAkAMXRu6EdLrLvh8g@mail.gmail.com>
+Subject: Re: [PATCH v6 05/10] tee: implement restricted DMA-heap
+To: Sumit Garg <sumit.garg@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
+	op-tee@lists.trustedfirmware.org, linux-arm-kernel@lists.infradead.org, 
+	Olivier Masse <olivier.masse@nxp.com>, Thierry Reding <thierry.reding@gmail.com>, 
+	Yong Wu <yong.wu@mediatek.com>, Sumit Semwal <sumit.semwal@linaro.org>, 
+	Benjamin Gaignard <benjamin.gaignard@collabora.com>, Brian Starkey <Brian.Starkey@arm.com>, 
+	John Stultz <jstultz@google.com>, "T . J . Mercier" <tjmercier@google.com>, 
+	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, azarrabi@qti.qualcomm.com, 
+	Simona Vetter <simona.vetter@ffwll.ch>, Daniel Stone <daniel@fooishbar.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-
-On 3/28/2025 6:21 PM, Dmitry Baryshkov wrote:
-> On Thu, Mar 27, 2025 at 11:47:49PM +0530, Sricharan R wrote:
->> From: Sricharan Ramabadhran <quic_srichara@quicinc.com>
->>
->> TMEL(Trust Management Engine Lite) subsystem provides different kinds of
-> 
-> Trust whatever SubSystem (TMEL SS) ...
-> 
-> different to what?
-> To the ARM TrustZone firmware(TZ). So these services (secureboot, image
-authentication etc) were provided by the TZ in some SOCs. Here, TMEL
-provides those. Can add those details here.
-
->> services like secureboot, remote image authentication, key management,
->> crypto, OEM provisioning etc.
->>
->> The QMP mailbox is the primary means of communication between TMEL SS and
-> 
-> What is QMP?
-Qualcomm Messaging Protocol
-
-> 
->> other subsystem on the SoC. A dedicated pair of inbound and outbound
->> mailboxes is implemented for each subsystem/external execution environment
-> 
-> Is it implemented in the driver? Is it provided by the hardware? By the
-> firmware?
+On Tue, Apr 1, 2025 at 9:58=E2=80=AFAM Sumit Garg <sumit.garg@kernel.org> w=
+rote:
 >
-TMEL firmware provides and processes the inbound requests and responds
-back on the outbound channel. Can mention this explicitly in the above.
+> On Tue, Mar 25, 2025 at 11:55:46AM +0100, Jens Wiklander wrote:
+> > Hi Sumit,
+> >
+>
+> <snip>
+>
+> >
+> > >
+> > > > +
+> > > > +#include "tee_private.h"
+> > > > +
+> > > > +struct tee_dma_heap {
+> > > > +     struct dma_heap *heap;
+> > > > +     enum tee_dma_heap_id id;
+> > > > +     struct tee_rstmem_pool *pool;
+> > > > +     struct tee_device *teedev;
+> > > > +     /* Protects pool and teedev above */
+> > > > +     struct mutex mu;
+> > > > +};
+> > > > +
+> > > > +struct tee_heap_buffer {
+> > > > +     struct tee_rstmem_pool *pool;
+> > > > +     struct tee_device *teedev;
+> > > > +     size_t size;
+> > > > +     size_t offs;
+> > > > +     struct sg_table table;
+> > > > +};
+> > > > +
+> > > > +struct tee_heap_attachment {
+> > > > +     struct sg_table table;
+> > > > +     struct device *dev;
+> > > > +};
+> > > > +
+> > > > +struct tee_rstmem_static_pool {
+> > > > +     struct tee_rstmem_pool pool;
+> > > > +     struct gen_pool *gen_pool;
+> > > > +     phys_addr_t pa_base;
+> > > > +};
+> > > > +
+> > > > +#if !IS_MODULE(CONFIG_TEE) && IS_ENABLED(CONFIG_DMABUF_HEAPS)
+> > >
+> > > Can this dependency rather be better managed via Kconfig?
+> >
+> > This was the easiest yet somewhat flexible solution I could find. If
+> > you have something better, let's use that instead.
+> >
+>
+> --- a/drivers/tee/optee/Kconfig
+> +++ b/drivers/tee/optee/Kconfig
+> @@ -5,6 +5,7 @@ config OPTEE
+>         depends on HAVE_ARM_SMCCC
+>         depends on MMU
+>         depends on RPMB || !RPMB
+> +       select DMABUF_HEAPS
+>         help
+>           This implements the OP-TEE Trusted Execution Environment (TEE)
+>           driver.
 
-Regards,
-  Sricharan
+I wanted to avoid that since there are plenty of use cases where
+DMABUF_HEAPS aren't needed. This seems to do the job:
++config TEE_DMABUF_HEAP
++ bool
++ depends on TEE =3D y && DMABUF_HEAPS
+
+We can only use DMABUF_HEAPS if the TEE subsystem is compiled into the kern=
+el.
+
+Cheers,
+Jens
