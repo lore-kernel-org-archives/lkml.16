@@ -1,132 +1,238 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 532731DA62E
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 19:04:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEEEE20E70C
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 19:05:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743534270; cv=none; b=nutqyXv5FXN/sxDeRntMKtwEoBJoRqjdldHxF4iDEhEhfwntvNCmbi+wleLuti2RalDiItWHafusvqbNka/vvye/Bo1cF+NLg2N512U6H+zCdrQxHkqxkS6KuUkyXPy500BLlv+geBx21Q3vnDVaajR4c2lpOFCknxgNdqCh5K8=
+	t=1743534337; cv=none; b=lIt2W9JXYi/Bx+d5KPubaJQd4/S7+pft3+I417LQFW00AQ+D+OpVhBuwCutjv0PMOtOw74fJwk8q8sOmkIxgYRATzxRYOjyT15AwLYX2W7eGi0hrMH3IZgIl+7hHep/n6eI89Kz0kOza1bLd7xJruHXHmNp96A9csx1QHGsEDh8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743534270; c=relaxed/simple;
-	bh=ZA8WLLQSRnBdeI7oPmhuG3QFKCFrkE3uu8PKti+PBHQ=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Ij5NAUxmH2rPttLv+T68QutS6Uo+VncKWZM/os5mbwth1EBVC8iIBO7FncQH/OqeR7416SVPgObUCVRyeqn/1k3Bc1TcbpPzCUl4RqWuCrWtmY8k4O/bItwWqx8llW55ehIdIEVXOaO5TUiQWkOB55D9Fb7O2Yngz9U5vy2z5MA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HX1/3oSN; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1743534337; c=relaxed/simple;
+	bh=6QxxwWjZmGXIgrvNHOurXFoqpCArFTr6tFFAISwoTM0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qBy9N406TsPuuSlNeiqC/b12R9XkXx2pLNEZfDDB1YyM5mY0sDtIr8Wie0QTk+UALyV18s0+2mKlULGN6qLsMMt4qcWQxw0p4POaj5NSpJi8NXEP/C2iJ2B6nvPM0ilpgQfVyoU1EsSwS+ropIpca+etooA+BiTV1nVlii9h/a4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Jtb/Lns/; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HX1/3oSN"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Jtb/Lns/"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743534267;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/LKDYucSS97pnhgHvj6/5ba13WSnYs1hpEZo6Z/7tAc=;
-	b=HX1/3oSNAU8cOUJyV2L/SBjqjjR+v+94rdoDS7A0lLyIhBeJELd7o/g3ugMXNn+/m9+47M
-	hF5/3cLPH7f1emeJr8c9zjGMdlswsRq/mhkGFTBJWlGLeYhrsFRn6DQkVGJ9jm/uod1upB
-	UWYTxQyAcvaN5G3NlW3yoVgmzPOODUw=
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
- [209.85.219.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-619-Qwojy8qXNMK1CPmrJ61LlA-1; Tue, 01 Apr 2025 15:04:26 -0400
-X-MC-Unique: Qwojy8qXNMK1CPmrJ61LlA-1
-X-Mimecast-MFC-AGG-ID: Qwojy8qXNMK1CPmrJ61LlA_1743534266
-Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6e8feea216aso2923296d6.0
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 12:04:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743534265; x=1744139065;
-        h=content-transfer-encoding:mime-version:user-agent:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=/LKDYucSS97pnhgHvj6/5ba13WSnYs1hpEZo6Z/7tAc=;
-        b=XJFGXwzGr8K36vqV3VeAyZs1itlPdl1+hhq2GxsGhXlKPdWyrKXTbGf3mQCc8M2v+w
-         zzFvN6oxh1j1065PcEkbXwoaeWxg/NnKoxBelRYs97Et5Q5BMXfQj+ozYdggB0nDai7d
-         hPRfkj+puAUpm4+nAdcpejD7L1Xr31z6MLO4szyyNCuOuJUwCUh4THN2PGvgT39yrfZs
-         yIZ2E8noYIvG0MDfWV8FwJQVQNn5u7/xztdtmuyqUVmI+0jsqunfgp8a6svzL0HNo6Zw
-         mG5DFEzQxnyB++vw1VRAAo3nRku9OZiNTR0Vc3eUiZxVX6sW+2r5Vtx9bgJdHTX0Q0tB
-         SEEg==
-X-Forwarded-Encrypted: i=1; AJvYcCXADei72I8H0ExZSuqXHyO2qs2+ieannXPF1xIa+25ZBAVwy7wbEmZYn7ahlF4G9lCN2NNgdn/D6tmjYWQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzAS1EqhyZgxUsv9LCEPMrQuAxo2FM0oI1NdtbMzMfxs0eH3/Oo
-	f9C37t6PJs+Wy8TA64Rgi+OPSTFNaqOFAVi3I0x78eM5tRiTbzNPNCjztCFSi+WezPQ8bwRp9B+
-	BxsKCJ8bJjJHpJ4b8AN+dWiNL1+UvALzou9NMaP+OH2xGaqs3WFrpdkHoizdbYQ==
-X-Gm-Gg: ASbGncsgKN5xEGhL6Yf/6pFVoYoRadB6QDHKkVYVafTMgxhhuCV/gYJTovU6yFeQ7dk
-	066MnO3ioAGbrfF8uaLBOjYzsoRvoKcnhChSEWiM8LpKcsAkdkZBnxi3ea3a+izh2BdZIfR0QWj
-	1gjuYp2kd6kZPCHe3gYF7ff8jkBNzHjzaz+cCYjZIwjarW4Z4miawFLFKbb5kN4zBod2ORVk4L2
-	6/2lHe0Weo+k45Sjm3wE9E8W8GdXXj0i6DJ6pgHNnBppq5e6Y7PiIPK9trOsLRjM083xBF1ojRg
-	C7wlmZ0Iy+wio5o=
-X-Received: by 2002:a0c:ed2f:0:b0:6e8:f387:e0d2 with SMTP id 6a1803df08f44-6ef007f4899mr13121736d6.11.1743534265653;
-        Tue, 01 Apr 2025 12:04:25 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IECRXXZWchA57oOedz8AT78HpF5eHX9r+gsD8ZcFuy0bS8m37e7vAC5QG33T44tol8BiKAbdw==
-X-Received: by 2002:a0c:ed2f:0:b0:6e8:f387:e0d2 with SMTP id 6a1803df08f44-6ef007f4899mr13121496d6.11.1743534265400;
-        Tue, 01 Apr 2025 12:04:25 -0700 (PDT)
-Received: from starship ([2607:fea8:fc01:8d8d:6adb:55ff:feaa:b156])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6eec965a40bsm64992426d6.61.2025.04.01.12.04.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Apr 2025 12:04:25 -0700 (PDT)
-Message-ID: <7ddba836af37493764c56098a46aad7ee202b6ba.camel@redhat.com>
-Subject: Re: [PATCH 1/2] KVM: VMX: Assert that IRQs are disabled when
- putting vCPU on PI wakeup list
-From: Maxim Levitsky <mlevitsk@redhat.com>
-To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini
- <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, Yan Zhao
-	 <yan.y.zhao@intel.com>
-Date: Tue, 01 Apr 2025 15:04:24 -0400
-In-Reply-To: <20250401154727.835231-2-seanjc@google.com>
-References: <20250401154727.835231-1-seanjc@google.com>
-	 <20250401154727.835231-2-seanjc@google.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.5 (3.36.5-2.fc32) 
+	s=mimecast20190719; t=1743534334;
+	h=from:from:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:in-reply-to:in-reply-to:  references:references;
+	bh=BwM5j+WnOf6r0xXn94ePbvLEZ5RCtpNMiobqF7N96Xw=;
+	b=Jtb/Lns/px/E/KiYFnnKmq0JrUNDtAeO3BnXJN+cyTogSwK2w5koecun0l7Voagr4zVMo1
+	wqaCG510ynBGDtfSZv4yEJiTmupocbUObNYR9UXnXyAWIJQ+PWgUlyS71UgnXyoQ6/5C6E
+	f6XQIhWPyOBxhsVGR4jSFmSOY8/uvYI=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-622-m84dYd0cPxKoFU_gq7DY4A-1; Tue,
+ 01 Apr 2025 15:05:29 -0400
+X-MC-Unique: m84dYd0cPxKoFU_gq7DY4A-1
+X-Mimecast-MFC-AGG-ID: m84dYd0cPxKoFU_gq7DY4A_1743534327
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D0A7F195422C;
+	Tue,  1 Apr 2025 19:05:26 +0000 (UTC)
+Received: from redhat.com (unknown [10.42.28.51])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id ED03B1956094;
+	Tue,  1 Apr 2025 19:05:19 +0000 (UTC)
+Date: Tue, 1 Apr 2025 20:05:16 +0100
+From: Daniel =?utf-8?B?UC4gQmVycmFuZ8Op?= <berrange@redhat.com>
+To: Stefano Garzarella <sgarzare@redhat.com>
+Cc: Bobby Eshleman <bobbyeshleman@gmail.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Stefan Hajnoczi <stefanha@redhat.com>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>,
+	Bryan Tan <bryan-bt.tan@broadcom.com>,
+	Vishnu Dasa <vishnu.dasa@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	virtualization@lists.linux.dev, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+	kvm@vger.kernel.org
+Subject: Re: [PATCH v2 0/3] vsock: add namespace support to vhost-vsock
+Message-ID: <Z-w47H3qUXZe4seQ@redhat.com>
+Reply-To: Daniel =?utf-8?B?UC4gQmVycmFuZ8Op?= <berrange@redhat.com>
+References: <20250312-vsock-netns-v2-0-84bffa1aa97a@gmail.com>
+ <r6a6ihjw3etlb5chqsb65u7uhcav6q6pjxu65iqpp76423w2wd@kmctvoaywmbu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <r6a6ihjw3etlb5chqsb65u7uhcav6q6pjxu65iqpp76423w2wd@kmctvoaywmbu>
+User-Agent: Mutt/2.2.13 (2024-03-09)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-On Tue, 2025-04-01 at 08:47 -0700, Sean Christopherson wrote:
-> Assert that IRQs are already disabled when putting a vCPU on a CPU's PI
-> wakeup list, as opposed to saving/disabling+restoring IRQs.  KVM relies on
-> IRQs being disabled until the vCPU task is fully scheduled out, i.e. until
-> the scheduler has dropped all of its per-CPU locks (e.g. for the runqueue),
-> as attempting to wake the task while it's being scheduled out could lead
-> to deadlock.
+On Fri, Mar 28, 2025 at 06:03:19PM +0100, Stefano Garzarella wrote:
+> CCing Daniel
 > 
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-> ---
->  arch/x86/kvm/vmx/posted_intr.c | 5 +----
->  1 file changed, 1 insertion(+), 4 deletions(-)
+> On Wed, Mar 12, 2025 at 01:59:34PM -0700, Bobby Eshleman wrote:
+> > Picking up Stefano's v1 [1], this series adds netns support to
+> > vhost-vsock. Unlike v1, this series does not address guest-to-host (g2h)
+> > namespaces, defering that for future implementation and discussion.
+> > 
+> > Any vsock created with /dev/vhost-vsock is a global vsock, accessible
+> > from any namespace. Any vsock created with /dev/vhost-vsock-netns is a
+> > "scoped" vsock, accessible only to sockets in its namespace. If a global
+> > vsock or scoped vsock share the same CID, the scoped vsock takes
+> > precedence.
+> > 
+> > If a socket in a namespace connects with a global vsock, the CID becomes
+> > unavailable to any VMM in that namespace when creating new vsocks. If
+> > disconnected, the CID becomes available again.
 > 
-> diff --git a/arch/x86/kvm/vmx/posted_intr.c b/arch/x86/kvm/vmx/posted_intr.c
-> index ec08fa3caf43..840d435229a8 100644
-> --- a/arch/x86/kvm/vmx/posted_intr.c
-> +++ b/arch/x86/kvm/vmx/posted_intr.c
-> @@ -148,9 +148,8 @@ static void pi_enable_wakeup_handler(struct kvm_vcpu *vcpu)
->  	struct pi_desc *pi_desc = vcpu_to_pi_desc(vcpu);
->  	struct vcpu_vmx *vmx = to_vmx(vcpu);
->  	struct pi_desc old, new;
-> -	unsigned long flags;
->  
-> -	local_irq_save(flags);
-> +	lockdep_assert_irqs_disabled();
->  
->  	raw_spin_lock(&per_cpu(wakeup_vcpus_on_cpu_lock, vcpu->cpu));
->  	list_add_tail(&vmx->pi_wakeup_list,
-> @@ -176,8 +175,6 @@ static void pi_enable_wakeup_handler(struct kvm_vcpu *vcpu)
->  	 */
->  	if (pi_test_on(&new))
->  		__apic_send_IPI_self(POSTED_INTR_WAKEUP_VECTOR);
-> -
-> -	local_irq_restore(flags);
->  }
->  
->  static bool vmx_needs_pi_wakeup(struct kvm_vcpu *vcpu)
+> I was talking about this feature with Daniel and he pointed out something
+> interesting (Daniel please feel free to correct me):
+> 
+>     If we have a process in the host that does a listen(AF_VSOCK) in a
+> namespace, can this receive connections from guests connected to
+> /dev/vhost-vsock in any namespace?
+> 
+>     Should we provide something (e.g. sysctl/sysfs entry) to disable
+> this behaviour, preventing a process in a namespace from receiving
+> connections from the global vsock address space (i.e.      /dev/vhost-vsock
+> VMs)?
+
+I think my concern goes a bit beyond that, to the general conceptual
+idea of sharing the CID space between the global vsocks and namespace
+vsocks. So I'm not sure a sysctl would be sufficient...details later
+below..
+
+> I understand that by default maybe we should allow this behaviour in order
+> to not break current applications, but in some cases the user may want to
+> isolate sockets in a namespace also from being accessed by VMs running in
+> the global vsock address space.
+> 
+> Indeed in this series we have talked mostly about the host -> guest path (as
+> the direction of the connection), but little about the guest -> host path,
+> maybe we should explain it better in the cover/commit
+> descriptions/documentation.
+
+> > Testing
+> > 
+> > QEMU with /dev/vhost-vsock-netns support:
+> > 	https://github.com/beshleman/qemu/tree/vsock-netns
+> > 
+> > Test: Scoped vsocks isolated by namespace
+> > 
+> >  host# ip netns add ns1
+> >  host# ip netns add ns2
+> >  host# ip netns exec ns1 \
+> > 				  qemu-system-x86_64 \
+> > 					  -m 8G -smp 4 -cpu host -enable-kvm \
+> > 					  -serial mon:stdio \
+> > 					  -drive if=virtio,file=${IMAGE1} \
+> > 					  -device vhost-vsock-pci,netns=on,guest-cid=15
+> >  host# ip netns exec ns2 \
+> > 				  qemu-system-x86_64 \
+> > 					  -m 8G -smp 4 -cpu host -enable-kvm \
+> > 					  -serial mon:stdio \
+> > 					  -drive if=virtio,file=${IMAGE2} \
+> > 					  -device vhost-vsock-pci,netns=on,guest-cid=15
+> > 
+> >  host# socat - VSOCK-CONNECT:15:1234
+> >  2025/03/10 17:09:40 socat[255741] E connect(5, AF=40 cid:15 port:1234, 16): No such device
+> > 
+> >  host# echo foobar1 | sudo ip netns exec ns1 socat - VSOCK-CONNECT:15:1234
+> >  host# echo foobar2 | sudo ip netns exec ns2 socat - VSOCK-CONNECT:15:1234
+> > 
+> >  vm1# socat - VSOCK-LISTEN:1234
+> >  foobar1
+> >  vm2# socat - VSOCK-LISTEN:1234
+> >  foobar2
+> > 
+> > Test: Global vsocks accessible to any namespace
+> > 
+> >  host# qemu-system-x86_64 \
+> > 	  -m 8G -smp 4 -cpu host -enable-kvm \
+> > 	  -serial mon:stdio \
+> > 	  -drive if=virtio,file=${IMAGE2} \
+> > 	  -device vhost-vsock-pci,guest-cid=15,netns=off
+> > 
+> >  host# echo foobar | sudo ip netns exec ns1 socat - VSOCK-CONNECT:15:1234
+> > 
+> >  vm# socat - VSOCK-LISTEN:1234
+> >  foobar
+> > 
+> > Test: Connecting to global vsock makes CID unavailble to namespace
+> > 
+> >  host# qemu-system-x86_64 \
+> > 	  -m 8G -smp 4 -cpu host -enable-kvm \
+> > 	  -serial mon:stdio \
+> > 	  -drive if=virtio,file=${IMAGE2} \
+> > 	  -device vhost-vsock-pci,guest-cid=15,netns=off
+> > 
+> >  vm# socat - VSOCK-LISTEN:1234
+> > 
+> >  host# sudo ip netns exec ns1 socat - VSOCK-CONNECT:15:1234
+> >  host# ip netns exec ns1 \
+> > 				  qemu-system-x86_64 \
+> > 					  -m 8G -smp 4 -cpu host -enable-kvm \
+> > 					  -serial mon:stdio \
+> > 					  -drive if=virtio,file=${IMAGE1} \
+> > 					  -device vhost-vsock-pci,netns=on,guest-cid=15
+> > 
+> >  qemu-system-x86_64: -device vhost-vsock-pci,netns=on,guest-cid=15: vhost-vsock: unable to set guest cid: Address already in use
+
+I find it conceptually quite unsettling that the VSOCK CID address
+space for AF_VSOCK is shared between the host and the namespace.
+That feels contrary to how namespaces are more commonly used for
+deterministically isolating resources between the namespace and the
+host.
+
+Naively I would expect that in a namespace, all VSOCK CIDs are
+free for use, without having to concern yourself with what CIDs
+are in use in the host now, or in future.
+
+What happens if we reverse the QEMU order above, to get the
+following scenario
+
+   # Launch VM1 inside the NS
+   host# ip netns exec ns1 \
+  				  qemu-system-x86_64 \
+  					  -m 8G -smp 4 -cpu host -enable-kvm \
+  					  -serial mon:stdio \
+  					  -drive if=virtio,file=${IMAGE1} \
+  					  -device vhost-vsock-pci,netns=on,guest-cid=15
+   # Launch VM2
+   host# qemu-system-x86_64 \
+  	  -m 8G -smp 4 -cpu host -enable-kvm \
+  	  -serial mon:stdio \
+  	  -drive if=virtio,file=${IMAGE2} \
+  	  -device vhost-vsock-pci,guest-cid=15,netns=off
+  
+   vm1# socat - VSOCK-LISTEN:1234
+   vm2# socat - VSOCK-LISTEN:1234
+
+   host# socat - VSOCK-CONNECT:15:1234
+     => Presume this connects to "VM2" running outside the NS
+
+   host# sudo ip netns exec ns1 socat - VSOCK-CONNECT:15:1234
+
+     => Does this connect to "VM1" inside the NS, or "VM2"
+        outside the NS ?
 
 
-Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
 
-Best regards,
-	Maxim Levitsky
+With regards,
+Daniel
+-- 
+|: https://berrange.com      -o-    https://www.flickr.com/photos/dberrange :|
+|: https://libvirt.org         -o-            https://fstop138.berrange.com :|
+|: https://entangle-photo.org    -o-    https://www.instagram.com/dberrange :|
 
