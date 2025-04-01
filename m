@@ -1,89 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.forwardemail.net (smtp.forwardemail.net [121.127.44.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 032D513AC1;
-	Tue,  1 Apr 2025 18:04:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54EBE1DDC28
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 18:05:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=121.127.44.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743530693; cv=none; b=kFEBDjHNKbQENj9dWSPw7mQzGJftteslkxaTWQdYFNgvRLfmycWxLmhMZ+iUeWZK6qXlDAmHSmp9kARSNTHDBR8CXxb6zfjfq/EY87zX3KhGTiFell9TBEgk202+mR6XJ1R4tSvpVBTEAveFmlxbV1+3nKts7UjOk4fE769e0Ck=
+	t=1743530718; cv=none; b=f1by/7hkz2EsvtWAkinpLIWhQJeWGGMnrJ4fxw20xWyQBU7Gltod7bNCmzy6xTEIwLK0R006V5xrEPmNT+X/PrWhE41xn31OHwqI16CxmeIslLFt3vnSjMTZa8DkBD+nDcFpPF5Z8N76F85/wiO5J5DX6uw4FZOxZMPuUc7IWew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743530693; c=relaxed/simple;
-	bh=X3UWVR5FrAiTLHuUdqDGWuSjTyf0NcWGQa2Gmhjp7SI=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=Ou7YxxG9GLVWuhF/9ESvvglq/+TB+aeW9RICmMLKRJB3lFpBZxTDx5HcNbSmK1leSVxs4JqoI9h8SEwmUXuvY9Oc0fFIEZOM94M9Hqdkh0MIm4rLVTxyGUpfZBwEV5ZNTb/qRdSzOIDjHZ65Yl1RXD/9WLBuTzNrc8aM9Acn1oM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h/i+k9op; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743530718; c=relaxed/simple;
+	bh=p4ZAQqQjKOYzlzR10/Ir2f/KEq7r7+fJlvaawutdPuM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=l6Rx+D9LcRWsU1xkPh3QrIT6hvZj4XRPLaE8jk/xGlsNp6/bdiUcqbPjOPWLb3lEV15BPU/QRoXzXuIe6lCL7SlOgUWqn+7yfsMY5v15ehXA6WFCwCCxkVN7UBDETvuSfEiy/7dzXohBKNzl4wFlmJpJFtOHE/JpQ5DkRzuj1yE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=Y8NON8IX; arc=none smtp.client-ip=121.127.44.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h/i+k9op"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48C5DC4CEE4;
-	Tue,  1 Apr 2025 18:04:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743530692;
-	bh=X3UWVR5FrAiTLHuUdqDGWuSjTyf0NcWGQa2Gmhjp7SI=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=h/i+k9opvXNDV/viKgz+IkFJDV0Q/+srL6x1bADFHk/mNdi36uSTPuGv5g5wlUNOh
-	 6nTKRTXq6KItqyV8v9GzG52p1ttKL/MYNkyBNpj8uScFbZrEjS0bNcoGAg9RXnZGAo
-	 HDXCYaH9bFx5OIdBohOCn28yQ3WawNYDtNw47zX+kv7v2sdYPNQw+0wYns//VNVt+q
-	 L8I+jUstMjum93FaeEfdgxeeP2/kDfqmj3ZRRoJ3zFZnmyhc17xR6h7fJsP3l0ai6t
-	 4yZVNp2B0kHRdpLkiAOJsyBz7/9VtTlupu9J9HrsATz6sjr/RzT8V3wmwEDU3iRaiJ
-	 2FZWVFt4Om9qA==
-From: Mark Brown <broonie@kernel.org>
-To: shengjiu.wang@gmail.com, xiubo.lee@gmail.com, festevam@gmail.com, 
- nicoleotsuka@gmail.com, lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com, 
- shawnguo@kernel.org, s.hauer@pengutronix.de, 
- Henry Martin <bsdhenrymartin@gmail.com>
-Cc: kernel@pengutronix.de, linux-sound@vger.kernel.org, 
- linuxppc-dev@lists.ozlabs.org, imx@lists.linux.dev, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250401142510.29900-1-bsdhenrymartin@gmail.com>
-References: <20250401142510.29900-1-bsdhenrymartin@gmail.com>
-Subject: Re: [PATCH v1] ASoC: imx-card: Add NULL check in imx_card_probe()
-Message-Id: <174353068900.126969.2791062137526970115.b4-ty@kernel.org>
-Date: Tue, 01 Apr 2025 19:04:49 +0100
+	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="Y8NON8IX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
+ h=Content-Transfer-Encoding: Content-Type: In-Reply-To: From: References:
+ Cc: To: Subject: MIME-Version: Date: Message-ID; q=dns/txt;
+ s=fe-e1b5cab7be; t=1743530715;
+ bh=6BaPnjQcShc/TQj8w7bokIUcnPjhGONOza6lZPt107c=;
+ b=Y8NON8IX5EBwK6hbsR3tXv4vf4WJlQ35u/D7JmE9DqLDEA06wN5+Fc/iLX9dx3dn/8UiasMFz
+ sqtYcaxa1YHsei7vBkPZA+EmOVV1Kl9BxcAWtey3O/PXk+xhRjyIjQOznJrI87l0BI9a+9Fu0jV
+ Y5+9R5UUJ0o+iHc2GLkIMcVzHAg75v+z4Zh5iL3sGafZ46/6LOnWAn6bCs9k+8nLTgWcfjXgJvX
+ rqTQpKAHATQ9EAMZ6n7GyyBbdyCFkXvfkeBQH52N9xpjUkeO6PWoMLlS5LISm/xAAG9qThLMlCU
+ YsgD4IYoZLA9+QEyt53qCRaXkvtjX6cRFXMVNCnWNukw==
+X-Forward-Email-ID: 67ec25c900d8331c283c9f62
+X-Forward-Email-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
+ 121.127.44.73
+X-Forward-Email-Version: 1.0.0
+X-Forward-Email-Website: https://forwardemail.net
+X-Complaints-To: abuse@forwardemail.net
+X-Report-Abuse: abuse@forwardemail.net
+X-Report-Abuse-To: abuse@forwardemail.net
+Message-ID: <02f6e0e0-9cd8-425c-bad2-f061b601fdcd@kwiboo.se>
+Date: Tue, 1 Apr 2025 19:43:33 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/3] arm64: dts: rockchip: Add DMA controller for
+ RK3528
+To: Yao Zi <ziyao@disroot.org>, Chukun Pan <amadeus@jmu.edu.cn>
+Cc: Rob Herring <robh@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
+ Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org
+References: <20250401100020.944658-1-amadeus@jmu.edu.cn>
+ <20250401100020.944658-3-amadeus@jmu.edu.cn> <Z-wj_eO6FGcwsEh6@pie.lan>
+Content-Language: en-US
+From: Jonas Karlman <jonas@kwiboo.se>
+In-Reply-To: <Z-wj_eO6FGcwsEh6@pie.lan>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-c25d1
 
-On Tue, 01 Apr 2025 22:25:10 +0800, Henry Martin wrote:
-> devm_kasprintf() returns NULL when memory allocation fails. Currently,
-> imx_card_probe() does not check for this case, which results in a NULL
-> pointer dereference.
+On 2025-04-01 19:35, Yao Zi wrote:
+> On Tue, Apr 01, 2025 at 06:00:19PM +0800, Chukun Pan wrote:
+>> Add DMA controller dt node for RK3528 SoC.
+>>
+>> Signed-off-by: Chukun Pan <amadeus@jmu.edu.cn>
+>> ---
+>>  arch/arm64/boot/dts/rockchip/rk3528.dtsi | 18 ++++++++++++++++++
+>>  1 file changed, 18 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/rockchip/rk3528.dtsi b/arch/arm64/boot/dts/rockchip/rk3528.dtsi
+>> index 7f1ffd6003f5..c366766ee3f5 100644
+>> --- a/arch/arm64/boot/dts/rockchip/rk3528.dtsi
+>> +++ b/arch/arm64/boot/dts/rockchip/rk3528.dtsi
+>> @@ -493,6 +493,24 @@ sdhci: mmc@ffbf0000 {
+>>  			status = "disabled";
+>>  		};
+>>  
+>> +		dmac: dma-controller@ffd60000 {
+>> +			compatible = "arm,pl330", "arm,primecell";
+>> +			reg = <0x0 0xffd60000 0x0 0x4000>;
+>> +			clocks = <&cru ACLK_DMAC>;
+>> +			clock-names = "apb_pclk";
+>> +			interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
+>> +				     <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>,
+>> +				     <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
+>> +				     <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
+>> +				     <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
+>> +				     <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>,
+>> +				     <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
+>> +				     <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
+>> +				     <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
+>> +			arm,pl330-periph-burst;
 > 
-> Add NULL check after devm_kasprintf() to prevent this issue.
+> Should this be moved above "clocks" line to sort the properties?
+
+Not preferred according to [1], vendor-prefixed props is ordered after
+non-vendor-prefixed props.
+
+"""
+The following order of properties in device nodes is preferred:
+- "compatible"
+- "reg"
+- "ranges"
+- Standard/common properties (defined by common bindings, e.g. without
+  vendor-prefixes)
+- Vendor-specific properties
+- "status" (if applicable)
+- Child nodes, where each node is preceded with a blank line
+
+The "status" property is by default "okay", thus it can be omitted.
+
+The above-described ordering follows this approach:
+- Most important properties start the node: compatible then bus
+  addressing to match unit address.
+- Each node will have common properties in similar place.
+- Status is the last information to annotate that device node is or is
+  not finished (board resources are needed).
+"""
+
+[1] https://docs.kernel.org/devicetree/bindings/dts-coding-style.html#order-of-properties-in-device-node
+
+Regards,
+Jonas
+
 > 
+> Thanks,
+> Yao Zi
 > 
-> [...]
-
-Applied to
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
-
-Thanks!
-
-[1/1] ASoC: imx-card: Add NULL check in imx_card_probe()
-      commit: 93d34608fd162f725172e780b1c60cc93a920719
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+>> +			#dma-cells = <1>;
+>> +		};
+>> +
+>>  		pinctrl: pinctrl {
+>>  			compatible = "rockchip,rk3528-pinctrl";
+>>  			rockchip,grf = <&ioc_grf>;
+>> -- 
+>> 2.25.1
+>>
 
