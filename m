@@ -1,139 +1,336 @@
-Received: from smtp.forwardemail.net (smtp.forwardemail.net [121.127.44.73])
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54EBE1DDC28
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 18:05:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=121.127.44.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FBD113AC1;
+	Tue,  1 Apr 2025 18:05:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743530718; cv=none; b=f1by/7hkz2EsvtWAkinpLIWhQJeWGGMnrJ4fxw20xWyQBU7Gltod7bNCmzy6xTEIwLK0R006V5xrEPmNT+X/PrWhE41xn31OHwqI16CxmeIslLFt3vnSjMTZa8DkBD+nDcFpPF5Z8N76F85/wiO5J5DX6uw4FZOxZMPuUc7IWew=
+	t=1743530720; cv=none; b=WPni3LOSwMnTpLNuBx/ifd5gGcXO2CkqJnFNzN+yP/5ux/sF7bofS7uIG6FuDLfqn/yuWvZMDhJsqaFmWJCdO9dFZe0+ikyiPufMyK9amByTYu5pQVDxDE3E7fWiYR/SsEf6y9Og3FopA8blhW/oqsRT/g8rN2OnMoult73A7lE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743530718; c=relaxed/simple;
-	bh=p4ZAQqQjKOYzlzR10/Ir2f/KEq7r7+fJlvaawutdPuM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=l6Rx+D9LcRWsU1xkPh3QrIT6hvZj4XRPLaE8jk/xGlsNp6/bdiUcqbPjOPWLb3lEV15BPU/QRoXzXuIe6lCL7SlOgUWqn+7yfsMY5v15ehXA6WFCwCCxkVN7UBDETvuSfEiy/7dzXohBKNzl4wFlmJpJFtOHE/JpQ5DkRzuj1yE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=Y8NON8IX; arc=none smtp.client-ip=121.127.44.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
+	s=arc-20240116; t=1743530720; c=relaxed/simple;
+	bh=XDpRdAgxRwuqM46f3uVQQuYMPlOEdc3e738FDjjOW9w=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fWjQSJX3/Vom6PjY6sPhPinahZi+zbCS3hLXgqoI8GR5HzYhwLb61ZjWKfYVY5t6rufijQmqpW0Np5tfwJ3ezaHFkQ5biwdwo0Ya8SwRAI8XDogM8ecEhbXRmW8KyHipidGajXTN1xh7UkHCAdROa4KiSyZ64HS6FJdUH/u9uFM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eLM54CXL; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="Y8NON8IX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
- h=Content-Transfer-Encoding: Content-Type: In-Reply-To: From: References:
- Cc: To: Subject: MIME-Version: Date: Message-ID; q=dns/txt;
- s=fe-e1b5cab7be; t=1743530715;
- bh=6BaPnjQcShc/TQj8w7bokIUcnPjhGONOza6lZPt107c=;
- b=Y8NON8IX5EBwK6hbsR3tXv4vf4WJlQ35u/D7JmE9DqLDEA06wN5+Fc/iLX9dx3dn/8UiasMFz
- sqtYcaxa1YHsei7vBkPZA+EmOVV1Kl9BxcAWtey3O/PXk+xhRjyIjQOznJrI87l0BI9a+9Fu0jV
- Y5+9R5UUJ0o+iHc2GLkIMcVzHAg75v+z4Zh5iL3sGafZ46/6LOnWAn6bCs9k+8nLTgWcfjXgJvX
- rqTQpKAHATQ9EAMZ6n7GyyBbdyCFkXvfkeBQH52N9xpjUkeO6PWoMLlS5LISm/xAAG9qThLMlCU
- YsgD4IYoZLA9+QEyt53qCRaXkvtjX6cRFXMVNCnWNukw==
-X-Forward-Email-ID: 67ec25c900d8331c283c9f62
-X-Forward-Email-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
- 121.127.44.73
-X-Forward-Email-Version: 1.0.0
-X-Forward-Email-Website: https://forwardemail.net
-X-Complaints-To: abuse@forwardemail.net
-X-Report-Abuse: abuse@forwardemail.net
-X-Report-Abuse-To: abuse@forwardemail.net
-Message-ID: <02f6e0e0-9cd8-425c-bad2-f061b601fdcd@kwiboo.se>
-Date: Tue, 1 Apr 2025 19:43:33 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eLM54CXL"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3914bc3e01aso3324935f8f.2;
+        Tue, 01 Apr 2025 11:05:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743530716; x=1744135516; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=nryfUWPwtMdkFx5KsN4d3gQF17UlPWaIg+fR9d/GUbs=;
+        b=eLM54CXLNxiS2mxEAm4eW6q9KMDazR9j7YdYCUtHz2eA8SPWNWU++kgU9oQfe7uMzg
+         YH39aCLDrqfOfMDJf8p2WOcwh94Gvo4pOQgB//hJ9KprD/I8ii1f3t85NKxC9XB5ayVL
+         BBaFwdDq+IvxnJ2fevAvJMrcwG2vvXeLkF4O48OEjSJD5zgPJA5WzjKr8pCLHx8bCQ1F
+         zju52Pvz7F4s+Sr6ctXWVMivojXe+5FW4RZ4dvMqK8jyKbxr+mYdgqf+9VHU18E80AzJ
+         Rt47zgbKsQiVGOxwQwH0wXkMx6S4ugyFVHSLJLl38vvDNnDmemehghD/j4rtU6Xi4irB
+         HMVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743530716; x=1744135516;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=nryfUWPwtMdkFx5KsN4d3gQF17UlPWaIg+fR9d/GUbs=;
+        b=LX6qK+EtZbTXefH3SMgKGZCXB9l7uX4U9vJkDvKD2w0CXfocv/xSAgB1zEFHBFDEsx
+         Qr3Ys37PLVuwjRi2jHl4xTAl3F0gsTxMb8UqdZ9HxqEVrBEWN/RmrpTBh8SVCg+OhvHr
+         Y8mYOn7ITdukUPuGM4NUo1x9z9y0Bg15dPWdcS4UUQ79oLo1gZsNSYbVoOkgM6ErGMX7
+         9MZMg5lcNC6sqibtouey9v0bHbNCs3QPaErH3GJFDjtPSeQOcageC1EcyNCipIJwNGcN
+         9/CyQrT4B+SRXnb3Fss2xLyQT9DCX/wgwOAMt7XK0U+c752OL3upZ/GJ39XSoz3BizZ3
+         U8AA==
+X-Forwarded-Encrypted: i=1; AJvYcCV2Gx6EwOVqqMTD0GCgSOLncq7UVHWlI9ph8ojgtQTId5qTAop2PeEgz3vkY7Lcmc+gXD5ydLXlz2pV@vger.kernel.org, AJvYcCVlpSR9SOROm+OvkWyyXWz7AOgKh308qKeBWNbeomjYE/wIeuxn8CJothY59RK4S8wSAdI72/FVfTDIWbDG@vger.kernel.org, AJvYcCXhNiUsi1qNRIXnDkANNuL53h5GPOuZfXNshQn5gU1pWgPZRx9YD9K03cUfmQIzaUXFwLOX3zI7DK2T@vger.kernel.org, AJvYcCXl3e5csaMoALnwsVgsTcL2pSic6r5xJo7UiPviLNJFDPgaAS+llaHMnm/ItYEDqM9WwiUq+y/HNPpQ2kYf2Q==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx+R+PFF9PS9LtAQ3expxrFEUDzvfFVcmVGnGInIB0cTZCWiov/
+	qdvvM1Y4aWy5plzGPIYC3QVOIA67DgBbqjjpHg+BiW6GOPfGEugqXYn78vvWa9RMFwUbxFbTTcn
+	uZ/qZrVw3LyA37oDiSRPw2ZXDuA==
+X-Gm-Gg: ASbGncslyg6ztH9KBRtlTMMLgClpf8Et0xqGmQoC6m9RCKgfk6ZYF5383XGw48tAsgv
+	uJuiAvc0tOWZPQiu+NbPcHqZskBIp7shG1nUDDwwlqK48wPRQegSK/gambjrdflc6g3amUdTFqU
+	UmdgleWEUFMC8bwC8E7BdTnqmumA==
+X-Google-Smtp-Source: AGHT+IH+QK+V24kJEIVldO9Zr767vV+GPNMIA5c/QiCee+ngvYUMVWmvMhk8SNbKMcOOMcyMGwoQbLw76VeQFb35H9M=
+X-Received: by 2002:a05:6000:210d:b0:39c:1257:dbab with SMTP id
+ ffacd0b85a97d-39c1257dd00mr8319119f8f.59.1743530715991; Tue, 01 Apr 2025
+ 11:05:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/3] arm64: dts: rockchip: Add DMA controller for
- RK3528
-To: Yao Zi <ziyao@disroot.org>, Chukun Pan <amadeus@jmu.edu.cn>
-Cc: Rob Herring <robh@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
- Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org
-References: <20250401100020.944658-1-amadeus@jmu.edu.cn>
- <20250401100020.944658-3-amadeus@jmu.edu.cn> <Z-wj_eO6FGcwsEh6@pie.lan>
-Content-Language: en-US
-From: Jonas Karlman <jonas@kwiboo.se>
-In-Reply-To: <Z-wj_eO6FGcwsEh6@pie.lan>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250331215720.19692-1-alex.vinarskis@gmail.com>
+ <20250331215720.19692-7-alex.vinarskis@gmail.com> <ef783edb-c966-4ef7-b496-564420c1b852@oss.qualcomm.com>
+In-Reply-To: <ef783edb-c966-4ef7-b496-564420c1b852@oss.qualcomm.com>
+From: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
+Date: Tue, 1 Apr 2025 20:05:05 +0200
+X-Gm-Features: AQ5f1Jo4ffJQTJBbHce2plaeHSYQtIvqK9UIjt3b6wewix3gePp0cy-0zeYgJGE
+Message-ID: <CAMcHhXq8kjsbDGHBn=63JutD1TcD6=KVxCQtPHRoLOwE+FY-sA@mail.gmail.com>
+Subject: Re: [PATCH v1 6/6] arm64: dts: qcom: Add support for X1-based Asus
+ Zenbook A14
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Dmitry Baryshkov <lumag@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Abel Vesa <abel.vesa@linaro.org>, 
+	Johan Hovold <johan+linaro@kernel.org>, linux-arm-msm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-usb@vger.kernel.org, Konrad Dybcio <konradybcio@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On 2025-04-01 19:35, Yao Zi wrote:
-> On Tue, Apr 01, 2025 at 06:00:19PM +0800, Chukun Pan wrote:
->> Add DMA controller dt node for RK3528 SoC.
->>
->> Signed-off-by: Chukun Pan <amadeus@jmu.edu.cn>
->> ---
->>  arch/arm64/boot/dts/rockchip/rk3528.dtsi | 18 ++++++++++++++++++
->>  1 file changed, 18 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/rockchip/rk3528.dtsi b/arch/arm64/boot/dts/rockchip/rk3528.dtsi
->> index 7f1ffd6003f5..c366766ee3f5 100644
->> --- a/arch/arm64/boot/dts/rockchip/rk3528.dtsi
->> +++ b/arch/arm64/boot/dts/rockchip/rk3528.dtsi
->> @@ -493,6 +493,24 @@ sdhci: mmc@ffbf0000 {
->>  			status = "disabled";
->>  		};
->>  
->> +		dmac: dma-controller@ffd60000 {
->> +			compatible = "arm,pl330", "arm,primecell";
->> +			reg = <0x0 0xffd60000 0x0 0x4000>;
->> +			clocks = <&cru ACLK_DMAC>;
->> +			clock-names = "apb_pclk";
->> +			interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
->> +				     <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>,
->> +				     <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
->> +				     <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
->> +				     <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
->> +				     <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>,
->> +				     <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
->> +				     <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
->> +				     <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
->> +			arm,pl330-periph-burst;
-> 
-> Should this be moved above "clocks" line to sort the properties?
+On Tue, 1 Apr 2025 at 17:59, Konrad Dybcio
+<konrad.dybcio@oss.qualcomm.com> wrote:
+>
+> On 3/31/25 11:53 PM, Aleksandrs Vinarskis wrote:
+> > Initial support for Asus Zenbook A14. Particular moddel exists
+> > in X1-26-100, X1P-42-100 (UX3407QA) and X1E-78-100 (UX3407RA).
+> >
+> > Mostly similar to other X1-based laptops. Notable differences are:
+> > * Wifi/Bluetooth combo being Qualcomm FastConnect 6900 on UX3407QA
+> >   and Qualcomm FastConnect 7800 on UX3407RA
+> > * USB Type-C retimers are Parade PS8833, appear to behave identical
+> >   to Parade PS8830
+> > * gpio90 is TZ protected
+>
+> [...]
+>
+> > +     leds {
+> > +             compatible = "gpio-leds";
+> > +
+> > +             pinctrl-names = "default";
+> > +             pinctrl-0 = <&cam_indicator_en>;
+>
+> property-n
+> property-names
+>
+> please, we're trying to unify such small things even though we know
+> it's "wrong" in a lot of places
+>
 
-Not preferred according to [1], vendor-prefixed props is ordered after
-non-vendor-prefixed props.
+will do.
 
-"""
-The following order of properties in device nodes is preferred:
-- "compatible"
-- "reg"
-- "ranges"
-- Standard/common properties (defined by common bindings, e.g. without
-  vendor-prefixes)
-- Vendor-specific properties
-- "status" (if applicable)
-- Child nodes, where each node is preceded with a blank line
+> > +
+> > +&i2c0 {
+> > +     clock-frequency = <400000>;
+> > +     status = "okay";
+> > +
+> > +     /* ELAN, 04F3:3315 */
+> > +     touchpad@15 {
+> > +             compatible = "hid-over-i2c";
+> > +             reg = <0x15>;
+> > +
+> > +             hid-descr-addr = <0x1>;
+> > +             interrupts-extended = <&tlmm 3 IRQ_TYPE_LEVEL_LOW>;
+> > +
+> > +             pinctrl-0 = <&tpad_default>;
+> > +             pinctrl-names = "default";
+> > +
+> > +             wakeup-source;
+> > +     };
+> > +};
+> > +
+> > +&i2c3 {
+> > +     clock-frequency = <400000>;
+> > +     status = "okay";
+>
+> It's also customary to leave a newline before 'status'
 
-The "status" property is by default "okay", thus it can be omitted.
+will do.
 
-The above-described ordering follows this approach:
-- Most important properties start the node: compatible then bus
-  addressing to match unit address.
-- Each node will have common properties in similar place.
-- Status is the last information to annotate that device node is or is
-  not finished (board resources are needed).
-"""
+>
+> > +&pm8550_gpios {
+> > +     rtmr0_default: rtmr0-reset-n-active-state {
+> > +             pins = "gpio10";
+> > +             function = "normal";
+> > +             power-source = <1>; /* 1.8V */
+>
+> Drop the 1.8v comments please
 
-[1] https://docs.kernel.org/devicetree/bindings/dts-coding-style.html#order-of-properties-in-device-node
+will do.
 
-Regards,
-Jonas
+>
+> [...]
+>
+> > +&spi10 {
+> > +     status = "disabled";
+> > +
+> > +     /* Unknown device */
+> > +};
+>
+> Does the device crash if you enable this bus? Keeping it 'okay' would
+> make it easier for folks to poke at it
 
-> 
-> Thanks,
-> Yao Zi
-> 
->> +			#dma-cells = <1>;
->> +		};
->> +
->>  		pinctrl: pinctrl {
->>  			compatible = "rockchip,rk3528-pinctrl";
->>  			rockchip,grf = <&ioc_grf>;
->> -- 
->> 2.25.1
->>
+It does boot just fine, but does not initialize:
+```
+geni_spi a88000.spi: Invalid proto 9
+...
+qnoc-x1e80100 interconnect-1: sync_state() pending due to a88000.spi
+...
+```
 
+I only quickly checked that 9 is indeed invalid state, iirc should've
+been 2. But haven't looked deeper into it, so left it disabled. So I
+thought best to leave it off for now. Unless you prefer to drop it
+altogether?
+
+>
+> > +
+> > +&tlmm {
+> > +     gpio-reserved-ranges = <44 4>,  /* SPI11, TZ Protected */
+> > +                            <90 1>;  /* Unknown, TZ Protected */
+> > +
+> > +     bt_en_default: bt-en-sleep {
+> > +             pins = "gpio116";
+> > +             function = "gpio";
+> > +             output-low;
+> > +             bias-disable;
+> > +             qcom,drive-strength = <16>;
+>
+> drop "qcom," and please keep the order of:
+>
+> pins
+> function
+> drive-strength
+> bias
+> output/input
+>
+> as you did below
+
+Will do.
+
+Should I also drop 'qcom,' from the 'misc_3p3_reg_en' and adjust order
+the same way, or that one is somehow special?
+
+>
+> > +
+> > +/ {
+> > +     model = "ASUS Zenbook A14 UX3407RA";
+>
+> There's no strict policy, but variants usually go in braces
+
+Parenthesis I guess, "ASUS Zenbook A14 (UX3407RA)" ?
+
+>
+> > +     compatible = "asus,x1e80100-zenbook-a14", "qcom,x1e80100";
+> > +};
+> > +
+> > +&gpu_zap_shader {
+> > +     firmware-name = "qcom/x1e80100/ASUSTeK/zenbook-a14/qcdxkmsuc8380.mbn";
+> > +};
+> > +
+> > +&remoteproc_adsp {
+> > +     firmware-name = "qcom/x1e80100/ASUSTeK/zenbook-a14/qcadsp8380.mbn",
+> > +                     "qcom/x1e80100/ASUSTeK/zenbook-a14/adsp_dtbs.elf";
+> > +
+> > +     status = "okay";
+> > +};
+> > +
+> > +&remoteproc_cdsp {
+> > +     firmware-name = "qcom/x1e80100/ASUSTeK/zenbook-a14/qccdsp8380.mbn",
+> > +                     "qcom/x1e80100/ASUSTeK/zenbook-a14/cdsp_dtbs.elf";
+> > +
+> > +     status = "okay";
+> > +};
+> > +
+> > +&uart14 {
+> > +     status = "okay";
+> > +
+> > +     bluetooth {
+> > +             compatible = "qcom,wcn7850-bt";
+> > +             pinctrl-names = "default";
+> > +             pinctrl-0 = <&bt_en_default>;
+> > +             enable-gpios = <&tlmm 116 GPIO_ACTIVE_HIGH>;
+> > +             max-speed = <3000000>;
+> > +     };
+> > +};
+> > diff --git a/arch/arm64/boot/dts/qcom/x1p42100-asus-zenbook-a14.dts b/arch/arm64/boot/dts/qcom/x1p42100-asus-zenbook-a14.dts
+> > new file mode 100644
+> > index 000000000000..b6c9a707090f
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/qcom/x1p42100-asus-zenbook-a14.dts
+> > @@ -0,0 +1,48 @@
+> > +// SPDX-License-Identifier: BSD-3-Clause
+> > +/*
+> > + * Copyright (c) 2025 Qualcomm Innovation Center, Inc. All rights reserved.
+> > + * Copyright (c) 2025 Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
+> > + */
+> > +
+> > +/dts-v1/;
+> > +
+> > +#include "x1p42100.dtsi"
+> > +#include "x1-zenbook-a14.dtsi"
+> > +
+> > +/delete-node/ &pmc8380_6;
+> > +/delete-node/ &pmc8380_6_thermal;
+> > +
+> > +/ {
+> > +     model = "ASUS Zenbook A14 UX3407QA";
+> > +     compatible = "asus,x1p42100-zenbook-a14", "qcom,x1p42100";
+> > +};
+> > +
+> > +&gpu_zap_shader {
+> > +     firmware-name = "qcom/x1p42100/ASUSTeK/zenbook-a14/qcdxkmsuc8380.mbn";
+> > +};
+>
+> This file is not going to work on this SoC, you can drop it
+
+I guess it would need a different firmware name? If yes, can we
+already add the new name, such that once x1p42100 gains GPU support it
+will get enabled 'automatically'?
+
+Otherwise, I will just drop it.
+
+>
+> > +
+> > +&remoteproc_adsp {
+> > +     firmware-name = "qcom/x1p42100/ASUSTeK/zenbook-a14/qcadsp8380.mbn",
+> > +                     "qcom/x1p42100/ASUSTeK/zenbook-a14/adsp_dtbs.elf";
+> > +
+> > +     status = "okay";
+> > +};
+> > +
+> > +&remoteproc_cdsp {
+> > +     firmware-name = "qcom/x1p42100/ASUSTeK/zenbook-a14/qccdsp8380.mbn",
+> > +                     "qcom/x1p42100/ASUSTeK/zenbook-a14/cdsp_dtbs.elf";
+> > +
+> > +     status = "okay";
+>
+> Are the DSP firmware files actually different between the two?
+
+CDSP is the same. ADSP blobs to my surprise are different, both '.elf'
+and '.mbn'. But like I wrote in the cover letter, perhaps Asus just
+forgot to update adsp firmware? Though according to changelong on
+device pages [2],[4] both have "ADSP Driver : 2.0.4135.0200"
+
+Compared by:
+* Downloading UX3407QA's drivers [1], from the device page [2] and
+UX3407RA'a drivers [3] from the device page [4]
+* Extract and flatten with `7z e filename.exe`
+* Compare via `md5sum *dsp*elf *dsp*mbn *dsp*jsn`
+
+Though, even if the blobs would be/will be the same, I think it is
+still beneficial to define firmware path per model, as this makes
+firmware extraction from driver/Windows partition and placement much
+easier. Unfortunately, as it seems so far, most of the devices besides
+Lenovos are not having firmware upstreamed, so this is pretty
+relevant. Eg. Ubuntu already has 'firmware extracting tool' [5] (draft
+MR to include Zenbook as well), I'm guessing other distros have
+something similar, though I haven't followed up.
+
+On the other hand, these tools could of course get path from device
+tree directly, eg. via `cat
+/sys/firmware/devicetree/base/soc@0/remoteproc@32300000/firmware-name`,
+then having all the blobs for the device in one location is less
+relevant...
+
+Thanks for reviewing,
+Alex
+
+[1] https://dlcdnets.asus.com/pub/ASUS/nb/Image/Driver/DriverPackage/42706/SOCPackage_forWebSite_Qualcomm_Z_V1.305.7550.2_42706.exe?model=UX3407QA
+[2] https://www.asus.com/ch-en/laptops/for-home/zenbook/asus-zenbook-a14-ux3407/helpdesk_download?model2Name=UX3407QA
+[3] https://dlcdnets.asus.com/pub/ASUS/nb/Image/Driver/DriverPackage/42705/SOCPackage_forWebSite_Qualcomm_Z_V1.305.7550.2_42705.exe?model=UX3407RA
+[4] https://www.asus.com/ch-en/laptops/for-home/zenbook/asus-zenbook-a14-ux3407/helpdesk_download?model2Name=UX3407RA
+[5] https://git.launchpad.net/~alexvinarskis/ubuntu/+source/qcom-firmware-extract/tree/qcom-firmware-extract?h=asus-zenbook-a14
+
+>
+> Konrad
