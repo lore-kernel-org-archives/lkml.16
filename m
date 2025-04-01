@@ -1,83 +1,85 @@
-Received: from box.fidei.email (box.fidei.email [71.19.144.250])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender3-pp-f112.zoho.com (sender3-pp-f112.zoho.com [136.143.184.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D5DC1E1C29
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 20:24:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=71.19.144.250
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743539049; cv=none; b=SYjic/pZJc4yJQ6c804l9iE91IhCqPRTcFL+4iOeI0l5hzC6NgLTntyQYHPes1KCQkewL4V/5gQlPqDz4aM2DZdPWBjgkV2K4chbPGt5qQ80PqJvwwLcwR9ivbROxJ/TsDFsWIuWwc+EYnwVXo7G6GndgiWg8QevUM15uNtgp1w=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743539049; c=relaxed/simple;
-	bh=BsSRILVhhDPgo5niRJu4FUZyXl80DfST1ovx9ux28P0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JFEVtAUvv7gotYITvaPlvSBXT+rxM/v4e2fBl/C9rWxa65ZsiCups186PIh5UG+6oUNiHn/QovPGn7gZdu3WedOXw/O/w06HXJOdC9aXWHAnCj6fbotYJpBZUPOJMUCRnRhL9RnzQyRqbwlKWpRRqzEw4bWUl8rl/hJqltTX47I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=dorminy.me; spf=pass smtp.mailfrom=dorminy.me; dkim=pass (2048-bit key) header.d=dorminy.me header.i=@dorminy.me header.b=How5cAAn; arc=none smtp.client-ip=71.19.144.250
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=dorminy.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dorminy.me
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8A3E1E1C29
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 20:24:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.184.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743539096; cv=pass; b=gzt8Bo67smAVxQzkwhhtvMcQI9/Sr8BbGR3I7RUupaU1Z94IZ3/3a1VN2MapPnGREJ+LQjWxgc5cytXZSWU19O3HSn4Hhkoo4sA6Sd8gBKiTZxadaJCkLp1mmu6XKga7hl6egDJzYe0Kk4GM4pTdl8Tz3pqAYTpqa5ozXrOrdss=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743539096; c=relaxed/simple;
+	bh=kkWavh5PNiM0ciEo9kqPCh2u3LTLA00fSnlFs7BiHa8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nVLpMESK5vz8PAxUtTKshR++9IrUnQR6yn1Hz6IxmxtFgczi2u4CPPazeOb30rzvjiAlkQl7yMNZcpQQROvllyfqtKZs54IXTPftzV8LBPPV7acRzpQv5E7GLOsy6xRgK69YaUbRYqQaJop/F7rnTj234RlffvTUoIdZ0u435Mw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b=DLsPkpwo; arc=pass smtp.client-ip=136.143.184.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dorminy.me header.i=@dorminy.me header.b="How5cAAn"
-Received: from authenticated-user (box.fidei.email [71.19.144.250])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-	(No client certificate requested)
-	by box.fidei.email (Postfix) with ESMTPSA id 8C934834C2;
-	Tue,  1 Apr 2025 16:24:07 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=dorminy.me; s=mail;
-	t=1743539047; bh=BsSRILVhhDPgo5niRJu4FUZyXl80DfST1ovx9ux28P0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=How5cAAnmTGDB2VhAPr5uld/jBvKb7nNQt0Hu6bWdGkhFsPMapW90wbP63PHUq19k
-	 AmWE3FcMS9Ip+FGP3WtkM/H9E9KvvO9IXv1+ODuspXqqym4ImRD2Bui3P+z4nweuPq
-	 oxwT8vV/mbEvzTbBFE1PYBRCOIAvyd10yNPLN9e2ts0jQdSy274gp4GMurHcXK74oy
-	 g9oLPPDCHWEWfLDYVMWzgSDJ7y5dPf7KXU/msmFNmeQ9Ip2mFAp8SiQug3PHdBx11p
-	 o1KmFjNvtn++viBV7+Nym+c/lkjffhnJfii3TI1HJn5a4xqR+AYsuwqwfyD4NKqPyr
-	 B4FOKIasmc0Mg==
-From: Sweet Tea Dorminy <sweettea-kernel@dorminy.me>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Cc: Sweet Tea Dorminy <sweettea-kernel@dorminy.me>
-Subject: [PATCH] mm/khugepaged: fix a tracepoint for error cases
-Date: Tue,  1 Apr 2025 16:23:53 -0400
-Message-ID: <20250401202354.103501-2-sweettea-kernel@dorminy.me>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b="DLsPkpwo"
+ARC-Seal: i=1; a=rsa-sha256; t=1743539065; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=nVudeP4HRTu5n6x8T1kjhZ9lFBAIcFkeUZcWcCRlPbxbnQwC44HjoJ2asVO+njogrhAFBWiuZVQ5q9evu+ZaeTkU9+Mk+vTDEummX+QsAoM2d1qzu0VbO/Q0sO48BVqZ0retUsOWynmdIA5Lc8RU+yhy9frEtgpxphI3konFD4k=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1743539065; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=J2P0Ic2aVRrBbXcHSHgdkSjSn8amYT/Pw5QVusBb3qg=; 
+	b=LErVpSmuRttut35FgdqocVT5vRgDLwUKSWE4KmuOgyaxb5oHaWs9he+PKPx78BupcY3fL018xcdIc/jFlJUHgkokVyrn+I0qTuL+SEQ38HdAQU75jRU6bR4I+SDY55QTgGqBTB/6XHvHvmM19No6HG01MffP8/e0kfeS2h3TR6U=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=dmitry.osipenko@collabora.com;
+	dmarc=pass header.from=<dmitry.osipenko@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1743539065;
+	s=zohomail; d=collabora.com; i=dmitry.osipenko@collabora.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=J2P0Ic2aVRrBbXcHSHgdkSjSn8amYT/Pw5QVusBb3qg=;
+	b=DLsPkpwokYbjjdPkgRazsC4bS0DE+Pactxb2YADSstoQSoQ5IkLowZ7ZSO/JjfrS
+	G6JO2PvIRNeC8/rYdant2Smbnx3DAdVNbsbps6GDxAYKNjnE8T3T1Espu79HW8s0aJj
+	HKPmI1zK63Uq36+eK+i8OaRF/H5xlWjDpmJ51EFE=
+Received: by mx.zohomail.com with SMTPS id 174353906464838.705516079159906;
+	Tue, 1 Apr 2025 13:24:24 -0700 (PDT)
+Message-ID: <0f16673f-9758-4790-ae6c-e81150241ba2@collabora.com>
+Date: Tue, 1 Apr 2025 23:24:20 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] drm/virtio: Don't attach GEM to a non-created
+ context in gem_object_open()
+To: Rob Clark <robdclark@gmail.com>
+Cc: David Airlie <airlied@redhat.com>, Gerd Hoffmann <kraxel@redhat.com>,
+ Gurchetan Singh <gurchetansingh@chromium.org>, Chia-I Wu
+ <olvaffe@gmail.com>, Vivek Kasireddy <vivek.kasireddy@intel.com>,
+ Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>,
+ dri-devel@lists.freedesktop.org, virtualization@lists.linux.dev,
+ linux-kernel@vger.kernel.org, kernel@collabora.com
+References: <20250401123842.2232205-1-dmitry.osipenko@collabora.com>
+ <CAF6AEGu8XZktM9Y0t=KEF68uGLz7D_+9H1GnAPnZqc1YsT8iGA@mail.gmail.com>
+From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
+Content-Language: en-US
+In-Reply-To: <CAF6AEGu8XZktM9Y0t=KEF68uGLz7D_+9H1GnAPnZqc1YsT8iGA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 
-Fix a potential NULL pointer dereference in trace_mm_khugepaged_scan_pmd()
-when folio is NULL. This is possible if vm_normal_page() returned a NULL
-page -- which is unlikely, but was hit in testing.
+On 4/1/25 22:53, Rob Clark wrote:
+> On Tue, Apr 1, 2025 at 5:39 AM Dmitry Osipenko
+> <dmitry.osipenko@collabora.com> wrote:
+>>
+>> The vfpriv->ctx_id is always initialized to a non-zero value. Check whether
+>> context was created before attaching GEM to this context ID. This left
+>> unnoticed previously because host silently skips attachment if context
+>> doesn't exist, still we shouldn't do that for consistency.
+>>
+>> Fixes: 086b9f27f0ab ("drm/virtio: Don't create a context with default param if context_init is supported")
+>> Cc: <stable@vger.kernel.org> # v6.14+
+>> Signed-off-by: Dmitry Osipenko <dmitry.osipenko@collabora.com>
+> 
+> Reviewed-by: Rob Clark <robdclark@gmail.com>
 
-(The tracepoint in include/trace/events/huge_memory.h can already deal
-with a NULL page.)
+Thanks, applied both patches to misc-fixes
 
-Signed-off-by: Sweet Tea Dorminy <sweettea-kernel@dorminy.me>
-
----
-Based on akpm/mm-unstable.
-
- mm/khugepaged.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-index cc945c6ab3bd..eb7b019159d4 100644
---- a/mm/khugepaged.c
-+++ b/mm/khugepaged.c
-@@ -1435,8 +1435,9 @@ static int hpage_collapse_scan_pmd(struct mm_struct *mm,
- 		*mmap_locked = false;
- 	}
- out:
--	trace_mm_khugepaged_scan_pmd(mm, &folio->page, writable, referenced,
--				     none_or_zero, result, unmapped);
-+	trace_mm_khugepaged_scan_pmd(mm, folio ? &folio->page : NULL,
-+				     writable, referenced, none_or_zero,
-+				     result, unmapped);
- 	return result;
- }
- 
-
-base-commit: e026356e4192ff5a52c1d535e6b9e3fa50def2c4
 -- 
-2.48.1
-
+Best regards,
+Dmitry
