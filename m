@@ -1,238 +1,313 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEEEE20E70C
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 19:05:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8431C20D51E
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 19:06:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743534337; cv=none; b=lIt2W9JXYi/Bx+d5KPubaJQd4/S7+pft3+I417LQFW00AQ+D+OpVhBuwCutjv0PMOtOw74fJwk8q8sOmkIxgYRATzxRYOjyT15AwLYX2W7eGi0hrMH3IZgIl+7hHep/n6eI89Kz0kOza1bLd7xJruHXHmNp96A9csx1QHGsEDh8=
+	t=1743534373; cv=none; b=Ba957JH96AXDzSHwAll9WtsRtNu/vw1rS71I6ikcH+5E9sRed0Bc6gKjAr7RLy3rdcdlxy3smJEYpprlIOhG20cY4WOWOw6PUiMEY6NIzAt5r8cMC1pOIiPnt0yYziO89/0qGrJ6e5xRPJRN3iSXYr21gwN27CxS+yR1dKyfmgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743534337; c=relaxed/simple;
-	bh=6QxxwWjZmGXIgrvNHOurXFoqpCArFTr6tFFAISwoTM0=;
+	s=arc-20240116; t=1743534373; c=relaxed/simple;
+	bh=eJAQpeTiAEAWn6jE5rU5Hw60MZwHgDyggy23BmOnCmE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qBy9N406TsPuuSlNeiqC/b12R9XkXx2pLNEZfDDB1YyM5mY0sDtIr8Wie0QTk+UALyV18s0+2mKlULGN6qLsMMt4qcWQxw0p4POaj5NSpJi8NXEP/C2iJ2B6nvPM0ilpgQfVyoU1EsSwS+ropIpca+etooA+BiTV1nVlii9h/a4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Jtb/Lns/; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=tVhYANLgPzhkFsrQjD+cPdNqZvtjUI5Pw+oALY+9wAHC0ZPS4WTc3ELk0Vwrrrv2lHV5I7n2OxhHhEOUpnon3gywX+00r3/JwGhHAzSD7NiuQFTY/7v5OsHS661x4jQ0vsGqQ0kTwi0smBvXRKh2lkdhXkSNM5cpEYRVCF79Urs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a7F2IdkZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Jtb/Lns/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743534334;
-	h=from:from:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:in-reply-to:in-reply-to:  references:references;
-	bh=BwM5j+WnOf6r0xXn94ePbvLEZ5RCtpNMiobqF7N96Xw=;
-	b=Jtb/Lns/px/E/KiYFnnKmq0JrUNDtAeO3BnXJN+cyTogSwK2w5koecun0l7Voagr4zVMo1
-	wqaCG510ynBGDtfSZv4yEJiTmupocbUObNYR9UXnXyAWIJQ+PWgUlyS71UgnXyoQ6/5C6E
-	f6XQIhWPyOBxhsVGR4jSFmSOY8/uvYI=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-622-m84dYd0cPxKoFU_gq7DY4A-1; Tue,
- 01 Apr 2025 15:05:29 -0400
-X-MC-Unique: m84dYd0cPxKoFU_gq7DY4A-1
-X-Mimecast-MFC-AGG-ID: m84dYd0cPxKoFU_gq7DY4A_1743534327
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D0A7F195422C;
-	Tue,  1 Apr 2025 19:05:26 +0000 (UTC)
-Received: from redhat.com (unknown [10.42.28.51])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id ED03B1956094;
-	Tue,  1 Apr 2025 19:05:19 +0000 (UTC)
-Date: Tue, 1 Apr 2025 20:05:16 +0100
-From: Daniel =?utf-8?B?UC4gQmVycmFuZ8Op?= <berrange@redhat.com>
-To: Stefano Garzarella <sgarzare@redhat.com>
-Cc: Bobby Eshleman <bobbyeshleman@gmail.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Stefan Hajnoczi <stefanha@redhat.com>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>,
-	Bryan Tan <bryan-bt.tan@broadcom.com>,
-	Vishnu Dasa <vishnu.dasa@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	virtualization@lists.linux.dev, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	kvm@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] vsock: add namespace support to vhost-vsock
-Message-ID: <Z-w47H3qUXZe4seQ@redhat.com>
-Reply-To: Daniel =?utf-8?B?UC4gQmVycmFuZ8Op?= <berrange@redhat.com>
-References: <20250312-vsock-netns-v2-0-84bffa1aa97a@gmail.com>
- <r6a6ihjw3etlb5chqsb65u7uhcav6q6pjxu65iqpp76423w2wd@kmctvoaywmbu>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a7F2IdkZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 212FEC4CEE4;
+	Tue,  1 Apr 2025 19:06:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743534372;
+	bh=eJAQpeTiAEAWn6jE5rU5Hw60MZwHgDyggy23BmOnCmE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=a7F2IdkZaqMzSzeegNTiIx+ppAXKFRQfKjRikFyhSKvsOt2MMbS3JCE4LU3KgRBHX
+	 NQGnAZDUqmfFDoTJNr7SnMaaKwzciY0L6RXr8AWfG01+067eDJ8K9nJ5iqsdbC50+G
+	 j14t18qFxvsFQy1H3lPlC4RdAA5ucVrNMEaJ3DRRMasFZhJ6qNAjsurTH4lpwlVI6M
+	 PhGbLbqWUkdmPH3dDQ4wHGTnFSuqNI5jj3vwWNpRrM6ZG66hB7UkQDpSkKJU8/uQOs
+	 umjdmfYHy6UvZYjfo4xN1SNlBhq+KcJKOdD3INnStIWOSf3DppdbIGdZ65HRg/kEeM
+	 61ozhF13jEytw==
+Date: Tue, 1 Apr 2025 21:06:08 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: linux-kernel@vger.kernel.org, Juergen Gross <jgross@suse.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH 11/49] x86/alternatives: Remove the confusing, inaccurate
+ & unnecessary 'temp_mm_state_t' abstraction
+Message-ID: <Z-w5INj77OkbFDQe@gmail.com>
+References: <20250328132704.1901674-1-mingo@kernel.org>
+ <20250328132704.1901674-12-mingo@kernel.org>
+ <20250401143624.GI5880@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <r6a6ihjw3etlb5chqsb65u7uhcav6q6pjxu65iqpp76423w2wd@kmctvoaywmbu>
-User-Agent: Mutt/2.2.13 (2024-03-09)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+In-Reply-To: <20250401143624.GI5880@noisy.programming.kicks-ass.net>
 
-On Fri, Mar 28, 2025 at 06:03:19PM +0100, Stefano Garzarella wrote:
-> CCing Daniel
+
+* Peter Zijlstra <peterz@infradead.org> wrote:
+
+> On Fri, Mar 28, 2025 at 02:26:26PM +0100, Ingo Molnar wrote:
+> > So the temp_mm_state_t abstraction used by use_temporary_mm() and
+> > unuse_temporary_mm() is super confusing:
 > 
-> On Wed, Mar 12, 2025 at 01:59:34PM -0700, Bobby Eshleman wrote:
-> > Picking up Stefano's v1 [1], this series adds netns support to
-> > vhost-vsock. Unlike v1, this series does not address guest-to-host (g2h)
-> > namespaces, defering that for future implementation and discussion.
-> > 
-> > Any vsock created with /dev/vhost-vsock is a global vsock, accessible
-> > from any namespace. Any vsock created with /dev/vhost-vsock-netns is a
-> > "scoped" vsock, accessible only to sockets in its namespace. If a global
-> > vsock or scoped vsock share the same CID, the scoped vsock takes
-> > precedence.
-> > 
-> > If a socket in a namespace connects with a global vsock, the CID becomes
-> > unavailable to any VMM in that namespace when creating new vsocks. If
-> > disconnected, the CID becomes available again.
+> I thing I see what you're saying, but we also still have these patches
+> pending:
 > 
-> I was talking about this feature with Daniel and he pointed out something
-> interesting (Daniel please feel free to correct me):
+>   https://lkml.kernel.org/r/20241119162527.952745944@infradead.org
 > 
->     If we have a process in the host that does a listen(AF_VSOCK) in a
-> namespace, can this receive connections from guests connected to
-> /dev/vhost-vsock in any namespace?
-> 
->     Should we provide something (e.g. sysctl/sysfs entry) to disable
-> this behaviour, preventing a process in a namespace from receiving
-> connections from the global vsock address space (i.e.      /dev/vhost-vsock
-> VMs)?
+> :-(
 
-I think my concern goes a bit beyond that, to the general conceptual
-idea of sharing the CID space between the global vsocks and namespace
-vsocks. So I'm not sure a sysctl would be sufficient...details later
-below..
+Yeah, so I think we should do your queue on top of mine, the
+whole temp_mm_state_t abstraction was rather nonsensical,
+and we shouldn't be iterating confusing code...
 
-> I understand that by default maybe we should allow this behaviour in order
-> to not break current applications, but in some cases the user may want to
-> isolate sockets in a namespace also from being accessed by VMs running in
-> the global vsock address space.
-> 
-> Indeed in this series we have talked mostly about the host -> guest path (as
-> the direction of the connection), but little about the guest -> host path,
-> maybe we should explain it better in the cover/commit
-> descriptions/documentation.
+I've ported patches #1 and #3 from your queue on top, see
+attached below - these should be the two that represent 99%
+of the conflicts between these two efforts AFAICS.
 
-> > Testing
-> > 
-> > QEMU with /dev/vhost-vsock-netns support:
-> > 	https://github.com/beshleman/qemu/tree/vsock-netns
-> > 
-> > Test: Scoped vsocks isolated by namespace
-> > 
-> >  host# ip netns add ns1
-> >  host# ip netns add ns2
-> >  host# ip netns exec ns1 \
-> > 				  qemu-system-x86_64 \
-> > 					  -m 8G -smp 4 -cpu host -enable-kvm \
-> > 					  -serial mon:stdio \
-> > 					  -drive if=virtio,file=${IMAGE1} \
-> > 					  -device vhost-vsock-pci,netns=on,guest-cid=15
-> >  host# ip netns exec ns2 \
-> > 				  qemu-system-x86_64 \
-> > 					  -m 8G -smp 4 -cpu host -enable-kvm \
-> > 					  -serial mon:stdio \
-> > 					  -drive if=virtio,file=${IMAGE2} \
-> > 					  -device vhost-vsock-pci,netns=on,guest-cid=15
-> > 
-> >  host# socat - VSOCK-CONNECT:15:1234
-> >  2025/03/10 17:09:40 socat[255741] E connect(5, AF=40 cid:15 port:1234, 16): No such device
-> > 
-> >  host# echo foobar1 | sudo ip netns exec ns1 socat - VSOCK-CONNECT:15:1234
-> >  host# echo foobar2 | sudo ip netns exec ns2 socat - VSOCK-CONNECT:15:1234
-> > 
-> >  vm1# socat - VSOCK-LISTEN:1234
-> >  foobar1
-> >  vm2# socat - VSOCK-LISTEN:1234
-> >  foobar2
-> > 
-> > Test: Global vsocks accessible to any namespace
-> > 
-> >  host# qemu-system-x86_64 \
-> > 	  -m 8G -smp 4 -cpu host -enable-kvm \
-> > 	  -serial mon:stdio \
-> > 	  -drive if=virtio,file=${IMAGE2} \
-> > 	  -device vhost-vsock-pci,guest-cid=15,netns=off
-> > 
-> >  host# echo foobar | sudo ip netns exec ns1 socat - VSOCK-CONNECT:15:1234
-> > 
-> >  vm# socat - VSOCK-LISTEN:1234
-> >  foobar
-> > 
-> > Test: Connecting to global vsock makes CID unavailble to namespace
-> > 
-> >  host# qemu-system-x86_64 \
-> > 	  -m 8G -smp 4 -cpu host -enable-kvm \
-> > 	  -serial mon:stdio \
-> > 	  -drive if=virtio,file=${IMAGE2} \
-> > 	  -device vhost-vsock-pci,guest-cid=15,netns=off
-> > 
-> >  vm# socat - VSOCK-LISTEN:1234
-> > 
-> >  host# sudo ip netns exec ns1 socat - VSOCK-CONNECT:15:1234
-> >  host# ip netns exec ns1 \
-> > 				  qemu-system-x86_64 \
-> > 					  -m 8G -smp 4 -cpu host -enable-kvm \
-> > 					  -serial mon:stdio \
-> > 					  -drive if=virtio,file=${IMAGE1} \
-> > 					  -device vhost-vsock-pci,netns=on,guest-cid=15
-> > 
-> >  qemu-system-x86_64: -device vhost-vsock-pci,netns=on,guest-cid=15: vhost-vsock: unable to set guest cid: Address already in use
+Does that work for you?
 
-I find it conceptually quite unsettling that the VSOCK CID address
-space for AF_VSOCK is shared between the host and the namespace.
-That feels contrary to how namespaces are more commonly used for
-deterministically isolating resources between the namespace and the
-host.
+Thanks,
 
-Naively I would expect that in a namespace, all VSOCK CIDs are
-free for use, without having to concern yourself with what CIDs
-are in use in the host now, or in future.
+	Ingo
 
-What happens if we reverse the QEMU order above, to get the
-following scenario
+================>
+From: Peter Zijlstra <peterz@infradead.org>
+Date: Tue, 19 Nov 2024 17:25:28 +0100
+Subject: [PATCH] x86/mm: Add mm argument to unuse_temporary_mm()
 
-   # Launch VM1 inside the NS
-   host# ip netns exec ns1 \
-  				  qemu-system-x86_64 \
-  					  -m 8G -smp 4 -cpu host -enable-kvm \
-  					  -serial mon:stdio \
-  					  -drive if=virtio,file=${IMAGE1} \
-  					  -device vhost-vsock-pci,netns=on,guest-cid=15
-   # Launch VM2
-   host# qemu-system-x86_64 \
-  	  -m 8G -smp 4 -cpu host -enable-kvm \
-  	  -serial mon:stdio \
-  	  -drive if=virtio,file=${IMAGE2} \
-  	  -device vhost-vsock-pci,guest-cid=15,netns=off
-  
-   vm1# socat - VSOCK-LISTEN:1234
-   vm2# socat - VSOCK-LISTEN:1234
+In commit 209954cbc7d0 ("x86/mm/tlb: Update mm_cpumask lazily")
+unuse_temporary_mm() grew the assumption that it gets used on
+poking_nn exclusively. While this is currently true, lets not hard
+code this assumption.
 
-   host# socat - VSOCK-CONNECT:15:1234
-     => Presume this connects to "VM2" running outside the NS
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lore.kernel.org/r/20241119163035.322525475@infradead.org
+---
+ arch/x86/kernel/alternative.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-   host# sudo ip netns exec ns1 socat - VSOCK-CONNECT:15:1234
-
-     => Does this connect to "VM1" inside the NS, or "VM2"
-        outside the NS ?
+diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+index 5b1a6252a4b9..cfffcb80f564 100644
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -2161,14 +2161,14 @@ static inline struct mm_struct *use_temporary_mm(struct mm_struct *temp_mm)
+ __ro_after_init struct mm_struct *text_poke_mm;
+ __ro_after_init unsigned long text_poke_mm_addr;
+ 
+-static inline void unuse_temporary_mm(struct mm_struct *prev_mm)
++static inline void unuse_temporary_mm(struct mm_struct *mm, struct mm_struct *prev_mm)
+ {
+ 	lockdep_assert_irqs_disabled();
+ 
+ 	switch_mm_irqs_off(NULL, prev_mm, current);
+ 
+ 	/* Clear the cpumask, to indicate no TLB flushing is needed anywhere */
+-	cpumask_clear_cpu(raw_smp_processor_id(), mm_cpumask(text_poke_mm));
++	cpumask_clear_cpu(raw_smp_processor_id(), mm_cpumask(mm));
+ 
+ 	/*
+ 	 * Restore the breakpoints if they were disabled before the temporary mm
+@@ -2275,7 +2275,7 @@ static void *__text_poke(text_poke_f func, void *addr, const void *src, size_t l
+ 	 * instruction that already allows the core to see the updated version.
+ 	 * Xen-PV is assumed to serialize execution in a similar manner.
+ 	 */
+-	unuse_temporary_mm(prev_mm);
++	unuse_temporary_mm(text_poke_mm, prev_mm);
+ 
+ 	/*
+ 	 * Flushing the TLB might involve IPIs, which would require enabled
 
 
+======================================>
+From: Andy Lutomirski <luto@kernel.org>
+Date: Tue, 19 Nov 2024 17:25:30 +0100
+Subject: [PATCH] x86/mm: Make use/unuse_temporary_mm() non-static
 
-With regards,
-Daniel
--- 
-|: https://berrange.com      -o-    https://www.flickr.com/photos/dberrange :|
-|: https://libvirt.org         -o-            https://fstop138.berrange.com :|
-|: https://entangle-photo.org    -o-    https://www.instagram.com/dberrange :|
+This prepares them for use outside of the alternative machinery.
+The code is unchanged.
 
+Signed-off-by: Andy Lutomirski <luto@kernel.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lkml.kernel.org/r/d1205bc7e165e249c52b7fe8cb1254f06e8a0e2a.1641659630.git.luto@kernel.org
+Link: https://lore.kernel.org/r/20241119163035.533822339@infradead.org
+---
+ arch/x86/include/asm/mmu_context.h |  3 ++
+ arch/x86/kernel/alternative.c      | 64 --------------------------------------
+ arch/x86/mm/tlb.c                  | 64 ++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 67 insertions(+), 64 deletions(-)
+
+diff --git a/arch/x86/include/asm/mmu_context.h b/arch/x86/include/asm/mmu_context.h
+index 2398058b6e83..b103e1709a67 100644
+--- a/arch/x86/include/asm/mmu_context.h
++++ b/arch/x86/include/asm/mmu_context.h
+@@ -272,4 +272,7 @@ unsigned long __get_current_cr3_fast(void);
+ 
+ #include <asm-generic/mmu_context.h>
+ 
++extern struct mm_struct *use_temporary_mm(struct mm_struct *temp_mm);
++extern void unuse_temporary_mm(struct mm_struct *mm, struct mm_struct *prev_mm);
++
+ #endif /* _ASM_X86_MMU_CONTEXT_H */
+diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+index cfffcb80f564..25abadaf8751 100644
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -2111,73 +2111,9 @@ void __init_or_module text_poke_early(void *addr, const void *opcode,
+ 	}
+ }
+ 
+-/*
+- * Using a temporary mm allows to set temporary mappings that are not accessible
+- * by other CPUs. Such mappings are needed to perform sensitive memory writes
+- * that override the kernel memory protections (e.g., W^X), without exposing the
+- * temporary page-table mappings that are required for these write operations to
+- * other CPUs. Using a temporary mm also allows to avoid TLB shootdowns when the
+- * mapping is torn down.
+- *
+- * Context: The temporary mm needs to be used exclusively by a single core. To
+- *          harden security IRQs must be disabled while the temporary mm is
+- *          loaded, thereby preventing interrupt handler bugs from overriding
+- *          the kernel memory protection.
+- */
+-static inline struct mm_struct *use_temporary_mm(struct mm_struct *temp_mm)
+-{
+-	struct mm_struct *prev_mm;
+-
+-	lockdep_assert_irqs_disabled();
+-
+-	/*
+-	 * Make sure not to be in TLB lazy mode, as otherwise we'll end up
+-	 * with a stale address space WITHOUT being in lazy mode after
+-	 * restoring the previous mm.
+-	 */
+-	if (this_cpu_read(cpu_tlbstate_shared.is_lazy))
+-		leave_mm();
+-
+-	prev_mm = this_cpu_read(cpu_tlbstate.loaded_mm);
+-	switch_mm_irqs_off(NULL, temp_mm, current);
+-
+-	/*
+-	 * If breakpoints are enabled, disable them while the temporary mm is
+-	 * used. Userspace might set up watchpoints on addresses that are used
+-	 * in the temporary mm, which would lead to wrong signals being sent or
+-	 * crashes.
+-	 *
+-	 * Note that breakpoints are not disabled selectively, which also causes
+-	 * kernel breakpoints (e.g., perf's) to be disabled. This might be
+-	 * undesirable, but still seems reasonable as the code that runs in the
+-	 * temporary mm should be short.
+-	 */
+-	if (hw_breakpoint_active())
+-		hw_breakpoint_disable();
+-
+-	return prev_mm;
+-}
+-
+ __ro_after_init struct mm_struct *text_poke_mm;
+ __ro_after_init unsigned long text_poke_mm_addr;
+ 
+-static inline void unuse_temporary_mm(struct mm_struct *mm, struct mm_struct *prev_mm)
+-{
+-	lockdep_assert_irqs_disabled();
+-
+-	switch_mm_irqs_off(NULL, prev_mm, current);
+-
+-	/* Clear the cpumask, to indicate no TLB flushing is needed anywhere */
+-	cpumask_clear_cpu(raw_smp_processor_id(), mm_cpumask(mm));
+-
+-	/*
+-	 * Restore the breakpoints if they were disabled before the temporary mm
+-	 * was loaded.
+-	 */
+-	if (hw_breakpoint_active())
+-		hw_breakpoint_restore();
+-}
+-
+ static void text_poke_memcpy(void *dst, const void *src, size_t len)
+ {
+ 	memcpy(dst, src, len);
+diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
+index 0925768d00cb..06a1ad39be74 100644
+--- a/arch/x86/mm/tlb.c
++++ b/arch/x86/mm/tlb.c
+@@ -972,6 +972,70 @@ void enter_lazy_tlb(struct mm_struct *mm, struct task_struct *tsk)
+ 	this_cpu_write(cpu_tlbstate_shared.is_lazy, true);
+ }
+ 
++/*
++ * Using a temporary mm allows to set temporary mappings that are not accessible
++ * by other CPUs. Such mappings are needed to perform sensitive memory writes
++ * that override the kernel memory protections (e.g., W^X), without exposing the
++ * temporary page-table mappings that are required for these write operations to
++ * other CPUs. Using a temporary mm also allows to avoid TLB shootdowns when the
++ * mapping is torn down.
++ *
++ * Context: The temporary mm needs to be used exclusively by a single core. To
++ *          harden security IRQs must be disabled while the temporary mm is
++ *          loaded, thereby preventing interrupt handler bugs from overriding
++ *          the kernel memory protection.
++ */
++struct mm_struct *use_temporary_mm(struct mm_struct *temp_mm)
++{
++	struct mm_struct *prev_mm;
++
++	lockdep_assert_irqs_disabled();
++
++	/*
++	 * Make sure not to be in TLB lazy mode, as otherwise we'll end up
++	 * with a stale address space WITHOUT being in lazy mode after
++	 * restoring the previous mm.
++	 */
++	if (this_cpu_read(cpu_tlbstate_shared.is_lazy))
++		leave_mm();
++
++	prev_mm = this_cpu_read(cpu_tlbstate.loaded_mm);
++	switch_mm_irqs_off(NULL, temp_mm, current);
++
++	/*
++	 * If breakpoints are enabled, disable them while the temporary mm is
++	 * used. Userspace might set up watchpoints on addresses that are used
++	 * in the temporary mm, which would lead to wrong signals being sent or
++	 * crashes.
++	 *
++	 * Note that breakpoints are not disabled selectively, which also causes
++	 * kernel breakpoints (e.g., perf's) to be disabled. This might be
++	 * undesirable, but still seems reasonable as the code that runs in the
++	 * temporary mm should be short.
++	 */
++	if (hw_breakpoint_active())
++		hw_breakpoint_disable();
++
++	return prev_mm;
++}
++
++void unuse_temporary_mm(struct mm_struct *mm, struct mm_struct *prev_mm)
++{
++	lockdep_assert_irqs_disabled();
++
++	switch_mm_irqs_off(NULL, prev_mm, current);
++
++	/* Clear the cpumask, to indicate no TLB flushing is needed anywhere */
++	cpumask_clear_cpu(raw_smp_processor_id(), mm_cpumask(mm));
++
++	/*
++	 * Restore the breakpoints if they were disabled before the temporary mm
++	 * was loaded.
++	 */
++	if (hw_breakpoint_active())
++		hw_breakpoint_restore();
++}
++
+ /*
+  * Call this when reinitializing a CPU.  It fixes the following potential
+  * problems:
