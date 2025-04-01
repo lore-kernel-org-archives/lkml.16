@@ -1,142 +1,174 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-b5-smtp.messagingengine.com (fhigh-b5-smtp.messagingengine.com [202.12.124.156])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E9BF1F03E0
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 09:56:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F8EDCA4B;
+	Tue,  1 Apr 2025 09:59:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743501403; cv=none; b=KsNaILGy9gbISO3RJUQCI3ZPkXakDuzv7/kaxOkYEfbi/sLTe1enWERHp5cmea48GEMAd68+6Raf+7IAOiTqww55EX8+9GFPSHJx/1LI8/Na4Lspl4jO1W9bDFTV3Zc8K+MREINRtzkbt/o0Xpj74MKt6Aj87rUAGtFIvrvXQoI=
+	t=1743501554; cv=none; b=Z3VUvBDQTdHcR4Mb4z7IYvj5dkrrBWoHTO/ryR44dRYU7+7fwzMPNbT3eDF4hXGP8JFMtyujBr/Vus+pveUbCY/TMOMr7qhiHlyVrqe0+iF1LmYNtClWMpnQ7nr5JUdGviKtyRHzW6nzrwBKk26Tl6ZydpT4DpeGg9f8Aioy4QE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743501403; c=relaxed/simple;
-	bh=NjCaM6NPE+96VH652cAxZooTkjH4DOBiqaZ8Cqsk0U8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MfJhNm9oLQVWZUC7+U7VYyHltSiZZ/GlNjO2a/ZKCkyLkX/DRrXfwCKAiLU+C+Gri39qMU79WRYFIT2gZlNcpBcUVT8fmzOCODAYpx+petGjnSdnLVRH6YgIYl4TssbvNknrSbHLoSfrMKBhpv887BdeDAQpbhzxhRTIyyUb48g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=t9iFLF69; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1743501554; c=relaxed/simple;
+	bh=Qqfak2UrvIEyXtb8So6PD7qTuEEQK52pCV08VP7kOFo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RjY8qCcYh9VThccTJTVQgBDnXdcFLHijMmlQv7GbFmY0AyJAGyY9bdhyA5SEH2NHXgMuUKeJbND1wv/Feq3iITWbllmEV1+Kfne0hVNupYBHb/Tb9oifMmVIK5rtKKE0m34qLYDKvtvHVluRGtq/xdMBE8sJLE67fRSLJtR8+h8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=queasysnail.net; spf=pass smtp.mailfrom=queasysnail.net; dkim=pass (2048-bit key) header.d=queasysnail.net header.i=@queasysnail.net header.b=VM9xcbZ6; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=A8GGpwHF; arc=none smtp.client-ip=202.12.124.156
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=queasysnail.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=queasysnail.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="t9iFLF69"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2240b4de12bso81264895ad.2
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 02:56:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743501401; x=1744106201; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=aocl7KwbvNUkzCO2WrWHJhkuKprouF8zjARuTRimIwc=;
-        b=t9iFLF69cofGDXvp7z0LaZkykKW7esNExBN/KG1h+brUINyuB4lNGJHJBdWWQU8Kdo
-         wQk1FfPrDvrJHVe9P2fA0jU5KLXCvP1WZflDU4Tphs6+dLTgt1qkrx1M/E2ftj6UkqJf
-         cGblhz7hEOxbYBaU4F9Vdb4TUdIPY6XHOkIsOINy2hVsVTa3JceDGbc3lYPhyNjXw7X4
-         s7sdJSkO/ig3TTAE13nArSq7hUxldDhkGbxTvg4354hw6e3z/c4LIYcZJ42+jqZC4LNa
-         Jr/0oWzPMP9DZnGG42atPooaKHubp2iEyIYCeVdLaEdwNBkDeCp1SqvGRbLgBW0ZkTgJ
-         FVQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743501401; x=1744106201;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=aocl7KwbvNUkzCO2WrWHJhkuKprouF8zjARuTRimIwc=;
-        b=qysFD/NRIR/5PFLx12hBk5Zb4whUqkuhNMUHBqW7MlToEc7oiSrmcnJjeUk3BfRmjj
-         Kvf6VP83i5Ud7TEd1KXtN4nt/wfNDERxuHspXoZnDXG6FhmQDIGIwqABnnXBN36RHFRd
-         jzTbwby3EMaJH8Qov68lRjZWqgaMqDWFyJt8bcD6ZFFx9mmb53ZUmUqDJymQTbZstN0x
-         P2MHfMWPPbRmQNS01ezaSiK65SD/L+Ze7EF0qMgCkG+u/BbAKmoAA0PfWACKCAFJG0cS
-         FBl83t+fFxQyXOptJqFextyf85Y9goj9UZnK0k+zuHFPQTeLnYkSSCdsSA7g07saaIxU
-         U1Wg==
-X-Forwarded-Encrypted: i=1; AJvYcCVwVNwKXoaCLEv8QqoklhxVM5HJfI6ETgjsinRHd2vvV72avSdBNP1RrZmy+tky+ehCq669daWId1qaM4M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxUg3yRHEitpG0JZDsFtntx6B9ahQVpZqS/OKcuucX6iajrtc5E
-	2ETGnKeZ/ElSqED1bPuu59NrvLpeT25NRgMA3/2D/wHvtQfGy88YA1hkLtO6uzn4x5uKxlQs6Cg
-	h+fsTrOZV9K+hbY+zt9nCX4fuzkdkTBdzlmmoFQ==
-X-Gm-Gg: ASbGncuyteN5MTt3UpeABuM8yHtjUHLGfeB3PsHSVlZ36D69fXmeTVsn4AYLwBN7jhZ
-	UMRkCW9rump7Ynwc89afQZLtFraHbZh67t8TwGz3B1R36UrDij4cbyL9rCzK4j0l0GsAC91txER
-	N3vwdbfECsdFNx5NRFYGaagKeoJJ1fz+Egv3Kykg==
-X-Google-Smtp-Source: AGHT+IHEMnnnmcPGt6SPwgUcHIAgu4byClDUyMF2Ro6APnhVIeAiXBrYYkjDBhhJ0hxiN2KwSVdg1cBseMLltQ3nC1A=
-X-Received: by 2002:a05:6a00:b49:b0:737:e73:f64b with SMTP id
- d2e1a72fcca58-73980339eb8mr15251487b3a.1.1743501401272; Tue, 01 Apr 2025
- 02:56:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=queasysnail.net header.i=@queasysnail.net header.b="VM9xcbZ6";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="A8GGpwHF"
+Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 5B41525401C2;
+	Tue,  1 Apr 2025 05:59:10 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-11.internal (MEProxy); Tue, 01 Apr 2025 05:59:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=queasysnail.net;
+	 h=cc:cc:content-type:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm3; t=1743501550; x=
+	1743587950; bh=Hz18F4NI0H8OQmza2BzZAHc1fArX+giecmzxAvAwMA8=; b=V
+	M9xcbZ6e46z6mIVZrXVmA30AdQP18dsZGj6VYEFstIkdnSPYOdX+R+adP8bWMu3G
+	IlGLvNW+0f7FhQdViHxgSNoRJ3nruyr2DgJU2BFRJNJs2MyNWbB26V1nZqHGbUuw
+	NBsYGXhrCJbVZ0R29j8mNfIvB/aggafgZfdSvE2nKsAj3vo/j2GwO8EhtvfmGSRA
+	uYW4gCseQyldE7gjPmOIU7J2s4un8LAfNaJTk86p07hiiBIIrQdwL5DIEK/L2CCh
+	0ogbhtPwytEya5kCPXBSqExTeuYJNSLpSzBb9AhPMO825g9prrgLHiep52yV3CDl
+	Q86ZGeUY3vdckoROZXRnQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+	1743501550; x=1743587950; bh=Hz18F4NI0H8OQmza2BzZAHc1fArX+giecmz
+	xAvAwMA8=; b=A8GGpwHFGpXrFaqFqXdbpm7G+S5iJYlt5RjTiRHNuV2DfykZIRW
+	9SdDQl9Tmiutqcmw0tuwb7L9+3y8TPO0MHf4XsC+KUJUxZ5iJE4iy1qVW3e3t+Vi
+	ZrEs3NBhuvKOESQzmpy7OV0+YPgMtgieYcRStSWqI5YLPNA9OymDQjzRUQ/OwUKK
+	Q8QBvojB1fKb0Y6+okfwV5UIMKWXCZudhXLQRhu+24cQgIzAL7fXCAw+GFxOt7rl
+	6+AsSdRwlNndMLghkIEkQr34yzlJZjixtpJl94Zk1uLjoX3XcbtLzsejbYyfXcWE
+	XKlcrA5DO1/mVGCJ4K0zLPXI10h/pnzIq6g==
+X-ME-Sender: <xms:7bjrZ2lIyirOMToXYE1bnbJdlw3kgm78I4DJ9G4cUkW-kDe3A4GSdA>
+    <xme:7bjrZ91G8Qt67hDsF8Wz6AN4VrFrLbPJavWG92EnfnDAmNm8g_-Jnyl2wIOY5D5U4
+    lqanY8FHI7k7LBF3ws>
+X-ME-Received: <xmr:7bjrZ0oSgsxHAXtxxgCwSbZGVcWZ21Uc8KQHCIi3nfoAfuPCPpfXiLFe_d_5>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddukedvhedtucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddt
+    jeenucfhrhhomhepufgrsghrihhnrgcuffhusghrohgtrgcuoehsugesqhhuvggrshihsh
+    hnrghilhdrnhgvtheqnecuggftrfgrthhtvghrnhepuefhhfffgfffhfefueeiudegtdef
+    hfekgeetheegheeifffguedvuefffefgudffnecuvehluhhsthgvrhfuihiivgeptdenuc
+    frrghrrghmpehmrghilhhfrhhomhepshgusehquhgvrghshihsnhgrihhlrdhnvghtpdhn
+    sggprhgtphhtthhopedufedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheprghnth
+    honhhiohesohhpvghnvhhpnhdrnhgvthdprhgtphhtthhopehnvghtuggvvhesvhhgvghr
+    rdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrd
+    gtohhmpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehp
+    rggsvghnihesrhgvughhrghtrdgtohhmpdhrtghpthhtohepughonhgrlhgurdhhuhhnth
+    gvrhesghhmrghilhdrtghomhdprhgtphhtthhopehshhhurghhsehkvghrnhgvlhdrohhr
+    ghdprhgtphhtthhopehrhigriigrnhhovhdrshdrrgesghhmrghilhdrtghomhdprhgtph
+    htthhopegrnhgurhgvfidonhgvthguvghvsehluhhnnhdrtghh
+X-ME-Proxy: <xmx:7bjrZ6mx6zwRUQDHyHNIPsuse5RRaevYRt4W8QV9c1FjVEbMXQalyA>
+    <xmx:7bjrZ00_CESBraqMgkBxNvOdhEfpLL01cTGRu_m4VD114bnIXk4o5A>
+    <xmx:7bjrZxu-RAIpwx0ZxWo-Ko1eB0G_J6HEUoSnZjBcYAj-erhb4AiacQ>
+    <xmx:7bjrZwXFkteSWDEO6F2dmeUMlYXfXdBC6rIvHnh4-ipK60RYPUIvyw>
+    <xmx:7rjrZ_0ChUTFZYO_riZ4ZDJw_fEc61lsVCmX7WWJoUp7wTGqzH65TLgn>
+Feedback-ID: i934648bf:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 1 Apr 2025 05:59:09 -0400 (EDT)
+Date: Tue, 1 Apr 2025 11:59:07 +0200
+From: Sabrina Dubroca <sd@queasysnail.net>
+To: Antonio Quartulli <antonio@openvpn.net>
+Cc: netdev@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Donald Hunter <donald.hunter@gmail.com>,
+	Shuah Khan <shuah@kernel.org>, ryazanov.s.a@gmail.com,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Simon Horman <horms@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, Xiao Liang <shaw.leon@gmail.com>
+Subject: Re: [PATCH net-next v24 09/23] ovpn: implement packet processing
+Message-ID: <Z-u46_82tkR8TsOa@krikkit>
+References: <20250318-b4-ovpn-v24-0-3ec4ab5c4a77@openvpn.net>
+ <20250318-b4-ovpn-v24-9-3ec4ab5c4a77@openvpn.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250401014210.2576993-1-jie.gan@oss.qualcomm.com> <470e4a90-41c3-4974-a4d7-3073a7fcc737@arm.com>
-In-Reply-To: <470e4a90-41c3-4974-a4d7-3073a7fcc737@arm.com>
-From: Mike Leach <mike.leach@linaro.org>
-Date: Tue, 1 Apr 2025 10:56:30 +0100
-X-Gm-Features: AQ5f1Jou6RuMhYg-mjMPT8QE1MQ92d3liRY4RQMc92_C5x1ac1ut41GmRyDV0w0
-Message-ID: <CAJ9a7VinQSx9FYvw4ww0KQgMqapLhWTaU9D2qcc-120YywUu2Q@mail.gmail.com>
-Subject: Re: [PATCH] coresight: fix the wrong type of the trace_id in coresight_path
-To: Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: Jie Gan <jie.gan@oss.qualcomm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
-	James Clark <james.clark@linaro.org>, Jie Gan <quic_jiegan@quicinc.com>, 
-	Tingwei Zhang <quic_tingweiz@quicinc.com>, Jinlong Mao <quic_jinlmao@quicinc.com>, 
-	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	Dan Carpenter <dan.carpenter@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250318-b4-ovpn-v24-9-3ec4ab5c4a77@openvpn.net>
 
-Hi,
+2025-03-18, 02:40:44 +0100, Antonio Quartulli wrote:
+> +/* this swap is not atomic, but there will be a very short time frame where the
+> + * old_secondary key won't be available. This should not be a big deal as most
+> + * likely both peers are already using the new primary at this point.
+> + */
 
-On Tue, 1 Apr 2025 at 07:11, Anshuman Khandual
-<anshuman.khandual@arm.com> wrote:
->
-> On 4/1/25 07:12, Jie Gan wrote:
-> > The trace_id in coresight_path may contain an error number which means a
-> > negative integer, but the current type of the trace_id is u8. Change the
-> > type to int to fix it.
-> >
-> > Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-> > Fixes: 3c03c49b2fa5 ("Coresight: Introduce a new struct coresight_path")
-> > Signed-off-by: Jie Gan <jie.gan@oss.qualcomm.com>
->
-> LGTM
->
-> Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
->
-> > ---
-> >  include/linux/coresight.h | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/include/linux/coresight.h b/include/linux/coresight.h
-> > index d79a242b271d..c2bf10c43e7c 100644
-> > --- a/include/linux/coresight.h
-> > +++ b/include/linux/coresight.h
-> > @@ -337,7 +337,7 @@ static struct coresight_dev_list (var) = {                                \
-> >   */
-> >  struct coresight_path {
-> >       struct list_head        path_list;
-> > -     u8                      trace_id;
-> > +     int                     trace_id;
-> >  };
-> >
-> >  enum cs_mode {
+This is not the case anymore.
 
-There are many places in the Coresight drivers that assign a u8
-traceid from the path trace ID.
+> +void ovpn_crypto_key_slots_swap(struct ovpn_crypto_state *cs)
+> +{
+> +	const struct ovpn_crypto_key_slot *old_primary, *old_secondary;
+> +	u8 idx;
+> +
+> +	spin_lock_bh(&cs->lock);
+> +	idx = cs->primary_idx;
+> +	old_primary = rcu_dereference_protected(cs->slots[idx],
+> +						lockdep_is_held(&cs->lock));
+> +	old_secondary = rcu_dereference_protected(cs->slots[!idx],
+> +						  lockdep_is_held(&cs->lock));
+> +	/* perform real swap by switching the index of the primary key */
+> +	WRITE_ONCE(cs->primary_idx, !cs->primary_idx);
+> +
+> +	pr_debug("key swapped: (old primary) %d <-> (new primary) %d\n",
+> +		 old_primary ? old_primary->key_id : -1,
+> +		 old_secondary ? old_secondary->key_id : -1);
+> +
+> +	spin_unlock_bh(&cs->lock);
+> +}
 
-e.g.
-In coresight-etm4x-core.c : etm4_enable_perf()
+[...]
+> +int ovpn_aead_encrypt(struct ovpn_peer *peer, struct ovpn_crypto_key_slot *ks,
+> +		      struct sk_buff *skb)
+> +{
+[...]
+> +	/* encrypt it */
+> +	return crypto_aead_encrypt(req);
+> +free_iv:
+> +	kfree(ovpn_skb_cb(skb)->iv);
+> +	ovpn_skb_cb(skb)->iv = NULL;
+> +free_sg:
+> +	kfree(ovpn_skb_cb(skb)->sg);
+> +	ovpn_skb_cb(skb)->sg = NULL;
 
-drvdata->trcid = path->trace_id;
+nit: Those shouldn't really be needed, since we'll call
+ovpn_encrypt_post that will take care of iv/sg/req. But it's fine if
+you leave them.
 
-drvdata->trcid is defined as a u8  - the reason being trace IDs are
-128 bits wide with some reserved values.
+(same thing on the decrypt side)
 
-Will this not just trigger the same issue if path->trace_id is changed
-to an int? Even if not it is inconsistent handling of the trace ID
-values.
-
-Trace ID errors should be handled by returning an invalid trace ID
-value - were the trace ID value will fail the macro
-IS_VALID_CS_TRACE_ID(), or separate the return of a trace ID from an
-error return in a function.
-
-Regards
-
-Mike
+> +	return ret;
+> +}
 
 
+[...]
+> +/**
+> + * ovpn_key_id_from_skb - extract key ID from the skb head
+> + * @skb: the packet to extract the key ID code from
+> + *
+> + * Note: this function assumes that the skb head was pulled enough
+> + * to access the first byte.
 
---
-Mike Leach
-Principal Engineer, ARM Ltd.
-Manchester Design Centre. UK
+nit: another "first byte" that I missed previously :(
+
+> + *
+> + * Return: the key ID
+> + */
+> +static inline u8 ovpn_key_id_from_skb(const struct sk_buff *skb)
+> +{
+> +	u32 opcode = be32_to_cpu(*(__be32 *)skb->data);
+> +
+> +	return FIELD_GET(OVPN_OPCODE_KEYID_MASK, opcode);
+> +}
+
+-- 
+Sabrina
