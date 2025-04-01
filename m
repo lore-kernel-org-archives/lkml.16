@@ -1,347 +1,235 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2064.outbound.protection.outlook.com [40.107.236.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1BBB1E51F1
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 05:12:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743484338; cv=none; b=bzAh4iAwZzebqNS3N0P2MVAaOy3vKzIpfovnHUdJaMr9C7ewCwkPi3x/kW5n9aQkmHMQ1MxgY1SitmZXwQefTPV9ZXKlt9bwJ2Fkzp521idxNsZsxBFCtkLz8qyv9c1rKmmo1SYRkowGh3o48IaBHhlGRZzuprC5i+VVeMOw4sA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743484338; c=relaxed/simple;
-	bh=fQDSEEOLghqW0gqjtjiP2QZkz7fbMPIZN5amp5V1z7k=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=qogHLnngg6/OZfMyzn6UsF4c3e4AjgA6QVHFBpCr0GfeDWSYf53Ouup7VXPqpwm6Ecjb3oxXQYLWNaO23yMdRRJq73ufoZaoHu5BreCWBIU/Mt0AaKJksz5PB/eJEdsHFX2RuXU1mAbiucM2fxcbNdtY6/YyDMDiGxS6YCU/3qw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=p3tZmKqC; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 999A915B135;
+	Tue,  1 Apr 2025 05:12:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.64
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743484354; cv=fail; b=dNvio4u60ZjuhHVNtExSn4rVQHJ2kz3hvbGYUMLKRUNZAbfw15GluVIFmeLfAhz2Zt5ZQdPbD997ybgcIWmcv43CsRqli0X8inKiYcWJC6C7lsQlz7cPmNA5VmVhyPjH7c8GnaoYwy/bVYLvThzSvSG9gXinq910ix4mVFqlfQA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743484354; c=relaxed/simple;
+	bh=9nwfrnICQswK+Vtbu1EEvFGVmte+2BSIzT9rnOH7MrI=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=oQw1h3rsqIIZnk62veccRlfWP9aqXDiXn3RaBzAAHIdL5C5WIWTqB6fkcSmo+apkfc4+gt8S+TGYac/FCN5FL/N2+TWgIBCR1ts9X+XXqLplhzipxxb1JC34E1NSaEJlMQXC/irpcif3xPJBuCKfyHWzjLz8kx5MLFlP2ax7E/s=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=KYp7a7CC; arc=fail smtp.client-ip=40.107.236.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="p3tZmKqC"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52VG8Ouh031810
-	for <linux-kernel@vger.kernel.org>; Tue, 1 Apr 2025 05:12:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	SufW+r80Y9ER9ibdcVkSFCKfUrwEDR608dkdfliv+88=; b=p3tZmKqCivwj6XHX
-	U5SiYPiT/xpskR9YVFyYuE9Kqe0dp9Jd1L2QedWVS8gxrwiy/oQXMTQ9WndI/wsR
-	u5E9mc8+vL8OR7oP6G52XVWKzj+gfhuxHk8AbIcoNEhm57F6bKP0oXw7Ndz86JFf
-	m1joS18m3iUDxXQYVD7hm0T/QxsoOjFTZhWdv9ia1iekGF432TVC4Ws3ZKMm64mC
-	OnpnI9iVamHMxeKLHl50rLy/K/oO7eODMhi7T27tzsWsQIAt6B2briKShDXV96yI
-	IEQD+6eiRB1pIQzzL6vKRXXQSXeTLDp2U3e/KFFB/lU6Pc5qRx0HhQTPGiKas7/f
-	TVPsWA==
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com [209.85.219.72])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45qxa7sj14-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 05:12:16 +0000 (GMT)
-Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6e900f6dcadso108994976d6.3
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 22:12:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743484333; x=1744089133;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SufW+r80Y9ER9ibdcVkSFCKfUrwEDR608dkdfliv+88=;
-        b=DVIuNtrlD/C+jcmtfd1PNG8dCXfAXjFfvArOpgFoCF0WU7wttypWgNqvfJE+t0KIZ1
-         5YxvcBSTFd3N6OrsvHMNO1rDezMuZjo0PWg5e5Hbog7VxwllwSgR4rmNpOu4DbniLi+d
-         qPNwQJB0m/nFx1FOAaOhiWN/mcjXneUBQaR4Osms+5QCWum1IXZleLWZRM78c0QPZD16
-         sXs0yd+5Afchw3mrsMgn7jsLYNxK/IPFCWXkYT0Sx6q5tm24GdLN4vxCrPuQya9a2ov9
-         +5FrNYcJq2369FwwFMQQDCDmqlp9k1QR7M1uBUWfotK8yOmmvWMlf6C8vV+zl8mVHzy7
-         Zmwg==
-X-Forwarded-Encrypted: i=1; AJvYcCXmBTQ0Gaf+kckKtjxax7fAgNUGQa9KsS6II9TIfPcUOomb8j4xoFJIJbOx/zZLK7xskksZ9m46ywWRapQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YywSVGfKghbfrnH7Zqx1p0lSZ2JApm81XSGLryRmYDFl0h9ivfS
-	AYzuBmG/lmbrmST5nO2oFRYp/wpQ5I6TYiALZWR/LlYykFgySeDsGFtVF93Q/fdr2yeZ6d72hUs
-	Dp2ReQEJS/npiRlgyH5AzYh1DqgNNQ3vKbI/cZjlOqK+smwsRpTllvUwpKKNG9ls=
-X-Gm-Gg: ASbGnctNWyaqKeqH9DWM1CojPQkRibo/BrzHsEcuY9nj9tKC2boHIlVYjpa7OKGUZ3K
-	eo06pLUgf31cHA+tGY5m9KcOJsNtpqG1rEQKr4ceW2ph6T0YYMJq4DFwL3JdsDZPeVr5drDi33A
-	d7sr9qnuLWLyvAbZB/pnaKA7191zl6pNHXAu72fuqc5MvpWuwBVbohKEpVVInQSCyXe5mQqXsK9
-	yo3IJtage1xIpOrSwbNiey1mhzIBFBe1L3/H+9bauj1/IW+zHwtlG7bdmlSeM02WqwktVG4yRiN
-	21E+d0hHZFznVEI3LRqrXtZqhVzLhEqxStMVUTwBMHkmd099JMQNgoeA93n1IP95twrBgDvojEW
-	ogpYyR2A19H5UwI4QOafnD3saOYTG
-X-Received: by 2002:a05:620a:2908:b0:7c5:5768:40b9 with SMTP id af79cd13be357-7c690875522mr1892799585a.43.1743484333136;
-        Mon, 31 Mar 2025 22:12:13 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEsior20lc9lixXbnK9mQBmXS1qNDNvJUiHmjCz+r6N/SDHxsQVRBDDeDs6C8IGTz71trkGnw==
-X-Received: by 2002:a05:620a:2908:b0:7c5:5768:40b9 with SMTP id af79cd13be357-7c690875522mr1892797985a.43.1743484332707;
-        Mon, 31 Mar 2025 22:12:12 -0700 (PDT)
-Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54b095a21b0sm1251697e87.243.2025.03.31.22.12.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Mar 2025 22:12:10 -0700 (PDT)
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Date: Tue, 01 Apr 2025 08:11:39 +0300
-Subject: [PATCH 7/7] drm/panel: make prepare/enable and disable/unprepare
- calls return void
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="KYp7a7CC"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=p9bqx8C7IMcbWnJKhhsUPR2R9UYYpTH+xEcDNaRy8NsmTMv4DZI2/Sex7vyGInDkGtvC1ZpPu7VtraY83CKMnYXd6Vaiax4hE+YiQLApIsk5wnvNfnQIhfaiGpHUsve0pO+Vg5dms1Ih/IwwRHFyMniz3U0oqkykvWGJ/UjM9+6O4dImorqw/LKAxlqYKJL9UllBiz4INqAsDtC60FS9ikt2QlBpo9YViYASjNWASNssPr1teOffmj1keW3tY6jSaOhavV21TtJ9e0eJ310E1Vwx1lOYwv/TYRGL7DX5xgaZbd21EbMVJMnMVIYfPyRFrVP5gXxhPLtulpBTun/b1A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=dpNIvxBFGNADof7Row5BCQgp4wkuQ34pUXQmgOTzzqE=;
+ b=ZESz/qAENwo4qQK8gFu6+IRu2w9Y/90pQst7NIZmufTrThSioFiCIqJN9XjFnmaH/IGaPbXXuctAiBnsjnjWAr24CNHO5gH81qNAd69gpNXwcqC3+It1FblxsPlBlQJErLMBR1U/FoQ31JORTMwiFSNKXp1sg0DWj9dJpkI6J9Q8e+B0m26wfIhWIhO+f3fx6n+mssK/3hxQZr27hIrCwyqJHDqI2Pa/+kVLZVs/D+Z0qDSW67jg2TFRYYePoItGQGGCCf8JCmbxgPS5yceDj9S5ZQ8lwonu4IRscbqwCvGtzNuT1VPk8sfSncctWD0soUjiaFbCNCuEHfNUNDGjmg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dpNIvxBFGNADof7Row5BCQgp4wkuQ34pUXQmgOTzzqE=;
+ b=KYp7a7CCDd0hINHkf2KVtXRQW7E1iSDvW1vKVsMJOwEYxh2s53w3+iThzBhPygZK5pCRs+osFOwRAdadxkJHkBQ+5JYPqDM+9hhXLDCs9lzukjbfLnVjuhjImt+5Tgo8Pt5nGca3VAJShKxZNZtGt27s7hhZ0Eq9WpWiJtS/MYI=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DS0PR12MB6608.namprd12.prod.outlook.com (2603:10b6:8:d0::10) by
+ SN7PR12MB7024.namprd12.prod.outlook.com (2603:10b6:806:26e::6) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8534.54; Tue, 1 Apr 2025 05:12:27 +0000
+Received: from DS0PR12MB6608.namprd12.prod.outlook.com
+ ([fe80::b71d:8902:9ab3:f627]) by DS0PR12MB6608.namprd12.prod.outlook.com
+ ([fe80::b71d:8902:9ab3:f627%4]) with mapi id 15.20.8534.043; Tue, 1 Apr 2025
+ 05:12:27 +0000
+Message-ID: <38edfce2-72c7-44a6-b657-b5ed9c75ed51@amd.com>
+Date: Tue, 1 Apr 2025 10:42:17 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC v2 01/17] x86/apic: Add new driver for Secure AVIC
+To: Borislav Petkov <bp@alien8.de>
+Cc: linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+ dave.hansen@linux.intel.com, Thomas.Lendacky@amd.com, nikunj@amd.com,
+ Santosh.Shukla@amd.com, Vasant.Hegde@amd.com, Suravee.Suthikulpanit@amd.com,
+ David.Kaplan@amd.com, x86@kernel.org, hpa@zytor.com, peterz@infradead.org,
+ seanjc@google.com, pbonzini@redhat.com, kvm@vger.kernel.org,
+ kirill.shutemov@linux.intel.com, huibo.wang@amd.com, naveen.rao@amd.com
+References: <20250226090525.231882-1-Neeraj.Upadhyay@amd.com>
+ <20250226090525.231882-2-Neeraj.Upadhyay@amd.com>
+ <20250320155150.GNZ9w5lh9ndTenkr_S@fat_crate.local>
+ <a7422464-4571-4eb3-b90c-863d8b74adca@amd.com>
+ <20250321135540.GCZ91v3N5bYyR59WjK@fat_crate.local>
+ <e0362a96-4b3a-44b1-8d54-806a6b045799@amd.com>
+ <20250321171138.GDZ92dykj1kOmNrUjZ@fat_crate.local>
+Content-Language: en-US
+From: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
+In-Reply-To: <20250321171138.GDZ92dykj1kOmNrUjZ@fat_crate.local>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN3PR01CA0112.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:96::20) To DS0PR12MB6608.namprd12.prod.outlook.com
+ (2603:10b6:8:d0::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250401-panel-return-void-v1-7-93e1be33dc8d@oss.qualcomm.com>
-References: <20250401-panel-return-void-v1-0-93e1be33dc8d@oss.qualcomm.com>
-In-Reply-To: <20250401-panel-return-void-v1-0-93e1be33dc8d@oss.qualcomm.com>
-To: Andrzej Hajda <andrzej.hajda@intel.com>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Robert Foss <rfoss@kernel.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Jessica Zhang <quic_jesszhan@quicinc.com>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7332;
- i=dmitry.baryshkov@oss.qualcomm.com; h=from:subject:message-id;
- bh=fQDSEEOLghqW0gqjtjiP2QZkz7fbMPIZN5amp5V1z7k=;
- b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBn63WRJEYlwE9X9glklAyZRqGVoodvfMuP5sFdR
- tn4AgM0ExuJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZ+t1kQAKCRCLPIo+Aiko
- 1Y3tB/9MOw1hOc0MzrJv7Ez3RcHJYHujcXQo2I5d1f1gaHB12EZL8MgwagBso+OSR28vrQu58br
- /ww6UqV0ft6YROBZ+MHu7IWY68AGd3+l2ToCPm7iu9DNAKhInXQlXYwlgXcLiqMwH9LOxKS7FC6
- qSUXWxgQIKqe08dlO9jq8w7JkvXVQxtzBQ+2NPNc73q5HZSGT4lbh/V4oxG1arkUcnDFwrJ+fr8
- xG+x/98cP0SQB8/9OcgBs6gE7tyqWKkT4xuQPHc6vxLgQKjs6qz4p3uIMziCtA2Q5OtZsF8Rif9
- dFkE/xiO2FES1ksV4FIY6TI9H1eNb5xQXj3PT9b25oBzrtj1
-X-Developer-Key: i=dmitry.baryshkov@oss.qualcomm.com; a=openpgp;
- fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
-X-Proofpoint-ORIG-GUID: GpUJS1BIfcwVuO2XNqlWcHJChF1tdEPi
-X-Proofpoint-GUID: GpUJS1BIfcwVuO2XNqlWcHJChF1tdEPi
-X-Authority-Analysis: v=2.4 cv=J9Oq7BnS c=1 sm=1 tr=0 ts=67eb75b0 cx=c_pps a=7E5Bxpl4vBhpaufnMqZlrw==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=rpcUNz5-J_niPHj66PUA:9 a=QEXdDO2ut3YA:10 a=pJ04lnu7RYOZP9TFuWaZ:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-01_01,2025-03-27_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- priorityscore=1501 phishscore=0 lowpriorityscore=0 bulkscore=0
- malwarescore=0 mlxscore=0 mlxlogscore=999 adultscore=0 spamscore=0
- suspectscore=0 impostorscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2504010033
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR12MB6608:EE_|SN7PR12MB7024:EE_
+X-MS-Office365-Filtering-Correlation-Id: d0abdc90-d3d4-4aaf-a789-08dd70dbcb3c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?dlkrMVVwcytaT2hYYzcyOEN5M1dzd3JURzg0TFV6N0FhdHNxRnJRL0FSUVdw?=
+ =?utf-8?B?UU5PQXorWlgwREpYUjM1VUV4S2Yxa0JvbUo4VGU0TXM2UnhoOXUyMURnSzlY?=
+ =?utf-8?B?MW5hL1UraGhuNWVZY3VwRyt4ZURzZ2ZKOFNZNjdtMUlEUS9ZUVlCc2ZMYy8z?=
+ =?utf-8?B?alp3NzZSUTdGdWUzd2hRUnZ3MkpoVG1haWJ1aHJqSlNRaU5qdFpTbnhsbDg5?=
+ =?utf-8?B?bDdEU2R1MkpaN1drUmdGRThhemVYSXBpUmRrSURTSklTN2UzeUpnRFF6blJH?=
+ =?utf-8?B?MFNoYThLdlVMQ2RzL3VZR3hMaHIwVnM3dnE1YjRwMllOMC9NSXQ3eldrTFJH?=
+ =?utf-8?B?RWgzb1JqRTFIMzZXZWNQTGw4NnpNNjdBVU04S1EwQURrRHBWTmZnY3F5VUts?=
+ =?utf-8?B?NzQ1S3lyMERaSHZXSk5YNmowR1ZMWWdoMC9oNjJJbVRXc3Y2YWtqVFVWSFBH?=
+ =?utf-8?B?REpkVmhId1hNK1prWm1XamI4RU94WmVpSnhLQlZhbWhmMXJPY3BydUt3d3Fl?=
+ =?utf-8?B?TlBtcml4Z29heTV6N3dIUUloRDdnME5DdnI3M1ZJR2NXbTh5dHJTMlVlbW95?=
+ =?utf-8?B?ZEhqSEw2OVpMNVN3RjJwRkhlSVlkSVJMZU0xSTlGcXJ4YThQemEwbXhDc1RD?=
+ =?utf-8?B?NWFaNkRCeGkxaGtMYUJNZVVxcXZYYzZyeFU4enBZVmtQS054em50YWhuT1BQ?=
+ =?utf-8?B?ZlB3cE5XWlFjSUVyRWFIU2x4WWRyQ1VTQkJ3aDd2ZHZDdjVNVFN2RmgwOUpv?=
+ =?utf-8?B?Y1VoMExaakR4aDVXbEc2MWhjb1VVVmd0RC9CRGFuNUdlQWt2ZVVnelZZOS9T?=
+ =?utf-8?B?RFpqZ016NVFKTnVUZ2l4azd3ZFJLcjhEdFpaenR3eGQ3VERSbEhMUWtxSytz?=
+ =?utf-8?B?YW9WczZTMi91MHpqbkhBUHo4bmZId0ZkMWZsMkt3Qkd5c2p1YzRLKzQyaVkw?=
+ =?utf-8?B?bFJ2TzVvU1k0Ti9NL2w0OWpoNVQ4bEo3aWgvMWw5ZFhDeTFlbHJYWVFiTzhM?=
+ =?utf-8?B?M3lCUm5KcHBHbTdWd2pJalp1Z2lRVlNIZUIvUzhjMEIxTjNEaE1UekYxL1U5?=
+ =?utf-8?B?Ym4wOS8rVGlRQ1RXL01yeVl3L24yMGdON3oyVlNlRzVFSGZmeDNZY21XdHpq?=
+ =?utf-8?B?dS9WY2UwMWEyTkQwVHFncDREWndNSkNMQUcwTXYxR2pwa0p3UTNuU0IyZVNJ?=
+ =?utf-8?B?WS92QmpnTkR0d2luNi9tTTJReEcwWksvQ1ZPMnFrcXZtZzQ2MXZMdXV1RXhk?=
+ =?utf-8?B?M0JaRmtzcFFEWTNTY29EcmxUbkNUeGdsNFduWGhxa0dMeTV0V3VpdmJEZVlR?=
+ =?utf-8?B?SUdWN0QzY1lTcWQ4MERxekI1OWNpWDd6KzJnWWpUbzZLbnh5SzA4YVBvTjZP?=
+ =?utf-8?B?QXoyZUg1ZDM4Z1BvS0RhUVBPYUt3VFRma24yaldrQS9wMmFmVlVQZVNrQ1ND?=
+ =?utf-8?B?MS9qeGpNTkJXWXdwRDZYMXNqb3NKSXhkbktwZEtYZzE2NTNXbXZwRktRdWdr?=
+ =?utf-8?B?blVKVDZlME9SNTdRK2ZoUjF6c2VVUUZwWkMvSEdPeHVKZldDc2xYZ3ZvRWRw?=
+ =?utf-8?B?WUpOSFREVEFiN2hPd285UzhzZlFpZVdPNDNLV2U1OVF5NCtqdW52WXphNklv?=
+ =?utf-8?B?LzVoZ29nNGJKT0tncGtBOFdYUnIrcTZKdFJKNGNQYVdWMUVyb09oYjM4VkVj?=
+ =?utf-8?B?U1VpaTlQODFRamJQZnZaeWdEcm0wU0hZckNVN1VSTmtHTXJPT0xGYXZIZ0Fa?=
+ =?utf-8?B?VCtwOUgwakRHOFhVOVhFaFdvYjFiWnkzYWxDQkxReUxWYlJUR2l3Q2lNNTNJ?=
+ =?utf-8?B?YzBvT1NPY3lHYmF3VUwydnJLSitMMnY2N0RraXRDQS9lSGoyK3FBUlQzcXlG?=
+ =?utf-8?Q?Zb7/7XEkg8C9I?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB6608.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?UExBaUVlbWd0d1NuL01aWnE0Y0QvMm1yWWlQaFZJemgzcS91WVBYbU1QTnpP?=
+ =?utf-8?B?akl0dnBHWG5UUzEzZHh6VjdBcVVmUDFVODEvRU10S3FGZmhOcFJpT1B5Tm9n?=
+ =?utf-8?B?eVduOEFZZ2lkOUkvQ3dEL0l3ZHFoVEZMWnhoV2VkMTlPV056NFozQnZiNHlC?=
+ =?utf-8?B?NjVRcmNGVk40U29CMS9ORkhnTXFMUmVLbFVUYTNZdXhoQ1RhZ3QzdkRqWEN4?=
+ =?utf-8?B?L2EvTmV2V2hDaTBrd1NxdEtoYXkwd1NER1lYUXV3WmpQNk5PQThET3ZLWlZj?=
+ =?utf-8?B?NlNMdXlnQ2EyTmUyTUtYWDVLeklDU1AxZWIxY2kvc2dkKzcvMXBOWENQamtP?=
+ =?utf-8?B?RW9aa0NJUStwOHNWS0dVamVQMFlLdmkza0RhVVgwM0s5eDZ0ZG1pTDBxdDVI?=
+ =?utf-8?B?dXFCcjMrbzY3cXljbHVEZjZPbXFLQnpKK1AyalI5U2pUUXlBTWVKL25HbHdw?=
+ =?utf-8?B?VEN1VHB6UHNDVnF2d3JGZ2JRTGdIZURLZFR0WlRFQXJlejBVWVNwaHhDSFc5?=
+ =?utf-8?B?clVkRFRSa1ZmbHJDbEI4bVlZMURNV2poeW5TZFZsdyt1dCt0RmY3aXd0Tmto?=
+ =?utf-8?B?SFYvM3oxbHIwbTEwY1VsQVpzT0EwTWJOMmJBZWpIVnlOVStPNUdIR0ZzYVlN?=
+ =?utf-8?B?SnFySEYzWlp0YmR6U0c4RXpwaEZtTGhqcmZvQXpaUWQ0eFJDUWxNdnJQbTJQ?=
+ =?utf-8?B?bjhUNk1hREY2QURYa3ZQcmxBb3c1Z25Ja3NxRlBYcUEyUGxvclNxbzZEMisy?=
+ =?utf-8?B?QUlXNURzNEpCck04dmxQdEhvVkY0dXc2UW1oRnBlbnFWNXhQNU1FcHdaUFdH?=
+ =?utf-8?B?ekJLVGZ5bkErdlpmT0Y5YmY1YXVyNzdEem1Oa2cvR2JOdG9WOWFLNUhiZTly?=
+ =?utf-8?B?bHpubnhnakMwRWlvYkxiaDVNdVZKb1ZjWW15K0JGaEptdmh4ajFZM2cxNW9Y?=
+ =?utf-8?B?VW5oT05RY3VaRGluQWRlc2gxajdiODk2SEtOZ1prUkZQS2JJTko0bGlkMG1Y?=
+ =?utf-8?B?K1o0RXNzZEtJSFNQYWU0UERBbi94T2IvTWN5Z1p5NW1rNTh4bVNRcDArUjRn?=
+ =?utf-8?B?SFd1YjNVbWY2Tm9UTW90M3BxSmVSZkZQNzFuN1hrNGl4UmpnUVo5UGtNZW5F?=
+ =?utf-8?B?Y3pDMnhYZFN0UlhVWm5lUDl5aHRrUmRPMkRJZnBGdGduODZSMk5sckd4WW9u?=
+ =?utf-8?B?WHkrbGhIYWJSdFdBVnBiVWlyTmZ6N2RxVmRiRC9oMjk1ZTA4bkthWmFVZU1U?=
+ =?utf-8?B?U2ZpdGVob1NxMzZtbG1FMXZDV2hZYk9LVkhvZ3VhS3UyS1VLU01nVEhpS2pq?=
+ =?utf-8?B?U0tYWkFoRHZBKzl0T0VoaGxLTS9KSnFZTk9WMkY5SlJzL3k0b25WWUw0cXRG?=
+ =?utf-8?B?NktMVXJPZnBiei8zeUgrazVjYzZ1bVh3RUpITEpWOGtubkxEMU5mVWJ4cE0w?=
+ =?utf-8?B?NG80TGNhcEUrdTVKZGZ1ekNXWGpneWRFMVlpSlUwZGpiZTlLb0swRjM4ZitB?=
+ =?utf-8?B?NWFCdFJESDVFYXdWWWxxS2pTbGFNOEdXTVEzSHhtS3JSb0xjN3RNZDE3YWxt?=
+ =?utf-8?B?YUJXdEZJTzZZWWMyd0djWlo1TnlKSTJzbGRzQUF6dWcwRVhaQ2NmbTVpTGdB?=
+ =?utf-8?B?SHluajg5dEZMZGJJWkIyano1Vmtwa3hLUDgzSGpabE9ZQjIwU0ttVTRLK2cv?=
+ =?utf-8?B?clM0cU1CT2dtM3E1TjZXR2FBM3RXbzFYaW9xRnhwRTJRMDZFY3UxU1lyaTk1?=
+ =?utf-8?B?dVYrWWlzOU9TdUdvTGU0NTRSaCtwM1dRU1FyQlF3R09WZ3VPNVFqd0VHdzla?=
+ =?utf-8?B?TEQyWWNHN21FSXVtUXlLOUxZd2FGdGlQa0RzR1ZnNXFJL2ZRRFgzSk5CUjVL?=
+ =?utf-8?B?R3RLcXArZE9ITDdudGR0MVBONUJyZDk5OFBiY0ZGeXErVHQ2SUNDdldtQW4y?=
+ =?utf-8?B?cEpOcUhzWkY4TVgybTVydDhOUGxHaG1OekZFYnFvWHJSNnA2ZjlXd2hSeis5?=
+ =?utf-8?B?VktDMi9INFN3b2ZXT1V0U3BjSFh5OElDUWlZcWVWS2ZIWFRsdDZ3ZzQ1SVZy?=
+ =?utf-8?B?QzdJb3NHQnczQ01WVzROazduTy85NUxPaGNJdE5kRHdLenFOTUwxTTQvNTJR?=
+ =?utf-8?Q?4Cj0bhvRh/lcGn/HV+mwL0SMi?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d0abdc90-d3d4-4aaf-a789-08dd70dbcb3c
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB6608.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Apr 2025 05:12:27.0414
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Ye/mx1rjvxx1Fh/reKJFrkVZOqTvNOBnZE6+sWxit0ET/zpRPj1+5igj3NN+duh7DSHw0LwhBMgk1oV/x+TuMA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB7024
 
-Now there are no users of the return value of the drm_panel_prepare(),
-drm_panel_unprepare(), drm_panel_enable() and drm_panel_disable() calls.
-Usually these calls are performed from the atomic callbacks, where it is
-impossible to return an error. Stop returning error codes and return
-void instead.
 
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
----
- drivers/gpu/drm/drm_panel.c                     | 54 +++++++++----------------
- drivers/gpu/drm/panel/panel-newvision-nv3051d.c |  9 +----
- include/drm/drm_panel.h                         |  8 ++--
- 3 files changed, 26 insertions(+), 45 deletions(-)
 
-diff --git a/drivers/gpu/drm/drm_panel.c b/drivers/gpu/drm/drm_panel.c
-index c627e42a7ce70459f50eb5095fffc806ca45dabf..faa7a76b63b53b3a45b3400d8bf3b58a027a340e 100644
---- a/drivers/gpu/drm/drm_panel.c
-+++ b/drivers/gpu/drm/drm_panel.c
-@@ -105,21 +105,21 @@ EXPORT_SYMBOL(drm_panel_remove);
-  *
-  * Calling this function will enable power and deassert any reset signals to
-  * the panel. After this has completed it is possible to communicate with any
-- * integrated circuitry via a command bus.
-- *
-- * Return: 0 on success or a negative error code on failure.
-+ * integrated circuitry via a command bus. This function cannot fail (as it is
-+ * called from the pre_enable call chain). There will always be a call to
-+ * drm_panel_disable() afterwards.
-  */
--int drm_panel_prepare(struct drm_panel *panel)
-+void drm_panel_prepare(struct drm_panel *panel)
- {
- 	struct drm_panel_follower *follower;
- 	int ret;
- 
- 	if (!panel)
--		return -EINVAL;
-+		return;
- 
- 	if (panel->prepared) {
- 		dev_warn(panel->dev, "Skipping prepare of already prepared panel\n");
--		return 0;
-+		return;
- 	}
- 
- 	mutex_lock(&panel->follower_lock);
-@@ -138,11 +138,8 @@ int drm_panel_prepare(struct drm_panel *panel)
- 				 follower->funcs->panel_prepared, ret);
- 	}
- 
--	ret = 0;
- exit:
- 	mutex_unlock(&panel->follower_lock);
--
--	return ret;
- }
- EXPORT_SYMBOL(drm_panel_prepare);
- 
-@@ -154,16 +151,14 @@ EXPORT_SYMBOL(drm_panel_prepare);
-  * reset, turn off power supplies, ...). After this function has completed, it
-  * is usually no longer possible to communicate with the panel until another
-  * call to drm_panel_prepare().
-- *
-- * Return: 0 on success or a negative error code on failure.
-  */
--int drm_panel_unprepare(struct drm_panel *panel)
-+void drm_panel_unprepare(struct drm_panel *panel)
- {
- 	struct drm_panel_follower *follower;
- 	int ret;
- 
- 	if (!panel)
--		return -EINVAL;
-+		return;
- 
- 	/*
- 	 * If you are seeing the warning below it likely means one of two things:
-@@ -176,7 +171,7 @@ int drm_panel_unprepare(struct drm_panel *panel)
- 	 */
- 	if (!panel->prepared) {
- 		dev_warn(panel->dev, "Skipping unprepare of already unprepared panel\n");
--		return 0;
-+		return;
- 	}
- 
- 	mutex_lock(&panel->follower_lock);
-@@ -195,11 +190,8 @@ int drm_panel_unprepare(struct drm_panel *panel)
- 	}
- 	panel->prepared = false;
- 
--	ret = 0;
- exit:
- 	mutex_unlock(&panel->follower_lock);
--
--	return ret;
- }
- EXPORT_SYMBOL(drm_panel_unprepare);
- 
-@@ -209,26 +201,26 @@ EXPORT_SYMBOL(drm_panel_unprepare);
-  *
-  * Calling this function will cause the panel display drivers to be turned on
-  * and the backlight to be enabled. Content will be visible on screen after
-- * this call completes.
-- *
-- * Return: 0 on success or a negative error code on failure.
-+ * this call completes. This function cannot fail (as it is called from the
-+ * enable call chain). There will always be a call to drm_panel_disable()
-+ * afterwards.
-  */
--int drm_panel_enable(struct drm_panel *panel)
-+void drm_panel_enable(struct drm_panel *panel)
- {
- 	int ret;
- 
- 	if (!panel)
--		return -EINVAL;
-+		return;
- 
- 	if (panel->enabled) {
- 		dev_warn(panel->dev, "Skipping enable of already enabled panel\n");
--		return 0;
-+		return;
- 	}
- 
- 	if (panel->funcs && panel->funcs->enable) {
- 		ret = panel->funcs->enable(panel);
- 		if (ret < 0)
--			return ret;
-+			return;
- 	}
- 	panel->enabled = true;
- 
-@@ -236,8 +228,6 @@ int drm_panel_enable(struct drm_panel *panel)
- 	if (ret < 0)
- 		DRM_DEV_INFO(panel->dev, "failed to enable backlight: %d\n",
- 			     ret);
--
--	return 0;
- }
- EXPORT_SYMBOL(drm_panel_enable);
- 
-@@ -248,15 +238,13 @@ EXPORT_SYMBOL(drm_panel_enable);
-  * This will typically turn off the panel's backlight or disable the display
-  * drivers. For smart panels it should still be possible to communicate with
-  * the integrated circuitry via any command bus after this call.
-- *
-- * Return: 0 on success or a negative error code on failure.
-  */
--int drm_panel_disable(struct drm_panel *panel)
-+void drm_panel_disable(struct drm_panel *panel)
- {
- 	int ret;
- 
- 	if (!panel)
--		return -EINVAL;
-+		return;
- 
- 	/*
- 	 * If you are seeing the warning below it likely means one of two things:
-@@ -269,7 +257,7 @@ int drm_panel_disable(struct drm_panel *panel)
- 	 */
- 	if (!panel->enabled) {
- 		dev_warn(panel->dev, "Skipping disable of already disabled panel\n");
--		return 0;
-+		return;
- 	}
- 
- 	ret = backlight_disable(panel->backlight);
-@@ -280,11 +268,9 @@ int drm_panel_disable(struct drm_panel *panel)
- 	if (panel->funcs && panel->funcs->disable) {
- 		ret = panel->funcs->disable(panel);
- 		if (ret < 0)
--			return ret;
-+			return;
- 	}
- 	panel->enabled = false;
--
--	return 0;
- }
- EXPORT_SYMBOL(drm_panel_disable);
- 
-diff --git a/drivers/gpu/drm/panel/panel-newvision-nv3051d.c b/drivers/gpu/drm/panel/panel-newvision-nv3051d.c
-index 5d115ecd5dd44c8e5e7d1fb8afe573324e987f59..b6429795e8f518646443dd8179f3ec28cef4dc0f 100644
---- a/drivers/gpu/drm/panel/panel-newvision-nv3051d.c
-+++ b/drivers/gpu/drm/panel/panel-newvision-nv3051d.c
-@@ -413,15 +413,10 @@ static int panel_nv3051d_probe(struct mipi_dsi_device *dsi)
- static void panel_nv3051d_shutdown(struct mipi_dsi_device *dsi)
- {
- 	struct panel_nv3051d *ctx = mipi_dsi_get_drvdata(dsi);
--	int ret;
- 
--	ret = drm_panel_unprepare(&ctx->panel);
--	if (ret < 0)
--		dev_err(&dsi->dev, "Failed to unprepare panel: %d\n", ret);
-+	drm_panel_unprepare(&ctx->panel);
- 
--	ret = drm_panel_disable(&ctx->panel);
--	if (ret < 0)
--		dev_err(&dsi->dev, "Failed to disable panel: %d\n", ret);
-+	drm_panel_disable(&ctx->panel);
- }
- 
- static void panel_nv3051d_remove(struct mipi_dsi_device *dsi)
-diff --git a/include/drm/drm_panel.h b/include/drm/drm_panel.h
-index a9c042c8dea1a82ef979c7a68204e0b55483fc28..18bf338c8b96254dc3f2880106b944e71ea4c9a7 100644
---- a/include/drm/drm_panel.h
-+++ b/include/drm/drm_panel.h
-@@ -275,11 +275,11 @@ void drm_panel_init(struct drm_panel *panel, struct device *dev,
- void drm_panel_add(struct drm_panel *panel);
- void drm_panel_remove(struct drm_panel *panel);
- 
--int drm_panel_prepare(struct drm_panel *panel);
--int drm_panel_unprepare(struct drm_panel *panel);
-+void drm_panel_prepare(struct drm_panel *panel);
-+void drm_panel_unprepare(struct drm_panel *panel);
- 
--int drm_panel_enable(struct drm_panel *panel);
--int drm_panel_disable(struct drm_panel *panel);
-+void drm_panel_enable(struct drm_panel *panel);
-+void drm_panel_disable(struct drm_panel *panel);
- 
- int drm_panel_get_modes(struct drm_panel *panel, struct drm_connector *connector);
- 
+On 3/21/2025 10:41 PM, Borislav Petkov wrote:
+> On Fri, Mar 21, 2025 at 09:39:22PM +0530, Neeraj Upadhyay wrote:
+>> Ok, something like below?
+> 
+> Or something like that:
+> 
+> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> index 76b16a2b03ee..1a5fa10ee4b9 100644
+> --- a/arch/x86/Kconfig
+> +++ b/arch/x86/Kconfig
+> @@ -476,7 +476,7 @@ config X86_X2APIC
+>  
+>  config AMD_SECURE_AVIC
+>  	bool "AMD Secure AVIC"
+> -	depends on X86_X2APIC
+> +	depends on AMD_MEM_ENCRYPT && X86_X2APIC
+>  	help
+>  	  This enables AMD Secure AVIC support on guests that have this feature.
+>  
+> @@ -1517,7 +1517,6 @@ config AMD_MEM_ENCRYPT
+>  	select X86_MEM_ENCRYPT
+>  	select UNACCEPTED_MEMORY
+>  	select CRYPTO_LIB_AESGCM
+> -	select AMD_SECURE_AVIC
+>  	help
+>  	  Say yes to enable support for the encryption of system memory.
+>  	  This requires an AMD processor that supports Secure Memory
+> diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+> index edc31615cb67..ecf86b8a6601 100644
+> --- a/arch/x86/include/asm/msr-index.h
+> +++ b/arch/x86/include/asm/msr-index.h
+> @@ -685,8 +685,14 @@
+>  #define MSR_AMD64_SNP_VMSA_REG_PROT	BIT_ULL(MSR_AMD64_SNP_VMSA_REG_PROT_BIT)
+>  #define MSR_AMD64_SNP_SMT_PROT_BIT	17
+>  #define MSR_AMD64_SNP_SMT_PROT		BIT_ULL(MSR_AMD64_SNP_SMT_PROT_BIT)
+> +
+>  #define MSR_AMD64_SNP_SECURE_AVIC_BIT	18
+> -#define MSR_AMD64_SNP_SECURE_AVIC 	BIT_ULL(MSR_AMD64_SNP_SECURE_AVIC_BIT)
+> +#ifdef CONFIG_AMD_SECURE_AVIC
+> +#define MSR_AMD64_SNP_SECURE_AVIC	BIT_ULL(MSR_AMD64_SNP_SECURE_AVIC_BIT)
+> +#else
+> +#define MSR_AMD64_SNP_SECURE_AVIC	0
+> +#endif
+> +
 
--- 
-2.39.5
+I missed this part. I think this does not work because if CONFIG_AMD_SECURE_AVIC
+is not enabled, MSR_AMD64_SNP_SECURE_AVIC bit becomes 0 in both SNP_FEATURES_IMPL_REQ
+and SNP_FEATURES_PRESENT.
+
+So, snp_get_unsupported_features() won't report SECURE_AVIC feature as not being
+enabled in guest launched with SECURE_AVIC vmsa feature enabled. Thoughts?
+
+u64 snp_get_unsupported_features(u64 status)
+{
+        if (!(status & MSR_AMD64_SEV_SNP_ENABLED))
+                return 0;
+
+        return status & SNP_FEATURES_IMPL_REQ & ~SNP_FEATURES_PRESENT;
+}
+
+
+- Neeraj
+
+>  #define MSR_AMD64_SNP_RESV_BIT		19
+>  #define MSR_AMD64_SNP_RESERVED_MASK	GENMASK_ULL(63, MSR_AMD64_SNP_RESV_BIT)
+>  #define MSR_AMD64_RMP_BASE		0xc0010132
+> 
 
