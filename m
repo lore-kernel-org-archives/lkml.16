@@ -1,218 +1,103 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D7B61F930
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 13:31:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64B301F30A4
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 13:32:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743514315; cv=none; b=m2Apt1ptN4jLLWpLbTluloidvmctNVpuNx6e/B7LlMRQUWBdxWlsQP5HbFfb0DKbsMiljYIHvJVHYu+jX4BleemdLm6kqAHiWS0jROFx0SMZzAf2ZH9YUUHtwb1JNZLPQF4h4w4RS3gg8KmoOdSUkkta8UUfSeSIrVN7oqwUFPQ=
+	t=1743514338; cv=none; b=SzTcJaNuiBGMtFb0XyTjxSrYxbIwswwUkbcRPepKzkOYiw7RyJw10eLvRjmrqWNG2ifuqzpg+KubKGKuHKVaQN/F7w7UKHZSNGT1+YlkAxDDOmwaskEBF3sZnEuoJnbufCqGEF9mlRPy9Jg2fgiu8VqzMPCA4cyTrusTfltrFZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743514315; c=relaxed/simple;
-	bh=Q1h3J1lMlqtTxeUWZ2nmb72vQCNud+YGGXy7C5Z3tuQ=;
+	s=arc-20240116; t=1743514338; c=relaxed/simple;
+	bh=/tBD38mp4DS6jkQtiRDsu4bhtmz7msq1iOn6Dz0mWmA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jIPIHFqu3wL/r+Gjtwg6c8VX4vDXafd3rvMUXqghO50YaWdwLEQmj1Neyitd7FhhtYYBPfi6eiNrD07QYcJe4XGgl5hn0hLiXYPAOv5Pvdbl9DEqbTWmvZLL0HQ9E9zejehuxdiKMgblDM7Exbp50m3iXzoajC1xGK0JguL/+OU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BF3D61424;
-	Tue,  1 Apr 2025 06:31:54 -0700 (PDT)
-Received: from [10.1.197.1] (ewhatever.cambridge.arm.com [10.1.197.1])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5E1723F694;
-	Tue,  1 Apr 2025 06:31:50 -0700 (PDT)
-Message-ID: <cf88ccd7-a95e-455e-a194-895dcc393c5b@arm.com>
-Date: Tue, 1 Apr 2025 14:31:49 +0100
+	 In-Reply-To:Content-Type; b=K9sU92RGto+XoTX6XB8txPAjUwHEzCkU38OTa8E5H6zOZHulIXJnl8VcFnU6nQgiCz03ajrJkNeG/2OyzVYjaV4NwaqcJgi4Z3cXMyS6sMwCS+ZEDUZZ+VccMjp2k/6vX36EnbPWL3dEfxaWdv7VVpVixejT54r/jB/3jKvX5q0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=KD+77uEm; arc=none smtp.client-ip=95.215.58.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="KD+77uEm"
+Message-ID: <052a9a59-b555-4867-9ec6-c6fa719adb61@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1743514321;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Lg826qukLI7doC/5Gq/qEXLkMQocti6S+kHz6s4mVhA=;
+	b=KD+77uEmnJzlYVcl++uqZFBZMmN9a07Fx8ECI9PCoqSh/jw7WXEewlggpwX8PDEVyAMA1U
+	+cYLjrSzc0sQ2PLj0iCRoZUwr/85VG6tB/qpTBhSFucK63Mtf0C7byMWasHDffa4s6izxx
+	6ZPeccmb5AmrKkR4s764ArJLFtIiFoc=
+Date: Tue, 1 Apr 2025 15:31:57 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] coresight: catu: Introduce refcount and spinlock for
- enabling/disabling
-To: James Clark <james.clark@linaro.org>, Yabin Cui <yabinc@google.com>
-Cc: coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, Mike Leach <mike.leach@linaro.org>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Leo Yan <leo.yan@arm.com>
-References: <20250328223837.2314277-1-yabinc@google.com>
- <ea366793-4c27-44af-9b6b-8964c4151416@linaro.org>
+Subject: Re: [PATCH net] net/smc: fix general protection fault in
+ __smc_diag_dump
+To: Paolo Abeni <pabeni@redhat.com>, Wang Liang <wangliang74@huawei.com>,
+ wenjia@linux.ibm.com, jaka@linux.ibm.com, alibuda@linux.alibaba.com,
+ tonylu@linux.alibaba.com, guwen@linux.alibaba.com, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, horms@kernel.org,
+ ubraun@linux.vnet.ibm.com
+Cc: yuehaibing@huawei.com, zhangchangzhong@huawei.com,
+ linux-rdma@vger.kernel.org, linux-s390@vger.kernel.org,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250331081003.1503211-1-wangliang74@huawei.com>
+ <37f86471-5abc-4f04-954e-c6fb5f2b653a@redhat.com>
 Content-Language: en-US
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-In-Reply-To: <ea366793-4c27-44af-9b6b-8964c4151416@linaro.org>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Zhu Yanjun <yanjun.zhu@linux.dev>
+In-Reply-To: <37f86471-5abc-4f04-954e-c6fb5f2b653a@redhat.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On 31/03/2025 15:24, James Clark wrote:
+On 01.04.25 13:01, Paolo Abeni wrote:
+> On 3/31/25 10:10 AM, Wang Liang wrote:
+>> diff --git a/net/smc/af_smc.c b/net/smc/af_smc.c
+>> index 3e6cb35baf25..454801188514 100644
+>> --- a/net/smc/af_smc.c
+>> +++ b/net/smc/af_smc.c
+>> @@ -371,6 +371,7 @@ void smc_sk_init(struct net *net, struct sock *sk, int protocol)
+>>   	sk->sk_protocol = protocol;
+>>   	WRITE_ONCE(sk->sk_sndbuf, 2 * READ_ONCE(net->smc.sysctl_wmem));
+>>   	WRITE_ONCE(sk->sk_rcvbuf, 2 * READ_ONCE(net->smc.sysctl_rmem));
+>> +	smc->clcsock = NULL;
+>>   	INIT_WORK(&smc->tcp_listen_work, smc_tcp_listen_work);
+>>   	INIT_WORK(&smc->connect_work, smc_connect_work);
+>>   	INIT_DELAYED_WORK(&smc->conn.tx_work, smc_tx_work);
 > 
+> The syzkaller report has a few reproducers, have you tested this? AFAICS
+> the smc socket is already zeroed on allocation by sk_alloc().
+
+Yes. I also agree with you that smc socket should have already been zeroed.
+
+Currently in this commit, this member variable is set to NULL 
+explicitly. I am not sure if this can fix this problem or not.
+
+Based on the following, it seems that this problem can be reproduced.
+"
+syzbot has tested the proposed patch but the reproducer is still 
+triggering an issue:
+general protection fault in __smc_diag_dump
+"
+
+Thus follow the instructions in this link to make tests.
+
+https://groups.google.com/g/syzkaller-bugs/c/YwENRImdcsk/m/wBJo6qGiCAAJ?pli=1, 
+the following can trigger the reproducer.
+
+"
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+"
+
+Zhu Yanjun
+
 > 
-> On 28/03/2025 10:38 pm, Yabin Cui wrote:
->> When tracing ETM data on multiple CPUs concurrently via the
->> perf interface, the CATU device is shared across different CPU
->> paths. This can lead to race conditions when multiple CPUs attempt
->> to enable or disable the CATU device simultaneously.
->>
->> To address these race conditions, this patch introduces the
->> following changes:
->>
->> 1. The enable and disable operations for the CATU device are not
->>     reentrant. Therefore, a spinlock is added to ensure that only
->>     one CPU can enable or disable a given CATU device at any point
->>     in time.
->>
->> 2. A reference counter is used to manage the enable/disable state
->>     of the CATU device. The device is enabled when the first CPU
->>     requires it and is only disabled when the last CPU finishes
->>     using it. This ensures the device remains active as long as at
->>     least one CPU needs it.
->>
->> Signed-off-by: Yabin Cui <yabinc@google.com>
->> ---
->>   drivers/hwtracing/coresight/coresight-catu.c | 29 ++++++++++++++------
->>   drivers/hwtracing/coresight/coresight-catu.h |  1 +
->>   2 files changed, 22 insertions(+), 8 deletions(-)
->>
->> diff --git a/drivers/hwtracing/coresight/coresight-catu.c b/drivers/ 
->> hwtracing/coresight/coresight-catu.c
->> index 275cc0d9f505..834a7ffbbdbc 100644
->> --- a/drivers/hwtracing/coresight/coresight-catu.c
->> +++ b/drivers/hwtracing/coresight/coresight-catu.c
->> @@ -458,12 +458,19 @@ static int catu_enable_hw(struct catu_drvdata 
->> *drvdata, enum cs_mode cs_mode,
->>   static int catu_enable(struct coresight_device *csdev, enum cs_mode 
->> mode,
->>                  void *data)
->>   {
->> -    int rc;
->> +    int rc = 0;
->> +    unsigned long flags;
->>       struct catu_drvdata *catu_drvdata = csdev_to_catu_drvdata(csdev);
->> -    CS_UNLOCK(catu_drvdata->base);
->> -    rc = catu_enable_hw(catu_drvdata, mode, data);
->> -    CS_LOCK(catu_drvdata->base);
->> +    spin_lock_irqsave(&catu_drvdata->spinlock, flags);
-> 
-> Hi Yabin,
-> 
-> This needs to be a raw_spinlock since [1]. Also you might as well use 
-> the new guard() thing to save someone find-and-replacing it later.
-> 
-> But I'm wondering if this is accurate. The ETR's refcount is dependent 
-> on the pid of the owner of the trace session:
-> 
->    /* Do not proceed if this device is associated with another session */
->    if (drvdata->pid != -1 && drvdata->pid != pid) {
->      rc = -EBUSY;
->      goto unlock_out;
->    }
-> 
->    /*
->     * No HW configuration is needed if the sink is already in
->     * use for this session.
->     */
->    if (drvdata->pid == pid) {
->      csdev->refcnt++;
->      goto unlock_out;
->    }
-> 
-> If the helpers get enabled first, could this mean that CATU gets 
-> associated with a different session than the ETR? 
-
-Thats a good point, I looked at the code and :
-
-I think we have a bug here, w.r.t helpers and Sinks. We enable the
-helpers (e.g. CATU) and then we try the actual sink (e.g. ETR). And
-if we fail to enable ETR, we don't disable the helpers.
-
-
-We have this today :
-
-	case CORESIGHT_DEV_TYPE_SINK:
-		ret = coresight_enable_sink(csdev, mode, sink_data);
-		/*
-		 * Sink is the first component turned on. If we
-		 * failed to enable the sink, there are no components
-		 * that need disabling. Disabling the path here
-		 * would mean we could disrupt an existing session.
-		 */
-		if (ret)
-			goto out;
-
-...
-
-out: 
-
-         return ret; 
-
-err: 
-
-         coresight_disable_path_from(path, nd); 
-
-         goto out; 
-
-}
-
-Suzuki
-
-
-Maybe not, but it
-> would be easier to understand if the core code handled the refcounting 
-> and locking for linked devices.
-> 
-> [1]: https://lore.kernel.org/all/20250306121110.1647948-3- 
-> yeoreum.yun@arm.com/
-> 
-> Thanks
-> James
-> 
->> +    if (csdev->refcnt == 0) {
->> +        CS_UNLOCK(catu_drvdata->base);
->> +        rc = catu_enable_hw(catu_drvdata, mode, data);
->> +        CS_LOCK(catu_drvdata->base);
->> +    }
->> +    if (!rc)
->> +        csdev->refcnt++;
->> +    spin_unlock_irqrestore(&catu_drvdata->spinlock, flags);
->>       return rc;
->>   }
->> @@ -486,12 +493,17 @@ static int catu_disable_hw(struct catu_drvdata 
->> *drvdata)
->>   static int catu_disable(struct coresight_device *csdev, void *__unused)
->>   {
->> -    int rc;
->> +    int rc = 0;
->> +    unsigned long flags;
->>       struct catu_drvdata *catu_drvdata = csdev_to_catu_drvdata(csdev);
->> -    CS_UNLOCK(catu_drvdata->base);
->> -    rc = catu_disable_hw(catu_drvdata);
->> -    CS_LOCK(catu_drvdata->base);
->> +    spin_lock_irqsave(&catu_drvdata->spinlock, flags);
->> +    if (--csdev->refcnt == 0) {
->> +        CS_UNLOCK(catu_drvdata->base);
->> +        rc = catu_disable_hw(catu_drvdata);
->> +        CS_LOCK(catu_drvdata->base);
->> +    }
->> +    spin_unlock_irqrestore(&catu_drvdata->spinlock, flags);
->>       return rc;
->>   }
->> @@ -550,6 +562,7 @@ static int __catu_probe(struct device *dev, struct 
->> resource *res)
->>       dev->platform_data = pdata;
->>       drvdata->base = base;
->> +    spin_lock_init(&drvdata->spinlock);
->>       catu_desc.access = CSDEV_ACCESS_IOMEM(base);
->>       catu_desc.pdata = pdata;
->>       catu_desc.dev = dev;
->> diff --git a/drivers/hwtracing/coresight/coresight-catu.h b/drivers/ 
->> hwtracing/coresight/coresight-catu.h
->> index 141feac1c14b..663282ec6381 100644
->> --- a/drivers/hwtracing/coresight/coresight-catu.h
->> +++ b/drivers/hwtracing/coresight/coresight-catu.h
->> @@ -65,6 +65,7 @@ struct catu_drvdata {
->>       void __iomem *base;
->>       struct coresight_device *csdev;
->>       int irq;
->> +    spinlock_t spinlock;
->>   };
->>   #define CATU_REG32(name, offset)                    \
+> /P
 > 
 
