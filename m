@@ -1,50 +1,33 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C765337160;
-	Tue,  1 Apr 2025 15:15:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D5951EB9F3;
+	Tue,  1 Apr 2025 15:16:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743520561; cv=none; b=gULucK95c5XqbUjwU0ZXhSFH+F/cO+2VG2Wms8QAG+xIsVCwYqf2NxmqnJ1C7bPdncF7paw/ThxKRA4xqWhJRIRji4v0sV3AvBXEMUSRSlhzdwVjC2p8ZgCmsRhldeK9uguYaEQVdA3ldqdeqGeWb5ruP0p6mgtnddgs9fjXBIk=
+	t=1743520580; cv=none; b=t3uzOw6EA1nhjqxlz7BYem8hO/Sn7j9Gk1jlufS/515BdJvpeOPSKNv/jCznw065CvglT5nqYdQiNSmxz8M5DQ/KczMp6e6OHO/RcK7wboBnVVgBsY7jGo/clwCgMBc/+Lzfm/AL85+LnFIgCDIvs6aN7arkPYEFioSQo3jE+Z0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743520561; c=relaxed/simple;
-	bh=sPjeVLoACA9nT+XZ0DB/7pvZa67WgLdOEm5FeaamAi8=;
+	s=arc-20240116; t=1743520580; c=relaxed/simple;
+	bh=jfC3tqKIz3LeHJC4ONTwz3P1JxkbCPRmxXY3x7/hqMY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rmloIMFYpSvWJ5+omWVdF73e5EzSIf70UTOERHNqFMKploasEgMKOYbHWomkoSlyfzRKd3XOsgvogFJpN0JpYv/wUx9KkVvv/DT1ajsdiODKL3dCg2TtJIII6cxukY2Qo89JJuacYuNsaWXcETt/UnvVdhw8corrob4DByOSxbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PIlDMtQz; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 In-Reply-To:Content-Type; b=MAixSYMU1I6msTrF1UJmVb+Kqwp8LOKM1VHZ68wHxbUWQIsOg3L/1MptGp9AhnMoe6yL/emc1cdOu/chbqz81Ykd/+A9PkSxhS6jJzUVF14iPRQ7RL74u9DITAkbrz+vEPfXxZWQJM46A8B9H4yowKNp8x2ZCRyjGFWWFxq8ae0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qEHxD/jE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PIlDMtQz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743520559; x=1775056559;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=sPjeVLoACA9nT+XZ0DB/7pvZa67WgLdOEm5FeaamAi8=;
-  b=PIlDMtQzrCBixXE+TBLupag3xbrgWU5TsACgFC+iwJAQ2OddMjFuXBQJ
-   jhdZVNzJZe+pElHxMFnIZezgEft0Jz/PyAnYVV+s11t6NEf/DwHlwLjdn
-   jz3+vXHU8Wq58z2GI4Ttsd9rBarpqJsH9E7w6SmzPOKOv8zBCmAb9E6L+
-   OhLQXkjH7czcyeJ3O0lbWqSRrqprJb6kyGwaM3H8dycqxQay/ND33Jw89
-   nFn1lktHmz9K/9OqpKLIZkUMzhKux1XZDNLtZ2Fgp1rHnTTzD0HvcA2IW
-   5E6t/SCLTuZSfAC0L8BZL4LaF1dVOqgok/+PViZyVbTMS1X+1UJXbq0Au
-   w==;
-X-CSE-ConnectionGUID: m3yU6hRUSe+6OaAtGvVN4Q==
-X-CSE-MsgGUID: 9c9GC9ETSj+fyGmk53aipw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11391"; a="56218808"
-X-IronPort-AV: E=Sophos;i="6.14,293,1736841600"; 
-   d="scan'208";a="56218808"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2025 08:15:58 -0700
-X-CSE-ConnectionGUID: zkOkx39dQEidkLb3ObxHXQ==
-X-CSE-MsgGUID: b04GmepJQQKw0Y7IdhMVxg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,293,1736841600"; 
-   d="scan'208";a="127233634"
-Received: from inaky-mobl1.amr.corp.intel.com (HELO [10.125.109.176]) ([10.125.109.176])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2025 08:15:56 -0700
-Message-ID: <79a032b5-b13d-43fd-b56e-01098122e104@intel.com>
-Date: Tue, 1 Apr 2025 08:15:55 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qEHxD/jE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2C41C4CEE5;
+	Tue,  1 Apr 2025 15:16:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743520576;
+	bh=jfC3tqKIz3LeHJC4ONTwz3P1JxkbCPRmxXY3x7/hqMY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=qEHxD/jEeI8uxbbiZqRBSFKNqvIkf/9WuEFV09uMnhpDWKLnDf0cuT9oshVUSGsFR
+	 tsH03ck1ODmCdDR8nmuDU2bSJrjlAO75udgAQy002tCe2jIaxldFS07H/l2pDRgKDY
+	 QlYht3hJW34lzDxSpCD7uoQgt8nHKyazijkZ7bboSBvOFuJ3HrIq9Ans2bKJsysH79
+	 7ipOFZSp0Xq51vgJGkJn60OduYkce5zT62FNoSZ7zJ3UwELUKB1XfGnQ4tRxga6O95
+	 d0ogsUMkr67HxvBebots2DTRN0gBrvdcHyySPT7GHDglyW2MLP7HhP8GbrsVh8xk+E
+	 KmQ1mkXjUSMYg==
+Message-ID: <bd2acf53-de9f-42d9-a671-a67930c7be64@kernel.org>
+Date: Tue, 1 Apr 2025 17:16:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,154 +35,100 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [BUG -next] ./usr/include/cxl/features.h:11:10: fatal error:
- uuid/uuid.h: No such file or directory
-To: Venkat Rao Bagalkote <venkat88@linux.ibm.com>,
- Dan Williams <dan.j.williams@intel.com>, Jason Gunthorpe <jgg@nvidia.com>
-Cc: "Paul E. McKenney" <paulmck@kernel.org>, linux-cxl@vger.kernel.org,
- dave@stgolabs.net, jonathan.cameron@huawei.com, alison.schofield@intel.com,
- vishal.l.verma@intel.com, ira.weiny@intel.com, gourry@gourry.net,
- linux-kernel@vger.kernel.org, linux-next@vger.kernel.org,
- sfr@canb.auug.org.au, Madhavan Srinivasan <maddy@linux.ibm.com>
-References: <f6489337-67c7-48c8-b48a-58603ec15328@paulmck-laptop>
- <14bfcfa0-5999-49e4-854e-ff8810d6df3c@intel.com>
- <52a34c97-88d2-415e-a899-6583ae3ba620@paulmck-laptop>
- <30a7f782-4388-45b6-bb3c-a0faf85b7445@intel.com>
- <51e9823c-784c-4b91-99d4-0500aaf5cec0@paulmck-laptop>
- <67e7301dc8ad7_201f0294a5@dwillia2-xfh.jf.intel.com.notmuch>
- <1f48ba3b-9ba8-44e5-98c7-4c9abf95a935@intel.com>
- <20250331132439.GD10839@nvidia.com>
- <67eac8df3e217_201f02948d@dwillia2-xfh.jf.intel.com.notmuch>
- <20250331171755.GC289482@nvidia.com>
- <67eaf14b7c611_201f0294ba@dwillia2-xfh.jf.intel.com.notmuch>
- <4641ce2f-74eb-45ea-a2f8-c7d0db905b7a@linux.ibm.com>
+Subject: Re: [PATCH 1/2] dt-bindings: watchdog: Add NXP Software Watchdog
+ Timer
+To: Daniel Lezcano <daniel.lezcano@linaro.org>, wim@linux-watchdog.org
+Cc: linux@roeck-us.net, linux-watchdog@vger.kernel.org,
+ linux-kernel@vger.kernel.org, S32@nxp.com,
+ Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>,
+ Thomas Fossati <thomas.fossati@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>,
+ "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+ <devicetree@vger.kernel.org>
+References: <20250328151516.2219971-1-daniel.lezcano@linaro.org>
+ <c433c28d-c88d-4647-b472-7bc81b332d8c@kernel.org>
+ <0638eb8c-d87f-44aa-9f1c-eee529b1e1a1@linaro.org>
+ <b14718f2-add3-436d-95a5-908eb9217120@kernel.org>
+ <16a0832a-7645-44ee-867f-fde8822f219c@linaro.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <4641ce2f-74eb-45ea-a2f8-c7d0db905b7a@linux.ibm.com>
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <16a0832a-7645-44ee-867f-fde8822f219c@linaro.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
+On 01/04/2025 10:46, Daniel Lezcano wrote:
+>> Yes, with one being the fallback.
+> 
+> Like that ?
+> 
+> properties:
+>    compatible:
+>      oneOf:
+>        - const: nxp,s32g2-wdt
+>        - items:
+>            - const: nxp,s32g3-wdt
+>            - const: nxp,s32g2-wdt
 
-
-On 4/1/25 12:01 AM, Venkat Rao Bagalkote wrote:
-> 
-> On 01/04/25 1:17 am, Dan Williams wrote:
->> Jason Gunthorpe wrote:
->>> On Mon, Mar 31, 2025 at 09:54:55AM -0700, Dan Williams wrote:
->>>> Jason Gunthorpe wrote:
->>>>> On Fri, Mar 28, 2025 at 05:26:42PM -0700, Dave Jiang wrote:
->>>>>>> For now the following builds for me, but it is a quite a mess to undo
->>>>>>> the assumption that that the hardware object definitions can not use
->>>>>>> uuid_t:
->>>>>> +Jason.
->>>>> Seems invasive?
->>>> Yeah, it left a bad taste for me as well.
->>>>
->>>>> Maybe just like below?
->>>> I like that this avoids converting to the kernel's uuid API, however,
->>>> not quite happy that it forces userspace to contend with the
->>>> type-conflict with uuid/uuid.h.
->>> Oh I see
->>>  
->>>> So how about one more riff on your idea?
->>> Sure, works for me, please post it..
->> b4 am supports scissors lines, so:
->>
->> b4 am -P _  67eac8df3e217_201f02948d@dwillia2-xfh.jf.intel.com.notmuch
->>
->> ...works for me. Do you still need a separate posting?
->>
-> 
-> This issue got introduced in next-20250307 and got fixed in next-20250311(not sure what fixed).
-> 
-> But again got re-introduced in  next-20250318. I tried bisection, below are the logs.
-> 
-> One of the things I tried is to install the UUID packages on my set up and after installing those packages, issue is not seen.
-> 
-> rpm -qa | grep uuid
-> 
-> libuuid-2.37.4-20.el9.ppc64le
-> uuid-1.6.2-55.el9.ppc64le
-> uuid-c++-1.6.2-55.el9.ppc64le
-> uuid-dce-1.6.2-55.el9.ppc64le
-> uuid-devel-1.6.2-55.el9.ppc64le
-> uuidd-2.37.4-20.el9.ppc64le
-> libuuid-devel-2.37.4-20.el9.ppc64le
-> 
-> So wondering is this not a setup issue?  Please advice.
-
-uuid/uuid.h only exists if the libuuid-devel package gets installed. And it seems that's where it resides in userspace.
-
-DJ
+Yes
 
 > 
-> 
-> Bisect Log:
-> 
-> git bisect log
-> git bisect start
-> # status: waiting for both good and bad commits
-> # bad: [c4d4884b67802c41fd67399747165d65c770621a] Add linux-next specific files for 20250318
-> git bisect bad c4d4884b67802c41fd67399747165d65c770621a
-> # status: waiting for good commit(s), bad commit known
-> # good: [4701f33a10702d5fc577c32434eb62adde0a1ae1] Linux 6.14-rc7
-> git bisect good 4701f33a10702d5fc577c32434eb62adde0a1ae1
-> # good: [cda4d1b29991d4500e9f65c6936b5d3ccd99ecbb] Merge branch 'spi-nor/next' of git://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git
-> git bisect good cda4d1b29991d4500e9f65c6936b5d3ccd99ecbb
-> # good: [9b22611592aa21d10f7d1b89352a618436dea7ac] Merge branch 'next' of git://git.kernel.org/pub/scm/linux/kernel/git/jarkko/linux-tpmdd.git
-> git bisect good 9b22611592aa21d10f7d1b89352a618436dea7ac
-> # good: [264791f7669a8246d129cbb935c861debba2f116] Merge branch 'driver-core-next' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git
-> git bisect good 264791f7669a8246d129cbb935c861debba2f116
-> # good: [3c51cb2d6ec7cecf724cd5d78a0633f61f31e726] Merge branch 'for-next' of git://git.kernel.org/pub/scm/linux/kernel/git/remoteproc/linux.git
-> git bisect good 3c51cb2d6ec7cecf724cd5d78a0633f61f31e726
-> # good: [612481dbc16505cf5e940809ebf36d8460d174cf] Merge branch 'main' of git://git.infradead.org/users/willy/xarray.git
-> git bisect good 612481dbc16505cf5e940809ebf36d8460d174cf
-> # bad: [892715be4379deb333376e573113fd75672eca6c] Merge branch 'rust-next' of https://github.com/Rust-for-Linux/linux.git
-> git bisect bad 892715be4379deb333376e573113fd75672eca6c
-> # bad: [b33f4167a8a2b9b9cc6b3e06f79b030db82cf530] Merge branch 'next' of git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git
-> git bisect bad b33f4167a8a2b9b9cc6b3e06f79b030db82cf530
-> # good: [3b5d43245f0a56390baaa670e1b6d898772266b3] Merge branch 'for-6.15/features' into cxl-for-next
-> git bisect good 3b5d43245f0a56390baaa670e1b6d898772266b3
-> # good: [d11af4ae2169672b690a4d07a9dfdfd76c082683] Merge branch 'for-next' of git://git.kernel.org/pub/scm/linux/kernel/git/andy/linux-auxdisplay.git
-> git bisect good d11af4ae2169672b690a4d07a9dfdfd76c082683
-> # bad: [5908f3ed6dc209e5c824e63afda7545805f75a7e] cxl: Add support to handle user feature commands for get feature
-> git bisect bad 5908f3ed6dc209e5c824e63afda7545805f75a7e
-> # good: [18285acc2c047cda2449f426c09fc8969b04b8b1] fwctl: Add documentation
-> git bisect good 18285acc2c047cda2449f426c09fc8969b04b8b1
-> # good: [15a26c223fff58d9fa4ada12a8c35697f8ecdf6c] Merge branch 'for-6.15/features' into fwctl
-> git bisect good 15a26c223fff58d9fa4ada12a8c35697f8ecdf6c
-> # bad: [9b8e73cdb1418f7c251c43b2082218ed9c0d0fee] cxl: Move cxl feature command structs to user header
-> git bisect bad 9b8e73cdb1418f7c251c43b2082218ed9c0d0fee
-> # good: [858ce2f56b5253063f61f6b1c58a6dbf5d71da0b] cxl: Add FWCTL support to CXL
-> git bisect good 858ce2f56b5253063f61f6b1c58a6dbf5d71da0b
-> # first bad commit: [9b8e73cdb1418f7c251c43b2082218ed9c0d0fee] cxl: Move cxl feature command structs to user header
-> 
-> 9b8e73cdb1418f7c251c43b2082218ed9c0d0fee is the first bad commit
-> commit 9b8e73cdb1418f7c251c43b2082218ed9c0d0fee
-> Author: Dave Jiang <dave.jiang@intel.com>
-> Date:  Fri Mar 7 13:55:32 2025 -0700
-> 
->   cxl: Move cxl feature command structs to user header
-> 
->   In preparation for cxl fwctl enabling, move data structures related to
->   cxl feature commands to a user header file.
-> 
->   Reviewed-by; Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> 
->   Link: https://patch.msgid.link/r/20250307205648.1021626-3-dave.jiang@intel.com
->   Reviewed-by: Dan Williams <dan.j.williams@intel.com>
->   Reviewed-by: Li Ming <ming.li@zohomail.com>
->   Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->   Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
-> 
->  include/cxl/features.h   | 112 +----------------------------
->  include/uapi/cxl/features.h | 169 ++++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 170 insertions(+), 111 deletions(-)
->  create mode 100644 include/uapi/cxl/features.h
-> 
-> 
-> Regards,
-> 
-> Venkat.
-> 
+> Why a fallback is needed for this case ? It is exactly the same hardware 
+> for s32g2 and s32g3. Could it be:
 
+Fallback is needed because it is exactly the same hardware.
+
+> 
+> properties:
+>    compatible:
+>      oneOf:
+>        - const: nxp,s32g2-wdt
+>        - const: nxp,s32g3-wdt
+
+This tells hardware is different.
+
+Best regards,
+Krzysztof
