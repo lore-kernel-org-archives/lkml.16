@@ -1,22 +1,22 @@
-Received: from mail-m49197.qiye.163.com (mail-m49197.qiye.163.com [45.254.49.197])
+Received: from mail-m155101.qiye.163.com (mail-m155101.qiye.163.com [101.71.155.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 188EB1E9B00;
-	Tue,  1 Apr 2025 10:00:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52EED1E9B23;
+	Tue,  1 Apr 2025 10:00:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.71.155.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743501635; cv=none; b=WZvnrhRgx0COEjyuBp+wXT79m5S5dkLtXqupXe4rq0JCwuaSn1VbJJHDPdHHEFCRQ8tSFcSRJrD4Gxvo3wwDQujvEFF9XbbE3L/F64sjLGp85XXsLllDkYYOBd1D7kgNp5Fp1udgU4NFpuApI9tbIuUTDATr3Ault0vUK7a+zoQ=
+	t=1743501635; cv=none; b=PMm1aLFUC1tZUPfPofcHRXzJqTz9E8ZC/EXURNAK4kzK39oByByo+QrlNJTLz37eB4JQJ9H+iz4ozpvf7ytIY6sGSSuKQ1AKdWTGS4YvvWvDhnEQzOytmgeZwEBeaBSr34AiPJj0uO/WY8hWhFuGdUTI3XAqz3aFchuZ6zy5Us8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1743501635; c=relaxed/simple;
-	bh=PZ2wlP0xAzb2e8AtSu2pWEXqMm2q8EHdiToSKwJ/Eg0=;
+	bh=RfT2gRInBbRAuxRqCN3YNSvsWt5BLaoVyjJTh6HsFao=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=gfdx0HuUT7e8C/sLfbO7K1bhuUXcHIkusGvWOhDHhZ7fTCx0/hV/kQOUF5LNiUKh05QpifoJft53i4FvZcXvZ9JaTQ99nx/Cru1/1lqq6MwoHDxCSAfPAIl68S3O8heXHUJUQpqAdqO/ZXCq6YAAUYyV5S7l29u0YmjKQ+j4AF4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn; spf=pass smtp.mailfrom=jmu.edu.cn; arc=none smtp.client-ip=45.254.49.197
+	 MIME-Version; b=k0aNR/OxpDHPxwMC03+YwcQb97rB6stwOhzD16W3pCkawVj1Lu1oLC8cdBYoFeZFjHNPa5XqEWhkZvkBlifyAnxoJWpsTp7B2nL3CaysKWF1fQreYI9ADNnWN60Gx0UwUF8oXEAkDjc67XSXSA3iIVzQPbxFFiHPjUTbAV6v5JQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn; spf=pass smtp.mailfrom=jmu.edu.cn; arc=none smtp.client-ip=101.71.155.101
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jmu.edu.cn
 Received: from amadeus-Vostro-3710.lan (unknown [IPV6:240e:3b3:2c00:430:ae31:3177:4f09:da96])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 10501cafd;
-	Tue, 1 Apr 2025 18:00:28 +0800 (GMT+08:00)
+	by smtp.qiye.163.com (Hmail) with ESMTP id 10501caff;
+	Tue, 1 Apr 2025 18:00:29 +0800 (GMT+08:00)
 From: Chukun Pan <amadeus@jmu.edu.cn>
 To: Yao Zi <ziyao@disroot.org>
 Cc: Rob Herring <robh@kernel.org>,
@@ -29,9 +29,9 @@ Cc: Rob Herring <robh@kernel.org>,
 	linux-rockchip@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	devicetree@vger.kernel.org
-Subject: [PATCH v2 1/3] arm64: dts: rockchip: Add missing uart3 interrupt for RK3528
-Date: Tue,  1 Apr 2025 18:00:18 +0800
-Message-Id: <20250401100020.944658-2-amadeus@jmu.edu.cn>
+Subject: [PATCH v2 2/3] arm64: dts: rockchip: Add DMA controller for RK3528
+Date: Tue,  1 Apr 2025 18:00:19 +0800
+Message-Id: <20250401100020.944658-3-amadeus@jmu.edu.cn>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20250401100020.944658-1-amadeus@jmu.edu.cn>
 References: <20250401100020.944658-1-amadeus@jmu.edu.cn>
@@ -43,40 +43,51 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlDSR5KVkNPQh5CHh5NGhlJTlYeHw5VEwETFhoSFy
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlCS0lJVhgZT0weSEoeGh8dHlYeHw5VEwETFhoSFy
 	QUDg9ZV1kYEgtZQVlJT0seQUgZSEFJGEtLQU9IS0EaHkhKQUhKTExBTx1LQkEfGkJNWVdZFhoPEh
-	UdFFlBWU9LSFVKS0hKTkxOVUpLS1VKQktLWQY+
-X-HM-Tid: 0a95f0cb936003a2kunm10501cafd
+	UdFFlBWU9LSFVKS0lPT09LVUpLS1VLWQY+
+X-HM-Tid: 0a95f0cb9a3403a2kunm10501caff
 X-HM-MType: 10
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6MC46Myo4ODIBLQpWIy0tFEgS
-	IS5PCRVVSlVKTE9ITktKTUlCSkNLVTMWGhIXVRoWGh8eDgg7ERYOVR4fDlUYFUVZV1kSC1lBWUlP
-	Sx5BSBlIQUkYS0tBT0hLQRoeSEpBSEpMTEFPHUtCQR8aQk1ZV1kIAVlBSkNCTjcG
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6ORw6Shw5FDJLPQoWFSwDFAEs
+	GU0KFBdVSlVKTE9ITktKTUhLQkhNVTMWGhIXVRoWGh8eDgg7ERYOVR4fDlUYFUVZV1kSC1lBWUlP
+	Sx5BSBlIQUkYS0tBT0hLQRoeSEpBSEpMTEFPHUtCQR8aQk1ZV1kIAVlBSUpOSDcG
 
-The interrupt of uart3 node on rk3528 is missing, fix it.
+Add DMA controller dt node for RK3528 SoC.
 
-Fixes: 7983e6c379a9 ("arm64: dts: rockchip: Add base DT for rk3528 SoC")
-Reviewed-by: Yao Zi <ziyao@disroot.org>
 Signed-off-by: Chukun Pan <amadeus@jmu.edu.cn>
 ---
- arch/arm64/boot/dts/rockchip/rk3528.dtsi | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/rockchip/rk3528.dtsi | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/rockchip/rk3528.dtsi b/arch/arm64/boot/dts/rockchip/rk3528.dtsi
-index 26c3559d6a6d..7f1ffd6003f5 100644
+index 7f1ffd6003f5..c366766ee3f5 100644
 --- a/arch/arm64/boot/dts/rockchip/rk3528.dtsi
 +++ b/arch/arm64/boot/dts/rockchip/rk3528.dtsi
-@@ -404,9 +404,10 @@ uart2: serial@ffa00000 {
- 
- 		uart3: serial@ffa08000 {
- 			compatible = "rockchip,rk3528-uart", "snps,dw-apb-uart";
-+			reg = <0x0 0xffa08000 0x0 0x100>;
- 			clocks = <&cru SCLK_UART3>, <&cru PCLK_UART3>;
- 			clock-names = "baudclk", "apb_pclk";
--			reg = <0x0 0xffa08000 0x0 0x100>;
-+			interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>;
- 			reg-io-width = <4>;
- 			reg-shift = <2>;
+@@ -493,6 +493,24 @@ sdhci: mmc@ffbf0000 {
  			status = "disabled";
+ 		};
+ 
++		dmac: dma-controller@ffd60000 {
++			compatible = "arm,pl330", "arm,primecell";
++			reg = <0x0 0xffd60000 0x0 0x4000>;
++			clocks = <&cru ACLK_DMAC>;
++			clock-names = "apb_pclk";
++			interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
++			arm,pl330-periph-burst;
++			#dma-cells = <1>;
++		};
++
+ 		pinctrl: pinctrl {
+ 			compatible = "rockchip,rk3528-pinctrl";
+ 			rockchip,grf = <&ioc_grf>;
 -- 
 2.25.1
 
