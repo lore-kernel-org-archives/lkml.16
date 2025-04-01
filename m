@@ -1,77 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6CDC1EDA11;
-	Tue,  1 Apr 2025 10:17:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA5681E885A;
+	Tue,  1 Apr 2025 10:18:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743502672; cv=none; b=uEBXwxDhMsRT5EYk4oIojJV244SEWVNR+ZNhmZ88yIj9BdLavcS5Bs5i9/l1SfTmRdz/PGLYBP5gcgMNJukjieZsRNz197V8+9XM2XfAlVs6j6B0taucUsqoHpldQsib5BjDwYpnNw4dGc6dAJjC1sdPfJyr4jS33mFm3T1/+r4=
+	t=1743502691; cv=none; b=Weu20Zaq0VFHs1775STQ4r+KD/FKH3sf3jwFm4bLHQ57kv3gImxfisfUuhYg2xZheoTk5kuksJXNxfuGlX+1G2vSTQ/loERg0zLaWmgIh5uyIp42/zFKj7Y0vv61nNa5eQ2qWIq38jOGiaL9Ab/Nod/i+I7z+RtAGYULH04QSVE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743502672; c=relaxed/simple;
-	bh=RsW3xw6+4WGi3+qk80YDknYAreyWrpPOP0x0XNLeK8k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZOJSelVFRvDRsay7gBIch6e8yzxTVIkjXWOTXvQihtMa5iK1GimSi6CpGs+b4GuSj+8x1n0mTmlE6zxG4Y2AKlvNBy/dw+8fNA7jvI42WI92Z1jteNheOzA7lVs46VjkM767KOrA88xiP3bRNQELJx/mKGwJ3tJFL1XOz//Nprk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KbmIHGKl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743502691; c=relaxed/simple;
+	bh=5URm45iO5Dva5c5vZE938pEu4oNn53E3yXkACy1GJsM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=WdEdPkL71QN5h8YuMWwj5vH2W+katQk2RFUDp7pUXexFikj7RnNUt8BJy2E+IfRAdlLJwUZtzlfWlDJYZWZcKIL/AYO8uMqFeUEvBzIkgt8TUHbuk+kGEWZGGNqhdRiPlYrDm2MBbvgctL3df3LKGWdob8u5id5grboRrsNr8sc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bEa5jlqG; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KbmIHGKl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E5AEC4CEE4;
-	Tue,  1 Apr 2025 10:17:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743502671;
-	bh=RsW3xw6+4WGi3+qk80YDknYAreyWrpPOP0x0XNLeK8k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KbmIHGKlSG7568PngKnyT47oKbCKO6OArfI5MguoBHylG22sNyQoMi+ivtS1VEKqm
-	 eQJoBFREUCVqxYgRXT+EuSwvcbrPW53H+FfnBRFhnej6mG0gnn2dw3Xie2HQmfExWc
-	 1cM8ojiw+8LnBCxlasrQ2yPaObOp8JjGcKVogDXVcuV1AlCsnDlg9gjuQ0NxL3vDKm
-	 xdUJMp7HHwbjrT6AXY8BmeQvd8WAQcttc6E4LuRQLqJITO3XKRNscWPFO0IRxFOs+a
-	 Q9Z2kUBXkyNLFRKe3KlnQOkD20Lj3mNy2hEHeOAUSVAL/8HjBB4f+RptrEEv35HduE
-	 M+5QliTUnOtwA==
-Date: Tue, 1 Apr 2025 10:17:48 +0000
-From: Tzung-Bi Shih <tzungbi@kernel.org>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Benson Leung <bleung@chromium.org>, Guenter Roeck <groeck@chromium.org>,
-	chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] platform/chrome: cros_ec: Avoid
- -Wflex-array-member-not-at-end warning
-Message-ID: <Z-u9TNrnEGD8fM8V@google.com>
-References: <Z-apE0ZmckBjRDyx@kspp>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bEa5jlqG"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-3012a0c8496so7114476a91.2;
+        Tue, 01 Apr 2025 03:18:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743502689; x=1744107489; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=CIZ3aaOK44zYE4FOewMRIfLw6B008LnAXYNyC85Qxc0=;
+        b=bEa5jlqGL0xZQmJnABteV7JRIOQELjWm6cnKvJUeHI8ZBAaAzjTSJGFH6Qp5rtpS59
+         eEBslAdCmsaVeoHlcR86TYX2m9grKp4pJvWFvObIuKpVMZqV7eAN+QsZxDIO6kcjSCwY
+         4DEapyC7/ZH5Tj16ifIa2cL50vFJftDFy0VwWfL9KEje0Vs1IOM+U5lJvCCKfLiukngc
+         iysVNEyoS6pkOcUbZW6sLRlF33kwVzINRFn6r1phU5nwOpfWlGezxOfSEgm9qmXGo8/P
+         na0B6Zidb7g26ZktVkbctc3gngFHFSrgIlEgmDeQAafCalhmchIE+jHghYEm7MeUb6dU
+         l43g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743502689; x=1744107489;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=CIZ3aaOK44zYE4FOewMRIfLw6B008LnAXYNyC85Qxc0=;
+        b=CWLqznjx1r/XKpEUkU1c9q1t00j7HAMtVq5MBm1Fl4g1sDA7tY20MkKAiz1poM3id6
+         7EnqTUlzAexxHWIQa/2pdzK+lpjFPe+LsUfwhnybBk1bYOyBmPJKZWckJ0fLpmic3wXM
+         YYbA1edqgTGQmpFhE9WZNX75mb+BLDE8Bo9Fk6uhYUH9NZYBCAdXgYPCN8qAIQM3xfF5
+         IiJkMszNkAyuB36hYzXxIauDH5EHRz7kspD1BCY6DE4uAQ4Mxz+qupagqqy3dL+mHtjz
+         JwZjYIiX05T7MF6hWYjV6QvpNG+fNk44zRx/dYUALF/oqs+ktjcjHXQPgXOnA+9Vttca
+         cGYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUjeqk8oSn4TEIQ5RHwCk+qaXczM3B3siBVV1aqu6xW8gkTTQ0SXm+23xffDMXgekuJAC4ieXsytPJE@vger.kernel.org, AJvYcCXWlbbIFH63OTrMBkOhGNgX5fdxPOEbVo0AbrtE4ufQBfzD5L2ty4C06C5VSmWDk7upWci4l/tCnslHPEk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4wio25MxvTTy2fNugf8K5n/eZiPu3ccQZBGgCkSRjR/7Er2Pl
+	jL2itoZ7SrSRNhGXgeg3XF53Gg2HFjjlcLXINS4vYwFDVSwb0TG8KvDMHvrB
+X-Gm-Gg: ASbGncsgt/L3x4x9+Hn79gFw1t3zCAAoVrJJh0AkpGbHyd9LOq8ZJliWg305iT+8+H0
+	cvhlZIrEnWBDMBs5R6lvUd0Uxe3JbjIpEsgrTirYqUD4ib2JLSiaR7r0F7yuIGcE8vwm9vHC6dD
+	L1Fq++JdX3Koc3FdO5SSMp8qz6OFWB9R4Wgnd5DpwvLyG1i7a/ItN6AmpGl/cCrgsgVcUr4Qc71
+	A35qU4sFWIWk9g3I5+HN0kHIZK/p2aBgf913JGTxf+NIg2xEAtVMbc/ci/eDWQltXkVGrVY9MGR
+	dyQ2MjegmvTQT+3xOunxhRTM5Q/lzOEJqoNVvWVB+xRPxpaVLOLOBQw0E/vOS9pBavNo11kMwLb
+	fUQc=
+X-Google-Smtp-Source: AGHT+IFnPKCc9XQIbSujsDw5VVE06q5nJCsm7Hu3gBV9iap9A/VDBbz1ulnF74a0u1j5CFLLrdySVQ==
+X-Received: by 2002:a17:90b:3a81:b0:301:1bce:c252 with SMTP id 98e67ed59e1d1-3053214bcdcmr19200369a91.27.1743502689074;
+        Tue, 01 Apr 2025 03:18:09 -0700 (PDT)
+Received: from mi-ThinkStation-K.mioffice.cn ([43.224.245.231])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291f1f8badsm84595835ad.246.2025.04.01.03.18.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Apr 2025 03:18:08 -0700 (PDT)
+From: Ying Lu <luying526@gmail.com>
+To: oneukum@suse.com,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com
+Cc: netdev@vger.kernel.org,
+	linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	luying1 <luying1@xiaomi.com>
+Subject: [PATCH v1 0/1] usbnet:fix NPE during rx_complete
+Date: Tue,  1 Apr 2025 18:18:00 +0800
+Message-ID: <cover.1743497376.git.luying1@xiaomi.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z-apE0ZmckBjRDyx@kspp>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, Mar 28, 2025 at 07:50:11AM -0600, Gustavo A. R. Silva wrote:
-> +union cros_ec_sleep_data {
-> +	struct ec_params_host_sleep_event req0;
-> +	struct ec_params_host_sleep_event_v1 req1;
-> +	struct ec_response_host_sleep_event_v1 resp1;
-> +} __packed;
+From: luying1 <luying1@xiaomi.com>
 
-The __packed modifier seems redundant.
+The patchset fix the issue caused by the following modifications:
+commit 04e906839a053f092ef53f4fb2d610983412b904
+(usbnet: fix cyclical race on disconnect with work queue)
 
->  static int cros_ec_sleep_event(struct cros_ec_device *ec_dev, u8 sleep_event)
->  {
->  	int ret;
-> -	struct {
-> -		struct cros_ec_command msg;
-> -		union {
-> -			struct ec_params_host_sleep_event req0;
-> -			struct ec_params_host_sleep_event_v1 req1;
-> -			struct ec_response_host_sleep_event_v1 resp1;
-> -		} u;
-> -	} __packed buf;
-> +	DEFINE_RAW_FLEX(struct cros_ec_command, msg, data,
-> +			sizeof(union cros_ec_sleep_data));
+The issue:
+The usb_submit_urb function lacks a usbnet_going_away validation,
+whereas __usbnet_queue_skb includes this check. This inconsistency
+creates a race condition where: A URB request may succeed, but
+the corresponding SKB data fails to be queued.
 
-Is it possible to use something similar to:
+Subsequent processes (e.g., rx_complete → defer_bh → __skb_unlink(skb, list))
+attempt to access skb->next, triggering a NULL pointer dereference (Kernel Panic).
 
-MAX(MAX(sizeof(A), sizeof(B)),
-    sizeof(C))
+Fix issue:
+adding the usbnet_going_away check in usb_submit_urb to synchronize the validation logic.
 
-so that the union doesn't need to be defined?
+
+luying1 (1):
+  usbnet:fix NPE during rx_complete
+
+ drivers/net/usb/usbnet.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+-- 
+2.40.1
+
