@@ -1,277 +1,147 @@
-Received: from mail-io1-f48.google.com (mail-io1-f48.google.com [209.85.166.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EA0A3594F;
-	Tue,  1 Apr 2025 20:41:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97A8120E703;
+	Tue,  1 Apr 2025 20:42:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743540063; cv=none; b=hQUGHwdaq4f5zV07N8hGu/naTYRCEdrx167QhSAtqMd3DYQGrNqYfyxYCozz7VwUiDMy1dQNjovieVD2yc7vZxHm7M6BMI2sddiKftL7pt/+eTBOxtULeYvRiCQEONhfOJUl7X0eRvNxRW6VFrKNWahYUK6lxxYP28cUq4X/Low=
+	t=1743540122; cv=none; b=rNH+N3M9PTI5gnyHbq1b+Mjjq4Peo5hLTtquhysyx5JC/X06eVp9kS5U7hVuGhHwi9/t26ZiU9qZIfVP+jphtua5uXMxYVAZHAb+GWkLnKCihDLwYIuMNItszI0XpopQJ1zX7lWDLh0Zn1zbnwVZrRUFqEz+OYq6NbmiM4z/JnQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743540063; c=relaxed/simple;
-	bh=mgoj2LmOzSdQWqzKSQIr6XK+nGpBkja3pWfiePVcXbk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fyuwRIF+nG5TN8t3FXdykYjwqfehER3LXWKFzNH6IDbqK3Ld1ihp4S4S+jCG4ZTrFpqpAwZxT6qgjFT11we983CkyZdiYok8deDdQeCxpAaLJdQK0qfxw1I+wPBvOuH2nFVMt/+Gtk80XVdfjL0r6jH5I2qj2hvQupelpF2FPOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PSxHJvSu; arc=none smtp.client-ip=209.85.166.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743540122; c=relaxed/simple;
+	bh=xacZ7hZtYM3xExL/0rXDeFSSRlJ4oJDev80Ooo0au5Y=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=RsOn4ZWxOeF1D8mpxqrt0LUj/l+AD4ebWj6Yp8KXpxtPPt/H7imX2aIkkYN+I7uNhMXG4D1BgMA6DX0F+DCpVue8/q/N9wyJKC9yc4frpLHrnB3sYFAlkeg+wjKCDZFE6WAMOHFzmJkbJhqoJ/kP4miVzwTR9pz00mGEVhmyYXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=utWRd+Jg; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=8hI0iQCM; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PSxHJvSu"
-Received: by mail-io1-f48.google.com with SMTP id ca18e2360f4ac-85b5e49615aso566131639f.1;
-        Tue, 01 Apr 2025 13:41:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743540061; x=1744144861; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=siRhwdkGqZcq/rdLOAyWJygNm07mlGX8YXe+LkcnPjg=;
-        b=PSxHJvSuA23eN/jf925EuM9iPY+9sLIZ6dh/9KYCvagrUELj0YwUGbCfLkIbMxLdvT
-         mW2r9huh++HXxqpXUYZ3zmFyEeSUIZnMKlKE515VHOD4nXmySPZH0cAazPvZSUCiO/QS
-         /MQUsPWaof0W4ifWvkGX47+gpwLXm/0ItQaKiFWB07WfyaC0+T3EW2tFPvHJl35T7J6M
-         I8xd6W4IEzNAJig8Aj11v4v0aLvXrERIuEVqShZIX6XI49fVUERceBq1z/ESGZ8jLitr
-         GQ75HO3s4Z+m9l3T7bFeuiOiq/7rfsGfx3Lla82reFOP2+zswkFZFjzL++2hZrpMNtAQ
-         aDsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743540061; x=1744144861;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=siRhwdkGqZcq/rdLOAyWJygNm07mlGX8YXe+LkcnPjg=;
-        b=vGje2YErMSh0P9vmIYzo1OPI7EpeLdKNTuI20+6r8DPzEGB02AyF5TpCxweLCCwLiP
-         0ru/W+sDxveM7leSQVKTrg9iTIa8R+faPe+9YhO11taJxtlSOI45kfYRvLjbJhAA+vGn
-         pIsSCY9r2PudWxBch35Qb4y+PaLEnvj11ZpuJFkOLz8zVWwYpmbAAYfhMP2H9/JN9bhB
-         IcjNGjAhyLJXHKJrtnR3kcJkzaklLS6KR860lruWR36g7bbZbLf/O0cjl9Q6/TwZ3WFc
-         zyARFRxa5g2HGPEduKcIfA5+d+2uWyOTmIhQR4GVmvfLXON3ExySHs9jH7BiQqLDFBk3
-         E3ig==
-X-Forwarded-Encrypted: i=1; AJvYcCWVOzYC0a7DNLuzrUcofI/wou77yimXnkUKJPerXNlAmOLU9PNgYWlKgNk5370mHrsJ3qw1yzj0h++VMO0=@vger.kernel.org, AJvYcCWyrY1fQrnCHgqqkeKXE7hrRFuwaL0T9UV/lG/0Fh5x48aDdJYYVLT7w6jVtIz0fpbwwaQ9LledgFY9qo0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzyMAOAG8wdMXk9z6am4dCdmsGwTzXS7bVnNV5z9a7WqTmmNcYC
-	7pm34wsAZGVWpP73HekwefgxDfTXJafSUHcYf0QIsqi4nyGLZRD8Sk8YjeHVEADwjeX5+gwZIV5
-	2munHnK7oM/1d6uyBS+V8ot06QMA=
-X-Gm-Gg: ASbGncskWiMendZzCxANAUcORY2Jf9D5wIxj3uTLSPAdnWAULuUyZwANUFzE2r0pGtY
-	qetIaQvqCITqLds96uJiTNgeb4goCiI+cO0vW0tI2LiYOU7vHDQUwEVVe2BbGFJkuBe+LRtMUsx
-	nF0t9c0A2LceTzBw9GBEwWj6rdr2hZBoXtfst5HML6Zrq8qQ5uZ7xouH/VkuSv
-X-Google-Smtp-Source: AGHT+IFLlhtX4Th4iaWF6gmgGrgmSI2sNYPTK5C3v32iqwrOki9gMq65N8YIiPUx2AS0QMSgiiHdclEstrrecxsEUTg=
-X-Received: by 2002:a05:6e02:330e:b0:3d4:2ea4:6b8a with SMTP id
- e9e14a558f8ab-3d6ca680434mr58428335ab.22.1743540061217; Tue, 01 Apr 2025
- 13:41:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="utWRd+Jg";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="8hI0iQCM"
+Date: Tue, 01 Apr 2025 20:41:48 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1743540118;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qkuxa8N+ex+n4KSwAdPbU67ZNUHIS3synVFOdTrpslk=;
+	b=utWRd+Jgt7/ZXzvpp0PKE297VptOTyaMeyOJhpxIKUZ5dCi3QsMfMOG9hE0BibCpWUnTPw
+	3ea+5ZjVWxNMyq/KmkxbiFllVF9xAPcF1LGlVZQAVgREVjgNGHUJC6WVhZyrmGUuIiWvLy
+	XxRYNhebL6qGag8ZQGkMmFK/teNGLEYu15kNE4n30o4lPhOGtL4xfy8uZezPUbNWVmeYOk
+	PjAVeZCH1KFODFwMT2CerN70KPUT08gMq7Fu0H4IUK/tOKACIA2wnC6xHmUd49XkhI80bh
+	F2eV9v9iEVrc6u0OXyiBm0buoB/pwHHEI3/GLKKHQkFBaQR3ePenFX6H19eXkg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1743540118;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qkuxa8N+ex+n4KSwAdPbU67ZNUHIS3synVFOdTrpslk=;
+	b=8hI0iQCMThODuso15FJ23P3QFnD6Nt8lhxuD5uF1GX0nqbkyfG12dDOUZShmj49olGBtFT
+	aABxfMVFeF50nhDA==
+From: "tip-bot2 for Xin Li (Intel)" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] x86/fred: Fix system hang during S4 resume with
+ FRED enabled
+Cc: Xi Pardee <xi.pardee@intel.com>, Todd Brandt <todd.e.brandt@intel.com>,
+ "H. Peter Anvin (Intel)" <hpa@zytor.com>, "Xin Li (Intel)" <xin@zytor.com>,
+ Ingo Molnar <mingo@kernel.org>,
+ "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+ Andy Lutomirski <luto@kernel.org>, Brian Gerst <brgerst@gmail.com>,
+ Juergen Gross <jgross@suse.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250401075728.3626147-1-xin@zytor.com>
+References: <20250401075728.3626147-1-xin@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250401155758.48855-1-robdclark@gmail.com>
-In-Reply-To: <20250401155758.48855-1-robdclark@gmail.com>
-From: Rob Clark <robdclark@gmail.com>
-Date: Tue, 1 Apr 2025 13:40:49 -0700
-X-Gm-Features: AQ5f1Jok8YMtfimcNM4pgU6iFDD8sQiU6mJe95HIx3itVvK4c_kQGvT5W1tTXT4
-Message-ID: <CAF6AEGsKbjq_q7ezQTn5vyAF1cjXahgbv84uYK35BJH1KBXSpw@mail.gmail.com>
-Subject: Re: [PATCH v6] drm/syncobj: Extend EXPORT_SYNC_FILE for timeline syncobjs
-To: dri-devel@lists.freedesktop.org
-Cc: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Dmitry Osipenko <dmitry.osipenko@collabora.com>, Rob Clark <robdclark@chromium.org>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Sumit Semwal <sumit.semwal@linaro.org>, open list <linux-kernel@vger.kernel.org>, 
-	"open list:DMA BUFFER SHARING FRAMEWORK:Keyword:bdma_(?:buf|fence|resv)b" <linux-media@vger.kernel.org>, 
-	"moderated list:DMA BUFFER SHARING FRAMEWORK:Keyword:bdma_(?:buf|fence|resv)b" <linaro-mm-sig@lists.linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Message-ID: <174354011306.14745.425964936388256045.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 1, 2025 at 8:58=E2=80=AFAM Rob Clark <robdclark@gmail.com> wrot=
-e:
->
-> From: Rob Clark <robdclark@chromium.org>
->
-> Add support for exporting a dma_fence fd for a specific point on a
-> timeline.  This is needed for vtest/vpipe[1][2] to implement timeline
-> syncobj support, as it needs a way to turn a point on a timeline back
-> into a dma_fence fd.  It also closes an odd omission from the syncobj
-> UAPI.
->
-> [1] https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/33433
-> [2] https://gitlab.freedesktop.org/virgl/virglrenderer/-/merge_requests/8=
-05
->
-> v2: Add DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_TIMELINE
-> v3: Add unstaged uabi header hunk
-> v4: Also handle IMPORT_SYNC_FILE case
-> v5: Address comments from Dmitry
-> v6: checkpatch.pl nits
->
-> Signed-off-by: Rob Clark <robdclark@chromium.org>
-> Reviewed-by: Christian K=C3=B6nig <christian.koenig@amd.com>
-> Reviewed-by: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-> ---
->  drivers/gpu/drm/drm_syncobj.c | 47 +++++++++++++++++++++++++++--------
->  include/uapi/drm/drm.h        |  4 +++
->  2 files changed, 41 insertions(+), 10 deletions(-)
->
-> diff --git a/drivers/gpu/drm/drm_syncobj.c b/drivers/gpu/drm/drm_syncobj.=
-c
-> index 4f2ab8a7b50f..636cd83ca29e 100644
-> --- a/drivers/gpu/drm/drm_syncobj.c
-> +++ b/drivers/gpu/drm/drm_syncobj.c
-> @@ -741,7 +741,7 @@ static int drm_syncobj_fd_to_handle(struct drm_file *=
-file_private,
->  }
->
->  static int drm_syncobj_import_sync_file_fence(struct drm_file *file_priv=
-ate,
-> -                                             int fd, int handle)
-> +                                             int fd, int handle, u64 poi=
-nt)
->  {
->         struct dma_fence *fence =3D sync_file_get_fence(fd);
->         struct drm_syncobj *syncobj;
-> @@ -755,14 +755,24 @@ static int drm_syncobj_import_sync_file_fence(struc=
-t drm_file *file_private,
->                 return -ENOENT;
->         }
->
-> -       drm_syncobj_replace_fence(syncobj, fence);
-> +       if (point) {
-> +               struct dma_fence_chain *chain =3D dma_fence_chain_alloc()=
-;
-> +
-> +               if (!chain)
-> +                       return -ENOMEM;
-> +
-> +               drm_syncobj_add_point(syncobj, chain, fence, point);
-> +       } else {
-> +               drm_syncobj_replace_fence(syncobj, fence);
-> +       }
-> +
->         dma_fence_put(fence);
->         drm_syncobj_put(syncobj);
->         return 0;
->  }
->
->  static int drm_syncobj_export_sync_file(struct drm_file *file_private,
-> -                                       int handle, int *p_fd)
-> +                                       int handle, u64 point, int *p_fd)
->  {
->         int ret;
->         struct dma_fence *fence;
-> @@ -772,7 +782,7 @@ static int drm_syncobj_export_sync_file(struct drm_fi=
-le *file_private,
->         if (fd < 0)
->                 return fd;
->
-> -       ret =3D drm_syncobj_find_fence(file_private, handle, 0, 0, &fence=
-);
-> +       ret =3D drm_syncobj_find_fence(file_private, handle, point, 0, &f=
-ence);
->         if (ret)
->                 goto err_put_fd;
->
-> @@ -869,6 +879,9 @@ drm_syncobj_handle_to_fd_ioctl(struct drm_device *dev=
-, void *data,
->                                    struct drm_file *file_private)
->  {
->         struct drm_syncobj_handle *args =3D data;
-> +       unsigned int valid_flags =3D DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_TIMEL=
-INE |
-> +                                  DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_EXPORT_=
-SYNC_FILE;
-> +       u64 point =3D 0;
->
->         if (!drm_core_check_feature(dev, DRIVER_SYNCOBJ))
->                 return -EOPNOTSUPP;
-> @@ -876,13 +889,18 @@ drm_syncobj_handle_to_fd_ioctl(struct drm_device *d=
-ev, void *data,
->         if (args->pad)
->                 return -EINVAL;
->
-> -       if (args->flags !=3D 0 &&
-> -           args->flags !=3D DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_EXPORT_SYNC_F=
-ILE)
-> +       if (args->flags & ~valid_flags)
->                 return -EINVAL;
->
-> +       if (args->flags & DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_TIMELINE)
-> +               point =3D args->point;
-> +
->         if (args->flags & DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_EXPORT_SYNC_FILE=
-)
->                 return drm_syncobj_export_sync_file(file_private, args->h=
-andle,
-> -                                                   &args->fd);
-> +                                                   point, &args->fd);
-> +
-> +       if (args->point)
-> +               return -EINVAL;
->
->         return drm_syncobj_handle_to_fd(file_private, args->handle,
->                                         &args->fd);
-> @@ -893,6 +911,9 @@ drm_syncobj_fd_to_handle_ioctl(struct drm_device *dev=
-, void *data,
->                                    struct drm_file *file_private)
->  {
->         struct drm_syncobj_handle *args =3D data;
-> +       unsigned int valid_flags =3D DRM_SYNCOBJ_FD_TO_HANDLE_FLAGS_TIMEL=
-INE |
-> +                                  DRM_SYNCOBJ_FD_TO_HANDLE_FLAGS_IMPORT_=
-SYNC_FILE;
-> +       u64 point =3D 0;
->
->         if (!drm_core_check_feature(dev, DRIVER_SYNCOBJ))
->                 return -EOPNOTSUPP;
+The following commit has been merged into the x86/urgent branch of tip:
 
-oh, I suppose I should add a check for DRIVER_SYNCOBJ_TIMELINE?  I'll
-send a v7 a bit later
+Commit-ID:     e5f1e8af9c9e151ecd665f6d2e36fb25fec3b110
+Gitweb:        https://git.kernel.org/tip/e5f1e8af9c9e151ecd665f6d2e36fb25fec3b110
+Author:        Xin Li (Intel) <xin@zytor.com>
+AuthorDate:    Tue, 01 Apr 2025 00:57:27 -07:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Tue, 01 Apr 2025 22:29:02 +02:00
 
-BR,
--R
+x86/fred: Fix system hang during S4 resume with FRED enabled
 
-> @@ -900,14 +921,20 @@ drm_syncobj_fd_to_handle_ioctl(struct drm_device *d=
-ev, void *data,
->         if (args->pad)
->                 return -EINVAL;
->
-> -       if (args->flags !=3D 0 &&
-> -           args->flags !=3D DRM_SYNCOBJ_FD_TO_HANDLE_FLAGS_IMPORT_SYNC_F=
-ILE)
-> +       if (args->flags & ~valid_flags)
->                 return -EINVAL;
->
-> +       if (args->flags & DRM_SYNCOBJ_FD_TO_HANDLE_FLAGS_TIMELINE)
-> +               point =3D args->point;
-> +
->         if (args->flags & DRM_SYNCOBJ_FD_TO_HANDLE_FLAGS_IMPORT_SYNC_FILE=
-)
->                 return drm_syncobj_import_sync_file_fence(file_private,
->                                                           args->fd,
-> -                                                         args->handle);
-> +                                                         args->handle,
-> +                                                         point);
-> +
-> +       if (args->point)
-> +               return -EINVAL;
->
->         return drm_syncobj_fd_to_handle(file_private, args->fd,
->                                         &args->handle);
-> diff --git a/include/uapi/drm/drm.h b/include/uapi/drm/drm.h
-> index 7fba37b94401..e63a71d3c607 100644
-> --- a/include/uapi/drm/drm.h
-> +++ b/include/uapi/drm/drm.h
-> @@ -905,13 +905,17 @@ struct drm_syncobj_destroy {
->  };
->
->  #define DRM_SYNCOBJ_FD_TO_HANDLE_FLAGS_IMPORT_SYNC_FILE (1 << 0)
-> +#define DRM_SYNCOBJ_FD_TO_HANDLE_FLAGS_TIMELINE         (1 << 1)
->  #define DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_EXPORT_SYNC_FILE (1 << 0)
-> +#define DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_TIMELINE         (1 << 1)
->  struct drm_syncobj_handle {
->         __u32 handle;
->         __u32 flags;
->
->         __s32 fd;
->         __u32 pad;
-> +
-> +       __u64 point;
->  };
->
->  struct drm_syncobj_transfer {
-> --
-> 2.49.0
->
+Upon a wakeup from S4, the restore kernel starts and initializes the
+FRED MSRs as needed from its perspective.  It then loads a hibernation
+image, including the image kernel, and attempts to load image pages
+directly into their original page frames used before hibernation unless
+those frames are currently in use.  Once all pages are moved to their
+original locations, it jumps to a "trampoline" page in the image kernel.
+
+At this point, the image kernel takes control, but the FRED MSRs still
+contain values set by the restore kernel, which may differ from those
+set by the image kernel before hibernation.  Therefore, the image kernel
+must ensure the FRED MSRs have the same values as before hibernation.
+Since these values depend only on the location of the kernel text and
+data, they can be recomputed from scratch.
+
+Reported-by: Xi Pardee <xi.pardee@intel.com>
+Reported-by: Todd Brandt <todd.e.brandt@intel.com>
+Tested-by: Todd Brandt <todd.e.brandt@intel.com>
+Suggested-by: H. Peter Anvin (Intel) <hpa@zytor.com>
+Signed-off-by: Xin Li (Intel) <xin@zytor.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Reviewed-by: H. Peter Anvin (Intel) <hpa@zytor.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Brian Gerst <brgerst@gmail.com>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Link: https://lore.kernel.org/r/20250401075728.3626147-1-xin@zytor.com
+---
+ arch/x86/power/cpu.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+diff --git a/arch/x86/power/cpu.c b/arch/x86/power/cpu.c
+index 63230ff..08e76a5 100644
+--- a/arch/x86/power/cpu.c
++++ b/arch/x86/power/cpu.c
+@@ -27,6 +27,7 @@
+ #include <asm/mmu_context.h>
+ #include <asm/cpu_device_id.h>
+ #include <asm/microcode.h>
++#include <asm/fred.h>
+ 
+ #ifdef CONFIG_X86_32
+ __visible unsigned long saved_context_ebx;
+@@ -231,6 +232,19 @@ static void notrace __restore_processor_state(struct saved_context *ctxt)
+ 	 */
+ #ifdef CONFIG_X86_64
+ 	wrmsrl(MSR_GS_BASE, ctxt->kernelmode_gs_base);
++
++	/*
++	 * Reinitialize FRED to ensure the FRED MSRs contain the same values
++	 * as before hibernation.
++	 *
++	 * Note, the setup of FRED RSPs requires access to percpu data
++	 * structures.  Therefore, FRED reinitialization can only occur after
++	 * the percpu access pointer (i.e., MSR_GS_BASE) is restored.
++	 */
++	if (ctxt->cr4 & X86_CR4_FRED) {
++		cpu_init_fred_exceptions();
++		cpu_init_fred_rsps();
++	}
+ #else
+ 	loadsegment(fs, __KERNEL_PERCPU);
+ #endif
