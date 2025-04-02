@@ -1,87 +1,150 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DBC51E9B0D;
-	Wed,  2 Apr 2025 14:16:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF9821E9B0D;
+	Wed,  2 Apr 2025 14:16:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743603385; cv=none; b=U3EE8f7FWDWyirX08lmMdoCHrfUXe6VbWUcEUNcB5hUAkPY4Ew8i9oaKOUs50MOulIztx025FfRCSC8srSoQ0rdy9LKS9hNU5IfyEVlfRXZ2GxM3HmsUl2PzMTMa3nMHM6sjnJvSCCD65S15Dl0sapgyGPvbIoaEnlVDjBXLvNY=
+	t=1743603405; cv=none; b=rGKwCWlm6uL+TaN/tpIUd7vZGcl/SfUvcOZP37oLGahhZJlfhyeELsqvO6ppq7A2GVMsZdgn8FjpDBjh3+VJjgUeQDWHwxXY+XT4MVBM8DQoXLlYlcxT1bLGIAvUZv2jqmxCo3OfsnoFmVLmEUVZDZOKxP5hYBPEbMkdkcuTXzI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743603385; c=relaxed/simple;
-	bh=w7oSw39XwiEryX1+UGNcDrLPrmD/z73jLcVEISlafyM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i4OtmlAA9dZceEFN8mVqGJ8x2peBrkaQD4mTNNylbUEHHMAjM1v/kRZd4BIijGcdfAmqNW0GZS2fzGBH0ZOCKJp5PI0rUtbrfXbSIWc1zf9eC+LLSL0ZV6wlyGek0PPxVI7TjJbUFc9368Hf4fzZChs6I45/kor3cD1ByRZOm7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=QbIXgIwz; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1743603405; c=relaxed/simple;
+	bh=r6lJAGgboC7cYskrH82DaVdQg4hKHkLaP+aIUrpPYIE=;
+	h=Date:Message-Id:To:Cc:Subject:From:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=WIX1q8Bt2YAbs8IN9RJKnxbQcQmRqNE6hSDyXqrnSegUkN0KyUZyJkKcxupkJ0gjFxPgziP/zlINRzeQLwFqzfz7B5JL5++3KlYcP5W9TPsRsk8x2kIML/kAEqAUIJ5jbkRUd8lCESXjvwu+2ng8ZGnAGQQI6/shZ4A7kpdehqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nGpOPsLs; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="QbIXgIwz"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Transfer-Encoding:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=gUPaAmmxVLsnrDYsaEbRgMqcxSa2fPKw/+pgPpN61B8=; b=QbIXgIwzIVZU69jPK/GeVKI/Qm
-	MiQRFwqkf8YIkAZ+MCSdxbwPicUG6J3emg/IyGVqipFcDVG1uJsjkLaSp3sFJxb4CCDk0GrMb52PQ
-	MfId5axYTL1/8Jaf7leVJkTmW8maNxYFmMV2m+Y98qKe4sKD9BgD4vNP5Sd3MU0mFxO1/GjngZE6n
-	dsXM1Kz8HZKApf0clsdclPyMvCBqCJ5D8618m2w8EKyh15TKHxB9cPbkdi/vSmswxB8Mx+hTWUBPw
-	2NzAdTu05z9/+foYRDg4QR+n4Yy4Gwahb+ALNhPtMJux+SAkV8I3y3Ds6lVL/PvoErZZqD4aAvnby
-	dfbz0Isg==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1tzyt7-00C92A-1F;
-	Wed, 02 Apr 2025 22:16:18 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Wed, 02 Apr 2025 22:16:17 +0800
-Date: Wed, 2 Apr 2025 22:16:17 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: T Pratham <t-pratham@ti.com>
-Cc: "David S. Miller" <davem@davemloft.net>, linux-crypto@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Vignesh Raghavendra <vigneshr@ti.com>,
-	Praneeth Bajjuri <praneeth@ti.com>,
-	Kamlesh Gurudasani <kamlesh@ti.com>,
-	Manorit Chawdhry <m-chawdhry@ti.com>
-Subject: Re: [PATCH RFC 1/2] crypto: ti: Add support for SHA224/256/384/512
- in DTHE V2 driver
-Message-ID: <Z-1GsWEkecDrExCn@gondor.apana.org.au>
-References: <20250218104943.2304730-1-t-pratham@ti.com>
- <20250218104943.2304730-2-t-pratham@ti.com>
- <Z8QSVLoucZxG1xlc@gondor.apana.org.au>
- <f7105c10-7e36-4914-a9e8-e83eb61f0189@ti.com>
- <Z-1BnSGNab34W6eU@gondor.apana.org.au>
- <c86a5251-a165-41be-9238-53fb133206a4@ti.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nGpOPsLs"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-22435603572so125139675ad.1;
+        Wed, 02 Apr 2025 07:16:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743603403; x=1744208203; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:from
+         :subject:cc:to:message-id:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4dEWhfK+nea9OPuzRfRRADxivQdl600DDzELneSshW0=;
+        b=nGpOPsLswQeCjdSoPsY+9HFk8+XxGcUGHMFwx7JdmGJxz/hNYEFmNxy/qQvEGFtWbA
+         CYHGaNUDClk2sy1n19eOHKtfbOUuWI3D4TM0bOmp0wX3M1+q82Mli6vPuECa4LiizcqH
+         GAozbnQIsS7B7wW8Kf60APzBFEdFaIvgbKPU+aFsT3Id6t+hXDFtemD/8JYnPMqrqwzQ
+         hUFVb7xIS9PVkAzJF345y7yScBB0Qo+VGejY1iK4SLYuwAOKGLzGfBwJ7wo2mfc2WnrH
+         00zksVIUnbATQVot1xL5M6cfwNZ1m99/IJ3fubk4inOqucLlBi6WKMPJa143FW7jNyYI
+         UGgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743603403; x=1744208203;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:from
+         :subject:cc:to:message-id:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=4dEWhfK+nea9OPuzRfRRADxivQdl600DDzELneSshW0=;
+        b=rwF7wVyJ6E8qR5qPDWDaGi12D673fsnJ9LRqazgQL5lQf4UjWYEFQziStqF7FCbus/
+         2500Ya84xrDNKXejada0bAm+YLP6LTgJ7hugSh+hpzjN2SBVGJnZJGuvdz4dIRIkICoj
+         LTS+Km8AdeopU22/2fzYeJyq+7wdR8lSV4XbsOR5k2VGXxKgBQJkeSDxpZrPrRou4l39
+         9zAddIUlB+W158Rkz45+we3USnOvRoVnGLeB4UhipGrFdM7Gos7pijm7xNJKaoBodymt
+         rkbTIlmINzqCOhoIyp2ox1xdLhUqbgYKyWt++Uuwi+qa+fbQLXXz8rJEsros5KzbtCyn
+         eDAw==
+X-Forwarded-Encrypted: i=1; AJvYcCVFyWowkvtvKRU1paTVrkA3GY54zNhCR+o7l2mTyH1RqjcdluJ8Z4EtNJ9q+AGeBoKaEpr+Yv4dASlDIk0UL0Y=@vger.kernel.org, AJvYcCWJNtPaNzK1ZPqMm/xfftfX1Ws9BvEf3z5eoUE7+LGKHPLYjm/Yyxfnbd3tV1gJIW2vj8uPOUhsGBKbzwg=@vger.kernel.org, AJvYcCXkm9FyXQNUMxIXhjVBOlitzTgAmDzQDFnmzQ+XNtO5dOHWsh0Vt0B3vzaETVI6ij16RL9r0eck@vger.kernel.org
+X-Gm-Message-State: AOJu0YzMhCTxHAhENtmqsPsMEjEkkyEpA8DnaL30rT8fpFe3lfHPDU/W
+	9naSXmc7HCq43L8AIAXBi9K6IIvqUd3gNdMp9bR2OFBmlnGduyHf
+X-Gm-Gg: ASbGncvCQLgobkrF87O1QQT32GX9VjI63Iwl08Vab1tt3xiS+30Qkl8Mjn3RhqH5r3+
+	f4j0FHyDstVdnxEjnH5WnYsRuCQqEmEphtaweER1ii0SVUEE/tdBrXecZNUmz+vofiD0yp+Fh/D
+	AghreaYHXpHirCErhbt9DWaFFpvh4Bj4Yxdazjs+c874t+8/WyIRnsmw5B+yQvxj95dju1GaGa8
+	eVTpfI6EqxsaMJh7K8d4OpmuCBLyoI2NTZfylGW8d1p3HEIcbgQZAMXk7xDgrRXZihclUqGTU7A
+	43c5hVP3hOYt3vdhXCE8yVzbF2MHvgLMDec+6yNWpxwfwOQvt6HCNDwooPbMeRGKSiPlrwBF1yO
+	P2oR2zZRFwSYb7Tf/WwxSQq+x8tY=
+X-Google-Smtp-Source: AGHT+IHAUnZugO7bekE6NDAS+iO7XgUV8ewF8Zpd5kxeKjRJDw+p16Np/nqRLdsScQvdxML3q4JFwA==
+X-Received: by 2002:a17:903:230e:b0:224:e33:8896 with SMTP id d9443c01a7336-2292f949d93mr273604545ad.11.1743603402721;
+        Wed, 02 Apr 2025 07:16:42 -0700 (PDT)
+Received: from localhost (p4204131-ipxg22701hodogaya.kanagawa.ocn.ne.jp. [153.160.176.131])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291f1ce08csm108772425ad.127.2025.04.02.07.16.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Apr 2025 07:16:42 -0700 (PDT)
+Date: Wed, 02 Apr 2025 23:16:27 +0900 (JST)
+Message-Id: <20250402.231627.270393242231849699.fujita.tomonori@gmail.com>
+To: boqun.feng@gmail.com
+Cc: a.hindborg@kernel.org, fujita.tomonori@gmail.com, tglx@linutronix.de,
+ linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+ netdev@vger.kernel.org, andrew@lunn.ch, hkallweit1@gmail.com,
+ tmgross@umich.edu, ojeda@kernel.org, alex.gaynor@gmail.com,
+ gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
+ a.hindborg@samsung.com, aliceryhl@google.com, anna-maria@linutronix.de,
+ frederic@kernel.org, arnd@arndb.de, jstultz@google.com, sboyd@kernel.org,
+ mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+ vincent.guittot@linaro.org, dietmar.eggemann@arm.com, rostedt@goodmis.org,
+ bsegall@google.com, mgorman@suse.de, vschneid@redhat.com,
+ tgunders@redhat.com, me@kloenk.dev, david.laight.linux@gmail.com
+Subject: Re: [PATCH v11 6/8] MAINTAINERS: rust: Add new sections for
+ DELAY/SLEEP and TIMEKEEPING API
+From: FUJITA Tomonori <fujita.tomonori@gmail.com>
+In-Reply-To: <Z-qgo5gl6Qly-Wur@Mac.home>
+References: <Z96zstZIiPsP4mSF@Mac.home>
+	<871puoelnj.fsf@kernel.org>
+	<Z-qgo5gl6Qly-Wur@Mac.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <c86a5251-a165-41be-9238-53fb133206a4@ti.com>
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 02, 2025 at 07:42:08PM +0530, T Pratham wrote:
->
-> Thanks! I'm assuming then count[1] will store the digest count in sha512
-> here.
+On Mon, 31 Mar 2025 07:03:15 -0700
+Boqun Feng <boqun.feng@gmail.com> wrote:
 
-count[1] contains the upper 64 bits of the 128-bit sha512 counter.
+>> My recommendation would be to take all of `rust/kernel/time` under one
+>> entry for now. I suggest the following, folding in the hrtimer entry as
+>> well:
+>> 
+>> DELAY, SLEEP, TIMEKEEPING, TIMERS [RUST]
+>> M:	Andreas Hindborg <a.hindborg@kernel.org>
+> 
+> Given you're the one who would handle the patches, I think this make
+> more sense.
+> 
+>> R:	Boqun Feng <boqun.feng@gmail.com>
+>> R:	FUJITA Tomonori <fujita.tomonori@gmail.com>
+> 
+> Tomo, does this look good to you?
 
-> Is this the same for SHA256? Since there the count is not an array, so
-> is it then count = (digestcnt << 32) & buflen? 
+Fine by me.
 
-The sha256 counter is only 64 bits long, so only count[0] gets
-written out.  There is no need to do any shifting for either sha256
-or sha512, it should just be:
+So a single entry for all the Rust time stuff, which isn't aligned
+with C's MAINTAINERS entries. It's just for now?
 
-	count = digestcnt + buflen;
 
-Where digestcnt is a multiple of blocksize and buflen is less than
-blocksize.
+>> R:	Lyude Paul <lyude@redhat.com>
+>> R:	Frederic Weisbecker <frederic@kernel.org>
+>> R:	Thomas Gleixner <tglx@linutronix.de>
+>> R:	Anna-Maria Behnsen <anna-maria@linutronix.de>
+>> R:	John Stultz <jstultz@google.com>
+> 
+> We should add:
+> 
+> R:      Stephen Boyd <sboyd@kernel.org>
+> 
+> If Stephen is not against it.
+> 
+>> L:	rust-for-linux@vger.kernel.org
+>> S:	Supported
+>> W:	https://rust-for-linux.com
+>> B:	https://github.com/Rust-for-Linux/linux/issues
+>> T:	git https://github.com/Rust-for-Linux/linux.git rust-timekeeping-next
+>> F:	rust/kernel/time.rs
+>> F:	rust/kernel/time/
+>> 
+>> If that is acceptable to everyone, it is very likely that I can pick 2-6
+>> for v6.16.
+>> 
+> 
+> You will need to fix something because patch 2-6 removes `Ktime` ;-)
 
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+I'll take care of it in the next version.
+
+>> I assume patch 1 will go through the sched/core tree, and then Miguel
+>> can pick 7.
+>> 
+> 
+> Patch 1 & 7 probably should go together, but we can decide it later.
+
+Since nothing has moved forward for quite a while, maybe it's time to
+drop patch 1.
