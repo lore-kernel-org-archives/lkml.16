@@ -1,182 +1,141 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+Received: from mail-pl1-f194.google.com (mail-pl1-f194.google.com [209.85.214.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EEB527735
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 13:50:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 042221DFF7;
+	Wed,  2 Apr 2025 13:50:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743601837; cv=none; b=YaHB1V1cuirjjW1uowX7IAVHRp47FufXySWY04jdcuuLxQvPxPVgc45E+vTYZT9wWG38qS6RkdLnoSmW2xYN5tuAM256Z5UcE5ucPzL8IftxlV4eASVfUm0Igmp6AT+tKua0y8AfDXhQHD2KhLfxoXD+VcAJv2EMoek8ZFEuOdY=
+	t=1743601847; cv=none; b=T3eAB8hLri2mwuaeJHTMnxX2XNI4W5q718JnAfXiEh5S7X/rw6BVLGGLJYyhDB+O3E9i0BUjm8DrVyw8n+qS1qtajcYRtyILG4gyip4GvoG36S/XO48whPdmIUbWG0klok0j4j1kORo9aY8RKLR9ytuwhPb14LzP9XvbW9uN1OM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743601837; c=relaxed/simple;
-	bh=pDeoNhuZwaw4msWO9MsOr3hBwwR4u8GBkPAPBUJEMZc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=F2axyc/tYRFnfvKHYyTt8hxxvpymDvtHXT4Nqu9VFBoIciqPhRTZOwLxWlJwWlKvEh//pae6O03uex44NXDCzT42bCtVDsOhvodS1ui6pK4DbNQX5rgx7XHkjSoMfRhULkOfTplF/O/Ryarq2ddo5bp+cAg1i2XH961snjQNI/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=y1ofJ6xw; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1743601847; c=relaxed/simple;
+	bh=r4I+uoYa0hZKd3pO7uuNLQmaLp0lpziSguB3WKXNzi0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=m/J+eVSwML6KYOplTuxKMDeugI5KXF60KgKp4FgRKeJ8g2Az/ec/qgg4phWtLW5I/1UFtQRaEhBGAox4gxM5xMOhkHVRt/2azqDkqiUPgLW7KPiTujCkMKUqPfOviYMkn4LQYK6INOIAo63WviSnvys5i6qDPZKxKGHZU4crrUo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mG4IBJyL; arc=none smtp.client-ip=209.85.214.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="y1ofJ6xw"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-736b0c68092so135696b3a.0
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 06:50:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mG4IBJyL"
+Received: by mail-pl1-f194.google.com with SMTP id d9443c01a7336-22401f4d35aso131181375ad.2;
+        Wed, 02 Apr 2025 06:50:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743601835; x=1744206635; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1743601845; x=1744206645; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=2HMguzqC9j9EV0of1YoNXfPm1mjs9rcmoyuc3Vef0Cg=;
-        b=y1ofJ6xwXo7/+9LUzV6klWp0V3CaDV03OeRSZF86VC6DC0RwtrX5MEufKlpmSWSZAx
-         odVdGw9MITCjJS3bdLorbptVhLYt3mMsGJQhQmo8AwhRh70tMBtkW5Rww7oRv3fnnNmx
-         mcP3kWCX9RpAQkpJjL0OtIxEwKN7VixcnOlTWPxAF20Iezz8f+G7KMNcMZNka48XvZcT
-         r+KyzD/STHQplB8GF4H3MJNvpJYVXXzxG+qYPOuW3Qv8HqVBhvZfFRCOY7igOBsQ+4b6
-         1y3mORai6OAQk4O8Wan6KuPJVn8fJPmOe7CHQs3s9M7cmRFEfrlDGcasQ6z/cU9Y8Ior
-         HE8Q==
+        bh=rIOO0RX/K5KkOu+JztllmzVSVHzx/kVyU+bn7Yx0fOQ=;
+        b=mG4IBJyLMi5zPcA7BGRtuvpaGQQyanbGQN59eUmuIN5mRceurSyCLEU+687Y2taCis
+         GT9ybUwV+U6St7KHzUVbCj5l1EAXo5BuDiRk7BYWR4CMOn+3UvLwLqct/O0nlIzIfmQD
+         D7x74lShdKJ4fd7jBFKtpg89hT2UQs0zajVofMGR8+sBrd3aiCyh5noHgUU5u/jEhzNc
+         Znj9eF7F7eiQjxXqhNUzXh/BAUwpq1QhLS0YICiYuXJ0B1ZnkskRntHaUi9rtLYydw40
+         uTenJicPNriZuBmo6p2dObe5oOX9jKeq9gUsbFEJc3/AASb4zhCAhJZ9ikS7jCi02V1W
+         fubA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743601835; x=1744206635;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1743601845; x=1744206645;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=2HMguzqC9j9EV0of1YoNXfPm1mjs9rcmoyuc3Vef0Cg=;
-        b=IW4yWzy/0qn1hlchrerA30FNDTq1DVcEZWUdby71QPtjFWLy9W2SHJJ3wA7+g7irFP
-         jaenBk2dC8vZTLnlL9jQvmwxTOgPPp/l0tvShlR0/QvaubcSRdC+bSoc/xyFqVCfTtUt
-         IQDmA7QQ2NNw5/h4zZcyd0NwXlsOCILgNzkVDFgNr7bVGr0cUk35UhO2NrP47f7e+UMv
-         qj4VoYcezutugabaF+S81gOFMRJWdZlqS6q9UvsnLHM0BFQnQ78nzTo/Ypq6kGxZcuas
-         HSyfrif37p6VWJLl2dJ83rppM4CZbGDJQCAHvnkEyS4yxESDiyr/NxSBGWB7YookMBmY
-         1GtA==
-X-Forwarded-Encrypted: i=1; AJvYcCWSDkMc45ghcX3pA6CDX7pBkEUzUQGOUyXlEkpibrInaiiPlN/5KipxurCCQGcMrElJzY+FsSZvGb1KTn0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yypp2fAyirny4Zqk6InGvgCMyF67M6mM5Tob+xRuMF/RDqPmk3m
-	0RhGzgIvnYLtQi+mBOyw4ITuCmBiaLKM4m9zeOufjhF79eJ9KLQS1ftRXt2gtHZ19qKZATTw+tO
-	3hx3IE8boJoX4uDj5CJQD005iqY1yiqMPJlSHWg==
-X-Gm-Gg: ASbGncun/9K/HCFEMdFim2eeCWob2S9HKFiWu7OLBTb/hTJuC61vqwADFWMiT/YJMZd
-	iB6HQr9224+iqj/p/QthDJQ1PLVXNPQjC6RsGlnNFI8RREwkC3IU+90EANPLaOLZ3SUgtcfFQH+
-	CMANKLSBNfm4n/Wc57GlkSQvMSsbk=
-X-Google-Smtp-Source: AGHT+IHp7t8r2pydSNbANhxJKeymRIZ/eKV+x2OT6vup6idos5f2KZpXXuu/OXbiS7W8QYIoIkAWymldruKbA3f2VXo=
-X-Received: by 2002:a05:6a00:1942:b0:736:a82a:58ad with SMTP id
- d2e1a72fcca58-739b60fb517mr8295648b3a.15.1743601834707; Wed, 02 Apr 2025
- 06:50:34 -0700 (PDT)
+        bh=rIOO0RX/K5KkOu+JztllmzVSVHzx/kVyU+bn7Yx0fOQ=;
+        b=TqIxAxFLAdmzS0Lu9mIpDDBaUiJZLo1RSd0V9+G48aToft+8ho9beF52YrXVk6Gr2C
+         LmGgMYerqg7F+zFap5FiI/ZcoH2qi33H+1tM4qgl+xVVe1lxuM0z0BYVdl/oIgsTw1oD
+         uBzYZyMxmRe6cYrPbh5BKvQrWE7d29mGCHUHpyIOGSf1ATjvUrZ5KtV5M8rmhsKrBBSU
+         D1NQQpwi5foV2YEztVjuVdNw4Gi9MqFkqZW8ziPbHcVcwE/5BmoEY7wxPgWCUjF22ODJ
+         YJFch+bZYXDpibT554lo0tTs3B5ffOWs17fpVl3RJnLfEOAMb3cenbkOIyHpQc0pXHlK
+         3xzQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUg8XxR9k/iOKkiB1uqpIWXQFuddSyhSU+rsWqkTu6Kas/NDdCiJFXEc06bbxV07OL79GMV7nzbjHZ7nm8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwiWgtq1I+rVm2OarTPUPfBKkYBePxKpLWSNApD6yztrL3Z3uhC
+	iXS1RWsJFPZJrHk7v/fjCjb97yxaUkuPVOwwvzaeWOANWRmIWOe1
+X-Gm-Gg: ASbGncukfobdCwpSBYDraPegqQNqgRLI7C2dmHI5RwzERZgrlVSunUNH8GsWmXvMYEX
+	ryEOY8Rh9H34G6pChJsZxyAwrF6nsS9K+f3Bjkq42lrO76jUuT4o0Usyuy+EPuxESvb1czVUNxd
+	t98yQ54i5EZo744Gh3Rb51cT7u6/T2bOnAqjJ/6/N7PvCeBXwcNOHxiFZ0FkSrdb5IceB8B0zN3
+	BtlBFMgkF/XovUQ6K2UgiPLTqdyxJuhUzFj5+4ixEhC2uzO9U8wM5eKJnyRturC6cClxniUAmH4
+	nQ1LAgiZuXUN2TdZBUd8M+m7lNrfQ0Oa5jqfjLvlZZay62y+zjWQ30A8WMog3N/msvzX8Cs=
+X-Google-Smtp-Source: AGHT+IHo/p/gGQJd/YdAzTR1DUcuJESA6Rxl5GAJP1rddIxYQIkiEv2jK16daHUY1yK+mQvCwY5IiQ==
+X-Received: by 2002:a17:903:2312:b0:223:fb3a:8647 with SMTP id d9443c01a7336-2296c8606e2mr34093985ad.41.1743601845042;
+        Wed, 02 Apr 2025 06:50:45 -0700 (PDT)
+Received: from henry.localdomain ([111.202.148.167])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291eeca24csm107969895ad.25.2025.04.02.06.50.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Apr 2025 06:50:44 -0700 (PDT)
+From: Henry Martin <bsdhenrymartin@gmail.com>
+To: m.grzeschik@pengutronix.de,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com
+Cc: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Henry Martin <bsdhenrymartin@gmail.com>
+Subject: [PATCH v3] arcnet: Add NULL check in com20020pci_probe()
+Date: Wed,  2 Apr 2025 21:50:36 +0800
+Message-Id: <20250402135036.44697-1-bsdhenrymartin@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250402090751.GH214849@horms.kernel.org>
+References: <20250402090751.GH214849@horms.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250402011832.2970072-1-yabinc@google.com> <20250402011832.2970072-4-yabinc@google.com>
- <CALJ9ZPOvcxswvfbpWkXgJ=WL+HLa33nm0ZzHogYNZ9keXfi1MA@mail.gmail.com> <20250402133232.GJ115840@e132581.arm.com>
-In-Reply-To: <20250402133232.GJ115840@e132581.arm.com>
-From: Mike Leach <mike.leach@linaro.org>
-Date: Wed, 2 Apr 2025 14:50:22 +0100
-X-Gm-Features: AQ5f1Jq5mPtgzeoLUURAuYqDE_iAPk5v6h-VWiYx7OA5tNNn0TL6E8vkrRSIDow
-Message-ID: <CAJ9a7Vg4DGzPhnSBh2taTgUTORMY3GUPpJY2bHjkMdFB1=wP=Q@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] coresight: core: Disable helpers for devices that
- fail to enable
-To: Leo Yan <leo.yan@arm.com>
-Cc: Yabin Cui <yabinc@google.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
-	James Clark <james.clark@linaro.org>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, coresight@lists.linaro.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi,
+devm_kasprintf() returns NULL when memory allocation fails. Currently,
+com20020pci_probe() does not check for this case, which results in a
+NULL pointer dereference.
 
-On Wed, 2 Apr 2025 at 14:32, Leo Yan <leo.yan@arm.com> wrote:
->
-> On Tue, Apr 01, 2025 at 06:22:46PM -0700, Yabin Cui wrote:
-> > On Tue, Apr 1, 2025 at 6:19=E2=80=AFPM Yabin Cui <yabinc@google.com> wr=
-ote:
-> > >
-> > > When enabling a SINK or LINK type coresight device fails, the
-> > > associated helpers should be disabled.
-> > >
-> > > Signed-off-by: Yabin Cui <yabinc@google.com>
-> > > Suggested-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> > > ---
-> > >  drivers/hwtracing/coresight/coresight-core.c | 12 ++++--------
-> > >  1 file changed, 4 insertions(+), 8 deletions(-)
-> > >
-> > > diff --git a/drivers/hwtracing/coresight/coresight-core.c b/drivers/h=
-wtracing/coresight/coresight-core.c
-> > > index fb43ef6a3b1f..e3270d9b46c9 100644
-> > > --- a/drivers/hwtracing/coresight/coresight-core.c
-> > > +++ b/drivers/hwtracing/coresight/coresight-core.c
-> > > @@ -465,7 +465,7 @@ int coresight_enable_path(struct coresight_path *=
-path, enum cs_mode mode,
-> > >                 /* Enable all helpers adjacent to the path first */
-> > >                 ret =3D coresight_enable_helpers(csdev, mode, path);
-> > >                 if (ret)
-> > > -                       goto err;
-> > > +                       goto err_helper;
-> > >                 /*
-> > >                  * ETF devices are tricky... They can be a link or a =
-sink,
-> > >                  * depending on how they are configured.  If an ETF h=
-as been
-> > > @@ -480,14 +480,8 @@ int coresight_enable_path(struct coresight_path =
-*path, enum cs_mode mode,
-> > >                 switch (type) {
-> > >                 case CORESIGHT_DEV_TYPE_SINK:
-> > >                         ret =3D coresight_enable_sink(csdev, mode, si=
-nk_data);
-> > > -                       /*
-> > > -                        * Sink is the first component turned on. If =
-we
-> > > -                        * failed to enable the sink, there are no co=
-mponents
-> > > -                        * that need disabling. Disabling the path he=
-re
-> > > -                        * would mean we could disrupt an existing se=
-ssion.
-> > > -                        */
-> > >                         if (ret)
-> > > -                               goto out;
-> > > +                               goto err;
+Add NULL check after devm_kasprintf() to prevent this issue and ensure
+no resources are left allocated.
 
-Going to err here is wrong. The comment above specifically states that
-we do _not_ want to disable the path, yet the new code flow disables
-helpers. then falls through to coresight_disable_path_from() - which
-the original code avoided and which also disables helpers a second
-time.
+Fixes: 6b17a597fc2f ("arcnet: restoring support for multiple Sohard Arcnet cards")
+Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
+---
+V2 -> V3: Reuse label err_free_arcdev for exception handing.
+V1 -> V2: Add a test after each devm_kasprintf().
 
-Please rework to get the correct program flow.
+ drivers/net/arcnet/com20020-pci.c | 17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
 
-> > >                         break;
-> > >                 case CORESIGHT_DEV_TYPE_SOURCE:
-> > >                         /* sources are enabled from either sysFS or P=
-erf */
-> > > @@ -507,6 +501,8 @@ int coresight_enable_path(struct coresight_path *=
-path, enum cs_mode mode,
-> > >  out:
-> > >         return ret;
-> > >  err:
-> > > +       coresight_disable_helpers(csdev);
+diff --git a/drivers/net/arcnet/com20020-pci.c b/drivers/net/arcnet/com20020-pci.c
+index c5e571ec94c9..0472bcdff130 100644
+--- a/drivers/net/arcnet/com20020-pci.c
++++ b/drivers/net/arcnet/com20020-pci.c
+@@ -251,18 +251,33 @@ static int com20020pci_probe(struct pci_dev *pdev,
+ 			card->tx_led.default_trigger = devm_kasprintf(&pdev->dev,
+ 							GFP_KERNEL, "arc%d-%d-tx",
+ 							dev->dev_id, i);
++			if (!card->tx_led.default_trigger) {
++				ret = -ENOMEM;
++				goto err_free_arcdev;
++			}
+ 			card->tx_led.name = devm_kasprintf(&pdev->dev, GFP_KERNEL,
+ 							"pci:green:tx:%d-%d",
+ 							dev->dev_id, i);
+-
++			if (!card->tx_led.name) {
++				ret = -ENOMEM;
++				goto err_free_arcdev;
++			}
+ 			card->tx_led.dev = &dev->dev;
+ 			card->recon_led.brightness_set = led_recon_set;
+ 			card->recon_led.default_trigger = devm_kasprintf(&pdev->dev,
+ 							GFP_KERNEL, "arc%d-%d-recon",
+ 							dev->dev_id, i);
++			if (!card->recon_led.default_trigger) {
++				ret = -ENOMEM;
++				goto err_free_arcdev;
++			}
+ 			card->recon_led.name = devm_kasprintf(&pdev->dev, GFP_KERNEL,
+ 							"pci:red:recon:%d-%d",
+ 							dev->dev_id, i);
++			if (!card->recon_led.name) {
++				ret = -ENOMEM;
++				goto err_free_arcdev;
++			}
+ 			card->recon_led.dev = &dev->dev;
+ 
+ 			ret = devm_led_classdev_register(&pdev->dev, &card->tx_led);
+-- 
+2.34.1
 
-Drop this - put it where it is needed  in the flow
-
-Regards
-
-Mike
-
-
->
-> Given it is unconditionally to enable helpers, I would suggest we
-> disable helper unconditionally.  Thus, we don't need to add a new
-> 'err_helper' tag, simply reuse the 'err' tag would be fine.
->
-> I would like to know if mainatiners have different opinions.
->
-> Thanks,
-> Leo
->
-> > > +err_helper:
-> > >         coresight_disable_path_from(path, nd);
-> > >         goto out;
-> > >  }
-> > > --
-> > > 2.49.0.472.ge94155a9ec-goog
-> > >
-
-coresight_disable_path_from() also disables helpers.
-
---=20
-Mike Leach
-Principal Engineer, ARM Ltd.
-Manchester Design Centre. UK
