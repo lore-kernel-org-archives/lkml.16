@@ -1,99 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AE7F23814A
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 09:46:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C38E62E336E;
+	Wed,  2 Apr 2025 09:48:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743587179; cv=none; b=tYZ7lAQmgU9K+PTCp0v/AaDmFdMluwr13HI956jL3frSQ18UPi306zmcNTS7M2OKVcvh6Te/+cF+bSkwSbEwf4vPTD69j+Ymnksk7EokuacJ/72pJJKLWUYpuR52oEgm6Ec9FdMn5Mc2R9xr3Y80e/+sZxJ/hyT1YlrsrvrODAc=
+	t=1743587295; cv=none; b=deChp1cotpb0eKzdmD589d2UHpAEcGxKGQGQZbRF+LoVi/zNIQoQagKKA1ZPsYcR3cZUL6jUZlviecRnqGii8u+gR2OFoVjOG3FxH/bK5iSqvWsw6cUTetfvRUWmEZFKR/ITKanGE8UUMPFqMG4ixHVejQ06gmZn+WV+vvSPxhE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743587179; c=relaxed/simple;
-	bh=wwJkv9MVllRwnbE94gJpES5xAIsuRO9xRorGgHss54k=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=sVOGIdf2WfiH3/e6E3pVqcYsgMBppwL7+koq3wVWIi8z+69JPbEUTybfbEtAUSN3n/shas+Eh6YkwuLOTH3Zt0GZuJALF1DcftOo0R/juSPJgLcdPCoBgTRux4k+ZqcRA7OWZ7YFbw+51O4oncXvRvAkWGdA2guws2rAv9i9jgU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pl1s3OTh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743587295; c=relaxed/simple;
+	bh=suqT8iQBJa5FgnDU/SDufSS45NeX1L9jgaeHh5HkMQM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gePeNWZ+q0EL0R8p35MVKl2qvQ7bE7D6C4epd5QoCzgIic7M6tOIaXyb9M93z7Y5uBxbays4zIOPddfwe+6YAct7b9LRNuEU26mOg4auNAp+5CUT4Xl2vImSyIv73022FFQzhf0zrStE+W9v5KLOkZ/wBGTmOKNeFO3OzOOpLUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=NCoovo36; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pl1s3OTh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92D88C4CEED;
-	Wed,  2 Apr 2025 09:46:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743587177;
-	bh=wwJkv9MVllRwnbE94gJpES5xAIsuRO9xRorGgHss54k=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Pl1s3OThcAMerSvAI3QBhdHsE3gmdzUE7h8Ied84vV7yCXxiPnTIvqvM+upZ9V05+
-	 7WIzyhq7PjUP7xQ6eQv+dUCD75sF9CK93JqT+7aafDC/EK2j1OptiD9jlYAp2a40fN
-	 jhl+6Dq9KjZGpjNsznmLWewVBqxL83bj3ugQvC/ChnPbpT6FF5neUeESvSnOqaOKsg
-	 /H9W2jW7kSx2qGA+plcMxMa7LDgLwppEzEx5K4H4ZMilXnzF2JTNC/J0p/oh0/i2+b
-	 951hVktRS5e1BBpMgxdBdgF7nMNTfpRyHHsoWOHhIqIybIh9+Jt+qvvTYZ0qlAy3bN
-	 ndKe22kNTOCbw==
-From: Ingo Molnar <mingo@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: Andy Lutomirski <luto@kernel.org>,
-	Rik van Riel <riel@surriel.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 7/7] x86/mm: Opt-in to IRQs-off activate_mm()
-Date: Wed,  2 Apr 2025 11:45:40 +0200
-Message-ID: <20250402094540.3586683-8-mingo@kernel.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250402094540.3586683-1-mingo@kernel.org>
-References: <20250402094540.3586683-1-mingo@kernel.org>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="NCoovo36"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id B948940E0196;
+	Wed,  2 Apr 2025 09:48:07 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id OU8HO-_OgT_3; Wed,  2 Apr 2025 09:48:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1743587283; bh=eQ8xvnw8eM22oCBBLNZs7z0mUSAGUegwLd+uMwiuzkA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NCoovo365/G/uMz3FKkUr9ljE2+3/qzDIbREAq39rFlmvdOqQcsNXArtjTQcUuERc
+	 YyTPneYs8Pk+jK1gaYwiozbx0/BKQL3WC/5bg9LuDqZM8M3EQ2yZ7LggYo/1fq0CuR
+	 ysfmE23QTcUVd23o6leBt4xG0YCTC47ABvIQ+fz5uquDiyzpeP6kuRqmj9CHjrizeX
+	 8G1iU/BbR6S5KEd38NMOQBFBJ1FWSDpqk+RgiUv1nvwxy2bptlmsTl2VbHnCzrI4YY
+	 p6zawB/PMVJmIPDbX6rbR52es2MNo5K2ew+9wOaXjmn1Nx3UosrHPAk7MMTYAkvlUM
+	 AS2CC8eP5dzpa17L7kMkdWSpXA3uahSktPfax/48LNyK43TnRJLKHxJC8oC9jJV/PA
+	 2cqa4RyvRDUEg0CX6ZmUsjQ8ZALj5ZLe0/x4q2Mfi5hIQbq5DBa4v/EvwMeHyb6Yzl
+	 hxTnTbM7UwIHUCp3y9RPj8XIM39gW5iNI1/lNBFW1rMNUtPYxUKBmPIq2qS8TAV+WZ
+	 BMjBNqpwhh7q8aEvfKt9wN9NG+b0KR7X4xFdFKLdyEOr77ohIrrhINO/u5KeNQfRmE
+	 SzXvLjoD0j24Xtla0k9yoS8uUE7GiFKh0PVw1LjTHMzpantmhKgRprR4aK2Rz17d4e
+	 /9N+azzQZLTjqll7KjJmvpVI=
+Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4B58440E0232;
+	Wed,  2 Apr 2025 09:47:43 +0000 (UTC)
+Date: Wed, 2 Apr 2025 11:47:36 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
+Cc: linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+	dave.hansen@linux.intel.com, Thomas.Lendacky@amd.com,
+	nikunj@amd.com, Santosh.Shukla@amd.com, Vasant.Hegde@amd.com,
+	Suravee.Suthikulpanit@amd.com, David.Kaplan@amd.com, x86@kernel.org,
+	hpa@zytor.com, peterz@infradead.org, seanjc@google.com,
+	pbonzini@redhat.com, kvm@vger.kernel.org,
+	kirill.shutemov@linux.intel.com, huibo.wang@amd.com,
+	naveen.rao@amd.com
+Subject: Re: [RFC v2 01/17] x86/apic: Add new driver for Secure AVIC
+Message-ID: <20250402094736.GAZ-0HuG0uVznq5wX_@fat_crate.local>
+References: <20250226090525.231882-1-Neeraj.Upadhyay@amd.com>
+ <20250226090525.231882-2-Neeraj.Upadhyay@amd.com>
+ <20250320155150.GNZ9w5lh9ndTenkr_S@fat_crate.local>
+ <a7422464-4571-4eb3-b90c-863d8b74adca@amd.com>
+ <20250321135540.GCZ91v3N5bYyR59WjK@fat_crate.local>
+ <e0362a96-4b3a-44b1-8d54-806a6b045799@amd.com>
+ <20250321171138.GDZ92dykj1kOmNrUjZ@fat_crate.local>
+ <38edfce2-72c7-44a6-b657-b5ed9c75ed51@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <38edfce2-72c7-44a6-b657-b5ed9c75ed51@amd.com>
 
-From: Andy Lutomirski <luto@kernel.org>
+On Tue, Apr 01, 2025 at 10:42:17AM +0530, Neeraj Upadhyay wrote:
+> > diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+> > index edc31615cb67..ecf86b8a6601 100644
+> > --- a/arch/x86/include/asm/msr-index.h
+> > +++ b/arch/x86/include/asm/msr-index.h
+> > @@ -685,8 +685,14 @@
+> >  #define MSR_AMD64_SNP_VMSA_REG_PROT	BIT_ULL(MSR_AMD64_SNP_VMSA_REG_PROT_BIT)
+> >  #define MSR_AMD64_SNP_SMT_PROT_BIT	17
+> >  #define MSR_AMD64_SNP_SMT_PROT		BIT_ULL(MSR_AMD64_SNP_SMT_PROT_BIT)
+> > +
+> >  #define MSR_AMD64_SNP_SECURE_AVIC_BIT	18
+> > -#define MSR_AMD64_SNP_SECURE_AVIC 	BIT_ULL(MSR_AMD64_SNP_SECURE_AVIC_BIT)
+> > +#ifdef CONFIG_AMD_SECURE_AVIC
+> > +#define MSR_AMD64_SNP_SECURE_AVIC	BIT_ULL(MSR_AMD64_SNP_SECURE_AVIC_BIT)
+> > +#else
+> > +#define MSR_AMD64_SNP_SECURE_AVIC	0
+> > +#endif
+> > +
+> 
+> I missed this part. I think this does not work because if CONFIG_AMD_SECURE_AVIC
+> is not enabled, MSR_AMD64_SNP_SECURE_AVIC bit becomes 0 in both SNP_FEATURES_IMPL_REQ
+> and SNP_FEATURES_PRESENT.
+> 
+> So, snp_get_unsupported_features() won't report SECURE_AVIC feature as not being
+> enabled in guest launched with SECURE_AVIC vmsa feature enabled. Thoughts?
 
-We gain nothing by having the core code enable IRQs right before calling
-activate_mm() only for us to turn them right back off again in switch_mm().
+Your formulations are killing me :-P
 
-This will save a few cycles, so execve() should be blazingly fast with this
-patch applied!
+... won't report.. as not being enabled ... with feature enabled.
 
-Signed-off-by: Andy Lutomirski <luto@kernel.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Rik van Riel <riel@surriel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Link: https://lore.kernel.org/r/20241119163035.985203915@infradead.org
----
- arch/x86/Kconfig                   | 1 +
- arch/x86/include/asm/mmu_context.h | 2 +-
- 2 files changed, 2 insertions(+), 1 deletion(-)
+Double negation with a positive at the end.
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 98bd4935280c..6b90d93fc40e 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -149,6 +149,7 @@ config X86
- 	select ARCH_WANT_OPTIMIZE_HUGETLB_VMEMMAP	if X86_64
- 	select ARCH_WANTS_THP_SWAP		if X86_64
- 	select ARCH_HAS_PARANOID_L1D_FLUSH
-+	select ARCH_WANT_IRQS_OFF_ACTIVATE_MM
- 	select BUILDTIME_TABLE_SORT
- 	select CLKEVT_I8253
- 	select CLOCKSOURCE_WATCHDOG
-diff --git a/arch/x86/include/asm/mmu_context.h b/arch/x86/include/asm/mmu_context.h
-index 988c11792634..c511f8584ae4 100644
---- a/arch/x86/include/asm/mmu_context.h
-+++ b/arch/x86/include/asm/mmu_context.h
-@@ -190,7 +190,7 @@ extern void switch_mm_irqs_off(struct mm_struct *prev, struct mm_struct *next,
- #define activate_mm(prev, next)			\
- do {						\
- 	paravirt_enter_mmap(next);		\
--	switch_mm((prev), (next), NULL);	\
-+	switch_mm_irqs_off((prev), (next), NULL);	\
- } while (0);
- 
- #ifdef CONFIG_X86_32
+So this translates to
+
+"will report as enabled when enabled"
+
+which doesn't make too much sense.
+
+*IF* you have CONFIG_AMD_SECURE_AVIC disabled, then you don't have SAVIC
+support and then SAVIC VMSA feature bit better be 0.
+
+Or what do you mean?
+
 -- 
-2.45.2
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
