@@ -1,180 +1,83 @@
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A79DA1E8358
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 09:38:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72B7B2356A6
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 09:38:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743586698; cv=none; b=ClaGywF9hvWC4QWgcTWxF4rnvrAwYSS6ZBPwu8GsM8nqja8Zn2z+X6WVnkC3qqcKDlNm0MLdjMPrNUk6clKrimNFtQP62evYcw3CcHSt6cbqUY42rW6CEj90mVkE1HUbITySP09DaoVyjLUaSm4C+mw+tbt7I3lJ48MVzyhbxb8=
+	t=1743586705; cv=none; b=ZKJbOIPxlfSm9Ng6XuqkXodfI6J/Vy6DfSNlnd0hawUzD30/dZWRC9D9gb2+Okzc66E+KMcaUajFuZveeKKl6lePW0nwyvYMW9nsbYAFpH02ddltGgC/H8o97wpYwA/IW+oS/UO0v2Hxk59DN1uKehN6XSuNJNgAmnHgQfc8ef8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743586698; c=relaxed/simple;
-	bh=cNejXleJqme9VajQRcc+kziIQxuHNEBzuJikNqfdGkY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iz4qXDs6jPjmgP8nHrxDpy+/S6P5+QQ1QoTASLs9nAVK6Mj187HROi+tVY9YuREPNVbZ7Z8tdF4biexlmdI6Pg7UrsvrstxIqn6B2n2YvxRrsswqw0+cu29vWCTQZ1xPxThgVQ/rf3Mw9OBWBuaQPMBAwaFyaDUiEcHa1wAH8Sg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=EvuX8XBf; arc=none smtp.client-ip=209.85.208.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EvuX8XBf"
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-30bfed67e08so65908691fa.2
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 02:38:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1743586695; x=1744191495; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=x2JNszX6iZTEKfz+6ykvGTqM6KFlJFkA7aYcjD0/BdY=;
-        b=EvuX8XBfegM0w+PJzDZUk906DKGQ1kEXf/O5tAVlB/xSvl3MlkqZHQHgDQonI5VDr2
-         K6ZT8IifsQQYz14xQ0MDKCZ1XkSOe+HfJRkBfCL4XqxUvqwzsJjbJBF3A1I+AM9WaNuB
-         WAi1mSpAze6MzTNlyTkNtJ7KrNHiU8kFspZVQ=
+	s=arc-20240116; t=1743586705; c=relaxed/simple;
+	bh=TxOdn7zfMJ1G4ABuFDhrvNKGIFsxHeCl5qtcdIukllg=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=ETGtwnI3DaOwLeHAsnnWVkiSHtucPS2WW5W6BKre8UwvnX8k7OconCga85VzLXzrrGOpqp5XHzMjMz6re+IqeX33spbDXTgMa4853s0F+cnWD6wKvCSIm2iHTrGa2VfHEnRa+KGGpuE3dtgzbUchgrzed398ggNoVdfOWcQ94CA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3d43d1df18bso70541835ab.0
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 02:38:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743586695; x=1744191495;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=x2JNszX6iZTEKfz+6ykvGTqM6KFlJFkA7aYcjD0/BdY=;
-        b=iksQvZycDFOYFHBYj6W8CnzltVXLK9Vfq/VQVIm7Fxdp8RTkYwLXRm2GyrwRTJsv2x
-         UULgWIJLsWYwVdUgAXjALkYJ19GJ5r85/vIjIIQuAM8iJ5gsmuA8FbJYoRzH4kjGQLJn
-         zhE2IxajJSg/eWTusEMjNu9shVSwkfnQOx+LwNXyWX7i95iiIqjTf5dMk2t3uvXXUdU0
-         iLlnxkFkxnbwyX/QAWH5utbB7VYUbw4drtRHod1b/NOOKazvmDKdn5aUCYkNBvNwQwXE
-         Urmiibph6H6Herrze2dFT2dC4WBXjdLmcSvxopQyjIag/9gYmOvRecMtux3OeNoU75Es
-         IRwA==
-X-Forwarded-Encrypted: i=1; AJvYcCXoF56viYlGz/GJjhH9r7ArRU5PHrhtrvnjYjdvb8GboxhEixLGahU0fmLvkRb2bSx6pEZYktQzwkRMNEI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywf1ZzDqoIejlRsEp8Pot0KlSFwG+qsg9KMkGIKykoMXY3TuLna
-	3e/djeCuPohYxHQdEmNhEXl0gBGVcpcZt7B9/qu78wnOfU8nU0VXCqvbz2GMTu9GU+OIzUsJcjS
-	gYMBCai5tuKnVFdrwNSmbpDc+HyBvkdGb6awH
-X-Gm-Gg: ASbGncu2z0OOYS2rxCrXtNfqpo7zavV3I1NrCEm3CL8OB74dLPwvfwzWJ/Nh+P56thw
-	cWohxb7kJ18ZRzmQQNk48sarPMa7Q9FZaNuvOphIwXl6hPQa2RVkdO8fOtUuiOyg2u6W2ERry6W
-	m5nE3gFNQe0drcf2gZRJasuYZYbyNxAuGOZ9lZXZemdU5EFLr0HRCmRbRG2ECnVhE=
-X-Google-Smtp-Source: AGHT+IExYrNEjA4pPxITL5Kgnipvtbv102T/YS0lH31Fsyobnp9W1LSzaQUExnLdiCH6E51BoFuI8ihy0vHN4Nlyq+I=
-X-Received: by 2002:a2e:be0f:0:b0:30c:5c6:91e0 with SMTP id
- 38308e7fff4ca-30de0231a0cmr50673981fa.2.1743586694676; Wed, 02 Apr 2025
- 02:38:14 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743586703; x=1744191503;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=cFAFcDdeatsk0rIUEwRZMxS5vX6WVqCabbcWXMXHWEc=;
+        b=wWIvYfSjfOQkuyEYY/BTfaYoh8dZfxIO8zVpDTfVtbF56sMq7uDABWDh15tnS+iqLZ
+         umMKpbP25mODCSwJWNECPBq7lv3k/hhgiPQ8/5YK20TL+eUObgF3Js3oh9OjWj2oe8vP
+         ED4OQH8DC8ZrzcS7eB9FHgItsy7az9zOhEicFwVuNuF0nXjlyiMAI+l+6pTJqt6I68Qa
+         lkyaal3q+hxn8GNmREjzPfIi6EZA4bzxeWDYkbkf5lgjVE1BHyUQy6PB2JItAbQDEpWy
+         HV0YQwfd8gLQXjyrT6AG2v9R8tQIHw3PVduZZo4ItD0nDwJgCs1YRG/zPNfNBVIpwZis
+         H59w==
+X-Forwarded-Encrypted: i=1; AJvYcCV+60Rx6Qfg7dwxZLGdpz7v6hCkC7Y4d5Vz/8DKiuPxkFlpc07FqcTdaH0IZ5JXaEByFAELICtkworqM+U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxHNwJ5z5dcVnfM/fJGUt/fKQfonrHFAmu8LYzJ35usr+W+jMCa
+	InIJZjqzr3owkWiOS6Pnuh2n0z+xmUa0gpm5qiU68eykSjM1B4dDV3yIaO6V8x5+WqiIMnPRxrN
+	qlUMhfousMHKTA0MyAMkvY7Y7jZfBgDKdmag91btS8GKF4yLFsZkT1gQ=
+X-Google-Smtp-Source: AGHT+IHLCNtKlZQUNTx1aPxdQlS77LFaF4uvBLk2+xCqBEWq6nfh5H96ofCOufzihjvGjl+6za0RD++QASHqV6IexKQvbxHiUiWm
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250402083628.20111-1-angelogioacchino.delregno@collabora.com> <20250402083628.20111-5-angelogioacchino.delregno@collabora.com>
-In-Reply-To: <20250402083628.20111-5-angelogioacchino.delregno@collabora.com>
-From: Chen-Yu Tsai <wenst@chromium.org>
-Date: Wed, 2 Apr 2025 17:38:03 +0800
-X-Gm-Features: AQ5f1Jo5jbEeaCvlhXWHAtzwNK4wbBL1go7L3GIt1qsXbC424ywOaYMmnHcwKAY
-Message-ID: <CAGXv+5E1qShE1LqgFL6rrgRzjwFUPoBqYdhO-sgNzmMqQsMS0Q@mail.gmail.com>
-Subject: Re: [PATCH v1 4/5] drm/mediatek: mtk_disp_ovl: Enable/disable
- interrupt on bind/unbind
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: chunkuang.hu@kernel.org, p.zabel@pengutronix.de, airlied@gmail.com, 
-	simona@ffwll.ch, matthias.bgg@gmail.com, nancy.lin@mediatek.com, 
-	ck.hu@mediatek.com, djkurtz@chromium.org, littlecvr@chromium.org, 
-	bibby.hsieh@mediatek.com, dri-devel@lists.freedesktop.org, 
-	linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, kernel@collabora.com
+X-Received: by 2002:a05:6e02:152e:b0:3d2:6768:c4fa with SMTP id
+ e9e14a558f8ab-3d5e09fdbf6mr170165725ab.21.1743586703538; Wed, 02 Apr 2025
+ 02:38:23 -0700 (PDT)
+Date: Wed, 02 Apr 2025 02:38:23 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67ed058f.050a0220.31979b.0040.GAE@google.com>
+Subject: [syzbot] Monthly kvm report (Apr 2025)
+From: syzbot <syzbot+list005eb7ef44f63424b8ba@syzkaller.appspotmail.com>
+To: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 2, 2025 at 4:36=E2=80=AFPM AngeloGioacchino Del Regno
-<angelogioacchino.delregno@collabora.com> wrote:
->
-> The OVL driver is installing an ISR in the probe function but, if
-> the component is not bound yet, the interrupt handler may call the
-> vblank_cb ahead of time (while probing other drivers) or too late
-> (while removing other drivers), possibly accessing memory that it
-> should not try to access by reusing stale pointers.
->
-> In order to fix this, add a new `irq` member to struct mtk_disp_ovl
-> and then set the NOAUTOEN flag to the irq before installing the ISR
-> to manually call enable_irq() and disable_irq() in the bind and
-> unbind callbacks respectively.
->
-> Fixes: 119f5173628a ("drm/mediatek: Add DRM Driver for Mediatek SoC MT817=
-3.")
-> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@coll=
-abora.com>
-> ---
->  drivers/gpu/drm/mediatek/mtk_disp_ovl.c | 19 +++++++++++++------
->  1 file changed, 13 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c b/drivers/gpu/drm/me=
-diatek/mtk_disp_ovl.c
-> index df82cea4bb79..1bff3a1273f6 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-> @@ -161,6 +161,7 @@ struct mtk_disp_ovl {
->         struct drm_crtc                 *crtc;
->         struct clk                      *clk;
->         void __iomem                    *regs;
-> +       int                             irq;
->         struct cmdq_client_reg          cmdq_reg;
->         const struct mtk_disp_ovl_data  *data;
->         void                            (*vblank_cb)(void *data);
-> @@ -587,12 +588,18 @@ void mtk_ovl_bgclr_in_off(struct device *dev)
->  static int mtk_disp_ovl_bind(struct device *dev, struct device *master,
->                              void *data)
->  {
-> +       struct mtk_disp_ovl *priv =3D dev_get_drvdata(dev);
-> +
-> +       enable_irq(priv->irq);
->         return 0;
->  }
->
->  static void mtk_disp_ovl_unbind(struct device *dev, struct device *maste=
-r,
->                                 void *data)
->  {
-> +       struct mtk_disp_ovl *priv =3D dev_get_drvdata(dev);
-> +
-> +       disable_irq(priv->irq);
->  }
->
->  static const struct component_ops mtk_disp_ovl_component_ops =3D {
-> @@ -605,16 +612,15 @@ static int mtk_disp_ovl_probe(struct platform_devic=
-e *pdev)
->         struct device *dev =3D &pdev->dev;
->         struct mtk_disp_ovl *priv;
->         struct resource *res;
-> -       int irq;
->         int ret;
->
->         priv =3D devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
->         if (!priv)
->                 return -ENOMEM;
->
-> -       irq =3D platform_get_irq(pdev, 0);
-> -       if (irq < 0)
-> -               return irq;
-> +       priv->irq =3D platform_get_irq(pdev, 0);
-> +       if (priv->irq < 0)
-> +               return priv->irq;
->
->         priv->clk =3D devm_clk_get(dev, NULL);
->         if (IS_ERR(priv->clk))
-> @@ -635,10 +641,11 @@ static int mtk_disp_ovl_probe(struct platform_devic=
-e *pdev)
->         priv->data =3D of_device_get_match_data(dev);
->         platform_set_drvdata(pdev, priv);
->
-> -       ret =3D devm_request_irq(dev, irq, mtk_disp_ovl_irq_handler,
-> +       irq_set_status_flags(priv->irq, IRQ_NOAUTOEN);
-> +       ret =3D devm_request_irq(dev, priv->irq, mtk_disp_ovl_irq_handler=
-,
->                                IRQF_TRIGGER_NONE, dev_name(dev), priv);
+Hello kvm maintainers/developers,
 
-Use IRQF_NO_AUTOEN here? Also, IRQF_TRIGGER_NONE can be dropped.
+This is a 31-day syzbot report for the kvm subsystem.
+All related reports/information can be found at:
+https://syzkaller.appspot.com/upstream/s/kvm
 
-Make sense otherwise.
+During the period, 0 new issues were detected and 0 were fixed.
+In total, 4 issues are still open and 129 have already been fixed.
 
-ChenYu
+Some of the still happening issues:
 
->         if (ret < 0)
-> -               return dev_err_probe(dev, ret, "Failed to request irq %d\=
-n", irq);
-> +               return dev_err_probe(dev, ret, "Failed to request irq %d\=
-n", priv->irq);
->
->         pm_runtime_enable(dev);
->
-> --
-> 2.48.1
->
+Ref Crashes Repro Title
+<1> 323     Yes   WARNING: locking bug in kvm_xen_set_evtchn_fast
+                  https://syzkaller.appspot.com/bug?extid=919877893c9d28162dc2
+<2> 147     Yes   WARNING in handle_exception_nmi (2)
+                  https://syzkaller.appspot.com/bug?extid=4688c50a9c8e68e7aaa1
+<3> 6       Yes   WARNING in vcpu_run
+                  https://syzkaller.appspot.com/bug?extid=1522459a74d26b0ac33a
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+To disable reminders for individual bugs, reply with the following command:
+#syz set <Ref> no-reminders
+
+To change bug's subsystems, reply with:
+#syz set <Ref> subsystems: new-subsystem
+
+You may send multiple commands in a single email message.
