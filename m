@@ -1,150 +1,143 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3E8923E357
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 12:47:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DA3F23F26B;
+	Wed,  2 Apr 2025 12:47:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743598075; cv=none; b=B68BoJE4c8UOEPJ3PpKDspTCfbwuwprhb955ECiBUobWhxyfvc89RhpRFdFdHN/YLEVSiAtx9GvJ6GXxe4nUqzai1xHk4uhSyDzqxFFM+eILMgmjQ48ZVcAh7HFwckj/2YUtNz69t+2/xNgm9ykGsl1HUUeNAz38JBtnPwhOnq4=
+	t=1743598077; cv=none; b=FxnyM6VKZnjZsQet4L/GO1yMOTil0Ude9raKVoqqRiKc+GUAja4WD/VsoVpTSgflXgO+b0KBrnWZ97eX1P0pbMpT7mLXWq5Box3ynxqknfjqwSmrnSpFzy7A7FmzDaSlmiPX3Oj9uGhbJ3KiNx21OY1MSE4AierzPXVO3GDADpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743598075; c=relaxed/simple;
-	bh=zSoehIniU8jm04IOOedJamJbm8GIIQPM5e7PJNzDOKc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hLipKCgYRF1V3XyAy+TEJBYjAvbrJFZU+D+lP0oiEIGYMBAjiYwRAsRS3U5oBmSQKR9wBGUatiUxUR2l3OtW3p9CyUsNymO10HQ4knGZyZClQv1lpSZa89xQ4lnvGeunItSw/5OoSBmQSlveWeSFAxl3Rm8+KgMPTMObzJgAh5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WzHjJq0z; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743598077; c=relaxed/simple;
+	bh=CKWrEBn3PtQ8x/toSXWJ4Dxu6mytJnYkI6qhOJskz78=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=F3LRuoS4q70BM2tdyR+GDtDQY21upW6ojYGu25uduIkVsNDTfefGSgRpnUmWljEFrqn+y0jho9GdHAA0KEfrOhwM0BxeS+FMwxKCtlyh8lho3urIVarUSZollpbL4m4rhSLGwDDTFHYhJMgvUSqi/KEeiorALtZtOlucd4yv9bE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=rNCzdP9d; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WzHjJq0z"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3965c995151so3712873f8f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 05:47:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743598072; x=1744202872; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=LEWeMCeaswgmteuyJgZbeIbf8aY5zFHTFf+liUe5LTg=;
-        b=WzHjJq0zQiMdPOzkTeFGCO87ZhT9Sh9KGnUSgxDFiH7PDwBaIJgdqRYLFZV/nTsGW1
-         Q9L6xFfh19xi/JUKXijXLL44GYJyRIyDF/pg8L2fch7WNOhfSnedNgV0igU+GzVGEYzn
-         3y7AdBnETuNqHt5Pywd/dj3j5EBtiG4qPnhSWqzhfWeaxc4A4UU6UJXgpNitaxijudUP
-         gj+1VWu8GIQ5yiH+AYcM8H4xHeMS0nLk96pRwL9qf4PcNXMJ6ShIyPDV0Z6GyuXbiw3c
-         g/SyaSbBXY1+Pja4PQDli1bbKoScJfWluot3xmheliQLV8UpNdDLiAY/05h7kMPZhhA+
-         lbVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743598072; x=1744202872;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LEWeMCeaswgmteuyJgZbeIbf8aY5zFHTFf+liUe5LTg=;
-        b=HQrd1CHoo/CpTRr+VI28NOqwOMluAQqn2VpRkuNb56wmbEcRxxHGn3VbbzOIU4bbXa
-         NJBTbUcBaIgbLm3hMQ3/t0asDe2A7Oh92NHmFcB+ZI86U9vdJgjc4xp66fxkmaAPTHg5
-         VEAuZoLDgcj5KWC0xe0VABFIX54r9eUdJ8LzuMrSdDyekVEghcyVThSHqv6AVI91I5A2
-         9Qod5iFCp6mlL23l3fEB2CANJuQyewSPhKr37IxpHoi1hsm2w2wWCxp2YxO/SmHOBpvs
-         Nkc6TuWMYFw3uVLdBRNc5bXlATUgp2LmoBbejyWtpIjAiv39j66Y1gMgoLNsqlxhK0AZ
-         N8QQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWH5p+E6VXAJ38HTMrt69st46NquF4JkKiFdDl5w80nVjOl9+fneDAXTXC2ll8z2Wca2hxgb4CRDVWF0LU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YywYV2w+gZQva+QZvIIiDmJo4w3tj5b8zwQT+MuORiEXV3sA2L+
-	j2HRjxmoa/TOY6l4O7dCTxZmoJeZnH0M5KRxYHidhrbqYFtSk793
-X-Gm-Gg: ASbGncveFZjfXKkMo/1uagiw2sExPWTIIXzH63griEVtkJEsxR4vn13WjNSivPYvt0O
-	0540YR2CeK2A8dkwwu6galmskcrfR/6/cwoT2CGVvecJ4z8DHVESegUuCBY7lQ1kHk7Gknjk0BL
-	KDtaPoNZTU+Gu3pRmfaFBMuTq/o+j8XCfSRak67qs+rBU8ZxFq1SHLSZTlWVL+nibi6kCjr5wbj
-	TpsTuFNxVwoiTWVJdMq/6xQwmD4tvQwckOTlAA2KtNpdOO95BaXS7zjXdAf+BzZ5geOAEnQC1b2
-	TBFFfR8uu2/okia8s10sjbJeVh/+s1k1+S+/c64GxA==
-X-Google-Smtp-Source: AGHT+IEOTmnpf9qGDadsLtbYyixVKFrhrd0ujtS0ksf/cMhCW8I+X2FWzaYLi0rLTArKqpzOW2dvHA==
-X-Received: by 2002:a5d:598b:0:b0:39a:c80b:8288 with SMTP id ffacd0b85a97d-39c297698fcmr2134047f8f.33.1743598071795;
-        Wed, 02 Apr 2025 05:47:51 -0700 (PDT)
-Received: from pc.. ([197.155.71.138])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43eb61b6cd2sm19675985e9.39.2025.04.02.05.47.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Apr 2025 05:47:51 -0700 (PDT)
-From: Erick Karanja <karanja99erick@gmail.com>
-To: gregkh@linuxfoundation.org,
-	outreachy@lists.linux.dev
-Cc: karanja99erick@gmail.com,
-	philipp.g.hortmann@gmail.com,
-	linux-staging@lists.linux.dev,
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="rNCzdP9d"
+Received: from DESKTOP-VOT081N.hsd1.ga.comcast.net (unknown [20.114.144.49])
+	by linux.microsoft.com (Postfix) with ESMTPSA id D3F0C2041310;
+	Wed,  2 Apr 2025 05:47:53 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D3F0C2041310
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1743598075;
+	bh=akIJhi5dOsbPwjFtHYsWPzeWZ2NiSa/DdRwiLCQ9Fbg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=rNCzdP9dHIJ0owIlx8+IhWD9u+n9u7qJfksu7jR/sDVdDhlBaAj9YGY+qIKJu6qe+
+	 m0CV0LLATNeXBWXvKHF9nLIIdf6iyPRtCYZBOlSju/5NftIG59OdbEUSwNDpp6HgJ8
+	 UlGkVOlj4WuolTyrf5WwPtYeb5Db5uqM8DxwDrec=
+From: steven chen <chenste@linux.microsoft.com>
+To: zohar@linux.ibm.com,
+	stefanb@linux.ibm.com,
+	roberto.sassu@huaweicloud.com,
+	roberto.sassu@huawei.com,
+	eric.snowberg@oracle.com,
+	ebiederm@xmission.com,
+	paul@paul-moore.com,
+	code@tyhicks.com,
+	bauermann@kolabnow.com,
+	linux-integrity@vger.kernel.org,
+	kexec@lists.infradead.org,
+	linux-security-module@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 0/3] staging: rtl8723bs: Code cleanup patches
-Date: Wed,  2 Apr 2025 15:47:40 +0300
-Message-ID: <cover.1743596287.git.karanja99erick@gmail.com>
+Cc: madvenka@linux.microsoft.com,
+	nramas@linux.microsoft.com,
+	James.Bottomley@HansenPartnership.com,
+	bhe@redhat.com,
+	vgoyal@redhat.com,
+	dyoung@redhat.com
+Subject: [PATCH v11 8/9] ima: make the kexec extra memory configurable
+Date: Wed,  2 Apr 2025 05:47:21 -0700
+Message-ID: <20250402124725.5601-9-chenste@linux.microsoft.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250402124725.5601-1-chenste@linux.microsoft.com>
+References: <20250402124725.5601-1-chenste@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
+The extra memory allocated for carrying the IMA measurement list across
+kexec is hard-coded as half a PAGE.  Make it configurable.
 
+Define a Kconfig option, IMA_KEXEC_EXTRA_MEMORY_KB, to configure the
+extra memory (in kb) to be allocated for IMA measurements added during
+kexec soft reboot.  Ensure the default value of the option is set such
+that extra half a page of memory for additional measurements is allocated
+for the additional measurements.
 
-This patchset refactors the rtl8723bs driver by replacing
-integer literals (1 and 0) with true and false,
-improving code readability and consistency with standard kernel practices.
-The transformation was performed using Coccinelle.
+Update ima_add_kexec_buffer() function to allocate memory based on the
+Kconfig option value, rather than the currently hard-coded one.
 
-below is the coccinelle script used:
-@initialize:ocaml@
-@@
+Suggested-by: Stefan Berger <stefanb@linux.ibm.com>
+Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+Signed-off-by: steven chen <chenste@linux.microsoft.com>
+Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
+Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+---
+ security/integrity/ima/Kconfig     | 10 ++++++++++
+ security/integrity/ima/ima_kexec.c | 16 +++++++++++-----
+ 2 files changed, 21 insertions(+), 5 deletions(-)
 
-let same_function p q =
-  (List.hd p).Coccilib.current_element = (List.hd q).Coccilib.current_element
-
-@r@
-expression e;
-position p;
-symbol true,false;
-@@
-
-e =@p \(true\|false\)
-
-@@
-expression r.e;
-position q : script:ocaml(r.p) { same_function p q };
-@@
-
-e =@q
-(
-- 1
-+ true
-|
-- 0
-+ false
-)
-
-@s@
-type T;
-T e;
-identifier fld;
-symbol true,false;
-@@
-
-e.fld = \(true\|false\)
-
-@@
-type s.T;
-T e;
-identifier s.fld;
-@@
-
-e.fld =
-(
-- 1
-+ true
-|
-- 0
-+ false
-)
-
-Erick Karanja (3):
-  staging: rtl8723bs: Use true/false instead of 1/0
-  staging: rtl8723bs: Use true/false instead of 1/0
-  staging: rtl8723bs: Use true/false instead of 1/0
-
- drivers/staging/rtl8723bs/core/rtw_ap.c       | 12 ++++++------
- drivers/staging/rtl8723bs/core/rtw_mlme_ext.c |  4 ++--
- drivers/staging/rtl8723bs/core/rtw_recv.c     |  2 +-
- 3 files changed, 9 insertions(+), 9 deletions(-)
-
+diff --git a/security/integrity/ima/Kconfig b/security/integrity/ima/Kconfig
+index 475c32615006..d73c96c3c1c9 100644
+--- a/security/integrity/ima/Kconfig
++++ b/security/integrity/ima/Kconfig
+@@ -321,4 +321,14 @@ config IMA_DISABLE_HTABLE
+ 	help
+ 	   This option disables htable to allow measurement of duplicate records.
+ 
++config IMA_KEXEC_EXTRA_MEMORY_KB
++	int "Extra memory for IMA measurements added during kexec soft reboot"
++	depends on IMA_KEXEC
++	default 0
++	help
++	  IMA_KEXEC_EXTRA_MEMORY_KB determines the extra memory to be
++	  allocated (in kb) for IMA measurements added during kexec soft reboot.
++	  If set to the default value of 0, an extra half page of memory for those
++	  additional measurements will be allocated.
++
+ endif
+diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
+index ed867734ee70..d1c9d369ba08 100644
+--- a/security/integrity/ima/ima_kexec.c
++++ b/security/integrity/ima/ima_kexec.c
+@@ -118,6 +118,7 @@ void ima_add_kexec_buffer(struct kimage *image)
+ 				  .buf_min = 0, .buf_max = ULONG_MAX,
+ 				  .top_down = true };
+ 	unsigned long binary_runtime_size;
++	unsigned long extra_memory;
+ 
+ 	/* use more understandable variable names than defined in kbuf */
+ 	size_t kexec_buffer_size = 0;
+@@ -125,15 +126,20 @@ void ima_add_kexec_buffer(struct kimage *image)
+ 	int ret;
+ 
+ 	/*
+-	 * Reserve an extra half page of memory for additional measurements
+-	 * added during the kexec load.
++	 * Reserve extra memory for measurements added during kexec.
+ 	 */
+-	binary_runtime_size = ima_get_binary_runtime_size();
++	if (CONFIG_IMA_KEXEC_EXTRA_MEMORY_KB <= 0)
++		extra_memory = PAGE_SIZE / 2;
++	else
++		extra_memory = CONFIG_IMA_KEXEC_EXTRA_MEMORY_KB * 1024;
++
++	binary_runtime_size = ima_get_binary_runtime_size() + extra_memory;
++
+ 	if (binary_runtime_size >= ULONG_MAX - PAGE_SIZE)
+ 		kexec_segment_size = ULONG_MAX;
+ 	else
+-		kexec_segment_size = ALIGN(ima_get_binary_runtime_size() +
+-					   PAGE_SIZE / 2, PAGE_SIZE);
++		kexec_segment_size = ALIGN(binary_runtime_size, PAGE_SIZE);
++
+ 	if ((kexec_segment_size == ULONG_MAX) ||
+ 	    ((kexec_segment_size >> PAGE_SHIFT) > totalram_pages() / 2)) {
+ 		pr_err("Binary measurement list too large.\n");
 -- 
-2.43.0
+2.25.1
 
