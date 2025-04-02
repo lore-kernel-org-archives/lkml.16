@@ -1,244 +1,301 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D52561581F8;
-	Wed,  2 Apr 2025 04:15:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743567335; cv=fail; b=BgtuoIySeHNPylgx0+QbduLU+wTKCXwZC3Ee1WSQzqFx6knInH2TpcEuijMlNp6/K7YoqLnYEE0/Rp9ojMDNoEV2MVWqvrM5T/PmU2FtDbzuZZFWOW0nMvLAwHAuduznZvCE1bjZPZdwidUkd/F5NEvimrnKO71Rpkx4S2QIdKE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743567335; c=relaxed/simple;
-	bh=I5H+AIgnpiFVeqBgabHZFGp7XvnYvTTWP3uoWY73yfw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=L/sQ0sxAGT56RQ9mDIUJgjx2/5PKlFy3lHChfDYflOl7nAqUsqXbD4bUv9Mv7hmD5DJrTP72uw3SNEPVuoORMb5bafEqMilT2awq6h8WevmLKcU/pHbucsmqCx0hqGP/FZwG1yZSs8lmmAHKGIt9/fB01wR5vu77Lj367bmWTm0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=cwg2bXYc; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=hY9jsj+A; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="cwg2bXYc";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="hY9jsj+A"
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 531L2TK6007213;
-	Wed, 2 Apr 2025 04:15:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2023-11-20; bh=7ZSQByRaM0Hg26qKtr
-	CBNIcVOwGm6iUbslIjvphVy9c=; b=cwg2bXYcvtPX+YO1Fz+ublhNZYVRvTGPBf
-	ILKvRqZFdO4sCQ4JGorkBA4FAuW9SrboB/NxWiEp8KyijgGVi9Foppq0kIYmq2Wq
-	tTUwqVSY1EvCHim7avqpBlCGpqk0z/W5Rf3FZSBsDoJPS/zLFB6TbiATTMB69i51
-	peG7tsaBcDwTcHeF+R3/w+ZstrQAYHNaN/+0izWkfoINnIah1xaCNFsmjPCcnlR4
-	cg7k45aafXrCurLt75YgzPaPbMF25FDzSxdoYzbJ+93It8gIYi0I768+Rce5sFhb
-	zinNaclibxT7A+lRBYUXuFKf0atLcNVPminfOR9G25tJU7kQiClA==
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 45p8fs9vxg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 02 Apr 2025 04:15:23 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 53241xbD032623;
-	Wed, 2 Apr 2025 04:15:22 GMT
-Received: from nam02-dm3-obe.outbound.protection.outlook.com (mail-dm3nam02lp2047.outbound.protection.outlook.com [104.47.56.47])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 45p7aa9jeu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 02 Apr 2025 04:15:22 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=CDfUX8RFDrAcghWhZocmaP6HUSD561hTsLYGlZBSX0qHmV2zcry51WIZJF+YnNq2VmbJoxvTxRFyrItSDiqQOeVap9XqxFdxBZrRbuKbbWafybToik2x8kvSAsf37HuawFvc5Ux5IzelYumcjUBKKFPZsMSJrgvKOnF6O/vr7FUv6RbrKH1U7sl//I3Ozi6uDmdbXBaa0hKw//E0k2iicFhPQ4vrG/bEv25SMDvFyX6mFo6vToOAQpko9JyWI3FEbuf0v03a1jS2PTLjVvJAKNNUcISYKK0IcdhlBZP7AjpZTxIc7dJXPzpU6pt7iVo4YkqUL3lQhJQPBY1vnRWrNQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7ZSQByRaM0Hg26qKtrCBNIcVOwGm6iUbslIjvphVy9c=;
- b=wkZ2ef0RhcWeCywxuP/sl8ezbcKvMsOuaC5+/Ay9MG/19BqUUombpW+eIthOB+dpo4SlkXRxaf5KqF7EQXphVyTdVj2BEQj7qFhcG1u/rhWj8umKQi8JyWPyzDoO3wFuED6HAsFgXJGTC1wR3PLl/9jkw8bGdfjMkO4kBEYeksVVN5Nj3lRLZfTxcGB4POliKfVv8V1s+NB6XockiiYYEBDDHdLSoQlRqOS7dRDfIh7dARQ5//Mrc7FFyNTellaEXWe+B1sAFJ8mhp6NMA4L/lSC5/Ry2xBh2GkvdEN1EaaQ+MnwKWrl5vo7joGD0hMJD9L4UmjicHSfU9Q7vzg6GA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7ZSQByRaM0Hg26qKtrCBNIcVOwGm6iUbslIjvphVy9c=;
- b=hY9jsj+AWxTsGHAk3uiMaeLh84AiyBkKKDn19Qlt7NB3jPKWOpvfeQBQg+ZQeMnnAj+AVV8S+dvPOX8MOdKDTQETxqD/W2J3T6dfy+s9qhGIf62+9n2UVrilUkv0neOBVaqHs1y+uru8rYfbaYT51dyzX/SfkLEumZm06idvBhk=
-Received: from CH3PR10MB7329.namprd10.prod.outlook.com (2603:10b6:610:12c::16)
- by CH3PR10MB6835.namprd10.prod.outlook.com (2603:10b6:610:152::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8583.39; Wed, 2 Apr
- 2025 04:15:20 +0000
-Received: from CH3PR10MB7329.namprd10.prod.outlook.com
- ([fe80::f238:6143:104c:da23]) by CH3PR10MB7329.namprd10.prod.outlook.com
- ([fe80::f238:6143:104c:da23%7]) with mapi id 15.20.8583.038; Wed, 2 Apr 2025
- 04:15:20 +0000
-Date: Wed, 2 Apr 2025 13:15:14 +0900
-From: Harry Yoo <harry.yoo@oracle.com>
-To: Kees Cook <kees@kernel.org>
-Cc: Yafang Shao <laoar.shao@gmail.com>, joel.granados@kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Josef Bacik <josef@toxicpanda.com>, linux-mm@kvack.org,
-        Vlastimil Babka <vbabka@suse.cz>
-Subject: Re: [PATCH] proc: Avoid costly high-order page allocations when
- reading proc files
-Message-ID: <Z-y50vEs_9MbjQhi@harry>
-References: <20250401073046.51121-1-laoar.shao@gmail.com>
- <3315D21B-0772-4312-BCFB-402F408B0EF6@kernel.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3315D21B-0772-4312-BCFB-402F408B0EF6@kernel.org>
-X-ClientProxiedBy: SE2P216CA0050.KORP216.PROD.OUTLOOK.COM
- (2603:1096:101:115::13) To CH3PR10MB7329.namprd10.prod.outlook.com
- (2603:10b6:610:12c::16)
+Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43892139D;
+	Wed,  2 Apr 2025 04:18:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743567542; cv=none; b=Za+ySqjY9vf4/TSs4zpxfri6len41LwqQdYst4CfmCc2aBTdty/K45VuX9v0D01lyo4228E6AP7ba9yRpl8BD10dVoTFKLb4zdU/jAA62HY79sPiDBSkqFxBsqYSjIWLnpDbnt5kIJfmUIbOa82GK8CucOlRqlq9Slefp+rtX6o=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743567542; c=relaxed/simple;
+	bh=3gBK+yGijClrVI2Qauckmrdnk05u+wwJ1CPfzPWrlqE=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=VlFINC8MzW8FRjVKDSJj6kvH3BObYAndSmqNbUWqZxTwzlbgR36pBHDG0B1utDpM96oRLVDaOYUAXg+SvP8ORbfViQrud06oUcC/SwawFy5lIsBWoO2gHZgVUptoGIMnnk0TwykCnmC0bDErlCOKUG21JICk3PlIrny15Hgx7Go=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-681ff7000002311f-8b-67ecbaacb317
+Message-ID: <5462e706-5b29-495d-9af9-1945e8a5445e@sk.com>
+Date: Wed, 2 Apr 2025 13:18:51 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR10MB7329:EE_|CH3PR10MB6835:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6ef40114-5294-4e43-32a0-08dd719cfb1a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?ArRVjNOk3r8nM5fLCbxkRbMt7oa1DGLSmqMVsrjUMIIilmdw09l6yvaaXDn5?=
- =?us-ascii?Q?K4qFagujRtmlI0nv8V55ikYJbVkfOzxKGU9wrmOo7QPjiconAvO6EDy81eIp?=
- =?us-ascii?Q?3GE/pYDTD1n7WWbpTvGjwYBSJJNMzbw7DZUyzC0o7QjzPORy7cb6GYpTfUN6?=
- =?us-ascii?Q?lQUt8HagLQ6LcG1bO3Li4WPFgOUMTFN00WKtes/nHFSKLOJYPjLJO4d5pyA8?=
- =?us-ascii?Q?hACOP6TKFNLqiFcLvY30xKiKgAetr6P74auRPBvXwykht9K8CfuW4GwCQweJ?=
- =?us-ascii?Q?/M3pWGJAMGfer8ds/IFo6ofpHga1VrQa2kZycfid160/+RRzTqJtzPU33fUB?=
- =?us-ascii?Q?NOgoGSHtrmFInlr/HiaGoN4OTorvHkAvQM56gRCHObKbIJ4K+r4xhbQQefYo?=
- =?us-ascii?Q?kxSH8NsDdN1S4M+++AGm6UOCWVPz7J/r4YAma1Pg3VquCz96ztg7sgjQxrhL?=
- =?us-ascii?Q?Cn0/4zvw1ilb/SR4CnpaBQPs+zqKH7rfnNSK+z9zzL7Jyfx/w84HRShil5MQ?=
- =?us-ascii?Q?UnwA/u4Gf8IiYZAHxQYrI1APyVRCemYBqNv09HEGD/JPOPH4hUQqAI+8hyGL?=
- =?us-ascii?Q?P6OSDvjBdJQpdl8KM7T+aylp5perafn5of7Zga9FTWgcAqVE1529E0QAbFjq?=
- =?us-ascii?Q?byQgMXRkoQL070FfBMxDICYpP2x75PXGGAS5HRoRL2hYO7EJDECIXHqBHeij?=
- =?us-ascii?Q?ZKkDUWSH5zs4EBzo4Pk54/xc0OCRN6oTIIV23u1kPeNzsw75TdP64KTbauNi?=
- =?us-ascii?Q?KTS/U3oBqNNswYq9FFgFTsIfdyllHn42hu+pUr+bslYT7cahlq8mtMXb7unT?=
- =?us-ascii?Q?WBFiUWOg2AlDaG4v8paQ7g3UWH9v/5AeVE1po/7OZmB3vSSYUzylJZNENF+J?=
- =?us-ascii?Q?sGzwWMijTTJ83ncUcfPGNet3ndtYFcG2GoFFYsuqwOiUXPTPONbGtd1E76gz?=
- =?us-ascii?Q?tGb3n4k4ol2X6VTpmp++/6eYesOT6XDLg77lRJkJOl0pbBlwyTDlTfqODeA2?=
- =?us-ascii?Q?3QJN/1f22zOpJ5yzdIXMMjBOLQydwAc/Hx1ootGpBrSgmStcys0h/6IcYE5Z?=
- =?us-ascii?Q?hvyQaFDuOwYMo4Pp8aMZ5ugHn4tpLRzEETqZeuu6E+hHC1FYAOu2bJWUoQ9n?=
- =?us-ascii?Q?j4bHAobJsR4nFVb2XzVjOeI1z11aUOp2oa/f2jgUoG40KdkOaSelVGuuBwec?=
- =?us-ascii?Q?RjbyhUUBNk6U9qAv5BscL29juFFE3T/Uo8uMSSdfkP5J2+XLUJ8OgMkzHiif?=
- =?us-ascii?Q?ZriT/Z7mH3GYIymfoDf/qgXXEApvZnFKbBZaoNuT2HeB3YVobadeYgEM1ywR?=
- =?us-ascii?Q?cTkqVIpncySHY62oMMHzECpk58bN6qMP2ezY3KGBlm9AEB8oOntXm05nfv4v?=
- =?us-ascii?Q?0Sw+o4K2Tgh4ae39UOERDUxsH3LX41xRth5iXrx4DJWgZy8MJHDDTsnzoLSl?=
- =?us-ascii?Q?cR4AGNmyv0I=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR10MB7329.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?nPIJq1rTZUr74eypA4n5bNqFCHom4y38Rtlv5uyOFC3873un8wL/0wAuouRG?=
- =?us-ascii?Q?sGiAKM6r/zmjvMAtTqS7c+zzuD0/5Ln7OJoWLzBQF/+mrf317844BFU2tXxZ?=
- =?us-ascii?Q?o1K+KcxJlofG42yaSjTC3BZLd/OdUVIzOXSqXSDiA3pYAXeAVWekrD3u3NVy?=
- =?us-ascii?Q?cqbrRHWvNxOmfJynkQmXkw1YuoPL51YQNgkXb2JJINhs6Fr08ZyDxQldbKkB?=
- =?us-ascii?Q?0Lb1ii4YL3Cuzh5V2a4zplbsdy5/H6oSxHCJLa/OCdNrwQLb5hILyNmOpJz5?=
- =?us-ascii?Q?YkXLfFzJ5mwOcS+HTa4NOrwdFGfXGKWLQQvntrPVekTS9OJWgCSUWdoeW1Bk?=
- =?us-ascii?Q?3CN4TiBv/ZI51ogjrhDuwD75rW7mQuZ/Dsy/8Q6SOFEr+kHx/RD8RXo0Kfgc?=
- =?us-ascii?Q?9b8a4VXZ4EKzVG4yYkIogQlwU3Q7WN7O0IwTtcoqcv+/uZuMit2EgMH0FTWo?=
- =?us-ascii?Q?W6SFuxoXM09usBnMeDaatoGRLpXmM0+VN6w3zVdtwmpxD5N5/rfhsrlrZrgo?=
- =?us-ascii?Q?LqWkaJO+TFBKL+0tYDXiKFCuVxRYX8XMYxt12EFo707rqRpkPmiTBI++agNv?=
- =?us-ascii?Q?0D52xiaQ6eqU5dcglWWgHkmTO/0UgtnIXZmeOsyVByBL+1Reu7kZDujDxFv8?=
- =?us-ascii?Q?rR3umEcCG3uaTiJ+iEnNDaQM2LnLKF3O8g9ONUS8CPmDOwWwoGPdBKaR9s3b?=
- =?us-ascii?Q?1umBkjO4EM3AQMOvGGF7u0x8rHYqRGiqN897bfmFpGoYxbaTok009Ru0ko5D?=
- =?us-ascii?Q?fb1uuQewzZXkozSdc6agosQxZ15D1BBRhgodGrhyHFFNdqK+opUxTy3CD/c/?=
- =?us-ascii?Q?OZdWzOF24zTI76EhbBd7Va+K9WuRMfhlBCWSWCQhfIanmteQHcDc3ERz7GG4?=
- =?us-ascii?Q?1worDP4yA+72D1+dgToUByN1gdY6HvHK3vWxfG28hQSBoxwx3GmuP1aAmk5r?=
- =?us-ascii?Q?dSjZyX69rRF40WyTSp+sh/Qk2MF1kmXscHngIed/YGYXmftslbB4LfWdn2V+?=
- =?us-ascii?Q?6/nKaXjGERp0zUZLHJaf7zifnbx6avQfHKqnkfnPjxqNr3KqBT9ztwnejlfY?=
- =?us-ascii?Q?7sck0ZHW8KQq6torOr6uMJ0RgcYmgj/5FX33kWt8WY62NxD3shP7RYLQJE96?=
- =?us-ascii?Q?t/W86f46svbEA/AL/WhrjoDtdZ2CBiS+6OIDPRkvpZ9K44WLmA9J0OYi3JGj?=
- =?us-ascii?Q?b8//Q6swHGlS2Dz76ELThwZZv2wVAiTI2E8WXdJR7J4vzfBvQ6Tqn9BQ17xC?=
- =?us-ascii?Q?pue5liW/Sc1lL9jeDMkPFiFvVoiiOKbXXkZ5sLGtloRiHdC+J/xBXmXrvyin?=
- =?us-ascii?Q?2aI1FqJm1gXeUDicQQGFG4Gr+2Kt3DMP1/VOcFQPRyVWZrjzNEn18VHEDmw1?=
- =?us-ascii?Q?PEWMiRZBKNeA7WtFUr4zpNiagbYYIImAIDl6mvqvk1TkNW5D2Aa3htlOAhHj?=
- =?us-ascii?Q?8FftoC7CP8K8b0B9m04AQF8O+sIhbj4lSTkvdrgGAIyFd3bQ+lLFk5inu7XJ?=
- =?us-ascii?Q?pBNdC3rE+4vszeev8VBxczlMfAaYu4adWsrA6hKFd+gCBGUm3ph/NbD4HoN3?=
- =?us-ascii?Q?SlGQrFe8Sgp5RBvqDyqIHuEuBGbsgh+18iQuj+s/?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	cbBn+C9ezSWVPMf79ZQZFDhnZjsg0emjGKUAasNJbFY+XBin7bZlDpnSTJQEmJ5sgtCQqxSKzttnCP9KyuZK8ST3LNVIN5mKfjIjntjiS+BDrHCNDwx8t9seOWUqcn6j58Gae3ZWjPH0BmcJHj21uvfwiHdqSP18pGv2+Gb7W99p9uPH+S2D7G9nwlzwVIso32fTXAzOrQXuQHBhRL+eF5L+Sf4Rr1ejtqecSXm5iy46EBwNGH0kJDk2ZJfRShxoxpAjZk66pRJbUT7R98Le+ltHb001jTvYsCbvQ/LVp+y4vygLmAIwfDjddPGNq6Jju/J/vah+a3Ubk0PmzVlOn4QjGdxt9mhv2DEOnXNktZNquxkDjfHSCyMJXhfAoB5JrwolbMZSc3BXy71N4YsiVy8UIKX1t25LPRhG/O6Xf3M5QT3P32WOjhWVG3s5eq5YY791jeHvqTVUSjWS6Hq4C722xzWobGQrrAehOYUDPOOpfuGH+/Z38F8TVezxQ3119sj02TTt7QUs1qwpZK9en5fWYtPHAJwsFHsl/8uqiM9Yuo0LV0x+Jx4kY5ljdjkzl81SuTCyDzHXz15ENPDGIYl4y9FcUvsetBAB4qJoLPY=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6ef40114-5294-4e43-32a0-08dd719cfb1a
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR10MB7329.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Apr 2025 04:15:20.1176
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Q1llSKdAtSKD6gTQWgEZdseJJFBg+ipIG7WeTqDp+XZrOhjLsl0DrgTkbPlGwZV5RnMCMdwnHbdgbzdeNVchxw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR10MB6835
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-02_02,2025-04-01_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0
- suspectscore=0 mlxscore=0 malwarescore=0 spamscore=0 bulkscore=0
- mlxlogscore=821 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2502280000 definitions=main-2504020024
-X-Proofpoint-ORIG-GUID: PTnUU6kL25pPl5y_tQ6SfsnMVzNqY8yo
-X-Proofpoint-GUID: PTnUU6kL25pPl5y_tQ6SfsnMVzNqY8yo
+User-Agent: Mozilla Thunderbird
+Cc: kernel_team@skhynix.com, akpm@linux-foundation.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+ joshua.hahnjy@gmail.com, dan.j.williams@intel.com,
+ ying.huang@linux.alibaba.com, david@redhat.com, Jonathan.Cameron@huawei.com,
+ yunjeong.mun@sk.com
+Subject: Re: [PATCH v5 3/3] mm/mempolicy: Support memory hotplug in weighted
+ interleave
+To: Rakie Kim <rakie.kim@sk.com>, gourry@gourry.net
+References: <20250402014906.1086-1-rakie.kim@sk.com>
+ <20250402014906.1086-4-rakie.kim@sk.com>
+Content-Language: ko
+From: Honggyu Kim <honggyu.kim@sk.com>
+In-Reply-To: <20250402014906.1086-4-rakie.kim@sk.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprEIsWRmVeSWpSXmKPExsXC9ZZnoe6aXW/SDaZ9VbCYs34Nm8X0qRcY
+	Lb6u/8Vs8fPucXaLVQuvsVkc3zqP3eL8rFMsFpd3zWGzuLfmP6vF6jUZDlweO2fdZffobrvM
+	7tFy5C2rx+I9L5k8Nn2axO5xYsZvFo+dDy093u+7yubxeZNcAGcUl01Kak5mWWqRvl0CV8b+
+	7d/YC35ZV/zbe4ypgbHFoIuRk0NCwERi24EzTDD29albwWxeAUuJX22trCA2i4CKxLobV1gh
+	4oISJ2c+YQGxRQXkJe7fmsHexcjFwSywgEni9IG3jCAJYYFIiQ2TroMNEhEwlrh1GWKokEC8
+	xLzdR5hBbGYBEYnZnW1gNpuAmsSVl5PAajgFTCXOLj/HCFFjJtG1tQvKlpfY/nYOM8gyCYH/
+	bBKvvrQzQlwtKXFwxQ2WCYyCs5AcOAvJjllIZs1CMmsBI8sqRqHMvLLcxMwcE72MyrzMCr3k
+	/NxNjMCYWlb7J3oH46cLwYcYBTgYlXh4G3jfpAuxJpYVV+YeYpTgYFYS4Y34+jJdiDclsbIq
+	tSg/vqg0J7X4EKM0B4uSOK/Rt/IUIYH0xJLU7NTUgtQimCwTB6dUA2NnhcO1GXOPbHn+uUxw
+	qut93XB57nWe3D8+PN1as+uYMfsxrSlH9h/erC0q9cL25NTF+3RmLb0cZRR3aEbux7bq+puB
+	PyWSz808cHLzws+VC+SNJb44bE6edLUyTf/Fls+das17phzcvfChxN67Hd3LZvkfX9Sy7blZ
+	2flHtq+mX87tdJyZLmgUpsRSnJFoqMVcVJwIAHfub9OlAgAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpnkeLIzCtJLcpLzFFi42LhmqGlp7tm15t0g9alwhZz1q9hs5g+9QKj
+	xdf1v5gtft49zm6xauE1NovjW+exWxyee5LV4vysUywWl3fNYbO4t+Y/q8Wha89ZLVavybD4
+	vW0FmwOvx85Zd9k9utsus3u0HHnL6rF4z0smj02fJrF7nJjxm8Vj50NLj/f7rrJ5fLvt4bH4
+	xQcmj8+b5AK4o7hsUlJzMstSi/TtErgy9m//xl7wy7ri395jTA2MLQZdjJwcEgImEtenbmUC
+	sXkFLCV+tbWygtgsAioS625cYYWIC0qcnPmEBcQWFZCXuH9rBnsXIxcHs8ACJonTB94ygiSE
+	BSIlNky6DjZIRMBY4tZliKFCAvES83YfYQaxmQVEJGZ3toHZbAJqEldeTgKr4RQwlTi7/Bwj
+	RI2ZRNfWLihbXmL72znMExj5ZiG5YxaSUbOQtMxC0rKAkWUVo0hmXlluYmaOqV5xdkZlXmaF
+	XnJ+7iZGYPQsq/0zcQfjl8vuhxgFOBiVeHgFet6kC7EmlhVX5h5ilOBgVhLhjfj6Ml2INyWx
+	siq1KD++qDQntfgQozQHi5I4r1d4aoKQQHpiSWp2ampBahFMlomDU6qBUab+Icdes1XXOZtF
+	mtYKHNI7PMk7e8WzvH0WbPFK6XK1JlmvtoW1rVkrw/pvL9+qitWfg7aX/SqU55i98YPm7PcJ
+	X7cKam/R9bZwq/2649rMnLPHD76aqbujg+WcGKf11pUbuKcUvcufxXps8TJzm+g5ltwR3IyL
+	Ut8765+TsPKoqW5e8OZLmRJLcUaioRZzUXEiAFMK6cmaAgAA
+X-CFilter-Loop: Reflected
 
-On Tue, Apr 01, 2025 at 07:01:04AM -0700, Kees Cook wrote:
-> 
-> 
-> On April 1, 2025 12:30:46 AM PDT, Yafang Shao <laoar.shao@gmail.com> wrote:
-> >While investigating a kcompactd 100% CPU utilization issue in production, I
-> >observed frequent costly high-order (order-6) page allocations triggered by
-> >proc file reads from monitoring tools. This can be reproduced with a simple
-> >test case:
-> >
-> >  fd = open(PROC_FILE, O_RDONLY);
-> >  size = read(fd, buff, 256KB);
-> >  close(fd);
-> >
-> >Although we should modify the monitoring tools to use smaller buffer sizes,
-> >we should also enhance the kernel to prevent these expensive high-order
-> >allocations.
-> >
-> >Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
-> >Cc: Josef Bacik <josef@toxicpanda.com>
-> >---
-> > fs/proc/proc_sysctl.c | 10 +++++++++-
-> > 1 file changed, 9 insertions(+), 1 deletion(-)
-> >
-> >diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
-> >index cc9d74a06ff0..c53ba733bda5 100644
-> >--- a/fs/proc/proc_sysctl.c
-> >+++ b/fs/proc/proc_sysctl.c
-> >@@ -581,7 +581,15 @@ static ssize_t proc_sys_call_handler(struct kiocb *iocb, struct iov_iter *iter,
-> > 	error = -ENOMEM;
-> > 	if (count >= KMALLOC_MAX_SIZE)
-> > 		goto out;
-> >-	kbuf = kvzalloc(count + 1, GFP_KERNEL);
-> >+
-> >+	/*
-> >+	 * Use vmalloc if the count is too large to avoid costly high-order page
-> >+	 * allocations.
-> >+	 */
-> >+	if (count < (PAGE_SIZE << PAGE_ALLOC_COSTLY_ORDER))
-> >+		kbuf = kvzalloc(count + 1, GFP_KERNEL);
-> 
-> Why not move this check into kvmalloc family?
+Hi Rakie,
 
-Hmm should this check really be in kvmalloc family?
+This is to fix the following broken status.
+https://lore.kernel.org/linux-mm/b8ac8654-92bd-4c08-a3fc-e28a7be5e0e6@sk.com
 
-I don't think users would expect kvmalloc() to implictly decide on using
-vmalloc() without trying kmalloc() first, just because it's a high-order
-allocation.
+So we must add the following tag for this patch.
+Fixes: fa3bea4e1f82 ("mm/mempolicy: introduce MPOL_WEIGHTED_INTERLEAVE for 
+weighted interleaving")
 
-> >+	else
-> >+		kbuf = vmalloc(count + 1);
-> 
-> You dropped the zeroing. This must be vzalloc.
-> 
-> > 	if (!kbuf)
-> > 		goto out;
-> > 
-> 
-> Alternatively, why not force count to be <PAGE_SIZE? What uses >PAGE_SIZE writes in proc/sys?
-> 
-> -Kees
-> 
-> -- 
-> Kees Cook
 
--- 
-Cheers,
-Harry (formerly known as Hyeonggon)
+Hi Gregory,
+
+This patch is already in Andrew's tree. Is the current version okay for you?
+
+
+Hi Andrew,
+
+I'm not sure if this is going to the final version but could you please add this
+patch to stable with Cc: <stable@vger.kernel.org>?
+We might need to bring the whole series to avoid conflicts to stable tree.
+
+Thanks,
+Honggyu
+
+On 4/2/2025 10:49 AM, Rakie Kim wrote:
+> The weighted interleave policy distributes page allocations across multiple
+> NUMA nodes based on their performance weight, thereby improving memory
+> bandwidth utilization. The weight values for each node are configured
+> through sysfs.
+> 
+> Previously, sysfs entries for configuring weighted interleave were created
+> for all possible nodes (N_POSSIBLE) at initialization, including nodes that
+> might not have memory. However, not all nodes in N_POSSIBLE are usable at
+> runtime, as some may remain memoryless or offline.
+> This led to sysfs entries being created for unusable nodes, causing
+> potential misconfiguration issues.
+> 
+> To address this issue, this patch modifies the sysfs creation logic to:
+> 1) Limit sysfs entries to nodes that are online and have memory, avoiding
+>     the creation of sysfs entries for nodes that cannot be used.
+> 2) Support memory hotplug by dynamically adding and removing sysfs entries
+>     based on whether a node transitions into or out of the N_MEMORY state.
+> 
+> Additionally, the patch ensures that sysfs attributes are properly managed
+> when nodes go offline, preventing stale or redundant entries from persisting
+> in the system.
+> 
+> By making these changes, the weighted interleave policy now manages its
+> sysfs entries more efficiently, ensuring that only relevant nodes are
+> considered for interleaving, and dynamically adapting to memory hotplug
+> events.
+> 
+> Signed-off-by: Rakie Kim <rakie.kim@sk.com>
+> Signed-off-by: Honggyu Kim <honggyu.kim@sk.com>
+> Signed-off-by: Yunjeong Mun <yunjeong.mun@sk.com>
+> ---
+>   mm/mempolicy.c | 110 ++++++++++++++++++++++++++++++++++++++-----------
+>   1 file changed, 87 insertions(+), 23 deletions(-)
+> 
+> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+> index 3092a792bd28..ea4f3f3f2cdd 100644
+> --- a/mm/mempolicy.c
+> +++ b/mm/mempolicy.c
+> @@ -113,6 +113,7 @@
+>   #include <asm/tlbflush.h>
+>   #include <asm/tlb.h>
+>   #include <linux/uaccess.h>
+> +#include <linux/memory.h>
+>   
+>   #include "internal.h"
+>   
+> @@ -3390,6 +3391,7 @@ struct iw_node_attr {
+>   
+>   struct sysfs_wi_group {
+>   	struct kobject wi_kobj;
+> +	struct mutex kobj_lock;
+>   	struct iw_node_attr *nattrs[];
+>   };
+>   
+> @@ -3439,13 +3441,24 @@ static ssize_t node_store(struct kobject *kobj, struct kobj_attribute *attr,
+>   
+>   static void sysfs_wi_node_release(int nid)
+>   {
+> -	if (!wi_group->nattrs[nid])
+> +	struct iw_node_attr *attr;
+> +
+> +	if (nid < 0 || nid >= nr_node_ids)
+> +		return;
+> +
+> +	mutex_lock(&wi_group->kobj_lock);
+> +	attr = wi_group->nattrs[nid];
+> +	if (!attr) {
+> +		mutex_unlock(&wi_group->kobj_lock);
+>   		return;
+> +	}
+> +
+> +	wi_group->nattrs[nid] = NULL;
+> +	mutex_unlock(&wi_group->kobj_lock);
+>   
+> -	sysfs_remove_file(&wi_group->wi_kobj,
+> -			  &wi_group->nattrs[nid]->kobj_attr.attr);
+> -	kfree(wi_group->nattrs[nid]->kobj_attr.attr.name);
+> -	kfree(wi_group->nattrs[nid]);
+> +	sysfs_remove_file(&wi_group->wi_kobj, &attr->kobj_attr.attr);
+> +	kfree(attr->kobj_attr.attr.name);
+> +	kfree(attr);
+>   }
+>   
+>   static void sysfs_wi_release(struct kobject *wi_kobj)
+> @@ -3464,35 +3477,81 @@ static const struct kobj_type wi_ktype = {
+>   
+>   static int sysfs_wi_node_add(int nid)
+>   {
+> -	struct iw_node_attr *node_attr;
+> +	int ret = 0;
+>   	char *name;
+> +	struct iw_node_attr *new_attr = NULL;
+>   
+> -	node_attr = kzalloc(sizeof(*node_attr), GFP_KERNEL);
+> -	if (!node_attr)
+> +	if (nid < 0 || nid >= nr_node_ids) {
+> +		pr_err("Invalid node id: %d\n", nid);
+> +		return -EINVAL;
+> +	}
+> +
+> +	new_attr = kzalloc(sizeof(struct iw_node_attr), GFP_KERNEL);
+> +	if (!new_attr)
+>   		return -ENOMEM;
+>   
+>   	name = kasprintf(GFP_KERNEL, "node%d", nid);
+>   	if (!name) {
+> -		kfree(node_attr);
+> +		kfree(new_attr);
+>   		return -ENOMEM;
+>   	}
+>   
+> -	sysfs_attr_init(&node_attr->kobj_attr.attr);
+> -	node_attr->kobj_attr.attr.name = name;
+> -	node_attr->kobj_attr.attr.mode = 0644;
+> -	node_attr->kobj_attr.show = node_show;
+> -	node_attr->kobj_attr.store = node_store;
+> -	node_attr->nid = nid;
+> +	mutex_lock(&wi_group->kobj_lock);
+> +	if (wi_group->nattrs[nid]) {
+> +		mutex_unlock(&wi_group->kobj_lock);
+> +		pr_info("Node [%d] already exists\n", nid);
+> +		kfree(new_attr);
+> +		kfree(name);
+> +		return 0;
+> +	}
+> +	wi_group->nattrs[nid] = new_attr;
+>   
+> -	if (sysfs_create_file(&wi_group->wi_kobj, &node_attr->kobj_attr.attr)) {
+> -		kfree(node_attr->kobj_attr.attr.name);
+> -		kfree(node_attr);
+> -		pr_err("failed to add attribute to weighted_interleave\n");
+> -		return -ENOMEM;
+> +	sysfs_attr_init(&wi_group->nattrs[nid]->kobj_attr.attr);
+> +	wi_group->nattrs[nid]->kobj_attr.attr.name = name;
+> +	wi_group->nattrs[nid]->kobj_attr.attr.mode = 0644;
+> +	wi_group->nattrs[nid]->kobj_attr.show = node_show;
+> +	wi_group->nattrs[nid]->kobj_attr.store = node_store;
+> +	wi_group->nattrs[nid]->nid = nid;
+> +
+> +	ret = sysfs_create_file(&wi_group->wi_kobj,
+> +				&wi_group->nattrs[nid]->kobj_attr.attr);
+> +	if (ret) {
+> +		kfree(wi_group->nattrs[nid]->kobj_attr.attr.name);
+> +		kfree(wi_group->nattrs[nid]);
+> +		wi_group->nattrs[nid] = NULL;
+> +		pr_err("Failed to add attribute to weighted_interleave: %d\n", ret);
+>   	}
+> +	mutex_unlock(&wi_group->kobj_lock);
+>   
+> -	wi_group->nattrs[nid] = node_attr;
+> -	return 0;
+> +	return ret;
+> +}
+> +
+> +static int wi_node_notifier(struct notifier_block *nb,
+> +			       unsigned long action, void *data)
+> +{
+> +	int err;
+> +	struct memory_notify *arg = data;
+> +	int nid = arg->status_change_nid;
+> +
+> +	if (nid < 0)
+> +		goto notifier_end;
+> +
+> +	switch(action) {
+> +	case MEM_ONLINE:
+> +		err = sysfs_wi_node_add(nid);
+> +		if (err) {
+> +			pr_err("failed to add sysfs [node%d]\n", nid);
+> +			return NOTIFY_BAD;
+> +		}
+> +		break;
+> +	case MEM_OFFLINE:
+> +		if (!node_state(nid, N_MEMORY))
+> +			sysfs_wi_node_release(nid);
+> +		break;
+> +	}
+> +
+> +notifier_end:
+> +	return NOTIFY_OK;
+>   }
+>   
+>   static int add_weighted_interleave_group(struct kobject *mempolicy_kobj)
+> @@ -3504,13 +3563,17 @@ static int add_weighted_interleave_group(struct kobject *mempolicy_kobj)
+>   		       GFP_KERNEL);
+>   	if (!wi_group)
+>   		return -ENOMEM;
+> +	mutex_init(&wi_group->kobj_lock);
+>   
+>   	err = kobject_init_and_add(&wi_group->wi_kobj, &wi_ktype, mempolicy_kobj,
+>   				   "weighted_interleave");
+>   	if (err)
+>   		goto err_out;
+>   
+> -	for_each_node_state(nid, N_POSSIBLE) {
+> +	for_each_online_node(nid) {
+> +		if (!node_state(nid, N_MEMORY))
+> +			continue;
+> +
+>   		err = sysfs_wi_node_add(nid);
+>   		if (err) {
+>   			pr_err("failed to add sysfs [node%d]\n", nid);
+> @@ -3518,6 +3581,7 @@ static int add_weighted_interleave_group(struct kobject *mempolicy_kobj)
+>   		}
+>   	}
+>   
+> +	hotplug_memory_notifier(wi_node_notifier, DEFAULT_CALLBACK_PRI);
+>   	return 0;
+>   
+>   err_out:
+
