@@ -1,109 +1,114 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1B2A1C860F
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 18:29:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 314CA19E99A;
+	Wed,  2 Apr 2025 18:30:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743618565; cv=none; b=a+vVEY6tXFNQEWDZ3mNGc2df3tRP+gT2uv9Sf3CxHxJsViz4jedSwldjAe93l7NgLIdeuoeg5PL9rw3Iwk6c1p5QncTCzwQ/hIyRGq+J0kFNloOaVEq//3KGTOosOO7AfcV257N4J8H1uOgTiN4YGcCGC4h7ENpGXFgM5qiGZFY=
+	t=1743618610; cv=none; b=b0Bbfpv2l6FxqZfgJNH4uXBSdPDxGiS0ys3pdH+NyqPceCrlYxVDNGk+3RohSnz8mWN4WhQhthffLQ6rp0OgtzTvLx6B2OC1w3hQ1uutWJIjQyGqL+Y4/8n9Qvq9FSbPVa1X0Yiyp4PoKz4FiPWVmfuMrH0ozdPFSXb6Sf+UAh4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743618565; c=relaxed/simple;
-	bh=UGTmqaAwJLatlzaq1p3+HmP4fgE7ybtpG6cAdyQKEwY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Z71z9QWev0JyKb+cTytNAnYyKaV3yH/6st8nuhXDZsXPqUmBDpEFHeO2rT7wrl8skXEseTmigzZiK+ukGedVwBI0cM2hQbd09QKJ6U8LWmEHxxFXaMLb3gT3ksoqEKbFze57RdpjlFPwymxc9Xu2f1a6zGr6D0YaFyQHW9xq5LI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=bBhSVL37; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1743618610; c=relaxed/simple;
+	bh=MIYZp0RpSxC/dK550QikaiN/zkIiyI2QWdLzOBOBqpY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K9ycq9qveOL/s3+rmS10f1hBnB++5RUhLdbXnelYG/UpkBOHhgloEz+ULK17UGb3sh6teZu7umsh/B3+FjkicatdEkmI7HKqw2KCONjGfOeNUbLFRPSziAILhu4iTROCzlRpwg/cJvM8YXxnNGjXFKucX4zTt4OmmVAmdBhmJZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=SZdI0vBf; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="bBhSVL37"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5e61da95244so193311a12.2
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 11:29:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1743618561; x=1744223361; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZhDeiG3XZDDBldCAqMcweB0+kts9uc1sZmovY354eSM=;
-        b=bBhSVL37gY8PZ1F0LFxAUHVrkZCDWiQekYyG/kefA/6pi2Tg8pW3uZcq5adQcI34yO
-         LW5ZD2DiTspluBVNYOUgHhvJCP4ooO+9ehobEDedDEvkuNSTxcXTFcI+eOZN6EilEnV5
-         o4BbFmPzgZI4iUz4SVSwqCOeOVPDAfihw9fCs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743618561; x=1744223361;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ZhDeiG3XZDDBldCAqMcweB0+kts9uc1sZmovY354eSM=;
-        b=PPt9R0BzxAEX868LH73lPCOh0beXQpY0ufg4VH4jeKIotYPVuI8erTtbSznIrfXbv8
-         iWd/Fpjohch/6wPKpmFypecSRLmaIu6RW/rTV0ZFk8u5BhBxiqTLxN6qQfR+GVFHB+x/
-         R8ULuPQ1xYsRzZkO0chbKYHWYhqs7nLu0odUhTkaGE4bZy5lmsbIX8dB6icntpAzHusl
-         oF/maiZEMHLZL14jjeh/lKFNwm/Nj4m/A+8DW09qaVKHXQmuWTbrAg0vC7L5TmwgOS3r
-         wHc3Q4owtsMFpUdWs++zbpxl6zv0zPufkqjQrgFX/LzvuVmuZEfaahCOI3In5NCyqPBu
-         +HKw==
-X-Forwarded-Encrypted: i=1; AJvYcCV3a2gr1gvktGP9Hay89g+HYQgLFN3suyuo+dN7AKte1dyYa8l1XvO++C6bLNQOBn9WULUitlbB3NRXp7g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzCRroSerJihSp7VV/WQQlBnpMNwS9qDVtm1wp2uJtBTRAKaM2r
-	GCFBSvWfKu1eKst9U6TFJNmAP/rjUZYVu+L7cXOdX1sjeJPquYG0cwu4keDTn9j8S3rbTQFxV6Z
-	BNs4=
-X-Gm-Gg: ASbGncuoNAOqCWpbyPRZoomuoejEc6yExBx0NAs0UUGm4EWsGDzlzJKuHGQBqATPpeA
-	xCFDbL/6j92b6UB9gXci6rqkHT3SRhd08sfzU/st1W0ODM4oAP974joV3BhNzE/MChMc7oXERoA
-	rGDa1+XlSv9rjhVsAjzIQElN4m8+oSZuEySINk6Gm4q4n7dAhx3MlPW4mSzPpyGex/X6Buxjnfr
-	74sfcd/xuTsuH6qPyH5GfDO3mjbwJfVyx1YvtDttclFE2BllYfDL9DtInmzheeXJQgXtv0666H6
-	O+/1L4eBedtCGhERX9LclmL6K1ZU6mjdtFrxi4NbXhLYm8BzuqsF+wAhlEdWGD5sxggdaXinR93
-	CPjjHOrv1Jd+x7Q6xShbPUbLgkS32Dw==
-X-Google-Smtp-Source: AGHT+IHrlUwDRhPY2Hfb/vEHmqLom1Y9tFlXm9BurUuAqEaQoLHTzhczKf7hLUH37CCB7c7mONVFgw==
-X-Received: by 2002:a05:6402:2744:b0:5ed:79cb:116f with SMTP id 4fb4d7f45d1cf-5edfdafccefmr16453397a12.25.1743618560695;
-        Wed, 02 Apr 2025 11:29:20 -0700 (PDT)
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com. [209.85.218.41])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5edc16aae90sm9052660a12.15.2025.04.02.11.29.19
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Apr 2025 11:29:19 -0700 (PDT)
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ac2c663a3daso11708166b.2
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 11:29:19 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWaVJ7MKpk+ynfOgH2R+0ANfpX5aZ7P/MAzGQzxJXr0UlFLkQJnn9MHPmrOGQiyoat7zU0XO1pTZGxNqfs=@vger.kernel.org
-X-Received: by 2002:a17:907:97c9:b0:ac4:3d0:8bc6 with SMTP id
- a640c23a62f3a-ac7389e1864mr1611206166b.13.1743618559154; Wed, 02 Apr 2025
- 11:29:19 -0700 (PDT)
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="SZdI0vBf"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 9E6E340E0196;
+	Wed,  2 Apr 2025 18:30:02 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id XOtpVDaZ6P3S; Wed,  2 Apr 2025 18:29:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1743618598; bh=jhDUDmM64c22Ocj1QmmY4kruyZeU8W2YObwLlnin59E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SZdI0vBfe5b5fSq+dU/Nkw8aec5CNiB1tK1BWVP/nZwIo+0CNnmN1T4mpcXp+hWzZ
+	 x3Wd9O0AM9YfFpbWB7DnnSJ5jO8/VFknTEzLiM2cB1CQXnoPG43EQ+Kd/TQLKVpY+R
+	 sipVJ+sau6oZyU1j+O4uk6tcdRUHNjRKZPgx9POf/pRW1IUw0tcMHLqSzIOUwRcAtO
+	 /ReoHNqNoBiJB3Byf0MxbjttxqYafKUGjGsDm2SeVeShPrF/+L6N1sDwraS4A43dSW
+	 GiMJRG95JKjT+LcqJfFV6zO/VzwgGXs+Qb0r2E+T//Euzo2cHFSj8TBrEgcTRRw8Nw
+	 9RKoKuy4XN7nrud2B+gRcJgCcc4wuwFM68Ei25xt4ydmxjHgfq8xPI8o7dS6PvIa5+
+	 pfCkkF0GQ9hR1AblLIhJneWwhRRUG2zgshpdShnPknpmKLpWedTmFVUBAQhQCM1hSs
+	 nkNAp47iyqviNGOj/DAJsbmrnpVtOAXr8Ctjd6iKL3i69baIDFJkWWJbIbhYlNf6zT
+	 +GP0qSk+LTw+uuhN0mIbbL/qESbcS59b8gdtT4n3iWcuKoId2JPGgsNbg2cSnAY6t6
+	 ebOT+gjFhWGNWz+69GXtg5ZI6VbFIdqtzCpkqtvv3K8S6q5s3i0PT8vAvGr0sB+MyW
+	 C5zplnk0AC9EIUcIx3H39dmw=
+Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 1E09140E022E;
+	Wed,  2 Apr 2025 18:29:34 +0000 (UTC)
+Date: Wed, 2 Apr 2025 20:29:28 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, amit@kernel.org,
+	kvm@vger.kernel.org, amit.shah@amd.com, thomas.lendacky@amd.com,
+	tglx@linutronix.de, peterz@infradead.org,
+	pawan.kumar.gupta@linux.intel.com, corbet@lwn.net, mingo@redhat.com,
+	dave.hansen@linux.intel.com, hpa@zytor.com, seanjc@google.com,
+	pbonzini@redhat.com, daniel.sneddon@linux.intel.com,
+	kai.huang@intel.com, sandipan.das@amd.com,
+	boris.ostrovsky@oracle.com, Babu.Moger@amd.com,
+	david.kaplan@amd.com, dwmw@amazon.co.uk, andrew.cooper3@citrix.com
+Subject: Re: [PATCH v3 1/6] x86/bugs: Rename entry_ibpb()
+Message-ID: <20250402182928.GAZ-2CCBR2BAgpwVLf@fat_crate.local>
+References: <cover.1743617897.git.jpoimboe@kernel.org>
+ <a3ce1558b68a64f52ea56000f2bbdfd6e7799258.1743617897.git.jpoimboe@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAGudoHEV-PFSr-xKUx5GkTf4KasJc=aNNzQbkoTnFVLisKti+A@mail.gmail.com>
- <948fffdc-d0d8-49c4-90b6-b91f282f76c9@citrix.com>
-In-Reply-To: <948fffdc-d0d8-49c4-90b6-b91f282f76c9@citrix.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Wed, 2 Apr 2025 11:29:03 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wg4syfXPBgQhq50ePOnB=zP9Jk1U+GmjXWmDMwcQ7X7WA@mail.gmail.com>
-X-Gm-Features: AQ5f1Jq_AlPUNJYvqZOLNAUo4-IhVSzOQBj_SYuotHcClMBbp19xe924coazHiU
-Message-ID: <CAHk-=wg4syfXPBgQhq50ePOnB=zP9Jk1U+GmjXWmDMwcQ7X7WA@mail.gmail.com>
-Subject: Re: [RFC PATCH] x86: prevent gcc from emitting rep movsq/stosq for
- inlined ops
-To: Andrew Cooper <andrew.cooper3@citrix.com>
-Cc: mjguzik@gmail.com, linux-kernel@vger.kernel.org, mingo@redhat.com, 
-	x86@kernel.org, "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <a3ce1558b68a64f52ea56000f2bbdfd6e7799258.1743617897.git.jpoimboe@kernel.org>
 
-On Wed, 2 Apr 2025 at 11:17, Andrew Cooper <andrew.cooper3@citrix.com> wrote:
->
-> Taking a leaf out of the repoline book, the ideal library call(s) would be:
->
->     CALL __x86_thunk_rep_{mov,stos}sb
->
-> using the REP ABI (parameters in %rcx/%rdi/etc), rather than the SYSV ABI.
+On Wed, Apr 02, 2025 at 11:19:18AM -0700, Josh Poimboeuf wrote:
+> There's nothing entry-specific about entry_ibpb().  In preparation for
 
-Yes. That's basically what 'rep_movs_alternative' does so that we can
-basically do a
+Not anymore - it was done on entry back then AFAIR.
 
-                ALTERNATIVE("rep movsb",
-                            "call rep_movs_alternative",
-ALT_NOT(X86_FEATURE_FSRM))
+> calling it from elsewhere, rename it to __write_ibpb().
+> 
+> Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
+> ---
+>  arch/x86/entry/entry.S               | 7 ++++---
+>  arch/x86/include/asm/nospec-branch.h | 6 +++---
+>  arch/x86/kernel/cpu/bugs.c           | 6 +++---
+>  3 files changed, 10 insertions(+), 9 deletions(-)
+> 
+> diff --git a/arch/x86/entry/entry.S b/arch/x86/entry/entry.S
+> index d3caa31240ed..3a53319988b9 100644
+> --- a/arch/x86/entry/entry.S
+> +++ b/arch/x86/entry/entry.S
+> @@ -17,7 +17,8 @@
+>  
+>  .pushsection .noinstr.text, "ax"
+>  
+> -SYM_FUNC_START(entry_ibpb)
+> +// Clobbers AX, CX, DX
 
-but we only do this for user space copies exactly because we don't
-have a good way to do it for compiler-generated ones.
+Why the ugly comment style if the rest of the file is already using the
+multiline one...
 
-If gcc just did an out-of-line call, but used the 'rep movs' "calling
-convention", we would be able to basically do the rewriting
-dynamically, replacing the call with an inlined "rep movsb" where
-appropriate.
+> +SYM_FUNC_START(__write_ibpb)
 
-                 Linus
+... and why the __ ?
+
+>  	ANNOTATE_NOENDBR
+>  	movl	$MSR_IA32_PRED_CMD, %ecx
+>  	movl	$PRED_CMD_IBPB, %eax
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
