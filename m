@@ -1,97 +1,103 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E77A23E353;
-	Wed,  2 Apr 2025 14:12:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E3A2C23645F
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 14:12:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743603140; cv=none; b=oxxkqOLjJPhZvGZTWgCLKx331V7gJv0CZnKGl48li19jUVxpQ3M0k1O8zAVfPEjuLDVo0XoP/Dl6a7gcpT9ea30Yb398mdqW0U8i9996OX+Gepiqs4luExmUnihjDqDKOPJbKXGII7YcqeiT/VdpNChRpk/Gch+vzvIw9Ykc2i0=
+	t=1743603156; cv=none; b=JzgNtJu1FAIL79iImVAEOiw5wA/bHs3lidH4IfTSJYJXIIewjOFhC+FEOHO7ze/7U9/ZA19CCbc+b02b4Um7hPI8uzcGAf3YcVh+cb74P0Ou7otgAoAQvMTNNasKH6KOmOANVPZGhPGNQSKsPwNTtDSwIHnB6xzO2nBmAHOmURw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743603140; c=relaxed/simple;
-	bh=8pobs8kkVx5NrgVJv8sO1zgsqGx5B98jV6dE3pZbOvU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=ZF+j4CH7Rj+HBKxk+WgbBSsr7E8dPxzoOhXlKHE171Tcs8DCtui8dX8Y0uMOyr8UBGJOIwfZy+A/zJUoCp5L8iJZBLpasDV56zy0x35At3pXYEcUtmxcHUMxYmbmznQh+/lMWcPqsxiuNgsZUDAbfRCN0njypsD+f22m17LoXCQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=miYnPYII; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="miYnPYII"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 532ECCxH3982460
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 2 Apr 2025 09:12:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1743603132;
-	bh=kenBoeloxYsujPtfJZxqmcFSGl2ijQbloYkE6+412Dw=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=miYnPYIIa2dG2izACaJVukBom5N/pZyv4y0h6HKrwpZHfs2RMKaUpe6S9fzqi3BNu
-	 ABDbsWrULj2XTYbp+/9Q36MyxgZ4grZngATXB8E9MgEYfLAvTib2kepHJfhuOnhqJU
-	 QLz9ukHvqaMmGBU7CVVsC3Hxr2YtjaatuA4q/N6c=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 532ECCZb020524
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 2 Apr 2025 09:12:12 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 2
- Apr 2025 09:12:12 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 2 Apr 2025 09:12:12 -0500
-Received: from [172.24.227.40] (pratham-workstation-pc.dhcp.ti.com [172.24.227.40])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 532EC9we090321;
-	Wed, 2 Apr 2025 09:12:10 -0500
-Message-ID: <c86a5251-a165-41be-9238-53fb133206a4@ti.com>
-Date: Wed, 2 Apr 2025 19:42:08 +0530
+	s=arc-20240116; t=1743603156; c=relaxed/simple;
+	bh=b4Rcuad7D/AGbMj+ruyRQoNngBSyrQjGent+DGdk5fg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DbpClrl0YVDiSV+xIao7TjB8BDlF0CNiHj1u3d8IS6nWU4nqw+39evPfTeX9CJVSlV4hrpN5iYs2wTVOE6QFkNuj6zQUuyu7tM6Oe/qQZSyiQzUp53Jqbepu2nXkrDhKI2WExisKdmf64aS5kBzmVmLFLYvKf+/n+ETC7zVK90Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2DC3F1007;
+	Wed,  2 Apr 2025 07:12:36 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C61B23F63F;
+	Wed,  2 Apr 2025 07:12:32 -0700 (PDT)
+Date: Wed, 2 Apr 2025 15:12:28 +0100
+From: Leo Yan <leo.yan@arm.com>
+To: Mike Leach <mike.leach@linaro.org>
+Cc: Yabin Cui <yabinc@google.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	James Clark <james.clark@linaro.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/3] coresight: core: Disable helpers for devices that
+ fail to enable
+Message-ID: <20250402141228.GL115840@e132581.arm.com>
+References: <20250402011832.2970072-1-yabinc@google.com>
+ <20250402011832.2970072-4-yabinc@google.com>
+ <CALJ9ZPOvcxswvfbpWkXgJ=WL+HLa33nm0ZzHogYNZ9keXfi1MA@mail.gmail.com>
+ <20250402133232.GJ115840@e132581.arm.com>
+ <CAJ9a7Vg4DGzPhnSBh2taTgUTORMY3GUPpJY2bHjkMdFB1=wP=Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC 1/2] crypto: ti: Add support for SHA224/256/384/512 in
- DTHE V2 driver
-To: Herbert Xu <herbert@gondor.apana.org.au>
-CC: "David S. Miller" <davem@davemloft.net>, <linux-crypto@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Vignesh Raghavendra <vigneshr@ti.com>,
-        Praneeth Bajjuri <praneeth@ti.com>,
-        Kamlesh Gurudasani <kamlesh@ti.com>,
-        Manorit Chawdhry <m-chawdhry@ti.com>
-References: <20250218104943.2304730-1-t-pratham@ti.com>
- <20250218104943.2304730-2-t-pratham@ti.com>
- <Z8QSVLoucZxG1xlc@gondor.apana.org.au>
- <f7105c10-7e36-4914-a9e8-e83eb61f0189@ti.com>
- <Z-1BnSGNab34W6eU@gondor.apana.org.au>
-Content-Language: en-US
-From: T Pratham <t-pratham@ti.com>
-In-Reply-To: <Z-1BnSGNab34W6eU@gondor.apana.org.au>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJ9a7Vg4DGzPhnSBh2taTgUTORMY3GUPpJY2bHjkMdFB1=wP=Q@mail.gmail.com>
 
+On Wed, Apr 02, 2025 at 02:50:22PM +0100, Mike Leach wrote:
 
-On 02/04/25 19:24, Herbert Xu wrote:
-> On Wed, Apr 02, 2025 at 07:01:25PM +0530, T Pratham wrote:
->> How are you planning to restore such states in import if the export is
->> to be made compatible with sha512_state? Do you have any pointers for me
->> on how to change the import/export before sending the next revision of
->> my driver?
-> In struct sha512_state buflen is simply stored in the lower bits of
-> count[0].  So when you import count[0] you can derive buflen from it
-> as
->
-> 	buflen = count[0] & (SHA512_BLOCK_SIZE - 1);
+[...]
 
-Thanks! I'm assuming then count[1] will store the digest count in sha512
-here.
+> > > > @@ -465,7 +465,7 @@ int coresight_enable_path(struct coresight_path *path, enum cs_mode mode,
+> > > >                 /* Enable all helpers adjacent to the path first */
+> > > >                 ret = coresight_enable_helpers(csdev, mode, path);
+> > > >                 if (ret)
+> > > > -                       goto err;
+> > > > +                       goto err_helper;
+> > > >                 /*
+> > > >                  * ETF devices are tricky... They can be a link or a sink,
+> > > >                  * depending on how they are configured.  If an ETF has been
+> > > > @@ -480,14 +480,8 @@ int coresight_enable_path(struct coresight_path *path, enum cs_mode mode,
+> > > >                 switch (type) {
+> > > >                 case CORESIGHT_DEV_TYPE_SINK:
+> > > >                         ret = coresight_enable_sink(csdev, mode, sink_data);
+> > > > -                       /*
+> > > > -                        * Sink is the first component turned on. If we
+> > > > -                        * failed to enable the sink, there are no components
+> > > > -                        * that need disabling. Disabling the path here
+> > > > -                        * would mean we could disrupt an existing session.
+> > > > -                        */
+> > > >                         if (ret)
+> > > > -                               goto out;
+> > > > +                               goto err;
+> 
+> Going to err here is wrong. The comment above specifically states that
+> we do _not_ want to disable the path, yet the new code flow disables
+> helpers.
 
-Is this the same for SHA256? Since there the count is not an array, so
-is it then count = (digestcnt << 32) & buflen? 
+Okay, now I understand here avoids to disable source and links for a
+sink error.
 
->
-> Of course when you're exporting don't forget to put buflen into
-> the lower bits of count[0] before you write it out.
->
-> Cheers,
+> then falls through to coresight_disable_path_from() - which
+> the original code avoided and which also disables helpers a second
+> time.
+
+Seems to me, the conclusion for "disables helpers a second time" is
+incorrect.
+
+I checked the coresight_disable_path_from() function, when the current
+'nd' is passed to it, it will iterate from the _next_ node after 'nd'.
+
+   /* Here 'nd' will be skipped and start from the next node */
+   list_for_each_entry_continue(nd, &path->path_list, link) {
+       ...
+
+       coresight_disable_helpers(csdev, path);
+   }
+
+This means the _current_ coresight device (here is sink device) will
+not disable its helpers.  Could you confirm for this?
+
+Thanks,
+Leo
