@@ -1,70 +1,71 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6197C237702
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 12:06:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 051CD238144
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 12:06:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743595578; cv=none; b=e4upu/WQGvuJRDDf5Fq7B+YebyJijnLMONDCkrxapXHcvsaROkpXxR0TcGU7a6iu6tILcWCXj1cI/o7X0eIrVW8LboOhg0d14QqtDyCFVh/CTimAs1S+LHo35/BmMqcZ8FvN4zBlwFgt+DxBK3I5CbxoFJQwczwfM8k/yNYxjt4=
+	t=1743595584; cv=none; b=APM2lDyrLhmWdbbWC8+lx9pNFdDN2YaF1K7gGYKkPr9pDhtUgiQ9tinW+YgitBQVJ/e60CDKKj8uJ0SjdJNC9Cq3I+J5YUZW3jEd1lUmowZh5J0R31bjsfWKJy+bsWCxfabY12pmETHsEFHwZ7Wa0ZcLINiNLt/Xgxa88HbfJXI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743595578; c=relaxed/simple;
-	bh=/uTmJ9UsYWYEJS6myozRG/JY4Df0PtAl0v3aecAqDDQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=BBa8iFYou9tucHqjPOVihLtEBHbFbfUZMOd4CSgPCJ69j0z4k96HFzOIU0oVoeDuOnQUHVxhI/QH//VtE6jPesCEjzmJbAkrZMjFZh/ARImP/wMkTh92pj49FYs3txxWMDN2BS0DZF8U8xiPJi0swsxlTRO5EG9AYb0uOqDWvPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mvista.com; spf=pass smtp.mailfrom=mvista.com; dkim=pass (1024-bit key) header.d=mvista.com header.i=@mvista.com header.b=Z6WlDGmn; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mvista.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mvista.com
+	s=arc-20240116; t=1743595584; c=relaxed/simple;
+	bh=NqsU/+7oxZL1YCnN3qRWYdYhLF155n2ACcMqk7+Lz9c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tPDjProv3o88327IJJeQ2bkIYFLjB+UHtxxxqsZJQJ79Q4qSPCYmiuKqJW3DKWoZpwz2NsRzos1CwUsgPgX7j+1UZVe3BMX/jJvDmCkS/XIVX2b+gmdBApM8+B/ddma5MRXsc1+IaMn4zoDCYFhbtb/kzh5escZ++sXPY3elz64=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hyA4rq+R; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mvista.com header.i=@mvista.com header.b="Z6WlDGmn"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2243803b776so65035595ad.0
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 05:06:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hyA4rq+R"
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-54af20849adso772389e87.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 05:06:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=mvista.com; s=google; t=1743595576; x=1744200376; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/uTmJ9UsYWYEJS6myozRG/JY4Df0PtAl0v3aecAqDDQ=;
-        b=Z6WlDGmn2k/VWb1EBVXZp+HZSPU7mZTRuGKgJ2faAgSVO4pujUZxuDaTq26dvsS+c+
-         Pikcv5ka/wQKXlT6NyNg4p3lnpnqS4epDYv4xW28WbSbiAPXBIbuSDDQoNDSSY+faQpC
-         +ZMUh3zbqz0w9VeX7bD7TBdsLDPbdaP+I4mJo=
+        d=linaro.org; s=google; t=1743595581; x=1744200381; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=zEG4gecI8tD+Jl0eEYFS/WRbrree3429dPKL1Yhc7hE=;
+        b=hyA4rq+Rv0BaMBUL7rFuBVDKN/CL4czjJlF/soLUu/NDqDAPgZv7p05t0Hr30tsVWq
+         T24ID3iRivFwbDgPUpEvodTxPddaF4vacyV9kCTjrNfJafp+soVcxJXy2qv3+ir8diuN
+         SFihR6ZvAYRQVkz+OpiMRBdCDHln368SsqzulhTau1FaP4tIcACWlqn/zHNcAItBvVjn
+         wgEAminPRWgrRn5uJvR7xNqqMwEveq9TippRF3AKuOE5FXNF5m0uOsIdZOCugwWlqR75
+         F/GFgfUB7SWmzbxDnoxu7x7AwrSdU4BBCbx1V3+yHPkOvZ43P81KjtxHEO2vFhpi/bcF
+         jxwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743595576; x=1744200376;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/uTmJ9UsYWYEJS6myozRG/JY4Df0PtAl0v3aecAqDDQ=;
-        b=WuriQLBCa6r0jZxO9i9DjBPgX7m/wB1DJTDENmJx9H0dZUphsb92GTc66/JqUwqvvo
-         2e/An9/qpV8BI/mGpcjOR7EcSzhD3wUV/u+nEPyfC+yM2OhmSb2hJGZRRG7kB8CwxmQh
-         jomJs8uLYOCaog+SAegbJzhofmsQ3dAjUEGjtP9KP2ckChCe/lrcEhQ/xBvWgBCafWhF
-         0uqIAIhnXbX09Lq577lRXRv4IInQ24K31S0+deHxDSyuY9dR/WV4JB6nRbh8lgh44BvG
-         CjJ+dTdbpQXd0yuTVOIWq675sq92GOtKhHb2P0VPJ0nTU3VoFsVP93SU3NeU+8ny2DpU
-         7JNA==
-X-Forwarded-Encrypted: i=1; AJvYcCUg9CmdNFgZ9Jfg5KbEnYwFTw2pgjzUi4+7emIz590zg7DWloo9wRbtQ7IdfrwGV9tZXuv5m8KMe1DyRv8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxTUbu1lzW89+cA81LZFWROt4BkmhOImpuPMKmIqOVRh+QA5R61
-	npqr1KGfOcGIXQL362AsWQ015e5BwGdxMAnSTnxt0hbayxig2FTx+ZA/ZrQSrwU=
-X-Gm-Gg: ASbGncuXhIaSQ814VzmfYst8/I0vZUcOIBKFNdZWAVK0GjQTm+esPxlSq+rzjtlzXNN
-	z10TbHPgHA71iZ6oh5hp34C5jhctUIkzqunJuI+36+7QKPCZCUZNKzpCBqlMwEvxNhw+pIUe9WL
-	YCuC2RCJvLy9YN5N2Q0jYQh25JpTDYX+6wG3HDAIC8GxFCujjrCNTM1MYU4FaWsfh2aNK0/Ekpq
-	eqdKHLWviFKl+fVH6rqDs3cNnBTl/np1oh/KwbkW9rPzsOCBGa6pZktDsGzqbv4+XR4GMY6m17u
-	NPM/HBlzUBR9QdgKPIDOtKzycWAE7qIOzS7dg/o4ExDDwbhPbvYWV+oSCe0=
-X-Google-Smtp-Source: AGHT+IG64VGCl5I7155VMIOLlEDzBLsaOanZgQIzLZTNCCSEsbqCU6XYP90rg4jT/vHTLE8X1okjyw==
-X-Received: by 2002:a17:902:ce08:b0:227:e74a:a057 with SMTP id d9443c01a7336-2296c879757mr33719785ad.44.1743595576545;
-        Wed, 02 Apr 2025 05:06:16 -0700 (PDT)
-Received: from niyas-desktop.mvista.com ([182.74.28.237])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291eedd2bcsm106477375ad.65.2025.04.02.05.06.14
+        d=1e100.net; s=20230601; t=1743595581; x=1744200381;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zEG4gecI8tD+Jl0eEYFS/WRbrree3429dPKL1Yhc7hE=;
+        b=bHP4yhvutjPh6c+00kyhI+fXDnDxRuijlfowEQDOBCRQIX+ODopEnwEVz8U1XL+GXY
+         jnuoTg7a6fLJRDj1+qIIVXpwqRWHVW6bli1CAKRaIghAVZP97sl8Q+c9XuCyxUI/ONKJ
+         nFmtldD9zbymIi5D5moS42+uL3CAEjX609p24j36qSCeGj17++ca4ENieN60z/ZpPmfn
+         wUMvTIQEu4PHeSxLQVk/jExKsFZ8UI4XD+uLYICmTmaJtUWnBE87YUSDFqjU9ZgnxdXE
+         1bzs/LaOWpUh91uB54hAtzXaj5ZtEcu5imE2iJkDf960scjFhxOr5JZRkxWA1DbLGku5
+         SYmA==
+X-Forwarded-Encrypted: i=1; AJvYcCVvBzJAw6VWSzNXBDJF7Ye/Yy/2OjdLpDlDxCWiZzV6koUuYx4Bf09wDBb+y7Kl6y0njT9neUbko5pR24k=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+eHXtWS4shaYlu32rQ2rKjj+IrHGJ2geXYab8QACrOlh6lolb
+	J7E02yU+cP5jsnuCUMpN22fkKUrq89QTksrzoCqTONb7jsNqBWSpYZiDzkfgCiFr0+6isAP+wf+
+	D
+X-Gm-Gg: ASbGncvIs2mUUOJcEhdrcSRHCKAf45NFCOnmYwwlwIUv0sqUwCE+6oC9Aa2LxM3wrJ7
+	6oIZst4TxV49tUE/t8N0d4b0Mi1RcTdea8aysf/bz1SHhWjMihio1iozlrShilbDVqC1N96X68n
+	2418K+Gwtuu72/AglTSYQLpvEIq6XNHDZkN09yP5VwAOMgbHkY4Jf3rXQ/jb6HoiaueiPZoEdPH
+	LlfhZYV+eq4L5z424Oiq2x7yhx2Kf54OX6wE0dW/+3bW76T4psPQKpXFed+Dc/K5vByi1wZrzoi
+	crks0PwAT+wRpbDnTW3g0H8Cyi+lFxQXAbCfjO1FO7/YxXCVPGLse0aTz8xX+8zBqfjrV7v+LSV
+	c0s0lcKSoMdFwmopk8KI=
+X-Google-Smtp-Source: AGHT+IHAorU5HIF63fzGnkivetyexueQYMJ3ZBC4Gy8XB0gdbMI3Klf829/ZF7PMB3Gu1bJ9VZlDzw==
+X-Received: by 2002:a05:6512:3d28:b0:548:878b:ccb3 with SMTP id 2adb3069b0e04-54c1a1daf7dmr682827e87.25.1743595581025;
+        Wed, 02 Apr 2025 05:06:21 -0700 (PDT)
+Received: from uffe-tuxpro14.. (h-178-174-189-39.A498.priv.bahnhof.se. [178.174.189.39])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54b09591bc4sm1594858e87.166.2025.04.02.05.06.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Apr 2025 05:06:16 -0700 (PDT)
-From: nmydeen@mvista.com
-To: alexandre.belloni@bootlin.com
-Cc: linux-rtc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	cminyard@mvista.com
-Subject: Re: Re: [PATCH] rtc-m41t62: kickstart ocillator upon failure 
-Date: Wed,  2 Apr 2025 17:35:45 +0530
-Message-Id: <20250402120546.336657-1-nmydeen@mvista.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250401090454fb0ccf16@mail.local>
-References: <20250401090454fb0ccf16@mail.local>
+        Wed, 02 Apr 2025 05:06:20 -0700 (PDT)
+From: Ulf Hansson <ulf.hansson@linaro.org>
+To: Ulf Hansson <ulf.hansson@linaro.org>,
+	linux-pm@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] pmdomain: core: Reset genpd->states to avoid freeing invalid data
+Date: Wed,  2 Apr 2025 14:06:13 +0200
+Message-ID: <20250402120613.1116711-1-ulf.hansson@linaro.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,5 +74,32 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Thanks, Hope it meets the expected
+If genpd_alloc_data() allocates data for the default power-states for the
+genpd, let's make sure to also reset the pointer in the error path. This
+makes sure a genpd provider driver doesn't end up trying to free the data
+again, but using an invalid pointer.
+
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+---
+ drivers/pmdomain/core.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/pmdomain/core.c b/drivers/pmdomain/core.c
+index 9b2f28b34bb5..c179464047fe 100644
+--- a/drivers/pmdomain/core.c
++++ b/drivers/pmdomain/core.c
+@@ -2229,8 +2229,10 @@ static int genpd_alloc_data(struct generic_pm_domain *genpd)
+ 	return 0;
+ put:
+ 	put_device(&genpd->dev);
+-	if (genpd->free_states == genpd_free_default_power_state)
++	if (genpd->free_states == genpd_free_default_power_state) {
+ 		kfree(genpd->states);
++		genpd->states = NULL;
++	}
+ free:
+ 	if (genpd_is_cpu_domain(genpd))
+ 		free_cpumask_var(genpd->cpus);
+-- 
+2.43.0
 
