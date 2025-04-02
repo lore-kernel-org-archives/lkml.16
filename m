@@ -1,181 +1,130 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from air.basealt.ru (air.basealt.ru [193.43.8.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A87E13A41F
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 15:51:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A0796AA7;
+	Wed,  2 Apr 2025 15:55:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.43.8.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743609116; cv=none; b=CHydKHuK4LxH6Yktdx1uA5ITI7bvddO+BfxEKUPCqEJCM70BzGuNvOm+IRz1K5fsc2TyGTbAycjX/lizYPDQMdefQGojcgf/my5Iic0Z9ksyMHwTsliGFcRhN/BMQ8LfOT4XZEIy3nf7pphfqcs5d/Co9Nwt6dq+nzeqL3T+sXg=
+	t=1743609309; cv=none; b=frv7oXuXRuuf0gXfvTDfRb3gVJSlzK1a/6iCgL48zEt0Fnqu2IMOP8De4nDcwqXSgHXFQ7KsdhpawofPy6RI+t8bOcncavIf0StXtQEbJDXF/YVmulD0yCcg4uk9GINf8gDNpdsmoMpkGILkLhMNLcpycoQ1drmnpKOPossZ/Qw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743609116; c=relaxed/simple;
-	bh=S6XMQ2AU39hYH5ah1HWGtNLnyoFQLpd8n80nkv6ZI4o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jNqCNZr3bHvBTooCC1hhOlLC++TSaxiHB9TLFqNr7LFaVzjOsqg7AC1VSM25/76Evd90OFsZ7cDmjradn1yE+fdJypwip0buPPTXE9HNonqrPMijaLrW9XQ3xs8i/fRZ46QPWgbZO85OcT5kE6Tar1AwWvFm/yJJp5Lktc7mABM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hab2WSqa; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hab2WSqa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743609114;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gjP/k3uVElhyu6yWy2GkiN2O11Nh5PnXFm8Rjgvf9F0=;
-	b=hab2WSqaq0m7CvRBlT/gpgYOJn13Ws3NinPtGDnDzOtA/Q0is4R+FwwwwMwUmmHqBs25O9
-	k3E6SbiAld3miH4PFvt6V0lI/Ak6PFIY+skl+HS3YMShn7ReFnaAeOjPHDgVzQF4aBvQn8
-	EakDjjq/kIzUf0aqXe2N8Z3q/NTBCew=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-335-F4UbrA90MkiVh7r0rUVoiw-1; Wed, 02 Apr 2025 11:51:52 -0400
-X-MC-Unique: F4UbrA90MkiVh7r0rUVoiw-1
-X-Mimecast-MFC-AGG-ID: F4UbrA90MkiVh7r0rUVoiw_1743609111
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43cf5196c25so34418685e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 08:51:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743609111; x=1744213911;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gjP/k3uVElhyu6yWy2GkiN2O11Nh5PnXFm8Rjgvf9F0=;
-        b=UMXCXtuM91JznEoFRQoZdVj5YRyx9z9AUl2EhsPKRJ83m/rIHKPUGTiX3s41yy909y
-         ruNPWkrma7VIsCNxi3vWeYL7jZWfOY5NSRJV4wNphrALd3G9M70tL5Z19G+PX3em9J2h
-         l9qhf+SPGwU6zI4aou18ZCdA8It+bGGWPEj91PC0AMcsGuaK89ArPPRY/PsPMRbSzewg
-         4IwB5ZGYu1pTk2FvVp/V34Jxa46Gytz/093HMxIgAdP979rDjCs4GFW2CUBjlDVM8aO+
-         9Kht6eXFfw5w2io+aKan8QtUZ7sB+ZmpLvALq1/YNDSCKqIuqKU++1Nr6f+KSBJ8dKGT
-         xsgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVx7VCMBmRAZpoZzk2Pm1NEsljIt6SzZQ6j954gzpO8ZoKcFTk8iGfSxG148gKyvKySsqYMUNp/vtF1qrI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy8IL3pL4irLxI3bwXlHe/qorKjACPdagrtm+hcLhwuVmuBJv2k
-	XsuhZdemd7hoSBex4B6sc1MODAJawQqXPoS3OsNF43S6eAOtOVFlAoMle9N9uwB1kGQ2UuEbedB
-	dvqiZubhJ5kZt4YPFQ3iYwkovhaJUt4cfjrF9qtTJjvG2qn/nDcdG2ljB65c7oQ==
-X-Gm-Gg: ASbGnctGeRtWsKBQejjRJZK2jEz0x3ztJ6sIfUiBwbGvXwQh0cxL2iigPF4QDe8sJB3
-	pi41VyoCm0BqBUd2Esgsq0kwiHYSYJVDyMKRSe7U2TNbETYwnJogEzE64h1sP/nvYrU2aciR6XE
-	jkg/yzHOzVMhO4pQcr8TVhzteQXC9hTO+Cwb+GPUgyoPb9/OnYcTUiqVGOwCS1tyhSD1ZAXA8dM
-	ftozjJQRU4EhI50a0r1g1OJGcjNnPHaLmCx215jaw4FhvFmCGeXkaxZj9ncJAMYETDVaT/60rIt
-	eQXvb6L6LA==
-X-Received: by 2002:a7b:c85a:0:b0:43d:fa59:cc8f with SMTP id 5b1f17b1804b1-43dfa59cd30mr114318945e9.33.1743609111402;
-        Wed, 02 Apr 2025 08:51:51 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEiu3ULj5S8kJbnqptVY3lwz6RG0tP91QvRSP7AmDKE1d8QjUwoVzBhXnKVVuSJMPHv4krlcQ==
-X-Received: by 2002:a7b:c85a:0:b0:43d:fa59:cc8f with SMTP id 5b1f17b1804b1-43dfa59cd30mr114318845e9.33.1743609111065;
-        Wed, 02 Apr 2025 08:51:51 -0700 (PDT)
-Received: from redhat.com ([2a0d:6fc0:1517:1000:ea83:8e5f:3302:3575])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43eb61116ffsm25120395e9.32.2025.04.02.08.51.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Apr 2025 08:51:50 -0700 (PDT)
-Date: Wed, 2 Apr 2025 11:51:47 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: David Woodhouse <dwmw2@infradead.org>
-Cc: virtio-comment@lists.linux.dev, hch@infradead.org,
-	Claire Chang <tientzu@chromium.org>,
-	linux-devicetree <devicetree@vger.kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	=?iso-8859-1?Q?J=F6rg?= Roedel <joro@8bytes.org>,
-	iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-	graf@amazon.de
-Subject: Re: [RFC PATCH 1/3] content: Add VIRTIO_F_SWIOTLB to negotiate use
- of SWIOTLB bounce buffers
-Message-ID: <20250402114757-mutt-send-email-mst@kernel.org>
-References: <20250402112410.2086892-1-dwmw2@infradead.org>
- <20250402112410.2086892-2-dwmw2@infradead.org>
- <20250402105137-mutt-send-email-mst@kernel.org>
- <19ba662feeb93157bc8a03fb0b11cb5f2eca5e40.camel@infradead.org>
- <20250402111901-mutt-send-email-mst@kernel.org>
- <6b3b047f1650d91abe5e523dd7f862c6f7ee6611.camel@infradead.org>
+	s=arc-20240116; t=1743609309; c=relaxed/simple;
+	bh=vlPh5PCSARRxi39gaSvhG0GHKkjN6gue9AuWiipJ7tk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tIFWsIWmTmmIldqFByo8V6dKR56mHvbkz1GC00hCA9NEvY8A/dKRXiEsYQdKjvcqnh4K0rCi53+zCtRt4htDFiNV3wCGtAb+L2xE94VYvQ8ce2HgByzAEHSCPXy3WpjG27Fjbzg+AUVfa1zIZ+Jm0e0EI2wYVjl8ciE1XIN8pHM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org; spf=pass smtp.mailfrom=altlinux.org; arc=none smtp.client-ip=193.43.8.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altlinux.org
+Received: from altlinux.ipa.basealt.ru (unknown [178.76.204.78])
+	(Authenticated sender: kovalevvv)
+	by air.basealt.ru (Postfix) with ESMTPSA id 35B07233C5;
+	Wed,  2 Apr 2025 18:47:46 +0300 (MSK)
+From: Vasiliy Kovalev <kovalev@altlinux.org>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Javier Carrasco <javier.carrasco.cruz@gmail.com>,
+	Martin Kepplinger <martink@posteo.de>,
+	linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: lvc-project@linuxtesting.org,
+	kovalev@altlinux.org
+Subject: [PATCH] Input: pegasus-notetaker - fix slab-out-of-bounds in pegasus_irq
+Date: Wed,  2 Apr 2025 18:47:45 +0300
+Message-Id: <20250402154745.399226-1-kovalev@altlinux.org>
+X-Mailer: git-send-email 2.33.8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <6b3b047f1650d91abe5e523dd7f862c6f7ee6611.camel@infradead.org>
 
-On Wed, Apr 02, 2025 at 04:47:18PM +0100, David Woodhouse wrote:
-> On Wed, 2025-04-02 at 11:20 -0400, Michael S. Tsirkin wrote:
-> > On Wed, Apr 02, 2025 at 04:12:39PM +0100, David Woodhouse wrote:
-> > > On Wed, 2025-04-02 at 10:54 -0400, Michael S. Tsirkin wrote:
-> > > > > +  If a the device transport provides a software IOTLB bounce buffer,
-> > > > > +  addresses within its range are not subject to the requirements of
-> > > > > +  VIRTIO_F_ACCESS_PLATFORM as they are considered to be ``on-device''.
-> > > > 
-> > > > I don't get this part. the system designers currently have a choice
-> > > > whether to have these controlled by VIRTIO_F_ACCESS_PLATFORM or not.
-> > > > with PCI, for example, BAR on the same device is naturally not
-> > > > behind an iommu.
-> > > 
-> > > In the PCI case this *is* a BAR on the same device, and is naturally
-> > > not behind an IOMMU as you say. This is just stating the obvious, for
-> > > clarity.
-> > 
-> > Then the platform already does this right, and it's better not to
-> > try and override it in the spec.
-> 
-> It isn't intended as an "override". This *is* what will happen if the
-> platform does it right. By mandating it in the spec, the intent is to
-> reduce the chances of platforms doing it *wrong*? (Or of drivers making
-> wrong assumptions).
+Fix a slab-out-of-bounds error in pegasus_irq reported by KASAN,
+caused by insufficient packet size validation. The driver relied
+on usb_maxpacket() to set the data length, which could be smaller
+than the 6 bytes expected by pegasus_parse_packet(), leading to
+oob reads at le16_to_cpup() calls when accessing coordinates.
 
-The text you wrote makes it seem that even if the platform says use
-an IOMMU, it should be bypassed.
+Introduce NOTETAKER_PKGLEN_SIZE define with a value of 6 bytes,
+reflecting the typical interrupt IN endpoint packet format for this
+device family. Add a check in pegasus_probe() to ensure the data
+length is at least this size, logging an info message if usb_maxpacket()
+returns a smaller value and adjusting it accordingly. This prevents
+buffer under-allocation while accommodating devices that might send
+shorter packets, as various brandings (e.g., Pegasus Mobile Notetaker,
+IRISnotes Express) may differ in implementation.
 
-> > > For virtio-mmio it also isn't translated by an IOMMU; that was the
-> > > *point* of the `restricted-dma-pool` support.
-> > > 
-> > 
-> > Clear VIRTIO_F_ACCESS_PLATFORM then?
-> 
-> > I don't want to say that VIRTIO_F_ACCESS_PLATFORM and VIRTIO_F_SWIOTLB
-> 
-> > are mutually exclusive...
-> 
-> 
-> > Generally, it is preferable to keep all features orthogonal if
-> > at all possible.
-> 
-> ...precisely because they *should* be orthogonal.
-> 
-> VIRTIO_F_ACCESS_PLATFORM defines how system memory is accessed;
-> basically whether DMA goes through an IOMMU or not. And as you point
-> out, the "on-device" buffer used with VIRTIO_F_SWIOTLB should never
-> pass through the IOMMU anyway, so it *is* naturally orthogonal.
-> 
-> 
-> And I think it does make sense for both to be set in some cases, for
-> both physical and virtual devices.
-> 
-> 
-> For physical devices that would mean "Got an IOMMU? Sure, go ahead and
-> use it. If not, if you don't trust me, you can just disable my bus
-> mastering and just use the SWIOTLB".
-> 
-> It's basically the same for a virtual device. In a confidential compute
-> model, the device model (in the VMM) might not be *able* to access the
-> guest memory unless the core guest OS explicitly permits that, through
-> some kind of pKVM enlightenment to allow pages to be shared, or a
-> vIOMMU, or marking hardware pages unencrypted. So having both bits set
-> would mean "Know how to drive that enlightenment? Sure, go ahead and
-> use it. Otherwise, use the SWIOTLB".
-> 
-> In fact that's exactly what that Linux code for `restricted-dma-pool`
-> already does — when setting up the dma_ops for the device, if it finds
-> an actual set of IOMMU operations, it'll use those. And if not, that's
-> when it falls back to using the provided SWIOTLB.
-> 
+KASAN report:
+BUG: KASAN: slab-out-of-bounds in pegasus_irq (little_endian.h:67 pegasus_notetaker.c:153 pegasus_notetaker.c:183)
+Read of size 2 at addr ffff888009a01da2 by task (udev-worker)/985
+CPU: 0 PID: 985 Comm: (udev-worker) Tainted: G OE 6.14.0-un-def-alt0.rc6.kasan #1
+Hardware: QEMU Standard PC (Q35 + ICH9, 2009)
+Call Trace:
+ <IRQ>
+  dump_stack_lvl (lib/dump_stack.c:122)
+  print_report (mm/kasan/report.c:521)
+  kasan_report (mm/kasan/report.c:636)
+  pegasus_irq (little_endian.h:67 pegasus_notetaker.c:153 pegasus_notetaker.c:183)
+  __usb_hcd_giveback_urb (drivers/usb/core/hcd.c:1650)
+  usb_hcd_giveback_urb (drivers/usb/core/hcd.c:1735)
+  dummy_timer (drivers/usb/gadget/udc/dummy_hcd.c:1995)
+  __hrtimer_run_queues (kernel/time/hrtimer.c:1865)
+  hrtimer_run_softirq (kernel/time/hrtimer.c:1884)
+  handle_softirqs (kernel/softirq.c:561)
+  __irq_exit_rcu (kernel/softirq.c:662)
+  irq_exit_rcu (kernel/softirq.c:680)
+  sysvec_apic_timer_interrupt (arch/x86/kernel/apic/apic.c:1049)
+ </IRQ>
 
-I just feel your text for VIRTIO_F_ACCESS_PLATFORM make it
-seem like that is not the case.
+Found by Linux Verification Center (linuxtesting.org) with
+"USB Gadget Tests"[1]:
 
-VIRTIO_F_ACCESS_PLATFORM says a lot of things, e.g.  it has implications
-for encrypted VMs, and so on.
+$ make input-tab-pegasus
+$ sudo ./src/input-tab-pegasus/input-tab-pegasus --invalid_ep_int_len
 
-I would drop this text, and maybe add some clarification in the mmio transport,
-as needed.
+[1] Link: https://github.com/kovalev0/usb-gadget-tests
+Fixes: 1afca2b66aac ("Input: add Pegasus Notetaker tablet driver")
+Cc: stable@vger.kernel.org
+Signed-off-by: Vasiliy Kovalev <kovalev@altlinux.org>
+---
+ drivers/input/tablet/pegasus_notetaker.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-
+diff --git a/drivers/input/tablet/pegasus_notetaker.c b/drivers/input/tablet/pegasus_notetaker.c
+index 8d6b71d5979316..e578720585c2c8 100644
+--- a/drivers/input/tablet/pegasus_notetaker.c
++++ b/drivers/input/tablet/pegasus_notetaker.c
+@@ -70,6 +70,15 @@
+ #define PEN_BUTTON_PRESSED		BIT(1)
+ #define PEN_TIP				BIT(0)
+ 
++/* Minimum packet size for interrupt IN endpoint.
++ * Packet format  (expected 6 bytes, though some devices may send less):
++ *  - Byte 0: Packet type (command or status)
++ *  - Byte 1: Button/tip state
++ *  - Bytes 2-3: X coordinate (16-bit, little-endian)
++ *  - Bytes 4-5: Y coordinate (16-bit, little-endian)
++ */
++#define NOTETAKER_PKGLEN_SIZE		6
++
+ struct pegasus {
+ 	unsigned char *data;
+ 	u8 data_len;
+@@ -311,6 +320,16 @@ static int pegasus_probe(struct usb_interface *intf,
+ 	}
+ 
+ 	pegasus->data_len = usb_maxpacket(dev, pipe);
++	/* Ensure buffer is at least NOTETAKER_PKGLEN_SIZE to avoid oob
++	 * access in pegasus_parse_packet(). Adjust if endpoint reports a
++	 * smaller size, as some devices might send shorter packets.
++	 */
++	if (pegasus->data_len < NOTETAKER_PKGLEN_SIZE) {
++		dev_info(&intf->dev,
++			 "Int in endpoint data_len adjusted from %d to minimum %d\n",
++			 pegasus->data_len, NOTETAKER_PKGLEN_SIZE);
++		pegasus->data_len = NOTETAKER_PKGLEN_SIZE;
++	}
+ 
+ 	pegasus->data = usb_alloc_coherent(dev, pegasus->data_len, GFP_KERNEL,
+ 					   &pegasus->data_dma);
 -- 
-MST
+2.42.2
 
