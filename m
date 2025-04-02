@@ -1,97 +1,120 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BBED23817C;
-	Wed,  2 Apr 2025 11:13:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59FFB23957D;
+	Wed,  2 Apr 2025 11:13:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743592414; cv=none; b=dpyoXAEjc1wM97EE+Iol4cxENVo00Y8wxInDR0Uqd4NI27LlkNDUNY5NuuAp+rpBV0uVkrWfoK7p7B+NAzVMOMmOOm86yMuAhS61tO4eDad7Wj0W9/zg3+QV4VXKWd68VErHdmQLo1+Cqj/xraCWtqFutSYpr104LO2xLA+tfrc=
+	t=1743592433; cv=none; b=ieSH1iL9p4H3ag+eIy1Y4x7z5Wg6fG/tWCflKTfk3kWqwzJQYMtveEl3H/uBoFay2riRYKYAAotXuxEQ995rYBGK1cvL1Ns3g9KPaqXqdDt+dV44wkbmVEub5NwjZg0mbdOm0FZy9kgGa545pGho8Rs5aQUfJ6pjYLWSJo8FqEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743592414; c=relaxed/simple;
-	bh=Va3/UmUACgg9LWpe5gv41c299SYu6ixHTt7HBmtP6Xc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=W+Hf/78YDQ0PXrDgxXW6U8gk07f1NVczWZqmonfZrIp0iCGkVX1C/xkMO7TCLEmcs/FMAQ9UBmktMkxL4z9uAHmheQQJqJSXAArqYoa0yCcE41/VxHI1zW8OHfuR6fYBl+2YGLsWuJ8+NkmbnYVDLQZOUY4fpmqbWtrNot/QNkk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C468fsY8; arc=none smtp.client-ip=209.85.216.42
+	s=arc-20240116; t=1743592433; c=relaxed/simple;
+	bh=cvXqM0ZQA/SF5d06nBpidPXazZn2wTHw/rrXERReFoE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Uikc4tkJx38cF5wfcTrfY+DQ2We0+w5Xv5DrCq239AnctMPggvveBIPgj/stYONfy/rCw6JCuejrCG5+AWmTKPyizAX3r9F/tPxYGlFZ4kqcPfsMjNjqQWTUHLrXp6NM/L57WKqHQ80lfqKeUcz7L+gOhr+JNo6ySSP4DAUSnQE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ECW8CUKv; arc=none smtp.client-ip=209.85.128.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C468fsY8"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2ff53b26af2so1439161a91.0;
-        Wed, 02 Apr 2025 04:13:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ECW8CUKv"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43cf0d787eeso62790185e9.3;
+        Wed, 02 Apr 2025 04:13:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743592413; x=1744197213; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Va3/UmUACgg9LWpe5gv41c299SYu6ixHTt7HBmtP6Xc=;
-        b=C468fsY8g5SnX3bWoQh+kV8m5rnXRtQwRrYJhU/etwVewQBLQwTqDcuM9xAcqzEqID
-         i5HRz30vTBZFuDA8v16/alRJQbdFFmaM9NvxI+b4N3GEp6yweGyNk0ChidsBVqjWV3y3
-         T3iYsPvVdhJwaUVYzHCVpEMwx2K2gLmQkq2yZlb/ReQ+HL3VpTmHtmuZ/UGaDxzGQcjP
-         6Hk/n79qtx68mNGlPI9RMfG5lJDC87di5g9pN/YZkap/iY+2HtU3jC76c8btFxs18EAT
-         dr1MAsdZTHwhpoMNCok8yLuWXoyPaThyrF+MxmcHJXBFJT4IlDvwtLTqQLpgSqsg+ppN
-         rFUw==
+        d=gmail.com; s=20230601; t=1743592429; x=1744197229; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=WxbAHoRPWMHISvbcRp+L5Pi9IuQda2X07kyg6gEi27s=;
+        b=ECW8CUKvcqJVHQAiUtFxjBHkwyrQhVxVeYpzsNDAeIvDbTmJmYkQb5wwaf1kAiTVOe
+         w8nu6BwmlQwGn+MfqrGkKMhwYuxCSgKeFT/H27rdmx7MD5v1k0OP6YIPJEJganrDxgGx
+         j5nRaT/41Jfv/+tYAJkt56Sdm0i931WLmUcSQLMTSLfaBSY8d2GefvNtN9yqT4hzTZHI
+         EKiNjv4+zG1OrOuwp5mmAaRARSMdYesC9WXz/kYq4NHG4T470RhFD14HtU+mQxVXIML1
+         40TwM2drsT0CPdvdVUDElZa/VFYSWye1tNk2fIfs5EsjrzHpuKBhapD95KNOIpwX6f9a
+         du+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743592413; x=1744197213;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Va3/UmUACgg9LWpe5gv41c299SYu6ixHTt7HBmtP6Xc=;
-        b=ma3G6SoLaRVrbKxo9eeLcLFkeWXRnV5W5vR/HpWxcXMuEFgjynpgsVclNqcSFTyxs1
-         RION+/BOJ9GNQlp4nIDCVqj7IFD3JjoMfh44e3UuwqGswDRfsObST7Znd/jlz9FuqUNE
-         tNeCKyA6JoF7oWbF/EgX3I6sBiHdGwKHY8gm/DbEjPDTHcrolw0MHOSPmBA5w7Mfu/Ps
-         WO46+MH7gAZkOSCJT8IlUxET/Y7kfDn9vFCUwM4z7Y6iLE4YG/MbLnTF3md5G6pUkSQy
-         Xxtr6qrscJk58jwZ1JItNrrfH6FVaqRTT1haBOqPLHk8WIMKt0arkb8RsXujralkSmPu
-         /xjg==
-X-Forwarded-Encrypted: i=1; AJvYcCU+Rm1xzaYnVo13rRkjTRnhRxHVKuJf6gak9DUZt0pf3vOqQzS6/Z/sXR/Uzp4usGpCqyci0fUgTyy7QTw=@vger.kernel.org, AJvYcCVEMy70EgIhlV92Cvkzab0yfHd9uUBnMOXPva1lY21MokKm6XXIxgGHIQ4M3VlTpaR7utsOhHXWaH1ve0xxDOs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywmrx8G8jSHKPBnPcEFtoXgvb+blUNG5N16H0SFBqP2GlXYVgbO
-	uYHxFmIhfjYxHsbzQ8rbMf6U/gh9yKBOX3JnTpNJJZDlSQQaQp9Rh5fEzfuSTIrMw2OKD9/Dfr+
-	fagN3Ss/lIFcJ32Yg3PvoCy7WODQ=
-X-Gm-Gg: ASbGnctzbkoHNgtM4xLA0pkQIoTHFUlyDy/HLHHNAP+/Vst+iYU4Ro6x7tu8j7iYSxl
-	2RKrCpvBw1Hh+fTeSsu/GoBE4DC4AT0R645PzCavSHgJv7geYqXsUIMjzTzyMFQZroid49WkMcB
-	1kUF9Dc83zfVHbcxeBtnbGAsFpozkQUhyGVyMh
-X-Google-Smtp-Source: AGHT+IEBkCp90LmZJMzNSuCw1qE0a9pZT4uHJuwEA4vfFgxDMgFpQvGkHWwdLKVCzAdFlWhEtA0WoxxQ02iDMVwiUrw=
-X-Received: by 2002:a17:90b:3e8c:b0:2ff:6666:529d with SMTP id
- 98e67ed59e1d1-30562e93988mr3236432a91.6.1743592412698; Wed, 02 Apr 2025
- 04:13:32 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743592429; x=1744197229;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WxbAHoRPWMHISvbcRp+L5Pi9IuQda2X07kyg6gEi27s=;
+        b=IUmZrnCmlIoT7EVZsjdGvAyoC0zVNOomlhDCsPo5ZFOWlgEkOXuY742F/ZdeFTHHgO
+         ZZ/+vklTlfoi8omE+MUZZIweL6G+PvZZ92USbS0m87q8mHlz4G4InY96AkTZk7XWKAnS
+         r8zLOjw+LQx1N87qQUEdU7TUgtHE1kzbOwr86RgUwPHgDLhZTpGOemX+t87kuTC/fjyI
+         sUcC7NIeK99pbWdSIf9yUq1uVpGnSSuoGUNViXvgCadyEorSZJi+hk3SnDxO1bWfEylf
+         5fZ2MKqBPlTKYRRCyvmiB9qNN3SfJNE93za0Q8qUtNsUz4EQ/vlTrTxJmLud2KzeE1tH
+         TJtw==
+X-Forwarded-Encrypted: i=1; AJvYcCU8YWYFcdzU7rmLWIRhXMr6Zhx8TWnJTkBuRfPkOi98gdynjFDPMrN+MFvzkNcs/9YuQIQGPq1pCwosh30=@vger.kernel.org, AJvYcCUwh71gYK711+8MTzEo+JuunyK3M7MC595JhBiT4vZwPvvjDVsPIay7dbL3VHmky8Vas3MT3vhlWcu5s2EC@vger.kernel.org
+X-Gm-Message-State: AOJu0YzVvPcEbK34gU05tjZi5CIFAoanT0sgyM2nou5JITvSJ/DKHDLf
+	EWmQdLlX9Rd3Zi+ZPmbN4trHQcTYxtNsHERvpyuX08CTFndgunx3
+X-Gm-Gg: ASbGncsDAqVRGpOovliEtKJdLR/MeRnaw8DB1cfCLQd+7Kg++qIFr/er9+0s4NynyZ3
+	PTOd9joLHSVd4uFHWB+3xcUtaBEAYLRgSMa95Dg5tnNx17HvKLc3dWnnGV+HgPDRBmmDa9OpvoC
+	uTbUi8uJNGjJmZLTB4q9a8fNa9DSAJWJOkOI08vusXnzKN8Pm9ePDOvjZPgWmLmrRdZlUyzMlqG
+	LpKyaFAMQtHwY2dso3XvaCBhud8DOoBCj1B+kgoz/AEUROGL+hXjGSryoLaR+y0/bXi68av31dM
+	4Ejk1g9toSkex5IyKpOIFCl9W3x0ay07xu8xaN/81h260g==
+X-Google-Smtp-Source: AGHT+IG8DjSotHCrsDLuuunlwFAcflox5He58nr411E9AWlWpXQ0JWgp9n1qos67GnisIzgeoT6EDg==
+X-Received: by 2002:a05:600c:4fd1:b0:43c:f6b0:e807 with SMTP id 5b1f17b1804b1-43db8527142mr168905395e9.31.1743592429245;
+        Wed, 02 Apr 2025 04:13:49 -0700 (PDT)
+Received: from localhost ([194.120.133.58])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-39c0b7a433bsm16858788f8f.97.2025.04.02.04.13.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Apr 2025 04:13:48 -0700 (PDT)
+From: Colin Ian King <colin.i.king@gmail.com>
+To: Christian Marangi <ansuelsmth@gmail.com>,
+	Antoine Tenart <atenart@kernel.org>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S . Miller" <davem@davemloft.net>,
+	linux-crypto@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] crypto: eip93: Make read-only arrays static const
+Date: Wed,  2 Apr 2025 12:13:47 +0100
+Message-ID: <20250402111347.409795-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250401221205.52381-1-ojeda@kernel.org> <D8VPGBN60E61.1Z48FQW6TL3A@proton.me>
-In-Reply-To: <D8VPGBN60E61.1Z48FQW6TL3A@proton.me>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Wed, 2 Apr 2025 13:13:20 +0200
-X-Gm-Features: AQ5f1JppUI-5RQRrcETk_cSydGCYdkJ4HjopUtEovoKCf5jbtrY8bK8XDJmnna4
-Message-ID: <CANiq72mdvnHvWbVNQbiXSRxd1xrF+A=v0RdJO74xeY3HyhRmcg@mail.gmail.com>
-Subject: Re: [PATCH] rust: clean Rust 1.86.0 new `clippy::needless_continue` cases
-To: Benno Lossin <benno.lossin@proton.me>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, patches@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 2, 2025 at 1:53=E2=80=AFAM Benno Lossin <benno.lossin@proton.me=
-> wrote:
->
-> I'm not too sure about this change, if the loop is longer than one
-> screen, it makes a lot of sense to have a `continue` instead of `()`,
-> since one might not see that there is nothing after the `match`.
->
-> I also think that an explicit `continue` is nicer from a expressability
-> standpoint. So I think we should keep them.
+Don't populate the read-only arrays sha256_init, sha224_init, sha1_init
+and md5_init on the stack at run time, instead make them static.
 
-Yeah, I feel similarly. It is sad because the lint did find other
-cases in the past that were useful.
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+---
+ .../crypto/inside-secure/eip93/eip93-hash.c   | 20 +++++++++++++------
+ 1 file changed, 14 insertions(+), 6 deletions(-)
 
-If nobody else cares about keeping this one enabled, then I will send
-the alternative patch. Hopefully we can re-enable it at some point in
-the future.
+diff --git a/drivers/crypto/inside-secure/eip93/eip93-hash.c b/drivers/crypto/inside-secure/eip93/eip93-hash.c
+index 5e9627467a42..528d5bd864c9 100644
+--- a/drivers/crypto/inside-secure/eip93/eip93-hash.c
++++ b/drivers/crypto/inside-secure/eip93/eip93-hash.c
+@@ -97,12 +97,20 @@ void eip93_hash_handle_result(struct crypto_async_request *async, int err)
+ 
+ static void eip93_hash_init_sa_state_digest(u32 hash, u8 *digest)
+ {
+-	u32 sha256_init[] = { SHA256_H0, SHA256_H1, SHA256_H2, SHA256_H3,
+-			      SHA256_H4, SHA256_H5, SHA256_H6, SHA256_H7 };
+-	u32 sha224_init[] = { SHA224_H0, SHA224_H1, SHA224_H2, SHA224_H3,
+-			      SHA224_H4, SHA224_H5, SHA224_H6, SHA224_H7 };
+-	u32 sha1_init[] = { SHA1_H0, SHA1_H1, SHA1_H2, SHA1_H3, SHA1_H4 };
+-	u32 md5_init[] = { MD5_H0, MD5_H1, MD5_H2, MD5_H3 };
++	static const u32 sha256_init[] = {
++		SHA256_H0, SHA256_H1, SHA256_H2, SHA256_H3,
++		SHA256_H4, SHA256_H5, SHA256_H6, SHA256_H7
++	};
++	static const u32 sha224_init[] = {
++		SHA224_H0, SHA224_H1, SHA224_H2, SHA224_H3,
++		SHA224_H4, SHA224_H5, SHA224_H6, SHA224_H7
++	};
++	static const u32 sha1_init[] = {
++		SHA1_H0, SHA1_H1, SHA1_H2, SHA1_H3, SHA1_H4
++	};
++	static const u32 md5_init[] = {
++		MD5_H0, MD5_H1, MD5_H2, MD5_H3
++	};
+ 
+ 	/* Init HASH constant */
+ 	switch (hash) {
+-- 
+2.49.0
 
-Cheers,
-Miguel
