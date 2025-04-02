@@ -1,256 +1,142 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A9EE21859F
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 23:56:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8587E1FC3
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 00:00:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743551797; cv=none; b=XHdsg0W8dt+xAiz4sHbkTNAMl5AMol9JpS1oF3j8fPy7isPMVUPaN5ivLo9hyG7JYQpmFYHuO2+nJJOUhdRQw0d4CU55E6TCXFk79AimD7MlGvwC7hCuR8V55tISlVm68rX2DtJGvWvY+WcKVxRot8G5XHy8tLo00qYpKypMbwY=
+	t=1743552023; cv=none; b=oURhC3xP9P1c2LwUpkXizKYvmABMGbUcNoKaxjB4oceHiLafVb9wjWz8mUf4EoFwkiY+oBo88Njbyk6eQvh0hEWO9P1ykMy3uX1lc+f8NFpJPgiOVPg8QwKxKhz3CUVE7f6A1RoZazIxbKbjufkeYtxY3ogTG+riPKmV1vRNHFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743551797; c=relaxed/simple;
-	bh=/oLB4lfTgEqsm45al5pc3NIWRfW5hWKG0WWTFCddDho=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LIxQhw32EJRBn8dt3mbAA+hn8Na93Jfuo/ZXN59Qc98lMFgsevV1ZecRpZs3PVFSpmXRj1zbiBn4tdsvKQBP8zFDLTHFVu2OhtD9Er5BiUCBG1UICCqNnN3MB5gFgNsVJj1/5DAeffxyQXXaqF0EhjvZPBenwhU6y7dRliZRFBc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wkennington.com; spf=none smtp.mailfrom=wkennington.com; dkim=pass (2048-bit key) header.d=wkennington-com.20230601.gappssmtp.com header.i=@wkennington-com.20230601.gappssmtp.com header.b=DIP2NIJw; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wkennington.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=wkennington.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wkennington-com.20230601.gappssmtp.com header.i=@wkennington-com.20230601.gappssmtp.com header.b="DIP2NIJw"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-22423adf751so114498925ad.2
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 16:56:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=wkennington-com.20230601.gappssmtp.com; s=20230601; t=1743551794; x=1744156594; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:reply-to:message-id:date
-         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=b6ihHnN8ilmRZM8hNAaeCWLomeBOtyWBXorZNgeS24M=;
-        b=DIP2NIJwv7+ufEqpvnAlpksAqCUtbwOxe4qZyDmZlwRvo5uoKLDxS6jtqc3KpATcke
-         zmIaMXdYYZAR3UTHHUKfFoq0UI9ldLRvXPvHQeoS55pod0uNVKi7JslSSS3/K9PWVj50
-         xX57jsFHSb2/obx663FahJBoi5o4m5pxw55H3lNgXYLOTFqEHRq9SMl5rdvYLcxWU18o
-         ATd7Ufoi09x/w0ZcwC4nGfRyAysG6JOOVka5Re3M46s5jsnP/irycK09sFQURaN+ui5X
-         u7AI3wSMhLKx2NY/HZeEYueMsobKGt5k009ScA57y+B9Wpx8808iBB3ZWdxkUN0WZeob
-         FlVA==
+	s=arc-20240116; t=1743552023; c=relaxed/simple;
+	bh=TDBxjMbF0Wv3pIZT4JptjBiJF2mVypKMtW/0cBwzVH0=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=lLOBMkFoeAZaouGXPi1VTaC/WF7aOOeQ9Sm5neEHfK/Ralsyhkyv5kpDjl4NdEiuHGa80kggKzXUplodrw+80Q0wvEB/Dqa06iPACuOsyCFVNQ22kC7pnpfHR8+C+azJ+cx4ThoRlBvOk3/GlkS5kuwZZMeEZwWcVQT7TDUyOGk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3d5b3819ff9so57232215ab.0
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 17:00:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743551794; x=1744156594;
-        h=content-transfer-encoding:mime-version:reply-to:message-id:date
-         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=b6ihHnN8ilmRZM8hNAaeCWLomeBOtyWBXorZNgeS24M=;
-        b=lBigobaqaou4eZ6B1C8C5iyUsyvvZY+55vRK6hVN/YgJn/+kaY/8pyOEDXhN8R2hdD
-         Lz3i3beQ494Omr4BxIw2C/ioWG21czQixxyUboJuXAHkFb6MmrGA4m0b8LPdXvTuyjW6
-         gGpMu92YeNWhei/4CzruMR/6WooWagX4x3PIfQfW2rrQhFiBNIUH7pYeMrzE7p8RlrBV
-         T8cRnyKnBCHYPsng/HUj0dUnH9z2Au+Q7hNOJrCAjRHnLVLytw62LAqt0Dvlg659sOP1
-         +OmH7rVRaLk4YC9TezZMHn0/f+ByJWqpXaAlA9hH8bL42PI85eGvmIpy5AaLB9hxf3yf
-         UvsQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVP89/kd5uZLawJG5OMafOTYXY4TTQNly/x1rFnE9urXkmhaTs10jQ3/SMNMfUaK2jqIcrbSo5sVYZ8XYo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxC+p6PrPWX0F01dfbKNTbMm6hW2a3k+6gHmuC42iSac4GttuMZ
-	zKKP5xT1HcO9VH9LjmF7kqOqVLSz+bYEWnk2EA/k+5YLRUeL8oFYSTgG0NcLrPc=
-X-Gm-Gg: ASbGnctgwRtqCaR/PWPzt+qqAULEVfxdkGXRP6pHda/c4u066GjzSiixkfFmnnsMBJK
-	VIAymolhU1PoYwAfCDh4KS3223O91q3qVLhu2/9NJzsR80Yt2sZ/u0ifYVxIwlmsR9IEYdAH73U
-	8l7w4eZNs05R2fYzEfxZQGX7TtFEpoBujjfHtGuHLI/I8qw16Y23nWLmherCqRYiduHAAtjxreC
-	iGVqQwu+XuxEaFAHWQm0Ozslc+lJ/cC/Q0Q4Z6c3Z9B1IeRMZFLMledtkmCtCgqFP5Wz8+ug5l9
-	ubldTfLrLa/D6kX5KRRzqWOHsa5rzwqllbpySrn77gxc1PNOpCoEJL0nonTtT+rRSE6qLOlzyUC
-	ydK47se/KxAx6nNdOLwuNaScYvMsKz8g=
-X-Google-Smtp-Source: AGHT+IFylzDbhBQ/sL2ExeIt5kLtcQJnLm0bfmikXo5VViRiVMSH4IaRuk3kFMVNKPfBS80Y7hZfgQ==
-X-Received: by 2002:a05:6a00:1486:b0:736:6ecd:8e32 with SMTP id d2e1a72fcca58-739b611955fmr5416229b3a.21.1743551794244;
-        Tue, 01 Apr 2025 16:56:34 -0700 (PDT)
-Received: from wak-linux.svl.corp.google.com ([2a00:79e0:2e5b:9:895:611e:1a61:85c1])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73970def428sm9646836b3a.32.2025.04.01.16.56.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Apr 2025 16:56:33 -0700 (PDT)
-From: "William A. Kennington III" <william@wkennington.com>
-To: Tomer Maimon <tmaimon77@gmail.com>,
-	Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	openbmc@lists.ozlabs.org,
-	"William A. Kennington III" <william@wkennington.com>
-Subject: [PATCH v2] ARM: dts: nuvoton: Add UDC nodes
-Date: Tue,  1 Apr 2025 16:56:30 -0700
-Message-ID: <20250401235630.3220150-1-william@wkennington.com>
-X-Mailer: git-send-email 2.49.0.472.ge94155a9ec-goog
-Reply-To: 20240925093956.2449119-1-william@wkennington.com
+        d=1e100.net; s=20230601; t=1743552020; x=1744156820;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=GsM3Ilm2N3CBIYDrmEbMx4uh1PJkyy+Bbjo8v8OIzH8=;
+        b=Pkzwdxqy+9YS/+jZgiR3WELIDgsWd4A6vnv6qoHfl+DUfRyeuJtUPzxXWgRBOPDuSq
+         5IeMU96VJdsMeyPu3XW0PHmyozOuSi7l8ATckf6mcub6rUxxhA0ln4reN4u83zBOjjH0
+         nJvPkNVq5gjCaG0LCPrnT7nbP4dIFyj6kw4nNeu7AysuDZYPPe0S3TOB7KtUM6Uc+N4J
+         ozy70js4qxo+hqEl5Ha6H0pYelw6feN24NCnXp1eCTHA+jH7sJNAdgxjUASy1cEe2Skb
+         JMCukyZtoPpr7T1yyOXNgGPUBSN3XZRIQavqeNIv3VvH/Tp5BwaaY8DYDDH+Q+tb2IYw
+         hdTg==
+X-Forwarded-Encrypted: i=1; AJvYcCVcBWZ/shz0E++cS3cl039BYWmguLGtyUkMw3TVeWqLISqLZc3ZWij2dweSGqARNabKM39RPz5hlnV27No=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywd89ioYYs4zqG9ud2VqbvZ3ycADaSck1salSNlSoEFHcZ7+H0l
+	Hb4XjGSoDbUAepTuUlbt1y+pQkW3jS0B4QWiBgQP4C+cLqn2+ySYfkk6umSMbLU22D9NPxcbydG
+	TJeY3QI9wi6sG2bmwcXWPIFcsIM0kES74a+nowgoJ5Z8vsLYz9ELz5fk=
+X-Google-Smtp-Source: AGHT+IHeZKlpXHH1suOWjsbDsdSn84HHpn0TaUzLiOwfkGj943XDNLMffuhXk6TJOAS1x1S/0YTZ4f3JLmdC8mvSh96YQiSAILA6
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:746:b0:3d3:f27a:9101 with SMTP id
+ e9e14a558f8ab-3d5e08e9ec2mr181422665ab.1.1743552020538; Tue, 01 Apr 2025
+ 17:00:20 -0700 (PDT)
+Date: Tue, 01 Apr 2025 17:00:20 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67ec7e14.050a0220.31979b.0031.GAE@google.com>
+Subject: [syzbot] [f2fs?] kernel BUG in f2fs_write_end_io
+From: syzbot <syzbot+803dd716c4310d16ff3a@syzkaller.appspotmail.com>
+To: chao@kernel.org, jaegeuk@kernel.org, 
+	linux-f2fs-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-The driver support was already added but we are missing the nodes in our
-common devicetree.
+Hello,
 
-Signed-off-by: William A. Kennington III <william@wkennington.com>
+syzbot found the following issue on:
+
+HEAD commit:    4e82c87058f4 Merge tag 'rust-6.15' of git://git.kernel.org..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=17007198580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=4253e469c0d32ef6
+dashboard link: https://syzkaller.appspot.com/bug?extid=803dd716c4310d16ff3a
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/5e6f1c2744e3/disk-4e82c870.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/5c1a60744d62/vmlinux-4e82c870.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/228bbd75bd12/bzImage-4e82c870.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+803dd716c4310d16ff3a@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+kernel BUG at fs/f2fs/data.c:358!
+Oops: invalid opcode: 0000 [#1] SMP KASAN PTI
+CPU: 1 UID: 0 PID: 23 Comm: ksoftirqd/1 Not tainted 6.14.0-syzkaller-10892-g4e82c87058f4 #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+RIP: 0010:f2fs_write_end_io+0x77a/0x790 fs/f2fs/data.c:357
+Code: e8 8b 01 f2 fd e9 a2 fa ff ff 89 d9 80 e1 07 38 c1 0f 8c fe fa ff ff 48 89 df e8 11 01 f2 fd e9 f1 fa ff ff e8 87 92 8b fd 90 <0f> 0b e8 8f d4 ed 07 66 66 66 66 66 66 2e 0f 1f 84 00 00 00 00 00
+RSP: 0018:ffffc900001d79c0 EFLAGS: 00010246
+RAX: ffffffff8437d9e9 RBX: 0000000000000000 RCX: ffff88801da85a00
+RDX: 0000000000000100 RSI: 0000000000000000 RDI: 000000000000000a
+RBP: ffffc900001d7ac8 R08: ffffffff8437d696 R09: 1ffffd400012b785
+R10: dffffc0000000000 R11: fffff9400012b786 R12: 0000000000000001
+R13: dffffc0000000000 R14: 000000000000000a R15: ffffea000095bc00
+FS:  0000000000000000(0000) GS:ffff8881250e5000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fd1b21f9438 CR3: 000000007b684000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ blk_update_request+0x5e5/0x1160 block/blk-mq.c:983
+ blk_mq_end_request+0x3e/0x70 block/blk-mq.c:1145
+ blk_complete_reqs block/blk-mq.c:1220 [inline]
+ blk_done_softirq+0x100/0x150 block/blk-mq.c:1225
+ handle_softirqs+0x2d6/0x9b0 kernel/softirq.c:579
+ run_ksoftirqd+0xcf/0x130 kernel/softirq.c:968
+ smpboot_thread_fn+0x576/0xaa0 kernel/smpboot.c:164
+ kthread+0x7b7/0x940 kernel/kthread.c:464
+ ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:f2fs_write_end_io+0x77a/0x790 fs/f2fs/data.c:357
+Code: e8 8b 01 f2 fd e9 a2 fa ff ff 89 d9 80 e1 07 38 c1 0f 8c fe fa ff ff 48 89 df e8 11 01 f2 fd e9 f1 fa ff ff e8 87 92 8b fd 90 <0f> 0b e8 8f d4 ed 07 66 66 66 66 66 66 2e 0f 1f 84 00 00 00 00 00
+RSP: 0018:ffffc900001d79c0 EFLAGS: 00010246
+RAX: ffffffff8437d9e9 RBX: 0000000000000000 RCX: ffff88801da85a00
+RDX: 0000000000000100 RSI: 0000000000000000 RDI: 000000000000000a
+RBP: ffffc900001d7ac8 R08: ffffffff8437d696 R09: 1ffffd400012b785
+R10: dffffc0000000000 R11: fffff9400012b786 R12: 0000000000000001
+R13: dffffc0000000000 R14: 000000000000000a R15: ffffea000095bc00
+FS:  0000000000000000(0000) GS:ffff8881250e5000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fd1b21f9438 CR3: 000000007b684000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
 ---
-V1 -> V2: Fix udc -> udc nodenames, fix reg values for npcm750
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
- .../dts/nuvoton/nuvoton-common-npcm7xx.dtsi   | 71 +++++++++++++++++++
- .../arm/boot/dts/nuvoton/nuvoton-npcm750.dtsi | 65 +++++++++++++++++
- 2 files changed, 136 insertions(+)
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-diff --git a/arch/arm/boot/dts/nuvoton/nuvoton-common-npcm7xx.dtsi b/arch/arm/boot/dts/nuvoton/nuvoton-common-npcm7xx.dtsi
-index 5a466e97955a..e337f40ae0f2 100644
---- a/arch/arm/boot/dts/nuvoton/nuvoton-common-npcm7xx.dtsi
-+++ b/arch/arm/boot/dts/nuvoton/nuvoton-common-npcm7xx.dtsi
-@@ -99,6 +99,11 @@ rst: rst@801000 {
- 		};
- 	};
- 
-+	udc0_phy: usb-phy {
-+		compatible = "usb-nop-xceiv";
-+		#phy-cells = <0>;
-+	};
-+
- 	ahb {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
-@@ -193,6 +198,72 @@ fiux: spi@fb001000 {
- 			status = "disabled";
- 		};
- 
-+		udc5: usb@f0835000 {
-+			compatible = "nuvoton,npcm750-udc";
-+			reg = <0xf0835000 0x1000
-+			       0xfffd2800 0x800>;
-+			interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clk NPCM7XX_CLK_SU>;
-+			clock-names = "clk_usb_bridge";
-+			phys = <&udc0_phy>;
-+			phy_type = "utmi_wide";
-+			dr_mode = "peripheral";
-+			status = "disabled";
-+		};
-+
-+		udc6: usb@f0836000 {
-+			compatible = "nuvoton,npcm750-udc";
-+			reg = <0xf0836000 0x1000
-+			       0xfffd3000 0x800>;
-+			interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clk NPCM7XX_CLK_SU>;
-+			clock-names = "clk_usb_bridge";
-+			phys = <&udc0_phy>;
-+			phy_type = "utmi_wide";
-+			dr_mode = "peripheral";
-+			status = "disabled";
-+		};
-+
-+		udc7: usb@f0837000 {
-+			compatible = "nuvoton,npcm750-udc";
-+			reg = <0xf0837000 0x1000
-+			       0xfffd3800 0x800>;
-+			interrupts = <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clk NPCM7XX_CLK_SU>;
-+			clock-names = "clk_usb_bridge";
-+			phys = <&udc0_phy>;
-+			phy_type = "utmi_wide";
-+			dr_mode = "peripheral";
-+			status = "disabled";
-+		};
-+
-+		udc8: usb@f0838000 {
-+			compatible = "nuvoton,npcm750-udc";
-+			reg = <0xf0838000 0x1000
-+			       0xfffd4000 0x800>;
-+			interrupts = <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clk NPCM7XX_CLK_SU>;
-+			clock-names = "clk_usb_bridge";
-+			phys = <&udc0_phy>;
-+			phy_type = "utmi_wide";
-+			dr_mode = "peripheral";
-+			status = "disabled";
-+		};
-+
-+		udc9: usb@f0839000 {
-+			compatible = "nuvoton,npcm750-udc";
-+			reg = <0xf0839000 0x1000
-+			       0xfffd4800 0x800>;
-+			interrupts = <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clk NPCM7XX_CLK_SU>;
-+			clock-names = "clk_usb_bridge";
-+			nuvoton,sysgcr = <&gcr>;
-+			phys = <&udc0_phy>;
-+			phy_type = "utmi_wide";
-+			dr_mode = "peripheral";
-+			status = "disabled";
-+		};
-+
- 		apb {
- 			#address-cells = <1>;
- 			#size-cells = <1>;
-diff --git a/arch/arm/boot/dts/nuvoton/nuvoton-npcm750.dtsi b/arch/arm/boot/dts/nuvoton/nuvoton-npcm750.dtsi
-index 30eed40b89b5..f42ad259636c 100644
---- a/arch/arm/boot/dts/nuvoton/nuvoton-npcm750.dtsi
-+++ b/arch/arm/boot/dts/nuvoton/nuvoton-npcm750.dtsi
-@@ -58,5 +58,70 @@ gmac1: eth@f0804000 {
- 					&rg2mdio_pins>;
- 			status = "disabled";
- 		};
-+
-+		udc0: usb@f0830000 {
-+			compatible = "nuvoton,npcm750-udc";
-+			reg = <0xf0830000 0x1000
-+			       0xfffd0000 0x800>;
-+			interrupts = <GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clk NPCM7XX_CLK_SU>;
-+			clock-names = "clk_usb_bridge";
-+			phys = <&udc0_phy>;
-+			phy_type = "utmi_wide";
-+			dr_mode = "peripheral";
-+			status = "disabled";
-+		};
-+
-+		udc1: usb@f0831000 {
-+			compatible = "nuvoton,npcm750-udc";
-+			reg = <0xf0831000 0x1000
-+			       0xfffd0800 0x800>;
-+			interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clk NPCM7XX_CLK_SU>;
-+			clock-names = "clk_usb_bridge";
-+			phys = <&udc0_phy>;
-+			phy_type = "utmi_wide";
-+			dr_mode = "peripheral";
-+			status = "disabled";
-+		};
-+
-+		udc2: usb@f0832000 {
-+			compatible = "nuvoton,npcm750-udc";
-+			reg = <0xf0832000 0x1000
-+			       0xfffd1000 0x800>;
-+			interrupts = <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clk NPCM7XX_CLK_SU>;
-+			clock-names = "clk_usb_bridge";
-+			phys = <&udc0_phy>;
-+			phy_type = "utmi_wide";
-+			dr_mode = "peripheral";
-+			status = "disabled";
-+		};
-+
-+		udc3: usb@f0833000 {
-+			compatible = "nuvoton,npcm750-udc";
-+			reg = <0xf0833000 0x1000
-+			       0xfffd1800 0x800>;
-+			interrupts = <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clk NPCM7XX_CLK_SU>;
-+			clock-names = "clk_usb_bridge";
-+			phys = <&udc0_phy>;
-+			phy_type = "utmi_wide";
-+			dr_mode = "peripheral";
-+			status = "disabled";
-+		};
-+
-+		udc4: usb@f0834000 {
-+			compatible = "nuvoton,npcm750-udc";
-+			reg = <0xf0834000 0x1000
-+			       0xfffd2000 0x800>;
-+			interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clk NPCM7XX_CLK_SU>;
-+			clock-names = "clk_usb_bridge";
-+			phys = <&udc0_phy>;
-+			phy_type = "utmi_wide";
-+			dr_mode = "peripheral";
-+			status = "disabled";
-+		};
- 	};
- };
--- 
-2.49.0.472.ge94155a9ec-goog
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
