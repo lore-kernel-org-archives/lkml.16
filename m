@@ -1,131 +1,177 @@
-Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF7EC236456
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 11:08:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 938601EF37D
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 11:11:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743592108; cv=none; b=UnRHhk8NBgqugL2dB7faXJD+Q+znWrDsbrBRlHIsEYxnEiPIQLi3V/qQZyOhT9MZPvTgV82JaqKPRFZP107KyEmym04ICGlXSbID1rF+3HonM4SfjvspxxYtxNbvn2VYiZxpK/V3O54Hup9xrpYADGAcnDdQ1HT6RDnl0r+chlE=
+	t=1743592262; cv=none; b=mUqZai6di6gXPTU/VJ/EU0j5dvRFQFBq1WsR6ryjVWJMVaNy+LbK0GFHLBZr9m2cVPH0S0IjzzErpMgAH4+VaUu2nnZCL27Z2cvzbtswpXA+cfZ6zY9dP7Kn7YSnZnD8p5oSOYfHcdV6wA42EVXtii3MxXFdFVx2KYCOvlNopIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743592108; c=relaxed/simple;
-	bh=vwrlLoQACrA1bvBVPmegFwAofUucnasgGRBwAUCRvzE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HmO/nP+aXpYSEx71AbTVu7ywARmL6LBON7dp97bw32X1rH4UHAUfZU/AI0CReL6uNTcinYetStjrJv0hadM5mFaS1CANvQvTjxmAkMoYfurUCIso9MakzpcjWEnb47mSZdIWr7GEv4/n3ZAv4BRagP77Xh6m7FTDQ4gKdM9mf2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=ckMi/IMA; arc=none smtp.client-ip=115.124.30.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1743592262; c=relaxed/simple;
+	bh=EWrgD18r2nfU1tBqbRK5IiJug7+Vse8FsJKY0eEvPCg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SPP6vF9Dqfewr7I0wEPmvCIgmHrt6oi0NhU4ksxtHUn+a4Lw455cw/pOkKs/KS+ROzHW8gOy+hK0EwGNL4RyobrsUW9xfBkgQkH7XnTeIBK4cbpfb2VBiRLIBSdQJ81fg1vVcH1sgYuRCutKg8lKMzCJf+T8rM4T19j1PGltu2M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cLnfcCH4; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="ckMi/IMA"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1743592098; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=kaitSHBU5pvb2bsJq/fBRS0Zx/s+bA+j4O/cfG5RpC0=;
-	b=ckMi/IMAByqDfguOBs9uILWBqdJwyvcoOY/gez0IkPyjenAwAGVhDlz48mdTQUg8kX7b2COIdZnvJO+R3x+jcJs/VnFVjM8E5RqsdtwxqXnpJ22S4HWB9kfQL64iCyaZJMmam6y7AJgush9CQBB0lRbQpvVhtXSZcidw1L4obto=
-Received: from 30.221.144.168(mailfrom:joseph.qi@linux.alibaba.com fp:SMTPD_---0WUKDyvz_1743592097 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 02 Apr 2025 19:08:17 +0800
-Message-ID: <1f3049dc-5536-4a27-8768-b264be062f7c@linux.alibaba.com>
-Date: Wed, 2 Apr 2025 19:08:17 +0800
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cLnfcCH4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743592259;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VgTSlcWUxY8a6JwJYyv7GJqNtqyp4QlKElc3qaVOgZs=;
+	b=cLnfcCH4am2r9gPjcQePZzXFIuIAVDk8tlBrco5I4GXKwMabxdjxpbWuTUKDa5uP/H69y4
+	TXdilvHsw1lBoWVQXIFxnq1NES74LG+SVu6bjRQU9+DEd0KS5alttEbQkOc1SHZVSwOPw+
+	5VRKZQnqL/GFA6VPD+FAurqua8eueso=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-457-xDKcHiZ4NxqXSrHBPqvjqA-1; Wed,
+ 02 Apr 2025 07:10:56 -0400
+X-MC-Unique: xDKcHiZ4NxqXSrHBPqvjqA-1
+X-Mimecast-MFC-AGG-ID: xDKcHiZ4NxqXSrHBPqvjqA_1743592253
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 70F521809CA6;
+	Wed,  2 Apr 2025 11:10:51 +0000 (UTC)
+Received: from f39 (unknown [10.45.225.130])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 738421828A80;
+	Wed,  2 Apr 2025 11:10:25 +0000 (UTC)
+Date: Wed, 2 Apr 2025 13:10:22 +0200
+From: Eder Zulian <ezulian@redhat.com>
+To: Ian Rogers <irogers@google.com>
+Cc: Yury Norov <yury.norov@gmail.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Darren Hart <dvhart@infradead.org>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	=?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>,
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+	James Clark <james.clark@linaro.org>,
+	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Al Viro <viro@zeniv.linux.org.uk>, Kyle Meyer <kyle.meyer@hpe.com>,
+	Ben Gainey <ben.gainey@arm.com>,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+	Kajol Jain <kjain@linux.ibm.com>,
+	Aditya Gupta <adityag@linux.ibm.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	Kuan-Wei Chiu <visitorckw@gmail.com>, He Zhe <zhe.he@windriver.com>,
+	Dirk Gouders <dirk@gouders.net>, Brian Geffon <bgeffon@google.com>,
+	Ravi Bangoria <ravi.bangoria@amd.com>,
+	Howard Chu <howardchu95@gmail.com>,
+	Charlie Jenkins <charlie@rivosinc.com>,
+	Colin Ian King <colin.i.king@gmail.com>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	Jann Horn <jannh@google.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Yang Jihong <yangjihong@bytedance.com>,
+	Dmitry Vyukov <dvyukov@google.com>, Andi Kleen <ak@linux.intel.com>,
+	Graham Woodward <graham.woodward@arm.com>,
+	Ilkka Koskinen <ilkka@os.amperecomputing.com>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Zhongqiu Han <quic_zhonhan@quicinc.com>, Hao Ge <gehao@kylinos.cn>,
+	Tengda Wu <wutengda@huaweicloud.com>,
+	Gabriele Monaco <gmonaco@redhat.com>,
+	Chun-Tse Shao <ctshao@google.com>,
+	Casey Chen <cachen@purestorage.com>,
+	"Dr. David Alan Gilbert" <linux@treblig.org>,
+	Li Huafei <lihuafei1@huawei.com>,
+	"Steinar H. Gunderson" <sesse@google.com>,
+	Levi Yun <yeoreum.yun@arm.com>, Weilin Wang <weilin.wang@intel.com>,
+	Thomas Falcon <thomas.falcon@intel.com>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	Andrew Kreimer <algonell@gmail.com>,
+	Krzysztof =?utf-8?Q?=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>,
+	Junhao He <hejunhao3@huawei.com>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	Xu Yang <xu.yang_2@nxp.com>,
+	Steve Clevenger <scclevenger@os.amperecomputing.com>,
+	Zixian Cai <fzczx123@gmail.com>,
+	Stephen Brennan <stephen.s.brennan@oracle.com>,
+	Yujie Liu <yujie.liu@intel.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev
+Subject: Re: [PATCH v1 04/48] x86/insn: Silence -Wshorten-64-to-32 warnings
+Message-ID: <Z-0bHg4aX5uX33CU@f39>
+References: <20250401182347.3422199-1-irogers@google.com>
+ <20250401182347.3422199-5-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] ocfs2: fixing global bitmap allocating failure for
- discontig type
-To: Heming Zhao <heming.zhao@suse.com>, akpm <akpm@linux-foundation.org>
-Cc: ocfs2-devel@lists.linux.dev, linux-kernel@vger.kernel.org,
- gautham.ananthakrishna@oracle.com
-References: <20250401142623.31223-1-heming.zhao@suse.com>
-From: Joseph Qi <joseph.qi@linux.alibaba.com>
-In-Reply-To: <20250401142623.31223-1-heming.zhao@suse.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250401182347.3422199-5-irogers@google.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
+Hello, apologies if I'm missing something, but
 
-
-On 2025/4/1 22:26, Heming Zhao wrote:
-> The commit 4eb7b93e0310 ("ocfs2: improve write IO performance when
-> fragmentation is high") introduced a regression. In the discontiguous
-> extent allocation case, ocfs2_cluster_group_search() is comparing with
-> the wrong target length, which causes allocation failure.
+On Tue, Apr 01, 2025 at 11:23:02AM -0700, Ian Rogers wrote:
+> The clang warning -Wshorten-64-to-32 can be useful to catch
+> inadvertent truncation. In some instances this truncation can lead to
+> changing the sign of a result, for example, truncation to return an
+> int to fit a sort routine. Silence the warning by making the implicit
+> truncation explicit.
 > 
-> Call stack:
-> ocfs2_mkdir()
->  ocfs2_reserve_new_inode()
->   ocfs2_reserve_suballoc_bits()
->    ocfs2_block_group_alloc()
->     ocfs2_block_group_alloc_discontig()
->      __ocfs2_claim_clusters()
->       ocfs2_claim_suballoc_bits()
->        ocfs2_search_chain()
->         ocfs2_cluster_group_search()
-> 
-> Reported-by: Gautham Ananthakrishna <gautham.ananthakrishna@oracle.com>
-> Fixes: 4eb7b93e0310 ("ocfs2: improve write IO performance when fragmentation is high")
-> Signed-off-by: Heming Zhao <heming.zhao@suse.com>
-
-Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
-Tested-by: Gautham Ananthakrishna <gautham.ananthakrishna@oracle.com>
-
+> Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
-> v1 -> v2: OCFS2_AC_USE_MAIN_DISCONTIG type requires separate handling,
->           with all other types proceeding as before.
-> ---
->  fs/ocfs2/suballoc.c | 10 ++++++++--
->  fs/ocfs2/suballoc.h |  1 +
->  2 files changed, 9 insertions(+), 2 deletions(-)
+>  tools/arch/x86/lib/insn.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/fs/ocfs2/suballoc.c b/fs/ocfs2/suballoc.c
-> index f7b483f0de2a..fde75f2af37a 100644
-> --- a/fs/ocfs2/suballoc.c
-> +++ b/fs/ocfs2/suballoc.c
-> @@ -698,10 +698,12 @@ static int ocfs2_block_group_alloc(struct ocfs2_super *osb,
+> diff --git a/tools/arch/x86/lib/insn.c b/tools/arch/x86/lib/insn.c
+> index e91d4c4e1c16..5fa8697498fe 100644
+> --- a/tools/arch/x86/lib/insn.c
+> +++ b/tools/arch/x86/lib/insn.c
+> @@ -92,7 +92,7 @@ static int __insn_get_emulate_prefix(struct insn *insn,
+>  			goto err_out;
+>  	}
 >  
->  	bg_bh = ocfs2_block_group_alloc_contig(osb, handle, alloc_inode,
->  					       ac, cl);
-> -	if (PTR_ERR(bg_bh) == -ENOSPC)
-> +	if (PTR_ERR(bg_bh) == -ENOSPC) {
-> +		ac->ac_which = OCFS2_AC_USE_MAIN_DISCONTIG;
->  		bg_bh = ocfs2_block_group_alloc_discontig(handle,
->  							  alloc_inode,
->  							  ac, cl);
-> +	}
->  	if (IS_ERR(bg_bh)) {
->  		status = PTR_ERR(bg_bh);
->  		bg_bh = NULL;
-> @@ -2365,7 +2367,8 @@ int __ocfs2_claim_clusters(handle_t *handle,
->  	BUG_ON(ac->ac_bits_given >= ac->ac_bits_wanted);
+> -	insn->emulate_prefix_size = len;
+> +	insn->emulate_prefix_size = (int)len;
+
+wouldn't something like 
++ insn->emulate_prefix_size = !!len;
+be preferable in this case?
+
+Apparently the 'insn->emulate_prefix_size' is only used in
+'insn_has_emulate_prefix()'. Perhaps both the flag 'emulate_prefix_size'
+(currently an 'int') and the 'insn_has_emulate_prefix()' function return
+type could be changed to boolean?
+
+>  	insn->next_byte += len;
+
+My knowledge of this part of the code is limited, however IMO it seems
+strange to have the 'emulate_prefix_size' flag affected implictly or
+explicitly by truncation and the pointer 'insn->next_byte' advanced
+regardless.
+
 >  
->  	BUG_ON(ac->ac_which != OCFS2_AC_USE_LOCAL
-> -	       && ac->ac_which != OCFS2_AC_USE_MAIN);
-> +	       && ac->ac_which != OCFS2_AC_USE_MAIN
-> +	       && ac->ac_which != OCFS2_AC_USE_MAIN_DISCONTIG);
->  
->  	if (ac->ac_which == OCFS2_AC_USE_LOCAL) {
->  		WARN_ON(min_clusters > 1);
-> @@ -2429,6 +2432,9 @@ int ocfs2_claim_clusters(handle_t *handle,
->  {
->  	unsigned int bits_wanted = ac->ac_bits_wanted - ac->ac_bits_given;
->  
-> +	if (ac->ac_which == OCFS2_AC_USE_MAIN_DISCONTIG)
-> +		bits_wanted = min_clusters;
-> +
->  	return __ocfs2_claim_clusters(handle, ac, min_clusters,
->  				      bits_wanted, cluster_start, num_clusters);
->  }
-> diff --git a/fs/ocfs2/suballoc.h b/fs/ocfs2/suballoc.h
-> index b481b834857d..bcf2ed4a8631 100644
-> --- a/fs/ocfs2/suballoc.h
-> +++ b/fs/ocfs2/suballoc.h
-> @@ -29,6 +29,7 @@ struct ocfs2_alloc_context {
->  #define OCFS2_AC_USE_MAIN  2
->  #define OCFS2_AC_USE_INODE 3
->  #define OCFS2_AC_USE_META  4
-> +#define OCFS2_AC_USE_MAIN_DISCONTIG  5
->  	u32    ac_which;
->  
->  	/* these are used by the chain search */
+>  	return 1;
+> -- 
+> 2.49.0.504.g3bcea36a83-goog
+> 
 
