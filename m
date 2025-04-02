@@ -1,64 +1,67 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97D4D802
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 12:10:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7C42237A3B
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 12:11:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743595849; cv=none; b=aBh1n4pb5ovsTtcHSBLjYIGKnKA2jrD3veytnav/3CYeU+094uo0AYKA72tOJMJLuijMy3Cry3R3d5uVpcsrh7+UZ26Fi5uU/KIyCad7Ij3O+y9pftGMhpbezaiasZj5i5Cg0VYqnwzQyhKpci9HLjciQ7rxSg/OFO2ASCynnas=
+	t=1743595910; cv=none; b=e5ADVGo6MWPAYGROOfTtP5xx6g4MzpWRTX9R+ry4VaHTAATy+Ppyby8RMx/h9aLF9pfJkxkg9Srm7a81ouJsVIolKqJ+iiCYTKSDobTKKy8eSdrQZJUJXmcC3SBalmBvracur1M+6ue33tDwZERuquPPng440xh4mwlBAuLQ9Wc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743595849; c=relaxed/simple;
-	bh=IUSG6x8jg+0GyDRnL8VhaFv/k5xiKGHkXOpNUq/V8T0=;
+	s=arc-20240116; t=1743595910; c=relaxed/simple;
+	bh=znh3N/rW7quWQkzFKk/ow5OXIniZs+x02k3aBF1YDno=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=a4GzqsvToVTPhcJ//2UJKBybEAaAKtIcKKFcHDQ0ZURtNyG1PcaftPsmnIx703aAd8xrcE/CZdrEJSUHV/hg+sGhwniqPfThARRIx36kvwRY9Oz/RsAokKsnuADG4hfwfqKXvUy/Cz3MZaqFrnlelmmel1uveigAo3Eq8e9PqKQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hncSghb3; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 In-Reply-To:Content-Type; b=K2FR4TygD4EgcImuEjcc2Kac280awSsM79dFYkYeZtmswLRoy41ZfTp4O8dXSifancD43DsWe8KgUX+6L3zpznocaOUuwed3qxYxx1GLmS+YioCFwUxfLjRjgw21klI9n5EQsCVIuf6RllSLMTOOItOAelUGuSt7zTfK/xifn4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=openvpn.net; spf=pass smtp.mailfrom=openvpn.com; dkim=pass (2048-bit key) header.d=openvpn.net header.i=@openvpn.net header.b=SDFrHGi2; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=openvpn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=openvpn.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hncSghb3"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43cfba466b2so66438835e9.3
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 05:10:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=openvpn.net header.i=@openvpn.net header.b="SDFrHGi2"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-aaf0f1adef8so923959866b.3
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 05:11:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743595846; x=1744200646; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=RYc1LuB/xIhlHruIFuXcUs0gJsKL3VzWsL18O/VLaxk=;
-        b=hncSghb3+51qvS62kA0kvOqS6WKdCgQDdrQIQI32lMeJM1Ow3AONb4jBf4jeTCbMTf
-         JhTMVFD+Ia5+l4qLEsSUxe/2iUcM6xGIYKjfApABgC8wYoIWiA+ZA7a/Xfg3pxWEo6Cl
-         65R9x6EDh21qCQ9eUb3hjYTQOVSIm5SCEyTfdaqtSbXRaK/rlZH66VVwPvoeDrXhdyja
-         RUI+X6CAxTe7z5YadFFwNDAru2Tluio0G5JPkaODvygtOxrnPbUsYg7MjM3u5+FLriU3
-         ZP+hD27iIqHzyCcTMuh1jZ6R7xAcuvLJ9/7tOLeqn1kDjfi5/4HnlN2TZsO3B216ayU6
-         ohwA==
+        d=openvpn.net; s=google; t=1743595906; x=1744200706; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=+v0JQJZFWiuhbl9dOgj1toLEURVKnByxbc2HMXbSZ+4=;
+        b=SDFrHGi2xHK3L4URXbaUYJ0YG6djOEs8qOULHd5fOhCDrAfbRJox3Z1kuYLBCbdbW2
+         1L5iqWbM77PgAGip27P0U9ghfHGOvqe6ngo5HJQvlYSOKDvuGZKxHMo/g8NHIndQnmAQ
+         bJBL+9qU25YhLz6k8Ay9P1dYhHmE8maA+ryGsvmGEE3aQUSUAVSgeCLb2gtwDy9hpO6U
+         QnfyKdAMrFk4bz66Tm5QmL5MG8+1C4E0AKh1zhxKZGsY4d9qFI/017VpLgnZbBehr03a
+         SPsPuq8jSFmrvgZE507T4RVuvjAc7Dvhb63QGE+oiMtSygq5jdZCW3zQzhkZFD6aUJ8L
+         ZpMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743595846; x=1744200646;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RYc1LuB/xIhlHruIFuXcUs0gJsKL3VzWsL18O/VLaxk=;
-        b=WvE9UEu25ex6oEnRmuHGemC3oK8+HZyNd/6Z8b4lMsuvO01+pjzKkAzT0Uqk0r7fft
-         cLGz6wC3ce5CgmYqFttLfQWhQpZJtCHcCkmrkWdnW8Pb1PgXFWq5SXLtv5YlQnM+qNTU
-         v0ffY1r+T+e0K2lYVilWSrFUDK61Fj2rI+92CrovdWwPiipAgGakXhtUN2mxI3M5nxly
-         vGzQwbiwqZApJiqNntm3OUC9QZG+d+MfKZWbS7ZgR0IxGVcktDguVL0GO2zhHxkDI5+d
-         uLdmefIvOeui9wxyDq5QRJUA34QdB4Y26ndINAhZt2PpfXhXL+n4SHKie9lhPI4xnghM
-         6RGw==
-X-Forwarded-Encrypted: i=1; AJvYcCUMCQCKP3kSGvqrWpSuEqiehMjwMkmzyZzrZt4aMv+1Z8uU3DxcJx6Z6rAzpMvXAbg2qsABTJ5nyHqfspY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywm5mQztvW02+9NeyaFWkGqHHq87+bg8Tk2Q9bjAH0gIhy+lLQb
-	rLsv5dT8/FV+inHkOvyppXlE7Tf7mcrcN8QUi1qeGV+rKdJnZufIlihOStn8c9I=
-X-Gm-Gg: ASbGncsVhVijqGATT8vIWZ9NP1zPPCLWXhLDhJ6ZyIw9Rwou2FdIl1bb2DJzVRfl0Dr
-	mnPF7JP/WwEWG5u7bVexT03BCz3EoXfpIJ9u7VOZyzEYVk4RoPl1WPeWN0v+lQIXshf0joQlTpv
-	LOo+lxIiba8aGpyZVhRUxn6/d7Xh/Q10MoyI7XCtIFHq5uFUjnapYwpXHTHrEYadwWBuugYclk4
-	NKn9FBgPiNOyJx8dQv7UVEdo2mWcsIZqfi9xoK/F9lahkEF7OIHDIK+/fUd4rGmzb+YlGBE9pSC
-	ZqaEKI3GbDWQeVHHXKabwuRqyjxVW/bIXMinLQE/UTTG7Phzm+q8wA==
-X-Google-Smtp-Source: AGHT+IEUaRlq843Y7/JXmnM/b92P4/Evfz3Q6+OEj5CnWNZqw+5LChhSQFa8MJAQNMyyV9Csuv1rZQ==
-X-Received: by 2002:a05:600c:b97:b0:43d:1b74:e89a with SMTP id 5b1f17b1804b1-43db6228697mr160288065e9.9.1743595845868;
-        Wed, 02 Apr 2025 05:10:45 -0700 (PDT)
-Received: from [192.168.0.14] ([79.115.63.146])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43eb613a7edsm18871825e9.38.2025.04.02.05.10.43
+        d=1e100.net; s=20230601; t=1743595906; x=1744200706;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+v0JQJZFWiuhbl9dOgj1toLEURVKnByxbc2HMXbSZ+4=;
+        b=q3EvAFEQkpuIdP/0Unohhc8VbjsidNkzuuNQWbeitVqiX7fvpR/5IoDjAngLDNCn6d
+         EO1ioUbI+GMOcnRUNt8uXBW6UBFQ5sAqCEHoDVOv+ROnTKq0b7OImCDGO0qaHx+Oy+EQ
+         VSMKI64hbunEmI0Z2tJsCxY64s75GgO62IsjRYZ4KKfIw+DXv4I+R4HTLglJm0qBnuPD
+         ft+5YSXU4irjBAm5ugCERMNEHt/hvGKiiSVI0Yg0RN5a4aWwpaP0RtWdVqlqSAdbzraz
+         QyoWlcps5BVHFkkFLTqHgYLda+9gVVPMHf9bYIxnR3Z5JJ0V3gNvNrFcHwT6/c32xU7z
+         hq+w==
+X-Forwarded-Encrypted: i=1; AJvYcCXZhUiIiM+ezG8rDaFW2wsQGKvAKovRwA6xiGprSkxQUVFc+VGrcjgtD7eBgEzIbUzFifjOOh9d62BG/+g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwGtP9vHKFbcAebfnV4ARX/woWQeirHlRL9KYoez/3Otl246Uqf
+	ZrGIzaaWb0oSdZLLhrLkoQiCb4OB85vFCMBlZ0/ENsNSGsgxSIzTUlaZVbcS4g4SPx9gVIJ9/DZ
+	O++QRjCUxdWbeKWljtN9u/mYXEZ+DDtq+V2+TP+HGB59Ywai81PSBUHg=
+X-Gm-Gg: ASbGnct0jfRPIf+pnmDUmY+VaYp5leucYwd4MJoiCvfJbHhb7f1UXa3359Fg7cRVWaC
+	FF/i4seIXAL8Bah2yZetouodtnE+tJEOtnem3TFHdBYs2E7c8IDQwgeJ/oSIztRc3aVq+uD6kWU
+	ACcQvjJCIo4e2/XrTRqYIh09Rpt8B2b940A2PUx+izUvehnXJ+EnNjkSqy9hqrM7IeQrRM2af8t
+	U9z7F1kqG4leQCuBni+5YFbGuJQHgM3fp1kJGnQCwGenmpJLi2WKtbE+JPu/CpnvzaRzTp+8/zT
+	2d/Fxf2dIaMXH2fqV/gYFCZUimMZZdrXLmfMOUswMnzzQ2Gct0h8hUFrG2kEIk+KL0galWtaqGd
+	As5XV9yM=
+X-Google-Smtp-Source: AGHT+IG1/Ya4jb9p6b1iUEKFuRWbirlB/ADOUvxv+FZqn33gXr5jpoeRL5uo2cZL8kWtEFMzd0mRQg==
+X-Received: by 2002:a17:907:1c9c:b0:ac2:baab:681c with SMTP id a640c23a62f3a-ac738a55dffmr1332866466b.28.1743595906097;
+        Wed, 02 Apr 2025 05:11:46 -0700 (PDT)
+Received: from ?IPV6:2001:67c:2fbc:1:9a9c:dc9e:39c6:2380? ([2001:67c:2fbc:1:9a9c:dc9e:39c6:2380])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac719223e1esm906786466b.7.2025.04.02.05.11.43
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Apr 2025 05:10:44 -0700 (PDT)
-Message-ID: <7aca2dd2-611d-4af2-b4a8-265528de2534@linaro.org>
-Date: Wed, 2 Apr 2025 13:10:43 +0100
+        Wed, 02 Apr 2025 05:11:44 -0700 (PDT)
+Message-ID: <39b4ca40-a4a8-447f-b2a7-7221437fad22@openvpn.net>
+Date: Wed, 2 Apr 2025 14:11:43 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,83 +69,132 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] mtd: spi-nor: macronix: Move
- macronix_nor_default_init logic to macronix_nor_late_init
-To: Cheng Ming Lin <linchengming884@gmail.com>, pratyush@kernel.org,
- mwalle@kernel.org, miquel.raynal@bootlin.com, richard@nod.at,
- vigneshr@ti.com, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: alvinzhou@mxic.com.tw, leoyu@mxic.com.tw,
- Cheng Ming Lin <chengminglin@mxic.com.tw>
-References: <20250402085129.1027670-1-linchengming884@gmail.com>
- <20250402085129.1027670-4-linchengming884@gmail.com>
+Subject: Re: [PATCH net-next v24 16/23] ovpn: implement keepalive mechanism
+To: Sabrina Dubroca <sd@queasysnail.net>
+Cc: netdev@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Donald Hunter <donald.hunter@gmail.com>, Shuah Khan <shuah@kernel.org>,
+ ryazanov.s.a@gmail.com, Andrew Lunn <andrew+netdev@lunn.ch>,
+ Simon Horman <horms@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, Xiao Liang <shaw.leon@gmail.com>
+References: <20250318-b4-ovpn-v24-0-3ec4ab5c4a77@openvpn.net>
+ <20250318-b4-ovpn-v24-16-3ec4ab5c4a77@openvpn.net> <Z-vhVdMThx7NQgW0@krikkit>
 Content-Language: en-US
-From: Tudor Ambarus <tudor.ambarus@linaro.org>
-In-Reply-To: <20250402085129.1027670-4-linchengming884@gmail.com>
-Content-Type: text/plain; charset=UTF-8
+From: Antonio Quartulli <antonio@openvpn.net>
+Autocrypt: addr=antonio@openvpn.net; keydata=
+ xsFNBFN3k+ABEADEvXdJZVUfqxGOKByfkExNpKzFzAwHYjhOb3MTlzSLlVKLRIHxe/Etj13I
+ X6tcViNYiIiJxmeHAH7FUj/yAISW56lynAEt7OdkGpZf3HGXRQz1Xi0PWuUINa4QW+ipaKmv
+ voR4b1wZQ9cZ787KLmu10VF1duHW/IewDx9GUQIzChqQVI3lSHRCo90Z/NQ75ZL/rbR3UHB+
+ EWLIh8Lz1cdE47VaVyX6f0yr3Itx0ZuyIWPrctlHwV5bUdA4JnyY3QvJh4yJPYh9I69HZWsj
+ qplU2WxEfM6+OlaM9iKOUhVxjpkFXheD57EGdVkuG0YhizVF4p9MKGB42D70pfS3EiYdTaKf
+ WzbiFUunOHLJ4hyAi75d4ugxU02DsUjw/0t0kfHtj2V0x1169Hp/NTW1jkqgPWtIsjn+dkde
+ dG9mXk5QrvbpihgpcmNbtloSdkRZ02lsxkUzpG8U64X8WK6LuRz7BZ7p5t/WzaR/hCdOiQCG
+ RNup2UTNDrZpWxpwadXMnJsyJcVX4BAKaWGsm5IQyXXBUdguHVa7To/JIBlhjlKackKWoBnI
+ Ojl8VQhVLcD551iJ61w4aQH6bHxdTjz65MT2OrW/mFZbtIwWSeif6axrYpVCyERIDEKrX5AV
+ rOmGEaUGsCd16FueoaM2Hf96BH3SI3/q2w+g058RedLOZVZtyQARAQABzSdBbnRvbmlvIFF1
+ YXJ0dWxsaSA8YW50b25pb0BvcGVudnBuLm5ldD7Cwa0EEwEIAFcCGwMFCwkIBwMFFQoJCAsF
+ FgIDAQACHgECF4AFCRWQ2TIWIQTKvaEoIBfCZyGYhcdI8My2j1nRTAUCYRUquBgYaGtwczov
+ L2tleXMub3BlbnBncC5vcmcACgkQSPDMto9Z0UzmcxAAjzLeD47We0R4A/14oDKlZxXO0mKL
+ fCzaWFsdhQCDhZkgxoHkYRektK2cEOh4Vd+CnfDcPs/iZ1i2+Zl+va79s4fcUhRReuwi7VCg
+ 7nHiYSNC7qZo84Wzjz3RoGYyJ6MKLRn3zqAxUtFECoS074/JX1sLG0Z3hi19MBmJ/teM84GY
+ IbSvRwZu+VkJgIvZonFZjbwF7XyoSIiEJWQC+AKvwtEBNoVOMuH0tZsgqcgMqGs6lLn66RK4
+ tMV1aNeX6R+dGSiu11i+9pm7sw8tAmsfu3kQpyk4SB3AJ0jtXrQRESFa1+iemJtt+RaSE5LK
+ 5sGLAO+oN+DlE0mRNDQowS6q/GBhPCjjbTMcMfRoWPCpHZZfKpv5iefXnZ/xVj7ugYdV2T7z
+ r6VL2BRPNvvkgbLZgIlkWyfxRnGh683h4vTqRqTb1wka5pmyBNAv7vCgqrwfvaV1m7J9O4B5
+ PuRjYRelmCygQBTXFeJAVJvuh2efFknMh41R01PP2ulXAQuVYEztq3t3Ycw6+HeqjbeqTF8C
+ DboqYeIM18HgkOqRrn3VuwnKFNdzyBmgYh/zZx/dJ3yWQi/kfhR6TawAwz6GdbQGiu5fsx5t
+ u14WBxmzNf9tXK7hnXcI24Z1z6e5jG6U2Swtmi8sGSh6fqV4dBKmhobEoS7Xl496JN2NKuaX
+ jeWsF2rOwE0EZmhJFwEIAOAWiIj1EYkbikxXSSP3AazkI+Y/ICzdFDmiXXrYnf/mYEzORB0K
+ vqNRQOdLyjbLKPQwSjYEt1uqwKaD1LRLbA7FpktAShDK4yIljkxhvDI8semfQ5WE/1Jj/I/Q
+ U+4VXhkd6UvvpyQt/LiWvyAfvExPEvhiMnsg2zkQbBQ/M4Ns7ck0zQ4BTAVzW/GqoT2z03mg
+ p1FhxkfzHMKPQ6ImEpuY5cZTQwrBUgWif6HzCtQJL7Ipa2fFnDaIHQeiJG0RXl/g9x3YlwWG
+ sxOFrpWWsh6GI0Mo2W2nkinEIts48+wNDBCMcMlOaMYpyAI7fT5ziDuG2CBA060ZT7qqdl6b
+ aXUAEQEAAcLBfAQYAQgAJhYhBMq9oSggF8JnIZiFx0jwzLaPWdFMBQJmaEkXAhsMBQkB4TOA
+ AAoJEEjwzLaPWdFMbRUP/0t5FrjF8KY6uCU4Tx029NYKDN9zJr0CVwSGsNfC8WWonKs66QE1
+ pd6xBVoBzu5InFRWa2ed6d6vBw2BaJHC0aMg3iwwBbEgPn4Jx89QfczFMJvFm+MNc2DLDrqN
+ zaQSqBzQ5SvUjxh8lQ+iqAhi0MPv4e2YbXD0ROyO+ITRgQVZBVXoPm4IJGYWgmVmxP34oUQh
+ BM7ipfCVbcOFU5OPhd9/jn1BCHzir+/i0fY2Z/aexMYHwXUMha/itvsBHGcIEYKk7PL9FEfs
+ wlbq+vWoCtUTUc0AjDgB76AcUVxxJtxxpyvES9aFxWD7Qc+dnGJnfxVJI0zbN2b37fX138Bf
+ 27NuKpokv0sBnNEtsD7TY4gBz4QhvRNSBli0E5bGUbkM31rh4Iz21Qk0cCwR9D/vwQVsgPvG
+ ioRqhvFWtLsEt/xKolOmUWA/jP0p8wnQ+3jY6a/DJ+o5LnVFzFqbK3fSojKbfr3bY33iZTSj
+ DX9A4BcohRyqhnpNYyHL36gaOnNnOc+uXFCdoQkI531hXjzIsVs2OlfRufuDrWwAv+em2uOT
+ BnRX9nFx9kPSO42TkFK55Dr5EDeBO3v33recscuB8VVN5xvh0GV57Qre+9sJrEq7Es9W609a
+ +M0yRJWJEjFnMa/jsGZ+QyLD5QTL6SGuZ9gKI3W1SfFZOzV7hHsxPTZ6
+Organization: OpenVPN Inc.
+In-Reply-To: <Z-vhVdMThx7NQgW0@krikkit>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
+On 01/04/2025 14:51, Sabrina Dubroca wrote:
+> 2025-03-18, 02:40:51 +0100, Antonio Quartulli wrote:
+>> @@ -124,6 +154,13 @@ void ovpn_decrypt_post(void *data, int ret)
+>>   			goto drop;
+>>   		}
+>>   
+>> +		if (ovpn_is_keepalive(skb)) {
+>> +			net_dbg_ratelimited("%s: ping received from peer %u\n",
+>> +					    netdev_name(peer->ovpn->dev),
+>> +					    peer->id);
+>> +			goto drop_nocount;
+>> +		}
+>> +
+>>   		net_info_ratelimited("%s: unsupported protocol received from peer %u\n",
+>>   				     netdev_name(peer->ovpn->dev), peer->id);
+>>   		goto drop;
+>> @@ -149,6 +186,7 @@ void ovpn_decrypt_post(void *data, int ret)
+>>   drop:
+>>   	if (unlikely(skb))
+>>   		dev_core_stats_rx_dropped_inc(peer->ovpn->dev);
+>> +drop_nocount:
+>>   	if (likely(peer))
+>>   		ovpn_peer_put(peer);
+>>   	if (likely(ks))
+>>   	kfree_skb(skb);
+>>   }
+> 
+> Again a small thing: in the case of a keepalive message, it would also
+> be nice to use consume_skb instead of kfree_skb. Quoting from the doc
+> for consume_skb:
+> 
+>   *	Functions identically to kfree_skb, but kfree_skb assumes that the frame
+>   *	is being dropped after a failure and notes that
+
+I agree! I always try to pay attention to when consume_skb() should be 
+used, but I must have missed this special case.
+
+> 
+> 
+> 
+> Something like this maybe (not compiled):
+> 
+> 	/* skb is passed to upper layer - don't free it */
+> 	skb = NULL;
+> drop:
+> 	if (unlikely(skb))
+> 		dev_core_stats_rx_dropped_inc(peer->ovpn->dev);
+> 	kfree_skb(skb);
+> 	skb = NULL;
+> drop_nocount:
+> 	if (likely(peer))
+> 		ovpn_peer_put(peer);
+> 	if (likely(ks))
+> 		ovpn_crypto_key_slot_put(ks);
+> 	consume_skb(skb);
+> 
+> 
+> 
+
+Either that or I can call consume_skb(skb) and set skb = NULL before 
+jumping to drop_nocount (haven't fully checked if possible).
+
+I'll see which version is better.
+
+Thanks for pointing this out!
+
+Regards,
 
 
-On 4/2/25 9:51 AM, Cheng Ming Lin wrote:
-> From: Cheng Ming Lin <chengminglin@mxic.com.tw>
-> 
-> Remove macronix_nor_default_init and move its functionality to
-> macronix_nor_late_init to ensure proper quad_enable initialization.
-> 
-> For MX25L3255E, SFDP follows JESD216, which does not include the Quad
-> Enable bit Requirements field in its version. When the size field is
-> removed, manufacturer->fixups->default_init hook is not executed, causing
-> params->quad_enable not being overwritten with the intended function.
-> Consequently, it remains as the default spi_nor_sr2_bit1_quad_enable.
-> 
-> By moving quad_enable setup from default_init to late_init, quad_enable
-> is correctly assigned after spi_nor_init_params, regardless of the size
-> field removal.
-> 
-> Additionally, according to spi-nor/core.h, quad_enable is more
-> appropriately placed in late_init, as older SFDP versions did not define
-> the Quad Enable bit Requirements. This change removes default_init and
-> moves quad_enable handling to late_init accordingly.
-> 
-> Signed-off-by: Cheng Ming Lin <chengminglin@mxic.com.tw>
-> ---
->  drivers/mtd/spi-nor/macronix.c | 7 +------
->  1 file changed, 1 insertion(+), 6 deletions(-)
-> 
-> diff --git a/drivers/mtd/spi-nor/macronix.c b/drivers/mtd/spi-nor/macronix.c
-> index 07e0bd0b70a0..216c02b92bfe 100644
-> --- a/drivers/mtd/spi-nor/macronix.c
-> +++ b/drivers/mtd/spi-nor/macronix.c
-> @@ -282,22 +282,17 @@ static int macronix_nor_set_octal_dtr(struct spi_nor *nor, bool enable)
->  	return enable ? macronix_nor_octal_dtr_en(nor) : macronix_nor_octal_dtr_dis(nor);
->  }
->  
-> -static void macronix_nor_default_init(struct spi_nor *nor)
-> -{
-> -	nor->params->quad_enable = spi_nor_sr1_bit6_quad_enable;
-> -}
-> -
->  static int macronix_nor_late_init(struct spi_nor *nor)
->  {
->  	if (!nor->params->set_4byte_addr_mode)
->  		nor->params->set_4byte_addr_mode = spi_nor_set_4byte_addr_mode_en4b_ex4b;
-> +	nor->params->quad_enable = spi_nor_sr1_bit6_quad_enable;
-
-Not at manufacturer level, please. You change the behavior and overwrite
-whatever is retrieved from SFDP for all the flashes. Instead you should
-introduce late init just for MX25L3255E, because set_4byte_addr_mode is
-not covered in rev A of JESD216 I assume. Then if other flashes get this
-param wrong from BFPT, amend them with post_bfpt hooks.
-
-
->  	nor->params->set_octal_dtr = macronix_nor_set_octal_dtr;
->  
->  	return 0;
->  }
->  
->  static const struct spi_nor_fixups macronix_nor_fixups = {
-> -	.default_init = macronix_nor_default_init,
->  	.late_init = macronix_nor_late_init,
->  };
->  
+-- 
+Antonio Quartulli
+OpenVPN Inc.
 
