@@ -1,114 +1,116 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from out-177.mta1.migadu.com (out-177.mta1.migadu.com [95.215.58.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 314CA19E99A;
-	Wed,  2 Apr 2025 18:30:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0277E1C863B
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 18:30:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743618610; cv=none; b=b0Bbfpv2l6FxqZfgJNH4uXBSdPDxGiS0ys3pdH+NyqPceCrlYxVDNGk+3RohSnz8mWN4WhQhthffLQ6rp0OgtzTvLx6B2OC1w3hQ1uutWJIjQyGqL+Y4/8n9Qvq9FSbPVa1X0Yiyp4PoKz4FiPWVmfuMrH0ozdPFSXb6Sf+UAh4=
+	t=1743618630; cv=none; b=lm2q1+W+uIrDW4ZBLhu5MLoVrKE4Is8BIQa7aqcXVZ1p8a9F3BmdaAyRrkOcAqAhu8CExKC8GImMiwj3B4SmhwjL6qmdk82PdBXeBvlCPzbyhktyOBKEwJsJhPtgrrHL+TiZ4D/U98fFjPJODcTPksEbUc5PN1sjtdwbeYG2OFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743618610; c=relaxed/simple;
-	bh=MIYZp0RpSxC/dK550QikaiN/zkIiyI2QWdLzOBOBqpY=;
+	s=arc-20240116; t=1743618630; c=relaxed/simple;
+	bh=5x2issN15vB42zgZIfNc/uBiGhxFXgYG5j4rbXf2OPc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K9ycq9qveOL/s3+rmS10f1hBnB++5RUhLdbXnelYG/UpkBOHhgloEz+ULK17UGb3sh6teZu7umsh/B3+FjkicatdEkmI7HKqw2KCONjGfOeNUbLFRPSziAILhu4iTROCzlRpwg/cJvM8YXxnNGjXFKucX4zTt4OmmVAmdBhmJZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=SZdI0vBf; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=cEzK6+Bt7RmCzttoFdvUImC6UahwkoNwSKxaluP+lnZQxM2VSaXwkI/3h8yQ6oOcksydDdRy2sauSU07qI1+/l92wSUl+ndqlELqQPLwfXvkiPXUYgnCUOPK5EUVhucaMLxPG8hMjyPoi10qnRLwpgDbGM8L5ZFQOegHjEjPsZ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=PySjimlQ; arc=none smtp.client-ip=95.215.58.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="SZdI0vBf"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 9E6E340E0196;
-	Wed,  2 Apr 2025 18:30:02 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id XOtpVDaZ6P3S; Wed,  2 Apr 2025 18:29:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1743618598; bh=jhDUDmM64c22Ocj1QmmY4kruyZeU8W2YObwLlnin59E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SZdI0vBfe5b5fSq+dU/Nkw8aec5CNiB1tK1BWVP/nZwIo+0CNnmN1T4mpcXp+hWzZ
-	 x3Wd9O0AM9YfFpbWB7DnnSJ5jO8/VFknTEzLiM2cB1CQXnoPG43EQ+Kd/TQLKVpY+R
-	 sipVJ+sau6oZyU1j+O4uk6tcdRUHNjRKZPgx9POf/pRW1IUw0tcMHLqSzIOUwRcAtO
-	 /ReoHNqNoBiJB3Byf0MxbjttxqYafKUGjGsDm2SeVeShPrF/+L6N1sDwraS4A43dSW
-	 GiMJRG95JKjT+LcqJfFV6zO/VzwgGXs+Qb0r2E+T//Euzo2cHFSj8TBrEgcTRRw8Nw
-	 9RKoKuy4XN7nrud2B+gRcJgCcc4wuwFM68Ei25xt4ydmxjHgfq8xPI8o7dS6PvIa5+
-	 pfCkkF0GQ9hR1AblLIhJneWwhRRUG2zgshpdShnPknpmKLpWedTmFVUBAQhQCM1hSs
-	 nkNAp47iyqviNGOj/DAJsbmrnpVtOAXr8Ctjd6iKL3i69baIDFJkWWJbIbhYlNf6zT
-	 +GP0qSk+LTw+uuhN0mIbbL/qESbcS59b8gdtT4n3iWcuKoId2JPGgsNbg2cSnAY6t6
-	 ebOT+gjFhWGNWz+69GXtg5ZI6VbFIdqtzCpkqtvv3K8S6q5s3i0PT8vAvGr0sB+MyW
-	 C5zplnk0AC9EIUcIx3H39dmw=
-Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 1E09140E022E;
-	Wed,  2 Apr 2025 18:29:34 +0000 (UTC)
-Date: Wed, 2 Apr 2025 20:29:28 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, amit@kernel.org,
-	kvm@vger.kernel.org, amit.shah@amd.com, thomas.lendacky@amd.com,
-	tglx@linutronix.de, peterz@infradead.org,
-	pawan.kumar.gupta@linux.intel.com, corbet@lwn.net, mingo@redhat.com,
-	dave.hansen@linux.intel.com, hpa@zytor.com, seanjc@google.com,
-	pbonzini@redhat.com, daniel.sneddon@linux.intel.com,
-	kai.huang@intel.com, sandipan.das@amd.com,
-	boris.ostrovsky@oracle.com, Babu.Moger@amd.com,
-	david.kaplan@amd.com, dwmw@amazon.co.uk, andrew.cooper3@citrix.com
-Subject: Re: [PATCH v3 1/6] x86/bugs: Rename entry_ibpb()
-Message-ID: <20250402182928.GAZ-2CCBR2BAgpwVLf@fat_crate.local>
-References: <cover.1743617897.git.jpoimboe@kernel.org>
- <a3ce1558b68a64f52ea56000f2bbdfd6e7799258.1743617897.git.jpoimboe@kernel.org>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="PySjimlQ"
+Date: Wed, 2 Apr 2025 11:30:10 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1743618615;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RRd3SQcvztMwM6nVkcAFoWMZZ4yVqjmYprozJgTEDhQ=;
+	b=PySjimlQBSxDpoJBYRyJxPQX5UpQ3bEXK4WqSxSBQq3lQsdjcZ3pft3X45O3k9kKcmTIxp
+	qnZtHY0MvLbowPwWBVCXOWBHpr/KAWGybO6i7YS4frnUMuYCtrHjbTedEihOjnwzqkxHpt
+	YUA+D+cNrQ4LgfNb3wc5WN7NV3Szmak=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Shakeel Butt <shakeel.butt@linux.dev>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: Michal Hocko <mhocko@suse.com>, Dave Chinner <david@fromorbit.com>, 
+	Yafang Shao <laoar.shao@gmail.com>, Harry Yoo <harry.yoo@oracle.com>, Kees Cook <kees@kernel.org>, 
+	joel.granados@kernel.org, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Josef Bacik <josef@toxicpanda.com>, linux-mm@kvack.org, Vlastimil Babka <vbabka@suse.cz>
+Subject: Re: [PATCH] proc: Avoid costly high-order page allocations when
+ reading proc files
+Message-ID: <vwlkfkkz3hezfwedklvybe3lhy2haz2l5fmcojmcjjwj3axye7@ac7junf6ay2f>
+References: <20250401073046.51121-1-laoar.shao@gmail.com>
+ <3315D21B-0772-4312-BCFB-402F408B0EF6@kernel.org>
+ <Z-y50vEs_9MbjQhi@harry>
+ <CALOAHbBSvMuZnKF_vy3kGGNOCg5N2CgomLhxMxjn8RNwMTrw7A@mail.gmail.com>
+ <Z-0gPqHVto7PgM1K@dread.disaster.area>
+ <Z-0sjd8SEtldbxB1@tiehlicka>
+ <Z-1yui_QgubgRAmL@casper.infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a3ce1558b68a64f52ea56000f2bbdfd6e7799258.1743617897.git.jpoimboe@kernel.org>
+In-Reply-To: <Z-1yui_QgubgRAmL@casper.infradead.org>
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, Apr 02, 2025 at 11:19:18AM -0700, Josh Poimboeuf wrote:
-> There's nothing entry-specific about entry_ibpb().  In preparation for
-
-Not anymore - it was done on entry back then AFAIR.
-
-> calling it from elsewhere, rename it to __write_ibpb().
+On Wed, Apr 02, 2025 at 06:24:10PM +0100, Matthew Wilcox wrote:
+> On Wed, Apr 02, 2025 at 02:24:45PM +0200, Michal Hocko wrote:
+> > On Wed 02-04-25 22:32:14, Dave Chinner wrote:
+> > > > > > >+    /*
+> > > > > > >+     * Use vmalloc if the count is too large to avoid costly high-order page
+> > > > > > >+     * allocations.
+> > > > > > >+     */
+> > > > > > >+    if (count < (PAGE_SIZE << PAGE_ALLOC_COSTLY_ORDER))
+> > > > > > >+            kbuf = kvzalloc(count + 1, GFP_KERNEL);
+> > > > > >
+> > > > > > Why not move this check into kvmalloc family?
+> > > > >
+> > > > > Hmm should this check really be in kvmalloc family?
+> > > > 
+> > > > Modifying the existing kvmalloc functions risks performance regressions.
+> > > > Could we instead introduce a new variant like vkmalloc() (favoring
+> > > > vmalloc over kmalloc) or kvmalloc_costless()?
+> > > 
+> > > We should fix kvmalloc() instead of continuing to force
+> > > subsystems to work around the limitations of kvmalloc().
+> > 
+> > Agreed!
+> > 
+> > > Have a look at xlog_kvmalloc() in XFS. It implements a basic
+> > > fast-fail, no retry high order kmalloc before it falls back to
+> > > vmalloc by turning off direct reclaim for the kmalloc() call.
+> > > Hence if the there isn't a high-order page on the free lists ready
+> > > to allocate, it falls back to vmalloc() immediately.
 > 
-> Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
-> ---
->  arch/x86/entry/entry.S               | 7 ++++---
->  arch/x86/include/asm/nospec-branch.h | 6 +++---
->  arch/x86/kernel/cpu/bugs.c           | 6 +++---
->  3 files changed, 10 insertions(+), 9 deletions(-)
+> ... but if vmalloc fails, it goes around again!  This is exactly why
+> we don't want filesystems implementing workarounds for MM problems.
+> What a mess.
 > 
-> diff --git a/arch/x86/entry/entry.S b/arch/x86/entry/entry.S
-> index d3caa31240ed..3a53319988b9 100644
-> --- a/arch/x86/entry/entry.S
-> +++ b/arch/x86/entry/entry.S
-> @@ -17,7 +17,8 @@
->  
->  .pushsection .noinstr.text, "ax"
->  
-> -SYM_FUNC_START(entry_ibpb)
-> +// Clobbers AX, CX, DX
+> >  	if (size > PAGE_SIZE) {
+> >  		flags |= __GFP_NOWARN;
+> >  
+> >  		if (!(flags & __GFP_RETRY_MAYFAIL))
+> >  			flags |= __GFP_NORETRY;
+> > +		else
+> > +			flags &= ~__GFP_DIRECT_RECLAIM;
+> 
+> I think it might be better to do this:
+> 
+> 		flags |= __GFP_NOWARN;
+> 
+> 		if (!(flags & __GFP_RETRY_MAYFAIL))
+> 			flags |= __GFP_NORETRY;
+> +		else if (size > (PAGE_SIZE << PAGE_ALLOC_COSTLY_ORDER))
+> +			flags &= ~__GFP_DIRECT_RECLAIM;
 
-Why the ugly comment style if the rest of the file is already using the
-multiline one...
+The above seems more appropriate then the Michal's bigger hammer.
+In addition I think Vlastimil has a very good point about the kswapd
+reclaim for such cases (the patch explicitly complains about kcompactd
+cpu usage).
 
-> +SYM_FUNC_START(__write_ibpb)
-
-... and why the __ ?
-
->  	ANNOTATE_NOENDBR
->  	movl	$MSR_IA32_PRED_CMD, %ecx
->  	movl	$PRED_CMD_IBPB, %eax
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+> 
+> I think it's entirely appropriate for a call to kvmalloc() to do
+> direct reclaim if it's asking for, say, 16KiB and we don't have any of
+> those available.  Better than exacerbating the fragmentation problem by
+> allocating 4x4KiB pages, each from different groupings.
