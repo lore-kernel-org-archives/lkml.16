@@ -1,128 +1,151 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-fw-80008.amazon.com (smtp-fw-80008.amazon.com [99.78.197.219])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88ABF155382;
-	Wed,  2 Apr 2025 21:59:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B46EA1F4625;
+	Wed,  2 Apr 2025 21:59:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.219
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743631142; cv=none; b=lbksnjWWcd1KC5nB8BBk+d8qmWpZ2Ek6jDgS/gfxa2JWOktWbKjNDDGzaNMkFX5URUjfPHbxJu8Qhmo42jVUi9N64OrJ1RNYiJMsICxzeHgTKX9GUHhDo8NP9gpCc6lZ4XA3ZevuqNxyOdUc+eYDhLUfQMJD4HMVDm8plTzGtS8=
+	t=1743631155; cv=none; b=oblt9dVY6bpGXsNLXcJ4SP3axhRGQt5jPb4zpIhBAeKXxAHbDK8uWCI9DLnPBytLMO90IrXpnGZVp/Md9NpoqgRHDSczN1uNe+7HfiP0TqxxepafzKCP6/gF9AQF9bAIpai1DfaaYAHepLBnCyF9I7kx2vlqilEU6VpW8pT6jLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743631142; c=relaxed/simple;
-	bh=0BXP9Sttv9k8REO+ljfXfz32urOtrGdhguS+/WAW0jA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=me7tUOUa9s0ihOjDssAbpffeOIRbH07VcKARtkz+Uo6oVEvyANunE9TzyAbLZooQOvM6Xwj6mFhh6JTgPkkb/Rpv7RlqFAh2Mn+AyatG6pxhZve+rEyOt3+BaCAfcpVVbOA2mSk+BaoHa40l6v9h/Xz90vPvoqGPqDe71BQINEQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hJJ3Qkza; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743631155; c=relaxed/simple;
+	bh=gZR/lUCfu7BfhLrh0H0NV5UuBc0uNwuknUip/HsM9TU=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Mn616sMqekvrFQW0h+sYgaApsYrT5Sicsnw8YQDzURRAEiTvhlL2clGCDpPkJNuFMg5cdHoNwiFIVaArnld+M/rvtVUZJwpWZxNfZeJU1mQWY7P3w7ebrCnWs1ccywK8dGSXhB8pCUX9aMxuQA9Db7w1OFA+XJbZsiOprkUqS2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=bBbnKpj4; arc=none smtp.client-ip=99.78.197.219
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hJJ3Qkza"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31D46C4CEE7;
-	Wed,  2 Apr 2025 21:59:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743631142;
-	bh=0BXP9Sttv9k8REO+ljfXfz32urOtrGdhguS+/WAW0jA=;
-	h=Date:From:To:Cc:Subject:From;
-	b=hJJ3QkzafMZCUvkyswDqA/xuoQh8r0ItuHa0MzoW9hLNxLeHxMNOLepDMEvRbuFjK
-	 dzXruQbPrWwfVhR5i7NbG4yFlAGY5DIPQVgjAHJs53QufguQk3K5e/09zZIAXh8FlH
-	 40yg3pn5v2t2640k760GjlbyhPmc9LqTsgkjLb4LzjQUfeb7jJx7w+fpiyvzCIj3To
-	 JzDzg+uUg7aNOXzPWwxPqgmYgKCAcQVWmb8D7y2yMBGp5SKFKQwotMloIxi2yCNVr3
-	 /4+gxZntVCiUCrgU87AxoAcxtc3aN81LwpQkffEgrkWk7QLx9mdEwmYb9NmbScgw+A
-	 m81lgmgcuhN6Q==
-Date: Wed, 2 Apr 2025 15:58:59 -0600
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Lyude Paul <lyude@redhat.com>, Danilo Krummrich <dakr@kernel.org>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-Cc: dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH v2][next] drm/nouveau: disp: Avoid
- -Wflex-array-member-not-at-end warning
-Message-ID: <Z-2zI55Qf88jTfNK@kspp>
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="bBbnKpj4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1743631153; x=1775167153;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=qbseHlUeh+wI3W4Lnm3HLIl0X8Puvw62VR4kgEDnHcU=;
+  b=bBbnKpj4ZCvqGPcLTUOivixmVgL7hVVmCKVYwlSsZpkKUEMvorYoMcTg
+   VdP975AWYD/9Zi/IZzRUW+SQfo8x4NNLO1Kv+XGlXk6f+3yYN12rJdKwK
+   WKUDwpAF0JAkPlY6dJ/j36UCyN2yNFcrYuJRgi3wq9SZfu+AlTsWmATYP
+   c=;
+X-IronPort-AV: E=Sophos;i="6.15,183,1739836800"; 
+   d="scan'208";a="184340993"
+Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.214])
+  by smtp-border-fw-80008.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 21:59:11 +0000
+Received: from EX19MTAUWC001.ant.amazon.com [10.0.21.151:52418]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.27.18:2525] with esmtp (Farcaster)
+ id 4a897196-90c0-4ea2-919a-6cf1e06e4c38; Wed, 2 Apr 2025 21:59:10 +0000 (UTC)
+X-Farcaster-Flow-ID: 4a897196-90c0-4ea2-919a-6cf1e06e4c38
+Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
+ EX19MTAUWC001.ant.amazon.com (10.250.64.174) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Wed, 2 Apr 2025 21:59:07 +0000
+Received: from 6c7e67bfbae3.amazon.com (10.106.101.8) by
+ EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Wed, 2 Apr 2025 21:59:03 +0000
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+To: <gregkh@linuxfoundation.org>
+CC: <cve@kernel.org>, <edumazet@google.com>, <ematsumiya@suse.de>,
+	<kuniyu@amazon.com>, <linux-fsdevel@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-net@vger.kernel.org>,
+	<sfrench@samba.org>, <smfrench@gmail.com>, <wangzhaolong1@huawei.com>,
+	<zhangchangzhong@huawei.com>
+Subject: Re: Fwd: [PATCH][SMB3 client] fix TCP timers deadlock after rmmod
+Date: Wed, 2 Apr 2025 14:58:49 -0700
+Message-ID: <20250402215855.18968-1-kuniyu@amazon.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <2025040207-yippee-unlearned-4b1c@gregkh>
+References: <2025040207-yippee-unlearned-4b1c@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D041UWA001.ant.amazon.com (10.13.139.124) To
+ EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
--Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-getting ready to enable it, globally.
+From: Greg KH <gregkh@linuxfoundation.org>
+Date: Wed, 2 Apr 2025 22:32:58 +0100
+> On Wed, Apr 02, 2025 at 01:50:05PM -0700, Kuniyuki Iwashima wrote:
+> > From: Greg KH <gregkh@linuxfoundation.org>
+> > Date: Wed, 2 Apr 2025 21:28:51 +0100
+> > > On Wed, Apr 02, 2025 at 01:22:11PM -0700, Kuniyuki Iwashima wrote:
+> > > > From: Greg KH <gregkh@linuxfoundation.org>
+> > > > Date: Wed, 2 Apr 2025 21:15:58 +0100
+> > > > > On Wed, Apr 02, 2025 at 01:09:19PM -0700, Kuniyuki Iwashima wrote:
+> > > > > > From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > > > > Date: Wed, 2 Apr 2025 16:18:37 +0100
+> > > > > > > On Wed, Apr 02, 2025 at 05:15:44PM +0800, Wang Zhaolong wrote:
+> > > > > > > > > On Wed, Apr 02, 2025 at 12:49:50PM +0800, Wang Zhaolong wrote:
+> > > > > > > > > > Yes, it seems the previous description might not have been entirely clear.
+> > > > > > > > > > I need to clearly point out that this patch, intended as the fix for CVE-2024-54680,
+> > > > > > > > > > does not actually address any real issues. It also fails to resolve the null pointer
+> > > > > > > > > > dereference problem within lockdep. On top of that, it has caused a series of
+> > > > > > > > > > subsequent leakage issues.
+> > > > > > > > > 
+> > > > > > > > > If this cve does not actually fix anything, then we can easily reject
+> > > > > > > > > it, please just let us know if that needs to happen here.
+> > > > > > > > > 
+> > > > > > > > > thanks,
+> > > > > > > > > 
+> > > > > > > > > greg k-h
+> > > > > > > > Hi Greg,
+> > > > > > > > 
+> > > > > > > > Yes, I can confirm that the patch for CVE-2024-54680 (commit e9f2517a3e18)
+> > > > > > > > should be rejected. Our analysis shows:
+> > > > > > > > 
+> > > > > > > > 1. It fails to address the actual null pointer dereference in lockdep
+> > > > > > > > 
+> > > > > > > > 2. It introduces multiple serious issues:
+> > > > > > > >    1. A socket leak vulnerability as documented in bugzilla #219972
+> > > > > > > >    2. Network namespace refcount imbalance issues as described in
+> > > > > > > >      bugzilla #219792 (which required the follow-up mainline fix
+> > > > > > > >      4e7f1644f2ac "smb: client: Fix netns refcount imbalance
+> > > > > > > >      causing leaks and use-after-free")
+> > > > > > > > 
+> > > > > > > > The next thing we should probably do is:
+> > > > > > > >    - Reverting e9f2517a3e18
+> > > > > > > >    - Reverting the follow-up fix 4e7f1644f2ac, as it's trying to fix
+> > > > > > > >      problems introduced by the problematic CVE patch
+> > > > > > > 
+> > > > > > > Great, can you please send patches now for both of these so we can
+> > > > > > > backport them to the stable kernels properly?
+> > > > > > 
+> > > > > > Sent to CIFS tree:
+> > > > > > https://lore.kernel.org/linux-cifs/20250402200319.2834-1-kuniyu@amazon.com/
+> > > > > 
+> > > > > You forgot to add a Cc: stable@ on the patches to ensure that they get
+> > > > > picked up properly for all stable trees :(
+> > > > 
+> > > > Ah sorry, I did the same with netdev.  netdev patches usually do
+> > > > not have the tag but are backported fine, maybe netdev local rule ?
+> > > 
+> > > Nope, that's the "old" way of dealing with netdev patches, the
+> > > documentation was changed years ago, please always put a cc: stable on
+> > > it.  Otherwise you are just at the whim of our "hey, I'm board, let's
+> > > look for Fixes: only tags!" script to catch them, which will also never
+> > > notify you of failures.
+> > 
+> > Good to know that, thanks!
+> > 
+> > My concern was that I could spam the list if I respin the patches,
+> > and incomplete patch could be backported.
+> > 
+> > >From stable-kernel-rules.rst, such an accident can be prevented if
+> > someone points out a problem within 48 hours ?
+> > 
+> > For example, if v1 is posted with Cc:stable, and a week later
+> > v2 is posted, then the not-yet-upstreamed v1 could be backported ?
+> > 
+> 
+> Anything can be asked to be applied to stable once it is in Linus's
+> tree, but if you add the cc: stable stuff to the original patch, it will
+> be done automatically for you.
 
-Use the `DEFINE_RAW_FLEX()` helper for an on-stack definition of
-a flexible structure where the size of the flexible-array member
-is known at compile-time, and refactor the rest of the code,
-accordingly.
+Now I understood.  The process is triggered only after the patch
+is merged to Linus' tree.  I assumed the workflow is triggered by
+the patch email itself.
 
-So, with these changes, fix the following warning:
-
-drivers/gpu/drm/nouveau/dispnv50/disp.c:779:47: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
-Changes in v2:
- - Calculate the size of `data[]` using ` __struct_size(args) - sizeof(*args)`.
-
-v1:
- - Link: https://lore.kernel.org/linux-hardening/ZsZLFS1CsHkKjw+C@elsanto/
-
- drivers/gpu/drm/nouveau/dispnv50/disp.c | 20 +++++++++-----------
- 1 file changed, 9 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/gpu/drm/nouveau/dispnv50/disp.c b/drivers/gpu/drm/nouveau/dispnv50/disp.c
-index 504cb3f2054b..725331638a15 100644
---- a/drivers/gpu/drm/nouveau/dispnv50/disp.c
-+++ b/drivers/gpu/drm/nouveau/dispnv50/disp.c
-@@ -775,10 +775,8 @@ nv50_hdmi_enable(struct drm_encoder *encoder, struct nouveau_crtc *nv_crtc,
- 	union hdmi_infoframe infoframe = { 0 };
- 	const u8 rekey = 56; /* binary driver, and tegra, constant */
- 	u32 max_ac_packet;
--	struct {
--		struct nvif_outp_infoframe_v0 infoframe;
--		u8 data[17];
--	} args = { 0 };
-+	DEFINE_RAW_FLEX(struct nvif_outp_infoframe_v0, args, data, 17);
-+	const u8 data_len = __struct_size(args) - sizeof(*args);
- 	int ret, size;
- 
- 	max_ac_packet  = mode->htotal - mode->hdisplay;
-@@ -815,29 +813,29 @@ nv50_hdmi_enable(struct drm_encoder *encoder, struct nouveau_crtc *nv_crtc,
- 		return;
- 
- 	/* AVI InfoFrame. */
--	args.infoframe.version = 0;
--	args.infoframe.head = nv_crtc->index;
-+	args->version = 0;
-+	args->head = nv_crtc->index;
- 
- 	if (!drm_hdmi_avi_infoframe_from_display_mode(&infoframe.avi, &nv_connector->base, mode)) {
- 		drm_hdmi_avi_infoframe_quant_range(&infoframe.avi, &nv_connector->base, mode,
- 						   HDMI_QUANTIZATION_RANGE_FULL);
- 
--		size = hdmi_infoframe_pack(&infoframe, args.data, ARRAY_SIZE(args.data));
-+		size = hdmi_infoframe_pack(&infoframe, args->data, data_len);
- 	} else {
- 		size = 0;
- 	}
- 
--	nvif_outp_infoframe(&nv_encoder->outp, NVIF_OUTP_INFOFRAME_V0_AVI, &args.infoframe, size);
-+	nvif_outp_infoframe(&nv_encoder->outp, NVIF_OUTP_INFOFRAME_V0_AVI, args, size);
- 
- 	/* Vendor InfoFrame. */
--	memset(&args.data, 0, sizeof(args.data));
-+	memset(args->data, 0, data_len);
- 	if (!drm_hdmi_vendor_infoframe_from_display_mode(&infoframe.vendor.hdmi,
- 							 &nv_connector->base, mode))
--		size = hdmi_infoframe_pack(&infoframe, args.data, ARRAY_SIZE(args.data));
-+		size = hdmi_infoframe_pack(&infoframe, args->data, data_len);
- 	else
- 		size = 0;
- 
--	nvif_outp_infoframe(&nv_encoder->outp, NVIF_OUTP_INFOFRAME_V0_VSI, &args.infoframe, size);
-+	nvif_outp_infoframe(&nv_encoder->outp, NVIF_OUTP_INFOFRAME_V0_VSI, args, size);
- 
- 	nv_encoder->hdmi.enabled = true;
- }
--- 
-2.43.0
-
+Thanks for explaining!
