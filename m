@@ -1,68 +1,69 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BE3B53BE
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 10:18:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB45E236A72
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 10:19:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743589136; cv=none; b=IYMCBk9FXV83W6oH0TQCUjH+s2Ldrlx+zZOYgbwNmnJfcenIl93QpBNfVaVv5EdyIUrWcDctYgilNLL2nCVGgfFGQKW8T1C9s/YYgGxuFeLD0c2crFRjIlUBwz/MD5ijjH/KKGy1e9vb2rbO8R8SnGI2jbRcGaf/cNU7aqGphMY=
+	t=1743589181; cv=none; b=BvZRmvnXIXGPsdubiWGzWTM8KhNa4fcmvNwX1B3C1It3C/e8SawOmrebJkFV+r8Ao6VLhv7rlomW58cvuyoETGMbgFFOLphE59jZHK9gU4i02nZNREBhhyU6fSEeVcTlSK0aG5WnxAMPCK5gttQHKS/cOxQeXq4sLJyuOd2atvo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743589136; c=relaxed/simple;
-	bh=QjXQhB715E3M3gxBEyLXFxdteNgJJyJ4lo2CrJN35Wo=;
+	s=arc-20240116; t=1743589181; c=relaxed/simple;
+	bh=Ne8Sh/EWe1a4ZmE8CVoTxWutV6wwjJwJoclVRYHi9O4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GMLW4pRXzF4AUDlZ2wAQEJ3P0FvjSmxodFH5IDVS29olGTdx91eErHmwirL/zHv0MQUqvRAHEknqJmsy1hXauqMd1MR7sjRnqjdOE4auVGhN9zRkEBeAgyI32YcIU5rWp4MAM7D1tfwRz9wncQS8xxGluD+FHWuR6ACG73/NKdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=WQ+GI5z0; arc=none smtp.client-ip=209.85.216.53
+	 To:Cc:Content-Type; b=E7hNabht4bm6ywlPs5pty3dArDHCapnN71ewtixTEoxdi8XeZv1cfWKbA7PCF8hFwGwhsVbyvZcX9DoezaypWHZ67i6ycKeCQ958aN2V+4vCdvBzsJyBppX94WAJTHX+6BH/IpDO3DvumiPBKhFxcyIy8ltQw6mDkMvkqd4KkP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=nz/f2Vjy; arc=none smtp.client-ip=209.85.216.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WQ+GI5z0"
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-301a4d5156aso10515031a91.1
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 03:18:55 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nz/f2Vjy"
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-301302a328bso11202890a91.2
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 03:19:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1743589135; x=1744193935; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1743589179; x=1744193979; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=0D56V4bGfpX/TU9e5gmFluYXKUdNZrEsrQeh3MS0+Bo=;
-        b=WQ+GI5z0JOt3ImywXdfCvuRR9txtK90Pzu8ElOmxwc22H3wVFXEtuYHW7LRPSj0F8/
-         W5fHls4JipToTSGXXHh+OuVQE0q3hBhJ76Nw0VeJdr4aPxSzQ9z6cs0RSH/P1oTF0Uod
-         dcM/dInvTuKhuWA+FDhNarb4YYLOvQ4R6sve8=
+        bh=XTVP9DTsW3vnY5FLKNjx74F5/L54TED0U9Vc1dT3Vbk=;
+        b=nz/f2Vjy8pxutvsa74omGuT/ACg1VwB8pHsZIL4iDsPHzq9jjvDwJPKOrpSEnXZRYf
+         6ZCWxuSxlVOz0eiStfO2LxCAwrLCC2MpxBblLjzqYdo/niOgSLP4eifETTGwJSlydYn2
+         +d9OZE2sqdu9UtoBiNHc/lZEVMacnXCeGNJKA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743589135; x=1744193935;
+        d=1e100.net; s=20230601; t=1743589179; x=1744193979;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=0D56V4bGfpX/TU9e5gmFluYXKUdNZrEsrQeh3MS0+Bo=;
-        b=rvZ2s2gmuMug68wbsg6++dU5fL3+4lvxlYwZlvKpnmugd2pYPF5arza9vTXq5d04QZ
-         tQqikxIznqERV51cYAyPX2ENeRU6IcPrrq/ktyZvcBufWLDpFCAJQ6XM9UsGRscQBdf7
-         JiCTnrKX1yNEIndIirSF1Qjy5tsPO5a+6a61+r6hA6gX3iswXbw9KQ9XpPFbRpa1zefT
-         hGX7wOEKhWccsnBuv0n4iUgbJyaDNaj1OO5Ch8C6JOfB3anyrC6XLL8MZL+HD5mpMg1e
-         vDnkYkMMxn++qCNf+a5ADttpydthOzgGRxvK2IOcfPAHQRSy8BMFtRmgLyBq/0RR91xC
-         5CsQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWgr05l8NEQ3XSTgaUD47TfpmHdU9Z/hz5l+JehWGvEQB15BRMj1nJh2OZeLc0Fat46spuWjp98AgOP2nM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzv2LbFz1WVSTG8f2OiBgtBIjhfsE/4GJkVb0FXZ79+DsJnw7Kd
-	hWdOSCf0Q+saAxybUrQg38biV1dwiSX3Srnc2o3d9DnuW4gn052bmmeXGirIXLgEyHmx3qomBb2
-	dsvTtz7SkiZGJJVgdoqPrEH6sFUnLiVn95pAW
-X-Gm-Gg: ASbGnctnCTf6IFigH48+n/N+8gDS5vYggSpchp3qX4fqJwLxQ4bu3Ffz1HJqll6gdZw
-	1M0mWw08ob2hM5HDyrlUvZUwnXIAzteWReMtpw2goVIkGI8juyhChWYlqBRCRnmb3V/DF2jrERA
-	v5SkskF9/JyNE2Gicqq5RrorJd8oqGmIpQHLFWHXXFL3ilbAcLogHM
-X-Google-Smtp-Source: AGHT+IGQrnkGyKn8dVTSUjKIJxy2/wcmbcJv3W5smbWJ2t/E7cpQH6SMGOxQZ5dG0vuNvno9IYMLbv3UhEax8FtatNA=
-X-Received: by 2002:a17:90a:c88b:b0:2ff:7c2d:6ff3 with SMTP id
- 98e67ed59e1d1-3056ef48b43mr2719742a91.35.1743589134726; Wed, 02 Apr 2025
- 03:18:54 -0700 (PDT)
+        bh=XTVP9DTsW3vnY5FLKNjx74F5/L54TED0U9Vc1dT3Vbk=;
+        b=AnuS921ViFtjERwJVSBzX51x0OlYuAxf920OqDcn3WWyxpXV0ONsryUOLGOYKV2dcs
+         LyWkN6GK+5PR7a6bW6AgT1f3Ov9uwV0WU1BmTluC1ZhaPDRIIDclJfOx+iMjdlAcjwti
+         m8VOh5xUBmbk0vLmzE7U87BVgUh4drjjVUmW162DmGU5uXe/lSF1xNQr6h4SRyDivtKx
+         Ly9o6yy/SWap+naCDKXerliaEiYYCEr5cvFjZFbw1gNU6+AM8+5mvSchp362xPInbOw3
+         SZr7wOO1KLMbFJRlmfD+Z9NCBAOjZBKMoeOxddov5tXAM1UdZm1XheSiMtbNMVEnvLGC
+         5MRA==
+X-Forwarded-Encrypted: i=1; AJvYcCVGfP+MN5thKlGN8BycTQjIZjJmVyzLaoBOebF9ZmwCAQ6m4o5EfzhWrRezpjtfTqePu8Tk8kI54SMMwwY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yza1N6z+ULNuuHKpBhi8rmIVjaiWkihN9GofIphkp6OA02jDe1+
+	zcq7U15y3xQF742rAPztIIbaPgXFAjFXpgoXS+Xhkt/ydrPfNH5K2+YD5KKhPme4BKQ4sEsO4IX
+	whnUK/7JwN3NQ9I1K440Wpb07iGgnfNvbY2mv
+X-Gm-Gg: ASbGncvpM7+fSBGy9bjSXfnDX7n+23N8iMHlNs6gdhiD5fD7SQvC/3K/pZlahm4+/dc
+	h9FOoBCw1ZyC0tF4EMObtQfPojoKysUyqMVYyUNBaDaWByrw4267uXptiYvgnZk2uVZP7b9gJ2j
+	+QSfXk4uqLs1pW4h/yPTYVn2QsMr4x0NVapmQ+VDScF6UFBZ+NkvGO
+X-Google-Smtp-Source: AGHT+IFc/gdat5Dr87A+81uJRFZWgnUw8FjScnpjhEXBVgVwotYa3CxXqBYBb5s66JTrRULG7QmLlhlnerHeo7QspTI=
+X-Received: by 2002:a17:90b:3b50:b0:301:1bce:c258 with SMTP id
+ 98e67ed59e1d1-3053215e7femr19031005a91.22.1743589179070; Wed, 02 Apr 2025
+ 03:19:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250402083628.20111-1-angelogioacchino.delregno@collabora.com> <20250402083628.20111-3-angelogioacchino.delregno@collabora.com>
-In-Reply-To: <20250402083628.20111-3-angelogioacchino.delregno@collabora.com>
+References: <20250402083628.20111-1-angelogioacchino.delregno@collabora.com> <20250402083628.20111-4-angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20250402083628.20111-4-angelogioacchino.delregno@collabora.com>
 From: Chen-Yu Tsai <wenst@chromium.org>
-Date: Wed, 2 Apr 2025 18:18:41 +0800
-X-Gm-Features: AQ5f1Jr3BoD2em-LznhL9zgkOSxDEEueTpI7DlFY2HYoRHnyStO_tGh8xaXUAvA
-Message-ID: <CAGXv+5GsoHN5mVe_kEP+oAzxa9HqgfhoiDqvO3xiQurFrvQ3qA@mail.gmail.com>
-Subject: Re: [PATCH v1 2/5] drm/mediatek: Fix kobject put for component sub-drivers
+Date: Wed, 2 Apr 2025 18:19:24 +0800
+X-Gm-Features: AQ5f1Jr24z9TQrfYXn99ssRwXfkIHJUxBLD8IHIrUHUVmb0Bwvezsgoy_EISkMk
+Message-ID: <CAGXv+5H1aww6Adf=EKCkpC8oCkdRLEHP5_fwtfU1BzEsnyi7NA@mail.gmail.com>
+Subject: Re: [PATCH v1 3/5] drm/mediatek: mtk_drm_drv: Unbind secondary mmsys
+ components on err
 To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 Cc: chunkuang.hu@kernel.org, p.zabel@pengutronix.de, airlied@gmail.com, 
 	simona@ffwll.ch, matthias.bgg@gmail.com, nancy.lin@mediatek.com, 
@@ -76,75 +77,58 @@ Content-Transfer-Encoding: quoted-printable
 On Wed, Apr 2, 2025 at 4:36=E2=80=AFPM AngeloGioacchino Del Regno
 <angelogioacchino.delregno@collabora.com> wrote:
 >
-> In function mtk_drm_get_all_priv(), this driver is incrementing
-
-              ^ mtk_drm_get_all_drm_priv()
-
-> the refcount for the sub-drivers of mediatek-drm with a call to
-> device_find_child() when taking a reference to all of those child
-> devices.
-
-Looking closer, that function is also missing a platform_device_put()
-to match of_find_device_by_node().
-
-> When the component bind fails multiple times this results in a
-> refcount_t overflow, as the reference count is never decremented:
-> fix that by adding a call to put_device() for all of the mmsys
-> devices in a loop, in error cases of mtk_drm_bind() and in the
-> mtk_drm_unbind() callback.
+> When calling component_bind_all(), if a component that is included
+> in the list fails, all of those that have been successfully bound
+> will be unbound, but this driver has two components lists for two
+> actual devices, as in, each mmsys instance has its own components
+> list.
+>
+> In case mmsys0 (or actually vdosys0) is able to bind all of its
+> components, but the secondary one fails, all of the components of
+> the first are kept bound, while the ones of mmsys1/vdosys1 are
+> correctly cleaned up.
+>
+> This is not right because, in case of a failure, the components
+> are re-bound for all of the mmsys/vdosys instances without caring
+> about the ones that were previously left in a bound state.
+>
+> Fix that by calling component_unbind_all() on all of the previous
+> component masters that succeeded binding all subdevices when any
+> of the other masters errors out.
 >
 > Fixes: 1ef7ed48356c ("drm/mediatek: Modify mediatek-drm for mt8195 multi =
 mmsys support")
 > Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@coll=
 abora.com>
 
+Makes sense.
+
 Reviewed-by: Chen-Yu Tsai <wenst@chromium.org>
 
 > ---
->  drivers/gpu/drm/mediatek/mtk_drm_drv.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
+>  drivers/gpu/drm/mediatek/mtk_drm_drv.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
 >
 > diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/med=
 iatek/mtk_drm_drv.c
-> index a8fbccb50c74..6b31df587507 100644
+> index 6b31df587507..2d6562b29755 100644
 > --- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
 > +++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-> @@ -676,6 +676,10 @@ static int mtk_drm_bind(struct device *dev)
->         for (i =3D 0; i < private->data->mmsys_dev_num; i++)
->                 private->all_drm_private[i]->drm =3D NULL;
->  err_put_dev:
-> +       for (i =3D 0; i < private->data->mmsys_dev_num; i++) {
-> +               /* For device_find_child in mtk_drm_get_all_priv() */
-> +               put_device(private->all_drm_private[i]->dev);
-> +       }
->         put_device(private->mutex_dev);
->         return ret;
->  }
-> @@ -683,6 +687,7 @@ static int mtk_drm_bind(struct device *dev)
->  static void mtk_drm_unbind(struct device *dev)
->  {
->         struct mtk_drm_private *private =3D dev_get_drvdata(dev);
-> +       int i;
->
->         /* for multi mmsys dev, unregister drm dev in mmsys master */
->         if (private->drm_master) {
-> @@ -690,6 +695,10 @@ static void mtk_drm_unbind(struct device *dev)
->                 mtk_drm_kms_deinit(private->drm);
->                 drm_dev_put(private->drm);
->
-> +               for (i =3D 0; i < private->data->mmsys_dev_num; i++) {
-
-Just FYI you can also declare the int within the for statement.
-
-ChenYu
-
-> +                       /* For device_find_child in mtk_drm_get_all_priv(=
-) */
-> +                       put_device(private->all_drm_private[i]->dev);
+> @@ -482,8 +482,11 @@ static int mtk_drm_kms_init(struct drm_device *drm)
+>         for (i =3D 0; i < private->data->mmsys_dev_num; i++) {
+>                 drm->dev_private =3D private->all_drm_private[i];
+>                 ret =3D component_bind_all(private->all_drm_private[i]->d=
+ev, drm);
+> -               if (ret)
+> +               if (ret) {
+> +                       while (--i >=3D 0)
+> +                               component_unbind_all(private->all_drm_pri=
+vate[i]->dev, drm);
+>                         return ret;
 > +               }
->                 put_device(private->mutex_dev);
 >         }
->         private->mtk_drm_bound =3D false;
+>
+>         /*
 > --
 > 2.48.1
 >
