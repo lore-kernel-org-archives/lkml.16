@@ -1,184 +1,281 @@
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8327712E5D
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 02:28:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743560926; cv=none; b=OamnbUN0+LkGfD0wGLkG765DEr1E5yMDFC/s6kPKwiTQuOy2d46z9PQKMm0wtQvT4JIdtGv23DrxTpCj6H2ozMUKu0ddudQcw63WQzsyTi/ImSkLGRDwjIQvCjjjm0I6TEpmOHvqNJ3bTPH78O2d8gGMKK3EIxzrFO5dauHsNDM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743560926; c=relaxed/simple;
-	bh=e/Ju2h7NCRRQ+8Kui3WDMVbZUdabNrGXKinZmYPOn+U=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
-	 Content-Type:References; b=m+pEfm0640hREAkn/rDO6sHnheng4SpWVhmVct27Fh93FWGP+UT3S/vmGHskBn1XsVnFQsyBqG3Iu9tl10g7zFcWKHe5f50IulK7uOj1lr97kzXhO53VeMbYCFWjqx0ju9xAeACNhls6HwjwpvzZ/TvXUzpKuIgSDrgx2Uk22LI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=RrTiGCaz; arc=none smtp.client-ip=203.254.224.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BCD3175A5;
+	Wed,  2 Apr 2025 02:29:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.10
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743560942; cv=fail; b=rYzeqlrR53lfywJOqpKgSel62e4Khxqcozx26m/KHWZNCh3MMhl9ZkzUpwmPX+wIPKqxUKtG4jig3qNthqR4XPg5F/vHK9sJlKP5CpGOn+qNIXpR+ximfcLLMWVR4zT4mtpzLjQZL8r+CTHrfa6BbcEPjtw6PNVcnOvclRAlDBY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743560942; c=relaxed/simple;
+	bh=FJxASc0OViCDioarPZcr/wajEJ5FFZTF9gmOxKIGDZU=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=k34dJn5d4MY83az1dzo3y04AtKzcakcAg5ZlJlbSk0L9ZpmNykgPEP5X1teDVjca2Z+cm1KcSNdgCU8P+A8Et1eeZPNRJVg77N5neAwYjYZ3c+aE9hA0xQ8es61bIyLb9CLuPOQhQjb5KIvlAKheQj1SQ6K8MNDBOHlrbFDF7bk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bHpT2R0K; arc=fail smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="RrTiGCaz"
-Received: from epcas2p2.samsung.com (unknown [182.195.41.54])
-	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20250402022841epoutp028b648046bfdbde1eae0aaf195fa0624a~yX2uUVMHH2181721817epoutp02t
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 02:28:41 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20250402022841epoutp028b648046bfdbde1eae0aaf195fa0624a~yX2uUVMHH2181721817epoutp02t
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1743560921;
-	bh=/8oxjPS8tIOPkMuy0QEnU6ypDz8yfhs22Fv/dtcibj4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=RrTiGCazqXXGnb00v9VBfymeqRov+Ym1dHvM0GZ6vpqnYalg8kOlIHAhV+kU76asI
-	 o4MUMRUFNjHvS65pwkEVE9gL4KQ2lOZeFZ4G0h7oFJGDzdVG0qJrds1wnVbSmTgxpO
-	 YvX5n0PKLzjy15YRbNW1Ssn9vsDZB4/FIbPk8Djk=
-Received: from epsnrtp02.localdomain (unknown [182.195.42.154]) by
-	epcas2p2.samsung.com (KnoxPortal) with ESMTPS id
-	20250402022840epcas2p287e4e041182a3af00852cadacbcf30ef~yX2tu_Zg12874028740epcas2p24;
-	Wed,  2 Apr 2025 02:28:40 +0000 (GMT)
-Received: from epsmges2p4.samsung.com (unknown [182.195.36.68]) by
-	epsnrtp02.localdomain (Postfix) with ESMTP id 4ZS81h1T4Dz2SSKd; Wed,  2 Apr
-	2025 02:28:40 +0000 (GMT)
-Received: from epcas2p3.samsung.com ( [182.195.41.55]) by
-	epsmges2p4.samsung.com (Symantec Messaging Gateway) with SMTP id
-	0E.AC.09871.8D0ACE76; Wed,  2 Apr 2025 11:28:40 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas2p4.samsung.com (KnoxPortal) with ESMTPA id
-	20250402022839epcas2p418dd591006fe8a00ecba240a3b60baaf~yX2sxd8oz1178711787epcas2p4d;
-	Wed,  2 Apr 2025 02:28:39 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20250402022839epsmtrp207b0765e1a3566a3b11851eb31b81dd6~yX2swXerG2617026170epsmtrp24;
-	Wed,  2 Apr 2025 02:28:39 +0000 (GMT)
-X-AuditID: b6c32a48-b95f07000000268f-87-67eca0d8adcf
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	11.D6.08805.7D0ACE76; Wed,  2 Apr 2025 11:28:39 +0900 (KST)
-Received: from perf (unknown [10.229.95.91]) by epsmtip1.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20250402022839epsmtip12afaf422178eadf15f85237be9f86c93~yX2sc-fs01452614526epsmtip1X;
-	Wed,  2 Apr 2025 02:28:39 +0000 (GMT)
-Date: Wed, 2 Apr 2025 11:32:57 +0900
-From: Youngmin Nam <youngmin.nam@samsung.com>
-To: William McVicker <willmcvicker@google.com>
-Cc: John Stultz <jstultz@google.com>, Catalin Marinas
-	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Peter Griffin
-	<peter.griffin@linaro.org>, =?iso-8859-1?Q?Andr=E9?= Draszik
-	<andre.draszik@linaro.org>, Tudor Ambarus <tudor.ambarus@linaro.org>, Rob
-	Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
-	Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, Daniel
-	Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>,
-	Saravana Kannan <saravanak@google.com>, Krzysztof Kozlowski
-	<krzk@kernel.org>, kernel-team@android.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
-	tigersoundkim@gmail.com
-Subject: Re: [PATCH v1 3/6] clocksource/drivers/exynos_mct: Set local timer
- interrupts as percpu
-Message-ID: <Z+yh2UUwxUz/vRbK@perf>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bHpT2R0K"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743560940; x=1775096940;
+  h=date:from:to:cc:subject:message-id:references:
+   content-transfer-encoding:in-reply-to:mime-version;
+  bh=FJxASc0OViCDioarPZcr/wajEJ5FFZTF9gmOxKIGDZU=;
+  b=bHpT2R0KzR7WYLedz14CYYoKkxJxrsA923YD/7mnKvZCqSq3sqoQQCLi
+   bsQL5EhhoFy3LRPfXMZZk098zh3jsLG9LXOJ57CorCiHxu/ysxJnyjFKr
+   cuZkcrjvN+6L8uxlHq+g0P0tigfsaZCoFqxwzoLdJDwm24NcuR3oMCAxZ
+   puZOYYjpe3mR8cSnUUzFsZtYWKuVxi+AKf1jOuGq8mXvKqZzmeAqaFegx
+   HZ1uCZxaw4jfXVnEll1cvivwiAJ8xhwIU17I17nmTmbw4ZTOTPfZXg9Y7
+   qXmDidbJsXgzuFZqXJTJxnnbw5mBu6HGrac0Ndt6weR31J9ZSlmS/YugK
+   Q==;
+X-CSE-ConnectionGUID: 2+bXUd8STH+UlP8gKdx6lQ==
+X-CSE-MsgGUID: HP/m1XDMRfiGX9/0FNJ14A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11391"; a="56274001"
+X-IronPort-AV: E=Sophos;i="6.14,295,1736841600"; 
+   d="scan'208";a="56274001"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2025 19:28:59 -0700
+X-CSE-ConnectionGUID: YoBg+zp2Sg25nSkAtifjhA==
+X-CSE-MsgGUID: V06SfFbQRjGZfFwfOBQriA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,295,1736841600"; 
+   d="scan'208";a="149740342"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2025 19:28:59 -0700
+Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.2.1544.14; Tue, 1 Apr 2025 19:28:58 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44 via Frontend Transport; Tue, 1 Apr 2025 19:28:58 -0700
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.173)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Tue, 1 Apr 2025 19:28:58 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=pV7sMAeALiUC9VS0pgy036hkHhaPrUWxOCYK3aVS129jqexYiNX8d+XV588P5KpGl8+MfR7Hw1l3e76//Ov6+mYviGDyFLp5F9N/C17JrgT/hwG1T46UAWETEi0OczfKwz82MHZutB7rFDO1NDLYmaSoxueq89YORZbGiA+dCAewx1B0aOECX64zyEMQ5kBPuh/OjDzukCwhSpQVw0UIwc+5VRLVNugSaQB8ThYwhK5lMN+FPd/6ntqHSH+2FF9LKBm41/NOM6fSgq90N9k3zKzgLcLn5UXSymjS8D+WS3MPbXIDP4LaaVQsH7ABICS4PsmL6RcHOApNarAqOc1xbA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=erHKb5o7lLrDVSEnHAa11YU2xKkMWwX5UaamPPyqNO4=;
+ b=wkbyQhXpQCp/VATFq4anOaLt1JN7OmW6fadCJhpgGJS9Fou/7tkIn6bJNb7k52tZvLd9GghRLEU+cGUIH9nxPRImcPcQ6uMJGGfzWFUtVe4h6x+nF3+HJgRWd19LkGJWwypz77VkHzH9u8cwXb4KhFkrpd6XWZr14nDueDVWzbd89lMETN0CemTt6vaNNm8Cpzx1vvVhWCn7bkRNr0maA+CvFIX9ebuAn6TJ6fblu9c0EBZqMjVLKut3skUaGnMyIiD0rmnI1TCl/8ioE7hVsrpUjD1fa25mIt1LEejztF5U/M/VWh/7ZFRgvXI+yiL3HgLO/VXjV6hWqehRq3Ox+A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from CH3PR11MB8660.namprd11.prod.outlook.com (2603:10b6:610:1ce::13)
+ by SA1PR11MB8838.namprd11.prod.outlook.com (2603:10b6:806:46b::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Wed, 2 Apr
+ 2025 02:28:29 +0000
+Received: from CH3PR11MB8660.namprd11.prod.outlook.com
+ ([fe80::cfad:add4:daad:fb9b]) by CH3PR11MB8660.namprd11.prod.outlook.com
+ ([fe80::cfad:add4:daad:fb9b%5]) with mapi id 15.20.8534.048; Wed, 2 Apr 2025
+ 02:28:29 +0000
+Date: Wed, 2 Apr 2025 10:28:16 +0800
+From: Chao Gao <chao.gao@intel.com>
+To: "Chang S. Bae" <chang.seok.bae@intel.com>
+CC: <x86@kernel.org>, <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
+	<tglx@linutronix.de>, <dave.hansen@intel.com>, <seanjc@google.com>,
+	<pbonzini@redhat.com>, <peterz@infradead.org>, <rick.p.edgecombe@intel.com>,
+	<weijiang.yang@intel.com>, <john.allen@amd.com>, <bp@alien8.de>,
+	<xin3.li@intel.com>, Maxim Levitsky <mlevitsk@redhat.com>, Ingo Molnar
+	<mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter
+ Anvin" <hpa@zytor.com>, Mitchell Levy <levymitchell0@gmail.com>, "Samuel
+ Holland" <samuel.holland@sifive.com>, Aruna Ramakrishna
+	<aruna.ramakrishna@oracle.com>, Vignesh Balasubramanian <vigbalas@amd.com>
+Subject: Re: [PATCH v4 3/8] x86/fpu/xstate: Add CET supervisor xfeature
+ support
+Message-ID: <Z+ygwMmxRJQIRGoy@intel.com>
+References: <20250318153316.1970147-1-chao.gao@intel.com>
+ <20250318153316.1970147-4-chao.gao@intel.com>
+ <d472f88d-96b3-4a57-a34f-2af6da0e2cc6@intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <d472f88d-96b3-4a57-a34f-2af6da0e2cc6@intel.com>
+X-ClientProxiedBy: SG2PR02CA0052.apcprd02.prod.outlook.com
+ (2603:1096:4:54::16) To CH3PR11MB8660.namprd11.prod.outlook.com
+ (2603:10b6:610:1ce::13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <Z-wWA-46L08V89qK@google.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Tf1DTZRzm3b77bqNbfp2YL4S0ptFJAhtt7KUDrxrVt/KC6rg4PIUBXzdk
-	bGs/PPrhSYFKwxM0uYOpyK9iNyfgGHOohE5FggTvCjFC0CMISEBYmdcha2Oz47/nfT7P836e
-	z33el0XnzuNhrDyVntKqZEo+How5rm6RRN+pfSAX1DQz0b0aB47sM20Ymv/+MEDWzn4aqnFv
-	RKev9TPQUs85HDnPh6Bp0yiOBgZamcg2fpuBfr5wEkdVAz/QUGvVMoY8l5xMZHQ9wVGbrZKO
-	bg0OYGhxeBcqGREjy6IHvL6edFx0MEhrjRWQHaa7TLLWZiBtlm9wcuT2JZyc6+9nkm2N+8kj
-	dgsg3baI1OCM/EQFJcultDxKlaPOzVPJk/jvf5wpzRTHC4TRwgQk4fNUsgIqiZ+8PTX67Tyl
-	dz4+b69MafBSqTKdjh+7LVGrNugpnkKt0yfxKU2uUiPRxOhkBTqDSh6jovSvCQWCOLFXmJWv
-	OH7ATNO4OYUtvWfoRaD2GSNgsyAhgo1//YoZQTCLSzgBNM1OMfyHRQDtp44FKo8AnByqpz21
-	VFw5RfMXOgHs7h4LWO4DaCl3rqgwYjPstfQxfRgnoqGjZxkYAYsVQsTApQOFPj2d8DDgnXPn
-	gU+zjsiGV+a/xXwaDrEJXq9L8dEcYi38sfp3zIfZRBScnhun+7yQKGdD55+/4P5EybDiURnm
-	x+vgzA0704/DoHuuM6DRwaKx4YC5BMDeoSm6v/AqNE0eWglBJxTQaL7O9IWA3hDXhjE//Sws
-	vfokQHNg6UGu3xkJ/z3eCvw4HF5sMAduJGFXU8NKWy5hpcFb9Z9WgAjTqnFMq5qZvLfSiS2w
-	5UKsn34BFrefoPvp52HTMmuVohbgFvAcpdEVyCldnEb0/65z1AU2sPLyo0gnODH7MMYFaCzg
-	ApBF54dw0v+elnM5ubLPPqe06kytQUnpXEDs3dJRetj6HLX366j0mUJRgkAUHy+UxIkFEv4G
-	jmthQs4l5DI9lU9RGkr71EdjscOKaGl9utGsobMkDTAdh3jlD7s+it8XldLeHbljh3F/NR9t
-	tGYnz7Ijij958x2HcU2kvSp3oblsJ2PkpULzH7acmamUF5stxBvSlP57c/u23uzq7itFOYku
-	xC9pcXTsnuC8NZV+84MKjH1m3BOy6eBOj2jhw4LLoscll4Pd6UGisLSMiL1BipfjMnavDXe3
-	72EebYs/6dlqHpQSE4xjEvGGSiohXfGu5r0vJtuzZkbrouzmbdt5PdIvg3/qG9QW1wiCbpzt
-	qD/dwLkv/vofw+Dj+iawJjzu8FfSPaHGlPQy6YNY5dgrgwONprvfLVRWLw1N9iWHTrQcmRaF
-	/pZtTdtVt7nDw8d0Cpkwiq7Vyf4DmLJZ64IEAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrEIsWRmVeSWpSXmKPExsWy7bCSnO71BW/SDT7+V7J4MG8bm8WWV5tZ
-	LN4v62G0WLP3HJPFvM+yFvOPnGO1+HNiI5vFju0iFi9n3WOzOH9+A7vFpsfXWC0u75rDZjHj
-	/D4miw0z/rFY/N+zg92i69BfNovNm6YyW1y4ep7F4tOtOIuWO6YWqz79Z3QQ9di2exurx5p5
-	axg9ds66y+6xYFOpx6ZVnWwed67tYfN4d+4cu8fmJfUefVtWMXp83iQXwBXFZZOSmpNZllqk
-	b5fAlXF1yQbmgqncFd/39DA3MN7j6GLk5JAQMJGYcHAuUxcjF4eQwG5Gic+fLzFCJGQkbq+8
-	zAphC0vcbznCClF0n1Fi1sEZzCAJFgEViVOrTrOD2GwCuhLbTvwDaubgEBHQk/jTWgFSzyzQ
-	ySbR/fwuE0iNsECSxMH3k1lAangFlCWOLvSHmLmGSeL43l1gc3gFBCVOznzCAmIzC6hL/Jl3
-	iRmknllAWmL5Pw6IsLxE89bZYCdwCmhJvHz3mHkCo+AsJN2zkHTPQuiehaR7ASPLKkbJ1ILi
-	3PTcYsMCo7zUcr3ixNzi0rx0veT83E2M4GjW0trBuGfVB71DjEwcjIcYJTiYlUR4I76+TBfi
-	TUmsrEotyo8vKs1JLT7EKM3BoiTO++11b4qQQHpiSWp2ampBahFMlomDU6qBSczw6vq2L1p/
-	/ixS9eRevH2BekX4NHPhm6vi92S7L3FymLIiS/WZxIpiiVbfbVY2QVKyvzgmKx56J756mhOT
-	TUnf0fO8fIf809n/lGsWJS/bttz1peNhmeCVO7dWSj/fmyvwmNM5pFLwmh3zx9AJs7fab/jP
-	P9/yy26fLbWNnA9yz9a8bylb2xa86sqmi9vDj7m+Notmufri6fSAI/c2zf2x6OkWa4WHivXi
-	10u2TljKaqK8SHC1mGHQAasVs/X4NH6y7XXqsHufvetgzoOShWsTFaVOZ8zR27EqzOxX56//
-	i69ELuXj4TuWt4LRweBuT8ymj/u368zuf61V/jVPgzPljMVFFrbFSsaK+zncdiqxFGckGmox
-	FxUnAgBuIFEVVQMAAA==
-X-CMS-MailID: 20250402022839epcas2p418dd591006fe8a00ecba240a3b60baaf
-X-Msg-Generator: CA
-Content-Type: multipart/mixed;
-	boundary="-----xErIy8MFyp5znNcbVfGOYxfVuB8z5fzEV-ls754GuccR_q1=_74052_"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250401163914epcas2p1a16e2b7a6ecac9f010ef6eb4c8efc6fb
-References: <20250331230034.806124-1-willmcvicker@google.com>
-	<20250331230034.806124-4-willmcvicker@google.com>
-	<CANDhNCqNqXfGgvo8vNof1qi3E3jejk5KBD=oedZp2_p8RKZdjw@mail.gmail.com>
-	<CGME20250401163914epcas2p1a16e2b7a6ecac9f010ef6eb4c8efc6fb@epcas2p1.samsung.com>
-	<Z-wWA-46L08V89qK@google.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR11MB8660:EE_|SA1PR11MB8838:EE_
+X-MS-Office365-Filtering-Correlation-Id: e2d5c833-740a-4b7b-bcd2-08dd718e0e07
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?N0szNThPemNwWk4yU0pDalRZTUp0dEE3Q3lud0lFanY3SEVOUTFGTlNpWmxz?=
+ =?utf-8?B?bnlJRXNiaG9aZkcxbngvQnd2M25FdDFBTys1OXhINXU0UGt6cTUxWlMrOFhJ?=
+ =?utf-8?B?czdGbm5XUWsxZXZsNlhLc0xHNjNoK2RicHRyMGZSY0kwclh5eXZxL1F4WVk4?=
+ =?utf-8?B?Z1NqK3VIVWoyRDhtdkdWUlBLUG1BTnBucW0zTVlTU01wMnlnbHNpbmo0Rm1Z?=
+ =?utf-8?B?eEJadVNYT2N1dXAxbEhUb1BQMVppWTdQQ1ZDRmNCV2xHdEhyRTJYbi9WUEhG?=
+ =?utf-8?B?U011cnVWUjdnOE9lSmpIQU44SGFzT3ppZ3NLQ3NPMkc3TzZIN1U1OEtGcGly?=
+ =?utf-8?B?WEhHZHhuYmxGZWd5dklNRStaa1llWXRjVG9kV3VTQnBLbkJUYkhwYWJGWlcz?=
+ =?utf-8?B?QTM0bEJ1QU1UUmRQbFhYVi9xUnd4Y1M2VytaUnpjditSc3NTcW1sd3Fhc0dZ?=
+ =?utf-8?B?QjZNbFloUzZvSWE3UWxkVFR3dVR0SnJ3R1FwWGpjemozSEw3TmVoMDZKWVFE?=
+ =?utf-8?B?SWNtMTltZlZPMFgxc3kydE93MUNNMVZCdkptSUZWbGlpUDNTUUhqbjE1NFJB?=
+ =?utf-8?B?RXhLL3V1eGJxSThyZEwxd21HM2VoWXhyY1UveDNRUDdLQ2dna29HSkFoUHBl?=
+ =?utf-8?B?dzlKQ3V3bnUvYlM4Q3l5Ui96Z0hPSnNXZ2tuOTIyRmdIcndIZ0ZidlVKVWlP?=
+ =?utf-8?B?aUlNWEp5UW8yNkJCTzJTMkdKazB2cmV2RC9NaWlMbGtCa1NTSlFxaWdaZFRj?=
+ =?utf-8?B?UW52SjVDaTZ4cjZIbWNBbG51azFqUXdhblM1eCtpMy9OclZEazN2ZUJyYmRu?=
+ =?utf-8?B?SUV6MW1PVmNIcHJwOUJVM0NtaEF6WEViK0x2WXZFaFdYeE8wTTBGeHpCNEFM?=
+ =?utf-8?B?UlhNeXh0bnp1QzU0azQ3OXpQRnVDUjYvYjJkamZEZUVJZ3IybTU4aUwwemlP?=
+ =?utf-8?B?TDBZRXJ3bXlxK3JWQW02eEVCNi84UFhLZlZxV2oxQlNiM2hHNUppZ3dJdDNM?=
+ =?utf-8?B?WDZtUjBaeUNRK2lHeGhVZ2c4UjFQemM0V3l6OUtuV0NQTFJTVkQ3KzV1dlc2?=
+ =?utf-8?B?bXArSVNESjhidlhCVjlhUTZTUWdVeDZLL1FVTFZCbGpnYmFUaWZSVFZ0R25j?=
+ =?utf-8?B?STRRL3Ezek1Oem5LekJEd0F4UE9uRjhYb1QxUTlEcXdUVXF1MXJTa1VUN0Ix?=
+ =?utf-8?B?SXJESlhPR1MzRkRsSDZGcHNEZEh2QmlnalcyM2Zka0R2M2tVTkwyODVtb1Jt?=
+ =?utf-8?B?SklrSEJVczBMdGdsa092dmxBMzlxNGNXeGVIR3R4Ylc4Q0FZL1dnZDkwQmtr?=
+ =?utf-8?B?dEppVmorcGc4RnJkdjd3TUlHV21pUmhiZXhIckFPVHVlMEt3N3doSjNsanAz?=
+ =?utf-8?B?cjJwZTUxVmYxVG5JYnZaTE9JMVdFMVIwMmJYVU1tckFKeW94SXFPT3p6ZmJm?=
+ =?utf-8?B?YVIrOXZrQmgxUExiZjNYRElGb2loOENZaXNNVkFHVnNSUmVhQWgrMVJId0E2?=
+ =?utf-8?B?TmNmZE40UEMzZUZqM29ZZFp0N2pWY3EvSTZIUVdldjNTRGFkVEI1c0FycXZa?=
+ =?utf-8?B?WE9ENFArdVRURjdkYmxNa2tuMXIxVmlIdEMvb25zNTVRTUR3RkZvb0NkNDlh?=
+ =?utf-8?B?MW5xdUxlbjQyVFVhZ21UZjJ1SFVDd0ZuZGwrWUxZZ0NHMU9pQzNNaWNISCs4?=
+ =?utf-8?B?Yy9wYmJCS3FTZlp4dmx6L3cxM2VYVEp0c3haMnBVQ3Z2QTFmTlNZVFFORENp?=
+ =?utf-8?B?Z3FnT2JNWWsvRERnMmtvaXZoZXNvdXJSM1VaUy9iNDhlUTMvbUZZRW9XUzN4?=
+ =?utf-8?B?Ym4rUk1KenJqZjRYaHVJZUh3R3Jwc2hNRFoxeDhGa3ppeXFmSHFmRjFWNE80?=
+ =?utf-8?Q?6Er6uZ/q4qFUS?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR11MB8660.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?Zk1WK3lRMmZpQmdhWEtHVFh5L0Q0NXRVNk5LSmxSckdqWFlxVG9Pc2FTeG1n?=
+ =?utf-8?B?d2l3TnR6eTUvaVFiMjIwcDh5dHo1VU40ZUtiSCtDSHVybkFDTmZ0M2g4eUt0?=
+ =?utf-8?B?dExtTUhkV2lzc0NVUWY5bTh3T0gwZmhnMlZGQXB3YmxZRUJ0cmcrZ1NLVHR1?=
+ =?utf-8?B?RlJjeGpMQzJUWW5pSDlOMFlyZkVoajM2TzVNaThRcnJuQzJUS2dKRW11TXVi?=
+ =?utf-8?B?emxMa2RNUE9aaVhENC9VUGRnVnl4bDJScjluemZQYWZhSFp5a1M4VzZsZTZQ?=
+ =?utf-8?B?REdQTzF6eENLcWZpS2U5ZWdRRnJVK0dBK0JFTXF2TnBzeEhPMDZaWjQxZDl4?=
+ =?utf-8?B?RTNDcks0RnpudG5xb2dubC9HWTlXK3J5STF4NFZVRENENDFUaUdLRXNXMjB1?=
+ =?utf-8?B?SHZZRzQzMWIvZ2l0MHZUYlpJUEpFalQ0akZNK1NobGVBYVJ3VStjTDJPYXBO?=
+ =?utf-8?B?dHgyemZwZTVFTXVLT3ZlU0V6cGxQN1R3ZUNoanBjMlpHUVUxbWF4UndZTGtz?=
+ =?utf-8?B?NWM4TUpzb3RpYkp0NWF4OXFiYlZCTkVqWm1ML3IzT051NkNJTStmUTR3TUFX?=
+ =?utf-8?B?aVZTY1pEelZzOHk5RlJiQUxMSWdMZUZSQlRKQTJXb1dONmgzeWlCNllTT05H?=
+ =?utf-8?B?ZlFpeDIxOTlmL1puM1hsQkdEU3c2QXNVM0ZLYldrQUYxSUg2aDJZWG5MSElq?=
+ =?utf-8?B?VDRYQlR2bnlOQUNXKzhVZ1BLZy9rMVpsZUVOUEVFaDBIZzB0YmR3WTNVR1Ev?=
+ =?utf-8?B?RUJDRG1ndDU2TXBoNkwvRzg0a3JtYllnYmNyOENGbGhkNko5SjlQUGRnKzc4?=
+ =?utf-8?B?Y0JpRHJUM01iUFhIV1lQcWxsYzJEZkVueXc3MFN0KzJwNjBheEVZa2pwNnhZ?=
+ =?utf-8?B?c2l5QXViV2pUbUFPZGpDeE9KUXpwdHpOaHp0L2xKU1hKaDZrZFhTQkpFQ2tu?=
+ =?utf-8?B?ZnpVbE45eTNVTXV2RHdqZWQ0bmJoalRadHc0RkwweXZWUmRpL3JyWXhGaXpl?=
+ =?utf-8?B?ZFIvemdoNjlDb0ZTbmFuZ29LQzZpL0UxNkpSalRsM2FtWWd5dnYybWRoTlBn?=
+ =?utf-8?B?RmxqUUtHSjBlUWNVb3N3enhXYTU4TnRrSk03QmhuczNsbGdzLzEvdGl0RFl4?=
+ =?utf-8?B?clFSeDNUUFlSeG45NzNXY1A3Z1lKUlNibUNFNWpBRlRERTRZUE1QMHpFb1J5?=
+ =?utf-8?B?T1lXa0hSU2VCbWkzUFVBb1Q5V3lLekZjYmNiNHg1Wk1qSElVUTBrdW5HZUdP?=
+ =?utf-8?B?S1VjUW9tSjZPSnhOVmJUUGFMcjhXS09DYmNqbUdRRjdXRDFQdzQvOW9KZHdI?=
+ =?utf-8?B?OWRBaW9XL3AvQm9SWjlqcjdyWStKWHRFT1ZQK0FOS0dKaXN0WVlMclVnbGR6?=
+ =?utf-8?B?NnZtdndOaXF5MkZnRXdja29YVVNTZnAwNmpYdkp1N2QvcDBwbzBjL3I3L1Fr?=
+ =?utf-8?B?cHpKZzhRcERwVjQyWnFZbFFlMlhDZVY5S1hHa2UvaEYvdXRIc2dLd011dVhO?=
+ =?utf-8?B?NCtvOUpHS3ppT3dLTkFsRVdaZjVzUzhpVHVNQ2JHVkdab1pCelh2Wk1uUDZy?=
+ =?utf-8?B?SUdNWWZjdlRhYjlTY2cxR3lEa2dSTWl5TVJVSjQvUmZONm8zbFNGOGxRclk2?=
+ =?utf-8?B?UXJTSlFkM3B6bDFOcDh3cFkyYlR5UWpuSWZkSkZWK2VLSlNOWW9SODdobUgz?=
+ =?utf-8?B?UGZlY3U1RXZJNzd4UjI5L1g1Y1NaZUdLZjBmSmVTRTFjblYwam5YV081VGQv?=
+ =?utf-8?B?QnlBTFE3bGNJZGxtd0pMZWtBR0RKTHJkdGtPY1V2S0hXM243anFyK2M2WEJM?=
+ =?utf-8?B?TWFUZVF1NENka1NmbmQwOFpJWlN4TkUzN3B4SUJQNlcxWkExNTNRNHZYd1lu?=
+ =?utf-8?B?ZzdDaENZQzJRNUt2WUVvY25Ja09LaTkwc1hOaDZ2S1RrKzhiZFl1RHUxdVZj?=
+ =?utf-8?B?Yko3clFCbFZ2clRScnhzdjBzY0R0VXlLNEFTRlRPd2Q0V2pCMzJYd0FOU2NJ?=
+ =?utf-8?B?K01XSmVCVEJNeFBsZmlUR2FkalVJM1NkU0h1ZUVDeE1nVTQxOWh1MXdSbjJU?=
+ =?utf-8?B?Y090VUdZdXBQZjlLMDU4cnVkcWhDYS9EU244Rk9FdzFEelN2QnhuU0YyVTdj?=
+ =?utf-8?Q?REded0x5+1bvCII+UUuoXzpLL?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: e2d5c833-740a-4b7b-bcd2-08dd718e0e07
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR11MB8660.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Apr 2025 02:28:29.3450
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: IZ4O1NciWPNkvpwq8iryXOBxApl8+YnV/R7SybkKb+TK81YvTHmftqfcJUtLqbRoTwqcslrHg589Fhwd/+xuVA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB8838
+X-OriginatorOrg: intel.com
 
--------xErIy8MFyp5znNcbVfGOYxfVuB8z5fzEV-ls754GuccR_q1=_74052_
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Content-Disposition: inline
+On Tue, Apr 01, 2025 at 10:15:50AM -0700, Chang S. Bae wrote:
+>On 3/18/2025 8:31 AM, Chao Gao wrote:
+>> From: Yang Weijiang <weijiang.yang@intel.com>
+>> 
+>> To support CET virtualization, KVM needs the kernel to save and restore
+>> the CET supervisor xstate in guest FPUs when switching between guest and
+>> host FPUs.
+>> 
+>> Add CET supervisor xstate support in preparation for the upcoming CET
+>> virtualization in KVM.
+>> 
+>> Currently, host FPUs do not utilize the CET supervisor xstate. Enabling
+>> this state for host FPUs would lead to a 24-byte waste in the XSAVE buffer
+>> on CET-capable parts.
+>> 
+>> Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
+>> Signed-off-by: Chao Gao <chao.gao@intel.com>
+>> Reviewed-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
+>> Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
+>
+>Placing this patch immediately after a few mainline fixes looks to suggest
+>that supervisor CET state can be enabled as-is, implying that the follow-up
+>patches are merely optional optimizations.
 
-On Tue, Apr 01, 2025 at 09:36:19AM -0700, William McVicker wrote:
-> On 03/31/2025, John Stultz wrote:
-> > On Mon, Mar 31, 2025 at 4:00 PM 'Will McVicker' via kernel-team
-> > <kernel-team@android.com> wrote:
-> > >
-> > > From: Hosung Kim <hosung0.kim@samsung.com>
-> > >
-> > > The MCT local timers can be used as a per-cpu event timer. To prevent
-> > 
-> > Can be used, or are used?  If it's an option, is this change important
-> > in both cases?
-> > 
-> > > the timer interrupts from migrating to other CPUs, set the flag
-> > > IRQF_PERCPU.
-> > 
-> > Might be work expanding this a bit to clarify why the interrupts
-> > migrating to other cpus is undesired.
-> 
-> Let me dig into this further to figure out if the IP has a limitation where the
-> interrupts need to be handled by the CPU the timer was triggered on or if this
-> is just an optimization.
-> 
-> Any chance you know this @Youngmin?
-> 
-> Thanks,
-> Will
-> 
+Yes, this is intentional. I mentioned it in the cover letter:
 
-Hi Will.
+"""
+Reorder the patches to put the CET supervisor state patch before the
+"guest-only" optimization, allowing maintainers to easily adopt or omit the
+optimization.
+"""
 
-Yes. In downstream, we’ve been using MCT as the clock event timer instead of the ARM timer.
-Setting this flag allows each CPU to handle its own clock events, such as scheduling interrupts.
+>
+>In V2, Dave provided feedback [1] when you placed this patch second out of
+>six:
 
-> > 
-> > > Signed-off-by: Hosung Kim <hosung0.kim@samsung.com>
-> > > [Original commit from https://android.googlesource.com/kernel/gs/+/03267fad19f093bac979ca78309483e9eb3a8d16]
-> > > Signed-off-by: Will McVicker <willmcvicker@google.com>
-> > 
-> > thanks!
-> > -john
-> 
-> 
+In my opinion, he wasn't referring to the patch introducing the CET supervisor
+xstate (i.e., this patch). Rather, he requested that the patch making the CET
+supervisor xstate a guest-only feature should follow the introduction of
+fpu_guest_cfg and the relevant cleanups.
 
--------xErIy8MFyp5znNcbVfGOYxfVuB8z5fzEV-ls754GuccR_q1=_74052_
-Content-Type: text/plain; charset="utf-8"
+>
+> > This series is starting to look backward to me.
+> >
+> > The normal way you do these things is that you introduce new
+> > abstractions and refactor the code. Then you go adding features.
+> >
+> > For instance, this series should spend a few patches introducing
+> > 'fpu_guest_cfg' and using it before ever introducing the concept of a
+> > dynamic xfeature.
+>
+>In V3, you moved this patch further back to position 8 out of 10. Now, in
+>this version, you've placed it at position 3 out of 8.
+>
+>This raises the question of whether you've fully internalized his advice.
+>
+>If your intent is to save kernel memory, the xstate infrastructure should
+>first be properly adjusted. Specifically:
+>
+>  1. Initialize the VCPU’s default xfeature set and its XSAVE buffer
+>     size.
+>
+>  2. Reference them in the two sites:
+>
+>    (a) for fpu->guest_perm
+>
+>    (b) at VCPU allocation time.
+>
+>  3. Introduce a new feature set (you named "guest supervisor state") as
+>     a placeholder and integrate it into initialization, along with the
+>     XSAVE sanity check.
+>
+>With these adjustments in place, you may consider enabling a new xfeature,
+>defining it as a guest-supervisor state simply.
 
+I believe you are suggesting that the CET supervisor xstate should be
+introduced directly as a guest-only feature, rather than first introducing it
+in one patch and then converting it to guest-only in a subsequent patch.
 
--------xErIy8MFyp5znNcbVfGOYxfVuB8z5fzEV-ls754GuccR_q1=_74052_--
+This is a valid point, and I have considered it. However, I chose to split them
+into two patches because the guest-only aspect is merely an optimization, and
+the decision on whether to accept it is still pending. This order and split-up
+make it easier for maintainers to make a decision.
