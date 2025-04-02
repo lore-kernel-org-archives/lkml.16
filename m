@@ -1,44 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6DA817BA9;
-	Wed,  2 Apr 2025 14:02:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB10C23875A
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 14:03:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743602521; cv=none; b=tWQtgDfXhsaMeBTIMf//4IwXbmPe65yszO8uvCi8mtOYl/CRxMqDCyDn+MTBoH2Eo4wWZJr0E/Kru2GzHWi91OxUzk18oVE9tNJKHSOnx0R0p4plMT/ORZn7mpgeKOC+6toLC+z8JrCWWJvTr1wj5mt2naLZU+PaJt7CBwpUNYU=
+	t=1743602620; cv=none; b=H2zR0d6/MVaj6BYD0aAplPxHHOqHATCvOyQamygNHmPhw/EjZzB3A3mq5c7w0ljGxSeR6dxrrvNSKDp3KGYV2cuiMbuEbITM3J/pKY9S1GtUR4SNaFeHgRskEOeU9ETxOXPjE6N2HMBVy3cFKtDbeOiIjW8sANkk8of0tEwGtgI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743602521; c=relaxed/simple;
-	bh=qv4cI4IVPumb8gQlQrRDmy3higF3YPD27DBX4liEeVA=;
+	s=arc-20240116; t=1743602620; c=relaxed/simple;
+	bh=GjXTvj9xb2GzWW3mlXTnUxkcIX9VcE/p7Fg8PevSAOI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QC2ITNCp6FOSWQtIeOXBxOP9p77++2DOx9ekhxqvXedWxIVS+vT3Mnmnx8swYzZR7oDyDW0z1CIYcS0cPgo/ih/blNswn2R+G603VQGg5Rpw79izgRBAjHb6MXgLo4D/0kks3jsLMce7hc1lNV1d2V41ibc27sz71xMSxf+2pYw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XNM0G15I; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=LR0RRzIAdMVfn6jgDeHi+jXEAb5gkBtDAk7Oer8wdgVPXwgdrhsYtFoTqNBn/I03OW+WrExaUHRhIi5hy861Xq53An6pvrpQf/Ve/RLlsn3hWOXn7YbASt3gwAgkNs8nely+2IyZGC1oeLWXMC9MAfTcjNr9jp2iNdRL9I8RC6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=O96Rm3z1; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=8EcOn2s1; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=O96Rm3z1; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=8EcOn2s1; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XNM0G15I"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A434EC4CEDD;
-	Wed,  2 Apr 2025 14:01:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743602520;
-	bh=qv4cI4IVPumb8gQlQrRDmy3higF3YPD27DBX4liEeVA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XNM0G15I0imaT8eiWhXWeyPjobe4XO9GumN5JmqtiLmjDyCVar0EjcxzmJzetBLyD
-	 PXYUadepbQEkoMg61BBcuxBNhF2aXIeRDQJceZJfCp7mpnNWLRycMXYoxomQrDAcEA
-	 a6hQ5yTmBAt63YSH3J5uc0hA98Ff4RbW/PJgpGV6DE5h2ThLxx+cWn+lRy8rdNbbKf
-	 zsTUuVifUEUGR2faKBbR/OZ2yBS55Q6OeHyRVIi6M8B9bIpaYcHAlcdUaBIMPkfNZQ
-	 0q91nJyDaljd+rlI6urFClTI1VuponIAD3OorNf743e5TfO+8kK06lu44TSgSBhAN4
-	 J1r6TgdQtV8yw==
-Date: Wed, 2 Apr 2025 15:01:55 +0100
-From: Simon Horman <horms@kernel.org>
-To: Jijie Shao <shaojijie@huawei.com>
-Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, andrew+netdev@lunn.ch, shenjian15@huawei.com,
-	wangpeiyang1@huawei.com, liuyonglong@huawei.com,
-	chenhao418@huawei.com, jonathan.cameron@huawei.com,
-	shameerali.kolothum.thodi@huawei.com, salil.mehta@huawei.com,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net 3/3] net: hns3: store rx VLAN tag offload state for VF
-Message-ID: <20250402140155.GR214849@horms.kernel.org>
-References: <20250402121001.663431-1-shaojijie@huawei.com>
- <20250402121001.663431-4-shaojijie@huawei.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="O96Rm3z1";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="8EcOn2s1";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="O96Rm3z1";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="8EcOn2s1"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id C16EE210F2;
+	Wed,  2 Apr 2025 14:03:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1743602616; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pWctlHaLutJX4c1zYarMiQ/lMppk3s7YXy2NAqxD7pQ=;
+	b=O96Rm3z1x8iclfYuIibE7TC3cxn2rKDudBNjR8Kef3jHRDPUyz6VHfHI6o8sZ1jqvDxsyh
+	WCPj6jIgCKaamflGnhHklyPRQYIWRxWDzK59QXWH44r0wvtQ/WCjGBt+kJEYM6SquuU1xG
+	MICL4+dufpugqWk6VpKJvCzmv4FwUXQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1743602616;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pWctlHaLutJX4c1zYarMiQ/lMppk3s7YXy2NAqxD7pQ=;
+	b=8EcOn2s1gLpWJkatZXTfE7BisiMFt6KYvxKKPSC4fq+iX4VYy4PQfAZXJGsmYMO4Wl0iJ3
+	VTRAlCn4IvFVBMAQ==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=O96Rm3z1;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=8EcOn2s1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1743602616; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pWctlHaLutJX4c1zYarMiQ/lMppk3s7YXy2NAqxD7pQ=;
+	b=O96Rm3z1x8iclfYuIibE7TC3cxn2rKDudBNjR8Kef3jHRDPUyz6VHfHI6o8sZ1jqvDxsyh
+	WCPj6jIgCKaamflGnhHklyPRQYIWRxWDzK59QXWH44r0wvtQ/WCjGBt+kJEYM6SquuU1xG
+	MICL4+dufpugqWk6VpKJvCzmv4FwUXQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1743602616;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pWctlHaLutJX4c1zYarMiQ/lMppk3s7YXy2NAqxD7pQ=;
+	b=8EcOn2s1gLpWJkatZXTfE7BisiMFt6KYvxKKPSC4fq+iX4VYy4PQfAZXJGsmYMO4Wl0iJ3
+	VTRAlCn4IvFVBMAQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A4B3113A4B;
+	Wed,  2 Apr 2025 14:03:36 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 4jHOJbhD7WfCIgAAD6G6ig
+	(envelope-from <dwagner@suse.de>); Wed, 02 Apr 2025 14:03:36 +0000
+Date: Wed, 2 Apr 2025 16:03:35 +0200
+From: Daniel Wagner <dwagner@suse.de>
+To: Hannes Reinecke <hare@suse.de>
+Cc: Daniel Wagner <wagi@kernel.org>, 
+	James Smart <james.smart@broadcom.com>, Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, 
+	Chaitanya Kulkarni <kch@nvidia.com>, Keith Busch <kbusch@kernel.org>, linux-nvme@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 02/18] nvmet-fcloop: replace kref with refcount
+Message-ID: <709b524c-7191-451f-81ea-8bad8f1c6a16@flourine.local>
+References: <20250318-nvmet-fcloop-v3-0-05fec0fc02f6@kernel.org>
+ <20250318-nvmet-fcloop-v3-2-05fec0fc02f6@kernel.org>
+ <e94a7fab-3811-449b-9999-7641b9274b07@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,46 +90,48 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250402121001.663431-4-shaojijie@huawei.com>
+In-Reply-To: <e94a7fab-3811-449b-9999-7641b9274b07@suse.de>
+X-Rspamd-Queue-Id: C16EE210F2
+X-Spam-Score: -4.51
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	MIME_TRACE(0.00)[0:+];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On Wed, Apr 02, 2025 at 08:10:01PM +0800, Jijie Shao wrote:
-> From: Jian Shen <shenjian15@huawei.com>
-> 
-> The VF driver missed to store the rx VLAN tag strip state when
-> user change the rx VLAN tag offload state. And it will default
-> to enable the rx vlan tag strip when re-init VF device after
-> reset. So if user disable rx VLAN tag offload, and trig reset,
-> then the HW will still strip the VLAN tag from packet nad fill
-> into RX BD, but the VF driver will ignore it for rx VLAN tag
-> offload disabled. It may cause the rx VLAN tag dropped.
-> 
-> Fixes: b2641e2ad456 ("net: hns3: Add support of hardware rx-vlan-offload to HNS3 VF driver")
-> Signed-off-by: Jian Shen <shenjian15@huawei.com>
-> Signed-off-by: Jijie Shao <shaojijie@huawei.com>
+On Tue, Mar 18, 2025 at 11:56:50AM +0100, Hannes Reinecke wrote:
+> On 3/18/25 11:39, Daniel Wagner wrote:
+> > The kref wrapper is not really adding any value ontop of refcount. Thus
+> > replace the kref API with the refcount API.
+> > 
+> > Signed-off-by: Daniel Wagner <wagi@kernel.org>
+> > ---
+> >   drivers/nvme/target/fcloop.c | 37 +++++++++++++------------------------
+> >   1 file changed, 13 insertions(+), 24 deletions(-)
+> > 
+> Can you split this in two, one for the nport and one for fcpreq?
+> That way it's easier to follow what has been modified.
 
-Overall this looks good to me.
-
-Reviewed-by: Simon Horman <horms@kernel.org>
-
-...
-
-> diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h
-> index cccef3228461..1e452b14b04e 100644
-> --- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h
-> +++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h
-> @@ -252,7 +252,8 @@ struct hclgevf_dev {
->  	u16 *vector_status;
->  	int *vector_irq;
->  
-> -	bool gro_en;
-> +	u32 gro_en :1;
-> +	u32 rxvtag_strip_en :1;
-
-FWIIW, as there is space I would have used two bools here.
-
->  
->  	unsigned long vlan_del_fail_bmap[BITS_TO_LONGS(VLAN_N_VID)];
->  
-> -- 
-> 2.33.0
-> 
+Do you still want me to split the patch? You and Christoph have sent the
+Reviewed-by tag after this review.
