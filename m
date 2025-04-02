@@ -1,202 +1,93 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 220371EA90;
-	Wed,  2 Apr 2025 04:49:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CC82230BF4
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 04:49:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743569397; cv=none; b=ugMcmyArV7qDwn47N7orQr+k4CtJ0wLDSJK8VAySwW0BHSJ4gKXB4NGk0TWGECoSRL+ePFOTcsyuuO+3arHhZtpNKZnIcLxHuvFUofWB6BH4maZNEiKdaYriyOe6qJ4XcNpekoi+VJBRs0/7cgZRibFZLJFtnDRYEsQbtTU1Itc=
+	t=1743569400; cv=none; b=mBzWZmQPSJ2IvNtJ5t0cD2SmVPf0puvo1eRBBGg71h4reAcjFSUcT2hYGJ7Vd0VxAuwbhdqvR6cnWYv/BMAaYQW4eSPJ7uzNP2w1SvByGrkviff1k0OJlgOskpAapg7vOqkqdlpXO3Hp3iHZWR3g8Om4k439gWfk7KxYut7CCCg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743569397; c=relaxed/simple;
-	bh=9m0e7crQ9Tm/COI28RDj/VbGs0vzyR5dA1r/D/Csyc4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=N5fJXoHYVn8guhIlb+K/vRfDzKkfsIqXQq1oIw7DMKuBP7+7bWq1lkeoplMo0Qtx7hXAcVNEhR+tCkK9wGfLl7owCQAIAw7oVaGlvZSwagKvTNxrIUWAZ5W1FnG0Sr0HfWFogWGpkZU8MKpzAQcp90iU3Z4pPmIJEfqih6FCNY4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4ZSC810KQzz13KhH;
-	Wed,  2 Apr 2025 12:49:21 +0800 (CST)
-Received: from kwepemg500010.china.huawei.com (unknown [7.202.181.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 8D420140360;
-	Wed,  2 Apr 2025 12:49:52 +0800 (CST)
-Received: from [10.174.178.209] (10.174.178.209) by
- kwepemg500010.china.huawei.com (7.202.181.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 2 Apr 2025 12:49:51 +0800
-Message-ID: <36dc113c-383e-4b8a-88c1-6a070e712086@huawei.com>
-Date: Wed, 2 Apr 2025 12:49:50 +0800
+	s=arc-20240116; t=1743569400; c=relaxed/simple;
+	bh=9avm0LqOZNotjogzUUyckFvE/j+N5SXlPAiqBtwZqUM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Mn+2qV1DXGjA00yjCjhtTXV7a+cUVcr8L9/x3MOvFLQVZNEQDAlKaON0IB8n47bo2EG3I90LZz9gilGBUlpX9g504YogyUyBrOF8ejrHglIIKSzedkLlSMUuGMZxYQBanYP5ZXDvEiPD96Lj2CvFAhBrIDabJRLCXegbyTDN9Cw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=HRqBiFIL; arc=none smtp.client-ip=209.85.219.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="HRqBiFIL"
+Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-6e8f8657f29so50614226d6.3
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 21:49:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1743569397; x=1744174197; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=9avm0LqOZNotjogzUUyckFvE/j+N5SXlPAiqBtwZqUM=;
+        b=HRqBiFIL+fmTzqnP91EOuNWsNtsZo1FoBDHKDoMOwQMJTnOKxkOxxLodJ0b1DPXLl+
+         pvQriF3hHpBxGE2o//aBLjAyhAsen7/a9K5PDq0m4ogKew+oPX/uH0TIfJ+mt4vnkalm
+         v67EejmS425+97wZbbwHQcAmJJcDEbYltE0bpktd5ChyGFkJGrSGZnVQAHrSLRWwMLBM
+         h11YtcFTwkIuKXzONwbLFDtAWVwEeGdP55jHQj46OX75hMuYjwjOandpvFs9lf9lrbWu
+         kLSkpTKDlKY29rtGJsnnlB2RJ4FGJsPBwzVTLzBSePxq56OTXeFQSgjwM5hbNNR1VsTc
+         eoDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743569397; x=1744174197;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9avm0LqOZNotjogzUUyckFvE/j+N5SXlPAiqBtwZqUM=;
+        b=SedmfVfTkn7fbrbwbpcOJl3qVIAtovyA7hPU3SDSxy81JbrDwmDHCU67Ekj9ssyyQe
+         Ax2LRNMwDfYbTep4AahIZItWMvnYOz05hue9A9vSxuY/o5fLuZA48jwvU3BfUgbIHdsp
+         Jjz2e/s0RpK7y0+PMctUt40ZlPNPJw2JicXao7F7i4YMfKx8N9r/fOTyOWY3GZOM5wza
+         pyrY0MMAO3RFD7Fw6Ht95TQWPzHM2Y7YEwssn8gQn1gM0//lOvoLlJ3Qx34x1fO/3u8h
+         78sN1VuauVli//zGOlbIOxh5xV8ez31gwCOOCx4FOaWG3qB1uALP+5EmTW1you+ABkDa
+         JcDg==
+X-Forwarded-Encrypted: i=1; AJvYcCUnyalw2+F4uz8HHrL/rlaUV0AwgWW3D/82KeFE56GUw7Cg5Tz3WgZ7OW9SQdML7sKgEGE6AYd81kjWv18=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+9m1T6YcdhgaKVAefLuiez35rm7+qI5L9zqd4DtabsbN/DEeZ
+	hyjDwxx5OAk0T/hYpRJXSnhwT4fJmz0kn2xc0xw9/Vs6up1i5TpzwkNtUwMiuJXUhmetrQ5bL9r
+	4
+X-Gm-Gg: ASbGncv7kDPB9bstBLv8OTW5ZmV9oxQIl+h92vHCvPxykhi+csFOG+U1fv5YyE90RaC
+	7B1hWhrCu8NKT244gk4mxrObBhGxC8QWhcgaONEBiSShpGy6wT8Nn9p+4TfSPyVfJ9YlbYdyxLy
+	EZ7rFCaj274b3ig3nvOrIaaBjjOh+nQtke4jnnJtX7UcZllUTMVHezLvvnrZ89PzIc7fA3JqS1A
+	Q38Yu3uxu0Gw2clfYC3hUvdp2OKJbTji7/PwBXQcIUutmBdX6pkwlyxTsX4feY1GSKpUAw59RpD
+	lUPDb3N89I9uXSoJLxo9l+Ojd93w9I/mYR5PLiDF9B+t1FU3GTgJH8iqUvDNPPayvXmET33fIb3
+	2+8YY8QkyJxZEFdzjRMPZGkILS7E=
+X-Google-Smtp-Source: AGHT+IHrhKBTscM2jCOGQCQuvRNnom05HAA99v9sLRDShuoNOC7upoIA4o6a6EuUpMYxe8aKa7cJeA==
+X-Received: by 2002:ad4:5d6c:0:b0:6d8:8d16:7cec with SMTP id 6a1803df08f44-6eed6297aadmr271668976d6.37.1743569397172;
+        Tue, 01 Apr 2025 21:49:57 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6eec96281aasm70706636d6.4.2025.04.01.21.49.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Apr 2025 21:49:56 -0700 (PDT)
+Date: Wed, 2 Apr 2025 00:49:55 -0400
+From: Gregory Price <gourry@gourry.net>
+To: lsf-pc@lists.linux-foundation.org
+Cc: linux-mm@kvack.org, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org, mhocko@suse.com,
+	a.manzanares@samsung.com
+Subject: Re: [LSFMM] Updated: Linux Management of Volatile CXL Memory Devices
+Message-ID: <Z-zB86WcoMEQ9lKV@gourry-fedora-PF4VCD3F>
+References: <Z226PG9t-Ih7fJDL@gourry-fedora-PF4VCD3F>
+ <Z9mo5qCpdlE-KZ7P@gourry-fedora-PF4VCD3F>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Fwd: [PATCH][SMB3 client] fix TCP timers deadlock after rmmod
-To: Kuniyuki Iwashima <kuniyu@amazon.com>
-CC: <edumazet@google.com>, <ematsumiya@suse.de>,
-	<linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-net@vger.kernel.org>, <smfrench@gmail.com>,
-	<zhangchangzhong@huawei.com>, <cve@kernel.org>, Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>, <sfrench@samba.org>
-References: <ac39f5a1-664a-4812-bb50-ceb9771d1d66@huawei.com>
- <20250402020807.28583-1-kuniyu@amazon.com>
-From: Wang Zhaolong <wangzhaolong1@huawei.com>
-In-Reply-To: <20250402020807.28583-1-kuniyu@amazon.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemg500010.china.huawei.com (7.202.181.71)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z9mo5qCpdlE-KZ7P@gourry-fedora-PF4VCD3F>
 
-Yes, it seems the previous description might not have been entirely clear.
-I need to clearly point out that this patch, intended as the fix for CVE-2024-54680,
-does not actually address any real issues. It also fails to resolve the null pointer
-dereference problem within lockdep. On top of that, it has caused a series of
-subsequent leakage issues.
+Slides up at:
+https://github.com/gourryinverse/cxl-boot-to-bash/blob/main/presentations/lsfmm25.pdf
 
-We will indeed need the CNA team to update the description once the correct fix
-is merged.
+Docs Transitioning to:
+https://github.com/gourryinverse/cxl-boot-to-bash/tree/main
 
-Best regards,
-Wang Zhaolong
+Browsable Page:
+https://gourryinverse.github.io/cxl-boot-to-bash/
 
+All help hacking on this is welcome. I imagine we'll convert some
+portion of this over to kernel docs, but not sure what.
 
-> From: Wang Zhaolong <wangzhaolong1@huawei.com>
-> Date: Tue, 1 Apr 2025 21:54:47 +0800
->> Hi.
->>
->> My colleagues and I have been investigating the issue addressed by this patch
->> and have discovered some significant concerns that require broader discussion.
->>
->> ### Socket Leak Issue
->>
->> After testing this patch extensively, I've confirmed it introduces a socket leak
->> when TCP connections don't complete proper termination (e.g., when FIN packets
->> are dropped). The leak manifests as a continuous increase in TCP slab usage:
->>
->> I've documented this issue with a reproducer in Bugzilla:
->>
->> https://bugzilla.kernel.org/show_bug.cgi?id=219972#c0
->>
->> The key issue appears to stem from the interaction between the SMB client and TCP
->> socket lifecycle management:
->>
->> 1. Removing `sk->sk_net_refcnt = 1` causes TCP timers to be terminated early in
->>      `tcp_close()` via the `inet_csk_clear_xmit_timers_sync()` call when
->>      `!sk->sk_net_refcnt`
->> 2. This early timer termination prevents proper reference counting resolution
->>      when connections don't complete the 4-way TCP termination handshake
->> 3. The resulting socket references are never fully released, leading to a leak
->>
->> #### Timeline of Related Changes
->>
->> 1. v4.2-rc1 26abe14379f8 ("net: Modify sk_alloc to not reference count the netns of kernel sockets")
->>      - Added `sk_net_refcnt` field to distinguish user sockets (=1) from kernel sockets (=0)
->>      - Kernel sockets don't hold netns references, which can lead to potential UAF issues
->>
->> 2. v6.9-rc2 151c9c724d05: ("tcp: properly terminate timers for kernel sockets")
->>      - Modified `tcp_close()` to check `sk->sk_net_refcnt` and explicitly terminate timers for kernel sockets (=0)
->>      - This prevents UAF when netns is destroyed before socket timers complete
->>      - **Key change**: If `!sk->sk_net_refcnt`, call `inet_csk_clear_xmit_timers_sync()`
->>
->> 3. v6.12-rc7 ef7134c7fc48: ("smb: client: Fix use-after-free of network namespace")
->>      - Fixed netns UAF in CIFS by manually setting `sk->sk_net_refcnt = 1`
->>      - Also called `maybe_get_net()` to maintain netns references
->>      - This effectively made kernel sockets behave like user sockets for reference counting
->>
->> 4. v6.13-rc4 e9f2517a3e18: ("smb: client: fix TCP timers deadlock after rmmod")
->>      - Problem commit: Removed `sk->sk_net_refcnt = 1` setting
->>      - Changed to using explicit `get_net()/put_net()` at CIFS layer
->>      - This change leads to socket leaks because timers are terminated early
->>
->> ### Lockdep Warning Analysis
->>
->> I've also investigated the lockdep warning mentioned in the patch. My analysis
->> suggests it may be a false positive rather than an actual deadlock. The crash
->> actually occurs in the lockdep subsystem itself (null pointer dereference in
->> `check_wait_context()`), not in the CIFS or networking code directly.
->>
->> The procedure for the null pointer dereference is as follows:
->>
->> When lockdep is enabled, the lock class "slock-AF_INET-CIFS" is set when a socket
->> connection is established.
->>
->> ```
->> cifs_do_mount
->>     cifs_mount
->>       mount_get_conns
->>         cifs_get_tcp_session
->>           ip_connect
->>             generic_ip_connect
->>               cifs_reclassify_socket4
->>                 sock_lock_init_class_and_name(sk, "slock-AF_INET-CIFS",
->>                   lockdep_init_map
->>                     lockdep_init_map_wait
->>                       lockdep_init_map_type
->>                         lockdep_init_map_type
->>                           register_lock_class
->>                             __set_bit(class - lock_classes, lock_classes_in_use);
->> ```
->>
->> When the module is unloaded, the lock class is cleaned up.
->>
->> ```
->> free_mod_mem
->>     lockdep_free_key_range
->>       __lockdep_free_key_range
->>         zap_class
->>           __clear_bit(class - lock_classes, lock_classes_in_use);
->> ```
->>
->> After the module is uninstalled and the network connection is restored, the
->> timer is woken up.
->>
->> ```
->> run_timer_softirq
->>     run_timer_base
->>       __run_timers
->>         call_timer_fn
->>           tcp_write_timer
->>             bh_lock_sock
->>               spin_lock(&((__sk)->sk_lock.slock))
->>                 _raw_spin_lock
->>                   lock_acquire
->>                     __lock_acquire
->>                       check_wait_context
->>                         hlock_class
->>                          if (!test_bit(class_idx, lock_classes_in_use)) {
->>                             return NULL;
->>                         hlock_class(next)->wait_type_inner; // Null pointer dereference
->> ```
->>
->> The problem lies within lockdep, as Kuniyuki says:
->>
->>> I tried the repro and confirmed it triggers null deref.
->>>
->>> It happens in LOCKDEP internal, so for me it looks like a problem in
->>> LOCKDEP rather than CIFS or TCP.
->>>
->>> I think LOCKDEP should hold a module reference and prevent related
->>> modules from being unloaded.
->>
->> Regarding the deadlock issue, it is clear that the locks mentioned in the deadlock warning
->> do not belong to the same lock instance. A deadlock should not occur.
->>
->> ### Discussion Points
->>
->> 1. API Design Question: Is this fundamentally an issue with how CIFS uses the socket
->>      API, or is it a networking layer issue that should handle socket cleanup differently?
->>
->> 2. Approach to Resolution: Would it be better to:
->>      - Revert to the original solution (setting `sk->sk_net_refcnt = 1`) from ef7134c7fc48?
->>      - Work with networking subsystem maintainers on a more comprehensive solution that
->>        handles socket cleanup properly?
->>
->> 3.  CVE Process Question: Given that CVE-2024-54680 appears to "fix" a non-existent issue
->>       while introducing an actual vulnerability, what's the appropriate way to address this?
-> 
-> I tested on 6.14 and e9f2517a3e18, but the issue still reproduces,
-> so e9f2517a3e18 is a bogus fix, and we will need to ask the CNA team
-> to update the description once the correct fix is merged.
-> 
+~Gregory Price
