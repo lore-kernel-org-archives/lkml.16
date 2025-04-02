@@ -1,85 +1,173 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5E2B230D08;
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0EF51230D0D;
 	Wed,  2 Apr 2025 04:21:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743567712; cv=none; b=HCzuWq6ZzkW2V4/9djacZQX5cr8HfaNee5ZQTO8vUuvE/rj3cOD1N3ahttJT+9Ef0zuGH7ycx6r2FUvAIBf24MDIXvH+zL9WOLAr/Lk149rZbM2uN8tCHhmZDoOA6bKshYDoUPxn/ZbA3Zq4PVMoCdlvDsiU0E58i71G7Jv3pDM=
+	t=1743567715; cv=none; b=bm/kA/HrgOgDKOXjMhCqMpjliGD5v0Z6EbdE9fmqCQalUKj9KQ6ELJdwFnJ+cioxn9pfUFuaItBRdx1y/A9rT6HwHqltAWE1N+upVcZIvL2JRZUCVMUaBbAbTm7mDa0I+X53qhgtcwTzY5/Dh8/QfCjE79xd49R9DyUvOScckaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743567712; c=relaxed/simple;
-	bh=m0SY0aMz6VYqx7I6tJ28nDq+/OGv6gq3bFTK7dq4V6U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h+iZOnt/77fAnKzh0M+zjZx/0x86yhl5uazCrYGy+kjqCW0Lp3lNPsi85D3NmzIDBiLzhOeC7kuvTx/VxP8I1iXWrcl1IU3oHnT//+J316JoC2EJyOk0/cDl03zSMKj3QFcxL9L1S1GTflcaSUK8gGeVP2ZXpSD504GU7XctmOk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LwzBHp7Z; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743567715; c=relaxed/simple;
+	bh=dS9hrGE2r6nZYjBpaEsv8QyfCT4mU3JS9gofScsAVMA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=CUlpBJlK1dHuaqyX3R7ASGG9xMEGRKQ/zpXfmAmuDZ+qGK+wYjcMxw35QQCuSMdGhWg2UFSdZtE6pKDtoPzFFzHDtZ641e0qKCWfzy/Wl9xaRU2yvyJMcy3pjog+SFmGOOHSydUX5IA9zN3124k9WnTRuAZNIFp2q1iGmiC6wKo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=ImYuqr4C; arc=none smtp.client-ip=220.197.31.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LwzBHp7Z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DFCDC4CEDD;
-	Wed,  2 Apr 2025 04:21:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743567711;
-	bh=m0SY0aMz6VYqx7I6tJ28nDq+/OGv6gq3bFTK7dq4V6U=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=LwzBHp7ZxYE3JDyc5xbuPO/aTzibLn5bXlb275iEVz8lnt+aPR2Gm9F0XHp75mrDt
-	 ASTMnXRoZE3jm5l3l1+13EKaQ9wWhWmPUPS2RP4eOk+hSSNz/s/npXp8odcaDC7Vzy
-	 AVZ58stfxu2KUXJYzcSUNHYTxxpHNLw+n0D86dZIuc5q1xtW8vrTbITgxN3XJBuV/C
-	 gnMu8JAukWxJOebacn/G5H+WEKU8045UyFJ8uUhzmx5h/yNgNenK8Zf0sapFdZ73nr
-	 uAWhq0W0VTIJc5LoHGSRsUlxkYGwmbB0tofIYUo8L6rOlDsqIcdQ4WhCLse+lSKlLD
-	 X0p0Tga44OAuQ==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id ED877CE160D; Tue,  1 Apr 2025 21:21:50 -0700 (PDT)
-Date: Tue, 1 Apr 2025 21:21:50 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Dave Jiang <dave.jiang@intel.com>,
-	Venkat Rao Bagalkote <venkat88@linux.ibm.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Jason Gunthorpe <jgg@nvidia.com>, linux-cxl@vger.kernel.org,
-	dave@stgolabs.net, jonathan.cameron@huawei.com,
-	alison.schofield@intel.com, vishal.l.verma@intel.com,
-	ira.weiny@intel.com, gourry@gourry.net,
-	linux-kernel@vger.kernel.org, linux-next@vger.kernel.org,
-	Madhavan Srinivasan <maddy@linux.ibm.com>
-Subject: Re: [BUG -next] ./usr/include/cxl/features.h:11:10: fatal error:
- uuid/uuid.h: No such file or directory
-Message-ID: <478264e8-af94-462b-929f-f7afdf8466bd@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <1f48ba3b-9ba8-44e5-98c7-4c9abf95a935@intel.com>
- <20250331132439.GD10839@nvidia.com>
- <67eac8df3e217_201f02948d@dwillia2-xfh.jf.intel.com.notmuch>
- <20250331171755.GC289482@nvidia.com>
- <67eaf14b7c611_201f0294ba@dwillia2-xfh.jf.intel.com.notmuch>
- <4641ce2f-74eb-45ea-a2f8-c7d0db905b7a@linux.ibm.com>
- <79a032b5-b13d-43fd-b56e-01098122e104@intel.com>
- <66ae49a8-d7f9-4fd9-b94e-9be26fd9aea4@paulmck-laptop>
- <e9c57344-43f3-4f90-9894-eb4f5a1b22f2@intel.com>
- <20250402114722.35cbd9d5@canb.auug.org.au>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="ImYuqr4C"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=0EePw
+	DUUMZhzh9549tMx88V8h+OGPUqEzKk9eoGJtpQ=; b=ImYuqr4CmI16CfqTLK0c3
+	iJuI16fD32jpSrI8EuA7FNTF1plgLUmANY9csmBg6ppfYeesY/75MHYolhlR7VA4
+	+s2WCq7L/TQaxspnBnm/vm/u8grKd+W3WVU0Dhu9sFuyxPisQytLKhRmdoNHBqO1
+	N6P7u/umYh2kwWopcavVWM=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g0-3 (Coremail) with SMTP id _____wBXJtQIu+xn1HfgDQ--.39888S5;
+	Wed, 02 Apr 2025 12:20:29 +0800 (CST)
+From: Hans Zhang <18255117159@163.com>
+To: lpieralisi@kernel.org,
+	bhelgaas@google.com
+Cc: kw@linux.com,
+	manivannan.sadhasivam@linaro.org,
+	ilpo.jarvinen@linux.intel.com,
+	robh@kernel.org,
+	jingoohan1@gmail.com,
+	thomas.richard@bootlin.com,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Hans Zhang <18255117159@163.com>
+Subject: [v7 3/5] PCI: dwc: Use common PCI host bridge APIs for finding the capabilities
+Date: Wed,  2 Apr 2025 12:20:18 +0800
+Message-Id: <20250402042020.48681-4-18255117159@163.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250402042020.48681-1-18255117159@163.com>
+References: <20250402042020.48681-1-18255117159@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250402114722.35cbd9d5@canb.auug.org.au>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wBXJtQIu+xn1HfgDQ--.39888S5
+X-Coremail-Antispam: 1Uf129KBjvJXoWxury5Cw17JryfCFy7ZrW8JFb_yoW5Zry8pa
+	yrAa4Fkr4rtr4Sqw4qvFnIyFy5AF9xAa4xZa97GwnavF12krWjg340kayaqF1IyrZF9Fy3
+	Kr47tF95Cw1kJFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UopBDUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOgMjo2fsusgIfgAAs2
 
-On Wed, Apr 02, 2025 at 11:47:22AM +1100, Stephen Rothwell wrote:
-> Hi all,
-> 
-> On Tue, 1 Apr 2025 17:18:23 -0700 Dave Jiang <dave.jiang@intel.com> wrote:
-> >
-> > > I of course do have some concerns about the number of userspace packages
-> > > that might be required if CXL is adding seven of them...  ;-)  
-> > 
-> > Technically it's only 1 package. libuuid-devel. Do the other 6 come
-> > with the installation of libuuid-devel?
-> 
-> On my debian build machine, I only need uuid-dev and libuuid1 installed ...
+Use the PCI core is now exposing generic macros for the host bridges to
+search for the PCIe capabilities, make use of them in the DWC driver.
 
-And libuuid-devel works on my Fedora systems.
+Signed-off-by: Hans Zhang <18255117159@163.com>
+---
+Changes since v6:
+https://lore.kernel.org/linux-pci/20250323164852.430546-3-18255117159@163.com/
 
-So the various kernel-build howtos will be updated?  Or is a patch
-forthcoming?
+- The patch commit message were modified.
 
-							Thanx, Paul
+Changes since v5:
+https://lore.kernel.org/linux-pci/20250321163803.391056-3-18255117159@163.com/
+
+- Kconfig add "select PCI_HOST_HELPERS"
+---
+ drivers/pci/controller/dwc/pcie-designware.c | 72 ++------------------
+ 1 file changed, 7 insertions(+), 65 deletions(-)
+
+diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+index 145e7f579072..e9a9a80b1085 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.c
++++ b/drivers/pci/controller/dwc/pcie-designware.c
+@@ -203,83 +203,25 @@ void dw_pcie_version_detect(struct dw_pcie *pci)
+ 		pci->type = ver;
+ }
+ 
+-/*
+- * These interfaces resemble the pci_find_*capability() interfaces, but these
+- * are for configuring host controllers, which are bridges *to* PCI devices but
+- * are not PCI devices themselves.
+- */
+-static u8 __dw_pcie_find_next_cap(struct dw_pcie *pci, u8 cap_ptr,
+-				  u8 cap)
++static int dw_pcie_read_cfg(void *priv, int where, int size, u32 *val)
+ {
+-	u8 cap_id, next_cap_ptr;
+-	u16 reg;
+-
+-	if (!cap_ptr)
+-		return 0;
+-
+-	reg = dw_pcie_readw_dbi(pci, cap_ptr);
+-	cap_id = (reg & 0x00ff);
+-
+-	if (cap_id > PCI_CAP_ID_MAX)
+-		return 0;
++	struct dw_pcie *pcie = priv;
+ 
+-	if (cap_id == cap)
+-		return cap_ptr;
++	*val = dw_pcie_read_dbi(pcie, where, size);
+ 
+-	next_cap_ptr = (reg & 0xff00) >> 8;
+-	return __dw_pcie_find_next_cap(pci, next_cap_ptr, cap);
++	return PCIBIOS_SUCCESSFUL;
+ }
+ 
+ u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap)
+ {
+-	u8 next_cap_ptr;
+-	u16 reg;
+-
+-	reg = dw_pcie_readw_dbi(pci, PCI_CAPABILITY_LIST);
+-	next_cap_ptr = (reg & 0x00ff);
+-
+-	return __dw_pcie_find_next_cap(pci, next_cap_ptr, cap);
++	return PCI_FIND_NEXT_CAP_TTL(dw_pcie_read_cfg, PCI_CAPABILITY_LIST, cap,
++				     pcie);
+ }
+ EXPORT_SYMBOL_GPL(dw_pcie_find_capability);
+ 
+-static u16 dw_pcie_find_next_ext_capability(struct dw_pcie *pci, u16 start,
+-					    u8 cap)
+-{
+-	u32 header;
+-	int ttl;
+-	int pos = PCI_CFG_SPACE_SIZE;
+-
+-	/* minimum 8 bytes per capability */
+-	ttl = (PCI_CFG_SPACE_EXP_SIZE - PCI_CFG_SPACE_SIZE) / 8;
+-
+-	if (start)
+-		pos = start;
+-
+-	header = dw_pcie_readl_dbi(pci, pos);
+-	/*
+-	 * If we have no capabilities, this is indicated by cap ID,
+-	 * cap version and next pointer all being 0.
+-	 */
+-	if (header == 0)
+-		return 0;
+-
+-	while (ttl-- > 0) {
+-		if (PCI_EXT_CAP_ID(header) == cap && pos != start)
+-			return pos;
+-
+-		pos = PCI_EXT_CAP_NEXT(header);
+-		if (pos < PCI_CFG_SPACE_SIZE)
+-			break;
+-
+-		header = dw_pcie_readl_dbi(pci, pos);
+-	}
+-
+-	return 0;
+-}
+-
+ u16 dw_pcie_find_ext_capability(struct dw_pcie *pci, u8 cap)
+ {
+-	return dw_pcie_find_next_ext_capability(pci, 0, cap);
++	return PCI_FIND_NEXT_EXT_CAPABILITY(dw_pcie_read_cfg, 0, cap, pcie);
+ }
+ EXPORT_SYMBOL_GPL(dw_pcie_find_ext_capability);
+ 
+-- 
+2.25.1
+
