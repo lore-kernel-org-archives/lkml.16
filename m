@@ -1,177 +1,105 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2084.outbound.protection.outlook.com [40.107.243.84])
+Received: from irl.hu (irl.hu [95.85.9.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51AFD149C7D
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 14:34:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.84
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743604485; cv=fail; b=eesllGJkMQB+sxuiu5gnxGrQUoQ0i/9djeLgb45ERtSyRaCBU76e7WC+mIUKywpv14SwP5Jd89IDMt5S5kwu9M1rGj1idfZuz9JIk5rcrVIQmuCq4JRLiFI7lFLi38tCPka3kkUY+yxfIOqcooOb/I/Ia1h1fw3FbQvX0vg7mtg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743604485; c=relaxed/simple;
-	bh=XAJ7nGw/RzA0pc/6Feq+798DsPznEUEkc6t9DLaNJCk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=eaXtELWtaVRSimTOEr6VRUDCdKqXOfJusdf34joCkvEurXiUsKDlOXTKLtV7iFR5rgCmF2zX8YEXFvfQtXk+SRMO8EmokYDUOgf65EanBvz7i40QbUmAdC2eSZoDJ9yolBWwEzf01Zt163rgT5ipd/0dHQLGsnuoz3mfm24iIwY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=OJ1oXUBs; arc=fail smtp.client-ip=40.107.243.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="OJ1oXUBs"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=PmjPGOT9+/VsaYpVN62v/xY3QkGWnCgguykiHIdB5WT8kkRMmCeUayQaVY+msGxLWxZO6Vqq/1Ef0iD5BmJ29BRN3Nka0YOfjFlRPRXyX4/iGXC07of5gzG0BAh9ABdamMmQh+xy3RFRg33wMV7iF3clz3NpSSNSx/SORfrQDouebMw4QmXdBD6qpeCVcxswtuE0s7+kXwUFhsHaGtk+DoetgRA7jmz+tw4AfNO097qAWHf43KHOJ7pKWYVv5gwl9QzIwpPQWObbIbqgLQUqsw3qUvGo2bZx1j1zhJ+jWlYVoosFoMvGJ6mpDBf61sgGxvQ7ymblBBAQqxLyEKPZaA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+X1UWKTXT7x30EugxmzPaNX3CVifcbT2x17P8EMPK4Q=;
- b=S744Zc98EuoyHt/JFQBWHwGlIlljAmbQIoOho8sNDLPfxKwVM8jRoe+RV75Rq6qPyVdeRHpTWOnKw1g7TbNFuB9vPmnVfNS5BynObSEfmoxUwSRPypsHzVsNDiKdlgmGWhNRyPiLLhCouvSBejSaU3aqRDe6WeDfzmex0dcRVgfYmLudpVVLScQxVXHYtDvbMO4WrICCG8gcMlTZ7xWXtVxQei869GGax2/EJN8WB+atVJCu0pg4biSzGn3fUQyj25f5e72AIgAujon+xAblOuAkbcgqCo5EzUF4uu9QRIxZTMyTeUwf9hhWwMU+JzAPvaTtOo4M41c1Cy6AB4AWjQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=suse.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+X1UWKTXT7x30EugxmzPaNX3CVifcbT2x17P8EMPK4Q=;
- b=OJ1oXUBsNvs1QaiH94kSEsBP9k/bQs/xI5epwlKnyd7x1Yjb8/OlrhLaBUZa14U7gk3yggh2Tq4s/Wd5VlLhj+q/Fo7dKlRfoFQ1akqMYxSDlvDrG0BbwJ0cNd9RHk3qAW0kah7yVkaGIFWGSiowzZNcfRkIcvjbNX0z3IVOlGg=
-Received: from BY5PR03CA0028.namprd03.prod.outlook.com (2603:10b6:a03:1e0::38)
- by CH3PR12MB7761.namprd12.prod.outlook.com (2603:10b6:610:153::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.50; Wed, 2 Apr
- 2025 14:34:39 +0000
-Received: from MWH0EPF000989E8.namprd02.prod.outlook.com
- (2603:10b6:a03:1e0:cafe::78) by BY5PR03CA0028.outlook.office365.com
- (2603:10b6:a03:1e0::38) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8534.46 via Frontend Transport; Wed,
- 2 Apr 2025 14:34:38 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
-Received: from SATLEXMB03.amd.com (165.204.84.17) by
- MWH0EPF000989E8.mail.protection.outlook.com (10.167.241.135) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8606.22 via Frontend Transport; Wed, 2 Apr 2025 14:34:38 +0000
-Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 2 Apr
- 2025 09:34:37 -0500
-Received: from [172.29.45.113] (10.180.168.240) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
- Transport; Wed, 2 Apr 2025 09:34:36 -0500
-Message-ID: <7fb49337-e1df-41fe-abba-6b2104094a68@amd.com>
-Date: Wed, 2 Apr 2025 10:34:33 -0400
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92F47149C7D
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 14:35:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.85.9.111
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743604511; cv=none; b=EX1FDGl9wK/MyCPsDLo4ksOy5QqfdpRytUjpJL8Bz+az20K0e+xBcHe7D1sZnEXk7HPSw0M6GA+5714UB8HOovw7anRrHb/fxz5n3HOru5+J7ub+NNJ320wnZZ5IZoxUHY1S9xa72c2SpuXnIG3Zut51knNwpkNt+0MDvXI6BZI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743604511; c=relaxed/simple;
+	bh=1t238q/aUujicZvFuDiQRuF4dfz4RMW/gKJbofRPYbk=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=eYt+VITLRd0oqXtPFN3qlXoShEns7g7qdeBPhowBaBs0TzTFSaE+R5zjxaj/qz6pUuiJ9QAbXzvLuNjCbFOv58IKQpck6ORsocfMx7ck7VgO+ENj1nnLqZlfZvdjQxZKAYOHihwxs/5aFAPHv2jI6/pXs1xsBmB8nnhGjZ3fRJs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu; spf=pass smtp.mailfrom=irl.hu; arc=none smtp.client-ip=95.85.9.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=irl.hu
+Received: from [192.168.2.19] (51b692a2.dsl.pool.telekom.hu [::ffff:81.182.146.162])
+  (AUTH: CRAM-MD5 soyer@irl.hu, )
+  by irl.hu with ESMTPSA
+  id 0000000000080D7C.0000000067ED4B1A.00083746; Wed, 02 Apr 2025 16:35:06 +0200
+Message-ID: <e323219b52cda1891a55d12ad77a2b34edc8688b.camel@irl.hu>
+Subject: Re: amdgpu_dm_connector_mode_valid regression
+From: Gergo Koteles <soyer@irl.hu>
+To: Dmitry Baryshkov <dbaryshkov@gmail.com>
+Cc: Dmitry Baryshkov <lumag@kernel.org>, regressions@lists.linux.dev,
+  dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+  amd-gfx@lists.freedesktop.org, Hans de Goede <hdegoede@redhat.com>,
+  Alex Deucher <alexander.deucher@amd.com>,
+  Mario Limonciello <mario.limonciello@amd.com>,
+  Alex Hung <alex.hung@amd.com>,
+  Harry Wentland <harry.wentland@amd.com>
+Date: Wed, 02 Apr 2025 16:35:05 +0200
+In-Reply-To: <CALT56yPd-xfd=47xRxrCk4F3jib4Ti7kg8pRXy-gVAQpbOc=pw@mail.gmail.com>
+References: <ed09edb167e74167a694f4854102a3de6d2f1433.camel@irl.hu>
+	 <8963a409dd575e040e5f07e4ad5e9c1d26b421f2.camel@irl.hu>
+	 <CALT56yPd-xfd=47xRxrCk4F3jib4Ti7kg8pRXy-gVAQpbOc=pw@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] xen: Change xen-acpi-processor dom0 dependency
-To: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>, Stefano Stabellini
-	<sstabellini@kernel.org>, Oleksandr Tyshchenko
-	<oleksandr_tyshchenko@epam.com>
-CC: Penny Zheng <penny.zheng@amd.com>, Jan Beulich <jbeulich@suse.com>,
-	<xen-devel@lists.xenproject.org>, <linux-kernel@vger.kernel.org>
-References: <20250331172913.51240-1-jason.andryuk@amd.com>
- <a6977caf-ce0e-4002-8df5-26cb0bdc88d7@suse.com>
-Content-Language: en-US
-From: Jason Andryuk <jason.andryuk@amd.com>
-In-Reply-To: <a6977caf-ce0e-4002-8df5-26cb0bdc88d7@suse.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Received-SPF: None (SATLEXMB03.amd.com: jason.andryuk@amd.com does not
- designate permitted sender hosts)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MWH0EPF000989E8:EE_|CH3PR12MB7761:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7664e9cd-bc4b-41f7-31e1-08dd71f37f92
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|376014|1800799024|82310400026|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?RTBaaHFyV1kzaSs1cDRmZ096NzYwKytQZ1BmaUtKZU1BV3YyaGNucUNRdWtr?=
- =?utf-8?B?eTdBREt5QkhKelpuaWYrek9rbUMwMmNjUUwyRCs3Qi9HRTlMTENHOU1GbDVG?=
- =?utf-8?B?TzFIa1p5WURUYzBBTzFpclFzNFZhaG50Q0RyQm5VbythRldNUWFwTG5YYWZN?=
- =?utf-8?B?UjAzVEx6VENyaUl5VmdwNTVLRGRnaDd1Q01aUDRNNHdKUURteTB3TmJKL3Rw?=
- =?utf-8?B?L3FQY04zbGhiK3BrZXc2RTRpbzM0cVNRclNQcmVxK2UzTWF2TWZsMjZqbEVs?=
- =?utf-8?B?bW91bHdDelhaZXRYenhQWmZJSjRkRHVEai8zb1NFSis0Vk91T1U0cHlWeW5h?=
- =?utf-8?B?aHFkV1RCcXhLdjBxblBBMDYyb3dpL2VjNS9BR0Z0elVBdW1Kc255YUorZTFF?=
- =?utf-8?B?MUVNRXJuWUhFRmtqNld4a0NRTlhwYUNtNzhZRmF2T2Q5bzZYZTF5Z2l1SFZl?=
- =?utf-8?B?OHZXYWZ4SWNEQVZFSVFHMVVjZmxlbWtlWWZuS25vcXdQaVhiYjFKaGxSaGZH?=
- =?utf-8?B?RTk3T2psMUZCUlVuamIxaFBvdVVNUGdIT2dPOFp1QlhhQm5ZcUU5VVBkbitT?=
- =?utf-8?B?UnRMZjFVNUhzVHZrUnpKRnFtTGg1cGFhTmxuZU11T0NPUmRHSWZuaHhBT3Bm?=
- =?utf-8?B?YTFIYnlqaTVZNlZudzBPMEpUUCtxUmM1WlhkQWdaNFgvdk85allxb1FoLzg5?=
- =?utf-8?B?dTVWU0ZudDJvN3ZBSHdXSXFoeDU1ZWdVTWQvWWwySnQrNGFuYjQxNzEzYkRq?=
- =?utf-8?B?a05NcHVsMWFjeXJURXA4V0RTbzd1S1FzZm5oa3d0WVB3VGl0c1B3MFBHTUdy?=
- =?utf-8?B?M2lQL1pwS3VEMFJiSVkyVHZ5a3NrUWs2QjVTZHlTN3F5cjZnb1dlNTZsZEU1?=
- =?utf-8?B?ano4Ui9LdHFydnRnSm5IeVQwT2lObU5iRHNUVXE1aURBUHNPR1pYdmJ5WUQx?=
- =?utf-8?B?Yzl5aUtKeHN4L3YxY0VKUzhKdlNhU29QUTdxVGlaeHJMajd3V0pFaDdNZ1ZW?=
- =?utf-8?B?Snl5VVg5VVdqNkZHNDlMek9hYXR2MURrbTlPK3hIbUg4RUFRdm02YkMyNlVk?=
- =?utf-8?B?UWw4OGN1czhBM2VpNnVkdzdjMkozNGhyZmphUXdNUjlBczRFSUFzVjNGYjUy?=
- =?utf-8?B?MFZXVHdSdllJRlhyandESWQ4SlNYOUFSRGxIWFVqWUUyNkduVVpOMDZBdkJZ?=
- =?utf-8?B?RE8xMU8wcWl1b2Jtd3RnTUlvUEdVQXZTMEFJd1ltYng4ajI4UDhRaGxvR3Yz?=
- =?utf-8?B?UVR2R2NwNlNoaG5oeEhaanhVNnIyYmZsek5ESUV4enY0cTJ1Zytkd2pjT2ZF?=
- =?utf-8?B?Uit1U1pnVVBoeVB3OVVwY3d1UEpFbGVDZjBXT1Z5K1pCRHVvSHFwQmExampH?=
- =?utf-8?B?UTYxTkQ5aTJzeklLaDdES1Q4SS90eTJaVDZvMVJNRlhuaitYbDRSa3BTdHZw?=
- =?utf-8?B?cHVxYmNnY1AyWDIrZ0d6YmV1L3Fad21tMnZFbHl2a3NZT1ZBQlZ3REtUbi81?=
- =?utf-8?B?Y21FKzJuc2JLVWNsK0EzTzViOUJ6Ymxwb1VXamFpc2VJaXhuTDQxbFlKRWxW?=
- =?utf-8?B?em85MlFzR2lzS1BlWFpRemZsVVc0akhRdnUyNHFOdmd6WlZCR2puN0ZVN3JB?=
- =?utf-8?B?TVNGQXRuL1UvVWMwVFVyVnJXNCthTXhma2NRMFdIQW9LYmlWZ21jRzAwQ1JH?=
- =?utf-8?B?bzlPRENnMHVZUFpGdkh6SC9tcllFQ2RoYjNvNlN4bGgvU3pBK1ArejlHNDJw?=
- =?utf-8?B?dHMwNHdJczZiSjhqSmY5cVZWQVBneWFBNHBmdFBsNFRsaGxCLzhkMVFnMUQr?=
- =?utf-8?B?TGZqVDY2aW5tQzVGL3FuU09aQjV2cTI4TStJTDJjVWR4VVh0T095QkN1M1Bl?=
- =?utf-8?B?VEVVazNoeHMydG11UjB0SWQxeGJHY2gxNTZBc1VIaEtjZklmS3oyTXRqUm1l?=
- =?utf-8?B?U1hqUUpNeTNYNE5EV3FyQ3VWRGRGSzlPTVpZeGtuRmhPT1NqNE1KVlNtcnFK?=
- =?utf-8?B?MFZaM2RpSEVnPT0=?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(376014)(1800799024)(82310400026)(7053199007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Apr 2025 14:34:38.6195
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7664e9cd-bc4b-41f7-31e1-08dd71f37f92
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	MWH0EPF000989E8.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB7761
 
-On 2025-04-02 10:24, Jürgen Groß wrote:
-> On 31.03.25 19:29, Jason Andryuk wrote:
->> xen-acpi-processor functions under a PVH dom0 with only a
->> xen_initial_domain() runtime check.  Change the Kconfig dependency from
->> PV dom0 to generic dom0 to reflect that.
->>
->> Suggested-by: Jan Beulich <jbeulich@suse.com>
->> Signed-off-by: Jason Andryuk <jason.andryuk@amd.com>
->> ---
->>   drivers/xen/Kconfig | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/xen/Kconfig b/drivers/xen/Kconfig
->> index f7d6f47971fd..24f485827e03 100644
->> --- a/drivers/xen/Kconfig
->> +++ b/drivers/xen/Kconfig
->> @@ -278,7 +278,7 @@ config XEN_PRIVCMD_EVENTFD
->>   config XEN_ACPI_PROCESSOR
->>       tristate "Xen ACPI processor"
->> -    depends on XEN && XEN_PV_DOM0 && X86 && ACPI_PROCESSOR && CPU_FREQ
->> +    depends on XEN && XEN_DOM0 && X86 && ACPI_PROCESSOR && CPU_FREQ
->>       default m
->>       help
->>         This ACPI processor uploads Power Management information to 
->> the Xen
-> 
-> Assuming that all needed hypercalls are fine for PVH dom0:
+Hi Dmitry,
 
-It's platform_op XENPF_set_processor_pminfo and XENPF_get_cpuinfo.  Xen 
-doesn't check if the caller is PV or PVH.
+On Wed, 2025-04-02 at 16:36 +0300, Dmitry Baryshkov wrote:
+> > >=20
+> > > It works if I call
+> > > drm_mode_set_crtcinfo((struct drm_display_mode *)mode, 0) before
+> > > create_validate_stream_for_sink()
+> > > in amdgpu_dm_connector_mode_valid()
+> > >=20
+> > > or
+> > >=20
+> > > if I comment out the decide_crtc_timing_for_drm_display_mode() in
+> > > create_stream_for_sink()
+> > >=20
+> > > but a better fix than these can be imagined :)
+>=20
+> Would it help if you force recalculate_timings to be true if
+> (drm_mode->crtc_clock =3D=3D 0)
+>=20
 
-> Reviewed-by: Juergen Gross <jgross@suse.com>
+Yes, it works with that one.
 
-Thanks, Juergen.
+But the code would start to become quite untraceable.
+duplicate mode in amdgpu_dm_connector_mode_valid()
+call drm_mode_set_crtcinfo() in amdgpu_dm_connector_mode_valid()
+duplicate mode in create_stream_for_sink()
+overwrite ctrc in decide_crtc_timing_for_drm_display_mode()
+if crtc_clock =3D=3D 0 call drm_mode_set_crtcinfo() again in
+create_stream_for_sink()=20
 
--Jason
+saved_mode is never used after this, so I can't add the condition here
+        if (recalculate_timing)
+                drm_mode_set_crtcinfo(&saved_mode, 0);
+
+This commit is related, I think:
+1101185 ("drm/amd/display: fix the ability to use lower resolution
+modes on eDP")
+
+Regards,
+Gergo
+
+---
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+index bae83a129b5f..83c8c81d4015 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+@@ -6984,6 +6984,9 @@ create_stream_for_sink(struct drm_connector
+*connector,
+        if (recalculate_timing)
+                drm_mode_set_crtcinfo(&saved_mode, 0);
+=20
++       if (mode.crtc_clock =3D=3D 0)
++               drm_mode_set_crtcinfo(&mode, 0);
++
+        /*
+         * If scaling is enabled and refresh rate didn't change
+         * we copy the vic and polarities of the old timings
+--
