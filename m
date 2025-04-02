@@ -1,111 +1,182 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6DAF19F419;
-	Wed,  2 Apr 2025 17:24:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA5D235946;
+	Wed,  2 Apr 2025 17:24:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743614657; cv=none; b=SdSyzMSsCv9d2ibvfotxGxKoP7Sx4KRuwKY9WnXKdBYfwPC01MFx+WLu/lF6IQ4KaSDaiNcBGfjJCvAiVd2gO0EEN8hRyxy2CHSxLLlMl3Lu+FfNWqIFa8Tcqf4gwqgPtfML33/n0zKqDRua5JUiCeWJVhBILNPJzdGW8BPcpz0=
+	t=1743614669; cv=none; b=hYHgdymo/zvGWWHfIMkYnWHnt+dqYBfqFffVtCk7my25HBRBe6ruuLnHnxEacijCuJvvDSNMfz+uG7ac+94Jv5VQz/3Mt2iORvzV5HH7ErIYIm/+pjuCVvu0ugIAnF0hegLj2ptwnw3GBbAZ6yjMqU0hZdIiZNTzQpSrz90ills=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743614657; c=relaxed/simple;
-	bh=Wwzzjx9epldMBp9XWXPdhD+aKU1In1RhITbbBIQz4+g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P+wtMpoNIXsyOCwb5mv1MFQd8/CkQ2RwEB8A9ijq1R4BgI3XJOXtsOdUsWN+DFRw8KZCY8BOnXDNuEcrI10t8PJEeY2b28/HeEDzzgXZF1ENBnTBkD1tTcxGmSLgFss09puM3qOgFvWkqDEMhqmamvkJgwvvrKtAeLSz6ztsqpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=F4+dWA8Y; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1743614669; c=relaxed/simple;
+	bh=6/IQIWw81YF4I3ww+QWFv/mTo+GnNJlko6uLlmyFKl0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WJA68kof907UNvavvO2B3iET79Cd17bImbtWnEOCRcDG84fH/CTH+4h/KIj3qBB68oi64sWC5UKHls+37btfQFvI9aGBBs4Bl7NSOF39CXMv5q+VpdyOg41GAztpJ9yf3jmFgzz2MtKziv+5zqyhJR/uDq+e2BtXoMPsMPlR7hU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TBTJ3C40; arc=none smtp.client-ip=209.85.219.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="F4+dWA8Y"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=MMVZTZdsjCij0P4cHkp+t6GHi08BvbXKpnaZVEfTiDY=; b=F4+dWA8Y9u3OT/Z0M5fTeYt317
-	imvas6j05UwKhvcab0A+nPC9h0MjmxyQxoc7oktwY790F9QGaOU9OkRGvjVzE0iGlV5ZxdDgOKRxe
-	S6T1g8faxTnJD7XGQbf3VC+iGa/yyAFxlRP/KYHS+C+eAL4cEkyds7Yi+vSfgsrTY7fh/4wP2sZkU
-	KRycofvp84d86PsjLXxSIdIZ78+K0tDOzfppE2ZhuuzBCzjO9b06j2pDL5S4xc2D+GdxTF12tky6V
-	ajLja1r04gHDAWR3ozhNo0M1kM3BaJ4Z5wH8gb9ajmEjL5c+S0n1VcKVyH3Unjl958HGvz15hVI32
-	sJ4oV7Nw==;
-Received: from willy by casper.infradead.org with local (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u01ow-00000009uU1-2mMM;
-	Wed, 02 Apr 2025 17:24:10 +0000
-Date: Wed, 2 Apr 2025 18:24:10 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Michal Hocko <mhocko@suse.com>
-Cc: Dave Chinner <david@fromorbit.com>, Yafang Shao <laoar.shao@gmail.com>,
-	Harry Yoo <harry.yoo@oracle.com>, Kees Cook <kees@kernel.org>,
-	joel.granados@kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-	linux-mm@kvack.org, Vlastimil Babka <vbabka@suse.cz>
-Subject: Re: [PATCH] proc: Avoid costly high-order page allocations when
- reading proc files
-Message-ID: <Z-1yui_QgubgRAmL@casper.infradead.org>
-References: <20250401073046.51121-1-laoar.shao@gmail.com>
- <3315D21B-0772-4312-BCFB-402F408B0EF6@kernel.org>
- <Z-y50vEs_9MbjQhi@harry>
- <CALOAHbBSvMuZnKF_vy3kGGNOCg5N2CgomLhxMxjn8RNwMTrw7A@mail.gmail.com>
- <Z-0gPqHVto7PgM1K@dread.disaster.area>
- <Z-0sjd8SEtldbxB1@tiehlicka>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TBTJ3C40"
+Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-6e8fca43972so181226d6.1;
+        Wed, 02 Apr 2025 10:24:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743614667; x=1744219467; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=2YmZh6k4S4A2gKPdCb+Hixcu2ZSXle/HXIt3s9AusCA=;
+        b=TBTJ3C408FGSKKnqfB6Os+D4FIqzDT2Zl6fP9zmn5qfWiSwTkcPIO/b3RZ2GOBbEGb
+         bkppGy9jbdzWbDLq6M6AXIOFykmEbeSzxZq3ywym5E39CHcEujMdXsfJf6fkoCo1INA7
+         DDihd6PRPvKqhAUT7Hn2KvXD8k3bSV+iGMkNdviROUSx9GNLpM55Sa7qsgCAkLpaiO6U
+         C9XNezUAuf6ca+Yii1W6TXJjJUhb1TXcqBMI7HFYtow47CCc4ewkf9DvEuEkDkJBKNUw
+         mGtEskpRKIyoROGdjIK39TX6gpF19ejY1Sv+19GbVBGC6ARTSUlRlvCcYk6IQTR7E/vc
+         7MOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743614667; x=1744219467;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2YmZh6k4S4A2gKPdCb+Hixcu2ZSXle/HXIt3s9AusCA=;
+        b=jYZbjNa6O7xddmcpvpeQz4mrHTJDbAczP4EFsKcbv4dUSJoQ+UpVulc4e85+C/F7KE
+         k+LqSBkDKukJoMkbvBe/CnsGWyY2Bxh2it8MuO91Rf5cHKj0fWvU5dpLf+q6Lv39d92c
+         MOS+5i7o0DK6UV9WjMoPfru43kIua1mliz+AOVSmISlUIVUjCWa19ngU+7FYxsw050hf
+         XsipJzBiMDMrXFKDgZD3tmBNMjpDlUDq0oIJK9v7nXlDe5Hcx1mo5fnA4/boGpzT0C66
+         jKXimPIjnDV+e/DvX39W/+fxhh0UHxTCE+Nxqv8P4H2Oi0GQlN0ikZbLLXvHxXRkR7pl
+         3knA==
+X-Forwarded-Encrypted: i=1; AJvYcCUAEiKozbD5OvAYW+SnddE+8w4w+CJMxnMef6gTux4ajUq112ugSkYwFo1cZQvqDBDnKjTbEknCJbl4@vger.kernel.org, AJvYcCUhFoq9OhDHoYaQ8ssiEx062xl4ksQa08RSMkDBUQsRhRDvOAdi9zCwPq7emwtSt3ood14abR3/nPinegSF@vger.kernel.org
+X-Gm-Message-State: AOJu0YzuPr5S5rk+wC5MAzV6b1adCiU0OX67qgN5eKuFSn2/1eIxzk5y
+	717pFKrPCUKZk4xNGIaC++a+auEPUbO0RJFyUfB7WEx4l00eUFc=
+X-Gm-Gg: ASbGnctspVyb6J0nPq1d6uEqwQP2qj9Zr+uZDZhgcXdKJO71urgDUbX6H4B3vWeJuaq
+	PXyAMpQYsJmTFSEJAmHo4m3MskGvYBwbILySXPbDgHCSJ5EfFgOMW1uqG9PBB9Pa39xFNlJlnEk
+	XQlRQHfZkwwU9OJHvTqGSS0sOUEsBhNFP08P/FIpCc7SysOkXEQv7l9d5/6zHvuyxbgCFpaLoPP
+	cUEtukBW5tg6oh7hiaQC9lzaIMGv9vF9D7k+AiQfmTXNRPtonFy3oT1dlfZAKtnqo8BCzWVHrit
+	2tDte1aFwGR7CEMXXhVJsYEofhE2YuS9SkNI6Kr1S3gFyKrXaWJozOi/hBqvT2bz+r/ULamQNt9
+	7+Ft8gELPlqLe
+X-Google-Smtp-Source: AGHT+IFMVDYLTn3P+AqF4w5EM6NFHR4DM/rUbBAs9Vcoe+DJhPsyf1ed5wxi6pxvZTB9jpF+/uNqvQ==
+X-Received: by 2002:a05:6214:258f:b0:6e8:f770:5045 with SMTP id 6a1803df08f44-6eed6271744mr284133846d6.28.1743614666448;
+        Wed, 02 Apr 2025 10:24:26 -0700 (PDT)
+Received: from ?IPV6:2a02:810b:f13:8500:edfc:c609:ae5:4b2c? ([2a02:810b:f13:8500:edfc:c609:ae5:4b2c])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6eec9643d6asm77042556d6.28.2025.04.02.10.24.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Apr 2025 10:24:26 -0700 (PDT)
+Message-ID: <680a40a8-07c1-4dde-93b2-337ab15f7afe@gmail.com>
+Date: Wed, 2 Apr 2025 19:24:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z-0sjd8SEtldbxB1@tiehlicka>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 7/7] drm/rockchip: inno-hdmi: Convert to drm bridge
+To: Andy Yan <andyshrk@163.com>, heiko@sntech.de
+Cc: conor+dt@kernel.org, krzk+dt@kernel.org, robh@kernel.org,
+ hjc@rock-chips.com, mripard@kernel.org, neil.armstrong@linaro.org,
+ dmitry.baryshkov@oss.qualcomm.com, devicetree@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
+ Andy Yan <andy.yan@rock-chips.com>
+References: <20250402123150.238234-1-andyshrk@163.com>
+ <20250402123150.238234-8-andyshrk@163.com>
+Content-Language: en-US
+From: Alex Bee <knaerzche@gmail.com>
+In-Reply-To: <20250402123150.238234-8-andyshrk@163.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 02, 2025 at 02:24:45PM +0200, Michal Hocko wrote:
-> On Wed 02-04-25 22:32:14, Dave Chinner wrote:
-> > > > > >+    /*
-> > > > > >+     * Use vmalloc if the count is too large to avoid costly high-order page
-> > > > > >+     * allocations.
-> > > > > >+     */
-> > > > > >+    if (count < (PAGE_SIZE << PAGE_ALLOC_COSTLY_ORDER))
-> > > > > >+            kbuf = kvzalloc(count + 1, GFP_KERNEL);
-> > > > >
-> > > > > Why not move this check into kvmalloc family?
-> > > >
-> > > > Hmm should this check really be in kvmalloc family?
-> > > 
-> > > Modifying the existing kvmalloc functions risks performance regressions.
-> > > Could we instead introduce a new variant like vkmalloc() (favoring
-> > > vmalloc over kmalloc) or kvmalloc_costless()?
-> > 
-> > We should fix kvmalloc() instead of continuing to force
-> > subsystems to work around the limitations of kvmalloc().
+
+Hi Andy,
+
+> From: Andy Yan <andy.yan@rock-chips.com>
 > 
-> Agreed!
+> Convert it to drm bridge driver, it will be convenient for us to
+> migrate the connector part to the display driver later.
 > 
-> > Have a look at xlog_kvmalloc() in XFS. It implements a basic
-> > fast-fail, no retry high order kmalloc before it falls back to
-> > vmalloc by turning off direct reclaim for the kmalloc() call.
-> > Hence if the there isn't a high-order page on the free lists ready
-> > to allocate, it falls back to vmalloc() immediately.
+> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+> 
+> ---
+> 
+> Changes in v3:
+> - First included in v3
+> - Link to V2: https://lore.kernel.org/dri-devel/20250325132944.171111-1-andyshrk@163.com/
+> 
+>   drivers/gpu/drm/bridge/Kconfig                |   7 +
+>   drivers/gpu/drm/bridge/Makefile               |   1 +
+>   .../inno_hdmi.c => bridge/inno-hdmi.c}        | 924 ++++++++++--------
+>   drivers/gpu/drm/rockchip/Kconfig              |   1 +
+>   drivers/gpu/drm/rockchip/Makefile             |   2 +-
+>   drivers/gpu/drm/rockchip/inno_hdmi-rockchip.c | 187 ++++
+>   drivers/gpu/drm/rockchip/inno_hdmi.h          | 349 -------
+>   include/drm/bridge/inno_hdmi.h                |  33 +
+>   8 files changed, 741 insertions(+), 763 deletions(-)
+>   rename drivers/gpu/drm/{rockchip/inno_hdmi.c => bridge/inno-hdmi.c} (52%)
+>   create mode 100644 drivers/gpu/drm/rockchip/inno_hdmi-rockchip.c
+>   delete mode 100644 drivers/gpu/drm/rockchip/inno_hdmi.h
+>   create mode 100644 include/drm/bridge/inno_hdmi.h
+>
 
-... but if vmalloc fails, it goes around again!  This is exactly why
-we don't want filesystems implementing workarounds for MM problems.
-What a mess.
+...
 
->  	if (size > PAGE_SIZE) {
->  		flags |= __GFP_NOWARN;
->  
->  		if (!(flags & __GFP_RETRY_MAYFAIL))
->  			flags |= __GFP_NORETRY;
-> +		else
-> +			flags &= ~__GFP_DIRECT_RECLAIM;
+> +#define m_RX_DONE			(1 << 0)
+> +
+> +#define HDMI_CEC_TX_INT			0xda
+> +#define HDMI_CEC_RX_INT			0xdb
+> +#define HDMI_CEC_BUSFREETIME_L		0xdc
+> +#define HDMI_CEC_BUSFREETIME_H		0xdd
+> +#define HDMI_CEC_LOGICADDR		0xde
+> +
+>   struct inno_hdmi_i2c {
+>   	struct i2c_adapter adap;
+>   
+> @@ -68,41 +395,18 @@ struct inno_hdmi_i2c {
+>   
+>   struct inno_hdmi {
+>   	struct device *dev;
+> -
+> +	struct drm_bridge bridge;
+>   	struct clk *pclk;
+>   	struct clk *refclk;
+>   	void __iomem *regs;
+>   	struct regmap *grf;
+>   
+> -	struct drm_connector	connector;
+> -	struct rockchip_encoder	encoder;
+> -
+>   	struct inno_hdmi_i2c *i2c;
+>   	struct i2c_adapter *ddc;
+> -
+> -	const struct inno_hdmi_variant *variant;
+> +	const struct inno_hdmi_plat_data *plat_data;
+> +	unsigned int colorimetry;
 
-I think it might be better to do this:
+thanks a lot for doing the bridge conversion for this driver.
+Please keep the custom connector state which was introduced after Maxim's
+review during the last rework of this [0] driver. The colorimetry is not
+part of the device, but of the connector and thus should not be part of the
+device struct.
+It's, however, likely that the common (hdmi-)connector framework will once
+hold its own colorimetry property and then the custom connector state in
+this driver can go away, but until than we have to keep it here.
 
-		flags |= __GFP_NOWARN;
+Thanks,
+Alex
 
-		if (!(flags & __GFP_RETRY_MAYFAIL))
-			flags |= __GFP_NORETRY;
-+		else if (size > (PAGE_SIZE << PAGE_ALLOC_COSTLY_ORDER))
-+			flags &= ~__GFP_DIRECT_RECLAIM;
+[0]
+https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=ceeb0f0104a62c867656c2730a51df47e7350b8f
 
-I think it's entirely appropriate for a call to kvmalloc() to do
-direct reclaim if it's asking for, say, 16KiB and we don't have any of
-those available.  Better than exacerbating the fragmentation problem by
-allocating 4x4KiB pages, each from different groupings.
+
+>   };
+>   
+> -struct inno_hdmi_connector_state {
+> -	struct drm_connector_state	base;
+> -	unsigned int			colorimetry;
+> -};
+> -
+> -static struct inno_hdmi *encoder_to_inno_hdmi(struct drm_encoder *encoder)
+> -{
+> -	struct rockchip_encoder *rkencoder = to_rockchip_encoder(encoder);
+> -
+> -	return container_of(rkencoder, struct inno_hdmi, encoder);
+> -}
+> -
+> -static struct inno_hdmi *connector_to_inno_hdmi(struct drm_connector *connector)
+...
