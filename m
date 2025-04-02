@@ -1,174 +1,150 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 780C52EB1D
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 10:17:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BE3B53BE
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 10:18:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743589067; cv=none; b=Pl9X8kywyttoKJfIo4uulIF6H4fHxy5isrjY9k+0lHGqklNm0XBmX+PkHc+FjLTfevB7pm92RW88DmuFXTdOHtMgvCsr/DrlkeS3nVDbVjdlRBEXLAYMrcxKvb/ngh3udJJt1zZ3SAbkgTTp/gOOlrnRko/YGEueYbOVAdf1moE=
+	t=1743589136; cv=none; b=IYMCBk9FXV83W6oH0TQCUjH+s2Ldrlx+zZOYgbwNmnJfcenIl93QpBNfVaVv5EdyIUrWcDctYgilNLL2nCVGgfFGQKW8T1C9s/YYgGxuFeLD0c2crFRjIlUBwz/MD5ijjH/KKGy1e9vb2rbO8R8SnGI2jbRcGaf/cNU7aqGphMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743589067; c=relaxed/simple;
-	bh=ZZSTNmBOfT4Nx0GONHsYAwg/gVKbfd4PkCBpKCshoGs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TkyshN3rdkDetn3Kwr5o4QmgwWSfLf8cxOsozPpBgxjapFe671lfjCERuvKfMjG6az9nhmNyRnUE1m2mrDuYZymCXe7un/MuutJEcL9UwBwrjUX+5DUunA9PLeT6Vlx9JlRNVi5YqjE5tzLMnD9evSxVA7qrz2s4Ps8CRjrPSZw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=eCeJ3/Nl; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
+	s=arc-20240116; t=1743589136; c=relaxed/simple;
+	bh=QjXQhB715E3M3gxBEyLXFxdteNgJJyJ4lo2CrJN35Wo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GMLW4pRXzF4AUDlZ2wAQEJ3P0FvjSmxodFH5IDVS29olGTdx91eErHmwirL/zHv0MQUqvRAHEknqJmsy1hXauqMd1MR7sjRnqjdOE4auVGhN9zRkEBeAgyI32YcIU5rWp4MAM7D1tfwRz9wncQS8xxGluD+FHWuR6ACG73/NKdY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=WQ+GI5z0; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="eCeJ3/Nl"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-39c266c1389so952099f8f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 03:17:45 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WQ+GI5z0"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-301a4d5156aso10515031a91.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 03:18:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=citrix.com; s=google; t=1743589064; x=1744193864; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=BoQN/cbdRb3bl+R0TruVM2i+azMwDjjz8Hy3l7cGhO4=;
-        b=eCeJ3/NlYwLNOWRnlcbZ5Ty4EMF4maUJ18qYMuhbIs6FKm91QPW8REKT5vJGr7LnPp
-         2wdCIFzSM1P5VSxPaAn4VcS085oz5bOKX3o2ElwO9soSbkfM9eyBnACgDU3uD6l2/Fb5
-         NLGx2PCBL8zfm3sCUUNKX4JqJlYyk95mpWCXs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743589064; x=1744193864;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+        d=chromium.org; s=google; t=1743589135; x=1744193935; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=BoQN/cbdRb3bl+R0TruVM2i+azMwDjjz8Hy3l7cGhO4=;
-        b=SHhUG6kRn8yrcst4MK/Qh4poZUc0cGf1b24cNdtxQlFH2MmUqX/WKvI4Nr6qCl/oXa
-         Ct8nAamBbC3nWeXruBr/GfBaEaA3OKneXggdoJT/EC+/vhSBijT2CDU+7mv2HcvPSrJ+
-         JcKYX0Wl4PRfupRvKhcJXF1R0h6ZOZlhPMfazwZCu7HGTseGo8YorNdJA44T/ooa36Ew
-         Bdi+0KkmP8FTvcsOMvcY+rdJdB3Zz4zJ7L3NCjYGtVCH15vX1n+tENoBE7nluXttgvnR
-         P/cUNL4RUghm57jfcSNShuMnfcI6xs03OgBQNfVmZ1QB7kAqlLFn5hqRQw+x/RMbPWJe
-         DNyw==
-X-Forwarded-Encrypted: i=1; AJvYcCVoHkjjXFmkDBznhTv131Y3HgbdbHxOsULJ0FY3OOWdrU6Q8/xEYX1+NRsri+BWTKLIRRv+4Ve/+AcTDfE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz1PLpWV9uMEHE4dRYtilgaBBDqY+wG1n6hddsgaHoPGT5UZY0l
-	JIHOjZ/lc0JsH/5ezQDVp84ERgQwXHukcq1bFcBTpTpUErjZkcmP9L9ULeXRc7c=
-X-Gm-Gg: ASbGncvb7UDxnXpRp65vDYNYtcHPqnEtPkMh9M0mWmVRBa+xqFyEXuBfejzHaHN3qbl
-	DT0xrJrREOdtbeD1qF4eELYyGjDbOlMJv+ODZ1+G2oQgm8GLymbggdNbPMt05sdU9QgwzWPCNrj
-	ENziu/JeuyeujOozdxG/bVY17/NtpmfNnfa8qvJdVRGAJURbSWHDm3zhXDmjvxzL6tlGD7dGckU
-	bzEToXBvk/+OuWd/eRFobl8y676j71HN6aeu6UTyoh/2OLfWBhWFffzRx9UPGpGIc5t1qdBs18/
-	tU+yIg5vn9aT3VOxtpjmCJqb79KfXDuHiDVwcWM/vNOCWGaa+UYHGc0xmm7+vG3/C/JhIJFVmw0
-	6ONboNsYJKw==
-X-Google-Smtp-Source: AGHT+IFKbv76Zb/vVr8KmUnWnp/XarFsP9YTgpQakXdkCwmU4iiDmtZ7r18nIo32KrZiYQpJ6mdzWA==
-X-Received: by 2002:a5d:47c2:0:b0:38f:2856:7d96 with SMTP id ffacd0b85a97d-39c120ca2d1mr13273123f8f.1.1743589063733;
-        Wed, 02 Apr 2025 03:17:43 -0700 (PDT)
-Received: from [192.168.1.183] (host-92-26-98-202.as13285.net. [92.26.98.202])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b66cb3dsm16844958f8f.57.2025.04.02.03.17.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Apr 2025 03:17:43 -0700 (PDT)
-Message-ID: <8f2a6d7a-cdd4-4742-9977-0bc1c1e872e6@citrix.com>
-Date: Wed, 2 Apr 2025 11:17:42 +0100
+        bh=0D56V4bGfpX/TU9e5gmFluYXKUdNZrEsrQeh3MS0+Bo=;
+        b=WQ+GI5z0JOt3ImywXdfCvuRR9txtK90Pzu8ElOmxwc22H3wVFXEtuYHW7LRPSj0F8/
+         W5fHls4JipToTSGXXHh+OuVQE0q3hBhJ76Nw0VeJdr4aPxSzQ9z6cs0RSH/P1oTF0Uod
+         dcM/dInvTuKhuWA+FDhNarb4YYLOvQ4R6sve8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743589135; x=1744193935;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0D56V4bGfpX/TU9e5gmFluYXKUdNZrEsrQeh3MS0+Bo=;
+        b=rvZ2s2gmuMug68wbsg6++dU5fL3+4lvxlYwZlvKpnmugd2pYPF5arza9vTXq5d04QZ
+         tQqikxIznqERV51cYAyPX2ENeRU6IcPrrq/ktyZvcBufWLDpFCAJQ6XM9UsGRscQBdf7
+         JiCTnrKX1yNEIndIirSF1Qjy5tsPO5a+6a61+r6hA6gX3iswXbw9KQ9XpPFbRpa1zefT
+         hGX7wOEKhWccsnBuv0n4iUgbJyaDNaj1OO5Ch8C6JOfB3anyrC6XLL8MZL+HD5mpMg1e
+         vDnkYkMMxn++qCNf+a5ADttpydthOzgGRxvK2IOcfPAHQRSy8BMFtRmgLyBq/0RR91xC
+         5CsQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWgr05l8NEQ3XSTgaUD47TfpmHdU9Z/hz5l+JehWGvEQB15BRMj1nJh2OZeLc0Fat46spuWjp98AgOP2nM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzv2LbFz1WVSTG8f2OiBgtBIjhfsE/4GJkVb0FXZ79+DsJnw7Kd
+	hWdOSCf0Q+saAxybUrQg38biV1dwiSX3Srnc2o3d9DnuW4gn052bmmeXGirIXLgEyHmx3qomBb2
+	dsvTtz7SkiZGJJVgdoqPrEH6sFUnLiVn95pAW
+X-Gm-Gg: ASbGnctnCTf6IFigH48+n/N+8gDS5vYggSpchp3qX4fqJwLxQ4bu3Ffz1HJqll6gdZw
+	1M0mWw08ob2hM5HDyrlUvZUwnXIAzteWReMtpw2goVIkGI8juyhChWYlqBRCRnmb3V/DF2jrERA
+	v5SkskF9/JyNE2Gicqq5RrorJd8oqGmIpQHLFWHXXFL3ilbAcLogHM
+X-Google-Smtp-Source: AGHT+IGQrnkGyKn8dVTSUjKIJxy2/wcmbcJv3W5smbWJ2t/E7cpQH6SMGOxQZ5dG0vuNvno9IYMLbv3UhEax8FtatNA=
+X-Received: by 2002:a17:90a:c88b:b0:2ff:7c2d:6ff3 with SMTP id
+ 98e67ed59e1d1-3056ef48b43mr2719742a91.35.1743589134726; Wed, 02 Apr 2025
+ 03:18:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [tip: x86/mm] x86/idle: Remove mb() barriers for
- X86_BUG_CLFLUSH_MONITOR in mwait_idle_with_hints()
-To: Ingo Molnar <mingo@kernel.org>
-Cc: "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
- Rik van Riel <riel@surriel.com>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Andy Lutomirski <luto@kernel.org>, Brian Gerst <brgerst@gmail.com>,
- Juergen Gross <jgross@suse.com>,
- "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, x86@kernel.org,
- linux-tip-commits@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250402091017.1249019-1-andrew.cooper3@citrix.com>
- <174358864842.14745.908324129810950623.tip-bot2@tip-bot2>
-Content-Language: en-GB
-From: Andrew Cooper <andrew.cooper3@citrix.com>
-Autocrypt: addr=andrew.cooper3@citrix.com; keydata=
- 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
- 6+ahAA==
-In-Reply-To: <174358864842.14745.908324129810950623.tip-bot2@tip-bot2>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20250402083628.20111-1-angelogioacchino.delregno@collabora.com> <20250402083628.20111-3-angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20250402083628.20111-3-angelogioacchino.delregno@collabora.com>
+From: Chen-Yu Tsai <wenst@chromium.org>
+Date: Wed, 2 Apr 2025 18:18:41 +0800
+X-Gm-Features: AQ5f1Jr3BoD2em-LznhL9zgkOSxDEEueTpI7DlFY2HYoRHnyStO_tGh8xaXUAvA
+Message-ID: <CAGXv+5GsoHN5mVe_kEP+oAzxa9HqgfhoiDqvO3xiQurFrvQ3qA@mail.gmail.com>
+Subject: Re: [PATCH v1 2/5] drm/mediatek: Fix kobject put for component sub-drivers
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: chunkuang.hu@kernel.org, p.zabel@pengutronix.de, airlied@gmail.com, 
+	simona@ffwll.ch, matthias.bgg@gmail.com, nancy.lin@mediatek.com, 
+	ck.hu@mediatek.com, djkurtz@chromium.org, littlecvr@chromium.org, 
+	bibby.hsieh@mediatek.com, dri-devel@lists.freedesktop.org, 
+	linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, kernel@collabora.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 02/04/2025 11:10 am, tip-bot2 for Andrew Cooper wrote:
-> The following commit has been merged into the x86/mm branch of tip:
+On Wed, Apr 2, 2025 at 4:36=E2=80=AFPM AngeloGioacchino Del Regno
+<angelogioacchino.delregno@collabora.com> wrote:
 >
-> Commit-ID:     90a22a5f841490790ecb17166633582681d44945
-> Gitweb:        https://git.kernel.org/tip/90a22a5f841490790ecb17166633582681d44945
-> Author:        Andrew Cooper <andrew.cooper3@citrix.com>
-> AuthorDate:    Wed, 02 Apr 2025 10:10:17 +01:00
-> Committer:     Ingo Molnar <mingo@kernel.org>
-> CommitterDate: Wed, 02 Apr 2025 11:54:51 +02:00
->
-> x86/idle: Remove mb() barriers for X86_BUG_CLFLUSH_MONITOR in mwait_idle_with_hints()
->
-> The following commit, 12 years ago:
->
->   7e98b7192046 ("x86, idle: Use static_cpu_has() for CLFLUSH workaround, add barriers")
->
-> added barriers around the CLFLUSH in mwait_idle_with_hints(), justified with:
->
->   ... and add memory barriers around it since the documentation is explicit
->   that CLFLUSH is only ordered with respect to MFENCE.
->
-> The SDM currently states:
->
->   Executions of the CLFLUSH instruction are ordered with respect to each
->   other and with respect to writes, locked read-modify-write instructions,
->   and fence instructions.
->
->   https://web.archive.org/web/20090219054841/http://download.intel.com/design/xeon/specupdt/32033601.pdf
+> In function mtk_drm_get_all_priv(), this driver is incrementing
 
-This link isn't the SDM.  Its ...
+              ^ mtk_drm_get_all_drm_priv()
 
->
-> With footnote 1 reading:
->
->   Earlier versions of this manual specified that executions of the CLFLUSH
->   instruction were ordered only by the MFENCE instruction.  All processors
->   implementing the CLFLUSH instruction also order it relative to the other
->   operations enumerated above.
->
-> I.e. The SDM was incorrect at the time, and barriers should not have been
-> inserted.  Double checking the original AAI65 errata (not available from
-> intel.com any more) shows no mention of barriers either.
+> the refcount for the sub-drivers of mediatek-drm with a call to
+> device_find_child() when taking a reference to all of those child
+> devices.
 
-... this errata link, no longer hosted on intel.com.
+Looking closer, that function is also missing a platform_device_put()
+to match of_find_device_by_node().
 
-~Andrew
+> When the component bind fails multiple times this results in a
+> refcount_t overflow, as the reference count is never decremented:
+> fix that by adding a call to put_device() for all of the mmsys
+> devices in a loop, in error cases of mtk_drm_bind() and in the
+> mtk_drm_unbind() callback.
+>
+> Fixes: 1ef7ed48356c ("drm/mediatek: Modify mediatek-drm for mt8195 multi =
+mmsys support")
+> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@coll=
+abora.com>
+
+Reviewed-by: Chen-Yu Tsai <wenst@chromium.org>
+
+> ---
+>  drivers/gpu/drm/mediatek/mtk_drm_drv.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+>
+> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/med=
+iatek/mtk_drm_drv.c
+> index a8fbccb50c74..6b31df587507 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+> @@ -676,6 +676,10 @@ static int mtk_drm_bind(struct device *dev)
+>         for (i =3D 0; i < private->data->mmsys_dev_num; i++)
+>                 private->all_drm_private[i]->drm =3D NULL;
+>  err_put_dev:
+> +       for (i =3D 0; i < private->data->mmsys_dev_num; i++) {
+> +               /* For device_find_child in mtk_drm_get_all_priv() */
+> +               put_device(private->all_drm_private[i]->dev);
+> +       }
+>         put_device(private->mutex_dev);
+>         return ret;
+>  }
+> @@ -683,6 +687,7 @@ static int mtk_drm_bind(struct device *dev)
+>  static void mtk_drm_unbind(struct device *dev)
+>  {
+>         struct mtk_drm_private *private =3D dev_get_drvdata(dev);
+> +       int i;
+>
+>         /* for multi mmsys dev, unregister drm dev in mmsys master */
+>         if (private->drm_master) {
+> @@ -690,6 +695,10 @@ static void mtk_drm_unbind(struct device *dev)
+>                 mtk_drm_kms_deinit(private->drm);
+>                 drm_dev_put(private->drm);
+>
+> +               for (i =3D 0; i < private->data->mmsys_dev_num; i++) {
+
+Just FYI you can also declare the int within the for statement.
+
+ChenYu
+
+> +                       /* For device_find_child in mtk_drm_get_all_priv(=
+) */
+> +                       put_device(private->all_drm_private[i]->dev);
+> +               }
+>                 put_device(private->mutex_dev);
+>         }
+>         private->mtk_drm_bound =3D false;
+> --
+> 2.48.1
+>
