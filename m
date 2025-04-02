@@ -1,68 +1,94 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0814718A93F;
-	Wed,  2 Apr 2025 18:56:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B2071DB92A;
+	Wed,  2 Apr 2025 18:56:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743620170; cv=none; b=k/GpLjfB6GrQs0CJ18u/3ZskHSo6MMjq4pSXc0lEXQOxKGV2gflmY2kC+uSvekugq9oOdMEQgI04NnOfK7972AH2bO5prfNy9F2xPICd6SPqMbEPAVgpdT3/Yr+XYHLRarluusk7EmXN6I0yE1/miuAVBV7ArAfpo53e7+tAvJY=
+	t=1743620196; cv=none; b=Ay8WH50Qnn0ac4lAlsZaADv0G3JNc2HedEop3LoabdJiwGXb0bBoGmly6Htay5+9juJZkM1vqrm0JJZt4CE2RVjaANr6bU7WEFK5XVU/6SbY0z+wfk8YxRkD2ybB3zt6C9dbpM6Biz2MQzBuFhbgPgELUpc4OU4Fcbm/6KXOVNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743620170; c=relaxed/simple;
-	bh=E7/8k6fI8V+003berCviggYozc+RWD88WFCUvF/199s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gSPHp/cF3sdWwfgc2ljH7Z18n3zgcgTBEGJwu0/4NKK7RrfaBOkJ8yMfMw5PVXEgv1Q0gcB5fA67BuRa56prNraaYu7Avi9IRjLW2f7dVj+3+k1WvqYNBQBqnH9AavnkXJsAvpqP1RW+B3HNx/xvAxn15wYz1qjjvFMwALI8iXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HNX5Eaue; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743620196; c=relaxed/simple;
+	bh=xmznKTQXjh7m9NClIWACppmUCWNDHM2Fnwfp/mZYh6A=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=SNJQp3wQGBpyp/qLi+Tm0Wy7zjBNHoYpYOBRtFM4WjapL43pCqskhEbn4a9l0QpSmD975Idx/UEdllNuuTMpfodGuoEo2GdqdZDG+dSZQnm8ENyOirENhlO6wdSR/sJuUEmPxdLlGX/T0yUJ6wBBsqZqO1oYFLSBBMYEaxrjQWA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VGqamARA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HNX5Eaue"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B16B6C4CEDD;
-	Wed,  2 Apr 2025 18:56:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VGqamARA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2BFDC4CEDD;
+	Wed,  2 Apr 2025 18:56:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743620169;
-	bh=E7/8k6fI8V+003berCviggYozc+RWD88WFCUvF/199s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HNX5EaueWL2i/RVdYG8dXs9r/BeShZ4iXmpX2g8nw4sWEJ2dIpZPdkwanct6jPDKN
-	 OFhKk7S0a172HMYpj9JKiR4r7xjfNd3D3FVQqiNhCGDlniEFA2C0ETZ3tVmR8gs8lF
-	 v/vKbpNhCmxLfJNxYqYUp/b5sU+eVWTeT0pilTuRnR+0o44el84BQUclYJrkB50Vlx
-	 o1z86+xo0GluNL4NolJRcYqcFBX33DlKNDQLlelXDbu1GuNZoOw6l2unw2xoWxJ6RJ
-	 dFgd+wPc6v8j0z85sG+xq75lysdslDsCVHDCaANZh/BhAG4miDo3PXq0WNROBabSj5
-	 pDpn52TnlPkPQ==
-Date: Wed, 2 Apr 2025 19:56:04 +0100
-From: Simon Horman <horms@kernel.org>
-To: Jijie Shao <shaojijie@huawei.com>
-Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, andrew+netdev@lunn.ch, shenjian15@huawei.com,
-	wangpeiyang1@huawei.com, liuyonglong@huawei.com,
-	chenhao418@huawei.com, jonathan.cameron@huawei.com,
-	shameerali.kolothum.thodi@huawei.com, salil.mehta@huawei.com,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net 1/7] net: hibmcge: fix incorrect pause frame
- statistics issue
-Message-ID: <20250402185604.GU214849@horms.kernel.org>
-References: <20250402133905.895421-1-shaojijie@huawei.com>
- <20250402133905.895421-2-shaojijie@huawei.com>
+	s=k20201202; t=1743620196;
+	bh=xmznKTQXjh7m9NClIWACppmUCWNDHM2Fnwfp/mZYh6A=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=VGqamARAY3FnSJ1x5qs7X/OPBN/OpQ0Ta2ueXCo5bQ8PdUmmeJ6+czpzt1198ht0R
+	 1Q6iRYdLqBLZiGHeB83NXgMyVlEdlZ1XWX+IFU+R4jKiLHziNwF8NlbVzo+Ficb/Ol
+	 VxAGgO5rFBN+7idluRIu5vxeDCknUY8kweQ72biok6Z29e8IqoXljRUr3dPO6Gbz+Z
+	 QRz9FUAWZjJrH9FC67w/h5ltxZP0o7vy7z/C6Fi+qtsmGi1oufS2X1Lt3uv3p5nnUx
+	 k/i4nmJ0LKLlNVeK14g58NzXu3sey+HCJtu34U9PVUAc2m5v3zL2djhO9BUrhL2dA0
+	 AcqJxL9YXtUrg==
+Date: Wed, 02 Apr 2025 13:56:34 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250402133905.895421-2-shaojijie@huawei.com>
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, S32@nxp.com, 
+ wim@linux-watchdog.org, krzk+dt@kernel.org, linux@roeck-us.net, 
+ conor+dt@kernel.org, ghennadi.procopciuc@nxp.com, 
+ linux-kernel@vger.kernel.org, thomas.fossati@linaro.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+In-Reply-To: <20250402154942.3645283-2-daniel.lezcano@linaro.org>
+References: <20250402154942.3645283-1-daniel.lezcano@linaro.org>
+ <20250402154942.3645283-2-daniel.lezcano@linaro.org>
+Message-Id: <174362019496.367085.18177836404576070514.robh@kernel.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: watchdog: Add NXP Software
+ Watchdog Timer
 
-On Wed, Apr 02, 2025 at 09:38:59PM +0800, Jijie Shao wrote:
-> The driver supports pause frames,
-> but does not pass pause frames based on rx pause enable configuration,
-> resulting in incorrect pause frame statistics.
 
-I think it would be worth explaining why pause frames need
-to be passed through in order for statistics to be correct.
-I.e. which entity is passing them through to which other
-entity that counts them.
-
-> This patch fixes this problem.
+On Wed, 02 Apr 2025 17:49:39 +0200, Daniel Lezcano wrote:
+> Describe the Software Watchdog Timer available on the S32G platforms.
 > 
-> Fixes: 3a03763f3876 ("net: hibmcge: Add pauseparam supported in this module")
-> Signed-off-by: Jijie Shao <shaojijie@huawei.com>
+> Cc: Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>
+> Cc: Thomas Fossati <thomas.fossati@linaro.org>
+> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> ---
+>  .../bindings/watchdog/nxp,s32g2-swt.yaml      | 42 +++++++++++++++++++
+>  1 file changed, 42 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/watchdog/nxp,s32g2-swt.yaml
+> 
 
-...
+My bot found errors running 'make dt_binding_check' on your patch:
+
+yamllint warnings/errors:
+./Documentation/devicetree/bindings/watchdog/nxp,s32g2-swt.yaml:17:7: [warning] wrong indentation: expected 4 but found 6 (indentation)
+
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/watchdog/nxp,s32g2-swt.yaml: ignoring, error in schema: properties: compatible
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/watchdog/nxp,s32g2-swt.yaml: properties:compatible: [{'const': 'nxp,s32g2-swt'}, {'items': [{'const': 'nxp,s32g3-swt'}, {'const': 'nxp,s32g2-swt'}]}] is not of type 'object', 'boolean'
+	from schema $id: http://json-schema.org/draft-07/schema#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/watchdog/nxp,s32g2-swt.yaml: properties:compatible: [{'const': 'nxp,s32g2-swt'}, {'items': [{'const': 'nxp,s32g3-swt'}, {'const': 'nxp,s32g2-swt'}]}] is not of type 'object', 'boolean'
+	from schema $id: http://devicetree.org/meta-schemas/keywords.yaml#
+Documentation/devicetree/bindings/watchdog/nxp,s32g2-swt.example.dts:18.29-23.11: Warning (unit_address_format): /example-0/watchdog@0x40100000: unit name should not have leading "0x"
+Documentation/devicetree/bindings/watchdog/nxp,s32g2-swt.example.dtb: /example-0/watchdog@0x40100000: failed to match any schema with compatible: ['nxp,s32g2-swt']
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250402154942.3645283-2-daniel.lezcano@linaro.org
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
