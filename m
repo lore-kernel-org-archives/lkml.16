@@ -1,134 +1,142 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E40F23957D
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 13:35:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE8E01E1C29
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 13:36:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743600947; cv=none; b=D8R/AsuWTFBZs0bv77B++/uZAex2+i3EjApR3hi26yx9TZ3m9ycLhsJarFYKSJXw6H+O1DKRos7LEM3GyTataSEfphFOk/BtCOOciPu2osRxvSilbyTRyXRtxYhwkL5pJ894vUbpiFdaRZRoI/aQ4QZplye1UdhY6co2hiVKOZg=
+	t=1743600976; cv=none; b=ZRIkkDdcopSfqLm6FOEmu/sYBxg2foJM8GpzL1Kd06rKMfV2+ajgUeIrP69Uk8jJXFeldpjvIw/FgKKtuA1ofAxNkDVXbb0iUSjQ4/ipmuzYcoDGSGwBZXr4xNYUL8/P64AM6AdNNuO81JgtcrrPGZgTacdYglF2Q8OGOYxjMro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743600947; c=relaxed/simple;
-	bh=Qys6J8PDiLhasTTX/Rv8L+IBTqtGpF6FBQOXsR9xULc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=uNmP9QkA1V2qNMeC+frL4NmMQsMV5S6OvzVROzwWBDwRcl3HhPgc2hbbnGmbFPSIYd41FVsdPBBCvVR4OL3jGeiEssjqqr4WQqXIBx+sLfBxQpdxUP4t8zki6A5j93pXfonRoNjkOZqhg99ngeIzymspmocDaEVa1z4LNGbeREA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=W1P3ZIDm; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1743600976; c=relaxed/simple;
+	bh=MqBOTDc9GRqer6IcN1CWf28Fjo98+zBzhr/8RRY4has=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=dpy/K7I7JLA1OAhe/G4tfMjsceuQKceEDtRL/PIx40KnAXf5dZ+0B+z5B7WzAG0sLqg1aKbSY4cDd5Clcz8nUiQ1yzrWM1qUFlgl1zzTnfkzA7ZS1CUxDc8YSW/KMYXBzZYHruPTvQN84BzAW+/jqT8unO8E6+sa9wK6P0G2APg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jnakGx+s; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="W1P3ZIDm"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 532DZP2l3250588
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 2 Apr 2025 08:35:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1743600925;
-	bh=ISpC0S/bifWyOLFGjqR1WFw8r/9cAgNMXnYHnloxEbA=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=W1P3ZIDmxQ37wf5L2VnsoRmvAZFk9FPK/urf7QxBA99vv6FyXdxBWVLcHsLU7JCLI
-	 uEX3RQh7Fh0wkgdqrDkuFF6ntNHJUhIGrV6dAwac26FjY66GwCSwkhtsMu0oXCvYyN
-	 au9+DUEx/J1nWoSvv9MnSiiWpLux59BLVFOmP9S4=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 532DZP5f029496
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 2 Apr 2025 08:35:25 -0500
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 2
- Apr 2025 08:35:25 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 2 Apr 2025 08:35:25 -0500
-Received: from [172.24.227.193] (devarsh-precision-tower-3620.dhcp.ti.com [172.24.227.193])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 532DZLh4043983;
-	Wed, 2 Apr 2025 08:35:22 -0500
-Message-ID: <223da324-4de7-4e62-b001-ea89c4768a13@ti.com>
-Date: Wed, 2 Apr 2025 19:05:21 +0530
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jnakGx+s"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ff4b130bb2so12018204a91.0
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 06:36:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1743600974; x=1744205774; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=mk+AHGtNwwzbB9JrzbmHG5xhTZS1h9alfQA3RqPYHQQ=;
+        b=jnakGx+sq4IcYFe97Jh95q4lWQnA7I+SUsN+n9j5SVMcMQw2uJ4H2JG8j4Pd/yQFym
+         qlNGSlG+vFt7lIXZusa5kBGuexBxQG0xb2WbSbAyReNgAlzOHdVDhNQrVLKLxr114pPK
+         Mzrz+ELwB/AvaZB8kdFlc0fmd1Fm6XmiGaxbMwF9nzV4+4Hu2WIRANrM1bddW9wYeFUI
+         oX2YFRJPZZj9/T043ub9v4sP3uEiZcig7nbGbvCfjARfLYO0nEokJZsd7lumnLgxk7S1
+         V1xKjD42uFQHQxaHDQjeYNPT/Tnl1TSxG4hU0ncSpAPTHBRsIML9bvIzLW7HdDWLJYuN
+         GhZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743600974; x=1744205774;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mk+AHGtNwwzbB9JrzbmHG5xhTZS1h9alfQA3RqPYHQQ=;
+        b=CvU5yZ377ORHIApHSOagYCXL8bT6OTmrZ8J6K9+9FO0MKH1OKKfkJh2hrBy2cwXrAJ
+         iTgGtS2xLUfaNfeBv4W2olo5NcP1vW19we3vVYAmTkcyTz8Povi6i1Z9ocQFb1PeJR+V
+         VpvZRShRj9RhvbcHbvZnjcok8f51ML/NJVZNjeF0WnPT3isR83jZWoi2J+BiAUw3YqgN
+         wXOJKwDxKsFdBMH9k849KEfQC1bocxJYllNFr6SxVk+eqYHUNczc4Vxrc0fimeVqof+l
+         P4G5WQxBMQGsh5WczgDFDxVImzluDuWi0HMSyV2BIg65PtkWOgS1FBi+L8Spw/oP7vmf
+         o+Hw==
+X-Forwarded-Encrypted: i=1; AJvYcCUgaX8quWO7J4G35CWonEusf3Lz/TbHGfyMFTTZpXMiLvrU9m6ZpxfC0/nJg5DlgVnN9Ly3dEZmYxxscsU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxHwIeeJ2pSndAXFFd0pQjBqahOC00uwETnlA1IODCHiF/8DdwM
+	wvap5VJ9c6lzaXNIvIDh+9uMINhmRh0hUJ6NBPokSi2T87K/8VOGmQACZNpDN5lpvXqeHYFdB+U
+	Rjg==
+X-Google-Smtp-Source: AGHT+IEg80yE/5EQOyTbP8oPtkkE6VHG4R4N8JI2Kg9VJlrk7/RNDAbsRVFXgGcpSHsz8luqfesoSLLT04M=
+X-Received: from pjbso5.prod.google.com ([2002:a17:90b:1f85:b0:2ff:6e58:8a0a])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2c8e:b0:2fe:a545:4c84
+ with SMTP id 98e67ed59e1d1-305321634dcmr21618691a91.34.1743600974287; Wed, 02
+ Apr 2025 06:36:14 -0700 (PDT)
+Date: Wed, 2 Apr 2025 06:36:12 -0700
+In-Reply-To: <20250401044931.793203-1-jon@nutanix.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] phy: cadence: cdns-dphy: Update calibration wait
- time for startup state machine
-To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-CC: <sakari.ailus@linux.intel.com>, <u.kleine-koenig@baylibre.com>,
-        <vigneshr@ti.com>, <aradhya.bhatia@linux.dev>, <s-jain1@ti.com>,
-        <r-donadkar@ti.com>, <vkoul@kernel.org>, <kishon@kernel.org>,
-        <mripard@kernel.org>, <linux-phy@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20250326152320.3835249-1-devarsht@ti.com>
- <20250326152320.3835249-3-devarsht@ti.com>
- <5465d2dd-d81a-4e33-b76f-cbbd3386c725@ideasonboard.com>
-Content-Language: en-US
-From: Devarsh Thakkar <devarsht@ti.com>
-In-Reply-To: <5465d2dd-d81a-4e33-b76f-cbbd3386c725@ideasonboard.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Mime-Version: 1.0
+References: <20250401044931.793203-1-jon@nutanix.com>
+Message-ID: <Z-09TLXNWv-msJ4O@google.com>
+Subject: Re: [PATCH] KVM: x86: Expose ARCH_CAP_FB_CLEAR when invulnerable to MDS
+From: Sean Christopherson <seanjc@google.com>
+To: Jon Kohler <jon@nutanix.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Emanuele Giuseppe Esposito <eesposit@redhat.com>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Content-Type: text/plain; charset="us-ascii"
 
-Hi Tomi,
-
-Thanks for the review.
-
-On 02/04/25 17:12, Tomi Valkeinen wrote:
-> Hi,
+On Mon, Mar 31, 2025, Jon Kohler wrote:
+> Expose FB_CLEAR in arch_capabilities for certain MDS-invulnerable cases 
+> to support live migration from older hardware (e.g., Cascade Lake, Ice 
+> Lake) to newer hardware (e.g., Sapphire Rapids or higher). This ensures 
+> compatibility when user space has previously configured vCPUs to see 
+> FB_CLEAR (ARCH_CAPABILITIES Bit 17).
 > 
-> On 26/03/2025 17:23, Devarsh Thakkar wrote:
->> Use system characterized reset value specified in TRM [1] to program
->> calibration wait time which defines number of cycles to wait for after
->> startup state machine is in bandgap enable state.
->>
->> This fixes PLL lock timeout error faced while using RPi DSI Panel on TI's
->> AM62L and J721E SoC [2].
->>
->> [1] AM62P TRM (Section ):
->> https://www.ti.com/lit/pdf/spruj83
->>
->> [2]:
->> Link: https://gist.github.com/devarsht/89e4830e886774fcd50aa6e29cce3a79
->>
->> Cc: stable@vger.kernel.org
->> Fixes: 7a343c8bf4b5 ("phy: Add Cadence D-PHY support")
->> Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
->> ---
->> V2: Introduced this as as separate patch
->>
->>   drivers/phy/cadence/cdns-dphy.c | 3 +++
->>   1 file changed, 3 insertions(+)
->>
->> diff --git a/drivers/phy/cadence/cdns-dphy.c 
->> b/drivers/phy/cadence/cdns-dphy.c
->> index c4de9e4d3e93..11fbffe5aafd 100644
->> --- a/drivers/phy/cadence/cdns-dphy.c
->> +++ b/drivers/phy/cadence/cdns-dphy.c
->> @@ -30,6 +30,7 @@
->>   #define DPHY_CMN_SSM            DPHY_PMA_CMN(0x20)
->>   #define DPHY_CMN_SSM_EN            BIT(0)
->> +#define DPHY_CMN_SSM_CAL_WAIT_TIME    GENMASK(8, 1)
->>   #define DPHY_CMN_TX_MODE_EN        BIT(9)
->>   #define DPHY_CMN_PWM            DPHY_PMA_CMN(0x40)
->> @@ -405,6 +406,8 @@ static int cdns_dphy_configure(struct phy *phy, 
->> union phy_configure_opts *opts)
->>       reg = FIELD_PREP(DPHY_BAND_CFG_LEFT_BAND, band_ctrl) |
->>             FIELD_PREP(DPHY_BAND_CFG_RIGHT_BAND, band_ctrl);
->>       writel(reg, dphy->regs + DPHY_BAND_CFG);
->> +    writel(FIELD_PREP(DPHY_CMN_SSM_CAL_WAIT_TIME, 0x14) | 
->> DPHY_CMN_SSM_EN | DPHY_CMN_TX_MODE_EN,
->> +           dphy->regs + DPHY_CMN_SSM);
-> 
-> This sounds like a TI specific characterized value, but the function 
-> here is a generic one. Also, is the value same for all TI SoCs? Or is it 
-> per-soc?
-> 
+> Newer hardware sets the following bits but does not set FB_CLEAR, which 
+> can prevent user space from configuring a matching setup:
 
-No this is not TI specific value. As mentioned in commit message, 0x14 
-is the cadence characterized default value for calibration wait time 
-which they put in as reset value in the IP (if you reset the IP you will 
-see calibration wait time as 0x14) to be used by software for optimal 
-initialization.
+I looked at this again right after PUCK, and KVM does NOT actually prevent
+userspace from matching the original, pre-SPR configuration.  KVM effectively
+treats ARCH_CAPABILITIES like a CPUID leaf, and lets userspace shove in any
+value.  I.e. userspace can still migrate+stuff FB_CLEAR irrespective of hardware
+support, and thus there is no need for KVM to lie to userspace.
 
-Regards
-Devarsh
+So in effect, this is a userspace problem where it's being too aggressive in its
+sanity checks.
+
+FWIW, even if KVM did reject unsupported ARCH_CAPABILITIES bits, I would still
+say this is userspace's problem to solve.  E.g. by using MSR filtering to
+intercept and emulate RDMSR(ARCH_CAPABILITIES) in userspace.
+
+>     ARCH_CAP_MDS_NO
+>     ARCH_CAP_TAA_NO
+>     ARCH_CAP_PSDP_NO
+>     ARCH_CAP_FBSDP_NO
+>     ARCH_CAP_SBDR_SSDP_NO
+> 
+> This change has minimal impact, as these bit combinations already mark 
+> the host as MMIO immune (via arch_cap_mmio_immune()) and set 
+> disable_fb_clear in vmx_update_fb_clear_dis(), resulting in no 
+> additional overhead.
+> 
+> Cc: Emanuele Giuseppe Esposito <eesposit@redhat.com>
+> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> Cc: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+> Signed-off-by: Jon Kohler <jon@nutanix.com>
+> 
+> ---
+>  arch/x86/kvm/x86.c | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+> 
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index c841817a914a..2a4337aa78cd 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -1641,6 +1641,20 @@ static u64 kvm_get_arch_capabilities(void)
+>  	if (!boot_cpu_has_bug(X86_BUG_GDS) || gds_ucode_mitigated())
+>  		data |= ARCH_CAP_GDS_NO;
+>  
+> +	/*
+> +	 * User space might set FB_CLEAR when starting a vCPU on a system
+> +	 * that does not enumerate FB_CLEAR but is also invulnerable to
+> +	 * other various MDS related bugs. To allow live migration from
+> +	 * hosts that do implement FB_CLEAR, leave it enabled.
+> +	 */
+> +	if ((data & ARCH_CAP_MDS_NO) &&
+> +	    (data & ARCH_CAP_TAA_NO) &&
+> +	    (data & ARCH_CAP_PSDP_NO) &&
+> +	    (data & ARCH_CAP_FBSDP_NO) &&
+> +	    (data & ARCH_CAP_SBDR_SSDP_NO)) {
+> +		data |= ARCH_CAP_FB_CLEAR;
+> +	}
+> +
+>  	return data;
+>  }
+>  
+> -- 
+> 2.43.0
+> 
