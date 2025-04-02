@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D1FD1F874A;
-	Wed,  2 Apr 2025 23:39:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 797561F8670;
+	Wed,  2 Apr 2025 23:40:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743637199; cv=none; b=NgJ7tMrIxS8gTp2ssL1zFtotAv7MDCu9PauEO4SMEbdJDfpDESBlqAW6DuIFtwRaTocmgP30BFdV6jhgOgYyOrx4xRVHVre/e8xGeUxG5Pr6G2ag8YvRCZtCXmsLNQWXSWpac2uqc90J4VcGd3QofmEO6P8rs6wJZ2BPDEig1nQ=
+	t=1743637202; cv=none; b=ditfgVPw9l5RT4+b0BOCbTa1fMyQxZ6uz4gE4E3BqECk9EkOaspwuHoH+Uyum3JWiSfoUZzPINnRA4Q9f2YHTTzYmYrYCGVCR3QK5CfHNaDC4Pp7FXfGButwFmKCU1gZHSlRV4Kb9kWsFSPRJI3/y/EX0+41A7DsLtrsMQ9t2z0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743637199; c=relaxed/simple;
-	bh=d1Mp78QX2vOcjTcP1u20w/Jr7brr6ddMTAuwiaof3SE=;
+	s=arc-20240116; t=1743637202; c=relaxed/simple;
+	bh=eZXamGcUFJf3JGdwncfEXWIL6WpV0YiWQeC2ZjusWE0=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=pviLkNsd5+BI7HmwtHHqoC8aQeVDkEjAMn1LpjFIneCeukDdKwjZHl6Iz0vOgZKsMtz8t1e3mDHdxjJmKbYpBNMMbsedglpYwDZOIrUEB9/+AY4aEuldcIIxkyjHTyMUGRgw8ESe8yQkNuxwFOiPLx9U8TrHPdB+JP08m2OoMgM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Shay3Qby; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=IW5y6wKhfuebkQ4ninITVvLfPDnup1BJL49B7rKN2sQCr0yaFF9Trc44cPePEzUd4n5/MBPQ66fw0AKMYy/gYyz0KESC/PCMBp3aqgBjat5Et5aTJCCB4zkICeuv5dovGRStaCKx0scduByUFcbs7IgMzPI8Qtgi+JdmopE+bpg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kjqa7y2t; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Shay3Qby"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19EB0C4CEDD;
-	Wed,  2 Apr 2025 23:39:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kjqa7y2t"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3C05C4CEE7;
+	Wed,  2 Apr 2025 23:40:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743637199;
-	bh=d1Mp78QX2vOcjTcP1u20w/Jr7brr6ddMTAuwiaof3SE=;
+	s=k20201202; t=1743637202;
+	bh=eZXamGcUFJf3JGdwncfEXWIL6WpV0YiWQeC2ZjusWE0=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=Shay3QbyXfP+uz67OtEn9L3RfekUQJyjhY4n6bPkVCOftS3a6SfKcHSLGxWtOVqut
-	 AMnLw14ZknW/ShbKgWSNyBYlWGwkQuzbi2n+8UFQf3REX2SKphPqX+ZlBJOyFYl3GU
-	 UiRpCZ833FQTuyDPsCFc7MOrnrR4Hmio+MvM1LY28izg3NouCik94B1TVbJoKQ0lAK
-	 sGFUf9Mxf9TwW1I2Sjl/rxOgXR2LK/GXr1OJF6fWYVUls5X5+P1Ao8lxBuJuGFPLVY
-	 /JLl7dMbSRVOEeWeI0hgWSKhXww8meagtPqQvTUfM7+IltMgtHyYEP5bUz3xGXI1OA
-	 Nxc/VRxTn7ykg==
+	b=kjqa7y2tpyv/zYp5Y7Q88FZgSsgr3TKgHJpi+hgfontj2x9rkchFqiatbtnhCnXNg
+	 fhRAbBNxx3MC4TRH10VM2F29JGD2kRmkg0Cl/9LgTDsgG6u7qvHeCfil5hxdOXEIul
+	 Btayg8Mhx/vqGhfgD/LBP1NL6XFcHqV6GkWMzFSewtlvuM+PBcwBK+CZJm1lItuWqN
+	 7b8InAWs2JxTS88HYB5uBrnPh9YX16b2GATwk7VRfWcgeQ5Frg4jW48d1ULERvcsuH
+	 /iIo2C2OReU6lsgiG16ECXzbhyDr+E8VQW3h4sFzS4tYdMvEAALVzKyQrFpSJcDi6E
+	 /VMbnRvpNC2jA==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33DF2380CEE3;
-	Wed,  2 Apr 2025 23:40:37 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EC00B380CEE3;
+	Wed,  2 Apr 2025 23:40:39 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,42 +37,36 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH bpf] bpf: add missing ops lock around dev_xdp_attach_link
+Subject: Re: [PATCH] eth: mlx4: select PAGE_POOL
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <174363723574.1716091.3593838422130018102.git-patchwork-notify@kernel.org>
-Date: Wed, 02 Apr 2025 23:40:35 +0000
-References: <20250331142814.1887506-1-sdf@fomichev.me>
-In-Reply-To: <20250331142814.1887506-1-sdf@fomichev.me>
-To: Stanislav Fomichev <sdf@fomichev.me>
-Cc: bpf@vger.kernel.org, netdev@vger.kernel.org, ast@kernel.org,
- daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev,
- song@kernel.org, yhs@fb.com, john.fastabend@gmail.com, kpsingh@kernel.org,
- haoluo@google.com, jolsa@kernel.org, linux-kernel@vger.kernel.org,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- horms@kernel.org, hawk@kernel.org,
- syzbot+08936936fe8132f91f1a@syzkaller.appspotmail.com
+ <174363723874.1716091.9449335720888818915.git-patchwork-notify@kernel.org>
+Date: Wed, 02 Apr 2025 23:40:38 +0000
+References: <20250401015315.2306092-1-gthelen@google.com>
+In-Reply-To: <20250401015315.2306092-1-gthelen@google.com>
+To: Greg Thelen <gthelen@google.com>
+Cc: kuba@kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 
 Hello:
 
 This patch was applied to netdev/net.git (main)
 by Jakub Kicinski <kuba@kernel.org>:
 
-On Mon, 31 Mar 2025 07:28:14 -0700 you wrote:
-> Syzkaller points out that create_link path doesn't grab ops lock,
-> add it.
+On Mon, 31 Mar 2025 18:53:15 -0700 you wrote:
+> With commit 8533b14b3d65 ("eth: mlx4: create a page pool for Rx") mlx4
+> started using functions guarded by PAGE_POOL. This change introduced
+> build errors when CONFIG_MLX4_EN is set but CONFIG_PAGE_POOL is not:
 > 
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Reported-by: syzbot+08936936fe8132f91f1a@syzkaller.appspotmail.com
-> Closes: https://lore.kernel.org/bpf/67e6b3e8.050a0220.2f068f.0079.GAE@google.com/
-> Fixes: 97246d6d21c2 ("net: hold netdev instance lock during ndo_bpf")
-> Signed-off-by: Stanislav Fomichev <sdf@fomichev.me>
+>   ld: vmlinux.o: in function `mlx4_en_alloc_frags':
+>   en_rx.c:(.text+0xa5eaf9): undefined reference to `page_pool_alloc_pages'
+>   ld: vmlinux.o: in function `mlx4_en_create_rx_ring':
+>   (.text+0xa5ee91): undefined reference to `page_pool_create'
 > 
 > [...]
 
 Here is the summary with links:
-  - [bpf] bpf: add missing ops lock around dev_xdp_attach_link
-    https://git.kernel.org/netdev/net/c/d996e412b2df
+  - eth: mlx4: select PAGE_POOL
+    https://git.kernel.org/netdev/net/c/d3210dabda8d
 
 You are awesome, thank you!
 -- 
