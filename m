@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4C5A1401C;
-	Wed,  2 Apr 2025 01:01:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 328DCF9E8;
+	Wed,  2 Apr 2025 01:01:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743555705; cv=none; b=lZ3PV7WveEQdphwpVPdCgMsAu1Lu7EuDSi1qfgy4olM4GiNR7yDjWdhnQqFyTV+DI3zv1EAeT+FbhiZpXoI1D3UKdxzqkvQd1O3e03hdnvv4Cgx6x4JUtRuhRQtf+vrD23jfaKQAFvGMGSd+fUqesnYds1M/mSdxE25wZQmeJP8=
+	t=1743555708; cv=none; b=RCxL2+jF+u/Dq5hgYfcg1qGMPSCrj7Z02ndN6LlWxIeQDiZJ79Taky9wLg0W3stdYynpb6bPCivYE+xaIgx7jcd2IXuL+ifx3eiMX8k9l7hA8kUDVppBwjC+hKoejx7i8Hsqb40pbVpbQRvgePCSu8KB00oHMX/kbeDi7Zz+VA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743555705; c=relaxed/simple;
-	bh=wDCZw1/rEUjbtEQ/buyMxMxErOO0Q0YsJqCv0Ge5jYM=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=By8dyUd/90Uy4LC9FOd4JQpzK8RKD0yyuoq46vE/sINrOdNbbzmTafjbTKtovFn5+J5/0sIwUPC0LqwwDZrYrZP/d2SU/kvFVwPlzpNxxV2IBEDFF48KEK/rktPbLbgXLat6tZaAIFo+CBCRjkf8WUKBLUWoAhuChjPjldbF1ig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YjRx6Kwh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743555708; c=relaxed/simple;
+	bh=/RDoEvzbnJmtSkLiqBjfh7A2x9BJ6j7hRAbPIPApz4o=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=shku74k8FWk5rPUp40D0FHI2GK7NF2vL6ilz6XD3UwdBjXUxpSTDYEdQQAuHuVQhSQbiUGgFJBfOelYrxBZeM23mZ0FMTDb4Kjod5qLq4CW/MyrVw8TGgbfeVk294skjSOCS1/xZSSXf5mqryR4iJUc0+TyWrYEjdvqlYYB379g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B95o++vg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YjRx6Kwh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34880C4CEE4;
-	Wed,  2 Apr 2025 01:01:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B95o++vg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A64A8C4CEE4;
+	Wed,  2 Apr 2025 01:01:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743555705;
-	bh=wDCZw1/rEUjbtEQ/buyMxMxErOO0Q0YsJqCv0Ge5jYM=;
+	s=k20201202; t=1743555707;
+	bh=/RDoEvzbnJmtSkLiqBjfh7A2x9BJ6j7hRAbPIPApz4o=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=YjRx6KwhMq0WvIk47ELpWjpyOF1k/WF0Z1g//3elteg0GhYK4m2QI8B0v4GxKojlY
-	 Y5InPKdI+J5H2bLHcmJYutQPMFIJQZsW3FHrpuux9fh5QYi1dupxUaL74Yd1h1RoqW
-	 BWJNomE3ZsVNUrm0WU5jKXlvXQO9vspR6liQ9yVpujOi04gkQ4c+dy8ivDkgsoBiEK
-	 cosX+T09MI2AyVeysrnf8O1mHhhcnmwjcW3LEftDgSnus5CjpQqNhDbm0Iwt0voCJF
-	 tZMCfcecUjDiJYLF1pWbBFKXWxe0m3qUB0ZqJmAbsMEOcAtj+GWfCE6Brjdi7aKHyC
-	 qWvABy6+yx85w==
+	b=B95o++vgA+N5xSa5vwlKiTuKVQWVsMSy0Pu0wsIrEKRz4WaCmdJ1HHJm+I9/bjh7/
+	 eyXoopbBqiqB3cZM5c6ARUbcVxyyflvhgsuB8jjykApmxOAPSsjcAFR8buE6DCbFDx
+	 DS8ipoi52NafYkJZMaSl9Ws/xH/NELc14UvN7ytRDOwvnIkEYYdaBJKOZb3MFhPGiz
+	 IA4Cj9ahp7H0cjPc5ufb9Pf7kLraWRY8ML5NFOlqsjP7IFvrPA+VOzC3ODq6f2Yo+g
+	 zoJywgSgQiivCwstg177ItJzFFXXrRfo1p/e9GsDnyfjnZKmv7P+zHPI6sR+MF1zH+
+	 6caRGsT1o+PNQ==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33E09380AAFA;
-	Wed,  2 Apr 2025 01:02:23 +0000 (UTC)
-Subject: Re: [GIT PULL REQUEST] watchdog - v6.15 release cycle.
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADD52380AAFA;
+	Wed,  2 Apr 2025 01:02:25 +0000 (UTC)
+Subject: Re: [GIT PULL] More thermal control updates for v6.15-rc1
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <20250330101333.GA18497@www.linux-watchdog.org>
-References: <20250330101333.GA18497@www.linux-watchdog.org>
+In-Reply-To: <CAJZ5v0jZdrpxXC8e=-uiJaHx2irYAgkW=kZ6OqSfOK2Fxc6=JQ@mail.gmail.com>
+References: <CAJZ5v0jZdrpxXC8e=-uiJaHx2irYAgkW=kZ6OqSfOK2Fxc6=JQ@mail.gmail.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20250330101333.GA18497@www.linux-watchdog.org>
-X-PR-Tracked-Remote: git://www.linux-watchdog.org/linux-watchdog.git tags/linux-watchdog-6.15-rc1
-X-PR-Tracked-Commit-Id: 9bc64d338b0b4b2061049df8b701f9786857690e
+X-PR-Tracked-Message-Id: <CAJZ5v0jZdrpxXC8e=-uiJaHx2irYAgkW=kZ6OqSfOK2Fxc6=JQ@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git thermal-6.15-rc1-2
+X-PR-Tracked-Commit-Id: 12da0fee4543ffbd50ff01b16153cc6ca2f7453a
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 696c45bcc3c35486578fd741d8551865aee42915
-Message-Id: <174355574186.978371.6976728017778504251.pr-tracker-bot@kernel.org>
-Date: Wed, 02 Apr 2025 01:02:21 +0000
-To: Wim Van Sebroeck <wim@linux-watchdog.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton <akpm@linux-foundation.org>, LKML <linux-kernel@vger.kernel.org>, Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>, Guenter Roeck <linux@roeck-us.net>, Andre Przywara <andre.przywara@arm.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Arnd Bergmann <arnd@arndb.de>, Biju Das <biju.das.jz@bp.renesas.com>, Chen Ni <nichen@iscas.ac.cn>, Chin-Ting Kuo <chin-ting_kuo@aspeedtech.com>, Frank Li <Frank.Li@nxp.com>, Kyunghwan Seo <khwan.seo@samsung.com>, Mark Pearson <mpearson-lenovo@squebb.ca>, Stephen Boyd <swboyd@chromium.org>, Stephen Rothwell <sfr@canb.auug.org.au>
+X-PR-Merge-Commit-Id: 8868485d6b13e6e12b9a90fb5d8cb2f26eb1264e
+Message-Id: <174355574414.978371.7734741341506300704.pr-tracker-bot@kernel.org>
+Date: Wed, 02 Apr 2025 01:02:24 +0000
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Linux PM <linux-pm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Sun, 30 Mar 2025 12:13:33 +0200:
+The pull request you sent on Mon, 31 Mar 2025 21:41:10 +0200:
 
-> git://www.linux-watchdog.org/linux-watchdog.git tags/linux-watchdog-6.15-rc1
+> git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git thermal-6.15-rc1-2
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/696c45bcc3c35486578fd741d8551865aee42915
+https://git.kernel.org/torvalds/c/8868485d6b13e6e12b9a90fb5d8cb2f26eb1264e
 
 Thank you!
 
