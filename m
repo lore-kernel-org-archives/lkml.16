@@ -1,221 +1,89 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BE9B1EB9EB
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 21:46:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CEC878C91;
+	Wed,  2 Apr 2025 21:51:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743630418; cv=none; b=WobgREX4K3hDNE6KThs5e51JcQY8/j9X2EftYA+Z30tec+VKYRwWiAK2W8Oq4qzc8nm5nZygUsaRWiADC9eyHr6FmY/gYCUcmgme7nenctzxg0dGBf7ohtDeBlgG5eWQYdP1OriHHran5kHh3hvzA0+tlPPBMkvNaGpWrQwrMiA=
+	t=1743630703; cv=none; b=ijH/F1EY7OjSglnvVw4XSouiYUuSZOvNbGqh4/E7xU3abkKDEfTzcGrbgc0Qfm8BlaX/X9teoOZgND+v4VmIdTaG+EVkuH7S/Ew4RqZSkixHRQ5FD9GIJStJVzZse9bJVSMlpnH+3l5prN87pUiJTI6E7bAKbPv7NfyoQ/jFSxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743630418; c=relaxed/simple;
-	bh=BAjq9C9fRZjELJQ8Vrb12QIgx+28LxEWhkHuCxrYAes=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Uki9RIAcoPrt6AXKF+0ekHB6HiT7bjR/sNI/ew6obqu7jcp5dnu0JVa1Wlazhe3ViWsa9f59s3qAWjPmWwjhk/VjLJdXoCkclHHgmbtrUWDeWihdIpkl8oB6Yzs6T6clKashSqITaEUNWd4jUTrVo0KNA0mG6sEeFPbyvh+tqOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ky+Zcp0X; arc=none smtp.client-ip=209.85.221.44
+	s=arc-20240116; t=1743630703; c=relaxed/simple;
+	bh=FICI9pCH3MuJ0i+AnsWFEK9mn5iJqpqGuU41GdC/AOc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hrCy7VtE+Mu+KVvu/RAtE1i+FjjesQSQp/zlolAjzusQVgPi6+38ts+PswdYjgSMvJ9nM76aQL1a+IxRKctVfe+ZtR0n4M5j3z2UNr7AJKZ1s/89+em3lROpB0momSwHnT2FHJVZPLWf/aUhYhhAFRybVyZuoUeCJGbEIjScBLw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CO4vx7CH; arc=none smtp.client-ip=209.85.222.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ky+Zcp0X"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3912d2c89ecso242925f8f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 14:46:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CO4vx7CH"
+Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-7c55500cf80so17715985a.1;
+        Wed, 02 Apr 2025 14:51:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743630415; x=1744235215; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1743630701; x=1744235501; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=1xRVm9klxaIdtAVf8mizHRMZsJy7B1VQj9wccFwe1a4=;
-        b=Ky+Zcp0Xutl6QAU/00bKCMucjM3p2xYo7yAnNdmXTVbgCuzBqgQ8FfUKkwSwPEaw+u
-         2ZR3dm46tpq6UOoG314vUWhXK6G8eGngHLQrWciwgO/eSTYdAwIAlbfMtKEksCfoN/C6
-         vz1iJgfMHfoUzHQg4nfxghg+lqOQGREtY79HscPneK9EK5zwZwAV4PYodrQbJdaz94C+
-         wJvVe9BEDPmEN2GAlpoh1idEAC748GEEzm5Ez2CVCOq7lSucx6Ksul+7eLkQJDpuakh+
-         BpLvzS1JTlf6KUwO/OuktQzVoqxetjsEqiRecCQUWK7V0Ex4aVF2+e+6xoSEFBGjyKDs
-         DWiQ==
+        bh=FICI9pCH3MuJ0i+AnsWFEK9mn5iJqpqGuU41GdC/AOc=;
+        b=CO4vx7CHkRi6sbhascE7wA38OpDo6VERrUihD2KI6PHaJZ5e+fHjmFDZ7MlvE5ceEL
+         WopwXw6ntEUrba4WfO8xCBhT/e2trd4thrOmB3kA4tLJyvZutB62Erm+4Wnj5FtraqPS
+         709OE89fLYol1oWl87qqpUskxoucYPqwckeRpkW0lDHwrgMBvXLE0CfkW1i5oJRfaEMw
+         nwISc6tUNyyCe4/zrvNd5FJPgXGjnTgas8w6NOxBzXtazKItrn2m1XFfpxU+oAdGg6Y3
+         g8K1Qzu79OAkf9ASY3Xo1KLd09gzdAHIUF4DZdbDho9MYTtj5ADRnDvLWvgl1+Og3UNr
+         yn0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743630415; x=1744235215;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1743630701; x=1744235501;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=1xRVm9klxaIdtAVf8mizHRMZsJy7B1VQj9wccFwe1a4=;
-        b=iydKUDmqaWwcmYfvkzi/XnQNxBRnWg0fVaemI1Ulaq7tunD7TEZ1GVjItwhTniy+gE
-         Qzplq+DpqBKedvf9N3XVBUHUDxebZ2zT3t9hSlwh4ZxprkdMCC10HHgoRNd1sz0x1Vld
-         Vl39QKKB2q37v7jH9yrmWUkIwu7/0N2FFM2GGk+ulqSjQe3pq+zB9sDcqTBjc43tYwPG
-         bA7+sKQ3LSPOiFa1ECwgnmoyGfxJXjjaUB8I2DGjKBmG3sBPf1Fmfwl0o3I3hTjPXGuG
-         u/FswT/M8dWrc7XMk1i/93ImYtKr3JMM0kb199+rag8DHYiq2wnPOdhd4Tea+zb4zjaE
-         V34A==
-X-Forwarded-Encrypted: i=1; AJvYcCXHEWR5HQ85NblU6B0Zqpd2mPt9oFvFEOb5u2qnxxkPKPUT3D8aM0Jjkg4o+3tnWAXcHqWHrYa1qs0/koQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxHEUXGcSjfWXPZyj/GLxFaPgO4Pnf37hCpBoEniyIQo7u8gH/+
-	Q+Izmkp5OX3XiOFdAxvZ46ZXRYGLD6P+0kuYwJYP9owkSZnlgcpS
-X-Gm-Gg: ASbGnctsYkCoSPxUd2llqmvE3nkUTMJlO/K1wXOXL3/8pCPbhPOCcVPvowx3V29dGs+
-	Vd6ErAvmqLGfMC59es4pWk4cBs6g1DcEbQ/94ydiVFMDV2hno0sVzYCsHWOtkPMJxx4ee5DU79Y
-	FJ7lFA/eqRY346xNX5xPnrhO84FvjjswWjTGYdDTqmAQz5eXsPEtrLHjCLfu25QoXrxZ7Lnbp6Z
-	KZV55iWNONIJo4eOLoWY9Xg1PYp5qh6edfFEzs674Yxbxu+ToIyRmc7Bw9LSCoIL7qajsBLfRol
-	fuU/g5JY6uIwiLHC0iSteRkmoxP79MgKgkvBNKLCcrI3YvjZEHOjyaJwly4xAxEPp0wsw9YcqZY
-	ERpkG6EY=
-X-Google-Smtp-Source: AGHT+IHWXMwJiJM76P81B1uDs6kCZvMGAkHnd92MC9Wf02QNyFsF8jaLJNYYpN7u5CA4Ys8qdAexUg==
-X-Received: by 2002:a5d:64ec:0:b0:39b:330d:9719 with SMTP id ffacd0b85a97d-39c120de108mr14226573f8f.17.1743630414449;
-        Wed, 02 Apr 2025 14:46:54 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec1794efesm2857995e9.28.2025.04.02.14.46.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Apr 2025 14:46:53 -0700 (PDT)
-Date: Wed, 2 Apr 2025 22:46:52 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <u.kleine-koenig@baylibre.com>
-Cc: Nicolas Pitre <nico@fluxnic.net>, Andrew Morton
- <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] math64: Provide an uprounding variant of
- mul_u64_u64_div_u64()
-Message-ID: <20250402224652.1bb38f6b@pumpkin>
-In-Reply-To: <gqqxuoz5jfrlsmrxdhwevfo7kflxjqhbkfy2ksnsdcadbk52hd@yaitrauy52xg>
-References: <20250321131813.6a332944@pumpkin>
-	<epuk3zijp2jt6jh72z3xi2wxneeunf5xx2h77kvim6xmzminwj@4saalgxu3enu>
-	<20250331195357.012c221f@pumpkin>
-	<mjqzvj6pujv3b3gnvo5rwgrb62gopysosg4r7su6hcssvys6sz@dzo7hpzqrgg2>
-	<20250401202640.13342a97@pumpkin>
-	<15qr98n0-q1q0-or1r-7r32-36rrq93p9oq6@onlyvoer.pbz>
-	<46368602-13n7-s878-s7o2-76sr0q67n9q4@syhkavp.arg>
-	<20250401223731.7102103d@pumpkin>
-	<2wwrj6aid2elnnotzfkazierqmzmzpfywyf33ahqs36xh5xz32@rszeetrztsiz>
-	<20250402135219.28b24e94@pumpkin>
-	<gqqxuoz5jfrlsmrxdhwevfo7kflxjqhbkfy2ksnsdcadbk52hd@yaitrauy52xg>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+        bh=FICI9pCH3MuJ0i+AnsWFEK9mn5iJqpqGuU41GdC/AOc=;
+        b=JWLtJMLFeXg9zxbnkXUECMEzjrqtLz6lZMJFr1C67gwjY+fjZf78ZnsBxh8k3uKUwU
+         7DbhR2JrNF+h28KnHXCcf4ARydl5LBF316/HuXWPeTIMZm3mTsIAtZH6XmYEJKY8EmZL
+         RA7se8iHZuQWBrAp4tOwvEHPU8mkv3VgDFGJe28I7jxJiX0k3pUHEkP4xF0XjS24julW
+         MecpPafUNU3kQXBMtzwKughatpXqU4HIGDrnHEDfqPRCVOTH8Ug77YNSeoC8DFkvs/vZ
+         ahnTBeZSgABnwwYb8cC+jqPgeV9FFbg9E+cVtQOUjUj1PaihLsughOvNPCS0gFAHQpIZ
+         J/Cg==
+X-Forwarded-Encrypted: i=1; AJvYcCWqyUilaFrfs/xowSCV+EZAk+iSJ30GxQYvFgMxvIJmRVobjgzUtxlmmLUYixA+X+40PZ0JL/anRCbh501U@vger.kernel.org, AJvYcCXZv5am7mYKseGt/A4FIoRTx0nn8PzAXK90phgTKo0gUljl5M6vBl1l21wqeDKOpbVx6eacOZgzsdg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzgiQwgGt6Awhg7GL0hmkDKgokAUdy5k5t1OHClgQ5H9Ad1385D
+	gKsjp0J6mHwvtDJYmOaWSBcXngQidPJ6XAS5lIffy3eKa+s9NR+pN6f2RYdXjofaFn/yJhLd7Ee
+	8keElWnXjpaAi+psacpvPTTN3kww=
+X-Gm-Gg: ASbGncvJg+Pic3F3DvucdY2LZSy8cQarqDYbTwH3TA+7Th1i1StemVKY2i70gyRvl0c
+	ndKMALF1TCep8rHbsNluhRvNbFt/vznuxaLO9wBPSfHIiNHb3W8Cpa6YnKPAvinpbbdiYUf3fJh
+	hN25eagodSaaN3XUkZF58Z88lS3g==
+X-Google-Smtp-Source: AGHT+IHPYg4Hg3MUUg5pKFbqOTtvyAgJXtWY6laP6tEJVCK5sDjjWMzqP2aQGxYlLyLJjUwWhjea3Zqim7lQWQ7lu8g=
+X-Received: by 2002:a05:620a:1da0:b0:7c7:62b4:91f8 with SMTP id
+ af79cd13be357-7c762b49256mr669208985a.13.1743630700983; Wed, 02 Apr 2025
+ 14:51:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+References: <20250402204416.3435994-1-nphamcs@gmail.com> <67edaef8da732_1a6d9294e4@dwillia2-xfh.jf.intel.com.notmuch>
+In-Reply-To: <67edaef8da732_1a6d9294e4@dwillia2-xfh.jf.intel.com.notmuch>
+From: Nhat Pham <nphamcs@gmail.com>
+Date: Wed, 2 Apr 2025 14:51:28 -0700
+X-Gm-Features: AQ5f1JpnbNAWmrE_n7rSW5zDGkArQI4_3QoAhEU6yCrIFbVS6YcXd-JP-CRYo6g
+Message-ID: <CAKEwX=PBp4i4DmCf_7r+Sk6ekB9ckgZEpuR-x4f0CTc00-d+BQ@mail.gmail.com>
+Subject: Re: [PATCH v2] zsmalloc: prefer the the original page's node for
+ compressed data
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: akpm@linux-foundation.org, hannes@cmpxchg.org, yosry.ahmed@linux.dev, 
+	chengming.zhou@linux.dev, sj@kernel.org, linux-mm@kvack.org, 
+	kernel-team@meta.com, linux-kernel@vger.kernel.org, gourry@gourry.net, 
+	ying.huang@linux.alibaba.com, jonathan.cameron@huawei.com, 
+	linux-cxl@vger.kernel.org, minchan@kernel.org, senozhatsky@chromium.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2 Apr 2025 17:01:49 +0200
-Uwe Kleine-K=C3=B6nig <u.kleine-koenig@baylibre.com> wrote:
+On Wed, Apr 2, 2025 at 2:41=E2=80=AFPM Dan Williams <dan.j.williams@intel.c=
+om> wrote>
+>
+> Why do the work to pass in @nid only to hardcode 0 to
+> alloc_pages_node()?
 
-How about (tab damaged):
+That 0 is the order, i.e we want a single page here :)
 
-Compile tested only, on x86-x64 (once with the local definitions removed).
-
-Looking at the object code, if u128 is supported then checking n_hi
-is always going to be better than a pre-check.
-Remember multiply is cheap.
-
-	David
-
-diff --git a/arch/x86/include/asm/div64.h b/arch/x86/include/asm/div64.h
-index 9931e4c7d73f..6115f3fcb975 100644
---- a/arch/x86/include/asm/div64.h
-+++ b/arch/x86/include/asm/div64.h
-@@ -84,21 +84,28 @@ static inline u64 mul_u32_u32(u32 a, u32 b)
-  * Will generate an #DE when the result doesn't fit u64, could fix with an
-  * __ex_table[] entry when it becomes an issue.
-  */
--static inline u64 mul_u64_u64_div_u64(u64 a, u64 mul, u64 div)
-+static inline u64 mul_u64_add_u64_div_u64(u64 a, u64 mul, u64 add, u64 div)
- {
-        u64 q;
-
--       asm ("mulq %2; divq %3" : "=3Da" (q)
--                               : "a" (a), "rm" (mul), "rm" (div)
--                               : "rdx");
-+       if (statically_true(!add)) {
-+               asm ("mulq %2; divq %3" : "=3Da" (q)
-+                                       : "a" (a), "rm" (mul), "rm" (div)
-+                                       : "rdx");
-+       } else {
-+               asm ("mulq %2; addq %4,%rax; addc $0,%rdx; divq %3"
-+                       : "=3Da" (q)
-+                       : "a" (a), "rm" (mul), "rm" (div), "rm" (add)
-+                       : "rdx");
-+       }
-
-        return q;
- }
--#define mul_u64_u64_div_u64 mul_u64_u64_div_u64
-+#define mul_u64_add_u64_div_u64 mul_u64_add_u64_div_u64
-
- static inline u64 mul_u64_u32_div(u64 a, u32 mul, u32 div)
- {
--       return mul_u64_u64_div_u64(a, mul, div);
-+       return mul_u64_add_u64_div_u64(a, mul, 0, div);
- }
- #define mul_u64_u32_div        mul_u64_u32_div
-
-diff --git a/include/linux/math64.h b/include/linux/math64.h
-index 6aaccc1626ab..1544dc37e317 100644
---- a/include/linux/math64.h
-+++ b/include/linux/math64.h
-@@ -282,7 +282,10 @@ static inline u64 mul_u64_u32_div(u64 a, u32 mul, u32 =
-divisor)
- }
- #endif /* mul_u64_u32_div */
-
--u64 mul_u64_u64_div_u64(u64 a, u64 mul, u64 div);
-+u64 mul_u64_add_u64_div_u64(u64 a, u64 mul, u64 add, u64 div);
-+#define mul_u64_u64_div_u64(a, mul, div) mul_u64_add_u64_div_u64(a, mul, 0=
-, div)
-+#define mul_u64_u64_div_u64_roundup(a, mul, div) \
-+       ({ u64 _tmp =3D (div); mul_u64_add_u64_div_u64(a, mul, _tmp - 1, _t=
-mp); })
-
- /**
-  * DIV64_U64_ROUND_UP - unsigned 64bit divide with 64bit divisor rounded up
-diff --git a/lib/math/div64.c b/lib/math/div64.c
-index 5faa29208bdb..efcc8d729c74 100644
---- a/lib/math/div64.c
-+++ b/lib/math/div64.c
-@@ -183,16 +183,13 @@ u32 iter_div_u64_rem(u64 dividend, u32 divisor, u64 *=
-remainder)
- }
- EXPORT_SYMBOL(iter_div_u64_rem);
-
--#ifndef mul_u64_u64_div_u64
--u64 mul_u64_u64_div_u64(u64 a, u64 b, u64 c)
-+#ifndef mul_u64_add_u64_div_u64
-+u64 mul_u64_add_u64_div_u64(u64 a, u64 b, u64 add, u64 c)
- {
--       if (ilog2(a) + ilog2(b) <=3D 62)
--               return div64_u64(a * b, c);
--
- #if defined(__SIZEOF_INT128__)
-
-        /* native 64x64=3D128 bits multiplication */
--       u128 prod =3D (u128)a * b;
-+       u128 prod =3D (u128)a * b + add;
-        u64 n_lo =3D prod, n_hi =3D prod >> 64;
-
- #else
-@@ -201,6 +198,11 @@ u64 mul_u64_u64_div_u64(u64 a, u64 b, u64 c)
-        u32 a_lo =3D a, a_hi =3D a >> 32, b_lo =3D b, b_hi =3D b >> 32;
-        u64 x, y, z;
-
-+#if BITS_PER_LONG =3D=3D 32
-+       if (!(a_hi | b_hi))
-+               return div64_u64(a_lo * b_lo + add, c);
-+#endif
-+
-        x =3D (u64)a_lo * b_lo;
-        y =3D (u64)a_lo * b_hi + (u32)(x >> 32);
-        z =3D (u64)a_hi * b_hi + (u32)(y >> 32);
-@@ -208,10 +210,13 @@ u64 mul_u64_u64_div_u64(u64 a, u64 b, u64 c)
-        z +=3D (u32)(y >> 32);
-        x =3D (y << 32) + (u32)x;
-
--       u64 n_lo =3D x, n_hi =3D z;
-+       u64 n_lo =3D x + add, n_hi =3D z + (n_lo < x);
-
- #endif
-
-+       if (!n_hi)
-+               return div64_u64(n_lo, c);
-+
-        /* make sure c is not zero, trigger exception otherwise */
- #pragma GCC diagnostic push
- #pragma GCC diagnostic ignored "-Wdiv-by-zero"
-@@ -265,5 +270,5 @@ u64 mul_u64_u64_div_u64(u64 a, u64 b, u64 c)
-
-        return res;
- }
--EXPORT_SYMBOL(mul_u64_u64_div_u64);
-+EXPORT_SYMBOL(mul_u64_add_u64_div_u64);
- #endif
-
+The node id is the first argument of alloc_pages_node. I made the same
+mistake in one of the earlier versions of this patch series (which,
+fortunately I did not send out) - hopefully this time I'm correct :)
