@@ -1,81 +1,79 @@
-Received: from irl.hu (irl.hu [95.85.9.111])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 649931953A1
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 10:41:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.85.9.111
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A3AB236429;
+	Wed,  2 Apr 2025 10:42:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743590464; cv=none; b=O6K7rjEs04uWJ3YsysH8Vt6VvEayVw0u2akc+bvJbZYA3pVJVB5uvGwT2PloAYkeLZltfeH/sKxWp4lCxdLBS70F/WUSCG89+WxrkyHrhkLftVhnm9OL6gQJZ5sW5deHDg290LSs8cSSocDPXcLSpbWh1Gl7IWfupfI4mT9K7Ts=
+	t=1743590562; cv=none; b=mTywLGATAQbexVOnE6ibQJQehjMFc29F09SiMSIdIVij6XsIIbtN2CR5wKumEomtlgaHGVmUts28II56+eFa492jcC+Jr7Wjruhkl8/UsT1JYouAGj2qnPcHEEjDB1hcKspjBw4l1v0/DSZpLGUkldyzUmjZvN5ksvCgESVmBGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743590464; c=relaxed/simple;
-	bh=B9CNIaH3ZPMGnrvYBrjRMpRBqVe60LjCjyRpg6E8+A0=;
-	h=Message-ID:Subject:From:To:Cc:Date:Content-Type:MIME-Version; b=TMBPhsCJlFMfrurWatg9Mkq1CeRyZP2cnqgiFfr5PxI+fyUULEAp5hLPKIyI4T36ZuznYSyOdbsTcPxRwq9mNq8iy+DxxSfIZTBVWvWvBfnw7BpL0X1IOpW8FbC8FAlRRT2afQfk/Ars1o/FrQ7F48Z5Kmoq+7Puk2JWo8noHzc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu; spf=pass smtp.mailfrom=irl.hu; arc=none smtp.client-ip=95.85.9.111
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=irl.hu
-Received: from [192.168.2.19] (51b692a2.dsl.pool.telekom.hu [::ffff:81.182.146.162])
-  (AUTH: CRAM-MD5 soyer@irl.hu, )
-  by irl.hu with ESMTPSA
-  id 0000000000080C4C.0000000067ED1436.00082B78; Wed, 02 Apr 2025 12:40:54 +0200
-Message-ID: <ed09edb167e74167a694f4854102a3de6d2f1433.camel@irl.hu>
-Subject: amdgpu_dm_connector_mode_valid regression
-From: Gergo Koteles <soyer@irl.hu>
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-  amd-gfx@lists.freedesktop.org, Hans de Goede <hdegoede@redhat.com>,
-  Alex Deucher <alexander.deucher@amd.com>,
-  Mario Limonciello <mario.limonciello@amd.com>,
-  Alex Hung <alex.hung@amd.com>,
-  Harry Wentland <harry.wentland@amd.com>
-Date: Wed, 02 Apr 2025 12:40:53 +0200
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	s=arc-20240116; t=1743590562; c=relaxed/simple;
+	bh=LjaWeROx0i4qgPrOG4F+1/nZAMJVS7oiPyYMR0jzip0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ouKw/6/g81SPql/L4MEY8F5C0O7gMyAI565VHnStLLPn8xbo+6+BKTUYsbsnLstZuhfBV6ufMZCVcmSvFIFyV7m25BeB3boweahUEUplBnMZLgSgcdfnfJ/K8P6u3rQk6QTXpJAyv6JefJqo5x8+fSboSDaqp2eM6ukvwuSw+4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-CSE-ConnectionGUID: vH6Rz7xcTJmAmsYZbavzVA==
+X-CSE-MsgGUID: ceGk+kIiSjyLJ12zL8yM3Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11391"; a="55140850"
+X-IronPort-AV: E=Sophos;i="6.14,182,1736841600"; 
+   d="scan'208";a="55140850"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 03:42:40 -0700
+X-CSE-ConnectionGUID: DiH8qsdIT8y1PYnUBsiTFQ==
+X-CSE-MsgGUID: Jp2djy6kTd+o8z4n6o33aQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,182,1736841600"; 
+   d="scan'208";a="126617611"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 03:42:38 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andy@kernel.org>)
+	id 1tzvYJ-00000008ROM-0iiQ;
+	Wed, 02 Apr 2025 13:42:35 +0300
+Date: Wed, 2 Apr 2025 13:42:34 +0300
+From: Andy Shevchenko <andy@kernel.org>
+To: Ricardo Ribalda <ribalda@chromium.org>
+Cc: Hans Verkuil <hverkuil@xs4all.nl>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-staging@lists.linux.dev
+Subject: Re: [PATCH v2 1/2] media: atomisp: Fix Wformat-truncation warning
+Message-ID: <Z-0UmpbjvrKASXIu@smile.fi.intel.com>
+References: <20250401-v614-v2-0-53024c4fcdc7@chromium.org>
+ <20250401-v614-v2-1-53024c4fcdc7@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250401-v614-v2-1-53024c4fcdc7@chromium.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Hi,
+On Tue, Apr 01, 2025 at 02:17:54PM +0000, Ricardo Ribalda wrote:
+> Gcc8 is convinced that we do not have enough space in dot_id_input_bin.
+> Extend the variable 17 bytes which is just used for debugging.
+> 
+> drivers/staging/media/atomisp/pci/runtime/debug/src/ia_css_debug.c:1336:9: warning: '(pipe' directive output may be truncated writing 5 bytes into a region of size between 1 and 74 [-Wformat-truncation=]
 
-While playing with
-https://lore.kernel.org/all/61c3df83ab73aba0bc7a941a443cd7faf4cf7fb0.174319=
-5250.git.soyer@irl.hu/
+Note, you may drop the drivers/staging/media/ as the driver is unique enough.
 
-I found a regression that prevented some EDID DTDs from being selected
-in some specific cases.
+Reviewed-by: Andy Shevchenko <andy@kernel.org>
 
-This is the first bad commit:
-b255ce4 ("drm/amdgpu: don't change mode in
-amdgpu_dm_connector_mode_valid()")
+...
 
-I think the problem is that decide_crtc_timing_for_drm_display_mode()
-function tries to copy the crtc information from the preferred mode,
-but that's not filled yet if the first one is the preferred one and
-it's not the one with the maximum refresh rate.
+You also want to send this patch separately since the AtomISP has its own
+MAINTAINERS record (and there are patches in the queue there, IIRC).
 
-amdgpu_dm_connector_mode_valid()
-create_validate_stream_for_sink()
-create_stream_for_sink()
-decide_crtc_timing_for_drm_display_mode(&mode, preferred_mode, scale)
+-- 
+With Best Regards,
+Andy Shevchenko
 
-It works if I call
-drm_mode_set_crtcinfo((struct drm_display_mode *)mode, 0) before=20
-create_validate_stream_for_sink()
-in amdgpu_dm_connector_mode_valid()
-
-or=20
-
-if I comment out the decide_crtc_timing_for_drm_display_mode() in
-create_stream_for_sink()
-
-but a better fix than these can be imagined :)
-
-more information:
-https://gitlab.freedesktop.org/drm/amd/-/issues/4085
-
-Regards,
-Gergo
 
