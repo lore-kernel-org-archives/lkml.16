@@ -1,106 +1,177 @@
-Received: from fout-b2-smtp.messagingengine.com (fout-b2-smtp.messagingengine.com [202.12.124.145])
+Received: from smtp-fw-80006.amazon.com (smtp-fw-80006.amazon.com [99.78.197.217])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEB0D1ACED1;
-	Wed,  2 Apr 2025 19:16:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.145
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81DA31442F4;
+	Wed,  2 Apr 2025 19:16:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.217
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743621374; cv=none; b=mfpy+VLPZOEZhEX//PQeO/xHfhcJ70+xM84DcKgYJaoLLBACOYIlVtr38bzJr2H3I6JfVgd899TlEHiyrcrCW4BB9UW2L3cpXqHu7pD30pYLO/3DQ6R90On9afXtK/hi2OYDQsBSQdjgfjFKD1o//cjtxztvZLn2//hqPeznbD4=
+	t=1743621398; cv=none; b=Z2vibACnhPGF40s8UwONZN2X6R+FFDvuuNkdlU4/g5pvJUHhdrKZy7kFfMzD75Vofuzf1wPXdY2s5/2iwaiEl/Th5PcC/KC076XIXMCoMLryn5ffQm6bjjtGuENvax20IqRKOGXwzzrMPcIwRaMrrgIMB4HRPD6l1xcob86ld7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743621374; c=relaxed/simple;
-	bh=0WH1sGWtFYZtIVHWq6dERmJQ3aaewZqD4RXfkPSUVwU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JM2awkidhYdpL0LK69f6JNMgg1AKU35kU9HV8dPmodPYp7OdangyNC+5Q8B69o0juUzGwIrdVx8051NL5eLbLBtMa22IFmQfu1/nJ/LRSiIbh6F3yxDixNYQbJ38ujSJlg9I2fiFymxRfjP/SJDAtB9Jj8cmlAMSsai/WBzgYwk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com; spf=pass smtp.mailfrom=kroah.com; dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b=e5B4MHAJ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=JzTYmOoZ; arc=none smtp.client-ip=202.12.124.145
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kroah.com
+	s=arc-20240116; t=1743621398; c=relaxed/simple;
+	bh=cAs+wIf0YxeeJJc1k2FwvxC4kPJYJUIJfrDRhxRP4Us=;
+	h=From:To:CC:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=B0HbxwPs6DVcTM5Cwl0d2jG5SVCPvXjGWkHoRCxxgaPn+ZPKOOE4/lCePi+NK7B8EDQmVQzYOkZont5JLZV4OuxDY0CXQ11GKwk7wMvvRj50eVhXe4d8ELTRQh/IhHZ8zrSR8LoPKH5/pX9es3/84HwUpFticWc3xglTD8QlahY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de; spf=pass smtp.mailfrom=amazon.de; dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b=iRHE1Dob; arc=none smtp.client-ip=99.78.197.217
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="e5B4MHAJ";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="JzTYmOoZ"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfout.stl.internal (Postfix) with ESMTP id BBB5611400F4;
-	Wed,  2 Apr 2025 15:15:37 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-05.internal (MEProxy); Wed, 02 Apr 2025 15:15:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1743621337; x=1743707737; bh=0WH1sGWtFY
-	ZtIVHWq6dERmJQ3aaewZqD4RXfkPSUVwU=; b=e5B4MHAJgYkrv1yYQXHRdsq0K5
-	dIj2GWoH6v4eZP9M3wJES3FQWLIvg6nNfxgmCzNe/fyWm0LVFWwGr93gJ3MWAqO0
-	6y0j0v4Lzz01a8FfAk7LGx5OX65JoaPTp5InvOgpVmcllduUQQRc12URTj7rWjIj
-	qKlAf6kSaJKqjo6IAqZ9CS0JCuERM+hOtl12qGXCGuU6QI4JDq4R1pt19JmWRoGK
-	V9R5sKhY9BZftQ3Kmp6ADQVa/6gowrOAX672B3CirrB8errvvUxJONCPimihEKJW
-	Erl46D4aAhM2d6mWg8VGYv8O6ALAl0fYhJPet8n2CKQoJ702P3YGUeQ5XKug==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
-	1743621337; x=1743707737; bh=0WH1sGWtFYZtIVHWq6dERmJQ3aaewZqD4RX
-	fkPSUVwU=; b=JzTYmOoZkUbUc/j5PQNdimyZWySdNdwHs38pwBAz+I2lKneGCfr
-	/s9HCta1QtmKbunM/NSoXYcLqLch33En7AKXdpVpGsM07PN/WC6vTbXdY8bAD8b6
-	xW/7pkorsaxUyz8D3Vt3fXXOWtMS3DGbcSXPGvhHOj57GklOhtF41SdYGIBh+C1p
-	wD2VNtroczLlKdqzyFG4a7yfZb17I+YFow54u8ANRoGRjbEbf+5oxzevOBXVM/pa
-	Qw7ksSQ9lt52IvdlE8OpF6FBvGzdoIQTFTYTrwAYr/S1G1jNUjxG4Tdnw6vgGF1S
-	g/g8vVoKX21gwR3fexWdrRLLYWpn/+hmmyA==
-X-ME-Sender: <xms:2YztZwsHUXGev0I_oUl9ZJi9QAiuz3jI4bVkuqCgBtakPXSohgUanA>
-    <xme:2YztZ9f97Vte9PZfY4Fc0xOupKaTGCVQEm141WRL86rgDYVucJz4X6YTEzTGjsXBL
-    yuxI3vH5uUxCg>
-X-ME-Received: <xmr:2YztZ7yW-GG4UfGEacZq97iZwnafYnbOhT2jZIyGFyFmVWpDmQW1ZACHutSd>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddukeeigeejucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucenucfjughrpeffhf
-    fvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefirhgvghcumffjuceoghhr
-    vghgsehkrhhorghhrdgtohhmqeenucggtffrrghtthgvrhhnpedvjefhvefhjeejfeefle
-    ejteegtedvgeeghfeuveevgfffueelhffhhedugffhkeenucffohhmrghinhepghhithhh
-    uhgsrdgtohhmnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrh
-    homhepghhrvghgsehkrhhorghhrdgtohhmpdhnsggprhgtphhtthhopedugedpmhhouggv
-    pehsmhhtphhouhhtpdhrtghpthhtohepghhorhgrlhgsrghrihhssehgmhgrihhlrdgtoh
-    hmpdhrtghpthhtohepmhgrrhhtihhnrdhpvghtvghrshgvnhesohhrrggtlhgvrdgtohhm
-    pdhrtghpthhtoheplhhinhhugidqshgtshhisehvghgvrhdrkhgvrhhnvghlrdhorhhgpd
-    hrtghpthhtohepthgrrhhgvghtqdguvghvvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-    pdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorh
-    hgpdhrtghpthhtohepshhkhhgrnheslhhinhhugihfohhunhgurghtihhonhdrohhrghdp
-    rhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhdqmhgvnhhtvggvsheslhhishhtshdrlh
-    hinhhugidruggvvh
-X-ME-Proxy: <xmx:2YztZzOCeFAxSuIaiWb8IMCWa8x9PaM54bFkCOSgSZr2oG8iLOA_Hg>
-    <xmx:2YztZw8GkQWjFBFWcwv8Oi_suR38H1AquawY4UicLI8YB9q2gKmRcg>
-    <xmx:2YztZ7Wq68LGcHt_f3fpVmrvT3uw8FlGQmSQ3M8YzoW28anqlOkuBw>
-    <xmx:2YztZ5feL4HPdDJV7uoQp1sI9714JCRw3SnqtW5sgYXw7JPIGMmv8Q>
-    <xmx:2YztZ0HM9n_NvRHVTqIif6dinptlCwb5zQ2akYWAmLcdWdahze89sehz>
-Feedback-ID: i787e41f1:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 2 Apr 2025 15:15:36 -0400 (EDT)
-Date: Wed, 2 Apr 2025 20:14:10 +0100
-From: Greg KH <greg@kroah.com>
-To: goralbaris <goralbaris@gmail.com>
-Cc: martin.petersen@oracle.com, linux-scsi@vger.kernel.org,
-	target-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev
-Subject: Re: [PATCH] change strncpy to strscpy strncpy is now depricated. It
- may not NUL-terminate the destination string, resulting in potential memory
- content exposures, unbounded reads, or crashes. Link:
- https://github.com/KSPP/linux/issues/90
-Message-ID: <2025040244-onward-attain-8e91@gregkh>
-References: <20250402172504.101576-1-goralbaris@gmail.com>
+	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="iRHE1Dob"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
+  t=1743621397; x=1775157397;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=8umj+ndDF/ipCfwtuKdMZkQWmOijnGXaazU2k4hwCNY=;
+  b=iRHE1DobpITxvIKwFSr7VZ3/+YI7EtW6fBkoKLP9AVJoEHINPrYiYYIf
+   TCn4mwAQ/2r0kxyeg9XIcaWoMT8XCXQ9N/RqnyvgyO2gZKAyXJORopRBJ
+   D052Je+b6KT8dTDxXUnQGOcV9Gvqx2MhUe9fRpXp9i2nshqSlw3S5cJzP
+   I=;
+X-IronPort-AV: E=Sophos;i="6.15,183,1739836800"; 
+   d="scan'208";a="37530635"
+Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.214])
+  by smtp-border-fw-80006.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 19:16:34 +0000
+Received: from EX19MTAUWC001.ant.amazon.com [10.0.7.35:8453]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.61.148:2525] with esmtp (Farcaster)
+ id 3d208980-fd57-4d9c-b742-ec30a98b0997; Wed, 2 Apr 2025 19:16:33 +0000 (UTC)
+X-Farcaster-Flow-ID: 3d208980-fd57-4d9c-b742-ec30a98b0997
+Received: from EX19D020UWC002.ant.amazon.com (10.13.138.147) by
+ EX19MTAUWC001.ant.amazon.com (10.250.64.174) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Wed, 2 Apr 2025 19:16:29 +0000
+Received: from EX19MTAUEC001.ant.amazon.com (10.252.135.222) by
+ EX19D020UWC002.ant.amazon.com (10.13.138.147) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Wed, 2 Apr 2025 19:16:28 +0000
+Received: from email-imr-corp-prod-pdx-all-2c-785684ef.us-west-2.amazon.com
+ (10.43.8.6) by mail-relay.amazon.com (10.252.135.200) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id
+ 15.2.1544.14 via Frontend Transport; Wed, 2 Apr 2025 19:16:28 +0000
+Received: from dev-dsk-ptyadav-1c-43206220.eu-west-1.amazon.com (dev-dsk-ptyadav-1c-43206220.eu-west-1.amazon.com [172.19.91.144])
+	by email-imr-corp-prod-pdx-all-2c-785684ef.us-west-2.amazon.com (Postfix) with ESMTP id 88B30A046F;
+	Wed,  2 Apr 2025 19:16:27 +0000 (UTC)
+Received: by dev-dsk-ptyadav-1c-43206220.eu-west-1.amazon.com (Postfix, from userid 23027615)
+	id 1CF466148; Wed,  2 Apr 2025 19:16:27 +0000 (UTC)
+From: Pratyush Yadav <ptyadav@amazon.de>
+To: Changyuan Lyu <changyuanl@google.com>
+CC: <linux-kernel@vger.kernel.org>, <graf@amazon.com>,
+	<akpm@linux-foundation.org>, <luto@kernel.org>, <anthony.yznaga@oracle.com>,
+	<arnd@arndb.de>, <ashish.kalra@amd.com>, <benh@kernel.crashing.org>,
+	<bp@alien8.de>, <catalin.marinas@arm.com>, <dave.hansen@linux.intel.com>,
+	<dwmw2@infradead.org>, <ebiederm@xmission.com>, <mingo@redhat.com>,
+	<jgowans@amazon.com>, <corbet@lwn.net>, <krzk@kernel.org>, <rppt@kernel.org>,
+	<mark.rutland@arm.com>, <pbonzini@redhat.com>, <pasha.tatashin@soleen.com>,
+	<hpa@zytor.com>, <peterz@infradead.org>, <robh+dt@kernel.org>,
+	<robh@kernel.org>, <saravanak@google.com>,
+	<skinsburskii@linux.microsoft.com>, <rostedt@goodmis.org>,
+	<tglx@linutronix.de>, <thomas.lendacky@amd.com>, <usama.arif@bytedance.com>,
+	<will@kernel.org>, <devicetree@vger.kernel.org>, <kexec@lists.infradead.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-doc@vger.kernel.org>,
+	<linux-mm@kvack.org>, <x86@kernel.org>, Jason Gunthorpe <jgg@nvidia.com>
+Subject: Re: [PATCH v5 09/16] kexec: enable KHO support for memory preservation
+In-Reply-To: <20250320015551.2157511-10-changyuanl@google.com>
+References: <20250320015551.2157511-1-changyuanl@google.com>
+	<20250320015551.2157511-10-changyuanl@google.com>
+Date: Wed, 2 Apr 2025 19:16:27 +0000
+Message-ID: <mafs05xjmqsqc.fsf@amazon.de>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250402172504.101576-1-goralbaris@gmail.com>
+Content-Type: text/plain
 
-On Wed, Apr 02, 2025 at 08:25:04PM +0300, goralbaris wrote:
-> Signed-off-by: goralbaris <goralbaris@gmail.com>
+Hi Changyuan,
 
-I think something went wrong with your subject line :(
+On Wed, Mar 19 2025, Changyuan Lyu wrote:
 
-Also, don't use your email alias for signed-off-by please.
+> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+>
+> Introduce APIs allowing KHO users to preserve memory across kexec and
+> get access to that memory after boot of the kexeced kernel
+>
+> kho_preserve_folio() - record a folio to be preserved over kexec
+> kho_restore_folio() - recreates the folio from the preserved memory
+> kho_preserve_phys() - record physically contiguous range to be
+> preserved over kexec.
+> kho_restore_phys() - recreates order-0 pages corresponding to the
+> preserved physical range
+>
+> The memory preservations are tracked by two levels of xarrays to manage
+> chunks of per-order 512 byte bitmaps. For instance the entire 1G order
+> of a 1TB x86 system would fit inside a single 512 byte bitmap. For
+> order 0 allocations each bitmap will cover 16M of address space. Thus,
+> for 16G of memory at most 512K of bitmap memory will be needed for order 0.
+>
+> At serialization time all bitmaps are recorded in a linked list of pages
+> for the next kernel to process and the physical address of the list is
+> recorded in KHO FDT.
+>
+> The next kernel then processes that list, reserves the memory ranges and
+> later, when a user requests a folio or a physical range, KHO restores
+> corresponding memory map entries.
+>
+> Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
+> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> Co-developed-by: Changyuan Lyu <changyuanl@google.com>
+> Signed-off-by: Changyuan Lyu <changyuanl@google.com>
+> ---
+>  include/linux/kexec_handover.h |  38 +++
+>  kernel/kexec_handover.c        | 486 ++++++++++++++++++++++++++++++++-
+>  2 files changed, 522 insertions(+), 2 deletions(-)
+[...]
+> +int kho_preserve_phys(phys_addr_t phys, size_t size)
+> +{
+> +	unsigned long pfn = PHYS_PFN(phys), end_pfn = PHYS_PFN(phys + size);
+> +	unsigned int order = ilog2(end_pfn - pfn);
 
-thanks,
+This caught my eye when playing around with the code. It does not put
+any limit on the order, so it can exceed NR_PAGE_ORDERS. Also, when
+initializing the page after KHO, we pass the order directly to
+prep_compound_page() without sanity checking it. The next kernel might
+not support all the orders the current one supports. Perhaps something
+to fix?
 
-greg k-h
+> +	unsigned long failed_pfn;
+> +	int err = 0;
+> +
+> +	if (!kho_enable)
+> +		return -EOPNOTSUPP;
+> +
+> +	down_read(&kho_out.tree_lock);
+> +	if (kho_out.fdt) {
+> +		err = -EBUSY;
+> +		goto unlock;
+> +	}
+> +
+> +	for (; pfn < end_pfn;
+> +	     pfn += (1 << order), order = ilog2(end_pfn - pfn)) {
+> +		err = __kho_preserve(&kho_mem_track, pfn, order);
+> +		if (err) {
+> +			failed_pfn = pfn;
+> +			break;
+> +		}
+> +	}
+[...
+> +struct folio *kho_restore_folio(phys_addr_t phys)
+> +{
+> +	struct page *page = pfn_to_online_page(PHYS_PFN(phys));
+> +	unsigned long order = page->private;
+> +
+> +	if (!page)
+> +		return NULL;
+> +
+> +	order = page->private;
+> +	if (order)
+> +		prep_compound_page(page, order);
+> +	else
+> +		kho_restore_page(page);
+> +
+> +	return page_folio(page);
+> +}
+[...]
+
+-- 
+Regards,
+Pratyush Yadav
