@@ -1,144 +1,75 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from webmail.webked.de (webmail.webked.de [159.69.203.94])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8014B12D1F1
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 21:17:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F84A126F0A;
+	Wed,  2 Apr 2025 21:18:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.203.94
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743628623; cv=none; b=Xo+3ORV9FqV0+tLrMldhm8oHdYbOucYxvLin21icGesxbMKn0jbgBTV3JorrCDjRN//NdvZd3mwbTunsFkt31f4mIQd0wW406VFDx+nvs+6wgTIuutU+CU6s8pOXvVeSuhdZfRpdGxt/jKJWCIIXP89s0wYTdJwC5coiRY9i+3Q=
+	t=1743628719; cv=none; b=D/nLhtaPvi4N+utrH58o4Hm5l3N9X7JGkfnnbv63ja+0TIZWEDvETwthP3qNE4fkvEoGnxSIHDUo36ffJXocys/3+sd1IpIFDo87NVym0z3lO1Vowz3e0p97FZY88hLIxVbLd1NdNBIR4eQHAQ1ZTxLAUJfHCjF5incQVLpD2Lc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743628623; c=relaxed/simple;
-	bh=yRY4i3WLmUWyAE8o8P8TYb1tByrQrsV7UggoX7SedcQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Kw/MrE1vOJiHcW9rx6+NcZ9p714bYz7Y8wOVxoc3A/WQmbb9c+xo1YIxsYYWRvLKc+UCq0yupwudoMAfckfNgeas5+P0+cItpGfeqC4Jz10ffaGsvZtw9mCtlk8PvgLPMRa5wqzmPWKCpU3QknbsovA7Ba+24kOIq4FC81nJEcs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=gc+pmdpQ; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="gc+pmdpQ"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-7399838db7fso207849b3a.0
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 14:17:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1743628621; x=1744233421; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Xc/zZ+DuPIPBwVNZBMJ0HujjjSUEiZ7ohcynsD7aA4A=;
-        b=gc+pmdpQ0+9siX5+vh2aTvHczGfhbe/dnXiKMxqGEozOM+vqaV5XQqsXQzykxl5Vwo
-         Nih5jA3YnBHYGVSAHafQtJ0btXDHDkL7rGAnmijaDWvnNCyEhaUzme0QytW49n4kiZVe
-         HdarkrdOZxyqT6ysO33SUv2vg0QEiV5x3yg5iU9467esk+te3gSYy4Cv7NLAKQdwljp0
-         N11HwzgMVhjZCAUaimSRcd2IgOimlYRxXO0EB7CmK2iEuvczPOiTtLiMtbR54t9Jnv4y
-         Yl4ABma7Ogqt7yv2z7lcHmue6KGy2ip5KPV5M6gA7SorGVy2+zqplRTDgKhVknCHOAsF
-         AIMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743628621; x=1744233421;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Xc/zZ+DuPIPBwVNZBMJ0HujjjSUEiZ7ohcynsD7aA4A=;
-        b=D0eN3Vuz9mCLaU0r5UpU/0Z5XQePq3jP36kJ5er5p/4Ln1QmJqFvsg4BlFFCymxjR7
-         sidlEq6GirmwZ6MzeOaoYUNLLmMyLCpL4wQq7I5JaezlXXynrR3WGzQeihFA/4mYmZYC
-         sJ3ZEIPfq+UKohm/TwFxnlUvNdh1daQzK+Ftnv5r9yfGrNDEsdBD2dh6DhpD1ZtNMdhk
-         RMsoYBnbJ1/3wUsAMDiuTwaf5+sP8Oyct6fqdmOi+Q9rzdIzO3myN8Xq4zLovAl75yLT
-         UVH9GMqwrz7UiJvXKf7bK54qcHJ1dTciMe0bUksdiOdZ9aSROF1tKdi2/jXn1eHtmQno
-         ViRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUJBgBqzXG1nbxpOP+jWlhM6TmOCI4sKq0RMsaZce3UlHCMaVL6fOtaIvHeT8Fby2KvWqlX0POMqk9wZ1c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyNTPFQG8kFs43LaPJ4P+h2gWel6gLXWHvypwqw3kMsqhBXQHsI
-	3jFK6KIMC0wVbYbNkUG+stn+P4XO2QNo0DnHibDRMem6QhjTOc9AaIN+JJrpI/E=
-X-Gm-Gg: ASbGncuETbqXqbXuT7QQSUDsjds+gPYiSb47+jKJ3l7xY7aUxpPyVRrrfWuyvnTA70Q
-	DvcaENdNA0gH4yEEC7Ll6BDbY9NrQK9mrzOtfFTmNrDfbJFPDr3cksZNvcxu0HS4wl5Z6CbxHCb
-	nk3w+bKxa5qPNVKjAG10JeDWMvbqpjGLHgnTBlhVYzFcYyYQb0YlhlIi77QG/O68WycX/PpBBmr
-	TubS0E53nuGTVRLrUdc4PgMlsKGHj0Y6H6AYhFJyOg5HW9pVFX1AEEqbOsLK4vlgQc+POAKx6VZ
-	WrL3Z6oyiOm8HCCY9BEZPhm0CEUnLLtDzxdzkX3oCBe7p7O9Tjk+kZh/VwL9rt4j5vsC1W4e6TA
-	Zf1uQEYVzNICVlXFbJgdS+ApbHYGZ
-X-Google-Smtp-Source: AGHT+IETTieNbw/k3oeNyL1K32Iu4F4JpFYjFu/JJSEnpgavTw/4tVMQ23H2f0Cx5addp90wkEKvIA==
-X-Received: by 2002:a05:6a00:4c17:b0:736:4c3d:2cba with SMTP id d2e1a72fcca58-739d6457e2dmr1406094b3a.9.1743628620577;
-        Wed, 02 Apr 2025 14:17:00 -0700 (PDT)
-Received: from dread.disaster.area (pa49-181-60-96.pa.nsw.optusnet.com.au. [49.181.60.96])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739710636a3sm11855554b3a.94.2025.04.02.14.16.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Apr 2025 14:17:00 -0700 (PDT)
-Received: from dave by dread.disaster.area with local (Exim 4.98)
-	(envelope-from <david@fromorbit.com>)
-	id 1u05SC-00000003h3r-2yeA;
-	Thu, 03 Apr 2025 08:16:56 +1100
-Date: Thu, 3 Apr 2025 08:16:56 +1100
-From: Dave Chinner <david@fromorbit.com>
-To: Michal Hocko <mhocko@suse.com>
-Cc: Yafang Shao <laoar.shao@gmail.com>, Harry Yoo <harry.yoo@oracle.com>,
-	Kees Cook <kees@kernel.org>, joel.granados@kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Josef Bacik <josef@toxicpanda.com>, linux-mm@kvack.org,
-	Vlastimil Babka <vbabka@suse.cz>
-Subject: Re: [PATCH] proc: Avoid costly high-order page allocations when
- reading proc files
-Message-ID: <Z-2pSF7Zu0CrLBy_@dread.disaster.area>
-References: <20250401073046.51121-1-laoar.shao@gmail.com>
- <3315D21B-0772-4312-BCFB-402F408B0EF6@kernel.org>
- <Z-y50vEs_9MbjQhi@harry>
- <CALOAHbBSvMuZnKF_vy3kGGNOCg5N2CgomLhxMxjn8RNwMTrw7A@mail.gmail.com>
- <Z-0gPqHVto7PgM1K@dread.disaster.area>
- <Z-0sjd8SEtldbxB1@tiehlicka>
+	s=arc-20240116; t=1743628719; c=relaxed/simple;
+	bh=TRKe2C2yWQUuu/9WP0Vtkv/UsPx1qc3XdDhBsmf2WZs=;
+	h=Message-ID:Subject:From:To:Cc:Date:Content-Type:MIME-Version; b=Wa5aoscKWgrAX24asCoWkAYPGZ46M8ouw6gNx9biIJR/VEJiykU0+40kaWI/tUG68embEeJWevvBr0nzwj68LWFoY0ptsnOt5Xwa1dnB07AwU8rgcoEKOJI4tSFAHGqOaUpuDtkqkTJOJZvT83/PCVr8tRudqHR00P5bovwoNQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=webked.de; spf=pass smtp.mailfrom=webked.de; arc=none smtp.client-ip=159.69.203.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=webked.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=webked.de
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id C65AF62B75;
+	Wed,  2 Apr 2025 23:12:13 +0200 (CEST)
+Message-ID: <1d388413ab9cfd765cd2c5e05b5e69cdb2ec5a10.camel@webked.de>
+Subject: [REGRESSION] Massive virtio-net throughput drop in guest VM with
+ Linux 6.8+
+From: Markus Fohrer <markus.fohrer@webked.de>
+To: virtualization@lists.linux-foundation.org
+Cc: mst@redhat.com, jasowang@redhat.com, davem@davemloft.net,
+ edumazet@google.com,  netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Wed, 02 Apr 2025 23:12:07 +0200
+Organization: WEBKED IT Markus Fohrer
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z-0sjd8SEtldbxB1@tiehlicka>
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Wed, Apr 02, 2025 at 02:24:45PM +0200, Michal Hocko wrote:
-> On Wed 02-04-25 22:32:14, Dave Chinner wrote:
-> > Have a look at xlog_kvmalloc() in XFS. It implements a basic
-> > fast-fail, no retry high order kmalloc before it falls back to
-> > vmalloc by turning off direct reclaim for the kmalloc() call.
-> > Hence if the there isn't a high-order page on the free lists ready
-> > to allocate, it falls back to vmalloc() immediately.
-> > 
-> > For XFS, using xlog_kvmalloc() reduced the high-order per-allocation
-> > overhead by around 80% when compared to a standard kvmalloc()
-> > call. Numbers and profiles were documented in the commit message
-> > (reproduced in whole below)...
-> 
-> Btw. it would be really great to have such concerns to be posted to the
-> linux-mm ML so that we are aware of that.
+Hi,
 
-I have brought it up in the past, along with all the other kvmalloc
-API problems that are mentioned in that commit message.
-Unfortunately, discussion focus always ended up on calling context
-and API flags (e.g. whether stuff like GFP_NOFS should be supported
-or not) no the fast-fail-then-no-fail behaviour we need.
+I'm observing a significant performance regression in KVM guest VMs using v=
+irtio-net with recent Linux kernels (6.8.1+ and 6.14).
 
-Yes, these discussions have resulted in API changes that support
-some new subset of gfp flags, but the performance issues have never
-been addressed...
+When running on a host system equipped with a Broadcom NetXtreme-E (bnxt_en=
+) NIC and AMD EPYC CPUs, the network throughput in the guest drops to 100=
+=E2=80=93200 KB/s. The same guest configuration performs normally (~100 MB/=
+s) when using kernel 6.8.0 or when the VM is moved to a host with Intel NIC=
+s.
 
-> kvmalloc currently doesn't support GFP_NOWAIT semantic but it does allow
-> to express - I prefer SLAB allocator over vmalloc.
+Test environment:
+- Host: QEMU/KVM, Linux 6.8.1 and 6.14.0
+- Guest: Linux with virtio-net interface
+- NIC: Broadcom BCM57416 (bnxt_en driver, no issues at host level)
+- CPU: AMD EPYC
+- Storage: virtio-scsi
+- VM network: virtio-net, virtio-scsi (no CPU or IO bottlenecks)
+- Traffic test: iperf3, scp, wget consistently slow in guest
 
-The conditional use of __GFP_NORETRY for the kmalloc call is broken
-if we try to use __GFP_NOFAIL with kvmalloc() - this causes the gfp
-mask to hold __GFP_NOFAIL | __GFP_NORETRY....
+This issue is not present:
+- On 6.8.0=20
+- On hosts with Intel NICs (same VM config)
 
-We have a hard requirement for xlog_kvmalloc() to provide
-__GFP_NOFAIL semantics.
+I have bisected the issue to the following upstream commit:
 
-IOWs, we need kvmalloc() to support kmalloc(GFP_NOWAIT) for
-performance with fallback to vmalloc(__GFP_NOFAIL) for
-correctness...
+  49d14b54a527 ("virtio-net: Suppress tx timeout warning for small tx")
+  https://git.kernel.org/linus/49d14b54a527
 
-> I think we could make
-> the default kvmalloc slab path weaker by default as those who really
-> want slab already have means to achieve that. There is a risk of long
-> term fragmentation but I think this is worth trying
+Reverting this commit restores normal network performance in affected guest=
+ VMs.
 
-We've been doing this for a few years now in XFS in a hot path that
-can make in the order of a million xlog_kvmalloc() calls a second.
-We've not seen any evidence that this causes or exacerbates memory
-fragmentation....
+I=E2=80=99m happy to provide more data or assist with testing a potential f=
+ix.
 
--Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+Thanks,
+Markus Fohrer
+
