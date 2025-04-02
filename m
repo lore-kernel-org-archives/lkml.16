@@ -1,255 +1,141 @@
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52FC01096F
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 01:39:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ED801426C
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 01:42:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743557978; cv=none; b=igOe+oK/GClzgAxUuCHKLnagaSpmOKMBAUTqYMq6mFgRG7gevaXTyMTflyZMiRYOyVg+4n6mCVSjGXTxI6uWOKJVCp3zD5lGKFj17tHkiM+uRh/dXkM+uy2iAqFEtFABTcReycdILXaaWNe+E6BKqwvFPx9/BaiF+ud6Vaz4jTo=
+	t=1743558181; cv=none; b=bh91ccE8nmpoVlQPRYNlRWDz7Cw2/1E7mnxMbRVpBPSQ4a9GZ3i24ueEWtomejk/HiQg0Ni7HX1UI3LE9GWYBhcwF/zgcxNTfXpcZ/IiUeDAM/zqezQ+kGd5jAfQEw3xZur6VjPUyc8kHm/Ux3qdsnQp0YXu9OBabG5wewXvs6g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743557978; c=relaxed/simple;
-	bh=4jOlb4ACh1sxX01IRIAhnIypJo4e6WZooU1luTyg1wk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
-	 Content-Type:References; b=YoU9R76QAH2fkv+2A2TUIsxc8yUSYIw6HyLz9V8WhAyY4jvfeEAC7SMq/E2IKaLW8fiyidGmlxaDYagGBJpEqTG8Hlm8BkCUAtDCnVWtPgEXkxRnpv4Y/fK3wj1a1ResFVi5AlFXGy+feSNXeRO6hGIXWles9zYWjpkNWUR4Jbw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=lUSdWcAj; arc=none smtp.client-ip=203.254.224.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1743558181; c=relaxed/simple;
+	bh=EP0QjyDeDMzQWEnJguROgR5Anzq1XpYtA9f9+0L+768=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=OBcxgFvkeMbsgWisE3KdW2/+Hf4eu2fY00gQuE+eOG5TSdJoUUkKBRSpfZ35nhbJGqK4squJIHigjnjyXRnZbtDuLXM+NnTHfz+iEiItO/NOdRNqp5zFmSFlwCMBXSPzd86a0tUEduChVpXEXaRtySsCTNrzRV0AxlgQbJ+AztM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U+YGj8P9; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="lUSdWcAj"
-Received: from epcas2p4.samsung.com (unknown [182.195.41.56])
-	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250402013933epoutp012077c7c8ad32b83b41651f5d69a9514a~yXL0ogDf80859808598epoutp01g
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 01:39:33 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250402013933epoutp012077c7c8ad32b83b41651f5d69a9514a~yXL0ogDf80859808598epoutp01g
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1743557973;
-	bh=eVjNkH/V/fv1Y45uPpNZVysJT11oKFePxebtI4FVQb4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=lUSdWcAjH6lkI9zgwx0zmjLt2pwDM5AQDK2n3KOnfDQ1tk+0WnkWb3Bzz3BZlWH2h
-	 kBkMz4jL8b/SSZzHukoyOgYwR+JA85yLfNwlxwGA8CDcGamqeyL9tNt3SJR69hsLiN
-	 /5CXZoxqreq19qxALmHmNkPgfZD41cGJApBi9rcg=
-Received: from epsnrtp04.localdomain (unknown [182.195.42.156]) by
-	epcas2p2.samsung.com (KnoxPortal) with ESMTPS id
-	20250402013932epcas2p232ccdd795d488406778169393bc21e9c~yXLz87yQg2124221242epcas2p2m;
-	Wed,  2 Apr 2025 01:39:32 +0000 (GMT)
-Received: from epsmges2p2.samsung.com (unknown [182.195.36.89]) by
-	epsnrtp04.localdomain (Postfix) with ESMTP id 4ZS6wz6bdrz6B9mJ; Wed,  2 Apr
-	2025 01:39:31 +0000 (GMT)
-Received: from epcas2p2.samsung.com ( [182.195.41.54]) by
-	epsmges2p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-	BC.94.10159.3559CE76; Wed,  2 Apr 2025 10:39:31 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas2p3.samsung.com (KnoxPortal) with ESMTPA id
-	20250402013931epcas2p31d16291742c84025c363b3783b8ac18e~yXLy7VQ151103811038epcas2p3Z;
-	Wed,  2 Apr 2025 01:39:31 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20250402013931epsmtrp2131d2f748c2191a3ab6278be721eba4b~yXLy6GJXg3008130081epsmtrp2Q;
-	Wed,  2 Apr 2025 01:39:31 +0000 (GMT)
-X-AuditID: b6c32a46-9fefd700000027af-e9-67ec9553e5d8
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	82.A7.08766.3559CE76; Wed,  2 Apr 2025 10:39:31 +0900 (KST)
-Received: from perf (unknown [10.229.95.91]) by epsmtip2.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20250402013931epsmtip2f0edf5faf9a071f540f43c5c9feea055~yXLypyyek1331713317epsmtip2B;
-	Wed,  2 Apr 2025 01:39:30 +0000 (GMT)
-Date: Wed, 2 Apr 2025 10:43:46 +0900
-From: Youngmin Nam <youngmin.nam@samsung.com>
-To: William McVicker <willmcvicker@google.com>
-Cc: John Stultz <jstultz@google.com>, Catalin Marinas
-	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Peter Griffin
-	<peter.griffin@linaro.org>, =?iso-8859-1?Q?Andr=E9?= Draszik
-	<andre.draszik@linaro.org>, Tudor Ambarus <tudor.ambarus@linaro.org>, Rob
-	Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
-	Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, Daniel
-	Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>,
-	Saravana Kannan <saravanak@google.com>, Krzysztof Kozlowski
-	<krzk@kernel.org>, kernel-team@android.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Donghoon Yu
-	<hoony.yu@samsung.com>, Youngmin Nam <youngmin.nam@samsung.com>
-Subject: Re: [PATCH v1 2/6] clocksource/drivers/exynos_mct: Don't register
- as a sched_clock on arm64
-Message-ID: <Z+yWUj5ZLftPrbht@perf>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U+YGj8P9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743558179; x=1775094179;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=EP0QjyDeDMzQWEnJguROgR5Anzq1XpYtA9f9+0L+768=;
+  b=U+YGj8P9HG29q09lELHHI73AKM3eOcJ3h1tmBhulMeY1uIu7mlMgoUKd
+   qWyroAEOTaim4g2duf05WoG5UuI9+nf7uzFUVTKhyqadCHPuDjan55Pk/
+   y/S3+VArXAgpZpSkq5kVXU9ocINfaK+ZgEkrlLUUZSA1b0quAh+QNXLFm
+   4yXAkY/Za9JdRkAJ1QAAP/fLUF352mmqHx/0Qc82MuvBp7/wfbhBpZTw0
+   PpsAnsnvXAwBDOW4vR87vQypVUoCyOn+o2iKmfeHxdsPgkEYJddsMPJTW
+   3WvWufQgnZy04aPhFElDHQ28hX/SGfFZYbpFKCEugk2p+K+3FuKphK/ji
+   w==;
+X-CSE-ConnectionGUID: qKv5quGCQrSYt1fZQ+oPSA==
+X-CSE-MsgGUID: zc4LlDhPS3a3GjjMz+yzZQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11391"; a="56273287"
+X-IronPort-AV: E=Sophos;i="6.14,294,1736841600"; 
+   d="scan'208";a="56273287"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2025 18:42:58 -0700
+X-CSE-ConnectionGUID: 1WAlJT2SSrqQ8o7IosuoUA==
+X-CSE-MsgGUID: 4UwRKH4KQVua9mT7djmmRg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,294,1736841600"; 
+   d="scan'208";a="127377326"
+Received: from lkp-server02.sh.intel.com (HELO e98e3655d6d2) ([10.239.97.151])
+  by fmviesa009.fm.intel.com with ESMTP; 01 Apr 2025 18:42:56 -0700
+Received: from kbuild by e98e3655d6d2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tzn82-000AKI-0j;
+	Wed, 02 Apr 2025 01:42:54 +0000
+Date: Wed, 2 Apr 2025 09:41:55 +0800
+From: kernel test robot <lkp@intel.com>
+To: Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Oliver Upton <oliver.upton@linux.dev>
+Subject: drivers/firmware/smccc/kvm_guest.c:106:2-3: Unneeded semicolon
+Message-ID: <202504020941.VEeL6nVJ-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <Z-wZV3RCXKPzpZGl@google.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA01TfUxTVxT39rWvLVvN43N3iNDVDcOnLVJ6WcSBMNK4ZWGTRLNlwgt9tIzS
-	Nv1YmJuIyiiCIZBJJoUBA+ekAe0KAuPLURDZspQBhmmnKENQkMEoYJYpsNaHC//9zu+c37m/
-	c8+9HMxrEffnZKn0lFZFKgW4B7OtPyQm4lDFvFx4xb4X3a9pw1HrXAsTLV48C1BTj52BapZ3
-	otoBOwvdaH7MQs+GfsBRR7sPmjVN4Gh42MJG1qlxFhrrrMbR+eFeBrKcX2eije4ONiq2reGo
-	xVqBIafjKCq4I0Zm5wZADT852fF+0rauNpa0qaYJSOusBqnVfAaX3hnvxqULdjtb2nLhhLS0
-	1Qyky9bAFO6H2fsUFCmjtHxKlaGWZankcYJ3DqUlpoljhKIIUSySCPgqMoeKEyS9mxKRnKV0
-	zSfgf0oqDS4qhdTpBHv279OqDXqKr1Dr9HECSiNTaiSaSB2ZozOo5JEqSv+mSCiMErsK07MV
-	1/pm2Zra3bld9iFGPhgIKgZcDiSi4b2xa3gx8OB4ER0A1p+sZtGBE0D7yAaDDp4A2Gw7zX4h
-	aV+9zqYTPQDeGi4BdDAJoOO7MlczDodJvA6rl4RuAU5EwLahdeCmfYhI+OzLXHc5RrTgcHBy
-	nuHmvYlMODEa6C7nEbvg+KKZRWNP+HPlA6Ybc4lQWFjS+NwqJIxcWGTuZNGGkuCpi2c3zXnD
-	uRutm9gfLi/04DTWwfx7DowWFwD4y++PMDqxF5pmjMCNMUIB+8/0st2GoMvFgINJ09thUf/a
-	Js2DRYVetDIY/nvOAmgcALsaLm12lMKZh0ubF9fEgCOOaWYZCDRtmce05TSTqy1GhMArnXto
-	OgievlqF0fQO+P06Z0tFHcDNwI/S6HLklC5KE/X/rjPUOVbw/OWHJneAc3/9HWkDDA6wAcjB
-	BD68I6uzci+ejPzsGKVVp2kNSkpnA2LXlsoxf98MtevrqPRpouhYYXRMjEgSJRZKBK/wbEvT
-	ci9CTuqpbIrSUNoXOgaH65/POG5zpMbxybWZhPG+qQ9mSm6PrH9TnljdfDA2yCPn8mu5VaO7
-	3veDX2xPndaITE9lPYMGf42z7uSP9ZfIE2thxrybJbvj8yqPPWRI+AFvKxIza5s/KRpZlfW/
-	NF/mW+Bd3uBZIbxuGby5GqwokV8d725tP5De3nv3cJ9PzcFXM0uVTwZi3qifDA8/PHY0/StJ
-	ob4Vdh7Z9l7D7ctvHY/fYOdBy8qAfM7XKh695dH4sSTsW+yR56k15dSK7WVjZS3P+NFcQtVO
-	clBv4j4dXKlPTYLBv31NfV46UtX4IF9VsA3yYpN/9cD/YO1Iflwb3vNP+wS0XPjz7kJA6f6m
-	hJCwdCP3voCpU5CiUEyrI/8DjLkHzYIEAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrEIsWRmVeSWpSXmKPExsWy7bCSvG7w1DfpBi//Clo8mLeNzWLLq80s
-	Fu+X9TBarNl7jsli3mdZi/lHzrFaHF/7mtXiz4mNbBY7totYvJx1j83i/PkN7BabHl9jtbi8
-	aw6bxYzz+5gsNsz4x2Lxf88OdouuQ3/ZLDZvmsps8elWnEXLHVOLVZ/+M1osPvCJ3UHMY9vu
-	bawea+atYfRYsKnUY9OqTjaPO9f2sHm8O3eO3WPzknqPvi2rGD0+b5IL4IzisklJzcksSy3S
-	t0vgyngw4xpjwUGViiUz/jM2MDbJdjFyckgImEhs/3qUvYuRi0NIYDejxJdF7awQCRmJ2ysv
-	Q9nCEvdbjrBCFN1nlDh84zRbFyMHB4uAisScjwYgNWwCuhLbTvxjBAmLCOhJ/GmtAClnFtjP
-	JtHV18MEUiMskCYxcdoZRhCbV0BZ4tr7VVAz1zBJPF/4lQkiIShxcuYTFhCbWUBd4s+8S8wg
-	Q5kFpCWW/+OACMtLNG+dzQxicwpoSbR1r2SbwCg4C0n3LCTdsxC6ZyHpXsDIsopRMrWgODc9
-	t9iwwDAvtVyvODG3uDQvXS85P3cTIziatTR3MG5f9UHvECMTB+MhRgkOZiUR3oivL9OFeFMS
-	K6tSi/Lji0pzUosPMUpzsCiJ84q/6E0REkhPLEnNTk0tSC2CyTJxcEo1MO2fLckYmt4kzbZR
-	/NN/zwWpAaoMzjHHfutk/T+2zS1pw/env0sfR9t9X27XvfvHjgut/U3FW0Qjwxx71iueLVcJ
-	1WaYKL094MbHo/NzHL7f1Xh3qM+063YBM6PTrJnVcyLuOyzdvUNFqMEp5MEE+9keW1f2dfQ9
-	/fP94Au+yin1omZSlo1JC/dbBq6WvCqyMWYhoxlLqOqBCc/M4mbudNdZn8126vn/8LjHKf8/
-	GKZcZ9UQOKS5vWvvpLmNjfosfBm1zZkuC1qZz91f3blaf4a9YIxnXBXLwQk95b5Niq5TjzRs
-	iF/mM1muUHFBwe26CZPXXTBiVnyRxjP5HFOAwvfiS9x8LP7H/WqVeptTlFiKMxINtZiLihMB
-	zitcEVUDAAA=
-X-CMS-MailID: 20250402013931epcas2p31d16291742c84025c363b3783b8ac18e
-X-Msg-Generator: CA
-Content-Type: multipart/mixed;
-	boundary="----caUwc_dC5aEw_I.xGS0GMYyTEPKysFRHRKa1IoFNAgiy-i3F=_73402_"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250401165039epcas2p16b954647b0c1c79e48450ad91d19f525
-References: <20250331230034.806124-1-willmcvicker@google.com>
-	<20250331230034.806124-3-willmcvicker@google.com>
-	<CANDhNCrxTTkeq3ewos=07jD67s3t6rXOv=u=_qV6d+JEVoXeUA@mail.gmail.com>
-	<CGME20250401165039epcas2p16b954647b0c1c79e48450ad91d19f525@epcas2p1.samsung.com>
-	<Z-wZV3RCXKPzpZGl@google.com>
-
-------caUwc_dC5aEw_I.xGS0GMYyTEPKysFRHRKa1IoFNAgiy-i3F=_73402_
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-Hi Will.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   91e5bfe317d8f8471fbaa3e70cf66cae1314a516
+commit: 44ff44cadbd144ee1159f5687a852c49c4290262 smccc: kvm_guest: Fix kernel builds for 32 bit arm
+date:   4 weeks ago
+config: arm-randconfig-r053-20250402 (https://download.01.org/0day-ci/archive/20250402/202504020941.VEeL6nVJ-lkp@intel.com/config)
+compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project 7eccafc3c84606587a175c0a8c1ebea6e4fb21cd)
 
-I'm really glad to see our work on Pixel being upstreamed.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504020941.VEeL6nVJ-lkp@intel.com/
 
-On Tue, Apr 01, 2025 at 09:50:31AM -0700, William McVicker wrote:
-> On 03/31/2025, John Stultz wrote:
-> > On Mon, Mar 31, 2025 at 4:00 PM 'Will McVicker' via kernel-team
-> > <kernel-team@android.com> wrote:
-> > >
-> > > When using the Exynos MCT as a sched_clock, accessing the timer value
-> > > via the MCT register is extremely slow. To improve performance on Arm64
-> > > SoCs, use the Arm architected timer instead for timekeeping.
-> > 
-> > This probably needs some further expansion to explain why we don't
-> > want to use it for sched_clock but continue to register the MCT as a
-> > clocksource (ie: why not disable MCT entirely?).
-> 
-> Using the MCT as a sched_clock was originally added for Exynos4 SoCs to improve
-> the gettimeofday() syscalls on ChromeOS. For ARM32 this is the best they can do
-> without the Arm architected timer. ChromeOS perf data can be found in [1,2]
-> 
-> [1] https://lore.kernel.org/linux-samsung-soc/CAJFHJrrgWGc4XGQB0ysLufAg3Wouz-aYXu97Sy2Kp=HzK+akVQ@mail.gmail.com/
-> [2] https://lore.kernel.org/linux-samsung-soc/CAASgrz2Nr69tpfC8ka9gbs2OvjLEGsvgAj4vBCFxhsamuFum7w@mail.gmail.com/
-> 
-> I think it's valid to still register the MCT as a clocksource to make it
-> available in case someone decides they want to use it, but by default it
-> doesn't make sense to use it as the default clocksource on Exynos-based ARM64
-> systems with arch_timer support. However, we can't disable the Exynos MCT
-> entirely on ARM64 because we need it as the wakeup source for the arch_timer to
-> support waking up from the "c2" idle state, which is discussed in [3].
-> 
-> [3] https://lore.kernel.org/linux-arm-kernel/20210608154341.10794-1-will@kernel.org/
-> 
+cocci warnings: (new ones prefixed by >>)
+>> drivers/firmware/smccc/kvm_guest.c:106:2-3: Unneeded semicolon
 
-Exactly right.
+vim +106 drivers/firmware/smccc/kvm_guest.c
 
-> > 
-> > > Note, ARM32 SoCs don't have an architectured timer and therefore
-> > > will continue to use the MCT timer. Detailed discussion on this topic
-> > > can be found at [1].
-> > >
-> > > [1] https://lore.kernel.org/all/1400188079-21832-1-git-send-email-chirantan@chromium.org/
-> > 
-> > That's a pretty deep thread (more so with the duplicate messages, as
-> > you used the "all" instead of a specific list). It might be good to
-> > have a bit more of a summary here in the commit message, so folks
-> > don't have to dig too deeply themselves.
-> 
-> Ah, sorry about the bad link. The above points should be a good summary of that
-> conversation with regards to this patch.
-> 
-> > 
-> > > Signed-off-by: Donghoon Yu <hoony.yu@samsung.com>
-> > > Signed-off-by: Youngmin Nam <youngmin.nam@samsung.com>
-> > > [Original commit from https://android.googlesource.com/kernel/gs/+/630817f7080e92c5e0216095ff52f6eb8dd00727
-> > > Signed-off-by: Will McVicker <willmcvicker@google.com>
-> > > ---
-> > >  drivers/clocksource/exynos_mct.c | 5 +++--
-> > >  1 file changed, 3 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/drivers/clocksource/exynos_mct.c b/drivers/clocksource/exynos_mct.c
-> > > index da09f467a6bb..05c50f2f7a7e 100644
-> > > --- a/drivers/clocksource/exynos_mct.c
-> > > +++ b/drivers/clocksource/exynos_mct.c
-> > > @@ -219,12 +219,12 @@ static struct clocksource mct_frc = {
-> > >         .resume         = exynos4_frc_resume,
-> > >  };
-> > >
-> > > +#if defined(CONFIG_ARM)
-> > 
-> > I'd probably suggest adding a comment here explaining why this is kept
-> > on ARM and not on AARCH64 as well.
-> 
-> Sure, I can add my comments above here in v2.
-> 
-> > 
-> > >  static u64 notrace exynos4_read_sched_clock(void)
-> > >  {
-> > >         return exynos4_read_count_32();
-> > >  }
-> > >
-> > > -#if defined(CONFIG_ARM)
-> > >  static struct delay_timer exynos4_delay_timer;
-> > >
-> > >  static cycles_t exynos4_read_current_timer(void)
-> > > @@ -250,12 +250,13 @@ static int __init exynos4_clocksource_init(bool frc_shared)
-> > >         exynos4_delay_timer.read_current_timer = &exynos4_read_current_timer;
-> > >         exynos4_delay_timer.freq = clk_rate;
-> > >         register_current_timer_delay(&exynos4_delay_timer);
-> > > +
-> > > +       sched_clock_register(exynos4_read_sched_clock, 32, clk_rate);
-> > >  #endif
-> > >
-> > >         if (clocksource_register_hz(&mct_frc, clk_rate))
-> > >                 panic("%s: can't register clocksource\n", mct_frc.name);
-> > >
-> > > -       sched_clock_register(exynos4_read_sched_clock, 32, clk_rate);
-> > >
-> > >         return 0;
-> > 
-> > Otherwise, this looks ok to me.
-> > 
-> > thanks
-> > -john
-> 
-> Thanks for taking the time to review!
-> 
-> Regards,
-> Will
-> 
+86edf6bdcf0571 Shameer Kolothum 2025-02-21   57  
+44ff44cadbd144 Shameer Kolothum 2025-03-06   58  #ifdef CONFIG_ARM64
+86edf6bdcf0571 Shameer Kolothum 2025-02-21   59  void  __init kvm_arm_target_impl_cpu_init(void)
+86edf6bdcf0571 Shameer Kolothum 2025-02-21   60  {
+86edf6bdcf0571 Shameer Kolothum 2025-02-21   61  	int i;
+86edf6bdcf0571 Shameer Kolothum 2025-02-21   62  	u32 ver;
+86edf6bdcf0571 Shameer Kolothum 2025-02-21   63  	u64 max_cpus;
+86edf6bdcf0571 Shameer Kolothum 2025-02-21   64  	struct arm_smccc_res res;
+86edf6bdcf0571 Shameer Kolothum 2025-02-21   65  	struct target_impl_cpu *target;
+86edf6bdcf0571 Shameer Kolothum 2025-02-21   66  
+86edf6bdcf0571 Shameer Kolothum 2025-02-21   67  	if (!kvm_arm_hyp_service_available(ARM_SMCCC_KVM_FUNC_DISCOVER_IMPL_VER) ||
+86edf6bdcf0571 Shameer Kolothum 2025-02-21   68  	    !kvm_arm_hyp_service_available(ARM_SMCCC_KVM_FUNC_DISCOVER_IMPL_CPUS))
+86edf6bdcf0571 Shameer Kolothum 2025-02-21   69  		return;
+86edf6bdcf0571 Shameer Kolothum 2025-02-21   70  
+86edf6bdcf0571 Shameer Kolothum 2025-02-21   71  	arm_smccc_1_1_invoke(ARM_SMCCC_VENDOR_HYP_KVM_DISCOVER_IMPL_VER_FUNC_ID,
+86edf6bdcf0571 Shameer Kolothum 2025-02-21   72  			     0, &res);
+86edf6bdcf0571 Shameer Kolothum 2025-02-21   73  	if (res.a0 != SMCCC_RET_SUCCESS)
+86edf6bdcf0571 Shameer Kolothum 2025-02-21   74  		return;
+86edf6bdcf0571 Shameer Kolothum 2025-02-21   75  
+86edf6bdcf0571 Shameer Kolothum 2025-02-21   76  	/* Version info is in lower 32 bits and is in SMMCCC_VERSION format */
+86edf6bdcf0571 Shameer Kolothum 2025-02-21   77  	ver = lower_32_bits(res.a1);
+86edf6bdcf0571 Shameer Kolothum 2025-02-21   78  	if (PSCI_VERSION_MAJOR(ver) != 1) {
+86edf6bdcf0571 Shameer Kolothum 2025-02-21   79  		pr_warn("Unsupported target CPU implementation version v%d.%d\n",
+86edf6bdcf0571 Shameer Kolothum 2025-02-21   80  			PSCI_VERSION_MAJOR(ver), PSCI_VERSION_MINOR(ver));
+86edf6bdcf0571 Shameer Kolothum 2025-02-21   81  		return;
+86edf6bdcf0571 Shameer Kolothum 2025-02-21   82  	}
+86edf6bdcf0571 Shameer Kolothum 2025-02-21   83  
+86edf6bdcf0571 Shameer Kolothum 2025-02-21   84  	if (!res.a2) {
+86edf6bdcf0571 Shameer Kolothum 2025-02-21   85  		pr_warn("No target implementation CPUs specified\n");
+86edf6bdcf0571 Shameer Kolothum 2025-02-21   86  		return;
+86edf6bdcf0571 Shameer Kolothum 2025-02-21   87  	}
+86edf6bdcf0571 Shameer Kolothum 2025-02-21   88  
+86edf6bdcf0571 Shameer Kolothum 2025-02-21   89  	max_cpus = res.a2;
+86edf6bdcf0571 Shameer Kolothum 2025-02-21   90  	target = memblock_alloc(sizeof(*target) * max_cpus,  __alignof__(*target));
+86edf6bdcf0571 Shameer Kolothum 2025-02-21   91  	if (!target) {
+86edf6bdcf0571 Shameer Kolothum 2025-02-21   92  		pr_warn("Not enough memory for struct target_impl_cpu\n");
+86edf6bdcf0571 Shameer Kolothum 2025-02-21   93  		return;
+86edf6bdcf0571 Shameer Kolothum 2025-02-21   94  	}
+86edf6bdcf0571 Shameer Kolothum 2025-02-21   95  
+86edf6bdcf0571 Shameer Kolothum 2025-02-21   96  	for (i = 0; i < max_cpus; i++) {
+86edf6bdcf0571 Shameer Kolothum 2025-02-21   97  		arm_smccc_1_1_invoke(ARM_SMCCC_VENDOR_HYP_KVM_DISCOVER_IMPL_CPUS_FUNC_ID,
+86edf6bdcf0571 Shameer Kolothum 2025-02-21   98  				     i, &res);
+86edf6bdcf0571 Shameer Kolothum 2025-02-21   99  		if (res.a0 != SMCCC_RET_SUCCESS) {
+86edf6bdcf0571 Shameer Kolothum 2025-02-21  100  			pr_warn("Discovering target implementation CPUs failed\n");
+86edf6bdcf0571 Shameer Kolothum 2025-02-21  101  			goto mem_free;
+86edf6bdcf0571 Shameer Kolothum 2025-02-21  102  		}
+86edf6bdcf0571 Shameer Kolothum 2025-02-21  103  		target[i].midr = res.a1;
+86edf6bdcf0571 Shameer Kolothum 2025-02-21  104  		target[i].revidr = res.a2;
+86edf6bdcf0571 Shameer Kolothum 2025-02-21  105  		target[i].aidr = res.a3;
+86edf6bdcf0571 Shameer Kolothum 2025-02-21 @106  	};
 
-Along with John's comment,
-Reviewed-by:: Youngmin Nam <youngmin.nam@samsung.com>
+:::::: The code at line 106 was first introduced by commit
+:::::: 86edf6bdcf0571c07103b8751e9d792a4b808e97 smccc/kvm_guest: Enable errata based on implementation CPUs
 
-------caUwc_dC5aEw_I.xGS0GMYyTEPKysFRHRKa1IoFNAgiy-i3F=_73402_
-Content-Type: text/plain; charset="utf-8"
+:::::: TO: Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
+:::::: CC: Oliver Upton <oliver.upton@linux.dev>
 
-
-------caUwc_dC5aEw_I.xGS0GMYyTEPKysFRHRKa1IoFNAgiy-i3F=_73402_--
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
