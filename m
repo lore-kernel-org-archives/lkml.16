@@ -1,173 +1,77 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0EF51230D0D;
-	Wed,  2 Apr 2025 04:21:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.3
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BE43139D;
+	Wed,  2 Apr 2025 04:23:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743567715; cv=none; b=bm/kA/HrgOgDKOXjMhCqMpjliGD5v0Z6EbdE9fmqCQalUKj9KQ6ELJdwFnJ+cioxn9pfUFuaItBRdx1y/A9rT6HwHqltAWE1N+upVcZIvL2JRZUCVMUaBbAbTm7mDa0I+X53qhgtcwTzY5/Dh8/QfCjE79xd49R9DyUvOScckaU=
+	t=1743567807; cv=none; b=Vg5fC6rUU129YrsD+jrODhB0uDxwc/HtBlDI939ljL7lsPplyfMzC1CZNEDTyuur8KUiAgnRge8uYAz/uSxtqnfxWf3+Xslkuj/aWiHgFN4uZwoOrcqpADxoB/gfy1ieb1t+daVzGusrLNl4DCFUzrL1PZVxLwOQIAlEdJG5XCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743567715; c=relaxed/simple;
-	bh=dS9hrGE2r6nZYjBpaEsv8QyfCT4mU3JS9gofScsAVMA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=CUlpBJlK1dHuaqyX3R7ASGG9xMEGRKQ/zpXfmAmuDZ+qGK+wYjcMxw35QQCuSMdGhWg2UFSdZtE6pKDtoPzFFzHDtZ641e0qKCWfzy/Wl9xaRU2yvyJMcy3pjog+SFmGOOHSydUX5IA9zN3124k9WnTRuAZNIFp2q1iGmiC6wKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=ImYuqr4C; arc=none smtp.client-ip=220.197.31.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1743567807; c=relaxed/simple;
+	bh=aXJNaNBKo24tZPmCdTjEucDXK7qzyfwu+SDoJWIsfMw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EZXqfKPOaowiXj+o2SAc3m/uq7rd7XkP6Sj+A3fPt0+rC3mM7qF3KC42Lz7wUMB0TcK3A/12vqWmNjxAS346Z4iFeSNxVpTe8pjR7xkEWi2N/8uhckS4jf59v0i6zlXnaWIlwVOl+wAXa3yQjR/skqs1GkFD88/HOtOWSQMyUd4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BNcaKqGW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="ImYuqr4C"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=0EePw
-	DUUMZhzh9549tMx88V8h+OGPUqEzKk9eoGJtpQ=; b=ImYuqr4CmI16CfqTLK0c3
-	iJuI16fD32jpSrI8EuA7FNTF1plgLUmANY9csmBg6ppfYeesY/75MHYolhlR7VA4
-	+s2WCq7L/TQaxspnBnm/vm/u8grKd+W3WVU0Dhu9sFuyxPisQytLKhRmdoNHBqO1
-	N6P7u/umYh2kwWopcavVWM=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g0-3 (Coremail) with SMTP id _____wBXJtQIu+xn1HfgDQ--.39888S5;
-	Wed, 02 Apr 2025 12:20:29 +0800 (CST)
-From: Hans Zhang <18255117159@163.com>
-To: lpieralisi@kernel.org,
-	bhelgaas@google.com
-Cc: kw@linux.com,
-	manivannan.sadhasivam@linaro.org,
-	ilpo.jarvinen@linux.intel.com,
-	robh@kernel.org,
-	jingoohan1@gmail.com,
-	thomas.richard@bootlin.com,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Hans Zhang <18255117159@163.com>
-Subject: [v7 3/5] PCI: dwc: Use common PCI host bridge APIs for finding the capabilities
-Date: Wed,  2 Apr 2025 12:20:18 +0800
-Message-Id: <20250402042020.48681-4-18255117159@163.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250402042020.48681-1-18255117159@163.com>
-References: <20250402042020.48681-1-18255117159@163.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BNcaKqGW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3541C4CEDD;
+	Wed,  2 Apr 2025 04:23:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743567806;
+	bh=aXJNaNBKo24tZPmCdTjEucDXK7qzyfwu+SDoJWIsfMw=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=BNcaKqGWTJ/9V0VmabkgaHhTHH04gO6gGO8Gp2bW+Y3upeY74DkK3ZFGJdFiQ5lYK
+	 RfcX8ydUsJwwwxNkKyFVeEOoFJGDyOA8xJucbXKyCoAg/5t2oiN4zuUIzTqeoXzny3
+	 4LEI4pNtvg+ZHAGahUPqPJq3YRk01zB25zQ6o7ndEfJj+cJvOdmX/PFyMBa91PZ/dM
+	 3bz6ruubX9BLsG3LPjw9k5jFsB2Xy0tgm+YNOJG7jnd84yEEvmr2BVeqoEo4ikUmL/
+	 TNj2KM4QKOtahLIJ2hkgs/WU7ZMP4wXo3uNtV/wWmauVuoMU/eCemtisFKziZjI0hO
+	 rwun++iwrV1Jw==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 650B8CE160D; Tue,  1 Apr 2025 21:23:26 -0700 (PDT)
+Date: Tue, 1 Apr 2025 21:23:26 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Joe Perches <joe@perches.com>
+Cc: rcu@vger.kernel.org, Joel Fernandes <joelagnelf@nvidia.com>,
+	linux-kernel@vger.kernel.org, kernel-team@meta.com,
+	rostedt@goodmis.org
+Subject: Re: [PATCH v2 10/12] checkpatch: Deprecate srcu_read_lock_lite() and
+ srcu_read_unlock_lite()
+Message-ID: <62ef3d73-1a33-4357-925e-9c2fdf1ac8fb@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <eea8d42f-6d2d-485b-9bb9-4eb77a0e1f95@paulmck-laptop>
+ <20250331210314.590622-10-paulmck@kernel.org>
+ <5588e91ab302e21bf4e30b5208cf3d387f8e7de4.camel@perches.com>
+ <0cbd404a-856a-4bc3-ab76-eeb839065a2d@paulmck-laptop>
+ <d03ed9d9f7d5e9d8fddca4071e044d26c55a10e2.camel@perches.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wBXJtQIu+xn1HfgDQ--.39888S5
-X-Coremail-Antispam: 1Uf129KBjvJXoWxury5Cw17JryfCFy7ZrW8JFb_yoW5Zry8pa
-	yrAa4Fkr4rtr4Sqw4qvFnIyFy5AF9xAa4xZa97GwnavF12krWjg340kayaqF1IyrZF9Fy3
-	Kr47tF95Cw1kJFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UopBDUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOgMjo2fsusgIfgAAs2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d03ed9d9f7d5e9d8fddca4071e044d26c55a10e2.camel@perches.com>
 
-Use the PCI core is now exposing generic macros for the host bridges to
-search for the PCIe capabilities, make use of them in the DWC driver.
+On Tue, Apr 01, 2025 at 08:48:44PM -0700, Joe Perches wrote:
+> On Tue, 2025-04-01 at 07:05 -0700, Paul E. McKenney wrote:
+> > On Mon, Mar 31, 2025 at 11:53:25PM -0700, Joe Perches wrote:
+> > > On Mon, 2025-03-31 at 14:03 -0700, Paul E. McKenney wrote:
+> > > > Uses of srcu_read_lock_lite() and srcu_read_unlock_lite() are better
+> > > > served by the new srcu_read_lock_fast() and srcu_read_unlock_fast() APIs.
+> > > > As in srcu_read_lock_lite() and srcu_read_unlock_lite() would never have
+> > > > happened had I thought a bit harder a few months ago.  Therefore, mark
+> > > > them deprecated.
+> > > 
+> > > Would it be better to convert the 3 existing instances?
+> > 
+> > Both are needed.  The point of these checkpatch.pl changes is to prevent
+> > other instances from being added.
+> 
+> If those are changed, why not remove the prototypes & functions too?
+> That would stop more instances being added no?
 
-Signed-off-by: Hans Zhang <18255117159@163.com>
----
-Changes since v6:
-https://lore.kernel.org/linux-pci/20250323164852.430546-3-18255117159@163.com/
+Deprecating it for a cycle then removing the prototypes and functions
+seems a bit more friendly to me.
 
-- The patch commit message were modified.
-
-Changes since v5:
-https://lore.kernel.org/linux-pci/20250321163803.391056-3-18255117159@163.com/
-
-- Kconfig add "select PCI_HOST_HELPERS"
----
- drivers/pci/controller/dwc/pcie-designware.c | 72 ++------------------
- 1 file changed, 7 insertions(+), 65 deletions(-)
-
-diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-index 145e7f579072..e9a9a80b1085 100644
---- a/drivers/pci/controller/dwc/pcie-designware.c
-+++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -203,83 +203,25 @@ void dw_pcie_version_detect(struct dw_pcie *pci)
- 		pci->type = ver;
- }
- 
--/*
-- * These interfaces resemble the pci_find_*capability() interfaces, but these
-- * are for configuring host controllers, which are bridges *to* PCI devices but
-- * are not PCI devices themselves.
-- */
--static u8 __dw_pcie_find_next_cap(struct dw_pcie *pci, u8 cap_ptr,
--				  u8 cap)
-+static int dw_pcie_read_cfg(void *priv, int where, int size, u32 *val)
- {
--	u8 cap_id, next_cap_ptr;
--	u16 reg;
--
--	if (!cap_ptr)
--		return 0;
--
--	reg = dw_pcie_readw_dbi(pci, cap_ptr);
--	cap_id = (reg & 0x00ff);
--
--	if (cap_id > PCI_CAP_ID_MAX)
--		return 0;
-+	struct dw_pcie *pcie = priv;
- 
--	if (cap_id == cap)
--		return cap_ptr;
-+	*val = dw_pcie_read_dbi(pcie, where, size);
- 
--	next_cap_ptr = (reg & 0xff00) >> 8;
--	return __dw_pcie_find_next_cap(pci, next_cap_ptr, cap);
-+	return PCIBIOS_SUCCESSFUL;
- }
- 
- u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap)
- {
--	u8 next_cap_ptr;
--	u16 reg;
--
--	reg = dw_pcie_readw_dbi(pci, PCI_CAPABILITY_LIST);
--	next_cap_ptr = (reg & 0x00ff);
--
--	return __dw_pcie_find_next_cap(pci, next_cap_ptr, cap);
-+	return PCI_FIND_NEXT_CAP_TTL(dw_pcie_read_cfg, PCI_CAPABILITY_LIST, cap,
-+				     pcie);
- }
- EXPORT_SYMBOL_GPL(dw_pcie_find_capability);
- 
--static u16 dw_pcie_find_next_ext_capability(struct dw_pcie *pci, u16 start,
--					    u8 cap)
--{
--	u32 header;
--	int ttl;
--	int pos = PCI_CFG_SPACE_SIZE;
--
--	/* minimum 8 bytes per capability */
--	ttl = (PCI_CFG_SPACE_EXP_SIZE - PCI_CFG_SPACE_SIZE) / 8;
--
--	if (start)
--		pos = start;
--
--	header = dw_pcie_readl_dbi(pci, pos);
--	/*
--	 * If we have no capabilities, this is indicated by cap ID,
--	 * cap version and next pointer all being 0.
--	 */
--	if (header == 0)
--		return 0;
--
--	while (ttl-- > 0) {
--		if (PCI_EXT_CAP_ID(header) == cap && pos != start)
--			return pos;
--
--		pos = PCI_EXT_CAP_NEXT(header);
--		if (pos < PCI_CFG_SPACE_SIZE)
--			break;
--
--		header = dw_pcie_readl_dbi(pci, pos);
--	}
--
--	return 0;
--}
--
- u16 dw_pcie_find_ext_capability(struct dw_pcie *pci, u8 cap)
- {
--	return dw_pcie_find_next_ext_capability(pci, 0, cap);
-+	return PCI_FIND_NEXT_EXT_CAPABILITY(dw_pcie_read_cfg, 0, cap, pcie);
- }
- EXPORT_SYMBOL_GPL(dw_pcie_find_ext_capability);
- 
--- 
-2.25.1
-
+							Thanx, Paul
