@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D28F823BFA6;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08B5F23C8A2;
 	Wed,  2 Apr 2025 14:48:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743605330; cv=none; b=V0geR+TeYwna4ZTpklEgPa4iRspCA7h9dl+m1e1Sksxz7jtJ08mB0H5xzJR4jDj/hU9D2y8OoMTZwsLQztMG1z81LvsuEt0fgZG73KWK8yEZ8t9+5BevCZ2SBw1a7afXOXEAE/0f+HelgQNhx/Ih8T/8TEYChBrQvPTgv7nCNMA=
+	t=1743605331; cv=none; b=H8Rs99GqIecEu8BN+8H4DiCwwRz7wsPi1Y1GkP0fpSjhL8RCB9Ig8XQHPw/aPf1tA3BdDS0r0AjlWKorHxKMUMiY22h0eO/RAESC8VEnkMUGhGbDzdgvwSxsdAodnFLAdLIpNqSj0goklXKsu+lHkkwbi0AyMLNiKC4xj0aVXF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743605330; c=relaxed/simple;
-	bh=NkrZFm87HlJc8esdzVgQ3RER7T9L0z8JKggbOBdeFdM=;
+	s=arc-20240116; t=1743605331; c=relaxed/simple;
+	bh=foiVaB0xCH0+i3jeZk8KsERy/lVTTajbEH937lGNGjk=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=U9ejObsTA+ZVusXskZGNM1gSjj2SDQeexskO/PIHiirpPLmIAif2h0VxaRVvq5YenNPby24q44QkLxCCun63ejIAehOsMBeCk8sUIDPgUDEtu+IiVJXzsv27xH+cwtjykpw6ryrKlL37W810lOSSEkZvT8V8r5GgH/CTGcaJTOw=
+	 Content-Type; b=agQt8HO6TX6M/OsxmLJkX2vU1JR044BtWgViT5yZoZ5UhDB5HoadDiFcN/ZUAPSW4R9dv3oqe9+S10A5LlFADkxF/cH7y0LXhESVkMVYlPVwjVje6uhW59gZGZZvgXXq+z1yCENHy/XJL/ET8mTmihjmzCsGzD5BEDBwOJwi35M=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 395BFC4CEE7;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F9B7C4CEF1;
 	Wed,  2 Apr 2025 14:48:50 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1tzzPd-00000006SOe-3520;
-	Wed, 02 Apr 2025 10:49:53 -0400
-Message-ID: <20250402144953.583750106@goodmis.org>
+	id 1tzzPe-00000006SPc-0IWG;
+	Wed, 02 Apr 2025 10:49:54 -0400
+Message-ID: <20250402144953.920792197@goodmis.org>
 User-Agent: quilt/0.68
-Date: Wed, 02 Apr 2025 10:49:05 -0400
+Date: Wed, 02 Apr 2025 10:49:07 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -32,9 +32,9 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>,
  Vincent Donnefort <vdonnefort@google.com>,
  Vlastimil Babka <vbabka@suse.cz>,
  Mike Rapoport <rppt@kernel.org>,
- Jann Horn <jannh@google.com>
-Subject: [PATCH v6 2/4] tracing: Have reserve_mem use phys_to_virt() and separate from memmap
- buffer
+ Jann Horn <jannh@google.com>,
+ stable@vger.kernel.org
+Subject: [PATCH v6 4/4] ring-buffer: Use flush_kernel_vmap_range() over flush_dcache_folio()
 References: <20250402144903.993276623@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -46,125 +46,55 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Steven Rostedt <rostedt@goodmis.org>
 
-The reserve_mem kernel command line option may pass back a physical
-address, but the memory is still part of the normal memory just like
-using memblock_alloc() would be. This means that the physical memory
-returned by the reserve_mem command line option can be converted directly
-to virtual memory by simply using phys_to_virt().
+Some architectures do not have data cache coherency between user and
+kernel space. For these architectures, the cache needs to be flushed on
+both the kernel and user addresses so that user space can see the updates
+the kernel has made.
 
-When freeing the buffer there's no need to call vunmap() anymore as the
-memory allocated by reserve_mem is freed by the call to
-reserve_mem_release_by_name().
+Instead of using flush_dcache_folio() and playing with virt_to_folio()
+within the call to that function, use flush_kernel_vmap_range() which
+takes the virtual address and does the work for those architectures that
+need it.
 
-Because the persistent ring buffer can also be allocated via the memmap
-option, which *is* different than normal memory as it cannot be added back
-to the buddy system, it must be treated differently. It still needs to be
-virtually mapped to have access to it. It also can not be freed nor can it
-ever be memory mapped to user space.
+This also fixes a bug where the flush of the reader page only flushed one
+page. If the sub-buffer order is 1 or more, where the sub-buffer size
+would be greater than a page, it would miss the rest of the sub-buffer
+content, as the "reader page" is not just a page, but the size of a
+sub-buffer.
 
-Create a new trace_array flag called TRACE_ARRAY_FL_MEMMAP which gets set
-if the buffer is created by the memmap option, and this will prevent the
-buffer from being memory mapped by user space.
+Link: https://lore.kernel.org/all/CAG48ez3w0my4Rwttbc5tEbNsme6tc0mrSN95thjXUFaJ3aQ6SA@mail.gmail.com/
 
-Also increment the ref count for memmap'ed buffers so that they can never
-be freed.
-
-Link: https://lore.kernel.org/all/Z-wFszhJ_9o4dc8O@kernel.org/
-
-Suggested-by: Mike Rapoport <rppt@kernel.org>
+Cc: stable@vger.kernel.org
+Fixes: 117c39200d9d7 ("ring-buffer: Introducing ring-buffer mapping functions");
+Suggested-by: Jann Horn <jannh@google.com>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
-Changes since v5: https://lore.kernel.org/linux-trace-kernel/20250401225842.429332654@goodmis.org/
+ kernel/trace/ring_buffer.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-- Updated change log to use memblock_alloc() instead of memblock_reserve()
-  (Mike Rapoport)
-
- kernel/trace/trace.c | 23 ++++++++++++++++-------
- kernel/trace/trace.h |  1 +
- 2 files changed, 17 insertions(+), 7 deletions(-)
-
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 96129985e81c..e58b72e61573 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -8492,6 +8492,10 @@ static int tracing_buffers_mmap(struct file *filp, struct vm_area_struct *vma)
- 	struct trace_iterator *iter = &info->iter;
- 	int ret = 0;
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index f25966b3a1fc..d4b0f7b55cce 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -6016,7 +6016,7 @@ static void rb_update_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
+ 	meta->read = cpu_buffer->read;
  
-+	/* A memmap'ed buffer is not supported for user space mmap */
-+	if (iter->tr->flags & TRACE_ARRAY_FL_MEMMAP)
-+		return -ENODEV;
-+
- 	/* Currently the boot mapped buffer is not supported for mmap */
- 	if (iter->tr->flags & TRACE_ARRAY_FL_BOOT)
- 		return -ENODEV;
-@@ -9600,9 +9604,6 @@ static void free_trace_buffers(struct trace_array *tr)
- #ifdef CONFIG_TRACER_MAX_TRACE
- 	free_trace_buffer(&tr->max_buffer);
- #endif
--
--	if (tr->range_addr_start)
--		vunmap((void *)tr->range_addr_start);
+ 	/* Some archs do not have data cache coherency between kernel and user-space */
+-	flush_dcache_folio(virt_to_folio(cpu_buffer->meta_page));
++	flush_kernel_vmap_range(cpu_buffer->meta_page, PAGE_SIZE);
  }
  
- static void init_trace_flags_index(struct trace_array *tr)
-@@ -10696,6 +10697,7 @@ static inline void do_allocate_snapshot(const char *name) { }
- __init static void enable_instances(void)
- {
- 	struct trace_array *tr;
-+	bool memmap_area = false;
- 	char *curr_str;
- 	char *name;
- 	char *str;
-@@ -10764,6 +10766,7 @@ __init static void enable_instances(void)
- 					name);
- 				continue;
- 			}
-+			memmap_area = true;
- 		} else if (tok) {
- 			if (!reserve_mem_find_by_name(tok, &start, &size)) {
- 				start = 0;
-@@ -10784,7 +10787,10 @@ __init static void enable_instances(void)
- 				continue;
- 			}
+ static void
+@@ -7319,7 +7319,8 @@ int ring_buffer_map_get_reader(struct trace_buffer *buffer, int cpu)
  
--			addr = map_pages(start, size);
-+			if (memmap_area)
-+				addr = map_pages(start, size);
-+			else
-+				addr = (unsigned long)phys_to_virt(start);
- 			if (addr) {
- 				pr_info("Tracing: mapped boot instance %s at physical memory %pa of size 0x%lx\n",
- 					name, &start, (unsigned long)size);
-@@ -10811,10 +10817,13 @@ __init static void enable_instances(void)
- 			update_printk_trace(tr);
+ out:
+ 	/* Some archs do not have data cache coherency between kernel and user-space */
+-	flush_dcache_folio(virt_to_folio(cpu_buffer->reader_page->page));
++	flush_kernel_vmap_range(cpu_buffer->reader_page->page,
++				buffer->subbuf_size + BUF_PAGE_HDR_SIZE);
  
- 		/*
--		 * If start is set, then this is a mapped buffer, and
--		 * cannot be deleted by user space, so keep the reference
--		 * to it.
-+		 * memmap'd buffers can not be freed.
- 		 */
-+		if (memmap_area) {
-+			tr->flags |= TRACE_ARRAY_FL_MEMMAP;
-+			tr->ref++;
-+		}
-+
- 		if (start) {
- 			tr->flags |= TRACE_ARRAY_FL_BOOT | TRACE_ARRAY_FL_LAST_BOOT;
- 			tr->range_name = no_free_ptr(rname);
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index ab7c7a1930cc..9d9dcfad6269 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -446,6 +446,7 @@ enum {
- 	TRACE_ARRAY_FL_BOOT		= BIT(1),
- 	TRACE_ARRAY_FL_LAST_BOOT	= BIT(2),
- 	TRACE_ARRAY_FL_MOD_INIT		= BIT(3),
-+	TRACE_ARRAY_FL_MEMMAP		= BIT(4),
- };
+ 	rb_update_meta_page(cpu_buffer);
  
- #ifdef CONFIG_MODULES
 -- 
 2.47.2
 
