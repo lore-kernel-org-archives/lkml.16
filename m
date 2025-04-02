@@ -1,115 +1,115 @@
-Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A86911F4187
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 23:10:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 185F31A3156
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 23:13:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743635426; cv=none; b=AnA2dSGgl+9iOSUzTeIKmCAz03fSfVAWrCMYQyUCR8gJ0YB2DsNXymH9pAjK1XC1D7RsON0RRPCA74gY/DfJyJsDke9CTbwQOudtiSUyQDIO8B7qK5BdtDsy4ystUMXT17ccaAdIh28LMRT+J1E8XQwaTtvIy+v8h+jcovPZcrw=
+	t=1743635585; cv=none; b=s/7wciZIZOvZosF0y7pYbEnGFgaDIwN6Ic1ICDCQPIWF9b26hU6yYEn5iI3L+754egs4aA76RQCHxpf5aQuXXFpCrx3oCqUxve2t+ghg/wPK5RGH3U/Ty7haNcaVsdeCUoZH2AtGhiSblpTk/MNCercIngi8o+8XQzNiVCZSSxQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743635426; c=relaxed/simple;
-	bh=Z5E+Ul9vRx/jedHULA901e1CtpGaie0FTu1DOwKgGRE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ix2G1QEnNJ2RAoezICU7HztS7bq3NU4+MiPQpQLhV6/it0X3glLryoF8W86PuNt2yx5TnE38ftaXv/YM/T+Ezxg1rs115zxCZc4sWvL5iduhX6A2IHANg+v8P+gc6Zbxn0Fl7Y307HL9cLxgyO27QNolo9qvCAgpH1Bt1hEEzaI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=oHzJphOF; arc=none smtp.client-ip=95.215.58.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1743635585; c=relaxed/simple;
+	bh=RvfrCmcBtfS66/uApqDOYHN0iRKuLLbZk69Qk+dcHmM=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=A0JPWzRUKNCc90a1Wv4jUw8I3cdaigybVXqBTo0znXMsCaxuZq5cqj9eKAKGgvI+0ePlXxzjec84hwNyWsJNJ5nOd8fe4nS2TgUzqupLDreUK9m7rW/4wfssMNrOekJ89DwOt16OFVMWrg/BCtYOjC/5jdriGDwllBVEY1JDS1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TvrffkqA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="oHzJphOF"
-Date: Wed, 2 Apr 2025 16:10:06 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1743635411;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LQmokx6Rzrba+kqyKTeF3C/N0r3WG9zBf0JGb6uUwnA=;
-	b=oHzJphOFyUFATELdREX2cGOk0OBVZWQ8ZI28+8TjnKNSqGGuTFtPk0k2flq2xYpSz7jtcS
-	CNpWZwJb7sOSIfUuImj1P/dTorBxzVB5cwF+wdiC9LS/DeELwM3H5TxVVYyrxzzBsQfQmR
-	knDEKvvnkfJOWGG8ToFzliDiACvY94o=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Dave Chinner <david@fromorbit.com>
-Cc: Michal Hocko <mhocko@suse.com>, Yafang Shao <laoar.shao@gmail.com>, 
-	Harry Yoo <harry.yoo@oracle.com>, Kees Cook <kees@kernel.org>, joel.granados@kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>, 
-	linux-mm@kvack.org, Vlastimil Babka <vbabka@suse.cz>
-Subject: Re: [PATCH] proc: Avoid costly high-order page allocations when
- reading proc files
-Message-ID: <b7qr6djsicpkecrkjk6473btzztfrvxifiy34u2vdb4cp5ktjf@lvg3rtwrbmsx>
-References: <20250401073046.51121-1-laoar.shao@gmail.com>
- <3315D21B-0772-4312-BCFB-402F408B0EF6@kernel.org>
- <Z-y50vEs_9MbjQhi@harry>
- <CALOAHbBSvMuZnKF_vy3kGGNOCg5N2CgomLhxMxjn8RNwMTrw7A@mail.gmail.com>
- <Z-0gPqHVto7PgM1K@dread.disaster.area>
- <Z-0sjd8SEtldbxB1@tiehlicka>
- <Z-2pSF7Zu0CrLBy_@dread.disaster.area>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TvrffkqA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DD13C4CEDD;
+	Wed,  2 Apr 2025 23:13:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743635584;
+	bh=RvfrCmcBtfS66/uApqDOYHN0iRKuLLbZk69Qk+dcHmM=;
+	h=From:Subject:Date:To:Cc:From;
+	b=TvrffkqABtxPT9ljHHxLb9iYteSfh0VLmE0fLXfNGv+yxCNSDvVSANCQ+6oIpAq5Y
+	 jXK63k9GFTpdW0ryHLWHULCkgkYW3zvWtJ9JoJ0U0OIAmTzvhRJ+1/6mHOrNXBB13G
+	 WzOX4jvpiRc45VibgUgL2CyupLexLP0Y2rTKJomV/K7U6+4iGmeT9NHWt1n6AFXp5l
+	 Xr++bOSHLeGu0gFEE/ALANfccQkxOG3wbth8zpTJ1NvmrtiUcvILLw8+S8HvODWwvy
+	 FVgICr1Vr9EWei90aiogF97FotPw7LeDRn2ZnA+RwjhF5RUHIo6L/ybOp0NNXrwyHg
+	 ImPuzGZDa6u+Q==
+From: Mark Brown <broonie@kernel.org>
+Subject: [PATCH 00/10] KVM: arm64: Backport of SVE fixes to v5.15
+Date: Wed, 02 Apr 2025 23:59:32 +0100
+Message-Id: <20250402-stable-sve-5-15-v1-0-84d0e5ff1102@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z-2pSF7Zu0CrLBy_@dread.disaster.area>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAFXB7WcC/x3MQQqAIBBA0avErBsoy4quEi00xxqICickkO6et
+ HyL/xMIBSaBsUgQKLLweWTUZQHLZo6VkF02qErpqlEdym3sTiiRUGOt0XrX63ZQbvEGcnUF8vz
+ 8x2l+3w9BrtLWYQAAAA==
+X-Change-ID: 20250326-stable-sve-5-15-bfd75482dcfa
+To: Marc Zyngier <maz@kernel.org>, James Morse <james.morse@arm.com>, 
+ Suzuki K Poulose <suzuki.poulose@arm.com>, 
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+ Oleg Nesterov <oleg@redhat.com>, Oliver Upton <oliver.upton@linux.dev>
+Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, 
+ linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, 
+ Mark Rutland <mark.rutland@arm.com>, Eric Auger <eauger@redhat.com>, 
+ Wilco Dijkstra <wilco.dijkstra@arm.com>, Eric Auger <eric.auger@redhat.com>, 
+ Florian Weimer <fweimer@redhat.com>, Fuad Tabba <tabba@google.com>, 
+ Jeremy Linton <jeremy.linton@arm.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+ James Clark <james.clark@linaro.org>
+X-Mailer: b4 0.15-dev-c25d1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1999; i=broonie@kernel.org;
+ h=from:subject:message-id; bh=RvfrCmcBtfS66/uApqDOYHN0iRKuLLbZk69Qk+dcHmM=;
+ b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBn7cR0MTDrMk0BLKpj/hATNP/G+/wEIZ2I5DavJxlD
+ OG45fNCJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCZ+3EdAAKCRAk1otyXVSH0CIlB/
+ sGvKLkDZXDWW03oFhJpynvp0xwR4P2bwJaQCKGPM6TDy3bPFtEBk/+sVjyUWlYw3MejCKC9b07HDd2
+ cRQJhq9m6YDImxQgGo5kPaXnHRpkW03czQZM7JwVYo7nA4wNH5QQgVMyft7U/0gH++GROfag+/+Ett
+ /4xMbfAJMBeWOsXOK89VfNQbyOz8ZDZd5AM44Vr1Aiff7sLjKrTt7xnoMK9Hiee2YVgaTjSmcPgBoD
+ ZQIZmav9OuM/uMHDlDxTJEYDqwawGlDZBdXzAXM22/ojvlwdvZTSPKWu2a5qb38o4rWtSYmUgUci/8
+ uyQhX9vpdZlTJN0A3cVxCwhf3eHNrE
+X-Developer-Key: i=broonie@kernel.org; a=openpgp;
+ fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
 
-On Thu, Apr 03, 2025 at 08:16:56AM +1100, Dave Chinner wrote:
-> On Wed, Apr 02, 2025 at 02:24:45PM +0200, Michal Hocko wrote:
-> > On Wed 02-04-25 22:32:14, Dave Chinner wrote:
-> > > Have a look at xlog_kvmalloc() in XFS. It implements a basic
-> > > fast-fail, no retry high order kmalloc before it falls back to
-> > > vmalloc by turning off direct reclaim for the kmalloc() call.
-> > > Hence if the there isn't a high-order page on the free lists ready
-> > > to allocate, it falls back to vmalloc() immediately.
-> > > 
-> > > For XFS, using xlog_kvmalloc() reduced the high-order per-allocation
-> > > overhead by around 80% when compared to a standard kvmalloc()
-> > > call. Numbers and profiles were documented in the commit message
-> > > (reproduced in whole below)...
-> > 
-> > Btw. it would be really great to have such concerns to be posted to the
-> > linux-mm ML so that we are aware of that.
-> 
-> I have brought it up in the past, along with all the other kvmalloc
-> API problems that are mentioned in that commit message.
-> Unfortunately, discussion focus always ended up on calling context
-> and API flags (e.g. whether stuff like GFP_NOFS should be supported
-> or not) no the fast-fail-then-no-fail behaviour we need.
-> 
-> Yes, these discussions have resulted in API changes that support
-> some new subset of gfp flags, but the performance issues have never
-> been addressed...
-> 
-> > kvmalloc currently doesn't support GFP_NOWAIT semantic but it does allow
-> > to express - I prefer SLAB allocator over vmalloc.
-> 
-> The conditional use of __GFP_NORETRY for the kmalloc call is broken
-> if we try to use __GFP_NOFAIL with kvmalloc() - this causes the gfp
-> mask to hold __GFP_NOFAIL | __GFP_NORETRY....
-> 
-> We have a hard requirement for xlog_kvmalloc() to provide
-> __GFP_NOFAIL semantics.
-> 
-> IOWs, we need kvmalloc() to support kmalloc(GFP_NOWAIT) for
-> performance with fallback to vmalloc(__GFP_NOFAIL) for
-> correctness...
-> 
+This series backports some recent fixes for SVE/KVM interactions from
+Mark Rutland to v5.15.
 
-Are you asking the above kvmalloc() semantics just for xfs or for all
-the users of kvmalloc() api? 
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+Fuad Tabba (1):
+      KVM: arm64: Calculate cptr_el2 traps on activating traps
 
-> > I think we could make
-> > the default kvmalloc slab path weaker by default as those who really
-> > want slab already have means to achieve that. There is a risk of long
-> > term fragmentation but I think this is worth trying
-> 
-> We've been doing this for a few years now in XFS in a hot path that
-> can make in the order of a million xlog_kvmalloc() calls a second.
-> We've not seen any evidence that this causes or exacerbates memory
-> fragmentation....
-> 
-> -Dave.
-> -- 
-> Dave Chinner
-> david@fromorbit.com
+Marc Zyngier (1):
+      KVM: arm64: Get rid of host SVE tracking/saving
+
+Mark Brown (4):
+      KVM: arm64: Discard any SVE state when entering KVM guests
+      arm64/fpsimd: Track the saved FPSIMD state type separately to TIF_SVE
+      arm64/fpsimd: Have KVM explicitly say which FP registers to save
+      arm64/fpsimd: Stop using TIF_SVE to manage register saving in KVM
+
+Mark Rutland (4):
+      KVM: arm64: Unconditionally save+flush host FPSIMD/SVE/SME state
+      KVM: arm64: Remove host FPSIMD saving for non-protected KVM
+      KVM: arm64: Remove VHE host restore of CPACR_EL1.ZEN
+      KVM: arm64: Eagerly switch ZCR_EL{1,2}
+
+ arch/arm64/include/asm/fpsimd.h         |   4 +-
+ arch/arm64/include/asm/kvm_host.h       |  17 +++--
+ arch/arm64/include/asm/kvm_hyp.h        |   7 ++
+ arch/arm64/include/asm/processor.h      |   7 ++
+ arch/arm64/kernel/fpsimd.c              | 117 +++++++++++++++++++++++---------
+ arch/arm64/kernel/process.c             |   3 +
+ arch/arm64/kernel/ptrace.c              |   3 +
+ arch/arm64/kernel/signal.c              |   3 +
+ arch/arm64/kvm/arm.c                    |   1 -
+ arch/arm64/kvm/fpsimd.c                 |  72 +++++++++-----------
+ arch/arm64/kvm/hyp/entry.S              |   5 ++
+ arch/arm64/kvm/hyp/include/hyp/switch.h |  86 +++++++++++++++--------
+ arch/arm64/kvm/hyp/nvhe/hyp-main.c      |   9 ++-
+ arch/arm64/kvm/hyp/nvhe/switch.c        |  52 +++++++++-----
+ arch/arm64/kvm/hyp/vhe/switch.c         |   4 ++
+ arch/arm64/kvm/reset.c                  |   3 +
+ 16 files changed, 266 insertions(+), 127 deletions(-)
+---
+base-commit: 0c935c049b5c196b83b968c72d348ae6fff83ea2
+change-id: 20250326-stable-sve-5-15-bfd75482dcfa
+
+Best regards,
+-- 
+Mark Brown <broonie@kernel.org>
+
