@@ -1,182 +1,185 @@
-Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA5D235946;
-	Wed,  2 Apr 2025 17:24:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70B4219C54C
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 17:25:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743614669; cv=none; b=hYHgdymo/zvGWWHfIMkYnWHnt+dqYBfqFffVtCk7my25HBRBe6ruuLnHnxEacijCuJvvDSNMfz+uG7ac+94Jv5VQz/3Mt2iORvzV5HH7ErIYIm/+pjuCVvu0ugIAnF0hegLj2ptwnw3GBbAZ6yjMqU0hZdIiZNTzQpSrz90ills=
+	t=1743614705; cv=none; b=lm8Ptmo61+stmIW+XzLAXnW0hh/OgWZnE4u+/kKXOJYUzFbObjWybXmv+WI08D+9f6WsdfMMGd/mGuQ4r6XxMxtypCEy1MgPD5MZVpO8M0hCZLQRKl0t1iPEPbhKsnk1Tqqwb5mtpW1fQeD56LfltV7U7EZWrhHohoN5LNLMV0s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743614669; c=relaxed/simple;
-	bh=6/IQIWw81YF4I3ww+QWFv/mTo+GnNJlko6uLlmyFKl0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WJA68kof907UNvavvO2B3iET79Cd17bImbtWnEOCRcDG84fH/CTH+4h/KIj3qBB68oi64sWC5UKHls+37btfQFvI9aGBBs4Bl7NSOF39CXMv5q+VpdyOg41GAztpJ9yf3jmFgzz2MtKziv+5zqyhJR/uDq+e2BtXoMPsMPlR7hU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TBTJ3C40; arc=none smtp.client-ip=209.85.219.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743614705; c=relaxed/simple;
+	bh=TgIr2NDKkj74x/2NbOGJikktGxZikty6LWZP3F1uGPU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=uEILTGclnIfaRHbOp1PDRmU+kBZNCe4IzBUmAZRWqbsNIJThOKmITdMzKiRHlTf9rp3mMU5p4UHgwyC8uLP3uirWAVLFpO9HoryvqdffQ8TderKVEkEEqjkETC57T+HzuD4AHOu075n6Kh+djng914vK3NnU/10U3ZVcrEBPKl8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=VgMaMrPA; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TBTJ3C40"
-Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-6e8fca43972so181226d6.1;
-        Wed, 02 Apr 2025 10:24:27 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="VgMaMrPA"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43cf628cb14so8510605e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 10:25:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743614667; x=1744219467; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=2YmZh6k4S4A2gKPdCb+Hixcu2ZSXle/HXIt3s9AusCA=;
-        b=TBTJ3C408FGSKKnqfB6Os+D4FIqzDT2Zl6fP9zmn5qfWiSwTkcPIO/b3RZ2GOBbEGb
-         bkppGy9jbdzWbDLq6M6AXIOFykmEbeSzxZq3ywym5E39CHcEujMdXsfJf6fkoCo1INA7
-         DDihd6PRPvKqhAUT7Hn2KvXD8k3bSV+iGMkNdviROUSx9GNLpM55Sa7qsgCAkLpaiO6U
-         C9XNezUAuf6ca+Yii1W6TXJjJUhb1TXcqBMI7HFYtow47CCc4ewkf9DvEuEkDkJBKNUw
-         mGtEskpRKIyoROGdjIK39TX6gpF19ejY1Sv+19GbVBGC6ARTSUlRlvCcYk6IQTR7E/vc
-         7MOg==
+        d=citrix.com; s=google; t=1743614701; x=1744219501; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=G+vmCFRBwsqvZP2d/t/KmjCWvMFBtPU1+nLgWVJPIwg=;
+        b=VgMaMrPAH9O0nRDPCCcMccyM6jD4hTrwHnwSxEASFUkA+WjWyfC4gS1jG/EPvQmUgN
+         o5ExZ+BfM03xq6ijh7WRT5NNEVPGBT0exPJBF0JJ5OzAv5Cmd6XKsy4pb/sTvnTp+w6e
+         9WZHNUtBNARwy8Gq0pVpIJ9Bbpoc52NrfZz1M=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743614667; x=1744219467;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2YmZh6k4S4A2gKPdCb+Hixcu2ZSXle/HXIt3s9AusCA=;
-        b=jYZbjNa6O7xddmcpvpeQz4mrHTJDbAczP4EFsKcbv4dUSJoQ+UpVulc4e85+C/F7KE
-         k+LqSBkDKukJoMkbvBe/CnsGWyY2Bxh2it8MuO91Rf5cHKj0fWvU5dpLf+q6Lv39d92c
-         MOS+5i7o0DK6UV9WjMoPfru43kIua1mliz+AOVSmISlUIVUjCWa19ngU+7FYxsw050hf
-         XsipJzBiMDMrXFKDgZD3tmBNMjpDlUDq0oIJK9v7nXlDe5Hcx1mo5fnA4/boGpzT0C66
-         jKXimPIjnDV+e/DvX39W/+fxhh0UHxTCE+Nxqv8P4H2Oi0GQlN0ikZbLLXvHxXRkR7pl
-         3knA==
-X-Forwarded-Encrypted: i=1; AJvYcCUAEiKozbD5OvAYW+SnddE+8w4w+CJMxnMef6gTux4ajUq112ugSkYwFo1cZQvqDBDnKjTbEknCJbl4@vger.kernel.org, AJvYcCUhFoq9OhDHoYaQ8ssiEx062xl4ksQa08RSMkDBUQsRhRDvOAdi9zCwPq7emwtSt3ood14abR3/nPinegSF@vger.kernel.org
-X-Gm-Message-State: AOJu0YzuPr5S5rk+wC5MAzV6b1adCiU0OX67qgN5eKuFSn2/1eIxzk5y
-	717pFKrPCUKZk4xNGIaC++a+auEPUbO0RJFyUfB7WEx4l00eUFc=
-X-Gm-Gg: ASbGnctspVyb6J0nPq1d6uEqwQP2qj9Zr+uZDZhgcXdKJO71urgDUbX6H4B3vWeJuaq
-	PXyAMpQYsJmTFSEJAmHo4m3MskGvYBwbILySXPbDgHCSJ5EfFgOMW1uqG9PBB9Pa39xFNlJlnEk
-	XQlRQHfZkwwU9OJHvTqGSS0sOUEsBhNFP08P/FIpCc7SysOkXEQv7l9d5/6zHvuyxbgCFpaLoPP
-	cUEtukBW5tg6oh7hiaQC9lzaIMGv9vF9D7k+AiQfmTXNRPtonFy3oT1dlfZAKtnqo8BCzWVHrit
-	2tDte1aFwGR7CEMXXhVJsYEofhE2YuS9SkNI6Kr1S3gFyKrXaWJozOi/hBqvT2bz+r/ULamQNt9
-	7+Ft8gELPlqLe
-X-Google-Smtp-Source: AGHT+IFMVDYLTn3P+AqF4w5EM6NFHR4DM/rUbBAs9Vcoe+DJhPsyf1ed5wxi6pxvZTB9jpF+/uNqvQ==
-X-Received: by 2002:a05:6214:258f:b0:6e8:f770:5045 with SMTP id 6a1803df08f44-6eed6271744mr284133846d6.28.1743614666448;
-        Wed, 02 Apr 2025 10:24:26 -0700 (PDT)
-Received: from ?IPV6:2a02:810b:f13:8500:edfc:c609:ae5:4b2c? ([2a02:810b:f13:8500:edfc:c609:ae5:4b2c])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6eec9643d6asm77042556d6.28.2025.04.02.10.24.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Apr 2025 10:24:26 -0700 (PDT)
-Message-ID: <680a40a8-07c1-4dde-93b2-337ab15f7afe@gmail.com>
-Date: Wed, 2 Apr 2025 19:24:22 +0200
+        d=1e100.net; s=20230601; t=1743614701; x=1744219501;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=G+vmCFRBwsqvZP2d/t/KmjCWvMFBtPU1+nLgWVJPIwg=;
+        b=fVan/RGaImOhgfcl1AOz3I1U9ViFUrQBxmuN2aqZnWuOiOk1nK0A+nC7pLzz+Ps72L
+         +1mY7i0hmInLYqN3TRextCPKbObDcLhaIM6GQa4OJP4g+VDpMRf53ATLdJp6HKdUVWhK
+         4hEra1bRsViQJo7JVwXJMshGw8S3Sf1YVVTQzS7dRECm3YQf53oCBYC5MUViJuZY+Btb
+         zZ23S1p8VrR33M00NnOwJzXPkolNkbR04tvUObvXrUcod9qyFNtysz03IgL3A4ouDyuA
+         Wrvdawg/9cLpP8NYic0JSMNis5c8PjpBZZbW4CVgnKPEsuZyKEKYTtZMHjIO2YKeLpk+
+         vBPA==
+X-Gm-Message-State: AOJu0YwOUW4x2weXzP6jE2/ZJsm8VXMulDOBdQcNcjGlVxnVTl/VCF47
+	8ZAIoXLbkhLLkP1opm33FoLaV6Y4tk29jji48xiSQx/piYc3kbZbmZ4aLEYnbZuSjI40XnM3nhE
+	g4kY=
+X-Gm-Gg: ASbGncurYJKc/kT1OpICrR7/stEWnn9qc2frmfKT/5TwS5IU+KFZlTtZ7xVTrbd/bU0
+	N1n0mIHZRgPPaTSbgEBaiuNhpWwOhE3wynU1Qxic6MVR8KOF3B2x+NjlRICIeWBXFDj9MnpIwWL
+	jyRLBZmCfBLH3/TudfrElGHksq9MyH6LBqsv3KTCSEHWTn9oInoOlf14hmvm9sW5r7eVRtESJZJ
+	qVEmartxpL09g8YSre204J+dvb9plUu43kAzCJdgOTSMXe4ce2hy8L5EiHk6v7FpBu0YhZQBEAm
+	ggvJRao/SIWlVk6zQrLy3nR4/Pb9jepZcAKpklzs6EmiD6/LIPKJvF8Yy0KGqgjArGPKpAuNAJL
+	Y+Hf9Ezz1SMmNp2Rzeg==
+X-Google-Smtp-Source: AGHT+IFVMVbp+Z6UWb19aspj30De+0ix7H7P9nLAnGm2POjhbpHWclm3cNODMyt3jprEFsvMCC3UcQ==
+X-Received: by 2002:a05:6000:2401:b0:399:6d8a:3f with SMTP id ffacd0b85a97d-39c2e636a70mr410726f8f.27.1743614701339;
+        Wed, 02 Apr 2025 10:25:01 -0700 (PDT)
+Received: from localhost.localdomain (host-92-26-98-202.as13285.net. [92.26.98.202])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b66a8d4sm17424016f8f.45.2025.04.02.10.25.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Apr 2025 10:25:00 -0700 (PDT)
+From: Andrew Cooper <andrew.cooper3@citrix.com>
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: Andrew Cooper <andrew.cooper3@citrix.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>
+Subject: [PATCH v2] x86/idle: Remove MFENCEs for X86_BUG_CLFLUSH_MONITOR
+Date: Wed,  2 Apr 2025 18:24:58 +0100
+Message-Id: <20250402172458.1378112-1-andrew.cooper3@citrix.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 7/7] drm/rockchip: inno-hdmi: Convert to drm bridge
-To: Andy Yan <andyshrk@163.com>, heiko@sntech.de
-Cc: conor+dt@kernel.org, krzk+dt@kernel.org, robh@kernel.org,
- hjc@rock-chips.com, mripard@kernel.org, neil.armstrong@linaro.org,
- dmitry.baryshkov@oss.qualcomm.com, devicetree@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
- Andy Yan <andy.yan@rock-chips.com>
-References: <20250402123150.238234-1-andyshrk@163.com>
- <20250402123150.238234-8-andyshrk@163.com>
-Content-Language: en-US
-From: Alex Bee <knaerzche@gmail.com>
-In-Reply-To: <20250402123150.238234-8-andyshrk@163.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+Commit 7e98b7192046 ("x86, idle: Use static_cpu_has() for CLFLUSH
+workaround, add barriers") adds barriers, justified with:
 
-Hi Andy,
+  ... and add memory barriers around it since the documentation is explicit
+  that CLFLUSH is only ordered with respect to MFENCE.
 
-> From: Andy Yan <andy.yan@rock-chips.com>
-> 
-> Convert it to drm bridge driver, it will be convenient for us to
-> migrate the connector part to the display driver later.
-> 
-> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
-> 
-> ---
-> 
-> Changes in v3:
-> - First included in v3
-> - Link to V2: https://lore.kernel.org/dri-devel/20250325132944.171111-1-andyshrk@163.com/
-> 
->   drivers/gpu/drm/bridge/Kconfig                |   7 +
->   drivers/gpu/drm/bridge/Makefile               |   1 +
->   .../inno_hdmi.c => bridge/inno-hdmi.c}        | 924 ++++++++++--------
->   drivers/gpu/drm/rockchip/Kconfig              |   1 +
->   drivers/gpu/drm/rockchip/Makefile             |   2 +-
->   drivers/gpu/drm/rockchip/inno_hdmi-rockchip.c | 187 ++++
->   drivers/gpu/drm/rockchip/inno_hdmi.h          | 349 -------
->   include/drm/bridge/inno_hdmi.h                |  33 +
->   8 files changed, 741 insertions(+), 763 deletions(-)
->   rename drivers/gpu/drm/{rockchip/inno_hdmi.c => bridge/inno-hdmi.c} (52%)
->   create mode 100644 drivers/gpu/drm/rockchip/inno_hdmi-rockchip.c
->   delete mode 100644 drivers/gpu/drm/rockchip/inno_hdmi.h
->   create mode 100644 include/drm/bridge/inno_hdmi.h
->
+This also triggered the same adjustment in commit
+f8e617f45829 ("sched/idle/x86: Optimize unnecessary mwait_idle() resched
+IPIs") during development, although it failed to get the static_cpu_has_bug()
+treatment.
 
-...
+X86_BUG_CLFLUSH_MONITOR (a.k.a the AAI65 errata) is specific to Intel CPUs,
+and the SDM currently states:
 
-> +#define m_RX_DONE			(1 << 0)
-> +
-> +#define HDMI_CEC_TX_INT			0xda
-> +#define HDMI_CEC_RX_INT			0xdb
-> +#define HDMI_CEC_BUSFREETIME_L		0xdc
-> +#define HDMI_CEC_BUSFREETIME_H		0xdd
-> +#define HDMI_CEC_LOGICADDR		0xde
-> +
->   struct inno_hdmi_i2c {
->   	struct i2c_adapter adap;
->   
-> @@ -68,41 +395,18 @@ struct inno_hdmi_i2c {
->   
->   struct inno_hdmi {
->   	struct device *dev;
-> -
-> +	struct drm_bridge bridge;
->   	struct clk *pclk;
->   	struct clk *refclk;
->   	void __iomem *regs;
->   	struct regmap *grf;
->   
-> -	struct drm_connector	connector;
-> -	struct rockchip_encoder	encoder;
-> -
->   	struct inno_hdmi_i2c *i2c;
->   	struct i2c_adapter *ddc;
-> -
-> -	const struct inno_hdmi_variant *variant;
-> +	const struct inno_hdmi_plat_data *plat_data;
-> +	unsigned int colorimetry;
+  Executions of the CLFLUSH instruction are ordered with respect to each
+  other and with respect to writes, locked read-modify-write instructions,
+  and fence instructions[1].
 
-thanks a lot for doing the bridge conversion for this driver.
-Please keep the custom connector state which was introduced after Maxim's
-review during the last rework of this [0] driver. The colorimetry is not
-part of the device, but of the connector and thus should not be part of the
-device struct.
-It's, however, likely that the common (hdmi-)connector framework will once
-hold its own colorimetry property and then the custom connector state in
-this driver can go away, but until than we have to keep it here.
+With footnote 1 reading:
 
-Thanks,
-Alex
+  Earlier versions of this manual specified that executions of the CLFLUSH
+  instruction were ordered only by the MFENCE instruction.  All processors
+  implementing the CLFLUSH instruction also order it relative to the other
+  operations enumerated above.
 
-[0]
-https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=ceeb0f0104a62c867656c2730a51df47e7350b8f
+i.e. The SDM was incorrect at the time, and barriers should not have been
+inserted.  Double checking the original AAI65 errata (not available from
+intel.com any more) shows no mention of barriers either.
 
+Note: If this were a general codepath, the MFENCEs would be needed, because
+      AMD CPUs of the same vintage do sport otherwise-unordered CLFLUSHs.
 
->   };
->   
-> -struct inno_hdmi_connector_state {
-> -	struct drm_connector_state	base;
-> -	unsigned int			colorimetry;
-> -};
-> -
-> -static struct inno_hdmi *encoder_to_inno_hdmi(struct drm_encoder *encoder)
-> -{
-> -	struct rockchip_encoder *rkencoder = to_rockchip_encoder(encoder);
-> -
-> -	return container_of(rkencoder, struct inno_hdmi, encoder);
-> -}
-> -
-> -static struct inno_hdmi *connector_to_inno_hdmi(struct drm_connector *connector)
-...
+Furthermore, use a plain alternative, rather than static_cpu_has_bug() and/or
+no optimisation.  The workaround is a single instruction.
+
+Use an explicit %rax pointer rather than a general memory operand, because
+MONITOR takes the pointer implicitly in the same way.
+
+Link: https://web.archive.org/web/20090219054841/http://download.intel.com/design/xeon/specupdt/32033601.pdf
+Fixes: 7e98b7192046 ("x86, idle: Use static_cpu_has() for CLFLUSH workaround, add barriers")
+Fixes: f8e617f45829 ("sched/idle/x86: Optimize unnecessary mwait_idle() resched IPIs")
+Signed-off-by: Andrew Cooper <andrew.cooper3@citrix.com>
+---
+CC: Thomas Gleixner <tglx@linutronix.de>
+CC: Ingo Molnar <mingo@redhat.com>
+CC: Borislav Petkov <bp@alien8.de>
+CC: Dave Hansen <dave.hansen@linux.intel.com>
+CC: x86@kernel.org
+CC: "H. Peter Anvin" <hpa@zytor.com>
+CC: linux-kernel@vger.kernel.org
+
+v2:
+ * Fix the same pattern in mwait_idle() too
+ * Expand on why we're not using a general memory operand.
+---
+ arch/x86/include/asm/mwait.h | 11 +++++------
+ arch/x86/kernel/process.c    | 10 ++++------
+ 2 files changed, 9 insertions(+), 12 deletions(-)
+
+diff --git a/arch/x86/include/asm/mwait.h b/arch/x86/include/asm/mwait.h
+index ce857ef54cf1..108d25bd4597 100644
+--- a/arch/x86/include/asm/mwait.h
++++ b/arch/x86/include/asm/mwait.h
+@@ -116,13 +116,12 @@ static __always_inline void __sti_mwait(unsigned long eax, unsigned long ecx)
+ static __always_inline void mwait_idle_with_hints(unsigned long eax, unsigned long ecx)
+ {
+ 	if (static_cpu_has_bug(X86_BUG_MONITOR) || !current_set_polling_and_test()) {
+-		if (static_cpu_has_bug(X86_BUG_CLFLUSH_MONITOR)) {
+-			mb();
+-			clflush((void *)&current_thread_info()->flags);
+-			mb();
+-		}
+ 
+-		__monitor((void *)&current_thread_info()->flags, 0, 0);
++		const void *addr = &current_thread_info()->flags;
++
++		alternative_input("", "clflush (%[addr])", X86_BUG_CLFLUSH_MONITOR,
++				  [addr] "a" (addr));
++		__monitor(addr, 0, 0);
+ 
+ 		if (!need_resched()) {
+ 			if (ecx & 1) {
+diff --git a/arch/x86/kernel/process.c b/arch/x86/kernel/process.c
+index 91f6ff618852..a1a41b3d94d2 100644
+--- a/arch/x86/kernel/process.c
++++ b/arch/x86/kernel/process.c
+@@ -907,13 +907,11 @@ static __init bool prefer_mwait_c1_over_halt(void)
+ static __cpuidle void mwait_idle(void)
+ {
+ 	if (!current_set_polling_and_test()) {
+-		if (this_cpu_has(X86_BUG_CLFLUSH_MONITOR)) {
+-			mb(); /* quirk */
+-			clflush((void *)&current_thread_info()->flags);
+-			mb(); /* quirk */
+-		}
++		const void *addr = &current_thread_info()->flags;
+ 
+-		__monitor((void *)&current_thread_info()->flags, 0, 0);
++		alternative_input("", "clflush (%[addr])", X86_BUG_CLFLUSH_MONITOR,
++				  [addr] "a" (addr));
++		__monitor(addr, 0, 0);
+ 		if (!need_resched()) {
+ 			__sti_mwait(0, 0);
+ 			raw_local_irq_disable();
+
+base-commit: acc4d5ff0b61eb1715c498b6536c38c1feb7f3c1
+-- 
+2.39.5
+
