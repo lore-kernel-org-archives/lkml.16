@@ -1,106 +1,164 @@
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25C86B674
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 16:36:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C1E88136E37;
+	Wed,  2 Apr 2025 16:38:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743611789; cv=none; b=tgs9fOzvvMTodERD3Hv6fncUbbBe43fTve202QC9oUCmQAYe5YbIwaII7yiUtZyyATv/PGdrw/PXzjmMaOOmAihtcQQUsASs6Ha0BHH/xnECVCjicqAW8zPow2HhcZtV76RtXrk1j4N/Z8OEXL/1r0XqnXH8Kx8NCg8SACyxxvs=
+	t=1743611894; cv=none; b=HqbWteaZ2DjQDlwSLmcWD+h+Ruf+biTKqGlMOu1qIlrOf+VSS2FUptCckaMsIdx0s2zEx9bxo04ipvMIO1p+MpY107C2kDO11sDej44DD1G+8Q+Rb//ShliYUcEeBZ9c2QzvidlRsGoJvyv6Im0L1noJfGGwO7rA51mCaI/Tk0s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743611789; c=relaxed/simple;
-	bh=34RWo3OZXG4EW/mq5LWgaaOz8jn5vGg8raium3usjig=;
+	s=arc-20240116; t=1743611894; c=relaxed/simple;
+	bh=PiLjoXvQRf2kVr7SQ6qTUAAZ0gGf8NJL48KaDm/P/wQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Te7EXVTx/1ZEpgF4MEXOyXiqvY91WsSIfaakAf5aXUtGIhv+rH+Dozh0+wpELVQzV/DvbQs0WELZAF/ccgmieJHniZ3DGOhHB4ZxSR4mc/wX6Xr/3o2LPqWrI8HsDL2GHDtmedM972mHybLFA3lFjoWI9upqavAX/zZ89Dp2p+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=ZDrUnxqg; arc=none smtp.client-ip=209.85.222.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="ZDrUnxqg"
-Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-7c081915cf3so840420685a.1
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 09:36:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1743611787; x=1744216587; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=KgpSBc4bwmCggwElKm6ARy8yOozY36WU1+SeYhhxYVo=;
-        b=ZDrUnxqgILxoq6eUAI6AdPgzCAy5l8+pIK2ACEArbQq2MBW0oQR1/GVKG8qAb63OoE
-         dJSQBQIqpuMGtaTmRqjaVnt5vVcMO6oGqpWrR8D55C7EIkgwEeNFnzAJ4R/T3wbtRsLm
-         /dOm09FegCnJhXnte2fGtCtoH2GzlORPZw+/YwQiXFr5IMQuYZG8MA/geTwEa53zbzVD
-         TnyKeWO6JsG9MYBu7LIWA+XWtJ8m8mxn3A3qe3E7gH6Iwtpp/ugyk5VeZSl4SzOE+fbR
-         +6zzulgcxIOEjhKLPSSlQ642oCuYiTDIyAiKxYe8QTAX9CQwUcvkGFY/b1kdeNAkV5c5
-         lIHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743611787; x=1744216587;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KgpSBc4bwmCggwElKm6ARy8yOozY36WU1+SeYhhxYVo=;
-        b=rMRyn3LKh5tZ6wm0+s94TGVGh3XIMnmc9mHZ2p06eMINUoEoBegnDm9ltsIsRQKCt+
-         88ahg5ZFwDR1puaM85lAGEWWb7F7rj8TPgSUljCgDYlxYgaU37bUNVVIn7GAgNL9eClS
-         j4YEg8q/hVDsVVHou0rxaLk2MJcAGhcJHA0mDCCvObGoVSw2Mp/1YK+PpRqpjftXtF8J
-         sOlir/YzCg3ZXe4bJlTIb5dFbCl3CrtRZQomjlQPyZ9oxTMC66wWPVAIMZARHYGlc0So
-         T96SAdp4Bs5MJ1rIVS9Wd4naxkKChxVkx4OQ2I1bxDaI6MpPApy42+ampKl15g0NdYbt
-         /wRw==
-X-Forwarded-Encrypted: i=1; AJvYcCUFb6knnWOpMh0HxOgMzh8sCGP/X6nZMQ/tuFmUzFT4iv7Q5ezh5k5i1YD0zBzBdsSFvhFGT6Syl5kPIwo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzlzm/FbLSKoiXhqO7HaZN4RXbqKiRLWPVdFpyGxd3/szPm9nTJ
-	5OxES07i8I9fmyE9lEkt0U95lnG9//EYyipkiPgFeYMPmX/v8ZSX4QMnmVYBkoA=
-X-Gm-Gg: ASbGncssNbuQ9hVEjHWUMdRLGma73z+amEKQ0ijdJXLb0vwdgNHAR7G33ymxCIMgR/F
-	I0gjBE0ly7X0yaDK1dkQHoLQIycnXIYvgkIruLsuNDZWUG83ELcxdbFHiY4rdOST+K42HmkPvkO
-	S9qM83bOh//eJ6Af3sXvcKGgFLjYWvB3MynM3xiXYQOFP4Mxb0OF0kn/nYmgekHU5FPYcbCAQ62
-	/kGstXKQqGfKXLyWYk6yu8vx2Ec/TqlNSCPz5MG55pSqknBpJwslFhapdn3SeKVKH8X/VDHJZyt
-	jBugp03+doVPdAdWK3naXh/0yJGVzEZfJXX4V8oZ3mdmHCrULavYYuvXjjZneQC+2/nW/h9JPxS
-	JRMuiCn0LkJKj+3/yPX62k/IfRSs=
-X-Google-Smtp-Source: AGHT+IEI/0jyf6fklqg75GbTJdfuNj+99i5HXBUCPbxpHS67L4ueSNZOE2R7l2jQabFzIRLJMuhBOg==
-X-Received: by 2002:a05:620a:3950:b0:7c5:4949:23f2 with SMTP id af79cd13be357-7c6908756d3mr2557731085a.44.1743611786890;
-        Wed, 02 Apr 2025 09:36:26 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c5f779a924sm800564685a.114.2025.04.02.09.36.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Apr 2025 09:36:26 -0700 (PDT)
-Date: Wed, 2 Apr 2025 12:36:24 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Oscar Salvador <osalvador@suse.de>
-Cc: Rakie Kim <rakie.kim@sk.com>, akpm@linux-foundation.org,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org, joshua.hahnjy@gmail.com,
-	dan.j.williams@intel.com, ying.huang@linux.alibaba.com,
-	david@redhat.com, Jonathan.Cameron@huawei.com,
-	kernel_team@skhynix.com, honggyu.kim@sk.com, yunjeong.mun@sk.com
-Subject: Re: [PATCH v5 3/3] mm/mempolicy: Support memory hotplug in weighted
- interleave
-Message-ID: <Z-1niNVSTcb9ogzl@gourry-fedora-PF4VCD3F>
-References: <20250402014906.1086-1-rakie.kim@sk.com>
- <20250402014906.1086-4-rakie.kim@sk.com>
- <Z-0IlZgYLjogZSZO@localhost.localdomain>
- <Z-1GUrdcOeYQgkE3@gourry-fedora-PF4VCD3F>
- <Z-1axdrOVBYESrXo@localhost.localdomain>
+	 Content-Type:Content-Disposition:In-Reply-To; b=ni3K7J2SR1dEikusrJ9uVwV55bnQqjo4hagQmo88+k/mHAALzgdBrFEvBbH4VIU77CTFKkdbbuATQZK+8K/kPOQBFWMTP7UnhcdJmEzb5dSgXTLcEZuf+YSRze/49859FiJonqB49wBuFm3fqPZr8WjDDQppAjkb+gEivL/uyyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D59091F91;
+	Wed,  2 Apr 2025 09:38:14 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 89AE93F63F;
+	Wed,  2 Apr 2025 09:38:11 -0700 (PDT)
+Date: Wed, 2 Apr 2025 17:38:07 +0100
+From: Leo Yan <leo.yan@arm.com>
+To: Ian Rogers <irogers@google.com>
+Cc: Yury Norov <yury.norov@gmail.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Darren Hart <dvhart@infradead.org>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	=?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>,
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+	James Clark <james.clark@linaro.org>,
+	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Al Viro <viro@zeniv.linux.org.uk>, Kyle Meyer <kyle.meyer@hpe.com>,
+	Ben Gainey <ben.gainey@arm.com>,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+	Kajol Jain <kjain@linux.ibm.com>,
+	Aditya Gupta <adityag@linux.ibm.com>,
+	Eder Zulian <ezulian@redhat.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	Kuan-Wei Chiu <visitorckw@gmail.com>, He Zhe <zhe.he@windriver.com>,
+	Dirk Gouders <dirk@gouders.net>, Brian Geffon <bgeffon@google.com>,
+	Ravi Bangoria <ravi.bangoria@amd.com>,
+	Howard Chu <howardchu95@gmail.com>,
+	Charlie Jenkins <charlie@rivosinc.com>,
+	Colin Ian King <colin.i.king@gmail.com>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	Jann Horn <jannh@google.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Yang Jihong <yangjihong@bytedance.com>,
+	Dmitry Vyukov <dvyukov@google.com>, Andi Kleen <ak@linux.intel.com>,
+	Graham Woodward <graham.woodward@arm.com>,
+	Ilkka Koskinen <ilkka@os.amperecomputing.com>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Zhongqiu Han <quic_zhonhan@quicinc.com>, Hao Ge <gehao@kylinos.cn>,
+	Tengda Wu <wutengda@huaweicloud.com>,
+	Gabriele Monaco <gmonaco@redhat.com>,
+	Chun-Tse Shao <ctshao@google.com>,
+	Casey Chen <cachen@purestorage.com>,
+	"Dr. David Alan Gilbert" <linux@treblig.org>,
+	Li Huafei <lihuafei1@huawei.com>,
+	"Steinar H. Gunderson" <sesse@google.com>,
+	Levi Yun <yeoreum.yun@arm.com>, Weilin Wang <weilin.wang@intel.com>,
+	Thomas Falcon <thomas.falcon@intel.com>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	Andrew Kreimer <algonell@gmail.com>,
+	Krzysztof =?utf-8?Q?=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>,
+	Junhao He <hejunhao3@huawei.com>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	Xu Yang <xu.yang_2@nxp.com>,
+	Steve Clevenger <scclevenger@os.amperecomputing.com>,
+	Zixian Cai <fzczx123@gmail.com>,
+	Stephen Brennan <stephen.s.brennan@oracle.com>,
+	Yujie Liu <yujie.liu@intel.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev
+Subject: Re: [PATCH v1 09/48] perf tests: Silence -Wshorten-64-to-32 warnings
+Message-ID: <20250402163807.GP115840@e132581.arm.com>
+References: <20250401182347.3422199-1-irogers@google.com>
+ <20250401182347.3422199-10-irogers@google.com>
+ <20250402143541.GM115840@e132581.arm.com>
+ <CAP-5=fVqax8cxdZ4HLBP4AMxL6jADfYNrORC97T6F23mjf3N1w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <Z-1axdrOVBYESrXo@localhost.localdomain>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fVqax8cxdZ4HLBP4AMxL6jADfYNrORC97T6F23mjf3N1w@mail.gmail.com>
 
-On Wed, Apr 02, 2025 at 05:41:57PM +0200, Oscar Salvador wrote:
-> 
-> Yes, this callback will be called whenever {online,offline}_pages succeeds, but
-> status_change_nid will be != NUMA_NO_NODE IFF the node state changes.
-> And you already have the check
-> 
->  if (nid < 0)
->     goto out
-> 
-> at the beginning, which means that all {offline,online}_pages operation that
-> do not carry a numa node state change will be filtered out there.
-> 
-> Makes sense, or am I missing something?
->
+Hi Ian,
 
-Ah, you're quite right.  That was difficult to see on the surface, so
-the check in fact superfluous.  No need for an extra version, can just
-add a patch to squash and drop it.
+On Wed, Apr 02, 2025 at 08:42:58AM -0700, Ian Rogers wrote:
 
-~Gregory
+[...]
+
+> On Wed, Apr 2, 2025 at 7:35 AM Leo Yan <leo.yan@arm.com> wrote:
+> >
+> > On Tue, Apr 01, 2025 at 11:23:07AM -0700, Ian Rogers wrote:
+> >
+> > [...]
+> >
+> > > @@ -478,13 +478,14 @@ static int __cmd_test(struct test_suite **suites, int argc, const char *argv[],
+> > >       int err = 0;
+> > >
+> > >       for (struct test_suite **t = suites; *t; t++) {
+> > > -             int i, len = strlen(test_description(*t, -1));
+> > > +             int i;
+> > > +             int len = (int)strlen(test_description(*t, -1));
+> >
+> > Thanks for huge polish.
+> >
+> > Just a concern from me.  Throughout this patch, the methodology is not
+> > consistent.  Some changes update variable types which is fine for me.
+> >
+> > But the case above it simply cast size_t to int.  Should we update the
+> > variable type as 'size_t' at here?
+> 
+> Thanks Leo, I played around with it, but don't mind if someone wants
+> to do it a different way. I was trying to make the changes minimal.
+> The problem typically with size_t is we then use the value, for
+> example, as a printf size modifier and need to introduce lots of casts
+> back to being an int.
+
+This conclusion is not quite right, see:
+https://stackoverflow.com/questions/2524611/how-can-one-print-a-size-t-variable-portably-using-the-printf-family
+
+> When this isn't too great I've done it, but in
+> this case I think keeping the int, the lack of casts but a cast here
+> to capture that we expect test descriptions to fit in the size of an
+> int is the least worst option.
+
+I would say in another way.  After we enabled a compiler warning
+option, this will give us a chance to improve code by dismissing
+the warnings (and avoid potential bugs).
+
+If we use casts just to silence warnings, we also lose the opportunity
+to improve code quality.  The changes in this series that fix type
+mismatches are good, but I think the use of casts is not particularly
+helpful - we're simply switching from implicit compiler casts to
+explicit ones.
+
+Thanks,
+Leo
