@@ -1,146 +1,122 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EBA8186E54
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 16:09:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A2E0139D0A;
+	Wed,  2 Apr 2025 16:10:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743610154; cv=none; b=iWBYYD4cG9oqikdJGSWnPOBmaP6MqfwiVvgOfQnAvoVMD3scpGLDoz/ugwOEh6EA1YvOnkrSt7k/M/r09D/hoV0Cra1GW3GLAtJ3LBxgWzNOQnArAwzhX8nh7b0RVdKHFwDbQ6/2TvYdy7hn7Ef6TJo4KotfBHi9UVidR673Mto=
+	t=1743610254; cv=none; b=ayEEiKquUaIDqgd49Thq6V4HxJ7ppcbj+cQUHlytb7gh241dRAGR3sAzbESmAA3vF34jsSTrVJ3r97u3wplj03ayczPDiqhFMa7IZGugoF1QHO/L+X8nLM0cjmeDfh1XOiOPg52MdG32rjrvzHfQ26+a6YW8IfRMbY8MbFaolRQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743610154; c=relaxed/simple;
-	bh=aGK6VuyhVTcGLnSoWqRmE8OCYseaGpTE/F6knDPLOE0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Wdyi0m6g8m8mz++9EiCgIwomUZmelqPh6FTRvJnuHIdf9at7NbCiZASH8c7wjgKEz7LZfeE8NGAfsnk384VwdfP+9Y1ebN7k85GNTArNowSbaRHJEzD/OQgImwUqhybqOr6DVOpJDCqzM+OSnV+R5kASlR/syhy3hnCPZ+/kcRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=snLsIEdx; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=GLyguBU5; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=snLsIEdx; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=GLyguBU5; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1743610254; c=relaxed/simple;
+	bh=OIVqJJNsFrMiqu/uq1QlcvPuIL4Ese/KYrI1dezFYZ4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iZGWhC1OsJYeiy7oOk28llBzJnZ7ZkHDZOS1j59iTsfJTG1aqVATR3c8/G7Nf0m0TGNV0PMEkfo4l70gjSumFXVcTG3gkY/RMc4UWP2va5MldWHKwWYO5BwMlanGQ7w2E8/tNz+EmrIFAVPGG4X9RwTOYv91fRXqiZmq2lyvFGM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PdOe+IRl; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="snLsIEdx";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="GLyguBU5";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="snLsIEdx";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="GLyguBU5"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 724481F45A;
-	Wed,  2 Apr 2025 16:09:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1743610151; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=F7+GIzQ8OHuvK0ENVm30lwRC1Z8wp0ImGz1s6oiTw98=;
-	b=snLsIEdxiZiVSVn1lfL9jemskrOzoO3Gmcyi96N7dUV4+fhCab6CXGg2Fs17M6/8rai0em
-	vXcllv76zDrHOEn8GaqjrafZfMV6YbtTleVeeQNGJPqEaW0bSovkf2J0lNKeDKNXSrdXjv
-	5c5SQj3sGPAA23IJ0J42zjcWyPJFetQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1743610151;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=F7+GIzQ8OHuvK0ENVm30lwRC1Z8wp0ImGz1s6oiTw98=;
-	b=GLyguBU5CifJGC6vJzbaDVU6UAOBjPRgnf3ZrzncrTDK3Jz1rzxysBj39HtGfqhTFJGUR7
-	xiwQgfVd0Kj6GFDw==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=snLsIEdx;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=GLyguBU5
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1743610151; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=F7+GIzQ8OHuvK0ENVm30lwRC1Z8wp0ImGz1s6oiTw98=;
-	b=snLsIEdxiZiVSVn1lfL9jemskrOzoO3Gmcyi96N7dUV4+fhCab6CXGg2Fs17M6/8rai0em
-	vXcllv76zDrHOEn8GaqjrafZfMV6YbtTleVeeQNGJPqEaW0bSovkf2J0lNKeDKNXSrdXjv
-	5c5SQj3sGPAA23IJ0J42zjcWyPJFetQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1743610151;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=F7+GIzQ8OHuvK0ENVm30lwRC1Z8wp0ImGz1s6oiTw98=;
-	b=GLyguBU5CifJGC6vJzbaDVU6UAOBjPRgnf3ZrzncrTDK3Jz1rzxysBj39HtGfqhTFJGUR7
-	xiwQgfVd0Kj6GFDw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B9D5E13A4B;
-	Wed,  2 Apr 2025 16:09:10 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id fHiJLCZh7WejTgAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Wed, 02 Apr 2025 16:09:10 +0000
-Message-ID: <5d16736e-4cb0-46c7-9c3e-715bbff3613f@suse.cz>
-Date: Wed, 2 Apr 2025 18:09:10 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PdOe+IRl"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-227cf12df27so125ad.0;
+        Wed, 02 Apr 2025 09:10:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743610252; x=1744215052; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZIIr79S8E8NybYY6gtYpu9PlGyNiRm8JHaUp3As1v3w=;
+        b=PdOe+IRljOzZiEWsDLjzCg01V4TCzZQLejqRLzKitHTMHKMO9laG/f4MV3YXY3Mm8e
+         d94moG71M6WHSginUZxh9/Dtr52QUe/8oCz31O9Gth5VLoS8PxGn1K07tgkQ+q4kwjQ7
+         ba7RUM9c7/zHGEQdJ6gTOdCUz3DK5mPEW3Tc6HHTz0kBkxZCULKommk+tDOJy7J9z4bU
+         Xkv+5WCnjpdYs457uld2ZXu49Wi7BQvCbNjBJ7ba+fscul8st5zB0yEwZaAxzYqEfLsb
+         4v4BveVUdoC7fzdvcz2lOEUYuRHSd0KSu6dX9SmRCKZsMCBIOV238STCZjOtVa/EmFij
+         bWpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743610252; x=1744215052;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZIIr79S8E8NybYY6gtYpu9PlGyNiRm8JHaUp3As1v3w=;
+        b=wQXztwVRbVyluMk8zKHummeE3Zw7JMTP1qdJ/avF/AKHuZIWLnIpbX3utm8yNx1RBR
+         nGj6UbNvHUVK313cY8vwzjc979xQ5G2UUi19NhPM3WBkCEdrpjWHNGMRDaxgHxmQZso3
+         /lH0IW7CbJ9FYeqFUeb9wAEg3tsweSoqmW8QPrj16xB2PB3PzPSGMIn645My/lk3NUKr
+         BBo/gMFc6FB9cIjCC0K2457pbIDcOba+c1f1YgDJuKvhLW+UCsXtg/N2vTxWf4uiY9rw
+         GlLXx7JEXaUnC8bvNKUXJ37GiN6c0ClG4ZwVI/MCP5DrKNCxyxbzPVTK5MrERq6MZwDf
+         M6ew==
+X-Forwarded-Encrypted: i=1; AJvYcCU2rZSw8fH8z/ukIge3e4NFqX6xm+BotkdMEydbCEqpjEUpkXlnuKMohudf4JhfcpP0y6RSuPcEOPe31PfK@vger.kernel.org, AJvYcCXNnWJMntgc8zQ0y2DD/hiOHub6Ysz2CQj3llqn1CjMwlbknVkXJb7KHWtWOctPbPf++0SN8CUOqSblNnxG7A==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyP5YCHoUsXuGlL1Nilb3IgiHg0V3CJuq+dUbOPuQYBp4d9yXkE
+	A2Iv5GJaScy/TS2XA5L5ltyUiZAxf55IZmc/Vn8L5UXLhkYnu5TK
+X-Gm-Gg: ASbGncvfW4kVKuYfSQGNXYXZlJIev5x9vyPxfYLgGe/VofSMl1XoXo2s4EbEzvwqhY0
+	mjm2JZMd0S49yPkSP4oM5h/MirmMzTZ8ijqy1QBEBEkZ9dN0PzRYtWPFlOge/U4GuEBFJPioksN
+	/33TCiVcWtTbUbWHslABdfsnk+Jam1cIOzkzo3WQSBxsoJpDOXsuzHRdTxBlaMPDnsknHW02aFX
+	Jngb1s9gRrvwlYwBAd/ZQtSBGsfCeoUCcjbvhozVTMnlVgNcOXVYAJ6h7EHDwU3MK/49HwoZ0T7
+	4HMb65acdKTBvdrJycr92FitfSMb5gUvVSnDKAVqYFopjTOP0rL1lHH1qclVHqFArA==
+X-Google-Smtp-Source: AGHT+IE7ktB2KWY480DsrcKFnuDQRmNlfL3ZQiO+dZdrtj8/7tTzLyWkyo/QVitSv9v+OWHDkn89lg==
+X-Received: by 2002:a17:903:1b27:b0:223:4d5e:76a6 with SMTP id d9443c01a7336-229765ba827mr1321195ad.1.1743610252117;
+        Wed, 02 Apr 2025 09:10:52 -0700 (PDT)
+Received: from localhost.localdomain ([14.139.69.34])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291f1fa0a5sm110205435ad.240.2025.04.02.09.10.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Apr 2025 09:10:51 -0700 (PDT)
+From: Bharadwaj Raju <bharadwaj.raju777@gmail.com>
+To: kent.overstreet@linux.dev
+Cc: Bharadwaj Raju <bharadwaj.raju777@gmail.com>,
+	linux-bcachefs@vger.kernel.org,
+	shuah@kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-kernel-mentees@lists.linux.dev,
+	syzbot+c82cd2906e2f192410bb@syzkaller.appspotmail.com
+Subject: [PATCH] bcachefs: don't call sleeping funcs when handling inconsistency errors
+Date: Wed,  2 Apr 2025 21:40:40 +0530
+Message-ID: <20250402161043.161795-1-bharadwaj.raju777@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] mm,memory_hotplug: Replace status_change_nid
- parameter in memory_notify
-Content-Language: en-US
-To: Oscar Salvador <osalvador@suse.de>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: David Hildenbrand <david@redhat.com>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, Hyeonggon Yoo <42.hyeyoo@gmail.com>,
- mkoutny@suse.com, Dan Williams <dan.j.williams@intel.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>
-References: <20250401092716.537512-1-osalvador@suse.de>
- <20250401092716.537512-3-osalvador@suse.de>
-From: Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <20250401092716.537512-3-osalvador@suse.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 724481F45A
-X-Spam-Score: -3.01
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	RCVD_TLS_ALL(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_COUNT_TWO(0.00)[2];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[redhat.com,kvack.org,vger.kernel.org,gmail.com,suse.com,intel.com,huawei.com];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+Content-Transfer-Encoding: 8bit
 
-On 4/1/25 11:27, Oscar Salvador wrote:
-> memory notify consumers are only interested in which node the memory we
-> are adding belongs to, so replace current status_change_nid{_normal} fields
-> with only one that specifies the node.
-> 
-> Signed-off-by: Oscar Salvador <osalvador@suse.de>
+In bch2_bkey_pick_read_device, we're in an RCU lock. So, we can't call
+any potentially-sleeping functions. However, we call bch2_dev_rcu,
+which calls bch2_fs_inconsistent in its error case. That then calls
+bch2_prt_print on a non-atomic printbuf, as well as uses the blocking
+variant of bch2_print_string_as_lines, both of which lead to calls to
+potentially-sleeping functions, namely krealloc with GFP_KERNEL
+and console_lock respectively.
 
-Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+Give a nonzero atomic to the printbuf, and use the nonblocking variant
+of bch2_print_string_as_lines.
 
+Reported-by: syzbot+c82cd2906e2f192410bb@syzkaller.appspotmail.com
+Closes: https://syzkaller.appspot.com/bug?extid=c82cd2906e2f192410bb
+Signed-off-by: Bharadwaj Raju <bharadwaj.raju777@gmail.com>
+---
+ fs/bcachefs/error.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/fs/bcachefs/error.c b/fs/bcachefs/error.c
+index d4dfd13a8076..6f0f2f12c004 100644
+--- a/fs/bcachefs/error.c
++++ b/fs/bcachefs/error.c
+@@ -60,6 +60,8 @@ static bool bch2_fs_trans_inconsistent(struct bch_fs *c, struct btree_trans *tra
+ {
+ 	struct printbuf buf = PRINTBUF;
+ 
++	buf.atomic++;
++
+ 	bch2_log_msg_start(c, &buf);
+ 
+ 	prt_vprintf(&buf, fmt, args);
+@@ -68,7 +70,9 @@ static bool bch2_fs_trans_inconsistent(struct bch_fs *c, struct btree_trans *tra
+ 	if (trans)
+ 		bch2_trans_updates_to_text(&buf, trans);
+ 	bool ret = __bch2_inconsistent_error(c, &buf);
+-	bch2_print_string_as_lines(KERN_ERR, buf.buf);
++	bch2_print_string_as_lines_nonblocking(KERN_ERR, buf.buf);
++
++	buf.atomic--;
+ 
+ 	printbuf_exit(&buf);
+ 	return ret;
+-- 
+2.49.0
 
