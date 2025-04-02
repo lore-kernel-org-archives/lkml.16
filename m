@@ -1,169 +1,77 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA33F20B7EA
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 07:51:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3E171EF38B;
+	Wed,  2 Apr 2025 07:52:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743580310; cv=none; b=GFIMLDKzjI/522THauQiuLydCaSDHKpQRlSiojZ+iwDPfYx8kvJ0k0J3etgI55/YT9wvWOu0VigrnSaPHv6zD1i060TFk+0f+x4cE7tvtVlRCM0ts1osjCrWIPIltEdm2K/OuyHvoEAkcq6WlTbWu5Fhl6alhqQz8T3JtHxL7jU=
+	t=1743580335; cv=none; b=AFgEV+MLeRptgy+c/NZ+AtBae18n2C6ec1C8M5+FpcR+38h3d6mvTdggHql+QqllLUboQJ9bLEAQiAv9FTHjMpfCTHMASCTrSMP90VeUOhLhjmiIh5OhC0oHD+Ye3UNEJdeK0g3KexCAcJ5zfaKEj6BeSGHIgGtrWSmREIqWjJg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743580310; c=relaxed/simple;
-	bh=F0KOdYBX44bBWreqooR/YTwb2uTv5LltwgfPROc7mf8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EOdOI5PRrsL42wsx2TgDpaFUYmsh1EsQL0FSLUyOh6bBf8PescSF2XJj9vTlC7S4LjalVggEIvq8UDC4uSxamysw7L3qXSv4hp9gpRffZWaWbVD0tr7hAiQclTYowrrmxyVI9uRMosT/nmFcGDq6v7gT/MqBXeN3UH50pEaG4No=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=CyUKlCXr; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+	s=arc-20240116; t=1743580335; c=relaxed/simple;
+	bh=UAr1Z+AxXev6VsfCf/rRanRitQOy9kGFIc+s7ksn0s8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GC1zhePyPKU4xpofT3ksHslS1DP27yaI6uPrB/eFR4ga7rou14OwfEADnJbDhX1udepefH7ss5C+4FxAKR94eaEoExO8w72ki99uCM7jO1bNtaY6zzJXvXj6qe8aLB83imi/0NwPbYs2ZEepssrpw8npcORAtyKKmaCyRP3cAFs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=l1GG/c//; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="CyUKlCXr"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="l1GG/c//"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=Content-Transfer-Encoding:MIME-Version:
-	Message-ID:Date:Subject:Cc:To:From:Content-Type:Sender:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-To:Resent-Cc:
-	Resent-Message-ID:In-Reply-To:References;
-	bh=B8AiNSptqMEvFsMfI5jyx79B10U1DkDao5ESEb572/M=; t=1743580308; x=1744789908; 
-	b=CyUKlCXr6L7kErt/zO5PWFCsot3XDLzYnhhtcvKARJhQv3nQ9oU6IDcPikT80KkN5K63xSKVsGo
-	EtDvgDAP5dJYrx36rh8Vqm9h0sxKvzox7lpPDbxK2P+UQDsdZGpdOV4WIrzdYassGyf0tiMP1uVkW
-	yHtNBKe0a1oZwu7Vq27VSYORXAFfwoo0bwOH+jDI+lKv/EncLSBdAW9sUn2VdUenVsMqwP36hCtHy
-	jsUJ3kWqdjrqfdl6D7F8QG9ooJ2QIfpCnuG4x8Ukd3keVefxFbz1EZLKu0XGNPQI67A4vASlLIxwv
-	hjoM5uUO49lCVLb3ELg43H0Gmqst2xo/toFQ==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.98)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1tzssx-0000000DGNC-180A;
-	Wed, 02 Apr 2025 09:51:44 +0200
-From: Johannes Berg <johannes@sipsolutions.net>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org,
-	linux-um@lists.infradead.org,
-	Richard Weinberger <richard@nod.at>,
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>
-Subject: pull-request: uml 6.15-rc1 [resend]
-Date: Wed,  2 Apr 2025 09:49:03 +0200
-Message-ID: <20250402075115.12455-3-johannes@sipsolutions.net>
-X-Mailer: git-send-email 2.49.0
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=QcJX0K8Yl0giGfzJVWrled6+/qbBHVkKw4ZT7UuEPXI=; b=l1GG/c//fbkOLLhclF5wAgkWMR
+	g0IbNLiU5l7vGPt+ReYRfa/NxMcsGJbBG2pzzasy1YsVolQ8IuV+EJjalGSCV0SO5L+vZBuNnaGUY
+	0mW1Otgz7OAcynUOlQngIJQC7gYlZPhD5IoOvyqYcWeqUCRDymHEreWq/yUQkO8JViuEv8OslMngw
+	YEDz1Dv1EplrY0qElzaYBuq2Z90c318axGUpg4fm5OmiZx+Su/qXyFMyC8WA2TLgSoLBM6PsS/iDO
+	XsL+uVTijCSQ/KorFnoMFFEsbIjqKlLYEiqyc8Bi4LC5rG7eOlof/UNSKuyQpaC8lGDMkgP3XKQXX
+	XeNY7/lw==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1tzstN-000000091wg-3A3Z;
+	Wed, 02 Apr 2025 07:52:10 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 3BEF030049D; Wed,  2 Apr 2025 09:52:09 +0200 (CEST)
+Date: Wed, 2 Apr 2025 09:52:09 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
+	iommu@lists.linux.dev, Randy Dunlap <rdunlap@infradead.org>,
+	"Paul E. McKenney" <paulmck@kernel.org>
+Subject: Re: [PATCH] iommu: Convert unreachable() to BUG()
+Message-ID: <20250402075209.GR5880@noisy.programming.kicks-ass.net>
+References: <0c801ae017ec078cacd39f8f0898fc7780535f85.1743053325.git.jpoimboe@kernel.org>
+ <20250327123718.GB31358@noisy.programming.kicks-ass.net>
+ <6zzyjtvkqc4ipj7ngtkx3jithfwpwuxlix677urlehgdnljwbl@wfoa5futari6>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6zzyjtvkqc4ipj7ngtkx3jithfwpwuxlix677urlehgdnljwbl@wfoa5futari6>
 
-Hi Linus, again,
+On Tue, Apr 01, 2025 at 05:50:32PM -0700, Josh Poimboeuf wrote:
+> On Thu, Mar 27, 2025 at 01:37:18PM +0100, Peter Zijlstra wrote:
+> > On Wed, Mar 26, 2025 at 10:28:46PM -0700, Josh Poimboeuf wrote:
+> > > Bare unreachable() should be avoided as it generates undefined behavior,
+> > > e.g. falling through to the next function.  Use BUG() instead so the
+> > > error is defined.
+> > 
+> > Right; I did a pass like this a while ago and thought I'd removed all
+> > unreachable() abuse.
+> 
+> Any reason not to just "#define unreachable() BUG()" and convert UD2 and
+> similar to use __builtin_unreachable()?
 
-And of course only I can get it wrong and mess up the most
-basic list address. Sorry. This is just resend with the
-correct address for linux-kernel this time, for the archive.
+Just remove unreachable() entirely at that point. But you're going to
+have to update all the various arch code that does use it correctly :/
 
-So I'm filling in for Richard (CC'ed) since he's been busy
-and I've been mostly working on getting things reviewed and
-merged this cycle. Nothing super exciting, see the summary
-in the tag below.
+There are a few sites besides BUG() that need it; eg, long jumps when
+bootstrapping etc.
 
-Please pull and let us know if there's any problem.
-
-Thanks,
-johannes
-
-
-
-The following changes since commit 7eb172143d5508b4da468ed59ee857c6e5e01da6:
-
-  Linux 6.14-rc5 (2025-03-02 11:48:20 -0800)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/uml/linux.git tags/uml-for-linux-6.15-rc1
-
-for you to fetch changes up to 33c9da5dfb18c2ff5a88d01aca2cf253cd0ac3bc:
-
-  um: Rewrite the sigio workaround based on epoll and tgkill (2025-03-20 09:28:44 +0100)
-
-----------------------------------------------------------------
-Updates for UML for this cycle, notably:
- - proper nofault accesses and read-only rodata
- - hostfs fix for host inode number reuse
- - fixes for host errno handling
- - various cleanups/small fixes
-
-----------------------------------------------------------------
-Benjamin Berg (4):
-      um: remove copy_from_kernel_nofault_allowed
-      um: hostfs: avoid issues on inode number reuse by host
-      um: work around sched_yield not yielding in time-travel mode
-      um: Store full CSGSFS and SS register from mcontext
-
-David Gow (1):
-      um: Pass the correct Rust target and options with gcc
-
-Ethan Carter Edwards (1):
-      um: use str_yes_no() to remove hardcoded "yes" and "no"
-
-Hajime Tazaki (1):
-      um: x86: clean up elf specific definitions
-
-Johannes Berg (1):
-      um: mark rodata read-only and implement _nofault accesses
-
-Tiwei Bie (8):
-      um: Allocate vdso page pointer statically
-      um: Update min_low_pfn to match changes in uml_reserved
-      um: virt-pci: Refactor virtio_pcidev into its own module
-      um: Add pthread-based helper support
-      um: ubd: Switch to the pthread-based helper
-      um: Switch to the pthread-based helper in sigio workaround
-      um: Prohibit the VM_CLONE flag in run_helper_thread()
-      um: Rewrite the sigio workaround based on epoll and tgkill
-
-Uros Bizjak (1):
-      um/locking: Remove semicolon from "lock" prefix
-
- arch/um/Kconfig                          |   1 +
- arch/um/drivers/Kconfig                  |  12 +-
- arch/um/drivers/Makefile                 |   3 +-
- arch/um/drivers/random.c                 |   2 +-
- arch/um/drivers/rtc_user.c               |   2 +-
- arch/um/drivers/ubd.h                    |   6 +-
- arch/um/drivers/ubd_kern.c               |  25 +-
- arch/um/drivers/ubd_user.c               |  14 +-
- arch/um/drivers/virt-pci.c               | 743 ++++++-------------------------
- arch/um/drivers/virt-pci.h               |  41 ++
- arch/um/drivers/virtio_pcidev.c          | 628 ++++++++++++++++++++++++++
- arch/um/include/asm/Kbuild               |   1 +
- arch/um/include/asm/processor-generic.h  |   2 +
- arch/um/include/asm/uaccess.h            |  20 +-
- arch/um/include/linux/time-internal.h    |   2 +
- arch/um/include/shared/arch.h            |   2 +
- arch/um/include/shared/as-layout.h       |   2 +-
- arch/um/include/shared/irq_user.h        |   3 +-
- arch/um/include/shared/kern_util.h       |  12 +-
- arch/um/include/shared/os.h              |   8 +-
- arch/um/include/shared/sigio.h           |   1 -
- arch/um/kernel/Makefile                  |   2 +-
- arch/um/kernel/irq.c                     |   3 +-
- arch/um/kernel/maccess.c                 |  19 -
- arch/um/kernel/mem.c                     |  11 +
- arch/um/kernel/sigio.c                   |  26 --
- arch/um/kernel/skas/syscall.c            |  11 +
- arch/um/kernel/trap.c                    |  28 +-
- arch/um/kernel/um_arch.c                 |   3 +-
- arch/um/os-Linux/helper.c                |  67 +++
- arch/um/os-Linux/process.c               |  51 ---
- arch/um/os-Linux/sigio.c                 | 358 +++------------
- arch/um/os-Linux/signal.c                |   4 +-
- arch/um/os-Linux/skas/process.c          |   8 +-
- arch/x86/Makefile.um                     |   7 +-
- arch/x86/um/asm/barrier.h                |   6 +-
- arch/x86/um/asm/module.h                 |  24 -
- arch/x86/um/os-Linux/mcontext.c          |  15 +-
- arch/x86/um/shared/sysdep/faultinfo_32.h |  12 +
- arch/x86/um/shared/sysdep/faultinfo_64.h |  12 +
- arch/x86/um/vdso/vma.c                   |  17 +-
- fs/hostfs/hostfs.h                       |   2 +-
- fs/hostfs/hostfs_kern.c                  |   7 +-
- fs/hostfs/hostfs_user.c                  |  59 +--
- 44 files changed, 1146 insertions(+), 1136 deletions(-)
- create mode 100644 arch/um/drivers/virt-pci.h
- create mode 100644 arch/um/drivers/virtio_pcidev.c
- delete mode 100644 arch/um/kernel/maccess.c
- delete mode 100644 arch/x86/um/asm/module.h
+But basically nothing outside of arch code should ever need or want
+unreachable.
