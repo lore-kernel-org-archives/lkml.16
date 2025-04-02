@@ -1,237 +1,86 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEE4A2F5A
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 07:56:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3286D23372A;
+	Wed,  2 Apr 2025 07:56:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743580587; cv=none; b=Nhzf1JgLxSu8qgF/Cfipjfh59zDljnwGY9r2QmdFXZOEteisSWD0NnbCQiGkeH01e4FpQ6vGN2W9wpqqvp1b+9KLmrvDyGkOZrEnTbn10uS2K0+vZvVmRoUB+pl1o/U60aJRh+QJVx2HtfVuLqLhTrItrmwLtSYQy+AbPm4ceyI=
+	t=1743580617; cv=none; b=dE9amoITgBEtSlGWo1PLumWlhaXuH5c5FNsNYFQgjLw2Stnhpu9kujuBE8FwdMvoBglgHef8aRr6gwYsJMTTuQVDBFS7acUnvgPfnTFqa2Xb7jXTJNlINUUIvwiaNNB/XK0Qm/uvuns+Mo8kC8e+fCGXAn4knJiY8mCf9x3PxNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743580587; c=relaxed/simple;
-	bh=vevaXCAfgf0RV0Jd5pTi5+8Q553KBeeummBfYxnRXZw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ITbHTV6We+tdFRl3DB2wUd+jw4LTyxFW89LB6AWM+SZ+ahV0WgUF+F126Kv4kk9ioF2vB3RHAXRZ3IU4M+P5ryMg6mZuLcGu96G1tN7qAkEjLZitReaBEz+5qkNhWyfkLVk4olX7aFQTIpqmXloRXvbWl0EcO5F0pYtnTDv64+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=o6abVXLj; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="o6abVXLj"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-227b650504fso127541315ad.0
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 00:56:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743580585; x=1744185385; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=noKgvUVQ2siSihaytXd2FVN73v58WuzUMmihxuAvJf8=;
-        b=o6abVXLjJokfHOta7A2h1RRUQpbyzYWJM0m5ZhO5euBkyzheuuRPJ+psbo7S6H3FmC
-         IInOPPmvM7jXstoqqoiShvi+Tx/cnVp5w3Fa6v5F5yZLNVNo/f0vHKFSScUag+NMi2z4
-         W7I3c0X48TKQQlOud0TagXafeTmDBVHVSzOIasDRl5/IP7s5xwUGPlxvsxn1JHis6PZh
-         5KVMXSHBCP8M5GDgoeyoL6Bw6Im1rReJ8l+rIJw0qMqGNOyNLIAJfc/6eP3UphO+xuPz
-         C2/Vw/2u1/sShBf22k/6/Uv1ket9KqVGWPs7U9sOjhFPkbBHpm0b1+5SAvSMl5+DuzDc
-         wuLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743580585; x=1744185385;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=noKgvUVQ2siSihaytXd2FVN73v58WuzUMmihxuAvJf8=;
-        b=lifGTOf1Iz7RjETEpUUgy8c1bTws1dpD3zLIsLdaESNWkRvqfZdTnm37PuLV4viXF4
-         IfTCn+QImoXcJH6HUrghU1eyTXbLuoCxlyMwKSgoNYlhol5MiBLheuqAsQEK7+kwou2W
-         2/Z2b4ennjI2SJi9OOl3JCLpEOrK8mh0vTeLOqJe8ufQrh2OxxCcUXYi9wOHQ1+hGYKn
-         0i+IYGyvz+Dm7ubxWBAVQzCWf+GBW9wb81CwN7XXGbyQtFMXG/5NmONyWpNtSWEKigKI
-         i/uIGnsXc+OpdGgsm7TPOvhC5CeFz3lu6J9i87dyEg9Gsyiy+rJlmM2a5/TJEIg+SC0s
-         i6yg==
-X-Forwarded-Encrypted: i=1; AJvYcCXmQOwbRVIVukueRicaKVNuEKTUHHdN/GFgtdqbNvon4wUHKTjAgFinTNP6HTvLXjSBoyBzJu7wK9SU0pk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyK2eeeAwxN+sc88oAeHs0VWjrmOt98jBfFyDPCSjMDosqhlVsj
-	GrpJ6WViwadqY3Wn4iQb9hSqc+PVEYKc0IBjospBuwpTzZzzUIQCXIkEAo1bWA==
-X-Gm-Gg: ASbGncsIUpzerQTGUj1pvM1BDMZ3bvicdH7Hv25JXuuoXN7u7nrwpwRFTxlPm/qafTb
-	JJAuTTi/TvoG5q25yWurUoXIKOiosnnw1XIHgbwGU11/eXDhpMogS34vG2K9Yf00voJEcAMOWXV
-	fq3iAzeCwRvm/rA9dHM78CTLDEAM4l4H2q/02BmwCbEJWnkq8f1nFXx7PR0dgkI4QWZMBtGEvwc
-	Tvv3JhZlUhPzpLQv4VsgK2OhjoQKFUcZT3r60o7GK8yBf5/X0iMgDHE1EUEoUMrMGL/yUMnXILv
-	vzxB0bFRxMYLIbEpbJjnHXG5BPB/heCeJoQDbzp4pb52c4CRgu1RK2LR/y9KbKSkK1w=
-X-Google-Smtp-Source: AGHT+IHOWRFG5W0KdxH0Zy0nVK1thir5cIAFzptpdFo0UkbUHPulKD1q5EFd4chj00OdziYyxmxbmQ==
-X-Received: by 2002:a05:6a20:d48b:b0:1f3:2e85:c052 with SMTP id adf61e73a8af0-2009f79b1f6mr27105411637.35.1743580585073;
-        Wed, 02 Apr 2025 00:56:25 -0700 (PDT)
-Received: from thinkpad ([120.56.205.103])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739710dd3d4sm10601497b3a.177.2025.04.02.00.56.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Apr 2025 00:56:24 -0700 (PDT)
-Date: Wed, 2 Apr 2025 13:26:17 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org, quic_mrana@quicinc.com, quic_vbadigan@quicinc.com
-Subject: Re: [PATCH v9 2/5] PCI: of: Add of_pci_get_equalization_presets() API
-Message-ID: <uipngb7dwzy22cbkp775jaasvas5eu2v7jlc2oyqr4oe6yr4gc@4nj6ehb7wcin>
-References: <20250328-preset_v6-v9-0-22cfa0490518@oss.qualcomm.com>
- <20250328-preset_v6-v9-2-22cfa0490518@oss.qualcomm.com>
+	s=arc-20240116; t=1743580617; c=relaxed/simple;
+	bh=E0mIWVHqstggdCCEUNjgt5beUCWykV4BPxOx5MBphX8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=imxg4uDNxe207jxwylI+tINZc5zkTssLXIlob3UlIWfUI2hKiFUlBRuSQA0rQzNDXuEwFZWIEdjgCdnymvkLUvNjeRlwS8Kc6V9eCsRLh0zOkslggIQs5tjmoQ64R1QgFnB1S1wxHWLqApkawvJI76KRx2AiNlK/e+65anBD4fE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost.localdomain (unknown [124.16.141.245])
+	by APP-05 (Coremail) with SMTP id zQCowACX1g647exnhj0VBQ--.33136S2;
+	Wed, 02 Apr 2025 15:56:42 +0800 (CST)
+From: Wentao Liang <vulab@iscas.ac.cn>
+To: maximlevitsky@gmail.com,
+	miquel.raynal@bootlin.com,
+	richard@nod.at,
+	vigneshr@ti.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-mtd@lists.infradead.org,
+	Wentao Liang <vulab@iscas.ac.cn>,
+	stable@vger.kernel.org
+Subject: [PATCH] mtd: rawnand: Add status chack in r852_ready()
+Date: Wed,  2 Apr 2025 15:56:23 +0800
+Message-ID: <20250402075624.3261-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.42.0.windows.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250328-preset_v6-v9-2-22cfa0490518@oss.qualcomm.com>
+X-CM-TRANSID:zQCowACX1g647exnhj0VBQ--.33136S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7XFy5Cw1xXF4rXFyUZFy8uFg_yoWDXFXE9r
+	17urZ2q347Grn3u3ySka13Xr90yr4UWr18Wws0vFZ5Jay7Aa4Sqryq9FnrGr109r1vkF13
+	Ja1qyw4xGrs7XjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUb4AFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
+	6F4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r
+	xl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
+	6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr
+	0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkF7I0En4kS14v2
+	6r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrV
+	AFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCI
+	c40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267
+	AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_
+	Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUjJ73P
+	UUUUU==
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiBgwAA2fsy5eVQwAAsI
 
-On Fri, Mar 28, 2025 at 03:58:30PM +0530, Krishna Chaitanya Chundru wrote:
-> PCIe equalization presets are predefined settings used to optimize
-> signal integrity by compensating for signal loss and distortion in
-> high-speed data transmission.
-> 
-> As per PCIe spec 6.0.1 revision section 8.3.3.3 & 4.2.4 for data rates
-> of 8.0 GT/s, 16.0 GT/s, 32.0 GT/s, and 64.0 GT/s, there is a way to
-> configure lane equalization presets for each lane to enhance the PCIe
-> link reliability. Each preset value represents a different combination
-> of pre-shoot and de-emphasis values. For each data rate, different
-> registers are defined: for 8.0 GT/s, registers are defined in section
-> 7.7.3.4; for 16.0 GT/s, in section 7.7.5.9, etc. The 8.0 GT/s rate has
-> an extra receiver preset hint, requiring 16 bits per lane, while the
-> remaining data rates use 8 bits per lane.
-> 
-> Based on the number of lanes and the supported data rate,
-> of_pci_get_equalization_presets() reads the device tree property and
-> stores in the presets structure.
-> 
-> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+In r852_ready(), the dev get from r852_get_dev() need to be checked.
+An unstable device should not be ready. A proper implementation can
+be found in r852_read_byte(). Add a status check and return 0 when it is
+unstable.
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Fixes: 50a487e7719c ("mtd: rawnand: Pass a nand_chip object to chip->dev_ready()")
+Cc: stable@vger.kernel.org # v4.20+
+Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+---
+ drivers/mtd/nand/raw/r852.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-- Mani
-
-> ---
->  drivers/pci/of.c  | 44 ++++++++++++++++++++++++++++++++++++++++++++
->  drivers/pci/pci.h | 32 +++++++++++++++++++++++++++++++-
->  2 files changed, 75 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-> index 7a806f5c0d20..d594a0e2fdfd 100644
-> --- a/drivers/pci/of.c
-> +++ b/drivers/pci/of.c
-> @@ -851,3 +851,47 @@ u32 of_pci_get_slot_power_limit(struct device_node *node,
->  	return slot_power_limit_mw;
->  }
->  EXPORT_SYMBOL_GPL(of_pci_get_slot_power_limit);
-> +
-> +/**
-> + * of_pci_get_equalization_presets - Parses the "eq-presets-Ngts" property.
-> + *
-> + * @dev: Device containing the properties.
-> + * @presets: Pointer to store the parsed data.
-> + * @num_lanes: Maximum number of lanes supported.
-> + *
-> + * If the property is present, read and store the data in the @presets structure.
-> + * Else, assign a default value of PCI_EQ_RESV.
-> + *
-> + * Return: 0 if the property is not available or successfully parsed else
-> + * errno otherwise.
-> + */
-> +int of_pci_get_equalization_presets(struct device *dev,
-> +				    struct pci_eq_presets *presets,
-> +				    int num_lanes)
-> +{
-> +	char name[20];
-> +	int ret;
-> +
-> +	presets->eq_presets_8gts[0] = PCI_EQ_RESV;
-> +	ret = of_property_read_u16_array(dev->of_node, "eq-presets-8gts",
-> +					 presets->eq_presets_8gts, num_lanes);
-> +	if (ret && ret != -EINVAL) {
-> +		dev_err(dev, "Error reading eq-presets-8gts: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	for (int i = 0; i < EQ_PRESET_TYPE_MAX - 1; i++) {
-> +		presets->eq_presets_Ngts[i][0] = PCI_EQ_RESV;
-> +		snprintf(name, sizeof(name), "eq-presets-%dgts", 8 << (i + 1));
-> +		ret = of_property_read_u8_array(dev->of_node, name,
-> +						presets->eq_presets_Ngts[i],
-> +						num_lanes);
-> +		if (ret && ret != -EINVAL) {
-> +			dev_err(dev, "Error reading %s: %d\n", name, ret);
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(of_pci_get_equalization_presets);
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 01e51db8d285..78c9cc0ad8fa 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -9,6 +9,8 @@ struct pcie_tlp_log;
->  /* Number of possible devfns: 0.0 to 1f.7 inclusive */
->  #define MAX_NR_DEVFNS 256
->  
-> +#define MAX_NR_LANES 16
-> +
->  #define PCI_FIND_CAP_TTL	48
->  
->  #define PCI_VSEC_ID_INTEL_TBT	0x1234	/* Thunderbolt */
-> @@ -808,6 +810,21 @@ static inline u64 pci_rebar_size_to_bytes(int size)
->  
->  struct device_node;
->  
-> +#define PCI_EQ_RESV	0xff
-> +
-> +enum equalization_preset_type {
-> +	EQ_PRESET_TYPE_8GTS,
-> +	EQ_PRESET_TYPE_16GTS,
-> +	EQ_PRESET_TYPE_32GTS,
-> +	EQ_PRESET_TYPE_64GTS,
-> +	EQ_PRESET_TYPE_MAX
-> +};
-> +
-> +struct pci_eq_presets {
-> +	u16 eq_presets_8gts[MAX_NR_LANES];
-> +	u8 eq_presets_Ngts[EQ_PRESET_TYPE_MAX - 1][MAX_NR_LANES];
-> +};
-> +
->  #ifdef CONFIG_OF
->  int of_get_pci_domain_nr(struct device_node *node);
->  int of_pci_get_max_link_speed(struct device_node *node);
-> @@ -822,7 +839,9 @@ void pci_release_bus_of_node(struct pci_bus *bus);
->  
->  int devm_of_pci_bridge_init(struct device *dev, struct pci_host_bridge *bridge);
->  bool of_pci_supply_present(struct device_node *np);
-> -
-> +int of_pci_get_equalization_presets(struct device *dev,
-> +				    struct pci_eq_presets *presets,
-> +				    int num_lanes);
->  #else
->  static inline int
->  of_get_pci_domain_nr(struct device_node *node)
-> @@ -867,6 +886,17 @@ static inline bool of_pci_supply_present(struct device_node *np)
->  {
->  	return false;
->  }
-> +
-> +static inline int of_pci_get_equalization_presets(struct device *dev,
-> +						  struct pci_eq_presets *presets,
-> +						  int num_lanes)
-> +{
-> +	presets->eq_presets_8gts[0] = PCI_EQ_RESV;
-> +	for (int i = 0; i < EQ_PRESET_TYPE_MAX - 1; i++)
-> +		presets->eq_presets_Ngts[i][0] = PCI_EQ_RESV;
-> +
-> +	return 0;
-> +}
->  #endif /* CONFIG_OF */
->  
->  struct of_changeset;
-> 
-> -- 
-> 2.34.1
-> 
-
+diff --git a/drivers/mtd/nand/raw/r852.c b/drivers/mtd/nand/raw/r852.c
+index b07c2f8b4035..918974d088cf 100644
+--- a/drivers/mtd/nand/raw/r852.c
++++ b/drivers/mtd/nand/raw/r852.c
+@@ -387,6 +387,9 @@ static int r852_wait(struct nand_chip *chip)
+ static int r852_ready(struct nand_chip *chip)
+ {
+ 	struct r852_device *dev = r852_get_dev(nand_to_mtd(chip));
++	if (dev->card_unstable)
++		return 0;
++
+ 	return !(r852_read_reg(dev, R852_CARD_STA) & R852_CARD_STA_BUSY);
+ }
+ 
 -- 
-மணிவண்ணன் சதாசிவம்
+2.42.0.windows.2
+
