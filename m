@@ -1,166 +1,104 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 990F418DF80;
-	Wed,  2 Apr 2025 16:31:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 740982AEE9;
+	Wed,  2 Apr 2025 16:33:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743611470; cv=none; b=kyeMEnD6PQSRCqcNNSkfSg496TAjiEz1uvM2+vHhguYzyAR1CBU8to0msxWoErRXzj8lOOIvMrbD4LrtpZ5g13o568U8XtJO5q8iksrkTtuIhCc4Grcd1iC0S40UaS2BMo0EdjTqJaL9VSFNxAdcc4NdEgXG2ChkdvFBuZZEJoc=
+	t=1743611618; cv=none; b=Ea8CIJD5yvNSB2uqN8dKraMo2jP3K3U91BUzVuZmEmyB2c8jtschPQVF8NSl5YgYChmfygIeE/DKz6FcAm6PJPxpaIV/D2cy2MOUCbmMqWqrjMpcPz6l6OU3Lx7cMjGpNZVNV08eSlfubYaLX0d6FwS+3YgX1RdcyKLOZSKI4JE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743611470; c=relaxed/simple;
-	bh=HIy0hHKXAPReYxd7y9ffbIswkaLgKDknXWgNX8/gO7Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XYFu67yXnMD//lA+9slyPrO9FvJWfmn3WgMNQRlSYYfNKIYA4E6j100JomxEF4ur2LQumqlU2hYeuECIKvR5DQiZNlrztg7tZpr6YSVfwvKl87UH5Xne+CQ2GWQQlAopbAODsRkXqpd8NTgIgVu3SHYeNnx5ye135etJZ4dY3kg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=aPXkPsRI; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=n1+9FCz0; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1743611618; c=relaxed/simple;
+	bh=a2xPLKRXNFM1k6b4pzJo6ujsadqfL0g/PuJfjy8Q/Ns=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VYcpkeTKGLyjKfvfnMpgQlnlOtVAqY/9chTVn4UpQ05uGriqqpY13DBtbKDmnn9r66VfT0K+9W4qJezW8ph0Q2jLYuUVv5uLLrXKqI5Cf+a04bRQ6LOdZUh6CWJ2gdbO1Sr7D28GCEHU3IdwI+ZtcjRjiZ2QIrZ0mrEZnhu2MKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KerGOxvu; arc=none smtp.client-ip=209.85.215.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="aPXkPsRI";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="n1+9FCz0"
-Date: Wed, 2 Apr 2025 18:31:02 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1743611465;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xd1KphlzMCu4Z6pJqyX+aES04YRk8Sgi26znrqcmoIg=;
-	b=aPXkPsRIIO+gk78hNS3UHwVMimopyiRa1u6YCD+0iGOR+lmT6lbaVwOH99yWvYa+WfQxLF
-	R51hhQM1N/mhrjLz/aLU294Ce1HMRoGVWJKB5LOhsUdIG99UC9WDsVeWAIut8jOTx9xmSN
-	B/i45j3A8a5oIiufsZmj0blDls862jXMfTo+QTqmTCW46OyN7r7mqq59x0oy47iXZ6ca+Y
-	oi6Qyr74IKAKJRGksrokIKJF9UD/s2DTABua+W1VDFbT2QfV+Y3kk3DMx8Z8XdesvqZnbY
-	4NNnBO9/MVZEK17byNSQ8r6etoNTI0sBKV8HP/1OnYvuoWhWWDF35lq6mzFCCg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1743611465;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xd1KphlzMCu4Z6pJqyX+aES04YRk8Sgi26znrqcmoIg=;
-	b=n1+9FCz093xgYuvsHQefw2o4N3FjHh4l9TGgA+vPheErSpZmihg0SZ5/I3Og9Dp0GRR6ox
-	+qrb7WjeznoHtOAQ==
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, 
-	Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>, 
-	"David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert@linux-m68k.org>, 
-	Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, 
-	linux-mm@kvack.org, x86@kernel.org, Naresh Kamboju <naresh.kamboju@linaro.org>, 
-	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>
-Subject: Re: [PATCH v2 10/13] arch, mm: set high_memory in free_area_init()
-Message-ID: <20250402181842-f25872a1-00f7-4a8f-ae6d-3927899ee3a6@linutronix.de>
-References: <20250313135003.836600-1-rppt@kernel.org>
- <20250313135003.836600-11-rppt@kernel.org>
- <20250402140521-bf9b3743-094e-4097-a189-10cdf1db9255@linutronix.de>
- <Z-0xrWyff9-9bJRf@kernel.org>
- <20250402145330-3ff21a6b-fb03-4bc8-8178-51a535582c6f@linutronix.de>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KerGOxvu"
+Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-af9a6b3da82so44936a12.0;
+        Wed, 02 Apr 2025 09:33:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743611617; x=1744216417; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=a2xPLKRXNFM1k6b4pzJo6ujsadqfL0g/PuJfjy8Q/Ns=;
+        b=KerGOxvu8yu9IE7dP8A2AE6rgiP+LNs0dVaL3WCJ+eOn5z24EM44eKBftgnFeNuRNd
+         12/ttuoqQoaXgNuoo1gcUEQz8SRPIbEIN2NVrYausPCeLuAdGJkgGl8O97uWl/ljiYMs
+         WC30Oeb3nbquvW1yvY4UbNhqfmQo3aNW0lE8HIWQK+5G0AGF9cAMsqEvedhbvMmW+xyd
+         YMqMeFRv4U8Vmc+wECBG6YtyF+Oz/HFtnNAAuJKpxTXWa3WUzAoHlTsaoR32rrY6k0JP
+         f0V1qKnUTrk6ef+TmW26pNQjOwjC0F/yooVmtWNd+b5n3ba14BSq2/Q2QtC76YLRPhM+
+         gqjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743611617; x=1744216417;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=a2xPLKRXNFM1k6b4pzJo6ujsadqfL0g/PuJfjy8Q/Ns=;
+        b=USZfwvpX+WnFj5K9oATB2emoveahtRfkl4N7lhY+GGuDB4L20GgnGGqiKZwCk/G3R9
+         n85lkislnn4KmR9WbXb+SHi8wPlSkyM1THq+QavNJSNnRf3yhuJ0zxTnPR7kfUHpJM2y
+         uvoyHqvZwR5S64CZCa8xa7NoOxw/ndOuO1bT1luo4yhf7PN8DVUvdvmhKvFw4sF9T4si
+         ialQ656na7ta8yn6T2tjXnMd4/A4MSAoWMba+PmQZtdT/txvc++K7fM7Toh5GWr/S+Wk
+         ZMCQz0KJVvqiyUSHhlVParoffuHgxBkdTC5emIDuE7aKxwVT6oAAtr/iypFNHudpklIN
+         kPEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWQZ283G3cdZDCdXbHRpP/SFf98kW7Lo9wOy7Vh6NS1JmoEwwvUO2VuthYfCTI/czOFYtunqSFTiM647vg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywi8DH17q9odKKGABrOnCIgFBNPyNdzGfIp1w7Z0BcXn1eW5PA9
+	As+6zCx29i60/HNnuJIiHJBw6nvrioUreD4jXjF72x3X3/m4txcTaG2XbAmCeWiridQnuxYsRYF
+	bZNoQroFk7LbsQaonnjrCWkAGbyE=
+X-Gm-Gg: ASbGncv29Cm5vC+xwijOaTssWJnaHN/09yybMaRHQFeqUyfFRXU11vkJmLgb+81EiSK
+	qQ5udEBEzP9uKKHRqjvZ/s6dIgHPymxIj2sekIzd58Kbt/8PPKDFfZx+9C4518ee+5vXHQPZ//6
+	F+YNIpHydwzZ1NCNoXXgTpQtRl
+X-Google-Smtp-Source: AGHT+IFePRuJ3j2s9IyQ0pR+vmX6gbN8OK9GvtH9S9o+IgM6Uwle22DNhWyjI1Qrq10lQblFq+VLC4SGdcaEN45RSJ4=
+X-Received: by 2002:a17:90b:5750:b0:2ff:6bd0:ff26 with SMTP id
+ 98e67ed59e1d1-3056ef3aademr3578364a91.34.1743611616286; Wed, 02 Apr 2025
+ 09:33:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250402145330-3ff21a6b-fb03-4bc8-8178-51a535582c6f@linutronix.de>
+References: <20250402161043.161795-1-bharadwaj.raju777@gmail.com> <zjqewsg6ijvol3x3rdjfyjeji3wy24nw45yb6mkqj7vwsk7mrn@yxnvgpj4i24k>
+In-Reply-To: <zjqewsg6ijvol3x3rdjfyjeji3wy24nw45yb6mkqj7vwsk7mrn@yxnvgpj4i24k>
+From: Bharadwaj Raju <bharadwaj.raju777@gmail.com>
+Date: Wed, 2 Apr 2025 22:03:10 +0530
+X-Gm-Features: AQ5f1JrBfyiPX15BceMt-IhDu2Xzz3EAQvGQEH515dfZf7zboOs61nV58pIlShw
+Message-ID: <CAPZ5DTEGi8RXBMui823bwnt96PcqZSavH8AQ+LPhRs=sJ-Br1Q@mail.gmail.com>
+Subject: Re: [PATCH] bcachefs: don't call sleeping funcs when handling
+ inconsistency errors
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: linux-bcachefs@vger.kernel.org, shuah@kernel.org, 
+	linux-kernel@vger.kernel.org, linux-kernel-mentees@lists.linux.dev, 
+	syzbot+c82cd2906e2f192410bb@syzkaller.appspotmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 02, 2025 at 03:07:51PM +0200, Thomas Weißschuh wrote:
-> On Wed, Apr 02, 2025 at 03:46:37PM +0300, Mike Rapoport wrote:
-> > On Wed, Apr 02, 2025 at 02:19:01PM +0200, Thomas Weißschuh wrote:
-> > > (drop all the non-x86 and non-mm recipients)
-> > > 
-> > > On Thu, Mar 13, 2025 at 03:50:00PM +0200, Mike Rapoport wrote:
-> > > > From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-> > > > 
-> > > > high_memory defines upper bound on the directly mapped memory.
-> > > > This bound is defined by the beginning of ZONE_HIGHMEM when a system has
-> > > > high memory and by the end of memory otherwise.
-> > > > 
-> > > > All this is known to generic memory management initialization code that
-> > > > can set high_memory while initializing core mm structures.
-> > > > 
-> > > > Add a generic calculation of high_memory to free_area_init() and remove
-> > > > per-architecture calculation except for the architectures that set and
-> > > > use high_memory earlier than that.
-> > > 
-> > > This change (in mainline as commit e120d1bc12da ("arch, mm: set high_memory in free_area_init()")
-> > > breaks booting i386 on QEMU for me (and others [0]).
-> > > The boot just hangs without output.
-> > > 
-> > > It's easily reproducible with kunit:
-> > > ./tools/testing/kunit/kunit.py run --arch i386
-> > > 
-> > > See below for the specific problematic hunk.
-> > > 
-> > > [0] https://lore.kernel.org/lkml/CA+G9fYtdXHVuirs3v6at3UoKNH5keuq0tpcvpz0tJFT4toLG4g@mail.gmail.com/
-> > > 
-> > > 
-> > > > diff --git a/arch/x86/mm/init_32.c b/arch/x86/mm/init_32.c
-> > > > index 6d2f8cb9451e..801b659ead0c 100644
-> > > > --- a/arch/x86/mm/init_32.c
-> > > > +++ b/arch/x86/mm/init_32.c
-> > > > @@ -643,9 +643,6 @@ void __init initmem_init(void)
-> > > >  		highstart_pfn = max_low_pfn;
-> > > >  	printk(KERN_NOTICE "%ldMB HIGHMEM available.\n",
-> > > >  		pages_to_mb(highend_pfn - highstart_pfn));
-> > > > -	high_memory = (void *) __va(highstart_pfn * PAGE_SIZE - 1) + 1;
-> > > > -#else
-> > > > -	high_memory = (void *) __va(max_low_pfn * PAGE_SIZE - 1) + 1;
-> > > >  #endif
-> > > 
-> > > Reverting this hunk fixes the issue for me.
-> >  
-> > This is already done by d893aca973c3 ("x86/mm: restore early initialization
-> > of high_memory for 32-bits").
-> 
-> Thanks. Of course I only noticed this shortly after sending my mail.
-> But this usecase is indeed broken on mainline.
-> Some further bisecting lead to the mm merge commit being broken, while both its
-> parents work. That lead the bisection astray.
-> eb0ece16027f ("Merge tag 'mm-stable-2025-03-30-16-52' of git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm")
-> 
-> As unlikely as it sounds, it's reproducible. I'll investigate a bit.
+On Wed, Apr 2, 2025 at 9:47=E2=80=AFPM Kent Overstreet
+<kent.overstreet@linux.dev> wrote:
+>
+> On Wed, Apr 02, 2025 at 09:40:40PM +0530, Bharadwaj Raju wrote:
+> > In bch2_bkey_pick_read_device, we're in an RCU lock. So, we can't call
+> > any potentially-sleeping functions. However, we call bch2_dev_rcu,
+> > which calls bch2_fs_inconsistent in its error case. That then calls
+> > bch2_prt_print on a non-atomic printbuf, as well as uses the blocking
+> > variant of bch2_print_string_as_lines, both of which lead to calls to
+> > potentially-sleeping functions, namely krealloc with GFP_KERNEL
+> > and console_lock respectively.
+> >
+> > Give a nonzero atomic to the printbuf, and use the nonblocking variant
+> > of bch2_print_string_as_lines.
+>
+> Sorry, beat you to it :)
+>
+> You also missed the one the syzbot report actually hit -
+> bch2_inconsistent_error().
 
-The issue is fixed with the following diff:
+Oops, thank you.
 
-diff --git a/mm/memblock.c b/mm/memblock.c
-index 284154445409..8cd95f60015d 100644
---- a/mm/memblock.c
-+++ b/mm/memblock.c
-@@ -2165,7 +2165,8 @@ static unsigned long __init __free_memory_core(phys_addr_t start,
-                                 phys_addr_t end)
- {
-        unsigned long start_pfn = PFN_UP(start);
--       unsigned long end_pfn = PFN_DOWN(end);
-+       unsigned long end_pfn = min_t(unsigned long,
-+                                     PFN_DOWN(end), max_low_pfn);
+If I'm not wrong, though, the bch2_print_string_as_lines
+still needs to be changed to bch2_print_string_as_lines_nonblocking?
 
-        if (start_pfn >= end_pfn)
-                return 0;
+In my testing that also produces the same BUG warning.
 
-
-Background:
-
-This reverts part of commit 6faea3422e3b ("arch, mm: streamline HIGHMEM freeing")
-which is the direct child of the partially reverted 
-commit e120d1bc12da ("arch, mm: set high_memory in free_area_init()").
-The assumptions the former commit became invalid with the partial revert the latter.
-
-This bug only triggers when CONFIG_HIGHMEM=n. When mm was branched from mainline
-the i386 configuration generated by kunit ended up with CONFIG_HIGHMEM=y.
-With some recent changes in mainline the kunit configuration switched to
-CONFIG_HIGHMEM=n, triggering this specific reproducer only when mm got merged
-into mainline again.
-
-New kunit reproducer:
-./tools/testing/kunit/kunit.py run --arch i386 example --timeout 10 --kconfig_add CONFIG_HIGHMEM=n
-
-Does this sound reasonable?  If so I'll send a patch tomorrow.
-
-@Naresh, could you test this, too?
-
-
-Thomas
+Should I make a patch for that?
