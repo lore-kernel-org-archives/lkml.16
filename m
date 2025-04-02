@@ -1,80 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AC19524C
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 05:54:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70F39524C;
+	Wed,  2 Apr 2025 05:56:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743573258; cv=none; b=UykvnZwDvY5bGxZDBRLqMINC0x4f2AD4aRt6qU+fy5/CLz3v8lz3uyoe/LJj2VHdiBYp7LyRJPUC+KeE8PHr2OAgXDWROrijw63Zp89cMjYfqd3q+iMjlpPLFHzBrtZv0mTNZIBekQl8J9ooPqGo37/X3kDQBv/qDb36s+AmZwg=
+	t=1743573399; cv=none; b=iD0V32c2aEir6Ncdxp8lhdXsgWcX3tR45E3MV5YIBoo9QDeE6zGvxj74c7i8fCnxc0/uL/ZJK+rmc9iYxXd3x0F43mFIYa72er0MzcZwuAv9dwbQ2FTiMFfJbH+kUXH+h+SyztqOvwyi1EdCFQ+DvwZRwBMsL1bJp7dDpIDjfEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743573258; c=relaxed/simple;
-	bh=xKtsK1Gzv7eBwRj8w+GLlG9DQFAmEcVSYHPgJmUUu1U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RWMIh0cbV987kkmyge27VBRHIFcII3EK3CKyXK1eLxcVtwYKlfMx+jO8N65POgec6wooP2+MUzTbJnWjZQpF0eYmyIYliPBv14URLSyTSUugc1SYjEA3w2FUcZ+4yDTjk+tWkQ6YMk3TOMu9k8lkUo5ji/omGwbUF44+OfxBup0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tZx2LWQY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743573399; c=relaxed/simple;
+	bh=idNX+svvEWLKtNy71wkE47NdHgMMCp/086kEVWpDgJc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LTUdWtV6SRMWUcSJ2MitlMAhslTEWZt+4BgNjT3AJvYwOJAAvV8iVDlRui7EpX2Y2vz4Z4AYutOxDMJ0yioOzXq1t2qm/U8v7hav6qWn0BDZVf5kjGc9C3TKs4MA1iB5MzmtLhVEVa+ZfVKvOlBjJqupRqtrJTG3VN6MkJkC558=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=b5/Duyyk; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tZx2LWQY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03621C4CEE9;
-	Wed,  2 Apr 2025 05:54:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743573254;
-	bh=xKtsK1Gzv7eBwRj8w+GLlG9DQFAmEcVSYHPgJmUUu1U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tZx2LWQYaC/nL/EJPNh3Gbm+dJL8xMXHKlJ5A3CpnMiny+c1aC52EU+d/ae7SLFPU
-	 JfOfIus9VAwYrEE5Espq5M6eoJ+COZRaGvEKkta36GkE2F6w9dn3h5tyTcxcSiwGbv
-	 iEv6LFiVt8UeOhleFh4LexHKmDu5BAe5WPgkVdjrinRi+qpTk5xnGHEoBlx3v3LXSI
-	 wCnQyIf/Xj7fSpvJqnoD1tj50VBsSHQFY1mBJdSPl/xf4xHEkxKGeXpYXknVc1MxuQ
-	 WKvPLUcHEQkBjp3uguOkZ9fqPrh75hZT4z/T9bGGe4wABTR9US/mp3lauA7r+IcfIG
-	 3TUcEwjfWrW+w==
-Date: Wed, 2 Apr 2025 08:54:09 +0300
-From: Leon Romanovsky <leon@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Christian Loehle <Christian.Loehle@arm.com>
-Subject: Re: [for-linus][PATCH 1/4] ftrace: Have tracing function args depend
- on PROBE_EVENTS_BTF_ARGS
-Message-ID: <20250402055409.GB84568@unreal>
-References: <20250402022308.372786127@goodmis.org>
- <20250402022334.683869963@goodmis.org>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="b5/Duyyk"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
+	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=b75+Ht5Hyq1P528GzwL4WQIDfaLlTiDS1piLjtDr6oY=; b=b5/DuyykqDpZGV5cYCxB3ptdbL
+	kFxw+AULnogOBOaIYBVtSPJoF5wVmts9Xh6yMsEoRpVZ4oT88mer0yJZLIvwfMOUl/FeREJfUNp0p
+	2JgSIbqdwKuMRcm+5BmIQ08tJtGeDBJkdmRlA+vGLI8sY/7j5ZZFBevuYPfhr5GLcTXrNWkKLR7CE
+	yQMNdoabWhI+fIz0Lw3za5az21nq4qb+A1XfPeKEq6ggpXkMYALO5wNtyU67NqsvWiahb79wUYogO
+	rY/ntXNvQkPEw0gA43/iV9rLyMJ+BhOIlrQHOSuvrIPTf6wjAXtx6CYrAFWnB6Dd/0hjfPyR6/c4S
+	/oBOnTlQ==;
+Received: from [50.53.2.24] (helo=[192.168.254.17])
+	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1tzr5X-00000006yR0-0vUZ;
+	Wed, 02 Apr 2025 05:56:36 +0000
+Message-ID: <b5589b7d-d4a1-4b12-a845-afdbb26ed845@infradead.org>
+Date: Tue, 1 Apr 2025 22:56:32 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250402022334.683869963@goodmis.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/7] lib/crc: remove unnecessary prompt for CONFIG_CRC32
+ and drop 'default y'
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+ linux-crypto@vger.kernel.org, linux-arch@vger.kernel.org
+References: <20250401221600.24878-1-ebiggers@kernel.org>
+ <20250401221600.24878-2-ebiggers@kernel.org>
+ <2c1cbb51-cc16-4292-ad30-482d93935d91@infradead.org>
+ <20250402035107.GA317606@sol.localdomain>
+ <81aac5ff-8698-4059-92a2-bccb998eb000@infradead.org>
+ <20250402050234.GB317606@sol.localdomain>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20250402050234.GB317606@sol.localdomain>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 01, 2025 at 10:23:09PM -0400, Steven Rostedt wrote:
-> From: Steven Rostedt <rostedt@goodmis.org>
-> 
-> The option PROBE_EVENTS_BTF_ARGS enables the functions
-> btf_find_func_proto() and btf_get_func_param() which are used by the
-> function argument tracing code. The option FUNCTION_TRACE_ARGS was
-> dependent on the same configs that PROBE_EVENTS_BTF_ARGS was dependent on,
-> but it was also dependent on PROBE_EVENTS_BTF_ARGS. In fact, if
-> PROBE_EVENTS_BTF_ARGS is supported then FUNCTION_TRACE_ARGS is supported.
-> 
-> Just make FUNCTION_TRACE_ARGS depend on PROBE_EVENTS_BTF_ARGS.
-> 
-> Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Leon Romanovsky <leon@kernel.org>
-> Link: https://lore.kernel.org/20250401113601.17fa1129@gandalf.local.home
-> Fixes: 533c20b062d7c ("ftrace: Add print_function_args()")
-> Closes: https://lore.kernel.org/all/DB9PR08MB75820599801BAD118D123D7D93AD2@DB9PR08MB7582.eurprd08.prod.outlook.com/
-> Reported-by: Christian Loehle <Christian.Loehle@arm.com>
-> Tested-by: Christian Loehle <Christian.Loehle@arm.com>
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
->  kernel/trace/Kconfig | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
 
-Tested-by: Leon Romanovsky <leon@kernel.org>
 
-Thanks
+On 4/1/25 10:02 PM, Eric Biggers wrote:
+> On Tue, Apr 01, 2025 at 09:50:57PM -0700, Randy Dunlap wrote:
+>>
+>>
+>> On 4/1/25 8:51 PM, Eric Biggers wrote:
+>>> On Tue, Apr 01, 2025 at 08:42:41PM -0700, Randy Dunlap wrote:
+>>>> Hi 
+>>>>
+>>>> On 4/1/25 3:15 PM, Eric Biggers wrote:
+>>>>> From: Eric Biggers <ebiggers@google.com>
+>>>>>
+>>>>> All modules that need CONFIG_CRC32 already select it, so there is no
+>>>>> need to bother users about the option, nor to default it to y.
+>>>>>
+>>>>
+>>>> My memory from 10-20 years ago could be foggy, but ISTR that someone made at least
+>>>> CRC16 and CRC32 user-selectable in order to support out-of-tree modules...
+>>>> FWIW.
+>>>> But they would not need to be default y.
+>>>
+>>> That's not supported by upstream, though.
+>>
+>> Which part is not supported by upstream?
+> 
+> Having prompts for library kconfig options solely because out-of-tree modules
+> might need them.
+
+Well, I think that is was supported for many years. I don't see how it would become
+unsupported all of a sudden. IMHO.
+
+-- 
+~Randy
+
