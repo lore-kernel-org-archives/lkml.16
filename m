@@ -1,150 +1,159 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE6FE1E50B;
-	Wed,  2 Apr 2025 12:35:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD303236A98
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 12:36:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743597327; cv=none; b=h30ZLn+JkUvc/rCp75EnT9baK+mFmpIEYgLM+MWwud50Qun1Ux5MpdGxKAT6pA39HwOp0mgns5oiEJt1UYX5q7ABX5OL4/FlKCRYaplSHZcKR/4K9Wx4DYTBsPG2Yl+gT7w8qXNuNzbN7PkeE046zPzBWsN+Pj/boMr0YLapqP4=
+	t=1743597390; cv=none; b=gFLA9ZV2E9sqKj+K1UWm+JpsE9fXgBCsNYbzE+EfoS1MKs6cwlRMKf6tiB3lPbqKwOYBn1j/IvAiTHF15NfB1kLB4eJeoBt+EIHcjAboXTgAtRG2z27vdxu6u/fLhFDWIT0bWFzYHfuiNQ7m0EaFSJim7Bx1T2jsBjV9M5m/p0k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743597327; c=relaxed/simple;
-	bh=5x5voHAbthWztCnJTAxyUPzXr6ODagheOFflvD8Cgow=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AMA7oZUMCtonaVfpWJxkF+P0OJ7BSsOvWYg+QhSJkZK+hI/WxIvN1zTQQR7g1YfghwIV22VO40xeAgHkqNDHApafGqfZFCwT1Hv/91aD+Rqjj7hca6jJ9eGt6abJElLe4u2nZ6WAlNCmU/BzGqdHEMrwE8HJuLxjYxuNT6f9UeY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QcGL7P7x; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743597390; c=relaxed/simple;
+	bh=wLXCvrQkypVg4hlEhY6JXt6xgl1mkrVJGg1FXS9VB3U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Lo+lGqoM2B7CulDh74JWremPWzOdumv/cvECX4BzrWX21iv/m6zXQied+m1o4/VCElerqLkW1HtE2xYZw5oMY5nk6KcSMZiNWttiXotQYwxBupYvhdNMI2peMMAsqQ/AeCh5wzh9LZFmW2UyR+mczFsSM/sITzjYcEiL2OJIYjs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=fXPF+hrW; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=vQdOo3Fh; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=fXPF+hrW; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=vQdOo3Fh; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QcGL7P7x"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3996af42857so578663f8f.0;
-        Wed, 02 Apr 2025 05:35:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743597324; x=1744202124; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fQPuk4z8aXO1/VwBQYL7UU05vvl1F/e5DxjIm3de0nQ=;
-        b=QcGL7P7xdIlNJFtbv1qiOnhd1v9UoUavw/eehcp5qTLK0ORnH24kzw7vGiboSbQGWD
-         ppytj7pxBsNeBJ/KEKu+yDjfacmVaip2Rdtoiwu/lcFmMPR30sBASZMW3vgAcQlC/kcJ
-         ONvHmufdnMwPmONrOTcijCBRR2mOKJRGN5Ik7OM0eZsVFF/wU6crTCymAIDEJLJ57LrX
-         yCfYIunRsZeYeilqu/gLbzXgnpL2aIL7IAMuIsvD1k4EzGkwrkdWakxLu2W6ESTmdWUy
-         CfBPgOa9ZZm0VX6/PZ/plvawSRCxyqIDzzojeiKRQDut4z5jxdRiFefL8ekzy/gSebAT
-         iATA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743597324; x=1744202124;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fQPuk4z8aXO1/VwBQYL7UU05vvl1F/e5DxjIm3de0nQ=;
-        b=rchl1ru5mEMrx+XbmE9zYhC8XxudatiZQckUfx+Q2yI1Sj58lcKLgfU4Ag+BlD5Arb
-         Apv4e0Uz0JaADiMbZPpur/U4xYeYusWhzxeYuYyN/bxXAX+msULtfbg7i1pT4E5IQ92U
-         8ff4RlkkHQPUJkr8GnaY+PCPHdU911BPpY5oiE18oD6ZPQEJ4ecEA2ugmAK81GNC1yxt
-         YNrSUQXHmX/OBYDNiDE0LoPdGvJU+NVDnFyibzPnKYAF4MTAJPPHF+19EBuLrx57rYti
-         Z3mnVI5AD3WEUFgh1GuXKzJ8NRZkLp6T/wnEwj+4NbspODNC1CzRoL+iaejXknP/MY30
-         /CAw==
-X-Forwarded-Encrypted: i=1; AJvYcCU3ET9hdKoCZuK+lJXILl+QeOU+9q2P4mmTWak/Kb6lNcsImdv3f60sxiyThbSwBN1mMHzEbRhC@vger.kernel.org, AJvYcCU74I9PmntDjz8zfd5JZDle0wx1kYIfc3UH7VOnGLXRO8T1kaRpYEDHuDyHwR4oHrjh9lA1fW464D6N@vger.kernel.org, AJvYcCUpJAx58K9xug8hCIcO4omOHbbtVDeMV2FnHsQPCgMsjTFNxbSlMeWQecOe0YeZLxaFaGlvKWOxqhv/@vger.kernel.org, AJvYcCVUJIQV2CYwVKa47sx5jWjf8kaOKvNmxOpNFNgFc7bhaOknHWN7EAW74bdQDDY9T5HrEmu/12SEhRy+yOKN@vger.kernel.org, AJvYcCVc+6wQcTWNvC5fGMy4colAI6SZ5ypD70q24zcagN2lOyQSLqbRKyMOSFXfjAFRFAokq50N2/Y2WQlJZw==@vger.kernel.org, AJvYcCVsGxNX+HQ7AxC/1/MOiDCNjX8hTbxrcPkogZqgWZQ3OzRI/ptciXR0N1SDcONAsKeZ9pkDuueh0ltZKQ==@vger.kernel.org, AJvYcCVvaLjZn2jWAOMryTf4TiQ9104/LhPJuQlmGmJWUymC9iJ0/4vjoG9mB07t2hOOTQjCHjs=@vger.kernel.org, AJvYcCWAO6wB/JHNG23o7D8wYYPRsT4woPW+mTI+ON3VykxaRxp85v9QbDMaZ+YrItzAgAFSU0SMypZBWDKDhg==@vger.kernel.org, AJvYcCWTozHbnxqZ0g4Mvqobcf98xg3b/LKrcQklnfZuZmUTH9yjYQr7huKmW5V+sDaIgNuZGK4npl2r1tw=@vger.kernel.org, AJvYcCWUySn7qvYZ7IfLe11HJ2nL9+AItCC9UNyZkXUmJaOC5Snh0leeY34sY0lWbq7yG235zceWfeh4PKthCC7pWu0a@vger.kernel.org, AJvYcCWyNyjHbs+QL6MN+LXrAl1LtFZ9eY4JHcwvO0So+LWgY7csykGT6u2JddCF8rfT3w6cfy/x1w==@vger.kernel.org, AJvYcCX7HB3HV08iHwh/h7qhgJbtQznDp2S8P9T8x5XmSZO//Yk+PNt1m2Eg82rqf5DdmxFJsMM93cb+dEgfkQ==@vger.kernel.org, AJvYcCXnjTIbGQ42spZ/B8cllCy0Wnw15dTI6sCfNv7cnja1bz3/Tn2ImuYGsX8lMVOYVQ4lGKCcun7G0y+h8Q==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx8kWe0OlPNKLMsRXrarDGAeF37TCmufpkhVJnukaY4cKLB0faL
-	3tWGhirrQsk7ZSfwk9zR2+yAODq9btzp1uLBk55AM5iuoqTpS46r
-X-Gm-Gg: ASbGncuwgp92SBngGAPvxqqxLAH0bom1QCyMzyiznnf/tCGA/5eVlJAmlDK+rd3Vnp6
-	zAE5/LFt43ItXHumAUnhVbRGkS3yvPE1fPlWNMfine5e6ZD9Rq3gxTzT6aH2JW4g2J+rNl20ZsS
-	zLqzJDsjitfGTXUaMmFSOVSU0qhHKnhsrrj2sLnDCplbP++r/MfJOV8Rhmp+SPpgcNN3ZeF43sh
-	cS4bJRDDLZnS/RUO5Agu/e0ZkYgeE//MONrwhzPhIos2dK1WIj/OOfA+YsfwGcXbqTM2VGK70wH
-	NG2d1QNr0uXb/qzKsUWEM9iad3ZDAwpqwWqN/VX7BfwQ3XSteV0ZNaELqpRH+bnF6OV4o4YKwmQ
-	+sKwCmsE=
-X-Google-Smtp-Source: AGHT+IHaPOBKU7A29Yjs98Lc1iT7Oi631s03TvCGaxR6gPTH2ceLJBkQprnFjuTvnVXixjBxLkV5PQ==
-X-Received: by 2002:a5d:648b:0:b0:38d:df15:2770 with SMTP id ffacd0b85a97d-39c2a2c9272mr2009745f8f.0.1743597323750;
-        Wed, 02 Apr 2025 05:35:23 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43eb613ae24sm19468475e9.40.2025.04.02.05.35.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Apr 2025 05:35:23 -0700 (PDT)
-Date: Wed, 2 Apr 2025 13:35:20 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Stefan Metzmacher <metze@samba.org>, Jens Axboe <axboe@kernel.dk>, Pavel
- Begunkov <asml.silence@gmail.com>, Breno Leitao <leitao@debian.org>, Jakub
- Kicinski <kuba@kernel.org>, Christoph Hellwig <hch@lst.de>, Karsten Keil
- <isdn@linux-pingi.de>, Ayush Sawal <ayush.sawal@chelsio.com>, Andrew Lunn
- <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Simon
- Horman <horms@kernel.org>, Kuniyuki Iwashima <kuniyu@amazon.com>, Willem de
- Bruijn <willemb@google.com>, David Ahern <dsahern@kernel.org>, Marcelo
- Ricardo Leitner <marcelo.leitner@gmail.com>, Xin Long
- <lucien.xin@gmail.com>, Neal Cardwell <ncardwell@google.com>, Joerg Reuter
- <jreuter@yaina.de>, Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg
- <johan.hedberg@gmail.com>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
- Oliver Hartkopp <socketcan@hartkopp.net>, Marc Kleine-Budde
- <mkl@pengutronix.de>, Robin van der Gracht <robin@protonic.nl>, Oleksij
- Rempel <o.rempel@pengutronix.de>, kernel@pengutronix.de, Alexander Aring
- <alex.aring@gmail.com>, Stefan Schmidt <stefan@datenfreihafen.org>, Miquel
- Raynal <miquel.raynal@bootlin.com>, Alexandra Winter
- <wintera@linux.ibm.com>, Thorsten Winkler <twinkler@linux.ibm.com>, James
- Chapman <jchapman@katalix.com>, Jeremy Kerr <jk@codeconstruct.com.au>, Matt
- Johnston <matt@codeconstruct.com.au>, Matthieu Baerts <matttbe@kernel.org>,
- Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
- Krzysztof Kozlowski <krzk@kernel.org>, Remi Denis-Courmont
- <courmisch@gmail.com>, Allison Henderson <allison.henderson@oracle.com>,
- David Howells <dhowells@redhat.com>, Marc Dionne
- <marc.dionne@auristor.com>, Wenjia Zhang <wenjia@linux.ibm.com>, Jan
- Karcher <jaka@linux.ibm.com>, "D. Wythe" <alibuda@linux.alibaba.com>, Tony
- Lu <tonylu@linux.alibaba.com>, Wen Gu <guwen@linux.alibaba.com>, Jon Maloy
- <jmaloy@redhat.com>, Boris Pismenny <borisp@nvidia.com>, John Fastabend
- <john.fastabend@gmail.com>, Stefano Garzarella <sgarzare@redhat.com>,
- Martin Schiller <ms@dev.tdt.de>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?=
- <bjorn@kernel.org>, Magnus Karlsson <magnus.karlsson@intel.com>, Maciej
- Fijalkowski <maciej.fijalkowski@intel.com>, Jonathan Lemon
- <jonathan.lemon@gmail.com>, Alexei Starovoitov <ast@kernel.org>, Daniel
- Borkmann <daniel@iogearbox.net>, Jesper Dangaard Brouer <hawk@kernel.org>,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-sctp@vger.kernel.org, linux-hams@vger.kernel.org,
- linux-bluetooth@vger.kernel.org, linux-can@vger.kernel.org,
- dccp@vger.kernel.org, linux-wpan@vger.kernel.org,
- linux-s390@vger.kernel.org, mptcp@lists.linux.dev,
- linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com,
- linux-afs@lists.infradead.org, tipc-discussion@lists.sourceforge.net,
- virtualization@lists.linux.dev, linux-x25@vger.kernel.org,
- bpf@vger.kernel.org, isdn4linux@listserv.isdn4linux.de,
- io-uring@vger.kernel.org
-Subject: Re: [RFC PATCH 0/4] net/io_uring: pass a kernel pointer via
- optlen_t to proto[_ops].getsockopt()
-Message-ID: <20250402133520.40451468@pumpkin>
-In-Reply-To: <CAHk-=whmzrO-BMU=uSVXbuoLi-3tJsO=0kHj1BCPBE3F2kVhTA@mail.gmail.com>
-References: <cover.1743449872.git.metze@samba.org>
-	<CAHk-=whmzrO-BMU=uSVXbuoLi-3tJsO=0kHj1BCPBE3F2kVhTA@mail.gmail.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="fXPF+hrW";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="vQdOo3Fh";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="fXPF+hrW";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="vQdOo3Fh"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id BD8561F461;
+	Wed,  2 Apr 2025 12:36:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1743597386; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OIq2yKV0kL+PNrsufhF/VS7j84XZ7TdP3HdOB/g4idM=;
+	b=fXPF+hrW9OESPG2JyNmFiJbWfZw+aOLT2am3EsXDEEaawlck8775kXMFtH5spghsHMtUcX
+	VscVu7TO3WxbGcWVnIsoPCJSY1e1WH3u5dN21madec0+Ca0cTDA90HvBCB0+Z7x25FU3Lo
+	30xD+e0cl4e5ygj3jNeB1ccwj/BZJbg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1743597386;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OIq2yKV0kL+PNrsufhF/VS7j84XZ7TdP3HdOB/g4idM=;
+	b=vQdOo3FhPZcMU3Ga27uied2qPElJlsEC94vV77CszZY2lWe+IWZ6FmtskR9LkIDLS/caXd
+	Q3C9ciRZxeK1NsAw==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1743597386; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OIq2yKV0kL+PNrsufhF/VS7j84XZ7TdP3HdOB/g4idM=;
+	b=fXPF+hrW9OESPG2JyNmFiJbWfZw+aOLT2am3EsXDEEaawlck8775kXMFtH5spghsHMtUcX
+	VscVu7TO3WxbGcWVnIsoPCJSY1e1WH3u5dN21madec0+Ca0cTDA90HvBCB0+Z7x25FU3Lo
+	30xD+e0cl4e5ygj3jNeB1ccwj/BZJbg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1743597386;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OIq2yKV0kL+PNrsufhF/VS7j84XZ7TdP3HdOB/g4idM=;
+	b=vQdOo3FhPZcMU3Ga27uied2qPElJlsEC94vV77CszZY2lWe+IWZ6FmtskR9LkIDLS/caXd
+	Q3C9ciRZxeK1NsAw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B0D52137D4;
+	Wed,  2 Apr 2025 12:36:26 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id XEknK0ov7WdpBAAAD6G6ig
+	(envelope-from <jack@suse.cz>); Wed, 02 Apr 2025 12:36:26 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 69067A07E6; Wed,  2 Apr 2025 14:36:26 +0200 (CEST)
+Date: Wed, 2 Apr 2025 14:36:26 +0200
+From: Jan Kara <jack@suse.cz>
+To: Murad Masimov <m.masimov@mt-integration.ru>
+Cc: Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>, 
+	Joseph Qi <joseph.qi@linux.alibaba.com>, Jan Kara <jack@suse.cz>, ocfs2-devel@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, lvc-project@linuxtesting.org
+Subject: Re: [PATCH 1/2] ocfs2: Fix possible memory leak in
+ ocfs2_finish_quota_recovery
+Message-ID: <ategbetdbjc3vxgablimxrche2dv4ndaqq3fkrd6lu64e3ggce@m76fa6gjhdh2>
+References: <20250402065628.706359-1-m.masimov@mt-integration.ru>
+ <20250402065628.706359-2-m.masimov@mt-integration.ru>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250402065628.706359-2-m.masimov@mt-integration.ru>
+X-Spam-Score: -3.80
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	RCVD_COUNT_THREE(0.00)[3];
+	FROM_HAS_DN(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_LAST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,suse.com:email]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On Tue, 1 Apr 2025 17:40:19 -0700
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
-
-> "
+On Wed 02-04-25 09:56:27, Murad Masimov wrote:
+> If ocfs2_finish_quota_recovery() exits due to an error before passing all
+> rc_list elements to ocfs2_recover_local_quota_file() then it can lead to
+> a memory leak as rc_list may still contain elements that have to be freed.
 > 
-> On Mon, 31 Mar 2025 at 13:11, Stefan Metzmacher <metze@samba.org> wrote:
-> >
-> > But as Linus don't like 'sockptr_t' I used a different approach.  
+> Release all memory allocated by ocfs2_add_recovery_chunk() using
+> ocfs2_free_quota_recovery() instead of kfree().
 > 
-> So the sockptr_t thing has already happened. I hate it, and I think
-> it's ugly as hell, but it is what it is.
+> Found by Linux Verification Center (linuxtesting.org) with Syzkaller.
 > 
-> I think it's a complete hack and having that "kernel or user" pointer
-> flag is disgusting.
+> Fixes: 2205363dce74 ("ocfs2: Implement quota recovery")
+> Signed-off-by: Murad Masimov <m.masimov@mt-integration.ru>
 
-I have proposed a patch which replaced it with a structure.
-That showed up some really hacky code in IIRC io_uring.
+Looks good. Thanks for debugging this! Feel free to add:
 
-Using sockptr_t for the buffer was one thing, the generic code
-can't copy the buffer to/from user because code lies about the length.
+Reviewed-by: Jan Kara <jack@suse.cz>
 
-But using for the length is just brain-dead.
-That is fixed size and can be copied from/to user by the wrapper.
-The code bloat reduction will be significant.
+								Honza
 
-	David
-
+> ---
+>  fs/ocfs2/quota_local.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/ocfs2/quota_local.c b/fs/ocfs2/quota_local.c
+> index 2956d888c131..e60383d6ecc1 100644
+> --- a/fs/ocfs2/quota_local.c
+> +++ b/fs/ocfs2/quota_local.c
+> @@ -678,7 +678,7 @@ int ocfs2_finish_quota_recovery(struct ocfs2_super *osb,
+>  	}
+>  out:
+>  	up_read(&sb->s_umount);
+> -	kfree(rec);
+> +	ocfs2_free_quota_recovery(rec);
+>  	return status;
+>  }
+> 
+> --
+> 2.39.2
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
