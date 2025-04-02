@@ -1,126 +1,96 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [217.72.192.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F1977081C
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 08:00:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01B2A2F5A;
+	Wed,  2 Apr 2025 08:03:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743580843; cv=none; b=SHG25zXcC7emY3S823lJf8G38h9/sz2y+xE50dlU4qyfPBlpy4S+4w+D51DQ9gSvryB8Z/IaqkF4cKLo/j9dvhuToJm/2ErpO/iKqFdVJ2vAPdRJfcJQ/7GOgWah9ouOXs4ddfBYS9lHR3kZCCpMnWd9Tld1BsnN0rQqJzv7g7c=
+	t=1743581012; cv=none; b=VcJY6oEQor52LxuB/b+dkXbW3yDJcfY/E7P6cSErLgCQxBQRx6QfTeiZa+VuNH08jdD70939dRtiEkIHF+ps8KblbKOKjY7YhvmchSumNcEmTZQYfAy6ogTv/ymD1PogBxBOM2TynrV01f47zuP3fdMWUScma5ryxlFdui5m4+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743580843; c=relaxed/simple;
-	bh=0a4g2AA3yqI2lZl/rLdcxJlvVBoXlDU/3TS7Jxz9usY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=atZb8Ssf9Xsdu4/3vmsroys2Ck5nzqsJu4CHkacljbVWds5/B5f7Ne5uXiSlTytBfu5WaxnaBPPNCK1d5jYK10e98LDTjna+8SjxmO6NqF5bGFj8JtBfJ8XBez/WqsbXRbrDImquV1Ip9CtaCIEs8dGhBHBv/2yTwzJKtPMHAp8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=E8KZeGlv; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1743581012; c=relaxed/simple;
+	bh=qGB7dzW9PSanqFpaSbGxQtSOv1FhWKxASFZi93co2CM=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=hHGa8xd3FhaZdYF9fW+iFKH06EXx9rfmvqIiUlbir4JiQN9P2UKkCc3lvZbWh9wi2vkCUZbT7P38rJwxH90OFCmq6C+sf9I+LKogQU8K3J+7i7OU8qOE/tUXhhjFK2+nQrUU8KCjw9qScSxw0jqDoTqvp55OdjbnQGO91gQunCU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=j86SPPYo; arc=none smtp.client-ip=217.72.192.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="E8KZeGlv"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2ff6e91cff5so11203215a91.2
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 01:00:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743580840; x=1744185640; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ctkJhtxKsp7SbmROJ/NcWvcFC2gk/L3/qKRnLMhq/34=;
-        b=E8KZeGlvhHQ5ZBVIMXgyhFY1Z97wEupWCdkGhGcJnW4mnUxYLPUcrb3IA4sTJsln57
-         w8tVtG/OSgh9g1Akc+dNZdsCD7+HEhHOcDDMmbQ0zjtxR54U5xvQCfYz22xHnWN+GkVd
-         4isG5cZUZvE4nldLhqIc8C7U09lrtlLCOZry9cpR4BLTrXRj+QndmXZ4ZDexQLiQsK63
-         G55FnqbrYoOFjEwo+lCHNdO8RNZu9nTC9qptiplN5GOLloztonZGHTx2084ODG0xC+2G
-         OLeqp2lXDqjO0Rp/dFp7Y8PPSNyqFBEydBFmorWUL4HmafopomhOHvOVSywi1fxOrf92
-         +QTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743580840; x=1744185640;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ctkJhtxKsp7SbmROJ/NcWvcFC2gk/L3/qKRnLMhq/34=;
-        b=QjYtBla54nf6eVaNfEtAjNU4EltmZHn2rVLIrQz9qDgHqxZWtcuf562h/DyyP+O1vx
-         iO2FKnyinbJIomUvBB6oKeuj6s/25pdy16tZoHqEnRbOwQNVV67EvS8Mu0ZVlaNh6A7Q
-         nOAaj1gvQ+AiE2qjPkcto30xGBsxW+VFjivt95Wy35IsaXlu7uZOJ9egfXh7Ydc/tId6
-         d8SO6pGgXBlA0UQ2H9suYnTjbAvu4QBUPGLxG2mo+fz8uPQHX+kYNLmTctgcDerZR8ON
-         Fx+/c0nVWPykXpRj52On0WLlRTX/3rQ9Zn8cM8iOidHI4DRTQH6lVreKxp7P4lq+o3fg
-         rbQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVRM826P97AV+JvcJqAmHVeC/uQp9HJZyoGnUjgXdSO4bHTv5bHWV+J9J3dD3KesBEuLeMPBr8axbuhXag=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzBXH73QFgDrtBpIuNJ2CBMw1+ycDoVCKZy21yYCPGnMhI2VMs9
-	WHm37xJlXXQivqfrfBeE5UAmMlfLf/ocl/5QpVi0CFLreQ1/s2G6JA7AVxxJcA==
-X-Gm-Gg: ASbGncsWpymRWi4kNqm8r1844es7++dMqC24YWaEP6FVHuF8ODHSWkVbwTxXPf5YjlX
-	KYkL/68r/IIt48K2POa0i2O3Wf91BDUwDPR/vmE5Za5czi2tqbd2R8cVPVA6Qh+FGPxtPkGbblG
-	3Ol2zuendmmKCyHpOPmdm+j3ObOqqOIIg1aH+XeCCCTWxq31mwQAsRwI0F+bYCkZjvZNz9Esvpt
-	YkhYKlX/Whv+uGu/0YXnJCyoRHBoywrXoDSmqiqMaTCAfxAcI950ZJU86TH+CuarV17JbqKmUJo
-	svyOZU+Uy3n0KfrRdKzc5JadUd0O/i9PO+odo7zUtD1JnaXmGGEgQctk
-X-Google-Smtp-Source: AGHT+IGTopCX2yplsS8GSpqfdGC18AVuR2urMTzElNFnwCLQ4BxN3uKkDEM1puu2xMXe8rc89mguVQ==
-X-Received: by 2002:a17:90b:1f92:b0:2fa:15ab:4dff with SMTP id 98e67ed59e1d1-3053215b176mr5797036a91.31.1743580840354;
-        Wed, 02 Apr 2025 01:00:40 -0700 (PDT)
-Received: from thinkpad ([120.56.205.103])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3056f979d6fsm1010122a91.45.2025.04.02.01.00.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Apr 2025 01:00:39 -0700 (PDT)
-Date: Wed, 2 Apr 2025 13:30:34 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Johan Hovold <johan+linaro@kernel.org>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Jeff Johnson <jjohnson@kernel.org>, linux-pci@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, ath11k@lists.infradead.org, ath12k@lists.infradead.org, 
-	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/4] PCI/arm64/ath11k/ath12k: Rename pwrctrl Kconfig
- symbols
-Message-ID: <bsk4s5tlbpnvds73uxeasqxydcxolxpxvmtladtejhbi65yxob@4h5gy5srxlrr>
-References: <20250328143646.27678-1-johan+linaro@kernel.org>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="j86SPPYo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1743581006; x=1744185806; i=markus.elfring@web.de;
+	bh=qGB7dzW9PSanqFpaSbGxQtSOv1FhWKxASFZi93co2CM=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=j86SPPYoH88VNTePktAyUyUF1OdTyO7G1L+L30JvIbTD/1rTCUHQJWCSQQuNTSLJ
+	 maf1vYqz8YVi4fOUBjBeY1vAYTq82J0bufLLi1mVR0rl298gBvJaXa+JQcoLLRqeC
+	 4vbWeA+illK/wVAlCmcM3EV1x28yM0qSRoXzr+yFURi/bNomid2SFdIpSeAHXcK64
+	 H5M44u/ssnqZKNNce3qmiikPYWKVg0Xjf5FEUozNUyap4AWksswfvcMnDFjpvr+wU
+	 xVwFjF8WjzwpILM9YU5d7HgRrmt9gKSSi2o9vf61T9Y/klj9Mc021YWG6F2WuxiAF
+	 lqjHzuTBYLrtjuUR/g==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.70.83]) by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MF2gM-1ttGJ40zkW-009yEU; Wed, 02
+ Apr 2025 10:03:26 +0200
+Message-ID: <1f6f6fe9-ae81-4154-8553-dfb4ca2b1cd2@web.de>
+Date: Wed, 2 Apr 2025 10:03:25 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250328143646.27678-1-johan+linaro@kernel.org>
+User-Agent: Mozilla Thunderbird
+To: Qasim Ijaz <qasdev00@gmail.com>, linux-input@vger.kernel.org,
+ syzbot+d5204cbbdd921f1f7cad@syzkaller.appspotmail.com
+Cc: stable@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ Benjamin Tissoires <bentiss@kernel.org>,
+ Jason Gerecke <jason.gerecke@wacom.com>, Jiri Kosina <jikos@kernel.org>,
+ Ping Cheng <ping.cheng@wacom.com>
+References: <20250401214703.7809-1-qasdev00@gmail.com>
+Subject: Re: [PATCH v2] HID: wacom: fix shift OOB in kfifo allocation for zero
+ pktlen
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20250401214703.7809-1-qasdev00@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:o/6B0FvTT9u0XYZVmXUikdrZbKXRw8/Ux3fKopM1xFUH3LkF2rV
+ X0Q+FEQ0CeMJj5fVs4Kx7r4SCLr2tX57ua7WndqCQ3xywrWOQZRbvqsLGxpAlK50dbMQoTJ
+ xIWl4r+iuZgl+57uGpVmbqxbzmS9x9Dub8qjZSDr7srd3KpFZXPyz9C2W8HwnZ/xEPk4gq4
+ G3owzUk0JDe85/EDWxHnw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:cezQpm+aQ+Q=;ZQ+Yi0ycYWYtl/sfyE77YU31tne
+ VvwzCJ6RY/FYFVEqXoDqmMQbvmCF+SGgY4dLCP+c+EdoHzuyj/rmpwrKtEGu5GDSBGDUa9x6X
+ liGbZ7AQ3J0cXzB3XfvMP72doFtK8F3rcZu14LXGmSUyeb0BO1H+1Ad9N9QbGc08S0qHLa1Z4
+ e1y4Br9vMbmvWNgR8H2J3EKAGBdvWI+wrz3/6myUxuIB8cwCm1q3eDpQUqWJ1xufZUsHqQ1m6
+ lgwzP/GnQ/L9IG962RAmRh903WBXssaIDXNv2MnC1bDhooGQ5NBNt0PPYbK728NGel+r3fMdT
+ FBYey9iIuFb/il/0lISSJd9CCgA8NYChhLY8qjSHqJwF4YaRAhufRUpix6QQeGTRWkSh2YZFF
+ 51MPLuelRy4aFyIHOpA/s1juej9gskhKAjGTSQOdtBbNWuXPfJR8mgT4ElhXECIbyh/GI2cwd
+ moeVga3bjBTr6Bjh8naOSSPcokj3XaAWmyhxIgh5YzgcP6acvDWxxmVwofuYlX1HjeqUL5v3H
+ eE5U/GYhfWiAYxq6JcUITsxJvZEOz+/Uvw+VQkwvbrY92ivkICTRJWb3JY/tvZMBMjo33pvKs
+ c8pcLNNosmA+OKCyIjSNoaRopGCDOiqQkA+JOCs2gs4jNl1mMBeapzD9yYnXk82isWIcDAkIm
+ uk+2hs3qguMTgdZzJp7nJvSNUzEdP3PyPsrcOeuYUt/H+/uJqb4JxUSa2517HFzh7js89vWKK
+ LS+009hXNS2ue+KG9eeQ7IWPdkeo1ne7RFgh5sqqShSQ8aDsOhZ6EOL/7zQdPW/E5lJiPvtAU
+ cWs719vTLPLu+jxx46nlYnGWW+cgSXaYUltSollrx04tbi9kJQx019Q57uzXSihgR9whCIYOo
+ cKMX2BuGfyoaiUI9uRCU6EdQVNx4sEK5pdBsIKAq8oDBW1IaXdLSLf5TR1qic+uyvnXvmLoS6
+ QV2ybQ/kHPzqK7m6pLKaVdtQ5oNlcaPxhu48oFy4EAsKSzyNKoWM9CpJkbCEV56P8/jRbm9j8
+ PKzQ0J1ZeZSLEiXe3NfIHKrfqpBVTvsJsCfLlXAFiUWHUh7RvzlOYiU+r3zQm5vGGOeaI4hba
+ ZKOgfEbteTC+kp+PDbI+xVTX7ShHeW3f+x2+mwHOsTYidLl8D4ddy5+C6vXroBfrBEMG9ggcr
+ NJlBYJgPCjZ/T7ozGniBs8wfBrBMYxG6U0/pRkylhc21uwll78d3GTn9/Esfsxt4wxSnyMqXg
+ VyupxyTMyS+UpmUtjtVgSYqZoyEURh995BperCCmd21WK//bTrEptZDdn243jUu87HIbp5iyP
+ g/i/hs5MNLBxH1VxVajATUGDgOPo/DGFgweCXlwIVEymCV/44K0xZSeLmdUoPFml0yU2J/E+q
+ TDA65hjzy8jwYDhUsVFAnYVv/vvQPRxtUb8ggmt9+K3fW46GfmHhcH8K0E2lzbouDtDSUHINT
+ ZTbbZ94CFfSw7i+nQEgJrP+HnYRrSLWZg4G0+5Lw4e0v6LyaCtYOa4QDynUAM0JfV0rAq/g==
 
-On Fri, Mar 28, 2025 at 03:36:42PM +0100, Johan Hovold wrote:
-> The PCI pwrctrl framework was renamed after being merged, but the
-> Kconfig symbols still reflect the old name ("pwrctl" without an "r").
-> 
-> This leads to people not knowing how to refer to the framework in
-> writing, inconsistencies in module naming, etc.
-> 
-> Let's rename also the Kconfig symbols before this gets any worse.
-> 
-> The arm64, ath11k and ath12k changes could go through the corresponding
-> subsystem trees once they have the new symbols (e.g. in the next cycle)
-> or they could all go in via the PCI tree with an ack from their
-> maintainers.
-> 
-> There are some new pwrctrl drivers and an arm64 defconfig change on the
-> lists so we may need to keep deprecated symbols for a release or two.
-> 
+=E2=80=A6
+> To fix this, we should handle cases where wacom_compute_pktlen()
+> results in 0.
 
-Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+See also once more:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tre=
+e/Documentation/process/submitting-patches.rst?h=3Dv6.14#n94
 
-- Mani
-
-> Johan
-> 
-> 
-> Johan Hovold (4):
->   PCI/pwrctrl: Rename pwrctrl Kconfig symbols and slot module
->   arm64: Kconfig: switch to HAVE_PWRCTRL
->   wifi: ath11k: switch to PCI_PWRCTRL_PWRSEQ
->   wifi: ath12k: switch to PCI_PWRCTRL_PWRSEQ
-> 
->  arch/arm64/Kconfig.platforms            |  2 +-
->  drivers/net/wireless/ath/ath11k/Kconfig |  2 +-
->  drivers/net/wireless/ath/ath12k/Kconfig |  2 +-
->  drivers/pci/pwrctrl/Kconfig             | 27 +++++++++++++++++++------
->  drivers/pci/pwrctrl/Makefile            |  8 ++++----
->  5 files changed, 28 insertions(+), 13 deletions(-)
-> 
-> -- 
-> 2.48.1
-> 
-
--- 
-மணிவண்ணன் சதாசிவம்
+Regards,
+Markus
