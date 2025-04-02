@@ -1,193 +1,179 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D305F23373D
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 08:14:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46A93F4E2
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 08:16:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743581663; cv=none; b=VBMpcIW3x2Si1znGK3ifsqQV5USLWBRD8T9k4Bk9S57UhOMZmW/8VlOO0V38d9+KhMkxgc3IunmkmqjAPwHzLIqDM68ZNjc1dzZwBmGJHd6EubPv9PrIUtKMivHZ68F7hqJkZBGva6hlf9akgZ+jm3dfV1Y++R2/N4M6qd4lQek=
+	t=1743581786; cv=none; b=gzok508tpZ1mLfw0QxC2jWCXrfRkZHrdA1RerbDdzDe0Ln3UIBDB5HzNsSnYle4zQ+AXy8BcdKHRm4LzWaxNl0+2QKUTDPq0Kd/lMzuscHcSZO7dh3zhVg5112/NTlcWIkH7fEKcPzEBmmTaJmJRsPB5vdPTLSdFlNGdVoAm9J4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743581663; c=relaxed/simple;
-	bh=igbpjlc+om75NKQRRy2GBs5xkFi6I3W5ExEdDflAGfI=;
+	s=arc-20240116; t=1743581786; c=relaxed/simple;
+	bh=2R08nNXH+ksS+D9gJQ6xeXHMkDiHQ4m12HD4ePibf4w=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VS+p1XX78n+MxrEdmuJA3XhNm+JA6LcC1Dt/WLjDc/kzl1fKzcMJcDy6PMwhGrf7k+SI39zYOry4hvZWgEtsbbkmpL1doBZhLRN8rfI4bdo3IXcoqu7fWFKLNdJH3vNVpMCGm+wobKabR3TELo9fC/YmVkxaGJi8mGEUXPGPKBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Esg6k5M0; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=SqpaI3SsNBNY2+jx0rsW4uZ30JHYxnmyTZ+ZZS0434hoWX0SyhgnWJI3Hg/2WYGKXrRZcpM0SugLywKeePYLXIX4NR2K2YddC2ozmxLXelNTOMdiTMpLx+ORsKVFxUQngoeos6s3027nKgqGEWYf/nn9UawyscuAKQqwddW08HI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=JHnqy1AG; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Esg6k5M0"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-224191d92e4so121445425ad.3
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 01:14:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="JHnqy1AG"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-39c1ef4ae3aso283490f8f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 01:16:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743581661; x=1744186461; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=H1cnwkimXqhzY/Km6QT4rMUsQ72mwN2an/NJZPWxQOI=;
-        b=Esg6k5M0nbHJtr0lwgbfwzoogF8RqwvL369+ty01NXcegdz1upN+TdhiI/eHOEIBn3
-         NBkpC0bEpO7KS07TVM/J//bus1NtmU5sYrqVL49LAP9RAKeJtgT3h2fJidFhJk5a3IfW
-         588HqCBANV5G7GFYxhVSPW4MPet+odb//fLL1VwC4SzfoHl+/wL0WrxmyaFqprnLEeQF
-         synYMl+EH5d/4Gc/7KP+8BpbY9XQzfkehpUPHFoKIZyTNcI5H7Vc7A+vMnsbtIuBCHsx
-         qA0zrWmLQOK9nIvk4joyoQFnjTYH1EJi89sEvb7Ov5+zQFssud9ZK3YamRYnajpYhCRg
-         JwoA==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1743581781; x=1744186581; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=KDCwlpjL2w/BkhcAwGHexxF7aVltu/71lKFkhQsvmIw=;
+        b=JHnqy1AGDxCode2zOSR5veA63EGTew85mCwoLWVHOuRcsY2bw27/sbIVYaC56JTKwC
+         bQeAd2xzrVC5ACVtr21XCbuOX8ta+H6c7WBJEQ/6NNeuS/E5mWMJVdXhqZRgSgGZ5uA/
+         jg0tZ3i2ApFzA3SCOKp9VThbcIskPeDZwN77fUjN6WeaCfdIFy9Dg0VvTrAUC3+Crq78
+         +zvexr5aeTQzpXQILoTHnZ4hij6oUUK5/PC33c3KyX/L6TZV5d6jfP7vqMm21rmyJsfi
+         VLth4k2u6XpB9sdayBX7NJGrN80qT5D1vQlyYed3j0Y/f8b1Olf4LWpXMErz07LmQwxo
+         Id9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743581661; x=1744186461;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=H1cnwkimXqhzY/Km6QT4rMUsQ72mwN2an/NJZPWxQOI=;
-        b=e0pWf22E6znYKuf3+1jWCRsiLlyHiQePS9p1hMWP2us8fuSkh6c5wglV8wipH6anxg
-         aG04STLz41GPyedfR84JrYEmMjeWHfbRSlER77OMXAgznN6nRFvwMQ+Tsir9xCX4MHOY
-         sVW0cPMjNKu8OQ5LpcIAN9UHHQzXdY2oRp1CD1M+vwm630ERnheK+1DHVxqIn9ngYkhk
-         wJnCXjSWi+v3Wi+MVHlBfYHc9BlwQ23IZpG3ZoneY520yl91ODZdY68Oz8T5S+3YLYQO
-         0gQWyq/DUAFQqcYlbohOymVxjm562zDPnGr9em0QXY8f4cejc9eElipzfhV9IBr4Ux2A
-         sD1Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXpvUkYWiCMkG2wB8w6d5In2ZSPSqBiRJ8MYORTkUYWE0peWTWrPLZCT/6qoUerhLc2eOij6/98a9i/nHw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YykWYps+bguka3e2PeExf1K6xwnni4elcBxgRxKf5jyUs04ZAxD
-	Th/vUys905bNr7kdwoGh6R5FHY9cpJt1piPFbHKrtwD2ft2tG4BWBsiACADL4iH+zqyYLWC/Bgw
-	=
-X-Gm-Gg: ASbGncttl7okZny+SN1ZmNCmIWhjQJQCbAu8JiIMnd6iUFYVeeVndf/29zWLJNEnhwy
-	aNucistPDE35jmp1OgNOM+qzDRF4GbyKipUrRUEzkv85nLW7Kfb7SaKQT0rR4P+bvB0LU2iguGJ
-	aqGS19+w4tUvMWbE/fEbPC4Iaj/wvruzhzOdKuqqbZKIu36gngoiE345HAIBJp3Sv9R74Po61E+
-	KfJimJKUZAwIE/GKdblcx4T7fDfIJMAbru7TY4Vrwr1TxrxrvaC5L5PtxACSMaysTFceFTm82iG
-	s+3/a09HcG/hkrqcDTmolTHR0B7hPwDyVZk5xpMLsAigRxZG1dZAdv6y
-X-Google-Smtp-Source: AGHT+IHF+a/qi9WRmwq/2EhAY/+Zv6byjb7whIpSeiPt/li72CYNWPJd27ConrCk1oEYHZTxrGAa3A==
-X-Received: by 2002:a17:902:ef0c:b0:21f:5638:2d8 with SMTP id d9443c01a7336-2292fa23240mr285972025ad.53.1743581661065;
-        Wed, 02 Apr 2025 01:14:21 -0700 (PDT)
-Received: from thinkpad ([120.56.205.103])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291eee0bfdsm102773555ad.72.2025.04.02.01.14.16
+        d=1e100.net; s=20230601; t=1743581781; x=1744186581;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KDCwlpjL2w/BkhcAwGHexxF7aVltu/71lKFkhQsvmIw=;
+        b=THuFDKq6aHPp0OdQIZbckOgTOYOvUHP4Amum3zV4RCdathR0Uy40Wuad43eTUwcY1F
+         0wTLq/g96Giv9wBUOJLZCdFixLOfN+NauKnZ6ch8aqKOYaMlxPJV1nXSAopaMgbBUySW
+         LAao25kDYIE4/So1f56GeC+jiAJ8c1bxyFXrSx9BhnvR8hCwF9vo0+kkg7Puk8EEGf0+
+         F9p4oN9LnyGxn1l6THVJqHeqjAsD/i5EGi7V28u8P56RUFnCzmOEawk0sHVeGm6LYTOD
+         LywZuR1msJHYBkP3h4JMhAW00iYzibyHrS5/ObXyhcubQL/j/7rCStK/hZAjuXZ5OMIS
+         2WfA==
+X-Forwarded-Encrypted: i=1; AJvYcCVujNpZsaanPjD7+KYd0rthuZRdgkhT9NZmdFgnnq4fHNIenrPi72lhstB1n64k27YctbbqufT85ktKrrM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwrFtfjpGDbq438hqGAjnNtn8Ax8y+eYX3kmCThYfQMObiIQnFo
+	z4G+aRoT6bUnvNIUXWdXJf75NV1IqFbZBr0WwJgLxRDf3IMo1IXYknCcA98bVriXHYtWtMnjfMt
+	l
+X-Gm-Gg: ASbGncvaD8aizlUtXuDu7zeOq7ozehAhABYEdP8Ws4ERTsr8OeHmOUTF9E32ryKvhQU
+	alZqJx5Fasg56vxuOCLWnLR4PT/+EaS6LK7azcEOr05ZDAuXtvapj4tqfn5PxGI51pXmox6jiW4
+	6eWJAVgIfg1kk0U4JCNqqCc3rrlK4xqtyCPN734A4Ek4Er02TXxHjEvhG3DBcdgpmjqINWyh7+3
+	51VRpdxHKqcFMVvHRyrV0RMOpeWKIxDPvFC7dRR4gBLN38kmNN8mYR1Rg1nxSfxYmrVOHcwD0cs
+	9jNUu3ZSMltdNQuGxLBjOmXjVHkHL633TogtJp4BI34jVzdQaolTGnAzUyrbdpff0UZIlaEDagp
+	RhTtiNKSN4vQ1ksL7WemcKQ==
+X-Google-Smtp-Source: AGHT+IEHBG/BTVs6hRh4079T6ieA5EIuK2djmqTjAi93ImNCsauANbqmU8TlcWod9Or7NFbhbRUyig==
+X-Received: by 2002:a05:6000:430b:b0:391:3207:2e68 with SMTP id ffacd0b85a97d-39c2a34ce11mr908407f8f.9.1743581781473;
+        Wed, 02 Apr 2025 01:16:21 -0700 (PDT)
+Received: from localhost (p200300f65f14610400000000000001b9.dip0.t-ipconnect.de. [2003:f6:5f14:6104::1b9])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-43eb60ec915sm12810195e9.28.2025.04.02.01.16.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Apr 2025 01:14:20 -0700 (PDT)
-Date: Wed, 2 Apr 2025 13:44:14 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Wei Fang <wei.fang@nxp.com>
-Cc: 
-	"devnull+manivannan.sadhasivam.linaro.org@kernel.org" <devnull+manivannan.sadhasivam.linaro.org@kernel.org>, 
-	"bartosz.golaszewski@linaro.org" <bartosz.golaszewski@linaro.org>, "bhelgaas@google.com" <bhelgaas@google.com>, 
-	"brgl@bgdev.pl" <brgl@bgdev.pl>, "conor+dt@kernel.org" <conor+dt@kernel.org>, 
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "krzk+dt@kernel.org" <krzk+dt@kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, 
-	"robh@kernel.org" <robh@kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, 
-	Frank Li <frank.li@nxp.com>
-Subject: Re: [PATCH v3 3/5] PCI/pwrctrl: Skip scanning for the device further
- if pwrctrl device is created
-Message-ID: <n74zsz7ae5eks5qccmqgsz72onuecp2cbyrmuod66f472isaxj@vhxq36t7b7uy>
-References: <20250116-pci-pwrctrl-slot-v3-3-827473c8fbf4@linaro.org>
- <20250321025940.2103854-1-wei.fang@nxp.com>
- <2BFDC577-949F-49EE-A639-A21010FEEE0E@linaro.org>
- <PAXPR04MB85102429AE77159F8CAF914088DB2@PAXPR04MB8510.eurprd04.prod.outlook.com>
- <20250322032344.uypqhi3kg6nqixay@thinkpad>
- <PAXPR04MB851005833B17C2B78CFB421388DA2@PAXPR04MB8510.eurprd04.prod.outlook.com>
- <yzhvxyjb75epv4mkkocjqsqkus44c55zwnxta6ac3aauvswv3x@knyhszmrgfc3>
- <PAXPR04MB851049B520288642141570F188A12@PAXPR04MB8510.eurprd04.prod.outlook.com>
+        Wed, 02 Apr 2025 01:16:20 -0700 (PDT)
+Date: Wed, 2 Apr 2025 10:16:19 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: David Laight <david.laight.linux@gmail.com>
+Cc: Nicolas Pitre <nico@fluxnic.net>, 
+	Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] math64: Provide an uprounding variant of
+ mul_u64_u64_div_u64()
+Message-ID: <2wwrj6aid2elnnotzfkazierqmzmzpfywyf33ahqs36xh5xz32@rszeetrztsiz>
+References: <20250319171426.175460-2-u.kleine-koenig@baylibre.com>
+ <20250321131813.6a332944@pumpkin>
+ <epuk3zijp2jt6jh72z3xi2wxneeunf5xx2h77kvim6xmzminwj@4saalgxu3enu>
+ <20250331195357.012c221f@pumpkin>
+ <mjqzvj6pujv3b3gnvo5rwgrb62gopysosg4r7su6hcssvys6sz@dzo7hpzqrgg2>
+ <20250401202640.13342a97@pumpkin>
+ <15qr98n0-q1q0-or1r-7r32-36rrq93p9oq6@onlyvoer.pbz>
+ <46368602-13n7-s878-s7o2-76sr0q67n9q4@syhkavp.arg>
+ <20250401223731.7102103d@pumpkin>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="biggbanxbt6sayp2"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <PAXPR04MB851049B520288642141570F188A12@PAXPR04MB8510.eurprd04.prod.outlook.com>
+In-Reply-To: <20250401223731.7102103d@pumpkin>
 
-On Thu, Mar 27, 2025 at 06:02:27AM +0000, Wei Fang wrote:
-> > > > > > >The current patch logic is that if the pcie device node is found to
-> > > > > > >have the "xxx-supply" property, the scan will be skipped, and then
-> > > > > > >the pwrctrl driver will rescan and enable the regulators. However,
-> > > > > > >after merging this patch, there is a problem on our platform. The
-> > > > > > >.probe() of our device driver will not be called. The reason is
-> > > > > > >that CONFIG_PCI_PWRCTL_SLOT is not enabled at all in our
-> > > > > > >configuration file, and the compatible string of the device is also not
-> > > > added to the pwrctrl driver.
-> > > > > >
-> > > > > > Hmm. So I guess the controller driver itself is enabling the
-> > > > > > supplies I believe (which I failed to spot). May I know what platforms are
-> > > > affected?
-> > > > >
-> > > > > Yes, the affected device is an Ethernet controller on our i.MX95
-> > > > > platform, it has a "phy-supply" property to control the power of the
-> > > > > external Ethernet PHY chip in the device driver.
-> > > >
-> > > > Ah, I was not aware of any devices using 'phy-supply' in the pcie device node.
-> > >
-> > > It is not a standard property defined in ethernet-controller.yaml. Maybe
-> > > for other vendors, it’s called "vdd-supply" or something else.
-> > >
-> > 
-> > Ah, then why is it used at all in the first place (if not defined in the
-> > binding)? This makes me wonder if I really have to fix anything since everything
-> > we are talking about are out of tree.
-> 
-> "phy-supply" is a vendor defined property, we have added it to fsl,fec.yaml,
-> but fec is not a PCIe device. And this property is also added to other Ethernet
-> devices such as allwinner,sun4i-a10-mdio.yaml and rockchip,emac.yaml, etc.
-> But they are all not a PCIe device. So there is no need to fix it in upstream.
-> 
-> > 
-> > > >
-> > > > > This part has not been
-> > > > > pushed upstream yet. So for upstream tree, there is no need to fix our
-> > > > > platform, but I am not sure whether other platforms are affected by
-> > > > > this on the upstream tree.
-> > > > >
-> > > >
-> > > > Ok, this makes sense and proves that my grep skills are not bad :) I don't
-> > think
-> > > > there is any platform in upstream that has the 'phy-supply' in the pcie node.
-> > > > But I do not want to ignore this property since it is pretty valid for existing
-> > > > ethernet drivers to control the ethernet device attached via PCIe.
-> > > >
-> > > > > >
-> > > > > > > I think other
-> > > > > > >platforms should also have similar problems, which undoubtedly make
-> > > > > > >these platforms be unstable. This patch has been applied, and I am
-> > > > > > >not familiar with this. Can you fix this problem? I mean that those
-> > > > > > >platforms that do not use pwrctrl can avoid skipping the scan.
-> > > > > >
-> > > > > > Sure. It makes sense to add a check to see if the pwrctrl driver is enabled
-> > or
-> > > > not.
-> > > > > > If it is not enabled, then the pwrctrl device creation could be
-> > > > > > skipped. I'll send a patch once I'm infront of my computer.
-> > > > > >
-> > > > >
-> > > > > I don't know whether check the pwrctrl driver is enabled is a good
-> > > > > idea, for some devices it is more convenient to manage these
-> > > > > regulators in their drivers, for some devices, we may want pwrctrl
-> > > > > driver to manage the regulators. If both types of devices appear on
-> > > > > the same platform, it is not enough to just check whether the pinctrl driver
-> > is
-> > > > enabled.
-> > > > >
-> > > >
-> > > > Hmm. Now that I got the problem clearly, I think more elegant fix would be
-> > to
-> > > > ignore the device nodes that has the 'phy-supply' property. I do not envision
-> > > > device nodes to mix 'phy-supply' and other '-supply' properties though.
-> > > >
-> > >
-> > > I think the below solution is not generic, "phy-supply" is just an example,
-> > > the following modification is only for this case. In fact, there is also a
-> > > "serdes-supply" on our platform, of course, this is not included in the
-> > > upstream, because we haven't had time to complete these. So for the
-> > > "serdes-supply" case, the below solution won't take effect.
-> > >
-> > 
-> > Does your platform have a serdes connected to the PCIe port? I doubt so. Again,
-> > these are all non-standard properties, not available in upstream. So I'm not
-> > going to worry about them.
-> 
-> No, the serdes is inside the Ethernet MAC. I was wondering how to bypass
-> pwrctrl in the future if we add such a "xxx-supply" to a PCIe device node,
-> so that our drivers can be smoothly accepted by upstream.
-> 
 
-In that case, the logic should be changed to only look for bindings defined
-supplies for the endpoint devices. Like, "v*pcie*-supply" properties instead of
-all supplies.
+--biggbanxbt6sayp2
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] math64: Provide an uprounding variant of
+ mul_u64_u64_div_u64()
+MIME-Version: 1.0
 
-- Mani
+On Tue, Apr 01, 2025 at 10:37:31PM +0100, David Laight wrote:
+> On Tue, 1 Apr 2025 16:30:34 -0400 (EDT)
+> Nicolas Pitre <nico@fluxnic.net> wrote:
+>=20
+> > On Tue, 1 Apr 2025, Nicolas Pitre wrote:
+> >=20
+> > > On Tue, 1 Apr 2025, David Laight wrote:
+> > >  =20
+> > > > Looking at the C version, I wonder if the two ilog2() calls are nee=
+ded.
+> > > > They may not be cheap, and are the same as checking 'n_hi =3D=3D 0'=
+=2E =20
+> > >=20
+> > > Which two calls? I see only one. =20
+> >=20
+> > Hmmm, sorry. If by ilog2() you mean the clz's then those are cheap. Mos=
+t=20
+> > CPUs have a dedicated instruction for that. The ctz, though, is more=20
+> > expensive (unless it is ARMv7 and above with an RBIT instruction).
+>=20
+> The code (6.14-rc6) starts:
+>=20
+> u64 mul_u64_u64_div_u64(u64 a, u64 b, u64 c)
+> {
+> 	if (ilog2(a) + ilog2(b) <=3D 62)
+> 		return div64_u64(a * b, c);
+>=20
+> Now ilog2() is (probably) much the same as clz - but not all cpu have it.
+> Indeed clz(a) + clz(b) >=3D 64 would be a more obvious test.
 
--- 
-மணிவண்ணன் சதாசிவம்
+Ack, the more intuitive check might be
+
+	if (fls64(a) + fls64(b) <=3D 64)
+ 		return div64_u64(a * b, c);
+
+then, but maybe "intuitive" is subjective here?
+
+> On 32bit a check for a >> 32 | b >> 32 before the multiply might be sane.
+
+Not 100% sure I'm following. `a >> 32 | b >> 32` is just an indicator
+that a * b fits into an u64 and in that case the above check is the
+better one as this also catches e.g. a =3D (1ULL << 32) and b =3D 42.
+
+> > > And please explain how it can be the same as checking 'n_hi =3D=3D 0'=
+=2E =20
+> >=20
+> > This question still stands.
+>=20
+> 'ni_hi =3D=3D 0' is exactly the condition under which you can do a 64 bit=
+ divide.
+> Since it is when 'a * b' fits in 64 bits.
+>=20
+> If you assume that most calls need the 128bit product (or why use the fun=
+ction)
+> then there is little point adding code to optimise for the unusual case.
+
+n_hi won't be zero when the branch
+
+	if (ilog2(a) + ilog2(b) <=3D 62)
+		return div64_u64(a * b, c);
+
+wasn't taken?
+
+Best regards
+Uwe
+
+--biggbanxbt6sayp2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmfs8lEACgkQj4D7WH0S
+/k6iBQf/UUoGWVIBVJZhj/MDS/JG7mdUIIfdbuDfPb6Dq2A6ADo3Ye6s0k6gABJ0
+fhg3qRAFBaDPMbRsN9EAFPfYuPPtk3iELmYXbjbdq0n3GEbEiZawHakFHXT5U6a+
+1KwMb8hfZitTaPKTi+c3LcF0P47otf2M5PvsMhtwBM+CUYhgDEK1tVuOdNA9IdXc
+V2Etrhee3aU94D3jtumJCTxNeew2brmZa/mQuCHtAyZTw8AqZ7lilgK2LdERuBI/
+cG2Dcy++swhAqMxMyUMSrXc2rnJ12gPMyJprf9i1JlDqXStbs2O3L7nJFvcpIOqM
+BTdUjLaPrqivmBsR5sFsnczuWsoLfA==
+=4LJO
+-----END PGP SIGNATURE-----
+
+--biggbanxbt6sayp2--
