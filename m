@@ -1,55 +1,55 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F20A41F8EEF
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 23:34:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E60AB1FAC48
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 23:34:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743636895; cv=none; b=EE/hvLb7mwV97jqu9eGWVr4kcb6QKXiAXwePJCTAoey+Qipej/N/86/di8oKee1UJxTQbWO/KxkqIzrk91DO1+uUFKzszF2xI5/2VUR++8qJiL75M0lpZMhb72YK8Z6bP+/zeKWp4IurOKEhHHB1Gs/v6eYS/dALoqLsvMEos3g=
+	t=1743636899; cv=none; b=QelUks9HqXfwBEak2uj6PZ2VpnLQITwpMI/3jwbb9PtQTJwjAlvjTLVz0bAPOwwKvXdZ+9xe2Lp5w1mdr0CJwqEV0aULDmLlCEg0i6xxw7sx9PEX5SxOC/4JULXaa0YroPQAIPnHdqqhHvxRMlqO4AcM6AxjrWS1GMs7GwJ/krg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743636895; c=relaxed/simple;
-	bh=OAknLtJvsu5Z8il1CGx/QAgW0sT8q2LX/C14tT3L9I4=;
+	s=arc-20240116; t=1743636899; c=relaxed/simple;
+	bh=BHqjnEz8Bqub0+5tOgaodvHpe7VxxoEtAWRFbgVwkX4=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Ul224rQKxJnnSwo/UhEEiV9GrFRpzGPHHL75hQkzGZk7gzwR6KVp/dDU6Xv/ECsGnfYMY4uqW4om44bxMuAicNtrY8JQPrPhLFPegItdJyo7ze06xToCfZa+gOOPBMzZlkObO1d+7biQLwOyLvVuSsUF27iGPzQ6fo5nVHkYQIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--willmcvicker.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bZPnea8z; arc=none smtp.client-ip=209.85.214.202
+	 To:Cc:Content-Type; b=vAdrBXkNc+Bo8PUYjK6xCqu2D+fNYYmxT49u6KMhgh9P2yApr2NBWdwzQ4AY/aj9BGzs3HNfP56Hi97K0G8dBRMBNQGZsuJiJRnYBj7/qzcWiyetaJjW9wB9rBPFXnp3gwVubd4pnWZAvauqVGCejRrG4p/1aT1SlwMCGslVwJo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--willmcvicker.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4UcdrfyL; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--willmcvicker.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bZPnea8z"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2240a7aceeaso3598785ad.0
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 16:34:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4UcdrfyL"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ff5296726fso443439a91.0
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 16:34:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743636893; x=1744241693; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1743636897; x=1744241697; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Z3woyidQeaVM0OgW9Tejczk+jE7A6Ip+4MgT+pOFZpA=;
-        b=bZPnea8zr75mLFe+j9B/womVxTLhEW9DKjHxo6Ekq2cIR20A6Hu8p86FU4ZLCkb5Hm
-         Qze9JTkvO7Vvgo8p/5t/1XkN7cesYwXtAzyK4YHiyDI/qH9+7EUeQ81Tqw1HS125kbxy
-         eIo55nqEgek57o1FpPrLpKC8iNKMAkKy5UsugoFVJt3mJDVCh+ZBLWVP7JngFotgKbMC
-         JC43EuWN4TPc3IQuTxpBzAlb9RLnSu5tUV7+9PV7wHbSrUysV6UtRLsMqZ/vI7UHrvkD
-         4Ylv2h5C2lQflDw4Um0/d1yviGlxoAqRPjmeWReOSsvVOSE01Tl2u/uYhXYTFRyFvVqE
-         JyRg==
+        bh=vqQfU5MFNX+M9dMbS6b209zYYBr6gV4W0L8ERj/h45U=;
+        b=4UcdrfyLO6lyFuhkBTdxNC/z2Ht8B3bBMZbqD6KyAw4B1bq6oTv7wfO511EFtNDsbd
+         hoVRsXO3arf56YP1+FJXcQyfjNEnZp/YBf09fhujfaSFtCZfCD3IwoAr1TP49x6Ij17X
+         j+bdC/YYZ8zBGk6eJHdHt7AVYQFZoMRc8HrJxNl9QO9UDS0l4EeRE0IyAZqRFzhbXoba
+         FdoTbDaGtHVoSvIBnHqRzFz1YT2T82vLwWYu/sKXQWHyM+eLZTkxFuGWIk0b1Jl8Nw9O
+         JMQd+vkNDTUlIv75JujMs9+MDHLO9mwAdr/bkBisr/7jVOa8aiDdOcKwSNbr1E9L/kvy
+         cjXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743636893; x=1744241693;
+        d=1e100.net; s=20230601; t=1743636897; x=1744241697;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Z3woyidQeaVM0OgW9Tejczk+jE7A6Ip+4MgT+pOFZpA=;
-        b=sLx2rZwCwhzZ+XLzvAVA3SSD2Mu9ntR5EMKUGIwiHeDRsIVCq7U+zcGls5qMehkwBm
-         UXkKTtfa1Bq3+mvwsdVYjCz84ADbjmEjKb93nKm50Y/FY9zFnuevka6500DjmRg9RIFx
-         hwutihLkX8Hgvy1guDFPJMQUudXsskuUUZdyDQHBHa6kiZldTIL8lFgUYOnEjCjQ+MFL
-         ayASHiGCKkbqhE96WAG1Xwh+S5cs5f7wj0lm1ZBit1m1cWy8lGdqMF9uOaIm2dveJG4W
-         IXotRVDrmo2c+o12B1wkN23wousEWbXLgjQ7SKLHIl4XBV5ObkkKNCPI+xWnZQ3rIDpp
-         UZkQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVEB5E6wUev8xAEs+Qx7iSHcS0JPH9XFfzaiJi1z30G++RJhfsvce6MD3KgOMV6rfKHQhz/kogXTgU8yHQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx+t67cQ+R4aOh6XWLDGkTejaY4YJTc8DDWRXxXHgHS9g/hc9E6
-	m8nhB1XRdFT8dQUbbSbj4C3exArTLp3tKDd77o5xz3qB9b5TYJxezbceO8KRAIDIrNMidh3kn7q
-	m7631zjOkMYEiShLSILo/M5ZMyg==
-X-Google-Smtp-Source: AGHT+IGiCVuhnR8Hm4ls6yhYVA+bAhMO7b7R8+FdaaPf0Sw6oW8BjVfyrFlY1Hg1Xa0Er5xFqEgThNby8zWx1wNh1Eo=
-X-Received: from pfjd22.prod.google.com ([2002:a05:6a00:2456:b0:736:9c55:9272])
+        bh=vqQfU5MFNX+M9dMbS6b209zYYBr6gV4W0L8ERj/h45U=;
+        b=Xl5S2J1LAcOk2R3sUYe4EtpSiEa4Qkndnj8QgqGZsKZ8zzTqlD2QuqkvOq6HmjY8Pr
+         Rps/Snobr2mxJ47bKZtTSl+bH3hlStCLtL2L6h5Sci9nEjoeXWHABB0AQa4lBSIp8+HM
+         sWnLzv17M2RGNY1Uy1M2N3b3xgNW27XZNPJRn2DUAjKv6Jv2KYxsPykH1QYJmB/UIjHw
+         zDqSGVm9jNM1+Q1g/N8gJS1n5nJ8D0TU5PgLpEFCCc1fqYyWJLuchq1W32yrBSsYjoNc
+         dTF8fbPOr5yM6FAqkSG0e4x23ztJZo1Z92PyQ7zs/DA0N2xk7AjoayM9t7uzz6OKP4bL
+         1OYA==
+X-Forwarded-Encrypted: i=1; AJvYcCVTQwfq9DLhgEXezL6+ZW1B8eAGiZW61QdS7KOkXNH9b8ZgWEqMwCb5JKZtch+1Y7pgPHpxFxMqx/Iq+5g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHSJhEx2ww7QTevX0ig1IezTJeapXxJTS+YKAgl6CSZYYP8P1a
+	G0dx6M9Cm/8T+nJn+mgOmYjgt22biJ8tGgmvyMD8+jomFgB0wMWb6DFRRL9vYXcdEmIpKb0Oo+U
+	cnmpjVTkLgChJ+j3znX/CyPKFsw==
+X-Google-Smtp-Source: AGHT+IHNjNoLSXpuoWq8MvyOWd0aQH4vReKV9zSqeimLC//wD66A6paRAKR65MmP1wxkBUjus4xLZlsJIhNOroJPqoE=
+X-Received: from pjbov3.prod.google.com ([2002:a17:90b:2583:b0:2f7:d453:e587])
  (user=willmcvicker job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:902:cf0f:b0:220:fe51:1aab with SMTP id d9443c01a7336-22977e0fa71mr9553365ad.38.1743636893194;
- Wed, 02 Apr 2025 16:34:53 -0700 (PDT)
-Date: Wed,  2 Apr 2025 16:33:56 -0700
+ 2002:a17:90b:56cf:b0:2f9:c56b:6ec8 with SMTP id 98e67ed59e1d1-3056ee3608dmr6316456a91.10.1743636897333;
+ Wed, 02 Apr 2025 16:34:57 -0700 (PDT)
+Date: Wed,  2 Apr 2025 16:33:58 -0700
 In-Reply-To: <20250402233407.2452429-1-willmcvicker@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,101 +59,45 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250402233407.2452429-1-willmcvicker@google.com>
 X-Mailer: git-send-email 2.49.0.472.ge94155a9ec-goog
-Message-ID: <20250402233407.2452429-6-willmcvicker@google.com>
-Subject: [PATCH v2 5/7] clocksource/drivers/exynos_mct: Fix uninitialized irq
- name warning
+Message-ID: <20250402233407.2452429-8-willmcvicker@google.com>
+Subject: [PATCH v2 7/7] arm64: exynos: Drop select CLKSRC_EXYNOS_MCT
 From: Will McVicker <willmcvicker@google.com>
 To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
 	Peter Griffin <peter.griffin@linaro.org>, 
 	"=?UTF-8?q?Andr=C3=A9=20Draszik?=" <andre.draszik@linaro.org>, Tudor Ambarus <tudor.ambarus@linaro.org>, 
 	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
 	Alim Akhtar <alim.akhtar@samsung.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Saravana Kannan <saravanak@google.com>, 
-	Krzysztof Kozlowski <krzk@kernel.org>
+	Thomas Gleixner <tglx@linutronix.de>, Saravana Kannan <saravanak@google.com>
 Cc: Will McVicker <willmcvicker@google.com>, Donghoon Yu <hoony.yu@samsung.com>, 
 	Hosung Kim <hosung0.kim@samsung.com>, kernel-team@android.com, 
 	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	Youngmin Nam <youngmin.nam@samsung.com>, linux-samsung-soc@vger.kernel.org, 
-	devicetree@vger.kernel.org
+	Youngmin Nam <youngmin.nam@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, 
+	linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-The Exynos MCT driver doesn't set the clocksource name until the CPU
-hotplug state is setup which happens after the IRQs are requested. This
-results in an empty IRQ name which leads to the below warning at
-proc_create() time. When this happens, the userdata partition fails to
-mount and the device gets stuck in an endless loop printing the error:
-
-  root '/dev/disk/by-partlabel/userdata' doesn't exist or does not contain a /dev.
-
-To fix this, we just need to initialize the name before requesting the
-IRQs.
-
-Warning from Pixel 6 kernel log:
-
-[  T430] name len 0
-[  T430] WARNING: CPU: 6 PID: 430 at fs/proc/generic.c:407 __proc_create+0x258/0x2b4
-[  T430] Modules linked in: dwc3_exynos(E+)
-[  T430]  ufs_exynos(E+) phy_exynos_ufs(E)
-[  T430]  phy_exynos5_usbdrd(E) exynos_usi(E+) exynos_mct(E+) s3c2410_wdt(E)
-[  T430]  arm_dsu_pmu(E) simplefb(E)
-[  T430] CPU: 6 UID: 0 PID: 430 Comm: (udev-worker) Tainted:
-         ... 6.14.0-next-20250331-4k-00008-g59adf909e40e #1 ...
-[  T430] Tainted: [W]=WARN, [E]=UNSIGNED_MODULE
-[  T430] Hardware name: Raven (DT)
-[...]
-[  T430] Call trace:
-[  T430]  __proc_create+0x258/0x2b4 (P)
-[  T430]  proc_mkdir+0x40/0xa0
-[  T430]  register_handler_proc+0x118/0x140
-[  T430]  __setup_irq+0x460/0x6d0
-[  T430]  request_threaded_irq+0xcc/0x1b0
-[  T430]  mct_init_dt+0x244/0x604 [exynos_mct ...]
-[  T430]  mct_init_spi+0x18/0x34 [exynos_mct ...]
-[  T430]  exynos4_mct_probe+0x30/0x4c [exynos_mct ...]
-[  T430]  platform_probe+0x6c/0xe4
-[  T430]  really_probe+0xf4/0x38c
-[...]
-[  T430]  driver_register+0x6c/0x140
-[  T430]  __platform_driver_register+0x28/0x38
-[  T430]  exynos4_mct_driver_init+0x24/0xfe8 [exynos_mct ...]
-[  T430]  do_one_initcall+0x84/0x3c0
-[  T430]  do_init_module+0x58/0x208
-[  T430]  load_module+0x1de0/0x2500
-[  T430]  init_module_from_file+0x8c/0xdc
+Since the Exynos MCT driver can be built as a module for some Arm64 SoCs
+like gs101, drop force-selecting it as a built-in driver by ARCH_EXYNOS
+and instead depend on `default y if ARCH_EXYNOS` to select it
+automatically. This allows platforms like Android to build the driver as
+a module if desired.
 
 Signed-off-by: Will McVicker <willmcvicker@google.com>
 ---
- drivers/clocksource/exynos_mct.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ arch/arm64/Kconfig.platforms | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/clocksource/exynos_mct.c b/drivers/clocksource/exynos_mct.c
-index a5ef7d64b1c2..62febeb4e1de 100644
---- a/drivers/clocksource/exynos_mct.c
-+++ b/drivers/clocksource/exynos_mct.c
-@@ -465,8 +465,6 @@ static int exynos4_mct_starting_cpu(unsigned int cpu)
- 		per_cpu_ptr(&percpu_mct_tick, cpu);
- 	struct clock_event_device *evt = &mevt->evt;
- 
--	snprintf(mevt->name, sizeof(mevt->name), "mct_tick%d", cpu);
--
- 	evt->name = mevt->name;
- 	evt->cpumask = cpumask_of(cpu);
- 	evt->set_next_event = exynos4_tick_set_next_event;
-@@ -567,6 +565,14 @@ static int __init exynos4_timer_interrupts(struct device_node *np,
- 	for (i = MCT_L0_IRQ; i < nr_irqs; i++)
- 		mct_irqs[i] = irq_of_parse_and_map(np, i);
- 
-+	for_each_possible_cpu(cpu) {
-+		struct mct_clock_event_device *mevt =
-+		    per_cpu_ptr(&percpu_mct_tick, cpu);
-+
-+		snprintf(mevt->name, sizeof(mevt->name), "mct_tick%d",
-+			 cpu);
-+	}
-+
- 	if (mct_int_type == MCT_INT_PPI) {
- 
- 		err = request_percpu_irq(mct_irqs[MCT_L0_IRQ],
+diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+index 8b76821f190f..325279193e2c 100644
+--- a/arch/arm64/Kconfig.platforms
++++ b/arch/arm64/Kconfig.platforms
+@@ -109,7 +109,6 @@ config ARCH_BLAIZE
+ config ARCH_EXYNOS
+ 	bool "Samsung Exynos SoC family"
+ 	select COMMON_CLK_SAMSUNG
+-	select CLKSRC_EXYNOS_MCT
+ 	select EXYNOS_PM_DOMAINS if PM_GENERIC_DOMAINS
+ 	select EXYNOS_PMU
+ 	select PINCTRL
 -- 
 2.49.0.472.ge94155a9ec-goog
 
