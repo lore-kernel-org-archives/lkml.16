@@ -1,106 +1,122 @@
-Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
+Received: from mail-pl1-f193.google.com (mail-pl1-f193.google.com [209.85.214.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 602FE23645F
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 14:14:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2141833993;
+	Wed,  2 Apr 2025 14:14:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743603288; cv=none; b=HklzS6o6OLr4mjCKGyTEO7KZB6gsBRibhvknyateEL0rWdHVpeRgXDQxuKNZjZ2kLE5VeWm7u/FfF+kCGBYyEEqKob3kaWL3HdoA+RqCZKbB/E6R5tRVqkRBKgaizXg2WCQB04YB7YeQMnddrFgVjMs86VJmr7jFQtRjDqWmikc=
+	t=1743603298; cv=none; b=DQU1TXN8UW6LC5nSXlbFIPuOYnfHbfDSYmn9yRyhuXdNfYGBfXLuFj+45ZjxlceEpHR4hfcR2QQANtmr+Y9Y0kbAHAQzzZHGkgQWqH7kgk+TuC4ygYwKjcLhTZeccW/Zh3+gFr+/Vy+9BG5D75/XYdMRLhnRYC9tQtkKVQsnt9U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743603288; c=relaxed/simple;
-	bh=UGyb8qo2Qvq6WmsRJYAhTFCRlnp4k7a+5kTcauPXtMw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h4cmmIxp1WmhPDO2g4hruLPnXrqkzQ5x9Vuc9DD/W3XAl9y8n/4HyvfYzQJq28jIJA8acxsdWMc/oVegob3fEY/vW5qFSfK8F2H4ZLXG22LbcbvsVXE677siU9yX4XbywaMq5mV0vMzQgD7/gZUouzcCv4MPmmYiTN7bsjFMHho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=di3eFfXj; arc=none smtp.client-ip=209.85.222.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1743603298; c=relaxed/simple;
+	bh=jinJva6VmkIdixrc44SfhYD9QbRViWUn9sjkKwbuZ24=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=MzRWRzigCSfbZupoieJetDjKppgKWanPuFvHkC1WiC/v6IKrf5wct+Z2FJqwh5dp39H5HopqDiHhsFBJsNvCO5RKTz8YOFDizi4i7bkqpkYLyRF80GSFSukHdRCD1mDO/l4/0SnN6jFYwmjyIIj4kz4K3DwxnS+BWn1Aq2hSXhs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Bi9ubqbt; arc=none smtp.client-ip=209.85.214.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="di3eFfXj"
-Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-7c542ffec37so686410885a.2
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 07:14:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bi9ubqbt"
+Received: by mail-pl1-f193.google.com with SMTP id d9443c01a7336-227914acd20so12569375ad.1;
+        Wed, 02 Apr 2025 07:14:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1743603285; x=1744208085; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=9UkL808QoOagxPn1CA7CvE/Yc8W+p4mA2vccj1YTlzs=;
-        b=di3eFfXjyGTkatSpt4Bphf98d/29Mww8WuMVzA+jWZOX32kgdO4xd82XG2jrkAnSOb
-         HNG3y+4kTqA9+zNMfaO1T1VP+lvYCCVovSgqVqc9YenZcCJq560Ezlaj2T2yzpb0lBYr
-         Bg1guCav569P/WjDxkuOUPgI+IW1bcY2GgK9tV973s3RWgMP72cJJ+UaKw2qgZ3D5ELD
-         o5ps2p6+5IeFdzrWHeQ1KT4xDWyc1KOJAsOE5dSLDDR4DIzKDgnahBkGp4RkqlZ7Kprg
-         IluKl+jZHIJxbBFPScYFb/lvIp3GOWlp0IOcZUTIHjWYWIyegos6F8gFO/T6fNB+HdtJ
-         2D6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743603285; x=1744208085;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1743603296; x=1744208096; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=9UkL808QoOagxPn1CA7CvE/Yc8W+p4mA2vccj1YTlzs=;
-        b=BYd5nmNKJ0NOVJ59fh4b6leus6nYJuEGB+3Kd/Q/1wc36XHyPnf6Xu3aQRQIb2S6J0
-         bMpuFZVk84ZqmjoAVgyXzpy/2w1hFoMWK+RxGyJ0ZBJCe3J5yctWtPe2B71t9fPJXH/+
-         /5Lys+ojJIbF5pvcuXi6XQgSa9tsY1YY+h0rqVS6XxYJGQ9vw7yQGfEuebLyX6cpac/H
-         0wmy7yWUD5ka5w5a0BaOTzHMJE/9sz+2/pTjZlzxofpUWKcIQE5sIlpdWzmzCfmuUh2y
-         U73qqZKkflJNV1Mevb7Yz6n521tNx4aLgS+VJaMcGCBD4k+q0qOwvF1q7GSjmCu5srLu
-         l++A==
-X-Forwarded-Encrypted: i=1; AJvYcCUt8tP4WCarirTOhqo4Wizbg7NUGwXgRcxXysCk5+KbNN5bAPHVpyygN+hf3H7XsufpVbOaGhAubGR169s=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw3nh2IM5c+ZrTxBj4MACmXKpNTupOjIAW1BYNQyu6lssW75Slr
-	2XRtVaSuCR4ZbUNc4XVFoT4gSgbvDt90qXS4ww19XDE8KiPsFOn+KtiLe06x9no=
-X-Gm-Gg: ASbGncu9ApHmmlmun29wGCVMGxaZYtyshIscPYZ+hNcfnkbTRIt3rXLf2W9pcK7C9TY
-	PhJ9ttc76kWJX7Q5PiBwknSz9tapSLHGOAi2m5BBFMeBbFJ+6BaHKY/dUXb0dpvjHGu4byv+v0l
-	ouI/FjceBEX9ESSbpA9LfW7TRQDpu+AwWwwM6wTGbt9iXcqEC4hVieCIKiLiJX3rJvB+F8kz+t3
-	v1eoANKftRYlA9KkyCsaIJnYnknjfvT4l9RToW4lArBAAPaWH5DHSxAXX9j9v6sTBS8GmwiP2sJ
-	hUyxQW7y8oUOIc6zglYEeI4kl5txhZ8GbF2srqJmsj8WKCP81ov013B0/U7gK/F1s2N7NgO5lhZ
-	o2tymXgmvXgqNGd4eIqJPUM3LSkA=
-X-Google-Smtp-Source: AGHT+IF+VKt9eqjk1q7w411mxoZKToWyH5/YzFwvHa2gfGrBQuMo82PAI2uSF+0IBasFLzRff+rDuw==
-X-Received: by 2002:a05:620a:19a5:b0:7c5:5584:dc1b with SMTP id af79cd13be357-7c7664f4655mr417448285a.54.1743603285123;
-        Wed, 02 Apr 2025 07:14:45 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c5f768e3cesm786174085a.46.2025.04.02.07.14.44
+        bh=+Z9aD1hMOgbWptS9Ck8Mm5LdumYoWsU5uiQAqSmaElE=;
+        b=Bi9ubqbtIUXMpJitNho0lbzom9eqYZVGXRftUeveA9CbfdZwUEcMif8XF1xExV2coH
+         dYqT6K2hblCwx3+5mMLumrEihQngnzji6DTaoXzrNrciArcNvNNlViFE6zjrzFELIa/V
+         LM2MwpnGvobmsJHWluei3z+WxHUFDGRWiaTZT+wHHd/1AFSjnIB23H7xI33jCL7fyR8e
+         OuX+rNGkUXQJsjHSAz9lAl7+YlGKHczc1oGsIq2taHTnLJHcWvvATd4npbgBCeqnJAJB
+         FTdXQscYdiE56FuEKVnViaOF7apZokv36PQsH8+4NWwDreZcb99AbO7HwkbltaZe/0Yl
+         W7Ig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743603296; x=1744208096;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+Z9aD1hMOgbWptS9Ck8Mm5LdumYoWsU5uiQAqSmaElE=;
+        b=RsJfe0t0FWVTz/amYausvggTAXSKJyNZX9Zaxmhb86D568fMQcTHVCAht40yz+flHy
+         0gBc+MT6YmTgrBl/GBEpu4zRDxNzf8ZaXi13INVOmhzSwVWeM9f8XkOx+uRyhXZNVYw9
+         zYZ5qJotIS3SsJmFr7OYk8yLDvqiBKORQUILwJyP613HiV2vCsnwVJuZ3TfWBeONcKLo
+         BbSL7lIdPJeTCxAJf/b18ckPFfcNkljXEbmCZyNOF896LJpus6iA4cMiQoqa41YzhwVG
+         ZrL+6h4SvXM+YyA66wcxOuY1kZQXXg5ydDCbCQ4AwQ34EVtZo/J+LglbQ6AyyFB8lLn3
+         NpxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVFeukZ5QBOdkIWzqHXdU7W4wypjCmRrLbIUMOlUwrIxMCYAz2tvMKPCvVp0Fb7egziPPUJXhvJPZHtp14=@vger.kernel.org, AJvYcCWSy5MGLyfMpVPsBUKlvsEBR+ryfyuA7CjFwS5yTJgvHEtG7pMG7I5B+IcF3wIkg7HGS1YNIhp41idgqEs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywnosu5E6B6CkmmQLcmoYMcuZAsDVmoO5udhl3r3H6u02CtZ3qY
+	cMOClG2lGEmeq3asKiX4BqRgTDj57HLCZHJwg83qDUER1V+XqV2nEdAD95gI374=
+X-Gm-Gg: ASbGncsm6Vo1ZiS1aN3EimjRG4Hjfqa31Msq6jm6Bq14+nWM8eG4JgQvLtp7VLeRFyW
+	a/22TbpoRUb5wZSZZaDkcu8QkFXjucZYcCtCkchmqie7nTLIk3369TIT2KXuHI6sjqMF3nvmNn6
+	0wgdE0CewOmKAyyhpIh3oMpQN4ntk/58YT3ueMLpwrZh8CgYMPpYyhNI8Br3WK4ZeeD0wHMl6U7
+	9vrqFN6hRiN31QuO+teNJI/a+9nozoqFSKhXKseffprIKUWHoswutmUu62n3m+wi1WHRlDh0o2Y
+	xQf12hr4MZ8Jklhw4Bshvhh0bmAo5g37wI/07bcWsqXaoGdcW2EQGf/qbny+wmh8DaUeeyY=
+X-Google-Smtp-Source: AGHT+IEVk9ePgij9pw83la/9RPj9XKLPUH+QbMvCEHd9Rgikgo1alzV+jBIHAZFyN1Ec/TTZ34JfQQ==
+X-Received: by 2002:a17:903:1c5:b0:225:abd2:5e5a with SMTP id d9443c01a7336-2296dea036amr30067385ad.4.1743603296169;
+        Wed, 02 Apr 2025 07:14:56 -0700 (PDT)
+Received: from henry.localdomain ([111.202.148.167])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73971063689sm11344920b3a.99.2025.04.02.07.14.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Apr 2025 07:14:44 -0700 (PDT)
-Date: Wed, 2 Apr 2025 10:14:42 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Oscar Salvador <osalvador@suse.de>
-Cc: Rakie Kim <rakie.kim@sk.com>, akpm@linux-foundation.org,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org, joshua.hahnjy@gmail.com,
-	dan.j.williams@intel.com, ying.huang@linux.alibaba.com,
-	david@redhat.com, Jonathan.Cameron@huawei.com,
-	kernel_team@skhynix.com, honggyu.kim@sk.com, yunjeong.mun@sk.com
-Subject: Re: [PATCH v5 3/3] mm/mempolicy: Support memory hotplug in weighted
- interleave
-Message-ID: <Z-1GUrdcOeYQgkE3@gourry-fedora-PF4VCD3F>
-References: <20250402014906.1086-1-rakie.kim@sk.com>
- <20250402014906.1086-4-rakie.kim@sk.com>
- <Z-0IlZgYLjogZSZO@localhost.localdomain>
+        Wed, 02 Apr 2025 07:14:55 -0700 (PDT)
+From: Henry Martin <bsdhenrymartin@gmail.com>
+To: cezary.rojewski@intel.com,
+	liam.r.girdwood@linux.intel.com,
+	peter.ujfalusi@linux.intel.com,
+	yung-chuan.liao@linux.intel.com,
+	ranjani.sridharan@linux.intel.com,
+	kai.vehmanen@linux.intel.com
+Cc: pierre-louis.bossart@linux.dev,
+	broonie@kernel.org,
+	perex@perex.cz,
+	tiwai@suse.com,
+	amadeuszx.slawinski@linux.intel.com,
+	ethan@ethancedwards.com,
+	jbrunet@baylibre.com,
+	bsdhenrymartin@gmail.com,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] ASoC: Intel: avs: Fix null-ptr-deref in avs_component_probe()
+Date: Wed,  2 Apr 2025 22:14:11 +0800
+Message-Id: <20250402141411.44972-1-bsdhenrymartin@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <95c39d93-f35f-4017-843e-e5d836f1b091@intel.com>
+References: <95c39d93-f35f-4017-843e-e5d836f1b091@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z-0IlZgYLjogZSZO@localhost.localdomain>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 02, 2025 at 11:51:17AM +0200, Oscar Salvador wrote:
-> > +	case MEM_OFFLINE:
-> > +		if (!node_state(nid, N_MEMORY))
-> > +			sysfs_wi_node_release(nid);
-> 
-> This check is not needed.
-> 
-> If status_change_nid is different than NUMA_NO_NODE, it means that the memory
-> state of the numa node was effectively changed.
-> So doing:
->  
->   case MEM_OFFLINE:
->           sysfs_wi_node_release(nid)
->  
-> is enough.
+devm_kasprintf() returns NULL when memory allocation fails. Currently,
+avs_component_probe() does not check for this case, which results in a
+NULL pointer dereference.
 
-offline_pages will call this callback unconditionally any time it's
-called (and succeeds).  If 2 dax devices online into the same node, it's
-possible to offline one chunk of blocks without offlining the other
-chunks of blocks - which is why we did the additional check.
+Fixes: 739c031110da ("ASoC: Intel: avs: Provide support for fallback topology")
+Reviewed-by: Cezary Rojewski <cezary.rojewski@intel.com>
+Reviewed-by: Ethan Carter Edwards <ethan@ethancedwards.com>
+Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
+---
+V1 -> V2: No functional changes, just correct title and redundant commit
+message.
 
-~Gregory
+ sound/soc/intel/avs/pcm.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/sound/soc/intel/avs/pcm.c b/sound/soc/intel/avs/pcm.c
+index dac463390da1..7072bcf4e56f 100644
+--- a/sound/soc/intel/avs/pcm.c
++++ b/sound/soc/intel/avs/pcm.c
+@@ -927,7 +927,8 @@ static int avs_component_probe(struct snd_soc_component *component)
+ 		else
+ 			mach->tplg_filename = devm_kasprintf(adev->dev, GFP_KERNEL,
+ 							     "hda-generic-tplg.bin");
+-
++		if (!mach->tplg_filename)
++			return -ENOMEM;
+ 		filename = kasprintf(GFP_KERNEL, "%s/%s", component->driver->topology_name_prefix,
+ 				     mach->tplg_filename);
+ 		if (!filename)
+-- 
+2.34.1
+
