@@ -1,91 +1,106 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mout.web.de (mout.web.de [217.72.192.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F72713635E
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 19:30:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6AE11DFDAB;
+	Wed,  2 Apr 2025 19:31:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743622233; cv=none; b=JRJOLMz41Jp9cbw4uQFKpNIsWTQtnCIRNj5+DcqUGpWSSoH45klwxmAh7HEBiQ1CZ1rNwUWtBgpyzpI/A2L77zQJy4XJCBM8s3uGjjXvjAB4XRyEJ14QzXAnGwvVbX0G2JJPLt6Tn5y5k5Xg0+27LRYYuJSTQbmLW5iiIFjxmhI=
+	t=1743622318; cv=none; b=QQk5yPCXz2j23vBSWa1UaKfP6S07hjFjtufg7uI5JCkQDvzuk57QCDOkYrsVvqPg9HVq38vUAKjKaEeryiZz1ZMw7aMLnHH3S2diYxX1Cj6nA6EEj0eJHso9JmPCKkn8UchlEAhKnAi9uuxoSFFnQeXfbZfVmxt2FaXA4Ut++No=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743622233; c=relaxed/simple;
-	bh=pDty7qdy1rHOKuZlyaV2086KMlSFCizQT1WMJPTpj0s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AGSxvrbkhnpVhwLYCY/cZNIoq4eIlDZYhArOgz2oasqmcQLgPPFomIrkrEicuPCxOV4/sweYwYh5M/wp7rPjvTlB6wmBs+dFXjIloA70ohbxcgk+Qgg3tbga+FLmjxE4exX9nnoylYkrIQGrDdLYwdjmfQCJvZHAdocOMba9bsE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OGItr/vr; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1743622318; c=relaxed/simple;
+	bh=nVbIoVqcHFrESYeRHzy5m1Eupw3F6hxYS6sjOV7sTck=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=NqcvnUTMJt+/lnWbWeoz7RltdcqqKoHJoa0xMQsO1UfaNZvjwiQ8PS131dGd9gqU0V9vtrAdZA5FOC7cBXrEy/vJ/eYYBKA7SGgtNXY63czphLeW4qZlZ7KwRSeNo7D7DUXf0WUQjpwJ2f38Yba5H5PaEVGdIyxUHMVsum2qLUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=guYyMPFt; arc=none smtp.client-ip=217.72.192.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OGItr/vr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743622231;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jMUxxfRt3wM6XkYnKMTxN7wq4AzIR0quaLREWPyUJRg=;
-	b=OGItr/vrwR0zN09EvEiHXiGj4Lr4yTU0P0wKpPoC8uz+qyf9glO6YZRFEGWY/+IKXI1Zzh
-	JlpBpTvIsz6N4k40P7VIkyC74z1nFtc21isZFVJkX37EbcaVOE8OOEALivekoDt6knpKTx
-	HlmMx1umVMdIhFItCA6L9IoUXJcKmWM=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-520-SLG-MGLjP8y-MyMLVm6a0Q-1; Wed,
- 02 Apr 2025 15:30:24 -0400
-X-MC-Unique: SLG-MGLjP8y-MyMLVm6a0Q-1
-X-Mimecast-MFC-AGG-ID: SLG-MGLjP8y-MyMLVm6a0Q_1743622222
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EDFA61800EC5;
-	Wed,  2 Apr 2025 19:30:21 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.28])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id EDFEA180B489;
-	Wed,  2 Apr 2025 19:30:16 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Wed,  2 Apr 2025 21:29:47 +0200 (CEST)
-Date: Wed, 2 Apr 2025 21:29:41 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Andrii Nakryiko <andrii@kernel.org>
-Cc: linux-trace-kernel@vger.kernel.org, peterz@infradead.org,
-	mingo@kernel.org, bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel-team@meta.com, mhocko@kernel.org, rostedt@goodmis.org,
-	brauner@kernel.org, glider@google.com, mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com, akpm@linux-foundation.org
-Subject: Re: [PATCH v2] exit: move and extend sched_process_exit() tracepoint
-Message-ID: <20250402192940.GB32368@redhat.com>
-References: <20250402180925.90914-1-andrii@kernel.org>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="guYyMPFt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1743622308; x=1744227108; i=markus.elfring@web.de;
+	bh=UHOjYhdUZi8zf8al7+oTcOgs8V80BAdyjZoQxApePzk=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=guYyMPFt5Qca3zcnYabEM4NfGJ2Zk0pz6oNJ+bIIBSKUFbjAnBR8WLmdif9Pp7XZ
+	 +74LTS3CMqfgf20sxcdlQfz3yZ6+K6Cddxef6furLuFy28YCQYeFpAbVJG310aynt
+	 sueL0oebNsb6kStinX/d8eX1keSWHMgDwOxfji4QLnEvKExhXpc+lOs9zHph9xDRQ
+	 zRWUNe/zicInwNeJAm9abF5T3/AMGQGgY1GSc5qyscTXh6VorFXhjf57ktIKIVqU5
+	 58wvhAnFsJosokHjXBh7ulhuhBuo+7AeIds4R/UpBzRrn3AGfXlB1Q9q6KnvQymsq
+	 mbpK0jQMc8mFAZcDfw==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.70.83]) by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MsrdC-1t70Hs1dsW-00wUGq; Wed, 02
+ Apr 2025 21:31:48 +0200
+Message-ID: <e13c8dee-2631-4366-a51c-6a47dabf23d6@web.de>
+Date: Wed, 2 Apr 2025 21:31:47 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250402180925.90914-1-andrii@kernel.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+User-Agent: Mozilla Thunderbird
+To: Henry Martin <bsdhenrymartin@gmail.com>, linux-tegra@vger.kernel.org
+Cc: LKML <linux-kernel@vger.kernel.org>, Jassi Brar
+ <jassisinghbrar@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>,
+ Thierry Reding <thierry.reding@gmail.com>
+References: <20250402144115.45564-1-bsdhenrymartin@gmail.com>
+Subject: Re: [PATCH] mailbox: tegra-hsp: Fix null-ptr-deref in
+ tegra_hsp_doorbell_create()
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20250402144115.45564-1-bsdhenrymartin@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:OLH2MdbhxSuSQeX5kUvZ62IrTw+XFu+k4gfXqGSUmSgM5hnk4R6
+ tfAN00W+Ay/6fGZHX6YJg/InsEp2LJp2D3rdfRDpQ4Zy/YfXWQw7ML8accHQjEUwQ+uAfz5
+ n9lkYCM7g3O668VtLNzIVUik3dOoFARmNq5udtrgUe79aPlYz2/66Iaey6Y4UlQHSZnBqQV
+ qEmoIdeCUP3592zdmYUYA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:Hh9PD4nuHyM=;Imei8X/d2lSoseWwzSc94AwyDuY
+ BPl28FZ7TTuRtaSnp6Jp56eygY9aMgOGEPsaqsVQo82qJPVFjXs1Hu1gc+ve9FxsSWNYgJuAs
+ 1PybVqpM4eQ45lGk/3EYiDKj5UMP4NvspiS6GmlWx3mHDSzhogn25E9pjMcGeAMwdvM5aCqB7
+ aCg8hSkXa9/BL08c9uKiOODOzRsBjip1q4vIl7IUrNHHPDWzhgrCyb/HEN/+K1xEUSJ+bSqG+
+ twLMJbU3Zyqw6LIxDTS9HZBfyaiQFihJvTuHzTy/CeKlcGLxK+Aisgzc4K6eaA6vWrUDhM3FE
+ XUxX7ZXOANjABRSF4o5zJucph9tnV4jq7eVyiLPzP0yNMYWzlOuGKsAvT7lc3avD1COyB4vsE
+ Rx2GN56pftbyI0kDWRYPIWm/9Ean4bdc3NjXsEOPWUi7lBHjNGU2S0cmPVaToIWieJPOjzsnA
+ /WzpBbLUbcFHDS8AbQ2qwRLXZju+iwCI4FrZvhIE9Sr3WMLrK4zI/kIhorS5V05qYfxQJLDzR
+ UY/EUL65Z02KUcA0Q8ubv8Ymr2+V3Wag0/P/fc1XeN66/SuNWFUWE16CKGhuAO651lm5e6tkb
+ uF/pO4F1N86RyqocqTZPKlBs8a5zrLMX1vACcLUDDKB3LeSHZ66AW+R6GDQHR5kAK+Tkde43z
+ p3l4eiAvuKsSFpHbwv66knBhetvYKEQJbUSx5eFNGEkvY/1tnKXu5SxdUJuuFKUR9nUabT9Fl
+ aT6phZCOpHRlZAP+wAhtdozhB+npY0yf1HVjO3fpFDt5eOPfshWI9QWBmRl51PRSMu8lukIve
+ AwIsH/BQkxta5V50NdU9ycxGC8KqLyur/G/ciiwG/8saNrUrsqiUMM3DX7E8HkMgFAiOQNbQR
+ otIifX/wgQTJCIJf+LleNj/zcRFP3V+effthCjJDuuG11GE1nk4r7bvwRdL7aZAVI3ueEIPPk
+ btsdCUbmGzWwwsj7RQd2uxXuMCx6ctOWwV6GXrt2DTs6G7S+8SbsoQZRUK1pPANaWKaqrwVIT
+ IU6XI19iGDgQ4kCdSbllhSlLIZQR5edMWRAStGVyDM+K86ixbPVSZEz1TrOy5jgcYIBwzctXp
+ pBQcjD1vgOfjEHZa3KIofZJjZitdqWQV8bVMIUVGMu+HP1It/895MJL1aWTQucSCkutIMqaOL
+ Zphg3wDoJV3AOSYYqTalY1bOs75+TlpN+mY8LQzdUl7Foe3zm2ccc1oz9yj8mNpsB1OsCgpNR
+ fsxXaajd0fBPDMmsthYD/VLu8iuRK+K5nSmdC46x6PZ0e73y768mZDD/EAn03w5qGsG491EEe
+ Udr2mf+aEIuaJUmqkitFfwBtXHPFz8YlhZRGW6Pkkn/FSudsmcmVcxDO2f+P/lBISCDVqamMe
+ UnLvFiVIeK86u2yZjcID9yY0aU20u/PwvMV6R6dQS6ZNwx64BRDn/a3vvGBDkIlun/CV5Jdwq
+ pAaHYNBsJ5wqQO4e/cBgWZPXjFDky2c2mdSzhln/nglfna5+i4tQYXXHzDJZhbLrV69phIA==
 
-On 04/02, Andrii Nakryiko wrote:
+> devm_kstrdup_const() returns NULL when memory allocation fails.
+=E2=80=A6
+                                                       failed?
+
+Can a summary phrase like =E2=80=9CPrevent null pointer dereference
+in tegra_hsp_doorbell_create()=E2=80=9D be a bit nicer?
+
+
+=E2=80=A6
+> +++ b/drivers/mailbox/tegra-hsp.c
+> @@ -293,6 +293,8 @@ tegra_hsp_doorbell_create(struct tegra_hsp *hsp, con=
+st char *name,
+>  	db->channel.hsp =3D hsp;
 >
-> --- a/kernel/exit.c
-> +++ b/kernel/exit.c
-> @@ -937,12 +937,12 @@ void __noreturn do_exit(long code)
->  
->  	tsk->exit_code = code;
->  	taskstats_exit(tsk, group_dead);
-> +	trace_sched_process_exit(tsk, group_dead);
->  
->  	exit_mm();
->  
->  	if (group_dead)
->  		acct_process();
-> -	trace_sched_process_exit(tsk);
+>  	db->name =3D devm_kstrdup_const(hsp->dev, name, GFP_KERNEL);
+> +	if (!db->name)
+> +		return ERR_PTR(-ENOMEM);
 
-I see nothing wrong in this change.
+Can a blank line be desirable after such a statement?
 
-(and I think that the current placement of trace_sched_process_exit() was
- more or less "random").
-
-Acked-by: Oleg Nesterov <oleg@redhat.com>
-
+Regards,
+Markus
