@@ -1,149 +1,109 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+Received: from vps.xff.cz (vps.xff.cz [195.181.215.36])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E0E317555
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 21:15:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 398991EB1A7
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 21:16:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.181.215.36
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743628545; cv=none; b=sfSfJOhugGt0Sqj1noYXInw1bK54RTVz63SiSbu6qzmtvZGiLaqd6G3fhBa84yRWP+EnNEtIONN2Et/oyF1+AYpmxVgXeAwM9YzI/MckWv52+XTr7OydD8KEub0aGdmp497B9cI2SoZy7Xga1OqB6YuNALX/+ycSSFOarROnPY0=
+	t=1743628572; cv=none; b=mGPO2y+DBtBTzugzV2MX/0PvJBLbTLqNl5KvGIIHGbOPQRBnF360g3a87ny69dyrFN+NSygULqQetDNnHbf6E5nEIiwFHHX/sHSElpCOOBFIT2sQzIryF2k3nyEUFphZg+8YKnYvykZC4mXcvS/6VcQKmdZWqzHvLrOkE4KjNr8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743628545; c=relaxed/simple;
-	bh=yMtg/5bd9WuFFPh1QUVVbVzPyQ8PxgEFM//QPDYEqaE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lr35ee2R9XwSGrrSx2GQIv4VKFNq2xNN49GTzXmixqRfPXYbToyQAAAtm/RuUcK9JDeT3f1JY3DVaukCDTeZE/lXksAy+FKqnXW+lMyVXPG54PxcADxg5BOfGQ635e/btPW/kns8Oqp0XRHyKAivjOg8AHUKShrV/cWYNE69lxE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=RZa/+h6H; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1743628572; c=relaxed/simple;
+	bh=NxU1qh4rEZ3galaYLuwWXch0mLJidkZNwrsLm5kun38=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Onb2FzRRuZezS0vYNIHJJPjeSXTONNxGa46Zs4Dex78WibiM0y7qCHjbs3eqMfK2xCQIhNP6fbiA/p/LG9oF3OMOKHPhpkLH/ioijnjSEHn+zWAo1UthkPS+1HVTWAj0xUw56vCxWBD/pNA7OLUc8641/OOYfq/SBdbbxo6nBbs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xff.cz; spf=pass smtp.mailfrom=xff.cz; dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b=jqch+iqd; arc=none smtp.client-ip=195.181.215.36
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xff.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xff.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="RZa/+h6H"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5e5e8274a74so433432a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 14:15:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1743628542; x=1744233342; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=6vOkaWbZeGW9ejcyKHqKRgGRaPzQmhuks1cZQp6R9ag=;
-        b=RZa/+h6HEjsYLq3HkITnh9KcuXtV6l1/HrWHOKlfjwJoEoG+vVh50SSBqnHy3tUnjK
-         XZfLYbZ56P9oJVs1R5/dJX0izYo/9GZ5itxtUgV/pxy/BBqQn2b7eNPgnUdzqav7r8q/
-         +yrvKK9f6OmdosVym50HCISw2QMZI4FChmOz8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743628542; x=1744233342;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=6vOkaWbZeGW9ejcyKHqKRgGRaPzQmhuks1cZQp6R9ag=;
-        b=wS+nUfMDj0CLLAinQEVrwq/8tm0u5BvhRR6Q04QyLO1ZMnOLMH5F8jY9up9YLl27ZF
-         dRzBJCy6kRzVilETFvwJ2W0D+ONxt3w++t3fQ8wZWR4X4WtkXjJtlRBiCxS60zs0swjl
-         i8hBnKzvEWvJDhhuTiYOAZsJJxx9AkMXVEgidpROIA0sCBii7sYle54uY1IB4hDxVg5n
-         VtvVnYzBJ94HJTGQ53R9rYfDu2K3OOHan1la8RP2tiVIYrrxCi6pjwGHiRUxBbeyGkCf
-         sw5cfZ2MDpWFhCFyT8WhFHMjR2giXsSQWrzel4tcFxID0z5HYdjLIh/CRNMf3HqAfR75
-         B5Qg==
-X-Forwarded-Encrypted: i=1; AJvYcCW57hlKEkwSd9rH8g8jVpUBU7rXeyC5ELdtiXJokbxz01VcH2j1WP8ah5KyA99Wqp0hgz2TZj0ffKbvypc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyklE3lNfFQM/dgzTdIYS5tyOjB+ZGGfml1dCAtabnNw7RuTQ2U
-	sxvtv4uYXKmSHP7X/ob77ysC4sSVue2nDUmzbphS2Qd+MSYdlAgiPZI9tENsfoc4nz+hqnUdlsK
-	yi4l7Mw==
-X-Gm-Gg: ASbGncsH+N7jjZfTsQjhiAbx2LXlkgCjgIUyRX7VaYio5PJdLQ6TSvdFVvS8GrHMJqB
-	Py+Oe/0zGWGAcOWWBnhr75wpi6AoAmvoWENFGNBXBYMm17R8JEtWo0y94xAmKZIgOIxYQR81QnV
-	n7M2bF5I1lr0Qov2o5S3V4WVhfbBBjwEmOhcevCguGvq+9MyKayMVmJBY6SDtTpVfFjHTZYYerb
-	xvhLpG86xahAkAL1AqGJAl0AHFGEVC1o8DJAo9S9qp5hSc28wslCVTpI0erxVkXpohjbEcKY92+
-	opu36o+sql9aDD+lBQEsTG0BgPCn6+gwaBLqsgaqMU6EciAnxfwRDcqQNRD65/bQgpneIEtuez+
-	w50Whvt2aEU5D6g/++tmCYC90GkQvjw==
-X-Google-Smtp-Source: AGHT+IHKvMhA12/Q9Qf9ljlMiGKycMopgTw+clKHOcWQoJKAejrVAzYVuElbEUDkYt8RaiZsmDoaoA==
-X-Received: by 2002:a17:907:728c:b0:ac7:31a4:d4e9 with SMTP id a640c23a62f3a-ac7bc03af17mr20633166b.4.1743628541632;
-        Wed, 02 Apr 2025 14:15:41 -0700 (PDT)
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com. [209.85.218.47])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac71961f8fbsm968126366b.107.2025.04.02.14.15.41
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Apr 2025 14:15:41 -0700 (PDT)
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ac298c8fa50so36527166b.1
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 14:15:41 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUYnuBeXsvf3T2gEWG6Dz1KX7IWVpiSptlbBsRFtSixJWI9LAarXVSdyrTRDKpUxhmBgHUqy8BPsfuQcmY=@vger.kernel.org
-X-Received: by 2002:a17:907:9409:b0:ac7:970b:8ee5 with SMTP id
- a640c23a62f3a-ac7bc126208mr19593966b.27.1743628091735; Wed, 02 Apr 2025
- 14:08:11 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b="jqch+iqd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xff.cz; s=mail;
+	t=1743628147; bh=NxU1qh4rEZ3galaYLuwWXch0mLJidkZNwrsLm5kun38=;
+	h=Date:From:To:Cc:Subject:X-My-GPG-KeyId:References:From;
+	b=jqch+iqdF1HrmRSVsRvaiDzIazDlj460v0RiPrW6fX8k0OLkha4r9GXYn52s+HdTg
+	 Avh6wXWHlXw7GhVOEkaNyRYQILZOlS+nMUSHG8rQ7puw1ZoAo6jQ+ajg9fQj/bi4Ca
+	 4JkaiYZUeHryIItxpdaxsOca0xFD8PN7+pX6IUTI=
+Date: Wed, 2 Apr 2025 23:09:06 +0200
+From: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>
+To: Anusha Srivatsa <asrivats@redhat.com>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>, 
+	Jessica Zhang <quic_jesszhan@quicinc.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Icenowy Zheng <icenowy@aosc.io>, 
+	Jagan Teki <jagan@amarulasolutions.com>, Javier Martinez Canillas <javierm@redhat.com>, 
+	Michael Trimarchi <michael@amarulasolutions.com>, Michael Walle <mwalle@kernel.org>, Jagan Teki <jagan@edgeble.ai>, 
+	Guido =?utf-8?Q?G=C3=BCnther?= <agx@sigxcpu.org>, Purism Kernel Team <kernel@puri.sm>, 
+	Linus Walleij <linus.walleij@linaro.org>, Jianhua Lu <lujianhua000@gmail.com>, 
+	Stefan Mavrodiev <stefan@olimex.com>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 07/30] panel/ilitek-ili9341: Use refcounted allocation in
+ place of devm_kzalloc()
+Message-ID: <75q6u7kgyhveuzlxujoocvqfzilaxsvh3udzeltk2itwigy2n3@f5sqxddtjxuf>
+Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>, 
+	Anusha Srivatsa <asrivats@redhat.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Jessica Zhang <quic_jesszhan@quicinc.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Icenowy Zheng <icenowy@aosc.io>, 
+	Jagan Teki <jagan@amarulasolutions.com>, Javier Martinez Canillas <javierm@redhat.com>, 
+	Michael Trimarchi <michael@amarulasolutions.com>, Michael Walle <mwalle@kernel.org>, Jagan Teki <jagan@edgeble.ai>, 
+	Guido =?utf-8?Q?G=C3=BCnther?= <agx@sigxcpu.org>, Purism Kernel Team <kernel@puri.sm>, 
+	Linus Walleij <linus.walleij@linaro.org>, Jianhua Lu <lujianhua000@gmail.com>, 
+	Stefan Mavrodiev <stefan@olimex.com>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
+References: <20250402-b4-drm_panel_mass_convert_part2-v1-0-903b70999ea6@redhat.com>
+ <20250402-b4-drm_panel_mass_convert_part2-v1-7-903b70999ea6@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <Z-sDc-0qyfPZz9lv@mini-arch> <39515c76-310d-41af-a8b4-a814841449e3@samba.org>
- <407c1a05-24a7-430b-958c-0ca78c467c07@samba.org> <ed2038b1-0331-43d6-ac15-fd7e004ab27e@samba.org>
- <Z+wH1oYOr1dlKeyN@gmail.com> <Z-wKI1rQGSgrsjbl@mini-arch> <0f0f9cfd-77be-4988-8043-0d1bd0d157e7@samba.org>
- <Z-xi7TH83upf-E3q@mini-arch> <4b7ac4e9-6856-4e54-a2ba-15465e9622ac@samba.org>
- <20250402132906.0ceb8985@pumpkin> <Z-1Hgv4ImjWOW8X2@mini-arch> <20250402214638.0b5eed55@pumpkin>
-In-Reply-To: <20250402214638.0b5eed55@pumpkin>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Wed, 2 Apr 2025 14:07:54 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wi7p9bKgZt1E1BWE-NjwSRDBQs=Coviiz0ZTQy9OhHvPg@mail.gmail.com>
-X-Gm-Features: AQ5f1JpKVAIlc4pALP5yKNCr8F3ijIqVBIOCCdqoIfNZomenel-ajZbKWJ5EdvE
-Message-ID: <CAHk-=wi7p9bKgZt1E1BWE-NjwSRDBQs=Coviiz0ZTQy9OhHvPg@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/4] net/io_uring: pass a kernel pointer via optlen_t
- to proto[_ops].getsockopt()
-To: David Laight <david.laight.linux@gmail.com>
-Cc: Stanislav Fomichev <stfomichev@gmail.com>, Stefan Metzmacher <metze@samba.org>, 
-	Breno Leitao <leitao@debian.org>, Jens Axboe <axboe@kernel.dk>, 
-	Pavel Begunkov <asml.silence@gmail.com>, Jakub Kicinski <kuba@kernel.org>, Christoph Hellwig <hch@lst.de>, 
-	Karsten Keil <isdn@linux-pingi.de>, Ayush Sawal <ayush.sawal@chelsio.com>, 
-	Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-	Kuniyuki Iwashima <kuniyu@amazon.com>, Willem de Bruijn <willemb@google.com>, David Ahern <dsahern@kernel.org>, 
-	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>, Xin Long <lucien.xin@gmail.com>, 
-	Neal Cardwell <ncardwell@google.com>, Joerg Reuter <jreuter@yaina.de>, 
-	Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, 
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>, Oliver Hartkopp <socketcan@hartkopp.net>, 
-	Marc Kleine-Budde <mkl@pengutronix.de>, Robin van der Gracht <robin@protonic.nl>, 
-	Oleksij Rempel <o.rempel@pengutronix.de>, kernel@pengutronix.de, 
-	Alexander Aring <alex.aring@gmail.com>, Stefan Schmidt <stefan@datenfreihafen.org>, 
-	Miquel Raynal <miquel.raynal@bootlin.com>, Alexandra Winter <wintera@linux.ibm.com>, 
-	Thorsten Winkler <twinkler@linux.ibm.com>, James Chapman <jchapman@katalix.com>, 
-	Jeremy Kerr <jk@codeconstruct.com.au>, Matt Johnston <matt@codeconstruct.com.au>, 
-	Matthieu Baerts <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>, 
-	Geliang Tang <geliang@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, 
-	Remi Denis-Courmont <courmisch@gmail.com>, Allison Henderson <allison.henderson@oracle.com>, 
-	David Howells <dhowells@redhat.com>, Marc Dionne <marc.dionne@auristor.com>, 
-	Wenjia Zhang <wenjia@linux.ibm.com>, Jan Karcher <jaka@linux.ibm.com>, 
-	"D. Wythe" <alibuda@linux.alibaba.com>, Tony Lu <tonylu@linux.alibaba.com>, 
-	Wen Gu <guwen@linux.alibaba.com>, Jon Maloy <jmaloy@redhat.com>, 
-	Boris Pismenny <borisp@nvidia.com>, John Fastabend <john.fastabend@gmail.com>, 
-	Stefano Garzarella <sgarzare@redhat.com>, Martin Schiller <ms@dev.tdt.de>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>, 
-	Magnus Karlsson <magnus.karlsson@intel.com>, 
-	Maciej Fijalkowski <maciej.fijalkowski@intel.com>, Jonathan Lemon <jonathan.lemon@gmail.com>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Jesper Dangaard Brouer <hawk@kernel.org>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-sctp@vger.kernel.org, linux-hams@vger.kernel.org, 
-	linux-bluetooth@vger.kernel.org, linux-can@vger.kernel.org, 
-	dccp@vger.kernel.org, linux-wpan@vger.kernel.org, linux-s390@vger.kernel.org, 
-	mptcp@lists.linux.dev, linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com, 
-	linux-afs@lists.infradead.org, tipc-discussion@lists.sourceforge.net, 
-	virtualization@lists.linux.dev, linux-x25@vger.kernel.org, 
-	bpf@vger.kernel.org, isdn4linux@listserv.isdn4linux.de, 
-	io-uring@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250402-b4-drm_panel_mass_convert_part2-v1-7-903b70999ea6@redhat.com>
 
-On Wed, 2 Apr 2025 at 13:46, David Laight <david.laight.linux@gmail.com> wrote:
->
-> The problem is that the generic code has to deal with all the 'wild stuff'.
-> It is also common to do non-sequential accesses - so iov_iter doesn't match
-> at all.
-> There also isn't a requirement for scatter-gather.
+Hi Anusha,
 
-Note that the generic code has special cases for the simple stuff,
-which is all that the sockopt code would need.
+On Wed, Apr 02, 2025 at 11:23:45AM -0400, Anusha Srivatsa wrote:
+> Move to using the new API devm_drm_panel_alloc() to allocate the
+> panel.
+> 
+> Signed-off-by: Anusha Srivatsa <asrivats@redhat.com>
+> ---
+>  drivers/gpu/drm/panel/panel-ilitek-ili9341.c | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/panel/panel-ilitek-ili9341.c b/drivers/gpu/drm/panel/panel-ilitek-ili9341.c
+> index ff39f5dd4097e8da0a0e16c50c5bfd45c078d91c..d87b7eefe9beedd290fb59065b389b3315c85720 100644
+> --- a/drivers/gpu/drm/panel/panel-ilitek-ili9341.c
+> +++ b/drivers/gpu/drm/panel/panel-ilitek-ili9341.c
+> @@ -490,9 +490,11 @@ static int ili9341_dpi_probe(struct spi_device *spi, struct gpio_desc *dc,
+>  	struct ili9341 *ili;
+>  	int ret;
+>  
+> -	ili = devm_kzalloc(dev, sizeof(struct ili9341), GFP_KERNEL);
+> -	if (!ili)
+> -		return -ENOMEM;
+> +	ili = devm_drm_panel_alloc(dev, struct ili9341, panel,
+> +				   &ili9341_dpi_funcs,
+> +				   DRM_MODE_CONNECTOR_DPI);
+> +	if (IS_ERR(ili))
+> +		return PTR_ERR(ili);
+>  
+>  	ili->dbi = devm_kzalloc(dev, sizeof(struct mipi_dbi),
+>  				GFP_KERNEL);
 
-Now, that's _particularly_ true for the "single user address range"
-thing, where there's a special ITER_UBUF thing.
+Unlike in other patches, in this one you did not remove:
 
-We don't actually have a "single kernel range" version of that, but
-ITER_KVEC is simple to use, and the sockopt code could say "I only
-ever look at the first buffer".
+https://elixir.bootlin.com/linux/v6.13.7/source/drivers/gpu/drm/panel/panel-ilitek-ili9341.c#L529
 
-It's ok to just not handle all the cases, and you don't *have* to use
-the generic "copy_from_iter()" routines if you don't want to.
+	drm_panel_init(&ili->panel, dev, &ili9341_dpi_funcs,
+		       DRM_MODE_CONNECTOR_DPI);
 
-In fact, I would expect that something like sockopt generally wouldn't
-want to use the normal iter copying routines, since those are
-basically all geared towards "copy and update the iter".
+Unintentional?
 
-           Linus
+kind regards,
+	o.
+
+> -- 
+> 2.48.1
+> 
