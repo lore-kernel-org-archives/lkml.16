@@ -1,94 +1,202 @@
-Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0867915A86B
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 16:38:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29AE310F9
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 16:39:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743611920; cv=none; b=FFeJG4jJi9zp2VcdUitCWMGlElgFl8P37cMQF8fcYv69bymFXiqfNi4P4uOS8/q+tMXI3MFsiWAIwcmWWn+pWZxnn5drnMyIHhPx/eirmCLKwenJyHA7b5SBKN85xyi5xGMPT8Icb51wwMd4iAZeRpOWkVgBchlpY+GlqAxRgtE=
+	t=1743611944; cv=none; b=fGz/p/dk7V+aZUUXw0NCb5xW3+7Gv+DIw/L9QEVgySVVBxpkR00r7GhXXZPyGDJEv6wutQR7NEe/cVakhvJDr6H5AItiPwBrRpy6Uk8AxCrY0GrYM8vWWhAOChS2RO3JfHEpM3/N5FZEEpv/hexwp9EiENoYq7tfQs1TmcLRQLs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743611920; c=relaxed/simple;
-	bh=rgBha65hW5dtc03g876KusDpvr8NdK4C0yB4SGa0zfs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TBeIfllRJdEd1Ye9LhsO9piDsvP4UIuNX7PK284tsDmysaEfQEKeyOUdjPgR5T8hfjvu4bizBhyaJ9E5q4LJEwiUxMIAe1G/3ShG4VdZFaXXE3K/rV3DdTiphp5OHJXXQjQGvKHA76KN0gldi0dGCGJiSPl3yC/aN/kU57PT8hI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=VzZECpFV; arc=none smtp.client-ip=95.215.58.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1743611944; c=relaxed/simple;
+	bh=JbpQGyS2k2ae5y5xVtR1Gxoy3SaqtFSjvZ/rBlydswQ=;
+	h=From:In-Reply-To:References:MIME-Version:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TnFGXtqH9g4uzGg7OnxvQi+twzragdiSldbieP7gKHypzbp290xuWe0gapSCO5hql6drdnDOcHjgzrqGMAwDY3KmGu5klQz6js4yB8ADFKiNspDzl5NBR4deTI4LHyM0PMzatV7VE+FcOoFb/8FQC6HfXJx9Kd9WO8GFiWJxrPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=etBGqs3u; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="VzZECpFV"
-Date: Wed, 2 Apr 2025 12:38:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1743611917;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="etBGqs3u"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743611939;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=1TjLropfZUyAcV9MBx+pByuu0YArP/C8m8u8knL0Q+o=;
-	b=VzZECpFVwyNp9OGMzBuIGRi1/avOc1x9/MKr8NksUhdhSOaEfubgCslZxt3Bv2aERqzuMe
-	0m9FLWJnPw0WXMn4Uxat0QBNQDWPfbAzhCT4B8L5QYF4V+7bPSLzLuOh8pFg7wEbOYrYWu
-	2YiUkAgXxAMQbqUNDlsY+0BTDUxWjeI=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Bharadwaj Raju <bharadwaj.raju777@gmail.com>
-Cc: linux-bcachefs@vger.kernel.org, shuah@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-kernel-mentees@lists.linux.dev, 
-	syzbot+c82cd2906e2f192410bb@syzkaller.appspotmail.com
-Subject: Re: [PATCH] bcachefs: don't call sleeping funcs when handling
- inconsistency errors
-Message-ID: <ciw5ocj6io5q5p2tsv3sqpga2ff73eqwhlrrug4el63ggolcho@iviprrqsaemj>
-References: <20250402161043.161795-1-bharadwaj.raju777@gmail.com>
- <zjqewsg6ijvol3x3rdjfyjeji3wy24nw45yb6mkqj7vwsk7mrn@yxnvgpj4i24k>
- <CAPZ5DTEGi8RXBMui823bwnt96PcqZSavH8AQ+LPhRs=sJ-Br1Q@mail.gmail.com>
+	bh=jA07gZAckB5bQhywn6Vwf6YGCI+Gg9x9Lpp/1wjtdSQ=;
+	b=etBGqs3uXVxdyuDntip6FyhlNGsF2sPyk7/zlYITsWy522iYH8mMBxCNOyWGh7RPmqB1c5
+	qaaQLbIvMtCNka6si77ckLNOEhkih7aPzEshNfpPlMa2ugnb4TNnDSeBqIeRpFd4OcxIvM
+	l4E4zIrzp5Cs5IPaKbjCdec15ayD7CQ=
+Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com
+ [209.85.216.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-290-bpxYVQP6MRGIetaLhITenA-1; Wed, 02 Apr 2025 12:38:57 -0400
+X-MC-Unique: bpxYVQP6MRGIetaLhITenA-1
+X-Mimecast-MFC-AGG-ID: bpxYVQP6MRGIetaLhITenA_1743611935
+Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-2ff68033070so11541561a91.2
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 09:38:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743611935; x=1744216735;
+        h=content-transfer-encoding:cc:to:subject:message-id:date
+         :mime-version:references:in-reply-to:from:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=jA07gZAckB5bQhywn6Vwf6YGCI+Gg9x9Lpp/1wjtdSQ=;
+        b=ioOTf/yu3Ecc9saUmGBWdWV6bh0KXkIWo+gkt9Xm6HZ6+lPNlZrS0Owa8fDav2FVfd
+         BkxTG232ZqFIaNUNzfCfcHlYf8w0VubUnpWR7UP7BOwgU0gZeHPTX5RIEGqssuFkR7C6
+         Dt3RoISCmQUWq1d46COF9e3d6yyINR8QuhsCpOcgOyNL3cn6Bfk4AY8nlaUkb18wGvqb
+         pHFe9r9HypcoDkoWFwZO5tG9aGV6zDJ6y7mKGOY8MSSvoaJRLynDZIsGjnm7VBrvMUhY
+         cnmga8ZIfeZvOUXG+xGw8fFTj0C6dZaVYNHk1Db1avAwiDpf+8YTpmYYwPj+iF2svuCh
+         33cQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWQvl6FAottCwGVeabaOFndCfwCmfNHIbeY6BN3WjJ9GPhA3X1E8eb1cCJwfNPZfjgidsRWkyY0h0T8Czw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJi9H1GvefSi5utwt68aPxJQagZz2w7n2WdjuqFNMDO3jWP6cB
+	15CU+F9O5sH+kGaq9JDHXLXTcwrriKgWdNYcNNhyo+MrCHLZLH/Wi0/KY6wkDFr26So8SVK1HoY
+	3fWXkjK+ZWJ2bSye6Un2RJ6oCuoXXForL3mO7skEwdnB444eNHcUBskPgPugoAyBWNfCsK8dBp/
+	9lJGNLtP3SsKMSwBsQz651/IrLh7dusQVdr1Yq
+X-Gm-Gg: ASbGncvdtLtVr38Bk634jduWk9/cmr/9ChCrOX+S0zqk3yBNHxDJ5rGeLNV8+KFX7Al
+	FFe0epKCVI+pJrI8ULrOJAMgd+3dEvhB0KnRYdmJGr15GSJ/E71laFPNXmrtVSZzr6/sC8g==
+X-Received: by 2002:a17:90a:e183:b0:2ff:5e4e:861 with SMTP id 98e67ed59e1d1-3056094b28amr11892721a91.24.1743611935197;
+        Wed, 02 Apr 2025 09:38:55 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFJeSWFRN5z2wxWXtKvRsOPT5CfAHrY7buz3TM6wH9tz9gjBfwFVkgsnjlHEgDTEqYebTRrhaxUSg2BrAW/4wM=
+X-Received: by 2002:a17:90a:e183:b0:2ff:5e4e:861 with SMTP id
+ 98e67ed59e1d1-3056094b28amr11892695a91.24.1743611934877; Wed, 02 Apr 2025
+ 09:38:54 -0700 (PDT)
+Received: from 753933720722 named unknown by gmailapi.google.com with
+ HTTPREST; Wed, 2 Apr 2025 18:38:54 +0200
+From: Sergio Lopez Pascual <slp@redhat.com>
+In-Reply-To: <CAAfnVBki816fSPuQ_FcvuwYzbSwiS_WaYsGSA1AyitmAA5OsXg@mail.gmail.com>
+References: <20240723114914.53677-1-slp@redhat.com> <942afa37-a24c-48ed-ae10-c811849165bf@collabora.com>
+ <CAAiTLFV6mAgrMj=itcxoBCibvYRyrAk02wYp-gYJ8kxhF0EPmw@mail.gmail.com>
+ <CAAfnVBkWKn3+YEhNz0CTmw-T_jjL72axkWqYgkzkSa72t_Gf0A@mail.gmail.com>
+ <CAF6AEGsnpEYFsCfZUAPopWzY=wv_GWn0P5f5D6U9y-JrWGQVnw@mail.gmail.com> <CAAfnVBki816fSPuQ_FcvuwYzbSwiS_WaYsGSA1AyitmAA5OsXg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAPZ5DTEGi8RXBMui823bwnt96PcqZSavH8AQ+LPhRs=sJ-Br1Q@mail.gmail.com>
-X-Migadu-Flow: FLOW_OUT
+Date: Wed, 2 Apr 2025 18:38:54 +0200
+X-Gm-Features: AQ5f1Jqh3JlHDowKtF1SlejjtYnTX8s9zM8BYZmloreOmj3oPMj4ojBdK_5F-_E
+Message-ID: <CAAiTLFWOfX+TOcLFKpgqZvGoC6xSbDyHcefET-jtbm=bCTtqeQ@mail.gmail.com>
+Subject: Re: [PATCH 0/2] drm/virtio: introduce the HOST_PAGE_SIZE feature
+To: Gurchetan Singh <gurchetansingh@chromium.org>, Rob Clark <robdclark@gmail.com>
+Cc: Dmitry Osipenko <dmitry.osipenko@collabora.com>, tzimmermann@suse.de, mripard@kernel.org, 
+	olvaffe@gmail.com, kraxel@redhat.com, daniel@ffwll.ch, 
+	maarten.lankhorst@linux.intel.com, airlied@redhat.com, 
+	linux-kernel@vger.kernel.org, virtualization@lists.linux.dev, 
+	dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 02, 2025 at 10:03:10PM +0530, Bharadwaj Raju wrote:
-> On Wed, Apr 2, 2025 at 9:47 PM Kent Overstreet
-> <kent.overstreet@linux.dev> wrote:
-> >
-> > On Wed, Apr 02, 2025 at 09:40:40PM +0530, Bharadwaj Raju wrote:
-> > > In bch2_bkey_pick_read_device, we're in an RCU lock. So, we can't call
-> > > any potentially-sleeping functions. However, we call bch2_dev_rcu,
-> > > which calls bch2_fs_inconsistent in its error case. That then calls
-> > > bch2_prt_print on a non-atomic printbuf, as well as uses the blocking
-> > > variant of bch2_print_string_as_lines, both of which lead to calls to
-> > > potentially-sleeping functions, namely krealloc with GFP_KERNEL
-> > > and console_lock respectively.
-> > >
-> > > Give a nonzero atomic to the printbuf, and use the nonblocking variant
-> > > of bch2_print_string_as_lines.
-> >
-> > Sorry, beat you to it :)
-> >
-> > You also missed the one the syzbot report actually hit -
-> > bch2_inconsistent_error().
-> 
-> Oops, thank you.
-> 
-> If I'm not wrong, though, the bch2_print_string_as_lines
-> still needs to be changed to bch2_print_string_as_lines_nonblocking?
-> 
-> In my testing that also produces the same BUG warning.
-> 
-> Should I make a patch for that?
+Gurchetan Singh <gurchetansingh@chromium.org> writes:
 
-Yeah, you're right - please do.
+> On Tue, Aug 6, 2024 at 1:15=E2=80=AFPM Rob Clark <robdclark@gmail.com> wr=
+ote:
+>
+>> On Tue, Aug 6, 2024 at 9:15=E2=80=AFAM Gurchetan Singh
+>> <gurchetansingh@chromium.org> wrote:
+>> >
+>> >
+>> >
+>> > On Mon, Aug 5, 2024 at 2:14=E2=80=AFAM Sergio Lopez Pascual <slp@redha=
+t.com>
+>> wrote:
+>> >>
+>> >> Dmitry Osipenko <dmitry.osipenko@collabora.com> writes:
+>> >>
+>> >> > On 7/23/24 14:49, Sergio Lopez wrote:
+>> >> >> There's an incresing number of machines supporting multiple page
+>> sizes
+>> >> >> and on these machines the host and a guest can be running, each on=
+e,
+>> >> >> with a different page size.
+>> >> >>
+>> >> >> For what pertains to virtio-gpu, this is not a problem if the page
+>> size
+>> >> >> of the guest happens to be bigger or equal than the host, but will
+>> >> >> potentially lead to failures in memory allocations and/or mappings
+>> >> >> otherwise.
+>> >> >
+>> >> > Please describe concrete problem you're trying to solve. Guest memo=
+ry
+>> >> > allocation consists of guest pages, I don't see how knowledge of ho=
+st
+>> >> > page size helps anything in userspace.
+>> >> >
+>> >> > I suspect you want this for host blobs, but then it should be
+>> >> > virtio_gpu_vram_create() that should use max(host_page_sz,
+>> >> > guest_page_size), AFAICT. It's kernel who is responsible for memory
+>> >> > management, userspace can't be trusted for doing that.
+>> >>
+>> >> Mesa's Vulkan/Venus uses CREATE_BLOB to request the host the creation
+>> >> and mapping into the guest of device-backed memory and shmem regions.
+>> >> The CREATE_BLOB ioctl doesn't update drm_virtgpu_resource_create->siz=
+e,
+>> >> so the guest kernel (and, as a consequence, the host kernel) can't
+>> >> override the user's request.
+>> >>
+>> >> I'd like Mesa's Vulkan/Venus in the guest to be able to obtain the ho=
+st
+>> >> page size to align the size of the CREATE_BLOB requests as required.
+>> >
+>> >
+>> > gfxstream solves this problem by putting the relevant information in t=
+he
+>> capabilities obtained from the host:
+>> >
+>> >
+>> https://android.googlesource.com/platform/hardware/google/gfxstream/+/re=
+fs/heads/main/host/virtio-gpu-gfxstream-renderer.cpp#1691
+>> >
+>> > If you want to be paranoid, you can also validate the
+>> ResourceCreateBlob::size is properly host-page aligned when that request
+>> reaches the host.
+>> >
+>> > So you can probably solve this problem using current interfaces.
+>> Whether it's cleaner for all context types to use the capabilities, or h=
+ave
+>> all VMMs to expose VIRTIO_GPU_F_HOST_PAGE_SIZE, would be the cost/benefi=
+t
+>> tradeoff.
+>> >
+>>
+>> I guess solving it in a context-type specific way is possible.  But I
+>> think it is a relatively universal constraint.  And maybe it makes
+>> sense for virtgpu guest kernel to enforce alignment (at least it can
+>> return an error synchronously) in addition to the host.
+>>
+>
+> virtio-media may have support for VIRTIO_MEDIA_CMD_MMAP too, so could run
+> into this issue.
+>
+> https://github.com/chromeos/virtio-media?tab=3Dreadme-ov-file#shared-memo=
+ry-regions
+>
+> virtio-fs also has the DAX window which uses the same memory mapping
+> mechanism.
+>
+> https://virtio-fs.gitlab.io/design.html
+>
+> Maybe this should not be a virtio-gpu thing, but a virtio thing?
 
-If you're feeling particularly adventurous - print_string_as_lines() is
-a hack, I think we should be able to do something more robust by
-skipping printk (that's where the 1k limit comes from) and calling
-something lower level - that will require digging into the printk
-codepath and finding lower level we can call.
+There seem to be certain consensus that the information about alignment
+restrictions must be shared in a device-specific way:
 
-I also just noticed that print_string_as_lines() needs to check for
-being passed a NULL pointer - in case the printbuf memory allocation
-fails. Want to get that one too?
+https://lore.kernel.org/virtio-comment/CY8PR12MB7195B5E575099CD9CA1F2F39DCA=
+F2@CY8PR12MB7195.namprd12.prod.outlook.com/T/#t
+
+There's also the precedent of virtio-fs already sharing the alignment
+restrictions through FUSE_INIT (from VIRTIO SPECS 1.3, section
+5.11.6.4).
+
+---
+The driver maps a file range into the DAX window using the
+FUSE_SETUPMAPPING request. Alignment
+constraints for FUSE_SETUPMAPPING and FUSE_REMOVEMAPPING requests are
+communicated dur-
+ing FUSE_INIT negotiation.
+---
+
+Given this information, I'm going to rebase and respin this series.
+
+Thanks,
+Sergio.
+
