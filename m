@@ -1,213 +1,270 @@
-Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07ECC139CF2
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 19:12:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE08C139CF2
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 19:13:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743621166; cv=none; b=XFFsDuTfDdiwj9Y8WkWi2s8TKBI5tcsLH97K7d+faAI1tBCyoPivNOU0KN4uUGmYX9PF4cmUcUUT0hjnrOuKqutRA1kfijODF3pnXWIeVKO8db48Ypy5uep4ZnYxL8RT6m0ToPL7F5NMDM9/lkrKovnRNeHdeFAsoO4kkButnBk=
+	t=1743621231; cv=none; b=NvSB5lo4ZkOO5tSw5IPKUqfMBPexuBTM0URVTESo5MrhI340RXGUp073WXOKDgBqL8cwVrorZwJhM5UgsMx4/wWS0O0ScxBUaryvfVMK7PY4PD/pbEwY1n71kBkuYGXGlfdNggainKle8hvvS+rY+jTIOPs/rN2Iyvd3TLaQkRs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743621166; c=relaxed/simple;
-	bh=aK3VBx6NA3jZwfdsrWRY2dRnu0FqhUszgGEOWyV+h3k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QnOh8ujwU3URH9qxqWwDzyLqzl2iObP6h2vHDqcBbEr2a7hW4PkyAxOU/dOB4dD5VAwCaVxipqFBQt/KacPsZyucSy8OF3pwf5P/8jYHSi3Z/UqfT89ICcZNAuwdhr0mMJmAYYIxXiH1Cx/uhOMoIbLbw9UlTNeTGGWRVQSXepc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dSemILLf; arc=none smtp.client-ip=209.85.221.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1743621231; c=relaxed/simple;
+	bh=YpofQFwIvCVyxZPNWfzHdfjvLBjY8hOmPZucYsVbXJI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=r8TybvaQUaLUiEdd2AhsBt9PKvEw3iuiLakerhmfjEt3q/mwuHi6HwHVjjdQ51CZLL51zoVRNL7QSpe8z7la7CgslIQCYX4f0ktbdhiW5WGoyizMH1edHalwleqzPFpn971nPKMgCVDIqOcxSstZ6YnLwa1hcm7lVvw3/CNLqHM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=clgBGfau; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dSemILLf"
-Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-5241abb9761so75629e0c.1
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 12:12:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743621164; x=1744225964; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ufQZbME7cCWTlfUFUJg7J87wZvmjwZWF7BNQvB4L4UM=;
-        b=dSemILLfNIW/FM82DNZXVSC3qICyNFkkE+6rNsHtXVXd7Dv3mTir70nsib4C+F5iwl
-         tvVpZyScNrY/axWTeHN4GWQEdPCfuPEyCFzVmzUQ9lig2MkdSZfOGXe+NbXjvPco1wOW
-         OVBmcNdVFZbOamSpYERZ4S+QoDacmOYj0cuvOGNXL5mJf7BfDXkL+Okw7Eaa6MyjMl2A
-         wWG06UyGve+FNyAoWwb0CW74YKLTZjuY5DvH7kVrr9C+Vi/tWnQ8jjdTinfxS+ufHaRG
-         FtozX7OOSZ2OOsnU/TU93s3riaDcJzo2b8Eaz4u62TTRUubWqUz9EWFvEah5ovkGM4Ke
-         JNBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743621164; x=1744225964;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ufQZbME7cCWTlfUFUJg7J87wZvmjwZWF7BNQvB4L4UM=;
-        b=I/x+PHEfsw2aqcCRCx5SUq5rl64MpYUse93xzZkma9w13tb08okAcqTb7BBKyvB/Ke
-         D5G1xf/CNd6Bq7zGPqlckbHDKa90m7RTZ2/Aitb3vqzaoSx+6U20xzOYd+Hh5gax0HeP
-         l+fy82xpIc3O6a/IZgvXwdfhSpgSohXTaDMJj+YymntGvBrkHtoZglTxwbf7cE1Z9NyJ
-         0YMZt1a8CAtz51Bzqt5nLFLrVXeSkCgQEQ4Xa2UrM8zGb43aQEqWDo7RkqhR7xxLgTDV
-         bLxOtDLBmYyLUp+WcGnHoZFb0SOnwn+Xw7me3WpqfWqPGJFAdicVUUHmybMPkCTyGugS
-         4Uhg==
-X-Forwarded-Encrypted: i=1; AJvYcCXUb6wO+9Aeul35j2/kgoBXwP/U595J3N9AkxGeiWqEIK7fxfV+HE9SAZ8hujk3sD0EO/bMh1YIJZloKz0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQFVyMYnTZXT+CdpDeSu0Tjp3wDtGmNX3pHKf+9u5+Wdy/c/Ni
-	VrSF0cEGqJADH6DAiHAGQIvOhK0Lu0YliBdynoN96pbzgUu+SGNLvHsu8Xvmw4hyXrkK8i8Rg8m
-	XbVo8VqcjrrUjMx3DEybu7CsuqS4mg6OeNzbMbg==
-X-Gm-Gg: ASbGnctQhsv6y9YJvurJxwLXFtV66mwm+BaeU46lZXbKCw1juRhegzFRUF5k5zvN5LS
-	7OjQ57TCeR6iSwOgp52W6rR7nvyCS8zWA9jLT2Vx76+IilGD6Eb6r7VdJZxyBvZklf1zM9XGkJg
-	P/XdfIdX076EqrtRg4cEL/sDVJCk+CayVxVENhGQW3tvbs+hwzsHD95+4dgdo=
-X-Google-Smtp-Source: AGHT+IHwLcsi3BX8Jz57ZZBx4yNh0gsPGUL4LlIBXdD4VmESoE42IUlvk+9eP+LcFYoQddReWmd77wMhRr7Yoibb+IA=
-X-Received: by 2002:a05:6122:a07:b0:518:a261:adca with SMTP id
- 71dfb90a1353d-5261d4759bcmr11728250e0c.8.1743621163716; Wed, 02 Apr 2025
- 12:12:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="clgBGfau"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13B47C4CEDD;
+	Wed,  2 Apr 2025 19:13:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743621231;
+	bh=YpofQFwIvCVyxZPNWfzHdfjvLBjY8hOmPZucYsVbXJI=;
+	h=Date:From:To:Cc:Subject:From;
+	b=clgBGfauWI15UmY4C2mGjxk6lLCWsSrbHIX2m1Anzk391Qhs4/xmij4x+w58Tb8QW
+	 aZFabx42ey1JCtkeKf86mpqtjDM7GycrF4d9kjPWiutC9AnnN56cxWKAFM+RKsXz9g
+	 YbCDl9kh8h7N7naxhz4Dv6M4BpKZR8n0YRqAwdBNiD4+jIdq7NKnjp2T5JxjSgCshx
+	 SR37h/hQPM6TlVJ9Z/nHpDQrv6Wlko+NgbaPpuEkDOZIXW7OyC2ikvPhs3LlW1eAVE
+	 9/m5jIx9sEQb78m/KD23XxKEIzbspyvNM8UAL33K+JunC9MZtkqELoImD7ar+MVw6E
+	 N2cvW9LsUfDrQ==
+Date: Wed, 2 Apr 2025 09:13:50 -1000
+From: Tejun Heo <tj@kernel.org>
+To: David Vernet <void@manifault.com>, Andrea Righi <arighi@nvidia.com>,
+	Changwoo Min <changwoo@igalia.com>
+Cc: linux-kernel@vger.kernel.org
+Subject: [PATCH sched_ext/for-6.15-fixes] tools/sched_ext: Sync with scx repo
+Message-ID: <Z-2Mbg1BWnTUwaua@slm.duckdns.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250313135003.836600-1-rppt@kernel.org> <20250313135003.836600-11-rppt@kernel.org>
- <20250402140521-bf9b3743-094e-4097-a189-10cdf1db9255@linutronix.de>
- <Z-0xrWyff9-9bJRf@kernel.org> <20250402145330-3ff21a6b-fb03-4bc8-8178-51a535582c6f@linutronix.de>
- <20250402181842-f25872a1-00f7-4a8f-ae6d-3927899ee3a6@linutronix.de>
-In-Reply-To: <20250402181842-f25872a1-00f7-4a8f-ae6d-3927899ee3a6@linutronix.de>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Thu, 3 Apr 2025 00:42:32 +0530
-X-Gm-Features: ATxdqUEPLfNJB2FSv1nTGKqf_ZE3BXsv2R3C6KxSgMELRNHzW7jhhAvjwROmbyc
-Message-ID: <CA+G9fYuM3XR3yMD9qwubGUYTFazpCAzK4kBw33Lagsw2HBQfhA@mail.gmail.com>
-Subject: Re: [PATCH v2 10/13] arch, mm: set high_memory in free_area_init()
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-Cc: Mike Rapoport <rppt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, 
-	Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>, 
-	"David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert@linux-m68k.org>, 
-	Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org, 
-	linux-arch@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org, 
-	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Wed, 2 Apr 2025 at 22:01, Thomas Wei=C3=9Fschuh
-<thomas.weissschuh@linutronix.de> wrote:
->
-> On Wed, Apr 02, 2025 at 03:07:51PM +0200, Thomas Wei=C3=9Fschuh wrote:
-> > On Wed, Apr 02, 2025 at 03:46:37PM +0300, Mike Rapoport wrote:
-> > > On Wed, Apr 02, 2025 at 02:19:01PM +0200, Thomas Wei=C3=9Fschuh wrote=
-:
-> > > > (drop all the non-x86 and non-mm recipients)
-> > > >
-> > > > On Thu, Mar 13, 2025 at 03:50:00PM +0200, Mike Rapoport wrote:
-> > > > > From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-> > > > >
-> > > > > high_memory defines upper bound on the directly mapped memory.
-> > > > > This bound is defined by the beginning of ZONE_HIGHMEM when a sys=
-tem has
-> > > > > high memory and by the end of memory otherwise.
-> > > > >
-> > > > > All this is known to generic memory management initialization cod=
-e that
-> > > > > can set high_memory while initializing core mm structures.
-> > > > >
-> > > > > Add a generic calculation of high_memory to free_area_init() and =
-remove
-> > > > > per-architecture calculation except for the architectures that se=
-t and
-> > > > > use high_memory earlier than that.
-> > > >
-> > > > This change (in mainline as commit e120d1bc12da ("arch, mm: set hig=
-h_memory in free_area_init()")
-> > > > breaks booting i386 on QEMU for me (and others [0]).
-> > > > The boot just hangs without output.
-> > > >
-> > > > It's easily reproducible with kunit:
-> > > > ./tools/testing/kunit/kunit.py run --arch i386
-> > > >
-> > > > See below for the specific problematic hunk.
-> > > >
-> > > > [0] https://lore.kernel.org/lkml/CA+G9fYtdXHVuirs3v6at3UoKNH5keuq0t=
-pcvpz0tJFT4toLG4g@mail.gmail.com/
-> > > >
-> > > >
-> > > > > diff --git a/arch/x86/mm/init_32.c b/arch/x86/mm/init_32.c
-> > > > > index 6d2f8cb9451e..801b659ead0c 100644
-> > > > > --- a/arch/x86/mm/init_32.c
-> > > > > +++ b/arch/x86/mm/init_32.c
-> > > > > @@ -643,9 +643,6 @@ void __init initmem_init(void)
-> > > > >                 highstart_pfn =3D max_low_pfn;
-> > > > >         printk(KERN_NOTICE "%ldMB HIGHMEM available.\n",
-> > > > >                 pages_to_mb(highend_pfn - highstart_pfn));
-> > > > > -       high_memory =3D (void *) __va(highstart_pfn * PAGE_SIZE -=
- 1) + 1;
-> > > > > -#else
-> > > > > -       high_memory =3D (void *) __va(max_low_pfn * PAGE_SIZE - 1=
-) + 1;
-> > > > >  #endif
-> > > >
-> > > > Reverting this hunk fixes the issue for me.
-> > >
-> > > This is already done by d893aca973c3 ("x86/mm: restore early initiali=
-zation
-> > > of high_memory for 32-bits").
-> >
-> > Thanks. Of course I only noticed this shortly after sending my mail.
-> > But this usecase is indeed broken on mainline.
-> > Some further bisecting lead to the mm merge commit being broken, while =
-both its
-> > parents work. That lead the bisection astray.
-> > eb0ece16027f ("Merge tag 'mm-stable-2025-03-30-16-52' of git://git.kern=
-el.org/pub/scm/linux/kernel/git/akpm/mm")
-> >
-> > As unlikely as it sounds, it's reproducible. I'll investigate a bit.
->
-> The issue is fixed with the following diff:
+From 2bac648dab395be0ad0d55b9c2ae7723e71e233e Mon Sep 17 00:00:00 2001
+From: Tejun Heo <tj@kernel.org>
+Date: Wed, 2 Apr 2025 09:08:33 -1000
 
-I have applied this patch,
+Synchronize with https://github.com/sched-ext/scx at dc44584874f0 ("kernel:
+Synchronize with kernel tools/sched_ext").
 
->
-> diff --git a/mm/memblock.c b/mm/memblock.c
-> index 284154445409..8cd95f60015d 100644
-> --- a/mm/memblock.c
-> +++ b/mm/memblock.c
-> @@ -2165,7 +2165,8 @@ static unsigned long __init __free_memory_core(phys=
-_addr_t start,
->                                  phys_addr_t end)
->  {
->         unsigned long start_pfn =3D PFN_UP(start);
-> -       unsigned long end_pfn =3D PFN_DOWN(end);
-> +       unsigned long end_pfn =3D min_t(unsigned long,
-> +                                     PFN_DOWN(end), max_low_pfn);
->
->         if (start_pfn >=3D end_pfn)
->                 return 0;
->
->
-> Background:
->
-> This reverts part of commit 6faea3422e3b ("arch, mm: streamline HIGHMEM f=
-reeing")
-> which is the direct child of the partially reverted
-> commit e120d1bc12da ("arch, mm: set high_memory in free_area_init()").
-> The assumptions the former commit became invalid with the partial revert =
-the latter.
->
-> This bug only triggers when CONFIG_HIGHMEM=3Dn. When mm was branched from=
- mainline
-> the i386 configuration generated by kunit ended up with CONFIG_HIGHMEM=3D=
-y.
-> With some recent changes in mainline the kunit configuration switched to
-> CONFIG_HIGHMEM=3Dn, triggering this specific reproducer only when mm got =
-merged
-> into mainline again.
->
-> New kunit reproducer:
-> ./tools/testing/kunit/kunit.py run --arch i386 example --timeout 10 --kco=
-nfig_add CONFIG_HIGHMEM=3Dn
->
-> Does this sound reasonable?  If so I'll send a patch tomorrow.
->
-> @Naresh, could you test this, too?
+- READ/WRITE_ONCE() is made more proper and READA_ONCE_ARENA() is dropped.
 
-I have applied the proposed fix patch and tested.
-The boot test and LTP smoke test pass.
+- scale_by_task_weight[_inverse]() helpers added.
 
-Links:
- - https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/naresh/tests/2vBZg=
-uDGiZclS394TDRdwW61twC
+- Enum defs expanded to cover more and new enums.
 
->
->
-> Thomas
+- Don't trigger fatal error when some enums are missing from kernel BTF.
+
+Signed-off-by: Tejun Heo <tj@kernel.org>
+---
+Applied to sched_ext/for-6.15-fixes.
+
+Thanks.
+
+ tools/sched_ext/include/scx/common.bpf.h      | 85 +++++++++++++------
+ .../sched_ext/include/scx/enum_defs.autogen.h |  3 +
+ .../sched_ext/include/scx/enums.autogen.bpf.h | 24 ++++++
+ tools/sched_ext/include/scx/enums.autogen.h   |  8 ++
+ tools/sched_ext/include/scx/enums.h           |  3 +-
+ 5 files changed, 94 insertions(+), 29 deletions(-)
+
+diff --git a/tools/sched_ext/include/scx/common.bpf.h b/tools/sched_ext/include/scx/common.bpf.h
+index dc4333d23189..8787048c6762 100644
+--- a/tools/sched_ext/include/scx/common.bpf.h
++++ b/tools/sched_ext/include/scx/common.bpf.h
+@@ -586,36 +586,48 @@ static __always_inline void __write_once_size(volatile void *p, void *res, int s
+ 	}
+ }
+ 
+-#define READ_ONCE(x)					\
+-({							\
+-	union { typeof(x) __val; char __c[1]; } __u =	\
+-		{ .__c = { 0 } };			\
+-	__read_once_size(&(x), __u.__c, sizeof(x));	\
+-	__u.__val;					\
+-})
+-
+-#define WRITE_ONCE(x, val)				\
+-({							\
+-	union { typeof(x) __val; char __c[1]; } __u =	\
+-		{ .__val = (val) }; 			\
+-	__write_once_size(&(x), __u.__c, sizeof(x));	\
+-	__u.__val;					\
+-})
+-
+-#define READ_ONCE_ARENA(type, x)				\
+-({								\
+-	union { type __val; char __c[1]; } __u =		\
+-		{ .__c = { 0 } };				\
+-	__read_once_size((void *)&(x), __u.__c, sizeof(x));	\
+-	__u.__val;						\
++/*
++ * __unqual_typeof(x) - Declare an unqualified scalar type, leaving
++ *			non-scalar types unchanged,
++ *
++ * Prefer C11 _Generic for better compile-times and simpler code. Note: 'char'
++ * is not type-compatible with 'signed char', and we define a separate case.
++ *
++ * This is copied verbatim from kernel's include/linux/compiler_types.h, but
++ * with default expression (for pointers) changed from (x) to (typeof(x)0).
++ *
++ * This is because LLVM has a bug where for lvalue (x), it does not get rid of
++ * an extra address_space qualifier, but does in case of rvalue (typeof(x)0).
++ * Hence, for pointers, we need to create an rvalue expression to get the
++ * desired type. See https://github.com/llvm/llvm-project/issues/53400.
++ */
++#define __scalar_type_to_expr_cases(type) \
++	unsigned type : (unsigned type)0, signed type : (signed type)0
++
++#define __unqual_typeof(x)                              \
++	typeof(_Generic((x),                            \
++		char: (char)0,                          \
++		__scalar_type_to_expr_cases(char),      \
++		__scalar_type_to_expr_cases(short),     \
++		__scalar_type_to_expr_cases(int),       \
++		__scalar_type_to_expr_cases(long),      \
++		__scalar_type_to_expr_cases(long long), \
++		default: (typeof(x))0))
++
++#define READ_ONCE(x)								\
++({										\
++	union { __unqual_typeof(x) __val; char __c[1]; } __u =			\
++		{ .__c = { 0 } };						\
++	__read_once_size((__unqual_typeof(x) *)&(x), __u.__c, sizeof(x));	\
++	__u.__val;								\
+ })
+ 
+-#define WRITE_ONCE_ARENA(type, x, val)				\
+-({								\
+-	union { type __val; char __c[1]; } __u =		\
+-		{ .__val = (val) }; 				\
+-	__write_once_size((void *)&(x), __u.__c, sizeof(x));	\
+-	__u.__val;						\
++#define WRITE_ONCE(x, val)							\
++({										\
++	union { __unqual_typeof(x) __val; char __c[1]; } __u =			\
++		{ .__val = (val) }; 						\
++	__write_once_size((__unqual_typeof(x) *)&(x), __u.__c, sizeof(x));	\
++	__u.__val;								\
+ })
+ 
+ /*
+@@ -648,6 +660,23 @@ static inline u32 log2_u64(u64 v)
+                 return log2_u32(v) + 1;
+ }
+ 
++/*
++ * Return a value proportionally scaled to the task's weight.
++ */
++static inline u64 scale_by_task_weight(const struct task_struct *p, u64 value)
++{
++	return (value * p->scx.weight) / 100;
++}
++
++/*
++ * Return a value inversely proportional to the task's weight.
++ */
++static inline u64 scale_by_task_weight_inverse(const struct task_struct *p, u64 value)
++{
++	return value * 100 / p->scx.weight;
++}
++
++
+ #include "compat.bpf.h"
+ #include "enums.bpf.h"
+ 
+diff --git a/tools/sched_ext/include/scx/enum_defs.autogen.h b/tools/sched_ext/include/scx/enum_defs.autogen.h
+index 6e6c45f14fe1..c2c33df9292c 100644
+--- a/tools/sched_ext/include/scx/enum_defs.autogen.h
++++ b/tools/sched_ext/include/scx/enum_defs.autogen.h
+@@ -88,6 +88,8 @@
+ #define HAVE_SCX_OPS_ENQ_LAST
+ #define HAVE_SCX_OPS_ENQ_EXITING
+ #define HAVE_SCX_OPS_SWITCH_PARTIAL
++#define HAVE_SCX_OPS_ENQ_MIGRATION_DISABLED
++#define HAVE_SCX_OPS_ALLOW_QUEUED_WAKEUP
+ #define HAVE_SCX_OPS_HAS_CGROUP_WEIGHT
+ #define HAVE_SCX_OPS_ALL_FLAGS
+ #define HAVE_SCX_OPSS_NONE
+@@ -104,6 +106,7 @@
+ #define HAVE_SCX_RQ_BAL_PENDING
+ #define HAVE_SCX_RQ_BAL_KEEP
+ #define HAVE_SCX_RQ_BYPASSING
++#define HAVE_SCX_RQ_CLK_VALID
+ #define HAVE_SCX_RQ_IN_WAKEUP
+ #define HAVE_SCX_RQ_IN_BALANCE
+ #define HAVE_SCX_TASK_NONE
+diff --git a/tools/sched_ext/include/scx/enums.autogen.bpf.h b/tools/sched_ext/include/scx/enums.autogen.bpf.h
+index 0e941a0d6f88..2f8002bcc19a 100644
+--- a/tools/sched_ext/include/scx/enums.autogen.bpf.h
++++ b/tools/sched_ext/include/scx/enums.autogen.bpf.h
+@@ -13,6 +13,30 @@ const volatile u64 __SCX_SLICE_DFL __weak;
+ const volatile u64 __SCX_SLICE_INF __weak;
+ #define SCX_SLICE_INF __SCX_SLICE_INF
+ 
++const volatile u64 __SCX_RQ_ONLINE __weak;
++#define SCX_RQ_ONLINE __SCX_RQ_ONLINE
++
++const volatile u64 __SCX_RQ_CAN_STOP_TICK __weak;
++#define SCX_RQ_CAN_STOP_TICK __SCX_RQ_CAN_STOP_TICK
++
++const volatile u64 __SCX_RQ_BAL_PENDING __weak;
++#define SCX_RQ_BAL_PENDING __SCX_RQ_BAL_PENDING
++
++const volatile u64 __SCX_RQ_BAL_KEEP __weak;
++#define SCX_RQ_BAL_KEEP __SCX_RQ_BAL_KEEP
++
++const volatile u64 __SCX_RQ_BYPASSING __weak;
++#define SCX_RQ_BYPASSING __SCX_RQ_BYPASSING
++
++const volatile u64 __SCX_RQ_CLK_VALID __weak;
++#define SCX_RQ_CLK_VALID __SCX_RQ_CLK_VALID
++
++const volatile u64 __SCX_RQ_IN_WAKEUP __weak;
++#define SCX_RQ_IN_WAKEUP __SCX_RQ_IN_WAKEUP
++
++const volatile u64 __SCX_RQ_IN_BALANCE __weak;
++#define SCX_RQ_IN_BALANCE __SCX_RQ_IN_BALANCE
++
+ const volatile u64 __SCX_DSQ_FLAG_BUILTIN __weak;
+ #define SCX_DSQ_FLAG_BUILTIN __SCX_DSQ_FLAG_BUILTIN
+ 
+diff --git a/tools/sched_ext/include/scx/enums.autogen.h b/tools/sched_ext/include/scx/enums.autogen.h
+index 88137a140e72..fedec938584b 100644
+--- a/tools/sched_ext/include/scx/enums.autogen.h
++++ b/tools/sched_ext/include/scx/enums.autogen.h
+@@ -8,6 +8,14 @@
+ 	SCX_ENUM_SET(skel, scx_public_consts, SCX_OPS_NAME_LEN); \
+ 	SCX_ENUM_SET(skel, scx_public_consts, SCX_SLICE_DFL); \
+ 	SCX_ENUM_SET(skel, scx_public_consts, SCX_SLICE_INF); \
++	SCX_ENUM_SET(skel, scx_rq_flags, SCX_RQ_ONLINE); \
++	SCX_ENUM_SET(skel, scx_rq_flags, SCX_RQ_CAN_STOP_TICK); \
++	SCX_ENUM_SET(skel, scx_rq_flags, SCX_RQ_BAL_PENDING); \
++	SCX_ENUM_SET(skel, scx_rq_flags, SCX_RQ_BAL_KEEP); \
++	SCX_ENUM_SET(skel, scx_rq_flags, SCX_RQ_BYPASSING); \
++	SCX_ENUM_SET(skel, scx_rq_flags, SCX_RQ_CLK_VALID); \
++	SCX_ENUM_SET(skel, scx_rq_flags, SCX_RQ_IN_WAKEUP); \
++	SCX_ENUM_SET(skel, scx_rq_flags, SCX_RQ_IN_BALANCE); \
+ 	SCX_ENUM_SET(skel, scx_dsq_id_flags, SCX_DSQ_FLAG_BUILTIN); \
+ 	SCX_ENUM_SET(skel, scx_dsq_id_flags, SCX_DSQ_FLAG_LOCAL_ON); \
+ 	SCX_ENUM_SET(skel, scx_dsq_id_flags, SCX_DSQ_INVALID); \
+diff --git a/tools/sched_ext/include/scx/enums.h b/tools/sched_ext/include/scx/enums.h
+index 34cbebe974b7..8e7c91575f0b 100644
+--- a/tools/sched_ext/include/scx/enums.h
++++ b/tools/sched_ext/include/scx/enums.h
+@@ -14,7 +14,8 @@ static inline void __ENUM_set(u64 *val, char *type, char *name)
+ 	bool res;
+ 
+ 	res = __COMPAT_read_enum(type, name, val);
+-	SCX_BUG_ON(!res, "enum not found(%s)", name);
++	if (!res)
++		*val = 0;
+ }
+ 
+ #define SCX_ENUM_SET(skel, type, name) do {			\
+-- 
+2.49.0
+
+
