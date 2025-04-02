@@ -1,140 +1,94 @@
-Received: from mail-oa1-f53.google.com (mail-oa1-f53.google.com [209.85.160.53])
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23DAB20C485;
-	Wed,  2 Apr 2025 08:17:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F3DD1D5151
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 08:18:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743581868; cv=none; b=POIYFnPw/ndWGQywl3alywFiwDEsH725mZZ2WziwAgkIm27/a4zCKyBoOfnfjG2HOOqcpBBNUjMw1DE1HomzmFCb1q8qTEARvLYMmhy/gUEMEeP/wwg0lJleW54V0yPQMHp4p0IIeGngzohBMJI4rjqw34pX79yn9XNS+UxTmUc=
+	t=1743581910; cv=none; b=FWCqpwW0oVWj51Tv9tf8nEd47jYuWK5G731wvbCDCZnPeM7/mmz3YzSYKUSX843NGczbaSCqUpoIFTCV6rZCYTKOuC9phoZuPsiRNSBysqLL3LNrirjCpZeD+Dl4JPzYrj0kvt5m/6qM9MPYCI/uXTLa+snRX5j48ogR02K/i3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743581868; c=relaxed/simple;
-	bh=HXVWXQjZBHgemZIstJDUf3tOUVVLt7xyNaadY5xfUlY=;
+	s=arc-20240116; t=1743581910; c=relaxed/simple;
+	bh=8e67ubdqmXXBC04FIgzHLvstXdZ6qmZT0OFP6KZR0u0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OjIqU0MSRZJ1MS3mTozYUc3TEKs63sMPHG1jy8+ktlUGJDWnVBKFwBmmh2hGhBylPO4wVDuWMHwQiDVUrWXPAe2hyZfAJC22+5DSnSjmHz5opHWsgN8Lr1ZEDE8MDYCTtsXyksGIonz2otEFDfp2LHsD3d3MoX+XchbvoNFKdXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G5q7HT1S; arc=none smtp.client-ip=209.85.160.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=JxHuF150Qtttx4L7DiibU8+jTs1lBo1iqhiEjF7mNVYnm659ufVbRElmCWevjcHSj/cD1Ef6bYstwpo7dThaIb56zWRy59uUDLTMbu5wxuQYgXL0I3fYCkhbl+ABo4PQ7WodcvCRVR60CW1UwAXYqnD6pAKuIlHWACBdWTZynVw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=A5ho/n3g; arc=none smtp.client-ip=209.85.160.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G5q7HT1S"
-Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-2c2bb447e5eso3602603fac.0;
-        Wed, 02 Apr 2025 01:17:46 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="A5ho/n3g"
+Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-477282401b3so66180581cf.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 01:18:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743581866; x=1744186666; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=scXv72Bahse5Ld8quQ31fuwQGCjaKYynLIZEvxwhnnM=;
-        b=G5q7HT1Svh/iqZtzJkZ6ae7GXL6T9d6kB1P8G4omOKoomwHjPIcOk5ShScMx48t9zV
-         UN+nNo0yxp8Q64W09fSYI1fCZhfuAcVG75Zet6iTSXVewtb8hGpRKBaG0hASzdpx9P0L
-         3QYBpCsEs7NdxcxN0z5qIaxmMgGAG/sEbBfHGKq/GX6BeW4Va+yim12ehqW9LoYpPGVT
-         DOIVXzpYxa8YECD1Qb6/Z42g9ilpML2FecV0f7fBGmT85mJWLqsdYW5IpwFXezZNFYnG
-         f0wDH8XIy2Lt/yjDwH3+vYIM/o4kt4lfqoQJY4NISER70q/5gpltpOikCf0inG9d/gbq
-         ZDSA==
+        d=szeredi.hu; s=google; t=1743581906; x=1744186706; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=8e67ubdqmXXBC04FIgzHLvstXdZ6qmZT0OFP6KZR0u0=;
+        b=A5ho/n3gHd2rV4p7XfzB5VGcOp4GNex9ukg+juOtFE8MifTGOjlOtK3kD0gI6ukfk6
+         nuCaVVobh4+IcK4YaDbgDfMLjyCmY3JWFtp2+097z5QUGMWVhShs8dXwaZ0jcW0+F0r1
+         FIRlymj/RhypJ6TFwOCSHaXZqBeL0CzzrMvfY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743581866; x=1744186666;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=scXv72Bahse5Ld8quQ31fuwQGCjaKYynLIZEvxwhnnM=;
-        b=dW5w28KPntqmOxEtEpQEAUuDxsltgOAe3XSSoUJGza958uvdoi4QpPnLcLJ29MdNn1
-         SWhTpFwDw2rlPRst2XqeCqrb8cSNrVrt/kYVvtrb68qhu5jaeEa1ukdSvc9kTmkpLh4e
-         uLhf6XkwjhE+bfizY5sAkhYAmnD3vrosT3dAmp9xwbcKfNneLg1uEdS3JEZ48GzyfAZH
-         gppywjzLjQeQ30PFnU4QrWkwgbmlRyerM7YyVLWdpl5wSjYmpoYAZsp5nHx1ttTB7zZs
-         8yWfSumMtLRy+ODLn91Etdn+/VPQUMkOuBMJ8jiXkLiIdrbP8aLmiCVpkIDsVNv5F+HK
-         dVLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUTPuKK6ULMBaJUhwKkutqvMZAV61CHlSoVZ72ZESqbcXV9YDeAdJtS76Blfh9eq+QqxK+21s9l@vger.kernel.org, AJvYcCWmv4ldkaEv6SHWcXqXAHmMWZmZIZMGMtcVjI4Fbho9npmTkxcH+y5/DGAKNe3wwHAIbgHVftjZlSy+@vger.kernel.org, AJvYcCXmGIETxpHuRbm4b2+GNW8x8ixPnuXB4KQqc2LvumGT4y+7Hg96DsQ+b4fNx78+cgVRORrzo0CyBnkYMm4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzBkzXNinLo71CULtRIqutgw9Ikj70r5XaahHkBSsYo2sVpvOLw
-	w3WuU+mG5fagR39q9+m1J7RCXsG+WkFqGT7y7+UVQzo2w04lTEQsBgwb1Ozhpwl/Wex7Oot4qaS
-	+frumSwSccLdHzf0iVkT/zP2XINM=
-X-Gm-Gg: ASbGncvTViBSIvgKrLXFw9/OLCtMvsO380baFr09klHypxsiXaVsDkM3ZvdN/wSMXBA
-	Rm0u4cjNzjxJti/0SyWlTZH5vRJ3tknF3j4CLZGMlJtz8GnzgfmmfVupz1tNwKCfl2jV25LBJhr
-	TFeXKNgYNTOfJ05gUGsAAQ4KLzWJQ=
-X-Google-Smtp-Source: AGHT+IHnWOrb0SQAM9qeTR3XznNyfvNQpkps5XgOACrUXiIN2RbZ1nz5GKAlnHeRW4ijLKsnV92MvcmQrgOqdxQHrGY=
-X-Received: by 2002:a05:6870:8092:b0:2c2:5369:f3b with SMTP id
- 586e51a60fabf-2cc60b0597bmr958285fac.14.1743581866041; Wed, 02 Apr 2025
- 01:17:46 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743581906; x=1744186706;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8e67ubdqmXXBC04FIgzHLvstXdZ6qmZT0OFP6KZR0u0=;
+        b=eXP4oBRkSCOKpzRgHEopQhM6uKTqAYLibxNVVCg7j5KdZjJa2ialoc87gtIl8vk/rl
+         rHDs8zC9WxYMoac377IQsUN5RRmHkTrGoyHtAAisefjRgckqaPJ95Y9F1I5RQ5LzHjm3
+         MjvHG3qNtUDYAw9L9wnEkwzLGDjfMKPxJB0yUdxlvt+KiNJMMiyQLazGHJEkqL/EoAUX
+         IU5w2Bj6UI2U3A+7dMK6KAczsBNUOgNlbc+5lHn+J2bSLL0zmumbsY7D7F+YqrW0T1lS
+         qh3pUTk3rLnS0UOudNKliSWWYVRvorEL0PEtS6GpNOsoDMwoCoNb1uIo/dKqIx/oFp9b
+         3uOw==
+X-Forwarded-Encrypted: i=1; AJvYcCVHsI2kU/P+Tgrhwslk0Cfeh54Qedm5WPok3R18nuR9Dbl/MlMGq5Uw9vUrmA4OdwRDS0iGDsQXsPYKNOY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyZKh/P9ALjHd7H9aF57MwLYkoPSI8mZ6FmSZ+Qs7Rr3GRAFhhV
+	3OrccZ3vNZlWyQBg6D1tuwGt72C2nSUv19/kwmO9rxYAUjm7cKtp1gZJXugaiIa2cNTNv3CpCMo
+	ajG5YM7H1aRmsIBTwCwnV0IAHo2iNPtRI02WUbQ==
+X-Gm-Gg: ASbGncuCuKM2kho2AyLPvaRh66nQrqCePRJsQ1TSo2jLTvknw/U/fVQrFF+VDp4RGsS
+	3RMHKQ0dfj5oQz87M0TL/z5VbwO2bg22WkV1yYLT9EItyYcKhCVKmhlkHIQxBp5Dzkt3iTPicJR
+	8fLFZiFVQ/OOwamxqwNnX7kMhodA==
+X-Google-Smtp-Source: AGHT+IGGKKwBKL/VRF9cyKMWEhNhYseEiH+wMiAFaohjj/Y3WhTHu7xHwzMyIT9ilqyaBMYQYXa+ng7b4i5Y46INwpc=
+X-Received: by 2002:a05:622a:1a95:b0:476:7018:9ae4 with SMTP id
+ d75a77b69052e-47909f81afcmr19689571cf.16.1743581906347; Wed, 02 Apr 2025
+ 01:18:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1743497376.git.luying1@xiaomi.com> <e3646459ea67f10135ab821f90f66d8b6e74456c.1743497376.git.luying1@xiaomi.com>
- <2025040110-unknowing-siding-c7d2@gregkh> <CAGo_G-f_8w9E388GOunNJ329W8UqOQ0y2amx_gMvbbstw4=H2A@mail.gmail.com>
- <2025040121-compactor-lumpiness-e615@gregkh> <CAGo_G-fiR5webo04uoVKTFh3UZaVTzkUgF2OcD8+fY-HzWCO6g@mail.gmail.com>
- <2025040228-mobile-busybody-e5c4@gregkh>
-In-Reply-To: <2025040228-mobile-busybody-e5c4@gregkh>
-From: Ying Lu <luying526@gmail.com>
-Date: Wed, 2 Apr 2025 16:17:35 +0800
-X-Gm-Features: AQ5f1Jquh1nJnLrgwYJjGFcAamZNu8xNGhAjeJoDqCgf_Ak9OFRUYZgaxk4j2Z4
-Message-ID: <CAGo_G-eptB4ui3UBf2Ey42iFUTnRvLO5dDBVf2drkLQXdMVbzQ@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] usbnet:fix NPE during rx_complete
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: oneukum@suse.com, andrew+netdev@lunn.ch, davem@davemloft.net, 
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
-	netdev@vger.kernel.org, linux-usb@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, luying1 <luying1@xiaomi.com>
+References: <20250314221701.12509-1-jaco@uls.co.za> <20250401142831.25699-1-jaco@uls.co.za>
+ <20250401142831.25699-3-jaco@uls.co.za> <CAJfpegtOGWz_r=7dbQiCh2wqjKh59BqzqJ0ruhtYtsYBB+GG2Q@mail.gmail.com>
+ <19df312f-06a2-4e71-960a-32bc952b0ed2@uls.co.za> <CAJfpegseKMRLpu3-yS6PeU2aTmh_qKyAvJUWud_SLz1aCHY_tw@mail.gmail.com>
+ <3f71532b-4fed-458a-a951-f631155c0107@uls.co.za>
+In-Reply-To: <3f71532b-4fed-458a-a951-f631155c0107@uls.co.za>
+From: Miklos Szeredi <miklos@szeredi.hu>
+Date: Wed, 2 Apr 2025 10:18:15 +0200
+X-Gm-Features: AQ5f1JoWWGW4t6Lowi9LpB5qejIwEk88bDTMV0GNUyEy49v_ytvZJkDPy_jQANE
+Message-ID: <CAJfpegtutvpYYzkW91SscwULcLt_xHeqCGLPmUHKAjozPAQQ8A@mail.gmail.com>
+Subject: Re: [PATCH 2/2] fuse: Adjust readdir() buffer to requesting buffer size.
+To: Jaco Kroon <jaco@uls.co.za>
+Cc: bernd.schubert@fastmail.fm, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, christophe.jaillet@wanadoo.fr, 
+	joannelkoong@gmail.com, rdunlap@infradead.org, trapexit@spawn.link, 
+	david.laight.linux@gmail.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 2, 2025 at 3:12=E2=80=AFPM Greg KH <gregkh@linuxfoundation.org>=
- wrote:
+On Wed, 2 Apr 2025 at 09:55, Jaco Kroon <jaco@uls.co.za> wrote:
 >
-> On Wed, Apr 02, 2025 at 08:12:06AM +0800, Ying Lu wrote:
-> > On Tue, Apr 1, 2025 at 9:48=E2=80=AFPM Greg KH <gregkh@linuxfoundation.=
-org> wrote:
-> > >
-> > > On Tue, Apr 01, 2025 at 08:48:01PM +0800, Ying Lu wrote:
-> > > > On Tue, Apr 1, 2025 at 6:31=E2=80=AFPM Greg KH <gregkh@linuxfoundat=
-ion.org> wrote:
-> > > > >
-> > > > > On Tue, Apr 01, 2025 at 06:18:01PM +0800, Ying Lu wrote:
-> > > > > > From: luying1 <luying1@xiaomi.com>
-> > > > > >
-> > > > > > Missing usbnet_going_away Check in Critical Path.
-> > > > > > The usb_submit_urb function lacks a usbnet_going_away
-> > > > > > validation, whereas __usbnet_queue_skb includes this check.
-> > > > > >
-> > > > > > This inconsistency creates a race condition where:
-> > > > > > A URB request may succeed, but the corresponding SKB data
-> > > > > > fails to be queued.
-> > > > > >
-> > > > > > Subsequent processes:
-> > > > > > (e.g., rx_complete =E2=86=92 defer_bh =E2=86=92 __skb_unlink(sk=
-b, list))
-> > > > > > attempt to access skb->next, triggering a NULL pointer
-> > > > > > dereference (Kernel Panic).
-> > > > > >
-> > > > > > Signed-off-by: luying1 <luying1@xiaomi.com>
-> > > > >
-> > > > > Please use your name, not an email alias.
-> > > > >
-> > > > OK, I have updated. please check the Patch v2
-> > > >
-> > > > > Also, what commit id does this fix?  Should it be applied to stab=
-le
-> > > > > kernels?
-> > > > The commit  id is 04e906839a053f092ef53f4fb2d610983412b904
-> > > > (usbnet: fix cyclical race on disconnect with work queue)
-> > > > Should it be applied to stable kernels?  -- Yes
-> > >
-> > > Please mark the commit with that information, you seem to have not do=
-ne
-> > > so for the v2 version :(
-> > Thank you for your response. Could you please confirm if I understand c=
-orrectly:
-> > Should we include in our commit message which commit id we're fixing?
+> Hi,
 >
-> No, use the correct "Fixes:" tag format as described in the
-> documentation.
+> I can definitely build on that, thank you.
 >
-> thanks,
->
-> greg k-h
+> What's the advantage of kvmalloc over folio's here, why should it be
+> preferred?
 
-Oh, I see. Thank you very much for the reminder!
-I've already fixed it in the PATCH v3. Could you please take another look?
+It offers the best of both worlds: first tries plain malloc (which
+just does a folio alloc internally for size > PAGE_SIZE) and if that
+fails, falls back to vmalloc, which should always succeed since it
+uses order 0 pages.
+
+This saves the trouble of iterating the folio alloc until it succeeds,
+which is both undeterministic and complex, neither of which is
+desirable.
 
 Thanks,
-
-Ying Lu
+Miklos
