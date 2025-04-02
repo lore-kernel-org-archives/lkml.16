@@ -1,130 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9F521F75A9
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 22:57:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EED2D1F1909
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 23:01:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743634651; cv=none; b=GHI/Tswu5tVtVuW0CJzkVJXuatJZ4pxr5dIb/zMWS2lB3rG8m6O+CmnsCmmZ1Eb9fqqvqfLxNTbtBCA5uWV/vJeRV4S003K/d6vGOA+fKp+tPi+4ZV9R/iTRsEBofQ35QTwBLFmz37fyhxaaKe8GX8bXtnWPvYgvQA2R1/1Hhpk=
+	t=1743634874; cv=none; b=PGABgUS8/tlrTxhx1JoISCW1Vb2jTctRUMonNDe436YAj83DGtiZfKhV2mPAyjw15O6H2H6xtwXbtxChUr52q8Bch3RWf857+jTwTaVePSmLiSeazmsSn4+zuMbNoYTfgMz65PZFHBnI8a/dEcDFbyz7L/P1nxd5+4GeSQrQrnQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743634651; c=relaxed/simple;
-	bh=RfagBImddDmbCWhxs+3aphi2n4fkuaf2i+OuyVKUp7c=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=BwyfaL5zu+4gefnZWXwh105iEQ6aNkQ3P0pG+hFCnKBw5wNCHa7MN+faA1oQMycgFAEF1gmkw81S3w/b3cOTMkRRcXdA06UHuwr8LgnK5CdR11pB5V8U5IWI/FZ6bINi34v9uUE+eNvMjx3v+/MLakXVefPgodaganJW3Zh3rtA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29438C4CEEF;
-	Wed,  2 Apr 2025 22:57:31 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.98)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1u072Z-00000006Z20-1uMB;
-	Wed, 02 Apr 2025 18:58:35 -0400
-Message-ID: <20250402225835.297421996@goodmis.org>
-User-Agent: quilt/0.68
-Date: Wed, 02 Apr 2025 18:57:38 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Vincent Donnefort <vdonnefort@google.com>,
- Vlastimil Babka <vbabka@suse.cz>,
- Mike Rapoport <rppt@kernel.org>,
- Jann Horn <jannh@google.com>,
- Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [for-linus][PATCH 3/4] tracing: Use vmap_page_range() to map memmap ring buffer
-References: <20250402225735.849814084@goodmis.org>
+	s=arc-20240116; t=1743634874; c=relaxed/simple;
+	bh=ae8HG5mamuJ6F6/+nBlRSOsXFultdkdpg9uOrzVgMHU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=j8Cv9BmJHwFiyg8kCiVFssx3xGcvs53sWNrt2OL6lI+vP1Zs11jk1GqVV3W3L2LHXYr4lsOWZWvOvmBcrEIfWDhZAvlivRL7Nfrtxk4ShP93byhi6jSLlm2MhidJLjRwPjjpvFjq+iMImqSB2iLDsePeQ6DIcjwBzdXO5oQ0slk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=erG22Kva; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="erG22Kva"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-399744f74e9so202450f8f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 16:01:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1743634870; x=1744239670; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ssDdQ9pYXMHr5I5/Xw/ZAgexifJSDigD1EuzFV2qg4I=;
+        b=erG22KvaPBOLtLLf9ql4HsTCgHMSvgtwC5lqQTS7vDTAZtUA7XmW4YPQXhRifwtjFx
+         UfWucTf35UPuRjkjIAjAESMRevW9BQoUrFVETT7mErooVPKiTz96fNpyHacOQxjLptYE
+         XvekRZ3LDy6uWyk9Yu3Snmw5b7KRvoVPCeybMTMJKFwS0Ii1NBZ9ov6dpAp6Mzb2KEg8
+         r1vs4ROGb+fPxeqc6s0F28EYZIPzwR0Qoda3ZGcTzSIJXyNuGYbwKZRsHeuqI0ODNc4m
+         KEnaf+m4NutpJYUUBIqvRRJt42sAuiNR+V45jFHP8OAtn0kHug28h70YT98Gqfg02tS8
+         HSAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743634870; x=1744239670;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ssDdQ9pYXMHr5I5/Xw/ZAgexifJSDigD1EuzFV2qg4I=;
+        b=HY6inMmNVa7K9t+YPekmBONUmaHQi3COhOzYMpK1ZzmJ2Dw5J2UXvtLmGbMqG+8ESy
+         xE33yi/Lh88Lx/qGIc5hjrbWOqYUs5IOKXQMwk+l2L+OHhZPinHQop9xce6KtyNdG4lU
+         zLB4yNcOr3CXwvhiudFLId4vRl2rizwEwJpyEsNEIInD9Pt6PEcw91bJU9OaxY3fnA2C
+         Cf1cpYtG+nYUy0CDydkeVzXkbxiHxON3TAqCmnKrSXqP7qqL2oFwHdhzq5CVVw3BOXPb
+         mWEDQuyHiO0ga5ev5dxxIlmSkvJjWfDyutI85DYyVRqlAId6RunlOfht0MJHY9DTa8Sc
+         6TqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX4gjMsMDvNZLpZyVJSYQz38R7OZ/+4rOjsnchG23Om2r4O9EYlcWPk5pBMD3N05CAku2wt0fyTPVeZTU4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YychqSxcyRQG7dKW5grCnNQSxqkpDdQjJ08UJQwkqdCKmbJo0Nv
+	E2UMdl0G/INcX+G/8+cCndACYcdfmXmsDN+VXAkhovhf0s3ojuasd9qh3cX0zaU=
+X-Gm-Gg: ASbGncvwtQwY5ezR9TlT4v1W15Y2QkJkuC0KeAul5bE8aKj9VIjijN1qrASu51HDlqZ
+	ffTsf1qgaAehDazLEvoJbdAm77Yyr0ObxIZEwWJSiApwbly1AHeoZx58ImZHPPQq5TbzD9UjYS6
+	ibcnCDrx4YeNXkZeHNHfGAjEJ9Zedg3MhVo7eTvFpnbRKMB9VP15wocgldTZXFZQRT71Tg9nWPI
+	zSlIbR58UqCBo4sTpXx56p7hv6uCcip4kwxoQylIrEXvOf4r/Ly0itkpTkimkfMeCmEgMFMsV+r
+	bSfvLuXY9lNQkaGdF4gAoGZZdcMexDzuGdAMAZCgiMK0bQgllSwMlplEGtzwujeMFsj9yetL1xj
+	GAzsxkagv
+X-Google-Smtp-Source: AGHT+IHyj66xL8VsObpHLyziVGG93y/NYfcl9RGB6qeFeKmVhSfE7lLRhxrpfsHle94LdUZoXtf+eg==
+X-Received: by 2002:a5d:64ed:0:b0:39c:1257:c7a2 with SMTP id ffacd0b85a97d-39c2f96b901mr215465f8f.58.1743634870250;
+        Wed, 02 Apr 2025 16:01:10 -0700 (PDT)
+Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-39c300963e1sm127285f8f.4.2025.04.02.16.01.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Apr 2025 16:01:09 -0700 (PDT)
+Message-ID: <c449fba0-476e-495b-abbd-65ba2d44d590@linaro.org>
+Date: Thu, 3 Apr 2025 01:01:07 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] dt-bindings: watchdog: Add NXP Software Watchdog
+ Timer
+To: Krzysztof Kozlowski <krzk@kernel.org>, wim@linux-watchdog.org
+Cc: linux@roeck-us.net, linux-watchdog@vger.kernel.org,
+ linux-kernel@vger.kernel.org, S32@nxp.com, ghennadi.procopciuc@nxp.com,
+ thomas.fossati@linaro.org, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, devicetree@vger.kernel.org
+References: <20250402154942.3645283-1-daniel.lezcano@linaro.org>
+ <20250402154942.3645283-2-daniel.lezcano@linaro.org>
+ <ffe49998-f809-458e-8eda-002d0c0fc32a@kernel.org>
+Content-Language: en-US
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+In-Reply-To: <ffe49998-f809-458e-8eda-002d0c0fc32a@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On 02/04/2025 17:56, Krzysztof Kozlowski wrote:
+> On 02/04/2025 17:49, Daniel Lezcano wrote:
+>> Describe the Software Watchdog Timer available on the S32G platforms.
+>>
+>> Cc: Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>
+>> Cc: Thomas Fossati <thomas.fossati@linaro.org>
+>> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> 
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> 
+> Best regards,
+> Krzysztof
 
-The code to map the physical memory retrieved by memmap currently
-allocates an array of pages to cover the physical memory and then calls
-vmap() to map it to a virtual address. Instead of using this temporary
-array of struct page descriptors, simply use vmap_page_range() that can
-directly map the contiguous physical memory to a virtual address.
+I ran the make dt_binding_check but inadvertently removed the "oneOf:" 
+after :/
 
-Link: https://lore.kernel.org/all/CAHk-=whUOfVucfJRt7E0AH+GV41ELmS4wJqxHDnui6Giddfkzw@mail.gmail.com/
 
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Vincent Donnefort <vdonnefort@google.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Mike Rapoport <rppt@kernel.org>
-Cc: Jann Horn <jannh@google.com>
-Link: https://lore.kernel.org/20250402144953.754618481@goodmis.org
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/trace.c | 33 ++++++++++++++++-----------------
- 1 file changed, 16 insertions(+), 17 deletions(-)
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index e58b72e61573..f6531cd3176b 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -50,6 +50,7 @@
- #include <linux/irq_work.h>
- #include <linux/workqueue.h>
- #include <linux/sort.h>
-+#include <linux/io.h> /* vmap_page_range() */
- 
- #include <asm/setup.h> /* COMMAND_LINE_SIZE */
- 
-@@ -9796,29 +9797,27 @@ static int instance_mkdir(const char *name)
- 	return ret;
- }
- 
--static u64 map_pages(u64 start, u64 size)
-+static u64 map_pages(unsigned long start, unsigned long size)
- {
--	struct page **pages;
--	phys_addr_t page_start;
--	unsigned int page_count;
--	unsigned int i;
--	void *vaddr;
--
--	page_count = DIV_ROUND_UP(size, PAGE_SIZE);
-+	unsigned long vmap_start, vmap_end;
-+	struct vm_struct *area;
-+	int ret;
- 
--	page_start = start;
--	pages = kmalloc_array(page_count, sizeof(struct page *), GFP_KERNEL);
--	if (!pages)
-+	area = get_vm_area(size, VM_IOREMAP);
-+	if (!area)
- 		return 0;
- 
--	for (i = 0; i < page_count; i++) {
--		phys_addr_t addr = page_start + i * PAGE_SIZE;
--		pages[i] = pfn_to_page(addr >> PAGE_SHIFT);
-+	vmap_start = (unsigned long) area->addr;
-+	vmap_end = vmap_start + size;
-+
-+	ret = vmap_page_range(vmap_start, vmap_end,
-+			      start, pgprot_nx(PAGE_KERNEL));
-+	if (ret < 0) {
-+		free_vm_area(area);
-+		return 0;
- 	}
--	vaddr = vmap(pages, page_count, VM_MAP, PAGE_KERNEL);
--	kfree(pages);
- 
--	return (u64)(unsigned long)vaddr;
-+	return (u64)vmap_start;
- }
- 
- /**
 -- 
-2.47.2
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
