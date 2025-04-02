@@ -1,101 +1,135 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp-fw-52005.amazon.com (smtp-fw-52005.amazon.com [52.119.213.156])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAD7E5C96;
-	Wed,  2 Apr 2025 18:48:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8966518A93F;
+	Wed,  2 Apr 2025 18:49:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743619738; cv=none; b=YQpHy11e65QzF/ql2DwZyl/dxiUtFZbjRVAi3KyRQGtqiin6epXn6QQ9blGSgnUB8XiWvZB1IdoocPx3XRZXSSrlAhLnxYbynEsVTYhVRRV6M3jEbEZSGn0pjnuxhngixHP0BRHLJqKq8dMcECbA6jO3tRWCG7wphDZ6IlC0oQQ=
+	t=1743619759; cv=none; b=iEeqR8C2Pe0MTpkfzbU+U0d4eg3OdZL/vnu/Yo/h9J83qebyuXF0cs7udkj788F8CExM5hP4oB4qur5qfqbrgW0gWl82hd0r7GR7UjyPLPgOsnLnjzAxUmH8dU59V9ADsDsOvcqJyNP/T6p4NbhhEvQqRkH9UHQYNlT9DEapUuc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743619738; c=relaxed/simple;
-	bh=BN8pPeaB18+ZGS9verxlJtdxTpoi9iF6l/UuLF+vi5c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sjwzPoS1vRjXA59GsnN9vm3gCvIDEWPqY8Czk0AhGaLqEOXQeXW4fCnCs2O2cIR+tdcQfYW29C3Qv6dnlquo8EhgUobIldK2Zwgzy4Qgw73oQiOeT8TD5+cd25ZHAg4lyfqeGBaVKaFgiUP3cngmnfOZehBoRPKdz2iMQG6mT/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=jH+am6jM; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1743619759; c=relaxed/simple;
+	bh=lzIzGe/A8K0FeDNd49e2UFCleX6gbOBWTXq2lLAmj28=;
+	h=From:To:CC:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=B78ShEliKPfEKdbYhLQBHmwqiEI/gMgVTFHv4OGOvtgaYfhu5yZAIap/KPjz5BjAuDZ8CPDYbeUa8OO6VRDU4g+9/3YFQhB7XwiWqODbb6ibIVFgIqzwHzUknkM/2fZi7M6JFoN6AKHe6VH4lKlHBpPnHY+KPxcW3XqIP/3jh1c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de; spf=pass smtp.mailfrom=amazon.de; dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b=N2tQb1bp; arc=none smtp.client-ip=52.119.213.156
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="jH+am6jM"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 4832940E021E;
-	Wed,  2 Apr 2025 18:48:54 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id BlN6ygf2ytRz; Wed,  2 Apr 2025 18:48:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1743619731; bh=ZdCGke78EY8DavBNUh6kV+s+XrFkLl05AHZqQYloNCM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jH+am6jMo/hklHNdoMkyaC5WM5A87ZpJT9kNiDGkXPjdkIB4c3CghA881NpAbfVeO
-	 y+1MN+c2Cq6+RjOOapDYIbUFWvKE6CucvxJoh9BOuXOOjlc5CEUpVhbdWjz8xHyHfN
-	 /iIUIR6Gc60aZsebdxCh9Sdl2de/+gu+L+E8wbb6XXB9BCpihJQQG/ygTBi7d8mha1
-	 PiVGswv7s4zzOH6BQPZ2qb5Z5kFD/LWWTT/UYfsFgdbPvn/g/96h1R3H+jXAYsHMdi
-	 YDEKXptaHLxk3spBlnY/IO06DbeCH1+k9w6vAoXWdhQreVc5kWyfJXc3gZD/0uLFBu
-	 3wxJMHBMvGHG7wWOz4+OK/NbMozQCY7T2unVg4Kxw4TSLMFLbQoeMuvzaNhIiv5aYJ
-	 s/i3h/smjCCyutCrt9iO0f6r6QApH1HKFTQ1hHT2h7yT1kxkN5R4t1D/9rQTDPNYoV
-	 7AAIEXMrHopvAMQG+pGLfsM05BCJbY8QVRi2c9BwFLDcCeIO5oZB9lJxCM0ZKn0/PZ
-	 i9WHMY1uFnb6VeudE1NJQmR7ywiK+mtI57RAhfPNim/fBzMfULoMyBJhsGsd0acr0F
-	 BwsRe62AhnKXKH/8QpqVw5LV+S4hVLfeh4QC2A2S2cY4DSIE+moSSzXJmdmZwskDaz
-	 u+T7Zpv0LPYcGxCVVBnPVMXk=
-Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B0CEF40E0196;
-	Wed,  2 Apr 2025 18:48:26 +0000 (UTC)
-Date: Wed, 2 Apr 2025 20:48:20 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, amit@kernel.org,
-	kvm@vger.kernel.org, amit.shah@amd.com, thomas.lendacky@amd.com,
-	tglx@linutronix.de, peterz@infradead.org,
-	pawan.kumar.gupta@linux.intel.com, corbet@lwn.net, mingo@redhat.com,
-	dave.hansen@linux.intel.com, hpa@zytor.com, seanjc@google.com,
-	pbonzini@redhat.com, daniel.sneddon@linux.intel.com,
-	kai.huang@intel.com, sandipan.das@amd.com,
-	boris.ostrovsky@oracle.com, Babu.Moger@amd.com,
-	david.kaplan@amd.com, dwmw@amazon.co.uk, andrew.cooper3@citrix.com
-Subject: Re: [PATCH v3 1/6] x86/bugs: Rename entry_ibpb()
-Message-ID: <20250402184820.GJZ-2GdG-CWRxEwTmy@fat_crate.local>
-References: <cover.1743617897.git.jpoimboe@kernel.org>
- <a3ce1558b68a64f52ea56000f2bbdfd6e7799258.1743617897.git.jpoimboe@kernel.org>
- <20250402182928.GAZ-2CCBR2BAgpwVLf@fat_crate.local>
- <qeg7tr5jvmyyxvftl4k4qsa4hxga7hzvqcs2xbhfpeun5yhn3r@ua6pawrgxix5>
+	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="N2tQb1bp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
+  t=1743619758; x=1775155758;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version:content-transfer-encoding;
+  bh=lzIzGe/A8K0FeDNd49e2UFCleX6gbOBWTXq2lLAmj28=;
+  b=N2tQb1bp3qAv2NusgoPPUnXMweVB3/nS7LdTV9GYHbUntQQwMGCSt5gQ
+   CzOr0x+as3Mg2yZi/OUBXSwDg6A6wInOT0nejWxGQ08Zz6rHBizhQ+FJT
+   KQHBfSBPuaQj3Ubru/FC85qSGD7pTQhVKLgT8j0AREHnkQmra13pouAec
+   Q=;
+X-IronPort-AV: E=Sophos;i="6.15,183,1739836800"; 
+   d="scan'208";a="732319846"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
+  by smtp-border-fw-52005.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 18:49:12 +0000
+Received: from EX19MTAUWB001.ant.amazon.com [10.0.21.151:38908]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.37.138:2525] with esmtp (Farcaster)
+ id 7d79399a-a36b-4d73-99b6-98948cdf7eea; Wed, 2 Apr 2025 18:49:11 +0000 (UTC)
+X-Farcaster-Flow-ID: 7d79399a-a36b-4d73-99b6-98948cdf7eea
+Received: from EX19D020UWA002.ant.amazon.com (10.13.138.222) by
+ EX19MTAUWB001.ant.amazon.com (10.250.64.248) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Wed, 2 Apr 2025 18:49:01 +0000
+Received: from EX19MTAUWA002.ant.amazon.com (10.250.64.202) by
+ EX19D020UWA002.ant.amazon.com (10.13.138.222) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Wed, 2 Apr 2025 18:49:01 +0000
+Received: from email-imr-corp-prod-iad-all-1b-85daddd1.us-east-1.amazon.com
+ (10.25.36.210) by mail-relay.amazon.com (10.250.64.203) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id
+ 15.2.1544.14 via Frontend Transport; Wed, 2 Apr 2025 18:49:01 +0000
+Received: from dev-dsk-ptyadav-1c-43206220.eu-west-1.amazon.com (dev-dsk-ptyadav-1c-43206220.eu-west-1.amazon.com [172.19.91.144])
+	by email-imr-corp-prod-iad-all-1b-85daddd1.us-east-1.amazon.com (Postfix) with ESMTP id B8E254076F;
+	Wed,  2 Apr 2025 18:49:00 +0000 (UTC)
+Received: by dev-dsk-ptyadav-1c-43206220.eu-west-1.amazon.com (Postfix, from userid 23027615)
+	id 74DA54F1C; Wed,  2 Apr 2025 18:49:00 +0000 (UTC)
+From: Pratyush Yadav <ptyadav@amazon.de>
+To: Pasha Tatashin <pasha.tatashin@soleen.com>
+CC: Changyuan Lyu <changyuanl@google.com>, <akpm@linux-foundation.org>,
+	<anthony.yznaga@oracle.com>, <arnd@arndb.de>, <ashish.kalra@amd.com>,
+	<benh@kernel.crashing.org>, <bp@alien8.de>, <catalin.marinas@arm.com>,
+	<corbet@lwn.net>, <dave.hansen@linux.intel.com>,
+	<devicetree@vger.kernel.org>, <dwmw2@infradead.org>, <ebiederm@xmission.com>,
+	<graf@amazon.com>, <hpa@zytor.com>, <jgg@nvidia.com>, <jgowans@amazon.com>,
+	<kexec@lists.infradead.org>, <krzk@kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-doc@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>, <luto@kernel.org>,
+	<mark.rutland@arm.com>, <mingo@redhat.com>, <pbonzini@redhat.com>,
+	<peterz@infradead.org>, <robh+dt@kernel.org>, <robh@kernel.org>,
+	<rostedt@goodmis.org>, <rppt@kernel.org>, <saravanak@google.com>,
+	<skinsburskii@linux.microsoft.com>, <tglx@linutronix.de>,
+	<thomas.lendacky@amd.com>, <will@kernel.org>, <x86@kernel.org>
+Subject: Re: [PATCH v5 09/16] kexec: enable KHO support for memory preservation
+In-Reply-To: <CA+CK2bBnbEtw7jL2fbukJ3aBCjn=-OVT70oEAsZ435vtFe18Vw@mail.gmail.com>
+References: <mafs0tt7eqt6f.fsf@amazon.de>
+	<20250402164453.2470750-1-changyuanl@google.com>
+	<mafs0ecyaqzmd.fsf_-_@amazon.de>
+	<CA+CK2bBnbEtw7jL2fbukJ3aBCjn=-OVT70oEAsZ435vtFe18Vw@mail.gmail.com>
+Date: Wed, 2 Apr 2025 18:49:00 +0000
+Message-ID: <mafs0a58yqu03.fsf_-_@amazon.de>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <qeg7tr5jvmyyxvftl4k4qsa4hxga7hzvqcs2xbhfpeun5yhn3r@ua6pawrgxix5>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 02, 2025 at 11:44:15AM -0700, Josh Poimboeuf wrote:
-> It helps it stand out more? :-)
+On Wed, Apr 02 2025, Pasha Tatashin wrote:
 
-Please don't.
+> On Wed, Apr 2, 2025 at 12:47=E2=80=AFPM Pratyush Yadav <ptyadav@amazon.de=
+> wrote:
+>>
+>> Hi,
+>>
+>> On Wed, Apr 02 2025, Changyuan Lyu wrote:
+>>
+>> > Hi Pratyush, Thanks for suggestions!
+>> >
+>> > On Thu, Mar 27, 2025 at 17:28:40 +0000, Pratyush Yadav <ptyadav@amazon=
+.de> wrote:
+[...]
+>> >>
+>> >> The memblock_reserve side we can optimize later, I agree. But the mem=
+ory
+>> >> preservation format is ABI and I think that is worth spending a little
+>> >> more time on. And I don't think it should be that much more complex t=
+han
+>> >> the current format.
+>> >>
+>> >> I want to hack around with it, so I'll give it a try over the next few
+>> >> days and see what I can come up with.
+>> >
+>> > I agree with Jason that "nothing is ABI at this
+>> > point" and it will take some time for KHO to stabilize.
+>> >
+>> > On the other hand if you have already came up with something working a=
+nd
+>> > simple, we can include it in the next version.
+>>
+>> I already have something that works with zero-order pages. I am
+>> currently implementing support for other orders. It is almost done, but
+>> I need to test it and do a performance comparison with the current
+>> patch. Will post something soon!
+>
+> Hi Pratyush,
+>
+> Just to clarify, how soon? We are about to post v6 for KHO, with all
+> other comments in this thread addressed.
 
-Someone thought that it is a good idea to start using that // ugliness all of
-a sudden.
+I have it working, but I need to clean up the code a bit and test it
+better. So hopefully end of this week or early next week.
 
-So we decided we should limit it in tip:
-
-Documentation/process/maintainer-tip.rst
-
-The paragrapn that starts with "Use C++ style, tail comments when documenting
-..."
-
-> I was thinking the calling interface is a bit nonstandard.  But actually
-> it's fine to call from C as those registers are already caller-saved
-> anyway.  So yeah, let's drop the '__'.
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+--=20
+Regards,
+Pratyush Yadav
