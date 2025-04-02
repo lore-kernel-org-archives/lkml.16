@@ -1,130 +1,111 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B45023814E;
-	Wed,  2 Apr 2025 11:59:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58418235BFB;
+	Wed,  2 Apr 2025 11:59:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743595143; cv=none; b=VJJ7/U2ExFMluP/h8C32I8XsxiYzmYopdfcOBiQ9j+VbZbQkssQoYb2Xp6c6p0OkzRBhb0fqutheW4mK/JGXN+g8/euEN7dcXPzmbHZ0Iy/TTUBbdi+e3lRD8b4b8w0nvfAW9hYRvFJWjZPFMEcMj1gLYzwUKFJX44+Rz+LgWs8=
+	t=1743595189; cv=none; b=KeGQ8iXRDRPGlGLTpsNWzbvutZ1eE36BRDPMNptAyJWnFRpZJQDxKtlq3XuFvcczOb4ePIRvKhPw4JpvtzPibitkvfnuLfpa1M6uuD9baf8KXCMW3wPIPe0/HG7ZrbBIW5DALYBuIuDN8pw7FFyXXXjE6strz8uyrpTU2p51p6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743595143; c=relaxed/simple;
-	bh=lEgXEGc4oeSLWNn+tNIIYFjH345uNAMY4TODj7ii6hQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ovQpz04qdC6Dk3pPXBylboIzARYbBWi5Q7nF2gXCAsmBLDUy9J8bQfognPZoFtLtJtyv0IjhpuXsZd1q5uzDjnYLdgE12LdzkRNp6G1FCVG5M/lXT6Mve7mSH59+TImlzHE3ksbK3MCE8gZigVdN6x+CHPd/r+KkP50b0KratZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZTolIx0x; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1743595189; c=relaxed/simple;
+	bh=8dl7ISQ+eM000+lZIQEPv+hiZRsdlSbP98vxWvDTalc=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=JZZNdmrm+3nSK/sA6aLhYE9uYK61WyTnejvq6KbRAuAUysEuCj49rJdhHw2wqDRdLA47l6fkfs31YKelkMh8OTePP7Gd2r5BcUDda8TMWi9ZypbA9UhsrYtRnZkLwH4lZdwiyIZUAfSt0RFdjAGzhzK7481//g+G7XVzFVKBxNI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=n8H+C9zY; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZTolIx0x"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743595142; x=1775131142;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=lEgXEGc4oeSLWNn+tNIIYFjH345uNAMY4TODj7ii6hQ=;
-  b=ZTolIx0xUsEnuob2xUOMBzm9gkSjl7TiC3Fy8BWH3y6AisZykptwgWAV
-   SqbbK1EcdJvehytJL+Qr2h4OdpqO0PAZ+XN62+7iZQ/DNPYqrnBD/COjY
-   QRTdJ/56h5cAW1jgsdObZD/2xEc6a1Cl2PY9VAnJhiTA1uDvJsLkIqocO
-   INus2wBz7uuvkhyVpqFTMQRyhVorkAdEUYoZ6cYmcpSGBIrDT10uJ2GKn
-   CvHJWDBZuibyUACp0JVCjxGDhrQz/9xRmOantpdGK9c+3FujR09UT1UyM
-   WDBal8ZGmZIne5RR3qG7nbztx0CzpV/hxaq3wHklTyUDJqS6GZPIG7x3f
-   w==;
-X-CSE-ConnectionGUID: 8g0UH4sWRYWi+wIC0yoR6Q==
-X-CSE-MsgGUID: daA3yRi/Smq922r7eTcjkg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11392"; a="48619360"
-X-IronPort-AV: E=Sophos;i="6.15,182,1739865600"; 
-   d="scan'208";a="48619360"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 04:59:01 -0700
-X-CSE-ConnectionGUID: oW1R1pqPSH+xKuAfFo/IGg==
-X-CSE-MsgGUID: bR0HajQ8S0KfDxFBNx12MA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,182,1739865600"; 
-   d="scan'208";a="126577539"
-Received: from lkp-server02.sh.intel.com (HELO e98e3655d6d2) ([10.239.97.151])
-  by orviesa010.jf.intel.com with ESMTP; 02 Apr 2025 04:58:58 -0700
-Received: from kbuild by e98e3655d6d2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tzwkB-000Afi-03;
-	Wed, 02 Apr 2025 11:58:55 +0000
-Date: Wed, 2 Apr 2025 19:58:03 +0800
-From: kernel test robot <lkp@intel.com>
-To: Hans Zhang <18255117159@163.com>, lpieralisi@kernel.org,
-	bhelgaas@google.com
-Cc: oe-kbuild-all@lists.linux.dev, kw@linux.com,
-	manivannan.sadhasivam@linaro.org, ilpo.jarvinen@linux.intel.com,
-	robh@kernel.org, jingoohan1@gmail.com, thomas.richard@bootlin.com,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Hans Zhang <18255117159@163.com>
-Subject: Re: [v7 3/5] PCI: dwc: Use common PCI host bridge APIs for finding
- the capabilities
-Message-ID: <202504021958.YeTPCsW1-lkp@intel.com>
-References: <20250402042020.48681-4-18255117159@163.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="n8H+C9zY"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 532AtCja032650;
+	Wed, 2 Apr 2025 11:59:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-type:date:from:message-id:mime-version:subject:to; s=
+	qcppdkim1; bh=n+iodew5GmsQ4lOHSz2keCNpjNVT3ejieh7tZZjFLp0=; b=n8
+	H+C9zY9aRX0pxmQs5UXKwjxo6U0zedV/Zh6ZotzySXJZ64PXFHoWvEOUqdYfjmNw
+	jmEr1EtVHtyYV85RZ0QgKv1RdlzbLX6WNrjJ+fIXFe7GBY59rwTijepKdFFqssz+
+	wI7o9Xn1rh1MPMPt0tRZErgH09FE5k2p/qRa1njnVAZfIiNXc8EupkAjJ0CtPv2S
+	fog9aYA/qNu48zAjs/jX28MZVrzO0msOHvboHLB9eDomosciG4tt22uxYEob72fe
+	Kz94bbyZBQm77/4zg9XJh3j0UZ3qPEiMqr0j4I9DugHNIPW313z4jYXiY28XdoTW
+	6V04TF3rDl+yR+jxYEgw==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45p67qkm2n-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 02 Apr 2025 11:59:43 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 532Bxg5b012802
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 2 Apr 2025 11:59:42 GMT
+Received: from hu-mapa-hyd.qualcomm.com (10.80.80.8) by
+ nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Wed, 2 Apr 2025 04:59:39 -0700
+From: Manish Pandey <quic_mapa@quicinc.com>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        "James E.J.
+ Bottomley" <James.Bottomley@HansenPartnership.com>,
+        "Martin K. Petersen"
+	<martin.petersen@oracle.com>
+CC: <linux-arm-msm@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <quic_nitirawa@quicinc.com>,
+        <quic_bhaskarv@quicinc.com>, <quic_rampraka@quicinc.com>,
+        <quic_cang@quicinc.com>, <quic_nguyenb@quicinc.com>
+Subject: [PATCH V5 0/3] scsi: ufs-qcom: Enable Hibern8, MCQ, and Testbus registers Dump
+Date: Wed, 2 Apr 2025 17:29:19 +0530
+Message-ID: <20250402115922.27874-1-quic_mapa@quicinc.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250402042020.48681-4-18255117159@163.com>
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=fMI53Yae c=1 sm=1 tr=0 ts=67ed26af cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=pyQEGUW01KN_hzJh80EA:9
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: 8yRP_j5TW9CB5zVMQSrRaegCucJ6i0sz
+X-Proofpoint-GUID: 8yRP_j5TW9CB5zVMQSrRaegCucJ6i0sz
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-02_04,2025-04-01_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxscore=0
+ priorityscore=1501 phishscore=0 spamscore=0 impostorscore=0 clxscore=1015
+ mlxlogscore=335 bulkscore=0 malwarescore=0 suspectscore=0
+ lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504020075
 
-Hi Hans,
+Adding support to enhance the debugging capabilities of the Qualcomm UFS
+Host Controller, including HW and SW Hibern8 counts, MCQ registers, and
+testbus registers dump.
+---
+Changes in v5:
+- Addressed Mani's comment and used cond_resched() instead of usleep().
+Changes in v4:
+- Addressed Mani's comment and used kmalloc_array() for testbus mem allocation.
+- Removed usleep_range from ufs_qcom_dump_testbus.
+- Updated commit text.
+Changes in v3:
+- Addressed Bart's comment and Annotated the 'testbus' declaration with __free.
+- Converted the switch-statements into an array lookup.
+- Introduced struct testbus_info{} for handling testbus switch-statements to an array lookup.
+Changes in v2:
+- Rebased patchsets.
+- Link to v1: https://lore.kernel.org/linux-arm-msm/20241025055054.23170-1-quic_mapa@quicinc.com/
 
-kernel test robot noticed the following build errors:
+---
+Manish Pandey (3):
+  scsi: ufs-qcom: Add support for dumping HW and SW hibern8 count
+  scsi: ufs-qcom: Add support to dump MCQ registers
+  scsi: ufs-qcom: Add support to dump testbus registers
 
-[auto build test ERROR on acb4f33713b9f6cadb6143f211714c343465411c]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Hans-Zhang/PCI-Refactor-capability-search-into-common-macros/20250402-122544
-base:   acb4f33713b9f6cadb6143f211714c343465411c
-patch link:    https://lore.kernel.org/r/20250402042020.48681-4-18255117159%40163.com
-patch subject: [v7 3/5] PCI: dwc: Use common PCI host bridge APIs for finding the capabilities
-config: loongarch-randconfig-001-20250402 (https://download.01.org/0day-ci/archive/20250402/202504021958.YeTPCsW1-lkp@intel.com/config)
-compiler: loongarch64-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250402/202504021958.YeTPCsW1-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504021958.YeTPCsW1-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   In file included from drivers/pci/controller/dwc/pcie-designware.c:23:
-   drivers/pci/controller/dwc/pcie-designware.c: In function 'dw_pcie_find_capability':
->> drivers/pci/controller/dwc/pcie-designware.c:218:38: error: 'pcie' undeclared (first use in this function); did you mean 'pci'?
-     218 |                                      pcie);
-         |                                      ^~~~
-   drivers/pci/controller/dwc/../../pci.h:114:18: note: in definition of macro 'PCI_FIND_NEXT_CAP_TTL'
-     114 |         read_cfg(args, __pos, 1, (u32 *)&__pos);                        \
-         |                  ^~~~
-   drivers/pci/controller/dwc/pcie-designware.c:218:38: note: each undeclared identifier is reported only once for each function it appears in
-     218 |                                      pcie);
-         |                                      ^~~~
-   drivers/pci/controller/dwc/../../pci.h:114:18: note: in definition of macro 'PCI_FIND_NEXT_CAP_TTL'
-     114 |         read_cfg(args, __pos, 1, (u32 *)&__pos);                        \
-         |                  ^~~~
-   drivers/pci/controller/dwc/pcie-designware.c: In function 'dw_pcie_find_ext_capability':
-   drivers/pci/controller/dwc/pcie-designware.c:224:71: error: 'pcie' undeclared (first use in this function); did you mean 'pci'?
-     224 |         return PCI_FIND_NEXT_EXT_CAPABILITY(dw_pcie_read_cfg, 0, cap, pcie);
-         |                                                                       ^~~~
-   drivers/pci/controller/dwc/../../pci.h:156:34: note: in definition of macro 'PCI_FIND_NEXT_EXT_CAPABILITY'
-     156 |                 __ret = read_cfg(args, __pos, 4, &__header);                    \
-         |                                  ^~~~
-
-
-vim +218 drivers/pci/controller/dwc/pcie-designware.c
-
-   214	
-   215	u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap)
-   216	{
-   217		return PCI_FIND_NEXT_CAP_TTL(dw_pcie_read_cfg, PCI_CAPABILITY_LIST, cap,
- > 218					     pcie);
-   219	}
-   220	EXPORT_SYMBOL_GPL(dw_pcie_find_capability);
-   221	
+ drivers/ufs/host/ufs-qcom.c | 119 ++++++++++++++++++++++++++++++++++++
+ drivers/ufs/host/ufs-qcom.h |  11 ++++
+ 2 files changed, 130 insertions(+)
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.17.1
+
