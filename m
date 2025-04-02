@@ -1,56 +1,43 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4852217C21C;
-	Wed,  2 Apr 2025 17:52:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743616372; cv=none; b=fSZ5MUQ0zLhtVdvPafDGV3ri7HM89SCQsbyrUZGggUlmRnSZ5JUMI+I1ohYI6Xw0V2kyi4+BruYoSV/tzcIET108a58h3TLLBRiz3mRzP+b+PIFJ155YjwbB99MJ4C7nHbnRu0eB5sSs0we1jqiS3hbCNxGje6s1KcxIFdh+rYI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743616372; c=relaxed/simple;
-	bh=h5NICahV7JeZ491aP7VXdSMuYMNaZpCrLTP/wgrYg5M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Phxe+UxPbDEAUqApvyxHHDjQEJJKf7f3T0q9OPtSkTnbQhnyEoLgYqAzzrP5yDUrikJm0kO0OUCia2ZyUxro9C+zo3DNXDlm1mh7CCMM/1lL1FvWA5dqcmxm0Qm1BLioEry/McIiR4lWXKFuuRaYym9o4t8o8Q28IXDYQTvITGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fiGc7SML; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04BFE17C21C
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 17:55:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743616541; cv=pass; b=kH/iJ3zYvtpI2OCYI2iXEA1/1GH8f/L7Vdk0AU25p8jvIH+LikPUQzyGDxqyZBLdu7L65705SrH+DeEXbXzk4F1E7aa3MwvuCIHYDZfT+Hde9GMgcOHlOn5VXECSrGYPPFqcNotMlLh8ZjOTt8LOSfaeWdQs1oI/paBZsSPIH1M=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743616541; c=relaxed/simple;
+	bh=bjmjN0u9o9dFxsGqOq9Okderup4ilJI7jJ8ZyBtaPd0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=c9FIJIaQS5tNCh4LwY6SjIx4/NVsen4OEdwf4Z2OBg+EiQx4ivtRfXuW74T2YQKhInqkeTZUn9UkpgHvBjuN4xsJQycI441+reJLkqhca8gblJbVcLOPriMHe28skbCPgXZ3foILgJeD7UhYNpWkQXzqYn5X2gcCC+ee6SfdILc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b=CfYt5j0v; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fiGc7SML"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743616371; x=1775152371;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=h5NICahV7JeZ491aP7VXdSMuYMNaZpCrLTP/wgrYg5M=;
-  b=fiGc7SMLapDFt6FB01Or5x/qQ71JZaCNd9GO9JEUWoKQuwGdYl83vjeW
-   n4kkhaiWURbZ5gkI1ulFq/HKY0A+ohT+FZ3E0p+haGRamwMzxnbHD/ksV
-   Sqddc/hRVT9RbI0eWatMIwa0e9NYW0ADR++7MmkWj2kEu+R0+SYFacQf5
-   5xKePhTGUkBoZfD/Tz/yEyP0r74v16g9UibVTmfWb43CiXkgrjjTNxbRQ
-   By+qHw8hUxgfByU0PuU4Vi1i8iB7TMliyNBguMMGmHDpLhIgk7fNTRhKU
-   26sXBkqO/+mC3wJ248OlnrUl6V0wDWGE+z0tP1Fd1Q7B/N4Qo6Rx7tFjC
-   Q==;
-X-CSE-ConnectionGUID: HkAmmnU3QVuBoy0pAY10+Q==
-X-CSE-MsgGUID: +qNlenhFSGmBzdhhDpn6gw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11392"; a="55192707"
-X-IronPort-AV: E=Sophos;i="6.15,182,1739865600"; 
-   d="scan'208";a="55192707"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 10:52:48 -0700
-X-CSE-ConnectionGUID: NK7C53LZTdSPdr1T9NjyMQ==
-X-CSE-MsgGUID: o6X37gn4SDuQW65LRVBieQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,182,1739865600"; 
-   d="scan'208";a="126730347"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 10:52:48 -0700
-Received: from [10.246.136.14] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.14])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 56B3720B5736;
-	Wed,  2 Apr 2025 10:52:45 -0700 (PDT)
-Message-ID: <6ba85605-39ea-40e0-a6f6-379deec30db7@linux.intel.com>
-Date: Wed, 2 Apr 2025 13:52:44 -0400
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b="CfYt5j0v"
+ARC-Seal: i=1; a=rsa-sha256; t=1743616513; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=lJVUxAnirQlEU+rJVX2xQlCD2jV1AZKeOP72HADn71pX2cIHTWHX7a+xqOqqRE57d6nfoYSNMBVwiSr5y1Evj5r/N+Hv/BzBjmKb2eozp2chtMktiIeBzmRjsi6js2yghBRjs10SZlHQ6cl6YebfBgWylfcWkc1kaC73NQXmjbU=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1743616513; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=UUibI/fSKc86USVu6DqXrZGKEGmqiWnbzh9cT1ooXjs=; 
+	b=hSomf38/AQHwXKB7qteL//sZImsBrRjb4dyZKUaOtRu4Z8edH2FeHZAj4JQHL/M7zCJ4b9IgGse5tHU7AzE2YX7pcDKS3v5jZK0jbW4y+cqj8YO6pWdiYrs2C3vhsATGvHvB7e5VFP6pbnUG9agAmFpvG2+qWA/VsaUj3Rh0kzs=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=dmitry.osipenko@collabora.com;
+	dmarc=pass header.from=<dmitry.osipenko@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1743616513;
+	s=zohomail; d=collabora.com; i=dmitry.osipenko@collabora.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=UUibI/fSKc86USVu6DqXrZGKEGmqiWnbzh9cT1ooXjs=;
+	b=CfYt5j0v+Q9FWqUIApf/ZN7h05F+YZ+cnSnD73Lm96wtFwAH8KmZwKuRHJe5Y3fY
+	a9blTNODxFtfFXiSZGnB9d5vALluVnsS7ClF1VM5RoeLX/tUiP63jrbFwp1fPVOFJAd
+	WGOntwTLE/AqnfXOmt6UmAWrqgJqS/waL8Ea0gc0=
+Received: by mx.zohomail.com with SMTPS id 1743616511686372.84492676785374;
+	Wed, 2 Apr 2025 10:55:11 -0700 (PDT)
+Message-ID: <712de3a8-83c2-4ae7-8a5c-dd1baa3d50e4@collabora.com>
+Date: Wed, 2 Apr 2025 20:55:06 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,87 +45,54 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 5/5] perf parse-events: Add debug dump of evlist if
- reordered
-To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Howard Chu <howardchu95@gmail.com>,
- Dominique Martinet <asmadeus@codewreck.org>, Levi Yun <yeoreum.yun@arm.com>,
- "Dr. David Alan Gilbert" <linux@treblig.org>, Andi Kleen
- <ak@linux.intel.com>, James Clark <james.clark@linaro.org>,
- Weilin Wang <weilin.wang@intel.com>, linux-perf-users@vger.kernel.org,
+Subject: Re: [PATCH v2 1/2] drm/virtio: introduce the HOST_PAGE_SIZE feature
+To: Sergio Lopez <slp@redhat.com>, David Airlie <airlied@redhat.com>,
+ Gerd Hoffmann <kraxel@redhat.com>,
+ Gurchetan Singh <gurchetansingh@chromium.org>, Chia-I Wu
+ <olvaffe@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ Simona Vetter <simona@ffwll.ch>, "Michael S. Tsirkin" <mst@redhat.com>,
+ Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+ =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>,
+ Rob Clark <robdclark@gmail.com>
+Cc: dri-devel@lists.freedesktop.org, virtualization@lists.linux.dev,
  linux-kernel@vger.kernel.org
-References: <20250402164720.3847573-1-irogers@google.com>
- <20250402164720.3847573-6-irogers@google.com>
+References: <20250402-virtio-gpu-host-page-size-v2-0-0afdc8c16cb9@redhat.com>
+ <20250402-virtio-gpu-host-page-size-v2-1-0afdc8c16cb9@redhat.com>
+From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
 Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20250402164720.3847573-6-irogers@google.com>
+In-Reply-To: <20250402-virtio-gpu-host-page-size-v2-1-0afdc8c16cb9@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-ZohoMailClient: External
 
-
-
-On 2025-04-02 12:47 p.m., Ian Rogers wrote:
-> Add debug verbose output to show how evsels were reordered by
-> parse_events__sort_events_and_fix_groups. For example:
-> ```
-> $ perf record -v -e '{instructions,cycles}' true
-> Using CPUID GenuineIntel-6-B7-1
-> WARNING: events were regrouped to match PMUs
-> evlist after sorting/fixing: '{cpu_atom/instructions/,cpu_atom/cycles/},{cpu_core/instructions/,cpu_core/cycles/}'
-> ```
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/util/parse-events.c | 16 +++++++++++++---
->  1 file changed, 13 insertions(+), 3 deletions(-)
-> 
-> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-> index 5152fd5a6ead..0f8fd5bee3a7 100644
-> --- a/tools/perf/util/parse-events.c
-> +++ b/tools/perf/util/parse-events.c
-> @@ -28,6 +28,7 @@
->  #include "util/evsel_config.h"
->  #include "util/event.h"
->  #include "util/bpf-filter.h"
-> +#include "util/stat.h"
->  #include "util/util.h"
->  #include "tracepoint.h"
+On 4/2/25 20:46, Sergio Lopez wrote:
+> diff --git a/include/uapi/linux/virtio_gpu.h b/include/uapi/linux/virtio_gpu.h
+> index bf2c9cabd20793e3851e749baadf210341445501..adc264df4e458e9c754936c3015c069e5ee6b899 100644
+> --- a/include/uapi/linux/virtio_gpu.h
+> +++ b/include/uapi/linux/virtio_gpu.h
+> @@ -64,6 +64,10 @@
+>   * context_init and multiple timelines
+>   */
+>  #define VIRTIO_GPU_F_CONTEXT_INIT        4
+> +/*
+> + * Config struct contains host page size
+> + */
+> +#define VIRTIO_GPU_F_HOST_PAGE_SIZE      5
 >  
-> @@ -2196,14 +2197,23 @@ int __parse_events(struct evlist *evlist, const char *str, const char *pmu_filte
->  	if (ret2 < 0)
->  		return ret;
->  
-> -	if (ret2 && warn_if_reordered && !parse_state.wild_card_pmus)
-> -		pr_warning("WARNING: events were regrouped to match PMUs\n");
-> -
->  	/*
->  	 * Add list to the evlist even with errors to allow callers to clean up.
->  	 */
->  	evlist__splice_list_tail(evlist, &parse_state.list);
->  
-> +	if (ret2 && warn_if_reordered && !parse_state.wild_card_pmus) {
-> +		pr_warning("WARNING: events were regrouped to match PMUs\n");
-> +
-> +		if (verbose > 0) {
-> +			struct strbuf sb = STRBUF_INIT;
-> +
-> +			evlist__uniquify_name(evlist);
-> +			evlist__format_evsels(evlist, &sb, 1024);
+>  enum virtio_gpu_ctrl_type {
+>  	VIRTIO_GPU_UNDEFINED = 0,
+> @@ -364,6 +368,7 @@ struct virtio_gpu_config {
+>  	__le32 events_clear;
+>  	__le32 num_scanouts;
+>  	__le32 num_capsets;
+> +	__le32 host_page_size;
+>  };
 
-Why is the size even less than the one in pr_err?
+Hi, this is still a spec change and the virtio-gpu spec update is need.
+Please send the spec patch, I'd want to see that it won't have new
+objections before merging the kernel patches.
 
-The user probably prefer to get the complete list in the debug.
-
-Thanks,
-Kan> +			pr_debug("evlist after sorting/fixing: '%s'\n", sb.buf);
-> +			strbuf_release(&sb);
-> +		}
-> +	}
->  	if (!ret) {
->  		struct evsel *last;
->  
-
+-- 
+Best regards,
+Dmitry
