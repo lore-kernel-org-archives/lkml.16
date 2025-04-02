@@ -1,120 +1,155 @@
-Received: from mail-oa1-f52.google.com (mail-oa1-f52.google.com [209.85.160.52])
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60616BA4A
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 14:39:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C50120E328
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 14:40:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743604789; cv=none; b=BfC7+jxodL+VNsbAH/cSYMmkEfy+1C9PjEe6AyyhcV8SS1vq5xALdqdEeA4HMR9Lk8hCX+Ydb9Mwldntcva9EtbsjwA3d9lIla70SkEF012ymYM5IZk077cymMqDQ7s3canIEqsQisSzZlpA23NtZduE7vl7na6gwoVirlfuJnk=
+	t=1743604853; cv=none; b=tUzZhPTPGG14fV23gZBWrtUSOfMSMYi+QacSEmpurCVTCU8lf0ovqPrRzLinYDmfLfHr/kixMKUldj0IW29cJlGURvbJAhXEassQP88+x242rnIHjzV+FqGLm1n6zw5CFiQEvHY6/HeF7Kt9QPAEpIRfxkyN52Opyuav319Qug4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743604789; c=relaxed/simple;
-	bh=an2KdMGCipmCOgRCCaG66zbXLj51zno2bj0u66QMdPY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gAb+ngMSCtvilLRlnIceo8gzpvKSgXIkEx0fRaQc9N0RPNHl8sFg2rA9GnLexapQBW3DdORrLAbbw5v+81LKpj/H2sj8IAaHrP7GQ1WYz1xbFjPMZIQ+2sJkoULHIJBrCUXZF0hPxRBbyl5YvIGDMJyQoC7B3dASUTF6T4sMX2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=fCoMjRgY; arc=none smtp.client-ip=209.85.160.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1743604853; c=relaxed/simple;
+	bh=I+T4/p/o14tjNdo2eIRFXj4kxVjt0av9HHARSui01ew=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tO5Dsvy8LXqIi0eh+hk6tco6ikmGOcRGGVMy1rwcRcHa+vpyhLpY4eDE84CKMq4gXtBniRiLO0sjeyi5SVOBxnqo6R/bvf/NkCpSzcxiGnSh3+WX0xp6CqF0ZfLoGPQcFSYDRcFPNiYCVEBrlhbJJJ69G/edpB3k5A48XFzUWbE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TciyG0qv; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="fCoMjRgY"
-Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-2c6ed7efb1dso4321453fac.2
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 07:39:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TciyG0qv"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ac2bfcd2a70so897100966b.0
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 07:40:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1743604786; x=1744209586; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=8EoS+69ci33BaJ93JVqHmaX+qxJHmm+lVs7qiZGT250=;
-        b=fCoMjRgYk2uNA9KHFLyPTi6OSp4vYKm4dvcMSE7TXSLtuGlLQ2KMRo7FJqeWUd0n7S
-         9uMjb1YtaHDnZTOX3c8r0jkpedkuqMuWSF/68XaHLXZpKiUyQqFIEx7elBVGbs10O/Dj
-         Lkbs2BDXte9EXQOsxrCh9K75Sl55/Y9KQpLKYJi4lq6Xl/OElebsVtKgICzz/17TICQl
-         sKAiQtHcnY8P7nEQG1FbwJxGuIv5J0B0t+2fIeH0KWiG7AsuEqbW+QxTmT/gYRnHDFsy
-         xrTEcOwI0SlsGHLMy1gl5m9A1Tx6NSr179JIdZSnSVaPKPO1DApryVnvdiJwsmReKgtx
-         X5Cg==
+        d=gmail.com; s=20230601; t=1743604850; x=1744209650; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=XdHt/IUBJRf8eYl33LVdyil+49CKbWzVa9iDx/vEpmQ=;
+        b=TciyG0qvai77OxKzf6Rg6H0DZ+XAq7R/ZphuV0q41vYYMw5WRGKvPqHC7aPFCb0Pok
+         Y1KFwAHDnl5FuL6PyYVTNpJ96N5oS8DDnMYLsub1XbMPJq+R/HSDdsjzAGQ4nU0U1jCX
+         rgb+65VLqIcCaotYO/RfIoZ9FnYtM+NgvO92Mqi9uXQTAiEJ+TIrYWubg8fmoPmvvzge
+         0qV3joa3ErnOtdJfon4T428eELqIiHEcmq6VwAQVQkBnG3Qz15LeJmQzzaUCpp7znplP
+         zqmBZ3+8oeNtndrNUFvqD+R5IMqumdKFgd6J3ntdLQYAGic9RQ4FtTEkBt6aynpYtfLr
+         aJ5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743604786; x=1744209586;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8EoS+69ci33BaJ93JVqHmaX+qxJHmm+lVs7qiZGT250=;
-        b=rkXPkyZNNJo9WuuizdK1GiHQShyq1N5XywFKpGdB9fGSQG7cUz8i+yn0aitUtIVS8U
-         7fDW+eIbCtlfW678rGYoQfGa0ROBGx8C2izZ2dckJMaK65Fqw8Jl4kXThC/AoL84TPWK
-         0NQpgme0Fv4pHcynnDGRGFSLUEQOGEaEJnNHjQoUaeZMhgflkwNYZ0l+LXkeEeJLuRN9
-         Ri4dmAqQMaVKTFRc0rwv+CRSUAUgQRIsz4i67EYaVUetqgT0rLf6iIu7bWJ9m3GhM413
-         nfTbAu//2AN/h9LXDdOnkWK/F/zlPGvT39y7n6m7uOFKnJcMbAZMnRvAvVnUcAnPelbJ
-         SAOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUwkqCL7y88GfoUsSXXuKuZcsCB0KI6xZypIYMyKMLBydd/plxmqXmwcYv/gbLPlZ+oQY+I3eRC7585REo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwRTakPIWEiHCb6fUY9YSGRBrcnJjm+wVxLuEVCMuAn4loZTyL/
-	4viu+ZxJHjEGewR6kZ/OBdeBD/1caW0Xt1yW3bjN1REcJwrjeav0h8bvOAXbkA4=
-X-Gm-Gg: ASbGncvO8qadq07sHQnpBm20uHnsZ3thvXkeYcDaYu5olXxoB6dP7xLzJZvkg5mfL03
-	iveWBOpPCduWtYfGHFMd9oZw+1UbNEUsbE+Cx8Xux0aFu2OAg0oPoBFUSwtmJx2JHqwWBPX5Lyj
-	FnWA4g3bXkVcgkzZ8e95ozq4amFhcLWJe/qsJt4LVlpRs1m/GszwcTRaAohIVkgmC2NBijlivr5
-	Vg/ZnAA/ab3bdfBKFXvGbx+3o1KZ1bxsSMyOFL0+lI5qggr7aT2L3/l1j+xHseUJVViBCt2fDfz
-	bKo9FaC2BZKM3bMr4akPBGGvK19Cdznke4qYFfQTcoLyUZK8q/wNKWsT0+9+BU8IlwH2YZtouN9
-	otzbjeQ==
-X-Google-Smtp-Source: AGHT+IE+TQS+xNEhqvoy35C1XBepZThD9x3tvi2hTYmUV7BCj5f7Twy+Lui8PnuV3OkYvF71xpDaDg==
-X-Received: by 2002:a05:6871:8786:b0:29e:2d18:2718 with SMTP id 586e51a60fabf-2cbcf738fa0mr10881898fac.28.1743604786400;
-        Wed, 02 Apr 2025 07:39:46 -0700 (PDT)
-Received: from [192.168.0.113] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2c86a91391esm2771044fac.46.2025.04.02.07.39.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Apr 2025 07:39:44 -0700 (PDT)
-Message-ID: <847307bf-c612-475e-84bd-31efcbd7239f@baylibre.com>
-Date: Wed, 2 Apr 2025 09:39:43 -0500
+        d=1e100.net; s=20230601; t=1743604850; x=1744209650;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XdHt/IUBJRf8eYl33LVdyil+49CKbWzVa9iDx/vEpmQ=;
+        b=uxVsSiaZjQN2Mt4Ifb5/yZKaOmvncFNxw1Jz3FkVm5R2wDzc7JgeBi/Zqqn0WJJaid
+         WiBQg6i0yeCgAMQ/Irv/i4+o29218KQprg7be3sqnG+MPSvxV7+vM7BtSNDCn4yk2fBE
+         6AGrl64/vGSF7WM0IGC4VJTRfztFb96pr2g/9hgRemv4U4JdGPffvx2DZIi6ASIqdhbJ
+         YqzaEE3hxTdj1L/5Ld+PTo7gcij3hfNfi19y0sTJnRCDADUVs/3cruBJNdWteM6Qk2/M
+         BxuNtts6e6A5kyhW3bRZ4U4KwCMQ4TSN+3xznbwKHV8mKuluyg3s8czzk8UT4W+voFI1
+         KPug==
+X-Forwarded-Encrypted: i=1; AJvYcCVOQSlLLeLfMsFr90oOu321z3Z7gKYIJhw1JTBI2sPu4mZqeVjSyeV0SRS41Fmdd9ZPDo/231Ou2wVtT24=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxtPezjPLCSKxt4L8ivZf0/4B0pq39qFEfD9J3od1lgq6yFbcMp
+	jIdQbhy5aTkuHkih31aRTWzZZLlprYi83h2n8lqkZ1Fgkhy2mp51UI2Ibu9Ftbcr2t8uKOCWE/Z
+	ou4N7+E8clz5oEQJ7Yve5NaFAtmsZM2Vycsk=
+X-Gm-Gg: ASbGncvqgTVWL83+bDpr+3FscadEqRkvW0WP5UqnCE89KHgk8USEixtStFdjAG3cEuk
+	4pIdWn2ZtFqeKL2xx7yIVIAP/QikjpLriNJ3VmVYMi0bUK3jO5AgR9f6cOw53L7mjqqQlv9dO03
+	spLw/5PCZDh1Alvmq3LZcRgJVy5HaF2blTXf1RvbnUZoKMr76s8Bc=
+X-Google-Smtp-Source: AGHT+IE0vkwx1hX/1OTjSflPZbThMYB6+8r0sqUR8j1ij3DKDFbTPc/JDMeDathxWVU4WV6O4plnQuRnHTgw4HD4hmU=
+X-Received: by 2002:a17:907:9693:b0:ac3:45c0:6d08 with SMTP id
+ a640c23a62f3a-ac7385b6095mr1595411066b.0.1743604850163; Wed, 02 Apr 2025
+ 07:40:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/5] dt-bindings: iio: adc: ad7380: add AD7389-4
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, linux-iio@vger.kernel.org,
- Michael Hennerich <Michael.Hennerich@analog.com>,
- =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
- Jonathan Corbet <corbet@lwn.net>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-References: <20250401-iio-ad7380-add-ad7389-4-v1-0-23d2568aa24f@baylibre.com>
- <20250401-iio-ad7380-add-ad7389-4-v1-1-23d2568aa24f@baylibre.com>
- <20250402-winged-ambitious-sparrow-c988c6@krzk-bin>
-Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <20250402-winged-ambitious-sparrow-c988c6@krzk-bin>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <ed09edb167e74167a694f4854102a3de6d2f1433.camel@irl.hu>
+ <8963a409dd575e040e5f07e4ad5e9c1d26b421f2.camel@irl.hu> <CALT56yPd-xfd=47xRxrCk4F3jib4Ti7kg8pRXy-gVAQpbOc=pw@mail.gmail.com>
+ <e323219b52cda1891a55d12ad77a2b34edc8688b.camel@irl.hu>
+In-Reply-To: <e323219b52cda1891a55d12ad77a2b34edc8688b.camel@irl.hu>
+From: Dmitry Baryshkov <dbaryshkov@gmail.com>
+Date: Wed, 2 Apr 2025 17:40:39 +0300
+X-Gm-Features: AQ5f1JpoH0lX5gFoAYCq8CN2F9yE_ggsFXrXdOVagMSfH3qOEL83a2b4hhyNzuk
+Message-ID: <CALT56yPvDW1dLNdZK0kkn53kTa0HcVXgYXp9Gim4MH4YjgEncw@mail.gmail.com>
+Subject: Re: amdgpu_dm_connector_mode_valid regression
+To: Gergo Koteles <soyer@irl.hu>
+Cc: Dmitry Baryshkov <lumag@kernel.org>, regressions@lists.linux.dev, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+	amd-gfx@lists.freedesktop.org, Hans de Goede <hdegoede@redhat.com>, 
+	Alex Deucher <alexander.deucher@amd.com>, Mario Limonciello <mario.limonciello@amd.com>, 
+	Alex Hung <alex.hung@amd.com>, Harry Wentland <harry.wentland@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On 4/2/25 3:25 AM, Krzysztof Kozlowski wrote:
-> On Tue, Apr 01, 2025 at 05:50:08PM -0500, David Lechner wrote:
->> Add compatible and quirks for AD7389-4. This is essentially the same as
->> AD7380-4 but instead of having no internal reference, it has no external
->> reference voltage supply.
-> 
-> So neither refio nor refin, but your schema says:
-> 
->> +    then:
->> +      properties:
->> +        refio-supply: false
-> 
-> So what about refin, which is also external reference?
+On Wed, 2 Apr 2025 at 17:35, Gergo Koteles <soyer@irl.hu> wrote:
+>
+> Hi Dmitry,
+>
+> On Wed, 2025-04-02 at 16:36 +0300, Dmitry Baryshkov wrote:
+> > > >
+> > > > It works if I call
+> > > > drm_mode_set_crtcinfo((struct drm_display_mode *)mode, 0) before
+> > > > create_validate_stream_for_sink()
+> > > > in amdgpu_dm_connector_mode_valid()
+> > > >
+> > > > or
+> > > >
+> > > > if I comment out the decide_crtc_timing_for_drm_display_mode() in
+> > > > create_stream_for_sink()
+> > > >
+> > > > but a better fix than these can be imagined :)
+> >
+> > Would it help if you force recalculate_timings to be true if
+> > (drm_mode->crtc_clock == 0)
+> >
+>
+> Yes, it works with that one.
+>
+> But the code would start to become quite untraceable.
+> duplicate mode in amdgpu_dm_connector_mode_valid()
+> call drm_mode_set_crtcinfo() in amdgpu_dm_connector_mode_valid()
+> duplicate mode in create_stream_for_sink()
+> overwrite ctrc in decide_crtc_timing_for_drm_display_mode()
+> if crtc_clock == 0 call drm_mode_set_crtcinfo() again in
+> create_stream_for_sink()
 
-This is already handled by the existing if statement:
+Well... Unfortunately I don't know AMD driver details to comment on
+this. The fix that you've posted below at least resolves a regression
+without requiring us to revert r/o drm_mode argument patches.
 
-  - if:
-      properties:
-        compatible:
-          enum:
-            - adi,ad7380-4
-            - adi,adaq4370-4
-            - adi,adaq4380-4
-            - adi,adaq4381-4
-    then:
-      properties:
-        refio-supply: false
-      required:
-        - refin-supply
-    else:
-      properties:
-        refin-supply: false
+>
+> saved_mode is never used after this, so I can't add the condition here
+>         if (recalculate_timing)
+>                 drm_mode_set_crtcinfo(&saved_mode, 0);
 
+Agree
+
+>
+> This commit is related, I think:
+> 1101185 ("drm/amd/display: fix the ability to use lower resolution
+> modes on eDP")
+>
+> Regards,
+> Gergo
+>
+> ---
+> diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+> b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+> index bae83a129b5f..83c8c81d4015 100644
+> --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+> +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+> @@ -6984,6 +6984,9 @@ create_stream_for_sink(struct drm_connector
+> *connector,
+>         if (recalculate_timing)
+>                 drm_mode_set_crtcinfo(&saved_mode, 0);
+>
+> +       if (mode.crtc_clock == 0)
+> +               drm_mode_set_crtcinfo(&mode, 0);
+> +
+
+I'd say, please post this and let AMD maintainers act upon it.
+
+>         /*
+>          * If scaling is enabled and refresh rate didn't change
+>          * we copy the vic and polarities of the old timings
+> --
+
+
+
+-- 
+With best wishes
+Dmitry
