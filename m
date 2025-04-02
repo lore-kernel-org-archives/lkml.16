@@ -1,72 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mailgate01.uberspace.is (mailgate01.uberspace.is [95.143.172.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D391FBA4A;
-	Wed,  2 Apr 2025 00:54:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71E94846F
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 00:55:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.143.172.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743555261; cv=none; b=P8I4DADxqGQ3NbaMcKENhxE6UhKgdiomoOA+sin2keCpyDwalMTg16QkvrxZVZaz7rj6Rfr/KbVUFi7MTkxEKKZgAWCBCZpVpPvIdK2RRA8VxInH2OWm1B1qFL6powSD8l+pzFbsSkyDgoO+bcqhyszmHA/yZVB3b6698WohkDU=
+	t=1743555313; cv=none; b=eTSMLqo0FnqQSgjJ895CVxv/p8OhCBADrcPScd9N5/adO95DhA5i9ZQWti/T9L9VpbnfGE2i8W8bWAZ/glB33vQ4CWmSvKwzohzXldMsvkGnYiXfs1/yp7ChiQ/gaaRSyYQ5J7wqQZg3mIQCxT2mYotVga5GCSeKh8GCRYuxibY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743555261; c=relaxed/simple;
-	bh=/0zz4PKfcfSmXN/45Xp1mSPvrRuJjBxRJOJ/lyfE7UQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LjBXbdtkqAA8SZn+KcKiyHagxURpIUuzJwTLlutzNTwLIHqyVOTb5bo47mrHSMCdVbncDpLSzt7JkaSSdPQ9vCaecieANA6SQDdEPrKd+75RLADAWTikMzXy3XTG2xIZsjxvdBwrb6C2EsrYf76MXi3EY4eTCBno6gF32aC2eJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RCsLNG9a; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743555313; c=relaxed/simple;
+	bh=vcbb/N719SqerjnEgmY492MYanRbJNvTR7pgs9UQi2g=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=AxZXF4m+g7uzoR2fgLl0UfkysQnS3hF+mr18W11oJkGSK/wexq1QhRTV0b5KX2SJ5iVjdVGP8LsB+SSxtsncgwVC14SqJun82bpriwdGmntUiXdPCNAfRy6kD2BzMM/XdtT9la1Z89i3Dnc+Cb3nNdOgLH/uxKv51t2BLYLOl/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=david-bauer.net; spf=pass smtp.mailfrom=david-bauer.net; dkim=pass (4096-bit key) header.d=david-bauer.net header.i=@david-bauer.net header.b=xY361tET; arc=none smtp.client-ip=95.143.172.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=david-bauer.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=david-bauer.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RCsLNG9a"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A460DC4CEE4;
-	Wed,  2 Apr 2025 00:54:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743555258;
-	bh=/0zz4PKfcfSmXN/45Xp1mSPvrRuJjBxRJOJ/lyfE7UQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=RCsLNG9aVi3V82xZ/6oEZSNsQF3BjRuXv1neERksnDPnGCtMulh/64xNESG3RWsLl
-	 yf30ngBuNOZsW+CbTIph1qQZBntJlB18XYzKzp5dyS1/AB7kBXnukbZviRs7IAECxw
-	 ZNx6Y8FUXHYOd5lx3/UHBVueom3RJ8c4bKNyUCHJUXhbqQsIUmU6hgrCIaBvIMW9nk
-	 jTENZXw45YJD8S3MXD7LQTYNs4QNntCXh61n7h0tI+qrlM3PAiQ5tujo51WezBgp5l
-	 sc+mIgxrTiyPa6Jp9gXUUniAF6io3Au2Smjys6blKdV/JkBfCdwuI0cSoOVbDMjx8M
-	 9ZUuwkPdBbcuA==
-Date: Tue, 1 Apr 2025 17:54:16 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: <Ryan.Wanner@microchip.com>
-Cc: <andrew+netdev@lunn.ch>, <davem@davemloft.net>, <edumazet@google.com>,
- <pabeni@redhat.com>, <robh@kernel.org>, <krzk+dt@kernel.org>,
- <conor+dt@kernel.org>, <alexandre.belloni@bootlin.com>,
- <claudiu.beznea@tuxon.dev>, <nicolas.ferre@microchip.com>,
- <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 1/6] dt-bindings: net: cdns,macb: add sama7d65 ethernet
- interface
-Message-ID: <20250401175326.1b0ae7d5@kernel.org>
-In-Reply-To: <392b078b38d15f6adf88771113043044f31e8cd6.1743523114.git.Ryan.Wanner@microchip.com>
-References: <cover.1743523114.git.Ryan.Wanner@microchip.com>
-	<392b078b38d15f6adf88771113043044f31e8cd6.1743523114.git.Ryan.Wanner@microchip.com>
+	dkim=pass (4096-bit key) header.d=david-bauer.net header.i=@david-bauer.net header.b="xY361tET"
+Received: from perseus.uberspace.de (perseus.uberspace.de [95.143.172.134])
+	by mailgate01.uberspace.is (Postfix) with ESMTPS id 25CED60A33
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 02:46:23 +0200 (CEST)
+Received: (qmail 23180 invoked by uid 988); 2 Apr 2025 00:46:23 -0000
+Authentication-Results: perseus.uberspace.de;
+	auth=pass (plain)
+Received: from unknown (HELO unkown) (::1)
+	by perseus.uberspace.de (Haraka/3.0.1) with ESMTPSA; Wed, 02 Apr 2025 02:46:22 +0200
+From: David Bauer <mail@david-bauer.net>
+To: Felix Fietkau <nbd@nbd.name>,
+	Lorenzo Bianconi <lorenzo@kernel.org>,
+	Ryder Lee <ryder.lee@mediatek.com>,
+	Shayne Chen <shayne.chen@mediatek.com>,
+	Sean Wang <sean.wang@mediatek.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: linux-wireless@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Subject: [PATCH 2/3] mt7915: mcu: increase command timeout
+Date: Wed,  2 Apr 2025 02:45:26 +0200
+Message-ID: <20250402004528.1036715-2-mail@david-bauer.net>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250402004528.1036715-1-mail@david-bauer.net>
+References: <20250402004528.1036715-1-mail@david-bauer.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Bar: /
+X-Rspamd-Report: SUSPICIOUS_RECIPS(1.5) BAYES_HAM(-3) MID_CONTAINS_FROM(1) MIME_GOOD(-0.1) R_MISSING_CHARSET(0.5)
+X-Rspamd-Score: -0.1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=david-bauer.net; s=uberspace;
+	h=from:to:cc:subject:date;
+	bh=vcbb/N719SqerjnEgmY492MYanRbJNvTR7pgs9UQi2g=;
+	b=xY361tET6zI12Oo5cMJrqCzaecMWF2wZfEmGKrdaOiWA8pN9bBNW+E/WtSlYfWcFnfL0U/Dcjc
+	82GaoEQnAgqrDaheMTPlOfAQDeomqdZ0bOieFeWmb5h0gECxR+XWDZ3j18cq1QaCOhrcBy6mb8O2
+	ZpJ7/7CjAhb8qeuOBB2BJ1Mi5aWmrVJFO/HbIWbBcxbQ3uyAccltFSBBOJoIYcbKeaCTIyR+jRL7
+	YJ8hhVzgmy+BXshHqgTyAYBmU0Er3bniumqQ6aak6TNJWUdmoXncgDdf6ttFr+6wp1h+a/DdI/zT
+	JBtmFU5H2XMEBiqBt03RTZ96XYYOsyOjwxbbe8iXs25Ff9aFeMkote9NxIwSjoCymmx9/27oCJXy
+	dJF6dnRZT3fsEOdVleSI/XR8kyC8I/WBqGk+DOUjesS5lVYrgRhlZ6rw6ASpo9G4JUF2Ha9ZFWIW
+	OtIUFikYak9Q6tj1RL9cfcem+/+Ka0+/NOjdv8t9ekhLZKNaxg9V2Vw8SnZ5cC7lo6NnQXHu2joN
+	Wbe8/Elp/yi4sqTtXiZHhNmovvmSQZ8DJ01p3IPG0oUpItV/hMQ7TY7O6vjmmQWLslkgJ97Sz9v6
+	OM06VRh5E/UhzSR2VO4cwZLF9aj2tML4p70zeb3FbawG41p+rCUO/5ELJWZA7wda9u+SpfyQze1G
+	c=
 
-On Tue, 1 Apr 2025 09:13:17 -0700 Ryan.Wanner@microchip.com wrote:
-> From: Ryan Wanner <Ryan.Wanner@microchip.com>
-> 
-> Add documentation for sama7d65 ethernet interface.
+Increase the timeout for MCU_EXT_CMD_EFUSE_BUFFER_MODE command.
 
-## Form letter - net-next-closed
+Regular retries upon hardware-recovery have been observed. Increasing
+the timeout slightly remedies this problem.
 
-Linus already pulled net-next material v6.15 and therefore net-next is closed
-for new drivers, features, code refactoring and optimizations. We are currently
-accepting bug fixes only.
+Signed-off-by: David Bauer <mail@david-bauer.net>
+---
+ drivers/net/wireless/mediatek/mt76/mt7915/mcu.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Please repost when net-next reopens after Apr 7th.
-
-RFC patches sent for review only are obviously welcome at any time.
-
-See: https://www.kernel.org/doc/html/next/process/maintainer-netdev.html#development-cycle
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7915/mcu.c b/drivers/net/wireless/mediatek/mt76/mt7915/mcu.c
+index c1c5afed571f..d93a72d0a78a 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7915/mcu.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7915/mcu.c
+@@ -210,6 +210,9 @@ mt7915_mcu_set_timeout(struct mt76_dev *mdev, int cmd)
+ 	case MCU_EXT_CMD_BSS_INFO_UPDATE:
+ 		mdev->mcu.timeout = 2 * HZ;
+ 		return;
++	case MCU_EXT_CMD_EFUSE_BUFFER_MODE:
++		mdev->mcu.timeout = 10 * HZ;
++		return;
+ 	default:
+ 		break;
+ 	}
 -- 
-pw-bot: defer
-pv-bot: closed
+2.47.2
 
