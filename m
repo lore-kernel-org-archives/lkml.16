@@ -1,89 +1,124 @@
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CEC878C91;
-	Wed,  2 Apr 2025 21:51:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 534FF1F4615
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 21:57:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743630703; cv=none; b=ijH/F1EY7OjSglnvVw4XSouiYUuSZOvNbGqh4/E7xU3abkKDEfTzcGrbgc0Qfm8BlaX/X9teoOZgND+v4VmIdTaG+EVkuH7S/Ew4RqZSkixHRQ5FD9GIJStJVzZse9bJVSMlpnH+3l5prN87pUiJTI6E7bAKbPv7NfyoQ/jFSxM=
+	t=1743631034; cv=none; b=lRfWbWfx9A/+KX90vepSt+8QC8Eoo9OMC/nYZRnKc6VpyaydCBDQwtDng7CJAyNrQhrlOXZvnmSelIWLlVj33wMBs4l8nsHftkq0m3A1LIE/K8Ls7uvHPl9mp0aQvQhvoajKYTS0aWFf/gOtLpAWXpGdqjeZ7JtWQQt7xBlZyiY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743630703; c=relaxed/simple;
-	bh=FICI9pCH3MuJ0i+AnsWFEK9mn5iJqpqGuU41GdC/AOc=;
+	s=arc-20240116; t=1743631034; c=relaxed/simple;
+	bh=sZgJaFM/GPh2oWYGpowCLzvx3H4iO+SVj2cRVqudPM0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hrCy7VtE+Mu+KVvu/RAtE1i+FjjesQSQp/zlolAjzusQVgPi6+38ts+PswdYjgSMvJ9nM76aQL1a+IxRKctVfe+ZtR0n4M5j3z2UNr7AJKZ1s/89+em3lROpB0momSwHnT2FHJVZPLWf/aUhYhhAFRybVyZuoUeCJGbEIjScBLw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CO4vx7CH; arc=none smtp.client-ip=209.85.222.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Content-Type; b=P7bsiBnk2Pg08Q9X1Zn/XyzP/vK2i0NLOahvp2VGxE7qwdEinYpIxFbqLsbsxAIDjTpnaBI+hqHl537xBTbYqkj7KHxa7x+L7aX2rCJgsdxUWaMHBBYC1KfL8lKP4zOUcC546+UIKmCMti7ElLf2v/eoMUB2LhO3TGpFtVLduS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dcVUN/8E; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CO4vx7CH"
-Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-7c55500cf80so17715985a.1;
-        Wed, 02 Apr 2025 14:51:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dcVUN/8E"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2264c9d0295so315275ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 14:57:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743630701; x=1744235501; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+        d=google.com; s=20230601; t=1743631032; x=1744235832; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=FICI9pCH3MuJ0i+AnsWFEK9mn5iJqpqGuU41GdC/AOc=;
-        b=CO4vx7CHkRi6sbhascE7wA38OpDo6VERrUihD2KI6PHaJZ5e+fHjmFDZ7MlvE5ceEL
-         WopwXw6ntEUrba4WfO8xCBhT/e2trd4thrOmB3kA4tLJyvZutB62Erm+4Wnj5FtraqPS
-         709OE89fLYol1oWl87qqpUskxoucYPqwckeRpkW0lDHwrgMBvXLE0CfkW1i5oJRfaEMw
-         nwISc6tUNyyCe4/zrvNd5FJPgXGjnTgas8w6NOxBzXtazKItrn2m1XFfpxU+oAdGg6Y3
-         g8K1Qzu79OAkf9ASY3Xo1KLd09gzdAHIUF4DZdbDho9MYTtj5ADRnDvLWvgl1+Og3UNr
-         yn0Q==
+        bh=kM+jWPv3K/nQ3Kg9TjMXv9TDh1L/e0CE47ZwZvq6Tz4=;
+        b=dcVUN/8ERLw9QPPeW3py0f6mwyzOzVVlt4IrnJ4l0MUHkaYEY0hMf3bzWuWvqj5vxf
+         w3UaukXNRPw/MDEejiy90u9tWWKELc7yETD2N5a6buLHHnr5nLYOsmg5Kmcsik0UMi6q
+         /SappQOJ0Z8Jqjkj+NKlf0rt1OTHu/gsOBeITKUWIMq+6c4gZ3agKXlh2IU0TCah1hrl
+         uavPGxKWXcduCR8lxk+ZnNrPyZJkSgeCz3UPpj0Vp9Wn81D7B/rn4efJYJt4xbEZ5MTr
+         oAo6BzN1K+8Ct1sP/Nz+CqqOZ2ocNvmKOaNi6OWjOaoy6klhY/65B5D3hSCkIO8X/HZw
+         VHdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743630701; x=1744235501;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+        d=1e100.net; s=20230601; t=1743631032; x=1744235832;
+        h=content-transfer-encoding:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=FICI9pCH3MuJ0i+AnsWFEK9mn5iJqpqGuU41GdC/AOc=;
-        b=JWLtJMLFeXg9zxbnkXUECMEzjrqtLz6lZMJFr1C67gwjY+fjZf78ZnsBxh8k3uKUwU
-         7DbhR2JrNF+h28KnHXCcf4ARydl5LBF316/HuXWPeTIMZm3mTsIAtZH6XmYEJKY8EmZL
-         RA7se8iHZuQWBrAp4tOwvEHPU8mkv3VgDFGJe28I7jxJiX0k3pUHEkP4xF0XjS24julW
-         MecpPafUNU3kQXBMtzwKughatpXqU4HIGDrnHEDfqPRCVOTH8Ug77YNSeoC8DFkvs/vZ
-         ahnTBeZSgABnwwYb8cC+jqPgeV9FFbg9E+cVtQOUjUj1PaihLsughOvNPCS0gFAHQpIZ
-         J/Cg==
-X-Forwarded-Encrypted: i=1; AJvYcCWqyUilaFrfs/xowSCV+EZAk+iSJ30GxQYvFgMxvIJmRVobjgzUtxlmmLUYixA+X+40PZ0JL/anRCbh501U@vger.kernel.org, AJvYcCXZv5am7mYKseGt/A4FIoRTx0nn8PzAXK90phgTKo0gUljl5M6vBl1l21wqeDKOpbVx6eacOZgzsdg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzgiQwgGt6Awhg7GL0hmkDKgokAUdy5k5t1OHClgQ5H9Ad1385D
-	gKsjp0J6mHwvtDJYmOaWSBcXngQidPJ6XAS5lIffy3eKa+s9NR+pN6f2RYdXjofaFn/yJhLd7Ee
-	8keElWnXjpaAi+psacpvPTTN3kww=
-X-Gm-Gg: ASbGncvJg+Pic3F3DvucdY2LZSy8cQarqDYbTwH3TA+7Th1i1StemVKY2i70gyRvl0c
-	ndKMALF1TCep8rHbsNluhRvNbFt/vznuxaLO9wBPSfHIiNHb3W8Cpa6YnKPAvinpbbdiYUf3fJh
-	hN25eagodSaaN3XUkZF58Z88lS3g==
-X-Google-Smtp-Source: AGHT+IHPYg4Hg3MUUg5pKFbqOTtvyAgJXtWY6laP6tEJVCK5sDjjWMzqP2aQGxYlLyLJjUwWhjea3Zqim7lQWQ7lu8g=
-X-Received: by 2002:a05:620a:1da0:b0:7c7:62b4:91f8 with SMTP id
- af79cd13be357-7c762b49256mr669208985a.13.1743630700983; Wed, 02 Apr 2025
- 14:51:40 -0700 (PDT)
+        bh=kM+jWPv3K/nQ3Kg9TjMXv9TDh1L/e0CE47ZwZvq6Tz4=;
+        b=AJpUiF8Jz10m5vD3ekmST5dTP6y8lXnbBd3OoY8yHWVXNZoVbdqIEIiv8WW59U72Bo
+         tirOmlDMX+GCDzYmVWwX0mmuFeHcYwcQw3usAPFzX3eYEqsjzLZMMeV/aUHKKZfyBF5a
+         qdzOIutp+gLYaxIdCjAh/i5AlIh0Nn/ae6/6i3tHPitE2DauHTnpQU89dKQzecINCEqT
+         zuIsHYpdgjN4zga7CYtdv9/tvtpxVqQ0EdYOUaXq96tDmfrLHjCLhx3QrJs3vXazua1N
+         xPy/Cw98jVzfsUnCKNKoAQLMRDipWJzmC5H84WI8mmqYtqm5/rxU91Se+8dVspeCYE8v
+         Shvw==
+X-Forwarded-Encrypted: i=1; AJvYcCV7ogHn+zygUcMfwy9CFk1lWXpoZyIRc80d/3DQrdeGtX/LJti2V63oMe97kH54/DTF5Ia5ILFTpJrTY7w=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzvch3wu2MYW7vdkkTSjW0sdbgcCo/lQEIj67JthvnOoGdlVTQS
+	1VHwfocyoC84zSiBYLpPpl/FrL1yxJPX0Fsu7lDC2Kf/CKAHx0GNsWMy3UpHkQJDJngNJZuwWHB
+	udsFyWPXgSA5jHrRQC8T/0b3fcYvaOIt/21+O
+X-Gm-Gg: ASbGncu3xuz9gkclRdxAe+Yy9hGhI6goHHRsJB9kNvrpWnrML7Q+iqwq4X+lAAgFfbL
+	r0wXe5X8olVHFvEgjrWPHzqInsORh1ZJvoeunGchvFDQDBtZ5/t7I/fN5EjHvQ9hYuRhC4+uTeZ
+	seLOSdRzCqcjA0tgEDdepp3GE97sjw47rCeWm/zTVCFVf4SDI+6F+V
+X-Google-Smtp-Source: AGHT+IE92yLS2/+wWqwy+hrbq/Bh0anK7D+XCgmIjXlBWutUA0gRV5fpkslAccNPdlX4RoPmf+df/LPNM+h6N9E9QiA=
+X-Received: by 2002:a17:902:d4cb:b0:212:26e:1b46 with SMTP id
+ d9443c01a7336-22978360b83mr313565ad.23.1743631032305; Wed, 02 Apr 2025
+ 14:57:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250402204416.3435994-1-nphamcs@gmail.com> <67edaef8da732_1a6d9294e4@dwillia2-xfh.jf.intel.com.notmuch>
-In-Reply-To: <67edaef8da732_1a6d9294e4@dwillia2-xfh.jf.intel.com.notmuch>
-From: Nhat Pham <nphamcs@gmail.com>
-Date: Wed, 2 Apr 2025 14:51:28 -0700
-X-Gm-Features: AQ5f1JpnbNAWmrE_n7rSW5zDGkArQI4_3QoAhEU6yCrIFbVS6YcXd-JP-CRYo6g
-Message-ID: <CAKEwX=PBp4i4DmCf_7r+Sk6ekB9ckgZEpuR-x4f0CTc00-d+BQ@mail.gmail.com>
-Subject: Re: [PATCH v2] zsmalloc: prefer the the original page's node for
- compressed data
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: akpm@linux-foundation.org, hannes@cmpxchg.org, yosry.ahmed@linux.dev, 
-	chengming.zhou@linux.dev, sj@kernel.org, linux-mm@kvack.org, 
-	kernel-team@meta.com, linux-kernel@vger.kernel.org, gourry@gourry.net, 
-	ying.huang@linux.alibaba.com, jonathan.cameron@huawei.com, 
-	linux-cxl@vger.kernel.org, minchan@kernel.org, senozhatsky@chromium.org
+References: <20250210183808.130522-1-irogers@google.com> <CAP-5=fVH=HN0csS6cXLPAYdk7Vn-g8FSdKWkaHcjfYKRA1o1Ag@mail.gmail.com>
+In-Reply-To: <CAP-5=fVH=HN0csS6cXLPAYdk7Vn-g8FSdKWkaHcjfYKRA1o1Ag@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 2 Apr 2025 14:57:01 -0700
+X-Gm-Features: AQ5f1Jq5oNxocL07Mtb5IgaU2Z7YnKdJ71A4Y8TJl5HHO52uIhvurX3QuDcsvNI
+Message-ID: <CAP-5=fW1cJRnU73udpXC9ayN8j-cAyjJK_ZOp97Z=LsagQcevg@mail.gmail.com>
+Subject: Re: [PATCH v5 0/4] Add support for cpu event term
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Leo Yan <leo.yan@arm.com>, 
+	Yoshihiro Furudera <fj5100bi@fujitsu.com>, Weilin Wang <weilin.wang@intel.com>, 
+	Andi Kleen <ak@linux.intel.com>, James Clark <james.clark@linaro.org>, 
+	Dominique Martinet <asmadeus@codewreck.org>, Yicong Yang <yangyicong@hisilicon.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 2, 2025 at 2:41=E2=80=AFPM Dan Williams <dan.j.williams@intel.c=
-om> wrote>
+On Mon, Mar 17, 2025 at 9:22=E2=80=AFAM Ian Rogers <irogers@google.com> wro=
+te:
 >
-> Why do the work to pass in @nid only to hardcode 0 to
-> alloc_pages_node()?
+> On Mon, Feb 10, 2025 at 10:38=E2=80=AFAM Ian Rogers <irogers@google.com> =
+wrote:
+> >
+> > Being able to set the cpu mask per event was discussed in the context
+> > of a sysfs event.cpus file is discussed here:
+> > https://lore.kernel.org/lkml/CAP-5=3DfXXuWchzUK0n5KTH8kamr=3DDQoEni+bUo=
+o8f-4j8Y+eMBg@mail.gmail.com/
+> > Ultimately Kan preferred to have multiple PMUs with a cpumask each
+> > rather than an event.cpus file per event. It is still useful to have
+> > the cpu event term and so the sysfs part of the original patch series
+> > is dropped.
+> >
+> > v5: Purely a rebase.
+> > v4: Add the stat-display output change for zero counters Namhyung
+> >     requested as part of the series:
+> >     https://lore.kernel.org/lkml/Zvx9VbJWtmkcuSBs@google.com/
+> >     This skips zero values for CPUs not in the evsel's cpumask rather
+> >     than the evsel's PMU's cpumask.
+> > v3: Drop sysfs event.cpus file support patch from series.  Reference
+> >     to using cpu to modify uncore events is dropped from the commit
+> >     message. Reference counting issues on the cpumap are addressed.
+> > v2: Add support for multiple cpu terms on an event that are
+> >     merged. For example, an event of "l1d-misses/cpu=3D4,cpu=3D5/" will
+> >     now be opened on both CPU 4 and 5 rather than just CPU 4.
+> >
+> > Ian Rogers (4):
+> >   libperf cpumap: Add ability to create CPU from a single CPU number
+> >   perf stat: Use counter cpumask to skip zero values
+> >   perf parse-events: Set is_pmu_core for legacy hardware events
+> >   perf parse-events: Add "cpu" term to set the CPU an event is recorded
+>
+> Ping.
 
-That 0 is the order, i.e we want a single page here :)
+Ping.
 
-The node id is the first argument of alloc_pages_node. I made the same
-mistake in one of the earlier versions of this patch series (which,
-fortunately I did not send out) - hopefully this time I'm correct :)
+Thanks,
+Ian
+
+> Thanks,
+> Ian
