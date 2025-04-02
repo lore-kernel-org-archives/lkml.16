@@ -1,109 +1,145 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2E8A20D4E4
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 07:59:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+Received: from invmail3.skhynix.com (exvmail3.skhynix.com [166.125.252.90])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8899C2F5A
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 08:00:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.90
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743580800; cv=none; b=om7hd/ImEWKL3AJFezrNX2mcipX7YorRuT070GO17BoxyFpe6jFjmc3uWjH4eiXJgPHG3rhTiMV2qph4MtWjkFo/hQ0UBojqFwsT5vWs6kN1aZ08piwFltznYR16ZnoKfJWYj+aeqAbw7cs9J5nTxHvjlZIwG38Cl2M83zutxFc=
+	t=1743580830; cv=none; b=d5Z+EopgDa5ONjppSl1aNpriNiybxfiR93oG9ouLgjjhPyQaYtzYvkm7ixh04jotxgFlXOpwZFgVnDPACpWBcdf/R6scQLW4ukpwp5NBGbE9+lQ5846BpEUFtavrlkeNC3TDgnsKNbTEkezy9GZgkEs3vbtoR9F4mLncQ7VAmXM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743580800; c=relaxed/simple;
-	bh=+j3tMr1pGXJh9dcAKRFqecoRIGkqk+YxWNkDjI3B2/o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MtouowvsG+HqASlchrp2YhmCVVyXJ5+5TS7jfB9qCCeyo3BpK61uNskknFqsoHQv+elg2t08lxYzBRbhpSvC8ijHxu1J/SG2b06HrJ+6ZcdQzF85OkQtWyeVJfyFBHvQ6OmxJSeXdc1QiW8K3W/4ModOK4uvjQkTYkjt8CwsKAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=AFI7lgWY; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="AFI7lgWY"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-227aaa82fafso124675435ad.2
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 00:59:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1743580798; x=1744185598; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zPDVVRxOhKXTk+phnJ6FdLjX7X2JQOoWpPLX8L2VaGs=;
-        b=AFI7lgWYbuqMz/XcBzRodGPbLqRgYpPxoXIHMhQdcL1cAcriC4vh8br1+HhgNfSvjy
-         97n2UfAyJ7qOShUn3Tdi+XXO/TTIh7RrtARyLKARx1+EHyKOVj+wAWSQzXFRRsiWDO9S
-         oOr/ECB3XH2j83G5S1b1zXj5manIdODe27qfaI2dPTQ40yVTQZD5rkVwqF1aTInMGoEz
-         DeiF/cSvpu/RuzsfTtH9UsgpJ34O5HR8nHoRhGBWhSBnLaYNf19d2Vt8mW+V90rjA4He
-         cdEb2Av7xkY83ph8bjXJ1jvRuy8XqcZmE7P27ik/CIDUNgBq9m+b20ajIE5FnKaafZLR
-         VeRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743580798; x=1744185598;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=zPDVVRxOhKXTk+phnJ6FdLjX7X2JQOoWpPLX8L2VaGs=;
-        b=O7YeLyD0GNu9Zj1C+E8TahLWhlbchTkEArQ1bdiyIn5Xx7JCPnHj8zdIymOTTHcyNB
-         KMSb2c9U09l2sJI1RKQf03/H3DCtX020YQdNAZ9d/y129WxiUobP9pm40Doo7pkVGaNw
-         Si7y2+Y/Hw/7LESWcKxtqNz+VyLWUSTKgf3/BD6vNCdTbn9JxjQtB6q2bCm808ZkolWw
-         M9QSYzgLe5fDN+CmJ9ZIhvJnWjcReCRNXHpVr68G4Ij490TWohYbrnPHIxgJ9tlimRSE
-         Ej2rSIjl7+OQ2W/9DPyC/tWnGe/uRFqxtPba+a5VieNC1GvfrvuyvA0lLahV8s32erN2
-         NpUg==
-X-Forwarded-Encrypted: i=1; AJvYcCUl4WWEfvfcVsgcZm7CdGFDbQZIchay74FxAcCsde62E/OG/B+48NLzVCwxYkfTxZXaBEr9VJX+Lo7d5hs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxFit+bltzrfSnkIg8idsMvpqVFUB3euxYnye4PmgrxHmVEiOuN
-	U1iS618UjeSTBYTZBnozCzBstr3Tw3SVXVSJ+q8w3uus9/1VkBqXVwvajc4WWT0=
-X-Gm-Gg: ASbGnctB7K38CQ4y6b3gtCQvOVDJZ/RtiyLkIezrQx0vMoeC8KsHmf7FNMfOwO1QsUi
-	aa0e8XdvZjDjVn7F8xLn8AGuYGIBjWr5GL9Jfs1vn6NWjH5WZa1WS4Yi6/jjPQD8OxR/9dEIFEY
-	gQuzvjbXWx9y8AY532ujyPPlSnK+dVJffocQ0j/BCa6GIIYd+IfWMVQkiIldDVZSy14+vnwUiQY
-	YwRwsAAmP1uXQbMUpuAo0w8Owacjo3M46EbG6nUEJw2fPfrSVVRc9nEI4JKMYULicSGVsqe8Idr
-	Z7DZPGjYXTeSlYxFT0FAb6obksmfPeSX0sxcxtrDyj9oNhWg6J422I5uamflhohTVO5VUiQ=
-X-Google-Smtp-Source: AGHT+IF6Gu2YVRXxfjljJAG2pLHFFH74A1KEuubhL99+wBdbkqiu+hQkMJQJRROAkkw2a98bzu/mBQ==
-X-Received: by 2002:a05:6a00:2181:b0:736:a4ca:62e1 with SMTP id d2e1a72fcca58-7398037c626mr21515664b3a.6.1743580797846;
-        Wed, 02 Apr 2025 00:59:57 -0700 (PDT)
-Received: from [10.254.167.15] ([139.177.225.240])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7398cd1cc3dsm7041680b3a.80.2025.04.02.00.59.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Apr 2025 00:59:57 -0700 (PDT)
-Message-ID: <ade19125-c9da-47dc-aab5-4d83b799e54d@bytedance.com>
-Date: Wed, 2 Apr 2025 15:59:51 +0800
+	s=arc-20240116; t=1743580830; c=relaxed/simple;
+	bh=AKGE9aNPGK4LwH5V7m/8gGinPFqVG7I+LuXuQjfxaO0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=nwnfjqDUHThMqcxET1FnkvLNlvy/FOhnlAs1okU0wJm445kpHo8BRYBqsBK2mwvyTUwPHbRRn9q6mQjJnlVniQm1BhvoYQw9Vs8DkVfAfWvZlUQUQv5ScLXBBksSlxZO7+qhhIDeRoCPRImryT+JcEtoBu0q9aQTXKRkO4sxroQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.90
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc59-03fff7000000aab6-f3-67ecee91e7d3
+From: "yohan.joung" <yohan.joung@sk.com>
+To: linux-f2fs-devel@lists.sourceforge.net
+Cc: chao@kernel.org,
+	jaegeuk@kernel.org,
+	linux-kernel@vger.kernel.org,
+	pilhyun.kim@sk.com,
+	yohan.joung@sk.com
+Subject: f2fs: prevent the current section from being selected as a victim during GC
+Date: Wed,  2 Apr 2025 17:00:14 +0900
+Message-ID: <20250402080015.2794-1-yohan.joung@sk.com>
+X-Mailer: git-send-email 2.49.0.windows.1
+In-Reply-To: <7440d324-03f4-44a6-b6bf-4f569c829214@kernel.org>
+References: <7440d324-03f4-44a6-b6bf-4f569c829214@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm: page_alloc: Remove redundant READ_ONCE
-To: Songtang Liu <liusongtang@bytedance.com>, akpm@linux-foundation.org,
- ying.huang@linux.alibaba.com
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- zhengqi.arch@bytedance.com, songmuchun@bytedance.com
-References: <CAA=HWd1kn01ym8YuVFuAqK2Ggq3itEGkqX8T6eCXs_C7tiv-Jw@mail.gmail.com>
-From: Qi Zheng <zhengqi.arch@bytedance.com>
-In-Reply-To: <CAA=HWd1kn01ym8YuVFuAqK2Ggq3itEGkqX8T6eCXs_C7tiv-Jw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrGLMWRmVeSWpSXmKPExsXC9ZZnke7Ed2/SDfo/81icnnqWyeLJ+lnM
+	FpcWuVtc3jWHzYHFY9OqTjaP3Qs+M3l83iQXwBzFZZOSmpNZllqkb5fAldFw8jZ7wQWxivbH
+	F5gbGM8IdTFyckgImEhMmzKPBcZesnonI4jNJqAh8ae3lxnEFhHQkpjY8BcszixQKtH7fBmY
+	LSwQIrFsw3G2LkYODhYBVYlv05JBTF4BM4kfPU4QEzUldnw5zwRicwrYSXz9twXMFhKwlVh3
+	oAFsK6+AoMTJmU9YIKbLSzRvnQ20lQuo9yurxPVdc5ghBklKHFxxg2UCI/8sJD2zkPQsYGRa
+	xSiSmVeWm5iZY6xXnJ1RmZdZoZecn7uJERh6y2r/RO5g/HYh+BCjAAejEg9vA++bdCHWxLLi
+	ytxDjBIczEoivEVngUK8KYmVValF+fFFpTmpxYcYpTlYlMR5jb6VpwgJpCeWpGanphakFsFk
+	mTg4pRoYE2fMTXjyJPzrf1O7B9flb8z/q7tNQ0HhyIJjxftvTN58M2JfmvqmFPsaS4V7uf9Y
+	19idUSg/rmV5pIop67LppjR75mq351xzXxx1bu0oZvuy0+PefAtTpvxaX4mM6xPvOAh73sq+
+	fDnLJ/x8t93ZANXvF9JjWSbFtDnxyLy32vXcVyBoffsrJZbijERDLeai4kQAnvz5WDkCAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupnluLIzCtJLcpLzFFi42LhmqEyR3fiuzfpBt17GS1OTz3LZPFk/Sxm
+	i0uL3C0u75rDZjFh7lUmi/db7zE6sHlsWtXJ5rF7wWcmj2+3PTw+b5ILYInisklJzcksSy3S
+	t0vgymg4eZu94IJYRfvjC8wNjGeEuhg5OSQETCSWrN7JCGKzCWhI/OntZQaxRQS0JCY2/AWL
+	MwuUSvQ+XwZmCwuESCzbcJyti5GDg0VAVeLbtGQQk1fATOJHjxPERE2JHV/OM4HYnAJ2El//
+	bQGzhQRsJdYdaGABsXkFBCVOznzCAjFdXqJ562zmCYw8s5CkZiFJLWBkWsUokplXlpuYmWOm
+	V5ydUZmXWaGXnJ+7iREYTMtq/0zawfjtsvshRgEORiUe3gbeN+lCrIllxZW5hxglOJiVRHiL
+	zgKFeFMSK6tSi/Lji0pzUosPMUpzsCiJ83qFpyYICaQnlqRmp6YWpBbBZJk4OKUaGJddeSnN
+	ryPEcWmiUfqLu+a7lu96cCrmoKfqAi819ie3JM9tzGgUtu1ewTWLL0YjhHX3EV2mnv1v2UJW
+	tH689qioTIqxPNQh0s3xwbRK49bpT/iObm9rm7a5tPrfvmMlVXzfyn87tQs+l7Dhr+E9wxAy
+	Q3j537e7Pj6dWHWm671N8vQGvVNrriixFGckGmoxFxUnAgCqi8jCIgIAAA==
+X-CFilter-Loop: Reflected
 
+>On 4/2/25 08:52, yohan.joung wrote:
+>> When selecting a victim using next_victim_seg in a large section, the
+>> selected section might already have been cleared and designated as the
+>> new current section, making it actively in use.
+>> This behavior causes inconsistency between the SIT and SSA.
+>>
+>> F2FS-fs (dm-54): Inconsistent segment (70961) type [0, 1] in SSA and
+>> SIT Call trace:
+>> dump_backtrace+0xe8/0x10c
+>> show_stack+0x18/0x28
+>> dump_stack_lvl+0x50/0x6c
+>> dump_stack+0x18/0x28
+>> f2fs_stop_checkpoint+0x1c/0x3c
+>> do_garbage_collect+0x41c/0x271c
+>> f2fs_gc+0x27c/0x828
+>> gc_thread_func+0x290/0x88c
+>> kthread+0x11c/0x164
+>> ret_from_fork+0x10/0x20
+>>
+>> issue scenario
+>> segs_per_sec=2
+>> - seg#0 and seg#1 are all dirty
+>> - all valid blocks are removed in seg#1
+>> - gc select this sec and next_victim_seg=seg#0
+>> - migrate seg#0, next_victim_seg=seg#1
+>> - checkpoint -> sec(seg#0, seg#1)  becomes free
+>> - allocator assigns sec(seg#0, seg#1) to curseg
+>> - gc tries to migrate seg#1
+>>
+>> Signed-off-by: yohan.joung <yohan.joung@sk.com>
+>> Signed-off-by: Chao Yu <chao@kernel.org>
+>> ---
+>>  fs/f2fs/segment.h | 6 ++++++
+>>  1 file changed, 6 insertions(+)
+>>
+>> diff --git a/fs/f2fs/segment.h b/fs/f2fs/segment.h index
+>> 0465dc00b349..14d18bcf3559 100644
+>> --- a/fs/f2fs/segment.h
+>> +++ b/fs/f2fs/segment.h
+>> @@ -460,6 +460,7 @@ static inline void __set_test_and_free(struct
+>f2fs_sb_info *sbi,
+>>  		unsigned int segno, bool inmem)
+>>  {
+>>  	struct free_segmap_info *free_i = FREE_I(sbi);
+>> +	struct dirty_seglist_info *dirty_i = DIRTY_I(sbi);
+>>  	unsigned int secno = GET_SEC_FROM_SEG(sbi, segno);
+>>  	unsigned int start_segno = GET_SEG_FROM_SEC(sbi, secno);
+>>  	unsigned int next;
+>> @@ -476,6 +477,11 @@ static inline void __set_test_and_free(struct
+>f2fs_sb_info *sbi,
+>>  		if (next >= start_segno + usable_segs) {
+>>  			if (test_and_clear_bit(secno, free_i->free_secmap))
+>>  				free_i->free_sections++;
+>> +
+>> +			if (test_and_clear_bit(secno, dirty_i->victim_secmap))
+>{
+>> +				sbi->next_victim_seg[BG_GC] = NULL_SEGNO;
+>> +				sbi->next_victim_seg[FG_GC] = NULL_SEGNO;
+>
+>sbi->next_victim_seg[FG_GC] relies on sbi->cur_victim_sec?
+right  
+>
+>If sbi->next_victim_seg[BG_GC] is not equal to secno, will we still need to
+>nullify sbi->next_victim_seg[BG_GC]?
+Changed to remove only when equal
+>
+>We have cleared bit in victim_secmap after we tag a section as prefree,
+>right?
+You are right 
+change victim_secmap to not be used
+In the end, I think I'll have to do this to directly compare segno, 
+as you suggested.
+I tested this and it worked fine.
 
+Thanks
+>
+>- locate_dirty_segment
+> - __locate_dirty_segment
+> - __remove_dirty_segment
+>  - clear_bit(GET_SEC_FROM_SEG(sbi, segno), dirty_i->victim_secmap);
+>
+>Thanks,
+>
+>> +			}
+>>  		}
+>>  	}
+>>  skip_free:
 
-On 4/2/25 3:41 PM, Songtang Liu wrote:
-> In the current code, batch is a local variable, and it cannot be
-> concurrently modified. It's unnecessary to use READ_ONCE here,
-> so remove it.
-> 
-> Fixes: 51a755c56dc0 ("mm: tune PCP high automatically")
-> Signed-off-by: Songtang Liu <liusongtang@bytedance.com>
-> ---
->   mm/page_alloc.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index e3ea5bf5c459..6edc6e57d4f8 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -2661,7 +2661,7 @@ static void free_frozen_page_commit(struct zone *zone,
->   		free_high = (pcp->free_count >= batch &&
->   			     (pcp->flags & PCPF_PREV_FREE_HIGH_ORDER) &&
->   			     (!(pcp->flags & PCPF_FREE_HIGH_BATCH) ||
-> -			      pcp->count >= READ_ONCE(batch)));
-> +			      pcp->count >= batch));
->   		pcp->flags |= PCPF_PREV_FREE_HIGH_ORDER;
->   	} else if (pcp->flags & PCPF_PREV_FREE_HIGH_ORDER) {
->   		pcp->flags &= ~PCPF_PREV_FREE_HIGH_ORDER;
-
-Reviewed-by: Qi Zheng <zhengqi.arch@bytedance.com>
-
-Thanks!
