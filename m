@@ -1,80 +1,101 @@
-Received: from smtp.domeneshop.no (smtp.domeneshop.no [194.63.252.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26E5215A86B
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 16:41:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.63.252.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 155EF13D279
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 16:42:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743612091; cv=none; b=rIM7td446ih1ZPTrcRktHT25ADEy2jQvjCWMen0voDl6PnOpO5r/YORrc7z4ap0mU3YPXHGWWoA+zy4brKJSsgTmLWrgUUeC3Bdh7QSuRarbPlhwGz9/6Q6W4nnhrLwWHRGGoZIe6tOwt2UBJ3G6GcUfTy7r3sETsKDs1ccR4Lk=
+	t=1743612142; cv=none; b=YoRw9LoHgw9KiGA4Oh5SOA5Dp8fKRYFjI7nqGglTZbev8MB1FlQxsBRV3XP1D4LaqxEmY1CwSqpfB1ggpxkecmbSC9LyOfeFndusJ8aLWyJZYwQ08JySOmdY8LLG5IGuPxo/hhOiCUY5xwrLcvjnfrzhWi7wlXwjLKcD8BkHZQ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743612091; c=relaxed/simple;
-	bh=nmsaXvfnIFl6NmwVoYD46lxTCuO515WxPZdTX66Qo3Q=;
-	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=YXNbGSNliifZDr6lG5rXjLJ0jBCo6U79Z2VzP4oVSSLgtA3UHJNX2o7QypCBlC9GGKobZ8wqvInfH7dnCMVDkmpaZeRDIlwUgQmm0u8uNOxG6ODxlPQh8kQA0CfWFDcG8EAYMXrPeNrHAruXOQXALVeDqjV9gsBhqAvRYnJ0g6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bit-philosophy.net; spf=pass smtp.mailfrom=bit-philosophy.net; dkim=pass (2048-bit key) header.d=bit-philosophy.net header.i=@bit-philosophy.net header.b=L/viaXhn; arc=none smtp.client-ip=194.63.252.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bit-philosophy.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bit-philosophy.net
+	s=arc-20240116; t=1743612142; c=relaxed/simple;
+	bh=jDMS7s/QqERhxp6/24eiwlAd0eMfjngKpnVvj0XkLKQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GdfyLVziLp1IlOSXqgehbY5Tb9M2bXcsJ7fqalgy55eBS7+bXfY/bHbGbjFZu0TmGAsF7+AgLZGP7SxOmlfRZiGwm3ImFLLHSPCvXngN49NCre3uDVHD6yfOlWjoqTXLl1qfj03qi/j93w9YMAyfZz54fQAyvV8nI03siFvFpyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=fUa6MEmF; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bit-philosophy.net header.i=@bit-philosophy.net header.b="L/viaXhn"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=bit-philosophy.net; s=ds202411; h=Content-Transfer-Encoding:Content-Type:
-	Subject:From:To:MIME-Version:Date:Message-ID:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=+A+81ucsh8zPhiyFojiWYCgzq0MGXiREO35Wvym6X50=; b=L/viaXhnz57XdEjH6QZHbDsyOZ
-	G3xa8PS0HkXltx0UQxnXJ/RSqZI7lEDdgu1mfn5GfGFvgPumvQOuY3MHTgSiX37vT6/GK5MninqYH
-	CgCbZ8JAet0M5F7JtpCRK3Mg29b4C/cn2RZq2Md98UCS2iG0VtUfPO09ud7xGHgZoHdVJi0uEJIWg
-	1uZO3EbnADp4hiSj9Sm6Xs5fx1a8DLBJn+WsA+QR3Th54imseWQOXyp8DpsjMfTxs7C6XUdA64kXN
-	8edlI9oLCxDh5ghh27+Qa2pAT5N4FfU277IHDWibKQ/gR/xaaSVXn2v0fIuSoCWeMLCdG6Eokia+c
-	s3NjuadA==;
-Received: from smtp
-	by smtp.domeneshop.no with esmtpsa (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	id 1u019V-000Up2-Er
-	for linux-kernel@vger.kernel.org;
-	Wed, 02 Apr 2025 18:41:21 +0200
-Message-ID: <28b2454d-61fe-430b-846e-d3727552f257@bit-philosophy.net>
-Date: Wed, 2 Apr 2025 18:41:20 +0200
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="fUa6MEmF"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5ec9d24acfbso2094577a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 09:42:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1743612139; x=1744216939; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=PiI+w7mkKlftQ5tbROJbiyp27FCKTbLNo5OCEHanpjQ=;
+        b=fUa6MEmFiAFLnnMoaAYsEze4TkUuRyRmrXEqXXIvcFtXbERU058DFbuC8cOVQMARY6
+         FgEAFO/B6PLiFVxAeMUPeBhlrs6HNF76fTb+kJgf/SeEjuor8G0iZrxZnDOVCdJqgc8v
+         Q2oiB33bia5h6HkTddyrjv6zrkbJbkBeRayVU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743612139; x=1744216939;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PiI+w7mkKlftQ5tbROJbiyp27FCKTbLNo5OCEHanpjQ=;
+        b=vy3bg932SIDuIBtgepwgtJFIEPpyKhLd44o8m90cMTW0ZW+o5fn6zFW7J7gq0BkUFM
+         Yknre8w0CSlu1fU7K9yNyznh6kg5cuelj7+rRjTuqknOk4jfk1KwE8j8llJV5BlQuhVl
+         mBXUOhRrX3G1OhUmna3C0v2E2BfMdYKMS6vquPGRk6FJ0Kc6GhIbwxQiUDNFgRX07wCZ
+         XLyLxsmWhEGcV2zqFiNU++ojK+ZSKhU4937wWizkLUtf0DqtrzIMPw3FxYF9onX0iAJq
+         bNKuTdSpxRdu1DLhMpIbT2dzvT1F3x9/jJCgDnm5ctv7GzHWKyZ/jS7JhLlCcLKdHYK1
+         hhsg==
+X-Gm-Message-State: AOJu0YxRfOZSZcFwErzMgRgZfaQxWKvdRvLRvWE2WQ6T0JxcQJ3sbMeY
+	JnyQIDW5v8PflJNlc98odpEtQV4TTiu6sUGAI+hPMIpZxHaVDLZ/+snR57Fvxy/hWkc/D+7j9a6
+	AWNg=
+X-Gm-Gg: ASbGncu1Vj68o/F409X4m/4UZn/C9y/ebmD/CyNiyRP1dv1BHv1yegAEUOBRVQZs38v
+	Nw7rfjxeLFerdIPbcJ6h0USvi2hJ2SCOkkzkalIVCGMeEWNRSX1Jm5swKUd7l+NggoDAdkZAHSS
+	S+G6rN1jprp64zkeLnKs1WsgvOzJmo8Dv9aJStLGOMBAxEi76dPGcqyai5vnRiu2tzfokBGHJff
+	9vapjeMn57yhTplS5CLfw1wbQ6mjz64uuRuGN9Esi38dNmnZkZ4841wxcOMo1Er4//sBlGhkJJV
+	0X7IianoDuMSjvdajdyUk755ml3pxGH1rDwDzHLAo/VGRsVqBjW4B3rKg8JwpSqovJ1xKobVQTe
+	F/kKe/ZmXfKoLairORPA=
+X-Google-Smtp-Source: AGHT+IFZPQwIgZ4ezeNU3EKrYv2yxa0skiOX3qqhiErAC8pOaVU5tpISRMkzq7+t6HrFYU4/Pk/arw==
+X-Received: by 2002:a05:6402:13ca:b0:5ec:8a77:7f2d with SMTP id 4fb4d7f45d1cf-5f084157685mr221009a12.5.1743612138938;
+        Wed, 02 Apr 2025 09:42:18 -0700 (PDT)
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com. [209.85.218.42])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5edc16d4752sm8764341a12.27.2025.04.02.09.42.17
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Apr 2025 09:42:17 -0700 (PDT)
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ac2a089fbbdso2323666b.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 09:42:17 -0700 (PDT)
+X-Received: by 2002:a17:907:72c9:b0:ac1:ecb0:ca98 with SMTP id
+ a640c23a62f3a-ac7b7184e0dmr16775366b.26.1743612136665; Wed, 02 Apr 2025
+ 09:42:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: linux-kernel@vger.kernel.org
-From: =?UTF-8?Q?Ywe_C=C3=A6rlyn?= <ywe@bit-philosophy.net>
-Subject: Seinfeld Satan
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250401225811.008143218@goodmis.org> <20250401225842.597899085@goodmis.org>
+In-Reply-To: <20250401225842.597899085@goodmis.org>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Wed, 2 Apr 2025 09:42:00 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wifCDa6FfRKzeioYuEqJFTeXnYQ1DpeuYsmmn59NWuakQ@mail.gmail.com>
+X-Gm-Features: AQ5f1Jo_6jfKVd2ZZL5O-Nn69rU-B6u26vp9pp03kbk_PkBqnLF3DFsRfWV2_Ok
+Message-ID: <CAHk-=wifCDa6FfRKzeioYuEqJFTeXnYQ1DpeuYsmmn59NWuakQ@mail.gmail.com>
+Subject: Re: [PATCH v5 3/4] tracing: Use vmap_page_range() to map memmap ring buffer
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Vincent Donnefort <vdonnefort@google.com>, Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, 
+	Jann Horn <jannh@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Some may have noticed how some people laugh when mentioning Satan. 
-Seinfeld actually used the effect for his comedy show.
+On Tue, 1 Apr 2025 at 15:57, Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> The code to map the physical memory retrieved by memmap currently
+> allocates an array of pages to cover the physical memory and then calls
+> vmap() to map it to a virtual address. Instead of using this temporary
+> array of struct page descriptors, simply use vmap_page_range() that can
+> directly map the contiguous physical memory to a virtual address.
 
-On c64 a "coding genious" knew how to use the interrupt for rasterline 
-effects, such as "border scroll". (Changing screenmode on bottom, doing 
-scroll via sprites.
+Wait, what?
 
-On Amiga the 7chan playroutine known through Chris Huelsbeck and the 
-Turrican game, was even more genious.
+Didn't you just say that you can just use page_address() for the kernel mapping?
 
-However this 7 chan fed sample-by-sample to the processor without use of 
-hardware looping in the soundchip.
+So the whole vmap thing is entirely unnecessary in the first place.
 
-But this is forbidden for Satan.
+Including the simpler vmap_page_range().
 
-If appropriate resouces was used it could have been much better.
-
-Hans Reiser axed his wife, due to Satanic belief. He, in confusion 
-thought it was good for the cause.
-
-It also means to Satan, do not use cache appropriately.
-
-"Hahaha" ?
-
-I do not really think so.
-
-Light,
-Ywe.
-https://bit-philosophy.net/
+             Linus
