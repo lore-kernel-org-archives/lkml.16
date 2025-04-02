@@ -1,318 +1,143 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50EFB1DA5F
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 13:42:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87DC41DA5F;
+	Wed,  2 Apr 2025 13:43:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743601375; cv=none; b=aINA9CUJ4QtNAbXerp9IdrNtE5YaacxDsKPPP5CE4dvCU7exoShW2r+j/5XWJozFFFww0nvQLuwjcL+IoIuYBVDFnUaxqMLXRpmWhud0sNj/pQXWFqkj9coppss4BdWY+SGgY3D8UcJSbcoTPZG9sUHXGRZZ2R6em5I5B8PQEYc=
+	t=1743601398; cv=none; b=pudt7D85Pl5Lli55qGWKQC4qUxTZCyRx1NMnqFa4kbJGgDLH+UVUr8Y6MYJXOZz4CWHDkIrv0lp95ZoT5y77HQhB4XVE9b2ge4ZmenE7jk0TPP0bUjZZEGIeuxb/89ZwnVQqEQulS/kJiLw6d4rdvdgIun19WwQ2j07H4hi38MM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743601375; c=relaxed/simple;
-	bh=ChveXZDkFtmy0KvhOkni+vMgTSHWWBXpSEltUMbEwQc=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=ezIPPydwR9XDYg4pmlPQ7yx2b27RBHYTn8lp51k8DEPSO0+1nrK3hHc5Q4NyQceI2ckKUnpUB7JC5sRYEJs6wE2CKP5hIOTdOGaD2oSpnoVzk4vYJRHRKrm8PNUG8W8/7cgqchkQcKxI4Grjf/o1xEevYxNNz5DU0MB/2zCxzLg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EUT3L8nC; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743601398; c=relaxed/simple;
+	bh=Tdt83M3brKmyt7PlTp3VngVmmy24EXxSH2mKPAcE7rY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IqdKmaKQJd0wFWNS17P70/K0pvqb7ry8qoTe+E4uwzxRkMlvKciVnCiuKqE1uJjCf8OHcDSRWR35JHDQNB5Nne8bKNeyc+aoE58+3Xt8BOIRamRnarknaPlmu/tIB7qXKs7NhH5GStqff/DKmPmSeAKz6uWbFJ8MRwJvZGWGD9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Yxv6+DLz; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EUT3L8nC"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-39c0dfba946so2997051f8f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 06:42:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743601371; x=1744206171; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=B5dIRk/SGoa+s9G+rkBPMxBY7azSBEa0v080fX5Lf8o=;
-        b=EUT3L8nCoLGCkxfi+y4xq5EhzeEyraaBvkeEZN8B3xVQaHCAZ71P0Hrv5G9mxYy6Vc
-         reLjEncn61N7VywiGGTtrGRSncaJ2aOZSl6ywxYWmiILLY+cdO3fW4FWJ1nwmrl7cU9n
-         468jI6Vk0i9sij5oIKx1VBALfrAnw2kOBPgoQ6Ce64UoG4xmYqJb1VlcceXldpUx3BCo
-         g7WLgtyAeXrB12yi2hlw+AuU+lPNeqaLSAbIfWZ6no+cUGLdwKvl6vp6ZGVaavn61pbp
-         6DqnZPPjMkx/5DS83cP2axlBk0xF6hMGH/dvVJEN+wphQJ2Z34XUW3XJGXKfW/wRlijq
-         51MQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743601371; x=1744206171;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=B5dIRk/SGoa+s9G+rkBPMxBY7azSBEa0v080fX5Lf8o=;
-        b=wZqIsWMkPYEDuoQ1F9V8iNCjbPEXJCh7OVkQrimNhoFoIusRx7EVEqEh0j1Sml7MtO
-         NmJ3PDa2SyOrmrb9lpt6xWlkZw2y1Y8m/fVGRxhT0yBqii97d/XBUvq9ByFnc/X3UwZY
-         KHLehRnOu0O3eATM2udRA8oP1oGc+qCHrXglpjqcJ0LdsOSM/zpSmLvn8eDmK9hxV4uW
-         8Fv0N4Hx5zc2ydsOBqEByPLaX02dGLDJajgkt9EybTqGGboUrY2oJok7V8PuEd3w40To
-         hlzDcCDxo25bvQYelF7oMKG3nxEPX1qEKURD7Yyhwymltake0KGHy6fpfOFlFbHGhEkG
-         xOtw==
-X-Forwarded-Encrypted: i=1; AJvYcCWsFkiiuwOIe4YGUNxru/EzfRZxzH6aTqzUZNk5AtW2Lw86Xrxg1OJW+4VYPgB9mBhWKWJ1Wv4VxQ6g4qk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwB3OixkAXesj3zC5WukQpkSxh8TuMR3YlKAODY4nmneDP8jzOf
-	OnWLcNinDJsAgiFIvhbxODYI0Erdg8CcwbAVBj9Z1kEVB9IQ4jAX
-X-Gm-Gg: ASbGncvtsMPb7P6HWc7UXSWp7taoWDsEy6qOOuXCjjZcFu76epUUBFSYXyoC3xVi1pr
-	jMQkpnpiLYWdpkUqehmDULuJxehyrInNB5x7+CqVIUkMNxQyF0Y4NO9VFyJjONa5h71r0AiKWnH
-	oU8vgRifqd1XWsE0tTQmOEgcVhevT1iw4PtRMB5HUsT0l+BLx07/oABW2Jhm7vmo6I3/rsZNR8u
-	wJGbhoE+ejv4l5/NLh5bS3V79/sIByvdUz+DJje221NpMUn0b0C8BIqchZCIs5N475ruY3cEgB/
-	N2eCNgIhEmlB/MIxJpwWW9RN23wVivP+9DjhNcnLnfCpYelGkLuy8IEGWg==
-X-Google-Smtp-Source: AGHT+IElKYHDuwdkGCLUOvCGDjQhULscSKwrc/6608KXPfmVS/Pq6x79ntb01M8jpKdgWSyUD9h1Wg==
-X-Received: by 2002:a05:6000:4203:b0:391:31f2:b998 with SMTP id ffacd0b85a97d-39c120cb8a3mr13529300f8f.6.1743601371049;
-        Wed, 02 Apr 2025 06:42:51 -0700 (PDT)
-Received: from f (cst-prg-6-220.cust.vodafone.cz. [46.135.6.220])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43eb61b6cd2sm21085035e9.39.2025.04.02.06.42.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Apr 2025 06:42:50 -0700 (PDT)
-Date: Wed, 2 Apr 2025 15:42:40 +0200
-From: Mateusz Guzik <mjguzik@gmail.com>
-To: torvalds@linux-foundation.org, mingo@redhat.com
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org
-Subject: [RFC PATCH] x86: prevent gcc from emitting rep movsq/stosq for
- inlined ops
-Message-ID: <xmzxiwno5q3ordgia55wyqtjqbefxpami5wevwltcto52fehbv@ul44rsesp4kw>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Yxv6+DLz"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 532A3dWW029551;
+	Wed, 2 Apr 2025 13:42:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=NGqrtN
+	G4PaixOSZS7kJ0sXu+eeh4MJzh4nHiIRA4mEI=; b=Yxv6+DLz4OO5bCqkOCVp7A
+	U4Hx3XzZnI2z6y+xsyCcH9i6EPr8kRc12z4FwMdYsRJLWy6cfTuzapYvLN8tUmiu
+	+kPAFkKQDfzMnfmWkmfK31aSWUtqHvfp7hJG1aNWlT/lsgQIqpTj38nFpSU4v/tv
+	UoS+qgpRXNDxMy2LlznQKRUwxlVK1gLm89/QZncoTMPTHNGT8RlOz1zsmUA0LJ0w
+	S9UwbI90ne53qxitkmITM1lKhesTRAnrLxFBQKVFwMuL+9zrxS1Rl7v/8iB2OcKg
+	uqLfRQcg6Qv8gNgcFvJ6QYMI8wng3ndWerxFQHQ/8GxLPkLZOC4KPHGodLAJaFPg
+	==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45rmax5k66-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 02 Apr 2025 13:42:53 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 532Bwn1a004788;
+	Wed, 2 Apr 2025 13:42:52 GMT
+Received: from smtprelay02.wdc07v.mail.ibm.com ([172.16.1.69])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45puk009ga-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 02 Apr 2025 13:42:52 +0000
+Received: from smtpav05.dal12v.mail.ibm.com (smtpav05.dal12v.mail.ibm.com [10.241.53.104])
+	by smtprelay02.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 532DgqQx26018432
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 2 Apr 2025 13:42:52 GMT
+Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2ECCF58056;
+	Wed,  2 Apr 2025 13:42:52 +0000 (GMT)
+Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 16EBA58052;
+	Wed,  2 Apr 2025 13:42:48 +0000 (GMT)
+Received: from [9.61.254.101] (unknown [9.61.254.101])
+	by smtpav05.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Wed,  2 Apr 2025 13:42:47 +0000 (GMT)
+Message-ID: <b41d0438-9940-43c8-8ed8-8f105909a8d3@linux.ibm.com>
+Date: Wed, 2 Apr 2025 19:12:46 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="uifixdeqtexi6rm7"
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [BUG -next] ./usr/include/cxl/features.h:11:10: fatal error:
+ uuid/uuid.h: No such file or directory
+Content-Language: en-GB
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: paulmck@kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org,
+        dave@stgolabs.net, jonathan.cameron@huawei.com,
+        alison.schofield@intel.com, vishal.l.verma@intel.com,
+        ira.weiny@intel.com, gourry@gourry.net, linux-kernel@vger.kernel.org,
+        linux-next@vger.kernel.org, Madhavan Srinivasan <maddy@linux.ibm.com>
+References: <67eac8df3e217_201f02948d@dwillia2-xfh.jf.intel.com.notmuch>
+ <20250331171755.GC289482@nvidia.com>
+ <67eaf14b7c611_201f0294ba@dwillia2-xfh.jf.intel.com.notmuch>
+ <4641ce2f-74eb-45ea-a2f8-c7d0db905b7a@linux.ibm.com>
+ <79a032b5-b13d-43fd-b56e-01098122e104@intel.com>
+ <66ae49a8-d7f9-4fd9-b94e-9be26fd9aea4@paulmck-laptop>
+ <e9c57344-43f3-4f90-9894-eb4f5a1b22f2@intel.com>
+ <20250402114722.35cbd9d5@canb.auug.org.au>
+ <478264e8-af94-462b-929f-f7afdf8466bd@paulmck-laptop>
+ <ce38cbe3-429d-466b-bc8c-7dbb7c596ab9@linux.ibm.com>
+ <20250402114412.GA342109@nvidia.com>
+From: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+In-Reply-To: <20250402114412.GA342109@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: x9wctKrpfhBDnvnStiUCmQBotDyt_QoC
+X-Proofpoint-ORIG-GUID: x9wctKrpfhBDnvnStiUCmQBotDyt_QoC
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-02_05,2025-04-02_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ priorityscore=1501 clxscore=1015 lowpriorityscore=0 mlxscore=0 spamscore=0
+ adultscore=0 mlxlogscore=999 phishscore=0 impostorscore=0 bulkscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502280000 definitions=main-2504020085
 
 
---uifixdeqtexi6rm7
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-
-Not a real submission yet as I would like results from other people.
-
-tl;dr when benchmarking compilation of a hello-world program I'm getting
-a 1.7% increase in throughput on Sapphire Rapids when convincing the
-compiler to only use regular stores for inlined memset and memcpy
-
-Note this uarch does have FSRM and still benefits from not using it for
-some cases.
-
-I am not in position to bench this on other CPUs, would be nice if
-someone did it on AMD.
-
-Onto the business:
-The kernel is chock full of inlined rep movsq and rep stosq, including
-in hot paths and these are known to be detrimental to performance below
-certain sizes.
-
-Most notably in sync_regs:
-<+0>:     endbr64
-<+4>:     mov    %gs:0x22ca5d4(%rip),%rax        # 0xffffffff8450f010 <cpu_current_top_of_stack>
-<+12>:    mov    %rdi,%rsi
-<+15>:    sub    $0xa8,%rax
-<+21>:    cmp    %rdi,%rax
-<+24>:    je     0xffffffff82244a55 <sync_regs+37>
-<+26>:    mov    $0x15,%ecx
-<+31>:    mov    %rax,%rdi
-<+34>:    rep movsq %ds:(%rsi),%es:(%rdi)
-<+37>:    jmp    0xffffffff82256ba0 <__x86_return_thunk>
-
-When issuing hello-world compiles in a loop this is over 1% of total CPU
-time as reported by perf. With the kernel recompiled to instead do a
-copy with regular stores this drops to 0.13%.
-
-Recompiled it looks like this:
-<+0>:     endbr64
-<+4>:     mov    %gs:0x22b9f44(%rip),%rax        # 0xffffffff8450f010 <cpu_current_top_of_stack>
-<+12>:    sub    $0xa8,%rax
-<+18>:    cmp    %rdi,%rax
-<+21>:    je     0xffffffff82255114 <sync_regs+84>
-<+23>:    xor    %ecx,%ecx
-<+25>:    mov    %ecx,%edx
-<+27>:    add    $0x20,%ecx
-<+30>:    mov    (%rdi,%rdx,1),%r10
-<+34>:    mov    0x8(%rdi,%rdx,1),%r9
-<+39>:    mov    0x10(%rdi,%rdx,1),%r8
-<+44>:    mov    0x18(%rdi,%rdx,1),%rsi
-<+49>:    mov    %r10,(%rax,%rdx,1)
-<+53>:    mov    %r9,0x8(%rax,%rdx,1)
-<+58>:    mov    %r8,0x10(%rax,%rdx,1)
-<+63>:    mov    %rsi,0x18(%rax,%rdx,1)
-<+68>:    cmp    $0xa0,%ecx
-<+74>:    jb     0xffffffff822550d9 <sync_regs+25>
-<+76>:    mov    (%rdi,%rcx,1),%rdx
-<+80>:    mov    %rdx,(%rax,%rcx,1)
-<+84>:    jmp    0xffffffff822673e0 <__x86_return_thunk>
-
-bloat-o-meter says:
-Total: Before=30021301, After=30089151, chg +0.23%
-
-There are of course other spots which are modified and they also see a
-reduction in time spent.
-
-Bench results in compilations completed in a 10 second period with /tmp
-backed by tmpfs:
-
-before:
-978 ops (97 ops/s)
-979 ops (97 ops/s)
-978 ops (97 ops/s)
-979 ops (97 ops/s)
-979 ops (97 ops/s)
-979 ops (97 ops/s)
-979 ops (97 ops/s)
-979 ops (97 ops/s)
-979 ops (97 ops/s)
-979 ops (97 ops/s)
-
-after:
-997 ops (99 ops/s)
-997 ops (99 ops/s)
-997 ops (99 ops/s)
-997 ops (99 ops/s)
-997 ops (99 ops/s)
-997 ops (99 ops/s)
-997 ops (99 ops/s)
-997 ops (99 ops/s)
-997 ops (99 ops/s)
-996 ops (99 ops/s)
-
-I'm running this with debian 12 userspace (gcc 12.2.0).
-
-I asked the LKP folk to bench but did not get a response yet:
-https://lore.kernel.org/oe-lkp/CAGudoHHd8TkyA1kOQ2KtZdZJ2VxUW=2mP-JR0t_oR07TfrwN8w@mail.gmail.com/
-
-Repro instructions:
-for i in $(seq 1 10); do taskset --cpu-list 1 ./ccbench 10; done
-
-taskset is important as otherwise processes roam around the box big
-time.
-
-Attached files are:
-- cc.c for will-it-scale if someone wants to profile the thing while it
-  loops indefinitely
-- src0.c -- hello world for reference, plop into /src/src0.c
-- ccbench.c is the bench; compile with cc -O2 -o ccbench ccbench.c
-
-It spawns gcc through system() forcing it to go through the shell, which
-mimicks what happens when compiling with make.
-
- arch/x86/Makefile | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
-
-diff --git a/arch/x86/Makefile b/arch/x86/Makefile
-index 9b76e77ff7f7..1a1afcc3041f 100644
---- a/arch/x86/Makefile
-+++ b/arch/x86/Makefile
-@@ -198,6 +198,29 @@ ifeq ($(CONFIG_STACKPROTECTOR),y)
-     endif
- endif
- 
-+ifdef CONFIG_CC_IS_GCC
-+#
-+# Inline memcpy and memset handling policy for gcc.
-+#
-+# For ops of sizes known at compilation time it quickly resorts to issuing rep
-+# movsq and stosq. On most uarchs rep-prefixed ops have a significant startup
-+# latency and it is faster to issue regular stores (even if in loops) to handle
-+# small buffers.
-+#
-+# This of course comes at an expense in terms of i-cache footprint. bloat-o-meter
-+# reported 0.23% increase for enabling these.
-+#
-+# We inline up to 256 bytes, which in the best case issues few movs, in the
-+# worst case creates a 4 * 8 store loop.
-+#
-+# The upper limit was chosen semi-arbitrarily -- uarchs wildly differ between a
-+# threshold past which a rep-prefixed op becomes faster, 256 being the lowest
-+# common denominator. Someone(tm) should revisit this from time to time.
-+#
-+KBUILD_CFLAGS += -mmemcpy-strategy=unrolled_loop:256:noalign,libcall:-1:noalign
-+KBUILD_CFLAGS += -mmemset-strategy=unrolled_loop:256:noalign,libcall:-1:noalign
-+endif
-+
- #
- # If the function graph tracer is used with mcount instead of fentry,
- # '-maccumulate-outgoing-args' is needed to prevent a GCC bug
--- 
-2.43.0
+On 02/04/25 5:14 pm, Jason Gunthorpe wrote:
+> On Wed, Apr 02, 2025 at 11:57:04AM +0530, Venkat Rao Bagalkote wrote:
+>>> So the various kernel-build howtos will be updated?  Or is a patch
+>>> forthcoming?
+> I was going to pick up Dan's patch after the merge window closes
 
 
---uifixdeqtexi6rm7
-Content-Type: text/x-csrc; charset=utf-8
-Content-Disposition: attachment; filename="ccbench.c"
+I have tested the proposed patch by applying on top of main line kernel, 
+and kernel builds with out any issue.
 
-#include <sys/types.h>
+Note: Tested this patch by uninstalling uuid-devel package.
 
-#include <err.h>
-#include <signal.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
+Commit Head on which this patch was 
+applied:acc4d5ff0b61eb1715c498b6536c38c1feb7f3c1
 
-#define	RUNCMD	"gcc -c -o /tmp/out0.o /src/src0.c"
-#define	WARMUP	5
+In case if you decided to merge this patch, please add below tags.
 
-volatile sig_atomic_t got_alarm;
 
-static void sigalrm_handler(int signo)
-{
-	got_alarm = 1;
-}
+Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
 
-int main(int argc, char **argv)
-{
-	long i;
-	int n;
+Tested-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
 
-	if (argc != 2) {
-		errx(1, "need time limit in seconds");
-	}
+>
+>> FYI, now the issue is on the main line kernel also.
+> I thought the header test stuff was disabled now?? How are people
+> hitting this?
 
-	n = atoi(argv[1]);
-	if (n < 1) {
-		errx(1, "bad arg");
-	}
 
-	signal(SIGALRM, sigalrm_handler);
+On main line, I started seeing this issue with below head commit.
 
-	if (!getenv("CCBENCH_SKIP_WARMUP")) {
-		alarm(WARMUP);
-		for (i = 0; !got_alarm; i++) {
-			system(RUNCMD);
-		}
-		printf("warmup: %ld ops (%ld ops/s)\n", i, i / WARMUP);
-		got_alarm = 0;
-	}
+Commit ID: 91e5bfe317d8f8471fbaa3e70cf66cae1314a516
 
-	alarm(n);
-	for (i = 0; !got_alarm; i++) {
-		system(RUNCMD);
-	}
-	printf("bench: %ld ops (%ld ops/s)\n", i, i / n);
-}
 
---uifixdeqtexi6rm7
-Content-Type: text/x-csrc; charset=utf-8
-Content-Disposition: attachment; filename="src0.c"
+Regards,
 
-#include <stdio.h>
+Venkat.
 
-int main(void)
-{
-	printf("Hello world!\n");
-}
-
---uifixdeqtexi6rm7
-Content-Type: text/x-csrc; charset=utf-8
-Content-Disposition: attachment; filename="cc.c"
-
-#include <sys/types.h>
-#include <unistd.h>
-#include <stdio.h>
-#include <stdlib.h>
-
-char *testcase_description = "compile";
-
-void testcase(unsigned long long *iterations, unsigned long nr)
-{
-	char cmd[1024];
-
-	sprintf(cmd, "cc -c -o /tmp/out.%ld /src/src%ld.c", nr, nr);
-
-	while (1) {
-		system(cmd);
-
-		(*iterations)++;
-	}
-}
-
---uifixdeqtexi6rm7--
+>
+> Jason
+>
