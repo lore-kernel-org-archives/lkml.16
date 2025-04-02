@@ -1,184 +1,201 @@
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2047.outbound.protection.outlook.com [40.107.22.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12F1D18DF80;
-	Wed,  2 Apr 2025 16:03:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.47
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743609817; cv=fail; b=mFTGsaz6hi1z3EHiPkvCypjhL/lacCwpLRRpJag6SOps8lO1mD49XKfpu13cSWyo7nmuqdau327ypLWBJZJfIeoBS2K26TC2lVH7l5X6JwQmM/oRfkGzxa21aAAVmIEh9ltqKaEs/1qw+b9x7oQH3x91d/CJbOPjBh/z6rBA7e8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743609817; c=relaxed/simple;
-	bh=CKyuptKILTN5KunSljAak7rzQk3/mAkmnsaXP4vyY6k=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=BqUkoiRhwrZTSkvDDKrme9ukfXz77bg7CicDRx/M9/QTVe4UrDJHUJhxkI1J615hjQwVxmzKuV3eHGvJ4rMqkEwwoEqxlTKy0RTrruW6Vo9S6ClD2imwulBllbzIm/ejCHk6wBzEEG6VZcSPF9BA3sgaDMpMN2zYXLIDuAGWYIY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nokia-sbell.com; spf=pass smtp.mailfrom=nokia-sbell.com; dkim=pass (2048-bit key) header.d=nokia-sbell.com header.i=@nokia-sbell.com header.b=QdHdKF/G; arc=fail smtp.client-ip=40.107.22.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nokia-sbell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nokia-sbell.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2791513B2A9
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 16:04:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.44
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743609859; cv=none; b=Y3coupE0AZXkOeDxkqorUYpzOdl+knv+GK18uQ+L+qoB2adDo8TS2lBhmVTX4afRETEWB6HTxF2QpRvsWZhmyuzARmilHgbWMMZNboMtHCOMGPEzO46Pym2rWZdPrYJ5UB63oBiGYivhHSezIxT+D1Ve++xvMt8vMRyhbCjyWJ4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743609859; c=relaxed/simple;
+	bh=UGfpQLQ61ImaisNx5dYToKG60nCfbCY6OgnEczIf8oE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=a7Ex30mIJS4YYHoCBi9O52QOPFtbePqQ+nbFD41ZUI42rgQFyMz5dWzbUISKGWqCnqvZH/2dzw1wgcilhM1Ta6NfpAL8NidVqyrVHsdS+0AIzpoyNxWiaXe3GDmnZFL1Mfi3i3jKvleVlSQmk7vJ/flcbFXPxe546GK/J1kQVl8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=BhZVGlGc; arc=none smtp.client-ip=209.85.161.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nokia-sbell.com header.i=@nokia-sbell.com header.b="QdHdKF/G"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Npy2ALK0ME8RmxBJHr/s/rKVE/FphvMQlIILP7j0tnWtr6WFvgZs4KXYj1yIQCUmD6pX4AIWjs+7aiI3etg602YOcG4KU0QkcG5Cz9ek1BBszuz6hQvUHFSlnbd2snAwgKwFENY3RnsxeWWvt1JUzdUaD2FlgN2pLIDiQo86nRJQy8/831Yximl8V3DZujn62bSR04qbihm7EPgFYw49wdde/mhSMqFOS1SMxc+G8rRBK7UH3/1KooWPS9uZ/sSzPbg23U7ZkpRnUT/tN5UPxcE4wAKchPUygRsDZL2Pm4RRaMyTNrhuTE859ZbmwztacATgpTmT92lTJQ8FtnBHjA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0DrURSzleIDTma6uwHFndChg5VAx80xNmUsWYYE5I4U=;
- b=UqpK9GxxGutUTKP2SfmOq31RdnnOWrZENsqzgjzgmuXE5JhOI8CwDrZuKg5eYdo+9/au6oFpsK5MDDn4IsTq/o/QE05EgUo3v+igr3Ln8KLF/eksrc5pW+GzdLz9taFO4Cl2wZV14Yh7nUTUuCpkuC1pWwcI5w4pebMOjJzp8irOrGOFHMrU1WMde9qyFIk9SLiSjR7+js2rPBNbgq51iAXD9rvp3+9lqe3osEzS92pDC5bs5K9nupsH/55EB9KSs5UuUhSnHeca1KBKQ4Yc9VyPoQx545y3h/r1/IYCU/s6ceg+kM3pTGtj7DsOIfwzbMm7Mbr8D799ZaybDTmrWg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nokia-sbell.com; dmarc=pass action=none
- header.from=nokia-sbell.com; dkim=pass header.d=nokia-sbell.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nokia-sbell.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0DrURSzleIDTma6uwHFndChg5VAx80xNmUsWYYE5I4U=;
- b=QdHdKF/GRiTvGQzElyzPEHMUsH7d86vPD8RobR0hJNFAPphYGWgwsCI2epw+1B3WPlkxD7tH/d0pXxeNQXTKg6ekxfAzhxxBdcovZPL2Zk2pZ5HUtBoAMhqcSnv/J1KYx2wFlZJPliT8lOfA/ewXvCALb/abTfit8hB+cZj+3tjLGeebMHLapiwjBx35ET8w9YeU5vmfCJpcwGDEXpk3AjvtyqrMgS+duHqnFBptku+lgNOn0fyHRGb3GJD2No/5rDVN+z7Fd03XM/5a4DHwTI+2ooVhhPI5mXLO/FjOOM3pyhzdNeOfXl2mmMqodbm7HqSIS00mGHYTVOucf/9HyQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nokia-sbell.com;
-Received: from DBBPR07MB7481.eurprd07.prod.outlook.com (2603:10a6:10:1f0::11)
- by AM9PR07MB7201.eurprd07.prod.outlook.com (2603:10a6:20b:2d0::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Wed, 2 Apr
- 2025 16:03:29 +0000
-Received: from DBBPR07MB7481.eurprd07.prod.outlook.com
- ([fe80::884b:f4bb:e97b:b9d5]) by DBBPR07MB7481.eurprd07.prod.outlook.com
- ([fe80::884b:f4bb:e97b:b9d5%2]) with mapi id 15.20.8583.028; Wed, 2 Apr 2025
- 16:03:29 +0000
-From: Zhen XIN <zhen.xin@nokia-sbell.com>
-To: linux-wireless@vger.kernel.org
-Cc: pkshih@realtek.com,
-	linux-kernel@vger.kernel.org,
-	martin.blumenstingl@googlemail.com,
-	Zhen XIN <zhen.xin@nokia-sbell.com>
-Subject: [RFC -v1] wifi: rtw88: sdio: Tx status for management frames
-Date: Wed,  2 Apr 2025 16:03:10 +0000
-Message-Id: <20250402160310.996141-1-zhen.xin@nokia-sbell.com>
-X-Mailer: git-send-email 2.25.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SI2PR01CA0048.apcprd01.prod.exchangelabs.com
- (2603:1096:4:193::17) To DBBPR07MB7481.eurprd07.prod.outlook.com
- (2603:10a6:10:1f0::11)
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="BhZVGlGc"
+Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-6021d118840so3657278eaf.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 09:04:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1743609857; x=1744214657; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=YRcCr0UxfopUNgxK+5pqGpdPNVgXj21wPiyLC3kd8PM=;
+        b=BhZVGlGciZ6SNg6I9GoCS/useJXzrHULImforcz9i07Jw1a0RWuZuZHuDRUxxmMq1J
+         SAwKXOl6pCWi0iYHmwx+nutXWKXYZofZUO0aeLpaMk3+QBcoVIhW5VqcB83IDxCkpYpx
+         3bopSvND1q3y1tbK8oxufje0fC/PW7n9bVBO4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743609857; x=1744214657;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YRcCr0UxfopUNgxK+5pqGpdPNVgXj21wPiyLC3kd8PM=;
+        b=KG1Am7eu1x1OmJmRga708d7S/t0xP79+NDytq+fXROe+FWm+2BZNh4moFP1KDTZfnX
+         upnhIj6kDOsuBye5bLwlKsNSYV1aT9Cf5ZCjzJtoS+O6W3qvoo7DOBHtquNX43+62jFd
+         HvwobbKfIG9cYe5Omxb2C9MwyWmLZ6V49AEXV365ewcEqjcq1L9hS6QpZIRyRVBCi+tn
+         WI1ENyhNEoqXYr3YE7IhRSsIUbUrqj3FSzNGXp5PwbjyBEkql+m/AYdaknfFR6k3qa7Z
+         R3NZu9GlpNX6FUn4V0r+WrDSha+b8woNEzqmHtPDiG6Y56a6H/C9oz+h3nTar9UOmmKW
+         87gg==
+X-Gm-Message-State: AOJu0YxBDRD8ORpnOCeVSFHDn8BDdClQSUxp4I5aTwjuAw5ePz0Mf524
+	cXN1k6si3Z5i7sECFgs2KKmYRLtJBXh7RY2eqOPrKLrERNcRq6YY3xR9xDPr4g==
+X-Gm-Gg: ASbGnct6YJLEQMXYZR/BSsOcng07eLoEVSEk6Px3mDtLERBHRtqlUUjc4n0uqos9zsu
+	/UT5s8BFyLXU/CnimN16mRJ7acWU47hRz+/6eL0zKgufidQiBzHUz0bSL0aMGjCO85vZfgQY+RA
+	QlFMyghIk9RnIVAJmx6pQRdnzm/Sel4aNeS8W8EahPsKSaVJ4CYh9j0Vy4O70HgSAwBH8S+qouQ
+	u9N+mzJgK9XIeYUjcQHBcCAnwWI9jP9l++xJXRGUQELfgxUbhpW+hp3boDjo8rOHEX/hv0PVH3a
+	IoflLII5etNsO+c5h58W8P0kN6RnmStYXh1zRY5+RyVLFs9+2y4083bdEN17B9yBFJDRG+INof1
+	C++pRDlIK
+X-Google-Smtp-Source: AGHT+IHPcEIEeitdzKDC8eD3T4OZh19nJpylEp0BpW6lGH0e8ZiOIghhnDLC5eL8MJ+Po1Uy950RiQ==
+X-Received: by 2002:a05:6808:1524:b0:3f9:43dd:a054 with SMTP id 5614622812f47-3ff0f5f4c6dmr11055882b6e.34.1743609857169;
+        Wed, 02 Apr 2025 09:04:17 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-3ff0529650esm2399237b6e.48.2025.04.02.09.04.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Apr 2025 09:04:15 -0700 (PDT)
+Message-ID: <92d95675-5d4a-4bc1-b2a2-8f2f1668a640@broadcom.com>
+Date: Wed, 2 Apr 2025 09:04:14 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DBBPR07MB7481:EE_|AM9PR07MB7201:EE_
-X-MS-Office365-Filtering-Correlation-Id: 87b12a5b-c867-4b7e-ea27-08dd71ffe8ac
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?9TSupn5H/APzmv4SDu7HfOm4IXrlltcPFyoEKWh8ATan+2BZGUW/ZO11nja5?=
- =?us-ascii?Q?mO2DPXl6C3xGs7KEpxsakQrzUnMfBnsEbdzRVaAJE+qPIK0DNbLC8BPr25Bl?=
- =?us-ascii?Q?KaUEPL5aHxhvIqI1Vm80aVGVAtiCtFB6iKRNowKrJ0umECDzS60oo7qQ1QDN?=
- =?us-ascii?Q?9tJzcvj6PVuieqxMTcZfhhuIp2O86SZkYHSmwUCunMvlxyCUC6kkf2eN00oK?=
- =?us-ascii?Q?kekidjSls9tV802mKHTDZN4VdUVYabTGSM4kmvb/lAPenpIOWyhZjKIp2sXz?=
- =?us-ascii?Q?IU+V+SuQt2fBZw74FKoncYd7ND+/w26bwDyrsCFsU8cAZFuQ1o2qP33cnJDV?=
- =?us-ascii?Q?i6ek6xmpToj4ff2OKuwz01lEx1e0KMw86QOv1C3SGBM4jEtmrPlu6x35GpEh?=
- =?us-ascii?Q?+t1WuxzwrllQXtaLw7gxN8LpR113n9CIQRubmVgFwX6WbCMCarvEdQ2ZLn76?=
- =?us-ascii?Q?denzQ8K0GQGo8se33rmqZxJnrvOkYlGhQHKLRM27cJKSqhnC/M+uanWEpUcy?=
- =?us-ascii?Q?kK1vHn1RWFxhqDqPDUv2OKVCgOOd+niSOS0OjAuntiBGun6AyMacVduz2wsp?=
- =?us-ascii?Q?6FLE5Rs1cd+uoODB7n6pnxHy77MZOEiMo+9APT/9tiGxErDZuDgdvBiPMYd4?=
- =?us-ascii?Q?+tvhU5Yh9AsONPP0yWe0AllG8AzD6q5tPVe1r1ndl2nFpGC03gHWBEPK47SV?=
- =?us-ascii?Q?OacJ0Cx+2mLJdnxh0PabJKTzHBHO7wxHY3rw7evSn7+I+awkCNdRN460F6fQ?=
- =?us-ascii?Q?Xotw2Xl483lwPcOahiVYMG2uvza2vOCeqF4hE4g+R4FFD8fhV7I0yHeiLbKf?=
- =?us-ascii?Q?3ceeEqXFu01poY9mvIiiVCEmFejCzdM9JXeETUkLsWyDBXm+EiW8B5WlTyP0?=
- =?us-ascii?Q?LJarVplBF3nkeEXua8O1Ifvc8Y3K79CWD4SRlYICOEu9v6SRheAMXR4zXwij?=
- =?us-ascii?Q?soprhOQnmS/E7+2CL06Emsa+AcFzeTKGjhYAFjfKdeX5Gi31Hceo+BDDvVBI?=
- =?us-ascii?Q?sngiPr4NsnYQHhIjK49L5Yj53JVHgttEi1117uq6WtW0pAc/vieZ5rL701wJ?=
- =?us-ascii?Q?Em2nWpMbv+h+YRkiYtzg+hDeOG6DEdcCv1vY4m66R3Xeneh0NTaAwrERSui/?=
- =?us-ascii?Q?nrPto/yOONgzQSD1HzOgoH+R2R3/ONfVbKKiejUvHST4gs+RqQ8rvp+kuNIX?=
- =?us-ascii?Q?NkzgXAaIap+E9aQIOputqvRIcZn8uwVYhVFOaySKu2ffm7rPTYMy84huXLyr?=
- =?us-ascii?Q?TKNsQJujVbIq8AjEF7XQ0nmneJsRrswiVG8+Ldi0rPh+osfFYgas+J2e7HMz?=
- =?us-ascii?Q?WLhMefdF4DRlXtY1A5CgzMVboB3wrH2scc01HFvDtmvDjOJaWZJrqwe1BwC+?=
- =?us-ascii?Q?AZGcRIPk6+fQ6DS8RhRbWlIV9wsNe//k1p6lRyb/MdJlfHnA0w=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DBBPR07MB7481.eurprd07.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?u4m/U+nRKDrMAcHJv/hKbDMcT8Uyv7OzUDIXfChhHShHhp+ZRgg1hBAZi8lU?=
- =?us-ascii?Q?Z4IKWiqk54fHrXRdaezD0jASWFlzJ2M8TH0uvZE6UeXJy9RA5BE4l07pP8MC?=
- =?us-ascii?Q?XQP1nDCrlCn1YStb5anw5IlYgpBIpyF+D0YxxeHE3Ip4FWEh1DgdjPKLbDka?=
- =?us-ascii?Q?EvbYYDC90A9ImtQnTLWAhCWVRF5YjriZdMsVLojl/uWaCOmbVUHSDkJVitlP?=
- =?us-ascii?Q?vzp8BRzVJA4Z/s/YGebGVh55Q8LLyl1uc/dELakIK/9p0cByONu92nNfYKZ9?=
- =?us-ascii?Q?B0LwSTw2L1MHv0W22Ix0drqWB7SwTb0NZW3Sy51Az/0szqxX1FQi4PiFyfFQ?=
- =?us-ascii?Q?lCWL39m5j9V+BsxalRmLz/SCBwuNy+BNV1tt7f9nPaIR6VRbGh0SSz3wW9G5?=
- =?us-ascii?Q?fE3sNmMMrhdYKDC8vc2bUh5VbuWWq+pySejd54e+TKYHDmooqUakrcey54PN?=
- =?us-ascii?Q?CUzYL3okO+LEupBjtxqK5jB0JztFrrWx664ryKEQL+7p67P4L7ds15TNJ0wY?=
- =?us-ascii?Q?tPWgKZal1/DZxZVkhnhmhH3PtCJECrveTvtDQOUtexz3qxWeTLPVMvAK+xaH?=
- =?us-ascii?Q?W4Y8A/rf5F2Z8mBusi7m7e1isgG+4tnws+/nRv1nNHN3nukCKnwXEjZQ1nJX?=
- =?us-ascii?Q?n4gBaw0StwD0EghN+d22CPd4lEDmrND6D9h8byxTvIUAPs+ljnRVKlyDLwxp?=
- =?us-ascii?Q?Ma5RhJMZb+l4XG55wt0wwx10grzOhhyAyZtLMI3ikvS3G5p5WZSnd0/2wdiT?=
- =?us-ascii?Q?KE41UqEKxKRwr8ic9LADjkvLxKDob1n/AeehjmnfwhljEBMhsgYnoinwYQK1?=
- =?us-ascii?Q?e2n/P7tivJJY1kXWY1Nq0FaGmMe9oBX5s0KiLK/Fw5BvCN72cljrt0Uf9Tg5?=
- =?us-ascii?Q?nUUsgOALGWlk0FadNETsiO6oqEWsHg0QZ+9QAlIxeeBhqb4a5cXsbD47zIIk?=
- =?us-ascii?Q?QDPZSI6+UW7jiUaYBkY88uiIRKFAM2/oQvyZxSL5VE27pGSy2cY0SMoWLRtT?=
- =?us-ascii?Q?fA2xXmWu+nASvqIsXQZ9km5jjTE1Og+LzY/YqnSyMv7ise98W1toWa0Xa2GN?=
- =?us-ascii?Q?YCGzs2nGOT0wsN52a6uyH5KlDttKGMq9o2ASu3bRzfluih7aa3aJZ9536A1u?=
- =?us-ascii?Q?/6lVIWm22NXUoq23aHZe/YUkdLIz+F0uW5jADMjx0/8OTqH0cmwFo8qZKBem?=
- =?us-ascii?Q?rHdohF831u+Yte8LxG5enMwx4ORsuuyLTqvsisetT7FH4ggNvsRd3uMKxWYF?=
- =?us-ascii?Q?HqEiGFMZ2H7ZxvTsyEw+3msyUkWJS8VVcZSWlo2jy1PNLTkDdSZ7MNNZr+rt?=
- =?us-ascii?Q?LZsBirvXvlCyuia+59lYbZrnsOAGTgZLOW5/JIjku5TEHmksxs9BAXYeK1AE?=
- =?us-ascii?Q?ryoY4Vrgc/5gCNmyfFnNdc6gURzoXonbPAbkitRAtv97itK8MCJTAwhnGaGE?=
- =?us-ascii?Q?4tQgyEtsZpKaej05QaO+SJxIa2yZ88E5Qg8v5atqkWEJINmTtFGfU7PVfIxC?=
- =?us-ascii?Q?710l99bYnfIJtj9buaZE11hF6F7IBiXuyxJF49pYESAiiZskBxyG7BvY0gX3?=
- =?us-ascii?Q?5J+uLHbKWPFZ3fsoOvN8ObwPd/s0OG8Uwvf/5BSjPKPrdvHOMDIUYvlqLcHC?=
- =?us-ascii?Q?ow=3D=3D?=
-X-OriginatorOrg: nokia-sbell.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 87b12a5b-c867-4b7e-ea27-08dd71ffe8ac
-X-MS-Exchange-CrossTenant-AuthSource: DBBPR07MB7481.eurprd07.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Apr 2025 16:03:29.3399
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5d471751-9675-428d-917b-70f44f9630b0
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: bWqrJWWsSTZp9G31sOsk5w21oYGeRuXh2Yq2RPYW+9l+Vho4cvr/QnJ7rVuCBdE8S9vQ7bVNtDN6cyE69PiHA70Cho70mrEKafq7dYNQubc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR07MB7201
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] spi: bcm2835: Restore native CS probing when
+ pinctrl-bcm2835 is absent
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+ Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+ "open list:SPI SUBSYSTEM" <linux-spi@vger.kernel.org>,
+ "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
+ <linux-rpi-kernel@lists.infradead.org>,
+ "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
+ <linux-arm-kernel@lists.infradead.org>
+References: <20250401233603.2938955-1-florian.fainelli@broadcom.com>
+ <CAMRc=MeiALzO3XAmH9BLjxrB3EA1br1tpzHd5Qucw2NCVQ2q7g@mail.gmail.com>
+Content-Language: en-US
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
+ IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
+ ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
+ bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
+ Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
+ tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
+ TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
+ zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
+ WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
+ IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
+ U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
+ 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
+ pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
+ MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
+ IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
+ gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
+ obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
+ N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
+ CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
+ C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
+ wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
+ EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
+ fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
+ MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
+ 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
+ 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
+In-Reply-To: <CAMRc=MeiALzO3XAmH9BLjxrB3EA1br1tpzHd5Qucw2NCVQ2q7g@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Rtl8732ds doesn't work in AP-Mode due to the missing tx status for management frames
-This patch enables tx status report for all tx skbs
+On 4/2/25 04:44, Bartosz Golaszewski wrote:
+> On Wed, Apr 2, 2025 at 1:37 AM Florian Fainelli
+> <florian.fainelli@broadcom.com> wrote:
+>>
+>> The lookup table forces the use of the "pinctrl-bcm2835" GPIO chip
+>> provider and essentially assumes that there is going to be such a
+>> provider, and if not, we will fail to set-up the SPI device.
+>>
+> 
+> Yeah, the consumer driver itself is an unfortunate place to define the
+> provider data. This could potentially be moved to gpiolib-of.c quirks.
+> 
+>> While this is true on Raspberry Pi based systems (2835/36/37, 2711,
+>> 2712), this is not true on 7712/77122 Broadcom STB systems which use the
+>> SPI driver, but not the GPIO driver.
+>>
+>> There used to be an early check:
+>>
+>>         chip = gpiochip_find("pinctrl-bcm2835", chip_match_name);
+>>         if (!chip)
+>>                 return 0;
+>>
+>> which would accomplish that nicely, bring something similar back by
+>> checking for the compatible strings matched by the pinctrl-bcm2835.c
+>> driver, if there is no Device Tree node matching those compatible
+>> strings, then we won't find any GPIO provider registered by the
+>> "pinctrl-bcm2835" driver.
+>>
+>> Fixes: 21f252cd29f0 ("spi: bcm2835: reduce the abuse of the GPIO API")
+>> Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
+>> ---
+>>   drivers/spi/spi-bcm2835.c | 15 ++++++++++++++-
+>>   1 file changed, 14 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/spi/spi-bcm2835.c b/drivers/spi/spi-bcm2835.c
+>> index a5d621b94d5e..5926e004d9a6 100644
+>> --- a/drivers/spi/spi-bcm2835.c
+>> +++ b/drivers/spi/spi-bcm2835.c
+>> @@ -1226,7 +1226,12 @@ static int bcm2835_spi_setup(struct spi_device *spi)
+>>          struct bcm2835_spi *bs = spi_controller_get_devdata(ctlr);
+>>          struct bcm2835_spidev *target = spi_get_ctldata(spi);
+>>          struct gpiod_lookup_table *lookup __free(kfree) = NULL;
+>> -       int ret;
+>> +       const char *pinctrl_compats[] = {
+>> +               "brcm,bcm2835-gpio",
+>> +               "brcm,bcm2711-gpio",
+>> +               "brcm,bcm7211-gpio",
+>> +       };
+>> +       int ret, i;
+>>          u32 cs;
+>>
+>>          if (!target) {
+>> @@ -1291,6 +1296,14 @@ static int bcm2835_spi_setup(struct spi_device *spi)
+>>                  goto err_cleanup;
+>>          }
+>>
+>> +       for (i = 0; i < ARRAY_SIZE(pinctrl_compats); i++) {
+>> +               if (of_find_compatible_node(NULL, NULL, pinctrl_compats[i]))
+>> +                       break;
+>> +       }
+>> +
+>> +       if (i == ARRAY_SIZE(pinctrl_compats))
+>> +               return 0;
+>> +
+>>          /*
+>>           * TODO: The code below is a slightly better alternative to the utter
+>>           * abuse of the GPIO API that I found here before. It creates a
+>> --
+>> 2.34.1
+>>
+>>
+> 
+> The fix is good for now but I'd still try to move this out of the
+> driver at some point.
+> 
+> Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Signed-off-by: Zhen XIN <zhen.xin@nokia-sbell.com>
----
- drivers/net/wireless/realtek/rtw88/sdio.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/net/wireless/realtek/rtw88/sdio.c b/drivers/net/wireless/realtek/rtw88/sdio.c
-index e024061bdbf7..84f71e13b5ae 100644
---- a/drivers/net/wireless/realtek/rtw88/sdio.c
-+++ b/drivers/net/wireless/realtek/rtw88/sdio.c
-@@ -1186,7 +1186,7 @@ static int rtw_sdio_request_irq(struct rtw_dev *rtwdev,
- }
- 
- static void rtw_sdio_indicate_tx_status(struct rtw_dev *rtwdev,
--					struct sk_buff *skb)
-+					struct sk_buff *skb, enum rtw_tx_queue_type queue)
- {
- 	struct rtw_sdio_tx_data *tx_data = rtw_sdio_get_tx_data(skb);
- 	struct ieee80211_tx_info *info = IEEE80211_SKB_CB(skb);
-@@ -1195,7 +1195,7 @@ static void rtw_sdio_indicate_tx_status(struct rtw_dev *rtwdev,
- 	skb_pull(skb, rtwdev->chip->tx_pkt_desc_sz);
- 
- 	/* enqueue to wait for tx report */
--	if (info->flags & IEEE80211_TX_CTL_REQ_TX_STATUS) {
-+	if (info->flags & IEEE80211_TX_CTL_REQ_TX_STATUS && queue <= RTW_TX_QUEUE_VO) {
- 		rtw_tx_report_enqueue(rtwdev, skb, tx_data->sn);
- 		return;
- 	}
-@@ -1227,10 +1227,7 @@ static void rtw_sdio_process_tx_queue(struct rtw_dev *rtwdev,
- 		return;
- 	}
- 
--	if (queue <= RTW_TX_QUEUE_VO)
--		rtw_sdio_indicate_tx_status(rtwdev, skb);
--	else
--		dev_kfree_skb_any(skb);
-+	rtw_sdio_indicate_tx_status(rtwdev, skb, queue);
- }
- 
- static void rtw_sdio_tx_handler(struct work_struct *work)
+Thanks, I will see what I can do on that front, but if you don't hear 
+from me in the next few weeks, don't hesitate to ask again :)
 -- 
-2.25.1
-
+Florian
