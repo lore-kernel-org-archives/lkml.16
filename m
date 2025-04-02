@@ -1,111 +1,99 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEEAC2F5A;
-	Wed,  2 Apr 2025 07:53:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0D3D2746C
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 07:54:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743580443; cv=none; b=nVYB+bcOfO8No9ggDgcv3DXglAQF28k6gApfc8B/QcN5qS9F+PWG52Xer4q0gdUeUwbMgWsLPGaB7SK4RPHxMchLGTlsc/tmJ59KTCDLIjE8xq6kJOfaCstW9RRWCFKPyyjskuQB8r3oBRhCPoiP+ObQUu67O67sl35Ek9fT5oI=
+	t=1743580463; cv=none; b=uuuBCNQ4v7p+st5nXVZzZSS7dO86/L7GLwJu1UniZCYGY6N7nUUN+Oi44uXXujss5Oe7WctR/0PDvkmx5xiL6mddnV8K72LY7sQXxJb7GEg8UqEnfv9kw5kvUVYbleG0eDmAs22IMw1/BAwr8I1vWVv1gVV/a+J7DKrpjg27zxk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743580443; c=relaxed/simple;
-	bh=GXpIJY0qTn6iM4clIdE2Rbm3NHxaqOO6tpSO2HXyIB8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=NI3W6lYk0vWTDDc730zW5q1c4C4AlA2AD3blJ5IhHvDbmhpnC/M4GlDrwf66LDC7R4T6CRa90P9cKMCtPSFAfbqwuftYlfS9ymvZ5oS6dDRGU5Wl64+yho2tbT1yG+kzchPPUCe+quKM3Ugt0jtSYQvSiOBVr4Z/KFYhKdRcgW4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 9e1615c00f9711f0a216b1d71e6e1362-20250402
-X-CTIC-Tags:
-	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CC_NO_NAME, HR_CTE_8B
-	HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME
-	HR_SJ_DIGIT_LEN, HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM
-	HR_SJ_PHRASE, HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT
-	HR_TO_NO_NAME, IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED, SA_EXISTED
-	SN_EXISTED, SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS, CIE_BAD
-	CIE_GOOD_SPF, GTI_FG_BS, GTI_RG_INFO, GTI_C_BU, AMN_T1
-	AMN_GOOD, AMN_C_TI, AMN_C_BU
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:c06ae3ba-5694-49c2-afbe-f9a4d98934ad,IP:0,U
-	RL:0,TC:0,Content:31,EDM:0,RT:0,SF:5,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:36
-X-CID-INFO: VERSION:1.1.45,REQID:c06ae3ba-5694-49c2-afbe-f9a4d98934ad,IP:0,URL
-	:0,TC:0,Content:31,EDM:0,RT:0,SF:5,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
-	elease,TS:36
-X-CID-META: VersionHash:6493067,CLOUDID:34959bcfc0261e44c3041503def90f69,BulkI
-	D:250402155354VL5IRVCQ,BulkQuantity:0,Recheck:0,SF:19|38|66|72|78|102,TC:n
-	il,Content:4|50,EDM:-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:ni
-	l,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FSD
-X-UUID: 9e1615c00f9711f0a216b1d71e6e1362-20250402
-X-User: luriwen@kylinos.cn
-Received: from localhost.localdomain [(10.44.16.150)] by mailgw.kylinos.cn
-	(envelope-from <luriwen@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 1010428196; Wed, 02 Apr 2025 15:53:51 +0800
-From: Riwen Lu <luriwen@kylinos.cn>
-To: o-takashi@sakamocchi.jp,
-	rafael@kernel.org,
-	lenb@kernel.org,
-	robert.moore@intel.com
-Cc: linux1394-devel@lists.sourceforge.net,
-	linux-kernel@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	acpica-devel@lists.linux.dev,
-	yu.c.chen@intel.com,
-	Riwen Lu <luriwen@kylinos.cn>,
-	k2ci <kernel-bot@kylinos.cn>
-Subject: [PATCH v2] tools: Restore built-in rules for subdirectory tool compilation
-Date: Wed,  2 Apr 2025 15:52:53 +0800
-Message-Id: <20250402075253.1772541-1-luriwen@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1743580463; c=relaxed/simple;
+	bh=c509z78gLwInA8mWC4l1f86kaUPKhKxnSr2LvkkSCJ4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XbrG+HD1/wRxxcQxt10CERng7lW9VZnhZ+pfnwB1FsXtxDmHbVwFyoM3ARuOnGXW6dN9HHxeN8HAlvJBYwmR29Nk9+/j//rTPGIvvltA4zM/SwcnrlK4lpQIFyEfuxAYfzcwhhY8pIgB6+ynDnk/B1/Zeff3j1jyIv0ImwmsDc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=grhnVAI/; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="grhnVAI/"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=EPaGWIUiXvI5cFuhDoTAev3QSns7G4LVvZrvmwGMQfU=; b=grhnVAI/7cW/wQ/p81PWH/eGdb
+	K9dy8mQqv7zc3GeXC1s0YHJ7jcbNsI8b9RLZimF4J8uuzy+bWzXOLNwBQwONegWqKuQPwu6PhRV6V
+	5UEqG6SUtTTn2g2tvwLABxK3IxvgPGiO516wt/QuKGhQ1H6mwqRxudAHsfhhsCTQwWjKUXXd2kXyR
+	kpbf4wAOYPGr+TVyQKaLGq1uMCaqMaPyk/OJ1Zs9vtCV/dgsVAHFvkMkpHsFKgm28p0HD3wtk8729
+	6PAe4KV/WkQAlpshXGT8BE8IEhX9WXxsFqsV42UvPbj3m4hjv3TxKCM7t/0Ixfa0vxpO8m5x7eneF
+	NppkCIAQ==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1tzsvS-00000006zPX-0Jxj;
+	Wed, 02 Apr 2025 07:54:18 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id A625530049D; Wed,  2 Apr 2025 09:54:17 +0200 (CEST)
+Date: Wed, 2 Apr 2025 09:54:17 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Juergen Gross <jgross@suse.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH 11/49] x86/alternatives: Remove the confusing, inaccurate
+ & unnecessary 'temp_mm_state_t' abstraction
+Message-ID: <20250402075417.GS5880@noisy.programming.kicks-ass.net>
+References: <20250328132704.1901674-1-mingo@kernel.org>
+ <20250328132704.1901674-12-mingo@kernel.org>
+ <20250401143624.GI5880@noisy.programming.kicks-ass.net>
+ <Z-w5INj77OkbFDQe@gmail.com>
+ <Z-y3958dG_giqfjw@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z-y3958dG_giqfjw@gmail.com>
 
-Prior to commit d1d096312176 ("tools: fix annoying "mkdir -p ..." logs
-when building tools in parallel"), the top-level MAKEFLAGS=-rR
-(disabling built-in rules/variables) was overridden by
-subdirectory-specific MAKEFLAGS during tools compilation. This allowed
-tools like pfrut and firewire to implicitly rely on Make's built-in rules.
+On Wed, Apr 02, 2025 at 06:07:19AM +0200, Ingo Molnar wrote:
+> 
+> * Ingo Molnar <mingo@kernel.org> wrote:
+> 
+> > 
+> > * Peter Zijlstra <peterz@infradead.org> wrote:
+> > 
+> > > On Fri, Mar 28, 2025 at 02:26:26PM +0100, Ingo Molnar wrote:
+> > > > So the temp_mm_state_t abstraction used by use_temporary_mm() and
+> > > > unuse_temporary_mm() is super confusing:
+> > > 
+> > > I thing I see what you're saying, but we also still have these patches
+> > > pending:
+> > > 
+> > >   https://lkml.kernel.org/r/20241119162527.952745944@infradead.org
+> > > 
+> > > :-(
+> > 
+> > Yeah, so I think we should do your queue on top of mine, the
+> > whole temp_mm_state_t abstraction was rather nonsensical,
+> > and we shouldn't be iterating confusing code...
+> > 
+> > I've ported patches #1 and #3 from your queue on top, see
+> > attached below - these should be the two that represent 99%
+> > of the conflicts between these two efforts AFAICS.
+> > 
+> > Does that work for you?
+> 
+> To make this an easier decision, I've ported Andy's and your patches on 
+> top of the x86/alternatives series, into WIP.x86/mm, resolving the 
+> conflicts, with a few touchups:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/mingo/tip.git WIP.x86/mm
+> 
+> Seems to work fine, after some light testing.
+> 
+> I'll send it out for another round of review if that's fine to you.
 
-After the aforementioned commit, the -rR flags from the top-level
-Makefile began propagating to subdirectory builds. This broke tools
-depending on implicit rules because:
-1. -r (--no-builtin-rules) disabled implicit .c -> .o rules
-2. -R (--no-builtin-variables) hid critical implicit variables like CC
-
-Fix this by filtering out -rR from MAKEFLAGS.
-
-Fixes: d1d096312176 ("tools: fix annoying "mkdir -p ..." logs when building tools in parallel")
-Reported-by: k2ci <kernel-bot@kylinos.cn>
-Signed-off-by: Riwen Lu <luriwen@kylinos.cn>
----
- Makefile | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/Makefile b/Makefile
-index d138b17b8840..abf9cfebaf4f 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1431,11 +1431,11 @@ endif
- 
- tools/: FORCE
- 	$(Q)mkdir -p $(objtree)/tools
--	$(Q)$(MAKE) LDFLAGS= O=$(abspath $(objtree)) subdir=tools -C $(srctree)/tools/
-+	$(Q)$(MAKE) LDFLAGS= MAKEFLAGS="$(filter-out rR,$(MAKEFLAGS))" O=$(abspath $(objtree)) subdir=tools -C $(srctree)/tools/
- 
- tools/%: FORCE
- 	$(Q)mkdir -p $(objtree)/tools
--	$(Q)$(MAKE) LDFLAGS= O=$(abspath $(objtree)) subdir=tools -C $(srctree)/tools/ $*
-+	$(Q)$(MAKE) LDFLAGS= MAKEFLAGS="$(filter-out rR,$(MAKEFLAGS))" O=$(abspath $(objtree)) subdir=tools -C $(srctree)/tools/ $*
- 
- # ---------------------------------------------------------------------------
- # Kernel selftest
--- 
-2.25.1
-
+Yep, that looks right, Thanks!
