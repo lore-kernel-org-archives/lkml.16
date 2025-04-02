@@ -1,110 +1,88 @@
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lamorak.hansenpartnership.com (lamorak.hansenpartnership.com [198.37.111.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A6E6236451
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 11:38:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AF1120F07D;
+	Wed,  2 Apr 2025 11:38:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.37.111.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743593917; cv=none; b=WYeORE5smiSa+RVPzWYBgG2mZeA/NFiX7jGibO0NAcXmevL8n7f/4PodF3pRw+NYk3rI/gAL0kYo66X81Pw7sSrJAHqa6NUOQuBvaE2l9o3fHuvi4K/o5RZEDuQV8LIDwoYmaB0m+GG2TppLlqhrD2Q+pyRR5vLblJm319Jlbgc=
+	t=1743593916; cv=none; b=bdR5kSGLf7iDSsyJ/iPEj2HL/K6WMBNTnWEVp8RybFmjB7G7NRpiWfFJNlE0tF5MMzQMTOCO9Wxm3fHn0zMJi+9q1oI2D+jdjD/TZu02oDFVkYWwfkLowAg6E3SBCyWyEwPQciGyLiIVCwCuY4zMfq1A2mwXU6qxDnn94aNeJhQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743593917; c=relaxed/simple;
-	bh=GUggOhobSrOlcUDTeQcYGsk57ggzviGGHES/ecK+M4s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tfQNOztDuuAKfC7dytbvuThBw8DlCqeGrRDy8CCQnXAPNMVhG7p9O/HXrnBAETOlMDsn8KGN1jNADpkOvS8i4EYDzvynDMiOO7qh3iol4UBzufmL9IJhbkQkAiQImLLNnpPz4d6vtlMcLtNxmlhCWW5gu7s+4Se1k7TRodKZ+yY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TiFCuPy+; arc=none smtp.client-ip=209.85.160.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743593916; c=relaxed/simple;
+	bh=T/WVGbjDjGJZYSkfbr6D3j0jr3kyoCC8EI0x1ftebPY=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=gZLviMAmcqGT5Uii6rFDLr1syy+pciOHiEXNeHbh3woYmK85tK1SCMHk4tNuomh893cBVGrFdGS4zGvVBtW6ZgI4WknxYDtJzgM3OCkS+O0xbdpOwjzYd8gXUPNCm09yAR78DoOtq3OLYOfC7G0XvhnvZ1XhTPcHH9p/UVUPpok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com; spf=pass smtp.mailfrom=HansenPartnership.com; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=tEYQyU7B; arc=none smtp.client-ip=198.37.111.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=HansenPartnership.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TiFCuPy+"
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-4769bbc21b0so59270261cf.2
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 04:38:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743593914; x=1744198714; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FRqA63UFWrU/kbVz2yqnfo+CaGznFARvu1jMY3Mq+6U=;
-        b=TiFCuPy+O2hsmIZxseHEN4Lp4FCL/+NVuqT4tXE8q2+4kBk5iseGzbh8q7APDBaWre
-         WUifvq7LA7Wc1TQi/CkRYBtAKdIQYWQh2MpchXrKp2HZlZ4QI0wCRjbeAgCcgDz3VIxF
-         1GScjZbpjLtmbD1uZXCD2JK71R9VTBysiXT9yNAvneITIcUt6hh8ZRWTxTqC41TJOTKU
-         N8juGiQfexlHupGBlB4s8upQyHUGxLwGDIUtiH2fH2ddbmjUd9RGGvBM2gMzHmVcxcGf
-         3AJ7BQo8YoEpbIi+Ui6ja0Uo6M5XROOQVVBPQWJrWEmPr0VT+JRrIs8FjQPkc0Dz3H/9
-         rGoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743593914; x=1744198714;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FRqA63UFWrU/kbVz2yqnfo+CaGznFARvu1jMY3Mq+6U=;
-        b=K6o9hyvUfE03Bd9Tu1eUm1nnx22wAH3tWKDCWARH0jCYrIJyC8Tx6aT2eIz2G1OYYS
-         qe7ROJmyqlg7C9Q5X6PLtNP/VMMTE+q9rYsfthrybCxxc38I4GAwIsMWbHVa6GOm932r
-         yUelUucAVWq2uB/FkFh4saXhOqP9WFOOFzWJKGsg7LUZ0shhsue+anJl1AMF/ger5lgv
-         FgldoQa+eUzbeWnlMj/mxgAqb6sLmbBHB1V6dXz80AMIroQ+HcZ3JaF3XjDjGWz45CcI
-         lxeyCmoG4wa3Eqd7VJBa20FMwNFdtbGjyffa/xh5pqTNAlbUucucNDNpnzA1P62ovTD5
-         UeCw==
-X-Forwarded-Encrypted: i=1; AJvYcCUyLk23a1x0STrfzrad+/uuND8k4Xgvxm1TUYjCoJBBngY2HmnJ1HQLM3IunyPi76UaKovuowx7wQHOYNY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJgmsZdP5a2UQBRyi9ZcH5AQlKeEJvxxwsAKP+btYdvRNgDOvS
-	6CthuTcq66FJiGqS5+LqS6TcCQ9kLRlDwh4ITu2iH0mmr8akTEXBv12YHjtcU1P9T5dBaD6wg75
-	hEtUrAUDK8TLKBw+TIIhtbaizuCiyVp5MBUA=
-X-Gm-Gg: ASbGnctmk/4hzmznH8oe8fmuLZ9U1u3n3IxROJId0BlTs2Enq9XF9lg6n5+FYlK08nE
-	lw4btfB3D4PzVcWSIGHjj2lN3U9CgYihi/asa+c2uccJOlKnkrSlmvVQ9wd2kfMVCxWrzkuTUuB
-	LoHD/jtg6SV7KrVN6XPqBeqQk2bO4jRJuwiFv1w9bxz+epBQLMh5zsR9rj
-X-Google-Smtp-Source: AGHT+IHn07IIP6+NU94AilqOS6twG644NgpX+0KmOrIAxkFFiYdraDmeVxNFjYfX16bn6CJ8/NKAnwQlbffXBjglfdU=
-X-Received: by 2002:a05:622a:1206:b0:476:7669:b947 with SMTP id
- d75a77b69052e-4790a01f711mr29016171cf.36.1743593914167; Wed, 02 Apr 2025
- 04:38:34 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="tEYQyU7B"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=hansenpartnership.com; s=20151216; t=1743593912;
+	bh=T/WVGbjDjGJZYSkfbr6D3j0jr3kyoCC8EI0x1ftebPY=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
+	b=tEYQyU7Bxqo03jpW/bR8wg25pQbOs36expSwSJjrPYmvSexeWTygdkvSFM2i27Lu6
+	 5S44CDoWs2LK9Qyubu99hb/28mEVAuTzr1IRRu3TYwfVtqIdcCSiSbw+EAzJRt58V8
+	 czoSwtaxR8d2MH5+H6eaNQ5iYbw63KI1zjaLihJY=
+Received: from lingrow.int.hansenpartnership.com (unknown [IPv6:2601:5c4:4302:c21::a774])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by lamorak.hansenpartnership.com (Postfix) with ESMTPSA id 9831C1C0391;
+	Wed, 02 Apr 2025 07:38:32 -0400 (EDT)
+Message-ID: <35a8d2093ba4c4b60ce07f1efc17ff2595f6964d.camel@HansenPartnership.com>
+Subject: Re: [PATCH v1] fs/super.c: Add NULL check for type in
+ iterate_supers_type
+From: James Bottomley <James.Bottomley@HansenPartnership.com>
+To: Xiaole He <hexiaole1994@126.com>, viro@zeniv.linux.org.uk, 
+	brauner@kernel.org
+Cc: jack@suse.cz, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Wed, 02 Apr 2025 07:38:31 -0400
+In-Reply-To: <20250402034529.12642-1-hexiaole1994@126.com>
+References: <20250402034529.12642-1-hexiaole1994@126.com>
+Autocrypt: addr=James.Bottomley@HansenPartnership.com;
+ prefer-encrypt=mutual;
+ keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.3 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250402113158.45760-1-gshahrouzi@gmail.com>
-In-Reply-To: <20250402113158.45760-1-gshahrouzi@gmail.com>
-From: Gabriel <gshahrouzi@gmail.com>
-Date: Wed, 2 Apr 2025 07:38:21 -0400
-X-Gm-Features: AQ5f1JpkOnQ2KG1mFrP2M4hqJ1HoC8ryy307ZDAG5XuA9hGC2YPKPvsG8alR0ZA
-Message-ID: <CAKUZ0zKst7us8LfZCP27=62ExiGisuW0ZqyCvgKETZbvTv3_yQ@mail.gmail.com>
-Subject: Re: [PATCH] staging: rtl8723bs: Remove trailing whitespace
-To: linux-staging@lists.linux.dev
-Cc: philipp.g.hortmann@gmail.com, eamanu@riseup.net, 
-	linux-kernel@vger.kernel.org, kernelmentees@lists.linuxfoundation.org, 
-	skhan@linuxfoundation.org, Greg KH <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 2, 2025 at 7:32=E2=80=AFAM Gabriel Shahrouzi <gshahrouzi@gmail.=
-com> wrote:
->
-> Remove trailing whitespace to comply with kernel coding style.
->
-> Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-> ---
->  drivers/staging/rtl8723bs/include/hal_pwr_seq.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/staging/rtl8723bs/include/hal_pwr_seq.h b/drivers/st=
-aging/rtl8723bs/include/hal_pwr_seq.h
-> index b93d74a5b9a5..48bf7f66a06e 100644
-> --- a/drivers/staging/rtl8723bs/include/hal_pwr_seq.h
-> +++ b/drivers/staging/rtl8723bs/include/hal_pwr_seq.h
-> @@ -209,7 +209,7 @@
->  #define RTL8723B_TRANS_END                                              =
-                                                                       \
->         /* format */                                                     =
-                                                                       \
->         /* { offset, cut_msk, fab_msk|interface_msk, base|cmd, msk, value=
- }, comments here*/                                                        =
-    \
-> -       {0xFFFF, PWR_CUT_ALL_MSK, PWR_FAB_ALL_MSK, PWR_INTF_ALL_MSK, 0, P=
-WR_CMD_END, 0, 0},
-> +       {0xFFFF, PWR_CUT_ALL_MSK, PWR_FAB_ALL_MSK, PWR_INTF_ALL_MSK, 0, P=
-WR_CMD_END, 0, 0},
->
->
->  extern struct wlan_pwr_cfg rtl8723B_power_on_flow[RTL8723B_TRANS_CARDEMU=
-_TO_ACT_STEPS+RTL8723B_TRANS_END_STEPS];
-> --
-> 2.43.0
->
-Adding Greg K-H to the CC list for visibility.
+On Wed, 2025-04-02 at 11:45 +0800, Xiaole He wrote:
+> The first several lines of iterate_supers_type are below:
+>=20
+> 1 void iterate_supers_type(struct file_system_type *type,
+> 2=C2=A0	void (*f)(struct super_block *, void *), void *arg)
+> 3 {
+> 4=C2=A0	struct super_block *sb, *p =3D NULL;
+> 5
+> 6=C2=A0	spin_lock(&sb_lock);
+> 7=C2=A0	hlist_for_each_entry(sb, &type->fs_supers, s_instances) {
+> 8=C2=A0	...
+> 9 }
+>=20
+> The iterate_super_type is a exported symbol, and if
+> iterate_supers_type is called with type of NULL, then there will be a
+> NULL pointer dereference of argument type in line 7.
+
+filesystem_type is an argument to alloc_super, which the filesystems
+code always fills in.  If a filesystem passed a NULL type to the
+context, the initialization code would crash on a NULL deref (iterating
+type->fs_supers) which makes what you're checking for here an
+impossible condition, doesn't it?
+
+Regards,
+
+James
+
