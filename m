@@ -1,60 +1,62 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F039DA92E;
-	Wed,  2 Apr 2025 08:46:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F1F523313E;
+	Wed,  2 Apr 2025 08:46:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743583612; cv=none; b=B673SARHgAfb6SiN4izqv8aXdLXx5pOOgdJlmfhQflYYxT/YN2fj7MOXqbtZxs5MAsTfvRhpOXAXVFtRpnygO8oGztsNwovNFjySFKM0vyGIltURcX5OevYi7vjj2MNv8xg1RLjUyQkwKIg/FNePlEVsDKQ32/4e6KlwKH6c958=
+	t=1743583613; cv=none; b=lRbeWVCmzhcBUHQj8HcCHTxzMf0gNvJwQNUHn7e96PGBwBrD4R4kA5HgFj/tBwnEtCo7cTOXgwO+PhmGtnosRns10zQ1Guw8UBNKPlU9GeLi38y3k7nxKw3r8c7wvHuxtfyFCewx2vH0pVgMjuub+a3FnnSc6WiWIV0p+aDqKHw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743583612; c=relaxed/simple;
-	bh=/+vBNaDSH5QTXi0/YsM1pDRIhvd7YRy6SEJTLAcU+QU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eNUDc0CX1oJCqSDUuiYLzKVjqR0Ui6tHgyaxo2AzviEXK3o69a1u3++HQFOzCLPfIc2eHcgm63EEVfrcXaunzu6L1pUtNlRnRoW3cFlGbIuShmVH/MSyEl70duN1Hfky3sFn6sa0UIxK21uW9ytYfSOKu8XK7SBrBsZjNDC2flI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=heOj9+zP; arc=none smtp.client-ip=209.85.218.52
+	s=arc-20240116; t=1743583613; c=relaxed/simple;
+	bh=r6iiGw0WPshoyykVfAw4KQSvu1jD7CE+zlVJnLOPPv8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=BEoL9FY7SQNqeLZYNnoD5kU0UdA9qY9RPbnlxEF8xr5JVf95fQVGipzn6CcwAeubPZoSevoTcY2/rh0YH5MvwSbzrPnr4djFW40GP/IJsYVY8ReDG6JO9kzfFVxQmjZWZ/Rxcfqk2jvRjAxWp7ujdpQelFdHskiDTarI+xMWC3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bzenInRn; arc=none smtp.client-ip=209.85.208.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="heOj9+zP"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ac41514a734so1080357966b.2;
-        Wed, 02 Apr 2025 01:46:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bzenInRn"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5e8be1bdb7bso10555222a12.0;
+        Wed, 02 Apr 2025 01:46:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743583609; x=1744188409; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=9ejPc7vz1NzfqJTdEL/ppgbTd/32+OfWNGIwtSm2VDk=;
-        b=heOj9+zP5eJ21foYaTrCDa2bEMJpY1gLGQXLfyVjOdU6jBVYNJ6+JxVSIckqqIX2Jc
-         9S+lFsD1iBYzWmBZmHlGXgZAn0dvVIxPU3CCAgoQsN7+uNRo4QHW9xA7iBEx0jNSXTM4
-         VnLwAz3p+zRkGz1lAuXiWZFjsOdFxs2Jwh8/+ynYfonP4zcICFgh8WvDM8B9TNHzhlia
-         9Uy1vsY+9myRxMrcHDwnQrphtgWrqMI5OvJtSWX6x2NjzHAuZPKU7kRqHMKfZXRUFYt7
-         Ic4AvaVJyjSJ+H0ojnux+U7qMoVJ7eRt+FXls+OJkSEma7TEh0QiWPM2jh3Eq3bIEWRP
-         nlrw==
+        d=gmail.com; s=20230601; t=1743583610; x=1744188410; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=a8SNfV9cq9fPWvvPmR3dGHfZnD5tEVE8UIBf0qCYzhM=;
+        b=bzenInRnabbHt1jTdfadt6MupKO9gRDoFQWsvz0lBRv3XxgRP/2ZtF19YcOtwJy7A+
+         WHsgZ18QyaiQsjzo+psGNyUFgdmOnwhSk91tbvJPiqcOaXCLVzXpmEpw92XOEowz8i1C
+         NlR7TSaxUSKfRn8a6qEyf9vHcJyXCXy3HMrbEdXGuqgrFs1U2MOf0TqvW5e84WpbmULo
+         XOOTTB/3uNtgEJEgQVBMO/XKyQhEGwHQ15eiWeCbLmIvCeFduN0MquBGIT6252QGyba4
+         aoT575CbE9K/ip467ZhhvNwpnILUMsuUsPYalox17zbroNszwaMJVPI7UyesEIgEsQMd
+         L5mg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743583609; x=1744188409;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9ejPc7vz1NzfqJTdEL/ppgbTd/32+OfWNGIwtSm2VDk=;
-        b=eWpALEEjcTVUwLt+0VpXE7wOhkwPorSDncnf++S8BzKkfeMAaKylOL4TbDLC9OjDpU
-         qZp02mWjNf0IFnZLGGVbtgtj5QIO4fodeLyDPrWpnPrKy/ZEya6uvDWty1+35XDAmNut
-         K4E/JwAVA9EujHDgs3UGGeTAoe7vOX/td7PvauMuFv2Id9UNvaLiufBaWjTYI2bCKSfc
-         Ps8TZtgZ9MZJeRVDUN7ukx/e4loED+tJTLMSXRBlvF7spPKHcO1jkUPaE/ZdFSnlj2ml
-         nz8FZGNfrNAjl4I0nAHZAWaKPtiBmnqDbjjxhYrVXuxMNYKuv1x8MDhrfvszwMsIXX+e
-         vu7g==
-X-Forwarded-Encrypted: i=1; AJvYcCVYvzqN4RfzZElhJszvunpyPT4MU6RykeuZzCbTXMyW9zxuNnk032C9Ea/3psbH+ysTYPhn6SpJkucp@vger.kernel.org, AJvYcCWMPOQmC1dCNifu1f6oainQvv7OQtsUfcgLWj5xW8qSsWr0OwLSCS0sPmb4mpEN8DXcE9pJdLYxyVdYGy4N@vger.kernel.org, AJvYcCXhdonnxsQzKZBpb47tlmCQGIc/er+/cf8H3OpelemLsdNVII+unriPYkdFO+mSDqVb/V95Ho4wJXJ5jGYuCQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwdVThoMIRtp+HdhcAU7S4Yz02VfWp/8Fmtv3cy6fRn75W4hcbN
-	9Z1Fz16YDZPrPf5dkJp3mhbfo2vvNuSIFrTsj2Q4+3GmzK9R0KatmY0WZHw=
-X-Gm-Gg: ASbGncuMENLOwJeq2tZLvaGoWP/f4mpVbxCxD4tOS3RVONzOl2ZKRPdYq8M8m42kRbg
-	f4Xw6iSOQ8RvMiBBaLO8E+Qegk9qZY4uOTaCAdl5Cxeji3OsRFp4wuIbBXQCM8+IOrbmAFtM3ux
-	IsKujCmoURWc2ezF7BYKHNaAbsiusmRpqcQhNwWUZo9X+aCUusHxQdnGSsiUqDQRWYqwFbhzSnS
-	kmflTvJx0WEciPhwNfXzEe6B6nScpBmOIib0FkRA9eTppGn0Pvs6a8Ya2M9+HeHlRP1/Lvf+7DO
-	CAjG3egpoyX0tNodYYFFzFm59nV2u6BU48IUa1t3BphXgKxGU3vaoYr73uTA
-X-Google-Smtp-Source: AGHT+IHNzSuTERE8ExbuGAfV3s0sg1/oLsjMnzYXwkmJD4dnlgvcmsIDdRwLbR8GdbUyMXT/NUU6zw==
-X-Received: by 2002:a17:907:d90:b0:ac2:49de:3969 with SMTP id a640c23a62f3a-ac7a197287cmr102633666b.47.1743583608653;
-        Wed, 02 Apr 2025 01:46:48 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743583610; x=1744188410;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=a8SNfV9cq9fPWvvPmR3dGHfZnD5tEVE8UIBf0qCYzhM=;
+        b=cpPUgjR2N0zTJ2Mgzk1F8hOyUD1cLGpWocX+EasnfdArY2QVhARHgZyF92gYV8zXFM
+         W3ULpFvVca/YCtEUYEcsPajcNbCtEN7l67gtv72GHVOOFfw3YH5JpPMDiB4l1ol7K+ij
+         q+0lEhg5FPB8udpsSpH8M5J4pZT6bP4ivuZlaE+p9N+gDQ0BBpkEC37KhrVTLB8vVuZh
+         X/+3s1M9LUvQ0ks8NDCsfuXdkexMupzc5YOaWEZX7U40Acu7mUgKFqs+FEVRNH4Zk96J
+         Lqzva/hEHtHqbsNiW4RX8tgfr/EFF5I33+YG6MM+nF9dIRHNOQkljFo4l1ZAjXf/Zstb
+         PlFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW0YX+pTBmNz8m5Gx74yuQ1a1j7X2E/VI1Y8vlLgRa6580X8Bq1z01R5wdXffJ1bBB2UqR9wg6paO2gz7ql@vger.kernel.org, AJvYcCX9YaoYImmh9utWcakQIsxxD/H6AsRDSNOUKoE47dBr9YgDjA97fwhG9IOgItcEJZ5jj7RSpi9AMyHZnA80+A==@vger.kernel.org, AJvYcCXIbg03KaqkpsCx3/jCXoE+8mIFlHAWoXgaVnQ7vt2ESaIvZp2HovvUtmo8TLy4HMfTaf95It0ZTFjM@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywoftw+NlcAstXtnaVcptgZ/Lj/DPWHBdaemt0e2lBuH3V+dvlY
+	6nvrqTD57I8FTdEoXKZzs2hlABb8eKNlg9QV5AOskucGq1OBnux9d6FWoZs=
+X-Gm-Gg: ASbGncs3A0/SzfgaUoew9+Wtd2F58dxoSyguS2RNM77wQyrk8B0aUKEIK7Iuh1veegq
+	MpL3AKLY4nEhIdS7GnseADLGid0X+KpqB7uPu6K3Lj9ydpCc3VAbOBV8B+LGyuMtjzZ1Cm1hLaC
+	sX5Pt42IgBIfMcyRQQV+JYDFKQkCBFo+47JlxMBoWMaR0+JRZCjA4Iqpnh/eBlcc8yQ5iGpcQR2
+	43WDtZ4Rj+cEWM+r4TPKqD0m29Tn+1+gpUEmR6bMb1VjL6GCgkLdVCfTUNlxo3MgTgOjkWdGBqZ
+	X7WVqViyT7ykj6T8TENtMivmE18ESG92xvHGHCROqAufTEeFlg==
+X-Google-Smtp-Source: AGHT+IESi57MSKb8d9YAD7fhTxQEdsotw1tsxSlanZbIfAnH5/XlsnEUGyThe6cm43ZgLFRPyYZjgg==
+X-Received: by 2002:a05:6402:5192:b0:5e4:a88a:657 with SMTP id 4fb4d7f45d1cf-5f04ec385f3mr1591291a12.28.1743583610424;
+        Wed, 02 Apr 2025 01:46:50 -0700 (PDT)
 Received: from alex-x1.lan ([84.226.118.249])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5edc16aae40sm8162760a12.7.2025.04.02.01.46.47
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5edc16aae40sm8162760a12.7.2025.04.02.01.46.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Apr 2025 01:46:48 -0700 (PDT)
+        Wed, 02 Apr 2025 01:46:49 -0700 (PDT)
 From: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
 To: Bjorn Andersson <andersson@kernel.org>,
 	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
@@ -69,10 +71,12 @@ Cc: Konrad Dybcio <konradybcio@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
 	maud_spierings@hotmail.com,
 	dmitry.baryshkov@oss.qualcomm.com
-Subject: [PATCH v2 0/3] X1E Asus Zenbook A14 support
-Date: Wed,  2 Apr 2025 10:44:01 +0200
-Message-ID: <20250402084646.10098-1-alex.vinarskis@gmail.com>
+Subject: [PATCH v2 2/3] firmware: qcom: scm: Allow QSEECOM on Asus Zenbook A14
+Date: Wed,  2 Apr 2025 10:44:03 +0200
+Message-ID: <20250402084646.10098-3-alex.vinarskis@gmail.com>
 X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250402084646.10098-1-alex.vinarskis@gmail.com>
+References: <20250402084646.10098-1-alex.vinarskis@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -81,73 +85,26 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Introduce support for the mentioned laptop.
+Allow particular machine accessing eg. efivars.
 
-Particular device exists in two model numbers:
-* UX3407QA: X1P-42-100 or X1-26-100 (as tested)
-* UX3407RA: X1E-78-100
+Signed-off-by: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
+---
+ drivers/firmware/qcom/qcom_scm.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Mostly similar to other X1-based laptops. Notable differences are:
-* Wifi/Bluetooth combo being Qualcomm FastConnect 6900 on UX3407QA
-  and Qualcomm FastConnect 7800 on UX3407RA
-* USB Type-C retimers are Parade PS8833, appear to behave identical
-  to Parade PS8830
-* gpio90 is TZ protected
-
-When comparing device firmware between UX3407QA, UX3407RA, it seems
-that only ADSP firmware is different, CDSP and GPU firmware appears to
-be the same. (At least assuming the GPU firmware name in both cases is
-`qcdxkmsuc8380.mbn`). Since at least some blobs are different betweeen
-X1E and X1/X1P, define new firmware directory for `qcom/x1p42100`. This
-also makes it easier for distros to automatically extract firmware from
-Windows and place all blobs for the model under the same path. If/When
-firmware blobs make it to linux-firmware, same blobs can be easily
-symlinked between `qcom/x1e80100` and `qcom/x1p42100`.
-
-NVMe SSD depends on [1]. USB Type-A over USB MP controller  depends on
-[2], or equivalent proposed solution.
-
-Qualcomm FastConnect 6900 on UX3407QA did not work out of the box, and
-additionally required both newer firmware and patches to `board-2.bin`.
-I added a short how-to [3], as it is not exactly trivial.
-
-ACPI dumps can be found on aarch64-laptops' github [4]. HWids on
-dtbloader's github [5].
-
-[1] https://lore.kernel.org/linux-arm-msm/20250319094544.3980357-1-quic_wenbyao@quicinc.com/
-[2] https://lore.kernel.org/all/20250318-xps13-fingerprint-v1-1-fbb02d5a34a7@oss.qualcomm.com/
-[3] https://github.com/alexVinarskis/linux-x1e80100-zenbook-a14?tab=readme-ov-file#wcn688x-wifi
-[4] https://github.com/aarch64-laptops/build/pull/134/files
-[5] https://github.com/TravMurav/dtbloader/pull/4/files
-
-Changes to v1:
-* Drop PS8833 variant, fallback to PS8830 as they behave the same
-* Drop wrong pcie6a_phy compatible revert
-* Drop redundant comments, fix order of properties in the device-tree
-* Fix device name bindings, express in model names instead of the soc
-* Fix GPU firmware name for UX3407QA
-* Fix model string, enclose variant in parenthesis
-* Added missing new lines before 'status = "okay";'
-* Updated cover letter to reflect some of the above changes
-* Left SPI10 disabled as it is unknown how/what for to use it as of now
-Link to v1: https://lore.kernel.org/all/20250331215720.19692-1-alex.vinarskis@gmail.com/
-
-Aleksandrs Vinarskis (3):
-  dt-bindings: arm: qcom: Add Asus Zenbook A14
-  firmware: qcom: scm: Allow QSEECOM on Asus Zenbook A14
-  arm64: dts: qcom: Add support for X1-based Asus Zenbook A14
-
- .../devicetree/bindings/arm/qcom.yaml         |    2 +
- arch/arm64/boot/dts/qcom/Makefile             |    2 +
- arch/arm64/boot/dts/qcom/x1-zenbook-a14.dtsi  | 1258 +++++++++++++++++
- .../dts/qcom/x1e80100-asus-zenbook-a14.dts    |   45 +
- .../dts/qcom/x1p42100-asus-zenbook-a14.dts    |   48 +
- drivers/firmware/qcom/qcom_scm.c              |    2 +
- 6 files changed, 1357 insertions(+)
- create mode 100644 arch/arm64/boot/dts/qcom/x1-zenbook-a14.dtsi
- create mode 100644 arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dts
- create mode 100644 arch/arm64/boot/dts/qcom/x1p42100-asus-zenbook-a14.dts
-
+diff --git a/drivers/firmware/qcom/qcom_scm.c b/drivers/firmware/qcom/qcom_scm.c
+index fc4d67e4c4a6..79128d11eb51 100644
+--- a/drivers/firmware/qcom/qcom_scm.c
++++ b/drivers/firmware/qcom/qcom_scm.c
+@@ -1986,6 +1986,8 @@ EXPORT_SYMBOL_GPL(qcom_scm_qseecom_app_send);
+  */
+ static const struct of_device_id qcom_scm_qseecom_allowlist[] __maybe_unused = {
+ 	{ .compatible = "asus,vivobook-s15" },
++	{ .compatible = "asus,zenbook-a14-ux3407qa" },
++	{ .compatible = "asus,zenbook-a14-ux3407ra" },
+ 	{ .compatible = "dell,xps13-9345" },
+ 	{ .compatible = "hp,omnibook-x14" },
+ 	{ .compatible = "huawei,gaokun3" },
 -- 
 2.45.2
 
