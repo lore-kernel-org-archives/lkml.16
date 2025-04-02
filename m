@@ -1,295 +1,300 @@
-Received: from YT5PR01CU002.outbound.protection.outlook.com (mail-canadacentralazon11021131.outbound.protection.outlook.com [40.107.192.131])
+Received: from EUR03-DBA-obe.outbound.protection.outlook.com (mail-dbaeur03on2054.outbound.protection.outlook.com [40.107.104.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFC6B23BD09;
-	Wed,  2 Apr 2025 15:01:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.192.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC82E23814E;
+	Wed,  2 Apr 2025 15:02:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.104.54
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743606119; cv=fail; b=ZebR5MQ6+b/Nx9pbcakn/eBEiedhd5jRyhlBffUHeu4oo6X3Jn/wPN/hogpbEYq9KnEbgbwmrmO3UFrOVsE7bgElLVYQoRMH24qJZw4Tzw1T/exxI6hV0kpySCHNfTVuzcxquwIqsUpk9rCtDzr3CSK1XEuBW3YcBpnJs2lJ+eE=
+	t=1743606148; cv=fail; b=n5JA7b1sjdrpir7fMNyfLY5VagkhJZBN2A9FxFwZ4MDu+AA/jjqJavbS5/HzLjJ2TQ4V1ecCDtKAMiOtIF7EI7ZSggAazLJEdi1BqcB69wOhGTus0MYeYP48cTM1RtvaFp7aInb3ImXfVg7X41qPfpfwnRlvA4FapKNjZdvRTFk=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743606119; c=relaxed/simple;
-	bh=3q4VvFlKVzXqbG+hLTiN2et+eF078XZKdT9IURtnb2s=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=XgDJNa2OkfoaXfUuC5evqCU0QKA7eGi/YQzr8aZR2fK4SG1oegLyjknoLv02MKrGIiKlJlRsmGLBSVgd0WIm8I2IY9asWfEQuuaBxAXuBesmujEM37aUh2vsp60fwF284WysllpL6Cg1qss7OB3BaoNjHx65DMcrChSOiJEUGV8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=S4p2Lskc; arc=fail smtp.client-ip=40.107.192.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
+	s=arc-20240116; t=1743606148; c=relaxed/simple;
+	bh=HsnUFhnyTrjgRKlF0q+J622LmpmDQRdXugmoXdJjpqM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=fS8/LLAj4yYGELqdJ+4T+QlPNQArdeHQU591Ne1X/IguPGwWb+dQLH2RXaswsm4iXh2vUyCqK+mkZPNlSX2CgBDyYjpfkJlHdL8ICzilgCvG2EjLjoSGcwZFapaoKc/WXcgsY/PG0WQXyDtj9XtkHTQSsh8qkddxwMFBXl3e0HM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=MEotwqvT; arc=fail smtp.client-ip=40.107.104.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="S4p2Lskc"
+	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="MEotwqvT"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=hw1xyje4cXELJIE04stkB1j1C8gFZLYeeOkF8/CDIGcJXIJ6ndmtmzrKTpcmHxQW9yqnR9lttWgRwaXUn6QxvZC6M+cm7gZTBWPcUTUpXIhxbuAwh+hXszJNJyfE4HKwegZ6OHH2yh0Dzm3kEfOb8ILGqP0Kl314tX1WIIqO9FGChrXxikgbP+r6YDkzYLxiVGnoVCPhxoHmO0ydJaeGxM+aLjF1Ul/SdcB9y89o6qQ5xu4pFj1wFUyqpMkG53wkPiY9bAauCA/K8BidyJCAU4+D737Xscf8rtGYfAoUoVyxGyI87jtwX3g1+8+wznMcKOLUdquG1A04I4HOrs9uTw==
+ b=TyoPNMt6IKY+/yrDqfd4PnTZT1pkGnn6ItSaDQGYeOAGcH2Lt3j5mn59YdmqA8oU/grjdFsAVlv4zlvs5viY3XpwpM1/a0i7ubV2bepd6YY3gcV22ac8tus/EieFgw5FLvG1irZFteBW0Ja9odKp0p3SDI61mMS6ggt6iQD3GOZn7IqcNpqHlu7/B5kf3EGOSqLRzxSglo5Peo9x6Mxb9NesE8CmZlZZKaxoZD13JixMvOMwCIg0xB3RDrp4ev07O5Yh2BwFcxrXyzCCaFpV24TW67iGp54xUhems/mWz4fO6WUnMeFnGaYs2xI18tdYMJhsMyxm+kGA/pTBbLDXwQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=uCJ8aOs18XujtreepvNoGBchHjh7hJYhR5eKPsW6NrM=;
- b=CUsCJavMYBGBJ7OuBmghYnkfxX4RzfLOgsDbk/zdEE0KcItyVzK1YliUAb+3CjcsaZm9dYdwfFmIwCgnyLsfqDu/AAbDzpg6eTu/AHIBrQ2c4cTczjM5gW2ZZ9kvKqxAdsBf+1NDFFgxUetndSCdXtQEli7SlJYkit7XJu+EQOcH9itNQ8p8227P4kDKZNi9PX41kDcpipqojXeJqMmKP/5wGxaet96ghHhYDR5esDhtAVgkSwYQ5+PfJH0Ba/Vk5g47DZ8V3KufiFVt5gPHRFNoYN44rypbFe6+fIjWzMwoiLTOAFkkCYlKU05opdZsexuIz0/w937aIwBEFaMsHA==
+ bh=WMPUPJa4bwMHYw3HIz5sm6Rg7dJAnrax97Q4pfQOMWU=;
+ b=LGPbd0pN7I6jgTzt77P6B80FgyycM17XevDO24xqqzgkeR5YEpVBQ5rsKRMFfzqftGrFlzymGnphiW4h4DDmJfiVEdcJOipWPCkbiF2mHQozv0AB77HtbV5IRYPFTlRKx/u08CiPGnyNDgnoVa4BmpUTZQ8xEZM8ChSodEpOP1dVVbQPhI1kgD/V/14poqSj8fpbywLy6GGbiXYcTqn2Ql457wXjCTja17QlaRNk9BDV3LBeWGQk8LxiJKjsFq2edSitlmU8GwkpuUG0GbU4HkO2MaTEWjw1T8RSRyIsaCpitsKNE9eEFjlhqhRP5FTPebwOMauCpRhGE+bvmDcxXg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=efficios.com; dmarc=pass action=none header.from=efficios.com;
- dkim=pass header.d=efficios.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
- s=selector1;
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector1-NXP1-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uCJ8aOs18XujtreepvNoGBchHjh7hJYhR5eKPsW6NrM=;
- b=S4p2LskcfoX9IQXBt/J7reNGchgkAOQVDFjelvYJJ6Z2lbwjRLmjLj3uIXyj2IoF2n2Q1YsD1lLdZV+WO43JUfANDD+GVSduXdoDRyCarHlCkJUVameoW1v3hyDyd6IOza7CjWRY7rqVWBbvzB7/oECf2ugatKoF+ZSLS8uc5wQgb3caBP7+6JbWoHkJYdwhiAVO9CgwkBABBWw3+lIpAYSjLdmyvCxJwUy73wq7v0VFnZrJtxIv710luFfKIdhcn71pVrLWFcrVMB+4jvN5UNPUpVxxSD4euyFuF+jnQT711cV3a+28EDioJTb6WxmMTYVGsongV32CPWui+pgm3A==
+ bh=WMPUPJa4bwMHYw3HIz5sm6Rg7dJAnrax97Q4pfQOMWU=;
+ b=MEotwqvT9RohqxM23S/upbwTqiTeFiJIl8yv1nzezvA8SgY5Ip5VD3bKsSB6z7Ij0w1bYJUDu1wU2UGedBAH1j3fCH8q+bXD/gROGwfBMUXgPuqvK2eg/WdD8ztQANke7ZxkW+jGgwS29nlNddG+7833brKYZnT9MKNedzTqGBek6FtAUWBZtzuv6TFGp8JVTU56VhRy6Op+cBlW43bg+TBe7kHewlV3HM7WReCZYUKNdbINuUq9bBY1oedSRDzgvYgC9AvYaCLTCP6dWE8xAJLszqsy+3BEsSU+q708kDZWtvYhXI+OIykzQmMV0wFoEvY6sFCJ0jtliGypZOBf5Q==
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=efficios.com;
-Received: from YT3PR01MB9171.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:a0::18)
- by QB1PPF7FD4E7D79.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:c08::254) with
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
+Received: from PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
+ by PA4PR04MB7997.eurprd04.prod.outlook.com (2603:10a6:102:c9::6) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8583.42; Wed, 2 Apr
- 2025 15:01:47 +0000
-Received: from YT3PR01MB9171.CANPRD01.PROD.OUTLOOK.COM
- ([fe80::5393:fe91:357f:3ccf]) by YT3PR01MB9171.CANPRD01.PROD.OUTLOOK.COM
- ([fe80::5393:fe91:357f:3ccf%6]) with mapi id 15.20.8534.045; Wed, 2 Apr 2025
- 15:01:47 +0000
-Message-ID: <a9a816d8-ce2f-4c89-a798-ef565febb906@efficios.com>
-Date: Wed, 2 Apr 2025 11:01:46 -0400
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 1/4] tracing: Enforce the persistent ring buffer to be
- page aligned
-To: Mike Rapoport <rppt@kernel.org>, Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Vincent Donnefort <vdonnefort@google.com>, Vlastimil Babka <vbabka@suse.cz>,
- Jann Horn <jannh@google.com>
-References: <20250401225811.008143218@goodmis.org>
- <20250401225842.261475465@goodmis.org> <Z-0BrT-OxGvaWM1H@kernel.org>
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Content-Language: en-US
-In-Reply-To: <Z-0BrT-OxGvaWM1H@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: QB1P288CA0023.CANP288.PROD.OUTLOOK.COM
- (2603:10b6:c00:2d::36) To YT3PR01MB9171.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:a0::18)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.50; Wed, 2 Apr
+ 2025 15:02:22 +0000
+Received: from PAXPR04MB8459.eurprd04.prod.outlook.com
+ ([fe80::165a:30a2:5835:9630]) by PAXPR04MB8459.eurprd04.prod.outlook.com
+ ([fe80::165a:30a2:5835:9630%6]) with mapi id 15.20.8534.048; Wed, 2 Apr 2025
+ 15:02:22 +0000
+Date: Thu, 3 Apr 2025 00:10:37 +0800
+From: Peng Fan <peng.fan@oss.nxp.com>
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Cristian Marussi <cristian.marussi@arm.com>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	linux-kernel@vger.kernel.org, arm-scmi@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
+	devicetree@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH v3 1/7] firmware: arm_scmi: imx: Add LMM and CPU
+ documentation
+Message-ID: <20250402161037.GC23033@nxa18884-linux>
+References: <20250303-imx-lmm-cpu-v3-0-7695f6f61cfc@nxp.com>
+ <20250303-imx-lmm-cpu-v3-1-7695f6f61cfc@nxp.com>
+ <20250401-quantum-coyote-of-admiration-bf1b68@sudeepholla>
+ <20250402123503.GA23033@nxa18884-linux>
+ <20250402-acoustic-analytic-guan-d3cda5@sudeepholla>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250402-acoustic-analytic-guan-d3cda5@sudeepholla>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-ClientProxiedBy: SI2PR01CA0026.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:192::16) To PAXPR04MB8459.eurprd04.prod.outlook.com
+ (2603:10a6:102:1da::15)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: YT3PR01MB9171:EE_|QB1PPF7FD4E7D79:EE_
-X-MS-Office365-Filtering-Correlation-Id: 592c4c86-0269-4f25-35d4-08dd71f74a2a
+X-MS-TrafficTypeDiagnostic: PAXPR04MB8459:EE_|PA4PR04MB7997:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0cc030db-7ba7-437e-3afc-08dd71f75eb0
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|52116014|7416014|376014|366016|1800799024|38350700014;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?Y3pHOXhwNFc5UktmRjFmcXJRZVlxMHBPZTJqWWxsSTQ1UFYzUHh6VXRCZU1R?=
- =?utf-8?B?VUFYSzhGYnNFU0h2SmJpRWlFOHI0K2o1SnJZbGdkMnBIU0hwTk5hVVRJbkpO?=
- =?utf-8?B?WUlacncxUVhNY0hZVW4vbXpSS29iYjZWQ1FtY2ZSL1cvYUMrRHpjdkxQMDdH?=
- =?utf-8?B?bGpuS2pFaEt2OTlyWURsbWFNcEpuMy9WM3o1ODVDU0FmK0ttN2Q5cnE4MklB?=
- =?utf-8?B?NWpGSEpVSWFYU1duemRNbWFrT25WVGJwSXFDZ0dXeW9UQ2ZVdk9HdTdObzNT?=
- =?utf-8?B?V1BpQ2Uxb1FJZW0rZ0EyNWtiWHh2WGhkU01WNWlONGFaUmQxZEFVY0svUWlT?=
- =?utf-8?B?WHNMRUt3R1VnOHRlVDJyZDh1dlJkM1dNeXNWK1pYdmRSMEx0czBSeHNDM2hr?=
- =?utf-8?B?NE5SWTFMbnlvZENXZFhwdkZtd0tTbEVXNXhCWmJvRG15TCtsR0dScjNlWkFu?=
- =?utf-8?B?NDRBTndyc3dDSDAzd1I2MXpLT3NhcUVZWUFGbC9GdysrWDRpVWV4dk1WbUJW?=
- =?utf-8?B?SEcxMUxFME9vSFRWemJRSC9tWSt4Nml4dWt5cTZxL2hlUzY0RlcyenJzRmxF?=
- =?utf-8?B?SWNQZGR4YnBIb0k3Zi96ZHdvRmRyMWVCN2kyMWlOTmlObS9sMTdnZ0ZJRHVx?=
- =?utf-8?B?SHJCRHRmMXhwbVRmV045SU9FTjZuL21hTWVMK01LM2tmL1pCM1NZdWFHQ3dJ?=
- =?utf-8?B?MkJHbVRIWE4xTTNCWWVxZGplUzRWejlpN3Rka3l4MmpSNW1Dc05Iek5aWlZX?=
- =?utf-8?B?dGZHalpFZHc2WjE1ME83dURCSHFtd0VWOG1IbVR6aUdmV3d6dDV5ZWs2TVRs?=
- =?utf-8?B?ZG83V2VzTFR6dWdPeEZQbm5ZMWNFN3pyUStWUEZ3U0FVTllrYkR4WE1HSXA0?=
- =?utf-8?B?RzZpczY3NUVWMzZ6T05wUytFMmNHRHBJQ2p2Y0NhMmJjVzY0N0VnYmtUTlBG?=
- =?utf-8?B?dG1URzJLOFVLMlQxUnR0eFBabUdoallpM1p0ZDg2L1FkL2kyOFFkeVRPODhJ?=
- =?utf-8?B?bElPaGV1V09TMmVaRnRpbmFnam5rVmFUNHRnSEZhWkpUdkM4RXVIajZRUERZ?=
- =?utf-8?B?UEl4NGJ6dzZvaWNqSFprQktQUmdKN2xEU1E2cHdJSEkwYnA3TkkzVHJKYXBo?=
- =?utf-8?B?WmxLRmhYUFBhSEwzdHJGNTNOYXdnWGgwajJOd3NVTEhIeUxJUmRPL0VlQW9H?=
- =?utf-8?B?aWwrc2dqODZFdHV4YmJLaVpCWU5BOTNZVnF5aDZzaHpmK3Zjc2FnNWMyTSth?=
- =?utf-8?B?RU1NUGNhZ1B5OHNWZVNaOTdLSFVtempCUHFkUE5KdkJFdHVlcjdFbjlIUDFO?=
- =?utf-8?B?QllMR0FSNWNZem9GRlJHZlFNZXVyaHdwWCtJNTJEQ0wvMzhPK2MrZVI0WkpI?=
- =?utf-8?B?L0k5QlJXSnMrTCtrQ0hiL2svS0w3RDNiZ2VEWTIvU0xkcTRxMG1sK0tZQUZ3?=
- =?utf-8?B?Z3R2ZkExUkw5dWZyMWlRSFVTaFdQM1ZJT2dDSWVxSVplc2pQeUtoMVJxMlM3?=
- =?utf-8?B?QmV3N2U2QnRxa01TdE5jakMyVjhKbnNDT2dBcWFVS1lnU0pKWFpHUmticUpE?=
- =?utf-8?B?ekU3OGdCRUg2ZUNTM2xrMHZ6ZGlGSExjeGowN0lqT0VHbjRWWWcwbi9WOTlR?=
- =?utf-8?B?YUN1ZExqcnNvYWNLR3RlOTJBdSs1aWthZUVXaFV1Sk5WN1pNOFkvUEtVTm4v?=
- =?utf-8?B?UGNHaklTUTBlRHd3Q2p3clNNRHRFWk1Ua1FZUnNkd1M5MzV1Z05mdkozTXZq?=
- =?utf-8?Q?dvmsVT6DpcvqpmKSqzexZRuvq2lSZoxGbOHdflG?=
+	=?us-ascii?Q?DKAcloq019Wu+Kp2hUg1wIeQu4FOyirRyyEWgBT5WMAgPvoc0K4SHYUSgLpA?=
+ =?us-ascii?Q?d8HauuX9SfqZb+l68sLXYNcGvBWvnk8VunGbqzoAZdsYV08aqS+vSaMG9Hty?=
+ =?us-ascii?Q?CgInv0iJFTUV4KDXOUXFRSv4IiWLl+2sRfprzrW7jycZpb6MIaEzkJsancVV?=
+ =?us-ascii?Q?4e+US7u0IjrDbNWKwUOVKrFJjBU7iPdYT33YrYR39E5CK+2r8DKJ0bCHSGFM?=
+ =?us-ascii?Q?dkjxJPaU/oUddW5Ib8nSjG3/lmVYUWaRwDicxVXmz/oLWFY0onqPWdboZMvW?=
+ =?us-ascii?Q?VqCBPIj4nCKfVQC6VpR6jkOEiCU4Lr58iRoF2dBXb1YsG09ZqfhnelHM94pO?=
+ =?us-ascii?Q?NGrdWqdxgL6Se4Ru2J0BwD2Zb6M8BqSgZ26wvSbZUWNYoNSI8FfzJ7YBp36p?=
+ =?us-ascii?Q?NC/fvbfyJtUuh/a63hgf6f39350FxWBdgSFmqzUlNot36eSusqxCTH27948/?=
+ =?us-ascii?Q?ZK5h/9ACccbW1EpFMi/2QBq1qxHTetRCKGnS7yNVZSv4UBO89AAZuhGi5Jk+?=
+ =?us-ascii?Q?xnouajJzip7VnEidThNJvRtHRgfbYjC21MWD4HWe/cz0HIDxx+B9IWpV+E17?=
+ =?us-ascii?Q?L0JXJ4wWE6UQWrltLVV4qHrCDVMFMSWgBxY1Qp/5V3nBplYQGbXcal+lLhdD?=
+ =?us-ascii?Q?Rt5J4PRDRLKmXwrBPDxhTyRMkxqhL3jTLZA6Oq2Bp4KlOHIJmLix5BEYTZGD?=
+ =?us-ascii?Q?O1kFxpzO97bk4iEIYszmjgVO9Kor16YrkQvPSLNtxwv17V6hmlecflwtpVGN?=
+ =?us-ascii?Q?M9vSL57eXTXZ2Lk73/MzPu4K9W9BerOqOAO6gy0NvcC/EXHftPyq88sRxJjJ?=
+ =?us-ascii?Q?oQf6+oTip3iB3B5MLHz8sOS5fp5psquvmhYeZD6jwT6loLpf6IvA5cszA09X?=
+ =?us-ascii?Q?xtP+jvcfUq6kWzr6W/vxZC8KWEE4k9OI3u0ooUHSsiH2CuwYg4yNkkRvEMbd?=
+ =?us-ascii?Q?OZbVvGP36xQE78zD+ajzLhHzSP2TvJEI0pdCd/jBmQ3DDvGNcwY4ioKiFqN4?=
+ =?us-ascii?Q?TCkZoO39WmSx0JSI6c8HczhUgTsfEAm1q0GfkGmf5V6thx7oOqRF8RfYqHM/?=
+ =?us-ascii?Q?d/d5XzUyCnWuZG3mmCzhY3tYkpc7WklybAZ+SLVDDpNsIpkjH1WT+M1f6gAK?=
+ =?us-ascii?Q?poYdcZHPDt6D2pMmfm/Tqkx5tusV8kwIcWAbOa3FPYRN/iKvZUbA3oFgk1hb?=
+ =?us-ascii?Q?q54UxdIxjABfbpPII9UcaO1UAJsonI45Fz6UcfrUcUcVqRZVAZLL3np3TkBU?=
+ =?us-ascii?Q?BVYoPUwhu/Yp/bxNoQVd3L/LleSJQBJZe8fgn+O2t5Dn9odRCeaoc+mYvWJh?=
+ =?us-ascii?Q?+XwLk5eXQtYCbNo0c64nU60uRdBH5qpBkg/GXv8F9SExXmR1HCxM6IWxzj0n?=
+ =?us-ascii?Q?P7OXIEaA3Bq6j+xRdUy27HaqAjUOkYZyp8l9bcLou3i5d2aGJ5swV9bviP7y?=
+ =?us-ascii?Q?YFQb51u0W0WqY2aGPtxC1q7AiKTnIeVx?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:YT3PR01MB9171.CANPRD01.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8459.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(7416014)(376014)(366016)(1800799024)(38350700014);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?V0RJcDRWaXowdzgvL09aL3pMc3ZYSFk2YWMwK0xIdWFoNXQ3cEhpN3Jjajcz?=
- =?utf-8?B?eXg2VXA1TXZ6TXFkMnpsalBYOUJEZG1EdG9CZXJOZGN6MG93bnp5T0VyS21p?=
- =?utf-8?B?TDZVMFBydUhsRjlLQ21CblZjVm9ZZ20wQ293MGxYcG0rMmdveFByVmIrM1ov?=
- =?utf-8?B?NTkxOUhGNEo5K1pJb2FWRGQxdjRwWEVWczliWjU4VnRpZy9ibXFoZUtXemp6?=
- =?utf-8?B?cTVTc2FoamdkUkRGK05OcnNnS2QvRnJJd0tWcVZOS3NYek9SN3NxUmQ2TkN5?=
- =?utf-8?B?ZmlrMXRaOHFHRC9ralhRSzA4bXRIZFZtTnZIamc4bGVJV01xQ2NtbE1LMHAw?=
- =?utf-8?B?QzZJcTVUd3NFTURBWnNzdEwyRE5TOVNEallUSWVpWWR1NzBGN1BiWVhiM3lP?=
- =?utf-8?B?b2JhNVpVSjkyWW82b2xkc21HdU9uaDR5cHprL256UXNQOFVSckRDY29BODRX?=
- =?utf-8?B?dGRYV0k4SEMvNlBXaEVJTDRxM2F5bC9KQ0ptUmdPOHJicjdpYks5UHZwTU4y?=
- =?utf-8?B?RXVocm11OThQSlYxdWZKM0hwZEJqOGNPRGtxOWFRaUFIUkMySFlpSG5TZTlh?=
- =?utf-8?B?YnJlNE1ma2VCejh1emMxaENpc3lGNzdURUZsZk5HS29QRzR1TGZyVktVS0lq?=
- =?utf-8?B?cG4yc0NYcU1KTXFucnpEcHhLU2RlOFpZSkhTWjVpT1gyYWtRTGNKK3FpWkxu?=
- =?utf-8?B?OE12dVRLSmozWmJlTGkrSStvMHhNRitpYURBZnNkc0pxZ1B5eDFRR1BGMVdI?=
- =?utf-8?B?TkN2VWNQZXdkTHBQZjIxUFpjNnRXZU5vMGJ4TFpWUlBIVjdBTFFQZHk0cENE?=
- =?utf-8?B?TGxwR1VwcGVKaE9VNHJUZGc2TTRPakVpSTBjWFZlSmJ4TE5SVytZSmZqeUY4?=
- =?utf-8?B?MkV2NGxsUC9Lc2VJTWI4QlZ4ZTlhRDg4aVc0blg1OWNIMkp5VU16UXNYOSs5?=
- =?utf-8?B?T1o1eTlva3BLckovNWpQTnpXRFprNTRENkpzeGZGMkVBL0cxK2YrbnR3b29J?=
- =?utf-8?B?eTF1a0IyZEJMZTQrZ3hwN3JPUlJxa1NkVC8rN3gwVzY5cHJEUjNhdzk4UzhB?=
- =?utf-8?B?eEpoVWZhN0FYeXNsSm9zV3BBZlR5UGpScXFUbDdqNkpIVEl6OHpTemNaamNQ?=
- =?utf-8?B?em9xQjhqZG53dnNZd1V4MFduV1VYNXpJZXhZcTdMcUhQMEQwb0dkSGZYY0VX?=
- =?utf-8?B?WTZPQkhzVjdWaXM1V1hxV2hlQVR0dU1NU0FRZDBGdzBDckUra2FsVXZwWHBH?=
- =?utf-8?B?NllQejFmZzJxeHNMdVRxay8wK0J4dVJNZFpDc0RVR3NKekpFNGRqOVRQMXNT?=
- =?utf-8?B?TVlDQngrR0UxS3JGOHJGWHoyb2NRbk1ibnVaanU3WkM5T1BMSTFxWHE4WmdB?=
- =?utf-8?B?ZjE2YnNMblh5L0ZjTWpsWXltaGJRTHBRNllRRVRvWDJQR1d5SlZxaFpqdW8r?=
- =?utf-8?B?Wk5jcUN2NVVXcmluaStMSTFWNGYwQWtZd0lZbEtLR2Yzd1pxbFY1TUxkWmx0?=
- =?utf-8?B?eU9UV2owbDkvVUVYSy9hV1RCNXFXbkR6RXUyUkdFTU02LzcweERyYXVIVisr?=
- =?utf-8?B?QlBvL3FYZU1LdDY0bTQrNjBpcU5YZnpzSTFiVjY1Z0MxUjBMeDNBa0tFKytW?=
- =?utf-8?B?cUcvbkZ4ZWJ3alpsMW5vV2puSUUzVzA3cUg4SXdCL3BWcERSUGFjZXZtL3JP?=
- =?utf-8?B?ajNLMWdPNkFjY29PaloxVnI0NXBrTS9xUzg4Q29NRmdaUVNSM2Q5bHdNeWZG?=
- =?utf-8?B?amtKaVE0c0hLSXNvZC9Jb0twcU5WTzhwY2NJU01BdzZYbTh6YlJvL3FsMzd3?=
- =?utf-8?B?SFV4OWpUZnFXRENMMUU1a3BTNks3SHVIeTFIejhNWTVrUzg4ZDdISTM0N0xy?=
- =?utf-8?B?SjdJd08yNk13cnU3RWthSGcyVVZ6WDlvM2d3WFZKMlJIdXk4eW1aTi8vSXBx?=
- =?utf-8?B?RHZRYnU3VmFsVnRFSlJSTERnTGJxNkZ4aHFkZ3VJN285RDdTRE5ObTlpUEhI?=
- =?utf-8?B?bGJuVTVqbHpvQ3VjUmhwcVhkTStRRlRIeER0bmlaMGIyUndSbC8yYU5iMy81?=
- =?utf-8?B?a3daUmNoMk80RFA2VXRDK1ZVL2xhSWRlMlFiMDlXaGdVWkxYZDM3cE5SUGlN?=
- =?utf-8?B?bzBGdm5lUzdkR1IyVVNaaGt3c2RMQUZxK2tjdUtwUXVlU2dsQ015WFhKdmxk?=
- =?utf-8?Q?c57M2GjQPzJB6lqqg2r9naU=3D?=
-X-OriginatorOrg: efficios.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 592c4c86-0269-4f25-35d4-08dd71f74a2a
-X-MS-Exchange-CrossTenant-AuthSource: YT3PR01MB9171.CANPRD01.PROD.OUTLOOK.COM
+	=?us-ascii?Q?2nsGymgkOvnH1CupXpd19cJIbFuySLcaV8JeSXYzreOEjEWiQdzrZfOyqLRV?=
+ =?us-ascii?Q?hBZhL5l3PSRpWsmw+340JJ23OLvnKs9sQruqmTaoxwzgxHSXJEMdNVdk7F5A?=
+ =?us-ascii?Q?VIJvRGj6RkdzOg+7OUCo9fyxacGauq3EC7sBPYSw1tqwYaEyR96tvQpVEBBF?=
+ =?us-ascii?Q?vCGGNqaOBzWoWtb38Hd/FGZD4S5sInChwQttXocmxUQzYx3P1K9duk8k7gl/?=
+ =?us-ascii?Q?KyFXWDJnPPeWYsWSvE625QSrS0IcOrrWEtBv1ic7wh+c3cSOiAkHWk0h2bKt?=
+ =?us-ascii?Q?e7LUTB1iOA8KF6iPxhIV7GXHwAzIRNgSf3C0QKbuoqeADZ7VPXsEcnWOW0H4?=
+ =?us-ascii?Q?4k79YuPjB8V/IvQ6YurEv7NnbLLQSkYsBSfNehGLsmq1kxcpwiwGKMIq4nx1?=
+ =?us-ascii?Q?9r7PsTpHtHS9erRY5TsW6RDLozMuenLybw9rjXjK2vaFeyoOW9lXMYngNk13?=
+ =?us-ascii?Q?1kRfCGxavU5CtCHa7svG5F+sNh3OpbnYFhErc7CavAIBph0qXXA/U6ad+ldU?=
+ =?us-ascii?Q?HRgxhJAWJVrsf2abvadgPta7BxKNmm82LMmhwUqQnzMJbM1Sqet5v58PCwx3?=
+ =?us-ascii?Q?dZHyjJmnZxsj4eBRQS53I07e3RE551qEo0WPAmRuYfR1/xL/4HjaAv/WRqye?=
+ =?us-ascii?Q?AET+yuzwiUxl5kX1vNe0oR5MB4VutD9241zoEqPfN98dBqxOWZqcdXOaF4zw?=
+ =?us-ascii?Q?BF07umeulZx/LZLOYCtq9ziePehNPSVvB9caoQTa/kjuqHKluENYYA2fx4Zd?=
+ =?us-ascii?Q?rAcsQFgoHb9nFxF3qGAbXpLRzgAbfzBa591HNFA+TtWjAKk4smKDSBHOx1dQ?=
+ =?us-ascii?Q?EYXXlJyh4SnULid7jZqteticGtjT0hN3kLAvxfsSYpolNj818pfQQtz6ylqq?=
+ =?us-ascii?Q?ThMiXfef9/5+g8gCM8ZWJK/v1njarnkvSeigEYekjLWh+/Xu69AR6aROL+p7?=
+ =?us-ascii?Q?xT9mEynowJMacJLDlqFTKf05uHE9nA30smMC9XYtB5zi8qPDsb0ZMbgdNkV+?=
+ =?us-ascii?Q?QqAWuOu5wmqhWXQhgW4iADEJfEiRcVIqcH6GjFL6ldpoLQ8SSN7CLH/EQryw?=
+ =?us-ascii?Q?Fpe6Ei2guHbouLYTiQaiw/pTOr0+vlJUzJh1NRPeRGXEYavjeFATtC5/P+/w?=
+ =?us-ascii?Q?0+0gtomGsUEC1MCHKBtPuJy0kzwUs1VuZyNwoBkkox7f2Fagkj/kqpjs+QPu?=
+ =?us-ascii?Q?8QxFRQ3aqFN8XsYqx2Q0IsqUuLZmgtcigU3ER3hQpAKUv64K15wbZeeQEX1h?=
+ =?us-ascii?Q?ISkRTnj7bwBvay8/pIU3FRE1NeXI6aTllBhP3JLK+FpVGeWV3LTualQhJMfP?=
+ =?us-ascii?Q?B3TkQJjHu+/bDNVc7Tf7FpCJbvt+FkPDjJEZGmEHNMFc2ss4CJ3kBqIAFfia?=
+ =?us-ascii?Q?QRAKo1mzSYkIQXNj/uonNHqkgJbPVCFPlvgqmi74hpVFIHxYjaFEAqW82k9j?=
+ =?us-ascii?Q?yy19kKntvzqpqYLkecNXRDKy5MQowz0HkfBRQjoHfm7huCXg+CmaKqu1Q3dK?=
+ =?us-ascii?Q?2PdYH1c3Mw6I3uyHXqYFPkSDn4yyMziCM/AzQP55/aQVnn1uyy/AwDGRaK9H?=
+ =?us-ascii?Q?OlCJum8Y589Md0jE1tU5Xa3D4YhjEtI0OlVWhIfd?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0cc030db-7ba7-437e-3afc-08dd71f75eb0
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8459.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Apr 2025 15:01:47.4229
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Apr 2025 15:02:22.0697
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4f278736-4ab6-415c-957e-1f55336bd31e
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: WygkRvRi5YQIPiQJpgncHrB1owBtyiOuagPtUbwil8pBnA8dptHyTj/3yGgbLb9mLA4FHagm6eF70sCEWIkXrilPa8d7aGR1TuAGSqMJrjQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: QB1PPF7FD4E7D79
+X-MS-Exchange-CrossTenant-UserPrincipalName: iooNXMuXWv3ecQ3Q8sGj3d/mVlzZqEPYqS7OKQjSsJho9+UJgtJLSeuL9WfL7i1wKY2dRy2v5TMdTJaS7HRgGA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR04MB7997
 
-On 2025-04-02 05:21, Mike Rapoport wrote:
-> On Tue, Apr 01, 2025 at 06:58:12PM -0400, Steven Rostedt wrote:
->> From: Steven Rostedt <rostedt@goodmis.org>
+Hi Sudeep,
+
+On Wed, Apr 02, 2025 at 12:46:14PM +0100, Sudeep Holla wrote:
+>On Wed, Apr 02, 2025 at 08:35:03PM +0800, Peng Fan wrote:
+>> Hi Sudeep,
+>> 
+>> Thanks for reviewing the patch.
+>> 
+>> For comments that I am not very clear, I marked with [TODO] for easily
+>> jump to.
+>> 
+>> On Tue, Apr 01, 2025 at 03:15:46PM +0100, Sudeep Holla wrote:
+>> >On Mon, Mar 03, 2025 at 10:53:22AM +0800, Peng Fan (OSS) wrote:
+>> >> From: Peng Fan <peng.fan@nxp.com>
+>> >> 
+>> >> Add i.MX95 Logical Machine Management and CPU Protocol documentation.
+>> >> 
+>> >> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+>> >> ---
+>> >>  drivers/firmware/arm_scmi/vendors/imx/imx95.rst | 801 ++++++++++++++++++++++++
+>> >>  1 file changed, 801 insertions(+)
+>> >> 
+>> >> diff --git a/drivers/firmware/arm_scmi/vendors/imx/imx95.rst b/drivers/firmware/arm_scmi/vendors/imx/imx95.rst
+>> >> index b2dfd6c46ca2f5f12f0475c24cb54c060e9fa421..74326bf2ea8586282a735713e0ab7eb90ccce8ff 100644
+>> >> --- a/drivers/firmware/arm_scmi/vendors/imx/imx95.rst
+>> >> +++ b/drivers/firmware/arm_scmi/vendors/imx/imx95.rst
+>
+>> >> +
+>> >> +PROTOCOL_MESSAGE_ATTRIBUTES
+>> >> +~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>> >> +
+>> >> +message_id: 0x2
+>> >> +protocol_id: 0x80
+>> >> +This command is mandatory.
+>> >> +
+>> >
+>> >For completeness add parameters here for message_id as in the spec as it is
+>> >referred in the returned value and seems incomplete without it.
+>> 
+>> [TODO]
+>> Sorry, I may not get your point here. You mean below format?
+>> 
+>> +------------------+-----------------------------------------------------------+
+>> |message_id: 0x2
+>> |protocol_id: 0x80
+>> |This command is mandatory.
+>> +------------------+-----------------------------------------------------------+
+>> |Return values                                                                 |
+>> +------------------+-----------------------------------------------------------+
+>> |Name              |Description                                                |
+>> +------------------+-----------------------------------------------------------+
+>> |int32 status      |SUCCESS: in case the message is implemented and available  |
+>> |                  |to use.                                                    |
+>> |                  |NOT_FOUND: if the message identified by message_id is      |
+>> |                  |invalid or not implemented                                 |
+>> +------------------+-----------------------------------------------------------+
+>> |uint32 attributes |Flags that are associated with a specific function in the  |
+>> |                  |protocol. For all functions in this protocol, this         |
+>> 
+>> message_id is not put in the table, but it is list above just below
+>> the protocol name. I would prefer to keep current layout and align with
+>> the MISC and BBM protocol.
 >>
->> Enforce that the address and the size of the memory used by the persistent
->> ring buffer is page aligned. Also update the documentation to reflect this
->> requirement.
+>
+>I meant why is the input parameter message_id not described in the table,
+>but is referred in the return values. For completeness, just add it even
+>though it may match the SCMI spec in terms of input parameter.
 
-I've been loosely following this thread, and I'm confused about one
-thing.
+I will add below only for PROTOCOL_MESSAGE_ATTRIBUTES which refer message_id
+in the return values. Please raise if you have concern.
 
-AFAIU the goal is to have the ftrace persistent ring buffer written to
-through a memory range mapped by vmap_page_range(), and userspace maps
-the buffer with its own virtual mappings.
++------------------+-----------------------------------------------------------+
+|Parameters                                                                    |
++------------------+-----------------------------------------------------------+
+|Name              |Description                                                |
++------------------+-----------------------------------------------------------+
+|uint32 message_id |ID of the message, const: 0x2                              |
++------------------+-----------------------------------------------------------+
+|Return values                                                                 |
 
-With respect to architectures with aliasing dcache, is the plan:
+...
 
-A) To make sure all persistent ring buffer mappings are aligned on
-    SHMLBA:
+>
+>
+>[...]
+>
+>> >> +|                     |Bit[23] Valid err ID:                                   |
+>> >> +|                     |Set to 1 if the error ID field is valid.                |
+>> >> +|                     |Set to 0 if the error ID field is not valid.            |
+>> >> +|                     |Bits[22:8] Error ID(Agent ID of the system).            |
+>> >> +|                     |Bit[7:0] Reason(WDOG, POR, FCCU and etc)                |
+>> >
+>> >Is there a mapping for this ?
+>> 
+>> I will add a note in V4:
+>> See the SRESR register description in the System Reset Controller (SRC) section
+>> in SoC reference mannual.
+>>
+>
+>A reference would be good here then. I would be hard to imagine what it means
+>otherwise.
 
-Quoting "Documentation/core-api/cachetlb.rst":
+Understood.
 
-   Is your port susceptible to virtual aliasing in its D-cache?
-   Well, if your D-cache is virtually indexed, is larger in size than
-   PAGE_SIZE, and does not prevent multiple cache lines for the same
-   physical address from existing at once, you have this problem.
+>
+>> >> +
+>> >> +LMM_RESET_VECTOR_SET
+>> >> +~~~~~~~~~~~~~~~~~~~~
+>> >> +
+>> >> +message_id: 0xC
+>> >> +protocol_id: 0x80
+>> >> +This command is mandatory.
+>> >> +
+>> >
+>> >I can't recall if I had asked this before. How is this different from
+>> >CPU_RESET_VECTOR_SET ? Why do you need this ? Why can't you use
+>> >CPU_RESET_VECTOR_SET with an additional LMM_* command.
+>> >
+>> >I am sure there is a valid reason. If so please document the same.
+>> 
+>> CPU_RESET_VECTOR_SET is for cases that M7 and A55 in the same LM.
+>> LMM_RESET_VECTOR_SET is for cases that M7 and A55 in different LM.
+>> M7 LM is under control of A55 LM
+>>
+>
+>That still doesn't answer my question. I was asking why do you need this
+>extra interface ? If LMM_RESET_VECTOR_SET can take both cpu id and LM id,
+>it can be used even for cpus within same LM with current LM ID. Why the
+>need for separate interface ?
 
-   If your D-cache has this problem, first define asm/shmparam.h SHMLBA
-   properly, it should essentially be the size of your virtually
-   addressed D-cache (or if the size is variable, the largest possible
-   size).  This setting will force the SYSv IPC layer to only allow user
-   processes to mmap shared memory at address which are a multiple of
-   this value.
-
-or
-
-B) to flush both the kernel and userspace mappings when a ring buffer
-    page is handed over from writer to reader ?
-
-I've seen both approaches being discussed in the recent threads, with
-some participants recommending approach (A), but then the code
-revisions that follow take approach (B).
-
-AFAIU, it we are aiming for approach (A), then I'm missing where
-vmap_page_range() guarantees that the _kernel_ virtual mapping is
-SHMLBA aligned. AFAIU, only user mappings are aligned on SHMLBA.
-
-And if we aiming towards approach (A), then the explicit flushing
-is not needed when handing over pages from writer to reader.
-
-Please let me know if I'm missing something,
+For this one, I need check with firmware owner. loop you in
+internal mail.
 
 Thanks,
+Peng
 
-Mathieu
-
->>
->> Link: https://lore.kernel.org/all/CAHk-=whUOfVucfJRt7E0AH+GV41ELmS4wJqxHDnui6Giddfkzw@mail.gmail.com/
->>
->> Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
->> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
->> ---
->>   Documentation/admin-guide/kernel-parameters.txt |  2 ++
->>   Documentation/trace/debugging.rst               |  2 ++
->>   kernel/trace/trace.c                            | 12 ++++++++++++
->>   3 files changed, 16 insertions(+)
->>
->> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
->> index 3435a062a208..f904fd8481bd 100644
->> --- a/Documentation/admin-guide/kernel-parameters.txt
->> +++ b/Documentation/admin-guide/kernel-parameters.txt
->> @@ -7266,6 +7266,8 @@
->>   			This is just one of many ways that can clear memory. Make sure your system
->>   			keeps the content of memory across reboots before relying on this option.
->>   
->> +			NB: Both the mapped address and size must be page aligned for the architecture.
->> +
->>   			See also Documentation/trace/debugging.rst
->>   
->>   
->> diff --git a/Documentation/trace/debugging.rst b/Documentation/trace/debugging.rst
->> index 54fb16239d70..d54bc500af80 100644
->> --- a/Documentation/trace/debugging.rst
->> +++ b/Documentation/trace/debugging.rst
->> @@ -136,6 +136,8 @@ kernel, so only the same kernel is guaranteed to work if the mapping is
->>   preserved. Switching to a different kernel version may find a different
->>   layout and mark the buffer as invalid.
->>   
->> +NB: Both the mapped address and size must be page aligned for the architecture.
->> +
->>   Using trace_printk() in the boot instance
->>   -----------------------------------------
->>   By default, the content of trace_printk() goes into the top level tracing
->> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
->> index de6d7f0e6206..de9c237e5826 100644
->> --- a/kernel/trace/trace.c
->> +++ b/kernel/trace/trace.c
->> @@ -10788,6 +10788,18 @@ __init static void enable_instances(void)
->>   		}
->>   
->>   		if (start) {
->> +			/* Start and size must be page aligned */
->> +			if (start & ~PAGE_MASK) {
->> +				pr_warn("Tracing: mapping start addr %lx is not page aligned\n",
->> +					(unsigned long)start);
->> +				continue;
->> +			}
->> +			if (size & ~PAGE_MASK) {
->> +				pr_warn("Tracing: mapping size %lx is not page aligned\n",
->> +					(unsigned long)size);
->> +				continue;
->> +			}
-> 
-> Better use %pa for printing physical address as on 32-bit systems
-> phys_addr_t may be unsigned long long:
-> 
-> 	pr_warn("Tracing: mapping size %pa is not page aligned\n", &size);
-> 
->> +
->>   			addr = map_pages(start, size);
->>   			if (addr) {
->>   				pr_info("Tracing: mapped boot instance %s at physical memory %pa of size 0x%lx\n",
->> -- 
->> 2.47.2
->>
->>
-> 
-
-
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-https://www.efficios.com
+>
+>Other than these 2, I am fine with your response on all other comments.
+>
+>-- 
+>Regards,
+>Sudeep
+>
