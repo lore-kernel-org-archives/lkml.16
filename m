@@ -1,204 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF35BEC2;
-	Wed,  2 Apr 2025 00:07:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1939E195
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 00:11:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743552441; cv=none; b=Q9vCNHBpG7M9l/fSLuw58oG7mLWMNvkJalpOhJTgDuxoxT98kyi0V9N7ot7hDDUhPjjvaavIYNxe2fa3jrsk9amWha865qfY6z8lHhFD3yVT2cuQeHq9x6aztIt5uPPs1rIVB1DFRJbw/NPqd//rTkPPrYcrONwvfeCqbakoDSo=
+	t=1743552667; cv=none; b=kg0Yx1P7s14x1iSIGWUkIU/eLRmb8opONHyU4WpLHfT/gWslwq93LF9wrdrUgDipl25JXa5nvAWtg/W4v7R5GXPWzbgeA0zrn+Oe4ycxD9RQq1RQZzyucDouIQxTeSj4SsOe1HeitiItj6FJFfXxb6Lzx9AzOKToOcIdM6rzC8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743552441; c=relaxed/simple;
-	bh=aDgpfKFPSIAIvupXhHegmH+Dv6FAUYxC5k4AfXxUGis=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sREz/8BMZca48I2sFNtWWo7zRqvA7vaSBoZCC3ZffhAgkh5xENOeUfw5fopgE+rrzc92jIHiZ7bJYXgERHdITvA9zDtQvc35JTBjxxphWUNajAnEAIwXUmv56m3yk/N7cx8TbEZ6U8NqPRFXWxljIHgHx03phzAu/XeSXD3WkuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H0znZzzW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743552667; c=relaxed/simple;
+	bh=EgdNDcLC7k0XtZIn+43y/w98YuMTuo72Sb3LaUG8pW0=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=oWqq9bBYaAMxTcyFmcbtj1s+0TLdryeSIzkxlXsIX7aWmpMISgoJbgdUYI0nQFAQhntkYIAO9IpTK2KeJ25ymQHF73hdMHE565vYNG8HC53DdbLBPo+ECX6v9DjNvJ0ttHRrFQECFLi7B/8a+EkwyOMUdaULO4WreMZhHLmpmsw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--hramamurthy.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tOVG6Y9J; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--hramamurthy.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H0znZzzW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57838C4CEE4;
-	Wed,  2 Apr 2025 00:07:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743552438;
-	bh=aDgpfKFPSIAIvupXhHegmH+Dv6FAUYxC5k4AfXxUGis=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=H0znZzzWGi/xfJQsWxAOuY2picP0fy8bctQLW/fkjfG7IpgdqKgxCWdvszRIjGXmi
-	 7h8raWqgBPVFCleF4wYyC5UmwyDlVxx3/OGuF44x9xlhSy//qlLhjZNPdx+n75+3yx
-	 V1WYlVqjyBsV3k3uTjnUJUsVdCh+ttVRIyJd4HhdbDsgunjbE5kgvhV4n5iZkathLM
-	 ZY48Mg0jmWYblHxB5VtYgQMfFnQN7+/k/EvWipjsb8XDedKkku5j8DtoWFmNFigCi3
-	 NPQ2t4KY5Xb86acioB0dvNkJBfw94kAAZqrZopAjvsVzS+tr/yAPapP6fG6j9cjKYQ
-	 gEvNcTlTSCWYQ==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id D1A42CE160D; Tue,  1 Apr 2025 17:07:17 -0700 (PDT)
-Date: Tue, 1 Apr 2025 17:07:17 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: Venkat Rao Bagalkote <venkat88@linux.ibm.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Jason Gunthorpe <jgg@nvidia.com>, linux-cxl@vger.kernel.org,
-	dave@stgolabs.net, jonathan.cameron@huawei.com,
-	alison.schofield@intel.com, vishal.l.verma@intel.com,
-	ira.weiny@intel.com, gourry@gourry.net,
-	linux-kernel@vger.kernel.org, linux-next@vger.kernel.org,
-	sfr@canb.auug.org.au, Madhavan Srinivasan <maddy@linux.ibm.com>
-Subject: Re: [BUG -next] ./usr/include/cxl/features.h:11:10: fatal error:
- uuid/uuid.h: No such file or directory
-Message-ID: <66ae49a8-d7f9-4fd9-b94e-9be26fd9aea4@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <30a7f782-4388-45b6-bb3c-a0faf85b7445@intel.com>
- <51e9823c-784c-4b91-99d4-0500aaf5cec0@paulmck-laptop>
- <67e7301dc8ad7_201f0294a5@dwillia2-xfh.jf.intel.com.notmuch>
- <1f48ba3b-9ba8-44e5-98c7-4c9abf95a935@intel.com>
- <20250331132439.GD10839@nvidia.com>
- <67eac8df3e217_201f02948d@dwillia2-xfh.jf.intel.com.notmuch>
- <20250331171755.GC289482@nvidia.com>
- <67eaf14b7c611_201f0294ba@dwillia2-xfh.jf.intel.com.notmuch>
- <4641ce2f-74eb-45ea-a2f8-c7d0db905b7a@linux.ibm.com>
- <79a032b5-b13d-43fd-b56e-01098122e104@intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tOVG6Y9J"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ff6167e9ccso1407241a91.1
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 17:11:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1743552665; x=1744157465; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=49XuAK5ARMEMF8yVcphCoCsW7MPVXvhnFi+JlgEVMBM=;
+        b=tOVG6Y9JuSsxQXvsNxGzRZ4CA8H5ZsHTPqU7SSJBsX8Uo1Vg16+Q5CbWMSZPGJVTg1
+         yaVqpxUOXPSVVmS1QrjHEKSt+tm4qcFfvDZuk+mNGMvTYxXIPCmtHFFenwN0HNNGv0mo
+         3vDLEq2C+RRFC9gcl5zQnYrkUoz7jbXpcS1kYXGn3YIttFFVZvoRTuH8/enLxRZ2kuvy
+         hgKjB27EPC26q5QGam1b5UKrmcdLVv2tfuRfASv9hS8QQ8hC6Ec1LjbwvXAuwum3gmxQ
+         Fu5twXGZumDggePA+QAWYCWEE/TWmCUfnMvYdMnz+janlOn9zulgzOmHZAwc2ulJm35d
+         D3xg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743552665; x=1744157465;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=49XuAK5ARMEMF8yVcphCoCsW7MPVXvhnFi+JlgEVMBM=;
+        b=ScZNjLcFtTQ6dSws8kA267E4hbEdCMXiaflvG8ILEKiHOyH1pK2Kpiy4NB19u1SNha
+         0yccurwGxK/KTIUzEy3CG5evdozgF/G5cClZ9a+N1udq4huV1jdaiRXc1N/Yxxf97ytm
+         9BOr8hgyp0j7HyeQTgz/0MYaNO2phY3stFyRLMgoi6/Ll4qJbGjIhfxfEUuGl9x/yIwE
+         Oxc4Z1Rux3wB383NmXLpZDaSna1rh6CrqLo41yQkQU0hXRcG4/m+quhPQBitaAFYjkYw
+         RN37dDzlZAvLEZAvUsGF70GZyJkroq3MwVgIoUHIPMPoCzpN6Fou+IABaQf8k+uEcKOF
+         A0Eg==
+X-Forwarded-Encrypted: i=1; AJvYcCWGCPkVthP+IscW+PuIWFrBIzJdyDn9QpJTwOKhU09gCsHBqVF4e4249rR3NZwl/R79uZV3qaOjWvAu75I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxLjxMtZTHWd+yqAqRbbWzCgVD6HizvcFeOitdZamY4b7ricVNI
+	TG9e+FrgjetiHWAVQtXyCGH4Jkola3th/SQ+GDJ33mkCwV6RdCJkHG8eXxPSjY4xFfysAYNAbtW
+	cZVYNi6ZfClzWqFG+0b5iBA==
+X-Google-Smtp-Source: AGHT+IEPa9CGIWZyBDpQA9aD0ohqR/Lj8uxc0Ay1S+0+Hqoqc8rpo7eYcxBsaRxplF7qihOZcOaCavYFMyXEGhP6HQ==
+X-Received: from pjbqn7.prod.google.com ([2002:a17:90b:3d47:b0:2ff:5f6a:835c])
+ (user=hramamurthy job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:90a:d88d:b0:2ee:c291:765a with SMTP id 98e67ed59e1d1-30531f964d1mr23237272a91.8.1743552665424;
+ Tue, 01 Apr 2025 17:11:05 -0700 (PDT)
+Date: Wed,  2 Apr 2025 00:10:37 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <79a032b5-b13d-43fd-b56e-01098122e104@intel.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.472.ge94155a9ec-goog
+Message-ID: <20250402001037.2717315-1-hramamurthy@google.com>
+Subject: [PATCH net] gve: handle overflow when reporting TX consumed descriptors
+From: Harshitha Ramamurthy <hramamurthy@google.com>
+To: netdev@vger.kernel.org
+Cc: jeroendb@google.com, hramamurthy@google.com, andrew+netdev@lunn.ch, 
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
+	pkaligineedi@google.com, willemb@google.com, joshwash@google.com, 
+	horms@kernel.org, shailend@google.com, jrkim@google.com, 
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Apr 01, 2025 at 08:15:55AM -0700, Dave Jiang wrote:
-> 
-> 
-> On 4/1/25 12:01 AM, Venkat Rao Bagalkote wrote:
-> > 
-> > On 01/04/25 1:17 am, Dan Williams wrote:
-> >> Jason Gunthorpe wrote:
-> >>> On Mon, Mar 31, 2025 at 09:54:55AM -0700, Dan Williams wrote:
-> >>>> Jason Gunthorpe wrote:
-> >>>>> On Fri, Mar 28, 2025 at 05:26:42PM -0700, Dave Jiang wrote:
-> >>>>>>> For now the following builds for me, but it is a quite a mess to undo
-> >>>>>>> the assumption that that the hardware object definitions can not use
-> >>>>>>> uuid_t:
-> >>>>>> +Jason.
-> >>>>> Seems invasive?
-> >>>> Yeah, it left a bad taste for me as well.
-> >>>>
-> >>>>> Maybe just like below?
-> >>>> I like that this avoids converting to the kernel's uuid API, however,
-> >>>> not quite happy that it forces userspace to contend with the
-> >>>> type-conflict with uuid/uuid.h.
-> >>> Oh I see
-> >>>  
-> >>>> So how about one more riff on your idea?
-> >>> Sure, works for me, please post it..
-> >> b4 am supports scissors lines, so:
-> >>
-> >> b4 am -P _  67eac8df3e217_201f02948d@dwillia2-xfh.jf.intel.com.notmuch
-> >>
-> >> ...works for me. Do you still need a separate posting?
-> >>
-> > 
-> > This issue got introduced in next-20250307 and got fixed in next-20250311(not sure what fixed).
-> > 
-> > But again got re-introduced in  next-20250318. I tried bisection, below are the logs.
-> > 
-> > One of the things I tried is to install the UUID packages on my set up and after installing those packages, issue is not seen.
-> > 
-> > rpm -qa | grep uuid
-> > 
-> > libuuid-2.37.4-20.el9.ppc64le
-> > uuid-1.6.2-55.el9.ppc64le
-> > uuid-c++-1.6.2-55.el9.ppc64le
-> > uuid-dce-1.6.2-55.el9.ppc64le
-> > uuid-devel-1.6.2-55.el9.ppc64le
-> > uuidd-2.37.4-20.el9.ppc64le
-> > libuuid-devel-2.37.4-20.el9.ppc64le
-> > 
-> > So wondering is this not a setup issue?  Please advice.
-> 
-> uuid/uuid.h only exists if the libuuid-devel package gets installed. And it seems that's where it resides in userspace.
+From: Joshua Washington <joshwash@google.com>
 
-Just to double-check...
+When the tx tail is less than the head (in cases of wraparound), the TX
+consumed descriptor statistic in DQ will be reported as
+UINT32_MAX - head + tail, which is incorrect. Mask the difference of
+head and tail according to the ring size when reporting the statistic.
 
-As of some fairly recent time, it is now necessary to install the above
-seven userspace packages if one wants to do an allmodconfig build of
-the kernel?  Or will there be a change similar to the ones put forward
-earlier in this thread that will allow such builds to be carried out
-without additional userspace packages needing to be installed?
+Cc: stable@vger.kernel.org
+Fixes: 2c9198356d56 ("gve: Add consumed counts to ethtool stats")
+Signed-off-by: Joshua Washington <joshwash@google.com>
+Signed-off-by: Harshitha Ramamurthy <hramamurthy@google.com>
+---
+ drivers/net/ethernet/google/gve/gve_ethtool.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-I of course do have some concerns about the number of userspace packages
-that might be required if CXL is adding seven of them...  ;-)
+diff --git a/drivers/net/ethernet/google/gve/gve_ethtool.c b/drivers/net/ethernet/google/gve/gve_ethtool.c
+index 31a21ccf4863..4dea1fdce748 100644
+--- a/drivers/net/ethernet/google/gve/gve_ethtool.c
++++ b/drivers/net/ethernet/google/gve/gve_ethtool.c
+@@ -392,7 +392,9 @@ gve_get_ethtool_stats(struct net_device *netdev,
+ 				 */
+ 				data[i++] = 0;
+ 				data[i++] = 0;
+-				data[i++] = tx->dqo_tx.tail - tx->dqo_tx.head;
++				data[i++] =
++					(tx->dqo_tx.tail - tx->dqo_tx.head) &
++					tx->mask;
+ 			}
+ 			do {
+ 				start =
+-- 
+2.49.0.472.ge94155a9ec-goog
 
-							Thanx, Paul
-
-> DJ
-> 
-> > 
-> > 
-> > Bisect Log:
-> > 
-> > git bisect log
-> > git bisect start
-> > # status: waiting for both good and bad commits
-> > # bad: [c4d4884b67802c41fd67399747165d65c770621a] Add linux-next specific files for 20250318
-> > git bisect bad c4d4884b67802c41fd67399747165d65c770621a
-> > # status: waiting for good commit(s), bad commit known
-> > # good: [4701f33a10702d5fc577c32434eb62adde0a1ae1] Linux 6.14-rc7
-> > git bisect good 4701f33a10702d5fc577c32434eb62adde0a1ae1
-> > # good: [cda4d1b29991d4500e9f65c6936b5d3ccd99ecbb] Merge branch 'spi-nor/next' of git://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git
-> > git bisect good cda4d1b29991d4500e9f65c6936b5d3ccd99ecbb
-> > # good: [9b22611592aa21d10f7d1b89352a618436dea7ac] Merge branch 'next' of git://git.kernel.org/pub/scm/linux/kernel/git/jarkko/linux-tpmdd.git
-> > git bisect good 9b22611592aa21d10f7d1b89352a618436dea7ac
-> > # good: [264791f7669a8246d129cbb935c861debba2f116] Merge branch 'driver-core-next' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git
-> > git bisect good 264791f7669a8246d129cbb935c861debba2f116
-> > # good: [3c51cb2d6ec7cecf724cd5d78a0633f61f31e726] Merge branch 'for-next' of git://git.kernel.org/pub/scm/linux/kernel/git/remoteproc/linux.git
-> > git bisect good 3c51cb2d6ec7cecf724cd5d78a0633f61f31e726
-> > # good: [612481dbc16505cf5e940809ebf36d8460d174cf] Merge branch 'main' of git://git.infradead.org/users/willy/xarray.git
-> > git bisect good 612481dbc16505cf5e940809ebf36d8460d174cf
-> > # bad: [892715be4379deb333376e573113fd75672eca6c] Merge branch 'rust-next' of https://github.com/Rust-for-Linux/linux.git
-> > git bisect bad 892715be4379deb333376e573113fd75672eca6c
-> > # bad: [b33f4167a8a2b9b9cc6b3e06f79b030db82cf530] Merge branch 'next' of git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git
-> > git bisect bad b33f4167a8a2b9b9cc6b3e06f79b030db82cf530
-> > # good: [3b5d43245f0a56390baaa670e1b6d898772266b3] Merge branch 'for-6.15/features' into cxl-for-next
-> > git bisect good 3b5d43245f0a56390baaa670e1b6d898772266b3
-> > # good: [d11af4ae2169672b690a4d07a9dfdfd76c082683] Merge branch 'for-next' of git://git.kernel.org/pub/scm/linux/kernel/git/andy/linux-auxdisplay.git
-> > git bisect good d11af4ae2169672b690a4d07a9dfdfd76c082683
-> > # bad: [5908f3ed6dc209e5c824e63afda7545805f75a7e] cxl: Add support to handle user feature commands for get feature
-> > git bisect bad 5908f3ed6dc209e5c824e63afda7545805f75a7e
-> > # good: [18285acc2c047cda2449f426c09fc8969b04b8b1] fwctl: Add documentation
-> > git bisect good 18285acc2c047cda2449f426c09fc8969b04b8b1
-> > # good: [15a26c223fff58d9fa4ada12a8c35697f8ecdf6c] Merge branch 'for-6.15/features' into fwctl
-> > git bisect good 15a26c223fff58d9fa4ada12a8c35697f8ecdf6c
-> > # bad: [9b8e73cdb1418f7c251c43b2082218ed9c0d0fee] cxl: Move cxl feature command structs to user header
-> > git bisect bad 9b8e73cdb1418f7c251c43b2082218ed9c0d0fee
-> > # good: [858ce2f56b5253063f61f6b1c58a6dbf5d71da0b] cxl: Add FWCTL support to CXL
-> > git bisect good 858ce2f56b5253063f61f6b1c58a6dbf5d71da0b
-> > # first bad commit: [9b8e73cdb1418f7c251c43b2082218ed9c0d0fee] cxl: Move cxl feature command structs to user header
-> > 
-> > 9b8e73cdb1418f7c251c43b2082218ed9c0d0fee is the first bad commit
-> > commit 9b8e73cdb1418f7c251c43b2082218ed9c0d0fee
-> > Author: Dave Jiang <dave.jiang@intel.com>
-> > Date:  Fri Mar 7 13:55:32 2025 -0700
-> > 
-> >   cxl: Move cxl feature command structs to user header
-> > 
-> >   In preparation for cxl fwctl enabling, move data structures related to
-> >   cxl feature commands to a user header file.
-> > 
-> >   Reviewed-by; Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > 
-> >   Link: https://patch.msgid.link/r/20250307205648.1021626-3-dave.jiang@intel.com
-> >   Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-> >   Reviewed-by: Li Ming <ming.li@zohomail.com>
-> >   Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> >   Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
-> > 
-> >  include/cxl/features.h   | 112 +----------------------------
-> >  include/uapi/cxl/features.h | 169 ++++++++++++++++++++++++++++++++++++++++++++
-> >  2 files changed, 170 insertions(+), 111 deletions(-)
-> >  create mode 100644 include/uapi/cxl/features.h
-> > 
-> > 
-> > Regards,
-> > 
-> > Venkat.
-> > 
-> 
