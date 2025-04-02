@@ -1,88 +1,95 @@
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [63.216.63.40])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09B88238159
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 11:35:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32553238159;
+	Wed,  2 Apr 2025 11:35:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.216.63.40
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743593729; cv=none; b=bISQThvUvR7oOfaeTMI/whGXdMAYO6oX/aomuZIj6IVj0u93pOv6xRmsyRNO7PYy6Vja3BE/zdeUdp401knVeUh9b4htBTgXbSDfOYaL2DqeRIykzeG98hIyhAjkXtz2jN3Bp2LVnQb11Xx5+zndiRZYxq/ggzhqUR+pAyfiuQY=
+	t=1743593739; cv=none; b=fpjWJ08ZYPZ8JuUMmtiTS2fnyuYGlmgr5AWi1ZNExsmK9HUvfWGiVk9VECS2/121yhQqVoxf7RIJHrRjigoXiU6RNCyaL2XGZN/qS3ucIyH2C7OxAVpYXvdDQEXDy1XzMgd61T+swI/UqOLQTW61WQmf6hS2rHrKfVHwPMzPl3A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743593729; c=relaxed/simple;
-	bh=60qC1uhCK9Nbd1nOdHDQDK0Brva/Xpk35wH1eUqSpLA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dHuvKswV8/bUSxEJcey5LEuY9ygMB+JWhy1T3cukJ4iY9iDWzDRETwzgOboyUGn18EjiGJo6M0chS4NAGFDsVVTIKj7f7RUw1H7a/x30SSIow2EMob6MpauMnX9AI7ZX7QtEaU/ae41qIuGOXhD+AGfj2OAgaZTA0YMDroDB96M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=fwfSZcgv; arc=none smtp.client-ip=209.85.160.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="fwfSZcgv"
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-4775ccf3e56so7938791cf.0
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 04:35:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google; t=1743593727; x=1744198527; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=AyTTWqWEm2Q3eGwJYvgDbaOrso7z8MzQ/iUvGLgLy44=;
-        b=fwfSZcgvnodCviIEq11IERTio8ZvhmY3eJYccgGRtVaxNNztK/Pn9A2EFqhcD8nnmd
-         vDlYwGqxAbvloIdhV/y/AIH63Fd0q98fOV8hjq/fIh4sH+22qL0ceh4CTpCgH0r9Kv4u
-         Tnf6mz4t1siNh+d0k2MujbqHPXbOqzdjO4O5I=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743593727; x=1744198527;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=AyTTWqWEm2Q3eGwJYvgDbaOrso7z8MzQ/iUvGLgLy44=;
-        b=t/O/9UDvCc4H5chZ5xPQPBtThguqM10KVm4f+tNG865OpQk6uU92NmO8CN9EV1gz5L
-         OuLf2QEsOj/Gua0RNRw/a0jGO7F2XnT8y7LhqaBzdwAyNh3TpA2ourqqUDwGoaclU9Ln
-         oTRuR0tQvvFmr9/X+bjndZ3RSK1kuwBedLfW8L9qhdYh64Ik4lwGh6aQH7ZX2VmCmSOV
-         uj0NRsvSF+LO5hPoDgfM3YG3B2+Uvi3cubhB8LKKmoJiTgVhAOkqwNF8JcydQOwci7Pl
-         085OH0d/CqLBAG81R6kB4aQTsImG8igNzle4p4sPQ6O9nqktKA+O6mCp/ohVGCjTAfpR
-         fJBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXJdk7cTL/zIboUMj1Dj7nai69jRb4s/wPg1zRV0sOTKXPJeGUzGrECtH3LpqTX7lB9tdgHfkqMBHFkNrY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw5WkvJ9JhaMeFNeS44e1qw1/TNN7YRrsSZcL8zKlqUWTsxRctT
-	AsJ4iA0KnbLn4UB9RPPD4kFzyRW5A9FJakeT5LzH10+phSARBV1/sZeWn98A7/ZUBiBdRY36YQn
-	5yS4Fx39Yn0r+P0d35X/83i94TD2l/z5LP/mbEQ==
-X-Gm-Gg: ASbGncsis9+3vqjzSsN8VPyFHaGWXdDEf7kUkhnyOVW187sBytw6fJG+eIxf0OP6nV9
-	fifcJVEx8QkpDkesblsImA6EuB/rDSElV3UTsWy/5yWWbER3CEvAbafKmM3Pci0zNlHL2ow0rZn
-	LZrvEY1ZNtZCUo6IoT+Umjy75daY/XSgeyYIVO
-X-Google-Smtp-Source: AGHT+IHRMp3oRX4nr5ObbPYstrqf4EpD/PfBTU7jIBurT79tsvYpJoTuU01kLSBMxAxMKvB5S5LeLrZLsUOhnrSMZo8=
-X-Received: by 2002:a05:622a:19a6:b0:477:1dd0:6d15 with SMTP id
- d75a77b69052e-4790ba8bf24mr25947861cf.5.1743593726924; Wed, 02 Apr 2025
- 04:35:26 -0700 (PDT)
+	s=arc-20240116; t=1743593739; c=relaxed/simple;
+	bh=TbdnfG8wkwkQNcCDVtClAVzFHhMRXauh/c7m5Sv6VTg=;
+	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=OJM/mqH+qQe+IbM/XLDbuZwDTBLtFYv4d36KU2AYNrherD4AZmuZ1vYTf/e021m/4ihRO5YUbFEG1cIsMKMZIi3y9Y6ZuaD7Hnml2zFvtZgYk5Dmf8kKOmfzXSE2ZnoTdgqAsK+q3o/atffkaTEbPUxO1t8wIgmPsD8quyseJrE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=63.216.63.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
+Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4ZSN8X20fdz8R049;
+	Wed,  2 Apr 2025 19:35:24 +0800 (CST)
+Received: from xaxapp05.zte.com.cn ([10.99.98.109])
+	by mse-fl1.zte.com.cn with SMTP id 532BZKTK064113;
+	Wed, 2 Apr 2025 19:35:20 +0800 (+08)
+	(envelope-from shao.mingyin@zte.com.cn)
+Received: from mapi (xaxapp05[null])
+	by mapi (Zmail) with MAPI id mid32;
+	Wed, 2 Apr 2025 19:35:22 +0800 (CST)
+Date: Wed, 2 Apr 2025 19:35:22 +0800 (CST)
+X-Zmail-TransId: 2afc67ed20fa174-1da6c
+X-Mailer: Zmail v1.0
+Message-ID: <20250402193522517tlQ-zKtbUFsLKAMwRTF6-@zte.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250314221701.12509-1-jaco@uls.co.za> <20250401142831.25699-1-jaco@uls.co.za>
- <20250401142831.25699-3-jaco@uls.co.za> <CAJfpegtOGWz_r=7dbQiCh2wqjKh59BqzqJ0ruhtYtsYBB+GG2Q@mail.gmail.com>
- <19df312f-06a2-4e71-960a-32bc952b0ed2@uls.co.za> <CAJfpegseKMRLpu3-yS6PeU2aTmh_qKyAvJUWud_SLz1aCHY_tw@mail.gmail.com>
- <3f71532b-4fed-458a-a951-f631155c0107@uls.co.za> <CAJfpegtutvpYYzkW91SscwULcLt_xHeqCGLPmUHKAjozPAQQ8A@mail.gmail.com>
- <0cf44936-57ef-42f2-a484-7f69b87b2520@uls.co.za> <0b0a6adf-348e-425d-b375-23da3d6668d0@fastmail.fm>
- <f22c14e1-43d9-4976-b13e-a664f5195233@uls.co.za>
-In-Reply-To: <f22c14e1-43d9-4976-b13e-a664f5195233@uls.co.za>
-From: Miklos Szeredi <miklos@szeredi.hu>
-Date: Wed, 2 Apr 2025 13:35:16 +0200
-X-Gm-Features: AQ5f1JrS8cWmbkOF3unbLqAV0Dyuf3Q1FEluVIjHYGJx7V9tExYQkyrVWPLZrcI
-Message-ID: <CAJfpegsx=_wbBtVG1wQj6ZWzEfwknJvqfLXnDONPrdUwJRVPEg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] fuse: Adjust readdir() buffer to requesting buffer size.
-To: Jaco Kroon <jaco@uls.co.za>
-Cc: Bernd Schubert <bernd.schubert@fastmail.fm>, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, christophe.jaillet@wanadoo.fr, 
-	joannelkoong@gmail.com, rdunlap@infradead.org, trapexit@spawn.link, 
-	david.laight.linux@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+From: <shao.mingyin@zte.com.cn>
+To: <andersson@kernel.org>
+Cc: <yang.yang29@zte.com.cn>, <xu.xin16@zte.com.cn>, <ye.xingchen@zte.com.cn>,
+        <konradybcio@kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <xie.ludan@zte.com.cn>
+Subject: =?UTF-8?B?W1BBVENIXSBidXM6IHFjb20tc3NjLWJsb2NrLWJ1czogVXNlwqBkZXZtX3BsYXRmb3JtX2lvcmVtYXBfcmVzb3VyY2VfYnluYW1l?=
+Content-Type: text/plain;
+	charset="UTF-8"
+X-MAIL:mse-fl1.zte.com.cn 532BZKTK064113
+X-Fangmail-Anti-Spam-Filtered: true
+X-Fangmail-MID-QID: 67ED20FC.001/4ZSN8X20fdz8R049
 
-On Wed, 2 Apr 2025 at 13:13, Jaco Kroon <jaco@uls.co.za> wrote:
+From: Xie Ludan <xie.ludan@zte.com.cn>
 
-> How do I go about confirming?  Can that behaviour be stopped so that in
-> the case where it would block we can return an EAGAIN or EWOULDBLOCK
-> error code instead?  Is that even desired?
+Introduce devm_platform_ioremap_resource_byname() to simplify resource
+retrieval and mapping.This new function consolidates
+platform_get_resource_byname() and devm_ioremap_resource() into a single
+call, improving code readability and reducing API call overhead.
 
-All allocations except GFP_ATOMIC may block (that applies to
-folio_alloc() and kmalloc() too).  This shouldn't be a worry in the
-readdir path.  Freeing can safely be done in an atomic context.
+Signed-off-by: Xie Ludan <xie.ludan@zte.com.cn>
+Signed-off-by: Shao Mingyin <shao.mingyin@zte.com.cn>
+---
+ drivers/bus/qcom-ssc-block-bus.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-Thanks,
-Miklos
+diff --git a/drivers/bus/qcom-ssc-block-bus.c b/drivers/bus/qcom-ssc-block-bus.c
+index 7f5fd4e0940d..c542ef8ae4a6 100644
+--- a/drivers/bus/qcom-ssc-block-bus.c
++++ b/drivers/bus/qcom-ssc-block-bus.c
+@@ -255,7 +255,6 @@ static int qcom_ssc_block_bus_probe(struct platform_device *pdev)
+ 	struct qcom_ssc_block_bus_data *data;
+ 	struct device_node *np = pdev->dev.of_node;
+ 	struct of_phandle_args halt_args;
+-	struct resource *res;
+ 	int ret;
+
+ 	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
+@@ -265,14 +264,14 @@ static int qcom_ssc_block_bus_probe(struct platform_device *pdev)
+ 	platform_set_drvdata(pdev, data);
+
+ 	/* low level overrides for when the HW logic doesn't "just work" */
+-	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "mpm_sscaon_config0");
+-	data->reg_mpm_sscaon_config0 = devm_ioremap_resource(&pdev->dev, res);
++	data->reg_mpm_sscaon_config0 = devm_platform_ioremap_resource_byname(pdev,
++																		 "mpm_sscaon_config0");
+ 	if (IS_ERR(data->reg_mpm_sscaon_config0))
+ 		return dev_err_probe(&pdev->dev, PTR_ERR(data->reg_mpm_sscaon_config0),
+ 				     "Failed to ioremap mpm_sscaon_config0\n");
+
+-	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "mpm_sscaon_config1");
+-	data->reg_mpm_sscaon_config1 = devm_ioremap_resource(&pdev->dev, res);
++	data->reg_mpm_sscaon_config1 = devm_platform_ioremap_resource_byname(pdev,
++																		 "mpm_sscaon_config1");
+ 	if (IS_ERR(data->reg_mpm_sscaon_config1))
+ 		return dev_err_probe(&pdev->dev, PTR_ERR(data->reg_mpm_sscaon_config1),
+ 				     "Failed to ioremap mpm_sscaon_config1\n");
+-- 
+2.25.1
