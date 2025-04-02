@@ -1,118 +1,257 @@
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A97CB23373E
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 08:13:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2C33233D87
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 08:13:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743581599; cv=none; b=qsECH5pjxOM8HqNMJsfi48HHH4Dtdb0XVr7hJcY93MjGl/d4pJWEX0ECVvbQpmVfvesJPQp7PPau0gTsNFENAwNtXbMrdzaHcITMjvva3CUC0eys+JKA9bUmEw+R5IePx4EelZlt3ozhSNNycTH/ZjZsVG4u8gqgtWe9WTk6/Ho=
+	t=1743581636; cv=none; b=BIw5skvGR6mXbrBk2UZ9yflwZIVbRR7pKSSw63tGL1vls9NbyMg3MJ2R6gArSFUhg9QC3sJ7+d9rSTRHsV8BPQ/dAaVmuNKd1iMmNdFpUK/xvjAur8xzKe3wcrcY0zcFovl1YjsLtZLtn0phRr0uNM0qJqGVC4UbnyJhSYdL9UE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743581599; c=relaxed/simple;
-	bh=w93RkYtfhsYpvj5VoEDDq9lpAvc4F47ifTML7icGMbg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RoDEGRAGGWxp1br2TkNJ1DisYcL+nm1XwdDn1ObwmK4afIPfto0DP5nKwOff4d/6RAX//AgH7CzDZn0A8+IOKdI8Ztfhhjw9IbHD/a1V5PkwKNmyKdBNIM2xJ2V3g9ceiTx2xQbvPeWSbwJOpqJILhml/JaC9HAxi5oY3/rneAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=ExeKrk5M; arc=none smtp.client-ip=209.85.208.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1743581636; c=relaxed/simple;
+	bh=48FlInyRo/LcieLYsm6LfOtngY5tAk0z5mIkPODl/NU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aZH/uW8UKgqtDGTnuDVx27PRV3OKlgcTSsxEehAEluz7StjQHr5In+mFlAmJWQMQSKDjmKC9V2izjA0jB9efGwqramjwSQbBgL/tXWsQpRQckgqsa5m6e3qh0e2kfdxGYtXUu32Ok2ESYtkfnxrAYzLfuC4z1cQel+rN1LurExQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XScIf8hv; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="ExeKrk5M"
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-30bfed67e08so65134841fa.2
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 01:13:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1743581595; x=1744186395; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Z5bKkMRbKxlSUJHVqMm4hUmrEWQcNn5FC/pLkQqhEAk=;
-        b=ExeKrk5M71A4I/E0XnkK88ktgGsgb1DsyE2/Dxxd+Iti0JcVq0nQUFIffaZxz8kpEW
-         rcWaGAqz9bm7QGpP4sIbTW0GTNOb8B7AXw4QL5F4R/Z/RLgwszH+OwfYdrB6m2Un0/51
-         VypwSCDr8bWHk0daZ2FNq2O5nu6MJbJRh2DB+B9ntXHgqJEy0Q3i2VWZAiA9Q2cmhgYZ
-         M1VQAjPn/FxLqzvAY4pcIRK2m8dTUZHj8iZCQoFZCaTYlZDBf7Usbsg7UImYbLVbNkJG
-         XKFLgoVCWYxQY5/P7cJUhL6X4w1tzT7ZX+/SuROS75XutBptZcnIQOaSXI3oqkqSVHom
-         2IDA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XScIf8hv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743581633;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=73g+JdJov636Q7rPEyHIPPOimNTk/w2YX8KtCebrUU8=;
+	b=XScIf8hvREFMARjeDTA96HRfRMGr7nD7kphxwL3gbGgMju8PeIImciTvT1+Vjk6Vqa2RPI
+	AKGrNLxrSARtIt9mJxW3BzMvZPUOqe9trZEylGXSD3u00jFIzr1HrQO4sCc3lHI/BpmY1O
+	BYiLcYA9ytg5idpiDCC7WIHwk+eg/cs=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-150-0Fh84e4OPX6x6Wen-C-WkA-1; Wed, 02 Apr 2025 04:13:52 -0400
+X-MC-Unique: 0Fh84e4OPX6x6Wen-C-WkA-1
+X-Mimecast-MFC-AGG-ID: 0Fh84e4OPX6x6Wen-C-WkA_1743581631
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3912fc9861cso2618145f8f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 01:13:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743581595; x=1744186395;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Z5bKkMRbKxlSUJHVqMm4hUmrEWQcNn5FC/pLkQqhEAk=;
-        b=bPFke5S5YLF2+2bNyeA39oSrvSU0FhDOyeTQlrzvcgkpWWqetxZBWRbywy5GzCJvbs
-         h974UTSDKYpfLV1svdaocNcIt62plFx0dDTZlKSOsN7Xrrb51RNSXTR73ue+MGHmnyFq
-         GFXZiknHHDLj5PV1oivMaHWxSgTQe8Ypnk9S7nUtOuJ+3d3JWeTranqPqIkV6XI/v0XI
-         YCCdrLAatfMnvL9PBsJB4ATDKaWFdv57K+t1XjcmUegNKHeUrgzTXISVfHx5F77S6W03
-         jc0FGw+Xh5Jg3CGs5b2+vhbDdGNKbFaErViMXrJOCzA4N3NZi+6uHUBy8G+Nu7MvNQo/
-         VHHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUGx84fwJu+uCmohtryklGNUsJYYDa0JfeFMaazbG9Vhn0OIVORXri+y2jLR246jxub8RLdvo8OZWnLSFk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw+DrowLMaDHE6F2ULhCZsra+Oe5pPM3ZBiUvANtYU20kJZfD2f
-	tt+DFKFe1gQGnymYxamA747/jCpaXwtgb9AMRHIdGqndYFu++ZRK8ef3HUESfapDaBkMo7EAUdm
-	NDL3ZMhj8/ipKTaCxihtlAJBKh57CRBaOLIQo3Q==
-X-Gm-Gg: ASbGncuDVCR7LSlhHGPdI+oxOMHeQfyHRwMt4vyWokUcBLdPcMYsmvcSld8YQ8yLEwu
-	lDuoue3tDHsFnCH0bnmJfsYnFB8BH2ofRI5oEeEWTMolZ3Ms9lfAbytd0fXFrSDoGzLIb5nCPYx
-	ofljg2rdLQ8iM7uZ34+Ha5J1HaZvBmh+ld/aq8xmt5mv7Q5YTeOTtzRK9HHA==
-X-Google-Smtp-Source: AGHT+IFkSOGGYa3V9WycrY+gu8XDZN3eeiEk30gJ0tR1xS7OpisGKyrqxHEtle04WwZppsgW2yf3BQ5HfqnjWB9F/Gs=
-X-Received: by 2002:a05:651c:904:b0:30b:ee81:9622 with SMTP id
- 38308e7fff4ca-30de035019cmr53207541fa.31.1743581594610; Wed, 02 Apr 2025
- 01:13:14 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743581631; x=1744186431;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=73g+JdJov636Q7rPEyHIPPOimNTk/w2YX8KtCebrUU8=;
+        b=SpCn/vcSYJi+W6jkJvzifExEKopnMGCwXdBIuPqRdte2MkD9EqGeo/8PTPaqZTZ6/j
+         kIinzGqKFd82tic1LdmjGesfWNwh9pb8RyKkRdr5IURdkRlDdgJxNiWDog9RwpTLh+hH
+         W9T9Y/KrK8TdH40ifVWqDanE1h/t8F/6OxAe29je6xaIHvHiDe5+HcbBJbhzwWlgTIyQ
+         RVqrCpgprZbVa7BT4Un0f1S8xgHnNuZpkB/XY0nabAWi1wNTrWH5cHhs7sd4VnY8BsOa
+         2CGSav6Ern8QQE3YftoVcgzBNbui/Kr0QxvwDieXLpIAq9c4KvpPIOJ1r9kFfNgN3oc+
+         bbqA==
+X-Forwarded-Encrypted: i=1; AJvYcCXqZrfjsCRcK4TfrhE4N5t2WTbJH63KM9YpmlG1MD15tN1gUIoRriTmdkraIhQuT5AlRo+RvHQgU48UkYw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzQ1ihFX/fZKipLX+4Xmo1S+q+dvS+fclJa07n7KIwv6UTzS1w6
+	LRqfvi0qJ1Ppr6UoW9d+fcqVizyT7ACkNqJuYYtql60gRQFWKORYTFl/pBkanPFwdLETepuyp7a
+	i2M7iPSC4dp2SNlcKSCo7oewlSUR95Jy6zas31Gu9rG7aXv4wf227aC+WTtl0UQ==
+X-Gm-Gg: ASbGncvNeIul3qM6+sPhsAIj8JQ83q7IldSzK/ahexEQXc6Avuj3bBPDALfMuORZfAe
+	8l26gGsLwkUy1oKif5iThI5ItyxrEAmlKwppFRmB+/vZ8GqLVjjcoI4KEuZeMr98d6FLxFKbb0A
+	tkJ67k6IZ2xmOjQHdjlHZAXns88edZcoHmrQ4+YXg81BD7OVr+mZ5vJ3UyalqRLxfJzDTxQaXai
+	0dDwa2Jh1PtLn1u0o1c8PPDK3QGVDev+c+ErHw5UYU7vdLBigcTcYIWsw1sbgOtbCyMFGvT1nRC
+	r3A2obkxXgf9k7tWyxgetW5OIUbrnxe9frykNeudZqZaq4JGSdIioS0CCEA=
+X-Received: by 2002:a05:6000:1a8e:b0:391:3cb7:d441 with SMTP id ffacd0b85a97d-39c120e16e3mr13848664f8f.25.1743581631280;
+        Wed, 02 Apr 2025 01:13:51 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFKec90Eug0+u/B8fubJMHRHw5+gTlflwfeHuzUsrEc1vi/3P99CVJqE6RcnW2VF+oxvK4X8Q==
+X-Received: by 2002:a05:6000:1a8e:b0:391:3cb7:d441 with SMTP id ffacd0b85a97d-39c120e16e3mr13848624f8f.25.1743581630720;
+        Wed, 02 Apr 2025 01:13:50 -0700 (PDT)
+Received: from sgarzare-redhat (host-87-11-6-59.retail.telecomitalia.it. [87.11.6.59])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43eb6138f3esm12761035e9.36.2025.04.02.01.13.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Apr 2025 01:13:50 -0700 (PDT)
+Date: Wed, 2 Apr 2025 10:13:43 +0200
+From: Stefano Garzarella <sgarzare@redhat.com>
+To: Bobby Eshleman <bobbyeshleman@gmail.com>, 
+	Daniel =?utf-8?B?UC4gQmVycmFuZ8Op?= <berrange@redhat.com>
+Cc: Jakub Kicinski <kuba@kernel.org>, 
+	"K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, 
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, 
+	Stefan Hajnoczi <stefanha@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>, 
+	Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
+	Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>, Bryan Tan <bryan-bt.tan@broadcom.com>, 
+	Vishnu Dasa <vishnu.dasa@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, "David S. Miller" <davem@davemloft.net>, 
+	virtualization@lists.linux.dev, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hyperv@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH v2 0/3] vsock: add namespace support to vhost-vsock
+Message-ID: <CAGxU2F7=64HHaAD+mYKYLqQD8rHg1CiF1YMDUULgSFw0WSY-Aw@mail.gmail.com>
+References: <20250312-vsock-netns-v2-0-84bffa1aa97a@gmail.com>
+ <r6a6ihjw3etlb5chqsb65u7uhcav6q6pjxu65iqpp76423w2wd@kmctvoaywmbu>
+ <Z-w47H3qUXZe4seQ@redhat.com>
+ <Z+yDCKt7GpubbTKJ@devvm6277.cco0.facebook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250328143646.27678-1-johan+linaro@kernel.org>
-In-Reply-To: <20250328143646.27678-1-johan+linaro@kernel.org>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 2 Apr 2025 10:13:03 +0200
-X-Gm-Features: AQ5f1JoGfVJ9ts98vDCtSYScI8e3HIFmZAN4o5AGXV0GNmnQTKivDH_VGXOT9Xk
-Message-ID: <CAMRc=McRPmWu4q9EqYC_3wDCKoniu7Rf308SsKrbCk5rbopFwA@mail.gmail.com>
-Subject: Re: [PATCH 0/4] PCI/arm64/ath11k/ath12k: Rename pwrctrl Kconfig symbols
-To: Johan Hovold <johan+linaro@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Jeff Johnson <jjohnson@kernel.org>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, linux-pci@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, ath11k@lists.infradead.org, 
-	ath12k@lists.infradead.org, linux-wireless@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z+yDCKt7GpubbTKJ@devvm6277.cco0.facebook.com>
 
-On Fri, Mar 28, 2025 at 3:41=E2=80=AFPM Johan Hovold <johan+linaro@kernel.o=
-rg> wrote:
+On Wed, 2 Apr 2025 at 02:21, Bobby Eshleman <bobbyeshleman@gmail.com> wrote:
 >
-> The PCI pwrctrl framework was renamed after being merged, but the
-> Kconfig symbols still reflect the old name ("pwrctl" without an "r").
+> On Tue, Apr 01, 2025 at 08:05:16PM +0100, Daniel P. Berrangé wrote:
+> > On Fri, Mar 28, 2025 at 06:03:19PM +0100, Stefano Garzarella wrote:
+> > > CCing Daniel
+> > >
+> > > On Wed, Mar 12, 2025 at 01:59:34PM -0700, Bobby Eshleman wrote:
+> > > > Picking up Stefano's v1 [1], this series adds netns support to
+> > > > vhost-vsock. Unlike v1, this series does not address guest-to-host (g2h)
+> > > > namespaces, defering that for future implementation and discussion.
+> > > >
+> > > > Any vsock created with /dev/vhost-vsock is a global vsock, accessible
+> > > > from any namespace. Any vsock created with /dev/vhost-vsock-netns is a
+> > > > "scoped" vsock, accessible only to sockets in its namespace. If a global
+> > > > vsock or scoped vsock share the same CID, the scoped vsock takes
+> > > > precedence.
+> > > >
+> > > > If a socket in a namespace connects with a global vsock, the CID becomes
+> > > > unavailable to any VMM in that namespace when creating new vsocks. If
+> > > > disconnected, the CID becomes available again.
+> > >
+> > > I was talking about this feature with Daniel and he pointed out something
+> > > interesting (Daniel please feel free to correct me):
+> > >
+> > >     If we have a process in the host that does a listen(AF_VSOCK) in a
+> > > namespace, can this receive connections from guests connected to
+> > > /dev/vhost-vsock in any namespace?
+> > >
+> > >     Should we provide something (e.g. sysctl/sysfs entry) to disable
+> > > this behaviour, preventing a process in a namespace from receiving
+> > > connections from the global vsock address space (i.e.      /dev/vhost-vsock
+> > > VMs)?
+> >
+> > I think my concern goes a bit beyond that, to the general conceptual
+> > idea of sharing the CID space between the global vsocks and namespace
+> > vsocks. So I'm not sure a sysctl would be sufficient...details later
+> > below..
+> >
+> > > I understand that by default maybe we should allow this behaviour in order
+> > > to not break current applications, but in some cases the user may want to
+> > > isolate sockets in a namespace also from being accessed by VMs running in
+> > > the global vsock address space.
+> > >
+> > > Indeed in this series we have talked mostly about the host -> guest path (as
+> > > the direction of the connection), but little about the guest -> host path,
+> > > maybe we should explain it better in the cover/commit
+> > > descriptions/documentation.
+> >
+> > > > Testing
+> > > >
+> > > > QEMU with /dev/vhost-vsock-netns support:
+> > > >   https://github.com/beshleman/qemu/tree/vsock-netns
+> > > >
+> > > > Test: Scoped vsocks isolated by namespace
+> > > >
+> > > >  host# ip netns add ns1
+> > > >  host# ip netns add ns2
+> > > >  host# ip netns exec ns1 \
+> > > >                             qemu-system-x86_64 \
+> > > >                                     -m 8G -smp 4 -cpu host -enable-kvm \
+> > > >                                     -serial mon:stdio \
+> > > >                                     -drive if=virtio,file=${IMAGE1} \
+> > > >                                     -device vhost-vsock-pci,netns=on,guest-cid=15
+> > > >  host# ip netns exec ns2 \
+> > > >                             qemu-system-x86_64 \
+> > > >                                     -m 8G -smp 4 -cpu host -enable-kvm \
+> > > >                                     -serial mon:stdio \
+> > > >                                     -drive if=virtio,file=${IMAGE2} \
+> > > >                                     -device vhost-vsock-pci,netns=on,guest-cid=15
+> > > >
+> > > >  host# socat - VSOCK-CONNECT:15:1234
+> > > >  2025/03/10 17:09:40 socat[255741] E connect(5, AF=40 cid:15 port:1234, 16): No such device
+> > > >
+> > > >  host# echo foobar1 | sudo ip netns exec ns1 socat - VSOCK-CONNECT:15:1234
+> > > >  host# echo foobar2 | sudo ip netns exec ns2 socat - VSOCK-CONNECT:15:1234
+> > > >
+> > > >  vm1# socat - VSOCK-LISTEN:1234
+> > > >  foobar1
+> > > >  vm2# socat - VSOCK-LISTEN:1234
+> > > >  foobar2
+> > > >
+> > > > Test: Global vsocks accessible to any namespace
+> > > >
+> > > >  host# qemu-system-x86_64 \
+> > > >     -m 8G -smp 4 -cpu host -enable-kvm \
+> > > >     -serial mon:stdio \
+> > > >     -drive if=virtio,file=${IMAGE2} \
+> > > >     -device vhost-vsock-pci,guest-cid=15,netns=off
+> > > >
+> > > >  host# echo foobar | sudo ip netns exec ns1 socat - VSOCK-CONNECT:15:1234
+> > > >
+> > > >  vm# socat - VSOCK-LISTEN:1234
+> > > >  foobar
+> > > >
+> > > > Test: Connecting to global vsock makes CID unavailble to namespace
+> > > >
+> > > >  host# qemu-system-x86_64 \
+> > > >     -m 8G -smp 4 -cpu host -enable-kvm \
+> > > >     -serial mon:stdio \
+> > > >     -drive if=virtio,file=${IMAGE2} \
+> > > >     -device vhost-vsock-pci,guest-cid=15,netns=off
+> > > >
+> > > >  vm# socat - VSOCK-LISTEN:1234
+> > > >
+> > > >  host# sudo ip netns exec ns1 socat - VSOCK-CONNECT:15:1234
+> > > >  host# ip netns exec ns1 \
+> > > >                             qemu-system-x86_64 \
+> > > >                                     -m 8G -smp 4 -cpu host -enable-kvm \
+> > > >                                     -serial mon:stdio \
+> > > >                                     -drive if=virtio,file=${IMAGE1} \
+> > > >                                     -device vhost-vsock-pci,netns=on,guest-cid=15
+> > > >
+> > > >  qemu-system-x86_64: -device vhost-vsock-pci,netns=on,guest-cid=15: vhost-vsock: unable to set guest cid: Address already in use
+> >
+> > I find it conceptually quite unsettling that the VSOCK CID address
+> > space for AF_VSOCK is shared between the host and the namespace.
+> > That feels contrary to how namespaces are more commonly used for
+> > deterministically isolating resources between the namespace and the
+> > host.
+> >
+> > Naively I would expect that in a namespace, all VSOCK CIDs are
+> > free for use, without having to concern yourself with what CIDs
+> > are in use in the host now, or in future.
+> >
 >
-> This leads to people not knowing how to refer to the framework in
-> writing, inconsistencies in module naming, etc.
+> True, that would be ideal. I think the definition of backwards
+> compatibility we've established includes the notion that any VM may
+> reach any namespace and any namespace may reach any VM. IIUC, it 
+> sounds
+> like you are suggesting this be revised to more strictly adhere to
+> namespace semantics?
 >
-> Let's rename also the Kconfig symbols before this gets any worse.
->
-> The arm64, ath11k and ath12k changes could go through the corresponding
-> subsystem trees once they have the new symbols (e.g. in the next cycle)
-> or they could all go in via the PCI tree with an ack from their
-> maintainers.
->
-> There are some new pwrctrl drivers and an arm64 defconfig change on the
-> lists so we may need to keep deprecated symbols for a release or two.
->
-> Johan
->
->
-> Johan Hovold (4):
->   PCI/pwrctrl: Rename pwrctrl Kconfig symbols and slot module
->   arm64: Kconfig: switch to HAVE_PWRCTRL
->   wifi: ath11k: switch to PCI_PWRCTRL_PWRSEQ
->   wifi: ath12k: switch to PCI_PWRCTRL_PWRSEQ
->
->  arch/arm64/Kconfig.platforms            |  2 +-
->  drivers/net/wireless/ath/ath11k/Kconfig |  2 +-
->  drivers/net/wireless/ath/ath12k/Kconfig |  2 +-
->  drivers/pci/pwrctrl/Kconfig             | 27 +++++++++++++++++++------
->  drivers/pci/pwrctrl/Makefile            |  8 ++++----
->  5 files changed, 28 insertions(+), 13 deletions(-)
->
-> --
-> 2.48.1
->
+> I do like Stefano's suggestion to add a sysctl for a "strict" mode,
+> Since it offers the best of both worlds, and still tends conservative in
+> protecting existing applications... but I agree, the non-strict mode
+> vsock would be unique WRT the usual concept of namespaces.
 
-Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Maybe we could do the opposite, enable strict mode by default (I think 
+it was similar to what I had tried to do with the kernel module in v1, I 
+was young I know xD)
+And provide a way to disable it for those use cases where the user wants 
+backward compatibility, while paying the cost of less isolation.
+
+I was thinking two options (not sure if the second one can be done):
+
+  1. provide a global sysfs/sysctl that disables strict mode, but this
+  then applies to all namespaces
+
+  2. provide something that allows disabling strict mode by namespace.
+  Maybe when it is created there are options, or something that can be
+  set later.
+
+2 would be ideal, but that might be too much, so 1 might be enough. In 
+any case, 2 could also be a next step.
+
+WDYT?
+
+Thanks,
+Stefano
+
