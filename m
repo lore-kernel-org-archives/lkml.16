@@ -1,186 +1,132 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9CFEE23F41A;
-	Wed,  2 Apr 2025 12:47:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 998F423F400
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 12:47:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743598080; cv=none; b=CfZZuIW1v51xmrea21tR10IoWP/0UQQMcrUfcDV/2gXrLKspkisNZgMWfpJBlFd5Yoyr/ax3bROot/eOLrtj0gYCu+zf4FCSoj+dJ2R5Anr6V1DO1N8CNLM+2h1K0ZQ7cWfp6p899eysJ8inI/FxMGhGbOnnvPw04mmYHgW3Nek=
+	t=1743598081; cv=none; b=hVUF+CEM0O1y4SAEEruMj/TUiy8h7MU35EC9y8PiqYhiqf0jzBNsp9J94FJKIqLrSdDimNq0ZUOG8xdHiIxXYnBmM4PTnZMgCaBYHDvVHzdJucfwK275guQw1UH2CaRW98jPBMUsXnTsYY+K5uIorhkxns62BGr30oTtjj4G11I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743598080; c=relaxed/simple;
-	bh=a7Y67Ezcs0uoJZtr8MYFzNKr69g69RsgDYsE1YLKUCg=;
+	s=arc-20240116; t=1743598081; c=relaxed/simple;
+	bh=TKE8yYqSvh5CTfDsthEGrDa+fvp8GLdxByJGAAoWQ5Q=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lOJ101VqV2IpNKD5Fxi0lnhKFzFu4cwbm7U/TvB5x6OEGIqFKwsaGsHnn+O5+kMvdyrRLwl0t7qulP6WzVF1gBqVgMiXojszMHlsJCr84ErLkYA5msx9SDJBaEFWfcEt129qOEISJ65bV2P6rSjibUzDPiK//q6nyjTthLb7i64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=kxGfbjaH; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	 MIME-Version:Content-Type; b=EzXZ6ds31bZRQ5qtpJApsgY4JHNMdW69TN92yxtmilepgiAf74tM6wgRZ9HV6sq3vB0f7hf+iHBR0AiBAXX8vxr8VWKNG8yUAQTedV6rQfoF3eCod9+o407BDM3lYS9X7vimYpMcVQY+dnQzSy4VOY0FR3FvADGHllS77bEcvdE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b6f8kIXB; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="kxGfbjaH"
-Received: from DESKTOP-VOT081N.hsd1.ga.comcast.net (unknown [20.114.144.49])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 5EB142041317;
-	Wed,  2 Apr 2025 05:47:56 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5EB142041317
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1743598078;
-	bh=hVxQ6Kg9GsCvIcW+Huga3a+Zb9j2IJqZ3DFDTnkF5rI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kxGfbjaHVRlu8UyhJav0auww1bCs3mcX4GvckI7MbbH+HB/yrsk9xwGHFlwmE7BMn
-	 EQTD5z6Y3wdStplhmXYJOK6kv+Lf0z1WRKOIMV4teDxu5omEXaxhuHCGQxS87xahCg
-	 woEjUMMFYYUlj70qdUpzo2FGiPfFkbo54ZbgFfAc=
-From: steven chen <chenste@linux.microsoft.com>
-To: zohar@linux.ibm.com,
-	stefanb@linux.ibm.com,
-	roberto.sassu@huaweicloud.com,
-	roberto.sassu@huawei.com,
-	eric.snowberg@oracle.com,
-	ebiederm@xmission.com,
-	paul@paul-moore.com,
-	code@tyhicks.com,
-	bauermann@kolabnow.com,
-	linux-integrity@vger.kernel.org,
-	kexec@lists.infradead.org,
-	linux-security-module@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b6f8kIXB"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43cfebc343dso49813885e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 05:47:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743598078; x=1744202878; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8rEM6GDoOc8qSQG8ptxriqMDYs/u8ieO+7RntT8HZ8Q=;
+        b=b6f8kIXB0gyTu6UsdhiQGjmQDOqxllcxCZSjN4EE0kUdXyl/QntY+9ya8G5msKSCW/
+         ncksT7hEmpi3PSzgoy2/LeS11nPTP1nMqVIAGbw2mlyLUFFWHt/gMgrnwTlHQhPN6+b8
+         FFz+1gekq8JhD1qGB/TJWkKEPaPr4T+LxWcZv1Dqf+ebs8TuO0G20b7MES0un/KxO2H2
+         o40VHKtysDxm2qSPphBBfD6yeCcmqBDvh3VV88El/t5+4Rdd58nl5JYtXX2B2d0ftB7c
+         4KHHxlXrNd0a9EnozLsnFt56r/UxOzpgLe9OkwWSItxyqGrzqmfFCkyuJE1lul90Ywrz
+         BbmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743598078; x=1744202878;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8rEM6GDoOc8qSQG8ptxriqMDYs/u8ieO+7RntT8HZ8Q=;
+        b=HjpZnFIRPMXpFQwPjSBsczVGxpTlSNY65nJReaLuOuD7BFHNFNX0s8xYM1hJxBNJsJ
+         lGjSUi3IsGZ/qduTHNF+fvpoeRnVvlXr+OwO3npmwkSTV4dCavrc+7nFIdv+f7xPfMtm
+         I0FBi6sV/iIgNj1v5KCYX1rJi6Z5DEROHzPUmLqWZKQIBt48qRDwjccsjSYCM1Tr1kw2
+         a0lF+BSqG/TTNZbEf3AiHH/lii8I5GuqNc1UvBtZQBWQIlkyLxumfyDZQIAodEjOWGNa
+         Pa7R5Wi4JjvirPAqNzs45mlHLHvgQXju3rukWoupCTowRW5IRzOQcQgnlpPJusBE7ZfW
+         K+cg==
+X-Forwarded-Encrypted: i=1; AJvYcCU9QwwYfeY/2UlIF+anLFp5gxvzxBsaQX74u8Uf7HqU7a/d6Ap6ULaP/fWIpILF61dbbGuYKH3+vyzRA1Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyZsdeOgi66jm/2Am6xnB+MTzP/h9uWtK6OqJyMoOU7cL3VoC+2
+	sMNlnbEDtdlzdbVsGmylP4cIg0lo1zpRTJDRXSYtQIfKe/x+A1r8GfRHyaxkawQ=
+X-Gm-Gg: ASbGnct7uFME6De3b4woAvueLufWeD9uNJU0VLvSy8eXf1okgvPhSeNu6pi9UWtq04S
+	hLETVGsz+uYoi3O2ZXHopgcMI953nVepIs1RxIRYRugm6IBpufeRMiiNz2960Bs3fuUJMSzPbTw
+	BACTg4cdcGkmygdPrRdbNvfav0rzrlYLbJa36FbU38bXOXe+JmhYBpnHZBx9QL1iJP6/HR+1VXN
+	htZJJX7n7e0Yjmi+gPYZxUrC64IF5S7x/SvWJ/ZOcDMx1HQcBnK1hJ/KxkX/MW+OZVkekbbtOcK
+	6fEeB1ICChv6CEmYgDP+Bm7Rr6APMHUoM3QHQ0cVbA==
+X-Google-Smtp-Source: AGHT+IF/ugBq75bTqrl45fMDCIyEjBFz/p2e/sr3I7XVZNQJ+ZGWvLt+LzQN5HokwK4sHTYXfc3xAw==
+X-Received: by 2002:a05:600c:34c2:b0:43c:f8fc:f687 with SMTP id 5b1f17b1804b1-43ea7cdf399mr62342575e9.27.1743598077828;
+        Wed, 02 Apr 2025 05:47:57 -0700 (PDT)
+Received: from pc.. ([197.155.71.138])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43eb61b6cd2sm19675985e9.39.2025.04.02.05.47.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Apr 2025 05:47:57 -0700 (PDT)
+From: Erick Karanja <karanja99erick@gmail.com>
+To: gregkh@linuxfoundation.org,
+	outreachy@lists.linux.dev
+Cc: karanja99erick@gmail.com,
+	philipp.g.hortmann@gmail.com,
+	linux-staging@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Cc: madvenka@linux.microsoft.com,
-	nramas@linux.microsoft.com,
-	James.Bottomley@HansenPartnership.com,
-	bhe@redhat.com,
-	vgoyal@redhat.com,
-	dyoung@redhat.com
-Subject: [PATCH v11 9/9] ima: measure kexec load and exec events as critical data
-Date: Wed,  2 Apr 2025 05:47:22 -0700
-Message-ID: <20250402124725.5601-10-chenste@linux.microsoft.com>
+Subject: [PATCH 1/3] staging: rtl8723bs: Use true/false instead of 1/0
+Date: Wed,  2 Apr 2025 15:47:41 +0300
+Message-ID: <49c14bf7475d121e7b3f600e46b93c003851abd1.1743596287.git.karanja99erick@gmail.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250402124725.5601-1-chenste@linux.microsoft.com>
-References: <20250402124725.5601-1-chenste@linux.microsoft.com>
+In-Reply-To: <cover.1743596287.git.karanja99erick@gmail.com>
+References: <cover.1743596287.git.karanja99erick@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-The amount of memory allocated at kexec load, even with the extra memory
-allocated, might not be large enough for the entire measurement list.  The
-indeterminate interval between kexec 'load' and 'execute' could exacerbate
-this problem.
+Standardize boolean representation by replacing 1/0
+with true/false in cases where boolean logic is implied.
+This improves code clarity and aligns with the kernel’s bool type usage.
 
-Define two new IMA events, 'kexec_load' and 'kexec_execute', to be 
-measured as critical data at kexec 'load' and 'execute' respectively.
-Report the allocated kexec segment size, IMA binary log size and the
-runtime measurements count as part of those events.
-
-These events, and the values reported through them, serve as markers in
-the IMA log to verify the IMA events are captured during kexec soft
-reboot.  The presence of a 'kexec_load' event in between the last two
-'boot_aggregate' events in the IMA log implies this is a kexec soft
-reboot, and not a cold-boot. And the absence of 'kexec_execute' event
-after kexec soft reboot implies missing events in that window which
-results in inconsistency with TPM PCR quotes, necessitating a cold boot
-for a successful remote attestation.
-
-These critical data events are displayed as hex encoded ascii in the
-ascii_runtime_measurement_list.  Verifying the critical data hash requires 
-calculating the hash of the decoded ascii string.  
-
-For example, to verify the 'kexec_load' data hash:
-
-sudo cat /sys/kernel/security/integrity/ima/ascii_runtime_measurements 
-| grep  kexec_load | cut -d' ' -f 6 | xxd -r -p | sha256sum
-
-
-To verify the 'kexec_execute' data hash:
-
-sudo cat /sys/kernel/security/integrity/ima/ascii_runtime_measurements 
-| grep kexec_execute | cut -d' ' -f 6 | xxd -r -p | sha256sum
-
-Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
-Signed-off-by: steven chen <chenste@linux.microsoft.com>
-Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
+Signed-off-by: Erick Karanja <karanja99erick@gmail.com>
 ---
- security/integrity/ima/ima.h       |  6 ++++++
- security/integrity/ima/ima_kexec.c | 21 +++++++++++++++++++++
- security/integrity/ima/ima_queue.c |  5 +++++
- 3 files changed, 32 insertions(+)
+ drivers/staging/rtl8723bs/core/rtw_ap.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-index 24d09ea91b87..34815baf5e21 100644
---- a/security/integrity/ima/ima.h
-+++ b/security/integrity/ima/ima.h
-@@ -240,6 +240,12 @@ void ima_post_key_create_or_update(struct key *keyring, struct key *key,
- 				   unsigned long flags, bool create);
- #endif
+diff --git a/drivers/staging/rtl8723bs/core/rtw_ap.c b/drivers/staging/rtl8723bs/core/rtw_ap.c
+index d46a04b9a05e..199727f04516 100644
+--- a/drivers/staging/rtl8723bs/core/rtw_ap.c
++++ b/drivers/staging/rtl8723bs/core/rtw_ap.c
+@@ -386,10 +386,10 @@ void update_bmc_sta(struct adapter *padapter)
  
-+#ifdef CONFIG_IMA_KEXEC
-+void ima_measure_kexec_event(const char *event_name);
-+#else
-+static inline void ima_measure_kexec_event(const char *event_name) {}
-+#endif
-+
- /*
-  * The default binary_runtime_measurements list format is defined as the
-  * platform native format.  The canonical format is defined as little-endian.
-diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
-index d1c9d369ba08..38cb2500f4c3 100644
---- a/security/integrity/ima/ima_kexec.c
-+++ b/security/integrity/ima/ima_kexec.c
-@@ -17,6 +17,8 @@
- #include "ima.h"
+ 		pmlmeinfo->FW_sta_info[psta->mac_id].psta = psta;
  
- #ifdef CONFIG_IMA_KEXEC
-+#define IMA_KEXEC_EVENT_LEN 256
-+
- static bool ima_kexec_update_registered;
- static struct seq_file ima_kexec_file;
- static size_t kexec_segment_size;
-@@ -31,6 +33,24 @@ static void ima_free_kexec_file_buf(struct seq_file *sf)
- 	sf->count = 0;
- }
+-		psta->qos_option = 0;
++		psta->qos_option = false;
+ 		psta->htpriv.ht_option = false;
  
-+void ima_measure_kexec_event(const char *event_name)
-+{
-+	char ima_kexec_event[IMA_KEXEC_EVENT_LEN];
-+	size_t buf_size = 0;
-+	long len;
-+	int n;
-+
-+	buf_size = ima_get_binary_runtime_size();
-+	len = atomic_long_read(&ima_htable.len);
-+
-+	n = scnprintf(ima_kexec_event, IMA_KEXEC_EVENT_LEN,
-+		      "kexec_segment_size=%lu;ima_binary_runtime_size=%lu;"
-+		      "ima_runtime_measurements_count=%ld;",
-+		      kexec_segment_size, buf_size, len);
-+
-+	ima_measure_critical_data("ima_kexec", event_name, ima_kexec_event, n, false, NULL, 0);
-+}
-+
- static int ima_alloc_kexec_file_buf(size_t segment_size)
- {
- 	/*
-@@ -53,6 +73,7 @@ static int ima_alloc_kexec_file_buf(size_t segment_size)
- out:
- 	ima_kexec_file.read_pos = 0;
- 	ima_kexec_file.count = sizeof(struct ima_kexec_hdr);	/* reserved space */
-+	ima_measure_kexec_event("kexec_load");
+-		psta->ieee8021x_blocked = 0;
++		psta->ieee8021x_blocked = false;
  
- 	return 0;
- }
-diff --git a/security/integrity/ima/ima_queue.c b/security/integrity/ima/ima_queue.c
-index 83d53824aa98..590637e81ad1 100644
---- a/security/integrity/ima/ima_queue.c
-+++ b/security/integrity/ima/ima_queue.c
-@@ -241,6 +241,11 @@ static int ima_reboot_notifier(struct notifier_block *nb,
- 			       unsigned long action,
- 			       void *data)
- {
-+#ifdef CONFIG_IMA_KEXEC
-+	if (action == SYS_RESTART && data && !strcmp(data, "kexec reboot"))
-+		ima_measure_kexec_event("kexec_execute");
-+#endif
-+
- 	ima_measurements_suspend();
+ 		memset((void *)&psta->sta_stats, 0, sizeof(struct stainfo_stats));
  
- 	return NOTIFY_DONE;
+@@ -1967,17 +1967,17 @@ void sta_info_update(struct adapter *padapter, struct sta_info *psta)
+ 
+ 	/* update wmm cap. */
+ 	if (WLAN_STA_WME & flags)
+-		psta->qos_option = 1;
++		psta->qos_option = true;
+ 	else
+-		psta->qos_option = 0;
++		psta->qos_option = false;
+ 
+ 	if (pmlmepriv->qospriv.qos_option == 0)
+-		psta->qos_option = 0;
++		psta->qos_option = false;
+ 
+ 	/* update 802.11n ht cap. */
+ 	if (WLAN_STA_HT & flags) {
+ 		psta->htpriv.ht_option = true;
+-		psta->qos_option = 1;
++		psta->qos_option = true;
+ 	} else {
+ 		psta->htpriv.ht_option = false;
+ 	}
 -- 
-2.25.1
+2.43.0
 
