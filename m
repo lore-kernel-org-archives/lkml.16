@@ -1,77 +1,50 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18C7D1DDC28
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 18:08:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7915E19F461;
+	Wed,  2 Apr 2025 18:09:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743617324; cv=none; b=lTsGTxIP9ssP/7oKUBzDKrRmeS7B5K8hwyQ8mXTO4KlplUJU+eq/FOKgJThafi0+W6F9hWg2dddzvAW1rc3j6k0MUPCXKLPcYsJ0KeCDLcWWqHwxu1gQbaM3jg85pd0MsIxd+VKuNzR/rT01cHgLHP4NJrrT6n54i8/urLabjNk=
+	t=1743617369; cv=none; b=qIk6Iop0RBTIFAB88h8ox2yTozRcqb15qqeLr2SmnckuLASCOK8n3FsArP6QmnI3h7elqid5pwQFAGeYRY34PfQWAIZB7rZBT9iMjXm0cBOAHM++YnzSkEQiKu+DK+KP6s0ajwWwgsJwI4yme4VZtrCCiOYTFVxwn7WruwC16tQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743617324; c=relaxed/simple;
-	bh=1t1Hz/lUYgNxRKvMyt+OF3tJQ1f5kTX7iHV7edkdQA0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=K65fj7zzU6dpXMu/WLCbBONitU4xq155mLAJEz/1nD9+lIv1LftY35uf4YdXVQV1ixV5ImSnYb99c8qxGvsBfk65p87gl1ZmUUrTngKSx1IjbBH/mNDmDhX6UhRDbtHExX04+e8vApJTh4Uhhhc83mmdGSl4At0SDuskQReFmJY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=byEak+uR; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743617369; c=relaxed/simple;
+	bh=rNmMO+u09D5zPnq+/pg7RkMy9c5EPySrQWya/Jy4H60=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kn8nSLod5pxA4rO4fy5OjzmNCfBLkDP4i45mOj9oN8ZwmQYOs5b6fiPxJEIDKGg09YL66OmesKbcmFiWvrgyABSo1Nojh9QUlTNBbKBPWNU6cE8FcwJ8QOG3Rq605lxq1Vk3wmvvLF/9cKfavxVN2PmefX/PvJK/fH27LNHU5uA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YG4y6sUt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="byEak+uR"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-abbb12bea54so12421866b.0
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 11:08:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743617320; x=1744222120; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0yRARSwgynvlM2xSRbd7Y1AqU2ZXEdz4XPqJsdLFLgo=;
-        b=byEak+uRnwNM/hc/3Y4bdZM9cjurpqu+9KsmqESPM0N2aOTh9EjfhNCOVs83egeTIJ
-         yrOwyXCr4Jew3TThnxl/9VgLGbAvBDK4CJjacJL9kkT82nzT4xog3abjxGW9ZjUhRKSa
-         hMTaN9bkdHrmsi9B7CiuNouI/4/gPB6a4+I1yOJzXgkPRtxyxVMYUKlwkb3l7NOK2b0c
-         O1d/IyhBG+7ddnEGWyB+ADh1/NDEEc1qSaZEoBvW0boO/1YIaBo7otrlXvLF+GtzSjHF
-         1peh6BAbmnxHppb13qJmYsCfn/ht5lmQQHCHT0qmYh+E2OcFA7kJjnrLWVtHsSYMbqgZ
-         bx7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743617320; x=1744222120;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0yRARSwgynvlM2xSRbd7Y1AqU2ZXEdz4XPqJsdLFLgo=;
-        b=porkNmYd+ZjVqAeJ7UDuH6dbGpBiW84DaomESBm6YM9uLkf2zf/cCQm1t+6KJM8TUX
-         feSxDkUveisJjehgFb4FVq+PyLud/XV8KKOo2qvWt6Q2Dp6uKl45VY6CK0PzMeH6KUKm
-         rEi6i91BPJdqToXBWAoINLx4vAaH3GtlF7pgtZow9pf0l4RdsllPZBmPfT2aRRBmm7AU
-         huNG9j+Rd/Sr5gHj2sEB2twhlwkGBVxLhzJCJ8F76p0ZzCySwMy+8bRUxUw2RAaGG/ap
-         TUJKqPjVHNiEzqIDPTp+CvGHfQynZ5ahY4PFaSBY/yXNdk06WQnOAega9/RmDCfPqFAn
-         I6oQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVhlgy7S+2frTaJISus28Kll5iVZmExP9+ZGS2ToCDj0/+/bUyZsPtOWJ80no1cKC4qaXSqar1Ba69tJv4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwOcUBgJfvM9izxVA8dalVbfqS1uOElriSMDTYhs35uL5ioi3Q7
-	Dt8Be+m4bHPodjFCqzeN1B2B36ac2ImLS6pGb9FQIhAbrOKWse1N
-X-Gm-Gg: ASbGncsC1rkz6bxM/kAvC5m4RuyTLxgYgm1oflmgGHasCV/o7Df9ZZ/aqkkgZYhUpQd
-	CvD5mdG00OtSaf9ZkJXKDdcoH0WLOKrHsVPGGdKDLhEWf/cRSYyFFs4WpfZ+74izEvPtCdtzqd5
-	mmXGXjEvaNweqNSFC4puiPn1i8zMVf9enwfQ4TPRZgC+P7c5tZnUubeUtiSmHgY7ule7H3J3xI6
-	8WVTsncNpEhztdG22JQ/qJ7wBhR9nyxV+Me6YCipvm8u8Y3R6LDVmcWLEtrKCwV0hGBcz8T7U68
-	sSiQ7u81ZIu7MswZus/AEcLj6BdHNXnmWQoCuTRmrZnodBo8Du1KMQ==
-X-Google-Smtp-Source: AGHT+IFsqn5JmRl8mlveBk7xkd3l7pSMvDjBT2o+ZWGQcHFuTHjuMcIjdL4sKhsrvmocOtXxqmYi9A==
-X-Received: by 2002:a17:906:48c6:b0:ac7:391a:e158 with SMTP id a640c23a62f3a-ac7391ae2a1mr1379759166b.59.1743617320061;
-        Wed, 02 Apr 2025 11:08:40 -0700 (PDT)
-Received: from localhost.localdomain ([46.248.82.114])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac71961f8cfsm942503866b.123.2025.04.02.11.08.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Apr 2025 11:08:39 -0700 (PDT)
-From: Uros Bizjak <ubizjak@gmail.com>
-To: x86@kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Uros Bizjak <ubizjak@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@kernel.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH -tip 4/4] x86/idle: Remove CONFIG_AS_TPAUSE
-Date: Wed,  2 Apr 2025 20:08:08 +0200
-Message-ID: <20250402180827.3762-4-ubizjak@gmail.com>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20250402180827.3762-1-ubizjak@gmail.com>
-References: <20250402180827.3762-1-ubizjak@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YG4y6sUt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB9B0C4CEDD;
+	Wed,  2 Apr 2025 18:09:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743617368;
+	bh=rNmMO+u09D5zPnq+/pg7RkMy9c5EPySrQWya/Jy4H60=;
+	h=From:To:Cc:Subject:Date:From;
+	b=YG4y6sUtR4ioGK8k00znOECE6AwnW1jKHtU3d4Yo28ZvmRpHcn9dZNADVqHntSJri
+	 UQeLbECJ0saH0Y62Xrx95BcgTHsGuvTAa0eFkV01Lq8wFZuMdumb8zU+aEHDU7NY0c
+	 rN0lSmFlt8dLaZFaxhr0e3p1I+hqUI8d8COStuGRNgnb3JgbFKRYUuLuvOlbk7Dtl+
+	 6GqUXKzIe22z7+gmSUNiXPl4m0Os7dohc3a705Wh4dq3cgE8kxR2+1PUQfpQCVbX6J
+	 xLQ+EmuLzsBKEabhRgZ45b1ndmLr9D0vrauaE4U79ZSWbOzQtAT87TBJqiOd4me1C0
+	 eiHXf7kQTTTZQ==
+From: Andrii Nakryiko <andrii@kernel.org>
+To: linux-trace-kernel@vger.kernel.org,
+	peterz@infradead.org,
+	mingo@kernel.org
+Cc: bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	kernel-team@meta.com,
+	mhocko@kernel.org,
+	rostedt@goodmis.org,
+	oleg@redhat.com,
+	brauner@kernel.org,
+	glider@google.com,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	akpm@linux-foundation.org,
+	Andrii Nakryiko <andrii@kernel.org>
+Subject: [PATCH v2] exit: move and extend sched_process_exit() tracepoint
+Date: Wed,  2 Apr 2025 11:09:25 -0700
+Message-ID: <20250402180925.90914-1-andrii@kernel.org>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -80,61 +53,96 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-There is no point to have CONFIG_AS_TPAUSE when the emitted assembly
-is always the same. Remove TPAUSE insn mnemonic and leave only the
-equivalent byte-wise definition. This will be changed back to
-insn mnemonic once binutils 2.31.1 is the minimum version to
-build the kernel.
+It is useful to be able to access current->mm at task exit to, say,
+record a bunch of VMA information right before the task exits (e.g., for
+stack symbolization reasons when dealing with short-lived processes that
+exit in the middle of profiling session). Currently,
+trace_sched_process_exit() is triggered after exit_mm() which resets
+current->mm to NULL making this tracepoint unsuitable for inspecting
+and recording task's mm_struct-related data when tracing process
+lifetimes.
 
-Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
+There is a particularly suitable place, though, right after
+taskstats_exit() is called, but before we do exit_mm() and other
+exit_*() resource teardowns. taskstats performs a similar kind of
+accounting that some applications do with BPF, and so co-locating them
+seems like a good fit. So that's where trace_sched_process_exit() is
+moved with this patch.
+
+Also, existing trace_sched_process_exit() tracepoint is notoriously
+missing `group_dead` flag that is certainly useful in practice and some
+of our production applications have to work around this. So plumb
+`group_dead` through while at it, to have a richer and more complete
+tracepoint.
+
+Note that we can't use sched_process_template anymore, and so we use
+TRACE_EVENT()-based tracepoint definition. But all the field names and
+order, as well as assign and output logic remain intact. We just add one
+extra field at the end in backwards-compatible way.
+
+Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
 ---
- arch/x86/Kconfig.assembler   |  4 ----
- arch/x86/include/asm/mwait.h | 11 ++---------
- 2 files changed, 2 insertions(+), 13 deletions(-)
+ include/trace/events/sched.h | 28 +++++++++++++++++++++++++---
+ kernel/exit.c                |  2 +-
+ 2 files changed, 26 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/Kconfig.assembler b/arch/x86/Kconfig.assembler
-index 6d20a6ce0507..fa8858546d5e 100644
---- a/arch/x86/Kconfig.assembler
-+++ b/arch/x86/Kconfig.assembler
-@@ -15,10 +15,6 @@ config AS_SHA256_NI
- 	def_bool $(as-instr,sha256msg1 %xmm0$(comma)%xmm1)
- 	help
- 	  Supported by binutils >= 2.24 and LLVM integrated assembler
--config AS_TPAUSE
--	def_bool $(as-instr,tpause %ecx)
--	help
--	  Supported by binutils >= 2.31.1 and LLVM integrated assembler >= V7
- 
- config AS_GFNI
- 	def_bool $(as-instr,vgf2p8mulb %xmm0$(comma)%xmm1$(comma)%xmm2)
-diff --git a/arch/x86/include/asm/mwait.h b/arch/x86/include/asm/mwait.h
-index 65228861b894..5141d2acc0ef 100644
---- a/arch/x86/include/asm/mwait.h
-+++ b/arch/x86/include/asm/mwait.h
-@@ -133,16 +133,9 @@ static __always_inline void mwait_idle_with_hints(unsigned long eax, unsigned lo
+diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
+index 8994e97d86c1..05a14f2b35c3 100644
+--- a/include/trace/events/sched.h
++++ b/include/trace/events/sched.h
+@@ -328,9 +328,31 @@ DEFINE_EVENT(sched_process_template, sched_process_free,
+ /*
+  * Tracepoint for a task exiting:
   */
- static inline void __tpause(u32 ecx, u32 edx, u32 eax)
- {
--	/* "tpause %ecx, %edx, %eax" */
--	#ifdef CONFIG_AS_TPAUSE
--	asm volatile("tpause %%ecx"
--		     :
--		     : "c"(ecx), "d"(edx), "a"(eax));
--	#else
-+	/* "tpause %ecx" */
- 	asm volatile(".byte 0x66, 0x0f, 0xae, 0xf1"
--		     :
--		     : "c"(ecx), "d"(edx), "a"(eax));
--	#endif
-+		     :: "c" (ecx), "d" (edx), "a" (eax));
- }
+-DEFINE_EVENT(sched_process_template, sched_process_exit,
+-	     TP_PROTO(struct task_struct *p),
+-	     TP_ARGS(p));
++TRACE_EVENT(sched_process_exit,
++
++	TP_PROTO(struct task_struct *p, bool group_dead),
++
++	TP_ARGS(p, group_dead),
++
++	TP_STRUCT__entry(
++		__array(	char,	comm,	TASK_COMM_LEN	)
++		__field(	pid_t,	pid			)
++		__field(	int,	prio			)
++		__field(	bool,	group_dead		)
++	),
++
++	TP_fast_assign(
++		memcpy(__entry->comm, p->comm, TASK_COMM_LEN);
++		__entry->pid		= p->pid;
++		__entry->prio		= p->prio; /* XXX SCHED_DEADLINE */
++		__entry->group_dead	= group_dead;
++	),
++
++	TP_printk("comm=%s pid=%d prio=%d group_dead=%s",
++		  __entry->comm, __entry->pid, __entry->prio,
++		  __entry->group_dead ? "true" : "false"
++	)
++);
  
- #endif /* _ASM_X86_MWAIT_H */
+ /*
+  * Tracepoint for waiting on task to unschedule:
+diff --git a/kernel/exit.c b/kernel/exit.c
+index c2e6c7b7779f..4abd307b1586 100644
+--- a/kernel/exit.c
++++ b/kernel/exit.c
+@@ -937,12 +937,12 @@ void __noreturn do_exit(long code)
+ 
+ 	tsk->exit_code = code;
+ 	taskstats_exit(tsk, group_dead);
++	trace_sched_process_exit(tsk, group_dead);
+ 
+ 	exit_mm();
+ 
+ 	if (group_dead)
+ 		acct_process();
+-	trace_sched_process_exit(tsk);
+ 
+ 	exit_sem(tsk);
+ 	exit_shm(tsk);
 -- 
-2.42.0
+2.47.1
 
