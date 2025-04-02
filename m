@@ -1,159 +1,121 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50AE26F30F
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 14:06:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1115317BB6;
+	Wed,  2 Apr 2025 14:08:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743602783; cv=none; b=H/k//ig47hfjagu0FDrIW+8aQBjLVcJV61ft1AN5GbtEqhQ28lrvVNt8ZNESzAl2srjHoWkg/i2HYetmyPyWZaNYpmKz6V8nygigPsVlbfYn+y0mhRRUDLO2RZ404iwd0587Tih4S8TBbE5Z68J5GQNvx0zAHKGjgJPBGi5GSDY=
+	t=1743602897; cv=none; b=m3OXE8J/EUI3Fwu6K6SS12VsWvENc6RibPqZ1mOlCYWAlAeYcUYhTGyiQ0AOujDxt0vECoGyge0w7mohktOlsjfylVj5VBRHBH8DQ6zhf0oNy9AVqUOCE0XJIOaraLhk2RNUOdssBPFbPBxRC9x1BoxRHzexcaRoq7OkLEuGnD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743602783; c=relaxed/simple;
-	bh=43yCaCwbhhwLAjYEKpYoAbta2guzQ6EG9XK1vyidZSY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NX5Y/ad7KOZYU8S62bsXSz/h9uRwZegLCnqQgmcaZ0G4zITpRWv5KcgiQGIVFw+eMngAdHDffIWydrkVt+ic24ZrMQieZbS691D6TPwnR+Dyu2jLGSHzEmmZITeIIkn1LfO14avTTHwZaDPAWdPZgOdvjXUaiGftqlt3XYsbmoo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=uHAvHlMU; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=uRGyNfEK; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=uHAvHlMU; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=uRGyNfEK; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1743602897; c=relaxed/simple;
+	bh=5LSN8xbr1mSlhFYbFKGSzQEbQQIkR41oBPOPFGrZKHc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=acC3zFWQXFXTPfhwxXXHAwYMjgiOyxNpZvHwlqMx8uwWJBhr5S0yQIo4hDVliIj+OWJb0s65rneK2zC8q180Y65zxi0n1zr91RL6/LnsERSAC0PLsJ/qwMjTzjTD6ocYYThFYdpZLYFHbjQng22OgyqhPUee2ssMi5Se+ujQSYo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qAZKmy2T; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="uHAvHlMU";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="uRGyNfEK";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="uHAvHlMU";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="uRGyNfEK"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 5D35F2119A;
-	Wed,  2 Apr 2025 14:06:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1743602779; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UwVUhdlYTIPsRFnJXKzm8rQ2XZbwVn7BV/kDQ+KUUbo=;
-	b=uHAvHlMUBgfdKyqrmmNu2h6hAMmo3ltSJEoBpUuO6eGtJWDcRRBDPAwY11LomrU4a41Mms
-	rDzqUTErNFWrlbhb7MllFi7JnfQDh6AYFINnfr0Y2MeC1gM0GuKrHyldyZY7rcBJBkcGxD
-	3ZV0TEH2k0oM3zPuhcbXYRbtwLzBIMU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1743602779;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UwVUhdlYTIPsRFnJXKzm8rQ2XZbwVn7BV/kDQ+KUUbo=;
-	b=uRGyNfEKoEM4z2TsLayc+dXXpeN9+o5Jv+yitLjxsBMLFDEethf498MJsijJzM4yMZxpew
-	dzqQnHN4NalSrVDA==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=uHAvHlMU;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=uRGyNfEK
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1743602779; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UwVUhdlYTIPsRFnJXKzm8rQ2XZbwVn7BV/kDQ+KUUbo=;
-	b=uHAvHlMUBgfdKyqrmmNu2h6hAMmo3ltSJEoBpUuO6eGtJWDcRRBDPAwY11LomrU4a41Mms
-	rDzqUTErNFWrlbhb7MllFi7JnfQDh6AYFINnfr0Y2MeC1gM0GuKrHyldyZY7rcBJBkcGxD
-	3ZV0TEH2k0oM3zPuhcbXYRbtwLzBIMU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1743602779;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UwVUhdlYTIPsRFnJXKzm8rQ2XZbwVn7BV/kDQ+KUUbo=;
-	b=uRGyNfEKoEM4z2TsLayc+dXXpeN9+o5Jv+yitLjxsBMLFDEethf498MJsijJzM4yMZxpew
-	dzqQnHN4NalSrVDA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 19C5D13A4B;
-	Wed,  2 Apr 2025 14:06:19 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 9uMeBVtE7WebIwAAD6G6ig
-	(envelope-from <hare@suse.de>); Wed, 02 Apr 2025 14:06:19 +0000
-Message-ID: <d4014616-88ad-4963-8385-e38fc9437fc0@suse.de>
-Date: Wed, 2 Apr 2025 16:06:18 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qAZKmy2T"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FCB2C4CEE9;
+	Wed,  2 Apr 2025 14:08:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743602896;
+	bh=5LSN8xbr1mSlhFYbFKGSzQEbQQIkR41oBPOPFGrZKHc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=qAZKmy2TLrzWHjuSZVHbJOy1ksb1IPe2yGDtRbs5XL4mXSXoKRzuVRImVNr13co6l
+	 GqORv9ixdGSf2DPoItQR3urSEdeBMv4QLmmHMMiBzOq6Po+annHiQfyNaCacRTO/r5
+	 kY2Hf0iUGHduBnPcA2ef0gOKQysuyFyBvzpeMPF8kmaZpXzKtzVoaEXGzjZqxGchYH
+	 MYwd0T+iWBesX4U6BztU/16zqsznjWihUocOgdPVSWCmK/osor6ETt8MvSUfdcpv8P
+	 EWQV3KYyaaM9rSoBP8aAfTydD9KTyCvyCnwG1d868YfnGwphFeRLxmWkRXviShk9T3
+	 qKD+Gu4m3AiwQ==
+From: Christian Brauner <brauner@kernel.org>
+To: linux-fsdevel@vger.kernel.org,
+	jack@suse.cz
+Cc: Christian Brauner <brauner@kernel.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	linux-efi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	James Bottomley <James.Bottomley@hansenpartnership.com>,
+	mcgrof@kernel.org,
+	hch@infradead.org,
+	david@fromorbit.com,
+	rafael@kernel.org,
+	djwong@kernel.org,
+	pavel@kernel.org,
+	peterz@infradead.org,
+	mingo@redhat.com,
+	will@kernel.org,
+	boqun.feng@gmail.com
+Subject: [PATCH v2 0/4] power: wire-up filesystem freeze/thaw with suspend/resume
+Date: Wed,  2 Apr 2025 16:07:30 +0200
+Message-ID: <20250402-work-freeze-v2-0-6719a97b52ac@kernel.org>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <5tiim72iyudzgmjbyvavfumprrifydt2mfb3h3wycsnqybek23@2ftdyt47yhyl>
+References: <5tiim72iyudzgmjbyvavfumprrifydt2mfb3h3wycsnqybek23@2ftdyt47yhyl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 02/18] nvmet-fcloop: replace kref with refcount
-To: Daniel Wagner <dwagner@suse.de>
-Cc: Daniel Wagner <wagi@kernel.org>, James Smart <james.smart@broadcom.com>,
- Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
- Chaitanya Kulkarni <kch@nvidia.com>, Keith Busch <kbusch@kernel.org>,
- linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20250318-nvmet-fcloop-v3-0-05fec0fc02f6@kernel.org>
- <20250318-nvmet-fcloop-v3-2-05fec0fc02f6@kernel.org>
- <e94a7fab-3811-449b-9999-7641b9274b07@suse.de>
- <709b524c-7191-451f-81ea-8bad8f1c6a16@flourine.local>
-Content-Language: en-US
-From: Hannes Reinecke <hare@suse.de>
-In-Reply-To: <709b524c-7191-451f-81ea-8bad8f1c6a16@flourine.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
+X-Change-ID: 20250401-work-freeze-693b5b5a78e0
+X-Mailer: b4 0.15-dev-42535
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2454; i=brauner@kernel.org; h=from:subject:message-id; bh=5LSN8xbr1mSlhFYbFKGSzQEbQQIkR41oBPOPFGrZKHc=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaS/dVk5L3v5e3GXp2eVHcISWtruB5ps/MgXoOrLImH94 ZuPQdD6jlIWBjEuBlkxRRaHdpNwueU8FZuNMjVg5rAygQxh4OIUgIlk+TIyPHlk+u6O8TO/N5Mc nL6Ui0zx/9dlWbzjkcOtK+qKOwqvHmdkmGZV9dzjvfnipHmRi/TWM8jwL5NO488w1sp8u6VFvdu UDwA=
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 5D35F2119A
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:dkim,suse.de:mid,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -4.51
-X-Spam-Flag: NO
 
-On 4/2/25 16:03, Daniel Wagner wrote:
-> On Tue, Mar 18, 2025 at 11:56:50AM +0100, Hannes Reinecke wrote:
->> On 3/18/25 11:39, Daniel Wagner wrote:
->>> The kref wrapper is not really adding any value ontop of refcount. Thus
->>> replace the kref API with the refcount API.
->>>
->>> Signed-off-by: Daniel Wagner <wagi@kernel.org>
->>> ---
->>>    drivers/nvme/target/fcloop.c | 37 +++++++++++++------------------------
->>>    1 file changed, 13 insertions(+), 24 deletions(-)
->>>
->> Can you split this in two, one for the nport and one for fcpreq?
->> That way it's easier to follow what has been modified.
-> 
-> Do you still want me to split the patch? You and Christoph have sent the
-> Reviewed-by tag after this review.
+Now all the pieces are in place to actually allow the power subsystem to
+freeze/thaw filesystems during suspend/resume. Filesystems are only
+frozen and thawed if the power subsystem does actually own the freeze.
 
-Ah, no, Don't bother.
+Othwerwise it risks thawing filesystems it didn't own. This could be
+done differently be e.g., keeping the filesystems that were actually
+frozen on a list and then unfreezing them from that list. This is
+disgustingly unclean though and reeks of an ugly hack.
 
-Cheers,
+If the filesystem is already frozen by the time we've frozen all
+userspace processes we don't care to freeze it again. That's userspace's
+job once the process resumes. We only actually freeze filesystems if we
+absolutely have to and we ignore other failures to freeze.
 
-Hannes
--- 
-Dr. Hannes Reinecke                  Kernel Storage Architect
-hare@suse.de                                +49 911 74053 688
-SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
-HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
+We could bubble up errors and fail suspend/resume if the error isn't
+EBUSY (aka it's already frozen) but I don't think that this is worth it.
+Filesystem freezing during suspend/resume is best-effort. If the user
+has 500 ext4 filesystems mounted and 4 fail to freeze for whatever
+reason then we simply skip them.
+
+What we have now is already a big improvement and let's see how we fare
+with it before making our lives even harder (and uglier) than we have
+to.
+
+Signed-off-by: Christian Brauner <brauner@kernel.org>
+---
+Changes in v2:
+- Drop all patches that remove TASK_FREEZABLE.
+- Expand commit messages a bit.
+- Link to v1: https://lore.kernel.org/r/20250401-work-freeze-v1-0-d000611d4ab0@kernel.org
+
+---
+Christian Brauner (4):
+      fs: add owner of freeze/thaw
+      fs: allow all writers to be frozen
+      power: freeze filesystems during suspend/resume
+      kernfs: add warning about implementing freeze/thaw
+
+ fs/f2fs/gc.c                |  6 ++--
+ fs/gfs2/super.c             | 20 ++++++-----
+ fs/gfs2/sys.c               |  4 +--
+ fs/ioctl.c                  |  8 ++---
+ fs/kernfs/mount.c           | 15 +++++++++
+ fs/super.c                  | 82 ++++++++++++++++++++++++++++++++++++---------
+ fs/xfs/scrub/fscounters.c   |  4 +--
+ fs/xfs/xfs_notify_failure.c |  6 ++--
+ include/linux/fs.h          | 16 +++++----
+ kernel/power/hibernate.c    | 16 ++++++++-
+ kernel/power/main.c         | 31 +++++++++++++++++
+ kernel/power/power.h        |  4 +++
+ kernel/power/suspend.c      |  7 ++++
+ 13 files changed, 174 insertions(+), 45 deletions(-)
+---
+base-commit: 62dfd8d59e2d16873398ede5b1835e302df789b3
+change-id: 20250401-work-freeze-693b5b5a78e0
+
