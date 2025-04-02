@@ -1,151 +1,164 @@
-Received: from smtp-fw-80008.amazon.com (smtp-fw-80008.amazon.com [99.78.197.219])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B46EA1F4625;
-	Wed,  2 Apr 2025 21:59:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.219
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 347C81F4C89
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 21:59:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743631155; cv=none; b=oblt9dVY6bpGXsNLXcJ4SP3axhRGQt5jPb4zpIhBAeKXxAHbDK8uWCI9DLnPBytLMO90IrXpnGZVp/Md9NpoqgRHDSczN1uNe+7HfiP0TqxxepafzKCP6/gF9AQF9bAIpai1DfaaYAHepLBnCyF9I7kx2vlqilEU6VpW8pT6jLU=
+	t=1743631178; cv=none; b=NpeGBMrsV57kTHw3uueqVxbE9M2WlakHC3VMsbDqv5tZ4jgzESV6nog8v6lQD+Q3nQ0SMlmKqdO0/jmqQ7E7BYu1LDZInz8kgT3JP47cCHDMhKGwufKwsAJGMweGeCtcDNNiaKMRpxJ8S9qrnK++dzuCGb4S5rP5GgQl2IlGqXM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743631155; c=relaxed/simple;
-	bh=gZR/lUCfu7BfhLrh0H0NV5UuBc0uNwuknUip/HsM9TU=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Mn616sMqekvrFQW0h+sYgaApsYrT5Sicsnw8YQDzURRAEiTvhlL2clGCDpPkJNuFMg5cdHoNwiFIVaArnld+M/rvtVUZJwpWZxNfZeJU1mQWY7P3w7ebrCnWs1ccywK8dGSXhB8pCUX9aMxuQA9Db7w1OFA+XJbZsiOprkUqS2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=bBbnKpj4; arc=none smtp.client-ip=99.78.197.219
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+	s=arc-20240116; t=1743631178; c=relaxed/simple;
+	bh=Z/xOV2Rb8NgoEvjLqYQw+xu9IJFae4Mb5dAPjpppXrk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SHdhWz3vwjJ7joRyxdrsbpjhnGuuDoPuH14T7H+v6p9kS7wuInz/FqB7glnJXzhUJTXIYPkO3SFOMDs4Mwv4MGWRphaMjBHLQM/wvYMu6WBbzGjpfawId2Aec0mEy5uS+eOL0uGeVwl/tYZ080jzORGjK7ggYRTX2aqBbKokxP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xZq14Bl/; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="bBbnKpj4"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xZq14Bl/"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2264aefc45dso4320455ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 14:59:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1743631153; x=1775167153;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=qbseHlUeh+wI3W4Lnm3HLIl0X8Puvw62VR4kgEDnHcU=;
-  b=bBbnKpj4ZCvqGPcLTUOivixmVgL7hVVmCKVYwlSsZpkKUEMvorYoMcTg
-   VdP975AWYD/9Zi/IZzRUW+SQfo8x4NNLO1Kv+XGlXk6f+3yYN12rJdKwK
-   WKUDwpAF0JAkPlY6dJ/j36UCyN2yNFcrYuJRgi3wq9SZfu+AlTsWmATYP
-   c=;
-X-IronPort-AV: E=Sophos;i="6.15,183,1739836800"; 
-   d="scan'208";a="184340993"
-Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.214])
-  by smtp-border-fw-80008.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 21:59:11 +0000
-Received: from EX19MTAUWC001.ant.amazon.com [10.0.21.151:52418]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.27.18:2525] with esmtp (Farcaster)
- id 4a897196-90c0-4ea2-919a-6cf1e06e4c38; Wed, 2 Apr 2025 21:59:10 +0000 (UTC)
-X-Farcaster-Flow-ID: 4a897196-90c0-4ea2-919a-6cf1e06e4c38
-Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
- EX19MTAUWC001.ant.amazon.com (10.250.64.174) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Wed, 2 Apr 2025 21:59:07 +0000
-Received: from 6c7e67bfbae3.amazon.com (10.106.101.8) by
- EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Wed, 2 Apr 2025 21:59:03 +0000
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
-To: <gregkh@linuxfoundation.org>
-CC: <cve@kernel.org>, <edumazet@google.com>, <ematsumiya@suse.de>,
-	<kuniyu@amazon.com>, <linux-fsdevel@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-net@vger.kernel.org>,
-	<sfrench@samba.org>, <smfrench@gmail.com>, <wangzhaolong1@huawei.com>,
-	<zhangchangzhong@huawei.com>
-Subject: Re: Fwd: [PATCH][SMB3 client] fix TCP timers deadlock after rmmod
-Date: Wed, 2 Apr 2025 14:58:49 -0700
-Message-ID: <20250402215855.18968-1-kuniyu@amazon.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <2025040207-yippee-unlearned-4b1c@gregkh>
-References: <2025040207-yippee-unlearned-4b1c@gregkh>
+        d=google.com; s=20230601; t=1743631176; x=1744235976; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=WqllMbVSzlYmSg4e9MsN3Hg5U+KXq66OHOKXxPOPhW8=;
+        b=xZq14Bl/GyyNlhPUpwTuaLjWoGIgqv8F1cDdpDwbEEPnjy94s6VIJDUB7F3K0h7fAD
+         5jDL17EWS1I8eaxbcoII1dKiCgWRqojvygllrZXFwBs2FXIZQI6L/+DW9j0w3vl3nf7/
+         ZQfWi1jQfSv+DnahlIPTKf04gFEIIvU0YdH7y8dYh9oRMOz6AbJvbRlt02LTWSt0MMlb
+         QWszKp4Qiz7zh1mhYqXSinmUx925sejMoBPCQ0clziuF+bwmkyQrmxz36O3BExFwWg+c
+         jRM0cp7PZwkPPzBWMFjO8a7YLfEd8Wnatl2/Tsp2fSi8uJZMEkJHBoDIzQN4gLcpoxMG
+         znEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743631176; x=1744235976;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WqllMbVSzlYmSg4e9MsN3Hg5U+KXq66OHOKXxPOPhW8=;
+        b=mnvhPG0ZdIjnmv94u7PH+rqf/L48jtX5njRqpcqprYzCNXEjIDB8re/U+2hLb40wAi
+         B9WElMZhIEJFe0paEjS/AdiPk+YOql7RQs70zbnpJ4w424DcOp439MHYBidqfFfENoxq
+         P0bLI9g9pBh5o8ZMBLyUy9obr7tWlAJfOGJQIUdwK4kEZ5jRlmpAxKYTgFCirrPsGawU
+         9IWEeRlXzvcx5pZKsFrNFD0aleFjg79tVAhRuJJCvqamGCEFmvAztoJmmysDojz7S+dh
+         9OfweyoIflshzEfn1T8nLH0dcYM6xvFpizCuIp0MjhpOMMQZi7LWA2qKNPNQ0ekNn1E7
+         1y7A==
+X-Forwarded-Encrypted: i=1; AJvYcCWH8JiMAM7f46nUxutgBRTHFzE+n6cGeQWofjRYuNK/TpBV5uuEtjiR3PXbfUt55cy5/qlrNObkN8aV5eQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyEJjQT7hZbyZMxhuQafMLKqBTrUHdx3r9YAn3+2hnKPdP+tIdQ
+	BeZ/04Isyhy1f3RTi7eo5M81AWa9MIb2JIIEyIQ94IVi+kx1ISqiTLqsxftJHg==
+X-Gm-Gg: ASbGncvxce+4ToHNwGW0IbQu2+7zbNvtpXKdmwiw26Bp9qJNAi/3oQ74EApd1vHc/Wn
+	gJx7J4iGFfbrqRs05vX4dhxZ4NDrmJCMZDOgztgkPs4z6FaB+1H6quCGaA6Uw+zXcR7cu2POmUW
+	TGH0kGC/8SDuxN4hz+WiyMMsK96RcLJjaFRqE4sX2dVSfBMdiqlU3cn+K/ViLi+6+HJRrLqThvq
+	djjSqRpvxpH/Io/P7F+gnh1HEU2maYdgTJlllJrE6i1/b9HS6qyQGcelmILvpSqjbk50XOAwgPT
+	WfR9tmTjiw5C+ya0fpj4EObNmYxHdUX2WD2At6x8KMOBU+J/9LBYY51j6UThipuRvuz8dzx7Eh4
+	KFSy9extQTj0eEgo=
+X-Google-Smtp-Source: AGHT+IHteXxFO7jbKx3k3Jy9PnUQzjVaQtKgEm+NOfEcxdPjDfCVTFwPG/5wPWOnq7Eh2M3nBNvUdw==
+X-Received: by 2002:a17:902:ea03:b0:223:536d:f67b with SMTP id d9443c01a7336-2292f9f607fmr329229995ad.38.1743631176289;
+        Wed, 02 Apr 2025 14:59:36 -0700 (PDT)
+Received: from google.com (198.103.247.35.bc.googleusercontent.com. [35.247.103.198])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-229785c2791sm636175ad.80.2025.04.02.14.59.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Apr 2025 14:59:35 -0700 (PDT)
+Date: Wed, 2 Apr 2025 14:59:31 -0700
+From: William McVicker <willmcvicker@google.com>
+To: Youngmin Nam <youngmin.nam@samsung.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Peter Griffin <peter.griffin@linaro.org>,
+	=?iso-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>,
+	Tudor Ambarus <tudor.ambarus@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Alim Akhtar <alim.akhtar@samsung.com>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Saravana Kannan <saravanak@google.com>, kernel-team@android.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
+	Will Deacon <willdeacon@google.com>
+Subject: Re: [PATCH v1 4/6] arm64: dts: exynos: gs101: Add 'local-timer-stop'
+ to cpuidle nodes
+Message-ID: <Z-2zQ-PcvxFTBc6M@google.com>
+References: <20250331230034.806124-1-willmcvicker@google.com>
+ <CGME20250331230151epcas2p486a7c6d7153737f4168cfef74249742f@epcas2p4.samsung.com>
+ <20250331230034.806124-5-willmcvicker@google.com>
+ <Z+y4zxfifkQqLxKF@perf>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D041UWA001.ant.amazon.com (10.13.139.124) To
- EX19D004ANA001.ant.amazon.com (10.37.240.138)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z+y4zxfifkQqLxKF@perf>
 
-From: Greg KH <gregkh@linuxfoundation.org>
-Date: Wed, 2 Apr 2025 22:32:58 +0100
-> On Wed, Apr 02, 2025 at 01:50:05PM -0700, Kuniyuki Iwashima wrote:
-> > From: Greg KH <gregkh@linuxfoundation.org>
-> > Date: Wed, 2 Apr 2025 21:28:51 +0100
-> > > On Wed, Apr 02, 2025 at 01:22:11PM -0700, Kuniyuki Iwashima wrote:
-> > > > From: Greg KH <gregkh@linuxfoundation.org>
-> > > > Date: Wed, 2 Apr 2025 21:15:58 +0100
-> > > > > On Wed, Apr 02, 2025 at 01:09:19PM -0700, Kuniyuki Iwashima wrote:
-> > > > > > From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > > > > > Date: Wed, 2 Apr 2025 16:18:37 +0100
-> > > > > > > On Wed, Apr 02, 2025 at 05:15:44PM +0800, Wang Zhaolong wrote:
-> > > > > > > > > On Wed, Apr 02, 2025 at 12:49:50PM +0800, Wang Zhaolong wrote:
-> > > > > > > > > > Yes, it seems the previous description might not have been entirely clear.
-> > > > > > > > > > I need to clearly point out that this patch, intended as the fix for CVE-2024-54680,
-> > > > > > > > > > does not actually address any real issues. It also fails to resolve the null pointer
-> > > > > > > > > > dereference problem within lockdep. On top of that, it has caused a series of
-> > > > > > > > > > subsequent leakage issues.
-> > > > > > > > > 
-> > > > > > > > > If this cve does not actually fix anything, then we can easily reject
-> > > > > > > > > it, please just let us know if that needs to happen here.
-> > > > > > > > > 
-> > > > > > > > > thanks,
-> > > > > > > > > 
-> > > > > > > > > greg k-h
-> > > > > > > > Hi Greg,
-> > > > > > > > 
-> > > > > > > > Yes, I can confirm that the patch for CVE-2024-54680 (commit e9f2517a3e18)
-> > > > > > > > should be rejected. Our analysis shows:
-> > > > > > > > 
-> > > > > > > > 1. It fails to address the actual null pointer dereference in lockdep
-> > > > > > > > 
-> > > > > > > > 2. It introduces multiple serious issues:
-> > > > > > > >    1. A socket leak vulnerability as documented in bugzilla #219972
-> > > > > > > >    2. Network namespace refcount imbalance issues as described in
-> > > > > > > >      bugzilla #219792 (which required the follow-up mainline fix
-> > > > > > > >      4e7f1644f2ac "smb: client: Fix netns refcount imbalance
-> > > > > > > >      causing leaks and use-after-free")
-> > > > > > > > 
-> > > > > > > > The next thing we should probably do is:
-> > > > > > > >    - Reverting e9f2517a3e18
-> > > > > > > >    - Reverting the follow-up fix 4e7f1644f2ac, as it's trying to fix
-> > > > > > > >      problems introduced by the problematic CVE patch
-> > > > > > > 
-> > > > > > > Great, can you please send patches now for both of these so we can
-> > > > > > > backport them to the stable kernels properly?
-> > > > > > 
-> > > > > > Sent to CIFS tree:
-> > > > > > https://lore.kernel.org/linux-cifs/20250402200319.2834-1-kuniyu@amazon.com/
-> > > > > 
-> > > > > You forgot to add a Cc: stable@ on the patches to ensure that they get
-> > > > > picked up properly for all stable trees :(
-> > > > 
-> > > > Ah sorry, I did the same with netdev.  netdev patches usually do
-> > > > not have the tag but are backported fine, maybe netdev local rule ?
-> > > 
-> > > Nope, that's the "old" way of dealing with netdev patches, the
-> > > documentation was changed years ago, please always put a cc: stable on
-> > > it.  Otherwise you are just at the whim of our "hey, I'm board, let's
-> > > look for Fixes: only tags!" script to catch them, which will also never
-> > > notify you of failures.
+Hi Youngmin,
+
+On 04/02/2025, Youngmin Nam wrote:
+> On Mon, Mar 31, 2025 at 04:00:26PM -0700, Will McVicker wrote:
+> > From: Will Deacon <willdeacon@google.com>
 > > 
-> > Good to know that, thanks!
+> > In preparation for switching to the architected timer as the primary
+> > clockevents device, mark the cpuidle nodes with the 'local-timer-stop'
+> > property to indicate that an alternative clockevents device must be
+> > used for waking up from the "c2" idle state.
 > > 
-> > My concern was that I could spam the list if I respin the patches,
-> > and incomplete patch could be backported.
+> > Signed-off-by: Will Deacon <willdeacon@google.com>
+> > [Original commit from https://android.googlesource.com/kernel/gs/+/a896fd98638047989513d05556faebd28a62b27c]
+> > Signed-off-by: Will McVicker <willmcvicker@google.com>
+> > ---
+> >  arch/arm64/boot/dts/exynos/google/gs101.dtsi | 3 +++
+> >  1 file changed, 3 insertions(+)
 > > 
-> > >From stable-kernel-rules.rst, such an accident can be prevented if
-> > someone points out a problem within 48 hours ?
+> > diff --git a/arch/arm64/boot/dts/exynos/google/gs101.dtsi b/arch/arm64/boot/dts/exynos/google/gs101.dtsi
+> > index 3de3a758f113..fd0badf24e6f 100644
+> > --- a/arch/arm64/boot/dts/exynos/google/gs101.dtsi
+> > +++ b/arch/arm64/boot/dts/exynos/google/gs101.dtsi
+> > @@ -155,6 +155,7 @@ ananke_cpu_sleep: cpu-ananke-sleep {
+> >  				idle-state-name = "c2";
+> >  				compatible = "arm,idle-state";
+> >  				arm,psci-suspend-param = <0x0010000>;
+> > +				local-timer-stop;
+> >  				entry-latency-us = <70>;
+> >  				exit-latency-us = <160>;
+> >  				min-residency-us = <2000>;
+> > @@ -164,6 +165,7 @@ enyo_cpu_sleep: cpu-enyo-sleep {
+> >  				idle-state-name = "c2";
+> >  				compatible = "arm,idle-state";
+> >  				arm,psci-suspend-param = <0x0010000>;
+> > +				local-timer-stop;
+> >  				entry-latency-us = <150>;
+> >  				exit-latency-us = <190>;
+> >  				min-residency-us = <2500>;
+> > @@ -173,6 +175,7 @@ hera_cpu_sleep: cpu-hera-sleep {
+> >  				idle-state-name = "c2";
+> >  				compatible = "arm,idle-state";
+> >  				arm,psci-suspend-param = <0x0010000>;
+> > +				local-timer-stop;
+> >  				entry-latency-us = <235>;
+> >  				exit-latency-us = <220>;
+> >  				min-residency-us = <3500>;
+> > -- 
+> > 2.49.0.472.ge94155a9ec-goog
 > > 
-> > For example, if v1 is posted with Cc:stable, and a week later
-> > v2 is posted, then the not-yet-upstreamed v1 could be backported ?
-> > 
+> Hi Will.
 > 
-> Anything can be asked to be applied to stable once it is in Linus's
-> tree, but if you add the cc: stable stuff to the original patch, it will
-> be done automatically for you.
+> Are you using this property in production?
+> If so, have you noticed any performance improvements?
 
-Now I understood.  The process is triggered only after the patch
-is merged to Linus' tree.  I assumed the workflow is triggered by
-the patch email itself.
+On Pixel 6, I have only recently switched to using the arch_timer as the
+default clocksource. I haven't noticed any major perf improvements to the main
+benchmarks, but also haven't seen any regressions. Based on the ChromeOS perf
+analysis in [1,2], there was a significant perf difference found.
 
-Thanks for explaining!
+[1] https://lore.kernel.org/linux-samsung-soc/CAJFHJrrgWGc4XGQB0ysLufAg3Wouz-aYXu97Sy2Kp=HzK+akVQ@mail.gmail.com/
+[2] https://lore.kernel.org/linux-samsung-soc/CAASgrz2Nr69tpfC8ka9gbs2OvjLEGsvgAj4vBCFxhsamuFum7w@mail.gmail.com/
+
+If it helps, I found that Pixel 8 and 9 devices (didn't check Pixel 7)
+are already using the arch_timer with this 'local-timer-stop' as the default
+clocksource in the production kernel.
+
+Thanks,
+Will
+
+[...]
