@@ -1,128 +1,118 @@
-Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDD292AE77
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 08:55:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA3D7231CAE
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 08:57:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743584108; cv=none; b=PUUm6VJwayJXjsVq+6vKEaoo1rlnkBAuQBMJB+Ia+04Q59x7yKo9HamqtHctwZVgof38e11iRMZIj0c3I/Krt0xqMmiSYscxrgqXbvsh/OP8Rvv19lI3GXpa1xKrphxMewwb6HOFU3rNK/QqCuv+jkahdqxKgJWIdp+37sG6eZo=
+	t=1743584227; cv=none; b=shS3HKGcTTs6hHQMt2icFtQcH1vLQkk2eBku1gX2EPWe5PhlE5sLKe4ocEO2bkGAa1RX0aBHtFs8otTFj+ulltnR+hr3lPj4QT1kocuNP0MU1qvtASPNg3GtumKGbH5pPztbFjN5LztYBL1gOk9ARzUY4u/bZ0fUzmj12YIUELE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743584108; c=relaxed/simple;
-	bh=ncAJeBOeuZgyrT06rISriwnLImcatJr0GbyJS11FwwM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OLnPWyYueXGAtqfSyqXBJqGsTKU0x8egsgAWyTxlIrfIkjMKwo13++6OJzFggz6lMvWMwn+abXI5AHPWqlIGZKyJZ5+Zn+c3wmXqpeiL3Q0mZuXXkWQsQaCWkOqC5Fb7NweFChzFfyBqreqZXAd6ZvtOOGcuHSuZ3uZlCWshI8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dtwa5xHc; arc=none smtp.client-ip=209.85.222.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1743584227; c=relaxed/simple;
+	bh=EDLEgtEdlcFXO9FrxUMsvd2X/o5lf0PxVMZuhrerVdQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=DZlVy3kl2OtGFR50fR7q/X6xPhv7drRjo16zukYziSiKHK9462pmVFx7yoNe6BNJV/Lc93sDHynzNJsOIbDIrEGZHKA/HXH+VwusN6PqLuiW20Rb5bbFt+PxIXG4Ts1/9OIikEnl4HwJbpxFoNCOzaL7Hpj4Baw5mJ1ivSOMY7M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RWmzGZjW; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dtwa5xHc"
-Received: by mail-ua1-f54.google.com with SMTP id a1e0cc1a2514c-86ba07fe7a4so5600794241.2
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 01:55:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RWmzGZjW"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-224171d6826so104978865ad.3
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 01:57:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743584104; x=1744188904; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=KkfXltEk1Iw8yonvOKbajZ01xoVadwQJF27RtKU8KBs=;
-        b=dtwa5xHcCl5/of6OYlbSenoQsgMPG0Xw2TF2XIFFb0fZ6DStPJzmKhkYiX763Hy8TE
-         5JzRkAjTxkgUPyOjUq5z2uOf2LpN/RZEjzyT9yJnW1aygZgXdmchLOhR1xSqDPGGrxeQ
-         5mYzOzpGSEUfqcZzrXPsioMT3z2fpGXWNfYVJxcAwP9pf1ov/0G9n5AQdzdJLlC99Qd7
-         LpHEEy16mf3b/JI1g2HakpyVMRjGrzCJqissta+WfoKNzU/+gJX8kqCXqiuoJsBavnqG
-         5sFW22R2U04iUVQOqrdZB4DFOPYaFlY53gdCuq+nMmqCg2y33xXc041cQfKFn409k7XT
-         0K4g==
+        d=gmail.com; s=20230601; t=1743584225; x=1744189025; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WWAPszpWlvrmrWFqRVfzalTuSm2t7m4HZ4+y2asZ5jM=;
+        b=RWmzGZjWuCRc0AR3uuNDHmpK32S0A/JgpDczKzhfKpqg5U7zMkKXImA+JyoM5idzKX
+         yVStGt5EA3AL+XuTH55MJhueQQdpZ3b4M0XF2UZ36D5mVkE7qz2uUV+OtuJX4Z7XAGA3
+         BAgIQ6pbVLEBMxfbc5aGV+CfjH5pTFrsCJ5+f+uF+kYajFshm/gHEhtcVHcR6yfwXapM
+         iIN8Xot+iDoTNmI7c1kZqoqq3K965OvwaoK5Yx1LS5oQ87UUiqCHApgA3XtY0skfgwX8
+         2negglIN0EV6+ZkAHOm2+kpPoCG315tbLBLWZEpsWFwyIbJHu31T07lrp0RuvfonMmyv
+         ZxEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743584104; x=1744188904;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=KkfXltEk1Iw8yonvOKbajZ01xoVadwQJF27RtKU8KBs=;
-        b=uC2XOK/jEeoJAT/EcSm/AOtNzYLUa4LsNWzXJY5LqhsUUDCH48opAWfQQ2SPDCah62
-         J2VfWuv6rV9Ad/GMmyZelzWgu0WIiiwZNRTHNFMekc7cHRbNsHL95XtHDVk7IiOdFzRa
-         axC8/kQ21V8jbnwK706j8IzAWvbZmuoPg7L7iTEzsGRtTHO1is2rE79Mxc3aqp97xe43
-         N+OENorHURIao1sgIcvDzs+n2MBijtW4MmpTARjrLL4fWA2UUDwUBtoFEIkKrEYOH8Zv
-         xeqWcyt02kCKJxth2W3WmDQTvcon6flGU7Gf1Ggjh4PTleTZI1eyoEAR5+TXN3nGz/NP
-         z4iQ==
-X-Gm-Message-State: AOJu0Yyh+uW7JLWEpeDydmLMa5+B/EwZkWy6bHpaO3ELY4xL/C/lAabi
-	yv1f39cXVizMC5NUPTn9QKg+Jk8217sRn7Nund/t7ZsEAC2TPwJV9g8TUEgmyGAnYBmISjufSbo
-	U3wBhLeKrzr8uusS/LyjUWQT5UBqQao0uvAUXut+ysvBu2MYCJIg=
-X-Gm-Gg: ASbGncuoveOsxP2ZCfu4SIwM7D3+It6d8y4JGy+sD/WmamYdpVcqDaKJb9tNctS9HrU
-	TnTLg9TlCwtXXQAAs5P5aVrh1MKw0x8iF1iB0zUQFFxnSDI+U2JyRu0wy56UYUoVwIq+SHCuBr+
-	vR71rN5Y6cTcanI/YOEBuOv59H5UoJh1/zFeqgU6Ot5G5O2WNkPgkUV+bJRLg=
-X-Google-Smtp-Source: AGHT+IEievB+pp1aNxi9woKq2lfHUjZwC1Q1KFIgh0dT/EWXbvXwXWvmBfX/gMYpQN/riDxOkHL1mr2rJfv84pPBaGk=
-X-Received: by 2002:a05:6102:c47:b0:4bb:eb4a:f9f0 with SMTP id
- ada2fe7eead31-4c6d3a16ccbmr11902354137.24.1743584104537; Wed, 02 Apr 2025
- 01:55:04 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743584225; x=1744189025;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WWAPszpWlvrmrWFqRVfzalTuSm2t7m4HZ4+y2asZ5jM=;
+        b=o9JFPzz7OXE2NhCGTUoeSP4Dac7iz57AFOEXZ/Q/0M7z9PSd0dgTw7I/Bb5JVkIQEh
+         oXoNO7Af1cmZK6naciqkJKGElHozS4vXp//X7HA1Xx//35+LBYmpgAtQdrWs36gn7F6p
+         MgQTTQc8lDCQ7vne2JfDV1ybyl/bLupV4bktNHf1cECkSfdRAaSG+kScQoXdwTxsRNXZ
+         CC45ZZEFA8kHKm5+YXaHGXNCA6d04AiNbsl/0d6MnISRU862Qq2sS1Fv++TBUA6RKCas
+         ZY5TZErSTSmH9UScXXYGFHgPV6gbaAwckl1vn29Zk61wMZLn1YLi1M2CQRmRN5y2rxiP
+         omxg==
+X-Forwarded-Encrypted: i=1; AJvYcCXaGXb5c0GdmcHqmu/i3YbvuCiEJHxIiSOPdJDjy78Pc21tKDtwpIH7hpxLbrW0GNGKB6VRBH/dt7ulKR0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzkodf4IAzWJISGAjNYH8N8SjnVpljf7/UXqPOWALzAF6Ft1h44
+	5YDBB05T1Z8f4G/+jVF3Iil+orxcSOtJ3PkoE3jk2zkJ2bbd5R+GpZimgxu+7r8=
+X-Gm-Gg: ASbGncswrNaRLxuY3x+0ac80qsGjdXeLefUDlCbZkpFyyXr+5u6v9uuhol3wPagPkLB
+	uAlyMG5MKUscTSzko6hNlK+7sC9XTW90ke7qrDTIgESXawtt2KHQMmOEYVElvpdmbXGxBLqft2u
+	Kw50R0icKL+9hU7x17Q6/CzLXzFFn+5Drm53RoegMCwHDGvi/o2YSmczKl3jbA3PpeQ3M7Z8qWx
+	GjNZE87oXiguCM9SfM2v+LM/vSmmgiuFhnzVxEv2Ud9bHhBCpMB6hlbtSFBdIWvs71nLnQhVuTm
+	vynJOCSR6Us/+UetZv4iQ5+DP+KMdAIGKl5BT3ZFEa1+qPXV27YdQ/ebX0KQ1WgV9sJ6
+X-Google-Smtp-Source: AGHT+IEB11GBk+GAE4+ZVetVY/CYu/AG8QyTGlgekDHi/jvsC7njBUNP5H6KE5bwxY7hZlGb8lzR/g==
+X-Received: by 2002:a17:903:1c7:b0:224:c46:d166 with SMTP id d9443c01a7336-2292f9e53camr256175075ad.40.1743584225005;
+        Wed, 02 Apr 2025 01:57:05 -0700 (PDT)
+Received: from twhmp6px (mxsmtp211.mxic.com.tw. [211.75.127.162])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291f1de7d7sm102753925ad.173.2025.04.02.01.57.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Apr 2025 01:57:04 -0700 (PDT)
+Received: from hqs-appsw-a2o.mp600.macronix.com (linux-patcher [172.17.236.67])
+	by twhmp6px (Postfix) with ESMTPS id 0103E80605;
+	Wed,  2 Apr 2025 17:06:10 +0800 (CST)
+From: Cheng Ming Lin <linchengming884@gmail.com>
+To: tudor.ambarus@linaro.org,
+	pratyush@kernel.org,
+	mwalle@kernel.org,
+	miquel.raynal@bootlin.com,
+	richard@nod.at,
+	vigneshr@ti.com,
+	linux-mtd@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: alvinzhou@mxic.com.tw,
+	leoyu@mxic.com.tw,
+	Cheng Ming Lin <chengminglin@mxic.com.tw>
+Subject: [PATCH 2/3] mtd: spi-nor: macronix: Remove duplicate flash info entries
+Date: Wed,  2 Apr 2025 16:51:28 +0800
+Message-Id: <20250402085129.1027670-3-linchengming884@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250402085129.1027670-1-linchengming884@gmail.com>
+References: <20250402085129.1027670-1-linchengming884@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CA+G9fYtdXHVuirs3v6at3UoKNH5keuq0tpcvpz0tJFT4toLG4g@mail.gmail.com>
-In-Reply-To: <CA+G9fYtdXHVuirs3v6at3UoKNH5keuq0tpcvpz0tJFT4toLG4g@mail.gmail.com>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Wed, 2 Apr 2025 14:24:53 +0530
-X-Gm-Features: AQ5f1Jrtv4W-Ik8Dy7MY8QPUm434a5sVsFhaoy_XcVSO_jLH2XT5qCr7_O_JHjg
-Message-ID: <CA+G9fYuHhz2YCafabKK+QMJiDuM65OcxpaW9TN-=u56r_kyGSA@mail.gmail.com>
-Subject: Re: qemu-i386 boot failed on mainline master - no console output
-To: open list <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>, 
-	linux-mm <linux-mm@kvack.org>, lkft-triage@lists.linaro.org, 
-	Linux Regressions <regressions@lists.linux.dev>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Vinod Koul <vkoul@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	Anders Roxell <anders.roxell@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Linus Torvalds <torvalds@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-+ Linus
-+ Greg KH
+From: Cheng Ming Lin <chengminglin@mxic.com.tw>
 
-On Wed, 2 Apr 2025 at 14:14, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
->
-> Regressions on qemu-i386 devices boot tests failed with defconfig on
-> the mainline master no console output.
->
+To clean up the code and reduce duplication, this entry is removed.
 
-The qemu-i386 boot failed with no console output and is still happening on
-the latest mainline master branch.
+Signed-off-by: Cheng Ming Lin <chengminglin@mxic.com.tw>
+---
+ drivers/mtd/spi-nor/macronix.c | 7 -------
+ 1 file changed, 7 deletions(-)
 
-> First seen on the char-misc-6.15-rc1 merge 25601e85441d ("Merge tag
-> 'char-misc-6.15-rc1' of...)
->  Good: [08733088b566b58283f0f12fb73f5db6a9a9de30] Merge tag
-> 'rust-fixes-6.15-merge'
->  Bad:  [91e5bfe317d8f8471fbaa3e70cf66cae1314a516] Merge tag 'dmaengine-6.15-rc1'
->
-> * qemu-i386
->  - boot
->
-> Regression Analysis:
->  - New regression? Yes
->  - Reproducibility? Yes
->
-> Test regression: qemu-i386 boot failed on mainline master
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
->
-> Anders bisected this to,
->   # first bad commit:
->     [eb0ece16027f8223d5dc9aaf90124f70577bd22a]
->     Merge tag 'mm-stable-2025-03-30-16-52' of
-> git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm
->
-> ## Test log
-> <No console output.>
->
-> ## Source
-> * Kernel version: 6.14.0
-> * Git tree: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-> * Git sha: 91e5bfe317d8f8471fbaa3e70cf66cae1314a516
-> * Git describe: v6.14-12245-g91e5bfe317d8
->
-> ## Test
-> * Test log: https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/anders/tests/2vAGjk1bqJ8kqDGEyo2jXerYOcR/logs?format=txt
-> * Build link: https://storage.tuxsuite.com/public/linaro/anders/builds/2vAGjX8EjBsjTTOgIxZswnitDbF/
-> * Kernel config:
-> https://storage.tuxsuite.com/public/linaro/anders/builds/2vAGjX8EjBsjTTOgIxZswnitDbF/config
->
-> --
-> Linaro LKFT
-> https://lkft.linaro.org
+diff --git a/drivers/mtd/spi-nor/macronix.c b/drivers/mtd/spi-nor/macronix.c
+index 2acd8e28d1c4..07e0bd0b70a0 100644
+--- a/drivers/mtd/spi-nor/macronix.c
++++ b/drivers/mtd/spi-nor/macronix.c
+@@ -160,13 +160,6 @@ static const struct flash_info macronix_nor_parts[] = {
+ 		/* MX25U51245G */
+ 		.id = SNOR_ID(0xc2, 0x25, 0x3a),
+ 		.fixups = &macronix_qpp4b_fixups,
+-	}, {
+-		.id = SNOR_ID(0xc2, 0x25, 0x3a),
+-		.name = "mx66u51235f",
+-		.size = SZ_64M,
+-		.no_sfdp_flags = SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ,
+-		.fixup_flags = SPI_NOR_4B_OPCODES,
+-		.fixups = &macronix_qpp4b_fixups,
+ 	}, {
+ 		/* MX66U1G45G */
+ 		.id = SNOR_ID(0xc2, 0x25, 0x3b),
+-- 
+2.25.1
+
