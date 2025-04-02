@@ -1,124 +1,178 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E21F134D4
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 01:27:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E3C43C17;
+	Wed,  2 Apr 2025 01:28:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743557224; cv=none; b=Epn0a+15r64NME6ScwieddIeCU1u9QuaTY2RzkEVSfe+67snY766YiXUlCdg59WQ/jaE49Rz2OstVqwjPNNOEU84zn9D7Fph6DV4kMEHLxeZNkzBvUa4yqcago5FKNDYViV2F7GZXjQB1CyK2PZOd1sB9nzLWhX08+/ZkwhuNKA=
+	t=1743557339; cv=none; b=CJ9qGXLqmmomFzgCGDxDww/HM5VtqimmXgWT2QFgmdM9ApT7PQqx/5oOYDaHCVRAYXJLaUflU9OTfSfstdVBlsHo3YtILD2A7pjmVUBpqBTCr0wnfUPWm2wfa/sUVcXoycAS7wvF6nIvJpka6iXgB4rQXBt0LyByed/74LwM2jU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743557224; c=relaxed/simple;
-	bh=zNk4H17GKtogAlGv7onHNwlEKEeXX8kX+t/1urbaFfw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qObGv7+27EGeEUJC5KjwXD3uZm++Zf1/m8eVudcQTWN6GcXlkYbYMimkH7AAZ7EnjOj3NWC0IC8ItitRbxZukCSpLNTgAw585WoI/x9+w3Wv3yqO3nHs2ieayPEBJMPyU4PKBnoUUe78xP55FUNmekfNNdPVnyX+aZZfkMA/1CI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TgVPXN85; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TgVPXN85"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743557220;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vf+g3ribFWe5hf9G9hxLYXw08cup7ZD9eiRIDOgNDSI=;
-	b=TgVPXN852TFlPkeGOfUO4gZ11l5pI4KhRk7Z0piSt11IpsgolZKNVAzRZwabidL/5iw/M3
-	t/yVjFlfZK26ffo/b+HtJb3RyzNIJHFHeNaYOGDoah8kCk3frbo7kwsFrwT1wRuAf1DBIC
-	0/wiiehU/6IOBWRnBwOK3EtyybqyCU4=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-45-RgvpDyb-PNq37mNobQHHZA-1; Tue,
- 01 Apr 2025 21:26:54 -0400
-X-MC-Unique: RgvpDyb-PNq37mNobQHHZA-1
-X-Mimecast-MFC-AGG-ID: RgvpDyb-PNq37mNobQHHZA_1743557213
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 95A8519560AB;
-	Wed,  2 Apr 2025 01:26:53 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.12])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 87FC03001D14;
-	Wed,  2 Apr 2025 01:26:50 +0000 (UTC)
-Date: Wed, 2 Apr 2025 09:26:46 +0800
-From: Baoquan He <bhe@redhat.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, yanjun.zhu@linux.dev
-Subject: Re: [PATCH v2 2/7] mm/gup: check if both GUP_GET and GUP_PIN are set
- in __get_user_pages() earlier
-Message-ID: <Z+ySVprhAsXgL0bh@MiWiFi-R3L-srv>
-References: <20250331081327.256412-1-bhe@redhat.com>
- <20250331081327.256412-3-bhe@redhat.com>
- <e6b8481f-0bf6-4acf-9ebc-9b4f28c0be08@redhat.com>
- <Z+v5fguHjl5DiaZm@MiWiFi-R3L-srv>
- <a504f547-dc3c-418b-acb0-111b372d88ce@redhat.com>
+	s=arc-20240116; t=1743557339; c=relaxed/simple;
+	bh=9fHDJ3Dz5NCO+7CJBRwb6ccS/OVogCHRXOkO6esEZBk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=pfBasEnUAr8PckoOCd/b/KN6gao9fFkNhhi8ixtS2ISV3INpeWWOii/gXtLJ7aKtmOpt6nLt1X+Zg57cI3vk3x2sK7mZMBLJcOlkwDrXu8X7oW07fgFchUh4/78iHwjf7AP+qqqz0ctQyjH9VPQa+cvcTiyxp3K0lMQtuEsAgX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-681ff7000002311f-18-67ec92d1caba
+From: Rakie Kim <rakie.kim@sk.com>
+To: Gregory Price <gourry@gourry.net>
+Cc: akpm@linux-foundation.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	joshua.hahnjy@gmail.com,
+	dan.j.williams@intel.com,
+	ying.huang@linux.alibaba.com,
+	david@redhat.com,
+	Jonathan.Cameron@huawei.com,
+	kernel_team@skhynix.com,
+	honggyu.kim@sk.com,
+	yunjeong.mun@sk.com,
+	Rakie Kim <rakie.kim@sk.com>
+Subject: Re: [PATCH v4 3/3] mm/mempolicy: Support memory hotplug in weighted interleave
+Date: Wed,  2 Apr 2025 10:28:37 +0900
+Message-ID: <20250402012845.1064-1-rakie.kim@sk.com>
+X-Mailer: git-send-email 2.48.1.windows.1
+In-Reply-To: <Z-xNajhtWgdhT2Jo@gourry-fedora-PF4VCD3F>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a504f547-dc3c-418b-acb0-111b372d88ce@redhat.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrHLMWRmVeSWpSXmKPExsXC9ZZnoe6lSW/SDe4d5bSYs34Nm8X0qRcY
+	Lb6u/8Vs8fPucXaLVQuvsVkc3zqP3eL8rFMsFpd3zWGzuLfmP6vF6jUZDlweO2fdZffobrvM
+	7tFy5C2rx+I9L5k8Nn2axO5xYsZvFo+dDy093u+7yubxeZNcAGcUl01Kak5mWWqRvl0CV8ak
+	K7+ZCv7IVJx5eo2lgbFHvIuRk0NCwESip72PtYuRA8zetKIYxGQTUJI4tjcGxBQRUJVou+Le
+	xcjFwSzwiEnidPtSVpBOYYFwiX+fPoHZLEA10z42gNm8QFMmXt/ACjFdU6Lh0j0mEJtTwExi
+	9/UPYHEhAR6JVxv2M0LUC0qcnPmEBcRmFpCXaN46mxmi9zmbxIluCwhbUuLgihssExj5ZyFp
+	mYWkZQEj0ypGocy8stzEzBwTvYzKvMwKveT83E2MwFBfVvsnegfjpwvBhxgFOBiVeHgbeN+k
+	C7EmlhVX5h5ilOBgVhLhjfj6Ml2INyWxsiq1KD++qDQntfgQozQHi5I4r9G38hQhgfTEktTs
+	1NSC1CKYLBMHp1QDo83EPxsWPs9RCta5mqBrs/SNUurdu6efLta49nzPcp672nEi1+patrX7
+	reL6Ibnv5DwZr2I27gxb5ZU2fm1bOcT/xCeUT2HNOq5q8Wsuk7CrVbpI8YfAh/e28f5RUWuU
+	ymoImaogYmAnvW+zwLWvq4yOHTx65IDqeVOpm8eEe+/5VbhYCuaZKbEUZyQaajEXFScCAGMO
+	dz5xAgAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrJLMWRmVeSWpSXmKPExsXCNUNNS/fipDfpBtN3mVjMWb+GzWL61AuM
+	Fl/X/2K2+Hn3OLvF52evmS1WLbzGZnF86zx2i8NzT7JanJ91isXi8q45bBb31vxntTh07Tmr
+	xeo1GRa/t61gc+Dz2DnrLrtHd9tldo+WI29ZPRbvecnksenTJHaPEzN+s3jsfGjp8X7fVTaP
+	b7c9PBa/+MDk8XmTXAB3FJdNSmpOZllqkb5dAlfGpCu/mQr+yFSceXqNpYGxR7yLkYNDQsBE
+	YtOKYhCTTUBJ4tjeGBBTREBVou2KexcjFwezwCMmidPtS1m7GDk5hAXCJf59+gRmswDVTPvY
+	AGbzAk2ZeH0DmC0hoCnRcOkeE4jNKWAmsfv6B7C4kACPxKsN+xkh6gUlTs58wgJiMwvISzRv
+	nc08gZFnFpLULCSpBYxMqxhFMvPKchMzc0z1irMzKvMyK/SS83M3MQIDfFntn4k7GL9cdj/E
+	KMDBqMTDK9DzJl2INbGsuDL3EKMEB7OSCG/E15fpQrwpiZVVqUX58UWlOanFhxilOViUxHm9
+	wlMThATSE0tSs1NTC1KLYLJMHJxSDYy6+xdef2gTH/x4hdOxz6c0/k9ZO/FT1iVzhQ1b8hjW
+	aqXWzm73b+4+ePui++blrTffqt5MbfjAlbHLTM3wXQDXkw2rDcLKKtcYRaSGnrlx+95exjta
+	ypsLJVb4avRZ2ojwxGpvTX28+kP/4qjJb81/tYW9qfl8z35rylolfstVk8uUdQ4pffRSYinO
+	SDTUYi4qTgQArKrENWwCAAA=
+X-CFilter-Loop: Reflected
 
-On 04/01/25 at 04:37pm, David Hildenbrand wrote:
-> On 01.04.25 16:34, Baoquan He wrote:
-> > On 04/01/25 at 10:02am, David Hildenbrand wrote:
-> > > On 31.03.25 10:13, Baoquan He wrote:
-...snip...
-> > > We already have that check in is_valid_gup_args(), that catches all external
-> > > users that could possibly mess this up.
-> > 
-> > Right.
-> > 
-> > > 
-> > > So we can just convert that into a VM_WARN_ON_ONCE(), and while doing that,
-> > > we should convert the VM_BUG_ON() above to a VM_WARN_ON_ONCE() as well.
-> > 
-> > Sounds great to me, will put below change into this patch of v3 as suggested.
-> > Thanks.
-> > 
-> > diff --git a/mm/gup.c b/mm/gup.c
-> > index 9e4ed09c578b..d551da9549b1 100644
-> > --- a/mm/gup.c
-> > +++ b/mm/gup.c
-> > @@ -1427,10 +1427,10 @@ static long __get_user_pages(struct mm_struct *mm,
-> >   	start = untagged_addr_remote(mm, start);
-> > -	VM_BUG_ON(!!pages != !!(gup_flags & (FOLL_GET | FOLL_PIN)));
-> > +	VM_WARN_ON_ONCE(!!pages != !!(gup_flags & (FOLL_GET | FOLL_PIN)));
-> >   	/* FOLL_GET and FOLL_PIN are mutually exclusive. */
-> > -	if (WARN_ON_ONCE((gup_flags & (FOLL_PIN | FOLL_GET)) ==
-> > +	if (VM_WARN_ON_ONCE((gup_flags & (FOLL_PIN | FOLL_GET)) ==
-> >   			 (FOLL_PIN | FOLL_GET)))
+On Tue, 1 Apr 2025 16:32:42 -0400 Gregory Price <gourry@gourry.net> wrote:
+> On Tue, Apr 01, 2025 at 06:08:59PM +0900, Rakie Kim wrote:
+> >  static void sysfs_wi_release(struct kobject *wi_kobj)
+> > @@ -3464,35 +3477,84 @@ static const struct kobj_type wi_ktype = {
+> >  
+> >  static int sysfs_wi_node_add(int nid)
+> >  {
+> ... snip ..
+> > +	mutex_lock(&wi_group->kobj_lock);
+> > +	if (wi_group->nattrs[nid]) {
+> > +		mutex_unlock(&wi_group->kobj_lock);
+> > +		pr_info("Node [%d] already exists\n", nid);
+> > +		kfree(new_attr);
+> > +		kfree(name);
+> > +		return 0;
+> > +	}
+> >  
+> > -	if (sysfs_create_file(&wi_group->wi_kobj, &node_attr->kobj_attr.attr)) {
+> > -		kfree(node_attr->kobj_attr.attr.name);
+> > -		kfree(node_attr);
+> > -		pr_err("failed to add attribute to weighted_interleave\n");
+> > -		return -ENOMEM;
+> > +	wi_group->nattrs[nid] = new_attr;
+> > +	mutex_unlock(&wi_group->kobj_lock);
+> > +
 > 
-> That won't work (or shouldn't work :) ). Just drop the handling, it's a
-> sanity check we don't expect to ever trigger, just like the old VM_BUG_ON
-> above.
+> Shouldn't all of this
+> vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+> > +	sysfs_attr_init(&wi_group->nattrs[nid]->kobj_attr.attr);
+> > +	wi_group->nattrs[nid]->kobj_attr.attr.name = name;
+> > +	wi_group->nattrs[nid]->kobj_attr.attr.mode = 0644;
+> > +	wi_group->nattrs[nid]->kobj_attr.show = node_show;
+> > +	wi_group->nattrs[nid]->kobj_attr.store = node_store;
+> > +	wi_group->nattrs[nid]->nid = nid;
+> > +
+> > +	ret = sysfs_create_file(&wi_group->wi_kobj,
+> > +				&wi_group->nattrs[nid]->kobj_attr.attr);
+> > +	if (ret) {
+> > +		kfree(wi_group->nattrs[nid]->kobj_attr.attr.name);
+> > +		kfree(wi_group->nattrs[nid]);
+> > +		wi_group->nattrs[nid] = NULL;
+> > +		pr_err("Failed to add attribute to weighted_interleave: %d\n", ret);
+> >  	}
+> ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 
+> Be happening inside the lock as well?
 
-Ah, I misunderstood it. Will add below change into this patch of v3.
+I agree that applying your suggestion would make the code more robust.
+I will update the patch to follow your recommendation.
 
-diff --git a/mm/gup.c b/mm/gup.c
-index 9e4ed09c578b..a8a10a8ebf14 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -1427,12 +1427,9 @@ static long __get_user_pages(struct mm_struct *mm,
- 
- 	start = untagged_addr_remote(mm, start);
- 
--	VM_BUG_ON(!!pages != !!(gup_flags & (FOLL_GET | FOLL_PIN)));
--
--	/* FOLL_GET and FOLL_PIN are mutually exclusive. */
--	if (WARN_ON_ONCE((gup_flags & (FOLL_PIN | FOLL_GET)) ==
--			 (FOLL_PIN | FOLL_GET)))
--		return -EINVAL;
-+	VM_WARN_ON_ONCE(!!pages != !!(gup_flags & (FOLL_GET | FOLL_PIN)));
-+	VM_WARN_ON_ONCE((gup_flags & (FOLL_PIN | FOLL_GET)) ==
-+			(FOLL_PIN | FOLL_GET));
- 
- 	do {
- 		struct page *page;
+> 
+> > +
+> > +	switch(action) {
+> > +	case MEM_ONLINE:
+> > +		if (node_state(nid, N_MEMORY)) {
+> 
+> Hm, I see the issue here, ok, this node_state check isn't needed, as it
+> will always be true.  So this function needs to handle duplicates still.
+
+Yes, you're right. The `node_state(nid, N_MEMORY)` check I added here is
+redundant because it will always be true in this context. I will remove it
+to avoid unnecessary duplication.
+
+>                           vvv 
+> > +			err = sysfs_wi_node_add(nid);
+> > +			if (err) {
+> > +				pr_err("failed to add sysfs [node%d]\n", nid);
+> > +				return NOTIFY_BAD;
+> > +			}
+> > +		}
+> > +		break;
+> > +	case MEM_OFFLINE:
+> > +		if (!node_state(nid, N_MEMORY))
+> 
+> This check is good for the time being.
+
+This check looks appropriate for now and I'll keep it as-is.
+
+> 
+> > +			sysfs_wi_node_release(nid);
+> > +		break;
+> > +	}
+> > +
+> > +notifier_end:
+> > +	return NOTIFY_OK;
+> >  }
+> >  
+> > 
+> 
+> But really I think we probably just want to change to build on top of this:
+> https://lore.kernel.org/all/20250401092716.537512-2-osalvador@suse.de/
+> 
+> And use register_node_notifier with NODE_BECAME_MEMORYLESS and NODE_BECAME_MEM_AWARE
+> 
+> ~Gregory
+
+Thank you for sharing the link regarding `node_notify`. I agree that the
+mechanism you pointed out would be a better fit for this patch.
+
+By using `register_node_notifier` with `NODE_BECAME_MEMORYLESS` and
+`NODE_BECAME_MEM_AWARE`, we can avoid unnecessary callbacks and implement
+this functionality more efficiently.
+
+However, I think it would be better to apply the current patch first and
+then update it to use `node_notify` once that support is finalized and
+available upstream.
+
+Rakie
 
