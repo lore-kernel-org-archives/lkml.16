@@ -1,125 +1,124 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE12B2356DE;
-	Wed,  2 Apr 2025 10:27:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CE3E236454;
+	Wed,  2 Apr 2025 10:27:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743589665; cv=none; b=pWUpy58vQ5aP1o9HzLj4I5TtF4v4TsxAN+sNzAoiD6nHqS+nUeTKlMFTnzyVqtYNvHSHuM5lfQPhtwk/F9U9E5d7e+G9M3YFueqY6GEoqG6QsqanIQLgSsIh/9EXViJlOO+Id8lujKInNeJRtyoPX5szAoOKkqqhvuIGvLxgibY=
+	t=1743589672; cv=none; b=PcVrdY/bMxSPzLlHFcI1SevqJQt2j3I7lV8jXb7nyisaFDFCqBbi8hv3RjaGbdoLk4u32GJQkBvHneA3WbsEoj/3ArgUUMNy2JwKvxqPwuMXmAtMiQ00E+4PANPsQiUzMoMNLppjAIvWs5B5/TzlgMVkuY3ZYfAh+h7xVe4MruU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743589665; c=relaxed/simple;
-	bh=MMD31686JfFToJn+vLrphzbOZzXUwfoQ30GKQjoszJs=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fqTB+V2ItKrNA5EncUoFDXoLtLFOW6ntK/gv3LmmVjlfAxy6qlVHxk1PAf1r1LdFhpagDAIpFDxw42tRIo5OA8LPKKps3JFNSs9O5wEkkRaU9rFXjt6mUxPJmsxUTx3gx0otNaIsbs3K8QX+U9yl70mNZxnAGo7sYCgByuVJIJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=VdWcmqMC; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1743589672; c=relaxed/simple;
+	bh=eeLoqleT0q+WUMWnv3fDw55O+C1cpprufM4gJ9k/rd4=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EpqOkCMGwbw2AesC1l6eD8cFErMye6TcG5AwTdDBA5+V3Zf/pmrh9sw2Y9EeY6bDuFAEQR3JTGGA12XSxtNORwgX95z1hqQej9K2Tv5xmTlPL81eGNVRoCEtQw1MiU3IgWo1fXUWZCpjO7CRu3ootWv7inR8JnEQ4hZqdUM5NlY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PjMalyPr; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="VdWcmqMC"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5324KK9D024541;
-	Wed, 2 Apr 2025 10:27:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=ekWlM48aZDcyqqTVRgro+i
-	ciSyDz9KxTtQC6KUE5Gng=; b=VdWcmqMCqxSb0egrsgjnKy2jR1SPww2aDtQAH5
-	avxXr9nxa2nVQflpqsf4LtF2ec5BiXklpAD0Ue4qyK2JgyXISicrXAGxiLn616dm
-	bAQ2ZaUff8QxrcS2E6pXVkwcfDqTVqA3K4Vn0uEgmUZ+dDtBtpYorxM3NZwosOYL
-	2garJbc0fVGy8FAQXAKMUMQ2M0gDpUBSBgcYdzlKZqmbkN7exy05jQWp6LJTSNcH
-	yiGrNqFlioGVkNupbiHjGFFCI0hHojp6Jj9sz+HqHq21wKptSOwAQJYZ5PUXts5a
-	rGF+zTLsNh0WVX7X6Ymlj0QShs7w9J6PjQnXg1/EGzB1FgUg==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45rbpyv3w9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 02 Apr 2025 10:27:40 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 532AReaa015001
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 2 Apr 2025 10:27:40 GMT
-Received: from hu-mmanikan-blr.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Wed, 2 Apr 2025 03:27:36 -0700
-From: Manikanta Mylavarapu <quic_mmanikan@quicinc.com>
-To: <andersson@kernel.org>, <konradybcio@kernel.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC: <quic_varada@quicinc.com>, <quic_srichara@quicinc.com>
-Subject: [PATCH v6 0/2] Add PCIe support for IPQ5424
-Date: Wed, 2 Apr 2025 15:57:21 +0530
-Message-ID: <20250402102723.219960-1-quic_mmanikan@quicinc.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PjMalyPr"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43d0782d787so43199325e9.0;
+        Wed, 02 Apr 2025 03:27:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743589668; x=1744194468; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=+k78tSb5ZA1zmXxb3m00fnDBewWredn7OcohwmOAeu4=;
+        b=PjMalyPrLAiQtT7u2pMITMyICfPFLl1fqEn6HwTdVNz3dBbceeBYb4uBb1eI0v7nKI
+         HhDVs3yFjkUM/Z4yc8b+M8CItRJP4xoHUdBPByuZtFCuA3hZ233boHfx8Y8L+xtEWBu1
+         QrDj98zx5PBb9ZltPvblk7AnN+zL9VTMy9041RFVhK3RIka/x9JwwqoyBsj6r7lf4FFt
+         +71YlKuomBSYUp8WbKHcfL+aQuYHGPkItI1UqaUpt/ex8gTZ15TuyuCnByCLkps5rXPZ
+         9CuHM/E4GwxJ04JIziGsoXdXTOVtpwNJCIEgBxTiNBhtEBnGXQwxnE4PlyCCCyiivJFZ
+         cvsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743589668; x=1744194468;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+k78tSb5ZA1zmXxb3m00fnDBewWredn7OcohwmOAeu4=;
+        b=TLjsKNlA5TIZ6vmU2fIOggqmOOTj1Uzj46OFjOtJazzX5XN8GvEnTSPqIaYNOahifu
+         VMbsR9wV+F3dB7wujx0Sp80w8PsYDu6SIl6V2vpkvgUgYEXOYws5kw+9uBKYi1ZgLQG/
+         HaUhGAhTeWcGkG8H4uFWaU2oeRLdsqZe3I0znvSCXPBjFOjo2oSn7Xki/1Ny7qhz/cCW
+         c55742OiILGda95ILOJag8d+rTVV6TbeKy/Drh6jALEh+ctsY2VSHgTorWt1jZ/nJDbX
+         NMydAYgAU699GUTYG0M8hQ42mdhqGKLOMN4UHl0j+XdGehwLGf5ilZf7kVVfgQgHXVVF
+         26MQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU3Q+5Fg+25C8X+NWNXcGLKqlBlSsoiRW4WHda71sTX6jJZo36vImr/DZsGQh5xQNcCrD/qwSz9OF6DOHCj@vger.kernel.org, AJvYcCWssWXdNNLkH70kKsnwNUSEnB0tnjMB9LJfcvh6TQnratSa7R4XosrCtNCCmMgRZUxWevQ=@vger.kernel.org, AJvYcCWtXa+nteArVEXovTtg8xbWb7QKQZU75hCCCqmi0OYZ4me2boNRaZulh2oNG2j0DN08ZGYJQRU5Jfitkcs7qoRC1jFU@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyc6NTra5/QVvhfXTmQIxSqcwMZwfGItleWMb84XwcDbvDz7tu3
+	UyWJ9bSJg5KGk1EAWxpU5IoCUL9RzJhl5paMJSwH9bhzQBrE+u4s
+X-Gm-Gg: ASbGncu/uPG8aNPCqgqW7uIvZuHSr2v7dN1Ud/E8tyOqnFCqbFfwfNrmC6cRTos62Ng
+	uzVO4K651iqSaM0fZQ5vFx6EuD1/CHvhgsrsrdF+al89TXArFxW/eA9CfukgcJq04b+OK3riuoi
+	+ug9jJYriAnxSrBSZsVwQKtRMoy2cw/yu5d8t/GFo5zKC9+Pq91BuLDGUJ0f9ZHQfm+vk/H5nPP
+	Xc9aw4ioDseEB52so4JDL5I2dMoSP3FjimIH/MqAVYiyVUpGIYHOkqz5Ztg3A6Ev/rdTR0jkP4x
+	5lb422DDFqjlnXq0N6FHM61i6SL38WhAMQHwNnAe4xL56G85tS2mAMq5o2l8l1tMMxgd9A==
+X-Google-Smtp-Source: AGHT+IFleKFYOWRpC3v9vuGJk33DcAzU872/yQKBydvXVfpJMSmUuNbUIfy+XpRWiVZAvuvoODgrEA==
+X-Received: by 2002:a05:600c:314b:b0:43c:ea1a:720c with SMTP id 5b1f17b1804b1-43db624b452mr173766045e9.18.1743589668387;
+        Wed, 02 Apr 2025 03:27:48 -0700 (PDT)
+Received: from krava (pokorny-hyundai2.faster.cz. [77.240.177.173])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43eb5fd0d36sm16067175e9.10.2025.04.02.03.27.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Apr 2025 03:27:47 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Wed, 2 Apr 2025 12:27:45 +0200
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	linux-trace-kernel@vger.kernel.org, peterz@infradead.org,
+	mingo@kernel.org, bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-team@meta.com, mhocko@kernel.org, oleg@redhat.com,
+	brauner@kernel.org, glider@google.com, mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com, akpm@linux-foundation.org
+Subject: Re: [PATCH] exit: add trace_task_exit() tracepoint before
+ current->mm is reset
+Message-ID: <Z-0RIXmHHGrXb5HH@krava>
+References: <20250401184021.2591443-1-andrii@kernel.org>
+ <20250401173249.42d43a28@gandalf.local.home>
+ <CAEf4BzYB1dvFF=7x-H3UDo4=qWjdhOO1Wqo9iFyz235u+xp9+g@mail.gmail.com>
+ <20250401181315.524161b5@gandalf.local.home>
+ <CAEf4Bzbq1AMdpBysK-OqJPwrKpibyLk9RffiwEU9xdGwwHC_3w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: xvh_P8t74Am1zoVgrzL7mYBxXCwdemHv
-X-Proofpoint-ORIG-GUID: xvh_P8t74Am1zoVgrzL7mYBxXCwdemHv
-X-Authority-Analysis: v=2.4 cv=ZNLXmW7b c=1 sm=1 tr=0 ts=67ed111c cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=R4e822Z64oTJ8j4ndmEA:9
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-02_04,2025-04-01_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- lowpriorityscore=0 clxscore=1015 mlxscore=0 adultscore=0 mlxlogscore=669
- priorityscore=1501 bulkscore=0 suspectscore=0 malwarescore=0 phishscore=0
- impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504020066
+In-Reply-To: <CAEf4Bzbq1AMdpBysK-OqJPwrKpibyLk9RffiwEU9xdGwwHC_3w@mail.gmail.com>
 
-This series adds support for enabling the PCIe host devices (PCIe0,
-PCIe1, PCIe2, PCIe3) found on IPQ5424 platform. The PCIe0 & PCIe1
-are 1-lane Gen3 host and PCIe2 & PCIe3 are 2-lane Gen3 host.
+On Tue, Apr 01, 2025 at 03:17:01PM -0700, Andrii Nakryiko wrote:
+> On Tue, Apr 1, 2025 at 3:12 PM Steven Rostedt <rostedt@goodmis.org> wrote:
+> >
+> > On Tue, 1 Apr 2025 15:04:11 -0700
+> > Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
+> >
+> > > How bad would it be to just move trace_sched_process_exit() then? (and
+> > > add group_dead there, as you mentioned)?
+> >
+> > I personally don't have an issue with that. In fact, the one place I used
+> > the sched_process_exit tracepoint, I had to change to use
+> > sched_process_free because it does too much after that.
+> 
+> heh, I ran into that as well just recently and also had to use
+> sched_process_free instead of sched_process_exit, because between exit
+> and free we still can get sched_switch tracepoint trigger (so it's a
+> bit too early to clean up whatever per-task state I maintain in BPF
+> program).
+> 
+> So yeah, I'm up for that as well, will send v2 just moving and
+> extending the existing tracepoint. Thanks!
 
-Depends on [1]
++1, it'd be great to have the group_dead info, we also need
+to have some workarounds for that
 
-[1] https://lore.kernel.org/linux-arm-msm/20250317100029.881286-1-quic_varada@quicinc.com/
+thanks,
+jirka
 
-Changes in V6:
-	- dtsi
-		- Drop the R-b tag because the unit address of the pcie nodes has been updated
-		  to align with the dbi address.
-		- Updated pcie node order based on unit address.
-		- Updated the formatting of clock-names and reset-names to vertical lists in
-		  all pcie phy nodes.
-
-V5 can be found at:
-https://lore.kernel.org/linux-arm-msm/20250306111610.3313495-1-quic_mmanikan@quicinc.com/
-
-V4 can be found at:
-https://lore.kernel.org/linux-arm-msm/20250213071912.2930066-1-quic_mmanikan@quicinc.com/
-
-V3 can be found at:
-https://lore.kernel.org/linux-arm-msm/20250125035920.2651972-1-quic_mmanikan@quicinc.com/
-
-V2 can be found at:
-https://lore.kernel.org/linux-arm-msm/20250115064747.3302912-1-quic_mmanikan@quicinc.com/
-
-V1 can be found at:
-https://lore.kernel.org/linux-arm-msm/20241213134950.234946-1-quic_mmanikan@quicinc.com/
-
-Manikanta Mylavarapu (2):
-  arm64: dts: qcom: ipq5424: Add PCIe PHYs and controller nodes
-  arm64: dts: qcom: ipq5424: Enable PCIe PHYs and controllers
-
- arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts |  41 +-
- arch/arm64/boot/dts/qcom/ipq5424.dtsi       | 525 +++++++++++++++++++-
- 2 files changed, 561 insertions(+), 5 deletions(-)
-
-
-base-commit: 7b7d0894c66154494b8295a2e73cfb5516f65756
-prerequisite-patch-id: 210bd857b2a3ce208c6c66389d2845616dafae60
-prerequisite-patch-id: 27a1070861e75cf1dcb03f1e440618bd77b32043
-prerequisite-patch-id: 4dfad74bedd5e7b3b628ead0b23baed7de8b88f7
-prerequisite-patch-id: 79ded164c537cfe947447c920602570626eddb3d
--- 
-2.34.1
-
+> 
+> >
+> > OK, let's just move the sched_process_exit tracepoint. It's in an arbitrary
+> > location anyway.
+> >
+> > -- Steve
+> 
