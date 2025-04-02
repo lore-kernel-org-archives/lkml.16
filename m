@@ -1,66 +1,145 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD87D18A93F;
-	Wed,  2 Apr 2025 18:58:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FE60BA42;
+	Wed,  2 Apr 2025 19:01:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743620301; cv=none; b=P5bQC04leaxks+zq8MfM718xNMB723SsyecRPxOL2FjAD2HrUfX1fGVi8ShUk9qbAIUtq+9IfmUsI2VJZ48uJrzk0hTMLX7fteOfUbujb+o9OKbFSS0qO4ilV6/RW2NpjXW965e+rb0yqU4sJjosC3MMbUXQ5Z4zr2AZakAfujM=
+	t=1743620465; cv=none; b=hsXztMSvGTUdceVioBjkPuEEv2o7Yyf2VdpjYuJHl6jx1ZapJ83lA0nPHgx+1f4LFwRf2U6UHY+NWjS7NObuFN5oi3ZB6KcUq2hmLXI7+FOIO0+aFwQzN/6S4JApfCEtdpokR+rHYSYB1CcMIa8v25HyLBIXKuy2UJwdaKP4uvM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743620301; c=relaxed/simple;
-	bh=h+Y756y/SC+mQDEHLzt1HSHju6agvpfNOY3ng6Pwbxs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y4wWbOWuG/GVZomKFG/Z4MrRYfMMiizHNs23fZNaFI5C9iMz6PYmon4C0eLYcqR652m4rw7iYytNAlkUhCzo65hbbjeHaCfV7/sRFdpnsMN6GHAiAhrOiSEnX3zv4Ab62cPxJ7UUKxfd2a+YqV91Sl0cEpctW+o1VGrmh8h+H9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LuzbuXa/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743620465; c=relaxed/simple;
+	bh=iVRswX5P/3WFcdk+pZHZMsYppdWUO4nmDl4ZBIPTkEY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=sXVug5fDlbJjzD5iTL2uQK/djw1tbCbG+SJX/ZZyA1jBwHd8s2A4ErNt62DlIc29BM95JOfz5hJJ6AKlUzJCdLN6Ccl0WCRCveLxn/ehpxBmM7Su0K30DU2szQKGqlJn9M1dg0UgSkD3S/OkmTRyHmcNvFk4biV1zG6pkFBt6wQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=hYhD7pVN; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LuzbuXa/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79D68C4CEDD;
-	Wed,  2 Apr 2025 18:58:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743620298;
-	bh=h+Y756y/SC+mQDEHLzt1HSHju6agvpfNOY3ng6Pwbxs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LuzbuXa/RMAT5Z28d4oxos4rB0Pms13S1hXOux542JptU7lGOxwTUK6eZ0AaPJ6//
-	 f1whKCM55V0eIL82rFit+kTN/4Lrj2uJYwTeM/HxOuJo1veyhQK+cQ1h2P6tSbbGlj
-	 9SlbVzGawQLA+RF0R5WjijSa7gG+ExP8w+sQPKo/5ZXAUBt6dl8Mx1dcp+ex6aJk4f
-	 LeLfUoKe7qQ0/ssAmo1blovnn8lUbYBlmP2guJPpGN/QBoUjBltBA3/aM5ycO6l4YQ
-	 1GLbqOLIdXGn0LP84b1QYa2UJVytKVlsoIdJrk391d5Rzl3FBClPu54XkNAvz3FVvB
-	 Ev2KBOGv/KhOQ==
-Date: Wed, 2 Apr 2025 19:58:13 +0100
-From: Simon Horman <horms@kernel.org>
-To: Jijie Shao <shaojijie@huawei.com>
-Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, andrew+netdev@lunn.ch, shenjian15@huawei.com,
-	wangpeiyang1@huawei.com, liuyonglong@huawei.com,
-	chenhao418@huawei.com, jonathan.cameron@huawei.com,
-	shameerali.kolothum.thodi@huawei.com, salil.mehta@huawei.com,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net 4/7] net: hibmcge: fix wrong mtu log issue
-Message-ID: <20250402185813.GX214849@horms.kernel.org>
-References: <20250402133905.895421-1-shaojijie@huawei.com>
- <20250402133905.895421-5-shaojijie@huawei.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="hYhD7pVN"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 532C1hZx024534;
+	Wed, 2 Apr 2025 19:00:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	ij6oVdOz4GhS0vGrhbityqjcv93TkR0sIrqUodkZMFk=; b=hYhD7pVNIeDwDBrW
+	RdO5PrMwS8sO1ippIQSGUyIYQ2aHb7qJuvA8S/CTVfe+wl3fGVcBkK+tVHJeC/Fq
+	hL0quAhjsZgdxh4KYOc6r2i6Gy0K17YxXYIvcN3aAPcOVgVQfvxnN1L1QRwh3B/f
+	iNw133fc//aUQBjMULW74HoUe6hVoYaUgy9HMacMC7MaMwE5l9UNz5swOuqq8Os5
+	wu3dTwbUcX100OEvJokqUmtO2Ui7Bihi+ChA5Cq0uSXw6qzZZsLnr5JqmT6CIlBj
+	jsmAF8BSmVLuxw7LwpPsMxs6waa4SBRHV0VIQ6IaNJwJBe63uNd47fsw3lzvLxqP
+	V7jENg==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45rbpywh5x-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 02 Apr 2025 19:00:28 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 532J0RBJ002057
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 2 Apr 2025 19:00:27 GMT
+Received: from [10.46.162.103] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 2 Apr 2025
+ 12:00:26 -0700
+Message-ID: <1b87152e-ff0f-9c45-020d-4927ff3dbef8@quicinc.com>
+Date: Wed, 2 Apr 2025 12:00:26 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250402133905.895421-5-shaojijie@huawei.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.1
+Subject: Re: [PATCH v4 1/1] scsi: ufs: core: add device level exception
+ support
+Content-Language: en-US
+To: "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
+        Bart Van Assche <bvanassche@acm.org>
+CC: Arthur Simchaev <Arthur.Simchaev@sandisk.com>,
+        "quic_cang@quicinc.com"
+	<quic_cang@quicinc.com>,
+        "quic_nitirawa@quicinc.com"
+	<quic_nitirawa@quicinc.com>,
+        "avri.altman@wdc.com" <avri.altman@wdc.com>,
+        "peter.wang@mediatek.com" <peter.wang@mediatek.com>,
+        "minwoo.im@samsung.com"
+	<minwoo.im@samsung.com>,
+        "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        Alim Akhtar
+	<alim.akhtar@samsung.com>,
+        "James E.J. Bottomley"
+	<James.Bottomley@hansenpartnership.com>,
+        Matthias Brugger
+	<matthias.bgg@gmail.com>,
+        AngeloGioacchino Del Regno
+	<angelogioacchino.delregno@collabora.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Keoseong Park <keosung.park@samsung.com>,
+        Ziqi Chen
+	<quic_ziqichen@quicinc.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        "Gwendal
+ Grignou" <gwendal@chromium.org>,
+        Eric Biggers <ebiggers@google.com>,
+        open
+ list <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC
+ support:Keyword:mediatek" <linux-arm-kernel@lists.infradead.org>,
+        "moderated
+ list:ARM/Mediatek SoC support:Keyword:mediatek"
+	<linux-mediatek@lists.infradead.org>
+References: <4370b3a3b5a5675bb3e75aaa48a273674c159339.1742526978.git.quic_nguyenb@quicinc.com>
+ <SA2PR16MB4251229744D717821D3D8353F4A72@SA2PR16MB4251.namprd16.prod.outlook.com>
+ <c5ab13ec-f650-ea10-5cb8-d6a2ddf1e825@quicinc.com>
+ <0a68d437-5d6a-42aa-ae4e-6f5d89cfcaf3@acm.org>
+ <ad246ef4-7429-63bb-0279-90738736f6e3@quicinc.com>
+ <3d7b543c-1165-42e0-8471-25b04c7572ac@acm.org>
+ <4cb20c80-9bb0-e147-e3c0-467f4c8828ba@quicinc.com>
+ <989e695e-e6a4-4427-9041-e39ecf5b5674@acm.org>
+ <yzy7oad77h744vf2bdylkm4fronemjwvrmlstnj6x5lzjxg672@zya6toqv4aeg>
+From: "Bao D. Nguyen" <quic_nguyenb@quicinc.com>
+In-Reply-To: <yzy7oad77h744vf2bdylkm4fronemjwvrmlstnj6x5lzjxg672@zya6toqv4aeg>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: nuJyCFbkUJbHjGlJ8RMkEV0OQHadcz5I
+X-Proofpoint-ORIG-GUID: nuJyCFbkUJbHjGlJ8RMkEV0OQHadcz5I
+X-Authority-Analysis: v=2.4 cv=ZNLXmW7b c=1 sm=1 tr=0 ts=67ed894c cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=KKAkSRfTAAAA:8 a=Si26H9tSdrSrRDVtBSgA:9 a=QEXdDO2ut3YA:10
+ a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-02_08,2025-04-02_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ lowpriorityscore=0 clxscore=1015 mlxscore=0 adultscore=0 mlxlogscore=999
+ priorityscore=1501 bulkscore=0 suspectscore=0 malwarescore=0 phishscore=0
+ impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504020121
 
-On Wed, Apr 02, 2025 at 09:39:02PM +0800, Jijie Shao wrote:
-> A dbg log is generated when the driver modifies the MTU,
-> which is expected to trace the change of the MTU.
-> 
-> However, the log is recorded after WRITE_ONCE().
-> At this time, netdev->mtu has been changed to the new value.
-> As a result, netdev->mtu is the same as new_mtu.
-> 
-> This patch modifies the log location and records logs before WRITE_ONCE().
-> 
-> Fixes: ff4edac6e9bd ("net: hibmcge: Implement some .ndo functions")
-> Signed-off-by: Jijie Shao <shaojijie@huawei.com>
+On 4/2/2025 12:49 AM, manivannan.sadhasivam@linaro.org wrote:
+> Yeah, we should be cautious in changing the uAPI header as it can break the
+> userspace applications. Annotating the members that need packed attribute seems
+> like the way forward to me.
 
-Reviewed-by: Simon Horman <horms@kernel.org>
+Yes, I realized potential issue when Bart raised a concern.
 
+> 
+> Though, I'd like to understand which architecture has the alignment constraint
+> in this structure. Only if an architecture requires 8 byte alignment for __be32
+> would be a problem. That too only for osf7 and reserved. But I'm not aware of
+> such architectures in use.
+When using "__u64 value;" in place of osf3-6, I saw the compiler padded 
+4 bytes, so __packed was needed for me to get correct __u64 value. I 
+thought even the existing structure utp_upiu_query_v4_0 may need 
+__packed on some fields where the driver reads the returned data in 
+order to be safe across all architectures. However, without evidence of 
+an actual failure, I didn't touch the existing structure. Only raised 
+potential issue for discussion.
+
+Thanks, Bao
