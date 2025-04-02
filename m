@@ -1,145 +1,98 @@
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BDC02356A7;
-	Wed,  2 Apr 2025 08:42:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8428231A4D;
+	Wed,  2 Apr 2025 08:43:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743583366; cv=none; b=AcW/4phRHvqqbA3vWwzS1QZlhjQUi4p2VvUM0RzJkb66cgVEEMZWp289lKLx8wWSCWk0JHpCltQRcQDYZP4aaYK9aHMj6qsytWkQCcymvTot5kQ5A4PBz0QrCuWKGBlnJEaTesC1EeMnE8yEirMfufiS5uhf+c2HtEX3p8MOkVY=
+	t=1743583395; cv=none; b=ZCZDaHc9OYOxuZYuAi+d8Jz2WqMFZRjlv8+r6YmM0OJVxL4bISV+djpaVEp1dODILCLY6keMx5Oqz+M3wawoiAbdT6Ya8Armi3PpQyhbyzRRNZ97dHULcddgzFcu7+OyY4e7XwPudciH7wln94RmGzBx6LEvFJtyXx24+0uWo6o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743583366; c=relaxed/simple;
-	bh=DVwcISZS5xhVIQrAFTZKj0OmT2lqUmyK5yPbdCdC0Go=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ibr7Vh7MMybiYicLO2oOXIrEstDnHaw0CS8J2HgCOW98XZpq5KMPqr249eUOSUGU1hBZ08GjWqpYHKR1CAlT9odxkOBbKeQHTfq7JOnnfwcuesvwy2xdW6LAaJUSJjirhaAEYOrvtrJx+7zc9LAThWXxoXUP6MvmDzlqpYsGuU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fvehnBjb; arc=none smtp.client-ip=209.85.160.181
+	s=arc-20240116; t=1743583395; c=relaxed/simple;
+	bh=z0s0q1o8XBTtQ1gx76sVhC4z1BhrlJUoq2EMeF1Nm20=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=sQLGAn0huEZr2wBSk0DRT2648EhRz2msP4H0xAQm/HafH3yNw4W6P3gNPAzdHOU11jTx2MDY7W9L3mSMy5Rjw04heRue34e2wiwYjobc5WdjJQcLyT4yirJTPxK2d1qBZu8QSgR5ZoyQ0BKQJDUaUz4iPVvoxeqK/eS5TPGzOv0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m5C5a60h; arc=none smtp.client-ip=209.85.218.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fvehnBjb"
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-4769aef457bso69610121cf.2;
-        Wed, 02 Apr 2025 01:42:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m5C5a60h"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ac3fcf5ab0dso1038883266b.3;
+        Wed, 02 Apr 2025 01:43:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743583363; x=1744188163; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=P1I7NeXMNkcuNFfTBD581NZoOi50eOmbz4OoopGU528=;
-        b=fvehnBjb+zKS3dYxalIo84xiS7znPDwJ28tx9tGtfYv53WeoVgLM3r7LZ8RMHErMfF
-         2LT7v/kndf7nCzJOHTJDG2YLis+Mb3OJEQuU0WUeALqoAEgqa+mk1agk0RayLcX4Byn4
-         VMeLUIAup4lIUSDEiFXOKNe1U4vYO/IbpGPG6hlGxNbCmnMV6KfRLkRJyWfqd3gXzdN5
-         A22bJ4jOuOx1gdP/kJrfzvL5Hz73BN/RswwCLxjmxvL2y6xZiBae+LDCFGDz/bGE7HKl
-         +ZSvabeuQhzZeUYmjeLm24bhvB7W0vuVcVDUHiyn0ogj5DQCkoixqtPwiAOTimL6Y/qc
-         jauQ==
+        d=gmail.com; s=20230601; t=1743583392; x=1744188192; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=z0s0q1o8XBTtQ1gx76sVhC4z1BhrlJUoq2EMeF1Nm20=;
+        b=m5C5a60hJ79TV+wuJu1pnYCJV+zh5XLDhTt9oXzeQK9tzn/GbkX84vRsMrqFzSVDME
+         JP88hVCGhgj2ALWKgIsZwer5TdTggy48Tj2S1oXS+hOSCyUGZA5BedsG0VFqbt1B0yTw
+         KsjosswtmX29bKaxE892vyTKUfm5hOVcViB9blgrYkqGvQWaMkrS4efYQ9EXPFtO+RrV
+         6pO9BmhLDD1dMH8piaVvHtVRX0amuoG0LPwqPeWYVtdSE79/puFlm0aS9dUjJsxEMQVX
+         KLvFCQvMkT5AhzfEMqR53rq17CRgZkBnEQuyi1kS4qEDA8/sXg2RID1FHmp29BqxzdkK
+         YXXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743583363; x=1744188163;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=P1I7NeXMNkcuNFfTBD581NZoOi50eOmbz4OoopGU528=;
-        b=b2I7sBdJjR2jiE8uDqHvB9UnWv7H10jVDslJsfkBlD4cZZhCGzD3ovJ8utHBjVvLGf
-         KuLtNoK76Tvrr9HUlWU1PVUXzAnRHlmWJjbVuRGn7AY64lo+Q7QQVpHR15HonqzI2mWJ
-         GdRhl/XV76BirT/wkAUb3rDnpa/JgGYF9mwQdj/ngUrLAcnXGpdTDcsV/pjSikaPBrGD
-         ry7gY7fxk98h16fTnh16jr8haMLUqQD7CcOW0isYQU+1Bwnug7CN4TAeOggJR+Sqm9ly
-         xTfIOhZyAlhkLLMC54+RWn0f2Qqt/gR0VGUfY2hy81kITbC9zSOtSN3h/i/R1FalFZSl
-         iaIA==
-X-Forwarded-Encrypted: i=1; AJvYcCUnedrbLn1MguoB3pjlhO3w/nBI6YSQFGKO8g3PhwJhN9EcC0PPWeZuEJJDJ4Sg2kEptWFEgoa+c0kihSE+@vger.kernel.org, AJvYcCVk7KnWqKjONHOsSbe9lhVOQDDPVNC02G6pfNF/Kq6jIKYNR53+F7/hwdohH4nqrCpc+VDgGeNa3yyiYeWz@vger.kernel.org
-X-Gm-Message-State: AOJu0YzFajp9NDx3XFuXH8evXDINlTk+sTqfnyWK+jh2HYp6GrPTZv6F
-	Fp9sfIgMJdJ52AStrn7gUj+uFkI5ZQCnjjGEYo/PyaIUds0zzj3Ar/v9/Plfm0TcKO3abzd7nW3
-	VuHUTc0yztVZ5Z0qtTpaViITFQoI=
-X-Gm-Gg: ASbGncuHcA9gHVorv7YEREDSHvV4yzWnZVIwezw1sxvhH1qDZXZY5VFZliDyl/PXAjj
-	3AImNWipKvaTpfIw78zSeII85yJIykeMqJdKfdFTD8BTTYwDD1ZhgRIa0SDmfKVr5haaUfJgRLd
-	tjCL/JbwRLZG7/FTw1EDMBPnVYzfKm7Yv2Dwp7Tw==
-X-Google-Smtp-Source: AGHT+IFYItNwpA/Wk64fkLYr+wxWGKsPgs8JlMhSDN7+WlRwbB7s+zxhsfXmxj67a145bRcVX0Ifs2rteI5yjKCiItA=
-X-Received: by 2002:a05:6214:268f:b0:6ec:f51f:30e9 with SMTP id
- 6a1803df08f44-6eed607395emr207393826d6.4.1743583363170; Wed, 02 Apr 2025
- 01:42:43 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743583392; x=1744188192;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=z0s0q1o8XBTtQ1gx76sVhC4z1BhrlJUoq2EMeF1Nm20=;
+        b=owkKpjyS8XvwDDq1p6BZ8DNXDRELeS8OG6OeVOz6QNZpJdklEsQgLx9mr44LCth0Ax
+         F92vENccbr43k8OXOxJgGxf+5rYgXiNW1CNDQuFi22VAvKkdGlNQoOV3nmv6sg68/8ub
+         0ySFu8tGIHDsSFN4mopVGZAk20DpIdQ0286Cu2j3SqDijmSUUcrOShiRR50k2p3iP0OX
+         MKs4FE9TnRcxWLwUQsNAIgObhJVHn+cEc7F4gQ/Q7tuuRDzRHbastQ2vG02lM7rBIhnU
+         A7dNzOvcIpXo/IejvGO8pIjEgc51pQrivAMCb+U6Z2yBpSnLJCul7fgYxxlhG6WYa3lc
+         gCSg==
+X-Forwarded-Encrypted: i=1; AJvYcCUsBukMt9yqnar0BWFVqpqj1jojP9WWrJdNU7xR5AHOtmBfTYib2GWPW4QIGNV5d2FJa8nHYw+UeH2kra0=@vger.kernel.org, AJvYcCVEr8fF8Q2yXluoMSwf0O0ehYfym09o7UzHTy4VFA45VjClSh7ZmHSXrVnAQPoG/mcQWKn0xDl5gkF3TA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwqHqg2Qpywe137irHP6pLv+ucGy6+bJCr8ZL2DMz/9NgfNCmxQ
+	zQHuUZkiXjeTtf5U+rRTb3/JRljOdbqlc8CDhz1YS1QMBpw16Be8
+X-Gm-Gg: ASbGncuOLMY0cVV35YrnJmC3CcvN5vKOUQxdPLiddFsMs7NS5L6iqLpeDZPEw137WUB
+	qyan1EplVHm3lNAANyWUvOfkfcNFoN3lLykGL0lPO2uBP1c7tMjdootMcEqwrwAapM0WtbJ7Wc3
+	SJYh7iVkspyXjHHfyh4obnCfiwWAGJb/0sd8cTdrh25G0ZFqh5LaQW92Ib3UnXnOiPGAEHen5JV
+	IgL/dEZ94JcOjsJTKXN2ZkQXhz/TrzTnFrDvSxanBXco9x2YvzCr9KKx+g9WYx4ZyhczcfUxlZJ
+	irMRVDYGUruRiFFj4gB0iAvmodnYLhLKVM5zXg+qVXMjjeg=
+X-Google-Smtp-Source: AGHT+IFxMlcQMnVfYx9tq0G35jrvwe8KRLDT9YbeLD+Z15SzpzuOccTl2iw/As8mgwf751M0fMDKKQ==
+X-Received: by 2002:a17:907:2d25:b0:ac2:a447:770b with SMTP id a640c23a62f3a-ac7a16c311fmr147758466b.21.1743583391928;
+        Wed, 02 Apr 2025 01:43:11 -0700 (PDT)
+Received: from [10.176.234.34] ([137.201.254.41])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5edc16ef7b2sm8609700a12.40.2025.04.02.01.43.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Apr 2025 01:43:11 -0700 (PDT)
+Message-ID: <5e067f1eecb2098c9c2368dc8a2005c1567198b0.camel@gmail.com>
+Subject: Re: [PATCH v8] ufs: core: Add WB buffer resize support
+From: Bean Huo <huobean@gmail.com>
+To: Huan Tang <tanghuan@vivo.com>, alim.akhtar@samsung.com,
+ avri.altman@wdc.com,  bvanassche@acm.org,
+ James.Bottomley@HansenPartnership.com,  martin.petersen@oracle.com,
+ beanhuo@micron.com, luhongfei@vivo.com,  quic_cang@quicinc.com,
+ keosung.park@samsung.com, viro@zeniv.linux.org.uk, 
+ quic_mnaresh@quicinc.com, peter.wang@mediatek.com, 
+ manivannan.sadhasivam@linaro.org, quic_nguyenb@quicinc.com,
+ linux@weissschuh.net,  ebiggers@google.com, minwoo.im@samsung.com,
+ linux-kernel@vger.kernel.org,  linux-scsi@vger.kernel.org
+Cc: opensource.kernel@vivo.com
+Date: Wed, 02 Apr 2025 10:43:09 +0200
+In-Reply-To: <20250402075710.224-1-tanghuan@vivo.com>
+References: <20250402075710.224-1-tanghuan@vivo.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+User-Agent: Evolution 3.44.4-0ubuntu2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250401073046.51121-1-laoar.shao@gmail.com> <3315D21B-0772-4312-BCFB-402F408B0EF6@kernel.org>
- <Z-y50vEs_9MbjQhi@harry>
-In-Reply-To: <Z-y50vEs_9MbjQhi@harry>
-From: Yafang Shao <laoar.shao@gmail.com>
-Date: Wed, 2 Apr 2025 16:42:06 +0800
-X-Gm-Features: AQ5f1Jp1Gg98RRdYNOuPRGyWDo5u7etjGkFPUh0Mpr13QaH-ygBKif10moy_dUc
-Message-ID: <CALOAHbBSvMuZnKF_vy3kGGNOCg5N2CgomLhxMxjn8RNwMTrw7A@mail.gmail.com>
-Subject: Re: [PATCH] proc: Avoid costly high-order page allocations when
- reading proc files
-To: Harry Yoo <harry.yoo@oracle.com>
-Cc: Kees Cook <kees@kernel.org>, joel.granados@kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Josef Bacik <josef@toxicpanda.com>, linux-mm@kvack.org, Vlastimil Babka <vbabka@suse.cz>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 2, 2025 at 12:15=E2=80=AFPM Harry Yoo <harry.yoo@oracle.com> wr=
-ote:
->
-> On Tue, Apr 01, 2025 at 07:01:04AM -0700, Kees Cook wrote:
-> >
-> >
-> > On April 1, 2025 12:30:46 AM PDT, Yafang Shao <laoar.shao@gmail.com> wr=
-ote:
-> > >While investigating a kcompactd 100% CPU utilization issue in producti=
-on, I
-> > >observed frequent costly high-order (order-6) page allocations trigger=
-ed by
-> > >proc file reads from monitoring tools. This can be reproduced with a s=
-imple
-> > >test case:
-> > >
-> > >  fd =3D open(PROC_FILE, O_RDONLY);
-> > >  size =3D read(fd, buff, 256KB);
-> > >  close(fd);
-> > >
-> > >Although we should modify the monitoring tools to use smaller buffer s=
-izes,
-> > >we should also enhance the kernel to prevent these expensive high-orde=
-r
-> > >allocations.
-> > >
-> > >Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
-> > >Cc: Josef Bacik <josef@toxicpanda.com>
-> > >---
-> > > fs/proc/proc_sysctl.c | 10 +++++++++-
-> > > 1 file changed, 9 insertions(+), 1 deletion(-)
-> > >
-> > >diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
-> > >index cc9d74a06ff0..c53ba733bda5 100644
-> > >--- a/fs/proc/proc_sysctl.c
-> > >+++ b/fs/proc/proc_sysctl.c
-> > >@@ -581,7 +581,15 @@ static ssize_t proc_sys_call_handler(struct kiocb=
- *iocb, struct iov_iter *iter,
-> > >     error =3D -ENOMEM;
-> > >     if (count >=3D KMALLOC_MAX_SIZE)
-> > >             goto out;
-> > >-    kbuf =3D kvzalloc(count + 1, GFP_KERNEL);
-> > >+
-> > >+    /*
-> > >+     * Use vmalloc if the count is too large to avoid costly high-ord=
-er page
-> > >+     * allocations.
-> > >+     */
-> > >+    if (count < (PAGE_SIZE << PAGE_ALLOC_COSTLY_ORDER))
-> > >+            kbuf =3D kvzalloc(count + 1, GFP_KERNEL);
-> >
-> > Why not move this check into kvmalloc family?
->
-> Hmm should this check really be in kvmalloc family?
+T24gV2VkLCAyMDI1LTA0LTAyIGF0IDE1OjU3ICswODAwLCBIdWFuIFRhbmcgd3JvdGU6Cj4gK3N0
+YXRpYyBjb25zdCBjaGFyICp1ZnNfd2JfcmVzaXplX3N0YXR1c190b19zdHJpbmcoZW51bQo+IHdi
+X3Jlc2l6ZV9zdGF0dXMgc3RhdHVzKQo+ICt7Cj4gK8KgwqDCoMKgwqDCoMKgc3dpdGNoIChzdGF0
+dXMpIHsKPiArwqDCoMKgwqDCoMKgwqBjYXNlIFdCX1JFU0laRV9TVEFUVVNfSURMRToKPiArwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgcmV0dXJuICJpZGxlIjsKPiArwqDCoMKgwqDCoMKg
+wqBjYXNlIFdCX1JFU0laRV9TVEFUVVNfSU5fUFJPR1JFU1M6Cj4gK8KgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoHJldHVybiAiaW5fcHJvZ3Jlc3MiOwo+ICvCoMKgwqDCoMKgwqDCoGNhc2Ug
+V0JfUkVTSVpFX1NUQVRVU19DT01QTEVURV9TVUNDRVNTOgo+ICvCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqByZXR1cm4gImNvbXBsZXRlX3N1Y2Nlc3MiOwo+ICvCoMKgwqDCoMKgwqDCoGNh
+c2UgV0JfUkVTSVpFX1NUQVRVU19HRU5FUkFMX0ZBSUw6Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoHJldHVybiAiZ2VybmVyYWxfZmFpbCI7CgoKVHlwbzogImdlcm5lcmFsX2ZhaWwi
+ICAtLT4gZ2VuZXJhbF9mYWlsCg==
 
-Modifying the existing kvmalloc functions risks performance regressions.
-Could we instead introduce a new variant like vkmalloc() (favoring
-vmalloc over kmalloc) or kvmalloc_costless()?
-
->
-> I don't think users would expect kvmalloc() to implictly decide on using
-> vmalloc() without trying kmalloc() first, just because it's a high-order
-> allocation.
->
-
---=20
-Regards
-Yafang
