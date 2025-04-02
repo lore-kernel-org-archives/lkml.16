@@ -1,121 +1,135 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82F0A20E70F;
-	Wed,  2 Apr 2025 15:27:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7453223A9A4
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 15:27:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743607635; cv=none; b=WvOV5rSxzNQB1PGzMHeRXtZdfZ5uJ2YnQ2SwXb7rDSryA+Dzls/dr7h5rauc5NustCOGQiyuudruw3Tfti2Vdkt7q3iH5ayGto1wmgnNlouLGpazs2vKDtma9DmSYGcJsh2nO41XwqHwk/x/sKEyGx+q2Y7ET6mMnVgu1ywUzgQ=
+	t=1743607642; cv=none; b=L58lDNfpQsp9jlyBgcHobY6UImBHmS882dErJrb16fno1aj8h8jgz/oBjbAtGyPY5Ob/JLwj2HKl7/2AegY54Ot3IdqW8UDuZEiSHHVT9pXw4DFmH1TLgjL699p1RGQamIHKonvsT1rxswaBctnRRLVBkxrxfYa7KkFEUHb1nGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743607635; c=relaxed/simple;
-	bh=xsz+a0w6v7e73F+KbPeTQhB7HVkdZld2TMXDVLVpPzQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EMgpVwLbm6hO8rv4jp6NRc77xjZEcbkHoDgRVn/qq+XZiFpH6PH7GiOZFh4ZVWfU7e5eM19uGVjpeohxLC3baPO84ohW7AVq5BwAoiJXKVsBPF4z1uL4UJcYgNSbo3MdZfzH/MnTTofHh1rkbNbDBVF31R0N/wMWpydntVwFlCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ONQjd7qF; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1743607642; c=relaxed/simple;
+	bh=txtat177/PlnHm55yhzLIBUhJ0o9pOS1InRhNIvgap4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VrVCXuxtwZcWJORytIYSdNSN/C0/qAc9zd2v+rjqNVGy8FlLSwFy33aBwrZMISlQXhOr7c/szEWIF92s6apRAHozWKcTU2B9EpDyZcVeti3DMH/slULNfFb852mdvlLDGbeJKcCm1qtdrYEk9INUZ0bj+tjsIijirYGmvXcYrdQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=XjwhcKjK; arc=none smtp.client-ip=209.85.222.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ONQjd7qF"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 532A1itv030333;
-	Wed, 2 Apr 2025 15:27:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=V53uxv
-	A71/usjtKHwAYe1dncwLcRRC71/8t4S18TMlg=; b=ONQjd7qF+WYz+vZjLP8mgh
-	WMUFuUV2TLf1EFoKZXAerVrJtfBb34Q+3shOq+jdDxCuNd2E7DTAoGeTXLoQOrpz
-	2OJu27BYcAjWWQKdzjORRqPfMCtnQUXHOGZPicCH+ZwAPNPXItSOHHi+X3se7m2A
-	LkBiPiLDU+42Mdtos9FkWeZEOnv8NvwRNatg49va8FRK7NcE0bTHh8Vaol77o+GW
-	5kYwc9tSHiN9AeEWnT5mbb6deDQP1sNwc2RvfFKs8tI+NQuoRRxbuLNaLhSyVK/U
-	JNw3vWahFLgt5DHQJYh9hZXZGJ5SO5LIOCGZZvUpAFPFHZUgyjo29NwOUcHd73Ew
-	==
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45rqc0mxn5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 02 Apr 2025 15:27:05 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 532BjQsC019410;
-	Wed, 2 Apr 2025 15:27:04 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 45pu6t8s3e-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 02 Apr 2025 15:27:04 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 532FR0u851970510
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 2 Apr 2025 15:27:00 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 990AD2004B;
-	Wed,  2 Apr 2025 15:27:00 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6DF2620049;
-	Wed,  2 Apr 2025 15:27:00 +0000 (GMT)
-Received: from li-ce58cfcc-320b-11b2-a85c-85e19b5285e0 (unknown [9.152.224.212])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed,  2 Apr 2025 15:27:00 +0000 (GMT)
-Date: Wed, 2 Apr 2025 17:26:59 +0200
-From: Halil Pasic <pasic@linux.ibm.com>
-To: Amit Shah <amit@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>,
-        virtualization@lists.linux.dev, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, "Michael S. Tsirkin"
- <mst@redhat.com>
-Cc: stable@vger.kernel.org,
-        "Maximilian Immanuel Brandtner"
- <maxbr@linux.ibm.com>,
-        Halil Pasic <pasic@linux.ibm.com>
-Subject: Re: [PATCH 1/1] virtio_console: fix missing byte order handling for
- cols and rows
-Message-ID: <20250402172659.59df72d2.pasic@linux.ibm.com>
-In-Reply-To: <20250322002954.3129282-1-pasic@linux.ibm.com>
-References: <20250322002954.3129282-1-pasic@linux.ibm.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="XjwhcKjK"
+Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-7c5f720c717so102577985a.0
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 08:27:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1743607637; x=1744212437; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=swp0ERIz+E6S0fYtrVurk6RuHTXtNkHGNmb4MbsFy44=;
+        b=XjwhcKjKyJuTXM2BEZEMeEt1f2Ol7MbCxJtPm/R+W6D/B7Q6LUs97ezS1rLcVsONwL
+         rCFKiYctSPiBZ4blHEy9+g3BE1gar8WBQDt3wQIGKV8Nn1W/EZXQPX2jmScHeJrX3CBt
+         JqXNopPXcNShqaGWlvJn+k164OVgQ4JwX/J8thzqMAdBbZE8jlM5HUZ0g53iO9es+XVx
+         1kGfhzF3YUVhT1W6TfqoAYZPIt7GUAq91qZHdT4TPvMJXHPMbpLWb4h8mA0a2LqapVp8
+         sAhWIIcXJdnylM2svQpQ12Ig4xiVT+e+UfMT2qfiAkKnBT+oSqfXaQqXO+R7svCOKMoG
+         g8mw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743607637; x=1744212437;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=swp0ERIz+E6S0fYtrVurk6RuHTXtNkHGNmb4MbsFy44=;
+        b=vP/lUGLU3uJhr8oOELnJzXYy7EYQAxadWQFICIkoUTgzwpKi3z4pYtH+iUZSEcw/JV
+         i/dUuMts9hXuIpf8rUEwR5uQJA6AXpveyKat3qLhpzGGH8AlsDe9gPKLXaGwfri6uN4m
+         NM6G24Z/xBfG2+nk/jBi8jvX3ozkPLHKd/3IFS0qRuGNRzHpIHrTka5pVgx4fsH3OdrY
+         Oe3Kuat3p7zi1Ah+hkX8xfWxCiPab32iwQ49ECL85JsasuMCbEUwcqtIkk2SNwx+/1se
+         XakbbiKrtgMLDB9klQyH7NsmZLnXuI+g3wWymFW5JJTECghD/C0Rf21kykuMxr+hNM6G
+         NW+g==
+X-Forwarded-Encrypted: i=1; AJvYcCVjnZ3TFiiLxzIUmbcdI5rtqgNPLgi9CcIPYMFyC3CqUeXarfIgSK/W7sAE1DFSq3M+YS4YNYeDdbZOXaA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx3rGE1xenmw6XLudt8qzO4lhKXKBosq25gSq3s+K/SDfrNGbcb
+	55tJl0pHoSkC89mKc8Yf/57bXnBZ7Zo0b+U2dqWEZUELvvIPLk6szKGIIybjwxhSwWehpMDV0A0
+	H
+X-Gm-Gg: ASbGncup4nH160JRoqQSl14uOJO+4mVTZGwTLZ2EOaFLzrwpnxcBTkyJrEaowXBSY4t
+	4e8wo2Qja7Oc76qseppzQzM2V06Fx7nixHLic+xnIoc6KDYeONXS0qzSfkU8dxyS3qOhINuNgWh
+	BC41i78JM6Mi9qkA6HngHhsbhm3vGy6NuGpmQj1srV9a5CMtpiPdhaRbg5fROB5hdngSm+q5xOb
+	blLqF0W0SJezKHri9YvLU8wqpcayZL5l3Vw721Oy93VCKHOQca2zLFjW1JYUdaEY3aDnfFouJBP
+	sO2DH2ZXa3Y0h8jw/ymEQV0uF9soU24TZg7CSkPkr34=
+X-Google-Smtp-Source: AGHT+IHJsyMfk1EJsf13VfMIMZgUAxHzVAUrgG99uJym7wCUyl4f8lI2YuB3eaEGFaakifl2T8iN8g==
+X-Received: by 2002:a05:620a:2806:b0:7c5:e8c5:a307 with SMTP id af79cd13be357-7c768236b36mr334604985a.9.1743607637061;
+        Wed, 02 Apr 2025 08:27:17 -0700 (PDT)
+Received: from localhost ([2603:7000:c01:2716:da5e:d3ff:fee7:26e7])
+        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6eec9798807sm74840846d6.116.2025.04.02.08.27.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Apr 2025 08:27:16 -0700 (PDT)
+Date: Wed, 2 Apr 2025 11:27:15 -0400
+From: Johannes Weiner <hannes@cmpxchg.org>
+To: Michal Hocko <mhocko@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+	Rik van Riel <riel@surriel.com>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Muchun Song <muchun.song@linux.dev>,
+	cgroups mailinglist <cgroups@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>, Michal Hocko <mhocko@suse.com>
+Subject: Re: [PATCH] memcg, oom: do not bypass oom killer for dying tasks
+Message-ID: <20250402152715.GA198651@cmpxchg.org>
+References: <20250402090117.130245-1-mhocko@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: dmdoYNaYsMeuGv-45p-NZvtXGA3aFdTw
-X-Proofpoint-GUID: dmdoYNaYsMeuGv-45p-NZvtXGA3aFdTw
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-02_06,2025-04-02_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- impostorscore=0 mlxscore=0 bulkscore=0 priorityscore=1501 malwarescore=0
- spamscore=0 clxscore=1015 mlxlogscore=999 phishscore=0 adultscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2504020098
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250402090117.130245-1-mhocko@kernel.org>
 
-On Sat, 22 Mar 2025 01:29:54 +0100
-Halil Pasic <pasic@linux.ibm.com> wrote:
-
-> As per virtio spec the fields cols and rows are specified as little
-> endian. 
-[..]
-
-@Amit: Any feedback?
-
+On Wed, Apr 02, 2025 at 11:01:17AM +0200, Michal Hocko wrote:
+> From: Michal Hocko <mhocko@suse.com>
 > 
-> Fixes: 8345adbf96fc1 ("virtio: console: Accept console size along with resize control message")
-> Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
-> Cc: stable@vger.kernel.org # v2.6.35+
+> 7775face2079 ("memcg: killed threads should not invoke memcg OOM killer") has added
+> a bypass of the oom killer path for dying threads because a very
+> specific workload (described in the changelog) could hit "no killable
+> tasks" path. This itself is not fatal condition but it could be annoying
+> if this was a common case.
+> 
+> On the other hand the bypass has some issues on its own. Without
+> triggering oom killer we won't be able to trigger async oom reclaim
+> (oom_reaper) which can operate on killed tasks as well as long as they
+> still have their mm available. This could be the case during futex
+> cleanup when the memory as pointed out by Johannes in [1]. The said case
+> is still not fully understood but let's drop this bypass that was mostly
+> driven by an artificial workload and allow dying tasks to go into oom
+> path. This will make the code easier to reason about and also help
+> corner cases where oom_reaper could help to release memory.
+> 
+> [1] https://lore.kernel.org/all/20241212183012.GB1026@cmpxchg.org/T/#u
+> 
+> Suggested-by: Johannes Weiner <hannes@cmpxchg.org>
+> Signed-off-by: Michal Hocko <mhocko@suse.com>
+
+Thanks, yeah, the investigation stalled out over the new years break
+and then... distractions.
+
+I think we'll eventually still need the second part of [2], to force
+charge from dying OOM victims, but let's go with this for now.
+
+Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+
+[2] https://lore.kernel.org/all/20241212183012.GB1026@cmpxchg.org/
+
 > ---
+>  mm/memcontrol.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> @Michael: I think it would be nice to add a clarification on the byte
-> order to be used for cols and rows when the legacy interface is used to
-> the spec, regardless of what we decide the right byte order is. If
-> it is native endian that shall be stated much like it is stated for
-> virtio_console_control. If it is little endian, I would like to add
-> a sentence that states that unlike for the fields of virtio_console_control
-> the byte order of the fields of struct virtio_console_resize is little
-> endian also when the legacy interface is used.
-
-@MST: any opinion on that?
-
-[..]
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index 7b3503d12aaf..9c30c442e3b0 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -1627,7 +1627,7 @@ static bool mem_cgroup_out_of_memory(struct mem_cgroup *memcg, gfp_t gfp_mask,
+>  	 * A few threads which were not waiting at mutex_lock_killable() can
+>  	 * fail to bail out. Therefore, check again after holding oom_lock.
+>  	 */
+> -	ret = task_is_dying() || out_of_memory(&oc);
+> +	ret = out_of_memory(&oc);
+>  
+>  unlock:
+>  	mutex_unlock(&oom_lock);
+> -- 
+> 2.49.0
