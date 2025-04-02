@@ -1,97 +1,82 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C192F4E2
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 03:39:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 019A7F4E2;
+	Wed,  2 Apr 2025 03:42:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743565202; cv=none; b=Z9oWZZEAfLIZgR97hEj73GEVGDW+/DuOXAyx5S5UZegAo9tjKqY66i9/gKNyX0Ig08ASiznDpYXyf869UJOHO5bFH8dXcyXR0WLK8l9WyHujmodKRkQumpkHiXfjLYyn+U4R3Wt0rQLI1W4KlsGm0IQr61rWmODv+Ecl0o2i/B0=
+	t=1743565370; cv=none; b=aUZt7MoaGBGwk8NGq1JzYYlfUtJ96guGUjFZObFYpCPI1Tsx1+6RJTjGoYBHgyhDENjPHu9b/KQ7vbvD4tUcJMkOeJ/0tWQ83muErXDPCGN/vo6Wz5oLuuG9DX2TE2lFAueuqTCF5W5/vUwBLcv+QfYA0d5cc3+jS6YsgHIYxmw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743565202; c=relaxed/simple;
-	bh=IgDWAylhfDvlyWR28lPw8OiYNG7mWWj6BNsjZyM0AqY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=otttPZUkGo7fy1jic4x2zS1n6RvD4PNsXcKP9cNGhUBYZBqJf74xNrQw/7GfZfHaV29DRs5fGUME+TXBqvC1Wnswkre+zyJkCJamAvo5ZrBpg2oj8lxPa1mpzRyEBu+S9Jw3XlZL1m0ivjmNn1E66ECOqDKG5Uq4pd39sSfzyrc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GkcV5rDD; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1743565370; c=relaxed/simple;
+	bh=V2e2nwSbZeY0394xlWvihWRW0KwuglxPVjbYt+qSt5g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LW8FbG3fkJLMgLb8iEBHvZANnxlRnQ0Piqqu4Smpr2WospfMV7wf7QC/1ImkDUZ/NCpaZlCkZah3JSv4m8FcFGv9v4KNy1LlFIalwsPcwea4hVef1giF9/xmJim8z20DmCCiS1n1+CnPb23l038Qns9IGjATmaD9l9UgL6prr1s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=XDBAg03k; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GkcV5rDD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743565198;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+J+xEtJMcJlG1ldYz5T0Nt1741RSZ9+l6RJzgdpSXmw=;
-	b=GkcV5rDDKJeItI94qhlaQvHpbYoNfi0hvLkdhQvtuHg6Ql9j1GdzwSrbi7TWcjlTmM/WVK
-	zoBfFD2AJ6iQbmnNNyd6Oi+hATewNgJjMBO3s5t6agdKLkhx931dpcrscTV9WSIRqXABky
-	I2clJ7gycPeGZj63RFT9VW9fGGqWCzY=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-611-r3AzAC98MI-jAJuxIry70w-1; Tue,
- 01 Apr 2025 23:39:57 -0400
-X-MC-Unique: r3AzAC98MI-jAJuxIry70w-1
-X-Mimecast-MFC-AGG-ID: r3AzAC98MI-jAJuxIry70w_1743565196
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 33A541800349;
-	Wed,  2 Apr 2025 03:39:56 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.12])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A4CFD1956094;
-	Wed,  2 Apr 2025 03:39:54 +0000 (UTC)
-Date: Wed, 2 Apr 2025 11:39:49 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Oscar Salvador <osalvador@suse.de>
-Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, yanjun.zhu@linux.dev, x86@kernel.org
-Subject: Re: [PATCH v2 5/7] x86/mm: remove pgd_leaf definition in arch
-Message-ID: <Z+yxhf07eaqYsaIl@MiWiFi-R3L-srv>
-References: <20250331081327.256412-1-bhe@redhat.com>
- <20250331081327.256412-6-bhe@redhat.com>
- <Z-vyGtcrU9Y3n9it@localhost.localdomain>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XDBAg03k"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
+	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=CfNMzRI2XDl7ZbVtkTrjOHHTHVANpEi1cK2v4Rcq0rE=; b=XDBAg03ked4nw0XHPZ98s4MHCr
+	Ngz2X2G0KIo+tVsx3cIPzSXYRGF7UAsIAhPSbWFW7whz1EHcIGCEUSiqzrHipcuK2MzsEBxm9ibCD
+	1oPbYB60JlPeYk32G62MstD4ZaF5SgPWbKWf57Skmm2Em2Ugu86zZ6k9a5mJumWe/6EtyiFl+KnnB
+	4+BRuiXis6eEZtIlzwNNBYc0ciGHpqRukQybsokVYyrmf90atCAXtfkbn5ZDc81C7+m8tO++2paV4
+	OU0wJbeiq47WbpnvfvBEc4vsOohzMCS3BY2+LXJlzJ7DmnuNghrl3E7MXmZaT8aFC+klWYC4JA+uT
+	+hSuWttA==;
+Received: from [50.53.2.24] (helo=[192.168.254.17])
+	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1tzp00-00000006xAn-3emH;
+	Wed, 02 Apr 2025 03:42:45 +0000
+Message-ID: <2c1cbb51-cc16-4292-ad30-482d93935d91@infradead.org>
+Date: Tue, 1 Apr 2025 20:42:41 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z-vyGtcrU9Y3n9it@localhost.localdomain>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/7] lib/crc: remove unnecessary prompt for CONFIG_CRC32
+ and drop 'default y'
+To: Eric Biggers <ebiggers@kernel.org>, linux-kernel@vger.kernel.org
+Cc: Ard Biesheuvel <ardb@kernel.org>, linux-crypto@vger.kernel.org,
+ linux-arch@vger.kernel.org
+References: <20250401221600.24878-1-ebiggers@kernel.org>
+ <20250401221600.24878-2-ebiggers@kernel.org>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20250401221600.24878-2-ebiggers@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 04/01/25 at 04:03pm, Oscar Salvador wrote:
-> On Mon, Mar 31, 2025 at 04:13:25PM +0800, Baoquan He wrote:
-> > pgd huge page is not supported yet, let's use the generic definition
-> > in linux/pgtable.h.
-> > 
-> > And also update the BUILD_BUG_ON() checking for pgd_leaf() in
-> > pti_user_pagetable_walk_p4d() because pgd_leaf() returns boolean value.
-> > 
-> > Signed-off-by: Baoquan He <bhe@redhat.com>
-> > Cc: x86@kernel.org
-> 
-> I have been carrying a sort of this patch in my tree as well for quite
-> some time now, and I think that Christophe also sent it some time ago,
-> so glad someone finally pushed it
-> 
-> https://patchwork.kernel.org/project/linux-mm/patch/20240704043132.28501-2-osalvador@suse.de/
+Hi 
 
-Oops, I even commented in Christophe's patch thread to ask why the
-patchset hasn't been merged yet. Later when I focused on mm/gup.c code
-reading, I forgot that posting completely. Hope you don't mind I grab
-you and Christophe's credit since Ingo has picked it into x86/tip tree.
+On 4/1/25 3:15 PM, Eric Biggers wrote:
+> From: Eric Biggers <ebiggers@google.com>
+> 
+> All modules that need CONFIG_CRC32 already select it, so there is no
+> need to bother users about the option, nor to default it to y.
+> 
 
-[PATCH v3 1/5] arch/x86: Drop own definition of pgd,p4d_leaf
+My memory from 10-20 years ago could be foggy, but ISTR that someone made at least
+CRC16 and CRC32 user-selectable in order to support out-of-tree modules...
+FWIW.
+But they would not need to be default y.
 
+
+> Signed-off-by: Eric Biggers <ebiggers@google.com>
+> ---
+>  arch/sh/configs/edosk7705_defconfig        | 1 -
+>  arch/sh/configs/kfr2r09-romimage_defconfig | 1 -
+>  arch/sh/configs/sh7724_generic_defconfig   | 1 -
+>  arch/sh/configs/sh7770_generic_defconfig   | 1 -
+>  lib/Kconfig                                | 8 +-------
+>  5 files changed, 1 insertion(+), 11 deletions(-)
 > 
-> Reviewed-by: Oscar Salvador <osalvador@suse.de>
-> 
-> 
-> -- 
-> Oscar Salvador
-> SUSE Labs
-> 
+
+-- 
+~Randy
 
