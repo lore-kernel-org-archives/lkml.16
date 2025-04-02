@@ -1,191 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-fw-6001.amazon.com (smtp-fw-6001.amazon.com [52.95.48.154])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA6241925AB;
-	Wed,  2 Apr 2025 20:19:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 757F71917E7;
+	Wed,  2 Apr 2025 20:23:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.95.48.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743625150; cv=none; b=lCo4UbHg2iwt5DnMJTWE8KrmNCkXYYuMMxZLNqJTDdpn+YhPgv0kI1Mvmi16hYF6d67V5aKOocxh0IRieSOrmwxbKypUbdfVa+Nxlr9nkDA4KCtmmQfmsO10/zU9UIa4blMN/A9RvMRtv/78lX11qGDMfSHpOTpaqveY4dsE7vc=
+	t=1743625400; cv=none; b=AYBsGiTsw6fSPNFJTI6d8NmdiDIEkCFM/siE9jKfm6PIDrHHZJQH55I+9SfjY2vBHGcyzdMQo4rdxAgYgE9Mm6H/grDf/C15NA+5IdVqIDgdR0lPgm55BrPUTEoHtPC21U5HKT1KUsnvayEmTQQM92p8oA+1qa7s9V55FLN2VIk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743625150; c=relaxed/simple;
-	bh=PBAlCXXoeZYK4hLqIaAvGTjwa5glXZM1tJS6eSjSSww=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fj+LJsDdHWGyBOc2IKv6FE29RfFdLPiGTJOZgRpNQPyEBAA7/1mNxBb2oH5bHFd+Tz9vnZCQmJMvCQ3TRqHfkzoVwSf/OrFO7iUkgoaL3kUd7i4UWnECPtkD1XJc2DNJrmbaSoju/aiwDSfn//DRO+nak/4yA8xPURyj1XGMySM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TNsGv5RE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743625400; c=relaxed/simple;
+	bh=B+O36yg5A5XPoTzoaWJvC8inENWYX8yWdPtFHWC748k=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SzcVgw6YAVlXFS1XvFvDM/0FLYKnC1/8L37+ySyWDzs90IiwyjhUlyROTcIJZcPn4EudCyluPJdsdl79a+/DHq0hYvICOwceQn+ZtryQSCAHeEK5vX7hrctWGLvezNPwhBGph3UsQEHLzBb7dpkp01fpf6LsXK4DoKEODVtg5SU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=sT2tP2dF; arc=none smtp.client-ip=52.95.48.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TNsGv5RE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5554BC4CEDD;
-	Wed,  2 Apr 2025 20:19:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743625150;
-	bh=PBAlCXXoeZYK4hLqIaAvGTjwa5glXZM1tJS6eSjSSww=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TNsGv5REBUv5cCT3Y6XQje0aF3DB0+YmNtT4Z8Guj8UnqP9RDvNkPh30jZCNJ6ym/
-	 ZYe5NowHojMJrVjp7O1ai7s2tjouVNUHS0RUE7OZayzmNTZNGUgq36PRUDhK0aZaFU
-	 ujflV2XCHpWTbN2b6vk/r5o9Ttku8oPuqsL8H1j410RsfZ4NlTatOVmbdm4guXXZqp
-	 bVKxgqmn5hngT7OjGOvj5fCLkUw0lcHgNdtXqygBbwQaJl+A9AwUNeCv70o9iFpba5
-	 4yoqbCjOIKhAZBP1SyDDZKiTsH2KyjMsLt9ILHAC85utAuq/POgnQVkBFhnZ21G4md
-	 h4MoLQ9RrqesQ==
-Date: Wed, 2 Apr 2025 23:18:55 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Andy Lutomirski <luto@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-	"David S. Miller" <davem@davemloft.net>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org,
-	Naresh Kamboju <naresh.kamboju@linaro.org>,
-	lkft-triage@lists.linaro.org,
-	Linux Regressions <regressions@lists.linux.dev>
-Subject: Re: [PATCH v2 10/13] arch, mm: set high_memory in free_area_init()
-Message-ID: <Z-2br1vk8lf9V40T@kernel.org>
-References: <20250313135003.836600-1-rppt@kernel.org>
- <20250313135003.836600-11-rppt@kernel.org>
- <20250402140521-bf9b3743-094e-4097-a189-10cdf1db9255@linutronix.de>
- <Z-0xrWyff9-9bJRf@kernel.org>
- <20250402145330-3ff21a6b-fb03-4bc8-8178-51a535582c6f@linutronix.de>
- <20250402181842-f25872a1-00f7-4a8f-ae6d-3927899ee3a6@linutronix.de>
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="sT2tP2dF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1743625399; x=1775161399;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=ctb6POoyh404vH+KjFkWC9B4g7iEU94Mtl3qduoJtog=;
+  b=sT2tP2dF+FbexGa4gIx8owprD4407tD/KG9I07kvSg97uVwynTDnA91T
+   K+0XJ89IFhRQjhaOEroLDpAmGpBVDnQrkyRrSpLonePuhPgImb3wMK5o9
+   u5DAQDemhtrrLtzLDTpDpLFHiiG4Olal6A/kIue+/pcgwZCmhw3hfmHHZ
+   w=;
+X-IronPort-AV: E=Sophos;i="6.15,183,1739836800"; 
+   d="scan'208";a="476947229"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.2])
+  by smtp-border-fw-6001.iad6.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 20:23:14 +0000
+Received: from EX19MTAUWA001.ant.amazon.com [10.0.7.35:34346]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.10.98:2525] with esmtp (Farcaster)
+ id 4fa530bb-68b7-4087-a078-61c6eba0c003; Wed, 2 Apr 2025 20:23:14 +0000 (UTC)
+X-Farcaster-Flow-ID: 4fa530bb-68b7-4087-a078-61c6eba0c003
+Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
+ EX19MTAUWA001.ant.amazon.com (10.250.64.218) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Wed, 2 Apr 2025 20:23:08 +0000
+Received: from 6c7e67bfbae3.amazon.com (10.106.101.8) by
+ EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Wed, 2 Apr 2025 20:23:05 +0000
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+To: <gregkh@linuxfoundation.org>
+CC: <cve@kernel.org>, <edumazet@google.com>, <ematsumiya@suse.de>,
+	<kuniyu@amazon.com>, <linux-fsdevel@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-net@vger.kernel.org>,
+	<sfrench@samba.org>, <smfrench@gmail.com>, <wangzhaolong1@huawei.com>,
+	<zhangchangzhong@huawei.com>
+Subject: Re: Fwd: [PATCH][SMB3 client] fix TCP timers deadlock after rmmod
+Date: Wed, 2 Apr 2025 13:22:11 -0700
+Message-ID: <20250402202257.5845-1-kuniyu@amazon.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <2025040233-tuesday-regroup-5c66@gregkh>
+References: <2025040233-tuesday-regroup-5c66@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250402181842-f25872a1-00f7-4a8f-ae6d-3927899ee3a6@linutronix.de>
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D041UWA004.ant.amazon.com (10.13.139.9) To
+ EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
-On Wed, Apr 02, 2025 at 06:31:02PM +0200, Thomas Weißschuh wrote:
-> On Wed, Apr 02, 2025 at 03:07:51PM +0200, Thomas Weißschuh wrote:
-> > On Wed, Apr 02, 2025 at 03:46:37PM +0300, Mike Rapoport wrote:
-> > > On Wed, Apr 02, 2025 at 02:19:01PM +0200, Thomas Weißschuh wrote:
-> > > > (drop all the non-x86 and non-mm recipients)
-> > > > 
-> > > > On Thu, Mar 13, 2025 at 03:50:00PM +0200, Mike Rapoport wrote:
-> > > > > From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+From: Greg KH <gregkh@linuxfoundation.org>
+Date: Wed, 2 Apr 2025 21:15:58 +0100
+> On Wed, Apr 02, 2025 at 01:09:19PM -0700, Kuniyuki Iwashima wrote:
+> > From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Date: Wed, 2 Apr 2025 16:18:37 +0100
+> > > On Wed, Apr 02, 2025 at 05:15:44PM +0800, Wang Zhaolong wrote:
+> > > > > On Wed, Apr 02, 2025 at 12:49:50PM +0800, Wang Zhaolong wrote:
+> > > > > > Yes, it seems the previous description might not have been entirely clear.
+> > > > > > I need to clearly point out that this patch, intended as the fix for CVE-2024-54680,
+> > > > > > does not actually address any real issues. It also fails to resolve the null pointer
+> > > > > > dereference problem within lockdep. On top of that, it has caused a series of
+> > > > > > subsequent leakage issues.
 > > > > > 
-> > > > > high_memory defines upper bound on the directly mapped memory.
-> > > > > This bound is defined by the beginning of ZONE_HIGHMEM when a system has
-> > > > > high memory and by the end of memory otherwise.
+> > > > > If this cve does not actually fix anything, then we can easily reject
+> > > > > it, please just let us know if that needs to happen here.
 > > > > > 
-> > > > > All this is known to generic memory management initialization code that
-> > > > > can set high_memory while initializing core mm structures.
+> > > > > thanks,
 > > > > > 
-> > > > > Add a generic calculation of high_memory to free_area_init() and remove
-> > > > > per-architecture calculation except for the architectures that set and
-> > > > > use high_memory earlier than that.
+> > > > > greg k-h
+> > > > Hi Greg,
 > > > > 
-> > > > This change (in mainline as commit e120d1bc12da ("arch, mm: set high_memory in free_area_init()")
-> > > > breaks booting i386 on QEMU for me (and others [0]).
-> > > > The boot just hangs without output.
+> > > > Yes, I can confirm that the patch for CVE-2024-54680 (commit e9f2517a3e18)
+> > > > should be rejected. Our analysis shows:
 > > > > 
-> > > > It's easily reproducible with kunit:
-> > > > ./tools/testing/kunit/kunit.py run --arch i386
+> > > > 1. It fails to address the actual null pointer dereference in lockdep
 > > > > 
-> > > > See below for the specific problematic hunk.
+> > > > 2. It introduces multiple serious issues:
+> > > >    1. A socket leak vulnerability as documented in bugzilla #219972
+> > > >    2. Network namespace refcount imbalance issues as described in
+> > > >      bugzilla #219792 (which required the follow-up mainline fix
+> > > >      4e7f1644f2ac "smb: client: Fix netns refcount imbalance
+> > > >      causing leaks and use-after-free")
 > > > > 
-> > > > [0] https://lore.kernel.org/lkml/CA+G9fYtdXHVuirs3v6at3UoKNH5keuq0tpcvpz0tJFT4toLG4g@mail.gmail.com/
-> > > > 
-> > > > 
-> > > > > diff --git a/arch/x86/mm/init_32.c b/arch/x86/mm/init_32.c
-> > > > > index 6d2f8cb9451e..801b659ead0c 100644
-> > > > > --- a/arch/x86/mm/init_32.c
-> > > > > +++ b/arch/x86/mm/init_32.c
-> > > > > @@ -643,9 +643,6 @@ void __init initmem_init(void)
-> > > > >  		highstart_pfn = max_low_pfn;
-> > > > >  	printk(KERN_NOTICE "%ldMB HIGHMEM available.\n",
-> > > > >  		pages_to_mb(highend_pfn - highstart_pfn));
-> > > > > -	high_memory = (void *) __va(highstart_pfn * PAGE_SIZE - 1) + 1;
-> > > > > -#else
-> > > > > -	high_memory = (void *) __va(max_low_pfn * PAGE_SIZE - 1) + 1;
-> > > > >  #endif
-> > > > 
-> > > > Reverting this hunk fixes the issue for me.
-> > >  
-> > > This is already done by d893aca973c3 ("x86/mm: restore early initialization
-> > > of high_memory for 32-bits").
+> > > > The next thing we should probably do is:
+> > > >    - Reverting e9f2517a3e18
+> > > >    - Reverting the follow-up fix 4e7f1644f2ac, as it's trying to fix
+> > > >      problems introduced by the problematic CVE patch
+> > > 
+> > > Great, can you please send patches now for both of these so we can
+> > > backport them to the stable kernels properly?
 > > 
-> > Thanks. Of course I only noticed this shortly after sending my mail.
-> > But this usecase is indeed broken on mainline.
-> > Some further bisecting lead to the mm merge commit being broken, while both its
-> > parents work. That lead the bisection astray.
-> > eb0ece16027f ("Merge tag 'mm-stable-2025-03-30-16-52' of git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm")
-> > 
-> > As unlikely as it sounds, it's reproducible. I'll investigate a bit.
+> > Sent to CIFS tree:
+> > https://lore.kernel.org/linux-cifs/20250402200319.2834-1-kuniyu@amazon.com/
 > 
-> The issue is fixed with the following diff:
-> 
-> diff --git a/mm/memblock.c b/mm/memblock.c
-> index 284154445409..8cd95f60015d 100644
-> --- a/mm/memblock.c
-> +++ b/mm/memblock.c
-> @@ -2165,7 +2165,8 @@ static unsigned long __init __free_memory_core(phys_addr_t start,
->                                  phys_addr_t end)
->  {
->         unsigned long start_pfn = PFN_UP(start);
-> -       unsigned long end_pfn = PFN_DOWN(end);
-> +       unsigned long end_pfn = min_t(unsigned long,
-> +                                     PFN_DOWN(end), max_low_pfn);
+> You forgot to add a Cc: stable@ on the patches to ensure that they get
+> picked up properly for all stable trees :(
 
-This will leave HIGHMEM completely unusable. The proper fix is
+Ah sorry, I did the same with netdev.  netdev patches usually do
+not have the tag but are backported fine, maybe netdev local rule ?
 
-diff --git a/mm/memblock.c b/mm/memblock.c
-index 64ae678cd1d1..d7ff8dfe5f88 100644
---- a/mm/memblock.c
-+++ b/mm/memblock.c
-@@ -2166,6 +2166,9 @@ static unsigned long __init __free_memory_core(phys_addr_t start,
- 	unsigned long start_pfn = PFN_UP(start);
- 	unsigned long end_pfn = PFN_DOWN(end);
- 
-+	if (!IS_ENABLED(CONFIG_HIGHMEM) && end_pfn > max_low_pfn)
-+		end_pfn = max_low_pfn;
-+
- 	if (start_pfn >= end_pfn)
- 		return 0;
 
-I've sent it along with the fix for x86 [1] (commit 7790c9c9265e
-("memblock: don't release high memory to page allocator when HIGHMEM is
-off") in mm-unstable), but for some reason it didn't make it to the Linus
-tree :/
+> 
+> Can you redo them?
 
-@Andrew, are you going to send it to Linus or you prefer if I take it via
-memblock tree? 
+Sure, will resend.
 
-[1] https://lore.kernel.org/all/20250325114928.1791109-3-rppt@kernel.org/
-
->         if (start_pfn >= end_pfn)
->                 return 0;
-> 
-> 
-> Background:
-> 
-> This reverts part of commit 6faea3422e3b ("arch, mm: streamline HIGHMEM freeing")
-> which is the direct child of the partially reverted 
-> commit e120d1bc12da ("arch, mm: set high_memory in free_area_init()").
-> The assumptions the former commit became invalid with the partial revert the latter.
-> 
-> This bug only triggers when CONFIG_HIGHMEM=n. When mm was branched from mainline
-> the i386 configuration generated by kunit ended up with CONFIG_HIGHMEM=y.
-> With some recent changes in mainline the kunit configuration switched to
-> CONFIG_HIGHMEM=n, triggering this specific reproducer only when mm got merged
-> into mainline again.
-> 
-> New kunit reproducer:
-> ./tools/testing/kunit/kunit.py run --arch i386 example --timeout 10 --kconfig_add CONFIG_HIGHMEM=n
-> 
-> Does this sound reasonable?  If so I'll send a patch tomorrow.
-> 
-> @Naresh, could you test this, too?
-> 
-> 
-> Thomas
-
--- 
-Sincerely yours,
-Mike.
+Thanks!
