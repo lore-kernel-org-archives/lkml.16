@@ -1,96 +1,147 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADE1D2E3385;
-	Wed,  2 Apr 2025 20:43:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB3FF1F152C;
+	Wed,  2 Apr 2025 20:43:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743626605; cv=none; b=Ls4ptAdRvisjhOQM6EXurlOsHP+twNc+PPrQyD5XgnpRQNDcwh56SWANEcQmnWTd1JIqw+PEyfhZs1d+z5adPp2tTlgCOts7bGdui2YVMi3bli4rNuy5lTh5gY8Pe79MplMd2Ts2A5e9Mlwj63jVYARKvCz6EAHyBnOS+SSk7zM=
+	t=1743626635; cv=none; b=oyb9vNUiQJReqEODpue/F6j3NuOwcFc/eDPrFj8i4621kOypWGnZZstAu35UHUc1t1nD0pPgeMirpQH2W2KuGzzcv7xWJNUJIf0MmaKbh7ZMyehkM8Tobw862einkW9g3pKelBQhCQsB0fIUzbHx7fYwWfCFvqnoKUzhxvTTKFA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743626605; c=relaxed/simple;
-	bh=T/AA5lvkKLCltmvkMx0uLlEFgfjmiOxjCld5CPY4p/8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gI6e+35NQb22gp2w3d7dN5c9pKsFcG2bFCOXSlJ+H8M+Zq0JtFI99Gg4iKhKRaD/U43r5Y+hIL8mgJXm6lcdBfFeKkPAss/RHUHNeGsDZPbAusaMfjWUxG4K23jhXwVlQAGRvani92oSUt1UOOO8NVhR6wplyyHCehwpK3NziBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=xVlHR9r5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743626635; c=relaxed/simple;
+	bh=krxWSO6Cj4EWo57+EA46N5PACYwLJWcAdUhznOWBR5A=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=V3BXcMsf9g4vO2Ff2kR2TcGF52PyGDlpC9saePG4m3RFFWcfqmgizoIL3UxUW7obIv/EY7vK1cdOr5tqtx2CME+U4KhtReVGw18EsmLOD2yazSZ6yTIC+ibDmQtw6q7KqXDL5VrKA9Zf0FZYKaxJBc1uFhvVLrNIl4YKO7Y2dzU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=oE64O04f; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=vbB4ZElc; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="xVlHR9r5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7853C4CEDD;
-	Wed,  2 Apr 2025 20:43:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1743626605;
-	bh=T/AA5lvkKLCltmvkMx0uLlEFgfjmiOxjCld5CPY4p/8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=xVlHR9r5Dhyb36sMzOmchWD+e802vwm/YKN0NqyNcnMK8uBlVTcFMPqxEbvya+AuN
-	 4wm7EzM8nPKF5WMvFGYFvHryewKO02VQWjLrOhm1rXjceZ8ytAjCWFt40QzX+ZmRY1
-	 j4SuOFhjGiES+clLcFHTqwKm0bsu326c6KgwmOBA=
-Date: Wed, 2 Apr 2025 21:41:57 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Julia Lawall <julia.lawall@inria.fr>
-Cc: Erick Karanja <karanja99erick@gmail.com>, outreachy@lists.linux.dev,
-	philipp.g.hortmann@gmail.com, linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] staging: rtl8723bs: Modify struct rx_pkt_attrib
- attribute bdecrypted
-Message-ID: <2025040246-series-tusk-bec1@gregkh>
-References: <cover.1743613025.git.karanja99erick@gmail.com>
- <00287fa9f40c643b8451a0d2df8e2fb97235ee46.1743613025.git.karanja99erick@gmail.com>
- <2025040215-confusing-sibling-f99f@gregkh>
- <3c235d91-efd6-ddf8-7c9-d8d35c7585@inria.fr>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="oE64O04f";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vbB4ZElc"
+Date: Wed, 02 Apr 2025 20:43:47 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1743626631;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0hyMt4Z1R36IMrUPqFnz/6TjMofBlpu4YW9UbN860XI=;
+	b=oE64O04fFedf+CpByDPmX/LZGTXWCuZmKOIJHm9SHs9eIon0bX8IsJo/R4wZRAc//3A9hv
+	yB3KVyNYLHcTwyAMH4o8Iy8jrKg3WvXAIjEkJBLluQF7dVC5JLD+P6g3yxpkVb7hYgWbpZ
+	pVxZHFYs42iUL7hmAPTzsuRzjKEtNXhMC5whTpmsO8nw0VJ+NRQSCjAq9OjXCnqaUxNVDR
+	DmWds7C2C72jnnvUrJSn/zg46LBAFLOg5N2LEbUg1EPFXTO5DJsr/55/LaAFWHNb1+aYXR
+	G8B4u2MlWOrYybVJEBTIN1yasEKvuPxkZnhpcYyjV0kWZT4CQDuJkyqEh4uE7Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1743626631;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0hyMt4Z1R36IMrUPqFnz/6TjMofBlpu4YW9UbN860XI=;
+	b=vbB4ZElc0czsaUc/stpFFLzDbz2Q+tdV0mbPuP3QALz1UYZea0h5Np6GPKpFRivHHkYZ1m
+	6eguLVKeEyfqqtDA==
+From: "tip-bot2 for Uros Bizjak" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/mm] x86/idle: Remove CONFIG_AS_TPAUSE
+Cc: Uros Bizjak <ubizjak@gmail.com>, Ingo Molnar <mingo@kernel.org>,
+ Andy Lutomirski <luto@kernel.org>, Brian Gerst <brgerst@gmail.com>,
+ Juergen Gross <jgross@suse.com>, Andrew Cooper <andrew.cooper3@citrix.com>,
+ Rik van Riel <riel@surriel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ Peter Zijlstra <peterz@infradead.org>,
+ "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250402180827.3762-4-ubizjak@gmail.com>
+References: <20250402180827.3762-4-ubizjak@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3c235d91-efd6-ddf8-7c9-d8d35c7585@inria.fr>
+Message-ID: <174362662745.14745.12169967548782921875.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 02, 2025 at 10:34:22PM +0200, Julia Lawall wrote:
-> 
-> 
-> On Wed, 2 Apr 2025, Greg KH wrote:
-> 
-> > On Wed, Apr 02, 2025 at 08:16:42PM +0300, Erick Karanja wrote:
-> > > Standardize boolean representation by ensuring consistency,
-> > > replace instances of 1/0 with true/false where boolean logic is implied,
-> > > as some definitions already use true/false.
-> > > This improves code clarity and aligns with the kernel’s bool type usage.
-> > >
-> > > Signed-off-by: Erick Karanja <karanja99erick@gmail.com>
-> > > ---
-> > >  drivers/staging/rtl8723bs/core/rtw_recv.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/staging/rtl8723bs/core/rtw_recv.c b/drivers/staging/rtl8723bs/core/rtw_recv.c
-> > > index a389ba5ecc6f..fd04dbacb50f 100644
-> > > --- a/drivers/staging/rtl8723bs/core/rtw_recv.c
-> > > +++ b/drivers/staging/rtl8723bs/core/rtw_recv.c
-> > > @@ -1358,7 +1358,7 @@ static signed int validate_80211w_mgmt(struct adapter *adapter, union recv_frame
-> > >  			u8 *mgmt_DATA;
-> > >  			u32 data_len = 0;
-> > >
-> > > -			pattrib->bdecrypted = 0;
-> > > +			pattrib->bdecrypted = false;
-> >
-> > but bdecrypted is a u8, not a boolean type.  So setting it to "false"
-> > does not seem correct here, right?
-> 
-> Is false different than 0?
+The following commit has been merged into the x86/mm branch of tip:
 
-Does C guarantee that?  I can never remember.  I don't think it
-guarantees that a 'bool' will only be 8 bits, or am I mistaken there
-too?
+Commit-ID:     cdc018e6b1c403b6a94416acea4649f9778c68c0
+Gitweb:        https://git.kernel.org/tip/cdc018e6b1c403b6a94416acea4649f9778c68c0
+Author:        Uros Bizjak <ubizjak@gmail.com>
+AuthorDate:    Wed, 02 Apr 2025 20:08:08 +02:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Wed, 02 Apr 2025 22:37:09 +02:00
 
-> Elsewhere there is an assignment to true.
+x86/idle: Remove CONFIG_AS_TPAUSE
 
-Was that in the original driver?
+There is not much point in CONFIG_AS_TPAUSE at all when the emittedu
+assembly is always the same - it only obfuscates the __tpause() code
+in essence.
 
-If this doesn't come from the hardware, then it's fine to make the
-change.  If it does, it needs to be verified that the layout and bit
-values are identical.
+Remove the TPAUSE insn mnemonic from __tpause() and leave only
+the equivalent byte-wise definition. This can then be changed
+back to insn mnemonic once binutils 2.31.1 is the minimum version
+to build the kernel. (Right now it's 2.25.)
 
-thanks,
+Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Brian Gerst <brgerst@gmail.com>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: Andrew Cooper <andrew.cooper3@citrix.com>
+Cc: Rik van Riel <riel@surriel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Link: https://lore.kernel.org/r/20250402180827.3762-4-ubizjak@gmail.com
+---
+ arch/x86/Kconfig.assembler   |  4 ----
+ arch/x86/include/asm/mwait.h | 11 ++---------
+ 2 files changed, 2 insertions(+), 13 deletions(-)
 
-greg k-h
+diff --git a/arch/x86/Kconfig.assembler b/arch/x86/Kconfig.assembler
+index 6d20a6c..fa88585 100644
+--- a/arch/x86/Kconfig.assembler
++++ b/arch/x86/Kconfig.assembler
+@@ -15,10 +15,6 @@ config AS_SHA256_NI
+ 	def_bool $(as-instr,sha256msg1 %xmm0$(comma)%xmm1)
+ 	help
+ 	  Supported by binutils >= 2.24 and LLVM integrated assembler
+-config AS_TPAUSE
+-	def_bool $(as-instr,tpause %ecx)
+-	help
+-	  Supported by binutils >= 2.31.1 and LLVM integrated assembler >= V7
+ 
+ config AS_GFNI
+ 	def_bool $(as-instr,vgf2p8mulb %xmm0$(comma)%xmm1$(comma)%xmm2)
+diff --git a/arch/x86/include/asm/mwait.h b/arch/x86/include/asm/mwait.h
+index 6522886..5141d2a 100644
+--- a/arch/x86/include/asm/mwait.h
++++ b/arch/x86/include/asm/mwait.h
+@@ -133,16 +133,9 @@ static __always_inline void mwait_idle_with_hints(unsigned long eax, unsigned lo
+  */
+ static inline void __tpause(u32 ecx, u32 edx, u32 eax)
+ {
+-	/* "tpause %ecx, %edx, %eax" */
+-	#ifdef CONFIG_AS_TPAUSE
+-	asm volatile("tpause %%ecx"
+-		     :
+-		     : "c"(ecx), "d"(edx), "a"(eax));
+-	#else
++	/* "tpause %ecx" */
+ 	asm volatile(".byte 0x66, 0x0f, 0xae, 0xf1"
+-		     :
+-		     : "c"(ecx), "d"(edx), "a"(eax));
+-	#endif
++		     :: "c" (ecx), "d" (edx), "a" (eax));
+ }
+ 
+ #endif /* _ASM_X86_MWAIT_H */
