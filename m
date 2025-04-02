@@ -1,101 +1,61 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F21051DE2B4
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 07:14:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD6D7233157;
+	Wed,  2 Apr 2025 07:15:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743578100; cv=none; b=Me93OtDIUBqteM00o7gyZac5a4Ka2bjjIv7TD66b/NT84jwmKiTQIv+F16+UGlS0QdzDhQ8dldhT180dRylmbqzYga/di+Kh5kCw2LcVUMwa5UM1UduPERlO/JYRBVx7aATopr3M6AkRaeJ2j2vvCZ0XwHUXDRHYXTln1djanVE=
+	t=1743578108; cv=none; b=tlLkgxi10/p+KssJTCvPAgOGviBBmGL5vcSixJTR1t3Xw9Krh64MUTHFGVsSIHlAtMRXKIrn4pPuvmgYszn5Sa14nIVoVKx0x3g/t5BhAqe+R3lsRzQY9Qap58BLz6vtlvI6G25dUD95S6XBnb5lmb+SNUNIICpcQMFAV/8n8MM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743578100; c=relaxed/simple;
-	bh=FOtpYeBp4zVQl3ctHjTlko2k1XohN/LrcFybr1axKz4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AsB+zTWUJFuiUHs85lLMso9egOKhnifjOvZavUWH4KXt+1iqv+8XLpUksVEf/U/qc5OCSR0Xst7Q89wajl5jzSJPTDk0tdc7TwDxTzqzlOntmQjq/LE9Lf4dzUpW6J51hbMY536dM6+ntesXdH649PeA65FsJgRpGfY356jhLLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eQ2VJsyE; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1743578108; c=relaxed/simple;
+	bh=Qs1W3wj42ZhRITNsZUtXty/qF1gbG3tiJDEnxquPng0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tSpRD3aVWA8nGVAqVYMj3JphvOKIY9Re262u7LkbuVnzq9FmiEb/bsxXvCpCphw2/tsXapnvKPzzaZHTVgSBpP9fCdmnPU7SxcKTqi8idX5DzSijxRtS/4gHuoqj1QrSeV9j0QBngzNpardO57+rCST1SRtDkJI4jwq1m47HBm4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=GUiv27Ea; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eQ2VJsyE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743578094;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=qh1ya57MIjo5Lkmn722x+JI5fDV/4skd8xfb1oy7zXs=;
-	b=eQ2VJsyEhmmqbjyJKvRKn7MXWDXPQrqFWH12HyyJ5roLbY3+PDxozHytyj9efK9ybjR2ae
-	C1BmHEjRnTn7/1e7DC4PvQZziuVp9zS2uv06YLbdcwd0r//I0cTVfyVQT6Ua7YVyFZrdC8
-	Ap0OgBBTIjcdTTtbCs6faAv0VhroUqc=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-328-XcjVldcLPfmmluMdhWpxZg-1; Wed,
- 02 Apr 2025 03:14:49 -0400
-X-MC-Unique: XcjVldcLPfmmluMdhWpxZg-1
-X-Mimecast-MFC-AGG-ID: XcjVldcLPfmmluMdhWpxZg_1743578087
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 591C11955BC9;
-	Wed,  2 Apr 2025 07:14:47 +0000 (UTC)
-Received: from gmonaco-thinkpadt14gen3.rmtit.com (unknown [10.45.224.220])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 11FE3180174E;
-	Wed,  2 Apr 2025 07:14:43 +0000 (UTC)
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: linux-kernel@vger.kernel.org,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Gabriele Monaco <gmonaco@redhat.com>,
-	linux-trace-kernel@vger.kernel.org
-Cc: kernel test robot <lkp@intel.com>,
-	Julia Lawall <julia.lawall@inria.fr>
-Subject: [PATCH] rv: Fix missing unlock on double nested monitors return path
-Date: Wed,  2 Apr 2025 09:13:52 +0200
-Message-ID: <20250402071351.19864-2-gmonaco@redhat.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="GUiv27Ea"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB926C4CEE9;
+	Wed,  2 Apr 2025 07:15:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1743578108;
+	bh=Qs1W3wj42ZhRITNsZUtXty/qF1gbG3tiJDEnxquPng0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GUiv27Ea5q5fcI+NyU9hk5k3l/ukrFv1Sb8AYrdsKC41zQ49/cU9MVnA4BqrPSiYf
+	 hm1b0A6nZKLYUHzsBcv0Oj0OWdkqEIJX1JHoNdpG3RTE9ct2KDGQ5PTSbGzVNrzxkb
+	 WaWXRLD0lItyD1iogBzQKEwN7Y2EElLbiQbz7Z6Y=
+Date: Wed, 2 Apr 2025 08:13:36 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Wang Zhaolong <wangzhaolong1@huawei.com>
+Cc: Kuniyuki Iwashima <kuniyu@amazon.com>, edumazet@google.com,
+	ematsumiya@suse.de, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-net@vger.kernel.org,
+	smfrench@gmail.com, zhangchangzhong@huawei.com, cve@kernel.org,
+	sfrench@samba.org
+Subject: Re: Fwd: [PATCH][SMB3 client] fix TCP timers deadlock after rmmod
+Message-ID: <2025040200-unchanged-roaming-52b3@gregkh>
+References: <ac39f5a1-664a-4812-bb50-ceb9771d1d66@huawei.com>
+ <20250402020807.28583-1-kuniyu@amazon.com>
+ <36dc113c-383e-4b8a-88c1-6a070e712086@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <36dc113c-383e-4b8a-88c1-6a070e712086@huawei.com>
 
-RV doesn't support nested monitors having children monitors themselves
-and exits with the EINVAL code. However, it returns without unlocking
-the rv_interface_lock.
+On Wed, Apr 02, 2025 at 12:49:50PM +0800, Wang Zhaolong wrote:
+> Yes, it seems the previous description might not have been entirely clear.
+> I need to clearly point out that this patch, intended as the fix for CVE-2024-54680,
+> does not actually address any real issues. It also fails to resolve the null pointer
+> dereference problem within lockdep. On top of that, it has caused a series of
+> subsequent leakage issues.
 
-Unlock the lock before returning from the initialisation function.
+If this cve does not actually fix anything, then we can easily reject
+it, please just let us know if that needs to happen here.
 
-Fixes: cb85c660fcd4 ("rv: Add option for nested monitors and include sched")
-Reported-by: kernel test robot <lkp@intel.com>
-Reported-by: Julia Lawall <julia.lawall@inria.fr>
-Closes: https://lore.kernel.org/r/202503310200.UBXGitB4-lkp@intel.com
-Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
----
+thanks,
 
-This fix is not critical since currently no nested monitor registers
-nested monitors and doing so would require another review for inclusion
-in the kernel code.
-
- kernel/trace/rv/rv.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/kernel/trace/rv/rv.c b/kernel/trace/rv/rv.c
-index 50344aa9f7f93..968c5c3b02464 100644
---- a/kernel/trace/rv/rv.c
-+++ b/kernel/trace/rv/rv.c
-@@ -809,7 +809,8 @@ int rv_register_monitor(struct rv_monitor *monitor, struct rv_monitor *parent)
- 	if (p && rv_is_nested_monitor(p)) {
- 		pr_info("Parent monitor %s is already nested, cannot nest further\n",
- 			parent->name);
--		return -EINVAL;
-+		retval = -EINVAL;
-+		goto out_unlock;
- 	}
- 
- 	r = kzalloc(sizeof(struct rv_monitor_def), GFP_KERNEL);
-
-base-commit: acc4d5ff0b61eb1715c498b6536c38c1feb7f3c1
--- 
-2.49.0
-
+greg k-h
