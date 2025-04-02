@@ -1,130 +1,155 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04F451F4CAE;
-	Wed,  2 Apr 2025 21:37:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37AEC78C91;
+	Wed,  2 Apr 2025 21:39:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743629858; cv=none; b=cQyvdK/VWGeveeoE4DD2jwsuXWwVrnE8gNWr0ywdIN0X9Ui8ihzFLTnk/PeDFKP7BQ1oEpvQX38YdhJSt+NfWffYG5q3tAmB2zbsFYMoHeqb2aq3k/zXwtBhqtxlspGNFN6fMx3STJGuETp0JVLsvPXJkudpUtlLXcn2+5Ni1nA=
+	t=1743629951; cv=none; b=Jd700IWr4GzrjztplhhdXdX2l20yNgjqrh55nW1GrTEEg719FkCNSIrJOyTsVcL7SVa8ecTpmgUhHqeVY8ZoEc9Ddp53nhcMZfo6h0xchDhfM7rMo/UnGTL6atM17+RiHTWatqhQL8sLU4jlEn464sRkzBsPdVERJD2G8V4SajA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743629858; c=relaxed/simple;
-	bh=mtnLhAvunP0n3HodqhA9V08lj5tMi88b4TwFRp404lw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jLO5BsGFxrJ4++OE0y+jFs8kkejrsePtAyX8gi9kQ3Jbjdgp17lLXXuGPyJQZFnnaqP+wHSZqcufdWVPjtgj27Y+fvdySxGnbk7/Vtsc8b8R4FZPwP4Pgj2+rps0xYy3E4QpasXDhHTEGzR/fYqVbTzd5bIQfH/xGE6PtQKaOvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nJFOLt0V; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1743629951; c=relaxed/simple;
+	bh=TSUZ/BtivkLRiKLsU2XCL8Ugofa5D2b//TRkx+fWb90=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=QLkVgokIt+4yC+zGVavDIeaUulAB+KVZVgXKi0yZHp43aOrFNYd2Z0WjxZ9IWFdXsKWFlN1TieECixHn2Uurw+UTneAkiB+yLdsTUACFanAeIjQRTswxu59klGA6HCThwuikL2lEgbBrkkva5HYj/QPEPnd1f6Y9aS/Kf93i0u8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gd1zNfiK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nJFOLt0V"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743629858; x=1775165858;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=mtnLhAvunP0n3HodqhA9V08lj5tMi88b4TwFRp404lw=;
-  b=nJFOLt0VuQM2vVqowadu1sCOkZwj6PpwsY1nA4kwq2nh47bplY/nByuo
-   w3wsYj6EOMJ4vEPtUISZBRCOXh+H2JI5+hLTGIx/H0Oa3+XPR8oNcuna/
-   S+b7bw8hVSURNaJwoHlB7r2fjRZL98TAclybCRQFfZ3oMjaJopiilaG60
-   tNfBHlven79rXYDUaZDLt6hkhfPPv/LDS9aJYrYKJwWBUT/HZkj2aWvIJ
-   0jhXte8ydPNKY1KrIlcuTro4h/PEhey9VxFzYMYtwOfDQyQj9eqUUBE04
-   3Vf1Y8dMHzEjguxnNXc9gMalCzjwz/O7Fa4AQo8MaEhJuCfpRXf7hk8Mg
-   A==;
-X-CSE-ConnectionGUID: c6jikhPQSPOw4bm7uxXyaw==
-X-CSE-MsgGUID: 8bvkixRLRWmGHQEJ9F0HhQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11392"; a="55212840"
-X-IronPort-AV: E=Sophos;i="6.15,183,1739865600"; 
-   d="scan'208";a="55212840"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 14:37:37 -0700
-X-CSE-ConnectionGUID: WC9oK6hdTe2zuwQdamU5tg==
-X-CSE-MsgGUID: 7yKzRoXySry1ctdq0HqdvA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,183,1739865600"; 
-   d="scan'208";a="127727297"
-Received: from johunt-mobl9.ger.corp.intel.com (HELO [10.124.222.41]) ([10.124.222.41])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 14:37:33 -0700
-Message-ID: <a287cfc1-da35-4cd4-9278-4920bb579b5c@intel.com>
-Date: Wed, 2 Apr 2025 14:37:32 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gd1zNfiK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7B5DC4CEEA;
+	Wed,  2 Apr 2025 21:39:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743629950;
+	bh=TSUZ/BtivkLRiKLsU2XCL8Ugofa5D2b//TRkx+fWb90=;
+	h=Date:From:To:Cc:Subject:From;
+	b=Gd1zNfiK12s9/7C+9AiJxdL37Jazmrvm2NVQveKCMeStcTD8bdgZ4g5vPmXFMZfF4
+	 FHo9du/fzkGCwZ6RbnqQnnVAVTt+70lJqq33GWG6m8wnNDEJG0w9azwVqpdI0drjyN
+	 SX9I/vDWWXiKYFWADa0UgE06UZ6rTQpjCh+6YX3USklPSEWgm+OBqxTdVdy48yA4Rf
+	 VmUWYuaI3hNv7gHNaztS5eNgFmjMoxwKmtQV/qrGAnNbI+ja3b4L9wRCf89rBLRD4U
+	 MOqD3nKvhtoWRiyUN9WLal56LDporgVl4J9aJyQe6ORkhNHcgcwcZarkc6Qu7g2mr0
+	 tR8TzxA8/8sYw==
+Date: Wed, 2 Apr 2025 15:39:07 -0600
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Lyude Paul <lyude@redhat.com>, Danilo Krummrich <dakr@kernel.org>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
+Cc: dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH][next] drm/nouveau: svm: Avoid -Wflex-array-member-not-at-end
+ warning
+Message-ID: <Z-2uezeHt1aaHH6x@kspp>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 3/8] x86/fpu/xstate: Add CET supervisor xfeature
- support
-To: "Chang S. Bae" <chang.seok.bae@intel.com>, Chao Gao <chao.gao@intel.com>,
- x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
- tglx@linutronix.de, seanjc@google.com, pbonzini@redhat.com
-Cc: peterz@infradead.org, rick.p.edgecombe@intel.com,
- weijiang.yang@intel.com, john.allen@amd.com, bp@alien8.de,
- xin3.li@intel.com, Maxim Levitsky <mlevitsk@redhat.com>,
- Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>,
- "H. Peter Anvin" <hpa@zytor.com>, Mitchell Levy <levymitchell0@gmail.com>,
- Samuel Holland <samuel.holland@sifive.com>,
- Aruna Ramakrishna <aruna.ramakrishna@oracle.com>,
- Vignesh Balasubramanian <vigbalas@amd.com>
-References: <20250318153316.1970147-1-chao.gao@intel.com>
- <20250318153316.1970147-4-chao.gao@intel.com>
- <d472f88d-96b3-4a57-a34f-2af6da0e2cc6@intel.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <d472f88d-96b3-4a57-a34f-2af6da0e2cc6@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 4/1/25 10:15, Chang S. Bae wrote:
-> In V3, you moved this patch further back to position 8 out of 10. Now,
-> in this version, you've placed it at position 3 out of 8.
-> 
-> This raises the question of whether you've fully internalized his advice.
+-Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+getting ready to enable it, globally.
 
-Uh huh.
+Use the `DEFINE_RAW_FLEX()` helper for an on-stack definition of
+a flexible structure where the size of the flexible-array member
+is known at compile-time, and refactor the rest of the code,
+accordingly.
 
-1. Refactor/fix existing code
-2. Add new infrastructure
-3. Add new feature
+So, with these changes, fix the following warning:
+
+drivers/gpu/drm/nouveau/nouveau_svm.c:724:44: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/gpu/drm/nouveau/nouveau_svm.c | 39 +++++++++++++--------------
+ 1 file changed, 18 insertions(+), 21 deletions(-)
+
+diff --git a/drivers/gpu/drm/nouveau/nouveau_svm.c b/drivers/gpu/drm/nouveau/nouveau_svm.c
+index e12e2596ed84..6fa387da0637 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_svm.c
++++ b/drivers/gpu/drm/nouveau/nouveau_svm.c
+@@ -720,10 +720,7 @@ nouveau_svm_fault(struct work_struct *work)
+ 	struct nouveau_svm *svm = container_of(buffer, typeof(*svm), buffer[buffer->id]);
+ 	struct nvif_object *device = &svm->drm->client.device.object;
+ 	struct nouveau_svmm *svmm;
+-	struct {
+-		struct nouveau_pfnmap_args i;
+-		u64 phys[1];
+-	} args;
++	DEFINE_RAW_FLEX(struct nouveau_pfnmap_args, args, p.phys, 1);
+ 	unsigned long hmm_flags;
+ 	u64 inst, start, limit;
+ 	int fi, fn;
+@@ -772,11 +769,11 @@ nouveau_svm_fault(struct work_struct *work)
+ 	mutex_unlock(&svm->mutex);
+ 
+ 	/* Process list of faults. */
+-	args.i.i.version = 0;
+-	args.i.i.type = NVIF_IOCTL_V0_MTHD;
+-	args.i.m.version = 0;
+-	args.i.m.method = NVIF_VMM_V0_PFNMAP;
+-	args.i.p.version = 0;
++	args->i.version = 0;
++	args->i.type = NVIF_IOCTL_V0_MTHD;
++	args->m.version = 0;
++	args->m.method = NVIF_VMM_V0_PFNMAP;
++	args->p.version = 0;
+ 
+ 	for (fi = 0; fn = fi + 1, fi < buffer->fault_nr; fi = fn) {
+ 		struct svm_notifier notifier;
+@@ -802,9 +799,9 @@ nouveau_svm_fault(struct work_struct *work)
+ 		 * fault window, determining required pages and access
+ 		 * permissions based on pending faults.
+ 		 */
+-		args.i.p.addr = start;
+-		args.i.p.page = PAGE_SHIFT;
+-		args.i.p.size = PAGE_SIZE;
++		args->p.addr = start;
++		args->p.page = PAGE_SHIFT;
++		args->p.size = PAGE_SIZE;
+ 		/*
+ 		 * Determine required permissions based on GPU fault
+ 		 * access flags.
+@@ -832,16 +829,16 @@ nouveau_svm_fault(struct work_struct *work)
+ 
+ 		notifier.svmm = svmm;
+ 		if (atomic)
+-			ret = nouveau_atomic_range_fault(svmm, svm->drm,
+-							 &args.i, sizeof(args),
++			ret = nouveau_atomic_range_fault(svmm, svm->drm, args,
++							 __struct_size(args),
+ 							 &notifier);
+ 		else
+-			ret = nouveau_range_fault(svmm, svm->drm, &args.i,
+-						  sizeof(args), hmm_flags,
+-						  &notifier);
++			ret = nouveau_range_fault(svmm, svm->drm, args,
++						  __struct_size(args),
++						  hmm_flags, &notifier);
+ 		mmput(mm);
+ 
+-		limit = args.i.p.addr + args.i.p.size;
++		limit = args->p.addr + args->p.size;
+ 		for (fn = fi; ++fn < buffer->fault_nr; ) {
+ 			/* It's okay to skip over duplicate addresses from the
+ 			 * same SVMM as faults are ordered by access type such
+@@ -855,14 +852,14 @@ nouveau_svm_fault(struct work_struct *work)
+ 			if (buffer->fault[fn]->svmm != svmm ||
+ 			    buffer->fault[fn]->addr >= limit ||
+ 			    (buffer->fault[fi]->access == FAULT_ACCESS_READ &&
+-			     !(args.phys[0] & NVIF_VMM_PFNMAP_V0_V)) ||
++			     !(args->p.phys[0] & NVIF_VMM_PFNMAP_V0_V)) ||
+ 			    (buffer->fault[fi]->access != FAULT_ACCESS_READ &&
+ 			     buffer->fault[fi]->access != FAULT_ACCESS_PREFETCH &&
+-			     !(args.phys[0] & NVIF_VMM_PFNMAP_V0_W)) ||
++			     !(args->p.phys[0] & NVIF_VMM_PFNMAP_V0_W)) ||
+ 			    (buffer->fault[fi]->access != FAULT_ACCESS_READ &&
+ 			     buffer->fault[fi]->access != FAULT_ACCESS_WRITE &&
+ 			     buffer->fault[fi]->access != FAULT_ACCESS_PREFETCH &&
+-			     !(args.phys[0] & NVIF_VMM_PFNMAP_V0_A)))
++			     !(args->p.phys[0] & NVIF_VMM_PFNMAP_V0_A)))
+ 				break;
+ 		}
+ 
+-- 
+2.43.0
+
