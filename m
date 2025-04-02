@@ -1,122 +1,101 @@
-Received: from mout.web.de (mout.web.de [212.227.17.12])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FB432E3374;
-	Wed,  2 Apr 2025 18:47:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAD7E5C96;
+	Wed,  2 Apr 2025 18:48:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743619642; cv=none; b=QoKYvX60Fih9zPNr0W3FRyI70oniyadAuTpeeCHgsrOFYpO322mNfHax0/PSdLzV1GLMem+MLtOC431Rxx5txPoRo9LQzGFcu2m5mdye65To3rS6SdLmpPo+0/jvIUo99DOb2BzfjjNKLKyAOw0fcnsR7GgcFb/U6L/kPreYnPQ=
+	t=1743619738; cv=none; b=YQpHy11e65QzF/ql2DwZyl/dxiUtFZbjRVAi3KyRQGtqiin6epXn6QQ9blGSgnUB8XiWvZB1IdoocPx3XRZXSSrlAhLnxYbynEsVTYhVRRV6M3jEbEZSGn0pjnuxhngixHP0BRHLJqKq8dMcECbA6jO3tRWCG7wphDZ6IlC0oQQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743619642; c=relaxed/simple;
-	bh=Hoa2+ro5EZ5o1RGrqrosAxoZVsV1RUdGM+AjzDAFuaA=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=MSYk7hi6UL9sEBWfw1nAa8a0RCx6rewXOYPTuONGFsNZhmA0vpU/AcYlf7/HWUQ/q4A1/nLhcbbzy9gh3JCMPMy6t7F0aIRihwYWQdqe+WUX64Kov+LevKRhX/r+B7O+LcRHFiWK303rbffIgXzvuYDjlpyt0D2meJwxnegcZXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=ofeeJhCr; arc=none smtp.client-ip=212.227.17.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1743619738; c=relaxed/simple;
+	bh=BN8pPeaB18+ZGS9verxlJtdxTpoi9iF6l/UuLF+vi5c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sjwzPoS1vRjXA59GsnN9vm3gCvIDEWPqY8Czk0AhGaLqEOXQeXW4fCnCs2O2cIR+tdcQfYW29C3Qv6dnlquo8EhgUobIldK2Zwgzy4Qgw73oQiOeT8TD5+cd25ZHAg4lyfqeGBaVKaFgiUP3cngmnfOZehBoRPKdz2iMQG6mT/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=jH+am6jM; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="ofeeJhCr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1743619624; x=1744224424; i=markus.elfring@web.de;
-	bh=Yj9RIDQsEt8tzSW+jzu6BqqXOE9MVtLSr5ORhlPBVxM=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=ofeeJhCr8HK3ha0zzlVhDnwFEJxlkRT1ztdiT3X+xO6A+Py76FHgpNOqhMsGiEP/
-	 A8cZ4Cnk2ixEKCEPjGizKqa7Mgnb89P3klp48F/B363ebR3wkZ4U1I+RzRmeBEp+r
-	 9UGHfshYw42j3/TiwlJeEtWCDNnLduX0tFXXTFvWW55+i21vKHaYgWa2LPwozeGb7
-	 Ley93/RkDJwunAsK5V3d2jOlETjpET8RB46eVKdkWTZlBh4xoJ5kMq33n5v5mYXrd
-	 XDjfeVrQsZMy8Rw8a7TF7lqxWf/DKpLAXH5xo4RgUv54WP1QRzQDijEVphIOGewLB
-	 R8mN2LkJKmMPJiyx6g==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.70.83]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MHVal-1tvQXh12PZ-004RVw; Wed, 02
- Apr 2025 20:47:04 +0200
-Message-ID: <8bb290ee-615a-4e88-b7d4-776239c07ae7@web.de>
-Date: Wed, 2 Apr 2025 20:46:48 +0200
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="jH+am6jM"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 4832940E021E;
+	Wed,  2 Apr 2025 18:48:54 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id BlN6ygf2ytRz; Wed,  2 Apr 2025 18:48:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1743619731; bh=ZdCGke78EY8DavBNUh6kV+s+XrFkLl05AHZqQYloNCM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jH+am6jMo/hklHNdoMkyaC5WM5A87ZpJT9kNiDGkXPjdkIB4c3CghA881NpAbfVeO
+	 y+1MN+c2Cq6+RjOOapDYIbUFWvKE6CucvxJoh9BOuXOOjlc5CEUpVhbdWjz8xHyHfN
+	 /iIUIR6Gc60aZsebdxCh9Sdl2de/+gu+L+E8wbb6XXB9BCpihJQQG/ygTBi7d8mha1
+	 PiVGswv7s4zzOH6BQPZ2qb5Z5kFD/LWWTT/UYfsFgdbPvn/g/96h1R3H+jXAYsHMdi
+	 YDEKXptaHLxk3spBlnY/IO06DbeCH1+k9w6vAoXWdhQreVc5kWyfJXc3gZD/0uLFBu
+	 3wxJMHBMvGHG7wWOz4+OK/NbMozQCY7T2unVg4Kxw4TSLMFLbQoeMuvzaNhIiv5aYJ
+	 s/i3h/smjCCyutCrt9iO0f6r6QApH1HKFTQ1hHT2h7yT1kxkN5R4t1D/9rQTDPNYoV
+	 7AAIEXMrHopvAMQG+pGLfsM05BCJbY8QVRi2c9BwFLDcCeIO5oZB9lJxCM0ZKn0/PZ
+	 i9WHMY1uFnb6VeudE1NJQmR7ywiK+mtI57RAhfPNim/fBzMfULoMyBJhsGsd0acr0F
+	 BwsRe62AhnKXKH/8QpqVw5LV+S4hVLfeh4QC2A2S2cY4DSIE+moSSzXJmdmZwskDaz
+	 u+T7Zpv0LPYcGxCVVBnPVMXk=
+Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B0CEF40E0196;
+	Wed,  2 Apr 2025 18:48:26 +0000 (UTC)
+Date: Wed, 2 Apr 2025 20:48:20 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, amit@kernel.org,
+	kvm@vger.kernel.org, amit.shah@amd.com, thomas.lendacky@amd.com,
+	tglx@linutronix.de, peterz@infradead.org,
+	pawan.kumar.gupta@linux.intel.com, corbet@lwn.net, mingo@redhat.com,
+	dave.hansen@linux.intel.com, hpa@zytor.com, seanjc@google.com,
+	pbonzini@redhat.com, daniel.sneddon@linux.intel.com,
+	kai.huang@intel.com, sandipan.das@amd.com,
+	boris.ostrovsky@oracle.com, Babu.Moger@amd.com,
+	david.kaplan@amd.com, dwmw@amazon.co.uk, andrew.cooper3@citrix.com
+Subject: Re: [PATCH v3 1/6] x86/bugs: Rename entry_ibpb()
+Message-ID: <20250402184820.GJZ-2GdG-CWRxEwTmy@fat_crate.local>
+References: <cover.1743617897.git.jpoimboe@kernel.org>
+ <a3ce1558b68a64f52ea56000f2bbdfd6e7799258.1743617897.git.jpoimboe@kernel.org>
+ <20250402182928.GAZ-2CCBR2BAgpwVLf@fat_crate.local>
+ <qeg7tr5jvmyyxvftl4k4qsa4hxga7hzvqcs2xbhfpeun5yhn3r@ua6pawrgxix5>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Henry Martin <bsdhenrymartin@gmail.com>, netdev@vger.kernel.org
-Cc: LKML <linux-kernel@vger.kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>,
- Michael Grzeschik <m.grzeschik@pengutronix.de>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>
-References: <20250402135036.44697-1-bsdhenrymartin@gmail.com>
-Subject: Re: [PATCH v3] arcnet: Add NULL check in com20020pci_probe()
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250402135036.44697-1-bsdhenrymartin@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:IJYrwiTEnWcW+yavwbIq47Sbbyd8KqFJersVQRVS63XObx8b575
- WNfEw9gGkWKOP04BQTFZgxDK7PKSMCncyH+tdjbYXeNawA6k6T2rBZBjUNMS/xVNHtMvQ6j
- 6Cuu2RyWq2Uaps56o60tmbELU/xp2zcqIOQIw8+M+6rJ3twOJu74arW+mhB8IFQImmpqVvP
- R3ddrqqkDW0Gy2BKgnTMA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:vogOzPIWMks=;yC88XCTv66/Z1sYoK8LVqd+iWPR
- 1v62xz3jHNFCYnnroCdQh8wWfS6kq7OULbk1NYSkFSfgjQs4koofmrkR7PIpa+e2iJv1qx6nn
- YSQTq2AwBY+yrlbUHWVQ4n/kGYDOvqp7pQJZ0juiwrZzN+Mf+JU2Fx3OpzXH2MsogTluWRMEm
- cVXaIcJvID1hkg1BJ/jYPm5gs5ZZd06RtemhU8I7BQ1zYPSY0bVbEf4VYPIyVhITH9BtbrjjM
- sTpCGhheFQA32+OLS0yjmYmOjfKP/UqUWwwk2udvUjjcy7kolialY+DDgppX4sq9Q/chBkjFD
- q+U57cM0Oqjh1zv9BAQZny5wXejf55SoQp2/odlUJd+rJzRLHfLT7oIjkYhIzL+6FUjR3wYDv
- UlXU5wVvSbmbmjb284R7jhkbuSJTmXUEyvFV9w38wUXnEf6WbH0dTZ8mDR4yJ3YCXsUWmFsvQ
- xfCFI5wERMS/msJPZ767RzRGUWPVmYThpYUEiR0M4+7jfRbj45JEm8xv1+Lkbdl4yEamnvKIP
- S2AojHz/RnLKXPSYVGG//iHhu72i6JTmC7J8rIc4pj0dLO4oCotc2wvCoUp/QzoBw4prAvwqL
- 4P0r6WQuSE3ib+ZfcjtdxCaH14EMWHZxcC/WLFAX0OfcDcPq3iBPhPOULcqHpXTjE5XRm+jJk
- 6aNJzAs217eOZtPJUcS4Vg+oMfZmX6MbZZlfg0XSeCetJxOVAOHdgECuJrcR+g+RiTG5sov9+
- wFJBGfbVX/NP4C5uGu1RCOuPAw3g02/FYaSNgXaKNxwV76A+T5hwC7eDJkOIGROVdUdpoJmcc
- mf0A4hEToQhYiTVxb4okIIqUHcS5oAKRYLqbZVahIz4ZicMWeCHtV6Gl2KXNG7R0QpjjEYqAu
- WfvDwlPfNdbhMYHDTSnUi74PI5V7CZET5v5gi+Tg5G45Zv+eLUKhCfwZxdUemxMjaSTV1e/HK
- ntn7znzO2RplnOPEb5giq+g+Wyyvd2G+uTYJ3D8QdVMmIN3SJXGX5tIg3X7+qmmzZON0nEZ4/
- rlPtxx4mfguJm1F9zWi61SQmIXnLdzWvpj6mHJbni/vehPIHm7D6F9mgi2JDnUvruNfl/sq69
- xDFfWmruWZ8lgxal/SRydUE6D+ShwN0OUbj3SwRb/Lv5s4j5WzEUASByTWvkUpdVUiMCKel+o
- 0txxc85BtZztpZcdgYO56AG5MXO4gHT1NpfK0H88Uhc+iLpedoDl0TSIYw/MWXEYaaPYyPQVs
- 3a2YgWGKYaAwBG6Jt6I+bd6/Fc8acZrTHxnRBiGakjA6MJXOQ7E7aOgxajpOrWSvn+wGuw3B2
- /IzTdeoYphmPeO4oN/+xDw39uXnu0NjYLA8CNv6cUVLXysbb2qjlCQZNs/YMr0W673ky8afKz
- Zunho/HyXK2ZTiJSlsByIcuytmaBC1ft8STIBVfu5YW/iknzT1i72g992ZdXH/mRD1unS80SQ
- CgRorGx3cD7+baEDVjgBmcqNuRWnNa4M47i/6jA9AOfdnue3B
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <qeg7tr5jvmyyxvftl4k4qsa4hxga7hzvqcs2xbhfpeun5yhn3r@ua6pawrgxix5>
 
-=E2=80=A6
-> Add NULL check after devm_kasprintf() to prevent this issue and ensure
-> no resources are left allocated.
+On Wed, Apr 02, 2025 at 11:44:15AM -0700, Josh Poimboeuf wrote:
+> It helps it stand out more? :-)
 
-I hope that further refinement possibilities can be taken better into acco=
-unt.
+Please don't.
 
+Someone thought that it is a good idea to start using that // ugliness all of
+a sudden.
 
-=E2=80=A6
-> ---
-> V2 -> V3: Reuse label err_free_arcdev for exception handing.
-=E2=80=A6
-> +++ b/drivers/net/arcnet/com20020-pci.c
-> @@ -251,18 +251,33 @@ static int com20020pci_probe(struct pci_dev *pdev,
->  			card->tx_led.default_trigger =3D devm_kasprintf(&pdev->dev,
->  							GFP_KERNEL, "arc%d-%d-tx",
->  							dev->dev_id, i);
-> +			if (!card->tx_led.default_trigger) {
-> +				ret =3D -ENOMEM;
-> +				goto err_free_arcdev;
-> +			}
-=E2=80=A6
+So we decided we should limit it in tip:
 
-I propose to avoid duplicate source code also for the shown completion of
-the corresponding exception handling.
-https://wiki.sei.cmu.edu/confluence/display/c/MEM12-C.+Consider+using+a+go=
-to+chain+when+leaving+a+function+on+error+when+using+and+releasing+resourc=
-es#MEM12C.Considerusingagotochainwhenleavingafunctiononerrorwhenusingandre=
-leasingresources-CompliantSolution(copy_process()fromLinuxkernel)
+Documentation/process/maintainer-tip.rst
 
-See also once more:
-* https://lore.kernel.org/linux-kernel/?q=3De_nomem
+The paragrapn that starts with "Use C++ style, tail comments when documenting
+..."
 
-* https://docs.kernel.org/process/maintainer-netdev.html
+> I was thinking the calling interface is a bit nonstandard.  But actually
+> it's fine to call from C as those registers are already caller-saved
+> anyway.  So yeah, let's drop the '__'.
 
-Regards,
-Markus
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
