@@ -1,123 +1,106 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AA8F231C8D
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 05:38:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AAE9A13AA27;
+	Wed,  2 Apr 2025 05:40:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743572338; cv=none; b=pkydVAt/y2bXAh9iVAh5V8xZ8ujWw06qxPLYwGVarSHP/Ffva9fXzCgA/CrmArEE3AlSE1nWsqFabdwOCpS2oQtsgJBlsifRBHzzsFmPU3j3DNEEWH81sZTffhq9DXpp8CP7eZktejjPvraFAfLOPrVfWkygYCHvA5aM4AdEPpU=
+	t=1743572453; cv=none; b=tVNSfUoL/USyT/3bKuYnX/d1IhAw6quNqJ5U8JMHgEgeaPJl8BCb7I4vwklGhueGsPnDddWLewRgqAKuR8ex8kF8hjNpR7iQp7LTvlRBJb1lkHhcYthItUXXi/T759W6Dorfpamk2SO9v4gW9ISCw2AdTvyvvMaIfL2xUyhLrE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743572338; c=relaxed/simple;
-	bh=Fi/SqJtJyUf1mHWGg3azbi4rP4riZdDLaioWwKzLB24=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Nr0DTMCZFroPP5p5uSWeypNtE4xqTbAZEUR+D3St2lgUh+z76qtEExx43SBdZTJZt8kJM+mUX0oi1ENjknfMQiuxCfy8msypWeUlBAwDBuSAsjVWFfojicyUs+8jsV5SvuvffkvVzrhhOi/KKaksvfTo0dUK8gyS83uWk3sHC+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Yzk3LWEG; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1743572453; c=relaxed/simple;
+	bh=wZNAuYXkU51dfAFPidgsL7ZUk4uvCwu3iAmPgfx/jes=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cqZOwjcOxwZuVdkI0M+tNcRhKMsYmpJBqlp3vzhzCFlM/OosKERVOpjguNPZSZZcGBPBfaMUxWYc8hx11ToR9GK9soI9KbphiA9TO4jHdNURtqRSYFethTFbBhNW47qq8aBlMAcve7GGa2oNfn4T7z0TN2QuGAk/ffH1FhEfANU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=bEqpqXet; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Yzk3LWEG"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2264aefc45dso2989385ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 22:38:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743572336; x=1744177136; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Vds3osu30LpJLxooKeQfecExvCs326fHSaN8YqB0VpY=;
-        b=Yzk3LWEGUDSggbAeTGOF1JhoBYK6Y7NPpHAPN8WWyIskBNXUDipKIRdQW31epCahFE
-         u2Rf31jvJFpeRQ2fkwAeZDeWv6mmpN2sd99PBDr7GEY3SUtQ7j9mNQawDKSjoyXajti3
-         Bv3PZVHZOYnrdL/MSc0/1pEgRtY1NMCNaCt2UvAes5I4xDP1QeVZmvDASjsjOcJ732xP
-         VcRIc5Supu5jfpaxOt6mpwUzWm4wvwP7hjoKc9XshASBNcsWhZe1Jx+D39O1q+ofafto
-         BXb8CFpbmgdwSQGuE/UfafMLRcoJapSEiQLOhlXtgvmEpNGIONWTC9bdlIuli3LCNDrx
-         dAOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743572336; x=1744177136;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Vds3osu30LpJLxooKeQfecExvCs326fHSaN8YqB0VpY=;
-        b=ALeIgS7DUHxlRSJ1fu4IJFKhrkCHNgSsg/KXUC/CPN/TXRe2MfjdIhgjiuawmZSfDb
-         0uD6q74fKMlF+GSZEyS1kZ6W2fl9efivU4rrrwezfVGCCM4QqHcR4Zla55TKSH3UE7il
-         mhFkWKiehyaAgeSsZH8VPFX9wH2o/BfEOZ3Sr4YVpTFO1jD8ScHkppHihIoYbFCGKBwR
-         mTSoC+HjEuNAT7mgMO36iRiaSwmGYcTj9S9B8Ub/CosKTTBnR2bW7M9sBYtQDTffTCJm
-         KpiwC2LLGcKdyOVTzw/6gjHRLi892dMJ0OvEtsoyriHTEpxPVvkUo9LIFdeQjMc/3TsT
-         rRPg==
-X-Forwarded-Encrypted: i=1; AJvYcCUSqehCbb5/g25jY/1N8HOS2oO1cruqdHkhFtFgSYFpEMfOetV4VJHcexLPNuTtC3UTJYlDk/vzwYcSOkM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwYRIdNQ+zkgy4QcqyTkBYz2vRnSX0BVPwVK1m8QyWygCS81/Ab
-	qLnPG641g2wSf0tF0EQOPycb6exLT2zao5MP2yvJOEgkCFEX7Sxw6N8BHJ32YBc=
-X-Gm-Gg: ASbGncsMCMSLGLIpcg+pLoTvwuPzpH+R1uHgt0j9tyOzM9FDysI8/2GsZAWhmTnAKEy
-	zyJPww2OBFimNtz7wKNUWZPhhwPPEsg41SY0/7OGz20AW8nIhCO26R8UUIN3vO9Q3U83jW0q74D
-	7NmqdWGlLU5M2/IAwX/H8pdlLYuSPckgI+E8cnkYYlW2InKajPck2E7qElxkQK95yy5Oun+Rj6Q
-	bO8VfY2Ef5fuhM9wW7rjhoqy9R+JIq+M9d365eLWmWzTnOYlKZl3lY3BUiPMAwZqeIDX9yGF2u6
-	3+OwmTY0Sqj/My4FPftFMx0RihWpm/qtGKgsuSLxgJaDqw==
-X-Google-Smtp-Source: AGHT+IFjTK/AkY3vAyWwEbnbqfQU+uFaUrIZm4GvtNApjNI1onAoRxSXqjrJ7Q6udqokIM5G8rb0Hg==
-X-Received: by 2002:a17:902:ea03:b0:220:c813:dfcc with SMTP id d9443c01a7336-2292f9fa333mr265612385ad.40.1743572336371;
-        Tue, 01 Apr 2025 22:38:56 -0700 (PDT)
-Received: from localhost ([122.172.83.32])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291eee0bfdsm99945695ad.72.2025.04.01.22.38.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Apr 2025 22:38:55 -0700 (PDT)
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: Yury Norov <yury.norov@gmail.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Trevor Gross <tmgross@umich.edu>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>,
-	linux-kernel@vger.kernel.org,
-	Danilo Krummrich <dakr@redhat.com>,
-	rust-for-linux@vger.kernel.org,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Burak Emir <bqe@google.com>
-Subject: [PATCH V4 2/2] MAINTAINERS: Add entry for Rust bitmap API
-Date: Wed,  2 Apr 2025 11:08:43 +0530
-Message-Id: <bf2d798034e5f2c6fd5fbc561a8bd19431e6a9cb.1743572195.git.viresh.kumar@linaro.org>
-X-Mailer: git-send-email 2.31.1.272.g89b43f80a514
-In-Reply-To: <cover.1743572195.git.viresh.kumar@linaro.org>
-References: <cover.1743572195.git.viresh.kumar@linaro.org>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="bEqpqXet"
+Received: by linux.microsoft.com (Postfix, from userid 1134)
+	id 3A3112041307; Tue,  1 Apr 2025 22:40:51 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3A3112041307
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1743572451;
+	bh=ZiB90PMMKAEaJMud/Ou60Rtt4u2bRPDLCYMXvuis7bU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bEqpqXet8h/38+KXimF2PsdMwKXgrUPJin8d4Ze+PWII0DMFUixbmRr7oVdtiDNht
+	 2AGCqlO+x/Q2+3HKhwaxk7M5DAiCGDWigFWgdR0vfn3WKn6QnRSNC4zm/kpMGYlcT4
+	 HMKvdkpbmfnJLG4vznDZnfC1Xnil+qczsJw8Gis0=
+Date: Tue, 1 Apr 2025 22:40:51 -0700
+From: Shradha Gupta <shradhagupta@linux.microsoft.com>
+To: Dexuan Cui <decui@microsoft.com>
+Cc: KY Srinivasan <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	Shradha Gupta <shradhagupta@microsoft.com>
+Subject: Re: [PATCH v2] hv/hv_kvp_daemon: Enable debug logs for hv_kvp_daemon
+Message-ID: <20250402054051.GA22424@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <1743401688-1573-1-git-send-email-shradhagupta@linux.microsoft.com>
+ <BL4PR21MB462765E191592754911DB67BBFAD2@BL4PR21MB4627.namprd21.prod.outlook.com>
+ <20250401040609.GA11465@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+ <BL4PR21MB4627E73164911623CFB98BADBFAC2@BL4PR21MB4627.namprd21.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <BL4PR21MB4627E73164911623CFB98BADBFAC2@BL4PR21MB4627.namprd21.prod.outlook.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-Update the MAINTAINERS file to include the Rust abstractions for bitmap
-API.
+On Tue, Apr 01, 2025 at 07:18:04PM +0000, Dexuan Cui wrote:
+> > From: Shradha Gupta <shradhagupta@linux.microsoft.com>
+> > Sent: Monday, March 31, 2025 9:06 PM
+> > > > +static void convert_tm_to_string(char *tm_str, size_t tm_str_size)
+> > > > +{
+> > > > +	struct tm tm;
+> > > > +	time_t t;
+> > > > +
+> > > > +	time(&t);
+> > > > +	gmtime_r(&t, &tm);
+> > > > +	strftime(tm_str, tm_str_size, "%Y-%m-%dT%H:%M:%S", &tm);
+> > > > +}
+> > >
+> > > Now the function is unnecessary since v2 uses syslog(), which already
+> > > prefixes every message with a timestamp.
+> > 
+> > Hi Dexuan,
+> > I have deliberately kept this timestamp in the raw message so that
+> > if/whenever they are redirected to other file, irrespective of the
+> > configuration of the syslog we have valid timestamp for debugging
+> 
+> A message produced by syslog() is always prefixed with a timestamp,
+> and IMO can't be redirected.  By "redirected to other file",  I guess
+> you mean systemd's options StandardOutput= and StandardError=
+> for a service, but those are stdout/err, not syslog().
 
-Yury has indicated that he does not wish to maintain the Rust code but
-would like to be listed as a reviewer.
+rsyslog can be configured to forward syslog logs from a service to a file.
+If the timestamp template in rsyslog.conf is not configured, the timestamps
+would be missed in forwarded file.
+But I think that would be an issue to be handled by the script/service
+forwarding these logs. It can be easily fixed by adding the timestamp
+template.
 
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-Reviewed-by: Yury Norov <yury.norov@gmail.com>
----
- MAINTAINERS | 6 ++++++
- 1 file changed, 6 insertions(+)
+I will remove the timestamp from the raw log message then. Thanks
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 315cff76df29..f67060f1b3e9 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -6113,6 +6113,12 @@ L:	linux-riscv@lists.infradead.org
- S:	Maintained
- F:	drivers/cpuidle/cpuidle-riscv-sbi.c
- 
-+CPUMASK API [RUST]
-+M:	Viresh Kumar <viresh.kumar@linaro.org>
-+R:	Yury Norov <yury.norov@gmail.com>
-+S:	Maintained
-+F:	rust/kernel/cpumask.rs
-+
- CRAMFS FILESYSTEM
- M:	Nicolas Pitre <nico@fluxnic.net>
- S:	Maintained
--- 
-2.31.1.272.g89b43f80a514
-
+> 
+> > > > +static void kvp_dump_initial_pools(int pool)
+> > > > + [...]
+> > > > +	for (i = 0; i < kvp_file_info[pool].num_records; i++)
+> > > > +		syslog(LOG_DEBUG, "[%s]: pool: %d, %d/%d key=%s
+> > > > val=%s\n",
+> > > > +		       tm_str, pool, i, kvp_file_info[pool].num_records,
+> > >
+> > > Can you change the 'i' to 'i+1'? This makes the messages a little more
+> > > natural to users who are not programmers :-)
+> > sure, but I am just worried that might cause confusion when someone
+> > tried to co-relate it with the actual kv_pool_{i} contents that start
+> > with 0.
+> IMO these messages are mostly for admins, who would feel more
+> natural when seeing N/N as the last element, compared  with N-1/N.
+Got it, will modify this too
+> 
+> Thanks,
+> Dexuan
