@@ -1,77 +1,111 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3E171EF38B;
-	Wed,  2 Apr 2025 07:52:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEEAC2F5A;
+	Wed,  2 Apr 2025 07:53:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743580335; cv=none; b=AFgEV+MLeRptgy+c/NZ+AtBae18n2C6ec1C8M5+FpcR+38h3d6mvTdggHql+QqllLUboQJ9bLEAQiAv9FTHjMpfCTHMASCTrSMP90VeUOhLhjmiIh5OhC0oHD+Ye3UNEJdeK0g3KexCAcJ5zfaKEj6BeSGHIgGtrWSmREIqWjJg=
+	t=1743580443; cv=none; b=nVYB+bcOfO8No9ggDgcv3DXglAQF28k6gApfc8B/QcN5qS9F+PWG52Xer4q0gdUeUwbMgWsLPGaB7SK4RPHxMchLGTlsc/tmJ59KTCDLIjE8xq6kJOfaCstW9RRWCFKPyyjskuQB8r3oBRhCPoiP+ObQUu67O67sl35Ek9fT5oI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743580335; c=relaxed/simple;
-	bh=UAr1Z+AxXev6VsfCf/rRanRitQOy9kGFIc+s7ksn0s8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GC1zhePyPKU4xpofT3ksHslS1DP27yaI6uPrB/eFR4ga7rou14OwfEADnJbDhX1udepefH7ss5C+4FxAKR94eaEoExO8w72ki99uCM7jO1bNtaY6zzJXvXj6qe8aLB83imi/0NwPbYs2ZEepssrpw8npcORAtyKKmaCyRP3cAFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=l1GG/c//; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="l1GG/c//"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=QcJX0K8Yl0giGfzJVWrled6+/qbBHVkKw4ZT7UuEPXI=; b=l1GG/c//fbkOLLhclF5wAgkWMR
-	g0IbNLiU5l7vGPt+ReYRfa/NxMcsGJbBG2pzzasy1YsVolQ8IuV+EJjalGSCV0SO5L+vZBuNnaGUY
-	0mW1Otgz7OAcynUOlQngIJQC7gYlZPhD5IoOvyqYcWeqUCRDymHEreWq/yUQkO8JViuEv8OslMngw
-	YEDz1Dv1EplrY0qElzaYBuq2Z90c318axGUpg4fm5OmiZx+Su/qXyFMyC8WA2TLgSoLBM6PsS/iDO
-	XsL+uVTijCSQ/KorFnoMFFEsbIjqKlLYEiqyc8Bi4LC5rG7eOlof/UNSKuyQpaC8lGDMkgP3XKQXX
-	XeNY7/lw==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1tzstN-000000091wg-3A3Z;
-	Wed, 02 Apr 2025 07:52:10 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 3BEF030049D; Wed,  2 Apr 2025 09:52:09 +0200 (CEST)
-Date: Wed, 2 Apr 2025 09:52:09 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
-	iommu@lists.linux.dev, Randy Dunlap <rdunlap@infradead.org>,
-	"Paul E. McKenney" <paulmck@kernel.org>
-Subject: Re: [PATCH] iommu: Convert unreachable() to BUG()
-Message-ID: <20250402075209.GR5880@noisy.programming.kicks-ass.net>
-References: <0c801ae017ec078cacd39f8f0898fc7780535f85.1743053325.git.jpoimboe@kernel.org>
- <20250327123718.GB31358@noisy.programming.kicks-ass.net>
- <6zzyjtvkqc4ipj7ngtkx3jithfwpwuxlix677urlehgdnljwbl@wfoa5futari6>
+	s=arc-20240116; t=1743580443; c=relaxed/simple;
+	bh=GXpIJY0qTn6iM4clIdE2Rbm3NHxaqOO6tpSO2HXyIB8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=NI3W6lYk0vWTDDc730zW5q1c4C4AlA2AD3blJ5IhHvDbmhpnC/M4GlDrwf66LDC7R4T6CRa90P9cKMCtPSFAfbqwuftYlfS9ymvZ5oS6dDRGU5Wl64+yho2tbT1yG+kzchPPUCe+quKM3Ugt0jtSYQvSiOBVr4Z/KFYhKdRcgW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 9e1615c00f9711f0a216b1d71e6e1362-20250402
+X-CTIC-Tags:
+	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CC_NO_NAME, HR_CTE_8B
+	HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME
+	HR_SJ_DIGIT_LEN, HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM
+	HR_SJ_PHRASE, HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT
+	HR_TO_NO_NAME, IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED, SA_EXISTED
+	SN_EXISTED, SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS, CIE_BAD
+	CIE_GOOD_SPF, GTI_FG_BS, GTI_RG_INFO, GTI_C_BU, AMN_T1
+	AMN_GOOD, AMN_C_TI, AMN_C_BU
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:c06ae3ba-5694-49c2-afbe-f9a4d98934ad,IP:0,U
+	RL:0,TC:0,Content:31,EDM:0,RT:0,SF:5,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:36
+X-CID-INFO: VERSION:1.1.45,REQID:c06ae3ba-5694-49c2-afbe-f9a4d98934ad,IP:0,URL
+	:0,TC:0,Content:31,EDM:0,RT:0,SF:5,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
+	elease,TS:36
+X-CID-META: VersionHash:6493067,CLOUDID:34959bcfc0261e44c3041503def90f69,BulkI
+	D:250402155354VL5IRVCQ,BulkQuantity:0,Recheck:0,SF:19|38|66|72|78|102,TC:n
+	il,Content:4|50,EDM:-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:ni
+	l,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FSD
+X-UUID: 9e1615c00f9711f0a216b1d71e6e1362-20250402
+X-User: luriwen@kylinos.cn
+Received: from localhost.localdomain [(10.44.16.150)] by mailgw.kylinos.cn
+	(envelope-from <luriwen@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
+	with ESMTP id 1010428196; Wed, 02 Apr 2025 15:53:51 +0800
+From: Riwen Lu <luriwen@kylinos.cn>
+To: o-takashi@sakamocchi.jp,
+	rafael@kernel.org,
+	lenb@kernel.org,
+	robert.moore@intel.com
+Cc: linux1394-devel@lists.sourceforge.net,
+	linux-kernel@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	acpica-devel@lists.linux.dev,
+	yu.c.chen@intel.com,
+	Riwen Lu <luriwen@kylinos.cn>,
+	k2ci <kernel-bot@kylinos.cn>
+Subject: [PATCH v2] tools: Restore built-in rules for subdirectory tool compilation
+Date: Wed,  2 Apr 2025 15:52:53 +0800
+Message-Id: <20250402075253.1772541-1-luriwen@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6zzyjtvkqc4ipj7ngtkx3jithfwpwuxlix677urlehgdnljwbl@wfoa5futari6>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 01, 2025 at 05:50:32PM -0700, Josh Poimboeuf wrote:
-> On Thu, Mar 27, 2025 at 01:37:18PM +0100, Peter Zijlstra wrote:
-> > On Wed, Mar 26, 2025 at 10:28:46PM -0700, Josh Poimboeuf wrote:
-> > > Bare unreachable() should be avoided as it generates undefined behavior,
-> > > e.g. falling through to the next function.  Use BUG() instead so the
-> > > error is defined.
-> > 
-> > Right; I did a pass like this a while ago and thought I'd removed all
-> > unreachable() abuse.
-> 
-> Any reason not to just "#define unreachable() BUG()" and convert UD2 and
-> similar to use __builtin_unreachable()?
+Prior to commit d1d096312176 ("tools: fix annoying "mkdir -p ..." logs
+when building tools in parallel"), the top-level MAKEFLAGS=-rR
+(disabling built-in rules/variables) was overridden by
+subdirectory-specific MAKEFLAGS during tools compilation. This allowed
+tools like pfrut and firewire to implicitly rely on Make's built-in rules.
 
-Just remove unreachable() entirely at that point. But you're going to
-have to update all the various arch code that does use it correctly :/
+After the aforementioned commit, the -rR flags from the top-level
+Makefile began propagating to subdirectory builds. This broke tools
+depending on implicit rules because:
+1. -r (--no-builtin-rules) disabled implicit .c -> .o rules
+2. -R (--no-builtin-variables) hid critical implicit variables like CC
 
-There are a few sites besides BUG() that need it; eg, long jumps when
-bootstrapping etc.
+Fix this by filtering out -rR from MAKEFLAGS.
 
-But basically nothing outside of arch code should ever need or want
-unreachable.
+Fixes: d1d096312176 ("tools: fix annoying "mkdir -p ..." logs when building tools in parallel")
+Reported-by: k2ci <kernel-bot@kylinos.cn>
+Signed-off-by: Riwen Lu <luriwen@kylinos.cn>
+---
+ Makefile | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index d138b17b8840..abf9cfebaf4f 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1431,11 +1431,11 @@ endif
+ 
+ tools/: FORCE
+ 	$(Q)mkdir -p $(objtree)/tools
+-	$(Q)$(MAKE) LDFLAGS= O=$(abspath $(objtree)) subdir=tools -C $(srctree)/tools/
++	$(Q)$(MAKE) LDFLAGS= MAKEFLAGS="$(filter-out rR,$(MAKEFLAGS))" O=$(abspath $(objtree)) subdir=tools -C $(srctree)/tools/
+ 
+ tools/%: FORCE
+ 	$(Q)mkdir -p $(objtree)/tools
+-	$(Q)$(MAKE) LDFLAGS= O=$(abspath $(objtree)) subdir=tools -C $(srctree)/tools/ $*
++	$(Q)$(MAKE) LDFLAGS= MAKEFLAGS="$(filter-out rR,$(MAKEFLAGS))" O=$(abspath $(objtree)) subdir=tools -C $(srctree)/tools/ $*
+ 
+ # ---------------------------------------------------------------------------
+ # Kernel selftest
+-- 
+2.25.1
+
