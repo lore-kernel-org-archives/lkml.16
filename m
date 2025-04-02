@@ -1,104 +1,100 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B736010F9
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 16:40:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4C5118C936;
+	Wed,  2 Apr 2025 16:41:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743612050; cv=none; b=SWZffnKvBRKLOJtlXaQK2WfNd8QDNcJBqDXJKM1g6HUe7ViHmZUo1CeCWr+S/0pDwtBDM0zSN5WMBAePgN1bGahdwfqPQHyQRbL5MqDkb6P+aamhocXFCwjQ26cmV6WoqPkMX9KpQ0rre3oizLFaB3Lwl8Xrkf9FAGvMx5QpgUY=
+	t=1743612064; cv=none; b=EQTw1EJlqv6z545S0tJ8zEjTQWMuwd96MUrx4MRe/cD/TFtSZAkq8TBzFR4x6/KBTeAbDxjXAC8VAmAErcXymVyieHuvIcUEtj1sUqXyg5ZXr389+A007MLgvOlKhFx2ihiGbmG59UM/FIyp+a2aK9xRJWRJJ0yWNq5KVK+6lLg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743612050; c=relaxed/simple;
-	bh=8ai0NWyr9jtQ6M5VqMnfVwxl41HFCLq4tElHMoMcia8=;
+	s=arc-20240116; t=1743612064; c=relaxed/simple;
+	bh=JL3Fc6Tx+Y7KKkGF51EOD/8yZESEW5Hbu4AYBc2UUrI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SAc6cIBGp/anTehauEU3l6Vs/bNNMAZb3LpaXxkLGnqglLZPwaf8xlFRMwe3pEJzWM1APtPT1QDZQplJKYX9FN7yWUMbKayTGhb/IAvl6WnPJMS//CrSCMZiZ6C4+avzW2bKZAgsOMwgrsdOyYp/rHHPRWizxtHKegM1Xphh3uc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o/QVfx+s; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=mJuLUIgHZ5uDCweDuKyAefuDOfL4JyPalIlTltWr7GoKN0VEHbpRAWI13OSAqmmvEPp2oIREa3l37iBqCHHOys00fzy2JjokWiBMPkghHU1sADq36iKmAIlFcA+k/BkDUzwa6FxZTGwGBs3i/TFnWdyBO0mfWwY+rjxGbrjSafw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JZ9/WGpi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o/QVfx+s"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D73C7C4CEDD;
-	Wed,  2 Apr 2025 16:40:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JZ9/WGpi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14142C4CEDD;
+	Wed,  2 Apr 2025 16:41:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743612050;
-	bh=8ai0NWyr9jtQ6M5VqMnfVwxl41HFCLq4tElHMoMcia8=;
+	s=k20201202; t=1743612063;
+	bh=JL3Fc6Tx+Y7KKkGF51EOD/8yZESEW5Hbu4AYBc2UUrI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=o/QVfx+sK6hmpazBR8nC8Ncp17MGstzaGvZ0QOOVE9CDOCIeGK1Ejyo05YlF8KpeA
-	 w0uslmM+e5YhQ+XJ9KQYZbzMNm1qVJ4zLBwsOfOxgeaq1/iCiJe3De8UGkkkPWBvMz
-	 6e7YmmxRlYvJ/5XXvgTePtOcDsDIUIlNJLmf2a7tk66kBd8OuVQuk0pvbxN7aewYQm
-	 MZS/QMS/1lteoJjVQ0iiv7sufnA8fJ2coVV9vKowaEbqYjMSe5Z7xyjaxAih4m7q3m
-	 uY8NqKKefmLzukadMZkwbJ77yqNKgfyZsSpsRQz7C4p0CnbZw+o6eiRinNzhA1cEN+
-	 kDF7Idz0OXhow==
-Date: Wed, 2 Apr 2025 18:40:47 +0200
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Tejun Heo <tj@kernel.org>, Marco Crivellari <marco.crivellari@suse.com>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	open list <linux-kernel@vger.kernel.org>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH] workqueue: Always use wq_select_unbound_cpu() for
- WORK_CPU_UNBOUND.
-Message-ID: <Z-1oj4zCByGN38J2@localhost.localdomain>
-References: <20250221112003.1dSuoGyc@linutronix.de>
- <Z7iSboU-05uMJ7-e@localhost.localdomain>
- <Z7iuUObJGgZtsaJe@slm.duckdns.org>
- <20250226161847.eYrJFpIg@linutronix.de>
- <Z79E_gbWm9j9bkfR@slm.duckdns.org>
+	b=JZ9/WGpiBdApatkU/d5aXIEl+WX0smTkXKrSB3ldd+SYl+KKwiJfRxS3Ffosk/QIE
+	 A870YcJT/MKSH0geGokVXHyBKxhEKl1t0PSQ3m9qS+S+0lKlTK/PIZGvwzlGIQRB+l
+	 5QEm0Een/ahWUEQpOxsWE83ohXUbfW86/OPkRrGjtLmUejFzt14QHVHVFqtcWsHjMl
+	 loy/psVrs21p1kTL0YmeuH06KfbmZJdWlZJyQnzRhiVjfM2mIXmAXplt7qZgUOazFv
+	 jsaeCLzl7m1UFch4Whr5CPBrxwEUTL9BO35nPnQ8R8vq/PPhNbLOOTlgoUUKvEZuak
+	 m/O6nScePRV5g==
+Date: Wed, 2 Apr 2025 09:41:01 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+To: Randy Dunlap <rdunlap@infradead.org>
+Cc: linux-kernel@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+	linux-crypto@vger.kernel.org, linux-arch@vger.kernel.org
+Subject: Re: [PATCH 1/7] lib/crc: remove unnecessary prompt for CONFIG_CRC32
+ and drop 'default y'
+Message-ID: <20250402164101.GC1235@sol.localdomain>
+References: <20250401221600.24878-1-ebiggers@kernel.org>
+ <20250401221600.24878-2-ebiggers@kernel.org>
+ <2c1cbb51-cc16-4292-ad30-482d93935d91@infradead.org>
+ <20250402035107.GA317606@sol.localdomain>
+ <81aac5ff-8698-4059-92a2-bccb998eb000@infradead.org>
+ <20250402050234.GB317606@sol.localdomain>
+ <b5589b7d-d4a1-4b12-a845-afdbb26ed845@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z79E_gbWm9j9bkfR@slm.duckdns.org>
+In-Reply-To: <b5589b7d-d4a1-4b12-a845-afdbb26ed845@infradead.org>
 
-(Adding Marco who may help us in this long adventure)
-
-Le Wed, Feb 26, 2025 at 06:44:46AM -1000, Tejun Heo a écrit :
-> We can rename APIs too and it's going to be a slog, which, to be fair, this
-> is going to be no matter what.
+On Tue, Apr 01, 2025 at 10:56:32PM -0700, Randy Dunlap wrote:
 > 
-> > > 2. There still are cases where local execution isn't required for
-> > >    correctness but local & concurrency controlled executions yield
-> > >    performance gains. Workqueue API currently doesn't distinguish these two
-> > >    cases. We should add a new API which prefers local execution but doesn't
-> > >    require it, which can then do what's suggested in this patch.
+> 
+> On 4/1/25 10:02 PM, Eric Biggers wrote:
+> > On Tue, Apr 01, 2025 at 09:50:57PM -0700, Randy Dunlap wrote:
+> >>
+> >>
+> >> On 4/1/25 8:51 PM, Eric Biggers wrote:
+> >>> On Tue, Apr 01, 2025 at 08:42:41PM -0700, Randy Dunlap wrote:
+> >>>> Hi 
+> >>>>
+> >>>> On 4/1/25 3:15 PM, Eric Biggers wrote:
+> >>>>> From: Eric Biggers <ebiggers@google.com>
+> >>>>>
+> >>>>> All modules that need CONFIG_CRC32 already select it, so there is no
+> >>>>> need to bother users about the option, nor to default it to y.
+> >>>>>
+> >>>>
+> >>>> My memory from 10-20 years ago could be foggy, but ISTR that someone made at least
+> >>>> CRC16 and CRC32 user-selectable in order to support out-of-tree modules...
+> >>>> FWIW.
+> >>>> But they would not need to be default y.
+> >>>
+> >>> That's not supported by upstream, though.
+> >>
+> >> Which part is not supported by upstream?
 > > 
-> > I see. So we get rid of the old naming and have them something like
-> > 	schedule_bound_work()
-> > 	schedule_unbound_work()
-> > 	schedule_hopefully_local_work()
+> > Having prompts for library kconfig options solely because out-of-tree modules
+> > might need them.
 > 
-> If we're renaming, I'd deprecate the schedule_*() interface and always use
-> queue_*() and maybe:
-> 
-> - Replace WQ_UNBOUND with its complement WQ_PERCPU.
+> Well, I think that is was supported for many years. I don't see how it would become
+> unsupported all of a sudden. IMHO.
 
-This one scares us a bit. Currently the default for alloc_workqueue() is
-WQ_PERCPU. After that the default will be the reverse. Even if this
-happens as a single patch treewide change, there will be conflicts
-in the merge window with new users coming up that will happen to be
-unbound whenever they were not intended to.
+Most kernel-internal options aren't user-selectable, though.  It's mainly just
+some older ones that were made user-selectable for some reason, and that is a
+mistake that has been getting cleaned up over time.
 
-But there is a way out of that if we are patient:
+Consider that the upstream community has no visibility into out-of-tree modules
+in general, so there is no reasonable policy that could be applied in deciding
+which options should be user-selectable purely for the benefit of out-of-tree
+modules.  The only reasonable policy is to consider in-tree users only.  Just
+like we don't add EXPORT_SYMBOL() just because an out-of-tree module wants it.
 
-1) For one release, do a treewide change that introduces WQ_PERCPU and apply
-   it to all relevant users. Keep WQ_UNBOUND around for now and warn if neither
-   WQ_PERCPU nor WQ_UNBOUND has been passed (this and grep/coccinelle will catch
-   missed patches from other trees after the merge window).
+And of course downstreams always can, and do, just add a new kconfig option that
+selects any non-visible options they want.
 
-2) Once that complete, remove WQ_UNBOUND and its uses on the next release.
-
-How does that sound?
-
-> - Add WQ_PREFER_PERCPU.
-
-This can be done afterward case by case.
-
-> - Rename system_wq -> system_percpu_wq.
-> - Add system_prefer_percpu_wq.
-> - Rename system_unbound_wq -> system_dfl_wq.
-
-Easy steps.
-
-Thanks!
+- Eric
