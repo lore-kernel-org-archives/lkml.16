@@ -1,141 +1,703 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+Received: from mail-qv1-f100.google.com (mail-qv1-f100.google.com [209.85.219.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AEDC1C3C08
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 19:26:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D80DF1E3DE5
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 19:28:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743621986; cv=none; b=FnjHunFb0VL+bOdWbC28X1ShVlYcXiFHbPidTks/zS3dhmFMDK3omjGsM/s6CvcrWmhwYWq7unMb9dg9HEWfe8rLeXVP+tN2F3pwNHfXtDEUTwWuh7BDza/6YKsmC/or8orfxDa//C1p7MKcOMI+3ns4f5/SkQBXHl+hdB8afFE=
+	t=1743622141; cv=none; b=S2OR+ch5lL8j1b3Mvc8FQ8utwYham4q5Odvmr/Lrs0sPrEHLdMFY9qrXRFDT5pe60SaSivQCycH9gIdaYVi6tZ0RyqmWuIAfd77ue3btj4IcM04lY4WyPk+iWACVwYPaj1Cu2ME7BXkTkCWEAPZarq6UmowsSojhwByGSXQwhXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743621986; c=relaxed/simple;
-	bh=EVrCVrVXJlLKgBVOreuWjw9DnbjO5pYN4We8V08Ay5Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WIjeBEBT1Fng5+B9Or2BVp9J2ZldsGkWqGmeZ5F7gpSVKOSnXEVGX43ZPpkwcLKYSh1xvELBsSy8UiVE1gm5XL2IPKk86h+NU0XI+wwPDPzwRONu5U98akwrO7oeu1VK3NHeG9ap1Egy+AeMiBn5bhwW9hk8/6ExJqYTYECr3+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P6GiGW7f; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743622141; c=relaxed/simple;
+	bh=9xSZETT5gFof3zfDuC5RmqyaqID9qLFDsrYsh0oTrBM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=c3tGhJGVTbEe3tiwhrPoxrLtNhQtM+WNG1BcIEFPP2nYaeFb15l6aZKHKSLa3fhxc3znggYyLP578n8dfnePYw2xPkd+sfnN11eXgMtU+v+nK1XEqrol4dEphbGAyis55K/OWVNahqAxkC4p0gyDEk7e3ns4UB6h3uAxHnr5k5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=YfBKMalE; arc=none smtp.client-ip=209.85.219.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P6GiGW7f"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ac29fd22163so18426066b.3
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 12:26:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="YfBKMalE"
+Received: by mail-qv1-f100.google.com with SMTP id 6a1803df08f44-6eaf1b6ce9aso1497736d6.2
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 12:28:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743621983; x=1744226783; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uSvBVuBebd9JcmdYocBWK5Sa3sXB2gmV6emMmt+aTQ8=;
-        b=P6GiGW7fROn1kRMhbJCRXpzog7MTx+skuJ5Pd/mxtAh13yTjlhDQS1ADA0QafIp1At
-         ELeCfpr7kz9EPRUfFUq1vBymCKNRlJXcULkoLMRfzRH6dSMzr+ZrawiNzNxFO5iF03RT
-         ysNPO6fHIh9MUPbh6GvLV3YLEiFal9TXuRdmxDCc9yf0CdalJ54CO+odgVRqWZHlv226
-         Xx3vrHRjSln1cwn2Oz5J8jcJCsnZf7rY7Flgx4hNiyrhHGBwDo7WoTqk6KY+TWr+mAmy
-         3tPQmVzI/jXlu6a8jRvBNUjRSMgDrhOoSJRt4zl908lRMhhQQOdfWYDW1HQ9Dmk52ojh
-         wPKQ==
+        d=purestorage.com; s=google2022; t=1743622138; x=1744226938; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=40b5Z3whuhYA5qu8MKrERgBaZcTY6CnNLb4R4lKlxrI=;
+        b=YfBKMalEnh/BRKjAW0PfkpAyxxD+SsPBTJFRlE/Rf03/NtTIHj+qgLQ+GertcshZY1
+         RUT7+KWdNCqfRp3p0U5+7wD1iSm3vnzoBqwx5wcjeXEpZG90ViAPEwfnrUBIXPLm7yiL
+         hIL6lQe7DTF9Zr0j4fyvax8aDh98O/aFGuIKBeZbJOuNY9KU6+Fy4wbOGbktP6UXSUGb
+         XgRgK8U9TPJVeCOUywh6q242qmNkjEriJ9SJ591CTtzCbNFWuE7RwPa3LCTx/95midEx
+         Aw1ldWdwS9LZhkltTs++qVZ7EqXQwty/tP93AB/Zv8jdG/zz0RHfh3syR4m4JKMSJObE
+         /PMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743621983; x=1744226783;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=uSvBVuBebd9JcmdYocBWK5Sa3sXB2gmV6emMmt+aTQ8=;
-        b=aZ7DSF1Y8+6mdnRCYyfzxpWe7xZ5BmYqPqM9LWAL1iq+7jArpuFyq/oTfMw+2DOb2x
-         T1bIaeqKc/e84NewoLHFU9XUqTBDwamshyQRibKEjPjIJCuOn7nfpp/PgsHEji5dq1uQ
-         /s+eXkIAnf7qztJw8XBvqi7L5QHyWmbjOapsJG1G5QYH1aYfZYmLHpWkSnYgzHQU1OzT
-         62CjTflBEBVB5ScGi74dRxVEr/8Y9KcYdoHylu/sla5ukpWYyCxqOVKyk/DpfXdY3aGw
-         PRDY6fgkwX+7QVilQELOwrBxq4c6QqqNaohO43Ku/P1dnF5bfYX3ENsqoruVAnbbULHT
-         iPBA==
-X-Forwarded-Encrypted: i=1; AJvYcCWr6/XWMQThiwuNwJHTHc0BVb3x1siN0Osdpk10mwNudKvROp6/OYQJfHrSDmkPYQ3VF7M0V3sowExiDO0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywd/MRXmn2HASZCTan7A0EFbTyXjMdEWVitSFvtzZIhcrLNXCb7
-	5Z/pqc8vxn/BOhMax6yj+qfKrpfmiUQM04R3pt1hjFkCy0+eLs6wR7ucE336OZvVtcJiZSPc3m6
-	De5vXugsUmsnHePrIWzWbBEPuLfA=
-X-Gm-Gg: ASbGncs9pFOWSGL2doBpRI4vhDU9fHQWuyhbZlIBY52H9DwV584kNlaottwHW+jZ7gJ
-	UzR0ldgBcaABXwMuLN++mqlpHzmAFYh+qv9ylN1TWJiXfQOl1Gqpxfo/67Yh+oFEQ9FH+eYJitx
-	RyVV5OmpsqLzyP3VOzeV2i+M03YVi7Q42/AqjF
-X-Google-Smtp-Source: AGHT+IEfG4oN84onUdKhC3t8aF9kQsL+4P/iBkogCDLiFTSfftCHU1FyfMS1bgMtYz+dZzfmUIyDsqd83OYpsmneT94=
-X-Received: by 2002:a17:906:f587:b0:ac3:f1dc:f3db with SMTP id
- a640c23a62f3a-ac738a42849mr1599349366b.13.1743621982647; Wed, 02 Apr 2025
- 12:26:22 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743622138; x=1744226938;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=40b5Z3whuhYA5qu8MKrERgBaZcTY6CnNLb4R4lKlxrI=;
+        b=uuDHWE0IlPFqOi7Q+FBTrfM1MHobcrWUa6vwNJwJoGMQAB/ixE7Ig45Tf0L1RVZKgX
+         /C2FqgZMmbVojumm21OkSzvjRX9cxfT5h3hf7Y90gjgAD22mIU0EqkunkfFB9FL267r+
+         ON99FOGWfANCM8hwU9+ZUPdJp/+fNKBTcGz2vr4BSMPTX1KoytsIIZHoQQ9z3E+SL6BV
+         ZejeHkGLaf4Vr3uww0SVfrqpz9H8iaKHU3juyEIIQC5jKPwvkL9Wf6kqA8TESxSuk9WL
+         2Da0IyRtbRWQafVWa5bEC+qNciIY1yanXsfu2nsiGGA451i9Iqg6j3zKarcaOzV10tZU
+         UaKA==
+X-Forwarded-Encrypted: i=1; AJvYcCWZRlrHP5VxPf2j1rzvI1absUGE+GwU1/HBHlXKDbyNM47FcHIsOFIgNzdb68N6zi0ceVqPjsLeKU5B8Qk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx+IHIJHSVCwmLUJZ1Y9qCwgtH5DMJ5AE8ABYPlO8vcIcTdhlAq
+	/3jBsP2R2P9xScaydrgYCxukhPWfVQxvR6qsblVpGvfOGMuTd7Ez81etb3c43RvkM0sgRFzUI63
+	4kk25wgeNh3W2gCMudaJ5vLD3UA/KiXgv
+X-Gm-Gg: ASbGncuOuA/Uczr2XKltGyUNe9uFS5eoV3QIQl33HPhnkgqyCrXLkcUNV+JY3xJHruw
+	LfwVT6kQZcVOcVc9JJQoU8fgbCUkr9hybz5XRLhFmHhc6A9nv2/o6U4Q3Zc5tYg05X9xu78bpZ/
+	FLJdZO592/U8pXX1kUPYmf+3MNva7HggZ3jKy7zbaNU+1PoUxIA8n3ad0iog+qnuovShSt8HmFC
+	lsitLPrnss/y+NHSYp1ZWqITY2eeCqjFHbplNIgOy3P3MPV2XaVw17DzgiDcLlh5uxX+rMDOUkr
+	/b3uzPiEWyfHXOCcoEhXylxAVseOF9JTs7aYq68jBp+SGokcJg==
+X-Google-Smtp-Source: AGHT+IH2zJw8QN7b31ZFPZzE1pESrwWtvKikdffIG5XineQC7VHLiLA+zF+EEyLY9/eywUR2x9VQwqq6poY4
+X-Received: by 2002:a05:6214:d08:b0:6e6:6599:edf6 with SMTP id 6a1803df08f44-6ef02d0d889mr56517396d6.34.1743622137654;
+        Wed, 02 Apr 2025 12:28:57 -0700 (PDT)
+Received: from c7-smtp-2023.dev.purestorage.com ([208.88.159.128])
+        by smtp-relay.gmail.com with ESMTPS id 6a1803df08f44-6eec9615dfdsm8773266d6.2.2025.04.02.12.28.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Apr 2025 12:28:57 -0700 (PDT)
+X-Relaying-Domain: purestorage.com
+Received: from dev-ushankar.dev.purestorage.com (dev-ushankar.dev.purestorage.com [10.7.70.36])
+	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id BF906340186;
+	Wed,  2 Apr 2025 13:28:56 -0600 (MDT)
+Received: by dev-ushankar.dev.purestorage.com (Postfix, from userid 1557716368)
+	id B17EDE4055E; Wed,  2 Apr 2025 13:28:56 -0600 (MDT)
+From: Uday Shankar <ushankar@purestorage.com>
+Date: Wed, 02 Apr 2025 13:27:23 -0600
+Subject: [PATCH v2] ublk: improve detection and handling of ublk server
+ exit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <Z-00cAEKkfvyNto2@pathway.suse.cz> <CAHk-=wgfX9nBGE0Ap9GjhOy7Mn=RSy=rx0MvqfYFFDx31KJXqQ@mail.gmail.com>
- <Z-2EVf5BvJ-BoYkU@surfacebook.localdomain> <CAHk-=wic_SpqRhtFF+_9wFOiUf-NZcTsNH+jNdi0xLPxexNGXg@mail.gmail.com>
-In-Reply-To: <CAHk-=wic_SpqRhtFF+_9wFOiUf-NZcTsNH+jNdi0xLPxexNGXg@mail.gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Wed, 2 Apr 2025 22:25:46 +0300
-X-Gm-Features: AQ5f1Jor_GfaxCVu5I8HRHR0WJhJDi_n9-9HslXXk6JT-1YtlrcdOuXCqXcF4os
-Message-ID: <CAHp75Vf=tYmWXDUZDqcMK4i8k6_VBqGttw6-mEgt6VhvRVFwuA@mail.gmail.com>
-Subject: Re: [GIT PULL] more printk for 6.15
-To: Linus Torvalds <torvalds@linux-foundation.org>, Kees Cook <kees@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>
-Cc: Petr Mladek <pmladek@suse.com>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, John Ogness <john.ogness@linutronix.de>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Peter Zijlstra <peterz@infradead.org>, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250402-ublk_timeout-v2-1-249bc5523000@purestorage.com>
+X-B4-Tracking: v=1; b=H4sIAJqP7WcC/3WMQQqDMBAAvyJ7bkqyJRZ76j+KFBNXXVqNJFFaJ
+ H9v9N7jDMxsEMgzBbgVG3haObCbMuCpADs0U0+C28yAErW8oBaLeb+ekUdySxRGlqYyWlldKcj
+ J7Knjz7F71JkHDtH573Ff1W7/jFYlpMASO6lQNVfT3ufF0x43PZ2tG6FOKf0AKFYGgK4AAAA=
+X-Change-ID: 20250325-ublk_timeout-b06b9b51c591
+To: Ming Lei <ming.lei@redhat.com>, Shuah Khan <shuah@kernel.org>, 
+ Jens Axboe <axboe@kernel.dk>
+Cc: linux-block@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Uday Shankar <ushankar@purestorage.com>
+X-Mailer: b4 0.14.2
 
-+Cc: Kees and Nathan (I believe this discussion has some material for
-you, folks, to think of / comment on / etc)
+There are currently two ways in which ublk server exit is detected by
+ublk_drv:
 
-On Wed, Apr 2, 2025 at 10:06=E2=80=AFPM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
-> On Wed, 2 Apr 2025 at 11:39, Andy Shevchenko <andy.shevchenko@gmail.com> =
-wrote:
-> >
-> > Yes. Clang complains on unknown pragma.
->
-> What a crock.
->
-> It says GCC, for chrissake!
->
-> And clang clearly doesn't complain about
->
-> >   +#pragma GCC diagnostic push
-> >   +#pragma GCC diagnostic pop
->
-> which are *not* protected by that #ifndef __clang__ thing.
->
-> So this smells like a clang bug to me.
+1. uring_cmd cancellation. If there are any outstanding uring_cmds which
+   have not been completed to the ublk server when it exits, io_uring
+   calls the uring_cmd callback with a special cancellation flag as the
+   issuing task is exiting.
+2. I/O timeout. This is needed in addition to the above to handle the
+   "saturated queue" case, when all I/Os for a given queue are in the
+   ublk server, and therefore there are no outstanding uring_cmds to
+   cancel when the ublk server exits.
 
-I Cc'ed Nathan, perhaps he can comment on this.
+There are a couple of issues with this approach:
 
-> Can we please use wrapper defines instead so that we don't have that
-> #ifndef in the middle of code? And since those don't work with
-> '#pragma', they need to use the _Pragma() operator instead.
->
-> Something like
->
->    #define GCC_PRAGMA(x) _Pragma(#x)
->
-> in compiler-gcc.h, and then add a
->
->   #ifndef GCC_PRAGMA
->     #define GCC_PRAGMA(x) /* Nothing */
->   #endif
->
-> and then you can just do
->
->    GCC_PRAGMA(Wsuggest-attribute=3Dformat)
->
-> in places like this?
->
-> (Entirely untested: I *despise* pragma in general).
+- It is complex and inelegant to have two methods to detect the same
+  condition
+- The second method detects ublk server exit only after a long delay
+  (~30s, the default timeout assigned by the block layer). This delays
+  the nosrv behavior from kicking in and potential subsequent recovery
+  of the device.
 
-Maybe. Tomorrow I can look at this.
+The second issue is brought to light with the new test_generic_04. It
+fails before this fix:
 
-> Or hey, how about we just add "-Wno-suggest-attribute=3Dformat" to the
-> compiler command line? Like we do for all the other garbage warnings
-> that we don't want to see.
+selftests: ublk: test_generic_04.sh
+dev id is 0
+dd: error writing '/dev/ublkb0': Input/output error
+1+0 records in
+0+0 records out
+0 bytes copied, 30.0611 s, 0.0 kB/s
+DEAD
+dd took 31 seconds to exit (>= 5s tolerance)!
+generic_04 : [FAIL]
 
-I actually don't know what the benefit of __printf() attribute from
-security (?) point of view is. I may speculate that this helps to
-validate the format string and arguments (when provided as ...) and
-helps with potential wrong argument sizes, etc. Kees, what do you
-think about Linus' proposal?
+Fix this by instead detecting and handling ublk server exit in the
+character file release callback. This has several advantages:
 
---=20
-With Best Regards,
-Andy Shevchenko
+- This one place can handle both saturated and unsaturated queues. Thus,
+  it replaces both preexisting methods of detecting ublk server exit.
+- It runs quickly on ublk server exit - there is no 30s delay.
+- It starts the process of removing task references in ublk_drv. This is
+  needed if we want to relax restrictions in the driver like letting
+  only one thread serve each queue
+
+There is also the disadvantage that the character file release callback
+can also be triggered by intentional close of the file, which is a
+significant behavior change. Preexisting ublk servers (libublksrv) are
+dependent on the ability to open/close the file multiple times. To
+address this, only transition to a nosrv state if the file is released
+while the ublk device is live. This allows for programs to open/close
+the file multiple times during setup. It is still a behavior change if a
+ublk server decides to close/reopen the file while the device is LIVE
+(i.e. while it is responsible for serving I/O), but that would be highly
+unusual. This behavior is in line with what is done by FUSE, which is
+very similar to ublk in that a userspace daemon is providing services
+traditionally provided by the kernel.
+
+With this change in, the new test (and all other selftests, and all
+ublksrv tests) pass:
+
+selftests: ublk: test_generic_04.sh
+dev id is 0
+dd: error writing '/dev/ublkb0': Input/output error
+1+0 records in
+0+0 records out
+0 bytes copied, 0.0376731 s, 0.0 kB/s
+DEAD
+generic_04 : [PASS]
+
+Signed-off-by: Uday Shankar <ushankar@purestorage.com>
+---
+Changes in v2:
+- Leave null ublk selftests target untouched, instead create new
+  fault_inject target for injecting per-I/O delay (Ming Lei)
+- Allow multiple open/close of ublk character device with some
+  restrictions
+- Drop patches which made it in separately at https://lore.kernel.org/r/20250401-ublk_selftests-v1-1-98129c9bc8bb@purestorage.com
+- Consolidate more nosrv logic in ublk character device release, and
+  associated code cleanup
+- Link to v1: https://lore.kernel.org/r/20250325-ublk_timeout-v1-0-262f0121a7bd@purestorage.com
+---
+ drivers/block/ublk_drv.c                        | 187 +++++++-----------------
+ tools/testing/selftests/ublk/Makefile           |   4 +-
+ tools/testing/selftests/ublk/fault_inject.c     |  58 ++++++++
+ tools/testing/selftests/ublk/kublk.c            |   6 +-
+ tools/testing/selftests/ublk/kublk.h            |   4 +
+ tools/testing/selftests/ublk/test_generic_04.sh |  43 ++++++
+ 6 files changed, 165 insertions(+), 137 deletions(-)
+
+diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
+index 2fd05c1bd30b03343cb6f357f8c08dd92ff47af9..d06f8a9aa23f8b846928247fc9e29002c10a49e3 100644
+--- a/drivers/block/ublk_drv.c
++++ b/drivers/block/ublk_drv.c
+@@ -162,7 +162,6 @@ struct ublk_queue {
+ 
+ 	bool force_abort;
+ 	bool timeout;
+-	bool canceling;
+ 	bool fail_io; /* copy of dev->state == UBLK_S_DEV_FAIL_IO */
+ 	unsigned short nr_io_ready;	/* how many ios setup */
+ 	spinlock_t		cancel_lock;
+@@ -199,8 +198,6 @@ struct ublk_device {
+ 	struct completion	completion;
+ 	unsigned int		nr_queues_ready;
+ 	unsigned int		nr_privileged_daemon;
+-
+-	struct work_struct	nosrv_work;
+ };
+ 
+ /* header of ublk_params */
+@@ -209,8 +206,9 @@ struct ublk_params_header {
+ 	__u32	types;
+ };
+ 
+-static bool ublk_abort_requests(struct ublk_device *ub, struct ublk_queue *ubq);
+-
++static void ublk_stop_dev_unlocked(struct ublk_device *ub);
++static void ublk_abort_queue(struct ublk_device *ub, struct ublk_queue *ubq);
++static void __ublk_quiesce_dev(struct ublk_device *ub);
+ static inline struct request *__ublk_check_and_get_req(struct ublk_device *ub,
+ 		struct ublk_queue *ubq, int tag, size_t offset);
+ static inline unsigned int ublk_req_build_flags(struct request *req);
+@@ -1314,8 +1312,6 @@ static void ublk_queue_cmd_list(struct ublk_queue *ubq, struct rq_list *l)
+ static enum blk_eh_timer_return ublk_timeout(struct request *rq)
+ {
+ 	struct ublk_queue *ubq = rq->mq_hctx->driver_data;
+-	unsigned int nr_inflight = 0;
+-	int i;
+ 
+ 	if (ubq->flags & UBLK_F_UNPRIVILEGED_DEV) {
+ 		if (!ubq->timeout) {
+@@ -1326,26 +1322,6 @@ static enum blk_eh_timer_return ublk_timeout(struct request *rq)
+ 		return BLK_EH_DONE;
+ 	}
+ 
+-	if (!ubq_daemon_is_dying(ubq))
+-		return BLK_EH_RESET_TIMER;
+-
+-	for (i = 0; i < ubq->q_depth; i++) {
+-		struct ublk_io *io = &ubq->ios[i];
+-
+-		if (!(io->flags & UBLK_IO_FLAG_ACTIVE))
+-			nr_inflight++;
+-	}
+-
+-	/* cancelable uring_cmd can't help us if all commands are in-flight */
+-	if (nr_inflight == ubq->q_depth) {
+-		struct ublk_device *ub = ubq->dev;
+-
+-		if (ublk_abort_requests(ub, ubq)) {
+-			schedule_work(&ub->nosrv_work);
+-		}
+-		return BLK_EH_DONE;
+-	}
+-
+ 	return BLK_EH_RESET_TIMER;
+ }
+ 
+@@ -1368,9 +1344,6 @@ static blk_status_t ublk_prep_req(struct ublk_queue *ubq, struct request *rq)
+ 	if (ublk_nosrv_should_queue_io(ubq) && unlikely(ubq->force_abort))
+ 		return BLK_STS_IOERR;
+ 
+-	if (unlikely(ubq->canceling))
+-		return BLK_STS_IOERR;
+-
+ 	/* fill iod to slot in io cmd buffer */
+ 	res = ublk_setup_iod(ubq, rq);
+ 	if (unlikely(res != BLK_STS_OK))
+@@ -1391,16 +1364,6 @@ static blk_status_t ublk_queue_rq(struct blk_mq_hw_ctx *hctx,
+ 	if (res != BLK_STS_OK)
+ 		return res;
+ 
+-	/*
+-	 * ->canceling has to be handled after ->force_abort and ->fail_io
+-	 * is dealt with, otherwise this request may not be failed in case
+-	 * of recovery, and cause hang when deleting disk
+-	 */
+-	if (unlikely(ubq->canceling)) {
+-		__ublk_abort_rq(ubq, rq);
+-		return BLK_STS_OK;
+-	}
+-
+ 	ublk_queue_cmd(ubq, rq);
+ 	return BLK_STS_OK;
+ }
+@@ -1461,8 +1424,52 @@ static int ublk_ch_open(struct inode *inode, struct file *filp)
+ static int ublk_ch_release(struct inode *inode, struct file *filp)
+ {
+ 	struct ublk_device *ub = filp->private_data;
++	int i;
+ 
++	mutex_lock(&ub->mutex);
++	/*
++	 * If the device is not live, we will not transition to a nosrv
++	 * state. This protects against:
++	 * - accidental poking of the ublk character device
++	 * - some ublk servers which may open/close the ublk character
++	 *   device during startup
++	 */
++	if (ub->dev_info.state != UBLK_S_DEV_LIVE)
++		goto out;
++
++	/*
++	 * Since we are releasing the ublk character file descriptor, we
++	 * know that there cannot be any concurrent file-related
++	 * activity (e.g. uring_cmds or reads/writes). However, I/O
++	 * might still be getting dispatched. Quiesce that too so that
++	 * we don't need to worry about anything concurrent
++	 */
++	blk_mq_quiesce_queue(ub->ub_disk->queue);
++
++	/*
++	 * Handle any requests outstanding to the ublk server
++	 */
++	for (i = 0; i < ub->dev_info.nr_hw_queues; i++)
++		ublk_abort_queue(ub, ublk_get_queue(ub, i));
++
++	/*
++	 * Transition the device to the nosrv state. What exactly this
++	 * means depends on the recovery flags
++	 */
++	if (ublk_nosrv_should_stop_dev(ub)) {
++		ublk_stop_dev_unlocked(ub);
++	} else if (ublk_nosrv_dev_should_queue_io(ub)) {
++		__ublk_quiesce_dev(ub);
++	} else {
++		ub->dev_info.state = UBLK_S_DEV_FAIL_IO;
++		for (i = 0; i < ub->dev_info.nr_hw_queues; i++)
++			ublk_get_queue(ub, i)->fail_io = true;
++	}
++
++	blk_mq_unquiesce_queue(ub->ub_disk->queue);
++out:
+ 	clear_bit(UB_STATE_OPEN, &ub->state);
++	mutex_unlock(&ub->mutex);
+ 	return 0;
+ }
+ 
+@@ -1556,57 +1563,6 @@ static void ublk_abort_queue(struct ublk_device *ub, struct ublk_queue *ubq)
+ 	}
+ }
+ 
+-/* Must be called when queue is frozen */
+-static bool ublk_mark_queue_canceling(struct ublk_queue *ubq)
+-{
+-	bool canceled;
+-
+-	spin_lock(&ubq->cancel_lock);
+-	canceled = ubq->canceling;
+-	if (!canceled)
+-		ubq->canceling = true;
+-	spin_unlock(&ubq->cancel_lock);
+-
+-	return canceled;
+-}
+-
+-static bool ublk_abort_requests(struct ublk_device *ub, struct ublk_queue *ubq)
+-{
+-	bool was_canceled = ubq->canceling;
+-	struct gendisk *disk;
+-
+-	if (was_canceled)
+-		return false;
+-
+-	spin_lock(&ub->lock);
+-	disk = ub->ub_disk;
+-	if (disk)
+-		get_device(disk_to_dev(disk));
+-	spin_unlock(&ub->lock);
+-
+-	/* Our disk has been dead */
+-	if (!disk)
+-		return false;
+-
+-	/*
+-	 * Now we are serialized with ublk_queue_rq()
+-	 *
+-	 * Make sure that ubq->canceling is set when queue is frozen,
+-	 * because ublk_queue_rq() has to rely on this flag for avoiding to
+-	 * touch completed uring_cmd
+-	 */
+-	blk_mq_quiesce_queue(disk->queue);
+-	was_canceled = ublk_mark_queue_canceling(ubq);
+-	if (!was_canceled) {
+-		/* abort queue is for making forward progress */
+-		ublk_abort_queue(ub, ubq);
+-	}
+-	blk_mq_unquiesce_queue(disk->queue);
+-	put_device(disk_to_dev(disk));
+-
+-	return !was_canceled;
+-}
+-
+ static void ublk_cancel_cmd(struct ublk_queue *ubq, struct ublk_io *io,
+ 		unsigned int issue_flags)
+ {
+@@ -1635,8 +1591,6 @@ static void ublk_uring_cmd_cancel_fn(struct io_uring_cmd *cmd,
+ 	struct ublk_uring_cmd_pdu *pdu = ublk_get_uring_cmd_pdu(cmd);
+ 	struct ublk_queue *ubq = pdu->ubq;
+ 	struct task_struct *task;
+-	struct ublk_device *ub;
+-	bool need_schedule;
+ 	struct ublk_io *io;
+ 
+ 	if (WARN_ON_ONCE(!ubq))
+@@ -1649,16 +1603,9 @@ static void ublk_uring_cmd_cancel_fn(struct io_uring_cmd *cmd,
+ 	if (WARN_ON_ONCE(task && task != ubq->ubq_daemon))
+ 		return;
+ 
+-	ub = ubq->dev;
+-	need_schedule = ublk_abort_requests(ub, ubq);
+-
+ 	io = &ubq->ios[pdu->tag];
+ 	WARN_ON_ONCE(io->cmd != cmd);
+ 	ublk_cancel_cmd(ubq, io, issue_flags);
+-
+-	if (need_schedule) {
+-		schedule_work(&ub->nosrv_work);
+-	}
+ }
+ 
+ static inline bool ublk_queue_ready(struct ublk_queue *ubq)
+@@ -1756,13 +1703,13 @@ static struct gendisk *ublk_detach_disk(struct ublk_device *ub)
+ 	return disk;
+ }
+ 
+-static void ublk_stop_dev(struct ublk_device *ub)
++static void ublk_stop_dev_unlocked(struct ublk_device *ub)
++	__must_hold(&ub->mutex)
+ {
+ 	struct gendisk *disk;
+ 
+-	mutex_lock(&ub->mutex);
+ 	if (ub->dev_info.state == UBLK_S_DEV_DEAD)
+-		goto unlock;
++		return;
+ 	if (ublk_nosrv_dev_should_queue_io(ub)) {
+ 		if (ub->dev_info.state == UBLK_S_DEV_LIVE)
+ 			__ublk_quiesce_dev(ub);
+@@ -1771,38 +1718,12 @@ static void ublk_stop_dev(struct ublk_device *ub)
+ 	del_gendisk(ub->ub_disk);
+ 	disk = ublk_detach_disk(ub);
+ 	put_disk(disk);
+- unlock:
+-	mutex_unlock(&ub->mutex);
+-	ublk_cancel_dev(ub);
+ }
+ 
+-static void ublk_nosrv_work(struct work_struct *work)
++static void ublk_stop_dev(struct ublk_device *ub)
+ {
+-	struct ublk_device *ub =
+-		container_of(work, struct ublk_device, nosrv_work);
+-	int i;
+-
+-	if (ublk_nosrv_should_stop_dev(ub)) {
+-		ublk_stop_dev(ub);
+-		return;
+-	}
+-
+ 	mutex_lock(&ub->mutex);
+-	if (ub->dev_info.state != UBLK_S_DEV_LIVE)
+-		goto unlock;
+-
+-	if (ublk_nosrv_dev_should_queue_io(ub)) {
+-		__ublk_quiesce_dev(ub);
+-	} else {
+-		blk_mq_quiesce_queue(ub->ub_disk->queue);
+-		ub->dev_info.state = UBLK_S_DEV_FAIL_IO;
+-		for (i = 0; i < ub->dev_info.nr_hw_queues; i++) {
+-			ublk_get_queue(ub, i)->fail_io = true;
+-		}
+-		blk_mq_unquiesce_queue(ub->ub_disk->queue);
+-	}
+-
+- unlock:
++	ublk_stop_dev_unlocked(ub);
+ 	mutex_unlock(&ub->mutex);
+ 	ublk_cancel_dev(ub);
+ }
+@@ -2388,7 +2309,6 @@ static void ublk_remove(struct ublk_device *ub)
+ 	bool unprivileged;
+ 
+ 	ublk_stop_dev(ub);
+-	cancel_work_sync(&ub->nosrv_work);
+ 	cdev_device_del(&ub->cdev, &ub->cdev_dev);
+ 	unprivileged = ub->dev_info.flags & UBLK_F_UNPRIVILEGED_DEV;
+ 	ublk_put_device(ub);
+@@ -2675,7 +2595,6 @@ static int ublk_ctrl_add_dev(struct io_uring_cmd *cmd)
+ 		goto out_unlock;
+ 	mutex_init(&ub->mutex);
+ 	spin_lock_init(&ub->lock);
+-	INIT_WORK(&ub->nosrv_work, ublk_nosrv_work);
+ 
+ 	ret = ublk_alloc_dev_number(ub, header->dev_id);
+ 	if (ret < 0)
+@@ -2807,7 +2726,6 @@ static inline void ublk_ctrl_cmd_dump(struct io_uring_cmd *cmd)
+ static int ublk_ctrl_stop_dev(struct ublk_device *ub)
+ {
+ 	ublk_stop_dev(ub);
+-	cancel_work_sync(&ub->nosrv_work);
+ 	return 0;
+ }
+ 
+@@ -2927,7 +2845,6 @@ static void ublk_queue_reinit(struct ublk_device *ub, struct ublk_queue *ubq)
+ 	/* We have to reset it to NULL, otherwise ub won't accept new FETCH_REQ */
+ 	ubq->ubq_daemon = NULL;
+ 	ubq->timeout = false;
+-	ubq->canceling = false;
+ 
+ 	for (i = 0; i < ubq->q_depth; i++) {
+ 		struct ublk_io *io = &ubq->ios[i];
+diff --git a/tools/testing/selftests/ublk/Makefile b/tools/testing/selftests/ublk/Makefile
+index c7781efea0f33c02f340f90f547d3a37c1d1b8a0..afee027cccdd1b8f13f1cb9a90a3348cd54b18bc 100644
+--- a/tools/testing/selftests/ublk/Makefile
++++ b/tools/testing/selftests/ublk/Makefile
+@@ -6,6 +6,7 @@ LDLIBS += -lpthread -lm -luring
+ TEST_PROGS := test_generic_01.sh
+ TEST_PROGS += test_generic_02.sh
+ TEST_PROGS += test_generic_03.sh
++TEST_PROGS += test_generic_04.sh
+ 
+ TEST_PROGS += test_null_01.sh
+ TEST_PROGS += test_null_02.sh
+@@ -26,7 +27,8 @@ TEST_GEN_PROGS_EXTENDED = kublk
+ 
+ include ../lib.mk
+ 
+-$(TEST_GEN_PROGS_EXTENDED): kublk.c null.c file_backed.c common.c stripe.c
++$(TEST_GEN_PROGS_EXTENDED): kublk.c null.c file_backed.c common.c stripe.c \
++	fault_inject.c
+ 
+ check:
+ 	shellcheck -x -f gcc *.sh
+diff --git a/tools/testing/selftests/ublk/fault_inject.c b/tools/testing/selftests/ublk/fault_inject.c
+new file mode 100644
+index 0000000000000000000000000000000000000000..e92d01e88e478a23df987ebff2a997212b831d31
+--- /dev/null
++++ b/tools/testing/selftests/ublk/fault_inject.c
+@@ -0,0 +1,58 @@
++// SPDX-License-Identifier: GPL-2.0
++
++/*
++ * Fault injection ublk target. Hack this up however you like for
++ * testing specific behaviors of ublk_drv. Currently is a null target
++ * with a configurable delay before completing each I/O. This delay can
++ * be used to test ublk_drv's handling of I/O outstanding to the ublk
++ * server when it dies.
++ */
++
++#include "kublk.h"
++
++static int ublk_fault_inject_tgt_init(const struct dev_ctx *ctx, struct ublk_dev *dev)
++{
++	const struct ublksrv_ctrl_dev_info *info = &dev->dev_info;
++	unsigned long dev_size = 250UL << 30;
++
++	dev->tgt.dev_size = dev_size;
++	dev->tgt.params = (struct ublk_params) {
++		.types = UBLK_PARAM_TYPE_BASIC | UBLK_PARAM_TYPE_DMA_ALIGN |
++			UBLK_PARAM_TYPE_SEGMENT,
++		.basic = {
++			.logical_bs_shift	= 9,
++			.physical_bs_shift	= 12,
++			.io_opt_shift		= 12,
++			.io_min_shift		= 9,
++			.max_sectors		= info->max_io_buf_bytes >> 9,
++			.dev_sectors		= dev_size >> 9,
++		},
++		.dma = {
++			.alignment		= 4095,
++		},
++		.seg = {
++			.seg_boundary_mask	= 4095,
++			.max_segment_size	= 32 << 10,
++			.max_segments		= 32,
++		},
++	};
++
++	dev->private_data = (void *)ctx->delay_us;
++	return 0;
++}
++
++static int ublk_fault_inject_queue_io(struct ublk_queue *q, int tag)
++{
++	const struct ublksrv_io_desc *iod = ublk_get_iod(q, tag);
++
++	usleep((unsigned long)q->dev->private_data);
++
++	ublk_complete_io(q, tag, iod->nr_sectors << 9);
++	return 0;
++}
++
++const struct ublk_tgt_ops fault_inject_tgt_ops = {
++	.name = "fault_inject",
++	.init_tgt = ublk_fault_inject_tgt_init,
++	.queue_io = ublk_fault_inject_queue_io,
++};
+diff --git a/tools/testing/selftests/ublk/kublk.c b/tools/testing/selftests/ublk/kublk.c
+index 91c282bc767449a418cce7fc816dc8e9fc732d6a..0fbfa43864453471219703451271540d5dfef593 100644
+--- a/tools/testing/selftests/ublk/kublk.c
++++ b/tools/testing/selftests/ublk/kublk.c
+@@ -10,6 +10,7 @@ static const struct ublk_tgt_ops *tgt_ops_list[] = {
+ 	&null_tgt_ops,
+ 	&loop_tgt_ops,
+ 	&stripe_tgt_ops,
++	&fault_inject_tgt_ops,
+ };
+ 
+ static const struct ublk_tgt_ops *ublk_find_tgt(const char *name)
+@@ -1041,7 +1042,7 @@ static int cmd_dev_get_features(void)
+ 
+ static int cmd_dev_help(char *exe)
+ {
+-	printf("%s add -t [null|loop] [-q nr_queues] [-d depth] [-n dev_id] [backfile1] [backfile2] ...\n", exe);
++	printf("%s add -t [null|loop|stripe|fault_inject] [-q nr_queues] [-d depth] [-n dev_id] [backfile1] [backfile2] ...\n", exe);
+ 	printf("\t default: nr_queues=2(max 4), depth=128(max 128), dev_id=-1(auto allocation)\n");
+ 	printf("%s del [-n dev_id] -a \n", exe);
+ 	printf("\t -a delete all devices -n delete specified device\n");
+@@ -1064,6 +1065,7 @@ int main(int argc, char *argv[])
+ 		{ "zero_copy",          0,      NULL, 'z' },
+ 		{ "foreground",		0,	NULL,  0  },
+ 		{ "chunk_size", 	1,	NULL,  0  },
++		{ "delay_us",		1,	NULL,  0  },
+ 		{ 0, 0, 0, 0 }
+ 	};
+ 	int option_idx, opt;
+@@ -1112,6 +1114,8 @@ int main(int argc, char *argv[])
+ 				ctx.fg = 1;
+ 			if (!strcmp(longopts[option_idx].name, "chunk_size"))
+ 				ctx.chunk_size = strtol(optarg, NULL, 10);
++			if (!strcmp(longopts[option_idx].name, "delay_us"))
++				ctx.delay_us = strtoul(optarg, NULL, 10);
+ 		}
+ 	}
+ 
+diff --git a/tools/testing/selftests/ublk/kublk.h b/tools/testing/selftests/ublk/kublk.h
+index 760ff8ffb8107037a19a8fb7ab408818845e010d..3750e67727eed89991158add49d30615ea012dae 100644
+--- a/tools/testing/selftests/ublk/kublk.h
++++ b/tools/testing/selftests/ublk/kublk.h
+@@ -70,6 +70,9 @@ struct dev_ctx {
+ 	/* stripe */
+ 	unsigned int    chunk_size;
+ 
++	/* fault_inject */
++	unsigned long	delay_us;
++
+ 	int _evtfd;
+ };
+ 
+@@ -357,6 +360,7 @@ static inline int ublk_queue_use_zc(const struct ublk_queue *q)
+ extern const struct ublk_tgt_ops null_tgt_ops;
+ extern const struct ublk_tgt_ops loop_tgt_ops;
+ extern const struct ublk_tgt_ops stripe_tgt_ops;
++extern const struct ublk_tgt_ops fault_inject_tgt_ops;
+ 
+ void backing_file_tgt_deinit(struct ublk_dev *dev);
+ int backing_file_tgt_init(struct ublk_dev *dev);
+diff --git a/tools/testing/selftests/ublk/test_generic_04.sh b/tools/testing/selftests/ublk/test_generic_04.sh
+new file mode 100755
+index 0000000000000000000000000000000000000000..48af48164aa444d8ac6a58fef1743d2a16a56a14
+--- /dev/null
++++ b/tools/testing/selftests/ublk/test_generic_04.sh
+@@ -0,0 +1,43 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0
++
++. "$(cd "$(dirname "$0")" && pwd)"/test_common.sh
++
++TID="generic_04"
++ERR_CODE=0
++
++_prep_test "fault_inject" "fast cleanup when all I/Os of one hctx are in server"
++
++# configure ublk server to sleep 2s before completing each I/O
++dev_id=$(_add_ublk_dev -t fault_inject -q 2 -d 1 --delay_us 2000000)
++_check_add_dev $TID $?
++
++echo "dev id is ${dev_id}"
++
++STARTTIME=${SECONDS}
++
++dd if=/dev/urandom of=/dev/ublkb${dev_id} oflag=direct bs=4k count=1 &
++dd_pid=$!
++
++__ublk_kill_daemon ${dev_id} "DEAD"
++
++wait $dd_pid
++dd_exitcode=$?
++
++ENDTIME=${SECONDS}
++ELAPSED=$(($ENDTIME - $STARTTIME))
++
++# assert that dd sees an error and exits quickly after ublk server is
++# killed. previously this relied on seeing an I/O timeout and so would
++# take ~30s
++if [ $dd_exitcode -eq 0 ]; then
++        echo "dd unexpectedly exited successfully!"
++        ERR_CODE=255
++fi
++if [ $ELAPSED -ge 5 ]; then
++        echo "dd took $ELAPSED seconds to exit (>= 5s tolerance)!"
++        ERR_CODE=255
++fi
++
++_cleanup_test "fault_inject"
++_show_result $TID $ERR_CODE
+
+---
+base-commit: 710e2c687a16b28a873a282517a85faf02a8b7cc
+change-id: 20250325-ublk_timeout-b06b9b51c591
+
+Best regards,
+-- 
+Uday Shankar <ushankar@purestorage.com>
+
