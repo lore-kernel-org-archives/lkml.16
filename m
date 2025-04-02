@@ -1,106 +1,133 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70378241698
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 12:48:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE2E7238D3B
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 12:49:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743598092; cv=none; b=eMrEhUZwGdDdhIEq6BOwazsTxIvHH4ZxEvt1GuGKRT5V+tFNvSJOu6W2zUXnfyuE6zWM6kEyfKtEIbObCz66QvczlYVK+nDXT6YC5xeMp6hz5X0M4+gYp099JhYGukEnOAbr23cQkmOH596xH4EHA22jPaQUOvIMT+/wAO1xVbw=
+	t=1743598175; cv=none; b=N6N8sSc0w1Cvr9iL4qt8cfxUnrQyHlVx2aWn5b5I5gHUh81Vq5D8FDCREHwFHtUGipHVN/EhK/Y+LZ8k/Nwuwb7PDbn+nMbiSsjM7hWXxcUFlv+3PEtkbBtSsu6HSSrNo86GD3qSA4s97jZcLn3ur4D4zPGwP7JdXU5yn4php+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743598092; c=relaxed/simple;
-	bh=gJR2vqorpVwZErAmb3XaISI/AYZE12CiUuRkCzdjxxM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=i8g3GRNI4Y23KkwGrt8nz5kED+zApI00pm84a/2mjtFp7FUfXUjvV30QFa85jog8jWrj0NNH37YK0/PQXjbmLhE6cN37FKU+dH8q9YqGhT/7mALK/o7XhSDcnSvAnPIFh1NGMl7JlhDx6hZcopeqSDyzUzySEuH59i8ClVqcx24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F8Csl5yv; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743598175; c=relaxed/simple;
+	bh=iy8gPSknBpYANxR3oDbou+tV9uyY16PAcTCT3p0TVTQ=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=SVk+zediXD1eByOAxUAqhc+ak9E6kKuy5QG2fTonJ3e0znSL6Q8H3jfumMRuIgFfHH3cE6EuC1wjsxGuilr7CTRrgDLH3cVqbWRZWLPddMPygoX0QyuFx2goJtTmGjiEi8oygL5mH0L8UfMAgm+dmb6Q5AkqjIfcxWMrjJnjHLc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=p2revYZX; arc=none smtp.client-ip=209.85.222.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F8Csl5yv"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3965c995151so3713015f8f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 05:48:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="p2revYZX"
+Received: by mail-ua1-f48.google.com with SMTP id a1e0cc1a2514c-86fea8329cdso5533452241.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 05:49:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743598089; x=1744202889; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sT+yvPMemtPOR/HKjNs6XD5v3Nsj8KVdns4dq/Y7ql8=;
-        b=F8Csl5yvhtqLWvwYcVZQauA9s0rSqGI8i177+JoKjakTxZh8//wt/ZrxEKjOZ10Q1x
-         54wT9WeIrQKWLV8nIPIIphCqcTmAMQvKJsOO78NcvJdO0CO9EkxiNqqveQFg//2RyXgp
-         9WHBEK+EI3BvZCeR0tb2R/XXcp76nMqK7fnHzoJ9HEWAzZV0rGWLkfPIz3Hr1HVassyK
-         B6xFczKFOebSCFzc+eZ+t64pk0Javhmnh1h6oMjBFPSqXTIBjXzsIfDhhuTDMC4KbkvH
-         V6UeF4Nua08jOIVpnJq8Z8J8JQYHv3b3odLuvJltljSBWKpqcNWMUAfbizhsUhUS1jl1
-         +6Pw==
+        d=linaro.org; s=google; t=1743598172; x=1744202972; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=y+3sJL5+WsmkUHEYm1BzR/GyrjVHVNtLDIyVC85cNdI=;
+        b=p2revYZX57bC3SE0rF3qEGnzfbBliYjtZVJ05uoY0cI/8uMHAJLoXqNwMVOForv7PF
+         MESTEjhq7HQyOtti+Eu1vSnYfHhm2HmKtm/hcDfGsAQgdePlvOZBMFetT1qGVvDEo6oj
+         7KjU48t8qP06hoPzQMeNJdxd7lsHf8G2OEqlJ/DtlDDGXamR8/hGNNrB95+I/J633rqV
+         SXMCqW8ZTPMcNPcuXqTXF4d5q7JbSmUtnlbiDDN+5m1bH0jsutTdEBJIIrX2wpoZEqR5
+         N+Bj7cTFlbFu4SXX95pdeyoBi6HcX0U5XGezv3u77NrwpaHhRElaAlZ/bhczQJeFxLDE
+         R/Dw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743598089; x=1744202889;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sT+yvPMemtPOR/HKjNs6XD5v3Nsj8KVdns4dq/Y7ql8=;
-        b=W8fFmdtQLn9paDO6PNRZ7Gdx5vd9EbZ/ujQP5s4kgWeriIP+xWpj5TXYHmfTCPf10w
-         oGhiC0n7Hv/HryMYjOZtRhF3xH2tc0pJ7B9WCcLRaiCrMLFRMdlyuU5KBHwpYSiwaqba
-         uELnZv+pBxJp3eQKRfMJVYLCbIFiAKR//VblxD4iTfITulkI+EyoouLfOjH99CqT2s6O
-         xiw8lu67hBfz1dmJ90JDWpiwyCnHm+UTdxvkcyn6IfIU/X7E6O+6sC3gsbLzIkZ8qx3a
-         8nTlclT5KOWRgJ222Bk2QgVKRpZzod1wKM4I7pJpLEWmCRmyrxR8tqoYv9uqZG116UZ7
-         i74g==
-X-Forwarded-Encrypted: i=1; AJvYcCU4To3XHLaJ7mY9t+K9Z/QFEVydcZzwPx4yn++VgGVhaAt3g0rk+RKZIYMVhNYwqYL0kB9/gsLivwQo2Zw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwJ4LNoSeRbHvhP/9Bq5obOcUfLdAPlUi0gUJuAS0JmLaA9OLND
-	S417pbgEgDKdwNKtfxebsnDChhWJ0vHOp5vtwwP5FcT/NVH9nEt0
-X-Gm-Gg: ASbGncu2hKbhW4O5PQDHEJ+kqqiJDj0Hy92m19fdnjhAg4CzP+0NpI3+pBf/A3uHvzz
-	9J3buqXBeYlsIrvjohegzF/InGqlYWYe8ORHtyRKQzxfheB3zgVHK/Kn/8bq6NlPILWP7HPqV3k
-	+lwha0oSSACdQMkCsACtCdg6lqFADrR6qHL6tV1QQGcgdZue1DZ0F5gjBQ7GqLn3sFFyicR05Hl
-	B0FhKZjUE8GDrW/y6O60HpbNPmmVUDm6kHBUhzQW56BxwXCHHBq4499L78wDAmV14m+ZOXarob9
-	Vuwea3mDAXfAlzUpX7LhzwbW2UQJHNH5UDNCXh6N/tE2nMNe6Gwd
-X-Google-Smtp-Source: AGHT+IGnc011EOBPeB/NrESCecedPvm684BUXOiL+FPzCD08PsPKT4rS32n6UjnY5bJR1s9NfzrUdA==
-X-Received: by 2002:a05:6000:22c6:b0:39c:1efc:1c1c with SMTP id ffacd0b85a97d-39c2976984emr2071008f8f.34.1743598088696;
-        Wed, 02 Apr 2025 05:48:08 -0700 (PDT)
-Received: from pc.. ([197.155.71.138])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43eb61b6cd2sm19675985e9.39.2025.04.02.05.48.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Apr 2025 05:48:08 -0700 (PDT)
-From: Erick Karanja <karanja99erick@gmail.com>
-To: gregkh@linuxfoundation.org,
-	outreachy@lists.linux.dev
-Cc: karanja99erick@gmail.com,
-	philipp.g.hortmann@gmail.com,
-	linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] staging: rtl8723bs: Use true/false instead of 1/0
-Date: Wed,  2 Apr 2025 15:47:43 +0300
-Message-ID: <2d7f7db67520fa127b81cb200a67304dfff2eaf7.1743596287.git.karanja99erick@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1743596287.git.karanja99erick@gmail.com>
-References: <cover.1743596287.git.karanja99erick@gmail.com>
+        d=1e100.net; s=20230601; t=1743598172; x=1744202972;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=y+3sJL5+WsmkUHEYm1BzR/GyrjVHVNtLDIyVC85cNdI=;
+        b=JuG8drrcuXvx6y5VA2befvnXgOA3H8jv+shEZoeu8AbluIcfJyVaHPF00La7EGshbN
+         vPD67N5oZJn2T+fBP2+coUr+M4WD5OrsoNzz/R0dNqzVcV8U8ebAOlKusjRApWt5rCvm
+         C2lfIpIzu2exydkMDsQUYn47PV4yUvUqScfUxRTCgxFKX5SmOz3io6Q4uLzdI4iCubtq
+         iWJhTiW28HS5Xgz8r0KCeftkD4ifdkYqert/zyvQW6YuT9nA347Rtmx9w0WNxRzOvwWE
+         nyvfukicBBu1frTuY0iK53D9g2f3uDeeBuDBy3XPu8bp8FvwW2DUacOsJLjk3ScvRVM7
+         XQcg==
+X-Gm-Message-State: AOJu0YzhYCNMbpsZKCabqOFxxMCVT47hNkOo1g7JjHeXzWVcm3z/tGdD
+	pXcJ3/wKCIEGMxYXlgnHGOaL8dXoYoXC2Na0l6WHBDKkGYqu9SVV+eeKTLSk335+oSOWZNkXWWn
+	W+rjwLCOfdNI2jORKHRHc1fM48nQH/5FJBCZDC4Hp4aBiv+ObxCk=
+X-Gm-Gg: ASbGncv2A9G4y93EdnmnVztzNUocGMatodakkBDVHKzohIwseRkRCQDXD5dKowTF86m
+	393RclKHEwudXl3LqY93ERWbjhmP/OCuKNCFDryJKzdezed1pGfgA6esa/Boh7RnejuUdp4ePKT
+	TOOFkLuSHMNbW0eQMEhYyLnhRdHbPsa107y5dUGKBC7+M/IPq2GC9mukGbbkk=
+X-Google-Smtp-Source: AGHT+IEZPV71xCZFRaiMP7CnHUqII0vri11WJXA0JOvFvWq6jg//KmbiEFno6N5n8nVLL7zZFwNgKtdEbJvUoV78150=
+X-Received: by 2002:a05:6102:f8f:b0:4c1:9bdb:6188 with SMTP id
+ ada2fe7eead31-4c839e38348mr1583448137.13.1743598172341; Wed, 02 Apr 2025
+ 05:49:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Wed, 2 Apr 2025 18:19:19 +0530
+X-Gm-Features: AQ5f1JrYBDqdwedr2g0EeIuRXqX4Zi5GT7DMBhpK7McR8fimUhQCIrzEPDNgmhA
+Message-ID: <CA+G9fYve7+nXJNoV48TksXoMeVjgJuP8Gs=+1br+Qur1DPWV4A@mail.gmail.com>
+Subject: v6.14-12245-g91e5bfe317d8: Boot regression: rk3399-rock-pi-4b
+ dragonboard-410c dragonboard-845c no console output
+To: open list <linux-kernel@vger.kernel.org>, 
+	Linux ARM <linux-arm-kernel@lists.infradead.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>, clang-built-linux <llvm@lists.linux.dev>
+Cc: Arnd Bergmann <arnd@arndb.de>, Ard Biesheuvel <ardb@kernel.org>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Anders Roxell <anders.roxell@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-    standardize boolean representation by replacing 1/0
-    with true/false in cases where boolean logic is implied.
-    This improves code clarity and aligns with the kernel’s bool type usage.
+Regressions on rk3399-rock-pi-4b, dragonboard-410c and dragonboard-845c
+the lto-thing, hardening and lto-full config boot failed with toolchain
+clang-nightly on the mainline master branch with no console output.
 
-Signed-off-by: Erick Karanja <karanja99erick@gmail.com>
----
- drivers/staging/rtl8723bs/core/rtw_recv.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+First seen on the v6.14-12245-g91e5bfe317d8
+ Good: v6.14-11270-g08733088b566
+ Bad: v6.14-12245-g91e5bfe317d8
 
-diff --git a/drivers/staging/rtl8723bs/core/rtw_recv.c b/drivers/staging/rtl8723bs/core/rtw_recv.c
-index a389ba5ecc6f..fd04dbacb50f 100644
---- a/drivers/staging/rtl8723bs/core/rtw_recv.c
-+++ b/drivers/staging/rtl8723bs/core/rtw_recv.c
-@@ -1358,7 +1358,7 @@ static signed int validate_80211w_mgmt(struct adapter *adapter, union recv_frame
- 			u8 *mgmt_DATA;
- 			u32 data_len = 0;
- 
--			pattrib->bdecrypted = 0;
-+			pattrib->bdecrypted = false;
- 			pattrib->encrypt = _AES_;
- 			pattrib->hdrlen = sizeof(struct ieee80211_hdr_3addr);
- 			/* set iv and icv length */
--- 
-2.43.0
+Regressions found on rk3399-rock-pi-4b:
+  - boot/clang-nightly-lkftconfig-kselftest
+  - boot/clang-nightly-lkftconfig-lto-thing
+  - boot/clang-nightly-lkftconfig-hardening
+  - boot/clang-nightly-lkftconfig-lto-full
 
+Regressions found on dragonboard-410c:
+  - boot/clang-nightly-lkftconfig-lto-thing
+  - boot/clang-nightly-lkftconfig-lto-full
+  - boot/clang-nightly-lkftconfig-hardening
+
+Regressions found on dragonboard-845c:
+  - boot/clang-nightly-lkftconfig-hardening
+  - boot/clang-nightly-lkftconfig-lto-thing
+
+Regression Analysis:
+ - New regression? Yes
+ - Reproducibility? Yes
+
+Boot regression: rk3399-rock-pi-4b dragonboard-410c dragonboard-845c
+no console output
+
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+
+## Boot log
+Starting kernel
+...
+<No console output>
+
+
+## Source
+* Kernel version: 6.14.0
+* Git tree: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+* Git sha: 91e5bfe317d8f8471fbaa3e70cf66cae1314a516
+* Git describe: v6.14-12245-g91e5bfe317d8
+* Project details:
+https://qa-reports.linaro.org/lkft/linux-mainline-master/build/v6.14-12245-g91e5bfe317d8/
+* Architectures: arm64 (rk3399-rock-pi-4b, dragonboard-410c, dragonboard-845c)
+* Toolchains: clang-nightly (Debian clang version 21.0.0 )
+* Kconfigs: lto-thing, hardening, lto-full
+
+## Build
+* Build log: https://qa-reports.linaro.org/lkft/linux-mainline-master/build/v6.14-12245-g91e5bfe317d8/testrun/27859063/suite/boot/test/clang-nightly-lkftconfig-lto-thing/log
+* Build history:
+https://qa-reports.linaro.org/lkft/linux-mainline-master/build/v6.14-12245-g91e5bfe317d8/testrun/27859063/suite/boot/test/clang-nightly-lkftconfig-lto-thing/history/
+* Build details:
+https://qa-reports.linaro.org/lkft/linux-mainline-master/build/v6.14-12245-g91e5bfe317d8/testrun/27859063/suite/boot/test/clang-nightly-lkftconfig-lto-thing/details/
+* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2v9EdkI9AGWWvuT5OzYdgSgXEeH/
+* Kernel config:
+https://storage.tuxsuite.com/public/linaro/lkft/builds/2v9EdkI9AGWWvuT5OzYdgSgXEeH/config
+
+
+--
+Linaro LKFT
+https://lkft.linaro.org
