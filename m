@@ -1,120 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fout-b2-smtp.messagingengine.com (fout-b2-smtp.messagingengine.com [202.12.124.145])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B85701EE028;
-	Wed,  2 Apr 2025 19:15:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEB0D1ACED1;
+	Wed,  2 Apr 2025 19:16:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743621306; cv=none; b=Xt866Vs34EjcMiUkugRGc64ANNJScADloPpyRaohOJJUpx1fRVMcfnP8zHqDwUcUGfI3gxWXmwJA0imESM4EgyYUCWjB3WiE+m9m4C1Z3K5f/FKHrwT89KscE8pHlKUnji3qB9WuGGFrWFJdcvj7thSPxwYIat2F5GgQFOgOBXY=
+	t=1743621374; cv=none; b=mfpy+VLPZOEZhEX//PQeO/xHfhcJ70+xM84DcKgYJaoLLBACOYIlVtr38bzJr2H3I6JfVgd899TlEHiyrcrCW4BB9UW2L3cpXqHu7pD30pYLO/3DQ6R90On9afXtK/hi2OYDQsBSQdjgfjFKD1o//cjtxztvZLn2//hqPeznbD4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743621306; c=relaxed/simple;
-	bh=t8SlwYvfr0dVPDmeuPmUptlt1LXH2OgT7yF+9hGe7LY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Yzbc5/32h7LIAiOwHBVzPYNvP5JRDxdfJmeQGq0m+VyEdaTTmAw5047E0HvqrHdBMAmgolNYx7MtZEP90AkfG5NQ7L8/9w6f1dwwPLUaknj6stXihVyUHalpUbGXn2x4pW+Dpn7K0otyxcUEdBy9V8VVHRqG3IksegHlE7Nyz54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dc78sARN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743621374; c=relaxed/simple;
+	bh=0WH1sGWtFYZtIVHWq6dERmJQ3aaewZqD4RXfkPSUVwU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JM2awkidhYdpL0LK69f6JNMgg1AKU35kU9HV8dPmodPYp7OdangyNC+5Q8B69o0juUzGwIrdVx8051NL5eLbLBtMa22IFmQfu1/nJ/LRSiIbh6F3yxDixNYQbJ38ujSJlg9I2fiFymxRfjP/SJDAtB9Jj8cmlAMSsai/WBzgYwk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com; spf=pass smtp.mailfrom=kroah.com; dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b=e5B4MHAJ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=JzTYmOoZ; arc=none smtp.client-ip=202.12.124.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kroah.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dc78sARN"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 2B2A9C4CEEB;
-	Wed,  2 Apr 2025 19:15:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743621305;
-	bh=t8SlwYvfr0dVPDmeuPmUptlt1LXH2OgT7yF+9hGe7LY=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=dc78sARNgxchz/KgHK9dXtQWdCPhhIeHRmGmv5a/McmuVhRgbveu2A4T0YQUVKmJz
-	 FFz3/SW2XdggyUgiEETH4aeEHB/o0fcKaW7VD1k0KWjcguRATsAteYLNpqL8d6W/xD
-	 6rHgXsr61/zQ3xcYpBJNUB5aXg59AZB9xfz2vY9jN2yrZDi62nrkdbhnmvrR47nSNF
-	 pb0fSiufIb/WFs8bkEDBVAxtCvDEkF8fG1JLaHPtmIQviy8OzQvuKg37luQkCxECOf
-	 5T+fM3V4oHYNbQNPkoLYD4Bx8wk4VRsVcmL2ponuPCYoDkHvi9O6LCXblxgi9ARJO3
-	 eUc4BudRqxcpQ==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20420C3601B;
-	Wed,  2 Apr 2025 19:15:05 +0000 (UTC)
-From: David Heidelberg via B4 Relay <devnull+david.ixit.cz@kernel.org>
-Date: Wed, 02 Apr 2025 21:14:15 +0200
-Subject: [PATCH v3 3/5] iio: light: al3320a: Fix an error handling path in
- al3320a_probe()
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="e5B4MHAJ";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="JzTYmOoZ"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfout.stl.internal (Postfix) with ESMTP id BBB5611400F4;
+	Wed,  2 Apr 2025 15:15:37 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-05.internal (MEProxy); Wed, 02 Apr 2025 15:15:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm2; t=1743621337; x=1743707737; bh=0WH1sGWtFY
+	ZtIVHWq6dERmJQ3aaewZqD4RXfkPSUVwU=; b=e5B4MHAJgYkrv1yYQXHRdsq0K5
+	dIj2GWoH6v4eZP9M3wJES3FQWLIvg6nNfxgmCzNe/fyWm0LVFWwGr93gJ3MWAqO0
+	6y0j0v4Lzz01a8FfAk7LGx5OX65JoaPTp5InvOgpVmcllduUQQRc12URTj7rWjIj
+	qKlAf6kSaJKqjo6IAqZ9CS0JCuERM+hOtl12qGXCGuU6QI4JDq4R1pt19JmWRoGK
+	V9R5sKhY9BZftQ3Kmp6ADQVa/6gowrOAX672B3CirrB8errvvUxJONCPimihEKJW
+	Erl46D4aAhM2d6mWg8VGYv8O6ALAl0fYhJPet8n2CKQoJ702P3YGUeQ5XKug==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+	1743621337; x=1743707737; bh=0WH1sGWtFYZtIVHWq6dERmJQ3aaewZqD4RX
+	fkPSUVwU=; b=JzTYmOoZkUbUc/j5PQNdimyZWySdNdwHs38pwBAz+I2lKneGCfr
+	/s9HCta1QtmKbunM/NSoXYcLqLch33En7AKXdpVpGsM07PN/WC6vTbXdY8bAD8b6
+	xW/7pkorsaxUyz8D3Vt3fXXOWtMS3DGbcSXPGvhHOj57GklOhtF41SdYGIBh+C1p
+	wD2VNtroczLlKdqzyFG4a7yfZb17I+YFow54u8ANRoGRjbEbf+5oxzevOBXVM/pa
+	Qw7ksSQ9lt52IvdlE8OpF6FBvGzdoIQTFTYTrwAYr/S1G1jNUjxG4Tdnw6vgGF1S
+	g/g8vVoKX21gwR3fexWdrRLLYWpn/+hmmyA==
+X-ME-Sender: <xms:2YztZwsHUXGev0I_oUl9ZJi9QAiuz3jI4bVkuqCgBtakPXSohgUanA>
+    <xme:2YztZ9f97Vte9PZfY4Fc0xOupKaTGCVQEm141WRL86rgDYVucJz4X6YTEzTGjsXBL
+    yuxI3vH5uUxCg>
+X-ME-Received: <xmr:2YztZ7yW-GG4UfGEacZq97iZwnafYnbOhT2jZIyGFyFmVWpDmQW1ZACHutSd>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddukeeigeejucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucenucfjughrpeffhf
+    fvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefirhgvghcumffjuceoghhr
+    vghgsehkrhhorghhrdgtohhmqeenucggtffrrghtthgvrhhnpedvjefhvefhjeejfeefle
+    ejteegtedvgeeghfeuveevgfffueelhffhhedugffhkeenucffohhmrghinhepghhithhh
+    uhgsrdgtohhmnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrh
+    homhepghhrvghgsehkrhhorghhrdgtohhmpdhnsggprhgtphhtthhopedugedpmhhouggv
+    pehsmhhtphhouhhtpdhrtghpthhtohepghhorhgrlhgsrghrihhssehgmhgrihhlrdgtoh
+    hmpdhrtghpthhtohepmhgrrhhtihhnrdhpvghtvghrshgvnhesohhrrggtlhgvrdgtohhm
+    pdhrtghpthhtoheplhhinhhugidqshgtshhisehvghgvrhdrkhgvrhhnvghlrdhorhhgpd
+    hrtghpthhtohepthgrrhhgvghtqdguvghvvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+    pdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorh
+    hgpdhrtghpthhtohepshhkhhgrnheslhhinhhugihfohhunhgurghtihhonhdrohhrghdp
+    rhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhdqmhgvnhhtvggvsheslhhishhtshdrlh
+    hinhhugidruggvvh
+X-ME-Proxy: <xmx:2YztZzOCeFAxSuIaiWb8IMCWa8x9PaM54bFkCOSgSZr2oG8iLOA_Hg>
+    <xmx:2YztZw8GkQWjFBFWcwv8Oi_suR38H1AquawY4UicLI8YB9q2gKmRcg>
+    <xmx:2YztZ7Wq68LGcHt_f3fpVmrvT3uw8FlGQmSQ3M8YzoW28anqlOkuBw>
+    <xmx:2YztZ5feL4HPdDJV7uoQp1sI9714JCRw3SnqtW5sgYXw7JPIGMmv8Q>
+    <xmx:2YztZ0HM9n_NvRHVTqIif6dinptlCwb5zQ2akYWAmLcdWdahze89sehz>
+Feedback-ID: i787e41f1:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 2 Apr 2025 15:15:36 -0400 (EDT)
+Date: Wed, 2 Apr 2025 20:14:10 +0100
+From: Greg KH <greg@kroah.com>
+To: goralbaris <goralbaris@gmail.com>
+Cc: martin.petersen@oracle.com, linux-scsi@vger.kernel.org,
+	target-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev
+Subject: Re: [PATCH] change strncpy to strscpy strncpy is now depricated. It
+ may not NUL-terminate the destination string, resulting in potential memory
+ content exposures, unbounded reads, or crashes. Link:
+ https://github.com/KSPP/linux/issues/90
+Message-ID: <2025040244-onward-attain-8e91@gregkh>
+References: <20250402172504.101576-1-goralbaris@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250402-al3010-iio-regmap-v3-3-cc3da273b5b2@ixit.cz>
-References: <20250402-al3010-iio-regmap-v3-0-cc3da273b5b2@ixit.cz>
-In-Reply-To: <20250402-al3010-iio-regmap-v3-0-cc3da273b5b2@ixit.cz>
-To: Jonathan Cameron <jic23@kernel.org>, 
- Lars-Peter Clausen <lars@metafoo.de>
-Cc: Svyatoslav Ryhel <clamor95@gmail.com>, 
- Robert Eckelmann <longnoserob@gmail.com>, linux-iio@vger.kernel.org, 
- linux-kernel@vger.kernel.org, David Heidelberg <david@ixit.cz>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1336; i=david@ixit.cz;
- h=from:subject:message-id;
- bh=xUR9gZOnjOoo0snJLgIn15f7Ro6lut1DvCDtNBnZliU=;
- b=owEBbQKS/ZANAwAIAWACP8TTSSByAcsmYgBn7Yy3HOIVp0gNPuYuFIC9TWknQMBqKiZtTfBDQ
- NHggVCvdbOJAjMEAAEIAB0WIQTXegnP7twrvVOnBHRgAj/E00kgcgUCZ+2MtwAKCRBgAj/E00kg
- ci+oEACT4SQ9qhj6AogU5XSeGSWVeoJmSF1/gDjIJFsYEk4x+IMWOilEld9etR8R9AVLgIIUz2N
- M9XEf73ktQ/UQNqq1Y6qRuRvWCOWW7QLYMFR6g0ufFcxfMRwQTpHfEQrTJfWfAvR5iDxuwqW7aD
- AhqQOR0tskfNAd4UTdWkKWqILRrcJW1Md9422fRpwNlFasiCAKMhaoGltqJULcFclEAw4y0eVtK
- 6w+LB1dR4R8YOU1kQmMJ6a6BzjpYezVSK6dOIBUw6L0UhO2ZDRWvXXPIntRIHq62Gg5XfCt0cXd
- Y4LIdBmPwonGzkVzGkBXeybA1dd7rDtXvdqv+eB3NRt0Um6+swHgVKDA2/BXkwwt/88/5e8afj7
- ph4GQH84p1GCEeudA5uGU64zN29pbQ8T+UpesfiT3XT2FV5siAuNedItlWrxu6bVJZBiVx/eGAH
- JlfIVjOvS3Qc77l+RODFHHDMySEZuQc8gnqN5isvQpjivajDa49PcikSQqZnHbAq5hhTsdRfGpb
- zJuJAeAIlyPpDH9c7R06S9WVyu9EpEcC7ceiWSQXrBXiaOmatqCvuAIb5NBXjIU+Bsvs24nJw5j
- YHDpQE6BMy8L2TIMAfn+VlR993h+krjuEwYaXVeN2FTjJN9uLTZ9vLqKPPRz3OMeGA8XOJlQqX+
- 53gPEkok5JDFmDw==
-X-Developer-Key: i=david@ixit.cz; a=openpgp;
- fpr=D77A09CFEEDC2BBD53A7047460023FC4D3492072
-X-Endpoint-Received: by B4 Relay for david@ixit.cz/default with auth_id=355
-X-Original-From: David Heidelberg <david@ixit.cz>
-Reply-To: david@ixit.cz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250402172504.101576-1-goralbaris@gmail.com>
 
-From: David Heidelberg <david@ixit.cz>
+On Wed, Apr 02, 2025 at 08:25:04PM +0300, goralbaris wrote:
+> Signed-off-by: goralbaris <goralbaris@gmail.com>
 
-If regmap_write() fails in al3320a_init(), al3320a_set_pwr_off is
-not called.
+I think something went wrong with your subject line :(
 
-In order to avoid such a situation, move the devm_add_action_or_reset()
-which calls al3320a_set_pwr_off right after a successful
-al3320a_set_pwr_on.
+Also, don't use your email alias for signed-off-by please.
 
-Signed-off-by: David Heidelberg <david@ixit.cz>
----
- drivers/iio/light/al3320a.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+thanks,
 
-diff --git a/drivers/iio/light/al3320a.c b/drivers/iio/light/al3320a.c
-index 1b2b0359ed5dad5e00d2fe584f8f3495c13c997e..005a7664568667b5cf9419baba6764f7b4e8fc39 100644
---- a/drivers/iio/light/al3320a.c
-+++ b/drivers/iio/light/al3320a.c
-@@ -101,6 +101,12 @@ static int al3320a_init(struct al3320a_data *data)
- 	if (ret < 0)
- 		return ret;
- 
-+	ret = devm_add_action_or_reset(&data->client->dev,
-+				       al3320a_set_pwr_off,
-+				       data);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "failed to add action\n");
-+
- 	ret = i2c_smbus_write_byte_data(data->client, AL3320A_REG_CONFIG_RANGE,
- 					FIELD_PREP(AL3320A_GAIN_MASK,
- 						   AL3320A_RANGE_3));
-@@ -211,10 +217,6 @@ static int al3320a_probe(struct i2c_client *client)
- 		return ret;
- 	}
- 
--	ret = devm_add_action_or_reset(dev, al3320a_set_pwr_off, data);
--	if (ret < 0)
--		return ret;
--
- 	return devm_iio_device_register(dev, indio_dev);
- }
- 
-
--- 
-2.49.0
-
-
+greg k-h
