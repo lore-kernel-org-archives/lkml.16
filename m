@@ -1,135 +1,100 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 868261C8603;
-	Wed,  2 Apr 2025 09:20:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A4B11C8603
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 09:21:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743585634; cv=none; b=k/JYPZlGnwoGAp99dWRXcjhvUWOKBMeeUo39Qv+pom6Zhm0rmKGoUNl0cb3gJi6u0Sfqmx2rY8F0TU14th3jcccUz256kz3uivFFWfB4IYSFONAIhIWDW5C5Amo2awn+n6QhlQvw91uYfBxkhB4/U4YfuRqd8OnqRsHZOc9X7v0=
+	t=1743585662; cv=none; b=S87yWHwnR6ENepeaS6kQ8Dw57toA2OAUv2KkhZtEnhqPlxUOIoKJxM9+cdy7NM7n9Xcu3A/n9lA8ZDTTqgCW8gxYlaJf6t/ax5zL6kBJBQcdcHqq+/pJ2Jcmm4ICwJ6oB19d/aDrNu64A0CwgNqyCIGnydH3B2g4KC+GkSRGLcY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743585634; c=relaxed/simple;
-	bh=wPE7WwhGeI3LRwBB24cAH+qILm+nUf5fr4GrEUahx+c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EtDpQqHN04oGBNEJ0zBuVnL9cFNPpqJOmpVXYCYphb8Ix6eBAXiGYXGrFOco/KMixFrrBw+/T1cMCRdiWBNSuPlrQLK0gXIKrLn1YjuwMxRiAg5wQYJO5sQc+cI22Iq7i45kNyIhpM2pZ1n3Or8qCSn1iGQ0xt2JP6AwOZTgl1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BWDp5X7z; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1743585662; c=relaxed/simple;
+	bh=cyRR7YwcTt1RVUuFWFxexpTiWgrITNp4gvcysQ5tmtU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fD4IJsd43b73XRV1WubOQ1zxqLCzfZmDlbv7xy6P06bOGSM4crVcHbYdyrG/gs1xrvlx4O1kzuQMoUjODnykQaOu3buamq0IgB3t5Zge5+cPmQ6B06RX1rqflBOzNRZwV3/ihnJdo/jl0fsfP8D5WtvKBWILlVB+TrurY1l+d7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Z6O36sOu; arc=none smtp.client-ip=209.85.167.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BWDp5X7z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743585632; x=1775121632;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=wPE7WwhGeI3LRwBB24cAH+qILm+nUf5fr4GrEUahx+c=;
-  b=BWDp5X7zr2uJcHz3HHnS29va2xzxoUljXq7ZFPgShON6URtt+RejL7Rr
-   5Kt2Rj1u/Gy5GZqWrpJP4NwO1LbL8CH/Yi+Pxzc7XYBuv5eQUjY1sQ5ko
-   GJ+wyjlKaFyoX11jgjq2LafA/WKvRjWKz4XzlQLfINGxZNCdcH0hLkUeq
-   PESgoHA37gYE9bh7PTXuyKWyLcgWT7qHHsjewuqPubdV7r0JHq/fCOi6E
-   27tsxVJlU5B/oJXZrYbWEb41Wojc9A1xdHtqvMwKqhb2A/Ogyc6OTs4Wt
-   osD1JM6xKlK0HpphBGORPkjOE5NmDCaOyBXuPjvUcuVTlDayyBi5a972u
-   w==;
-X-CSE-ConnectionGUID: WinA7UiTTbCsdFfDPKEVUA==
-X-CSE-MsgGUID: ISUPeldrSQC7u7gw1ZaQLA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11391"; a="45083622"
-X-IronPort-AV: E=Sophos;i="6.14,295,1736841600"; 
-   d="scan'208";a="45083622"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 02:20:31 -0700
-X-CSE-ConnectionGUID: 7VV9JwBDQoauM69SpulY/g==
-X-CSE-MsgGUID: amQFqQTIRhWsfkxk5mOAmw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,295,1736841600"; 
-   d="scan'208";a="127542263"
-Received: from lkp-server02.sh.intel.com (HELO e98e3655d6d2) ([10.239.97.151])
-  by orviesa008.jf.intel.com with ESMTP; 02 Apr 2025 02:20:25 -0700
-Received: from kbuild by e98e3655d6d2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tzuGk-000Ab0-0A;
-	Wed, 02 Apr 2025 09:20:22 +0000
-Date: Wed, 2 Apr 2025 17:19:55 +0800
-From: kernel test robot <lkp@intel.com>
-To: Hans Zhang <18255117159@163.com>, lpieralisi@kernel.org,
-	bhelgaas@google.com
-Cc: oe-kbuild-all@lists.linux.dev, kw@linux.com,
-	manivannan.sadhasivam@linaro.org, ilpo.jarvinen@linux.intel.com,
-	robh@kernel.org, jingoohan1@gmail.com, thomas.richard@bootlin.com,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Hans Zhang <18255117159@163.com>
-Subject: Re: [v7 2/5] PCI: Refactor capability search functions to eliminate
- code duplication
-Message-ID: <202504021623.LgnqoZPE-lkp@intel.com>
-References: <20250402042020.48681-3-18255117159@163.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Z6O36sOu"
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-54acc0cd458so805929e87.0
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 02:21:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1743585658; x=1744190458; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cyRR7YwcTt1RVUuFWFxexpTiWgrITNp4gvcysQ5tmtU=;
+        b=Z6O36sOufnewZxbHbgW9XPWl2THCMwLLTTow6DtxbOjoiFYQT38kANPQyXBDbVxreM
+         ntnkAED85IwQR/4tyOIkctnYf7tCgUH12IAV2OguMj4Mot6Ww+7ddkkwFa7ctq5ogzCi
+         MW+LRh+UVTM3989CbBgwdQlyHtvLnZkrpVXFM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743585658; x=1744190458;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cyRR7YwcTt1RVUuFWFxexpTiWgrITNp4gvcysQ5tmtU=;
+        b=ZB7OoPN2LLxTBlULfBnSjEHINOOgHofSe8prIRgDmyXBiBXhO8ar/kEhccrar1EbyC
+         z1sVoDeBrcoOOuljQ8y6BVkKl4joiKa7gmubWIeIS4BnJq1GDjCs2LtTCQVHTXiMqoiy
+         2fOIf5ZXVH5V90D2FuY92q2YaxizMwynlKAe/2Klwv4PpKURp07tWJv5sUq46XA24QKU
+         IhyqCLNsEnbSwQujNcdvPgBR6hzlr7QmSQpF/Zq206ggZ57UH+GHOyXa9sR7XP74Bd4l
+         H5zXA9Ie+ltvjRBizmdjBrJJ9z96UtOvqIDkhd3EJjBuGg5WNjpe/EAVeK2WES/IxzcM
+         uLqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU0nl9E1mh2EN7oZpW8Z+lpqcJjIhtsjwEIEkdLhSxCkgobYK/X+N0835qLm+U4AQ2MQdS7AQxoZB3vRzE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwfQ+ByTipuca/4PLgkMooM0zLcyvolhuK0r7Vr6rPeVxe2uv8b
+	B8/kcR8En8TcVLLzmvC4iZ4a8os2hZ3gQFRfxcY8YQUAODQB6J8eoodpWgv9P3uptzBhaGbbJiT
+	U/VynqvK3zXqEkoQM2OnJaWDTj6Ed9MStfBkp
+X-Gm-Gg: ASbGncshcMuUFhGfCnkQ6NZeo7qb2jJhL64nFcEYyoQrvRsa9mEFDaOo7Uz93CifHsI
+	z8NyMGIPTyIefIYEQECTTQ1QMSF/p6M6lII8983OSMaRbcho0jFBG3d6zBZ0Ay646PpirAMZcNF
+	S7hBK4zKxQs2sL8QplDTCf87eDIEYn5UrAbHQgdCOjHy63Fs0aV90I
+X-Google-Smtp-Source: AGHT+IFNQ8rh8uohCED3FsKCQuotU4QQf82Ifu/wJJpZo0zeWoQri2IhxtJ24b7PrATskKr8lE3tJp/lmcDLayTcKSY=
+X-Received: by 2002:a05:6512:1582:b0:53e:39e6:a1c1 with SMTP id
+ 2adb3069b0e04-54c19c81f80mr468673e87.43.1743585658589; Wed, 02 Apr 2025
+ 02:20:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250402042020.48681-3-18255117159@163.com>
+References: <20250402083852.20624-1-angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20250402083852.20624-1-angelogioacchino.delregno@collabora.com>
+From: Chen-Yu Tsai <wenst@chromium.org>
+Date: Wed, 2 Apr 2025 17:20:47 +0800
+X-Gm-Features: AQ5f1JrBOnaeLpNxIHL0qnzLitrLXH_ivJZiH5ry-mQ9PevMkY1uBQey-dy93ik
+Message-ID: <CAGXv+5Fo3-5J1Tyn1JGP0+aTeCnkUJhwxiuLt71MLUp-zVSCkg@mail.gmail.com>
+Subject: Re: [PATCH] thermal/drivers/mediatek/lvts: Fix debugfs unregister on failure
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: rafael@kernel.org, daniel.lezcano@linaro.org, rui.zhang@intel.com, 
+	lukasz.luba@arm.com, matthias.bgg@gmail.com, npitre@baylibre.com, 
+	jpanis@baylibre.com, nfraprado@collabora.com, bchihi@baylibre.com, 
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
+	kernel@collabora.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Hans,
+On Wed, Apr 2, 2025 at 4:39=E2=80=AFPM AngeloGioacchino Del Regno
+<angelogioacchino.delregno@collabora.com> wrote:
+>
+> When running the probe function for this driver, the function
+> lvts_debugfs_init() gets called in lvts_domain_init() which, in
+> turn, gets called in lvts_probe() before registering threaded
+> interrupt handlers.
+>
+> Even though it's unlikely, the last call may fail and, if it does,
+> there's nothing removing the already created debugfs folder and
+> files.
+>
+> In order to fix that, instead of calling the lvts debugfs cleanup
+> function upon failure, register a devm action that will take care
+> of calling that upon failure or driver removal.
+>
+> Since devm was used, also delete the call to lvts_debugfs_exit()
+> in the lvts_remove() callback, as now that's done automatically.
+>
+> Fixes: f5f633b18234 ("thermal/drivers/mediatek: Add the Low Voltage Therm=
+al Sensor driver")
+> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@coll=
+abora.com>
 
-kernel test robot noticed the following build errors:
-
-[auto build test ERROR on acb4f33713b9f6cadb6143f211714c343465411c]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Hans-Zhang/PCI-Refactor-capability-search-into-common-macros/20250402-122544
-base:   acb4f33713b9f6cadb6143f211714c343465411c
-patch link:    https://lore.kernel.org/r/20250402042020.48681-3-18255117159%40163.com
-patch subject: [v7 2/5] PCI: Refactor capability search functions to eliminate code duplication
-config: loongarch-randconfig-001-20250402 (https://download.01.org/0day-ci/archive/20250402/202504021623.LgnqoZPE-lkp@intel.com/config)
-compiler: loongarch64-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250402/202504021623.LgnqoZPE-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504021623.LgnqoZPE-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   drivers/pci/pci.c: In function '__pci_find_next_ht_cap':
->> drivers/pci/pci.c:627:17: error: 'rc' undeclared (first use in this function); did you mean 'rq'?
-     627 |                 rc = pci_read_config_byte(dev, pos + 3, &cap);
-         |                 ^~
-         |                 rq
-   drivers/pci/pci.c:627:17: note: each undeclared identifier is reported only once for each function it appears in
-
-
-vim +627 drivers/pci/pci.c
-
-70c0923b0ef10b Jacob Keller     2020-03-02  614  
-f646c2a0a6685a Puranjay Mohan   2020-11-29  615  static u8 __pci_find_next_ht_cap(struct pci_dev *dev, u8 pos, int ht_cap)
-687d5fe3dc3379 Michael Ellerman 2006-11-22  616  {
-687d5fe3dc3379 Michael Ellerman 2006-11-22  617  	u8 cap, mask;
-687d5fe3dc3379 Michael Ellerman 2006-11-22  618  
-687d5fe3dc3379 Michael Ellerman 2006-11-22  619  	if (ht_cap == HT_CAPTYPE_SLAVE || ht_cap == HT_CAPTYPE_HOST)
-687d5fe3dc3379 Michael Ellerman 2006-11-22  620  		mask = HT_3BIT_CAP_MASK;
-687d5fe3dc3379 Michael Ellerman 2006-11-22  621  	else
-687d5fe3dc3379 Michael Ellerman 2006-11-22  622  		mask = HT_5BIT_CAP_MASK;
-687d5fe3dc3379 Michael Ellerman 2006-11-22  623  
-687d5fe3dc3379 Michael Ellerman 2006-11-22  624  	pos = __pci_find_next_cap_ttl(dev->bus, dev->devfn, pos,
-2675dfd086c109 Hans Zhang       2025-04-02  625  				      PCI_CAP_ID_HT);
-687d5fe3dc3379 Michael Ellerman 2006-11-22  626  	while (pos) {
-687d5fe3dc3379 Michael Ellerman 2006-11-22 @627  		rc = pci_read_config_byte(dev, pos + 3, &cap);
-687d5fe3dc3379 Michael Ellerman 2006-11-22  628  		if (rc != PCIBIOS_SUCCESSFUL)
-687d5fe3dc3379 Michael Ellerman 2006-11-22  629  			return 0;
-687d5fe3dc3379 Michael Ellerman 2006-11-22  630  
-687d5fe3dc3379 Michael Ellerman 2006-11-22  631  		if ((cap & mask) == ht_cap)
-687d5fe3dc3379 Michael Ellerman 2006-11-22  632  			return pos;
-687d5fe3dc3379 Michael Ellerman 2006-11-22  633  
-47a4d5be7c50b2 Brice Goglin     2007-01-10  634  		pos = __pci_find_next_cap_ttl(dev->bus, dev->devfn,
-47a4d5be7c50b2 Brice Goglin     2007-01-10  635  					      pos + PCI_CAP_LIST_NEXT,
-2675dfd086c109 Hans Zhang       2025-04-02  636  					      PCI_CAP_ID_HT);
-687d5fe3dc3379 Michael Ellerman 2006-11-22  637  	}
-687d5fe3dc3379 Michael Ellerman 2006-11-22  638  
-687d5fe3dc3379 Michael Ellerman 2006-11-22  639  	return 0;
-687d5fe3dc3379 Michael Ellerman 2006-11-22  640  }
-f646c2a0a6685a Puranjay Mohan   2020-11-29  641  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Reviewed-by: Chen-Yu Tsai <wenst@chromium.org>
