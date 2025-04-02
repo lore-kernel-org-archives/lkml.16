@@ -1,105 +1,114 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A82E1F2BBB;
-	Wed,  2 Apr 2025 12:46:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E510E1EA7DE;
+	Wed,  2 Apr 2025 12:46:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743597992; cv=none; b=tBbXt+SAeuCIQTRqWdRBkOX+gOgAcES4Y0WnDvD8/h3ocfOx2p6B3msvNuUsF3rSf9LYumPcBmd3XIyDELgSJ8lzjFefya+dP9yNTizZtDn4KBiu3EHi3q8Ue0PSHHbJodMvQsKoZH4nuPI6jfkKvAJIexcDLxkU3IDaZGAVuwA=
+	t=1743598008; cv=none; b=EbFPuuIqJ+OoSEvwX/R6ByexbxOUFN2GtsNO3wkPwwQhyj+8VzbvljPqTiJvywhNY3GszjpSlDdb8GRFpoZbuB9IYpdyEq/5EIaDlT4cUEnhdzv+AZZMEacdAkrThuCAKQkXbcZ+1DXzniDSAOsEezTiELuUBCwN+nxNQ1bscXI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743597992; c=relaxed/simple;
-	bh=RKR7bdFOIqZEt3jCxHjv6sy16GgjixF70npH2yYLpT4=;
+	s=arc-20240116; t=1743598008; c=relaxed/simple;
+	bh=fuDw+v9E63a/aSleIffar11221krG7wOgWHTJ1Q3/68=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jTJOWMwYg0SP69GtC5+dwm2KoW4qMSaMIAGK6/YZOqnDPmZFWWsWmguFVcr0YM2pxwAdRY4qOT14ytKPDzWYzkhno8j8aaU7ZQ/BpaiONm4XjXw3NRgWsAQdCa7jqSicGXJtxEGKnHVA3LcrjCx5GkeKL+0AEIeGSwzwEW5VSAA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=QNtZlNBd; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=KqGtonnqIi0b41d3imOnyv+0XfiWgfW2CKFMki1S56baiFtdOsB1J7iXlVBIuqOBwhJN84kG5XKj62/GRWnN7vRzuVZ2oQG/ywhIqlruhYz5K6dV9MT/rQTHqZDULde9MEsrFXc9EmEfCdTRneOOvAH5kjGVOGXwd/wwixODxn0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aUgtls2H; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="QNtZlNBd"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 54DD063B;
-	Wed,  2 Apr 2025 14:44:36 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1743597876;
-	bh=RKR7bdFOIqZEt3jCxHjv6sy16GgjixF70npH2yYLpT4=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aUgtls2H"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10F69C4CEDD;
+	Wed,  2 Apr 2025 12:46:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743598007;
+	bh=fuDw+v9E63a/aSleIffar11221krG7wOgWHTJ1Q3/68=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QNtZlNBdhWzgbnPNmjZAGDVOjcS6jPWoPqm1ufjEOBIkoSy/PwZtoyRRx4Wq7xJzT
-	 xuz3GbCZAn9Iqdl50ekcFBrdFZmb9JiLYnc5hXRMoWa8bYXn+IlSLLo1O+JwiG23PH
-	 4rjsXGs5pFQPXXkAFprHyoluTHqV3xPko5etj7Ic=
-Date: Wed, 2 Apr 2025 15:46:05 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Benjamin Mugnier <benjamin.mugnier@foss.st.com>,
-	Sylvain Petinot <sylvain.petinot@foss.st.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] media: dt-bindings: Add ST VD55G1 camera sensor
- binding
-Message-ID: <20250402124605.GB13181@pendragon.ideasonboard.com>
-References: <20250401-b4-vd55g1-v2-0-0c8ab8a48c55@foss.st.com>
- <20250401-b4-vd55g1-v2-1-0c8ab8a48c55@foss.st.com>
- <20250402-curvy-seriema-of-blizzard-b1c4d9@krzk-bin>
- <228ddf41-e1d0-4d06-9e0e-9e0dad841688@foss.st.com>
- <fd874f4d-d68c-4443-8bb6-115246f4407b@kernel.org>
- <a0c62797-3c4c-453c-938b-d43666f3b264@foss.st.com>
- <7d501bf2-a017-4c02-a96f-184a7d648b6a@foss.st.com>
- <9f128ce9-6a26-435c-b133-0da80120de2d@kernel.org>
+	b=aUgtls2HhODVEH5+qLIKQLomvMF7ELxBw2MKKL+6p9VihJy6d4ilR7aZw4VM6bG22
+	 zDUpLBwkinARXAebf2dC5uy5D27Sf/uK9zqZ+B49O6LNTG0nTIxRRy+6zHt6uiHuw7
+	 5boShg/yXA5K3U142BUMUiz436tWHj7ha92cEpTGGgLBqz/uaRfxU/SobFsCzamk+8
+	 MRnsgcyxYuQPHtOHzvmlrpD/jnUXZMC+dmrLYm6NsqGgAmSGJcY2+AWKZYdyihL0Pw
+	 MkhiMnL7XaCGdAeekj/PX+fUOfk5PZyZhgr3fkpy2FJwN+zM/a5KhPh4b6M1nvbjWq
+	 /VGfAQG+QNTyA==
+Date: Wed, 2 Apr 2025 15:46:37 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Andy Lutomirski <luto@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+	"David S. Miller" <davem@davemloft.net>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
+	linux-arch@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org,
+	Naresh Kamboju <naresh.kamboju@linaro.org>,
+	lkft-triage@lists.linaro.org,
+	Linux Regressions <regressions@lists.linux.dev>
+Subject: Re: [PATCH v2 10/13] arch, mm: set high_memory in free_area_init()
+Message-ID: <Z-0xrWyff9-9bJRf@kernel.org>
+References: <20250313135003.836600-1-rppt@kernel.org>
+ <20250313135003.836600-11-rppt@kernel.org>
+ <20250402140521-bf9b3743-094e-4097-a189-10cdf1db9255@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <9f128ce9-6a26-435c-b133-0da80120de2d@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250402140521-bf9b3743-094e-4097-a189-10cdf1db9255@linutronix.de>
 
-On Wed, Apr 02, 2025 at 12:27:08PM +0200, Krzysztof Kozlowski wrote:
-> On 02/04/2025 11:41, Benjamin Mugnier wrote:
-> > On 4/2/25 11:38, Benjamin Mugnier wrote:
-> >> On 4/2/25 11:11, Krzysztof Kozlowski wrote:
-> >>> On 02/04/2025 10:34, Benjamin Mugnier wrote:
-> >>>> Hi Krzysztof,
-> >>>>
-> >>>> On 4/2/25 09:08, Krzysztof Kozlowski wrote:
-> >>>>> On Tue, Apr 01, 2025 at 01:05:58PM +0200, Benjamin Mugnier wrote:
-> >>>>>> +    properties:
-> >>>>>> +      endpoint:
-> >>>>>> +        $ref: /schemas/media/video-interfaces.yaml#
-> >>>>>> +        unevaluatedProperties: false
-> >>>>>> +
-> >>>>>> +        properties:
-> >>>>>> +          data-lanes:
-> >>>>>> +            items:
-> >>>>>> +              const: 1
-> >>>>>
-> >>>>> Not what I asked. Now you miss number of items. Just use the syntax I
-> >>>>> proposed. Or was there any issue with it?
-> >>>>
-> >>>> No issue I just misunderstood and thought const: 1 was impliying
-> >>>> maxItems: 1. I'll add maxItems back.
-> >>>
-> >>> That's just longer way to express what I asked for. So I repeat the
-> >>> question: why not using the syntax I asked for?
-> >>
-> >> I guess I didn't understand what you asked for.
-> >> May I ask you to write it ? That will help me a lot.
+On Wed, Apr 02, 2025 at 02:19:01PM +0200, Thomas Weißschuh wrote:
+> (drop all the non-x86 and non-mm recipients)
+> 
+> Hi,
+> 
+> On Thu, Mar 13, 2025 at 03:50:00PM +0200, Mike Rapoport wrote:
+> > From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
 > > 
-> > By 'it' I mean the binding.
->
-> I wrote it last time. I don't think that copying the same here would
-> change anything. If I can look at v1, you can do as well.
-
-Reading your comment on v1, I would have come up with the exact same
-result as Benjamin's v2. I can't figure out what alternative description
-you meant.
+> > high_memory defines upper bound on the directly mapped memory.
+> > This bound is defined by the beginning of ZONE_HIGHMEM when a system has
+> > high memory and by the end of memory otherwise.
+> > 
+> > All this is known to generic memory management initialization code that
+> > can set high_memory while initializing core mm structures.
+> > 
+> > Add a generic calculation of high_memory to free_area_init() and remove
+> > per-architecture calculation except for the architectures that set and
+> > use high_memory earlier than that.
+> 
+> This change (in mainline as commit e120d1bc12da ("arch, mm: set high_memory in free_area_init()")
+> breaks booting i386 on QEMU for me (and others [0]).
+> The boot just hangs without output.
+> 
+> It's easily reproducible with kunit:
+> ./tools/testing/kunit/kunit.py run --arch i386
+> 
+> See below for the specific problematic hunk.
+> 
+> [0] https://lore.kernel.org/lkml/CA+G9fYtdXHVuirs3v6at3UoKNH5keuq0tpcvpz0tJFT4toLG4g@mail.gmail.com/
+> 
+> 
+> > diff --git a/arch/x86/mm/init_32.c b/arch/x86/mm/init_32.c
+> > index 6d2f8cb9451e..801b659ead0c 100644
+> > --- a/arch/x86/mm/init_32.c
+> > +++ b/arch/x86/mm/init_32.c
+> > @@ -643,9 +643,6 @@ void __init initmem_init(void)
+> >  		highstart_pfn = max_low_pfn;
+> >  	printk(KERN_NOTICE "%ldMB HIGHMEM available.\n",
+> >  		pages_to_mb(highend_pfn - highstart_pfn));
+> > -	high_memory = (void *) __va(highstart_pfn * PAGE_SIZE - 1) + 1;
+> > -#else
+> > -	high_memory = (void *) __va(max_low_pfn * PAGE_SIZE - 1) + 1;
+> >  #endif
+> 
+> Reverting this hunk fixes the issue for me.
+ 
+This is already done by d893aca973c3 ("x86/mm: restore early initialization
+of high_memory for 32-bits").
+  
+> >  	memblock_set_node(0, PHYS_ADDR_MAX, &memblock.memory, 0);
 
 -- 
-Regards,
-
-Laurent Pinchart
+Sincerely yours,
+Mike.
