@@ -1,166 +1,223 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4955020E01D;
-	Wed,  2 Apr 2025 11:46:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E54120E01D
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 11:47:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743594382; cv=none; b=uy7075j0zXOY9pD9KBA9LaWl8bFcZND9z2mlnMJbc7RxI2+SG7EqXqyeGJHDxY50iCGT3k7+uAhi5a3eBMCDhOeoYHxPkHu71V25gnK8BRHMyZKwA3WNMbnjyWmCkiTQtg9foivTeTRqU7nGuFXReNvmUlld0BVLOGyJhPKm69M=
+	t=1743594435; cv=none; b=Z9773PPHoo5k/Otce5c0oO3RAZoGrf7vjRppzdoxMJwDW+db2N4FxmmqAgpCnvIos3JlVid4/AZXevpdD4wpUYzOVsmH0Swjedg3GxH6nhpoPksQU1ql5z4oq0ru/HewAR7emRB+4OplHb6vnmCdKkte9XWKz+WJretjLmhYJvs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743594382; c=relaxed/simple;
-	bh=13/ZTgkQNn8YLYBwvB18oJqhNzSjCyZ6MMrKnzIuUK0=;
+	s=arc-20240116; t=1743594435; c=relaxed/simple;
+	bh=aAWMzELJP1P/if9KF7/bduo6wGnBWLqqHpooy2iQ6Nw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lqw3EZuWbk+5wEAK3PuoyvITLZ1HfK1iIMTyeGOg6XCNL21/VA/WPlwiwiEmsHV+bJ514Kow6+ZDMeD+G/ZJ/nQrb+FHiJu2qeEbYRqh9eEV59/1Y20+H5J4fNRcyrTR0r+bd8KmphDKRke+lCasn95F22RlZP0o7eQMo+qi6xA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=arm.com; spf=none smtp.mailfrom=foss.arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=foss.arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B6526106F;
-	Wed,  2 Apr 2025 04:46:23 -0700 (PDT)
-Received: from bogus (unknown [10.57.41.33])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8CBB53F694;
-	Wed,  2 Apr 2025 04:46:17 -0700 (PDT)
-Date: Wed, 2 Apr 2025 12:46:14 +0100
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: Peng Fan <peng.fan@oss.nxp.com>
-Cc: Cristian Marussi <cristian.marussi@arm.com>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	linux-kernel@vger.kernel.org, arm-scmi@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
-	devicetree@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH v3 1/7] firmware: arm_scmi: imx: Add LMM and CPU
- documentation
-Message-ID: <20250402-acoustic-analytic-guan-d3cda5@sudeepholla>
-References: <20250303-imx-lmm-cpu-v3-0-7695f6f61cfc@nxp.com>
- <20250303-imx-lmm-cpu-v3-1-7695f6f61cfc@nxp.com>
- <20250401-quantum-coyote-of-admiration-bf1b68@sudeepholla>
- <20250402123503.GA23033@nxa18884-linux>
+	 Content-Type:Content-Disposition:In-Reply-To; b=sEmhw/TAQoc66LAzOrgBLR7k9QiV6PXYY9mmFNMNcqX2keVhTbqViepJ7oxX83K+ZKmWtPM6/9HoYJ2CC6G2rlS26IKGlM3EffOaoTLAS5z+m8eSpbTnNBhLHD7dN56zG6bu1o+n8Lwp35ZvMzhhxFVZy2DxEqtFUNH/P/ykzOA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=VvWtACp4; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=AVPSE5DM; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=VvWtACp4; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=AVPSE5DM; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="VvWtACp4";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="AVPSE5DM";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="VvWtACp4";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="AVPSE5DM"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 3CFF921168;
+	Wed,  2 Apr 2025 11:47:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1743594431; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hRC1Ph3v+dpLUuN6PqUZ7LoZjP3VCw/h5Hi3hKP3wJQ=;
+	b=VvWtACp4e5Hwz/FYvvv2rYbfAnIKDXHF66ZNX9rKOwzJ1rv4x78pEzSxpkjjvS8U0Y4f0V
+	ywFGX/skiQLH2QJKusP29Ueop4fFXYF/BJ7dO0BBGefEPYecRSNtPVYy4fkap2TUeYqy1U
+	tnZBkE5H82tctqN+ayrjuKQiX7pOPu8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1743594431;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hRC1Ph3v+dpLUuN6PqUZ7LoZjP3VCw/h5Hi3hKP3wJQ=;
+	b=AVPSE5DMJ6Y/I/QNwxPw8VyR29KkM+YlBuSlKFG6eS6hWTZBJB23tjIAnHdEdSg9tDVsKW
+	Aq/u7TGKBolnxyAw==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=VvWtACp4;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=AVPSE5DM
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1743594431; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hRC1Ph3v+dpLUuN6PqUZ7LoZjP3VCw/h5Hi3hKP3wJQ=;
+	b=VvWtACp4e5Hwz/FYvvv2rYbfAnIKDXHF66ZNX9rKOwzJ1rv4x78pEzSxpkjjvS8U0Y4f0V
+	ywFGX/skiQLH2QJKusP29Ueop4fFXYF/BJ7dO0BBGefEPYecRSNtPVYy4fkap2TUeYqy1U
+	tnZBkE5H82tctqN+ayrjuKQiX7pOPu8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1743594431;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hRC1Ph3v+dpLUuN6PqUZ7LoZjP3VCw/h5Hi3hKP3wJQ=;
+	b=AVPSE5DMJ6Y/I/QNwxPw8VyR29KkM+YlBuSlKFG6eS6hWTZBJB23tjIAnHdEdSg9tDVsKW
+	Aq/u7TGKBolnxyAw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1365313A4B;
+	Wed,  2 Apr 2025 11:47:11 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id oiNPBL8j7WcfcwAAD6G6ig
+	(envelope-from <jack@suse.cz>); Wed, 02 Apr 2025 11:47:11 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 93B48A07E6; Wed,  2 Apr 2025 13:47:06 +0200 (CEST)
+Date: Wed, 2 Apr 2025 13:47:06 +0200
+From: Jan Kara <jack@suse.cz>
+To: James Bottomley <James.Bottomley@hansenpartnership.com>
+Cc: Jan Kara <jack@suse.cz>, Christian Brauner <brauner@kernel.org>, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, mcgrof@kernel.org, 
+	hch@infradead.org, david@fromorbit.com, rafael@kernel.org, djwong@kernel.org, 
+	pavel@kernel.org, peterz@infradead.org, mingo@redhat.com, will@kernel.org, 
+	boqun.feng@gmail.com
+Subject: Re: [RFC PATCH 1/4] locking/percpu-rwsem: add freezable alternative
+ to down_read
+Message-ID: <ophjhrnyzl7jp55qj35kgiz3zflopsiuiwg4dhxmkyua2w46nz@5p2e2djo3vw4>
+References: <20250327140613.25178-1-James.Bottomley@HansenPartnership.com>
+ <20250327140613.25178-2-James.Bottomley@HansenPartnership.com>
+ <77774eb380e343976de3de681204e2c7f3ab1926.camel@HansenPartnership.com>
+ <20250401-anwalt-dazugeben-18d8c3efd1fd@brauner>
+ <f6bdfa23b9f54055f8a539ce396f1134b0921417.camel@HansenPartnership.com>
+ <3bfnds6nsvxy5jfbcoy62uva6kebhacjuavqxvelbfs6ut6rqf@m4pzsudbqg6l>
+ <1d913e99368039b77945d1be89e6626b4238f665.camel@HansenPartnership.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20250402123503.GA23033@nxa18884-linux>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1d913e99368039b77945d1be89e6626b4238f665.camel@HansenPartnership.com>
+X-Rspamd-Queue-Id: 3CFF921168
+X-Spam-Score: -2.51
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-2.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCPT_COUNT_TWELVE(0.00)[15];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	RCVD_COUNT_THREE(0.00)[3];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	RCVD_TLS_LAST(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	TO_DN_SOME(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	MISSING_XM_UA(0.00)[];
+	FREEMAIL_CC(0.00)[suse.cz,kernel.org,vger.kernel.org,infradead.org,fromorbit.com,redhat.com,gmail.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On Wed, Apr 02, 2025 at 08:35:03PM +0800, Peng Fan wrote:
-> Hi Sudeep,
+On Tue 01-04-25 08:52:02, James Bottomley wrote:
+> On Tue, 2025-04-01 at 13:20 +0200, Jan Kara wrote:
+> > On Mon 31-03-25 21:13:20, James Bottomley wrote:
+> > > On Tue, 2025-04-01 at 01:32 +0200, Christian Brauner wrote:
+> [...]
+> > > > diff --git a/include/linux/fs.h b/include/linux/fs.h
+> > > > index b379a46b5576..528e73f192ac 100644
+> > > > --- a/include/linux/fs.h
+> > > > +++ b/include/linux/fs.h
+> > > > @@ -1782,7 +1782,8 @@ static inline void __sb_end_write(struct
+> > > > super_block *sb, int level)
+> > > >  static inline void __sb_start_write(struct super_block *sb, int
+> > > > level)
+> > > >  {
+> > > >         percpu_down_read_freezable(sb->s_writers.rw_sem + level -
+> > > > 1,
+> > > > -                                  level == SB_FREEZE_WRITE);
+> > > > +                                  (level == SB_FREEZE_WRITE ||
+> > > > +                                   level ==
+> > > > SB_FREEZE_PAGEFAULT));
+> > > >  }
+> > > 
+> > > Yes, I was about to tell Jan that the condition here simply needs
+> > > to be true.  All our rwsem levels need to be freezable to avoid a
+> > > hibernation failure.
+> > 
+> > So there is one snag with this. SB_FREEZE_PAGEFAULT level is acquired
+> > under mmap_sem, SB_FREEZE_INTERNAL level is possibly acquired under
+> > some other filesystem locks.
 > 
-> Thanks for reviewing the patch.
+> Just for SB_FREEZE_INTERNAL, I think there's no case of
+> sb_start_intwrite() that can ever hold in D wait because by the time we
+> acquire the semaphore for write, the internal freeze_fs should have
+> been called and the filesystem should have quiesced itself.  On the
+> other hand, if that theory itself is true, there's no real need for
+> sb_start_intwrite() at all because it can never conflict.
+
+This is not true. Sure, userspace should all be blocked, dirty pages
+written back, but you still have filesystem background tasks like lazy
+initialization of inode tables, inode garbage collection, regular lazy
+updates of statistics in the superblock. These generally happen from
+kthreads / work queues and they can still be scheduled and executed
+although freeze_super() has started blocking SB_FREEZE_WRITE and
+SB_FREEZE_PAGEFAULT levels... And generally this freeze level is there
+exactly because it needs to be acquired from locking context which doesn't
+allow usage of SB_FREEZE_WRITE or SB_FREEZE_PAGEFAULT levels.
+
+> >  So if you freeze the filesystem, a task can block on frozen
+> > filesystem with e.g. mmap_sem held and if some other task then blocks
+> > on grabbing that mmap_sem, hibernation fails because we'll be unable
+> > to hibernate the task waiting for mmap_sem. So if you'd like to
+> > completely avoid these hibernation failures, you'd have to make a
+> > slew of filesystem related locks use freezable sleeping. I don't
+> > think that's feasible.
 > 
-> For comments that I am not very clear, I marked with [TODO] for easily
-> jump to.
+> I wouldn't see that because I'm on x86_64 and that takes the vma_lock
+> in page faults not the mmap_lock.  The granularity of all these locks
+> is process level, so it's hard to see what they'd be racing with ...
+
+I agree that because of vma_lock it would be much harder to see this. But
+as far as I remember mmap_sem is still a fallback option when we race with
+VMA modification even for x86 so this problem is possible to hit, just much
+more unlikely.
+
+> even if I conjecture two threads trying to write to something, they'd
+> have to have some internal co-ordination which would likely prevent the
+> second one from writing if the first got stuck on the page fault. 
 > 
-> On Tue, Apr 01, 2025 at 03:15:46PM +0100, Sudeep Holla wrote:
-> >On Mon, Mar 03, 2025 at 10:53:22AM +0800, Peng Fan (OSS) wrote:
-> >> From: Peng Fan <peng.fan@nxp.com>
-> >> 
-> >> Add i.MX95 Logical Machine Management and CPU Protocol documentation.
-> >> 
-> >> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> >> ---
-> >>  drivers/firmware/arm_scmi/vendors/imx/imx95.rst | 801 ++++++++++++++++++++++++
-> >>  1 file changed, 801 insertions(+)
-> >> 
-> >> diff --git a/drivers/firmware/arm_scmi/vendors/imx/imx95.rst b/drivers/firmware/arm_scmi/vendors/imx/imx95.rst
-> >> index b2dfd6c46ca2f5f12f0475c24cb54c060e9fa421..74326bf2ea8586282a735713e0ab7eb90ccce8ff 100644
-> >> --- a/drivers/firmware/arm_scmi/vendors/imx/imx95.rst
-> >> +++ b/drivers/firmware/arm_scmi/vendors/imx/imx95.rst
-
-> >> +
-> >> +PROTOCOL_MESSAGE_ATTRIBUTES
-> >> +~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> >> +
-> >> +message_id: 0x2
-> >> +protocol_id: 0x80
-> >> +This command is mandatory.
-> >> +
-> >
-> >For completeness add parameters here for message_id as in the spec as it is
-> >referred in the returned value and seems incomplete without it.
+> > I was hoping that failures due to SB_FREEZE_PAGEFAULT level not being
+> > freezable would be rare enough but you've proven they are quite
+> > frequent. We can try making SB_FREEZE_PAGEFAULT level (or even
+> > SB_FREEZE_INTERNAL) freezable and see whether that works good
+> > enough...
 > 
-> [TODO]
-> Sorry, I may not get your point here. You mean below format?
-> 
-> +------------------+-----------------------------------------------------------+
-> |message_id: 0x2
-> |protocol_id: 0x80
-> |This command is mandatory.
-> +------------------+-----------------------------------------------------------+
-> |Return values                                                                 |
-> +------------------+-----------------------------------------------------------+
-> |Name              |Description                                                |
-> +------------------+-----------------------------------------------------------+
-> |int32 status      |SUCCESS: in case the message is implemented and available  |
-> |                  |to use.                                                    |
-> |                  |NOT_FOUND: if the message identified by message_id is      |
-> |                  |invalid or not implemented                                 |
-> +------------------+-----------------------------------------------------------+
-> |uint32 attributes |Flags that are associated with a specific function in the  |
-> |                  |protocol. For all functions in this protocol, this         |
-> 
-> message_id is not put in the table, but it is list above just below
-> the protocol name. I would prefer to keep current layout and align with
-> the MISC and BBM protocol.
->
+> I'll try to construct a more severe test than systemd-journald ... it
+> looks to be single threaded in its operation.
 
-I meant why is the input parameter message_id not described in the table,
-but is referred in the return values. For completeness, just add it even
-though it may match the SCMI spec in terms of input parameter.
+OK, thanks!
 
-
-[...]
-
-> >> +|                     |Bit[23] Valid err ID:                                   |
-> >> +|                     |Set to 1 if the error ID field is valid.                |
-> >> +|                     |Set to 0 if the error ID field is not valid.            |
-> >> +|                     |Bits[22:8] Error ID(Agent ID of the system).            |
-> >> +|                     |Bit[7:0] Reason(WDOG, POR, FCCU and etc)                |
-> >
-> >Is there a mapping for this ?
-> 
-> I will add a note in V4:
-> See the SRESR register description in the System Reset Controller (SRC) section
-> in SoC reference mannual.
->
-
-A reference would be good here then. I would be hard to imagine what it means
-otherwise.
-
-> >> +
-> >> +LMM_RESET_VECTOR_SET
-> >> +~~~~~~~~~~~~~~~~~~~~
-> >> +
-> >> +message_id: 0xC
-> >> +protocol_id: 0x80
-> >> +This command is mandatory.
-> >> +
-> >
-> >I can't recall if I had asked this before. How is this different from
-> >CPU_RESET_VECTOR_SET ? Why do you need this ? Why can't you use
-> >CPU_RESET_VECTOR_SET with an additional LMM_* command.
-> >
-> >I am sure there is a valid reason. If so please document the same.
-> 
-> CPU_RESET_VECTOR_SET is for cases that M7 and A55 in the same LM.
-> LMM_RESET_VECTOR_SET is for cases that M7 and A55 in different LM.
-> M7 LM is under control of A55 LM
->
-
-That still doesn't answer my question. I was asking why do you need this
-extra interface ? If LMM_RESET_VECTOR_SET can take both cpu id and LM id,
-it can be used even for cpus within same LM with current LM ID. Why the
-need for separate interface ?
-
-Other than these 2, I am fine with your response on all other comments.
-
+								Honza
 -- 
-Regards,
-Sudeep
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
