@@ -1,133 +1,119 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail2-relais-roc.national.inria.fr (mail2-relais-roc.national.inria.fr [192.134.164.83])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20E41238D25;
-	Wed,  2 Apr 2025 12:53:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F5A223909E
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 12:54:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.134.164.83
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743598420; cv=none; b=RUa35taEkiFaLCSSsAxbGWa63Ksd+Ru2mYDq+S7CIR/mX2XSS9IqRTjggw+rMG2XC4XXpvcQBpJXtNUfhsGuOK/UHS/6rJ+vySIcZ5b7LhmrZMvKKmeeD0zZ54IZw0VpEVPS51wRs3TU1ez7ksLd4JxPLwyXK/cq11YHLtXbU0Q=
+	t=1743598453; cv=none; b=Tj03GsN4sUyjXlJk1shbkTAmE+RGbSDNyrs7XRKHFMOrSLqkPFc+vSDiNib4sDIzuSRfEbSoc28QHJXm/gvKHtIx27zmZAKZBsgpWnoNKNlMEQ3IfbasOOpjK6zFxkmE4KVFbyPX+ALZibm0U0Ru5T3p4/2v86nZF3OzmIEPO1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743598420; c=relaxed/simple;
-	bh=QWAHrdoHZQWrK4dNu2Qq9in6lH220oPuPQXNfKYeiJU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=deqUaxpcVOiNfoe+DNcpZFNrgmBNaC2QRY9jXFB4GVdKN+8SYl1yaG2wMM8rcHUBpT8jPpfm6zD9KNdI70cYetxtlu4k8tcPuA057mJ7LkbCSOl3zrB/zTXcLAB3p+ECJ4x+1pIHP+2LsNhxGVBj+hWumEVI9kwuk4X4LDkWjaQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EgpS6NSX; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743598453; c=relaxed/simple;
+	bh=5INxPsuOE6270fFWGYFq15y/ebioY3u8KiI0+M4WPMk=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=fJziJC2HQDm73P+vNjbqXW7NAOCgylP5zrbo3EneaZaxoj6bg8bU436PD+k6uf4QUs11kFSRyN22Bou11vTm5INfbWAv4VMEqRR+3ZcD9HoB/SXWNExSNkqnCzNBrMY66bgLVBnrnWGTc+rui1tatTuDKcfhZqdEuTaFSbKCK+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr; spf=pass smtp.mailfrom=inria.fr; dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b=r2csHdH/; arc=none smtp.client-ip=192.134.164.83
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inria.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EgpS6NSX"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5efe8d9ebdfso6051460a12.3;
-        Wed, 02 Apr 2025 05:53:38 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b="r2csHdH/"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743598417; x=1744203217; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QWAHrdoHZQWrK4dNu2Qq9in6lH220oPuPQXNfKYeiJU=;
-        b=EgpS6NSXnqOTQAIJU98K8tAar5bA0gF42DZu5boRp9Pd070HYbxTEAnzOcrC9FvOJJ
-         0Fe8Yu4qdb6R++x2duj9yMPo9hBOXMZu4WdrMwp4H+XLpU00sok0Jn6pBMIeuM5u8LJU
-         Xzr+iEIeEyGUtcXlI8Fndac2127tcI2deqmSut4FSTOJ8zadWJOE/0npr37748bFmf9R
-         gjeMdQS9wDGyi051SORP+tL092SIwrFAWHaEStbwf0QEawe4zdc1MLVM5FH/W/mGP4NZ
-         42Q1jzoAixzdvSstJ9yZGFziTGNqsL4OCujBHuhwN/s9ZknsWvoila4RNBBWAXQnReNG
-         7Ylg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743598417; x=1744203217;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QWAHrdoHZQWrK4dNu2Qq9in6lH220oPuPQXNfKYeiJU=;
-        b=Z0JO4Dg9QcGUCx8nZ3D+41/EyN5OIcCLGqXMLx0OYAuZJ+8AUC8wZ+Escj7ZTt5vTZ
-         lS1ydUeHRI4Y4+JMpwJyF95Ajgshfrl92oimH4b7uVCRq1k2kwcOAgvweCU/9ji2XBMs
-         QNHPboqFzCjiIAZbyJA+/JoqHuj7YpKcYP8Ztpl8Cxl9R5QKyngcW2OsdwAwN679yuSb
-         KtvDExK6unTpxFuG7RbPSll7eauvpJ/T3aZGKeQt2RgJ8Nmfn8mA9Q3RUjR7uSl7dqbq
-         FWfYRUw/g8mToBWbkcslOqHdHgki91iI59+6/GHtfEzTL8iuzqdPGWrZAQ1cBAenXrjb
-         3kAQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUccaZyYkirq9bTsMj0N5DZIeFeorRpD/CGSnX32kVXsqqTiCLmwKiT8YdBFBmxKcP0St8j0kEExnIBfMs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YztbdbXI3dACorNjaiAuu2GBumkSET1Sa/Em5kmb7NQaKxI3sEe
-	riROsZIzuXhVNYAtfgVKzyfaQFJfRwxZNsIjxmEdN0ox3m228IoM8nEmJXVzte1qtfYeQdjKhSA
-	IfxKQIwhuSsDLf0d7Y66XXnV2kIo=
-X-Gm-Gg: ASbGnctCeM5445x/402F94JfMVKB+8OOo/H9X4/sac9PsvCvK6YoIO5bJsB2bEsp9p6
-	NQbP1/mpu+HU6vIhG9KNwHZyOZGssymRLODL60WltB9pJ3aJKWG9/sf0aDsk9ytFxeOh92AQLCa
-	3BOkyFFEeVDuyGmhVCvt4Q+dnFCjfkBDPgwy61oSQ=
-X-Google-Smtp-Source: AGHT+IGxDgr+/GaLpKlsw9St3w6GJvEPpvjphaV5hDOM2BUJ91HNibOwkf5Ij8wA/sKQqWEOmB+VBIEys451X/p7yBI=
-X-Received: by 2002:a17:906:6a0b:b0:ac7:9937:e259 with SMTP id
- a640c23a62f3a-ac79937e35bmr225555866b.0.1743598417114; Wed, 02 Apr 2025
- 05:53:37 -0700 (PDT)
+  d=inria.fr; s=dc;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=UGPDN/CtUITf4gTg1aiWC2eiejfhU3hysLculSlUEkg=;
+  b=r2csHdH/5fPj8zgjiRfr/a1nfYvP3Pvt7857lOEpkoK0o2/toTlAtxpP
+   lcAamEsVU2HS32vimNIOEyqpKpv1tXBEVYeWR/MocfGOR/i5ezlacLbG1
+   yuMCg6ggGM79lI3/KynhCCEQS5Kgl83a7+woT0MXvDv8qgCPRNqZVIoyB
+   o=;
+Authentication-Results: mail2-relais-roc.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=julia.lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
+X-IronPort-AV: E=Sophos;i="6.15,182,1739833200"; 
+   d="scan'208";a="216010297"
+Received: from powered-by.xenosite.net (HELO hadrien) ([89.255.17.162])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 14:54:08 +0200
+Date: Wed, 2 Apr 2025 14:54:08 +0200 (CEST)
+From: Julia Lawall <julia.lawall@inria.fr>
+To: Erick Karanja <karanja99erick@gmail.com>
+cc: gregkh@linuxfoundation.org, outreachy@lists.linux.dev, 
+    philipp.g.hortmann@gmail.com, linux-staging@lists.linux.dev, 
+    linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] staging: rtl8723bs: Use true/false instead of 1/0
+In-Reply-To: <49c14bf7475d121e7b3f600e46b93c003851abd1.1743596287.git.karanja99erick@gmail.com>
+Message-ID: <72eb7f-52ce-60f5-6c56-52c644084f7@inria.fr>
+References: <cover.1743596287.git.karanja99erick@gmail.com> <49c14bf7475d121e7b3f600e46b93c003851abd1.1743596287.git.karanja99erick@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <67eca38a.d40a0220.22c3d5.88f3@mx.google.com> <CAHp75Vf4abzcNFwo2W-=-fOr1_j51RAUPxDbGNVX9F-Soxbs3A@mail.gmail.com>
- <CAKUZ0z+mqGwyEt8oem7gLMXbNp6D3MPPMXEH5GCdA4_768d=5g@mail.gmail.com>
-In-Reply-To: <CAKUZ0z+mqGwyEt8oem7gLMXbNp6D3MPPMXEH5GCdA4_768d=5g@mail.gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Wed, 2 Apr 2025 15:53:00 +0300
-X-Gm-Features: AQ5f1JpDktiw_Kd3xROZdIkDbnI11lgI5EHYRPHPVopQZ4eLDQiCWlbTGKfxrq0
-Message-ID: <CAHp75Vdr9YO6GJmomumP=tksZfVj4BtDHx=Rb9Cr4gSQPnt+eg@mail.gmail.com>
-Subject: Re: [PATCH] staging: media: Fix indentation to use tabs instead of spaces
-To: Gabriel <gshahrouzi@gmail.com>
-Cc: linux-media@vger.kernel.org, andy@kernel.org, hdegoede@redhat.com, 
-	mchehab@kernel.org, sakari.ailus@linux.intel.com, gregkh@linuxfoundation.org, 
-	linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/mixed; boundary="8323329-810343527-1743598448=:3176"
 
-On Wed, Apr 2, 2025 at 3:28=E2=80=AFPM Gabriel <gshahrouzi@gmail.com> wrote=
-:
-> On Wed, Apr 2, 2025 at 3:12=E2=80=AFAM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
-> > On Wed, Apr 2, 2025 at 5:40=E2=80=AFAM <gshahrouzi@gmail.com> wrote:
-> >
-> > Is it your first patch to the Linux kernel? See my comments below.
-> It's among the first patches I've submitted.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Good start!
+--8323329-810343527-1743598448=:3176
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 
-...
+You have three patches with the same subject line, which is not allowed.
+You can be more specific about the files name or the structure name and
+field.
 
-> > > >From d6a08153171ac52b438b6ddc1da50ebdd3550951 Mon Sep 17 00:00:00 20=
-01
-> > > From: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-> > > Date: Tue, 1 Apr 2025 22:04:25 -0400
-> > > Subject: [PATCH] staging: media: Fix indentation to use tabs instead =
-of spaces
-> >
-> > First of all, your patch is mangled. You want to use proper tools,
-> > perhaps. One of which is `git format-patch ...` and another one is
-> > `git send-email ...`
-> I was using git format-patch but not git send-email which seems to
-> have been the issue. The meta-data from the patch was getting appended to
-> the top.
+julia
 
-These are just normal headers for an email. They may be used by tools
-such as `git send-email ...` or `mutt -H ...`.
+On Wed, 2 Apr 2025, Erick Karanja wrote:
 
-...
-
-> > Change itself is okay, but is this the only one case in the entire
-> > driver (which is something like 100k LoCs long)? Even though, and
-> > while for the training purposes this is fine, you can also think about
-> > checking the common style of other functions, which may be shifted
-> > with TABs, but still having not enough spaces or so.
-
-> Good point. Regarding formatting, it probably makes the most sense to
-> address these issues comprehensively in a single cleanup pass (similar
-> to https://lore.kernel.org/linux-staging/cover.1743524096.git.karanja99er=
-ick@gmail.com/T/#t).
-> This particular instance caught my attention because I initially
-> thought the author might have accidentally used spaces instead of
-> tabs. The line in question used 2 tabs + 8 spaces, while subsequent
-> similarly-aligned lines used 3 tabs. However, after examining
-> different files in the driver, I noticed that while the formatting
-> appears inconsistent, it likely exists for specific reasons. It's
-> probably better to avoid changing a single detail without considering
-> the broader formatting approach, and to treat checkpatch.pl more as a
-> guide than the final authority.
-
-Okay! In any case this patch is fine to me in case you want to send a v2.
-
---=20
-With Best Regards,
-Andy Shevchenko
+> Standardize boolean representation by replacing 1/0
+> with true/false in cases where boolean logic is implied.
+> This improves code clarity and aligns with the kernel’s bool type usage.
+>
+> Signed-off-by: Erick Karanja <karanja99erick@gmail.com>
+> ---
+>  drivers/staging/rtl8723bs/core/rtw_ap.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/staging/rtl8723bs/core/rtw_ap.c b/drivers/staging/rtl8723bs/core/rtw_ap.c
+> index d46a04b9a05e..199727f04516 100644
+> --- a/drivers/staging/rtl8723bs/core/rtw_ap.c
+> +++ b/drivers/staging/rtl8723bs/core/rtw_ap.c
+> @@ -386,10 +386,10 @@ void update_bmc_sta(struct adapter *padapter)
+>
+>  		pmlmeinfo->FW_sta_info[psta->mac_id].psta = psta;
+>
+> -		psta->qos_option = 0;
+> +		psta->qos_option = false;
+>  		psta->htpriv.ht_option = false;
+>
+> -		psta->ieee8021x_blocked = 0;
+> +		psta->ieee8021x_blocked = false;
+>
+>  		memset((void *)&psta->sta_stats, 0, sizeof(struct stainfo_stats));
+>
+> @@ -1967,17 +1967,17 @@ void sta_info_update(struct adapter *padapter, struct sta_info *psta)
+>
+>  	/* update wmm cap. */
+>  	if (WLAN_STA_WME & flags)
+> -		psta->qos_option = 1;
+> +		psta->qos_option = true;
+>  	else
+> -		psta->qos_option = 0;
+> +		psta->qos_option = false;
+>
+>  	if (pmlmepriv->qospriv.qos_option == 0)
+> -		psta->qos_option = 0;
+> +		psta->qos_option = false;
+>
+>  	/* update 802.11n ht cap. */
+>  	if (WLAN_STA_HT & flags) {
+>  		psta->htpriv.ht_option = true;
+> -		psta->qos_option = 1;
+> +		psta->qos_option = true;
+>  	} else {
+>  		psta->htpriv.ht_option = false;
+>  	}
+> --
+> 2.43.0
+>
+>
+>
+--8323329-810343527-1743598448=:3176--
