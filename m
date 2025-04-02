@@ -1,82 +1,89 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 019A7F4E2;
-	Wed,  2 Apr 2025 03:42:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+Received: from m16.mail.126.com (m16.mail.126.com [220.197.31.8])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C930226CF0;
+	Wed,  2 Apr 2025 03:45:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743565370; cv=none; b=aUZt7MoaGBGwk8NGq1JzYYlfUtJ96guGUjFZObFYpCPI1Tsx1+6RJTjGoYBHgyhDENjPHu9b/KQ7vbvD4tUcJMkOeJ/0tWQ83muErXDPCGN/vo6Wz5oLuuG9DX2TE2lFAueuqTCF5W5/vUwBLcv+QfYA0d5cc3+jS6YsgHIYxmw=
+	t=1743565560; cv=none; b=WvJJIDi4V+1W3EHWtB89u+3Kd8BE4AcGcQdIAKE8mCevMBxSkOHaQvaOUFio+Wz1T2zAZ9mGLZ8eh0TIwL0i5qOLyVRGHfRHeCTmvHk/OtEi/ZR6bo3kHtuyU9qA7n9rOoPqSgwc4K4E9QtidqJZyrMcKpRyXcs4ZOUE4ReVGus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743565370; c=relaxed/simple;
-	bh=V2e2nwSbZeY0394xlWvihWRW0KwuglxPVjbYt+qSt5g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LW8FbG3fkJLMgLb8iEBHvZANnxlRnQ0Piqqu4Smpr2WospfMV7wf7QC/1ImkDUZ/NCpaZlCkZah3JSv4m8FcFGv9v4KNy1LlFIalwsPcwea4hVef1giF9/xmJim8z20DmCCiS1n1+CnPb23l038Qns9IGjATmaD9l9UgL6prr1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=XDBAg03k; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1743565560; c=relaxed/simple;
+	bh=eLJXIpnlB/DF+APEOR2BWEebuVobdEbVvoO7SlYo430=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=C9HdWGPU4XeVVsZYH8rpp/+Oka5k+jH4co/EB0fkrL01GdnYmUlcNUzypZieMGwkWEw+Bgk0xuqkS4MZ8FYT2w6kY2m+zFLX0Ut+WQH6wB7A0KQoi9Ykkbma7ShdoMCF1YMpSXmI2viqHCZuJk6UO7r8xZUkoayCRcyK59rPWMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=E/Z9ZCoh; arc=none smtp.client-ip=220.197.31.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XDBAg03k"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
-	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=CfNMzRI2XDl7ZbVtkTrjOHHTHVANpEi1cK2v4Rcq0rE=; b=XDBAg03ked4nw0XHPZ98s4MHCr
-	Ngz2X2G0KIo+tVsx3cIPzSXYRGF7UAsIAhPSbWFW7whz1EHcIGCEUSiqzrHipcuK2MzsEBxm9ibCD
-	1oPbYB60JlPeYk32G62MstD4ZaF5SgPWbKWf57Skmm2Em2Ugu86zZ6k9a5mJumWe/6EtyiFl+KnnB
-	4+BRuiXis6eEZtIlzwNNBYc0ciGHpqRukQybsokVYyrmf90atCAXtfkbn5ZDc81C7+m8tO++2paV4
-	OU0wJbeiq47WbpnvfvBEc4vsOohzMCS3BY2+LXJlzJ7DmnuNghrl3E7MXmZaT8aFC+klWYC4JA+uT
-	+hSuWttA==;
-Received: from [50.53.2.24] (helo=[192.168.254.17])
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1tzp00-00000006xAn-3emH;
-	Wed, 02 Apr 2025 03:42:45 +0000
-Message-ID: <2c1cbb51-cc16-4292-ad30-482d93935d91@infradead.org>
-Date: Tue, 1 Apr 2025 20:42:41 -0700
+	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="E/Z9ZCoh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+	s=s110527; h=From:Subject:Date:Message-ID:MIME-Version; bh=dZO8Z
+	XE0GcyFn5LuP2awAU+8F/Vo4jGABZ91w6miiDU=; b=E/Z9ZCohgcxGEiIJgtOST
+	th4p+UlP9e/31+6xpY19FhL6oqTszophTJ8Oxr/aD4tjMLkSx3LJfFstVAs3RKPh
+	1YXwEh1r7X3Nqp804edqpLozuvDvwjmg66kiiR9IC0N1gQaQieXHTfxn8b9Iad1P
+	RcpCcIM8gITP7NEPonxdEQ=
+Received: from hexiaole-VMware-Virtual-Platform.localdomain (unknown [])
+	by gzga-smtp-mtada-g0-1 (Coremail) with SMTP id _____wC332_bsuxnDx5HAg--.44432S2;
+	Wed, 02 Apr 2025 11:45:32 +0800 (CST)
+From: Xiaole He <hexiaole1994@126.com>
+To: viro@zeniv.linux.org.uk,
+	brauner@kernel.org
+Cc: jack@suse.cz,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Xiaole He <hexiaole1994@126.com>
+Subject: [PATCH v1] fs/super.c: Add NULL check for type in iterate_supers_type
+Date: Wed,  2 Apr 2025 11:45:29 +0800
+Message-ID: <20250402034529.12642-1-hexiaole1994@126.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/7] lib/crc: remove unnecessary prompt for CONFIG_CRC32
- and drop 'default y'
-To: Eric Biggers <ebiggers@kernel.org>, linux-kernel@vger.kernel.org
-Cc: Ard Biesheuvel <ardb@kernel.org>, linux-crypto@vger.kernel.org,
- linux-arch@vger.kernel.org
-References: <20250401221600.24878-1-ebiggers@kernel.org>
- <20250401221600.24878-2-ebiggers@kernel.org>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20250401221600.24878-2-ebiggers@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wC332_bsuxnDx5HAg--.44432S2
+X-Coremail-Antispam: 1Uf129KBjvdXoWrtw1rWFyfKFWDtrWUZw43KFg_yoWDKFX_Zr
+	1xZFZ3Gw47AF1rtF45CFWxJrZxKwnavr1fWr4avFZrCr98JF4DJrykur98Z3yfCFnYqF9r
+	Grn2gF4fKF4xujkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7xRNF4iUUUUUU==
+X-CM-SenderInfo: 5kh0xt5rohimizu6ij2wof0z/1tbikAgjBmfsrBCylgAAsu
 
-Hi 
+The first several lines of iterate_supers_type are below:
 
-On 4/1/25 3:15 PM, Eric Biggers wrote:
-> From: Eric Biggers <ebiggers@google.com>
-> 
-> All modules that need CONFIG_CRC32 already select it, so there is no
-> need to bother users about the option, nor to default it to y.
-> 
+1 void iterate_supers_type(struct file_system_type *type,
+2 	void (*f)(struct super_block *, void *), void *arg)
+3 {
+4 	struct super_block *sb, *p = NULL;
+5
+6 	spin_lock(&sb_lock);
+7 	hlist_for_each_entry(sb, &type->fs_supers, s_instances) {
+8 	...
+9 }
 
-My memory from 10-20 years ago could be foggy, but ISTR that someone made at least
-CRC16 and CRC32 user-selectable in order to support out-of-tree modules...
-FWIW.
-But they would not need to be default y.
+The iterate_super_type is a exported symbol, and if iterate_supers_type
+is called with type of NULL, then there will be a NULL pointer
+dereference of argument type in line 7.
 
+This patch fix above problem by adding NULL pointer check for argument
+type.
 
-> Signed-off-by: Eric Biggers <ebiggers@google.com>
-> ---
->  arch/sh/configs/edosk7705_defconfig        | 1 -
->  arch/sh/configs/kfr2r09-romimage_defconfig | 1 -
->  arch/sh/configs/sh7724_generic_defconfig   | 1 -
->  arch/sh/configs/sh7770_generic_defconfig   | 1 -
->  lib/Kconfig                                | 8 +-------
->  5 files changed, 1 insertion(+), 11 deletions(-)
-> 
+Signed-off-by: Xiaole He <hexiaole1994@126.com>
+---
+ fs/super.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
+diff --git a/fs/super.c b/fs/super.c
+index 5a7db4a556e3..105a275b8360 100644
+--- a/fs/super.c
++++ b/fs/super.c
+@@ -959,6 +959,8 @@ void iterate_supers_type(struct file_system_type *type,
+ {
+ 	struct super_block *sb, *p = NULL;
+ 
++	if (unlikely(ZERO_OR_NULL_PTR(type)))
++		return;
+ 	spin_lock(&sb_lock);
+ 	hlist_for_each_entry(sb, &type->fs_supers, s_instances) {
+ 		bool locked;
 -- 
-~Randy
+2.43.0
 
