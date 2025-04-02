@@ -1,166 +1,153 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD161230BCF
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 10:08:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E51E71078F;
+	Wed,  2 Apr 2025 10:10:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743588535; cv=none; b=Lq/Rfaddgza8bz5cPQyK2vftdutu4tlBzUuRnzSYf2cuEKul0ql0CqsM/Nrn2SeqMPuJNNCpLyjlhi381t+E9fDRyxotTaBhaMjTNlfaF7nmwV5Sxf4WA9awLG0f0wSw6Gtv63cCqvwqJVqos3BhBqIu9MmOTAv4+86hzdaMinM=
+	t=1743588660; cv=none; b=uTl7LYSZmpv/T6CC16HPwLGgBjlGoyAiF2ZsNZbl/XNkTOReALS0tKtO7VgQXF6Tc5YuWClNEyLeMP7CBYCUIxgGfQbXxiUFiGJTRybmmnUeT348LPOKuuBnGu0FUN9B+TwG1jCPjFm6HDDUpURU0ZSmI7IMaJc6B4rTRbVgCBw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743588535; c=relaxed/simple;
-	bh=xA/faLEB0MkdAsz9QcJVzhzblw7gBnHvn4QbsV73wCI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ch9g2UM2c+smigeAgRr6AmOGMvcqg2PDOJLOZJo37DMJfRj3Kq9zVN/AWPU5Bl5OdV6Jru1mD4RvN8Lp2Sis6md1+RHK6v85xgy/O+XFFysSocE+D9iMAEPayQYXEaNzhmyY5jbauuCExIO1xlY3UvO58KeRG5oasSTS9Hapax4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=R2TTor1l; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1743588660; c=relaxed/simple;
+	bh=YsQ+ZEpOBzRENvI3w2Cgx7tGcPpu8PZYXcUACDmq2tk=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=Czi3apyTJZOaTMIxagoI8eaO9WoSgHOeKvoAmB2+CzE0jgqYvKT0DO4wH6iMOidkRGZVWou/EPSleCtw2poewmC+JyAQVqefHAt/JEZtzti20S6y1B8Alw+IiaYoQh1Y9c/XqpXYpyhop3e0RNyKYwVGyi+5CFBgeBL5+Kqnkcw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Dg7KZ+NJ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=LkE6X16D; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="R2TTor1l"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1743588532;
-	bh=xA/faLEB0MkdAsz9QcJVzhzblw7gBnHvn4QbsV73wCI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=R2TTor1lnu8BsZvlTYnHg1NXM+t7l+8q5xKDq8ujeaUyOQxiOJPQHoSfF6Ip0AJEh
-	 6kJie715j+uoTCnirJs9ssTrPtEwaF20B0EeVm76TgV31oOYsEGSZHrwGNTh6oYukt
-	 AdWFSYI/AwvwGpWzKloINpz0kk27tkvPte7eVlAn+eyBEYniAYGePJ+DlSHChlTwmg
-	 44grpWD2LoZRw6uCHVezgVsmi6h/AdyRPZl+YQ56DZEbwd69/egpnWifrmHnpC/oND
-	 uEVdX/IMJMqseTxjRIgBD6SlWuv9pc7ThdvOUhW0bxla5wfH7zaWB1pPmL/qn7Nw6h
-	 n5SnKausYkHqg==
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 0CD3117E091E;
-	Wed,  2 Apr 2025 12:08:51 +0200 (CEST)
-Message-ID: <608f25af-69dc-455d-b382-aaa3cb2d9578@collabora.com>
-Date: Wed, 2 Apr 2025 12:08:50 +0200
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Dg7KZ+NJ";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="LkE6X16D"
+Date: Wed, 02 Apr 2025 10:10:48 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1743588655;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fNsUG8J4yHEKunPN03eOzFpqG1kg0r7jZKB13rFKnuw=;
+	b=Dg7KZ+NJzjYUxrj8J4qCnji9/PzRF+N3J02+UTMBJHEcWERde0GUIlVPP0zWgbmnvrBTs/
+	lxPljELBPE2uRCCaBiXr9iwQVSMr9RtBZ2A8EOGtpibjACXjikqhT7SMkt/R7gEY2j8pzW
+	63VHPzNo+Bg8uNWvaBpg2wMYXssAFMp6plzKZ2ICDGf00OaSOuF+OyZyDxF9BLJFGhpyLq
+	6jDE8UIHUmiAu3fM+DyF5VupnC77BBeze96wwVMhrycFDsgfM8vYvldpBemCW0wXYtoXBG
+	JYvni5x+xlt+cP0aNJuUhPVjsUfTfCwQ0X56LyqjqP1KtJ76BseHXbwBB77CNg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1743588655;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fNsUG8J4yHEKunPN03eOzFpqG1kg0r7jZKB13rFKnuw=;
+	b=LkE6X16Dz0SQfp1+7axnkWMUZbZ++DZNCG9XsWAYnqXwg0aCWfkJh3+NEOzkDeWdt5npz3
+	TgX6qzjZKY2vkzBQ==
+From: "tip-bot2 for Andrew Cooper" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/mm] x86/idle: Remove mb() barriers for
+ X86_BUG_CLFLUSH_MONITOR in mwait_idle_with_hints()
+Cc: Andrew Cooper <andrew.cooper3@citrix.com>, Ingo Molnar <mingo@kernel.org>,
+ "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
+ Rik van Riel <riel@surriel.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Andy Lutomirski <luto@kernel.org>, Brian Gerst <brgerst@gmail.com>,
+ Juergen Gross <jgross@suse.com>,
+ "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250402091017.1249019-1-andrew.cooper3@citrix.com>
+References: <20250402091017.1249019-1-andrew.cooper3@citrix.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 4/5] drm/mediatek: mtk_disp_ovl: Enable/disable
- interrupt on bind/unbind
-To: Chen-Yu Tsai <wenst@chromium.org>
-Cc: chunkuang.hu@kernel.org, p.zabel@pengutronix.de, airlied@gmail.com,
- simona@ffwll.ch, matthias.bgg@gmail.com, nancy.lin@mediatek.com,
- ck.hu@mediatek.com, djkurtz@chromium.org, littlecvr@chromium.org,
- bibby.hsieh@mediatek.com, dri-devel@lists.freedesktop.org,
- linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, kernel@collabora.com
-References: <20250402083628.20111-1-angelogioacchino.delregno@collabora.com>
- <20250402083628.20111-5-angelogioacchino.delregno@collabora.com>
- <CAGXv+5E1qShE1LqgFL6rrgRzjwFUPoBqYdhO-sgNzmMqQsMS0Q@mail.gmail.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <CAGXv+5E1qShE1LqgFL6rrgRzjwFUPoBqYdhO-sgNzmMqQsMS0Q@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Message-ID: <174358864842.14745.908324129810950623.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-Il 02/04/25 11:38, Chen-Yu Tsai ha scritto:
-> On Wed, Apr 2, 2025 at 4:36 PM AngeloGioacchino Del Regno
-> <angelogioacchino.delregno@collabora.com> wrote:
->>
->> The OVL driver is installing an ISR in the probe function but, if
->> the component is not bound yet, the interrupt handler may call the
->> vblank_cb ahead of time (while probing other drivers) or too late
->> (while removing other drivers), possibly accessing memory that it
->> should not try to access by reusing stale pointers.
->>
->> In order to fix this, add a new `irq` member to struct mtk_disp_ovl
->> and then set the NOAUTOEN flag to the irq before installing the ISR
->> to manually call enable_irq() and disable_irq() in the bind and
->> unbind callbacks respectively.
->>
->> Fixes: 119f5173628a ("drm/mediatek: Add DRM Driver for Mediatek SoC MT8173.")
->> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
->> ---
->>   drivers/gpu/drm/mediatek/mtk_disp_ovl.c | 19 +++++++++++++------
->>   1 file changed, 13 insertions(+), 6 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
->> index df82cea4bb79..1bff3a1273f6 100644
->> --- a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
->> +++ b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
->> @@ -161,6 +161,7 @@ struct mtk_disp_ovl {
->>          struct drm_crtc                 *crtc;
->>          struct clk                      *clk;
->>          void __iomem                    *regs;
->> +       int                             irq;
->>          struct cmdq_client_reg          cmdq_reg;
->>          const struct mtk_disp_ovl_data  *data;
->>          void                            (*vblank_cb)(void *data);
->> @@ -587,12 +588,18 @@ void mtk_ovl_bgclr_in_off(struct device *dev)
->>   static int mtk_disp_ovl_bind(struct device *dev, struct device *master,
->>                               void *data)
->>   {
->> +       struct mtk_disp_ovl *priv = dev_get_drvdata(dev);
->> +
->> +       enable_irq(priv->irq);
->>          return 0;
->>   }
->>
->>   static void mtk_disp_ovl_unbind(struct device *dev, struct device *master,
->>                                  void *data)
->>   {
->> +       struct mtk_disp_ovl *priv = dev_get_drvdata(dev);
->> +
->> +       disable_irq(priv->irq);
->>   }
->>
->>   static const struct component_ops mtk_disp_ovl_component_ops = {
->> @@ -605,16 +612,15 @@ static int mtk_disp_ovl_probe(struct platform_device *pdev)
->>          struct device *dev = &pdev->dev;
->>          struct mtk_disp_ovl *priv;
->>          struct resource *res;
->> -       int irq;
->>          int ret;
->>
->>          priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
->>          if (!priv)
->>                  return -ENOMEM;
->>
->> -       irq = platform_get_irq(pdev, 0);
->> -       if (irq < 0)
->> -               return irq;
->> +       priv->irq = platform_get_irq(pdev, 0);
->> +       if (priv->irq < 0)
->> +               return priv->irq;
->>
->>          priv->clk = devm_clk_get(dev, NULL);
->>          if (IS_ERR(priv->clk))
->> @@ -635,10 +641,11 @@ static int mtk_disp_ovl_probe(struct platform_device *pdev)
->>          priv->data = of_device_get_match_data(dev);
->>          platform_set_drvdata(pdev, priv);
->>
->> -       ret = devm_request_irq(dev, irq, mtk_disp_ovl_irq_handler,
->> +       irq_set_status_flags(priv->irq, IRQ_NOAUTOEN);
->> +       ret = devm_request_irq(dev, priv->irq, mtk_disp_ovl_irq_handler,
->>                                 IRQF_TRIGGER_NONE, dev_name(dev), priv);
-> 
-> Use IRQF_NO_AUTOEN here? Also, IRQF_TRIGGER_NONE can be dropped.
-> 
+The following commit has been merged into the x86/mm branch of tip:
 
-Yeah, nice one. Thanks!
+Commit-ID:     90a22a5f841490790ecb17166633582681d44945
+Gitweb:        https://git.kernel.org/tip/90a22a5f841490790ecb17166633582681d44945
+Author:        Andrew Cooper <andrew.cooper3@citrix.com>
+AuthorDate:    Wed, 02 Apr 2025 10:10:17 +01:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Wed, 02 Apr 2025 11:54:51 +02:00
 
-Cheers,
-Angelo
+x86/idle: Remove mb() barriers for X86_BUG_CLFLUSH_MONITOR in mwait_idle_with_hints()
 
-> Make sense otherwise.
-> 
-> ChenYu
-> 
->>          if (ret < 0)
->> -               return dev_err_probe(dev, ret, "Failed to request irq %d\n", irq);
->> +               return dev_err_probe(dev, ret, "Failed to request irq %d\n", priv->irq);
->>
->>          pm_runtime_enable(dev);
->>
->> --
->> 2.48.1
->>
+The following commit, 12 years ago:
 
+  7e98b7192046 ("x86, idle: Use static_cpu_has() for CLFLUSH workaround, add barriers")
 
+added barriers around the CLFLUSH in mwait_idle_with_hints(), justified with:
+
+  ... and add memory barriers around it since the documentation is explicit
+  that CLFLUSH is only ordered with respect to MFENCE.
+
+The SDM currently states:
+
+  Executions of the CLFLUSH instruction are ordered with respect to each
+  other and with respect to writes, locked read-modify-write instructions,
+  and fence instructions.
+
+  https://web.archive.org/web/20090219054841/http://download.intel.com/design/xeon/specupdt/32033601.pdf
+
+With footnote 1 reading:
+
+  Earlier versions of this manual specified that executions of the CLFLUSH
+  instruction were ordered only by the MFENCE instruction.  All processors
+  implementing the CLFLUSH instruction also order it relative to the other
+  operations enumerated above.
+
+I.e. The SDM was incorrect at the time, and barriers should not have been
+inserted.  Double checking the original AAI65 errata (not available from
+intel.com any more) shows no mention of barriers either.
+
+Additionally, drop the static_cpu_has_bug() and use a plain alternative().
+The workaround is a single instruction, with identical address setup to the
+MONITOR instruction.
+
+Fixes: 7e98b7192046 ("x86, idle: Use static_cpu_has() for CLFLUSH workaround, add barriers")
+Signed-off-by: Andrew Cooper <andrew.cooper3@citrix.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Rik van Riel <riel@surriel.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Brian Gerst <brgerst@gmail.com>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Link: https://lore.kernel.org/r/20250402091017.1249019-1-andrew.cooper3@citrix.com
+---
+ arch/x86/include/asm/mwait.h |  9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
+
+diff --git a/arch/x86/include/asm/mwait.h b/arch/x86/include/asm/mwait.h
+index ce857ef..54dc313 100644
+--- a/arch/x86/include/asm/mwait.h
++++ b/arch/x86/include/asm/mwait.h
+@@ -116,13 +116,10 @@ static __always_inline void __sti_mwait(unsigned long eax, unsigned long ecx)
+ static __always_inline void mwait_idle_with_hints(unsigned long eax, unsigned long ecx)
+ {
+ 	if (static_cpu_has_bug(X86_BUG_MONITOR) || !current_set_polling_and_test()) {
+-		if (static_cpu_has_bug(X86_BUG_CLFLUSH_MONITOR)) {
+-			mb();
+-			clflush((void *)&current_thread_info()->flags);
+-			mb();
+-		}
++		const void *addr = &current_thread_info()->flags;
+ 
+-		__monitor((void *)&current_thread_info()->flags, 0, 0);
++		alternative_input("", "clflush (%[addr])", X86_BUG_CLFLUSH_MONITOR, [addr] "a" (addr));
++		__monitor(addr, 0, 0);
+ 
+ 		if (!need_resched()) {
+ 			if (ecx & 1) {
