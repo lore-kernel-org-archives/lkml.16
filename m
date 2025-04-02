@@ -1,125 +1,237 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 298425BAF0;
-	Wed,  2 Apr 2025 13:07:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6B6D1E531;
+	Wed,  2 Apr 2025 13:08:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743599275; cv=none; b=U/AVTif4GGVZHo9f1UQPU6ym3ZYsYbiQ3CZxGQfehYYoYeGXMH/C2GIlH587Ur5+2diydHUx0ZkMguDbvgnK58KMb89/KzOqK/mvAtEmaTxnQYOgir8M3I/3PunmOCTx7M4lqVuzRypbnHnSJNaC6tT4eg2nh+1ALqy0ZYxwvRk=
+	t=1743599303; cv=none; b=heeOr0CNimA8ZTZ2R8JsPPbrETYNN5LnSfaNmS24XLyQNq6RdPqF6zuwZN1ODbaMjQp+BLRdaZAb0W+3VLAFUdEswjtO4p0DX6rHzbwJJsLG4kCmrZfgirVSQbDAoCS5Ce7/I5rEzW4I1wZgPVOdjM0ZQnXNBQSCI0DRHobRQrQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743599275; c=relaxed/simple;
-	bh=mfOHJodd9Ix+904JZn6Bb6pxHxbK7pb4BM8dh/9iDp0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rRDU4QK6dnYNaCx05kTPbLQETTLmuwkg6lnkEhWUVEmbavo6AVMrtDVY2b1pU1/ZISJKQYRVKYLB51vuiG48DBT+wGKHettDMFq5W6p8wQx+tJsxVVyKK32r6lCaFOxfqIr29NZSXnyjKDaDhCAcerS+8KOq0ic6DB4u0JrXaK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qJ+t6SGu; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NiG1u7Az; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1743599303; c=relaxed/simple;
+	bh=ugF+WqKm9kgqQdaTPHY1qJ3Qavy8FobVwb/atnkcQ3M=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=DsdlWDlnH3HGYPjLHa4Va+cRoXgx164K6cCnS/mdlVlyH0+5tEB74kl/ZjQHJRR7BoDjAD/YQs6+Y3kvKcBJfKtl4hE4QRtwIlLwY5fUgB8vEQqh7eV4PfZ8pPitSOI+a6DpNAew/GUKlsndi+e8UtrrANnHcRF5qDK39E6ouAg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=VbgPI0Iz; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qJ+t6SGu";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NiG1u7Az"
-Date: Wed, 2 Apr 2025 15:07:50 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1743599271;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1X5wKZymmcKMOD5wz7WhMq48v9AtCOzb7Bp+Wejqjt8=;
-	b=qJ+t6SGuwcs0fcyTCbz3+CsuGvBvpcjRYcRy/lpyBhR+xNgkf0K9rJPWuH0Ai+vKzYoypW
-	hqrNELPyFAyCERAgiBi7wAA54c3Chm8qfwjjDzhdUPZRvvAMPqKEo4uSn+n+whHb0reT8i
-	wbUReQVouPVIqlxZ6r8BTrHhifDE2WHyP3Wy9EL8f/yEnnGI5zIKUPIBCYSUrVyAaQXsra
-	KeQDShbcfQn2CDTOO5A+IHd7IX+XVzqSQsZnteNmyMY4FkI9MYmdiIlJnoGRg+W2QYUy8p
-	UZSllggqcCZAQ0lxGVyI18oFzgzoD5Sxv/zkJj3Z1jCPpaYXFavROx6jN2z7yA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1743599271;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1X5wKZymmcKMOD5wz7WhMq48v9AtCOzb7Bp+Wejqjt8=;
-	b=NiG1u7AzlJl1SUEGEOjj7BJBgsegHE66/nZ7RMmUJd1+EAbdhFi4oSlsDCHU/zRo4c/EEd
-	L5aOdKtWP/pNZrAA==
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, 
-	Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>, 
-	"David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert@linux-m68k.org>, 
-	Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, 
-	linux-mm@kvack.org, x86@kernel.org, Naresh Kamboju <naresh.kamboju@linaro.org>, 
-	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>
-Subject: Re: [PATCH v2 10/13] arch, mm: set high_memory in free_area_init()
-Message-ID: <20250402145330-3ff21a6b-fb03-4bc8-8178-51a535582c6f@linutronix.de>
-References: <20250313135003.836600-1-rppt@kernel.org>
- <20250313135003.836600-11-rppt@kernel.org>
- <20250402140521-bf9b3743-094e-4097-a189-10cdf1db9255@linutronix.de>
- <Z-0xrWyff9-9bJRf@kernel.org>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="VbgPI0Iz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1743599299;
+	bh=ugF+WqKm9kgqQdaTPHY1qJ3Qavy8FobVwb/atnkcQ3M=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=VbgPI0Iz0ZXGEc5WZYhLXxxncmmn6uWiWt8n/pqo5/TXE4OIu/9Nr3cN7M484OqpD
+	 ePUro6b3kpWgUcem0ZWi4GitlEHhoDQaJFh2cKo3ZKluBqWIcrOT8Sxc3aTKqNpJ1o
+	 rWS/pYTN2P1jwqZEbsBqgNLCSduUrjCT1Sdo+P0p49ykFFgCB1T2VywT1dRACBYQfA
+	 y47+XzRUaWw12pBIgAs6m2XcYtkifFGWAwdM31JPMGAxFYUhYovwqDuFllD+C80/Wa
+	 h7q3dcBGmpH4vdUfRO5yhYlHdbMdTQ1Shu9W5fV+Qlcin02UsLWecuLwH/c1TyoId/
+	 DmwgUEhNl1fkw==
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bbrezillon)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 85D3117E080B;
+	Wed,  2 Apr 2025 15:08:18 +0200 (CEST)
+Date: Wed, 2 Apr 2025 15:08:12 +0200
+From: Boris Brezillon <boris.brezillon@collabora.com>
+To: =?UTF-8?B?QWRyacOhbg==?= Larumbe <adrian.larumbe@collabora.com>
+Cc: Steven Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+ <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
+ <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Sumit Semwal
+ <sumit.semwal@linaro.org>, Christian =?UTF-8?B?S8O2bmln?=
+ <christian.koenig@amd.com>, kernel@collabora.com,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org
+Subject: Re: [PATCH v4 3/4] drm/panthor: Label all kernel BO's
+Message-ID: <20250402150812.0595465a@collabora.com>
+In-Reply-To: <20250402115432.1469703-4-adrian.larumbe@collabora.com>
+References: <20250402115432.1469703-1-adrian.larumbe@collabora.com>
+	<20250402115432.1469703-4-adrian.larumbe@collabora.com>
+Organization: Collabora
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z-0xrWyff9-9bJRf@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 02, 2025 at 03:46:37PM +0300, Mike Rapoport wrote:
-> On Wed, Apr 02, 2025 at 02:19:01PM +0200, Thomas Weißschuh wrote:
-> > (drop all the non-x86 and non-mm recipients)
-> > 
-> > On Thu, Mar 13, 2025 at 03:50:00PM +0200, Mike Rapoport wrote:
-> > > From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-> > > 
-> > > high_memory defines upper bound on the directly mapped memory.
-> > > This bound is defined by the beginning of ZONE_HIGHMEM when a system has
-> > > high memory and by the end of memory otherwise.
-> > > 
-> > > All this is known to generic memory management initialization code that
-> > > can set high_memory while initializing core mm structures.
-> > > 
-> > > Add a generic calculation of high_memory to free_area_init() and remove
-> > > per-architecture calculation except for the architectures that set and
-> > > use high_memory earlier than that.
-> > 
-> > This change (in mainline as commit e120d1bc12da ("arch, mm: set high_memory in free_area_init()")
-> > breaks booting i386 on QEMU for me (and others [0]).
-> > The boot just hangs without output.
-> > 
-> > It's easily reproducible with kunit:
-> > ./tools/testing/kunit/kunit.py run --arch i386
-> > 
-> > See below for the specific problematic hunk.
-> > 
-> > [0] https://lore.kernel.org/lkml/CA+G9fYtdXHVuirs3v6at3UoKNH5keuq0tpcvpz0tJFT4toLG4g@mail.gmail.com/
-> > 
-> > 
-> > > diff --git a/arch/x86/mm/init_32.c b/arch/x86/mm/init_32.c
-> > > index 6d2f8cb9451e..801b659ead0c 100644
-> > > --- a/arch/x86/mm/init_32.c
-> > > +++ b/arch/x86/mm/init_32.c
-> > > @@ -643,9 +643,6 @@ void __init initmem_init(void)
-> > >  		highstart_pfn = max_low_pfn;
-> > >  	printk(KERN_NOTICE "%ldMB HIGHMEM available.\n",
-> > >  		pages_to_mb(highend_pfn - highstart_pfn));
-> > > -	high_memory = (void *) __va(highstart_pfn * PAGE_SIZE - 1) + 1;
-> > > -#else
-> > > -	high_memory = (void *) __va(max_low_pfn * PAGE_SIZE - 1) + 1;
-> > >  #endif
-> > 
-> > Reverting this hunk fixes the issue for me.
->  
-> This is already done by d893aca973c3 ("x86/mm: restore early initialization
-> of high_memory for 32-bits").
+On Wed,  2 Apr 2025 12:54:28 +0100
+Adri=C3=A1n Larumbe <adrian.larumbe@collabora.com> wrote:
 
-Thanks. Of course I only noticed this shortly after sending my mail.
-But this usecase is indeed broken on mainline.
-Some further bisecting lead to the mm merge commit being broken, while both its
-parents work. That lead the bisection astray.
-eb0ece16027f ("Merge tag 'mm-stable-2025-03-30-16-52' of git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm")
+> Kernel BO's aren't exposed to UM, so labelling them is the responsibility
+> of the driver itself. This kind of tagging will prove useful in further
+> commits when want to expose these objects through DebugFS.
+>=20
+> Expand panthor_kernel_bo_create() interface to take a NULL-terminated
+> string. No bounds checking is done because all label strings are given
+> as statically-allocated literals, but if a more complex kernel BO naming
+> scheme with explicit memory allocation and formatting was desired in the
+> future, this would have to change.
+>=20
+> Signed-off-by: Adri=C3=A1n Larumbe <adrian.larumbe@collabora.com>
+> ---
+>  drivers/gpu/drm/panthor/panthor_fw.c    | 8 +++++---
+>  drivers/gpu/drm/panthor/panthor_gem.c   | 3 ++-
+>  drivers/gpu/drm/panthor/panthor_gem.h   | 2 +-
+>  drivers/gpu/drm/panthor/panthor_heap.c  | 6 ++++--
+>  drivers/gpu/drm/panthor/panthor_sched.c | 9 ++++++---
+>  5 files changed, 18 insertions(+), 10 deletions(-)
+>=20
+> diff --git a/drivers/gpu/drm/panthor/panthor_fw.c b/drivers/gpu/drm/panth=
+or/panthor_fw.c
+> index 4a9c4afa9ad7..36e60bb2dcc5 100644
+> --- a/drivers/gpu/drm/panthor/panthor_fw.c
+> +++ b/drivers/gpu/drm/panthor/panthor_fw.c
+> @@ -449,7 +449,8 @@ panthor_fw_alloc_queue_iface_mem(struct panthor_devic=
+e *ptdev,
+>  				       DRM_PANTHOR_BO_NO_MMAP,
+>  				       DRM_PANTHOR_VM_BIND_OP_MAP_NOEXEC |
+>  				       DRM_PANTHOR_VM_BIND_OP_MAP_UNCACHED,
+> -				       PANTHOR_VM_KERNEL_AUTO_VA);
+> +				       PANTHOR_VM_KERNEL_AUTO_VA,
+> +				       "Queue FW interface");
+>  	if (IS_ERR(mem))
+>  		return mem;
+> =20
+> @@ -481,7 +482,8 @@ panthor_fw_alloc_suspend_buf_mem(struct panthor_devic=
+e *ptdev, size_t size)
+>  	return panthor_kernel_bo_create(ptdev, panthor_fw_vm(ptdev), size,
+>  					DRM_PANTHOR_BO_NO_MMAP,
+>  					DRM_PANTHOR_VM_BIND_OP_MAP_NOEXEC,
+> -					PANTHOR_VM_KERNEL_AUTO_VA);
+> +					PANTHOR_VM_KERNEL_AUTO_VA,
+> +					"FW suspend buffer");
+>  }
+> =20
+>  static int panthor_fw_load_section_entry(struct panthor_device *ptdev,
+> @@ -601,7 +603,7 @@ static int panthor_fw_load_section_entry(struct panth=
+or_device *ptdev,
+>  		section->mem =3D panthor_kernel_bo_create(ptdev, panthor_fw_vm(ptdev),
+>  							section_size,
+>  							DRM_PANTHOR_BO_NO_MMAP,
+> -							vm_map_flags, va);
+> +							vm_map_flags, va, "FW Section");
 
-As unlikely as it sounds, it's reproducible. I'll investigate a bit.
+nit: Let's try to use the caps consistently in the names we assign to
+kernel BOs, like, cap on the first word only, or cap on each word, I
+don't mind, but pick one and try to stick to it.
 
-> > >  	memblock_set_node(0, PHYS_ADDR_MAX, &memblock.memory, 0);
+>  		if (IS_ERR(section->mem))
+>  			return PTR_ERR(section->mem);
+> =20
+> diff --git a/drivers/gpu/drm/panthor/panthor_gem.c b/drivers/gpu/drm/pant=
+hor/panthor_gem.c
+> index 7d017f9d1d52..44d027e6d664 100644
+> --- a/drivers/gpu/drm/panthor/panthor_gem.c
+> +++ b/drivers/gpu/drm/panthor/panthor_gem.c
+> @@ -81,7 +81,7 @@ void panthor_kernel_bo_destroy(struct panthor_kernel_bo=
+ *bo)
+>  struct panthor_kernel_bo *
+>  panthor_kernel_bo_create(struct panthor_device *ptdev, struct panthor_vm=
+ *vm,
+>  			 size_t size, u32 bo_flags, u32 vm_map_flags,
+> -			 u64 gpu_va)
+> +			 u64 gpu_va, const char *name)
+>  {
+>  	struct drm_gem_shmem_object *obj;
+>  	struct panthor_kernel_bo *kbo;
+> @@ -105,6 +105,7 @@ panthor_kernel_bo_create(struct panthor_device *ptdev=
+, struct panthor_vm *vm,
+>  	kbo->obj =3D &obj->base;
+>  	bo->flags =3D bo_flags;
+> =20
+> +	panthor_gem_kernel_bo_set_label(kbo, name);
+
+nit: can we add a blank line here, and remove the one that's after the
+bo->flags assignment?
+
+>  	/* The system and GPU MMU page size might differ, which becomes a
+>  	 * problem for FW sections that need to be mapped at explicit address
+>  	 * since our PAGE_SIZE alignment might cover a VA range that's
+> diff --git a/drivers/gpu/drm/panthor/panthor_gem.h b/drivers/gpu/drm/pant=
+hor/panthor_gem.h
+> index e18fbc093abd..49daa5088a0d 100644
+> --- a/drivers/gpu/drm/panthor/panthor_gem.h
+> +++ b/drivers/gpu/drm/panthor/panthor_gem.h
+> @@ -153,7 +153,7 @@ panthor_kernel_bo_vunmap(struct panthor_kernel_bo *bo)
+>  struct panthor_kernel_bo *
+>  panthor_kernel_bo_create(struct panthor_device *ptdev, struct panthor_vm=
+ *vm,
+>  			 size_t size, u32 bo_flags, u32 vm_map_flags,
+> -			 u64 gpu_va);
+> +			 u64 gpu_va, const char *name);
+> =20
+>  void panthor_kernel_bo_destroy(struct panthor_kernel_bo *bo);
+> =20
+> diff --git a/drivers/gpu/drm/panthor/panthor_heap.c b/drivers/gpu/drm/pan=
+thor/panthor_heap.c
+> index db0285ce5812..ad122bd37ac2 100644
+> --- a/drivers/gpu/drm/panthor/panthor_heap.c
+> +++ b/drivers/gpu/drm/panthor/panthor_heap.c
+> @@ -147,7 +147,8 @@ static int panthor_alloc_heap_chunk(struct panthor_de=
+vice *ptdev,
+>  	chunk->bo =3D panthor_kernel_bo_create(ptdev, vm, heap->chunk_size,
+>  					     DRM_PANTHOR_BO_NO_MMAP,
+>  					     DRM_PANTHOR_VM_BIND_OP_MAP_NOEXEC,
+> -					     PANTHOR_VM_KERNEL_AUTO_VA);
+> +					     PANTHOR_VM_KERNEL_AUTO_VA,
+> +					     "Tiler heap chunk");
+>  	if (IS_ERR(chunk->bo)) {
+>  		ret =3D PTR_ERR(chunk->bo);
+>  		goto err_free_chunk;
+> @@ -550,7 +551,8 @@ panthor_heap_pool_create(struct panthor_device *ptdev=
+, struct panthor_vm *vm)
+>  	pool->gpu_contexts =3D panthor_kernel_bo_create(ptdev, vm, bosize,
+>  						      DRM_PANTHOR_BO_NO_MMAP,
+>  						      DRM_PANTHOR_VM_BIND_OP_MAP_NOEXEC,
+> -						      PANTHOR_VM_KERNEL_AUTO_VA);
+> +						      PANTHOR_VM_KERNEL_AUTO_VA,
+> +						      "Heap pool");
+>  	if (IS_ERR(pool->gpu_contexts)) {
+>  		ret =3D PTR_ERR(pool->gpu_contexts);
+>  		goto err_destroy_pool;
+> diff --git a/drivers/gpu/drm/panthor/panthor_sched.c b/drivers/gpu/drm/pa=
+nthor/panthor_sched.c
+> index 1a276db095ff..a0b8f1ba4ea8 100644
+> --- a/drivers/gpu/drm/panthor/panthor_sched.c
+> +++ b/drivers/gpu/drm/panthor/panthor_sched.c
+> @@ -3334,7 +3334,8 @@ group_create_queue(struct panthor_group *group,
+>  						  DRM_PANTHOR_BO_NO_MMAP,
+>  						  DRM_PANTHOR_VM_BIND_OP_MAP_NOEXEC |
+>  						  DRM_PANTHOR_VM_BIND_OP_MAP_UNCACHED,
+> -						  PANTHOR_VM_KERNEL_AUTO_VA);
+> +						  PANTHOR_VM_KERNEL_AUTO_VA,
+> +						  "Ring buffer");
+>  	if (IS_ERR(queue->ringbuf)) {
+>  		ret =3D PTR_ERR(queue->ringbuf);
+>  		goto err_free_queue;
+> @@ -3364,7 +3365,8 @@ group_create_queue(struct panthor_group *group,
+>  					 DRM_PANTHOR_BO_NO_MMAP,
+>  					 DRM_PANTHOR_VM_BIND_OP_MAP_NOEXEC |
+>  					 DRM_PANTHOR_VM_BIND_OP_MAP_UNCACHED,
+> -					 PANTHOR_VM_KERNEL_AUTO_VA);
+> +					 PANTHOR_VM_KERNEL_AUTO_VA,
+> +					 "fdinfo slots");
+
+I think I'd prefer "Group job stats", just in case we end up dumping
+other stuff that's not exposed through fdinfo there.
+
+> =20
+>  	if (IS_ERR(queue->profiling.slots)) {
+>  		ret =3D PTR_ERR(queue->profiling.slots);
+> @@ -3495,7 +3497,8 @@ int panthor_group_create(struct panthor_file *pfile,
+>  						   DRM_PANTHOR_BO_NO_MMAP,
+>  						   DRM_PANTHOR_VM_BIND_OP_MAP_NOEXEC |
+>  						   DRM_PANTHOR_VM_BIND_OP_MAP_UNCACHED,
+> -						   PANTHOR_VM_KERNEL_AUTO_VA);
+> +						   PANTHOR_VM_KERNEL_AUTO_VA,
+> +						   "Group sync objects");
+>  	if (IS_ERR(group->syncobjs)) {
+>  		ret =3D PTR_ERR(group->syncobjs);
+>  		goto err_put_group;
+
