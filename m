@@ -1,73 +1,100 @@
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DAD123A98E
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 12:51:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B70B239591
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 12:51:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743598265; cv=none; b=s+RaM8GCPF2qM4cVdkCB7moRk3L0+aVZ7GIBeHJTxQg173eicgUFOzIxqZeUO7oTeYXfsbkRkTc2GPHE7U3Q5Nfkm/QlKA7yG6bNBCOcgPHU1v8A5JNOeMK2p+xEtMXs1vDNzSIgZnx7j1Kiulv8qSYLN8KdCkxi9zpfnEnJhA0=
+	t=1743598310; cv=none; b=m/44qqVsA2tmsTQLZS6ti6FkdlFPwO3QeXFez5LX9YYrTx4vYBmnPPg5bxrC+hshgczgRWBnS+aN1lvZ/1CZ5ZznB2GuSF2lnupMEyAyUvYtm10P1VMCqNLFsR0xqEkidm+oD4zqP9e9qBZd0zyEHK+syyLBdcR58rh007B9/dA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743598265; c=relaxed/simple;
-	bh=afCa8AdNkS9HiwaxrZoMSOxGsPXW7Sb7OD6fZe4nTNg=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=YdXdYdCcySRc/KRD25hyZSF0xEhFkeJAZnKOnu1Yy68gF8/zLJMypEOzmU26CcWgIhsFgo10eFi4kP2II/SbIGcRivmhLZOqs64mHZpzNDlpSZFupdydk5QktVS+ajK1fkiK83Jb6g2Lpg15bBdiZxPXdyMxGC4FQvWrjO5XqRE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3d43621bb7eso8618805ab.1
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 05:51:03 -0700 (PDT)
+	s=arc-20240116; t=1743598310; c=relaxed/simple;
+	bh=8IL/Ra0pO0weo0T0Jdbi6Z7WKIY/D3v+uDgImwBhRSc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tsQMe8DkA84l5SvKLbhymdI6bwCeSTXgzMwEAiUdGdzAUkDOHSs2mlGXHTRbUx1u4lrsUhd/TEEsoyWNExy3MRp+A1oERRiB+oku8eznzHcQ17XmNMQ2SDXaVJ/Wpv30kB1wlYazBa3hD/zdLhrizja2uSqXZOEor2WBzwv9O24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cSWiYyal; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cSWiYyal"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43cfba466b2so66944445e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 05:51:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743598306; x=1744203106; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/r3cMncWG+nY/YBhRc114Qo+8DX8tI4MejL3tdVmr+0=;
+        b=cSWiYyal1aLjwX8L+uH/lV5kznic6GRUJruaSDAMvt3eShewpM+LNgE6XRgIlCcVd4
+         K/ZPZeWAOBcax7EPDKgjKD7kV+cfSO32V/AYcToH5Fl/4nEJ/B1HRsHI00R1V6NuSJcZ
+         oiMMp5va+61HF0K9JLirzzj09Kjjo8TxEB5QbX+8ay66lR7I427TrkPz1ZbWmaGy41lk
+         UQNso7tFum+GB4R6XLbOPuFO5L2h46Yg8KxeXWLloEx4qvuFyP0HJr0Ux3dLGst2ooEH
+         Cnxj/5gbEJDfJ8eElZ8rniqZ5FAlxAYKuHwdZfBhD6Uau+6pMgDyE9x304a52m9VlOZN
+         PHYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743598262; x=1744203062;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YjuIfv/GmXrH5PxPkm5IBAUkqJzS4jv6c08tPKdZ60Q=;
-        b=nUE6ruU2luneN0IRGNVuowxUDB6ig/DtDl6OdCd2Z8LQf7OtLVMBcZm7PlPtHnDLfL
-         xrkSZ6CV0J7cwMew52SswjRe/mGRU8xMzEzFZq8LUw4c92u4Mf1U2NmjZczOHk1Xqfsd
-         q3wAI9i4AcRShPJFuBIfD9+64KqdpZWGkDX9WToZFi2EiISo2g464Tomgi3SdNdNfduD
-         5lkanY1piG1XK0SFpViv9dAtoildC9j0OMXTGnhmq/mjai7fxnpb7cOA8YQBXWjOiW7A
-         RE3UpOZi9457TRMDTpPOwKV30+caxWq38HzsDzqKrEZyIyaGAfmepX+2jMa0wXmyvb+0
-         4dzA==
-X-Forwarded-Encrypted: i=1; AJvYcCVHcCeyM7OnC/6xu7q4VslqzxX5BM2vrgm3Nr0mm+aNN900iwfHDXHsKAgJaX1wDyDzBjHqYlIxaWQM9h8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwSQYOc+k2D4mVBJReBWvqGWjIct3j26I5jvwG+nPyiaomSfqc4
-	3bnOmUOCh6OB87oW31F/0UhA4/s6Mf8l6+DLQGjGlEp9C27wa9KynK+oVAEqfnkrfQKdW0bK7mH
-	uqgjzKZAXJbwcH/y29S7Phbf2/n7iSxNRdrkvfNIF5vH+r/0TlgUlQlY=
-X-Google-Smtp-Source: AGHT+IH2Un+PPHn9xdFSEXRF38mKOLNo6GP/crRn8T8qZYBNsW/vbmq+E7TMe52rfUTaVB0f9YUhtEScwjpyKeZCvO6ASYyrSOnz
+        d=1e100.net; s=20230601; t=1743598306; x=1744203106;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/r3cMncWG+nY/YBhRc114Qo+8DX8tI4MejL3tdVmr+0=;
+        b=I3IGCd2DDNRXEry7llamjSlkj0eW3EBJj5WDNpTG0Cco1Fn5JGCmU52kAiT1h4gS2S
+         Qn8MgfI6O6s5PWnquAjvwLnP18/So/eti26S3ghv+CldER0FEd59UCCO0njXF4+V0d67
+         8RhXCxJLDnwG3fMiPpCnFstf7hzoZIG8kbmcSdoPIl4MJFOn4uedGb8rZtBSw9rL0cCs
+         AEX2/YELO9iVujWr6oQPAWvBAeuqRHzFh8kTXcYwpGq5tMk4VdmAf0fY4ABeTzFSe2gJ
+         cQ9MkfzX/7tT/ZDAzEftMGZlaVY2mH1NuL71RDmYSjKMokoPl1yAtCIjOHP1ATq4cNok
+         qmuQ==
+X-Gm-Message-State: AOJu0YydY99s8ll4rHPsvCrHSQwDLESXw0IUvg2pA1Pg3NczXP3Y5q1Z
+	9ERWqLydXeYdCKweOV/ATwS5tKZV5eMeH24s7L3bK9DRNTVUhoXTERgYJw==
+X-Gm-Gg: ASbGncvgsGdBlaFH4/alLlzJ5XIGXwEp0Os8bH6/OnloyjrP6ghCmcaSMDKaxZ4qs8k
+	sw6cIhTAI3FktotFW9qrp9SeDqb3o9GIdtNPz0YdKuIPqSSnNYxJ0eEoQnJwPpjizxgCHfhbTKb
+	T5DoJmLImA/+/X5z+MAwq0tVLXWqCmT5TcKo+6hKqaYSy5hdxdhXl+Ejq4cNvtkF27uMziN6QAa
+	HIvKB78TVsEvrtBDKJHkmdxRD53u5qZHc9eiE6x/LRhCC/FtsfvyuLK7VJc+KT4hkTNEFfaFFjB
+	LOtzB3O7qBTwgkIYCOC/iOthN/v6IfeV1A5axC8i0QhP0uSunM692D7NzJgM7v8Mrpc=
+X-Google-Smtp-Source: AGHT+IHwTMkfqRSkZ58Yan3MebJBkTAOwyrfLFB3Jty3X3VWWLSJM2hTRFyCsjAcnBT+qa17ceNzhQ==
+X-Received: by 2002:a05:600c:1ca9:b0:43d:762:e0c4 with SMTP id 5b1f17b1804b1-43db8518c88mr105724715e9.27.1743598306169;
+        Wed, 02 Apr 2025 05:51:46 -0700 (PDT)
+Received: from localhost.localdomain ([145.40.144.104])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43eb613a7edsm20452575e9.38.2025.04.02.05.51.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Apr 2025 05:51:45 -0700 (PDT)
+From: Chiron Horwood <chiron.developer@gmail.com>
+To: linux-kernel@vger.kernel.org
+Cc: kuba@kernel.org,
+	Chiron Horwood <chiron.developer@gmail.com>
+Subject: [PATCH] CREDITS: Add Sam Moores
+Date: Wed,  2 Apr 2025 14:51:14 +0100
+Message-ID: <20250402135114.225731-1-chiron.developer@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1fc4:b0:3d4:2acc:81fa with SMTP id
- e9e14a558f8ab-3d6d6c9ac56mr20999355ab.2.1743598262683; Wed, 02 Apr 2025
- 05:51:02 -0700 (PDT)
-Date: Wed, 02 Apr 2025 05:51:02 -0700
-In-Reply-To: <56fcb1ba-b9c1-4ec5-b1c5-dc90e3d81552@lucifer.local>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67ed32b6.050a0220.297a31.001a.GAE@google.com>
-Subject: Re: [syzbot] [mm?] general protection fault in sys_mremap
-From: syzbot <syzbot+e3385f43b2897a19be24@syzkaller.appspotmail.com>
-To: akpm@linux-foundation.org, jannh@google.com, liam.howlett@oracle.com, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, lorenzo.stoakes@oracle.com, 
-	syzkaller-bugs@googlegroups.com, vbabka@suse.cz
-Content-Type: text/plain; charset="UTF-8"
-
-Hello,
-
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-unregister_netdevice: waiting for DEV to become free
-
-unregister_netdevice: waiting for batadv0 to become free. Usage count = 3
+Content-Transfer-Encoding: 8bit
 
 
-Tested on:
+Thank you for reviewing this.
 
-commit:         e20706d5 mseal sysmap: add arch-support txt
-git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git/ mm-stable
-console output: https://syzkaller.appspot.com/x/log.txt?x=13bf9998580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=ccf540055069887f
-dashboard link: https://syzkaller.appspot.com/bug?extid=e3385f43b2897a19be24
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+Signed-off-by: Chiron Horwood <chiron.developer@gmail.com>
+---
+ CREDITS | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Note: no patches were applied.
+diff --git a/CREDITS b/CREDITS
+index 5cc36686d0f1..8af8f71d450d 100644
+--- a/CREDITS
++++ b/CREDITS
+@@ -2857,6 +2857,12 @@ E: paul@paul-moore.com
+ W: https://www.paul-moore.com
+ D: NetLabel, SELinux, audit
+ 
++N: Sam Moores
++D: This section is dedicated to our beloved friend Sam Moores who tragically lost his life
++D: He loved using Linux and was passionate about the open-source community
++D: He will always be forever in our hearts <3
++D: We love you Sam. From Chiron, Freya and Rosalind
++
+ N: James Morris
+ E: jmorris@namei.org
+ W: http://namei.org/
+-- 
+2.49.0
+
