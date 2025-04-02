@@ -1,171 +1,116 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64134235360;
-	Wed,  2 Apr 2025 12:04:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FCCF237702
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 12:05:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743595497; cv=none; b=fCcWH0dATDUse+QyWRAcZiVWRpOeUGMc88xGy9ma9p45EPs7gOD1I12eVYbhjuKPFmqAb/Gm3tPkIEuJRsgkoINIWJnjb7e33K5U5yaL1B4ZfeTzY/8O5wyArVS5qQOXOwkNxtSatOPSnLDg36M02GMIeDEGKa7s5T24kAmHqsw=
+	t=1743595514; cv=none; b=lRC9/oTLHgQiWao+eoKBsrPgtoYc3ay1ioifJFCOMOY1xABy5Iz6fz/E+NMiUARpaTzuQ+QNkS9EcQBGlL3vf2eXn7J0Hoeh2Bbr4OkMsfyHu/P8qEKrl7gqtRbenGTlqhhv/lycXlKcihAavOm8SwTTPj4nnOA3UqGsQGfr2aM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743595497; c=relaxed/simple;
-	bh=gyT77WPdhw/G+FzvEtM14D9rh108cqFsFkXIeMboHpk=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=JWRgjwyqERYvPwHuSPp7EL8u5HEMifejY8WWDYtOgNbQ1wOBixMvrdJTRAmEDdaPuMMRB6/Iu3HuZFpOcA00cdfxqtXOta34JKnU0CtRG1MwHHyK2SHE8YIBrXiS7ZMBea1nY4YRFyIgamt+3rCJ73mEA7dycIl98ej1HgIb3wQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=b3MKtqYk; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1743595514; c=relaxed/simple;
+	bh=7CEsnTuCrG0rAa7QCL0T0Eaa6b4iClo2iTSoboqyft4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HfPFcWe8AvJOxlUuuVk+VnK6P9SB9iXqPpG4ButMFA+5R77FRJasHhXNKkwrwvtpdhFlorskM8P+7GtlKZU1nqb5mMwfnu1GgcFBl6MiNMhTfqhiHlC8COVaoTP6UYrDiq88VLq3F49Lga5YVFzhw97eTreMQm5KF9wYZ6qvdyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=J0y4/lHF; arc=none smtp.client-ip=209.85.222.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="b3MKtqYk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743595496; x=1775131496;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=gyT77WPdhw/G+FzvEtM14D9rh108cqFsFkXIeMboHpk=;
-  b=b3MKtqYk4Uw7c8jXV5qyJA/6kAVKBrfoHPypzlJiGM8R+X6qtDwMzl/r
-   NWvJBKu376norD0FmuOrktu4APSlC5EYJvIWSIPbFjjm+LaHQWmk5BSGF
-   s6taeddfGvRyux2VmptXRfG48zQF3l+2w+Cl2NkGEb1qBaHULCIAA6hxN
-   NNbNdZ8bMUMyUkoGFXmp3flaWtH8t/CCFSaElvS9kZruzf7T1HUqh8KZz
-   Fy4tcWVOUqzC//WzYgaOZ8prXmWB4f9uSLC3wSoyQ4GBubSLMB9zIHIqV
-   H/U43c5qXgGdtRPxTQ2+Un/1FuVa87l4zKZdYlCpEyXvsNH+LB1oxLs3J
-   A==;
-X-CSE-ConnectionGUID: 0bQWR08xQrKdzfkdA8xtRw==
-X-CSE-MsgGUID: sjvdT33mRdeonSkTIRW5pA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11392"; a="48620593"
-X-IronPort-AV: E=Sophos;i="6.15,182,1739865600"; 
-   d="scan'208";a="48620593"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 05:04:55 -0700
-X-CSE-ConnectionGUID: 0teg8t3fR3OxKzSxWSsNqA==
-X-CSE-MsgGUID: ZxrKiiIpTdqd/QP/Vs14QA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,182,1739865600"; 
-   d="scan'208";a="126579557"
-Received: from pgcooper-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.244.40])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 05:04:48 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 2 Apr 2025 15:04:44 +0300 (EEST)
-To: =?ISO-8859-2?Q?Micha=B3_Winiarski?= <michal.winiarski@intel.com>
-cc: linux-pci@vger.kernel.org, intel-xe@lists.freedesktop.org, 
-    dri-devel@lists.freedesktop.org, LKML <linux-kernel@vger.kernel.org>, 
-    Bjorn Helgaas <bhelgaas@google.com>, 
-    =?ISO-8859-15?Q?Christian_K=F6nig?= <christian.koenig@amd.com>, 
-    =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>, 
-    Rodrigo Vivi <rodrigo.vivi@intel.com>, 
-    Michal Wajdeczko <michal.wajdeczko@intel.com>, 
-    Lucas De Marchi <lucas.demarchi@intel.com>, 
-    =?ISO-8859-15?Q?Thomas_Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>, 
-    Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-    Maxime Ripard <mripard@kernel.org>, 
-    Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-    Simona Vetter <simona@ffwll.ch>, Matt Roper <matthew.d.roper@intel.com>
-Subject: Re: [PATCH v6 5/6] PCI: Allow drivers to control VF BAR size
-In-Reply-To: <fnisbg2bng3f5rkcoc7duzi34g7hghcqgzzehc5v6yb772kdj4@rcjs4mftf7s6>
-Message-ID: <5de3951c-01f1-3892-09e1-f7d30a4e048d@linux.intel.com>
-References: <20250320110854.3866284-1-michal.winiarski@intel.com> <20250320110854.3866284-6-michal.winiarski@intel.com> <7374beef-46ed-ab53-ccb5-48565526545c@linux.intel.com> <fnisbg2bng3f5rkcoc7duzi34g7hghcqgzzehc5v6yb772kdj4@rcjs4mftf7s6>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="J0y4/lHF"
+Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-7c5b2472969so655296485a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 05:05:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1743595511; x=1744200311; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=bkTi7Bcj38WU+Rd3hReHr6Wh69RvlQ9bdv7n2XEkdhI=;
+        b=J0y4/lHFKDamu2SYC+O1/1xPR81jydmP9WzMDhxED/kedRxfhxUDevAgKxlxDlOkaW
+         gtSbM3MuecEEsTPr+aZk4t9Kl252biUT8iFk4kBEqOBQ9N57DMNMw4y/7szmDz2QPd4S
+         Utnw1VBcFoiTJ5L0izU//rJw+h8rmg1yTJAep0ga+An2IFiTcWovZxEv1SNzbtaX57i3
+         x9mJoE3t70LPGyBAl2ygrDx48o7W9IQIujlKBvsPpHxOHpAC4jQ67ftlfAqxG0XD0vS+
+         hT/MgmbRaD521hKq26LWMCYFSPxuYEZexWvzUqHRYPJuDqa9WY7HgNkgS5wMoQsHfORz
+         0tvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743595511; x=1744200311;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bkTi7Bcj38WU+Rd3hReHr6Wh69RvlQ9bdv7n2XEkdhI=;
+        b=Xzgo43U3hP6OwPB+YzYft/pag5Ct0k5K7HMNVNJYaVfqZiNHFk764CbsuEYupJPibY
+         DlKBsmoHJblpKZAZmMNfdTeLUO2J9M8q7EctSoIKGnjTzmlK4Fc5PV4KnOVNfJ6XYbBk
+         qdnCOoJweYsABbsw8+7NIyQUlM+fFO3bkIRIn8YAu1KjIcvgCdPmyuLsdtRTgVLoaylv
+         pNP2qq/zpmxdRkhLkfe8ReB5jkPE9TpedIpUUIFxZ01ne96RmCopcmz+7Zuc5W0q25SF
+         JtulZ41IvFnR64F+8udHfbf4dzNhlBHG4pdyJ3svLfVOMMLrBEWQ6twEkuGsL3O5uwdh
+         ealg==
+X-Forwarded-Encrypted: i=1; AJvYcCV4KFpxQh7FpZYg0ly+02H18FiEtCYw7bWUCH1AOiuLtecnR9Q8LcaId2B71xfxgyZbJriT44BbWUGRba4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz/211CgXEOUgVR45XgFANH0ytOuznS0j9VHj5N4ADuPyqdlPoJ
+	70xt1bv56q4UBSjlf8lclDYUwXNPdmhZ7rpfTvpFoIH8P50BfDrP3l8ziWC2gCg=
+X-Gm-Gg: ASbGnctSatLoUfPtufuK0p8frjlO6Y52r9qoqkqwETiP5n2DnZEtTO1mkN1rkNS2JZR
+	D1a3YkumMUJDU/Rs3tzRj5jYeHimDH2OVu9mADdQb5uWWwmr+Tlm1ZodrQdIhI1k3FSVTe4NJs6
+	exZxo6J8vjEI72M8019hKkU0HIpJIQoOI4EeWPwifrobDPp23dZx4poyycbMesDcVhlQq08h5M1
+	/8cF0cM3Znvks3ja4V6PD8G2TzwZ84WRoowuruF73CDLmbkzszrwfyqfhp5dVTif3pIfalibTxe
+	n83o4ayFY9SyU75aKqZvdeijQuvWSzpTBWrL64960wWNkHG9yKWV2w==
+X-Google-Smtp-Source: AGHT+IGZ+TKjPjyzpfLvNQqi7skImvMdilaWdCsfXLZWph14f22OHARyD1wKqUPvDzE7YHLPRIWcKg==
+X-Received: by 2002:a05:620a:4407:b0:7c5:962b:e87c with SMTP id af79cd13be357-7c7664d7c44mr309610985a.44.1743595511400;
+        Wed, 02 Apr 2025 05:05:11 -0700 (PDT)
+Received: from [192.168.0.14] ([79.115.63.146])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c5f7765150sm776116585a.81.2025.04.02.05.05.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Apr 2025 05:05:10 -0700 (PDT)
+Message-ID: <e8c9891d-cd30-473c-837a-8243f20379ba@linaro.org>
+Date: Wed, 2 Apr 2025 13:05:07 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-679664592-1743595484=:952"
-
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323328-679664592-1743595484=:952
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-
-On Wed, 2 Apr 2025, Micha=C5=82 Winiarski wrote:
-
-> On Wed, Mar 26, 2025 at 05:22:50PM +0200, Ilpo J=C3=A4rvinen wrote:
-> > On Thu, 20 Mar 2025, Micha=C5=82 Winiarski wrote:
-> >=20
-> > > Drivers could leverage the fact that the VF BAR MMIO reservation is
-> > > created for total number of VFs supported by the device by resizing t=
-he
-> > > BAR to larger size when smaller number of VFs is enabled.
-> > >=20
-> > > Add a pci_iov_vf_bar_set_size() function to control the size and a
-> > > pci_iov_vf_bar_get_sizes() helper to get the VF BAR sizes that will
-> > > allow up to num_vfs to be successfully enabled with the current
-> > > underlying reservation size.
-> > >=20
-> > > Signed-off-by: Micha=C5=82 Winiarski <michal.winiarski@intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/3] mtd: spi-nor: macronix: Remove duplicate flash info
+ entries
+To: Cheng Ming Lin <linchengming884@gmail.com>, pratyush@kernel.org,
+ mwalle@kernel.org, miquel.raynal@bootlin.com, richard@nod.at,
+ vigneshr@ti.com, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: alvinzhou@mxic.com.tw, leoyu@mxic.com.tw,
+ Cheng Ming Lin <chengminglin@mxic.com.tw>
+References: <20250402085129.1027670-1-linchengming884@gmail.com>
+ <20250402085129.1027670-3-linchengming884@gmail.com>
+Content-Language: en-US
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+In-Reply-To: <20250402085129.1027670-3-linchengming884@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
-> > > +/**
-> > > + * pci_iov_vf_bar_get_sizes - get VF BAR sizes allowing to create up=
- to num_vfs
-> > > + * @dev: the PCI device
-> > > + * @resno: the resource number
-> > > + * @num_vfs: number of VFs
-> > > + *
-> > > + * Get the sizes of a VF resizable BAR that can be accommodated with=
-in the
-> > > + * resource that reserves the MMIO space if num_vfs are enabled.
-> >=20
-> > I'd rephrase to:
-> >=20
-> > Get the sizes of a VF resizable BAR that can be accommodate @num_vfs=20
-> > within the currently assigned size of the resource @resno.
->=20
-> Ok.
 
-I have small grammar error in that:
+On 4/2/25 9:51 AM, Cheng Ming Lin wrote:
+> From: Cheng Ming Lin <chengminglin@mxic.com.tw>
+> 
+> To clean up the code and reduce duplication, this entry is removed.
+> 
+> Signed-off-by: Cheng Ming Lin <chengminglin@mxic.com.tw>
 
-"can be accomodate" -> "can accomodate"
+Reviewed-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+> ---
+>  drivers/mtd/spi-nor/macronix.c | 7 -------
+>  1 file changed, 7 deletions(-)
+> 
+> diff --git a/drivers/mtd/spi-nor/macronix.c b/drivers/mtd/spi-nor/macronix.c
+> index 2acd8e28d1c4..07e0bd0b70a0 100644
+> --- a/drivers/mtd/spi-nor/macronix.c
+> +++ b/drivers/mtd/spi-nor/macronix.c
+> @@ -160,13 +160,6 @@ static const struct flash_info macronix_nor_parts[] = {
+>  		/* MX25U51245G */
+>  		.id = SNOR_ID(0xc2, 0x25, 0x3a),
+>  		.fixups = &macronix_qpp4b_fixups,
+> -	}, {
+> -		.id = SNOR_ID(0xc2, 0x25, 0x3a),
+> -		.name = "mx66u51235f",
+> -		.size = SZ_64M,
+> -		.no_sfdp_flags = SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ,
+> -		.fixup_flags = SPI_NOR_4B_OPCODES,
+> -		.fixups = &macronix_qpp4b_fixups,
+>  	}, {
+>  		/* MX66U1G45G */
+>  		.id = SNOR_ID(0xc2, 0x25, 0x3b),
 
-> > > + * defined in the spec (bit 0=3D1MB, bit 31=3D128TB).
-> > > + */
-> > > +u32 pci_iov_vf_bar_get_sizes(struct pci_dev *dev, int resno, int num=
-_vfs)
-> > > +{
-> > > +=09resource_size_t size;
-> > > +=09u32 sizes;
-> > > +=09int i;
-> > > +
-> > > +=09sizes =3D pci_rebar_get_possible_sizes(dev, resno);
-> > > +=09if (!sizes)
-> > > +=09=09return 0;
-> > > +
-> > > +=09while (sizes > 0) {
-> > > +=09=09i =3D __fls(sizes);
-> > > +=09=09size =3D pci_rebar_size_to_bytes(i);
-> > > +
-> > > +=09=09if (size * num_vfs <=3D pci_resource_len(dev, resno))
-> > > +=09=09=09break;
-> > > +
-> > > +=09=09sizes &=3D ~BIT(i);
-> > > +=09}
-> >=20
-> > Couldn't this be handled without a loop:
-> >=20
-> > =09bar_sizes =3D (round_up(pci_resource_len(dev, resno) / num_vfs) - 1)=
- >>
-> > =09=09    ilog2(SZ_1M);
-> >=20
-> > =09sizes &=3D bar_sizes;
-> >=20
-> > (Just to given an idea, I wrote this into the email so it might contain=
-=20
-> > some off-by-one errors or like).
->=20
-> I think the division will need to be wrapped with something like do_div
-> (because IIUC, we have 32bit architectures where resource_size_t is
-> u64).
->=20
-> But yeah, we can drop the loop, turning it into something like this:
->=20
-> =09vf_len =3D pci_resource_len(dev, resno);
-> =09do_div(vf_len, num_vfs);
-> =09sizes =3D (roundup_pow_of_two(vf_len + 1) - 1) >> ilog2(SZ_1M);
-
-Yes, good point, 64-bit division is required.
-
---=20
- i.
-
---8323328-679664592-1743595484=:952--
