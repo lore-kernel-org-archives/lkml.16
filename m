@@ -1,221 +1,148 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C19523A99C;
-	Wed,  2 Apr 2025 12:38:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.3
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C757823BCF2;
+	Wed,  2 Apr 2025 12:38:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743597503; cv=none; b=OhwhgltdM5lJz0zTCeDaZbIWDp0Z9gtXjZ6xB3WCL38adunLU0rVtZw7xctOmxEd5mNZm1nTR2mmLMmumYCDfqcqohX33QC6yTz/geCkoRsJ1jNDi2KjNROOJUkZihUTaSoe/KlWqJSpEDY9LCsjtpOkvvP5GdBEnx/OCclH51E=
+	t=1743597505; cv=none; b=WDVMCJ7cOqeUgZw53CvOa8iyp2ol/RIYDOSuDNgu+8PbKv27E4geEnVtcSFAA+JW1p52o/Xrs3erz/T7wYCky6yLn3f7Rv+sP8wwK1tHC5JchR3wxLZ9lpFV0oiEoeu6GZqiBabGeUtCsnpR8DIjM+FLup04rQN7rtuoJ/R4l/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743597503; c=relaxed/simple;
-	bh=ddtnqBOd2ODSD+XyZv/73r6EEZeGjBoXxpInKC6Gw3Y=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=NBkyMKUGHnCvJREZ+ub8f68Ur2iaNmVuyOK8vLOlmCoKi555lUoTfWPKBTfX7WjspMov1UJcFNv3qYbUTuCoswpslRcmRX1daDptbXxkG/fmBb0G+YVWiGa4vuhIt0WpeqZXSLizk4da2LT52murIW1XKr4/yz7Z2Y44lDVIVHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=eEV3Z8Fc; arc=none smtp.client-ip=220.197.31.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1743597505; c=relaxed/simple;
+	bh=dTjL5EFXoS0czJKKji+k4G9YaMQT5DMND5Dnr5uRJm0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=jgTyGYoyUuDtL+QbDSwFubVN6x7qOgquQsquD41/dwVKZU7KgIHgiCpN72oem0Eadw4yEyZ/AyCYKfmn4eWWhr3yNL0oLteD2jPiTDhy3/RUD518WNZkwRSKBNWEc91BeJNMb3E4ue9Aukrc15rv9b7uj9ZTwdwFHSIDROpgDbA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=gDeoq9iu; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="eEV3Z8Fc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=av1Pb
-	jZeH5TlBaSDhEWPUDcgL43N17wauAZ7YJSio9Y=; b=eEV3Z8FcQYWcOssaNZ+xc
-	mDEvpF/Sv9iWnJbmLctSznzKfcgunn7UwncGiA9B0mu/Jrdyh/88l7uRclIMDSOE
-	gjvfO5Dl7Rp6IhKtGqnBrM9wxvQLxWErn5PiNiqCEOTrzypoPVW3UH+ocbLbbMwW
-	RoQFlRFIUyOjYHT+Hbaxr8=
-Received: from localhost.localdomain (unknown [])
-	by gzsmtp1 (Coremail) with SMTP id PCgvCgCXrkiUL+1nL3+IAA--.22499S4;
-	Wed, 02 Apr 2025 20:37:46 +0800 (CST)
-From: Hans Zhang <18255117159@163.com>
-To: lpieralisi@kernel.org,
-	bhelgaas@google.com
-Cc: kw@linux.com,
-	manivannan.sadhasivam@linaro.org,
-	ilpo.jarvinen@linux.intel.com,
-	robh@kernel.org,
-	jingoohan1@gmail.com,
-	thomas.richard@bootlin.com,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Hans Zhang <18255117159@163.com>
-Subject: [v8 2/5] PCI: Refactor capability search functions to eliminate code duplication
-Date: Wed,  2 Apr 2025 20:37:33 +0800
-Message-Id: <20250402123736.55995-3-18255117159@163.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250402123736.55995-1-18255117159@163.com>
-References: <20250402123736.55995-1-18255117159@163.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="gDeoq9iu"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 532CbN0f3241854
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 2 Apr 2025 07:37:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1743597443;
+	bh=4qOoA3LVJAeCTkVPfMbm4Vm9pRsN9xHcsiNmubFd1nM=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=gDeoq9iu0w5moioITpXaWzK1YWwZkMwmmrVhnKQM60yYkUx9zFlXdUoaRrIxuyxu3
+	 0876/n+IAnhhIimjd/X49IGjjUrJI6o8G7PgO1bG3dvYdb7f1qXxe2mE+yFca+Nd9p
+	 4qa2UqZOzY1pOof5+dgSWzCV+YknEskwRNCJ363U=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 532CbNrc019560
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 2 Apr 2025 07:37:23 -0500
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 2
+ Apr 2025 07:37:22 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 2 Apr 2025 07:37:22 -0500
+Received: from [172.24.17.211] (lt9560gk3.dhcp.ti.com [172.24.17.211])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 532CbGDp101576;
+	Wed, 2 Apr 2025 07:37:17 -0500
+Message-ID: <b0a099a6-33b2-49f9-9af7-580c60b98f55@ti.com>
+Date: Wed, 2 Apr 2025 18:07:15 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:PCgvCgCXrkiUL+1nL3+IAA--.22499S4
-X-Coremail-Antispam: 1Uf129KBjvJXoWxAryxCw4UuryUJw4DJr1fJFb_yoWrKF18pF
-	W3Aa43Ary8G3W7tw4q9ayjyw13WF9rJrWxZrWxC3sYvF12yryvyFy2ka4aqFy2grZ7WF1f
-	X39xtan5C3WqyaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zROzVbUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDx8jo2ftJx3gQwAAsD
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net v3 3/3] net: ti: icss-iep: Fix possible NULL pointer
+ dereference for perout request
+To: Roger Quadros <rogerq@kernel.org>, <dan.carpenter@linaro.org>,
+        <pabeni@redhat.com>, <kuba@kernel.org>, <edumazet@google.com>,
+        <davem@davemloft.net>, <andrew+netdev@lunn.ch>
+CC: <bpf@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <namcao@linutronix.de>, <javier.carrasco.cruz@gmail.com>,
+        <diogo.ivo@siemens.com>, <horms@kernel.org>,
+        <jacob.e.keller@intel.com>, <john.fastabend@gmail.com>,
+        <hawk@kernel.org>, <daniel@iogearbox.net>, <ast@kernel.org>,
+        <srk@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
+        <danishanwar@ti.com>
+References: <20250328102403.2626974-1-m-malladi@ti.com>
+ <20250328102403.2626974-4-m-malladi@ti.com>
+ <0fb67fc2-4915-49af-aa20-8bdc9bed4226@kernel.org>
+Content-Language: en-US
+From: "Malladi, Meghana" <m-malladi@ti.com>
+In-Reply-To: <0fb67fc2-4915-49af-aa20-8bdc9bed4226@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Refactor the PCI capability and extended capability search functions
-by consolidating common code patterns into reusable macros
-(PCI_FIND_NEXT_CAP_TTL and PCI_FIND_NEXT_EXT_CAPABILITY). The main
-changes include:
 
-1. Introducing a unified config space read helper (__pci_bus_read_config).
-2. Removing duplicate search logic from __pci_find_next_cap_ttl and
-   pci_find_next_ext_capability.
-3. Implementing consistent capability discovery using the new macros.
-4. Simplifying HyperTransport capability lookup by leveraging the
-   refactored code.
 
-The refactoring maintains existing functionality while reducing code
-duplication and improving maintainability. By centralizing the search
-logic, we achieve better code consistency and make future updates easier.
+On 4/2/2025 5:58 PM, Roger Quadros wrote:
+> Meghana,
+> 
+> On 28/03/2025 12:24, Meghana Malladi wrote:
+>> ICSS IEP driver has flags to check if perout or pps has been enabled
+>> at any given point of time. Whenever there is request to enable or
+>> disable the signal, the driver first checks its enabled or disabled
+>> and acts accordingly.
+>>
+>> After bringing the interface down and up, calling PPS/perout enable
+>> doesn't work as the driver believes PPS is already enabled,
+> 
+> How? aren't we calling icss_iep_pps_enable(iep, false)?
+> wouldn't this disable the IEP and clear the iep->pps_enabled flag?
+> 
 
-This change has been verified to maintain backward compatibility with
-existing capability discovery patterns through thorough testing of PCI
-device enumeration and capability probing.
+The whole purpose of calling icss_iep_pps_enable(iep, false) is to clear 
+iep->pps_enabled flag, because if this flag is not cleared it hinders 
+generating new pps signal (with the newly loaded firmware) once any of 
+the interfaces are up (check icss_iep_perout_enable()), so instead of 
+calling icss_iep_pps_enable(iep, false) I am just clearing the 
+iep->pps_enabled flag.
 
-Signed-off-by: Hans Zhang <18255117159@163.com>
----
-Changes since v7:
-https://lore.kernel.org/linux-pci/20250402042020.48681-3-18255117159@163.com
+> And, what if you brought 2 interfaces of the same ICSS instances up
+> but put only 1 interface down and up?
+> 
 
-- Resolve compilation errors.
----
- drivers/pci/pci.c | 80 ++++++++++++++---------------------------------
- 1 file changed, 23 insertions(+), 57 deletions(-)
+Then the flag need not be disabled if only one interface is brought down 
+because the IEP is still alive and all the IEP configuration (including 
+pps/perout) is still valid.
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 869d204a70a3..f5a97f8882a6 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -423,36 +423,33 @@ static int pci_dev_str_match(struct pci_dev *dev, const char *p,
- 	return 1;
- }
- 
--static u8 __pci_find_next_cap_ttl(struct pci_bus *bus, unsigned int devfn,
--				  u8 pos, int cap, int *ttl)
-+static int __pci_bus_read_config(void *priv, unsigned int devfn, int where,
-+				 u32 size, u32 *val)
- {
--	u8 id;
--	u16 ent;
-+	struct pci_bus *bus = priv;
-+	int ret;
- 
--	pci_bus_read_config_byte(bus, devfn, pos, &pos);
-+	if (size == 1)
-+		ret = pci_bus_read_config_byte(bus, devfn, where, (u8 *)val);
-+	else if (size == 2)
-+		ret = pci_bus_read_config_word(bus, devfn, where, (u16 *)val);
-+	else
-+		ret = pci_bus_read_config_dword(bus, devfn, where, val);
- 
--	while ((*ttl)--) {
--		if (pos < 0x40)
--			break;
--		pos &= ~3;
--		pci_bus_read_config_word(bus, devfn, pos, &ent);
-+	return ret;
-+}
- 
--		id = ent & 0xff;
--		if (id == 0xff)
--			break;
--		if (id == cap)
--			return pos;
--		pos = (ent >> 8);
--	}
--	return 0;
-+static u8 __pci_find_next_cap_ttl(struct pci_bus *bus, unsigned int devfn,
-+				  u8 pos, int cap)
-+{
-+	return PCI_FIND_NEXT_CAP_TTL(__pci_bus_read_config, pos, cap, bus,
-+				     devfn);
- }
- 
- static u8 __pci_find_next_cap(struct pci_bus *bus, unsigned int devfn,
- 			      u8 pos, int cap)
- {
--	int ttl = PCI_FIND_CAP_TTL;
--
--	return __pci_find_next_cap_ttl(bus, devfn, pos, cap, &ttl);
-+	return __pci_find_next_cap_ttl(bus, devfn, pos, cap);
- }
- 
- u8 pci_find_next_capability(struct pci_dev *dev, u8 pos, int cap)
-@@ -553,42 +550,11 @@ EXPORT_SYMBOL(pci_bus_find_capability);
-  */
- u16 pci_find_next_ext_capability(struct pci_dev *dev, u16 start, int cap)
- {
--	u32 header;
--	int ttl;
--	u16 pos = PCI_CFG_SPACE_SIZE;
--
--	/* minimum 8 bytes per capability */
--	ttl = (PCI_CFG_SPACE_EXP_SIZE - PCI_CFG_SPACE_SIZE) / 8;
--
- 	if (dev->cfg_size <= PCI_CFG_SPACE_SIZE)
- 		return 0;
- 
--	if (start)
--		pos = start;
--
--	if (pci_read_config_dword(dev, pos, &header) != PCIBIOS_SUCCESSFUL)
--		return 0;
--
--	/*
--	 * If we have no capabilities, this is indicated by cap ID,
--	 * cap version and next pointer all being 0.
--	 */
--	if (header == 0)
--		return 0;
--
--	while (ttl-- > 0) {
--		if (PCI_EXT_CAP_ID(header) == cap && pos != start)
--			return pos;
--
--		pos = PCI_EXT_CAP_NEXT(header);
--		if (pos < PCI_CFG_SPACE_SIZE)
--			break;
--
--		if (pci_read_config_dword(dev, pos, &header) != PCIBIOS_SUCCESSFUL)
--			break;
--	}
--
--	return 0;
-+	return PCI_FIND_NEXT_EXT_CAPABILITY(__pci_bus_read_config, start, cap,
-+					    dev->bus, dev->devfn);
- }
- EXPORT_SYMBOL_GPL(pci_find_next_ext_capability);
- 
-@@ -648,7 +614,7 @@ EXPORT_SYMBOL_GPL(pci_get_dsn);
- 
- static u8 __pci_find_next_ht_cap(struct pci_dev *dev, u8 pos, int ht_cap)
- {
--	int rc, ttl = PCI_FIND_CAP_TTL;
-+	int rc;
- 	u8 cap, mask;
- 
- 	if (ht_cap == HT_CAPTYPE_SLAVE || ht_cap == HT_CAPTYPE_HOST)
-@@ -657,7 +623,7 @@ static u8 __pci_find_next_ht_cap(struct pci_dev *dev, u8 pos, int ht_cap)
- 		mask = HT_5BIT_CAP_MASK;
- 
- 	pos = __pci_find_next_cap_ttl(dev->bus, dev->devfn, pos,
--				      PCI_CAP_ID_HT, &ttl);
-+				      PCI_CAP_ID_HT);
- 	while (pos) {
- 		rc = pci_read_config_byte(dev, pos + 3, &cap);
- 		if (rc != PCIBIOS_SUCCESSFUL)
-@@ -668,7 +634,7 @@ static u8 __pci_find_next_ht_cap(struct pci_dev *dev, u8 pos, int ht_cap)
- 
- 		pos = __pci_find_next_cap_ttl(dev->bus, dev->devfn,
- 					      pos + PCI_CAP_LIST_NEXT,
--					      PCI_CAP_ID_HT, &ttl);
-+					      PCI_CAP_ID_HT);
- 	}
- 
- 	return 0;
--- 
-2.25.1
+please refer for more details: 
+https://lore.kernel.org/all/20241211135941.1800240-1-m-malladi@ti.com/
+
+>> (iep->pps_enabled is not cleared during interface bring down)
+>> and driver will just return true even though there is no signal.
+>> Fix this by setting pps and perout flags to false instead of
+>> disabling perout to avoid possible null pointer dereference.
+>>
+>> Fixes: 9b115361248d ("net: ti: icssg-prueth: Fix clearing of IEP_CMP_CFG registers during iep_init")
+>> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+>> Closes: https://lore.kernel.org/all/7b1c7c36-363a-4085-b26c-4f210bee1df6@stanley.mountain/
+>> Signed-off-by: Meghana Malladi <m-malladi@ti.com>
+>> ---
+>>
+>> Changes from v2(v3-v2):
+>> - Add Reported-by tag and link to the bug reported by Dan Carpenter <dan.carpenter@linaro.org>
+>> - drop calling icss_iep_perout_enable() for disabling perout and set perout to false instead
+>>
+>>   drivers/net/ethernet/ti/icssg/icss_iep.c | 4 ++--
+>>   1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/net/ethernet/ti/icssg/icss_iep.c b/drivers/net/ethernet/ti/icssg/icss_iep.c
+>> index b4a34c57b7b4..b70e4c482d74 100644
+>> --- a/drivers/net/ethernet/ti/icssg/icss_iep.c
+>> +++ b/drivers/net/ethernet/ti/icssg/icss_iep.c
+>> @@ -820,9 +820,9 @@ int icss_iep_exit(struct icss_iep *iep)
+>>   	icss_iep_disable(iep);
+>>   
+>>   	if (iep->pps_enabled)
+>> -		icss_iep_pps_enable(iep, false);
+>> +		iep->pps_enabled = false;
+>>   	else if (iep->perout_enabled)
+>> -		icss_iep_perout_enable(iep, NULL, false);
+>> +		iep->perout_enabled = false;
+>>   
+>>   	return 0;
+>>   }
+> 
 
