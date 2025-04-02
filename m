@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B2CC23814A
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 09:46:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AE7F23814A
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 09:46:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743587175; cv=none; b=LrZmv+ym8T4zofXRgmjgswwXx8w/8iziqvr5Qd4o+9qLhSIOM0GIEDqUcKutgCYRt3MIL0ZZs3AEi3aSEhdf/vjNmENqmI/dxvPxF3F1rE9W/DXLeR5p0SB5mJwWGGQaGbgNkCZlAjmbYf+PLt3BIxQUkIYWW/P3eneGXEY2iog=
+	t=1743587179; cv=none; b=tYZ7lAQmgU9K+PTCp0v/AaDmFdMluwr13HI956jL3frSQ18UPi306zmcNTS7M2OKVcvh6Te/+cF+bSkwSbEwf4vPTD69j+Ymnksk7EokuacJ/72pJJKLWUYpuR52oEgm6Ec9FdMn5Mc2R9xr3Y80e/+sZxJ/hyT1YlrsrvrODAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743587175; c=relaxed/simple;
-	bh=UM46Z3LywVA8SgF6vCR4JHx+WH4GLGG/jRvAXsdQuKI=;
+	s=arc-20240116; t=1743587179; c=relaxed/simple;
+	bh=wwJkv9MVllRwnbE94gJpES5xAIsuRO9xRorGgHss54k=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hXDQCwQMORqJcwkyXUCeokhAqfw1LF45g4Vk784ObB6EKEdf8symQVB2h49Hm66jUX4NAga63/vQw51omrT7jgahSTpIt+DoTjs3Ghb3Add4R8H0OCsFg9XB910EDNgZ3C6tqbmtpi/IV0FKelZheApv+KHCrtWqHBiW2EQE4+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kB7v57eZ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=sVOGIdf2WfiH3/e6E3pVqcYsgMBppwL7+koq3wVWIi8z+69JPbEUTybfbEtAUSN3n/shas+Eh6YkwuLOTH3Zt0GZuJALF1DcftOo0R/juSPJgLcdPCoBgTRux4k+ZqcRA7OWZ7YFbw+51O4oncXvRvAkWGdA2guws2rAv9i9jgU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pl1s3OTh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kB7v57eZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 207D6C4CEE8;
-	Wed,  2 Apr 2025 09:46:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pl1s3OTh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92D88C4CEED;
+	Wed,  2 Apr 2025 09:46:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743587175;
-	bh=UM46Z3LywVA8SgF6vCR4JHx+WH4GLGG/jRvAXsdQuKI=;
+	s=k20201202; t=1743587177;
+	bh=wwJkv9MVllRwnbE94gJpES5xAIsuRO9xRorGgHss54k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kB7v57eZ5YAJXipGlLqcskI5To4WGavXLSdxv96UgnMcU78H3tEM3ydAAfwNhJq17
-	 eTaoRKwA5V7PAli6MdHnXcLIAf8RAic6cnFc1FafsIhCc3Qoliy45sy0ETxmcgAyhB
-	 J0rJrhFmHIPInDk1IOt6sQcHfBhVL2IRma4m7KQ6GOL3nJLzHwE6RkBG2BcltHAtCv
-	 HorHOpnnl51htcdw5UeCKv0nh4O6Y4nt1dt3tGlurABUev9emJPqK89uQKRhIvZ6xE
-	 cDx+1oCFO1ide/j2SOt4isZioUSrQHh+RpoxLaQvo9EJBrlcIqsyZ7NPQ0KLMT6y9C
-	 UaHSjGYFvoUGg==
+	b=Pl1s3OThcAMerSvAI3QBhdHsE3gmdzUE7h8Ied84vV7yCXxiPnTIvqvM+upZ9V05+
+	 7WIzyhq7PjUP7xQ6eQv+dUCD75sF9CK93JqT+7aafDC/EK2j1OptiD9jlYAp2a40fN
+	 jhl+6Dq9KjZGpjNsznmLWewVBqxL83bj3ugQvC/ChnPbpT6FF5neUeESvSnOqaOKsg
+	 /H9W2jW7kSx2qGA+plcMxMa7LDgLwppEzEx5K4H4ZMilXnzF2JTNC/J0p/oh0/i2+b
+	 951hVktRS5e1BBpMgxdBdgF7nMNTfpRyHHsoWOHhIqIybIh9+Jt+qvvTYZ0qlAy3bN
+	 ndKe22kNTOCbw==
 From: Ingo Molnar <mingo@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: Andy Lutomirski <luto@kernel.org>,
@@ -35,9 +35,9 @@ Cc: Andy Lutomirski <luto@kernel.org>,
 	Linus Torvalds <torvalds@linux-foundation.org>,
 	Andrew Morton <akpm@linux-foundation.org>,
 	Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 6/7] x86/efi: Make efi_enter/leave_mm() use the use_/unuse_temporary_mm() machinery
-Date: Wed,  2 Apr 2025 11:45:39 +0200
-Message-ID: <20250402094540.3586683-7-mingo@kernel.org>
+Subject: [PATCH 7/7] x86/mm: Opt-in to IRQs-off activate_mm()
+Date: Wed,  2 Apr 2025 11:45:40 +0200
+Message-ID: <20250402094540.3586683-8-mingo@kernel.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250402094540.3586683-1-mingo@kernel.org>
 References: <20250402094540.3586683-1-mingo@kernel.org>
@@ -51,11 +51,11 @@ Content-Transfer-Encoding: 8bit
 
 From: Andy Lutomirski <luto@kernel.org>
 
-This should be considerably more robust.  It's also necessary for optimized
-for_each_possible_lazymm_cpu() on x86 -- without this patch, EFI calls in
-lazy context would remove the lazy mm from mm_cpumask().
+We gain nothing by having the core code enable IRQs right before calling
+activate_mm() only for us to turn them right back off again in switch_mm().
 
-[ mingo: Merged it on top of x86/alternatives ]
+This will save a few cycles, so execve() should be blazingly fast with this
+patch applied!
 
 Signed-off-by: Andy Lutomirski <luto@kernel.org>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
@@ -63,33 +63,37 @@ Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Cc: Rik van Riel <riel@surriel.com>
 Cc: "H. Peter Anvin" <hpa@zytor.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Link: https://lore.kernel.org/r/20241119163035.877939834@infradead.org
+Link: https://lore.kernel.org/r/20241119163035.985203915@infradead.org
 ---
- arch/x86/platform/efi/efi_64.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ arch/x86/Kconfig                   | 1 +
+ arch/x86/include/asm/mmu_context.h | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/platform/efi/efi_64.c b/arch/x86/platform/efi/efi_64.c
-index ac57259a432b..a5d3496d32a5 100644
---- a/arch/x86/platform/efi/efi_64.c
-+++ b/arch/x86/platform/efi/efi_64.c
-@@ -434,15 +434,12 @@ void __init efi_dump_pagetable(void)
-  */
- static void efi_enter_mm(void)
- {
--	efi_prev_mm = current->active_mm;
--	current->active_mm = &efi_mm;
--	switch_mm(efi_prev_mm, &efi_mm, NULL);
-+	efi_prev_mm = use_temporary_mm(&efi_mm);
- }
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 98bd4935280c..6b90d93fc40e 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -149,6 +149,7 @@ config X86
+ 	select ARCH_WANT_OPTIMIZE_HUGETLB_VMEMMAP	if X86_64
+ 	select ARCH_WANTS_THP_SWAP		if X86_64
+ 	select ARCH_HAS_PARANOID_L1D_FLUSH
++	select ARCH_WANT_IRQS_OFF_ACTIVATE_MM
+ 	select BUILDTIME_TABLE_SORT
+ 	select CLKEVT_I8253
+ 	select CLOCKSOURCE_WATCHDOG
+diff --git a/arch/x86/include/asm/mmu_context.h b/arch/x86/include/asm/mmu_context.h
+index 988c11792634..c511f8584ae4 100644
+--- a/arch/x86/include/asm/mmu_context.h
++++ b/arch/x86/include/asm/mmu_context.h
+@@ -190,7 +190,7 @@ extern void switch_mm_irqs_off(struct mm_struct *prev, struct mm_struct *next,
+ #define activate_mm(prev, next)			\
+ do {						\
+ 	paravirt_enter_mmap(next);		\
+-	switch_mm((prev), (next), NULL);	\
++	switch_mm_irqs_off((prev), (next), NULL);	\
+ } while (0);
  
- static void efi_leave_mm(void)
- {
--	current->active_mm = efi_prev_mm;
--	switch_mm(&efi_mm, efi_prev_mm, NULL);
-+	unuse_temporary_mm(efi_prev_mm);
- }
- 
- void arch_efi_call_virt_setup(void)
+ #ifdef CONFIG_X86_32
 -- 
 2.45.2
 
