@@ -1,282 +1,223 @@
-Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6359A7082F;
-	Wed,  2 Apr 2025 01:50:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743558615; cv=none; b=htoDGl35BQK1JrgheH6H0HhVbIusDB4i/W+yXHABGmRias8mfKKIdhQr0hA0jd8Em/bgPhqSB8mfzLe4khhy5lznZFRev9KA7i0XIKGDElpylCEVo3hymiGv+IJYteLSfNrqiDL2JUX/VAZLYcAog4KkFidUncg1kt3ydqxqNIY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743558615; c=relaxed/simple;
-	bh=VX0p3J+m4fa+xQJLzqqXnOjle9XG1ttmj5wMfJOjGN4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mx6RpCIyGcMgmhbDwsOdF9aPSQw4tyEg17tgWa69yso5ECJW6+KTH5FhlGBCMvnp4dh2bQrzev890EwH4QdlOd1e2Zwj4K4n4fbx6W8SnlE/Z2sNcG4NFb0zNhaC+DiOeKK69DNScCwZO4sFb9seNp2xy8bYAmo7x83ZwcT+MEs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-681ff7000002311f-e8-67ec97ce1b74
-From: Rakie Kim <rakie.kim@sk.com>
-To: gourry@gourry.net
-Cc: akpm@linux-foundation.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	joshua.hahnjy@gmail.com,
-	dan.j.williams@intel.com,
-	ying.huang@linux.alibaba.com,
-	david@redhat.com,
-	Jonathan.Cameron@huawei.com,
-	kernel_team@skhynix.com,
-	honggyu.kim@sk.com,
-	yunjeong.mun@sk.com,
-	rakie.kim@sk.com
-Subject: [PATCH v5 3/3] mm/mempolicy: Support memory hotplug in weighted interleave
-Date: Wed,  2 Apr 2025 10:49:04 +0900
-Message-ID: <20250402014906.1086-4-rakie.kim@sk.com>
-X-Mailer: git-send-email 2.48.1.windows.1
-In-Reply-To: <20250402014906.1086-1-rakie.kim@sk.com>
-References: <20250402014906.1086-1-rakie.kim@sk.com>
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2065.outbound.protection.outlook.com [40.107.223.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BC281096F
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 01:53:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.65
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743558805; cv=fail; b=VS7pI/W6XO5zNukhhKFmtxdeKu/pmX7q6RNAVA1OpWwY3ZRxkwHUDs5T0wpGj2TTCMDsA4ttcZfHZdYbV7SlFoQMRXMTRLEhLMKZX3oEQe60Nj7bsLWf6amyGfkRqc831mr5/1Z1i+LYAoOtwGxL+AVNO2iBJq7ZRjURlLes2lQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743558805; c=relaxed/simple;
+	bh=UycYkSeiV2N3goeKrWUyYCdT8yONMCDOdQkvezznlKI=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=rMA33u+wL6SS/MtvpqPpfeELJqQFUTVfRauH2zrSt08aByaPUepuGeKRp7OXFkzj25EhQkl4w+vvxf6PvNo6aRfK+QwDdfJmOrhR1g62ZLV2K6T1gG7yQ3TDNnUomT479xU/TiqMKjavappQ96Q99hQB0UR5tybLnFdxY46nljE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=L0qp6kM1; arc=fail smtp.client-ip=40.107.223.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="L0qp6kM1"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Y61YAHeevFe77QP/hej/eFaD0bSG+tuGyZkOUvFlDKrhTU4ILtzz0yBcqAAWDGbU8q67Jm2BZ2vm+ZDxonCDgPjwgwTktbzsqnwubqIvbIcrM2ziuJv+1IzGhk3t72ItTJcfSIbdExopcOiivvqMYLtlybC2ev2C4XToGGds7vxdmpoeb876Sqp/BEfqSqAfq5qYMtR9B0lwQi5X8ICJrGhedikPCWiMh1ghHfwCqFUhK9paJKR+J9HMNPIefFFCkcj7rt2GIP13nAj+1E/RW7dlHgi/HtVb//uWMyKAlVuCNTNfVRRIWz/uBQslY5XzWjlME6AJfNMBmCXRm8BeVg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=zVUE9nRM++H/do52brawLEBvvjE5mfztY6bsXFel9Pk=;
+ b=SLdeGHXStMzSfP1JWE2joMTg1rE8FBQOI123jRYQmxrEJiVBtYWFioaCGBmHQJFxMf70FrTWoyYkLAzt7veMv+7dVkvjHDfsDEHIJUNfXaU3s19ODnr6mH3Afe+us8aKUe3pAJp5f7T+Vs9G2xc73OsEqs0qmxQoR6SF+GZ+zlb0tWzFVWbBPluqZuonQSY9wP+GftVN6fcqp4SryWUfSttHln9k4NsUS2BoItVnziqkK8SNh09f9Bpe81F7tMLftZ39IcXbWrwt0TY4X3kKB7yBH1+OUtZSB9HsX0oS4ic5gs51ubgnpYdVGL1ibaBSZBW/z+TjtTVF2Dkhnim9Fw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zVUE9nRM++H/do52brawLEBvvjE5mfztY6bsXFel9Pk=;
+ b=L0qp6kM1jK8T3MisX5TDvHsghD3OYDTfz5xaVD/+MxKV8F3RTMjtK1HTz+Uyb5achOaYAx9volgiQrgc1MXjK6PNR3RoQQMjXZCTD47ysCoxmZM/DDoP6/+aJNEHrAJnAsM5j09TpBATNYS85j31ps+sPBsrPy8PL167xr72isI=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from IA1PR12MB6435.namprd12.prod.outlook.com (2603:10b6:208:3ad::10)
+ by DM4PR12MB7669.namprd12.prod.outlook.com (2603:10b6:8:106::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.47; Wed, 2 Apr
+ 2025 01:53:20 +0000
+Received: from IA1PR12MB6435.namprd12.prod.outlook.com
+ ([fe80::273a:80c9:35fc:6941]) by IA1PR12MB6435.namprd12.prod.outlook.com
+ ([fe80::273a:80c9:35fc:6941%4]) with mapi id 15.20.8534.052; Wed, 2 Apr 2025
+ 01:53:20 +0000
+Message-ID: <6e796751-86f3-42e5-b0a6-3a3602d3af13@amd.com>
+Date: Wed, 2 Apr 2025 09:53:10 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 7/7] drm/virtio: implement userptr: add interval tree
+To: Dmitry Osipenko <dmitry.osipenko@collabora.com>,
+ David Airlie <airlied@redhat.com>, Gerd Hoffmann <kraxel@redhat.com>,
+ Gurchetan Singh <gurchetansingh@chromium.org>, Chia-I Wu
+ <olvaffe@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ Simona Vetter <simona@ffwll.ch>, Rob Clark <robdclark@gmail.com>,
+ Huang Rui <ray.huang@amd.com>
+Cc: dri-devel@lists.freedesktop.org, virtualization@lists.linux.dev,
+ linux-kernel@vger.kernel.org, Demi Marie Obenour <demiobenour@gmail.com>
+References: <20250321080029.1715078-1-honglei1.huang@amd.com>
+ <20250321080029.1715078-8-honglei1.huang@amd.com>
+ <810789ec-c034-4bdd-961a-f49c67336e45@collabora.com>
+Content-Language: en-US
+From: "Huang, Honglei1" <Honglei1.Huang@amd.com>
+In-Reply-To: <810789ec-c034-4bdd-961a-f49c67336e45@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SI1PR02CA0018.apcprd02.prod.outlook.com
+ (2603:1096:4:1f4::7) To IA1PR12MB6435.namprd12.prod.outlook.com
+ (2603:10b6:208:3ad::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrALMWRmVeSWpSXmKPExsXC9ZZnoe656W/SDV42clrMWb+GzWL61AuM
-	Fl/X/2K2+Hn3OLvFqoXX2CyOb53HbnF+1ikWi8u75rBZ3Fvzn9Vi9ZoMBy6PnbPusnt0t11m
-	92g58pbVY/Gel0wemz5NYvc4MeM3i8fOh5Ye7/ddZfP4vEkugDOKyyYlNSezLLVI3y6BK6P/
-	8H32gibjiqkvrzM1ME7T6mLk5JAQMJF40r+YDcY+9X8SaxcjBwebgJLEsb0xIGERAVGJeUdn
-	s3QxcnEwC1xjkjjw+SYLSEJYIFhi5ZVjYDaLgKrEn//z2EFsXqA5S+Z9YoWYqSnRcOkeE8hM
-	TgFTia/dYCVCQCVNt5ewQJQLSpyc+QTMZhaQl2jeOpsZZJeEwHM2iV39v1kg5khKHFxxg2UC
-	I/8sJD2zkPQsYGRaxSiUmVeWm5iZY6KXUZmXWaGXnJ+7iREY7stq/0TvYPx0IfgQowAHoxIP
-	bwPvm3Qh1sSy4srcQ4wSHMxKIrwRX1+mC/GmJFZWpRblxxeV5qQWH2KU5mBREuc1+laeIiSQ
-	nliSmp2aWpBaBJNl4uCUamD0lCxKm/rnl9xsb9mpPfmhLTdPGhyTSbqh+P17zISrs5ZeZzO9
-	6rdDL8d/sk5nsoVXNEOX3Mm3VyZNkdvPManM+NusuR1LP1uw+TyMYNPzuKG0680X+2wpvdrZ
-	rkk6ShIrH8VszVJNqjh/ycpHm/eAS5wWt+KfnaHHc8uLxZZ+2+y5Uvrs4j1KLMUZiYZazEXF
-	iQDjDgjFcwIAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrFLMWRmVeSWpSXmKPExsXCNUNNS/fs9DfpBrduG1vMWb+GzWL61AuM
-	Fl/X/2K2+Hn3OLvF52evmS1WLbzGZnF86zx2i8NzT7JanJ91isXi8q45bBb31vxntTh07Tmr
-	xeo1GRa/t61gc+Dz2DnrLrtHd9tldo+WI29ZPRbvecnksenTJHaPEzN+s3jsfGjp8X7fVTaP
-	b7c9PBa/+MDk8XmTXAB3FJdNSmpOZllqkb5dAldG/+H77AVNxhVTX15namCcptXFyMkhIWAi
-	cer/JNYuRg4ONgEliWN7Y0DCIgKiEvOOzmbpYuTiYBa4xiRx4PNNFpCEsECwxMorx8BsFgFV
-	iT//57GD2LxAc5bM+8QKMVNTouHSPSaQmZwCphJfu8FKhIBKmm4vYYEoF5Q4OfMJmM0sIC/R
-	vHU28wRGnllIUrOQpBYwMq1iFMnMK8tNzMwx1SvOzqjMy6zQS87P3cQIDPFltX8m7mD8ctn9
-	EKMAB6MSD69Az5t0IdbEsuLK3EOMEhzMSiK8EV9fpgvxpiRWVqUW5ccXleakFh9ilOZgURLn
-	9QpPTRASSE8sSc1OTS1ILYLJMnFwSjUw1quf6/c1ujPnwEfje2v/WqycdPny/lXzwm6t+21z
-	hDnMc8cvhxKro6/Pdfg/0o2u28/R8bHXc4W1U6VcnqJh0JcN006uqvqh4h93fO/TrGnzWE5W
-	znDLe5/qICQyfbLskQ+dbu6aO05NNFSZpaOVlRp4cUaKV9d6saqLOm6f99flbl+uFnrqtBJL
-	cUaioRZzUXEiAGQV7optAgAA
-X-CFilter-Loop: Reflected
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: IA1PR12MB6435:EE_|DM4PR12MB7669:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9983a461-a0c2-480f-de18-08dd71892504
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|1800799024|366016|376014|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?b3dIUWQyOVU2SC93NDJKdHVOai9WQXJpelFKNDVLTHB4eVJlNXVRY2xKRGFu?=
+ =?utf-8?B?UlhZeGdrQm1saHRKbmpneWg3ekVtU3AzM0U3Y0FZMzJjbGtJK0lFUUl4cFJh?=
+ =?utf-8?B?NDZPUDdRV01mcHk2UDJ5bXFBdTNIVkVMM1Nvbzl3MGplbHFxb2RvbFhwcWdN?=
+ =?utf-8?B?OVEvb3N5ZXloQzJZQjh4dkw5VXBZRldIUUlxUUJ3cG5BRiszZkdJMVhFcWlz?=
+ =?utf-8?B?dEVRcGozUFhXUlpJaHV1UzJtUFB2QmJiUU9pOTBzeEI1K2tUbElMSGgxNFN1?=
+ =?utf-8?B?SmNWSjJpdjdOZ0sxUkhRUFZnYzZsK3NRdTh3bHVKQ3Z2M2ZJRmVYNTl3NXJV?=
+ =?utf-8?B?MkNLdHdiUXh3Sld2Y1lXYVRKM1ArY29UZFVpUW9RUWZkTmZYZHFvVU5VNHUv?=
+ =?utf-8?B?akFpVFBoOUNmTkY0NVVFNGZJYnJubUNIQkp2QW4veXVFUFpZL2IrQUFVTVVh?=
+ =?utf-8?B?TkxaVGZxYmtzRHhXai9Wb2pORVNNN3hwZzQvVllyNXZxZVdtVzdpVFkzdEpm?=
+ =?utf-8?B?akZTQXpIVmh3MkZEZUROLzZOVko2UGpWOEw0d3hveTBrYzk1WVU1MnZtRXZL?=
+ =?utf-8?B?Z0RqOGxoWDdxYno5Z2p4QlhCZWUvWjFVR0RZcFExbUJDenladkgwN0Y2REFv?=
+ =?utf-8?B?NmlPZTBmWGhGak1ZaWxkQWZuNlJib1JlTDhsdnVXbExBMllJZlRvQW5oVHpW?=
+ =?utf-8?B?cDhUUmRjZGlscXUwejZuRU83KzFEM0Qrd2R6b0JUV0tIeGwxT05VK1YrQVNS?=
+ =?utf-8?B?SXk5OXV5N2JlQkl3RlB2dnJobDcxektaYTU3NG9IN3ZqWTBTOFpJYytkNFlV?=
+ =?utf-8?B?MG8rUkRzQ3MyM1I5YWs2S2RpMHNZUldNOW1uZHdDblpoS2F3OVQvSG50d2NS?=
+ =?utf-8?B?YkVzNTJEQWR2MUM3MUQwS0xOQkk0OU84QnFnMlVsRmhvblQzYXZzN3VSWVBx?=
+ =?utf-8?B?bFQ1QnVqMkl1clNSYjQrNi83NzFaZXREeTREblBleThob2JjREVNU0FLZjJV?=
+ =?utf-8?B?cmg4ZWZRSjBJVFRSK0QrOEtSLytNSzNxV0RWTmlUbnZHT0dDTC8rQm03S0Er?=
+ =?utf-8?B?bU5PeE5ndFpWTkYrZkU1bGNOVmpmK2lycG5nNUdVRHpRcm9lYldNYjV5VFJP?=
+ =?utf-8?B?NzdXZVB6bEgyV1ZNbEU5SUNHTU5NOXd3cGxXRzhnZ0gxR2dWU0t5K1oydVp0?=
+ =?utf-8?B?Q3dMMDBIa1dHWkJDQkpsTUZKTXJYM25INUpCUE5pUHA0cUNRMUF3T2h4bys2?=
+ =?utf-8?B?bld2SCtZZjhIK1RuY2txOFJFbDdkVUpTeW13bkdGeHpoN0N6VkhnUkhvbWZF?=
+ =?utf-8?B?eDAxWklYNGEvWGY3a0cwbVZUVHVGR0MzVUU3MHdCRk84OFVXTGZDTlhTUnFB?=
+ =?utf-8?B?TVpKVXA5WE9ndXdJTHBKVEdCc3lEbzRPOTE4emRNSSs2SENTMThVM3k4R0hu?=
+ =?utf-8?B?YWI1NVQ1TWEyMjFLYkF2MEo4YVZXcURHdm9YVnMzL2kxbkpxZ2RjZXZEM0F0?=
+ =?utf-8?B?b3J1R25GY2lVOW9SZkczWVZPelBGQmVZR3hobURMbCtmOGxQVWRMSDkrNS9Z?=
+ =?utf-8?B?TjhkeCt5cTJWTTgrS0JqWmwwY0MwejlNWkE5M2l5SDVheTlObjJ2bVlNQll4?=
+ =?utf-8?B?T0VOZWxDNGNLazhQM1pBd3BHQjhJZ2pIdGpYRTluaVUzS1l2cjRyNnNlRU81?=
+ =?utf-8?B?d3d3ZXE5bHQ5QUtBa1JGNXRFSUFNMG1mSmhXa3NlMVg4MGZZakJIQ2xZQy80?=
+ =?utf-8?B?TGxkZ3M4akc5czQyaVFjZzJ5cHRFaE1IeW1PZk0xZkRjc2Y4UzN0QmlJMjFa?=
+ =?utf-8?B?S1hPNkJEWWkvTEdwc3pLTlZqbjRPWmJFcWZ6UWZZeEorWHZ0UGZmbmkxMW9j?=
+ =?utf-8?B?d1EydzdMZFVVV244ZW5nYVdjemtLR25hM2tEejdIMjBSVzNzSjlqWDBSaDRk?=
+ =?utf-8?Q?IoHwz56ffMw=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR12MB6435.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(366016)(376014)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?OHl2THVyNDU0dFpSWDM0MEpsbWU1d09FSWptYVdtTW9Zd3dYaG5TWjdYUWR6?=
+ =?utf-8?B?clorcjNYa3M2Q2ZKOUF5UXF6dnQ4S2M3ZEZmTHcveGNhZXFWRjNKMFl4dkxu?=
+ =?utf-8?B?MlBvUjM5WUJlSkRBQ2ZRRGU3WDlZR3FpeVpnZ2tCSGFqWXppRUI1Q0M0aW1y?=
+ =?utf-8?B?VzBuTk4wakh0TzFCUlpPZ1BSMTFRdUorTnlLdi9OWnByQXhMVFpSb1ZjK1VU?=
+ =?utf-8?B?dlQ4UkpIVWdUaFQ2dHBlK0tYQ29wMzJTdnltYTBOOStSam1kTUJET21QV1BI?=
+ =?utf-8?B?U0ZMTERkTHlPa0dDOFJ6REFwcW1lNXhRYW0xNkNNb3Jqc0xsVWVWNzZ1ejR5?=
+ =?utf-8?B?OFZPbzYxU3pZWnVVMEd4bW8zc1dKS0d4SVo0SExmTlpGc2lObDFmcklRdWov?=
+ =?utf-8?B?YnMwTmtJaTMvZXJJVGFIWGhiZGtTK1M5czlFVlY0S3d4WEJXSU8yS0dZcnFK?=
+ =?utf-8?B?LzBvNkJ0S1BSQWFNaU52eDZlOTVUelc0MkI3M3ZxK1VvS2lrL0RYQ01WMXpq?=
+ =?utf-8?B?WDUyOFF4Wm5WbmtZVjVUS2FqTlI4bFFiZ3NRRExqek9RemRiVG5YWlFiYkQx?=
+ =?utf-8?B?ZW5Ydk50S0IzZDhONWh5L21hMEYyb1ZqMEo5V2l6QjFUY3hFUFF3RFhreStl?=
+ =?utf-8?B?WDFvamREN0lURGtvRjAyS1J0MnZxRy9idjRqOHdXaUlpUHVMM1Z6VEJuZWF0?=
+ =?utf-8?B?TWJseHk5MFp6eEh1ZWhrZStLVFJjRG80WUtzT2RlTkdMWlE2UU1keUhQYlFz?=
+ =?utf-8?B?QldqNHNNZk92UjVjUUVEeWx0RVh0OE1VZlc2Y3hja3lRQkYzUCtkdUErL2pk?=
+ =?utf-8?B?TXM1R1BzWTM1NlJYblVTeU40ODZrcWJUWmxTWGlXdHBDU3ptSjYyKzNNcE4x?=
+ =?utf-8?B?TzV4alllKytEV3ZZSEdCVVQ4cDhBN2NIZ0QvWXczcjNXT2VIS3I2cmY4bEtk?=
+ =?utf-8?B?eHUwbStzUlJONmxjd3RlU0dwTytCekN1UTlVM2lLazExWmFIRVZ4TldvV2Jv?=
+ =?utf-8?B?aXlmUVUvS2NvNVk3ZjBCQ0t2ME5FSkN0V3dZRGJneWNCK1JkT0hpT09iTW9m?=
+ =?utf-8?B?MVlwYnlzU3pqTGQ4QlJGWnphZk9oUVhWVXBHbUV4RGRBUkljWnFiaENod1c1?=
+ =?utf-8?B?MWk2TWVrM3FYTm5UOHZlYk5NVDN6V09jaktQcXE3YVF3dFFDeldpUkFDLzNH?=
+ =?utf-8?B?TENVMVU5MGtJY2RaeXBZcitGSE10UkZOZFl2ZjdVWjI4bklsL2t4c0pYVkdu?=
+ =?utf-8?B?c0x5NEkrQlQ4NldrR2EyWW5CV09LZW5LbzdyWmtkbWMva0p1ZVo1Tk5CV281?=
+ =?utf-8?B?KzFMMnl5KzhXUVFnMG1xNnVObmo1SlV6dTZocVdqOEpxbGhLODhQY1Q0ZkJ5?=
+ =?utf-8?B?VmYyQUJJWHFtdGdrTnU1T1pCOGpnVmtEdk5GMTViTDhjclc2UXkxZ3BkUEFj?=
+ =?utf-8?B?Yk5HalhHdVV0SEJ1NWR0K1B3aVhCaVV3WTE2dktPQ3pOdG01V3NDdUduQVVn?=
+ =?utf-8?B?TG5KZFJnY0xETmlkaFpKajkvc3psZE8xc1IxbElnWHFtWEZjS1ppejBkMnpD?=
+ =?utf-8?B?SnZpR1Q1UWZabk9aZGlXbzljYWNiYnlEaGRWMXk2YkpQaDdEbjhUTGVrak4r?=
+ =?utf-8?B?QTFWNjZXZW5tT2w3S2NkWWpuOE1na0JEdlVuamxNSFVmM1FuYU5MQW9VUWxB?=
+ =?utf-8?B?bnNWZDY2akx2d0ZhQS8rZDBwcldGemtXaUxPamV5YVpFSm92enhpM0d5RnB6?=
+ =?utf-8?B?M0VNcEh4bHdYU0lQZDRPS29sckpaYk5Zd2lFcXhDOWcxR0VteElmcXZxemtn?=
+ =?utf-8?B?Q3B1TjYyUlQzNFc4SUpGbTh0TFlEQlZPTVJlcXhqZ3lCWEoxb0crdHhyczNK?=
+ =?utf-8?B?OGtpdGp1NTZXZzlySVQxcXZwUWVYS0RKNk1RLy9HbTVoV1NkVDVQT3h4MTY0?=
+ =?utf-8?B?WFFSS0R4bW1UdmZSZ2tIdERTdW1CRkQ5d2Qva1hVY0pKZktmRjQzVWRBZXFX?=
+ =?utf-8?B?Z09aZUkxYUhaaCtKRXRkVHczeStFMkFpa2ZRczNRdThYRG13QTdhLzhXMTVk?=
+ =?utf-8?B?WTNna05DRHF3T0dwNDczV2dPVlJMUkRhVU85dXQ4QXNBaVpwaVFrbHFkSGNj?=
+ =?utf-8?Q?Yqv4p3zbaxunplONLBHaArfCs?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9983a461-a0c2-480f-de18-08dd71892504
+X-MS-Exchange-CrossTenant-AuthSource: IA1PR12MB6435.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Apr 2025 01:53:20.6051
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: RnRso05juy5puXGAKkfO+UMPuJ87oNwFjAaRLHhJchHjocRA5VC3AN5mdjegc8unagG74pO5hloQTTBtgsqBWg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB7669
 
-The weighted interleave policy distributes page allocations across multiple
-NUMA nodes based on their performance weight, thereby improving memory
-bandwidth utilization. The weight values for each node are configured
-through sysfs.
 
-Previously, sysfs entries for configuring weighted interleave were created
-for all possible nodes (N_POSSIBLE) at initialization, including nodes that
-might not have memory. However, not all nodes in N_POSSIBLE are usable at
-runtime, as some may remain memoryless or offline.
-This led to sysfs entries being created for unusable nodes, causing
-potential misconfiguration issues.
 
-To address this issue, this patch modifies the sysfs creation logic to:
-1) Limit sysfs entries to nodes that are online and have memory, avoiding
-   the creation of sysfs entries for nodes that cannot be used.
-2) Support memory hotplug by dynamically adding and removing sysfs entries
-   based on whether a node transitions into or out of the N_MEMORY state.
+On 2025/3/30 19:57, Dmitry Osipenko wrote:
+> If the purpose of this feature is to dedup usrptr BOs of a the single
+> process/application, can this can be done in userspace?
+> 
+> On 3/21/25 11:00, Honglei Huang wrote:
+>>   int virtio_gpu_userptr_create(struct virtio_gpu_device *vgdev,
+>>   			      struct drm_file *file,
+>>   			      struct virtio_gpu_object_params *params,
+>> -			      struct virtio_gpu_object **bo_ptr)
+>> +			      struct virtio_gpu_object **bo_ptr,
+>> +			      struct drm_virtgpu_resource_create_blob *rc_blob)
+>>   {
+>> +	struct virtio_gpu_fpriv *vfpriv = file->driver_priv;
+>>   	struct virtio_gpu_object_userptr *userptr;
+>>   	int ret, si;
+>>   	struct sg_table *sgt;
+>> @@ -187,6 +290,20 @@ int virtio_gpu_userptr_create(struct virtio_gpu_device *vgdev,
+>>   		       params->size))
+>>   		return -EFAULT;
+>>   
+>> +	mutex_lock(&vfpriv->userptrs_tree_lock);
+>> +
+>> +	userptr = virtio_gpu_userptr_from_addr_range(
+>> +		vfpriv, params->userptr, params->userptr + params->size - 1UL);
+> 
+> Is it possible that userptr address will be same for two different
+> processes?
+> 
+> What if userptr->flags mismatch?
 
-Additionally, the patch ensures that sysfs attributes are properly managed
-when nodes go offline, preventing stale or redundant entries from persisting
-in the system.
+This situation need to be considered, I will add flag check, and add
+handle the situation of increasing write permissions.
 
-By making these changes, the weighted interleave policy now manages its
-sysfs entries more efficiently, ensuring that only relevant nodes are
-considered for interleaving, and dynamically adapting to memory hotplug
-events.
+> 
+>> +	if (userptr) {
+>> +		*bo_ptr = &userptr->base;
+>> +		rc_blob->res_handle = userptr->base.hw_res_handle;
+>> +		rc_blob->bo_handle = userptr->bo_handle;
+> 
+> Doesn't BO refcount need to be bumped?
 
-Signed-off-by: Rakie Kim <rakie.kim@sk.com>
-Signed-off-by: Honggyu Kim <honggyu.kim@sk.com>
-Signed-off-by: Yunjeong Mun <yunjeong.mun@sk.com>
----
- mm/mempolicy.c | 110 ++++++++++++++++++++++++++++++++++++++-----------
- 1 file changed, 87 insertions(+), 23 deletions(-)
+Will add Bo refcount in next version.
 
-diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-index 3092a792bd28..ea4f3f3f2cdd 100644
---- a/mm/mempolicy.c
-+++ b/mm/mempolicy.c
-@@ -113,6 +113,7 @@
- #include <asm/tlbflush.h>
- #include <asm/tlb.h>
- #include <linux/uaccess.h>
-+#include <linux/memory.h>
- 
- #include "internal.h"
- 
-@@ -3390,6 +3391,7 @@ struct iw_node_attr {
- 
- struct sysfs_wi_group {
- 	struct kobject wi_kobj;
-+	struct mutex kobj_lock;
- 	struct iw_node_attr *nattrs[];
- };
- 
-@@ -3439,13 +3441,24 @@ static ssize_t node_store(struct kobject *kobj, struct kobj_attribute *attr,
- 
- static void sysfs_wi_node_release(int nid)
- {
--	if (!wi_group->nattrs[nid])
-+	struct iw_node_attr *attr;
-+
-+	if (nid < 0 || nid >= nr_node_ids)
-+		return;
-+
-+	mutex_lock(&wi_group->kobj_lock);
-+	attr = wi_group->nattrs[nid];
-+	if (!attr) {
-+		mutex_unlock(&wi_group->kobj_lock);
- 		return;
-+	}
-+
-+	wi_group->nattrs[nid] = NULL;
-+	mutex_unlock(&wi_group->kobj_lock);
- 
--	sysfs_remove_file(&wi_group->wi_kobj,
--			  &wi_group->nattrs[nid]->kobj_attr.attr);
--	kfree(wi_group->nattrs[nid]->kobj_attr.attr.name);
--	kfree(wi_group->nattrs[nid]);
-+	sysfs_remove_file(&wi_group->wi_kobj, &attr->kobj_attr.attr);
-+	kfree(attr->kobj_attr.attr.name);
-+	kfree(attr);
- }
- 
- static void sysfs_wi_release(struct kobject *wi_kobj)
-@@ -3464,35 +3477,81 @@ static const struct kobj_type wi_ktype = {
- 
- static int sysfs_wi_node_add(int nid)
- {
--	struct iw_node_attr *node_attr;
-+	int ret = 0;
- 	char *name;
-+	struct iw_node_attr *new_attr = NULL;
- 
--	node_attr = kzalloc(sizeof(*node_attr), GFP_KERNEL);
--	if (!node_attr)
-+	if (nid < 0 || nid >= nr_node_ids) {
-+		pr_err("Invalid node id: %d\n", nid);
-+		return -EINVAL;
-+	}
-+
-+	new_attr = kzalloc(sizeof(struct iw_node_attr), GFP_KERNEL);
-+	if (!new_attr)
- 		return -ENOMEM;
- 
- 	name = kasprintf(GFP_KERNEL, "node%d", nid);
- 	if (!name) {
--		kfree(node_attr);
-+		kfree(new_attr);
- 		return -ENOMEM;
- 	}
- 
--	sysfs_attr_init(&node_attr->kobj_attr.attr);
--	node_attr->kobj_attr.attr.name = name;
--	node_attr->kobj_attr.attr.mode = 0644;
--	node_attr->kobj_attr.show = node_show;
--	node_attr->kobj_attr.store = node_store;
--	node_attr->nid = nid;
-+	mutex_lock(&wi_group->kobj_lock);
-+	if (wi_group->nattrs[nid]) {
-+		mutex_unlock(&wi_group->kobj_lock);
-+		pr_info("Node [%d] already exists\n", nid);
-+		kfree(new_attr);
-+		kfree(name);
-+		return 0;
-+	}
-+	wi_group->nattrs[nid] = new_attr;
- 
--	if (sysfs_create_file(&wi_group->wi_kobj, &node_attr->kobj_attr.attr)) {
--		kfree(node_attr->kobj_attr.attr.name);
--		kfree(node_attr);
--		pr_err("failed to add attribute to weighted_interleave\n");
--		return -ENOMEM;
-+	sysfs_attr_init(&wi_group->nattrs[nid]->kobj_attr.attr);
-+	wi_group->nattrs[nid]->kobj_attr.attr.name = name;
-+	wi_group->nattrs[nid]->kobj_attr.attr.mode = 0644;
-+	wi_group->nattrs[nid]->kobj_attr.show = node_show;
-+	wi_group->nattrs[nid]->kobj_attr.store = node_store;
-+	wi_group->nattrs[nid]->nid = nid;
-+
-+	ret = sysfs_create_file(&wi_group->wi_kobj,
-+				&wi_group->nattrs[nid]->kobj_attr.attr);
-+	if (ret) {
-+		kfree(wi_group->nattrs[nid]->kobj_attr.attr.name);
-+		kfree(wi_group->nattrs[nid]);
-+		wi_group->nattrs[nid] = NULL;
-+		pr_err("Failed to add attribute to weighted_interleave: %d\n", ret);
- 	}
-+	mutex_unlock(&wi_group->kobj_lock);
- 
--	wi_group->nattrs[nid] = node_attr;
--	return 0;
-+	return ret;
-+}
-+
-+static int wi_node_notifier(struct notifier_block *nb,
-+			       unsigned long action, void *data)
-+{
-+	int err;
-+	struct memory_notify *arg = data;
-+	int nid = arg->status_change_nid;
-+
-+	if (nid < 0)
-+		goto notifier_end;
-+
-+	switch(action) {
-+	case MEM_ONLINE:
-+		err = sysfs_wi_node_add(nid);
-+		if (err) {
-+			pr_err("failed to add sysfs [node%d]\n", nid);
-+			return NOTIFY_BAD;
-+		}
-+		break;
-+	case MEM_OFFLINE:
-+		if (!node_state(nid, N_MEMORY))
-+			sysfs_wi_node_release(nid);
-+		break;
-+	}
-+
-+notifier_end:
-+	return NOTIFY_OK;
- }
- 
- static int add_weighted_interleave_group(struct kobject *mempolicy_kobj)
-@@ -3504,13 +3563,17 @@ static int add_weighted_interleave_group(struct kobject *mempolicy_kobj)
- 		       GFP_KERNEL);
- 	if (!wi_group)
- 		return -ENOMEM;
-+	mutex_init(&wi_group->kobj_lock);
- 
- 	err = kobject_init_and_add(&wi_group->wi_kobj, &wi_ktype, mempolicy_kobj,
- 				   "weighted_interleave");
- 	if (err)
- 		goto err_out;
- 
--	for_each_node_state(nid, N_POSSIBLE) {
-+	for_each_online_node(nid) {
-+		if (!node_state(nid, N_MEMORY))
-+			continue;
-+
- 		err = sysfs_wi_node_add(nid);
- 		if (err) {
- 			pr_err("failed to add sysfs [node%d]\n", nid);
-@@ -3518,6 +3581,7 @@ static int add_weighted_interleave_group(struct kobject *mempolicy_kobj)
- 		}
- 	}
- 
-+	hotplug_memory_notifier(wi_node_notifier, DEFAULT_CALLBACK_PRI);
- 	return 0;
- 
- err_out:
--- 
-2.34.1
+> 
+>> +		rc_blob->offset = virtio_gpu_userptr_get_offset(
+>> +			&userptr->base, rc_blob->userptr);
+>> +		mutex_unlock(&vfpriv->userptrs_tree_lock);
+>> +		return STATE_RES_EXISTS;
+> 
+> STATE_RES_EXISTS isn't a error code
+
+Will use the system's built-in error code, really thanks for the review.
+
+> 
 
