@@ -1,198 +1,84 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42ED01E47DD
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 09:45:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC2331E47DD
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 09:45:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743587125; cv=none; b=EmuwlqHgF98bop0Dlf13GELfO58ke0D1HIHtuluZXhMVEFqSux7bIxbwOyyVlMfvoHvFSuD7+xgvqZmw3Hp+RP7OSfxerCfKZ5F9lGT1xVsXWXk1mVk+/S2mEQ/QSMaxyuj8CLJ95Sixn+2X7W+oIr+ZGMLRVIa98nUQbpH/S9s=
+	t=1743587154; cv=none; b=r3iJvqKYibIhZSOjHnEeOdiPxEGhSdbQh6yh/BZmr049Ioz0gdGnSAqS/yn8qrCP5Y9iWBy7O8X9s8kbAZJU7/Xc0hez3g4HrC55emWF3LGX+Opy4Kayp70eduI3S9a0TWaBSlXOVlAvhOMHe1IKhVD7grGHiYXofpFS9sps6rQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743587125; c=relaxed/simple;
-	bh=9ii484WIPnc3vVR9tKTWYlN7FUE47sFz0UO27BjypPc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sa7Fm8+/whLzSe71iany45Ci9sHLUcCZ2mE8WOSrbushyGL3Dnt+gOXmCZAYF2rghQtZt2bwYa46jSrJ4QG47VLD3dl2N+5Dc7RUubwK3tBhqOdSHjBExmLwd11L3qoD4kX1LXkEEa7GfMh6/ruJWilG8hWNaK9Lp0tD6fxXNiU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=W51jKUW3; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=sMGqo046; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=W51jKUW3; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=sMGqo046; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1743587154; c=relaxed/simple;
+	bh=PI+2ULxmE/DTgvzraKY8zkyVcwAkMEPkrxN0O3sDM98=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rDEsJKtMENGl++zdrHCOZYp83R4bS3foj7MC9P7nE0nJeoRPPhzR+c9PblORW4a2nfJzOncbSnUDcU00Emqj5WrR4Vuyu6RgGKWBbLZThrdG6y66UuJMJB567Vi6gr1+/63zkrIMxup7lOUdPsIcm+I5dKzRSJihWCBnn7tAVR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e4jsXC+Z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="W51jKUW3";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="sMGqo046";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="W51jKUW3";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="sMGqo046"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 4BC901F38E;
-	Wed,  2 Apr 2025 09:45:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1743587122; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=3wqHq0y0vfW+gtDYZnbbzr+c6KEpRcpGnljd2nWTC2M=;
-	b=W51jKUW3nu33LTOMeOXys/gup5jZsLcx43h9IHwfne9BjL8mk3uhvk80guC9qeBLSn+wWD
-	WP7IZtqO4C3brUZxRntP3Ms0WI0nFziRpEXRLdtds7w4uoHeJU+j0EbaSJRoFgLlQdCW1q
-	k6ODRNCu0POFYt7fvg5A7UISznS0snQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1743587122;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=3wqHq0y0vfW+gtDYZnbbzr+c6KEpRcpGnljd2nWTC2M=;
-	b=sMGqo046EcB2rA2P+soZVXMpfim+u0eauPkUOe5Uy1YIbJBnqJTv1uf8e3v1xOvkDi+NPE
-	BtIpNWpicSH26UBg==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=W51jKUW3;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=sMGqo046
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1743587122; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=3wqHq0y0vfW+gtDYZnbbzr+c6KEpRcpGnljd2nWTC2M=;
-	b=W51jKUW3nu33LTOMeOXys/gup5jZsLcx43h9IHwfne9BjL8mk3uhvk80guC9qeBLSn+wWD
-	WP7IZtqO4C3brUZxRntP3Ms0WI0nFziRpEXRLdtds7w4uoHeJU+j0EbaSJRoFgLlQdCW1q
-	k6ODRNCu0POFYt7fvg5A7UISznS0snQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1743587122;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=3wqHq0y0vfW+gtDYZnbbzr+c6KEpRcpGnljd2nWTC2M=;
-	b=sMGqo046EcB2rA2P+soZVXMpfim+u0eauPkUOe5Uy1YIbJBnqJTv1uf8e3v1xOvkDi+NPE
-	BtIpNWpicSH26UBg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 048B113A4B;
-	Wed,  2 Apr 2025 09:45:21 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id Mx+fOjEH7WdYSgAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Wed, 02 Apr 2025 09:45:21 +0000
-Message-ID: <dae5089d-e214-4518-b927-5c4149babad8@suse.de>
-Date: Wed, 2 Apr 2025 11:45:21 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e4jsXC+Z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50448C4CEDD;
+	Wed,  2 Apr 2025 09:45:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743587154;
+	bh=PI+2ULxmE/DTgvzraKY8zkyVcwAkMEPkrxN0O3sDM98=;
+	h=From:To:Cc:Subject:Date:From;
+	b=e4jsXC+ZAsdkzBKR42x9V+I0oLViatNn+tIQG8B12s3ttSuNJvPM++2ays682wOeg
+	 6cSjzuP59WqufqHSR7EgcJ61WR5DVZjMnr72ZGbwlTIVPc+YWeAjXdOZRT2ixiZ0MH
+	 CxZz2yK3BhE2yaW1ije6+rAtGK1w5/Au4qtwHuTSkBWhf1oVDHFKmAx91xc7lx/JQD
+	 1JDMk5o/wQhmCvyErEl9RWJMfGoRjWU2HjeiX6TjYEi/dSF/gSr+LEepbD4rpc5J+g
+	 sksZDIWAjqxhzGuTX8IOiA6LZAZ0mctK0qLgxzm6wfgUpsx5Z4G6CkpmTNnjZb2yUB
+	 V1tZRYGI13a1g==
+From: Ingo Molnar <mingo@kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: Andy Lutomirski <luto@kernel.org>,
+	Rik van Riel <riel@surriel.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 0/7 -v2] Factor out, clean up and use the use_/unuse_temporary_mm() APIs some more
+Date: Wed,  2 Apr 2025 11:45:33 +0200
+Message-ID: <20250402094540.3586683-1-mingo@kernel.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC drm-next 0/1] Add support for drm_panic
-To: Ryosuke Yasuoka <ryasuoka@redhat.com>, maarten.lankhorst@linux.intel.com,
- mripard@kernel.org, airlied@gmail.com, simona@ffwll.ch,
- drawat.floss@gmail.com, jfalempe@redhat.com
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- linux-hyperv@vger.kernel.org
-References: <20250402084351.1545536-1-ryasuoka@redhat.com>
-Content-Language: en-US
-From: Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
- AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
- AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
- lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
- U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
- vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
- 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
- j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
- T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
- 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
- GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
- hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
- EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
- C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
- yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
- SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
- Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
- 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
-In-Reply-To: <20250402084351.1545536-1-ryasuoka@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 4BC901F38E
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	TO_DN_SOME(0.00)[];
-	ARC_NA(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FREEMAIL_TO(0.00)[redhat.com,linux.intel.com,kernel.org,gmail.com,ffwll.ch];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	DKIM_TRACE(0.00)[suse.de:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:mid,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -3.01
-X-Spam-Flag: NO
+Content-Transfer-Encoding: 8bit
 
-Hi
+These are a couple of cleanups and micro-optimizations by
+Andy and Peter around the x86 use_/unuse_temporary_mm() APIs,
+which were posted back in November, and which I merged on top
+of the WIP.x86/alternatives tree:
 
-Am 02.04.25 um 10:43 schrieb Ryosuke Yasuoka:
-> This patch adds drm_panic support for hyperv-drm driver. This function
-> works but it's still needed to brush up. Let me hear your opinions.
->
-> Once kernel panic occurs we expect to see a panic screen. However, to
-> see the screen, I need to close/re-open the graphic console client
-> window. As the panic screen shows correctly in the small preview
-> window in Hyper-V manager and debugfs API for drm_panic works correctly,
-> I think kernel needs to send signal to Hyper-V host that the console
-> client refreshes, but I have no idea what kind of signal is needed.
->
-> This patch is tested on Hyper-V 2022.
->
-> Ryosuke Yasuoka (1):
->    drm/hyperv: Add support for drm_panic
->
->   drivers/gpu/drm/drm_simple_kms_helper.c     | 26 +++++++++++++
->   drivers/gpu/drm/hyperv/hyperv_drm_modeset.c | 42 +++++++++++++++++++++
->   include/drm/drm_simple_kms_helper.h         | 22 +++++++++++
+  git://git.kernel.org/pub/scm/linux/kernel/git/mingo/tip.git WIP.x86/mm
 
-No changes to simple_kms_helper please. This is obsolete and should go 
-away. Just put everything into hyperv_drm.
+Thanks,
 
-Best regards
-Thomas
+	Ingo
 
->   3 files changed, 90 insertions(+)
->
->
-> base-commit: cf05922d63e2ae6a9b1b52ff5236a44c3b29f78c
+===============>
+
+Andy Lutomirski (5):
+  x86/events, x86/insn-eval: Remove incorrect current->active_mm references
+  x86/mm: Make use_/unuse_temporary_mm() non-static
+  x86/mm: Allow temporary MMs when IRQs are on
+  x86/efi: Make efi_enter/leave_mm() use the use_/unuse_temporary_mm() machinery
+  x86/mm: Opt-in to IRQs-off activate_mm()
+
+Peter Zijlstra (2):
+  x86/mm: Add 'mm' argument to unuse_temporary_mm()
+  x86/mm: Remove 'mm' argument from unuse_temporary_mm() again
+
+ arch/x86/Kconfig                   |  1 +
+ arch/x86/events/core.c             |  9 ++++-
+ arch/x86/include/asm/mmu_context.h |  5 ++-
+ arch/x86/kernel/alternative.c      | 64 -----------------------------------
+ arch/x86/lib/insn-eval.c           | 13 +++++--
+ arch/x86/mm/tlb.c                  | 69 ++++++++++++++++++++++++++++++++++++++
+ arch/x86/platform/efi/efi_64.c     |  7 ++--
+ 7 files changed, 94 insertions(+), 74 deletions(-)
 
 -- 
---
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Frankenstrasse 146, 90461 Nuernberg, Germany
-GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
-HRB 36809 (AG Nuernberg)
+2.45.2
 
