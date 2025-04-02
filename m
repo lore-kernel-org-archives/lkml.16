@@ -1,139 +1,76 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0C2F16BE17
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 09:35:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAB1A16BE17;
+	Wed,  2 Apr 2025 09:36:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743586514; cv=none; b=OfYmJSyYsi1588NaGU2KOu22mAiVfFnYwSMHIOxYlRq7StPxK8GsmGME8cXMDRdIe2cxUQ/ThfAkLRtswse2TFFo/f0rDLsfeh6YNWl5RQ963FYn7x6xJY76WsAMPWsMF57tFtozVuN+DoBv/zKjfE3xIjFDW9hiOLAHrWuWkWE=
+	t=1743586574; cv=none; b=C+tAmSSxRwvQoM0F06M1au6td3C47peBW2NO2peAFrC9eqo+lHtwvXoQyDm4YAcRpATYFyaaR0aPyM1czfknPjeO2FRM8w0h/a70DUiBbHwfWmJdndSsP27Zx2FttYV//OJQg4YSGQVJh8JdnwqVCE8lZ1gJM7QblEbRdlmRsUQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743586514; c=relaxed/simple;
-	bh=xz2QsNIt+Ztwq87lCfk7uvdsZ/Qk6EAegVkCzpv+338=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kv6q+n9UnFC9wdDGzSDAcMur/0NY1XHxxppqkfc4SM7hIpp/pVmQeQxtpwWfa6WxfY1qmo3cVbEjhPCx5ViYJm+Q5w42n2h1sJDZOfee0iggZ4vpP4CzRTv2Rq5QqXd9ymmxsAXPGo5ts5+74QBqQnpI1AvNpmU8X+CaTJlMAkw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=kEIJWqZj; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1743586574; c=relaxed/simple;
+	bh=G1RWy73ojl3qG3hlsUMk08tmX8YtZkW4GbYJeVymtog=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z5kylx/67BtspqYV0I8Yoj3/z7/mhdUnw0rz91z1mskHwNQdIS7nGwmvtCVVGSTpSkIlSZ14Fr1v+P/UoOrt32mAm3ucOy6ilVeZGN89Sep7vIKJfKXU3LjR+NVzRVMO/E9oFXDw20pXhL3+qhq98RJ66tMLiNvgU+N7PhV1HYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gpLZVzwj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kEIJWqZj"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-54c090fc7adso2242297e87.2
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 02:35:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1743586510; x=1744191310; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NvqFvLihDh/0pOLv9eRfMmIbmTTMjctegUodYgsIBs0=;
-        b=kEIJWqZjebQ+b+/qdVU5HIHyEMIMmhUoVIJpNDcCG63R4wq+TOMAHSnO4Lotcn+orD
-         SIfWdUPsis/80vEuhIPpdR8siXVyeR2li5ZNsBM78qBxdOj5RIH0nEU05zNzzRfPTEMD
-         SBfoX9vtVVtO+YVR5pzzdZ3TxI+a5+0NZMzAM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743586510; x=1744191310;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NvqFvLihDh/0pOLv9eRfMmIbmTTMjctegUodYgsIBs0=;
-        b=Ftftsz/GpmjNA5H8/uYci+S9QQf3AymAsv+gsHDpzio01TWQx0Fvkvk9OS1YpF/wBH
-         S1aEk/BIZkFIT54il3Q12M6kXqm7e+hHJQXhiGdHp7uEN+EU6m6UzdBnp1/5fnJXH8k6
-         +VqBDf6YGHD/55bJJwYWyR3pLkpcB599CzqokOjCkd+BDX4xgYpbHGSp4fnXXM08Tmb7
-         QW+A+7GF3ZB6/dUlgz1tED8qVRt1SJXfXm7JJbL3EUy2nbd9s7vVUk6WI0syr5E0mSk6
-         qbRpYmHnrVEjQ4QGKlBlE9pEXj++G9/IN4vfbZxreRo5J3AdR3Z0nsrAMNayDopByIHR
-         K8ig==
-X-Forwarded-Encrypted: i=1; AJvYcCU2o8wyVdIwAoFusazTD0Lod+FQEcjPV7o/O0QNR4Ky+gOCO427jUOu63xIjnVoptxjTAbE7PePZ964H9I=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz5p2JeNjdLY4rGD8rPhK8rRKiqyFf5XZHUPa8f+oS1aIZgqqg5
-	7MuIsPP+q0nJ4nDHDWhEATDA60Qb++/un9pG/sjNddoUXtvj85BiXjWbH6BeiyWMQwmveEvVyTe
-	iXZ/EXlGf31OsLpqginySEQO975+KXm3U0eER
-X-Gm-Gg: ASbGncumtLp0+uGOWdfLQUscWXlhmoGzI0m1bdn7l21KUnYYTb1L+792S5dvfUUwpCj
-	4w2Z+oBmjVr+bIrWdkRLYUzii+KQkCybCSMvdO//ImTMs95Ctx6v3TaQQS4smQXZI0msLq7D2vx
-	zv7sad/BfSGxsgstPYDyiqmuPea5e59++IjanDQsiBa9dLGG0hZ2vY
-X-Google-Smtp-Source: AGHT+IHolYjToDJLO0MSTMBrUHXLrPk3zfgJ0HVwalaG7YqgYjm+NUtBLWq6MDeTZX2/PLh7y+9Yuwp9U64qQgsq58c=
-X-Received: by 2002:a05:6512:3ca4:b0:54a:fa5a:e9b3 with SMTP id
- 2adb3069b0e04-54b111401fdmr5382707e87.52.1743586509850; Wed, 02 Apr 2025
- 02:35:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gpLZVzwj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCB0DC4CEDD;
+	Wed,  2 Apr 2025 09:36:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743586573;
+	bh=G1RWy73ojl3qG3hlsUMk08tmX8YtZkW4GbYJeVymtog=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gpLZVzwjgIHIzfOAbLFxcZRqMm90MrAweJjoIwUOf3gaFJBeIhHzb7mVWej2Lz9ow
+	 vjOte9ntM+nGfIdS89C04B6MJSaivBkmmGHgYSN9SeFVhf0ReADjFWveiuSvJjD77G
+	 oQH4ObwFl/ql/lOnsVsXelG9YzSZygO66mbu+5qCFr6348ci3tBwOhtN4b+xlJMnlP
+	 /x37CRslYuwVTCwxO9p0HmUf21GSTeaVc9LLMRf4/Wk2MbB44O9rEAi3YAHPspQ+Jd
+	 ZpIQcdGeTVtuvbW4bHhO4vPFAh5DtDK9rudgLoAe5LKhgLDGGCl2/ZkVnFtyUTJUPh
+	 MCQAClHgULaWA==
+Date: Wed, 2 Apr 2025 10:36:09 +0100
+From: Simon Horman <horms@kernel.org>
+To: Debin Zhu <mowenroot@163.com>
+Cc: pabeni@redhat.com, 1985755126@qq.com, kuba@kernel.org,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	paul@paul-moore.com
+Subject: Re: [PATCH v3] netlabel: Fix NULL pointer exception caused by
+ CALIPSO on IPv4 sockets
+Message-ID: <20250402093609.GK214849@horms.kernel.org>
+References: <2a4f2c24-62a8-4627-88c0-776c0e005163@redhat.com>
+ <20250401124018.4763-1-mowenroot@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250402090615.25871-1-angelogioacchino.delregno@collabora.com> <20250402090615.25871-2-angelogioacchino.delregno@collabora.com>
-In-Reply-To: <20250402090615.25871-2-angelogioacchino.delregno@collabora.com>
-From: Chen-Yu Tsai <wenst@chromium.org>
-Date: Wed, 2 Apr 2025 17:34:58 +0800
-X-Gm-Features: AQ5f1JqvPNDibEnWSVdu_841YWdl7OuqFaP96Ge_W58uChccFThN9Of9ZLYLgag
-Message-ID: <CAGXv+5GHf5D3JDh+OZ-Cxf91PTAGYk2+jvuwK1gymy=k1YOo_A@mail.gmail.com>
-Subject: Re: [PATCH v1 1/2] arm64: dts: mediatek: mt8195: Add subsys clks for
- PCIe power domains
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: linux-mediatek@lists.infradead.org, robh@kernel.org, krzk+dt@kernel.org, 
-	conor+dt@kernel.org, matthias.bgg@gmail.com, weiyi.lu@mediatek.com, 
-	tinghan.shen@mediatek.com, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	kernel@collabora.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250401124018.4763-1-mowenroot@163.com>
 
-On Wed, Apr 2, 2025 at 5:10=E2=80=AFPM AngeloGioacchino Del Regno
-<angelogioacchino.delregno@collabora.com> wrote:
->
-> The PCIe MAC needs the sram to be powered on for internal IP
-> access and it has always worked before because the bootloader
-> on Chromebooks was leaving the PCIe PERI_AO MEM clocks on
-> before booting the kernel.
-> Add the SRAM (mem) clock as a subsystem clock on the PCIe MAC
-> P0 and P1 to correctly describe the hardware and to avoid any
-> issue with bootloaders behaving differently.
->
-> Fixes: 2b515194bf0c ("arm64: dts: mt8195: Add power domains controller")
-> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@coll=
-abora.com>
-> ---
->  arch/arm64/boot/dts/mediatek/mt8195.dtsi | 4 ++++
->  1 file changed, 4 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8195.dtsi b/arch/arm64/boot/d=
-ts/mediatek/mt8195.dtsi
-> index b33726da900b..0cb96cba727a 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8195.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt8195.dtsi
-> @@ -792,12 +792,16 @@ power-domain@MT8195_POWER_DOMAIN_CAM_MRAW {
->
->                                 power-domain@MT8195_POWER_DOMAIN_PCIE_MAC=
-_P0 {
->                                         reg =3D <MT8195_POWER_DOMAIN_PCIE=
-_MAC_P0>;
-> +                                       clocks =3D <&pericfg_ao CLK_PERI_=
-AO_PCIE_P0_MEM>;
-> +                                       clock-names =3D "ss-pextp0-mem";
+On Tue, Apr 01, 2025 at 08:40:18PM +0800, Debin Zhu wrote:
+> When calling netlbl_conn_setattr(), addr->sa_family is used
+> to determine the function behavior. If sk is an IPv4 socket,
+> but the connect function is called with an IPv6 address,
+> the function calipso_sock_setattr() is triggered.
+> Inside this function, the following code is executed:
+> 
+> sk_fullsock(__sk) ? inet_sk(__sk)->pinet6 : NULL;
+> 
+> Since sk is an IPv4 socket, pinet6 is NULL, leading to a
+> null pointer dereference.
+> 
+> This patch fixes the issue by checking if inet6_sk(sk)
+> returns a NULL pointer before accessing pinet6.
+> 
+> Fixes: ceba1832b1b2("calipso: Set the calipso socket label to match the secattr.")
 
-Doesn't the PCIe host controller already reference this clock?
+There is probably no need to repost for this, but
+there is a missing space in the Fixes tag. It should be like this:
 
->                                         mediatek,infracfg =3D <&infracfg_=
-ao>;
->                                         #power-domain-cells =3D <0>;
->                                 };
->
->                                 power-domain@MT8195_POWER_DOMAIN_PCIE_MAC=
-_P1 {
->                                         reg =3D <MT8195_POWER_DOMAIN_PCIE=
-_MAC_P1>;
-> +                                       clocks =3D <&pericfg_ao CLK_PERI_=
-AO_PCIE_P1_MEM>;
-> +                                       clock-names =3D "ss-pextp1-mem";
+Fixes: ceba1832b1b2 ("calipso: Set the calipso socket label to match the secattr.")
 
-Not this one though, since:
+> Signed-off-by: Debin Zhu <mowenroot@163.com>
+> Signed-off-by: Bitao Ouyang <1985755126@qq.com>
+> Acked-by: Paul Moore <paul@paul-moore.com>
 
-         /* Designer has connect pcie1 with peri_mem_p0 clock */
-         <&pericfg_ao CLK_PERI_AO_PCIE_P0_MEM>;
-
-
-ChenYu
-
->                                         mediatek,infracfg =3D <&infracfg_=
-ao>;
->                                         #power-domain-cells =3D <0>;
->                                 };
-> --
-> 2.48.1
->
->
+...
