@@ -1,104 +1,195 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B40621B199;
-	Wed,  2 Apr 2025 12:22:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC3712356AB;
+	Wed,  2 Apr 2025 12:23:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743596552; cv=none; b=XtYG2P9Tu5hb7IfkNl0GuGw5YZOm0fw1t2YEzI6uQeWKYA1CRgIfTspoxMvCnQPdtxh9LayKRRpdh+UGExOBEhlrE8bV8q2aMxuQIf0iM1CvJPU3ZHKRJ4Dr7b4FsUDW5be26T/FIFlx84zTwRYuAYJymW+slCS5aA+KLF7lzYc=
+	t=1743596588; cv=none; b=Sry3xQqkipCVJCtHOAjkrZ+BA1mPU4XHFTRz/Ua6XYR5RKqwJyWzUmHDssDoa0uUhAcQ9u7fKrWKsImq4RHAabbKOwm0xd2TxN9sBEbvrLst359p41Izp06JYjCyqeYokMEDfLRv68dnHczHE0+R16EzaG7M7ajn+IMeAajugGU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743596552; c=relaxed/simple;
-	bh=rjPUePPhHfImwnSvaxwfF564XJ0VhhEVaBaFthDIdp0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JWzKRdIRfOGlq8Mcq5Y4fBIc3fOaGrHY3+R+JewHaLjwi8a6zIWe6+Dq3Ke+rlx0iXNOjx364YzqAQWXV5iysyfvFZ74tte3T92lkcvtBUDKn+eVWhWYG6l/1279hk4TXUNxWq3docgLI7wuWePaiqmWUnk5jpZk3LoQBIr0cEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=exMHggJ/; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1743596588; c=relaxed/simple;
+	bh=jrQuqRPZTLRY/Nv4wjP8wiHYwDHsodAh6RSZDaxljOA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=LKU+T32mSafDmM14YybpaKnFq39tLVAMm60tZbycxLP7lW6Dh45TElHXbffPztoUAYVUaonogRRQoWZfvSH5i236cLy0pkuexj2TULBgRpHrEjsnnTrh70h9FD5VEoRfihlqUzsvkXm2fjlmZT5Dldek6oav5zz6KLKDby3U5UM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TjhJ0zT0; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="exMHggJ/"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=33b2t4HcrwoP+ai68jl46pM/QnlIuyA8Mc5B+grxlcA=; b=exMHggJ//R3UNW/FQV6swFas17
-	utBymsHGwpsvS0cD/fUT65Wxa+tkWNbJzZkCbFpksuhWh/1sZMpX8oEu6+AH5qenYXWbphvvL625h
-	BKg6nKjo73TsrmNcQGl+cphViRA8+Kh5u5BURHr1U8bktfgwRyJ1IfXtPl8xvX2tV2+y1mL63G2IE
-	ZFjWYBq7Eo0Pa+EfSIyvcZAoiI3/8U1ghZjlOkofcF5lNVM2v8nf1YvjD7zvHS69C/2C5SsU5qYuN
-	Ix1CCUS+GIn6rtfLrIhINo8TbHvG2DA2mObaoS7Oeoj/199PLFQxuiiPtgjE6nAMjm9GEqRtzyHsa
-	btvoQhng==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1tzx6v-00000007183-0Szs;
-	Wed, 02 Apr 2025 12:22:25 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id A8C68300288; Wed,  2 Apr 2025 14:22:24 +0200 (CEST)
-Date: Wed, 2 Apr 2025 14:22:24 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, vbabka@suse.cz,
-	torvalds@linux-foundation.org, intel-wired-lan@lists.osuosl.org,
-	netdev@vger.kernel.org, linux-toolchains@vger.kernel.org
-Subject: Re: [RFC] slab: introduce auto_kfree macro
-Message-ID: <20250402122224.GB25719@noisy.programming.kicks-ass.net>
-References: <20250401134408.37312-1-przemyslaw.kitszel@intel.com>
- <Z-0SU8cYkTTbprSh@smile.fi.intel.com>
- <20250402121935.GJ25239@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TjhJ0zT0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743596587; x=1775132587;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=jrQuqRPZTLRY/Nv4wjP8wiHYwDHsodAh6RSZDaxljOA=;
+  b=TjhJ0zT0Km3lLyIPt5zqZ0N8KOBWO8ybNLcL1G9H8Xx85rvay0FaWGLR
+   3ouy4aJk98jGVPbwHdz7AQx1bjsbus6XwJPggZ6C032HgWebjijg8+n9i
+   sVPPbfNHAtoLcq5BRZ/2peTNsgfBfJBytTXGOaJYaTMLvOeNjxxwkX4zG
+   VHwtZRCu1W7e15/hVpOL8neNWdpLJGoPdVoPgQTaa+FEdDDQMOlN/HqBB
+   OYdm+V8yDjqgoVQTOL8MJzxGhW+vp6g2UvNRhOhOJxOhsQDws6bMDBWUT
+   ZAjmOD7YYd26LirEPeGgqbOs+28tTpBWxMafAmvWtWKL453rsl+pc/GMV
+   w==;
+X-CSE-ConnectionGUID: YEahfclmTBysQWaARrbT/w==
+X-CSE-MsgGUID: FLDrPTH9RAqmilNwInep1Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11392"; a="44104530"
+X-IronPort-AV: E=Sophos;i="6.15,182,1739865600"; 
+   d="scan'208";a="44104530"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 05:23:06 -0700
+X-CSE-ConnectionGUID: ss7ZNeBlRhKHvpd1/tEbwA==
+X-CSE-MsgGUID: JBaTt+7QRqWAk6a/fiZEVA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,182,1739865600"; 
+   d="scan'208";a="149872337"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa002.fm.intel.com with ESMTP; 02 Apr 2025 05:23:04 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 745794B0; Wed, 02 Apr 2025 15:23:03 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-gpio@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Mika Westerberg <westeri@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH v1 4/5] gpiolib: acpi: Reuse struct acpi_gpio_params in struct acpi_gpio_lookup
+Date: Wed,  2 Apr 2025 15:21:19 +0300
+Message-ID: <20250402122301.1517463-5-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250402122301.1517463-1-andriy.shevchenko@linux.intel.com>
+References: <20250402122301.1517463-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250402121935.GJ25239@noisy.programming.kicks-ass.net>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 02, 2025 at 02:19:35PM +0200, Peter Zijlstra wrote:
-> On Wed, Apr 02, 2025 at 01:32:51PM +0300, Andy Shevchenko wrote:
-> > On Tue, Apr 01, 2025 at 03:44:08PM +0200, Przemek Kitszel wrote:
-> > > Add auto_kfree macro that acts as a higher level wrapper for manual
-> > > __free(kfree) invocation, and sets the pointer to NULL - to have both
-> > > well defined behavior also for the case code would lack other assignement.
-> > > 
-> > > Consider the following code:
-> > > int my_foo(int arg)
-> > > {
-> > > 	struct my_dev_foo *foo __free(kfree); /* no assignement */
-> > > 
-> > > 	foo = kzalloc(sizeof(*foo), GFP_KERNEL);
-> > > 	/* ... */
-> > > }
-> > > 
-> > > So far it is fine and even optimal in terms of not assigning when
-> > > not needed. But it is typical to don't touch (and sadly to don't
-> > > think about) code that is not related to the change, so let's consider
-> > > an extension to the above, namely an "early return" style to check
-> > > arg prior to allocation:
-> > > int my_foo(int arg)
-> > > {
-> > >         struct my_dev_foo *foo __free(kfree); /* no assignement */
-> > > +
-> > > +	if (!arg)
-> > > +		return -EINVAL;
-> > >         foo = kzalloc(sizeof(*foo), GFP_KERNEL);
-> > >         /* ... */
-> > > }
-> > > Now we have uninitialized foo passed to kfree, what likely will crash.
-> > > One could argue that `= NULL` should be added to this patch, but it is
-> > > easy to forgot, especially when the foo declaration is outside of the
-> > > default git context.
-> 
-> The compiler *should* complain. But neither GCC nor clang actually
-> appear to warn in this case.
-> 
-> I don't think we should be making dodgy macros like you propose to work
-> around this compiler deficiency. Instead I would argue we ought to get
-> both compilers fixed asap, and then none of this will be needed.
+Some of the contents of struct acpi_gpio_lookup repeats what we have
+in the struct acpi_gpio_params. Reuse the latter in the former.
 
-Ah, I think the problem is that the cleanup function takes a pointer to
-the object, and pointers to uninitialized values are generally
-considered okay.
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/gpio/gpiolib-acpi.c | 34 ++++++++++++++++++----------------
+ 1 file changed, 18 insertions(+), 16 deletions(-)
 
-The compilers would have to explicitly disallow this for the cleanup
-functions.
+diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
+index afeb8d1c7102..750724601106 100644
+--- a/drivers/gpio/gpiolib-acpi.c
++++ b/drivers/gpio/gpiolib-acpi.c
+@@ -744,9 +744,7 @@ static int acpi_gpio_update_gpiod_lookup_flags(unsigned long *lookupflags,
+ 
+ struct acpi_gpio_lookup {
+ 	struct acpi_gpio_info info;
+-	int index;
+-	u16 pin_index;
+-	bool active_low;
++	struct acpi_gpio_params par;
+ 	struct gpio_desc *desc;
+ 	int n;
+ };
+@@ -754,6 +752,7 @@ struct acpi_gpio_lookup {
+ static int acpi_populate_gpio_lookup(struct acpi_resource *ares, void *data)
+ {
+ 	struct acpi_gpio_lookup *lookup = data;
++	struct acpi_gpio_params *par = &lookup->par;
+ 
+ 	if (ares->type != ACPI_RESOURCE_TYPE_GPIO)
+ 		return 1;
+@@ -765,12 +764,12 @@ static int acpi_populate_gpio_lookup(struct acpi_resource *ares, void *data)
+ 		u16 pin_index;
+ 
+ 		if (lookup->info.quirks & ACPI_GPIO_QUIRK_ONLY_GPIOIO && gpioint)
+-			lookup->index++;
++			par->crs_entry_index++;
+ 
+-		if (lookup->n++ != lookup->index)
++		if (lookup->n++ != par->crs_entry_index)
+ 			return 1;
+ 
+-		pin_index = lookup->pin_index;
++		pin_index = par->line_index;
+ 		if (pin_index >= agpio->pin_table_length)
+ 			return 1;
+ 
+@@ -796,7 +795,7 @@ static int acpi_populate_gpio_lookup(struct acpi_resource *ares, void *data)
+ 			lookup->info.polarity = agpio->polarity;
+ 			lookup->info.triggering = agpio->triggering;
+ 		} else {
+-			lookup->info.polarity = lookup->active_low;
++			lookup->info.polarity = par->active_low;
+ 		}
+ 
+ 		lookup->info.flags = acpi_gpio_to_gpiod_flags(agpio, lookup->info.polarity);
+@@ -834,7 +833,8 @@ static int acpi_gpio_property_lookup(struct fwnode_handle *fwnode, const char *p
+ 				     struct acpi_gpio_lookup *lookup)
+ {
+ 	struct fwnode_reference_args args;
+-	unsigned int index = lookup->index;
++	struct acpi_gpio_params *par = &lookup->par;
++	unsigned int index = par->crs_entry_index;
+ 	unsigned int quirks = 0;
+ 	int ret;
+ 
+@@ -857,9 +857,9 @@ static int acpi_gpio_property_lookup(struct fwnode_handle *fwnode, const char *p
+ 	if (args.nargs != 3)
+ 		return -EPROTO;
+ 
+-	lookup->index = args.args[0];
+-	lookup->pin_index = args.args[1];
+-	lookup->active_low = !!args.args[2];
++	par->crs_entry_index = args.args[0];
++	par->line_index = args.args[1];
++	par->active_low = !!args.args[2];
+ 
+ 	lookup->info.adev = to_acpi_device_node(args.fwnode);
+ 	lookup->info.quirks = quirks;
+@@ -897,10 +897,11 @@ static struct gpio_desc *acpi_get_gpiod_by_index(struct acpi_device *adev,
+ 						 struct acpi_gpio_info *info)
+ {
+ 	struct acpi_gpio_lookup lookup;
++	struct acpi_gpio_params *par = &lookup.par;
+ 	int ret;
+ 
+ 	memset(&lookup, 0, sizeof(lookup));
+-	lookup.index = index;
++	par->crs_entry_index = index;
+ 
+ 	if (propname) {
+ 		dev_dbg(&adev->dev, "GPIO: looking up %s\n", propname);
+@@ -909,9 +910,9 @@ static struct gpio_desc *acpi_get_gpiod_by_index(struct acpi_device *adev,
+ 		if (ret)
+ 			return ERR_PTR(ret);
+ 
+-		dev_dbg(&adev->dev, "GPIO: _DSD returned %s %d %u %u\n",
+-			dev_name(&lookup.info.adev->dev), lookup.index,
+-			lookup.pin_index, lookup.active_low);
++		dev_dbg(&adev->dev, "GPIO: _DSD returned %s %u %u %u\n",
++			dev_name(&lookup.info.adev->dev),
++			par->crs_entry_index, par->line_index, par->active_low);
+ 	} else {
+ 		dev_dbg(&adev->dev, "GPIO: looking up %d in _CRS\n", index);
+ 		lookup.info.adev = adev;
+@@ -943,6 +944,7 @@ static struct gpio_desc *acpi_get_gpiod_from_data(struct fwnode_handle *fwnode,
+ 						  struct acpi_gpio_info *info)
+ {
+ 	struct acpi_gpio_lookup lookup;
++	struct acpi_gpio_params *par = &lookup.par;
+ 	int ret;
+ 
+ 	if (!is_acpi_data_node(fwnode))
+@@ -952,7 +954,7 @@ static struct gpio_desc *acpi_get_gpiod_from_data(struct fwnode_handle *fwnode,
+ 		return ERR_PTR(-EINVAL);
+ 
+ 	memset(&lookup, 0, sizeof(lookup));
+-	lookup.index = index;
++	par->crs_entry_index = index;
+ 
+ 	ret = acpi_gpio_property_lookup(fwnode, propname, &lookup);
+ 	if (ret)
+-- 
+2.47.2
+
