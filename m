@@ -1,122 +1,93 @@
-Received: from mail-pl1-f193.google.com (mail-pl1-f193.google.com [209.85.214.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2141833993;
-	Wed,  2 Apr 2025 14:14:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EB0C23BCE4
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 14:15:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743603298; cv=none; b=DQU1TXN8UW6LC5nSXlbFIPuOYnfHbfDSYmn9yRyhuXdNfYGBfXLuFj+45ZjxlceEpHR4hfcR2QQANtmr+Y9Y0kbAHAQzzZHGkgQWqH7kgk+TuC4ygYwKjcLhTZeccW/Zh3+gFr+/Vy+9BG5D75/XYdMRLhnRYC9tQtkKVQsnt9U=
+	t=1743603302; cv=none; b=oTgR8Im3Vk29B+s5+rcvtdzGqepAsjNzV6Hl/3gS9cJabQB2VEhNZarJ+u1csafx77B2l4oxQ3Y25HNCbjN9eIJsiHvETMRaXyd0xXLfDiYkvd+LmuPLlYu1stkJ1iWv0u6mVtkeTmkE3/E2vAH4U5h4FA6eTMbl5A3v9qSCJmo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743603298; c=relaxed/simple;
-	bh=jinJva6VmkIdixrc44SfhYD9QbRViWUn9sjkKwbuZ24=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=MzRWRzigCSfbZupoieJetDjKppgKWanPuFvHkC1WiC/v6IKrf5wct+Z2FJqwh5dp39H5HopqDiHhsFBJsNvCO5RKTz8YOFDizi4i7bkqpkYLyRF80GSFSukHdRCD1mDO/l4/0SnN6jFYwmjyIIj4kz4K3DwxnS+BWn1Aq2hSXhs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Bi9ubqbt; arc=none smtp.client-ip=209.85.214.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bi9ubqbt"
-Received: by mail-pl1-f193.google.com with SMTP id d9443c01a7336-227914acd20so12569375ad.1;
-        Wed, 02 Apr 2025 07:14:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743603296; x=1744208096; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+Z9aD1hMOgbWptS9Ck8Mm5LdumYoWsU5uiQAqSmaElE=;
-        b=Bi9ubqbtIUXMpJitNho0lbzom9eqYZVGXRftUeveA9CbfdZwUEcMif8XF1xExV2coH
-         dYqT6K2hblCwx3+5mMLumrEihQngnzji6DTaoXzrNrciArcNvNNlViFE6zjrzFELIa/V
-         LM2MwpnGvobmsJHWluei3z+WxHUFDGRWiaTZT+wHHd/1AFSjnIB23H7xI33jCL7fyR8e
-         OuX+rNGkUXQJsjHSAz9lAl7+YlGKHczc1oGsIq2taHTnLJHcWvvATd4npbgBCeqnJAJB
-         FTdXQscYdiE56FuEKVnViaOF7apZokv36PQsH8+4NWwDreZcb99AbO7HwkbltaZe/0Yl
-         W7Ig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743603296; x=1744208096;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+Z9aD1hMOgbWptS9Ck8Mm5LdumYoWsU5uiQAqSmaElE=;
-        b=RsJfe0t0FWVTz/amYausvggTAXSKJyNZX9Zaxmhb86D568fMQcTHVCAht40yz+flHy
-         0gBc+MT6YmTgrBl/GBEpu4zRDxNzf8ZaXi13INVOmhzSwVWeM9f8XkOx+uRyhXZNVYw9
-         zYZ5qJotIS3SsJmFr7OYk8yLDvqiBKORQUILwJyP613HiV2vCsnwVJuZ3TfWBeONcKLo
-         BbSL7lIdPJeTCxAJf/b18ckPFfcNkljXEbmCZyNOF896LJpus6iA4cMiQoqa41YzhwVG
-         ZrL+6h4SvXM+YyA66wcxOuY1kZQXXg5ydDCbCQ4AwQ34EVtZo/J+LglbQ6AyyFB8lLn3
-         NpxQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVFeukZ5QBOdkIWzqHXdU7W4wypjCmRrLbIUMOlUwrIxMCYAz2tvMKPCvVp0Fb7egziPPUJXhvJPZHtp14=@vger.kernel.org, AJvYcCWSy5MGLyfMpVPsBUKlvsEBR+ryfyuA7CjFwS5yTJgvHEtG7pMG7I5B+IcF3wIkg7HGS1YNIhp41idgqEs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywnosu5E6B6CkmmQLcmoYMcuZAsDVmoO5udhl3r3H6u02CtZ3qY
-	cMOClG2lGEmeq3asKiX4BqRgTDj57HLCZHJwg83qDUER1V+XqV2nEdAD95gI374=
-X-Gm-Gg: ASbGncsm6Vo1ZiS1aN3EimjRG4Hjfqa31Msq6jm6Bq14+nWM8eG4JgQvLtp7VLeRFyW
-	a/22TbpoRUb5wZSZZaDkcu8QkFXjucZYcCtCkchmqie7nTLIk3369TIT2KXuHI6sjqMF3nvmNn6
-	0wgdE0CewOmKAyyhpIh3oMpQN4ntk/58YT3ueMLpwrZh8CgYMPpYyhNI8Br3WK4ZeeD0wHMl6U7
-	9vrqFN6hRiN31QuO+teNJI/a+9nozoqFSKhXKseffprIKUWHoswutmUu62n3m+wi1WHRlDh0o2Y
-	xQf12hr4MZ8Jklhw4Bshvhh0bmAo5g37wI/07bcWsqXaoGdcW2EQGf/qbny+wmh8DaUeeyY=
-X-Google-Smtp-Source: AGHT+IEVk9ePgij9pw83la/9RPj9XKLPUH+QbMvCEHd9Rgikgo1alzV+jBIHAZFyN1Ec/TTZ34JfQQ==
-X-Received: by 2002:a17:903:1c5:b0:225:abd2:5e5a with SMTP id d9443c01a7336-2296dea036amr30067385ad.4.1743603296169;
-        Wed, 02 Apr 2025 07:14:56 -0700 (PDT)
-Received: from henry.localdomain ([111.202.148.167])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73971063689sm11344920b3a.99.2025.04.02.07.14.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Apr 2025 07:14:55 -0700 (PDT)
-From: Henry Martin <bsdhenrymartin@gmail.com>
-To: cezary.rojewski@intel.com,
-	liam.r.girdwood@linux.intel.com,
-	peter.ujfalusi@linux.intel.com,
-	yung-chuan.liao@linux.intel.com,
-	ranjani.sridharan@linux.intel.com,
-	kai.vehmanen@linux.intel.com
-Cc: pierre-louis.bossart@linux.dev,
-	broonie@kernel.org,
-	perex@perex.cz,
-	tiwai@suse.com,
-	amadeuszx.slawinski@linux.intel.com,
-	ethan@ethancedwards.com,
-	jbrunet@baylibre.com,
-	bsdhenrymartin@gmail.com,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] ASoC: Intel: avs: Fix null-ptr-deref in avs_component_probe()
-Date: Wed,  2 Apr 2025 22:14:11 +0800
-Message-Id: <20250402141411.44972-1-bsdhenrymartin@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <95c39d93-f35f-4017-843e-e5d836f1b091@intel.com>
-References: <95c39d93-f35f-4017-843e-e5d836f1b091@intel.com>
+	s=arc-20240116; t=1743603302; c=relaxed/simple;
+	bh=RekemI21winZSkN/4ZTNVhN87O5VbRFw+71Y2jqcSSo=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=pmcgQHYXiOxczXi0ME72oSg8thVG5EVinXrwdKCYXtT71dcvJjmePMCpVPpP9G2ZaUIo+3MKUN8UlCH5MNfnobJQqLkNo2JxIYqDw8PRS7abuPZRvxnhH/2HDk212+gaS566zBzPorOi55yav0bUL3y0tWgCjekghQwpOLbHv6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZSRcR295Sz6D94P;
+	Wed,  2 Apr 2025 22:11:19 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 3892A1407DC;
+	Wed,  2 Apr 2025 22:14:58 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (7.182.85.71) by
+ frapeml500008.china.huawei.com (7.182.85.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Wed, 2 Apr 2025 16:14:58 +0200
+Received: from frapeml500008.china.huawei.com ([7.182.85.71]) by
+ frapeml500008.china.huawei.com ([7.182.85.71]) with mapi id 15.01.2507.039;
+ Wed, 2 Apr 2025 16:14:58 +0200
+From: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
+To: Sudeep Holla <sudeep.holla@arm.com>
+CC: "kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "oliver.upton@linux.dev"
+	<oliver.upton@linux.dev>, "maz@kernel.org" <maz@kernel.org>,
+	"mark.rutland@arm.com" <mark.rutland@arm.com>, "lpieralisi@kernel.org"
+	<lpieralisi@kernel.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"nichen@iscas.ac.cn" <nichen@iscas.ac.cn>
+Subject: RE: [PATCH] smccc/kvm_guest: Remove the accidental semicolon
+Thread-Topic: [PATCH] smccc/kvm_guest: Remove the accidental semicolon
+Thread-Index: AQHbo9Xb1Qaum+PVw0qFOb1Na1wSkbOQRVEAgAAki3A=
+Date: Wed, 2 Apr 2025 14:14:57 +0000
+Message-ID: <fac61876ab13495ca1b4ca2a94cc735a@huawei.com>
+References: <20250402134401.146156-1-shameerali.kolothum.thodi@huawei.com>
+ <20250402-independent-hyrax-of-honor-4515fb@sudeepholla>
+In-Reply-To: <20250402-independent-hyrax-of-honor-4515fb@sudeepholla>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-devm_kasprintf() returns NULL when memory allocation fails. Currently,
-avs_component_probe() does not check for this case, which results in a
-NULL pointer dereference.
 
-Fixes: 739c031110da ("ASoC: Intel: avs: Provide support for fallback topology")
-Reviewed-by: Cezary Rojewski <cezary.rojewski@intel.com>
-Reviewed-by: Ethan Carter Edwards <ethan@ethancedwards.com>
-Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
----
-V1 -> V2: No functional changes, just correct title and redundant commit
-message.
 
- sound/soc/intel/avs/pcm.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+> -----Original Message-----
+> From: Sudeep Holla <sudeep.holla@arm.com>
+> Sent: Wednesday, April 2, 2025 2:58 PM
+> To: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
+> Cc: kvmarm@lists.linux.dev; linux-arm-kernel@lists.infradead.org;
+> oliver.upton@linux.dev; maz@kernel.org; mark.rutland@arm.com;
+> lpieralisi@kernel.org; catalin.marinas@arm.com; linux-
+> kernel@vger.kernel.org
+> Subject: Re: [PATCH] smccc/kvm_guest: Remove the accidental semicolon
+>=20
+> On Wed, Apr 02, 2025 at 02:44:01PM +0100, Shameer Kolothum wrote:
+> > Fixes cocci reported warning:Unneeded semicolon
+> >
+>=20
+> There was similar patch on the list [1] few days ago.
 
-diff --git a/sound/soc/intel/avs/pcm.c b/sound/soc/intel/avs/pcm.c
-index dac463390da1..7072bcf4e56f 100644
---- a/sound/soc/intel/avs/pcm.c
-+++ b/sound/soc/intel/avs/pcm.c
-@@ -927,7 +927,8 @@ static int avs_component_probe(struct snd_soc_component *component)
- 		else
- 			mach->tplg_filename = devm_kasprintf(adev->dev, GFP_KERNEL,
- 							     "hda-generic-tplg.bin");
--
-+		if (!mach->tplg_filename)
-+			return -ENOMEM;
- 		filename = kasprintf(GFP_KERNEL, "%s/%s", component->driver->topology_name_prefix,
- 				     mach->tplg_filename);
- 		if (!filename)
--- 
-2.34.1
+Ah.. I missed that. Please take that.
+>=20
+> > Fixes: 86edf6bdcf05 ("smccc/kvm_guest: Enable errata based on
+> > implementation CPUs")
+>=20
+> ^^^ Is this really necessary as they get backported as well ?
 
+Actually I was of two minds on this. Not sure.
+
+>=20
+> Since, KVM maintainers are in cc-ed, let me know if you guys want to pick
+> this ? Else I can send it as part of my firmware (ffa/scmi) fixes.
+
+Thanks,
+Shameer
