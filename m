@@ -1,96 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A2C728382;
-	Wed,  2 Apr 2025 15:20:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B61720E70F;
+	Wed,  2 Apr 2025 15:20:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743607206; cv=none; b=udqiyJNIhRwROCTQC+bCv1568j20sZCkwXusm7yH3FEHZPcmHGdSPTGwcC1t5xtG07vRBVdxi/oqdaAW08pbJ7P9FvPVIZeqj7gTBWX+MLPkKp5lKFtV1oxDDW7ohWXE2aNlMkwRAvOx8KZwxSJPWHttpJrjzR6gjSyTyhyoMuM=
+	t=1743607208; cv=none; b=VT5pM2lU3u3b/fq1Zm12hcKlWO0q20A8YDleQ0FOJqL5381S1Bkj9ajHa02XLDtNyYEGYkY1uJN9ObcaHn7c2JN1gssbkX6XzbNwwqDprRWIYvy4bQPw+hhQu1PU274XTO6BoRzqldJE6LuwbnujQ3KaDQwIgNxL2z+47vtYAtc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743607206; c=relaxed/simple;
-	bh=RF67FA7KLWM7yXZbl1Og9wynn8w4dU551JL/aWox2SY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y3A6WoVLMKREeovUrp0FKxd5gblIMOdhZ6T/NFxv/0LjwyivW1ILF4EBN/urwaEBRe9OIcSOXFvQZKfo19RjF543QGKwuAh8JbAiEwUedg2Zcl69INgzSLY/2TEIAG3W7AwRS603b9E4AMqWjp7+BhS6+bS7G2InaqX+X0yvRcg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=jVStg4s5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743607208; c=relaxed/simple;
+	bh=YuiwZ64BLIak85yyhwyjHCS3tbVg/tevpw8kdApePzI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=h6qmojW5UEkkLv46vrLB8GejHK7FN/n637yBxM2U3cDImBsYZD4R+i3+fJDMELl5ZYd3OPumG3oVBm+ejp+MhSuuJ8Z/MoQr9xMs9cLwiomg5Bk1NPAUIOZ0wO8VDOLd+Gvo/CrB7ewCTVxTz3/kxot8Hs+uYbivuSeDEsjrQRY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NkOQ6pXD; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="jVStg4s5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C255C4CEDD;
-	Wed,  2 Apr 2025 15:20:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1743607205;
-	bh=RF67FA7KLWM7yXZbl1Og9wynn8w4dU551JL/aWox2SY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jVStg4s59mQvS3H6luFFXqrZZr7oeovy6DGIH4c08aDLWBDBjpHQ7+PGhIjXHvHRd
-	 yph+HtUtbfxYXsGD/Dlvrdz2wdztsy8mxSMAf+jF9rhP9j/wIBVGFgEUxgXw9p2RmB
-	 9x4pUNf4iqO9+/KK70lM+AIWYgWuhweYRzrR4s00=
-Date: Wed, 2 Apr 2025 16:18:37 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Wang Zhaolong <wangzhaolong1@huawei.com>
-Cc: Kuniyuki Iwashima <kuniyu@amazon.com>, edumazet@google.com,
-	ematsumiya@suse.de, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-net@vger.kernel.org,
-	smfrench@gmail.com, zhangchangzhong@huawei.com, cve@kernel.org,
-	sfrench@samba.org
-Subject: Re: Fwd: [PATCH][SMB3 client] fix TCP timers deadlock after rmmod
-Message-ID: <2025040248-tummy-smilingly-4240@gregkh>
-References: <ac39f5a1-664a-4812-bb50-ceb9771d1d66@huawei.com>
- <20250402020807.28583-1-kuniyu@amazon.com>
- <36dc113c-383e-4b8a-88c1-6a070e712086@huawei.com>
- <2025040200-unchanged-roaming-52b3@gregkh>
- <e6537aa9-6fe7-47e4-afd3-9da549ce12a1@huawei.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NkOQ6pXD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743607206; x=1775143206;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=YuiwZ64BLIak85yyhwyjHCS3tbVg/tevpw8kdApePzI=;
+  b=NkOQ6pXDDfkDL2yNMZGtiQ25ZLjIe8qxLgjahlWUiXgGrvrpNeFyqie1
+   hKAgLPDiIRIVidvxf84Qr0Sn4vb44xYGcxqG92mKDcx4hI5+vz2h9xjW/
+   L07pX5llQ7QT7goExAej+zekvcaTsTHUoOVfkrpsTZ99N1+QYhME1h3Io
+   UbATtuyig82Lwtl5MwSIbB9MZ/97y4jvr3rbccyMmnM//y5GbIHG4IaiD
+   fmKSFzY4tIUi4uK16wLBq7vgAadAzRpbNaBanL0ZSYFOlWnlNQBZAjVQG
+   hDzTnIDBlpNgpfB9XQnAM7v2PQp2EKEBBc6YOC8pvDFc5zhOWARfJazBS
+   Q==;
+X-CSE-ConnectionGUID: DDfAUHkKQgO0DJFXiZQCsw==
+X-CSE-MsgGUID: 1EN8EDv1TJqaU0/s499iaw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11392"; a="44988847"
+X-IronPort-AV: E=Sophos;i="6.15,182,1739865600"; 
+   d="scan'208";a="44988847"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 08:20:06 -0700
+X-CSE-ConnectionGUID: fNemeXIIQxmRJ47KaJlkYA==
+X-CSE-MsgGUID: mYyU4FEUTJaKF6+Y046OQA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,182,1739865600"; 
+   d="scan'208";a="126705784"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa007.fm.intel.com with ESMTP; 02 Apr 2025 08:20:03 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 5960026D; Wed, 02 Apr 2025 18:20:02 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 1/1] gpiolib: Make gpiod_put() error pointer aware
+Date: Wed,  2 Apr 2025 18:20:00 +0300
+Message-ID: <20250402152000.1572764-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e6537aa9-6fe7-47e4-afd3-9da549ce12a1@huawei.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 02, 2025 at 05:15:44PM +0800, Wang Zhaolong wrote:
-> > On Wed, Apr 02, 2025 at 12:49:50PM +0800, Wang Zhaolong wrote:
-> > > Yes, it seems the previous description might not have been entirely clear.
-> > > I need to clearly point out that this patch, intended as the fix for CVE-2024-54680,
-> > > does not actually address any real issues. It also fails to resolve the null pointer
-> > > dereference problem within lockdep. On top of that, it has caused a series of
-> > > subsequent leakage issues.
-> > 
-> > If this cve does not actually fix anything, then we can easily reject
-> > it, please just let us know if that needs to happen here.
-> > 
-> > thanks,
-> > 
-> > greg k-h
-> Hi Greg,
-> 
-> Yes, I can confirm that the patch for CVE-2024-54680 (commit e9f2517a3e18)
-> should be rejected. Our analysis shows:
-> 
-> 1. It fails to address the actual null pointer dereference in lockdep
-> 
-> 2. It introduces multiple serious issues:
->    1. A socket leak vulnerability as documented in bugzilla #219972
->    2. Network namespace refcount imbalance issues as described in
->      bugzilla #219792 (which required the follow-up mainline fix
->      4e7f1644f2ac "smb: client: Fix netns refcount imbalance
->      causing leaks and use-after-free")
-> 
-> The next thing we should probably do is:
->    - Reverting e9f2517a3e18
->    - Reverting the follow-up fix 4e7f1644f2ac, as it's trying to fix
->      problems introduced by the problematic CVE patch
+When non-optional GPIO is requested and failed, the variable that holds
+the (invalid) descriptor can contain an error pointer. However, gpiod_put()
+ignores that fact and tries to cleanup never requested descriptor.
+Make sure gpiod_put() ignores that as well.
 
-Great, can you please send patches now for both of these so we can
-backport them to the stable kernels properly?
+While at it, do the same for the gpiod_put_array().
 
->    - Addressing the original lockdep issue properly (Kuniyuki is working
->      on a module ownership tracking patch, though it hasn't been merged yet)
-> 
-> Regardless of the status of Kuniyuki's lockdep fix, the CVE patch itself
-> is fundamentally flawed and should be rejected as it creates more problems
-> than it solves.
+Note, it arguable needs to be present in the stubs as those are usually
+called when CONFIG_GPIOLIB=n and GPIOs are requested using gpiod_get_optional()
+or similar APIs.
 
-Ok, I'll go reject that now, thanks.
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/gpio/gpiolib.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-greg k-h
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index eda4f51d6bb8..1e96b83d2670 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -5111,8 +5111,10 @@ EXPORT_SYMBOL_GPL(gpiod_get_array_optional);
+  */
+ void gpiod_put(struct gpio_desc *desc)
+ {
+-	if (desc)
+-		gpiod_free(desc);
++	if (IS_ERR_OR_NULL(desc))
++		return;
++
++	gpiod_free(desc);
+ }
+ EXPORT_SYMBOL_GPL(gpiod_put);
+ 
+@@ -5124,6 +5126,9 @@ void gpiod_put_array(struct gpio_descs *descs)
+ {
+ 	unsigned int i;
+ 
++	if (IS_ERR_OR_NULL(descs))
++		return;
++
+ 	for (i = 0; i < descs->ndescs; i++)
+ 		gpiod_put(descs->desc[i]);
+ 
+-- 
+2.47.2
+
