@@ -1,246 +1,92 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10C7023E326
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 15:17:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0FEA2E3385
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 15:19:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743607068; cv=none; b=JaHIlVf77SqCNa1LsTWuF0yLlYY+V0MvIAvLpxTbWrD07PG0unf19C+QC4ao25F+BcLWSb0Lf2KFBIhKnUTBlBCqwNkh/Fow60XdEwXVvmqyg+iNuQfdQvH9y1mlBeSttWG/7I30L/Fq3TmeDgxvfKgi0w6sey2o7ZqETCLmzqU=
+	t=1743607145; cv=none; b=dEfz2vFazH+Jf9gvyNoTkNxw04dlPeM45ELoE8qH+QyjqPTU7/dSbZMrLj1F/41OTYpvMFT0594G3GSGLTcolDC1ihDx/KFyobdIrj6zEKp7V3e2C8PthXGntN4d9Xhw7UJTYeSN5aKLc35UikxFbQREUwKcPrvLVb7QlF4htvk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743607068; c=relaxed/simple;
-	bh=AujZQXa7GXfZ//2SBfjSJDuHvl2+ROHYQOi0tdHKgdk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=mbBsbogMFXia65HiZHLD7ZKaOozT6M9AfqvNA+UBfX1S8JL98lU7NfyBc11oX6M/oMWGo6+RzLOQjzLEca2FDq8VxWmR2PoN7yzTM3p6A6/1gA4sssFX0hBDyZVxjlgla/UuKy2YR4CDYU5niSfv8l7wMZ48CIwaZxvwLDkz00Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QhL/Jryi; arc=none smtp.client-ip=209.85.128.53
+	s=arc-20240116; t=1743607145; c=relaxed/simple;
+	bh=GlysUqLOtsPNkV/QiNl3yOcjs2Ox34WviGlejoVRthA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FB6DJT602WsrN3WjBvJFiiXxFPU3t6GmBZZKpw/dqSK0RRW1beF4KVWFUfOxEFUfGD4cry2abT7G5RUCCQRxI73ii73UbPeMhy9B2tdWaaKSLHnd8Wp9gjP3DA7Qoi2KCfSGpoNi0j0vQ177f3KFDLXwWSVvFfDZVjg7WlLWgdE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dODhFCJM; arc=none smtp.client-ip=209.85.128.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QhL/Jryi"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43ea40a6e98so26961555e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 08:17:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dODhFCJM"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4394a0c65fcso65908845e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 08:19:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743607064; x=1744211864; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=RT1SeGSA5GQ1fXoKXVvanXrAwd9U3trQ/c8CMPHycCA=;
-        b=QhL/JryiWdxexqz0OF0SxY8XPkiJItikfvOwbZ8T8z0elLV1BJ3Glgm1ItIRPbXmV2
-         QD/Dwu5lfAKXD7s5/Kf+hhH5lQB8JJ94v7MlCUze8caVfiG8lwr+/yPo9ZFomt6yXCXl
-         95RSaDTlRlLTCrU4d8gbtVjPRF7Muux3nPLubGvqLX3BQ+zyNhMUtMj3ofSJNwsU967Y
-         dIDDbAkXm1fi1JQpBPxklTA8S0hiMhj74LjA95UANXntrRBD7m3D7xsJmdY+3xylisu/
-         h5tv6Y95ICEsUL2uPAE/rFq6iGeQ4DVd6o4+wgu7TuWpaywpylViL8RdyjNvxfu54zj7
-         yK3Q==
+        d=linaro.org; s=google; t=1743607142; x=1744211942; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=GlysUqLOtsPNkV/QiNl3yOcjs2Ox34WviGlejoVRthA=;
+        b=dODhFCJMqLVSaXoqJu7+CDJvwPa7EB5FON6uWsfLPEW8x61Ah7JGChsVD6sOW4+M1v
+         vuIf4M0KUh/eFScmtfVULCZ419uuUmN6PmO7I0zq4RaTzoUcQUi7+D5ig4gjpgMjqoQW
+         NqHFhaM5NDK3pPLmtigyhaZrP11nbXC6+LZR9PB2lESKPn6xXa1dntS15FGWQ4KcmIuH
+         6msoWFWNpe7mD+9mr5Vne1epnk8TQMbJFSVXTXu9DXV2b77CrZaDDTi6vAQyJj1XEIwM
+         ZG7qZuZKjwD9t3F9+toismdB20oLKUiFbHohqRkGCbKjtcfRTF2WAisY4Vts5no5A8aa
+         vGEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743607064; x=1744211864;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RT1SeGSA5GQ1fXoKXVvanXrAwd9U3trQ/c8CMPHycCA=;
-        b=iiOk57Auc0JQ54Mgj3SMDulDGBhuuAhHd5k/kWt3rOCqNfpPO7kUHXx8gMHzoGen/l
-         g27HAZMnnXZGbIdF1d7eCtank5z8YDTCps63a+pqmGote1k//Gyh5sTS29s8Eln2Ypmw
-         uAisyANAqccl5C9klmpOLNqnZaak0cvljqVSMwSO9zrBRdto24whvZJNWS8XlWRnmhPO
-         6vkvJu7fetYPR697nwnHd6mfYKiZYNcQ9W/IACvdlHyFE6a8ZGTqYFMpC9F8ngENNe2A
-         32FARFfKCuLkEOWt3RJYphHJzQGVQ/OpIbAKF8GkLgduXprMDh+2J41/fSqgnrwP4+si
-         wtlA==
-X-Forwarded-Encrypted: i=1; AJvYcCUEUzJK2phidGsurQAyiCJTL4gGzrXQCeZY6roCDb+EX8fGI4AEk6l9oQiR4o7RsaPlF3rpF93oUdniZ9U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyfmzK+AIeUpEXcR8mOGtsSkDDP937AK7c5i72X2iuWGDkbpbmm
-	zZ6Uar2vhXXskidkwb6VpqgNncx1XboGEDKmQfUjzDrP9ceYEyQmUV1U4lAox8Y=
-X-Gm-Gg: ASbGnctL9KpuYxC/H2/qwBkWJPU9HwmXCrayBGEbqM/6jNe3hwd/LIMergdFZ3R94hV
-	ZAJOj27LalS8UkVjc55j1pE0yTHgB2pTqxIf91tQV9nj3rMjFAYMlUGU02ft7S9ZdMUGWBAS68M
-	Uskq+hzpvnt8TuuoQbp43PHHCGpOl8zn8DepEo77YFPJrY9ahTI1ldXVcBpASsQpxTEbOBLPmhv
-	DI48gUrk/NnMt8AM9zKw7NpzDMkp89QhSMWmzIVFWXlBrDgZ6AYppogINW4Eypv/jFixmlj5IGk
-	NBoO5qn/3KU83eK5dffw7jK0zVxJOV3sguWAhczVbGdg5aO9YDf4EFjKkQXKGFljCIqQ7Ot7OYI
-	i5pD665QN
-X-Google-Smtp-Source: AGHT+IHFo1V7olRxYCuDmHeY5rzVFfk8a7h1ctHGDdUeLAMnTEwORauybS7JaON5yanV/uSmOQw9DQ==
-X-Received: by 2002:a5d:5c84:0:b0:390:f9a5:bd79 with SMTP id ffacd0b85a97d-39c29767c8emr2464302f8f.26.1743607064139;
-        Wed, 02 Apr 2025 08:17:44 -0700 (PDT)
-Received: from gpeter-l.roam.corp.google.com ([145.224.66.90])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b663860sm17469190f8f.39.2025.04.02.08.17.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Apr 2025 08:17:43 -0700 (PDT)
-From: Peter Griffin <peter.griffin@linaro.org>
-Date: Wed, 02 Apr 2025 16:17:33 +0100
-Subject: [PATCH v6 4/4] pinctrl: samsung: Add filter selection support for
- alive bank on gs101
+        d=1e100.net; s=20230601; t=1743607142; x=1744211942;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=GlysUqLOtsPNkV/QiNl3yOcjs2Ox34WviGlejoVRthA=;
+        b=ugpAjmc/Sh9KISfFSCSzbQDx2xA5RIEUXuODRERs3Un9dx5c5PUKaDOTe9L9d192YU
+         yf/vctJmMIAduRMT26w7Ld/IHXbE396JEsvfEwwNJEn/zFYP0YNqWg+Lvw3hFoTBdrQK
+         0k55qT2H5ovJPkb5lqE59VCfczTm70wDqLSwTfKVJ3yhPdbvCRz67EJa0NeRSnQwlKYZ
+         PkywKwWWjgauSAZQ4GlO55UcAVitkvqx6d8GzpQcL3EI0B4mpo2Ya4Z32zdYff5ywHFI
+         Htn77G4xbMZKHmn3DkkeZihfFHKi2CcsBz8PGGt3abePcKFBwmplmwWmnT6GhPEA5VTf
+         IiZw==
+X-Forwarded-Encrypted: i=1; AJvYcCUWscMUvSs0o4hdJMmhXtNLfin/fSvykcUZduKASSreybQDDgRp87SAZ0j7DPVWJYS/1HqjC7ki0Gzs5vM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxhHZRefVzUQfuliysUmfYQ3ojw0rowM2F4THuJLvckuuMAdZ8k
+	ib3IHuHRBklrQ5X9svxIEcxEl1v+O7Cq5OGyWXaYSOUBoR7Sh8aVdK395N4cEJI=
+X-Gm-Gg: ASbGncvOR/YOH1unWWr80I8xZvIdCSvl9EAHKF766o/GjhMdoAT5yzKnKvVxouLE9qC
+	1Pu3Ei7ERgJzKhYwEEbOeDNk1gFjWU2onxIr2IgI6RIn7tu6820t+5r1Wos5rhZa4eubSLUn98P
+	3aG7exWFE5hjv7ayVtpPJRI9/rAjdT5w7Fc4Mh0EX5yiVgmnUjWdF+ld89Wuz921nPt4LitYVsR
+	iUfNp0C4bCVham9KHHLSYHwEJOI+Ly9YWc7h8We1Fe96+B9xANpjCZAU3PH8PtuvCZxJ6BUg8QY
+	akoDrS5v5Phrbwyqk5xlD4Yx7F7pesjj2jwMx4feZkgXRQhGJPBWXg==
+X-Google-Smtp-Source: AGHT+IGwv2MsdCnsG2Kqybof4F/W5PPqZj6tCbp/AEjtdMPrsS/kXPnFlt7D8CDkoHBhANFtHeAn0g==
+X-Received: by 2002:a05:600c:8411:b0:43c:fcbc:968c with SMTP id 5b1f17b1804b1-43eb3af4581mr30858685e9.7.1743607142241;
+        Wed, 02 Apr 2025 08:19:02 -0700 (PDT)
+Received: from [192.168.0.14] ([79.115.63.146])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43eb5fd0a46sm24297325e9.9.2025.04.02.08.19.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Apr 2025 08:19:01 -0700 (PDT)
+Message-ID: <3ebd53ef-c7fd-4c8c-96f3-32e97b355b6b@linaro.org>
+Date: Wed, 2 Apr 2025 16:19:00 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250402-pinctrl-fltcon-suspend-v6-4-78ce0d4eb30c@linaro.org>
-References: <20250402-pinctrl-fltcon-suspend-v6-0-78ce0d4eb30c@linaro.org>
-In-Reply-To: <20250402-pinctrl-fltcon-suspend-v6-0-78ce0d4eb30c@linaro.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>, 
- Sylwester Nawrocki <s.nawrocki@samsung.com>, 
- Alim Akhtar <alim.akhtar@samsung.com>, 
- Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
- linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- andre.draszik@linaro.org, tudor.ambarus@linaro.org, willmcvicker@google.com, 
- semen.protsenko@linaro.org, kernel-team@android.com, 
- jaewon02.kim@samsung.com, Peter Griffin <peter.griffin@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5531;
- i=peter.griffin@linaro.org; h=from:subject:message-id;
- bh=AujZQXa7GXfZ//2SBfjSJDuHvl2+ROHYQOi0tdHKgdk=;
- b=owEBbQKS/ZANAwAKAc7ouNYCNHK6AcsmYgBn7VUQGniN8W+uLmpOtptdW5cgPSdCqV6b5hk7D
- Qw8dbFgKwaJAjMEAAEKAB0WIQQO/I5vVXh1DVa1SfzO6LjWAjRyugUCZ+1VEAAKCRDO6LjWAjRy
- unn/D/48Ey3dk5oqJw+GiAHkYpQd+iXupMawkzqXjhGuwM4Mz8zWN+54tcnACYE7hgoKZ5abTiq
- nA14otuXvKKgePX9szClRgF2SoNUFp6xjIjOwDj5XAzhG+4WCizAukoYhnlIoQQ5Ba1Fhp9dfw6
- sQbTaFQqrL1zmOBNxQsnQbv/YrrwTpLZPa8OnbA5TBXR6TLW9AtFpFhp4zDReRc8azFWt5uyR7R
- wgXwRv2POp9OLMH2fzZy/HRYdIyxmeJ+A2gAdSffkGdmz6LBJfaXamtOhB+52bPpcV1+8Sl8+3J
- V5YL91z2loW58fjLMQ3RO4qOwRkLGeDSAtZwecyNRzOk4qrGlxJ1FKfbSuabG3O9E5MxUXyUTKV
- q6a0XReTnUfABBG0Ibn0hkg7npOy//eo2D9H1EtTR3qfCqmKIFZmA0SL5DU3qLI4VnnP2YnFAbN
- XCwm60t/1w+soWbj+wxp3+NUCnOaX3ts2/SKgn8KjWinHQeI/UlrbVtJgFMSWHGXkZ6hmD87h3K
- b2Aif+soPFiqmbgaZ1pSTkjysSjfAVxilYUT6Oxbynu6s9yJgeQJlWtbxdp7VCXnhPEKPyDfxww
- Q6S++vCHolnvVQdzmmN0XbQz4M6dXRYZ7fyRVB/wRCYCGvhg1ca+OjuNwlX7DuvYfJiwjWS2Ydi
- eKtcJUvaeNpNrcw==
-X-Developer-Key: i=peter.griffin@linaro.org; a=openpgp;
- fpr=0EFC8E6F5578750D56B549FCCEE8B8D6023472BA
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 15/21] mtd: spinand: winbond: Rename DTR variants
+To: Miquel Raynal <miquel.raynal@bootlin.com>,
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
+ Santhosh Kumar K <s-k6@ti.com>
+Cc: Pratyush Yadav <pratyush@kernel.org>, Michael Walle <michael@walle.cc>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ Steam Lin <stlin2@winbond.com>, linux-mtd@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20250307-winbond-6-14-rc1-octal-v1-0-45c1e074ad74@bootlin.com>
+ <20250307-winbond-6-14-rc1-octal-v1-15-45c1e074ad74@bootlin.com>
+Content-Language: en-US
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+In-Reply-To: <20250307-winbond-6-14-rc1-octal-v1-15-45c1e074ad74@bootlin.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Newer Exynos based SoCs have a filter selection bitfield in the filter
-configuration registers on alive bank pins. This allows the selection of
-a digital or analog delay filter for each pin. Add support for selecting
-and enabling the filter.
+Hi, Miquel,
 
-On suspend we set the analog filter to all pins in the bank (as the
-digital filter relies on a clock). On resume the digital filter is
-reapplied to all pins in the bank. The digital filter is working via
-a clock and has an adjustable filter delay flt_width bitfield, whereas
-the analog filter uses a fixed delay.
+On 3/7/25 3:08 PM, Miquel Raynal wrote:
+> -static SPINAND_OP_VARIANTS(read_cache_dtr_variants,
+> +static SPINAND_OP_VARIANTS(read_cache_dual_quad_dtr_variants,
 
-The filter determines to what extent signal fluctuations received through
-the pad are considered glitches.
-
-The code path can be exercised using
-echo mem > /sys/power/state
-And then wake the device using a eint gpio
-
-Reviewed-by: André Draszik <andre.draszik@linaro.org>
-Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
----
-
-Changes since v2:
-* Ensure EXYNOS_FLTCON_DIGITAL bit is cleared (Andre)
-* Make it obvious that exynos_eint_set_filter() is conditional on bank type (Andre)
-
-Changes since v1:
-* Remove eint_flt_selectable bool as it can be deduced from EINT_TYPE_WKUP (Peter)
-* Move filter config comment to header (Andre)
-* Rename EXYNOS_FLTCON_DELAY to EXYNOS_FLTCON_ANALOG (Andre)
-* Remove misleading old comment (Andre)
-* Refactor exynos_eint_update_flt_reg() into a loop (Andre)
-
-Note: this patch was previously sent as part of the initial gs101/ Pixel 6
-series and was dropped in v6. This new version incorporates the review
-feedback from Sam Protsenko here in v5.
-
-Link: https://lore.kernel.org/all/20231201160925.3136868-1-peter.griffin@linaro.org/T/#m79ced98939e895c840d812c8b4c2b3f33ce604c8
-
-Changes since previous version
-* Drop fltcon_type enum and use bool eint_flt_selectable (Sam)
-* Refactor and add exynos_eint_update_flt_reg() (Sam)
-* Rename function to exynos_eint_set_filter() for easier readability (Sam)
-* Remove comments and `if bank->fltcon_type != FLT_DEFAULT)` checks and indentation (Sam)
----
- drivers/pinctrl/samsung/pinctrl-exynos.c | 34 ++++++++++++++++++++++++++++++++
- drivers/pinctrl/samsung/pinctrl-exynos.h | 20 +++++++++++++++++++
- 2 files changed, 54 insertions(+)
-
-diff --git a/drivers/pinctrl/samsung/pinctrl-exynos.c b/drivers/pinctrl/samsung/pinctrl-exynos.c
-index 0879684338c772e484174a94ac2c274cc7d932ed..f3e1c11abe55032ee4ed7eb4db861dbb1e60c2bf 100644
---- a/drivers/pinctrl/samsung/pinctrl-exynos.c
-+++ b/drivers/pinctrl/samsung/pinctrl-exynos.c
-@@ -370,6 +370,37 @@ struct exynos_eint_gpio_save {
- 	u32 eint_mask;
- };
- 
-+static void exynos_eint_update_flt_reg(void __iomem *reg, int cnt, int con)
-+{
-+	unsigned int val, shift;
-+	int i;
-+
-+	val = readl(reg);
-+	for (i = 0; i < cnt; i++) {
-+		shift = i * EXYNOS_FLTCON_LEN;
-+		val &= ~(EXYNOS_FLTCON_DIGITAL << shift);
-+		val |= con << shift;
-+	}
-+	writel(val, reg);
-+}
-+
-+/*
-+ * Set the desired filter (digital or analog delay) and enable it to
-+ * every pin in the bank. Note the filter selection bitfield is only
-+ * found on alive banks. The filter determines to what extent signal
-+ * fluctuations received through the pad are considered glitches.
-+ */
-+static void exynos_eint_set_filter(struct samsung_pin_bank *bank, int filter)
-+{
-+	unsigned int off = EXYNOS_GPIO_EFLTCON_OFFSET + bank->eint_fltcon_offset;
-+	void __iomem *reg = bank->drvdata->virt_base + off;
-+	unsigned int con = EXYNOS_FLTCON_EN | filter;
-+
-+	for (int n = 0; n < bank->nr_pins; n += 4)
-+		exynos_eint_update_flt_reg(reg + n,
-+					   min(bank->nr_pins - n, 4), con);
-+}
-+
- /*
-  * exynos_eint_gpio_init() - setup handling of external gpio interrupts.
-  * @d: driver data of samsung pinctrl driver.
-@@ -832,6 +863,7 @@ void gs101_pinctrl_suspend(struct samsung_pin_bank *bank)
- 			 bank->name, save->eint_mask);
- 	} else if (bank->eint_type == EINT_TYPE_WKUP) {
- 		exynos_set_wakeup(bank);
-+		exynos_eint_set_filter(bank, EXYNOS_FLTCON_ANALOG);
- 	}
- }
- 
-@@ -887,6 +919,8 @@ void gs101_pinctrl_resume(struct samsung_pin_bank *bank)
- 			writel(save->eint_fltcon1, eint_fltcfg0 + 4);
- 		writel(save->eint_mask, regs + bank->irq_chip->eint_mask
- 		       + bank->eint_offset);
-+	} else if (bank->eint_type == EINT_TYPE_WKUP) {
-+		exynos_eint_set_filter(bank, EXYNOS_FLTCON_DIGITAL);
- 	}
- }
- 
-diff --git a/drivers/pinctrl/samsung/pinctrl-exynos.h b/drivers/pinctrl/samsung/pinctrl-exynos.h
-index 2bee52b61b9317ff79c618c1dc53e98242805087..362dc533186fb4ab9926b38b8d34af07690f783d 100644
---- a/drivers/pinctrl/samsung/pinctrl-exynos.h
-+++ b/drivers/pinctrl/samsung/pinctrl-exynos.h
-@@ -52,6 +52,26 @@
- #define EXYNOS_EINT_MAX_PER_BANK	8
- #define EXYNOS_EINT_NR_WKUP_EINT
- 
-+/*
-+ * EINT filter configuration register (on alive banks) has
-+ * the following layout.
-+ *
-+ * BitfieldName[PinNum][Bit:Bit]
-+ * FLT_EN[3][31] FLT_SEL[3][30] FLT_WIDTH[3][29:24]
-+ * FLT_EN[2][23] FLT_SEL[2][22] FLT_WIDTH[2][21:16]
-+ * FLT_EN[1][15] FLT_SEL[1][14] FLT_WIDTH[1][13:8]
-+ * FLT_EN[0][7]  FLT_SEL[0][6]  FLT_WIDTH[0][5:0]
-+ *
-+ * FLT_EN	0x0 = Disable, 0x1=Enable
-+ * FLT_SEL	0x0 = Analog delay filter, 0x1 Digital filter (clock count)
-+ * FLT_WIDTH	Filtering width. Valid when FLT_SEL is 0x1
-+ */
-+
-+#define EXYNOS_FLTCON_EN		BIT(7)
-+#define EXYNOS_FLTCON_DIGITAL		BIT(6)
-+#define EXYNOS_FLTCON_ANALOG		(0 << 6)
-+#define EXYNOS_FLTCON_LEN		8
-+
- #define EXYNOS_PIN_BANK_EINTN(pins, reg, id)		\
- 	{						\
- 		.type		= &bank_type_off,	\
-
--- 
-2.49.0.504.g3bcea36a83-goog
-
+why not read_cache_single_dual_quad_dtr_variants? I see single dtr too
+in the supported ops.
