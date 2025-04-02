@@ -1,79 +1,137 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A3AB236429;
-	Wed,  2 Apr 2025 10:42:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26C5C236A98;
+	Wed,  2 Apr 2025 10:42:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743590562; cv=none; b=mTywLGATAQbexVOnE6ibQJQehjMFc29F09SiMSIdIVij6XsIIbtN2CR5wKumEomtlgaHGVmUts28II56+eFa492jcC+Jr7Wjruhkl8/UsT1JYouAGj2qnPcHEEjDB1hcKspjBw4l1v0/DSZpLGUkldyzUmjZvN5ksvCgESVmBGE=
+	t=1743590574; cv=none; b=uOCiOeH9leYo4yHu7LqqMMi39JkwvZayToSxfNv3ksl4xHaoIISwg80m4zBnjcWdEGTvlexqLnij9Zoamyf4PdokrtsZSZI/MBCAInSXyQ+hryvlopMMpcAXdbe+JeqI7YNtv2tMO3UH08ZcACVdOEqvlqaIUWb//lUp6+Ln/oc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743590562; c=relaxed/simple;
-	bh=LjaWeROx0i4qgPrOG4F+1/nZAMJVS7oiPyYMR0jzip0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ouKw/6/g81SPql/L4MEY8F5C0O7gMyAI565VHnStLLPn8xbo+6+BKTUYsbsnLstZuhfBV6ufMZCVcmSvFIFyV7m25BeB3boweahUEUplBnMZLgSgcdfnfJ/K8P6u3rQk6QTXpJAyv6JefJqo5x8+fSboSDaqp2eM6ukvwuSw+4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-CSE-ConnectionGUID: vH6Rz7xcTJmAmsYZbavzVA==
-X-CSE-MsgGUID: ceGk+kIiSjyLJ12zL8yM3Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11391"; a="55140850"
-X-IronPort-AV: E=Sophos;i="6.14,182,1736841600"; 
-   d="scan'208";a="55140850"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 03:42:40 -0700
-X-CSE-ConnectionGUID: DiH8qsdIT8y1PYnUBsiTFQ==
-X-CSE-MsgGUID: Jp2djy6kTd+o8z4n6o33aQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,182,1736841600"; 
-   d="scan'208";a="126617611"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 03:42:38 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andy@kernel.org>)
-	id 1tzvYJ-00000008ROM-0iiQ;
-	Wed, 02 Apr 2025 13:42:35 +0300
-Date: Wed, 2 Apr 2025 13:42:34 +0300
-From: Andy Shevchenko <andy@kernel.org>
-To: Ricardo Ribalda <ribalda@chromium.org>
-Cc: Hans Verkuil <hverkuil@xs4all.nl>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-staging@lists.linux.dev
-Subject: Re: [PATCH v2 1/2] media: atomisp: Fix Wformat-truncation warning
-Message-ID: <Z-0UmpbjvrKASXIu@smile.fi.intel.com>
-References: <20250401-v614-v2-0-53024c4fcdc7@chromium.org>
- <20250401-v614-v2-1-53024c4fcdc7@chromium.org>
+	s=arc-20240116; t=1743590574; c=relaxed/simple;
+	bh=jvCPXBkMR01+H0/gE+9GrtRjlN3dPzEAtl91KC/IW4w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CkWFjVzdOFwKdcr/OpK40bf0zaco/Hzbeo/jsbsIl2jRMIhSOYrmbhgAlq0kRLqDLHt8RBZVN5zxo7ssCb7YYtwQNiJFsf3nhuZ6jhyhYbjt9WIDjy+9WeWV6aN7n+zMO8p052adxy1lIy9VO0ij+64GA6rnZ6/6ofOlU64KWJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=ontMlA/B; arc=none smtp.client-ip=117.135.210.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="ontMlA/B"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=VR24xgoS8feUSFAEGMRfyNjAAFTUtLrhNnAA7b/J2oQ=;
+	b=ontMlA/BsnHycNKnU5V1TKXGfrKx9JFjrDc24A5L2nRx868+k+2lhbk6+1Ebuq
+	0993Wi1YEXVj0zyvhMQh3XbNZBl4au2YzUawOk7QdmkOpqbB/NMtwYTJfyeqsi7s
+	ji6UOJfLSZZC9j/NJrGXRopkZe+YlevPIXBUPlanEIVuI=
+Received: from [192.168.60.52] (unknown [])
+	by gzsmtp4 (Coremail) with SMTP id PygvCgCn8qF6FO1nmwyABA--.39487S2;
+	Wed, 02 Apr 2025 18:42:06 +0800 (CST)
+Message-ID: <b0dc232e-fdd8-4df3-a55e-d21b90441a4c@163.com>
+Date: Wed, 2 Apr 2025 18:42:01 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250401-v614-v2-1-53024c4fcdc7@chromium.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [v7 2/5] PCI: Refactor capability search functions to eliminate
+ code duplication
+To: kernel test robot <lkp@intel.com>, lpieralisi@kernel.org,
+ bhelgaas@google.com
+Cc: oe-kbuild-all@lists.linux.dev, kw@linux.com,
+ manivannan.sadhasivam@linaro.org, ilpo.jarvinen@linux.intel.com,
+ robh@kernel.org, jingoohan1@gmail.com, thomas.richard@bootlin.com,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250402042020.48681-3-18255117159@163.com>
+ <202504021623.LgnqoZPE-lkp@intel.com>
+Content-Language: en-US
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <202504021623.LgnqoZPE-lkp@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:PygvCgCn8qF6FO1nmwyABA--.39487S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxAr17tF17urW5tr1rKrW5GFg_yoWrXw4xpa
+	yxXFy7u3yUGw1vganrAa1Iyr92qaykArW7XFWDGwn8AF1DA345ZFWSgFWfJa47KF98KFy3
+	Xa98G34xJF12v3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UJkucUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOgUjo2ftDGf+6gAAsK
 
-On Tue, Apr 01, 2025 at 02:17:54PM +0000, Ricardo Ribalda wrote:
-> Gcc8 is convinced that we do not have enough space in dot_id_input_bin.
-> Extend the variable 17 bytes which is just used for debugging.
+
+
+On 2025/4/2 17:19, kernel test robot wrote:
+> Hi Hans,
 > 
-> drivers/staging/media/atomisp/pci/runtime/debug/src/ia_css_debug.c:1336:9: warning: '(pipe' directive output may be truncated writing 5 bytes into a region of size between 1 and 74 [-Wformat-truncation=]
+> kernel test robot noticed the following build errors:
+> 
+> [auto build test ERROR on acb4f33713b9f6cadb6143f211714c343465411c]
+> 
+> url:    https://github.com/intel-lab-lkp/linux/commits/Hans-Zhang/PCI-Refactor-capability-search-into-common-macros/20250402-122544
+> base:   acb4f33713b9f6cadb6143f211714c343465411c
+> patch link:    https://lore.kernel.org/r/20250402042020.48681-3-18255117159%40163.com
+> patch subject: [v7 2/5] PCI: Refactor capability search functions to eliminate code duplication
+> config: loongarch-randconfig-001-20250402 (https://download.01.org/0day-ci/archive/20250402/202504021623.LgnqoZPE-lkp@intel.com/config)
+> compiler: loongarch64-linux-gcc (GCC) 14.2.0
+> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250402/202504021623.LgnqoZPE-lkp@intel.com/reproduce)
+> 
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202504021623.LgnqoZPE-lkp@intel.com/
+> 
+> All errors (new ones prefixed by >>):
+> 
+>     drivers/pci/pci.c: In function '__pci_find_next_ht_cap':
+>>> drivers/pci/pci.c:627:17: error: 'rc' undeclared (first use in this function); did you mean 'rq'?
+>       627 |                 rc = pci_read_config_byte(dev, pos + 3, &cap);
+>           |                 ^~
+>           |                 rq
+>     drivers/pci/pci.c:627:17: note: each undeclared identifier is reported only once for each function it appears in
+> 
 
-Note, you may drop the drivers/staging/media/ as the driver is unique enough.
+  static u8 __pci_find_next_ht_cap(struct pci_dev *dev, u8 pos, int ht_cap)
+  {
+-	int rc, ttl = PCI_FIND_CAP_TTL;
+  	u8 cap, mask;
 
-Reviewed-by: Andy Shevchenko <andy@kernel.org>
+The rc variable was deleted by mistake and will be changed in the next 
+version.
 
-...
+  static u8 __pci_find_next_ht_cap(struct pci_dev *dev, u8 pos, int ht_cap)
+  {
+-	int rc;
+  	u8 cap, mask;
 
-You also want to send this patch separately since the AtomISP has its own
-MAINTAINERS record (and there are patches in the queue there, IIRC).
+Best regards,
+Hans
 
--- 
-With Best Regards,
-Andy Shevchenko
-
+> 
+> vim +627 drivers/pci/pci.c
+> 
+> 70c0923b0ef10b Jacob Keller     2020-03-02  614
+> f646c2a0a6685a Puranjay Mohan   2020-11-29  615  static u8 __pci_find_next_ht_cap(struct pci_dev *dev, u8 pos, int ht_cap)
+> 687d5fe3dc3379 Michael Ellerman 2006-11-22  616  {
+> 687d5fe3dc3379 Michael Ellerman 2006-11-22  617  	u8 cap, mask;
+> 687d5fe3dc3379 Michael Ellerman 2006-11-22  618
+> 687d5fe3dc3379 Michael Ellerman 2006-11-22  619  	if (ht_cap == HT_CAPTYPE_SLAVE || ht_cap == HT_CAPTYPE_HOST)
+> 687d5fe3dc3379 Michael Ellerman 2006-11-22  620  		mask = HT_3BIT_CAP_MASK;
+> 687d5fe3dc3379 Michael Ellerman 2006-11-22  621  	else
+> 687d5fe3dc3379 Michael Ellerman 2006-11-22  622  		mask = HT_5BIT_CAP_MASK;
+> 687d5fe3dc3379 Michael Ellerman 2006-11-22  623
+> 687d5fe3dc3379 Michael Ellerman 2006-11-22  624  	pos = __pci_find_next_cap_ttl(dev->bus, dev->devfn, pos,
+> 2675dfd086c109 Hans Zhang       2025-04-02  625  				      PCI_CAP_ID_HT);
+> 687d5fe3dc3379 Michael Ellerman 2006-11-22  626  	while (pos) {
+> 687d5fe3dc3379 Michael Ellerman 2006-11-22 @627  		rc = pci_read_config_byte(dev, pos + 3, &cap);
+> 687d5fe3dc3379 Michael Ellerman 2006-11-22  628  		if (rc != PCIBIOS_SUCCESSFUL)
+> 687d5fe3dc3379 Michael Ellerman 2006-11-22  629  			return 0;
+> 687d5fe3dc3379 Michael Ellerman 2006-11-22  630
+> 687d5fe3dc3379 Michael Ellerman 2006-11-22  631  		if ((cap & mask) == ht_cap)
+> 687d5fe3dc3379 Michael Ellerman 2006-11-22  632  			return pos;
+> 687d5fe3dc3379 Michael Ellerman 2006-11-22  633
+> 47a4d5be7c50b2 Brice Goglin     2007-01-10  634  		pos = __pci_find_next_cap_ttl(dev->bus, dev->devfn,
+> 47a4d5be7c50b2 Brice Goglin     2007-01-10  635  					      pos + PCI_CAP_LIST_NEXT,
+> 2675dfd086c109 Hans Zhang       2025-04-02  636  					      PCI_CAP_ID_HT);
+> 687d5fe3dc3379 Michael Ellerman 2006-11-22  637  	}
+> 687d5fe3dc3379 Michael Ellerman 2006-11-22  638
+> 687d5fe3dc3379 Michael Ellerman 2006-11-22  639  	return 0;
+> 687d5fe3dc3379 Michael Ellerman 2006-11-22  640  }
+> f646c2a0a6685a Puranjay Mohan   2020-11-29  641
+> 
 
