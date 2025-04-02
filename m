@@ -1,247 +1,104 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f66.google.com (mail-pj1-f66.google.com [209.85.216.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 635CE33C9;
-	Wed,  2 Apr 2025 02:39:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 798BD33C9;
+	Wed,  2 Apr 2025 02:39:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743561543; cv=none; b=qJ8W67DCwxLckl/SaM1zL0PHkgjhsLRhhKDv8uLIHxdhP8dQAL8b1xbdV0GW+j7WB/enB3/TjZBLqfxe2K1WErPWayWNTAsrn0EcY/50HBGahd8fYVbVZ7eoGRNCi7cg+IrZsDEqMmllG0/VTDqvozmgMcgBatK27q9Dyo7wf8A=
+	t=1743561550; cv=none; b=NBicjp7ikIpnSHhcOWgtzfHFXNMZz/EqfqrsEwTt+Afyxckh2dJPUS5/29LcAu8JeLHD5JShzqu6gtpKib7ZCkQaOcSIc0IBFwJY2ldMY1omMp8icLNyF4maTV8AKMV/xpzy45gJG6Xf0h7Ob6qrpxdgo5ux/ap8Pp0uu0AEeVk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743561543; c=relaxed/simple;
-	bh=0eR4hK0BQ/4v5YAB7N1FQMuBNS+VlicybXl7MF44OpA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=g9T+iTMEP9PlPnNVJXSdel8gVdVR5ukE4kRlXZFPKo9GAYWr9+RbpA73N/LtC4BP9rmOGokv3MWXA/kgov5eyZ4juPalCGRopuNaHbCBnc4AngL5hxYMDGzXto3IhXQ23H+TRREMgnpcxn9pWszlt2ARryjHi+RJSIBsG3kBBxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.112])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4ZS8813wPnz2TS5H;
-	Wed,  2 Apr 2025 10:34:09 +0800 (CST)
-Received: from kwepemg200005.china.huawei.com (unknown [7.202.181.32])
-	by mail.maildlp.com (Postfix) with ESMTPS id 75FC7140109;
-	Wed,  2 Apr 2025 10:38:57 +0800 (CST)
-Received: from [10.174.176.70] (10.174.176.70) by
- kwepemg200005.china.huawei.com (7.202.181.32) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 2 Apr 2025 10:38:56 +0800
-Message-ID: <16797fe9-2080-4e1e-ba2c-aa8e13febe8f@huawei.com>
-Date: Wed, 2 Apr 2025 10:38:55 +0800
+	s=arc-20240116; t=1743561550; c=relaxed/simple;
+	bh=3abjfXCbj/PSro5zEDsoIit1avgJG8LAE+LKPMwYcSg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=t1sWdlGTyeKHzKKMpt+H7PP/LAyBvs+53GyTWnVSacczJmRrf8T1k1UahK+8B6+m75P5aHtaa0Otd4xcFpYGcR8utJw61h98FSxFxfDduTJQflIY8Bb5HZFODUKQpHNI34VhwVeoJocB2Jeu0uFneUMQg1s6CB5SFJ2zoLszhHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iC3qMMFg; arc=none smtp.client-ip=209.85.216.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iC3qMMFg"
+Received: by mail-pj1-f66.google.com with SMTP id 98e67ed59e1d1-2ff694d2d4dso10245451a91.0;
+        Tue, 01 Apr 2025 19:39:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743561549; x=1744166349; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/XwOLIHJIAy2dOsI8s3bg1wV3SaOv47d2J5QpbnBW3c=;
+        b=iC3qMMFgR+whrof74SoblxbKoPSIGk9EZ4fj2uACkSFzLYbxgNsiM/KConHCtDJkBj
+         jMM8oyrSmkyd196Vcv321dCIynZO49T1M55o22cwSsef/8sqZ6ecp72xzCYVFZEcbxOa
+         OcqvyXYAQ9LD5hhEzwH9t8pmQdmWnX1hCjPHd/+ulQub1igTVi3U7Q/0d2NhiOD8yyEU
+         aAcMl6F+hL6zfgerwZNYBgIPUHKCvkatpT8RubZBBHMBCxlW7MDMi9H7yoNgPg9OC+O/
+         Or/povy3ccsJz+rwT1OlamnvQsPvovn4e9I9q4VUQiS6GPHXVj0vUW89kkpLd2sL/PUE
+         pFNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743561549; x=1744166349;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/XwOLIHJIAy2dOsI8s3bg1wV3SaOv47d2J5QpbnBW3c=;
+        b=iuArv7BBcUGp3Fczp/TVN3ykoV0T8jQG9+Mx06Hb9Xu8CEJPUXYeXqFlVERHLpYmvP
+         +qf1wghB96lEl8oxskzfUQY6hiTo/BhqtnEKjR3pEGAte3mRHAAG+KEQzWjiHhN8s7OO
+         Wh+kZMy3b5v6xOAEujSTukEaacjX1o+GjEDyl5cq1y/38qRtL6Ts6N3zzfd/13EpJwGH
+         eeVSprSriq8nr6ruq8E60fAdmi9BrUUFMb5cjdvE173Qu4mNDGquDhnl1jAV57kIfqsR
+         3FyAXxlu2H78Yr4q10SR5px5gY5baXsVB+WeEs7mPZO8kwU2LhJDMCRG//P9/9T7CwfG
+         1Y7w==
+X-Forwarded-Encrypted: i=1; AJvYcCXROD77S8OfYj8q5P+Eyz0aErPS6zDxoBO5jaZp5vfksA2F1k2wRXrxNWyDMR6VxcRjjTIrLyBLbDnPMe4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzvPSU2d63yl4pvqvcHdDFqyxahGCswoT/tuojtpDrTtMlu7QAC
+	phS+9cvyz+5bEqNeN6vk7UmUimhpao4Zj1RL04mY3tqfCpEfowqXXKFVx39dCVBdVQ==
+X-Gm-Gg: ASbGnctgYCF8EhtcGXl+Of78NWpYddSjfWjk466JbwBg5f9TWK/6Ur2g5IiOXeC/C2T
+	FIj1DRvw6oyIwjKcAJW7t6XTH6JqZu8lXbox+MhkNcpuyZ2T0quNw58j2dHeVNsDNAXz88bMqy6
+	23xBriVw8+6tVHu7UiboQAo3gKcY0dBKsjVQQ9JcxkRIvUoImaxQUOK1oUpaxf+s5p0StcClXhl
+	4rzymg1v0ARKwR5UV7E5B0T2E47RawTJOvfhPDYIoAgXIS0yZMGGdSetFv1M3hsPxC/2oPmGTBj
+	hUshRzimEg/T8j63NVLQHP+71Eq2p0Brdx7euVjvGgMJ6oann2wOLkVbtApZOFXGjKn5y4M=
+X-Google-Smtp-Source: AGHT+IH/peSgVybRZVHTTZKlkdx+Qa99lE/p1LQoedRbFRbWsJRJo4TdosYp7h5YD5s9x7/KsLpBrQ==
+X-Received: by 2002:a17:90b:1f92:b0:2f7:e201:a8cc with SMTP id 98e67ed59e1d1-305320b1002mr27114871a91.18.1743561548511;
+        Tue, 01 Apr 2025 19:39:08 -0700 (PDT)
+Received: from henry.localdomain ([111.202.148.167])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291eeca20esm97061305ad.51.2025.04.01.19.39.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Apr 2025 19:39:08 -0700 (PDT)
+From: Henry Martin <bsdhenrymartin@gmail.com>
+To: peter.ujfalusi@gmail.com,
+	vkoul@kernel.org
+Cc: dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Henry Martin <bsdhenrymartin@gmail.com>
+Subject: [PATCH v1] dmaengine: ti: Add NULL check in udma_probe()
+Date: Wed,  2 Apr 2025 10:39:00 +0800
+Message-Id: <20250402023900.43440-1-bsdhenrymartin@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net] xsk: correct tx_ring_empty_descs count statistics
-To: Magnus Karlsson <magnus.karlsson@gmail.com>
-CC: Stanislav Fomichev <stfomichev@gmail.com>, <bjorn@kernel.org>,
-	<magnus.karlsson@intel.com>, <maciej.fijalkowski@intel.com>,
-	<jonathan.lemon@gmail.com>, <davem@davemloft.net>, <edumazet@google.com>,
-	<kuba@kernel.org>, <pabeni@redhat.com>, <horms@kernel.org>, <ast@kernel.org>,
-	<daniel@iogearbox.net>, <hawk@kernel.org>, <john.fastabend@gmail.com>,
-	<yuehaibing@huawei.com>, <zhangchangzhong@huawei.com>,
-	<netdev@vger.kernel.org>, <bpf@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-References: <20250329061548.1357925-1-wangliang74@huawei.com>
- <Z-qzLyGKskaqgFh5@mini-arch> <Z-sRF0G43HpGiGwH@mini-arch>
- <0d1b689c-c0ef-460a-9969-ff5aebbb8fac@huawei.com>
- <CAJ8uoz1JxhXFkzW8n_Dud8SR-4zE7gim5vS_UZHELiA7d0k+wQ@mail.gmail.com>
- <ed10eea2-0bf2-4747-b519-f9b9089e434e@huawei.com>
- <CAJ8uoz2QXNN4so-EgR8sU8A86E_AeYx1w_b+BSVeCgzr1kaR+g@mail.gmail.com>
- <ffc84696-f9c6-4869-9f1e-7faf45d99060@huawei.com>
- <CAJ8uoz127WoEFbm1Gg7OquYJCLigg03N1XrKDcXejsUmVuQ3PA@mail.gmail.com>
-From: Wang Liang <wangliang74@huawei.com>
-In-Reply-To: <CAJ8uoz127WoEFbm1Gg7OquYJCLigg03N1XrKDcXejsUmVuQ3PA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemg200005.china.huawei.com (7.202.181.32)
 
+devm_kasprintf() returns NULL when memory allocation fails. Currently,
+udma_probe() does not check for this case, which results in a NULL
+pointer dereference.
 
-在 2025/4/1 19:00, Magnus Karlsson 写道:
-> On Tue, 1 Apr 2025 at 11:33, Wang Liang <wangliang74@huawei.com> wrote:
->>
->> 在 2025/4/1 16:12, Magnus Karlsson 写道:
->>> On Tue, 1 Apr 2025 at 09:44, Wang Liang <wangliang74@huawei.com> wrote:
->>>> 在 2025/4/1 14:57, Magnus Karlsson 写道:
->>>>> On Tue, 1 Apr 2025 at 04:36, Wang Liang <wangliang74@huawei.com> wrote:
->>>>>> 在 2025/4/1 6:03, Stanislav Fomichev 写道:
->>>>>>> On 03/31, Stanislav Fomichev wrote:
->>>>>>>> On 03/29, Wang Liang wrote:
->>>>>>>>> The tx_ring_empty_descs count may be incorrect, when set the XDP_TX_RING
->>>>>>>>> option but do not reserve tx ring. Because xsk_poll() try to wakeup the
->>>>>>>>> driver by calling xsk_generic_xmit() for non-zero-copy mode. So the
->>>>>>>>> tx_ring_empty_descs count increases once the xsk_poll()is called:
->>>>>>>>>
->>>>>>>>>       xsk_poll
->>>>>>>>>         xsk_generic_xmit
->>>>>>>>>           __xsk_generic_xmit
->>>>>>>>>             xskq_cons_peek_desc
->>>>>>>>>               xskq_cons_read_desc
->>>>>>>>>                 q->queue_empty_descs++;
->>>>> Sorry, but I do not understand how to reproduce this error. So you
->>>>> first issue a setsockopt with the XDP_TX_RING option and then you do
->>>>> not "reserve tx ring". What does that last "not reserve tx ring" mean?
->>>>> No mmap() of that ring, or something else? I guess you have bound the
->>>>> socket with a bind()? Some pseudo code on how to reproduce this would
->>>>> be helpful. Just want to understand so I can help. Thank you.
->>>> Sorry, the last email is garbled, and send again.
->>>>
->>>> Ok. Some pseudo code like below:
->>>>
->>>>        fd = socket(AF_XDP, SOCK_RAW, 0);
->>>>        setsockopt(fd, SOL_XDP, XDP_UMEM_REG, &mr, sizeof(mr));
->>>>
->>>>        setsockopt(fd, SOL_XDP, XDP_UMEM_FILL_RING, &fill_size,
->>>> sizeof(fill_size));
->>>>        setsockopt(fd, SOL_XDP, XDP_UMEM_COMPLETION_RING, &comp_size,
->>>> sizeof(comp_size));
->>>>        mmap(NULL, off.fr.desc + fill_size * sizeof(__u64), ...,
->>>> XDP_UMEM_PGOFF_FILL_RING);
->>>>        mmap(NULL, off.cr.desc + comp_size * sizeof(__u64), ...,
->>>> XDP_UMEM_PGOFF_COMPLETION_RING);
->>>>
->>>>        setsockopt(fd, SOL_XDP, XDP_RX_RING, &rx_size, sizeof(rx_size));
->>>>        setsockopt(fd, SOL_XDP, XDP_TX_RING, &tx_size, sizeof(tx_size));
->>>>        mmap(NULL, off.rx.desc + rx_size * sizeof(struct xdp_desc), ...,
->>>> XDP_PGOFF_RX_RING);
->>>>        mmap(NULL, off.tx.desc + tx_size * sizeof(struct xdp_desc), ...,
->>>> XDP_PGOFF_TX_RING);
->>>>
->>>>        bind(fd, (struct sockaddr *)&sxdp, sizeof(sxdp));
->>>>        bpf_map_update_elem(xsk_map_fd, &queue_id, &fd, 0);
->>>>
->>>>        while(!global_exit) {
->>>>            poll(fds, 1, -1);
->>>>            handle_receive_packets(...);
->>>>        }
->>>>
->>>> The xsk is created success, and xs->tx is initialized.
->>>>
->>>> The "not reserve tx ring" means user app do not update tx ring producer.
->>>> Like:
->>>>
->>>>        xsk_ring_prod__reserve(tx, 1, &tx_idx);
->>>>        xsk_ring_prod__tx_desc(tx, tx_idx)->addr = frame;
->>>>        xsk_ring_prod__tx_desc(tx, tx_idx)->len = pkg_length;
->>>>        xsk_ring_prod__submit(tx, 1);
->>>>
->>>> These functions (xsk_ring_prod__reserve, etc.) is provided by libxdp.
->>>>
->>>> The tx->producer is not updated, so the xs->tx->cached_cons and
->>>> xs->tx->cached_prod are always zero.
->>>>
->>>> When receive packets and user app call poll(), xsk_generic_xmit() will be
->>>> triggered by xsk_poll(), leading to this issue.
->>> Thanks, that really helped. The problem here is that the kernel cannot
->>> guess your intent. Since you created a socket with both Rx and Tx, it
->>> thinks you will use it for both, so it should increase
->>> queue_empty_descs in this case as you did not provide any Tx descs.
->>> Your proposed patch will break this. Consider this Tx case with the
->>> exact same init code as you have above but with this send loop:
->>>
->>> while(!global_exit) {
->>>          maybe_send_packets(...);
->>>          poll(fds, 1, -1);
->>> }
->>>
->>> With your patch, the queue_empty_descs will never be increased in the
->>> case when I do not submit any Tx descs, even though we would like it
->>> to be so.
->>>
->>> So in my mind, you have a couple of options:
->>>
->>> * Create two sockets, one rx only and one tx only and use the
->>> SHARED_UMEM mode to bind them to the same netdev and queue id. In your
->>> loop above, you would use the Rx socket. This might have the drawback
->>> that you need to call poll() twice if you are both sending and
->>> receiving in the same loop. But the stats will be the way you want
->>> them to be.
->>>
->>> * Introduce a new variable in user space that you increase every time
->>> you do poll() in your loop above. When displaying the statistics, just
->>> deduct this variable from the queue_empty_descs that the kernel
->>> reports using the XDP_STATISTICS getsockopt().
->>>
->>> Hope this helps.
->>
->> Thank you for the advices.
->>
->>   From user view, queue_empty_descs increases when the app only receive
->> packets and call poll(), it is some confusing.
-> But if the only thing you are doing in the app is receive packets, you
-> should create an Rx only socket.
->
->> In your Tx case, if user app use sendto() to send packets, the
->> queue_empty_descs will increase. This is reasonably.
->>
->> In linux manual, poll() waits for some event on a file descriptor. But
->> in af_xdp, poll() has a side effect of send msg.
-> If I remember correctly, we did this so that zero-copy mode and copy
-> mode should have the same behavior from an app point of view. But I do
-> not remember why we implemented this behavior in zero-copy in the
-> first place. Maybe out of necessity since zero-copy Tx is driven by
-> the driver.
->
->> Previous commit 77cd0d7b3f25 ("xsk: add support for need_wakeup flag in
->> AF_XDP rings") add need_wakeup flag. It mainly work in rx process. When
->> the application and driver run on the same core, if the fill ring is
->> empty, the driver can set the need_wakeup flag and return, so the
->> application could be scheduled to produce entries of the fill ring.
->>
->> The commit df551058f7a3 ("xsk: Fix crash in poll when device does not
->> support ndo_xsk_wakeup") add sendmsg function in xsk_poll(), considering
->> some devices donot define ndo_xsk_wakeup.
->>
->> At present the value of need_wakeup & XDP_WAKEUP_TX is always true,
->> except the mlx5 driver. If the mlx5 driver queued some packets for tx,
->> it may clear XDP_WAKEUP_TX by xsk_clear_tx_need_wakeup(). So when user
->> app use sendto() to send packets, __xsk_sendmsg() will return without
->> calling xsk_generic_xmit().
-> Mellanox is doing it in the correct way. The Intel drivers had it like
-> this too in the beginning, until we discovered a race condition in the
-> HW in which the interrupt was not armed at the same time as the
-> need_wakeup flag was cleared. This would then lead to packets not
-> being sent and user-space not knowing about it. As to why all other
-> drivers copied this unfortunate fall-back, I do not know.
->
->> So I have a bold suggestion, how about removing xsk_generic_xmit() in
->> xsk_poll()?
-> That would indeed be bold :-)! But we cannot do this since it would
-> break existing applications that rely on this. I think you have to use
-> one of the workarounds I pitched in the previous mail. If you are
-> really just receiving, you should create an Rx only socket.
-Thanks for your replies. it is really helpful.
->>>>>>>>> To avoid this count error, add check for tx descs before send msg in poll.
->>>>>>>>>
->>>>>>>>> Fixes: df551058f7a3 ("xsk: Fix crash in poll when device does not support ndo_xsk_wakeup")
->>>>>>>>> Signed-off-by: Wang Liang <wangliang74@huawei.com>
->>>>>>>> Acked-by: Stanislav Fomichev <sdf@fomichev.me>
->>>>>>> Hmm, wait, I stumbled upon xskq_has_descs again and it looks only at
->>>>>>> cached prod/cons. How is it supposed to work when the actual tx
->>>>>>> descriptor is posted? Is there anything besides xskq_cons_peek_desc from
->>>>>>> __xsk_generic_xmit that refreshes cached_prod?
->>>>>> Yes, you are right!
->>>>>>
->>>>>> How about using xskq_cons_nb_entries() to check free descriptors?
->>>>>>
->>>>>> Like this:
->>>>>>
->>>>>>
->>>>>> diff --git a/net/xdp/xsk.c b/net/xdp/xsk.c
->>>>>> index e5d104ce7b82..babb7928d335 100644
->>>>>> --- a/net/xdp/xsk.c
->>>>>> +++ b/net/xdp/xsk.c
->>>>>> @@ -993,7 +993,7 @@ static __poll_t xsk_poll(struct file *file, struct
->>>>>> socket *sock,
->>>>>>             if (pool->cached_need_wakeup) {
->>>>>>                     if (xs->zc)
->>>>>>                             xsk_wakeup(xs, pool->cached_need_wakeup);
->>>>>> -               else if (xs->tx)
->>>>>> +               else if (xs->tx && xskq_cons_nb_entries(xs->tx, 1))
->>>>>>                             /* Poll needs to drive Tx also in copy mode */
->>>>>>                             xsk_generic_xmit(sk);
->>>>>>             }
->>>>>>
->>>>>>
+Add NULL check after devm_kasprintf() to prevent this issue.
+
+Fixes: 25dcb5dd7b7c ("dmaengine: ti: New driver for K3 UDMA")
+Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
+---
+ drivers/dma/ti/k3-udma.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
+index 7ed1956b4642..f1c2f8170730 100644
+--- a/drivers/dma/ti/k3-udma.c
++++ b/drivers/dma/ti/k3-udma.c
+@@ -5582,7 +5582,8 @@ static int udma_probe(struct platform_device *pdev)
+ 		uc->config.dir = DMA_MEM_TO_MEM;
+ 		uc->name = devm_kasprintf(dev, GFP_KERNEL, "%s chan%d",
+ 					  dev_name(dev), i);
+-
++		if (!uc->name)
++			return -ENOMEM;
+ 		vchan_init(&uc->vc, &ud->ddev);
+ 		/* Use custom vchan completion handling */
+ 		tasklet_setup(&uc->vc.task, udma_vchan_complete);
+-- 
+2.34.1
+
