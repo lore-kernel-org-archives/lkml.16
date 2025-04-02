@@ -1,316 +1,234 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A6DD2D7BF;
-	Wed,  2 Apr 2025 15:47:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BA411E511;
+	Wed,  2 Apr 2025 15:47:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743608834; cv=none; b=sifxnR1Y9z1cpNiti958Y4rPJ5of1vui+P9TQvZmcw1OVq+VWjbAS/e9kR3X+4YaGnu9pkLbCO/V1zY7qxvhqrM2tWAoxoFBmK8iQSS7MjxKj3ucXx+fbvBmAldM2f1NldjywvxRzBQl9lTTO7QEfHuhOKBtXKXac40WqYoR0Og=
+	t=1743608846; cv=none; b=oAENwFEEqMLmZFJlG0aKNq8bkXu+/GQZRTeI/+TlS6YfL4+XK6MY91cyifMyMUaI+vzkwAgNYoz8KO0+p/HcJOli/oj1MNd19fC6KNG56k760/3w2hysBrZyOk2gkFLz3+Bq7Mh2R+LJGAXOQbgK44ER9w4vSVmwib84ftBHeA4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743608834; c=relaxed/simple;
-	bh=1Cj2krhC2Dtsw1m1xorjC3ucVUKufE7MmCF0CDjRN+Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QO5oFKJ4eeQinO8qjNm+ltsyZknBtDZYzmTYfmN1WA8CTzczqJoBfoqMKLsz6dNgcmmVqwWVmUcFWSQ/mhVrDpSWbNg/l34NpQh6g1ZH5C9tG7oJjA3M8Wa38HauvXUvxS65AS8knAOy+L/7zFmEDmawPx0NIwEZmxUIwM+61Oc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XyaNMX6K; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743608846; c=relaxed/simple;
+	bh=ianagpQrzxuiEeJ8qW2ygl6eJKVkOCgieWnMU/rRnEQ=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Ia2I7kPQzcTqquKVF7VII+QuDQ6KbtpMC/1W8Qq2nJOm67tioHbwakVL8bwZIe8GX2rTuEbl8hERGd2xv8qQ5M8T9v6lo7vFkFp7/LX8y+Y+Ffr0docIOvlKTkS9pPIQEjlfFgeDM8jhYNR4r+5Y0Cq+GA7/d0JM2uCyc0ncLX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=desiato.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=bVeSAzRj; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=desiato.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XyaNMX6K"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-225df540edcso17430515ad.0;
-        Wed, 02 Apr 2025 08:47:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743608831; x=1744213631; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=CIQmNCdKP6me2O/Omw1ppiMa5tbAIYpKZkNSYEsazIs=;
-        b=XyaNMX6Kr2YP+waQ6zyMjvYB+Zs395A4bYhYOGiryLLYju665UTAKhjA3ctTupSooB
-         Ci/laGyQYBvZKoJZHsSLVxjffuazL6oAh7GbDj3y4gIW1EcquwonZo3luHPjL0WxY9YP
-         P5w6AUGrlpzCIgJogDMqji8yeNeWUkd4znpZSyjdQMIvC1JbwmR7ZfXPcpiLijD8DuDo
-         U4KiAEx5vx+42HuGNQr5mjrxCgNrpE4AqTxqF9NRdjat63kr72rVsXoeKKPmTP3IWuGe
-         FCNboF20UHfvmpsfElmta/KMKspQHpkdDERBxf07e1ig3RRsEf6Y4uPCZBZ/GB+O8iQY
-         BJsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743608831; x=1744213631;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CIQmNCdKP6me2O/Omw1ppiMa5tbAIYpKZkNSYEsazIs=;
-        b=anuRBzTvHJUNHmiBwQmC8CsgYL0s5sE/GCQObmeR0m69djcGaIyBMk+WPYahx/s73c
-         Cr3YKHi6wfnBNhctHeeXojXqWduig8oTYe6xTHqonW/qS10srkHVixqNrkG8K6rAsNDW
-         5dk4IT75M4NNdfpRoKqYZ4Ey/tdb3nN0EXgfmu6OHOG7XAhbOGC+Vn52eABbFK8fPSMc
-         vC2iU0XvYFoPqIUI3fpt46fEvcqqKlYhAKvSpqHLjay8ipETk9J6MxPOovSOxpiX8JHt
-         4slg+IX/W61HvjQwzpt79yvBUluiTv3r8OHxq9YU+8ASuHt5TpALxfQTcayDqqBZAZmI
-         uvVw==
-X-Forwarded-Encrypted: i=1; AJvYcCViaiguESmRqpEc6tj8MMh/uUW+NRazIHniKCwn5+kZoFMjT3qnkoy3ilB1FLB/M2wr6UwYjkbq8Hoao8Y=@vger.kernel.org, AJvYcCXyhnEoMuEU7Nue4Az1raxkF/WJY2C7ozMxLlcsUnfzEDGAevoIHNwB1HIUJZ+gcjuUqdiD9x8dHP1/s94m4rA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw7XUbAXbXHJkfe7PJCsCqvSVWdTkqSpWwe+4uIJMMbyShZqUjZ
-	j3ghi7x8i5qlinW+EHog21EM9tv7Bj774kSt+uQuWVruCb+bnY/0
-X-Gm-Gg: ASbGncujkcd7KkV0dsTpu5+WYAy1yO8uYf6CBBoFXNdIp/ABo2RGr/l2wXz9/WwafTX
-	l8/LtZwT1KBN1EbXPgCXIL+sAYX6uDkFwVBZUIoXi/UbRycKQxjX8I6ComhIC0m8tqPas13Y6vy
-	gy+4QLHzOHr53rR8E7inPFqAj+ONTM78J7wJ5Yug3jkqYIdVyA/oELocWfwd2+6L1AsCpWK65K9
-	ycMyhtA+zUKjeytsju/qNPLjQjVGDMZ3lxjU0Cn5iNwNwPgJBcxX3sWBXPG/fgEzymQnBo1x22X
-	Y5kROM5i6oJ6aY5AtCSYOx/fOb6YNhcDlFLPRM+g1jMn68nc4E2Tx6g=
-X-Google-Smtp-Source: AGHT+IGpFfJcr7gdxCITP1UWjkqX9ItNLy78MqKyN3K+iXIUnro+nPhpe1lhj5L9aZXv921yTavKiA==
-X-Received: by 2002:a17:902:820d:b0:21f:40de:ae4e with SMTP id d9443c01a7336-229765ce2bdmr181665ad.9.1743608831411;
-        Wed, 02 Apr 2025 08:47:11 -0700 (PDT)
-Received: from localhost ([216.228.125.129])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291eec53easm110037475ad.24.2025.04.02.08.47.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Apr 2025 08:47:10 -0700 (PDT)
-Date: Wed, 2 Apr 2025 11:47:08 -0400
-From: Yury Norov <yury.norov@gmail.com>
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	linux-kernel@vger.kernel.org, Danilo Krummrich <dakr@redhat.com>,
-	rust-for-linux@vger.kernel.org,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Burak Emir <bqe@google.com>
-Subject: Re: [PATCH V4 1/2] rust: Add initial cpumask abstractions
-Message-ID: <Z-1b_FkYUJEIj-YW@thinkpad>
-References: <cover.1743572195.git.viresh.kumar@linaro.org>
- <35f4223be4a51139348fed82420481b370d7b1db.1743572195.git.viresh.kumar@linaro.org>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bVeSAzRj"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=MIME-Version:Content-Type:References:
+	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=ianagpQrzxuiEeJ8qW2ygl6eJKVkOCgieWnMU/rRnEQ=; b=bVeSAzRj0JOrev4EhTfFjc6TTp
+	AARQ5+7ADehtDROhy/uOTlzl2uIHPsvcAfezfo7iyeW5bsyMvXq2G4IKBVIm72Y7hmd/o/Z1JU6jV
+	Y4xhIooYaq3f7YWsis8vpP8D8BsiLB8KlY1wQcSagVTsxUs60OOYSgEjLa9FfQyEWz9nqn3Q1dwbC
+	BdSTIzQ2LVtLnt7L0xGVSrUN+SosDKOc/G+tkxzJ/tyjWFYBFj27KMQar6m0y3812Ra+b6FVce7+7
+	3iwgJpjtoflzGedwO+gIJd6rQh4bKwvK/7BZLlZToMh1wKXY1j+/pP6tPRss89//Eh1w7QfmvWirh
+	ppXFu/tA==;
+Received: from [172.31.31.145] (helo=u09cd745991455d.ant.amazon.com)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1u00JC-000000073sF-2Y13;
+	Wed, 02 Apr 2025 15:47:18 +0000
+Message-ID: <6b3b047f1650d91abe5e523dd7f862c6f7ee6611.camel@infradead.org>
+Subject: Re: [RFC PATCH 1/3] content: Add VIRTIO_F_SWIOTLB to negotiate use
+ of SWIOTLB bounce buffers
+From: David Woodhouse <dwmw2@infradead.org>
+To: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: virtio-comment@lists.linux.dev, hch@infradead.org, Claire Chang
+ <tientzu@chromium.org>, linux-devicetree <devicetree@vger.kernel.org>, Rob
+ Herring <robh+dt@kernel.org>, =?ISO-8859-1?Q?J=F6rg?= Roedel
+ <joro@8bytes.org>,  iommu@lists.linux-foundation.org,
+ linux-kernel@vger.kernel.org, graf@amazon.de
+Date: Wed, 02 Apr 2025 16:47:18 +0100
+In-Reply-To: <20250402111901-mutt-send-email-mst@kernel.org>
+References: <20250402112410.2086892-1-dwmw2@infradead.org>
+	 <20250402112410.2086892-2-dwmw2@infradead.org>
+	 <20250402105137-mutt-send-email-mst@kernel.org>
+	 <19ba662feeb93157bc8a03fb0b11cb5f2eca5e40.camel@infradead.org>
+	 <20250402111901-mutt-send-email-mst@kernel.org>
+Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
+	boundary="=-6RjDHDqdoAIfGBoxa/uv"
+User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <35f4223be4a51139348fed82420481b370d7b1db.1743572195.git.viresh.kumar@linaro.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
 
-On Wed, Apr 02, 2025 at 11:08:42AM +0530, Viresh Kumar wrote:
-> Wed,  2 Apr 2025 11:08:42 +0530
-> Message-Id: <35f4223be4a51139348fed82420481b370d7b1db.1743572195.git.viresh.kumar@linaro.org>
-> X-Mailer: git-send-email 2.31.1.272.g89b43f80a514
-> In-Reply-To: <cover.1743572195.git.viresh.kumar@linaro.org>
-> References: <cover.1743572195.git.viresh.kumar@linaro.org>
-> MIME-Version: 1.0
-> Content-Transfer-Encoding: 8bit
-> Status: O
-> Content-Length: 11430
-> Lines: 334
-> 
-> Add initial Rust abstractions for struct cpumask, covering a subset of
-> its APIs. Additional APIs can be added as needed.
-> 
-> These abstractions will be used in upcoming Rust support for cpufreq and
-> OPP frameworks.
-> 
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
->  rust/kernel/cpumask.rs | 301 +++++++++++++++++++++++++++++++++++++++++
->  rust/kernel/lib.rs     |   1 +
->  2 files changed, 302 insertions(+)
->  create mode 100644 rust/kernel/cpumask.rs
-> 
-> diff --git a/rust/kernel/cpumask.rs b/rust/kernel/cpumask.rs
-> new file mode 100644
-> index 000000000000..792210a77770
-> --- /dev/null
-> +++ b/rust/kernel/cpumask.rs
-> @@ -0,0 +1,301 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +//! CPU Mask abstractions.
-> +//!
-> +//! C header: [`include/linux/cpumask.h`](srctree/include/linux/cpumask.h)
-> +
-> +use crate::{
-> +    alloc::{AllocError, Flags},
-> +    bindings,
-> +    prelude::*,
-> +    types::Opaque,
-> +};
-> +
-> +#[cfg(CONFIG_CPUMASK_OFFSTACK)]
-> +use core::ptr::{self, NonNull};
-> +
-> +#[cfg(not(CONFIG_CPUMASK_OFFSTACK))]
-> +use core::mem::MaybeUninit;
-> +
-> +use core::ops::{Deref, DerefMut};
-> +
-> +/// A CPU Mask.
-> +///
-> +/// This represents the Rust abstraction for the C `struct cpumask`.
-> +///
-> +/// # Invariants
-> +///
-> +/// A [`Cpumask`] instance always corresponds to a valid C `struct cpumask`.
-> +///
-> +/// The callers must ensure that the `struct cpumask` is valid for access and remains valid for the
-> +/// lifetime of the returned reference.
-> +///
-> +/// ## Examples
-> +///
-> +/// The following example demonstrates how to update a [`Cpumask`].
-> +///
-> +/// ```
-> +/// use kernel::bindings;
-> +/// use kernel::cpumask::Cpumask;
-> +///
-> +/// fn set_clear_cpu(ptr: *mut bindings::cpumask, set_cpu: u32, clear_cpu: i32) {
-> +///     // SAFETY: The `ptr` is valid for writing and remains valid for the lifetime of the
-> +///     // returned reference.
-> +///     let mask = unsafe { Cpumask::from_raw_mut(ptr) };
-> +///     mask.set(set_cpu);
-> +///     mask.clear(clear_cpu);
-> +/// }
-> +/// ```
-> +#[repr(transparent)]
-> +pub struct Cpumask(Opaque<bindings::cpumask>);
-> +
-> +impl Cpumask {
-> +    /// Creates a mutable reference to an existing `struct cpumask` pointer.
-> +    ///
-> +    /// # Safety
-> +    ///
-> +    /// The caller must ensure that `ptr` is valid for writing and remains valid for the lifetime
-> +    /// of the returned reference.
-> +    pub unsafe fn from_raw_mut<'a>(ptr: *mut bindings::cpumask) -> &'a mut Self {
-> +        // SAFETY: Guaranteed by the safety requirements of the function.
-> +        //
-> +        // INVARIANT: The caller ensures that `ptr` is valid for writing and remains valid for the
-> +        // lifetime of the returned reference.
-> +        unsafe { &mut *ptr.cast() }
-> +    }
-> +
-> +    /// Creates a reference to an existing `struct cpumask` pointer.
-> +    ///
-> +    /// # Safety
-> +    ///
-> +    /// The caller must ensure that `ptr` is valid for reading and remains valid for the lifetime
-> +    /// of the returned reference.
-> +    pub unsafe fn from_raw<'a>(ptr: *const bindings::cpumask) -> &'a Self {
-> +        // SAFETY: Guaranteed by the safety requirements of the function.
-> +        //
-> +        // INVARIANT: The caller ensures that `ptr` is valid for reading and remains valid for the
-> +        // lifetime of the returned reference.
-> +        unsafe { &*ptr.cast() }
-> +    }
-> +
-> +    /// Obtain the raw `struct cpumask` pointer.
-> +    pub fn as_raw(&self) -> *mut bindings::cpumask {
-> +        self as *const Cpumask as *mut bindings::cpumask
-> +    }
-> +
-> +    /// Set `cpu` in the cpumask.
-> +    ///
-> +    /// Equivalent to the kernel's `cpumask_set_cpu` API.
-> +    #[inline]
-> +    pub fn set(&mut self, cpu: u32) {
-> +        // SAFETY: By the type invariant, `self.as_raw` is a valid argument to `cpumask_set_cpus`.
-> +        unsafe { bindings::cpumask_set_cpu(cpu, self.as_raw()) };
-> +    }
 
-Alright, this is an atomic operation. For bitmaps in rust, Burak and
-Alice decided to switch naming, so 'set()' in C becomes 'set_atomic()'
-in rust, and correspondingly, '__set()' becomes 'set()'.
+--=-6RjDHDqdoAIfGBoxa/uv
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-I think it's maybe OK to switch naming for a different language. But
-guys, can you please be consistent once you made a decision?
+On Wed, 2025-04-02 at 11:20 -0400, Michael S. Tsirkin wrote:
+> On Wed, Apr 02, 2025 at 04:12:39PM +0100, David Woodhouse wrote:
+> > On Wed, 2025-04-02 at 10:54 -0400, Michael S. Tsirkin wrote:
+> > > > +=C2=A0 If a the device transport provides a software IOTLB bounce =
+buffer,
+> > > > +=C2=A0 addresses within its range are not subject to the requireme=
+nts of
+> > > > +=C2=A0 VIRTIO_F_ACCESS_PLATFORM as they are considered to be ``on-=
+device''.
+> > >=20
+> > > I don't get this part. the system designers currently have a choice
+> > > whether to have these controlled by VIRTIO_F_ACCESS_PLATFORM or not.
+> > > with PCI, for example, BAR on the same device is naturally not
+> > > behind an iommu.
+> >=20
+> > In the PCI case this *is* a BAR on the same device, and is naturally
+> > not behind an IOMMU as you say. This is just stating the obvious, for
+> > clarity.
+>=20
+> Then the platform already does this right, and it's better not to
+> try and override it in the spec.
 
-Burak, Alice, please comment.
+It isn't intended as an "override". This *is* what will happen if the
+platform does it right. By mandating it in the spec, the intent is to
+reduce the chances of platforms doing it *wrong*? (Or of drivers making
+wrong assumptions).
 
-Regardless, without looking at the end code I can't judge if you need
-atomic or non-atomic ops. Can you link the project that actually uses
-this API? Better if you just prepend that series with this 2 patches
-and move them together.
+> > For virtio-mmio it also isn't translated by an IOMMU; that was the
+> > *point* of the `restricted-dma-pool` support.
+> >=20
+>=20
+> Clear VIRTIO_F_ACCESS_PLATFORM then?
 
-> +    /// Clear `cpu` in the cpumask.
-> +    ///
-> +    /// Equivalent to the kernel's `cpumask_clear_cpu` API.
-> +    #[inline]
-> +    pub fn clear(&mut self, cpu: i32) {
-> +        // SAFETY: By the type invariant, `self.as_raw` is a valid argument to `cpumask_clear_cpu`.
-> +        unsafe { bindings::cpumask_clear_cpu(cpu, self.as_raw()) };
-> +    }
-> +
-> +    /// Set all CPUs in the cpumask.
-> +    ///
-> +    /// Equivalent to the kernel's `cpumask_setall` API.
-> +    #[inline]
-> +    pub fn set_all(&mut self) {
-> +        // SAFETY: By the type invariant, `self.as_raw` is a valid argument to `cpumask_setall`.
-> +        unsafe { bindings::cpumask_setall(self.as_raw()) };
-> +    }
+> I don't want to say that VIRTIO_F_ACCESS_PLATFORM and VIRTIO_F_SWIOTLB
 
-Can you keep the name as 'setall'? This would help those grepping
-methods roots in C sources.
+> are mutually exclusive...
 
-> +    /// Get weight of the cpumask.
-> +    ///
-> +    /// Equivalent to the kernel's `cpumask_weight` API.
-> +    #[inline]
-> +    pub fn weight(&self) -> u32 {
-> +        // SAFETY: By the type invariant, `self.as_raw` is a valid argument to `cpumask_weight`.
-> +        unsafe { bindings::cpumask_weight(self.as_raw()) }
-> +    }
-> +
-> +    /// Copy cpumask.
-> +    ///
-> +    /// Equivalent to the kernel's `cpumask_copy` API.
-> +    #[inline]
-> +    pub fn copy(&self, dstp: &mut Self) {
-> +        // SAFETY: By the type invariant, `Self::as_raw` is a valid argument to `cpumask_copy`.
-> +        unsafe { bindings::cpumask_copy(dstp.as_raw(), self.as_raw()) };
-> +    }
-> +}
-> +
-> +/// A CPU Mask pointer.
-> +///
-> +/// This represents the Rust abstraction for the C `struct cpumask_var_t`.
-> +///
-> +/// # Invariants
-> +///
-> +/// A [`CpumaskBox`] instance always corresponds to a valid C `struct cpumask_var_t`.
 
-Can you keep the C name? Maybe CpumaskVar? Or this 'Box' has special
-meaning in rust?
+> Generally, it is preferable to keep all features orthogonal if
+> at all possible.
 
-> +///
-> +/// The callers must ensure that the `struct cpumask_var_t` is valid for access and remains valid
-> +/// for the lifetime of [`CpumaskBox`].
-> +///
-> +/// ## Examples
-> +///
-> +/// The following example demonstrates how to create and update a [`CpumaskBox`].
-> +///
-> +/// ```
-> +/// use kernel::cpumask::CpumaskBox;
-> +/// use kernel::error::Result;
-> +///
-> +/// fn cpumask_foo() -> Result {
+...precisely because they *should* be orthogonal.
 
-cpumask_foo() what? This is not a good name for test, neither
-for an example.
+VIRTIO_F_ACCESS_PLATFORM defines how system memory is accessed;
+basically whether DMA goes through an IOMMU or not. And as you point
+out, the "on-device" buffer used with VIRTIO_F_SWIOTLB=C2=A0should never
+pass through the IOMMU anyway, so it *is* naturally orthogonal.
 
-> +///     let mut mask = CpumaskBox::new(GFP_KERNEL)?;
-> +///
-> +///     assert_eq!(mask.weight(), 0);
-> +///     mask.set(2);
-> +///     assert_eq!(mask.weight(), 1);
-> +///     mask.set(3);
-> +///     assert_eq!(mask.weight(), 2);
 
-Yeah, you don't import cpumask_test_cpu() for some reason, and has
-to use .weight() here to illustrate how it works. For an example, I
-think it's a rather bad example.
+And I think it does make sense for both to be set in some cases, for
+both physical and virtual devices.
 
-Also, because you have atomic setters (except setall) and non-atomic 
-getter, I think you most likely abuse the atomic API in your code.
-Please share your driver for the next round. 
 
-I think it would be better to move this implementation together with
-the client code. Now that we merged cpumask helpers and stabilized the
-API, there's no need to merge dead lib code without clients.
+For physical devices that would mean "Got an IOMMU? Sure, go ahead and
+use it. If not, if you don't trust me, you can just disable my bus
+mastering and just use the SWIOTLB".
 
-Thanks,
-Yury
+It's basically the same for a virtual device. In a confidential compute
+model, the device model (in the VMM) might not be *able* to access the
+guest memory unless the core guest OS explicitly permits that, through
+some kind of pKVM enlightenment to allow pages to be shared, or a
+vIOMMU, or marking hardware pages unencrypted. So having both bits set
+would mean "Know how to drive that enlightenment? Sure, go ahead and
+use it. Otherwise, use the SWIOTLB".
+
+In fact that's exactly what that Linux code for `restricted-dma-pool`
+already does =E2=80=94 when setting up the dma_ops for the device, if it fi=
+nds
+an actual set of IOMMU operations, it'll use those. And if not, that's
+when it falls back to using the provided SWIOTLB.
+
+
+--=-6RjDHDqdoAIfGBoxa/uv
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Transfer-Encoding: base64
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCD9Aw
+ggSOMIIDdqADAgECAhAOmiw0ECVD4cWj5DqVrT9PMA0GCSqGSIb3DQEBCwUAMGUxCzAJBgNVBAYT
+AlVTMRUwEwYDVQQKEwxEaWdpQ2VydCBJbmMxGTAXBgNVBAsTEHd3dy5kaWdpY2VydC5jb20xJDAi
+BgNVBAMTG0RpZ2lDZXJ0IEFzc3VyZWQgSUQgUm9vdCBDQTAeFw0yNDAxMzAwMDAwMDBaFw0zMTEx
+MDkyMzU5NTlaMEExCzAJBgNVBAYTAkFVMRAwDgYDVQQKEwdWZXJva2V5MSAwHgYDVQQDExdWZXJv
+a2V5IFNlY3VyZSBFbWFpbCBHMjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMjvgLKj
+jfhCFqxYyRiW8g3cNFAvltDbK5AzcOaR7yVzVGadr4YcCVxjKrEJOgi7WEOH8rUgCNB5cTD8N/Et
+GfZI+LGqSv0YtNa54T9D1AWJy08ZKkWvfGGIXN9UFAPMJ6OLLH/UUEgFa+7KlrEvMUupDFGnnR06
+aDJAwtycb8yXtILj+TvfhLFhafxroXrflspavejQkEiHjNjtHnwbZ+o43g0/yxjwnarGI3kgcak7
+nnI9/8Lqpq79tLHYwLajotwLiGTB71AGN5xK+tzB+D4eN9lXayrjcszgbOv2ZCgzExQUAIt98mre
+8EggKs9mwtEuKAhYBIP/0K6WsoMnQCcCAwEAAaOCAVwwggFYMBIGA1UdEwEB/wQIMAYBAf8CAQAw
+HQYDVR0OBBYEFIlICOogTndrhuWByNfhjWSEf/xwMB8GA1UdIwQYMBaAFEXroq/0ksuCMS1Ri6en
+IZ3zbcgPMA4GA1UdDwEB/wQEAwIBhjAdBgNVHSUEFjAUBggrBgEFBQcDBAYIKwYBBQUHAwIweQYI
+KwYBBQUHAQEEbTBrMCQGCCsGAQUFBzABhhhodHRwOi8vb2NzcC5kaWdpY2VydC5jb20wQwYIKwYB
+BQUHMAKGN2h0dHA6Ly9jYWNlcnRzLmRpZ2ljZXJ0LmNvbS9EaWdpQ2VydEFzc3VyZWRJRFJvb3RD
+QS5jcnQwRQYDVR0fBD4wPDA6oDigNoY0aHR0cDovL2NybDMuZGlnaWNlcnQuY29tL0RpZ2lDZXJ0
+QXNzdXJlZElEUm9vdENBLmNybDARBgNVHSAECjAIMAYGBFUdIAAwDQYJKoZIhvcNAQELBQADggEB
+ACiagCqvNVxOfSd0uYfJMiZsOEBXAKIR/kpqRp2YCfrP4Tz7fJogYN4fxNAw7iy/bPZcvpVCfe/H
+/CCcp3alXL0I8M/rnEnRlv8ItY4MEF+2T/MkdXI3u1vHy3ua8SxBM8eT9LBQokHZxGUX51cE0kwa
+uEOZ+PonVIOnMjuLp29kcNOVnzf8DGKiek+cT51FvGRjV6LbaxXOm2P47/aiaXrDD5O0RF5SiPo6
+xD1/ClkCETyyEAE5LRJlXtx288R598koyFcwCSXijeVcRvBB1cNOLEbg7RMSw1AGq14fNe2cH1HG
+W7xyduY/ydQt6gv5r21mDOQ5SaZSWC/ZRfLDuEYwggWbMIIEg6ADAgECAhAH5JEPagNRXYDiRPdl
+c1vgMA0GCSqGSIb3DQEBCwUAMEExCzAJBgNVBAYTAkFVMRAwDgYDVQQKEwdWZXJva2V5MSAwHgYD
+VQQDExdWZXJva2V5IFNlY3VyZSBFbWFpbCBHMjAeFw0yNDEyMzAwMDAwMDBaFw0yODAxMDQyMzU5
+NTlaMB4xHDAaBgNVBAMME2R3bXcyQGluZnJhZGVhZC5vcmcwggIiMA0GCSqGSIb3DQEBAQUAA4IC
+DwAwggIKAoICAQDali7HveR1thexYXx/W7oMk/3Wpyppl62zJ8+RmTQH4yZeYAS/SRV6zmfXlXaZ
+sNOE6emg8WXLRS6BA70liot+u0O0oPnIvnx+CsMH0PD4tCKSCsdp+XphIJ2zkC9S7/yHDYnqegqt
+w4smkqUqf0WX/ggH1Dckh0vHlpoS1OoxqUg+ocU6WCsnuz5q5rzFsHxhD1qGpgFdZEk2/c//ZvUN
+i12vPWipk8TcJwHw9zoZ/ZrVNybpMCC0THsJ/UEVyuyszPtNYeYZAhOJ41vav1RhZJzYan4a1gU0
+kKBPQklcpQEhq48woEu15isvwWh9/+5jjh0L+YNaN0I//nHSp6U9COUG9Z0cvnO8FM6PTqsnSbcc
+0j+GchwOHRC7aP2t5v2stVx3KbptaYEzi4MQHxm/0+HQpMEVLLUiizJqS4PWPU6zfQTOMZ9uLQRR
+ci+c5xhtMEBszlQDOvEQcyEG+hc++fH47K+MmZz21bFNfoBxLP6bjR6xtPXtREF5lLXxp+CJ6KKS
+blPKeVRg/UtyJHeFKAZXO8Zeco7TZUMVHmK0ZZ1EpnZbnAhKE19Z+FJrQPQrlR0gO3lBzuyPPArV
+hvWxjlO7S4DmaEhLzarWi/ze7EGwWSuI2eEa/8zU0INUsGI4ywe7vepQz7IqaAovAX0d+f1YjbmC
+VsAwjhLmveFjNwIDAQABo4IBsDCCAawwHwYDVR0jBBgwFoAUiUgI6iBOd2uG5YHI1+GNZIR//HAw
+HQYDVR0OBBYEFFxiGptwbOfWOtMk5loHw7uqWUOnMDAGA1UdEQQpMCeBE2R3bXcyQGluZnJhZGVh
+ZC5vcmeBEGRhdmlkQHdvb2Rob3Uuc2UwFAYDVR0gBA0wCzAJBgdngQwBBQEBMA4GA1UdDwEB/wQE
+AwIF4DAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwewYDVR0fBHQwcjA3oDWgM4YxaHR0
+cDovL2NybDMuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNybDA3oDWgM4YxaHR0
+cDovL2NybDQuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNybDB2BggrBgEFBQcB
+AQRqMGgwJAYIKwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmRpZ2ljZXJ0LmNvbTBABggrBgEFBQcwAoY0
+aHR0cDovL2NhY2VydHMuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNydDANBgkq
+hkiG9w0BAQsFAAOCAQEAQXc4FPiPLRnTDvmOABEzkIumojfZAe5SlnuQoeFUfi+LsWCKiB8Uextv
+iBAvboKhLuN6eG/NC6WOzOCppn4mkQxRkOdLNThwMHW0d19jrZFEKtEG/epZ/hw/DdScTuZ2m7im
+8ppItAT6GXD3aPhXkXnJpC/zTs85uNSQR64cEcBFjjoQDuSsTeJ5DAWf8EMyhMuD8pcbqx5kRvyt
+JPsWBQzv1Dsdv2LDPLNd/JUKhHSgr7nbUr4+aAP2PHTXGcEBh8lTeYea9p4d5k969pe0OHYMV5aL
+xERqTagmSetuIwolkAuBCzA9vulg8Y49Nz2zrpUGfKGOD0FMqenYxdJHgDCCBZswggSDoAMCAQIC
+EAfkkQ9qA1FdgOJE92VzW+AwDQYJKoZIhvcNAQELBQAwQTELMAkGA1UEBhMCQVUxEDAOBgNVBAoT
+B1Zlcm9rZXkxIDAeBgNVBAMTF1Zlcm9rZXkgU2VjdXJlIEVtYWlsIEcyMB4XDTI0MTIzMDAwMDAw
+MFoXDTI4MDEwNDIzNTk1OVowHjEcMBoGA1UEAwwTZHdtdzJAaW5mcmFkZWFkLm9yZzCCAiIwDQYJ
+KoZIhvcNAQEBBQADggIPADCCAgoCggIBANqWLse95HW2F7FhfH9bugyT/danKmmXrbMnz5GZNAfj
+Jl5gBL9JFXrOZ9eVdpmw04Tp6aDxZctFLoEDvSWKi367Q7Sg+ci+fH4KwwfQ8Pi0IpIKx2n5emEg
+nbOQL1Lv/IcNiep6Cq3DiyaSpSp/RZf+CAfUNySHS8eWmhLU6jGpSD6hxTpYKye7PmrmvMWwfGEP
+WoamAV1kSTb9z/9m9Q2LXa89aKmTxNwnAfD3Ohn9mtU3JukwILRMewn9QRXK7KzM+01h5hkCE4nj
+W9q/VGFknNhqfhrWBTSQoE9CSVylASGrjzCgS7XmKy/BaH3/7mOOHQv5g1o3Qj/+cdKnpT0I5Qb1
+nRy+c7wUzo9OqydJtxzSP4ZyHA4dELto/a3m/ay1XHcpum1pgTOLgxAfGb/T4dCkwRUstSKLMmpL
+g9Y9TrN9BM4xn24tBFFyL5znGG0wQGzOVAM68RBzIQb6Fz758fjsr4yZnPbVsU1+gHEs/puNHrG0
+9e1EQXmUtfGn4InoopJuU8p5VGD9S3Ikd4UoBlc7xl5yjtNlQxUeYrRlnUSmdlucCEoTX1n4UmtA
+9CuVHSA7eUHO7I88CtWG9bGOU7tLgOZoSEvNqtaL/N7sQbBZK4jZ4Rr/zNTQg1SwYjjLB7u96lDP
+sipoCi8BfR35/ViNuYJWwDCOEua94WM3AgMBAAGjggGwMIIBrDAfBgNVHSMEGDAWgBSJSAjqIE53
+a4blgcjX4Y1khH/8cDAdBgNVHQ4EFgQUXGIam3Bs59Y60yTmWgfDu6pZQ6cwMAYDVR0RBCkwJ4ET
+ZHdtdzJAaW5mcmFkZWFkLm9yZ4EQZGF2aWRAd29vZGhvdS5zZTAUBgNVHSAEDTALMAkGB2eBDAEF
+AQEwDgYDVR0PAQH/BAQDAgXgMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDBDB7BgNVHR8E
+dDByMDegNaAzhjFodHRwOi8vY3JsMy5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVtYWlsRzIu
+Y3JsMDegNaAzhjFodHRwOi8vY3JsNC5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVtYWlsRzIu
+Y3JsMHYGCCsGAQUFBwEBBGowaDAkBggrBgEFBQcwAYYYaHR0cDovL29jc3AuZGlnaWNlcnQuY29t
+MEAGCCsGAQUFBzAChjRodHRwOi8vY2FjZXJ0cy5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVt
+YWlsRzIuY3J0MA0GCSqGSIb3DQEBCwUAA4IBAQBBdzgU+I8tGdMO+Y4AETOQi6aiN9kB7lKWe5Ch
+4VR+L4uxYIqIHxR7G2+IEC9ugqEu43p4b80LpY7M4KmmfiaRDFGQ50s1OHAwdbR3X2OtkUQq0Qb9
+6ln+HD8N1JxO5nabuKbymki0BPoZcPdo+FeRecmkL/NOzzm41JBHrhwRwEWOOhAO5KxN4nkMBZ/w
+QzKEy4PylxurHmRG/K0k+xYFDO/UOx2/YsM8s138lQqEdKCvudtSvj5oA/Y8dNcZwQGHyVN5h5r2
+nh3mT3r2l7Q4dgxXlovERGpNqCZJ624jCiWQC4ELMD2+6WDxjj03PbOulQZ8oY4PQUyp6djF0keA
+MYIDuzCCA7cCAQEwVTBBMQswCQYDVQQGEwJBVTEQMA4GA1UEChMHVmVyb2tleTEgMB4GA1UEAxMX
+VmVyb2tleSBTZWN1cmUgRW1haWwgRzICEAfkkQ9qA1FdgOJE92VzW+AwDQYJYIZIAWUDBAIBBQCg
+ggE3MBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDQwMjE1NDcx
+OFowLwYJKoZIhvcNAQkEMSIEIJ3mutCpC8d5SW0U9yi1LopnyHSecQuTYG6TRpTZow7QMGQGCSsG
+AQQBgjcQBDFXMFUwQTELMAkGA1UEBhMCQVUxEDAOBgNVBAoTB1Zlcm9rZXkxIDAeBgNVBAMTF1Zl
+cm9rZXkgU2VjdXJlIEVtYWlsIEcyAhAH5JEPagNRXYDiRPdlc1vgMGYGCyqGSIb3DQEJEAILMVeg
+VTBBMQswCQYDVQQGEwJBVTEQMA4GA1UEChMHVmVyb2tleTEgMB4GA1UEAxMXVmVyb2tleSBTZWN1
+cmUgRW1haWwgRzICEAfkkQ9qA1FdgOJE92VzW+AwDQYJKoZIhvcNAQEBBQAEggIAQUb+dOI3LH7A
+hFt0Kat4NH1EOd0Jlq1Nh7GDhTmjv5bKyJcEJ3L8gLJvOlFHl4NoKqzDq6pPiTZlotcI6PLExZ2D
+MjV6PuiBpF3Sa3qnO8KTzvCMfP/3CYlvwT0X1GN4zp4ahdux+AFmV+/s+JftbBuklp2EW08UqVb4
+NJ4DKQG59bmweAH5TZa0GGDZ9fVEm3B+KpuYngZbEq67CedUnpa545vPmLt/5kai4p5ukydYNIdQ
+S214qcJELFOpPzmwwnWFGN2bQkNYd2zAYLScJTXnePUOH8zQITiu6CM2SzGj6wiWuzogBVWTVEFF
++nrFHnkKI8Vz/fRPp3CcOvsXHftkUR8V0SRksbV1AM7qsVkkRDo5ib/lNIGAl1FMBgYD7UzaWpO1
+0XwR2r7rsPy+v+agcrDMtPyfcv85Usqw54jdOiges4dpp0JLcrzQjGb8ywZ9/UTwZ9ec+jBsL64R
+1SXZ/mvgUaJp3qigi0tlKwu+jsGX3xkrYaeUqnpC+Odcm0VI0lf9zwnnp2i48OOyK9LRn1LJCULZ
+DcyuhqY3cSwX/N2b1Wuxmm1fRHXvr5A+ibUtcfR9XKQd1w0v/efwM1NKqqk/yhtswa/J3giATFLu
+6NMdbszNezSgFiJt5Q8ecJRUKn26QKWBFbiLcP9XznG8BQ6okRoDFt0D3VpdgZgAAAAAAAA=
+
+
+--=-6RjDHDqdoAIfGBoxa/uv--
