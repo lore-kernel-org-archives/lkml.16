@@ -1,146 +1,118 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AF455BAF0;
-	Wed,  2 Apr 2025 13:16:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 930B51F03E0
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 13:18:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743599810; cv=none; b=V7cnLnKIs3M+BD/+9C6AuL61XbtumP5B/bzlsYhJdT0Oe0dnjCmyV2+YU17Ue+QJB3k7DQfmmtkkFrs3GOGlKUDFjReCltQ6Lukq8hoF9PxYgHR5AyIxcTXYusBG9bzPN60SwpH/s5oVrtLhTxofD7h18/4AurYH5BtbFF1KO9k=
+	t=1743599923; cv=none; b=NtfS03hEVcBryV3abPqzgCABXnJTyLfoBGZEA0pZYL+cVIVueOCB4GpYYZHgKaq6jq2Kboh1DXouv1I9NxnDQkqs6en+/+lUXunJEjbUX5LD7hQWvlWW+I5xvR4zOhCaHaKygTPw+2k+JcZ4Uzq6OFc5TlgEJeaQ/3w0o+w+CwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743599810; c=relaxed/simple;
-	bh=d6hmBXGp60mn5wwqyak2KqVoDBzb+Wvc5pH1eYeHxRk=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=q85MQDJBCV9adRiBVxysD3YpLpOW3WwZz2oHhC0puGS0tifxibBIyFp69rFlg6rQHjV6uwwfdLMGVvMRLbl+HWOGoYfLT5TEbPviHK0wNvBdeIxjanJgbRlS+Q/y05XGdSd98p9hFF/BTEGJuHPMB8j35R1IfUEiADXyXIRA2JY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SQHr9KMs; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1743599923; c=relaxed/simple;
+	bh=hTce2fu63vILU+Nv0bLr6fat6cpDQYvpiVdtQKz7zr4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=bI2S4qb6VYq+HrShbRWOH9rdjez6lLKPorJn7uMtct2JimrhH/E0U9em9vVFFrxxZH89+csFIirrDsBQH3e8s+TWxYo21RqitT0DW6biycheK2zgGgFDe09KZqeNuSbzpd22AKg1/e38WqnppUUz6edRBl6kda38UJzQgVDn+qA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OFMrmh7M; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SQHr9KMs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743599809; x=1775135809;
-  h=message-id:date:mime-version:subject:from:to:cc:
-   references:in-reply-to:content-transfer-encoding;
-  bh=d6hmBXGp60mn5wwqyak2KqVoDBzb+Wvc5pH1eYeHxRk=;
-  b=SQHr9KMsAKzLxzuOLRI8htdJGT9RiiM14CU2sCDGdRqf0Qf9OTPGMzEu
-   OfiTaKd6m9Vf8d98pCrn25HYc7ytSgmidikDn6NT6XzduzqOx2l0Teqet
-   c0PuXD05XR/E+kWhLTuutc/SQ1VzCf+Er3mvna1MLL++ISkDK+DLOqCqu
-   TEZBu3/DUhRLV/90GILu3/wyX0nJHhCDD1v5b980LkKF1lrGB6yMWk8HC
-   Bf8wdXGejLc8wiCCYpaNnV9oRZJiJUL5bgiG1Cas0RTwlSm9TBO7z8wXq
-   mqUj4gf1B20GjhyUM+ftpqgN0iLIibpwfR6iCAa9kY9+tThpA8kTjMYKZ
-   A==;
-X-CSE-ConnectionGUID: c5w/VMHOTt2PPFi4tWr+qQ==
-X-CSE-MsgGUID: Z4Csxq5PSLaQWVvjP5Nyrw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11392"; a="48754119"
-X-IronPort-AV: E=Sophos;i="6.15,182,1739865600"; 
-   d="scan'208";a="48754119"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 06:16:48 -0700
-X-CSE-ConnectionGUID: 5ffR5GaDTPGXMcp6iElOvw==
-X-CSE-MsgGUID: OO1lkGRYRt6fn6XYmVXsKg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,182,1739865600"; 
-   d="scan'208";a="131825882"
-Received: from binbinwu-mobl.ccr.corp.intel.com (HELO [10.124.242.208]) ([10.124.242.208])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 06:16:44 -0700
-Message-ID: <c96f2ed1-1c7f-4b61-85ff-902e08c61fbc@linux.intel.com>
-Date: Wed, 2 Apr 2025 21:16:37 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OFMrmh7M"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5e5e8274a74so10808731a12.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 06:18:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743599920; x=1744204720; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=H8OOW19gYi9GtyeQ4qqZw+eawnXRnqo/rA8a2T8vrZE=;
+        b=OFMrmh7MnB7lY7NsohuVZt2nX3i2p2JZEsSsTBYXBwquTBFXwwOri3khNug4mbOm5d
+         D2XWc4ojNuYZ4G9ge3VhXFePnTL2iYOD1qBIqBGyJ5Pdee4K1eiv+NG1GjL5gr2d5wwq
+         QLShAWS6nLwseLCHILfcS8XA3A0fH2GqzeAWlg3j/JQEi5VL/obXinh7+OQb6vZ5LIal
+         nEEwqR70A57P5ENP6E2UyYX52+C6WJeD/kmen6gcQWUNWSyYo5wQTCnMdUOkOwJHhGeC
+         PycdO1u1Ip3Ufib8HJrtmxq+214L3wbs2NfdGS+KdeXZi+d3I5doR4EEKJsAlSjri9PE
+         PXCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743599920; x=1744204720;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=H8OOW19gYi9GtyeQ4qqZw+eawnXRnqo/rA8a2T8vrZE=;
+        b=kqtVco0k+cMF9w9YN1as5JkzO82XWdeImUjwh36eFeIkadTgo8PvA2rQch8BEwAq0S
+         ehLnN2Lc3sIvcw6nwjdTMupadAirM93eOsxopK49umuXgh8/Sgqdv389efE75K21ZTcz
+         pjePc3hmbCbJu8gmsQn1DnSl0NXOlB36w1HGRX0nyvXPmFCgEiw+vHf3/6WS85FhS1d8
+         KQqWqyVFuNXq+kOSWjwxWQeKmc6hh9+wmlxUS4KmW/wYrcJhcU+ngnGnG2ewK9N2ypgI
+         cPguPDXdIPgPBWkiIQkZshBETwxIbmyWRq5eqk8ZLWcaeYMuDo1LmEWF3LQcf7zKSXb/
+         /Drw==
+X-Forwarded-Encrypted: i=1; AJvYcCXMhJS1Rxcoq83zFGgWWZImOwF0b4Gku2iiTDIC6nRyUKO36NL5bCYnCy87R3PM0VfeyMAwSRESST5a6ew=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yynmn8ysyCE+zEmZd1B7RU4QxiGXHgpeJVwfn3PPN8IQtm0RR2t
+	W5tyouU8SCPcUjCuoYJJpY2Vo+0uCsKL7fzYG4x6kQoQa4s/Jo3dlYP0p8dk
+X-Gm-Gg: ASbGncvfzdlZ7ObTEb/amhMFkJRxpSKuGmxqMcBVeH474/o/o9e24oRYipupH+1Peth
+	pkE9j9vjynSCijZMZj40HMJrVuyT1neOIT7uZHf0WJRjPlByUbIW4mx1N8FbaQSdTXHTEqHhWXV
+	gM5DCjLK1xRKw7HylohLshCBPctPP8fjggXSnQ3aBRKfi4REbUbu1tyv8k3jwEUpCxUKY5sB51D
+	bj8t3DEyqLeNWJ/THtx1eVMCVIXxvDR/3Sc5HT1qqw+joDMqKk6cTviwOf00fcMx4s5K5cNPwIV
+	8N+EWTmQ6k3K9bP+50ZdHdCbT02oRV7uHSlqf3AhlHiLmeOf8g==
+X-Google-Smtp-Source: AGHT+IHFUmrmlc4HA2ylOlLMlHTULjl3M+S7hQguh6s8FyPgenDwQjUTgAyjksCyMnV0khwDxKRsUA==
+X-Received: by 2002:a05:6402:42c8:b0:5e6:17d7:9a32 with SMTP id 4fb4d7f45d1cf-5edfd13ca73mr15448608a12.18.1743599919214;
+        Wed, 02 Apr 2025 06:18:39 -0700 (PDT)
+Received: from HP-650 ([105.112.228.227])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5edcaac38f4sm7793053a12.10.2025.04.02.06.18.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Apr 2025 06:18:38 -0700 (PDT)
+Date: Wed, 2 Apr 2025 14:18:24 +0100
+From: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Julia Lawall <julia.lawall@inria.fr>
+Cc: outreachy@lists.linux.dev, linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: rtl8723bs: modify struct field to use standard bool
+ type
+Message-ID: <Z+05IEjV3pczMLNQ@HP-650>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] KVM: TDX: Handle TDG.VP.VMCALL<GetQuote>
-From: Binbin Wu <binbin.wu@linux.intel.com>
-To: "Huang, Kai" <kai.huang@intel.com>,
- "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
- "pbonzini@redhat.com" <pbonzini@redhat.com>,
- "seanjc@google.com" <seanjc@google.com>
-Cc: "Gao, Chao" <chao.gao@intel.com>,
- "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
- "mikko.ylinen@linux.intel.com" <mikko.ylinen@linux.intel.com>,
- "Li, Xiaoyao" <xiaoyao.li@intel.com>,
- "Lindgren, Tony" <tony.lindgren@intel.com>,
- "Hunter, Adrian" <adrian.hunter@intel.com>,
- "Chatre, Reinette" <reinette.chatre@intel.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "Zhao, Yan Y" <yan.y.zhao@intel.com>,
- "Yamahata, Isaku" <isaku.yamahata@intel.com>
-References: <20250402001557.173586-1-binbin.wu@linux.intel.com>
- <20250402001557.173586-2-binbin.wu@linux.intel.com>
- <40f3dcc964bfb5d922cf09ddf080d53c97d82273.camel@intel.com>
- <112c4cdb-4757-4625-ad18-9402340cd47e@linux.intel.com>
-Content-Language: en-US
-In-Reply-To: <112c4cdb-4757-4625-ad18-9402340cd47e@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+The struct field uses the uint values 0 and 1 to represent false and
+true values respectively.
 
+Convert cases to use the bool type instead to conform to Linux
+coding styles and ensure consistency.
 
-On 4/2/2025 8:53 PM, Binbin Wu wrote:
-[...]
->>> diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
->>> index b952bc673271..535200446c21 100644
->>> --- a/arch/x86/kvm/vmx/tdx.c
->>> +++ b/arch/x86/kvm/vmx/tdx.c
->>> @@ -1463,6 +1463,39 @@ static int tdx_get_td_vm_call_info(struct kvm_vcpu *vcpu)
->>>       return 1;
->>>   }
->>>   +static int tdx_complete_get_quote(struct kvm_vcpu *vcpu)
->>> +{
->>> +    tdvmcall_set_return_code(vcpu, vcpu->run->tdx_get_quote.ret);
->>> +    return 1;
->>> +}
->>> +
->>> +static int tdx_get_quote(struct kvm_vcpu *vcpu)
->>> +{
->>> +    struct vcpu_tdx *tdx = to_tdx(vcpu);
->>> +
->>> +    u64 gpa = tdx->vp_enter_args.r12;
->>> +    u64 size = tdx->vp_enter_args.r13;
->>> +
->>> +    /* The buffer must be shared memory. */
->>> +    if (vt_is_tdx_private_gpa(vcpu->kvm, gpa) || size == 0) {
->>> +        tdvmcall_set_return_code(vcpu, TDVMCALL_STATUS_INVALID_OPERAND);
->>> +        return 1;
->>> +    }
->> It is a little bit confusing about the shared buffer check here.  There are two
->> perspectives here:
->>
->> 1) the buffer has already been converted to shared, i.e., the attributes are
->> stored in the Xarray.
->> 2) the GPA passed in the GetQuote must have the shared bit set.
->>
->> The key is we need 1) here.  From the spec, we need the 2) as well because it
->> *seems* that the spec requires GetQuote to provide the GPA with shared bit set,
->> as it says "Shared GPA as input".
->>
->> The above check only does 2).  I think we need to check 1) as well, because once
->> you forward this GetQuote to userspace, userspace is able to access it freely.
->
-> Right.
->
-> Another discussion is whether KVM should skip the sanity checks for GetQuote
-> and let the userspace take the job.
-> Considering checking the buffer is shared memory or not, KVM seems to be a
-> better place.
-A second thought. If the userspace could do the shared memory check, the
-whole sanity checks can be done in userspace to keep KVM as small as possible.
+reported by Coccinelle:
 
->
->>
->> As a result, the comment
->>
->>    /* The buffer must be shared memory. */
->>
->> should also be updated to something like:
->>
->>    /*
->>     * The buffer must be shared. GetQuote requires the GPA to have
->>     * shared bit set.
->>     */
->
->
+Signed-off-by: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
+---
+ drivers/staging/rtl8723bs/core/rtw_ap.c      | 2 +-
+ drivers/staging/rtl8723bs/include/sta_info.h | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/staging/rtl8723bs/core/rtw_ap.c b/drivers/staging/rtl8723bs/core/rtw_ap.c
+index ed6942e289a5..82f54f769ed1 100644
+--- a/drivers/staging/rtl8723bs/core/rtw_ap.c
++++ b/drivers/staging/rtl8723bs/core/rtw_ap.c
+@@ -389,7 +389,7 @@ void update_bmc_sta(struct adapter *padapter)
+ 		psta->qos_option = 0;
+ 		psta->htpriv.ht_option = false;
+ 
+-		psta->ieee8021x_blocked = 0;
++		psta->ieee8021x_blocked = false;
+ 
+ 		memset((void *)&psta->sta_stats, 0, sizeof(struct stainfo_stats));
+ 
+diff --git a/drivers/staging/rtl8723bs/include/sta_info.h b/drivers/staging/rtl8723bs/include/sta_info.h
+index b3535fed3de7..63343998266a 100644
+--- a/drivers/staging/rtl8723bs/include/sta_info.h
++++ b/drivers/staging/rtl8723bs/include/sta_info.h
+@@ -86,7 +86,7 @@ struct sta_info {
+ 	uint qos_option;
+ 	u8 hwaddr[ETH_ALEN];
+ 
+-	uint	ieee8021x_blocked;	/* 0: allowed, 1:blocked */
++	bool ieee8021x_blocked;
+ 	uint	dot118021XPrivacy; /* aes, tkip... */
+ 	union Keytype	dot11tkiptxmickey;
+ 	union Keytype	dot11tkiprxmickey;
+-- 
+2.34.1
 
