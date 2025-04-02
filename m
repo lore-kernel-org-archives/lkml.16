@@ -1,46 +1,47 @@
 Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B5722356BD;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22673236A99;
 	Wed,  2 Apr 2025 11:32:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743593532; cv=none; b=iXL6RqGvRBQ8edHuK4t2mzEGgXqoW7qxiBeOdEIERD7vetEZMJ45RU0Tk6hZMjnSE0uSI+C4LFDVf4mqorO7D3bnVr/B0rm9uqMvLVQ8qC+jzDdE1h4QWwLQvrok1o9XkFSPcDxiQs/ck2GJE/08vdk0uPgg8OyXUxe/vEUHTCA=
+	t=1743593532; cv=none; b=IkmcyJJahvNthpFvm/pkP64cGGV9LxA/DRvm8/wu8Cn2Q0vKkITtOg8hOBpriXD6+80i8hyQW98o4VXNVWdhA6iMlWlxAlvFWXjuwE7mxrTQWMO7uuOLaynPu4SkvjV2DoOVpjEULQU6cqyHVJHxKLrmZ58Tr32chInTgFOs93A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1743593532; c=relaxed/simple;
-	bh=Jqq+tZb2iwvIgau84/D9AjPWpg3COyHfFgvOtSB+djA=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=UmfbDv1LYcye0n01VOJA8wc57xQTtqRB8OPJm/72TzSFdELHJZGTdQecj7agwMr3we6O+bzHEETKv3cbG5pgAPZEBbVc/Ee2GYoypdEKZ0hEelAcabxExMqLbZNFgFz0NAoP2JwXs2B9jFO4esMhFuEBrnBPUFWnToqzRfgtFas=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=MXAwXoil; arc=none smtp.client-ip=198.47.23.235
+	bh=8WhNYugsSqHYYkJ5SfOI8qiq7dZYIPTnffMpuptuLHI=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TTn/eOjZ/NoPsXqn/q47laNLiRwwfWQu0yJvdA+ggW64/U05wmz4BpONN0VIey2uO0HU1kPqno8Hn9kFNkWHarH8aaCIekedIsE3ydTTTJMTXzxHZpHmj02i/RLuChX+/Fl7Hg1kL/sqFUdM4ZWgxFEycGTJBHrmZKebMEppLC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=BoLlrrsr; arc=none smtp.client-ip=198.47.23.235
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="MXAwXoil"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 532BW34r3915796
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BoLlrrsr"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 532BW5iW3915800
 	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 2 Apr 2025 06:32:03 -0500
+	Wed, 2 Apr 2025 06:32:05 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1743593523;
-	bh=sX5h5CFojGv8LnhPEfyz9Mo/ZRxnuXNUcaxTQXypESI=;
-	h=From:To:CC:Subject:Date;
-	b=MXAwXoil58eJQ8IWzzweFdwgwECINiQYjhl8HmFBDifDlzNSj1wd7VnQe+mYlrl6z
-	 AAAMhWayMGWrToZ2jXvO3RexlcBY3aOtl0XmVyVxmlW7orr4H+Sh8PY894bW2wQNdv
-	 E/nll3EicOETX6va6myashBGoMw6Yu1bgtbZ2mFk=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 532BW3Dd013316
+	s=ti-com-17Q1; t=1743593525;
+	bh=aMs2O+a+TiQUYN0V8AKxd4jss6ijSi+/4hLvnBJOlks=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=BoLlrrsrE+X0b/LBEXf6dH1ajnK91L8NDlsMoCIpOCJNl5pMhxvch6CFrFqr6RTBw
+	 a1nmVR/m4HsvpKArf+xofLuca2xz8l27/emVEIHw7rY6+SOXkXvr6ncuBGIk5dQ2pR
+	 TKLd2YNnkBzgouuuOoqjGuF7bcsIrIXzX2oQUfIc=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 532BW5ku123244
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 2 Apr 2025 06:32:03 -0500
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+	Wed, 2 Apr 2025 06:32:05 -0500
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 2
- Apr 2025 06:32:03 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ Apr 2025 06:32:04 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 2 Apr 2025 06:32:03 -0500
+ Frontend Transport; Wed, 2 Apr 2025 06:32:04 -0500
 Received: from localhost (jayesh-hp-z2-tower-g5-workstation.dhcp.ti.com [10.24.68.210])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 532BW1jn017249;
-	Wed, 2 Apr 2025 06:32:02 -0500
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 532BW3Vx017352;
+	Wed, 2 Apr 2025 06:32:04 -0500
 From: Jayesh Choudhary <j-choudhary@ti.com>
 To: <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
         <nm@ti.com>, <vigneshr@ti.com>, <afd@ti.com>, <s-vadapalli@ti.com>,
@@ -48,10 +49,12 @@ To: <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
 CC: <kristo@kernel.org>, <rogerq@kernel.org>, <kishon@kernel.org>,
         <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
         <j-choudhary@ti.com>
-Subject: [PATCH v2 0/5] Use ti,j784s4-pcie-ctrl for PCIe CTRL spaces
-Date: Wed, 2 Apr 2025 17:01:56 +0530
-Message-ID: <20250402113201.151195-1-j-choudhary@ti.com>
+Subject: [PATCH v2 1/5] dt-bindings: soc: ti: ti,j721e-system-controller: Add PCIe ctrl property
+Date: Wed, 2 Apr 2025 17:01:57 +0530
+Message-ID: <20250402113201.151195-2-j-choudhary@ti.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250402113201.151195-1-j-choudhary@ti.com>
+References: <20250402113201.151195-1-j-choudhary@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,52 +65,44 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Hello all,
+From: Andrew Davis <afd@ti.com>
 
-Now that we have ti,j784s4-pcie-ctrl[0] let's use it. This makes these
-K3 SoCs all match what is already done for J784s4.
+Add a pattern property for pcie-ctrl which can be part of this controller.
 
-No functional change, DT changes are fully backwards and forwards
-compatible.
+Signed-off-by: Andrew Davis <afd@ti.com>
+[j-choudhary@ti.com: Change description and add example]
+Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
+---
+ .../bindings/soc/ti/ti,j721e-system-controller.yaml    | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-[0]: commit cc1965b02d6c ("dt-bindings: mfd: syscon: Add ti,j784s4-pcie-ctrl compatible")
-<https://lore.kernel.org/all/20240204090336.3209063-1-s-vadapalli@ti.com/>
-
-Posting next revision for PCIe control node cleanup with minor changes
-to new overlays added after v1 was posted.
-
-NOTE: Once the bindings are in the mainline tree, scm_conf will be
-converted to "simple-bus" compatible which will unblock other
-items like audio_refclk in scm_conf required for audio support
-for TI SoC J721S2-EVM (currently giving dtbs_check warnings)
-
-v1: <https://lore.kernel.org/all/20241016233044.240699-1-afd@ti.com/>
-
-Changelog v1->v2:
-- Change property description and add example in the binding
-- Add changes in additional overlays using pcie*_ctrl node
-
-Andrew Davis (5):
-  dt-bindings: soc: ti: ti,j721e-system-controller: Add PCIe ctrl
-    property
-  arm64: dts: ti: k3-j721e: Add PCIe ctrl node to scm_conf region
-  arm64: dts: ti: k3-j7200: Add PCIe ctrl node to scm_conf region
-  arm64: dts: ti: k3-j721s2: Add PCIe ctrl node to scm_conf region
-  arm64: dts: ti: k3-am64: Add PCIe ctrl node to main_conf region
-
- .../soc/ti/ti,j721e-system-controller.yaml    | 10 +++++++
- arch/arm64/boot/dts/ti/k3-am64-main.dtsi      |  7 ++++-
- .../boot/dts/ti/k3-am642-evm-pcie0-ep.dtso    |  2 +-
- .../ti/k3-am68-sk-base-board-pcie1-ep.dtso    |  2 +-
- .../boot/dts/ti/k3-j7200-evm-pcie1-ep.dtso    |  2 +-
- arch/arm64/boot/dts/ti/k3-j7200-main.dtsi     |  7 ++++-
- .../boot/dts/ti/k3-j721e-evm-pcie0-ep.dtso    |  2 +-
- .../boot/dts/ti/k3-j721e-evm-pcie1-ep.dtso    |  2 +-
- arch/arm64/boot/dts/ti/k3-j721e-main.dtsi     | 28 ++++++++++++++++---
- .../boot/dts/ti/k3-j721s2-evm-pcie1-ep.dtso   |  2 +-
- arch/arm64/boot/dts/ti/k3-j721s2-main.dtsi    |  7 ++++-
- 11 files changed, 58 insertions(+), 13 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/soc/ti/ti,j721e-system-controller.yaml b/Documentation/devicetree/bindings/soc/ti/ti,j721e-system-controller.yaml
+index 378e9cc5fac2..13b6b6fa5dee 100644
+--- a/Documentation/devicetree/bindings/soc/ti/ti,j721e-system-controller.yaml
++++ b/Documentation/devicetree/bindings/soc/ti/ti,j721e-system-controller.yaml
+@@ -68,6 +68,11 @@ patternProperties:
+     description:
+       The node corresponding to SoC chip identification.
+ 
++  "^pcie-ctrl@[0-9a-f]+$":
++    type: object
++    description:
++      The node corresponding to PCIe control register.
++
+ required:
+   - compatible
+   - reg
+@@ -110,5 +115,10 @@ examples:
+             compatible = "ti,am654-chipid";
+             reg = <0x14 0x4>;
+         };
++
++        pcie0_ctrl: pcie-ctrl@4070 {
++            compatible = "ti,j784s4-pcie-ctrl", "syscon";
++            reg = <0x4070 0x4>;
++        };
+     };
+ ...
 -- 
 2.34.1
 
