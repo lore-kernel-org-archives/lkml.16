@@ -1,87 +1,131 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9611D211299
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 15:14:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C562923C393
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 15:14:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743606843; cv=none; b=U9OJ8LT9/HDiBSyRJtrk4dz5hVsQq0rpcEJjyBKJ/42e8Ept9M3RwcLMg16JWyLemn3WWcOCpFBWLwTXMnV0VxLcCkzX9ipLu2a1jmRyjw82ayi8LjCXaI9ymxtfBUjxZWvBvOTsj7o6jLE4VnIKZ3wn6svNVAMgIaqnWHtAd54=
+	t=1743606846; cv=none; b=RcK9RBSMf4JLA9wGrRth1C4wvt5eGVJ3YlSVYFGgtRYfyCZVH9qs07A1aLMwndnX4iA3v4RXMlK5fxbRZXyl8+2uJCMFvXdOAtiVd9WNzqK3VexfVMCnqeCxOI2zcIZ6lsVgB+vefIKeVV76swMRWmdX1Tx9Qpnbd2KNp6iS3k4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743606843; c=relaxed/simple;
-	bh=AmsS7TeoR5lfEkPA/4hWMzBs7ZLo8pjbDxlnDnyGR5I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WXjt7qteXK95Le2RVLv7sRe6Vxw7C1g6PIoI8Q8ykv34i9IYhtVTkSmZ+72uwZmpSDRlTKT8La3C71Lm5ePsCtwBNGgj8Xfp0ZVPne1mBh+4e7Dy7+L+zZJ5ZzwYhH6+4g+dCj8rF8rNfyXNoXJsFfWYd7204NdHYPpLUYR9T1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JvDZ6fXb; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1743606846; c=relaxed/simple;
+	bh=2et4+1tFRUBDxKlH2jm+SKWLLwwNkVddxsNNtrF9zqA=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=n6YwBNN9Pr3wlPIoRYnBiNQC17J4q5OZuGVK+rn3903qcH40fASSvBow+cGIBZ9vc6pDrLI3ETJlI9aD3g/FgkxGT4S6MLXnoimE8Kzl6Ox/jpgW3jXdkjjKaqZxdtMlVY2ItFDKa4rtje0cPr8S++mu65+u5GNTVZxL96ZgC2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=SsXwSU6s; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JvDZ6fXb"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43d04ea9d9aso32581165e9.3
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 08:14:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743606840; x=1744211640; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=AmsS7TeoR5lfEkPA/4hWMzBs7ZLo8pjbDxlnDnyGR5I=;
-        b=JvDZ6fXbDHuNjqOCj4zmYm8QDr2d7BfWPaBvV6gl0mGDfWtA4GgcldMpCPxfyEjqpt
-         +FS42RFFcB8mrYIZ9EwH43uBJoh3ffdAUhm+iRXq6KfbWa6nzo1FL+mzVWKTOwV0F4Ci
-         XxKF74K/jxBEQUR/4N7xScSD2RnyN1RaRltEmG6gemBkg6YjfciOaVbidkyhWZHWJacz
-         wPhv2AwCKJyNRaJy43BT/BkGcQfIf7WDjGr83LaphzVegAZfIA5ixL/wF0dVLOq74A37
-         351vRNPZ2Alzhz568OymABnFTf7JhRyZeaJ5I8PwWGCbcs7b43h/j3Fy891Ve9HwkXrD
-         F4cQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743606840; x=1744211640;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=AmsS7TeoR5lfEkPA/4hWMzBs7ZLo8pjbDxlnDnyGR5I=;
-        b=f86jqIo1gIcTmOrVvBM91UfulfPFsxsqpKgH03mlPBTp6LUo5PxmuNH3+qg9RWer3q
-         m6VMUcgC71xIreiP+GksQigZ/ojTIoiFfZXmXKufGhhFSFnzkPBMGkFQZgPbgJNIg4Ll
-         E61EJe/D1FEICcy8aobog90xrKn89AZj8FlAPIONP+aCpxdo6xQuTwgwIg5K3tvrWazf
-         1iI19pG2VRNod9XV6WRRRuVohBAqPoJZRa6I71TKUmlGdOxWpHSQsdF+9ZV9TldzU/nO
-         wJx1wRGUVOIbF3R/jGwJgtD2IF3v32f0SGJP1klnjA52uY40abFWXBWR7mPvjkKkG6Pv
-         qK2g==
-X-Forwarded-Encrypted: i=1; AJvYcCWE7kqvsLM218S4qg54Wh9HWlbiTjFkgSuHYrrvwc0yApue3zSvBVV9wKnQtCJlVKlQQk/jFRYGEmX90No=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxavCtQ06Hr/JKybL1lLSO0UECpfwHgqnkiTeWs8WmP+jq7Uq47
-	DHNYmTYzV/GGtbvVwdWGdxZ4eVS1R4OTwpLoOWPf1qWO8CSkV95wjjm72SbY/nU=
-X-Gm-Gg: ASbGncvlm0G5Uc+HXMtKQomo09TiHgiD/7iLoLDi4Uwym4YL0/g0f8TMZtIIi1hc2sc
-	e/LqxCsi5HD54DFJVzxjNACjbbqp7FYrBkuX7Pw53vGzk4qYPGyawXay2mjTj5/ro8qRmHkQ+W2
-	wmqRdy2CRMZDxpWu5vDGXCvB6m2Kt69q9ZJ+ca0t1En2x9+EU8KUSCsxhkYybRYvr5lKB0Fh1qk
-	1+agsz3GO+vx5MnbP53gwosaVEza9pxx+8b95J4REed7d+Z9eTaxbL56BEOU/5kbrbFVfWYFQKH
-	iUBZIwrNK/oc99MWuE7SJsIIQQ3zr5Vbwwa1AAHj3UZymyJGSWC4VA==
-X-Google-Smtp-Source: AGHT+IG6p3UHT9VfN8elbbIcomUrX8igQSBx7GXK+qu6zBuYsACWtZ6EtMj3y0kC69/t3Mx0577lqA==
-X-Received: by 2002:a05:600c:4e87:b0:43d:8ea:8d80 with SMTP id 5b1f17b1804b1-43db61d5fd2mr142290465e9.5.1743606839846;
-        Wed, 02 Apr 2025 08:13:59 -0700 (PDT)
-Received: from [192.168.0.14] ([79.115.63.146])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43eb60ec915sm23620405e9.28.2025.04.02.08.13.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Apr 2025 08:13:59 -0700 (PDT)
-Message-ID: <da84d300-0af5-4ee0-a6ca-4bad3df39eb9@linaro.org>
-Date: Wed, 2 Apr 2025 16:13:58 +0100
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="SsXwSU6s"
+Received: from [127.0.0.1] ([76.133.66.138])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 532FDPm0081523
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Wed, 2 Apr 2025 08:13:25 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 532FDPm0081523
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025032001; t=1743606806;
+	bh=rBQ9vbx5WwUZnxioFnQCAQxQGMrLPM9huNEt/MpV618=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=SsXwSU6sUia1/fAzbBqlk1XNUZPMRMsmGIMK8NZGnwtLtwCCxv7LKeBBkOoxOzrJE
+	 emyIviWRLSB26IekRzOfGmCpeoOlsEI6XcrRKa01uuzf0zLhHoLOONtI2oktLB8YmD
+	 Cf1BMkrB9dmdDZqtt1nv6JRTsgX5HnfJ2AXLnkrI17jrcxQAf6ZvzwZrff2GQ4mi9i
+	 PWLnLRh2i7BCVpzhEWex6/LVcCAxJxYOE4lXcqCekIPKt6EBiZEuJBaFNuBKYeYjit
+	 X7rjftnEauaCCZWBYoopHT7Oe68kbv/26Fo/6Jc6ngmpG9OQ7i20sg1HD115Stc53L
+	 N5xgyZkcnjGqA==
+Date: Wed, 02 Apr 2025 08:13:24 -0700
+From: "H. Peter Anvin" <hpa@zytor.com>
+To: Sohil Mehta <sohil.mehta@intel.com>, x86@kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>
+CC: Dave Hansen <dave.hansen@linux.intel.com>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Kai Huang <kai.huang@intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Mike Rapoport <rppt@kernel.org>, Petr Mladek <pmladek@suse.com>,
+        Jani Nikula <jani.nikula@intel.com>, Tony Luck <tony.luck@intel.com>,
+        Xin Li <xin@zytor.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/9] x86: Cleanup NMI handling
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20250327234629.3953536-1-sohil.mehta@intel.com>
+References: <20250327234629.3953536-1-sohil.mehta@intel.com>
+Message-ID: <F5D36889-A868-46D2-A678-8EE26E28556D@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 14/21] mtd: spinand: Use more specific naming for the
- (quad) program load op
-To: Miquel Raynal <miquel.raynal@bootlin.com>,
- Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
- Santhosh Kumar K <s-k6@ti.com>
-Cc: Pratyush Yadav <pratyush@kernel.org>, Michael Walle <michael@walle.cc>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
- Steam Lin <stlin2@winbond.com>, linux-mtd@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20250307-winbond-6-14-rc1-octal-v1-0-45c1e074ad74@bootlin.com>
- <20250307-winbond-6-14-rc1-octal-v1-14-45c1e074ad74@bootlin.com>
-Content-Language: en-US
-From: Tudor Ambarus <tudor.ambarus@linaro.org>
-In-Reply-To: <20250307-winbond-6-14-rc1-octal-v1-14-45c1e074ad74@bootlin.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Acked-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+On March 27, 2025 4:46:20 PM PDT, Sohil Mehta <sohil=2Emehta@intel=2Ecom> w=
+rote:
+>While reworking the NMI-source patches[1], I spent quite a few days
+>understanding the existing NMI handling code=2E The intention of this ser=
+ies is
+>to fix the inconsistencies and redundancies that I encountered=2E
+>
+>This series also includes improved documentation to make the code easier =
+to
+>follow=2E It does not introduce any significant functional changes=2E
+>
+>I have tried to split the patches logically to make them easier to review=
+=2E Let
+>me know if some of them should be combined=2E The patches are in no parti=
+cular
+>order and can be picked up independently=2E=20
+>
+>The documentation updates in patches (5, 6, 7) are to the best of my abil=
+ity=2E
+>However, I would really appreciate extra eyes to ensure it is precise=2E
+>
+>The updated NMI-source patches will follow this series sometime later=2E
+>
+>@Ingo, I tried to format the commit references the way you prefer:
+>
+>  Commit:
+>    feeaf5512947 ("x86: Move sysctls into arch/x86")
+>
+>However, checkpatch seems to dislike it, so I reformatted them as below:
+>
+>  Commit feeaf5512947 ("x86: Move sysctls into arch/x86")
+>
+>Is there a specific guideline for x86?
+>
+>[1]: https://lore=2Ekernel=2Eorg/lkml/20240709143906=2E1040477-1-jacob=2E=
+jun=2Epan@linux=2Eintel=2Ecom/
+>
+>Sohil Mehta (9):
+>  x86/nmi: Simplify unknown NMI panic handling
+>  x86/nmi: Consolidate NMI panic variables
+>  x86/nmi: Use a macro to initialize NMI descriptors
+>  x86/nmi: Remove export of local_touch_nmi()
+>  x86/nmi: Fix comment in unknown NMI handling
+>  x86/nmi: Improve and relocate NMI handler comments
+>  x86/nmi: Improve NMI header documentation
+>  x86/nmi: Clean up NMI selftest
+>  x86/nmi: Improve NMI duration console print
+>
+> arch/x86/include/asm/nmi=2Eh      | 49 +++++++++++++++++--
+> arch/x86/include/asm/x86_init=2Eh |  1 +
+> arch/x86/kernel/dumpstack=2Ec     |  2 -
+> arch/x86/kernel/nmi=2Ec           | 87 ++++++++++++++++-----------------
+> arch/x86/kernel/nmi_selftest=2Ec  | 52 ++++++--------------
+> arch/x86/kernel/setup=2Ec         | 37 ++++++--------
+> include/linux/panic=2Eh           |  2 -
+> 7 files changed, 122 insertions(+), 108 deletions(-)
+>
 
+Talking about NMI, one thing I would like to see done would be to explicit=
+ly enable NMI at the point where we are ready to take them=2E=20
+
+If we enter the kernel with NMIs disabled, using IDT they will get spuriou=
+sly reenabled the first time we do IRET, but using FRED they could stay dis=
+abled until we enter user space=2E
+
+It also seems "cleaner"=2E
+
+We ought to already be doing something with the RTC NMI gate register, so =
+that ought to be in the same logical spot, too=2E
