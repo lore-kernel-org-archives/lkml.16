@@ -1,109 +1,98 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EB1F14375C
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 12:58:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743598710; cv=none; b=mJTQGA7TXfw0e4dKay9hyzYuIaL3ygyNf6Be8IAvfwQW8oZJ7GnisiaR6bNlHUkOmCNOvg68lPWGyqJ/3JmNORu0bUYQBPjPEzpA5Rs9BJg1frvdSdJltAnSUs2x+cCKWR8nnSrn33MmGHNLRmNB4lFn3Nxi0HaWbB7Erkqoilg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743598710; c=relaxed/simple;
-	bh=vLmCnOaSVqE5u8oYACEx8U1piuuOsquiMf5pfOSJnZY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=g8hjML8YcYEog7LgbG79Q6irqq4v/9qRz4Wd6tLd0xG2hKKnR3J1tLq82vOpEA5zCe7ZFdR63dFMVimtr2t0olrFgOT/7xXq4y1Z5yS1A/GGbG3czLsA7nBKtnSJQDSn+z0rzYstsNtdI2waOpU2Ddi84SWxHyk4YlE+gk6Ulck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=O5FQcs9m; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FA70238D3B
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 12:59:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743598770; cv=pass; b=bC89lCDhDR1JxMrF2T+j/B1PsgDDIUaxpJwTLujnAGoskflpxjnWiHWn8KwQQqbwQZTiJnAtQ0a5TL2AFQOzkMc3Mp5kRRP9I3H5g1qHeaUuuS0/OmtGGCpdKrNkuglyhu9d5EMdAkeFyNFkqpBHX5EnqLJ5fULijo0DHhKfkqQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743598770; c=relaxed/simple;
+	bh=selS/isIIgC+xm0AIoL44sE8XFoLJbocij1bUEZoZRA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RJnU6dGmZiddp4p5Qrht2+l3bfAXfSKsd5egwKGWKElJTWioO60AhJb4fsHkY+kWs9bcYp35m9eptmDx3eWBd4kk9o4eSc4iPOI/eucYrcwuQ7MLMXP+Hl62kyPCmV0hgWogA99BUQj9veXWgC2SZbLesfvY2nsKMYsceO6zFu4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b=cHyYb0iB; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="O5FQcs9m"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-39c1efc4577so1447191f8f.0
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 05:58:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1743598706; x=1744203506; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-disposition:mime-version
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Lb6p77zC9DVNLUO/djgPgrQnwSB5fXDb56w2QJQXimg=;
-        b=O5FQcs9mIE+dAcBgCA3ITnPuI00MWRw8PLVr9lPSEzun1F+HQOtKoL/uyoOAY/0MwH
-         Qs9JfYC8RNZlg/N0/JiArPVaZW6hnORdKm7NGXJ4v4NjzB3yS3p0K5PbGdH91C8FsnHQ
-         V3BfRhYpPJlxng0rX1/YrT0yefigSGumgBqDI1Vd0psbkja/cb3A5l0IgxtKeSFE755q
-         fd7atpuaoEpduOF5v5Qbci9F4JF8tncFnqBUu96ie8r08xgAf03oPOf/M/ba+TQ6ow9o
-         gL4zgPfnKuj517ZE05eLFJ6LSHCHJOLFUMSCfTdV+U9cbMpJLVCnTDPMiS3lgF2Jg7Ii
-         QdSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743598706; x=1744203506;
-        h=content-transfer-encoding:content-disposition:mime-version
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Lb6p77zC9DVNLUO/djgPgrQnwSB5fXDb56w2QJQXimg=;
-        b=Dxrjmho35WL6xQu4Jyy30xpsyrjokVJjyTWSO2GY39C401P6oW+EQDXM031F/h3lLE
-         4tBOOYscFveh1A6rMe9U49ELE/kvS7YrT7Q9jvfxbVn0S/yOWWrDMSWvWT9OVgRZs8je
-         aQBASEVAU2414kRRNJoNghUqcRSgp8vRrbYJZhoPYo2yBwqPcRpbIGkXwLz4VqIRsCCa
-         oVEORoFvAloEl8ynx/eV8/BFf2JKzyQv4p9aMl49zY7MO4fFFbc1lRDR5RWasEdRCgdP
-         KpgM/h9WAAubrPanoeBP3LZ/z4ZG6HUDJqApgAyzYDFIINEQjqwi6jvCWatGA5zNihIA
-         Hovw==
-X-Forwarded-Encrypted: i=1; AJvYcCUt7iHL89uspogBDoGR4DsA4av6XMPCUF2F9XF+NOld4rWw7iznimQgGVtjSbDQGKTEjSPu75Ws4d5XM5w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyD8JcdFcc0iGu8bde3O6+jwzyzjw8vt3PMlaKtj/XiVLWhZeSI
-	eNsal5m85xjFnuFkMt080q7kQOo3meZXI+aF+UxAvNsDE/d7wjDIJX2qv67ZTds=
-X-Gm-Gg: ASbGnct6hlhByzgSVCy6A9AZCSNND4ZHQrPUajfrX9nvizh2raBiol857akuMcG89Zj
-	Cgglp5uYCVkpdNBR7UG4gkntL9ptJov3yVULkIUq4SO20JXvjLBQ4rz2b16rwePMuRkdC59db9Z
-	VQ0tKC4A+DJt+YRIv/ghyIZEhRJCrBfGJx+He/2f0Vt+OBVEIBVDxH9Zehau+ZJ1Ftn1DEbCwBe
-	WS8GOlhEIrFEHq2IVVbPalhTdutmIgb6D+eNUT3PsuxPHH0MAcwEB5QxvyPdpjzSdaqmQhsirv1
-	VXeSfGliCbaRgZYXB9dRe0WuTZXIn7RhbMbvcRmTcAMrMPY=
-X-Google-Smtp-Source: AGHT+IFz5CkUfQK8qckCWJEwaGVtA/JUEjtz7Q3wjzQKZZOOePVj1rXFvEqaccHctPNk+KyEgA4qQA==
-X-Received: by 2002:a5d:6da1:0:b0:391:13ef:1b1b with SMTP id ffacd0b85a97d-39c236500aamr6122374f8f.30.1743598706561;
-        Wed, 02 Apr 2025 05:58:26 -0700 (PDT)
-Received: from pathway.suse.cz ([176.114.240.130])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b79e33asm17108765f8f.66.2025.04.02.05.58.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Apr 2025 05:58:26 -0700 (PDT)
-Date: Wed, 2 Apr 2025 14:58:24 +0200
-From: Petr Mladek <pmladek@suse.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	John Ogness <john.ogness@linutronix.de>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] more printk for 6.15
-Message-ID: <Z-00cAEKkfvyNto2@pathway.suse.cz>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b="cHyYb0iB"
+ARC-Seal: i=1; a=rsa-sha256; t=1743598742; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=hWlg2avs/Yb+ObDwA71DvUeMcy8yfPeW9OHpG0OijtPInz7V7bvqE2pSPX7Xy/VbnNqNNmXUeOMwe1YF2fY9iY/Z1GX4OYYos/UVFlrpyd6gpA236mhcA41EkR1w+i+XYgd+8E65VBLaBq7SXg6KWKf2miiGXkFS9m7Yik2jP68=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1743598742; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=mZ8fonKlky+JNA4Rhn203pUe67ljBH0B+8f/AS8ommA=; 
+	b=YzuqZOYLiGHdSSjs2ggS16Wi+Yo2CN/x3YdN1/SI9djQkP9DLqlQWJwWfJLOAIMcZE+9i1jkJzCCktW8uq9bxh251vRixhqKrjndFxnKb+ueW/JHJycbfq7CB2mjsm0Gif5snN8qVznJIkm7/vhL4dybwyQ8wQLN59SuYwjNzNw=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=dmitry.osipenko@collabora.com;
+	dmarc=pass header.from=<dmitry.osipenko@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1743598742;
+	s=zohomail; d=collabora.com; i=dmitry.osipenko@collabora.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=mZ8fonKlky+JNA4Rhn203pUe67ljBH0B+8f/AS8ommA=;
+	b=cHyYb0iBWAdvdSAa5YVuJNIS7yT6O736AQe/Q0lGvjr3WN+wAIYt9Is73tBEbMO3
+	cFtlB2CJ5QMelefbGw2e0ep5HIdkTrzJsQY8QezK/QSI+K53m8FNlaQ43svVHpQcSA5
+	E6+945ZeRYklEn9x42yAq5sTcB5eyLvMw6rR10G4=
+Received: by mx.zohomail.com with SMTPS id 1743598740489912.9935045232037;
+	Wed, 2 Apr 2025 05:59:00 -0700 (PDT)
+Message-ID: <710cdbd4-2c6e-48b7-b12b-972ab6d12abf@collabora.com>
+Date: Wed, 2 Apr 2025 15:58:55 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v20 09/10] drm/shmem-helper: Switch
+ drm_gem_shmem_vmap/vunmap to use pin/unpin
+To: Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
+ <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Gerd Hoffmann <kraxel@redhat.com>, Qiang Yu <yuq825@gmail.com>,
+ Steven Price <steven.price@arm.com>,
+ Boris Brezillon <boris.brezillon@collabora.com>,
+ Frank Binns <frank.binns@imgtec.com>, Matt Coster <matt.coster@imgtec.com>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ kernel@collabora.com
+References: <20250322212608.40511-1-dmitry.osipenko@collabora.com>
+ <20250322212608.40511-10-dmitry.osipenko@collabora.com>
+ <ea4f4059-7748-4bfd-9205-8e95222144da@suse.de>
+From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
+Content-Language: en-US
+In-Reply-To: <ea4f4059-7748-4bfd-9205-8e95222144da@suse.de>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 
-Hi Linus,
+On 4/2/25 15:47, Thomas Zimmermann wrote:
+> Hi
+> 
+> Am 22.03.25 um 22:26 schrieb Dmitry Osipenko:
+>> The vmapped pages shall be pinned in memory and previously get/
+>> put_pages()
+>> were implicitly hard-pinning/unpinning the pages. This will no longer be
+>> the case with addition of memory shrinker because pages_use_count > 0
+>> won't
+>> determine anymore whether pages are hard-pinned (they will be soft-
+>> pinned),
+>> while the new pages_pin_count will do the hard-pinning. Switch the
+>> vmap/vunmap() to use pin/unpin() functions in a preparation of addition
+>> of the memory shrinker support to drm-shmem.
+> 
+> I've meanwhile rediscovered this patch and I'm sure this is not correct.
+> Vmap should not pin AFAIK. It is possible to vmap if the buffer has been
+> pinned, but that's not automatic.  For other vmaps it is necessary to
+> hold the reservation lock to prevent the buffer from moving.
 
-please pull few more printk-related changes from
+Hi, with vmap() you're getting a kernel address. The GEM's memory should
+be not movable while it's vmapped as we can't handle kernel page faults.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/printk/linux.git tags/printk-for-6.15-2
+Not sure what you're meaning by the "other vmaps", please clarify.
 
-=====================================
-
-- Silence warnings about candidates for ‘gnu_print’ format attribute.
-
-----------------------------------------------------------------
-Andy Shevchenko (6):
-      seq_buf: Mark binary printing functions with __printf() attribute
-      seq_file: Mark binary printing functions with __printf() attribute
-      tracing: Mark binary printing functions with __printf() attribute
-      vsnprintf: Mark binary printing functions with __printf() attribute
-      vsnprintf: Drop unused const char fmt * in va_format()
-      vsnprintf: Silence false positive GCC warning for va_format()
-
- include/linux/seq_buf.h   |  4 ++--
- include/linux/seq_file.h  |  1 +
- include/linux/string.h    |  4 ++--
- include/linux/trace.h     |  4 ++--
- include/linux/trace_seq.h |  8 ++++----
- kernel/trace/trace.c      | 11 +++--------
- kernel/trace/trace.h      | 16 +++++++++-------
- lib/vsprintf.c            |  9 +++++++--
- 8 files changed, 30 insertions(+), 27 deletions(-)
+-- 
+Best regards,
+Dmitry
