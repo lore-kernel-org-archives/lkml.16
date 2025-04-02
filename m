@@ -1,111 +1,181 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5102190468
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 15:50:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A87E13A41F
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 15:51:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743609005; cv=none; b=kWOCWiiWK+yVq/KIswQwBzwopLHL2IYX/9B0bOqzDXRgqYdgxb+9cisYkNZgy7edvRL0ih8FUk0tmuLQvfLgBq44r2S6gJ3J3yuTleiw5XQnPD9tYuFKMKj5nFn96EKe8eAFb32nY2gaohgdx+J75NQl4IogixqzNNxktrq3zu4=
+	t=1743609116; cv=none; b=CHydKHuK4LxH6Yktdx1uA5ITI7bvddO+BfxEKUPCqEJCM70BzGuNvOm+IRz1K5fsc2TyGTbAycjX/lizYPDQMdefQGojcgf/my5Iic0Z9ksyMHwTsliGFcRhN/BMQ8LfOT4XZEIy3nf7pphfqcs5d/Co9Nwt6dq+nzeqL3T+sXg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743609005; c=relaxed/simple;
-	bh=9AxsPXpV33aro4Ehcz2kdnc997kXrIf8ngyB8rmtuTU=;
+	s=arc-20240116; t=1743609116; c=relaxed/simple;
+	bh=S6XMQ2AU39hYH5ah1HWGtNLnyoFQLpd8n80nkv6ZI4o=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J8wSm8fojUbq1H2I5Tp5q4hkpE+SUfymG7n185TCaTN+YRHO3sqvpM8BEb/CLcGvGauCf3hV/1fAqAnVDvm+BEnHttg7PPqqF5i4yqrzVUgfJi+zju9LL4l51CBg8ji6i2Ld2rghfEshY2Ou7A+qZ/14r/f0FnloKeqAkO8hBPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=a+nRQyLG; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=jNqCNZr3bHvBTooCC1hhOlLC++TSaxiHB9TLFqNr7LFaVzjOsqg7AC1VSM25/76Evd90OFsZ7cDmjradn1yE+fdJypwip0buPPTXE9HNonqrPMijaLrW9XQ3xs8i/fRZ46QPWgbZO85OcT5kE6Tar1AwWvFm/yJJp5Lktc7mABM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hab2WSqa; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="a+nRQyLG"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-736b0c68092so324737b3a.0
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 08:50:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fastly.com; s=google; t=1743609003; x=1744213803; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tts1PyQeFznPaCzX89s9ejnq18G5xStDhXIRY8gowkM=;
-        b=a+nRQyLG2PBgSzkwuJgMLJIQNg7taSkiw7QXwh/MIR4zvWKkmwHFWTKpsJjrkNpftM
-         OKy7Cr8DjgJHNYThFvfrVlcxYORtlNZkR9pdxXrXgFmSTU9jhdVEbCxmGu8IJiK+E2pp
-         718wxdWo9hdiIaxgHjd38Yi+4mWqW4ARzTYd0=
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hab2WSqa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743609114;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gjP/k3uVElhyu6yWy2GkiN2O11Nh5PnXFm8Rjgvf9F0=;
+	b=hab2WSqaq0m7CvRBlT/gpgYOJn13Ws3NinPtGDnDzOtA/Q0is4R+FwwwwMwUmmHqBs25O9
+	k3E6SbiAld3miH4PFvt6V0lI/Ak6PFIY+skl+HS3YMShn7ReFnaAeOjPHDgVzQF4aBvQn8
+	EakDjjq/kIzUf0aqXe2N8Z3q/NTBCew=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-335-F4UbrA90MkiVh7r0rUVoiw-1; Wed, 02 Apr 2025 11:51:52 -0400
+X-MC-Unique: F4UbrA90MkiVh7r0rUVoiw-1
+X-Mimecast-MFC-AGG-ID: F4UbrA90MkiVh7r0rUVoiw_1743609111
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43cf5196c25so34418685e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 08:51:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743609003; x=1744213803;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date
+        d=1e100.net; s=20230601; t=1743609111; x=1744213911;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tts1PyQeFznPaCzX89s9ejnq18G5xStDhXIRY8gowkM=;
-        b=rMdPhleByX7xsnxKF+cLh7fxpuHTjBLIDSg22pM5u0n3OG9Hr12m6WiroWQbz6nCC0
-         497lSI2/Z0C0VLlFpmVChG3XFhYexw9WaXu02N++wjp8D5G5vVc9e4U+CwILtyrKoXRt
-         uMPYDWJOrcSOYAwTMGPGmXwRukhOe4H0o/GJHxstXYMOoheJRobud0RibTeKzkBq7DWJ
-         QFwtCQKNFJI0qqoD0A22WL75TLjpb9AMoedgiwqaGefQhMUCEWCqx0V6znFly9Yh4PJJ
-         /yOTD5y08kUxn5e2uOEVQrxkuxX2e7Yo0mz+eWGvgAspWwI/DyLHTxTBfDTpAnC8lpms
-         YVdw==
-X-Forwarded-Encrypted: i=1; AJvYcCXWpi+WEalG4RAX31ROUSkvTAI+QJjGdghgt5K4XdSdlRX4H5K+pqC4hYHZ8gvqF6JJPtSpEdZd/FjYb4o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwcWQXCxvWFyLzvBIan9NzZ7yI8I1HAaTTEInJAvqsEeGuGFlLN
-	egIP1yGCHyBeGbX9lgI19foFoh7k9pGDFrWdmlq3dWEWvVo0i1/Y4KqJN5W3XQk=
-X-Gm-Gg: ASbGncuC31m0OKIXb3PgVji9sNSK+B1o2HE2HJNLQnhj2guq4seie5WK8PNeuTVI1z1
-	TPox9s8sduNd6CuT33/Ix2Ifmv8w8YMuFU1lUK9GRz/c7s9VsbDUWMiROppKRE6Jyg2BG8NGFls
-	ry9t9Ghju/3Ws/7tIfvVDvs1ewZU7KtpYeVdwnCouACE8RShxVvTb3i2V29Qn2BS6Vwq6Sq/nkm
-	uxj9gJ6u9B/mdcT0gPsR6t2CesbsAWYKxX/tUKl1v6ZXkjb3Ss2vrubJ/NjCZPPdGDOSd1rpa0W
-	viOgvHMnl7ZlZSzgtWW2TRCWxnaqzW8zip6BMrfpHrMOqT/oiRjOwg==
-X-Google-Smtp-Source: AGHT+IGZ1aQVeL8ZtNpOc9vdjnGS61ySWE+2f6wBfYggOgsl/7d3plYh+nmllez0zd6VBQlgQIBh4A==
-X-Received: by 2002:a05:6a00:885:b0:736:5e28:cfba with SMTP id d2e1a72fcca58-739b60fc196mr11053193b3a.18.1743609002798;
-        Wed, 02 Apr 2025 08:50:02 -0700 (PDT)
-Received: from LQ3V64L9R2 ([208.184.224.238])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73970e2245fsm11062809b3a.42.2025.04.02.08.50.01
+        bh=gjP/k3uVElhyu6yWy2GkiN2O11Nh5PnXFm8Rjgvf9F0=;
+        b=UMXCXtuM91JznEoFRQoZdVj5YRyx9z9AUl2EhsPKRJ83m/rIHKPUGTiX3s41yy909y
+         ruNPWkrma7VIsCNxi3vWeYL7jZWfOY5NSRJV4wNphrALd3G9M70tL5Z19G+PX3em9J2h
+         l9qhf+SPGwU6zI4aou18ZCdA8It+bGGWPEj91PC0AMcsGuaK89ArPPRY/PsPMRbSzewg
+         4IwB5ZGYu1pTk2FvVp/V34Jxa46Gytz/093HMxIgAdP979rDjCs4GFW2CUBjlDVM8aO+
+         9Kht6eXFfw5w2io+aKan8QtUZ7sB+ZmpLvALq1/YNDSCKqIuqKU++1Nr6f+KSBJ8dKGT
+         xsgQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVx7VCMBmRAZpoZzk2Pm1NEsljIt6SzZQ6j954gzpO8ZoKcFTk8iGfSxG148gKyvKySsqYMUNp/vtF1qrI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy8IL3pL4irLxI3bwXlHe/qorKjACPdagrtm+hcLhwuVmuBJv2k
+	XsuhZdemd7hoSBex4B6sc1MODAJawQqXPoS3OsNF43S6eAOtOVFlAoMle9N9uwB1kGQ2UuEbedB
+	dvqiZubhJ5kZt4YPFQ3iYwkovhaJUt4cfjrF9qtTJjvG2qn/nDcdG2ljB65c7oQ==
+X-Gm-Gg: ASbGnctGeRtWsKBQejjRJZK2jEz0x3ztJ6sIfUiBwbGvXwQh0cxL2iigPF4QDe8sJB3
+	pi41VyoCm0BqBUd2Esgsq0kwiHYSYJVDyMKRSe7U2TNbETYwnJogEzE64h1sP/nvYrU2aciR6XE
+	jkg/yzHOzVMhO4pQcr8TVhzteQXC9hTO+Cwb+GPUgyoPb9/OnYcTUiqVGOwCS1tyhSD1ZAXA8dM
+	ftozjJQRU4EhI50a0r1g1OJGcjNnPHaLmCx215jaw4FhvFmCGeXkaxZj9ncJAMYETDVaT/60rIt
+	eQXvb6L6LA==
+X-Received: by 2002:a7b:c85a:0:b0:43d:fa59:cc8f with SMTP id 5b1f17b1804b1-43dfa59cd30mr114318945e9.33.1743609111402;
+        Wed, 02 Apr 2025 08:51:51 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEiu3ULj5S8kJbnqptVY3lwz6RG0tP91QvRSP7AmDKE1d8QjUwoVzBhXnKVVuSJMPHv4krlcQ==
+X-Received: by 2002:a7b:c85a:0:b0:43d:fa59:cc8f with SMTP id 5b1f17b1804b1-43dfa59cd30mr114318845e9.33.1743609111065;
+        Wed, 02 Apr 2025 08:51:51 -0700 (PDT)
+Received: from redhat.com ([2a0d:6fc0:1517:1000:ea83:8e5f:3302:3575])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43eb61116ffsm25120395e9.32.2025.04.02.08.51.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Apr 2025 08:50:02 -0700 (PDT)
-Date: Wed, 2 Apr 2025 08:50:00 -0700
-From: Joe Damato <jdamato@fastly.com>
-To: Greg Thelen <gthelen@google.com>
-Cc: Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] eth: mlx4: select PAGE_POOL
-Message-ID: <Z-1cqKd-2avzWQtI@LQ3V64L9R2>
-Mail-Followup-To: Joe Damato <jdamato@fastly.com>,
-	Greg Thelen <gthelen@google.com>, Jakub Kicinski <kuba@kernel.org>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250401015315.2306092-1-gthelen@google.com>
+        Wed, 02 Apr 2025 08:51:50 -0700 (PDT)
+Date: Wed, 2 Apr 2025 11:51:47 -0400
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: David Woodhouse <dwmw2@infradead.org>
+Cc: virtio-comment@lists.linux.dev, hch@infradead.org,
+	Claire Chang <tientzu@chromium.org>,
+	linux-devicetree <devicetree@vger.kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	=?iso-8859-1?Q?J=F6rg?= Roedel <joro@8bytes.org>,
+	iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+	graf@amazon.de
+Subject: Re: [RFC PATCH 1/3] content: Add VIRTIO_F_SWIOTLB to negotiate use
+ of SWIOTLB bounce buffers
+Message-ID: <20250402114757-mutt-send-email-mst@kernel.org>
+References: <20250402112410.2086892-1-dwmw2@infradead.org>
+ <20250402112410.2086892-2-dwmw2@infradead.org>
+ <20250402105137-mutt-send-email-mst@kernel.org>
+ <19ba662feeb93157bc8a03fb0b11cb5f2eca5e40.camel@infradead.org>
+ <20250402111901-mutt-send-email-mst@kernel.org>
+ <6b3b047f1650d91abe5e523dd7f862c6f7ee6611.camel@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250401015315.2306092-1-gthelen@google.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <6b3b047f1650d91abe5e523dd7f862c6f7ee6611.camel@infradead.org>
 
-On Mon, Mar 31, 2025 at 06:53:15PM -0700, Greg Thelen wrote:
-> With commit 8533b14b3d65 ("eth: mlx4: create a page pool for Rx") mlx4
-> started using functions guarded by PAGE_POOL. This change introduced
-> build errors when CONFIG_MLX4_EN is set but CONFIG_PAGE_POOL is not:
+On Wed, Apr 02, 2025 at 04:47:18PM +0100, David Woodhouse wrote:
+> On Wed, 2025-04-02 at 11:20 -0400, Michael S. Tsirkin wrote:
+> > On Wed, Apr 02, 2025 at 04:12:39PM +0100, David Woodhouse wrote:
+> > > On Wed, 2025-04-02 at 10:54 -0400, Michael S. Tsirkin wrote:
+> > > > > +  If a the device transport provides a software IOTLB bounce buffer,
+> > > > > +  addresses within its range are not subject to the requirements of
+> > > > > +  VIRTIO_F_ACCESS_PLATFORM as they are considered to be ``on-device''.
+> > > > 
+> > > > I don't get this part. the system designers currently have a choice
+> > > > whether to have these controlled by VIRTIO_F_ACCESS_PLATFORM or not.
+> > > > with PCI, for example, BAR on the same device is naturally not
+> > > > behind an iommu.
+> > > 
+> > > In the PCI case this *is* a BAR on the same device, and is naturally
+> > > not behind an IOMMU as you say. This is just stating the obvious, for
+> > > clarity.
+> > 
+> > Then the platform already does this right, and it's better not to
+> > try and override it in the spec.
 > 
->   ld: vmlinux.o: in function `mlx4_en_alloc_frags':
->   en_rx.c:(.text+0xa5eaf9): undefined reference to `page_pool_alloc_pages'
->   ld: vmlinux.o: in function `mlx4_en_create_rx_ring':
->   (.text+0xa5ee91): undefined reference to `page_pool_create'
-> 
-> Make MLX4_EN select PAGE_POOL to fix the ml;x4 build errors.
-> 
-> Fixes: 8533b14b3d65 ("eth: mlx4: create a page pool for Rx")
-> Signed-off-by: Greg Thelen <gthelen@google.com>
-> ---
->  drivers/net/ethernet/mellanox/mlx4/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/net/ethernet/mellanox/mlx4/Kconfig b/drivers/net/ethernet/mellanox/mlx4/Kconfig
-> index 825e05fb8607..0b1cb340206f 100644
-> --- a/drivers/net/ethernet/mellanox/mlx4/Kconfig
-> +++ b/drivers/net/ethernet/mellanox/mlx4/Kconfig
-> @@ -7,6 +7,7 @@ config MLX4_EN
->  	tristate "Mellanox Technologies 1/10/40Gbit Ethernet support"
->  	depends on PCI && NETDEVICES && ETHERNET && INET
->  	depends on PTP_1588_CLOCK_OPTIONAL
-> +	select PAGE_POOL
+> It isn't intended as an "override". This *is* what will happen if the
+> platform does it right. By mandating it in the spec, the intent is to
+> reduce the chances of platforms doing it *wrong*? (Or of drivers making
+> wrong assumptions).
 
-I didn't look, but I assume that mlx4 does not use page pool stats?
+The text you wrote makes it seem that even if the platform says use
+an IOMMU, it should be bypassed.
 
-If it does, there might be a follow-up change to select
-PAGE_POOL_STATS?
+> > > For virtio-mmio it also isn't translated by an IOMMU; that was the
+> > > *point* of the `restricted-dma-pool` support.
+> > > 
+> > 
+> > Clear VIRTIO_F_ACCESS_PLATFORM then?
+> 
+> > I don't want to say that VIRTIO_F_ACCESS_PLATFORM and VIRTIO_F_SWIOTLB
+> 
+> > are mutually exclusive...
+> 
+> 
+> > Generally, it is preferable to keep all features orthogonal if
+> > at all possible.
+> 
+> ...precisely because they *should* be orthogonal.
+> 
+> VIRTIO_F_ACCESS_PLATFORM defines how system memory is accessed;
+> basically whether DMA goes through an IOMMU or not. And as you point
+> out, the "on-device" buffer used with VIRTIO_F_SWIOTLB should never
+> pass through the IOMMU anyway, so it *is* naturally orthogonal.
+> 
+> 
+> And I think it does make sense for both to be set in some cases, for
+> both physical and virtual devices.
+> 
+> 
+> For physical devices that would mean "Got an IOMMU? Sure, go ahead and
+> use it. If not, if you don't trust me, you can just disable my bus
+> mastering and just use the SWIOTLB".
+> 
+> It's basically the same for a virtual device. In a confidential compute
+> model, the device model (in the VMM) might not be *able* to access the
+> guest memory unless the core guest OS explicitly permits that, through
+> some kind of pKVM enlightenment to allow pages to be shared, or a
+> vIOMMU, or marking hardware pages unencrypted. So having both bits set
+> would mean "Know how to drive that enlightenment? Sure, go ahead and
+> use it. Otherwise, use the SWIOTLB".
+> 
+> In fact that's exactly what that Linux code for `restricted-dma-pool`
+> already does — when setting up the dma_ops for the device, if it finds
+> an actual set of IOMMU operations, it'll use those. And if not, that's
+> when it falls back to using the provided SWIOTLB.
+> 
 
-Reviewed-by: Joe Damato <jdamato@fastly.com>
+I just feel your text for VIRTIO_F_ACCESS_PLATFORM make it
+seem like that is not the case.
+
+VIRTIO_F_ACCESS_PLATFORM says a lot of things, e.g.  it has implications
+for encrypted VMs, and so on.
+
+I would drop this text, and maybe add some clarification in the mmio transport,
+as needed.
+
+
+-- 
+MST
+
