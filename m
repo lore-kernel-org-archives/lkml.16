@@ -1,83 +1,61 @@
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EB261917D6
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 05:05:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F7EB1917D6;
+	Wed,  2 Apr 2025 05:10:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743570354; cv=none; b=lDevi0cljSnKv4GZXWrqYTI0IBeUjqjbRJd8a1YrrdnsartfMyCyrxB8yZlpTJp8PDquftodoYmG//ArMvW4jB++8uZmd1I3f28OjgaAa9Wej0Q3/9bC/JtK4KgixhrT6EvqqvZD6fca6njIgkYprwMdhPeMNer3lFC9xMBjOTk=
+	t=1743570634; cv=none; b=Rig6RqP7fkTrA9x6fWiFGphe6+eLwDUrys5DfqxmA3ee6mEwhKWHOQZQInkAHAFzMOQdKMkH11AHQlOqs//X/H4GfDhPhpgCRsgeophZmdjyXZL6vBO06XhWjA3sj5AFIYSYCmvcZ6wJjxV4aTevOpwMGpB72neuVUuSt1nau4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743570354; c=relaxed/simple;
-	bh=ToBtS/Fq7DMHoT1e2iY+L0xTZeqkApz5pB3d7f0G3bI=;
+	s=arc-20240116; t=1743570634; c=relaxed/simple;
+	bh=grZPU9oPQcN0TENqzwiUIqv/0tkINZLoV8QdjaVk4ms=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CwDcGQ6jPx0f7djo6zwCz0t58aO4BwQmJdO+zIYIDUkagfRwRMtA4JWqy/Y6JCnzc/uJS9HbnWclJThIf0k5Bu3Q+rtFRRFykBe43laZCZpSA9NCVGKW3UsCOyFqNgSj++JFbH1mUT0FYGLn0zYSquG43dhRsXNs+lKN7+uGte4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=Qww3K6ZN; arc=none smtp.client-ip=209.85.160.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=fdLorA2OHWIE0qYpg0/Unvf1GSRMpLvBmcVL30OsBv7+9NCJ5V5hW02BCUkZ1z2bsvFJMU66GNdMW/xJof+TJKhZ/VzjpOiGuauLfY7OEvTr5xpz/yxM9/N5O4G3GshztkgC8cLzTFMmhJI5AFQzSI9o6pknGg9TfxB2tjo9RhY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EQFCvrRI; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="Qww3K6ZN"
-Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-477296dce8dso62118781cf.3
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 22:05:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1743570351; x=1744175151; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=46m3GPuzo/ijq2+XYsa68t/WcXGozC1h1ijATq7sgg4=;
-        b=Qww3K6ZNKTrMfzyFEZdddf7/sAC2VlxiuI612xh2s4rrwgUJcrI+ID6Tw7Z+5Aoagc
-         GKOVdoClgKV+WpvsgPYeB6/+/IDL6TixBRf6MEdcNA1tgUgr4ZQueUXe/KL4JL10PyJJ
-         0U0gXp0AEf+lHg1sigeS1xLofhqJZTAhIeZIAVcrmc5GJCx7JdGBntZhN8HhToNNOLvt
-         /Mzs6uFTfQiK5bCwfIjB5RxjR/vpGs0MWMA+sJ4FHDikTYlK/WKXTVWu8c7pUaxHP8/N
-         RaHd9rqpEBgGReZng1KVGVy0sBY++7TAMJ/FuzEiKzWMULHxd1SA1l5lkyVavufN8B/L
-         gf5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743570351; x=1744175151;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=46m3GPuzo/ijq2+XYsa68t/WcXGozC1h1ijATq7sgg4=;
-        b=rzNFMA8pgWPZWf9jyy2/aLM+Jt3nqPoiNUlhJu4EgSE1FI3vjbY6ADc8+xF4OddesX
-         0khKzcvLaDmNSAhx0AXORvZreePwHygKc1MjsMIYxwYxGHvFmDmM+CfGcfYHjhNDLjhH
-         eyPn7p1RQmTGLTs3BCUHsHFgSQA0rOfhM7CC+DZdgAIKyvKVVZNrrXLpRoDwxMGPGByG
-         Pnp2QlFHQBHWDWAjrf9/SdE8hqUzADKW6XArhsaIRhucdGEyWTwvB8QEiUFnXXIOnKD5
-         E7z+J5I1WYpfpm3BowFbNkRsJSeNh3Fg25anwFMMQcb25tZ3/aqr8aNHDc8wbONDcam+
-         0Ggg==
-X-Forwarded-Encrypted: i=1; AJvYcCX1LADqyYwrQC3G0xqck+XnPtvVfcbXYiyFf4aWkS1yCwrpKKuENhIp7gyg2m3+hwkV2pGual1FE72WMRw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwnoBpbHerFWfF53qlN0nrC/1NkduLoznfNC0Bxbcd7R9LHkFz4
-	5o7ANzh8qE67AHWLU3FH9qFtZcy8zJs8anjg5DR3SNVwgpvcdnokakVowoXygeY=
-X-Gm-Gg: ASbGncuvQvCiaiKYpF7MHWDdXPy4FqfHe3eUWc6mxp6fTyWau3SCHMrdrQgZxJMo9Xn
-	kkiu7q7dmd+kwWwAVfDnt2oWLbZ/ZObdFE3ZTDZQ1oUCGOqCLJ8BBJ123TwbjSU3adtp+bdAjzT
-	QdCQc8ZLyRf5eUPviD1+TPZlVCwGHQtOedKedt0YGFZ2us3O8VCrPD/tUZmYItPW0l7RgHFqQBv
-	O0KPsPXi4RlGhPEyXFpDdfbsru4IIuM4eBVRfXakV9qRRgRpvr9EK4SZ1CxCTLJOVkYKdzdp1De
-	mhxZH1Fg4u91P/lPTtXq8+7wwoXJMhlqmA2HWAYOLWltmsqej29iMqZ7h9hDVaOyvZghoWaw3mn
-	02EgJxgL5/dfGzC7KlCI6pvEDB68=
-X-Google-Smtp-Source: AGHT+IHTe1SVUeuYXh0ubFlwsbzJ9Pp8B2+0OWLUKDSPQ4T5nDWaqnAyykP7ESnbJY9Hs/1MKNXpWw==
-X-Received: by 2002:a05:622a:592:b0:471:cdae:ac44 with SMTP id d75a77b69052e-478f6d6b005mr69196541cf.47.1743570351163;
-        Tue, 01 Apr 2025 22:05:51 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-477831a65a3sm74670621cf.79.2025.04.01.22.05.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Apr 2025 22:05:50 -0700 (PDT)
-Date: Wed, 2 Apr 2025 01:05:48 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>, Robert Richter <rrichter@amd.com>,
-	ming.li@zohomail.com, linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org
-Subject: Re: [PATCH 2/4 v2] cxl/core: Add helpers to detect Low memory Holes
- on x86
-Message-ID: <Z-zFrBqZHc4UWvMb@gourry-fedora-PF4VCD3F>
-References: <20250114203432.31861-1-fabio.m.de.francesco@linux.intel.com>
- <20250114203432.31861-3-fabio.m.de.francesco@linux.intel.com>
- <Z4ccKD9Fc-Egc6EL@gourry-fedora-PF4VCD3F>
- <67ec4d61c3fd6_288d2947b@dwillia2-xfh.jf.intel.com.notmuch>
- <Z-xdYvxD6yz3fMiE@gourry-fedora-PF4VCD3F>
- <67ec7814ea055_73d8294e0@dwillia2-xfh.jf.intel.com.notmuch>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EQFCvrRI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743570632; x=1775106632;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=grZPU9oPQcN0TENqzwiUIqv/0tkINZLoV8QdjaVk4ms=;
+  b=EQFCvrRIvajSsqqZhBdzcTLPrVBY/3IpIYyNgW0vqMfpjUDf67u4xVLq
+   T1OsphOs69Pfnribq76IRUPwVOG3BvuZ8Yq+mYXaDpLQPfKuA+Tlr5QTY
+   V5+YNHFmc7V8bzV32PfYlhf6f0VEgVArXASXJe9xZod7qREEti3ozwZis
+   zkHYXtBklQpNYwcmmOqQ2oc+ueDHy+QR2aj39Vo883to8yP6L5J7ZZhON
+   HJWFbjVBlMHV8W6E66sAQKe1BaRYzu83ZFK5by3/51UT0nN6MU92/3r1Y
+   gDBQi1wJh1yFrUpyOTwvHBLHiPcaRShucYUOdIgWJeY6s0VCrnRZZXuuL
+   A==;
+X-CSE-ConnectionGUID: AxM7Mw19Tm+2crt10Z/C3g==
+X-CSE-MsgGUID: gPIa0Rq/SkWEBluKdREBSA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11391"; a="62316430"
+X-IronPort-AV: E=Sophos;i="6.14,295,1736841600"; 
+   d="scan'208";a="62316430"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2025 22:10:32 -0700
+X-CSE-ConnectionGUID: lJLrnvqyQ6+t3OLQZ1mEug==
+X-CSE-MsgGUID: yDnFL7ROQt+M+lRdqiM+GQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,295,1736841600"; 
+   d="scan'208";a="131570397"
+Received: from mev-dev.igk.intel.com ([10.237.112.144])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2025 22:10:28 -0700
+Date: Wed, 2 Apr 2025 07:10:18 +0200
+From: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
+To: Harshitha Ramamurthy <hramamurthy@google.com>
+Cc: netdev@vger.kernel.org, jeroendb@google.com, andrew+netdev@lunn.ch,
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, pkaligineedi@google.com, willemb@google.com,
+	joshwash@google.com, horms@kernel.org, shailend@google.com,
+	jrkim@google.com, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH net] gve: handle overflow when reporting TX consumed
+ descriptors
+Message-ID: <Z+zGrWljk7u91VMY@mev-dev.igk.intel.com>
+References: <20250402001037.2717315-1-hramamurthy@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -86,43 +64,50 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <67ec7814ea055_73d8294e0@dwillia2-xfh.jf.intel.com.notmuch>
+In-Reply-To: <20250402001037.2717315-1-hramamurthy@google.com>
 
-On Tue, Apr 01, 2025 at 04:34:44PM -0700, Dan Williams wrote:
-> The platforms with this condition want to support CXL mapped starting at
-> zero *and* the typical/historical PCI MMIO space in low memory (for
-> those PCI devices that do not support 64-bit addressing). If the CFMWS
-> blindly followed the 256MB*NIW constraint the CXL window would overlap
-> the MMIO space. So the choices are:
+On Wed, Apr 02, 2025 at 12:10:37AM +0000, Harshitha Ramamurthy wrote:
+> From: Joshua Washington <joshwash@google.com>
 > 
-
-If I'm understanding everything correctly, then I think this is intended
-to work only when EFI_MEMORY_SP is *not* set for these particular CXL
-devices - so it comes up as memory in early boot and we're just trying
-to wire up all the bits to let the driver manage it accordingly?
-
-If that's the case, then ignore me, i'm just bikeshedding at this point.
-
-I can't imagine a system where the memory at 0x0-4GB is intended to come
-up as EFI_MEMORY_SP, so I hope no one ever tries this :D
-
-> > (Also, I still don't understand the oracle value of <4GB address range.
-> >  It seems like if this is some quirk of SPA vs HPA alignment, then it
-> >  can hold for *all* ocurrances, not just stuff below 4GB)
+> When the tx tail is less than the head (in cases of wraparound), the TX
+> consumed descriptor statistic in DQ will be reported as
+> UINT32_MAX - head + tail, which is incorrect. Mask the difference of
+> head and tail according to the ring size when reporting the statistic.
 > 
-> The goal is to get platform vendors to define the rules so that an OS
-> has a reasonable expectation to know what is a valid vs invalid
-> configuration. A hole above 4GB has no reason to exist, there is no
-> resource conflict like PCI MMIO that explains why typical spec
-> expectation can not be met.
+> Cc: stable@vger.kernel.org
+> Fixes: 2c9198356d56 ("gve: Add consumed counts to ethtool stats")
+> Signed-off-by: Joshua Washington <joshwash@google.com>
+> Signed-off-by: Harshitha Ramamurthy <hramamurthy@google.com>
+> ---
+>  drivers/net/ethernet/google/gve/gve_ethtool.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 > 
-> So I want the subsystem to have an explicit set of platform quirks
-> ideally backed up by updated spec language. That allows us to validate
-> that the Linux implementation is correct by some objective source of
-> truth, encourage platform vendors to update that source of truth when
-> they create new corner cases, or even better, be more mindful to not
-> create new corner cases.
+> diff --git a/drivers/net/ethernet/google/gve/gve_ethtool.c b/drivers/net/ethernet/google/gve/gve_ethtool.c
+> index 31a21ccf4863..4dea1fdce748 100644
+> --- a/drivers/net/ethernet/google/gve/gve_ethtool.c
+> +++ b/drivers/net/ethernet/google/gve/gve_ethtool.c
+> @@ -392,7 +392,9 @@ gve_get_ethtool_stats(struct net_device *netdev,
+>  				 */
+>  				data[i++] = 0;
+>  				data[i++] = 0;
+> -				data[i++] = tx->dqo_tx.tail - tx->dqo_tx.head;
+> +				data[i++] =
+> +					(tx->dqo_tx.tail - tx->dqo_tx.head) &
+> +					tx->mask;
 
-I follow, seems reasonable.  
+Reviewed-by: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
 
-~Gregory
+I will add it in gve_tx_dqo.c as num_used_tx_slots() and simplify
+num_avail_tx_slots()
+{
+	return tx->mask - num_used_tx_slots();
+}
+but it isn't needed, even maybe unwanted as this is just fix.
+
+Thanks
+
+>  			}
+>  			do {
+>  				start =
+> -- 
+> 2.49.0.472.ge94155a9ec-goog
