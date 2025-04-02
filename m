@@ -1,108 +1,313 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37D2A233701;
-	Wed,  2 Apr 2025 09:02:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FBFB235354
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 09:02:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743584573; cv=none; b=EsYG8hp2rZSSd/siaNu1C5bQIjq/plBBDBPbdInbNpzKVQ8aEv96RvJniCcf63B5p5Im+m94PkMPAkLRiImNTJmJt7amJUzXZPuyVxOXTtKGBuhULD1pGXP/IYlZ+Gmz9qrk0c77Ftg1sm5hkeKg4Ku3wzm+gno2ptpjmbe5jfA=
+	t=1743584576; cv=none; b=LY6fOFuH1j+qqkuX9GmMVbCE2L5hfKBAkR6GQqJTcEmZnOw/vhvLfUPRKssjqzrlPZpPFkw7LdLy9q4WN+be3HhC0jEYeNppe6RRP9Uksssifu8o7GDbO9A0VyQ7en/c/NrL7zhpqGyNl/fgbke+wqN4TKh5R4sgChq3uxx26Oc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743584573; c=relaxed/simple;
-	bh=JjWawIgxHYl0dQ6L/xhHpDAkfrKz2ch7rKR8aZlCMm4=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=E6YbThHFFRKNDtmcVLIqkktSShT63+yHz3d8Q5Gn+PVFFR6nGHQKrn1wUHgtDYXY4LMcfYjbic3RR1L5ofqxp6wx07gxmOmzWjrjDJL9xUGG+pEBELt0v6RK2nRMx/7WX/OlLkUsQAmkJgRe+aGsCJjRlPxZjFNNX85KGgH8q+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=hOKmzQqy; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+	s=arc-20240116; t=1743584576; c=relaxed/simple;
+	bh=ktTx9xtc4Slo5Czxl/jNm8Y83TVDmYTQOH/8R2zzeRQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=faOEaI/PUC6ZFVs/crPYBIEEgX0zRxt1Q7/MvBHbk+3MjjHeqcJCsNoAY9ljzgsTvKUnf6FUsTtZAQ1BA0OUIZYRN1E+CrtTbE2KIdpat8upMgUP1L07XJFkhTfWdPlEvTgJLXR012PSAy1iPDFzoIQM3FAw2AP9D6X12+6LRyg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=up426dt/; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=VbQzgEAU; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=up426dt/; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=VbQzgEAU; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="hOKmzQqy"
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 53292WqcC3958272, This message is accepted by code: ctloc85258
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
-	t=1743584552; bh=JjWawIgxHYl0dQ6L/xhHpDAkfrKz2ch7rKR8aZlCMm4=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding:MIME-Version;
-	b=hOKmzQqywAR96KtmDvC0NTjLcbKoWtfZHuP1fL2bP4vLM/3zjDjB66JpVU9OkaQVQ
-	 GIg5c92Aq+YjslRH42IN7hzCrdN0+p+U3Ee/Z5TKvAKkYBQj8pwxaoVPITm0GzaOD7
-	 nSDHjh3uq+pjEWkhjT4DMCfNVLMYpLLsNcKZ8LbCfLQA3gbKIy9U2yGu/leM6hCH4g
-	 PWMiH3wl5NxakI8F7xTRYw7mnjJkh5/1t6/PLIQDQLA8YmsUx7o/yeVs6a+BvfOmUR
-	 WjnI4EeiaZkaNhpbbJqQFzb6U3vZcXa6cDHPBkB4Fr8WSFKTSPneOZ16aka03x2dRm
-	 2Ng2mtzGQH20g==
-Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
-	by rtits2.realtek.com.tw (8.15.2/3.06/5.92) with ESMTPS id 53292WqcC3958272
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 2 Apr 2025 17:02:32 +0800
-Received: from RTEXMBS06.realtek.com.tw (172.21.6.99) by
- RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Wed, 2 Apr 2025 17:02:32 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXMBS06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Wed, 2 Apr 2025 17:02:32 +0800
-Received: from RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622]) by
- RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622%5]) with mapi id
- 15.01.2507.035; Wed, 2 Apr 2025 17:02:32 +0800
-From: Ping-Ke Shih <pkshih@realtek.com>
-To: Wentao Liang <vulab@iscas.ac.cn>, "kvalo@kernel.org" <kvalo@kernel.org>
-CC: "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: RE: [PATCH] rtlwifi: rtl892cu: Set limit for pwdb_all
-Thread-Topic: [PATCH] rtlwifi: rtl892cu: Set limit for pwdb_all
-Thread-Index: AQHbo55wvrLyXgByg0Ol6GEoOb4umbOQE82Q
-Date: Wed, 2 Apr 2025 09:02:31 +0000
-Message-ID: <0af1b6ed8d5c400fb41f20169d0d173a@realtek.com>
-References: <20250402071040.3155-1-vulab@iscas.ac.cn>
-In-Reply-To: <20250402071040.3155-1-vulab@iscas.ac.cn>
-Accept-Language: en-US, zh-TW
-Content-Language: zh-TW
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="up426dt/";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="VbQzgEAU";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="up426dt/";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="VbQzgEAU"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 9E0FA1F455;
+	Wed,  2 Apr 2025 09:02:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1743584571; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EOMQWK3ChVizaeK2FCjKPQYIKHNhrgOGcfTl9Rl4IG0=;
+	b=up426dt/AtPt3hmLYqxGQxSjgFbEJYSohTG3yILtK3WfJ5UrbJNAPo0wWePFvfrb/pW5OB
+	gBma+zH2pG8IHjJspy4E09Gsx9MpJB4lpaTaBRmCZ3yVCu65FeiWOX2rRnMdAgwPIVS68b
+	KhnxpNl2CPrwxqPZSR4xmD6F304dNT4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1743584571;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EOMQWK3ChVizaeK2FCjKPQYIKHNhrgOGcfTl9Rl4IG0=;
+	b=VbQzgEAUmcVoZNz5Sp8WYo5xWccRjKSP5mWDZOCQhhyTSr2MXXCvEDeK0m/5HQy6a+MaWO
+	4GNaTbPkr76+NwAg==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b="up426dt/";
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=VbQzgEAU
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1743584571; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EOMQWK3ChVizaeK2FCjKPQYIKHNhrgOGcfTl9Rl4IG0=;
+	b=up426dt/AtPt3hmLYqxGQxSjgFbEJYSohTG3yILtK3WfJ5UrbJNAPo0wWePFvfrb/pW5OB
+	gBma+zH2pG8IHjJspy4E09Gsx9MpJB4lpaTaBRmCZ3yVCu65FeiWOX2rRnMdAgwPIVS68b
+	KhnxpNl2CPrwxqPZSR4xmD6F304dNT4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1743584571;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EOMQWK3ChVizaeK2FCjKPQYIKHNhrgOGcfTl9Rl4IG0=;
+	b=VbQzgEAUmcVoZNz5Sp8WYo5xWccRjKSP5mWDZOCQhhyTSr2MXXCvEDeK0m/5HQy6a+MaWO
+	4GNaTbPkr76+NwAg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 6EA5B13A4B;
+	Wed,  2 Apr 2025 09:02:51 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id LHa2Gjv97GdOPAAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Wed, 02 Apr 2025 09:02:51 +0000
+Message-ID: <62dd026d-1290-49cb-a411-897f4d5f6ca7@suse.cz>
+Date: Wed, 2 Apr 2025 11:02:51 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] locking/local_lock, mm: Replace localtry_ helpers with
+ local_trylock_t type
+Content-Language: en-US
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+ Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, bpf@vger.kernel.org,
+ daniel@iogearbox.net, andrii@kernel.org, martin.lau@kernel.org,
+ akpm@linux-foundation.org, peterz@infradead.org, rostedt@goodmis.org,
+ shakeel.butt@linux.dev, mhocko@suse.com, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <20250401005134.14433-1-alexei.starovoitov@gmail.com>
+ <20250402073032.rqsmPfJs@linutronix.de>
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <20250402073032.rqsmPfJs@linutronix.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 9E0FA1F455
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	RCPT_COUNT_TWELVE(0.00)[14];
+	ARC_NA(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FREEMAIL_TO(0.00)[linutronix.de,gmail.com];
+	MIME_TRACE(0.00)[0:+];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.cz:email,suse.cz:dkim,suse.cz:mid]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -3.01
+X-Spam-Flag: NO
 
-Wentao Liang <vulab@iscas.ac.cn> wrote:
->=20
-> In _rtl92c_query_rxphystatus(), the return rtl_query_rxpwrpercentage()
-> need to be checked. A proper implementation can be found in
-> _rtl8723be_query_rxphystatus(). Add a value check and set the limit of
-> pwdb_add as 100.
+On 4/2/25 09:30, Sebastian Andrzej Siewior wrote:
+> On 2025-03-31 17:51:34 [-0700], Alexei Starovoitov wrote:
+>> From: Alexei Starovoitov <ast@kernel.org>
+>> 
+>> Partially revert commit 0aaddfb06882 ("locking/local_lock: Introduce localtry_lock_t").
+>> Remove localtry_*() helpers, since localtry_lock() name might
+>> be misinterpreted as "try lock".
+> 
+> So we back to what you suggested initially. I was more a fan of
+> explicitly naming things but if this is misleading so be it. So
+> 
+> Acked-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> 
+> While at it, could you look at the hunk below and check if it worth it?
+> The struct duplication and hoping that the first part remains the same,
+> is hoping. This still relies that the first part remains the same but…
 
-Have you tested on real hardware? Or just guess this is a potential problem=
-?
-If that is a real problem, please point out what it happens in commit messa=
-ge.
+I've updated your fixups to v2
+https://lore.kernel.org/all/20250401205245.70838-1-alexei.starovoitov@gmail.com/
 
-By the way, subject should be "wifi: rtlwifi: ..."
+and to support runtime local_trylock_init(), and it's at the end of my e-mail
 
->=20
-> Fixes: 666e8457fae4 ("rtlwifi: rtl8192cu: Add routine mac")
-> Cc: stable@vger.kernel.org # v2.6+
-> Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
-> ---
->  drivers/net/wireless/realtek/rtlwifi/rtl8192cu/mac.c | 3 +++
->  1 file changed, 3 insertions(+)
->=20
-> diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8192cu/mac.c
-> b/drivers/net/wireless/realtek/rtlwifi/rtl8192cu/mac.c
-> index a76f2dc8a977..e2145f284ec0 100644
-> --- a/drivers/net/wireless/realtek/rtlwifi/rtl8192cu/mac.c
-> +++ b/drivers/net/wireless/realtek/rtlwifi/rtl8192cu/mac.c
-> @@ -641,6 +641,9 @@ static void _rtl92c_query_rxphystatus(struct ieee8021=
-1_hw *hw,
->                         }
->                 }
->                 pwdb_all =3D rtl_query_rxpwrpercentage(rx_pwr_all);
-> +               if (pwdb_all > 100)
-> +                       pwdb_all =3D 100;
-> +
->                 pstats->rx_pwdb_all =3D pwdb_all;
->                 pstats->recvsignalpower =3D rx_pwr_all;
->                 if (packet_match_bssid) {
-> --
-> 2.42.0.windows.2
+But I also thought we could go all the way with removing casting in
+that way and stop relying on the same layout implicitly.
+
+So I rewrote this:
+
+#define __local_lock_acquire(lock)                                      \
+        do {                                                            \
+                local_trylock_t *tl;                                    \
+                local_lock_t *l;                                        \
+                                                                        \
+                _Generic((lock),                                        \
+                        local_lock_t *: ({                      	\
+                                l = this_cpu_ptr(lock);                 \
+                        }),                                             \
+                        local_trylock_t *: ({                   	\
+                                tl = this_cpu_ptr(lock);                \
+                                l = &tl->llock;                         \
+                                lockdep_assert(tl->acquired == 0);      \
+                                WRITE_ONCE(tl->acquired, 1);            \
+                        }),                                             \
+                        default:(void)0);                               \
+                local_lock_acquire(l);                                  \
+        } while (0)
+
+But I'm getting weird errors:
+
+./include/linux/local_lock_internal.h:107:36: error: assignment to ‘local_trylock_t *’ from incompatible pointer type ‘local_lock_t *’ [-Wincompatible-pointer-types]
+  107 |                                 tl = this_cpu_ptr(lock);                \
+
+coming from the guard expansions. I don't understand why it goes to the
+_Generic() "branch" of local_trylock_t * with a local_lock_t *.
+
+----8<----
+From eeeb928ccc6d86e93cb573fb93ce4f6aeb8576fb Mon Sep 17 00:00:00 2001
+From: Vlastimil Babka <vbabka@suse.cz>
+Date: Wed, 2 Apr 2025 10:13:28 +0200
+Subject: [PATCH] fixup! locking/local_lock, mm: Replace localtry_ helpers with
+ local_trylock_t type
+
+---
+ include/linux/local_lock.h          |  5 +++++
+ include/linux/local_lock_internal.h | 23 +++++++++++++----------
+ mm/memcontrol.c                     |  2 +-
+ 3 files changed, 19 insertions(+), 11 deletions(-)
+
+diff --git a/include/linux/local_lock.h b/include/linux/local_lock.h
+index 7ac9385cd475..16a2ee4f8310 100644
+--- a/include/linux/local_lock.h
++++ b/include/linux/local_lock.h
+@@ -51,6 +51,11 @@
+ #define local_unlock_irqrestore(lock, flags)			\
+ 	__local_unlock_irqrestore(lock, flags)
+ 
++/**
++ * local_lock_init - Runtime initialize a lock instance
++ */
++#define local_trylock_init(lock)	__local_trylock_init(lock)
++
+ /**
+  * local_trylock - Try to acquire a per CPU local lock
+  * @lock:	The lock variable
+diff --git a/include/linux/local_lock_internal.h b/include/linux/local_lock_internal.h
+index 2389ae4f69a6..6ccb2c4ef86f 100644
+--- a/include/linux/local_lock_internal.h
++++ b/include/linux/local_lock_internal.h
+@@ -17,15 +17,8 @@ typedef struct {
+ 
+ /* local_trylock() and local_trylock_irqsave() only work with local_trylock_t */
+ typedef struct {
+-#ifdef CONFIG_DEBUG_LOCK_ALLOC
+-	struct lockdep_map	dep_map;
+-	struct task_struct	*owner;
+-#endif
+-	/*
+-	 * Same layout as local_lock_t with 'acquired' field at the end.
+-	 * (local_trylock_t *) will be cast to (local_lock_t *).
+-	 */
+-	int acquired;
++	local_lock_t	llock;
++	int		acquired;
+ } local_trylock_t;
+ 
+ #ifdef CONFIG_DEBUG_LOCK_ALLOC
+@@ -37,6 +30,9 @@ typedef struct {
+ 	},						\
+ 	.owner = NULL,
+ 
++# define LOCAL_TRYLOCK_DEBUG_INIT(lockname)		\
++	.llock = { LOCAL_LOCK_DEBUG_INIT((lockname).llock) },
++
+ static inline void local_lock_acquire(local_lock_t *l)
+ {
+ 	lock_map_acquire(&l->dep_map);
+@@ -64,6 +60,7 @@ static inline void local_lock_debug_init(local_lock_t *l)
+ }
+ #else /* CONFIG_DEBUG_LOCK_ALLOC */
+ # define LOCAL_LOCK_DEBUG_INIT(lockname)
++# define LOCAL_TRYLOCK_DEBUG_INIT(lockname)
+ static inline void local_lock_acquire(local_lock_t *l) { }
+ static inline void local_trylock_acquire(local_lock_t *l) { }
+ static inline void local_lock_release(local_lock_t *l) { }
+@@ -71,6 +68,7 @@ static inline void local_lock_debug_init(local_lock_t *l) { }
+ #endif /* !CONFIG_DEBUG_LOCK_ALLOC */
+ 
+ #define INIT_LOCAL_LOCK(lockname)	{ LOCAL_LOCK_DEBUG_INIT(lockname) }
++#define INIT_LOCAL_TRYLOCK(lockname)	{ LOCAL_TRYLOCK_DEBUG_INIT(lockname) }
+ 
+ #define __local_lock_init(lock)					\
+ do {								\
+@@ -80,9 +78,11 @@ do {								\
+ 	lockdep_init_map_type(&(lock)->dep_map, #lock, &__key,  \
+ 			      0, LD_WAIT_CONFIG, LD_WAIT_INV,	\
+ 			      LD_LOCK_PERCPU);			\
+-	local_lock_debug_init((local_lock_t *)lock);		\
++	local_lock_debug_init(lock);				\
+ } while (0)
+ 
++#define __local_trylock_init(lock) __local_lock_init(lock.llock)
++
+ #define __spinlock_nested_bh_init(lock)				\
+ do {								\
+ 	static struct lock_class_key __key;			\
+@@ -215,12 +215,15 @@ typedef spinlock_t local_lock_t;
+ typedef spinlock_t local_trylock_t;
+ 
+ #define INIT_LOCAL_LOCK(lockname) __LOCAL_SPIN_LOCK_UNLOCKED((lockname))
++#define INIT_LOCAL_TRYLOCK(lockname) __LOCAL_SPIN_LOCK_UNLOCKED((lockname))
+ 
+ #define __local_lock_init(l)					\
+ 	do {							\
+ 		local_spin_lock_init((l));			\
+ 	} while (0)
+ 
++#define __local_trylock_init(l)			__local_lock_init(l)
++
+ #define __local_lock(__lock)					\
+ 	do {							\
+ 		migrate_disable();				\
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index bca86961754e..0401fb7b6c6a 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -1754,7 +1754,7 @@ struct memcg_stock_pcp {
+ #define FLUSHING_CACHED_CHARGE	0
+ };
+ static DEFINE_PER_CPU(struct memcg_stock_pcp, memcg_stock) = {
+-	.stock_lock = INIT_LOCAL_LOCK(stock_lock),
++	.stock_lock = INIT_LOCAL_TRYLOCK(stock_lock),
+ };
+ static DEFINE_MUTEX(percpu_charge_mutex);
+ 
+-- 
+2.49.0
+
 
