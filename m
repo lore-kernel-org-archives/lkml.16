@@ -1,122 +1,276 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A2E0139D0A;
-	Wed,  2 Apr 2025 16:10:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B973139D0A;
+	Wed,  2 Apr 2025 16:12:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743610254; cv=none; b=ayEEiKquUaIDqgd49Thq6V4HxJ7ppcbj+cQUHlytb7gh241dRAGR3sAzbESmAA3vF34jsSTrVJ3r97u3wplj03ayczPDiqhFMa7IZGugoF1QHO/L+X8nLM0cjmeDfh1XOiOPg52MdG32rjrvzHfQ26+a6YW8IfRMbY8MbFaolRQ=
+	t=1743610334; cv=none; b=fkAREyc9dBJW2DwINBwOULGuXfKwykVUDzHqD3aJ3kfrC1q86AicxAMkrA5H5SyoMwoVH/Z3BS7xYc95NbKbtW6WBqK2AEPx4ihnY5L/3+c66J124cGNRlIwuCYdfi2gCzi5EguzSigux7wTWh+vHroGBRCI9Xntm+2jT77yaKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743610254; c=relaxed/simple;
-	bh=OIVqJJNsFrMiqu/uq1QlcvPuIL4Ese/KYrI1dezFYZ4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iZGWhC1OsJYeiy7oOk28llBzJnZ7ZkHDZOS1j59iTsfJTG1aqVATR3c8/G7Nf0m0TGNV0PMEkfo4l70gjSumFXVcTG3gkY/RMc4UWP2va5MldWHKwWYO5BwMlanGQ7w2E8/tNz+EmrIFAVPGG4X9RwTOYv91fRXqiZmq2lyvFGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PdOe+IRl; arc=none smtp.client-ip=209.85.214.178
+	s=arc-20240116; t=1743610334; c=relaxed/simple;
+	bh=CmJZSvVlPvhoNUkiAMzo21sJ0WPv8J2bj1Yx+V83y4Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JchqCCW9sjgpOHRH9/ABtKOviTsvj+4OWBMDdzefZykWxicc+tSSAHmNlC5NbvzXrfQAB2xOuEtxq0ffZ0ME28Mgi6V2YsEMImRy543hEIzQ4bfF1KORZBgY8gUaMP2yi49uAj07J99lpIym0CGyXUCd7d6o7b3kNRyCMLBKb2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K/0wQUIl; arc=none smtp.client-ip=209.85.166.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PdOe+IRl"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-227cf12df27so125ad.0;
-        Wed, 02 Apr 2025 09:10:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K/0wQUIl"
+Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-3d442a77a03so120745ab.1;
+        Wed, 02 Apr 2025 09:12:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743610252; x=1744215052; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZIIr79S8E8NybYY6gtYpu9PlGyNiRm8JHaUp3As1v3w=;
-        b=PdOe+IRljOzZiEWsDLjzCg01V4TCzZQLejqRLzKitHTMHKMO9laG/f4MV3YXY3Mm8e
-         d94moG71M6WHSginUZxh9/Dtr52QUe/8oCz31O9Gth5VLoS8PxGn1K07tgkQ+q4kwjQ7
-         ba7RUM9c7/zHGEQdJ6gTOdCUz3DK5mPEW3Tc6HHTz0kBkxZCULKommk+tDOJy7J9z4bU
-         Xkv+5WCnjpdYs457uld2ZXu49Wi7BQvCbNjBJ7ba+fscul8st5zB0yEwZaAxzYqEfLsb
-         4v4BveVUdoC7fzdvcz2lOEUYuRHSd0KSu6dX9SmRCKZsMCBIOV238STCZjOtVa/EmFij
-         bWpg==
+        d=gmail.com; s=20230601; t=1743610331; x=1744215131; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5rK9kTwLfXEgDnRykzZWh9AEgnuJfNseTnoRiIhmpsc=;
+        b=K/0wQUIlWZAKX1A/VS1FWCMS7YE8ilwjmQbbxSX2I1/Miu61Od4yf7C9Katl+h7fkS
+         89Su4z8RsuzJRYm4dEFCJPtSH4zvsZUwlgoUAZ2xLfRsptEaQIhZOGJmN5bUjcn1dSEz
+         T44DIlL5emK+Uz5rWKNaCVNtH/DzJkIIV33yvwqqaCV/OKg6/KC4pjsuasJnPJ/CvQsH
+         CZ3V8nL9oGfzW/5t3MST3pZlDmr8AZOwKeq5+Kq23Y/1JhwtoJHj0SdTBxV7t4QT57Fs
+         ZWbB0FpzpNjEEExdeQJb/OVBGKrHQEISI4FnMYpZ/dCJ7zzsSj7J1+RfsOPYfUfeggF0
+         DWUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743610252; x=1744215052;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ZIIr79S8E8NybYY6gtYpu9PlGyNiRm8JHaUp3As1v3w=;
-        b=wQXztwVRbVyluMk8zKHummeE3Zw7JMTP1qdJ/avF/AKHuZIWLnIpbX3utm8yNx1RBR
-         nGj6UbNvHUVK313cY8vwzjc979xQ5G2UUi19NhPM3WBkCEdrpjWHNGMRDaxgHxmQZso3
-         /lH0IW7CbJ9FYeqFUeb9wAEg3tsweSoqmW8QPrj16xB2PB3PzPSGMIn645My/lk3NUKr
-         BBo/gMFc6FB9cIjCC0K2457pbIDcOba+c1f1YgDJuKvhLW+UCsXtg/N2vTxWf4uiY9rw
-         GlLXx7JEXaUnC8bvNKUXJ37GiN6c0ClG4ZwVI/MCP5DrKNCxyxbzPVTK5MrERq6MZwDf
-         M6ew==
-X-Forwarded-Encrypted: i=1; AJvYcCU2rZSw8fH8z/ukIge3e4NFqX6xm+BotkdMEydbCEqpjEUpkXlnuKMohudf4JhfcpP0y6RSuPcEOPe31PfK@vger.kernel.org, AJvYcCXNnWJMntgc8zQ0y2DD/hiOHub6Ysz2CQj3llqn1CjMwlbknVkXJb7KHWtWOctPbPf++0SN8CUOqSblNnxG7A==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyP5YCHoUsXuGlL1Nilb3IgiHg0V3CJuq+dUbOPuQYBp4d9yXkE
-	A2Iv5GJaScy/TS2XA5L5ltyUiZAxf55IZmc/Vn8L5UXLhkYnu5TK
-X-Gm-Gg: ASbGncvfW4kVKuYfSQGNXYXZlJIev5x9vyPxfYLgGe/VofSMl1XoXo2s4EbEzvwqhY0
-	mjm2JZMd0S49yPkSP4oM5h/MirmMzTZ8ijqy1QBEBEkZ9dN0PzRYtWPFlOge/U4GuEBFJPioksN
-	/33TCiVcWtTbUbWHslABdfsnk+Jam1cIOzkzo3WQSBxsoJpDOXsuzHRdTxBlaMPDnsknHW02aFX
-	Jngb1s9gRrvwlYwBAd/ZQtSBGsfCeoUCcjbvhozVTMnlVgNcOXVYAJ6h7EHDwU3MK/49HwoZ0T7
-	4HMb65acdKTBvdrJycr92FitfSMb5gUvVSnDKAVqYFopjTOP0rL1lHH1qclVHqFArA==
-X-Google-Smtp-Source: AGHT+IE7ktB2KWY480DsrcKFnuDQRmNlfL3ZQiO+dZdrtj8/7tTzLyWkyo/QVitSv9v+OWHDkn89lg==
-X-Received: by 2002:a17:903:1b27:b0:223:4d5e:76a6 with SMTP id d9443c01a7336-229765ba827mr1321195ad.1.1743610252117;
-        Wed, 02 Apr 2025 09:10:52 -0700 (PDT)
-Received: from localhost.localdomain ([14.139.69.34])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291f1fa0a5sm110205435ad.240.2025.04.02.09.10.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Apr 2025 09:10:51 -0700 (PDT)
-From: Bharadwaj Raju <bharadwaj.raju777@gmail.com>
-To: kent.overstreet@linux.dev
-Cc: Bharadwaj Raju <bharadwaj.raju777@gmail.com>,
-	linux-bcachefs@vger.kernel.org,
-	shuah@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-kernel-mentees@lists.linux.dev,
-	syzbot+c82cd2906e2f192410bb@syzkaller.appspotmail.com
-Subject: [PATCH] bcachefs: don't call sleeping funcs when handling inconsistency errors
-Date: Wed,  2 Apr 2025 21:40:40 +0530
-Message-ID: <20250402161043.161795-1-bharadwaj.raju777@gmail.com>
-X-Mailer: git-send-email 2.49.0
+        d=1e100.net; s=20230601; t=1743610331; x=1744215131;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5rK9kTwLfXEgDnRykzZWh9AEgnuJfNseTnoRiIhmpsc=;
+        b=jDAjo7FjtN87MdNVtvgo9DNrKouCQ35hPZvRGnBnn6ZXNA9oqAGn0+Aopq8W/7fUqH
+         LyQpsVazYJ07JRxw4Ztugf0/s0iZXE2lzRAJsKD/4alqTNhEFeiAMFgxkWvfncH47ECx
+         2iaMa3lR8OrK3LvbKQez3bj1jC2s+YwT1b6KaJ0IXs1geRCPxkrshRK/S6dfgAS4Md14
+         y+bak7+5SIhZ81a3Pdv2pjXVVaT/sNhKD6OvovqT6J5LRNo8KgNqKpZ/as8Qf50f1Cxk
+         BoRRAMzXfjiznWIcJkfMKl+d6QN6xWdTbHaBdHRZqxKwhpTQ/cDXRTTprMDwgLRiiMMY
+         hfag==
+X-Forwarded-Encrypted: i=1; AJvYcCWnkLxrumrwwHUhcpnfvynyODzimS8sknyIuWkm8uKs6XP57HeVQbJMIusXT9gfxt2h/dOIrz9hDgfxUR4=@vger.kernel.org, AJvYcCXSXtJAXwaFMODWjLbzD2QD41cy2h9GfT/s08qVVkk3V8pzs/jBaLkUsxm8ogSWs4jtAdOPpw5pn1KKmqU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YypAWDuOHa6JKQjOV1ys2uTEleIEmmXiS92/l8bRgGgFPNmXzDb
+	36u0XddZqj0htV7hnUBranWSMDgVBZmwhidilUkrtSlcNrGeE6e/dNVrEOunBSwzfOKRhvnJ5di
+	ZZZ0eWnAl6RGtxtOm7k/6n9ix/qs=
+X-Gm-Gg: ASbGncsWjrLuRdILo7sMpFdJWFWTIr4U/xQt+yuhPY0CJ1DrME1yW40Wp/lYxDcDFa6
+	n+nxN0nnOh+Crj/fqompuQ9xPDI/DSxGwGYymkxkZcKsbUUa6HRW/FTgJCB9EbJP05NIJddaQEb
+	MZCNcw8h530/bpIr1zd+0e2i6/07BAYTxr5XKBNSFR5iepT8utzbd04X6TOFdywjZ3kfz2c/w=
+X-Google-Smtp-Source: AGHT+IFkYI6mSsCBU3Xd58kZsuiXhxMXIV+xUr1NKSGa56kWg9906qGj0TOjzVUzEtK07ut+ViwxdQy4wwNXDrQnrD0=
+X-Received: by 2002:a05:6e02:4401:10b0:3d6:d3f7:8813 with SMTP id
+ e9e14a558f8ab-3d6d3f7c3c0mr33927585ab.22.1743610331229; Wed, 02 Apr 2025
+ 09:12:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250401155758.48855-1-robdclark@gmail.com> <CAF6AEGsKbjq_q7ezQTn5vyAF1cjXahgbv84uYK35BJH1KBXSpw@mail.gmail.com>
+ <ff614cb7-94ca-4d74-9bbb-f97c95893113@collabora.com> <b636faa5-ab31-41d6-b957-4dfe89a2b47d@amd.com>
+In-Reply-To: <b636faa5-ab31-41d6-b957-4dfe89a2b47d@amd.com>
+From: Rob Clark <robdclark@gmail.com>
+Date: Wed, 2 Apr 2025 09:11:59 -0700
+X-Gm-Features: AQ5f1JoTRdjAnHaCZTeG_hJr4mmegr_fGINI7Zx0FF-EN5SHZjfv1OdMb7Fb8uc
+Message-ID: <CAF6AEGutP-TTJjt=HrzpYooUerQ3jETYz=Mw8NEb2h3kLo=3kA@mail.gmail.com>
+Subject: Re: [PATCH v6] drm/syncobj: Extend EXPORT_SYNC_FILE for timeline syncobjs
+To: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+Cc: Dmitry Osipenko <dmitry.osipenko@collabora.com>, dri-devel@lists.freedesktop.org, 
+	Rob Clark <robdclark@chromium.org>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Sumit Semwal <sumit.semwal@linaro.org>, open list <linux-kernel@vger.kernel.org>, 
+	"open list:DMA BUFFER SHARING FRAMEWORK:Keyword:bdma_(?:buf|fence|resv)b" <linux-media@vger.kernel.org>, 
+	"moderated list:DMA BUFFER SHARING FRAMEWORK:Keyword:bdma_(?:buf|fence|resv)b" <linaro-mm-sig@lists.linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-In bch2_bkey_pick_read_device, we're in an RCU lock. So, we can't call
-any potentially-sleeping functions. However, we call bch2_dev_rcu,
-which calls bch2_fs_inconsistent in its error case. That then calls
-bch2_prt_print on a non-atomic printbuf, as well as uses the blocking
-variant of bch2_print_string_as_lines, both of which lead to calls to
-potentially-sleeping functions, namely krealloc with GFP_KERNEL
-and console_lock respectively.
+On Tue, Apr 1, 2025 at 11:55=E2=80=AFPM Christian K=C3=B6nig
+<christian.koenig@amd.com> wrote:
+>
+> Am 01.04.25 um 22:46 schrieb Dmitry Osipenko:
+> > On 4/1/25 23:40, Rob Clark wrote:
+> >> On Tue, Apr 1, 2025 at 8:58=E2=80=AFAM Rob Clark <robdclark@gmail.com>=
+ wrote:
+> >>> From: Rob Clark <robdclark@chromium.org>
+> >>>
+> >>> Add support for exporting a dma_fence fd for a specific point on a
+> >>> timeline.  This is needed for vtest/vpipe[1][2] to implement timeline
+> >>> syncobj support, as it needs a way to turn a point on a timeline back
+> >>> into a dma_fence fd.  It also closes an odd omission from the syncobj
+> >>> UAPI.
+> >>>
+> >>> [1] https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/33433
+> >>> [2] https://gitlab.freedesktop.org/virgl/virglrenderer/-/merge_reques=
+ts/805
+> >>>
+> >>> v2: Add DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_TIMELINE
+> >>> v3: Add unstaged uabi header hunk
+> >>> v4: Also handle IMPORT_SYNC_FILE case
+> >>> v5: Address comments from Dmitry
+> >>> v6: checkpatch.pl nits
+> >>>
+> >>> Signed-off-by: Rob Clark <robdclark@chromium.org>
+> >>> Reviewed-by: Christian K=C3=B6nig <christian.koenig@amd.com>
+> >>> Reviewed-by: Dmitry Osipenko <dmitry.osipenko@collabora.com>
+> >>> ---
+> >>>  drivers/gpu/drm/drm_syncobj.c | 47 +++++++++++++++++++++++++++------=
+--
+> >>>  include/uapi/drm/drm.h        |  4 +++
+> >>>  2 files changed, 41 insertions(+), 10 deletions(-)
+> >>>
+> >>> diff --git a/drivers/gpu/drm/drm_syncobj.c b/drivers/gpu/drm/drm_sync=
+obj.c
+> >>> index 4f2ab8a7b50f..636cd83ca29e 100644
+> >>> --- a/drivers/gpu/drm/drm_syncobj.c
+> >>> +++ b/drivers/gpu/drm/drm_syncobj.c
+> >>> @@ -741,7 +741,7 @@ static int drm_syncobj_fd_to_handle(struct drm_fi=
+le *file_private,
+> >>>  }
+> >>>
+> >>>  static int drm_syncobj_import_sync_file_fence(struct drm_file *file_=
+private,
+> >>> -                                             int fd, int handle)
+> >>> +                                             int fd, int handle, u64=
+ point)
+> >>>  {
+> >>>         struct dma_fence *fence =3D sync_file_get_fence(fd);
+> >>>         struct drm_syncobj *syncobj;
+> >>> @@ -755,14 +755,24 @@ static int drm_syncobj_import_sync_file_fence(s=
+truct drm_file *file_private,
+> >>>                 return -ENOENT;
+> >>>         }
+> >>>
+> >>> -       drm_syncobj_replace_fence(syncobj, fence);
+> >>> +       if (point) {
+> >>> +               struct dma_fence_chain *chain =3D dma_fence_chain_all=
+oc();
+> >>> +
+> >>> +               if (!chain)
+> >>> +                       return -ENOMEM;
+> >>> +
+> >>> +               drm_syncobj_add_point(syncobj, chain, fence, point);
+> >>> +       } else {
+> >>> +               drm_syncobj_replace_fence(syncobj, fence);
+> >>> +       }
+> >>> +
+> >>>         dma_fence_put(fence);
+> >>>         drm_syncobj_put(syncobj);
+> >>>         return 0;
+> >>>  }
+> >>>
+> >>>  static int drm_syncobj_export_sync_file(struct drm_file *file_privat=
+e,
+> >>> -                                       int handle, int *p_fd)
+> >>> +                                       int handle, u64 point, int *p=
+_fd)
+> >>>  {
+> >>>         int ret;
+> >>>         struct dma_fence *fence;
+> >>> @@ -772,7 +782,7 @@ static int drm_syncobj_export_sync_file(struct dr=
+m_file *file_private,
+> >>>         if (fd < 0)
+> >>>                 return fd;
+> >>>
+> >>> -       ret =3D drm_syncobj_find_fence(file_private, handle, 0, 0, &f=
+ence);
+> >>> +       ret =3D drm_syncobj_find_fence(file_private, handle, point, 0=
+, &fence);
+> >>>         if (ret)
+> >>>                 goto err_put_fd;
+> >>>
+> >>> @@ -869,6 +879,9 @@ drm_syncobj_handle_to_fd_ioctl(struct drm_device =
+*dev, void *data,
+> >>>                                    struct drm_file *file_private)
+> >>>  {
+> >>>         struct drm_syncobj_handle *args =3D data;
+> >>> +       unsigned int valid_flags =3D DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_T=
+IMELINE |
+> >>> +                                  DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_EXP=
+ORT_SYNC_FILE;
+> >>> +       u64 point =3D 0;
+> >>>
+> >>>         if (!drm_core_check_feature(dev, DRIVER_SYNCOBJ))
+> >>>                 return -EOPNOTSUPP;
+> >>> @@ -876,13 +889,18 @@ drm_syncobj_handle_to_fd_ioctl(struct drm_devic=
+e *dev, void *data,
+> >>>         if (args->pad)
+> >>>                 return -EINVAL;
+> >>>
+> >>> -       if (args->flags !=3D 0 &&
+> >>> -           args->flags !=3D DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_EXPORT_SY=
+NC_FILE)
+> >>> +       if (args->flags & ~valid_flags)
+> >>>                 return -EINVAL;
+> >>>
+> >>> +       if (args->flags & DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_TIMELINE)
+> >>> +               point =3D args->point;
+> >>> +
+> >>>         if (args->flags & DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_EXPORT_SYNC_=
+FILE)
+> >>>                 return drm_syncobj_export_sync_file(file_private, arg=
+s->handle,
+> >>> -                                                   &args->fd);
+> >>> +                                                   point, &args->fd)=
+;
+> >>> +
+> >>> +       if (args->point)
+> >>> +               return -EINVAL;
+> >>>
+> >>>         return drm_syncobj_handle_to_fd(file_private, args->handle,
+> >>>                                         &args->fd);
+> >>> @@ -893,6 +911,9 @@ drm_syncobj_fd_to_handle_ioctl(struct drm_device =
+*dev, void *data,
+> >>>                                    struct drm_file *file_private)
+> >>>  {
+> >>>         struct drm_syncobj_handle *args =3D data;
+> >>> +       unsigned int valid_flags =3D DRM_SYNCOBJ_FD_TO_HANDLE_FLAGS_T=
+IMELINE |
+> >>> +                                  DRM_SYNCOBJ_FD_TO_HANDLE_FLAGS_IMP=
+ORT_SYNC_FILE;
+> >>> +       u64 point =3D 0;
+> >>>
+> >>>         if (!drm_core_check_feature(dev, DRIVER_SYNCOBJ))
+> >>>                 return -EOPNOTSUPP;
+> >> oh, I suppose I should add a check for DRIVER_SYNCOBJ_TIMELINE?  I'll
+> >> send a v7 a bit later
+> > Christian already applied to misc-test, please rebase and make it as a
+> > new patch
+>
+> Yeah, sorry I was a bit to quick obviously.
+>
+> On the other hand I don't see an immediate need for a check for DRIVER_SY=
+NCOBJ_TIMELINE here.
+>
+> The functions should work even when the driver doesn't handle timeline sy=
+ncobj on it's own.
 
-Give a nonzero atomic to the printbuf, and use the nonblocking variant
-of bch2_print_string_as_lines.
+Ok, no problem, I'll just put an explicit cap check in virglrenderer,
+rather than relying on this to tell me also if the driver supports
+timeline:
 
-Reported-by: syzbot+c82cd2906e2f192410bb@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=c82cd2906e2f192410bb
-Signed-off-by: Bharadwaj Raju <bharadwaj.raju777@gmail.com>
----
- fs/bcachefs/error.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+         struct drm_syncobj_handle args =3D {
+            .handle =3D 0,   /* invalid handle */
+            .flags =3D DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_EXPORT_SYNC_FILE |
+                     DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_TIMELINE,
+            .fd =3D -1,
+            .point =3D 1,
+         };
 
-diff --git a/fs/bcachefs/error.c b/fs/bcachefs/error.c
-index d4dfd13a8076..6f0f2f12c004 100644
---- a/fs/bcachefs/error.c
-+++ b/fs/bcachefs/error.c
-@@ -60,6 +60,8 @@ static bool bch2_fs_trans_inconsistent(struct bch_fs *c, struct btree_trans *tra
- {
- 	struct printbuf buf = PRINTBUF;
- 
-+	buf.atomic++;
-+
- 	bch2_log_msg_start(c, &buf);
- 
- 	prt_vprintf(&buf, fmt, args);
-@@ -68,7 +70,9 @@ static bool bch2_fs_trans_inconsistent(struct bch_fs *c, struct btree_trans *tra
- 	if (trans)
- 		bch2_trans_updates_to_text(&buf, trans);
- 	bool ret = __bch2_inconsistent_error(c, &buf);
--	bch2_print_string_as_lines(KERN_ERR, buf.buf);
-+	bch2_print_string_as_lines_nonblocking(KERN_ERR, buf.buf);
-+
-+	buf.atomic--;
- 
- 	printbuf_exit(&buf);
- 	return ret;
--- 
-2.49.0
+         errno =3D 0;
+         ret =3D drmIoctl(fd, DRM_IOCTL_SYNCOBJ_HANDLE_TO_FD, &args);
 
+         /* ENOENT means the kernel supports
+DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_TIMELINE
+          * but that we didn't provide a valid handle.  EINVAL means
+the kernel does
+          * not support DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_TIMELINE.
+          */
+         if (errno =3D=3D ENOENT) {
+            resp[0] =3D true;
+            resp[1] =3D 1;
+         } else {
+            assert(errno =3D=3D EINVAL);
+         }
+
+
+BR,
+-R
+
+> Regards,
+> Christian.
+>
+>
