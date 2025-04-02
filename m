@@ -1,211 +1,152 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1B7C1D86E8
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 18:39:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EE1719E826
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 18:40:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743619170; cv=none; b=F9N9PK+5couPmS79zA0JZdlJ2r3pgBtRHs5hXLQcObVMv0xzWAy1UXv112AnlvAfkXFgfNAAf0Bwb6Xaa3JuEa5ZHd85lJjKjAXcXBhgYaKjx2Y2ZuOHKRuFZeiS+dkGgGZt+D+WepFF05IwGsLnfoaUgGfnd2Ehy+lBHnvkv4g=
+	t=1743619208; cv=none; b=g8LIqb7oXz8TC9wAQSbympbC5rAT94Tole+1w4uZ4jzUPMmOQ80Js/owq4GMMXOc8bVbRM5MuS45xRO13k83AkELmLtjy/spXTjy1X7cC/lOVK0xg74qpbGf8LPmPeVetg2KU+Y2ctM80Wh5lQVDX1l0bfbaxH0ZIx3UxGqYulY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743619170; c=relaxed/simple;
-	bh=A3khaq21uI6D+hNfec4Redi3mG1fNskqHWFV9FCWlUc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ijtyj1ECnFlDHt36GzDR4TDN6A8dT7IBS31VAS7oESdr8eRonFqb2nmMLCY/ZF05JYASU6lA9ldIOO+fBCVzZrYUk+34dKXFYRJ+6d9Q4q24zPXbeA/AEEgsB0yNveyNZKcqRP+PTcLxWncgvHH95NYaw5v4rjW6cAfTn6tMfTk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=ESY+6x7s; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1743619208; c=relaxed/simple;
+	bh=qtWBCuy2bEC7WNdaJLPfgj9TXSRipxsath+GwLA8wwY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=R8ckvpi263fczE+nJceTISu1mbei3pWX102SlmjRvyfVzNrj9dnZ/cYTh3HglqyWF5zKF7MZxODwzmWtbxC9TRmCnrA/xtHnxR4IGO8tnieKjMN+NOgxLAr244N183nbgZZjdz/ZXkQSEkM0H4HgNdJHnIWoPsV9MrdcdOWgvQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=f6xsb/9a; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="ESY+6x7s"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 532D9r8Z023751
-	for <linux-kernel@vger.kernel.org>; Wed, 2 Apr 2025 18:39:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	rLRltPAW2VT+osyndq8xbNTAaaTzvicU6XEHnaTvyEQ=; b=ESY+6x7scCrYx+nG
-	BrnUXYp5lICXjecsq2AXoO/uQpGAP95loBcQcLxRTeLSEwb2eidswYei2oMEoyc5
-	aoP4uSPj80Df2j0dk3523XVXObrAM93Z6SXWy620jysZlLFSd3FZCd2+qQxXf/D3
-	DWkGujXDcuc6+i9wt2WXm21X2NHrL+l12ECJqSNiOp/rWmtXLCZOyldDsOX/QxVc
-	wk8NJbM0ZOGS9IfoSh+8pnnA42eLn42rAhN0A+fpDwgAsQtThrrGbucwVb6nSKZl
-	/8NGadeGi4anVSQRK9IB5TkEoOEncnCdTqZufa2lHJ6sfkJfH6mhJ+nSkQHypFm8
-	42xKiA==
-Received: from mail-oi1-f200.google.com (mail-oi1-f200.google.com [209.85.167.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45rxaptbkf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 18:39:27 +0000 (GMT)
-Received: by mail-oi1-f200.google.com with SMTP id 5614622812f47-3f85d071f94so133310b6e.1
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 11:39:27 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="f6xsb/9a"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3912fdddf8fso758384f8f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 11:40:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=citrix.com; s=google; t=1743619202; x=1744224002; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=CN0Ank11k5Ff8vlzb1zmQOxlnXsF9/tLRiVAYjU0m2o=;
+        b=f6xsb/9ammH+guYKepCy0LwGLPyclHuOvAwTs59dUlhIaJSb9bUjPA+t4GufyofQsq
+         Y7ifQIErSUQkkquYhco8pJFXtuEZV0eRiOxt8r3eIN7U/fxJpCyPM2GXqFqTaCZwCbaR
+         vVl0xvLhcpW0cqeJ8uceAghXPYML7fK9INXdQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743619166; x=1744223966;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rLRltPAW2VT+osyndq8xbNTAaaTzvicU6XEHnaTvyEQ=;
-        b=hyd7m2rMUXw2TYXQEqjqFJcaci8AJEPXgDwroJgrjNxN5/UkR/tuctD8VjmxYv+yw1
-         dMdjcX13pzxaIZmYHZthvOuolQrJe3dUugRour58zP0VdbsMd9JlJMShiO1E3CtSqeqO
-         pgn3xt9a9EcqgGHlM6m2ndUB7m1Vy+1whJgw//IGftw5eoFt4q9CWv738WxkJh5HXf0F
-         lIuugTBd7Efv2sM627bpcY1xXAv9lfLYMRm0z8/UIxvavPgLDypi+5EhCujwEk+snhiz
-         s3pOlWFcT8bat/Mea2P3QF+1pZGP61jrJTz2KeMpF7CfbuM1iqZcvDyE3uvZOEiFgmYu
-         uMIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXnKff6RtuiE3RLiF2ve77ehsixl29tC812du+/gw1BQ5J68gKGl7Op2zNmhwgaPBOlUY74tIKazD+9SA4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxSKsugzHziZ8nqKkKeRhsU1pZN0SKUY7Ysd49cAS0GpUzD9ne9
-	/gkk3mU2/Rw7xbPcs2r0TaClRm0JWRVWikAfajix1cVHGtzvD2xMSHR1zxnhMjs3be6IWrCVVFi
-	GXCg0puBjyM1HcwF3/GT1JHzgUQjRh/0a7Ywwc4lA/VT5hhJECE2BpKdyiwTgRbwoHsX0XW9YYr
-	DVAi+joo+WtrLaRB4R9RX/3UpukeT5y0xr2Qa0yg==
-X-Gm-Gg: ASbGncv+qDRQHxlZdwOXxqdzXNwPEaNm5ZmoLoRLxoz8VFm393nr+4tsbC23IAWePpT
-	qV8u0GIBlUorN/n4B+5IDcRU2t93q5YZdwsQQio9JroiBtDgAzYqTGPBfvOV5sn9sWNXLJgo4hw
-	==
-X-Received: by 2002:a05:6808:6c82:b0:3fb:2e8f:4de5 with SMTP id 5614622812f47-3ff0f52ef55mr12164482b6e.17.1743619166142;
-        Wed, 02 Apr 2025 11:39:26 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEa8ubrSd45uaaFhCFxG8RPmNf74FF0t82olgtZy7cR4JA2o8Zjllf8U6MoEnTSrTKOqq9YmFW/PnuOLXRUna8=
-X-Received: by 2002:a05:6808:6c82:b0:3fb:2e8f:4de5 with SMTP id
- 5614622812f47-3ff0f52ef55mr12164445b6e.17.1743619165788; Wed, 02 Apr 2025
- 11:39:25 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743619202; x=1744224002;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CN0Ank11k5Ff8vlzb1zmQOxlnXsF9/tLRiVAYjU0m2o=;
+        b=QNMAiOrjcDKj111PlQ6mMKfpNvZlqJiQca35PBo0a1xzaPhWcbpHf7Za0viCslrsJk
+         ELKxYgBbHWRKJqRwpxTgI/Kd/uTjYMznVpP5bXRUG0ThE6Ot6+p3kmQpDJbD3x5GYGrn
+         zByy2X5rBV0ZGxweMsrnF8fSGsE70ATZ3OA865Z4ZCafJs6P0RvJj0FYNqsp5qXAE3oX
+         R3e3fkVmS7nXs+d7rxxgBqUAaREQGrGLPrVgVEkCVeSKDRLR2l7oPJYrFe1GJds4W5Xh
+         Mz43OYqf/DxBTqcEIS4yS8w5aLPC3tYSFfLJ49NmOC9IvjoLwQjja+49kWxo5ajndx5P
+         aHiQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU1Hn4bkN0Jn+v1zxIDeKheH6tUxeOBH2k/K5jX+394j7gbXEcDjCjz1n9C5CiyRe/UlIlycyVzRVphIjs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw68WZAgeiJi6Cp7NohheS8ygN5VM7p1kiUsr51KLv+ayPYhz5C
+	7/x/26OO1bUzzeG9twgiKiRBdoUUbsW6Ehm5sARD05wJdADxsGoJnsSoSRPZzz0=
+X-Gm-Gg: ASbGncuTga66e1/xZK79mBElXN/eREE0yctdzx97O164itPFsEUF8yoQCfMj6jJ2d75
+	uDIEsnhwF1yurjP3W2zTsbwTMWrD3PgmBxVb2xntDSZfaUt0w6usCYNCETeLJotTe8T5juHay1d
+	hUwXaP75CuycdwtBmCSXP/J8n3Znxfl+Dj9ApMo3AD5JOvwVUhRC3Ev/pa+KXdT6tR2I3zFWJdf
+	FZAFDYcmksXimPXBOOIXGG9zGirr/xquk5NVaxwdP3dHu0R0WRoeD0szbbze+7YjxvazNP2rGjU
+	dAuABqBYv4RKu2XBd7xOSx+7CA7Nx8cZd/vVDM79EqPED4jT4ugaqvYApzYjCCIwKqHQDBFady6
+	mxXgmg5tC1A==
+X-Google-Smtp-Source: AGHT+IEK2h/pWYEShjWJcu3coYpjWKibIiuvxxbNpc4sukgHKbWI7uvVA9AmRXWQoL9zOMHkWI4dWA==
+X-Received: by 2002:a05:6000:22c5:b0:39c:2c0b:8db4 with SMTP id ffacd0b85a97d-39c2e610ac9mr601605f8f.10.1743619202352;
+        Wed, 02 Apr 2025 11:40:02 -0700 (PDT)
+Received: from [192.168.1.183] (host-92-26-98-202.as13285.net. [92.26.98.202])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b663617sm17849456f8f.34.2025.04.02.11.40.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Apr 2025 11:40:01 -0700 (PDT)
+Message-ID: <e0021746-d43c-4c45-83b6-bcf3982b2548@citrix.com>
+Date: Wed, 2 Apr 2025 19:40:01 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250303-arm-psci-system_reset2-vendor-reboots-v9-0-b2cf4a20feda@oss.qualcomm.com>
- <20250303-arm-psci-system_reset2-vendor-reboots-v9-2-b2cf4a20feda@oss.qualcomm.com>
- <Z9QQw6BcE7IXzu+r@lpieralisi> <Z+K3uNjTNbq3pUis@hu-mojha-hyd.qualcomm.com>
-In-Reply-To: <Z+K3uNjTNbq3pUis@hu-mojha-hyd.qualcomm.com>
-From: Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>
-Date: Thu, 3 Apr 2025 00:09:14 +0530
-X-Gm-Features: AQ5f1JoIGcawwwxAneye4VDKyUquub00SsUJlDPk9-P3wh_983NTysTlWsL0c0s
-Message-ID: <CAN3W6UUgacP0JZc7yGJ2Q3HYGFZ3mMHh0okyHTMiuxDSwmABHA@mail.gmail.com>
-Subject: Re: [PATCH v9 2/5] firmware: psci: Read and use vendor reset types
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc: Bjorn Andersson <andersson@kernel.org>, Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>, Andy Yan <andy.yan@rock-chips.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, cros-qcom-dts-watchers@chromium.org,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Satya Durga Srinivasu Prabhala <quic_satyap@quicinc.com>,
-        Melody Olvera <quic_molvera@quicinc.com>,
-        Shivendra Pratap <quic_spratap@quicinc.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Florian Fainelli <florian.fainelli@broadcom.com>,
-        Stephen Boyd <swboyd@chromium.org>, linux-pm@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, Elliot Berman <elliotb317@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Authority-Analysis: v=2.4 cv=Vbj3PEp9 c=1 sm=1 tr=0 ts=67ed845f cx=c_pps a=AKZTfHrQPB8q3CcvmcIuDA==:117 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=GcyzOjIWAAAA:8 a=EUspDBNiAAAA:8 a=ZS3UFk-b-OyYpVL8qdMA:9 a=QEXdDO2ut3YA:10 a=dtxw0mqMjrQA:10
- a=pF_qn-MSjDawc0seGVz6:22 a=hQL3dl6oAZ8NdCsdz28n:22
-X-Proofpoint-ORIG-GUID: NvkKc-h3JPRMr0K76NS0ET92xhzda8NC
-X-Proofpoint-GUID: NvkKc-h3JPRMr0K76NS0ET92xhzda8NC
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-02_08,2025-04-02_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
- suspectscore=0 clxscore=1015 mlxscore=0 phishscore=0 bulkscore=0
- priorityscore=1501 spamscore=0 lowpriorityscore=0 mlxlogscore=999
- impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504020118
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH] x86: prevent gcc from emitting rep movsq/stosq for
+ inlined ops
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: mjguzik@gmail.com, linux-kernel@vger.kernel.org, mingo@redhat.com,
+ x86@kernel.org, "Peter Zijlstra (Intel)" <peterz@infradead.org>
+References: <CAGudoHEV-PFSr-xKUx5GkTf4KasJc=aNNzQbkoTnFVLisKti+A@mail.gmail.com>
+ <948fffdc-d0d8-49c4-90b6-b91f282f76c9@citrix.com>
+ <CAHk-=wg4syfXPBgQhq50ePOnB=zP9Jk1U+GmjXWmDMwcQ7X7WA@mail.gmail.com>
+Content-Language: en-GB
+From: Andrew Cooper <andrew.cooper3@citrix.com>
+Autocrypt: addr=andrew.cooper3@citrix.com; keydata=
+ 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
+ 6+ahAA==
+In-Reply-To: <CAHk-=wg4syfXPBgQhq50ePOnB=zP9Jk1U+GmjXWmDMwcQ7X7WA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Mar 25, 2025 at 7:33=E2=80=AFPM Mukesh Ojha
-<mukesh.ojha@oss.qualcomm.com> wrote:
+On 02/04/2025 7:29 pm, Linus Torvalds wrote:
+> On Wed, 2 Apr 2025 at 11:17, Andrew Cooper <andrew.cooper3@citrix.com> wrote:
+>> Taking a leaf out of the repoline book, the ideal library call(s) would be:
+>>
+>>     CALL __x86_thunk_rep_{mov,stos}sb
+>>
+>> using the REP ABI (parameters in %rcx/%rdi/etc), rather than the SYSV ABI.
+> Yes. That's basically what 'rep_movs_alternative' does so that we can
+> basically do a
 >
-> On Fri, Mar 14, 2025 at 12:19:31PM +0100, Lorenzo Pieralisi wrote:
-> > On Mon, Mar 03, 2025 at 01:08:31PM -0800, Elliot Berman wrote:
-> > > From: Elliot Berman <elliot.berman@oss.qualcomm.com>
-> > >
-> > > SoC vendors have different types of resets and are controlled through
-> > > various registers. For instance, Qualcomm chipsets can reboot to a
-> > > "download mode" that allows a RAM dump to be collected. Another examp=
-le
-> > > is they also support writing a cookie that can be read by bootloader
-> > > during next boot. PSCI offers a mechanism, SYSTEM_RESET2, for these
-> > > vendor reset types to be implemented without requiring drivers for ev=
-ery
-> > > register/cookie.
-> > >
-> > > Add support in PSCI to statically map reboot mode commands from
-> > > userspace to a vendor reset and cookie value using the device tree.
-> >
-> > I have managed to discuss a little bit this patchset over the last
-> > few days and I think we have defined a plan going forward.
-> >
-> > A point that was raised is:
-> >
-> > https://man7.org/linux/man-pages/man2/reboot.2.html
-> >
-> > LINUX_REBOOT_CMD_RESTART2 *arg command, what is it supposed to
-> > represent ?
-> >
-> > Is it the mode the system should reboot into OR it is the
-> > actual command to be issued (which is what this patchset
-> > implements) ?
-> >
-> > LINUX_REBOOT_CMD_RESTART "..a default restart..."
-> >
-> > It is unclear what "default" means. We wonder whether the
-> > reboot_mode variable was introduced to _define_ that "default".
-> >
-> > So, in short, my aim is trying to decouple reboot_mode from the
-> > LINUX_REBOOT_CMD_RESTART2 *arg command.
-> >
-> > I believe that adding a sysfs interface to reboot-mode driver
-> > infrastructure would be useful, so that the commands would
-> > be exposed to userspace and userspace can set the *arg command
-> > specifically to issue a given reset/mode.
-> >
-> > I wonder why this is not already in place for eg syscon-reboot-mode
-> > resets, how does user space issue a command in those systems if the
-> > available commands aren't exposed to userspace ?
-> >
-> > Is there a kernel entity exposing those "modes" to userspace, somehow ?
-> >
-> > > A separate initcall is needed to parse the devicetree, instead of usi=
-ng
-> > > psci_dt_init because mm isn't sufficiently set up to allocate memory.
-> > >
-> > > Reboot mode framework is close but doesn't quite fit with the
-> > > design and requirements for PSCI SYSTEM_RESET2. Some of these issues =
-can
-> > > be solved but doesn't seem reasonable in sum:
-> > >  1. reboot mode registers against the reboot_notifier_list, which is =
-too
-> > >     early to call SYSTEM_RESET2. PSCI would need to remember the rese=
-t
-> > >     type from the reboot-mode framework callback and use it
-> > >     psci_sys_reset.
-> > >  2. reboot mode assumes only one cookie/parameter is described in the
-> > >     device tree. SYSTEM_RESET2 uses 2: one for the type and one for
-> > >     cookie.
-> >
-> > This can be changed and I think it should, so that the reboot modes
-> > are exposed to user space and PSCI can use that.
-> >
-> In the case of a regular reboot or panic, the reboot/panic notifiers run
-> first, followed by the restart notifiers. The PSCI reset/reset2 should
-> be the last call from Linux, and ideally, this call should not fail.
+>                 ALTERNATIVE("rep movsb",
+>                             "call rep_movs_alternative",
+> ALT_NOT(X86_FEATURE_FSRM))
 >
-> Reboot mode notifiers =3D> restart notifiers or Panic notifiers =3D> rest=
-art
-> notifiers
+> but we only do this for user space copies exactly because we don't
+> have a good way to do it for compiler-generated ones.
 >
-> So, if I understand correctly, you mean that we can change the reboot
-> mode framework to expose the arguments available to user space. We can
-> extend it to accept magic and cookies, save them in the reboot
-> framework, and retrieve them via a call from PSCI during a regular
-> reboot or panic based on the current arguments. Is this leading towards
-> writing an ARM-specific PSCI-reboot-mode driver, which in its reboot
-> notifier callback saves the magic and cookies, and these magic and
-> cookies will be used during psci_sys_reset2()? Or is there something
-> wrong with my understanding?
+> If gcc just did an out-of-line call, but used the 'rep movs' "calling
+> convention", we would be able to basically do the rewriting
+> dynamically, replacing the call with an inlined "rep movsb" where
+> appropriate.
 
-In case this mail got lost in your inbox, I wanted to float this up
-again as this is a very important ARM feature and
-its future course of action depends on the common understanding.
+You still want the compiler to be able to do a first-pass optimisation
+over __builtin_mem*(), for elimination/merging/etc, but if it could stop
+half way through what it currently does and just emit the library call,
+that would be excellent.
 
--Mukesh
+~Andrew
