@@ -1,133 +1,137 @@
-Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-fw-52004.amazon.com (smtp-fw-52004.amazon.com [52.119.213.154])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40F3A1F03CE
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 20:49:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 819C7193436;
+	Wed,  2 Apr 2025 20:50:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743626948; cv=none; b=JXJ94Ef++6WDkEM01zshOJoR0Am5qayN1RbDSZIMkIqUYqY3Z6RQMZkcGTOOIw9RKFpo9FRI6FNFnxn11Y+GAg5SxAyUqAS1Ev7/C1aUX+2gmKSidz7fWdmt2EL6Fc6jY5LQhfcsTYpIQSjpKaNY8Drjy6BdfEGGsRFELtgUmJE=
+	t=1743627057; cv=none; b=pljA/rsdEnBi4ctiDT7uNAcnsjBW03mVWZRY1kxZqD57Z2RfNTkK1pJBu4osw4Ji1ofkxz2xUkMUd3uERcxHBQIIYJ+CTLO64bCRNdzCKgp/FEWfi9wx+Vrwkh7mqjCUgMqfzEW//F/Twr3KceMxblRvzydVd8E1H/7tu33QO4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743626948; c=relaxed/simple;
-	bh=H0i2KMBMFcDec5UVW9Y/Y/PbNB6zqGI1enytd6buQDE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=l9eupsVu9szAhFhl7MoX6DtMa3l6RObDlmQLcL+jAbJTt2ZNTpnwVUOe8WPO+PS0gLT5p+gLBB6IsM6BJBez36PdJV+ObwtKV0zA68LQlsX6RRKRPQ50ql0c0uhJXAD0gvy0u+FWuDZtq33HEiqsYz0W5og/2yOo2/6u+e124oM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=kDJBJbiY; arc=none smtp.client-ip=209.85.210.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1743627057; c=relaxed/simple;
+	bh=0djtFdo5h3fDieUNKNXazTKddt+w5retjfkch5CCArs=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=je8v2Hj5DWTxkJdlNR4ztHA8nvsxZ806jQeyE0CiYSJKUgbEyV0e9R/W5nQGZ/ozR693eVIwrkY01E8Rm0CzXo0CalQwaRDXRwDA02MAIWjgjcLs7DM8zrXAwFmGADbA3RNbl9Y3/sb4G1g2F1NCBSGNsyN13zi9G81oD+eIT0w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=AynC7A59; arc=none smtp.client-ip=52.119.213.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="kDJBJbiY"
-Received: by mail-ot1-f47.google.com with SMTP id 46e09a7af769-72c1818c394so165803a34.2
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 13:49:05 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="AynC7A59"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1743626945; x=1744231745; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=PneA/KGio5qHN0s6LVOkmY0X5eDLJLZ6gsMfj989kss=;
-        b=kDJBJbiYfteFc81juiYoMVAJDG5SJd6MpyoqKKF+RRVHg9erbwvDIg5R+bQwjKOL3U
-         gkhMj+KOAPp1ZJBNJhjbl3aSdvZB4xIIShUEkY8qoyevxsxhxgIQIzeD1Y3G3eWikIJq
-         MH8ibxnDHq+ihiODi+4cZV2KGTN8p0eBsdUS+orw2+bP713fPBqfqGKht/1b7aYg9KER
-         EdgMYGuLanXJTDMi53p8ENCExOQ18fGOTH7+MBuiuKihQH9N0np3gpU1rXfvxoU8xpWg
-         X9/bEOBjCadeT2M7K6NezmKamu+d9zdd6ryN5SxUZDA8KbRf8TcyKdWXwzxaFnNvlkvB
-         NPEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743626945; x=1744231745;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PneA/KGio5qHN0s6LVOkmY0X5eDLJLZ6gsMfj989kss=;
-        b=I/C61P+Tqd0JDq+/LpV9b4YnfwBEcgeWwW5A/7Zhzyqcm0Led/rnC1MTzEsGA+YkFb
-         LdDACNUN+QMrlQjz0Rqv5Gln9YxhB8aka7sGYrxoQR4kJ42pQhZkAqhya3V+MFLIZWmT
-         /pFtvOs6jPoqJh+2IweJtYGUhWY308Z+LxJDuFxtA2pI/V1Mgm20S/3ovoNZefLhID5J
-         KSTRUMMsd9GlNnc8YqAOCzIQ8cbhkj0hW4w3ox/x2F/HiknH3TZzNti86sMI6ukTL6u4
-         iG6OwM8vxN1avvdGK9jIPKczItSRDpgv42mRxg9kX9WGgBAbNbjDScjcv19v73EOrONY
-         tGiA==
-X-Forwarded-Encrypted: i=1; AJvYcCVXMUoo9kTQQXH+kA8uUxMSz520ifLzH87tMykxvL6FwkZZmLzlpAA5tOFw8cpMg+Pthf2Pza3yIDkKORI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/HZB6lwDsTLtvhpsevuPNbUCVTi/PgTLBPD/LMfqHIBeUZAQn
-	KV76fB8ISI0O2mzAVCa0Rew7lBxebfM/xZ+QaTS9bIqPPrLgm8nvP9cdSTV7rmU=
-X-Gm-Gg: ASbGncvMXSSVqRkUG90s0KnqkrXPnH6us/qNwViZUVXKu2zFavFobacrX2Goms1I4+K
-	IMISGan0lFNJjfXyiAjo41ftZnZUVGLFDH3U3n7K4K2163YRygfh2QsPmN/1E9JhoV+xNPOBtcR
-	ecCucYZCaPvWB1aG719IDXomAI8xN0Evjugi/Q3p5Sfx1uRK7yGYQZhU3uKSvcKpCu94hcolTCX
-	3yExLifDUhLy0bj3Fdu/9ViuJEhSgt8l0TdY7yv9V7Ex8PCluAwnd993CSxqm0dcvow30o8geIo
-	DzZWZ6CPy9ayOPK3Qh6jXrxDAnPsDKyqVRlXoLTzL4Yj0V7vim6sU6Nm3lbxfWpZj1HPSnpW6d2
-	RYxeQKw==
-X-Google-Smtp-Source: AGHT+IFWoCgfUq1vdjqIVUCLEyrdA1VjfKcnGwC3l4aghGm2e9OquWNUwBhki4cUzlNFqajANw0wEg==
-X-Received: by 2002:a05:6830:6887:b0:72b:a465:d93c with SMTP id 46e09a7af769-72e258ac106mr2530485a34.20.1743626945226;
-        Wed, 02 Apr 2025 13:49:05 -0700 (PDT)
-Received: from [192.168.0.113] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-72c580d30e0sm2390283a34.37.2025.04.02.13.49.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Apr 2025 13:49:03 -0700 (PDT)
-Message-ID: <c42b1dc3-34d9-4419-ae2e-5bacffa070b6@baylibre.com>
-Date: Wed, 2 Apr 2025 15:49:01 -0500
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1743627056; x=1775163056;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=PZgBsjQbBUgfbfilglLiHgWwr6bb2rCEcoxzjvzGR6M=;
+  b=AynC7A59OJeewNtH7GpGr6OMCNGJl5Dk5Q8OUgl65rLu+qBqiFBQ1Li0
+   w9gS4nulRNMxFTx9VvR52st/HmcfrXCh1q3UC41iQrGghISVbv2J86H4y
+   yYtyYIo66IsY75br+jH9XvzHPBt8msYQMwZE9Qfpg0JItA07rwXtwjsFq
+   M=;
+X-IronPort-AV: E=Sophos;i="6.15,183,1739836800"; 
+   d="scan'208";a="285094299"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.2])
+  by smtp-border-fw-52004.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 20:50:52 +0000
+Received: from EX19MTAUWC001.ant.amazon.com [10.0.7.35:63875]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.57.231:2525] with esmtp (Farcaster)
+ id 58bbd771-3e95-48f9-9ba9-001f711cdfcd; Wed, 2 Apr 2025 20:50:51 +0000 (UTC)
+X-Farcaster-Flow-ID: 58bbd771-3e95-48f9-9ba9-001f711cdfcd
+Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
+ EX19MTAUWC001.ant.amazon.com (10.250.64.174) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Wed, 2 Apr 2025 20:50:51 +0000
+Received: from 6c7e67bfbae3.amazon.com (10.106.101.8) by
+ EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Wed, 2 Apr 2025 20:50:48 +0000
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+To: <gregkh@linuxfoundation.org>
+CC: <cve@kernel.org>, <edumazet@google.com>, <ematsumiya@suse.de>,
+	<kuniyu@amazon.com>, <linux-fsdevel@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-net@vger.kernel.org>,
+	<sfrench@samba.org>, <smfrench@gmail.com>, <wangzhaolong1@huawei.com>,
+	<zhangchangzhong@huawei.com>
+Subject: Re: Fwd: [PATCH][SMB3 client] fix TCP timers deadlock after rmmod
+Date: Wed, 2 Apr 2025 13:50:05 -0700
+Message-ID: <20250402205039.9933-1-kuniyu@amazon.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <2025040256-spindle-cornea-60ec@gregkh>
+References: <2025040256-spindle-cornea-60ec@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC v2 7/7] iio: ti-adc128s052: Drop variable vref
-To: Matti Vaittinen <mazziesaccount@gmail.com>,
- Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen
- <lars@metafoo.de>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Nuno Sa <nuno.sa@analog.com>,
- Javier Carrasco <javier.carrasco.cruz@gmail.com>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <cover.1743573284.git.mazziesaccount@gmail.com>
- <dda9e0710a9293a9f52e64c092f79afd4b719536.1743573284.git.mazziesaccount@gmail.com>
-Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <dda9e0710a9293a9f52e64c092f79afd4b719536.1743573284.git.mazziesaccount@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D035UWA004.ant.amazon.com (10.13.139.109) To
+ EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
-On 4/2/25 1:10 AM, Matti Vaittinen wrote:
-> According to Jonathan, variable reference voltages are very rare. It is
-> unlikely it is needed, and supporting it makes the code a bit more
-> complex.
-
-There is also around 60 other drivers where we could do something like this
-in case anyone is bored. :-p
-
+From: Greg KH <gregkh@linuxfoundation.org>
+Date: Wed, 2 Apr 2025 21:28:51 +0100
+> On Wed, Apr 02, 2025 at 01:22:11PM -0700, Kuniyuki Iwashima wrote:
+> > From: Greg KH <gregkh@linuxfoundation.org>
+> > Date: Wed, 2 Apr 2025 21:15:58 +0100
+> > > On Wed, Apr 02, 2025 at 01:09:19PM -0700, Kuniyuki Iwashima wrote:
+> > > > From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > > Date: Wed, 2 Apr 2025 16:18:37 +0100
+> > > > > On Wed, Apr 02, 2025 at 05:15:44PM +0800, Wang Zhaolong wrote:
+> > > > > > > On Wed, Apr 02, 2025 at 12:49:50PM +0800, Wang Zhaolong wrote:
+> > > > > > > > Yes, it seems the previous description might not have been entirely clear.
+> > > > > > > > I need to clearly point out that this patch, intended as the fix for CVE-2024-54680,
+> > > > > > > > does not actually address any real issues. It also fails to resolve the null pointer
+> > > > > > > > dereference problem within lockdep. On top of that, it has caused a series of
+> > > > > > > > subsequent leakage issues.
+> > > > > > > 
+> > > > > > > If this cve does not actually fix anything, then we can easily reject
+> > > > > > > it, please just let us know if that needs to happen here.
+> > > > > > > 
+> > > > > > > thanks,
+> > > > > > > 
+> > > > > > > greg k-h
+> > > > > > Hi Greg,
+> > > > > > 
+> > > > > > Yes, I can confirm that the patch for CVE-2024-54680 (commit e9f2517a3e18)
+> > > > > > should be rejected. Our analysis shows:
+> > > > > > 
+> > > > > > 1. It fails to address the actual null pointer dereference in lockdep
+> > > > > > 
+> > > > > > 2. It introduces multiple serious issues:
+> > > > > >    1. A socket leak vulnerability as documented in bugzilla #219972
+> > > > > >    2. Network namespace refcount imbalance issues as described in
+> > > > > >      bugzilla #219792 (which required the follow-up mainline fix
+> > > > > >      4e7f1644f2ac "smb: client: Fix netns refcount imbalance
+> > > > > >      causing leaks and use-after-free")
+> > > > > > 
+> > > > > > The next thing we should probably do is:
+> > > > > >    - Reverting e9f2517a3e18
+> > > > > >    - Reverting the follow-up fix 4e7f1644f2ac, as it's trying to fix
+> > > > > >      problems introduced by the problematic CVE patch
+> > > > > 
+> > > > > Great, can you please send patches now for both of these so we can
+> > > > > backport them to the stable kernels properly?
+> > > > 
+> > > > Sent to CIFS tree:
+> > > > https://lore.kernel.org/linux-cifs/20250402200319.2834-1-kuniyu@amazon.com/
+> > > 
+> > > You forgot to add a Cc: stable@ on the patches to ensure that they get
+> > > picked up properly for all stable trees :(
+> > 
+> > Ah sorry, I did the same with netdev.  netdev patches usually do
+> > not have the tag but are backported fine, maybe netdev local rule ?
 > 
-> Simplify the driver and drop the variable vref support.
-> 
-> Suggested-by: Jonathan Cameron <jic23@kernel.org>
-> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
-> ---
-> Revision History:
->  v2:
->   - New patch
-> ---
->  drivers/iio/adc/ti-adc128s052.c | 29 ++++++-----------------------
->  1 file changed, 6 insertions(+), 23 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/ti-adc128s052.c b/drivers/iio/adc/ti-adc128s052.c
-> index 0f93c6266527..0bfe4e558c69 100644
-> --- a/drivers/iio/adc/ti-adc128s052.c
-> +++ b/drivers/iio/adc/ti-adc128s052.c
-> @@ -29,13 +29,12 @@ struct adc128_configuration {
->  struct adc128 {
->  	struct spi_device *spi;
->  
-> -	struct regulator *reg;
->  	/*
->  	 * Serialize the SPI 'write-channel + read data' accesses and protect
->  	 * the shared buffer.
->  	 */
->  	struct mutex lock;
-> -
-> +	int vref;
+> Nope, that's the "old" way of dealing with netdev patches, the
+> documentation was changed years ago, please always put a cc: stable on
+> it.  Otherwise you are just at the whim of our "hey, I'm board, let's
+> look for Fixes: only tags!" script to catch them, which will also never
+> notify you of failures.
 
-Units in the name are helpful: vref_uv.
+Good to know that, thanks!
 
-Could also consider doing division in probe and storing vref_mv instead
-since we never use the microvolts part.
+My concern was that I could spam the list if I respin the patches,
+and incomplete patch could be backported.
 
->  	union {
->  		__be16 rx_buffer;
->  		u8 tx_buffer[2];
+From stable-kernel-rules.rst, such an accident can be prevented if
+someone points out a problem within 48 hours ?
 
+For example, if v1 is posted with Cc:stable, and a week later
+v2 is posted, then the not-yet-upstreamed v1 could be backported ?
