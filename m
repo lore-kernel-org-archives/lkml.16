@@ -1,159 +1,83 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD303236A98
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 12:36:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8664D2356DB;
+	Wed,  2 Apr 2025 12:37:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743597390; cv=none; b=gFLA9ZV2E9sqKj+K1UWm+JpsE9fXgBCsNYbzE+EfoS1MKs6cwlRMKf6tiB3lPbqKwOYBn1j/IvAiTHF15NfB1kLB4eJeoBt+EIHcjAboXTgAtRG2z27vdxu6u/fLhFDWIT0bWFzYHfuiNQ7m0EaFSJim7Bx1T2jsBjV9M5m/p0k=
+	t=1743597450; cv=none; b=Bfc+CzG9cS3mNxYU5B/4X0f9N/mI6JRoVNvFtMCdbjvtJ+TV6Sroe5PWEhOzZcSeJB2ctelD1an1uQHkhIK6voZ8r3ceKpC8I44aKuppIcnhxacOlMa5kcROL6brymi1sWRk/IG7/D8BLGenQQG7hCgBqNqig8EKX5xoesEwAt8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743597390; c=relaxed/simple;
-	bh=wLXCvrQkypVg4hlEhY6JXt6xgl1mkrVJGg1FXS9VB3U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Lo+lGqoM2B7CulDh74JWremPWzOdumv/cvECX4BzrWX21iv/m6zXQied+m1o4/VCElerqLkW1HtE2xYZw5oMY5nk6KcSMZiNWttiXotQYwxBupYvhdNMI2peMMAsqQ/AeCh5wzh9LZFmW2UyR+mczFsSM/sITzjYcEiL2OJIYjs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=fXPF+hrW; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=vQdOo3Fh; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=fXPF+hrW; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=vQdOo3Fh; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1743597450; c=relaxed/simple;
+	bh=XKQaPTbRKvCbo3F0ZS3qDmjQ39ONiGZQ/d2wF9XPviU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fe0wlx0SV5l6J0SVTuAYOryynjWHUZEfFcs/G4pBgUJ38lmi/e9e5+Lzgh56NWQeDpcsxVGqhN+dLek1YuxmMuVc9/f+34PAWAg4zQGf7rHsiqq79Pe10uYMWu+hdJBt95o0hCggGFrX8lzpMVdCbzdSbtRhl21HRKTDYixbpGk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o8i7JTn7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="fXPF+hrW";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="vQdOo3Fh";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="fXPF+hrW";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="vQdOo3Fh"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id BD8561F461;
-	Wed,  2 Apr 2025 12:36:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1743597386; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OIq2yKV0kL+PNrsufhF/VS7j84XZ7TdP3HdOB/g4idM=;
-	b=fXPF+hrW9OESPG2JyNmFiJbWfZw+aOLT2am3EsXDEEaawlck8775kXMFtH5spghsHMtUcX
-	VscVu7TO3WxbGcWVnIsoPCJSY1e1WH3u5dN21madec0+Ca0cTDA90HvBCB0+Z7x25FU3Lo
-	30xD+e0cl4e5ygj3jNeB1ccwj/BZJbg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1743597386;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OIq2yKV0kL+PNrsufhF/VS7j84XZ7TdP3HdOB/g4idM=;
-	b=vQdOo3FhPZcMU3Ga27uied2qPElJlsEC94vV77CszZY2lWe+IWZ6FmtskR9LkIDLS/caXd
-	Q3C9ciRZxeK1NsAw==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1743597386; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OIq2yKV0kL+PNrsufhF/VS7j84XZ7TdP3HdOB/g4idM=;
-	b=fXPF+hrW9OESPG2JyNmFiJbWfZw+aOLT2am3EsXDEEaawlck8775kXMFtH5spghsHMtUcX
-	VscVu7TO3WxbGcWVnIsoPCJSY1e1WH3u5dN21madec0+Ca0cTDA90HvBCB0+Z7x25FU3Lo
-	30xD+e0cl4e5ygj3jNeB1ccwj/BZJbg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1743597386;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OIq2yKV0kL+PNrsufhF/VS7j84XZ7TdP3HdOB/g4idM=;
-	b=vQdOo3FhPZcMU3Ga27uied2qPElJlsEC94vV77CszZY2lWe+IWZ6FmtskR9LkIDLS/caXd
-	Q3C9ciRZxeK1NsAw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B0D52137D4;
-	Wed,  2 Apr 2025 12:36:26 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id XEknK0ov7WdpBAAAD6G6ig
-	(envelope-from <jack@suse.cz>); Wed, 02 Apr 2025 12:36:26 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 69067A07E6; Wed,  2 Apr 2025 14:36:26 +0200 (CEST)
-Date: Wed, 2 Apr 2025 14:36:26 +0200
-From: Jan Kara <jack@suse.cz>
-To: Murad Masimov <m.masimov@mt-integration.ru>
-Cc: Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>, 
-	Joseph Qi <joseph.qi@linux.alibaba.com>, Jan Kara <jack@suse.cz>, ocfs2-devel@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, lvc-project@linuxtesting.org
-Subject: Re: [PATCH 1/2] ocfs2: Fix possible memory leak in
- ocfs2_finish_quota_recovery
-Message-ID: <ategbetdbjc3vxgablimxrche2dv4ndaqq3fkrd6lu64e3ggce@m76fa6gjhdh2>
-References: <20250402065628.706359-1-m.masimov@mt-integration.ru>
- <20250402065628.706359-2-m.masimov@mt-integration.ru>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o8i7JTn7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58038C4CEDD;
+	Wed,  2 Apr 2025 12:37:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743597450;
+	bh=XKQaPTbRKvCbo3F0ZS3qDmjQ39ONiGZQ/d2wF9XPviU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=o8i7JTn7K/m8DmKe6878Wv+PFTXU9TW4y70GpjrP1voHwch+nzMuGE7Zm0SJ12ibw
+	 qLtyuWeEBSxT5QX5qiO9d0S5S3UjsIz3ZlwWWZqJdR4hyxTFByHHMgRxM6XUBI/Dnz
+	 LD+1dkhvZwAdw3nhfcpIxjwrdHp59/71EolN3x3i9cDGjV3uKeB2VU73+RQxJRt1Py
+	 9raATHyU2JSp7al0QtpKu8YUSVwLpZCCXf76wxfCRYepyMVb1PA2X3T8+DnWgbjDtQ
+	 /Gk9YSuk58cNzBBB1HyO5gJDMT3M/nGF1B+hw6eVRdR4wrfeU2J4iQeoTHup0dx+tf
+	 /OhW0YTd3E7iw==
+Message-ID: <a5a47ca2-a64a-409f-a143-637699e316c7@kernel.org>
+Date: Wed, 2 Apr 2025 15:37:25 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250402065628.706359-2-m.masimov@mt-integration.ru>
-X-Spam-Score: -3.80
-X-Spamd-Result: default: False [-3.80 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	RCVD_COUNT_THREE(0.00)[3];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_TLS_LAST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,suse.com:email]
-X-Spam-Flag: NO
-X-Spam-Level: 
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next 6/9] net: ethernet: ti: cpsw_ale: add
+ cpsw_ale_policer_set/clr_entry()
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Siddharth Vadapalli <s-vadapalli@ti.com>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Paolo Abeni <pabeni@redhat.com>, Russell King <linux@armlinux.org.uk>,
+ danishanwar@ti.com, srk@ti.com, linux-omap@vger.kernel.org,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250319-am65-cpsw-rx-class-v1-0-2bfded07490e@kernel.org>
+ <20250319-am65-cpsw-rx-class-v1-6-2bfded07490e@kernel.org>
+ <20250325072141.026b643d@kernel.org>
+Content-Language: en-US
+From: Roger Quadros <rogerq@kernel.org>
+In-Reply-To: <20250325072141.026b643d@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed 02-04-25 09:56:27, Murad Masimov wrote:
-> If ocfs2_finish_quota_recovery() exits due to an error before passing all
-> rc_list elements to ocfs2_recover_local_quota_file() then it can lead to
-> a memory leak as rc_list may still contain elements that have to be freed.
-> 
-> Release all memory allocated by ocfs2_add_recovery_chunk() using
-> ocfs2_free_quota_recovery() instead of kfree().
-> 
-> Found by Linux Verification Center (linuxtesting.org) with Syzkaller.
-> 
-> Fixes: 2205363dce74 ("ocfs2: Implement quota recovery")
-> Signed-off-by: Murad Masimov <m.masimov@mt-integration.ru>
 
-Looks good. Thanks for debugging this! Feel free to add:
 
-Reviewed-by: Jan Kara <jack@suse.cz>
+On 25/03/2025 16:21, Jakub Kicinski wrote:
+> On Wed, 19 Mar 2025 15:38:32 +0200 Roger Quadros wrote:
+>> +/* FIXME: VLAN ID based flow routing not yet working, Only PCP matching for now
+>> + *		u32 port_mask, unreg_mcast = 0;
+>> + *
+>> + *		port_mask = BIT(cfg->port_id) | ALE_PORT_HOST;
+>> + *		if (!cfg->vid)
+>> + *			unreg_mcast = port_mask;
+>> + *		ale_idx = cpsw_ale_vlan_add_modify(ale, cfg->vid, port_mask,
+>> + *				unreg_mcast, port_mask, 0);
+>> + *		if (ale_idx < 0)
+>> + *			return -ENOENT;
+>> + *
+>> + *		regmap_field_write(ale->fields[POL_OVLAN_INDEX], ale_idx);
+>> + *		regmap_field_write(ale->fields[POL_OVLAN_MEN], 1);
+>> + */
+> 
+> This commented out code is odd.
+> Shouldn't you check if the user asked for ID match and return an error?
 
-								Honza
+I think I'll drop the comment.
 
-> ---
->  fs/ocfs2/quota_local.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/ocfs2/quota_local.c b/fs/ocfs2/quota_local.c
-> index 2956d888c131..e60383d6ecc1 100644
-> --- a/fs/ocfs2/quota_local.c
-> +++ b/fs/ocfs2/quota_local.c
-> @@ -678,7 +678,7 @@ int ocfs2_finish_quota_recovery(struct ocfs2_super *osb,
->  	}
->  out:
->  	up_read(&sb->s_umount);
-> -	kfree(rec);
-> +	ocfs2_free_quota_recovery(rec);
->  	return status;
->  }
-> 
-> --
-> 2.39.2
-> 
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+cheers,
+-roger
+
