@@ -1,142 +1,121 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78E7B1D7E57;
-	Wed,  2 Apr 2025 12:19:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF10E239094;
+	Wed,  2 Apr 2025 12:19:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743596350; cv=none; b=McQRz++SFqABj8HbtqGy+6LtIhTTDlwbN8q/QUDbGCMn+qnzpy8rsH8Eulxspq2YUmtVWw2yfEmzvcST8OcwnT6/IU8Ks71DOecaNRIyFyZ+2YXoLio0Wx3wSEAdF5cYdxfe63YEj2iQoDgP29wDGXCP8Nhg7ATU6j5iYmpXBqA=
+	t=1743596356; cv=none; b=J2xjMBDYvOX4eeA9Tf+haHeSNcBERN/Kvdqv2F0qXA8PX6gpcePoZ/W4LqnMDMfY5ud3wdPvW5LsKbyrlL/lsxzWK7eBkDqf0l+kerWMssX9rgg2owqux+YgWuIlYZ5hcSk//j+b6s94P4AhWJ/K5tiMjUjVtasKqihvjuJ6tc0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743596350; c=relaxed/simple;
-	bh=+YugTiA5uSlijtvOniAz233xfd9rjfYPP9SWxiLilz4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dFVvvevE10ce9SxMctrL+V8/S2jSu2aJLtSzROjTk5C3bJrFKJExAfsRYL1qaY3YLVkQpkR6uGY96+CP0Nq+0MHyxruXWrVHFL1LJniiE41386e0iU86v4xjcILL/XotqC3vZ6sj4NFBZM6g5XIxvOAtF8dn0Kz9y0KdOjnPGFA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4C4HdGt+; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=t1CXcxl7; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1743596356; c=relaxed/simple;
+	bh=v9o/0GsG9hlpEVMILiuT/UXu6Gay+7R0EoqjQXNBKw8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cYRkt1EL7QjRD4hwxtGNS+FAnMIfOaF505hMZUMSy/iJaBA1x+ccTPG5zqFGe/EXUnvJbQC4P3RGQDVmiNVBCx6o/MIyXRLiZ0LbnHp5SIqqxJ05lBxVPmRuvzOCMitxO6R1UWJaZZs6r/X1AlaZjLzJPudqBNP3iTsBj5yxz2Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=p3QW2AVX; arc=none smtp.client-ip=220.197.31.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4C4HdGt+";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="t1CXcxl7"
-Date: Wed, 2 Apr 2025 14:19:01 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1743596346;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QPwuNcBCkbZ5awEPfs4/za9zsV6NBdgUfdxmq9Ar2zg=;
-	b=4C4HdGt+Eda2qns01kTkRT+qPk6Wn4tZQ5k8O1Gx7H6kUOU1PXVZWAQFtMS0r4AiH92Qy2
-	T19YMwiz9JFLLSHv54Dn9RITOldT/MtOzK49CNMWAuxNeEC+2Y6jm0UKbVEosmPzAfc5jj
-	9ZmhrVVrsxgekRU0tgRzk1+hD6Ij87xwwZ7agsbOUR5Gj8FET9ayzNQGwloZQFkrw1war7
-	RXDjG/MLKkGblGXOcKEt15IW1odXI5QbD6QWTMGTgmopNAe9NZ59ehpG3ncR54fm//ECjU
-	qSSL0ofXcq5UCmBbiP/BNaPIX9ZMUzNeOBxIdcNETXuRaJGbkcuNUw631Z8kYQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1743596346;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QPwuNcBCkbZ5awEPfs4/za9zsV6NBdgUfdxmq9Ar2zg=;
-	b=t1CXcxl7E7i5zDKv6ErJjLdNnAghpNhssI165DwRwHvZe5uvKbvjZ19neMAQXjnMrzKBSO
-	g9EkcgUMbGsLe6BA==
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-To: Mike Rapoport <rppt@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "David S. Miller" <davem@davemloft.net>, 
-	Geert Uytterhoeven <geert@linux-m68k.org>, Ingo Molnar <mingo@redhat.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org, 
-	Naresh Kamboju <naresh.kamboju@linaro.org>, lkft-triage@lists.linaro.org, 
-	Linux Regressions <regressions@lists.linux.dev>
-Subject: Re: [PATCH v2 10/13] arch, mm: set high_memory in free_area_init()
-Message-ID: <20250402140521-bf9b3743-094e-4097-a189-10cdf1db9255@linutronix.de>
-References: <20250313135003.836600-1-rppt@kernel.org>
- <20250313135003.836600-11-rppt@kernel.org>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="p3QW2AVX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=1K93p+jfwwbKax5M8o/f4XaPFLFEtqliG2k63r4obes=;
+	b=p3QW2AVXL9zWuzV1dY8TkMfEAeCT3p/8khNHcr/3YBtVlrVNnqbA56Uk5aGT8c
+	L8KLxkvlKSjEWI2udr55Nf9//va0LYD8e3GKX0FDOUq7/tPwo01etlwR0S3Bc/Ch
+	ZEaFxorIdTmey363pUQpg/7N4d4YAuePZD+//XgyXQBDQ=
+Received: from [192.168.60.52] (unknown [])
+	by gzga-smtp-mtada-g1-3 (Coremail) with SMTP id _____wD3t9gUK+1nh2qGDg--.42426S2;
+	Wed, 02 Apr 2025 20:18:30 +0800 (CST)
+Message-ID: <ad119d32-0755-4ca1-9db8-28f6a8f17c43@163.com>
+Date: Wed, 2 Apr 2025 20:18:28 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250313135003.836600-11-rppt@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [v7 3/5] PCI: dwc: Use common PCI host bridge APIs for finding
+ the capabilities
+To: kernel test robot <lkp@intel.com>, lpieralisi@kernel.org,
+ bhelgaas@google.com
+Cc: oe-kbuild-all@lists.linux.dev, kw@linux.com,
+ manivannan.sadhasivam@linaro.org, ilpo.jarvinen@linux.intel.com,
+ robh@kernel.org, jingoohan1@gmail.com, thomas.richard@bootlin.com,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250402042020.48681-4-18255117159@163.com>
+ <202504021958.YeTPCsW1-lkp@intel.com>
+Content-Language: en-US
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <202504021958.YeTPCsW1-lkp@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:_____wD3t9gUK+1nh2qGDg--.42426S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxAr17tF17urW5tr1rZw13Arb_yoW5Cr4xpa
+	yUAa13ZFyrJF4Sgw48t3WF93WaqF1DAry7G3ykG3W7WFy7Zry5GryIkFyagFy7tw4qgrya
+	kryqq3Z7Ars8AaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07ULyCXUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDwQjo2ftJx1vAgAAsW
 
-(drop all the non-x86 and non-mm recipients)
 
-Hi,
 
-On Thu, Mar 13, 2025 at 03:50:00PM +0200, Mike Rapoport wrote:
-> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+On 2025/4/2 19:58, kernel test robot wrote:
+> Hi Hans,
 > 
-> high_memory defines upper bound on the directly mapped memory.
-> This bound is defined by the beginning of ZONE_HIGHMEM when a system has
-> high memory and by the end of memory otherwise.
+> kernel test robot noticed the following build errors:
 > 
-> All this is known to generic memory management initialization code that
-> can set high_memory while initializing core mm structures.
+> [auto build test ERROR on acb4f33713b9f6cadb6143f211714c343465411c]
 > 
-> Add a generic calculation of high_memory to free_area_init() and remove
-> per-architecture calculation except for the architectures that set and
-> use high_memory earlier than that.
+> url:    https://github.com/intel-lab-lkp/linux/commits/Hans-Zhang/PCI-Refactor-capability-search-into-common-macros/20250402-122544
+> base:   acb4f33713b9f6cadb6143f211714c343465411c
+> patch link:    https://lore.kernel.org/r/20250402042020.48681-4-18255117159%40163.com
+> patch subject: [v7 3/5] PCI: dwc: Use common PCI host bridge APIs for finding the capabilities
+> config: loongarch-randconfig-001-20250402 (https://download.01.org/0day-ci/archive/20250402/202504021958.YeTPCsW1-lkp@intel.com/config)
+> compiler: loongarch64-linux-gcc (GCC) 14.2.0
+> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250402/202504021958.YeTPCsW1-lkp@intel.com/reproduce)
+> 
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202504021958.YeTPCsW1-lkp@intel.com/
+> 
+> All errors (new ones prefixed by >>):
+> 
+>     In file included from drivers/pci/controller/dwc/pcie-designware.c:23:
+>     drivers/pci/controller/dwc/pcie-designware.c: In function 'dw_pcie_find_capability':
+>>> drivers/pci/controller/dwc/pcie-designware.c:218:38: error: 'pcie' undeclared (first use in this function); did you mean 'pci'?
+>       218 |                                      pcie);
+>           |                                      ^~~~
+>     drivers/pci/controller/dwc/../../pci.h:114:18: note: in definition of macro 'PCI_FIND_NEXT_CAP_TTL'
+>       114 |         read_cfg(args, __pos, 1, (u32 *)&__pos);                        \
+>           |                  ^~~~
+>     drivers/pci/controller/dwc/pcie-designware.c:218:38: note: each undeclared identifier is reported only once for each function it appears in
+>       218 |                                      pcie);
+>           |                                      ^~~~
+>     drivers/pci/controller/dwc/../../pci.h:114:18: note: in definition of macro 'PCI_FIND_NEXT_CAP_TTL'
+>       114 |         read_cfg(args, __pos, 1, (u32 *)&__pos);                        \
+>           |                  ^~~~
+>     drivers/pci/controller/dwc/pcie-designware.c: In function 'dw_pcie_find_ext_capability':
+>     drivers/pci/controller/dwc/pcie-designware.c:224:71: error: 'pcie' undeclared (first use in this function); did you mean 'pci'?
+>       224 |         return PCI_FIND_NEXT_EXT_CAPABILITY(dw_pcie_read_cfg, 0, cap, pcie);
+>           |                                                                       ^~~~
+>     drivers/pci/controller/dwc/../../pci.h:156:34: note: in definition of macro 'PCI_FIND_NEXT_EXT_CAPABILITY'
+>       156 |                 __ret = read_cfg(args, __pos, 4, &__header);                    \
+>           |                                  ^~~~
+> 
 
-This change (in mainline as commit e120d1bc12da ("arch, mm: set high_memory in free_area_init()")
-breaks booting i386 on QEMU for me (and others [0]).
-The boot just hangs without output.
+Copy the errors carried over. Will change.
 
-It's easily reproducible with kunit:
-./tools/testing/kunit/kunit.py run --arch i386
+Best regards,
+Hans
 
-See below for the specific problematic hunk.
+> 
+> vim +218 drivers/pci/controller/dwc/pcie-designware.c
+> 
+>     214	
+>     215	u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap)
+>     216	{
+>     217		return PCI_FIND_NEXT_CAP_TTL(dw_pcie_read_cfg, PCI_CAPABILITY_LIST, cap,
+>   > 218					     pcie);
+>     219	}
+>     220	EXPORT_SYMBOL_GPL(dw_pcie_find_capability);
+>     221	
+> 
 
-[0] https://lore.kernel.org/lkml/CA+G9fYtdXHVuirs3v6at3UoKNH5keuq0tpcvpz0tJFT4toLG4g@mail.gmail.com/
-
-> Acked-by: Dave Hansen <dave.hansen@linux.intel.com>	# x86
-> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> ---
->  arch/alpha/mm/init.c         |  1 -
->  arch/arc/mm/init.c           |  2 --
->  arch/arm64/mm/init.c         |  2 --
->  arch/csky/mm/init.c          |  1 -
->  arch/hexagon/mm/init.c       |  6 ------
->  arch/loongarch/kernel/numa.c |  1 -
->  arch/loongarch/mm/init.c     |  2 --
->  arch/microblaze/mm/init.c    |  2 --
->  arch/mips/mm/init.c          |  2 --
->  arch/nios2/mm/init.c         |  6 ------
->  arch/openrisc/mm/init.c      |  2 --
->  arch/parisc/mm/init.c        |  1 -
->  arch/riscv/mm/init.c         |  1 -
->  arch/s390/mm/init.c          |  2 --
->  arch/sh/mm/init.c            |  7 -------
->  arch/sparc/mm/init_32.c      |  1 -
->  arch/sparc/mm/init_64.c      |  2 --
->  arch/um/kernel/um_arch.c     |  1 -
->  arch/x86/kernel/setup.c      |  2 --
->  arch/x86/mm/init_32.c        |  3 ---
->  arch/x86/mm/numa_32.c        |  3 ---
->  arch/xtensa/mm/init.c        |  2 --
->  mm/memory.c                  |  8 --------
->  mm/mm_init.c                 | 30 ++++++++++++++++++++++++++++++
->  mm/nommu.c                   |  2 --
->  25 files changed, 30 insertions(+), 62 deletions(-)
-
-<snip>
-
-> diff --git a/arch/x86/mm/init_32.c b/arch/x86/mm/init_32.c
-> index 6d2f8cb9451e..801b659ead0c 100644
-> --- a/arch/x86/mm/init_32.c
-> +++ b/arch/x86/mm/init_32.c
-> @@ -643,9 +643,6 @@ void __init initmem_init(void)
->  		highstart_pfn = max_low_pfn;
->  	printk(KERN_NOTICE "%ldMB HIGHMEM available.\n",
->  		pages_to_mb(highend_pfn - highstart_pfn));
-> -	high_memory = (void *) __va(highstart_pfn * PAGE_SIZE - 1) + 1;
-> -#else
-> -	high_memory = (void *) __va(max_low_pfn * PAGE_SIZE - 1) + 1;
->  #endif
-
-Reverting this hunk fixes the issue for me.
-
->  
->  	memblock_set_node(0, PHYS_ADDR_MAX, &memblock.memory, 0);
