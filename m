@@ -1,145 +1,87 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FE60BA42;
-	Wed,  2 Apr 2025 19:01:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D385F175D48
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 19:01:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743620465; cv=none; b=hsXztMSvGTUdceVioBjkPuEEv2o7Yyf2VdpjYuJHl6jx1ZapJ83lA0nPHgx+1f4LFwRf2U6UHY+NWjS7NObuFN5oi3ZB6KcUq2hmLXI7+FOIO0+aFwQzN/6S4JApfCEtdpokR+rHYSYB1CcMIa8v25HyLBIXKuy2UJwdaKP4uvM=
+	t=1743620518; cv=none; b=fYcj0/GnSw/bV3bPPF+enM5K16a/2EBR+iv+J/GoGodGIbNgwZFrD9pH45rd+uKxTEzM8hLjGKhabGUdbi34ooYyAtDX+TBn8ohgxdJIBbM3f+2iVwohFDKCKU5ymDtdobjPLcQMl+Kjnn0DSMwONbtU4Mctmol2yqdxB53jvNo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743620465; c=relaxed/simple;
-	bh=iVRswX5P/3WFcdk+pZHZMsYppdWUO4nmDl4ZBIPTkEY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=sXVug5fDlbJjzD5iTL2uQK/djw1tbCbG+SJX/ZZyA1jBwHd8s2A4ErNt62DlIc29BM95JOfz5hJJ6AKlUzJCdLN6Ccl0WCRCveLxn/ehpxBmM7Su0K30DU2szQKGqlJn9M1dg0UgSkD3S/OkmTRyHmcNvFk4biV1zG6pkFBt6wQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=hYhD7pVN; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1743620518; c=relaxed/simple;
+	bh=1CRTZ17xGy1eJAgP86O3H7RxWmFhSfV0qChPUCeg0x0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jfWM5mp+ioVb1T3odQqiU1QIH5Ty3R5lJZaZnUQ/7ylrvDtn3qrRr1l5v4EC+ztGDGlR3h49177XGZvnCAyGbyjAsOTJ0xn5QwyJcW/yTMuxs32q5aqweGELve018RMMYrcbLgRGT+gJSh4fr6wfGeX4l7dFr4ViVfQVfz4VX4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U3pH6+t8; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="hYhD7pVN"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 532C1hZx024534;
-	Wed, 2 Apr 2025 19:00:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	ij6oVdOz4GhS0vGrhbityqjcv93TkR0sIrqUodkZMFk=; b=hYhD7pVNIeDwDBrW
-	RdO5PrMwS8sO1ippIQSGUyIYQ2aHb7qJuvA8S/CTVfe+wl3fGVcBkK+tVHJeC/Fq
-	hL0quAhjsZgdxh4KYOc6r2i6Gy0K17YxXYIvcN3aAPcOVgVQfvxnN1L1QRwh3B/f
-	iNw133fc//aUQBjMULW74HoUe6hVoYaUgy9HMacMC7MaMwE5l9UNz5swOuqq8Os5
-	wu3dTwbUcX100OEvJokqUmtO2Ui7Bihi+ChA5Cq0uSXw6qzZZsLnr5JqmT6CIlBj
-	jsmAF8BSmVLuxw7LwpPsMxs6waa4SBRHV0VIQ6IaNJwJBe63uNd47fsw3lzvLxqP
-	V7jENg==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45rbpywh5x-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 02 Apr 2025 19:00:28 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 532J0RBJ002057
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 2 Apr 2025 19:00:27 GMT
-Received: from [10.46.162.103] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 2 Apr 2025
- 12:00:26 -0700
-Message-ID: <1b87152e-ff0f-9c45-020d-4927ff3dbef8@quicinc.com>
-Date: Wed, 2 Apr 2025 12:00:26 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U3pH6+t8"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-736bfa487c3so103345b3a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 12:01:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743620516; x=1744225316; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=nb+Gpjg1JmZryqku7pXG2hw8wj2Q2vTluqT4h8F5GS4=;
+        b=U3pH6+t8EWvIou3I+FSXMsmPaX6EUAhr05waYHhTQK4W7TRbL4ndbjguZYse58QnVz
+         4/LiKOVyBisWebUCI7ja37JmeK9INMDISTeRAcjnMel3ZzwmgD2dAM8Sv+v1g6XM0J1S
+         t90O6WhcMziJc1KzXByBSmZ+6yT9o9VSd8UdkU/F9CHpcZ/n63tyBK2/OBQvrSJD49N1
+         M0f19MYk260NXkjkOz6EGrDLFjlr3eHyPta3vrDZIhsdvaCmcOpHDaYtXndMdb9YRh4F
+         EAtzFUq4uUq6a26EznHKY8HW/BtEEhq3D6VzEYmGYDBRe9m44m6kibWJ+6FU3oN18rn/
+         LxMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743620516; x=1744225316;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nb+Gpjg1JmZryqku7pXG2hw8wj2Q2vTluqT4h8F5GS4=;
+        b=lz7GGvP69BumXwLeU+MKgu0X/MNmeHpyVf4hOw97yXi9k8KZVOoBxtb0nrPv/My9lj
+         uGanFW/yoMszRmRMA4JhAhDhV+wVa+9KExJGM2dcku5yi4PMfVAH0y1KAxXvStpXyV4Y
+         y1FawIMNoXgxiin7p2Seq3GKqBSiZ7/DpNirvUxluRSucKUxaz+VF2NuYvKpmIxTrqB9
+         uvwuWqksthVQD92D3disK5uXr9laSCts1IvWOavKYhKZQmGSCHyk5rHVbCpR0JU7/O+Y
+         FOvo1ft6kyPiaLMKDsqJq0M0eZI9vz65TT6gsgHhnv8/qvLMkdFNMA9qnUN5Fs1YEM+y
+         WkGw==
+X-Forwarded-Encrypted: i=1; AJvYcCX7F8ogPe0AjhvnTDYyxFNpRsZvjM3jPX6WT5XC8+wsX2RCd6l3h/XjWaCZdl8bLiKpVm58xtodfCWLfhQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy7+rRSMKAx7x40A2BuLzsDQbsquqtxrvsO7hklxjjKisxN8w6y
+	4p/tQqGiy2ab+6b6NIG0gLDEMJeQYmNrm8lCkpAPKt9DIKZ6dieI
+X-Gm-Gg: ASbGncsR2JzLiiiwl7Rv6YvNalBSoMhlkLXoocvZGr0WY+F3Bn2EzGueLcAihsWNYxS
+	iJPnM+Jdp1jvcz2M/X3gXpnPIsQPZFWspf8C3cRfyLI4XY9UViEE98ZoEA8XL2ubLIrun+4Sf0v
+	O2iAyDHOJGRIXS6oJYOim62Rh0iOiOfIR1hsRm5xDxrlRUy68zvffD1CahRP+SNw42pwWClua+G
+	MALcpvsUnkxIUcTjfp9Xble6hpdt3G7gGyR6lJfvH83D6BqDqNPFigkR+jwlx2Cm9mwUut50nnU
+	nSeSOH2ika9+1+yi8099eb2H1MrctxWDkQLWktXYdR6M5anMAKc4eZw0ZECGy2akHh3vncAjUc/
+	e
+X-Google-Smtp-Source: AGHT+IFw5BHeHgoe/2f1XCTVp8zBEE9uULeUw0xNTUTDyx7n85Bk/+ooSDGmjDTYpc9RcDsrxy8V1g==
+X-Received: by 2002:a05:6a20:9f99:b0:1f5:8f65:a6e6 with SMTP id adf61e73a8af0-200f73694admr58421637.27.1743620515909;
+        Wed, 02 Apr 2025 12:01:55 -0700 (PDT)
+Received: from fedora (c-67-164-59-41.hsd1.ca.comcast.net. [67.164.59.41])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af93b6d57dasm8684672a12.33.2025.04.02.12.01.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Apr 2025 12:01:55 -0700 (PDT)
+Date: Wed, 2 Apr 2025 12:01:52 -0700
+From: "Vishal Moola (Oracle)" <vishal.moola@gmail.com>
+To: Songtang Liu <liusongtang@bytedance.com>
+Cc: akpm@linux-foundation.org, ying.huang@linux.alibaba.com,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	zhengqi.arch@bytedance.com, songmuchun@bytedance.com
+Subject: Re: [PATCH] mm: page_alloc: Remove redundant READ_ONCE
+Message-ID: <Z-2JoJWjGuqWCsdu@fedora>
+References: <CAA=HWd1kn01ym8YuVFuAqK2Ggq3itEGkqX8T6eCXs_C7tiv-Jw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Subject: Re: [PATCH v4 1/1] scsi: ufs: core: add device level exception
- support
-Content-Language: en-US
-To: "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
-        Bart Van Assche <bvanassche@acm.org>
-CC: Arthur Simchaev <Arthur.Simchaev@sandisk.com>,
-        "quic_cang@quicinc.com"
-	<quic_cang@quicinc.com>,
-        "quic_nitirawa@quicinc.com"
-	<quic_nitirawa@quicinc.com>,
-        "avri.altman@wdc.com" <avri.altman@wdc.com>,
-        "peter.wang@mediatek.com" <peter.wang@mediatek.com>,
-        "minwoo.im@samsung.com"
-	<minwoo.im@samsung.com>,
-        "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        Alim Akhtar
-	<alim.akhtar@samsung.com>,
-        "James E.J. Bottomley"
-	<James.Bottomley@hansenpartnership.com>,
-        Matthias Brugger
-	<matthias.bgg@gmail.com>,
-        AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Keoseong Park <keosung.park@samsung.com>,
-        Ziqi Chen
-	<quic_ziqichen@quicinc.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "Gwendal
- Grignou" <gwendal@chromium.org>,
-        Eric Biggers <ebiggers@google.com>,
-        open
- list <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC
- support:Keyword:mediatek" <linux-arm-kernel@lists.infradead.org>,
-        "moderated
- list:ARM/Mediatek SoC support:Keyword:mediatek"
-	<linux-mediatek@lists.infradead.org>
-References: <4370b3a3b5a5675bb3e75aaa48a273674c159339.1742526978.git.quic_nguyenb@quicinc.com>
- <SA2PR16MB4251229744D717821D3D8353F4A72@SA2PR16MB4251.namprd16.prod.outlook.com>
- <c5ab13ec-f650-ea10-5cb8-d6a2ddf1e825@quicinc.com>
- <0a68d437-5d6a-42aa-ae4e-6f5d89cfcaf3@acm.org>
- <ad246ef4-7429-63bb-0279-90738736f6e3@quicinc.com>
- <3d7b543c-1165-42e0-8471-25b04c7572ac@acm.org>
- <4cb20c80-9bb0-e147-e3c0-467f4c8828ba@quicinc.com>
- <989e695e-e6a4-4427-9041-e39ecf5b5674@acm.org>
- <yzy7oad77h744vf2bdylkm4fronemjwvrmlstnj6x5lzjxg672@zya6toqv4aeg>
-From: "Bao D. Nguyen" <quic_nguyenb@quicinc.com>
-In-Reply-To: <yzy7oad77h744vf2bdylkm4fronemjwvrmlstnj6x5lzjxg672@zya6toqv4aeg>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: nuJyCFbkUJbHjGlJ8RMkEV0OQHadcz5I
-X-Proofpoint-ORIG-GUID: nuJyCFbkUJbHjGlJ8RMkEV0OQHadcz5I
-X-Authority-Analysis: v=2.4 cv=ZNLXmW7b c=1 sm=1 tr=0 ts=67ed894c cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=KKAkSRfTAAAA:8 a=Si26H9tSdrSrRDVtBSgA:9 a=QEXdDO2ut3YA:10
- a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-02_08,2025-04-02_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- lowpriorityscore=0 clxscore=1015 mlxscore=0 adultscore=0 mlxlogscore=999
- priorityscore=1501 bulkscore=0 suspectscore=0 malwarescore=0 phishscore=0
- impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504020121
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAA=HWd1kn01ym8YuVFuAqK2Ggq3itEGkqX8T6eCXs_C7tiv-Jw@mail.gmail.com>
 
-On 4/2/2025 12:49 AM, manivannan.sadhasivam@linaro.org wrote:
-> Yeah, we should be cautious in changing the uAPI header as it can break the
-> userspace applications. Annotating the members that need packed attribute seems
-> like the way forward to me.
-
-Yes, I realized potential issue when Bart raised a concern.
-
+On Wed, Apr 02, 2025 at 03:41:16AM -0400, Songtang Liu wrote:
+> In the current code, batch is a local variable, and it cannot be
+> concurrently modified. It's unnecessary to use READ_ONCE here,
+> so remove it.
 > 
-> Though, I'd like to understand which architecture has the alignment constraint
-> in this structure. Only if an architecture requires 8 byte alignment for __be32
-> would be a problem. That too only for osf7 and reserved. But I'm not aware of
-> such architectures in use.
-When using "__u64 value;" in place of osf3-6, I saw the compiler padded 
-4 bytes, so __packed was needed for me to get correct __u64 value. I 
-thought even the existing structure utp_upiu_query_v4_0 may need 
-__packed on some fields where the driver reads the returned data in 
-order to be safe across all architectures. However, without evidence of 
-an actual failure, I didn't touch the existing structure. Only raised 
-potential issue for discussion.
+> Fixes: 51a755c56dc0 ("mm: tune PCP high automatically")
+> Signed-off-by: Songtang Liu <liusongtang@bytedance.com>
 
-Thanks, Bao
+Reviewed-by: Vishal Moola (Oracle) <vishal.moola@gmail.com>
