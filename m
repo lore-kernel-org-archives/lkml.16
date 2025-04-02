@@ -1,497 +1,285 @@
-Received: from bg5.exmail.qq.com (bg5.exmail.qq.com [43.154.197.177])
+Received: from TY3P286CU002.outbound.protection.outlook.com (mail-japaneastazolkn19010005.outbound.protection.outlook.com [52.103.43.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E19EAEEB2;
-	Wed,  2 Apr 2025 02:33:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=43.154.197.177
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743561186; cv=none; b=U5CA/1ss6b+FCKHeuZ+7g791Z+FpgkgQTqooqppFfQCXBuNC4pps12yHgDCjV/rO+l9SAYI/0YWJhhDtx/30lfIMLX44vNdih8eQHDZU6CjouN0r9qJ44GiVXI4B9JFiTFbR5DkdMfCOUTt4lIhkBb1Q1+rxE1cLow+AVjwTtTM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743561186; c=relaxed/simple;
-	bh=EAiy6oQESp4bH9RUWapq0zzIPxcPEcBVLvInJtCoZL0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=TKzcxgaZ+OAQJjuUHbJm2WVQxUD/nRfqPMObScaROetMGKu1KVZ2py2aMt+79nrR9gI+0fkFzTcOPcKXVCCiAuGXHpDP0A8Kujxbs7JuV4Csb5aYRyMWW4C6w8X5cIp9aottHZWbIKJ4AUb5PTNUrfZfvTbXcXLW+VbZKPweoy0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=GfUeAtHn; arc=none smtp.client-ip=43.154.197.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47644645;
+	Wed,  2 Apr 2025 02:36:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.43.5
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743561407; cv=fail; b=ZXBGbbHCQYvurs7IVFPUQzkyjgZ4OKLZbJ9GgcVBTVCDjKBm8jliqu670uIwuSmctJh37IUYe0L71AbUcQXlGwbrZPf5soMQy8Q52xrZHk1ghGdpgxkPaRI8siH4aYC2D/HPzMneLqlYdZhP3tN3Dbs6bMW0qggazKW6C4rKtuA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743561407; c=relaxed/simple;
+	bh=72w52ftipQyVNpGYpTUh4vKPuGYSEG8jt4UXAsrl/78=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=AtShVH9sbvrQIvcLUPSBZMaoAApKOmCt59L4ir9YxfL/SfnYZP1IHxKeI1cCa2FWBH7HuS0VeNo1WcfeISd7SpFT6xxPq9Ha3pshyZzI5skGLp/gWKiqq0a18LvF6XhLZotBm7z0FdXCxxtxR4k/5UrPRMkbF4x0SykCxUB8z7g=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hotmail.com; spf=pass smtp.mailfrom=hotmail.com; dkim=pass (2048-bit key) header.d=hotmail.com header.i=@hotmail.com header.b=LJzQRq9d; arc=fail smtp.client-ip=52.103.43.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hotmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="GfUeAtHn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1743561161;
-	bh=eGU5KbXO6e1/HojDQxT8SCCrYwesKSvunfoPBk+eObk=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version;
-	b=GfUeAtHnLGK9MJQ7Cw+iGUwjPive3iXdhoQ+eAglrx5VIsNLTDjH0PUwqCurH8asU
-	 Q8VYbr+7NSOG9YYg/USABt2uwrbOfayQsTcSomvJMYFtoX3jh0WQPy4IIg0MEiUcFB
-	 Z81V3pq8RtAypkbu0Q6hD7tfKZowEukTMk77OJCY=
-X-QQ-mid: bizesmtpip4t1743561052tc8e308
-X-QQ-Originating-IP: jKwJ6CYMPd9lPExsLpd+vLwoRtPbgYC/T8e0Byx4OGw=
-Received: from localhost.localdomain ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Wed, 02 Apr 2025 10:30:50 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 15527068167197107366
-EX-QQ-RecipientCnt: 7
-From: raoxu <raoxu@uniontech.com>
-To: mathias.nyman@intel.com,
-	gregkh@linuxfoundation.org
-Cc: linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	wangyuli@uniontech.com,
-	zhanjun@uniontech.com,
-	Xu Rao <raoxu@uniontech.com>
-Subject: [RESEND PATCH V6] usb:xhci: Add debugfs support for xHCI port bandwidth
-Date: Wed,  2 Apr 2025 10:30:47 +0800
-Message-Id: <20250402023047.26719-1-raoxu@uniontech.com>
-X-Mailer: git-send-email 2.20.1
+	dkim=pass (2048-bit key) header.d=hotmail.com header.i=@hotmail.com header.b="LJzQRq9d"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=WDi9Ah7h1jYwbewahpJco0fCO0d3uGec3RSo6OgLC7rLWbC7TjhmIYFKj7wFn/1zyQXo39FUitMOnqJuzQfasKTMMcCnF5ku2Wockxi0t52xR+PdHRa+Fqv9m3UlYZ+lv3N+F/v/bjA3tGGTjGy3WouUHx52x/G8JMPsVRqb1UTgHER4roOEVkUkwsHaIcNFH5DCq9YqEBmq7w0eK5ECwGZRrlbYj3eBHrmwKMoF6r5JBfI51BnNjRdvVqj3+Za9kaZPRsgasiD39EWE+dYc3Kp6Cvo4Y9TLKrSiESRaHuFEEseBRdf1Ra+nSmHKAjmRn3eo6NZn9Q54MQ5OCzHa9w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=FC6DX2UmSar7VPefwgrH5PmZLyeGRuSb+gGjvWX8qZw=;
+ b=sdoubldWJCf2pF29FD4/qMNY5FVzTe1/siE0X6D1TcA/MVip2jCFuzeN860mT+cmRqiKKhUWvklSXUU6tzlt59/0wxcHilFVAHfDNBrrFcT43gne3jAAIp7FjhjCh8Ukl+BxV8f/xI4BGyL9Hjr9vdvhUE6+0rf4JRqsvEUt0NaPYf/JkWC8aLNIepxWL94UbANijc3VsA0SREI3w1wzf0t+XGOqM0/NDo3VAxfYhXAgOh7o1RGHc+gC16hSzf3nXUCyAb2T/xCkkTktjcSYjBF+NRvzmpdWeH9nkfhXN8E9LArCWZc2u9VD3NKGTsl+pgTm2F7vhFwif6pOjnRVwA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hotmail.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FC6DX2UmSar7VPefwgrH5PmZLyeGRuSb+gGjvWX8qZw=;
+ b=LJzQRq9dppcdZhbW9RbaXi6F/ISyG9n3xQHH7tOk2JUt+iWy/YCAOUHC11wudHzGPMz1aMWu+wnxEpANsWgYxZQN8/4FRi8KUyuw5jdorRHhFX/N+bAvCcINbBcOfiIXkHQFDQ4SWZqEv7rgDgAoVgq6F9HQqX0ciIAnse1AAfMbMYZSdX09gIYiZXBgkHzsYO3XoNo6DiRtb39hxMOcuCVn2koBLWJkfYuaObzXCjLwpRIYgZA2s3n5nD7ItATBNUKb22rtRzu2076BCLbupaqj1S7DDBIrAKVasVS9cp/ijvxQL8yMcC0oaW08i+s9tYZ3XGtVaOLItA+mdIrxTA==
+Received: from TYBPR01MB5470.jpnprd01.prod.outlook.com (2603:1096:404:8025::8)
+ by TYCPR01MB11375.jpnprd01.prod.outlook.com (2603:1096:400:3c2::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8583.39; Wed, 2 Apr
+ 2025 02:36:37 +0000
+Received: from TYBPR01MB5470.jpnprd01.prod.outlook.com
+ ([fe80::a7c3:4e82:38ff:65f3]) by TYBPR01MB5470.jpnprd01.prod.outlook.com
+ ([fe80::a7c3:4e82:38ff:65f3%5]) with mapi id 15.20.8583.033; Wed, 2 Apr 2025
+ 02:36:37 +0000
+Message-ID:
+ <TYBPR01MB5470E7F3F1E80FF9842AAF75B1AF2@TYBPR01MB5470.jpnprd01.prod.outlook.com>
+Date: Wed, 2 Apr 2025 10:36:29 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] tools: Fix compile error of pfrut/firewire
+To: "Chen, Yu C" <yu.c.chen@intel.com>
+Cc: Takashi Sakamoto <o-takashi@sakamocchi.jp>, lenb@kernel.org,
+ robert.moore@intel.com, linux1394-devel@lists.sourceforge.net,
+ linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+ acpica-devel@lists.linux.dev, k2ci <kernel-bot@kylinos.cn>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Masahiro Yamada <masahiroy@kernel.org>, yu.chen.surf@foxmail.com
+References: <20250328074750.3524280-1-luriwen@kylinos.cn>
+ <20250329010721.GA11319@workstation.local>
+ <TYBPR01MB5470C91FC2902D16D3FB9707B1AD2@TYBPR01MB5470.jpnprd01.prod.outlook.com>
+ <CAJZ5v0jy21xWDSrTxSzg0YPBQYrntXvDYK-GZtH2we+qGjw3Bw@mail.gmail.com>
+ <88a36c5b-8dc0-47b8-832d-366f0214dd11@intel.com>
+Content-Language: en-US
+From: luriwen <luriwen@hotmail.com>
+In-Reply-To: <88a36c5b-8dc0-47b8-832d-366f0214dd11@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SG2PR02CA0103.apcprd02.prod.outlook.com
+ (2603:1096:4:92::19) To TYBPR01MB5470.jpnprd01.prod.outlook.com
+ (2603:1096:404:8025::8)
+X-Microsoft-Original-Message-ID:
+ <40a19e1d-98df-4286-bfb9-ea0d405e22ad@hotmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz7a-0
-X-QQ-XMAILINFO: NIvXgkk7mfUglAlRqZUtKE4p1EzyqTOIDUk1Y3wKzf4xzV8mcIY43un/
-	7QRkmkCHdf9hg+PXTV7ls7Gj5RLKD4ZzM+wlSTOxVFJb5HDyXjXnYbLQMRcHNaKgOHxqve5
-	6mVHtD/+9GN2pwnxAMc1FkNdwgVljGcH4ZjtSdleQBQtJRwc2T9PvQENC6R+LNLi9LigxP0
-	Q2Y0KH5ES+b/PXRU2IoFyyGxHpZAkmZPyZNaFeB9NRyp1GH2ZOHQC3KaAvbAxp3MPZ7MdxW
-	s7nOGmyIIX9yT2Y/TpPN+jfzLo+sRUFF/EKe8hdJClkGmjUNIgXbVJZyKCRogUmU8mHcKOH
-	dWz9ZrTU+uSuM5OZLcrD7pLzVfoI8A+TSf9G8D+4bMCxqAcfi0w2DSV7gwYbCxDxAQX64g5
-	GaBQX0P7syYJ9+RrGTbBJ+hGK2KiwY76p8JDMYVq9inA06xGMkRFMTnZibSk4OsfudfY1gB
-	vbHnwAGNUp3+9ltrbEKFwLj2NGKvbr7w83+5er+sptDTCZ408Jbxw0T38X4aKJ0blIG8gn6
-	qkPouk1UxJx+a5rO5eAyXxeCufqWS2po53XGAACbGoj2oIEZcDnFtdoWEjoO2a0lXm+HZZz
-	T5lXMhfgWeFQ3F/Wj26PS0efHvZh0THVV7Pd4rkjXcNST/MLXCV2lfkhZTurNuI3vHYUg9+
-	kYRuVII9GeSMsrMk31fIxGy95uut1du+Fjg8TzGiLTyMlJtP286yDAiWWXNdALREHqGj7cH
-	3Qetsjcgf2E7FvCNT9166AzeS561NTlDP58CpAyPs1xpaDfr7JJNzTN1C0Y6zE+CTdkzbek
-	RHkOIU46S2i1YT3dQygsAuiJHYJG5kjjIhKuXvb1VK3bCMjJp49ElwfgNjthQERi5fN2bRz
-	UANbX38ERA5sigys32LN7AOTz/yk1vnIF+OvngcryRjyyeedU/+tW00kqnEFBXxhW1kDIod
-	yjeRk2ktlQFLj0FK1CeEQHuP0nvtgdcHLYMq9q6b+OMOYfQOnRmNU23uIQD9o0wj0ud2b/t
-	aLP+Mbox2W1V1sRko8m8Q9p0Tuxso=
-X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
-X-QQ-RECHKSPAM: 0
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: TYBPR01MB5470:EE_|TYCPR01MB11375:EE_
+X-MS-Office365-Filtering-Correlation-Id: c2d638fc-7bc9-4888-2840-08dd718f3027
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|5072599009|6090799003|461199028|19110799003|15080799006|8060799006|7092599003|440099028|3412199025;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?b1VxbGNRVmZTT2ZWREtoOXBhakJSUmRYYlp6SXFTcG51OUNaVW1BdXhjc2Iy?=
+ =?utf-8?B?b0wzVEZ0NTl4dk16TUttM3VLdGxWUXJOOHJRWTBBZVM5YkVMOGE4U0trdU9P?=
+ =?utf-8?B?bklIU1pXS0w5WXFqMHRBZ2N0ZW9mV1hIUHBZMTlubjV4MkZ6OU8yTDJTcFcw?=
+ =?utf-8?B?UHhOd3hkemo5YW5IcEpvWmllbVNNVGU4MDY4ekFHMFRjNXN0NGkwV3BsNHVn?=
+ =?utf-8?B?V1QwbWZjaWxzYm5xNjJDY1VZSkMzM1F2djUxZCs4M3lsNkNua0FrdVhOUmtX?=
+ =?utf-8?B?NWkxMmF6bk04eXN2ak85SnZKcTU5N1ZRTk5oWjlzZmRIQkloNjlDUTN4cU1R?=
+ =?utf-8?B?VHFSRTFoVDdxVEVMeVRveXlIUWtXN3UwRjI1RmNGcFR0STVEdllCSTlIUVZJ?=
+ =?utf-8?B?N2R4ZmRvazV6b1k3K2xZRmxHM1VodGtEUitQUmxFZlNrV0IzSWdSN0dOdXkz?=
+ =?utf-8?B?dzJWYUgxU3FtWWpJdm9zakhCQ3FiQVVFQndEek5yRGFGUE5DQnJnRmJhU1pa?=
+ =?utf-8?B?M0JqallmV3NlamJTdFJia2ZPTlFjM01Ga3VaSjMrVnRlblNyT2svL3k5V3lB?=
+ =?utf-8?B?VzVVNG5uNHNWVG1hRk9HOXhISEtnNW5qcGY5TTZScmlQdU9iQTBQazdJcEI3?=
+ =?utf-8?B?NG52eE9IMTRVcUFJRTl2cnQ2N3AxZzhteEJ1M2YxaGFvdDY0bkUzUmxlcitt?=
+ =?utf-8?B?Z0dlUVZtWHUwZUI4U2MyWUdGTGVldFlrWGpXN0lIekYydTJGdFcvTE1OUnJ0?=
+ =?utf-8?B?YW51S1Q1MU91VnU5anJRRUhMTXFuMUt1UXNsWU9zQ2VXYnp6L29iQnZHYWdY?=
+ =?utf-8?B?MGtha0dZUDRCaE9Gdm9JWWduNVpFbE1PTE9ObUlOMFQyMFRNR2kxK3BnWk9N?=
+ =?utf-8?B?RkUzaXpsOHNoVGtrb2F0VXdGSm9DVHFCYVcyeEN0bEQrb092MHpMcUE1c3hS?=
+ =?utf-8?B?OVlGMVNtODEyaEVvSlc2UCswQXV6Qmo4a040T1MwdUZxS1JUUXdqK05QcnJX?=
+ =?utf-8?B?VmZnbXoxMlRsRis0TXZ3aGFLZ1hkYVJId0dZTzBKMGo0YnNpWURzaUQ4YnhK?=
+ =?utf-8?B?dUFZUWxLNEF3dWdTYVc4QUZrd3A0dWhaeEJFTHZRWXd5cXMrZGJMN285YVJp?=
+ =?utf-8?B?ejByNU1xTUd4cnNlazc0bngxNi9xUmhxT1JmWFVYYWZiSnppY1R5NzMyS01u?=
+ =?utf-8?B?cEExZmJscG1aOW9CNzQ0QjhzQVFLbTV6Z1paMHlpMUxoallWU09mU2lKMm1x?=
+ =?utf-8?B?b055VUZQVDBVZ1EvR0p5am5iUzlSNGx2bmJJWE5tYzMwZ3hiQWRzalhOdkFp?=
+ =?utf-8?B?ZFFNMEgxSVh6djA4QSt5WHlIN2FLUHA4MzMrakR6TVhBaTZzd3d0Zmtndy9j?=
+ =?utf-8?B?a0t6ellMdkFKOEptY1ZGWUorZXJNUUNFdXdHRVhrcEJHS2JVdlpmZW5lRVk4?=
+ =?utf-8?B?bEJzaFBJN2VjN3JxaHlIWUIrNDRJZ2FxdTZnZnNxWDhpNkF6VnUrZk5sdWgv?=
+ =?utf-8?B?NFVvcGJpSGNKMTdjR3VxcGVnTnNnaTZmSGNnZTh3VElpc2wvN0QwY0dOYkpV?=
+ =?utf-8?B?NkQrQT09?=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?RTZOSE9XOEE3bGRSTzBFdy9KMWxMVVVDOWVycTl0dzZvV0dRWXhwRlBHbStX?=
+ =?utf-8?B?bHhjVmVLZG5PR25FUTVEK05Wa0tzLzRuemlINWQvOG1yUjV3ajVjRmZ5NGhF?=
+ =?utf-8?B?S3cyeWU2NlE0OTB5MC9TcFNUZUE1bWFIS3B6WEN2YjJDNDdycHUvS3ByTlMy?=
+ =?utf-8?B?WFA0Sk5tUmpPZEFjdHpWVlhBTEYxcTZOczh5M3pyMVAwdkhVN3Jsb0dqbzEw?=
+ =?utf-8?B?bUlUbmdWWWRXZ3hYdVpZU1BiVDNQeUk0b2pINnZwK3Bjdnp0UUYrZk8vbGdK?=
+ =?utf-8?B?UEtVbjFhekJ6OFM1QjZSN1EvV0dVVDFiNUY1OWVGcitPVElaT2hBYU5EdEpT?=
+ =?utf-8?B?U0NVOWFuMW1DYytMdmkvL25CVytJUWVWRWhXTUhxSkJTczRRb3hSK2FkL3hi?=
+ =?utf-8?B?SEYwaUR1QW5vc1lHdk5jblFVQzRkVlJsbUkxS01Qbmw0UDFLVXZhTGVPVTFx?=
+ =?utf-8?B?WHBLc3p1bUwxUUxReW10MmN6Tk16eVlrbkMyY3ArQ3I4eC9nVWZPQk5DU2Z3?=
+ =?utf-8?B?STA5bVRYTy80ZFM5OHVYdnFHRVdKY1VQbjZTUGlCTXpXTzhCME1qSkFqOUlt?=
+ =?utf-8?B?bm5wOWhFNGFqY0hPWTRTa3ZOVktlT21YbnJmUnhPRS9DZU9NSmdDcGZFZ3Nq?=
+ =?utf-8?B?ZGlpL3lEWWJRZUhvemJPRFhXczhqb2RpNWxHWWJCMFBTQ2tDNEtwTTJXT2hI?=
+ =?utf-8?B?cjh3Z1ZoVmxDZm5VbGFzckxXbU40bFNHRmk2cjRVT3NoWUNKNHVwYzBmV01V?=
+ =?utf-8?B?RWY3S1IrVGxuSjVSOVhLTDJiRnBNMW44YlRUSmNxaER1QTViUVlIV3AyUWJj?=
+ =?utf-8?B?VCtkWkVyV1ZwaFFYQ2J5eSsrWXVxZkFHMmpOZE9Ja3luUnBFV1RnUlpUSG55?=
+ =?utf-8?B?OVZpY1VOYVJVL2RuN2UvWUhYS0Nlc3RxTmF6SVRKWU10Q05ZN0s3RWJMY0VR?=
+ =?utf-8?B?dlB2U1E1Q2dMWjA0Ulg1eC9LK0hFeWl5MXRMRFBOaFBNQXNQRVVBNG03aVg0?=
+ =?utf-8?B?bnkvakpTWWJ3RE10c1h0THpsMWk4WHJSRy9WRTJlT2luK1dGeDIyTENTdHI0?=
+ =?utf-8?B?UjNVZk55SVdsWnFEMWQ5N2MyMC9MSTVoNm9YTXcwQisxR0t5RW5lYmh2VnBm?=
+ =?utf-8?B?cDZCYXFDTlFUVENISWFMcjZQdEhrbUd4L3lwKyt3WE15dUR2bFhud200U3Zl?=
+ =?utf-8?B?d2dJVlFMOFdaR2k3MnlpMVEwaEw1Njc4RHByc0Vjcm9xUDNkMUl1dGw5TW9Y?=
+ =?utf-8?B?c3N4Zyt0SVdhcnVubzY1UUNsV1N5VE5lSzJCNEc3R3h3aE93Q3VGWm8xKy9U?=
+ =?utf-8?B?M1dFMUxpd0JDTzA4RzAxVDJXcGFxZ0FaNWJMa012amdZUHpWak5uSlVZSzVw?=
+ =?utf-8?B?TVVta1YxdUgvMW5vMVA2cmR2YTc3V21Sbmdnc0huK3RqajBqZFRKaUlGaGlB?=
+ =?utf-8?B?VWFlTFQra0lWc1BiaU1Sb2JXMUZJanVidDNpK2hvVU5uZkNSOTdtaE9uUjdz?=
+ =?utf-8?B?Ym5mNFhKVDFleGdJWVZpa0Q0aGxqSGRSb1ZxL2VrNWx0OTZGdXoxWGc4Ym1B?=
+ =?utf-8?B?dDh1YXZFN2JmQnpNSGRBc211ZEc5UUxHVkNVY0NuWVIwSGZ4WlVuL1QwSWxn?=
+ =?utf-8?Q?v1h2uGOAfXD+4vjSgSUorpA/TKUdZPGrOZFq9BTNJP+Y=3D?=
+X-OriginatorOrg: sct-15-20-7719-20-msonline-outlook-15995.templateTenant
+X-MS-Exchange-CrossTenant-Network-Message-Id: c2d638fc-7bc9-4888-2840-08dd718f3027
+X-MS-Exchange-CrossTenant-AuthSource: TYBPR01MB5470.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Apr 2025 02:36:36.9553
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYCPR01MB11375
 
-From: Xu Rao <raoxu@uniontech.com>
-
-In many projects, you need to obtain the available bandwidth of the
-xhci roothub port. Refer to xhci rev1_2 and use the TRB_GET_BW
-command to obtain it.
-
-hardware tested:
-03:00.3 USB controller: Advanced Micro Devices, Inc. [AMD] Raven USB 3.1
-(prog-if 30 [XHCI])
-Subsystem: Huawei Technologies Co., Ltd. Raven USB 3.1
-Flags: bus master, fast devsel, latency 0, IRQ 30
-Memory at c0300000 (64-bit, non-prefetchable) [size=1M]
-Capabilities: [48] Vendor Specific Information: Len=08 <?>
-Capabilities: [50] Power Management version 3
-Capabilities: [64] Express Endpoint, MSI 00
-Capabilities: [a0] MSI: Enable- Count=1/8 Maskable- 64bit+
-Capabilities: [c0] MSI-X: Enable+ Count=8 Masked-
-Kernel driver in use: xhci_hcd
-
-test progress:
-1. cd /sys/kernel/debug/usb/xhci/0000:03:00.3/port_bandwidth# ls
-FS_BW  HS_BW  SS_BW
-2. test fs speed  device
-cat FS_BW
-port[1] available bw: 90%.
-port[2] available bw: 90%.
-port[3] available bw: 90%.
-port[4] available bw: 90%.
-port[5] available bw: 0%.
-port[6] available bw: 0%.
-port[7] available bw: 0%.
-port[8] available bw: 0%.
-plug in fs usb audio ID 0d8c:013c
-cat FS_BW
-port[1] available bw: 76%.
-port[2] available bw: 76%.
-port[3] available bw: 76%.
-port[4] available bw: 76%.
-port[5] available bw: 0%.
-port[6] available bw: 0%.
-port[7] available bw: 0%.
-port[8] available bw: 0%.
-3. test hs speed device
-cat HS_BW
-port[1] available bw: 79%.
-port[2] available bw: 79%.
-port[3] available bw: 79%.
-port[4] available bw: 79%.
-port[5] available bw: 0%.
-port[6] available bw: 0%.
-port[7] available bw: 0%.
-port[8] available bw: 0%.
-plug in hs usb video ID 0408:1040
-cat HS_BW
-port[1] available bw: 39%.
-port[2] available bw: 39%.
-port[3] available bw: 39%.
-port[4] available bw: 39%.
-port[5] available bw: 0%.
-port[6] available bw: 0%.
-port[7] available bw: 0%.
-port[8] available bw: 0%.
-4.cat SS_BW
-port[1] available bw: 0%.
-port[2] available bw: 0%.
-port[3] available bw: 0%.
-port[4] available bw: 0%.
-port[5] available bw: 90%.
-port[6] available bw: 90%.
-port[7] available bw: 90%.
-port[8] available bw: 90%.
-
-Signed-off-by: Xu Rao <raoxu@uniontech.com>
----
-Changelog:
- *v1->v2: modify the patch subject no code changes.
-  v2->v3: separate files in debugfs for each speed (SS HS FS).
-	  queue one command for each speed not queuing three commands on one file.
-	  print value from context not array on stack.
-  v3->v4: Fix compilation warnings for W=1 build. Delete unused variable
-  v4->v5: Add pm_runtime_get_sync operation before get port bandwidth.
-	  When obtaining port bandwidth, alloc a new command structure with
-	  context for each time.
-	  Create dma pool instead of allocating one shared.
-  v5->v6: The memory of port bandwidth context structure shall be aligned 16-
-	  byte not 8-byte
----
- drivers/usb/host/xhci-debugfs.c | 108 ++++++++++++++++++++++++++++++++
- drivers/usb/host/xhci-mem.c     |  45 ++++++++++++-
- drivers/usb/host/xhci-ring.c    |  13 ++++
- drivers/usb/host/xhci.c         |  36 +++++++++++
- drivers/usb/host/xhci.h         |  14 +++++
- 5 files changed, 215 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/usb/host/xhci-debugfs.c b/drivers/usb/host/xhci-debugfs.c
-index 1f5ef174abea..c6d44977193f 100644
---- a/drivers/usb/host/xhci-debugfs.c
-+++ b/drivers/usb/host/xhci-debugfs.c
-@@ -631,6 +631,112 @@ static void xhci_debugfs_create_ports(struct xhci_hcd *xhci,
- 	}
- }
-
-+static int xhci_port_bw_show(struct xhci_hcd *xhci, u8 dev_speed,
-+				struct seq_file *s)
-+{
-+	unsigned int			num_ports;
-+	unsigned int			i;
-+	int				ret;
-+	struct xhci_container_ctx	*ctx;
-+	struct usb_hcd			*hcd = xhci_to_hcd(xhci);
-+	struct device			*dev = hcd->self.controller;
-+
-+	ret = pm_runtime_get_sync(dev);
-+	if (ret < 0)
-+		return ret;
-+
-+	num_ports = HCS_MAX_PORTS(xhci->hcs_params1);
-+
-+	ctx = xhci_alloc_port_bw_ctx(xhci, 0);
-+	if (!ctx) {
-+		pm_runtime_put_sync(dev);
-+		return -ENOMEM;
-+	}
-+
-+	/* get roothub port bandwidth */
-+	ret = xhci_get_port_bandwidth(xhci, ctx, dev_speed);
-+	if (ret)
-+		goto err_out;
-+
-+	/* print all roothub ports available bandwidth
-+	 * refer to xhci rev1_2 protocol 6.2.6 , byte 0 is reserved
-+	 */
-+	for (i = 1; i < num_ports+1; i++)
-+		seq_printf(s, "port[%d] available bw: %d%%.\n", i,
-+				ctx->bytes[i]);
-+err_out:
-+	pm_runtime_put_sync(dev);
-+	xhci_free_port_bw_ctx(xhci, ctx);
-+	return ret;
-+}
-+
-+static int xhci_ss_bw_show(struct seq_file *s, void *unused)
-+{
-+	int ret;
-+	struct xhci_hcd		*xhci = (struct xhci_hcd *)s->private;
-+
-+	ret = xhci_port_bw_show(xhci, USB_SPEED_SUPER, s);
-+	return ret;
-+}
-+
-+static int xhci_hs_bw_show(struct seq_file *s, void *unused)
-+{
-+	int ret;
-+	struct xhci_hcd		*xhci = (struct xhci_hcd *)s->private;
-+
-+	ret = xhci_port_bw_show(xhci, USB_SPEED_HIGH, s);
-+	return ret;
-+}
-+
-+static int xhci_fs_bw_show(struct seq_file *s, void *unused)
-+{
-+	int ret;
-+	struct xhci_hcd		*xhci = (struct xhci_hcd *)s->private;
-+
-+	ret = xhci_port_bw_show(xhci, USB_SPEED_FULL, s);
-+	return ret;
-+}
-+
-+static struct xhci_file_map bw_context_files[] = {
-+	{"SS_BW",	xhci_ss_bw_show, },
-+	{"HS_BW",	xhci_hs_bw_show, },
-+	{"FS_BW",	xhci_fs_bw_show, },
-+};
-+
-+static int bw_context_open(struct inode *inode, struct file *file)
-+{
-+	int			i;
-+	struct xhci_file_map	*f_map;
-+	const char		*file_name = file_dentry(file)->d_iname;
-+
-+	for (i = 0; i < ARRAY_SIZE(bw_context_files); i++) {
-+		f_map = &bw_context_files[i];
-+
-+		if (strcmp(f_map->name, file_name) == 0)
-+			break;
-+	}
-+
-+	return single_open(file, f_map->show, inode->i_private);
-+}
-+
-+static const struct file_operations bw_fops = {
-+	.open			= bw_context_open,
-+	.read			= seq_read,
-+	.llseek			= seq_lseek,
-+	.release		= single_release,
-+};
-+
-+static void xhci_debugfs_create_bandwidth(struct xhci_hcd *xhci,
-+					struct dentry *parent)
-+{
-+	parent = debugfs_create_dir("port_bandwidth", parent);
-+
-+	xhci_debugfs_create_files(xhci, bw_context_files,
-+			  ARRAY_SIZE(bw_context_files),
-+			  xhci,
-+			  parent, &bw_fops);
-+}
-+
- void xhci_debugfs_init(struct xhci_hcd *xhci)
- {
- 	struct device		*dev = xhci_to_hcd(xhci)->self.controller;
-@@ -681,6 +787,8 @@ void xhci_debugfs_init(struct xhci_hcd *xhci)
- 	xhci->debugfs_slots = debugfs_create_dir("devices", xhci->debugfs_root);
-
- 	xhci_debugfs_create_ports(xhci, xhci->debugfs_root);
-+
-+	xhci_debugfs_create_bandwidth(xhci, xhci->debugfs_root);
- }
-
- void xhci_debugfs_exit(struct xhci_hcd *xhci)
-diff --git a/drivers/usb/host/xhci-mem.c b/drivers/usb/host/xhci-mem.c
-index 92703efda1f7..31549b37f61e 100644
---- a/drivers/usb/host/xhci-mem.c
-+++ b/drivers/usb/host/xhci-mem.c
-@@ -484,6 +484,35 @@ void xhci_free_container_ctx(struct xhci_hcd *xhci,
- 	kfree(ctx);
- }
-
-+struct xhci_container_ctx *xhci_alloc_port_bw_ctx(struct xhci_hcd *xhci,
-+						    gfp_t flags)
-+{
-+	struct xhci_container_ctx *ctx;
-+	struct device *dev = xhci_to_hcd(xhci)->self.sysdev;
-+
-+	ctx = kzalloc_node(sizeof(*ctx), flags, dev_to_node(dev));
-+	if (!ctx)
-+		return NULL;
-+
-+	ctx->size = GET_PORT_BW_ARRAY_SIZE;
-+
-+	ctx->bytes = dma_pool_zalloc(xhci->port_bw_pool, flags, &ctx->dma);
-+	if (!ctx->bytes) {
-+		kfree(ctx);
-+		return NULL;
-+	}
-+	return ctx;
-+}
-+
-+void xhci_free_port_bw_ctx(struct xhci_hcd *xhci,
-+			     struct xhci_container_ctx *ctx)
-+{
-+	if (!ctx)
-+		return;
-+	dma_pool_free(xhci->port_bw_pool, ctx->bytes, ctx->dma);
-+	kfree(ctx);
-+}
-+
- struct xhci_input_control_ctx *xhci_get_input_control_ctx(
- 					      struct xhci_container_ctx *ctx)
- {
-@@ -1907,6 +1936,11 @@ void xhci_mem_cleanup(struct xhci_hcd *xhci)
- 	xhci_dbg_trace(xhci, trace_xhci_dbg_init,
- 			"Freed small stream array pool");
-
-+	dma_pool_destroy(xhci->port_bw_pool);
-+	xhci->port_bw_pool = NULL;
-+	xhci_dbg_trace(xhci, trace_xhci_dbg_init,
-+			"Freed xhci port bw array pool");
-+
- 	dma_pool_destroy(xhci->medium_streams_pool);
- 	xhci->medium_streams_pool = NULL;
- 	xhci_dbg_trace(xhci, trace_xhci_dbg_init,
-@@ -2463,7 +2497,16 @@ int xhci_mem_init(struct xhci_hcd *xhci, gfp_t flags)
- 	 * will be allocated with dma_alloc_coherent()
- 	 */
-
--	if (!xhci->small_streams_pool || !xhci->medium_streams_pool)
-+	/* refer to xhci rev1_2 protocol 5.3.3 max ports is 255.
-+	 * refer to xhci rev1_2 protocol 6.4.3.14 port bandwidth buffer need
-+	 * to be 16-byte aligned.
-+	 */
-+	xhci->port_bw_pool =
-+		dma_pool_create("xHCI 256 port bw ctx arrays",
-+			dev, GET_PORT_BW_ARRAY_SIZE, 16, 0);
-+
-+	if (!xhci->small_streams_pool || !xhci->medium_streams_pool ||
-+		!xhci->port_bw_pool)
- 		goto fail;
-
- 	/* Set up the command ring to have one segments for now. */
-diff --git a/drivers/usb/host/xhci-ring.c b/drivers/usb/host/xhci-ring.c
-index 965bffce301e..0a01753075b4 100644
---- a/drivers/usb/host/xhci-ring.c
-+++ b/drivers/usb/host/xhci-ring.c
-@@ -1867,6 +1867,8 @@ static void handle_cmd_completion(struct xhci_hcd *xhci,
- 	case TRB_NEC_GET_FW:
- 		xhci_handle_cmd_nec_get_fw(xhci, event);
- 		break;
-+	case TRB_GET_BW:
-+		break;
- 	default:
- 		/* Skip over unknown commands on the event ring */
- 		xhci_info(xhci, "INFO unknown command type %d\n", cmd_type);
-@@ -4414,6 +4416,17 @@ int xhci_queue_configure_endpoint(struct xhci_hcd *xhci,
- 			command_must_succeed);
- }
-
-+/* Queue a get root hub port bandwidth command TRB */
-+int xhci_queue_get_port_bw(struct xhci_hcd *xhci,
-+		struct xhci_command *cmd, dma_addr_t in_ctx_ptr,
-+		u8 dev_speed, bool command_must_succeed)
-+{
-+	return queue_command(xhci, cmd, lower_32_bits(in_ctx_ptr),
-+		upper_32_bits(in_ctx_ptr), 0,
-+		TRB_TYPE(TRB_GET_BW) | DEV_SPEED_FOR_TRB(dev_speed),
-+		command_must_succeed);
-+}
-+
- /* Queue an evaluate context command TRB */
- int xhci_queue_evaluate_context(struct xhci_hcd *xhci, struct xhci_command *cmd,
- 		dma_addr_t in_ctx_ptr, u32 slot_id, bool command_must_succeed)
-diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
-index 45653114ccd7..fde774408a13 100644
---- a/drivers/usb/host/xhci.c
-+++ b/drivers/usb/host/xhci.c
-@@ -3088,6 +3088,42 @@ void xhci_reset_bandwidth(struct usb_hcd *hcd, struct usb_device *udev)
- }
- EXPORT_SYMBOL_GPL(xhci_reset_bandwidth);
-
-+/* Get the available bandwidth of the ports under the xhci roothub */
-+int xhci_get_port_bandwidth(struct xhci_hcd *xhci, struct xhci_container_ctx *ctx,
-+		u8 dev_speed)
-+{
-+	struct xhci_command *cmd;
-+	unsigned long flags;
-+	int ret;
-+
-+	if (!ctx || !xhci)
-+		return -EINVAL;
-+
-+	cmd = xhci_alloc_command(xhci, true, GFP_KERNEL);
-+	if (!cmd)
-+		return -ENOMEM;
-+
-+	cmd->in_ctx = ctx;
-+
-+	/* get xhci port bandwidth, refer to xhci rev1_2 protocol 4.6.15 */
-+	spin_lock_irqsave(&xhci->lock, flags);
-+
-+	ret = xhci_queue_get_port_bw(xhci, cmd, ctx->dma, dev_speed, 0);
-+	if (ret) {
-+		spin_unlock_irqrestore(&xhci->lock, flags);
-+		goto err_out;
-+	}
-+	xhci_ring_cmd_db(xhci);
-+	spin_unlock_irqrestore(&xhci->lock, flags);
-+
-+	wait_for_completion(cmd->completion);
-+err_out:
-+	kfree(cmd->completion);
-+	kfree(cmd);
-+
-+	return ret;
-+}
-+
- static void xhci_setup_input_ctx_for_config_ep(struct xhci_hcd *xhci,
- 		struct xhci_container_ctx *in_ctx,
- 		struct xhci_container_ctx *out_ctx,
-diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
-index 8c164340a2c3..51bf99787ec9 100644
---- a/drivers/usb/host/xhci.h
-+++ b/drivers/usb/host/xhci.h
-@@ -586,6 +586,7 @@ struct xhci_stream_info {
-
- #define	SMALL_STREAM_ARRAY_SIZE		256
- #define	MEDIUM_STREAM_ARRAY_SIZE	1024
-+#define	GET_PORT_BW_ARRAY_SIZE		256
-
- /* Some Intel xHCI host controllers need software to keep track of the bus
-  * bandwidth.  Keep track of endpoint info here.  Each root port is allocated
-@@ -999,6 +1000,9 @@ enum xhci_setup_dev {
- /* bits 16:23 are the virtual function ID */
- /* bits 24:31 are the slot ID */
-
-+/* bits 19:16 are the dev speed */
-+#define DEV_SPEED_FOR_TRB(p)    ((p) << 16)
-+
- /* Stop Endpoint TRB - ep_index to endpoint ID for this TRB */
- #define SUSPEND_PORT_FOR_TRB(p)		(((p) & 1) << 23)
- #define TRB_TO_SUSPEND_PORT(p)		(((p) & (1 << 23)) >> 23)
-@@ -1554,6 +1558,7 @@ struct xhci_hcd {
- 	struct dma_pool	*device_pool;
- 	struct dma_pool	*segment_pool;
- 	struct dma_pool	*small_streams_pool;
-+	struct dma_pool	*port_bw_pool;
- 	struct dma_pool	*medium_streams_pool;
-
- 	/* Host controller watchdog timer structures */
-@@ -1837,6 +1842,10 @@ struct xhci_container_ctx *xhci_alloc_container_ctx(struct xhci_hcd *xhci,
- 		int type, gfp_t flags);
- void xhci_free_container_ctx(struct xhci_hcd *xhci,
- 		struct xhci_container_ctx *ctx);
-+struct xhci_container_ctx *xhci_alloc_port_bw_ctx(struct xhci_hcd *xhci,
-+		gfp_t flags);
-+void xhci_free_port_bw_ctx(struct xhci_hcd *xhci,
-+		struct xhci_container_ctx *ctx);
- struct xhci_interrupter *
- xhci_create_secondary_interrupter(struct usb_hcd *hcd, unsigned int segs,
- 				  u32 imod_interval);
-@@ -1907,6 +1916,11 @@ int xhci_queue_isoc_tx_prepare(struct xhci_hcd *xhci, gfp_t mem_flags,
- int xhci_queue_configure_endpoint(struct xhci_hcd *xhci,
- 		struct xhci_command *cmd, dma_addr_t in_ctx_ptr, u32 slot_id,
- 		bool command_must_succeed);
-+int xhci_queue_get_port_bw(struct xhci_hcd *xhci,
-+		struct xhci_command *cmd, dma_addr_t in_ctx_ptr,
-+		u8 dev_speed, bool command_must_succeed);
-+int xhci_get_port_bandwidth(struct xhci_hcd *xhci, struct xhci_container_ctx *ctx,
-+		u8 dev_speed);
- int xhci_queue_evaluate_context(struct xhci_hcd *xhci, struct xhci_command *cmd,
- 		dma_addr_t in_ctx_ptr, u32 slot_id, bool command_must_succeed);
- int xhci_queue_reset_ep(struct xhci_hcd *xhci, struct xhci_command *cmd,
---
-2.43.4
+在 2025/4/1 14:56, Chen, Yu C 写道:
+> Hi Riwen,
+> 
+> On 3/31/2025 7:52 PM, Rafael J. Wysocki wrote:
+>> On Mon, Mar 31, 2025 at 11:15 AM luriwen <luriwen@hotmail.com> wrote:
+>>>
+>>> 在 2025/3/29 09:07, Takashi Sakamoto 写道:
+>>>> Hi,
+>>>>
+>>>> On Fri, Mar 28, 2025 at 03:47:50PM +0800, Riwen Lu wrote:
+>>>>> The value -rR of MAKEFLAGS implicit do not use make's built-in 
+>>>>> rules and
+>>>>> variables. Previous commit d1d096312176 ("tools: fix annoying 
+>>>>> "mkdir -p
+>>>>> ..." logs when building tools in parallel") removed the MAKEFLAGS=
+>>>>> command for tools and caused the built-in rules for pfrut/firewire
+>>>>> failed to take effect.
+>>>>>
+>>>>> Reported-by: k2ci <kernel-bot@kylinos.cn>
+>>>>> Signed-off-by: Riwen Lu <luriwen@kylinos.cn>
+>>
+>> Yu, can you have a look at this please?
+>>
+>>>>> ---
+>>>>>    tools/firewire/Makefile               | 7 +++++++
+>>>>>    tools/power/acpi/tools/pfrut/Makefile | 2 +-
+>>>>>    2 files changed, 8 insertions(+), 1 deletion(-)
+>>>>
+>>>> As long as testing with v6.14 release, I can not find such failure. I
+>>>> guess that some one has fixed the issue between the commit and the
+>>>> release.
+>>>>
+>>>> Would you please recheck the issue?
+>>>>
+>>>>
+>>>> Thanks
+>>>>
+>>>> Takashi Sakamoto
+>>>
+>>> I have reconfirmed that this type of error does indeed exist when using
+>>> make tools/all or make tools/firewire at commit 4e82c87058f4 ("Merge tag
+>>> 'rust-6.15' of
+>>> git://git.kernel.org/pub/scm/linux/kernel/git/ojeda/linux") in the 6.14
+>>> kernel.
+>>> The relevant error messages are as follows:
+>>> $ make tools/all
+>>>     ...
+>>>     LD       pfrut
+>>> /usr/bin/ld:
+>>> /home/luriwen/workspace/kernel/kernel.org/linux-git/linux/tools/power/acpi/tools/pfrut/pfrut.o:
+>>> in function `print_cap':
+>>> /home/luriwen/workspace/kernel/kernel.org/linux-git/linux/tools/power/acpi/tools/pfrut/pfrut.c:179:
+>>> undefined reference to `uuid_unparse'
+>>> /usr/bin/ld:
+>>> /home/luriwen/workspace/kernel/kernel.org/linux-git/linux/tools/power/acpi/tools/pfrut/pfrut.c:184:
+>>> undefined reference to `uuid_unparse'
+>>> /usr/bin/ld:
+>>> /home/luriwen/workspace/kernel/kernel.org/linux-git/linux/tools/power/acpi/tools/pfrut/pfrut.c:189:
+>>> undefined reference to `uuid_unparse'
+>>> /usr/bin/ld:
+>>> /home/luriwen/workspace/kernel/kernel.org/linux-git/linux/tools/power/acpi/tools/pfrut/pfrut.c:191:
+>>> undefined reference to `uuid_unparse'
+>>> collect2: error: ld returned 1 exit status
+>>>
+>>> $ make tools/firewire
+>>>     SYNC    include/config/auto.conf.cmd
+>>>     HOSTCC  scripts/basic/fixdep
+>>>     HOSTCC  scripts/kconfig/conf.o
+>>>     HOSTCC  scripts/kconfig/confdata.o
+>>>     HOSTCC  scripts/kconfig/expr.o
+>>>     LEX     scripts/kconfig/lexer.lex.c
+>>>     YACC    scripts/kconfig/parser.tab.[ch]
+>>>     HOSTCC  scripts/kconfig/lexer.lex.o
+>>>     HOSTCC  scripts/kconfig/menu.o
+>>>     HOSTCC  scripts/kconfig/parser.tab.o
+>>>     HOSTCC  scripts/kconfig/preprocess.o
+>>>     HOSTCC  scripts/kconfig/symbol.o
+>>>     HOSTCC  scripts/kconfig/util.o
+>>>     HOSTLD  scripts/kconfig/conf
+>>>     DESCEND firewire
+>>> make[3]: *** No rule to make target 'nosy-dump.o', needed by
+>>> 'nosy-dump'.  Stop.
+>>> make[2]: *** [Makefile:72: firewire] Error 2
+>>> make[1]: ***
+>>> [/home/kylin/remote/kernel/kernel.org/linux-git/linux/Makefile:1438:
+>>> tools/firewire] Error 2
+>>> make: *** [Makefile:251: __sub-make] Error 2
+>>>
+> 
+> Maybe add more background in the commit log that, the default
+> MAKEFLAGS in Makefile under Linux's root directory is with "-rR".
+> Before commit d1d096312176 is applied, the -rR is overwriten by
+> the subdirectory's MAKEFLAGS, so it will not cause problems when
+> compiling the sub-directory of tools. After commit d1d096312176,
+> the -rR takes effect, which prevents the tools from using the
+> built-in rules and variables. Maybe also added Fixed: tag.
+> 
+OK. I'll enhance the commit message and add a Fixes tag.
+> Regarding the prfut Makefile, we have fixed the LDFLAGS issue,
+> but the CFLAGS += xxx will not take effect, right?
+> 
+Correct. The CFLAGS += xxx is not take effect.
+> This reminds me that, is it possible to just remove -rR for the
+> sub-directories? In this way we don't have to change the code of
+> every tool one-by-one, pfrut, firewire...
+> Cced Masahiro for guidance.
+> 
+> Something like below:
+> 
+> diff --git a/Makefile b/Makefile
+> index d138b17b8840..853be42ca1a1 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -1431,12 +1431,11 @@ endif
+> 
+>   tools/: FORCE
+>          $(Q)mkdir -p $(objtree)/tools
+> -       $(Q)$(MAKE) LDFLAGS= O=$(abspath $(objtree)) subdir=tools -C 
+> $(srctree)/tools/
+> +       $(Q)$(MAKE) LDFLAGS= MAKEFLAGS="$(filter-out rR,$(MAKEFLAGS))" 
+> O=$(abspath $(objtree)) subdir=tools -C $(srctree)/tools/
+> 
+>   tools/%: FORCE
+>          $(Q)mkdir -p $(objtree)/tools
+> -       $(Q)$(MAKE) LDFLAGS= O=$(abspath $(objtree)) subdir=tools -C 
+> $(srctree)/tools/ $*
+> -
+> +       $(Q)$(MAKE) LDFLAGS= MAKEFLAGS="$(filter-out rR,$(MAKEFLAGS))" 
+> O=$(abspath $(objtree)) subdir=tools -C $(srctree)/tools/ $*
+>   # 
+> ---------------------------------------------------------------------------
+>   # Kernel selftest
+> 
+> I believe this modification is more appropriate.
 
