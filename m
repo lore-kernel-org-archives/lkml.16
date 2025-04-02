@@ -1,87 +1,87 @@
-Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5116A33993
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 14:15:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DBC51E9B0D;
+	Wed,  2 Apr 2025 14:16:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743603346; cv=none; b=KJFe14lkoictrDFNhXN9RmXA8CwbH90UIoejeBsUfe1kS4G3ndf4VE3guogKw8DcyCxLhC1JPmD8/BcLG3pjAh3Wof6bxE/5uGf+0jaKyLFC05bp16VXkk+2z6SwhM0qIHlpNblvU/x0ZINUB9eTbszjsWAmeni9uRWS6aWAcHg=
+	t=1743603385; cv=none; b=U3EE8f7FWDWyirX08lmMdoCHrfUXe6VbWUcEUNcB5hUAkPY4Ew8i9oaKOUs50MOulIztx025FfRCSC8srSoQ0rdy9LKS9hNU5IfyEVlfRXZ2GxM3HmsUl2PzMTMa3nMHM6sjnJvSCCD65S15Dl0sapgyGPvbIoaEnlVDjBXLvNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743603346; c=relaxed/simple;
-	bh=HmxXuuLvTGRW2v0lSm/MV17CTpYebj+3WV1Y2S95tAE=;
+	s=arc-20240116; t=1743603385; c=relaxed/simple;
+	bh=w7oSw39XwiEryX1+UGNcDrLPrmD/z73jLcVEISlafyM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V7X/Q9nzjTIiU/wia/VfPhXxZfYwa6Wt0sH8ASwXYyGY+GEWXGmHyqlYvDQzJa0zDQk4IAe2/Xf1Z/xAC400Cd1Bqv3BIrehsoYe3AdEEvf9t4BRx3J8MxHMWn7D4I8oqEo2O3XOXoO44g7zwveAqGZ7yHOh1W8fFr86CJEGt5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=cJaMMfMJ; arc=none smtp.client-ip=91.218.175.185
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 Content-Type:Content-Disposition:In-Reply-To; b=i4OtmlAA9dZceEFN8mVqGJ8x2peBrkaQD4mTNNylbUEHHMAjM1v/kRZd4BIijGcdfAmqNW0GZS2fzGBH0ZOCKJp5PI0rUtbrfXbSIWc1zf9eC+LLSL0ZV6wlyGek0PPxVI7TjJbUFc9368Hf4fzZChs6I45/kor3cD1ByRZOm7k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=QbIXgIwz; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="cJaMMfMJ"
-Date: Wed, 2 Apr 2025 10:15:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1743603342;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CM4At2M6VUr7hqgzQbMZ99RPNNt354raBAzhLjuv9tY=;
-	b=cJaMMfMJzHtPeZSRikn8f6yctUS9lY7DG5BJtz3NWsqYcgD7NrJlYzXUdVwLCn1MvdI4bt
-	Oa6xIOTFBbcUJkoMDapN9DDPaxurXFHBNoMxSEkwWCn0a/xJl1Vqfz++jGYwQeEN+xzBuj
-	/RxPxYdFUypswelsB0pxamJoN4mGtEc=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Wentao Liang <vulab@iscas.ac.cn>
-Cc: linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	stable@vger.kernel.org
-Subject: Re: [PATCH] bcachefs: Add error handling for zlib_deflateInit2()
-Message-ID: <xjtejtaya3znotupznz4eywstkjvucxwyo2gf4b6phcwq6a2i5@pqicczp3ty5g>
-References: <20250402134544.3550-1-vulab@iscas.ac.cn>
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="QbIXgIwz"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Transfer-Encoding:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=gUPaAmmxVLsnrDYsaEbRgMqcxSa2fPKw/+pgPpN61B8=; b=QbIXgIwzIVZU69jPK/GeVKI/Qm
+	MiQRFwqkf8YIkAZ+MCSdxbwPicUG6J3emg/IyGVqipFcDVG1uJsjkLaSp3sFJxb4CCDk0GrMb52PQ
+	MfId5axYTL1/8Jaf7leVJkTmW8maNxYFmMV2m+Y98qKe4sKD9BgD4vNP5Sd3MU0mFxO1/GjngZE6n
+	dsXM1Kz8HZKApf0clsdclPyMvCBqCJ5D8618m2w8EKyh15TKHxB9cPbkdi/vSmswxB8Mx+hTWUBPw
+	2NzAdTu05z9/+foYRDg4QR+n4Yy4Gwahb+ALNhPtMJux+SAkV8I3y3Ds6lVL/PvoErZZqD4aAvnby
+	dfbz0Isg==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1tzyt7-00C92A-1F;
+	Wed, 02 Apr 2025 22:16:18 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Wed, 02 Apr 2025 22:16:17 +0800
+Date: Wed, 2 Apr 2025 22:16:17 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: T Pratham <t-pratham@ti.com>
+Cc: "David S. Miller" <davem@davemloft.net>, linux-crypto@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Vignesh Raghavendra <vigneshr@ti.com>,
+	Praneeth Bajjuri <praneeth@ti.com>,
+	Kamlesh Gurudasani <kamlesh@ti.com>,
+	Manorit Chawdhry <m-chawdhry@ti.com>
+Subject: Re: [PATCH RFC 1/2] crypto: ti: Add support for SHA224/256/384/512
+ in DTHE V2 driver
+Message-ID: <Z-1GsWEkecDrExCn@gondor.apana.org.au>
+References: <20250218104943.2304730-1-t-pratham@ti.com>
+ <20250218104943.2304730-2-t-pratham@ti.com>
+ <Z8QSVLoucZxG1xlc@gondor.apana.org.au>
+ <f7105c10-7e36-4914-a9e8-e83eb61f0189@ti.com>
+ <Z-1BnSGNab34W6eU@gondor.apana.org.au>
+ <c86a5251-a165-41be-9238-53fb133206a4@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20250402134544.3550-1-vulab@iscas.ac.cn>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <c86a5251-a165-41be-9238-53fb133206a4@ti.com>
 
-On Wed, Apr 02, 2025 at 09:45:44PM +0800, Wentao Liang wrote:
-> In attempt_compress(), the return value of zlib_deflateInit2() needs to be
-> checked. A proper implementation can be found in  pstore_compress().
-> 
-> Add an error check and return 0 immediately if the initialzation fails.
-> 
-> Fixes: 986e9842fb68 ("bcachefs: Compression levels")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+On Wed, Apr 02, 2025 at 07:42:08PM +0530, T Pratham wrote:
+>
+> Thanks! I'm assuming then count[1] will store the digest count in sha512
+> here.
 
-Applied
+count[1] contains the upper 64 bits of the 128-bit sha512 counter.
 
-> ---
->  fs/bcachefs/compress.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/fs/bcachefs/compress.c b/fs/bcachefs/compress.c
-> index f99ff1819597..5af37c40cef0 100644
-> --- a/fs/bcachefs/compress.c
-> +++ b/fs/bcachefs/compress.c
-> @@ -365,13 +365,14 @@ static int attempt_compress(struct bch_fs *c,
->  		};
->  
->  		zlib_set_workspace(&strm, workspace);
-> -		zlib_deflateInit2(&strm,
-> +		if (zlib_deflateInit2(&strm,
->  				  compression.level
->  				  ? clamp_t(unsigned, compression.level,
->  					    Z_BEST_SPEED, Z_BEST_COMPRESSION)
->  				  : Z_DEFAULT_COMPRESSION,
->  				  Z_DEFLATED, -MAX_WBITS, DEF_MEM_LEVEL,
-> -				  Z_DEFAULT_STRATEGY);
-> +				  Z_DEFAULT_STRATEGY) != Z_OK)
-> +			return 0;
->  
->  		if (zlib_deflate(&strm, Z_FINISH) != Z_STREAM_END)
->  			return 0;
-> -- 
-> 2.42.0.windows.2
-> 
+> Is this the same for SHA256? Since there the count is not an array, so
+> is it then count = (digestcnt << 32) & buflen? 
+
+The sha256 counter is only 64 bits long, so only count[0] gets
+written out.  There is no need to do any shifting for either sha256
+or sha512, it should just be:
+
+	count = digestcnt + buflen;
+
+Where digestcnt is a multiple of blocksize and buflen is less than
+blocksize.
+
+Cheers,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
