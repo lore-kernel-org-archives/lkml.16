@@ -1,62 +1,64 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2079.outbound.protection.outlook.com [40.107.93.79])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7344B1373;
-	Wed,  2 Apr 2025 17:35:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.79
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743615335; cv=fail; b=pfU83pW6yOn+YcZC9C3kcNCWTJCA7CWbG0c0eL29kqQ3FVIdUzp8e8UkuhNnIIo6rrxQvJ0r/Sig+glcocSB/ghdYtAEk7ljH8rPwtVh8S6aMtfsvu6k1KHVrmVe3St8J2w9m+3OqJbeqZnlpGatcO6FhqP2RxQzHoy0HqV1v1w=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743615335; c=relaxed/simple;
-	bh=f0Bi62M9dcane4K/XMQi1ZXPvFINKymFEuI2SX+u1qg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=HtFGlo9yZMvPLgd8zjMGGIKekg2M1gQ+O4J81r+ZJzDlTlCV7FlRxE4ThHEqNCb3DcUdDVCBgeI4MSwoHApGIN3nTY2dsohO7slI021piakWC18smF4rqWHSiGEE0vHZm++Wt83IhG0RoW8DuMYoGvtJJZBZvUMwIeyjDAMQ+Hk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=QyP3mGZi; arc=fail smtp.client-ip=40.107.93.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E78251373;
+	Wed,  2 Apr 2025 17:36:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743615374; cv=none; b=Dx2dfL2Or9OkbQl9n16D279sVy1z1q0OzTlpe75M/Fn68I57m8VTSJvED3FFoXdWV5ihKtA+kf3oe5BSX2s3TCXXqwjv9CWxCH27aoyr4cVSZtf9eiC2EagCUVvwDfb6wqkOahv6Krzke23oSq9CTmDpeGfizQ15bq6v2JxIbIA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743615374; c=relaxed/simple;
+	bh=XYepnn+4Z6u72L9tQoVt8YSYl3/VkaS1Sw16suZ3Lnk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BIySjB335t3/KbQhMWSoYzaY2vWxgHllAVVXkvYET7I6jkZWt9vQrn0/7wTSETMZfBD1ILlpsnRHRpnASPhraNYVRAba43MHgeNP7xu/wYCL/Zd0BZqESmid9uNiqGOP7zmZ9JNfjYuDZHqevbv7S5Jom+/i6xYIP3Lf3H3+iwo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EzY+zyLP; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="QyP3mGZi"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=anduuUrwF4oPra0CM20YLTyK/P+y7Eosw7KKTgG+n34L41OJ/Rw5lEkHMYkKx+o0nHn6F22yjNirBWxzapULUm/RL+hWeUqRe9ShmJrg9V4bcB5Ou1FU4FrzMj/DWvC5IDn9Gb6EzKMlRJAP6wZvK16WuhSO+HLYr4VfRRsZaYcdL9OhpIz1bHt1aMmVrFpQT87CyFPII029O8I6g7R3pzYd3FFmQHJxbYC478un27vCmf2HhxMExSPHnkC9HUSkhe3gauuHKEGLXf9+s6fcOQVahaILr1xgCl/scer2gcA3tajVWdAUpo1vfBe7CcQ/ONpdqNzya3Ge5Ib4CEkmcQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vmXY18Upu2d1wVnFSG7sxALYlzsmPYjS8PnWoV3KTjQ=;
- b=jKNHeYvD2rQe2F2tzLmLkT4i3PLzR14VmoDMC30fNYsD8VBUpXMjN4hjhz6+FbqyX8VTiZ9SXqDZP0maEvzSiy+L03LnkwRnk+Bb4Upp6NEwklUganQaMT5KarURzeqrAcOyToYmnM6PaeFfgABdZeE4RnfvQPgHNuRCdMiOMmx5TogWYFkrTWCTvCmof5syYOd1tYp2pa94dhbZ4m0IjmcEsdbZ+tH43ngpyYZBEC7vjtkz/g/x7ng/pVyQSsYqAwfZShBLG8Fm7LGfdN3GCfcXOWwpbpSyC47ADv1n5ruUAXnyoPYScCsetabr+0c2uJo/clkOoyYE+1GV4oQ+hg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vmXY18Upu2d1wVnFSG7sxALYlzsmPYjS8PnWoV3KTjQ=;
- b=QyP3mGZiSEG13Z+lCaf5msL2/etYYwOmYoMkNW80FL7/PxzKotvmirHhpgcS2/KB1M7raM/9ZZ6WSe5Iji9lMjp3ab2CMyVjK0ITGmGcGi5ZZL2tbvVyOLBa1gMMGp1f1XgYZ/TnzhGNYVfFFQuSI6KDA7xWWoorp3MXR77+jdA=
-Received: from BN9PR03CA0472.namprd03.prod.outlook.com (2603:10b6:408:139::27)
- by SN7PR12MB7155.namprd12.prod.outlook.com (2603:10b6:806:2a6::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Wed, 2 Apr
- 2025 17:35:30 +0000
-Received: from MN1PEPF0000ECD7.namprd02.prod.outlook.com
- (2603:10b6:408:139:cafe::5d) by BN9PR03CA0472.outlook.office365.com
- (2603:10b6:408:139::27) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8534.54 via Frontend Transport; Wed,
- 2 Apr 2025 17:35:29 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- MN1PEPF0000ECD7.mail.protection.outlook.com (10.167.242.136) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8606.22 via Frontend Transport; Wed, 2 Apr 2025 17:35:29 +0000
-Received: from [172.31.188.187] (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 2 Apr
- 2025 12:35:23 -0500
-Message-ID: <fff4f53b-eec6-409a-840a-0e8be64fe1a2@amd.com>
-Date: Wed, 2 Apr 2025 23:05:16 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EzY+zyLP"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-39129fc51f8so72821f8f.0;
+        Wed, 02 Apr 2025 10:36:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743615370; x=1744220170; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=xJF/yDLwsfW5UrwVXzqdx75NmNQKrLzOg1Gm4WonWkE=;
+        b=EzY+zyLPCzD7dvy0BGiC5yBBXyAtKkCJxK8C6VUn52k0ZcXxUSG06cdePOOSdZjaqz
+         KeLQgL49kd698JsOuMZw6wutysYHg4jZ5kEFfEI648cTss4tL6ss9yZNi27TbgPntWU3
+         2mM3Rqec88xK/BeOQOg323gARIxGGouNnNZwM5MRCBKVLWn88bQeyK+z10l32b4DqhgT
+         WpVYq7R4A1krdsiU0A53vHtJh+uYB0W1Ki+elgM/zS1egLw+l4NQSE5NzQLy4ISXSo0h
+         z4xUnrIPjF2qSA4yTzj8BRV+utgAGlDS0jilwB1qf+SV8drvMEzdswiZbPB8bSvKohVq
+         6rtw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743615370; x=1744220170;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xJF/yDLwsfW5UrwVXzqdx75NmNQKrLzOg1Gm4WonWkE=;
+        b=eSNba3HDmVMXitTVmHToUNc2W2i1b0suEsrW85/p9N9IwjoksdD0aWOAVXfA3MwfIU
+         qSKGK0hyX7Ow7lD4+OPBPPKhMA0uRbRdej95zz2LlF6WrapIrRdqB/A/6j3bPwXlcT/v
+         4aMirCYwemzsrJpNagTO7dtbDgAezjGzPPqqmkD5Bt7KJjs3SJVo7jYxyis7nV48tVE/
+         bJtrIP3d/PrSCztzhXghetHuMuNcDqHOtjHh2DEfEpDIJrDD9E4qGXJbb5dXaW1KsssY
+         Ih+XaaNo1Su+6ey4Q29qUk7GwK7dhmNqgcSc23j7qEfwMEV5rbr/eKpzBpvuosVh4xlS
+         Alww==
+X-Forwarded-Encrypted: i=1; AJvYcCU+z86DYvLaABM0P3cWUWSI7nfzVf4eUS5Sx8BTVLwSDwySj/AkgWWh9HPw3cAQg9IgDA/z2BJKxvRdVQ==@vger.kernel.org, AJvYcCUs0JR28gWP+IOrQiQ657C7FLry3lswFrMbT6KJRY0J66EBC25Z8jyGrveV9o7OaLfKwlqVf40LaChJ+0M=@vger.kernel.org, AJvYcCVtDhc1xMzfSG7oQsnvjLxD/ym1pbqWmsF3X5ov9vYGWfM5pHhIE+1EFzzRfOkYgYQ0vw+i61cy@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy1gStJKRMvKr87U++DHmkLquRxDMmdGh9WJD5VRM+5QwUArK6j
+	0c5cLJjYGIcpAN+NKBTxsxXHBgnQIit9TczwzZH42Mz89iF3niRyPMCiMA==
+X-Gm-Gg: ASbGncvuNqByKnwFB6xbOAp3Evi7NT9YNho08lLLPsySJN20fODG3gEHZDctT4366EI
+	+SiQEwTocxBzWke22sT1gSItOh6FVLMIVoDoLmVZmjKU7Xsi1OVcLGbmSEyChNJbwEipHegvImQ
+	vxDOl0f30JWkgPfMCUJ2B41imlYzXlaINhAU9EoKhIEJvF8nocxKQoOeg3BGJ9P35Eob9HeBQ5U
+	LaEYCrP+C28puMmVVdouyAWD+1AE4yDLGYLx9a9LWXnWi2xxhv4Sih7XBW5ZU/I75HRj/6Clkj0
+	qkDVYBUr+me6q4Z30zqz4yzY4ElA9xDaTLxw7wf486RdeDJUabps5jBbN9UpjlrVdw==
+X-Google-Smtp-Source: AGHT+IEKaq5swH+Ld/WaSM+FM2PRUctpPNIAzaLPfh6179lOd77dDsKSDCZuW45hwzdmjqiQ95AdYg==
+X-Received: by 2002:a05:6000:4014:b0:391:3f4f:a17f with SMTP id ffacd0b85a97d-39c12114f62mr13489731f8f.42.1743615369806;
+        Wed, 02 Apr 2025 10:36:09 -0700 (PDT)
+Received: from [172.27.62.155] ([193.47.165.251])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b6656afsm17369462f8f.40.2025.04.02.10.36.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Apr 2025 10:36:09 -0700 (PDT)
+Message-ID: <afae7a4b-e39a-4775-89e4-bd967d1fdf4e@gmail.com>
+Date: Wed, 2 Apr 2025 20:36:05 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,145 +66,58 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] sched/numa: Add statistics of numa balance task migration
- and swap
-To: Chen Yu <yu.c.chen@intel.com>, Peter Zijlstra <peterz@infradead.org>,
-	"Ingo Molnar" <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
-	"Vincent Guittot" <vincent.guittot@linaro.org>, Mel Gorman <mgorman@suse.de>,
-	"Johannes Weiner" <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>, Shakeel Butt
-	<shakeel.butt@linux.dev>, "Muchun Song" <muchun.song@linux.dev>, Andrew
- Morton <akpm@linux-foundation.org>
-CC: Tim Chen <tim.c.chen@intel.com>, Aubrey Li <aubrey.li@intel.com>, "Rik van
- Riel" <riel@surriel.com>, Raghavendra K T <raghavendra.kt@amd.com>, "Baolin
- Wang" <baolin.wang@linux.alibaba.com>, Xunlei Pang
-	<xlpang@linux.alibaba.com>, <linux-kernel@vger.kernel.org>,
-	<cgroups@vger.kernel.org>, <linux-mm@kvack.org>, Chen Yu
-	<yu.chen.surf@foxmail.com>
-References: <20250402010611.3204674-1-yu.c.chen@intel.com>
+Subject: Re: [PATCH] net/mlx4_en: Remove the redundant NULL check for the
+ 'my_ets' object
+To: =?UTF-8?B?0JLQsNGC0L7RgNC+0L/QuNC9INCQ0L3QtNGA0LXQuQ==?=
+ <a.vatoropin@crpt.ru>, Tariq Toukan <tariqt@nvidia.com>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+ "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "lvc-project@linuxtesting.org" <lvc-project@linuxtesting.org>
+References: <20250401061439.9978-1-a.vatoropin@crpt.ru>
 Content-Language: en-US
-From: K Prateek Nayak <kprateek.nayak@amd.com>
-In-Reply-To: <20250402010611.3204674-1-yu.c.chen@intel.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN1PEPF0000ECD7:EE_|SN7PR12MB7155:EE_
-X-MS-Office365-Filtering-Correlation-Id: 87444780-b839-43d7-bdf4-08dd720cc2e2
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|1800799024|7416014|376014|36860700013|921020|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?Q25tR25NL0haWDVVTU1GZ0crZnN6cHpQb3pvRDVTM3JzdzY0YzRBTENVNHRy?=
- =?utf-8?B?eU1GRlpOM1prZHptWjRYOVRiTnRnSkxKdUM3ZWd3TlF2MzBrQktEc2daLzda?=
- =?utf-8?B?eGcyb0IvVVUvNGF3c0ZlV1QydlZCdHpzVjhlL3lWV2o4dVpTcW93cFBsb1BN?=
- =?utf-8?B?WGExNUkvdUt0SWJxdDNmQWZoY2xuMVRQQktjWWZoQ2xqcUVRUjVaQUdLZm4w?=
- =?utf-8?B?MzZWTUovSjJZZlhUaEdMVlB3Z1pBSENseWxhakFmU0FiU3pRYXg0U0g4T2wx?=
- =?utf-8?B?MHd3MjRTcE9JanBZaitmcVBORVgydjd6Umd3cWVKbURDR1JkRndwUDBST1dl?=
- =?utf-8?B?TjAwTlQ2MGlQa09WbERSeExzNVhOSjBYNUNKYTQ0T0dpNk1mMGdNY09xZjZ1?=
- =?utf-8?B?VVlRdGpPc205bXl6UitFOHRvTDFIRkU2N0lURUlXS3pseDNtVW5GcXBidkxC?=
- =?utf-8?B?SDhQTGUvRTgxMGRhbHNmK0swUlo4OGx3N0dta0MvTmNuK2ZtR3hiQ3c2OVFo?=
- =?utf-8?B?Uzd3RzdLa3EyWlp5WGt3VEMvTUw5MktFZ0NqaWpucjVucm1pc2FTYUhwTEs2?=
- =?utf-8?B?RTg1NEdSc000Z0NHTlFkak4veXZIZDU1ekRIT2dUMmppZGVvMk44cW9QTU14?=
- =?utf-8?B?bm5GcDNaUVFWN0JDWG43dzJ1cDdQa21WakVJdkpyUnJYQVc5ckgxMVJ0aGpR?=
- =?utf-8?B?UVFOUmZZbHRtbmNVblMxbmV2bnJ0VU14VS9XbFFvYkEvd2p6bU4vSUxIbG94?=
- =?utf-8?B?VEtxM1U5UTNpQ0JOWWxXNkNoeFhFZk1LNVJSdXZhMWJHNVR6SytmTFNkeFFy?=
- =?utf-8?B?MnpsanJVdy9LeFYwTGQ0a055RENQeUtLZ3pCeEZQMG1lLzFRZWtWNTV2amFt?=
- =?utf-8?B?S1prVlk4STF1bmlxWEJaZmRyQjhyOXNoMzB2TVBER3V3bTRDTDZtMXJFbmM5?=
- =?utf-8?B?b0dONk4wWVN1ZzgzZ2xsMmE4Mk1UcVB0TlU0amVLNW9jZzZLbjdiOHJTSmFT?=
- =?utf-8?B?aU83c2Z5OEZkZUU0SXBDTmNJNU1Kblk4U3ErMit0dHlJTlNocG9RK0RENkxT?=
- =?utf-8?B?aEtWZHk3eUlNNThiUWlDL2VxNys4MmRRNmh2Z3graGd0QkJxWHZQeWw2dWtq?=
- =?utf-8?B?a2RQKzRoNnVCeStDaXQ5YUsvNHhiaUUrTG9DSDErd3Z5TzBCNk9kZmFibEpB?=
- =?utf-8?B?VW5wZmxlcjJiSElpdHptYmdUaERpdkNiZ3lLZkRtNHYxVE1NKzNKTTVTaThy?=
- =?utf-8?B?cnZWUTZ0U1J4VW05eHhNTlNCTVhlbk9KdU9XSGxHcmtYc0ZRZXV6ejVrMnpq?=
- =?utf-8?B?amNJUGtqS0hIT2VCdTFGdnErbURpUlhUY09NdjVwd21qd0ZWUGQyMzY0QUx0?=
- =?utf-8?B?OXpKV2ZWZFhZSEZYVnZOdlNoZGd4OGg5Z1JFUDlxckR5eHhBRy8zMEdvdUpF?=
- =?utf-8?B?ZXZYaUJyYmk0QkRrOXErclhoRzJPejIzbEFma3RmUStyeUUzOUxrT2dnMjhz?=
- =?utf-8?B?K2xwVlo5ekhjRTdObTVDUXJoaXhPc1NYWC9VeGNoY3pUTDYzbThESEs0N3F6?=
- =?utf-8?B?K2hSQUZpZjhXM21qenN0OWJvbXM5dTBnN0ZLTUw1bUhSb2ZnRDdXZkpRbVRy?=
- =?utf-8?B?b25PYnFWNmw5a2lrdUlYWUVvelFKWkJGcnFsSENBWCt3NldtYUdQU2NJaUFM?=
- =?utf-8?B?aFNENnBVMlBpVGVydnZhdHZDbFV5QVdxMk95bVZoNEZ0RjcxYkVmM2JBZENv?=
- =?utf-8?B?YzYySFlDMXhDc1JJa0Z0SDgyVlhwSVZKYzBBa1RTN1U1c080THFSNWxlNEFh?=
- =?utf-8?B?V0xBOGdoKy8wSnBMbnIwS1VLd2V1ZzUvbGNiVDZaU1FzR1RMLytydFdlVUdQ?=
- =?utf-8?B?VDZzdEE2SXl6SEpXWmxRY2trL01rRXVRaWhtWDMraXpCVHE0MHlTMVhlTXpM?=
- =?utf-8?B?eVBoYVVMNWtCTWFmcS9YeWdFWjFSRFZ4dnNvdEhWOGNLTW5URmtuUWRVWVFB?=
- =?utf-8?B?SnVDcENLd0ZGSGdkbkkwM1NVektzTDJoc3RIRDVGdWlhQmdpaXl1TDF1MVh4?=
- =?utf-8?Q?CRYo/s?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(7416014)(376014)(36860700013)(921020)(7053199007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Apr 2025 17:35:29.0823
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 87444780-b839-43d7-bdf4-08dd720cc2e2
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	MN1PEPF0000ECD7.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB7155
+From: Tariq Toukan <ttoukan.linux@gmail.com>
+In-Reply-To: <20250401061439.9978-1-a.vatoropin@crpt.ru>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hello Chenyu,
 
-On 4/2/2025 6:36 AM, Chen Yu wrote:
-> On system with NUMA balancing enabled, it is found that tracking
-> the task activities due to NUMA balancing is helpful. NUMA balancing
-> has two mechanisms for task migration: one is to migrate the task to
-> an idle CPU in its preferred node, the other is to swap tasks on
-> different nodes if they are on each other's preferred node.
+
+On 01/04/2025 9:15, Ваторопин Андрей wrote:
+> From: Andrey Vatoropin <a.vatoropin@crpt.ru>
 > 
-> The kernel already has NUMA page migration statistics in
-> /sys/fs/cgroup/mytest/memory.stat and /proc/{PID}/sched.
-> but does not have statistics for task migration/swap.
-> Add the task migration and swap count accordingly.
+> Static analysis shows that pointer "my_ets" cannot be NULL because it
+> points to the object "struct ieee_ets".
 > 
-> The following two new fields:
+> Remove the extra NULL check. It is meaningless and harms the readability
+> of the code.
 > 
-> numa_task_migrated
-> numa_task_swapped
+> Found by Linux Verification Center (linuxtesting.org) with SVACE.
 > 
-> will be displayed in both
-> /sys/fs/cgroup/{GROUP}/memory.stat and /proc/{PID}/sched
-
-Running sched-messaging with schedstats enabled, I could see both
-"numa_task_migrated" and "numa_task_swapped" being populated for the
-sched-messaging threads:
-
-$ for i in $(ls /proc/4030/task/); do grep "numa_task_migrated" /proc/$i/sched; done | tr -s ' ' | cut -d ' ' -f3 | sort | uniq -c
-     400 0
-     231 1
-      10 2
-
-$ for i in $(ls /proc/4030/task/); do grep "numa_task_swapped" /proc/$i/sched; done | tr -s ' ' | cut -d ' ' -f3 | sort | uniq -c
-     389 0
-     193 1
-      47 2
-      11 3
-       1 4
-
-> 
-> Previous RFC version can be found here:
-> https://lore.kernel.org/lkml/1847c5ef828ad4835a35e3a54b88d2e13bce0eea.1740483690.git.yu.c.chen@intel.com/
-> 
-> Signed-off-by: Chen Yu <yu.c.chen@intel.com>
-
-Feel free to add:
-
-Tested-by: K Prateek Nayak <kprateek.nayak@amd.com>
-
--- 
-Thanks and Regards,
-Prateek
-
+> Signed-off-by: Andrey Vatoropin <a.vatoropin@crpt.ru>
 > ---
-> RFC->v1: Rename the nr_numa_task_migrated to
->           numa_task_migrated, and nr_numa_task_swapped
->           numa_task_swapped in /proc/{PID}/sched,
->           so both cgroup's memory.stat and task's
->           sched have the same field name.
->
+>   drivers/net/ethernet/mellanox/mlx4/en_dcb_nl.c | 3 ---
+>   1 file changed, 3 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/mellanox/mlx4/en_dcb_nl.c b/drivers/net/ethernet/mellanox/mlx4/en_dcb_nl.c
+> index 752a72499b4f..be80da03a594 100644
+> --- a/drivers/net/ethernet/mellanox/mlx4/en_dcb_nl.c
+> +++ b/drivers/net/ethernet/mellanox/mlx4/en_dcb_nl.c
+> @@ -290,9 +290,6 @@ static int mlx4_en_dcbnl_ieee_getets(struct net_device *dev,
+>   	struct mlx4_en_priv *priv = netdev_priv(dev);
+>   	struct ieee_ets *my_ets = &priv->ets;
+>   
+> -	if (!my_ets)
+> -		return -EINVAL;
+> -
+>   	ets->ets_cap = IEEE_8021QAZ_MAX_TCS;
+>   	ets->cbs = my_ets->cbs;
+>   	memcpy(ets->tc_tx_bw, my_ets->tc_tx_bw, sizeof(ets->tc_tx_bw));
 
-[..snip..]
+Thanks for your patch.
+You can add my tag when you resend, once the submission window opens.
+
+Reviewed-by: Tariq Toukan <tariqt@nvidia.com>
