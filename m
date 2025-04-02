@@ -1,137 +1,138 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout-b3-smtp.messagingengine.com (fout-b3-smtp.messagingengine.com [202.12.124.146])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE3E320E00B
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 09:10:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEF0720E00B;
+	Wed,  2 Apr 2025 09:10:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.146
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743585023; cv=none; b=TJRVxNkOe8CI72pz6gKHplNVh0tDqBbpdJejJU/unFJFnJvAZYmZz5ZUHxff/0R7iNCBauS0J4KiZ6smKotbwFLVflnqxrPgkIDGyAs/lH6pwTlysWhSA2vD0WxI8ZfaMmzJmRnMMjgZySWjwXkrXVi9YElRt/QJrMohUIC1xs0=
+	t=1743585059; cv=none; b=hzLScNtSlSQaII0FF+Aur13841RK4WlJaQcUJ0C1pFtbUV2Zu/Oe7A1DJZH6DdLZ/JiAoGgNgPxxSJxgLUD3Lb83ZxFz8ItpkaxcUNQ9pFDzJT/Ds58fGROXj9cXEZZNGz0TkuTr5pxdB/AZtT8uGz0KasER4hMp7dNc2tY73rY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743585023; c=relaxed/simple;
-	bh=JXe9+MoAHNEbl3ShXRxAj4qmSQFLrbwr4XO8/clU/LU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HMN/XP0s7VjapttEaQZYb0PCeyKYp02mb/nSobI5Qls6n1RI2vlpOvdPysG1jLjgmqUiCYMP7pgetjsMgwfnoZtIRlqz/w0aSvccGgg+/lSl3lDDZPaMJLREgFgNCplCeo77qE30Tfe41/lkNjcBgcUC0kjKzC/8zRM5G+vYlO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=j7Y5yx5s; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
+	s=arc-20240116; t=1743585059; c=relaxed/simple;
+	bh=VSe3OeVWWnLk2r3FC4J7BJMmPc/Q2MEG9Hs1eEpSz2A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=K9gG74cA6GEDfl/vEqxCGvnUgSx6Vub3l2EdNikqUhyUKCU0GyT4x5asSHGPbIQ7u3Yr1nQi7Bm3odzT29syd6i5R/glGWoxRI49pq+0Xa9AnfK37ViDpQZ04s3iN+jJSPPBJUeIoCwKI9u12i5PBsgYVuQzncw3FlO9oRwsZBs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.fm; spf=pass smtp.mailfrom=fastmail.fm; dkim=pass (2048-bit key) header.d=fastmail.fm header.i=@fastmail.fm header.b=TYycLM0v; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=HM9bPB+M; arc=none smtp.client-ip=202.12.124.146
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.fm
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastmail.fm
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="j7Y5yx5s"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43ce71582e9so47033495e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 02:10:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=citrix.com; s=google; t=1743585020; x=1744189820; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=U7z/KlsKyhhnbH8XEsUbytOmm1NX0p4soUYAosgwOb4=;
-        b=j7Y5yx5s63ojq7Us8NftaVp77aZTOclglZe2/Uw2ZbKEk4kgNvCICXx23fHz6FrALH
-         C75s7lpSBmQolqOzSnD7pFMQAHcJse8fPVVB6aPdrMgqvlW5KdNAlHH+9kQUwrUNzI1u
-         VrfiIGtrxRtVFFfZoSXxN0oWydJeNhulIR+34=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743585020; x=1744189820;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=U7z/KlsKyhhnbH8XEsUbytOmm1NX0p4soUYAosgwOb4=;
-        b=o4Rw00UA5Wyme9bSlBOuE2nglA71IXSRI3PW/NuSJswsKZH9YZdBCqYf9zgV5qXYY3
-         69pav/mOvKPFKj+oujM6zVRtbr7yNYQNNQVFNjBMr+KYW0Sb+lyN5yI0Gy6a0Napd9ua
-         su4GMeTjPmLXkMO8RZ4gJaC5KFQUPJSxTrvRAXBgO9JlWwYv/L/d066TvzaM0Sp7vb23
-         moaF+jwUu1fXQDPKVq7+e+mu22BLclgGHno0ma+Tqs7mxroXNljzvJ9sZCmHKx/ylSZk
-         CDv1x/SG8GJg8Dgn7PHl5P9+yIaoF/wwfut2u5LzcHwn33aF+u7st4xGr+dMwIOCxL7S
-         7u/g==
-X-Gm-Message-State: AOJu0YxFLa7V3HXSdqa2jMdc3uBWroGUJuBLQcqDkr39h0gvVoMV4oX2
-	AtTpQEb25/bGs3F6m4C5W1jGWwoDvYMVQn7EfJpHK5OAEz3csjKgqYXOcmBepi7N9GvTMygsw0r
-	o5TM=
-X-Gm-Gg: ASbGncvgjHCENBzI5e+5LCFklyzq2QdE8Fbfh/IhFMSiVR4enKds4bT2eJ8F5a0kQPu
-	Cc5F+3jGyPQdF93SQB0O3O54O3eKuW4X2PjaxHmdCSpIu430lm0vj09F1DOH11ByYN6+HpF5OLU
-	HChMVD0vKt+gndlUDuFu3+X1WwCylPyg1HUVjbg1xjuT++1QnOl0UoQm55hPAvXojlUCZy2wvOA
-	uGbyw8b0eGzsvSvTPW14YkFBZUxwks/QZ1cLlJ9J4VB9BX/NNObn1FJwTaDCWSGSoAD4eGm3zwU
-	zFxxAMPDGs8FXJK9JeZ0qUCPofTO1GKznWpy/QjmPAqkUrkmKn9tuQORkflo3nUqR94Skn/ZRcT
-	tkGqRX1o5pMm2LNcHWQ==
-X-Google-Smtp-Source: AGHT+IHaT2jIGzrZL2WfHszAPwDWfxKqNuAXnqoprQT/S0V/rRcapqWZ9joJ1OyHcV4WCfVLYdjkAw==
-X-Received: by 2002:a05:600c:1c1c:b0:43c:fd72:f028 with SMTP id 5b1f17b1804b1-43db62b5d7emr131469375e9.29.1743585019725;
-        Wed, 02 Apr 2025 02:10:19 -0700 (PDT)
-Received: from localhost.localdomain (host-92-26-98-202.as13285.net. [92.26.98.202])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43eb613aabesm14292515e9.39.2025.04.02.02.10.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Apr 2025 02:10:19 -0700 (PDT)
-From: Andrew Cooper <andrew.cooper3@citrix.com>
-To: LKML <linux-kernel@vger.kernel.org>
-Cc: Andrew Cooper <andrew.cooper3@citrix.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: x86/idle: Remove barriers for X86_BUG_CLFLUSH_MONITOR
-Date: Wed,  2 Apr 2025 10:10:17 +0100
-Message-Id: <20250402091017.1249019-1-andrew.cooper3@citrix.com>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=fastmail.fm header.i=@fastmail.fm header.b="TYycLM0v";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="HM9bPB+M"
+Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
+	by mailfout.stl.internal (Postfix) with ESMTP id B7704114011A;
+	Wed,  2 Apr 2025 05:10:55 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-02.internal (MEProxy); Wed, 02 Apr 2025 05:10:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fastmail.fm; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1743585055;
+	 x=1743671455; bh=jUcSKZNgP+Sg/DbCPgXX4khSpS1DYk5lWGNv40G5oaI=; b=
+	TYycLM0vHgClioRO+V1aCV3RpEHvVzc2wW+b7rbdK7g83WOxAie9aBNrqurSQZYx
+	VGzQGtoliTjk2XFf+g1muwvANWGHcLRxlmeF0tNvuGS9Fu0+/yjgcYf3powpXu/S
+	keKjTTyc8fhIk949Qr+RtOI4mtpmGygKw81vVP0cCL/WFDqeV9scuroDdaLngPyz
+	3ZKb/DYJoeFLwOu6poas7lKX6dCgnWYuGApajrGy3ZQ4Xr2hQ6shEQ7o4h4jaG2F
+	ywG2n9Tzf+EgWyhLfWOg0voW/pYyabd+x3K2CevizZKeeBbnrA8hY+131JY3I/0o
+	ydTFVTI6oyw0f+H5hmE7qQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1743585055; x=
+	1743671455; bh=jUcSKZNgP+Sg/DbCPgXX4khSpS1DYk5lWGNv40G5oaI=; b=H
+	M9bPB+MD7WOfJKSm9LbHnYaDx1S2wIBeP1aUYeqmRb3ftWGD4jLVJvDg4MPNZNaI
+	tS83pafPiSm45eTXg8wVVxW5ZbkoMOJc9MVbmRUEuMgBSqi1/1MXCWZDyDGxhz8X
+	SdzDDFyzbTL1ysRsKfjIZN9PeOnnyoTIlfWGlqm/yQ55ePpFwVfJOIxWvIdkfQXN
+	30TcODpqI0mGB5seOlZQGwY/lgO7StGbMTjLqw5LW34R3tx+WDduiAygqtZkW6ZI
+	Za21ou6niA1Jtcw2knzb+yfRzqPVZIuCtCEOkJ/NxPipWN5C73JiLeLqP4fp+yP2
+	q+5zU5Mk7zObJ3SgSmRfA==
+X-ME-Sender: <xms:Hv_sZyQvn7HkvJfNdnGs_meUZQBRg_NtmTzYTuAx3SuOYGPAG4v6_g>
+    <xme:Hv_sZ3yGR5ptWUUhjYu_Ox-uoFJ4VWVbg7Z96DY3mM3POSdR52IjHxzqVQWzJ4h2y
+    VMj4iIGKQJLRYME>
+X-ME-Received: <xmr:Hv_sZ_0C-GzncG3R2lblJ4BAPnwO9DH57mL7tTqe-snV5wNMyz9i02uyHaEUn9YE_yN7ucnan7SLAE5J-IctbvePngcpHW7scfTdFkZnNC6qc_41-HqY>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddukeehvdekucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtkeertddt
+    vdejnecuhfhrohhmpeeuvghrnhguucfutghhuhgsvghrthcuoegsvghrnhgurdhstghhuh
+    gsvghrthesfhgrshhtmhgrihhlrdhfmheqnecuggftrfgrthhtvghrnhepudelfedvudev
+    udevleegleffffekudekgeevlefgkeeluedvheekheehheekhfefnecuvehluhhsthgvrh
+    fuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsggvrhhnugdrshgthhhusggv
+    rhhtsehfrghsthhmrghilhdrfhhmpdhnsggprhgtphhtthhopeelpdhmohguvgepshhmth
+    hpohhuthdprhgtphhtthhopehjrggtohesuhhlshdrtghordiirgdprhgtphhtthhopehm
+    ihhklhhoshesshiivghrvgguihdrhhhupdhrtghpthhtoheplhhinhhugidqfhhsuggvvh
+    gvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghr
+    nhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegthhhrihhsthhoph
+    hhvgdrjhgrihhllhgvthesfigrnhgrughoohdrfhhrpdhrtghpthhtohepjhhorghnnhgv
+    lhhkohhonhhgsehgmhgrihhlrdgtohhmpdhrtghpthhtoheprhguuhhnlhgrphesihhnfh
+    hrrgguvggrugdrohhrghdprhgtphhtthhopehtrhgrphgvgihithesshhprgifnhdrlhhi
+    nhhkpdhrtghpthhtohepuggrvhhiugdrlhgrihhghhhtrdhlihhnuhigsehgmhgrihhlrd
+    gtohhm
+X-ME-Proxy: <xmx:H__sZ-D_Z6Q2psY0YA439HNCyavSC38TJ7Whb_y8v-F8cAIO0hksRw>
+    <xmx:H__sZ7j27s5vINVZI2ZZfoBGMgfe968pFn4DGcTOzHp3ou-_DN5N8A>
+    <xmx:H__sZ6r47k-ziJw5inLc20YGY-mHULEfNJSvrnuco0rxG9MYQ6YXpA>
+    <xmx:H__sZ-gtftfwRV8CELCSFGvpDR5VmOFG5dCnE6xOsE5lal6LpVH4bw>
+    <xmx:H__sZ8qGwNo9cRmwYSV5WpJYOCQXkbOdiYNr1vup8BThFeZeqp8WRcL7>
+Feedback-ID: id8a24192:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 2 Apr 2025 05:10:53 -0400 (EDT)
+Message-ID: <0b0a6adf-348e-425d-b375-23da3d6668d0@fastmail.fm>
+Date: Wed, 2 Apr 2025 11:10:52 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] fuse: Adjust readdir() buffer to requesting buffer
+ size.
+To: Jaco Kroon <jaco@uls.co.za>, Miklos Szeredi <miklos@szeredi.hu>
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ christophe.jaillet@wanadoo.fr, joannelkoong@gmail.com,
+ rdunlap@infradead.org, trapexit@spawn.link, david.laight.linux@gmail.com
+References: <20250314221701.12509-1-jaco@uls.co.za>
+ <20250401142831.25699-1-jaco@uls.co.za>
+ <20250401142831.25699-3-jaco@uls.co.za>
+ <CAJfpegtOGWz_r=7dbQiCh2wqjKh59BqzqJ0ruhtYtsYBB+GG2Q@mail.gmail.com>
+ <19df312f-06a2-4e71-960a-32bc952b0ed2@uls.co.za>
+ <CAJfpegseKMRLpu3-yS6PeU2aTmh_qKyAvJUWud_SLz1aCHY_tw@mail.gmail.com>
+ <3f71532b-4fed-458a-a951-f631155c0107@uls.co.za>
+ <CAJfpegtutvpYYzkW91SscwULcLt_xHeqCGLPmUHKAjozPAQQ8A@mail.gmail.com>
+ <0cf44936-57ef-42f2-a484-7f69b87b2520@uls.co.za>
+From: Bernd Schubert <bernd.schubert@fastmail.fm>
+Content-Language: en-US, de-DE, fr
+In-Reply-To: <0cf44936-57ef-42f2-a484-7f69b87b2520@uls.co.za>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Commit 7e98b7192046 ("x86, idle: Use static_cpu_has() for CLFLUSH
-workaround, add barriers") adds barriers, justified with:
 
-  ... and add memory barriers around it since the documentation is explicit
-  that CLFLUSH is only ordered with respect to MFENCE.
 
-The SDM currently states:
+On 4/2/25 10:52, Jaco Kroon wrote:
+> Hi,
+> 
+> On 2025/04/02 10:18, Miklos Szeredi wrote:
+>> On Wed, 2 Apr 2025 at 09:55, Jaco Kroon <jaco@uls.co.za> wrote:
+>>> Hi,
+>>>
+>>> I can definitely build on that, thank you.
+>>>
+>>> What's the advantage of kvmalloc over folio's here, why should it be
+>>> preferred?
+>> It offers the best of both worlds: first tries plain malloc (which
+>> just does a folio alloc internally for size > PAGE_SIZE) and if that
+>> fails, falls back to vmalloc, which should always succeed since it
+>> uses order 0 pages.
+> 
+> So basically assigns the space, but doesn't commit physical pages for
+> the allocation, meaning first access will cause a page fault, and single
+> page allocation at that point in time?  Or is it merely the fact that
+> vmalloc may return a virtual contiguous block that's not physically
+> contiguous?
 
-  Executions of the CLFLUSH instruction are ordered with respect to each
-  other and with respect to writes, locked read-modify-write instructions,
-  and fence instructions[1].
 
-With footnote 1 reading:
+Yes vmalloc return buffers might not be physically contiguous - not
+suitable for hardware DMA. And AFAIK it is also a blocking allocation.
 
-  Earlier versions of this manual specified that executions of the CLFLUSH
-  instruction were ordered only by the MFENCE instruction.  All processors
-  implementing the CLFLUSH instruction also order it relative to the other
-  operations enumerated above.
 
-i.e. The SDM was incorrect at the time, and barriers should not have been
-inserted.  Double checking the original AAI65 errata (not available from
-intel.com any more) shows no mention of barriers either.
-
-Additionally, drop the static_cpu_has_bug() and use a plain alternative.
-The workaround is a single instruction, with identical address setup to the
-MONITOR instruction.
-
-Link: https://web.archive.org/web/20090219054841/http://download.intel.com/design/xeon/specupdt/32033601.pdf
-Fixes: 7e98b7192046 ("x86, idle: Use static_cpu_has() for CLFLUSH workaround, add barriers")
-Signed-off-by: Andrew Cooper <andrew.cooper3@citrix.com>
----
-CC: Thomas Gleixner <tglx@linutronix.de>
-CC: Ingo Molnar <mingo@redhat.com>
-CC: Borislav Petkov <bp@alien8.de>
-CC: Dave Hansen <dave.hansen@linux.intel.com>
-CC: x86@kernel.org
-CC: "H. Peter Anvin" <hpa@zytor.com>
-CC: linux-kernel@vger.kernel.org
-
-diff --git a/arch/x86/include/asm/mwait.h b/arch/x86/include/asm/mwait.h
-index ce857ef54cf1..dff9e7d854ed 100644
---- a/arch/x86/include/asm/mwait.h
-+++ b/arch/x86/include/asm/mwait.h
-@@ -116,13 +116,11 @@ static __always_inline void __sti_mwait(unsigned long eax, unsigned long ecx)
- static __always_inline void mwait_idle_with_hints(unsigned long eax, unsigned long ecx)
- {
- 	if (static_cpu_has_bug(X86_BUG_MONITOR) || !current_set_polling_and_test()) {
--		if (static_cpu_has_bug(X86_BUG_CLFLUSH_MONITOR)) {
--			mb();
--			clflush((void *)&current_thread_info()->flags);
--			mb();
--		}
-+		const void *addr = &current_thread_info()->flags;
- 
--		__monitor((void *)&current_thread_info()->flags, 0, 0);
-+		alternative_input("", "clflush (%[addr])", X86_BUG_CLFLUSH_MONITOR,
-+				  [addr] "a" (addr));
-+		__monitor(addr, 0, 0);
- 
- 		if (!need_resched()) {
- 			if (ecx & 1) {
+Bernd
