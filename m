@@ -1,171 +1,138 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08F081442F4;
-	Wed,  2 Apr 2025 19:19:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 709661917C2;
+	Wed,  2 Apr 2025 19:21:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743621592; cv=none; b=tuOC0SH93M9wN+fdgahDx/YRqQUB1yiirjnOfLJFi4D1cwl7weN7E2EezmoTAddGIRP/RzzTQyF8redPJ2tHvUXplLALM29u0ajDPP313l1QTz7lXBnf/BUE7Wf+I6Dv4McimjapGHupjBf1sOWpWYcfZ5EZvP3d4aNmu8djjAY=
+	t=1743621699; cv=none; b=EoWIE2x456trO/zQjCKKOkCxd9WonZcxOumgcXaG/QEnSgKdaf1hZ3tDPItk9fulNvXu/ZbuWYaKuoPY7s4ktOU8G3pIb33I0viSSFhYXGSJhpEAX4O4yRyKFwXVGPT7jhDmgZku6yAxqZDqTDQg37hVDYKPztUaN/kI8P859rA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743621592; c=relaxed/simple;
-	bh=5dCJTV7MJQ9vS48OjZJPdGMuhje4qjq2u96/Hv7bC5s=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aLDisSHqMxcaoGniPwGEv91mL9YqIVXQtlXURgz5nA4NBNWhir3cFMym8bSQIiCOtUszUm0h4q2hNqJ9OSVzlYb0yX7wjouao2k03DnywWReElsgrFd14CaTYJt+k6zLAjDfqW00WVxRwgRDqFoB3C2Lvsmcp+rgqHthBNazo4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EP5ZkV6f; arc=none smtp.client-ip=209.85.221.50
+	s=arc-20240116; t=1743621699; c=relaxed/simple;
+	bh=Y0CJoWpl3EeJ09Y6hm8dhwkjJsoPxwsv8MYXUF0IkkI=;
+	h=Message-ID:Subject:From:To:Cc:Date:Content-Type:MIME-Version; b=Wvz8DVEYc6/lQnd5G9DykGh5vNUA5R1DLQ8BXmB5KzwMl7Ov3AN/hf4ljk25h6tEvNLceu5/2wiFi5AMxQsFn9jPS408Jlyc95KVEJ9hGBpoXagEb5DDIZ4q9rcueb9Xuv6s70X8iESrEWhZqica9rVUuRKjuMV9O8KVoYtNnzo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WOjc2rcx; arc=none smtp.client-ip=209.85.208.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EP5ZkV6f"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-39c1efbefc6so107607f8f.1;
-        Wed, 02 Apr 2025 12:19:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WOjc2rcx"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5dbf7d45853so29131a12.1;
+        Wed, 02 Apr 2025 12:21:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743621589; x=1744226389; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=RahRZ7vaJa/8FYkhEaHWhZlX3tAdZhEONr4B6jgVA5I=;
-        b=EP5ZkV6fEOUXDFb1kgBwyCOI65Eg1GoMlmHRssLFfAKRevrjreOXWHVrWz5yHTc6Ts
-         zo10rSITRVxSAkSY0EnLxVRNlbJVd1dzvj2lNCmhY0gOWr5tpV6LpAWteB6wK2bNVR0z
-         /aa8GUBkmdWO3kag1mBhSfeIKl/cIQ+ODXI001RUqm1FUOx1cFrDj6LfMMrTb8Ph6Ue1
-         TTj1150bmR4vL7fwNNuZlm6CTU1VSClFHqrFk1ulL5voxCUJUF5PkVNq/UtvdwxotHAX
-         mxfmgph6EVOFNb4REgill2g9gmxHgL3IC3ccSdhxVjxlfwRg6Nr7A3PeNyZjYAqmmGMi
-         fPJg==
+        d=gmail.com; s=20230601; t=1743621695; x=1744226495; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding
+         :disposition-notification-to:date:cc:to:from:subject:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=Y0CJoWpl3EeJ09Y6hm8dhwkjJsoPxwsv8MYXUF0IkkI=;
+        b=WOjc2rcxBDyJ9G7KHkNHm/9YEk0XTHn9nz+tXYMGxHeP3y8P/QiISyIa9jgpPaMCwA
+         dAWBSquoHXjKn2qtPmIXD3ceFYtBPLDwaY5EpuT3d0UHKyy2mxtPqpMIszOSVzUMfHWv
+         tRYD+Vi40gGj6+Spn6Lhu2Rt01TvD+doLAkzPtrIHCmXBtCZi7fAWSPl/Pq4+MG1gzYC
+         ezrD8R5ws2XSRhI5uZsmrVA9ooV8XCjOmCynnB12u+RlyXNvupPFHwAHB7X8ecgPkVfw
+         0ORvD549cAHb6lmyV3zg98nM9D4+2eKSenzpcrfXKnC8frzZWQ/YLHMyoCJwnudWHBuq
+         polA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743621589; x=1744226389;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
+        d=1e100.net; s=20230601; t=1743621695; x=1744226495;
+        h=mime-version:user-agent:content-transfer-encoding
+         :disposition-notification-to:date:cc:to:from:subject:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RahRZ7vaJa/8FYkhEaHWhZlX3tAdZhEONr4B6jgVA5I=;
-        b=IkC/yeSGSHnxT27GLvl6guOb3XJShgX1tYEebOYizlKWHj2w3jMghpCs81RK8PrDft
-         H0lXjbFAnAYVOAeweVoAjFG3ctOfU9yMP6GXaU9NsPUmrR6xOzliC9zoWc3VmJnBEicE
-         aSeaaUdRFM4QaDT8kuJtuk40SmMj5D5TqCZQl/zzHPNILx5MdiYQ8KK8w7yEUqqzjQ/9
-         u5KHsXryLZAGjJ56MDCZDi/mgNgkPRj9igjdUopKE/V4b84LnTdVm8V/b7q8fHX07PCo
-         L9gs6RTwX3zd4y7dGFISEo3e3+mwjIwctJhXqlm/lXay/cu021nQy6642lIBxVJphX6Z
-         JyXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVX8uBpzRcjcwvJLKb9PDr1ZJweN00FpNO0qSBwApvocDjaTSfCshgO4J1YcQToC3R6ilBVt2iohT15+cBdqpILEtcQ@vger.kernel.org, AJvYcCXAj4BzPhgf/3XW1cnSRfp6GvxAD/yAYdYr3ZwbAcbOcXNhCm48F3AJFpLlGWKfpTO3vH8=@vger.kernel.org, AJvYcCXyBKU5uidyHpfH9zG90/nLz1+u0dhmTJ/6hgpNRt21eAdTl2paCX19A+5nWqFW6FzmhVFpRmxVEvCF0uF4@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx7OuewdbUxzNVTINqie5mo2I3A7eE2yB8JSLvCqoehG6JmUEtr
-	AoYpOiGQKVAuG5MIVQNuLnISU9mEmODQ918+4M8eTxDpKaRLnVNA
-X-Gm-Gg: ASbGnctZlbnM/Buds/One7OR9rMmZUYBKaKG+J7VkzxoyC0fCBdkny/ua8TMlnVFSip
-	NH18j58sPV8HelS84TB+PelYo8qgd2jl7Q5c3BG6Lxj49GR+CrS41S8WMarZEd90ZPTdsPpiU0N
-	L8usM5W5gKYFw7ec0UsuINSug1+hq9T/wPUKJ984G4NBW9ZROo+IDCCNjAChfIl+nzQYUvlPrBb
-	gVufuajxod9s876gCJTw+vK6NS47w/ECBPTMcPzBo7FG3o9cgNICGpklwoT2LRHKQMK+j3zO1Rs
-	DXe0NYuZmOfiiBw0EHhJ4piZkS5w/mo=
-X-Google-Smtp-Source: AGHT+IHJ/q67EMVRx0vVkEYpfKe1lCXpKlpmCn0IK9TKv4Nh6zyWEQIyZ1cleR8XRSVJGlSWSqVdaQ==
-X-Received: by 2002:a05:6000:2907:b0:39a:d32c:fb5e with SMTP id ffacd0b85a97d-39c297530f2mr3596885f8f.21.1743621588989;
-        Wed, 02 Apr 2025 12:19:48 -0700 (PDT)
-Received: from krava ([173.38.220.50])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b7a422dsm18016034f8f.93.2025.04.02.12.19.47
+        bh=Y0CJoWpl3EeJ09Y6hm8dhwkjJsoPxwsv8MYXUF0IkkI=;
+        b=e1yJm+jEwdfTqtb5SP8kkaFUzfbCQdBZLoUIuUYWMDbSBr8T94gJoWdDA3Uzcoof8s
+         6X6tn3SCg2Rwv+SyaacOWMcLnYE2hhueTNHlKHGUcCLM09WgUgK+7tMT9Bw0bUIAw+KI
+         KNowcA8WHH560EgKrCd3q3Kg74a6cuRAJFFzPtbPfv2vqz2UePHYIqWfqo4dLrfvBOMg
+         ru0J1P106njiFcRwVFRvO4YuhkWz2Z7HEOAWI9u9tD4DIAZ8+vW4OfD3rXCcIh6mRy9i
+         h6sy7HBcsn3JagCKw5HjUvdfOqhiWbqFYm/FzXMbI9L+k96qAdRP+mRYYrvkK7YdZx9d
+         iRbQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUs3zXxzzdzYZ3GWZp6RVxZnyirsBEBTtG0C7MtQJfYLX1Ov66gqYAjVqmft1JGpzJovBhdGD8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzqLxRDJpsLknUe+Gv5WxCUjXJ+w+69K8Y6zNmTa/z6FyHcUZbP
+	8i9btQOJ+lZHuWXEyWWBzXq6MJPRBp7kWnxRbQc151yJpaSpF7rQmVnqWw==
+X-Gm-Gg: ASbGncu2RKM7ECmuvuisgB0vi20KWJzcI+q1S4H/moUpkxMZgxIOrE9QYlkwcgco4v1
+	D0tpVlfpp9779fudA5O3bekxgvP5zIMgGsQ18F1ivz+fiC5Gr0KhhtyHW9WBkovhQSrVVk9tqoB
+	BleBJuMe2g9m6YHOz1tOZj0K1OR21fQOA0qrtsQQBvOT+FcGH+4oEP9NuwvlC1mdyH8pmpB3rau
+	lzf0GD5cC5BwJI/vHgq0wtEsHlXzEgmDt6ZKnQaI5wWVdOlt/i9ycHYzpuDU6kKvYCT6IDuEfZ5
+	Rf0LI46H/pM6WU6wDdYfFkgNxP9s9Wp7KCrQOI9Z5fsJFWpXCpnvMhtJ1soqk4G6g4YSU6cocHq
+	GXSToTMjaKhFnX/75ZrlmTA==
+X-Google-Smtp-Source: AGHT+IFiQzV9o9e7nDkOOcJEinOSM0/JLY+RhChkW9DUoFCOY0jF5RPJcHwkT1do1xB278YUakWHmg==
+X-Received: by 2002:a05:6402:1e8c:b0:5e0:36da:7ae4 with SMTP id 4fb4d7f45d1cf-5f03bfbf084mr1997409a12.1.1743621695196;
+        Wed, 02 Apr 2025 12:21:35 -0700 (PDT)
+Received: from [192.168.1.239] (89-64-31-184.dynamic.chello.pl. [89.64.31.184])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5edc17e0704sm8822861a12.66.2025.04.02.12.21.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Apr 2025 12:19:48 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Wed, 2 Apr 2025 21:19:45 +0200
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-	Tao Chen <chen.dylane@linux.dev>, song@kernel.org, ast@kernel.org,
-	daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev,
-	eddyz87@gmail.com, yonghong.song@linux.dev,
-	john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me,
-	haoluo@google.com, rostedt@goodmis.org, mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com, laoar.shao@gmail.com,
-	bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH bpf-next 2/2] bpf: Check link_create parameter for
- multi_uprobe
-Message-ID: <Z-2N0Z6UxVx7mpYp@krava>
-References: <20250331094745.336010-1-chen.dylane@linux.dev>
- <20250331094745.336010-2-chen.dylane@linux.dev>
- <Z-vH_HiJhR3cwLhF@krava>
- <918395a6-122c-4fb0-9761-892b8020b95e@linux.dev>
- <CAEf4BzbOirQiAmowckX8OeiFUTR8yfkO6m+kY96VMy5f9rG26A@mail.gmail.com>
- <Z-z8_HlpMk39SHUD@krava>
+        Wed, 02 Apr 2025 12:21:34 -0700 (PDT)
+Message-ID: <a0f1dae5eee091781711d3b4ebe812b9a1f8c944.camel@gmail.com>
+Subject: Request for backporting hid-pidff driver patches
+From: tomasz.pakula.oficjalny@gmail.com
+To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc: sashal@kernel.org, gregkh@linuxfoundation.org, oleg@makarenk.ooo
+Date: Wed, 02 Apr 2025 21:21:31 +0200
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.0 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z-z8_HlpMk39SHUD@krava>
 
-On Wed, Apr 02, 2025 at 11:01:48AM +0200, Jiri Olsa wrote:
-> On Tue, Apr 01, 2025 at 03:06:22PM -0700, Andrii Nakryiko wrote:
-> > On Tue, Apr 1, 2025 at 5:40 AM Tao Chen <chen.dylane@linux.dev> wrote:
-> > >
-> > > 在 2025/4/1 19:03, Jiri Olsa 写道:
-> > > > On Mon, Mar 31, 2025 at 05:47:45PM +0800, Tao Chen wrote:
-> > > >> The target_fd and flags in link_create no used in multi_uprobe
-> > > >> , return -EINVAL if they assigned, keep it same as other link
-> > > >> attach apis.
-> > > >>
-> > > >> Fixes: 89ae89f53d20 ("bpf: Add multi uprobe link")
-> > > >> Signed-off-by: Tao Chen <chen.dylane@linux.dev>
-> > > >> ---
-> > > >>   kernel/trace/bpf_trace.c | 3 +++
-> > > >>   1 file changed, 3 insertions(+)
-> > > >>
-> > > >> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-> > > >> index 2f206a2a2..f7ebf17e3 100644
-> > > >> --- a/kernel/trace/bpf_trace.c
-> > > >> +++ b/kernel/trace/bpf_trace.c
-> > > >> @@ -3385,6 +3385,9 @@ int bpf_uprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *pr
-> > > >>      if (sizeof(u64) != sizeof(void *))
-> > > >>              return -EOPNOTSUPP;
-> > > >>
-> > > >> +    if (attr->link_create.target_fd || attr->link_create.flags)
-> > > >> +            return -EINVAL;
-> > > >
-> > > > I think the CI is failing because usdt code does uprobe multi detection
-> > > > with target_fd = -1 and it fails and perf-uprobe fallback will fail on
-> > > > not having enough file descriptors
-> > > >
-> > >
-> > > Hi jiri
-> > >
-> > > As you said, i found it, thanks.
-> > >
-> > > static int probe_uprobe_multi_link(int token_fd)
-> > > {
-> > >          LIBBPF_OPTS(bpf_prog_load_opts, load_opts,
-> > >                  .expected_attach_type = BPF_TRACE_UPROBE_MULTI,
-> > >                  .token_fd = token_fd,
-> > >                  .prog_flags = token_fd ? BPF_F_TOKEN_FD : 0,
-> > >          );
-> > >          LIBBPF_OPTS(bpf_link_create_opts, link_opts);
-> > >          struct bpf_insn insns[] = {
-> > >                  BPF_MOV64_IMM(BPF_REG_0, 0),
-> > >                  BPF_EXIT_INSN(),
-> > >          };
-> > >          int prog_fd, link_fd, err;
-> > >          unsigned long offset = 0;
-> > >
-> > >          prog_fd = bpf_prog_load(BPF_PROG_TYPE_KPROBE, NULL, "GPL",
-> > >                                  insns, ARRAY_SIZE(insns), &load_opts);
-> > >          if (prog_fd < 0)
-> > >                  return -errno;
-> > >
-> > >          /* Creating uprobe in '/' binary should fail with -EBADF. */
-> > >          link_opts.uprobe_multi.path = "/";
-> > >          link_opts.uprobe_multi.offsets = &offset;
-> > >          link_opts.uprobe_multi.cnt = 1;
-> > >
-> > >          link_fd = bpf_link_create(prog_fd, -1, BPF_TRACE_UPROBE_MULTI,
-> > > &link_opts);
-> > >
-> > > > but I think at this stage we will brake some user apps by introducing
-> > > > this check, link ebpf go library, which passes 0
-> > > >
-> > >
-> > > So is it ok just check the flags?
-> > 
-> > good catch, Jiri! Yep, let's validate just flags?
-> 
-> I think so.. I'll test that with ebpf/go to make sure we are safe
-> at least there ;-) I'll let you know
+Hello
 
-sorry, got stuck.. link_create.flags are initialized to zero,
-so I think flags check should be fine (at least for ebpf/go)
+Recently AUTOSEL selected some of out patches to hid-pidff and
+hid-universal-pidff. Though I looked over what was selected and
+everything will be working, I'd like to keep the drivers up-to-date at
+least going back to 6.12 as these kernels are widely used and leaving
+said driers in an incomplete state, not up to upstream might lead to
+some false positive bug reports to me and Oleg.
 
-jirka
+Here's the full list of the hid-pidff related patches from upstream. It
+might look like a lot but some granular changes were recorded as the
+driver was in need of an overhaul for at least 10 years. This mainly
+touches just two files.
+
+I tested it personally and all the patches apply cleanly on top of
+current 6.12.y, 6.13.y and 6.14.y branches.
+
+Thanks in advance!
+
+e2fa0bdf08a7 HID: pidff: Fix set_device_control()
+f98ecedbeca3 HID: pidff: Fix 90 degrees direction name North -> East
+1a575044d516 HID: pidff: Compute INFINITE value instead of using hardcoded =
+0xffff
+0c6673e3d17b HID: pidff: Clamp effect playback LOOP_COUNT value
+bbeface10511 HID: pidff: Rename two functions to align them with naming con=
+vention
+1bd55e79cbc0 HID: pidff: Remove redundant call to pidff_find_special_keys
+9d4174dc4a23 HID: pidff: Support device error response from PID_BLOCK_LOAD
+e19675c24774 HID: pidff: Comment and code style update
+c385f61108d4 HID: hid-universal-pidff: Add Asetek wheelbases support
+1f650dcec32d HID: pidff: Make sure to fetch pool before checking SIMULTANEO=
+US_MAX
+2c2afb50b50f MAINTAINERS: Update hid-universal-pidff entry
+5d98079b2d01 HID: pidff: Factor out pool report fetch and remove excess dec=
+laration
+217551624569 HID: pidff: Use macros instead of hardcoded min/max values for=
+ shorts
+4eb9c2ee538b HID: pidff: Simplify pidff_rescale_signed
+0d24d4b1da96 HID: pidff: Move all hid-pidff definitions to a dedicated head=
+er
+22a05462c3d0 HID: pidff: Fix null pointer dereference in pidff_find_fields
+f7ebf0b11b9e HID: pidff: Factor out code for setting gain
+8713107221a8 HID: pidff: Rescale time values to match field units
+1c12f136891c HID: pidff: Define values used in pidff_find_special_fields
+e4bdc80ef142 HID: pidff: Simplify pidff_upload_effect function
+cb3fd788e3fa HID: pidff: Completely rework and fix pidff_reset function
+abdbf8764f49 HID: pidff: Add PERIODIC_SINE_ONLY quirk
+7d3adb9695ec MAINTAINERS: Add entry for hid-universal-pidff driver
+f06bf8d94fff HID: Add hid-universal-pidff driver and supported device ids
+ce52c0c939fc HID: pidff: Stop all effects before enabling actuators
+3051bf5ec773 HID: pidff: Add FIX_WHEEL_DIRECTION quirk
+36de0164bbaf HID: pidff: Add hid_pidff_init_with_quirks and export as GPL s=
+ymbol
+a4119108d253 HID: pidff: Add PERMISSIVE_CONTROL quirk
+fc7c154e9bb3 HID: pidff: Add MISSING_PBO quirk and its detection
+2d5c7ce5bf4c HID: pidff: Add MISSING_DELAY quirk and its detection
+f538183e997a HID: pidff: Clamp PERIODIC effect period to device's logical r=
+ange
+8876fc1884f5 HID: pidff: Do not send effect envelope if it's empty
+37e0591fe44d HID: pidff: Convert infinite length from Linux API to PID stan=
+dard
+
+Tomasz
