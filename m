@@ -1,101 +1,64 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E86AB221DB2;
-	Wed,  2 Apr 2025 04:24:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACEB98632B;
+	Wed,  2 Apr 2025 04:29:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743567882; cv=none; b=U6SMsaha2ZWYkkAXe9wGz+ZfBZklliCrh77gqpZP7n53umDC69vHUBT2QiziHoXDo2SSl8qcJgoCNlvasIEW/s0GblpmQ0RXGQcjHBCnJ26ZJ7CY2+QHVQyEpZFoCZZM2svp1te84k/FqenqzaJhC8albJWahYcO2GasGKIAbg8=
+	t=1743568157; cv=none; b=X5lithbaXX81y78mMK3QuG3RYRbVI49c+QSSGCwcj2bWXm9MdfLe6tvPy/J7/50p125l2BRsotAN33MX6YK2pUio80D9pjx3WnKSAJWepCQLtmtrdlZSqbZYZcahzoFKYlf4rRaHNf+hrRfRhtAgT3R3s6bzCEwrx1b+dnZLGWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743567882; c=relaxed/simple;
-	bh=iPerpFKBLSUX7o746DNeTHUueumGD/t3jLh+gLiQEoY=;
+	s=arc-20240116; t=1743568157; c=relaxed/simple;
+	bh=TsjZ5qHec+BLwK3MjMgqZa/Y6ZeFgQeWxIvPrxBJ2AE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Es0kTD3v2P5TAVW4cq0Xpdst1HcHMGNxAmucBAcCvKB1X4rFoinqdPW3M4e/xyns3d8UaY0wp/FNLTOgRhgXuEd2gMoIyF3xMAfNbzWEgW+YifaXFpXv4fSqM3BAz1ELxwVGvC4LiyMKb/hNyKJU1XXLLYyNZHal98swxdcjlJk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L+qQFvLG; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=gWeNSOIZvJsHYMLHrnwWwuaRn+XxkqMQQpn7h+iWSFX30d0HUtThKZWjGBsFlQ+pGwrpKuCf0I6XT0L/xOVzSD8nINUWa4W23oIx9bUnO3IYP0U2uxKy+GVhodY1W0p393gWK9pOFV6Epb8jbs5skAPwSxrl1P2a3u1UnX4akZ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=CUbBeCGr; arc=none smtp.client-ip=91.218.175.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L+qQFvLG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 573A1C4CEDD;
-	Wed,  2 Apr 2025 04:24:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743567881;
-	bh=iPerpFKBLSUX7o746DNeTHUueumGD/t3jLh+gLiQEoY=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=L+qQFvLGRKQi2C8vUF5KHsY9EJ4oNfZ9cVRrZ4LoKJnhpINUmg2+tXEsNWnbK31xO
-	 lvKaNu38SwTbvEQJLZ4yM1i6wPLVPbfhgYpEjOi34aSMVHGfF4Ti/0dyjcYMPzMwXI
-	 be9sMv5z3lcgD6kD6fcbXSVWFQ5fiDRPJKzaB7Kooxm+iIEqYMjmsbaLXLcVqexxGe
-	 3RnJkCF9jLXZ0a7uRs4JjCVdFaIMA+SId+FEG/OGwhoCvdkWp0Z7DXPxPuKZ/3kI4n
-	 pZOZZ4Nus9W/lsvS4/34ioYqFhm+FF00ni+0/4s6Ixvmt+tp4+HnJAUOBpUGy+OSBA
-	 sSheyM4301BCA==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 09129CE160D; Tue,  1 Apr 2025 21:24:41 -0700 (PDT)
-Date: Tue, 1 Apr 2025 21:24:41 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Frederic Weisbecker <frederic@kernel.org>
-Cc: Joel Fernandes <joelagnelf@nvidia.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Zqiang <qiang.zhang1211@gmail.com>,
-	"rcu@vger.kernel.org" <rcu@vger.kernel.org>
-Subject: Re: [PATCH 1/3] rcu: Replace magic number with meaningful constant
- in rcu_seq_done_exact()
-Message-ID: <aaa33a2c-099f-490a-8054-02dcf4f88ef2@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20250324170156.469763-1-joelagnelf@nvidia.com>
- <20250324170156.469763-2-joelagnelf@nvidia.com>
- <eeda52c2-5397-4aad-ad01-ca04e5b0b80f@paulmck-laptop>
- <DDDD275D-1017-4189-9A8A-578021A33B4A@nvidia.com>
- <e47e5611-36de-4d12-9c07-57aa2a885299@paulmck-laptop>
- <Z-nBcg9FJqu5RzME@pavilion.home>
- <71fc9642-5fc7-45ec-8196-8fc89ed8e765@paulmck-laptop>
- <Z-sFonl2NrppdGQS@pavilion.home>
- <bc4d930e-60c2-4ff8-8995-d463b6365b00@paulmck-laptop>
- <Z-vsTRydjIAK-4-d@localhost.localdomain>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="CUbBeCGr"
+Date: Tue, 1 Apr 2025 21:29:05 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1743568152;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5NR6EYwPfMVgROEL2dm2qwR6XWAXVQz6akFvE7Z2xsQ=;
+	b=CUbBeCGrruCoHQ6IlqtWfosAvZqvkFo19JVTp1duPxjt22wc7Ry5Wjtzw+OT/AUu1jC4Jx
+	HEhHxMx4b33kLiKgEdamAdAna+os8TUq+AhYOLi25Ban6lb7+cjd6CCbMlPd1KTy9hu4Ez
+	eMz/DqvFtSpu7tGZpp3LzTSzbAo/IRc=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Shakeel Butt <shakeel.butt@linux.dev>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, bpf@vger.kernel.org, 
+	daniel@iogearbox.net, andrii@kernel.org, martin.lau@kernel.org, 
+	akpm@linux-foundation.org, peterz@infradead.org, vbabka@suse.cz, bigeasy@linutronix.de, 
+	rostedt@goodmis.org, mhocko@suse.com, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH mm] mm/page_alloc: Avoid second trylock of zone->lock
+Message-ID: <a6z7nozoprpbnf34z2rnah375sgakethpip6rpxtkd6xknqxm3@kxir5he5rbra>
+References: <20250331002809.94758-1-alexei.starovoitov@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z-vsTRydjIAK-4-d@localhost.localdomain>
+In-Reply-To: <20250331002809.94758-1-alexei.starovoitov@gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, Apr 01, 2025 at 03:38:21PM +0200, Frederic Weisbecker wrote:
-> Le Mon, Mar 31, 2025 at 02:29:52PM -0700, Paul E. McKenney a écrit :
-> > The disagreement is a feature, at least up to a point.  That feature
-> > allows CPUs to go idle for long periods without RCU having to bother
-> > them or to mess with their per-CPU data (give or take ->gpwrap).  It also
-> > allows per-rcu_node-leaf locking, which is important on large systems.
-> > 
-> > Trying to make precisely globally agreed-on beginnings and ends of
-> > RCU grace periods will not end well from performance, scalability,
-> > or real-time-response viewpoints.  ;-)
+On Sun, Mar 30, 2025 at 05:28:09PM -0700, Alexei Starovoitov wrote:
+> From: Alexei Starovoitov <ast@kernel.org>
 > 
-> The distributed disagreement is definetly a feature. The duplicate root
-> is more debatable.
+> spin_trylock followed by spin_lock will cause extra write cache
+> access. If the lock is contended it may cause unnecessary cache
+> line bouncing and will execute redundant irq restore/save pair.
+> Therefore, check alloc/fpi_flags first and use spin_trylock or
+> spin_lock.
 > 
-> > But simplifications that don't hurt performance, scalability, and
-> > real-time-response are of course welcome.
-> 
-> I'm not even sure my proposal is a simplification. Perhaps it is. Another
-> hope is that it could avoid future accidents.
-> 
-> > Indeed, this probably needs actual performance results showing that
-> > it is needed.  My guess is that only systems with a single rcu_node
-> > structure that is both leaf and root would have any chance of noticing.
-> > And those tend to have few CPUs, so they might not care.
-> 
-> Do you have any idea for a benchmark to test here?
+> Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+> Fixes: 97769a53f117 ("mm, bpf: Introduce try_alloc_pages() for opportunistic page allocation")
+> Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 
-The best that I can come up with is hammering with a combination of
-expedited grace periods and polled grace periods.
-
-							Thanx, Paul
+Reviewed-by: Shakeel Butt <shakeel.butt@linux.dev>
