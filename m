@@ -1,137 +1,147 @@
-Received: from smtp-fw-52004.amazon.com (smtp-fw-52004.amazon.com [52.119.213.154])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 819C7193436;
-	Wed,  2 Apr 2025 20:50:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BBC01F130E;
+	Wed,  2 Apr 2025 20:55:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743627057; cv=none; b=pljA/rsdEnBi4ctiDT7uNAcnsjBW03mVWZRY1kxZqD57Z2RfNTkK1pJBu4osw4Ji1ofkxz2xUkMUd3uERcxHBQIIYJ+CTLO64bCRNdzCKgp/FEWfi9wx+Vrwkh7mqjCUgMqfzEW//F/Twr3KceMxblRvzydVd8E1H/7tu33QO4g=
+	t=1743627308; cv=none; b=tB+qBNEFf9+52kY3zWbCBTfcebYlky9PhT8jrOfiuY2XSxN+6et9OP5GDkVFlnvbQMwGUrbDGjzdOqvRkWr4eUsIRXAWF1VNMa4QTpjtRpGuU5xjG6DLOvTzNtPEk7hZDPP0p6yjCmrxZVVbf39wHLv+yhUGK7dBbFtBFPREdF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743627057; c=relaxed/simple;
-	bh=0djtFdo5h3fDieUNKNXazTKddt+w5retjfkch5CCArs=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=je8v2Hj5DWTxkJdlNR4ztHA8nvsxZ806jQeyE0CiYSJKUgbEyV0e9R/W5nQGZ/ozR693eVIwrkY01E8Rm0CzXo0CalQwaRDXRwDA02MAIWjgjcLs7DM8zrXAwFmGADbA3RNbl9Y3/sb4G1g2F1NCBSGNsyN13zi9G81oD+eIT0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=AynC7A59; arc=none smtp.client-ip=52.119.213.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+	s=arc-20240116; t=1743627308; c=relaxed/simple;
+	bh=IJMfFJB5RAS82t5AJGmvYpFASEz2xELVAZxfFrjkjTc=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=uZhRKZDyXNP6+WWiNn4l9rZmLhKJaeMvxeP07VomhfRmmBBr5n/zoay29k/RX1RFZWFzOEUucWV+dqSgGLDh9Talo6Iu69szuKERRHmMxJlMqBNeq9RqVDsYswQo+j97CfmSGMA4YuZp68p6xnfqP9K3U25Crs4nd2QvVIOMyLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=LlbeVR6b; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=o5cJDJXp; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="AynC7A59"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1743627056; x=1775163056;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=PZgBsjQbBUgfbfilglLiHgWwr6bb2rCEcoxzjvzGR6M=;
-  b=AynC7A59OJeewNtH7GpGr6OMCNGJl5Dk5Q8OUgl65rLu+qBqiFBQ1Li0
-   w9gS4nulRNMxFTx9VvR52st/HmcfrXCh1q3UC41iQrGghISVbv2J86H4y
-   yYtyYIo66IsY75br+jH9XvzHPBt8msYQMwZE9Qfpg0JItA07rwXtwjsFq
-   M=;
-X-IronPort-AV: E=Sophos;i="6.15,183,1739836800"; 
-   d="scan'208";a="285094299"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.2])
-  by smtp-border-fw-52004.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 20:50:52 +0000
-Received: from EX19MTAUWC001.ant.amazon.com [10.0.7.35:63875]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.57.231:2525] with esmtp (Farcaster)
- id 58bbd771-3e95-48f9-9ba9-001f711cdfcd; Wed, 2 Apr 2025 20:50:51 +0000 (UTC)
-X-Farcaster-Flow-ID: 58bbd771-3e95-48f9-9ba9-001f711cdfcd
-Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
- EX19MTAUWC001.ant.amazon.com (10.250.64.174) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Wed, 2 Apr 2025 20:50:51 +0000
-Received: from 6c7e67bfbae3.amazon.com (10.106.101.8) by
- EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Wed, 2 Apr 2025 20:50:48 +0000
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
-To: <gregkh@linuxfoundation.org>
-CC: <cve@kernel.org>, <edumazet@google.com>, <ematsumiya@suse.de>,
-	<kuniyu@amazon.com>, <linux-fsdevel@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-net@vger.kernel.org>,
-	<sfrench@samba.org>, <smfrench@gmail.com>, <wangzhaolong1@huawei.com>,
-	<zhangchangzhong@huawei.com>
-Subject: Re: Fwd: [PATCH][SMB3 client] fix TCP timers deadlock after rmmod
-Date: Wed, 2 Apr 2025 13:50:05 -0700
-Message-ID: <20250402205039.9933-1-kuniyu@amazon.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <2025040256-spindle-cornea-60ec@gregkh>
-References: <2025040256-spindle-cornea-60ec@gregkh>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="LlbeVR6b";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="o5cJDJXp"
+Date: Wed, 02 Apr 2025 20:55:01 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1743627304;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aaVdHQfjeIL0gLeNZTp4EYIGMIrAipefe4bfBQLFK0c=;
+	b=LlbeVR6bp+3JCCb+nQAsPbGI02WnoamiK+l54B0DZtTcJtS7X2dW89TXndhLDDWH2zDcsN
+	T3BVqOhYpgwNCAwhYKj01o0qnS/W/atC92N7PEQPvld+ADmgVoh1CZIp/PAFij1a3LZiEy
+	bbnoQnqyfSqFDO7Ai8gL9YWNBG7uNSa9WKkdqQhd5crJ1WXHuSUmjdPvNoPeTfQ95BcMmk
+	jL5pHngrT3o4Yc3Oy/tQOPozFtf3O/pjGeqoURXiAVcb9ZfGZVkvrjDho4tKDN58pPzL8j
+	TtOGQjHh9V9GBHz+W0Gojjr2LO1hhCG6VtwJKr+kg55Q5xktr88zbDo8xRL4+Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1743627304;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aaVdHQfjeIL0gLeNZTp4EYIGMIrAipefe4bfBQLFK0c=;
+	b=o5cJDJXpUvFma4SLHB1jqq5eGI7bwtw9GRD+wpdvb2Ai39aDLJKVhOK7H1mMkeGq5fsYc4
+	2KBY+kUjy50+rsDw==
+From: "tip-bot2 for Uros Bizjak" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/mm] x86/idle: Remove CONFIG_AS_TPAUSE
+Cc: Uros Bizjak <ubizjak@gmail.com>, Ingo Molnar <mingo@kernel.org>,
+ Andy Lutomirski <luto@kernel.org>, Brian Gerst <brgerst@gmail.com>,
+ Juergen Gross <jgross@suse.com>, Andrew Cooper <andrew.cooper3@citrix.com>,
+ Rik van Riel <riel@surriel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ Peter Zijlstra <peterz@infradead.org>,
+ "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250402180827.3762-4-ubizjak@gmail.com>
+References: <20250402180827.3762-4-ubizjak@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D035UWA004.ant.amazon.com (10.13.139.109) To
- EX19D004ANA001.ant.amazon.com (10.37.240.138)
+Message-ID: <174362730161.14745.794215138372098584.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-From: Greg KH <gregkh@linuxfoundation.org>
-Date: Wed, 2 Apr 2025 21:28:51 +0100
-> On Wed, Apr 02, 2025 at 01:22:11PM -0700, Kuniyuki Iwashima wrote:
-> > From: Greg KH <gregkh@linuxfoundation.org>
-> > Date: Wed, 2 Apr 2025 21:15:58 +0100
-> > > On Wed, Apr 02, 2025 at 01:09:19PM -0700, Kuniyuki Iwashima wrote:
-> > > > From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > > > Date: Wed, 2 Apr 2025 16:18:37 +0100
-> > > > > On Wed, Apr 02, 2025 at 05:15:44PM +0800, Wang Zhaolong wrote:
-> > > > > > > On Wed, Apr 02, 2025 at 12:49:50PM +0800, Wang Zhaolong wrote:
-> > > > > > > > Yes, it seems the previous description might not have been entirely clear.
-> > > > > > > > I need to clearly point out that this patch, intended as the fix for CVE-2024-54680,
-> > > > > > > > does not actually address any real issues. It also fails to resolve the null pointer
-> > > > > > > > dereference problem within lockdep. On top of that, it has caused a series of
-> > > > > > > > subsequent leakage issues.
-> > > > > > > 
-> > > > > > > If this cve does not actually fix anything, then we can easily reject
-> > > > > > > it, please just let us know if that needs to happen here.
-> > > > > > > 
-> > > > > > > thanks,
-> > > > > > > 
-> > > > > > > greg k-h
-> > > > > > Hi Greg,
-> > > > > > 
-> > > > > > Yes, I can confirm that the patch for CVE-2024-54680 (commit e9f2517a3e18)
-> > > > > > should be rejected. Our analysis shows:
-> > > > > > 
-> > > > > > 1. It fails to address the actual null pointer dereference in lockdep
-> > > > > > 
-> > > > > > 2. It introduces multiple serious issues:
-> > > > > >    1. A socket leak vulnerability as documented in bugzilla #219972
-> > > > > >    2. Network namespace refcount imbalance issues as described in
-> > > > > >      bugzilla #219792 (which required the follow-up mainline fix
-> > > > > >      4e7f1644f2ac "smb: client: Fix netns refcount imbalance
-> > > > > >      causing leaks and use-after-free")
-> > > > > > 
-> > > > > > The next thing we should probably do is:
-> > > > > >    - Reverting e9f2517a3e18
-> > > > > >    - Reverting the follow-up fix 4e7f1644f2ac, as it's trying to fix
-> > > > > >      problems introduced by the problematic CVE patch
-> > > > > 
-> > > > > Great, can you please send patches now for both of these so we can
-> > > > > backport them to the stable kernels properly?
-> > > > 
-> > > > Sent to CIFS tree:
-> > > > https://lore.kernel.org/linux-cifs/20250402200319.2834-1-kuniyu@amazon.com/
-> > > 
-> > > You forgot to add a Cc: stable@ on the patches to ensure that they get
-> > > picked up properly for all stable trees :(
-> > 
-> > Ah sorry, I did the same with netdev.  netdev patches usually do
-> > not have the tag but are backported fine, maybe netdev local rule ?
-> 
-> Nope, that's the "old" way of dealing with netdev patches, the
-> documentation was changed years ago, please always put a cc: stable on
-> it.  Otherwise you are just at the whim of our "hey, I'm board, let's
-> look for Fixes: only tags!" script to catch them, which will also never
-> notify you of failures.
+The following commit has been merged into the x86/mm branch of tip:
 
-Good to know that, thanks!
+Commit-ID:     6c921984e75c78e1c509d99b8cde04f1eadd46fb
+Gitweb:        https://git.kernel.org/tip/6c921984e75c78e1c509d99b8cde04f1eadd46fb
+Author:        Uros Bizjak <ubizjak@gmail.com>
+AuthorDate:    Wed, 02 Apr 2025 20:08:08 +02:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Wed, 02 Apr 2025 22:44:55 +02:00
 
-My concern was that I could spam the list if I respin the patches,
-and incomplete patch could be backported.
+x86/idle: Remove CONFIG_AS_TPAUSE
 
-From stable-kernel-rules.rst, such an accident can be prevented if
-someone points out a problem within 48 hours ?
+There is not much point in CONFIG_AS_TPAUSE at all when the emitted
+assembly is always the same - it only obfuscates the __tpause() code
+in essence.
 
-For example, if v1 is posted with Cc:stable, and a week later
-v2 is posted, then the not-yet-upstreamed v1 could be backported ?
+Remove the TPAUSE insn mnemonic from __tpause() and leave only
+the equivalent byte-wise definition. This can then be changed
+back to insn mnemonic once binutils 2.31.1 is the minimum version
+to build the kernel. (Right now it's 2.25.)
+
+Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Brian Gerst <brgerst@gmail.com>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: Andrew Cooper <andrew.cooper3@citrix.com>
+Cc: Rik van Riel <riel@surriel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Link: https://lore.kernel.org/r/20250402180827.3762-4-ubizjak@gmail.com
+---
+ arch/x86/Kconfig.assembler   |  4 ----
+ arch/x86/include/asm/mwait.h | 11 ++---------
+ 2 files changed, 2 insertions(+), 13 deletions(-)
+
+diff --git a/arch/x86/Kconfig.assembler b/arch/x86/Kconfig.assembler
+index 6d20a6c..fa88585 100644
+--- a/arch/x86/Kconfig.assembler
++++ b/arch/x86/Kconfig.assembler
+@@ -15,10 +15,6 @@ config AS_SHA256_NI
+ 	def_bool $(as-instr,sha256msg1 %xmm0$(comma)%xmm1)
+ 	help
+ 	  Supported by binutils >= 2.24 and LLVM integrated assembler
+-config AS_TPAUSE
+-	def_bool $(as-instr,tpause %ecx)
+-	help
+-	  Supported by binutils >= 2.31.1 and LLVM integrated assembler >= V7
+ 
+ config AS_GFNI
+ 	def_bool $(as-instr,vgf2p8mulb %xmm0$(comma)%xmm1$(comma)%xmm2)
+diff --git a/arch/x86/include/asm/mwait.h b/arch/x86/include/asm/mwait.h
+index 6522886..5141d2a 100644
+--- a/arch/x86/include/asm/mwait.h
++++ b/arch/x86/include/asm/mwait.h
+@@ -133,16 +133,9 @@ static __always_inline void mwait_idle_with_hints(unsigned long eax, unsigned lo
+  */
+ static inline void __tpause(u32 ecx, u32 edx, u32 eax)
+ {
+-	/* "tpause %ecx, %edx, %eax" */
+-	#ifdef CONFIG_AS_TPAUSE
+-	asm volatile("tpause %%ecx"
+-		     :
+-		     : "c"(ecx), "d"(edx), "a"(eax));
+-	#else
++	/* "tpause %ecx" */
+ 	asm volatile(".byte 0x66, 0x0f, 0xae, 0xf1"
+-		     :
+-		     : "c"(ecx), "d"(edx), "a"(eax));
+-	#endif
++		     :: "c" (ecx), "d" (edx), "a" (eax));
+ }
+ 
+ #endif /* _ASM_X86_MWAIT_H */
