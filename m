@@ -1,120 +1,119 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A3BF20E01D;
-	Wed,  2 Apr 2025 12:23:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 707652356B5
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 12:24:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743596623; cv=none; b=OUOrlSsQZQldqcnYSo16go3xxtokFFFNxXEhIogsmRwB+2wdNrgm0weG7WyIGSBiOvLWehKUv64T8ba/9IWBwSjF9/UnK3PC4+T6jcFa96DM06+JMsfW255VY+TntriKolbYTEHqBxy103Jk81hkyMK2KGhpwSdXjoEgZR+vR04=
+	t=1743596660; cv=none; b=DNrr3DkChgj4+0qzy2ydgI4yrb3QOuIZ+umbfI3NlT5xLpin/6jqN9GH/jetoob750CN1qeRfpX2MKZy8qqPJsB6bJIhFNfX8Y3pg5k5cTNFMrmQY0ARcGS1MYRqMnbHVr1Ypo9s1I/FkSHtQ7b22z71BEffs6d/eVcwYRTF0E8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743596623; c=relaxed/simple;
-	bh=sxRCMN2UqFzJH+4agENHp4HExEaVEUjCHCJeJ/xTgX4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=XFxW6WjooFvPu8TmkF3Ahl4L0oVufXwE7Tw2uUlpu/YmgcACSlrQ+JMhEPvJvS1uWzVIJGhjPK8bPUHVABqwdnP7oIxZ1yGTGKt1fTO3oxiR2eQsjTxnQ1OGpvweKLfbc173VPnvooP7tNCDEFzChAh0GT63yXRmg84bAFHagJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=oTvPllBL; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1743596660; c=relaxed/simple;
+	bh=0v2URiG8esdkRgUTyd3SngcEHuSOj0Zafp4N84xHkg4=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=hOG1TXg2a++OkFnk/5qKZ28EReqAHQ47Zs1ndAwZz6/iHo5umK8Hd6FcRxLhtvQqmOkmq5ITZqAfGEvaPLYb4WdF5Hsabq2d0uud2cicOqHao/0+oKLrYoMQu3s3xofPGT1kPyRTN/btSgxdxKPy9DFxQ9NuGVbBUebEw3pfV/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sGYF0GSe; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="oTvPllBL"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 532C0JZY007268;
-	Wed, 2 Apr 2025 12:23:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	xkcFHpWEAlY4rM9aIyFAYhMCRoLN5VKa+BwF+yLsfpc=; b=oTvPllBLGAaIe5u+
-	OmbTk8Im+MvIdNV3CJREpZ4yrkl+jITWrbvM2mKbOp7xe01eCoB9Vpiyw1g9pFy8
-	tXWfy6KJLnirJ+IaweQMrA3c0ZjzclLO5/BbOEBjroqJpV7Cg2EgP7UjfYbgwuBg
-	06gVEQtZHVFQ01cY3r3oRHElotfs46J+h3z/qFwuGALsipAviWg1OAa7TL9MmTkY
-	OZ3XWeUXLHXOBwl42D5Ady7H95ZlySWzCerm8oNEOHRs9Z9SDRBv9izc617JumQk
-	CqZm+P6NohzDA+cDHnjzlOqampYFP6Od+dPhtLswOsYY3bINrtYYtUwRVXXeKwt6
-	uN4+bA==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45rh7yk8gc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 02 Apr 2025 12:23:28 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 532CNRO8021059
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 2 Apr 2025 12:23:28 GMT
-Received: from [10.231.195.71] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 2 Apr 2025
- 05:23:25 -0700
-Message-ID: <1eb3933d-9aac-4e47-a7a5-818aa18b137a@quicinc.com>
-Date: Wed, 2 Apr 2025 20:23:23 +0800
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sGYF0GSe"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43cfebc343dso49608735e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 05:24:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1743596657; x=1744201457; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ztK8X1ZBqwTpCQZgzQx75WiIn9I1zX9gTe47p5OjGL8=;
+        b=sGYF0GSeNVXXFwNIelq2JcE7p2k9EUARs3S/FzjucEFbRNJDZO+iNusSH6DpNHfUYh
+         7Oci/JxglJ/EjAVKagJ1msMF51SxzoM93l9mXOMhlnUDiFOdCVzy2DLbj4tE/zcbe2HU
+         5ucqlbzBTmsjUxxIe2eFF6r8A7xIExAr4unP03Uy1Ja9pETHp5Scl4MQaXAFMDz8ww7Z
+         pUd1SHOL1rRIB4B1IJK5Jw1DlPP7Qz0DbVEnfrf0bwPixpLK/8Q0RTWyDYTvkrJKHTCW
+         SFgHqqiphChv/gBlnTfueNWEB6F4AGrp3qDH6ElaLsaaNyyrqdpLoU4zt2vRgQ3ylyrD
+         JuLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743596657; x=1744201457;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ztK8X1ZBqwTpCQZgzQx75WiIn9I1zX9gTe47p5OjGL8=;
+        b=FxuvWMJKI53JcGGCsgGImDB+mazfTAQOc9WMugqcYzIhgHsT+qiu6P5oqYavwO8/q9
+         Vyyu/otx3FJUKVsuNAVJOlK26zXDq5C9L/+MXASApr8E6dQOEPIvpY+IaM6f6U3qKmDR
+         NBopOqVdFTQMo0dG0gjm+Bta4K2kd7epdGzCNIxKiizMpuXJhHe714+R/7PCimUgmi2D
+         eRAB7VS/NdirWsXvkPT4tsdsCaBK8sQVRyX8fPBmilOaGq0hcrlVz44LstyZVjFX+tjG
+         hAFnxwti9qz1n4GN9PiTTG1AA37dnrD4msKI4w18P5jrRPfKEZRFDxicCcsaDsihcEzj
+         DVdA==
+X-Forwarded-Encrypted: i=1; AJvYcCVOEw3TPbpaNzCAt4jDGXVB07mnNlnLZjvDgn6YbJ1sh/I8+IfE2eHwzdrAqK7cz8SveKe59axoVVaDpe4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHV0VKrXBWED06lZzSMVth7TP4h9lfn3u/yrH1BkSeFRrAftA/
+	/8ILn0Xx0bz9Nrg3lxUtT7gu6NX58SvdviAnCAHUMPrNe3PWMRwyCQjM4epezbc=
+X-Gm-Gg: ASbGnctWx69Tb09FpGzdfvT6b5x5Txa2hWDaMvOIIadOP2cxt4ROGzvWRW0PdjTOtdo
+	k8mwE3gnX7RBnX2JZOr/mzqHAo5CKJlE8jOWVzpgdSjfvxZG+RE46Ew+qSESui1Zu6SDvfpF22A
+	nH24oc3qBlwXilnjT+MFCM30fUxsoUg4UrkQJM4hU+ck2a3SXoq1zWgaByd7GuDI5YIQNfNxqeT
+	IuyHufE88217XESIF1legIac0UspDsfcF7Z//oD+AxI3qo1XWYJOdWTENLKvDWmaedbPv4e1XMI
+	UQF5YGrWNpZJ90Ki+pEFzjPwI0l202mFtfSYhS0jzmTP02YaXD6Ou4CxNVcGXQEuASo+KRa+OTK
+	DNv2gdDLH8J6qW3tPRHdo
+X-Google-Smtp-Source: AGHT+IF40EzUUmGVd0zd7rqUsdkDiAiIczPUOCxpw6qKHK2XBj0/TDqOPqbFk3OkguXZaFpVMQXW9A==
+X-Received: by 2002:a05:600c:450a:b0:43d:ed:ad07 with SMTP id 5b1f17b1804b1-43ea7cdfdf8mr50511585e9.29.1743596656675;
+        Wed, 02 Apr 2025 05:24:16 -0700 (PDT)
+Received: from [192.168.0.34] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43eb60ccc66sm19418675e9.24.2025.04.02.05.24.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Apr 2025 05:24:16 -0700 (PDT)
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Subject: [PATCH v3 0/2] media: MAINTAINERS: Update venus/iris reviewers and
+ maintainers list
+Date: Wed, 02 Apr 2025 13:24:13 +0100
+Message-Id: <20250402-b4-25-03-29-media-committers-venus-iris-maintainers-v3-0-2b2434807ece@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] wifi: ath11k: allow APs combination when dual stations
- are supported
-To: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
-CC: <ath11k@lists.infradead.org>, <jjohnson@kernel.org>, <kvalo@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-wireless@vger.kernel.org>,
-        <quic_cjhuang@quicinc.com>, <vbenes@redhat.com>
-References: <d410576f-2fc7-4de1-af51-29fbe8b14948@quicinc.com>
- <20250115130359.138890-1-jtornosm@redhat.com>
- <748a5a75-1385-4691-85c1-e9cc5eb4ffc2@oss.qualcomm.com>
-Content-Language: en-US
-From: "Yu Zhang (Yuriy)" <quic_yuzha@quicinc.com>
-In-Reply-To: <748a5a75-1385-4691-85c1-e9cc5eb4ffc2@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=IYWHWXqa c=1 sm=1 tr=0 ts=67ed2c41 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=tPUOBYC6UmroMFteW7gA:9
- a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: 4Q3ha7XTLwWm7TH7As6SR4qYtZIU77iW
-X-Proofpoint-ORIG-GUID: 4Q3ha7XTLwWm7TH7As6SR4qYtZIU77iW
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-02_05,2025-04-01_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=786
- priorityscore=1501 mlxscore=0 malwarescore=0 bulkscore=0 suspectscore=0
- lowpriorityscore=0 adultscore=0 impostorscore=0 clxscore=1011 spamscore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504020078
+X-B4-Tracking: v=1; b=H4sIAG0s7WcC/6XOPQ7CMAwF4KugzBilNv8T90AMaeq2lmiCkhKBq
+ t6dhAlWGCz5vcGfJxU5CEd1XEwqcJIo3uVAy4WyvXEdgzQ5K9S40YQHqNeAG9AEeR+4EQPWD4O
+ MI4cIid09ggSJMBhxY55Sc017Xh8au93VKl++BW7l8VbPl5x7iaMPz/cTqSrtf16qQINmW2m9a
+ xsme7qKM8GvfOhUARN+IFT9hmBBaIuIraE9mS9knucX4+8NGlwBAAA=
+X-Change-ID: 20250329-b4-25-03-29-media-committers-venus-iris-maintainers-eb38e49dc67b
+To: stanimir.k.varbanov@gmail.com, hverkuil@xs4all.nl, 
+ quic_vgarodia@quicinc.com, quic_dikshita@quicinc.com, mchehab@kernel.org, 
+ linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>
+X-Mailer: b4 0.14.2
 
+V3:
+- Was: Add myself into venus/iris to maintain/review
+- I'll be helping to pickup patches for camss, venus and iris so
+  +R to make sure checkpatch.pl includes me.
+- +M Dikshita as she is an expert in this area.
+- Link to v2: https://lore.kernel.org/r/20250331-b4-25-03-29-media-committers-venus-iris-maintainers-v2-0-036222fa383a@linaro.org
 
+V2:
+- Remove Stan from venus +M per his indication he can't continue
+  due to lack of appropriate test hardware.
+- Apply trailers from Neil on patch #2
+- Link to v1: https://lore.kernel.org/r/20250329-b4-25-03-29-media-committers-venus-iris-maintainers-v1-0-0ec1007fde3c@linaro.org
 
-On 1/16/2025 8:31 AM, Jeff Johnson wrote:
-> On 1/15/2025 5:03 AM, Jose Ignacio Tornos Martinez wrote:
->> Hello Yuriy,
->>
->> Thank you for the information.
->> My platform, as you said, is just wcn6855 hw2.1, but using NetworkManager
->> with the default configuration.
->> If this is the only stopper, you can skip and not consider as a wrong case,
->> because (sorry for repeating) it is just a matter of the number of available
->> resources that can be adjusted after some research from us.
->>
->> Thanks
->>
->> Best regards
->> Jose Ignacio
-> 
-> Thanks,
-> 
-> I was hesitant to take Yuriv's patch since your problem was not fixed. But I
-> guess you are already broken with the current code, so I'll take his patch,
-> and then we can work on fixing any other issues from there.
-> 
-> Kalle, can you review? You currently have this deferred in patchwork:
-> https://patchwork.kernel.org/project/linux-wireless/patch/20240829064420.3074140-1-quic_yuzha@quicinc.com/
-> 
-> /jeff
-> 
-Jeff
+V1:
+I'd like to help out getting patches reviewed and merged for both of these
+drivers.
 
-Could you help it?
++M for venus
++R for iris
 
-Thanks,
-Yuriy
+Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+---
+Bryan O'Donoghue (2):
+      media: MAINTAINERS: Amend venus Maintainers and Reviewers
+      media: MAINTAINERS: Add myself to iris Reviewers
+
+ MAINTAINERS | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+---
+base-commit: f2151613e040973c868d28c8b00885dfab69eb75
+change-id: 20250329-b4-25-03-29-media-committers-venus-iris-maintainers-eb38e49dc67b
+
+Best regards,
+-- 
+Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 
