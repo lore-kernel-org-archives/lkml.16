@@ -1,183 +1,99 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74D952E3397;
-	Wed,  2 Apr 2025 00:50:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7CE2F513
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 00:50:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743555031; cv=none; b=ciq0vhdAIarj6zIj2k7FiPg67YpVK6gMlmj1I64gKvUQDOMaanhO2gI7akCw5wrr+Q/4D81pvG7+5HMz7esa7pd081ZmR4+vfvv/CQuvmrn3klUXstZLVDXKeqbqgJCS64kh5eEUHj1oF3R92QLx3udNc6Xk5qsi4RNaGnN5MJY=
+	t=1743555041; cv=none; b=fxW0lrcmklHWynGBDwrL810uFqBgS14JEDwtizRfTzi0/CkICVk52jgTiISavDJrcOE4ft3p4avhHJJg/Z/y1O2ndui8cemh9ebSvLI0H8wTScXNHI0urDRDilOXn2dNdF21JQTuWktAGezzaPfFK7sLzBc8fAtrMWfsZ3ro8vg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743555031; c=relaxed/simple;
-	bh=gGYwdPzX3FAauhm6OrrUX5cTjP2EDehPAVqoS/8fqC8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=onSw0QhRFiS8hTSlOZg79hImxdYr2GXKZkZztJQFpA7xDh4DZM9WUMzdRQqzvXqZw+5JSO0nFBYuVrtmHZakiS8N7tlXMATs/La0oghsvmJSl069tS3XmhV+Fs2EZn5g3YvFLieYIH8VSwvsrNktizND07ks4qPxGE0Y07EiqTk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=MINsnI0B; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1743555041; c=relaxed/simple;
+	bh=2HtuutMy+lDMR+2ROadl7v745BYRGRRdl+H5LeHcAUo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JCeerL47jlJvEIpC4d6IlpjT41T1R9j1ZR81JxBJRc12cG1laf2TBXHxHTKkktf6D5ud2jEYYMcBuOu65Bbp17eokA58T6gaKmhyxhH6H/sBdYEXWlPySxs3bqUb4kFElWjOJLwmapyG/WFRSr+wOnBDgZRDLKKoG+jzwsUBdmc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VIjcC9ot; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="MINsnI0B"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5320NoFG025623;
-	Wed, 2 Apr 2025 00:50:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	7Ow9ZRWVKiwiJjLhjvrx7TPn0gkmBPGJACkygHdkD5c=; b=MINsnI0B8Hzydbax
-	+zLpMPWpqam8aZhHeTYbFP/kE/p7CoGyT3avORh1GY7fWKM4sN7ItcEgqIFoZdDV
-	yRsYGRibGxRnI737ltFdq6xg9Fe0QsalfwadalgvUDhZgcc0Hg6r9ornRfR9ljIV
-	cJXQwjtZ+wpT99SuyGnGi9ZjkRkS5rD2ZywCY13k6nWe/xTBpPHABbFwTHKRf12a
-	N+adIt98Xo6KqKIo9Y+v4ue8e8IOfeQIIHBETMY8/0hOEJoNuxMNLYoLwBPwgVFQ
-	sR7x1F98ryapkCwWpJ7WonLoSWLOHsJJ/1nKw9T7FBthii4ffv/w7jP/8z+WtX4h
-	PyIlNQ==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45p6jhsuxx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 02 Apr 2025 00:50:13 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5320oD1u031477
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 2 Apr 2025 00:50:13 GMT
-Received: from [10.133.33.107] (10.80.80.8) by nalasex01c.na.qualcomm.com
- (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 1 Apr 2025
- 17:50:09 -0700
-Message-ID: <92dc9b50-5e58-4cfd-a78c-e32a4bec8e26@quicinc.com>
-Date: Wed, 2 Apr 2025 08:50:06 +0800
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VIjcC9ot"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743555038;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vJTNg57TpFxM6eiCchcjLRtnNvCRkiMrbkIi/jphXdc=;
+	b=VIjcC9ot5+Hsk6T/ZkGtP92v3vWB5YWtyswTvKYmXEUyOc0/gHtL681VXzxGVMeYV/UzEm
+	0a2tAiIMH4Ct0MkLO0oN0lobiWtPoQo0Md8QtqxZ27uCECf8OC+PsB2ZToea35dSOCEU8b
+	4u5PUvC4+3/H7KV6iwR0nvymeHTQesQ=
+Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com
+ [209.85.216.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-377-Wtan21V5P821LbLHOjiyUw-1; Tue, 01 Apr 2025 20:50:37 -0400
+X-MC-Unique: Wtan21V5P821LbLHOjiyUw-1
+X-Mimecast-MFC-AGG-ID: Wtan21V5P821LbLHOjiyUw_1743555036
+Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-2ff605a7a43so17213681a91.3
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 17:50:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743555036; x=1744159836;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vJTNg57TpFxM6eiCchcjLRtnNvCRkiMrbkIi/jphXdc=;
+        b=ae8j9ljWqVPbHO4pQ9OxXme4KuVb0YssYMkOur37SPYlY6/N/XF11PTjbM7nYhn64p
+         gQFlD8ReEezq+wz6fzASe+snlg5vFpO1YF4F+onCRRv0ngaJ1kP2w3dBEv3WYlD59PGl
+         uew5QdG47EkJPtjyeE6z185QRZX+bdNH/yWzVjDavL+qxs9DbZVogokh70uCMzjjQtWV
+         fGTF8gTEdIwMLXpUwwQAZH8t5TdO19NTrDk4Q6nQtRkMzoefCEXDO+aYQwucovkUJQCr
+         ZmZ1C+SKgD01ku3cO4NcawaKQ1gq472MkyRCPXTMY8nhpW+MqBSKfnOd9mN0GX7J3Oda
+         CW4A==
+X-Forwarded-Encrypted: i=1; AJvYcCUFoEBvEF7AcwU1PxDgBITahzOGgSyGHG41wG4R29BcnWeVoy9aevHXQVjOvPg1OicfVE81wfr614JqX/k=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzxn2R0Vw6mNRqrp9DSL21UVKdkPd8utzvkPEcknvY3f0JlgXgW
+	xKhEh3pvjNTqNXApyuUVYcfJE5kgZIF9uJNbv10gC5BCfMAfViz/ksTVNkqbvaqHgZsaA2faV5+
+	k2uD9dYYH6fQ0lk7d7721AG0FUaRUbpMdu1jbCBHq/jd2pYlsZCqCZG+wdYNgiA==
+X-Gm-Gg: ASbGncsXZPHUXxXYskgXAuMpjW03CGZHR18buEAUBRCD/GEZIs/E/p9KQ7OW2+Fz02p
+	f1J28zpLDe/tzMOMpozRMYHkWSxeAOZnlXZmWEwZpDStIY8CaomfOE4ihFXB0P6QV3K4phCxbqG
+	cG70YR6dIETKHwCXNNKmQKma1nUmRxcbRFmlxZKi7q+8+lT7XcQpKGsKamA74mugvSY4pRvLd5M
+	UFIvvxj/nhoUZyyKfO4YIbc1SIY0GKLAaQ4pBnOvtT66EHFyxY9YzYCrk/4KebrVYCzUQ==
+X-Received: by 2002:a05:6a20:d04e:b0:1f5:730b:e09a with SMTP id adf61e73a8af0-200e4c4f75fmr590022637.20.1743555036454;
+        Tue, 01 Apr 2025 17:50:36 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFdk1FxrJ+9cINgByDopFSozFjxckoY96NPi7m/sZgKLt5ACht/tUy31f50xwZLM8tQpD7l1Q==
+X-Received: by 2002:a05:6a20:d04e:b0:1f5:730b:e09a with SMTP id adf61e73a8af0-200e4c4f75fmr590003637.20.1743555036171;
+        Tue, 01 Apr 2025 17:50:36 -0700 (PDT)
+Received: from jpoimboe ([2600:1700:6e32:6c00::1e])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af93b8acb9esm8768221a12.54.2025.04.01.17.50.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Apr 2025 17:50:35 -0700 (PDT)
+Date: Tue, 1 Apr 2025 17:50:32 -0700
+From: Josh Poimboeuf <jpoimboe@redhat.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>, 
+	Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org, iommu@lists.linux.dev, 
+	Randy Dunlap <rdunlap@infradead.org>, "Paul E. McKenney" <paulmck@kernel.org>
+Subject: Re: [PATCH] iommu: Convert unreachable() to BUG()
+Message-ID: <6zzyjtvkqc4ipj7ngtkx3jithfwpwuxlix677urlehgdnljwbl@wfoa5futari6>
+References: <0c801ae017ec078cacd39f8f0898fc7780535f85.1743053325.git.jpoimboe@kernel.org>
+ <20250327123718.GB31358@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] coresight: fix the wrong type of the trace_id in
- coresight_path
-To: Mike Leach <mike.leach@linaro.org>,
-        Anshuman Khandual
-	<anshuman.khandual@arm.com>
-CC: Jie Gan <jie.gan@oss.qualcomm.com>,
-        Suzuki K Poulose
-	<suzuki.poulose@arm.com>,
-        James Clark <james.clark@linaro.org>,
-        Tingwei Zhang
-	<quic_tingweiz@quicinc.com>,
-        Jinlong Mao <quic_jinlmao@quicinc.com>, <coresight@lists.linaro.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>,
-        "Dan
- Carpenter" <dan.carpenter@linaro.org>
-References: <20250401014210.2576993-1-jie.gan@oss.qualcomm.com>
- <470e4a90-41c3-4974-a4d7-3073a7fcc737@arm.com>
- <CAJ9a7VinQSx9FYvw4ww0KQgMqapLhWTaU9D2qcc-120YywUu2Q@mail.gmail.com>
-Content-Language: en-US
-From: Jie Gan <quic_jiegan@quicinc.com>
-In-Reply-To: <CAJ9a7VinQSx9FYvw4ww0KQgMqapLhWTaU9D2qcc-120YywUu2Q@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: v84JANZpLEwK0BHsLFrDRdt9Z-X6-PS6
-X-Proofpoint-ORIG-GUID: v84JANZpLEwK0BHsLFrDRdt9Z-X6-PS6
-X-Authority-Analysis: v=2.4 cv=bZZrUPPB c=1 sm=1 tr=0 ts=67ec89c5 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=7CQSdrXTAAAA:8 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8
- a=v2YgshKn32HQQJbOv8QA:9 a=QEXdDO2ut3YA:10 a=a-qgeE7W1pNrGK8U0ZQC:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-01_10,2025-04-01_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
- priorityscore=1501 clxscore=1011 phishscore=0 adultscore=0
- lowpriorityscore=0 suspectscore=0 spamscore=0 malwarescore=0 mlxscore=0
- impostorscore=0 mlxlogscore=999 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2504020003
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250327123718.GB31358@noisy.programming.kicks-ass.net>
 
+On Thu, Mar 27, 2025 at 01:37:18PM +0100, Peter Zijlstra wrote:
+> On Wed, Mar 26, 2025 at 10:28:46PM -0700, Josh Poimboeuf wrote:
+> > Bare unreachable() should be avoided as it generates undefined behavior,
+> > e.g. falling through to the next function.  Use BUG() instead so the
+> > error is defined.
+> 
+> Right; I did a pass like this a while ago and thought I'd removed all
+> unreachable() abuse.
 
+Any reason not to just "#define unreachable() BUG()" and convert UD2 and
+similar to use __builtin_unreachable()?
 
-On 4/1/2025 5:56 PM, Mike Leach wrote:
-> Hi,
-> 
-> On Tue, 1 Apr 2025 at 07:11, Anshuman Khandual
-> <anshuman.khandual@arm.com> wrote:
->>
->> On 4/1/25 07:12, Jie Gan wrote:
->>> The trace_id in coresight_path may contain an error number which means a
->>> negative integer, but the current type of the trace_id is u8. Change the
->>> type to int to fix it.
->>>
->>> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
->>> Fixes: 3c03c49b2fa5 ("Coresight: Introduce a new struct coresight_path")
->>> Signed-off-by: Jie Gan <jie.gan@oss.qualcomm.com>
->>
->> LGTM
->>
->> Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
->>
->>> ---
->>>   include/linux/coresight.h | 2 +-
->>>   1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/include/linux/coresight.h b/include/linux/coresight.h
->>> index d79a242b271d..c2bf10c43e7c 100644
->>> --- a/include/linux/coresight.h
->>> +++ b/include/linux/coresight.h
->>> @@ -337,7 +337,7 @@ static struct coresight_dev_list (var) = {                                \
->>>    */
->>>   struct coresight_path {
->>>        struct list_head        path_list;
->>> -     u8                      trace_id;
->>> +     int                     trace_id;
->>>   };
->>>
->>>   enum cs_mode {
-> 
-> There are many places in the Coresight drivers that assign a u8
-> traceid from the path trace ID.
-> 
-> e.g.
-> In coresight-etm4x-core.c : etm4_enable_perf()
-> 
-> drvdata->trcid = path->trace_id;
-> 
-> drvdata->trcid is defined as a u8  - the reason being trace IDs are
-> 128 bits wide with some reserved values.
-> 
-> Will this not just trigger the same issue if path->trace_id is changed
-> to an int? Even if not it is inconsistent handling of the trace ID
-> values.
-> 
-> Trace ID errors should be handled by returning an invalid trace ID
-> value - were the trace ID value will fail the macro
-> IS_VALID_CS_TRACE_ID(), or separate the return of a trace ID from an
-> error return in a function.
-> 
-
-Hi Mike,
-
-The path->trace_id is verified after it has been assigned with the logic 
-you mentioned:
-
-if (!IS_VALID_CS_TRACE_ID(path->trace_id))
-	goto err_path;
-
-So it should be safe to assign to another u8 parameter, like you mentioned:
-
-In coresight-etm4x-core.c : etm4_enable_perf()
-
-drvdata->trcid = path->trace_id;
-
-Thanks,
-Jie
-
-
-> Regards
-> 
-> Mike
-> 
-> 
-> 
-> --
-> Mike Leach
-> Principal Engineer, ARM Ltd.
-> Manchester Design Centre. UK
+-- 
+Josh
 
