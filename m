@@ -1,152 +1,264 @@
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR03-AM7-obe.outbound.protection.outlook.com (mail-am7eur03on2089.outbound.protection.outlook.com [40.107.105.89])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8894C3C17;
-	Wed,  2 Apr 2025 06:46:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743576366; cv=none; b=OKMFr4se7QNoijdhH79PRkWUysAWZWI6NRpnOiyLR6UvqG2aIUHYoGmqJ9mFsgGn1JqfGmLpFLCGpQp88U9WswYYyHEDLXotOnGiJyLo2h6gnZZtedDVzaXW2PsjXKUJM3DUGC80O0h7oHA2a9yJVcj8B0oztb8/mvaUU5eaXgQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743576366; c=relaxed/simple;
-	bh=NuDLQRs5l0dChPpwOQQfl42OYxc8n6kig9UU+8ovl4k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=syaGrVe6uXBQ8Qe28rBXdo4q+GzBRYNTo3m9cLrOJncOmAkiKtMBFqVv7LbWZOgcN9upaDWKhWA6HaOXM6J9hEr0j/1OlPVwzAo87OWP/BGGx8X7IVQHBvE8XzcQi5wCp8gSGnTJwgwLs2wNxJ3XKcBZrkEE7py+CwZEv784jEE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hIw3jWvM; arc=none smtp.client-ip=209.85.167.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8572219049B;
+	Wed,  2 Apr 2025 06:46:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.105.89
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743576368; cv=fail; b=W9UCgIo6mJNfk+nm6BJ3fWUoXS7yYnZqL+y8BaXCNu8Qv/hCNSVY7Cbygds27kOC1NfI218oiDidk/lFX+Fz1g7Tkj/6WV0Onu5O1DoJufW3sz8+v+nf6tvUpEqEujsOaBjo1ZeW1O8prBgsCe/Q2T9zR3vxyP1UR/zDYN2RtPE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743576368; c=relaxed/simple;
+	bh=h7icQ/AKVwkIqxoEBRooyV2M7KQItzNgL7DmuxBfCNU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=nuQXMCpCgZAKu+BJg8NWLG59tTdjdGBNoOZ+6tT73C0lSyireK9+mTCPBOk0PaS51dZ6lnOg5eml/il+efItQWfipHH4lBGyCS+YL9zkD0YD+sBcTo80EGbHFAAoqUPsunU6+2mpheQvhZhZg7MPnxN8x32qWryYI5r7GkX+cok=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=Dylzw60N; arc=fail smtp.client-ip=40.107.105.89
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hIw3jWvM"
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-5499659e669so1878441e87.3;
-        Tue, 01 Apr 2025 23:46:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743576363; x=1744181163; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=4EA3jhMqOTPL7EhQ50J1i67Md0hhqleTtmmrsXC2hOk=;
-        b=hIw3jWvMo6HAqC7Gs/6kK9HUjHYlD4mbaemEP4lHZ91qILQ6U0pwJRt0bn3Q/RXehV
-         kc+Mg4jnTrKu/miOBXHLx1ZmhLjJTH+xKJKL3bL9QAZFQmPf7mgT2BDa04ks61fE9XYJ
-         2r2jPFWAvIvNQcxsrqboEikkdgWaJOLXGJORqzkfZnScCmIVaryJ6vvYxV0cz+Tx3y1C
-         BbNIsO+JX+67eOeMEd39LiCmrd/RSd/KTDe98SPkJRsPJ9tM17VF0E4OlO5ABpJqZWe5
-         7Ccjjl7QU5tw8lkkts/XlyVluCVIKz3hi8udy94mOtlGkxr6uQSWpdoEuGO14UvOFcmR
-         oT7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743576363; x=1744181163;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4EA3jhMqOTPL7EhQ50J1i67Md0hhqleTtmmrsXC2hOk=;
-        b=dtqYgFdx3bKSXpbl1jwji7HIlSJM+6H6pr8UlaauY+HHWJKu0agZQQdI9opq738wd/
-         FRKNhNO98lEDsrA6YITXQ1IsBcakWIMptQcCOLy8H813NBqgKBc9OQBVSVq584kjIWTU
-         TT3vkJKgr/uEt5kSZr5jtnAGDLz76pR8qdnvSfCPbIxq60+bTjUBkiNL807TkMOqnyn5
-         nBBFFmpcU3/mWsAKq22wfw027vxsJaNfyNkn3tsnFHNkIGTm0ihHYbKl+Nov0DhHu0BJ
-         /U4uiGrfe9JzA6d6LqNFU5PunIw7ocZv+cboDy6FFaRDHfPMReRD8YVDB2RhxOP/U/lh
-         UF2w==
-X-Forwarded-Encrypted: i=1; AJvYcCVZ83Md9e54LNtacLJbRMfuAI5wT4tQAvEtF+I3VPd57Vc8cXGiVDfM941qvT/8eghsCnwO3CukM5af34+g@vger.kernel.org, AJvYcCX2mbG8Xsm+5D+o1iPmgIsbaAKF8SqBvjN2CwrfFxxiyst66yK/JO0ywzhSvCDGPnreKC2PKdy2QUFb@vger.kernel.org, AJvYcCXgNKQfdbWp4TPGbJ+MaIAOtVJV6okcRo9lVr65rDzG7/EhkHo/UgSq/OCnFEMlq1eemp/b9Oipd5SE@vger.kernel.org
-X-Gm-Message-State: AOJu0YyUcnD+jCKo3tWHkp5RngeJsB8uRF1P/zDoOmXxeAPU/27m8DqD
-	t90Xf90pr4KvPdpQAevwoOgWx7ieDWw/694i4dgjcJ5MCeMLTfybnnqGiw==
-X-Gm-Gg: ASbGncugE3H/ghj6Q82S3izxtfBQBbm7ChwFmCWgmoP+GLyI9SlnWFogZRIyZV4MOsj
-	j0iBT13sHQkon9hM7pPrBTyP0jCEOOvPO3bEcfisMNsu9XM1WUxUWEQnvJKio2O0o0DWBHT6T7M
-	mR/OUJpGm65oNN3SaMzQxe2d1HrduBn9wS32sdxNDwCdzptAdV9wCjNdyN3xP8zkBLrX0vZi3hp
-	I/2OFMbt9/AkvliSyLLcksRjT4HOEnKAylGr7QgOtJ5PHHLTtr1C5gplLa2q3kEzRlJPsKdkCq7
-	Fiir7GAsL0xv+PEEyBzFan+a6JuwnRez6T+QrUbHMmFGeP5Ljcc=
-X-Google-Smtp-Source: AGHT+IH5GCpE6QqU5Mq/4YURzGIUmuOkOuIthVzMwLwK3aArcaQtDZ/O+W0/TUDnugU1nkzcTIbJcQ==
-X-Received: by 2002:a05:6512:3b25:b0:54a:cc76:1676 with SMTP id 2adb3069b0e04-54c0a52846dmr1605252e87.44.1743576362479;
-        Tue, 01 Apr 2025 23:46:02 -0700 (PDT)
-Received: from mva-rohm ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54b094bb0e1sm1551511e87.52.2025.04.01.23.45.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Apr 2025 23:46:01 -0700 (PDT)
-Date: Wed, 2 Apr 2025 09:45:56 +0300
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-To: Matti Vaittinen <mazziesaccount@gmail.com>,
-	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc: Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Matti Vaittinen <mazziesaccount@gmail.com>,
-	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/5] iio: dac: bd79703 Store device address to 'address'
-Message-ID: <e53cb4120d16a3c678e1f391b600af630d6767ce.1743576022.git.mazziesaccount@gmail.com>
-References: <cover.1743576022.git.mazziesaccount@gmail.com>
+	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="Dylzw60N"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=xLZceiLEWAcFCfMHGS1RsfdGhG5Rg7gQsLi7nLxNJ2wTNEBcwA4ssYjmMURXuTO7EwrrP8Vhq+lW0Y3rPKlz/rIB+ov8sqGQuFMiSRBQ8WdYkUop3JSoKQerYVe60euLx5E+n+Yf88svuZEGxwCcr7f6Aj4Y3L4QRoSyL49kn/odW3pHm+cdg87BiDULPZM8/px+EOwcTFZtQn4E11pKer/IaCrBGRGJrM1AEVre3uwohtgfw9+R+MHDtnVoVKWroC8258nlRLBM1SXH/ESKRu5k1gOBFsuSp7PMQtOPBEibDWJmFPSavuYEngrK1U0u0SBxXxFoYBwXBbsNE5h3pg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=r3XGTKSe3xYx1rA0yGDMdiCfM+I4pINvQWbfIsyRqbE=;
+ b=AAUnL5lVeyzaxzISw/1fGqS1J7K0Lly6MC+NNKa8ooDz79FHdjLaaumGKivU7w5MjTUb7nD8Wkaad9FahG5rkX5g+/7H1gUQIhaT1AN96nENhsbEYo8yYn+xlgsmfbZ9urqpO5HTwHCPvBDDR+S+z6qKiN8TrBarAgN7/sYMdZgQtTMxeh15BOZfgzMubUwqgJdhmWj8UXvucEPSk5UxeMjpFtGdPqri4QJahpPFmZek1eWlj0+mrpUGUJY4wB1aQnluuIBNr5cOLJ16sZjR03XeZz5D0fcn2Im5eaVLndaNwPir2bXRscnonGoXoZcurwJ0LYSK8qMxpZkIu7mbYg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector1-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=r3XGTKSe3xYx1rA0yGDMdiCfM+I4pINvQWbfIsyRqbE=;
+ b=Dylzw60NsEgHdpE8H84K7EFe2RHqtt6Cv97RXDw0Bl1ukWPz2u8BXjenMKiG1KPcUzmjz2kNjSLzyHgNLVsuk1iIFjXZv4G4A2C4vdfu4xGUrJgV7Sl2RF5uiLruNVSGYRw+Q3Ng1O8HFkWnWytoIMHGzDYy4DZ2Kmk2qEx5thVMu4Xlf3Q/P1nuDl24XuxC26NuEomlzwEIhFtpGieRz3BwoLwB6jhtWaGJBbr/i3GXrIbcSEcNGV5P2cUY3II7I6m0VhN/FWnxPf6+dAyVTOifqnTPqwAPYJC2ns/JyU5Q3GBlVSQdTcN3NJwsmvIBque/5IqHbcIhfWYGDlBq1w==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
+Received: from AS4PR04MB9576.eurprd04.prod.outlook.com (2603:10a6:20b:4fe::12)
+ by AS8PR04MB9048.eurprd04.prod.outlook.com (2603:10a6:20b:443::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Wed, 2 Apr
+ 2025 06:46:02 +0000
+Received: from AS4PR04MB9576.eurprd04.prod.outlook.com
+ ([fe80::9cf2:8eae:c3d1:2f30]) by AS4PR04MB9576.eurprd04.prod.outlook.com
+ ([fe80::9cf2:8eae:c3d1:2f30%5]) with mapi id 15.20.8534.043; Wed, 2 Apr 2025
+ 06:46:02 +0000
+Date: Wed, 2 Apr 2025 09:45:57 +0300
+From: Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, 
+	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
+	Dong Aisheng <aisheng.dong@nxp.com>, Jacopo Mondi <jacopo@jmondi.org>, 
+	Christian Hemp <c.hemp@phytec.de>, Guoniu Zhou <guoniu.zhou@nxp.com>, 
+	Stefan Riedmueller <s.riedmueller@phytec.de>, linux-media@vger.kernel.org, imx@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] media: nxp: imx8-isi: better handle the m2m
+ usage_count
+Message-ID: <uie4tvosmzq63qpi4fgengjfuodkzoy3th5zhurt4j4yt772ml@rpplzhmbiky5>
+References: <20241023085643.978729-1-laurentiu.palcu@oss.nxp.com>
+ <20250206203749.GD7524@pendragon.ideasonboard.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250206203749.GD7524@pendragon.ideasonboard.com>
+X-ClientProxiedBy: AM0P190CA0004.EURP190.PROD.OUTLOOK.COM
+ (2603:10a6:208:190::14) To AS4PR04MB9576.eurprd04.prod.outlook.com
+ (2603:10a6:20b:4fe::12)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="9MsS00R+CXwbngT5"
-Content-Disposition: inline
-In-Reply-To: <cover.1743576022.git.mazziesaccount@gmail.com>
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AS4PR04MB9576:EE_|AS8PR04MB9048:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3e632009-1bea-492e-a285-08dd71b2087f
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-LD-Processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+ BCL:0;ARA:13230040|7416014|376014|366016|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info:
+ =?us-ascii?Q?WeVAzOy+W1YrSpSze8ElT0szsZD15mPZIvxw3ZzdxLVdaHASyHWeokamwpLE?=
+ =?us-ascii?Q?2AvFlfZamloMBU7oACtHDyJCFJP2xogiIBhEzXuoijExe70r62XVLc610Hhn?=
+ =?us-ascii?Q?X7RJcSGLapUjHzC/Ejukcn4VHWggaCvirZDxdaxThmYtmaoKU1p7JthDrvW3?=
+ =?us-ascii?Q?0RJBlZn1Jp2vjZkwmzG7UeeLQsi1EO/kv8k/kJedWxrTQNlPbgPaewIr1KCM?=
+ =?us-ascii?Q?NL9RiTd7K9/miZdxa8Qgp6+JAmN9Um171iZqdXgbG9/67ztWoPh/z211Ld9X?=
+ =?us-ascii?Q?fj4Et1JJGGbLXwFxzjs9SULVZe3Ygy/BToQBXq5vBuuga27+18w9cbB2TWyg?=
+ =?us-ascii?Q?uJbkdDquPHwupvmb5QhuA1fEt0mgw6AO4ECz+T2yz5Z1u1vD4dlCuWOI/0xp?=
+ =?us-ascii?Q?5HUyBobUr8eQHEdArpeck3BhfrGkTYdAwB22WVjoF99nQcPKhfDq9vYxsUzM?=
+ =?us-ascii?Q?pN/uEIsZhagemA04QoZE1DFOAHvquprQEu5HP8Ksec/tvCiWE717TOGe2so0?=
+ =?us-ascii?Q?D8pHdHOF7fQQl7SwoujaxaEyhFT/o4qfjdjbEhapUyumecV6PC24ojaSZm/T?=
+ =?us-ascii?Q?Hp6Z/fMhuKa6f36OFJqVNL1dNXy24T2dlDsHVNfk1lIMTZXt1JPjvREL2VlH?=
+ =?us-ascii?Q?aIReTCy6P/Z/y2UrQvKa7QtUQ1uY7V2ycBSCGLh1nahFNvNREmLAABMSAHjP?=
+ =?us-ascii?Q?ZlNlTU5yLH448Mne3JCgSXbcHopM1hSJWtO7a8NLSQEAVEBfPHjM3OoPdYEk?=
+ =?us-ascii?Q?no9+v72a+voAFhoZFiSt0G5GzMw0Dn79dSKdV28Ljq0jGZzEmWLqTyL/IkPC?=
+ =?us-ascii?Q?etrxB1VTkh5s/mvmkgUnZ2+WTvicDZONF0Qt+BtoDQvjoRaz2EM81K24n+va?=
+ =?us-ascii?Q?D8gfjyHFvWQEWhVS+hzMZlc9i4q3s0J1TBf+oLqxPUTvgcFUeF4H7ltslfqu?=
+ =?us-ascii?Q?k9QN+BfiMjp1Xv4UOO/88vn2/V8hmSaKn3lkTiSwcTq9ARCi27C59q9JFcDm?=
+ =?us-ascii?Q?nz5K1HL1eoERkKskTzOYqGWAgaJurcRLx7wCrnyX2Lj8rXOIQ8/WrWS3W0Ax?=
+ =?us-ascii?Q?mFbjcpQALs65T67IUBMhWDztSojcQpOJ/8U5Jdunupqwsd16cWw6nEGnHQmr?=
+ =?us-ascii?Q?tdHTPAbTejnDz45psTMjWreU2ml/sbyahhMiYPOid0YzVnOXvwfgDdHE+I+w?=
+ =?us-ascii?Q?k+V4vXyAvcnDEY4+uF1NvxytNVyTTXyONrUgsPwr/2BbtSdsXMVmjlL27AM2?=
+ =?us-ascii?Q?sudS8gdsNdv8MzcDmGv3/IKOKWCR+AfPC4mby9RauApoEPei9s0ALR9QjRxx?=
+ =?us-ascii?Q?mJFL8PjXR9dR/bubdEO5itkbJCZ2UTJowwGf/jrlcjcO8EfK5whAro4bJGkw?=
+ =?us-ascii?Q?57vxmAJhV2CIGQ8St3/+RsajsYQY?=
+X-Forefront-Antispam-Report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS4PR04MB9576.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+ =?us-ascii?Q?cskkePzMBOKkxvxV9s6cVokZce+3DLjfqjFvINPZ7bjBYgYtqqaPgVfn6sKj?=
+ =?us-ascii?Q?lolA63KbVQdDGGYmU9yj65W0f4YoSF3qug/WIj7uX45WhkwFF8tiyPEgK4W6?=
+ =?us-ascii?Q?I2tqsUFIL0e1fbNeanyYb5z3hn/ax49sOxYKl+TE4g1zS3IpG/xBhrz9+Ubf?=
+ =?us-ascii?Q?JL/8nwztsG7HAD88wmMVtGJ3GYlaU4ESv+nvZvriU4S4F0izsw55QkMRhlsB?=
+ =?us-ascii?Q?jHptM8xsAFVDAGZLtFB4Pgd37vi2YfTAVVRxYa/ZtCL2jM+4+21neGgNc6rQ?=
+ =?us-ascii?Q?nYCB0YWdxNlFKe+KPHYTjK39saOGSqrQmwfvyJ9ARaWy/R5XhlhNP58ep2QO?=
+ =?us-ascii?Q?IMz6WwwBJJCzaSXa9U4s4vv7laA4veizOKqNElUA/v+RcTFX+u9wwWgl1AYB?=
+ =?us-ascii?Q?SmBmlMAGuXCckmO0XLzJRjl+5vT+O3uA3GD62AGZYDtflm+u6ugvbMaSvwQA?=
+ =?us-ascii?Q?5Rcdret8g2SzM4ia7puXiKB8PLTiwKXcajKNEl4KeDF0F9Yb1fQH9+Dfk3zy?=
+ =?us-ascii?Q?3ZtsKH6Orz1Exn58YFFbsf9Czww0M+37IgxAJAXxecC/pFxmPLRiXobXzHh6?=
+ =?us-ascii?Q?6dzTjVaseRRdQwTUlGlixmp44kIjE1qA0QREl2TqB/XIIBiPywTpB9XzpOnb?=
+ =?us-ascii?Q?Qd3YdCS3PA13XMKf9s/xenVlq/QXPWyqR9ifMHToh1LVAx8g03O4PO4NVFlp?=
+ =?us-ascii?Q?QvKTID9YbcopbWhIzx3ge8743k/LQnt+rkj68nrNnJMwLl93V5qbZzb0IWjE?=
+ =?us-ascii?Q?55cg40jsyHoUp9OnHMJJ095H5ejPxADFbsc9949gQS8mPiO9G2nfG7fGn2L5?=
+ =?us-ascii?Q?LRwMe++IblBDyIgo1WXB5tCzkw50RjEFklDSINul8ln7wAOKHgs/K6IO/GXS?=
+ =?us-ascii?Q?kY0hHf9adr5T1inV6CsQa9orM6HruAKUf+XzPd6q5bMzLtFC/YgsN2qGdHDi?=
+ =?us-ascii?Q?1fpCxltobRxvGlIjWSHrJL56qHjytu63AXrL1v8TXxYCxjsu5wojtJBjDM5j?=
+ =?us-ascii?Q?NJ7zYucTtAIBL1zM+56DetCC13qPErdpm0ToZ+5z45/ogpjcvea64eXxQWSq?=
+ =?us-ascii?Q?LESnpwVOneyYIML01KvGmVbxHnPm6Kle71PECuA5kg98NTvwg6tftL3LyxnQ?=
+ =?us-ascii?Q?1zdZIig7L1BJiJsKOhG93/YhvghNHBRT1tRmucMqvvALBtsKDWXoRvSLe3nU?=
+ =?us-ascii?Q?ijE/Vas6eoY4ad2uarBa5JAs47VT5dSppR/omnNoc3e69Xh9a740f9FfiRCS?=
+ =?us-ascii?Q?dXvv4dxBx98C2Y4fwzKPIxgI9SjO/3C7M7P8DQElcMpvdv49gdhMVskRQy0M?=
+ =?us-ascii?Q?Y2i4hNVNYA1WxG7ajT0AA/QTyGa4Sr3WCqJpyDP0gaDrphWxN12PRHdv/mhY?=
+ =?us-ascii?Q?bqgDd+e28ie/T96rPWgQzHIQmYVO4D3w7dEkZ+57HyDkMqSHoqugtL7B8JMa?=
+ =?us-ascii?Q?ckeUp2J/+otRmkA1a8YxplDa0iATf4UxfeEs6IDq8xyGj26upcZu6rq1tAJ/?=
+ =?us-ascii?Q?gTLzgFdDzcp/gYZLaP2NYUpP5DvF3L7Y44CN1FqSUhnO1AW8h0bEajjp5Owv?=
+ =?us-ascii?Q?rVr1X2HtVrG1ZAAxP3fI6PZaeOYXIPaBaVsq0u4DOHz9mDIhazamKMj4ILz/?=
+ =?us-ascii?Q?bw=3D=3D?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3e632009-1bea-492e-a285-08dd71b2087f
+X-MS-Exchange-CrossTenant-AuthSource: AS4PR04MB9576.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Apr 2025 06:46:02.0698
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: K4Uz7Cwa3bOr6YWuIkERuDZcbYtc6WdFTA/wDXBkciXchXre7KsaMKlApQ2Bc41DPAzg/JITFrjIpTd9cFxxdg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB9048
 
+Hi Laurent,
 
---9MsS00R+CXwbngT5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I'm really sorry to keep bugging you about this patch but it looks like
+this one fell through the cracks again... :/
 
-The ROHM BD79703 needs to identify a channel which we are reading from
-in the SPI transfers. This can be seen as an address for the device.
+Thanks,
+Laurentiu
 
-For the bd79703 the address is nicely aligned with the channel number,
-so the driver uses the channel ID for the SPI transfers. This, however,
-does not need to be the case. The iio_chan_spec has a separate 'address'
-field, which we can populate directly with this information.
-
-This helps adding new ICs like the ROHM BD79702 where the channel ID is
-different from this address to be handled by this driver, so we don't
-need to have separate, IC specific mapping for channel numbers <=3D>
-addresses.
-
-Make the 'address' field in the iio_chan_spec to contain the SPI protocol
-address for the channel, and use this value in the transfers.
-
-Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
----
- drivers/iio/dac/rohm-bd79703.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/iio/dac/rohm-bd79703.c b/drivers/iio/dac/rohm-bd79703.c
-index e998ab51052e..236aa98bf005 100644
---- a/drivers/iio/dac/rohm-bd79703.c
-+++ b/drivers/iio/dac/rohm-bd79703.c
-@@ -67,7 +67,7 @@ static int bd79703_write_raw(struct iio_dev *idev,
- 	if (val < 0 || val >=3D 1 << BD79703_DAC_BITS)
- 		return -EINVAL;
-=20
--	return regmap_write(data->regmap, chan->channel + 1, val);
-+	return regmap_write(data->regmap, chan->address, val);
- };
-=20
- static const struct iio_info bd79703_info =3D {
-@@ -82,7 +82,7 @@ static const struct iio_info bd79703_info =3D {
- 	.channel =3D (_chan),					\
- 	.info_mask_separate =3D BIT(IIO_CHAN_INFO_RAW),		\
- 	.info_mask_shared_by_type =3D BIT(IIO_CHAN_INFO_SCALE),	\
--	.address =3D (_chan),					\
-+	.address =3D (_chan + 1),					\
- }
-=20
- static const struct iio_chan_spec bd79703_channels[] =3D {
---=20
-2.49.0
-
-
---9MsS00R+CXwbngT5
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAmfs3SQACgkQeFA3/03a
-ocXcqAgAr1E03RS2gse8NPhoymcVGw0Qu+fG8IYXPGUGcOpLUvrS4kXr6GUMpjr3
-UWA/fsI03TeotrtnB3qxvvWsI/TT7B6aARbIjD0h/Uysr1tldPoetg9h4gsM6CU4
-KH3aNpCjjjMlagsR8pt5dLS/0rNhqH6/pvpMgf4h0L/JG5Bs51aK3IAk6vENpJ9C
-Vy8+2kvh4UGtIVfJt6BVo7v5Q8bOk6GREiftumHgEOIsNizYgWFJ6b2KFQycAvRc
-OOPDbeYScJJUugEWcQOb8P15CFKZVjHBa2SY2GmZmn+NiK7Sw2YQ2i1u9UU/9b9g
-xMUDRYpDQuVlc60SUP4i5zxRvGHipw==
-=5cZJ
------END PGP SIGNATURE-----
-
---9MsS00R+CXwbngT5--
+On Thu, Feb 06, 2025 at 10:37:49PM +0200, Laurent Pinchart wrote:
+> Hi Laurentiu,
+> 
+> Thank you for the patch.
+> 
+> On Wed, Oct 23, 2024 at 11:56:43AM +0300, Laurentiu Palcu wrote:
+> > Currently, if streamon/streamoff calls are imbalanced we can either end up
+> > with a negative ISI m2m usage_count (if streamoff() is called more times
+> > than streamon()) in which case we'll not be able to restart the ISI pipe
+> > next time, or the usage_count never gets to 0 and the pipe is never
+> > switched off.
+> > 
+> > To avoid that, add a 'streaming' flag to mxc_isi_m2m_ctx_queue_data and use it
+> > in the streamon/streamoff to avoid incrementing/decrementing the usage_count
+> > uselessly, if called multiple times from the same context.
+> > 
+> > Fixes: cf21f328fcafac ("media: nxp: Add i.MX8 ISI driver")
+> > Suggested-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > Signed-off-by: Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>
+> > ---
+> > v3:
+> >  * Changed the implementation as suggested by Laurent and add a Suggested-by
+> >    tag to reflect that;
+> > 
+> > v2:
+> >  * Changed the way 'usage_count' is incremented/decremented by taking
+> >    into account the context the streamon/streamoff functions are called
+> >    from;
+> >  * Changed the commit message and subject to reflect the changes;
+> > 
+> >  drivers/media/platform/nxp/imx8-isi/imx8-isi-m2m.c | 13 +++++++++++++
+> >  1 file changed, 13 insertions(+)
+> > 
+> > diff --git a/drivers/media/platform/nxp/imx8-isi/imx8-isi-m2m.c b/drivers/media/platform/nxp/imx8-isi/imx8-isi-m2m.c
+> > index 9745d6219a166..dc10e1a9f27c1 100644
+> > --- a/drivers/media/platform/nxp/imx8-isi/imx8-isi-m2m.c
+> > +++ b/drivers/media/platform/nxp/imx8-isi/imx8-isi-m2m.c
+> > @@ -43,6 +43,7 @@ struct mxc_isi_m2m_ctx_queue_data {
+> >  	struct v4l2_pix_format_mplane format;
+> >  	const struct mxc_isi_format_info *info;
+> >  	u32 sequence;
+> > +	bool streaming;
+> >  };
+> >  
+> >  struct mxc_isi_m2m_ctx {
+> > @@ -486,6 +487,7 @@ static int mxc_isi_m2m_streamon(struct file *file, void *fh,
+> >  				enum v4l2_buf_type type)
+> >  {
+> >  	struct mxc_isi_m2m_ctx *ctx = to_isi_m2m_ctx(fh);
+> > +	struct mxc_isi_m2m_ctx_queue_data *q = mxc_isi_m2m_ctx_qdata(ctx, type);
+> >  	const struct v4l2_pix_format_mplane *out_pix = &ctx->queues.out.format;
+> >  	const struct v4l2_pix_format_mplane *cap_pix = &ctx->queues.cap.format;
+> >  	const struct mxc_isi_format_info *cap_info = ctx->queues.cap.info;
+> > @@ -495,6 +497,9 @@ static int mxc_isi_m2m_streamon(struct file *file, void *fh,
+> >  
+> 
+> While at it I'll drop the blank line here when applying the patch.
+> 
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> 
+> >  	int ret;
+> >  
+> > +	if (q->streaming)
+> > +		return 0;
+> > +
+> >  	mutex_lock(&m2m->lock);
+> >  
+> >  	if (m2m->usage_count == INT_MAX) {
+> > @@ -547,6 +552,8 @@ static int mxc_isi_m2m_streamon(struct file *file, void *fh,
+> >  		goto unchain;
+> >  	}
+> >  
+> > +	q->streaming = true;
+> > +
+> >  	return 0;
+> >  
+> >  unchain:
+> > @@ -569,10 +576,14 @@ static int mxc_isi_m2m_streamoff(struct file *file, void *fh,
+> >  				 enum v4l2_buf_type type)
+> >  {
+> >  	struct mxc_isi_m2m_ctx *ctx = to_isi_m2m_ctx(fh);
+> > +	struct mxc_isi_m2m_ctx_queue_data *q = mxc_isi_m2m_ctx_qdata(ctx, type);
+> >  	struct mxc_isi_m2m *m2m = ctx->m2m;
+> >  
+> >  	v4l2_m2m_ioctl_streamoff(file, fh, type);
+> >  
+> > +	if (!q->streaming)
+> > +		return 0;
+> > +
+> >  	mutex_lock(&m2m->lock);
+> >  
+> >  	/*
+> > @@ -598,6 +609,8 @@ static int mxc_isi_m2m_streamoff(struct file *file, void *fh,
+> >  
+> >  	mutex_unlock(&m2m->lock);
+> >  
+> > +	q->streaming = false;
+> > +
+> >  	return 0;
+> >  }
+> >  
+> 
+> -- 
+> Regards,
+> 
+> Laurent Pinchart
