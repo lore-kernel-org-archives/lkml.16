@@ -1,151 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail2-relais-roc.national.inria.fr (mail2-relais-roc.national.inria.fr [192.134.164.83])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E331023A9A2;
-	Wed,  2 Apr 2025 12:55:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9656323BCF0
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 12:55:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.134.164.83
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743598547; cv=none; b=P14i3rB+f0HRBgoY1vpmOsL2Y3sI0p8ROC5aHKKQ54V0O6TzSaLrU9amkImRpRa7qFKKNhJsrYbi4EYu9L3kBv13X1YIRVXM1F39811pdie/BaV0a3KMe8FUmGIsrsF2VyhBxMjaDH/4KvYEP9MRp1aVYw/FZZM3KuausdEBU5c=
+	t=1743598550; cv=none; b=ihzRyRJryYHnkrTg8znjV9NDiXnQ0cU9PM3WvFETY6LjFxNchMZ7+xQYwoPPG37zvXgHeqwjzwmQpwhUQDCyj4L5Y8TBhJmNwSdmjjvrNKhTB+BckyYtv46GAOyUv1RKui4Se0VUx71iJLVYDOYF9fm8AyBkAyY9a1FUq5iCQDQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743598547; c=relaxed/simple;
-	bh=7Oa7dZIB+yqiTzbdqm9vU96Ae/PK/xcRM4BPNdPHiLo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=D0homFUVlZUYOksLPed/o7i5YDZD/bftUb3RaVQAwn9ouXccxNRTZCzJ8PAQYH27sODExMKR/4bvMGsZ83+EZHR72vfyck1WvsfTTtVnerD3tvkAuRjMSYPPapPQYEBdK52OU0gz09o64ZnoBC9BCLuKkVob226wRp29wp8RQKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pGXJ1GC7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743598550; c=relaxed/simple;
+	bh=fKoqFFmUobB+RoqXGicXqBSc2/VRppGpRM/Dcj2P7zg=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=WmVY/v7ofYJ1G6fcOC/MwgKEPFFUfgzL2y35abg8wR2GmjoHZtAgvE4M8+t/3B8V4f/JrkyJ3SVDJYVh7Zw/CuwxlbAwKoLokhblLPZzDSgr0SiZbnmOcqLHc9PjfVe5kEm8tjZJTbtDt9NWUpPU74lShRLGuUcNMXjZwQoeE3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr; spf=pass smtp.mailfrom=inria.fr; dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b=mqIE34jy; arc=none smtp.client-ip=192.134.164.83
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inria.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pGXJ1GC7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE952C4CEDD;
-	Wed,  2 Apr 2025 12:55:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743598546;
-	bh=7Oa7dZIB+yqiTzbdqm9vU96Ae/PK/xcRM4BPNdPHiLo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=pGXJ1GC7cuTAJXyvjroGnk7PdyHQ+41FN7uUttyErsCtJb7+RT9qTHPxpFuqkXUlI
-	 Toyf8iMFdiJYYNsKy6fvnFvvc1QsaFdpFYI0/KbBcPqi9k4icNqmnni7k2BDS9N8O4
-	 lbvgJkogySMEC7elETEyjt+zTMThSj+1XtE7A5qTV7oNQFrohiB23GxLQ6eWo4t97l
-	 M8+nqL2yT+SRuDnWdy8ScjRQr6wUogHG3TXs5V/VOMna91Bq2Aep/roOjcaK/oPqny
-	 lSLhkOeVEy/CmvN8biNXd2w1BvgpPyTLeXvQPBn8M1rsY5Y5kzY3D9VWAMvzmSQp22
-	 Nr7sGeMQCrTRA==
-Message-ID: <6f832ce4-03d3-46bc-afcc-86983b2ec47a@kernel.org>
-Date: Wed, 2 Apr 2025 14:55:40 +0200
+	dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b="mqIE34jy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=inria.fr; s=dc;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=oFO+eOzQmZZQk/wT//ioGwcfxy3u55ixA2r4co2L760=;
+  b=mqIE34jyFJghB5zwUJfaWefICq1ZSORM71l9bB5c53Q2+3vi4ux5XIzA
+   6zO5aZ80fLSkgGdpIqhEW2G06mXFKI9Y9CcmjFdKIMw5iRyToGCTMGoDz
+   461AVk5T54/338wh2w7UJvyTmJVxwVFVu/xB85/GSfNJu3Gm9cvfOHqt/
+   E=;
+Authentication-Results: mail2-relais-roc.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=julia.lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
+X-IronPort-AV: E=Sophos;i="6.15,182,1739833200"; 
+   d="scan'208";a="216010659"
+Received: from powered-by.xenosite.net (HELO hadrien) ([89.255.17.162])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 14:55:46 +0200
+Date: Wed, 2 Apr 2025 14:55:45 +0200 (CEST)
+From: Julia Lawall <julia.lawall@inria.fr>
+To: Erick Karanja <karanja99erick@gmail.com>
+cc: gregkh@linuxfoundation.org, outreachy@lists.linux.dev, 
+    philipp.g.hortmann@gmail.com, linux-staging@lists.linux.dev, 
+    linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] staging: rtl8723bs: Use true/false instead of 1/0
+In-Reply-To: <2d7f7db67520fa127b81cb200a67304dfff2eaf7.1743596287.git.karanja99erick@gmail.com>
+Message-ID: <e7564fb5-528f-3b7c-5cf-37c544fab3c4@inria.fr>
+References: <cover.1743596287.git.karanja99erick@gmail.com> <2d7f7db67520fa127b81cb200a67304dfff2eaf7.1743596287.git.karanja99erick@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] media: dt-bindings: Add ST VD55G1 camera sensor
- binding
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Benjamin Mugnier <benjamin.mugnier@foss.st.com>,
- Sylvain Petinot <sylvain.petinot@foss.st.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>,
- linux-media@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250401-b4-vd55g1-v2-0-0c8ab8a48c55@foss.st.com>
- <20250401-b4-vd55g1-v2-1-0c8ab8a48c55@foss.st.com>
- <20250402-curvy-seriema-of-blizzard-b1c4d9@krzk-bin>
- <228ddf41-e1d0-4d06-9e0e-9e0dad841688@foss.st.com>
- <fd874f4d-d68c-4443-8bb6-115246f4407b@kernel.org>
- <a0c62797-3c4c-453c-938b-d43666f3b264@foss.st.com>
- <7d501bf2-a017-4c02-a96f-184a7d648b6a@foss.st.com>
- <9f128ce9-6a26-435c-b133-0da80120de2d@kernel.org>
- <20250402124605.GB13181@pendragon.ideasonboard.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250402124605.GB13181@pendragon.ideasonboard.com>
+Content-Type: multipart/mixed; boundary="8323329-1501888478-1743598546=:3176"
+
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323329-1501888478-1743598546=:3176
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8BIT
 
-On 02/04/2025 14:46, Laurent Pinchart wrote:
-> On Wed, Apr 02, 2025 at 12:27:08PM +0200, Krzysztof Kozlowski wrote:
->> On 02/04/2025 11:41, Benjamin Mugnier wrote:
->>> On 4/2/25 11:38, Benjamin Mugnier wrote:
->>>> On 4/2/25 11:11, Krzysztof Kozlowski wrote:
->>>>> On 02/04/2025 10:34, Benjamin Mugnier wrote:
->>>>>> Hi Krzysztof,
->>>>>>
->>>>>> On 4/2/25 09:08, Krzysztof Kozlowski wrote:
->>>>>>> On Tue, Apr 01, 2025 at 01:05:58PM +0200, Benjamin Mugnier wrote:
->>>>>>>> +    properties:
->>>>>>>> +      endpoint:
->>>>>>>> +        $ref: /schemas/media/video-interfaces.yaml#
->>>>>>>> +        unevaluatedProperties: false
->>>>>>>> +
->>>>>>>> +        properties:
->>>>>>>> +          data-lanes:
->>>>>>>> +            items:
->>>>>>>> +              const: 1
->>>>>>>
->>>>>>> Not what I asked. Now you miss number of items. Just use the syntax I
->>>>>>> proposed. Or was there any issue with it?
->>>>>>
->>>>>> No issue I just misunderstood and thought const: 1 was impliying
->>>>>> maxItems: 1. I'll add maxItems back.
->>>>>
->>>>> That's just longer way to express what I asked for. So I repeat the
->>>>> question: why not using the syntax I asked for?
->>>>
->>>> I guess I didn't understand what you asked for.
->>>> May I ask you to write it ? That will help me a lot.
->>>
->>> By 'it' I mean the binding.
->>
->> I wrote it last time. I don't think that copying the same here would
->> change anything. If I can look at v1, you can do as well.
-> 
-> Reading your comment on v1, I would have come up with the exact same
-> result as Benjamin's v2. I can't figure out what alternative description
-> you meant.
-What do you mean by description? I pasted code. The *exact* code to use.
-Benjamin used different code. Two times I asked why you cannot use the
-code I pasted. Still no answer.
 
-Best regards,
-Krzysztof
+
+On Wed, 2 Apr 2025, Erick Karanja wrote:
+
+>     standardize boolean representation by replacing 1/0
+
+Start with a capital letter.  And why is the message indented?
+
+julia
+
+>     with true/false in cases where boolean logic is implied.
+>     This improves code clarity and aligns with the kernel’s bool type usage.
+>
+> Signed-off-by: Erick Karanja <karanja99erick@gmail.com>
+> ---
+>  drivers/staging/rtl8723bs/core/rtw_recv.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/staging/rtl8723bs/core/rtw_recv.c b/drivers/staging/rtl8723bs/core/rtw_recv.c
+> index a389ba5ecc6f..fd04dbacb50f 100644
+> --- a/drivers/staging/rtl8723bs/core/rtw_recv.c
+> +++ b/drivers/staging/rtl8723bs/core/rtw_recv.c
+> @@ -1358,7 +1358,7 @@ static signed int validate_80211w_mgmt(struct adapter *adapter, union recv_frame
+>  			u8 *mgmt_DATA;
+>  			u32 data_len = 0;
+>
+> -			pattrib->bdecrypted = 0;
+> +			pattrib->bdecrypted = false;
+>  			pattrib->encrypt = _AES_;
+>  			pattrib->hdrlen = sizeof(struct ieee80211_hdr_3addr);
+>  			/* set iv and icv length */
+> --
+> 2.43.0
+>
+>
+>
+--8323329-1501888478-1743598546=:3176--
