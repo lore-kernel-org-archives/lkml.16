@@ -1,129 +1,195 @@
-Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9360780B;
-	Wed,  2 Apr 2025 01:07:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B8EF80B
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 01:10:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743556049; cv=none; b=lzoVLpp7zdGke0otlX+c+51sHCxNPS6MkwRn2KgIOlO9UoTa/xCR4+6dcaA4JZ+5kLQCCUmcJ/YH8GYDePe7Ydjm7lRF3rBkhPmeTHnyjVwzlPqEhysAkDw91t36K2Y5KVmsCdjjbi7XTr2CfGlzib7ZZkS2gq27ZY5rfTFThvw=
+	t=1743556256; cv=none; b=Z2V/AjUImEwoJ+irHL0Htnxvw6QPhFEQ2raF1CGoNAr2PdlqIxS0jenMvJEZDvKSnZaHeAPfhUacyrGtx+8Xtuta8FOiYseVdIcNjVM0qeNi5xYMyAcYjS9t7MPRjSIJKVPj/flVN77fhO/xT6bsBjwJyYOSm2fn7VKTKPR8/D4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743556049; c=relaxed/simple;
-	bh=5PZesHeW3FmH0zI46qagmvpB3+cAWyaw3+Q+BiOdv20=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=c6o3++RXWYL4HL2oUOdHVrXFmKqXkfcNx2vexRtK0idc2ZEWYTkdycsB2T4iYz077/s4Bvk7nji94iielOie1nF/4zVJTLzZOaRMA1fL2DvT7WBlVeCBssfGIAWH3xg/F3nFk59PUhUby7hmwjiPRBmDRguuEw60JsKpHJlwLhA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gQPOsnGS; arc=none smtp.client-ip=209.85.128.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743556256; c=relaxed/simple;
+	bh=yobEfPdvLGT2LuLPEMUSZ7qNptH3/YvNa+vijI6VvWg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GlufoUfFO5NH24koSmp8bivyjI0ab0J5t0RRbGl3xHu8B3fz6O0U+xXaBd6xTIlwe9vziBDUw5ETbnUasj/twx+oTpnoDfGU/UxQpf7QZZ+sjx77TW2vlryK81kxwWg8da0j9/N8PjlVaOWrKIsQ/V7WIMuMI+/m97sbqzpan6c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JtzPBZAm; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gQPOsnGS"
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-6f74b78df93so70874457b3.0;
-        Tue, 01 Apr 2025 18:07:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743556046; x=1744160846; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/oxF+p5em2VYpqRHWZtHX7g5OjoPMVbjbFeP48P7SxY=;
-        b=gQPOsnGS2sCUEE4wTvFZvGDH04QfBzyHJONXs4poQQpzLgpOzDaAHQb7k/mdsTe2d4
-         gWfjin16k2wZmKpoSbRHTMXkjOx1K3f0VlBPVQXl7AZXBDR9b2fB7/Xytxs7R1VYcgps
-         beVpxZqA/am+nUCQ1ioRcBwqK/pJcq66looj/TmT4PA/ieaq+ZZvky+ipnq5ynh0eZHF
-         kK59zVJRQ0+VqA6/NuyyiFfyt8yo7o5VlfbomZB9e3lJyO3roYVLEuWnj9M79P30i+DP
-         q1yuswtBHE/bbxRl+Vn20Wyp1Nl5CUWHcafP5oqIkqeUwA+S1Utrcns0paOcL+qOycrS
-         WrcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743556046; x=1744160846;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/oxF+p5em2VYpqRHWZtHX7g5OjoPMVbjbFeP48P7SxY=;
-        b=L+1f1juCbFizwtAcHhmcHipjJK1UgIjiFCsEVtB6/cx4Gtk80GCehVKWJN7ZCDBiXB
-         +YRuaB3Wb8ytBCQ8wAp1Frb4qGbrcwsG40DvQs16d1DZkqMvbrPu86jbP2rFaLZZaOvC
-         cs2ZQBKynUr4UDUw78ge9j1EGbqxzWCMY5fXTws6g1IfcU+viExFX3OB6BXmtfb20wDI
-         526vs2blJWx0jYE5dPg8EGGJ+O8I28dUK2lKj5eiOFiXzKfQ8+2upBH8HxypKnqVmfH5
-         anR+cQyXpBto/LEjP5coGmNFHYFl15fLPaDqnMr6am+94JEeQof25ZeibdPP/a+0scSv
-         Rhlw==
-X-Forwarded-Encrypted: i=1; AJvYcCUDnG/zLAprHJAINz7FLZcWfjyPhGdicvbwt3HTkVpenUbmbSjYxFVEd2m7lhZOmEPz0vinriqZXxlU2a4=@vger.kernel.org, AJvYcCXL+5rtGzsYfkrTg6cIlshjzIGUcH+l1/LJ14EU3unefszyj1k1VUrajYKAj5CoS2YhLJYs+UO2zN2zI9f0GFcNcA==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZuiCPj6VfryMhnvi6+s+D6JFXTWai6sk0fRGFxa7hcgYYOS2f
-	e3jhvyxgy5KkmfMBdOtCq19Mh33GstCTVp/ASFSCIBoI6PewngBn6G9qufUZ2x9xHGJvuJ5l8Br
-	v8z6CbI6wKMJJ+sKDsD282sPB+Es=
-X-Gm-Gg: ASbGnctgolvKA3ThPk84eRexJVvDWnGXy5kVg63VsWpyk+o8DG4HyfNwL5TLzwSU6Rv
-	+K+Y8DAdu1E24M7SdVRVRU2cTrl0o2nQAeCGKVfKAqL/YCOULX1BnxppBqlwbjs8UX+kX/rxxOP
-	e1GxdaQMz1pTsKtPiUm8457p4E
-X-Google-Smtp-Source: AGHT+IGHdyt7ATG8saEPHInkDsfS2SbzdYlFSB9ZTEx7N29oPWAzPreH+Xdjio/K7RgguyLPJxjDyW69EylaCYAoStY=
-X-Received: by 2002:a05:690c:6e08:b0:6fd:34c7:280b with SMTP id
- 00721157ae682-702570df85cmr198241777b3.5.1743556046330; Tue, 01 Apr 2025
- 18:07:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JtzPBZAm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743556252; x=1775092252;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=yobEfPdvLGT2LuLPEMUSZ7qNptH3/YvNa+vijI6VvWg=;
+  b=JtzPBZAmih21f5aQY0obbU1v+jhst3Xuu5XVobs4R3LfAtLhmUeJAdtq
+   p9/PgiGfGL9HnFfDCkebfic3XAwFHqZEHP3zIL7NZ6gFyyW96XJZrTZ4R
+   OkAgbWKQEhoNR8y4p4jz+65OdLKf4QQan/u3wBK5/uKDdnbWdbZHjNeLC
+   7wTqHj6EpseQdttuEiy12SDrUBnHZ7k4DhtG/vFTvfTls16F5tlxqP7mf
+   jLDcBgdMxXRIbgo5gLql3F2V6cG3LvtBRXxmeKrdyO7obWie6fRwk6f2N
+   xIlCTxfvAMAeApwbXIM2rlwaS+rklcNMxbzLYfj0j2QBmrmhjdwTDGrF7
+   g==;
+X-CSE-ConnectionGUID: 8AFJ3lJTQ2CGr5wap+HVcQ==
+X-CSE-MsgGUID: hJr32BaoQASzppJjZgSPSA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11391"; a="56271535"
+X-IronPort-AV: E=Sophos;i="6.14,294,1736841600"; 
+   d="scan'208";a="56271535"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2025 18:10:51 -0700
+X-CSE-ConnectionGUID: MBtw/jbzRxWBvg5RTDgsHg==
+X-CSE-MsgGUID: xpPVMDo7TAKv4nHyVE1fgg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,294,1736841600"; 
+   d="scan'208";a="130657242"
+Received: from lkp-server02.sh.intel.com (HELO e98e3655d6d2) ([10.239.97.151])
+  by fmviesa003.fm.intel.com with ESMTP; 01 Apr 2025 18:10:49 -0700
+Received: from kbuild by e98e3655d6d2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tzmcw-000AJe-20;
+	Wed, 02 Apr 2025 01:10:46 +0000
+Date: Wed, 2 Apr 2025 09:09:54 +0800
+From: kernel test robot <lkp@intel.com>
+To: Alexandru Dadu <alexandru.dadu@imgtec.com>,
+	Frank Binns <frank.binns@imgtec.com>,
+	Matt Coster <matt.coster@imgtec.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
+Cc: oe-kbuild-all@lists.linux.dev, dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	Alexandru Dadu <alexandru.dadu@imgtec.com>
+Subject: Re: [PATCH] drm/imagination: loop counters moved to loop scope
+Message-ID: <202504020813.vjg3Thjg-lkp@intel.com>
+References: <20250401-for-loop-counter-scope-v1-1-5ba75770be52@imgtec.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250331184638.3856982-1-namhyung@kernel.org>
-In-Reply-To: <20250331184638.3856982-1-namhyung@kernel.org>
-From: Howard Chu <howardchu95@gmail.com>
-Date: Tue, 1 Apr 2025 18:07:15 -0700
-X-Gm-Features: AQ5f1JoORAAUrvTsmhzebYXpG_ZOK_mFZj1KngdWpqGDjQqPlObv2dxbUQOZF6A
-Message-ID: <CAH0uvohL4cFXukxhY6G4WfAWXqPOi3HbEHv=_KWixBQmgon2KQ@mail.gmail.com>
-Subject: Re: [PATCH] perf trace: Fix some leaks of struct thread
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250401-for-loop-counter-scope-v1-1-5ba75770be52@imgtec.com>
 
-Hello Namhyung,
+Hi Alexandru,
 
-On Mon, Mar 31, 2025 at 11:46=E2=80=AFAM Namhyung Kim <namhyung@kernel.org>=
- wrote:
->
-> I've found some leaks from 'perf trace -a'.  It seems there are more
-> leaks but this is what I can find for now.
->
-> Cc: Howard Chu <howardchu95@gmail.com>
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/perf/builtin-trace.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-> index 3d0c0076884d34cb..10cd99888a9a11b5 100644
-> --- a/tools/perf/builtin-trace.c
-> +++ b/tools/perf/builtin-trace.c
-> @@ -2835,7 +2835,7 @@ static int trace__fprintf_sys_enter(struct trace *t=
-race, struct evsel *evsel,
->         e_machine =3D thread__e_machine(thread, trace->host);
->         sc =3D trace__syscall_info(trace, evsel, e_machine, id);
->         if (sc =3D=3D NULL)
-> -               return -1;
-> +               goto out_put;
->         ttrace =3D thread__trace(thread, trace);
->         /*
->          * We need to get ttrace just to make sure it is there when sysca=
-ll__scnprintf_args()
-> @@ -4123,8 +4123,10 @@ static int trace__set_filter_loop_pids(struct trac=
-e *trace)
->                         pids[nr++] =3D thread__tid(parent);
+kernel test robot noticed the following build warnings:
 
-I suggest adding a:
-thread_put(parent);
-here, just before the break.
+[auto build test WARNING on 2f9d51740cc30e0d2c8a23a55b1e20cf2513c250]
 
->                         break;
->                 }
-> +               thread__put(thread);
->                 thread =3D parent;
->         }
-> +       thread__put(thread);
->
->         err =3D evlist__append_tp_filter_pids(trace->evlist, nr, pids);
->         if (!err && trace->filter_pids.map)
-> --
-> 2.49.0.472.ge94155a9ec-goog
->
+url:    https://github.com/intel-lab-lkp/linux/commits/Alexandru-Dadu/drm-imagination-loop-counters-moved-to-loop-scope/20250401-204252
+base:   2f9d51740cc30e0d2c8a23a55b1e20cf2513c250
+patch link:    https://lore.kernel.org/r/20250401-for-loop-counter-scope-v1-1-5ba75770be52%40imgtec.com
+patch subject: [PATCH] drm/imagination: loop counters moved to loop scope
+config: arm64-randconfig-002-20250402 (https://download.01.org/0day-ci/archive/20250402/202504020813.vjg3Thjg-lkp@intel.com/config)
+compiler: aarch64-linux-gcc (GCC) 7.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250402/202504020813.vjg3Thjg-lkp@intel.com/reproduce)
 
-Thanks,
-Howard
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504020813.vjg3Thjg-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   drivers/gpu/drm/imagination/pvr_fw.c: In function 'pvr_fw_validate':
+>> drivers/gpu/drm/imagination/pvr_fw.c:98:6: warning: unused variable 'entry' [-Wunused-variable]
+     u32 entry;
+         ^~~~~
+
+
+vim +/entry +98 drivers/gpu/drm/imagination/pvr_fw.c
+
+cc1aeedb98ad34 Sarah Walker   2023-11-22   79  
+f99f5f3ea7efd5 Sarah Walker   2023-11-22   80  /**
+f99f5f3ea7efd5 Sarah Walker   2023-11-22   81   * pvr_fw_validate() - Parse firmware header and check compatibility
+f99f5f3ea7efd5 Sarah Walker   2023-11-22   82   * @pvr_dev: Device pointer.
+f99f5f3ea7efd5 Sarah Walker   2023-11-22   83   *
+f99f5f3ea7efd5 Sarah Walker   2023-11-22   84   * Returns:
+f99f5f3ea7efd5 Sarah Walker   2023-11-22   85   *  * 0 on success, or
+f99f5f3ea7efd5 Sarah Walker   2023-11-22   86   *  * -EINVAL if firmware is incompatible.
+f99f5f3ea7efd5 Sarah Walker   2023-11-22   87   */
+f99f5f3ea7efd5 Sarah Walker   2023-11-22   88  static int
+f99f5f3ea7efd5 Sarah Walker   2023-11-22   89  pvr_fw_validate(struct pvr_device *pvr_dev)
+f99f5f3ea7efd5 Sarah Walker   2023-11-22   90  {
+f99f5f3ea7efd5 Sarah Walker   2023-11-22   91  	struct drm_device *drm_dev = from_pvr_device(pvr_dev);
+f99f5f3ea7efd5 Sarah Walker   2023-11-22   92  	const struct firmware *firmware = pvr_dev->fw_dev.firmware;
+f99f5f3ea7efd5 Sarah Walker   2023-11-22   93  	const struct pvr_fw_layout_entry *layout_entries;
+f99f5f3ea7efd5 Sarah Walker   2023-11-22   94  	const struct pvr_fw_info_header *header;
+f99f5f3ea7efd5 Sarah Walker   2023-11-22   95  	const u8 *fw = firmware->data;
+f99f5f3ea7efd5 Sarah Walker   2023-11-22   96  	u32 fw_offset = firmware->size - SZ_4K;
+f99f5f3ea7efd5 Sarah Walker   2023-11-22   97  	u32 layout_table_size;
+f99f5f3ea7efd5 Sarah Walker   2023-11-22  @98  	u32 entry;
+f99f5f3ea7efd5 Sarah Walker   2023-11-22   99  
+f99f5f3ea7efd5 Sarah Walker   2023-11-22  100  	if (firmware->size < SZ_4K || (firmware->size % FW_BLOCK_SIZE))
+f99f5f3ea7efd5 Sarah Walker   2023-11-22  101  		return -EINVAL;
+f99f5f3ea7efd5 Sarah Walker   2023-11-22  102  
+f99f5f3ea7efd5 Sarah Walker   2023-11-22  103  	header = (const struct pvr_fw_info_header *)&fw[fw_offset];
+f99f5f3ea7efd5 Sarah Walker   2023-11-22  104  
+f99f5f3ea7efd5 Sarah Walker   2023-11-22  105  	if (header->info_version != PVR_FW_INFO_VERSION) {
+f99f5f3ea7efd5 Sarah Walker   2023-11-22  106  		drm_err(drm_dev, "Unsupported fw info version %u\n",
+f99f5f3ea7efd5 Sarah Walker   2023-11-22  107  			header->info_version);
+f99f5f3ea7efd5 Sarah Walker   2023-11-22  108  		return -EINVAL;
+f99f5f3ea7efd5 Sarah Walker   2023-11-22  109  	}
+f99f5f3ea7efd5 Sarah Walker   2023-11-22  110  
+f99f5f3ea7efd5 Sarah Walker   2023-11-22  111  	if (header->header_len != sizeof(struct pvr_fw_info_header) ||
+f99f5f3ea7efd5 Sarah Walker   2023-11-22  112  	    header->layout_entry_size != sizeof(struct pvr_fw_layout_entry) ||
+f99f5f3ea7efd5 Sarah Walker   2023-11-22  113  	    header->layout_entry_num > PVR_FW_INFO_MAX_NUM_ENTRIES) {
+f99f5f3ea7efd5 Sarah Walker   2023-11-22  114  		drm_err(drm_dev, "FW info format mismatch\n");
+f99f5f3ea7efd5 Sarah Walker   2023-11-22  115  		return -EINVAL;
+f99f5f3ea7efd5 Sarah Walker   2023-11-22  116  	}
+f99f5f3ea7efd5 Sarah Walker   2023-11-22  117  
+f99f5f3ea7efd5 Sarah Walker   2023-11-22  118  	if (!(header->flags & PVR_FW_FLAGS_OPEN_SOURCE) ||
+f99f5f3ea7efd5 Sarah Walker   2023-11-22  119  	    header->fw_version_major > FW_MAX_SUPPORTED_MAJOR_VERSION ||
+f99f5f3ea7efd5 Sarah Walker   2023-11-22  120  	    header->fw_version_major == 0) {
+f99f5f3ea7efd5 Sarah Walker   2023-11-22  121  		drm_err(drm_dev, "Unsupported FW version %u.%u (build: %u%s)\n",
+f99f5f3ea7efd5 Sarah Walker   2023-11-22  122  			header->fw_version_major, header->fw_version_minor,
+f99f5f3ea7efd5 Sarah Walker   2023-11-22  123  			header->fw_version_build,
+f99f5f3ea7efd5 Sarah Walker   2023-11-22  124  			(header->flags & PVR_FW_FLAGS_OPEN_SOURCE) ? " OS" : "");
+f99f5f3ea7efd5 Sarah Walker   2023-11-22  125  		return -EINVAL;
+f99f5f3ea7efd5 Sarah Walker   2023-11-22  126  	}
+f99f5f3ea7efd5 Sarah Walker   2023-11-22  127  
+f99f5f3ea7efd5 Sarah Walker   2023-11-22  128  	if (pvr_gpu_id_to_packed_bvnc(&pvr_dev->gpu_id) != header->bvnc) {
+f99f5f3ea7efd5 Sarah Walker   2023-11-22  129  		struct pvr_gpu_id fw_gpu_id;
+f99f5f3ea7efd5 Sarah Walker   2023-11-22  130  
+f99f5f3ea7efd5 Sarah Walker   2023-11-22  131  		packed_bvnc_to_pvr_gpu_id(header->bvnc, &fw_gpu_id);
+f99f5f3ea7efd5 Sarah Walker   2023-11-22  132  		drm_err(drm_dev, "FW built for incorrect GPU ID %i.%i.%i.%i (expected %i.%i.%i.%i)\n",
+f99f5f3ea7efd5 Sarah Walker   2023-11-22  133  			fw_gpu_id.b, fw_gpu_id.v, fw_gpu_id.n, fw_gpu_id.c,
+f99f5f3ea7efd5 Sarah Walker   2023-11-22  134  			pvr_dev->gpu_id.b, pvr_dev->gpu_id.v, pvr_dev->gpu_id.n, pvr_dev->gpu_id.c);
+f99f5f3ea7efd5 Sarah Walker   2023-11-22  135  		return -EINVAL;
+f99f5f3ea7efd5 Sarah Walker   2023-11-22  136  	}
+f99f5f3ea7efd5 Sarah Walker   2023-11-22  137  
+f99f5f3ea7efd5 Sarah Walker   2023-11-22  138  	fw_offset += header->header_len;
+f99f5f3ea7efd5 Sarah Walker   2023-11-22  139  	layout_table_size =
+f99f5f3ea7efd5 Sarah Walker   2023-11-22  140  		header->layout_entry_size * header->layout_entry_num;
+f99f5f3ea7efd5 Sarah Walker   2023-11-22  141  	if ((fw_offset + layout_table_size) > firmware->size)
+f99f5f3ea7efd5 Sarah Walker   2023-11-22  142  		return -EINVAL;
+f99f5f3ea7efd5 Sarah Walker   2023-11-22  143  
+f99f5f3ea7efd5 Sarah Walker   2023-11-22  144  	layout_entries = (const struct pvr_fw_layout_entry *)&fw[fw_offset];
+318bb30bc58c60 Alexandru Dadu 2025-04-01  145  	for (u32 entry = 0; entry < header->layout_entry_num; entry++) {
+f99f5f3ea7efd5 Sarah Walker   2023-11-22  146  		u32 start_addr = layout_entries[entry].base_addr;
+f99f5f3ea7efd5 Sarah Walker   2023-11-22  147  		u32 end_addr = start_addr + layout_entries[entry].alloc_size;
+f99f5f3ea7efd5 Sarah Walker   2023-11-22  148  
+f99f5f3ea7efd5 Sarah Walker   2023-11-22  149  		if (start_addr >= end_addr)
+f99f5f3ea7efd5 Sarah Walker   2023-11-22  150  			return -EINVAL;
+f99f5f3ea7efd5 Sarah Walker   2023-11-22  151  	}
+f99f5f3ea7efd5 Sarah Walker   2023-11-22  152  
+f99f5f3ea7efd5 Sarah Walker   2023-11-22  153  	fw_offset = (firmware->size - SZ_4K) - header->device_info_size;
+f99f5f3ea7efd5 Sarah Walker   2023-11-22  154  
+f99f5f3ea7efd5 Sarah Walker   2023-11-22  155  	drm_info(drm_dev, "FW version v%u.%u (build %u OS)\n", header->fw_version_major,
+f99f5f3ea7efd5 Sarah Walker   2023-11-22  156  		 header->fw_version_minor, header->fw_version_build);
+f99f5f3ea7efd5 Sarah Walker   2023-11-22  157  
+f99f5f3ea7efd5 Sarah Walker   2023-11-22  158  	pvr_dev->fw_version.major = header->fw_version_major;
+f99f5f3ea7efd5 Sarah Walker   2023-11-22  159  	pvr_dev->fw_version.minor = header->fw_version_minor;
+f99f5f3ea7efd5 Sarah Walker   2023-11-22  160  
+f99f5f3ea7efd5 Sarah Walker   2023-11-22  161  	pvr_dev->fw_dev.header = header;
+f99f5f3ea7efd5 Sarah Walker   2023-11-22  162  	pvr_dev->fw_dev.layout_entries = layout_entries;
+f99f5f3ea7efd5 Sarah Walker   2023-11-22  163  
+f99f5f3ea7efd5 Sarah Walker   2023-11-22  164  	return 0;
+f99f5f3ea7efd5 Sarah Walker   2023-11-22  165  }
+f99f5f3ea7efd5 Sarah Walker   2023-11-22  166  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
