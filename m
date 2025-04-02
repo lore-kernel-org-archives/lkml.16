@@ -1,240 +1,381 @@
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40DCC236A98;
-	Wed,  2 Apr 2025 10:42:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743590580; cv=none; b=nl25Um7EIn/9iq68T6kp+ZiKznw1HV6TL4f9yJOVzEgyIC0Nfj7o4jBVssh+fSqYV98kzV+gL3pd3MNNhymyZLi/0b9KhpwyQ8CnHtPFW8fAsU/aTTORpUzF4Bb9hGI4X0xwkZHqySD8lqEn4UWWDn62u5VXDWo8JPyKlbuydJQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743590580; c=relaxed/simple;
-	bh=rlDlw3yUfuqzlrhTpPvQV6Fd9LaYQCd9M9OhxHLbQ8k=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BqKRExLt7zHZW+4Iy91RTcu1NPE48FuWf3kqp7WvV9XTZFeJYC4h5VM6IDNo6nCRQFOasBrUojRge5TBomiTN3YLdb7icLfkSBet8rKiMVD4s9mZW3TgfSoz771f5XgG2cdJnnslDCfc1oyYf+J5eKOPFKZZkhnNayyNhxMXEAs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gvOfbbLM; arc=none smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82EAD236450;
+	Wed,  2 Apr 2025 10:43:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.10
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743590637; cv=fail; b=EiZuJuayRb81X0nVAKdCy7NptzqKS+95mfMxnAMLknPuRDZfIpcgbfY7ORkt4LftZHwjjYPeqbsRDoPpbeOETmlPLj3mWWcrbSa45gpTkhxeD6WRPMXPbgDTT9/8b1rrIjmDnPiR/8/F34L//oszhOYfDU8PijCTbljs1iKTyn8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743590637; c=relaxed/simple;
+	bh=xqjBa+GOh5YnU2xOAJ35dbpaIq9U45tC4hBY3VwZ4Mk=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=KDmay+1Sephma8vGHiiy5DTcou8GNDTK+i6mPTwHUt5lOfQrps5Fq2DS0ZBmxfmfGuqd7usd2T7o/1EX32F3XeJ/DjH3LSUWA8DI4koQV8uzzl6n5OXXGM3abu9vPKEjOykAvlLPQLorRwhGh4iJMfHJ6bqOUrFWlsyQneu0uB4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eQFmjdj/; arc=fail smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gvOfbbLM"
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-30bf5d7d107so51854311fa.2;
-        Wed, 02 Apr 2025 03:42:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743590576; x=1744195376; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=a1mbvCMn3XwC0PBtIyIiFWpjjAurXmIwAPDT7wRHCMU=;
-        b=gvOfbbLMFRcHGfrWbYqqMxc0MDNzG6NaLYIKHaqVAkDHuw1NeIMAezcwMmaDaHxugP
-         VsWmfKsmNdRtRZOYGFSKNjZt2kEjEE9TPRH1QU6JWVwlqkuQLYHKMDIl/hU6BAICQmaQ
-         sLVaIPIUdbu8WejN6kDSUNcvChmt+XlMIo9Hl34Se2i0TEwi5qm2IEUwKGyK9E5A71Lr
-         qfI5/ECDQrH4vPPJvid3hnT08jz0HMJHf9uQjTxe6C9kovKG5yIBMv1twqA22vShVhNP
-         LvVI9L50GC727svBCqCSweaG9s5RbxwwJhGBlxP60iBFPfX//KrN9I/6WVKGESV469bL
-         viKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743590576; x=1744195376;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=a1mbvCMn3XwC0PBtIyIiFWpjjAurXmIwAPDT7wRHCMU=;
-        b=J/dHOEhhp68nYdsLsj2X5k5DhAJv8iLZPIwD4PBZOzOyTkFAgQUkHRIYZqaRgjNqbT
-         gIdWHIKxPmkZOqCUM4cQblHsPQ/xnMGLTp3uL1Qc/DIQe0qDWcmEXd1AtnNEX2AwlITW
-         Y737fV4jsm2SAg9sXQv2EpzLlbkPecm2qfFMFnJ6CzxUkR5s648ETvk4wCnB3/URYx/8
-         ru+hukb7bBBhBKUmbZqKp495PepyZ8/o4CUK/AANd0GgYZVktHfK36G8jNh3SgceHDUd
-         oaXbSKIKziUjaY3UEveOL156KQ4wcirXfC2C/Dvexxvh+WuQhroL8oLH0ddAVVFBmSUN
-         AAVg==
-X-Gm-Message-State: AOJu0YzfQPCcjjpZv//crAwdh+uQ6rk6/EKG+9dxO+UGayhclkt4lsq6
-	fbgN3OPEWMQ1alddYEJsWM6cnnPsS3+74l4ZAkP2pcNXBdRYukvbhe4nO19KGBk=
-X-Gm-Gg: ASbGncuYnB0gnBbhX1pwGzCWwDTeun2e5xqhszUepyJiSI4UUu6ANxv0mNfOHnnQGm/
-	ozPRvGlQh2BNKRAqe2JlCsxm9uDroKBRdcRrGMgdcyoiMGFS6Dnlzvp25UYwcOk8sF2IJRVsV8y
-	dSpwOa9PXHzYxjnIRJEE38RD/UPM8WjXfDoDiL+0PXN8D+eXUnUv9Hb7O62wIxeKbYMx+XXZMcR
-	K7BaR7oF2zOdg4aoz78f+NLDSMJNQsDB5wFwb/UrW2sn5lYwExGd1sLRhjfi6Apb8E2oAtE2NLI
-	D/uXH7OmSlBnxgdKtHnGNf/D1Sv1flBa5Lb66Y/OrAPBmDFWE7zSAdVN
-X-Google-Smtp-Source: AGHT+IHUnkrYXSw/2I9Wcm8+rw+8y4bSPSdJ8VkZy3rq67co93W4W8kouj6dzFPAvTT6KftaxQ23kw==
-X-Received: by 2002:a2e:bd84:0:b0:30b:d562:c154 with SMTP id 38308e7fff4ca-30de0278501mr68735231fa.19.1743590575982;
-        Wed, 02 Apr 2025 03:42:55 -0700 (PDT)
-Received: from NB-5360.corp.yadro.com ([89.250.166.11])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30dd2ab84afsm21033121fa.35.2025.04.02.03.42.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Apr 2025 03:42:55 -0700 (PDT)
-From: Matthew Bystrin <dev.mbstr@gmail.com>
-To: arm-scmi@vger.kernel.org,
-	Sudeep Holla <sudeep.holla@arm.com>
-Cc: linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Cristian Marussi <cristian.marussi@arm.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH] firmware: arm_scmi: add timeout in do_xfer_with_response()
-Date: Wed,  2 Apr 2025 13:42:54 +0300
-Message-ID: <20250402104254.149998-1-dev.mbstr@gmail.com>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eQFmjdj/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743590636; x=1775126636;
+  h=date:from:to:cc:subject:message-id:references:
+   content-transfer-encoding:in-reply-to:mime-version;
+  bh=xqjBa+GOh5YnU2xOAJ35dbpaIq9U45tC4hBY3VwZ4Mk=;
+  b=eQFmjdj/3c5jqf6ISxQ/wCfGRSXrh3QJJid0LPhqCeq45fwPUOrwtm8q
+   jEkAWMNreIiPAJusg5WRooRzCxNw1TgM/dnchsENS4hGQ0DFol3tTQyge
+   3pEW0+Sw55KPiS7UK4QqS4DC53dhqnQHd+7yFU5LN6HutSU0zJXKW0D+U
+   DtJh4v/DYLluInz/90FNgo3J4dmuMVu9ApUMhX+Cm9moAo/yWR8oy6M62
+   jgjBzKzduXnrMuO/it4tbBdb3mPuCJ0HwfsK9QFtfxg2ejH2i4Cd59Q/B
+   ZjPxo7HsUf/6FI2iO+JKu4usRDh58P9MWng3TZLyGhwP5+9q9YGlQALqp
+   A==;
+X-CSE-ConnectionGUID: JhpMLnSeSKWnIXABuS7Wbw==
+X-CSE-MsgGUID: s4GY2a0dSCGnpettHEDaEA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11391"; a="62347920"
+X-IronPort-AV: E=Sophos;i="6.14,182,1736841600"; 
+   d="scan'208";a="62347920"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 03:43:55 -0700
+X-CSE-ConnectionGUID: xhItt+I2QlGgYPNkR8bOJw==
+X-CSE-MsgGUID: 7yJEg+4GSuCzAM3PZlWPhA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,182,1736841600"; 
+   d="scan'208";a="127172039"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 03:43:55 -0700
+Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Wed, 2 Apr 2025 03:43:54 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Wed, 2 Apr 2025 03:43:54 -0700
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.176)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Wed, 2 Apr 2025 03:43:53 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=F3vX0wIt2K6viBi0iK0TJSNDy35+QFGL7IZxcWWdiUm17zXkoR1Yx4DLq7G0M/jNIKvolfVeYLJVBkEYUKTbrS2POfPCEAnz8vw0y3XMevMOoDWPD/MYodY8+AURh2S9k3D7dRekMBWwMov/sxVazSIJsApaWsYJ8ToXQRZLIUaJ8lOrsephCGc+uNl5I632uvcWVd9ZOLc5JrGMlzHpYNaZQJvVR7+GD0nso/SliONRXZWnM0SH4i2bFOM59X3NZiEy2sMz/RM361+BLXjSAQJRdfNqxK7TxN3ug4fbTCVlNNs8fx4/fGClobOvNKjfalJrnSt31O0lzwe21H/rsg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=x9WTUgR4uOVOVcQQ1iJP3GZRes4vxohs96YFcc11jdQ=;
+ b=tEOeIWlZ48Mk765stC2lKLdFedKt2avoK0TsQ/B7Z1QeV5diiXobAt4qvj1WfNSv0QkPEdMMsVL9fwAjrwdXwT4mdsyoJZdLkYC84d4fpaWGPz2B9sAjJWpQx8sj/0no5qcoCXiVDWA01kRwx8E32MF18f7fLaiub142o4Sn6cUe/+daAimt1ro/E5xJaGG6s4RH7505kBnlJpbFtyLE8kY9jd2N+zf38hy8biOnCW1lfE7ZP0vTH40g/UFKcKmyaKJ57AvoYLccbAH+B9vI8iAdf+EHlaOaWO0MBYAgpOPLWH8D7Ujr6WcTXjrqdqQtIqOa7ndjvFyV7MOtKPkALw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DM4PR11MB5373.namprd11.prod.outlook.com (2603:10b6:5:394::7) by
+ SJ0PR11MB5087.namprd11.prod.outlook.com (2603:10b6:a03:2ad::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.28; Wed, 2 Apr
+ 2025 10:43:51 +0000
+Received: from DM4PR11MB5373.namprd11.prod.outlook.com
+ ([fe80::927a:9c08:26f7:5b39]) by DM4PR11MB5373.namprd11.prod.outlook.com
+ ([fe80::927a:9c08:26f7:5b39%4]) with mapi id 15.20.8583.041; Wed, 2 Apr 2025
+ 10:43:51 +0000
+Date: Wed, 2 Apr 2025 12:43:48 +0200
+From: =?utf-8?Q?Micha=C5=82?= Winiarski <michal.winiarski@intel.com>
+To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+CC: <linux-pci@vger.kernel.org>, <intel-xe@lists.freedesktop.org>,
+	<dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>,
+	"Bjorn Helgaas" <bhelgaas@google.com>, Christian =?utf-8?B?S8O2bmln?=
+	<christian.koenig@amd.com>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?=
+	<kw@linux.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, Michal Wajdeczko
+	<michal.wajdeczko@intel.com>, Lucas De Marchi <lucas.demarchi@intel.com>,
+	Thomas =?utf-8?Q?Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+	"Maarten Lankhorst" <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+	<mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
+	<airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Matt Roper
+	<matthew.d.roper@intel.com>
+Subject: Re: [PATCH v6 5/6] PCI: Allow drivers to control VF BAR size
+Message-ID: <fnisbg2bng3f5rkcoc7duzi34g7hghcqgzzehc5v6yb772kdj4@rcjs4mftf7s6>
+References: <20250320110854.3866284-1-michal.winiarski@intel.com>
+ <20250320110854.3866284-6-michal.winiarski@intel.com>
+ <7374beef-46ed-ab53-ccb5-48565526545c@linux.intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7374beef-46ed-ab53-ccb5-48565526545c@linux.intel.com>
+X-ClientProxiedBy: WA1P291CA0005.POLP291.PROD.OUTLOOK.COM
+ (2603:10a6:1d0:19::28) To DM4PR11MB5373.namprd11.prod.outlook.com
+ (2603:10b6:5:394::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR11MB5373:EE_|SJ0PR11MB5087:EE_
+X-MS-Office365-Filtering-Correlation-Id: 585a605e-1e74-4699-abb9-08dd71d341bd
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?L2M3Smd1WTdhYmZ5RHByOTdDM0F1NHJRb0hUQjFZdjJSaHZmaW5UOW9PV3Fa?=
+ =?utf-8?B?ZlBVR3dZMjcwbHdPbWlDMGtPZWpwVmJacUQ4RU5PVlRqZ2xjaGdUZUswcCtt?=
+ =?utf-8?B?ei9WUlhxU09QRi93cFZaYndrS0IrbWFETGY4aWs5NlVNd1R1eTRyc2Rab3dr?=
+ =?utf-8?B?emw4K1c3UXc4akxFZ3FEREpyZnlxbWNxUVFrdGljY0hETmZobEFYaGNCQzV4?=
+ =?utf-8?B?emFERVRHOE5oZ2xoY3lRL1NkNWZvWUVFNnNLa3Q1SW54TitlOU5rYkRCLzlO?=
+ =?utf-8?B?UFVVclJzOHhPSVNnc0tXNmpuSlVjbG5BMGF4VnZ0WEFtdTZFcW9qSWN1M1k2?=
+ =?utf-8?B?dTNhWUxoS1ZMdFF2WU9UTExWTjRpUysyZFlsMmdpc20xajZkYlZtWFkySk1v?=
+ =?utf-8?B?R01mM0d2TlNaTDVuNDBROHM0ZjVlVDVlSWYxRjlWODZYN1B5d0xYT1RKbjhm?=
+ =?utf-8?B?ZGpKMGF5TFF6NFBkNXMvL1NsM3pTYWlDQ1RaNDBKdE0waTJSd0Y5M2RnSTA0?=
+ =?utf-8?B?Z0FuS0RuNGRROStkQ0tPbFAzdEc2cWF4ZnkzZjdNUjYzVk1EWWVLQk5Fd3Fz?=
+ =?utf-8?B?NllINjlUNzNEZGVLYkphSnQzUjBULysrc1IxSnZiVmZoYWJ5dFJrQVZnSHky?=
+ =?utf-8?B?TDduRUZyTWsxTm1FZUtibitVZFJlSFV2WlF2K3NWbTlBWW1VS0tYZ1VzZGRW?=
+ =?utf-8?B?ZnpTM2ZLVEYxaFlaRWdZZW5JczFleENLQ3dMNFRGZlE4YTBlOHhCbld5ZkZk?=
+ =?utf-8?B?QkRqemluN0dSM1Z0NCsvMzNPbGtSYWJCZ3BWenU4YlJoRGE0WXlvakI4ckk2?=
+ =?utf-8?B?c2JGbjhVQU5VZEQvWWppTTIvcTVQMlJ3cG1jOXhxSDJJWnZEVFdleFE1dS95?=
+ =?utf-8?B?eGxKTlZhWDFybWtnbWdDeStFQzVDM0pIajZoblhQVk84cllNMmFDUmZYeWsv?=
+ =?utf-8?B?K3k4dTdheWxiWENZUEJleEUwa24wTFdEcFNBU3pHNVhNODNTTDBQeWRpNm9X?=
+ =?utf-8?B?QTJGd2MzT21hWHBOczhkVVdvSHhiLzVxZnVHT01lWmowUm5LYkg4V3hFc2la?=
+ =?utf-8?B?WVdKTi8zdGtUaFdRUjVPMWM4alhGSlg1Yk9LVlJSSWVUYjVZRng4SDVVdkts?=
+ =?utf-8?B?ZXpweWtaYnIxcHJjcktiVlVCNzIrc2xXRUJzaDVReDE5M2NkcUdUbmR6SHho?=
+ =?utf-8?B?Tlp3ekNGc2wydDl5Z1BWbmFHYmQxNnRDc0dvL3NHeXpOM3Y3SW1vbUJEbFYw?=
+ =?utf-8?B?TmxyWWVpZGVhK1lzSEJ1RjZhMTF6bzBWR2g2M3pBSXkzaVRGdEZYeURxYVZl?=
+ =?utf-8?B?eHZ1U0VQS3hFY2FYUnlpenRqWU1rTStxajQ1VFdTNFowaGFKeW10alZZOXBu?=
+ =?utf-8?B?QTR2cnNhd1FXc3BPYnU3VlRRVTE5VmlKNHM2V0dhQmg1YjNrVVdQUFIzSFBv?=
+ =?utf-8?B?LzVDK29EMHBDL0IxWFA3OGM2c1J0Tzgwdm9RamlLQjg1M0hYZVNqb1dEa3Vh?=
+ =?utf-8?B?b2RaQk05QkZjZGE2VVpDaVFMb1JDTmFCQk16cVAyTzI0ZzRUU0c1NDcwZEMr?=
+ =?utf-8?B?RWFhV1dUZC9jUGpHQnlVa0x0UmdwUG9neUNXczJFazhjWEQ5UkxaQU1GVzF1?=
+ =?utf-8?B?Z0VZelU0aWNkMVNBOEpKUlZhWFJRUFFiNDk2Ly8xMHVqMEJ0WWtrRDYxZm03?=
+ =?utf-8?B?ZTNYRVlUYnRDZXZSZFMxbzB0djF2OVNHT0pCek5CL3h5TmFleG9kY29Ld2d5?=
+ =?utf-8?B?NHQrWFFvWHFxaDEzV0VLNGNkTFVKZ3lycncrVUE0Tk8wU2tVM1lQWmYxOTBK?=
+ =?utf-8?B?OHRxb3FtemU5U3dSb0p2Y2ZISWl5Q1NrMWNPK2dtblFYTFdBL0tMa2JUWWZK?=
+ =?utf-8?Q?x6+NClU9OGa2I?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR11MB5373.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?Z3VHeUVPa2ZmWVZrZ1l2UHcrME9lZHJrWlBEdUx1SHdqQUdwcWRmcTYyM0xB?=
+ =?utf-8?B?R3hqUzlrUDA0Y2ZVVWN1RlpDKzFILzI5bjhIY3o2aUdhSjdkMTlnTGhvWXN6?=
+ =?utf-8?B?cm5KQ3ExaWRQTGtJTitMYjZGZzhBQlArT1ZrWERWMndndnlobjBqTW41dzRR?=
+ =?utf-8?B?dmxHc2JDc1pxQ1JTRVFCMjgrUG8rQXYvSGt0a1VPQmE4VktEb1dwM3FqUWUx?=
+ =?utf-8?B?NW5LRjRVZG00THNiY3l5WlYyaXVYbUdHN09CS1hZNzNhVERUZXR0dXphTXVj?=
+ =?utf-8?B?SHlDL09sR3NXcVcxTlVqeHBGN29oRmR0b1k1dVZ2eEU4Q2t0RThUcWhmdE5Y?=
+ =?utf-8?B?djBHUlBrQmloa0xVR09Zcytublo0WGp0LzVPRi9leXI0djlVa3Z5N1FRMHpk?=
+ =?utf-8?B?MVdCdngwTkRPVU4rVUhsZ2o0ejdtNGNnbjBLSzdsdVhyOTZLdlh1dmlrbktx?=
+ =?utf-8?B?dXA2WlBKZkt2cE9YVXpNampwS2Z0S1hYZXdGMWQ3R0ZQRS9RNDE4UzlIV3FI?=
+ =?utf-8?B?anJRbnQvUjVoeUJpeE83aVgvM2xReERUOWx5amNZRWhPNnpFdGNKMUNzNVpl?=
+ =?utf-8?B?aVZXMTVHMGM1Mkp4bjRXVDZROHNvajkxVGVkUUZQUWNlVWgxVEs5RkMxcGxO?=
+ =?utf-8?B?MXBkNnNMeFArMXhNSlpNVDVsZHR6Z0xVWkZSMUpReEdBU0xFck4zYTBzdW9u?=
+ =?utf-8?B?MnR4dzNPK2JQWjczRHFyaXVWalVQZ0VaOHlHL0FjTFVCcGFkNXlhTVdGNWdB?=
+ =?utf-8?B?QjBiUjZaSnVxdERZSldSdWNQSFFmUnY0RFhSMzdteDBCRERsV3UvM09vN0pO?=
+ =?utf-8?B?THZIRzBlQmx3bm5VU0RLWTJnakZ6RUFkbkU0SDlmMFlabnBhdUhWYzJYQTB2?=
+ =?utf-8?B?ejQ3K2FtK3hWdHZJYzJhOE0yOEw2SHFWUXhKUDNybkYvbHZyR1RkSTVqZ3VU?=
+ =?utf-8?B?WWI0ZkhvNE1ybU1ZSW95OFZKQ2dDZ2xiK0IxYTF0OXVUbElEVGdaT0pkamFQ?=
+ =?utf-8?B?ak1GeHhyUjBoS00wUXdselNXVXNyU2t1Y2FNR2ZBMzhOVTcxTGI3aTBJTUp3?=
+ =?utf-8?B?d0c2L3lHa2tFUnU3cnRQWTdURHcyNVl6NEgrZzVzN0RMTlFzSmdJS3V2ZThX?=
+ =?utf-8?B?bG1seWNtWmRhWDNzMm91L2VCOU5lSGV1K00wWG80dkMxdVV3UkFHSW5FRXNH?=
+ =?utf-8?B?Z09iM1Z0MkJ6YlNPYjJXYkQrQkpDS2h5U3d2MFdYc0dFcm8vSUtBYmdWN1J0?=
+ =?utf-8?B?S0RGZVpiRnhLdFVoYVVURTFzZkJWcEhGUXpkQXhrTXphaFg1TzZwVGpxQWNV?=
+ =?utf-8?B?Rk41c3dEeDRsbjNFR1ZCM1l6WUpqZ1ZYZkpPV2FVdUJlaWZ3VWhLRCtPZkI3?=
+ =?utf-8?B?ekZoTmdvZitDdnJDQ0pWTFdVMWFhaTRFM3p4encrUUdZZFM4K1F3cWRBcVlz?=
+ =?utf-8?B?V1ZBV2lhWGE0L1V5Z1k5TUF0dVY5d2dtZk1tWnA0U0NWbVZWSy9DOUsrTVVh?=
+ =?utf-8?B?Um9wTjNmaEtydUM2Q2RMNWwzNGpiV2c4V1NCYUplMit4anpXUGoyaE5XU1J5?=
+ =?utf-8?B?MzB1MTJBRDJ6VWM5RkREZktNS1JNMHZJY1RtOGJkZmpBNkRhUkprVG9GMEhk?=
+ =?utf-8?B?aEtFcVlpd0E5TjhSVDBPampteEh6RG01N1pGVE5Edkhzelg0NXJJUWRkR1or?=
+ =?utf-8?B?S0ROR0RyVWtnVktUSzh4VElCU1I5ZmhKSGF2b3dIM1hPWDNFVU5LbEp4NmMx?=
+ =?utf-8?B?Y0xrZEN0TUxEbzN2SjJqSjh3T1JwSlZNb3ZSS3hZWkF0aDhwZlM3eXZ1UlhL?=
+ =?utf-8?B?RGRSRklTRUpMRU9manpmWUxUR1hkUGlOeUp2RktCT2ZyNy9IUFBHeDlRNFY4?=
+ =?utf-8?B?OGptRTJwZVJRRWR0T0lXR3ZhV0VlWG12d3BVMGFrMEgyRjNXM09xclVNN2dN?=
+ =?utf-8?B?cEhsMGxiNWEvL25rYmtCSU93bEdDOXRCSVg5Yk1jbzJQb1FGc3BiZFc2bkZZ?=
+ =?utf-8?B?ci9ETEs5MnZ3MDV1ayt5a1VlT05IMktJQkVWV2c4MTNwRDdmbkxYMXJkNjl5?=
+ =?utf-8?B?QWJwY2hVdlFwZTJ3Ym9KbXo1YWFvUVZZeldCT0VKVTdxLzdVSExyb1JERGdB?=
+ =?utf-8?B?ajhKejduVjh2SkVCLzgyUVdxMFh1SmVWL2Vhc21HTlF4UjZaUE4zQnJTNXNG?=
+ =?utf-8?B?R0E9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 585a605e-1e74-4699-abb9-08dd71d341bd
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR11MB5373.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Apr 2025 10:43:51.3234
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: MVhCGvPUuUgn4dVHfsU1SHnWXimYEdddW56mDzh+J4At3Cnyn53DyKAzh60rMbY8qIiUhLCnAY/GV9FibLlbFD5Ko47sFWu6c9pnRjvdpF4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR11MB5087
+X-OriginatorOrg: intel.com
 
-Add timeout argument to do_xfer_with_response() with subsequent changes
-in corresponding drivers. To maintain backward compatibility use
-previous hardcoded timeout value.
+On Wed, Mar 26, 2025 at 05:22:50PM +0200, Ilpo Järvinen wrote:
+> On Thu, 20 Mar 2025, Michał Winiarski wrote:
+> 
+> > Drivers could leverage the fact that the VF BAR MMIO reservation is
+> > created for total number of VFs supported by the device by resizing the
+> > BAR to larger size when smaller number of VFs is enabled.
+> > 
+> > Add a pci_iov_vf_bar_set_size() function to control the size and a
+> > pci_iov_vf_bar_get_sizes() helper to get the VF BAR sizes that will
+> > allow up to num_vfs to be successfully enabled with the current
+> > underlying reservation size.
+> > 
+> > Signed-off-by: Michał Winiarski <michal.winiarski@intel.com>
+> > ---
+> >  drivers/pci/iov.c   | 78 +++++++++++++++++++++++++++++++++++++++++++++
+> >  include/linux/pci.h |  6 ++++
+> >  2 files changed, 84 insertions(+)
+> > 
+> > diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+> > index 861273ad9a580..751eef232685c 100644
+> > --- a/drivers/pci/iov.c
+> > +++ b/drivers/pci/iov.c
+> > @@ -1291,3 +1291,81 @@ int pci_sriov_configure_simple(struct pci_dev *dev, int nr_virtfn)
+> >  	return nr_virtfn;
+> >  }
+> >  EXPORT_SYMBOL_GPL(pci_sriov_configure_simple);
+> > +
+> > +/**
+> > + * pci_iov_vf_bar_set_size - set a new size for a VF BAR
+> > + * @dev: the PCI device
+> > + * @resno: the resource number
+> > + * @size: new size as defined in the spec (0=1MB, 31=128TB)
+> > + *
+> > + * Set the new size of a VF BAR that supports VF resizable BAR capability.
+> > + * Unlike pci_resize_resource(), this does not cause the resource that
+> > + * reserves the MMIO space (originally up to total_VFs) to be resized, which
+> > + * means that following calls to pci_enable_sriov() can fail if the resources
+> > + * no longer fit.
+> > + *
+> > + * Returns 0 on success, or negative on failure.
+> 
+> Return: is the correct kernel doc style.
 
-According to SCMI specification [1] there is no defined timeout for
-delayed messages in the interface. While hardcoded 2 seconds timeout
-might be good enough for existing protocol drivers, moving it to the
-function argument may be useful for vendor-specific protocols with
-different timing needs.
+Yeah, I just blindly followed the style from surrounding docs. I'll
+change it here.
 
-Link: https://developer.arm.com/Architectures/System%20Control%20and%20Management%20Interface
-Signed-off-by: Matthew Bystrin <dev.mbstr@gmail.com>
----
- drivers/firmware/arm_scmi/clock.c     | 2 +-
- drivers/firmware/arm_scmi/common.h    | 1 -
- drivers/firmware/arm_scmi/driver.c    | 6 ++++--
- drivers/firmware/arm_scmi/powercap.c  | 2 +-
- drivers/firmware/arm_scmi/protocols.h | 3 ++-
- drivers/firmware/arm_scmi/reset.c     | 2 +-
- drivers/firmware/arm_scmi/sensors.c   | 4 ++--
- drivers/firmware/arm_scmi/voltage.c   | 2 +-
- include/linux/scmi_protocol.h         | 1 +
- 9 files changed, 13 insertions(+), 10 deletions(-)
+> 
+> > + */
+> > +int pci_iov_vf_bar_set_size(struct pci_dev *dev, int resno, int size)
+> > +{
+> > +	int ret;
+> > +	u32 sizes;
+> > +
+> > +	if (!pci_resource_is_iov(resno))
+> > +		return -EINVAL;
+> > +
+> > +	if (pci_iov_is_memory_decoding_enabled(dev))
+> > +		return -EBUSY;
+> > +
+> > +	sizes = pci_rebar_get_possible_sizes(dev, resno);
+> > +	if (!sizes)
+> > +		return -ENOTSUPP;
+> > +
+> > +	if (!(sizes & BIT(size)))
+> > +		return -EINVAL;
+> > +
+> > +	ret = pci_rebar_set_size(dev, resno, size);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	pci_iov_resource_set_size(dev, resno, pci_rebar_size_to_bytes(size));
+> > +
+> > +	return 0;
+> > +}
+> > +EXPORT_SYMBOL_GPL(pci_iov_vf_bar_set_size);
+> > +
+> > +/**
+> > + * pci_iov_vf_bar_get_sizes - get VF BAR sizes allowing to create up to num_vfs
+> > + * @dev: the PCI device
+> > + * @resno: the resource number
+> > + * @num_vfs: number of VFs
+> > + *
+> > + * Get the sizes of a VF resizable BAR that can be accommodated within the
+> > + * resource that reserves the MMIO space if num_vfs are enabled.
+> 
+> I'd rephrase to:
+> 
+> Get the sizes of a VF resizable BAR that can be accommodate @num_vfs 
+> within the currently assigned size of the resource @resno.
 
-diff --git a/drivers/firmware/arm_scmi/clock.c b/drivers/firmware/arm_scmi/clock.c
-index 2ed2279388f0..4b5cd73384c3 100644
---- a/drivers/firmware/arm_scmi/clock.c
-+++ b/drivers/firmware/arm_scmi/clock.c
-@@ -596,7 +596,7 @@ static int scmi_clock_rate_set(const struct scmi_protocol_handle *ph,
- 	cfg->value_high = cpu_to_le32(rate >> 32);
- 
- 	if (flags & CLOCK_SET_ASYNC) {
--		ret = ph->xops->do_xfer_with_response(ph, t);
-+		ret = ph->xops->do_xfer_with_response(ph, t, SCMI_DEFAULT_TIMEOUT);
- 		if (!ret) {
- 			struct scmi_msg_resp_set_rate_complete *resp;
- 
-diff --git a/drivers/firmware/arm_scmi/common.h b/drivers/firmware/arm_scmi/common.h
-index 10ea7962323e..34527366c909 100644
---- a/drivers/firmware/arm_scmi/common.h
-+++ b/drivers/firmware/arm_scmi/common.h
-@@ -29,7 +29,6 @@
- 
- #define SCMI_MAX_CHANNELS		256
- 
--#define SCMI_MAX_RESPONSE_TIMEOUT	(2 * MSEC_PER_SEC)
- 
- #define SCMI_SHMEM_MAX_PAYLOAD_SIZE	104
- 
-diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
-index 1c75a4c9c371..51c6634d5505 100644
---- a/drivers/firmware/arm_scmi/driver.c
-+++ b/drivers/firmware/arm_scmi/driver.c
-@@ -1490,6 +1490,7 @@ static void reset_rx_to_maxsz(const struct scmi_protocol_handle *ph,
-  *
-  * @ph: Pointer to SCMI protocol handle
-  * @xfer: Transfer to initiate and wait for response
-+ * @timeout_ms: Delayed response wait timeout, if unsure use SCMI_DEFAULT_TIMEOUT
-  *
-  * Using asynchronous commands in atomic/polling mode should be avoided since
-  * it could cause long busy-waiting here, so ignore polling for the delayed
-@@ -1509,9 +1510,10 @@ static void reset_rx_to_maxsz(const struct scmi_protocol_handle *ph,
-  *	return corresponding error, else if all goes well, return 0.
-  */
- static int do_xfer_with_response(const struct scmi_protocol_handle *ph,
--				 struct scmi_xfer *xfer)
-+				 struct scmi_xfer *xfer, unsigned long timeout_ms)
- {
--	int ret, timeout = msecs_to_jiffies(SCMI_MAX_RESPONSE_TIMEOUT);
-+	int ret;
-+	unsigned long timeout = msecs_to_jiffies(timeout_ms);
- 	DECLARE_COMPLETION_ONSTACK(async_response);
- 
- 	xfer->async_done = &async_response;
-diff --git a/drivers/firmware/arm_scmi/powercap.c b/drivers/firmware/arm_scmi/powercap.c
-index 1fa79bba492e..82565dacd301 100644
---- a/drivers/firmware/arm_scmi/powercap.c
-+++ b/drivers/firmware/arm_scmi/powercap.c
-@@ -386,7 +386,7 @@ static int scmi_powercap_xfer_cap_set(const struct scmi_protocol_handle *ph,
- 	if (!pc->async_powercap_cap_set || ignore_dresp) {
- 		ret = ph->xops->do_xfer(ph, t);
- 	} else {
--		ret = ph->xops->do_xfer_with_response(ph, t);
-+		ret = ph->xops->do_xfer_with_response(ph, t, SCMI_DEFAULT_TIMEOUT);
- 		if (!ret) {
- 			struct scmi_msg_resp_powercap_cap_set_complete *resp;
- 
-diff --git a/drivers/firmware/arm_scmi/protocols.h b/drivers/firmware/arm_scmi/protocols.h
-index aaee57cdcd55..b1e3cf3601fe 100644
---- a/drivers/firmware/arm_scmi/protocols.h
-+++ b/drivers/firmware/arm_scmi/protocols.h
-@@ -307,7 +307,8 @@ struct scmi_xfer_ops {
- 	int (*do_xfer)(const struct scmi_protocol_handle *ph,
- 		       struct scmi_xfer *xfer);
- 	int (*do_xfer_with_response)(const struct scmi_protocol_handle *ph,
--				     struct scmi_xfer *xfer);
-+				     struct scmi_xfer *xfer,
-+				     unsigned long timeout_ms);
- 	void (*xfer_put)(const struct scmi_protocol_handle *ph,
- 			 struct scmi_xfer *xfer);
- };
-diff --git a/drivers/firmware/arm_scmi/reset.c b/drivers/firmware/arm_scmi/reset.c
-index 0aa82b96f41b..a458b1c16c51 100644
---- a/drivers/firmware/arm_scmi/reset.c
-+++ b/drivers/firmware/arm_scmi/reset.c
-@@ -198,7 +198,7 @@ static int scmi_domain_reset(const struct scmi_protocol_handle *ph, u32 domain,
- 	dom->reset_state = cpu_to_le32(state);
- 
- 	if (flags & ASYNCHRONOUS_RESET)
--		ret = ph->xops->do_xfer_with_response(ph, t);
-+		ret = ph->xops->do_xfer_with_response(ph, t, SCMI_DEFAULT_TIMEOUT);
- 	else
- 		ret = ph->xops->do_xfer(ph, t);
- 
-diff --git a/drivers/firmware/arm_scmi/sensors.c b/drivers/firmware/arm_scmi/sensors.c
-index 791efd0f82d7..9a07399237f5 100644
---- a/drivers/firmware/arm_scmi/sensors.c
-+++ b/drivers/firmware/arm_scmi/sensors.c
-@@ -871,7 +871,7 @@ static int scmi_sensor_reading_get(const struct scmi_protocol_handle *ph,
- 	s = si->sensors + sensor_id;
- 	if (s->async) {
- 		sensor->flags = cpu_to_le32(SENSOR_READ_ASYNC);
--		ret = ph->xops->do_xfer_with_response(ph, t);
-+		ret = ph->xops->do_xfer_with_response(ph, t, SCMI_DEFAULT_TIMEOUT);
- 		if (!ret) {
- 			struct scmi_resp_sensor_reading_complete *resp;
- 
-@@ -943,7 +943,7 @@ scmi_sensor_reading_get_timestamped(const struct scmi_protocol_handle *ph,
- 	sensor->id = cpu_to_le32(sensor_id);
- 	if (s->async) {
- 		sensor->flags = cpu_to_le32(SENSOR_READ_ASYNC);
--		ret = ph->xops->do_xfer_with_response(ph, t);
-+		ret = ph->xops->do_xfer_with_response(ph, t, SCMI_DEFAULT_TIMEOUT);
- 		if (!ret) {
- 			int i;
- 			struct scmi_resp_sensor_reading_complete_v3 *resp;
-diff --git a/drivers/firmware/arm_scmi/voltage.c b/drivers/firmware/arm_scmi/voltage.c
-index fda6a1573609..26b1f034256b 100644
---- a/drivers/firmware/arm_scmi/voltage.c
-+++ b/drivers/firmware/arm_scmi/voltage.c
-@@ -348,7 +348,7 @@ static int scmi_voltage_level_set(const struct scmi_protocol_handle *ph,
- 		ret = ph->xops->do_xfer(ph, t);
- 	} else {
- 		cmd->flags = cpu_to_le32(0x1);
--		ret = ph->xops->do_xfer_with_response(ph, t);
-+		ret = ph->xops->do_xfer_with_response(ph, t, SCMI_DEFAULT_TIMEOUT);
- 		if (!ret) {
- 			struct scmi_resp_voltage_level_set_complete *resp;
- 
-diff --git a/include/linux/scmi_protocol.h b/include/linux/scmi_protocol.h
-index 688466a0e816..2426daae8a87 100644
---- a/include/linux/scmi_protocol.h
-+++ b/include/linux/scmi_protocol.h
-@@ -16,6 +16,7 @@
- #define SCMI_MAX_STR_SIZE		64
- #define SCMI_SHORT_NAME_MAX_SIZE	16
- #define SCMI_MAX_NUM_RATES		16
-+#define SCMI_DEFAULT_TIMEOUT		(2 * MSEC_PER_SEC)
- 
- /**
-  * struct scmi_revision_info - version information structure
--- 
-2.47.2
+Ok.
+
+> 
+> > + *
+> > + * Returns 0 if BAR isn't resizable, otherwise returns a bitmask in format
+> 
+> Return:
+> 
+> a bitmask of sizes
+
+Ok.
+
+> 
+> > + * defined in the spec (bit 0=1MB, bit 31=128TB).
+> > + */
+> > +u32 pci_iov_vf_bar_get_sizes(struct pci_dev *dev, int resno, int num_vfs)
+> > +{
+> > +	resource_size_t size;
+> > +	u32 sizes;
+> > +	int i;
+> > +
+> > +	sizes = pci_rebar_get_possible_sizes(dev, resno);
+> > +	if (!sizes)
+> > +		return 0;
+> > +
+> > +	while (sizes > 0) {
+> > +		i = __fls(sizes);
+> > +		size = pci_rebar_size_to_bytes(i);
+> > +
+> > +		if (size * num_vfs <= pci_resource_len(dev, resno))
+> > +			break;
+> > +
+> > +		sizes &= ~BIT(i);
+> > +	}
+> 
+> Couldn't this be handled without a loop:
+> 
+> 	bar_sizes = (round_up(pci_resource_len(dev, resno) / num_vfs) - 1) >>
+> 		    ilog2(SZ_1M);
+> 
+> 	sizes &= bar_sizes;
+> 
+> (Just to given an idea, I wrote this into the email so it might contain 
+> some off-by-one errors or like).
+
+I think the division will need to be wrapped with something like do_div
+(because IIUC, we have 32bit architectures where resource_size_t is
+u64).
+
+But yeah, we can drop the loop, turning it into something like this:
+
+	vf_len = pci_resource_len(dev, resno);
+	do_div(vf_len, num_vfs);
+	sizes = (roundup_pow_of_two(vf_len + 1) - 1) >> ilog2(SZ_1M);
+
+Thanks,
+-Michał
+
+> 
+> > +
+> > +	return sizes;
+> > +}
+> > +EXPORT_SYMBOL_GPL(pci_iov_vf_bar_get_sizes);
+> > diff --git a/include/linux/pci.h b/include/linux/pci.h
+> > index 0e8e3fd77e967..c8708f3749757 100644
+> > --- a/include/linux/pci.h
+> > +++ b/include/linux/pci.h
+> > @@ -2389,6 +2389,8 @@ int pci_sriov_set_totalvfs(struct pci_dev *dev, u16 numvfs);
+> >  int pci_sriov_get_totalvfs(struct pci_dev *dev);
+> >  int pci_sriov_configure_simple(struct pci_dev *dev, int nr_virtfn);
+> >  resource_size_t pci_iov_resource_size(struct pci_dev *dev, int resno);
+> > +int pci_iov_vf_bar_set_size(struct pci_dev *dev, int resno, int size);
+> > +u32 pci_iov_vf_bar_get_sizes(struct pci_dev *dev, int resno, int num_vfs);
+> >  void pci_vf_drivers_autoprobe(struct pci_dev *dev, bool probe);
+> >  
+> >  /* Arch may override these (weak) */
+> > @@ -2441,6 +2443,10 @@ static inline int pci_sriov_get_totalvfs(struct pci_dev *dev)
+> >  #define pci_sriov_configure_simple	NULL
+> >  static inline resource_size_t pci_iov_resource_size(struct pci_dev *dev, int resno)
+> >  { return 0; }
+> > +static inline int pci_iov_vf_bar_set_size(struct pci_dev *dev, int resno, int size)
+> > +{ return -ENODEV; }
+> > +static inline u32 pci_iov_vf_bar_get_sizes(struct pci_dev *dev, int resno, int num_vfs)
+> > +{ return 0; }
+> >  static inline void pci_vf_drivers_autoprobe(struct pci_dev *dev, bool probe) { }
+> >  #endif
+> >  
+> > 
+> 
+> -- 
+>  i.
 
