@@ -1,106 +1,141 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AAE9A13AA27;
-	Wed,  2 Apr 2025 05:40:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E7302E3360;
+	Wed,  2 Apr 2025 05:43:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743572453; cv=none; b=tVNSfUoL/USyT/3bKuYnX/d1IhAw6quNqJ5U8JMHgEgeaPJl8BCb7I4vwklGhueGsPnDddWLewRgqAKuR8ex8kF8hjNpR7iQp7LTvlRBJb1lkHhcYthItUXXi/T759W6Dorfpamk2SO9v4gW9ISCw2AdTvyvvMaIfL2xUyhLrE8=
+	t=1743572619; cv=none; b=tHKTWN9TebDnn3fkcLldIld0+bw3vhHtOn3OqjdnGe1mCMt/tfjKxLIMI/O/dPKReamlKoJl56aqH9lzqZCHZzTVcPeRijmzWliNUKukMf+9N/xrLTfwEpITCamqDoTfbLJaqE8oZ8yfF8QOMi5HVarXaFMnia2o0Z/5YvgnehA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743572453; c=relaxed/simple;
-	bh=wZNAuYXkU51dfAFPidgsL7ZUk4uvCwu3iAmPgfx/jes=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cqZOwjcOxwZuVdkI0M+tNcRhKMsYmpJBqlp3vzhzCFlM/OosKERVOpjguNPZSZZcGBPBfaMUxWYc8hx11ToR9GK9soI9KbphiA9TO4jHdNURtqRSYFethTFbBhNW47qq8aBlMAcve7GGa2oNfn4T7z0TN2QuGAk/ffH1FhEfANU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=bEqpqXet; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1743572619; c=relaxed/simple;
+	bh=4YodOXIyddgrUGXCDpWh7pKVlP0DqqsIUu4EW1rqHZU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Njtdr4wO6l2X5cIMrR1kBjL544GlH2VfxUQQBjiuui88RaJmnrlPAVAsc0sn0SL6AtAOAdX64dYUPfKBHcljXC28cinuPT70ER05z01ELncn2LHB5fqkbKvWmZCaMygnjwaWh6DAnCHxeELLutcBFrpqAkbKFTJEfsgRdD+y/5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m5TNYqzv; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="bEqpqXet"
-Received: by linux.microsoft.com (Postfix, from userid 1134)
-	id 3A3112041307; Tue,  1 Apr 2025 22:40:51 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3A3112041307
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1743572451;
-	bh=ZiB90PMMKAEaJMud/Ou60Rtt4u2bRPDLCYMXvuis7bU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bEqpqXet8h/38+KXimF2PsdMwKXgrUPJin8d4Ze+PWII0DMFUixbmRr7oVdtiDNht
-	 2AGCqlO+x/Q2+3HKhwaxk7M5DAiCGDWigFWgdR0vfn3WKn6QnRSNC4zm/kpMGYlcT4
-	 HMKvdkpbmfnJLG4vznDZnfC1Xnil+qczsJw8Gis0=
-Date: Tue, 1 Apr 2025 22:40:51 -0700
-From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-To: Dexuan Cui <decui@microsoft.com>
-Cc: KY Srinivasan <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	Shradha Gupta <shradhagupta@microsoft.com>
-Subject: Re: [PATCH v2] hv/hv_kvp_daemon: Enable debug logs for hv_kvp_daemon
-Message-ID: <20250402054051.GA22424@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1743401688-1573-1-git-send-email-shradhagupta@linux.microsoft.com>
- <BL4PR21MB462765E191592754911DB67BBFAD2@BL4PR21MB4627.namprd21.prod.outlook.com>
- <20250401040609.GA11465@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
- <BL4PR21MB4627E73164911623CFB98BADBFAC2@BL4PR21MB4627.namprd21.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m5TNYqzv"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-301e05b90caso10842925a91.2;
+        Tue, 01 Apr 2025 22:43:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743572617; x=1744177417; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=7oMFt6rTiybYoRdpooKvYV5UYutJybr7cfusGu3htIA=;
+        b=m5TNYqzv15bXRjG04zu1R2qoTvZYtpwYNcXckGw0dyM/Z4WngShcMCJQqAE9kdvh/G
+         7+4N9p1JMXKm70KdpvUuhu6WE8+qReIGsRS3RaPO1JF6cgCF/lG6uqo4Q3VfzFCglVIH
+         uWKdP69QgSrh6SK8N+8HGB+oeONjfWCAxdG1+EBho7LhJzK6UpX1mO7lGqkvvBnLkqmp
+         DwzJ8srdFT54P+y/IaXBXKDi5qDjYv+vPAJ0Um1vV2kKVG+rPMvO1e8HNukKEqXVj2JY
+         pbkn4fZT7rTAcL2AZESx/gNMtBfyU0U7Cvev+AJGbueHsasaRRKnnJAkZCMYXwUXndI2
+         cdIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743572617; x=1744177417;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7oMFt6rTiybYoRdpooKvYV5UYutJybr7cfusGu3htIA=;
+        b=GBn0RZbtb9YoXmPOfJfGGQqX7YsXb2ERUYgJo7DhB8RLEM7p1Bzz/KUiOrWSPxaIc4
+         3lFRHbotz6wSByjhlsTEg3X/8wejEElSygyQAfNsUEs/7KFJrZzXe8REujHEq4+Pex5R
+         5ix7qDnQCboX0+DAwxHIqzMvGthLoGTqAWT6FKqIpUM0f8yTQZGoEZXgrbUw1G7U8TPT
+         PKf0a3DmyCM2OAgXSurJZ+zn27tYlW6e7n8B34DtOdeSGcXWiy/C2W23NhYSXsgebIl2
+         t5UQgbntFJqmLe1pAduW23DZB5R2XNe1ZYLSf2knGSGFUMIVyxR7iK6Tbz/5tkcztpUA
+         mfww==
+X-Forwarded-Encrypted: i=1; AJvYcCUcTEdXZJs7aRvfDEceIazcDU5duSe1oWZH0OZc4HdyrmSSaumNGWh8LrWLMX/9DHuRIsCLswme@vger.kernel.org, AJvYcCVSJDyxtnKLIQZww9YB+zsPoKs1bzibfsIiXXGMIk2iBBOMHaay/+nVhiHIgKAH1IBGHpHYIT9TinoUANT3@vger.kernel.org, AJvYcCWKRtrDEE6A2RUJPM+OB3llapuFT2GfKLb6K8ZoFbId+ZO3gTuQ0YGGH4pqmp12VNLZ8w4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzSTt+jrj5K0hUAZWI5bcxGrbT1iUvMRffJSSO1uXzBGKdG4fPz
+	9QpxyXHJrOm4Hqu165gOy4Rse/KJQ21iIq6aPF3Hf2cIPU07tu/a
+X-Gm-Gg: ASbGncul4SMwqY2BSF+CBfJp491qzk9J24GAeWyb2BiW8hKuGIDALhGkEngne8ErqNp
+	ov064JbMbA7J7i5Oe4i2kJqP/2yr0tnBCPSNxCNs2h6BHL0PV/OfXOlnSWcTolGs5d/zEHbd7BN
+	hEBLSUFsOZ4+Lh/7DKhssTe/SW9MW9h7YQaVEs1hObiugXWCuqu5+nAnQCUcZrHJljeEMkphlrQ
+	hic2PZS0EZFqAtcZHg++YOlqg4jzy3dchqcgX2bvtcAwHJf82XeaW8qDWFr62hIthQ6SXTcuGXO
+	oRovcVCsUTpH0LREctnINn3/nUwpc/XoDJ+s+5zxh31ReYa7ONJlBKTsVZ4Z
+X-Google-Smtp-Source: AGHT+IEic+6AY+ZdBrLSKJCMvjDVGOhMYUP1QxYWYvLdMiiVD00LmEfJ4lEnY8i5M2nghj2SBWMTbA==
+X-Received: by 2002:a17:90b:5210:b0:2ee:9d49:3ae6 with SMTP id 98e67ed59e1d1-30531f93127mr25734500a91.10.1743572616792;
+        Tue, 01 Apr 2025 22:43:36 -0700 (PDT)
+Received: from minh.192.168.1.1 ([2001:ee0:4f4e:bd30:194b:b252:cf33:1fe5])
+        by smtp.googlemail.com with ESMTPSA id 98e67ed59e1d1-3056f83c93asm720529a91.14.2025.04.01.22.43.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Apr 2025 22:43:36 -0700 (PDT)
+From: Bui Quang Minh <minhquangbui99@gmail.com>
+To: virtualization@lists.linux.dev
+Cc: "Michael S . Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>,
+	=?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org,
+	Bui Quang Minh <minhquangbui99@gmail.com>
+Subject: [PATCH] virtio-net: disable delayed refill when setting up xdp
+Date: Wed,  2 Apr 2025 12:42:10 +0700
+Message-ID: <20250402054210.67623-1-minhquangbui99@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BL4PR21MB4627E73164911623CFB98BADBFAC2@BL4PR21MB4627.namprd21.prod.outlook.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 01, 2025 at 07:18:04PM +0000, Dexuan Cui wrote:
-> > From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-> > Sent: Monday, March 31, 2025 9:06 PM
-> > > > +static void convert_tm_to_string(char *tm_str, size_t tm_str_size)
-> > > > +{
-> > > > +	struct tm tm;
-> > > > +	time_t t;
-> > > > +
-> > > > +	time(&t);
-> > > > +	gmtime_r(&t, &tm);
-> > > > +	strftime(tm_str, tm_str_size, "%Y-%m-%dT%H:%M:%S", &tm);
-> > > > +}
-> > >
-> > > Now the function is unnecessary since v2 uses syslog(), which already
-> > > prefixes every message with a timestamp.
-> > 
-> > Hi Dexuan,
-> > I have deliberately kept this timestamp in the raw message so that
-> > if/whenever they are redirected to other file, irrespective of the
-> > configuration of the syslog we have valid timestamp for debugging
-> 
-> A message produced by syslog() is always prefixed with a timestamp,
-> and IMO can't be redirected.  By "redirected to other file",  I guess
-> you mean systemd's options StandardOutput= and StandardError=
-> for a service, but those are stdout/err, not syslog().
+When setting up XDP for a running interface, we call napi_disable() on
+the receive queue's napi. In delayed refill_work, it also calls
+napi_disable() on the receive queue's napi. This can leads to deadlock
+when napi_disable() is called on an already disabled napi. This commit
+fixes this by disabling future and cancelling all inflight delayed
+refill works before calling napi_disabled() in virtnet_xdp_set.
 
-rsyslog can be configured to forward syslog logs from a service to a file.
-If the timestamp template in rsyslog.conf is not configured, the timestamps
-would be missed in forwarded file.
-But I think that would be an issue to be handled by the script/service
-forwarding these logs. It can be easily fixed by adding the timestamp
-template.
+Fixes: 4941d472bf95 ("virtio-net: do not reset during XDP set")
+Signed-off-by: Bui Quang Minh <minhquangbui99@gmail.com>
+---
+ drivers/net/virtio_net.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-I will remove the timestamp from the raw log message then. Thanks
+diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
+index 7e4617216a4b..33406d59efe2 100644
+--- a/drivers/net/virtio_net.c
++++ b/drivers/net/virtio_net.c
+@@ -5956,6 +5956,15 @@ static int virtnet_xdp_set(struct net_device *dev, struct bpf_prog *prog,
+ 	if (!prog && !old_prog)
+ 		return 0;
+ 
++	/*
++	 * Make sure refill_work does not run concurrently to
++	 * avoid napi_disable race which leads to deadlock.
++	 */
++	if (netif_running(dev)) {
++		disable_delayed_refill(vi);
++		cancel_delayed_work_sync(&vi->refill);
++	}
++
+ 	if (prog)
+ 		bpf_prog_add(prog, vi->max_queue_pairs - 1);
+ 
+@@ -6004,6 +6013,8 @@ static int virtnet_xdp_set(struct net_device *dev, struct bpf_prog *prog,
+ 			virtnet_napi_tx_enable(&vi->sq[i]);
+ 		}
+ 	}
++	if (netif_running(dev))
++		enable_delayed_refill(vi);
+ 
+ 	return 0;
+ 
+@@ -6019,6 +6030,7 @@ static int virtnet_xdp_set(struct net_device *dev, struct bpf_prog *prog,
+ 			virtnet_napi_enable(&vi->rq[i]);
+ 			virtnet_napi_tx_enable(&vi->sq[i]);
+ 		}
++		enable_delayed_refill(vi);
+ 	}
+ 	if (prog)
+ 		bpf_prog_sub(prog, vi->max_queue_pairs - 1);
+-- 
+2.43.0
 
-> 
-> > > > +static void kvp_dump_initial_pools(int pool)
-> > > > + [...]
-> > > > +	for (i = 0; i < kvp_file_info[pool].num_records; i++)
-> > > > +		syslog(LOG_DEBUG, "[%s]: pool: %d, %d/%d key=%s
-> > > > val=%s\n",
-> > > > +		       tm_str, pool, i, kvp_file_info[pool].num_records,
-> > >
-> > > Can you change the 'i' to 'i+1'? This makes the messages a little more
-> > > natural to users who are not programmers :-)
-> > sure, but I am just worried that might cause confusion when someone
-> > tried to co-relate it with the actual kv_pool_{i} contents that start
-> > with 0.
-> IMO these messages are mostly for admins, who would feel more
-> natural when seeing N/N as the last element, compared  with N-1/N.
-Got it, will modify this too
-> 
-> Thanks,
-> Dexuan
