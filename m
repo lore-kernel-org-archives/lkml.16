@@ -1,99 +1,108 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0D3D2746C
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 07:54:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AC5C20E6E3
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 07:54:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743580463; cv=none; b=uuuBCNQ4v7p+st5nXVZzZSS7dO86/L7GLwJu1UniZCYGY6N7nUUN+Oi44uXXujss5Oe7WctR/0PDvkmx5xiL6mddnV8K72LY7sQXxJb7GEg8UqEnfv9kw5kvUVYbleG0eDmAs22IMw1/BAwr8I1vWVv1gVV/a+J7DKrpjg27zxk=
+	t=1743580463; cv=none; b=NxWJEeXuW85XSrO0vi+GdZgV8DTIw5TKl5bDaLY4DGaeCE6f80uiV7DLp7EteJnULlludJ2tT9iLgaO3gASyEuQKI1GRBZr2GKLN3ZYLH+H0uoNUQvw/ZeZQkK1U4QTA1OiatUA4Yu22L6fKK7ru+zpx4Y9ATBefCG7j89HohwQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1743580463; c=relaxed/simple;
-	bh=c509z78gLwInA8mWC4l1f86kaUPKhKxnSr2LvkkSCJ4=;
+	bh=Mb2EC/6/vHC3OJXU3HZj8yJyiLfSXeSJs6GJiHDSlr0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XbrG+HD1/wRxxcQxt10CERng7lW9VZnhZ+pfnwB1FsXtxDmHbVwFyoM3ARuOnGXW6dN9HHxeN8HAlvJBYwmR29Nk9+/j//rTPGIvvltA4zM/SwcnrlK4lpQIFyEfuxAYfzcwhhY8pIgB6+ynDnk/B1/Zeff3j1jyIv0ImwmsDc4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=grhnVAI/; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=gc7g1ZenmKRiHlxtFJiK/cM+0sWrLd5bYCysRFl/IijjQgdldspuHfujmKKS2t5ReL++m5HavBWkGlWC8RR9bP8F9D9kPWrvKrQ1v4DKme+EaFa9+OGyj4wc8SRQTqcGrQSV8b1Uc3c9pZALyopRE0VJpSu8Cti5k7Dj7Lvr1Rw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jdWLfVed; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="grhnVAI/"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=EPaGWIUiXvI5cFuhDoTAev3QSns7G4LVvZrvmwGMQfU=; b=grhnVAI/7cW/wQ/p81PWH/eGdb
-	K9dy8mQqv7zc3GeXC1s0YHJ7jcbNsI8b9RLZimF4J8uuzy+bWzXOLNwBQwONegWqKuQPwu6PhRV6V
-	5UEqG6SUtTTn2g2tvwLABxK3IxvgPGiO516wt/QuKGhQ1H6mwqRxudAHsfhhsCTQwWjKUXXd2kXyR
-	kpbf4wAOYPGr+TVyQKaLGq1uMCaqMaPyk/OJ1Zs9vtCV/dgsVAHFvkMkpHsFKgm28p0HD3wtk8729
-	6PAe4KV/WkQAlpshXGT8BE8IEhX9WXxsFqsV42UvPbj3m4hjv3TxKCM7t/0Ixfa0vxpO8m5x7eneF
-	NppkCIAQ==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1tzsvS-00000006zPX-0Jxj;
-	Wed, 02 Apr 2025 07:54:18 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id A625530049D; Wed,  2 Apr 2025 09:54:17 +0200 (CEST)
-Date: Wed, 2 Apr 2025 09:54:17 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Juergen Gross <jgross@suse.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH 11/49] x86/alternatives: Remove the confusing, inaccurate
- & unnecessary 'temp_mm_state_t' abstraction
-Message-ID: <20250402075417.GS5880@noisy.programming.kicks-ass.net>
-References: <20250328132704.1901674-1-mingo@kernel.org>
- <20250328132704.1901674-12-mingo@kernel.org>
- <20250401143624.GI5880@noisy.programming.kicks-ass.net>
- <Z-w5INj77OkbFDQe@gmail.com>
- <Z-y3958dG_giqfjw@gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jdWLfVed"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-22438c356c8so123798345ad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 00:54:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1743580462; x=1744185262; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=WCENuk9PQu4krAXVW7qdLepJ1A4XFH9uwEadY8jcBM4=;
+        b=jdWLfVedl8Y4s3y4IsirDjJRsZNiYnG8q0SA3V8xbUArm/DyDzXnrNjxt+d6v8fO9Y
+         m6xRiX72blFsrnPvezwqr2EfkNl1EtWXuHGAiCRquKWYatIlipdKFXyThSFz8c8mypBU
+         L/xEWBeP2GgaFrMRgSbW9ancnr2Ad1e/3s75AFnkYPpzDpEkEdRMuR3v80ZYCH2klWAL
+         i+gQnhX91awZAKkuS2cONMHYeqL4J6TTEvRuDsjI14kbFHfnMUGtjdGnvxlxuIBOc/Yk
+         TREJjx3yoTegtX6pR3fkB+ZVCtYXx5PiWNiJAeGbI4p7734zpuHFgIyFhCZgTpmnBDEn
+         mzgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743580462; x=1744185262;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WCENuk9PQu4krAXVW7qdLepJ1A4XFH9uwEadY8jcBM4=;
+        b=gNKsNEqR7hy1OBBgyEiFgx0Im49gHp5xu7uKDxX8loKTXGEZajL64SN/SbufhgJK+m
+         EqRf+7x6X8trPNOzZl2l9sGRXbn2xPId5jMRvcYzg1GUL/4L4tMUm8ed9SCfWFPYcYRS
+         cGUgT+5bpTo/c5Nx6QFjwsC3WqR4Mv2prtOasThIwDBGwIDX9pr0VNeqM5TOvVIXiBMw
+         6TOWoHpqeD48DRGeK9DUu9umOVoeAA2YjRjxr01bl0gFiR1C7Ks4kn16mxwXiL+mA2+p
+         1mUrkBoOtV3m0WYelzO0uUBwzlxDLTnzoee/MeYpp7z0PajVr4yXfSFwCRbjkAwaQ20W
+         AyZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUxQ1PCR/tgGB5VRM0gfrt/QFXZ+9NYbaXWwKZ9g4LO7tTaOe9kD/A6NlOAtwIPjAnOaMtBlf1zeTbIoUY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyTmMFHAez2x9nXrx70C+mFD9GjHXSPv0C1WgFZ0gCPQ+ZVTbrD
+	jQkaxtrMa04yYpuFyTRCEyZpfySNnDjHvVhK2w3PamzdbKs4NWmBJWnrD0e38w==
+X-Gm-Gg: ASbGnctZ4fE+sO1orvCGis47XFQD131smcj5SXIRYcPwg4nr+bxyaxZAcJQGBdFkQWV
+	4Sq5Sx4KmMAKXnz3bXrXJiN2G+F8WGs6IRJ3yvZZw7Czab3xOr5TkTW5w+REbE1Bc4O4O3zvwsu
+	/viRLKhOaRHN0buvUd/56XnymKoXBqKqpGC+Qf7A/lBPD3idSaekiPy1IleU/IHIkgLzx/TnaiI
+	5OG87KwK75UQFQRD2U9YAWTDlb1hUlMxsz2awcmNCqJC4C8rfinglrlr2lV3vOxgQqvceBT1GCG
+	lGKBSWO/GFSh3V+GZySxHG9fnSNBCkVkO06Z7IPXcNKTAX0ua2K6RD9y
+X-Google-Smtp-Source: AGHT+IGge72TZJH1J2vvYo6DD9BNpDIh2f4O+A+Z8qHrboOP7InJqdVuoFxRjCNjgzZYii4VjHrbsw==
+X-Received: by 2002:a17:903:2acc:b0:220:fb23:48df with SMTP id d9443c01a7336-2292f9d682emr277347625ad.36.1743580461725;
+        Wed, 02 Apr 2025 00:54:21 -0700 (PDT)
+Received: from thinkpad ([120.56.205.103])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291f1ce127sm101967895ad.108.2025.04.02.00.54.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Apr 2025 00:54:21 -0700 (PDT)
+Date: Wed, 2 Apr 2025 13:24:15 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Jensen Huang <jensenhuang@friendlyarm.com>
+Cc: Shawn Lin <shawn.lin@rock-chips.com>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Heiko Stuebner <heiko@sntech.de>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Anand Moon <linux.amoon@gmail.com>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: rockchip: Fix order of rockchip_pci_core_rsts
+Message-ID: <lbar6fn3uhqeyg7apvggor7a4lqy22ozkid47quumuvfv7gz36@bny3kfhxvrq2>
+References: <20250328105822.3946767-1-jensenhuang@friendlyarm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <Z-y3958dG_giqfjw@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250328105822.3946767-1-jensenhuang@friendlyarm.com>
 
-On Wed, Apr 02, 2025 at 06:07:19AM +0200, Ingo Molnar wrote:
+On Fri, Mar 28, 2025 at 06:58:22PM +0800, Jensen Huang wrote:
+> The order of rockchip_pci_core_rsts follows the previous comments suggesting
+> to avoid reordering. However, reset_control_bulk_deassert() applies resets in
+> reverse, which may lead to the link downgrading to 2.5 GT/s.
 > 
-> * Ingo Molnar <mingo@kernel.org> wrote:
-> 
-> > 
-> > * Peter Zijlstra <peterz@infradead.org> wrote:
-> > 
-> > > On Fri, Mar 28, 2025 at 02:26:26PM +0100, Ingo Molnar wrote:
-> > > > So the temp_mm_state_t abstraction used by use_temporary_mm() and
-> > > > unuse_temporary_mm() is super confusing:
-> > > 
-> > > I thing I see what you're saying, but we also still have these patches
-> > > pending:
-> > > 
-> > >   https://lkml.kernel.org/r/20241119162527.952745944@infradead.org
-> > > 
-> > > :-(
-> > 
-> > Yeah, so I think we should do your queue on top of mine, the
-> > whole temp_mm_state_t abstraction was rather nonsensical,
-> > and we shouldn't be iterating confusing code...
-> > 
-> > I've ported patches #1 and #3 from your queue on top, see
-> > attached below - these should be the two that represent 99%
-> > of the conflicts between these two efforts AFAICS.
-> > 
-> > Does that work for you?
-> 
-> To make this an easier decision, I've ported Andy's and your patches on 
-> top of the x86/alternatives series, into WIP.x86/mm, resolving the 
-> conflicts, with a few touchups:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/mingo/tip.git WIP.x86/mm
-> 
-> Seems to work fine, after some light testing.
-> 
-> I'll send it out for another round of review if that's fine to you.
 
-Yep, that looks right, Thanks!
+Oops! I failed to spot it...
+
+> This patch restores the deassert order and comments for core_rsts, introduced in
+> commit 58c6990c5ee7 ("PCI: rockchip: Improve the deassert sequence of four reset pins").
+> 
+> Tested on NanoPC-T4 with Samsung 970 Pro.
+>
+
+Thanks for the fix.
+
+> Fixes: 18715931a5c0 ("PCI: rockchip: Simplify reset control handling by using reset_control_bulk*() function")
+> Signed-off-by: Jensen Huang <jensenhuang@friendlyarm.com>
+
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
