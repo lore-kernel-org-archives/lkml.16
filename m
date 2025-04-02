@@ -1,128 +1,129 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E6C8367;
-	Wed,  2 Apr 2025 06:42:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AEA0231CAE;
+	Wed,  2 Apr 2025 06:44:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743576148; cv=none; b=i9nofnsahOVK9ITfb2NdThMNBRhpRTAdzH7HvPefFNM7N5z28mhOH/ri/LUJDqMB8tjvJNXXrw+aT2wmgMdvEoWqnMDu9XGZVz7rT8X/2ex52qOg+Pm4XMq722G4sFPi31lWIrGSl1Ujfmpy8z6oo3GLuOlycWDKsoItQdGhsyI=
+	t=1743576269; cv=none; b=ZcVEZDQzCtf2OeQT0H7bXQcPIVhj/diA2fgifC/fXSX9gV0yAfbcZPqbGvppeLC8wn2mGXmfpTW4aCJdU7FgjHVfdjFe9Vg15e3S07Ql5r2ikCU31JAEB9K7qyIT9zfvrByZgwiwR+jPeXUUkUi4/cc5VkvNZLMunEJKZx/607A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743576148; c=relaxed/simple;
-	bh=IvT6bXYIRNyYJbWDmQqou9gU5rQ1k2JDX+k31FQ4U2o=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=r3KQVEU2FYYXtUPxIH7bp/qEareo/zNqAvs2jVB5AseDLeHUxJNKaskRJNx2UEpMDN8pmlKAanULTSsh88z543D0CnIsIvhPELBQfhlYUU+qRE0VoME3gWcqUgjHiBkA0dFG+y0QUurdeYjPDocJj15IbNtMa74kmEN/7NNbcY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YQJr2G8B; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1743576269; c=relaxed/simple;
+	bh=wvssUiaAajsbx1V1+ngVwwFLBdfRJOeTQZeabaLQhAw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Zdf0ds6ImKW4mpGBxFiuSuBs8w9jlrn3LPNviKwWzMu3E2QMvARou70UxcxbJ7Kt9nwVu6mIf705gYP8jmkTr4twO1KpPTiVoRGqC1ZOiOJch3og9OwTB903OeYfQBjBXGTA6jmmIWVSD9DbycAI7S/Ku+RXcl2lOOVFO3FsRQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DSCFLDfg; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YQJr2G8B"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743576147; x=1775112147;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=IvT6bXYIRNyYJbWDmQqou9gU5rQ1k2JDX+k31FQ4U2o=;
-  b=YQJr2G8BLeihBJksoHT2mYZ9lGLPP9XFfAwrWXytV9pbENb/kRMT2s+j
-   ZNcx4wPwENd1LYGxKOQXyamvMuKO0vORbCc6WAAxsAil9+7Mdi8f/S86I
-   A5IHx0vSchJUkzZJ0DPNYweKn1odmeDnJ3Cb69wieLlgv/5xO8SGmXd4W
-   /1QYxGYDoJ6EP5OdlnOg3MDmfa+i4GFscmkz6n5Ida4nFmDwRJcAzKMvm
-   smxu9Mx+W/5TScKqzub9OV+to6PqCKa+1lnOAL82ygtpQ28GtFYt5id6Z
-   DkDOJPTphxLAlvnovsTtaSypOk07/GzGhFXIn2hyPhMlV28qrzKi/SnYi
-   A==;
-X-CSE-ConnectionGUID: sbnq/v44SsyxDqu/vAq4rw==
-X-CSE-MsgGUID: IEU8SufoSMCYYoStpzjRDA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11391"; a="47640805"
-X-IronPort-AV: E=Sophos;i="6.14,295,1736841600"; 
-   d="scan'208";a="47640805"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2025 23:42:26 -0700
-X-CSE-ConnectionGUID: Y4U+mLA1TqW4h9UMyHtagw==
-X-CSE-MsgGUID: Vf0QIeFTSC661sAvBhpz4Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,295,1736841600"; 
-   d="scan'208";a="131740239"
-Received: from win-uq4qlp9a0jq.iind.intel.com (HELO madhum.iind.intel.com) ([10.223.138.63])
-  by fmviesa004.fm.intel.com with ESMTP; 01 Apr 2025 23:42:23 -0700
-From: madhu.m@intel.com
-To: gregkh@linuxfoundation.org
-Cc: heikki.krogerus@linux.intel.com,
-	linux-usb@vger.kernel.org,
-	pooja.katiyar@intel.com,
-	dmitry.baryshkov@linaro.org,
-	diogo.ivo@tecnico.ulisboa.pt,
-	lk@c--e.de,
-	linux-kernel@vger.kernel.org,
-	Madhu M <madhu.m@intel.com>
-Subject: [PATCH v4] usb: typec: ucsi: Add the UCSI commands in debugfs
-Date: Wed,  2 Apr 2025 12:38:17 +0530
-Message-Id: <20250402070817.1016635-1-madhu.m@intel.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DSCFLDfg"
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-54af20849bbso5013775e87.0;
+        Tue, 01 Apr 2025 23:44:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743576266; x=1744181066; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=/Ai+KjUdgq7U8qh2/AfcQIUCKsaxgpkUx0SXuCgrqKU=;
+        b=DSCFLDfgjOwHnvUFiZHKKUOdnYYkF6IIpOH/WGfMg9LY619EOqGV1XXdNSPs1tubIB
+         bUjkivlW96cJ9qAnp2BHT5+MDYaVwcbkKqQtcIJhPrZFyMxiWBBzrQEU4fsWG14qkpCT
+         T/knchzfSlBy5faFPSr+Lz45ITAED0GlRwEeA4o6rzH64LdkzBTN8RVVi/IyI5aoTGE6
+         fbRZfeQKbEbB3j9INLK0EQNUWVPRMqnqmLCbzCmiguhzKCoha/3XzfYmooBn0vb/l4s5
+         IxvwFUp08f2tu4UCJYcbGBZyABxoJFBPWL57bmCVjTklak+X+0Uv8+UG/du81udGKiVZ
+         0G0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743576266; x=1744181066;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/Ai+KjUdgq7U8qh2/AfcQIUCKsaxgpkUx0SXuCgrqKU=;
+        b=IMkIq8vizVMAkw03PCC3mD2a9i3mbc7dfHE/KEnvF1VfyP4W/UBOKo1eQsQfWlaRlu
+         VyWlsnE7DKonMmg84Wxh7ZZQB7cB1wIPNPJ3ugRa85+/ku8qSQDqKXxmzS/rUj9W6iaC
+         eO4rOPYgasPZqGXJAzHnMCHZlYLYRCCV9JmXkdUjmXTryBRNQ13afbwQgZBAf3z4ZzDx
+         8JXTroxtCGctVBywzRQvl35TSu8i9uK8ZPV1qkph2Myj8JNkqX1uF3JgVMqNUndkAdiA
+         56KA4GJJIgplvaEdUGE5mdunk1SJbjwH5F8wX0tBeNmRboVlKNgvg9yNWuxkJTLBCqBO
+         SyLg==
+X-Forwarded-Encrypted: i=1; AJvYcCUBRQjYa3zT2wN5Ue5aP1jQ2oheQOAdRuj41CRzEGFt7jEGQrFLQgCUuZ7okx0S5C8KZ8iUd5QdimW9@vger.kernel.org, AJvYcCW4He4wvyn99uCqBVD7OhETFr/Z+b4Hqg12w7r8m7nq2v36uRPaNH2B958akBhhxXTbgOgwi+bLkdUf@vger.kernel.org, AJvYcCXIDbCoqy8VZCa64tU1GYyJ2tiHuo32BLuZVOiVp+jzp6VUXAvZ1luCsyQ44+xAcYZRPxj7uR77zX1Bve6Q@vger.kernel.org
+X-Gm-Message-State: AOJu0YzKj5+oCvVvGv6qiXcR8C1bBzIbJhUgLv9+Y8bbn77J3bxIMusC
+	C1hYG8o6VU4P3G9oLaD//fKL2/kS49vl6ciW7F7zqCtGoMdtA8f3
+X-Gm-Gg: ASbGncsNmWN1VY0Eoiur312uXPdYuhWmDXap0tTxUvkI2FQ7J9hWLJYVzgbr2W9balD
+	QKO5MVNx/L/gZSEXEWST7Q8nJ9LhQ9FeegdsKX4zPU4dpQIhabn3GGEi6AOQ2oJfRXYfVZr48LA
+	AbnjHj2EcFXlyN1j7Ka/CWCdGKvAfTkGdZs+i317f6DvyV3y4EwwfYaen6YmoshhFFHqZnLKZ5F
+	1rkmCTyEPqV+69OkQeq2QvtKADFOjgU4fcRJP3jG4BaqIv0NfGqTbBumPHQBMt1AkNKLWbahEc6
+	Ay5T3lPn7EjGodru8T499J7tkOFHuXylMmFrTuO7OkkAkpTFE9TDApZrval2YQ==
+X-Google-Smtp-Source: AGHT+IF+2OKSId8d/Y0oPhayDuyaGknQL5XNMTAv8kgbf9fXRWfj0r9px7Szmyk9qCVoqc22GMM6lg==
+X-Received: by 2002:a05:6512:baa:b0:545:4d1:64c0 with SMTP id 2adb3069b0e04-54b10eca960mr3890070e87.27.1743576265850;
+        Tue, 01 Apr 2025 23:44:25 -0700 (PDT)
+Received: from mva-rohm ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54b095806b2sm1545423e87.155.2025.04.01.23.44.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Apr 2025 23:44:24 -0700 (PDT)
+Date: Wed, 2 Apr 2025 09:44:20 +0300
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+To: Matti Vaittinen <mazziesaccount@gmail.com>,
+	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc: Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Matti Vaittinen <mazziesaccount@gmail.com>,
+	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/5] Support ROHM BD797xx DACs
+Message-ID: <cover.1743576022.git.mazziesaccount@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="coY4FNYkVBrlXXH4"
+Content-Disposition: inline
 
-From: Madhu M <madhu.m@intel.com>
 
-Added the UCSI commands UCSI_GET_CAM_SUPPORTED, UCSI_GET_PD_MESSAGE,
-UCSI_GET_ATTENTION_VDO and UCSI_SET_USB support in debugfs to enhance
-PD/TypeC debugging capability
+--coY4FNYkVBrlXXH4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Madhu M <madhu.m@intel.com>
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Support ROHM BD797xx DACs
+
+ROHM BD79700, BD79701 and BD79702 are very similar to the already
+sipported BD79703. Main difference is the reduced number of channels.
+Also, the *00 and *01 variants lack of the separate Vfs pin.
+
+This series adds support for the BD79700, BD79701 and BD79702.
+
 ---
-v3->v4: Added Reviewer
-v2->v3: Added changelog
-v1->v2: Removed UCSI_READ_POWER_LEVEL and UCSI_SET_PDOS commands and
-modified commit messages.
----
- drivers/usb/typec/ucsi/debugfs.c | 4 ++++
- drivers/usb/typec/ucsi/ucsi.h    | 2 ++
- 2 files changed, 6 insertions(+)
 
-diff --git a/drivers/usb/typec/ucsi/debugfs.c b/drivers/usb/typec/ucsi/debugfs.c
-index eae2b18a2d8a..92ebf1a2defd 100644
---- a/drivers/usb/typec/ucsi/debugfs.c
-+++ b/drivers/usb/typec/ucsi/debugfs.c
-@@ -34,16 +34,20 @@ static int ucsi_cmd(void *data, u64 val)
- 	case UCSI_CONNECTOR_RESET:
- 	case UCSI_SET_SINK_PATH:
- 	case UCSI_SET_NEW_CAM:
-+	case UCSI_SET_USB:
- 		ret = ucsi_send_command(ucsi, val, NULL, 0);
- 		break;
- 	case UCSI_GET_CAPABILITY:
- 	case UCSI_GET_CONNECTOR_CAPABILITY:
- 	case UCSI_GET_ALTERNATE_MODES:
-+	case UCSI_GET_CAM_SUPPORTED:
- 	case UCSI_GET_CURRENT_CAM:
- 	case UCSI_GET_PDOS:
- 	case UCSI_GET_CABLE_PROPERTY:
- 	case UCSI_GET_CONNECTOR_STATUS:
- 	case UCSI_GET_ERROR_STATUS:
-+	case UCSI_GET_PD_MESSAGE:
-+	case UCSI_GET_ATTENTION_VDO:
- 	case UCSI_GET_CAM_CS:
- 	case UCSI_GET_LPM_PPM_INFO:
- 		ret = ucsi_send_command(ucsi, val,
-diff --git a/drivers/usb/typec/ucsi/ucsi.h b/drivers/usb/typec/ucsi/ucsi.h
-index 3a2c1762bec1..72b9d5a42961 100644
---- a/drivers/usb/typec/ucsi/ucsi.h
-+++ b/drivers/usb/typec/ucsi/ucsi.h
-@@ -123,9 +123,11 @@ void ucsi_connector_change(struct ucsi *ucsi, u8 num);
- #define UCSI_GET_CONNECTOR_STATUS		0x12
- #define UCSI_GET_CONNECTOR_STATUS_SIZE		152
- #define UCSI_GET_ERROR_STATUS			0x13
-+#define UCSI_GET_ATTENTION_VDO			0x16
- #define UCSI_GET_PD_MESSAGE			0x15
- #define UCSI_GET_CAM_CS			0x18
- #define UCSI_SET_SINK_PATH			0x1c
-+#define UCSI_SET_USB				0x21
- #define UCSI_GET_LPM_PPM_INFO			0x22
- 
- #define UCSI_CONNECTOR_NUMBER(_num_)		((u64)(_num_) << 16)
--- 
-2.34.1
+Matti Vaittinen (5):
+  dt-bindings: Add ROHM BD7970x variants
+  iio: dac: bd79703 Store device address to 'address'
+  dac: bd79703: Add chip data
+  iio: bd79703: Support BD79700 and BD79701
+  iio: dac: bd79703: Support ROHM BD79702
 
+ .../bindings/iio/dac/rohm,bd79703.yaml        |  33 +++--
+ drivers/iio/dac/rohm-bd79703.c                | 116 +++++++++++++++---
+ 2 files changed, 126 insertions(+), 23 deletions(-)
+
+
+base-commit: 543da6252b48bbfe13e194fb980bdd2b161f6838
+--=20
+2.49.0
+
+
+--coY4FNYkVBrlXXH4
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAmfs3LcACgkQeFA3/03a
+ocXnXgf/cmTK9neGOPdoxg2ccvfMBTyB8gCkxUE/LRGqbfHm4pdeOs/2lV7ud7vE
+5acK8OSAThzbTCJdBJrw3bXdH/g1tNHDPfMpiKP3VGPMxzy8y2pQXQ+DYvCbpBny
+HtYGaFBClGLMYjUED1enMUkTF0AVT6+bc8Knif8P+WMJpDXVsZ57JLtmToXAwYrG
+LJrwb2eCRUHoL89idgXgvdO9aZQCT6c66Sn7QMNOwF+27UuzjnnfBow2efWlqvTW
+H/ovOzTC0vJmcGRyn8+YRPgL3xzci/jz1fi68tFnKqNrfvYZRv64qc/j7O6vZscu
+4R5epaiJ3KMOeXKAJavTwYWh/0Rlmg==
+=srJf
+-----END PGP SIGNATURE-----
+
+--coY4FNYkVBrlXXH4--
