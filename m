@@ -1,159 +1,57 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12DD81F560B
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 23:27:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BD5473477;
+	Wed,  2 Apr 2025 23:27:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743636424; cv=none; b=gO0JRIhRmr2qxh8dIP3dIIlZKyhtpWnFVyt2mBZnb9rT4Iss0dgvl85zKGQ+auT3PdlW2o3dschm1BfRejsywqJokzEZbzTO0LjXzqgMYqBCXbJc1erGvKSPyHKFSSp4QIVCLBqtEDjcB/wgjgjXm4KKRR6OU7ky231Zep+Ix48=
+	t=1743636469; cv=none; b=Du9tctchjph4QTjmu7M31daPws6JgNFNYW17F3/4xg6Nh7ZODH/3QPuskZDxvyOzRfxzmRqn+qFOo1bM1jnMqVyRpmJ+IHl1HN/QTjTzNoOxBKoxesjw0T1d5+TVAec7m3Lf/d0E9gRSek9rQ96oIb5pxzYk1WNZ85tbht7VkhA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743636424; c=relaxed/simple;
-	bh=TSPlVub8sK1k/3jJb2bB9xiezhCRc5ikRWxBwuUkz4Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=F+04FiG4PCrnhW2K01B5gb9qFy7PrQ0dX5j6A7I6VcYayVd/ksq2WVZoJnte1J6ymzfaPg4TS+4HJ8E0Ug70lrMZ2dJMiOSHXbbLfMMCsfCYaP7sI/KavpmIsRz/++e2v90nKWBMChwyOFhxy0XrGiO5ffzyovSkg5/SS5a8ITI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=YW2/9JjC; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="YW2/9JjC"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43d0618746bso1721325e9.2
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 16:27:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=citrix.com; s=google; t=1743636421; x=1744241221; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=h4xs57uHy58GBftbej3FkFLo4jfMFCX79EJdMrWM4Qc=;
-        b=YW2/9JjC4d+3OeldCbpboRXIQUGtpWInsVCA8mg0fowtN9WFav8jxAInrHDKgMlyKR
-         WjVjiobc8RhGJG0vG0hcdi8FNIXHKzFBmHoFEJQ1ye1lB1OY+DdzTYgAnRmY/FdQeAd7
-         CazidSbsT8FXh30iYdDM9yzMDnJlIDFkd+ZUY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743636421; x=1744241221;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=h4xs57uHy58GBftbej3FkFLo4jfMFCX79EJdMrWM4Qc=;
-        b=RXkxOj0JXtzGJmj5BRcYN6N1vdGS+0eri9ZNSkSE0l7YBda/lZKmz6pwH5qOYBsjV5
-         /2CgPNQZWtGCi//FteO/U3abmb9Ozr2baD4ZnHywGH3sX+YMBjFg8cU/q+ArUknwZRWM
-         wG0oJCdDnp3vemXEP19xVNzB3tUJwRb1Y8O+X6SVG9G5rPwbeMKew6F8ugiT3c8xlQsp
-         i42IXdzeezwLhf6j8CDHtt/iEtKl6RTkLnzr4wL/pMzc/DsCUglhdwBv2/JAXGOTkLCE
-         16bzSe0/yJUx9DjuaOkzKP02KMFz42MIU9wLMYEcf6USxHfcUS8OuJpRieBPPvddKsiC
-         2moQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXWu3yM+3xm691TpOlFtHNcPHE3/F/hfB2V+D9YTwVzOPsaZ3R3/NuiCZiIos8VOKPH0AjxMBTgFQIUAJ4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzyiAJfsnCs9tW9u/Gd2SduSvunIdocrtcXAJhZt4zVGajDwidU
-	XxH+BX8m1VquD3NhcnP6SJPFy6glhmUlNtkLicdLkHf5UZLteoLWpZ4mkesmTnw=
-X-Gm-Gg: ASbGncsDFh1oP44IbJSn+Q736qPD2CeqZi1L8EgLRJB2UDrOZVa6aTU/UfnEt8ql+vn
-	RfOW/0F5a1OJcl30IhME8IIynhxsEs/6DSBss067BzhzWDHkQU+7aSOnu7jAnAbCAXamGx0CMBv
-	ZyQLspusDDQ/fd4R2lIsVf5tC6ygD6gZduEPTQDekYSsWzjTroi3KhZltIFL863mTcRqC3ZvzH8
-	2dSQPaTIhtgpwj7DgyOZMg+moWxdKyY+jPdjoo+hvETnNSd93gCnrgaliLlofrfi1PE2d/zaEXL
-	FHcA2xwlGNsrxSueaL4WNbQHQgDG8saRvnV+RZo1REMMM1Zck35M40cz9SiP2phyTfedlvnhvRA
-	C7ji/NBmUoA==
-X-Google-Smtp-Source: AGHT+IEMPRLBqe9b6PCNp/w6Jni5RVDzLp0OTadXPoIEFOzn9hr7DAxraF1OiN5hXsEpnmQyxIqMng==
-X-Received: by 2002:adf:f40d:0:b0:391:49f6:dad4 with SMTP id ffacd0b85a97d-39c2f945f61mr224288f8f.41.1743636421304;
-        Wed, 02 Apr 2025 16:27:01 -0700 (PDT)
-Received: from [192.168.1.183] (host-92-26-98-202.as13285.net. [92.26.98.202])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c301ba2dfsm169438f8f.60.2025.04.02.16.26.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Apr 2025 16:27:00 -0700 (PDT)
-Message-ID: <9ba2f0ac-eb06-4437-8662-441da7e168c7@citrix.com>
-Date: Thu, 3 Apr 2025 00:26:59 +0100
+	s=arc-20240116; t=1743636469; c=relaxed/simple;
+	bh=1Uv31Ll1fQK0AqFMccftUdwxSBINZAldPxF7EF0eGss=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ZDmUExh9CtmIMiJHZvpQYK3dG1JXtC+S/enf16EVVyjrC/1Gd3P4BHnk3WCr1Y+MO1427dCPrT9ujU9TSDPOqf2OxINIhySxC9b+TT0BRXiTdADJx3V20fcaR6BzgS3AriBOGRHW8GJx2ba2Np1zhFpW8cQVazXoDV9D66860Fs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A841C4CEDD;
+	Wed,  2 Apr 2025 23:27:47 +0000 (UTC)
+Date: Wed, 2 Apr 2025 19:28:51 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Ihor Solodrai" <ihor.solodrai@linux.dev>
+Cc: "Vasily Gorbik" <gor@linux.ibm.com>, "Masami Hiramatsu"
+ <mhiramat@kernel.org>, "Catalin Marinas" <catalin.marinas@arm.com>, "Nathan
+ Chancellor" <nathan@kernel.org>, "Ilya Leoshkevich" <iii@linux.ibm.com>,
+ "Heiko Carstens" <hca@linux.ibm.com>, "Alexander Gordeev"
+ <agordeev@linux.ibm.com>, linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH] scripts/sorttable: Fix endianness handling in
+ build-time mcount sort
+Message-ID: <20250402192851.0bc6fc77@gandalf.local.home>
+In-Reply-To: <6acbc2347a86153c2646a4bfebaa226e9b0e01f7@linux.dev>
+References: <patch.git-dca31444b0f1.your-ad-here.call-01743554658-ext-8692@work.hours>
+	<6acbc2347a86153c2646a4bfebaa226e9b0e01f7@linux.dev>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [tip: x86/mm] x86/idle: Standardize argument types for
- MONITOR{,X} and MWAIT{,X} instruction wrappers on 'u32'
-To: Uros Bizjak <ubizjak@gmail.com>
-Cc: Ingo Molnar <mingo@kernel.org>, Andy Lutomirski <luto@kernel.org>,
- Brian Gerst <brgerst@gmail.com>, Juergen Gross <jgross@suse.com>,
- Rik van Riel <riel@surriel.com>, "H. Peter Anvin" <hpa@zytor.com>,
- Peter Zijlstra <peterz@infradead.org>,
- "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
- Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org,
- linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org
-References: <20250402180827.3762-1-ubizjak@gmail.com>
- <174362663333.14745.17539175188705861090.tip-bot2@tip-bot2>
-Content-Language: en-GB
-From: Andrew Cooper <andrew.cooper3@citrix.com>
-Autocrypt: addr=andrew.cooper3@citrix.com; keydata=
- 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
- 6+ahAA==
-In-Reply-To: <174362663333.14745.17539175188705861090.tip-bot2@tip-bot2>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On 02/04/2025 9:43 pm, tip-bot2 for Uros Bizjak wrote:
-> The following commit has been merged into the x86/mm branch of tip:
->
-> Commit-ID:     1ae899e413105aa81068d0282ab6e22974891d74
-> Gitweb:        https://git.kernel.org/tip/1ae899e413105aa81068d0282ab6e22974891d74
-> Author:        Uros Bizjak <ubizjak@gmail.com>
-> AuthorDate:    Wed, 02 Apr 2025 20:08:05 +02:00
-> Committer:     Ingo Molnar <mingo@kernel.org>
-> CommitterDate: Wed, 02 Apr 2025 22:26:17 +02:00
->
-> x86/idle: Standardize argument types for MONITOR{,X} and MWAIT{,X} instruction wrappers on 'u32'
->
-> MONITOR and MONITORX expect 32-bit unsigned integer arguments in the %ecx
-> and %edx registers. MWAIT and MWAITX expect 32-bit usigned int
-> argument in %eax and %ecx registers.
->
-> Some of the helpers around these instructions in <asm/mwait.h> are using
-> too wide types (long), standardize on u32 instead that makes it clear that
-> this is a hardware ABI.
->
-> [ mingo: Cleaned up the changelog. ]
->
-> Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+On Wed, 02 Apr 2025 23:22:40 +0000
+"Ihor Solodrai" <ihor.solodrai@linux.dev> wrote:
 
-Something I noticed while looking over this is that you want to push the
-u32's up into the callers too.
+> Hi Vasily,
+> 
+> I can confirm that this patch fixes BPF selftests on s390x:
+> https://github.com/kernel-patches/vmtest/actions/runs/14231181710
+> 
+> Tested-by: Ihor Solodrai <ihor.solodrai@linux.dev>
 
-mwait_idle_with_hints() with have (marginally) better code gen by
-swapping it's unsigned longs for u32's.
+Thanks, but I already submitted a pull request that includes this fix, as
+it looked pretty obvious (I did run it through all my normal tests, but
+just didn't test the big/little endian case).
 
-~Andrew
+  https://lore.kernel.org/all/20250402174449.08caae28@gandalf.local.home/
+
+-- Steve
