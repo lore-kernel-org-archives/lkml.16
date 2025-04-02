@@ -1,127 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5429923371F;
-	Wed,  2 Apr 2025 08:13:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A97CB23373E
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 08:13:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743581581; cv=none; b=pLY0w9YVwXVg3WX7f5HHXu5IeNMXuP2bn38p/dH2Vlc6yXO3GqRYWhAoDmKJB1PFxse46EwbLRPL5t7xG8E9eq2UUs3RyS5w9qsCFQu6/dhFf8hbL8mKcZKnIDLR07J8KbeFFKkfStt3txUwab5/yioZKHzflxlHCzNX+QkQCl8=
+	t=1743581599; cv=none; b=qsECH5pjxOM8HqNMJsfi48HHH4Dtdb0XVr7hJcY93MjGl/d4pJWEX0ECVvbQpmVfvesJPQp7PPau0gTsNFENAwNtXbMrdzaHcITMjvva3CUC0eys+JKA9bUmEw+R5IePx4EelZlt3ozhSNNycTH/ZjZsVG4u8gqgtWe9WTk6/Ho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743581581; c=relaxed/simple;
-	bh=Lyya/ZVyn5QzEBxnwriP42fEj//LfFO2/h8nHMyeiyY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oV5GwK0Wi87xKGK5lG2g4LX1isZOFJdQmhrVcChE5BoNGd0ssGIKI4n39uF8Aht+7rK2pRdacDO2b0XdUcAkK0ePbNx49syE5gFZgRsgPhkH/x36Dx5nLxE5Pgw0lMStsEnLgplDK3Z665vZbCa/ZaZBhlZ3vsC1FjCObWVJQkk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=u9TICkSl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743581599; c=relaxed/simple;
+	bh=w93RkYtfhsYpvj5VoEDDq9lpAvc4F47ifTML7icGMbg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RoDEGRAGGWxp1br2TkNJ1DisYcL+nm1XwdDn1ObwmK4afIPfto0DP5nKwOff4d/6RAX//AgH7CzDZn0A8+IOKdI8Ztfhhjw9IbHD/a1V5PkwKNmyKdBNIM2xJ2V3g9ceiTx2xQbvPeWSbwJOpqJILhml/JaC9HAxi5oY3/rneAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=ExeKrk5M; arc=none smtp.client-ip=209.85.208.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="u9TICkSl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AA1AC4CEDD;
-	Wed,  2 Apr 2025 08:13:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1743581580;
-	bh=Lyya/ZVyn5QzEBxnwriP42fEj//LfFO2/h8nHMyeiyY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=u9TICkSlZ2eKvRQS+knKIop8M/MS6Q4dv1+j/VEHKLpqz8EK5WRuDnZrQFuW9db+T
-	 DMyJVPx/Brg3RjeDtgpq6RpLQKNBhK/oU3ZAC8fXXjpbHFrk809/W6c4ShxaOmKyPf
-	 VvouVoHFlat8fgMotqnKHEczfwJfURxeDut4qx/E=
-Date: Wed, 2 Apr 2025 09:11:30 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Ying Lu <luying526@gmail.com>
-Cc: oneukum@suse.com, andrew+netdev@lunn.ch, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	netdev@vger.kernel.org, linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Ying Lu <luying1@xiaomi.com>
-Subject: Re: [PATCH v3 1/1] usbnet:fix NPE during rx_complete
-Message-ID: <2025040218-uphill-mouth-c528@gregkh>
-References: <cover.1743580881.git.luying1@xiaomi.com>
- <11211b6967816ce4eac2ff5341d78b09de4f6747.1743580881.git.luying1@xiaomi.com>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="ExeKrk5M"
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-30bfed67e08so65134841fa.2
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 01:13:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1743581595; x=1744186395; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Z5bKkMRbKxlSUJHVqMm4hUmrEWQcNn5FC/pLkQqhEAk=;
+        b=ExeKrk5M71A4I/E0XnkK88ktgGsgb1DsyE2/Dxxd+Iti0JcVq0nQUFIffaZxz8kpEW
+         rcWaGAqz9bm7QGpP4sIbTW0GTNOb8B7AXw4QL5F4R/Z/RLgwszH+OwfYdrB6m2Un0/51
+         VypwSCDr8bWHk0daZ2FNq2O5nu6MJbJRh2DB+B9ntXHgqJEy0Q3i2VWZAiA9Q2cmhgYZ
+         M1VQAjPn/FxLqzvAY4pcIRK2m8dTUZHj8iZCQoFZCaTYlZDBf7Usbsg7UImYbLVbNkJG
+         XKFLgoVCWYxQY5/P7cJUhL6X4w1tzT7ZX+/SuROS75XutBptZcnIQOaSXI3oqkqSVHom
+         2IDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743581595; x=1744186395;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Z5bKkMRbKxlSUJHVqMm4hUmrEWQcNn5FC/pLkQqhEAk=;
+        b=bPFke5S5YLF2+2bNyeA39oSrvSU0FhDOyeTQlrzvcgkpWWqetxZBWRbywy5GzCJvbs
+         h974UTSDKYpfLV1svdaocNcIt62plFx0dDTZlKSOsN7Xrrb51RNSXTR73ue+MGHmnyFq
+         GFXZiknHHDLj5PV1oivMaHWxSgTQe8Ypnk9S7nUtOuJ+3d3JWeTranqPqIkV6XI/v0XI
+         YCCdrLAatfMnvL9PBsJB4ATDKaWFdv57K+t1XjcmUegNKHeUrgzTXISVfHx5F77S6W03
+         jc0FGw+Xh5Jg3CGs5b2+vhbDdGNKbFaErViMXrJOCzA4N3NZi+6uHUBy8G+Nu7MvNQo/
+         VHHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUGx84fwJu+uCmohtryklGNUsJYYDa0JfeFMaazbG9Vhn0OIVORXri+y2jLR246jxub8RLdvo8OZWnLSFk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+DrowLMaDHE6F2ULhCZsra+Oe5pPM3ZBiUvANtYU20kJZfD2f
+	tt+DFKFe1gQGnymYxamA747/jCpaXwtgb9AMRHIdGqndYFu++ZRK8ef3HUESfapDaBkMo7EAUdm
+	NDL3ZMhj8/ipKTaCxihtlAJBKh57CRBaOLIQo3Q==
+X-Gm-Gg: ASbGncuDVCR7LSlhHGPdI+oxOMHeQfyHRwMt4vyWokUcBLdPcMYsmvcSld8YQ8yLEwu
+	lDuoue3tDHsFnCH0bnmJfsYnFB8BH2ofRI5oEeEWTMolZ3Ms9lfAbytd0fXFrSDoGzLIb5nCPYx
+	ofljg2rdLQ8iM7uZ34+Ha5J1HaZvBmh+ld/aq8xmt5mv7Q5YTeOTtzRK9HHA==
+X-Google-Smtp-Source: AGHT+IFkSOGGYa3V9WycrY+gu8XDZN3eeiEk30gJ0tR1xS7OpisGKyrqxHEtle04WwZppsgW2yf3BQ5HfqnjWB9F/Gs=
+X-Received: by 2002:a05:651c:904:b0:30b:ee81:9622 with SMTP id
+ 38308e7fff4ca-30de035019cmr53207541fa.31.1743581594610; Wed, 02 Apr 2025
+ 01:13:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <11211b6967816ce4eac2ff5341d78b09de4f6747.1743580881.git.luying1@xiaomi.com>
+References: <20250328143646.27678-1-johan+linaro@kernel.org>
+In-Reply-To: <20250328143646.27678-1-johan+linaro@kernel.org>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 2 Apr 2025 10:13:03 +0200
+X-Gm-Features: AQ5f1JoGfVJ9ts98vDCtSYScI8e3HIFmZAN4o5AGXV0GNmnQTKivDH_VGXOT9Xk
+Message-ID: <CAMRc=McRPmWu4q9EqYC_3wDCKoniu7Rf308SsKrbCk5rbopFwA@mail.gmail.com>
+Subject: Re: [PATCH 0/4] PCI/arm64/ath11k/ath12k: Rename pwrctrl Kconfig symbols
+To: Johan Hovold <johan+linaro@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Jeff Johnson <jjohnson@kernel.org>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, linux-pci@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, ath11k@lists.infradead.org, 
+	ath12k@lists.infradead.org, linux-wireless@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 02, 2025 at 04:06:29PM +0800, Ying Lu wrote:
-> From: Ying Lu <luying1@xiaomi.com>
-> 
-> Missing usbnet_going_away Check in Critical Path.
-> The usb_submit_urb function lacks a usbnet_going_away
-> validation, whereas __usbnet_queue_skb includes this check.
-> 
-> This inconsistency creates a race condition where:
-> A URB request may succeed, but the corresponding SKB data
-> fails to be queued.
-> 
-> Subsequent processes:
-> (e.g., rx_complete → defer_bh → __skb_unlink(skb, list))
-> attempt to access skb->next, triggering a NULL pointer
-> dereference (Kernel Panic).
-> 
-> Fixes: 04e906839a05 ("usbnet: fix cyclical race on disconnect with work queue")
-> Signed-off-by: Ying Lu <luying1@xiaomi.com>
-> ---
->  drivers/net/usb/usbnet.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/net/usb/usbnet.c b/drivers/net/usb/usbnet.c
-> index 44179f4e807f..5161bb5d824b 100644
-> --- a/drivers/net/usb/usbnet.c
-> +++ b/drivers/net/usb/usbnet.c
-> @@ -519,7 +519,8 @@ static int rx_submit (struct usbnet *dev, struct urb *urb, gfp_t flags)
->  	    netif_device_present (dev->net) &&
->  	    test_bit(EVENT_DEV_OPEN, &dev->flags) &&
->  	    !test_bit (EVENT_RX_HALT, &dev->flags) &&
-> -	    !test_bit (EVENT_DEV_ASLEEP, &dev->flags)) {
-> +	    !test_bit (EVENT_DEV_ASLEEP, &dev->flags) &&
-> +	    !usbnet_going_away(dev)) {
->  		switch (retval = usb_submit_urb (urb, GFP_ATOMIC)) {
->  		case -EPIPE:
->  			usbnet_defer_kevent (dev, EVENT_RX_HALT);
-> @@ -540,8 +541,7 @@ static int rx_submit (struct usbnet *dev, struct urb *urb, gfp_t flags)
->  			tasklet_schedule (&dev->bh);
->  			break;
->  		case 0:
-> -			if (!usbnet_going_away(dev))
-> -				__usbnet_queue_skb(&dev->rxq, skb, rx_start);
-> +			__usbnet_queue_skb(&dev->rxq, skb, rx_start);
->  		}
->  	} else {
->  		netif_dbg(dev, ifdown, dev->net, "rx: stopped\n");
-> -- 
-> 2.49.0
-> 
-> 
+On Fri, Mar 28, 2025 at 3:41=E2=80=AFPM Johan Hovold <johan+linaro@kernel.o=
+rg> wrote:
+>
+> The PCI pwrctrl framework was renamed after being merged, but the
+> Kconfig symbols still reflect the old name ("pwrctl" without an "r").
+>
+> This leads to people not knowing how to refer to the framework in
+> writing, inconsistencies in module naming, etc.
+>
+> Let's rename also the Kconfig symbols before this gets any worse.
+>
+> The arm64, ath11k and ath12k changes could go through the corresponding
+> subsystem trees once they have the new symbols (e.g. in the next cycle)
+> or they could all go in via the PCI tree with an ack from their
+> maintainers.
+>
+> There are some new pwrctrl drivers and an arm64 defconfig change on the
+> lists so we may need to keep deprecated symbols for a release or two.
+>
+> Johan
+>
+>
+> Johan Hovold (4):
+>   PCI/pwrctrl: Rename pwrctrl Kconfig symbols and slot module
+>   arm64: Kconfig: switch to HAVE_PWRCTRL
+>   wifi: ath11k: switch to PCI_PWRCTRL_PWRSEQ
+>   wifi: ath12k: switch to PCI_PWRCTRL_PWRSEQ
+>
+>  arch/arm64/Kconfig.platforms            |  2 +-
+>  drivers/net/wireless/ath/ath11k/Kconfig |  2 +-
+>  drivers/net/wireless/ath/ath12k/Kconfig |  2 +-
+>  drivers/pci/pwrctrl/Kconfig             | 27 +++++++++++++++++++------
+>  drivers/pci/pwrctrl/Makefile            |  8 ++++----
+>  5 files changed, 28 insertions(+), 13 deletions(-)
+>
+> --
+> 2.48.1
+>
 
-Hi,
-
-This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
-a patch that has triggered this response.  He used to manually respond
-to these common problems, but in order to save his sanity (he kept
-writing the same thing over and over, yet to different people), I was
-created.  Hopefully you will not take offence and will fix the problem
-in your patch and resubmit it so that it can be accepted into the Linux
-kernel tree.
-
-You are receiving this message because of the following common error(s)
-as indicated below:
-
-- You have marked a patch with a "Fixes:" tag for a commit that is in an
-  older released kernel, yet you do not have a cc: stable line in the
-  signed-off-by area at all, which means that the patch will not be
-  applied to any older kernel releases.  To properly fix this, please
-  follow the documented rules in the
-  Documentation/process/stable-kernel-rules.rst file for how to resolve
-  this.
-
-If you wish to discuss this problem further, or you have questions about
-how to resolve this issue, please feel free to respond to this email and
-Greg will reply once he has dug out from the pending patches received
-from other developers.
-
-thanks,
-
-greg k-h's patch email bot
+Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
