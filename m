@@ -1,247 +1,185 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f79.google.com (mail-io1-f79.google.com [209.85.166.79])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9885D2309AA
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 03:59:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FADA33DB
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 04:01:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.79
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743566392; cv=none; b=Zd/Z/Z17NnnZjZHWmTCPYNMlmJlwRlGnfagY1H5PB1VQVJ8dwU/IZewKzhUBVdS32DrpPDNcfpN9wPoiDjmzuVTgTDPm1E55uklrNyIDc72heSUeNmLqusvSfs+cuE82i4q8CGqVGqWanP8tFutoVtvO1ZnxL5aMOXycAWQJIrg=
+	t=1743566482; cv=none; b=GTkfGo7g4G5XhY0m4ebavQNH2hXfYbRaMudmwWGy5hJws/BpvKQnoa8D4z5S+hhKwKUuxHEW4wRvMwil3qQrTOPu/YwwG0nJxRJ906urIfnTYrTbC815D5fVSIXoZx69sylwKWo3CNVb1CqsWdqiCOQEie59JbOz8UczXDaP6Xk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743566392; c=relaxed/simple;
-	bh=5XAaBVK3PYlu5jmU+rZarTc0x0/lrq+TgCeHcJRWMng=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r5zYkFWrmLk4Z3hQw6yVjGxPyGuvUUZB/BvDEiQkTDvQBR9XX/CCWjqoqEnv1k03XqjmXbprGZUofrBnuzEsJOJcoleT9uwkzX7j7TiKYE81vtp1Sv0lqaGEHUUM3mTg+6Eq8HeFCR1KuX7akYmwnwAGtNDMYGTg3UAQ8SimkeM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MFP9ZNlU; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MFP9ZNlU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743566388;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tGXy3CN7gC6EypnGhzzb76sSaOem2BZqrJYP6QEGJ/4=;
-	b=MFP9ZNlUQHp2FMg0eX9FK8JLXdNp6trpGDAzRLNTx++XLWqkygSo83+L1Qu09CHOpISxwk
-	YtiR8ZQrMx9Q/SfzNBUbUd7/cl96abMB2mC16as+7zX4HZa/aSq2Qx2cIvRvue9VI/0DsQ
-	lDAlxWPn97OvCQmxK1iERA0peQqSB+c=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-459-2mGvHwF1Pd6akDJCiMkKNA-1; Tue,
- 01 Apr 2025 23:59:45 -0400
-X-MC-Unique: 2mGvHwF1Pd6akDJCiMkKNA-1
-X-Mimecast-MFC-AGG-ID: 2mGvHwF1Pd6akDJCiMkKNA_1743566384
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 069D719560BB;
-	Wed,  2 Apr 2025 03:59:44 +0000 (UTC)
-Received: from fedora (unknown [10.72.120.17])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B21BD180A803;
-	Wed,  2 Apr 2025 03:59:38 +0000 (UTC)
-Date: Wed, 2 Apr 2025 11:59:32 +0800
-From: Ming Lei <ming.lei@redhat.com>
-To: Uday Shankar <ushankar@purestorage.com>
-Cc: Shuah Khan <shuah@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-	linux-block@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/4] ublk: improve handling of saturated queues when ublk
- server exits
-Message-ID: <Z-y2JGJC56ZhdYHP@fedora>
-References: <20250325-ublk_timeout-v1-0-262f0121a7bd@purestorage.com>
- <20250325-ublk_timeout-v1-4-262f0121a7bd@purestorage.com>
- <Z-OS2_J7o0NKHWmj@fedora>
- <Z+Q/SNmX+DpVQ5ir@dev-ushankar.dev.purestorage.com>
- <Z-SoibOdOmzOWB-C@fedora>
- <Z+sifI6fujsc186S@dev-ushankar.dev.purestorage.com>
+	s=arc-20240116; t=1743566482; c=relaxed/simple;
+	bh=+SlSZSbWPshA0O2QwLGJDKizvotl4Tu99BPBkV1OA+I=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=GwAqeSZVd9oX9V/+sA0tSVSHDaM1qwlWT6wA/4fWPuRsiGkewb0mTv+D/4/P0FMU3+Vi1YP+7avY8DnMb+E1VPv6MghpquvWQadOp9JZw/pECFhr2Xncbb2Mbow6RcXDCQUXXVUacY+qKu7oA8pWQmUrux3mDbGlKuiT/Pyhc7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.79
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f79.google.com with SMTP id ca18e2360f4ac-85b5878a66cso1240611939f.2
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 21:01:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743566480; x=1744171280;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=LBGRGo9P/D0Zf9y3J6uSoJsL1ycztv86eqTrGWjDJCE=;
+        b=Y/58oYTbeofvXwESGCdeKwBlHY9tBMA1PrDhWC+TuMvuH2vDWRKXt0nMmLO5am39eS
+         mR01Cls/tQgrB7eChN3t6rd95goYrefi+VRkAU/SC7pJy/zt0xxo98yCTEmytMYo08Xy
+         0lwq3IPo/WOycBtaYlBYHGRn0DrnAZSbVw3a/+iSO6o+jyjLwA8koQBOSMntzeOTEU0O
+         keSoNfzS9sGlA/rVwImw31TsPKgPV4vQZQf7nN2SCtHtFdCxk5lYHYY+uJCu1aKexR6B
+         xwp1tinFTot/cMmEjF0NQXEqZRZ0t4ViXARl8qKNnLTtCN4ys67wMm07U5jKdgKHVwqr
+         OlSg==
+X-Forwarded-Encrypted: i=1; AJvYcCWPMPLUFfaOxQ0tuOrLe8igWlMHsmpIDCf7OgBB85LeY3SUQ2N6jHGcTM/BGULQqOiv6epjvB9Jc1SJ/l4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw16jgmF02lua1bvF0zh2UTaluPOH+yUm8xKT74LkeUGhcHNupo
+	BSp3Q8EuxEerqxSGyusEgtkxmRY1v3W8IXHYqTeW6/1uLcgc5Fy749m6YIhrJOdzhtQKsmcIoSB
+	mRxzyGrmAtQ+NAfTxwWJCBSNNEK05EdDRmsPLrKjgKjdojQ85GCdONwU=
+X-Google-Smtp-Source: AGHT+IGgHWiGTY8D8L68GL1x4BimquiiUy8nvuuyGDcoj1nKyRA/sppjcrHaLmZ+CZ8Xul1Vp7NqiDqydfnriDadpSkH5hzHvY1g
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z+sifI6fujsc186S@dev-ushankar.dev.purestorage.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+X-Received: by 2002:a05:6e02:3101:b0:3d3:d4f0:271d with SMTP id
+ e9e14a558f8ab-3d6d54ce9b9mr11941595ab.12.1743566480394; Tue, 01 Apr 2025
+ 21:01:20 -0700 (PDT)
+Date: Tue, 01 Apr 2025 21:01:20 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67ecb690.050a0220.31979b.0036.GAE@google.com>
+Subject: [syzbot] [net?] possible deadlock in dev_close
+From: syzbot <syzbot+9f46f55b69eb4f3e054b@syzkaller.appspotmail.com>
+To: davem@davemloft.net, edumazet@google.com, horms@kernel.org, 
+	kuba@kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+	pabeni@redhat.com, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Mar 31, 2025 at 05:17:16PM -0600, Uday Shankar wrote:
-> On Thu, Mar 27, 2025 at 09:23:21AM +0800, Ming Lei wrote:
-> > On Wed, Mar 26, 2025 at 11:54:16AM -0600, Uday Shankar wrote:
-> > > On Wed, Mar 26, 2025 at 01:38:35PM +0800, Ming Lei wrote:
-> > > > On Tue, Mar 25, 2025 at 04:19:34PM -0600, Uday Shankar wrote:
-> > > > > There are currently two ways in which ublk server exit is detected by
-> > > > > ublk_drv:
-> > > > > 
-> > > > > 1. uring_cmd cancellation. If there are any outstanding uring_cmds which
-> > > > >    have not been completed to the ublk server when it exits, io_uring
-> > > > >    calls the uring_cmd callback with a special cancellation flag as the
-> > > > >    issuing task is exiting.
-> > > > > 2. I/O timeout. This is needed in addition to the above to handle the
-> > > > >    "saturated queue" case, when all I/Os for a given queue are in the
-> > > > >    ublk server, and therefore there are no outstanding uring_cmds to
-> > > > >    cancel when the ublk server exits.
-> > > > > 
-> > > > > The second method detects ublk server exit only after a long delay
-> > > > > (~30s, the default timeout assigned by the block layer). Any
-> > > > > applications using the ublk device will be left hanging for these 30s
-> > > > > before seeing an error/knowing anything went wrong. This problem is
-> > > > > illustrated by running the new test_generic_02 against a ublk_drv which
-> > > > > doesn't have the fix:
-> > > > > 
-> > > > > selftests: ublk: test_generic_02.sh
-> > > > > dev id is 0
-> > > > > dd: error writing '/dev/ublkb0': Input/output error
-> > > > > 1+0 records in
-> > > > > 0+0 records out
-> > > > > 0 bytes copied, 30.0611 s, 0.0 kB/s
-> > > > > DEAD
-> > > > > dd took 31 seconds to exit (>= 5s tolerance)!
-> > > > > generic_02 : [FAIL]
-> > > > > 
-> > > > > Fix this by instead handling the saturated queue case in the ublk
-> > > > > character file release callback. This happens during ublk server exit
-> > > > > and handles the issue much more quickly than an I/O timeout:
-> > > > 
-> > > > Another solution is to override default 30sec 'timeout'.
-> > > 
-> > > Yes, but that still will introduce unnecessary delays, since it is a
-> > > polling-based solution (very similar to monitor_work we used to have).
-> > > Also it will add complexity to the unprivileged case, since that
-> > > actually cares about timeout and we will have to track the "real"
-> > > timeout separately.
-> > > 
-> > > > 
-> > > > > 
-> > > > > selftests: ublk: test_generic_02.sh
-> > > > > dev id is 0
-> > > > > dd: error writing '/dev/ublkb0': Input/output error
-> > > > > 1+0 records in
-> > > > > 0+0 records out
-> > > > > 0 bytes copied, 0.0376731 s, 0.0 kB/s
-> > > > > DEAD
-> > > > > generic_02 : [PASS]
-> > > > > 
-> > > > > Signed-off-by: Uday Shankar <ushankar@purestorage.com>
-> > > > > ---
-> > > > >  drivers/block/ublk_drv.c                        | 40 +++++++++++------------
-> > > > >  tools/testing/selftests/ublk/Makefile           |  1 +
-> > > > >  tools/testing/selftests/ublk/kublk.c            |  3 ++
-> > > > >  tools/testing/selftests/ublk/kublk.h            |  3 ++
-> > > > >  tools/testing/selftests/ublk/null.c             |  4 +++
-> > > > >  tools/testing/selftests/ublk/test_generic_02.sh | 43 +++++++++++++++++++++++++
-> > > > >  6 files changed, 72 insertions(+), 22 deletions(-)
-> > > > > 
-> > > > > diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
-> > > > > index c060da409ed8a888b7e414c9065efd2cbd6d57d7..1816b2cac01056dc9d01455759594af43c5f78d6 100644
-> > > > > --- a/drivers/block/ublk_drv.c
-> > > > > +++ b/drivers/block/ublk_drv.c
-> > > > > @@ -1247,8 +1247,6 @@ static void ublk_queue_cmd(struct ublk_queue *ubq, struct request *rq)
-> > > > >  static enum blk_eh_timer_return ublk_timeout(struct request *rq)
-> > > > >  {
-> > > > >  	struct ublk_queue *ubq = rq->mq_hctx->driver_data;
-> > > > > -	unsigned int nr_inflight = 0;
-> > > > > -	int i;
-> > > > >  
-> > > > >  	if (ubq->flags & UBLK_F_UNPRIVILEGED_DEV) {
-> > > > >  		if (!ubq->timeout) {
-> > > > > @@ -1259,26 +1257,6 @@ static enum blk_eh_timer_return ublk_timeout(struct request *rq)
-> > > > >  		return BLK_EH_DONE;
-> > > > >  	}
-> > > > >  
-> > > > > -	if (!ubq_daemon_is_dying(ubq))
-> > > > > -		return BLK_EH_RESET_TIMER;
-> > > > > -
-> > > > > -	for (i = 0; i < ubq->q_depth; i++) {
-> > > > > -		struct ublk_io *io = &ubq->ios[i];
-> > > > > -
-> > > > > -		if (!(io->flags & UBLK_IO_FLAG_ACTIVE))
-> > > > > -			nr_inflight++;
-> > > > > -	}
-> > > > > -
-> > > > > -	/* cancelable uring_cmd can't help us if all commands are in-flight */
-> > > > > -	if (nr_inflight == ubq->q_depth) {
-> > > > > -		struct ublk_device *ub = ubq->dev;
-> > > > > -
-> > > > > -		if (ublk_abort_requests(ub, ubq)) {
-> > > > > -			schedule_work(&ub->nosrv_work);
-> > > > > -		}
-> > > > > -		return BLK_EH_DONE;
-> > > > > -	}
-> > > > > -
-> > > > >  	return BLK_EH_RESET_TIMER;
-> > > > >  }
-> > > > >  
-> > > > > @@ -1351,6 +1329,24 @@ static int ublk_ch_open(struct inode *inode, struct file *filp)
-> > > > >  static int ublk_ch_release(struct inode *inode, struct file *filp)
-> > > > >  {
-> > > > >  	struct ublk_device *ub = filp->private_data;
-> > > > > +	bool need_schedule = false;
-> > > > > +	int i;
-> > > > > +
-> > > > > +	/*
-> > > > > +	 * Error out any requests outstanding to the ublk server. This
-> > > > > +	 * may have happened already (via uring_cmd cancellation), in
-> > > > > +	 * which case it is not harmful to repeat. But uring_cmd
-> > > > > +	 * cancellation does not handle queues which are fully saturated
-> > > > > +	 * (all requests in ublk server), because from the kernel's POV,
-> > > > > +	 * there are no outstanding uring_cmds to cancel. This code
-> > > > > +	 * handles such queues.
-> > > > > +	 */
-> > > > > +
-> > > > > +	for (i = 0; i < ub->dev_info.nr_hw_queues; i++)
-> > > > > +		need_schedule |= ublk_abort_requests(ub, ublk_get_queue(ub, i));
-> > > > > +
-> > > > > +	if (need_schedule)
-> > > > > +		schedule_work(&ub->nosrv_work);
-> > > > 
-> > > > ublk_abort_requests() should be called only in case of queue dying,
-> > > > since ublk server may open & close the char device multiple times.
-> > > 
-> > > Sure that is technically possible, however is any real ublk server doing
-> > > this? Seems like a strange thing to do, and seems reasonable for the
-> > > driver to transition the device to the nosrv state (dead or recovery,
-> > > depending on flags) when the char device is closed, since in this case,
-> > > no one can be handling I/O anymore.
-> > 
-> > ublk server should be free to open & close the char device multiple times,
-> > but you patch limits ublk server to open & close the char device just once.
-> > 
-> > The limit looks too strong...
-> 
-> Tying a userspace daemon lifetime to the file seems to also be done in
-> fuse, which is very similar to ublk_drv. See e.g. the description here:
-> 
-> https://lore.kernel.org/lkml/20240524064030.4944-1-jefflexu@linux.alibaba.com/T/
-> 
-> This seems required to support certain workflows, e.g. using an fdstore
-> with ublk devices. While we still keep task references in ublk_drv,
-> these workflows will be broken.
-> 
-> I am not familiar with fuse so I don't know for sure, but it sounds like
-> if the file is closed after some setup is performed, then the connection
-> is aborted. The analogy in ublk might be - if the file is closed while
-> the device is LIVE, then we transition to the nosrv state. Otherwise
-> nothing happens and the file can be reopened freely. This will allow
-> libublksrv to continue working as it opens/closes the fd early to
-> determine if it is accessible. Does that sound any better?
+Hello,
 
-Yes, my point is that the close shouldn't delete disk, since it may
-be one normal close().
+syzbot found the following issue on:
 
-Actually I think your patch should work by the following change:
+HEAD commit:    0c86b42439b6 Merge tag 'drm-next-2025-03-28' of https://gi..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1353c678580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=500ed53123ea6589
+dashboard link: https://syzkaller.appspot.com/bug?extid=9f46f55b69eb4f3e054b
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
 
-- remove 'schedule_work(&ub->nosrv_work);' done in ublk_ch_release()
+Unfortunately, I don't have any reproducer for this issue yet.
 
-- re-initialize each ublk_queue in open()
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-0c86b424.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/3e78f55971a9/vmlinux-0c86b424.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/3f8acc0407dd/bzImage-0c86b424.xz
 
-Then disk won't be deleted, but any IO is `aborted` by ubq->canceling
-if the char device isn't opened. After the char device is re-opened,
-everything will become fine.
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+9f46f55b69eb4f3e054b@syzkaller.appspotmail.com
+
+loop0: detected capacity change from 0 to 1024
+netlink: 36 bytes leftover after parsing attributes in process `syz.0.0'.
+netlink: 'syz.0.0': attribute type 10 has an invalid length.
+bond0: (slave netdevsim0): Enslaving as an active interface with an up link
+bond0: (slave netdevsim0): Releasing backup interface
+============================================
+WARNING: possible recursive locking detected
+6.14.0-syzkaller-09352-g0c86b42439b6 #0 Not tainted
+--------------------------------------------
+syz.0.0/5321 is trying to acquire lock:
+ffff888042eccd28 (&dev->lock){+.+.}-{4:4}, at: netdev_lock include/linux/netdevice.h:2751 [inline]
+ffff888042eccd28 (&dev->lock){+.+.}-{4:4}, at: netdev_lock_ops include/net/netdev_lock.h:42 [inline]
+ffff888042eccd28 (&dev->lock){+.+.}-{4:4}, at: dev_close+0x121/0x280 net/core/dev_api.c:224
+
+but task is already holding lock:
+ffff888042eccd28 (&dev->lock){+.+.}-{4:4}, at: netdev_lock include/linux/netdevice.h:2751 [inline]
+ffff888042eccd28 (&dev->lock){+.+.}-{4:4}, at: netdev_lock_ops include/net/netdev_lock.h:42 [inline]
+ffff888042eccd28 (&dev->lock){+.+.}-{4:4}, at: do_setlink+0x209/0x4370 net/core/rtnetlink.c:3025
+
+other info that might help us debug this:
+ Possible unsafe locking scenario:
+
+       CPU0
+       ----
+  lock(&dev->lock);
+  lock(&dev->lock);
+
+ *** DEADLOCK ***
+
+ May be due to missing lock nesting notation
+
+2 locks held by syz.0.0/5321:
+ #0: ffffffff900e5f48 (rtnl_mutex){+.+.}-{4:4}, at: rtnl_lock net/core/rtnetlink.c:80 [inline]
+ #0: ffffffff900e5f48 (rtnl_mutex){+.+.}-{4:4}, at: rtnl_nets_lock net/core/rtnetlink.c:341 [inline]
+ #0: ffffffff900e5f48 (rtnl_mutex){+.+.}-{4:4}, at: rtnl_newlink+0xd68/0x1fe0 net/core/rtnetlink.c:4061
+ #1: ffff888042eccd28 (&dev->lock){+.+.}-{4:4}, at: netdev_lock include/linux/netdevice.h:2751 [inline]
+ #1: ffff888042eccd28 (&dev->lock){+.+.}-{4:4}, at: netdev_lock_ops include/net/netdev_lock.h:42 [inline]
+ #1: ffff888042eccd28 (&dev->lock){+.+.}-{4:4}, at: do_setlink+0x209/0x4370 net/core/rtnetlink.c:3025
+
+stack backtrace:
+CPU: 0 UID: 0 PID: 5321 Comm: syz.0.0 Not tainted 6.14.0-syzkaller-09352-g0c86b42439b6 #0 PREEMPT(full) 
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
+ print_deadlock_bug+0x2be/0x2d0 kernel/locking/lockdep.c:3042
+ check_deadlock kernel/locking/lockdep.c:3094 [inline]
+ validate_chain+0x928/0x24e0 kernel/locking/lockdep.c:3896
+ __lock_acquire+0xad5/0xd80 kernel/locking/lockdep.c:5235
+ lock_acquire+0x116/0x2f0 kernel/locking/lockdep.c:5866
+ __mutex_lock_common kernel/locking/mutex.c:587 [inline]
+ __mutex_lock+0x1a5/0x10c0 kernel/locking/mutex.c:732
+ netdev_lock include/linux/netdevice.h:2751 [inline]
+ netdev_lock_ops include/net/netdev_lock.h:42 [inline]
+ dev_close+0x121/0x280 net/core/dev_api.c:224
+ __bond_release_one+0xcaf/0x1220 drivers/net/bonding/bond_main.c:2629
+ bond_slave_netdev_event drivers/net/bonding/bond_main.c:4028 [inline]
+ bond_netdev_event+0x557/0xfb0 drivers/net/bonding/bond_main.c:4146
+ notifier_call_chain+0x1a5/0x3f0 kernel/notifier.c:85
+ call_netdevice_notifiers_extack net/core/dev.c:2218 [inline]
+ call_netdevice_notifiers net/core/dev.c:2232 [inline]
+ netif_change_net_namespace+0xa30/0x1c20 net/core/dev.c:12163
+ do_setlink+0x3aa/0x4370 net/core/rtnetlink.c:3042
+ rtnl_changelink net/core/rtnetlink.c:3766 [inline]
+ __rtnl_newlink net/core/rtnetlink.c:3925 [inline]
+ rtnl_newlink+0x17e2/0x1fe0 net/core/rtnetlink.c:4062
+ rtnetlink_rcv_msg+0x80f/0xd70 net/core/rtnetlink.c:6952
+ netlink_rcv_skb+0x208/0x480 net/netlink/af_netlink.c:2534
+ netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
+ netlink_unicast+0x7f8/0x9a0 net/netlink/af_netlink.c:1339
+ netlink_sendmsg+0x8e8/0xce0 net/netlink/af_netlink.c:1883
+ sock_sendmsg_nosec net/socket.c:712 [inline]
+ __sock_sendmsg+0x221/0x270 net/socket.c:727
+ ____sys_sendmsg+0x53c/0x870 net/socket.c:2566
+ ___sys_sendmsg net/socket.c:2620 [inline]
+ __sys_sendmsg+0x271/0x360 net/socket.c:2652
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fb17b38d169
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fb17c2be038 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00007fb17b5a5fa0 RCX: 00007fb17b38d169
+RDX: 0000000000000000 RSI: 0000200000000340 RDI: 0000000000000008
+RBP: 00007fb17b40e2a0 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000000000 R14: 00007fb17b5a5fa0 R15: 00007fff2d1aa5d8
+ </TASK>
 
 
-Thanks,
-Ming
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
