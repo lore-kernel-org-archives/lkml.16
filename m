@@ -1,133 +1,84 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 382D0233708
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 07:10:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A8B8231CB0;
+	Wed,  2 Apr 2025 07:11:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743577831; cv=none; b=YZSVxV0JZnDujUo9/rI8vnzIscvdKm5E7nGrzXvfPsas+UtSGt7wNeGym/rsHeaJv8iCXIy5EJsV0zIqaPz9PRu3pT5CbSkdV3js3voUVwX+JBLRsbaSPIMtafX+VovlEclVACH9fK5rYKQWRgICquGTk2+z5EGY8f0sXlsEkNs=
+	t=1743577872; cv=none; b=JFJrwQ/dP61KgVN0KoefD1zw08UFPI8imA+CDB2sloM4UpVaXLHAnOQCejaQLYRIszFsiYMe1A/7ZFavq9oPDZvbhTZGC0Abk8jL/3Mp0V1DG75wJk1hwHDPesXj5lv8/I01JPUQVKz/aTIdpfSFwQIyrI//xgMHhufTa6u/d3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743577831; c=relaxed/simple;
-	bh=7ZFduh289kmIv14Cb97BOB2D+kLl6uOqn1YtVHrX7Pw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e3G2E2mc/cjzf9Ysb6qPQ6WbHIKBOGjKJnVEzZI611fJ28QZwlwMpRQHPKVYa6ci+0vJzw9QEwmc1gosOZ7KQoMDRi/BpAFRuU+ae4afVq7iPlG00JOtH4mc9wTLbSSYE+NKHjAWzI2+GsUxL0Krg/hy2NQsx5MmgwzKn8ZmXrQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tn8lGSVL; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tn8lGSVL"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-225df540edcso11130225ad.0
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 00:10:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743577829; x=1744182629; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=zjR4lEGGyx3HdyMesa5h6gRayUig9bsMGHv5vZfbr1E=;
-        b=tn8lGSVL4WYbU3w3ReJGEyvTyydMot802P0TAJn9vNj0cuYFB833AwYC+c9hzrg94r
-         JWraFj6jqe8mJDL9vxFWDcinGfBnLujxmuckPLeIpROAEz/QmrgXD0//+S/+XGuaCv3E
-         vxpJIfYY030MB5MEhjmp+kUpKl1WOsYyAgjk1iIDj6pQBfZSzxaFHP0CTG35NUXCefe3
-         DJk8iW8h870ag1f/VtWahxyAj1i2H684OuGlVTdy8YWWEYMZpsYy7Ons91HP9+z8vjgF
-         3pUIJFaZpLisWnFj036n08axuVwCnxRWyfhTeUPCiFd9eTirYHT3d6FZdbVfkLEVkULW
-         2yJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743577829; x=1744182629;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zjR4lEGGyx3HdyMesa5h6gRayUig9bsMGHv5vZfbr1E=;
-        b=q+Y4zyLu+wTyUA5RjIr8dAt2IReekBOSnle/suRJRtJrchLnkBX1LJNvXbywEuuyFw
-         JVm6onC+5yRNdGVwiF08ZRMDQKep1fsTQiKHzJrKheJaFjwMaBJarjb3/PIyQ4u4aaAf
-         iHNmfl5I5Tld1ZEB/8uOHWTZxJqF+BFAFV64+mhispQOFFcfawPyF++T7ookzK6I1tfT
-         EfSwxgk+yEYRu7/9W0P2mTGnY6QzYjNfF5SQeAfI0GBsMgbNabMlimdivUdz+fZjsuzc
-         DNOFYhKQSbfUvitBFCG1WX1jkK/i9UCf724+CLV4RnDoF1lSVaVMryTYdM9esrGUxpTW
-         1GAg==
-X-Forwarded-Encrypted: i=1; AJvYcCVd7ZtNM3z06WmAz+K2QtcDZ+/DuVo3KEKQZ4+ag/HxbIBWz1Td2ERB8ty2tux3E3Lv/4TwSWpePKEM5Yc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxoBql8jhn1YTX0wXBQt6n+lePz/Q7tjm3O8ojfsjLQyIAsN33C
-	RstvKNJpf66jBshx4VFhDXkqYCIXW4q0L97zkM/qeFMbr5tDBRmfAhEe22PGoA==
-X-Gm-Gg: ASbGncuu3PChT70XaDzYY0a0+nhh7veM/67EAMFcYskh42ypOZUF3FjtB3TyVV726qP
-	BL4ro0fJTRibOGcoKKH/8117PtxVaerXqXxQoDS/qXAXhPeFZgS83zE3N8b58vQmawjEcxnqvs5
-	len8TOgcUYA2ngKR+b84GkqXjEYsMsm1VRqKV0PCHbNIq0QTAqHsjL9I5fkX3syraE3+7x+utJL
-	btrdaUIBbbHOG+V8tuwXicaKT02j9BZFGjmKfuxoWRLjHHgB2Yj2dh1iM0z+jSPRBF10nCItitC
-	fAD9OQ0tT89MuczB+SGp3BigMrICIdC5vqDfBgk/3MSQ+4wmp5/HgXkl
-X-Google-Smtp-Source: AGHT+IF2PkfJ6gvdatC+Ohrdk2DCIs4bJ4gvM262TiahqchaDp4ihwwIJoGbKxCJkUgJQO2cM8XLTw==
-X-Received: by 2002:a05:6a00:130d:b0:737:cd8:2484 with SMTP id d2e1a72fcca58-739cac57712mr1314725b3a.6.1743577829272;
-        Wed, 02 Apr 2025 00:10:29 -0700 (PDT)
-Received: from thinkpad ([120.56.205.103])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739710cbd88sm10117652b3a.157.2025.04.02.00.10.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Apr 2025 00:10:28 -0700 (PDT)
-Date: Wed, 2 Apr 2025 12:40:23 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Richard Zhu <hongxing.zhu@nxp.com>
-Cc: frank.li@nxp.com, l.stach@pengutronix.de, lpieralisi@kernel.org, 
-	kw@linux.com, robh@kernel.org, bhelgaas@google.com, shawnguo@kernel.org, 
-	s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, 
-	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 5/6] PCI: imx6: Add PLL clock lock check for i.MX95
- PCIe
-Message-ID: <y3ys5ojt3cryklqibg4shznkjqije7bturs5ljkjyzbri5dhgu@jeo2mmyv7sci>
-References: <20250328030213.1650990-1-hongxing.zhu@nxp.com>
- <20250328030213.1650990-6-hongxing.zhu@nxp.com>
+	s=arc-20240116; t=1743577872; c=relaxed/simple;
+	bh=XQlBs4MWg6zV4rM+kXg/Gqvvzm2T9P4VGZapl0Pr2sA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SNxboLAK7b17RHCRqb+ZuWOE0OFWwnCqD/tpzNcMpLgiEfbg2VaBn0lcZr3YO1srXejwCylvmeSmANfKusbpxt2DpXJ2ggPb7kYB0CvO3a/178CYGqUHTFfQumpsDAjb/OdpvEnZKUxmkDJJltcCVBCmr+WceeyqazAqoESYf7M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost.localdomain (unknown [124.16.141.245])
+	by APP-01 (Coremail) with SMTP id qwCowABH7v4C4+xnizYWBQ--.19487S2;
+	Wed, 02 Apr 2025 15:11:03 +0800 (CST)
+From: Wentao Liang <vulab@iscas.ac.cn>
+To: pkshih@realtek.com,
+	kvalo@kernel.org
+Cc: linux-wireless@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Wentao Liang <vulab@iscas.ac.cn>,
+	stable@vger.kernel.org
+Subject: [PATCH] rtlwifi: rtl892cu: Set limit for pwdb_all
+Date: Wed,  2 Apr 2025 15:10:40 +0800
+Message-ID: <20250402071040.3155-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.42.0.windows.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250328030213.1650990-6-hongxing.zhu@nxp.com>
+X-CM-TRANSID:qwCowABH7v4C4+xnizYWBQ--.19487S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrtF15Jr4DCF1DZF4UJr4fXwb_yoWkWrX_Cr
+	W0qF9ava47tw1UKF43JFW3urWI9F1DX3Z5G3y2qrW3C3Z0qF95Zr4Sva45GryUWFyvkFs3
+	GwsrJFyrA348ZjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbsAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
+	Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7CjxVAaw2AFwI0_
+	JF0_Jw1lc2xSY4AK67AK6r4xMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r
+	4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF
+	67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2I
+	x0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2
+	z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnU
+	UI43ZEXa7VUjSdgtUUUUU==
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiBwkAA2fszLMcGAABs8
 
-On Fri, Mar 28, 2025 at 11:02:12AM +0800, Richard Zhu wrote:
-> Add PLL clock lock check for i.MX95 PCIe.
-> 
+In _rtl92c_query_rxphystatus(), the return rtl_query_rxpwrpercentage()
+need to be checked. A proper implementation can be found in
+_rtl8723be_query_rxphystatus(). Add a value check and set the limit of
+pwdb_add as 100.
 
-What are the implications of not waiting for PLL lock? I guess clock
-instability.
+Fixes: 666e8457fae4 ("rtlwifi: rtl8192cu: Add routine mac")
+Cc: stable@vger.kernel.org # v2.6+
+Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+---
+ drivers/net/wireless/realtek/rtlwifi/rtl8192cu/mac.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
-> Reviewed-by: Frank Li <Frank.Li@nxp.com>
-> ---
->  drivers/pci/controller/dwc/pci-imx6.c | 28 +++++++++++++++++++++++++--
->  1 file changed, 26 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-> index 35194b543551..40eeb02ffb5d 100644
-> --- a/drivers/pci/controller/dwc/pci-imx6.c
-> +++ b/drivers/pci/controller/dwc/pci-imx6.c
-> @@ -45,6 +45,9 @@
->  #define IMX95_PCIE_PHY_GEN_CTRL			0x0
->  #define IMX95_PCIE_REF_USE_PAD			BIT(17)
->  
-> +#define IMX95_PCIE_PHY_MPLLA_CTRL		0x10
-> +#define IMX95_PCIE_PHY_MPLL_STATE		BIT(30)
-> +
->  #define IMX95_PCIE_SS_RW_REG_0			0xf0
->  #define IMX95_PCIE_REF_CLKEN			BIT(23)
->  #define IMX95_PCIE_PHY_CR_PARA_SEL		BIT(9)
-> @@ -479,6 +482,23 @@ static void imx7d_pcie_wait_for_phy_pll_lock(struct imx_pcie *imx_pcie)
->  		dev_err(dev, "PCIe PLL lock timeout\n");
->  }
->  
-> +static int imx95_pcie_wait_for_phy_pll_lock(struct imx_pcie *imx_pcie)
-> +{
-> +	u32 val;
-> +	struct device *dev = imx_pcie->pci->dev;
-> +
-> +	if (regmap_read_poll_timeout(imx_pcie->iomuxc_gpr,
-> +				     IMX95_PCIE_PHY_MPLLA_CTRL, val,
-> +				     val & IMX95_PCIE_PHY_MPLL_STATE,
-> +				     PHY_PLL_LOCK_WAIT_USLEEP_MAX,
-> +				     PHY_PLL_LOCK_WAIT_TIMEOUT)) {
-> +		dev_err(dev, "PCIe PLL lock timeout\n");
-> +		return -ENODEV;
-
--ETIMEDOUT
-
-- Mani
-
+diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8192cu/mac.c b/drivers/net/wireless/realtek/rtlwifi/rtl8192cu/mac.c
+index a76f2dc8a977..e2145f284ec0 100644
+--- a/drivers/net/wireless/realtek/rtlwifi/rtl8192cu/mac.c
++++ b/drivers/net/wireless/realtek/rtlwifi/rtl8192cu/mac.c
+@@ -641,6 +641,9 @@ static void _rtl92c_query_rxphystatus(struct ieee80211_hw *hw,
+ 			}
+ 		}
+ 		pwdb_all = rtl_query_rxpwrpercentage(rx_pwr_all);
++		if (pwdb_all > 100)
++			pwdb_all = 100;
++
+ 		pstats->rx_pwdb_all = pwdb_all;
+ 		pstats->recvsignalpower = rx_pwr_all;
+ 		if (packet_match_bssid) {
 -- 
-மணிவண்ணன் சதாசிவம்
+2.42.0.windows.2
+
