@@ -1,135 +1,297 @@
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 431932AEFB
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 15:37:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C64162E3372;
+	Wed,  2 Apr 2025 15:38:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743608256; cv=none; b=i1DqsYbQjpjhlaIPW6OVaatVprts/DnI3BVSbMPUgPCZvQxF9jIAVDNAd58UIITdot7d4eZ3HKp6CN/EWZ/sFWcfXaf7rNlFI8zOlLj0tQPUdxDfRkjbVOXopqgH8q8VIpDrWoDPuhlSCcubTVER3+q8lJ1xuhEUK55KIXiOCN4=
+	t=1743608325; cv=none; b=MZ3wttyaJ+BZUDLx8uXOYxzrTcbdvh7JPnfinOP7OV+XK0dNbLny6dhkfFlOWrn9IfC/0hmscK3N4Tuaaxz+snTbpwfQaZvb/A6KZBeEC5nJroXw048b2PzGw7ZYnSoyOFu47YzkhYzi0VQILjGL8iNfGDgnrUb3q7EsJ7xbSyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743608256; c=relaxed/simple;
-	bh=qOAWHJJYiFzc3hDjDpDucfpGw87omsXRrilcS4Wt21s=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=OQG6Yg5JgwywR626KGoofnUHCPP1ZmzabN/LkB2VJeVhEM+IgYl20N59S2U36J+BJU9ZK8sib8Ksl6FMNjn7z5vxDgKVt1MOEU70NTjG/W7mAaufA5qve8dUUlLAe0BHX1ZKbt1KOJ7rOxThwB+t6LYaTGq0Y0IZEx526ETdVcg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca; spf=none smtp.mailfrom=ndufresne.ca; dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b=JMOsNP21; arc=none smtp.client-ip=209.85.222.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ndufresne.ca
+	s=arc-20240116; t=1743608325; c=relaxed/simple;
+	bh=1a5AtKgtRfWa1wPOQRdDqRvCNnUU1/G3gjL/nQcplR0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mdUigLz5kEI3eLqFBMvX0FWxKWWW1fcFDcKNrk93KEnKn3gTUcp8kYXG/H1BNUY3UGWU8czj4V8v383kxLluonGcpnn84M1g6nvl/NjUya9Krc4WoTbuhHWFCsvlgHANrCdQAuBU/5pEaKi2gqoy9QNTtR+nQ+x32mGqIcNDu1c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=hJNUbsV7; arc=none smtp.client-ip=117.135.210.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b="JMOsNP21"
-Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7c5f720c717so103788785a.0
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 08:37:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ndufresne-ca.20230601.gappssmtp.com; s=20230601; t=1743608254; x=1744213054; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rhmKnF0oiTEPkeisoeZbaGPYtFNcuzXscDMztyaRd+w=;
-        b=JMOsNP21iHgoTZypjYxuN+YvoQlf522Q16Gopmu76pyK0c+0gS6821XPQ4QEF78nYR
-         nDYWhVJuL9bQtDj0qbr8gvCeimg2JjhLIcBUo+0vnP+4WIRdIoaMMCpDSjMnEZVl0s6D
-         1IeKwamApjeeSjzgkJ4L7zMukGQdKuw2LvXYoGYlUVYu2kM2cwCaof1RR4Gq1A2jsiF+
-         kPcYO7GJ21VuqyhxswKEIP3syC7iQjciRTjE+kqzooTsryYuTUFBKPcT2K42Y8Ggy5TN
-         sMWh8qKonarghxcEUbRibUcQMKmgx9taz/QTDRz4waKDf4/32ikwLe1R5bnN4IwroNBX
-         iS2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743608254; x=1744213054;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=rhmKnF0oiTEPkeisoeZbaGPYtFNcuzXscDMztyaRd+w=;
-        b=lMhzCH/HsNfCu2U64KpKxezLfBFyyC9LTJAppPPIjykQHXJVIioEM04VNAGjsmnd+B
-         ekWbmp8fO4g2rBKDBSS52K61n9rwqWkfe/MOEY6SDdOytMTfkkbQGj+TYA5DlUzP5d8l
-         mKcaBCzLxxjTHYQCLkN7FaI5IhUFkZcT1gEkEmhdm3CZqdtRAsj/vZfr7hRr3bxUtJkP
-         ynzXa/TzvRNOEKSgT2VAXRTId9hrzllSIeyYXyoIOr0IkYARv3MIU4zaJdq6eo6PkGnK
-         zcUqmCJ7zphzDp2lyNOkmIA93JcJ4NoBijoImgsydxxQMnHA7v6eJsmWWqZiNTQ0K4CM
-         B+sw==
-X-Forwarded-Encrypted: i=1; AJvYcCW0SAv5PK1fL3Vb7JfuxO+kLDgHzaizEW6QM/2i63ZNIyqPCEDfsxS7eI2lYHW8sWEeMw0p/IB9PzT6muk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx4EsfEsG883diew9kXn8uKMlCfwUSSb7SF9A5GWUD4/BJIs1uG
-	Sxld51YB5jBTRiG7wSI/TR6rXOOGfsSS8ykyz2nd5gXMOliSyMe7MZwrzL6LKDc=
-X-Gm-Gg: ASbGncu+Iy7Fxx7tiqInYi5tgwqQy8v89N2GDaofXgxml3FemP8OPmeWxvtXyv9crtk
-	KTr8NvPWtp5ZWCgwCH08quvnFff40t0fFnFJcWhf1AuXFCm2cHXrYE9E36Tkxjc8K/n2VTIhwES
-	jXODC2UGJOXUFpdxkRLyrfuIs6CJZz34DD7+GcEuDnJwxRzuDf2KdrEhWgd+gxjjH1lRP+TF5Tq
-	BMHaAatofTcGJoYxDdUVv3OyrDTD0TEMx+rdO25GYaa05MH3iEdgeHGxNUEMmt4ewllSKAxbFs5
-	L8W80Jw1dHTqs5tD9x2eudF6avBFwzdX6binXUVOeyXx/XS/lA==
-X-Google-Smtp-Source: AGHT+IGt12U4LeoNV08d0rSucCuL30UKo3Q/u+eYpiDfdZNZWOV5NQwkfWw/ZI52IiTuX89vZtkt/g==
-X-Received: by 2002:a05:620a:d89:b0:7c5:9452:4a60 with SMTP id af79cd13be357-7c76c970550mr2456785a.5.1743608253843;
-        Wed, 02 Apr 2025 08:37:33 -0700 (PDT)
-Received: from ?IPv6:2606:6d00:11:e976::5ac? ([2606:6d00:11:e976::5ac])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c5f77804a9sm796103585a.112.2025.04.02.08.37.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Apr 2025 08:37:33 -0700 (PDT)
-Message-ID: <cfc905988dda23078b5086f3eb0975863bbb6c2d.camel@ndufresne.ca>
-Subject: Re: [PATCH] media: mtk-vcodec: Fix reference count leak in
- mtk_vcodec_fw_scp_init
-From: Nicolas Dufresne <nicolas@ndufresne.ca>
-To: Miaoqian Lin <linmq006@gmail.com>, Tiffany Lin
- <tiffany.lin@mediatek.com>,  Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
- Yunfei Dong <yunfei.dong@mediatek.com>, Mauro Carvalho Chehab	
- <mchehab@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Fullway Wang <fullwaywang@outlook.com>, 	linux-media@vger.kernel.org,
- linux-kernel@vger.kernel.org, 	linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org
-Date: Wed, 02 Apr 2025 11:37:32 -0400
-In-Reply-To: <20250318110556.903-1-linmq006@gmail.com>
-References: <20250318110556.903-1-linmq006@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.0 (3.56.0-1.fc42) 
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="hJNUbsV7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=QUj+GFy5Qx5hlrV4dqr5cXgZbrQBFi4pUIlzv+rdsis=;
+	b=hJNUbsV7QR+OM2qdvyos1+yy6/57sM4lpcCGwxIfc610aluYcmCeJ+XQTWeCt2
+	Xwyr61iQ6qd0opkcP2ySXlJWYLY3p9Od75W37qy4qaPv8XyBji86P7Uz/ysLHCyX
+	zUeQLRJI6d8rL+dcX2au9RzOeFDliuUXDhZarWGUVEmrU=
+Received: from [192.168.71.89] (unknown [])
+	by gzga-smtp-mtada-g1-0 (Coremail) with SMTP id _____wC3Owa+We1n0VouBg--.8836S2;
+	Wed, 02 Apr 2025 23:37:35 +0800 (CST)
+Message-ID: <c6706073-86b0-445a-b39f-993ac9b054fa@163.com>
+Date: Wed, 2 Apr 2025 23:37:34 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [v7 2/5] PCI: Refactor capability search functions to eliminate
+ code duplication
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: lpieralisi@kernel.org, bhelgaas@google.com, kw@linux.com,
+ manivannan.sadhasivam@linaro.org, robh@kernel.org, jingoohan1@gmail.com,
+ thomas.richard@bootlin.com, linux-pci@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>
+References: <20250402042020.48681-1-18255117159@163.com>
+ <20250402042020.48681-3-18255117159@163.com>
+ <8b693bfc-73e0-2956-2ba3-1bfd639660b6@linux.intel.com>
+Content-Language: en-US
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <8b693bfc-73e0-2956-2ba3-1bfd639660b6@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wC3Owa+We1n0VouBg--.8836S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW3AFyDZw13tF4ftrWDtF1UWrg_yoW3JFyfpF
+	W3J3WayrW8GF12gF4qvayktryaqFZ7JFWxGrWxCas0vFnFkF9YvFy2kw15W342grWkWF1x
+	Xws5tFyDC3WvyaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UVnQUUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDxMjo2ftV0IYYAABs6
 
-Hi,
 
-Le mardi 18 mars 2025 =C3=A0 19:05 +0800, Miaoqian Lin a =C3=A9crit=C2=A0:
-> scp_get() returns a reference that needs to be released with scp_put().
-> Add missing scp_put() before returning error in mtk_vcodec_fw_scp_init().
->=20
-> Fixes: 53dbe0850444 ("media: mtk-vcodec: potential null pointer deference=
- in SCP")
-> Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
-> ---
-> =C2=A0.../platform/mediatek/vcodec/common/mtk_vcodec_fw_scp.c=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 | 5 +++--
-> =C2=A01 file changed, 3 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/media/platform/mediatek/vcodec/common/mtk_vcodec_fw_=
-scp.c b/drivers/media/platform/mediatek/vcodec/common/mtk_vcodec_fw_scp.c
-> index ff23b225db70..11ab3bc60217 100644
-> --- a/drivers/media/platform/mediatek/vcodec/common/mtk_vcodec_fw_scp.c
-> +++ b/drivers/media/platform/mediatek/vcodec/common/mtk_vcodec_fw_scp.c
-> @@ -71,7 +71,6 @@ struct mtk_vcodec_fw *mtk_vcodec_fw_scp_init(void *priv=
-, enum mtk_vcodec_fw_use
-> =C2=A0		pr_err("Invalid fw_use %d (use a reasonable fw id here)\n", fw_us=
-e);
-> =C2=A0		return ERR_PTR(-EINVAL);
-> =C2=A0	}
-> -
 
-Might sound nit-picky, but don't do style fixes in patches intended for
-backports. It increases the chance of conflicts.
+On 2025/4/2 20:38, Ilpo Järvinen wrote:
+> On Wed, 2 Apr 2025, Hans Zhang wrote:
+> 
+>> Refactor the PCI capability and extended capability search functions
+>> by consolidating common code patterns into reusable macros
+>> (PCI_FIND_NEXT_CAP_TTL and PCI_FIND_NEXT_EXT_CAPABILITY). The main
+>> changes include:
+>>
+>> 1. Introducing a unified config space read helper (__pci_bus_read_config).
+>> 2. Removing duplicate search logic from __pci_find_next_cap_ttl and
+>>     pci_find_next_ext_capability.
+>> 3. Implementing consistent capability discovery using the new macros.
+>> 4. Simplifying HyperTransport capability lookup by leveraging the
+>>     refactored code.
+>>
+>> The refactoring maintains existing functionality while reducing code
+>> duplication and improving maintainability. By centralizing the search
+>> logic, we achieve better code consistency and make future updates easier.
+>>
+>> This change has been verified to maintain backward compatibility with
+>> existing capability discovery patterns through thorough testing of PCI
+>> device enumeration and capability probing.
+>>
+>> Signed-off-by: Hans Zhang <18255117159@163.com>
+>> ---
+>>   drivers/pci/pci.c | 79 +++++++++++++----------------------------------
+>>   1 file changed, 22 insertions(+), 57 deletions(-)
+>>
+>> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+>> index 869d204a70a3..521096c73686 100644
+>> --- a/drivers/pci/pci.c
+>> +++ b/drivers/pci/pci.c
+>> @@ -423,36 +423,33 @@ static int pci_dev_str_match(struct pci_dev *dev, const char *p,
+>>   	return 1;
+>>   }
+>>   
+>> -static u8 __pci_find_next_cap_ttl(struct pci_bus *bus, unsigned int devfn,
+>> -				  u8 pos, int cap, int *ttl)
+>> +static int __pci_bus_read_config(void *priv, unsigned int devfn, int where,
+>> +				 u32 size, u32 *val)
+> 
+> This probably should be where the other accessors are so in access.c. I'd
+> put its prototype into drivers/pci/pci.h only for now.
+> 
 
-> =C2=A0	scp =3D scp_get(plat_dev);
-> =C2=A0	if (!scp) {
-> =C2=A0		dev_err(&plat_dev->dev, "could not get vdec scp handle");
-> @@ -79,8 +78,10 @@ struct mtk_vcodec_fw *mtk_vcodec_fw_scp_init(void *pri=
-v, enum mtk_vcodec_fw_use
-> =C2=A0	}
-> =C2=A0
-> =C2=A0	fw =3D devm_kzalloc(&plat_dev->dev, sizeof(*fw), GFP_KERNEL);
-> -	if (!fw)
-> +	if (!fw) {
-> +		scp_put(scp);
-> =C2=A0		return ERR_PTR(-ENOMEM);
-> +	}
+Hi Ilpo,
 
-With the above style change removed:
+Thank you very much for your guidance. Will change.
 
-Reviewed-by: Nicolas Dufresne <nicolas.dufresne@colllabora.com>
 
-> =C2=A0	fw->type =3D SCP;
-> =C2=A0	fw->ops =3D &mtk_vcodec_rproc_msg;
-> =C2=A0	fw->scp =3D scp;
+>>   {
+>> -	u8 id;
+>> -	u16 ent;
+>> +	struct pci_bus *bus = priv;
+>> +	int ret;
+>>   
+>> -	pci_bus_read_config_byte(bus, devfn, pos, &pos);
+>> +	if (size == 1)
+>> +		ret = pci_bus_read_config_byte(bus, devfn, where, (u8 *)val);
+>> +	else if (size == 2)
+>> +		ret = pci_bus_read_config_word(bus, devfn, where, (u16 *)val);
+>> +	else
+>> +		ret = pci_bus_read_config_dword(bus, devfn, where, val);
+>>   
+>> -	while ((*ttl)--) {
+>> -		if (pos < 0x40)
+>> -			break;
+>> -		pos &= ~3;
+>> -		pci_bus_read_config_word(bus, devfn, pos, &ent);
+>> +	return ret;
+>> +}
+>>   
+>> -		id = ent & 0xff;
+>> -		if (id == 0xff)
+>> -			break;
+>> -		if (id == cap)
+>> -			return pos;
+>> -		pos = (ent >> 8);
+>> -	}
+>> -	return 0;
+>> +static u8 __pci_find_next_cap_ttl(struct pci_bus *bus, unsigned int devfn,
+>> +				  u8 pos, int cap)
+>> +{
+>> +	return PCI_FIND_NEXT_CAP_TTL(__pci_bus_read_config, pos, cap, bus,
+>> +				     devfn);
+>>   }
+>>   
+>>   static u8 __pci_find_next_cap(struct pci_bus *bus, unsigned int devfn,
+>>   			      u8 pos, int cap)
+>>   {
+>> -	int ttl = PCI_FIND_CAP_TTL;
+>> -
+>> -	return __pci_find_next_cap_ttl(bus, devfn, pos, cap, &ttl);
+>> +	return __pci_find_next_cap_ttl(bus, devfn, pos, cap);
+>>   }
+>>   
+>>   u8 pci_find_next_capability(struct pci_dev *dev, u8 pos, int cap)
+>> @@ -553,42 +550,11 @@ EXPORT_SYMBOL(pci_bus_find_capability);
+>>    */
+>>   u16 pci_find_next_ext_capability(struct pci_dev *dev, u16 start, int cap)
+>>   {
+>> -	u32 header;
+>> -	int ttl;
+>> -	u16 pos = PCI_CFG_SPACE_SIZE;
+>> -
+>> -	/* minimum 8 bytes per capability */
+>> -	ttl = (PCI_CFG_SPACE_EXP_SIZE - PCI_CFG_SPACE_SIZE) / 8;
+>> -
+>>   	if (dev->cfg_size <= PCI_CFG_SPACE_SIZE)
+>>   		return 0;
+>>   
+>> -	if (start)
+>> -		pos = start;
+>> -
+>> -	if (pci_read_config_dword(dev, pos, &header) != PCIBIOS_SUCCESSFUL)
+>> -		return 0;
+>> -
+>> -	/*
+>> -	 * If we have no capabilities, this is indicated by cap ID,
+>> -	 * cap version and next pointer all being 0.
+>> -	 */
+>> -	if (header == 0)
+>> -		return 0;
+>> -
+>> -	while (ttl-- > 0) {
+>> -		if (PCI_EXT_CAP_ID(header) == cap && pos != start)
+>> -			return pos;
+>> -
+>> -		pos = PCI_EXT_CAP_NEXT(header);
+>> -		if (pos < PCI_CFG_SPACE_SIZE)
+>> -			break;
+>> -
+>> -		if (pci_read_config_dword(dev, pos, &header) != PCIBIOS_SUCCESSFUL)
+>> -			break;
+>> -	}
+>> -
+>> -	return 0;
+>> +	return PCI_FIND_NEXT_EXT_CAPABILITY(__pci_bus_read_config, start, cap,
+>> +					    dev->bus, dev->devfn);
+> 
+> I don't like how 1 & 2 patches are split into two. IMO, they mostly belong
+> together. However, (IMO) you can introduce the new all-size config space
+> accessor in a separate patch before the combined patch.
+> 
+
+Ok. I'll change it to the following. The rest I'll combine into a patch.
+
+diff --git a/drivers/pci/access.c b/drivers/pci/access.c
+index b123da16b63b..bb2e26c2eb81 100644
+--- a/drivers/pci/access.c
++++ b/drivers/pci/access.c
+@@ -85,6 +85,23 @@ EXPORT_SYMBOL(pci_bus_write_config_byte);
+  EXPORT_SYMBOL(pci_bus_write_config_word);
+  EXPORT_SYMBOL(pci_bus_write_config_dword);
+
++
++int pci_bus_read_config(void *priv, unsigned int devfn, int where, u32 
+size,
++			u32 *val)
++{
++	struct pci_bus *bus = priv;
++	int ret;
++
++	if (size == 1)
++		ret = pci_bus_read_config_byte(bus, devfn, where, (u8 *)val);
++	else if (size == 2)
++		ret = pci_bus_read_config_word(bus, devfn, where, (u16 *)val);
++	else
++		ret = pci_bus_read_config_dword(bus, devfn, where, val);
++
++	return ret;
++}
++
+  int pci_generic_config_read(struct pci_bus *bus, unsigned int devfn,
+  			    int where, int size, u32 *val)
+  {
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 2e9cf26a9ee9..6a7c88b9cd35 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -88,6 +88,8 @@ extern bool pci_early_dump;
+  bool pcie_cap_has_lnkctl(const struct pci_dev *dev);
+  bool pcie_cap_has_lnkctl2(const struct pci_dev *dev);
+  bool pcie_cap_has_rtctl(const struct pci_dev *dev);
++int pci_bus_read_config(void *priv, unsigned int devfn, int where, u32 
+size,
++			u32 *val);
+
+  /* Functions internal to the PCI core code */
+
+
+>>   }
+>>   EXPORT_SYMBOL_GPL(pci_find_next_ext_capability);
+>>   
+>> @@ -648,7 +614,6 @@ EXPORT_SYMBOL_GPL(pci_get_dsn);
+>>   
+>>   static u8 __pci_find_next_ht_cap(struct pci_dev *dev, u8 pos, int ht_cap)
+>>   {
+>> -	int rc, ttl = PCI_FIND_CAP_TTL;
+>>   	u8 cap, mask;
+>>   
+>>   	if (ht_cap == HT_CAPTYPE_SLAVE || ht_cap == HT_CAPTYPE_HOST)
+>> @@ -657,7 +622,7 @@ static u8 __pci_find_next_ht_cap(struct pci_dev *dev, u8 pos, int ht_cap)
+>>   		mask = HT_5BIT_CAP_MASK;
+>>   
+>>   	pos = __pci_find_next_cap_ttl(dev->bus, dev->devfn, pos,
+>> -				      PCI_CAP_ID_HT, &ttl);
+>> +				      PCI_CAP_ID_HT);
+>>   	while (pos) {
+>>   		rc = pci_read_config_byte(dev, pos + 3, &cap);
+>>   		if (rc != PCIBIOS_SUCCESSFUL)
+>> @@ -668,7 +633,7 @@ static u8 __pci_find_next_ht_cap(struct pci_dev *dev, u8 pos, int ht_cap)
+>>   
+>>   		pos = __pci_find_next_cap_ttl(dev->bus, dev->devfn,
+>>   					      pos + PCI_CAP_LIST_NEXT,
+>> -					      PCI_CAP_ID_HT, &ttl);
+>> +					      PCI_CAP_ID_HT);
+> 
+> This function kind of had the idea to share the ttl but I suppose that was
+> just a final safeguard to make sure the loop will always terminate in case
+> the config space is corrupted so the unsharing is not a big issue.
+> 
+
+__pci_find_next_cap_ttl
+   // This macro definition already has ttl loop restrictions inside it.
+   PCI_FIND_NEXT_CAP_TTL
+
+Do I understand that you agree to remove ttl initialization and 
+parameter passing?
+
+Best regards,
+Hans
+
+>>   	}
+>>   
+>>   	return 0;
+>>
+> 
+
