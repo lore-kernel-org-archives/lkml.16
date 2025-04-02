@@ -1,85 +1,38 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77D191DA5F
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 13:44:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFBFA23A989
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 13:45:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743601480; cv=none; b=HlajLKGoWVaEsQSOBRwlXQd0IABjAkuFoWzSKOVwaujDD0MHuT/nqG6zWXkFfI3dKp3AbBSArZ8WkuDIJEE24aInVISgSPAZ7ztvx718xCYeAvGsbaQQ6YFRNjdO42CgFqPfig8yf4ro15tFxJrRyTknp/N4ahYc+n4D/ArfPec=
+	t=1743601510; cv=none; b=Gj8pFUNAMGYM9Fbw/ANTJvVTA6KJErV2jxUXe9jPe5k+z8ZP+K6+vhZ4Y9iknC0Q4TN4aJC0UIK1zNzXqr8bWG7uiYKLNNewxR8CWV90neV1sMAzaELxD3fBw4IhYeVs4tHZTOy6kNLSukDliN87U54Xd0meYdPZ95j87Jy3Pw8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743601480; c=relaxed/simple;
-	bh=bAFtZQ4n74TeKqgW1UVgdxDBZQaL32TNRNDJ8hM/0w4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=bUJmPAjkzxcu3TelJGEGLdfaHfEQbIIL7qNNuaXYICMJUNjWUZ6Fw4enbFJxoFAVL2cTHmr3B7frPrIDC76J4zwesvbd5D/VlYolM+t2oY9fP8WQvim4zaL8nrJ5aFcqmPPyA9QiD7m7+0/h723vN/DQklxfItvY2VBvnLRQIB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=SxqjsjSV; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="SxqjsjSV"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-39c1efc457bso1746063f8f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 06:44:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1743601476; x=1744206276; darn=vger.kernel.org;
-        h=mime-version:message-id:date:user-agent:references:in-reply-to
-         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=M+KPScMUK+AO9N4U8oKua6WTB7J2b7ytXODSOml94Zo=;
-        b=SxqjsjSV7bmQM2wzwYHBDlcdxHLeP6Qz2wZghJM7QY3/kEB9ryZ6HVgvxTme2ENT90
-         y/eaGAaMw3LDR277H3buNfjki3GoiuHA+A2cmLLa0xxtda2y5PfkLsPuBBuRkpYsqIE0
-         Z86d2X/pET+O7pHei8eUCHEQCzCbDsdRG3CMhv+lILVnsCX+9W1igH2Bt7yDJJLDeX6l
-         5NDC1xE9MOrkHyZWhJGvQIAoh9gd+033yx+R5r0IuS6CXSKbjBc4HIjQ0UBppkrKY/v6
-         GjKGG4fLQ2qeO97OjwZ5oyEYphRSqmxNF4xHBLKDGEAj3ZmZtEZfaeETkXw8ddKfve4a
-         UtSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743601476; x=1744206276;
-        h=mime-version:message-id:date:user-agent:references:in-reply-to
-         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=M+KPScMUK+AO9N4U8oKua6WTB7J2b7ytXODSOml94Zo=;
-        b=dDIF4rWuUHcvbxoiQk0hgbD9QeHFw4B9Jfmuta8U7BEsvczspgill3BdTw+MY8Q5tQ
-         JI6ppL9u543qNrn9O+pqUUNu5ZQhHbfg3SetecwhyndOUYcFqi6ne/ZZmex8eAZrBTZ5
-         +7vRRb8X9S/uqsPYIpGpuF6x4ka18bEeHOp8NMVPR6NcQdSZw2kBkpsPb6KySOBjPJH1
-         hQ3VFLb7x7dTlfT0kJL1i5qDoNASGtJR+Yne78HgGcz+1VwmGR7/mbvR10kDxmSUXpGR
-         BXzBVPgNlHTwTt0BCY0BZd1EcOfKAKImf/KaFzM8tgbNXpwFryFx2PH13XV/3wD02qLD
-         d1rg==
-X-Forwarded-Encrypted: i=1; AJvYcCX066v5A2qkTACLvjoMDKehKFPya6XeJt9lX5lM/V/R0L+90yuANs4GWge02Dy9QAGL9KgaAEZ19M9ofAM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywr8L+ZFoAmdnnHQD+4J6EFKX4M+TZjBcnnfiPyb4dcYB9+bPmI
-	7KP4/lhyaHI0gvKjFUtlTzwrJOXj1cw2jFW+w+JoRXQfZl4uEqS2/TrNkdTBlOQ=
-X-Gm-Gg: ASbGncuMyiHGWLLAEYIw4Rm9Iuis75a9CgkpeaI63NAanPJaVxiwRSr7CGEYSvsq6j+
-	ESfPQnh40KDRVi5wrxGbgU2UHY/kCFN7rQl8p4osquxB08hjFZWYqdUcxmsJ+5IoPxSneoOxSYg
-	qybBR/I5U4pcvHBp9bvfV/PhUXFFf52xhLjtdldGYgg3D82GkXRauT2P/ClewouAfQcijumIdri
-	QgVaDWCfiFe9lHBn9xh0YSOPpRCPT4ZNwLcgo4AC6Jh94VVGaE8XMpebGkNrx7z4bQPqUgdhEGA
-	s2mhJFXP2aaPo51xv5MaUr7ILMcORf/oYVd9CrKiyyo=
-X-Google-Smtp-Source: AGHT+IH2Shn9J0awqYD8blIWstPWQg0xn0kUnMPetVi0klBHYvCu+x/je/Jcfw4sK2CLrMVB6OxOdA==
-X-Received: by 2002:a5d:6d84:0:b0:39c:dfa:d41f with SMTP id ffacd0b85a97d-39c120cb81fmr11722261f8f.3.1743601475734;
-        Wed, 02 Apr 2025 06:44:35 -0700 (PDT)
-Received: from localhost ([2a01:e0a:3c5:5fb1:bcc0:32e:c479:20d5])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-39c0b7a8e0asm16873922f8f.101.2025.04.02.06.44.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Apr 2025 06:44:35 -0700 (PDT)
-From: Jerome Brunet <jbrunet@baylibre.com>
-To: Frank Li <Frank.li@nxp.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,  Krzysztof
- =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,  Kishon Vijay Abraham I
- <kishon@kernel.org>,
-  Bjorn Helgaas <bhelgaas@google.com>,  Lorenzo Pieralisi
- <lpieralisi@kernel.org>,  Jon Mason <jdmason@kudzu.us>,  Dave Jiang
- <dave.jiang@intel.com>,  Allen Hubbe <allenbh@gmail.com>,  Marek Vasut
- <marek.vasut+renesas@gmail.com>,  Yoshihiro Shimoda
- <yoshihiro.shimoda.uh@renesas.com>,  Yuya Hamamachi
- <yuya.hamamachi.sx@renesas.com>,  linux-pci@vger.kernel.org,
-  linux-kernel@vger.kernel.org,  ntb@lists.linux.dev
-Subject: Re: [PATCH 2/2] PCI: endpoint: pci-epf-vntb: simplify ctrl/spad
- space allocation
-In-Reply-To: <Z+v+Uni7PV9Nlstq@lizhi-Precision-Tower-5810> (Frank Li's message
-	of "Tue, 1 Apr 2025 10:55:14 -0400")
-References: <20250328-pci-ep-size-alignment-v1-0-ee5b78b15a9a@baylibre.com>
-	<20250328-pci-ep-size-alignment-v1-2-ee5b78b15a9a@baylibre.com>
-	<Z+qrWleCthbAfDxf@lizhi-Precision-Tower-5810>
-	<1jr02ctjoh.fsf@starbuckisacylon.baylibre.com>
-	<Z+v+Uni7PV9Nlstq@lizhi-Precision-Tower-5810>
-User-Agent: mu4e 1.12.9; emacs 30.1
-Date: Wed, 02 Apr 2025 15:44:34 +0200
-Message-ID: <1jldsiu18d.fsf@starbuckisacylon.baylibre.com>
+	s=arc-20240116; t=1743601510; c=relaxed/simple;
+	bh=sTRLlDut0NE0rxGw8O3zmmuspwpenBHKz76wLbnjUYM=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=RpzAtX2IfzCA7ncxrV26/HixWeGPw5I+5oZeWkI9OGkmQk1fUTPSz+HUeGxTZG2z7SMfEsP8ZVW/PgwCSfQ0EX4tPq3sECyRc7A4Xzx8laqcpUpfN6uwffx6BvquzQUZlg0YtfAjI6Sl3nHM/8ezKB2UJTGwD5HSD2DxiUo+oEo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZSQxx275yz6M4lj;
+	Wed,  2 Apr 2025 21:41:25 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 2C6391406AD;
+	Wed,  2 Apr 2025 21:45:04 +0800 (CST)
+Received: from A2303104131.china.huawei.com (10.48.153.182) by
+ frapeml500008.china.huawei.com (7.182.85.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Wed, 2 Apr 2025 15:44:59 +0200
+From: Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
+To: <kvmarm@lists.linux.dev>, <linux-arm-kernel@lists.infradead.org>,
+	<oliver.upton@linux.dev>
+CC: <maz@kernel.org>, <mark.rutland@arm.com>, <lpieralisi@kernel.org>,
+	<sudeep.holla@arm.com>, <catalin.marinas@arm.com>,
+	<linux-kernel@vger.kernel.org>
+Subject: [PATCH] smccc/kvm_guest: Remove the accidental semicolon
+Date: Wed, 2 Apr 2025 14:44:01 +0100
+Message-ID: <20250402134401.146156-1-shameerali.kolothum.thodi@huawei.com>
+X-Mailer: git-send-email 2.12.0.windows.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -87,127 +40,32 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Tue 01 Apr 2025 at 10:55, Frank Li <Frank.li@nxp.com> wrote:
+Fixes cocci reported warning:Unneeded semicolon
 
-> On Tue, Apr 01, 2025 at 09:39:10AM +0200, Jerome Brunet wrote:
->> On Mon 31 Mar 2025 at 10:48, Frank Li <Frank.li@nxp.com> wrote:
->>
->> > On Fri, Mar 28, 2025 at 03:53:43PM +0100, Jerome Brunet wrote:
->> >> When allocating the shared ctrl/spad space, epf_ntb_config_spad_bar_alloc()
->> >> should not try to handle the size quirks for the underlying BAR, whether it
->> >> is fixed size or alignment. This is already handled by
->> >> pci_epf_alloc_space().
->> >>
->> >> Also, when handling the alignment, this allocate more space than necessary.
->> >> For example, with a spad size of 1024B and a ctrl size of 308B, the space
->> >> necessary is 1332B. If the alignment is 1MB,
->> >> epf_ntb_config_spad_bar_alloc() tries to allocate 2MB where 1MB would have
->> >> been more than enough.
->> >>
->> >> Just drop all the handling of the BAR size quirks and let
->> >> pci_epf_alloc_space() handle that.
->> >>
->> >> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
->> >> ---
->> >>  drivers/pci/endpoint/functions/pci-epf-vntb.c | 24 ++----------------------
->> >>  1 file changed, 2 insertions(+), 22 deletions(-)
->> >>
->> >> diff --git a/drivers/pci/endpoint/functions/pci-epf-vntb.c b/drivers/pci/endpoint/functions/pci-epf-vntb.c
->> >> index 874cb097b093ae645bbc4bf3c9d28ca812d7689d..c20a60fcb99e6e16716dd78ab59ebf7cf074b2a6 100644
->> >> --- a/drivers/pci/endpoint/functions/pci-epf-vntb.c
->> >> +++ b/drivers/pci/endpoint/functions/pci-epf-vntb.c
->> >> @@ -408,11 +408,9 @@ static void epf_ntb_config_spad_bar_free(struct epf_ntb *ntb)
->> >>   */
->> >>  static int epf_ntb_config_spad_bar_alloc(struct epf_ntb *ntb)
->> >>  {
->> >> -	size_t align;
->> >>  	enum pci_barno barno;
->> >>  	struct epf_ntb_ctrl *ctrl;
->> >>  	u32 spad_size, ctrl_size;
->> >> -	u64 size;
->> >>  	struct pci_epf *epf = ntb->epf;
->> >>  	struct device *dev = &epf->dev;
->> >>  	u32 spad_count;
->> >> @@ -422,31 +420,13 @@ static int epf_ntb_config_spad_bar_alloc(struct epf_ntb *ntb)
->> >>  								epf->func_no,
->> >>  								epf->vfunc_no);
->> >>  	barno = ntb->epf_ntb_bar[BAR_CONFIG];
->> >> -	size = epc_features->bar[barno].fixed_size;
->> >> -	align = epc_features->align;
->> >> -
->> >> -	if ((!IS_ALIGNED(size, align)))
->> >> -		return -EINVAL;
->> >> -
->> >>  	spad_count = ntb->spad_count;
->> >>
->> >>  	ctrl_size = sizeof(struct epf_ntb_ctrl);
->> >
->> > I think keep ctrl_size at least align to 4 bytes.
->>
->> Sure, makes sense
->>
->> > keep align 2^n is more safe to keep spad area start at align
->> > possition.
->>
->> That's something else. Both region are registers (or the emulation of
->> it) so a 32bits aligned is enough, AFAICT.
->>
->> What purpose would 2^n aligned serve ? If it is safer, what's is the risk
->> exactly ?
->
-> After second think, it should be fine if 4 bytes align.
->
-> Frank
+Fixes: 86edf6bdcf05 ("smccc/kvm_guest: Enable errata based on implementation CPUs")
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202504020941.VEeL6nVJ-lkp@intel.com/
+Signed-off-by: Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
+---
+ drivers/firmware/smccc/kvm_guest.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Ok. Thanks for the feedback.
-
-I think the same type of change should probably be applied to the NTB
-endpoint function. It also tries to handle the alignment on its own, but
-that's mixed up with msix doorbell things
-
-I don't have the necessary HW to test that function so it would be a bit
-risky for me to modify it, but it would be nice for the two endpoint
-functions to be somehow aligned, especially since they share the same RC
-side driver.
-
-If anyone is able to help on this, that would be greatly appreciated :)
-
->
->>
->> >
->> > 	ctrl_size = roundup_pow_of_two(sizeof(struct epf_ntb_ctrl));
->> >
->> > Frank
->> >
->> >>  	spad_size = 2 * spad_count * sizeof(u32);
->> >>
->> >> -	if (!align) {
->> >> -		ctrl_size = roundup_pow_of_two(ctrl_size);
->> >> -		spad_size = roundup_pow_of_two(spad_size);
->> >> -	} else {
->> >> -		ctrl_size = ALIGN(ctrl_size, align);
->> >> -		spad_size = ALIGN(spad_size, align);
->> >> -	}
->> >> -
->> >> -	if (!size)
->> >> -		size = ctrl_size + spad_size;
->> >> -	else if (size < ctrl_size + spad_size)
->> >> -		return -EINVAL;
->> >> -
->> >> -	base = pci_epf_alloc_space(epf, size, barno, epc_features, 0);
->> >> +	base = pci_epf_alloc_space(epf, ctrl_size + spad_size,
->> >> +				   barno, epc_features, 0);
->> >>  	if (!base) {
->> >>  		dev_err(dev, "Config/Status/SPAD alloc region fail\n");
->> >>  		return -ENOMEM;
->> >>
->> >> --
->> >> 2.47.2
->> >>
->>
->> --
->> Jerome
-
+diff --git a/drivers/firmware/smccc/kvm_guest.c b/drivers/firmware/smccc/kvm_guest.c
+index 5767aed25cdc..ffe9f3c013df 100644
+--- a/drivers/firmware/smccc/kvm_guest.c
++++ b/drivers/firmware/smccc/kvm_guest.c
+@@ -103,7 +103,7 @@ void  __init kvm_arm_target_impl_cpu_init(void)
+ 		target[i].midr = res.a1;
+ 		target[i].revidr = res.a2;
+ 		target[i].aidr = res.a3;
+-	};
++	}
+ 
+ 	if (!cpu_errata_set_target_impl(max_cpus, target)) {
+ 		pr_warn("Failed to set target implementation CPUs\n");
 -- 
-Jerome
+2.47.0
+
