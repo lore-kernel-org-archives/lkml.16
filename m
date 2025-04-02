@@ -1,55 +1,64 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D87E235358
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 07:08:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 669E220CCE8;
+	Wed,  2 Apr 2025 07:08:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743577704; cv=none; b=Sc8jK5pYZo7rinN2czy2KNd2DNYMUdxoWnt19hx/C8WCOcvHubDekXIB+FK+TBXumnPV+w/0ft6JCvnMZAlsyfjNYww1BHU2PvIjTF8NIHZDIIRUpKsAI2VxM9WfbampcuPSfghN9pXQoVmCUcnqi4qgDRX6rUOiGHL7smaq9iQ=
+	t=1743577709; cv=none; b=lZhoc4YC6DGwvLC63ULmZVu5gaAuIMBn/me9h+OD0SINFwp48KHgypMWeDG9EO1NNGep79ZrKCNA7VfplKs8WvEwHaUsAKY9I69Czh7ot3nPvRioWOyrsIN4OzsWaJvDS6JUajEfiKVypiym1Pu0YJszNxfaYBK3rN8bR85z8R4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743577704; c=relaxed/simple;
-	bh=scO2MWhzghsEBmqX3QWuvXKxtonoPDmNbW3ut34UDEM=;
+	s=arc-20240116; t=1743577709; c=relaxed/simple;
+	bh=V0fOz0lqv2C+VmGCRklE/5cDBz+lCE6+y+wyDB6Z5gE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e0INWH8xQmCpvmKy1VHQvPm4Os3Ht+oKvRVur6DbSIuX2sO7KPka2BitscrApeHGpEc+lucpOdEDH4tqDiaS6suzusJXTlImZOuBoaP+eJvZBkDg0f38nKb3j1RwNv0IkZjQagTnH9ugx7rwUwx0neMlMjzGydeSqP0wG8fajvQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=XkFnafQv; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=bEWpVXxCVmyAkZVl9qJ0uWyCfrgXMgkATuG+gnBerHObeByQ4AHzoi00k9wWN9f5SPF6jwO2RjxZra2ghoN9T4LBm06NvdMClzFBPx6R1ypXhPupU91v+jpWdMHl3mOZyYqSZHZYVonDQgX/hFcOjY2KjVmKJiS+rTS6iDgCDIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RRXeaYZk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="XkFnafQv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A644C4CEDD;
-	Wed,  2 Apr 2025 07:08:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1743577703;
-	bh=scO2MWhzghsEBmqX3QWuvXKxtonoPDmNbW3ut34UDEM=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RRXeaYZk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C052C4CEDD;
+	Wed,  2 Apr 2025 07:08:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743577708;
+	bh=V0fOz0lqv2C+VmGCRklE/5cDBz+lCE6+y+wyDB6Z5gE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XkFnafQvz5FqIufB2gWlj/BBL1LUVHCK//FjRAoOaXW0nC1cyh3WbafPG3dKFRi1Z
-	 FXowxAevB794h2C+gmiXn58i9l+pvBDYOr3ZyMO9rh5IjK3948Yj7D/278idZb98gy
-	 xCAa8RfmVgya46f1VtyGy9VqMQhotp8KCb/+O60Q=
-Date: Wed, 2 Apr 2025 08:06:51 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Siddh Raman Pant <siddh.raman.pant@oracle.com>
-Cc: linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] published: CVE-2025-0927: Rearrange fields in JSON.
-Message-ID: <2025040225-last-kitchen-9035@gregkh>
-References: <80cd3f46783cd5702b3abd40c11f3f08f64717ec.1743576485.git.siddh.raman.pant@oracle.com>
- <93257fe21a95499b59e410f3dd514d287ffc8cdb.1743576485.git.siddh.raman.pant@oracle.com>
+	b=RRXeaYZkNROVdV6DDVqeivBdTPrM9rHSKD+Rk+DSRXqZEWcKJobQIU8uR/5xL0NB1
+	 WTyZoBTdexi9vMrATvf0DvlSYqmxb8J9hun+kCIrZSgzWYSI6irN13LelNKXLXASyY
+	 Qmmgu5Lksd4tOXJEaktSfYZrC2TEDoXYFYazMC59NKCf4CySihoTrGoJ80lGNJMYl0
+	 6HfFCBGx8ayBlwjSXXabb+KzDVnXJX5XcMH/1lyOU7EZYvRhAzr6m4H0/Evhfombm+
+	 b9nuBvpfkDUinDyvpLnKMCwY6n5FlNvKqHIxbsvJDAA9ogg9fpzc3R5ZXVlVgT7g2W
+	 6Ip047SRD3oTA==
+Date: Wed, 2 Apr 2025 09:08:25 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Benjamin Mugnier <benjamin.mugnier@foss.st.com>
+Cc: Sylvain Petinot <sylvain.petinot@foss.st.com>, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] media: dt-bindings: Add ST VD55G1 camera sensor
+ binding
+Message-ID: <20250402-glorious-olive-seahorse-eb505a@krzk-bin>
+References: <20250401-b4-vd55g1-v2-0-0c8ab8a48c55@foss.st.com>
+ <20250401-b4-vd55g1-v2-1-0c8ab8a48c55@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <93257fe21a95499b59e410f3dd514d287ffc8cdb.1743576485.git.siddh.raman.pant@oracle.com>
+In-Reply-To: <20250401-b4-vd55g1-v2-1-0c8ab8a48c55@foss.st.com>
 
-On Wed, Apr 02, 2025 at 12:21:53PM +0530, Siddh Raman Pant wrote:
-> Now that we manually fixed the values, let's rearrange the fields so
-> that it looks like other CVE JSONs.
-> 
-> The order doesn't matter, but it's nice to have it look the same way.
+On Tue, Apr 01, 2025 at 01:05:58PM +0200, Benjamin Mugnier wrote:
+> Also update MAINTAINERS file accordingly.
 
-Again, this was created by vulnogram so let's leave it as-is unless
-there's a good reason to change it at this time.
+Since there will be one more version:
 
-thanks,
+A nit, subject: drop second/last, redundant "binding". The
+"dt-bindings" prefix is already stating that these are bindings.
+See also:
+https://elixir.bootlin.com/linux/v6.7-rc8/source/Documentation/devicetree/bindings/submitting-patches.rst#L18
 
-greg k-h
+Best regards,
+Krzysztof
+
