@@ -1,120 +1,224 @@
-Received: from ida.uls.co.za (ida.uls.co.za [154.73.32.4])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 960C51E570D;
-	Wed,  2 Apr 2025 08:53:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=154.73.32.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58FD12AE77;
+	Wed,  2 Apr 2025 08:53:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743583988; cv=none; b=Hsry/5eHARgzOFLOLPXuaaTxoC2GVsPFuzKySRufQcRQ45En6hx8C8Pch6oL1apTQjq56WuLjJ/3SES9T4wFcxF3u1T6lAwPeU8x2Dr6A/1H8thjzG6SrtYwuiDjIoWEiAhyDD4CNsak9RMNU1gtbsaY1kGmjPyxHFhJEE8uZVk=
+	t=1743583993; cv=none; b=Zd0vMqDiiwAHcGfqDqBRIfETMu7KzrgMuEH0wfqf4HQ6nBG9LT9WlJLbeR9hSxKbHgO+xJKae6C/otpL2ioLLfHFjvc4H32Quv5X3xqXKYvJuoGu1ET3xZqJjV8d2S7gy3eeFb9lCXuaFo0GwqP0ywSO9k5YOp3MLrNN8+KuxDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743583988; c=relaxed/simple;
-	bh=4Wd1pFjhkfUvMqEoDP4TNMiNLHfXrhW0EPQG0Y6rGsQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=s4IPM5Wh8qa5VE+8Ia1MoTZpdV6pXw2EEoOqzZ0npnZpWRrwTItEbOLvz2FFjf4AVTtGl1Qw+UHJGqoTBLE8dDBkXBvcXMuGQsh7mvqs7Djn57CCY58rwIiXaCQCNbLky8nmjDW4jlJw5xtNQn0fA20W/GE7wXlYtsx3BomCJbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uls.co.za; spf=pass smtp.mailfrom=uls.co.za; arc=none smtp.client-ip=154.73.32.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uls.co.za
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uls.co.za
-Received: from [192.168.42.36]
-	by ida.uls.co.za with esmtpsa  (TLS1.3) tls TLS_AES_128_GCM_SHA256
-	(Exim 4.97.1)
-	(envelope-from <jaco@uls.co.za>)
-	id 1tztqB-0000000027F-08XU;
-	Wed, 02 Apr 2025 10:52:55 +0200
-Message-ID: <0cf44936-57ef-42f2-a484-7f69b87b2520@uls.co.za>
-Date: Wed, 2 Apr 2025 10:52:52 +0200
+	s=arc-20240116; t=1743583993; c=relaxed/simple;
+	bh=enC2m4wCkWB+i5kUhd6IO/oEV/Hpy8LrQ8ZLtm0O20s=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=bIOx/FczUjrhFFenad1zd2ML0LeVRScIXu758+JgxT2W2vV1JgYtG4OtP/I8EMMe2wrw3bWldc7Wd12PUWDQvC+dUqFV2OBMc88SLW7M6ZQ1PiSHaFT3PD5mb6g9uw61Hz8fCJHErww8BN91+UwNSWX8yoknH0OhqyFNB8K8RyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oKoCt9Up; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oKoCt9Up"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54D5AC4CEDD;
+	Wed,  2 Apr 2025 08:53:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743583992;
+	bh=enC2m4wCkWB+i5kUhd6IO/oEV/Hpy8LrQ8ZLtm0O20s=;
+	h=From:To:Cc:Subject:Date:From;
+	b=oKoCt9UpxtgwqejJhJT11zZTpI5ruHca4teLQzytbVeU9cKTb81yabw0zrRZqGpkC
+	 wllXxNK0VHF6XTi9NJgyOnFgYSDTS0By2tAlgOI3ZDIpWSzGvOt8mqGHlf5VXApdlt
+	 onRp50Hck4Xrv/5zIa8KlFj9XzH2WUw6ndrfCVhuER7rXfYC46zfvl+yhH6RGZ+EBE
+	 wkaK3/8uFGGQGOryAFBJLTJw2v9j1A2GG2G8BYh3F6ylUWekPGEpAEO8vxGEGK/hr2
+	 tw9eyvB332TJzjapZQgSH0pbbWeAtUBE6SpUbaU2u73PF3MYpaUhomVD+XEUYBuM97
+	 c57tCkEgCqoFw==
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: David Howells <dhowells@redhat.com>
+Cc: keyrings@vger.kernel.org,
+	Jarkko Sakkinen <jarkko.sakkinen@opinsys.com>,
+	Jarkko Sakkinen <jarkko@kernel.org>,
+	Paul Moore <paul@paul-moore.com>,
+	James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	linux-kernel@vger.kernel.org,
+	linux-security-module@vger.kernel.org
+Subject: [RFC PATCH v3] KEYS: Add a list for unreferenced keys
+Date: Wed,  2 Apr 2025 11:52:57 +0300
+Message-Id: <20250402085257.728844-1-jarkko@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] fuse: Adjust readdir() buffer to requesting buffer
- size.
-To: Miklos Szeredi <miklos@szeredi.hu>
-Cc: bernd.schubert@fastmail.fm, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, christophe.jaillet@wanadoo.fr,
- joannelkoong@gmail.com, rdunlap@infradead.org, trapexit@spawn.link,
- david.laight.linux@gmail.com
-References: <20250314221701.12509-1-jaco@uls.co.za>
- <20250401142831.25699-1-jaco@uls.co.za>
- <20250401142831.25699-3-jaco@uls.co.za>
- <CAJfpegtOGWz_r=7dbQiCh2wqjKh59BqzqJ0ruhtYtsYBB+GG2Q@mail.gmail.com>
- <19df312f-06a2-4e71-960a-32bc952b0ed2@uls.co.za>
- <CAJfpegseKMRLpu3-yS6PeU2aTmh_qKyAvJUWud_SLz1aCHY_tw@mail.gmail.com>
- <3f71532b-4fed-458a-a951-f631155c0107@uls.co.za>
- <CAJfpegtutvpYYzkW91SscwULcLt_xHeqCGLPmUHKAjozPAQQ8A@mail.gmail.com>
-Content-Language: en-GB
-From: Jaco Kroon <jaco@uls.co.za>
-Autocrypt: addr=jaco@uls.co.za; keydata=
- xsBNBFXtplYBCADM6RTLCOSPiclevkn/gdf8h9l+kKA6N+WGIIFuUtoc9Gaf8QhXWW/fvUq2
- a3eo4ULVFT1jJ56Vfm4MssGA97NZtlOe3cg8QJMZZhsoN5wetG9SrJvT9Rlltwo5nFmXY3ZY
- gXsdwkpDr9Y5TqBizx7DGxMd/mrOfXeql57FWFeOc2GuJBnHPZQMJsQ66l2obPn36hWEtHYN
- gcUSPH3OOusSEGZg/oX/8WSDQ/b8xz1JKTEgcnu/JR0FxzjY19zSHmbnyVU+/gF3oeJFcEUk
- HvZu776LRVdcZ0lb1bHQB2K9rTZBVeZLitgAefPVH2uERVSO8EZO1I5M7afV0Kd/Vyn9ABEB
- AAHNG0phY28gS3Jvb24gPGphY29AdWxzLmNvLnphPsLAdwQTAQgAIQUCVe2mVgIbAwULCQgH
- AgYVCAkKCwIEFgIDAQIeAQIXgAAKCRAILcSxr/fungCPB/sHrfufpRbrVTtHUjpbY4bTQLQE
- bVrh4/yMiKprALRYy0nsMivl16Q/3rNWXJuQ0gR/faC3yNlDgtEoXx8noXOhva9GGHPGTaPT
- hhpcp/1E4C9Ghcaxw3MRapVnSKnSYL+zOOpkGwye2+fbqwCkCYCM7Vu6ws3+pMzJNFK/UOgW
- Tj8O5eBa3DiU4U26/jUHEIg74U+ypYPcj5qXG0xNXmmoDpZweW41Cfo6FMmgjQBTEGzo9e5R
- kjc7MH3+IyJvP4bzE5Paq0q0b5zZ8DUJFtT7pVb3FQTz1v3CutLlF1elFZzd9sZrg+mLA5PM
- o8PG9FLw9ZtTE314vgMWJ+TTYX0kzsBNBFXtplYBCADedX9HSSJozh4YIBT+PuLWCTJRLTLu
- jXU7HobdK1EljPAi1ahCUXJR+NHvpJLSq/N5rtL12ejJJ4EMMp2UUK0IHz4kx26FeAJuOQMe
- GEzoEkiiR15ufkApBCRssIj5B8OA/351Y9PFore5KJzQf1psrCnMSZoJ89KLfU7C5S+ooX9e
- re2aWgu5jqKgKDLa07/UVHyxDTtQKRZSFibFCHbMELYKDr3tUdUfCDqVjipCzHmLZ+xMisfn
- yX9aTVI3FUIs8UiqM5xlxqfuCnDrKBJjQs3uvmd6cyhPRmnsjase48RoO84Ckjbp/HVu0+1+
- 6vgiPjbe4xk7Ehkw1mfSxb79ABEBAAHCwF8EGAEIAAkFAlXtplYCGwwACgkQCC3Esa/37p7u
- XwgAjpFzUj+GMmo8ZeYwHH6YfNZQV+hfesr7tqlZn5DhQXJgT2NF6qh5Vn8TcFPR4JZiVIkF
- o0je7c8FJe34Aqex/H9R8LxvhENX/YOtq5+PqZj59y9G9+0FFZ1CyguTDC845zuJnnR5A0lw
- FARZaL8T7e6UGphtiT0NdR7EXnJ/alvtsnsNudtvFnKtigYvtw2wthW6CLvwrFjsuiXPjVUX
- 825zQUnBHnrED6vG67UG4z5cQ4uY/LcSNsqBsoj6/wsT0pnqdibhCWmgFimOsSRgaF7qsVtg
- TWyQDTjH643+qYbJJdH91LASRLrenRCgpCXgzNWAMX6PJlqLrNX1Ye4CQw==
-Organization: Ultimate Linux Solutions (Pty) Ltd
-In-Reply-To: <CAJfpegtutvpYYzkW91SscwULcLt_xHeqCGLPmUHKAjozPAQQ8A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Spam-report: Relay access (ida.uls.co.za).
 
-Hi,
+From: Jarkko Sakkinen <jarkko.sakkinen@opinsys.com>
 
-On 2025/04/02 10:18, Miklos Szeredi wrote:
-> On Wed, 2 Apr 2025 at 09:55, Jaco Kroon <jaco@uls.co.za> wrote:
->> Hi,
->>
->> I can definitely build on that, thank you.
->>
->> What's the advantage of kvmalloc over folio's here, why should it be
->> preferred?
-> It offers the best of both worlds: first tries plain malloc (which
-> just does a folio alloc internally for size > PAGE_SIZE) and if that
-> fails, falls back to vmalloc, which should always succeed since it
-> uses order 0 pages.
+Add an isolated list for unreferenced keys, thereby splitting key
+deletion as separate phase, after the reaping cycle. This makes the
+whole process more safe, as these two distinct tasks don't intervene
+each other. As an effect, KEY_FLAG_FINAL_PUT is no longer needed.
 
-So basically assigns the space, but doesn't commit physical pages for 
-the allocation, meaning first access will cause a page fault, and single 
-page allocation at that point in time?  Or is it merely the fact that 
-vmalloc may return a virtual contiguous block that's not physically 
-contiguous?
+Since `security/keys/proc.c` reserves key_serial_lock for variable
+amount of time, `rb_erase()` cannot be done within `key_put()` by using
+IRQ saving/restoring versions of the spin lock functions. For the same
+reason, the key needs to co-exist both in the tree and in the list for
+period of time.
 
-Sorry if I'm asking notoriously dumb questions, I've got a VERY BASIC 
-grasp of memory management at kernel level, I work much more in 
-userspace, and I know there usually first access generates a page fault 
-which will then result in memory being physically allocated by the 
-kernel.  Generally I ignore these complexities and just assume that the 
-"lower down" layers know what they're doing and I've got a "flat, 
-contiguous" memory space, and that malloc knows what it's doing and will 
-communicate with the kernel regarding which regions of virtual space 
-should be mapped.  Love the learning though, so appreciate the feedback 
-very much.
+Therefore, split the union in `struct key` into separate `serial_node`
+and `graveyard_link` fields, and introduce a separate lock for the
+graveyard, which is locked and unlocked using IRQ saving/restoring
+versions of the locking routines.
 
->
-> This saves the trouble of iterating the folio alloc until it succeeds,
-> which is both undeterministic and complex, neither of which is
-> desirable.
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@opinsys.com>
+---
+v3:
+- Using spin_lock() fails since key_put() is executed inside IRQs.
+  Using spin_lock_irqsave() would neither work given the lock is
+  acquired for /proc/keys. Therefore, separate the lock for
+  graveyard and key_graveyard before reaping key_serial_tree.
+v2:
+- Rename key_gc_unused_keys as key_gc_graveyard, and re-document the
+  function.
+---
+ include/linux/key.h      |  7 ++-----
+ security/keys/gc.c       | 34 ++++++++++++++--------------------
+ security/keys/internal.h |  2 ++
+ security/keys/key.c      |  7 +++++--
+ 4 files changed, 23 insertions(+), 27 deletions(-)
 
-Agreed.
+diff --git a/include/linux/key.h b/include/linux/key.h
+index ba05de8579ec..c50659184bdf 100644
+--- a/include/linux/key.h
++++ b/include/linux/key.h
+@@ -195,10 +195,8 @@ enum key_state {
+ struct key {
+ 	refcount_t		usage;		/* number of references */
+ 	key_serial_t		serial;		/* key serial number */
+-	union {
+-		struct list_head graveyard_link;
+-		struct rb_node	serial_node;
+-	};
++	struct list_head	graveyard_link; /* key->usage == 0 */
++	struct rb_node		serial_node;
+ #ifdef CONFIG_KEY_NOTIFICATIONS
+ 	struct watch_list	*watchers;	/* Entities watching this key for changes */
+ #endif
+@@ -236,7 +234,6 @@ struct key {
+ #define KEY_FLAG_ROOT_CAN_INVAL	7	/* set if key can be invalidated by root without permission */
+ #define KEY_FLAG_KEEP		8	/* set if key should not be removed */
+ #define KEY_FLAG_UID_KEYRING	9	/* set if key is a user or user session keyring */
+-#define KEY_FLAG_FINAL_PUT	10	/* set if final put has happened on key */
+ 
+ 	/* the key type and key description string
+ 	 * - the desc is used to match a key against search criteria
+diff --git a/security/keys/gc.c b/security/keys/gc.c
+index f27223ea4578..7b1356c1095d 100644
+--- a/security/keys/gc.c
++++ b/security/keys/gc.c
+@@ -130,9 +130,9 @@ void key_gc_keytype(struct key_type *ktype)
+ }
+ 
+ /*
+- * Garbage collect a list of unreferenced, detached keys
++ * Takes ownership of the given list, and deinitializes and destroys the keys.
+  */
+-static noinline void key_gc_unused_keys(struct list_head *keys)
++static noinline void key_gc_graveyard(struct list_head *keys)
+ {
+ 	while (!list_empty(keys)) {
+ 		struct key *key =
+@@ -206,6 +206,17 @@ static void key_garbage_collector(struct work_struct *work)
+ 
+ 	new_timer = TIME64_MAX;
+ 
++	spin_lock_irqsave(&key_graveyard_lock, flags);
++	list_splice_init(&key_graveyard, &graveyard);
++	spin_unlock_irqrestore(&key_graveyard_lock, flags);
++
++	list_for_each_entry(key, &graveyard, graveyard_link) {
++		spin_lock(&key_serial_lock);
++		kdebug("unrefd key %d", key->serial);
++		rb_erase(&key->serial_node, &key_serial_tree);
++		spin_unlock(&key_serial_lock);
++	}
++
+ 	/* As only this function is permitted to remove things from the key
+ 	 * serial tree, if cursor is non-NULL then it will always point to a
+ 	 * valid node in the tree - even if lock got dropped.
+@@ -218,11 +229,6 @@ static void key_garbage_collector(struct work_struct *work)
+ 		key = rb_entry(cursor, struct key, serial_node);
+ 		cursor = rb_next(cursor);
+ 
+-		if (test_bit(KEY_FLAG_FINAL_PUT, &key->flags)) {
+-			smp_mb(); /* Clobber key->user after FINAL_PUT seen. */
+-			goto found_unreferenced_key;
+-		}
+-
+ 		if (unlikely(gc_state & KEY_GC_REAPING_DEAD_1)) {
+ 			if (key->type == key_gc_dead_keytype) {
+ 				gc_state |= KEY_GC_FOUND_DEAD_KEY;
+@@ -299,7 +305,7 @@ static void key_garbage_collector(struct work_struct *work)
+ 
+ 	if (!list_empty(&graveyard)) {
+ 		kdebug("gc keys");
+-		key_gc_unused_keys(&graveyard);
++		key_gc_graveyard(&graveyard);
+ 	}
+ 
+ 	if (unlikely(gc_state & (KEY_GC_REAPING_DEAD_1 |
+@@ -328,18 +334,6 @@ static void key_garbage_collector(struct work_struct *work)
+ 	kleave(" [end %x]", gc_state);
+ 	return;
+ 
+-	/* We found an unreferenced key - once we've removed it from the tree,
+-	 * we can safely drop the lock.
+-	 */
+-found_unreferenced_key:
+-	kdebug("unrefd key %d", key->serial);
+-	rb_erase(&key->serial_node, &key_serial_tree);
+-	spin_unlock(&key_serial_lock);
+-
+-	list_add_tail(&key->graveyard_link, &graveyard);
+-	gc_state |= KEY_GC_REAP_AGAIN;
+-	goto maybe_resched;
+-
+ 	/* We found a restricted keyring and need to update the restriction if
+ 	 * it is associated with the dead key type.
+ 	 */
+diff --git a/security/keys/internal.h b/security/keys/internal.h
+index 2cffa6dc8255..08f356d04d78 100644
+--- a/security/keys/internal.h
++++ b/security/keys/internal.h
+@@ -66,6 +66,8 @@ struct key_user {
+ extern struct rb_root	key_user_tree;
+ extern spinlock_t	key_user_lock;
+ extern struct key_user	root_key_user;
++extern struct list_head	key_graveyard;
++extern spinlock_t	key_graveyard_lock;
+ 
+ extern struct key_user *key_user_lookup(kuid_t uid);
+ extern void key_user_put(struct key_user *user);
+diff --git a/security/keys/key.c b/security/keys/key.c
+index 7198cd2ac3a3..7511f2017b6b 100644
+--- a/security/keys/key.c
++++ b/security/keys/key.c
+@@ -22,6 +22,8 @@ DEFINE_SPINLOCK(key_serial_lock);
+ 
+ struct rb_root	key_user_tree; /* tree of quota records indexed by UID */
+ DEFINE_SPINLOCK(key_user_lock);
++LIST_HEAD(key_graveyard);
++DEFINE_SPINLOCK(key_graveyard_lock);
+ 
+ unsigned int key_quota_root_maxkeys = 1000000;	/* root's key count quota */
+ unsigned int key_quota_root_maxbytes = 25000000; /* root's key space quota */
+@@ -658,8 +660,9 @@ void key_put(struct key *key)
+ 				key->user->qnbytes -= key->quotalen;
+ 				spin_unlock_irqrestore(&key->user->lock, flags);
+ 			}
+-			smp_mb(); /* key->user before FINAL_PUT set. */
+-			set_bit(KEY_FLAG_FINAL_PUT, &key->flags);
++			spin_lock_irqsave(&key_graveyard_lock, flags);
++			list_add_tail(&key->graveyard_link, &key_graveyard);
++			spin_unlock_irqrestore(&key_graveyard_lock, flags);
+ 			schedule_work(&key_gc_work);
+ 		}
+ 	}
+-- 
+2.39.5
 
-
->
-> Thanks,
-> Miklos
