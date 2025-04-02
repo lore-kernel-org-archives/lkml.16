@@ -1,100 +1,120 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from ida.uls.co.za (ida.uls.co.za [154.73.32.4])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DB781F9F7A;
-	Wed,  2 Apr 2025 08:51:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 960C51E570D;
+	Wed,  2 Apr 2025 08:53:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=154.73.32.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743583873; cv=none; b=jgPm/V8SL/uOpP5hwv6OmcQ6hEb1J3qL/gu11EshQmyjpskXh8bibJVWipiDbSapdmXmgAGFQ5LR1oC49MpkzGgNehmEe0/i0wkRA24Pi8R1t1Za5OgmETkH4tNaTh3WpkJX5dULtsWlavXbYOHLIHrrOMG0eUIJ+3TY3Bp31Io=
+	t=1743583988; cv=none; b=Hsry/5eHARgzOFLOLPXuaaTxoC2GVsPFuzKySRufQcRQ45En6hx8C8Pch6oL1apTQjq56WuLjJ/3SES9T4wFcxF3u1T6lAwPeU8x2Dr6A/1H8thjzG6SrtYwuiDjIoWEiAhyDD4CNsak9RMNU1gtbsaY1kGmjPyxHFhJEE8uZVk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743583873; c=relaxed/simple;
-	bh=2C014mxROCRDtsO04srHF5zNmW+l8l4FbGKJiZ0rRnc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Yj4U5bgXf+V+cVUhYY38Mh6HuK+a5LGO6U7Kv5r2WDhP5pqFvOSOKZYgUCzVoE1A6zbL7Qw41dpfUEdyJUlmbzuCAiucmmn9TGueyAeNxIVQXXI7tDmqNK6WgKqW4ZRT4Q2BaJdu3IfxrBxL/qqlPke8Dwusq/aKRJkm1dt+D7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MmrlQJaq; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MmrlQJaq"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ab771575040so122909466b.1;
-        Wed, 02 Apr 2025 01:51:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743583868; x=1744188668; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=2C014mxROCRDtsO04srHF5zNmW+l8l4FbGKJiZ0rRnc=;
-        b=MmrlQJaqzjSP9GFbGwJ/JCFsdIC7nP+RwhPqBL3wWP+uQpHtSVijDvnQ0bIk+bU5vl
-         8Olv9uxiXiSXDjBWssY5T/hDjR/n3zu2wrRtqDmu3TQQliGtQ1n+6Tun23tw+lzBrOnD
-         kpQjH53cok2d1Mh6yL3TeTer0nBbgSY41FXkSHrzJV0mKPr3RbNxbnyTdxf0ilM3A3hD
-         7olD4MXpk806iUt0pQgedHui1As2QA/ZSg0TGNNAOTkS19j3TE9pG98o2aFQ/ertZC7z
-         atsjAjshwKnUOw+BvfFhagG8O4A3eyu3u2VM5fMFOmsKhIXFWol0BINTuJ36oRIiZD8x
-         xpQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743583868; x=1744188668;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=2C014mxROCRDtsO04srHF5zNmW+l8l4FbGKJiZ0rRnc=;
-        b=mAYcOtSU3Mx6yRk1HZ95D4Wd//PROkEPz1dvAJk9eiRIW6uYNk3avBu0JadP+33rAc
-         1zfpMKqBeFd22rjPaD5L0ZN7+CUdC8zvavjFfvK7lHE5fyo5dP5d7a0KHh1DAJKIpNO+
-         fkH7oiio1VyAP5RvDhJFI7XpjY1hJh8gm9FpPwq3+bK5pF160V2wYDlj3vCAkE8Q//wd
-         bi+/QLgAEHo1E3hnJAmaWIf8QKqsrOCcYFICz1wyN3X/Or2Tv51A0IqqjCWn6/T7lPnz
-         vLNAeDSxGJOOUcXEWwW8BLvRNhdsOkgIv/UiaTR/9smceh9eXK9tOxaP+GrjBEARZx5d
-         F5yw==
-X-Forwarded-Encrypted: i=1; AJvYcCX+ql72Jfe5AQwEEma6w4xsaI0XqUSLY0LtkzBzeRlZGwTc/Wbt60MKepbCics2YV2+nfV45+NoGvot5A==@vger.kernel.org, AJvYcCX4z6hqXlWzjo384DETA8MlLZgNdVyxVRBuVhjtILhrLb7jNABaOZuDO6AUJNaUlk/pfvP78MT5cwBb0J4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywx8SUZIQgs3AJ2sXUoiuU1eTakct2l9Ie8qs3AX0GK7sW1gRu/
-	bUhXuoArulbOUdmbxhXlFPdGJs5ua/DtCVY3G68vsq6M5zLZRYiS
-X-Gm-Gg: ASbGncsp5H3RQgdFq9X9XsaOJVVRWETdH29usHxO85WOlCCmWh9X9dut4Xf7Xvu87p+
-	LUBvnmMi0xD+Ot5Je4sErTQFPjy1hrTcyx1hbz9Cqjh/+uMPRMHjevxogErTDer7r9zj8rwMsQr
-	uLmL4A9blRkVHPqo9pCPV6Sbdf+JgsZh3eTZFuI+nXwIaSMr4ALwssuAJHI6Xoj0b9szI7AteTP
-	GXs6VRvOeB1Imp1Pt0Cv/3ppjI9jEur5wBAAOIQac4av4J84eR9XMH0kjVmhI53Xwu6axGdJUe2
-	fKnn2Hafqh6gBdGpowgXKyFaoFvcD4SjLyojyH8lQauzkT4=
-X-Google-Smtp-Source: AGHT+IF2peLlZz8CtWJ7CfbJ8NEYEHGPninGbEcHAIlNnUR3fipLckbBovlkHaOZmUGNuky8TbYuJA==
-X-Received: by 2002:a17:907:3f29:b0:ac3:ef17:f6f0 with SMTP id a640c23a62f3a-ac7a5a670ebmr96209966b.5.1743583868302;
-        Wed, 02 Apr 2025 01:51:08 -0700 (PDT)
-Received: from [10.176.234.34] ([137.201.254.41])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7192e7d36sm881646466b.77.2025.04.02.01.51.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Apr 2025 01:51:07 -0700 (PDT)
-Message-ID: <1a7a6e077f3750b0385388187cd52010eef4a085.camel@gmail.com>
-Subject: Re: [PATCH v8] ufs: core: Add WB buffer resize support
-From: Bean Huo <huobean@gmail.com>
-To: Huan Tang <tanghuan@vivo.com>, alim.akhtar@samsung.com,
- avri.altman@wdc.com,  bvanassche@acm.org,
- James.Bottomley@HansenPartnership.com,  martin.petersen@oracle.com,
- beanhuo@micron.com, luhongfei@vivo.com,  quic_cang@quicinc.com,
- keosung.park@samsung.com, viro@zeniv.linux.org.uk, 
- quic_mnaresh@quicinc.com, peter.wang@mediatek.com, 
- manivannan.sadhasivam@linaro.org, quic_nguyenb@quicinc.com,
- linux@weissschuh.net,  ebiggers@google.com, minwoo.im@samsung.com,
- linux-kernel@vger.kernel.org,  linux-scsi@vger.kernel.org
-Cc: opensource.kernel@vivo.com
-Date: Wed, 02 Apr 2025 10:51:01 +0200
-In-Reply-To: <20250402075710.224-1-tanghuan@vivo.com>
-References: <20250402075710.224-1-tanghuan@vivo.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-User-Agent: Evolution 3.44.4-0ubuntu2 
+	s=arc-20240116; t=1743583988; c=relaxed/simple;
+	bh=4Wd1pFjhkfUvMqEoDP4TNMiNLHfXrhW0EPQG0Y6rGsQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=s4IPM5Wh8qa5VE+8Ia1MoTZpdV6pXw2EEoOqzZ0npnZpWRrwTItEbOLvz2FFjf4AVTtGl1Qw+UHJGqoTBLE8dDBkXBvcXMuGQsh7mvqs7Djn57CCY58rwIiXaCQCNbLky8nmjDW4jlJw5xtNQn0fA20W/GE7wXlYtsx3BomCJbc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uls.co.za; spf=pass smtp.mailfrom=uls.co.za; arc=none smtp.client-ip=154.73.32.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uls.co.za
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uls.co.za
+Received: from [192.168.42.36]
+	by ida.uls.co.za with esmtpsa  (TLS1.3) tls TLS_AES_128_GCM_SHA256
+	(Exim 4.97.1)
+	(envelope-from <jaco@uls.co.za>)
+	id 1tztqB-0000000027F-08XU;
+	Wed, 02 Apr 2025 10:52:55 +0200
+Message-ID: <0cf44936-57ef-42f2-a484-7f69b87b2520@uls.co.za>
+Date: Wed, 2 Apr 2025 10:52:52 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] fuse: Adjust readdir() buffer to requesting buffer
+ size.
+To: Miklos Szeredi <miklos@szeredi.hu>
+Cc: bernd.schubert@fastmail.fm, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, christophe.jaillet@wanadoo.fr,
+ joannelkoong@gmail.com, rdunlap@infradead.org, trapexit@spawn.link,
+ david.laight.linux@gmail.com
+References: <20250314221701.12509-1-jaco@uls.co.za>
+ <20250401142831.25699-1-jaco@uls.co.za>
+ <20250401142831.25699-3-jaco@uls.co.za>
+ <CAJfpegtOGWz_r=7dbQiCh2wqjKh59BqzqJ0ruhtYtsYBB+GG2Q@mail.gmail.com>
+ <19df312f-06a2-4e71-960a-32bc952b0ed2@uls.co.za>
+ <CAJfpegseKMRLpu3-yS6PeU2aTmh_qKyAvJUWud_SLz1aCHY_tw@mail.gmail.com>
+ <3f71532b-4fed-458a-a951-f631155c0107@uls.co.za>
+ <CAJfpegtutvpYYzkW91SscwULcLt_xHeqCGLPmUHKAjozPAQQ8A@mail.gmail.com>
+Content-Language: en-GB
+From: Jaco Kroon <jaco@uls.co.za>
+Autocrypt: addr=jaco@uls.co.za; keydata=
+ xsBNBFXtplYBCADM6RTLCOSPiclevkn/gdf8h9l+kKA6N+WGIIFuUtoc9Gaf8QhXWW/fvUq2
+ a3eo4ULVFT1jJ56Vfm4MssGA97NZtlOe3cg8QJMZZhsoN5wetG9SrJvT9Rlltwo5nFmXY3ZY
+ gXsdwkpDr9Y5TqBizx7DGxMd/mrOfXeql57FWFeOc2GuJBnHPZQMJsQ66l2obPn36hWEtHYN
+ gcUSPH3OOusSEGZg/oX/8WSDQ/b8xz1JKTEgcnu/JR0FxzjY19zSHmbnyVU+/gF3oeJFcEUk
+ HvZu776LRVdcZ0lb1bHQB2K9rTZBVeZLitgAefPVH2uERVSO8EZO1I5M7afV0Kd/Vyn9ABEB
+ AAHNG0phY28gS3Jvb24gPGphY29AdWxzLmNvLnphPsLAdwQTAQgAIQUCVe2mVgIbAwULCQgH
+ AgYVCAkKCwIEFgIDAQIeAQIXgAAKCRAILcSxr/fungCPB/sHrfufpRbrVTtHUjpbY4bTQLQE
+ bVrh4/yMiKprALRYy0nsMivl16Q/3rNWXJuQ0gR/faC3yNlDgtEoXx8noXOhva9GGHPGTaPT
+ hhpcp/1E4C9Ghcaxw3MRapVnSKnSYL+zOOpkGwye2+fbqwCkCYCM7Vu6ws3+pMzJNFK/UOgW
+ Tj8O5eBa3DiU4U26/jUHEIg74U+ypYPcj5qXG0xNXmmoDpZweW41Cfo6FMmgjQBTEGzo9e5R
+ kjc7MH3+IyJvP4bzE5Paq0q0b5zZ8DUJFtT7pVb3FQTz1v3CutLlF1elFZzd9sZrg+mLA5PM
+ o8PG9FLw9ZtTE314vgMWJ+TTYX0kzsBNBFXtplYBCADedX9HSSJozh4YIBT+PuLWCTJRLTLu
+ jXU7HobdK1EljPAi1ahCUXJR+NHvpJLSq/N5rtL12ejJJ4EMMp2UUK0IHz4kx26FeAJuOQMe
+ GEzoEkiiR15ufkApBCRssIj5B8OA/351Y9PFore5KJzQf1psrCnMSZoJ89KLfU7C5S+ooX9e
+ re2aWgu5jqKgKDLa07/UVHyxDTtQKRZSFibFCHbMELYKDr3tUdUfCDqVjipCzHmLZ+xMisfn
+ yX9aTVI3FUIs8UiqM5xlxqfuCnDrKBJjQs3uvmd6cyhPRmnsjase48RoO84Ckjbp/HVu0+1+
+ 6vgiPjbe4xk7Ehkw1mfSxb79ABEBAAHCwF8EGAEIAAkFAlXtplYCGwwACgkQCC3Esa/37p7u
+ XwgAjpFzUj+GMmo8ZeYwHH6YfNZQV+hfesr7tqlZn5DhQXJgT2NF6qh5Vn8TcFPR4JZiVIkF
+ o0je7c8FJe34Aqex/H9R8LxvhENX/YOtq5+PqZj59y9G9+0FFZ1CyguTDC845zuJnnR5A0lw
+ FARZaL8T7e6UGphtiT0NdR7EXnJ/alvtsnsNudtvFnKtigYvtw2wthW6CLvwrFjsuiXPjVUX
+ 825zQUnBHnrED6vG67UG4z5cQ4uY/LcSNsqBsoj6/wsT0pnqdibhCWmgFimOsSRgaF7qsVtg
+ TWyQDTjH643+qYbJJdH91LASRLrenRCgpCXgzNWAMX6PJlqLrNX1Ye4CQw==
+Organization: Ultimate Linux Solutions (Pty) Ltd
+In-Reply-To: <CAJfpegtutvpYYzkW91SscwULcLt_xHeqCGLPmUHKAjozPAQQ8A@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-report: Relay access (ida.uls.co.za).
 
-T24gV2VkLCAyMDI1LTA0LTAyIGF0IDE1OjU3ICswODAwLCBIdWFuIFRhbmcgd3JvdGU6Cj4gwqAK
-PiAraW50IHVmc2hjZF93Yl9zZXRfcmVzaXplX2VuKHN0cnVjdCB1ZnNfaGJhICpoYmEsIHUzMiBl
-bl9tb2RlKQoKCnlvdSBtdXN0IGVuc3VyZSB0aGUgbW9kZSBlbl9tb2RlIGlzIHdpdGhpbiB2YWxp
-ZCByYW5nZSAoMC0yKSwgd2h5IG5vdAp1c2UgZW51bT8KCgo+ICt7Cj4gK8KgwqDCoMKgwqDCoMKg
-aW50IHJldDsKPiArwqDCoMKgwqDCoMKgwqB1OCBpbmRleDsKPiArCj4gK8KgwqDCoMKgwqDCoMKg
-aW5kZXggPSB1ZnNoY2Rfd2JfZ2V0X3F1ZXJ5X2luZGV4KGhiYSk7Cj4gK8KgwqDCoMKgwqDCoMKg
-cmV0ID0gdWZzaGNkX3F1ZXJ5X2F0dHJfcmV0cnkoaGJhLAo+IFVQSVVfUVVFUllfT1BDT0RFX1dS
-SVRFX0FUVFIsCj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgUVVFUllfQVRUUl9JRE5fV0JfQlVGX1JFU0laRV9FTiwKPiBpbmRl
-eCwgMCwgJmVuX21vZGUpOwo+ICvCoMKgwqDCoMKgwqDCoGlmIChyZXQpCj4gK8KgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoGRldl9lcnIoaGJhLT5kZXYsICIlczogRW5hYmxlIFdCIGJ1ZiBy
-ZXNpemUgb3BlcmF0aW9uCj4gZmFpbGVkICVkXG4iLAo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgX19mdW5jX18sIHJldCk7Cj4gKwo+ICvCoMKgwqDCoMKg
-wqDCoHJldHVybiByZXQ7Cj4gK30KCg==
+Hi,
 
+On 2025/04/02 10:18, Miklos Szeredi wrote:
+> On Wed, 2 Apr 2025 at 09:55, Jaco Kroon <jaco@uls.co.za> wrote:
+>> Hi,
+>>
+>> I can definitely build on that, thank you.
+>>
+>> What's the advantage of kvmalloc over folio's here, why should it be
+>> preferred?
+> It offers the best of both worlds: first tries plain malloc (which
+> just does a folio alloc internally for size > PAGE_SIZE) and if that
+> fails, falls back to vmalloc, which should always succeed since it
+> uses order 0 pages.
+
+So basically assigns the space, but doesn't commit physical pages for 
+the allocation, meaning first access will cause a page fault, and single 
+page allocation at that point in time?  Or is it merely the fact that 
+vmalloc may return a virtual contiguous block that's not physically 
+contiguous?
+
+Sorry if I'm asking notoriously dumb questions, I've got a VERY BASIC 
+grasp of memory management at kernel level, I work much more in 
+userspace, and I know there usually first access generates a page fault 
+which will then result in memory being physically allocated by the 
+kernel.  Generally I ignore these complexities and just assume that the 
+"lower down" layers know what they're doing and I've got a "flat, 
+contiguous" memory space, and that malloc knows what it's doing and will 
+communicate with the kernel regarding which regions of virtual space 
+should be mapped.  Love the learning though, so appreciate the feedback 
+very much.
+
+>
+> This saves the trouble of iterating the folio alloc until it succeeds,
+> which is both undeterministic and complex, neither of which is
+> desirable.
+
+Agreed.
+
+
+>
+> Thanks,
+> Miklos
