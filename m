@@ -1,145 +1,145 @@
-Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27CE5146A6F
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 15:40:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33DCE38DE9;
+	Wed,  2 Apr 2025 15:41:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743608440; cv=none; b=O9tae1lIoymbusazaWYZufOTZn8Jkw/xAwLEDNNXqYAWC+T5rc/Sbi12ZtkM93Srs54lnigHH7+R4YqwnB33Lb13gAWLm2OUJTtyXP6CXdXoD+HF7/ugRMdiitL26+6x+0UmjjAAuz4gSZnxkAsPzI/25KvI3ybWYWYPlVLw8uI=
+	t=1743608474; cv=none; b=PjxDnEaDXMWIHIB/KXiuGO/VgAxs6RGakE3o0HzhbZtZ0hlBxe8NmNMyVWOT5ak0TqZFdSEA60vSmAaiIcMN5KMz5a0U1+yiab9sJL7gSWn4HBopeyi3m5B3rPO/E72/0Td1B/cOimH3OR0Bh5GYpaxNh1At5dhZh83XsDIw+tI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743608440; c=relaxed/simple;
-	bh=m8FqCYRPD/ld4g14kTDKwwpuKk7jdYyYNBQfDGTVyiA=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=iEuo2zJV4I6KE6wSBEA4NiekhxgdJXnUVgTJSiWz01OiMkK3m38lvhkiQk4qDGBECRlZxEYDkRU7Rf8/AkOzCsnxTPHF+zjO8TxpbslZ63zDKVsVw7095bTVCrLPx0msJKUC7pWrimDcFKScpaLV7ftlPe8WhUNVJ8FDaLeu4P0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca; spf=none smtp.mailfrom=ndufresne.ca; dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b=JnhQCe/8; arc=none smtp.client-ip=209.85.219.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ndufresne.ca
+	s=arc-20240116; t=1743608474; c=relaxed/simple;
+	bh=Y/O2DK5Lf6ey6Pfej1vFZZLi5jn02o1oRvHXFQ36iCQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mMtFZ2qzMHrNoUK1pu0vQANDAUhJp2nIHVCvnvrRLV62i5v2K8pT8W9Qe4lDuiKMdvj77DgVh15blIgclSJHLnLRVhKKW/Rdng81+iHr/mUflbJVFIlbjCPYC7UNj7aBoucQ3g018YDZZ+sffRn3MzvUOLVNFrR3s1Uac3zatOA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OH1LsY4q; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b="JnhQCe/8"
-Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6e8f254b875so63760746d6.1
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 08:40:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ndufresne-ca.20230601.gappssmtp.com; s=20230601; t=1743608438; x=1744213238; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PSL4oRGEAPHD9iSzx4FRIOJD2xPfGaZhPkphkR7+6y0=;
-        b=JnhQCe/8hWac9UyRPioZkA8nFlGO8aaoiifbYrZwB3N4/OvG+JvvtMOqHMJlSQVmgz
-         TbX4aM6MnU1RwwH67pdtUGcfDwWpBz5zoQvn9C2QDYmsulZyMacheYvPWrB/1amkdnD1
-         rtQFj9wpXUVunIIU5gVcvSIqB5cH3JUhg5mAv3sPxU+bmHkOVH/RtglzYkOoud3RLszf
-         ieVe/zFRKdzv/Uz3NQALgisK3mDPTFVfgukXzJMeJbaSiqWxKyxXlFVe95bDq3jpH8qt
-         4XHu8/BKJ44bDziTGcvxI5DbqiqT8BQ61gDXTJGcnrnWdrrX8asEFVx2TWoa9P4p5NUJ
-         PuJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743608438; x=1744213238;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=PSL4oRGEAPHD9iSzx4FRIOJD2xPfGaZhPkphkR7+6y0=;
-        b=k093/wXC9OJxcIthnQ3D1YJLYI7schHqqn1bgZHWuiFIUmhy6FRqX5QVaYy+zRRr4J
-         HxUIj+ov7UI9wYoTL6yYU+Le+3SKwPbQUBtZ1ppvuzOcJCAVPUjdRlyAFheoIKSojcgJ
-         5lXNBDl9sq3wKpQsHvAr3m6kIdf16QVRxnTsQGusTH39ERG3DCcuyXYbXZvzgsMA2ru5
-         n1Vn+2DwXQM72aqBCPie8oT54bXFKElOKCDb3p+6FOoDVGKySEKb6Jy2R44mXl5K6EE5
-         lveIDgTXOUmf16REYAF9/94rcgAv7XYOsmRHV6AcMJvYuZdCi/CO2vX1J3izTPuvRNm2
-         4AKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVrDRAEMg/oeUvc2RkzWwCWzcScOhuN/EtWFUEInyxICzIcgxR56O/SeOJUdGEmBsfELohFk6+NXct/XW0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyiWDH8mU79kBFHCQzApPqQB8CmRWiEeCAe2CT2VDapDkzyOkLy
-	7L4KQI0NFaznb4Gc+UywtIi9VjNgRwWMX+UMMZYrUxaYzV5d3vzsz7BvAhnkqNo=
-X-Gm-Gg: ASbGncsvG7gUkNVXXxf2tPonDnm3u4riZz1hRLAiUhMo4R5PV71nN5uaqnfmRsYhkF2
-	Bhgr0n0jlklobqmZcZb+U/AmApm3x32CRDOmUBA4KYgFaXbqKTnShIRRQVWG84fWI3mVWHDXVFQ
-	kpD074ZtdxBBeZpXGlA3hzBjQ8lSYXKxeGHGCsYM/RC+WuoapJfbE/vQc3UTgYbXvXzqVhkEZ2p
-	zFssJf0GixV+1v9cpIbKom/mqLYSnvDUi7uV3WqyG/Wh+wbzQhFqMX2zu3dBIvEN2YNDHVmh674
-	1IE6SAh6DL7lKKAURg2ODZjrWvrpYGA5Nfz41M5Sat6xVMNkXA==
-X-Google-Smtp-Source: AGHT+IF4Dz/stCS5BEC5GFlEUNzvWwaks8m+IIa7woNJtCMmFQbWLxjNz8YenZdUROs678sB7aZKEw==
-X-Received: by 2002:a05:6214:b62:b0:6d8:9ead:c665 with SMTP id 6a1803df08f44-6ef02c92ed5mr46211356d6.27.1743608437967;
-        Wed, 02 Apr 2025 08:40:37 -0700 (PDT)
-Received: from ?IPv6:2606:6d00:11:e976::5ac? ([2606:6d00:11:e976::5ac])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6eec965a1desm75344486d6.60.2025.04.02.08.40.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Apr 2025 08:40:37 -0700 (PDT)
-Message-ID: <14a86f60d026411eb7e4546b8a4879a90f247843.camel@ndufresne.ca>
-Subject: Re: [PATCH] media: mtk-vcodec: Fix reference count leak in
- mtk_vcodec_fw_scp_init
-From: Nicolas Dufresne <nicolas@ndufresne.ca>
-To: Miaoqian Lin <linmq006@gmail.com>, Tiffany Lin
- <tiffany.lin@mediatek.com>,  Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
- Yunfei Dong <yunfei.dong@mediatek.com>, Mauro Carvalho Chehab	
- <mchehab@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Fullway Wang <fullwaywang@outlook.com>, 	linux-media@vger.kernel.org,
- linux-kernel@vger.kernel.org, 	linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org
-Date: Wed, 02 Apr 2025 11:40:36 -0400
-In-Reply-To: <cfc905988dda23078b5086f3eb0975863bbb6c2d.camel@ndufresne.ca>
-References: <20250318110556.903-1-linmq006@gmail.com>
-	 <cfc905988dda23078b5086f3eb0975863bbb6c2d.camel@ndufresne.ca>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.0 (3.56.0-1.fc42) 
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OH1LsY4q"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743608472; x=1775144472;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=Y/O2DK5Lf6ey6Pfej1vFZZLi5jn02o1oRvHXFQ36iCQ=;
+  b=OH1LsY4qizQgV0jbTK7Uekah+5OqsBFcRTO2M19ErtZGnF1hgWR+hnUw
+   ntdbTz9l2LCxStga+Tm1fEJjJ3ttHzwSGJvlDqnC60bJt7eDNAPogAx90
+   Kw571iZ/seT2Ys8zPnV/mAG3p+vj7hTjOy7aKnnM5HgqZfK0REhLmsy6e
+   hLGwd8kawgbJ3ajjJzr3Y0txPSXvO7I/n7WLXa7OsbDFxTblXIo0jNNLI
+   w70Ng5w2WkQDz+2a5xPimzlWXea0tZYMeeqjQlrgJMeLa52DEULEBgeEv
+   i/TG3mdySNB5PqWXArlK8psyr5Mnz2yI7VtvTND0Y7sb/bJz2fSMT6s9+
+   Q==;
+X-CSE-ConnectionGUID: XjAhMAGeSRK0Yx3Ua55o9Q==
+X-CSE-MsgGUID: BX3JQgMKQRGEvaDQrVTTSg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11392"; a="45106889"
+X-IronPort-AV: E=Sophos;i="6.15,182,1739865600"; 
+   d="scan'208";a="45106889"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 08:41:11 -0700
+X-CSE-ConnectionGUID: zHDjNtvDTouroy5OyapFag==
+X-CSE-MsgGUID: S3MiKWOZRGuvNqyyZyUeaQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,182,1739865600"; 
+   d="scan'208";a="131603092"
+Received: from johunt-mobl9.ger.corp.intel.com (HELO [10.124.222.41]) ([10.124.222.41])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 08:41:08 -0700
+Message-ID: <e5770add-9d18-40e1-929d-df7c40f3c7d1@intel.com>
+Date: Wed, 2 Apr 2025 08:41:07 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v1 01/15] x86/msr: Replace __wrmsr() with
+ native_wrmsrl()
+To: Xin Li <xin@zytor.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ Ingo Molnar <mingo@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
+ linux-edac@vger.kernel.org, kvm@vger.kernel.org,
+ xen-devel@lists.xenproject.org, linux-ide@vger.kernel.org,
+ linux-pm@vger.kernel.org, bpf@vger.kernel.org, llvm@lists.linux.dev,
+ tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, x86@kernel.org, jgross@suse.com,
+ andrew.cooper3@citrix.com, peterz@infradead.org, acme@kernel.org,
+ namhyung@kernel.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
+ adrian.hunter@intel.com, kan.liang@linux.intel.com, wei.liu@kernel.org,
+ ajay.kaher@broadcom.com, alexey.amakhalov@broadcom.com,
+ bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
+ pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
+ luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
+ haiyangz@microsoft.com, decui@microsoft.com
+References: <20250331082251.3171276-1-xin@zytor.com>
+ <20250331082251.3171276-2-xin@zytor.com> <Z-pruogreCuU66wm@gmail.com>
+ <9D15DE81-2E68-4FCD-A133-4963602E18C9@zytor.com>
+ <a0254e73-bf7c-4876-b64e-b08e96044666@zytor.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <a0254e73-bf7c-4876-b64e-b08e96044666@zytor.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Le mercredi 02 avril 2025 =C3=A0 11:37 -0400, Nicolas Dufresne a =C3=A9crit=
-=C2=A0:
-> Hi,
->=20
-> Le mardi 18 mars 2025 =C3=A0 19:05 +0800, Miaoqian Lin a =C3=A9crit=C2=A0=
-:
-> > scp_get() returns a reference that needs to be released with scp_put().
-> > Add missing scp_put() before returning error in mtk_vcodec_fw_scp_init(=
-).
-> >=20
-> > Fixes: 53dbe0850444 ("media: mtk-vcodec: potential null pointer deferen=
-ce in SCP")
-> > Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
-> > ---
-> > =C2=A0.../platform/mediatek/vcodec/common/mtk_vcodec_fw_scp.c=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 | 5 +++--
-> > =C2=A01 file changed, 3 insertions(+), 2 deletions(-)
-> >=20
-> > diff --git a/drivers/media/platform/mediatek/vcodec/common/mtk_vcodec_f=
-w_scp.c b/drivers/media/platform/mediatek/vcodec/common/mtk_vcodec_fw_scp.c
-> > index ff23b225db70..11ab3bc60217 100644
-> > --- a/drivers/media/platform/mediatek/vcodec/common/mtk_vcodec_fw_scp.c
-> > +++ b/drivers/media/platform/mediatek/vcodec/common/mtk_vcodec_fw_scp.c
-> > @@ -71,7 +71,6 @@ struct mtk_vcodec_fw *mtk_vcodec_fw_scp_init(void *pr=
-iv, enum mtk_vcodec_fw_use
-> > =C2=A0		pr_err("Invalid fw_use %d (use a reasonable fw id here)\n", fw_=
-use);
-> > =C2=A0		return ERR_PTR(-EINVAL);
-> > =C2=A0	}
-> > -
->=20
-> Might sound nit-picky, but don't do style fixes in patches intended for
-> backports. It increases the chance of conflicts.
->=20
-> > =C2=A0	scp =3D scp_get(plat_dev);
-> > =C2=A0	if (!scp) {
-> > =C2=A0		dev_err(&plat_dev->dev, "could not get vdec scp handle");
-> > @@ -79,8 +78,10 @@ struct mtk_vcodec_fw *mtk_vcodec_fw_scp_init(void *p=
-riv, enum mtk_vcodec_fw_use
-> > =C2=A0	}
-> > =C2=A0
-> > =C2=A0	fw =3D devm_kzalloc(&plat_dev->dev, sizeof(*fw), GFP_KERNEL);
-> > -	if (!fw)
-> > +	if (!fw) {
-> > +		scp_put(scp);
-> > =C2=A0		return ERR_PTR(-ENOMEM);
-> > +	}
->=20
-> With the above style change removed:
->=20
-> Reviewed-by: Nicolas Dufresne <nicolas.dufresne@colllabora.com>
+On 3/31/25 22:53, Xin Li wrote:
+> Per "struct msr" defined in arch/x86/include/asm/shared/msr.h:
+> 
+> struct msr {
+>         union {
+>                 struct {
+>                         u32 l;
+>                         u32 h;
+>                 };
+>                 u64 q;
+>         };
+> };
+> 
+> Probably *msrq() is what we want?
 
-Sorry for the noise, I see that Hans fixed and merged it already.
-
-Nicolas
-
->=20
-> > =C2=A0	fw->type =3D SCP;
-> > =C2=A0	fw->ops =3D &mtk_vcodec_rproc_msg;
-> > =C2=A0	fw->scp =3D scp;
+What would folks think about "wrmsr64()"? It's writing a 64-bit value to
+an MSR and there are a lot of functions in the kernel that are named
+with the argument width in bits.
