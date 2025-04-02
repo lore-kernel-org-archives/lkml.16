@@ -1,127 +1,108 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from ssh247.corpemail.net (ssh247.corpemail.net [210.51.61.247])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C81F7235BF0;
-	Wed,  2 Apr 2025 09:43:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA8031E8837;
+	Wed,  2 Apr 2025 09:43:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.51.61.247
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743586983; cv=none; b=Duw3LpzIozV1u6uljuVKJXGNFEvHXI8x1EgfcQjGS7GRWMnYMFyPiH6G0upo27VbsbA57CX7TdPzZRLzdPxgjF08jyVH9pqEQZi5T8iUnpdLV9BVyEbGSrfs1pAkckykzOCSXZdvzB7Mqt+jqcMuODasMKeG5MbXV2fNLbM3CdY=
+	t=1743587040; cv=none; b=BOyTrmTdSmy8UwAY7xFU0CGswg9/TUThM4fFeqClTmKRtv7WEhehRHCvIwavdZ+M0PVjbCO4+ePvJCh2bXXAW+OCTsz40H1+MPdyhHMXMeVuaNSCDK8NXJPNuBIbumlwEtDjk2nnQ4u074o0aaFVDX3FLZ8OtmW4RiD1aEMNnpc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743586983; c=relaxed/simple;
-	bh=aNG+jrxFlonmhDgmPxRzvRwJIMZz5s0z+WZcxhuZUwI=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
-	 In-Reply-To:Content-Type; b=BGAGYprnJwH9xUOpva5Hjwa2T0IeQqF05iEiGBwrTFqR5rp4bn9SpR6A8UpW7NksiJ16UuKQ880k3yynSkqkBwDnOUDIvuIPF39c07faXajT855JkGI4JDr+4qlHIjicEZSSY+z/o8mNsDg+K/lVU7/HS4+vSDn1Wafbb0UUZEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=oPD1odEV; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="oPD1odEV"
-Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5328CrcH010752;
-	Wed, 2 Apr 2025 11:42:53 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	3rNfCsM7ceeWvKyul5GHwiFF6qapfQZjGVJxNuVdVbU=; b=oPD1odEVldP1owBg
-	cMUQui198Zm+92F5iaH64PgvtuPXe+AGG5tP9HNHjWt1K4PQq3W4wC7g5FdnxyQp
-	3nU69ijGGDYMTBArUa4v+kyknZxqgpvvUZFWIZOIWX+fiJqh4xbqDZK1l2jsdUK2
-	TdJ+G2iF1n5s36vCw8Hbcw6bKbmbWT7F7df0wv6iXQCJQjR+guuallMPX/Vfuulm
-	lK8yGd/kj0URjM22qPo2waPRQRwV1xBQAlqN0dXlRBYt0GMddcRVP/9MaP4Sb1fM
-	+ID+Il4EFD7glnViz4KnDgBwRR8r7608vh78zLwRORHRClkxeGIucJccFvaSTGmu
-	Wd2dZQ==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 45p75qadm7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 02 Apr 2025 11:42:53 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 79EAF4004C;
-	Wed,  2 Apr 2025 11:42:02 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 2612D8A1420;
-	Wed,  2 Apr 2025 11:41:27 +0200 (CEST)
-Received: from [10.252.30.87] (10.252.30.87) by SHFDAG1NODE1.st.com
- (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 2 Apr
- 2025 11:41:26 +0200
-Message-ID: <7d501bf2-a017-4c02-a96f-184a7d648b6a@foss.st.com>
-Date: Wed, 2 Apr 2025 11:41:25 +0200
+	s=arc-20240116; t=1743587040; c=relaxed/simple;
+	bh=tLnHDvXP/BIczRM9DMQPzPHkFUZUWfwXeFQNa1rWq1M=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=k579yajYhsWKU+pkdEBbe3NDMA03jm2EqtOvexUdeqF0OlAhr2I6L+b/ht8KmUUnR0nlwIXY4I/SN6EL7PkfLRXUw6GnKHWBz40upRlsiMkLcJySaikD+iK7FnBEOAdslvq7FITkXvRJjYxmZIWyrrRroPZg0cPmiub4t9b6Yow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com; spf=pass smtp.mailfrom=inspur.com; arc=none smtp.client-ip=210.51.61.247
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inspur.com
+Received: from jtjnmail201609.home.langchao.com
+        by ssh247.corpemail.net ((D)) with ASMTP (SSL) id 202504021743468888;
+        Wed, 02 Apr 2025 17:43:46 +0800
+Received: from jtjnmail201607.home.langchao.com (10.100.2.7) by
+ jtjnmail201609.home.langchao.com (10.100.2.9) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Wed, 2 Apr 2025 17:43:45 +0800
+Received: from locahost.localdomain.com (10.94.17.92) by
+ jtjnmail201607.home.langchao.com (10.100.2.7) with Microsoft SMTP Server id
+ 15.1.2507.39; Wed, 2 Apr 2025 17:43:44 +0800
+From: Charles Han <hanchunchao@inspur.com>
+To: <saeedm@nvidia.com>, <leon@kernel.org>, <tariqt@nvidia.com>,
+	<andrew+netdev@lunn.ch>, <davem@davemloft.net>, <edumazet@google.com>,
+	<kuba@kernel.org>, <pabeni@redhat.com>, <markzhang@nvidia.com>,
+	<mbloch@nvidia.com>
+CC: <netdev@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, Charles Han <hanchunchao@inspur.com>
+Subject: [PATCH] net/mlx5: fix potential null dereference when enable shared FDB
+Date: Wed, 2 Apr 2025 17:43:42 +0800
+Message-ID: <20250402094342.3559-1-hanchunchao@inspur.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] media: dt-bindings: Add ST VD55G1 camera sensor
- binding
-From: Benjamin Mugnier <benjamin.mugnier@foss.st.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-CC: Sylvain Petinot <sylvain.petinot@foss.st.com>,
-        Mauro Carvalho Chehab
-	<mchehab@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Sakari Ailus
-	<sakari.ailus@linux.intel.com>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20250401-b4-vd55g1-v2-0-0c8ab8a48c55@foss.st.com>
- <20250401-b4-vd55g1-v2-1-0c8ab8a48c55@foss.st.com>
- <20250402-curvy-seriema-of-blizzard-b1c4d9@krzk-bin>
- <228ddf41-e1d0-4d06-9e0e-9e0dad841688@foss.st.com>
- <fd874f4d-d68c-4443-8bb6-115246f4407b@kernel.org>
- <a0c62797-3c4c-453c-938b-d43666f3b264@foss.st.com>
-Content-Language: en-US
-In-Reply-To: <a0c62797-3c4c-453c-938b-d43666f3b264@foss.st.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-02_03,2025-04-01_01,2024-11-22_01
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+tUid: 2025402174346bccee3f803b545c68e0e4ab65b987d72
+X-Abuse-Reports-To: service@corp-email.com
+Abuse-Reports-To: service@corp-email.com
+X-Complaints-To: service@corp-email.com
+X-Report-Abuse-To: service@corp-email.com
 
+mlx5_get_flow_namespace() may return a NULL pointer, dereferencing it
+without NULL check may lead to NULL dereference.
+Add a NULL check for ns.
 
+Fixes: db202995f503 ("net/mlx5: E-Switch, add logic to enable shared FDB")
+Signed-off-by: Charles Han <hanchunchao@inspur.com>
+---
+ .../net/ethernet/mellanox/mlx5/core/eswitch_offloads.c | 10 ++++++++++
+ drivers/net/ethernet/mellanox/mlx5/core/fs_cmd.c       |  5 +++++
+ 2 files changed, 15 insertions(+)
 
-On 4/2/25 11:38, Benjamin Mugnier wrote:
-> On 4/2/25 11:11, Krzysztof Kozlowski wrote:
->> On 02/04/2025 10:34, Benjamin Mugnier wrote:
->>> Hi Krzysztof,
->>>
->>> On 4/2/25 09:08, Krzysztof Kozlowski wrote:
->>>> On Tue, Apr 01, 2025 at 01:05:58PM +0200, Benjamin Mugnier wrote:
->>>>> +    properties:
->>>>> +      endpoint:
->>>>> +        $ref: /schemas/media/video-interfaces.yaml#
->>>>> +        unevaluatedProperties: false
->>>>> +
->>>>> +        properties:
->>>>> +          data-lanes:
->>>>> +            items:
->>>>> +              const: 1
->>>>
->>>> Not what I asked. Now you miss number of items. Just use the syntax I
->>>> proposed. Or was there any issue with it?
->>>
->>> No issue I just misunderstood and thought const: 1 was impliying
->>> maxItems: 1. I'll add maxItems back.
->>
->> That's just longer way to express what I asked for. So I repeat the
->> question: why not using the syntax I asked for?
-> 
-> I guess I didn't understand what you asked for.
-> May I ask you to write it ? That will help me a lot.
-
-By 'it' I mean the binding.
-
-> 
->>
->> Best regards,
->> Krzysztof
-> 
-
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c b/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c
+index a6a8eea5980c..dc58e4c2d786 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c
+@@ -2667,6 +2667,11 @@ static int esw_set_slave_root_fdb(struct mlx5_core_dev *master,
+ 	if (master) {
+ 		ns = mlx5_get_flow_namespace(master,
+ 					     MLX5_FLOW_NAMESPACE_FDB);
++		if (!ns) {
++			mlx5_core_warn(master, "Failed to get flow namespace\n");
++			return -EOPNOTSUPP;
++		}
++
+ 		root = find_root(&ns->node);
+ 		mutex_lock(&root->chain_lock);
+ 		MLX5_SET(set_flow_table_root_in, in,
+@@ -2679,6 +2684,11 @@ static int esw_set_slave_root_fdb(struct mlx5_core_dev *master,
+ 	} else {
+ 		ns = mlx5_get_flow_namespace(slave,
+ 					     MLX5_FLOW_NAMESPACE_FDB);
++		if (!ns) {
++			mlx5_core_warn(slave, "Failed to get flow namespace\n");
++			return -EOPNOTSUPP;
++		}
++
+ 		root = find_root(&ns->node);
+ 		mutex_lock(&root->chain_lock);
+ 		MLX5_SET(set_flow_table_root_in, in, table_id,
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/fs_cmd.c b/drivers/net/ethernet/mellanox/mlx5/core/fs_cmd.c
+index a47c29571f64..18e59f6a0f2d 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/fs_cmd.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/fs_cmd.c
+@@ -186,6 +186,11 @@ static int mlx5_cmd_set_slave_root_fdb(struct mlx5_core_dev *master,
+ 	} else {
+ 		ns = mlx5_get_flow_namespace(slave,
+ 					     MLX5_FLOW_NAMESPACE_FDB);
++		if (!ns) {
++			mlx5_core_warn(slave, "Failed to get flow namespace\n");
++			return -EOPNOTSUPP;
++		}
++
+ 		root = find_root(&ns->node);
+ 		MLX5_SET(set_flow_table_root_in, in, table_id,
+ 			 root->root_ft->id);
 -- 
-Regards,
-Benjamin
+2.43.0
+
