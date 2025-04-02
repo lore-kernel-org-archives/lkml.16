@@ -1,191 +1,596 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2066.outbound.protection.outlook.com [40.107.22.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CC54238D49
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 12:24:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743596690; cv=none; b=fGskkX0v7DYCsuQJxa5ptUsCgdebRC6ae942OcgKObaqmZ4jUKobgdWtOYfCHAptr25WuMwh7M6bbaJu7nTofhJWqDir+rJe9R0ewcRN3lBy0hmoWc1OBsa7LlvPcs8vOCN9/LxJlLipy/g99p8ShSSQvotj/TWC7LSOqhwE1Lc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743596690; c=relaxed/simple;
-	bh=LqeonuKBobu5rkPqsZ3oev/LqKwXyYHgqrbMyezVleA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kfilH5NZyrP24MIJj1lNuURxIkVjdfuT0n2kW+alLL6lCCfNZcTwbxJmtK1Nx1ebM/mDfbb3xmxfr/Qyf95KN5K/iUlOHUuHuxN6PyWNGR6djYWmifJazRmeH3Hf6GDVTcZ62kNmy3V49d69L5YoWct8trmUECdZtN4+GZD7svg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=PVuc/GpR; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6DBB23814E
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 12:26:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.66
+ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743596815; cv=fail; b=Fn1QwlLqKbjLrJxlbnA8hcmwmWEeYYRYaTMpgEex0Zv4ejgNUVpnsMFvZaAIvUo5s8R+4XGkdMFAE9hZsd/YFS1ZUjFBdkCNpi0q9G1WS/Qzs4KgGK9qvoL5HB1yZ5049gV5upD4SCSSxeGPzB4gtwVykBMsuzGXfk3+Ape7Zbo=
+ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743596815; c=relaxed/simple;
+	bh=2CIMxGz4IAyHE0Eq2WnhgFxmUlA2Ux/eC4WgIiYzLHU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=uwKrk+BjYmWlMVzNidDXnoasmWSHjh5/gN+R83JsDQ4RCBFoLpKwmNWb1u4TrNAdDuJmAuC5t0J0yvgzXE8DaTcZKLafJid/+O/rZuQuBZd8zyyTQVp3DEfyIRMNOPF+KmFOo7iABxIKgaWF7BNVIS023w7Rd0leSbkM8QC3sMY=
+ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=fMG6nY1b; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=fMG6nY1b; arc=fail smtp.client-ip=40.107.22.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="PVuc/GpR"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-39c0dfba946so2934980f8f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 05:24:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1743596686; x=1744201486; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=KRFn/kYndNELtCs9bm4l6TqR46CF9PJ02S18fDZOVDM=;
-        b=PVuc/GpR/uh9AFQgPx3tcXmeHnFdrN/PnvAUg6a6fRE8lEmdzP8aWLwFUyAYnaOxno
-         zQzq06NQWgui9LTQcfDvsaQn1saezlzon7BGn/PkWPIXS4dBrHPGwDOYJArxnsSwatkf
-         GOK4Who+Cok8A2NeuBsxI4PWlK1fz+m1VYc1s1u3mbN74J4R8Bf55uJsAt4j30tuNX8t
-         VYvt0l7KqvHMpOz+aA5CU737KMWueyEWt5wtPJYYbKnH/SPeKB0lP2F3A9RVGKZSV5hY
-         Ldap9H6VBb/0UuW+oZzShgx2CwVgmHW/B36q8RCpqM+goQI1mO0uweem4FuNRlLQGZeN
-         4ZGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743596686; x=1744201486;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KRFn/kYndNELtCs9bm4l6TqR46CF9PJ02S18fDZOVDM=;
-        b=ZPYWtDPOpufV+jQfOKJiUvZKptzl0B8RyddZSIYhyENFK3Y3u3OVTKr78FL4DONuMm
-         zdGrRS8L4wIOSVQ9F+O+ehlApikVSn7CKdEVAdgbZbGDYk4zokniUodGCojcW3c2L6aW
-         pTXWhy2Zb51SrkZNVsQUxUq8+OHKNF3DpY1LDa5hjfin6aIyDPV20o7x6nNr+Or7CzKW
-         fM6Ap8l19U19gCJ6/VY2wQn9BQAPK64HjWxbDGrZGCfae8nViGRKdzE6TPGDjHYYNw/M
-         inrTjYutE13UrazxQfvll4LrQyK7FKCJJb2wGzmUm7FHpJo+UxrTH4gL73TUm1sHIGAL
-         4hOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUoxNpI+0h44aFIH789bGq9FbqBmGg9zvrCbUCkoQgMSvNSci0RUDtlvaPGwCk1xCuS8TxLZEH6fXUiJis=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzUzz8aXGIvFEDw57lhK6bw9ZLr9T+gy9zrGpvageCS7uh/IOtu
-	0GJoJBNg9+QSjiGN/76UpipiCAGTXcmR/3KHVONZqXH5gd13DfTB+kmyuK1Bf6+wU/HuHMAMtJK
-	x
-X-Gm-Gg: ASbGncsqob9fikRaPv+qGhZAAcdjnwfaSnEzBrzvI9eSVd0HGuw5Md4I6lU72Zrtqgn
-	h6Xq4ijRSXslDV9iT52UfWluIuxBw+ccWOUulYIMKZ0WY7BKz6WCfKeRngc21n8XQZ3UtjsgHb4
-	wNjHDA8kaf6lrRy/RoXkc+lKScKxiUGxW6xnYUGCfe1NaT2NkP/MGqD6zpXvrjvGE8htSBoG2LU
-	xb6OFMHG5Ghe6C+FxV2yn/2IsLID48NBfU0oAchWEjE4+zjLoPhy488hyG60IKvaczrxENZ//Kv
-	x/8awR7W0OL/tmRbezvS9SAx9o8zeRRiiQZ29il64d8qDmsi8ItQ/zc4tOeJqJA9+4Z4
-X-Google-Smtp-Source: AGHT+IH94G8NMZggEmYTqBe2slfssz4AV4QqXUWOJ4XU66EOBQZvQTodDOoaZK39wpDvzUvmqsjg2Q==
-X-Received: by 2002:a5d:59a2:0:b0:399:71d4:a2 with SMTP id ffacd0b85a97d-39c120de28cmr14089922f8f.14.1743596686324;
-        Wed, 02 Apr 2025 05:24:46 -0700 (PDT)
-Received: from localhost (109-81-92-185.rct.o2.cz. [109.81.92.185])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-43eb6135dc4sm19179155e9.33.2025.04.02.05.24.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Apr 2025 05:24:46 -0700 (PDT)
-Date: Wed, 2 Apr 2025 14:24:45 +0200
-From: Michal Hocko <mhocko@suse.com>
-To: Dave Chinner <david@fromorbit.com>
-Cc: Yafang Shao <laoar.shao@gmail.com>, Harry Yoo <harry.yoo@oracle.com>,
-	Kees Cook <kees@kernel.org>, joel.granados@kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Josef Bacik <josef@toxicpanda.com>, linux-mm@kvack.org,
-	Vlastimil Babka <vbabka@suse.cz>
-Subject: Re: [PATCH] proc: Avoid costly high-order page allocations when
- reading proc files
-Message-ID: <Z-0sjd8SEtldbxB1@tiehlicka>
-References: <20250401073046.51121-1-laoar.shao@gmail.com>
- <3315D21B-0772-4312-BCFB-402F408B0EF6@kernel.org>
- <Z-y50vEs_9MbjQhi@harry>
- <CALOAHbBSvMuZnKF_vy3kGGNOCg5N2CgomLhxMxjn8RNwMTrw7A@mail.gmail.com>
- <Z-0gPqHVto7PgM1K@dread.disaster.area>
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="fMG6nY1b";
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="fMG6nY1b"
+ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
+ b=e2f0TV3jLf50srrA6IUzQ9pz+iWd6Up2HzH2MTQ7wRKzZ5ayM96r6X4+heX9xNI1pCWesptfn7nHLimC1+c6hJ9jpAg6ECgbwiWWmimJIfHDxU1lDLsauW2ezO6PYxG3NFAqQ0RY4cM3UhHc15AsyXpeIh2z3ms8R+TDf7IPWtymnzK4tGahcpOQ+D5I4eluAa0enNapoxiaq859KGce0jYBvAAuCWJ9JH5eevk7SRQl3Y5/fFwcbSZEZPTLOvMG3p/fPwJDiQba7v90JrjRRobENiSRFaq2kxhqAxYFiqTolyeAoLYNo8C9uKYArzonC2h6GWt5lElVMoOHMGBrmg==
+ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Mgarb0RcEqQSnR6PRZ2VQeYomxvV4nAWvVAf6OVFD1Y=;
+ b=adMgVC3C9o7AUf6RQM+mkrduNnCbY2pGHHFIhJW1NRrlVVNnZboxYOerQIiAL0GkrEBgrMa9vqZb9uxj1wmru6E+ZKVgFMO7yH2NzMxq2qINvKr1kbo6L88aXzzMegnyM3PFXeRJmje5oLMEjWsoznmaBdF1UJ42Jk5B4AZ8SZ8q14OUMr0syPJ3TKua30USFf731HkVLbbM45T9SLPCv12CKtWDqElvP+pr2ECS4P1aZhqv04AYtFyQtT6x1oF7kNjSsMZC13MAC+Rhn8EmTl6y3A5Y1XngIMXjuuXSkhl13pll9jx7Y2bWCe6+5QjEoA2irsjDzvI/PU5Fiv0tng==
+ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=fail (sender ip is
+ 4.158.2.129) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=arm.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=arm.com;
+ dkim=pass (signature was verified) header.d=arm.com; arc=pass (0 oda=0
+ ltdi=1)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Mgarb0RcEqQSnR6PRZ2VQeYomxvV4nAWvVAf6OVFD1Y=;
+ b=fMG6nY1b4GnmaUvDLAuI3o0z2snGKYa7GIXVbvw8z+DrWbyd+xWvlH9dV2d6q4eW23DHL5ozBWUirgI5ymN/cM0IRYB//CLkzEgdSS7a/yxjFkYthUi2MEb3d3nc7zriLJqvlk3tKLTCdHKKop5jtXe8xMdVMHhC+lzHZUFzFlw=
+Received: from DU7P250CA0030.EURP250.PROD.OUTLOOK.COM (2603:10a6:10:54f::34)
+ by DU4PR08MB11175.eurprd08.prod.outlook.com (2603:10a6:10:574::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Wed, 2 Apr
+ 2025 12:26:49 +0000
+Received: from DU2PEPF0001E9C5.eurprd03.prod.outlook.com
+ (2603:10a6:10:54f:cafe::89) by DU7P250CA0030.outlook.office365.com
+ (2603:10a6:10:54f::34) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8583.41 via Frontend Transport; Wed,
+ 2 Apr 2025 12:26:49 +0000
+X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 4.158.2.129)
+ smtp.mailfrom=arm.com; dkim=pass (signature was verified)
+ header.d=arm.com;dmarc=pass action=none header.from=arm.com;
+Received-SPF: Fail (protection.outlook.com: domain of arm.com does not
+ designate 4.158.2.129 as permitted sender) receiver=protection.outlook.com;
+ client-ip=4.158.2.129; helo=outbound-uk1.az.dlp.m.darktrace.com;
+Received: from outbound-uk1.az.dlp.m.darktrace.com (4.158.2.129) by
+ DU2PEPF0001E9C5.mail.protection.outlook.com (10.167.8.74) with Microsoft SMTP
+ Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8606.22 via
+ Frontend Transport; Wed, 2 Apr 2025 12:26:49 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Gl0M3yBzgZ3T3LVOnpuHiEGomrvw5zVAR3Ni8SzEZcYFnoDRWp58eIYea4qJ0pE630cx8hxGYm643SknOtgNFefeEYpuDIA2EL4z5+Ir128rb3+sibAGmFjlyviNhWltzDzNAKpSVxIo9r98+NgdWXhOCgsqFJM6WVN1dusNx48kRmmUuCPl58dnazXYFXXD+a9Wjou66Dp4aw5zClL3UBdwPX4XaTfF6V/p+M5rpe8eHKqntDneoSnja5y+j7J1Qltn67xz8SUGGKDG6Hv/xtiAbRlt60X/128pTputACnvbgeYmPGzYoB1MH+RcXWHB926J2tZMoIUf5K7BHqxHg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Mgarb0RcEqQSnR6PRZ2VQeYomxvV4nAWvVAf6OVFD1Y=;
+ b=tURKVP9XvQpUvLffJoZwZsr1H6aYKVw9QWyV9nrXa2KUAKC4i2B2Kvn9Wzi3wjH8V5+GAkmOds8DJlFoDeHDR6Ypt7DrHkNLU2wLxHhuywUPy+OyDjqoTV9rnrQ9iOX1oEiKq4ACFq0UZic1LIWkNrIIYDkxXg7ohPN1gNgkofWc96AVu6ZODihboxHh9bp3M7hruu73gJ5C7Itw96NYp57yulha++UK8DOfg9zsYIatlCEaObWAo+wSJteb3PL8CosjyREeY3sX6A2HUNydWXNny/T5Bpp41eo3327QyFrIr2WtHYlXY81+spo+g0OxO79HQCiVo6Eb6EB5YK4jSg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
+ 172.205.89.229) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=arm.com;
+ dmarc=fail (p=none sp=none pct=100) action=none header.from=arm.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Mgarb0RcEqQSnR6PRZ2VQeYomxvV4nAWvVAf6OVFD1Y=;
+ b=fMG6nY1b4GnmaUvDLAuI3o0z2snGKYa7GIXVbvw8z+DrWbyd+xWvlH9dV2d6q4eW23DHL5ozBWUirgI5ymN/cM0IRYB//CLkzEgdSS7a/yxjFkYthUi2MEb3d3nc7zriLJqvlk3tKLTCdHKKop5jtXe8xMdVMHhC+lzHZUFzFlw=
+Received: from DUZPR01CA0053.eurprd01.prod.exchangelabs.com
+ (2603:10a6:10:469::11) by GV2PR08MB7954.eurprd08.prod.outlook.com
+ (2603:10a6:150:a8::20) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Wed, 2 Apr
+ 2025 12:26:14 +0000
+Received: from DU2PEPF0001E9C5.eurprd03.prod.outlook.com
+ (2603:10a6:10:469:cafe::19) by DUZPR01CA0053.outlook.office365.com
+ (2603:10a6:10:469::11) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8583.42 via Frontend Transport; Wed,
+ 2 Apr 2025 12:26:14 +0000
+X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 172.205.89.229)
+ smtp.mailfrom=arm.com; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=none header.from=arm.com;
+Received-SPF: Fail (protection.outlook.com: domain of arm.com does not
+ designate 172.205.89.229 as permitted sender)
+ receiver=protection.outlook.com; client-ip=172.205.89.229;
+ helo=nebula.arm.com;
+Received: from nebula.arm.com (172.205.89.229) by
+ DU2PEPF0001E9C5.mail.protection.outlook.com (10.167.8.74) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8606.22 via Frontend Transport; Wed, 2 Apr 2025 12:26:14 +0000
+Received: from AZ-NEU-EX06.Arm.com (10.240.25.134) by AZ-NEU-EX06.Arm.com
+ (10.240.25.134) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 2 Apr
+ 2025 12:26:10 +0000
+Received: from e129171.arm.com (10.57.71.10) by mail.arm.com (10.240.25.134)
+ with Microsoft SMTP Server id 15.1.2507.39 via Frontend Transport; Wed, 2 Apr
+ 2025 12:26:10 +0000
+From: Luis Machado <luis.machado@arm.com>
+To: <linux-kernel@vger.kernel.org>, <peterz@infradead.org>,
+	<dietmar.eggemann@arm.com>
+CC: <mingo@redhat.com>, <juri.lelli@redhat.com>, <vincent.guittot@linaro.org>,
+	<rostedt@goodmis.org>, <bsegall@google.com>, <mgorman@suse.de>,
+	<vschneid@redhat.com>
+Subject: [RFC] sched: Improving scheduler debugging/tracing interfaces
+Date: Wed, 2 Apr 2025 13:26:07 +0100
+Message-ID: <20250402122607.2982523-1-luis.machado@arm.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z-0gPqHVto7PgM1K@dread.disaster.area>
+X-EOPAttributedMessage: 1
+X-MS-TrafficTypeDiagnostic:
+	DU2PEPF0001E9C5:EE_|GV2PR08MB7954:EE_|DU2PEPF0001E9C5:EE_|DU4PR08MB11175:EE_
+X-MS-Office365-Filtering-Correlation-Id: decb91b1-be05-4891-d451-08dd71e1a476
+x-checkrecipientrouted: true
+NoDisclaimer: true
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam-Untrusted:
+ BCL:0;ARA:13230040|376014|82310400026|36860700013|1800799024;
+X-Microsoft-Antispam-Message-Info-Original:
+ =?utf-8?B?eWFkWE5UOTh4b2trOXFQSFJaMnF3eElVUkdrL2J5bkhRL2o1K293eXk0U2Rj?=
+ =?utf-8?B?VTN0YUUrOVE2MlAyU0VvMElONzFXM24rZzFiaHM5K3EvbVB4b3BDSkgwWThw?=
+ =?utf-8?B?TnQzbkRGTHZUMm9WSzJkSUxFdVRFMDdVWUJid3FaY1BjdzZ6ZE5rKysrcmVy?=
+ =?utf-8?B?T3FRazhaNGhzN09XS052aFJpbDRsWUdqZnpKSk55dUplWHY3aTZJOVhrQmZa?=
+ =?utf-8?B?MlZ5SHY3Tm9VVC8rdEloeEhuOTc5c1JWYmVVZW1aaUNGUTc2R3RoVVM4V09I?=
+ =?utf-8?B?SGRkRTRqOWNiNWdmSW5BdWRuRHlQWkFOdmlUa1FQQ0QwTEYwY2xwT3ZBRmVK?=
+ =?utf-8?B?NTIyVEJyOE9Fajg3aThBS054OHlScWkrNlUzdDFueURaRDN1ZHdtM0c0M0JQ?=
+ =?utf-8?B?NVk2KzJZV3BLNHEyZk5ZenJQWWdGT1RYclRlUUsvSDI4ZFNnVk5rZndrR2I4?=
+ =?utf-8?B?NHBZampueDJVc0N6TmFCMHlTeU1tbUdUUWJzdERkSFVrUlF2b1hyODNOSm01?=
+ =?utf-8?B?ZUphMjgzU2t0Q1BSbkUxUUllNG9zcEZoc3B2T3dvdmN0K29vRUFmRmZlZkM3?=
+ =?utf-8?B?NGJINk51TXQ0eXl6TGMxbVdYSXluVjQ5dkdwaGlLZEdBN1pXZDMyTjh6UlRB?=
+ =?utf-8?B?TVRWV1IzZGpRZHY5WG9vRGJZL2Jxc3BaUmxPQ1dpWGtzUDJqMUhnWU9Ocnor?=
+ =?utf-8?B?VzFxR3ptK05xaWxZNE5keC95ME03blhzQm5oMlhHN1VwZnhBeStwRXVsSHpm?=
+ =?utf-8?B?Z1pPUjlkNGJBaE5zbDdNMmpzdUlLUDhUQ1JaMWdjbTFBL3hvVVhIUG1BRW40?=
+ =?utf-8?B?QlgxYndzTldQU3oxMjAwcU1pb0FyR0xtdHlPNFYvU0JMZ3NnWjBJQlprM1Nq?=
+ =?utf-8?B?bkJvRTBURktjdG41R1FUS3hPK3M1U1pNTjBEc1h1OEVpRmM5YWh5TjJ0d2hq?=
+ =?utf-8?B?UXFlSE1iU05maHNJWmJES0RsNTRaZkF4a2dEdk4zZFJwNm9GWmJwbnRFZDBl?=
+ =?utf-8?B?ZDBXbHUrb0tLOEFXRDRkY2pTVzZnZkh2TU1VUXczbVNaTVlWS2tBUnlOWFM2?=
+ =?utf-8?B?U2swdWkydW1DMXdlL24xSG5zZHp3T3RXS3NCY2xsR1dEWkRwT29aV1Y1eVJv?=
+ =?utf-8?B?TUhkYUVxTHhVL09vNGllRmpaSHJyMHRlOFRpNHZkblhlS3BJd3VpU0xYUWNC?=
+ =?utf-8?B?cHR3Z1FNbVE5T0lITmpQNm5iZFFhTGh4TDdUWVh6WFNkRTVyVno3dFRadTNl?=
+ =?utf-8?B?ZlZMY2dtc2plcE1ySE1JMTJhRmdTT1R0M2JWbCtrd2RZczUvS2ZvOWhMMXV6?=
+ =?utf-8?B?MWUvSnYxWnhSdlRXWEl1a1htLzd5V1pFNHVWMFBKZVUyUHg2ZkFQOWMzekZQ?=
+ =?utf-8?B?eGphNmtLSzRhUFRocHpvdnM4QXVxYzFpTVIwNlVvZllVeFNZdDlLenFZeVU3?=
+ =?utf-8?B?RUVaSi9UQ25WNzcvakdOdnFOMkl2blE0V1hWYmE1N1BDM3NyK0hSa3dodUph?=
+ =?utf-8?B?Y2Y2cldKUUFwMjV2OVRZbE4xdUZpcGFhUXJjem90RFBHREFDVEc5WlE3NTcz?=
+ =?utf-8?B?b2N2Zmp6emZOV2hsQ1d1TTMzV0ZadGhRYUorVitXRDlDWlF6ditYOWUrekNI?=
+ =?utf-8?B?ZHh4bjJIUytZcUc4RDhiMS9LYmFtbjl3d0g0c1JyNjFOd0VGa1JLOHcyVUtn?=
+ =?utf-8?B?MGlrUEJaKzVQWmU5MjdvTXVqc1pWbW5MeG5adWs5RzhJWnR1TW9zQTVQTXd3?=
+ =?utf-8?B?QTloVldkNElBU0RXSGZXRkdTcGFGdDF3ZlY3WE1tdUhqSnlJWjAxTmtWSnlS?=
+ =?utf-8?B?bEtzbEFUMVN5U3RzYVZjRzBTUmxTOHA4WnRldUNRZmxhWTBxVk9Oa3dyMGN4?=
+ =?utf-8?B?MG96TnVNK2VzSzJ1WFE4QmhKU3l3dnJHdThqdDVnem92b3ZYQS9pTGpMMlB6?=
+ =?utf-8?B?Y0ZMYXlDWTZrNlpQNEV6d0UrTWdJVXJnSmo4RE1HOFpMeEgvVXhIbnNqTHEr?=
+ =?utf-8?Q?Ls/hnswkz5EbcF63lCww2n0vwxWi2E=3D?=
+X-Forefront-Antispam-Report-Untrusted:
+ CIP:172.205.89.229;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:nebula.arm.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(82310400026)(36860700013)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV2PR08MB7954
+X-MS-Exchange-Transport-CrossTenantHeadersStripped:
+ DU2PEPF0001E9C5.eurprd03.prod.outlook.com
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id-Prvs:
+	4536cd70-f145-4316-45dd-08dd71e18f5c
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|14060799003|35042699022|1800799024|82310400026|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?OW9TWHhPMnpHTzR2YUY3alJKSnAvM2szdnZEdkQzZmo4bU56NFY0MDBDYXRU?=
+ =?utf-8?B?UGNvS0w5VWVJWUtoNVJ3bTUrOUFMTlVGTm5JUVhzdUFWK2dTaVd3S0NKdGEr?=
+ =?utf-8?B?VUx3dDRYVUQxOGVscmdHZGFSMlk4bnhZb2Z3WUdRTU5rR3ZkZUdqS3NlMnVu?=
+ =?utf-8?B?VWFpSVFoQXhsMEFMSmZla2piRklmNm9FTHFoRlJQazZiRzVROEF0dTlLTllB?=
+ =?utf-8?B?WU1zMDlJL3YvRm5nUlFVREFGRjRGNUl5bWtEQ3F1MXZzVGx5dU0zdDcwamtj?=
+ =?utf-8?B?TkZxUkZnWjFUbURRbUdxMlZEbnMvY0d5QTIrVHB6ZldRR1dDaTBQMjRNNWJX?=
+ =?utf-8?B?dUIvSUtoN01HNzM4N0NtTGZPY1Jxc3pNZHU5Zkl2eUgxUkk5MmVyT1lZd3Fi?=
+ =?utf-8?B?WCszdzU5aEh5c0FRY1RHWUg5QXFxcDVRUTRBeFh1OUxpMGZhWG1ZYTZIYTN6?=
+ =?utf-8?B?V0J0Y080NGh4c1VFZE9ySUZEdk1FUzNXWUYyU0VPZ0hFd0VEanJiSndjM0h4?=
+ =?utf-8?B?a2dhb2tyMytrZ0R1dFgyRloyK2RIQnI4NWFtQVQ4UUJvRlgwUGx0L2dnTEVV?=
+ =?utf-8?B?WFY0dE4vZUMxNCttcVpldVhSQjNWTURKcS9wTmlVNUFQQzhyZTlHd0VXblRR?=
+ =?utf-8?B?UlE2WXFaVEVxaVRKSHJWZ25KOFZjWk9sa1Q3SjluNHltL0JBSDU1eXJ6a2NQ?=
+ =?utf-8?B?RWgvZ1N3WDVkcU5DbGJQdmxTL3BOc244YkNNUGF2aFVoT2tPZEtkTk9ad2Nz?=
+ =?utf-8?B?WjdHSWs1MDlxR04zOC9hNWV5MVM0UlJuZUYzMThaUzVUSWtlMGQyaFFzN0l2?=
+ =?utf-8?B?OFZKbWlqT0dQTjZwMGlOSXlQRFBubzZtR3hTRmhITGZEbUVWRm9kMXFpZnh5?=
+ =?utf-8?B?bmp3eG9XaStaRjVISkMvZFJKbHcvOVMxckRhN2pFREZJaUQzYnZWSFI5eXIy?=
+ =?utf-8?B?RVFsVHozOVlVVHFaczZXNHBDTVEyb1NMRytSbjBaVFQ4MFF1dkIxc2RnVU5q?=
+ =?utf-8?B?cjVteGc4UU1Na3NQV3JxRjNoZ3E5K0UrTFgwOHhXSlNVR3dYMm1Ua1pTSzZv?=
+ =?utf-8?B?VVIvUktYMCtRS3JxSGVQM3R4bXVPNC9TMndxVmhpWnB2RnZRS0xRZlFvVFUy?=
+ =?utf-8?B?eE1OQnVVa2E1SVllbjRYYkhGcGVoQjBpMWc5ZGtjVFNDTW14NEFPK0NNTzdZ?=
+ =?utf-8?B?S1VSN253MklFK2JUZGJwenptNFVYR25kR21HMGtMY2hJNStHOForMWRLbExN?=
+ =?utf-8?B?bklFTmVGZzA1cFg0M0RxWnBPL0JvekQvRzRCZmlvUWhmdFJ2QlhoYzBxa3Jx?=
+ =?utf-8?B?TFFwZ2FFZVk1T090WHRFbWNmQlkwY3pVQUpHUE5RSU9VUnJvUzNXV3M1c09D?=
+ =?utf-8?B?MVpCTzlPZmhLMDIxak9TTEh2cFdZZlJBL2pKVGxvZmFMa2hIUmUxdEVRNGxt?=
+ =?utf-8?B?UWVjbll3T1R0QVAvY3l2cU01cHB1dkJ4NXBnWWhVOTdTRjJjbEM2RmVxRFRW?=
+ =?utf-8?B?d2E1dzZUSkVkaU9adFFqSzA1V0JRTktHUEdVbWVRZ3hhdWdHeWZXY3hubWUy?=
+ =?utf-8?B?d1VLeEw4ZmgzU1VQaEZQQ0tqNWo5ZUJDYk9vV3ErM2IyNzN6V1NUQ2VGNURR?=
+ =?utf-8?B?WlJiNWdWNUtkYW5GM0RBUlo4azZ6cFhjVGRrVEtvR3k2b3dEcS9aMDJ5dkto?=
+ =?utf-8?B?T2p1YkYxZ0tKMGgwbGlmVlk2N0FWU1BWeWo2MGxUSnV3b0tCTnFING0vL1VO?=
+ =?utf-8?B?YS9qY2tVdmZIMXNhWTQyUTlza3V4a0dGZmRBZWpHN1hlQWp4RUs0RGNwK3My?=
+ =?utf-8?B?SmhqS3BsK2c1dzhBVnRaSFdxZ0E0QU8rUVlsazNGM1h6ZUgrdFlXSWlXcFVi?=
+ =?utf-8?B?WUN1ZkxXREczdVc0ZkE1V3FlRG14QVE5Ti8yaExielNyK1dqR05lS3VXSGMx?=
+ =?utf-8?B?MmJkRlRDOHNhNmFTSGwwbEdPZlROdlg1ZWR0S291SUdlcHNXTzhGajQ4Rnc0?=
+ =?utf-8?Q?RVNXmCbb08T7ym6v74xtk566w0A4/w=3D?=
+X-Forefront-Antispam-Report:
+	CIP:4.158.2.129;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:outbound-uk1.az.dlp.m.darktrace.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(14060799003)(35042699022)(1800799024)(82310400026)(376014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Apr 2025 12:26:49.6215
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: decb91b1-be05-4891-d451-08dd71e1a476
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[4.158.2.129];Helo=[outbound-uk1.az.dlp.m.darktrace.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DU2PEPF0001E9C5.eurprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU4PR08MB11175
 
-On Wed 02-04-25 22:32:14, Dave Chinner wrote:
-> On Wed, Apr 02, 2025 at 04:42:06PM +0800, Yafang Shao wrote:
-> > On Wed, Apr 2, 2025 at 12:15 PM Harry Yoo <harry.yoo@oracle.com> wrote:
-> > >
-> > > On Tue, Apr 01, 2025 at 07:01:04AM -0700, Kees Cook wrote:
-> > > >
-> > > >
-> > > > On April 1, 2025 12:30:46 AM PDT, Yafang Shao <laoar.shao@gmail.com> wrote:
-> > > > >While investigating a kcompactd 100% CPU utilization issue in production, I
-> > > > >observed frequent costly high-order (order-6) page allocations triggered by
-> > > > >proc file reads from monitoring tools. This can be reproduced with a simple
-> > > > >test case:
-> > > > >
-> > > > >  fd = open(PROC_FILE, O_RDONLY);
-> > > > >  size = read(fd, buff, 256KB);
-> > > > >  close(fd);
-> > > > >
-> > > > >Although we should modify the monitoring tools to use smaller buffer sizes,
-> > > > >we should also enhance the kernel to prevent these expensive high-order
-> > > > >allocations.
-> > > > >
-> > > > >Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
-> > > > >Cc: Josef Bacik <josef@toxicpanda.com>
-> > > > >---
-> > > > > fs/proc/proc_sysctl.c | 10 +++++++++-
-> > > > > 1 file changed, 9 insertions(+), 1 deletion(-)
-> > > > >
-> > > > >diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
-> > > > >index cc9d74a06ff0..c53ba733bda5 100644
-> > > > >--- a/fs/proc/proc_sysctl.c
-> > > > >+++ b/fs/proc/proc_sysctl.c
-> > > > >@@ -581,7 +581,15 @@ static ssize_t proc_sys_call_handler(struct kiocb *iocb, struct iov_iter *iter,
-> > > > >     error = -ENOMEM;
-> > > > >     if (count >= KMALLOC_MAX_SIZE)
-> > > > >             goto out;
-> > > > >-    kbuf = kvzalloc(count + 1, GFP_KERNEL);
-> > > > >+
-> > > > >+    /*
-> > > > >+     * Use vmalloc if the count is too large to avoid costly high-order page
-> > > > >+     * allocations.
-> > > > >+     */
-> > > > >+    if (count < (PAGE_SIZE << PAGE_ALLOC_COSTLY_ORDER))
-> > > > >+            kbuf = kvzalloc(count + 1, GFP_KERNEL);
-> > > >
-> > > > Why not move this check into kvmalloc family?
-> > >
-> > > Hmm should this check really be in kvmalloc family?
-> > 
-> > Modifying the existing kvmalloc functions risks performance regressions.
-> > Could we instead introduce a new variant like vkmalloc() (favoring
-> > vmalloc over kmalloc) or kvmalloc_costless()?
-> 
-> We should fix kvmalloc() instead of continuing to force
-> subsystems to work around the limitations of kvmalloc().
+This patch is primarily a proposal aimed at improving the observability of the
+scheduler, especially in the context of energy-aware scheduling, without
+introducing long-term maintenance burdens such as a stable userspace ABI. I’m
+seeking feedback from the community on whether this approach seems viable, or
+if there are suggestions for making it more robust or maintainable.
 
-Agreed!
+Today, validating that a set of scheduler changes behaves sanely and doesn’t
+regress performance or energy metrics can be time-consuming. On the
+energy-aware side in particular, this often requires significant manual
+intervention to collect, post-process, and analyze data.
 
-> Have a look at xlog_kvmalloc() in XFS. It implements a basic
-> fast-fail, no retry high order kmalloc before it falls back to
-> vmalloc by turning off direct reclaim for the kmalloc() call.
-> Hence if the there isn't a high-order page on the free lists ready
-> to allocate, it falls back to vmalloc() immediately.
-> 
-> For XFS, using xlog_kvmalloc() reduced the high-order per-allocation
-> overhead by around 80% when compared to a standard kvmalloc()
-> call. Numbers and profiles were documented in the commit message
-> (reproduced in whole below)...
+Another challenge is the limited availability of platforms that can run a
+mainline kernel while still exposing the detailed data we need. While we do
+have some options, most devices running upstream kernels don’t provide as
+much — or as precise — information as we’d like. The most data-rich devices
+tend to be phones or Android-based systems, which typically run slightly
+older or patched kernels, adding yet another layer of complexity.
 
-Btw. it would be really great to have such concerns to be posted to the
-linux-mm ML so that we are aware of that.
+As a result, going from reviewing a patch series on LKML to having a concrete
+good/bad/neutral result often involves several intermediate steps and tooling
+hurdles.
 
-kvmalloc currently doesn't support GFP_NOWAIT semantic but it does allow
-to express - I prefer SLAB allocator over vmalloc. I think we could make
-the default kvmalloc slab path weaker by default as those who really
-want slab already have means to achieve that. There is a risk of long
-term fragmentation but I think this is worth trying
-diff --git a/mm/util.c b/mm/util.c
-index 60aa40f612b8..8386f6976d7d 100644
---- a/mm/util.c
-+++ b/mm/util.c
-@@ -601,14 +601,18 @@ static gfp_t kmalloc_gfp_adjust(gfp_t flags, size_t size)
- 	 * We want to attempt a large physically contiguous block first because
- 	 * it is less likely to fragment multiple larger blocks and therefore
- 	 * contribute to a long term fragmentation less than vmalloc fallback.
--	 * However make sure that larger requests are not too disruptive - no
--	 * OOM killer and no allocation failure warnings as we have a fallback.
-+	 * However make sure that larger requests are not too disruptive - i.e.
-+	 * do not direct reclaim unless physically continuous memory is preferred
-+	 * (__GFP_RETRY_MAYFAIL mode). We still kick in kswapd/kcompactd to start
-+	 * working in the background but the allocation itself.
- 	 */
- 	if (size > PAGE_SIZE) {
- 		flags |= __GFP_NOWARN;
+Our current data collection relies heavily on existing kernel tracepoints and
+trace events. However, adding new trace events is increasingly discouraged,
+since these are often treated as part of a de facto userspace ABI — something
+we want to avoid maintaining long-term. So extending the trace events set isn’t
+a viable option.
+
+To work around this, we use a kernel module (LISA) that defines its own trace
+events based on existing scheduler tracepoints. This approach gives us
+flexibility in creating events without modifying the kernel’s core trace
+infrastructure or establishing any new userspace ABI.
+
+For the past few years, tracepoint definitions for the scheduler have been
+exposed in include/trace/events/sched.h. These definitions are not always
+made available via tracefs, and are documented as being for testing and
+debugging purposes — which aligns well with our use case.
+
+However, this approach has limitations. One issue is the visibility of
+tracepoint argument types. If a tracepoint uses a public type defined in a
+public header, we can dereference members directly to extract data. But if
+the type is internal or opaque — such as struct rq — we can’t access its
+contents, which prevents us from retrieving useful values like the CPU number.
+
+One workaround is to duplicate the kernel’s internal struct definitions in
+the module, but this is not good: it’s error-prone due to alignment issues and
+requires constant tracking of kernel changes to avoid mismatches.
+
+A better approach, which we currently use, is to rely on BTF (BPF Type
+Format) to reconstruct type information. BTF allows us to access internal
+kernel types without having to maintain duplicate struct definitions. As long
+as BTF info is available, we can introspect data structures even if they’re
+not publicly defined.
+
+Using this, our module can define trace events and dereference internal types
+to extract data — but it’s not without friction:
+
+- Struct members are often nested deeply within BTF type trees, which can make
+it awkward to navigate and extract data.
+
+- BTF describes data types, but not semantics. For example, sched_avg.util_est
+appears to be a numeric value, but in reality it encodes a flag alongside the
+actual utilization value. The kernel uses the following helper to extract the
+actual data:
+
+static inline unsigned long _task_util_est(struct task_struct *p)
+{
+    return READ_ONCE(p->se.avg.util_est) & ~UTIL_AVG_UNCHANGED;
+}
+
+There is no way to infer from BTF alone that this masking is needed. And even
+when such helpers exist in the kernel, they’re often inlined or unavailable
+to modules, so we’d have to reimplement them — again reintroducing
+maintenance overhead.
+
+To address these challenges and reduce duplication, we propose adding an
+extra argument to certain scheduler tracepoints: a pointer to a struct of
+function pointers (callbacks). These callbacks would act as "getters" that
+the module could use to fetch internal data in a safe, forward-compatible
+way.
+
+For example, to extract the CPU capacity from a struct rq (which is opaque to
+the module), the module could call a getter function via the callback struct.
+These functions would reside inside the kernel, and could leverage internal
+knowledge, including inlined helpers and static data.
+
+Here's an example of the proposed callback structure:
+
+struct sched_tp_callbacks {
+    /* Fetches the util_est from a cfs_rq. */
+    unsigned int (*cfs_rq_util_est)(struct cfs_rq *cfs_rq);
+
+    /* Fetches the util_est from a sched_entity. */
+    unsigned int (*se_util_est)(struct sched_entity *se);
+
+    /* Fetches the current CPU capacity from an rq. */
+    unsigned long (*rq_cpu_current_capacity)(struct rq *rq);
+};
+
+The idea is simple: given a base type (e.g. rq, cfs_rq, sched_entity), the
+module calls a getter function that returns the data it needs. These getters
+encapsulate internal kernel logic and remove the need for the module to
+replicate or guess how to access scheduler internals.
+
+Since these additions would be part of tracepoints used for
+testing/debugging, they are not considered stable ABI and can evolve as the
+kernel changes. It would be up to the module to adapt to changes in available
+hooks, types, or fields — something we already do today using BTF for
+disappearing types (e.g. struct util_est becoming a raw integer).
+
+While this approach would require some extra code in the kernel to define the
+callback struct and register the functions, we believe it would significantly
+improve testability and maintainability of tooling like LISA. It could even
+be extended to support non-energy-aware scheduler debugging scenarios as
+well.
+
+Our current testing pipeline already makes heavy use of LISA [1], which
+automates test execution and data analysis. It also integrates with rt-app
+[2] to generate configurable workloads.
+
+The attached proof-of-concept patch adds three such callback functions as a
+demonstration. We’ve tested this against a modified version of our module
+that uses the callbacks to fetch scheduler internals.
+
+Thoughts?
+
+[1] https://tooling.sites.arm.com/lisa/latest/
+[2] https://github.com/scheduler-tools/rt-app
+
+Signed-off-by: Luis Machado <luis.machado@arm.com>
+---
+ include/trace/events/sched.h | 27 +++++++++++++++++----------
+ kernel/sched/core.c          | 27 +++++++++++++++++++++++++++
+ kernel/sched/fair.c          | 16 ++++++++--------
+ kernel/sched/pelt.c          |  6 +++---
+ kernel/sched/sched.h         | 11 +++++++++++
+ 5 files changed, 66 insertions(+), 21 deletions(-)
+
+diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
+index 8994e97d86c..0687f4f62d9 100644
+--- a/include/trace/events/sched.h
++++ b/include/trace/events/sched.h
+@@ -767,6 +767,13 @@ TRACE_EVENT(sched_wake_idle_without_ipi,
+ 	TP_printk("cpu=%d", __entry->cpu)
+ );
  
- 		if (!(flags & __GFP_RETRY_MAYFAIL))
- 			flags |= __GFP_NORETRY;
-+		else
-+			flags &= ~__GFP_DIRECT_RECLAIM;
++/* This struct is declared here so the tracepoints below can pass
++ * these types as parameter.
++ * This is only used for testing and debugging, so tracepoint probes can
++ * use the callbacks to fetch the data they need.
++ */
++struct sched_tp_callbacks;
++
+ /*
+  * Following tracepoints are not exported in tracefs and provide hooking
+  * mechanisms only for testing and debugging purposes.
+@@ -774,8 +781,8 @@ TRACE_EVENT(sched_wake_idle_without_ipi,
+  * Postfixed with _tp to make them easily identifiable in the code.
+  */
+ DECLARE_TRACE(pelt_cfs_tp,
+-	TP_PROTO(struct cfs_rq *cfs_rq),
+-	TP_ARGS(cfs_rq));
++	TP_PROTO(struct cfs_rq *cfs_rq, struct sched_tp_callbacks *sched_tp_callbacks),
++	TP_ARGS(cfs_rq, sched_tp_callbacks));
  
- 		/* nofail semantic is implemented by the vmalloc fallback */
- 		flags &= ~__GFP_NOFAIL;
+ DECLARE_TRACE(pelt_rt_tp,
+ 	TP_PROTO(struct rq *rq),
+@@ -794,24 +801,24 @@ DECLARE_TRACE(pelt_irq_tp,
+ 	TP_ARGS(rq));
+ 
+ DECLARE_TRACE(pelt_se_tp,
+-	TP_PROTO(struct sched_entity *se),
+-	TP_ARGS(se));
++	TP_PROTO(struct sched_entity *se, struct sched_tp_callbacks *sched_tp_callbacks),
++	TP_ARGS(se, sched_tp_callbacks));
+ 
+ DECLARE_TRACE(sched_cpu_capacity_tp,
+-	TP_PROTO(struct rq *rq),
+-	TP_ARGS(rq));
++	TP_PROTO(struct rq *rq, struct sched_tp_callbacks *sched_tp_callbacks),
++	TP_ARGS(rq, sched_tp_callbacks));
+ 
+ DECLARE_TRACE(sched_overutilized_tp,
+ 	TP_PROTO(struct root_domain *rd, bool overutilized),
+ 	TP_ARGS(rd, overutilized));
+ 
+ DECLARE_TRACE(sched_util_est_cfs_tp,
+-	TP_PROTO(struct cfs_rq *cfs_rq),
+-	TP_ARGS(cfs_rq));
++	TP_PROTO(struct cfs_rq *cfs_rq, struct sched_tp_callbacks *sched_tp_callbacks),
++	TP_ARGS(cfs_rq, sched_tp_callbacks));
+ 
+ DECLARE_TRACE(sched_util_est_se_tp,
+-	TP_PROTO(struct sched_entity *se),
+-	TP_ARGS(se));
++	TP_PROTO(struct sched_entity *se, struct sched_tp_callbacks *sched_tp_callbacks),
++	TP_ARGS(se, sched_tp_callbacks));
+ 
+ DECLARE_TRACE(sched_update_nr_running_tp,
+ 	TP_PROTO(struct rq *rq, int change),
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index c81cf642dba..a0ee7534aaa 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -99,6 +99,27 @@
+ EXPORT_TRACEPOINT_SYMBOL_GPL(ipi_send_cpu);
+ EXPORT_TRACEPOINT_SYMBOL_GPL(ipi_send_cpumask);
+ 
++static unsigned int cfs_rq_util_est(struct cfs_rq *cfs_rq)
++{
++	return cfs_rq ? cfs_rq->avg.util_est: 0;
++}
++
++static unsigned int se_util_est(struct sched_entity *se)
++{
++
++	return se ? se->avg.util_est & ~UTIL_AVG_UNCHANGED : 0;
++}
++
++static unsigned long rq_cpu_current_capacity(struct rq *rq)
++{
++	if (rq == NULL)
++		return 0;
++
++	unsigned long capacity_orig = per_cpu(cpu_scale, rq->cpu);
++	unsigned long scale_freq = per_cpu(arch_freq_scale, rq->cpu);
++	return cap_scale(capacity_orig, scale_freq);
++}
++
+ /*
+  * Export tracepoints that act as a bare tracehook (ie: have no trace event
+  * associated with them) to allow external modules to probe them.
+@@ -8524,11 +8545,17 @@ LIST_HEAD(task_groups);
+ static struct kmem_cache *task_group_cache __ro_after_init;
+ #endif
+ 
++struct sched_tp_callbacks sched_tp_callbacks;
++
+ void __init sched_init(void)
+ {
+ 	unsigned long ptr = 0;
+ 	int i;
+ 
++	sched_tp_callbacks.cfs_rq_util_est = cfs_rq_util_est;
++	sched_tp_callbacks.se_util_est = se_util_est;
++	sched_tp_callbacks.rq_cpu_current_capacity = rq_cpu_current_capacity;
++
+ 	/* Make sure the linker didn't screw up */
+ #ifdef CONFIG_SMP
+ 	BUG_ON(!sched_class_above(&stop_sched_class, &dl_sched_class));
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index e43993a4e58..f115842669b 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -4433,8 +4433,8 @@ static inline int propagate_entity_load_avg(struct sched_entity *se)
+ 	update_tg_cfs_runnable(cfs_rq, se, gcfs_rq);
+ 	update_tg_cfs_load(cfs_rq, se, gcfs_rq);
+ 
+-	trace_pelt_cfs_tp(cfs_rq);
+-	trace_pelt_se_tp(se);
++	trace_pelt_cfs_tp(cfs_rq, &sched_tp_callbacks);
++	trace_pelt_se_tp(se, &sched_tp_callbacks);
+ 
+ 	return 1;
+ }
+@@ -4698,7 +4698,7 @@ static void attach_entity_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *s
+ 
+ 	cfs_rq_util_change(cfs_rq, 0);
+ 
+-	trace_pelt_cfs_tp(cfs_rq);
++	trace_pelt_cfs_tp(cfs_rq, &sched_tp_callbacks);
+ }
+ 
+ /**
+@@ -4728,7 +4728,7 @@ static void detach_entity_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *s
+ 
+ 	cfs_rq_util_change(cfs_rq, 0);
+ 
+-	trace_pelt_cfs_tp(cfs_rq);
++	trace_pelt_cfs_tp(cfs_rq, &sched_tp_callbacks);
+ }
+ 
+ /*
+@@ -4865,7 +4865,7 @@ static inline void util_est_enqueue(struct cfs_rq *cfs_rq,
+ 	enqueued += _task_util_est(p);
+ 	WRITE_ONCE(cfs_rq->avg.util_est, enqueued);
+ 
+-	trace_sched_util_est_cfs_tp(cfs_rq);
++	trace_sched_util_est_cfs_tp(cfs_rq, &sched_tp_callbacks);
+ }
+ 
+ static inline void util_est_dequeue(struct cfs_rq *cfs_rq,
+@@ -4881,7 +4881,7 @@ static inline void util_est_dequeue(struct cfs_rq *cfs_rq,
+ 	enqueued -= min_t(unsigned int, enqueued, _task_util_est(p));
+ 	WRITE_ONCE(cfs_rq->avg.util_est, enqueued);
+ 
+-	trace_sched_util_est_cfs_tp(cfs_rq);
++	trace_sched_util_est_cfs_tp(cfs_rq, &sched_tp_callbacks);
+ }
+ 
+ #define UTIL_EST_MARGIN (SCHED_CAPACITY_SCALE / 100)
+@@ -4970,7 +4970,7 @@ static inline void util_est_update(struct cfs_rq *cfs_rq,
+ 	ewma |= UTIL_AVG_UNCHANGED;
+ 	WRITE_ONCE(p->se.avg.util_est, ewma);
+ 
+-	trace_sched_util_est_se_tp(&p->se);
++	trace_sched_util_est_se_tp(&p->se, &sched_tp_callbacks);
+ }
+ 
+ static inline unsigned long get_actual_cpu_capacity(int cpu)
+@@ -10009,7 +10009,7 @@ static void update_cpu_capacity(struct sched_domain *sd, int cpu)
+ 		capacity = 1;
+ 
+ 	cpu_rq(cpu)->cpu_capacity = capacity;
+-	trace_sched_cpu_capacity_tp(cpu_rq(cpu));
++	trace_sched_cpu_capacity_tp(cpu_rq(cpu), &sched_tp_callbacks);
+ 
+ 	sdg->sgc->capacity = capacity;
+ 	sdg->sgc->min_capacity = capacity;
+diff --git a/kernel/sched/pelt.c b/kernel/sched/pelt.c
+index 7a8534a2def..7ca37abf46b 100644
+--- a/kernel/sched/pelt.c
++++ b/kernel/sched/pelt.c
+@@ -296,7 +296,7 @@ int __update_load_avg_blocked_se(u64 now, struct sched_entity *se)
+ {
+ 	if (___update_load_sum(now, &se->avg, 0, 0, 0)) {
+ 		___update_load_avg(&se->avg, se_weight(se));
+-		trace_pelt_se_tp(se);
++		trace_pelt_se_tp(se, &sched_tp_callbacks);
+ 		return 1;
+ 	}
+ 
+@@ -310,7 +310,7 @@ int __update_load_avg_se(u64 now, struct cfs_rq *cfs_rq, struct sched_entity *se
+ 
+ 		___update_load_avg(&se->avg, se_weight(se));
+ 		cfs_se_util_change(&se->avg);
+-		trace_pelt_se_tp(se);
++		trace_pelt_se_tp(se, &sched_tp_callbacks);
+ 		return 1;
+ 	}
+ 
+@@ -325,7 +325,7 @@ int __update_load_avg_cfs_rq(u64 now, struct cfs_rq *cfs_rq)
+ 				cfs_rq->curr != NULL)) {
+ 
+ 		___update_load_avg(&cfs_rq->avg, 1);
+-		trace_pelt_cfs_tp(cfs_rq);
++		trace_pelt_cfs_tp(cfs_rq, &sched_tp_callbacks);
+ 		return 1;
+ 	}
+ 
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index 47972f34ea7..5b0b8bb460c 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -182,6 +182,17 @@ extern struct list_head asym_cap_list;
+  */
+ #define RUNTIME_INF		((u64)~0ULL)
+ 
++struct sched_tp_callbacks {
++	/* Fetches the util_est from a cfs_rq. */
++	unsigned int (*cfs_rq_util_est)(struct cfs_rq *cfs_rq);
++	/* Fetches the util_est from a sched_entity. */
++	unsigned int (*se_util_est)(struct sched_entity *se);
++	/* Fetches the current cpu capacity out of a rq. */
++	unsigned long (*rq_cpu_current_capacity)(struct rq *rq);
++};
++
++extern struct sched_tp_callbacks sched_tp_callbacks;
++
+ static inline int idle_policy(int policy)
+ {
+ 	return policy == SCHED_IDLE;
+
+base-commit: 328802738e1cd091d04076317f3c2174125c5916
 -- 
-Michal Hocko
-SUSE Labs
+2.25.1
+
