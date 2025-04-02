@@ -1,148 +1,253 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C757823BCF2;
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E608B23BCF6;
 	Wed,  2 Apr 2025 12:38:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743597505; cv=none; b=WDVMCJ7cOqeUgZw53CvOa8iyp2ol/RIYDOSuDNgu+8PbKv27E4geEnVtcSFAA+JW1p52o/Xrs3erz/T7wYCky6yLn3f7Rv+sP8wwK1tHC5JchR3wxLZ9lpFV0oiEoeu6GZqiBabGeUtCsnpR8DIjM+FLup04rQN7rtuoJ/R4l/8=
+	t=1743597505; cv=none; b=JATl4shVYPo6iha8sOZSv9qcg0odP3ljGUNYTwqjg58j8w1F35YqOQl2ma15Nk3UvMvEEanrwxC6mT5rJydi6GK6mHXZVCJQxO7t7pdJavlAuSeP1BC1V3N46LMIRg1F9/OCmRUqVseLni8u35fbjZKlY6lURy43hbiJJq9ZRpI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1743597505; c=relaxed/simple;
-	bh=dTjL5EFXoS0czJKKji+k4G9YaMQT5DMND5Dnr5uRJm0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=jgTyGYoyUuDtL+QbDSwFubVN6x7qOgquQsquD41/dwVKZU7KgIHgiCpN72oem0Eadw4yEyZ/AyCYKfmn4eWWhr3yNL0oLteD2jPiTDhy3/RUD518WNZkwRSKBNWEc91BeJNMb3E4ue9Aukrc15rv9b7uj9ZTwdwFHSIDROpgDbA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=gDeoq9iu; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	bh=rdD1MFPnk2GfSUTUq554PxFg2PFw7Gz5ghF3Vj8jLV8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=GeYK40ELr+MY4AZ4Z/CLXeMBWtqbqRMyyiGm7KcskRWJ7j7HhWntbRU5Lu/ZrYCOobFXxLZkCpEsDHw5VHmhhMPMSwEqVdmUyBvp+M/B8IIOsetiMNvVqC9A5lxQTfFGAcfkd5XtPknwXiRzPNOk16SyoD0+1q2xKKslTyK4k14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=J6fv3WQl; arc=none smtp.client-ip=117.135.210.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="gDeoq9iu"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 532CbN0f3241854
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 2 Apr 2025 07:37:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1743597443;
-	bh=4qOoA3LVJAeCTkVPfMbm4Vm9pRsN9xHcsiNmubFd1nM=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=gDeoq9iu0w5moioITpXaWzK1YWwZkMwmmrVhnKQM60yYkUx9zFlXdUoaRrIxuyxu3
-	 0876/n+IAnhhIimjd/X49IGjjUrJI6o8G7PgO1bG3dvYdb7f1qXxe2mE+yFca+Nd9p
-	 4qa2UqZOzY1pOof5+dgSWzCV+YknEskwRNCJ363U=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 532CbNrc019560
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 2 Apr 2025 07:37:23 -0500
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 2
- Apr 2025 07:37:22 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 2 Apr 2025 07:37:22 -0500
-Received: from [172.24.17.211] (lt9560gk3.dhcp.ti.com [172.24.17.211])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 532CbGDp101576;
-	Wed, 2 Apr 2025 07:37:17 -0500
-Message-ID: <b0a099a6-33b2-49f9-9af7-580c60b98f55@ti.com>
-Date: Wed, 2 Apr 2025 18:07:15 +0530
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="J6fv3WQl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=3pdrC
+	OxR6siQiayEEylQqqJe1i5VAX0C977IX+Taf2k=; b=J6fv3WQlJfYkAe7ZMEtTQ
+	QqcRkOgpJbldKtmrfcHZoDbQbwYkz1UZZD7gr77M9UMSVF+6W1semVUkfHTo+etQ
+	db86Oz/NFVDLyYx+IjsH/0r/KUNdNH+MJBy4FxaDIqnCbTGe45is5t12adAZUZ65
+	HwGBRvEfSAe84GWqrFr5nw=
+Received: from localhost.localdomain (unknown [])
+	by gzsmtp1 (Coremail) with SMTP id PCgvCgCXrkiUL+1nL3+IAA--.22499S7;
+	Wed, 02 Apr 2025 20:37:50 +0800 (CST)
+From: Hans Zhang <18255117159@163.com>
+To: lpieralisi@kernel.org,
+	bhelgaas@google.com
+Cc: kw@linux.com,
+	manivannan.sadhasivam@linaro.org,
+	ilpo.jarvinen@linux.intel.com,
+	robh@kernel.org,
+	jingoohan1@gmail.com,
+	thomas.richard@bootlin.com,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Hans Zhang <18255117159@163.com>
+Subject: [v8 5/5] PCI: cadence: Use cdns_pcie_find_*capability to avoid hardcode.
+Date: Wed,  2 Apr 2025 20:37:36 +0800
+Message-Id: <20250402123736.55995-6-18255117159@163.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250402123736.55995-1-18255117159@163.com>
+References: <20250402123736.55995-1-18255117159@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net v3 3/3] net: ti: icss-iep: Fix possible NULL pointer
- dereference for perout request
-To: Roger Quadros <rogerq@kernel.org>, <dan.carpenter@linaro.org>,
-        <pabeni@redhat.com>, <kuba@kernel.org>, <edumazet@google.com>,
-        <davem@davemloft.net>, <andrew+netdev@lunn.ch>
-CC: <bpf@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <namcao@linutronix.de>, <javier.carrasco.cruz@gmail.com>,
-        <diogo.ivo@siemens.com>, <horms@kernel.org>,
-        <jacob.e.keller@intel.com>, <john.fastabend@gmail.com>,
-        <hawk@kernel.org>, <daniel@iogearbox.net>, <ast@kernel.org>,
-        <srk@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
-        <danishanwar@ti.com>
-References: <20250328102403.2626974-1-m-malladi@ti.com>
- <20250328102403.2626974-4-m-malladi@ti.com>
- <0fb67fc2-4915-49af-aa20-8bdc9bed4226@kernel.org>
-Content-Language: en-US
-From: "Malladi, Meghana" <m-malladi@ti.com>
-In-Reply-To: <0fb67fc2-4915-49af-aa20-8bdc9bed4226@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:PCgvCgCXrkiUL+1nL3+IAA--.22499S7
+X-Coremail-Antispam: 1Uf129KBjvJXoW3JF1xAFy3Jw43GF17ur18AFb_yoWxCr4fpF
+	W5ua4SkF40qrW7uFsrAa15ZrnxtFnIv347Aa92kw1ruF129FyUGFyIva43KF1akrs7uF17
+	XrWDtrsa93W3trUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0ziID7hUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDw4jo2ftJx3gpgAAs3
 
+The PCIe capability/extended capability offsets are not guaranteed to be
+the same across all SoCs integrating the Cadence PCIe IP. Hence, use the
+cdns_pcie_find_{ext}_capability() APIs for finding them.
 
+This avoids hardcoding the offsets in the driver.
 
-On 4/2/2025 5:58 PM, Roger Quadros wrote:
-> Meghana,
-> 
-> On 28/03/2025 12:24, Meghana Malladi wrote:
->> ICSS IEP driver has flags to check if perout or pps has been enabled
->> at any given point of time. Whenever there is request to enable or
->> disable the signal, the driver first checks its enabled or disabled
->> and acts accordingly.
->>
->> After bringing the interface down and up, calling PPS/perout enable
->> doesn't work as the driver believes PPS is already enabled,
-> 
-> How? aren't we calling icss_iep_pps_enable(iep, false)?
-> wouldn't this disable the IEP and clear the iep->pps_enabled flag?
-> 
+Signed-off-by: Hans Zhang <18255117159@163.com>
+---
+Changes since v5~v7:
 
-The whole purpose of calling icss_iep_pps_enable(iep, false) is to clear 
-iep->pps_enabled flag, because if this flag is not cleared it hinders 
-generating new pps signal (with the newly loaded firmware) once any of 
-the interfaces are up (check icss_iep_perout_enable()), so instead of 
-calling icss_iep_pps_enable(iep, false) I am just clearing the 
-iep->pps_enabled flag.
+- None
 
-> And, what if you brought 2 interfaces of the same ICSS instances up
-> but put only 1 interface down and up?
-> 
+Changes since v4:
+https://lore.kernel.org/linux-pci/20250321101710.371480-5-18255117159@163.com/
 
-Then the flag need not be disabled if only one interface is brought down 
-because the IEP is still alive and all the IEP configuration (including 
-pps/perout) is still valid.
+- The patch subject and commit message were modified.
+---
+ .../pci/controller/cadence/pcie-cadence-ep.c  | 40 +++++++++++--------
+ drivers/pci/controller/cadence/pcie-cadence.h |  5 ---
+ 2 files changed, 23 insertions(+), 22 deletions(-)
 
-please refer for more details: 
-https://lore.kernel.org/all/20241211135941.1800240-1-m-malladi@ti.com/
-
->> (iep->pps_enabled is not cleared during interface bring down)
->> and driver will just return true even though there is no signal.
->> Fix this by setting pps and perout flags to false instead of
->> disabling perout to avoid possible null pointer dereference.
->>
->> Fixes: 9b115361248d ("net: ti: icssg-prueth: Fix clearing of IEP_CMP_CFG registers during iep_init")
->> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
->> Closes: https://lore.kernel.org/all/7b1c7c36-363a-4085-b26c-4f210bee1df6@stanley.mountain/
->> Signed-off-by: Meghana Malladi <m-malladi@ti.com>
->> ---
->>
->> Changes from v2(v3-v2):
->> - Add Reported-by tag and link to the bug reported by Dan Carpenter <dan.carpenter@linaro.org>
->> - drop calling icss_iep_perout_enable() for disabling perout and set perout to false instead
->>
->>   drivers/net/ethernet/ti/icssg/icss_iep.c | 4 ++--
->>   1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/net/ethernet/ti/icssg/icss_iep.c b/drivers/net/ethernet/ti/icssg/icss_iep.c
->> index b4a34c57b7b4..b70e4c482d74 100644
->> --- a/drivers/net/ethernet/ti/icssg/icss_iep.c
->> +++ b/drivers/net/ethernet/ti/icssg/icss_iep.c
->> @@ -820,9 +820,9 @@ int icss_iep_exit(struct icss_iep *iep)
->>   	icss_iep_disable(iep);
->>   
->>   	if (iep->pps_enabled)
->> -		icss_iep_pps_enable(iep, false);
->> +		iep->pps_enabled = false;
->>   	else if (iep->perout_enabled)
->> -		icss_iep_perout_enable(iep, NULL, false);
->> +		iep->perout_enabled = false;
->>   
->>   	return 0;
->>   }
-> 
+diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+index e0cc4560dfde..aea53ddcaf9b 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
++++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+@@ -19,12 +19,13 @@
+ 
+ static u8 cdns_pcie_get_fn_from_vfn(struct cdns_pcie *pcie, u8 fn, u8 vfn)
+ {
+-	u32 cap = CDNS_PCIE_EP_FUNC_SRIOV_CAP_OFFSET;
+ 	u32 first_vf_offset, stride;
++	u16 cap;
+ 
+ 	if (vfn == 0)
+ 		return fn;
+ 
++	cap = cdns_pcie_find_ext_capability(pcie, PCI_EXT_CAP_ID_SRIOV);
+ 	first_vf_offset = cdns_pcie_ep_fn_readw(pcie, fn, cap + PCI_SRIOV_VF_OFFSET);
+ 	stride = cdns_pcie_ep_fn_readw(pcie, fn, cap +  PCI_SRIOV_VF_STRIDE);
+ 	fn = fn + first_vf_offset + ((vfn - 1) * stride);
+@@ -36,10 +37,11 @@ static int cdns_pcie_ep_write_header(struct pci_epc *epc, u8 fn, u8 vfn,
+ 				     struct pci_epf_header *hdr)
+ {
+ 	struct cdns_pcie_ep *ep = epc_get_drvdata(epc);
+-	u32 cap = CDNS_PCIE_EP_FUNC_SRIOV_CAP_OFFSET;
+ 	struct cdns_pcie *pcie = &ep->pcie;
+ 	u32 reg;
++	u16 cap;
+ 
++	cap = cdns_pcie_find_ext_capability(pcie, PCI_EXT_CAP_ID_SRIOV);
+ 	if (vfn > 1) {
+ 		dev_err(&epc->dev, "Only Virtual Function #1 has deviceID\n");
+ 		return -EINVAL;
+@@ -224,9 +226,10 @@ static int cdns_pcie_ep_set_msi(struct pci_epc *epc, u8 fn, u8 vfn, u8 mmc)
+ {
+ 	struct cdns_pcie_ep *ep = epc_get_drvdata(epc);
+ 	struct cdns_pcie *pcie = &ep->pcie;
+-	u32 cap = CDNS_PCIE_EP_FUNC_MSI_CAP_OFFSET;
+ 	u16 flags;
++	u8 cap;
+ 
++	cap = cdns_pcie_find_capability(pcie, PCI_CAP_ID_MSI);
+ 	fn = cdns_pcie_get_fn_from_vfn(pcie, fn, vfn);
+ 
+ 	/*
+@@ -246,9 +249,10 @@ static int cdns_pcie_ep_get_msi(struct pci_epc *epc, u8 fn, u8 vfn)
+ {
+ 	struct cdns_pcie_ep *ep = epc_get_drvdata(epc);
+ 	struct cdns_pcie *pcie = &ep->pcie;
+-	u32 cap = CDNS_PCIE_EP_FUNC_MSI_CAP_OFFSET;
+ 	u16 flags, mme;
++	u8 cap;
+ 
++	cap = cdns_pcie_find_capability(pcie, PCI_CAP_ID_MSI);
+ 	fn = cdns_pcie_get_fn_from_vfn(pcie, fn, vfn);
+ 
+ 	/* Validate that the MSI feature is actually enabled. */
+@@ -269,9 +273,10 @@ static int cdns_pcie_ep_get_msix(struct pci_epc *epc, u8 func_no, u8 vfunc_no)
+ {
+ 	struct cdns_pcie_ep *ep = epc_get_drvdata(epc);
+ 	struct cdns_pcie *pcie = &ep->pcie;
+-	u32 cap = CDNS_PCIE_EP_FUNC_MSIX_CAP_OFFSET;
+ 	u32 val, reg;
++	u8 cap;
+ 
++	cap = cdns_pcie_find_capability(pcie, PCI_CAP_ID_MSIX);
+ 	func_no = cdns_pcie_get_fn_from_vfn(pcie, func_no, vfunc_no);
+ 
+ 	reg = cap + PCI_MSIX_FLAGS;
+@@ -290,9 +295,10 @@ static int cdns_pcie_ep_set_msix(struct pci_epc *epc, u8 fn, u8 vfn,
+ {
+ 	struct cdns_pcie_ep *ep = epc_get_drvdata(epc);
+ 	struct cdns_pcie *pcie = &ep->pcie;
+-	u32 cap = CDNS_PCIE_EP_FUNC_MSIX_CAP_OFFSET;
+ 	u32 val, reg;
++	u8 cap;
+ 
++	cap = cdns_pcie_find_capability(pcie, PCI_CAP_ID_MSIX);
+ 	fn = cdns_pcie_get_fn_from_vfn(pcie, fn, vfn);
+ 
+ 	reg = cap + PCI_MSIX_FLAGS;
+@@ -379,11 +385,11 @@ static int cdns_pcie_ep_send_msi_irq(struct cdns_pcie_ep *ep, u8 fn, u8 vfn,
+ 				     u8 interrupt_num)
+ {
+ 	struct cdns_pcie *pcie = &ep->pcie;
+-	u32 cap = CDNS_PCIE_EP_FUNC_MSI_CAP_OFFSET;
+ 	u16 flags, mme, data, data_mask;
+-	u8 msi_count;
+ 	u64 pci_addr, pci_addr_mask = 0xff;
++	u8 msi_count, cap;
+ 
++	cap = cdns_pcie_find_capability(pcie, PCI_CAP_ID_MSI);
+ 	fn = cdns_pcie_get_fn_from_vfn(pcie, fn, vfn);
+ 
+ 	/* Check whether the MSI feature has been enabled by the PCI host. */
+@@ -431,14 +437,14 @@ static int cdns_pcie_ep_map_msi_irq(struct pci_epc *epc, u8 fn, u8 vfn,
+ 				    u32 *msi_addr_offset)
+ {
+ 	struct cdns_pcie_ep *ep = epc_get_drvdata(epc);
+-	u32 cap = CDNS_PCIE_EP_FUNC_MSI_CAP_OFFSET;
+ 	struct cdns_pcie *pcie = &ep->pcie;
+ 	u64 pci_addr, pci_addr_mask = 0xff;
+ 	u16 flags, mme, data, data_mask;
+-	u8 msi_count;
++	u8 msi_count, cap;
+ 	int ret;
+ 	int i;
+ 
++	cap = cdns_pcie_find_capability(pcie, PCI_CAP_ID_MSI);
+ 	fn = cdns_pcie_get_fn_from_vfn(pcie, fn, vfn);
+ 
+ 	/* Check whether the MSI feature has been enabled by the PCI host. */
+@@ -481,16 +487,16 @@ static int cdns_pcie_ep_map_msi_irq(struct pci_epc *epc, u8 fn, u8 vfn,
+ static int cdns_pcie_ep_send_msix_irq(struct cdns_pcie_ep *ep, u8 fn, u8 vfn,
+ 				      u16 interrupt_num)
+ {
+-	u32 cap = CDNS_PCIE_EP_FUNC_MSIX_CAP_OFFSET;
+ 	u32 tbl_offset, msg_data, reg;
+ 	struct cdns_pcie *pcie = &ep->pcie;
+ 	struct pci_epf_msix_tbl *msix_tbl;
+ 	struct cdns_pcie_epf *epf;
+ 	u64 pci_addr_mask = 0xff;
+ 	u64 msg_addr;
++	u8 bir, cap;
+ 	u16 flags;
+-	u8 bir;
+ 
++	cap = cdns_pcie_find_capability(pcie, PCI_CAP_ID_MSIX);
+ 	epf = &ep->epf[fn];
+ 	if (vfn > 0)
+ 		epf = &epf->epf[vfn - 1];
+@@ -564,7 +570,9 @@ static int cdns_pcie_ep_start(struct pci_epc *epc)
+ 	int max_epfs = sizeof(epc->function_num_map) * 8;
+ 	int ret, epf, last_fn;
+ 	u32 reg, value;
++	u8 cap;
+ 
++	cap = cdns_pcie_find_capability(pcie, PCI_CAP_ID_EXP);
+ 	/*
+ 	 * BIT(0) is hardwired to 1, hence function 0 is always enabled
+ 	 * and can't be disabled anyway.
+@@ -588,12 +596,10 @@ static int cdns_pcie_ep_start(struct pci_epc *epc)
+ 				continue;
+ 
+ 			value = cdns_pcie_ep_fn_readl(pcie, epf,
+-					CDNS_PCIE_EP_FUNC_DEV_CAP_OFFSET +
+-					PCI_EXP_DEVCAP);
++						      cap + PCI_EXP_DEVCAP);
+ 			value &= ~PCI_EXP_DEVCAP_FLR;
+-			cdns_pcie_ep_fn_writel(pcie, epf,
+-					CDNS_PCIE_EP_FUNC_DEV_CAP_OFFSET +
+-					PCI_EXP_DEVCAP, value);
++			cdns_pcie_ep_fn_writel(pcie, epf, cap + PCI_EXP_DEVCAP,
++					       value);
+ 		}
+ 	}
+ 
+diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
+index dd7cb6b6b291..3cfef0b25988 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence.h
++++ b/drivers/pci/controller/cadence/pcie-cadence.h
+@@ -125,11 +125,6 @@
+  */
+ #define CDNS_PCIE_EP_FUNC_BASE(fn)	(((fn) << 12) & GENMASK(19, 12))
+ 
+-#define CDNS_PCIE_EP_FUNC_MSI_CAP_OFFSET	0x90
+-#define CDNS_PCIE_EP_FUNC_MSIX_CAP_OFFSET	0xb0
+-#define CDNS_PCIE_EP_FUNC_DEV_CAP_OFFSET	0xc0
+-#define CDNS_PCIE_EP_FUNC_SRIOV_CAP_OFFSET	0x200
+-
+ /*
+  * Endpoint PF Registers
+  */
+-- 
+2.25.1
 
