@@ -1,179 +1,347 @@
-Received: from YT5PR01CU002.outbound.protection.outlook.com (mail-canadacentralazon11021097.outbound.protection.outlook.com [40.107.192.97])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A8D68634F;
-	Wed,  2 Apr 2025 16:00:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.192.97
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743609617; cv=fail; b=CLPcdoqwSF0Z0Fm7rnH1gXvXscwoAZ1GgplcoggoxMOBpcwQewVTSe1TblWI66n/ps58ACQfU3TtpRpz1jyG+JIPgLIhtYDIqIHlNSRdx0XJm6Nys723JlVTEqVIYV1LV4Pey/LcFaPEF5CHKVZnLciy9h8Gmm6K5PpDqoTQ71M=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743609617; c=relaxed/simple;
-	bh=AX3CDMMEwnM6zwHdowIU6y6ryo63xFEG3Gf0ZkYEi+s=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=mt56KNKaxch+0GXKcPKHeZ6E8CUS4vKSN1Mn5X1I5oHVkyc4Vvm0tBWZx6ZXdIUDbANbCSnwcoYajCNr24RFzCLXTylrkFwk1bgC5bJ1eD6WqsFKCy+mg98RDh8k32RBgnu3s7Q9Xx5vLa6QHYiwShGbydKV5FmrN6CjTMUSEVs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=n/DqpTSJ; arc=fail smtp.client-ip=40.107.192.97
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0C5526AD9
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 16:00:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.52
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743609640; cv=none; b=ZN/fbQ/cA8TZM8TNkWYL/4vARWZ9VRzb2KKGU9zmI+TM+ijcgFfM0E43z+6Wcz8sK0N/6NlFpZcL8Fwz8YBW1Hk1bObth9KXPxhMArjc3k17lEoAbE5uYpMXPOIql9EgtF0yLcjFct0STvzRcKkdZF4084fbmKUWcgLUjwGWNC8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743609640; c=relaxed/simple;
+	bh=qPruB88JkgBwyYGDFyof/2LgRNG5vg0TGV874clVrA8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JP/ZZf9H1tFSDvVOR5biWuhKi5UADFWMLzShDawHswFyYA1IHKthxwIOkx7y2dusZtVQJqPdlBDHfsZGT/06zjyujMNVLG/Qmtk01cL08jTrpcbjKR78c67HhG5DT/eoyGuVkpe14YdKTuyrdRY4J8qGZUQjW5ls91AvpNr1/TQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=iGV9cO1f; arc=none smtp.client-ip=209.85.210.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="n/DqpTSJ"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ZnZVYrgb+XLqgXYuVsD2VZD0KhXvEduZxO1YKTSmwDDAVvvhJ3V6qvumYtmxxp6RfcgRLHBqxjm75X2/eEJIemjKmWB05SquYtsmg66/K2QQOeMauJS9VlcImmBFASQlIH4buisI8NEoscnBqCrNdX8I+G86wmcqhDXV6XuUhlZ5mzOvCt3V1ttuGOBg2NcXB+thGTQMBFND5WXad6V+hRpJBBYxseu40HneLRkpcElqicE5yJqHJE7JWJkqbulMmRlKBJzwfRqbCTr13szYoRyCddZfa/rCkP8C3ZMvf/+jlt4h31ZibT4et0r5ldXvyxUrXB6qP3Gl55/E5R5bvw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ggeVY3/SvMEoAt2uvCOgWDdE4FjLpe/7JPr6pEbkPvc=;
- b=HlxcxkjThhsY66ok2+6G1JFxzS+JqXA+ftB8UbrTuL82OEKR0hVEC8tAmyKJUYmgBczhmTvl4TkN6Jqkg+dSfvp+3IxhpDJZOcdNgi+zb8A0AWApVxrtjhdEX9XyWYO6nT8OWkXfRChysYPNMEPL+VMiL0ffNacltUFVeOrHuO9n3LK67LtTNW28skbyUR/xjmumjJByabKmfT4orVZX68wXGQ4cNdwc4Rjs5KTlof4muDXu7Arc0etEkZxpvVbnXyezlYsPQdRipCFaEAHtp3DGO8cNGDXr1wg4ZCYti2BHrUaNrTvzkbm4zF4nw37hqDJr5GfrFzIef34xW3Df8A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=efficios.com; dmarc=pass action=none header.from=efficios.com;
- dkim=pass header.d=efficios.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ggeVY3/SvMEoAt2uvCOgWDdE4FjLpe/7JPr6pEbkPvc=;
- b=n/DqpTSJAM9lT7hu2KAWKbnUfgKyFuFWNtullaPuDGwq1fFByErUApNWlc2XL5xuUzgdulC0BoQWJuq7dfXwDFWHocZKl93ynB+f5xzyIfkRbkSVxG4aOEMNyDyxON7hAA+VYeXP3vqS2bvZCGYkS/Pu6I7v1jHcwU+8EY+AzQbcuB1Qr1jSD0Rh1dA+Xft2aEWnx6mWaFJ73U+zV2OQt/GoO4BcCOs7zngDmF3k9ck5dP625iQSvNguoO80ER5luKIjxMBrbZWFQjCIeC9HW3ej+YlIqYo+LNMjlnz/zqo0A4EZLg7crQFniWHz5jtbtT+zUxPqAHlE31wMSEzRkQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=efficios.com;
-Received: from YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:be::5)
- by YT2PR01MB5307.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:52::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Wed, 2 Apr
- 2025 16:00:05 +0000
-Received: from YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
- ([fe80::50f1:2e3f:a5dd:5b4]) by YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
- ([fe80::50f1:2e3f:a5dd:5b4%4]) with mapi id 15.20.8534.044; Wed, 2 Apr 2025
- 16:00:05 +0000
-Message-ID: <24fcfce6-6ec9-46e4-bcd6-307814fcea5c@efficios.com>
-Date: Wed, 2 Apr 2025 12:00:03 -0400
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 0/4] tracing: Clean up persistent ring buffer code
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Vincent Donnefort <vdonnefort@google.com>, Vlastimil Babka <vbabka@suse.cz>,
- Mike Rapoport <rppt@kernel.org>, Jann Horn <jannh@google.com>
-References: <20250402144903.993276623@goodmis.org>
- <c3e395d7-0c64-44d0-a0a7-57205b2ab712@efficios.com>
- <20250402114923.132217c1@gandalf.local.home>
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Content-Language: en-US
-In-Reply-To: <20250402114923.132217c1@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: YQZPR01CA0184.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:c01:8b::18) To YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:be::5)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iGV9cO1f"
+Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-72bd5f25ea6so4710a34.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 09:00:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1743609638; x=1744214438; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lRDOiAn7OWba8LvnkLWDRjg8G9T7P0yMZ35Irl3iVzI=;
+        b=iGV9cO1fyBKVUeFUvFGuetRnQF6g0n30JAkcv98GeliaQfkZ990KfSNyi30JucHPzS
+         MaT5fzeSrWnU9CVcNev0G47gpEv731bsLFNNgHQeEgb2cqOHq8OL0bnjSdFJG6850mjs
+         ZDYDzgowA0kDPiqBTuTq5m+HKq0IMclmEWIJQb3YCMuPA3sATZX8RfZG0Mi2Qmm9CFn8
+         GWiBuzoGA4rejL/QHtj+FiGC6L/tY66+qX4ZpJLZKRjfbGRah7Qtr+r/dltloofNimpM
+         M1khPqtIQYnMd/nem29mxY1tktQcz/tr9dZj0CGjmFNsThosTTzLU09snFnxzgI55FIR
+         svUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743609638; x=1744214438;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lRDOiAn7OWba8LvnkLWDRjg8G9T7P0yMZ35Irl3iVzI=;
+        b=PT6fa97Gb7W6C3mK4e2j4fOX5jBsv5ePKqt4rXA1SlWwUKuKuWIMmF4nZr3uZBHmxH
+         bpvNARI5sx6Y6WkqqO+8RTLS9ufN8rYozGV37o5mqxe6XalU7PJ88x/LdkBJu/lmOsoB
+         K/tyVE7mp9tlMXIgdrzF5Xjvq941YO3POHUdvJaf1jbp5qupzQcTOAf+uOZDBpX4FAcj
+         MZhUlMH41wwYh7YsiZtXLqbTvFiyE916zZiv9mhDY6EuCDCJfYb//MkBcvEq2JstWH3Z
+         JtTukA2cf9fPKIu9tR6jRXyj1iPMPmxwAU/D3TlcTIrcjQnpqLzYw97Lzv8xWgjwN348
+         W3wA==
+X-Forwarded-Encrypted: i=1; AJvYcCXUvrvXjSrxJW0yEwnZ5njuQDDWgmgH0bdoaN+oZGDE/qIVjLm7im/yKOOPmtGs5Zy2KVudHD4ElTmkU1A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwUe+YRJzCbdiqaDY+ITU0XQD4Z+RbtHfZ7Ebl+4rwp9ypzkXWu
+	2upXacPA5mx36tZRg1x53vgDDr1RjlgHINKeoKjRyT/T+e/F9jqbbVbzSf32ezbcjXlIEfNXEPG
+	z7VuZ/dyIZXjf4WIv4xhauW2aDXrBeQ/reiWW/R9r2kIij8jVsQ==
+X-Gm-Gg: ASbGnctQWSOPj2u1wf37jzNlC/KkuTW0R1ScLYBYbG+IFf3k1jxnAcyzclz6h01XBLF
+	kSzbDzgYEBnOKiDIm8mABRWxe8lQIfE78b8dUN9BJx0RYRQ2fcqLespwvpxfvy9hkqo0zRoJAQG
+	N8vyZWxKZCPOhH3Zv14qm6pC4ZucS8K7Qnsu3pbsQ/CVBgWioepJLO40MA
+X-Google-Smtp-Source: AGHT+IHZ305k9OUX06ubo13guSPIcxAmRDM5qO8wiVOXVTqB5NF9drufZaXM02tHVPHDCC6o1zgd1mz6lISUXn5f6Hg=
+X-Received: by 2002:a05:6808:1451:b0:3fa:d6c:cdbe with SMTP id
+ 5614622812f47-3ff0f6351d7mr10936183b6e.32.1743609637662; Wed, 02 Apr 2025
+ 09:00:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: YT2PR01MB9175:EE_|YT2PR01MB5307:EE_
-X-MS-Office365-Filtering-Correlation-Id: 80aefd6e-8cb7-4983-5c43-08dd71ff6f09
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|7416014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?TWRrYWZWVTRYWHhKNE14aWdiSnphbzdOd2FvR2VOR0pEeENpN0xhV1NJellj?=
- =?utf-8?B?TDZtSnlIUEIvUnNXanluSmhUUWF3K20zNEd6UGdWcURSditYUExheExrbDRr?=
- =?utf-8?B?VTYzRm5BeUhoRFBHUmFSblpGSDAwTUFVZGdXcEFLcDVkSWlmbVRxcjZUeklw?=
- =?utf-8?B?a2tsQmltL2RDc2VySjh1SzgwbVdtZktQNHlqM2o3emNtQmJsWDl3cjFoT0hY?=
- =?utf-8?B?RmN3T1RMSWxxT0dpakhuNkxnS3pUZlJHTFRPbWdTVjBzZG1ZVHU0WXZ1cHNI?=
- =?utf-8?B?aGo4NThTTVlweWo0cm9aazBiRGE3TGJKcUlpaFhyQndtRmFsRHpaQU9Kb3NH?=
- =?utf-8?B?SkVxS0pmZU1kaS9EekNKaXBpOTRUbmF0aEpsSXRPaTBKSUNlUFQrbGtheER3?=
- =?utf-8?B?VnBlR3pJOGp6ODh6dm5QRHB2Nm5odlRJQkJSL2d2UHROeEEzZU5Yb2NzN0Vm?=
- =?utf-8?B?MUZTWnd6c2RXNnQ0blhIdi96OTgzRERWc1ZBdkllVHBQbXFaK2hoMFkvRDVI?=
- =?utf-8?B?bi9SNzErQlRucGdReU5hN2FnRzJybENDK2FESzh5a0k0Rmdham5HTDF2WEdN?=
- =?utf-8?B?ZkNieTRkZWVoTGplbDNkN3grRmIzenFYRVUvMDExY3NkR0F5bmZCN2RRYmk0?=
- =?utf-8?B?czJoK1BuVWxkUVY4MHcwS2tWUHpSSU41dS91S2RqK0tuM1ozUGJJTWRxRXNZ?=
- =?utf-8?B?ejI0WDVBV09sNmJ3ek1OOHdGNkY2bFBWYUw4T2w0NVJ3SUVZcHhJb2R4dHFh?=
- =?utf-8?B?UGlmT1VnUjNiV1VvemdUNFJqSE1DUnY3WjlFb0dPV0xMVW5mSkhUbW54Y0Ji?=
- =?utf-8?B?L1FZbk5obVFkS1ZRSlNBRVBtc2xZZENRWFI2Vk43cC90OXlRM2pjOGEzNVFv?=
- =?utf-8?B?NkxSR0JDaU45V0VGcTdZSUcrTGNuTlArZStFcTkvdU9yL3lyakxCNHYxRzRV?=
- =?utf-8?B?T2hmWi9PQW8xTk5xcnZsd0tuaW1Dd1RBU01pRzRxVFV5ZDZSWjlyTFFVUEhN?=
- =?utf-8?B?RHQwMkxqSjl6d3RWcEhWT1U5cUJGT2gxa1FibHF3cWFPc0ZRRDI2Ymp3M1Er?=
- =?utf-8?B?ZDhnNVc3NzdEcWhqWnFpSHh1Vk9RRk9iUy96aUhmUk5VWklsOHEvazU1N09S?=
- =?utf-8?B?azFJQmtrMENqRURrTzh3VFBnZDlLOU1DWWJjR2xEQkowOVhucGt2Um5PQjZz?=
- =?utf-8?B?Y3g0a25meG42dVVmKzNEZGJremhRNjNUNnh0ek5hK2dQWTIvZGwyeUYyV1hL?=
- =?utf-8?B?N0MveTNIdEZZUmtMMWdNWUMxQTVlYlhqU0kyMXlrNWZSZjljeGp4V1ZkeTdI?=
- =?utf-8?B?cGpqWXM2MlZZRUtYSzROZWhxMzNndVd3Z1Z4OHpXNHE2aXV4ZVRoSU4yUnI2?=
- =?utf-8?B?L1k0L2FvOHRCVm5BSURldE02ck0xcVgzbW84bFI1cGpmWWFoQ3BJL2xtNys0?=
- =?utf-8?B?Zm1pbFBUR1k1T1pJU0ZqUFNZNVVEQkk4ZWhWUU9rbmZBU2prTmY2TjFJb2tw?=
- =?utf-8?B?WjkxTHcvNHNTTHBtUElFOHFCUjJvajUwMlFES1NxZjVQZXFFbkY5c3VVUDZX?=
- =?utf-8?B?enlNWjVNWlJUa0tEY2U4NEVubjNEanIwdkVxVWViN21iRm9NNlpDVE9objNq?=
- =?utf-8?B?ZU1hOHBaYlhISnVQSTV6cFFGakVzYXlsOXI2NkJ6N1E1WStOM2V4Q2ZCUGsy?=
- =?utf-8?B?c0QxR01Nb3RBUm5EZVRqWUgyYmQ3eVZtVHhuekJXeUNDSnJMajBKQjlpWXJ2?=
- =?utf-8?Q?y0opiAfMLqsRikEThgcbh+ZpsvqL/uK+BOxsdZO?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?VElWTW5NTG5LN1k2TmhLZkh3Njl1MEo4dHFkdytEc0RPZlJaeEpKaTNUSnFm?=
- =?utf-8?B?U21BZWZVL0hPVGx1QUJ2b3o1U1d0MFlWc096TXpPSm9pcWpCSWoyV2czZzFp?=
- =?utf-8?B?ak5qbkpTMGxKNkVzTWxnRHZ1WjhrOE9jYjRtUzB6alZlWTZwSUMwdFlxR1Mv?=
- =?utf-8?B?bitPMjkwWXp2WVgxZklXL05OUTFmL1FuMFVmUUZaa1UzclNoNnFmWXpyb01B?=
- =?utf-8?B?SUhSOFJoS1ErWlJiejlMb0ZTc1ppb2xSMXk1dGY5U0YvVU00U0hvbWkrVENO?=
- =?utf-8?B?K0pnN0k2V3pleUMycWJEU1FibHJtV3JSc3NsS0FhcHB2bGRpdXhkMGw1Q1U5?=
- =?utf-8?B?WSt4V1V0ZkZBRnlMaFFqWEZHYjBZMEw5TE5lWGJwTDhHaiswbFRVL1JhYlhP?=
- =?utf-8?B?eForNlRZUXlxeUhFdU92M3pDODFTRWhYdHlaVFRNTEpYSkpQc2ZFbFRJMDF0?=
- =?utf-8?B?NVBoWXhFV2liYzdmL0pKanJPNUE4b2lqMjF1Y2pjT096RmdwclAxK0VzTUdK?=
- =?utf-8?B?NE1QeFF2bWZPQ2NHcVpIdXJ1VUJGYmFTUXRvdVRqc3VnOW9TQTcwRzMvZXJa?=
- =?utf-8?B?T1VNVmlEalRQVVl1ZHVGMVdWeHpraURuaHlFR25VbVhaa3hkMlFpSVgzMWdW?=
- =?utf-8?B?OUxhK3YrTjk2aWlWOENicXIyL1lnZDJHU1c0WGhRMkR3cGF6aXZpYWh5NDd6?=
- =?utf-8?B?WHgvZlc4NFNlek5rMVY1M28wZWJIREh5d1dIVGZaT0F4N2kydU5MZ002dnZx?=
- =?utf-8?B?TXJVOVIwWFdlUFVaTDhRRlhoR0pjVHB5bXVmRGtHSkc5T0drQkVRazROTFQw?=
- =?utf-8?B?SmpFWkdUc0NFRmFTa2tLaERtVW4xTWNnN0o1SUpQckEyR2hlazgrZGN1SnlS?=
- =?utf-8?B?K01xYko1VjB6dUc4bnZOZ0tkNndjNjNhVmVFVE5ITGNOcVd4RTRnS0p4emhr?=
- =?utf-8?B?dEhGSXI0OUVpcURLRVNIZ0JpTHY4YVUvaU9OdTN4WTBGcHR1NjBSRXYwNlhF?=
- =?utf-8?B?ZnoxQ1dtTkh5cWJYbjBKTVljc2pEVkxGdnhsa0FWTWo4M3ZDdDlNd242azQ0?=
- =?utf-8?B?TjlEajdUSmU5a2p0QlJWaU00K0psRmowd2s3TlU4QmJOSithV2tTOVMzbGY0?=
- =?utf-8?B?RnF0MEY1ajcrODZ0RzNQaGVBb0t2TFVlZUU2YURVTnZPYUpaMHdxZm8yUzZD?=
- =?utf-8?B?Q0lmdWpTSEtJV1U1TDNpSGxiTTBLSXNrU1A4TFZ3L0lCajdtU2c5Q1p1NjV6?=
- =?utf-8?B?dTluaWJta0hlTlBZdDFZUnVGKy9KMEFLdWpiVlVHcmc3ZUVsVzFtQm1pUTRs?=
- =?utf-8?B?S1ZEU0pURS9xUlVVRWdUYzZnYlBMUFdNd2dSVy9wNHFGTHZ1U3EvWU80akNP?=
- =?utf-8?B?MXlKOWtqZE8xY0NhWTNuWG5pdEJFNkg5RDBPSFprS2RVR21iYUgzdTA4cWZr?=
- =?utf-8?B?RkFaTUhORUdCWTdoWGFWdnRrWDlJWGRKSEc3Q1pKcjZMazdueDV0SFdwUUF0?=
- =?utf-8?B?K0lIRi9JT0F4ekZpQlBvNDZDQ0lxUmcwck9BZCtKRWJtZ056bWNzUU56QVdZ?=
- =?utf-8?B?TVZyUFYzT0RGb0FLOGxneDBuazVwRXFYMHRQRHRrbXVONzFUWVJJSUFwaEJm?=
- =?utf-8?B?dGRQaTVuOUVDcFIybkZhQ0JsYmgzZmNIanVva24rcVlQNDFKc1RMb0tBamNz?=
- =?utf-8?B?YkhrS2lqYjRXUjJ0bWpmcEhFQ3Q5R3YxMDBkT2dSWlVRaitZUzh1MFk3eGUv?=
- =?utf-8?B?a3JoN2c0WFMyWDZmWjhQRVZyWW0rY1AwTUFSeUhVemRvSXd5U2VkaHZBZWRO?=
- =?utf-8?B?b2Z4ZkNIZHE4YndMcEwyRXM0b0V3aVk4NlFRWEozNlR1dTlvYnE1M0NrbnBs?=
- =?utf-8?B?SFdlWDlUY2tTbGJCcGphQjIxMHE5NVZMMERVRnROMlc4WUZBcVphNmNBV2FL?=
- =?utf-8?B?Z3pqS2dxa0xFUDdRZ0h4c2VVcnJkWFQwdUVleGFHNkZPRkRnbWVWdDJQWWU3?=
- =?utf-8?B?QkgwMUdtN05seVRvbUJwelh1ekE1OFdheld0dGdJWFZ5azcxcFU5R2hKYkJY?=
- =?utf-8?B?d1VMOWkwNHZ4TGEzZnhnWWlJTzBOWTA5YlBseXh4TUVHOUxlb0s5bzdIbGp5?=
- =?utf-8?B?UENoQTFXZE9aSm1hT1VyS1gwNHAxTy9reURLYktmK3dSTGxmZEdNbGV1VWFk?=
- =?utf-8?Q?EM8hwNMjcGOp6zek4rw4WUA=3D?=
-X-OriginatorOrg: efficios.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 80aefd6e-8cb7-4983-5c43-08dd71ff6f09
-X-MS-Exchange-CrossTenant-AuthSource: YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Apr 2025 16:00:05.1536
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4f278736-4ab6-415c-957e-1f55336bd31e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: h7O/Ub36A/RLhOUQSUQQdw2ZDvYdzmjH1CUybx8SvTUNE5bdZUT3DS19b2OdzZCXWwZ7A16hxPG051JGjinQUj3WhGxY5h7xkDdDPNb3VZg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: YT2PR01MB5307
+References: <cover.1743572195.git.viresh.kumar@linaro.org> <35f4223be4a51139348fed82420481b370d7b1db.1743572195.git.viresh.kumar@linaro.org>
+ <Z-1b_FkYUJEIj-YW@thinkpad>
+In-Reply-To: <Z-1b_FkYUJEIj-YW@thinkpad>
+From: Burak Emir <bqe@google.com>
+Date: Wed, 2 Apr 2025 18:00:26 +0200
+X-Gm-Features: AQ5f1JqBpfnQ28rLuPWm0oFko_ozy1h-sFtem4HTb0TGPbpma4McG2-SwMYmsEo
+Message-ID: <CACQBu=WMu_CmzERJAHmjiuQ-NZe6DK2kAkvP0cnFN-Y+QhRwvg@mail.gmail.com>
+Subject: Re: [PATCH V4 1/2] rust: Add initial cpumask abstractions
+To: Yury Norov <yury.norov@gmail.com>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, linux-kernel@vger.kernel.org, 
+	Danilo Krummrich <dakr@redhat.com>, rust-for-linux@vger.kernel.org, 
+	Vincent Guittot <vincent.guittot@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2025-04-02 11:49, Steven Rostedt wrote:
-> On Wed, 2 Apr 2025 10:56:51 -0400
-> Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
-[...]
->> Please let me know if I'm missing something,
-> 
-> I guess what you are missing is that the code no longer is aimed at having
-> vmap_page_range() ever get mapped to user space ;-)
+On Wed, Apr 2, 2025 at 5:47=E2=80=AFPM Yury Norov <yury.norov@gmail.com> wr=
+ote:
+>
+> On Wed, Apr 02, 2025 at 11:08:42AM +0530, Viresh Kumar wrote:
+> > Wed,  2 Apr 2025 11:08:42 +0530
+> > Message-Id: <35f4223be4a51139348fed82420481b370d7b1db.1743572195.git.vi=
+resh.kumar@linaro.org>
+> > X-Mailer: git-send-email 2.31.1.272.g89b43f80a514
+> > In-Reply-To: <cover.1743572195.git.viresh.kumar@linaro.org>
+> > References: <cover.1743572195.git.viresh.kumar@linaro.org>
+> > MIME-Version: 1.0
+> > Content-Transfer-Encoding: 8bit
+> > Status: O
+> > Content-Length: 11430
+> > Lines: 334
+> >
+> > Add initial Rust abstractions for struct cpumask, covering a subset of
+> > its APIs. Additional APIs can be added as needed.
+> >
+> > These abstractions will be used in upcoming Rust support for cpufreq an=
+d
+> > OPP frameworks.
+> >
+> > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> > ---
+> >  rust/kernel/cpumask.rs | 301 +++++++++++++++++++++++++++++++++++++++++
+> >  rust/kernel/lib.rs     |   1 +
+> >  2 files changed, 302 insertions(+)
+> >  create mode 100644 rust/kernel/cpumask.rs
+> >
+> > diff --git a/rust/kernel/cpumask.rs b/rust/kernel/cpumask.rs
+> > new file mode 100644
+> > index 000000000000..792210a77770
+> > --- /dev/null
+> > +++ b/rust/kernel/cpumask.rs
+> > @@ -0,0 +1,301 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +
+> > +//! CPU Mask abstractions.
+> > +//!
+> > +//! C header: [`include/linux/cpumask.h`](srctree/include/linux/cpumas=
+k.h)
+> > +
+> > +use crate::{
+> > +    alloc::{AllocError, Flags},
+> > +    bindings,
+> > +    prelude::*,
+> > +    types::Opaque,
+> > +};
+> > +
+> > +#[cfg(CONFIG_CPUMASK_OFFSTACK)]
+> > +use core::ptr::{self, NonNull};
+> > +
+> > +#[cfg(not(CONFIG_CPUMASK_OFFSTACK))]
+> > +use core::mem::MaybeUninit;
+> > +
+> > +use core::ops::{Deref, DerefMut};
+> > +
+> > +/// A CPU Mask.
+> > +///
+> > +/// This represents the Rust abstraction for the C `struct cpumask`.
+> > +///
+> > +/// # Invariants
+> > +///
+> > +/// A [`Cpumask`] instance always corresponds to a valid C `struct cpu=
+mask`.
+> > +///
+> > +/// The callers must ensure that the `struct cpumask` is valid for acc=
+ess and remains valid for the
+> > +/// lifetime of the returned reference.
+> > +///
+> > +/// ## Examples
+> > +///
+> > +/// The following example demonstrates how to update a [`Cpumask`].
+> > +///
+> > +/// ```
+> > +/// use kernel::bindings;
+> > +/// use kernel::cpumask::Cpumask;
+> > +///
+> > +/// fn set_clear_cpu(ptr: *mut bindings::cpumask, set_cpu: u32, clear_=
+cpu: i32) {
+> > +///     // SAFETY: The `ptr` is valid for writing and remains valid fo=
+r the lifetime of the
+> > +///     // returned reference.
+> > +///     let mask =3D unsafe { Cpumask::from_raw_mut(ptr) };
+> > +///     mask.set(set_cpu);
+> > +///     mask.clear(clear_cpu);
+> > +/// }
+> > +/// ```
+> > +#[repr(transparent)]
+> > +pub struct Cpumask(Opaque<bindings::cpumask>);
+> > +
+> > +impl Cpumask {
+> > +    /// Creates a mutable reference to an existing `struct cpumask` po=
+inter.
+> > +    ///
+> > +    /// # Safety
+> > +    ///
+> > +    /// The caller must ensure that `ptr` is valid for writing and rem=
+ains valid for the lifetime
+> > +    /// of the returned reference.
+> > +    pub unsafe fn from_raw_mut<'a>(ptr: *mut bindings::cpumask) -> &'a=
+ mut Self {
+> > +        // SAFETY: Guaranteed by the safety requirements of the functi=
+on.
+> > +        //
+> > +        // INVARIANT: The caller ensures that `ptr` is valid for writi=
+ng and remains valid for the
+> > +        // lifetime of the returned reference.
+> > +        unsafe { &mut *ptr.cast() }
+> > +    }
+> > +
+> > +    /// Creates a reference to an existing `struct cpumask` pointer.
+> > +    ///
+> > +    /// # Safety
+> > +    ///
+> > +    /// The caller must ensure that `ptr` is valid for reading and rem=
+ains valid for the lifetime
+> > +    /// of the returned reference.
+> > +    pub unsafe fn from_raw<'a>(ptr: *const bindings::cpumask) -> &'a S=
+elf {
+> > +        // SAFETY: Guaranteed by the safety requirements of the functi=
+on.
+> > +        //
+> > +        // INVARIANT: The caller ensures that `ptr` is valid for readi=
+ng and remains valid for the
+> > +        // lifetime of the returned reference.
+> > +        unsafe { &*ptr.cast() }
+> > +    }
+> > +
+> > +    /// Obtain the raw `struct cpumask` pointer.
+> > +    pub fn as_raw(&self) -> *mut bindings::cpumask {
+> > +        self as *const Cpumask as *mut bindings::cpumask
+> > +    }
+> > +
+> > +    /// Set `cpu` in the cpumask.
+> > +    ///
+> > +    /// Equivalent to the kernel's `cpumask_set_cpu` API.
+> > +    #[inline]
+> > +    pub fn set(&mut self, cpu: u32) {
+> > +        // SAFETY: By the type invariant, `self.as_raw` is a valid arg=
+ument to `cpumask_set_cpus`.
+> > +        unsafe { bindings::cpumask_set_cpu(cpu, self.as_raw()) };
+> > +    }
+>
+> Alright, this is an atomic operation. For bitmaps in rust, Burak and
+> Alice decided to switch naming, so 'set()' in C becomes 'set_atomic()'
+> in rust, and correspondingly, '__set()' becomes 'set()'.
+>
+> I think it's maybe OK to switch naming for a different language. But
+> guys, can you please be consistent once you made a decision?
+>
+> Burak, Alice, please comment.
 
-Thanks for the clarification!
+I really like the explicit naming convention that includes "atomic" if
+an operation is atomic.
+It seems also consistent with std library.
 
-Mathieu
+> Regardless, without looking at the end code I can't judge if you need
+> atomic or non-atomic ops. Can you link the project that actually uses
+> this API? Better if you just prepend that series with this 2 patches
+> and move them together.
 
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-https://www.efficios.com
+The type &mut self gives it away: the Rust type system enforces
+exclusive access here due to aliasing rules.
+So a non-atomic operation is sufficient here.
+
+> > +    /// Clear `cpu` in the cpumask.
+> > +    ///
+> > +    /// Equivalent to the kernel's `cpumask_clear_cpu` API.
+> > +    #[inline]
+> > +    pub fn clear(&mut self, cpu: i32) {
+> > +        // SAFETY: By the type invariant, `self.as_raw` is a valid arg=
+ument to `cpumask_clear_cpu`.
+> > +        unsafe { bindings::cpumask_clear_cpu(cpu, self.as_raw()) };
+> > +    }
+> > +
+> > +    /// Set all CPUs in the cpumask.
+> > +    ///
+> > +    /// Equivalent to the kernel's `cpumask_setall` API.
+> > +    #[inline]
+> > +    pub fn set_all(&mut self) {
+> > +        // SAFETY: By the type invariant, `self.as_raw` is a valid arg=
+ument to `cpumask_setall`.
+> > +        unsafe { bindings::cpumask_setall(self.as_raw()) };
+> > +    }
+>
+> Can you keep the name as 'setall'? This would help those grepping
+> methods roots in C sources.
+>
+> > +    /// Get weight of the cpumask.
+> > +    ///
+> > +    /// Equivalent to the kernel's `cpumask_weight` API.
+> > +    #[inline]
+> > +    pub fn weight(&self) -> u32 {
+> > +        // SAFETY: By the type invariant, `self.as_raw` is a valid arg=
+ument to `cpumask_weight`.
+> > +        unsafe { bindings::cpumask_weight(self.as_raw()) }
+> > +    }
+> > +
+> > +    /// Copy cpumask.
+> > +    ///
+> > +    /// Equivalent to the kernel's `cpumask_copy` API.
+> > +    #[inline]
+> > +    pub fn copy(&self, dstp: &mut Self) {
+> > +        // SAFETY: By the type invariant, `Self::as_raw` is a valid ar=
+gument to `cpumask_copy`.
+> > +        unsafe { bindings::cpumask_copy(dstp.as_raw(), self.as_raw()) =
+};
+> > +    }
+> > +}
+> > +
+> > +/// A CPU Mask pointer.
+> > +///
+> > +/// This represents the Rust abstraction for the C `struct cpumask_var=
+_t`.
+> > +///
+> > +/// # Invariants
+> > +///
+> > +/// A [`CpumaskBox`] instance always corresponds to a valid C `struct =
+cpumask_var_t`.
+>
+> Can you keep the C name? Maybe CpumaskVar? Or this 'Box' has special
+> meaning in rust?
+>
+> > +///
+> > +/// The callers must ensure that the `struct cpumask_var_t` is valid f=
+or access and remains valid
+> > +/// for the lifetime of [`CpumaskBox`].
+> > +///
+> > +/// ## Examples
+> > +///
+> > +/// The following example demonstrates how to create and update a [`Cp=
+umaskBox`].
+> > +///
+> > +/// ```
+> > +/// use kernel::cpumask::CpumaskBox;
+> > +/// use kernel::error::Result;
+> > +///
+> > +/// fn cpumask_foo() -> Result {
+>
+> cpumask_foo() what? This is not a good name for test, neither
+> for an example.
+>
+> > +///     let mut mask =3D CpumaskBox::new(GFP_KERNEL)?;
+> > +///
+> > +///     assert_eq!(mask.weight(), 0);
+> > +///     mask.set(2);
+> > +///     assert_eq!(mask.weight(), 1);
+> > +///     mask.set(3);
+> > +///     assert_eq!(mask.weight(), 2);
+>
+> Yeah, you don't import cpumask_test_cpu() for some reason, and has
+> to use .weight() here to illustrate how it works. For an example, I
+> think it's a rather bad example.
+>
+> Also, because you have atomic setters (except setall) and non-atomic
+> getter, I think you most likely abuse the atomic API in your code.
+> Please share your driver for the next round.
+>
+> I think it would be better to move this implementation together with
+> the client code. Now that we merged cpumask helpers and stabilized the
+> API, there's no need to merge dead lib code without clients.
+>
+> Thanks,
+> Yury
