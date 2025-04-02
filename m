@@ -1,63 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41B4F19E826
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 20:29:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743625779; cv=none; b=BgI2Muqf3ToqNEkJgrhsVEwRsFEPfdSiBy+sq/95TSpq4CopMjnFsthr7mvok+2J2/WJxaAgKHPxE70R21CeDUBkvv4bCd9FrhLXpUETWV6+ffCWn47gjVSyGgtqTFP89BksYNcmKwhyprpUaE9fOkU3kordEtCEJ60rGmqF3eQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743625779; c=relaxed/simple;
-	bh=sGiYg3z/tFgNP8/WeX2yozEZiRzk47zD4QucahjSTzs=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=FZn20G843B9ijQ90aJh+8vai8GTPK3KChDyPQLe6B1G89gXHnI8EXp0twQqu1wbsPmV9nUAq8/kKOZnR6331eGBjedCgeTOxGxEdB2gw9ttFQIRmmaWRgKqSs+nAnBDVVHxTc/PMVzg56Bb9wmVRD7KZ+cprf2BgJA1+y5noSCw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZnZkSB/7; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZnZkSB/7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1851AC4CEDD;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08B771F0E40;
 	Wed,  2 Apr 2025 20:29:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743625779;
-	bh=sGiYg3z/tFgNP8/WeX2yozEZiRzk47zD4QucahjSTzs=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=ZnZkSB/74Ls5R4iJsmRMHuLbE92jjVw+CBPZqqRaNyHF1nCVgqv43Nf4/samwkh35
-	 fJ5bxCzgK2LNh+mVebmnygkw4l3hYrXIQ5dER0EabI92wJLNORI9YMTHAo35sU/wZ2
-	 gPISmu0Bzt2jpHp445UKvl+8N/QtOVyQeGpb2/Ars7TFpLq84EF27llsAp9AyTU9QX
-	 9UE4jhNhy8hVP9CSnWF+ficX3SoLMRHhFMvUunLpnYs1FMk6Tku9E/n+hBGOrS3IPp
-	 xjd6oo2E80WhnITklYXR55NxiF0ah/1Svts/ykQ2P2pK0M2cKnKovAwzXIO2CHYvSy
-	 vmQPPqldS1YWQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 34412380665A;
-	Wed,  2 Apr 2025 20:30:17 +0000 (UTC)
-Subject: Re: [GIT PULL] Please pull powerpc/linux.git powerpc-6.15-2 tag
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <87zfgyivld.fsf@mpe.ellerman.id.au>
-References: <87zfgyivld.fsf@mpe.ellerman.id.au>
-X-PR-Tracked-List-Id: <linuxppc-dev.lists.ozlabs.org>
-X-PR-Tracked-Message-Id: <87zfgyivld.fsf@mpe.ellerman.id.au>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git tags/powerpc-6.15-2
-X-PR-Tracked-Commit-Id: 892c4e465c360d07f529bc3668fde7cbd4ea6b32
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 0a87d6bb6fd274cde3bf217a821153714374198f
-Message-Id: <174362581579.1664588.10759501812226685205.pr-tracker-bot@kernel.org>
-Date: Wed, 02 Apr 2025 20:30:15 +0000
-To: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, maddy@linux.ibm.com, linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au, naveen@kernel.org, npiggin@gmail.com, ajd@linux.ibm.com, christophe.leroy@csgroup.eu, fbarrat@linux.ibm.com, linux-kernel@vger.kernel.org, martin.petersen@oracle.com, James.Bottomley@HansenPartnership.com
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743625781; cv=none; b=QozPD3KaGTEQQIGCeRnHrMLwTOvHmOtDK7He+ZE3UV3KeIcGDDRxn0rC5W7aDOpjmULguGBstQL2FZ3Rr+IlTjeUZliPDa+yWVtcRoz98fauYwqgkqjAHJOEUad5y6S1NhsUvytsPp2tJlWT5UmGpXV8XR98DDfM8xRrsYOtrEw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743625781; c=relaxed/simple;
+	bh=G2MDdEdO8z0KC+Zdy7504GbR+idMVp6LcuRq7ECu370=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pKwJUg8FauB519DVB7sPIkxONHLBtFhaAvITgxqzrjrrdZPIBEVMjPUjAmP88oJlDOQFDUif3jitHKfZY4y4PulJT2Wno5ps+Z4+e89SMFP/zRRzyjlDr9R04s8NmbJBpOMS7jifei/k3XC/kS26EPQh1UreEZ6BDU6tMHbacf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z3+zKsWE; arc=none smtp.client-ip=209.85.216.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z3+zKsWE"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2ff53b26af2so26605a91.0;
+        Wed, 02 Apr 2025 13:29:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743625779; x=1744230579; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=G2MDdEdO8z0KC+Zdy7504GbR+idMVp6LcuRq7ECu370=;
+        b=Z3+zKsWEEs111SDpSpJEjc9z8HzDLkgSHUAR85c2qFtj7+y/w4bklUX1NVgEcMG27T
+         s8IikfSSgmee8VUphPEUucyKXRhlYaOvdn18RpRxv3yeUKkzIdEVUGXWC5ktuDapZIpi
+         Jj6RRqzZBCBi3KUKnVYtQYKAAT0E47sYKpg4Zkc5+mPctQduevlWumyqeINHcZUcqiuV
+         iS/93ZAdAMViHlV/ePXVSyGq3KMP8ZzCnHBfQ9B7f0Qk/khBazcsSydZu9pIUSND4wRK
+         ZaqzYZwNjlypYX6RbalCbHGUXBvjKD/ojw+nbdlpcE9Yqga6velrBZNep9LYeHcgk848
+         RfyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743625779; x=1744230579;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=G2MDdEdO8z0KC+Zdy7504GbR+idMVp6LcuRq7ECu370=;
+        b=kdMPIOWTDrndYMFNVNukVL5QBCK8QLZTFIlVWpx4huVX3B/VyoHmIlzSofaG9JWcAw
+         WLENCRuIKRtGpjnWFdfaN0hcq4lax+CS7hOjK2ZeYLL7K751J6U0eoJBfd95/HDxHd73
+         c8uAz4nl+4+8f/XBPNqyRpAurOTT3Dtj4N4gskBbXd24/N7pb9KjRjY20mtGHxSY0MTm
+         1wSlTpomRlGUT65vPOdZj+xtfyKwergeUsd53KgpwLolz/GrlT2D+wPvKCRi8lbkk498
+         sPitSpWAZ7poNadfPLT3wURMhG//tblbzLuqNZR9HMqAq3C6TAPgKswx2x1wwJlZMOWy
+         BySA==
+X-Forwarded-Encrypted: i=1; AJvYcCUbBAmwppbc1YfZFKhu8T5waB7WXuZ+eN3ZEuHHrAZS4uyInq09gvzIEsWLtCLyEG/P8+I0lLSV0Fzf+d0=@vger.kernel.org, AJvYcCX3nkhr2iYhZPav6VbcVUr28iTZ2x/GuJRSRKUhLUOK0bjkbk1aK9rnSg7oygLJLsXGN5GJscrsZiDW4BglQo8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxshyyw3Vzv5Gmb256vyWaQwgQY+KiSRIfsL3gFhxKIfX7vOiPT
+	M5t6PCcdRGFO0+47OEYXTBCUtgNkgr5q4xey3E4GC0QTVavS7FG028y2+3zAANMyNLrDO2NHKk5
+	KRLNua96uQeEo6Jbvpaqd9knMR1FIyVII
+X-Gm-Gg: ASbGncsoSGjWQVQcy7s3Xww+uWSCuSnxnn+FrT8GCSNwSp3WXiMKod0J+R0YOOLWY11
+	y/jlOxE56tpU0QiHNbezV7S5Eb/JCOc8+7SF0cCIIlAoqskOpQmQgLnTqHZPxN5NoXxoOym4hRa
+	CZmLKjdjOa1nxf9EDjlCgPY+s=
+X-Google-Smtp-Source: AGHT+IFCmvkmz5a2ce/qEErTy+ix3lRxJsnJ8qatRbe6xQkTV1eTtqypTjSAmk71nyPy+VkbGf6oJPtgS+lqMyJ4Z/w=
+X-Received: by 2002:a17:90a:e7cc:b0:2fe:8fa0:e7a1 with SMTP id
+ 98e67ed59e1d1-30562ddfce2mr4049565a91.2.1743625779225; Wed, 02 Apr 2025
+ 13:29:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20250401221205.52381-1-ojeda@kernel.org> <D8VPGBN60E61.1Z48FQW6TL3A@proton.me>
+ <CANiq72mdvnHvWbVNQbiXSRxd1xrF+A=v0RdJO74xeY3HyhRmcg@mail.gmail.com>
+ <CAJ-ks9nAAcoJoFF+qNPbhsM32kOh9u+LGYUwFN_n9qqudB6YhA@mail.gmail.com>
+ <CANiq72k36Tvwbzkg6nRdxB8VNRHLf8QzLeCXZq7sEPewccsWNw@mail.gmail.com> <CAJ-ks9nfEg=sdn_-q+xOc+k9mU0pdMuumwRb76LXzE3RcOtg6w@mail.gmail.com>
+In-Reply-To: <CAJ-ks9nfEg=sdn_-q+xOc+k9mU0pdMuumwRb76LXzE3RcOtg6w@mail.gmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Wed, 2 Apr 2025 22:29:26 +0200
+X-Gm-Features: AQ5f1Jr5D2JPo_bfn1lEtiLKIRtSrkGZ03A37KRZeYcdWqFq9fOb3M7KrVF5WBA
+Message-ID: <CANiq72mERwbmXYq-pi=WUAZ_VYGcBVS7tzH4P5zSUVCMcL4-CQ@mail.gmail.com>
+Subject: Re: [PATCH] rust: clean Rust 1.86.0 new `clippy::needless_continue` cases
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: Benno Lossin <benno.lossin@proton.me>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, patches@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The pull request you sent on Wed, 02 Apr 2025 23:41:50 +1100:
+On Wed, Apr 2, 2025 at 6:41=E2=80=AFPM Tamir Duberstein <tamird@gmail.com> =
+wrote:
+>
+> The counterfactual is hard to prove - you don't know what true
+> positives the lint would catch. In my opinion disabling lints is
+> risking throwing the baby out with the bathwater.
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git tags/powerpc-6.15-2
+It is true that it is not easy to know what we will exactly lose right
+now (apart from what it claims in the docs and its examples), but one
+can easily test enabling it in a couple cycles and we would have some
+data from kernel code.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/0a87d6bb6fd274cde3bf217a821153714374198f
+To be clear, disabling now does not mean forever -- we can reevaluate
+with that data and possible improvements to the lint that happened
+meanwhile (sometimes they get improved or split due to feedback).
 
-Thank you!
+By the way, the lint is in "pedantic" in Clippy and disabled by
+default -- so we are "only" disabling w.r.t. what we do nowadays.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+In any case, my main concern is cost: we already require a lot from
+Rust kernel developers, typically more than in C, and while one goal
+of the project is trying to see how far we can go on being strict
+about things like lints, I worry we may overdo it at times.
+
+Cheers,
+Miguel
