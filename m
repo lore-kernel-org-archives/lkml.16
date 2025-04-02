@@ -1,44 +1,59 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9C1D33993;
-	Wed,  2 Apr 2025 17:19:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A3FE33993;
+	Wed,  2 Apr 2025 17:20:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743614372; cv=none; b=cslhdlc5xQx8Shwa1Ry67ZMBZAqpkteSeR1+CmEM48yYXj16xSZbj/vzgPTh+IaYH2P2iqn36Rrk6Bc4FmP18+Dl+3LtidJ9Mg/q7RMOjtPeFwI1D+Ea/YiYRwkMJ/beJzcacyCQuwBxnTmUL9zy6e+x93D5fVSs+qXKf81iXMc=
+	t=1743614425; cv=none; b=uAwAwTfSAqcWE5Un2izkX/6/SbBnRJv3idDAxIJI2Yt6Guq2yMUTCm5on0EEhNsuVgITwA5T7fnXVQEoy6usTNgZwQkIgf1m5vN/aOl+I2Qj+rTVQsjU2jvwsk55ZmP1PhbYwlyLNfPitK4ucp2rEJK8bAOqEoggwEeYo00cf8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743614372; c=relaxed/simple;
-	bh=6ZAuJe7VpvzN0yn03t+NJJYfd2x2rZOrxKuVdjVr/c4=;
+	s=arc-20240116; t=1743614425; c=relaxed/simple;
+	bh=ARkWPTneha6aLmXSvrGnF6uhfv/6LtE9EzJDxX/VM6g=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AdnqHnJlDlPgOoq1CTB1yp6TfkimqixZSPOjt319ffUObt1nv58SWYg20v5VAPxB7WRX995g8OUy6G9GkedsX9l6gBfIz1PDQUpbzoFICK55Qq6LtgeMnQU3G6wDNUAprLnfLdGLPlnrRyqgnADawmY6IXcQuwe7xzRVHDU/PHY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qcp7NY/U; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=U6civGeYWMAJNXWQnnEBO7dQfELqYPcNoXBHMiJO2EVoI0Gty3vHbP0GfI+3g+HDjvEKJ2hY/tkQ+IIGphVJCwAJYJbkSIYlo/QMk9LyP0VDNy7kC6IDnNxQs630mGcojvp8AXmB5dK4zYVDfcXb+ynq9s6CVgZyL/RpE4AIYdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F+qjFAMs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qcp7NY/U"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13449C4CEDD;
-	Wed,  2 Apr 2025 17:19:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F+qjFAMs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0E30C4CEDD;
+	Wed,  2 Apr 2025 17:20:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743614372;
-	bh=6ZAuJe7VpvzN0yn03t+NJJYfd2x2rZOrxKuVdjVr/c4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Qcp7NY/UEHczn/meGifvCOmH+kqRAT/EYrl6oHSOaRWQbPRG6985J8GQDYLfLcAk+
-	 VmkvzUYsBk3LgHWllXQ/uSib6UCpcjpP46ruHZK7MV+is/my/H6mPeAAnQH865uNCd
-	 cqhZU6kHkeYtt9Z4ACIanKNGZlEDRdh2x9trTgObutVHvV5YahIfaSYz9DLBHOSqKT
-	 zliJKhg+RR8kHn5xGWYghQC6Tp5CEZe55kX/f7udjbCcLMD60i33li9YYeZJO2lXeW
-	 HXddhF9l3bBdeSVALT/ZeY5e0HrwLkMGdpVCWuMeZghkOeERvUrEbCyihF7U6bQkeM
-	 cjpthLU77Ot9w==
-Date: Wed, 2 Apr 2025 10:19:30 -0700
-From: Eric Biggers <ebiggers@kernel.org>
-To: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Ard Biesheuvel <ardb@kernel.org>, linux-crypto@vger.kernel.org,
-	linux-kernel@vger.kernel.org, x86@kernel.org,
-	"Jason A. Donenfeld" <Jason@zx2c4.com>
-Subject: Re: [PATCH v2 0/9] crypto: x86 - stop using the SIMD helper
-Message-ID: <20250402171930.GD1235@sol.localdomain>
-References: <20250402002420.89233-1-ebiggers@kernel.org>
- <Z-yrf_9D2rV1Q136@gondor.apana.org.au>
- <CAMj1kXEx__RLBriW0kVPrKnx6+DCpq8=6F-7Tmj2Us61gvGGaw@mail.gmail.com>
- <CAMj1kXE-vo7E1U++4mAqDH2SXfc=sRZs8KganedJk5z0QF49NA@mail.gmail.com>
- <Z-zzvXbjt3xzquXb@gondor.apana.org.au>
+	s=k20201202; t=1743614422;
+	bh=ARkWPTneha6aLmXSvrGnF6uhfv/6LtE9EzJDxX/VM6g=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=F+qjFAMs1+K82IxmFxXr3WbwC9FRq8eVFeSS4wQtW/CNa2PRakUd8ifTDuPaBFVBb
+	 rbZePb+V4ZYS4gdPizbVx8N0HYxRbxO2DvLhlmcLPYnpRb5jq4K+YFUKAGBPZMnPZA
+	 8cQ9TpGAwZ3pUbapHmugGnJIb+BaKbK/Lpd7R/816GkCRvb1Nh2HEzzcWHZHfCY7+G
+	 JjYPTHLIGKzY+6o8ceD5Y9LUi+LIw0OAngWHENaztDm5JqJAm9w8g0sHKvamEIucaa
+	 yqZREe9YEttIknmkTZS7BjXMMpqntnLJblrPd1AG9Z9wtQdZkPRCe6GsimzXFP2fwt
+	 XBpWNwBqYtKnw==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 6371ECE079A; Wed,  2 Apr 2025 10:20:22 -0700 (PDT)
+Date: Wed, 2 Apr 2025 10:20:22 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Venkat Rao Bagalkote <venkat88@linux.ibm.com>,
+	Stephen Rothwell <sfr@canb.auug.org.au>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org,
+	dave@stgolabs.net, jonathan.cameron@huawei.com,
+	alison.schofield@intel.com, vishal.l.verma@intel.com,
+	ira.weiny@intel.com, gourry@gourry.net,
+	linux-kernel@vger.kernel.org, linux-next@vger.kernel.org,
+	Madhavan Srinivasan <maddy@linux.ibm.com>
+Subject: Re: [BUG -next] ./usr/include/cxl/features.h:11:10: fatal error:
+ uuid/uuid.h: No such file or directory
+Message-ID: <b26c96af-8856-4bdf-9b43-dd225cdaab6c@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20250331171755.GC289482@nvidia.com>
+ <67eaf14b7c611_201f0294ba@dwillia2-xfh.jf.intel.com.notmuch>
+ <4641ce2f-74eb-45ea-a2f8-c7d0db905b7a@linux.ibm.com>
+ <79a032b5-b13d-43fd-b56e-01098122e104@intel.com>
+ <66ae49a8-d7f9-4fd9-b94e-9be26fd9aea4@paulmck-laptop>
+ <e9c57344-43f3-4f90-9894-eb4f5a1b22f2@intel.com>
+ <20250402114722.35cbd9d5@canb.auug.org.au>
+ <478264e8-af94-462b-929f-f7afdf8466bd@paulmck-laptop>
+ <ce38cbe3-429d-466b-bc8c-7dbb7c596ab9@linux.ibm.com>
+ <20250402114412.GA342109@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,51 +62,23 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z-zzvXbjt3xzquXb@gondor.apana.org.au>
+In-Reply-To: <20250402114412.GA342109@nvidia.com>
 
-On Wed, Apr 02, 2025 at 04:22:21PM +0800, Herbert Xu wrote:
-> On Wed, Apr 02, 2025 at 09:34:30AM +0300, Ard Biesheuvel wrote:
-> >
-> > Ah, never mind - I see some calls on 32-bit ARM to
-> > simd_skcipher_create_compat(), which have become redundant now that
-> > SIMD is guaranteed to be available in softirq context.
+On Wed, Apr 02, 2025 at 08:44:12AM -0300, Jason Gunthorpe wrote:
+> On Wed, Apr 02, 2025 at 11:57:04AM +0530, Venkat Rao Bagalkote wrote:
+> > > So the various kernel-build howtos will be updated?  Or is a patch
+> > > forthcoming?
 > 
-> Thanks!
+> I was going to pick up Dan's patch after the merge window closes
+
+Very good, thank you!
+
+> > FYI, now the issue is on the main line kernel also.
 > 
-> We could also remove all the calls to crypto_simd_usable in the
-> Crypto API hashing code, e.g., arch/arm64/crypto/sha1-ce-glue.c.
-> 
-> For the lib/crypto code I think we should make it a rule to
-> not allow any hardirq usage just like the Crypto API.  Does
-> anyone know of any uses of lib/crypto in a hardirq?
+> I thought the header test stuff was disabled now?? How are people
+> hitting this?
 
-This seems premature.  crypto_shash is documented to be usable in any context.
-See the "Context:" comments in include/crypto/hash.h.  Similarly, developers
-expect lib/ functions to be available in any context unless otherwise
-documented.
+For me, an allmodconfig build hits it every time unless I have the
+libuuid-devel package installed.
 
-For skcipher and aead, there are more reasons why it makes sense to limit the
-contexts:
-
-- skcipher_walk_first() already explicitly errors out if in_hardirq(), which
-  already prevents them from working in hardirq context in most cases
-- Even if it was allowed, the skcipher and aead APIs are already difficult to
-  use correctly in a hardirq
-- Because of how the crypto API is designed, it's not straightforward to fall
-  back to generic skcipher and aead code in no-SIMD contexts
-
-I could see the limitation being brought into crypto_shash too, though the
-crypto_shash documentation will need to be updated.  The crypto API also really
-needs to be explicitly checking all its requirements.  (It's probably finally
-time to add a kconfig option like CONFIG_DEBUG_CRYPTO to lib/Kconfig.debug, and
-put the extra assertions under there.  Then they could be added without
-impacting performance for normal users.)
-
-IMO, doing it for lib/ too would be going too far though.  The lib/ functions
-should be easy to use and not have random requirements on the calling context.
-And since they're just functions, it's easy for them to fall back to the generic
-functions when needed.  Also note that for very short inputs it can actually be
-faster to use no-SIMD code, as that avoids the overhead of a kernel-mode SIMD
-section.  So the fallback sometimes exists anyway for that.
-
-- Eric
+							Thanx, Paul
