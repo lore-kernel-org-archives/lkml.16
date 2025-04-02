@@ -1,198 +1,113 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14DF715CD46
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 17:11:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 935D52AEE9
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 17:12:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743613881; cv=none; b=ppGxdTasqCmSa8krtCLvHKX8xPoqVn2Xwv7SM4L+1iHx/BUszQ/UAJ+bpy2xEzeaVBTHvU4Y8w5xKjO/ln/N/kQKm/2rqKjY58Ij6gUkLN1I2AGLQaC2V613ADPDyR3JqmtY4Dd2mPFZCtEgAeCGPPluMLNJ050zG8hvqHhq50A=
+	t=1743613970; cv=none; b=AJKDrsEDiQENPooXwVqesKkWUNhemiVqRP8I3kHTQ/b8df/Om1ntuPIrC5IJ/Yk6RwKcHgzQpbOxe3JE8FktNH6m7qr2GDrdqCfel5FkZn1Wuf8XQA0bhw8O86BlKoAncYbZVmEjwLzmhTeU2eocNmISuEUnqUPiU49B8sElPyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743613881; c=relaxed/simple;
-	bh=+wJNA6oLLunSeEPuZaI+eRVSIe5qi71OKIi76K84Xb0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=LLUkEFncTgbyYvfPdno46yj7VQTSNCyjpq9yAzYO3CwS0SLOe10zZt3I4MUrQXOTlpT2r5kAVQ68bcLPxrLnEQBihOE0ZrQNJbiyiVFcfIy2dEzpKRlM+2D5UbrQsAvJcFEtRURhxlk3UMyY3iVYI7HdLjT+NWGUCuqoi9rdK6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Z4OSZv57; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1743613970; c=relaxed/simple;
+	bh=M+88wIcibNXlkVrU9mXUvjqfg/rJqIG5T8+nWXQU314=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iyanZKbk0e+JrDjAPx6uLvrPr2TmfSdQFMW3IgND5RhhxUeFAYytQ/gM5yqjzxCuVDT9UCHMSt61W3hSWZSK8Y6sLWAP6uDPGNsE6MvnIXccCP+F+InZHC/Nu/xzrI+XBydTEvx/mkTclTd5wOHXJx5EKVr5J2FKV9LCtA3MVkw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=YlYnM2oy; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Z4OSZv57"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743613878; x=1775149878;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=+wJNA6oLLunSeEPuZaI+eRVSIe5qi71OKIi76K84Xb0=;
-  b=Z4OSZv57xtZy1JdopHf/UCBwegrHUU25RR4IRf2jMywnkS1Q+3x+BWdq
-   pdiE3P9jJFkMbVhgFnzC9HXbAfnynAcLX+y/9iKSYw4mtDUZIzZdqqWWg
-   fUX9jagwz1Nd73mmw48eCBOiC+dJYPGdZEe0uZsb0SqYx4JLp036rhK+x
-   oKYjUO77tcATxif70uYLGGVvlmSkgBl+eh2Mq37wVEH7VV9dxG1ldkEMo
-   9fO4Xts3A/9hnR7YP3qwXxdRgMF9R6MAHrizOoS7a4PXo/D1OPvCgYq02
-   KnqHFNPdbhjLIQMqh8QjagYUm6ngUJRTFpkf0B8Kk44qOjygp+cEvm0rC
-   g==;
-X-CSE-ConnectionGUID: buy0o/xnQ6Gb+oAeRUUPQQ==
-X-CSE-MsgGUID: yJgaH78wSEm29zBLbSdBpA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11392"; a="55658607"
-X-IronPort-AV: E=Sophos;i="6.15,182,1739865600"; 
-   d="scan'208";a="55658607"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 10:11:17 -0700
-X-CSE-ConnectionGUID: Pv6p3CwCQd28FbptNbWIPA==
-X-CSE-MsgGUID: ZEd2JhQTRHW+zf79yvqNDw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,182,1739865600"; 
-   d="scan'208";a="157755129"
-Received: from inaky-mobl1.amr.corp.intel.com (HELO [10.125.110.4]) ([10.125.110.4])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 10:11:17 -0700
-Message-ID: <47d36f29-6507-43bd-b39f-f19a4170551a@intel.com>
-Date: Wed, 2 Apr 2025 10:11:13 -0700
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="YlYnM2oy"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ac2963dc379so1099231866b.2
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 10:12:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1743613966; x=1744218766; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=YVV1LWawFo1VyqHoXteM+f/Aj3/PTJr9pv2oltZdO1I=;
+        b=YlYnM2oy43gAUaX0eLXeyQkm8k9lpGXmPYqja1J7UgJBvRXOCD35K6l4m9iaHUgfLw
+         tIspvPoBQS6DcnWvC8fIjEuEzQtyyxl/npIY5opZw2Gsw60izkJBRuSA+hR4MGfLVNUh
+         63ZSi10NO42j4REjFJcZRWgnJKgL6KuBQwQWo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743613966; x=1744218766;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YVV1LWawFo1VyqHoXteM+f/Aj3/PTJr9pv2oltZdO1I=;
+        b=CjGhgMeyigNuI9NxG06w1sX1PTJKrBaGWkvfjsrrynQnFmFJiQ+e1y4Pur3ZCersW9
+         2dsbGAiuiKX4EIlwNy0lslY/8zK0OfTYbvMtXMr/BxBrkELurAqUn0fcse4Ne3RHO6w6
+         yb1JuRtP2FK4REav0jFiB1KTZjIEonQ7g8rD+yE9iOrN8QS1dGvzDLfACPDNCnowwDZ/
+         3t4/JkgZ7sUOtRUyD/ywQv3vRv5KtEygQz1NAQ4dM7kVBFG7NqS+l9IMpCWHRTzamrfN
+         Bn7teNv4fCJefVj9z+EMSQDX0mjiHOhB5CFBLRhErEQSO2jT1ZDBzLU7OA+SsoNmvQue
+         IulQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWP2CY9y0TtOW5U6xlwOkZ+8TfonaqDS3KMpXm9PqkZxuJmA6hz+Bx+YdbJ7ccP/3cs9YQBk9TVWgCowDU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyXoeT8jbKcIwRn3EwnFRC5a5N/0Z0/Co361oyDqwkFPC0baT5t
+	MgwyKiaK/u/BjtMuN2aHSfJotapvKYYiFTWIqGw5hcsJ28ddF6FzQNhQ97V10YTBDD3aGqDdBlP
+	cL6g=
+X-Gm-Gg: ASbGncs+OIE3bECNpO/okHZd5cO7bY79GXEhPFwx1AJOsvqOGp+Gw/qjgQ7Q+KdQhfS
+	Gz6BqMGUbqxWZQOPvPhbGJa+q37wG2bVKwEF5CwUryAyOyg0kceqRN+LryJqT6JHE/xr+suePwT
+	peeqHsnvbtACbBHNS+Rsi55tQASaGaDJHtE0TP9jq5gZ90lwjy+YbKu7bME1WdeXfcgTQQYk7P/
+	1djC59gcT3ynLuAYnDGHFQ3IH6z7dZO7kJkHPmI53hdrh757rWar1aCNMzn8g2r5WU4b7973mjK
+	xPJhH7ooqxspfbbM75pVe2+MxB0ZzsJSM3p0fFCeN8qxf1Wup/33cvfmI7MbQPG9u4i7UGdMTjI
+	1hWtYDxoEkOUMNhLXXy5WYavgPEW62A==
+X-Google-Smtp-Source: AGHT+IGG3JUuP822hqdQW5IsmYQT6ztBRZk6sWVBBGdwFSh2t0rdGr4tkMrfZ35RGLYgL486/to/7w==
+X-Received: by 2002:a17:907:94c1:b0:ac6:ba91:ca4d with SMTP id a640c23a62f3a-ac738a5ad2emr1606213166b.31.1743613965574;
+        Wed, 02 Apr 2025 10:12:45 -0700 (PDT)
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com. [209.85.218.46])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5edc16d3634sm8696411a12.19.2025.04.02.10.12.44
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Apr 2025 10:12:44 -0700 (PDT)
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ac298c8fa50so1151514766b.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 10:12:44 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWA04szTHfKFN3wO+yAd4TJJRmZ4RpODTYdEIawfB4aUyJQ0UeG6BQC2oL7V+3fub2y6fBeIwRU61HZmaA=@vger.kernel.org
+X-Received: by 2002:a17:907:c1f:b0:aaf:103a:e6e3 with SMTP id
+ a640c23a62f3a-ac738b4fa46mr1501644166b.43.1743613963920; Wed, 02 Apr 2025
+ 10:12:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH fwctl] pds_fwctl: fix type and endian complaints
-To: Shannon Nelson <shannon.nelson@amd.com>, jgg@nvidia.com,
- saeedm@nvidia.com, Jonathan.Cameron@huawei.com, leonro@nvidia.com,
- brett.creeley@amd.com, lkp@intel.com, oe-kbuild-all@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20250402165630.24288-1-shannon.nelson@amd.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250402165630.24288-1-shannon.nelson@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <Z-00cAEKkfvyNto2@pathway.suse.cz>
+In-Reply-To: <Z-00cAEKkfvyNto2@pathway.suse.cz>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Wed, 2 Apr 2025 10:12:27 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgfX9nBGE0Ap9GjhOy7Mn=RSy=rx0MvqfYFFDx31KJXqQ@mail.gmail.com>
+X-Gm-Features: AQ5f1Jrz4B-YeMv0VReyLm0sNwe0AKkz4BT05CVKnHGwIakoT1rqvU-uAhJPiUE
+Message-ID: <CAHk-=wgfX9nBGE0Ap9GjhOy7Mn=RSy=rx0MvqfYFFDx31KJXqQ@mail.gmail.com>
+Subject: Re: [GIT PULL] more printk for 6.15
+To: Petr Mladek <pmladek@suse.com>
+Cc: Sergey Senozhatsky <senozhatsky@chromium.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	John Ogness <john.ogness@linutronix.de>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Peter Zijlstra <peterz@infradead.org>, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+On Wed, 2 Apr 2025 at 05:58, Petr Mladek <pmladek@suse.com> wrote:
+>
+> please pull few more printk-related changes from
 
+Pulled. However, I reacted to this mess:
 
-On 4/2/25 9:56 AM, Shannon Nelson wrote:
-> Fix a number of type and endian complaints from the sparse checker.
-> 
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202504020246.Dfbhxoo9-lkp@intel.com/
-> Signed-off-by: Shannon Nelson <shannon.nelson@amd.com>
-> ---
->  drivers/fwctl/pds/main.c | 33 ++++++++++++++++++++-------------
->  1 file changed, 20 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/fwctl/pds/main.c b/drivers/fwctl/pds/main.c
-> index 284c4165fdd4..9b9d1f6b5556 100644
-> --- a/drivers/fwctl/pds/main.c
-> +++ b/drivers/fwctl/pds/main.c
-> @@ -105,12 +105,14 @@ static int pdsfc_identify(struct pdsfc_dev *pdsfc)
->  static void pdsfc_free_endpoints(struct pdsfc_dev *pdsfc)
->  {
->  	struct device *dev = &pdsfc->fwctl.dev;
-> +	u32 num_endpoints;
->  	int i;
->  
->  	if (!pdsfc->endpoints)
->  		return;
->  
-> -	for (i = 0; pdsfc->endpoint_info && i < pdsfc->endpoints->num_entries; i++)
-> +	num_endpoints = le32_to_cpu(pdsfc->endpoints->num_entries);
-> +	for (i = 0; pdsfc->endpoint_info && i < num_endpoints; i++)
->  		mutex_destroy(&pdsfc->endpoint_info[i].lock);
->  	vfree(pdsfc->endpoint_info);
->  	pdsfc->endpoint_info = NULL;
-> @@ -199,7 +201,7 @@ static int pdsfc_init_endpoints(struct pdsfc_dev *pdsfc)
->  	ep_entry = (struct pds_fwctl_query_data_endpoint *)pdsfc->endpoints->entries;
->  	for (i = 0; i < num_endpoints; i++) {
->  		mutex_init(&pdsfc->endpoint_info[i].lock);
-> -		pdsfc->endpoint_info[i].endpoint = ep_entry[i].id;
-> +		pdsfc->endpoint_info[i].endpoint = le32_to_cpu(ep_entry[i].id);
->  	}
->  
->  	return 0;
-> @@ -214,6 +216,7 @@ static struct pds_fwctl_query_data *pdsfc_get_operations(struct pdsfc_dev *pdsfc
->  	struct pds_fwctl_query_data *data;
->  	union pds_core_adminq_cmd cmd;
->  	dma_addr_t data_pa;
-> +	u32 num_entries;
->  	int err;
->  	int i;
->  
-> @@ -246,8 +249,9 @@ static struct pds_fwctl_query_data *pdsfc_get_operations(struct pdsfc_dev *pdsfc
->  	*pa = data_pa;
->  
->  	entries = (struct pds_fwctl_query_data_operation *)data->entries;
-> -	dev_dbg(dev, "num_entries %d\n", data->num_entries);
-> -	for (i = 0; i < data->num_entries; i++) {
-> +	num_entries = le32_to_cpu(data->num_entries);
-> +	dev_dbg(dev, "num_entries %d\n", num_entries);
-> +	for (i = 0; i < num_entries; i++) {
->  
->  		/* Translate FW command attribute to fwctl scope */
->  		switch (entries[i].scope) {
-> @@ -267,7 +271,7 @@ static struct pds_fwctl_query_data *pdsfc_get_operations(struct pdsfc_dev *pdsfc
->  			break;
->  		}
->  		dev_dbg(dev, "endpoint %d operation: id %x scope %d\n",
-> -			ep, entries[i].id, entries[i].scope);
-> +			ep, le32_to_cpu(entries[i].id), entries[i].scope);
->  	}
->  
->  	return data;
-> @@ -280,24 +284,26 @@ static int pdsfc_validate_rpc(struct pdsfc_dev *pdsfc,
->  	struct pds_fwctl_query_data_operation *op_entry;
->  	struct pdsfc_rpc_endpoint_info *ep_info = NULL;
->  	struct device *dev = &pdsfc->fwctl.dev;
-> +	u32 num_entries;
->  	int i;
->  
->  	/* validate rpc in_len & out_len based
->  	 * on ident.max_req_sz & max_resp_sz
->  	 */
-> -	if (rpc->in.len > pdsfc->ident.max_req_sz) {
-> +	if (rpc->in.len > le32_to_cpu(pdsfc->ident.max_req_sz)) {
->  		dev_dbg(dev, "Invalid request size %u, max %u\n",
-> -			rpc->in.len, pdsfc->ident.max_req_sz);
-> +			rpc->in.len, le32_to_cpu(pdsfc->ident.max_req_sz));
+  +#pragma GCC diagnostic push
+  +#ifndef __clang__
+  +#pragma GCC diagnostic ignored "-Wsuggest-attribute=format"
+  +#endif
 
-Maybe use a local var for max_req_sz. I'm seeing that getting converted more than once in the same function.
+do we really need a "#ifndef __clang__" there? It's "#pragma GCC"
+after all, and the diagnostic push/pop are done unconditionally.
 
->  		return -EINVAL;
->  	}
->  
-> -	if (rpc->out.len > pdsfc->ident.max_resp_sz) {
-> +	if (rpc->out.len > le32_to_cpu(pdsfc->ident.max_resp_sz)) {
->  		dev_dbg(dev, "Invalid response size %u, max %u\n",
-> -			rpc->out.len, pdsfc->ident.max_resp_sz);
-> +			rpc->out.len, le32_to_cpu(pdsfc->ident.max_resp_sz));
+I can well imagine that yes, we need it for some strange and stupid
+reason, but it looks wrong, and the commit message doesn't explain why
+we'd need it.
 
-Same for max_res_sz.
+And once again the "Link" is completely useless and doesn't point to
+any explanation, only points to the submission that has all the same
+info.
 
-DJ
+I hate those things. The disappointment is real: "Oh, an explanation"
+followed by "No, just useless noise, doing a google search would
+almost certainly have been more productive".
 
->  		return -EINVAL;
->  	}
->  
-> -	for (i = 0; i < pdsfc->endpoints->num_entries; i++) {
-> +	num_entries = le32_to_cpu(pdsfc->endpoints->num_entries);
-> +	for (i = 0; i < num_entries; i++) {
->  		if (pdsfc->endpoint_info[i].endpoint == rpc->in.ep) {
->  			ep_info = &pdsfc->endpoint_info[i];
->  			break;
-> @@ -326,8 +332,9 @@ static int pdsfc_validate_rpc(struct pdsfc_dev *pdsfc,
->  
->  	/* reject unsupported and/or out of scope commands */
->  	op_entry = (struct pds_fwctl_query_data_operation *)ep_info->operations->entries;
-> -	for (i = 0; i < ep_info->operations->num_entries; i++) {
-> -		if (PDS_FWCTL_RPC_OPCODE_CMP(rpc->in.op, op_entry[i].id)) {
-> +	num_entries = le32_to_cpu(ep_info->operations->num_entries);
-> +	for (i = 0; i < num_entries; i++) {
-> +		if (PDS_FWCTL_RPC_OPCODE_CMP(rpc->in.op, le32_to_cpu(op_entry[i].id))) {
->  			if (scope < op_entry[i].scope)
->  				return -EPERM;
->  			return 0;
-> @@ -402,7 +409,7 @@ static void *pdsfc_fw_rpc(struct fwctl_uctx *uctx, enum fwctl_rpc_scope scope,
->  	cmd = (union pds_core_adminq_cmd) {
->  		.fwctl_rpc = {
->  			.opcode = PDS_FWCTL_CMD_RPC,
-> -			.flags = PDS_FWCTL_RPC_IND_REQ | PDS_FWCTL_RPC_IND_RESP,
-> +			.flags = cpu_to_le16(PDS_FWCTL_RPC_IND_REQ | PDS_FWCTL_RPC_IND_RESP),
->  			.ep = cpu_to_le32(rpc->in.ep),
->  			.op = cpu_to_le32(rpc->in.op),
->  			.req_pa = cpu_to_le64(in_payload_dma_addr),
-
+              Linus
