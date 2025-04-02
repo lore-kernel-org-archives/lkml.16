@@ -1,146 +1,134 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF09B1EA7C8
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 10:32:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C7511953A1;
+	Wed,  2 Apr 2025 10:33:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743589968; cv=none; b=uHSVgs+SAdjfuQhCyzVo4oGCQAImSqE47lLUqyYyDdN/YiIdmC2BnIe6nM2PP/KnkXA9/sUVSsLwPR4v2G/zNVA5XbjoB8qB52VHFdySJWS+nc+D+3Jd1mmLpHVoHjubrzBFgLyTStN60gof4njj3DqWxL0pHj6KY/EUW+o9tLI=
+	t=1743589997; cv=none; b=I1u0xVROqYphdZCMOfd0tO/0gqGJi6pKVyCim6JKqnwK+YS/UfahWnryK2MTaEtd0OZt4+b3ow2hZ0Kd7DNy7DUdkKJlBtNdvr1xBVG+Bf8Wo1gg9FvlYeZ86rOjmeQMsw6ZY4aeXcHcYcu0pn9QvXjEFCL0oRTuqVV3wxMxj5g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743589968; c=relaxed/simple;
-	bh=DflGEPr809DcfvBjGzKFAjTDtAVQkAdsrnTtYfVENlY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cJ0tiveBmQDYS5howwHfrjq9tzyBBkf7whF0L3UqdU5EqvuT4p3Dm2laENVl9izV3SyCEpksBh7ZE+KTpsDlhGQtTMYdFyRYYKoNXkErXi2aoEke06PCZp9LYOxKuKoakviTfvXVIPAig8fglelUKz9jrE2orbHnmAN09Iop9X8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=PgL+lvm9; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1743589997; c=relaxed/simple;
+	bh=uzgVRHkC0/6oVwMh4YG7sDY5ZqY1Wc1ZMefrtNkrfxw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tRpKoe3nHwP2V3+327UX466dxRyfir+pR30k/WC4qWgeR9/1+y7wA8pr68A5Nd6TRnZ60L1klF5YvjX84nGagZT0XrjcsUbQxy7w2JNHG79/N+tG+BLuFdRbe2sFRkS+AnXtGAHX3dsaRikM9a5uNg0JT8sedubmOmn8dAYkj+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZNR0e/if; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="PgL+lvm9"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ac28e66c0e1so970763766b.0
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 03:32:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1743589965; x=1744194765; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=nYOlHkVubKmajyWk2RePk9qXc6Wg0yW0lVN0+PnWT+c=;
-        b=PgL+lvm9k+i8Fg5CaweqNT43xf2GQrj++DMbQjwe5isn88ZXZnqM95OihRahEkQuPa
-         3S3bbsjPhbp1MDzpAfwPDSRy1oZQ1vyMqC+xH+VwK7VlIGIx5GjRn88Q6buwcmJAs2bF
-         uP5VSDQZ0wP8QUqzaScoVgmDfQkyQePscK6VU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743589965; x=1744194765;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nYOlHkVubKmajyWk2RePk9qXc6Wg0yW0lVN0+PnWT+c=;
-        b=pLNnceM2VPfABGu3ya4UDFsWABQr2DCdRtgmC3HZ5h7m4fDQ5BOyZtVBpCWA/dcGqX
-         3zPtEpR9J0AMS5WD9MxpnLEsGnwqPddpVae01ZaIE8VA8sn6XgwQU08ETLwMsCKuVSwu
-         4AxHyuwxD5+5EmigS5KuS5ZaCIVzzVNd23qS4mfco5poNKXqEyq2E5APXzD8KZ8VjMIb
-         b4sg6ZnEN8jM9ylTP2Zha4oeIK7zUHdVvKc7FHf6OBWiNzGQi2fl8e6zjegDMxnUNX0S
-         qjgEMROPuWZlDV1KCMVWB2cYFouGpDVxRG9o6aJT0nH9SRMUltRlXhEioYw7HiiisaIB
-         +nNg==
-X-Forwarded-Encrypted: i=1; AJvYcCWMtbNb717lqNOo1E5TM4Duvwj3hYvf0lFz4HCdewOf0/cVKDh9eFZWGXkGWzNmkHJ9bN9wBssP6sIZDQE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw9ot0ITi2BSIEVb/pkF3rjh4TmCg7tvUeJ8cgasvJU+9W3X8sk
-	+sePHM1tgbmTdnrIIpWcTbwm+GYZ4jLG6JUQ5KTTzMwXY/+hZz0yZUdtxPJsFg==
-X-Gm-Gg: ASbGncuG/hSx5FvDZKLbRX0tW0fNsj4albh9zKVqxRSu2YA4+pwsLi9KpXmVNFKo8TT
-	b32rkMWOc1OmCj4rdyNGeaIJ+TnpTn9wfE3U/JcDgv1OwnBY2+f66k4bCGQJoIR1+tjVebR2mdq
-	8zrxtelC4whR9j+y+5ixfA6x9i9lnEN2Aw6QHa3UEUpG9jdSCMClCshF4T73fm0memkT6lGvNET
-	oGa47oMwvq2dqKtR+ceTohLeAXPBjUdLtrO+HgeDKCXsjGmedJiw2U4b/8h8gC4HezQFbdJSR2j
-	A5w68sA9nhP/BTUE/Ddl870l8LEwA1EyaJRMzgN2rkJcPyQzqlYHtu6Sac/BJ/5tNOr9OlQJrwU
-	LkVdGu7p2oe0SzFzQd1XS
-X-Google-Smtp-Source: AGHT+IFpW0IH0OVPP0hG6AZ2A5rwiYPu9fXLTSAGYC9pCTSgRA4O68FhJ+pZ9v6TVJ0TMEq2caepXw==
-X-Received: by 2002:a17:907:9445:b0:ac2:cf0b:b809 with SMTP id a640c23a62f3a-ac738a9c32emr1530190166b.31.1743589964962;
-        Wed, 02 Apr 2025 03:32:44 -0700 (PDT)
-Received: from [192.168.178.137] (f215227.upc-f.chello.nl. [80.56.215.227])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5edc16d2dd0sm8336324a12.21.2025.04.02.03.32.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Apr 2025 03:32:44 -0700 (PDT)
-Message-ID: <866606d4-927f-4996-91ff-082037db147b@broadcom.com>
-Date: Wed, 2 Apr 2025 12:32:43 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZNR0e/if"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743589997; x=1775125997;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=uzgVRHkC0/6oVwMh4YG7sDY5ZqY1Wc1ZMefrtNkrfxw=;
+  b=ZNR0e/ifFoCRm1YcC0C88pk/IH+Dcn6W0RkU9/gTTAMazpwH9jGK/Y13
+   wg6swhSoOW0cgtHgTKG/QcIIjBFpD2EWpoN020W1DrKMh1ghAWMeT+Wjb
+   MMYK+CZta4aywY8/Fbizu8kDhAeryyaD4GxWzkOfWpew43RL7t5FxkYFo
+   B0sTQGMTfx+1hEBvbJQCZmxKZK9D7JgoifMQAFb0MM/JHzPMxizko/dON
+   bxwSa9KsmscELSLPtmSEBm4ie5PS706Fl+rmYBANnFDYdzWlPnRi6d8+m
+   RzQcQRHDDIegGuPeh63sROJwWsIaCuEzhuR52dpPlKBlvVvp6K+l/YnWD
+   w==;
+X-CSE-ConnectionGUID: PN7LF4jiRB+P/HYH9m1x0g==
+X-CSE-MsgGUID: FvGcDMdmQp+UOCz8CnonVQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11391"; a="62346681"
+X-IronPort-AV: E=Sophos;i="6.14,182,1736841600"; 
+   d="scan'208";a="62346681"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 03:32:58 -0700
+X-CSE-ConnectionGUID: jnKqawtdRCC7ytoiJ+6FvA==
+X-CSE-MsgGUID: 9Y43AS5zQbiCJvtQWGGu+A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,182,1736841600"; 
+   d="scan'208";a="126417413"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 03:32:55 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tzvOu-00000008RE3-0xzR;
+	Wed, 02 Apr 2025 13:32:52 +0300
+Date: Wed, 2 Apr 2025 13:32:51 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Przemek Kitszel <przemyslaw.kitszel@intel.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, vbabka@suse.cz,
+	torvalds@linux-foundation.org, peterz@infradead.org,
+	intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org
+Subject: Re: [RFC] slab: introduce auto_kfree macro
+Message-ID: <Z-0SU8cYkTTbprSh@smile.fi.intel.com>
+References: <20250401134408.37312-1-przemyslaw.kitszel@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] clk: bcm: rpi: Fix NULL check after devm_kasprintf()
-To: Henry Martin <bsdhenrymartin@gmail.com>
-Cc: linux-wireless@vger.kernel.org, brcm80211@lists.linux.dev,
- brcm80211-dev-list.pdl@broadcom.com, linux-kernel@vger.kernel.org
-References: <195f2498f70.279b.9b12b7fc0a3841636cfb5e919b41b954@broadcom.com>
- <20250402022215.42834-1-bsdhenrymartin@gmail.com>
-Content-Language: en-US
-From: Arend van Spriel <arend.vanspriel@broadcom.com>
-Autocrypt: addr=arend.vanspriel@broadcom.com; keydata=
- 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
-In-Reply-To: <20250402022215.42834-1-bsdhenrymartin@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250401134408.37312-1-przemyslaw.kitszel@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On 4/2/2025 4:22 AM, Henry Martin wrote:
-> Hi Arend,
+On Tue, Apr 01, 2025 at 03:44:08PM +0200, Przemek Kitszel wrote:
+> Add auto_kfree macro that acts as a higher level wrapper for manual
+> __free(kfree) invocation, and sets the pointer to NULL - to have both
+> well defined behavior also for the case code would lack other assignement.
 > 
-> Thank you for your thorough review and catching the return type mismatch. Upon
-> further investigation, I’ve confirmed that this issue was flagged by static
-> analysis but appears to be a false positive, as all call sites already handle
-> NULL checks appropriately.
+> Consider the following code:
+> int my_foo(int arg)
+> {
+> 	struct my_dev_foo *foo __free(kfree); /* no assignement */
 > 
-> I appreciate your time and insight—please let me know if you’d like me to drop
-> this patch or revise it differently.
+> 	foo = kzalloc(sizeof(*foo), GFP_KERNEL);
+> 	/* ... */
+> }
+> 
+> So far it is fine and even optimal in terms of not assigning when
+> not needed. But it is typical to don't touch (and sadly to don't
+> think about) code that is not related to the change, so let's consider
+> an extension to the above, namely an "early return" style to check
+> arg prior to allocation:
+> int my_foo(int arg)
+> {
+>         struct my_dev_foo *foo __free(kfree); /* no assignement */
+> +
+> +	if (!arg)
+> +		return -EINVAL;
+>         foo = kzalloc(sizeof(*foo), GFP_KERNEL);
+>         /* ... */
+> }
+> Now we have uninitialized foo passed to kfree, what likely will crash.
+> One could argue that `= NULL` should be added to this patch, but it is
+> easy to forgot, especially when the foo declaration is outside of the
+> default git context.
+> 
+> With new auto_kfree, we simply will start with
+> 	struct my_dev_foo *foo auto_kfree;
+> and be safe against future extensions.
+> 
+> I believe this will open up way for broader adoption of Scope Based
+> Resource Management, say in networking.
+> I also believe that my proposed name is special enough that it will
+> be easy to know/spot that the assignement is hidden.
 
-If I look at the code I think the driver probe will eventually fail when 
-the board_type is not available although USB devices seem to be the 
-exception here. For PCIe and SDIO the board_type seems required so we 
-could bail out in brcmf_get_module_param() when there is no board_type 
-found, ie. returning NULL iso settings. I think I found another issue 
-for SDIO. Upon failure it may end up with sdiodev->settings being 
-ERR_PTR() so not NULL. This is not properly handled in the remove path.
 
-So drop the patch and I will see if I can incorporate the musings above 
-in some driver patches.
+I understand the issue and the problem it solves, but...
 
-Regards,
-Arend
+> +#define auto_kfree __free(kfree) = NULL
+
+...I do not like this syntax at all (note, you forgot to show the result
+in the code how it will look like).
+
+What would be better in my opinion is to have it something like DEFINE_*()
+type, which will look more naturally in the current kernel codebase
+(as we have tons of DEFINE_FOO().
+
+	DEFINE_AUTO_KFREE_VAR(name, struct foo);
+
+with equivalent to
+
+	struct foo *name __free(kfree) = NULL
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
