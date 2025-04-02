@@ -1,112 +1,162 @@
-Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7CE91E47DD;
-	Wed,  2 Apr 2025 13:34:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92B1723A9B0;
+	Wed,  2 Apr 2025 13:35:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743600888; cv=none; b=fTpIzlg0cEdoOhpyBtK3lHEnnJcI1hgRI6CauWOw3Nj1g5uRgPKL1hf186jfMXjrQIjGdzJZGAddFGsqJPWM/qVdNsP/mMjdBuxCKfz6yC8zyeSVFdgv62YlVSeHGXpZ5BJOKMWjx5GieAPMoYbdcshJJG2aEyhRbxEBPXT/k6Y=
+	t=1743600902; cv=none; b=F5WA0t7Z6uTDaJf78Wjp7rcDZPDkxQ0ZZAcAUXtp4xUXeeKiAm5GX4IY7VcXLtlElqwF3adxq1/Mrn/xXmJipjWdkVVmpFkMXknTX9VjoGCbFU8tjTa7IdXR5sQ7gnPiBjv10abTPnoH8o4Xv+wpFkimzHpeG4JXuBaniMmuz4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743600888; c=relaxed/simple;
-	bh=OuoAqeBuPQ2j/ghqeglyEndvOevSd7UsPrm+9oDmN70=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IiWvMJvMJy+wcrrFq14+c8GFO8LxMFTAM9bBlgFNiT5tLcJMhU4T4BuZnL0c68xt6v8IHCihZHQs0vsqFbpoFlGrUUHEzo4rVTGhpMmRHg4g9fb09T/3AZTk8LMg9PFUOjP+foSyKRZZ7v6Lbl8B42ZEP7qnL3uMzmqa5p8SSh8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com; spf=pass smtp.mailfrom=ethancedwards.com; dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b=h4I4vi42; arc=none smtp.client-ip=80.241.56.161
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ethancedwards.com
+	s=arc-20240116; t=1743600902; c=relaxed/simple;
+	bh=N/oBIehD8eRXwpCNk7k6ba24AxCMzaiO+1pmCM3xXfo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SdAQQegXawKHQOTdphj8EMMs2tRElm8v43WspLm3Fu5SJ2uTihT/PHkMUO/GXi7YSQfxPq7sauCCt2TxeC5kp3fUfjv1V3Mo/V7XxltearNA7iY+oPFH8DvzKWudz7UTC0ei74Jdz4IVCDrQ67p9jQwlZrylabnhgKyw3HmA18w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=hQvSdOGQ; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b="h4I4vi42"
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [10.196.197.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4ZSQp40sg4z9tgG;
-	Wed,  2 Apr 2025 15:34:36 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ethancedwards.com;
-	s=MBO0001; t=1743600876;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cbl3CBymeICS1VuZIdcxAIF2SWxl8CbPoMyDAZuk7/Y=;
-	b=h4I4vi42Qrd02l6K/oWFPuhBJrfb7+He3RxXPATHj8olCRDkxIl9Ngxy2speBCrNNRTb9R
-	om8bCuSiQ4NM/Hdy6q9YQuvvIOGcCtJIOHrCzdxLTB//mKEQxirKojU5u21Z1U3Is2ZNEp
-	w5Gu0sQs94fBxPiiAViJRFmA+sg3yLEXHXekUXNgp7TBdTq+0nx6uXVPq1tbeN+xZr7e43
-	hMnZsCiL8oonWt8jkgXwyBJ6jMpp5N9VlRNNFzDiJwceNeRhiOBMKzBVzrPB2dkgWf7VSa
-	UMx5De7D4FN/mnBOE3J1dg8hCeKtUAA8+bdcYgTdn94YFE4xjiE2L0t/zxM0Qg==
-Date: Wed, 2 Apr 2025 09:34:30 -0400
-From: Ethan Carter Edwards <ethan@ethancedwards.com>
-To: Markus Elfring <Markus.Elfring@web.de>
-Cc: Henry Martin <bsdhenrymartin@gmail.com>, linux-sound@vger.kernel.org, 
-	LKML <linux-kernel@vger.kernel.org>, 
-	Amadeusz =?utf-8?B?U8WCYXdpxYRza2k=?= <amadeuszx.slawinski@linux.intel.com>, Bard Liao <yung-chuan.liao@linux.intel.com>, 
-	Cezary Rojewski <cezary.rojewski@intel.com>, Jaroslav Kysela <perex@perex.cz>, 
-	Jerome Brunet <jbrunet@baylibre.com>, Julia Lawall <julia.lawall@inria.fr>, 
-	Kai Vehmanen <kai.vehmanen@linux.intel.com>, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
-	Liam Girdwood <liam.r.girdwood@linux.intel.com>, Mark Brown <broonie@kernel.org>, 
-	Peter Ujfalusi <peter.ujfalusi@linux.intel.com>, Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>, 
-	Ranjani Sridharan <ranjani.sridharan@linux.intel.com>, Takashi Iwai <tiwai@suse.com>
-Subject: Re: [PATCH] ASoC: Intel: avs: Add NULL check in avs_component_probe()
-Message-ID: <deahfhubcdeq3hw3qqu7waqdgcet6n5lpkfrao7u66dmroujzk@35gsdx7hb3rv>
-References: <20250401143222.30344-1-bsdhenrymartin@gmail.com>
- <ed1be43c-99e0-4afb-8f98-9c7f39611610@web.de>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="hQvSdOGQ"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 532A7cOn032720;
+	Wed, 2 Apr 2025 13:34:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:to; s=pp1;
+	 bh=WyEyXUzQBG5YYWYNGano5THo76MoLBzhRYTP61tbVHg=; b=hQvSdOGQLXH1
+	biParECBb3mpF18P129RUrhEDgFDbZkodAxrPyaAahoufJkKahT8k3PqhYf7QpD+
+	+jSjMh1XdxuugkDsx2OJOG6m1NPdPOcJLObyrOD7ZuyE5s0xut/HUd+tFqdD+vKr
+	uepOc/HDhuNoYZNL3WAMiH5hVrwDvkObFtJXNYgEu657kE0xs/d1wo2qSR8y9LDH
+	B5Zb+JtGKGgPgBUhNlFQdtcrJo8pT7lAUG1UUjWyIuLsd+/1Ysf/hSnSoOsI10XX
+	XtsBq8g7Phj/GrERqKNjMN8LoSDyV0mSZsWJGswbmAgMEJpILisPF6zfWDCuaXIG
+	yRTE4ngZGw==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45rwmaaua7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 02 Apr 2025 13:34:06 +0000 (GMT)
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 532Cj0xn001558;
+	Wed, 2 Apr 2025 13:34:05 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45rwmaaua3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 02 Apr 2025 13:34:05 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 532D34Uk010394;
+	Wed, 2 Apr 2025 13:34:04 GMT
+Received: from smtprelay07.dal12v.mail.ibm.com ([172.16.1.9])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45pv6p0305-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 02 Apr 2025 13:34:04 +0000
+Received: from smtpav04.dal12v.mail.ibm.com (smtpav04.dal12v.mail.ibm.com [10.241.53.103])
+	by smtprelay07.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 532DY3Br29819586
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 2 Apr 2025 13:34:03 GMT
+Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 613155805E;
+	Wed,  2 Apr 2025 13:34:03 +0000 (GMT)
+Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8634B58056;
+	Wed,  2 Apr 2025 13:33:55 +0000 (GMT)
+Received: from [9.43.67.35] (unknown [9.43.67.35])
+	by smtpav04.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Wed,  2 Apr 2025 13:33:55 +0000 (GMT)
+Message-ID: <3ba327b9-3020-4a63-9623-e6eea0120056@linux.ibm.com>
+Date: Wed, 2 Apr 2025 19:03:54 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ed1be43c-99e0-4afb-8f98-9c7f39611610@web.de>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] sched/numa: Add statistics of numa balance task migration
+ and swap
+To: Chen Yu <yu.c.chen@intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Mel Gorman <mgorman@suse.de>, Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Roman Gushchin <roman.gushchin@linux.dev>,
+        Shakeel Butt <shakeel.butt@linux.dev>,
+        Muchun Song <muchun.song@linux.dev>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tim Chen <tim.c.chen@intel.com>, Aubrey Li <aubrey.li@intel.com>,
+        Rik van Riel <riel@surriel.com>,
+        Raghavendra K T <raghavendra.kt@amd.com>,
+        K Prateek Nayak <kprateek.nayak@amd.com>,
+        Baolin Wang <baolin.wang@linux.alibaba.com>,
+        Xunlei Pang <xlpang@linux.alibaba.com>, linux-kernel@vger.kernel.org,
+        cgroups@vger.kernel.org, linux-mm@kvack.org,
+        Chen Yu <yu.chen.surf@foxmail.com>,
+        Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+References: <20250402010611.3204674-1-yu.c.chen@intel.com>
+Content-Language: en-US
+Reply-To: 20250402010611.3204674-1-yu.c.chen@intel.com
+From: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+In-Reply-To: <20250402010611.3204674-1-yu.c.chen@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: HXJV5Q-jqXHxdR2AcOHw3yx69yUfEuGO
+X-Proofpoint-ORIG-GUID: d9-NvWT-09rPiaSGGOiXdBzqDhqISW8d
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-02_05,2025-04-02_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ spamscore=0 priorityscore=1501 impostorscore=0 phishscore=0 clxscore=1011
+ mlxlogscore=999 bulkscore=0 suspectscore=0 mlxscore=0 malwarescore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502280000 definitions=main-2504020085
 
-On 25/04/02 02:00PM, Markus Elfring wrote:
-> > devm_kasprintf() returns NULL when memory allocation fails. Currently,
-> …
->                 call?                                  failed?
+Hi Chen Yu,
+
+On 02/04/25 06:36, Chen Yu wrote:
+> On system with NUMA balancing enabled, it is found that tracking
+> the task activities due to NUMA balancing is helpful. NUMA balancing
+> has two mechanisms for task migration: one is to migrate the task to
+> an idle CPU in its preferred node, the other is to swap tasks on
+> different nodes if they are on each other's preferred node.
 > 
+> The kernel already has NUMA page migration statistics in
+> /sys/fs/cgroup/mytest/memory.stat and /proc/{PID}/sched.
+> but does not have statistics for task migration/swap.
+> Add the task migration and swap count accordingly.
 > 
-> > Add NULL check after devm_kasprintf() to prevent this issue.
+> The following two new fields:
 > 
-> Do you generally propose here to improve the error handling?
+> numa_task_migrated
+> numa_task_swapped
 > 
+> will be displayed in both
+> /sys/fs/cgroup/{GROUP}/memory.stat and /proc/{PID}/sched
+
+I applied this patch, but I still don't see the two new fields
+in /proc/{PID}/sched.
+
+Am I missing any additional steps?
+
+Thanks,
+Madadi Vineeth Reddy
+
 > 
-> …
-> > +++ b/sound/soc/intel/avs/pcm.c
-> > @@ -927,7 +927,8 @@ static int avs_component_probe(struct snd_soc_component *component)
-> >  		else
-> >  			mach->tplg_filename = devm_kasprintf(adev->dev, GFP_KERNEL,
-> >  							     "hda-generic-tplg.bin");
-> > -
-> > +		if (!mach->tplg_filename)
-> > +			return -ENOMEM;
+> Previous RFC version can be found here:
+> https://lore.kernel.org/lkml/1847c5ef828ad4835a35e3a54b88d2e13bce0eea.1740483690.git.yu.c.chen@intel.com/
 > 
-> Can a blank line be desirable after such a statement?
-> 
-> 
-> Would another source code transformation become helpful with an additional update step?
-> 
-> -		if (((vendor_id >> 16) & 0xFFFF) == 0x8086)
-> -			mach->tplg_filename = devm_kasprintf(adev->dev, GFP_KERNEL,
-> -							     "hda-8086-generic-tplg.bin");
-> -		else
-> -			mach->tplg_filename = devm_kasprintf(adev->dev, GFP_KERNEL,
-> -							     "hda-generic-tplg.bin");
-> +		mach->tplg_filename = devm_kasprintf(adev->dev, GFP_KERNEL,
-> +						     (((vendor_id >> 16) & 0xFFFF) == 0x8086)
-> +						     ? "hda-8086-generic-tplg.bin"
-> +						     : "hda-generic-tplg.bin");
-> 
-> 
-> Regards,
-> Markus
+> Signed-off-by: Chen Yu <yu.c.chen@intel.com>
+> ---
+> RFC->v1: Rename the nr_numa_task_migrated to
+>          numa_task_migrated, and nr_numa_task_swapped
+>          numa_task_swapped in /proc/{PID}/sched,
+>          so both cgroup's memory.stat and task's
+>          sched have the same field name.
+> ---
+>  include/linux/sched.h         |  4 ++++
+>  include/linux/vm_event_item.h |  2 ++
+>  kernel/sched/core.c           | 10 ++++++++--
+>  kernel/sched/debug.c          |  4 ++++
+>  mm/memcontrol.c               |  2 ++
+>  mm/vmstat.c                   |  2 ++
+>  6 files changed, 22 insertions(+), 2 deletions(-)
 
 
-Please feel free to ignore Markus. He has a tendency to provide unclear
-and nonsense feedback. He has done this several times with my patch
-sets. I almost wonder if he is an internet troll.
-
-In any case, this change makes sense to me.
-
-Reviewed-by: Ethan Carter Edwards <ethan@ethancedwards.com>
