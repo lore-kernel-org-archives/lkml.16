@@ -1,79 +1,71 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CD0815D1
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 03:48:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFFC71D5ABF;
+	Wed,  2 Apr 2025 03:48:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743565684; cv=none; b=h1I85fBEic/LKzHtVXvB7B+hxtxiwb8l+6ntd513E3mBFNrJgy5a3ovr6ycweu77rZfF0iEumFrMlJ5PbyboGR3YZADBcKj7kLaZezMIDQ5gB3lGR/L15Gn3D4XLZLBOTNKbtdeL5ftKqU8Oc/Mfc7o4ka4CLqoVsDtRtuxKuwU=
+	t=1743565732; cv=none; b=OGTlPQJj77XyfVrcHQJRCYq6VdwRwxX4dZflQJq985EnDrviKzkZi+nKzcaKKc59IY1F4yk7cNOHeXsV8nmsjOIHW2iIAnm/VZ2Tu+Q6Br4mXRrhhZNPvNKFD03Oeogjn6hTK/OFBwgJWHmiz0txgQvi1rRdrBqhSnz8FUOyH1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743565684; c=relaxed/simple;
-	bh=2cbla7mnOLoS4rKB/K/5R/RWZ1uimU6q3udMuF3DrVY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pXXLDw9ZN8+CGBDkdv1vFVwve6DhKgzM9rwIUoEVwhapzSCIvP0yId+mwCo/WvWlKCFTlWy4wQPapkwluPvFBNND4/fsRWV0DAhKP5ff6PbbBmN8wYxaUTkWBhz8EeOUVEQcL4AUO5z/IAdo74ucKnF30ZaAFiasuZWTDuT1lyo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O85abYyX; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O85abYyX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17B74C4CEDD;
-	Wed,  2 Apr 2025 03:48:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743565683;
-	bh=2cbla7mnOLoS4rKB/K/5R/RWZ1uimU6q3udMuF3DrVY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=O85abYyXjCoJkpC7lPv65JfM5ObIdl28rqExiW4gMGrG1BLKyVHG8wjSRY6iin59D
-	 AdhnBxIvIjWNkDGS606Ny/Q0GQnS3wjzkloIG/nbrveb7lfwLgJkihLxUwjDfnV1As
-	 gTE7zXZhWOnNKAZVNoBsLUiC8zr3n7ciokbl1vQuPf/WhBhnQXravt3fVzap/FjOIY
-	 H2/lMhb2YNRWhzEIqm/k+fO5FenMcIqnJc3gnBXAyUzeGFnpDujAzY7I+ttlD1DO/3
-	 JpMwyBv48hhZ7pTipGFY0JuJxhz3cpnTGCDsT2a5pEfIgDChIGKuVvFGfhG0FJo5rJ
-	 iy8Sfl/uslu9A==
-Date: Wed, 2 Apr 2025 05:47:59 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: linux-kernel@vger.kernel.org, Juergen Gross <jgross@suse.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH -v2 00/49] Simplify, reorganize and clean up the x86
- text-patching code (alternative.c)
-Message-ID: <Z-yzb9abBfIlRVhb@gmail.com>
-References: <20250328132704.1901674-1-mingo@kernel.org>
- <20250401143148.GH5880@noisy.programming.kicks-ass.net>
+	s=arc-20240116; t=1743565732; c=relaxed/simple;
+	bh=YwTUW/8tC0cRiMYeNCJ7yyb4tykwJb1puupm9zTUoKo=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=N5dxdMjD2ofZfk8uc0LO68L69G1PEuyVY2nv99DLqzNAL3LrPvtZdHaY14kvnNcNvx70cWgPS8ELvGZvTWFs4rp3NfFIE3X9vNH5dr0M+eDcCssNRbF7QauVV7j7BoxcO9f0qPXGM6mCe48smClGIt69RQXNqR7o3N8Cizhb1dw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com; spf=pass smtp.mailfrom=perches.com; arc=none smtp.client-ip=216.40.44.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=perches.com
+Received: from omf15.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay04.hostedemail.com (Postfix) with ESMTP id 48E851A0E5E;
+	Wed,  2 Apr 2025 03:48:49 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf15.hostedemail.com (Postfix) with ESMTPA id 11F501A;
+	Wed,  2 Apr 2025 03:48:46 +0000 (UTC)
+Message-ID: <d03ed9d9f7d5e9d8fddca4071e044d26c55a10e2.camel@perches.com>
+Subject: Re: [PATCH v2 10/12] checkpatch: Deprecate srcu_read_lock_lite()
+ and srcu_read_unlock_lite()
+From: Joe Perches <joe@perches.com>
+To: paulmck@kernel.org
+Cc: rcu@vger.kernel.org, Joel Fernandes <joelagnelf@nvidia.com>, 
+	linux-kernel@vger.kernel.org, kernel-team@meta.com, rostedt@goodmis.org
+Date: Tue, 01 Apr 2025 20:48:44 -0700
+In-Reply-To: <0cbd404a-856a-4bc3-ab76-eeb839065a2d@paulmck-laptop>
+References: <eea8d42f-6d2d-485b-9bb9-4eb77a0e1f95@paulmck-laptop>
+	 <20250331210314.590622-10-paulmck@kernel.org>
+	 <5588e91ab302e21bf4e30b5208cf3d387f8e7de4.camel@perches.com>
+	 <0cbd404a-856a-4bc3-ab76-eeb839065a2d@paulmck-laptop>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250401143148.GH5880@noisy.programming.kicks-ass.net>
+X-Stat-Signature: r1jys3rwqi95cymwzuubq1kyp7opq6r4
+X-Rspamd-Server: rspamout06
+X-Rspamd-Queue-Id: 11F501A
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-Session-ID: U2FsdGVkX18iieNHgT4im9qCggwliyTVuSvht7h55kA=
+X-HE-Tag: 1743565726-689812
+X-HE-Meta: U2FsdGVkX1/dxdOWCT4AGdGqdzGp4xLryc6mDh2uzdJ+zNtMPMqCckikTwJF7TZsKzcgfEahzkcEd85xxGWf/FnCLQ8BHiUnyP7APIvXrP+SCm40edhEn0hVphjNFNG92P6IzJULWIqmzvtKNrYOsdfS1zEcyr3W+xyur1qU1C9Yibeqx7YGv6OU8/0JHKr4NutYk5R13p7Cn8zoS2hcBU/By5Yac0/hepNIrY75bCmTaISeoKCSI0zZpaccJmLxkoUw4G3t9SMzJk3wXw2qyHhWDjvNldk+YaNN+hL+HGkdpWKdq8fy0AD+5HcXAbAq
 
+On Tue, 2025-04-01 at 07:05 -0700, Paul E. McKenney wrote:
+> On Mon, Mar 31, 2025 at 11:53:25PM -0700, Joe Perches wrote:
+> > On Mon, 2025-03-31 at 14:03 -0700, Paul E. McKenney wrote:
+> > > Uses of srcu_read_lock_lite() and srcu_read_unlock_lite() are better
+> > > served by the new srcu_read_lock_fast() and srcu_read_unlock_fast() A=
+PIs.
+> > > As in srcu_read_lock_lite() and srcu_read_unlock_lite() would never h=
+ave
+> > > happened had I thought a bit harder a few months ago.  Therefore, mar=
+k
+> > > them deprecated.
+> >=20
+> > Would it be better to convert the 3 existing instances?
+>=20
+> Both are needed.  The point of these checkpatch.pl changes is to prevent
+> other instances from being added.
 
-* Peter Zijlstra <peterz@infradead.org> wrote:
+If those are changed, why not remove the prototypes & functions too?
+That would stop more instances being added no?
 
-> On Fri, Mar 28, 2025 at 02:26:15PM +0100, Ingo Molnar wrote:
-> > This tree can also be found at:
-> > 
-> >   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip WIP.x86/alternatives
-> 
-> Can you please use your own tree for WIP stuff?
-
-Certainly! Wanted to do that for some time anyway, to reduce mixups 
-with -tip, but procrastinated it :-)
-
-I have just moved all of my Work-In-Progress branches to:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/mingo/tip.git
-
-    WIP.x86/alternatives
-    WIP.x86/msr
-    WIP.x86/core
-    WIP.x86/cpu
-    WIP.x86/fpu
-    WIP.core/bugs
-    ...
-
-Thanks,
-
-	Ingo
