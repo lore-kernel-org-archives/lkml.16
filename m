@@ -1,280 +1,109 @@
-Received: from mail-pg1-f231.google.com (mail-pg1-f231.google.com [209.85.215.231])
+Received: from mail-io1-f43.google.com (mail-io1-f43.google.com [209.85.166.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D9031EE013
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 19:41:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.231
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C2FD1E8325
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 19:42:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743622875; cv=none; b=T7z5SLbADgxwOef8XO/B8m7dIet3xkmRyCYR74AnimJBlBY91xcEHnqg7fEH6lkI6gVl5at1BvldkbDNElaeeRMQwRHTlrFxvykUoXmXNhr6lmBH1rJY7bGOGS2JI4HvBtiyD4mwovuUaqljMf8nCpf0td2cB26D0RMg3/X6F08=
+	t=1743622931; cv=none; b=G+lozXPL7mPOwgY3odmUicDD2xVCBHzQV2LdCaLTasTWF1kpNWPySf2ODg8gVIzN5gP8i7PcDvfqdP5MwsQNrIfqTvJjvChE4tnbq+DliQMlSvZDHQ97YKAhZBCd/Cf1WrQpEALTixYv9+l9mqA6ys3Dx4DA1mTFz//TVVKJuOs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743622875; c=relaxed/simple;
-	bh=iDwhdKTHkiVI/kVWHgxcQk682Wh2c/MBtb4WhOisM3I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DK9HmdSaPctr3qNrJ1ClZA1Lb1OkpxOmu+rg0+YvoONFnTbaqWUdFWgs3nxmkrFMeM/sFWTEm9GtZVvISVEYJFn/mQFQVTIswlVkciam0cmZ+h9bjwnI5rmZTHDSTMvCNo2ofNmQZqILMAU8DjOY73/kpY+ujW0h99gYc6seQ3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=XG4C9DQj; arc=none smtp.client-ip=209.85.215.231
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+	s=arc-20240116; t=1743622931; c=relaxed/simple;
+	bh=CM9zmYJGZnZs7kUAuKyeUucWwmasrOdVlk80HRPRmXA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=D3tPFn1rixrbEoE4Us7dnEMDy3qvRyVBKVogJTbhoxItiplIKLkmw38m7Q0n8cuP7kWVcnv/jUWebHapamCHr23Nxth8puj/iGMD72x7fLUc0KIZxKAeI5GpPDGefoovcd2hm0rus9+cJkjNsRw0CjLsbd5X+9AFFQRu/z/JBko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=mjGutCdW; arc=none smtp.client-ip=209.85.166.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="XG4C9DQj"
-Received: by mail-pg1-f231.google.com with SMTP id 41be03b00d2f7-af9a7717163so198123a12.2
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 12:41:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="mjGutCdW"
+Received: by mail-io1-f43.google.com with SMTP id ca18e2360f4ac-85ea482e3adso38977539f.0
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 12:42:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1743622871; x=1744227671; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=qxIY3Gf2m8j6PJ9snlE5RC50f7NMmTNygP+VovwJ4NM=;
-        b=XG4C9DQjBmejArNQ9fOyxTiH/xy6NgqJTdyPQmwJBUDLTOQ6Qvq1Q5M153CpisJu4V
-         CuuR8zp6XBZ8zHzpa62oO64QFbx9qN4bPtf80EQyOheksGnY5O4gHaB3UWRu6mOHdR9h
-         T0ZMtcssfaTu+4KgbgCmPQEZURnjMCfUGn1Dch4cKjxN5jqCr2IhMmp3s3vfdESb2PKN
-         ijt5F/sHH1i+Gv9vLuA9OLfbst5LhSF6VTZYHwhhKes5bp7GRCuyGFpjoGZ+WZ6/Uq8m
-         Jxz/4xtECvCXNqZzpiPr0j2KFWM3gLtEH30cTwPcwqxIKAGo14B7y9ln3am630KlAok9
-         EQag==
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1743622929; x=1744227729; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=OmmFPo/oQkKrk4qBgcoqHzb2/uLFhooznPACRDehBps=;
+        b=mjGutCdWx/vpT3zcs4xlKVwftBZLLYUjFB8ETGKGbiTpIyPG4ltBg41p/2Seug/uw8
+         SSN+cdsfJQr4FIjwWnnaZGd3Hp6b+/gILJfTRMBA0fTDmeh5rEKKhTEJ/Ns9TqcLZ1qb
+         TnIhWFX+hOhoY9zD170sN9y+6FLVTUXNEOMOaqRaxsxqztqtOyXf3YKzvC5MXH4Pq5Jf
+         xofadt09KeIwUNSI4acWD46SlLb7bEfzdNp1wfqq0d2ZKiEtb+A5ulV3zN3HgavfzjHU
+         MgSFX/8Zx3F6WL02PyuhHJVAl5lJ+0sKoHf3NC/T/DKQiHccHggthzlGQtnAfoEPbKIG
+         OYrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743622871; x=1744227671;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qxIY3Gf2m8j6PJ9snlE5RC50f7NMmTNygP+VovwJ4NM=;
-        b=rEN7olAaMl5mc4mvFUUa1Nbgm8v94rVKKN72Meo5XzP9lPmAY7VL3/vxUdzlRnF+q3
-         nBgPcqZi8vbMCfOzoiH4/neE0nmLgWCsLQ/Ii1o4WVefoAoPD4qwjy2EoLo95B4XF8Q7
-         Y2+uQwCJBpaJxBRwVnMIPDoExYCuOJlC7z3J6KDzmZHtc+DBe0SoC3fQOSz6vus33TQU
-         5DJgAU6iqqUR0Qjfjij+FpDsQGx45jVID/bMCSohxAfjddxFYfySBFJ0LEYGfKrd7r9q
-         nbeghOH5lECHu7JgUNU/OBjHBQyi8CIU9gwZZ8IUj0APbhWGhsFp+bi1n3DPAcg/Io57
-         yynw==
-X-Forwarded-Encrypted: i=1; AJvYcCWMMAUQbeG0MerntEYKSUcHEM3BAMgXWk/iAIwvMd4ugT3Fep30A4LbLQQiwpq07X5x3YPlmu8wr3lWADg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwCwnAAQWJqkeM2FGH/RYq+Iu1utkXzeJlnHHWBZkQYiuTMvyok
-	GZGxD8DZPTUFZG3oIP3fGCCLpw3ks6r4FadExf09CiE3O85YL9RgNY4RUf+UvgzVKG4WM0PJ/uf
-	IYfnZ5wCDkDpqFbKNvmGiK56miTPD5I1T
-X-Gm-Gg: ASbGncsiKgJ31ZRJ4AoYM4Hqjp/3d/Py3nyqrpIkIQLNdCcelKW3mPN3N/jwypE7P8C
-	fKzN/yLtwWDYBInb/OvyktUZmDUPHtVvzmYl3WJWBEym5C39QBy1n/YjmRC7W2WvhNCh33GDah7
-	Omcm4pevZua9PAGLFaWt/dAyejF5ZwKeDUQgFsNFwhoaUw/jMm4BI6CqgM9tKf6QJR2d52t794o
-	FuUZ0JE4r/E+x+8a7lMe0qg0uzdaz0Y7Tp1PXv5rBI3iqKU53y/W1ddUbWcv/DA6ThP0p3T5ehE
-	j/nsQ1gyohxgkjH/yHufz/rgpjte++Fg0fJM8Hi4UAo7ZWDdTA==
-X-Google-Smtp-Source: AGHT+IGPPdi6hp5vbdxdNWj7geNIhxy8tTekIGtN+6m/Tg45W5Kjiga5bCFvHih7NICf+2geQNrTJ/6UhdrZ
-X-Received: by 2002:a05:6a20:9f97:b0:1f5:6680:82b6 with SMTP id adf61e73a8af0-200e4cf887emr4972323637.38.1743622871548;
-        Wed, 02 Apr 2025 12:41:11 -0700 (PDT)
-Received: from c7-smtp-2023.dev.purestorage.com ([208.88.159.128])
-        by smtp-relay.gmail.com with ESMTPS id 41be03b00d2f7-af93b8a7c1esm529907a12.26.2025.04.02.12.41.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Apr 2025 12:41:11 -0700 (PDT)
-X-Relaying-Domain: purestorage.com
-Received: from dev-ushankar.dev.purestorage.com (dev-ushankar.dev.purestorage.com [10.7.70.36])
-	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id D1B503400E5;
-	Wed,  2 Apr 2025 13:41:10 -0600 (MDT)
-Received: by dev-ushankar.dev.purestorage.com (Postfix, from userid 1557716368)
-	id C312FE4018A; Wed,  2 Apr 2025 13:41:10 -0600 (MDT)
-Date: Wed, 2 Apr 2025 13:41:10 -0600
-From: Uday Shankar <ushankar@purestorage.com>
-To: Ming Lei <ming.lei@redhat.com>
-Cc: Shuah Khan <shuah@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-	linux-block@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/4] ublk: improve handling of saturated queues when ublk
- server exits
-Message-ID: <Z+2S1uxw3/h0EgQx@dev-ushankar.dev.purestorage.com>
-References: <20250325-ublk_timeout-v1-0-262f0121a7bd@purestorage.com>
- <20250325-ublk_timeout-v1-4-262f0121a7bd@purestorage.com>
- <Z-OS2_J7o0NKHWmj@fedora>
- <Z+Q/SNmX+DpVQ5ir@dev-ushankar.dev.purestorage.com>
- <Z-SoibOdOmzOWB-C@fedora>
- <Z+sifI6fujsc186S@dev-ushankar.dev.purestorage.com>
- <Z-y2JGJC56ZhdYHP@fedora>
+        d=1e100.net; s=20230601; t=1743622929; x=1744227729;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=OmmFPo/oQkKrk4qBgcoqHzb2/uLFhooznPACRDehBps=;
+        b=CIanz5mPJaO9Jkf+uh0mSxG1okta8rVphUnwvEKorbEFawJna6/vwox7nxqDPsx+Fg
+         CANJ4AS6B73VyuYuXrVpMvEAcny+4pbhim4kRaR9cu4c8TD/z0rz5W8d0qfrxyj9On/7
+         7jAWf+X4ANTsdM7ctcaZKAKMRCOZkBKfbP5WHF4v9gvBWto1Uvg4VLnm8GoPtalQ2m/i
+         U7shkfpVqgOKhQLnlBo2Plm+7DKo4gOqFo3TT5PUF5bJ3bYecJ8ATkO4hpjeyMGK2o6B
+         o2+HJHRWC0xQoMDSFPVYqla1hYQasxtz/lQt1+EVPz37LnCwGjqTFqIF3lDS+qif6eds
+         giNA==
+X-Forwarded-Encrypted: i=1; AJvYcCXpRXQuNY4jtAbQHvzBlqcRoJYBgMtj2puzgAFdmxmLnUWmguELaOTgI5qB9LGwHfL6PJZV5zuZK6C6yhI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5NQabRq9yvKlnTzTLXPIvVHcdkEOvBWHVWd6ea54VsORZ5K8x
+	ppMVg1c9zTajf2hJJfadn0ZSNBCynWnL6nFtb6248VNoHr/JM4FDN5RagteDz+k=
+X-Gm-Gg: ASbGncu6uXvVo8t0nYhAI76X8zp9OQOC5KcB9mNw73Q/SAvQPaB4QfKSiJgBLHsF5Bc
+	jwNy9HnVm8qoaHikQEbTSxcYp40pflo57Knf8Lltim95XUXyVpuSjD4W8jLQIUgP2X5q8/95qqB
+	2c3EAkq5WC1AW0A+rZKMtRIbLZ6ggAjPX8Swq/ErkYHqPwqZbGEDFiZ/ZrwFIJ68HRp0S2NvL5K
+	KYdK6hRy86hcsKAU48kyl8NglPJiGz/a2P2n2gw+X/647Lieyhgi2c03lP4/LqixdAPGdaxXbTm
+	aI+sgrKYf9aOmeJJcCRXF3Rb+3OYegZAZitQMRiY
+X-Google-Smtp-Source: AGHT+IFq7nqGwaJTgKFWpd26u7TsGGXL3SChIeP/K+8QvIyMmdvg2/SMiNKjMYbc3aJMTRODTVLpEQ==
+X-Received: by 2002:a05:6e02:12cd:b0:3d6:c2ff:eee2 with SMTP id e9e14a558f8ab-3d6dcb7c764mr11873895ab.6.1743622929047;
+        Wed, 02 Apr 2025 12:42:09 -0700 (PDT)
+Received: from [192.168.1.116] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f46475107dsm3065158173.43.2025.04.02.12.42.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Apr 2025 12:42:08 -0700 (PDT)
+Message-ID: <03f61a5a-15e6-4096-8b2e-5d09b741cb1d@kernel.dk>
+Date: Wed, 2 Apr 2025 13:42:07 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z-y2JGJC56ZhdYHP@fedora>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/2] ublk: fixes for selftests
+To: Uday Shankar <ushankar@purestorage.com>
+Cc: Ming Lei <ming.lei@redhat.com>, Shuah Khan <shuah@kernel.org>,
+ linux-block@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250401-ublk_selftests-v1-0-98129c9bc8bb@purestorage.com>
+ <174359956539.20480.17105268115889494986.b4-ty@kernel.dk>
+ <Z+2RPI1GC9NoE/w4@dev-ushankar.dev.purestorage.com>
+Content-Language: en-US
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <Z+2RPI1GC9NoE/w4@dev-ushankar.dev.purestorage.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 02, 2025 at 11:59:32AM +0800, Ming Lei wrote:
-> On Mon, Mar 31, 2025 at 05:17:16PM -0600, Uday Shankar wrote:
-> > On Thu, Mar 27, 2025 at 09:23:21AM +0800, Ming Lei wrote:
-> > > On Wed, Mar 26, 2025 at 11:54:16AM -0600, Uday Shankar wrote:
-> > > > On Wed, Mar 26, 2025 at 01:38:35PM +0800, Ming Lei wrote:
-> > > > > On Tue, Mar 25, 2025 at 04:19:34PM -0600, Uday Shankar wrote:
-> > > > > > There are currently two ways in which ublk server exit is detected by
-> > > > > > ublk_drv:
-> > > > > > 
-> > > > > > 1. uring_cmd cancellation. If there are any outstanding uring_cmds which
-> > > > > >    have not been completed to the ublk server when it exits, io_uring
-> > > > > >    calls the uring_cmd callback with a special cancellation flag as the
-> > > > > >    issuing task is exiting.
-> > > > > > 2. I/O timeout. This is needed in addition to the above to handle the
-> > > > > >    "saturated queue" case, when all I/Os for a given queue are in the
-> > > > > >    ublk server, and therefore there are no outstanding uring_cmds to
-> > > > > >    cancel when the ublk server exits.
-> > > > > > 
-> > > > > > The second method detects ublk server exit only after a long delay
-> > > > > > (~30s, the default timeout assigned by the block layer). Any
-> > > > > > applications using the ublk device will be left hanging for these 30s
-> > > > > > before seeing an error/knowing anything went wrong. This problem is
-> > > > > > illustrated by running the new test_generic_02 against a ublk_drv which
-> > > > > > doesn't have the fix:
-> > > > > > 
-> > > > > > selftests: ublk: test_generic_02.sh
-> > > > > > dev id is 0
-> > > > > > dd: error writing '/dev/ublkb0': Input/output error
-> > > > > > 1+0 records in
-> > > > > > 0+0 records out
-> > > > > > 0 bytes copied, 30.0611 s, 0.0 kB/s
-> > > > > > DEAD
-> > > > > > dd took 31 seconds to exit (>= 5s tolerance)!
-> > > > > > generic_02 : [FAIL]
-> > > > > > 
-> > > > > > Fix this by instead handling the saturated queue case in the ublk
-> > > > > > character file release callback. This happens during ublk server exit
-> > > > > > and handles the issue much more quickly than an I/O timeout:
-> > > > > 
-> > > > > Another solution is to override default 30sec 'timeout'.
-> > > > 
-> > > > Yes, but that still will introduce unnecessary delays, since it is a
-> > > > polling-based solution (very similar to monitor_work we used to have).
-> > > > Also it will add complexity to the unprivileged case, since that
-> > > > actually cares about timeout and we will have to track the "real"
-> > > > timeout separately.
-> > > > 
-> > > > > 
-> > > > > > 
-> > > > > > selftests: ublk: test_generic_02.sh
-> > > > > > dev id is 0
-> > > > > > dd: error writing '/dev/ublkb0': Input/output error
-> > > > > > 1+0 records in
-> > > > > > 0+0 records out
-> > > > > > 0 bytes copied, 0.0376731 s, 0.0 kB/s
-> > > > > > DEAD
-> > > > > > generic_02 : [PASS]
-> > > > > > 
-> > > > > > Signed-off-by: Uday Shankar <ushankar@purestorage.com>
-> > > > > > ---
-> > > > > >  drivers/block/ublk_drv.c                        | 40 +++++++++++------------
-> > > > > >  tools/testing/selftests/ublk/Makefile           |  1 +
-> > > > > >  tools/testing/selftests/ublk/kublk.c            |  3 ++
-> > > > > >  tools/testing/selftests/ublk/kublk.h            |  3 ++
-> > > > > >  tools/testing/selftests/ublk/null.c             |  4 +++
-> > > > > >  tools/testing/selftests/ublk/test_generic_02.sh | 43 +++++++++++++++++++++++++
-> > > > > >  6 files changed, 72 insertions(+), 22 deletions(-)
-> > > > > > 
-> > > > > > diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
-> > > > > > index c060da409ed8a888b7e414c9065efd2cbd6d57d7..1816b2cac01056dc9d01455759594af43c5f78d6 100644
-> > > > > > --- a/drivers/block/ublk_drv.c
-> > > > > > +++ b/drivers/block/ublk_drv.c
-> > > > > > @@ -1247,8 +1247,6 @@ static void ublk_queue_cmd(struct ublk_queue *ubq, struct request *rq)
-> > > > > >  static enum blk_eh_timer_return ublk_timeout(struct request *rq)
-> > > > > >  {
-> > > > > >  	struct ublk_queue *ubq = rq->mq_hctx->driver_data;
-> > > > > > -	unsigned int nr_inflight = 0;
-> > > > > > -	int i;
-> > > > > >  
-> > > > > >  	if (ubq->flags & UBLK_F_UNPRIVILEGED_DEV) {
-> > > > > >  		if (!ubq->timeout) {
-> > > > > > @@ -1259,26 +1257,6 @@ static enum blk_eh_timer_return ublk_timeout(struct request *rq)
-> > > > > >  		return BLK_EH_DONE;
-> > > > > >  	}
-> > > > > >  
-> > > > > > -	if (!ubq_daemon_is_dying(ubq))
-> > > > > > -		return BLK_EH_RESET_TIMER;
-> > > > > > -
-> > > > > > -	for (i = 0; i < ubq->q_depth; i++) {
-> > > > > > -		struct ublk_io *io = &ubq->ios[i];
-> > > > > > -
-> > > > > > -		if (!(io->flags & UBLK_IO_FLAG_ACTIVE))
-> > > > > > -			nr_inflight++;
-> > > > > > -	}
-> > > > > > -
-> > > > > > -	/* cancelable uring_cmd can't help us if all commands are in-flight */
-> > > > > > -	if (nr_inflight == ubq->q_depth) {
-> > > > > > -		struct ublk_device *ub = ubq->dev;
-> > > > > > -
-> > > > > > -		if (ublk_abort_requests(ub, ubq)) {
-> > > > > > -			schedule_work(&ub->nosrv_work);
-> > > > > > -		}
-> > > > > > -		return BLK_EH_DONE;
-> > > > > > -	}
-> > > > > > -
-> > > > > >  	return BLK_EH_RESET_TIMER;
-> > > > > >  }
-> > > > > >  
-> > > > > > @@ -1351,6 +1329,24 @@ static int ublk_ch_open(struct inode *inode, struct file *filp)
-> > > > > >  static int ublk_ch_release(struct inode *inode, struct file *filp)
-> > > > > >  {
-> > > > > >  	struct ublk_device *ub = filp->private_data;
-> > > > > > +	bool need_schedule = false;
-> > > > > > +	int i;
-> > > > > > +
-> > > > > > +	/*
-> > > > > > +	 * Error out any requests outstanding to the ublk server. This
-> > > > > > +	 * may have happened already (via uring_cmd cancellation), in
-> > > > > > +	 * which case it is not harmful to repeat. But uring_cmd
-> > > > > > +	 * cancellation does not handle queues which are fully saturated
-> > > > > > +	 * (all requests in ublk server), because from the kernel's POV,
-> > > > > > +	 * there are no outstanding uring_cmds to cancel. This code
-> > > > > > +	 * handles such queues.
-> > > > > > +	 */
-> > > > > > +
-> > > > > > +	for (i = 0; i < ub->dev_info.nr_hw_queues; i++)
-> > > > > > +		need_schedule |= ublk_abort_requests(ub, ublk_get_queue(ub, i));
-> > > > > > +
-> > > > > > +	if (need_schedule)
-> > > > > > +		schedule_work(&ub->nosrv_work);
-> > > > > 
-> > > > > ublk_abort_requests() should be called only in case of queue dying,
-> > > > > since ublk server may open & close the char device multiple times.
-> > > > 
-> > > > Sure that is technically possible, however is any real ublk server doing
-> > > > this? Seems like a strange thing to do, and seems reasonable for the
-> > > > driver to transition the device to the nosrv state (dead or recovery,
-> > > > depending on flags) when the char device is closed, since in this case,
-> > > > no one can be handling I/O anymore.
-> > > 
-> > > ublk server should be free to open & close the char device multiple times,
-> > > but you patch limits ublk server to open & close the char device just once.
-> > > 
-> > > The limit looks too strong...
-> > 
-> > Tying a userspace daemon lifetime to the file seems to also be done in
-> > fuse, which is very similar to ublk_drv. See e.g. the description here:
-> > 
-> > https://lore.kernel.org/lkml/20240524064030.4944-1-jefflexu@linux.alibaba.com/T/
-> > 
-> > This seems required to support certain workflows, e.g. using an fdstore
-> > with ublk devices. While we still keep task references in ublk_drv,
-> > these workflows will be broken.
-> > 
-> > I am not familiar with fuse so I don't know for sure, but it sounds like
-> > if the file is closed after some setup is performed, then the connection
-> > is aborted. The analogy in ublk might be - if the file is closed while
-> > the device is LIVE, then we transition to the nosrv state. Otherwise
-> > nothing happens and the file can be reopened freely. This will allow
-> > libublksrv to continue working as it opens/closes the fd early to
-> > determine if it is accessible. Does that sound any better?
+On 4/2/25 1:34 PM, Uday Shankar wrote:
+> On Wed, Apr 02, 2025 at 07:12:45AM -0600, Jens Axboe wrote:
+>>
+>> On Tue, 01 Apr 2025 14:49:07 -0600, Uday Shankar wrote:
+>>> Fix a couple of issues I saw when developing selftests for ublk. These
+>>> patches are split out from the following series:
+>>>
+>>> https://lore.kernel.org/linux-block/20250325-ublk_timeout-v1-0-262f0121a7bd@purestorage.com/T/#t
+>>>
+>>>
+>>
+>> Applied, thanks!
+>>
+>> [1/2] selftests: ublk: kublk: use ioctl-encoded opcodes
+>>       (no commit info)
+>> [2/2] selftests: ublk: kublk: fix an error log line
+>>       (no commit info)
 > 
-> Yes, my point is that the close shouldn't delete disk, since it may
-> be one normal close().
-> 
-> Actually I think your patch should work by the following change:
-> 
-> - remove 'schedule_work(&ub->nosrv_work);' done in ublk_ch_release()
-> 
-> - re-initialize each ublk_queue in open()
-> 
-> Then disk won't be deleted, but any IO is `aborted` by ubq->canceling
-> if the char device isn't opened. After the char device is re-opened,
-> everything will become fine.
+> Jens, MAINTAINERS parsing didn't add you to this email - I had to do it
+> manually. Do we need to add you somewhere so you get a copy of all ublk
+> patches (since you maintain its tree)?
 
-Yes, thanks for the suggestion, but I ideally want to replace the two
-places where we detect nosrv (uring_cmd cancellation and timeout) with
-one new place, instead of adding a third one.
+It's under ublk, so it should go to linux-block. That should be good
+enough, I'll see them.
 
-Please see the new patch at
-https://lore.kernel.org/linux-block/20250402-ublk_timeout-v2-1-249bc5523000@purestorage.com/T/#u
-
-It allows multiple open/close as long as device is not LIVE. This is
-similar to fuse and works with current libublksrv implementation, and is
-resilient to accidental/random environmental open/close of the character
-device, so it may be more acceptable.
-
-Either way, let's continue discussion on that thread.
-
+-- 
+Jens Axboe
