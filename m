@@ -1,302 +1,250 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2075.outbound.protection.outlook.com [40.107.237.75])
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85E2B1EFFB8;
-	Wed,  2 Apr 2025 06:55:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.75
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743576925; cv=fail; b=OzzLrh7SGrlZn5Rz8o8ucgXIwcgiwAEEa3bBCmYaAa5XAlKor3GEsv3exbPKeHJjrTx8ujNxpGXWc4f/THp8XiV9vxk4xZiL4FJIAG6tqszQgJGkHHWdHBZT76qEUl77rmgLmWeq4a3Lgbxd688Cm8mtLcb2A5RI1ejKMP3WfgU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743576925; c=relaxed/simple;
-	bh=x+Dg3DxgS7nEFKvz4t2wy6XcHgO7N3BDXZkgL6/7cbY=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=tF6eQkuTHP82yXOnl82EWarg8li4rkW5hTLRyJvKvaCQxDA5xvvefPdAgE26VnwKxJLojx6gIEZfRB6mZha2abfRQQ2GdEEK3hrpti5SKzQHHrdkTCeNVcIQWuMO93WwVi25rCKaRGD5cHcxIQa+Dx3r0fn3C+rKfJSnKXRQBpQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=jg7hdu3F; arc=fail smtp.client-ip=40.107.237.75
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AB431EFFB8
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 06:56:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743577016; cv=none; b=LhgfrXSPlWucx+QhSEoNonhxyq4gUCBzjaCkWAY71SZKHYwDoAz6vdnYmqi2TEFvYK6PUzqKhXIzo0Jri4mk0J8HjUEtlWaP5yKa3Xzy394ur4KEhzwvow78EVmI+ig4FKrDU3a2R7CSWt6Wz27zrUqmdiU5y3xMcpRmr5ctj2s=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743577016; c=relaxed/simple;
+	bh=fJ/BtvsK+6L1p7nRw/xMxEqOGWQ9YBxiQfrNkYjekH8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=L5tnlavAXOyqoh6g/K4Z+OwAQutfbmdSktl8Mb3FE0NRaTidofxMgO+uxghqXYEbA0UMtJ/6GyubtWKqhgoIJtaM/u1E9SMTY1lCmHBgIltZSOc0g2p6no990zVSEbcDcP1/knG9HY6rYxgBrgP3P2b0+0uqxSY3seamqg0+7oc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=NzPxw+do; arc=none smtp.client-ip=185.125.188.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="jg7hdu3F"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=LImXpwi9DhiGzmxi7459/RNAAsIhE6uMx0/pR+hywR3MsUmggk5Ihxx0o5LfrntO23aTwLcGjMaVUdw/lZz+0CLwei6Nwol0Y5UxCv/whN/6tIuq1n/oXknmn+N7A1wEE08b/x1CWTwRciW87ex4n8DiHb33krcVv47nbkgCu3a2BwkC46ajYB4d7yOL+f+v/U2UI+bGK54adYPFXsinq6gAjlkL4pcUSkP58jt6ie3i/DiuLJi33uNc24nyLK5S0FBzsJyUFXrun/qvh2DLQ+YBcC/LL/z8sil8NQN8CVxyijGLNeXpJUE5Auyyl+oKiGiDrvh2VzyDdSro1QEItw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3mZcEHH2DqEa02GY3M32pX5rVocJ1d74cs0948Olvb8=;
- b=J8IyVIC9kg9+x7xgDllIzaJsz7YrO7kRtj4fWUSK8M+4iF08/6IF7AqCIflcuDaxV7RAt9vpo+oagMLGUEdrOMVqU5Ex0TfGB658j5B4UNwgfwuiFwgOkzrG425Jg4s5PIkBvfF4AsI0O/oBgAJOo4td31HJ6Z/mTGWU0cZQCP0Sj1uf7Rs2hJuxXnTWC9l7Ku717v0zcgQoXgPHsLjdcyndilPFmWUdbXshI/p+lDSihrvsLmVJxfqEjKr53Xw1Zqz8/7tPj/KPoArmdsk/cegc3jawOmYMO7aleE0UIDwXUE4U7hpwG1lwLItA6CLWcMJIDVv3p8vRhxpoiSvb/w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3mZcEHH2DqEa02GY3M32pX5rVocJ1d74cs0948Olvb8=;
- b=jg7hdu3F2rZHOb2a/MkuWSbGF96K8BXi/6I4JgWg114hXqYokNiOhoOPjniDVrR+TN16utfbIfD2hdMe0RmtNLpzycXGJj4b4yHRJD378fMEWM/zWIIRVxpbe4N4AyEb2B7gR2cMRVQk0sugB//B12IvwO+xqlvJLSrdn8S/Cfc=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB5685.namprd12.prod.outlook.com (2603:10b6:510:13c::22)
- by DS5PPF6BCF148B6.namprd12.prod.outlook.com (2603:10b6:f:fc00::652) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8583.41; Wed, 2 Apr
- 2025 06:55:20 +0000
-Received: from PH7PR12MB5685.namprd12.prod.outlook.com
- ([fe80::46fb:96f2:7667:7ca5]) by PH7PR12MB5685.namprd12.prod.outlook.com
- ([fe80::46fb:96f2:7667:7ca5%5]) with mapi id 15.20.8534.043; Wed, 2 Apr 2025
- 06:55:20 +0000
-Message-ID: <b636faa5-ab31-41d6-b957-4dfe89a2b47d@amd.com>
-Date: Wed, 2 Apr 2025 08:55:15 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6] drm/syncobj: Extend EXPORT_SYNC_FILE for timeline
- syncobjs
-To: Dmitry Osipenko <dmitry.osipenko@collabora.com>,
- Rob Clark <robdclark@gmail.com>, dri-devel@lists.freedesktop.org
-Cc: Rob Clark <robdclark@chromium.org>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Sumit Semwal <sumit.semwal@linaro.org>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:DMA BUFFER SHARING FRAMEWORK:Keyword:bdma_(?:buf|fence|resv)b"
- <linux-media@vger.kernel.org>,
- "moderated list:DMA BUFFER SHARING FRAMEWORK:Keyword:bdma_(?:buf|fence|resv)b"
- <linaro-mm-sig@lists.linaro.org>
-References: <20250401155758.48855-1-robdclark@gmail.com>
- <CAF6AEGsKbjq_q7ezQTn5vyAF1cjXahgbv84uYK35BJH1KBXSpw@mail.gmail.com>
- <ff614cb7-94ca-4d74-9bbb-f97c95893113@collabora.com>
-Content-Language: en-US
-From: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-In-Reply-To: <ff614cb7-94ca-4d74-9bbb-f97c95893113@collabora.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: FR4P281CA0285.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:e6::19) To PH7PR12MB5685.namprd12.prod.outlook.com
- (2603:10b6:510:13c::22)
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="NzPxw+do"
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com [209.85.218.72])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id A246B3F84D
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 06:56:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1743577005;
+	bh=iJCjafL5T3uwEbRIx6/ivF1Ot4vyx5UZkygzmWgtBWQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type;
+	b=NzPxw+doBi4A/vYEi7ZyqZkkxVGBvQbmAuQLa3mgK7sdTlqGZ+BURBeGpadXiW3NT
+	 piQRyTIFdY1TwwmVSX8Itdf4zmQDtc1s3V+s5TLfHZMQr//S1K+Ag9ua5c+10KwM5Q
+	 4uIOHzvK7wp+uS6hmHDTtd9FoRnj3dk4VUqVNONwW4VlFpDoKtdF+2AFFRQnFFbMaR
+	 xSxh/N9UyIcBvwIpqDZnEV85FZc1aix+K8YkVe4WxFEAPsbAeWohH+pOEftUUaPB8M
+	 fq1RuvCiK9nmp0TxYkX/vvlgSMcRkS1uc4dveCfrvo3+CUcaGV+YbJM56su/LW1ar0
+	 wX+3UiG88KfcQ==
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-ac384a889easo49335866b.0
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 23:56:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743577005; x=1744181805;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=iJCjafL5T3uwEbRIx6/ivF1Ot4vyx5UZkygzmWgtBWQ=;
+        b=Pd4uWEmAtKcZ+rsIt/+axpaEsrfCS1+EPvlcPOZYbg54KfISmbVnYOcQcX64ErWuSP
+         KmIaSESlxZFfSFZ7J/SFLi74xCWwdKOvjYAANLXA4Sr9p8HOEbEv377w2RkZ4aG7QfZq
+         tQU7Si/P296Z5UQvItiiaan6YJD2tVnj7yEn1gRwlHiFE0RXUDSfY0XOOddT+gDyuxqn
+         kq6JctM2YWJcWUduFBOUXWG1sZ907ukPninbgr+3fhBu/r/JZzV9IC5jcxAnM/1GO4NK
+         RrP7C7dcZe21kj/OlRlwJ5Zo+N5QCi+qhtQZ3zFWxtxfgV/i1hD/zOay4wifvBGAowI8
+         AxHA==
+X-Forwarded-Encrypted: i=1; AJvYcCVAf/Pkhtbd48UIZR+IQedG2Pugz5iAvETzY47Vf2ettBWjZZFSr6vjD9TTcOpPk5k71VYa6CYaS64xIs0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxOjmXAKrbdHqo9L0Wa78FrnEUabodtc0c0BwvOXBO/6r61rdz8
+	oSMElCC+ZvChYv7o4JpnPZKVEf3aeVq5Swi2jCYr2DjppmNwjw4n03LforT7rUcyBWbeGATo9mK
+	ahbWHCZgbHsOcRmSjaIF5GoAQra6PE1HEw1p5hLT9F9v1Xy06zBPuEogEQ/Ix+kWQ6QymT4OqjA
+	v0D4pLgTMHA6pZX22YI6SGKbIozmMmoMYLWY6CoNdJjpaB1LlivOuY
+X-Gm-Gg: ASbGnctMbn82uO5gh9LRx/o3CFouVxN8Oue+WZOfDMcTOb6k92iHGgMxdXNVAm0k3v3
+	xENrTb87KFQlmH+rjxwufjbxUeZCDDKPOJsfSUOdUPR7CaOTIQxTqat2wnB1eD2vSQtUr7ulecH
+	Na3Qhy0aXK95J9X/By
+X-Received: by 2002:a17:906:6d8c:b0:ac3:4228:6e00 with SMTP id a640c23a62f3a-ac7a5a6ace0mr73302866b.6.1743577005026;
+        Tue, 01 Apr 2025 23:56:45 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFnByrU9JRG0DAMgNafNLSf28PK8EcYeDsl7ldlIC7zxv+U9ffEaSE9z1Rsy68HNpm8PyZ73Oq1b/ipZnOneUo=
+X-Received: by 2002:a17:906:6d8c:b0:ac3:4228:6e00 with SMTP id
+ a640c23a62f3a-ac7a5a6ace0mr73301366b.6.1743577004608; Tue, 01 Apr 2025
+ 23:56:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB5685:EE_|DS5PPF6BCF148B6:EE_
-X-MS-Office365-Filtering-Correlation-Id: 443945f3-b028-4a7b-cc8f-08dd71b3558d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|376014|7416014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?eTRwRERxNzJrQlJvamJCbWIzOThISDU2S1g2WVc3OWxRNHE2ZzlEWVNQb0Z4?=
- =?utf-8?B?VDQxZXpVc0xMQmtaRlljeVVQY1B0T3JVUUhYb2NObWkycnRZcC9ocjF3OVFQ?=
- =?utf-8?B?Z3hFQnlwT3Y0emc1MWxhT1pMQ1llY0FHRWI5YXgyZlAxbjJIcnh4NnplUldh?=
- =?utf-8?B?aUxWdDRrZW14c1JFL2cwd1FySGd1ZXgzeE5KTlVpZ2owTWZuek1XQ3F0aG8z?=
- =?utf-8?B?UXl0NE9MMzhUdEU4SEtmcHZBS0t2amVFaEJWWXl5OEczUEJNYXFUaHpseC9w?=
- =?utf-8?B?WGY3aHBJcUhzbDFVbmF4cHlKaHVJcDl6eUtBdU56T3pGTUIyMm5oY2JMVmZG?=
- =?utf-8?B?b0NKR1QreHdlcXJkVldCZVY5dzBJbWVIK2ZaYjhPa1kvaFZva0V4MmxmYXV5?=
- =?utf-8?B?Q01xb1ZGRFFQQ1NzTlpZM0s1bHFLLzBnZ0N5YkZBR1dkQ29Cbk1HTTM0VDA1?=
- =?utf-8?B?MUFJT2RORllPMWRNbHJpWklEQUtXQ0dZdjA0Wm1PNVh0RXlkbjFiOVIrLzhS?=
- =?utf-8?B?K00yY2s3Uk1TWDZLRWNDL1FOUDdrVUhPNmhoVGFYSEkzQ25pR1NlamZyc3hG?=
- =?utf-8?B?VW1nZndUaVRyTVFUVXFUZ3NmOEsvVmFHWFM3dE9wRHpZUkcwU1VMM2tEeE1N?=
- =?utf-8?B?M21uTzk2K05HUXRNek5yWXBOaG1TaHJrbXVSODdlN3VCWG1pNmFPQ2YveGRR?=
- =?utf-8?B?N2NtWldHb3FwcllyMkZ5NHluQkY0TFB5SnNhT1VVbHY5WlYzTXhWVU5VVHBv?=
- =?utf-8?B?b1JYRzBPUnNYUlZhSFBxd0l3aCtyT0lFWklIRytZajkvdkNjbmViSjViUXZF?=
- =?utf-8?B?a1lnK3VqRXJJVGY3ZDE0OWJ4ZTVJaVBJT2w3Nm94R2hDbHJHMm8vZGdpWFhq?=
- =?utf-8?B?dHRKMTc0N3pSVjE1UUE4Vzk1OW94a2F5dmRKck5lTEJnaVVNeDhTR3RwOVVD?=
- =?utf-8?B?eEgxRlZSOENyVXlNMDRlVmhxTWUzY3hWY1pEREFjOTdNanVNZDBUNEdTTGNx?=
- =?utf-8?B?Zi9ja0tneEFwOE5BenB1MlBzRk9TbVlRd1gzdGRJNXZYRmNXVjlLMXN4d0VZ?=
- =?utf-8?B?RkxKRXNjeG0wd3UxMldCWFErbndITG04eE04WHh3dEpyTUp6dGtqRkpxMGp5?=
- =?utf-8?B?Wldwc3B0T1M1aDJGYlNETEI1dGdNcjdocG0yTVU3N3Q2KzlEY3N0VGRzZnBt?=
- =?utf-8?B?VGI1VE1SUkNVVjhaeEI3UVNlWjZMTUlCTHZ4MndpazZNUWFPQlpLNGhOQndV?=
- =?utf-8?B?K3RSM2FRZkcvSzBjUHlwYjAxTmsrZDdyL1dPdHZ3dEJZSG1RQUZJbE1ueU5j?=
- =?utf-8?B?allMSGx5aGtYWUNQMFZ1QWdPd092aWsvUzdXTy85RXZUakY3aXlRcldpZGFv?=
- =?utf-8?B?a25Vd0tSS1k1NDV1RVNHYmEvK0VKbHR1WG9OcVUxR1p5eTArZmFGNUR1ZDg2?=
- =?utf-8?B?cnNpSUxYTnhWNkxNQW5HdHp6Ymo4MXV6Z1JjaS9oeFRNc3RsVWhnSElKZnhn?=
- =?utf-8?B?YkErMlh0QUxzekVwNXR4SlpqdjM4OGhtSFEvcUlKd21NZTBWN1E0UWFNNCtX?=
- =?utf-8?B?NTQwZEJKelBVVTBVQ245YjdPeUUzTDMxNGt4K3VYeFVPUTlFTk5KTTBTNGVk?=
- =?utf-8?B?VmtobzF3eDE2SkVWNEE3UnBPMTdSdjJNWTlhUjBicFRKVjgyVGZwNDdKelJy?=
- =?utf-8?B?RTZVQTZnOU01cDlkc2YvTkd0YzYxMVY5SnZIZU9PWDVSTWZRbEs4RDA0NTQ3?=
- =?utf-8?B?L2Q0aW5oNWVKZTRRSE1SUTl4c2pVUk5xWHJZc0NJYWJJMGJJT3pYUzVnUnJs?=
- =?utf-8?B?dHN4S0R1bEQ3OWZZblhXQT09?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5685.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?M2YzNFpYUEJUQURSWXhQcCtzZjB5YmkxeU1tbU8wdGROcUphNVVTKzVGN0lQ?=
- =?utf-8?B?aWh6YWd1UGVBVWY5SUhtbUtQQm1Lek5RMWVlQVBXWVZCTXBMOU1LZDZvZS9s?=
- =?utf-8?B?WExLWksrQUxpUjlWWDdzV3Y5SmZpVUcvNmwxTitrVkFkSGh3elpnTk5GeWxV?=
- =?utf-8?B?OVJEdncxRHhSWXF6Tmx3RGVvVDBOaGNndjNOZFlKUHhrL3VvTXIxQlFXYm5T?=
- =?utf-8?B?a0lEbjQ1cmx4TGprU284SlJiRWJVbHBVbHI0eGZCNzhYNmVoZnpJRzdlWWdI?=
- =?utf-8?B?cWwzWGoyeDVTU1VXeTBxTUdVbTUwOWJDcy91VE02akVCbUNGREk0TzhBNmRs?=
- =?utf-8?B?dlEyOUZ5NU5tYUxNc0dMeWxodmJ0Lzh3OVZNaktJL1JtYXhiMDEzMkVjbjRT?=
- =?utf-8?B?cUNRMjFPc1F6cWhublN4c1JaUENUTGdaTTFPUzFxUEtuNHJycHN6amM3Vk1o?=
- =?utf-8?B?ZmRWNEVyU2JlR1BVdXFlMHNRSm4reWlaSG5QR2NqKzlFQ0c1ZjlybThHcmlO?=
- =?utf-8?B?TWdnb25pK3I5Q3VROWVTVFFVVUw0bENCaDNEcFJwb0ZYejFUVTRWYjVzUHVl?=
- =?utf-8?B?RGNqbWd1VmFBaFlMS0FaOHlNT3ArTVprNnQvYVVMWmZHdzRLN3VzOWJCQVNJ?=
- =?utf-8?B?N2JJY0s0ZE9hK0JqazNNUjZYVHFxNk1IbFpwZnhyaTVUZG03L3Z1VWk0SVpa?=
- =?utf-8?B?T0RMMXJJcitOVXBFaXl2RWZxeTI2VXp1MkxTTDdWdUwyWVdLd2pqeTlGYTlj?=
- =?utf-8?B?bUI3bWJBem40T1RMM1MxSFVtSFJ2RkhNL3BBdE16bFJ5ZE5CQ2VHL0p6eGha?=
- =?utf-8?B?cWdzSkVSSkcrUlVSdVIvbmw5TXgzNjl1a2J1bmpzbGNGOVFnYk1GTmxMZEdz?=
- =?utf-8?B?QnZqajFNSDd0Q2d6VVNBRWlBV1ZQam5BQitMVkxJelpRVXU2dXVGdzNPUERB?=
- =?utf-8?B?czFyREUwUHIydklTaFJpT0d0MVI4ZHdDUDd6R3FkeEtrdFNHclJIZzIyY1ZK?=
- =?utf-8?B?dDFqcFZ0S0xraGtkY3VCUmFyWGJadW1BZG1meGIyQ2tGRkgxVkJMdFFRcFhu?=
- =?utf-8?B?QkREM1JhRyt4QmRrYkFoV214RVpsVzYrL3RHSVF0SlJZdjNYdmdQMkdCRm1D?=
- =?utf-8?B?MU95MXBXSjc4ZzY2cm1IL3RUdVBMRWFYTUZWT2pud3labzZwWllQRElwZGZx?=
- =?utf-8?B?S1ZxWWZLSkdiaEVUc2NGbXVIdXpLYlArdEQzdmpQbExZeHlmckVWcDNWeURJ?=
- =?utf-8?B?Y1V4SktNVHpoK3hPdlhmRFZBMUJsNjhqYUU3ajlSMUNGcEVHOEJvRmNKaEpN?=
- =?utf-8?B?dmw2bWpsZ0h1cy9pQmZIVU5OK3dITVVwRTFDQ3g3U0N1QTR2TFZRRkxoeVNv?=
- =?utf-8?B?SHFyaWxRREhYdktWSHJkbkNSQmlabnNEY2hxK3JjSUU4cmtPY1NQT3hRcnZN?=
- =?utf-8?B?U3hUQ2NuQmVhbk5pUU5EN1RMMHM2a2h1a1VFTmJFaEs2SkdrOXRqTnpWdFg5?=
- =?utf-8?B?SGdlbTMwVFBvOXZlcGZyWURsSGptL0FIc09aU2loaWhIck0zc3dWQnZZamh1?=
- =?utf-8?B?WDVQR1RTMW9GUFkyR3NRQXh0TFNndkRZeVB4MDllL0xhSE9HdzB6ZXc0TEhK?=
- =?utf-8?B?OFpOdVpkcS9yVm4xVDdsL21jN3YwRjQ4N1JVWGNBVkdIR20rQWNLcHpIU3ZW?=
- =?utf-8?B?ZjdzTnhqS3lkZjB1UkRETmFrVkUwbVVJY2ZIaUVzaFR1aGpkUThSRzZNVGsz?=
- =?utf-8?B?R21sRFZwbkhzRHh5WDZocFJoZG9KQU1PaFN5TS90cWZoL21wOWs1eG9WT1dr?=
- =?utf-8?B?NFFEd2cxNW1rRmRSVHFMeElVU1dsaStxbWpZRmdOZkhzUGo5aFIrMTZFcHZF?=
- =?utf-8?B?emNKcXU1aXpuYXk3U3l1QUlVN3lEM3ZqVVpqdHBPaFpPTTlSVlpKcUR6eXBa?=
- =?utf-8?B?clUzNER0U3RjeVFvN0s1NW40aitFWFh2Ui9FN1Uwd1I1d1hSRitRWGErZ1ND?=
- =?utf-8?B?WW1WYVZmZFJYMTBZeXR6K3VpbGdERktubkRmRndmQVpyT1dTRENYRDhuVzB0?=
- =?utf-8?B?Q1JJMUVrMzFYSWpXK2dEWjFIM1lFOTVxZndwNzl5eFVYMXd5MTJzc2EyQ21U?=
- =?utf-8?Q?SvntuFwpOUHP1rHgfYc2XLHhn?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 443945f3-b028-4a7b-cc8f-08dd71b3558d
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5685.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Apr 2025 06:55:20.7495
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 6Pgu1+A0Rv2UTxaoIViXYWMPH7tcC31U1Ta9V8qspe8/3axv1Otkd61i6GP3rnjr
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS5PPF6BCF148B6
+References: <CAFv23QnqgTVoB-XRe5yNndRz4-Z_3y38+QpKRxQMeZ2xQTg=gw@mail.gmail.com>
+ <180d8a88-52d9-4b83-83de-0184ed7cb4a5@huawei.com> <z6wlwwcbrmr3mcws6wmn5r6z45kosinvq6wyfq6hxfvcuxdjp5@ucjecgmhqp42>
+ <59a1fa13-888e-4fe0-9de0-cd0e63c91265@huawei.com> <hshsylujj64nlrakfeboyriwhnfvmo2kodju6mrznrf56mttmv@3nuxifxmo6yc>
+In-Reply-To: <hshsylujj64nlrakfeboyriwhnfvmo2kodju6mrznrf56mttmv@3nuxifxmo6yc>
+From: AceLan Kao <acelan.kao@canonical.com>
+Date: Wed, 2 Apr 2025 14:56:33 +0800
+X-Gm-Features: AQ5f1JoVlUCXaWINEjljNnyGsYN8nzQE5dUNmwv8EqKv2yuL5g-TVBsldQ-xJOs
+Message-ID: <CAFv23Q=Wkko7VEVcztJSC+R8sfwzUDz4G4yLohhv_QfZozGARw@mail.gmail.com>
+Subject: Re: Regression found in memory stress test with stress-ng
+To: Baokun Li <libaokun1@huawei.com>
+Cc: linux-block@vger.kernel.org, axboe@kernel.dk, 
+	Christoph Hellwig <hch@infradead.org>, 
+	"Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>, yangerkun@huawei.com, houtao1@huawei.com, 
+	yukuai3@huawei.com, Dirk Su <dirk.su@canonical.com>, jani.nikula@linux.intel.com, 
+	joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com, tursulin@ursulin.net, 
+	airlied@gmail.com, simona@ffwll.ch, intel-gfx@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Am 01.04.25 um 22:46 schrieb Dmitry Osipenko:
-> On 4/1/25 23:40, Rob Clark wrote:
->> On Tue, Apr 1, 2025 at 8:58 AM Rob Clark <robdclark@gmail.com> wrote:
->>> From: Rob Clark <robdclark@chromium.org>
->>>
->>> Add support for exporting a dma_fence fd for a specific point on a
->>> timeline.  This is needed for vtest/vpipe[1][2] to implement timeline
->>> syncobj support, as it needs a way to turn a point on a timeline back
->>> into a dma_fence fd.  It also closes an odd omission from the syncobj
->>> UAPI.
->>>
->>> [1] https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/33433
->>> [2] https://gitlab.freedesktop.org/virgl/virglrenderer/-/merge_requests/805
->>>
->>> v2: Add DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_TIMELINE
->>> v3: Add unstaged uabi header hunk
->>> v4: Also handle IMPORT_SYNC_FILE case
->>> v5: Address comments from Dmitry
->>> v6: checkpatch.pl nits
->>>
->>> Signed-off-by: Rob Clark <robdclark@chromium.org>
->>> Reviewed-by: Christian König <christian.koenig@amd.com>
->>> Reviewed-by: Dmitry Osipenko <dmitry.osipenko@collabora.com>
->>> ---
->>>  drivers/gpu/drm/drm_syncobj.c | 47 +++++++++++++++++++++++++++--------
->>>  include/uapi/drm/drm.h        |  4 +++
->>>  2 files changed, 41 insertions(+), 10 deletions(-)
->>>
->>> diff --git a/drivers/gpu/drm/drm_syncobj.c b/drivers/gpu/drm/drm_syncobj.c
->>> index 4f2ab8a7b50f..636cd83ca29e 100644
->>> --- a/drivers/gpu/drm/drm_syncobj.c
->>> +++ b/drivers/gpu/drm/drm_syncobj.c
->>> @@ -741,7 +741,7 @@ static int drm_syncobj_fd_to_handle(struct drm_file *file_private,
->>>  }
->>>
->>>  static int drm_syncobj_import_sync_file_fence(struct drm_file *file_private,
->>> -                                             int fd, int handle)
->>> +                                             int fd, int handle, u64 point)
->>>  {
->>>         struct dma_fence *fence = sync_file_get_fence(fd);
->>>         struct drm_syncobj *syncobj;
->>> @@ -755,14 +755,24 @@ static int drm_syncobj_import_sync_file_fence(struct drm_file *file_private,
->>>                 return -ENOENT;
->>>         }
->>>
->>> -       drm_syncobj_replace_fence(syncobj, fence);
->>> +       if (point) {
->>> +               struct dma_fence_chain *chain = dma_fence_chain_alloc();
->>> +
->>> +               if (!chain)
->>> +                       return -ENOMEM;
->>> +
->>> +               drm_syncobj_add_point(syncobj, chain, fence, point);
->>> +       } else {
->>> +               drm_syncobj_replace_fence(syncobj, fence);
->>> +       }
->>> +
->>>         dma_fence_put(fence);
->>>         drm_syncobj_put(syncobj);
->>>         return 0;
->>>  }
->>>
->>>  static int drm_syncobj_export_sync_file(struct drm_file *file_private,
->>> -                                       int handle, int *p_fd)
->>> +                                       int handle, u64 point, int *p_fd)
->>>  {
->>>         int ret;
->>>         struct dma_fence *fence;
->>> @@ -772,7 +782,7 @@ static int drm_syncobj_export_sync_file(struct drm_file *file_private,
->>>         if (fd < 0)
->>>                 return fd;
->>>
->>> -       ret = drm_syncobj_find_fence(file_private, handle, 0, 0, &fence);
->>> +       ret = drm_syncobj_find_fence(file_private, handle, point, 0, &fence);
->>>         if (ret)
->>>                 goto err_put_fd;
->>>
->>> @@ -869,6 +879,9 @@ drm_syncobj_handle_to_fd_ioctl(struct drm_device *dev, void *data,
->>>                                    struct drm_file *file_private)
->>>  {
->>>         struct drm_syncobj_handle *args = data;
->>> +       unsigned int valid_flags = DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_TIMELINE |
->>> +                                  DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_EXPORT_SYNC_FILE;
->>> +       u64 point = 0;
->>>
->>>         if (!drm_core_check_feature(dev, DRIVER_SYNCOBJ))
->>>                 return -EOPNOTSUPP;
->>> @@ -876,13 +889,18 @@ drm_syncobj_handle_to_fd_ioctl(struct drm_device *dev, void *data,
->>>         if (args->pad)
->>>                 return -EINVAL;
->>>
->>> -       if (args->flags != 0 &&
->>> -           args->flags != DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_EXPORT_SYNC_FILE)
->>> +       if (args->flags & ~valid_flags)
->>>                 return -EINVAL;
->>>
->>> +       if (args->flags & DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_TIMELINE)
->>> +               point = args->point;
->>> +
->>>         if (args->flags & DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_EXPORT_SYNC_FILE)
->>>                 return drm_syncobj_export_sync_file(file_private, args->handle,
->>> -                                                   &args->fd);
->>> +                                                   point, &args->fd);
->>> +
->>> +       if (args->point)
->>> +               return -EINVAL;
->>>
->>>         return drm_syncobj_handle_to_fd(file_private, args->handle,
->>>                                         &args->fd);
->>> @@ -893,6 +911,9 @@ drm_syncobj_fd_to_handle_ioctl(struct drm_device *dev, void *data,
->>>                                    struct drm_file *file_private)
->>>  {
->>>         struct drm_syncobj_handle *args = data;
->>> +       unsigned int valid_flags = DRM_SYNCOBJ_FD_TO_HANDLE_FLAGS_TIMELINE |
->>> +                                  DRM_SYNCOBJ_FD_TO_HANDLE_FLAGS_IMPORT_SYNC_FILE;
->>> +       u64 point = 0;
->>>
->>>         if (!drm_core_check_feature(dev, DRIVER_SYNCOBJ))
->>>                 return -EOPNOTSUPP;
->> oh, I suppose I should add a check for DRIVER_SYNCOBJ_TIMELINE?  I'll
->> send a v7 a bit later
-> Christian already applied to misc-test, please rebase and make it as a
-> new patch
+Chia-Lin Kao (AceLan) <acelan.kao@canonical.com> =E6=96=BC 2025=E5=B9=B43=
+=E6=9C=8821=E6=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=883:47=E5=AF=AB=E9=
+=81=93=EF=BC=9A
+>
+> On Thu, Mar 20, 2025 at 02:32:55PM +0800, Baokun Li wrote:
+> > On 2025/3/20 13:23, Chia-Lin Kao (AceLan) wrote:
+> > > On Thu, Mar 20, 2025 at 11:52:20AM +0800, Baokun Li wrote:
+> > > > On 2025/3/20 10:49, AceLan Kao wrote:
+> > > > > Hi all,
+> > > > >
+> > > > > We have found a regression while doing a memory stress test using
+> > > > > stress-ng with the following command
+> > > > >      sudo stress-ng --aggressive --verify --timeout 300 --mmapman=
+y 0
+> > > > >
+> > > > > This issue occurs on recent kernel versions, and we have found th=
+at
+> > > > > the following commit leads to the issue
+> > > > >      4e63aeb5d010 ("blk-wbt: don't throttle swap writes in direct=
+ reclaim")
+> > > > >
+> > > > > Before reverting the commit directly, I wonder if we can identify=
+ the
+> > > > > issue and implement a solution quickly.
+> > > > > Currently, I'm unable to provide logs, as the system becomes
+> > > > > unresponsive during testing. If you have any idea to capture logs=
+,
+> > > > > please let me know, I'm willing to help.
+> > > > Hi AceLan,
+> > > >
+> > > > I cannot reproduce this issue. The above command will trigger OOM.
+> > > > Have you enabled panic_on_oom? (You can check by sysctl vm.panic_on=
+_oom).
+> > > > Or are there more kernel Oops reports in dmesg?
+> > > Actually, there is no kernel panic during the testing.
+> > > I tried using kernel magic key to trigger crash and this is what I
+> > > got.
+> > > It repeats the "Purging GPU memory" message over and over again.
+> > >
+> > > [ 3605.341706] [   T5739] Purging GPU memory, 0 pages freed, 0 pages =
+still pinned, 2787 pages left available.
+> >
+> > The messages are coming from i915_gem_shrinker_oom(), so it looks like
+> > it's still an OOM issue. I'm just not sure why the OOM is happening so
+> > often, like every 0.05 seconds.
+> >
+> > I'm not familiar with gpu/drm/i915/gem, so I CCed the relevant maintain=
+ers
+> > to see if they have any thoughts.
+> Hi Baokun,
+>
+> Right, how the i915 shrinks its memory may need some tweak to check if
+> it can really shrink the memory.
+> But this issue is more likely from the swap.
+>
+> We found the issue can't be reproduced after reverts that commit, and
+> the issue can't be reproduced if we run swapoff to disable swap.
+> I'm worrying that there might be a bug in the swap code that it can't
+> handle the OOM situation well.
+>
+> Do you think should we try adding some debug messages to the block driver
+> to see if we can find any clues?
+A gentle ping.
 
-Yeah, sorry I was a bit to quick obviously.
+Does anyone have ideas on how to debug this issue?
 
-On the other hand I don't see an immediate need for a check for DRIVER_SYNCOBJ_TIMELINE here.
-
-The functions should work even when the driver doesn't handle timeline syncobj on it's own.
-
-Regards,
-Christian.
-
-
+> >
+> > > [ 3605.346295] [   T5739] Purging GPU memory, 0 pages freed, 0 pages =
+still pinned, 2787 pages left available.
+> > > [ 3605.350815] [   T5739] Purging GPU memory, 0 pages freed, 0 pages =
+still pinned, 2787 pages left available.
+> > > [ 3605.355463] [   T5739] Purging GPU memory, 0 pages freed, 0 pages =
+still pinned, 2787 pages left available.
+> > > [ 3605.360105] [   T5739] Purging GPU memory, 0 pages freed, 0 pages =
+still pinned, 2787 pages left available.
+> > > [ 3605.364743] [   T5739] Purging GPU memory, 0 pages freed, 0 pages =
+still pinned, 2787 pages left available.
+> > > [ 3605.369426] [   T5739] Purging GPU memory, 0 pages freed, 0 pages =
+still pinned, 2787 pages left available.
+> > > [ 3605.374044] [   T5739] Purging GPU memory, 0 pages freed, 0 pages =
+still pinned, 2787 pages left available.
+> > > [ 3605.378467] [   T5739] Purging GPU memory, 0 pages freed, 0 pages =
+still pinned, 2787 pages left available.
+> > > [ 3605.382958] [   T5739] Purging GPU memory, 0 pages freed, 0 pages =
+still pinned, 2787 pages left available.
+> > > [ 3605.387534] [   T5739] Purging GPU memory, 0 pages freed, 0 pages =
+still pinned, 2787 pages left available.
+> > > [ 3605.392130] [   T5739] Purging GPU memory, 0 pages freed, 0 pages =
+still pinned, 2787 pages left available.
+> > > [ 3605.394571] [     C11] sysrq: Trigger a crash
+> > > [ 3605.394575] [     C11] Kernel panic - not syncing: sysrq triggered=
+ crash
+> > > [ 3605.394580] [     C11] CPU: 11 UID: 0 PID: 0 Comm: swapper/11 Kdum=
+p: loaded Not tainted 6.11.0-1016-oem #16-Ubuntu
+> > > [ 3605.394586] [     C11] Hardware name: HP HP ZBook Fury 16 G11 Mobi=
+le Workstation PC/8CA7, BIOS W98 Ver. 01.01.12 11/25/2024
+> > > [ 3605.394588] [     C11] Call Trace:
+> > > [ 3605.394591] [     C11]  <IRQ>
+> > > [ 3605.394596] [     C11]  dump_stack_lvl+0x27/0xa0
+> > > [ 3605.394605] [     C11]  dump_stack+0x10/0x20
+> > > [ 3605.394608] [     C11]  panic+0x352/0x3e0
+> > > [ 3605.394613] [     C11]  sysrq_handle_crash+0x1a/0x20
+> > > [ 3605.394618] [     C11]  __handle_sysrq+0xf0/0x290
+> > > [ 3605.394623] [     C11]  sysrq_handle_keypress+0x2f4/0x550
+> > > [ 3605.394627] [     C11]  sysrq_filter+0x45/0xa0
+> > > [ 3605.394631] [     C11]  ? sched_balance_find_src_group+0x51/0x280
+> > > [ 3605.394637] [     C11]  input_handle_events_filter+0x46/0xb0
+> > > [ 3605.394643] [     C11]  input_pass_values+0x142/0x170
+> > > [ 3605.394647] [     C11]  input_event_dispose+0x167/0x170
+> > > [ 3605.394651] [     C11]  input_handle_event+0x41/0x80
+> > > [ 3605.394656] [     C11]  input_event+0x51/0x80
+> > > [ 3605.394659] [     C11]  atkbd_receive_byte+0x805/0x8f0
+> > > [ 3605.394664] [     C11]  ps2_interrupt+0xb4/0x1b0
+> > > [ 3605.394668] [     C11]  serio_interrupt+0x49/0xa0
+> > > [ 3605.394673] [     C11]  i8042_interrupt+0x196/0x4c0
+> > > [ 3605.394677] [     C11]  ? enqueue_hrtimer+0x4d/0xc0
+> > > [ 3605.394682] [     C11]  ? ktime_get+0x3f/0xf0
+> > > [ 3605.394686] [     C11]  ? lapic_next_deadline+0x2c/0x50
+> > > [ 3605.394691] [     C11]  __handle_irq_event_percpu+0x4c/0x1b0
+> > > [ 3605.394696] [     C11]  ? sched_clock_noinstr+0x9/0x10
+> > > [ 3605.394700] [     C11]  handle_irq_event+0x39/0x80
+> > > [ 3605.394706] [     C11]  handle_edge_irq+0x8c/0x250
+> > > [ 3605.394710] [     C11]  __common_interrupt+0x4e/0x110
+> > > [ 3605.394715] [     C11]  common_interrupt+0xb1/0xe0
+> > > [ 3605.394718] [     C11]  </IRQ>
+> > > [ 3605.394720] [     C11]  <TASK>
+> > > [ 3605.394721] [     C11]  asm_common_interrupt+0x27/0x40
+> > > [ 3605.394726] [     C11] RIP: 0010:poll_idle+0x4f/0xac
+> > > [ 3605.394731] [     C11] Code: 00 00 65 4c 8b 3d a1 78 7b 63 f0 41 8=
+0 4f 02 20 49 8b 07 a8 08 75 32 4c 89 ef 48 89 de e8 d9 fe ff ff 49 89 c5 b=
+8 c9 00 00 00 <49> 8b 17 83 e2 08 75 17 f3 90 83 e8 01 75 f1 e8 bd d1 ff ff=
+ 4c 29
+> > > [ 3605.394735] [     C11] RSP: 0000:ffff9c57001f7dc8 EFLAGS: 00000206
+> > > [ 3605.394740] [     C11] RAX: 000000000000003c RBX: ffffbc56ff59b618=
+ RCX: 0000000000000000
+> > > [ 3605.394743] [     C11] RDX: 0000000000000000 RSI: 0000000000000000=
+ RDI: 0000000000000000
+> > > [ 3605.394744] [     C11] RBP: ffff9c57001f7df0 R08: 0000000000000000=
+ R09: 0000000000000000
+> > > [ 3605.394747] [     C11] R10: 0000000000000000 R11: 0000000000000000=
+ R12: 0000034772423b38
+> > > [ 3605.394749] [     C11] R13: 000000000000f424 R14: 0000000000000000=
+ R15: ffff912c8122a900
+> > > [ 3605.394754] [     C11]  ? poll_idle+0x63/0xac
+> > > [ 3605.394757] [     C11]  cpuidle_enter_state+0x8e/0x720
+> > > [ 3605.394762] [     C11]  ? sysvec_apic_timer_interrupt+0x57/0xc0
+> > > [ 3605.394766] [     C11]  cpuidle_enter+0x2e/0x50
+> > > [ 3605.394771] [     C11]  call_cpuidle+0x22/0x60
+> > > [ 3605.394775] [     C11]  cpuidle_idle_call+0x119/0x190
+> > > [ 3605.394778] [     C11]  do_idle+0x82/0xe0
+> > > [ 3605.394781] [     C11]  cpu_startup_entry+0x29/0x30
+> > > [ 3605.394784] [     C11]  start_secondary+0x127/0x160
+> > > [ 3605.394788] [     C11]  common_startup_64+0x13e/0x141
+> > > [ 3605.394794] [     C11]  </TASK>
+> > >
+> > > >
+> > > > Regards,
+> > > > Baokun
+> > > > > Best regards,
+> > > > > AceLan Kao.
+> > > > >
+> >
