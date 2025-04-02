@@ -1,121 +1,95 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF10E239094;
-	Wed,  2 Apr 2025 12:19:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 077A720E01D;
+	Wed,  2 Apr 2025 12:19:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743596356; cv=none; b=J2xjMBDYvOX4eeA9Tf+haHeSNcBERN/Kvdqv2F0qXA8PX6gpcePoZ/W4LqnMDMfY5ud3wdPvW5LsKbyrlL/lsxzWK7eBkDqf0l+kerWMssX9rgg2owqux+YgWuIlYZ5hcSk//j+b6s94P4AhWJ/K5tiMjUjVtasKqihvjuJ6tc0=
+	t=1743596385; cv=none; b=eniYhIULoB2UGepzqTz0VUCTaOXOLjZMbsMegU0cLl0dTMv1RIisMga5v2jXdGTMrnPJZv//lYjTvymPo//Fo4IzuSjD7ZJgwLX1J8PVvHx87dNVAQtOM7nMbDi01oXQQZRWEOx0S8u62HeaUoRxq4RrE/NE0D4CpdvvX4nwVfc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743596356; c=relaxed/simple;
-	bh=v9o/0GsG9hlpEVMILiuT/UXu6Gay+7R0EoqjQXNBKw8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cYRkt1EL7QjRD4hwxtGNS+FAnMIfOaF505hMZUMSy/iJaBA1x+ccTPG5zqFGe/EXUnvJbQC4P3RGQDVmiNVBCx6o/MIyXRLiZ0LbnHp5SIqqxJ05lBxVPmRuvzOCMitxO6R1UWJaZZs6r/X1AlaZjLzJPudqBNP3iTsBj5yxz2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=p3QW2AVX; arc=none smtp.client-ip=220.197.31.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1743596385; c=relaxed/simple;
+	bh=kolbk5Q3wtJxd0+NiGQSwAuJbT11Mr9/eiUv+PMRFnc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=P4Kc58QFe5PhpY/2fg4wtoz2r2NGlHugT2YSFwnhv4S0dIjMxDZXuv/+BVjZcETbTEywKwvCxPn9AHB7JA/ALLQRYRrD4ARTnBlYQjnU4RmQWvfz/QIkETISJdwjROTY+Xkz0Np5TgLp32JL3ah1K8peygjWS+o7YvTzLF2enxA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=DeX/TrKk; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="p3QW2AVX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=1K93p+jfwwbKax5M8o/f4XaPFLFEtqliG2k63r4obes=;
-	b=p3QW2AVXL9zWuzV1dY8TkMfEAeCT3p/8khNHcr/3YBtVlrVNnqbA56Uk5aGT8c
-	L8KLxkvlKSjEWI2udr55Nf9//va0LYD8e3GKX0FDOUq7/tPwo01etlwR0S3Bc/Ch
-	ZEaFxorIdTmey363pUQpg/7N4d4YAuePZD+//XgyXQBDQ=
-Received: from [192.168.60.52] (unknown [])
-	by gzga-smtp-mtada-g1-3 (Coremail) with SMTP id _____wD3t9gUK+1nh2qGDg--.42426S2;
-	Wed, 02 Apr 2025 20:18:30 +0800 (CST)
-Message-ID: <ad119d32-0755-4ca1-9db8-28f6a8f17c43@163.com>
-Date: Wed, 2 Apr 2025 20:18:28 +0800
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DeX/TrKk"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=tYWalLVq1oY7YpgCK/9TLrLFA6SrCHespTPHmhCT5W0=; b=DeX/TrKkUl7ChmLIkudAGakoJN
+	wsSUgMerqtPGyl9OXs8f24kpWwBVJCMpW/mnnpHVcIc4OFtPRxqhUGuMvHw4wCWTy7pEstmV8dRqn
+	SadtUutQ0Bhw+tvxfLx5Iy7VQHuSg3eZ7EzlI/tibq4jui7PPUzPDGdga1tKZm4PN1gijbLSSu5Yt
+	AdWyU6i6jvl5Vs8HVhz4pa7OScaG9WOdE/0xPQ3XyXx1/O7YS7ikRMNrc3+BZ9bxl1zp5Mn9mnwly
+	/7hMuerNACzK46FGeyFdO5XBglm5/1g1jneirQD7kOlp0jIWa3mTQpDGl+5poSLkMLitbYYaAlA9P
+	3LY4gU1A==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1tzx4C-00000007171-1r8R;
+	Wed, 02 Apr 2025 12:19:36 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 7678D30049D; Wed,  2 Apr 2025 14:19:35 +0200 (CEST)
+Date: Wed, 2 Apr 2025 14:19:35 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, vbabka@suse.cz,
+	torvalds@linux-foundation.org, intel-wired-lan@lists.osuosl.org,
+	netdev@vger.kernel.org, linux-toolchains@vger.kernel.org
+Subject: Re: [RFC] slab: introduce auto_kfree macro
+Message-ID: <20250402121935.GJ25239@noisy.programming.kicks-ass.net>
+References: <20250401134408.37312-1-przemyslaw.kitszel@intel.com>
+ <Z-0SU8cYkTTbprSh@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [v7 3/5] PCI: dwc: Use common PCI host bridge APIs for finding
- the capabilities
-To: kernel test robot <lkp@intel.com>, lpieralisi@kernel.org,
- bhelgaas@google.com
-Cc: oe-kbuild-all@lists.linux.dev, kw@linux.com,
- manivannan.sadhasivam@linaro.org, ilpo.jarvinen@linux.intel.com,
- robh@kernel.org, jingoohan1@gmail.com, thomas.richard@bootlin.com,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250402042020.48681-4-18255117159@163.com>
- <202504021958.YeTPCsW1-lkp@intel.com>
-Content-Language: en-US
-From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <202504021958.YeTPCsW1-lkp@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_____wD3t9gUK+1nh2qGDg--.42426S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxAr17tF17urW5tr1rZw13Arb_yoW5Cr4xpa
-	yUAa13ZFyrJF4Sgw48t3WF93WaqF1DAry7G3ykG3W7WFy7Zry5GryIkFyagFy7tw4qgrya
-	kryqq3Z7Ars8AaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07ULyCXUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDwQjo2ftJx1vAgAAsW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z-0SU8cYkTTbprSh@smile.fi.intel.com>
 
+On Wed, Apr 02, 2025 at 01:32:51PM +0300, Andy Shevchenko wrote:
+> On Tue, Apr 01, 2025 at 03:44:08PM +0200, Przemek Kitszel wrote:
+> > Add auto_kfree macro that acts as a higher level wrapper for manual
+> > __free(kfree) invocation, and sets the pointer to NULL - to have both
+> > well defined behavior also for the case code would lack other assignement.
+> > 
+> > Consider the following code:
+> > int my_foo(int arg)
+> > {
+> > 	struct my_dev_foo *foo __free(kfree); /* no assignement */
+> > 
+> > 	foo = kzalloc(sizeof(*foo), GFP_KERNEL);
+> > 	/* ... */
+> > }
+> > 
+> > So far it is fine and even optimal in terms of not assigning when
+> > not needed. But it is typical to don't touch (and sadly to don't
+> > think about) code that is not related to the change, so let's consider
+> > an extension to the above, namely an "early return" style to check
+> > arg prior to allocation:
+> > int my_foo(int arg)
+> > {
+> >         struct my_dev_foo *foo __free(kfree); /* no assignement */
+> > +
+> > +	if (!arg)
+> > +		return -EINVAL;
+> >         foo = kzalloc(sizeof(*foo), GFP_KERNEL);
+> >         /* ... */
+> > }
+> > Now we have uninitialized foo passed to kfree, what likely will crash.
+> > One could argue that `= NULL` should be added to this patch, but it is
+> > easy to forgot, especially when the foo declaration is outside of the
+> > default git context.
 
+The compiler *should* complain. But neither GCC nor clang actually
+appear to warn in this case.
 
-On 2025/4/2 19:58, kernel test robot wrote:
-> Hi Hans,
-> 
-> kernel test robot noticed the following build errors:
-> 
-> [auto build test ERROR on acb4f33713b9f6cadb6143f211714c343465411c]
-> 
-> url:    https://github.com/intel-lab-lkp/linux/commits/Hans-Zhang/PCI-Refactor-capability-search-into-common-macros/20250402-122544
-> base:   acb4f33713b9f6cadb6143f211714c343465411c
-> patch link:    https://lore.kernel.org/r/20250402042020.48681-4-18255117159%40163.com
-> patch subject: [v7 3/5] PCI: dwc: Use common PCI host bridge APIs for finding the capabilities
-> config: loongarch-randconfig-001-20250402 (https://download.01.org/0day-ci/archive/20250402/202504021958.YeTPCsW1-lkp@intel.com/config)
-> compiler: loongarch64-linux-gcc (GCC) 14.2.0
-> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250402/202504021958.YeTPCsW1-lkp@intel.com/reproduce)
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202504021958.YeTPCsW1-lkp@intel.com/
-> 
-> All errors (new ones prefixed by >>):
-> 
->     In file included from drivers/pci/controller/dwc/pcie-designware.c:23:
->     drivers/pci/controller/dwc/pcie-designware.c: In function 'dw_pcie_find_capability':
->>> drivers/pci/controller/dwc/pcie-designware.c:218:38: error: 'pcie' undeclared (first use in this function); did you mean 'pci'?
->       218 |                                      pcie);
->           |                                      ^~~~
->     drivers/pci/controller/dwc/../../pci.h:114:18: note: in definition of macro 'PCI_FIND_NEXT_CAP_TTL'
->       114 |         read_cfg(args, __pos, 1, (u32 *)&__pos);                        \
->           |                  ^~~~
->     drivers/pci/controller/dwc/pcie-designware.c:218:38: note: each undeclared identifier is reported only once for each function it appears in
->       218 |                                      pcie);
->           |                                      ^~~~
->     drivers/pci/controller/dwc/../../pci.h:114:18: note: in definition of macro 'PCI_FIND_NEXT_CAP_TTL'
->       114 |         read_cfg(args, __pos, 1, (u32 *)&__pos);                        \
->           |                  ^~~~
->     drivers/pci/controller/dwc/pcie-designware.c: In function 'dw_pcie_find_ext_capability':
->     drivers/pci/controller/dwc/pcie-designware.c:224:71: error: 'pcie' undeclared (first use in this function); did you mean 'pci'?
->       224 |         return PCI_FIND_NEXT_EXT_CAPABILITY(dw_pcie_read_cfg, 0, cap, pcie);
->           |                                                                       ^~~~
->     drivers/pci/controller/dwc/../../pci.h:156:34: note: in definition of macro 'PCI_FIND_NEXT_EXT_CAPABILITY'
->       156 |                 __ret = read_cfg(args, __pos, 4, &__header);                    \
->           |                                  ^~~~
-> 
-
-Copy the errors carried over. Will change.
-
-Best regards,
-Hans
-
-> 
-> vim +218 drivers/pci/controller/dwc/pcie-designware.c
-> 
->     214	
->     215	u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap)
->     216	{
->     217		return PCI_FIND_NEXT_CAP_TTL(dw_pcie_read_cfg, PCI_CAPABILITY_LIST, cap,
->   > 218					     pcie);
->     219	}
->     220	EXPORT_SYMBOL_GPL(dw_pcie_find_capability);
->     221	
-> 
-
+I don't think we should be making dodgy macros like you propose to work
+around this compiler deficiency. Instead I would argue we ought to get
+both compilers fixed asap, and then none of this will be needed.
