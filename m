@@ -1,39 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E703C1F12EF;
-	Wed,  2 Apr 2025 20:30:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EAD81917E7
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 20:30:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743625819; cv=none; b=HHcptJncbmPN2Req5oK4EufoJO+AgQiV3D/CfGhJxiqDO1GTZBYhwVu6gasWPiMegOwByYToS8zG2V8ZO6VurtEokuyCYahXqaf5fqikQWrioKlCMYaO+Lo/PWmbtftSpzZ516+I9jfg7fSzQVhOEKaQD913Rlc0CsgO9OdX/WM=
+	t=1743625826; cv=none; b=RzKyAPtMzjnjL08smD76LYFxkST5S4WQOKAQxST/DFcTiPUcqYdSsN0zC3hZuJ8/JOu8AYrD/r9jQ9sHJBV9N7s6wh1VJKCV2D9ZKPQktgfCk2qO/VTlm1RI+FPz+d0FP7/9E/o4fGz3WWvTIFjpOqqmvfSezfetYRo/EaEXCJ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743625819; c=relaxed/simple;
-	bh=L4frJeuLq/Lt6VCxk/O2OjocIX91QfXFH3Bgln6CqsA=;
+	s=arc-20240116; t=1743625826; c=relaxed/simple;
+	bh=RLONw20lGO+tRITzrVnK2W01Z85JtRqJFfoLO5wknFM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AGGky7PAzADbue6xsQE6t3b5ZQeSEJWL+bQEDAANGFkrgE6ZbhQBuflF0lWyOm883+7hbWQ951JvN+Nk9PMZ2a9oWTJUaiA+wOBFVwYNKRkENr+3wtFBUDWZUCU/f11zIgTtCCDOf/aMFJDyoC3Bk5knhfzpQYs5J8EQIjzRf/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=dZ9Mt5uT; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=GcLrWLxwBzXB6QyJs+r1qlSGZZ89O0iXE/xoXhYMoUKiemaziZzdx6Obs/ADvap+lRtXDozqbJwvF7+9szb36+UEiIxLDo5WkqdLtlpwr295mi4eJ3EIU/dJXwyD9d+4/wItLG48dPRKeyfUDeGStxsvyW5QHZovlUIRiR0wtpc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G9omKV1a; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="dZ9Mt5uT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62041C4CEDD;
-	Wed,  2 Apr 2025 20:30:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1743625818;
-	bh=L4frJeuLq/Lt6VCxk/O2OjocIX91QfXFH3Bgln6CqsA=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G9omKV1a"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9949FC4CEDD;
+	Wed,  2 Apr 2025 20:30:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743625826;
+	bh=RLONw20lGO+tRITzrVnK2W01Z85JtRqJFfoLO5wknFM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dZ9Mt5uTS0kn4Th4K1TuVXBBjIWu3jPWkfNai96/o+3eFtRcqgTEkebjnUrfpmi9Q
-	 q4rcmrLGxiukMx2UrVYg4gg2SbNPAuoJ+d1wxDS6WDoZAkyHHpRKrxL37Z4pHciBaF
-	 NGnPUxmPxEybFtYv9OzeLF/OJufT4Wsyf7YlXP0A=
-Date: Wed, 2 Apr 2025 21:28:51 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Kuniyuki Iwashima <kuniyu@amazon.com>
-Cc: cve@kernel.org, edumazet@google.com, ematsumiya@suse.de,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-net@vger.kernel.org, sfrench@samba.org, smfrench@gmail.com,
-	wangzhaolong1@huawei.com, zhangchangzhong@huawei.com
-Subject: Re: Fwd: [PATCH][SMB3 client] fix TCP timers deadlock after rmmod
-Message-ID: <2025040256-spindle-cornea-60ec@gregkh>
-References: <2025040233-tuesday-regroup-5c66@gregkh>
- <20250402202257.5845-1-kuniyu@amazon.com>
+	b=G9omKV1aweowffnaD4V5AUpAs01/S8dJOsQ7pbEb1+mNhhY8CFBXK6N5d1YjNr0fv
+	 mN7/Xs+I9EJR53WeeP47XFngbLRrz2Iy5Q6kk8B7b0K1lZ43Wr/AXpLKcA86opF9Rl
+	 LfKNMv7x0c/ARjX/tJRRtyUgM/0W29wO/KT8JjEOuwiQSYT68X3Xv6KejQtI87Zbfo
+	 rmtZkpQj+vLA9xIulagoe5TZ/LGn/xr12NNGlkimKaquz38c88O0tFfu8RDKOvvLrs
+	 pU9nlmBp+X3atMrxNnTS47F4uByB492pbFJ/7gDGeVIYvx3+idOSx0eoHu3zP/h2k0
+	 NZuJyFEIWuCxQ==
+Date: Wed, 2 Apr 2025 22:30:21 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, Peter Zijlstra <a.p.zijlstra@chello.nl>,
+	Josh Poimboeuf <jpoimboe@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [GIT PULL] objtool fixes
+Message-ID: <Z-2eXbKvyJG8a4xt@gmail.com>
+References: <Z-xFKa5hiQ5urVwS@gmail.com>
+ <CAHk-=wgqa0B9OV+EAQ34-VOUAeVB2o2bXnZXQDG7u+Z=4Cmw8w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,65 +46,29 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250402202257.5845-1-kuniyu@amazon.com>
+In-Reply-To: <CAHk-=wgqa0B9OV+EAQ34-VOUAeVB2o2bXnZXQDG7u+Z=4Cmw8w@mail.gmail.com>
 
-On Wed, Apr 02, 2025 at 01:22:11PM -0700, Kuniyuki Iwashima wrote:
-> From: Greg KH <gregkh@linuxfoundation.org>
-> Date: Wed, 2 Apr 2025 21:15:58 +0100
-> > On Wed, Apr 02, 2025 at 01:09:19PM -0700, Kuniyuki Iwashima wrote:
-> > > From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > > Date: Wed, 2 Apr 2025 16:18:37 +0100
-> > > > On Wed, Apr 02, 2025 at 05:15:44PM +0800, Wang Zhaolong wrote:
-> > > > > > On Wed, Apr 02, 2025 at 12:49:50PM +0800, Wang Zhaolong wrote:
-> > > > > > > Yes, it seems the previous description might not have been entirely clear.
-> > > > > > > I need to clearly point out that this patch, intended as the fix for CVE-2024-54680,
-> > > > > > > does not actually address any real issues. It also fails to resolve the null pointer
-> > > > > > > dereference problem within lockdep. On top of that, it has caused a series of
-> > > > > > > subsequent leakage issues.
-> > > > > > 
-> > > > > > If this cve does not actually fix anything, then we can easily reject
-> > > > > > it, please just let us know if that needs to happen here.
-> > > > > > 
-> > > > > > thanks,
-> > > > > > 
-> > > > > > greg k-h
-> > > > > Hi Greg,
-> > > > > 
-> > > > > Yes, I can confirm that the patch for CVE-2024-54680 (commit e9f2517a3e18)
-> > > > > should be rejected. Our analysis shows:
-> > > > > 
-> > > > > 1. It fails to address the actual null pointer dereference in lockdep
-> > > > > 
-> > > > > 2. It introduces multiple serious issues:
-> > > > >    1. A socket leak vulnerability as documented in bugzilla #219972
-> > > > >    2. Network namespace refcount imbalance issues as described in
-> > > > >      bugzilla #219792 (which required the follow-up mainline fix
-> > > > >      4e7f1644f2ac "smb: client: Fix netns refcount imbalance
-> > > > >      causing leaks and use-after-free")
-> > > > > 
-> > > > > The next thing we should probably do is:
-> > > > >    - Reverting e9f2517a3e18
-> > > > >    - Reverting the follow-up fix 4e7f1644f2ac, as it's trying to fix
-> > > > >      problems introduced by the problematic CVE patch
-> > > > 
-> > > > Great, can you please send patches now for both of these so we can
-> > > > backport them to the stable kernels properly?
-> > > 
-> > > Sent to CIFS tree:
-> > > https://lore.kernel.org/linux-cifs/20250402200319.2834-1-kuniyu@amazon.com/
-> > 
-> > You forgot to add a Cc: stable@ on the patches to ensure that they get
-> > picked up properly for all stable trees :(
+
+* Linus Torvalds <torvalds@linux-foundation.org> wrote:
+
+> On Tue, 1 Apr 2025 at 12:57, Ingo Molnar <mingo@kernel.org> wrote:
+> >
+> >  - Fix a number of objtool warnings in various drivers, core kernel
+> >    code and architecture code. About half of them are potential
+> >    problems related to out-of-bounds accesses or potential undefined
+> >    behavior, the other half are additional objtool annotations.
 > 
-> Ah sorry, I did the same with netdev.  netdev patches usually do
-> not have the tag but are backported fine, maybe netdev local rule ?
+> So I've pulled this, but I really dislike some of it.
+> 
+> That
+> 
+> > Josh Poimboeuf (35):
+> >       objtool: Fix X86_FEATURE_SMAP alternative handling
+> 
+> makes a bad thing even worse.
 
-Nope, that's the "old" way of dealing with netdev patches, the
-documentation was changed years ago, please always put a cc: stable on
-it.  Otherwise you are just at the whim of our "hey, I'm board, let's
-look for Fixes: only tags!" script to catch them, which will also never
-notify you of failures.
+Sorry about that, we'll fix it!!
 
-thanks,
+Thanks,
 
-greg k-h
+	Ingo
