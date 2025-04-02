@@ -1,123 +1,123 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BA4519C54C
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 16:27:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F7A81EB199
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 16:27:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743611238; cv=none; b=abgzDHQzZqeFRx2x6k2813ArYwXeL3e5/WjlcO4PXU9aSKMbnp2an5IxUtwpH9k8oOBNUJZ2jniB562NI4G1ssJWGHe+L5BhWrlCeg64+nHhN0zlo4i6QBs1HwBl1HUUxIev90Z0rwn7YhmVWmvrsYy+E68zTrl0v+HGzjqYdao=
+	t=1743611238; cv=none; b=iP28cuaixTq/QqiJpvazlrGx5emsfE3Ics+2ZIGwBSyxTbh4kX96t8WCLCte0AvgCiCAUSrd2R6nKHJ6/Uz2n8/sJnRCDAdEX/WsLriRHlm8jgEXZAcFY/2a4lpTmZ28yEtb5aEflhTxXRxswazGZXWeIGPAtTz9/Y4ewFER9dM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1743611238; c=relaxed/simple;
-	bh=44k7kmF9Heh1axcX60vhvBSddhWWyYlpyTedqElkVy8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IYPOxCAh6okN+GE/iH9txBrn6za5GsdD2TXFmUcmAQt4ZebSmHqm6k4GMQNsG542b25SvADOPLtjsJqan3RMrS4diut0QUG/OUmZ+an3BBYjRxLUsi8BI1CxjQsSjsqROxqKuA5jgdYW9yoUjenOqvNa03TcArli4lNbrivVols=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OwmcdSes; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	bh=6GoWxokYmPAF1A56XB7LaL9Vb/FUCA1ecKXpwfONqmQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=XUVdhIxWFtQiyoD7vZADfc1ao3KjQ7XuYEzloUcjtJ80WMOi2IIGF4FEERrLlC6AJB6qvYkEcuBIb+kXS8xy6ShOS8bBUs/9OeaDkoLvM0ZKkGs5XQzv24o8kWZeM34kUTTdGd85bYV++Taz8S9d4pUoVHDjygn99ko8vpahdcI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KCmmBCmw; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OwmcdSes"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5eb92df4fcbso33234a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 09:27:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743611234; x=1744216034; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=44k7kmF9Heh1axcX60vhvBSddhWWyYlpyTedqElkVy8=;
-        b=OwmcdSesdWannAZEv6wpwSsXAebR76OvLFJUPjXdZFnbYFQi5L+IqwCoGr3JZJAnbp
-         CsUQVol0IQPBDBE+WLoISMkRNiOlo1O3svLuo4TzmGSrGTi53cDMY0SDtj31b0Oy95eG
-         HQiTAPreJkg5JUF4bHX8Jgv0te7AKhKsOiztnjPmsmYE6D93DfhOQJW2rzeyCW+spe/T
-         msCW3lrDfLcmUFRdeoYc1BIJf62CiXJhjWgQQmrh/TsXKqyt2hoFLHMCklmhcqHAEjzh
-         1c6cd6ZfZsXzyRqNg5L+f1OJnXQdhqTldjl9caTQTMnn7ptcqG58FObHo2Ff0o8+J88u
-         7YnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743611234; x=1744216034;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=44k7kmF9Heh1axcX60vhvBSddhWWyYlpyTedqElkVy8=;
-        b=D0bXKUolb0R6TsqvTZlofc7x1pHzg0HFcCKb3QUGOdFJ//cg08CSY95wZeySM5c5z8
-         p3VBdw8BcDGB3v03Q25AHpnPi8K0LHK2k43w4Xlm1lO7RoVZeeSHfk0ISScYpItgizFM
-         6VQaILurqll6retCLprpNGBG85HvLfxCn7nnczf8P7JgY8z25w1hqzSXKuiDaPukINp7
-         o0XbTgyYsiesbOxzBRP9RwPOVOhao8c4TCx07cE9YSrs79kbQIk6gqe4ak93YmQ75z61
-         U1iamXHY3q4qsdrAk27IZ5Pc/RAz3/NtxD7lxRk4ICdHKL/S+/7l4RRDFSFUPufnavAS
-         WWlw==
-X-Forwarded-Encrypted: i=1; AJvYcCUbPN+OZ91zo6+jQJBTy06erBxhmhxoMrWRCdJzhSVVr/4Ezchg3hdwO6lyiRekQHFUfmibHonRfyY1UvA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzqrmLAodXPj4bFFMMLSG0i3zmxMQyo1DGVwPmPTWkgxd2lNdMS
-	LR5AMWmBX4LkMu4wzi7lTeR8gCky7plwsvWLYxEtk+mEonBbmEYuktTkjU2Dma7mQ+RqQYmR2wE
-	aZXB5GLqUs2IVDEDoc/EdkhpWSiI=
-X-Gm-Gg: ASbGncvIhRcYEH5Guc/wgy0j9BKW4oqr165wFNHBfeQ5sSmhsYe+FtBP9c3L40H9zp3
-	hvH9ZccaP36yRPCqTSL80eOGCUByuDX5ME3+gpFHm2yGaKfS2DfT+7PTvxM/AmjncXBOfdVxbcq
-	Vc2lyzWnCYg7X4eLdr4HH7q50z3/iPcrs0wI4=
-X-Google-Smtp-Source: AGHT+IEnOHT6hOVDHiNqwvM3gOQnQeSxW+1KveJ2xpZBmOQfzfFxPoaWlwyo7ThKDEbEHo5q7T2hTL1FbZ2eK4mhbTQ=
-X-Received: by 2002:a05:6402:2706:b0:5e5:3610:8b7a with SMTP id
- 4fb4d7f45d1cf-5edfcfe6179mr14596201a12.17.1743611234211; Wed, 02 Apr 2025
- 09:27:14 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KCmmBCmw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743611236;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qiHgMjSkd5odbQqdgij+KRxFLrr73iYNN/fqbj4FvnM=;
+	b=KCmmBCmwWLbJtKuYpADayqtEKe0hnpyFtkqW72SsEYtayNvKqZJ2HhzRvcqEzzGPQ6yI8Z
+	tL+Wev/mDR0ElUpR1nitKTRfa8gTlEn/sIx/Q6ttH2BJ3KAXL1NTXoW7CHTBn/dp+Jjzcb
+	1goPSDwOSNW1zYs+BObq4QJxpypHhwk=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-417-VkzY3yMCN0y65iBnTikCgg-1; Wed,
+ 02 Apr 2025 12:27:12 -0400
+X-MC-Unique: VkzY3yMCN0y65iBnTikCgg-1
+X-Mimecast-MFC-AGG-ID: VkzY3yMCN0y65iBnTikCgg_1743611228
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B99031956048;
+	Wed,  2 Apr 2025 16:27:08 +0000 (UTC)
+Received: from asrivats-na.rmtustx.csb (unknown [10.2.16.30])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id C6E6F195609D;
+	Wed,  2 Apr 2025 16:27:04 +0000 (UTC)
+From: Anusha Srivatsa <asrivats@redhat.com>
+Date: Wed, 02 Apr 2025 11:24:00 -0400
+Subject: [PATCH 22/30] panel/newvision-nv3052c: Use refcounted allocation
+ in place of devm_kzalloc()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <xmzxiwno5q3ordgia55wyqtjqbefxpami5wevwltcto52fehbv@ul44rsesp4kw> <CAHk-=wgk+upuXn7-wsDs4psxOJO4wW7G2g-Sxvv0axCibFua1w@mail.gmail.com>
-In-Reply-To: <CAHk-=wgk+upuXn7-wsDs4psxOJO4wW7G2g-Sxvv0axCibFua1w@mail.gmail.com>
-From: Mateusz Guzik <mjguzik@gmail.com>
-Date: Wed, 2 Apr 2025 18:27:02 +0200
-X-Gm-Features: AQ5f1JoDofdtjUwMStWknBzTyrnCYW_pJ4WVgjQ6yTTt1NBqqY87USBqCHJng_M
-Message-ID: <CAGudoHEV-PFSr-xKUx5GkTf4KasJc=aNNzQbkoTnFVLisKti+A@mail.gmail.com>
-Subject: Re: [RFC PATCH] x86: prevent gcc from emitting rep movsq/stosq for
- inlined ops
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: mingo@redhat.com, x86@kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250402-b4-drm_panel_mass_convert_part2-v1-22-903b70999ea6@redhat.com>
+References: <20250402-b4-drm_panel_mass_convert_part2-v1-0-903b70999ea6@redhat.com>
+In-Reply-To: <20250402-b4-drm_panel_mass_convert_part2-v1-0-903b70999ea6@redhat.com>
+To: Neil Armstrong <neil.armstrong@linaro.org>, 
+ Jessica Zhang <quic_jesszhan@quicinc.com>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Icenowy Zheng <icenowy@aosc.io>, Jagan Teki <jagan@amarulasolutions.com>, 
+ Ondrej Jirman <megi@xff.cz>, Javier Martinez Canillas <javierm@redhat.com>, 
+ Michael Trimarchi <michael@amarulasolutions.com>, 
+ Michael Walle <mwalle@kernel.org>, Jagan Teki <jagan@edgeble.ai>, 
+ =?utf-8?q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>, 
+ Purism Kernel Team <kernel@puri.sm>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Jianhua Lu <lujianhua000@gmail.com>, Stefan Mavrodiev <stefan@olimex.com>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ Anusha Srivatsa <asrivats@redhat.com>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1743607440; l=1293;
+ i=asrivats@redhat.com; s=20250122; h=from:subject:message-id;
+ bh=6GoWxokYmPAF1A56XB7LaL9Vb/FUCA1ecKXpwfONqmQ=;
+ b=iwffykaHiHxudGYhemjKDmWzWLp8WCIEchCKoWH6Ok571worysWA/JlBmYjjNDl1nhPaP8KXW
+ zXNosmY4ljPCXNg+F5Hfvs6L06HUVrdeMUHQpfLWVeY/x2cY0JdkuKy
+X-Developer-Key: i=asrivats@redhat.com; a=ed25519;
+ pk=brnIHkBsUZEhyW6Zyn0U92AeIZ1psws/q8VFbIkf1AU=
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-On Wed, Apr 2, 2025 at 6:22=E2=80=AFPM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Wed, 2 Apr 2025 at 06:42, Mateusz Guzik <mjguzik@gmail.com> wrote:
-> >
-> >
-> > +ifdef CONFIG_CC_IS_GCC
-> > +#
-> > +# Inline memcpy and memset handling policy for gcc.
-> > +#
-> > +# For ops of sizes known at compilation time it quickly resorts to iss=
-uing rep
-> > +# movsq and stosq. On most uarchs rep-prefixed ops have a significant =
-startup
-> > +# latency and it is faster to issue regular stores (even if in loops) =
-to handle
-> > +# small buffers.
-> > +#
-> > +# This of course comes at an expense in terms of i-cache footprint. bl=
-oat-o-meter
-> > +# reported 0.23% increase for enabling these.
-> > +#
-> > +# We inline up to 256 bytes, which in the best case issues few movs, i=
-n the
-> > +# worst case creates a 4 * 8 store loop.
-> > +#
-> > +# The upper limit was chosen semi-arbitrarily -- uarchs wildly differ =
-between a
-> > +# threshold past which a rep-prefixed op becomes faster, 256 being the=
- lowest
-> > +# common denominator. Someone(tm) should revisit this from time to tim=
-e.
-> > +#
-> > +KBUILD_CFLAGS +=3D -mmemcpy-strategy=3Dunrolled_loop:256:noalign,libca=
-ll:-1:noalign
-> > +KBUILD_CFLAGS +=3D -mmemset-strategy=3Dunrolled_loop:256:noalign,libca=
-ll:-1:noalign
-> > +endif
->
-> Please make this a gcc bug-report instead - I really don't want to
-> have random compiler-specific tuning options in the kernel.
->
-> Because that whole memcpy-strategy thing is something that gets tuned
-> by a lot of other compiler options (ie -march and different versions).
->
+Move to using the new API devm_drm_panel_alloc() to allocate the
+panel.
 
-Ok.
---=20
-Mateusz Guzik <mjguzik gmail.com>
+Signed-off-by: Anusha Srivatsa <asrivats@redhat.com>
+---
+ drivers/gpu/drm/panel/panel-newvision-nv3052c.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/gpu/drm/panel/panel-newvision-nv3052c.c b/drivers/gpu/drm/panel/panel-newvision-nv3052c.c
+index 06e16a7c14a756b9a399347b29b410fd5f4ae273..08c99a48e06dc02677c6f0575d344f890871e0af 100644
+--- a/drivers/gpu/drm/panel/panel-newvision-nv3052c.c
++++ b/drivers/gpu/drm/panel/panel-newvision-nv3052c.c
+@@ -777,9 +777,10 @@ static int nv3052c_probe(struct spi_device *spi)
+ 	struct nv3052c *priv;
+ 	int err;
+ 
+-	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+-	if (!priv)
+-		return -ENOMEM;
++	priv = devm_drm_panel_alloc(dev, struct nv3052c, panel, &nv3052c_funcs,
++				DRM_MODE_CONNECTOR_DPI);
++	if (IS_ERR(priv))
++		return PTR_ERR(priv);
+ 
+ 	priv->dev = dev;
+ 
+@@ -803,9 +804,6 @@ static int nv3052c_probe(struct spi_device *spi)
+ 
+ 	spi_set_drvdata(spi, priv);
+ 
+-	drm_panel_init(&priv->panel, dev, &nv3052c_funcs,
+-		       DRM_MODE_CONNECTOR_DPI);
+-
+ 	err = drm_panel_of_backlight(&priv->panel);
+ 	if (err)
+ 		return dev_err_probe(dev, err, "Failed to attach backlight\n");
+
+-- 
+2.48.1
+
