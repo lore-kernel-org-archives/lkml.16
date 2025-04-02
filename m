@@ -1,44 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2877023908C;
-	Wed,  2 Apr 2025 13:27:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5FA11EF360;
+	Wed,  2 Apr 2025 13:29:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743600456; cv=none; b=C2GSdl0DlQK67UNyrCNWI/2g2r10SFKjMWy9SovlziiaLow5tp47TdOhpLZ835EF/9LGisMtUVlHXkIgIN1Ve4VgjUM6gxvVOOp6oxTggbCGr96gdZPHRpVsV4ju4KbSiZ/iSljZYufrwNHob9owZv6fMHBMOarwqJxLaecBm+8=
+	t=1743600545; cv=none; b=kp8U/B4Kf9X80KaysoBfxSnG/5rtoVcsWEQsAUN5hxzhXi356/7wQNSFcNE5FAceKqIyS4s88mOmd/Wqd13Cu/IDJTzZkJuPtvQUs9tkHs/yvn8c8bkYfWChnsm1nrf8lFmdJ4m8aUNAJW8yCLrKrz4xje/UiOYW0pXly17HcFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743600456; c=relaxed/simple;
-	bh=eyprlbruttFArk649ZaHs0r8kWpNrV0UoRpFY8gTMtE=;
+	s=arc-20240116; t=1743600545; c=relaxed/simple;
+	bh=J8Cb8WfrOi04FgY+I+b68wymSxxbztaQD6sKD+oS7zw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sTxlWPKk+xTchOLG8DDS/BCXrZiY4+JvNK2TYbTlUwKCndB0XTLUpFLQ9fszDiPJ0vyhC7qQ1GWkleH2UcCp3WGVa+96l1ex1HjvnSyPRDlXi4efmeArKHsMsR5RXqqRf8cCSSpHhE+ecGi2IEWqLKVr0qLTwgjWIX8IT3EYMSE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BLBsfe3A; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=F7ZIwhXH/9DcxxDNRNKiN6Ekk4tAy81BIvbkrJpxsjENB1ZKKf9oD0XZaGOr0I8JTdudHjOJHatGueXLE/1nEt95PnhfYe/fvO/2CO9kIPNoFh2UVTi3fKjnfRDdU7rumYPbGWNQtmWNc8xogNA+VfIno3OfDpTE42VM2T7vTUE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rHQr1qkE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BLBsfe3A"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A90C9C4CEDD;
-	Wed,  2 Apr 2025 13:27:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rHQr1qkE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69D19C4CEDD;
+	Wed,  2 Apr 2025 13:29:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743600455;
-	bh=eyprlbruttFArk649ZaHs0r8kWpNrV0UoRpFY8gTMtE=;
+	s=k20201202; t=1743600544;
+	bh=J8Cb8WfrOi04FgY+I+b68wymSxxbztaQD6sKD+oS7zw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BLBsfe3AnWLUfmJuHSfLJ3hFtnbJsOb5O6rstvyh3TYl/N2+3Oyl/bKPGiSaNYVSg
-	 WLqAx4DX1LWz/s/+Htg4VbhxsdufkOZK5eV2T+Da7R9jmkt2fdO/5AOR6ZCYyBuOXh
-	 2aSzzGfe6YbWv520Us/FHPdL5CGCr65Sy7+Aj92BTo9FYvVphJs5RqFhkkTAsdi5AZ
-	 1F2qba3fYr5GhtSHXsq0Y/SISp4nPhLlGplQlAIwjHRCZH9IYUadXelA0kk93FgWQF
-	 Dm/zIpyDx8rvD58GNbVKbOlyNw898rSH1jEq7M3A4mwWAGxe4s9k+j+NCUYxfhnETC
-	 oi8a6TDWplSmA==
-Date: Wed, 2 Apr 2025 14:27:31 +0100
+	b=rHQr1qkE3buusVy8ANjaLnBQ4zFUyD7GilFdYyHgonPwzXV4aOCz4Y9erDD26d/jY
+	 f5yO9EoQXQjoJFF0wd2cfxPa3hwTQYqJxD/GgOAPbx3ewUN5oS/8qQXZrlwHSaGtc7
+	 6eXf+l8fvvg/MLbu09N9vycPmtgAx6SrALgiZdi4rMfD7VOQ2lsYEqD27M+jbaNIPa
+	 eVfcbagk0M6Cpz/2z4yxYDgS68pqrtgz3dOSmCgNshDmhnZfRuWTQ+2//mQVJnQOQT
+	 0mS0vVIHFqktcXzu5bnWyX9oJ4TjbU+nGSbYxKemOtgrSJzial7Jyv4SeFbg/yPuKt
+	 HQqyqoA510bGw==
+Date: Wed, 2 Apr 2025 14:28:59 +0100
 From: Conor Dooley <conor@kernel.org>
-To: Matti Vaittinen <mazziesaccount@gmail.com>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/5] dt-bindings: Add ROHM BD7970x variants
-Message-ID: <20250402-directory-turbine-bfe77d6bc543@spud>
-References: <cover.1743576022.git.mazziesaccount@gmail.com>
- <0a114565e4de52bf8f98c4f9d17943e5148b0112.1743576022.git.mazziesaccount@gmail.com>
+To: Ryan.Wanner@microchip.com
+Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org,
+	alexandre.belloni@bootlin.com, claudiu.beznea@tuxon.dev,
+	nicolas.ferre@microchip.com, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/6] dt-bindings: net: cdns,macb: add sama7d65 ethernet
+ interface
+Message-ID: <20250402-scribing-doorknob-53a67e9e27cd@spud>
+References: <cover.1743523114.git.Ryan.Wanner@microchip.com>
+ <392b078b38d15f6adf88771113043044f31e8cd6.1743523114.git.Ryan.Wanner@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,40 +48,59 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="inqJrLpCfua9LcWy"
+	protocol="application/pgp-signature"; boundary="ZH+IhbSqEBnXm3HD"
 Content-Disposition: inline
-In-Reply-To: <0a114565e4de52bf8f98c4f9d17943e5148b0112.1743576022.git.mazziesaccount@gmail.com>
+In-Reply-To: <392b078b38d15f6adf88771113043044f31e8cd6.1743523114.git.Ryan.Wanner@microchip.com>
 
 
---inqJrLpCfua9LcWy
+--ZH+IhbSqEBnXm3HD
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 02, 2025 at 09:44:36AM +0300, Matti Vaittinen wrote:
-> The ROHM BD79700, BD79701 and BD79702 are subsets of the BD79703 DAC.
-> The main difference is the number of the channels. BD79703 has 6
-> channels.
+On Tue, Apr 01, 2025 at 09:13:17AM -0700, Ryan.Wanner@microchip.com wrote:
+> From: Ryan Wanner <Ryan.Wanner@microchip.com>
 >=20
-> The BD79702 has 4, BD79701 3 and BD79700 2 channels. Additionally, the
-> BD79700 and BD79701 do not have separate Vfs pin but use the Vcc also
-> for the full-scale voltage.
+> Add documentation for sama7d65 ethernet interface.
 >=20
-> Add properties for the BD79700, BD79701 and BD79702.
->=20
-> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
+> Signed-off-by: Ryan Wanner <Ryan.Wanner@microchip.com>
 
 Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
---inqJrLpCfua9LcWy
+> ---
+>  Documentation/devicetree/bindings/net/cdns,macb.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/net/cdns,macb.yaml b/Docum=
+entation/devicetree/bindings/net/cdns,macb.yaml
+> index 3c30dd23cd4e..eeb9b6592720 100644
+> --- a/Documentation/devicetree/bindings/net/cdns,macb.yaml
+> +++ b/Documentation/devicetree/bindings/net/cdns,macb.yaml
+> @@ -62,6 +62,7 @@ properties:
+>        - items:
+>            - enum:
+>                - microchip,sam9x7-gem     # Microchip SAM9X7 gigabit ethe=
+rnet interface
+> +              - microchip,sama7d65-gem   # Microchip SAMA7D65 gigabit et=
+hernet interface
+>            - const: microchip,sama7g5-gem # Microchip SAMA7G5 gigabit eth=
+ernet interface
+> =20
+>    reg:
+> --=20
+> 2.43.0
+>=20
+>=20
+
+--ZH+IhbSqEBnXm3HD
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ+07QwAKCRB4tDGHoIJi
-0jBhAQC50GOZN9lPXluk3fI491lymkX1Ztx3nC26mydUrC/VKgD/Xt/6ZMpdqyIq
-dGnDLqGxnz3yY99z2Kz8Q4zs+M5LRgU=
-=HDg9
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ+07mwAKCRB4tDGHoIJi
+0oaaAQDZCHsKizxzSW01d9pShvwWkQbjhsKYMyc+Dx+WthYU/AD/QMHJfPRMRa92
+2cV+g+ELOsKdCKbzefq6+0KCssfZrAg=
+=l9g7
 -----END PGP SIGNATURE-----
 
---inqJrLpCfua9LcWy--
+--ZH+IhbSqEBnXm3HD--
