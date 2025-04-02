@@ -1,268 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f229.google.com (mail-il1-f229.google.com [209.85.166.229])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEDA81E2847;
-	Wed,  2 Apr 2025 19:33:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1B0B1E8325
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 19:34:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.229
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743622412; cv=none; b=Sqgp4VNszVgmYOsZoGZV5/0kDd2wtnIYToa1AvqT25dUAVij6U2E0Atqdnm29e9uYfROcDtls1A4PXQkNxycw2kntuBtpowkTYD7W8GmqUYznbHinmcVKg0pCq9pnR0a6cLhmSxk9cfSRRjpG8F1wyWsFSQuG4DHHvEfLYuk2Uw=
+	t=1743622463; cv=none; b=KSSw0+71LvR3nRz5pa2S8i6UVvMQGWJ9Iwhjmc3BbUX/XNIFitbsjGKilEy0vKOyiqP70hXagvgoW7T40V96MlzlE37jMkAiHPV9wl7sZ6kEIMoVF/dq3NRqCcSW2tG57uj/iA/y3cIl0Avd6yThSAZNc7P+LlVwzZAXFp64DWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743622412; c=relaxed/simple;
-	bh=ZQ5rXtxFpcftxO9BKYVGOH3WBUnbDNUjD+xKM7Odu9w=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=AmAcQwEI9yxgp8qbCHo23MMeoc/Qlu3AUTmGfvz4FgwJEGg6ECOKdIu/NGh8qA3yLxSh742ykw7oGFCklpZeu2RzGrfLyfmrWENJxIGWOPFaeFUb2dNArFRDNS58umbVq4rd+0rYWwAztJdsM1zeDGrJ5VVWh194f1qNUaU6fuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZXBpFQUV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743622463; c=relaxed/simple;
+	bh=lV/SwxkHMDeoIBtMKdT8vjsBHGJhbLBdcHJ4C+0jMMc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZokIYlnT/elEkYiiolsBnoMY7TAZzhnEfOa1JqiN41OwbJ8L9OpgKRUmI0nTLl+/MslXha0LuFxrnYTXrDJGBmPWHlLN103Fk+iD+Gc4VHyeyn6TBOyz7GhC7BITem3JtgoNiA8JPMsIP+s/dHQphGGdQdPDyA0hqd1tkBVWkZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=JfTtlCRv; arc=none smtp.client-ip=209.85.166.229
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZXBpFQUV"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 7855CC4CEF1;
-	Wed,  2 Apr 2025 19:33:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743622412;
-	bh=ZQ5rXtxFpcftxO9BKYVGOH3WBUnbDNUjD+xKM7Odu9w=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=ZXBpFQUVMUXo7CyFR/i0RG2m7m0ejcT2qSmszm9oasu0NDb7hISayzIQyLwI9e3dC
-	 RgeZviifmPoxkFaTTDBXvWtnCMRix6sOjZCbcccWPggD7UumWgbSXBbhXnVST5i3NW
-	 zcC0eXkvhQD68FtpvygCH6/k9xr25RJdQp6z4hpCuyN4NMqYIvtxl1V7zhRa2EPfxp
-	 Yaym+dXzJUdSRoNLSfIHioYqj8rkNv3gXh5qSOT/4EdB5woypshpfLRDVn/pRr//pI
-	 rcU1oZ4sIIRiQse/uqWe4OnGbAwrOj9MkTuZgmuAFhK1K8Yhu5EyirLfZ4n6wvcZUX
-	 S6hlarWi7fskg==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DCDCC36018;
-	Wed,  2 Apr 2025 19:33:32 +0000 (UTC)
-From: David Heidelberg via B4 Relay <devnull+david.ixit.cz@kernel.org>
-Date: Wed, 02 Apr 2025 21:33:28 +0200
-Subject: [PATCH v4 5/5] iio: light: al3320a: Implement regmap support
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="JfTtlCRv"
+Received: by mail-il1-f229.google.com with SMTP id e9e14a558f8ab-3d6d162e516so1781895ab.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 12:34:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=purestorage.com; s=google2022; t=1743622461; x=1744227261; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=RaIhuSmEG2G5gRImcsA2An6Xyo4MZv5/cYCExcMzv5I=;
+        b=JfTtlCRvLM+P92rFUbnlT6JHjq9Pcc503XyB0KT4YmnhdWISk1L7p7b9UIghw93Lwn
+         rgOCeOBsqinFAlCrJAXkxUrd8sa+mfoz3+bCVr+pXJekHN4Ge/ol5f2DegQbVUwyJg2Q
+         344btZlxS6fTFQIeUz+yCDC+8sDGMoZ4xaJaPDXbHfBAUP2bOWE7H/lWCTyuoU2pIO1r
+         aeYiGbNGd1yDdOc3bHboKeVDrBu4kboKvu54rcJzA46OvEwpS1jwPt4m1lEF5pxx5p6t
+         XDzYA0udK5cSAvt6hG5mzyBPJu/34xUhDXfGryY/2akRZ46LH4UVU8PwL2v93+3kGWc1
+         cZmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743622461; x=1744227261;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RaIhuSmEG2G5gRImcsA2An6Xyo4MZv5/cYCExcMzv5I=;
+        b=uzMJVvgc9/93vQFAUGp+lD/gAyOhz/3i8RxhOFRR93Xpy0IxwBXcV9DStN5wjXowAW
+         j7Nblz/aJYyZHB54NmuDBehBFlZ7SFz7M0TCsvtTgvmRclyOoIxRKr5f8flYYfMMM2s7
+         Ek2MaWVMBC6AQ4F6Rib0A+1Fn+YlTshi1clmirgW73OIbu/2uL5jCJqXYuJKKk3AgcYx
+         orBowV6DgbHoo8YhvNaKTD0QDEm7KrnU8GZHb5gRnqIQwF971zPffF5QyELgIA3huITc
+         LlgTBPlM9jUhokuQT4i3EFwgCrSEg7R5JQWies23+fGm8abSGYM8tsz4l6M+XHWV3Lni
+         35WA==
+X-Forwarded-Encrypted: i=1; AJvYcCVWBkFJBNTyeZ5qaiI1ZCLqc2vi0qqu3ZxcjBxdhgolmAAxWpBg8Z7R7NPhuhw9R5PM7HyxHPwSej2cDHo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyLfLuTkRnuEx1K8PnsrXusMJTkzKXdilGMqekRxigEgqpw0JR8
+	gw9qi03zzMWVQdqlPHZwFTH45bsPDIZCNWF2lFaFQRbzqNkL/PLa8+HH5wRlAjKI53mJ0nG8sZy
+	7f1dYqM3+JEu/c11pmOWj1K9qbff9Bs6r
+X-Gm-Gg: ASbGncvG5y6gArKo20oc3cJ4rwHInMXDrjc6xqbUe4ra1XLHI8Df9L/8aGtPUWpRn6c
+	7cpnorxbYTT1E9zFCOZf8Ku/0eCW+2nHk6u8+8Dtvw9JpRb2un+x9hixSLDOQwgGb3jDtmKCdNk
+	pgEjZbJDXf5j6/44BfraCZtp74LAgAVC6OGXEbHVRZ/WVyY0oXZ7PpqkQ7DhbsdDmE09Ev2jKo9
+	eX0A7wU8tGAsebA1ZuLgVTF2tUh6ShAXolSbX1tEXV/pMZxVSNQoW2XeV0d9Hd5Hw3Klirksdl4
+	e6L0SjtadcyJuev49KT+H/AZdlCl3I3PtucEUHqSa22QApG6+g==
+X-Google-Smtp-Source: AGHT+IFsAD207aygo+0nztSrAWlExKIbT6EOMKflxaoI+jAMbF2RFZ0fWIRVrELjJbRzWc4ygH65qwEhvjnZ
+X-Received: by 2002:a05:6e02:17ca:b0:3d0:4a82:3f43 with SMTP id e9e14a558f8ab-3d6d547edfbmr43005475ab.5.1743622460924;
+        Wed, 02 Apr 2025 12:34:20 -0700 (PDT)
+Received: from c7-smtp-2023.dev.purestorage.com ([208.88.159.128])
+        by smtp-relay.gmail.com with ESMTPS id e9e14a558f8ab-3d5d5a6d972sm9687095ab.28.2025.04.02.12.34.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Apr 2025 12:34:20 -0700 (PDT)
+X-Relaying-Domain: purestorage.com
+Received: from dev-ushankar.dev.purestorage.com (dev-ushankar.dev.purestorage.com [IPv6:2620:125:9007:640:7:70:36:0])
+	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 3ACB0340186;
+	Wed,  2 Apr 2025 13:34:20 -0600 (MDT)
+Received: by dev-ushankar.dev.purestorage.com (Postfix, from userid 1557716368)
+	id 2CA73E4031B; Wed,  2 Apr 2025 13:34:20 -0600 (MDT)
+Date: Wed, 2 Apr 2025 13:34:20 -0600
+From: Uday Shankar <ushankar@purestorage.com>
+To: Jens Axboe <axboe@kernel.dk>
+Cc: Ming Lei <ming.lei@redhat.com>, Shuah Khan <shuah@kernel.org>,
+	linux-block@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] ublk: fixes for selftests
+Message-ID: <Z+2RPI1GC9NoE/w4@dev-ushankar.dev.purestorage.com>
+References: <20250401-ublk_selftests-v1-0-98129c9bc8bb@purestorage.com>
+ <174359956539.20480.17105268115889494986.b4-ty@kernel.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250402-al3010-iio-regmap-v4-5-d189bea87261@ixit.cz>
-References: <20250402-al3010-iio-regmap-v4-0-d189bea87261@ixit.cz>
-In-Reply-To: <20250402-al3010-iio-regmap-v4-0-d189bea87261@ixit.cz>
-To: Jonathan Cameron <jic23@kernel.org>, 
- Lars-Peter Clausen <lars@metafoo.de>
-Cc: Svyatoslav Ryhel <clamor95@gmail.com>, 
- Robert Eckelmann <longnoserob@gmail.com>, linux-iio@vger.kernel.org, 
- linux-kernel@vger.kernel.org, David Heidelberg <david@ixit.cz>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5966; i=david@ixit.cz;
- h=from:subject:message-id;
- bh=KF7wfd386VFn0Qab9eMCBOMC7w8cF3bp15+z7GtVxKg=;
- b=owEBbQKS/ZANAwAIAWACP8TTSSByAcsmYgBn7ZEKANUDM7It0EXHF5Zdp51cw6YGYAR+pS7gk
- diU+mWsUt2JAjMEAAEIAB0WIQTXegnP7twrvVOnBHRgAj/E00kgcgUCZ+2RCgAKCRBgAj/E00kg
- choBEACyrkpl681CZgf8ZKOvVH6HO5wDcd0B4Hu9xdZHhuETVbVMknY0sYRNDwvdf4gSxjOcCW1
- siWO9ydJeNafHoi3uZZulQc84FnIx1/tC3YLBX9aVPAW9zsJPJM9e04HhW+LJWgOIZidhuzyWIJ
- SlFM4QfEJ82VDsZP58PvcYS2jhldS54Pb0mnUz4Db52zFKkncLclkByBye217sjPlPmwAqoJpcK
- uBaQFfzVW57nn4gB0dpHK5cTlcJtV6yVdbGp30yI84Tiht7wNvLbmUrQnmEeSumxw0vt4oHOSnC
- AvXIorG0/uUM9BnlpWOB9PRtTTlinjihN9iDCPg9ZzOwaFmDmQPWxZcz7EPl/UjhFVA5YdrCIY3
- uHpf7BZdtuVRbIBlurAOK1UmNo/gNODeFyR5Ls9rRXsuJ4KTeeyX9+OLonMujyJ/SlUEPkNtXO/
- pgWAGMCqKKa1jPQ9WTTU+g2N1CVeOMD7JsUMXnV9meQpqbYXtsazOseIYq/NQKgMsqwtkVJh3Ex
- EWx0kKIA1j4AxevvdsWXYyxI3ljTXix1Ke2M9GP7hTPWiRwkKEE2pJUKyxeM9czaLbotnIqhsQa
- /fv02G9Rdg9yb2s6J54xYGZ3F5oHYMtLSlT0Ke/2qRs9XctnnhtywP9d/XpZ9xqAJ6sRSLFAanz
- 0qCT5mok3aauaNw==
-X-Developer-Key: i=david@ixit.cz; a=openpgp;
- fpr=D77A09CFEEDC2BBD53A7047460023FC4D3492072
-X-Endpoint-Received: by B4 Relay for david@ixit.cz/default with auth_id=355
-X-Original-From: David Heidelberg <david@ixit.cz>
-Reply-To: david@ixit.cz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <174359956539.20480.17105268115889494986.b4-ty@kernel.dk>
 
-From: David Heidelberg <david@ixit.cz>
+On Wed, Apr 02, 2025 at 07:12:45AM -0600, Jens Axboe wrote:
+> 
+> On Tue, 01 Apr 2025 14:49:07 -0600, Uday Shankar wrote:
+> > Fix a couple of issues I saw when developing selftests for ublk. These
+> > patches are split out from the following series:
+> > 
+> > https://lore.kernel.org/linux-block/20250325-ublk_timeout-v1-0-262f0121a7bd@purestorage.com/T/#t
+> > 
+> > 
+> 
+> Applied, thanks!
+> 
+> [1/2] selftests: ublk: kublk: use ioctl-encoded opcodes
+>       (no commit info)
+> [2/2] selftests: ublk: kublk: fix an error log line
+>       (no commit info)
 
-Modernize and clean up the driver using the regmap framework.
-
-With the regmap implementation, the compiler produces
-a significantly smaller module.
-
-Size before: 72 kB
-Size after:  58 kB
-
-Signed-off-by: David Heidelberg <david@ixit.cz>
----
- drivers/iio/light/al3320a.c | 89 +++++++++++++++++++++++++--------------------
- 1 file changed, 49 insertions(+), 40 deletions(-)
-
-diff --git a/drivers/iio/light/al3320a.c b/drivers/iio/light/al3320a.c
-index 1fa693d54ae2a6e5ead3a9c7ac7018afeba9b760..988a3dd3a8449f10c657eb75fd744b2a9db2965e 100644
---- a/drivers/iio/light/al3320a.c
-+++ b/drivers/iio/light/al3320a.c
-@@ -15,6 +15,7 @@
- #include <linux/bitfield.h>
- #include <linux/i2c.h>
- #include <linux/module.h>
-+#include <linux/regmap.h>
- #include <linux/mod_devicetable.h>
- 
- #include <linux/iio/iio.h>
-@@ -57,8 +58,14 @@ static const int al3320a_scales[][2] = {
- 	{0, 512000}, {0, 128000}, {0, 32000}, {0, 10000}
- };
- 
-+static const struct regmap_config al3320a_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+	.max_register = AL3320A_REG_HIGH_THRESH_HIGH,
-+};
-+
- struct al3320a_data {
--	struct i2c_client *client;
-+	struct regmap *regmap;
- };
- 
- static const struct iio_chan_spec al3320a_channels[] = {
-@@ -80,50 +87,47 @@ static const struct attribute_group al3320a_attribute_group = {
- 	.attrs = al3320a_attributes,
- };
- 
--static int al3320a_set_pwr_on(struct i2c_client *client)
-+static int al3320a_set_pwr_on(struct al3320a_data *data)
- {
--	return i2c_smbus_write_byte_data(client, AL3320A_REG_CONFIG, AL3320A_CONFIG_ENABLE);
-+	return regmap_write(data->regmap, AL3320A_REG_CONFIG, AL3320A_CONFIG_ENABLE);
- }
- 
- static void al3320a_set_pwr_off(void *_data)
- {
- 	struct al3320a_data *data = _data;
-+	struct device *dev = regmap_get_device(data->regmap);
-+	int ret;
- 
--	i2c_smbus_write_byte_data(data->client, AL3320A_REG_CONFIG, AL3320A_CONFIG_DISABLE);
-+	ret = regmap_write(data->regmap, AL3320A_REG_CONFIG, AL3320A_CONFIG_DISABLE);
-+	if (ret)
-+		dev_err(dev, "failed to write system register\n");
- }
- 
- static int al3320a_init(struct al3320a_data *data)
- {
-+	struct device *dev = regmap_get_device(data->regmap);
- 	int ret;
- 
--	ret = al3320a_set_pwr_on(data->client);
--
--	if (ret < 0)
-+	ret = al3320a_set_pwr_on(data);
-+	if (ret)
- 		return ret;
- 
--	ret = devm_add_action_or_reset(&data->client->dev,
--				       al3320a_set_pwr_off,
--				       data);
-+	ret = devm_add_action_or_reset(dev, al3320a_set_pwr_off, data);
- 	if (ret)
--		return dev_err_probe(&data->client->dev, ret, "failed to add action\n");
--
--	ret = i2c_smbus_write_byte_data(data->client, AL3320A_REG_CONFIG_RANGE,
--					FIELD_PREP(AL3320A_GAIN_MASK,
--						   AL3320A_RANGE_3));
--	if (ret < 0)
--		return ret;
-+		return dev_err_probe(dev, ret, "failed to add action\n");
- 
--	ret = i2c_smbus_write_byte_data(data->client, AL3320A_REG_MEAN_TIME,
--					AL3320A_DEFAULT_MEAN_TIME);
--	if (ret < 0)
-+	ret = regmap_write(data->regmap, AL3320A_REG_CONFIG_RANGE,
-+			   FIELD_PREP(AL3320A_GAIN_MASK, AL3320A_RANGE_3));
-+	if (ret)
- 		return ret;
- 
--	ret = i2c_smbus_write_byte_data(data->client, AL3320A_REG_WAIT,
--					AL3320A_DEFAULT_WAIT_TIME);
--	if (ret < 0)
-+	ret = regmap_write(data->regmap, AL3320A_REG_MEAN_TIME,
-+			   AL3320A_DEFAULT_MEAN_TIME);
-+	if (ret)
- 		return ret;
- 
--	return 0;
-+	return regmap_write(data->regmap, AL3320A_REG_WAIT,
-+			    AL3320A_DEFAULT_WAIT_TIME);
- }
- 
- static int al3320a_read_raw(struct iio_dev *indio_dev,
-@@ -131,7 +135,7 @@ static int al3320a_read_raw(struct iio_dev *indio_dev,
- 			    int *val2, long mask)
- {
- 	struct al3320a_data *data = iio_priv(indio_dev);
--	int ret;
-+	int ret, gain, raw;
- 
- 	switch (mask) {
- 	case IIO_CHAN_INFO_RAW:
-@@ -140,21 +144,21 @@ static int al3320a_read_raw(struct iio_dev *indio_dev,
- 		 * - low byte of output is stored at AL3320A_REG_DATA_LOW
- 		 * - high byte of output is stored at AL3320A_REG_DATA_LOW + 1
- 		 */
--		ret = i2c_smbus_read_word_data(data->client,
--					       AL3320A_REG_DATA_LOW);
--		if (ret < 0)
-+		ret = regmap_read(data->regmap, AL3320A_REG_DATA_LOW, &raw);
-+		if (ret)
- 			return ret;
--		*val = ret;
-+
-+		*val = raw;
-+
- 		return IIO_VAL_INT;
- 	case IIO_CHAN_INFO_SCALE:
--		ret = i2c_smbus_read_byte_data(data->client,
--					       AL3320A_REG_CONFIG_RANGE);
--		if (ret < 0)
-+		ret = regmap_read(data->regmap, AL3320A_REG_CONFIG_RANGE, &gain);
-+		if (ret)
- 			return ret;
- 
--		ret = FIELD_GET(AL3320A_GAIN_MASK, ret);
--		*val = al3320a_scales[ret][0];
--		*val2 = al3320a_scales[ret][1];
-+		gain = FIELD_GET(AL3320A_GAIN_MASK, gain);
-+		*val = al3320a_scales[gain][0];
-+		*val2 = al3320a_scales[gain][1];
- 
- 		return IIO_VAL_INT_PLUS_MICRO;
- 	}
-@@ -175,9 +179,8 @@ static int al3320a_write_raw(struct iio_dev *indio_dev,
- 			    val2 != al3320a_scales[i][1])
- 				continue;
- 
--			return i2c_smbus_write_byte_data(data->client,
--					AL3320A_REG_CONFIG_RANGE,
--					FIELD_PREP(AL3320A_GAIN_MASK, i));
-+			return regmap_write(data->regmap, AL3320A_REG_CONFIG_RANGE,
-+					    FIELD_PREP(AL3320A_GAIN_MASK, i));
- 		}
- 		break;
- 	}
-@@ -203,7 +206,11 @@ static int al3320a_probe(struct i2c_client *client)
- 
- 	data = iio_priv(indio_dev);
- 	i2c_set_clientdata(client, indio_dev);
--	data->client = client;
-+
-+	data->regmap = devm_regmap_init_i2c(client, &al3320a_regmap_config);
-+	if (IS_ERR(data->regmap))
-+		return dev_err_probe(dev, PTR_ERR(data->regmap),
-+				     "cannot allocate regmap\n");
- 
- 	indio_dev->info = &al3320a_info;
- 	indio_dev->name = "al3320a";
-@@ -230,7 +237,9 @@ static int al3320a_suspend(struct device *dev)
- 
- static int al3320a_resume(struct device *dev)
- {
--	return al3320a_set_pwr_on(to_i2c_client(dev));
-+	struct al3320a_data *data = iio_priv(dev_get_drvdata(dev));
-+
-+	return al3320a_set_pwr_on(data);
- }
- 
- static DEFINE_SIMPLE_DEV_PM_OPS(al3320a_pm_ops, al3320a_suspend,
-
--- 
-2.49.0
-
+Jens, MAINTAINERS parsing didn't add you to this email - I had to do it
+manually. Do we need to add you somewhere so you get a copy of all ublk
+patches (since you maintain its tree)?
 
