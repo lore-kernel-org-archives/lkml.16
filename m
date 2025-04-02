@@ -1,125 +1,178 @@
-Received: from smtp-fw-6001.amazon.com (smtp-fw-6001.amazon.com [52.95.48.154])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 757F71917E7;
-	Wed,  2 Apr 2025 20:23:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.95.48.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51CDCB674
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 20:24:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743625400; cv=none; b=AYBsGiTsw6fSPNFJTI6d8NmdiDIEkCFM/siE9jKfm6PIDrHHZJQH55I+9SfjY2vBHGcyzdMQo4rdxAgYgE9Mm6H/grDf/C15NA+5IdVqIDgdR0lPgm55BrPUTEoHtPC21U5HKT1KUsnvayEmTQQM92p8oA+1qa7s9V55FLN2VIk=
+	t=1743625461; cv=none; b=QKxglP0IYBKvhTDHcw7AW7SqL72YpetvnTWQpnRyxb2UL1WF5nxISYNkAeCSmNnraSwSlsYs3moTD4wV9L/oZykxoerm9sQOD5YDvTie7Wfg7KDF0GBybM4cqv1jP9IsqDryHYRPl3G+2IRk3z0hMZnC/zMHVc4nRZBasnToxGk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743625400; c=relaxed/simple;
-	bh=B+O36yg5A5XPoTzoaWJvC8inENWYX8yWdPtFHWC748k=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SzcVgw6YAVlXFS1XvFvDM/0FLYKnC1/8L37+ySyWDzs90IiwyjhUlyROTcIJZcPn4EudCyluPJdsdl79a+/DHq0hYvICOwceQn+ZtryQSCAHeEK5vX7hrctWGLvezNPwhBGph3UsQEHLzBb7dpkp01fpf6LsXK4DoKEODVtg5SU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=sT2tP2dF; arc=none smtp.client-ip=52.95.48.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+	s=arc-20240116; t=1743625461; c=relaxed/simple;
+	bh=tXpnEX3tyw/SdWapN8z0fagduXq6C8vTGKb5RiIDUkM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YH/KY8U6fXSq9SbRI4bt4CmQUYP4/DpJXbkblMEEg0wjhgGJlrk2enfgdYt/BfJJ7af8fYHYFigGMF9An239lwpfV61IHwGZ0oplr+pdYJAr9pGaIRFErMCl7GxUFg0YTPRwGYQz/dPRMlG0c8duU8K0ToZXsnVOPWajTcwMX1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=KUisUPle; arc=none smtp.client-ip=209.85.160.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="sT2tP2dF"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="KUisUPle"
+Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-4775ccf3e56so13454981cf.0
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 13:24:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1743625399; x=1775161399;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=ctb6POoyh404vH+KjFkWC9B4g7iEU94Mtl3qduoJtog=;
-  b=sT2tP2dF+FbexGa4gIx8owprD4407tD/KG9I07kvSg97uVwynTDnA91T
-   K+0XJ89IFhRQjhaOEroLDpAmGpBVDnQrkyRrSpLonePuhPgImb3wMK5o9
-   u5DAQDemhtrrLtzLDTpDpLFHiiG4Olal6A/kIue+/pcgwZCmhw3hfmHHZ
-   w=;
-X-IronPort-AV: E=Sophos;i="6.15,183,1739836800"; 
-   d="scan'208";a="476947229"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.2])
-  by smtp-border-fw-6001.iad6.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 20:23:14 +0000
-Received: from EX19MTAUWA001.ant.amazon.com [10.0.7.35:34346]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.10.98:2525] with esmtp (Farcaster)
- id 4fa530bb-68b7-4087-a078-61c6eba0c003; Wed, 2 Apr 2025 20:23:14 +0000 (UTC)
-X-Farcaster-Flow-ID: 4fa530bb-68b7-4087-a078-61c6eba0c003
-Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
- EX19MTAUWA001.ant.amazon.com (10.250.64.218) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Wed, 2 Apr 2025 20:23:08 +0000
-Received: from 6c7e67bfbae3.amazon.com (10.106.101.8) by
- EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Wed, 2 Apr 2025 20:23:05 +0000
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
-To: <gregkh@linuxfoundation.org>
-CC: <cve@kernel.org>, <edumazet@google.com>, <ematsumiya@suse.de>,
-	<kuniyu@amazon.com>, <linux-fsdevel@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-net@vger.kernel.org>,
-	<sfrench@samba.org>, <smfrench@gmail.com>, <wangzhaolong1@huawei.com>,
-	<zhangchangzhong@huawei.com>
-Subject: Re: Fwd: [PATCH][SMB3 client] fix TCP timers deadlock after rmmod
-Date: Wed, 2 Apr 2025 13:22:11 -0700
-Message-ID: <20250402202257.5845-1-kuniyu@amazon.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <2025040233-tuesday-regroup-5c66@gregkh>
-References: <2025040233-tuesday-regroup-5c66@gregkh>
+        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1743625458; x=1744230258; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=jlKsIdBA3751Uewe6o63Rt1BOvdcDnO+aqIrz5DM7Dk=;
+        b=KUisUPle8a30RYJfwZpJkKBXfNSqbzLE0XrxErBP3JuHH/NhjFLQDFcpRNTnuiy5Nq
+         YrFuQpaXpCkQmSjiJHTDY/hLzFkMMjhVxbo4o1nXxMoY+N1SdQbOzzpFEYMHxNh92/O7
+         d+EqBQxyVeoVvjoOfu32Hg0Gdvncru7/qmg72ZyS741rF2cMWxwLOiZ8NpJsjCFWraeL
+         zb5LeO8fq+DRrjCgTd0OcYbRYwnCB+1wAEFxwHasTqPmjkwG1qWFNk7GjXdBc+8mh/hK
+         y0dXqBgvM1zbrBoKQo5tVXdoK/ton7g/6OiD0xfXfd3mc733E1MlV4QTcN+YEqCpXWl8
+         JvDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743625458; x=1744230258;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jlKsIdBA3751Uewe6o63Rt1BOvdcDnO+aqIrz5DM7Dk=;
+        b=dUpVqNBzYf1kPSXweHKh3usoWym3TNHvG4f8b8Q+fYuO960ci7eyNQdOMJmWEcArb8
+         0A+l+uTBb3+aoAacncXu2Yl7ucc4D3Jv03m/mQgijWsChzd3RGOi8sgiC9BsUBzZVgui
+         zib9+8xogLJQfIO5JbWKEW+2narKvxuJbKVLZxPS1zV9+mx1WO4dUNZpFcCUn5w/RX5I
+         PKYjWZhXj839rpnlIoMt7BwFWmtGGbfqxSm5qe1pvQLcIRiBXnAmZ8IC81kh6NJeQ+VX
+         sp6aO03HfKBoXDABVs6891YFDDBtmzjYkNcBxd0el8uJ/CjAwcvlqHalLP+uWI7bjIqx
+         eLRg==
+X-Forwarded-Encrypted: i=1; AJvYcCXA0WvSL4OwnEWHGIsVVvi1WfdEdg93XQ0AvMX0JXtmlfLQj9SKT6FF/5tmAjtZhCvJtoc65yA/Rb28jII=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw0nDhr6e0D4bEnZvjq6Elw7oi0/tS3gyvdWormfm4SIB/xBTNJ
+	vHtBLtcfJfrziT1BEN23KrV/FHo/TzkAeOCqljiQlz1lNVCj9XAjEe8j274AEtw=
+X-Gm-Gg: ASbGncvV9ssI0KJApjStHLn9Eb13wP03YpRU8FWRePL7s5xRmi3/TXYjBwpmyDIRQVF
+	bX63Mv7Nn5v1YYyMTHrKCGi4hzDMIF1VKGw/o9qTihTQaAJ2m7fLnRae0IYYQUmTkN9HnKmRFBG
+	O2wQOlJUW/uyKyl8v0Ey72ngyQk/qcbXpYOBYGtLtHxFV/Sd2MPvZ60rLSsu4nrDDntKmm2H1lU
+	3R8S+qeOMWruxADFIQgAyeJ5QmFvp6krOR7QDjc4cGxZvdD0KzVgRBO/iyqp+rJ5AxncOaCL8WS
+	nwmALpYc0N8HF9dhCXy4vPc07vde5Kh1O/dFcL7mzSo=
+X-Google-Smtp-Source: AGHT+IGLRRkKyiKbQIIEjOC/9qkPzHlmQ2oHBsFZcm/Bojdzg8BtC0+7P2RKcRzroUtH8XCrfAKOdQ==
+X-Received: by 2002:a05:622a:19a6:b0:467:6563:8b1d with SMTP id d75a77b69052e-4791615e3c9mr13324771cf.6.1743625458002;
+        Wed, 02 Apr 2025 13:24:18 -0700 (PDT)
+Received: from localhost ([2603:7000:c01:2716:da5e:d3ff:fee7:26e7])
+        by smtp.gmail.com with UTF8SMTPSA id d75a77b69052e-477831a6579sm83209061cf.73.2025.04.02.13.24.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Apr 2025 13:24:17 -0700 (PDT)
+Date: Wed, 2 Apr 2025 16:24:16 -0400
+From: Johannes Weiner <hannes@cmpxchg.org>
+To: Nhat Pham <nphamcs@gmail.com>
+Cc: linux-mm@kvack.org, akpm@linux-foundation.org, yosry.ahmed@linux.dev,
+	chengming.zhou@linux.dev, sj@kernel.org, kernel-team@meta.com,
+	linux-kernel@vger.kernel.org, gourry@gourry.net,
+	ying.huang@linux.alibaba.com, jonathan.cameron@huawei.com,
+	dan.j.williams@intel.com, linux-cxl@vger.kernel.org,
+	minchan@kernel.org, senozhatsky@chromium.org
+Subject: Re: [PATCH] zswap/zsmalloc: prefer the the original page's node for
+ compressed data
+Message-ID: <20250402202416.GE198651@cmpxchg.org>
+References: <20250402191145.2841864-1-nphamcs@gmail.com>
+ <20250402195741.GD198651@cmpxchg.org>
+ <CAKEwX=Pjk=7Ec3rE2c1SOUL9zeYGcyEOCVQqSffC6Qw077dBHQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D041UWA004.ant.amazon.com (10.13.139.9) To
- EX19D004ANA001.ant.amazon.com (10.37.240.138)
+In-Reply-To: <CAKEwX=Pjk=7Ec3rE2c1SOUL9zeYGcyEOCVQqSffC6Qw077dBHQ@mail.gmail.com>
 
-From: Greg KH <gregkh@linuxfoundation.org>
-Date: Wed, 2 Apr 2025 21:15:58 +0100
-> On Wed, Apr 02, 2025 at 01:09:19PM -0700, Kuniyuki Iwashima wrote:
-> > From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Date: Wed, 2 Apr 2025 16:18:37 +0100
-> > > On Wed, Apr 02, 2025 at 05:15:44PM +0800, Wang Zhaolong wrote:
-> > > > > On Wed, Apr 02, 2025 at 12:49:50PM +0800, Wang Zhaolong wrote:
-> > > > > > Yes, it seems the previous description might not have been entirely clear.
-> > > > > > I need to clearly point out that this patch, intended as the fix for CVE-2024-54680,
-> > > > > > does not actually address any real issues. It also fails to resolve the null pointer
-> > > > > > dereference problem within lockdep. On top of that, it has caused a series of
-> > > > > > subsequent leakage issues.
-> > > > > 
-> > > > > If this cve does not actually fix anything, then we can easily reject
-> > > > > it, please just let us know if that needs to happen here.
-> > > > > 
-> > > > > thanks,
-> > > > > 
-> > > > > greg k-h
-> > > > Hi Greg,
-> > > > 
-> > > > Yes, I can confirm that the patch for CVE-2024-54680 (commit e9f2517a3e18)
-> > > > should be rejected. Our analysis shows:
-> > > > 
-> > > > 1. It fails to address the actual null pointer dereference in lockdep
-> > > > 
-> > > > 2. It introduces multiple serious issues:
-> > > >    1. A socket leak vulnerability as documented in bugzilla #219972
-> > > >    2. Network namespace refcount imbalance issues as described in
-> > > >      bugzilla #219792 (which required the follow-up mainline fix
-> > > >      4e7f1644f2ac "smb: client: Fix netns refcount imbalance
-> > > >      causing leaks and use-after-free")
-> > > > 
-> > > > The next thing we should probably do is:
-> > > >    - Reverting e9f2517a3e18
-> > > >    - Reverting the follow-up fix 4e7f1644f2ac, as it's trying to fix
-> > > >      problems introduced by the problematic CVE patch
-> > > 
-> > > Great, can you please send patches now for both of these so we can
-> > > backport them to the stable kernels properly?
-> > 
-> > Sent to CIFS tree:
-> > https://lore.kernel.org/linux-cifs/20250402200319.2834-1-kuniyu@amazon.com/
+On Wed, Apr 02, 2025 at 01:09:29PM -0700, Nhat Pham wrote:
+> On Wed, Apr 2, 2025 at 12:57 PM Johannes Weiner <hannes@cmpxchg.org> wrote:
+> >
+> > On Wed, Apr 02, 2025 at 12:11:45PM -0700, Nhat Pham wrote:
+> > > Currently, zsmalloc, zswap's backend memory allocator, does not enforce
+> > > any policy for the allocation of memory for the compressed data,
+> > > instead just adopting the memory policy of the task entering reclaim,
+> > > or the default policy (prefer local node) if no such policy is
+> > > specified. This can lead to several pathological behaviors in
+> > > multi-node NUMA systems:
+> > >
+> > > 1. Systems with CXL-based memory tiering can encounter the following
+> > >    inversion with zswap: the coldest pages demoted to the CXL tier
+> > >    can return to the high tier when they are zswapped out, creating
+> > >    memory pressure on the high tier.
+> > >
+> > > 2. Consider a direct reclaimer scanning nodes in order of allocation
+> > >    preference. If it ventures into remote nodes, the memory it
+> > >    compresses there should stay there. Trying to shift those contents
+> > >    over to the reclaiming thread's preferred node further *increases*
+> > >    its local pressure, and provoking more spills. The remote node is
+> > >    also the most likely to refault this data again. This undesirable
+> > >    behavior was pointed out by Johannes Weiner in [1].
+> > >
+> > > 3. For zswap writeback, the zswap entries are organized in
+> > >    node-specific LRUs, based on the node placement of the original
+> > >    pages, allowing for targeted zswap writeback for specific nodes.
+> > >
+> > >    However, the compressed data of a zswap entry can be placed on a
+> > >    different node from the LRU it is placed on. This means that reclaim
+> > >    targeted at one node might not free up memory used for zswap entries
+> > >    in that node, but instead reclaiming memory in a different node.
+> > >
+> > > All of these issues will be resolved if the compressed data go to the
+> > > same node as the original page. This patch encourages this behavior by
+> > > having zswap pass the node of the original page to zsmalloc, and have
+> > > zsmalloc prefer the specified node if we need to allocate new (zs)pages
+> > > for the compressed data.
+> > >
+> > > Note that we are not strictly binding the allocation to the preferred
+> > > node. We still allow the allocation to fall back to other nodes when
+> > > the preferred node is full, or if we have zspages with slots available
+> > > on a different node. This is OK, and still a strict improvement over
+> > > the status quo:
+> > >
+> > > 1. On a system with demotion enabled, we will generally prefer
+> > >    demotions over zswapping, and only zswap when pages have
+> > >    already gone to the lowest tier. This patch should achieve the
+> > >    desired effect for the most part.
+> > >
+> > > 2. If the preferred node is out of memory, letting the compressed data
+> > >    going to other nodes can be better than the alternative (OOMs,
+> > >    keeping cold memory unreclaimed, disk swapping, etc.).
+> > >
+> > > 3. If the allocation go to a separate node because we have a zspage
+> > >    with slots available, at least we're not creating extra immediate
+> > >    memory pressure (since the space is already allocated).
+> > >
+> > > 3. While there can be mixings, we generally reclaim pages in
+> > >    same-node batches, which encourage zspage grouping that is more
+> > >    likely to go to the right node.
+> > >
+> > > 4. A strict binding would require partitioning zsmalloc by node, which
+> > >    is more complicated, and more prone to regression, since it reduces
+> > >    the storage density of zsmalloc. We need to evaluate the tradeoff
+> > >    and benchmark carefully before adopting such an involved solution.
+> > >
+> > > This patch does not fix zram, leaving its memory allocation behavior
+> > > unchanged. We leave this effort to future work.
+> >
+> > zram's zs_malloc() calls all have page context. It seems a lot easier
+> > to just fix the bug for them as well than to have two allocation APIs
+> > and verbose commentary?
 > 
-> You forgot to add a Cc: stable@ on the patches to ensure that they get
-> picked up properly for all stable trees :(
-
-Ah sorry, I did the same with netdev.  netdev patches usually do
-not have the tag but are backported fine, maybe netdev local rule ?
-
-
+> I think the recompress path doesn't quite have the context at the callsite:
 > 
-> Can you redo them?
+> static int recompress_slot(struct zram *zram, u32 index, struct page *page,
+>    u64 *num_recomp_pages, u32 threshold, u32 prio,
+>    u32 prio_max)
+> 
+> Note that the "page" argument here is allocated by zram internally,
+> and not the original page. We can get the original page's node by
+> asking zsmalloc to return it when it returns the compressed data, but
+> that's quite involved, and potentially requires further zsmalloc API
+> change.
 
-Sure, will resend.
+Yeah, that path currently allocates the target page on the node of
+whoever is writing to the "recompress" file.
 
-Thanks!
+I think it's fine to use page_to_nid() on that one. It's no worse than
+the current behavior. Add an /* XXX */ to recompress_store() and
+should somebody care to make that path generally NUMA-aware they can
+do so without having to garbage-collect dependencies in zsmalloc code.
