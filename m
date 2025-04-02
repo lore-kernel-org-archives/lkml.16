@@ -1,64 +1,75 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CB5E23372D
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 07:07:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58F90233736;
+	Wed,  2 Apr 2025 07:08:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743577673; cv=none; b=rZ5ZCFQI0SLYCMidKMEtn3SY32tZ9ZbquaoIOEa8tSLO8L06g3eMwUcrwUwqA3/gNaOCEge/Pg2HWKrJrIlSOWkO5XBYBtHwODDoBMfZ3K/F/0EnEyW0rL2x4uEyUNqoWfs1XzFHk/dVs6zb3py82KyCHBFp3hpQ5FgCJFkw0DE=
+	t=1743577688; cv=none; b=DQNNCSlxfW4Ch5BU+EGK4044SPgx4gq2/AInAeRovDw1TKxLufaGRgJswQ78/3L74I3ql5vu8qD/K6n3+Ol0BWzLUFFLtTygTZH+5kg9hNnFGVS2CW0NP0MBEdLNV5QbZjN4fZQoCBjsFpb66eMujo6ExL3Hl8IdZDeKXZTVMrE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743577673; c=relaxed/simple;
-	bh=TJ3PZbqHkQs/4tukT/mVpA5HaQGninFtVcz7pGCCY/o=;
+	s=arc-20240116; t=1743577688; c=relaxed/simple;
+	bh=wtHLJiYIWI8qlPwCMFuVGNMagth1T5fWPZ+oOrKc2iA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kdCrNgUN4rnkxtvKlKoiLvzTNULFFZFM1CDXzP5h1SGw3ikgSjWurLrUECvSvJSqcMYynkPgTWMulTp6DzaXPDmrXbqZjcc8wjknAl7al0mnAC9tHCHa/vTT/SkAhUOW9KhEdT2/j0V4ZmjBfalfue5We6keorbFTH6eYLn+u8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=f1MxB4dQ; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=ImET9A1JGXXun1sO1qEDe7JH+JJHNv0NJJ++uoIc5oOR8qL9sWRxB5JiO9ExKZe1j6s2H9ul4l9VkVsfKU1oBfY1M5C4b4yf+ihAkXMnlt4TvwpIaC3ELlThm+5EoyKNtMlL2aszJfgW5HMWG04y175l8W3x/OyoQH7+23GyWDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ei2LYmz2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="f1MxB4dQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA360C4CEDD;
-	Wed,  2 Apr 2025 07:07:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1743577673;
-	bh=TJ3PZbqHkQs/4tukT/mVpA5HaQGninFtVcz7pGCCY/o=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ei2LYmz2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51B0EC4CEDD;
+	Wed,  2 Apr 2025 07:08:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743577688;
+	bh=wtHLJiYIWI8qlPwCMFuVGNMagth1T5fWPZ+oOrKc2iA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=f1MxB4dQilCYg/3ooTBqzYah3QEO/MnPyJzRWYWPtDLkxsxV0DGYQnx9h5PL9tET8
-	 pK+AXPfBr3YG48cutXO+zIdMX0t99giI6xTvZ00Ao6nxtTow1HR80jSu1bqQeJlJWG
-	 W+ng2hTQql5oM7axIAtMJ/FwgbgdWOVSLYEevbZs=
-Date: Wed, 2 Apr 2025 08:06:20 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Siddh Raman Pant <siddh.raman.pant@oracle.com>
-Cc: linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] published: CVE-2025-0927: Fix up JSON schema.
-Message-ID: <2025040248-hut-sevenfold-82c3@gregkh>
-References: <2025033057-CVE-2025-0927-1436@gregkh>
- <80cd3f46783cd5702b3abd40c11f3f08f64717ec.1743576485.git.siddh.raman.pant@oracle.com>
+	b=ei2LYmz2/fPHvHiR+TLt9UUelL7skuDHlxfVx2r/PSe+ro7kExx4TF+zegIcUWDDh
+	 2ly1qqmDBeoMg3kp62QoGDaWAqEniW9Z9OWvKPfnoQ6KgMFTBERzQBi/Omu/r8Bi1w
+	 zZ3iWM1tN91weW4PqlhuukzX7jwzi2qV0fIiHzHFYi+/DGffjfk1hTIdoLdTR1yzAd
+	 UDaIuqqY1WOETVLeW9BGQPXgWIsXhpHi3L9cdoaDbeoTFV0UGjJ332YtgDZOMFLUMP
+	 /poi9THdlSRjPMdB648iX7WBiiEqzUO0yqoYFMNMmcoUM7Ut28fU4YmCV49+wm+I0i
+	 jtdXMSNcMsYpA==
+Date: Wed, 2 Apr 2025 09:08:04 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Benjamin Mugnier <benjamin.mugnier@foss.st.com>
+Cc: Sylvain Petinot <sylvain.petinot@foss.st.com>, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] media: dt-bindings: Add ST VD55G1 camera sensor
+ binding
+Message-ID: <20250402-curvy-seriema-of-blizzard-b1c4d9@krzk-bin>
+References: <20250401-b4-vd55g1-v2-0-0c8ab8a48c55@foss.st.com>
+ <20250401-b4-vd55g1-v2-1-0c8ab8a48c55@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <80cd3f46783cd5702b3abd40c11f3f08f64717ec.1743576485.git.siddh.raman.pant@oracle.com>
+In-Reply-To: <20250401-b4-vd55g1-v2-1-0c8ab8a48c55@foss.st.com>
 
-On Wed, Apr 02, 2025 at 12:21:52PM +0530, Siddh Raman Pant wrote:
-> It doesn't match the schema of other CVEs as it was not generated
-> by bippy.
+On Tue, Apr 01, 2025 at 01:05:58PM +0200, Benjamin Mugnier wrote:
+> +    properties:
+> +      endpoint:
+> +        $ref: /schemas/media/video-interfaces.yaml#
+> +        unevaluatedProperties: false
+> +
+> +        properties:
+> +          data-lanes:
+> +            items:
+> +              const: 1
 
-It was created by vulnogram for obvious reasons :(
+Not what I asked. Now you miss number of items. Just use the syntax I
+proposed. Or was there any issue with it?
 
-Also, please cc: cve@kernel.org for stuff like this.
+> +
+> +          link-frequencies:
+> +            maxItems: 1
+> +            items:
+> +              minimum: 125000000
+> +              maximum: 600000000
 
-> Fixed by hand / manually.
-> 
-> programFiles were added from the info in mbox.
+Best regards,
+Krzysztof
 
-So this did two different things?  Why does the layout matter here?
-Eventually it will be created properly when someone gets the fix
-upstream, I'm waiting for Canonical to do it as they are responsible for
-fixing this mess at the moment, but don't seem to be responding to my
-emails anymore...
-
-thanks,
-
-greg k-h
