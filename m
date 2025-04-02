@@ -1,134 +1,160 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 05D2CEAD7;
-	Wed,  2 Apr 2025 15:30:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBE8F10F9;
+	Wed,  2 Apr 2025 15:31:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743607838; cv=none; b=i8SEtNtE1XXidfzL47FwDSslr780JiDMeQy/XFqaqQCIqe0D5Jj+HGRmUgZrMy/ToONk/KG0EAFdcRWA0KhUzZT3sykpan8X5+CAYBRWdho6wMCSRQIipo2TLpdM4RoY0xC875YIYEx1ANNABiLo5BXUBA5jBFXC5kjWohpjneU=
+	t=1743607871; cv=none; b=tJvDTVO1/kuxrf5vr7/IXpwWm33pqKBOwAvHZwnUQDAwLSFhfvzAT/iUsRXuY3bRFEjKLPBHcEjQOBl3WDAIqbuLRkWtGjS5+bnGd8VJjEGAfpvyctlPSDqoq2XjYeGBzPCpuwg/UtxQZEonMbbAWeidtGi9lKCrImucVt9WxRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743607838; c=relaxed/simple;
-	bh=50ulFjUqXwgfIP0/hz3Pe+E09PZpugkbNUnxMO3Zl9g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kX9a3rN0qCDnVNM3wzZduTDoUtTjT9yaQi6of+1ZSNQ4WOmpUGaGemP1qhdJDTXvvvSQZ47Od3Kr7kzzueTxBY+DjLai4WaNjzZDy6cGba2QqEzhfGTju9CFNH7M9GDFSSJKOXXIJN2VlcwhcO1ycYuDgwOuyKMBE37MW7kan2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=arm.com; spf=none smtp.mailfrom=foss.arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=foss.arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 27D3A106F;
-	Wed,  2 Apr 2025 08:30:38 -0700 (PDT)
-Received: from bogus (unknown [10.57.41.33])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3E9943F694;
-	Wed,  2 Apr 2025 08:30:32 -0700 (PDT)
-Date: Wed, 2 Apr 2025 16:30:29 +0100
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: Peng Fan <peng.fan@oss.nxp.com>
-Cc: Cristian Marussi <cristian.marussi@arm.com>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	linux-kernel@vger.kernel.org, arm-scmi@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
-	devicetree@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH v3 1/7] firmware: arm_scmi: imx: Add LMM and CPU
- documentation
-Message-ID: <20250402-pastoral-screeching-panda-da4a45@sudeepholla>
-References: <20250303-imx-lmm-cpu-v3-0-7695f6f61cfc@nxp.com>
- <20250303-imx-lmm-cpu-v3-1-7695f6f61cfc@nxp.com>
- <20250401-quantum-coyote-of-admiration-bf1b68@sudeepholla>
- <20250402123503.GA23033@nxa18884-linux>
- <20250402-acoustic-analytic-guan-d3cda5@sudeepholla>
- <20250402161037.GC23033@nxa18884-linux>
+	s=arc-20240116; t=1743607871; c=relaxed/simple;
+	bh=DCRq2ZvCLh3oAN9gAb4UKag+DXIJpyJq8KIvPQhUQrM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mai7tdOR5jI5V3v+2YPSxb91KNOlhJVh3Wn9yn6He7KxO7U3X4dAk5Q4D9XALLemHBCgueP0PPJxj+LVagyfqW3F3/K+MO9MhRb3NWDgMxo5BjpWaz2o3N7/E6HXXk9QIUZjV/tyaYwaMBXDmHPQnLYau+CzW8ssJ6Uobdu4prc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fdCjRJrJ; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fdCjRJrJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743607869; x=1775143869;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=DCRq2ZvCLh3oAN9gAb4UKag+DXIJpyJq8KIvPQhUQrM=;
+  b=fdCjRJrJRN4jkPqezZRA3V+ubLn9fqN08jZk0q4QAiL/HGFIYf7ivGRn
+   el5HRB3VDkiKZ11eC2AVNkfqVodhbKJ+fmBZGcTmi14JSBPUGqVI14vVI
+   7reASz4P0o6QwgH+zXNPxOB983+kxcxg0kaWeZ+A4bIfbvb3BmQ0l8cDh
+   y+VSY/Av7uDiMj94rOmG5J+Z7YCgCiNLcuj/CzFzo/nA/hua48+IHW5O+
+   w1Gt/p1bYDRXOIJkqoFZnE4ys78Smum5rBvyMqQJ0g+4PemmYmfIDmesI
+   0SlqvsVTCKFV4JdsqYrqBCdwfhnJl4XwB40UXyKdMzNNNlk3AC7ULAVFf
+   A==;
+X-CSE-ConnectionGUID: Khp304z5Q9KUNoPd01l3uQ==
+X-CSE-MsgGUID: kYlo37VcR4GEPF+VZHpq1w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11392"; a="44886652"
+X-IronPort-AV: E=Sophos;i="6.15,182,1739865600"; 
+   d="scan'208";a="44886652"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 08:31:09 -0700
+X-CSE-ConnectionGUID: oNBDcvriQd+psnJhCqhhLQ==
+X-CSE-MsgGUID: DNoPf2d4Q2upkSzn2xrY6g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,182,1739865600"; 
+   d="scan'208";a="131719856"
+Received: from inaky-mobl1.amr.corp.intel.com (HELO [10.125.110.4]) ([10.125.110.4])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 08:31:08 -0700
+Message-ID: <c333ba8b-f01f-4413-81d8-af7efbf5454b@intel.com>
+Date: Wed, 2 Apr 2025 08:31:06 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250402161037.GC23033@nxa18884-linux>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/4 v3] cxl/core: Enable Region creation on x86 with Low
+ Mem Hole
+To: Robert Richter <rrichter@amd.com>
+Cc: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+ Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>, ming.li@zohomail.com,
+ linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org
+References: <20250314113708.759808-1-fabio.m.de.francesco@linux.intel.com>
+ <Z91Au5en7r6D7IsW@rric.localdomain> <3301434.hkbZ0PkbqX@fdefranc-mobl3>
+ <Z-Zlrm8emmOtQjhu@rric.localdomain>
+ <ae1e1b6f-3435-44f6-890b-7c7bd013113a@intel.com>
+ <Z-0kzvPAS2JrNiIb@rric.localdomain>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <Z-0kzvPAS2JrNiIb@rric.localdomain>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Apr 03, 2025 at 12:10:37AM +0800, Peng Fan wrote:
-> Hi Sudeep,
+
+
+On 4/2/25 4:51 AM, Robert Richter wrote:
+> Dave,
 > 
-> On Wed, Apr 02, 2025 at 12:46:14PM +0100, Sudeep Holla wrote:
-> >On Wed, Apr 02, 2025 at 08:35:03PM +0800, Peng Fan wrote:
-> >> Hi Sudeep,
-> >> 
-> >> Thanks for reviewing the patch.
-> >> 
-> >> For comments that I am not very clear, I marked with [TODO] for easily
-> >> jump to.
-> >> 
-> >> On Tue, Apr 01, 2025 at 03:15:46PM +0100, Sudeep Holla wrote:
-> >> >On Mon, Mar 03, 2025 at 10:53:22AM +0800, Peng Fan (OSS) wrote:
-> >> >> From: Peng Fan <peng.fan@nxp.com>
-> >> >> 
-> >> >> Add i.MX95 Logical Machine Management and CPU Protocol documentation.
-> >> >> 
-> >> >> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> >> >> ---
-> >> >>  drivers/firmware/arm_scmi/vendors/imx/imx95.rst | 801 ++++++++++++++++++++++++
-> >> >>  1 file changed, 801 insertions(+)
-> >> >> 
-> >> >> diff --git a/drivers/firmware/arm_scmi/vendors/imx/imx95.rst b/drivers/firmware/arm_scmi/vendors/imx/imx95.rst
-> >> >> index b2dfd6c46ca2f5f12f0475c24cb54c060e9fa421..74326bf2ea8586282a735713e0ab7eb90ccce8ff 100644
-> >> >> --- a/drivers/firmware/arm_scmi/vendors/imx/imx95.rst
-> >> >> +++ b/drivers/firmware/arm_scmi/vendors/imx/imx95.rst
-> >
-> >> >> +
-> >> >> +PROTOCOL_MESSAGE_ATTRIBUTES
-> >> >> +~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> >> >> +
-> >> >> +message_id: 0x2
-> >> >> +protocol_id: 0x80
-> >> >> +This command is mandatory.
-> >> >> +
-> >> >
-> >> >For completeness add parameters here for message_id as in the spec as it is
-> >> >referred in the returned value and seems incomplete without it.
-> >> 
-> >> [TODO]
-> >> Sorry, I may not get your point here. You mean below format?
-> >> 
-> >> +------------------+-----------------------------------------------------------+
-> >> |message_id: 0x2
-> >> |protocol_id: 0x80
-> >> |This command is mandatory.
-> >> +------------------+-----------------------------------------------------------+
-> >> |Return values                                                                 |
-> >> +------------------+-----------------------------------------------------------+
-> >> |Name              |Description                                                |
-> >> +------------------+-----------------------------------------------------------+
-> >> |int32 status      |SUCCESS: in case the message is implemented and available  |
-> >> |                  |to use.                                                    |
-> >> |                  |NOT_FOUND: if the message identified by message_id is      |
-> >> |                  |invalid or not implemented                                 |
-> >> +------------------+-----------------------------------------------------------+
-> >> |uint32 attributes |Flags that are associated with a specific function in the  |
-> >> |                  |protocol. For all functions in this protocol, this         |
-> >> 
-> >> message_id is not put in the table, but it is list above just below
-> >> the protocol name. I would prefer to keep current layout and align with
-> >> the MISC and BBM protocol.
-> >>
-> >
-> >I meant why is the input parameter message_id not described in the table,
-> >but is referred in the return values. For completeness, just add it even
-> >though it may match the SCMI spec in terms of input parameter.
+> thank you for your answer.
 > 
-> I will add below only for PROTOCOL_MESSAGE_ATTRIBUTES which refer message_id
-> in the return values. Please raise if you have concern.
+> On 28.03.25 14:10:00, Dave Jiang wrote:
+>>
+>>
+>> On 3/28/25 2:02 AM, Robert Richter wrote:
+>>> On 25.03.25 17:13:50, Fabio M. De Francesco wrote:
+> 
+>>>> Interference? Do you mean that this series would make the driver fail on 
+>>>> other platforms? 
+>>>
+>>> No, other platforms must deal with that specific code and constrains.
+>>>
+>>>>
+>>>> Of course I don't want anything like that. I'm not clear about it...
+>>>> Would you please describe how would this series interfere and what
+>>>> would happen on other platforms?
+>>>
+>>> Other platforms should not care about platform-specifics of others. So
+>>> again, use a platform check and only enable that code there necessary.
+>>> And this requires a well defined interface to common code.
+>>
+>> Hi Robert,
+> 
+>> Can you please share more on the background information and/or your
+>> specific concerns on the possible memory holes in the other
+>> platforms that need to be considered and not covered by Fabio's
+>> code? Let's all get on the same page of what specifics we need to
+>> consider to make this work. Preferably I want to avoid arch and
+>> platform specific code in CXL if possible. Of course that may not
+>> always be possible. Would like see if we can avoid a bunch of #ifdef
+>> X86/ARM/INTEL/AMD and do it more cleanly. But fully understand the
+>> situation first would be helpful to determine that. Thank you!
+> 
+> We implement a "special" case in the main path. This adds unnecessary
+> complexity to the code, makes it hard to maintain, change or even to
+> understand in the future. It becomes more error-prone. Though it is
+> limited to x86 arch, the code runs for all platforms. A reuse for
+> other archs will enable it for all platforms of that archs too.
+> 
+> This general approach to add "special" cases does not scale. We see
+> this already with the "extended linear cache" and now the "low mem
+> hole". While I am fine with all those special cases (AMD address
+> translation is another), we need a proper way to enable and implement
+> those by reducing complexity and with a good isolation. This makes
+> future changes easier and reduces conflicts with other
+> implementations.
+
+I'm more of thinking that if those special cases are detectable rather than a set of ambiguous rules then we might address those quirks in a way better than #ifdefs. For "extended linear cache", it is detected via HMAT spec change. So while only Intel implements this right now on a platform, other vendors can and may in the future. The LMH is more difficult as there are no are no standard ways to enumerate it. Hopefully a set of clear rules will define this. It does look like Dan is trying to get the CXL spec to clearly define this and discussion in the WG is coming in the next couple weeks. The AMD translation can be detected by seeing if certain ACPI callback methods exist right? Is there more required to detect the special translation needs to be applied? But I do agree with the reducing complexity for maintenance and future implementations.  
+
+> 
+> The change of this series does not much, just find a CFMWS region that
+> is unaligned to the EP decoder's range and then just shrink the used
+> SPA range of the EP to match that region. That can be implemented in a
+> very simple way if we introduce a spa_range paramater plus a custom
+> port setup. The generalized part of my address translation part alrady
+> implements this, it can be reused here. To implement LMH support only
+> the following is needed then:
+> 
+>  * add a setup function with a platform check to add a custom
+>    callback,
+> 
+>  * the callback checks for the LMH range and adjusts the spa_range.
+> 
+> The modified spa_range matches then with the region range (no changes
+> needed here). That's it.
+> 
+> I can help making this work.
+
+Code is always welcome :)
+> 
+> I hope that makes sense?
+
+Yes. Appreciate you explaining. thank you!
+> 
+> Thanks,
+> 
+> -Robert
 > 
 
-Ignore this. I see even existing BBM and MISC follow the same pattern for
-standard protocol commands(0x0-0x2). We can fix them all at once if it
-needs to be in the future. For now, it should be fine as is.
-
--- 
-Regards,
-Sudeep
