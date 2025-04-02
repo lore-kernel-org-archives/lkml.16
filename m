@@ -1,135 +1,100 @@
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7453223A9A4
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 15:27:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D017923A9A4;
+	Wed,  2 Apr 2025 15:27:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743607642; cv=none; b=L58lDNfpQsp9jlyBgcHobY6UImBHmS882dErJrb16fno1aj8h8jgz/oBjbAtGyPY5Ob/JLwj2HKl7/2AegY54Ot3IdqW8UDuZEiSHHVT9pXw4DFmH1TLgjL699p1RGQamIHKonvsT1rxswaBctnRRLVBkxrxfYa7KkFEUHb1nGs=
+	t=1743607679; cv=none; b=lDTm1UmQALOiC0cxtT3JXqI3+wG1OF4RZO9zY9dQ2FIkipS8zigxagVzAhRCszOQ8/XWUcrgF4O/jSmL1Ya2lBXcCrOQ39EGxI4oCEcLSBeZr2sofbxa7l2JAI2fDBlKEbyB2u7Wlk/Icd3TDzJd+gLPrgIg+Rxf4hJu7SeJvpU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743607642; c=relaxed/simple;
-	bh=txtat177/PlnHm55yhzLIBUhJ0o9pOS1InRhNIvgap4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VrVCXuxtwZcWJORytIYSdNSN/C0/qAc9zd2v+rjqNVGy8FlLSwFy33aBwrZMISlQXhOr7c/szEWIF92s6apRAHozWKcTU2B9EpDyZcVeti3DMH/slULNfFb852mdvlLDGbeJKcCm1qtdrYEk9INUZ0bj+tjsIijirYGmvXcYrdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=XjwhcKjK; arc=none smtp.client-ip=209.85.222.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
+	s=arc-20240116; t=1743607679; c=relaxed/simple;
+	bh=84wxmOUuZguUPHRF2Z+/DPs+bRzIW2iV+gP7Vzph/AE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DGZR/95yF+vBQlY/LDvNNFKUm5FAt6WneVFhmfVyVqPqSs96/xORz7kQ63m8Zva0iSh+X1YzAaBzdzpQNSWYmLGLt0eui3kbFeZu9BEwCQNtldhRBjmwHslhlntpSxmaR45jgEUFJExW2h3ACSVGWI7N8vR0bAJGejSdjsNB4EU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=irXtTpNe; arc=none smtp.client-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="XjwhcKjK"
-Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-7c5f720c717so102577985a.0
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 08:27:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="irXtTpNe"
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-301a8b7398cso1364871a91.1;
+        Wed, 02 Apr 2025 08:27:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1743607637; x=1744212437; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=swp0ERIz+E6S0fYtrVurk6RuHTXtNkHGNmb4MbsFy44=;
-        b=XjwhcKjKyJuTXM2BEZEMeEt1f2Ol7MbCxJtPm/R+W6D/B7Q6LUs97ezS1rLcVsONwL
-         rCFKiYctSPiBZ4blHEy9+g3BE1gar8WBQDt3wQIGKV8Nn1W/EZXQPX2jmScHeJrX3CBt
-         JqXNopPXcNShqaGWlvJn+k164OVgQ4JwX/J8thzqMAdBbZE8jlM5HUZ0g53iO9es+XVx
-         1kGfhzF3YUVhT1W6TfqoAYZPIt7GUAq91qZHdT4TPvMJXHPMbpLWb4h8mA0a2LqapVp8
-         sAhWIIcXJdnylM2svQpQ12Ig4xiVT+e+UfMT2qfiAkKnBT+oSqfXaQqXO+R7svCOKMoG
-         g8mw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743607637; x=1744212437;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1743607677; x=1744212477; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=swp0ERIz+E6S0fYtrVurk6RuHTXtNkHGNmb4MbsFy44=;
-        b=vP/lUGLU3uJhr8oOELnJzXYy7EYQAxadWQFICIkoUTgzwpKi3z4pYtH+iUZSEcw/JV
-         i/dUuMts9hXuIpf8rUEwR5uQJA6AXpveyKat3qLhpzGGH8AlsDe9gPKLXaGwfri6uN4m
-         NM6G24Z/xBfG2+nk/jBi8jvX3ozkPLHKd/3IFS0qRuGNRzHpIHrTka5pVgx4fsH3OdrY
-         Oe3Kuat3p7zi1Ah+hkX8xfWxCiPab32iwQ49ECL85JsasuMCbEUwcqtIkk2SNwx+/1se
-         XakbbiKrtgMLDB9klQyH7NsmZLnXuI+g3wWymFW5JJTECghD/C0Rf21kykuMxr+hNM6G
-         NW+g==
-X-Forwarded-Encrypted: i=1; AJvYcCVjnZ3TFiiLxzIUmbcdI5rtqgNPLgi9CcIPYMFyC3CqUeXarfIgSK/W7sAE1DFSq3M+YS4YNYeDdbZOXaA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx3rGE1xenmw6XLudt8qzO4lhKXKBosq25gSq3s+K/SDfrNGbcb
-	55tJl0pHoSkC89mKc8Yf/57bXnBZ7Zo0b+U2dqWEZUELvvIPLk6szKGIIybjwxhSwWehpMDV0A0
-	H
-X-Gm-Gg: ASbGncup4nH160JRoqQSl14uOJO+4mVTZGwTLZ2EOaFLzrwpnxcBTkyJrEaowXBSY4t
-	4e8wo2Qja7Oc76qseppzQzM2V06Fx7nixHLic+xnIoc6KDYeONXS0qzSfkU8dxyS3qOhINuNgWh
-	BC41i78JM6Mi9qkA6HngHhsbhm3vGy6NuGpmQj1srV9a5CMtpiPdhaRbg5fROB5hdngSm+q5xOb
-	blLqF0W0SJezKHri9YvLU8wqpcayZL5l3Vw721Oy93VCKHOQca2zLFjW1JYUdaEY3aDnfFouJBP
-	sO2DH2ZXa3Y0h8jw/ymEQV0uF9soU24TZg7CSkPkr34=
-X-Google-Smtp-Source: AGHT+IHJsyMfk1EJsf13VfMIMZgUAxHzVAUrgG99uJym7wCUyl4f8lI2YuB3eaEGFaakifl2T8iN8g==
-X-Received: by 2002:a05:620a:2806:b0:7c5:e8c5:a307 with SMTP id af79cd13be357-7c768236b36mr334604985a.9.1743607637061;
-        Wed, 02 Apr 2025 08:27:17 -0700 (PDT)
-Received: from localhost ([2603:7000:c01:2716:da5e:d3ff:fee7:26e7])
-        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6eec9798807sm74840846d6.116.2025.04.02.08.27.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Apr 2025 08:27:16 -0700 (PDT)
-Date: Wed, 2 Apr 2025 11:27:15 -0400
-From: Johannes Weiner <hannes@cmpxchg.org>
-To: Michal Hocko <mhocko@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-	Rik van Riel <riel@surriel.com>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Muchun Song <muchun.song@linux.dev>,
-	cgroups mailinglist <cgroups@vger.kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>, Michal Hocko <mhocko@suse.com>
-Subject: Re: [PATCH] memcg, oom: do not bypass oom killer for dying tasks
-Message-ID: <20250402152715.GA198651@cmpxchg.org>
-References: <20250402090117.130245-1-mhocko@kernel.org>
+        bh=84wxmOUuZguUPHRF2Z+/DPs+bRzIW2iV+gP7Vzph/AE=;
+        b=irXtTpNeG+aQ0j8bRJdbcftD4NXuArDAib5qutyV4sgUKk7/3/lQ6YJCKivSiPJa9S
+         qA0YSjFb6L3lvc+MYM1Ma/bNd4HLrclY0QEpo/MRd/dsEeKcRmnYJJZWQa5BZF9s396C
+         th3QJD8LJFDOk9Hku36iZzbs3KaPU3lE1PTL68tGft5UKDu/0yL0W9/AYRaFBRfo+ygV
+         7Yve7NY7FUXKlwiYWzR/Sh4jDQAxwVxlzPopRnLL+kC1UX1+f0V7zmMWvbj7pCiMMgE+
+         BlB3h+LXPb804fY9cFFs1FprrZA5s+gC1Q+ChIFGNFBl6H85gBom0C74qKCCjBIQ6/HS
+         rsTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743607677; x=1744212477;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=84wxmOUuZguUPHRF2Z+/DPs+bRzIW2iV+gP7Vzph/AE=;
+        b=B3RnXckP/vkY2BryAt2m7TMGAvk4/3Y68meHc7LGHPGisvMExne8S4BbJ1QXQYILb5
+         AfGe8KRcWOpJfz3ZdeFuP4wuGtK4djzYB1ZDCiP3bh6PLyKf1TNDhxDKrqcLPyUfYp6+
+         S1Ro5FSpFmjYMUk/AUJCPP2r9WET7fFA6KuRe+eT+Yzo9F0g0XrPb3uKcqb9qyKWuVX3
+         oALpAlokekCCp1S8HKVz9OzLSk8QVQS9J88XnGQ+uGC+MR98kJTUe81NHdpccPlQ33oQ
+         5FC0vY/PzhMb6Z2p+OiKGaTNa6ZazlIyAz47STob38ilA25v5oCbNCuq3Pn39SMM/xXg
+         Xn0w==
+X-Forwarded-Encrypted: i=1; AJvYcCV57gLl6zKXTfRbWWbOn7uh65F3NSHRrTGkfFYD+Ca1KHDfo/jzExa7tptnB92R4IUfMFezR169BhSPpCM=@vger.kernel.org, AJvYcCVZGJqZ5LkD0VxUjrY4E0zJ2CbCys6innNF56t+dSVfOqyeqgarhelI3x4yReu14/t/wDCUe8mw5fYN0FKTAUc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YylnAzWShVsb3ATlJITp9SIf7MZq0N6Ip89FocndryQj1oEET/1
+	+H51cojci0W7/+mEL5lecwrmjHAAindex882SmaBV5iUP6zOpiCqN+SPUeIB58/GS7rC7F5N5T9
+	ZAXvZaavQaQxVAfaPdvd500R4mpQ=
+X-Gm-Gg: ASbGncthVB+nQrV65BQGAJLDHEBwRbTV2R0ngy8yvvnfkwH9VnCNyXPtUiZb7Wlq9jL
+	lepTdUXoZOjf+NlvyyHXRMrH00VHCrPWRLSeAsoYtkP66ZDlMgkPq0W2PJZurVxrsyfnxtQZoeT
+	BKAbz5DWQqV/e4FUw1+oCpDizptg==
+X-Google-Smtp-Source: AGHT+IFgu8WJu4ETgzkoPIm09BkqQZYs+/o4m6q+OoOBxfa6QeCI+cNBBW7zBSkFSqOaR/bzrCPSWdOOUKW+krWRqlY=
+X-Received: by 2002:a17:90b:4ad2:b0:2ee:acea:9ec4 with SMTP id
+ 98e67ed59e1d1-30562e636b7mr3562139a91.3.1743607677054; Wed, 02 Apr 2025
+ 08:27:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250402090117.130245-1-mhocko@kernel.org>
+References: <20250401221205.52381-1-ojeda@kernel.org> <D8VPGBN60E61.1Z48FQW6TL3A@proton.me>
+ <CANiq72mdvnHvWbVNQbiXSRxd1xrF+A=v0RdJO74xeY3HyhRmcg@mail.gmail.com> <CAJ-ks9nAAcoJoFF+qNPbhsM32kOh9u+LGYUwFN_n9qqudB6YhA@mail.gmail.com>
+In-Reply-To: <CAJ-ks9nAAcoJoFF+qNPbhsM32kOh9u+LGYUwFN_n9qqudB6YhA@mail.gmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Wed, 2 Apr 2025 17:27:43 +0200
+X-Gm-Features: AQ5f1JoRtbxlEpwdukshR1-PkgSkh2vofg1jzjX7AuGCKpYamwkZP-wPM1fWZQo
+Message-ID: <CANiq72k36Tvwbzkg6nRdxB8VNRHLf8QzLeCXZq7sEPewccsWNw@mail.gmail.com>
+Subject: Re: [PATCH] rust: clean Rust 1.86.0 new `clippy::needless_continue` cases
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: Benno Lossin <benno.lossin@proton.me>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, patches@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 02, 2025 at 11:01:17AM +0200, Michal Hocko wrote:
-> From: Michal Hocko <mhocko@suse.com>
-> 
-> 7775face2079 ("memcg: killed threads should not invoke memcg OOM killer") has added
-> a bypass of the oom killer path for dying threads because a very
-> specific workload (described in the changelog) could hit "no killable
-> tasks" path. This itself is not fatal condition but it could be annoying
-> if this was a common case.
-> 
-> On the other hand the bypass has some issues on its own. Without
-> triggering oom killer we won't be able to trigger async oom reclaim
-> (oom_reaper) which can operate on killed tasks as well as long as they
-> still have their mm available. This could be the case during futex
-> cleanup when the memory as pointed out by Johannes in [1]. The said case
-> is still not fully understood but let's drop this bypass that was mostly
-> driven by an artificial workload and allow dying tasks to go into oom
-> path. This will make the code easier to reason about and also help
-> corner cases where oom_reaper could help to release memory.
-> 
-> [1] https://lore.kernel.org/all/20241212183012.GB1026@cmpxchg.org/T/#u
-> 
-> Suggested-by: Johannes Weiner <hannes@cmpxchg.org>
-> Signed-off-by: Michal Hocko <mhocko@suse.com>
+On Wed, Apr 2, 2025 at 3:59=E2=80=AFPM Tamir Duberstein <tamird@gmail.com> =
+wrote:
+>
+> Rather than disabling globally, why not `#[expect]` these instances
+> with a reason?
 
-Thanks, yeah, the investigation stalled out over the new years break
-and then... distractions.
+That is an option sometimes, yeah, but in this case, writing those
+lines is also a burden -- one that is, I would say, worse than just
+using `()`.
 
-I think we'll eventually still need the second part of [2], to force
-charge from dying OOM victims, but let's go with this for now.
+It would also need to be `allow` here, not `expect`, because older
+versions do not complain, which makes it even worse...
 
-Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+So it is all about what a lint gives us in exchange of those false
+positives, and about how much time people would need to spend on it. I
+have always supported adding lints (I think I added this one, long
+ago, in fact), but I don't want that we overdo it either, so I am
+happy disabling it if it is going to be too painful.
 
-[2] https://lore.kernel.org/all/20241212183012.GB1026@cmpxchg.org/
-
-> ---
->  mm/memcontrol.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index 7b3503d12aaf..9c30c442e3b0 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -1627,7 +1627,7 @@ static bool mem_cgroup_out_of_memory(struct mem_cgroup *memcg, gfp_t gfp_mask,
->  	 * A few threads which were not waiting at mutex_lock_killable() can
->  	 * fail to bail out. Therefore, check again after holding oom_lock.
->  	 */
-> -	ret = task_is_dying() || out_of_memory(&oc);
-> +	ret = out_of_memory(&oc);
->  
->  unlock:
->  	mutex_unlock(&oom_lock);
-> -- 
-> 2.49.0
+Cheers,
+Miguel
