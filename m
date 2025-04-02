@@ -1,117 +1,133 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BE621F03CA
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 17:46:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64490170A13
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 17:47:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743616021; cv=none; b=BMkex0bOtsKGNH6Xb0ydZ+v/4JM3AMGbjleRMrXb61/Cg+0NBwLJ0d4MFyjvfhfvR8NlI7F2tmnhLSnlnXFthwMjo65FR0TdPqe8OMgNmMc64GgADWiKKQN0IN7Myk+pI+Ua11aBdencuEvJasvPrtEwQltqdbyEAeCKZf8caRU=
+	t=1743616035; cv=none; b=g9kV4zSbLWOj24w+/4VNFd2XgU5GIV9Oupm30kHJRpcLbuNiwEIRFxBO9OPoR7iDDbLh1K74lBK12htv+72uVDedQAgavgHusSF2HGC7dmLm6fNjdHSn+6fLSSvqNmKNNs2sMIZD5QvcmEN/oaYo92oE5oHMBM/l5B9FATUcWiQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743616021; c=relaxed/simple;
-	bh=EOlZcnFOrqCflQFwOYTy+1h7jZlZEe2uY8Lc98YJXQc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tjeS0KQWrjin4eqL2U/km18/gG+wEfL/9+dd1aMx2Jk2LxuJfdJtPZyGNAMyj2R6Iu1ZvnZTWyrcWmmmUVpWOpxASpm5O++96UyatRuAuCTTU0LvyfXU0LDfVTUUkkCKEUVMyjBtlOMylFXLWfrmHrxj87B4g0y+hwHZxXvKJ78=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=iGeuX9i8; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1743616035; c=relaxed/simple;
+	bh=DaC4xIu8S920LD9rwCqJXW5v8vFKT9MSwvYIoasRtA8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=ONZfUW7yA6Sfwzf6lO8GkhD55bY9+EZXLDYnSd7gxD56KiJx5QkaBaE3+L90Ry011hCdvpPbYP9B1/pgqq9+mlXO4guEI0M5GWgprlfQRqvy0ep15Bq8lEiAOumo8nvevaBPlHCNQ6WyK+wnkoWvnFbidVRM/2YgUTvRmWO8vr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=K64Walcm; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="iGeuX9i8"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5eb92df4fcbso178954a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 10:46:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1743616017; x=1744220817; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=xorHSeXHZOAo+fDlPKYms7iJ4xhfFELkMJgrAoSH+BU=;
-        b=iGeuX9i8A5GO+tyZhqym/5POB6RZ/hU3tBxXHU0f1J3BYeqvd7eVsYybr05+56bh3M
-         6esQBHs4AOsdoBrCNjkCU6R4RrNUzqcdLlOOU33NBhDLnOGZUO5A+6kmyWGBPJRrW6mL
-         ngB7obD9Fn6A1XiKjT3d8nQAB7c5CwziHPFro=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743616017; x=1744220817;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xorHSeXHZOAo+fDlPKYms7iJ4xhfFELkMJgrAoSH+BU=;
-        b=Xuge8glGwu8uay8I1v5WXu/55F1/BfHBINWyuaTGnliba6qogQhAjjVH39ZEQYOD3F
-         edlHDHluQgc2t4TEYvPibDL+Ngo+oFrJfzpzYET1xqwsBHeU9ro5RYq8481femZxdvDU
-         9FeuXYh28XMFoUMe4NqNW9ySfuHUcxhieK9EK9c14JoAajx/1EUEnqMbhhg+BB7oLHWO
-         /Cky3kUKvAADcuMhEzS9QTSesY4gbZYR3goSTBHgKqn/Mgr+S8YDJHY8uHgSYfGPW+5F
-         YzyovNXrwMLYVEK23UjWBgK0LuIzN5Ie66EnBaSZR+4BZgqhFSS4N/lrBsqSUn6yIGZ3
-         VP1A==
-X-Gm-Message-State: AOJu0YxjS1j6dDJBIvX4glD0XjBUHcZEks9615pODGsI0AKr3wjqWr/9
-	Ej7kIKlmKC5pe9OCMJN9HW9idZR3JtgDz/HFDHVA7lnd+kl48GdQFrF3oxri3ddx78UIJtBldJV
-	Dd2A=
-X-Gm-Gg: ASbGnctTUoKxPSnKVhD0ZAhjKagA7dzpmlKT3CLCygiY8fKesooDEVB6h/g4bfhooOp
-	hH0SYlWqfivijishiW1Yck14ja4CQLjwdr/DafvVoW8q7m5SXDRTbxu0Vp6fn9vCfbzG6LrXwRv
-	wJN5zGjMw3a5Kdf63PY3Chu1OU9ROgbmSpuWFbxcl6kDLkxr/ULYHn4rYNzW0ThI5np53FNjx6P
-	CKLUx6Ed4lzN4LHJIqon0QIscK21tqIPeuryH360ySx3MOKipDUbE+R6mmUxLMib/e8g+xP/hsC
-	G/GOxlHJA5aZavhbV/dhwwjvnRw6VjCSPwfDasac3UgWdkvdwjbPk90sWpkSH77uxB3KRM/auia
-	9RI+fsYxXg8nYlWtTTZTLx33u3tpsTQ==
-X-Google-Smtp-Source: AGHT+IHGn+BF0j8rwQeuYN2LSfPqTGn4tvp+Mewc3w9PiI4CALVOiiLo+GNhnsV9yE0qeBS3h/aDbw==
-X-Received: by 2002:a05:6402:4310:b0:5e0:8c55:536 with SMTP id 4fb4d7f45d1cf-5edfcbd2529mr16290720a12.4.1743616017414;
-        Wed, 02 Apr 2025 10:46:57 -0700 (PDT)
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com. [209.85.218.42])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5edc16ef7a7sm9006500a12.36.2025.04.02.10.46.55
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Apr 2025 10:46:55 -0700 (PDT)
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ac2dfdf3c38so4024566b.3
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 10:46:55 -0700 (PDT)
-X-Received: by 2002:a17:907:7f87:b0:ac3:f0b7:6ad3 with SMTP id
- a640c23a62f3a-ac738c1b69fmr1516270266b.40.1743616015142; Wed, 02 Apr 2025
- 10:46:55 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="K64Walcm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743616032;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Ue9UDRpcZFfRT6ZZ3d1v/ptuQfesmwypehS6C96747U=;
+	b=K64WalcmOYg5l/C5+o4Cdfc1KxfFthfq7JkxR60vu0Oc0De0imlDfLU/7YruUgkDFBiJiG
+	IKPnKZb4PO2XFSFRl/m70YuoqV1N6CGXSvxEzzT0SO8x4pj3rz2eoKLK4mRBmy4IuGlhXq
+	m/Is/YT+6wwjEvjNGLV43zytCb8RBHU=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-433-kw_GrFiVMlSP8i_dIaLUnA-1; Wed,
+ 02 Apr 2025 13:46:45 -0400
+X-MC-Unique: kw_GrFiVMlSP8i_dIaLUnA-1
+X-Mimecast-MFC-AGG-ID: kw_GrFiVMlSP8i_dIaLUnA_1743616003
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2ECDF19560B3;
+	Wed,  2 Apr 2025 17:46:43 +0000 (UTC)
+Received: from [127.0.1.1] (unknown [10.44.32.79])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 5EA6C180174E;
+	Wed,  2 Apr 2025 17:46:36 +0000 (UTC)
+From: Sergio Lopez <slp@redhat.com>
+Date: Wed, 02 Apr 2025 19:46:01 +0200
+Subject: [PATCH v2 2/2] drm/virtio: add VIRTGPU_PARAM_HOST_PAGE_SIZE to
+ params
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250401225811.008143218@goodmis.org> <20250401225842.597899085@goodmis.org>
- <CAHk-=wifCDa6FfRKzeioYuEqJFTeXnYQ1DpeuYsmmn59NWuakQ@mail.gmail.com>
- <20250402125548.02cc57d0@gandalf.local.home> <20250402130337.5de5a8cf@gandalf.local.home>
- <20250402131431.218d3458@gandalf.local.home> <CAHk-=wh8=QAC0jjcjDRnmsmd2xDf97j8h25=aSFGeh9x+1X8UA@mail.gmail.com>
- <20250402134030.26a9b141@gandalf.local.home>
-In-Reply-To: <20250402134030.26a9b141@gandalf.local.home>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Wed, 2 Apr 2025 10:46:37 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjAW=WHnmP3+B8dF_U91FEzkesUW0JPGMsip2CJ9e0hgw@mail.gmail.com>
-X-Gm-Features: AQ5f1JpSafEjStqfGbLJ11HrwQUxXblIlVdAsWMZyIwfr8HJB2qb6iMxdcPchKA
-Message-ID: <CAHk-=wjAW=WHnmP3+B8dF_U91FEzkesUW0JPGMsip2CJ9e0hgw@mail.gmail.com>
-Subject: Re: [PATCH v5 3/4] tracing: Use vmap_page_range() to map memmap ring buffer
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Vincent Donnefort <vdonnefort@google.com>, Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, 
-	Jann Horn <jannh@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250402-virtio-gpu-host-page-size-v2-2-0afdc8c16cb9@redhat.com>
+References: <20250402-virtio-gpu-host-page-size-v2-0-0afdc8c16cb9@redhat.com>
+In-Reply-To: <20250402-virtio-gpu-host-page-size-v2-0-0afdc8c16cb9@redhat.com>
+To: David Airlie <airlied@redhat.com>, Gerd Hoffmann <kraxel@redhat.com>, 
+ Gurchetan Singh <gurchetansingh@chromium.org>, 
+ Chia-I Wu <olvaffe@gmail.com>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ Simona Vetter <simona@ffwll.ch>, "Michael S. Tsirkin" <mst@redhat.com>, 
+ Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
+ =?utf-8?q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
+ Gurchetan Singh <gurchetansingh@chromium.org>, 
+ Rob Clark <robdclark@gmail.com>, 
+ Dmitry Osipenko <dmitry.osipenko@collabora.com>
+Cc: dri-devel@lists.freedesktop.org, virtualization@lists.linux.dev, 
+ linux-kernel@vger.kernel.org, Sergio Lopez <slp@redhat.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1770; i=slp@redhat.com;
+ h=from:subject:message-id; bh=DaC4xIu8S920LD9rwCqJXW5v8vFKT9MSwvYIoasRtA8=;
+ b=owEBbQKS/ZANAwAIAfRpJ40vDAI1AcsmYgBn7Xftkj6yT9EYp57Tc7Bmv1zyoPKTdeDBQ7qkl
+ d5Bd7CqT4+JAjMEAAEIAB0WIQS+1fz3US2GgJFC6KL0aSeNLwwCNQUCZ+137QAKCRD0aSeNLwwC
+ NRArD/0f+7eo5bUxWQvbJN9KrMRdB2fyPQ13i4nJAfYT2e5NlYqIOhBo+y/gR947CahgRByLNV8
+ jx8rTk7ec5IxbSV91+/+vY0HdH7yYPCfZv9cqTikzbYNU/vKRPJnoz3yLjJy/DxOFKIl5VmUzZu
+ lCGqhAcV5pUkDcOZIGasG8w3Ep4yKTb5nHFMbtVr9Wf1lijRwgFwVZ5IqcLQ3LlSwzQID1WaNn0
+ N0bXN0mpScF2yetVddZSZWm/1mdUyaYpa6xT2NTy9kSEZlSNL9lyTp26q0yngn/O5OZ44t1KVdj
+ KpuRWNbdQZePkyV2yO8fgRRxFYr4yWzIyhnul27ocIi8cUIIV8TjLGhro930WzpXpW+MpH9Edv1
+ sFkdhGn1Az2kHAqVrvucxuZGc3MUIx81KQKXOQLGIUrDkKjdN+iQxdlu1vUKP3FoSQnVLwxxZae
+ HwcbB1dO4Wh2FjClL6uGFKWjtT/X1PUAq64opjQxpMzeovGquNOPdjzr0yeWnOpICLrXGaCZrsf
+ hkqcoKur8y7PKCIHiynf/TEONEmBpkv+MG6MAdohfF0l38IM6ALTOykqyizM3Fk/iLqMQK+9IZd
+ bKWy/z1Raq7iOS3z42kPCMv5aDJvCibrOSat/d25u4ZIKy6upBMx2qjqxOqhHlJBOeJHa13i/tA
+ 5FpFGFmlEcviBYQ==
+X-Developer-Key: i=slp@redhat.com; a=openpgp;
+ fpr=BED5FCF7512D86809142E8A2F469278D2F0C0235
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-On Wed, 2 Apr 2025 at 10:39, Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> This has nothing to do with admins. This would only occur if the kernel
-> itself created a buffer from some random physical address and then tried to
-> mmap it to user space (which would be a bug).
+Add VIRTGPU_PARAM_HOST_PAGE_SIZE as a param that can be read with
+VIRTGPU_GETPARAM by userspace applications running in the guest to
+obtain the host's page size and find out the right alignment to be used
+in shared memory allocations.
 
-Do *not* try to check for bugs like that with virt_addr_valid().
+Signed-off-by: Sergio Lopez <slp@redhat.com>
+---
+ drivers/gpu/drm/virtio/virtgpu_ioctl.c | 5 +++++
+ include/uapi/drm/virtgpu_drm.h         | 1 +
+ 2 files changed, 6 insertions(+)
 
-It literally snakes debugging harder.
+diff --git a/drivers/gpu/drm/virtio/virtgpu_ioctl.c b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
+index c33c057365f85a2ace536f91655c903036827312..405203b3c3847a8b318a7118aa34356c839d249e 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_ioctl.c
++++ b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
+@@ -117,6 +117,11 @@ static int virtio_gpu_getparam_ioctl(struct drm_device *dev, void *data,
+ 	case VIRTGPU_PARAM_EXPLICIT_DEBUG_NAME:
+ 		value = vgdev->has_context_init ? 1 : 0;
+ 		break;
++	case VIRTGPU_PARAM_HOST_PAGE_SIZE:
++		if (!vgdev->has_host_page_size)
++			return -EINVAL;
++		value = vgdev->host_page_size;
++		break;
+ 	default:
+ 		return -EINVAL;
+ 	}
+diff --git a/include/uapi/drm/virtgpu_drm.h b/include/uapi/drm/virtgpu_drm.h
+index c2ce71987e9bb816d13a300679336cb756f1cbcf..505f87263a15f55302d7134335bebd91ff4cdae3 100644
+--- a/include/uapi/drm/virtgpu_drm.h
++++ b/include/uapi/drm/virtgpu_drm.h
+@@ -98,6 +98,7 @@ struct drm_virtgpu_execbuffer {
+ #define VIRTGPU_PARAM_CONTEXT_INIT 6 /* DRM_VIRTGPU_CONTEXT_INIT */
+ #define VIRTGPU_PARAM_SUPPORTED_CAPSET_IDs 7 /* Bitmask of supported capability set ids */
+ #define VIRTGPU_PARAM_EXPLICIT_DEBUG_NAME 8 /* Ability to set debug name from userspace */
++#define VIRTGPU_PARAM_HOST_PAGE_SIZE 9 /* Host's page size */
+ 
+ struct drm_virtgpu_getparam {
+ 	__u64 param;
 
-You're much better off getting an oops,. and then you have stack
-traces, distro bug trackers, and various other automated tools that
-give you information.
+-- 
+2.48.1
 
-Trying to "validate" buggy data is crazy. It's absolutely the opposite
-of safety. It's going to cause more bugs, it's going to only work for
-the validation scenarios you thought about, and it's going to make it
-harder to debug the cases it actually catches.
-
-And if you are trying to catch kernel bugs, *any* data could be that
-buggy data. So the whole concept is insane.
-
-Yes, you could make every single line be a "WARN_ON()" with some
-random check for the particular data you are using.
-
-Or you could just write good solid code that is actually readable and
-maintainable, and doesn't have random pointless checks in it.
-
-          Linus
