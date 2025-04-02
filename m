@@ -1,147 +1,92 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from irl.hu (irl.hu [95.85.9.111])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2310C19ADBF
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 17:03:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB90617E8E2
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 17:04:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.85.9.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743613402; cv=none; b=eW0J8cvphOtqGz4+PMe+c9y/xzvI+5jW342VNEpCWqrRVujaSaWapyx3xgNgqn1pId0vg4x5zSjOeJggoRSsB2IuviMNGlEkF5ypv+rDBQaauJQZ7H5mL3RLFLBAKIShHepJv5RJBs9eXn8IX+iEohkPdyNiN7EYpMndyjqqkWI=
+	t=1743613467; cv=none; b=bCEu69bUyaozQ4bOiRAORpkU6Xwpd5nB2u7vQMqzhHm/BjFInIHaLJUtspIE8A4PemQVCf4zb1SVD5nc3ftnHcnIUVqxU1/bHSzOBpN/Y5tFu2bzrgjD3qyg1J8pZMw+qMgc1Apu0h9Dq5tlud86c4YrrGR3XdgtKQkFrtyxYDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743613402; c=relaxed/simple;
-	bh=UPXAbSFM46LvItdz6K36Hv59vGh9Nkgg2+ffhWuDgFQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VcgtNt2AooUhfwN8zfZtX4wLctK5vMlhv7K2PmvHUtVgauERsNlp27BRZ2YIJFfvWfK1ddXsuqSzFbBmqJqGXiYwFz0rJPL973B1zUuYSP710hhvB7ljLURHCrIOZILNt2V2kULBM9Eq1wcxabvZ9UcqiMbhI2ircdakDE0zc9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=rWFGI8P8; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=aha205K+; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=rWFGI8P8; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=aha205K+; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="rWFGI8P8";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="aha205K+";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="rWFGI8P8";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="aha205K+"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 4B9BB1F38E;
-	Wed,  2 Apr 2025 17:03:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1743613399; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fa6YlXKodz8uE2B17ypH6DPH4OLlDWUm8hFyF5FIY9Y=;
-	b=rWFGI8P80VWPbDK82CvkzpgfMRqhsRT66++IButprgXUkvHplkNVR+XAfce703NyqRxfcm
-	o2Mnvu1xS4IhZbCaKlE9zWZo3KFT7U8zBPJKZlJW82qj5MbU9BRPUik8tnzKz6atXEJ7wa
-	5jeb912wh//dS+1kIcc3XIVtg3IOkQA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1743613399;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fa6YlXKodz8uE2B17ypH6DPH4OLlDWUm8hFyF5FIY9Y=;
-	b=aha205K+PISVQemmiSHd444KuIKNhvoqvLTkoXs+lESA7oYt3e01QexR7UdiM4dzX9Rahi
-	zE4x/84orzT5wUAw==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1743613399; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fa6YlXKodz8uE2B17ypH6DPH4OLlDWUm8hFyF5FIY9Y=;
-	b=rWFGI8P80VWPbDK82CvkzpgfMRqhsRT66++IButprgXUkvHplkNVR+XAfce703NyqRxfcm
-	o2Mnvu1xS4IhZbCaKlE9zWZo3KFT7U8zBPJKZlJW82qj5MbU9BRPUik8tnzKz6atXEJ7wa
-	5jeb912wh//dS+1kIcc3XIVtg3IOkQA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1743613399;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fa6YlXKodz8uE2B17ypH6DPH4OLlDWUm8hFyF5FIY9Y=;
-	b=aha205K+PISVQemmiSHd444KuIKNhvoqvLTkoXs+lESA7oYt3e01QexR7UdiM4dzX9Rahi
-	zE4x/84orzT5wUAw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id BDBED137D4;
-	Wed,  2 Apr 2025 17:03:18 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id d/qQK9Zt7Wc2XwAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Wed, 02 Apr 2025 17:03:18 +0000
-Date: Wed, 2 Apr 2025 19:03:10 +0200
-From: Oscar Salvador <osalvador@suse.de>
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@redhat.com>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-	mkoutny@suse.com, Dan Williams <dan.j.williams@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: Re: [PATCH 0/2] Implement numa node notifier
-Message-ID: <Z-1tzl2NqqRUYyU-@localhost.localdomain>
-References: <20250401092716.537512-1-osalvador@suse.de>
- <78c976ba-1eaf-47b7-a310-b8a99a3882e2@suse.cz>
+	s=arc-20240116; t=1743613467; c=relaxed/simple;
+	bh=Gc7Ragp9iuXOBeoHG5WqCjVo9Y/rcXtltf26po39z+U=;
+	h=From:To:Cc:Subject:Date:Message-ID:Mime-Version:Content-Type; b=lNpqaVI67TppccPpNMmnMClnnXTh8iiRrq307C7euFk6wFxWWFwPkMdcecEjGDxyTvEbTUzq7s6Wkc0wk0eaUUmzxfWdXBWGw4LVRqYF0klGXX6TKmhhgFDH0p9dhzM9gX7+4f6eeyotQRa7sM8eTaTYp9/iO6RCTqcOkdgD3zI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu; spf=pass smtp.mailfrom=irl.hu; arc=none smtp.client-ip=95.85.9.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=irl.hu
+Received: from fedori.lan (51b692a2.dsl.pool.telekom.hu [::ffff:81.182.146.162])
+  (AUTH: CRAM-MD5 soyer@irl.hu, )
+  by irl.hu with ESMTPSA
+  id 0000000000080D7C.0000000067ED6E16.0008406E; Wed, 02 Apr 2025 19:04:21 +0200
+From: Gergo Koteles <soyer@irl.hu>
+To: Harry Wentland <harry.wentland@amd.com>,
+  Leo Li <sunpeng.li@amd.com>, Rodrigo Siqueira <siqueira@igalia.com>,
+  Alex Deucher <alexander.deucher@amd.com>,
+  =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+  David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+  Alex Hung <alex.hung@amd.com>,
+  Mario Limonciello <mario.limonciello@amd.com>,
+  Tom Chung <chiahsuan.chung@amd.com>,
+  Sunil Khatri <sunil.khatri@amd.com>,
+  Aurabindo Pillai <aurabindo.pillai@amd.com>,
+  Hersen Wu <hersenxs.wu@amd.com>, Melissa Wen <mwen@igalia.com>,
+  Maxime Ripard <mripard@kernel.org>,
+  Dmitry Baryshkov <lumag@kernel.org>,
+  Thomas Zimmermann <tzimmermann@suse.de>,
+  Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Cc: amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+  linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
+  Gergo Koteles <soyer@irl.hu>
+Subject: [PATCH] drm/amd/display: do not copy invalid CRTC timing info
+Date: Wed,  2 Apr 2025 19:03:31 +0200
+Message-ID: <24439c13a014e1cd200785db6f3dcf08f4773eb3.1743612701.git.soyer@irl.hu>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <78c976ba-1eaf-47b7-a310-b8a99a3882e2@suse.cz>
-X-Spam-Level: 
-X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	TAGGED_RCPT(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	MISSING_XM_UA(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[linux-foundation.org,redhat.com,kvack.org,vger.kernel.org,gmail.com,suse.com,intel.com,huawei.com];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,localhost.localdomain:mid]
-X-Spam-Score: -2.80
-X-Spam-Flag: NO
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Mime-Autoconverted: from 8bit to 7bit by courier 1.0
 
-On Wed, Apr 02, 2025 at 06:06:51PM +0200, Vlastimil Babka wrote:
-> What if we had two chains:
-> 
-> register_node_notifier()
-> register_node_normal_notifier()
-> 
-> I think they could have shared the state #defines and struct node_notify
-> would have just one nid and be always >= 0.
-> 
-> Or would it add too much extra boilerplate and only slab cares?
+Since b255ce4388e0, it is possible that the CRTC timing
+information for the preferred mode has not yet been
+calculated while amdgpu_dm_connector_mode_valid() is running.
 
-We could indeed go on that direction to try to decouple
-status_change_nid from status_change_nid_normal.
+In this case use the CRTC timing information of the actual mode.
 
-Although as you said, slub is the only user of status_change_nid_normal
-for the time beign, so I am not sure of adding a second chain for only
-one user.
+Fixes: b255ce4388e0 ("drm/amdgpu: don't change mode in amdgpu_dm_connector_mode_valid()")
+Closes: https://lore.kernel.org/all/ed09edb167e74167a694f4854102a3de6d2f1433.camel@irl.hu/
+Closes: https://gitlab.freedesktop.org/drm/amd/-/issues/4085
+Signed-off-by: Gergo Koteles <soyer@irl.hu>
+---
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-Might look cleaner though, and the advantatge is that slub would not get
-notified for nodes adquiring only ZONE_MOVABLE.
-
-Let us see what David thinks about it.
-
-thanks for the suggestion ;-)
-
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+index bae83a129b5f..0eb25cdcb52f 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+@@ -6500,12 +6500,12 @@ decide_crtc_timing_for_drm_display_mode(struct drm_display_mode *drm_mode,
+ 					const struct drm_display_mode *native_mode,
+ 					bool scale_enabled)
+ {
+-	if (scale_enabled) {
+-		copy_crtc_timing_for_drm_display_mode(native_mode, drm_mode);
+-	} else if (native_mode->clock == drm_mode->clock &&
+-			native_mode->htotal == drm_mode->htotal &&
+-			native_mode->vtotal == drm_mode->vtotal) {
+-		copy_crtc_timing_for_drm_display_mode(native_mode, drm_mode);
++	if (scale_enabled || (
++	    native_mode->clock == drm_mode->clock &&
++	    native_mode->htotal == drm_mode->htotal &&
++	    native_mode->vtotal == drm_mode->vtotal)) {
++		if (native_mode->crtc_clock)
++			copy_crtc_timing_for_drm_display_mode(native_mode, drm_mode);
+ 	} else {
+ 		/* no scaling nor amdgpu inserted, no need to patch */
+ 	}
 -- 
-Oscar Salvador
-SUSE Labs
+2.49.0
+
