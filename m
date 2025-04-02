@@ -1,87 +1,127 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AACE15CD46
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 17:55:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743616541; cv=pass; b=g7t1nt/hzl12QOZix2VZG7wp1a5pjQ2zZNrScfBstBZ8RStjnuucBW1hkfI9inonskUVAHFeJVWctFwGEN6/5zGbBg/kZYyiLfcvL5bdz65VM/R9NLuGCpRL7BozA8gzcvEEYxBUjeDp++b6SmnyfzNsC+OGMvIX9qGwFLiRMcA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743616541; c=relaxed/simple;
-	bh=CV6J3vXD80KJhXSYLkq+FWpmzjVg9m/5fRIn9KJLwUI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qrsRYJfN/Ks3eW+wfSdM++iY5utOCQPCqjXQqmXQJbTjYTtymHRb7myz31Ib2Gd/+3UYJ3U6f8qsbXYITCslZ5HMOYTSE3iMbyPEgJ507LncVcdl2lv48ElmoWrh2S0RJMV/BOjauO3AXXObf8Xp/H0akirP7n7HDYP+tgjzy/8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b=O+GxSyYZ; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CAFF198833
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 17:58:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743616718; cv=none; b=Dj0pnJeydv+SoX7RAc12CUuIJRy9qy/OXijfzOMGHnnus5mAakA0dG/YmJivLIIr1F8KbVK/kXJ7bxZNTeB3Rc0p3DXwR32z1d1LOBDUZH/aitJT1YfyP5FkG/S07WfPHHWQ74thrcqndzXk028EV3izThfZO/Z9dGlnko94XjQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743616718; c=relaxed/simple;
+	bh=D74ofNqOA7SYqmUp+Mla6PTcWb0dGPqjVWpS17OFnfI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eiDBPWiYJiKnD1QlSVNq8lImvpQ+0tLvb8tCDc8IgHnEmlBcwh8HYWwgs4iEuSZoZwvwJ4MlA/B2mp5nkfmPIBAOf0mQjEiocKPgYO1HG+y6qeROLY7JeaAbb7994BoSJi7UjHOzoXxGhXmdKX8AfC+zuNP3xX/b15mzfT3CQUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=RGY8HGFj; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b="O+GxSyYZ"
-ARC-Seal: i=1; a=rsa-sha256; t=1743616517; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=dq8oFyNyYlwIijLBqUEAEtjQ9SeTbQjfZlqNM07RhuuMgjm4YfQnGR83jAW7X85wsu1agLMhmbB+R+0u1NqLz+jxKmji1yOZJGKu1j+r8+7IJZn3RcpfRWxK1PUqqreQ76CEPLY3DnmTTdKloyf8197Zx6wd7cpRE7rdqlQc8bY=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1743616517; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=4jIdQhvHBH28PFI2WuKCsKIOFiGxPR8GFY6OZ4sX0gA=; 
-	b=Jn7vboabvMnnqZjwEX8skN5zCRqdf+lvFB4E52iv8LeY57yq1z//+R46g5f2h4w1jSOgowVqd6xtvyiYW050bQlLBnD0hCsP4fsU38pGdEDmVMIRSJRWRiDmm7oiBIJsT1cWj4F83Lc3OEJHpcbVQ+BypDYm3BD+vGQGLbUDZNw=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=dmitry.osipenko@collabora.com;
-	dmarc=pass header.from=<dmitry.osipenko@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1743616517;
-	s=zohomail; d=collabora.com; i=dmitry.osipenko@collabora.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=4jIdQhvHBH28PFI2WuKCsKIOFiGxPR8GFY6OZ4sX0gA=;
-	b=O+GxSyYZOLPtLEpbgqBV53U0WuTflzL/GVn+HgRcBMcVK32JqJbPeY4sExwls/Vi
-	wiYo/45qd0S48OWeHjSgOyG22B7yBS19ej8n7+zT/JqvAG07rtzqrz2ZXb4IBKnsFPE
-	2k+n2bcq1MCTEIGmwONW9goJ3Ay/ENTvC3bKgds8=
-Received: by mx.zohomail.com with SMTPS id 1743616516155342.8745540804241;
-	Wed, 2 Apr 2025 10:55:16 -0700 (PDT)
-Message-ID: <0227f234-8eac-4bf5-b2ba-4767936dd04c@collabora.com>
-Date: Wed, 2 Apr 2025 20:55:08 +0300
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="RGY8HGFj"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ac25520a289so5917866b.3
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 10:58:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1743616714; x=1744221514; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=1MQX/4jbOB87ZzQVjurudVLbH8O3d+X8ocGzSuwXjw8=;
+        b=RGY8HGFjgrGq+9QFgQV3bEKlsvqLuQGiNhZZRjafPLT/F4vO/FNH0eti3tX9ouOeUQ
+         7M/NE1OrxtvTFdyR8URIlw+Qx+DvfoFP+PodtQ0ozkrf8cIKQpuq5GxMWExTWSM0PMzY
+         Gk5uR480bH/HTPElpKCOYrwhLjclwL33ndL3A=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743616714; x=1744221514;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1MQX/4jbOB87ZzQVjurudVLbH8O3d+X8ocGzSuwXjw8=;
+        b=r4x1hStAbg4kbF77/hPVy+dIg0Rjog0l6IxfnpvJ0B2OZFyXzOn7bbmsCfCkgRa0tr
+         Z1+LYemfgZH+MbOg+M6RgbQ9+OZv2sc9WYz3N254yjs5xAjI1xCZ06Rsu8dfRjlVVlup
+         p3YhkxIGeWaEVe6CmVLd7J4qA3vEoV2HVXI4dzYizNlsXikLZ0AaSAp5exnZzkusGUth
+         fizXYiuXfzUcODe6KSS6XFNSyRNMB/dUlVSj2fcwqhc2OIf0Ijn2F5LWyfykEBj2dzfP
+         RgbJRl+rnph27+bB3/lI5X4XiyUeMNc2/cihnUIv++YbngwH+bAauAk0Pewkdy32lN/W
+         IYrQ==
+X-Gm-Message-State: AOJu0Yx8tTlwBy4QZEJDahriBmCHHRL3zHBSShQcjMatQnJwsb/rf0bo
+	jAemPuj4B7M4oL/+47fIGyprmOfSluOQK8Vsb8uWrhy/RFiRjOLkqqsBsGd4Yc6+2IV80aWdqwU
+	1S20=
+X-Gm-Gg: ASbGncurES9bCDP0ULc8av6NFtM9wCps5OQGZFuPLb7TONkh2RtKpY0ToqW+Y4bN2qb
+	P/v0htcGe2anWUpOyulQdnuttHQDeb6YMtm5u0qzDwBEc/UVpuIs0RQEIDpEk1rG/0LFkLESFbR
+	QLOxeM6C5WR+9IN3MY5bjUQHNS/HqVK8ZDBXVY3XEBmvyai8C0Cs6ZsU3ZEmQkuEQHRhiuN6Cto
+	UJbzcRRje9sECdUJfmUnmAfQQk6ANnp6bovUlgfBhxNt4mU6cTs2WzsBoOZKQnS9yHTWX0yYPM9
+	CSjpklFtR6Lk0OLC/2O6kCmcrO0TABybbaWfjjpuh18ug5+TVn2XzUjBgev4F50ZQnBnzVL7yLM
+	wxtUv33UXylqdiX5/7CI=
+X-Google-Smtp-Source: AGHT+IHmObMmOsD8dHzkTsGmgatq71BFWoSdTrfdf+77YSoWT62wYsEuh9HvnJjBb8mO76hVcjYASA==
+X-Received: by 2002:a17:907:9693:b0:ac1:ddaa:2c03 with SMTP id a640c23a62f3a-ac7385d8502mr1715880666b.0.1743616714035;
+        Wed, 02 Apr 2025 10:58:34 -0700 (PDT)
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com. [209.85.218.41])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac71961f9dasm963340566b.90.2025.04.02.10.58.33
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Apr 2025 10:58:33 -0700 (PDT)
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ab78e6edb99so4766066b.2
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 10:58:33 -0700 (PDT)
+X-Received: by 2002:a17:907:724c:b0:ac0:6e7d:cd0b with SMTP id
+ a640c23a62f3a-ac738a80f54mr1364237366b.34.1743616712863; Wed, 02 Apr 2025
+ 10:58:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] drm/virtio: add VIRTGPU_PARAM_HOST_PAGE_SIZE to
- params
-To: Sergio Lopez <slp@redhat.com>, David Airlie <airlied@redhat.com>,
- Gerd Hoffmann <kraxel@redhat.com>,
- Gurchetan Singh <gurchetansingh@chromium.org>, Chia-I Wu
- <olvaffe@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- Simona Vetter <simona@ffwll.ch>, "Michael S. Tsirkin" <mst@redhat.com>,
- Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
- =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>,
- Rob Clark <robdclark@gmail.com>
-Cc: dri-devel@lists.freedesktop.org, virtualization@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20250402-virtio-gpu-host-page-size-v2-0-0afdc8c16cb9@redhat.com>
- <20250402-virtio-gpu-host-page-size-v2-2-0afdc8c16cb9@redhat.com>
-From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20250402-virtio-gpu-host-page-size-v2-2-0afdc8c16cb9@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ZohoMailClient: External
+References: <Z-xFKa5hiQ5urVwS@gmail.com>
+In-Reply-To: <Z-xFKa5hiQ5urVwS@gmail.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Wed, 2 Apr 2025 10:58:15 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgqa0B9OV+EAQ34-VOUAeVB2o2bXnZXQDG7u+Z=4Cmw8w@mail.gmail.com>
+X-Gm-Features: AQ5f1JqQq75M_XOdaWX7xnjVetlVA0__RlcFY6Re5xxEPVlslcVR-3_SRVFmbgM
+Message-ID: <CAHk-=wgqa0B9OV+EAQ34-VOUAeVB2o2bXnZXQDG7u+Z=4Cmw8w@mail.gmail.com>
+Subject: Re: [GIT PULL] objtool fixes
+To: Ingo Molnar <mingo@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Peter Zijlstra <a.p.zijlstra@chello.nl>, 
+	Josh Poimboeuf <jpoimboe@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, 
+	Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On 4/2/25 20:46, Sergio Lopez wrote:
-> diff --git a/drivers/gpu/drm/virtio/virtgpu_ioctl.c b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
-> index c33c057365f85a2ace536f91655c903036827312..405203b3c3847a8b318a7118aa34356c839d249e 100644
-> --- a/drivers/gpu/drm/virtio/virtgpu_ioctl.c
-> +++ b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
-> @@ -117,6 +117,11 @@ static int virtio_gpu_getparam_ioctl(struct drm_device *dev, void *data,
->  	case VIRTGPU_PARAM_EXPLICIT_DEBUG_NAME:
->  		value = vgdev->has_context_init ? 1 : 0;
->  		break;
-> +	case VIRTGPU_PARAM_HOST_PAGE_SIZE:
-> +		if (!vgdev->has_host_page_size)
-> +			return -EINVAL;
+On Tue, 1 Apr 2025 at 12:57, Ingo Molnar <mingo@kernel.org> wrote:
+>
+>  - Fix a number of objtool warnings in various drivers, core kernel
+>    code and architecture code. About half of them are potential
+>    problems related to out-of-bounds accesses or potential undefined
+>    behavior, the other half are additional objtool annotations.
 
-ENOENT
+So I've pulled this, but I really dislike some of it.
 
--- 
-Best regards,
-Dmitry
+That
+
+> Josh Poimboeuf (35):
+>       objtool: Fix X86_FEATURE_SMAP alternative handling
+
+makes a bad thing even worse.
+
+Apparently nobody else ever looks at generated code, but dammit, the
+clac/stac code generation has turned the ugly up to 11.
+
+Yes, the altinstruction replacement thing was already making the
+generated asm hard to read, but now it's *also* adding this garbage to
+it:
+
+        911:
+        .pushsection .discard.annotate_insn,"M",@progbits,8
+        .long 911b - .
+        .long 6
+        .popsection
+
+which is just pure unadulterated pointless noise.
+
+That "annotation #6" is WORTHLESS.
+
+Dammit, objtool could have figured that annotation out ON ITS OWN
+without generating shit in our code. It's not like it doesn't already
+look at alternatives, and it's not like it couldn't just have seen
+"oh, look, it's a nop instruction with a clac/stac instruction as an
+alternative".
+
+So why does it add that pointless garbage that makes already nasty
+code even nastier?
+
+Please fix this.
+
+            Linus
