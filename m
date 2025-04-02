@@ -1,133 +1,97 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3E6F1A23AF
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 17:17:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9C1D33993;
+	Wed,  2 Apr 2025 17:19:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743614236; cv=none; b=QUldSvmknIvwEeXGrIg0u/NFavh78oAfAVMX9RB25UvBGg0UiAc/h3rUAaCS6AXBjoF5CqQVHR/6HnBk4QxWjDNFN9MvOmRsr6HP5HE+/c01UTTI4VNlVowqZaftHrxsdk7D+tuYEOSGfFs3uVWZ2bLPk13iYJPRsnvdThwlJlQ=
+	t=1743614372; cv=none; b=cslhdlc5xQx8Shwa1Ry67ZMBZAqpkteSeR1+CmEM48yYXj16xSZbj/vzgPTh+IaYH2P2iqn36Rrk6Bc4FmP18+Dl+3LtidJ9Mg/q7RMOjtPeFwI1D+Ea/YiYRwkMJ/beJzcacyCQuwBxnTmUL9zy6e+x93D5fVSs+qXKf81iXMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743614236; c=relaxed/simple;
-	bh=VaMFdFfclsC+WFCyzHYDRn44c9vE4yPnhIs+rwALdxM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QeW8O9zyf7Q6khDll8khiDZB5pAtvpS+Sz1CyL5WZoWDusJyPt1funo6y5P/bNFfuNyI4Ucb5cNiJ0wkkNC9u/ID4Fj3iFBtGkA1bPxSKOgOZFHzYSBjhF6bRxQA5KOasgYMh/dJUC0NCHRhoBRtVyHqxnCJpDvylsLnIv4DEBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kR6RTR40; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743614372; c=relaxed/simple;
+	bh=6ZAuJe7VpvzN0yn03t+NJJYfd2x2rZOrxKuVdjVr/c4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AdnqHnJlDlPgOoq1CTB1yp6TfkimqixZSPOjt319ffUObt1nv58SWYg20v5VAPxB7WRX995g8OUy6G9GkedsX9l6gBfIz1PDQUpbzoFICK55Qq6LtgeMnQU3G6wDNUAprLnfLdGLPlnrRyqgnADawmY6IXcQuwe7xzRVHDU/PHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qcp7NY/U; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kR6RTR40"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43cfb6e9031so62970215e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 10:17:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743614233; x=1744219033; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8+C4G4SbGxknyB0zTfgPx+p1t+bnYiQcQISoKxR/Vkc=;
-        b=kR6RTR40Y9+DJcvS7PqUtmO4uphlKXV/61aZU77jej6yHlBxPYAElKE4Q0b/Q+PbDn
-         axJk19avCFJEwbTZvpk0banyw+tIDpf6rGAwrHr4uUMzTRaQCYHvKyQqqPy50L5jozKl
-         Xy5RGyMVYA8gr4GqxwHVoiR//JgZOdkN0tK9MRS5E6aRzbSF1p6glqHjbU4GC+shn4dE
-         +BeHMQQVBiXKqNtdCx2f/awtpUl53sQNItd0pqJAKbCK0iqp7ybpI1JK7Qu9uzvpvOt1
-         MpAXp7ZZvL48Qc2/mTxnm9U34jOcN3AByw1E9D9SfngqMIC+cKtj71kGaZ4Ct0NIpayh
-         KETQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743614233; x=1744219033;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8+C4G4SbGxknyB0zTfgPx+p1t+bnYiQcQISoKxR/Vkc=;
-        b=pg2fWnobpJnNDEHMuIab57oAdpbGIFIbOLPgI+GP25MeMun8TNX6PyFiytqCFa4Xft
-         DLSTsHIgzO0J3spRgsRyKArBUerK41CQ8qE4PRqk9Zuuo3LiWqyqdgJ4FbQnOYlX/4Xv
-         5YPNT3Id7kpcyUwK/2BM/15dU0COXAlat3tEiAVQwAEtmwU+Q9z3lSlLLOaI+aAaGY3+
-         xFmh4VJ/1utTRy2UweyKIcd15QZ91tnhkCmpf8a5VfYBjYhxlmj16cUjiUVnj/eUBAhQ
-         qrMLJTG/bP3tp3kz2Zbp4bbJRiOlhR/ahREOwtTZ3RtrOmvPa6xcYjHg/tarBqyzEsvU
-         EB+A==
-X-Forwarded-Encrypted: i=1; AJvYcCXFPnP0Akjhc1ZOgeSAMPOBruiJGEcf4GlpduSInYG82vjNtLQJ+bGdCfSzP/6eFaSEqrJTWUzCRABtYJs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwtTP/PH/8TNV73J2j20c/ZE5lt9IH7uV0xopot4PUSyAKevZR5
-	8p6bDzNOb6oP/t/P7kFXiO5Wd2VVMOb/8eeKEMik/yQAOo8ys3a2FKKmVB4dxn0=
-X-Gm-Gg: ASbGncswjTHwv0AoZRGREvpElRpEccfyX1v5F4NCYSkmvhQB15hxaUz4v2GNcnubEWJ
-	lkI+1Xa+gmpEZPExBRp01oFEtwSquNCMf3TrKqJGpRDW6ByeCgBh0IykIJ3RiYHmGndCIFekn6H
-	AvEMi/cW/al32ErtxVZE/vv/uSCgODFdhkZwpnQYOx5FyNW9bX8/oToiHGdaiyje6ydgKkMJSiH
-	R7YkU3EkHdfD1E9Ctka9fmKuPPOCvbF5NoE4WaKgY0HZKs5APiL4uRW4UVbuZvscMxVwSSW9NTW
-	DElI4auCtrQjAkig3f5xuepOupmPiuVf0GEW1+1LTQ==
-X-Google-Smtp-Source: AGHT+IGXAJCPar3HVUFKQjK06ujZSRm1R6M97IdO3GlXbC5NKiu0ELwX7yqGkBPK9kj/Fy5xyyxC6g==
-X-Received: by 2002:a05:6000:18a5:b0:38f:3e1c:211d with SMTP id ffacd0b85a97d-39c120deb39mr13203589f8f.14.1743614232894;
-        Wed, 02 Apr 2025 10:17:12 -0700 (PDT)
-Received: from pc.. ([197.232.62.205])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43eb5fcd489sm26713525e9.11.2025.04.02.10.17.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Apr 2025 10:17:12 -0700 (PDT)
-From: Erick Karanja <karanja99erick@gmail.com>
-To: gregkh@linuxfoundation.org,
-	outreachy@lists.linux.dev
-Cc: karanja99erick@gmail.com,
-	philipp.g.hortmann@gmail.com,
-	linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/3] staging: rtl8723bs: Modify struct sta_info attribute qos_option and ieee8021x_blocked
-Date: Wed,  2 Apr 2025 20:16:44 +0300
-Message-ID: <cea7ede3db3709a13f1dcd25976779cd46da713c.1743613025.git.karanja99erick@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1743613025.git.karanja99erick@gmail.com>
-References: <cover.1743613025.git.karanja99erick@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qcp7NY/U"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13449C4CEDD;
+	Wed,  2 Apr 2025 17:19:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743614372;
+	bh=6ZAuJe7VpvzN0yn03t+NJJYfd2x2rZOrxKuVdjVr/c4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Qcp7NY/UEHczn/meGifvCOmH+kqRAT/EYrl6oHSOaRWQbPRG6985J8GQDYLfLcAk+
+	 VmkvzUYsBk3LgHWllXQ/uSib6UCpcjpP46ruHZK7MV+is/my/H6mPeAAnQH865uNCd
+	 cqhZU6kHkeYtt9Z4ACIanKNGZlEDRdh2x9trTgObutVHvV5YahIfaSYz9DLBHOSqKT
+	 zliJKhg+RR8kHn5xGWYghQC6Tp5CEZe55kX/f7udjbCcLMD60i33li9YYeZJO2lXeW
+	 HXddhF9l3bBdeSVALT/ZeY5e0HrwLkMGdpVCWuMeZghkOeERvUrEbCyihF7U6bQkeM
+	 cjpthLU77Ot9w==
+Date: Wed, 2 Apr 2025 10:19:30 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Ard Biesheuvel <ardb@kernel.org>, linux-crypto@vger.kernel.org,
+	linux-kernel@vger.kernel.org, x86@kernel.org,
+	"Jason A. Donenfeld" <Jason@zx2c4.com>
+Subject: Re: [PATCH v2 0/9] crypto: x86 - stop using the SIMD helper
+Message-ID: <20250402171930.GD1235@sol.localdomain>
+References: <20250402002420.89233-1-ebiggers@kernel.org>
+ <Z-yrf_9D2rV1Q136@gondor.apana.org.au>
+ <CAMj1kXEx__RLBriW0kVPrKnx6+DCpq8=6F-7Tmj2Us61gvGGaw@mail.gmail.com>
+ <CAMj1kXE-vo7E1U++4mAqDH2SXfc=sRZs8KganedJk5z0QF49NA@mail.gmail.com>
+ <Z-zzvXbjt3xzquXb@gondor.apana.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z-zzvXbjt3xzquXb@gondor.apana.org.au>
 
-Standardize boolean representation by ensuring consistency,
-replacing instances of 1/0 with true/false where boolean
-logic is implied, as some definitions already use true/false.
-This improves code clarity and aligns with the kernel’s bool type usage.
+On Wed, Apr 02, 2025 at 04:22:21PM +0800, Herbert Xu wrote:
+> On Wed, Apr 02, 2025 at 09:34:30AM +0300, Ard Biesheuvel wrote:
+> >
+> > Ah, never mind - I see some calls on 32-bit ARM to
+> > simd_skcipher_create_compat(), which have become redundant now that
+> > SIMD is guaranteed to be available in softirq context.
+> 
+> Thanks!
+> 
+> We could also remove all the calls to crypto_simd_usable in the
+> Crypto API hashing code, e.g., arch/arm64/crypto/sha1-ce-glue.c.
+> 
+> For the lib/crypto code I think we should make it a rule to
+> not allow any hardirq usage just like the Crypto API.  Does
+> anyone know of any uses of lib/crypto in a hardirq?
 
-Signed-off-by: Erick Karanja <karanja99erick@gmail.com>
----
- drivers/staging/rtl8723bs/core/rtw_ap.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+This seems premature.  crypto_shash is documented to be usable in any context.
+See the "Context:" comments in include/crypto/hash.h.  Similarly, developers
+expect lib/ functions to be available in any context unless otherwise
+documented.
 
-diff --git a/drivers/staging/rtl8723bs/core/rtw_ap.c b/drivers/staging/rtl8723bs/core/rtw_ap.c
-index d46a04b9a05e..199727f04516 100644
---- a/drivers/staging/rtl8723bs/core/rtw_ap.c
-+++ b/drivers/staging/rtl8723bs/core/rtw_ap.c
-@@ -386,10 +386,10 @@ void update_bmc_sta(struct adapter *padapter)
- 
- 		pmlmeinfo->FW_sta_info[psta->mac_id].psta = psta;
- 
--		psta->qos_option = 0;
-+		psta->qos_option = false;
- 		psta->htpriv.ht_option = false;
- 
--		psta->ieee8021x_blocked = 0;
-+		psta->ieee8021x_blocked = false;
- 
- 		memset((void *)&psta->sta_stats, 0, sizeof(struct stainfo_stats));
- 
-@@ -1967,17 +1967,17 @@ void sta_info_update(struct adapter *padapter, struct sta_info *psta)
- 
- 	/* update wmm cap. */
- 	if (WLAN_STA_WME & flags)
--		psta->qos_option = 1;
-+		psta->qos_option = true;
- 	else
--		psta->qos_option = 0;
-+		psta->qos_option = false;
- 
- 	if (pmlmepriv->qospriv.qos_option == 0)
--		psta->qos_option = 0;
-+		psta->qos_option = false;
- 
- 	/* update 802.11n ht cap. */
- 	if (WLAN_STA_HT & flags) {
- 		psta->htpriv.ht_option = true;
--		psta->qos_option = 1;
-+		psta->qos_option = true;
- 	} else {
- 		psta->htpriv.ht_option = false;
- 	}
--- 
-2.43.0
+For skcipher and aead, there are more reasons why it makes sense to limit the
+contexts:
 
+- skcipher_walk_first() already explicitly errors out if in_hardirq(), which
+  already prevents them from working in hardirq context in most cases
+- Even if it was allowed, the skcipher and aead APIs are already difficult to
+  use correctly in a hardirq
+- Because of how the crypto API is designed, it's not straightforward to fall
+  back to generic skcipher and aead code in no-SIMD contexts
+
+I could see the limitation being brought into crypto_shash too, though the
+crypto_shash documentation will need to be updated.  The crypto API also really
+needs to be explicitly checking all its requirements.  (It's probably finally
+time to add a kconfig option like CONFIG_DEBUG_CRYPTO to lib/Kconfig.debug, and
+put the extra assertions under there.  Then they could be added without
+impacting performance for normal users.)
+
+IMO, doing it for lib/ too would be going too far though.  The lib/ functions
+should be easy to use and not have random requirements on the calling context.
+And since they're just functions, it's easy for them to fall back to the generic
+functions when needed.  Also note that for very short inputs it can actually be
+faster to use no-SIMD code, as that avoids the overhead of a kernel-mode SIMD
+section.  So the fallback sometimes exists anyway for that.
+
+- Eric
