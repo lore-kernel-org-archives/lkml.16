@@ -1,88 +1,73 @@
-Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [63.216.63.40])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32334233153;
-	Wed,  2 Apr 2025 11:45:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.216.63.40
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E27B92356A0
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 11:46:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743594349; cv=none; b=P/RLzwjF1rvT93eLJa0GfUxfolA8UmQnj8GpgzzWYruMwAzzO91l8kXhg6oPdq0ULGbCQanR1Mw2IYW5ZcbaAXxWPYC5Q+RU/S3a9RHjM2mefaYSZG/GhK8TwOPCaZtFBS4yTitme2dffs3EIqqzt/ITm02XPmfOEcl9uCbcNu4=
+	t=1743594365; cv=none; b=LVphOG1Fc6cnQQ5xGVQA1NdJujbpMurBQ6k9AGIYiWxxYvW3ZaCSk/m7fAdzM/BJUdW5DnQEUL8/KdL8PofwzSLzjPyONzYybCruNogFIWfBBfk0jf8zoIBxZ9pkm+feGBfT3mVVeCnB5yJn0furMyC2wOEs1n7hPKBCsWKdOw0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743594349; c=relaxed/simple;
-	bh=1FEXNb+3sgwnhrzy3P2QhZYbooTBMvl6WNcpdOtLPqc=;
-	h=Date:Message-ID:In-Reply-To:References:Mime-Version:From:To:Cc:
-	 Subject:Content-Type; b=QsLc6x1Zxw9FmyUVRjyCLAQipLmh9EqOUpuB3K49i+fPNBJOtD+GvwFs77sIuJTzb7C4WFyh84pXrmPVKV/gkT+HtHyvyKjkH+lHXiHbgltC5K8IPLA1HuRFqtbgwM0ltuR6ZRzYWWxVMBtWu6DU/4kYUqMwiizF+TQrPybpq3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=63.216.63.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4ZSNNR0FSrz8QrkZ;
-	Wed,  2 Apr 2025 19:45:43 +0800 (CST)
-Received: from xaxapp02.zte.com.cn ([10.88.97.241])
-	by mse-fl1.zte.com.cn with SMTP id 532Bjd3j070014;
-	Wed, 2 Apr 2025 19:45:39 +0800 (+08)
-	(envelope-from shao.mingyin@zte.com.cn)
-Received: from mapi (xaxapp04[null])
-	by mapi (Zmail) with MAPI id mid32;
-	Wed, 2 Apr 2025 19:45:42 +0800 (CST)
-Date: Wed, 2 Apr 2025 19:45:42 +0800 (CST)
-X-Zmail-TransId: 2afb67ed2366ffffffffef7-237ea
-X-Mailer: Zmail v1.0
-Message-ID: <20250402194542026OH8jAzuv0uq-J-D9AVPqJ@zte.com.cn>
-In-Reply-To: <20250402194100610qY6KQ4JPISk-4v214Qs36@zte.com.cn>
-References: 20250402194100610qY6KQ4JPISk-4v214Qs36@zte.com.cn
+	s=arc-20240116; t=1743594365; c=relaxed/simple;
+	bh=aNMkM2/oqZ9nMCjFPqnNVR+sMmsTs8bfhq4pAvUOm3Q=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=u2Z1igkOohYINdNbk8T5TWiTxRH7pbJ9JJRmTj+Y+x5GSh3gEHopDYrnAEqXaPsd1rc2JEm1OQGqHMTfNCGY7eBX6ytBgz7peM93RCk7n6MFuAzDNaQ20C0MzaTM0tfyQWMUXQyY95XZIG24kso9Ox4jQaEkuPbzrHeqA9eWkIw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3d44a3882a0so8202395ab.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 04:46:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743594363; x=1744199163;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=pAr0bHwAv+wEW9U+HD3Kl47Eakz9GlvcSplNmr7f9BI=;
+        b=dm3ezrFvIwVNIlq+d3ZpALmFbg6G3J97ugpSTcjlLe0l+cMG5jJ/NCOZveLo0SzIk6
+         BpTaOlMjTwNl5fkwA+ke3jnCFKunrQzudnjvajczmTo2uhHQtk2S+v++ArUn8eXdPtim
+         5lxhZKT+z7HEl5/d2kW96IZd5MaMaHxqg2SiH6nn7OWDvCOsxbQi0nPRFva6upJGbdbf
+         W/I9HwM/TeOS8pOk0jIW+cukxOucAyh/6ajydgORZGRR1yczzQhGMmUWnnxUw2tErEc0
+         OQM7QpfdfWrheaViXh32gcxV3FKdQfSWMVuqYkgkRd1DDNkgRX+f/hsgbRbTqfcdQbrl
+         ou4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXQAjQuPdlNZTOge6lZ50bpIputTRp4gwECMaONLXcbmUVOunStoxH944vriUIhlM5CZ47Z1dxCYdru5Rc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywf8LfLhd1lH6tNM4THv0aZfLr5vDVzxjx+nWFAozk+WZLgZPEG
+	HkaL0bQVJWYRscNW6ac9If2/4PcGIhZ5aXMJwmMv5cnAoxktKLUZWg0o+zc6ehij0pMUiKauYQV
+	QXaZXaSMaYilKC00H5b0OJOSmyf+kZlrlogmAXIrJDjCgadR2pKL/v5k=
+X-Google-Smtp-Source: AGHT+IFP8Vu8eyKnFDEOLX80bU32FaQbjtJMe0Q41pTgbxmHVqx+8RITthL/vxN/h82eq51cHnvzbsWK5X5Mc6OyG22i2roBc6Zb
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-From: <shao.mingyin@zte.com.cn>
-To: <vkoul@kernel.org>, <robert.marko@sartura.hr>
-Cc: <kishon@kernel.org>, <wens@csie.org>, <jernej.skrabec@gmail.com>,
-        <samuel@sholland.org>, <zhang.enpei@zte.com.cn>,
-        <linux-phy@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-sunxi@lists.linux.dev>,
-        <linux-kernel@vger.kernel.org>, <luka.perkov@sartura.hr>,
-        <linux-arm-msm@vger.kernel.org>, <heiko@sntech.de>,
-        <linux-rockchip@lists.infradead.org>, <yang.yang29@zte.com.cn>,
-        <xu.xin16@zte.com.cn>, <ye.xingchen@zte.com.cn>
-Subject: =?UTF-8?B?W1BBVENIIGxpbnV4LW5leHQgNS81XSBwaHk6IHJvY2tjaGlwOiBwaHktcm9ja2NoaXAtdHlwZWM6IFVzZcKgZGV2X2Vycl9wcm9iZSgp?=
-Content-Type: text/plain;
-	charset="UTF-8"
-X-MAIL:mse-fl1.zte.com.cn 532Bjd3j070014
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 67ED2367.000/4ZSNNR0FSrz8QrkZ
+MIME-Version: 1.0
+X-Received: by 2002:a05:6e02:1a89:b0:3d4:6ed4:e0a with SMTP id
+ e9e14a558f8ab-3d6d6cf7eb9mr13661855ab.4.1743594363044; Wed, 02 Apr 2025
+ 04:46:03 -0700 (PDT)
+Date: Wed, 02 Apr 2025 04:46:03 -0700
+In-Reply-To: <b648feeb-d33d-4476-bdac-1d1a28eb72a1@lucifer.local>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67ed237b.050a0220.297a31.0019.GAE@google.com>
+Subject: Re: [syzbot] [mm?] general protection fault in sys_mremap
+From: syzbot <syzbot+e3385f43b2897a19be24@syzkaller.appspotmail.com>
+To: akpm@linux-foundation.org, jannh@google.com, liam.howlett@oracle.com, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, lorenzo.stoakes@oracle.com, 
+	syzkaller-bugs@googlegroups.com, vbabka@suse.cz
+Content-Type: text/plain; charset="UTF-8"
 
-From: Zhang Enpei <zhang.enpei@zte.com.cn>
+Hello,
 
-Replace the open-code with dev_err_probe() to simplify the code.
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+unregister_netdevice: waiting for DEV to become free
 
-Signed-off-by: Zhang Enpei <zhang.enpei@zte.com.cn>
-Signed-off-by: Shao Mingyin <shao.mingyin@zte.com.cn>
----
- drivers/phy/rockchip/phy-rockchip-typec.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+unregister_netdevice: waiting for batadv0 to become free. Usage count = 3
 
-diff --git a/drivers/phy/rockchip/phy-rockchip-typec.c b/drivers/phy/rockchip/phy-rockchip-typec.c
-index d9701b6106d5..94d1e6ead1a7 100644
---- a/drivers/phy/rockchip/phy-rockchip-typec.c
-+++ b/drivers/phy/rockchip/phy-rockchip-typec.c
-@@ -1151,11 +1151,9 @@ static int rockchip_typec_phy_probe(struct platform_device *pdev)
- 	if (IS_ERR(tcphy->extcon)) {
- 		if (PTR_ERR(tcphy->extcon) == -ENODEV) {
- 			tcphy->extcon = NULL;
--		} else {
--			if (PTR_ERR(tcphy->extcon) != -EPROBE_DEFER)
--				dev_err(dev, "Invalid or missing extcon\n");
--			return PTR_ERR(tcphy->extcon);
--		}
-+		} else
-+			return dev_err_probe(dev, PTR_ERR(tcphy->extcon),
-+					     "Invalid or missing extcon\n");
- 	}
 
- 	pm_runtime_enable(dev);
--- 
-2.25.1
+Tested on:
+
+commit:         e20706d5 mseal sysmap: add arch-support txt
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git/ mm-stable
+console output: https://syzkaller.appspot.com/x/log.txt?x=167a694c580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=ccf540055069887f
+dashboard link: https://syzkaller.appspot.com/bug?extid=e3385f43b2897a19be24
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+
+Note: no patches were applied.
