@@ -1,81 +1,177 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2084.outbound.protection.outlook.com [40.107.243.84])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90E7C219306;
-	Wed,  2 Apr 2025 14:31:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743604319; cv=none; b=CzS31G/ytiTOiwEfH4rAHL0i6ti14rUjkC/7f874sc6PlSHjt48nnlDdGPkg+UXqQvuhn7O3yweEScF0s1ixeme5vbURWwUyxGwoG/CXmIvyv17jZfaWCjpzB4v3YRaNSt8NKULL8pvTvLmOQEWcReeYrxnNDRH2cvyJkQyLTis=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743604319; c=relaxed/simple;
-	bh=d3HO0by06NGB3AnL1TDQXs+J5kO79f27JvV/QUX6/qU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HwfTrLYY0SXzJHWlvLRjyqxmT5Rws4XPtemgX+79SS1aGmjLomSasCER3gDgUQpUzbMhmVFgokXLWc6VWhAP6EIRxGdkjnn72Ej+nwGjT5fPd36W4IcMgXWzlGsSQ3SgfdVx3zA2yIDTTqpNGNnWRW5nR7W1/4uI4nmKuS7g8HY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qSUx5PNi; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51AFD149C7D
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 14:34:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.84
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743604485; cv=fail; b=eesllGJkMQB+sxuiu5gnxGrQUoQ0i/9djeLgb45ERtSyRaCBU76e7WC+mIUKywpv14SwP5Jd89IDMt5S5kwu9M1rGj1idfZuz9JIk5rcrVIQmuCq4JRLiFI7lFLi38tCPka3kkUY+yxfIOqcooOb/I/Ia1h1fw3FbQvX0vg7mtg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743604485; c=relaxed/simple;
+	bh=XAJ7nGw/RzA0pc/6Feq+798DsPznEUEkc6t9DLaNJCk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=eaXtELWtaVRSimTOEr6VRUDCdKqXOfJusdf34joCkvEurXiUsKDlOXTKLtV7iFR5rgCmF2zX8YEXFvfQtXk+SRMO8EmokYDUOgf65EanBvz7i40QbUmAdC2eSZoDJ9yolBWwEzf01Zt163rgT5ipd/0dHQLGsnuoz3mfm24iIwY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=OJ1oXUBs; arc=fail smtp.client-ip=40.107.243.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qSUx5PNi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAFF6C4CEDD;
-	Wed,  2 Apr 2025 14:31:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743604319;
-	bh=d3HO0by06NGB3AnL1TDQXs+J5kO79f27JvV/QUX6/qU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qSUx5PNi/HCgEaurtM28iXWavW1rSrYdA1ZRVSe8HouTPdhy6PezxIDO0/fxCSXbJ
-	 ijuQUGu9m9dscRURCmHx5HAnPtZnxfFaQ7f+buvP6zLvOcJ2zXhpPkmIXAMD7JdE+Q
-	 dg5qQ6ProLWyosHNDJgn6OST2bAOY1zZ8IaCdVB/y3UbwKMJojEhBajKryvzwCKv6w
-	 8n00cvWkNb+SRhMNlIY28aKzS83MYCQujZVN39YVrvwJ1AY7kJhEx62f1TTYwx425k
-	 ylTu7EoQmBPzHp0KkjxPubM0gKSg0JWWh/UaGwi/+77oo5UwjXf/k7W5WGq+XfKTvp
-	 nGUrUnSlC9QIA==
-Date: Wed, 2 Apr 2025 09:31:57 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Francesco Dolcini <francesco@dolcini.it>
-Cc: Farouk Bouabid <farouk.bouabid@cherry.de>,
-	Francesco Dolcini <francesco.dolcini@toradex.com>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Jean Delvare <jdelvare@suse.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org,
-	Conor Dooley <conor+dt@kernel.org>,
-	Quentin Schulz <quentin.schulz@cherry.de>
-Subject: Re: [PATCH v4 1/2] dt-bindings: hwmon: amc6821: add fan and PWM
- output
-Message-ID: <174360431679.216370.1049216368114674934.robh@kernel.org>
-References: <20250402102146.65406-1-francesco@dolcini.it>
- <20250402102146.65406-2-francesco@dolcini.it>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="OJ1oXUBs"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=PmjPGOT9+/VsaYpVN62v/xY3QkGWnCgguykiHIdB5WT8kkRMmCeUayQaVY+msGxLWxZO6Vqq/1Ef0iD5BmJ29BRN3Nka0YOfjFlRPRXyX4/iGXC07of5gzG0BAh9ABdamMmQh+xy3RFRg33wMV7iF3clz3NpSSNSx/SORfrQDouebMw4QmXdBD6qpeCVcxswtuE0s7+kXwUFhsHaGtk+DoetgRA7jmz+tw4AfNO097qAWHf43KHOJ7pKWYVv5gwl9QzIwpPQWObbIbqgLQUqsw3qUvGo2bZx1j1zhJ+jWlYVoosFoMvGJ6mpDBf61sgGxvQ7ymblBBAQqxLyEKPZaA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+X1UWKTXT7x30EugxmzPaNX3CVifcbT2x17P8EMPK4Q=;
+ b=S744Zc98EuoyHt/JFQBWHwGlIlljAmbQIoOho8sNDLPfxKwVM8jRoe+RV75Rq6qPyVdeRHpTWOnKw1g7TbNFuB9vPmnVfNS5BynObSEfmoxUwSRPypsHzVsNDiKdlgmGWhNRyPiLLhCouvSBejSaU3aqRDe6WeDfzmex0dcRVgfYmLudpVVLScQxVXHYtDvbMO4WrICCG8gcMlTZ7xWXtVxQei869GGax2/EJN8WB+atVJCu0pg4biSzGn3fUQyj25f5e72AIgAujon+xAblOuAkbcgqCo5EzUF4uu9QRIxZTMyTeUwf9hhWwMU+JzAPvaTtOo4M41c1Cy6AB4AWjQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=suse.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+X1UWKTXT7x30EugxmzPaNX3CVifcbT2x17P8EMPK4Q=;
+ b=OJ1oXUBsNvs1QaiH94kSEsBP9k/bQs/xI5epwlKnyd7x1Yjb8/OlrhLaBUZa14U7gk3yggh2Tq4s/Wd5VlLhj+q/Fo7dKlRfoFQ1akqMYxSDlvDrG0BbwJ0cNd9RHk3qAW0kah7yVkaGIFWGSiowzZNcfRkIcvjbNX0z3IVOlGg=
+Received: from BY5PR03CA0028.namprd03.prod.outlook.com (2603:10b6:a03:1e0::38)
+ by CH3PR12MB7761.namprd12.prod.outlook.com (2603:10b6:610:153::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.50; Wed, 2 Apr
+ 2025 14:34:39 +0000
+Received: from MWH0EPF000989E8.namprd02.prod.outlook.com
+ (2603:10b6:a03:1e0:cafe::78) by BY5PR03CA0028.outlook.office365.com
+ (2603:10b6:a03:1e0::38) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8534.46 via Frontend Transport; Wed,
+ 2 Apr 2025 14:34:38 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
+Received: from SATLEXMB03.amd.com (165.204.84.17) by
+ MWH0EPF000989E8.mail.protection.outlook.com (10.167.241.135) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8606.22 via Frontend Transport; Wed, 2 Apr 2025 14:34:38 +0000
+Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 2 Apr
+ 2025 09:34:37 -0500
+Received: from [172.29.45.113] (10.180.168.240) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
+ Transport; Wed, 2 Apr 2025 09:34:36 -0500
+Message-ID: <7fb49337-e1df-41fe-abba-6b2104094a68@amd.com>
+Date: Wed, 2 Apr 2025 10:34:33 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250402102146.65406-2-francesco@dolcini.it>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] xen: Change xen-acpi-processor dom0 dependency
+To: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>, Stefano Stabellini
+	<sstabellini@kernel.org>, Oleksandr Tyshchenko
+	<oleksandr_tyshchenko@epam.com>
+CC: Penny Zheng <penny.zheng@amd.com>, Jan Beulich <jbeulich@suse.com>,
+	<xen-devel@lists.xenproject.org>, <linux-kernel@vger.kernel.org>
+References: <20250331172913.51240-1-jason.andryuk@amd.com>
+ <a6977caf-ce0e-4002-8df5-26cb0bdc88d7@suse.com>
+Content-Language: en-US
+From: Jason Andryuk <jason.andryuk@amd.com>
+In-Reply-To: <a6977caf-ce0e-4002-8df5-26cb0bdc88d7@suse.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Received-SPF: None (SATLEXMB03.amd.com: jason.andryuk@amd.com does not
+ designate permitted sender hosts)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MWH0EPF000989E8:EE_|CH3PR12MB7761:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7664e9cd-bc4b-41f7-31e1-08dd71f37f92
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|376014|1800799024|82310400026|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?RTBaaHFyV1kzaSs1cDRmZ096NzYwKytQZ1BmaUtKZU1BV3YyaGNucUNRdWtr?=
+ =?utf-8?B?eTdBREt5QkhKelpuaWYrek9rbUMwMmNjUUwyRCs3Qi9HRTlMTENHOU1GbDVG?=
+ =?utf-8?B?TzFIa1p5WURUYzBBTzFpclFzNFZhaG50Q0RyQm5VbythRldNUWFwTG5YYWZN?=
+ =?utf-8?B?UjAzVEx6VENyaUl5VmdwNTVLRGRnaDd1Q01aUDRNNHdKUURteTB3TmJKL3Rw?=
+ =?utf-8?B?L3FQY04zbGhiK3BrZXc2RTRpbzM0cVNRclNQcmVxK2UzTWF2TWZsMjZqbEVs?=
+ =?utf-8?B?bW91bHdDelhaZXRYenhQWmZJSjRkRHVEai8zb1NFSis0Vk91T1U0cHlWeW5h?=
+ =?utf-8?B?aHFkV1RCcXhLdjBxblBBMDYyb3dpL2VjNS9BR0Z0elVBdW1Kc255YUorZTFF?=
+ =?utf-8?B?MUVNRXJuWUhFRmtqNld4a0NRTlhwYUNtNzhZRmF2T2Q5bzZYZTF5Z2l1SFZl?=
+ =?utf-8?B?OHZXYWZ4SWNEQVZFSVFHMVVjZmxlbWtlWWZuS25vcXdQaVhiYjFKaGxSaGZH?=
+ =?utf-8?B?RTk3T2psMUZCUlVuamIxaFBvdVVNUGdIT2dPOFp1QlhhQm5ZcUU5VVBkbitT?=
+ =?utf-8?B?UnRMZjFVNUhzVHZrUnpKRnFtTGg1cGFhTmxuZU11T0NPUmRHSWZuaHhBT3Bm?=
+ =?utf-8?B?YTFIYnlqaTVZNlZudzBPMEpUUCtxUmM1WlhkQWdaNFgvdk85allxb1FoLzg5?=
+ =?utf-8?B?dTVWU0ZudDJvN3ZBSHdXSXFoeDU1ZWdVTWQvWWwySnQrNGFuYjQxNzEzYkRq?=
+ =?utf-8?B?a05NcHVsMWFjeXJURXA4V0RTbzd1S1FzZm5oa3d0WVB3VGl0c1B3MFBHTUdy?=
+ =?utf-8?B?M2lQL1pwS3VEMFJiSVkyVHZ5a3NrUWs2QjVTZHlTN3F5cjZnb1dlNTZsZEU1?=
+ =?utf-8?B?ano4Ui9LdHFydnRnSm5IeVQwT2lObU5iRHNUVXE1aURBUHNPR1pYdmJ5WUQx?=
+ =?utf-8?B?Yzl5aUtKeHN4L3YxY0VKUzhKdlNhU29QUTdxVGlaeHJMajd3V0pFaDdNZ1ZW?=
+ =?utf-8?B?Snl5VVg5VVdqNkZHNDlMek9hYXR2MURrbTlPK3hIbUg4RUFRdm02YkMyNlVk?=
+ =?utf-8?B?UWw4OGN1czhBM2VpNnVkdzdjMkozNGhyZmphUXdNUjlBczRFSUFzVjNGYjUy?=
+ =?utf-8?B?MFZXVHdSdllJRlhyandESWQ4SlNYOUFSRGxIWFVqWUUyNkduVVpOMDZBdkJZ?=
+ =?utf-8?B?RE8xMU8wcWl1b2Jtd3RnTUlvUEdVQXZTMEFJd1ltYng4ajI4UDhRaGxvR3Yz?=
+ =?utf-8?B?UVR2R2NwNlNoaG5oeEhaanhVNnIyYmZsek5ESUV4enY0cTJ1Zytkd2pjT2ZF?=
+ =?utf-8?B?Uit1U1pnVVBoeVB3OVVwY3d1UEpFbGVDZjBXT1Z5K1pCRHVvSHFwQmExampH?=
+ =?utf-8?B?UTYxTkQ5aTJzeklLaDdES1Q4SS90eTJaVDZvMVJNRlhuaitYbDRSa3BTdHZw?=
+ =?utf-8?B?cHVxYmNnY1AyWDIrZ0d6YmV1L3Fad21tMnZFbHl2a3NZT1ZBQlZ3REtUbi81?=
+ =?utf-8?B?Y21FKzJuc2JLVWNsK0EzTzViOUJ6Ymxwb1VXamFpc2VJaXhuTDQxbFlKRWxW?=
+ =?utf-8?B?em85MlFzR2lzS1BlWFpRemZsVVc0akhRdnUyNHFOdmd6WlZCR2puN0ZVN3JB?=
+ =?utf-8?B?TVNGQXRuL1UvVWMwVFVyVnJXNCthTXhma2NRMFdIQW9LYmlWZ21jRzAwQ1JH?=
+ =?utf-8?B?bzlPRENnMHVZUFpGdkh6SC9tcllFQ2RoYjNvNlN4bGgvU3pBK1ArejlHNDJw?=
+ =?utf-8?B?dHMwNHdJczZiSjhqSmY5cVZWQVBneWFBNHBmdFBsNFRsaGxCLzhkMVFnMUQr?=
+ =?utf-8?B?TGZqVDY2aW5tQzVGL3FuU09aQjV2cTI4TStJTDJjVWR4VVh0T095QkN1M1Bl?=
+ =?utf-8?B?VEVVazNoeHMydG11UjB0SWQxeGJHY2gxNTZBc1VIaEtjZklmS3oyTXRqUm1l?=
+ =?utf-8?B?U1hqUUpNeTNYNE5EV3FyQ3VWRGRGSzlPTVpZeGtuRmhPT1NqNE1KVlNtcnFK?=
+ =?utf-8?B?MFZaM2RpSEVnPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(376014)(1800799024)(82310400026)(7053199007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Apr 2025 14:34:38.6195
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7664e9cd-bc4b-41f7-31e1-08dd71f37f92
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	MWH0EPF000989E8.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB7761
 
-
-On Wed, 02 Apr 2025 12:21:45 +0200, Francesco Dolcini wrote:
-> From: Francesco Dolcini <francesco.dolcini@toradex.com>
+On 2025-04-02 10:24, Jürgen Groß wrote:
+> On 31.03.25 19:29, Jason Andryuk wrote:
+>> xen-acpi-processor functions under a PVH dom0 with only a
+>> xen_initial_domain() runtime check.  Change the Kconfig dependency from
+>> PV dom0 to generic dom0 to reflect that.
+>>
+>> Suggested-by: Jan Beulich <jbeulich@suse.com>
+>> Signed-off-by: Jason Andryuk <jason.andryuk@amd.com>
+>> ---
+>>   drivers/xen/Kconfig | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/xen/Kconfig b/drivers/xen/Kconfig
+>> index f7d6f47971fd..24f485827e03 100644
+>> --- a/drivers/xen/Kconfig
+>> +++ b/drivers/xen/Kconfig
+>> @@ -278,7 +278,7 @@ config XEN_PRIVCMD_EVENTFD
+>>   config XEN_ACPI_PROCESSOR
+>>       tristate "Xen ACPI processor"
+>> -    depends on XEN && XEN_PV_DOM0 && X86 && ACPI_PROCESSOR && CPU_FREQ
+>> +    depends on XEN && XEN_DOM0 && X86 && ACPI_PROCESSOR && CPU_FREQ
+>>       default m
+>>       help
+>>         This ACPI processor uploads Power Management information to 
+>> the Xen
 > 
-> Add properties to describe the fan and the PWM controller output.
-> 
-> Link: https://www.ti.com/lit/gpn/amc6821
-> Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
-> ---
-> v4:
->  - add #pwm-cells description
->  - remove useless first #pwm-cells, that was supposed to be the instance
->    number
-> v3: https://lore.kernel.org/all/20250331155229.147879-2-francesco@dolcini.it/
->  - explicitly describe the fan, use standard PWM and FAN bindings
->  - pwm.yaml cannot be referenced, because of the $nodename pattern that is
->    enforced there
-> v2: https://lore.kernel.org/all/20250224180801.128685-2-francesco@dolcini.it/
->  - no changes
-> v1: https://lore.kernel.org/all/20250218165633.106867-2-francesco@dolcini.it/
-> ---
->  .../devicetree/bindings/hwmon/ti,amc6821.yaml  | 18 +++++++++++++++++-
->  1 file changed, 17 insertions(+), 1 deletion(-)
-> 
+> Assuming that all needed hypercalls are fine for PVH dom0:
 
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+It's platform_op XENPF_set_processor_pminfo and XENPF_get_cpuinfo.  Xen 
+doesn't check if the caller is PV or PVH.
 
+> Reviewed-by: Juergen Gross <jgross@suse.com>
+
+Thanks, Juergen.
+
+-Jason
