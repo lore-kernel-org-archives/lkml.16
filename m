@@ -1,98 +1,104 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FA70238D3B
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 12:59:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743598770; cv=pass; b=bC89lCDhDR1JxMrF2T+j/B1PsgDDIUaxpJwTLujnAGoskflpxjnWiHWn8KwQQqbwQZTiJnAtQ0a5TL2AFQOzkMc3Mp5kRRP9I3H5g1qHeaUuuS0/OmtGGCpdKrNkuglyhu9d5EMdAkeFyNFkqpBHX5EnqLJ5fULijo0DHhKfkqQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743598770; c=relaxed/simple;
-	bh=selS/isIIgC+xm0AIoL44sE8XFoLJbocij1bUEZoZRA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RJnU6dGmZiddp4p5Qrht2+l3bfAXfSKsd5egwKGWKElJTWioO60AhJb4fsHkY+kWs9bcYp35m9eptmDx3eWBd4kk9o4eSc4iPOI/eucYrcwuQ7MLMXP+Hl62kyPCmV0hgWogA99BUQj9veXWgC2SZbLesfvY2nsKMYsceO6zFu4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b=cHyYb0iB; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AD1C1DB13A
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 13:00:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743598840; cv=none; b=PnS2aFVRIqe5u+CJDJp35bcRhZ2b6f28kgM5Ow/bg5SLBNYg9hYOma2yS5q0v+BVCz5pt7epHkse9Gd0uRTrFLWol+Vec2sfO9Zd1kjA5F7utgR0B9fKpXIbYrUoQJO+xNVePOX2ojXHRte+8mgiG8G6lOK1ZD+HczkedfTB2FI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743598840; c=relaxed/simple;
+	bh=x+IoBLuVA0H/up1jHiIASga2/T/EYTYb7rDbGXD9P0w=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=cXicCNSyEwh28ugIrvxCKc3No4f2f+zvhvy/RTlJoM5pGPXZul60dA/4Xlbu+x/4n1iFM2B5u6ftt3LcVybgmNk4npyDqO3BZdjKH2RRqNCjLiqR4f1HisUbzoPPzN7Ah8GHp2uEtj44BSw6x11fGbmKt1erBJPXE44idKqcmBY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i6Lpik8k; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b="cHyYb0iB"
-ARC-Seal: i=1; a=rsa-sha256; t=1743598742; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=hWlg2avs/Yb+ObDwA71DvUeMcy8yfPeW9OHpG0OijtPInz7V7bvqE2pSPX7Xy/VbnNqNNmXUeOMwe1YF2fY9iY/Z1GX4OYYos/UVFlrpyd6gpA236mhcA41EkR1w+i+XYgd+8E65VBLaBq7SXg6KWKf2miiGXkFS9m7Yik2jP68=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1743598742; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=mZ8fonKlky+JNA4Rhn203pUe67ljBH0B+8f/AS8ommA=; 
-	b=YzuqZOYLiGHdSSjs2ggS16Wi+Yo2CN/x3YdN1/SI9djQkP9DLqlQWJwWfJLOAIMcZE+9i1jkJzCCktW8uq9bxh251vRixhqKrjndFxnKb+ueW/JHJycbfq7CB2mjsm0Gif5snN8qVznJIkm7/vhL4dybwyQ8wQLN59SuYwjNzNw=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=dmitry.osipenko@collabora.com;
-	dmarc=pass header.from=<dmitry.osipenko@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1743598742;
-	s=zohomail; d=collabora.com; i=dmitry.osipenko@collabora.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=mZ8fonKlky+JNA4Rhn203pUe67ljBH0B+8f/AS8ommA=;
-	b=cHyYb0iBWAdvdSAa5YVuJNIS7yT6O736AQe/Q0lGvjr3WN+wAIYt9Is73tBEbMO3
-	cFtlB2CJ5QMelefbGw2e0ep5HIdkTrzJsQY8QezK/QSI+K53m8FNlaQ43svVHpQcSA5
-	E6+945ZeRYklEn9x42yAq5sTcB5eyLvMw6rR10G4=
-Received: by mx.zohomail.com with SMTPS id 1743598740489912.9935045232037;
-	Wed, 2 Apr 2025 05:59:00 -0700 (PDT)
-Message-ID: <710cdbd4-2c6e-48b7-b12b-972ab6d12abf@collabora.com>
-Date: Wed, 2 Apr 2025 15:58:55 +0300
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i6Lpik8k"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43cf3192f3bso66933395e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 06:00:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743598837; x=1744203637; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ngxDFq1nGLdsrKZFLcmh45jEs49yfqhaJP1grV4jxpE=;
+        b=i6Lpik8knlJErJG9LpAujzp+P5joXLBVWNzwuf4W0Y4yHrSznsp7ALGyiSqLGfrvRT
+         wCRaOKpL9GVFj31z7g/k9BGMyh4oPT28P1bQdkVfTat8eYeGX39vTE49WkSGkwJSI7An
+         ziLS2PHgOe6Zvea/zioqs2q0RAT/JOKFfuzAOUEYKcB3L/JMHfMXcOjd+NzpHoP9jJkQ
+         8S3bwlHV3deAnJIwqEPZfYz/dVrmSjykIiON3OaksJVL3Xtuvqy7SUIW6lLo6p9UYg79
+         jd/5uOgnNnt+fCGKB1fgsJE2wb2R7ySEij9KrOglr3Yc3GW5PdMIsV7yKXFk58gWR+7G
+         76Ig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743598837; x=1744203637;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ngxDFq1nGLdsrKZFLcmh45jEs49yfqhaJP1grV4jxpE=;
+        b=IKsbXQYbVw0wsDa7TDzcLkT4n5OohqckKxz1CocAFup4IqQSev9Ky7U7W3IzEYIjz5
+         NkNJKstj0tWuTkdTDgoqujkYS/t+OVHQiszuj2Kb5eGF7W53zKRInpieJXi05WrFFo5x
+         9xV1DfOwEiCGARbclkgIcnYVDvLBh4oZ2QaEuVGILFeBnmEt2vjcI+xFZ5YIoJcI2vkx
+         S5MDZH/jyAieTOJeoddDcg5v8VGKHzsga+zcADyPdRcGxN+vukAb6KRgOv4j8XtlJxql
+         SkYSkolEnVvvtjOC7gYwyy62OAZXmSRx/S2tFbFAtiMsmBqd2KpdHEHkyGXQc5guogsz
+         BqfA==
+X-Forwarded-Encrypted: i=1; AJvYcCW+s2CbCZLltIggMGz7lp9VPXUs0Q6/BNpNCdaf12No4iOJc3ygV8Hlp8M39mRRHPvS2/NrNkNwMdRW0+8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwVzYlavlXgqZeI+ihIFhJ9zSeK/h2DWmp1yaIFccHemRSOPnGJ
+	GIBnA8U+8oqeminbIZSsp6D1L/gwlaLe26/38gCQttx/GLPxAAfx9xJiBA==
+X-Gm-Gg: ASbGncsgA/WYl1ar5AUNSbIAoPn9PX6+ROkhHcUg0ZVsG4TZ7AKEiSH7LxYMSJq7AXS
+	Ac/vSU4bhR1KB2m3KC0F925ReSUA5b44SvF377X3D4u3iDkVx91qRQhX0MxmmoFmQtZZu2KVSYW
+	vB74szcHS6smA5ptZECwIZ1Mt2pps7o39jciEA4wHfVNTAc9YNr/dyfYs+PgIW+SaXIdCVeJYyp
+	j8I08wP63MkLEpUHHd8elYfEsEKEzlpistG+XMQZHJd0ZEV+netl/5sRCTaEA0AURw6lG3Ln9Ws
+	FOa30ez9o7dp3BruQsdqgH+mhxtgcyT/WJrGmiOs/ClI8fsRxFCM+r/nY/wuOFQnE/ph5L+18mo
+	SStz5i5o=
+X-Google-Smtp-Source: AGHT+IEicv5KsZA/zLNoahNekdHnYAFlpnVcWaBREtvGIuqd11qcLb81th3r38X1cJ6IPJ8qdCPrVA==
+X-Received: by 2002:a05:600c:4f43:b0:43c:fad6:fa5a with SMTP id 5b1f17b1804b1-43db62b77acmr152520745e9.24.1743598836578;
+        Wed, 02 Apr 2025 06:00:36 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ea8d1673dsm41466725e9.0.2025.04.02.06.00.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Apr 2025 06:00:36 -0700 (PDT)
+Date: Wed, 2 Apr 2025 14:00:34 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: Xu Lu <luxu.kernel@bytedance.com>, tjeznach@rivosinc.com,
+ joro@8bytes.org, will@kernel.org, alex@ghiti.fr, lihangjing@bytedance.com,
+ xieyongji@bytedance.com, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org, iommu@lists.linux.dev
+Subject: Re: [PATCH] iommu: riscv: Split 8-byte accesses on 32 bit I/O bus
+ platform
+Message-ID: <20250402140034.0fc4cbac@pumpkin>
+In-Reply-To: <8cfe938f-5eff-483e-95a1-c4029993e287@arm.com>
+References: <20250325144252.27403-1-luxu.kernel@bytedance.com>
+	<8cfe938f-5eff-483e-95a1-c4029993e287@arm.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v20 09/10] drm/shmem-helper: Switch
- drm_gem_shmem_vmap/vunmap to use pin/unpin
-To: Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
- <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Gerd Hoffmann <kraxel@redhat.com>, Qiang Yu <yuq825@gmail.com>,
- Steven Price <steven.price@arm.com>,
- Boris Brezillon <boris.brezillon@collabora.com>,
- Frank Binns <frank.binns@imgtec.com>, Matt Coster <matt.coster@imgtec.com>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- kernel@collabora.com
-References: <20250322212608.40511-1-dmitry.osipenko@collabora.com>
- <20250322212608.40511-10-dmitry.osipenko@collabora.com>
- <ea4f4059-7748-4bfd-9205-8e95222144da@suse.de>
-From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-Content-Language: en-US
-In-Reply-To: <ea4f4059-7748-4bfd-9205-8e95222144da@suse.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 4/2/25 15:47, Thomas Zimmermann wrote:
-> Hi
-> 
-> Am 22.03.25 um 22:26 schrieb Dmitry Osipenko:
->> The vmapped pages shall be pinned in memory and previously get/
->> put_pages()
->> were implicitly hard-pinning/unpinning the pages. This will no longer be
->> the case with addition of memory shrinker because pages_use_count > 0
->> won't
->> determine anymore whether pages are hard-pinned (they will be soft-
->> pinned),
->> while the new pages_pin_count will do the hard-pinning. Switch the
->> vmap/vunmap() to use pin/unpin() functions in a preparation of addition
->> of the memory shrinker support to drm-shmem.
-> 
-> I've meanwhile rediscovered this patch and I'm sure this is not correct.
-> Vmap should not pin AFAIK. It is possible to vmap if the buffer has been
-> pinned, but that's not automatic.  For other vmaps it is necessary to
-> hold the reservation lock to prevent the buffer from moving.
+On Wed, 2 Apr 2025 12:28:54 +0100
+Robin Murphy <robin.murphy@arm.com> wrote:
 
-Hi, with vmap() you're getting a kernel address. The GEM's memory should
-be not movable while it's vmapped as we can't handle kernel page faults.
+...
+> It is not, in general, safe to do a split write to a running counter 
+> either way - low-high vs. high-low just moves the problem around, 
+> changing *which* combinations of values are problematic and capable of 
+> overflowing into each other between the writes. If the PMU driver can't 
+> write counters atomically, it will need to ensure that it only ever 
+> write them while stopped (at which point the order surely shouldn't 
+> matter). Conversely, though, reading from running counters is a bit more 
+> reasonable, but it needs more than just hi_lo_readq to guarantee it's 
+> not got a torn result.
 
-Not sure what you're meaning by the "other vmaps", please clarify.
+Or have hardware that latches a value waiting for the following cycle.
+That could be done in the bus interface logic.
+In which case the cycle better come from the same cpu, not another
+cpu accessing an entirely different register.
+That requires a global lock for the device.
 
--- 
-Best regards,
-Dmitry
+	David
