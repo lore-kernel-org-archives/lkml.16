@@ -1,135 +1,148 @@
-Received: from mail-qt1-f202.google.com (mail-qt1-f202.google.com [209.85.160.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 147CD20E328
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E24523817C
 	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 13:31:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.202
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743600680; cv=none; b=rg8vFKRXjl6JTv/Wob35xtrcXX8SFPdV1bdjLpPwp5lcojgv1MqFOFIzKaL46oEUSyIJR3OdMJHJaCXj8YZ/htyH9aeMxJ7ttmcZxbXXQE1iURpCO7HxY1wb1yg+g3qUljEvNhInelGMyGvuPRMp2VnNqOZhDFhTFJl7FE5J9TQ=
+	t=1743600681; cv=none; b=SfOhyYnu9cIS7QHs/V1D7Hqueeqzs4YrAORCv25sfBAKo6wlubrJBRuWS8jTlglbl8ec7BhmfAsjJdaJNZ/AYxby89jsH9t31DaHDVjMgFeZpCEZIuMQkwwsLV2KwK4KPdfEqMfjddKu1fdyZPm62a5K49o43ha/Crlxt069kNc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743600680; c=relaxed/simple;
-	bh=yF7LQDhBMogiJgmpGQRpJ19sEkFmBcIG7FiCXcGrn4o=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=JnVet2uddeJ7kDNn5lM5IBrrJRABN9u1/xBXOMxqZS4URoF8C5QG52/mHZCyGUu6MO64atWAyU/fLOYTr8PcQu6soHcxy4uhCvI5NqfirstPnp1YyNhgTZ8FpGsxCjV1lEOKcVPnEVkIsWqut33JqLXczND+TZ1c7zAsMUobOUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--edumazet.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VKD8P0bt; arc=none smtp.client-ip=209.85.160.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--edumazet.bounces.google.com
+	s=arc-20240116; t=1743600681; c=relaxed/simple;
+	bh=tWpzu7ba133Zdaj4dIf8mfTY5P/FzEw3AwQGlLkB6nY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=NkNBxxxJ3evrSJEgI6ooJjk6yt4g5DwDhR2AsErT5G7Qvg7k1+HqVMApJK/pnEblg0SRlD2bjcf2jufAJ/LrHbdXbvVpEGoKi+AxdbyvHP65ToYYxEoFxUf8W08slKqWdLQoOQw2SCBuZY3GQhgpr89O2TR0D3f8sqvWGIgmyMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=XiTaeGGQ; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VKD8P0bt"
-Received: by mail-qt1-f202.google.com with SMTP id d75a77b69052e-476a8aff693so155636701cf.3
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 06:31:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743600678; x=1744205478; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=9RmVxeIETvRh1wXmJ7aAweKDY6rQw3N9ywL0sW+KKOg=;
-        b=VKD8P0bt7DTGvwI2/UI9aosveu1tlU9zsoa7+9x4rJqle+t8FrwrFE1x9ca5U8fMRA
-         c0CnIMfwTAjUh7dXR50ulbV/8lLKgyDAU7rLk6xtKURBfpLbluH4VC4i244/ClvwMR+m
-         spbBU5BBttp+Xt3pWz2h3Yg/sIVC4oBUtpe62jSdyuZD7hRgZycDklOQr+o7qcfU660w
-         Zj8mYyGERZMeQs549xylQ6Zy3Z6b4TgT7Cj+UHy5KsvcTUNX+aP1/VLUyLTB5naeoBOT
-         wRZZAE8MTcXhpCalAiAcDO1MOWRV8AlROSL9FUzrrPxA5o4/O9WRolTMDUmtLUVLcF7t
-         rpIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743600678; x=1744205478;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=9RmVxeIETvRh1wXmJ7aAweKDY6rQw3N9ywL0sW+KKOg=;
-        b=xSQ8XttcpYpoMW/wqmrobsdFVLi4eQqf3Jof8nK7w/cdXqCVDSdI2tYADsU4ubkO8I
-         3G0i84PnAMRmASCfwqbD/27W/XKDqHOG86eBFda2h92tAe2CPxXchqjmwWXyPp1AnUVD
-         WABO8r3gUHWHz+T0grxXfCdD/jNQrqx7ATd1dwPVPnyzpRnZp80g0Z0TdvN7y6xf8sln
-         jrWMuQWfjz7T5PlusifMptVSgg5/oQmrxtY3aVMKFXfed0MJ+WuOD4FjSDmvJwp1+DO4
-         XP0lJIjcZz5218y9krlriTk41gA5KoMhfKLtkF1+QrefUB/wKkIW5qGAWIB/KbFuIVka
-         Tcuw==
-X-Gm-Message-State: AOJu0YztRbHg5SlgZG7uMeVFhAdQs8tEIBsQziI8IM8k1dVZhRSWxLlm
-	cXveMjdf43GAy9FFDP53BWeBefNM93J+z9brFH+5H+f2nQLqdiEpqsQq86FU51Dl1yfxbpsMUMA
-	ewDvBF2ITlw==
-X-Google-Smtp-Source: AGHT+IHjB7Bx6/FFNgdVxgoEbeZcgksOimq/wqJG0z6i4BHDMUWZamerMJrztSykieI5AJKYf7YIWK2RHnzqrw==
-X-Received: from qtbhh8.prod.google.com ([2002:a05:622a:6188:b0:476:8f8b:91a1])
- (user=edumazet job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:622a:347:b0:476:8412:9275 with SMTP id d75a77b69052e-477ed728721mr297381961cf.35.1743600677832;
- Wed, 02 Apr 2025 06:31:17 -0700 (PDT)
-Date: Wed,  2 Apr 2025 13:31:14 +0000
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="XiTaeGGQ"
+Received: from [127.0.1.1] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id E74956A2;
+	Wed,  2 Apr 2025 15:29:22 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1743600563;
+	bh=tWpzu7ba133Zdaj4dIf8mfTY5P/FzEw3AwQGlLkB6nY=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=XiTaeGGQDZcc5mC4YZUP28aG6WrYTqwJQctuaS29IqWasCY46ayi9aMnTvOV2+0Dp
+	 7fgHvJty0omJ9Bh/B/U+pTGpHyUu2ldvTRDegglbK6fsqJU1lBXWLEu53CmakAo8Ez
+	 F+BKSFgd1LhMBrUybOl3GlRzHbnQveR5lUTMs9zE=
+From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Date: Wed, 02 Apr 2025 16:30:43 +0300
+Subject: [PATCH v2 01/18] drm/tidss: Fix missing includes and struct decls
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.49.0.472.ge94155a9ec-goog
-Message-ID: <20250402133114.253901-1-edumazet@google.com>
-Subject: [PATCH] posix-timers: remove init_posix_timers()
-From: Eric Dumazet <edumazet@google.com>
-To: Anna-Maria Behnsen <anna-maria@linutronix.de>, Frederic Weisbecker <frederic@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-kernel <linux-kernel@vger.kernel.org>, Eric Dumazet <eric.dumazet@gmail.com>, 
-	Eric Dumazet <edumazet@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250402-cdns-dsi-impro-v2-1-4a093eaa5e27@ideasonboard.com>
+References: <20250402-cdns-dsi-impro-v2-0-4a093eaa5e27@ideasonboard.com>
+In-Reply-To: <20250402-cdns-dsi-impro-v2-0-4a093eaa5e27@ideasonboard.com>
+To: Jyri Sarha <jyri.sarha@iki.fi>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, 
+ Andrzej Hajda <andrzej.hajda@intel.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ linux-phy@lists.infradead.org, Francesco Dolcini <francesco@dolcini.it>, 
+ Aradhya Bhatia <aradhya.bhatia@linux.dev>, 
+ Devarsh Thakkar <devarsht@ti.com>, 
+ Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+X-Mailer: b4 0.15-dev-c25d1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2118;
+ i=tomi.valkeinen@ideasonboard.com; h=from:subject:message-id;
+ bh=tWpzu7ba133Zdaj4dIf8mfTY5P/FzEw3AwQGlLkB6nY=;
+ b=owEBbQKS/ZANAwAIAfo9qoy8lh71AcsmYgBn7Twb1rv8WsaK7ZyMNRHo2SCza155wW0BQGFDR
+ NuG01wNSSSJAjMEAAEIAB0WIQTEOAw+ll79gQef86f6PaqMvJYe9QUCZ+08GwAKCRD6PaqMvJYe
+ 9ZZSD/49WAxaJgfcNgLcwg7nvNWgDMBwl6GFx8D71IkdeY1FtzSCQzO0LoB9ZeM9+Y+aPy9f9T9
+ DqhcnPQ7o/u4tq67PcIq4OIVOklnk5O0Z2SDVMNryax3kQboN4gvnlUFAaMPSHSFzE3vY9pw2m3
+ bwVFI+eLtAntLqXcsXBm1uFy5LlptAFXbaknwYA6Uvkw6/GBkOgJF4E9WqIMPvtXmOJDse1lYgh
+ oIOBPDA1ZyVbQ+i3mSH3PDAi9PXz/Emza4558knGsHsMizm4dfqD/oTuWIqDAikqEdyQ2ZQYEdk
+ IjDah/sv1spVbVDqJiLbcgE+0SMW263mwf4AFwyLvmRkLP6AhpUcgs9WUA2iZxpBxTbbHKB1VIR
+ l0O9mMR1nSWTo9yMRjp7HkgyrINyVN/FYbnCUBwMRKmR9O18a63yjhaMyG9StPtVPRrtouYxf7A
+ F0dd/L06h6dfIrsecf9CV2zgezxbcmGXWjFDUOpANUM+Rmsffmr/JmKCw9oVjdtpuLWEsdZuIoi
+ IGYR5UCtUABr//fBgpalui7Bg9vmxND+t6TgKl5e/vis7yEOk3X4LPpTiVt8BCvzS3zUWPN5GgM
+ 8UsMXNWazahMmRyhzBBBtMut6+QhJqZchWn+kGEVwfExjBemikxlF7Re4nAiJqW9kKrELflJVi7
+ H70T3CRi185GwZw==
+X-Developer-Key: i=tomi.valkeinen@ideasonboard.com; a=openpgp;
+ fpr=C4380C3E965EFD81079FF3A7FA3DAA8CBC961EF5
 
-Move posix_timers_cache initialization to posixtimer_init()
+Fix missing includes and struct declarations. Even if these don't cause
+any compile issues at the moment, it's good to have them correct.
 
-Also move the variable to the __timer_data variable to avoid
-potential false sharing, since it never was marked as __read_mostly.
-
-Signed-off-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
 ---
- kernel/time/posix-timers.c | 23 ++++++++++-------------
- 1 file changed, 10 insertions(+), 13 deletions(-)
+ drivers/gpu/drm/tidss/tidss_dispc.h       | 3 +++
+ drivers/gpu/drm/tidss/tidss_drv.h         | 2 ++
+ drivers/gpu/drm/tidss/tidss_plane.h       | 2 ++
+ drivers/gpu/drm/tidss/tidss_scale_coefs.h | 2 ++
+ 4 files changed, 9 insertions(+)
 
-diff --git a/kernel/time/posix-timers.c b/kernel/time/posix-timers.c
-index 6222112533a7b902bb986ac2347a5bcc35625fa6..2053b1a4c9e4bfd792368035553b654593bc7b33 100644
---- a/kernel/time/posix-timers.c
-+++ b/kernel/time/posix-timers.c
-@@ -30,8 +30,6 @@
- #include "timekeeping.h"
- #include "posix-timers.h"
+diff --git a/drivers/gpu/drm/tidss/tidss_dispc.h b/drivers/gpu/drm/tidss/tidss_dispc.h
+index 086327d51a90..c31b477a18b0 100644
+--- a/drivers/gpu/drm/tidss/tidss_dispc.h
++++ b/drivers/gpu/drm/tidss/tidss_dispc.h
+@@ -7,11 +7,14 @@
+ #ifndef __TIDSS_DISPC_H__
+ #define __TIDSS_DISPC_H__
  
--static struct kmem_cache *posix_timers_cache;
--
- /*
-  * Timers are managed in a hash table for lockless lookup. The hash key is
-  * constructed from current::signal and the timer ID and the timer is
-@@ -49,10 +47,12 @@ struct timer_hash_bucket {
- static struct {
- 	struct timer_hash_bucket	*buckets;
- 	unsigned long			mask;
--} __timer_data __ro_after_init __aligned(2*sizeof(long));
-+	struct kmem_cache		*cache;
-+} __timer_data __ro_after_init __aligned(4*sizeof(long));
- 
--#define timer_buckets	(__timer_data.buckets)
--#define timer_hashmask	(__timer_data.mask)
-+#define timer_buckets		(__timer_data.buckets)
-+#define timer_hashmask		(__timer_data.mask)
-+#define posix_timers_cache	(__timer_data.cache)
- 
- static const struct k_clock * const posix_clocks[];
- static const struct k_clock *clockid_to_kclock(const clockid_t id);
-@@ -283,14 +283,6 @@ static int posix_get_hrtimer_res(clockid_t which_clock, struct timespec64 *tp)
- 	return 0;
- }
- 
--static __init int init_posix_timers(void)
--{
--	posix_timers_cache = kmem_cache_create("posix_timers_cache", sizeof(struct k_itimer),
--					       __alignof__(struct k_itimer), SLAB_ACCOUNT, NULL);
--	return 0;
--}
--__initcall(init_posix_timers);
--
- /*
-  * The siginfo si_overrun field and the return value of timer_getoverrun(2)
-  * are of type int. Clamp the overrun value to INT_MAX
-@@ -1556,6 +1548,11 @@ static int __init posixtimer_init(void)
- 	unsigned long i, size;
- 	unsigned int shift;
- 
-+	posix_timers_cache = kmem_cache_create("posix_timers_cache",
-+					       sizeof(struct k_itimer),
-+					       __alignof__(struct k_itimer),
-+					       SLAB_ACCOUNT, NULL);
++#include <drm/drm_color_mgmt.h>
 +
- 	if (IS_ENABLED(CONFIG_BASE_SMALL))
- 		size = 512;
- 	else
+ #include "tidss_drv.h"
+ 
+ struct dispc_device;
+ 
+ struct drm_crtc_state;
++struct drm_plane_state;
+ 
+ enum tidss_gamma_type { TIDSS_GAMMA_8BIT, TIDSS_GAMMA_10BIT };
+ 
+diff --git a/drivers/gpu/drm/tidss/tidss_drv.h b/drivers/gpu/drm/tidss/tidss_drv.h
+index 7f4f4282bc04..56a2020e20d0 100644
+--- a/drivers/gpu/drm/tidss/tidss_drv.h
++++ b/drivers/gpu/drm/tidss/tidss_drv.h
+@@ -9,6 +9,8 @@
+ 
+ #include <linux/spinlock.h>
+ 
++#include <drm/drm_device.h>
++
+ #define TIDSS_MAX_PORTS 4
+ #define TIDSS_MAX_PLANES 4
+ 
+diff --git a/drivers/gpu/drm/tidss/tidss_plane.h b/drivers/gpu/drm/tidss/tidss_plane.h
+index aecaf2728406..92c560c3a621 100644
+--- a/drivers/gpu/drm/tidss/tidss_plane.h
++++ b/drivers/gpu/drm/tidss/tidss_plane.h
+@@ -7,6 +7,8 @@
+ #ifndef __TIDSS_PLANE_H__
+ #define __TIDSS_PLANE_H__
+ 
++#include <drm/drm_plane.h>
++
+ #define to_tidss_plane(p) container_of((p), struct tidss_plane, plane)
+ 
+ struct tidss_device;
+diff --git a/drivers/gpu/drm/tidss/tidss_scale_coefs.h b/drivers/gpu/drm/tidss/tidss_scale_coefs.h
+index 9c560d0fdac0..9824d02d9d1f 100644
+--- a/drivers/gpu/drm/tidss/tidss_scale_coefs.h
++++ b/drivers/gpu/drm/tidss/tidss_scale_coefs.h
+@@ -9,6 +9,8 @@
+ 
+ #include <linux/types.h>
+ 
++struct device;
++
+ struct tidss_scale_coefs {
+ 	s16 c2[16];
+ 	s16 c1[16];
+
 -- 
-2.49.0.472.ge94155a9ec-goog
+2.43.0
 
