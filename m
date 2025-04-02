@@ -1,31 +1,33 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFFB42F4A;
-	Wed,  2 Apr 2025 04:43:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EDD22629F;
+	Wed,  2 Apr 2025 04:44:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743569021; cv=none; b=JdQG81JZQX/teY37a5N0qfswEsz6MVREZbG4I5GMVywV5ean6EIPsjZ8GtM3b8QjIq4TP1ihAq9snPPyjofR1aQRsd+Vau6KZIYCzWfiBzEmwEF8VNI28Pfv7TFY+YLWZA3tasBJDsdKpB11QpDPy/6HoD3kGgcVl1lStFD4f5w=
+	t=1743569063; cv=none; b=svjFAVTWsSVUzVVstzhm6OBOhiwdkhUFEs2NxPqBzeg9rD9+ubmWJbDqDhiKzE5PeeTtb3HRomVQNU0T+mW13IfZOs4ld5/NQ3MYq8iBlnknoTGA7QI1yrgzQ7iY7EV3hTs6GVYtUNmY23adoEfjBGntVWQPDR9HBQi8WNnhGt4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743569021; c=relaxed/simple;
-	bh=uz9b61nKBl2wacNaAk7DwWcKhDzagZRIJ5Ms1Nts/+g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=U6/EIl4EQ5Fd2jv9yCBA4cO1a/QWytlaJVQT+eKqbfkAnrf65v7HFTgYSMbY2fq9LVigpSpBs52G9EL/p8hHRT9wYDKMLkDbFVdW1BXgNaSvfr93uN6Lh+2QOxW6i+5K2OKZczsZnJfhCS11PM9TECNfALCiz/Ra+v0v3edndhw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4ZSBzk4kLmztRLS;
-	Wed,  2 Apr 2025 12:42:10 +0800 (CST)
-Received: from kwepemg500010.china.huawei.com (unknown [7.202.181.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id D46661800B4;
-	Wed,  2 Apr 2025 12:43:35 +0800 (CST)
-Received: from [10.174.178.209] (10.174.178.209) by
- kwepemg500010.china.huawei.com (7.202.181.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 2 Apr 2025 12:43:34 +0800
-Message-ID: <15d52659-5a86-4601-be20-4662cac76c60@huawei.com>
-Date: Wed, 2 Apr 2025 12:43:34 +0800
+	s=arc-20240116; t=1743569063; c=relaxed/simple;
+	bh=hY+dbgSYzPEz/xRq5NSq/IBlmZCpsvsoXlPL/F8qGeY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=K4v+YcqJYImQwKLi4gNsEEgXQIzjLM8HzCQ3y4xst2kVGPz0MrTVC+haaeqx3xqtcMyVR4EJ1tFHRdMCQiu1PDvSUM7Wwsg4/0mAuNJargyWCRjpcpjcJdymAX5Rp/9K61tTHa5l1CclK3H/rJ1Uxjb8EpzBc+9FEQXCqmO6vFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JRagJ3CX; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JRagJ3CX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3980CC4CEDD;
+	Wed,  2 Apr 2025 04:44:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743569062;
+	bh=hY+dbgSYzPEz/xRq5NSq/IBlmZCpsvsoXlPL/F8qGeY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=JRagJ3CXuxhu0wYIz0hmsaWDbZM9QRwOzIoh3oaKtHMBUspcva6mQCNZaJ5L4NefJ
+	 ++aYoj1V/FSl1Rgi/7XfM1bVcm0mGh7fIwUsCjMC+B3NAM15VR55P2wj03eBv82a24
+	 uhO7G8XKat0BDxlzfHkM31BXzpu9HO17q8ML7BHfwqYjxDaXlc+dco9imY/h1jCmJC
+	 CryiRnsqmGAN4X9IPb3MzPE1fBaUPrpppLbOt4Rs36EZvsgWr4Mq+pGXs2aSUHzuKj
+	 40bvxgTcYgIIRurFSwK6sIViI7MCCDs5R5bpvRaB7HV8Pd6/e7LPg4sPJzUZUuf49T
+	 2sNe0MZjswlMA==
+Message-ID: <d9a60a75-14f1-46df-b22e-6afb768a4381@kernel.org>
+Date: Wed, 2 Apr 2025 06:44:17 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -33,94 +35,81 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Fwd: [PATCH][SMB3 client] fix TCP timers deadlock after rmmod
-To: Kuniyuki Iwashima <kuniyu@amazon.com>
-CC: <edumazet@google.com>, <ematsumiya@suse.de>,
-	<linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<netdev@vger.kernel.org>, <smfrench@gmail.com>, <zhangchangzhong@huawei.com>
-References: <20250401202810.81863-1-kuniyu@amazon.com>
- <20250402005841.19846-1-kuniyu@amazon.com>
-From: Wang Zhaolong <wangzhaolong1@huawei.com>
-In-Reply-To: <20250402005841.19846-1-kuniyu@amazon.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Subject: Re: [PATCH] tty: serial: samsung: Fix potential buffer overflow in
+ clkname
+To: jiang.peng9@zte.com.cn, krzk@kernel.org
+Cc: shao.mingyin@zte.com.cn, alim.akhtar@samsung.com, yang.yang29@zte.com.cn,
+ xu.xin16@zte.com.cn, ye.xingchen@zte.com.cn, gregkh@linuxfoundation.org,
+ linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
+References: <202504020933293306VVVuy_8HVKbwBOL2PFjW@zte.com.cn>
+Content-Language: en-US
+From: Jiri Slaby <jirislaby@kernel.org>
+Autocrypt: addr=jirislaby@kernel.org; keydata=
+ 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
+In-Reply-To: <202504020933293306VVVuy_8HVKbwBOL2PFjW@zte.com.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemg500010.china.huawei.com (7.202.181.71)
 
-Hi.
+FWIW Your e-mail client broke threading.
 
-sorry for the late response.
-
-I tested this patch below and it works fine.
-
-Best Regards,
-Wang Zhaolong
-
+On 02. 04. 25, 3:33, jiang.peng9@zte.com.cn wrote:
+>> Same comments as with other patches, not possible, IMO. Plus this patch
+>> looks actually worse - commit msg is hardly readable.
+>>
+>> Best regards,
+>> Krzysztof
 > 
-> I verified the patch below fixed the null-ptr-deref in lockdep by
-> preventing cifs from being unloaded while TCP sockets are alive.
-> 
-> I'll post this officialy, and once this is merged and pulled into
-> the cifs tree, I'll send a revert of e9f2517a3e18.
-> 
-> ---8<---
-> diff --git a/include/net/sock.h b/include/net/sock.h
-> index 8daf1b3b12c6..e6515ef9116a 100644
-> --- a/include/net/sock.h
-> +++ b/include/net/sock.h
-> @@ -547,6 +547,10 @@ struct sock {
->   	struct rcu_head		sk_rcu;
->   	netns_tracker		ns_tracker;
->   	struct xarray		sk_user_frags;
-> +
-> +#if IS_ENABLED(CONFIG_PROVE_LOCKING) && IS_ENABLED(CONFIG_MODULES)
-> +	struct module		*sk_owner;
-> +#endif
->   };
->   
->   struct sock_bh_locked {
-> @@ -1583,6 +1587,16 @@ static inline void sk_mem_uncharge(struct sock *sk, int size)
->   	sk_mem_reclaim(sk);
->   }
->   
-> +#if IS_ENABLED(CONFIG_PROVE_LOCKING) && IS_ENABLED(CONFIG_MODULES)
-> +static inline void sk_set_owner(struct sock *sk, struct module *owner)
-> +{
-> +	__module_get(owner);
-> +	sk->sk_owner = owner;
-> +}
-> +#else
-> +#define sk_set_owner(sk, owner)
-> +#endif
-> +
->   /*
->    * Macro so as to not evaluate some arguments when
->    * lockdep is not enabled.
-> @@ -1592,6 +1606,7 @@ static inline void sk_mem_uncharge(struct sock *sk, int size)
->    */
->   #define sock_lock_init_class_and_name(sk, sname, skey, name, key)	\
->   do {									\
-> +	sk_set_owner(sk, THIS_MODULE);					\
->   	sk->sk_lock.owned = 0;						\
->   	init_waitqueue_head(&sk->sk_lock.wq);				\
->   	spin_lock_init(&(sk)->sk_lock.slock);				\
-> diff --git a/net/core/sock.c b/net/core/sock.c
-> index 323892066def..b54f12faad1c 100644
-> --- a/net/core/sock.c
-> +++ b/net/core/sock.c
-> @@ -2324,6 +2324,12 @@ static void __sk_destruct(struct rcu_head *head)
->   		__netns_tracker_free(net, &sk->ns_tracker, false);
->   		net_passive_dec(net);
->   	}
-> +
-> +#if IS_ENABLED(CONFIG_PROVE_LOCKING) && IS_ENABLED(CONFIG_MODULES)
-> +	if (sk->sk_owner)
-> +		module_put(sk->sk_owner);
-> +#endif
-> +
->   	sk_prot_free(sk->sk_prot_creator, sk);
->   }
->   
-> ---8<---
-> 
+> Hi Krzysztof,
+> Thank you for your feedback. Let me briefly re-explain the change:
+> The issue:
+> When building with W=1, we get a format-overflow warning because "clk_uart_baud%d" could write 15-17 bytes (14 chars + 1-3 digits) into a 15-byte buffer.
 
+Hi,
+
+how did you come to "1-3 digits"?
+
+thanks,
+-- 
+js
+suse labs
