@@ -1,108 +1,95 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from ida.uls.co.za (ida.uls.co.za [154.73.32.4])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AC5C20E6E3
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 07:54:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 956012F5A;
+	Wed,  2 Apr 2025 07:55:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=154.73.32.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743580463; cv=none; b=NxWJEeXuW85XSrO0vi+GdZgV8DTIw5TKl5bDaLY4DGaeCE6f80uiV7DLp7EteJnULlludJ2tT9iLgaO3gASyEuQKI1GRBZr2GKLN3ZYLH+H0uoNUQvw/ZeZQkK1U4QTA1OiatUA4Yu22L6fKK7ru+zpx4Y9ATBefCG7j89HohwQ=
+	t=1743580517; cv=none; b=UFkHvIHmICODvkq0srTy0TzeyT8k/tt9ak5hbNX5eQpCZqA8wVWzHLJM21umBqwwcXQKuoF6Ct0afn3TGsuxK2GG1lMn1EiHmQiWIy+IEVwd+KpH3nxFa+vdGUbwhTt0EGhcp+uZ2PwQ0bexFBb/sjanClctdJv0OIEKOxXnldU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743580463; c=relaxed/simple;
-	bh=Mb2EC/6/vHC3OJXU3HZj8yJyiLfSXeSJs6GJiHDSlr0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gc7g1ZenmKRiHlxtFJiK/cM+0sWrLd5bYCysRFl/IijjQgdldspuHfujmKKS2t5ReL++m5HavBWkGlWC8RR9bP8F9D9kPWrvKrQ1v4DKme+EaFa9+OGyj4wc8SRQTqcGrQSV8b1Uc3c9pZALyopRE0VJpSu8Cti5k7Dj7Lvr1Rw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jdWLfVed; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jdWLfVed"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-22438c356c8so123798345ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 00:54:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743580462; x=1744185262; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=WCENuk9PQu4krAXVW7qdLepJ1A4XFH9uwEadY8jcBM4=;
-        b=jdWLfVedl8Y4s3y4IsirDjJRsZNiYnG8q0SA3V8xbUArm/DyDzXnrNjxt+d6v8fO9Y
-         m6xRiX72blFsrnPvezwqr2EfkNl1EtWXuHGAiCRquKWYatIlipdKFXyThSFz8c8mypBU
-         L/xEWBeP2GgaFrMRgSbW9ancnr2Ad1e/3s75AFnkYPpzDpEkEdRMuR3v80ZYCH2klWAL
-         i+gQnhX91awZAKkuS2cONMHYeqL4J6TTEvRuDsjI14kbFHfnMUGtjdGnvxlxuIBOc/Yk
-         TREJjx3yoTegtX6pR3fkB+ZVCtYXx5PiWNiJAeGbI4p7734zpuHFgIyFhCZgTpmnBDEn
-         mzgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743580462; x=1744185262;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WCENuk9PQu4krAXVW7qdLepJ1A4XFH9uwEadY8jcBM4=;
-        b=gNKsNEqR7hy1OBBgyEiFgx0Im49gHp5xu7uKDxX8loKTXGEZajL64SN/SbufhgJK+m
-         EqRf+7x6X8trPNOzZl2l9sGRXbn2xPId5jMRvcYzg1GUL/4L4tMUm8ed9SCfWFPYcYRS
-         cGUgT+5bpTo/c5Nx6QFjwsC3WqR4Mv2prtOasThIwDBGwIDX9pr0VNeqM5TOvVIXiBMw
-         6TOWoHpqeD48DRGeK9DUu9umOVoeAA2YjRjxr01bl0gFiR1C7Ks4kn16mxwXiL+mA2+p
-         1mUrkBoOtV3m0WYelzO0uUBwzlxDLTnzoee/MeYpp7z0PajVr4yXfSFwCRbjkAwaQ20W
-         AyZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUxQ1PCR/tgGB5VRM0gfrt/QFXZ+9NYbaXWwKZ9g4LO7tTaOe9kD/A6NlOAtwIPjAnOaMtBlf1zeTbIoUY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyTmMFHAez2x9nXrx70C+mFD9GjHXSPv0C1WgFZ0gCPQ+ZVTbrD
-	jQkaxtrMa04yYpuFyTRCEyZpfySNnDjHvVhK2w3PamzdbKs4NWmBJWnrD0e38w==
-X-Gm-Gg: ASbGnctZ4fE+sO1orvCGis47XFQD131smcj5SXIRYcPwg4nr+bxyaxZAcJQGBdFkQWV
-	4Sq5Sx4KmMAKXnz3bXrXJiN2G+F8WGs6IRJ3yvZZw7Czab3xOr5TkTW5w+REbE1Bc4O4O3zvwsu
-	/viRLKhOaRHN0buvUd/56XnymKoXBqKqpGC+Qf7A/lBPD3idSaekiPy1IleU/IHIkgLzx/TnaiI
-	5OG87KwK75UQFQRD2U9YAWTDlb1hUlMxsz2awcmNCqJC4C8rfinglrlr2lV3vOxgQqvceBT1GCG
-	lGKBSWO/GFSh3V+GZySxHG9fnSNBCkVkO06Z7IPXcNKTAX0ua2K6RD9y
-X-Google-Smtp-Source: AGHT+IGge72TZJH1J2vvYo6DD9BNpDIh2f4O+A+Z8qHrboOP7InJqdVuoFxRjCNjgzZYii4VjHrbsw==
-X-Received: by 2002:a17:903:2acc:b0:220:fb23:48df with SMTP id d9443c01a7336-2292f9d682emr277347625ad.36.1743580461725;
-        Wed, 02 Apr 2025 00:54:21 -0700 (PDT)
-Received: from thinkpad ([120.56.205.103])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291f1ce127sm101967895ad.108.2025.04.02.00.54.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Apr 2025 00:54:21 -0700 (PDT)
-Date: Wed, 2 Apr 2025 13:24:15 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Jensen Huang <jensenhuang@friendlyarm.com>
-Cc: Shawn Lin <shawn.lin@rock-chips.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Heiko Stuebner <heiko@sntech.de>, Philipp Zabel <p.zabel@pengutronix.de>, 
-	Anand Moon <linux.amoon@gmail.com>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: rockchip: Fix order of rockchip_pci_core_rsts
-Message-ID: <lbar6fn3uhqeyg7apvggor7a4lqy22ozkid47quumuvfv7gz36@bny3kfhxvrq2>
-References: <20250328105822.3946767-1-jensenhuang@friendlyarm.com>
+	s=arc-20240116; t=1743580517; c=relaxed/simple;
+	bh=4YO5TIvnXhsRP13fJXk665Ug4/x4CRmu0+dMycblV30=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=f2Id/9g5xQJH6rQp0ctt/9QvPhWwbdi3NJDDhTem+7Yp6RVuwtlMNJ6LQ5obXgGw7hhmNDbzfCUWNX4pZlWTwZZbHnYx8drQl5pHiNkRNkhws0DwaKqEDW+sbznPYnA0dUJMg7UlS4OXkphhEQkT4drz832JWqbzxXes63vJ8SY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uls.co.za; spf=pass smtp.mailfrom=uls.co.za; arc=none smtp.client-ip=154.73.32.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uls.co.za
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uls.co.za
+Received: from [192.168.42.36]
+	by ida.uls.co.za with esmtpsa  (TLS1.3) tls TLS_AES_128_GCM_SHA256
+	(Exim 4.97.1)
+	(envelope-from <jaco@uls.co.za>)
+	id 1tzsw2-000000004KP-1AsD;
+	Wed, 02 Apr 2025 09:54:54 +0200
+Message-ID: <3f71532b-4fed-458a-a951-f631155c0107@uls.co.za>
+Date: Wed, 2 Apr 2025 09:54:51 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250328105822.3946767-1-jensenhuang@friendlyarm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] fuse: Adjust readdir() buffer to requesting buffer
+ size.
+To: Miklos Szeredi <miklos@szeredi.hu>
+Cc: bernd.schubert@fastmail.fm, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, christophe.jaillet@wanadoo.fr,
+ joannelkoong@gmail.com, rdunlap@infradead.org, trapexit@spawn.link,
+ david.laight.linux@gmail.com
+References: <20250314221701.12509-1-jaco@uls.co.za>
+ <20250401142831.25699-1-jaco@uls.co.za>
+ <20250401142831.25699-3-jaco@uls.co.za>
+ <CAJfpegtOGWz_r=7dbQiCh2wqjKh59BqzqJ0ruhtYtsYBB+GG2Q@mail.gmail.com>
+ <19df312f-06a2-4e71-960a-32bc952b0ed2@uls.co.za>
+ <CAJfpegseKMRLpu3-yS6PeU2aTmh_qKyAvJUWud_SLz1aCHY_tw@mail.gmail.com>
+Content-Language: en-GB
+From: Jaco Kroon <jaco@uls.co.za>
+Autocrypt: addr=jaco@uls.co.za; keydata=
+ xsBNBFXtplYBCADM6RTLCOSPiclevkn/gdf8h9l+kKA6N+WGIIFuUtoc9Gaf8QhXWW/fvUq2
+ a3eo4ULVFT1jJ56Vfm4MssGA97NZtlOe3cg8QJMZZhsoN5wetG9SrJvT9Rlltwo5nFmXY3ZY
+ gXsdwkpDr9Y5TqBizx7DGxMd/mrOfXeql57FWFeOc2GuJBnHPZQMJsQ66l2obPn36hWEtHYN
+ gcUSPH3OOusSEGZg/oX/8WSDQ/b8xz1JKTEgcnu/JR0FxzjY19zSHmbnyVU+/gF3oeJFcEUk
+ HvZu776LRVdcZ0lb1bHQB2K9rTZBVeZLitgAefPVH2uERVSO8EZO1I5M7afV0Kd/Vyn9ABEB
+ AAHNG0phY28gS3Jvb24gPGphY29AdWxzLmNvLnphPsLAdwQTAQgAIQUCVe2mVgIbAwULCQgH
+ AgYVCAkKCwIEFgIDAQIeAQIXgAAKCRAILcSxr/fungCPB/sHrfufpRbrVTtHUjpbY4bTQLQE
+ bVrh4/yMiKprALRYy0nsMivl16Q/3rNWXJuQ0gR/faC3yNlDgtEoXx8noXOhva9GGHPGTaPT
+ hhpcp/1E4C9Ghcaxw3MRapVnSKnSYL+zOOpkGwye2+fbqwCkCYCM7Vu6ws3+pMzJNFK/UOgW
+ Tj8O5eBa3DiU4U26/jUHEIg74U+ypYPcj5qXG0xNXmmoDpZweW41Cfo6FMmgjQBTEGzo9e5R
+ kjc7MH3+IyJvP4bzE5Paq0q0b5zZ8DUJFtT7pVb3FQTz1v3CutLlF1elFZzd9sZrg+mLA5PM
+ o8PG9FLw9ZtTE314vgMWJ+TTYX0kzsBNBFXtplYBCADedX9HSSJozh4YIBT+PuLWCTJRLTLu
+ jXU7HobdK1EljPAi1ahCUXJR+NHvpJLSq/N5rtL12ejJJ4EMMp2UUK0IHz4kx26FeAJuOQMe
+ GEzoEkiiR15ufkApBCRssIj5B8OA/351Y9PFore5KJzQf1psrCnMSZoJ89KLfU7C5S+ooX9e
+ re2aWgu5jqKgKDLa07/UVHyxDTtQKRZSFibFCHbMELYKDr3tUdUfCDqVjipCzHmLZ+xMisfn
+ yX9aTVI3FUIs8UiqM5xlxqfuCnDrKBJjQs3uvmd6cyhPRmnsjase48RoO84Ckjbp/HVu0+1+
+ 6vgiPjbe4xk7Ehkw1mfSxb79ABEBAAHCwF8EGAEIAAkFAlXtplYCGwwACgkQCC3Esa/37p7u
+ XwgAjpFzUj+GMmo8ZeYwHH6YfNZQV+hfesr7tqlZn5DhQXJgT2NF6qh5Vn8TcFPR4JZiVIkF
+ o0je7c8FJe34Aqex/H9R8LxvhENX/YOtq5+PqZj59y9G9+0FFZ1CyguTDC845zuJnnR5A0lw
+ FARZaL8T7e6UGphtiT0NdR7EXnJ/alvtsnsNudtvFnKtigYvtw2wthW6CLvwrFjsuiXPjVUX
+ 825zQUnBHnrED6vG67UG4z5cQ4uY/LcSNsqBsoj6/wsT0pnqdibhCWmgFimOsSRgaF7qsVtg
+ TWyQDTjH643+qYbJJdH91LASRLrenRCgpCXgzNWAMX6PJlqLrNX1Ye4CQw==
+Organization: Ultimate Linux Solutions (Pty) Ltd
+In-Reply-To: <CAJfpegseKMRLpu3-yS6PeU2aTmh_qKyAvJUWud_SLz1aCHY_tw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-report: Relay access (ida.uls.co.za).
 
-On Fri, Mar 28, 2025 at 06:58:22PM +0800, Jensen Huang wrote:
-> The order of rockchip_pci_core_rsts follows the previous comments suggesting
-> to avoid reordering. However, reset_control_bulk_deassert() applies resets in
-> reverse, which may lead to the link downgrading to 2.5 GT/s.
-> 
+Hi,
 
-Oops! I failed to spot it...
+I can definitely build on that, thank you.
 
-> This patch restores the deassert order and comments for core_rsts, introduced in
-> commit 58c6990c5ee7 ("PCI: rockchip: Improve the deassert sequence of four reset pins").
-> 
-> Tested on NanoPC-T4 with Samsung 970 Pro.
+What's the advantage of kvmalloc over folio's here, why should it be 
+preferred?
+
+Kind regards,
+Jaco
+
+On 2025/04/01 17:33, Miklos Szeredi wrote:
+> On Tue, 1 Apr 2025 at 17:04, Jaco Kroon <jaco@uls.co.za> wrote:
 >
-
-Thanks for the fix.
-
-> Fixes: 18715931a5c0 ("PCI: rockchip: Simplify reset control handling by using reset_control_bulk*() function")
-> Signed-off-by: Jensen Huang <jensenhuang@friendlyarm.com>
-
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
+>> Because fuse_simple_request via fuse_args_pages (ap) via fuse_io_args
+>> (ia) expects folios and changing that is more than what I'm capable off,
+>> and has larger overall impact.
+> Attaching a minimally tested patch.
+>
+> Thanks,
+> Miklos
