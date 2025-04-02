@@ -1,112 +1,98 @@
-Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F44786353;
-	Wed,  2 Apr 2025 18:16:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28D4AB674
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 18:16:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743617775; cv=none; b=fB83aDhd6zNDFCGKEjnvvEo5FSLfBYK6fa9S/GDTvVKocaxjdIxMDntnzax0gN9cKB+Gkl4uEujKgi74IDX85A0peifY9LGhcaBNVQ7kh3ZxGhsMkmqtE7es7FUDzh7N/qPaQPMgSEpaPUqEN4k2I0Ur4DeiJ4LDC0epYrNuguQ=
+	t=1743617792; cv=none; b=NGHc2JABgCx6L1XRmmm+0+9OFUC/DntoGkXKVZH8WcUIZ2AsAHQRya+xjhqVUMz4g3UVdqGUooiSfQ5skefU7G7QN7XHl74dNC+DjNG6ypELboqcxgf0FEN5HaS2AgI+iODOcldqeYTTznM0aau8JYoj5TQtKyZ/Dqpx/Nze4mQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743617775; c=relaxed/simple;
-	bh=DIH9ivi+lh/hzgbKGXNvqFzCJgtGWKWEU6a5nsjLyUQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mZZSFZpYbTO2cLxvJ0AzqhGO/pIvlLBviV7HbdX/B9JbqKvRDu4f2MQaztnWcAa/JMfybe7FlxzqS70UAAHRHvrYB1+8nDZwRNVN19JNaGkhcLPjPkXSEViSsJg6geUN639X65PDDTSWFDW6X9NjH/CeJZdM5wqivevc7LiLtbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HmGAxVzg; arc=none smtp.client-ip=209.85.215.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743617792; c=relaxed/simple;
+	bh=w7PrYtRAx4c/uDv7ZWUo0w6QoO2+YwivCacOGOGF7i8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=s1ariz7HXwFxq0uYIsJfDsVjVANzamo6XraOFgAAjDbdkbq+/flxUJPyWkEqNIQ3s5acNy2wt0cuUM3ix72QTvoeQYkQzzMSzDULoYppQACIeY/gycnrLLeHw0Fad/PyUYEANKDp5dOgfXXVgkiyjAvX+XzPwp8HeoyRKCvBsEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mouyiy9w; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HmGAxVzg"
-Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-7fd581c2bf4so109927a12.3;
-        Wed, 02 Apr 2025 11:16:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743617774; x=1744222574; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=x0TdMKNGPTVum9Gw2uyoKM+R1Bk/OCWS7Vd5opsWj9s=;
-        b=HmGAxVzgDoNQeyrTQctH8Bk2u33GDx7DbzqiYER+a9P7cA5qRIx9hmj3b/o3JkfzF1
-         yQirISIqX4ujeqcb7qiereMPfbGzS6F6l55/GBIFdAVh/UzytulaUrYFDzlLL5dtFEDW
-         r6uXyJlR/Sy48cQkcUw2O5Vi1Ux/uxoOyZLFNRi9VxOb5PCVTadv/pEyGdqDMNo7Om+T
-         d26o/q6/DH3dgrUW6ToBzQ3En1gJmW3tdev2JugQ1aBNb0ahZ2dJCx6kzrQvWNcxqZOo
-         ERzxitjQp5EM/7QlBrPMl6LYRApKrJ2dZDLhbt/I4sSwju49kd3SngpuC4iIZRmQuSOI
-         I2pw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743617774; x=1744222574;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=x0TdMKNGPTVum9Gw2uyoKM+R1Bk/OCWS7Vd5opsWj9s=;
-        b=qLn7QntTHifjxP5Y8+uPVNAznPawTzMvWhrrJO6FSTdXj7lqeZ341HGIQSWTmg9UxJ
-         oLlSYf+BRYLJOuv5xFf/8It0rL+8boXuoqdANT7L+7FhOpc5zdOpjGMJvakIZNLBG57f
-         /+Xfmfh6HuPBGmTSOOWU5T/We9RJc1dZsC9/ma6UwWsd+PeLMcrwdZuVXCM6dm2L8rjw
-         /NGJFxVSnXyUBaef07C983/U9xMGosrKIsIHjnhsLwGbYrx0Gw3NrF1VHBii+v95ddtV
-         l1zSaojid58m/F1rJbIjr7Jp8fETt9XOucUl+JGLeCXCSAqjXhfQJIJr/Ll45IbNUN5q
-         NP4w==
-X-Forwarded-Encrypted: i=1; AJvYcCUIWgSMSSA6IMtti/30RzzLImM8r8cfMXhlqwaakI6acFARcalRjRalbWkgVISfacl2wPXtRaAa1mXptWgX@vger.kernel.org, AJvYcCVh0e6OjA+8i78OE3tPHff9IpOumE5OOtauqD6V9WTjeVRSFEeB+bGHGMQG7Fm2xx3vT/Xs/a5vkgWNhbyehw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyRfuNTEbkERdkcOj80rIRzlii7D2SWxoVqgYEMQs541NSoKjoV
-	xo64qZan1NSFcpDUcYPNbBC8/OrCvqJpbSyolFQe7+ivHdqSLdWf
-X-Gm-Gg: ASbGncsCs4ORYf4KCqojxUe/9BXV9ND9cqgcTceQJPT8BADYrNZaa3qKhfs/dTnnXBS
-	FeDPCVQnVyu62evU9MqJJoLJamOf4FLm6aqBSxHWrVk91knPsN8QqhF1bD4hSQMyN15+QP6DDwb
-	PGiN/mWBF+JiN551ETYc/CFy6ga1OviQS0VS4QG+q48HHG5fwEAL/duAUYYvL5xXwlLN0sDZ3Cw
-	Ord23y5zeK8fcFoQlRBTma/obfcXIXnt/hxC4EX38PrA1UfTvI35SD3wXZRGSGg+uFLz4qcxlC/
-	FwgfFMNtXtqLZj8JtJ2fI5iXNfqC3tHRTbXtl5M6+XTHwCF1k12tSulgs8/s3xwPCA==
-X-Google-Smtp-Source: AGHT+IF0oea4zc4vg1J+wdlW4qiDKMUxbE8/u+yBFJthNc7Rd32uz5JsdoUwKx3/CjqQ5l3svlkACA==
-X-Received: by 2002:a17:90b:3c4f:b0:2ee:f550:3848 with SMTP id 98e67ed59e1d1-30531f7c573mr23548735a91.5.1743617773656;
-        Wed, 02 Apr 2025 11:16:13 -0700 (PDT)
-Received: from localhost.localdomain ([14.139.69.34])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3056f888d3csm2151378a91.29.2025.04.02.11.16.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Apr 2025 11:16:12 -0700 (PDT)
-From: Bharadwaj Raju <bharadwaj.raju777@gmail.com>
-To: kent.overstreet@linux.dev
-Cc: Bharadwaj Raju <bharadwaj.raju777@gmail.com>,
-	linux-bcachefs@vger.kernel.org,
-	shuah@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-kernel-mentees@lists.linux.dev
-Subject: [PATCH bcachefs-testing] bcachefs: use nonblocking variant of print_string_as_lines in error path
-Date: Wed,  2 Apr 2025 23:45:53 +0530
-Message-ID: <20250402181556.81529-1-bharadwaj.raju777@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mouyiy9w"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CAADC4CEDD;
+	Wed,  2 Apr 2025 18:16:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743617791;
+	bh=w7PrYtRAx4c/uDv7ZWUo0w6QoO2+YwivCacOGOGF7i8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mouyiy9wZJJsAr0LsAFR9W+IniWXifkNvjNqbpROb8gKjYi1IA37qE7nd+EofLFvz
+	 XmnFQoIa62Ea672CmZk6qoev3YtYz4czB/3rHHufWRs6ZYn5URJ/rEPatBfa3OotzT
+	 UwjmXfkMUwu2DW/XGCDON3T/B1bLGejdDMYpeSyQ11c5S3SBRS83tc6ddZaolGk8qY
+	 bLX32pgoWdmJMuL1iWNqZYCc6kUjBBwrodKSw8DfeJ9lsOPNk7+CHpNkFewf2yeMQ2
+	 DWJFSAbSqqTDiu/tu8LoD8OLMKwtH2wu+Y/GPKHHuy/PUS7EDD2RC1ySkZBfW9l7DP
+	 Sr4jDkd64K/QA==
+Date: Wed, 2 Apr 2025 08:16:30 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Frederic Weisbecker <frederic@kernel.org>
+Cc: Marco Crivellari <marco.crivellari@suse.com>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	open list <linux-kernel@vger.kernel.org>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH] workqueue: Always use wq_select_unbound_cpu() for
+ WORK_CPU_UNBOUND.
+Message-ID: <Z-1-_hOEzp9st1wg@slm.duckdns.org>
+References: <20250221112003.1dSuoGyc@linutronix.de>
+ <Z7iSboU-05uMJ7-e@localhost.localdomain>
+ <Z7iuUObJGgZtsaJe@slm.duckdns.org>
+ <20250226161847.eYrJFpIg@linutronix.de>
+ <Z79E_gbWm9j9bkfR@slm.duckdns.org>
+ <Z-1oj4zCByGN38J2@localhost.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z-1oj4zCByGN38J2@localhost.localdomain>
 
-The inconsistency error path calls print_string_as_lines, which calls
-console_lock, which is a potentially-sleeping function and so can't be
-called in an atomic context.
+Hello, Frederic.
 
-Replace calls to it with the nonblocking variant which is safe to call.
+On Wed, Apr 02, 2025 at 06:40:47PM +0200, Frederic Weisbecker wrote:
+> > If we're renaming, I'd deprecate the schedule_*() interface and always use
+> > queue_*() and maybe:
+> > 
+> > - Replace WQ_UNBOUND with its complement WQ_PERCPU.
+> 
+> This one scares us a bit. Currently the default for alloc_workqueue() is
+> WQ_PERCPU. After that the default will be the reverse. Even if this
+> happens as a single patch treewide change, there will be conflicts
+> in the merge window with new users coming up that will happen to be
+> unbound whenever they were not intended to.
+> 
+> But there is a way out of that if we are patient:
+> 
+> 1) For one release, do a treewide change that introduces WQ_PERCPU and apply
+>    it to all relevant users. Keep WQ_UNBOUND around for now and warn if neither
+>    WQ_PERCPU nor WQ_UNBOUND has been passed (this and grep/coccinelle will catch
+>    missed patches from other trees after the merge window).
+> 
+> 2) Once that complete, remove WQ_UNBOUND and its uses on the next release.
+> 
+> How does that sound?
 
-Signed-off-by: Bharadwaj Raju <bharadwaj.raju777@gmail.com>
----
- fs/bcachefs/error.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Yeah, that sounds way safer.
 
-diff --git a/fs/bcachefs/error.c b/fs/bcachefs/error.c
-index b885bd92834c..baf5dfb32298 100644
---- a/fs/bcachefs/error.c
-+++ b/fs/bcachefs/error.c
-@@ -34,7 +34,7 @@ bool __bch2_inconsistent_error(struct bch_fs *c, struct printbuf *out)
- 				   journal_cur_seq(&c->journal));
- 		return true;
- 	case BCH_ON_ERROR_panic:
--		bch2_print_string_as_lines(KERN_ERR, out->buf);
-+		bch2_print_string_as_lines_nonblocking(KERN_ERR, out->buf);
- 		panic(bch2_fmt(c, "panic after error"));
- 		return true;
- 	default:
-@@ -71,7 +71,7 @@ static bool bch2_fs_trans_inconsistent(struct bch_fs *c, struct btree_trans *tra
- 	if (trans)
- 		bch2_trans_updates_to_text(&buf, trans);
- 	bool ret = __bch2_inconsistent_error(c, &buf);
--	bch2_print_string_as_lines(KERN_ERR, buf.buf);
-+	bch2_print_string_as_lines_nonblocking(KERN_ERR, buf.buf);
- 
- 	printbuf_exit(&buf);
- 	return ret;
+> > - Add WQ_PREFER_PERCPU.
+> 
+> This can be done afterward case by case.
+> 
+> > - Rename system_wq -> system_percpu_wq.
+> > - Add system_prefer_percpu_wq.
+> > - Rename system_unbound_wq -> system_dfl_wq.
+> 
+> Easy steps.
+
+Sounds great to me.
+
+Thanks.
+
 -- 
-2.49.0
-
+tejun
