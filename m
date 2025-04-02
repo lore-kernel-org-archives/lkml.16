@@ -1,73 +1,166 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E27B92356A0
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 11:46:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4955020E01D;
+	Wed,  2 Apr 2025 11:46:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743594365; cv=none; b=LVphOG1Fc6cnQQ5xGVQA1NdJujbpMurBQ6k9AGIYiWxxYvW3ZaCSk/m7fAdzM/BJUdW5DnQEUL8/KdL8PofwzSLzjPyONzYybCruNogFIWfBBfk0jf8zoIBxZ9pkm+feGBfT3mVVeCnB5yJn0furMyC2wOEs1n7hPKBCsWKdOw0=
+	t=1743594382; cv=none; b=uy7075j0zXOY9pD9KBA9LaWl8bFcZND9z2mlnMJbc7RxI2+SG7EqXqyeGJHDxY50iCGT3k7+uAhi5a3eBMCDhOeoYHxPkHu71V25gnK8BRHMyZKwA3WNMbnjyWmCkiTQtg9foivTeTRqU7nGuFXReNvmUlld0BVLOGyJhPKm69M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743594365; c=relaxed/simple;
-	bh=aNMkM2/oqZ9nMCjFPqnNVR+sMmsTs8bfhq4pAvUOm3Q=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=u2Z1igkOohYINdNbk8T5TWiTxRH7pbJ9JJRmTj+Y+x5GSh3gEHopDYrnAEqXaPsd1rc2JEm1OQGqHMTfNCGY7eBX6ytBgz7peM93RCk7n6MFuAzDNaQ20C0MzaTM0tfyQWMUXQyY95XZIG24kso9Ox4jQaEkuPbzrHeqA9eWkIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3d44a3882a0so8202395ab.1
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 04:46:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743594363; x=1744199163;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pAr0bHwAv+wEW9U+HD3Kl47Eakz9GlvcSplNmr7f9BI=;
-        b=dm3ezrFvIwVNIlq+d3ZpALmFbg6G3J97ugpSTcjlLe0l+cMG5jJ/NCOZveLo0SzIk6
-         BpTaOlMjTwNl5fkwA+ke3jnCFKunrQzudnjvajczmTo2uhHQtk2S+v++ArUn8eXdPtim
-         5lxhZKT+z7HEl5/d2kW96IZd5MaMaHxqg2SiH6nn7OWDvCOsxbQi0nPRFva6upJGbdbf
-         W/I9HwM/TeOS8pOk0jIW+cukxOucAyh/6ajydgORZGRR1yczzQhGMmUWnnxUw2tErEc0
-         OQM7QpfdfWrheaViXh32gcxV3FKdQfSWMVuqYkgkRd1DDNkgRX+f/hsgbRbTqfcdQbrl
-         ou4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXQAjQuPdlNZTOge6lZ50bpIputTRp4gwECMaONLXcbmUVOunStoxH944vriUIhlM5CZ47Z1dxCYdru5Rc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywf8LfLhd1lH6tNM4THv0aZfLr5vDVzxjx+nWFAozk+WZLgZPEG
-	HkaL0bQVJWYRscNW6ac9If2/4PcGIhZ5aXMJwmMv5cnAoxktKLUZWg0o+zc6ehij0pMUiKauYQV
-	QXaZXaSMaYilKC00H5b0OJOSmyf+kZlrlogmAXIrJDjCgadR2pKL/v5k=
-X-Google-Smtp-Source: AGHT+IFP8Vu8eyKnFDEOLX80bU32FaQbjtJMe0Q41pTgbxmHVqx+8RITthL/vxN/h82eq51cHnvzbsWK5X5Mc6OyG22i2roBc6Zb
+	s=arc-20240116; t=1743594382; c=relaxed/simple;
+	bh=13/ZTgkQNn8YLYBwvB18oJqhNzSjCyZ6MMrKnzIuUK0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lqw3EZuWbk+5wEAK3PuoyvITLZ1HfK1iIMTyeGOg6XCNL21/VA/WPlwiwiEmsHV+bJ514Kow6+ZDMeD+G/ZJ/nQrb+FHiJu2qeEbYRqh9eEV59/1Y20+H5J4fNRcyrTR0r+bd8KmphDKRke+lCasn95F22RlZP0o7eQMo+qi6xA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=arm.com; spf=none smtp.mailfrom=foss.arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=foss.arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B6526106F;
+	Wed,  2 Apr 2025 04:46:23 -0700 (PDT)
+Received: from bogus (unknown [10.57.41.33])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8CBB53F694;
+	Wed,  2 Apr 2025 04:46:17 -0700 (PDT)
+Date: Wed, 2 Apr 2025 12:46:14 +0100
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: Peng Fan <peng.fan@oss.nxp.com>
+Cc: Cristian Marussi <cristian.marussi@arm.com>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	linux-kernel@vger.kernel.org, arm-scmi@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
+	devicetree@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH v3 1/7] firmware: arm_scmi: imx: Add LMM and CPU
+ documentation
+Message-ID: <20250402-acoustic-analytic-guan-d3cda5@sudeepholla>
+References: <20250303-imx-lmm-cpu-v3-0-7695f6f61cfc@nxp.com>
+ <20250303-imx-lmm-cpu-v3-1-7695f6f61cfc@nxp.com>
+ <20250401-quantum-coyote-of-admiration-bf1b68@sudeepholla>
+ <20250402123503.GA23033@nxa18884-linux>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1a89:b0:3d4:6ed4:e0a with SMTP id
- e9e14a558f8ab-3d6d6cf7eb9mr13661855ab.4.1743594363044; Wed, 02 Apr 2025
- 04:46:03 -0700 (PDT)
-Date: Wed, 02 Apr 2025 04:46:03 -0700
-In-Reply-To: <b648feeb-d33d-4476-bdac-1d1a28eb72a1@lucifer.local>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67ed237b.050a0220.297a31.0019.GAE@google.com>
-Subject: Re: [syzbot] [mm?] general protection fault in sys_mremap
-From: syzbot <syzbot+e3385f43b2897a19be24@syzkaller.appspotmail.com>
-To: akpm@linux-foundation.org, jannh@google.com, liam.howlett@oracle.com, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, lorenzo.stoakes@oracle.com, 
-	syzkaller-bugs@googlegroups.com, vbabka@suse.cz
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250402123503.GA23033@nxa18884-linux>
 
-Hello,
+On Wed, Apr 02, 2025 at 08:35:03PM +0800, Peng Fan wrote:
+> Hi Sudeep,
+> 
+> Thanks for reviewing the patch.
+> 
+> For comments that I am not very clear, I marked with [TODO] for easily
+> jump to.
+> 
+> On Tue, Apr 01, 2025 at 03:15:46PM +0100, Sudeep Holla wrote:
+> >On Mon, Mar 03, 2025 at 10:53:22AM +0800, Peng Fan (OSS) wrote:
+> >> From: Peng Fan <peng.fan@nxp.com>
+> >> 
+> >> Add i.MX95 Logical Machine Management and CPU Protocol documentation.
+> >> 
+> >> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> >> ---
+> >>  drivers/firmware/arm_scmi/vendors/imx/imx95.rst | 801 ++++++++++++++++++++++++
+> >>  1 file changed, 801 insertions(+)
+> >> 
+> >> diff --git a/drivers/firmware/arm_scmi/vendors/imx/imx95.rst b/drivers/firmware/arm_scmi/vendors/imx/imx95.rst
+> >> index b2dfd6c46ca2f5f12f0475c24cb54c060e9fa421..74326bf2ea8586282a735713e0ab7eb90ccce8ff 100644
+> >> --- a/drivers/firmware/arm_scmi/vendors/imx/imx95.rst
+> >> +++ b/drivers/firmware/arm_scmi/vendors/imx/imx95.rst
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-unregister_netdevice: waiting for DEV to become free
+> >> +
+> >> +PROTOCOL_MESSAGE_ATTRIBUTES
+> >> +~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> >> +
+> >> +message_id: 0x2
+> >> +protocol_id: 0x80
+> >> +This command is mandatory.
+> >> +
+> >
+> >For completeness add parameters here for message_id as in the spec as it is
+> >referred in the returned value and seems incomplete without it.
+> 
+> [TODO]
+> Sorry, I may not get your point here. You mean below format?
+> 
+> +------------------+-----------------------------------------------------------+
+> |message_id: 0x2
+> |protocol_id: 0x80
+> |This command is mandatory.
+> +------------------+-----------------------------------------------------------+
+> |Return values                                                                 |
+> +------------------+-----------------------------------------------------------+
+> |Name              |Description                                                |
+> +------------------+-----------------------------------------------------------+
+> |int32 status      |SUCCESS: in case the message is implemented and available  |
+> |                  |to use.                                                    |
+> |                  |NOT_FOUND: if the message identified by message_id is      |
+> |                  |invalid or not implemented                                 |
+> +------------------+-----------------------------------------------------------+
+> |uint32 attributes |Flags that are associated with a specific function in the  |
+> |                  |protocol. For all functions in this protocol, this         |
+> 
+> message_id is not put in the table, but it is list above just below
+> the protocol name. I would prefer to keep current layout and align with
+> the MISC and BBM protocol.
+>
 
-unregister_netdevice: waiting for batadv0 to become free. Usage count = 3
+I meant why is the input parameter message_id not described in the table,
+but is referred in the return values. For completeness, just add it even
+though it may match the SCMI spec in terms of input parameter.
 
 
-Tested on:
+[...]
 
-commit:         e20706d5 mseal sysmap: add arch-support txt
-git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git/ mm-stable
-console output: https://syzkaller.appspot.com/x/log.txt?x=167a694c580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=ccf540055069887f
-dashboard link: https://syzkaller.appspot.com/bug?extid=e3385f43b2897a19be24
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+> >> +|                     |Bit[23] Valid err ID:                                   |
+> >> +|                     |Set to 1 if the error ID field is valid.                |
+> >> +|                     |Set to 0 if the error ID field is not valid.            |
+> >> +|                     |Bits[22:8] Error ID(Agent ID of the system).            |
+> >> +|                     |Bit[7:0] Reason(WDOG, POR, FCCU and etc)                |
+> >
+> >Is there a mapping for this ?
+> 
+> I will add a note in V4:
+> See the SRESR register description in the System Reset Controller (SRC) section
+> in SoC reference mannual.
+>
 
-Note: no patches were applied.
+A reference would be good here then. I would be hard to imagine what it means
+otherwise.
+
+> >> +
+> >> +LMM_RESET_VECTOR_SET
+> >> +~~~~~~~~~~~~~~~~~~~~
+> >> +
+> >> +message_id: 0xC
+> >> +protocol_id: 0x80
+> >> +This command is mandatory.
+> >> +
+> >
+> >I can't recall if I had asked this before. How is this different from
+> >CPU_RESET_VECTOR_SET ? Why do you need this ? Why can't you use
+> >CPU_RESET_VECTOR_SET with an additional LMM_* command.
+> >
+> >I am sure there is a valid reason. If so please document the same.
+> 
+> CPU_RESET_VECTOR_SET is for cases that M7 and A55 in the same LM.
+> LMM_RESET_VECTOR_SET is for cases that M7 and A55 in different LM.
+> M7 LM is under control of A55 LM
+>
+
+That still doesn't answer my question. I was asking why do you need this
+extra interface ? If LMM_RESET_VECTOR_SET can take both cpu id and LM id,
+it can be used even for cpus within same LM with current LM ID. Why the
+need for separate interface ?
+
+Other than these 2, I am fine with your response on all other comments.
+
+-- 
+Regards,
+Sudeep
