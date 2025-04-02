@@ -1,62 +1,41 @@
-Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
+Received: from irl.hu (irl.hu [95.85.9.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D0CF23BD09;
-	Wed,  2 Apr 2025 15:00:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0ADE1DA5F
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 15:00:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.85.9.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743606011; cv=none; b=Ljte44PsB67URQMiyGjpfUfCwyghn2djW88uUvqorKmTyiPajSh5lMwtRO9+wjReMTQIM69yVY4OloDr1XzpOY9LteOl5AZgWHqMGNmkaqn53/u4DdquhvSWkdTgbLgtHFSEtKhYiA+7Nq69sECfGqr/Pc5VNHYiuQ8QYirHFI0=
+	t=1743606033; cv=none; b=uHNXsheAuQdtx/J01ekVyWBY+Jwf+YJ0AnRSsq49aTECy2SbFXg+rBAsI6ToJR9WXiUYPiNROihBxr1y4dceMKmIMHGmC/fjI5lFuQFU48UmdgoYV7kZYork/RyuqKuJh31/N/Q+QvABdRPz/5kPAnubl76VvcGSzIOP8824cGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743606011; c=relaxed/simple;
-	bh=QDR3wL0XPBW/EDcrWr7RCbY09c1dPTtj1ZoruraubdI=;
+	s=arc-20240116; t=1743606033; c=relaxed/simple;
+	bh=f4O6sv3eZ30NvzM284f3G5Oa8bN+72v/oVfzjI0rhSI=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=CAyUx/6Ug6kOtpIwDTRl/2uyck/tDVNqS9N6rIiwoJiI2oVXCV6wS8cJ2VYtfeRMQYkBYp0MWKHZjsOV3/9Aaprrmz0DSvCyExte181e3p1vU98HuUSGsitDto0DREXSd+x9L2Ui9nzjgf+TR9MTbUfGW5l14gSOCvyFRrG87CI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=shelob.surriel.com; arc=none smtp.client-ip=96.67.55.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shelob.surriel.com
-Received: from fangorn.home.surriel.com ([10.0.13.7])
-	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.97.1)
-	(envelope-from <riel@shelob.surriel.com>)
-	id 1tzzYb-000000007Vk-0UjT;
-	Wed, 02 Apr 2025 10:59:09 -0400
-Message-ID: <9d38c61098b426777c1a748cf1baf8e57c41c334.camel@surriel.com>
-Subject: Re: [PATCH] sched/fair: Add null pointer check to pick_next_entity()
-From: Rik van Riel <riel@surriel.com>
-To: Peter Zijlstra <peterz@infradead.org>, Pat Cody <pat@patcody.io>
-Cc: mingo@redhat.com, juri.lelli@redhat.com, vincent.guittot@linaro.org, 
-	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
- mgorman@suse.de, 	vschneid@redhat.com, linux-kernel@vger.kernel.org,
- patcody@meta.com, 	kernel-team@meta.com, stable@vger.kernel.org, Breno
- Leitao <leitao@debian.org>
-Date: Wed, 02 Apr 2025 10:59:09 -0400
-In-Reply-To: <20250324115613.GD14944@noisy.programming.kicks-ass.net>
-References: <20250320205310.779888-1-pat@patcody.io>
-	 <20250324115613.GD14944@noisy.programming.kicks-ass.net>
-Autocrypt: addr=riel@surriel.com; prefer-encrypt=mutual;
- keydata=mQENBFIt3aUBCADCK0LicyCYyMa0E1lodCDUBf6G+6C5UXKG1jEYwQu49cc/gUBTTk33A
- eo2hjn4JinVaPF3zfZprnKMEGGv4dHvEOCPWiNhlz5RtqH3SKJllq2dpeMS9RqbMvDA36rlJIIo47
- Z/nl6IA8MDhSqyqdnTY8z7LnQHqq16jAqwo7Ll9qALXz4yG1ZdSCmo80VPetBZZPw7WMjo+1hByv/
- lvdFnLfiQ52tayuuC1r9x2qZ/SYWd2M4p/f5CLmvG9UcnkbYFsKWz8bwOBWKg1PQcaYHLx06sHGdY
- dIDaeVvkIfMFwAprSo5EFU+aes2VB2ZjugOTbkkW2aPSWTRsBhPHhV6dABEBAAG0HlJpayB2YW4gU
- mllbCA8cmllbEByZWRoYXQuY29tPokBHwQwAQIACQUCW5LcVgIdIAAKCRDOed6ShMTeg05SB/986o
- gEgdq4byrtaBQKFg5LWfd8e+h+QzLOg/T8mSS3dJzFXe5JBOfvYg7Bj47xXi9I5sM+I9Lu9+1XVb/
- r2rGJrU1DwA09TnmyFtK76bgMF0sBEh1ECILYNQTEIemzNFwOWLZZlEhZFRJsZyX+mtEp/WQIygHV
- WjwuP69VJw+fPQvLOGn4j8W9QXuvhha7u1QJ7mYx4dLGHrZlHdwDsqpvWsW+3rsIqs1BBe5/Itz9o
- 6y9gLNtQzwmSDioV8KhF85VmYInslhv5tUtMEppfdTLyX4SUKh8ftNIVmH9mXyRCZclSoa6IMd635
- Jq1Pj2/Lp64tOzSvN5Y9zaiCc5FucXtB9SaWsgdmFuIFJpZWwgPHJpZWxAc3VycmllbC5jb20+iQE
- +BBMBAgAoBQJSLd2lAhsjBQkSzAMABgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRDOed6ShMTe
- g4PpB/0ZivKYFt0LaB22ssWUrBoeNWCP1NY/lkq2QbPhR3agLB7ZXI97PF2z/5QD9Fuy/FD/jddPx
- KRTvFCtHcEzTOcFjBmf52uqgt3U40H9GM++0IM0yHusd9EzlaWsbp09vsAV2DwdqS69x9RPbvE/Ne
- fO5subhocH76okcF/aQiQ+oj2j6LJZGBJBVigOHg+4zyzdDgKM+jp0bvDI51KQ4XfxV593OhvkS3z
- 3FPx0CE7l62WhWrieHyBblqvkTYgJ6dq4bsYpqxxGJOkQ47WpEUx6onH+rImWmPJbSYGhwBzTo0Mm
- G1Nb1qGPG+mTrSmJjDRxrwf1zjmYqQreWVSFEt26tBpSaWsgdmFuIFJpZWwgPHJpZWxAZmIuY29tP
- okBPgQTAQIAKAUCW5LbiAIbIwUJEswDAAYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AACgkQznneko
- TE3oOUEQgAsrGxjTC1bGtZyuvyQPcXclap11Ogib6rQywGYu6/Mnkbd6hbyY3wpdyQii/cas2S44N
- cQj8HkGv91JLVE24/Wt0gITPCH3rLVJJDGQxprHTVDs1t1RAbsbp0XTksZPCNWDGYIBo2aHDwErhI
- omYQ0Xluo1WBtH/UmHgirHvclsou1Ks9jyTxiPyUKRfae7GNOFiX99+ZlB27P3t8CjtSO831Ij0Ip
- QrfooZ21YVlUKw0Wy6Ll8EyefyrEYSh8KTm8dQj4O7xxvdg865TLeLpho5PwDRF+/mR3qi8CdGbkE
- c4pYZQO8UDXUN4S+pe0aTeTqlYw8rRHWF9TnvtpcNzZw==
+	 Content-Type:MIME-Version; b=PdDfjcnGY+ZekjTLJQB/SjKWgtzn01IXDnhBgzOsIuDZldcjgeSfJoPA+Qv07JQsanHLQgUbe7SuMZ/8rdrK/0RF9McvfWdOXcMGth/EGGf72TNM5Cu6CuZ5RxBMn8wYSwc932rkQNFB1J0vsvd0eH72jitLFBZ20D9r4dBHr3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu; spf=pass smtp.mailfrom=irl.hu; arc=none smtp.client-ip=95.85.9.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=irl.hu
+Received: from [192.168.2.19] (51b692a2.dsl.pool.telekom.hu [::ffff:81.182.146.162])
+  (AUTH: CRAM-MD5 soyer@irl.hu, )
+  by irl.hu with ESMTPSA
+  id 0000000000080D7C.0000000067ED510D.000838A8; Wed, 02 Apr 2025 17:00:29 +0200
+Message-ID: <dfe09171d1968fd3a03784b04de23f9127adff8d.camel@irl.hu>
+Subject: Re: amdgpu_dm_connector_mode_valid regression
+From: Gergo Koteles <soyer@irl.hu>
+To: Dmitry Baryshkov <dbaryshkov@gmail.com>
+Cc: Dmitry Baryshkov <lumag@kernel.org>, regressions@lists.linux.dev,
+  dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+  amd-gfx@lists.freedesktop.org, Hans de Goede <hdegoede@redhat.com>,
+  Alex Deucher <alexander.deucher@amd.com>,
+  Mario Limonciello <mario.limonciello@amd.com>,
+  Alex Hung <alex.hung@amd.com>,
+  Harry Wentland <harry.wentland@amd.com>
+Date: Wed, 02 Apr 2025 17:00:29 +0200
+In-Reply-To: <CALT56yPvDW1dLNdZK0kkn53kTa0HcVXgYXp9Gim4MH4YjgEncw@mail.gmail.com>
+References: <ed09edb167e74167a694f4854102a3de6d2f1433.camel@irl.hu>
+	 <8963a409dd575e040e5f07e4ad5e9c1d26b421f2.camel@irl.hu>
+	 <CALT56yPd-xfd=47xRxrCk4F3jib4Ti7kg8pRXy-gVAQpbOc=pw@mail.gmail.com>
+	 <e323219b52cda1891a55d12ad77a2b34edc8688b.camel@irl.hu>
+	 <CALT56yPvDW1dLNdZK0kkn53kTa0HcVXgYXp9Gim4MH4YjgEncw@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
@@ -66,65 +45,86 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Sender: riel@surriel.com
 
-On Mon, 2025-03-24 at 12:56 +0100, Peter Zijlstra wrote:
-> On Thu, Mar 20, 2025 at 01:53:10PM -0700, Pat Cody wrote:
-> > pick_eevdf() can return null, resulting in a null pointer
-> > dereference
-> > crash in pick_next_entity()
+Hi Dmitry,
+
+On Wed, 2025-04-02 at 17:40 +0300, Dmitry Baryshkov wrote:
+> On Wed, 2 Apr 2025 at 17:35, Gergo Koteles <soyer@irl.hu> wrote:
+> >=20
+> > Hi Dmitry,
+> >=20
+> > On Wed, 2025-04-02 at 16:36 +0300, Dmitry Baryshkov wrote:
+> > > > >=20
+> > > > > It works if I call
+> > > > > drm_mode_set_crtcinfo((struct drm_display_mode *)mode, 0) before
+> > > > > create_validate_stream_for_sink()
+> > > > > in amdgpu_dm_connector_mode_valid()
+> > > > >=20
+> > > > > or
+> > > > >=20
+> > > > > if I comment out the decide_crtc_timing_for_drm_display_mode() in
+> > > > > create_stream_for_sink()
+> > > > >=20
+> > > > > but a better fix than these can be imagined :)
+> > >=20
+> > > Would it help if you force recalculate_timings to be true if
+> > > (drm_mode->crtc_clock =3D=3D 0)
+> > >=20
+> >=20
+> > Yes, it works with that one.
+> >=20
+> > But the code would start to become quite untraceable.
+> > duplicate mode in amdgpu_dm_connector_mode_valid()
+> > call drm_mode_set_crtcinfo() in amdgpu_dm_connector_mode_valid()
+> > duplicate mode in create_stream_for_sink()
+> > overwrite ctrc in decide_crtc_timing_for_drm_display_mode()
+> > if crtc_clock =3D=3D 0 call drm_mode_set_crtcinfo() again in
+> > create_stream_for_sink()
 >=20
-> If it returns NULL while nr_queued, something is really badly wrong.
+> Well... Unfortunately I don't know AMD driver details to comment on
+> this. The fix that you've posted below at least resolves a regression
+> without requiring us to revert r/o drm_mode argument patches.
 >=20
-> Your check will hide this badness.
+> >=20
+> > saved_mode is never used after this, so I can't add the condition here
+> >         if (recalculate_timing)
+> >                 drm_mode_set_crtcinfo(&saved_mode, 0);
+>=20
+> Agree
+>=20
+> >=20
+> > This commit is related, I think:
+> > 1101185 ("drm/amd/display: fix the ability to use lower resolution
+> > modes on eDP")
+> >=20
+> > Regards,
+> > Gergo
+> >=20
+> > ---
+> > diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+> > b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+> > index bae83a129b5f..83c8c81d4015 100644
+> > --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+> > +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+> > @@ -6984,6 +6984,9 @@ create_stream_for_sink(struct drm_connector
+> > *connector,
+> >         if (recalculate_timing)
+> >                 drm_mode_set_crtcinfo(&saved_mode, 0);
+> >=20
+> > +       if (mode.crtc_clock =3D=3D 0)
+> > +               drm_mode_set_crtcinfo(&mode, 0);
+> > +
+>=20
+> I'd say, please post this and let AMD maintainers act upon it.
+>=20
+>=20
 
-Looking at the numbers, I suspect vruntime_eligible()
-is simply not allowing us to run the left-most entity
-in the rb tree.
+This patch is probably not good yet, because I think it would bring up
+the problem mentioned in=C2=A01101185 ("drm/amd/display: fix the ability to
+use lower resolution modes on eDP") again.
 
-At the root level we are seeing these numbers:
+Maybe someone will come up with a better one.
 
-*(struct cfs_rq *)0xffff8882b3b80000 =3D {
-	.load =3D (struct load_weight){
-		.weight =3D (unsigned long)4750106,
-		.inv_weight =3D (u32)0,
-	},
-	.nr_running =3D (unsigned int)3,
-	.h_nr_running =3D (unsigned int)3,
-	.idle_nr_running =3D (unsigned int)0,
-	.idle_h_nr_running =3D (unsigned int)0,
-	.h_nr_delayed =3D (unsigned int)0,
-	.avg_vruntime =3D (s64)-2206158374744070955,
-	.avg_load =3D (u64)4637,
-	.min_vruntime =3D (u64)12547674988423219,
+Regards,
+Gergo
 
-Meanwhile, the cfs_rq->curr entity has a weight of=20
-4699124, a vruntime of 12071905127234526, and a
-vlag of -2826239998
-
-The left node entity in the cfs_rq has a weight
-of 107666, a vruntime of 16048555717648580,
-and a vlag of -1338888
-
-I cannot for the life of me figure out how the
-avg_vruntime number is so out of whack from what
-the vruntime numbers of the sched entities on the
-runqueue look like.
-
-The avg_vruntime code is confusing me. On the
-one hand the vruntime number is multiplied by
-the sched entity weight when adding to or
-subtracting to avg_vruntime, but on the other
-hand vruntime_eligible scales the comparison
-by the cfs_rq->avg_load number.
-
-What even protects the load number in vruntime_eligible
-from going negative in certain cases, when the current
-entity's entity_key is a negative value?
-
-The latter is probably not the bug we're seeing now, but
-I don't understand how that is supposed to behave.
-
-
---=20
-All Rights Reversed.
