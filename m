@@ -1,181 +1,105 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1826820E01D
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 12:41:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECECF1E89C
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 12:42:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743597719; cv=none; b=oRkx9OxsT2IgULpWayh9Uh1AkzBzQZLEHKnTyhF9rtdATeyOMEDS0W/nLom10DhfT2WhlwlEF7JLzOnrCfyZ1YJsTyv1ejTVuAF1yTXeKTRBAN8AnUfL46yxI+GGoAPwgEC+tXqsw9jEgBM5Ufdn3Vz6YwuYY3yU5wbG+wExvvk=
+	t=1743597740; cv=none; b=CafGo6ZhpmRme6Xr3RcOFkDH9WOvu6N1Q0IGriWx2Ymg4quT1SF0H4NYX6mpKwyJ00faoe/TS3IMpRx2tsXc79vB3ZAVG67KudjL+HRiDzkSo6GP3xncFLKyXSZEVKQ43jbCXlO/lONk2CjpAJkAPsGxJf1pqdtA7NIj1zBsDA4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743597719; c=relaxed/simple;
-	bh=YMUMhB8xVBtwCXRkX0PBJ+HemsVjUeLTSyb6MzDREjc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=OJWFYxsRmfWpFugR+k9TX3/nHui9kBY6UN3+gvJtWKhsFJTdLc0C1b/vvpqZQn/BWJiQ1N8zPbtn+4zQ0P0KcIzD4V25fvzaxDOh8pL9AezwJySPrMm9wSHtwW8FKMe4dmzQUHJlSRn99Z9j5lsksJ39pFh5KiT+aBi4NuusDyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b=LwJeNVwv; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
+	s=arc-20240116; t=1743597740; c=relaxed/simple;
+	bh=R4OCPC5GIW5rDlf8DLopCRzwBaWhDmTzxMbuMc6KxPs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DFEYT+g3JL6nScRY8nMEo+aIJK072KHiMAtUY5FRMBBYdJgiaLMXtQ90iA3KZIoYfKUHmj1AtggrsyMHYnH8ujXWKzQwpCfATVxz5vbbfjFHc7lulQ+G2hwI9UaG+H2UqO5YOEIPOkwSD9Y6p8OxrRgEn3Bf57262b4IqDS+pjs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g9akKPf4; arc=none smtp.client-ip=209.85.222.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="LwJeNVwv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
-	s=201909; t=1743597714;
-	bh=UW1Q3DQR3kXzVkAw91XeIcKR12Yo/AaT1tjpeSt/DM8=;
-	h=From:To:Cc:Subject:Date:From;
-	b=LwJeNVwvv3UnB4h5O5u4ef3mVCfPdKmhFgklVP7sF04PbcR5Po/1uToqpyeYeOA37
-	 01n32BMOdXKoJoq9S7gGC9dm74mux1BgHnfzaNa6OEJ4gYu2+3QgNKLo+ogFS0NNVH
-	 gVEpTjbF1f1E67qghb9U6ylMZZIy+SFBlH+6RO37e+y1LYgPefDL6LykihfJyVeVEI
-	 7TSJFn7ktINNG3h2utEhniNA3HkKZK58Xp3FiZ90Bc/nj07SkEmLCCMHWAY72ihIM2
-	 0XkbidWxbF717QBNkILLaifRrY3lNBneGukcjcgFazVAez0c6Y8YzAT7PvsUcrCm4y
-	 6eInRR76Xhbzw==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZSPdF6krrz4wcT;
-	Wed,  2 Apr 2025 23:41:53 +1100 (AEDT)
-From: Michael Ellerman <mpe@ellerman.id.au>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: maddy@linux.ibm.com, linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au,
- naveen@kernel.org, npiggin@gmail.com, ajd@linux.ibm.com,
- christophe.leroy@csgroup.eu, fbarrat@linux.ibm.com,
- linux-kernel@vger.kernel.org, martin.petersen@oracle.com,
- James.Bottomley@HansenPartnership.com
-Subject: [GIT PULL] Please pull powerpc/linux.git powerpc-6.15-2 tag
-Date: Wed, 02 Apr 2025 23:41:50 +1100
-Message-ID: <87zfgyivld.fsf@mpe.ellerman.id.au>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g9akKPf4"
+Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-7c56321b22cso76528985a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 05:42:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743597738; x=1744202538; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=gMesyxSaPdR5MylDGUVskOG3tbpdc/ALanBjO7+rOAQ=;
+        b=g9akKPf4AMzPQdRiBC4bE3kdrhGNkri+WRav7s4zO/AKe6IEisT6GGXNmtTcGHQoYK
+         xtJwbRGOZJESe2ZhH75uB5plWNiaQSxZ6KW6xS5Nlm2Qqplpx2lb4ztmS87DWm65pjVE
+         ap8cTsRr/1Zc0Zb9ayefGcuEwGGJxMZuhWt3hGCixD21ezHcLcgVCkXT9n52QJeJAj6E
+         paPntwn0aNokaWhlsHvzZFT6rZ3JH3KyiL08W/ahwOLtA906QrLN3n/3ki3i9t6bNv+S
+         Jvh4uYCoOOPo5VAHXu1cCgUlRbEj+bASBWb8+TBmm9jKDKaGgj+CnELOvqu2H9+ln68D
+         d/Tw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743597738; x=1744202538;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gMesyxSaPdR5MylDGUVskOG3tbpdc/ALanBjO7+rOAQ=;
+        b=aAM9P5WT2Qd8+5rBekXxRFOpX1JX2IBQZHN1FsX3oTj42jqpsGxjGMAf2Fc5S68+Nu
+         r2J+ZtWMQp6E8qa3kdeUHsURrwQYQlRT+xyCAkkB7UjWB09VbAbrw+/4CnhS9yVzkXew
+         aCh0Izl68xYlhBNwLX3SNyJ+JfHjQkOY7wQhXNIITNIeZTOMltulGYa4R9i2gW4CGxXt
+         8noQ2AvC+mze3+lfDr+VfjHTJHGp4CqOFqh+/nRiHT90aW1hrMZK94Kg+PEBHlHWM1cI
+         chO0vcGpmJChd0kmJzw6GjENl1jvuRKqu8aTNDehaN7Q+vNcaiPIig8O7/N0EVLh3Qq1
+         jAOA==
+X-Forwarded-Encrypted: i=1; AJvYcCXLQ7igIbslvHmXmSLP1bWQmliaR9vJRvZxlM+E7aXsbNKykQoj3qMQs+tWxHBDlijQORu2/XZhd0Qzul4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHU3PbCMLy3flzo8Nhuy7aGsjl4DE7p2C7BpYEZcbPmGg96V2w
+	CO2FD3reN1nPpRXEYvwjKEkP/nk/memlhRz9Pm91tmvfnPkHhHHK
+X-Gm-Gg: ASbGncv3kVa1j5qTH/vdtmVrsW1qj+BTY1kysvQFg78L3JRzDfXudtk3/7tPGCGPBL7
+	tJz1GDnno2ub8vU4UoQhk8YSLLORi3fUjqkLnkE3PRnmdHNaqa4GEBvUDOfTnWwItNCf0c9sNqD
+	sbkkZlO4jd4+MgvCQs6vB+qu9Hd/iw+xTM0X9Tx15+zEZo//dV921YhJcrQw/drmP/dzo77/MFR
+	PpIURbuymPJbPVO1xSbd95isCR9m3KDR/15FnLjDCZCAjM5Hu+hDPY3NbbzLW/oPRKTJrxNu4SD
+	ljJAoMDMxsFAxPpiDJiggE+UW4XzEXB1Dv6auvdASyJNNPDYZKZuKaoNhvIr+Gc4dGj3o4+DtAC
+	ORdrhOAcraSEUaDGdXJJlsG4=
+X-Google-Smtp-Source: AGHT+IEvCJhIE1lGLlolmFROkAGgo6HK15aytIN0zxVdJcGxXPm3q4rCkbA7uRuwdJucvIaKAu4A3g==
+X-Received: by 2002:a05:620a:17ab:b0:7c0:b350:820 with SMTP id af79cd13be357-7c76820f723mr236313785a.5.1743597737702;
+        Wed, 02 Apr 2025 05:42:17 -0700 (PDT)
+Received: from theriatric.mshome.net (c-73-123-232-110.hsd1.ma.comcast.net. [73.123.232.110])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c5f7764fefsm781128685a.85.2025.04.02.05.42.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Apr 2025 05:42:17 -0700 (PDT)
+From: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+To: linux-staging@lists.linux.dev
+Cc: philipp.g.hortmann@gmail.com,
+	eamanu@riseup.net,
+	linux-kernel@vger.kernel.org,
+	kernelmentees@lists.linuxfoundation.org,
+	skhan@linuxfoundation.org,
+	gregkh@linuxfoundation.org,
+	Gabriel Shahrouzi <gshahrouzi@gmail.com>
+Subject: [PATCH v2] staging: rtl8723bs: Remove trailing whitespace
+Date: Wed,  2 Apr 2025 08:42:07 -0400
+Message-ID: <20250402124207.5024-1-gshahrouzi@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA512
+Remove trailing whitespace to comply with kernel coding style.
 
-Hi Linus,
+Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+---
+Changes in v2:
+	- Resend using git send-email to fix formatting issues in email body.
+---
+ drivers/staging/rtl8723bs/include/hal_pwr_seq.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Please pull the removal of the powerpc CAPI driver.
+diff --git drivers/staging/rtl8723bs/include/hal_pwr_seq.h drivers/staging/rtl8723bs/include/hal_pwr_seq.h
+index b93d74a5b9a5..48bf7f66a06e 100644
+--- drivers/staging/rtl8723bs/include/hal_pwr_seq.h
++++ drivers/staging/rtl8723bs/include/hal_pwr_seq.h
+@@ -209,7 +209,7 @@
+ #define RTL8723B_TRANS_END															\
+ 	/* format */																\
+ 	/* { offset, cut_msk, fab_msk|interface_msk, base|cmd, msk, value }, comments here*/								\
+-	{0xFFFF, PWR_CUT_ALL_MSK, PWR_FAB_ALL_MSK, PWR_INTF_ALL_MSK, 0, PWR_CMD_END, 0, 0}, 
++	{0xFFFF, PWR_CUT_ALL_MSK, PWR_FAB_ALL_MSK, PWR_INTF_ALL_MSK, 0, PWR_CMD_END, 0, 0},
+ 
+ 
+ extern struct wlan_pwr_cfg rtl8723B_power_on_flow[RTL8723B_TRANS_CARDEMU_TO_ACT_STEPS+RTL8723B_TRANS_END_STEPS];
+-- 
+2.43.0
 
-This was a two patch series, the first patch went via the SCSI tree and the
-second patch had a conflict with the powerpc fixes branch.
-
-To avoid a messy conflict I put it in a topic branch and resolved the conflicts
-there. It's been in linux-next for a couple of weeks.
-
-cheers
-
-The following changes since commit 7b667acd69e316c2ed1b47e5dcd9d093be4a843f:
-
-  Merge tag 'powerpc-6.15-1' of git://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux (2025-03-27 19:39:08 -0700)
-
-are available in the git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git tags/powerpc-6.15-2
-
-for you to fetch changes up to 892c4e465c360d07f529bc3668fde7cbd4ea6b32:
-
-  docs: Fix references to IBM CAPI (cxl) removal version (2025-04-02 23:09:52 +1100)
-
-- - ------------------------------------------------------------------
-powerpc updates for 6.15 #2
-
- - Remove the IBM CAPI (cxl) driver
-
-Thanks to: Andrew Donnellan.
-
-- - ------------------------------------------------------------------
-Andrew Donnellan (1):
-      cxl: Remove driver
-
-Michael Ellerman (3):
-      Merge branch 'fixes' into topic/cxl
-      Merge branch 'topic/cxl' into next
-      docs: Fix references to IBM CAPI (cxl) removal version
-
-
- Documentation/ABI/{obsolete => removed}/sysfs-class-cxl |   55 +-
- Documentation/arch/powerpc/cxl.rst                      |  470 -----
- Documentation/arch/powerpc/index.rst                    |    1 -
- Documentation/userspace-api/ioctl/ioctl-number.rst      |    4 +-
- MAINTAINERS                                             |   12 -
- arch/powerpc/configs/skiroot_defconfig                  |    1 -
- arch/powerpc/include/asm/copro.h                        |    6 -
- arch/powerpc/include/asm/device.h                       |    3 -
- arch/powerpc/include/asm/pnv-pci.h                      |   17 -
- arch/powerpc/mm/book3s64/hash_native.c                  |   13 +-
- arch/powerpc/mm/book3s64/hash_utils.c                   |   10 +-
- arch/powerpc/mm/book3s64/pgtable.c                      |    1 -
- arch/powerpc/mm/book3s64/slice.c                        |    6 +-
- arch/powerpc/mm/copro_fault.c                           |   11 -
- arch/powerpc/platforms/powernv/Makefile                 |    1 -
- arch/powerpc/platforms/powernv/pci-cxl.c                |  153 --
- arch/powerpc/platforms/powernv/pci-ioda.c               |   43 -
- arch/powerpc/platforms/powernv/pci.c                    |   61 -
- arch/powerpc/platforms/powernv/pci.h                    |    2 -
- drivers/misc/Kconfig                                    |    1 -
- drivers/misc/Makefile                                   |    1 -
- drivers/misc/cxl/Kconfig                                |   28 -
- drivers/misc/cxl/Makefile                               |   14 -
- drivers/misc/cxl/api.c                                  |  532 -----
- drivers/misc/cxl/base.c                                 |  126 --
- drivers/misc/cxl/context.c                              |  362 ----
- drivers/misc/cxl/cxl.h                                  | 1135 -----------
- drivers/misc/cxl/cxllib.c                               |  271 ---
- drivers/misc/cxl/debugfs.c                              |  134 --
- drivers/misc/cxl/fault.c                                |  341 ----
- drivers/misc/cxl/file.c                                 |  699 -------
- drivers/misc/cxl/flash.c                                |  538 -----
- drivers/misc/cxl/guest.c                                | 1208 -----------
- drivers/misc/cxl/hcalls.c                               |  643 ------
- drivers/misc/cxl/hcalls.h                               |  200 --
- drivers/misc/cxl/irq.c                                  |  450 -----
- drivers/misc/cxl/main.c                                 |  383 ----
- drivers/misc/cxl/native.c                               | 1592 ---------------
- drivers/misc/cxl/of.c                                   |  346 ----
- drivers/misc/cxl/pci.c                                  | 2103 --------------------
- drivers/misc/cxl/sysfs.c                                |  771 -------
- drivers/misc/cxl/trace.c                                |    9 -
- drivers/misc/cxl/trace.h                                |  691 -------
- drivers/misc/cxl/vphb.c                                 |  309 ---
- include/misc/cxl-base.h                                 |   48 -
- include/misc/cxl.h                                      |  265 ---
- include/misc/cxllib.h                                   |  129 --
- include/uapi/misc/cxl.h                                 |  156 --
- 48 files changed, 43 insertions(+), 14312 deletions(-)
- rename Documentation/ABI/{obsolete => removed}/sysfs-class-cxl (87%)
- delete mode 100644 Documentation/arch/powerpc/cxl.rst
- delete mode 100644 arch/powerpc/platforms/powernv/pci-cxl.c
- delete mode 100644 drivers/misc/cxl/Kconfig
- delete mode 100644 drivers/misc/cxl/Makefile
- delete mode 100644 drivers/misc/cxl/api.c
- delete mode 100644 drivers/misc/cxl/base.c
- delete mode 100644 drivers/misc/cxl/context.c
- delete mode 100644 drivers/misc/cxl/cxl.h
- delete mode 100644 drivers/misc/cxl/cxllib.c
- delete mode 100644 drivers/misc/cxl/debugfs.c
- delete mode 100644 drivers/misc/cxl/fault.c
- delete mode 100644 drivers/misc/cxl/file.c
- delete mode 100644 drivers/misc/cxl/flash.c
- delete mode 100644 drivers/misc/cxl/guest.c
- delete mode 100644 drivers/misc/cxl/hcalls.c
- delete mode 100644 drivers/misc/cxl/hcalls.h
- delete mode 100644 drivers/misc/cxl/irq.c
- delete mode 100644 drivers/misc/cxl/main.c
- delete mode 100644 drivers/misc/cxl/native.c
- delete mode 100644 drivers/misc/cxl/of.c
- delete mode 100644 drivers/misc/cxl/pci.c
- delete mode 100644 drivers/misc/cxl/sysfs.c
- delete mode 100644 drivers/misc/cxl/trace.c
- delete mode 100644 drivers/misc/cxl/trace.h
- delete mode 100644 drivers/misc/cxl/vphb.c
- delete mode 100644 include/misc/cxl-base.h
- delete mode 100644 include/misc/cxl.h
- delete mode 100644 include/misc/cxllib.h
- delete mode 100644 include/uapi/misc/cxl.h
------BEGIN PGP SIGNATURE-----
-
-iHUEARYKAB0WIQRjvi15rv0TSTaE+SIF0oADX8seIQUCZ+0tEgAKCRAF0oADX8se
-IcfuAQCG4FpG5hlZ01jIWq9cQmnhHYZbnvR7AkvI1TYlPpqbYQEAw1nGSOU6M30Q
-SM3visqeO9ZGUrmJhJfllHEBRpHJcAo=
-=aTSI
------END PGP SIGNATURE-----
