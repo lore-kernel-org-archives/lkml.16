@@ -1,128 +1,76 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01BB720E328
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 13:36:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 873EB2376EA;
+	Wed,  2 Apr 2025 13:37:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743601016; cv=none; b=Myf62xRmV1xHXM1z3TPuVGa3FyDPoMTbN/BCwnakk9VbeNatr+9IwDQzPK1Oy7zp/YSGlYxrF5VLwpN9pISt/AWS/24mm88h14n5TvBBJjlU0jA/78dV5Cs8zocD9YEC+PQfti1rSDyehSlDMzWG69JmWPKaGql0e9loxWoD7tw=
+	t=1743601065; cv=none; b=aevId9dvFpiwqPVvn04wIT8CRkLBtZLN++U3ubrmoJ+0UzoBd02I2ApEpzoNQpQR5RD75V9MO1C8JoISRQ0z1HwAXc/T6jGzWPLSfZq3R9qs7UiL2v/H4Z/wQ6oC87vtbVMpV3eyA6KtuTUtPVXqbak03/e2vuslBABru4AfTu8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743601016; c=relaxed/simple;
-	bh=b9wZe3zUusuqi80SoEAKAiGo1Ofb54SdnVVM8IPNgiw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Q5COg2f5JkXwF1IdcWHTCqTTlyGRttlbU5w38xUBOcScQJhgc1QBTaM1wfbnaKZ0yaeWdNlcv3FSgL34vQZ1CRu09jI15gcfyyc2zLseTqwgUd2OalrILOg3qHLoQjMC9SjX6s4n9UZicOUDzRjCoVQTuj4pMdk4kX8p5itz9y4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lUXDahjv; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743601065; c=relaxed/simple;
+	bh=swpd2XtNMzz3kpxG6BhGNWoUL34duct8rpYe5rxi9/g=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=YkmfnDeCaKHISu2OFogEOKM9qLQxZZZ2hmwPvEpK/+bG1iMLiv1JbGRRSfi626+9DOrTbgmCHp+0ie/7MiK6XYbTpQ2ZVhCfMTGObHTtwL9nqDdr3KhWKisZCXWlwFePX3A8grVlTbLMJpRVcuCC9tFnFELaC6/OSzRcL/kpTRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=atQnTlhn; arc=none smtp.client-ip=178.60.130.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lUXDahjv"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-7394945d37eso119623b3a.3
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 06:36:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743601014; x=1744205814; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=CevzHgDI4EfoYMztFNapjbRDQjnuZqx7ZaIK/kY7TqA=;
-        b=lUXDahjvGCAYUKIYDGI0kAixsjHiWBK+BCan4Hdx6wRy88nzHPafHBy4d75Uj34uYr
-         7JgAbD4z4iML2N3VMx+H56xKTKxaqZbBx8eymltzoNQ9ZdEOR9kfsMWyuRBPROTG086F
-         xqxQuFdF+AjBM55lJkJyfXkEjzXDR5l1NL5SoR0jsNVvuAeKtyClGpYyXea4f8HXmUAR
-         GmNflrPgV14vCh9djsKABvGtOH6+bQ/qUBOJHHW9esX0HU9yNRdZCfy51wWApiFuvxGd
-         kLRmZobwpSF0Bn+NFvxGk4LN1C6MqoIdZqmArrf7obPOs72OO4dAKZ4r1fedpRGAxkgX
-         W1Aw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743601014; x=1744205814;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CevzHgDI4EfoYMztFNapjbRDQjnuZqx7ZaIK/kY7TqA=;
-        b=OhuDMqvq0uXJ9jW0zUYSw+FGtDe5ztPYRoPwxQpnr2c4+2BBC1YlTZQEqSw/RUTfE1
-         /M4NRtGcPhkO/x8ovHL3SOvUNAYinbxmKPFeHmr2mVMorDXqEyv1RQklBayqpfyn78qz
-         p17Dxjyz3qzbfq5OXVMtLa74VBEoSYPgnnkkrv7YUGQ2lhCOInf4psz/s3sA2uuvpU9S
-         ljisVT49lEjr5FV/FRokSxc/rWSD4xYx1cQLqXFnYopg/xxcUDlGL31b/iO+0zPUh6qH
-         2ME0pG4BJ40tdy2wx6dbLI3L3ZGQNSYN3kR5xBkpBDKb1zTLJYRK8AlnLBYiWXYD7DCf
-         IqdA==
-X-Gm-Message-State: AOJu0Yz8elQOabbkCOg74EMmmkMGz7IEGhoyIxH6u6+lxRJCGVY8NEyj
-	sic7uqhEOIkLlWJTxaHI6KYT7IGjKvOCJpCpAc1RspI/bVP38MbB
-X-Gm-Gg: ASbGnctUrxdzscuVIKuc+nT8UuLnhY/F4Ao/CK/WABD4NhruJ1rSIEOkp7RtQJR4bYs
-	18ALKqFuiPKgVsUrQi9KXQWddoHBZ1Y2ZCeiz1Jr1eBS75v2fvUCYvWlrFc6ao2K0Mv7/Kqk5hf
-	0Ryq2NEoDdc1q1b/ySxi51guzAlQu4kvPH7KO2tpEdX6XX4csy10IqfgdwXPry2rwR02jED5pyv
-	To6GSKDmf/ExxHTKnqS5AcwsBiaZmomUEaB/3ZukmUfMIHrswX8NibqtQj2vaxm0pYR5Xe0ZaA+
-	pAleWCQhdhMlhxzGUpHN0oA8QE+5hBniMsz/L/L6M7eM18qCG2RewdKg
-X-Google-Smtp-Source: AGHT+IEG0CGWYCtJMD10Yjwof6pX0tM+SD9K1zb210PZ0rhjrYZw7pGNPoVdlVUOQhEHs9Dwm/9C3Q==
-X-Received: by 2002:a05:6a00:856:b0:736:7960:981f with SMTP id d2e1a72fcca58-7398037c9d8mr25756724b3a.8.1743601014112;
-        Wed, 02 Apr 2025 06:36:54 -0700 (PDT)
-Received: from [10.189.144.225] ([43.224.245.227])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7397106ad9bsm10944008b3a.117.2025.04.02.06.36.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Apr 2025 06:36:53 -0700 (PDT)
-Message-ID: <15dfe0c4-c1cb-4146-ab06-cd36b7412b2e@gmail.com>
-Date: Wed, 2 Apr 2025 21:36:49 +0800
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="atQnTlhn"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=MIME-Version:Content-Transfer-Encoding:Content-Type:References:
+	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=swpd2XtNMzz3kpxG6BhGNWoUL34duct8rpYe5rxi9/g=; b=atQnTlhnDVeymsrO7mq7AdM9cT
+	gWmGJSigP5+KZAA7LJ/6rqIbLqn5Hj8eScXDZ7GVmJb6xnn08shXC9glA0IRr+BfGEQhJ3PfUA/tg
+	cdQtD4HOodpUFg0CnISgCnHYQj7XM0zEDTbOIqpJeURjZug/DEzMV2LnKCwpDiCWJiOgKMGTKQ8p0
+	5Z2eeCKpEOh3ZMLNqiwHreCJS1XslsXVhrZgw4tri7vvbcs6rdcov1h9pF90+AfgvZnXo80MQKeDA
+	39ugXT27jhNfH0c7DD9zleT4QTIBYnIn54u2ZkIpxg2erB/sO+5kNz15D6rU/1J4BxhI/AF3ZPtye
+	FMEP3BEw==;
+Received: from 79.red-83-60-111.dynamicip.rima-tde.net ([83.60.111.79] helo=[192.168.1.72])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
+	id 1tzyHX-00AOOR-SM; Wed, 02 Apr 2025 15:37:27 +0200
+Message-ID: <62dbd9ed967e43e7310cd5333867cfd8930321c4.camel@igalia.com>
+Subject: Re: [PATCH] sctp: check transport existence before processing a
+ send primitive
+From: Ricardo =?ISO-8859-1?Q?Ca=F1uelo?= Navarro <rcn@igalia.com>
+To: Simon Horman <horms@kernel.org>
+Cc: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>, Xin Long	
+ <lucien.xin@gmail.com>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet	 <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
+ Abeni	 <pabeni@redhat.com>, kernel-dev@igalia.com,
+ linux-sctp@vger.kernel.org, 	netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Date: Wed, 02 Apr 2025 15:37:27 +0200
+In-Reply-To: <20250402132141.GO214849@horms.kernel.org>
+References: 
+	<20250402-kasan_slab-use-after-free_read_in_sctp_outq_select_transport-v1-1-da6f5f00f286@igalia.com>
+	 <20250402132141.GO214849@horms.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] lib/iov_iter: fix to increase non slab folio refcount
-To: Vlastimil Babka <vbabka@suse.cz>, akpm@linux-foundation.org,
- willy@infradead.org
-Cc: linux-kernel@vger.kernel.org, linux-mm@archiver.kernel.org,
- Sheng Yong <shengyong1@xiaomi.com>
-References: <20250401144712.1377719-1-shengyong1@xiaomi.com>
- <b2c07fdf-5ab1-4a65-9ce2-38638b7c718e@suse.cz>
-Content-Language: en-US
-From: Sheng Yong <shengyong2021@gmail.com>
-In-Reply-To: <b2c07fdf-5ab1-4a65-9ce2-38638b7c718e@suse.cz>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 
-On 4/1/25 23:22, Vlastimil Babka wrote:
-> On 4/1/25 16:47, Sheng Yong wrote:
->> From: Sheng Yong <shengyong1@xiaomi.com>
-[...]
->>
->> Fixes: b9c0e49abfca ("mm: decline to manipulate the refcount on a slab page")
-> 
-> Sigh. That went to v6.14
-> 
-> mm-hotfixes and Cc: stable then?
+Hi Simon,
 
-Hi, Vlastimil,
+On Wed, 2025-04-02 at 14:21 +0100, Simon Horman wrote:
+> Hi Ricardo,
+>=20
+> This is not a full review, and I would suggest waiting for one from
+> others.
+> But this will result in the local variable err being used
+> uninitialised.
+>=20
+> Flagged by Smatch.
 
-Shall I resend this patch with Cc: tag to the stable list?
+Nice catch! Thanks, I'll queue a fix for this for v2.
 
-thanks,
-sheng
-
-> 
->> Signed-off-by: Sheng Yong <shengyong1@xiaomi.com>
-> 
-> Acked-by: Vlastimil Babka <vbabka@suse.cz>
-> 
-> Thanks.
-> 
->> ---
->>   lib/iov_iter.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->> ---
->> v2:
->>    * update commit message
->>    * update coding style
->>
->> diff --git a/lib/iov_iter.c b/lib/iov_iter.c
->> index 8c7fdb7d8c8f..bc9391e55d57 100644
->> --- a/lib/iov_iter.c
->> +++ b/lib/iov_iter.c
->> @@ -1191,7 +1191,7 @@ static ssize_t __iov_iter_get_pages_alloc(struct iov_iter *i,
->>   			return -ENOMEM;
->>   		p = *pages;
->>   		for (int k = 0; k < n; k++) {
->> -			struct folio *folio = page_folio(page);
->> +			struct folio *folio = page_folio(page + k);
->>   			p[k] = page + k;
->>   			if (!folio_test_slab(folio))
->>   				folio_get(folio);
-> 
-
+Cheers,
+Ricardo
