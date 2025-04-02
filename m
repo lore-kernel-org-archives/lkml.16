@@ -1,793 +1,428 @@
-Received: from mail-oa1-f44.google.com (mail-oa1-f44.google.com [209.85.160.44])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B60B1F583D
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 22:36:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 000401F4623;
+	Wed,  2 Apr 2025 22:38:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743633394; cv=none; b=Md+5jIWuFliCVdVePbefzjijlTLuJk8JRAqxqEVfmOx0AETqrdelTGBvPyPLBcQcfwOVaAi+j4e19dBqF4w1Z10it8SG0j2NlsxdJ8/skd/1G5RRBdn7E01tuisei+ePh8ZRnvT3+u0NnImiUqTmx/7WLd09oPQoDr3fBAznn2w=
+	t=1743633494; cv=none; b=ex+6au4gsTSih7+pBgFd7bY2hGj5XRiNi0qGehC+MhpGetAqkGtdt6Xi/h60fTmjwCXFC+ZVzM2Z6RmNpIpfacTsQA9zHT29G1+nYBUNIR+BFhS+UEA/IEFpEwLsbRLuDz6KissKs6IaxzjG1idhU9Su3zbpe9RXw4OI2InzZTk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743633394; c=relaxed/simple;
-	bh=FGq8nkbRJo+cFfpBwn+mWJPjtOXeRcDZ1+hdVNdpNWc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=dk1VmNuE/s0OL0wnMKpT7Jm/8MAK/ylB/mNL91btSVq6Zhhw+RIuQTVWq21ipmiSrc6NVVfg8qVfcWMerbn1lYGHHEUnQB1y/uXpQWd+l4PF2Tf863GWjJttNNepZ1lnnc3UawK5o1AlQhnbxPmpS05yppS+V6sBH6c9x0cWags=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=W3DsTvDx; arc=none smtp.client-ip=209.85.160.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1743633494; c=relaxed/simple;
+	bh=QyMAccHArRFUEMA0ZybJ2ZRJgcMsQGUttmrvj+2dU/g=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YYdRpL+7JMV/opg13bL9EkA45Ka0xZKCTWgRXGCgKUXPqJvwZzwA3wNMQcAVWaqQXUDDFW0G9xXuZ2LyaqXuQtHpD4cu+/nE9FAVSd3blIzSAYx+Joat6Hxr8bZoaH1wz0ffkxhaZW8j8BOQWuUnlUD8Wf0oAklFTAhPtsN5cMk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VH0AOJ4f; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="W3DsTvDx"
-Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-2c68fd223bcso91632fac.1
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 15:36:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VH0AOJ4f"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4394345e4d5so1615275e9.0;
+        Wed, 02 Apr 2025 15:38:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1743633391; x=1744238191; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1743633489; x=1744238289; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=q6tlU1YeQPfkQrarWx51AFbhkmlI8wPUnXl1IP2Pf/k=;
-        b=W3DsTvDx/ioACmUzTVfMfaZM238E1vw+VR8WNT/MGY+b9j4ByE6pwjagps4DW6tlgc
-         Wf4BelEik8IXe8M894Vw7WaXw2m5bjzI2Ivgm07vXmf8so6dC9giKG9QJy64F4tDno9/
-         UeyhMAY4Cvo+vNxy0qPC/WLvS/Cy2PmpORtRE=
+        bh=t1diHKPEGc7Id8XYuf2IxnytcV75OMWkcSNy9CRfawY=;
+        b=VH0AOJ4fhB7EHRU4Oq6jGfBaLHqLiFFlNe8/60pO6j57yoG/FAO3W7jXutXXMkHgRt
+         EAY527wH0Y6uuKV9U+kDdYwCvxzdrWfiamSCgvLLlTNOuZeFH7ccabT9J9l1OdiQcL87
+         dNMbDxB7rKaO0MyCQyRl4cRUqh4m+DGApnm5cvfwKWiqrMX3MLOF7ZfaalqT9nuHQEDN
+         NpltGAH3NQ6pW67+x7G5JdDboOC4oGcWDPPdQA2dkAHdYKqEnTTlLQMJlg43q04s1D60
+         2pIz+mErj9WK6HIkW5sZwRjIlphbX6BcLAs2iVcOhysp3fTse2BuJSz6kihehpZQzQOv
+         s5IA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743633391; x=1744238191;
+        d=1e100.net; s=20230601; t=1743633489; x=1744238289;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=q6tlU1YeQPfkQrarWx51AFbhkmlI8wPUnXl1IP2Pf/k=;
-        b=dFCXIlb9m34aocS+HwCuO1WmdpQU3G9ynkyv0VHyGTxmW4l2kdeoGW4P1AiYAiAUsJ
-         TA8f9ChxL50YsChkbJJYxw+VgiMFrj6k1Y79V/+XghsAmv4MLObiCVmmeiaZnzlVCdh0
-         Djqn5GHyyoUATIFBWM1tp50UDnSqm1Fji8L/B91DzpDzVTcqFvXk0GGClPNhwtI52C2Y
-         9pgi8NLrMPp9zx2onfEmUrOsBruwxMYJIJU5WzdDTK/naYjvfXL/ZJsHjDQHyKc94cQe
-         z0e7we9vRlqpkzKOOoBpD9hQIvSNCxI4XW+Xoid+4o6AYh85iQpCYoNRhTbci4Zkrms/
-         13nA==
-X-Forwarded-Encrypted: i=1; AJvYcCUhzCA4dybvp6UeNtLIpKBYPCEINcjikabj4aDONafzqMtxBZbVT6KrHpMWk8Xc0tj8VW4VyqvMeJSVBcI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzWiukbL3SIEYt7Ez6CMQKUD8bPG69zmWrgDx9WovGCod9yCst4
-	FY6s0uJqLqgV2xxc/e/aFS8xvELLOeFa1AKodNZdckx49cYF24fvcrIJjEhqTw==
-X-Gm-Gg: ASbGncvDlOuG+MyHqVLpaW4h2gpyHk6i4iBdPujY0HW+IuaQ5L+pq9fmJ/BBEQQxhbh
-	BaFXXhTWtgc/vdckFJ/n6eYQj08IeD8m2slh9FLTTMPcXaCGOkFw3b6DU7XJ4iV9TcHjxtNBbgP
-	xOZ/jU1CII2m8NWgkWnhiM2xvdVFvzvjL7+V90lJFEfh6+wpQPV6+reIauErUJdNckquNTd+iGz
-	ZfSb1mcX3/S8Tk9tXoJplQd6qAYF1fRfZwn6nt4h76LkN8Khmmgqh2xCo8oX07YXZU6sL/yRpUn
-	/ga058gqg0uz4QLt+R3vNC9uEtFzVO0K5HaXWS4PMCU8jFmzSPJibzamBf1h9ZNTYCShETiLW5N
-	/PLzi5Y/etSo1g6N0tCQLaQ==
-X-Google-Smtp-Source: AGHT+IECUK99wB3Fh5FAb4pWpznzS2FHR0gOLhdbhgHuGuBMUdzc1xJhDO6bBAbI1FcTnP3ZZlzdWQ==
-X-Received: by 2002:a05:6870:65ac:b0:2c1:504f:42ed with SMTP id 586e51a60fabf-2cbcf73eeadmr12591184fac.29.1743633390953;
-        Wed, 02 Apr 2025 15:36:30 -0700 (PDT)
-Received: from stbirv-lnx-1.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2cc84bcf5besm190fac.45.2025.04.02.15.36.29
+        bh=t1diHKPEGc7Id8XYuf2IxnytcV75OMWkcSNy9CRfawY=;
+        b=HUFr0von/1LxF/cizEiz3gqLpF6GOFc2e1d6ubQKN+S9NUuF6XtUHi/+5QIY3x+42O
+         Kt0hTw1aXbHPDi3anpUgsvCmPCnu1IeiQSHUJxLJeJizqtytzqEdtEb+vqjfNkZqkg1m
+         bK5z1MioGt3AJH6IgqwRgzWzz+0nwrZBmVDtERwr2wOqO6GSjUyLvmXo8HSY2p6eT5jT
+         G8gLkxSFFNdF/PpQLwkitDPKGajOdUJezKSwbfKf1pemlkZtpQkEHl/Cqm0NepCpdXq+
+         tmM1G+FBvDeN/V5FlUIx0JT+sbES7LLSIu7ukHdNdA1193HM4vxNla6gMXeENGPOUxrK
+         WVVw==
+X-Forwarded-Encrypted: i=1; AJvYcCUBopEYAHOKFqfcnHwcr2nJke4y8Jgl/iNz615zjJoFBPC8mJ8RFT5Ni/sUt/FI/gflnN8Fm73gYUSfmg==@vger.kernel.org, AJvYcCUQGCxZvo2xtDupILqAHkTafhEfICNwtyrzx+UqqEHpQipcfnWt9RUcXii897LEtfOHkiCjLCpaP9RHct4XtXM6@vger.kernel.org, AJvYcCV2JCsp4F8VS2MFcrlCHoU8mM9bWusD8eYzRVXor7OCzEFzeFjasyMe/buYISPLh4TiDtk9Gg==@vger.kernel.org, AJvYcCVKFzhF3Q69fPC49QVErZSVTZX56xr3izOPWOffJIhoYlS378dOSyaNj4RknGnqWUnwQFDS5KixydT42w==@vger.kernel.org, AJvYcCW1+Y/HOc4TeO+sIIzJJn8E1tTZqQWyyehzQi6Gw0srt+LnGKFvMCFpsXgVAM/2iGmzrqY0T3jzCKZJ56/k@vger.kernel.org, AJvYcCW1I9qJpek22a1C6Ty+ZXFJU8ymIoLnYvTHnumJ/M2RMI8h6iuFaBaUYaFfPZL5ZZ5iguE=@vger.kernel.org, AJvYcCW2vvGbF3fEdJrQ8oEz4AWOhEHxRB1QEPDSgEr1Mz+KW3N7Tg++5WwCLd350WhniU7vj5A/tD5BKe4=@vger.kernel.org, AJvYcCWIGOPFsjnBrlSR/avnaTd9VUK1ZCFVhLEqCq8beYbrWtJDDHx+K248M/20Ic1GCYiyn5NkWyahfc50@vger.kernel.org, AJvYcCWPGgzIKxNvQlQGWmawfHAd9q7jRU0MFqbeD4zdOivP71Ll0LZT5d1PZo4KJY50m1o7RqyNvGZCZaNN@vger.kernel.org, AJvYcCWvoB2k+89PWPoJsfSaYzfcz4L9RNh0Y7Z7B2LxCjDasUHTp5f7gSxCEkst14JbCE6USRpuZ+D45ULtcA==@vger.kernel.org, AJvYcCXQ4dyNj9UNkuWQxl14h7bJAQUJgaGKcxirecC8JUpYKKZYX+/mUmuCTXLYga8rGMet3nwYD36/5Lvc3g==@vger.kernel.org, AJvYcCXWdockLL3cJDzRvwdUIX6K/5204zXHjH4PQfuCdktison/u2ndAlCf3qM+2g1dVZe2DjFcq/SNN0iBEw==@vger.kernel.org, AJvYcCXtt7VeSymgeL0mSOXbYVL/J8p3W1LV0bHgoErNxdIpCZnPT6Kly24iUHkQX+16pKQDbZmDnuYj@vger.kernel.org
+X-Gm-Message-State: AOJu0YxKL7z3roL0zzDlzhVp7FH50dM+C6phrcspRv0Ywfbd9tKLAtFs
+	8HFXu1gC+WCvJewZhoZEDmZmtlbvvVzV4yQ6IS2yM3+EPSeRFmO7
+X-Gm-Gg: ASbGncut/uOyhFRKvxFyrJgKHULs9vW4DQaqbZWCse9r6kT0P+VeDMTFlRdyvAR6SRQ
+	jbaYvQgOBQ6yk39eWYpF4m7NPz4Be5inFR5H3PwQlPdruOKJ+EHN09wZXX/K87GhCVAEpLmsBZv
+	kPW+9I98fBrsPmSVIV/IFGPqMjWQ5On6TkoKMNE7Uk2rk0nwDjg0gYkV/TRokKg87cHCiwzOszO
+	tvsQ0nfWefE0NR20/hC3Ao1JkCNkmkNMioe0Cu3YMwPJng4i5A3voBSky6EKED+ZEl2vmlTKFQz
+	B2O17NY1LoYwYLgCb8Ex8qjDUEKkflLKlk1sNJqcH3MXZb5UTQo0hjhiuRPjbhA+zZLUyUYU2Cl
+	EgzOGhLw=
+X-Google-Smtp-Source: AGHT+IGixqzhC2Qwqifdf8ByyftQ6fOugkJkfimMCdWUSausF3MeJcw4pdlkoqCsjupr2prYcZ0FYA==
+X-Received: by 2002:a05:600c:6d45:b0:43c:e70d:4504 with SMTP id 5b1f17b1804b1-43eb63d417dmr27754705e9.19.1743633488458;
+        Wed, 02 Apr 2025 15:38:08 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c3020da17sm69168f8f.64.2025.04.02.15.38.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Apr 2025 15:36:30 -0700 (PDT)
-From: Justin Chen <justin.chen@broadcom.com>
-To: devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: florian.fainelli@broadcom.com,
-	conor+dt@kernel.org,
-	krzk+dt@kernel.org,
-	robh@kernel.org,
-	jassisinghbrar@gmail.com,
-	bcm-kernel-feedback-list@broadcom.com,
-	Justin Chen <justin.chen@broadcom.com>
-Subject: [PATCH v2 2/2] mailbox: Add support for bcm74110 mailbox
-Date: Wed,  2 Apr 2025 15:36:19 -0700
-Message-Id: <20250402223619.358818-3-justin.chen@broadcom.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250402223619.358818-1-justin.chen@broadcom.com>
-References: <20250402223619.358818-1-justin.chen@broadcom.com>
+        Wed, 02 Apr 2025 15:38:07 -0700 (PDT)
+Date: Wed, 2 Apr 2025 23:38:05 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: Stanislav Fomichev <stfomichev@gmail.com>
+Cc: Stefan Metzmacher <metze@samba.org>, Breno Leitao <leitao@debian.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>, Jens Axboe
+ <axboe@kernel.dk>, Pavel Begunkov <asml.silence@gmail.com>, Jakub Kicinski
+ <kuba@kernel.org>, Christoph Hellwig <hch@lst.de>, Karsten Keil
+ <isdn@linux-pingi.de>, Ayush Sawal <ayush.sawal@chelsio.com>, Andrew Lunn
+ <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Simon
+ Horman <horms@kernel.org>, Kuniyuki Iwashima <kuniyu@amazon.com>, Willem de
+ Bruijn <willemb@google.com>, David Ahern <dsahern@kernel.org>, Marcelo
+ Ricardo Leitner <marcelo.leitner@gmail.com>, Xin Long
+ <lucien.xin@gmail.com>, Neal Cardwell <ncardwell@google.com>, Joerg Reuter
+ <jreuter@yaina.de>, Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg
+ <johan.hedberg@gmail.com>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+ Oliver Hartkopp <socketcan@hartkopp.net>, Marc Kleine-Budde
+ <mkl@pengutronix.de>, Robin van der Gracht <robin@protonic.nl>, Oleksij
+ Rempel <o.rempel@pengutronix.de>, kernel@pengutronix.de, Alexander Aring
+ <alex.aring@gmail.com>, Stefan Schmidt <stefan@datenfreihafen.org>, Miquel
+ Raynal <miquel.raynal@bootlin.com>, Alexandra Winter
+ <wintera@linux.ibm.com>, Thorsten Winkler <twinkler@linux.ibm.com>, James
+ Chapman <jchapman@katalix.com>, Jeremy Kerr <jk@codeconstruct.com.au>, Matt
+ Johnston <matt@codeconstruct.com.au>, Matthieu Baerts <matttbe@kernel.org>,
+ Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
+ Krzysztof Kozlowski <krzk@kernel.org>, Remi Denis-Courmont
+ <courmisch@gmail.com>, Allison Henderson <allison.henderson@oracle.com>,
+ David Howells <dhowells@redhat.com>, Marc Dionne
+ <marc.dionne@auristor.com>, Wenjia Zhang <wenjia@linux.ibm.com>, Jan
+ Karcher <jaka@linux.ibm.com>, "D. Wythe" <alibuda@linux.alibaba.com>, Tony
+ Lu <tonylu@linux.alibaba.com>, Wen Gu <guwen@linux.alibaba.com>, Jon Maloy
+ <jmaloy@redhat.com>, Boris Pismenny <borisp@nvidia.com>, John Fastabend
+ <john.fastabend@gmail.com>, Stefano Garzarella <sgarzare@redhat.com>,
+ Martin Schiller <ms@dev.tdt.de>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?=
+ <bjorn@kernel.org>, Magnus Karlsson <magnus.karlsson@intel.com>, Maciej
+ Fijalkowski <maciej.fijalkowski@intel.com>, Jonathan Lemon
+ <jonathan.lemon@gmail.com>, Alexei Starovoitov <ast@kernel.org>, Daniel
+ Borkmann <daniel@iogearbox.net>, Jesper Dangaard Brouer <hawk@kernel.org>,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-sctp@vger.kernel.org, linux-hams@vger.kernel.org,
+ linux-bluetooth@vger.kernel.org, linux-can@vger.kernel.org,
+ dccp@vger.kernel.org, linux-wpan@vger.kernel.org,
+ linux-s390@vger.kernel.org, mptcp@lists.linux.dev,
+ linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com,
+ linux-afs@lists.infradead.org, tipc-discussion@lists.sourceforge.net,
+ virtualization@lists.linux.dev, linux-x25@vger.kernel.org,
+ bpf@vger.kernel.org, isdn4linux@listserv.isdn4linux.de,
+ io-uring@vger.kernel.org
+Subject: Re: [RFC PATCH 0/4] net/io_uring: pass a kernel pointer via
+ optlen_t to proto[_ops].getsockopt()
+Message-ID: <20250402233805.464ed70e@pumpkin>
+In-Reply-To: <Z-2qX_N2-jpMYSIy@mini-arch>
+References: <407c1a05-24a7-430b-958c-0ca78c467c07@samba.org>
+	<ed2038b1-0331-43d6-ac15-fd7e004ab27e@samba.org>
+	<Z+wH1oYOr1dlKeyN@gmail.com>
+	<Z-wKI1rQGSgrsjbl@mini-arch>
+	<0f0f9cfd-77be-4988-8043-0d1bd0d157e7@samba.org>
+	<Z-xi7TH83upf-E3q@mini-arch>
+	<4b7ac4e9-6856-4e54-a2ba-15465e9622ac@samba.org>
+	<20250402132906.0ceb8985@pumpkin>
+	<Z-1Hgv4ImjWOW8X2@mini-arch>
+	<20250402214638.0b5eed55@pumpkin>
+	<Z-2qX_N2-jpMYSIy@mini-arch>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-The bcm74110 mailbox driver is used to communicate with
-a co-processor for various power management and firmware
-related tasks.
+On Wed, 2 Apr 2025 14:21:35 -0700
+Stanislav Fomichev <stfomichev@gmail.com> wrote:
 
-Signed-off-by: Justin Chen <justin.chen@broadcom.com>
----
-v2
-        Fixed minor formatting issues
-        Fixed error check of platform_get_irq()
-        Removed offsetted base iomem vars. Instead we just offset directly
-        from base.
-	Removed shmem variable. Hardcode it instead.
+> On 04/02, David Laight wrote:
+> > On Wed, 2 Apr 2025 07:19:46 -0700
+> > Stanislav Fomichev <stfomichev@gmail.com> wrote:
+> >  =20
+> > > On 04/02, David Laight wrote: =20
+> > > > On Wed, 2 Apr 2025 00:53:58 +0200
+> > > > Stefan Metzmacher <metze@samba.org> wrote:
+> > > >    =20
+> > > > > Am 02.04.25 um 00:04 schrieb Stanislav Fomichev:   =20
+> > > > > > On 04/01, Stefan Metzmacher wrote:     =20
+> > > > > >> Am 01.04.25 um 17:45 schrieb Stanislav Fomichev:     =20
+> > > > > >>> On 04/01, Breno Leitao wrote:     =20
+> > > > > >>>> On Tue, Apr 01, 2025 at 03:48:58PM +0200, Stefan Metzmacher =
+wrote:     =20
+> > > > > >>>>> Am 01.04.25 um 15:37 schrieb Stefan Metzmacher:     =20
+> > > > > >>>>>> Am 01.04.25 um 10:19 schrieb Stefan Metzmacher:     =20
+> > > > > >>>>>>> Am 31.03.25 um 23:04 schrieb Stanislav Fomichev:     =20
+> > > > > >>>>>>>> On 03/31, Stefan Metzmacher wrote:     =20
+> > > > > >>>>>>>>> The motivation for this is to remove the SOL_SOCKET lim=
+itation
+> > > > > >>>>>>>>> from io_uring_cmd_getsockopt().
+> > > > > >>>>>>>>>
+> > > > > >>>>>>>>> The reason for this limitation is that io_uring_cmd_get=
+sockopt()
+> > > > > >>>>>>>>> passes a kernel pointer as optlen to do_sock_getsockopt=
+()
+> > > > > >>>>>>>>> and can't reach the ops->getsockopt() path.
+> > > > > >>>>>>>>>
+> > > > > >>>>>>>>> The first idea would be to change the optval and optlen=
+ arguments
+> > > > > >>>>>>>>> to the protocol specific hooks also to sockptr_t, as th=
+at
+> > > > > >>>>>>>>> is already used for setsockopt() and also by do_sock_ge=
+tsockopt()
+> > > > > >>>>>>>>> sk_getsockopt() and BPF_CGROUP_RUN_PROG_GETSOCKOPT().
+> > > > > >>>>>>>>>
+> > > > > >>>>>>>>> But as Linus don't like 'sockptr_t' I used a different =
+approach.
+> > > > > >>>>>>>>>
+> > > > > >>>>>>>>> @Linus, would that optlen_t approach fit better for you=
+?     =20
+> > > > > >>>>>>>>
+> > > > > >>>>>>>> [..]
+> > > > > >>>>>>>>     =20
+> > > > > >>>>>>>>> Instead of passing the optlen as user or kernel pointer,
+> > > > > >>>>>>>>> we only ever pass a kernel pointer and do the
+> > > > > >>>>>>>>> translation from/to userspace in do_sock_getsockopt(). =
+    =20
+> > > > > >>>>>>>>
+> > > > > >>>>>>>> At this point why not just fully embrace iov_iter? You h=
+ave the size
+> > > > > >>>>>>>> now + the user (or kernel) pointer. Might as well do
+> > > > > >>>>>>>> s/sockptr_t/iov_iter/ conversion?     =20
+> > > > > >>>>>>>
+> > > > > >>>>>>> I think that would only be possible if we introduce
+> > > > > >>>>>>> proto[_ops].getsockopt_iter() and then convert the implem=
+entations
+> > > > > >>>>>>> step by step. Doing it all in one go has a lot of potenti=
+al to break
+> > > > > >>>>>>> the uapi. I could try to convert things like socket, ip a=
+nd tcp myself, but
+> > > > > >>>>>>> the rest needs to be converted by the maintainer of the s=
+pecific protocol,
+> > > > > >>>>>>> as it needs to be tested. As there are crazy things happe=
+ning in the existing
+> > > > > >>>>>>> implementations, e.g. some getsockopt() implementations u=
+se optval as in and out
+> > > > > >>>>>>> buffer.
+> > > > > >>>>>>>
+> > > > > >>>>>>> I first tried to convert both optval and optlen of getsoc=
+kopt to sockptr_t,
+> > > > > >>>>>>> and that showed that touching the optval part starts to g=
+et complex very soon,
+> > > > > >>>>>>> see https://git.samba.org/?p=3Dmetze/linux/wip.git;a=3Dco=
+mmitdiff;h=3D141912166473bf8843ec6ace76dc9c6945adafd1
+> > > > > >>>>>>> (note it didn't converted everything, I gave up after hit=
+ting
+> > > > > >>>>>>> sctp_getsockopt_peer_addrs and sctp_getsockopt_local_addr=
+s.
+> > > > > >>>>>>> sctp_getsockopt_context, sctp_getsockopt_maxseg, sctp_get=
+sockopt_associnfo and maybe
+> > > > > >>>>>>> more are the ones also doing both copy_from_user and copy=
+_to_user on optval)
+> > > > > >>>>>>>
+> > > > > >>>>>>> I come also across one implementation that returned -ERAN=
+GE because *optlen was
+> > > > > >>>>>>> too short and put the required length into *optlen, which=
+ means the returned
+> > > > > >>>>>>> *optlen is larger than the optval buffer given from users=
+pace.
+> > > > > >>>>>>>
+> > > > > >>>>>>> Because of all these strange things I tried to do a minim=
+al change
+> > > > > >>>>>>> in order to get rid of the io_uring limitation and only c=
+onverted
+> > > > > >>>>>>> optlen and leave optval as is.
+> > > > > >>>>>>>
+> > > > > >>>>>>> In order to have a patchset that has a low risk to cause =
+regressions.
+> > > > > >>>>>>>
+> > > > > >>>>>>> But as alternative introducing a prototype like this:
+> > > > > >>>>>>>
+> > > > > >>>>>>>   =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int (*=
+getsockopt_iter)(struct socket *sock, int level, int optname,
+> > > > > >>>>>>>   =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct iov_iter *=
+optval_iter);
+> > > > > >>>>>>>
+> > > > > >>>>>>> That returns a non-negative value which can be placed int=
+o *optlen
+> > > > > >>>>>>> or negative value as error and *optlen will not be change=
+d on error.
+> > > > > >>>>>>> optval_iter will get direction ITER_DEST, so it can only =
+be written to.
+> > > > > >>>>>>>
+> > > > > >>>>>>> Implementations could then opt in for the new interface a=
+nd
+> > > > > >>>>>>> allow do_sock_getsockopt() work also for the io_uring cas=
+e,
+> > > > > >>>>>>> while all others would still get -EOPNOTSUPP.
+> > > > > >>>>>>>
+> > > > > >>>>>>> So what should be the way to go?     =20
+> > > > > >>>>>>
+> > > > > >>>>>> Ok, I've added the infrastructure for getsockopt_iter, see=
+ below,
+> > > > > >>>>>> but the first part I wanted to convert was
+> > > > > >>>>>> tcp_ao_copy_mkts_to_user() and that also reads from usersp=
+ace before
+> > > > > >>>>>> writing.
+> > > > > >>>>>>
+> > > > > >>>>>> So we could go with the optlen_t approach, or we need
+> > > > > >>>>>> logic for ITER_BOTH or pass two iov_iters one with ITER_SR=
+C and one
+> > > > > >>>>>> with ITER_DEST...
+> > > > > >>>>>>
+> > > > > >>>>>> So who wants to decide?     =20
+> > > > > >>>>>
+> > > > > >>>>> I just noticed that it's even possible in same cases
+> > > > > >>>>> to pass in a short buffer to optval, but have a longer valu=
+e in optlen,
+> > > > > >>>>> hci_sock_getsockopt() with SOL_BLUETOOTH completely ignores=
+ optlen.
+> > > > > >>>>>
+> > > > > >>>>> This makes it really hard to believe that trying to use iov=
+_iter for this
+> > > > > >>>>> is a good idea :-(     =20
+> > > > > >>>>
+> > > > > >>>> That was my finding as well a while ago, when I was planning=
+ to get the
+> > > > > >>>> __user pointers converted to iov_iter. There are some weird =
+ways of
+> > > > > >>>> using optlen and optval, which makes them non-trivial to cov=
+ert to
+> > > > > >>>> iov_iter.     =20
+> > > > > >>>
+> > > > > >>> Can we ignore all non-ip/tcp/udp cases for now? This should c=
+over +90%
+> > > > > >>> of useful socket opts. See if there are any obvious problems =
+with them
+> > > > > >>> and if not, try converting. The rest we can cover separately =
+when/if
+> > > > > >>> needed.     =20
+> > > > > >>
+> > > > > >> That's what I tried, but it fails with
+> > > > > >> tcp_getsockopt ->
+> > > > > >>     do_tcp_getsockopt ->
+> > > > > >>       tcp_ao_get_mkts ->
+> > > > > >>          tcp_ao_copy_mkts_to_user ->
+> > > > > >>             copy_struct_from_sockptr
+> > > > > >>       tcp_ao_get_sock_info ->
+> > > > > >>          copy_struct_from_sockptr
+> > > > > >>
+> > > > > >> That's not possible with a ITER_DEST iov_iter.
+> > > > > >>
+> > > > > >> metze     =20
+> > > > > >=20
+> > > > > > Can we create two iterators over the same memory? One for ITER_=
+SOURCE and
+> > > > > > another for ITER_DEST. And then make getsockopt_iter accept opt=
+val_in and
+> > > > > > optval_out. We can also use optval_out position (iov_offset) as=
+ optlen output
+> > > > > > value. Don't see why it won't work, but I agree that's gonna be=
+ a messy
+> > > > > > conversion so let's see if someone else has better suggestions.=
+     =20
+> > > > >=20
+> > > > > Yes, that might work, but it would be good to get some feedback
+> > > > > if this would be the way to go:
+> > > > >=20
+> > > > >            int (*getsockopt_iter)(struct socket *sock,
+> > > > > 				 int level, int optname,
+> > > > > 				 struct iov_iter *optval_in,
+> > > > > 				 struct iov_iter *optval_out);
+> > > > >=20
+> > > > > And *optlen =3D optval_out->iov_offset;
+> > > > >=20
+> > > > > Any objection or better ideas? Linus would that be what you had i=
+n mind?   =20
+> > > >=20
+> > > > I'd worry about performance - yes I know 'iter' are used elsewhere =
+but...
+> > > > Also look at the SCTP code.   =20
+> > >=20
+> > > Performance usually does not matter for set/getsockopts, there
+> > > are a few exceptions that I know (TCP_ZEROCOPY_RECEIVE) =20
+> >=20
+> > That might be the one that is really horrid and completely abuses
+> > the 'length' parameter. =20
+>=20
+> It is reading and writing, yes, but it's not a huge problem. And it
+> does enforce the optlen (to copy back the same amount of bytes). It's
+> not that bad, it's just an example of where we need to be extra
+> careful.
+>=20
+> > > and maybe recent
+> > > devmem sockopts; we can special-case these if needed, or keep sockptr=
+_t,
+> > > idk. I'm skeptical we can convert everything though, that's why the
+> > > suggestion to start with sk/ip/tcp/udp.
+> > >  =20
+> > > > How do you handle code that wants to return an updated length (ofte=
+n longer
+> > > > than the one provided) and an error code (eg ERRSIZE or similar).
+> > > >
+> > > > There is also a very strange use (I think it is a sockopt rather th=
+an an ioctl)
+> > > > where the buffer length the application provides is only that of th=
+e header.
+> > > > The actual buffer length is contained in the header.
+> > > > The return length is the amount written into the full buffer.   =20
+> > >=20
+> > > Let's discuss these special cases as they come up? Worst case these
+> > > places can always re-init iov_iter with a comment on why it is ok.
+> > > But I do agree in general that there are a few places that do wild
+> > > stuff. =20
+> >=20
+> > The problem is that the generic code has to deal with all the 'wild stu=
+ff'. =20
+>=20
+> getsockopt_iter will have optval_in for the minority of socket options
+> (like TCP_ZEROCOPY_RECEIVE) that want to read user's value as well
+> as optval_out. The latter is what the majority of socket options
+> will use to write their value. That doesn't seem too complicated to
+> handle?
+>=20
+> > It is also common to do non-sequential accesses - so iov_iter doesn't m=
+atch
+> > at all. =20
+>=20
+> I disagree that it's 'common'. Searching for copy_from_sockptr_offset
+> returns a few cases and they are mostly using read-with-offset because
+> there is no sequential read (iterator) semantics with sockptr_t.
+>=20
+> > There also isn't a requirement for scatter-gather.
+> >=20
+> > For 'normal' getsockopt (and setsockopt) with short lengths it actually=
+ makes
+> > sense for the syscall wrapper to do the user copies.
+> > But it would need to pass the user ptr+len as well as the kernel ptr+len
+> > to give the required flexibilty.
+> > Then you have to work out whether the final copy to user is needed or n=
+ot.
+> > (not that hard, but it all adds complication). =20
+>=20
+> Not sure I understand what's the problem. The user vs kernel part will
+> be abstracted by iov_iter. The callers will have to write the optlen
+> back. And there are two call sites we care about: io_uring and regular
+> system call. What's your suggestion? Maybe I'm missing something. Do you
+> prefer get_optlen/put_optlen?
 
- drivers/mailbox/Kconfig            |  10 +
- drivers/mailbox/Makefile           |   2 +
- drivers/mailbox/bcm74110-mailbox.c | 655 +++++++++++++++++++++++++++++
- 3 files changed, 667 insertions(+)
- create mode 100644 drivers/mailbox/bcm74110-mailbox.c
+I think the final aim should be to pass the user supplied length to the
+per-protocol code and have it return the length/error to be passed back to =
+the
+user.
 
-diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig
-index ed52db272f4d..6fe3356ddde5 100644
---- a/drivers/mailbox/Kconfig
-+++ b/drivers/mailbox/Kconfig
-@@ -330,4 +330,14 @@ config THEAD_TH1520_MBOX
- 	  kernel is running, and E902 core used for power management among other
- 	  things.
- 
-+config BCM74110_MAILBOX
-+	tristate "Brcmstb BCM74110 Mailbox"
-+	depends on ARCH_BRCMSTB || COMPILE_TEST
-+	default ARCH_BRCMSTB
-+	help
-+	  Broadcom STB mailbox driver present starting with brcmstb bcm74110
-+	  SoCs. The mailbox is a communication channel between the host
-+	  processor and coprocessor that handles various power management task
-+	  and more.
-+
- endif
-diff --git a/drivers/mailbox/Makefile b/drivers/mailbox/Makefile
-index 9a1542b55539..eb2e8f55bd15 100644
---- a/drivers/mailbox/Makefile
-+++ b/drivers/mailbox/Makefile
-@@ -70,3 +70,5 @@ obj-$(CONFIG_QCOM_CPUCP_MBOX)	+= qcom-cpucp-mbox.o
- obj-$(CONFIG_QCOM_IPCC)		+= qcom-ipcc.o
- 
- obj-$(CONFIG_THEAD_TH1520_MBOX)	+= mailbox-th1520.o
-+
-+obj-$(CONFIG_BCM74110_MAILBOX)	+= bcm74110-mailbox.o
-diff --git a/drivers/mailbox/bcm74110-mailbox.c b/drivers/mailbox/bcm74110-mailbox.c
-new file mode 100644
-index 000000000000..04600f2b075e
---- /dev/null
-+++ b/drivers/mailbox/bcm74110-mailbox.c
-@@ -0,0 +1,655 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Broadcom BCM74110 Mailbox Driver
-+ *
-+ * Copyright (c) 2025 Broadcom
-+ */
-+#include <linux/list.h>
-+#include <linux/types.h>
-+#include <linux/workqueue.h>
-+#include <linux/io-64-nonatomic-hi-lo.h>
-+#include <linux/interrupt.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/of.h>
-+#include <linux/delay.h>
-+#include <linux/mailbox_controller.h>
-+#include <linux/bitfield.h>
-+
-+#define BCM_MBOX_BASE(sel)		((sel) * 0x40)
-+#define BCM_MBOX_IRQ_BASE(sel)		(((sel) * 0x20) + 0x800)
-+
-+#define BCM_MBOX_CFGA			0x0
-+#define BCM_MBOX_CFGB			0x4
-+#define BCM_MBOX_CFGC			0x8
-+#define BCM_MBOX_CFGD			0xc
-+#define BCM_MBOX_CTRL			0x10
-+#define  BCM_MBOX_CTRL_EN		BIT(0)
-+#define  BCM_MBOX_CTRL_CLR		BIT(1)
-+#define BCM_MBOX_STATUS0		0x14
-+#define  BCM_MBOX_STATUS0_NOT_EMPTY	BIT(28)
-+#define  BCM_MBOX_STATUS0_FULL		BIT(29)
-+#define BCM_MBOX_STATUS1		0x18
-+#define BCM_MBOX_STATUS2		0x1c
-+#define BCM_MBOX_WDATA			0x20
-+#define BCM_MBOX_RDATA			0x28
-+
-+#define BCM_MBOX_IRQ_STATUS		0x0
-+#define BCM_MBOX_IRQ_SET		0x4
-+#define BCM_MBOX_IRQ_CLEAR		0x8
-+#define BCM_MBOX_IRQ_MASK_STATUS	0xc
-+#define BCM_MBOX_IRQ_MASK_SET		0x10
-+#define BCM_MBOX_IRQ_MASK_CLEAR		0x14
-+#define  BCM_MBOX_IRQ_TIMEOUT		BIT(0)
-+#define  BCM_MBOX_IRQ_NOT_EMPTY		BIT(1)
-+#define  BCM_MBOX_IRQ_FULL		BIT(2)
-+#define  BCM_MBOX_IRQ_LOW_WM		BIT(3)
-+#define  BCM_MBOX_IRQ_HIGH_WM		BIT(4)
-+
-+#define BCM_LINK_CODE0			0xbe0
-+#define BCM_LINK_CODE1			0xbe1
-+#define BCM_LINK_CODE2			0xbe2
-+
-+enum {
-+	BCM_MSG_FUNC_LINK_START = 0,
-+	BCM_MSG_FUNC_LINK_STOP,
-+	BCM_MSG_FUNC_SHMEM_TX,
-+	BCM_MSG_FUNC_SHMEM_RX,
-+	BCM_MSG_FUNC_SHMEM_STOP,
-+	BCM_MSG_FUNC_MAX,
-+};
-+
-+enum {
-+	BCM_MSG_SVC_INIT = 0,
-+	BCM_MSG_SVC_PMC,
-+	BCM_MSG_SVC_SCMI,
-+	BCM_MSG_SVC_DPFE,
-+	BCM_MSG_SVC_MAX,
-+};
-+
-+struct bcm74110_mbox_msg {
-+	struct list_head		list_entry;
-+#define BCM_MSG_VERSION_MASK		GENMASK(31, 29)
-+#define  BCM_MSG_VERSION		0x1
-+#define BCM_MSG_REQ_MASK		BIT(28)
-+#define BCM_MSG_RPLY_MASK		BIT(27)
-+#define BCM_MSG_SVC_MASK		GENMASK(26, 24)
-+#define BCM_MSG_FUNC_MASK		GENMASK(23, 16)
-+#define BCM_MSG_LENGTH_MASK		GENMASK(15, 4)
-+#define BCM_MSG_SLOT_MASK		GENMASK(3, 0)
-+
-+#define BCM_MSG_SET_FIELD(hdr, field, val)			\
-+	do {							\
-+		hdr &= ~BCM_MSG_##field##_MASK;			\
-+		hdr |= FIELD_PREP(BCM_MSG_##field##_MASK, val);	\
-+	} while (0)
-+
-+#define BCM_MSG_GET_FIELD(hdr, field)				\
-+		FIELD_GET(BCM_MSG_##field##_MASK, hdr)
-+	u32				msg;
-+};
-+
-+struct bcm74110_mbox_chan {
-+	struct bcm74110_mbox		*mbox;
-+	bool				en;
-+	int				slot;
-+	int				type;
-+};
-+
-+struct bcm74110_mbox {
-+	struct platform_device		*pdev;
-+	void __iomem			*base;
-+
-+	int				tx_chan;
-+	int				rx_chan;
-+	int				rx_irq;
-+	struct list_head		rx_svc_init_list;
-+	spinlock_t			rx_svc_list_lock;
-+
-+	struct mbox_controller		controller;
-+	struct bcm74110_mbox_chan	*mbox_chan;
-+};
-+
-+#define BCM74110_OFFSET_IO_WRITEL_MACRO(name, offset_base)	\
-+static void bcm74110_##name##_writel(struct bcm74110_mbox *mbox,\
-+				     u32 val, u32 off)		\
-+{								\
-+	writel_relaxed(val, mbox->base + offset_base + off);	\
-+}
-+BCM74110_OFFSET_IO_WRITEL_MACRO(tx, BCM_MBOX_BASE(mbox->tx_chan));
-+BCM74110_OFFSET_IO_WRITEL_MACRO(irq, BCM_MBOX_IRQ_BASE(mbox->rx_chan));
-+
-+#define BCM74110_OFFSET_IO_READL_MACRO(name, offset_base)	\
-+static u32 bcm74110_##name##_readl(struct bcm74110_mbox *mbox,	\
-+				   u32 off)			\
-+{								\
-+	return readl_relaxed(mbox->base + offset_base + off);	\
-+}
-+BCM74110_OFFSET_IO_READL_MACRO(tx, BCM_MBOX_BASE(mbox->tx_chan));
-+BCM74110_OFFSET_IO_READL_MACRO(rx, BCM_MBOX_BASE(mbox->rx_chan));
-+BCM74110_OFFSET_IO_READL_MACRO(irq, BCM_MBOX_IRQ_BASE(mbox->rx_chan));
-+
-+static inline struct bcm74110_mbox *bcm74110_mbox_from_cntrl(
-+					struct mbox_controller *cntrl)
-+{
-+	return container_of(cntrl, struct bcm74110_mbox, controller);
-+}
-+
-+static void bcm74110_rx_push_init_msg(struct bcm74110_mbox *mbox, u32 val)
-+{
-+	struct bcm74110_mbox_msg *msg;
-+
-+	msg = kzalloc(sizeof(*msg), GFP_ATOMIC);
-+	if (!msg)
-+		return;
-+
-+	INIT_LIST_HEAD(&msg->list_entry);
-+	msg->msg = val;
-+
-+	spin_lock(&mbox->rx_svc_list_lock);
-+	list_add_tail(&msg->list_entry, &mbox->rx_svc_init_list);
-+	spin_unlock(&mbox->rx_svc_list_lock);
-+}
-+
-+static void bcm74110_rx_process_msg(struct bcm74110_mbox *mbox)
-+{
-+	struct device *dev = &mbox->pdev->dev;
-+	struct bcm74110_mbox_chan *chan_priv;
-+	struct mbox_chan *chan;
-+	u32 msg, status;
-+	int type;
-+
-+	do {
-+		msg = bcm74110_rx_readl(mbox, BCM_MBOX_RDATA);
-+		status = bcm74110_rx_readl(mbox, BCM_MBOX_STATUS0);
-+
-+		dev_dbg(dev, "rx: [{req=%lu|rply=%lu|srv=%lu|fn=%lu|length=%lu|slot=%lu]\n",
-+			BCM_MSG_GET_FIELD(msg, REQ), BCM_MSG_GET_FIELD(msg, RPLY),
-+			BCM_MSG_GET_FIELD(msg, SVC), BCM_MSG_GET_FIELD(msg, FUNC),
-+			BCM_MSG_GET_FIELD(msg, LENGTH), BCM_MSG_GET_FIELD(msg, SLOT));
-+
-+		type = BCM_MSG_GET_FIELD(msg, SVC);
-+		switch (type) {
-+		case BCM_MSG_SVC_INIT:
-+			bcm74110_rx_push_init_msg(mbox, msg);
-+			break;
-+		case BCM_MSG_SVC_PMC:
-+		case BCM_MSG_SVC_SCMI:
-+		case BCM_MSG_SVC_DPFE:
-+			chan = &mbox->controller.chans[type];
-+			chan_priv = chan->con_priv;
-+			if (chan_priv->en)
-+				mbox_chan_received_data(chan, NULL);
-+			else
-+				dev_warn(dev, "Channel not enabled\n");
-+			break;
-+		default:
-+			dev_warn(dev, "Unsupported msg received\n");
-+		}
-+	} while (status & BCM_MBOX_STATUS0_NOT_EMPTY);
-+}
-+
-+static irqreturn_t bcm74110_mbox_isr(int irq, void *data)
-+{
-+	struct bcm74110_mbox *mbox = data;
-+	u32 status;
-+
-+	status = bcm74110_irq_readl(mbox, BCM_MBOX_IRQ_STATUS);
-+
-+	bcm74110_irq_writel(mbox, 0xffffffff, BCM_MBOX_IRQ_CLEAR);
-+
-+	if (status & BCM_MBOX_IRQ_NOT_EMPTY)
-+		bcm74110_rx_process_msg(mbox);
-+	else
-+		dev_warn(&mbox->pdev->dev, "Spurious interrupt\n");
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static void bcm74110_mbox_mask_and_clear(struct bcm74110_mbox *mbox)
-+{
-+	bcm74110_irq_writel(mbox, 0xffffffff, BCM_MBOX_IRQ_MASK_SET);
-+	bcm74110_irq_writel(mbox, 0xffffffff, BCM_MBOX_IRQ_CLEAR);
-+}
-+
-+static int bcm74110_rx_pop_init_msg(struct bcm74110_mbox *mbox, u32 func_type,
-+				    u32 *val)
-+{
-+	struct bcm74110_mbox_msg *msg, *msg_tmp;
-+	unsigned long flags;
-+	bool found = false;
-+
-+	spin_lock_irqsave(&mbox->rx_svc_list_lock, flags);
-+	list_for_each_entry_safe(msg, msg_tmp, &mbox->rx_svc_init_list,
-+				 list_entry) {
-+		if (BCM_MSG_GET_FIELD(msg->msg, FUNC) == func_type) {
-+			list_del(&msg->list_entry);
-+			found = true;
-+			break;
-+		}
-+	}
-+	spin_unlock_irqrestore(&mbox->rx_svc_list_lock, flags);
-+
-+	if (!found)
-+		return -EINVAL;
-+
-+	*val = msg->msg;
-+	kfree(msg);
-+
-+	return 0;
-+}
-+
-+static void bcm74110_rx_flush_msg(struct bcm74110_mbox *mbox)
-+{
-+	struct bcm74110_mbox_msg *msg, *msg_tmp;
-+	LIST_HEAD(list_temp);
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&mbox->rx_svc_list_lock, flags);
-+	list_splice_init(&mbox->rx_svc_init_list, &list_temp);
-+	spin_unlock_irqrestore(&mbox->rx_svc_list_lock, flags);
-+
-+	list_for_each_entry_safe(msg, msg_tmp, &list_temp, list_entry) {
-+		list_del(&msg->list_entry);
-+		kfree(msg);
-+	}
-+}
-+
-+#define BCM_DEQUEUE_TIMEOUT_MS 30
-+static int bcm74110_rx_pop_init_msg_block(struct bcm74110_mbox *mbox, u32 func_type,
-+					  u32 *val)
-+{
-+	int ret, timeout = 0;
-+
-+	do {
-+		ret = bcm74110_rx_pop_init_msg(mbox, func_type, val);
-+
-+		if (!ret)
-+			return 0;
-+
-+		/* TODO: Figure out what is a good sleep here. */
-+		usleep_range(1000, 2000);
-+		timeout++;
-+	} while (timeout < BCM_DEQUEUE_TIMEOUT_MS);
-+
-+	dev_warn(&mbox->pdev->dev, "Timeout waiting for service init response\n");
-+	return -ETIMEDOUT;
-+}
-+
-+static int bcm74110_mbox_create_msg(int req, int rply, int svc, int func,
-+				    int length, int slot)
-+{
-+	u32 msg = 0;
-+
-+	BCM_MSG_SET_FIELD(msg, REQ, req);
-+	BCM_MSG_SET_FIELD(msg, RPLY, rply);
-+	BCM_MSG_SET_FIELD(msg, SVC, svc);
-+	BCM_MSG_SET_FIELD(msg, FUNC, func);
-+	BCM_MSG_SET_FIELD(msg, LENGTH, length);
-+	BCM_MSG_SET_FIELD(msg, SLOT, slot);
-+
-+	return msg;
-+}
-+
-+static int bcm74110_mbox_tx_msg(struct bcm74110_mbox *mbox, u32 msg)
-+{
-+	int val;
-+
-+	/* We can potentially poll with timeout here instead */
-+	val = bcm74110_tx_readl(mbox, BCM_MBOX_STATUS0);
-+	if (val & BCM_MBOX_STATUS0_FULL) {
-+		dev_err(&mbox->pdev->dev, "Mailbox full\n");
-+		return -EINVAL;
-+	}
-+
-+	dev_dbg(&mbox->pdev->dev, "tx: [{req=%lu|rply=%lu|srv=%lu|fn=%lu|length=%lu|slot=%lu]\n",
-+		BCM_MSG_GET_FIELD(msg, REQ), BCM_MSG_GET_FIELD(msg, RPLY),
-+		BCM_MSG_GET_FIELD(msg, SVC), BCM_MSG_GET_FIELD(msg, FUNC),
-+		BCM_MSG_GET_FIELD(msg, LENGTH), BCM_MSG_GET_FIELD(msg, SLOT));
-+
-+	bcm74110_tx_writel(mbox, msg, BCM_MBOX_WDATA);
-+
-+	return 0;
-+}
-+
-+#define BCM_MBOX_LINK_TRAINING_RETRIES	5
-+static int bcm74110_mbox_link_training(struct bcm74110_mbox *mbox)
-+{
-+	int ret, retries = 0;
-+	u32 msg = 0, orig_len = 0, len = BCM_LINK_CODE0;
-+
-+	do {
-+		switch (len) {
-+		case 0:
-+			retries++;
-+			dev_warn(&mbox->pdev->dev,
-+				 "Link train failed, trying again... %d\n",
-+				 retries);
-+			if (retries > BCM_MBOX_LINK_TRAINING_RETRIES)
-+				return -EINVAL;
-+			len = BCM_LINK_CODE0;
-+			fallthrough;
-+		case BCM_LINK_CODE0:
-+		case BCM_LINK_CODE1:
-+		case BCM_LINK_CODE2:
-+			msg = bcm74110_mbox_create_msg(1, 0, BCM_MSG_SVC_INIT,
-+						       BCM_MSG_FUNC_LINK_START,
-+						       len, BCM_MSG_SVC_INIT);
-+			break;
-+		default:
-+			break;
-+		}
-+
-+		bcm74110_mbox_tx_msg(mbox, msg);
-+
-+		/* No response expected for LINK_CODE2 */
-+		if (len == BCM_LINK_CODE2)
-+			return 0;
-+
-+		orig_len = len;
-+
-+		ret = bcm74110_rx_pop_init_msg_block(mbox,
-+						     BCM_MSG_GET_FIELD(msg, FUNC),
-+						     &msg);
-+		if (ret) {
-+			len = 0;
-+			continue;
-+		}
-+
-+		if ((BCM_MSG_GET_FIELD(msg, SVC) != BCM_MSG_SVC_INIT) ||
-+		    (BCM_MSG_GET_FIELD(msg, FUNC) != BCM_MSG_FUNC_LINK_START) ||
-+		    (BCM_MSG_GET_FIELD(msg, SLOT) != 0) ||
-+		    (BCM_MSG_GET_FIELD(msg, RPLY) != 1) ||
-+		    (BCM_MSG_GET_FIELD(msg, REQ) != 0)) {
-+			len = 0;
-+			continue;
-+		}
-+
-+		len = BCM_MSG_GET_FIELD(msg, LENGTH);
-+
-+		/* Make sure sequence is good */
-+		if (len != (orig_len + 1)) {
-+			len = 0;
-+			continue;
-+		}
-+	} while (1);
-+
-+	return -EINVAL;
-+}
-+
-+static int bcm74110_mbox_tx_msg_and_wait_ack(struct bcm74110_mbox *mbox, u32 msg)
-+{
-+	int ret;
-+	u32 recv_msg;
-+
-+	ret = bcm74110_mbox_tx_msg(mbox, msg);
-+	if (ret)
-+		return ret;
-+
-+	ret = bcm74110_rx_pop_init_msg_block(mbox, BCM_MSG_GET_FIELD(msg, FUNC),
-+					     &recv_msg);
-+	if (ret)
-+		return ret;
-+
-+	/*
-+	 * Modify tx message to verify rx ack.
-+	 * Flip RPLY/REQ for synchronous messages
-+	 */
-+	if (BCM_MSG_GET_FIELD(msg, REQ) == 1) {
-+		BCM_MSG_SET_FIELD(msg, RPLY, 1);
-+		BCM_MSG_SET_FIELD(msg, REQ, 0);
-+	}
-+
-+	if (msg != recv_msg) {
-+		dev_err(&mbox->pdev->dev, "Found ack, but ack is invalid\n");
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+/* Each index points to 0x100 of HAB MEM. IDX size counts from 0 */
-+#define BCM_MBOX_HAB_MEM_IDX_START	0x30
-+#define BCM_MBOX_HAB_MEM_IDX_SIZE	0x0
-+static int bcm74110_mbox_shmem_init(struct bcm74110_mbox *mbox)
-+{
-+	u32 msg = 0;
-+	int ret;
-+
-+	msg = bcm74110_mbox_create_msg(1, 0, BCM_MSG_SVC_INIT,
-+				       BCM_MSG_FUNC_SHMEM_STOP,
-+				       0, BCM_MSG_SVC_INIT);
-+	ret = bcm74110_mbox_tx_msg_and_wait_ack(mbox, msg);
-+	if (ret)
-+		return -EINVAL;
-+
-+	msg = bcm74110_mbox_create_msg(1, 0, BCM_MSG_SVC_INIT,
-+				       BCM_MSG_FUNC_SHMEM_TX,
-+				       BCM_MBOX_HAB_MEM_IDX_START,
-+				       BCM_MBOX_HAB_MEM_IDX_SIZE);
-+	ret = bcm74110_mbox_tx_msg_and_wait_ack(mbox, msg);
-+	if (ret)
-+		return -EINVAL;
-+
-+	msg = bcm74110_mbox_create_msg(1, 0, BCM_MSG_SVC_INIT,
-+				       BCM_MSG_FUNC_SHMEM_RX,
-+				       BCM_MBOX_HAB_MEM_IDX_START,
-+				       BCM_MBOX_HAB_MEM_IDX_SIZE);
-+	ret = bcm74110_mbox_tx_msg_and_wait_ack(mbox, msg);
-+	if (ret)
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
-+static int bcm74110_mbox_init(struct bcm74110_mbox *mbox)
-+{
-+	int ret = 0;
-+
-+	/* Disable queues tx/rx */
-+	bcm74110_tx_writel(mbox, 0x0, BCM_MBOX_CTRL);
-+
-+	/* Clear status & restart tx/rx*/
-+	bcm74110_tx_writel(mbox, BCM_MBOX_CTRL_EN | BCM_MBOX_CTRL_CLR,
-+			   BCM_MBOX_CTRL);
-+
-+	/* Unmask irq */
-+	bcm74110_irq_writel(mbox, BCM_MBOX_IRQ_NOT_EMPTY, BCM_MBOX_IRQ_MASK_CLEAR);
-+
-+	ret = bcm74110_mbox_link_training(mbox);
-+	if (ret) {
-+		dev_err(&mbox->pdev->dev, "Training failed\n");
-+		return ret;
-+	}
-+
-+	return bcm74110_mbox_shmem_init(mbox);
-+}
-+
-+static int bcm74110_mbox_send_data(struct mbox_chan *chan, void *data)
-+{
-+	struct bcm74110_mbox_chan *chan_priv = chan->con_priv;
-+	u32 msg;
-+
-+	switch (chan_priv->type) {
-+	case BCM_MSG_SVC_PMC:
-+	case BCM_MSG_SVC_SCMI:
-+	case BCM_MSG_SVC_DPFE:
-+		msg = bcm74110_mbox_create_msg(1, 0, chan_priv->type, 0,
-+					       128 + 28, chan_priv->slot);
-+		break;
-+	default:
-+		return -EINVAL;
-+	};
-+
-+	return bcm74110_mbox_tx_msg(chan_priv->mbox, msg);
-+}
-+
-+static int bcm74110_mbox_chan_startup(struct mbox_chan *chan)
-+{
-+	struct bcm74110_mbox_chan *chan_priv = chan->con_priv;
-+
-+	chan_priv->en = true;
-+
-+	return 0;
-+}
-+
-+static void bcm74110_mbox_chan_shutdown(struct mbox_chan *chan)
-+{
-+	struct bcm74110_mbox_chan *chan_priv = chan->con_priv;
-+
-+	chan_priv->en = false;
-+}
-+
-+static const struct mbox_chan_ops bcm74110_mbox_chan_ops = {
-+	.send_data = bcm74110_mbox_send_data,
-+	.startup = bcm74110_mbox_chan_startup,
-+	.shutdown = bcm74110_mbox_chan_shutdown,
-+};
-+
-+static void bcm74110_mbox_shutdown(struct platform_device *pdev)
-+{
-+	struct bcm74110_mbox *mbox = dev_get_drvdata(&pdev->dev);
-+	u32 msg;
-+
-+	msg = bcm74110_mbox_create_msg(1, 0, BCM_MSG_SVC_INIT,
-+				       BCM_MSG_FUNC_LINK_STOP,
-+				       0, 0);
-+
-+	bcm74110_mbox_tx_msg_and_wait_ack(mbox, msg);
-+
-+	/* Even if we don't receive ACK, lets shut it down */
-+
-+	bcm74110_mbox_mask_and_clear(mbox);
-+
-+	/* Disable queues tx/rx */
-+	bcm74110_tx_writel(mbox, 0x0, BCM_MBOX_CTRL);
-+
-+	/* Flush queues */
-+	bcm74110_rx_flush_msg(mbox);
-+}
-+
-+static struct mbox_chan *bcm74110_mbox_of_xlate(struct mbox_controller *cntrl,
-+						const struct of_phandle_args *p)
-+{
-+	struct bcm74110_mbox *mbox = bcm74110_mbox_from_cntrl(cntrl);
-+	struct device *dev = &mbox->pdev->dev;
-+	struct bcm74110_mbox_chan *chan_priv;
-+	int slot, type;
-+
-+	if (p->args_count != 2) {
-+		dev_err(dev, "Invalid arguments\n");
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	type = p->args[0];
-+	slot = p->args[1];
-+
-+	switch (type) {
-+	case BCM_MSG_SVC_PMC:
-+	case BCM_MSG_SVC_SCMI:
-+	case BCM_MSG_SVC_DPFE:
-+		if (slot > BCM_MBOX_HAB_MEM_IDX_SIZE) {
-+			dev_err(dev, "Not enough shared memory\n");
-+			return ERR_PTR(-EINVAL);
-+		}
-+		chan_priv = cntrl->chans[type].con_priv;
-+		chan_priv->slot = slot;
-+		chan_priv->type = type;
-+		break;
-+	default:
-+		dev_err(dev, "Invalid channel type: %d\n", type);
-+		return ERR_PTR(-EINVAL);
-+	};
-+
-+	return &cntrl->chans[type];
-+}
-+
-+static int bcm74110_mbox_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct bcm74110_mbox *mbox;
-+	int i, ret;
-+
-+	mbox = devm_kzalloc(dev, sizeof(*mbox), GFP_KERNEL);
-+	if (!mbox)
-+		return -ENOMEM;
-+
-+	mbox->pdev = pdev;
-+	platform_set_drvdata(pdev, mbox);
-+
-+	mbox->base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(mbox->base))
-+		return dev_err_probe(dev, PTR_ERR(mbox->base), "Failed to iomap\n");
-+
-+	ret = of_property_read_u32(dev->of_node, "brcm,tx", &mbox->tx_chan);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to find tx channel\n");
-+
-+	ret = of_property_read_u32(dev->of_node, "brcm,rx", &mbox->rx_chan);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to find rx channel\n");
-+
-+	mbox->rx_irq = platform_get_irq(pdev, 0);
-+	if (mbox->rx_irq < 0)
-+		return mbox->rx_irq;
-+
-+	INIT_LIST_HEAD(&mbox->rx_svc_init_list);
-+	spin_lock_init(&mbox->rx_svc_list_lock);
-+	bcm74110_mbox_mask_and_clear(mbox);
-+
-+	ret = devm_request_irq(dev, mbox->rx_irq, bcm74110_mbox_isr,
-+			       IRQF_NO_SUSPEND, pdev->name, mbox);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to request irq\n");
-+
-+	mbox->controller.ops = &bcm74110_mbox_chan_ops;
-+	mbox->controller.dev = dev;
-+	mbox->controller.num_chans = BCM_MSG_SVC_MAX;
-+	mbox->controller.of_xlate = &bcm74110_mbox_of_xlate;
-+	mbox->controller.chans = devm_kcalloc(dev, BCM_MSG_SVC_MAX,
-+					      sizeof(*mbox->controller.chans),
-+					      GFP_KERNEL);
-+	if (!mbox->controller.chans)
-+		return -ENOMEM;
-+
-+	mbox->mbox_chan = devm_kcalloc(dev, BCM_MSG_SVC_MAX,
-+				       sizeof(*mbox->mbox_chan),
-+				       GFP_KERNEL);
-+	if (!mbox->mbox_chan)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < BCM_MSG_SVC_MAX; i++) {
-+		mbox->mbox_chan[i].mbox = mbox;
-+		mbox->controller.chans[i].con_priv = &mbox->mbox_chan[i];
-+	}
-+
-+	ret = devm_mbox_controller_register(dev, &mbox->controller);
-+	if (ret)
-+		return ret;
-+
-+	ret = bcm74110_mbox_init(mbox);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id bcm74110_mbox_of_match[] = {
-+	{ .compatible = "brcm,bcm74110-mbox", },
-+	{ /* sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(of, bcm74110_mbox_of_match);
-+
-+static struct platform_driver bcm74110_mbox_driver = {
-+	.driver = {
-+		.name = "bcm74110-mbox",
-+		.of_match_table = bcm74110_mbox_of_match,
-+		},
-+	.probe = bcm74110_mbox_probe,
-+	.shutdown = bcm74110_mbox_shutdown,
-+};
-+module_platform_driver(bcm74110_mbox_driver);
-+
-+MODULE_AUTHOR("Justin Chen <justin.chen@braodcom.com>");
-+MODULE_DESCRIPTION("BCM74110 mailbox driver");
-+MODULE_LICENSE("GPL");
--- 
-2.34.1
+But in a lot of cases the syscall wrapper can do the buffer copies (as well
+as the length copies).
+That would be restricted to short length (on stack).
+So code that needed a long buffer (like some of the sctp options)
+would need to directly access the user buffer (or a long buffer provided
+by an in-kernel user).
+
+But you'll find code that reads/writes well beyond the apparent size of
+the user buffer.
+(And not just code that accesses 4 bytes without checking the length).
+
+	David
+
+
 
