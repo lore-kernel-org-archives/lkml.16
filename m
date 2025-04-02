@@ -1,230 +1,314 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C9821E9B0D;
-	Wed,  2 Apr 2025 14:19:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.18
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743603586; cv=fail; b=TVSXaQFF5ncj5Rrvi/IELDwiuEbPZUHWfjfakdJLrsfFsMrXgWo1p5sqlfR0KN4jIp4OS/FsJFg9eu7eT77N+AsnnjuMwt2XoDYlp2qc8mxAnT4I2AatQ5/OU+EpcMqfzlPMsxIZv034SQ4zMwJwe8yOd+U8/tsKG4DkdLXp6nA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743603586; c=relaxed/simple;
-	bh=VxW/E0UykYJh+QD1QGo6w7ZtsUwqrmchx0C0iE38xeA=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=QEnYz35YEMa9nqiXeSuRgMzh2ZTd0xIGT9XqIpcjgFTLDSJ9OxNlN4qmEMduhgN8PctlppF9ASyccFee59MRrt9uKGvjiY4Ub6znEHwjEq8rCjh8UgUncNxtxbFUhUFgufKWAM6HPmaDAN8xOYIN56sxlJbBLctoBqG7uIGfyEI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eWbjE4Sp; arc=fail smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90958238D50;
+	Wed,  2 Apr 2025 14:19:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743603591; cv=none; b=mOalks5jY73Q4OG0By9OeJPfnwQGiwGCfkWHsufsN8tD3EQOTcxvPsw+whiX7vETcta+y4WP1MPBY0Ttjb6W52sQqzzmSAwHpaNGbgpkXTIEwKhEGdjmvKuzUhcTO6K0R7LLMXGQB3C9GqLFLjKMHr9hw2qIgVYs2OQejJqTd6s=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743603591; c=relaxed/simple;
+	bh=QmSKLMexLZuOsKJ3JTWnQfENhcug/imYBhQTapPo4Y0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aADtO7e5TPqrtt0m8lviIntjzlkm3T/QcCjaYWhJzoCIpAhWhMOkui6lV7Sh0GHXsKghTN6xzf/UOB/OxAy1AUSixweGqcKCLjP7P3Vz+PdASgVALUy4YWGyX5atCp2/11wq3+4qWQuHzoMDCRcgcTu9VmyuQcbASFsqH1uJ/6M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fm1vme6X; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eWbjE4Sp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743603584; x=1775139584;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=VxW/E0UykYJh+QD1QGo6w7ZtsUwqrmchx0C0iE38xeA=;
-  b=eWbjE4SpCkbbGO5id/wd/QjqmBBsba9kNyDhOBPiB1FLOvtHs7dRedD2
-   vqSF2JxYpQTjYJDFDy+XSIRDQ2+PuAyzoxluJ/jsFBThe62DmdaWazE2T
-   TZB8EK5+reb0iChBZkI9mdGDpbjNDhgCtcZjTBjArS5MGx0u6gR4PDKQH
-   aLry33cMQRdp07ZZb5q45QGBVL0oxBejv/vNvb/XYSmie21goRErhcmYV
-   LVHnv2WQzsmVfniaFiQMIcUem1aw/DmsNNp9j9JyddT+wt2CqZpE6cVo+
-   WkqdBgTk93wWdmCoX4qUxsV+EU6rmqzNy4CNLolXn4Tu+Y48sbzuAC4T4
-   Q==;
-X-CSE-ConnectionGUID: 3FyTMgfNTCqnmsZgeH2iTg==
-X-CSE-MsgGUID: +WsKv4dgQz2Npv2W0564LA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11392"; a="44227901"
-X-IronPort-AV: E=Sophos;i="6.15,182,1739865600"; 
-   d="scan'208";a="44227901"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 07:19:43 -0700
-X-CSE-ConnectionGUID: 5b7Y47j3SNa1qjuQ+5oVeg==
-X-CSE-MsgGUID: A/UeZXf7SuGP3ItfxJrJIQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,182,1739865600"; 
-   d="scan'208";a="149907347"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 07:19:43 -0700
-Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Wed, 2 Apr 2025 07:19:43 -0700
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Wed, 2 Apr 2025 07:19:43 -0700
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.175)
- by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Wed, 2 Apr 2025 07:19:42 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=er7GXCJ5hv4rFaLZ52LBrFTlSb4EfV17Bc6gT6Krh1eOesuyVG1Mn35OSyFwL1NTdH43yKcP2fdmSRFDL9itJUPIg0FCO1W16em5jf7C/TppdZiLklkDKsKWdhVf6gLyZUcbxA33/aOVpiDCn9MgH9Bqy7UYY2pfft91QngjK4kgTmAkN/q0O/8RcU5g3N6Xkaa6kW/uTFkMXr19MCdjl4LuFMQfIaxEY9LjKR9iFhXynw92gXnVOJQL61EBOBCyT7tnKqE4ij91XaTdqs3CqSa1ywCI9H17kA6ThO1Oycaa835zMkyT7d+nTYtO6tQ0iW3ZCJrAku7jxN6puF8C6Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=rhDrWDI3l+hftOEBxF/rsF5Ex2yRacC0M2EUUnfKtxI=;
- b=JoJOnDcL5Oo1UGDv1AHHwxqgq5YbhyV7ebEdoTUGsJKXo5y6bPe1OjmxMuXWMTJHGgOZRVvUwF93XPNuZJVnuFBzSWF7weI/fHDqrOLBgK5tyJC7gMxTq6WVlhA7u6NYoGPdNkF5ZKupYlxqYPOISbROr34Lwo+J9HZwYrJ1vmk4Nq8Cj2dpnUsPqFdZqAW7GAzkLDCpEHzE9l0X9fbFnIC74EWNcmQiYi7QolTFtbYqLdpV8Xb8iNeAyogKN/1Pc3Gen+M2gA4ks/Jux6PpYetapavOwaBox9Ul+dVDAaRgKffoCrIPMXaOERG0hybhtzuGkJD17aoLt9nPPvyPDw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
- by PH0PR11MB5048.namprd11.prod.outlook.com (2603:10b6:510:3d::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.50; Wed, 2 Apr
- 2025 14:19:40 +0000
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::cf7d:9363:38f4:8c57]) by SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::cf7d:9363:38f4:8c57%5]) with mapi id 15.20.8534.052; Wed, 2 Apr 2025
- 14:19:40 +0000
-Date: Wed, 2 Apr 2025 09:20:02 -0500
-From: Ira Weiny <ira.weiny@intel.com>
-To: Gregory Price <gourry@gourry.net>, Dan Williams <dan.j.williams@intel.com>
-CC: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>, "Davidlohr
- Bueso" <dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>, Alison Schofield
-	<alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, "Ira
- Weiny" <ira.weiny@intel.com>, Robert Richter <rrichter@amd.com>,
-	<ming.li@zohomail.com>, <linux-kernel@vger.kernel.org>,
-	<linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH 2/4 v2] cxl/core: Add helpers to detect Low memory Holes
- on x86
-Message-ID: <67ed4792b475_7190f294ce@iweiny-mobl.notmuch>
-References: <20250114203432.31861-1-fabio.m.de.francesco@linux.intel.com>
- <20250114203432.31861-3-fabio.m.de.francesco@linux.intel.com>
- <Z4ccKD9Fc-Egc6EL@gourry-fedora-PF4VCD3F>
- <67ec4d61c3fd6_288d2947b@dwillia2-xfh.jf.intel.com.notmuch>
- <Z-xdYvxD6yz3fMiE@gourry-fedora-PF4VCD3F>
- <67ec7814ea055_73d8294e0@dwillia2-xfh.jf.intel.com.notmuch>
- <Z-zFrBqZHc4UWvMb@gourry-fedora-PF4VCD3F>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <Z-zFrBqZHc4UWvMb@gourry-fedora-PF4VCD3F>
-X-ClientProxiedBy: MW3PR05CA0008.namprd05.prod.outlook.com
- (2603:10b6:303:2b::13) To SA1PR11MB6733.namprd11.prod.outlook.com
- (2603:10b6:806:25c::17)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fm1vme6X"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-225477548e1so119997465ad.0;
+        Wed, 02 Apr 2025 07:19:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743603589; x=1744208389; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=qsDyRyLthI5kIXY7kfZ4YoKcSQd5W0JI6ColIoFAbyw=;
+        b=fm1vme6XEa50uMT6d5KqapKRGh+i40EPxJ9u523Ln+Jzt+iCRBpClBhi3nuQiqQuW5
+         f/B4ekhYY1ciIdbXprW4ECJFlP/IjUgmeLbw2RHs7tC7pNPs5PCjd0N2GXbrcE7AwGzV
+         5KQUfr7gocQCxh4RoWN82LVLCuWofH28uULVd3sk/MjUBaceKq0sjfOecz56SdtslFXb
+         Vw/VUWPihASibpnCF2WvVSk5Mpqp4Qcj+0PH30lZrCmyGeVwjplyaV288EAYF5DmH4ch
+         musv2GlhM51mA1eHYOS4gemm05gIy4kQlpUoweStOIbsIxFTFnPe/4BvvvsIojlR1pH7
+         0E6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743603589; x=1744208389;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qsDyRyLthI5kIXY7kfZ4YoKcSQd5W0JI6ColIoFAbyw=;
+        b=hzPRgU0yVrcR6lUZykBP2jKOIHte2CO3qX5baQlcpILrIw5KBVkp1zuHEaRVmoNPZE
+         4bUp0a1tin09WhsIlTfep7sW45T50ezCTbmJXOcRmXtU4Qa49i9+LppGu+RO6UEmEnDM
+         nBn42bpqm5ygO02UeWSymoJ76AGPmp9WBhTC91vUwKJpcBRBytrzaD0ZHhYvM/70migY
+         MKrBDsyOZdXP3tex2nrC9vS6P0nY0XqY3lneo+KRD14f5J78DgJ2PFOcoi06czJTmw6r
+         iBT6mcWIJyDuLfzYY4FDOtmWgjMScJMqPWO6/6Juhyf2pqIfiQ2gPxGe4ss/KzxwbRHY
+         WTww==
+X-Forwarded-Encrypted: i=1; AJvYcCUCYaHR/S9/AIGg3c97T9NcyFdOzT4rFlW/UThhYbGA76vn/R6bEHo1EAuzB6wKuU3MgoiiiIcUC5oviA==@vger.kernel.org, AJvYcCUW54EeQ1NjA5FPEPsNQ8SRRlac1cQnwYGEM2SuHwHEdLHD0fCvd43JiPxHepYH0nvk2pW2px77E6ZxmGfz@vger.kernel.org, AJvYcCVBo63n2T9sVQ9kVw96efk357mW/g6daZ3n9JZoXu0ibNqezvp/gc2Tzf/bnQIrrn50MFgl38cw7MN1aA==@vger.kernel.org, AJvYcCVhhOgC/jYJI+D4+/DgoZPLv68Uui6qa1aOrUbGK/7YhvGVI5mmUAMzA6ecHglyWMFUU+9/qEDM@vger.kernel.org, AJvYcCVkKZBtYducp0dRJRXaouT4ojP/RHkK6TuO/sVLu/ywcVUoobyA5b3UJXA2ge1YJfJhMAfQww==@vger.kernel.org, AJvYcCVrdfRxciursSST+0cZA9i1Mu/LAzCWgb+GdL0zxI5Cy4nCsPwSaLZul3tls+7RsdbuDmQ=@vger.kernel.org, AJvYcCWOgBCUtn+AbSKAtDd5x0wdXL34fdlojLto8THtafrYDZR1AMHY/S9K6j+HkPIh05rxMKvWMjSexp2OiQ==@vger.kernel.org, AJvYcCWjguqBdFApMT5lNYu5CniXxtcRnHtOt2f06KNu1S62aQDDsUdHe3ikdIDcC+dc5YcSN+npI3eo3LMO/w==@vger.kernel.org, AJvYcCWkBCYWUKVH2r/tR8FG8gUbi8d6viJQf3R/q/2SY9Jvg1V0YRBFjBw6wsQr15kQOtypoW7JIbwO+uHV@vger.kernel.org, AJvYcCWkQ/akFfow+/1K3goVcTCOI0apc3xN6p7qyWBXIKVx8N1+BDxQjy3a6ERnD1zvd5o4PFjIanKsWL8k@vger.kernel.org, AJvYcCX2ar/AUezsgSGZnwKowzMFDQmUflGvfuB18XfmHaXlXpdRb6INnvoAo6FWNuY5Hj1ackmXullK6MO2Ub8uMovg@vger.kernel.org, AJvYcCXEf05CibTIo7jQunkyGFxTxVDFmaVKImRxJxGRaIqdag0KtMpzboJgFGXV5JgTSXY7pPXYAOMUyLW54w==@vger.kernel.org, AJvYcCXs9GFZoAlQNjh+ksT3ZqRdqhozpPVUy227xVb+Zm4gtQlr4XhzHpI2+gpS0Ky2FGfFgj7TjMb+6oU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwOj9Fx5TtKOuQXVhSvI3QH7YNfhLpptFCMokWrA4qcQtZA1qQq
+	GfmasBDn7cNWKK2CLXGiiu2ODhC0bv0ZtLQg8eEWuaInTG93M0E=
+X-Gm-Gg: ASbGncuN0zML8l54Wy+VgyPc1pWUcZz7NYqE5GuBcbWBbnd1fg4HxxLW6VzvV7KiZvi
+	TLY5IzFPNs3T26Z7WHu8OLpyI6GtJS85qEhjXG+ef79RL0ykgEFf4z98crsvb2ELKna4IxIV4kU
+	eszCn3i2EHcD0zpqqElFkUKemvCtS7Hk/AsnY1Lvq3wqIZbBbaOGxJDUD9kRje/woOlHPaNtdxS
+	ZdF/wAgrzELY/FOTNWVE9IvST/P8tFUaJWcOLr3Pdx/jaRhzxziS/OJ6M2nrLcza8QiXAHcq10d
+	QlkkBX65MddXv1sjI81CKzSwD00wqs6rMb0l9k0S25Iu1Z68VEE/HmU=
+X-Google-Smtp-Source: AGHT+IG/kMHvWorUD9WkRvq58v/22Ct9eFPyBZLSK3FKft1U/aymg17BN6IaugHDl/+VvoD/r2ksjg==
+X-Received: by 2002:a17:902:e74f:b0:224:3c9:19ae with SMTP id d9443c01a7336-2292f9de650mr297499695ad.34.1743603588484;
+        Wed, 02 Apr 2025 07:19:48 -0700 (PDT)
+Received: from localhost ([2601:646:9e00:f56e:123b:cea3:439a:b3e3])
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-73971073a9fsm11326286b3a.92.2025.04.02.07.19.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Apr 2025 07:19:47 -0700 (PDT)
+Date: Wed, 2 Apr 2025 07:19:46 -0700
+From: Stanislav Fomichev <stfomichev@gmail.com>
+To: David Laight <david.laight.linux@gmail.com>
+Cc: Stefan Metzmacher <metze@samba.org>, Breno Leitao <leitao@debian.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Jens Axboe <axboe@kernel.dk>,
+	Pavel Begunkov <asml.silence@gmail.com>,
+	Jakub Kicinski <kuba@kernel.org>, Christoph Hellwig <hch@lst.de>,
+	Karsten Keil <isdn@linux-pingi.de>,
+	Ayush Sawal <ayush.sawal@chelsio.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Kuniyuki Iwashima <kuniyu@amazon.com>,
+	Willem de Bruijn <willemb@google.com>,
+	David Ahern <dsahern@kernel.org>,
+	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+	Xin Long <lucien.xin@gmail.com>,
+	Neal Cardwell <ncardwell@google.com>,
+	Joerg Reuter <jreuter@yaina.de>,
+	Marcel Holtmann <marcel@holtmann.org>,
+	Johan Hedberg <johan.hedberg@gmail.com>,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+	Oliver Hartkopp <socketcan@hartkopp.net>,
+	Marc Kleine-Budde <mkl@pengutronix.de>,
+	Robin van der Gracht <robin@protonic.nl>,
+	Oleksij Rempel <o.rempel@pengutronix.de>, kernel@pengutronix.de,
+	Alexander Aring <alex.aring@gmail.com>,
+	Stefan Schmidt <stefan@datenfreihafen.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Alexandra Winter <wintera@linux.ibm.com>,
+	Thorsten Winkler <twinkler@linux.ibm.com>,
+	James Chapman <jchapman@katalix.com>,
+	Jeremy Kerr <jk@codeconstruct.com.au>,
+	Matt Johnston <matt@codeconstruct.com.au>,
+	Matthieu Baerts <matttbe@kernel.org>,
+	Mat Martineau <martineau@kernel.org>,
+	Geliang Tang <geliang@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Remi Denis-Courmont <courmisch@gmail.com>,
+	Allison Henderson <allison.henderson@oracle.com>,
+	David Howells <dhowells@redhat.com>,
+	Marc Dionne <marc.dionne@auristor.com>,
+	Wenjia Zhang <wenjia@linux.ibm.com>,
+	Jan Karcher <jaka@linux.ibm.com>,
+	"D. Wythe" <alibuda@linux.alibaba.com>,
+	Tony Lu <tonylu@linux.alibaba.com>,
+	Wen Gu <guwen@linux.alibaba.com>, Jon Maloy <jmaloy@redhat.com>,
+	Boris Pismenny <borisp@nvidia.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Stefano Garzarella <sgarzare@redhat.com>,
+	Martin Schiller <ms@dev.tdt.de>,
+	=?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>,
+	Magnus Karlsson <magnus.karlsson@intel.com>,
+	Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
+	Jonathan Lemon <jonathan.lemon@gmail.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Jesper Dangaard Brouer <hawk@kernel.org>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-sctp@vger.kernel.org,
+	linux-hams@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+	linux-can@vger.kernel.org, dccp@vger.kernel.org,
+	linux-wpan@vger.kernel.org, linux-s390@vger.kernel.org,
+	mptcp@lists.linux.dev, linux-rdma@vger.kernel.org,
+	rds-devel@oss.oracle.com, linux-afs@lists.infradead.org,
+	tipc-discussion@lists.sourceforge.net,
+	virtualization@lists.linux.dev, linux-x25@vger.kernel.org,
+	bpf@vger.kernel.org, isdn4linux@listserv.isdn4linux.de,
+	io-uring@vger.kernel.org
+Subject: Re: [RFC PATCH 0/4] net/io_uring: pass a kernel pointer via optlen_t
+ to proto[_ops].getsockopt()
+Message-ID: <Z-1Hgv4ImjWOW8X2@mini-arch>
+References: <Z-sDc-0qyfPZz9lv@mini-arch>
+ <39515c76-310d-41af-a8b4-a814841449e3@samba.org>
+ <407c1a05-24a7-430b-958c-0ca78c467c07@samba.org>
+ <ed2038b1-0331-43d6-ac15-fd7e004ab27e@samba.org>
+ <Z+wH1oYOr1dlKeyN@gmail.com>
+ <Z-wKI1rQGSgrsjbl@mini-arch>
+ <0f0f9cfd-77be-4988-8043-0d1bd0d157e7@samba.org>
+ <Z-xi7TH83upf-E3q@mini-arch>
+ <4b7ac4e9-6856-4e54-a2ba-15465e9622ac@samba.org>
+ <20250402132906.0ceb8985@pumpkin>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|PH0PR11MB5048:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3c85de36-0430-499c-656f-08dd71f167c1
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?dPAjCwMemzBi3zN8mjSAEyiVuRWTNHwrdIiFnY61YgS8jic5F/gzs37cUiBy?=
- =?us-ascii?Q?zYjPfrbT9OSn6SG6ojsFsUb/wafGS0SBDODvQAgkx0u9vS2P6N1EEz2zKDdd?=
- =?us-ascii?Q?PSE/i7kyCB/uZd00QHgZMJTubUkQAO40SdJdKaRwboe1srKmy/u285tJ949j?=
- =?us-ascii?Q?1+TTxh88IGwg7Ag43drS1gL/aOCeb39V9k6ay853YKXq/sskr4n/P94v8GVs?=
- =?us-ascii?Q?hAb4EfAap+pVy3oSaYrQGaqWeh9QuTTq5iXgKu5m6HFyQUkzajInbkjkDW3q?=
- =?us-ascii?Q?gqsjqpgqFfki9AjIolxrUA+SzXJSjtWNzlLJS0gTAei85dPJKE3QMT5vDyDY?=
- =?us-ascii?Q?7WZM842pnr/OgBmhUR5rrvkBG2sgi+06dN0/2F4y4t3u9EVjimVFmetr9uuL?=
- =?us-ascii?Q?vQmSiUOV24AdW94yR0YV60iwjrG28+u7f31bqtYF7iFGVp2WRltgEBhEVGKW?=
- =?us-ascii?Q?Dp81/neA3bBPsKsQAWhIGH/ukiDDyxa7ZHfv9+CS6EGoh5E2gtMaf5O/ardD?=
- =?us-ascii?Q?RTrfua+42d7hA/Q+u1msDkz7LoyDl2IUYmIPOE3mjFDjoN3eTXiVK6uqSQSC?=
- =?us-ascii?Q?6ea7pkVNvWO5wy5xA63xUWCFmGQ57hAg+dMnuWRmRkPfLTst4EUfjsJziLQg?=
- =?us-ascii?Q?Y5n0z2C6MXaWFzS5mWqKm6Sb5nJXLZ1JzUlQv4xdhP0NlIdmZEBqrHQ/EJPw?=
- =?us-ascii?Q?LyxAT3BsDXttBdJjYuYkm/64hLIoXLyf084Ig4gPqKw/zBXZn1WsuBLoeUy6?=
- =?us-ascii?Q?u/1fzqoIuckoELvFKHxyIhtuKpyOV0ocheVVecoozInhtwd+eVRQRFtsfwsm?=
- =?us-ascii?Q?8RXNLgTU+ETIdSk/qdbhQx2kCvP8Yah4E9BNM91BmdGx2QYWDsrJCeD7KY6y?=
- =?us-ascii?Q?4eIpos9EJzznk9ImEhyEbEaasGvw0C5NcHoIHG56k5Y5YbpQeKWDRJ/+KtrY?=
- =?us-ascii?Q?3//g1BWDdqcapl0JdtZtjb7bgyAHi9rWpSYZjJhPySApwmoBxzOjCVZUoQY5?=
- =?us-ascii?Q?fEINMHckJZzmScxl5y9iFKrLwTzIqHFAGnje49PRSz+Spy/fkIgiuW9l09BI?=
- =?us-ascii?Q?tFB8WQNCLD7tYpZddO3C05FU/fiDoBhzHd8ozIbgLktLj+ybQFAdnMY7QmW1?=
- =?us-ascii?Q?yrfZhCPO/8oEO3K3lTI7WNzf68LLLQHAarZ8VDe/siavPlgAje5k3HSre0S8?=
- =?us-ascii?Q?26FyDZpwMPL25ePUVWV/R3/fj6cbnwE3EPg6JZ90opOICpcMU0LoJWeQfJm8?=
- =?us-ascii?Q?xa5Vlqn3Wdo9fj4DGXW2f7DmemIfGqXy150dUL7KUd3VLfz8OJLC29F6miu5?=
- =?us-ascii?Q?tVku7bgnxlkU/YnVGapHphTgSx15xHcm38NRYHKh8UKaCUsjH+UFh/OCUf+7?=
- =?us-ascii?Q?jpD+loHW/0l0MoZNBGq6trGdZgdZ?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?fNrD3VfT0lrDpq0xT+oNJWnaZCVvtcs2EJHXzTO6AS0PpxF+6kUsY/0QqnR8?=
- =?us-ascii?Q?pj9vHr5dpmEv3cVTeJ0/Uw0IN6H74CX3STpueiaQOM9xSu04j/oHpvAwCj/7?=
- =?us-ascii?Q?0GsTWg8xdAqQ4aRhK6qVddf4rVWL7R3HktBrAARZ6xdI4+Loc2fD8+ypLUQ6?=
- =?us-ascii?Q?nrEEUUuklDxzmMG5TnZw66CV3+ZOtZxu6i3yGAM1Bahpnl1rfwyUniqBjZYa?=
- =?us-ascii?Q?zwVLWvU7NiptA4ygd6jMf2LNbVSOGqg2ddHO72QPdITiJDxxa/4RVhwUKvXH?=
- =?us-ascii?Q?eZnR8ZqErjY4komXQ/bqSfTiH694ue+PV4+3sE8IphDrxu4ukInHRv468Yy2?=
- =?us-ascii?Q?ydVEpevkDbO9Xqk38CtkBpRXTN8PHPIeXgxKgpzXp/LAZcfKRrfFtPlOs1b3?=
- =?us-ascii?Q?0R3pFJx8ctiDDPiTwRjFsjAcJf0dfqMeyXXykv37ijaCWH4BgzH/NEvQBMJc?=
- =?us-ascii?Q?vgBOjsY805V8CdOTjpBXJ0arf83G0j8oY0TKu4MpUjY8BTvVtlOvRhlM6UhI?=
- =?us-ascii?Q?T+tkwU+t5p8QrRXNelg4gsPHcZcU1Orm5zd6ZYkE7bA7vj8FgknK21wPqOAG?=
- =?us-ascii?Q?So6ie2d0xu6C2IfAKUgnJQTm0IOUzO7a4IY7V2jB/yl6srh7BMdhXsKjfrDQ?=
- =?us-ascii?Q?ai/nNSbF+WnHT3St/NPvOLD3fQt/OGraSDF7aP4y0ey3CEUm4gYjNAWODW4h?=
- =?us-ascii?Q?/XvOGaD/iZuZI8fiE7OE5WTPMtv8fCL+rw9XUq5iVQ+6Q6j72GE3I+l9Vzgf?=
- =?us-ascii?Q?ey6hvSjvx3o/OXd0qRFJiQcC+A9z7m/ZtlEHMguKRDXLJl4AIDVVgwGaAo/F?=
- =?us-ascii?Q?Qo49Vb+Vs1A8ki1rxh+qQAdM4rKTdQOopzKLHksEmZptG2nPp3uJ3X7C9dns?=
- =?us-ascii?Q?PQeULZQZCiNDZGq77PekdGkVKT7pbml/E3wScHEyD1pEIZSDqOcKm47E6IKM?=
- =?us-ascii?Q?2iOTiA9JjRmlYDrjrtf0PV4ixjfxxDitoqfeiR0bWyJMB2X2NI3X3Q9RQuWj?=
- =?us-ascii?Q?PtDsXQjpxeLL8I54GfEdSjnCOLsPnR2K+BSMaMQI1tUmyqplApT+rQGyrYLt?=
- =?us-ascii?Q?lfXGbZsNTkoGbNzjAYnl1YHJ9pdcT1s9N0AUYENymp+5w9HEORGaj3IktFrJ?=
- =?us-ascii?Q?a+nROKqO6uYyowSq39xxvpGV5CSOUmd+wg9nBRzr6YcmCxUPqGwbEsO4z8mC?=
- =?us-ascii?Q?TsyTUwPaQ6ekCaoRA0dweLzlLN0vbuHHt+ph4t3atEBRJQE+ToSvlDm8thzX?=
- =?us-ascii?Q?GQJqRXbFb8eNwdwNtvJMKVNVsTcHSGpN31U2ea4NG01UH2yt747Y6URnxChp?=
- =?us-ascii?Q?z0dggtiHA/8TzwRJAcXXFY2eU/Xsm4b6C8fnGpVTUtUIYgi72phbZFWdJxmH?=
- =?us-ascii?Q?Va8K0YSYN5oyFhsi03A64/6L2u0sKfDZWMC0J0BiIMJefw58KoHexf4zydZo?=
- =?us-ascii?Q?wV/aXlkPEkCwRMUJCEEN2Nw9x5SOfOZJYUGmm++z29nAjwnmab8lc0F69Jy8?=
- =?us-ascii?Q?qofjdPLuT2rVu3TqfzT3lKqIxDjUUVcXHhWPbb4Zx949EANC2zShH9qcEG2K?=
- =?us-ascii?Q?+rgcifCksq82Me77WB4iQH5WEh2s3r3brTLU5vO+R7cZ0AArO12aczpNA3LB?=
- =?us-ascii?Q?gg=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3c85de36-0430-499c-656f-08dd71f167c1
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Apr 2025 14:19:39.9579
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 8k10mI+aSh4nSKZ4KCyZc3PZsrtQhGkTCrFUhwK7Q1oj4peWo+3XPT5cdKr0ftRMdewcQsVAQ7seEr+K2KFd0A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB5048
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250402132906.0ceb8985@pumpkin>
 
-Gregory Price wrote:
-> On Tue, Apr 01, 2025 at 04:34:44PM -0700, Dan Williams wrote:
-> > The platforms with this condition want to support CXL mapped starting at
-> > zero *and* the typical/historical PCI MMIO space in low memory (for
-> > those PCI devices that do not support 64-bit addressing). If the CFMWS
-> > blindly followed the 256MB*NIW constraint the CXL window would overlap
-> > the MMIO space. So the choices are:
+On 04/02, David Laight wrote:
+> On Wed, 2 Apr 2025 00:53:58 +0200
+> Stefan Metzmacher <metze@samba.org> wrote:
+> 
+> > Am 02.04.25 um 00:04 schrieb Stanislav Fomichev:
+> > > On 04/01, Stefan Metzmacher wrote:  
+> > >> Am 01.04.25 um 17:45 schrieb Stanislav Fomichev:  
+> > >>> On 04/01, Breno Leitao wrote:  
+> > >>>> On Tue, Apr 01, 2025 at 03:48:58PM +0200, Stefan Metzmacher wrote:  
+> > >>>>> Am 01.04.25 um 15:37 schrieb Stefan Metzmacher:  
+> > >>>>>> Am 01.04.25 um 10:19 schrieb Stefan Metzmacher:  
+> > >>>>>>> Am 31.03.25 um 23:04 schrieb Stanislav Fomichev:  
+> > >>>>>>>> On 03/31, Stefan Metzmacher wrote:  
+> > >>>>>>>>> The motivation for this is to remove the SOL_SOCKET limitation
+> > >>>>>>>>> from io_uring_cmd_getsockopt().
+> > >>>>>>>>>
+> > >>>>>>>>> The reason for this limitation is that io_uring_cmd_getsockopt()
+> > >>>>>>>>> passes a kernel pointer as optlen to do_sock_getsockopt()
+> > >>>>>>>>> and can't reach the ops->getsockopt() path.
+> > >>>>>>>>>
+> > >>>>>>>>> The first idea would be to change the optval and optlen arguments
+> > >>>>>>>>> to the protocol specific hooks also to sockptr_t, as that
+> > >>>>>>>>> is already used for setsockopt() and also by do_sock_getsockopt()
+> > >>>>>>>>> sk_getsockopt() and BPF_CGROUP_RUN_PROG_GETSOCKOPT().
+> > >>>>>>>>>
+> > >>>>>>>>> But as Linus don't like 'sockptr_t' I used a different approach.
+> > >>>>>>>>>
+> > >>>>>>>>> @Linus, would that optlen_t approach fit better for you?  
+> > >>>>>>>>
+> > >>>>>>>> [..]
+> > >>>>>>>>  
+> > >>>>>>>>> Instead of passing the optlen as user or kernel pointer,
+> > >>>>>>>>> we only ever pass a kernel pointer and do the
+> > >>>>>>>>> translation from/to userspace in do_sock_getsockopt().  
+> > >>>>>>>>
+> > >>>>>>>> At this point why not just fully embrace iov_iter? You have the size
+> > >>>>>>>> now + the user (or kernel) pointer. Might as well do
+> > >>>>>>>> s/sockptr_t/iov_iter/ conversion?  
+> > >>>>>>>
+> > >>>>>>> I think that would only be possible if we introduce
+> > >>>>>>> proto[_ops].getsockopt_iter() and then convert the implementations
+> > >>>>>>> step by step. Doing it all in one go has a lot of potential to break
+> > >>>>>>> the uapi. I could try to convert things like socket, ip and tcp myself, but
+> > >>>>>>> the rest needs to be converted by the maintainer of the specific protocol,
+> > >>>>>>> as it needs to be tested. As there are crazy things happening in the existing
+> > >>>>>>> implementations, e.g. some getsockopt() implementations use optval as in and out
+> > >>>>>>> buffer.
+> > >>>>>>>
+> > >>>>>>> I first tried to convert both optval and optlen of getsockopt to sockptr_t,
+> > >>>>>>> and that showed that touching the optval part starts to get complex very soon,
+> > >>>>>>> see https://git.samba.org/?p=metze/linux/wip.git;a=commitdiff;h=141912166473bf8843ec6ace76dc9c6945adafd1
+> > >>>>>>> (note it didn't converted everything, I gave up after hitting
+> > >>>>>>> sctp_getsockopt_peer_addrs and sctp_getsockopt_local_addrs.
+> > >>>>>>> sctp_getsockopt_context, sctp_getsockopt_maxseg, sctp_getsockopt_associnfo and maybe
+> > >>>>>>> more are the ones also doing both copy_from_user and copy_to_user on optval)
+> > >>>>>>>
+> > >>>>>>> I come also across one implementation that returned -ERANGE because *optlen was
+> > >>>>>>> too short and put the required length into *optlen, which means the returned
+> > >>>>>>> *optlen is larger than the optval buffer given from userspace.
+> > >>>>>>>
+> > >>>>>>> Because of all these strange things I tried to do a minimal change
+> > >>>>>>> in order to get rid of the io_uring limitation and only converted
+> > >>>>>>> optlen and leave optval as is.
+> > >>>>>>>
+> > >>>>>>> In order to have a patchset that has a low risk to cause regressions.
+> > >>>>>>>
+> > >>>>>>> But as alternative introducing a prototype like this:
+> > >>>>>>>
+> > >>>>>>>            int (*getsockopt_iter)(struct socket *sock, int level, int optname,
+> > >>>>>>>                                   struct iov_iter *optval_iter);
+> > >>>>>>>
+> > >>>>>>> That returns a non-negative value which can be placed into *optlen
+> > >>>>>>> or negative value as error and *optlen will not be changed on error.
+> > >>>>>>> optval_iter will get direction ITER_DEST, so it can only be written to.
+> > >>>>>>>
+> > >>>>>>> Implementations could then opt in for the new interface and
+> > >>>>>>> allow do_sock_getsockopt() work also for the io_uring case,
+> > >>>>>>> while all others would still get -EOPNOTSUPP.
+> > >>>>>>>
+> > >>>>>>> So what should be the way to go?  
+> > >>>>>>
+> > >>>>>> Ok, I've added the infrastructure for getsockopt_iter, see below,
+> > >>>>>> but the first part I wanted to convert was
+> > >>>>>> tcp_ao_copy_mkts_to_user() and that also reads from userspace before
+> > >>>>>> writing.
+> > >>>>>>
+> > >>>>>> So we could go with the optlen_t approach, or we need
+> > >>>>>> logic for ITER_BOTH or pass two iov_iters one with ITER_SRC and one
+> > >>>>>> with ITER_DEST...
+> > >>>>>>
+> > >>>>>> So who wants to decide?  
+> > >>>>>
+> > >>>>> I just noticed that it's even possible in same cases
+> > >>>>> to pass in a short buffer to optval, but have a longer value in optlen,
+> > >>>>> hci_sock_getsockopt() with SOL_BLUETOOTH completely ignores optlen.
+> > >>>>>
+> > >>>>> This makes it really hard to believe that trying to use iov_iter for this
+> > >>>>> is a good idea :-(  
+> > >>>>
+> > >>>> That was my finding as well a while ago, when I was planning to get the
+> > >>>> __user pointers converted to iov_iter. There are some weird ways of
+> > >>>> using optlen and optval, which makes them non-trivial to covert to
+> > >>>> iov_iter.  
+> > >>>
+> > >>> Can we ignore all non-ip/tcp/udp cases for now? This should cover +90%
+> > >>> of useful socket opts. See if there are any obvious problems with them
+> > >>> and if not, try converting. The rest we can cover separately when/if
+> > >>> needed.  
+> > >>
+> > >> That's what I tried, but it fails with
+> > >> tcp_getsockopt ->
+> > >>     do_tcp_getsockopt ->
+> > >>       tcp_ao_get_mkts ->
+> > >>          tcp_ao_copy_mkts_to_user ->
+> > >>             copy_struct_from_sockptr
+> > >>       tcp_ao_get_sock_info ->
+> > >>          copy_struct_from_sockptr
+> > >>
+> > >> That's not possible with a ITER_DEST iov_iter.
+> > >>
+> > >> metze  
+> > > 
+> > > Can we create two iterators over the same memory? One for ITER_SOURCE and
+> > > another for ITER_DEST. And then make getsockopt_iter accept optval_in and
+> > > optval_out. We can also use optval_out position (iov_offset) as optlen output
+> > > value. Don't see why it won't work, but I agree that's gonna be a messy
+> > > conversion so let's see if someone else has better suggestions.  
 > > 
-> 
-> If I'm understanding everything correctly, then I think this is intended
-> to work only when EFI_MEMORY_SP is *not* set for these particular CXL
-> devices - so it comes up as memory in early boot and we're just trying
-> to wire up all the bits to let the driver manage it accordingly?
-
-That is how I understand things.  But I'm just jumping in just to review
-the patches so I could be wrong...
-
-Ira
-
-> 
-> If that's the case, then ignore me, i'm just bikeshedding at this point.
-> 
-> I can't imagine a system where the memory at 0x0-4GB is intended to come
-> up as EFI_MEMORY_SP, so I hope no one ever tries this :D
-> 
-> > > (Also, I still don't understand the oracle value of <4GB address range.
-> > >  It seems like if this is some quirk of SPA vs HPA alignment, then it
-> > >  can hold for *all* ocurrances, not just stuff below 4GB)
+> > Yes, that might work, but it would be good to get some feedback
+> > if this would be the way to go:
 > > 
-> > The goal is to get platform vendors to define the rules so that an OS
-> > has a reasonable expectation to know what is a valid vs invalid
-> > configuration. A hole above 4GB has no reason to exist, there is no
-> > resource conflict like PCI MMIO that explains why typical spec
-> > expectation can not be met.
+> >            int (*getsockopt_iter)(struct socket *sock,
+> > 				 int level, int optname,
+> > 				 struct iov_iter *optval_in,
+> > 				 struct iov_iter *optval_out);
 > > 
-> > So I want the subsystem to have an explicit set of platform quirks
-> > ideally backed up by updated spec language. That allows us to validate
-> > that the Linux implementation is correct by some objective source of
-> > truth, encourage platform vendors to update that source of truth when
-> > they create new corner cases, or even better, be more mindful to not
-> > create new corner cases.
+> > And *optlen = optval_out->iov_offset;
+> > 
+> > Any objection or better ideas? Linus would that be what you had in mind?
 > 
-> I follow, seems reasonable.  
-> 
-> ~Gregory
+> I'd worry about performance - yes I know 'iter' are used elsewhere but...
+> Also look at the SCTP code.
 
+Performance usually does not matter for set/getsockopts, there
+are a few exceptions that I know (TCP_ZEROCOPY_RECEIVE) and maybe recent
+devmem sockopts; we can special-case these if needed, or keep sockptr_t,
+idk. I'm skeptical we can convert everything though, that's why the
+suggestion to start with sk/ip/tcp/udp.
 
+> How do you handle code that wants to return an updated length (often longer
+> than the one provided) and an error code (eg ERRSIZE or similar).
+>
+> There is also a very strange use (I think it is a sockopt rather than an ioctl)
+> where the buffer length the application provides is only that of the header.
+> The actual buffer length is contained in the header.
+> The return length is the amount written into the full buffer.
+
+Let's discuss these special cases as they come up? Worst case these
+places can always re-init iov_iter with a comment on why it is ok.
+But I do agree in general that there are a few places that do wild
+stuff.
