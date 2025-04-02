@@ -1,101 +1,130 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 262D91BD9D3
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 19:07:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AC191E491B
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 19:07:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743620869; cv=none; b=srYxDm0OYURYMubkgf5iF8szplZIV8TLA8sSt8xRrl/3vxGM/9IFLWo4FVbg3h23rMb1qadsrPnpasnhl1Oa5vDpfDxVJ78Rd/YuhwHpeHeWx469BbwVTEUO1SLT0eo9zIiJRLuMMeLMLxxqh2tAxd6Yba0H7vMkiR4QFIqa48M=
+	t=1743620872; cv=none; b=qnNUrD4Ew97WNmqoVR8ZJteG4YhIkPwparOVY2Hp4qBNaTl+iFF30KUb7rxdfSa6+a+RWEqUHwACiB1in59T4P3uRpswxxksrabnZ06FIwbxv2aANZGYGXH1/Vt88J5tDIOowQlmAGgL2m/FquCSk9YfvD+rBAmkqv3dL9jFQ8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743620869; c=relaxed/simple;
-	bh=bIK8da7sky1k23z+lSAg0musuO7cZiapdODmR0GgpOs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=A4Z/6csqScUDE5YwapKuHQ7Enyd8zQeQjcmora+XEIueh3BH3CGO+h9+EwfHJAntI5/3mimZAypzk0vtLchY2pcQ7KrOza0dfe1CYBQrgXH3P9kGnmkNutk05eqpnYTRHoav6E8d/2uM2Q8RRO4fPynt36EtfxPgpUthS6bLQb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=FGaLt9ZB; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1743620872; c=relaxed/simple;
+	bh=nsq76gksv/CQjLrekPMlJY9e0Z3fWNmE406AI/XQB2Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=u7RAXXMcut79t9KvgL6FFTpjI8hts75WGJb69KQxtymdTjPHGnVCjAAUeyzSdvzWJq53x9wWtrjXL229eRDuq6OGT94qi828OicCk1MB0C/d51SzlZUVV0NtxWcDd5thu3MW+viC71zGhJ4u9J+/JQHQlBKJoM6OXCSYDjyHdrY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=XI1od+kH; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="FGaLt9ZB"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ac41514a734so17525966b.2
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 12:07:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1743620865; x=1744225665; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=vDCfLJ1c+8KgmhIhvBXyzALAntvM3wprjYsirzy6g70=;
-        b=FGaLt9ZBYqY7Uj1WW4dCei8vvHXZuhWUjsU4OjVQZELXZCxOxloYIwXB1WvuTN9IEV
-         +rASFRyyS2BGlTxjW4L+exVJ8+kNXyKeDP2umD3z9jGT01qf99B+ZhcJrCO8g8CT+8VE
-         12lRdIFk3ys3HPVPSbqFzMF/19Bmc2wlQNHc8=
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="XI1od+kH"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 532APmBt000927
+	for <linux-kernel@vger.kernel.org>; Wed, 2 Apr 2025 19:07:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=LA1WOhQTX5ByQ9v6PfWc2mZW
+	1spbBXtueAXo3bqSDbQ=; b=XI1od+kHQtwJiuPa/LY0dHthPp4qR/eoGoTaqKw4
+	WV7e5ihx3zU1tau9huE/G5OE2N4tNJEMZ77lAAibREy4/Qmyw6k2H64sOJH1Ri7Z
+	47OWt85AvO6qQMOlR6ytfYOE4ZElqCmoPNf2gnLUKBevX22uUulrvrvzC/6SuApw
+	fQIiqwJJOpRlahR42Km1d9n9PbvzHAPlxwtv5+mQxGthcGyBKUDdL3oquRkyiw8z
+	hf20O2xstFk+v8RH5P/bCuu+9OmShYaZLDwiTKe1ISFxhe78vrigS0inB3s2Fw3A
+	msAyJi/TsrE98XWr8EhUAeamWYHDhU5K3ey+hSsEkuwnAA==
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45p67qmsfc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 19:07:50 +0000 (GMT)
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c5f3b94827so26030485a.0
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 12:07:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743620865; x=1744225665;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vDCfLJ1c+8KgmhIhvBXyzALAntvM3wprjYsirzy6g70=;
-        b=SSwDx6mttNCe2GWd8LpUp9lOaoQcegpYUB4NWiYAZGu0AX8XSh4mzAyIwNgkMwm38t
-         6H1BvcTB+UlHar9E25Z0GZJEKrDGbZAl3A9/NIRtKpowSzKJqWfSWc2E3ghtJbkRP8A2
-         cXL2muKiGfXMxGChj4grv9PgrxYN1jrvJbtWU8n37K+Xg7FOph/CZukQknwC8w+7yN32
-         9rRU5cgd2KLMajStGuDaqzqTKfnKKPQ723Q30ZM7RnXiRHNnGSWhP8hIBi6C47gSx5xN
-         5n+JDVh0LBKOwhGa5U/S9D/VXubTKmU3FYNTaC3e3qTy/t78u3F1fbe+P4RUsYBZDsFK
-         hJnQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU462WpeYXv+afoRy+858364kahsuayw3J6amFV8x9KykXDuslz9WPLDEtcp8EOWDVIBKiOj06zWTdRxrk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxAstm+T44H+987RPGnkOGaiDiiX3C4dOigtqSncbBzfqJn1WOx
-	xpc6B+z/rwo9rMUJ7g69fA8tz0RRysZeYcQarIU0Fi+M1Fk2Y26cYtn4Iaq3d2MF3tkI2Ow4UsD
-	iS20=
-X-Gm-Gg: ASbGnct2vbwATrSC/xl52ALRVxQdmp/mfH1yJXbHOpJXv6k2MX0Nj2VN+QFDR7L2TZ9
-	jw/a5zBDXt78P3vf8/kLoxaHwR4rWQUtatxNgVySBqMGWWCxP4qWfJCSMJQpfFE239DlS2L/lo+
-	ODihA4jaqUXMszzw2q06syNh0vhLYwF+B2sYOjmv5RBuo+n/bL7EpeDzrJDEcXnB70Gp0h0MaLG
-	XKTLwg5Hna4zNBeVGZaUYh4o1e4nPNfIQjfjAd6O0VzNiFFtmXgPNXwJM9dKPCaEOQxbibWqjCc
-	1RQu9VX5pkgSdt8Rad/A8wp1VoDPCg4lY8cYGXxuKWKLY419HYsNlA5V57cNcj/YqukPXr1x0ZW
-	rKn0m2KCsIjvuQkz/Hj0=
-X-Google-Smtp-Source: AGHT+IEx6tX77vItpf691nsWTtEfv3scpEEEa5Z303BcbWp379933eehAXohu9ew2zXhu9n6Uy58Gg==
-X-Received: by 2002:a17:907:a4e:b0:ac7:3918:7530 with SMTP id a640c23a62f3a-ac7a1aacd23mr344974266b.61.1743620865183;
-        Wed, 02 Apr 2025 12:07:45 -0700 (PDT)
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com. [209.85.218.54])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac71962177fsm946458166b.115.2025.04.02.12.07.43
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Apr 2025 12:07:43 -0700 (PDT)
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ac41514a734so17519666b.2
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 12:07:43 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV64tAwLI+FCppBmPs2Hxow5zjXTaa8+Cn6yKA5W7ykhNQ+NXDZ0DsqWWDFts4HrSRhQOSBOS6r7Jm+C+I=@vger.kernel.org
-X-Received: by 2002:a17:906:c153:b0:ac6:fcdd:5a97 with SMTP id
- a640c23a62f3a-ac7a1972b9emr277321066b.48.1743620863404; Wed, 02 Apr 2025
- 12:07:43 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743620869; x=1744225669;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LA1WOhQTX5ByQ9v6PfWc2mZW1spbBXtueAXo3bqSDbQ=;
+        b=pvNd1WX5pct/O7sK7rckZFrYiNL0FajVt5seOP7W5rjy3UKMYZeKeLgK3FT7hnA48o
+         q3zaxGJh8GRsb8uRUbw8HXbz8B/oKgdVrT1rJuVbXDiv2QPZLNXWLa/j0rFGdYU8gMci
+         YqjGbzg85lA/JrlwCwpm4JQXTQvjQbSJ4JtcvRN8yD8kixRQAonrgo5Gizp9HMupk63y
+         H1s6AOHvVsL0yIT4DOMdL9radxhBtrLhfhpMDj0qbzuB59sca2E03gUcJRZQS8eic+YO
+         eFgLhKZaCnphJ9jqka4TrJxI0tJzzVXInMhkIEXfnvjKJSzFtC+FMGQpHOATt7Zgb73b
+         56/w==
+X-Forwarded-Encrypted: i=1; AJvYcCUuqgWD6BH5Jko0i4DIwfAKdlj5nPl0vQq5Mu8fbYAqfa6T1Ml5IV8UPsLEyKhN+h5z5Rxsw8S9mYIgMCE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzryswGdK26INk42CNRIyEwy8rf/XutvSKCzqsPrZ1JW50L31Pz
+	/dlXrbet4LGEqk33ayrruOxTp9lCnPWtOo7U4dwDlyry9JEVKGQ0DImqw9vs8Eg9I6Fejdjnu6X
+	+f4mSZUwHEuQ8zy/XC47cqsdOHh52c+Cz0K1YOQpN5H5PbShmjDX4thxh8RhqTm0=
+X-Gm-Gg: ASbGnctQeX2Nbcik95mBhK45oa4ZTUQx7pPKOxo4a5Axy9VeIvBEi63vO4cA7LFl3qo
+	eAnho6TLF2Ci962i3nSnhuogBTOA+OSAtJkP3Eyg3tiwI5lJ6Xyc20ONvwZH1wD9bd2O4KYMJMW
+	Pg72bYHeE7toYAWHtbNAGTLTRPffJhrsBTK4jzgKgfuoTaDMwzVrYJpiBdbPvaTT8OkMJdA1tIk
+	o9F4XRbEYl/6dJ8+r9GN1gbP5v8sdb7sU5fvaWRBXVZKbCPtkqxEMO63WsBxN7yT5iBrbk9xlUW
+	/k5ut+Uyk43Pl7H6kwrsgOTNeRvM4yz4zdMBy+WJxjqwDZUEdWSNMfl6+mtcPoOJFK8bgmp6raM
+	Pr+Q=
+X-Received: by 2002:a05:620a:1a0e:b0:7c5:94e0:cafb with SMTP id af79cd13be357-7c75bc8e3afmr1349614585a.48.1743620869350;
+        Wed, 02 Apr 2025 12:07:49 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IErZZ608u4zqFw2htoAry3TzhWNQ1iLzSerIc8/NM1Iiada2nzhQbeC8aAg15XvOdwOqWacIQ==
+X-Received: by 2002:a05:620a:1a0e:b0:7c5:94e0:cafb with SMTP id af79cd13be357-7c75bc8e3afmr1349608585a.48.1743620868984;
+        Wed, 02 Apr 2025 12:07:48 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30dda97350fsm18626371fa.107.2025.04.02.12.07.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Apr 2025 12:07:48 -0700 (PDT)
+Date: Wed, 2 Apr 2025 22:07:46 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Christopher Obbard <christopher.obbard@linaro.org>
+Cc: Douglas Anderson <dianders@chromium.org>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        Jessica Zhang <quic_jesszhan@quicinc.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+        Rui Miguel Silva <rui.silva@linaro.org>,
+        Abel Vesa <abel.vesa@linaro.org>, devicetree@vger.kernel.org
+Subject: Re: [PATCH v5 2/3] arm64: dts: qcom: x1e78100-t14s: add hpd gpio to
+ dp controller
+Message-ID: <6fxnxcrtihxcpmn3fy2bb3tz5xoeqhxdftvurarlwvto5vyofx@ff2sfftyz5cv>
+References: <20250402-wip-obbardc-qcom-t14s-oled-panel-v5-0-ff33f4d0020f@linaro.org>
+ <20250402-wip-obbardc-qcom-t14s-oled-panel-v5-2-ff33f4d0020f@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <Z-00cAEKkfvyNto2@pathway.suse.cz> <CAHk-=wgfX9nBGE0Ap9GjhOy7Mn=RSy=rx0MvqfYFFDx31KJXqQ@mail.gmail.com>
- <Z-2EVf5BvJ-BoYkU@surfacebook.localdomain>
-In-Reply-To: <Z-2EVf5BvJ-BoYkU@surfacebook.localdomain>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Wed, 2 Apr 2025 12:07:27 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgfX7yfDYVOF8VqRR60RaBFbK=FZMLqOx0nT4ckMnS0ug@mail.gmail.com>
-X-Gm-Features: AQ5f1JoQXAx-alQWWbavkSAu0d70XPd0zt-Ls1z_xUTHHvO8V_7VZdEHhN41tW0
-Message-ID: <CAHk-=wgfX7yfDYVOF8VqRR60RaBFbK=FZMLqOx0nT4ckMnS0ug@mail.gmail.com>
-Subject: Re: [GIT PULL] more printk for 6.15
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Petr Mladek <pmladek@suse.com>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, John Ogness <john.ogness@linutronix.de>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Peter Zijlstra <peterz@infradead.org>, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250402-wip-obbardc-qcom-t14s-oled-panel-v5-2-ff33f4d0020f@linaro.org>
+X-Authority-Analysis: v=2.4 cv=fMI53Yae c=1 sm=1 tr=0 ts=67ed8b06 cx=c_pps a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8 a=mxXJVTWgdfz31GLmhacA:9 a=CjuIK1q_8ugA:10
+ a=bTQJ7kPSJx9SKPbeHEYW:22 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-ORIG-GUID: lv1HeLrQfhYLnPlj1BVTK65UZh1gp9dm
+X-Proofpoint-GUID: lv1HeLrQfhYLnPlj1BVTK65UZh1gp9dm
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-02_09,2025-04-02_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxscore=0
+ priorityscore=1501 phishscore=0 spamscore=0 impostorscore=0 clxscore=1015
+ mlxlogscore=588 bulkscore=0 malwarescore=0 suspectscore=0
+ lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504020122
 
-On Wed, 2 Apr 2025 at 11:39, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
->
-> The problem with (automatic) Link tag is that it points to the latest version
-> of the patch where all of the discussion have been settled down. And more (but
-> maybe not full) information is available on the previous versions. The fix
-> would be to have some kind of version tracking system for the series (oh,
-> sounds like Gerrit :).
+On Wed, Apr 02, 2025 at 03:36:33PM +0100, Christopher Obbard wrote:
+> The eDP controller has an HPD GPIO. Describe it in the device tree
+> for the generic T14s model, as the HPD GPIO is used in both the
+> OLED and LCD models which inherit this device tree.
+> 
+> Signed-off-by: Christopher Obbard <christopher.obbard@linaro.org>
+> ---
+>  arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dtsi | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
 
-No, the fix is to admit that noise is noise, and that search engines
-are better at context than some silly commit-time noise.
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 
-The whole "link to original submission" is garbage.
-
-               Linus
+-- 
+With best wishes
+Dmitry
