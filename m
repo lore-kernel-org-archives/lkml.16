@@ -1,143 +1,157 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8761E2F5A
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 07:57:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1D7F232373
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 07:58:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743580673; cv=none; b=ZIBCiMOIvOOZpyGWhEB+a8BHMSbqUbl+kbHscrHDoHFjCZ0y7CwUwCyrZDmLgfLjOS0SgZ7hsKmQS3nGcwrPX9zpII1lGHt9J2ykZSiNw82VxZMWmCYGeu+2HKjoXlR3rju8A1Pg/VW1cqAYbPEYgo95Q8rmK+BGpeaJQGHK1fQ=
+	t=1743580693; cv=none; b=fvcGDMosoDPRQ6h3RaH+15Plsf1hZbLwKirM4GUqJrdV+OCWBDfVV1HyVHSjM7LVntj5U+PXj0TSU1WLQZnz/f9GMS++rzO3rF3BfhjzgSdNFlW4IX2iflbnW6/e+KHZWECuacT9CUqQCAyyIfJvM2wb3QeEq3ZK+j0Tfwy3szk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743580673; c=relaxed/simple;
-	bh=R8qBaOqxCr4dyXpWM04sX/GCqchZ6RKNVr5LsTtixVQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QHpDTQ6Ouq+FLDo0XPoA+Ve9Jf8c78l5lpSBSk2WRSqKA7H8feGn237E9USGt4QvSoQs6f3/fqtoK9e94ib3STyFq4ecuH6TMzG4e+67+tUjOdzgUBx+cvVyV0hingD5hAAus2OpbPJpE9nfWNFRkqfzklSVoRR9GfSKL4sNCPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=t4hzO+GY; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1743580693; c=relaxed/simple;
+	bh=YOyS/VRuzvF8wKR4NIEMF3nzFBcwRnHWrkEDr6R/J+c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type:References; b=pF0ixst++3v77/A8d+NYUpdf9MvsdcQeLY76IYLv8x9cLoIRyb//Nng9bTm/1RMyvutBcljSHOd8Tix2TPekfMy6thZ5zfTW/Y3D6Abmm6bCYjirtWxlPb6pknROSbS+NJnIKqhvyt5ZLemvxrqJ7S0NoCTdhJtFyCa6/D4seCc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=ZcRLQR3/; arc=none smtp.client-ip=210.118.77.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="t4hzO+GY"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-224171d6826so104009895ad.3
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 00:57:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743580671; x=1744185471; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=dRSyCnFP0grZIfNQwckuEKAPhgRGKFDaBXM6ybS+yQY=;
-        b=t4hzO+GYXoh0PpTM8q8nImq9wzJoofnjFSnBjfABxN0E/paZ0WUUxTzzRXyxqooWLr
-         11Y6kyVU6iRt+/zIVbHrwqE2gWH0JrGeQQYRHS8hQQ+lLCt8HUKWDA285n0IaTBAJJsR
-         4OCaAKbqB1Kozkxl+C+k8OlsnKhkSr5Y3a3wJOImrcnhjZ8o5HdfMPWR3CoLKX0h2svr
-         2zXaP4OPfM93GQAetiwoWcQouXyPtLqdjNVfyu1ZQdCEq/S/w5DO9GmqZpgP9jlIGU/c
-         HCGkD4W4dzmgE1xgzjg0qY4B/C1mC576Y92wptYNCk6vTED0ytfOhi27BQ0L5djVbogF
-         L2Yg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743580671; x=1744185471;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dRSyCnFP0grZIfNQwckuEKAPhgRGKFDaBXM6ybS+yQY=;
-        b=NFvOMGzYcFOKrM77ZTVV3l0ckfj3vWgbN3cNQGX51/ohQvXq0z11Zq5b+un+mRZvtN
-         LnYStJmLgQwTB9mFB9MQ4YHIulPTjOHBQYTUrJ74bt6R6gTa+EeCafoDQNjcvmg5WOEm
-         rFvgV37PklfcggXiMDT4L2o/NNQOezxVi206PocA11zhpqzVa+UZ+/zELMG3tOSr1hp7
-         nqHjrt5OBBC5xaIK3QURJw9BcvYwp8jXVjzlI+fLqBnOMDhJL/Bs6WfiL4pYl8X+EVyp
-         JMtaGaq6WBN8Pdktdzi3LvMajyVw2gIGBuBINZLnY1VI2SxhYLEgvIqvqeTJ5PD2H41C
-         Nc3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXOt8eP8eDgZI8jGsEz9gLeZyPhCJxN1NxmZY2iUZotpNOzNmOWrm+omq2973CMy7zeIN1T4qpTibXMHJM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzzloo29N3/9/HXX1A/FsONrMC8O7EiyHI5U6roTKIyjp6L6Q8N
-	3/fpi72j8WW0uwj0Cr/DdkA2G0gsZ+9Oxj0zsgGa+okriAKhZxSABRxE9Y8q1Q==
-X-Gm-Gg: ASbGncsJ7beynqGaAG8IwKggOerhDTTs87/n09antsDvGyk7N9jaQZF2+WkCXZ9TByp
-	p9sHDBZBwKADHiKhaQsBT9LHKuEOQa8Md6N4zK6bciD6YsMJh3N2Sb0UXpnLuAYuYiQk4SYsmue
-	KTZClH+euGcKPcxBbFm+HIlGqFPQILzGH+6t+fyEHoUKl7xpk4jOoZYUCG1HU9RgEWEA8KSP/Is
-	Ea3uzx0HiHruf44uvLLtgNxcHB/liiqQijetWmUnS6TbnnKPVbGx2xQh6vt2HgkoncFK4/QEICO
-	jkTIXeDV/4fuuw+932F7F+bBUEiXjBwpvJJBRSdHmUAkNyhz2nbF477f
-X-Google-Smtp-Source: AGHT+IEzlbEBgFvDc2I1WYI+e0N/2YEc5vy2uJFcQHdCufTOfWQZ8Vjaelsgo3YFEKjff3mKRuYO+w==
-X-Received: by 2002:a17:902:f652:b0:216:3c36:69a7 with SMTP id d9443c01a7336-2292f9f7a8emr221580805ad.45.1743580670960;
-        Wed, 02 Apr 2025 00:57:50 -0700 (PDT)
-Received: from thinkpad ([120.56.205.103])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291f1dee5dsm101582755ad.189.2025.04.02.00.57.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Apr 2025 00:57:50 -0700 (PDT)
-Date: Wed, 2 Apr 2025 13:27:44 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org, quic_mrana@quicinc.com, quic_vbadigan@quicinc.com
-Subject: Re: [PATCH v9 4/5] PCI: Add lane equalization register offsets
-Message-ID: <mi7rmrbx5yjzznabjc6kpafskhmxdi4hgx6vaerxzqkp4hdixy@ky4dckgngrnd>
-References: <20250328-preset_v6-v9-0-22cfa0490518@oss.qualcomm.com>
- <20250328-preset_v6-v9-4-22cfa0490518@oss.qualcomm.com>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ZcRLQR3/"
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250402075806euoutp012cfa5aea7da0ab37834689a03fca6629~ycWWXfe7J2176521765euoutp01K
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 07:58:06 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250402075806euoutp012cfa5aea7da0ab37834689a03fca6629~ycWWXfe7J2176521765euoutp01K
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1743580686;
+	bh=z4vQilOEpdI5stLozjq/NkL9wmzjCpAfpg9UZTbA8Mc=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=ZcRLQR3/3d2m161DbX/gRKXvCcPnWPSMLsliYIkdjeAqy+7+lzwtgHWNhCYTzPmRZ
+	 2+aq/LvKnNqY6RPa3Cikt3yukHVo8kEUHoaxi1un9nWBnyReymIFQ57ZDueG6Bd/XU
+	 ufFXMXj5Aw32yhxAwCEsPiqoURk8mX0nQrTz6HqI=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+	20250402075806eucas1p17e6d76222dcd6ccfad30a8733a82ecb7~ycWWPgtR11675716757eucas1p1P;
+	Wed,  2 Apr 2025 07:58:06 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+	eusmges3new.samsung.com (EUCPMTA) with SMTP id 42.97.20397.E0EECE76; Wed,  2
+	Apr 2025 08:58:06 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250402075806eucas1p2c5db45b8f1c1067d4c290ff1dfce9e16~ycWV8QxQ11764217642eucas1p2L;
+	Wed,  2 Apr 2025 07:58:06 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+	eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20250402075806eusmtrp19bc9846d231b16cefdb872afb4ec5d7b~ycWV7tpMq2986429864eusmtrp1W;
+	Wed,  2 Apr 2025 07:58:06 +0000 (GMT)
+X-AuditID: cbfec7f5-ed1d670000004fad-4c-67ecee0e90ac
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+	eusmgms1.samsung.com (EUCPMTA) with SMTP id C5.D5.19920.E0EECE76; Wed,  2
+	Apr 2025 08:58:06 +0100 (BST)
+Received: from [106.210.134.192] (unknown [106.210.134.192]) by
+	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250402075804eusmtip1ae0f37572ccc42d728f330f2d9c29d9a~ycWUmiPXM0712107121eusmtip1V;
+	Wed,  2 Apr 2025 07:58:04 +0000 (GMT)
+Message-ID: <27678ba6-20aa-4ba2-93e2-001a4434a7ea@samsung.com>
+Date: Wed, 2 Apr 2025 09:58:03 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] media: videobuf2: check constants during build time
+To: =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>, Tomasz
+	Figa <tfiga@chromium.org>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Content-Language: en-US
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+In-Reply-To: <f78d0c5d569d646717f31fbb2bc4e1a5812e40b5.1743199454.git.mirq-linux@rere.qmqm.pl>
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250328-preset_v6-v9-4-22cfa0490518@oss.qualcomm.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFuphleLIzCtJLcpLzFFi42LZduznOV2+d2/SDa6cULe4vGsOm0XPhq2s
+	Fss2/WGy+Pb8FKPF59Z/bA6sHrMbLrJ4bFrVyeYxq20fm8fnTXIBLFFcNimpOZllqUX6dglc
+	GZve7GMt2MFXsW37KrYGxnaeLkYODgkBE4mDi5O7GLk4hARWMEqc3XuAvYuRE8j5wijR/0Af
+	IvGZUWLNpo8sIAmQhutTlrFAJJYzSuz5dYwVwvnIKPFs+hw2kCpeATuJxTPXMYPYLAIqEjd2
+	LGCHiAtKnJz5BGySqIC8xP1bM8DiwgIeEvN2PmEEsUUE0iSe7/4NFmcWyJZY9nsjC4QtLnHr
+	yXwmEJtNwFCi620X2C5OgTiJ+9cOQNXLSzRvnc0McpCEwBEOiZcL57NA/Oki0fE7CuIDYYlX
+	x7ewQ9gyEqcn97BA1LczSiz4fZ8JwpnAKNHw/BYjRJW1xJ1zv9hABjELaEqs36UPMdNR4s7y
+	SAiTT+LGW0GIE/gkJm2bzgwR5pXoaBOCmKEmMev4OritBy9cYp7AqDQLKVBmIXlyFpJnZiGs
+	XcDIsopRPLW0ODc9tdg4L7Vcrzgxt7g0L10vOT93EyMwwZz+d/zrDsYVrz7qHWJk4mA8xCjB
+	wawkwlt09k26EG9KYmVValF+fFFpTmrxIUZpDhYlcd5F+1vThQTSE0tSs1NTC1KLYLJMHJxS
+	DUwb2nuOLThUfi+zpujtFa+75s/yolRMT3y+rzKROzZn1+Psiu3MXq9zruodYDtx0ffGpPkf
+	IzQOVq/xqj5V+i/p2O41S4TP1z1x/51+8mPtbp+CKYWcIv1qkp6HDoUXrt6+JS7vL+/rww0L
+	p1h9uMe2br3x2Z/zN/l75zU8/yhjlfjLffHv3wxRi7idn/v+mL28aENYQVy8NLP8wvNKfFUF
+	h3i+FWYFTfy9w+zy5V+1Xz6uX2Ap9n59Qb3oSrkVopuFfhy4v8/nOJ/lL29Jj6ONuunSjAWP
+	2HbZ32aL28T6YbVaS0vjE7M+XRmVrUpyeuEvivsqJtVVzunerDDr3ymjRduLphfvkPr95OaD
+	b00CSizFGYmGWsxFxYkA8zm3G58DAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrEIsWRmVeSWpSXmKPExsVy+t/xu7p8796kG0xvEbe4vGsOm0XPhq2s
+	Fss2/WGy+Pb8FKPF59Z/bA6sHrMbLrJ4bFrVyeYxq20fm8fnTXIBLFF6NkX5pSWpChn5xSW2
+	StGGFkZ6hpYWekYmlnqGxuaxVkamSvp2NimpOZllqUX6dgl6GZve7GMt2MFXsW37KrYGxnae
+	LkZODgkBE4nrU5axdDFycQgJLGWUOPK4hwUiISNxcloDK4QtLPHnWhcbRNF7RokNMxcxgSR4
+	BewkFs9cxwxiswioSNzYsYAdIi4ocXLmE7BBogLyEvdvzQCLCwt4SMzb+YQRxBYRSJNYu+w1
+	WJxZIFti5p0HjBALNjJKLJ39FyohLnHryXywZWwChhJdb0Gu4OTgFIiTuH/tAFSNmUTX1i5G
+	CFteonnrbOYJjEKzkNwxC8moWUhaZiFpWcDIsopRJLW0ODc9t9hQrzgxt7g0L10vOT93EyMw
+	srYd+7l5B+O8Vx/1DjEycTAeYpTgYFYS4S06+yZdiDclsbIqtSg/vqg0J7X4EKMpMDAmMkuJ
+	JucDYzuvJN7QzMDU0MTM0sDU0sxYSZzX7fL5NCGB9MSS1OzU1ILUIpg+Jg5OqQamNVrnln0+
+	3s47gf3/etbzHxod2jyfxwgsTbljsstGql/G56jMfMH3Ags+RvRu4PhhwxzGl9nF/nsNs+uf
+	qIxHj4zOc2a83p7dGFH011h4v63094Qrf7du50rwrjaXDn+wp0djQ/XurWcmei8OdtU9JHRB
+	iYPXXm+hmebFb9LZT+/4Lw1cvyqu5cyWs1oGPg51XM/uHf3CsKDzpYWVtv/So5ms2R99ZLtN
+	F1///58jX/fDLd7acCXNU7s+11gFr1VoVKuLCDj/zvCzgqtpVHvt/R+q5lstTQRzHUQcpgXW
+	Rl+eYvKt7XBUubWmSE7k6xShnNUbGZ0nT5/z58D+iR8vbur9v+/PwpeXDxYG675SYinOSDTU
+	Yi4qTgQAMwB9aDUDAAA=
+X-CMS-MailID: 20250402075806eucas1p2c5db45b8f1c1067d4c290ff1dfce9e16
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20250328220534eucas1p1cc5c334505d06f34a4eb01b8c1df27da
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20250328220534eucas1p1cc5c334505d06f34a4eb01b8c1df27da
+References: <CGME20250328220534eucas1p1cc5c334505d06f34a4eb01b8c1df27da@eucas1p1.samsung.com>
+	<f78d0c5d569d646717f31fbb2bc4e1a5812e40b5.1743199454.git.mirq-linux@rere.qmqm.pl>
 
-On Fri, Mar 28, 2025 at 03:58:32PM +0530, Krishna Chaitanya Chundru wrote:
-> As per PCIe spec 6.0.1, add PCIe lane equalization register offset for
-> data rates 8.0 GT/s, 32.0 GT/s and 64.0 GT/s.
-> 
-> Add macro for defining data rate 64.0 GT/s physical layer capability ID.
-> 
-> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-
-- Mani
-
+On 28.03.2025 23:05, Michał Mirosław wrote:
+> There is nothing a driver author can do fix in the driver to make the
+> global constants match. Since the assertion can be verified at build
+> time, don't return EINVAL at runtime for it.
+>
+> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+Acked-by: Marek Szyprowski <m.szyprowski@samsung.com>
 > ---
->  include/uapi/linux/pci_regs.h | 12 +++++++++++-
->  1 file changed, 11 insertions(+), 1 deletion(-)
-> 
-> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-> index 3445c4970e4d..0dcd9aba584d 100644
-> --- a/include/uapi/linux/pci_regs.h
-> +++ b/include/uapi/linux/pci_regs.h
-> @@ -749,7 +749,8 @@
->  #define PCI_EXT_CAP_ID_NPEM	0x29	/* Native PCIe Enclosure Management */
->  #define PCI_EXT_CAP_ID_PL_32GT  0x2A    /* Physical Layer 32.0 GT/s */
->  #define PCI_EXT_CAP_ID_DOE	0x2E	/* Data Object Exchange */
-> -#define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_DOE
-> +#define PCI_EXT_CAP_ID_PL_64GT	0x31	/* Physical Layer 64.0 GT/s */
-> +#define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_PL_64GT
->  
->  #define PCI_EXT_CAP_DSN_SIZEOF	12
->  #define PCI_EXT_CAP_MCAST_ENDPOINT_SIZEOF 40
-> @@ -1140,12 +1141,21 @@
->  #define PCI_DLF_CAP		0x04	/* Capabilities Register */
->  #define  PCI_DLF_EXCHANGE_ENABLE	0x80000000  /* Data Link Feature Exchange Enable */
->  
-> +/* Secondary PCIe Capability 8.0 GT/s */
-> +#define PCI_SECPCI_LE_CTRL	0x0c /* Lane Equalization Control Register */
+>   drivers/media/common/videobuf2/videobuf2-v4l2.c | 11 +++++------
+>   1 file changed, 5 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/media/common/videobuf2/videobuf2-v4l2.c b/drivers/media/common/videobuf2/videobuf2-v4l2.c
+> index 9201d854dbcc..1cd26faee503 100644
+> --- a/drivers/media/common/videobuf2/videobuf2-v4l2.c
+> +++ b/drivers/media/common/videobuf2/videobuf2-v4l2.c
+> @@ -903,6 +903,11 @@ EXPORT_SYMBOL_GPL(vb2_expbuf);
+>   
+>   int vb2_queue_init_name(struct vb2_queue *q, const char *name)
+>   {
+> +	/* vb2_memory should match with v4l2_memory */
+> +	BUILD_BUG_ON(VB2_MEMORY_MMAP != (int)V4L2_MEMORY_MMAP);
+> +	BUILD_BUG_ON(VB2_MEMORY_USERPTR != (int)V4L2_MEMORY_USERPTR);
+> +	BUILD_BUG_ON(VB2_MEMORY_DMABUF != (int)V4L2_MEMORY_DMABUF);
 > +
->  /* Physical Layer 16.0 GT/s */
->  #define PCI_PL_16GT_LE_CTRL	0x20	/* Lane Equalization Control Register */
->  #define  PCI_PL_16GT_LE_CTRL_DSP_TX_PRESET_MASK		0x0000000F
->  #define  PCI_PL_16GT_LE_CTRL_USP_TX_PRESET_MASK		0x000000F0
->  #define  PCI_PL_16GT_LE_CTRL_USP_TX_PRESET_SHIFT	4
->  
-> +/* Physical Layer 32.0 GT/s */
-> +#define PCI_PL_32GT_LE_CTRL	0x20	/* Lane Equalization Control Register */
-> +
-> +/* Physical Layer 64.0 GT/s */
-> +#define PCI_PL_64GT_LE_CTRL	0x20	/* Lane Equalization Control Register */
-> +
->  /* Native PCIe Enclosure Management */
->  #define PCI_NPEM_CAP     0x04 /* NPEM capability register */
->  #define  PCI_NPEM_CAP_CAPABLE     0x00000001 /* NPEM Capable */
-> 
-> -- 
-> 2.34.1
-> 
+>   	/*
+>   	 * Sanity check
+>   	 */
+> @@ -916,12 +921,6 @@ int vb2_queue_init_name(struct vb2_queue *q, const char *name)
+>   	WARN_ON((q->timestamp_flags & V4L2_BUF_FLAG_TIMESTAMP_MASK) ==
+>   		V4L2_BUF_FLAG_TIMESTAMP_UNKNOWN);
+>   
+> -	/* Warn that vb2_memory should match with v4l2_memory */
+> -	if (WARN_ON(VB2_MEMORY_MMAP != (int)V4L2_MEMORY_MMAP)
+> -		|| WARN_ON(VB2_MEMORY_USERPTR != (int)V4L2_MEMORY_USERPTR)
+> -		|| WARN_ON(VB2_MEMORY_DMABUF != (int)V4L2_MEMORY_DMABUF))
+> -		return -EINVAL;
+> -
+>   	if (q->buf_struct_size == 0)
+>   		q->buf_struct_size = sizeof(struct vb2_v4l2_buffer);
+>   
 
+Best regards
 -- 
-மணிவண்ணன் சதாசிவம்
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
+
