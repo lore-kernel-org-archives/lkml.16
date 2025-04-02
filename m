@@ -1,147 +1,118 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37D46230BCF
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 11:29:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9971023B0;
+	Wed,  2 Apr 2025 11:31:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743593342; cv=none; b=fRB1qgC3Wegflf6HOBa8oG0U0jCb4zNlAWERgT7cQsnfWbVOCArTRPjmlmT7NEIi0gYuA6SDOeTp1Ls+gkVtZ6j5qHgYCdf7MlWxBhEZ4v2AjU4HDSpki6NXpTfeTfbYNHGLCwrB8P27Fq+IVQqx1ELV02tvHOKRf+Co4AcF5u8=
+	t=1743593488; cv=none; b=hfHdSvLxG2sYGTvNVAR/gEXQ4yo9j9LC17TSXpNoR8wkZLGqyG35dPTmvGVvfiWzCwUO9Ov8u5ZEodKfUPGW0a9v29BMQMebcmEGg+vTS14MiZUq9gdM6uNSkHkjaKEBY0yg+C6klMk9GCMfbRZUJuGyTY5Lax8hFdmidqa4kaQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743593342; c=relaxed/simple;
-	bh=BdaMmivvGxIoTi/+df3TeXjXtYwmJDg6l5TeR3nVX6A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AsWrudG9eTDmu6n9Cu5ZzQ8hxmmXaxdO4+wMylUFlv++N5vHdpBeVQuOpHvDEnfh+lRXu5p4P1qkhcA8aK2m0FrJPWFVC/J7Iy1Qr/5LV2H4K6wRxhkIg5oBcxnwLa43sO4DlSvYlgwKwjAGR0ktjEl8tR5fCQ76m6hqEk6zjwk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 83758106F;
-	Wed,  2 Apr 2025 04:29:02 -0700 (PDT)
-Received: from [10.57.67.12] (unknown [10.57.67.12])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 417F23F694;
-	Wed,  2 Apr 2025 04:28:57 -0700 (PDT)
-Message-ID: <8cfe938f-5eff-483e-95a1-c4029993e287@arm.com>
-Date: Wed, 2 Apr 2025 12:28:54 +0100
+	s=arc-20240116; t=1743593488; c=relaxed/simple;
+	bh=k1UyVXVWg2z8ebfSXRRxAGOouyZA/x1/w5HRrCKSSeE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LWYICxTcEjO1/4n2xdDrFH7gSc1QywKbSC/1p1qvaA0JiiELP9HOtVyY6LFPAVaMKJMoFNh8HPGspb9magPcVardXLqNnumyDUknRvm4X+C4u8BiEYOSixg/FPB3SkByhVgyTdg76ldJ+O9GP9mU9hZ0ZwRJM9Nhh0HlpWKTNC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cJq/UmwN; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cJq/UmwN"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-54acc04516fso6275728e87.0;
+        Wed, 02 Apr 2025 04:31:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743593485; x=1744198285; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VOAVNu9Kqf7PZaTRYwlcNfDlS68QrPwBXmLNyWX78Ag=;
+        b=cJq/UmwNsnm6BB47UEoGq890CcvjzKwUw85HuQbuKaMo4gX62zoQfVRcCYYTxqhNA5
+         nnj22pQ4pW0aqXEPoDmEl+6O34WRb33xmnFkyt/YTkB8arh+YJQ/cwAmdoROnFRSAF54
+         fpYr3IvAtenOly8YR84ksBq74qV9Fm6z5J+yWNrowYX49wOZKf+H2lLW7xQe9/1CTSer
+         H/DJgAXe2pIj0xJUs0vyTIzraxQF0SbfnvfnR/tQJcupze4MlK0PJmkq0xM+xgsZD7VG
+         ++dXhjDshFOrhC+ynCC+iTQR5NB4flA+nZxpJ68bDnUbu16yWggcHeDg5UKvKwNlvzIH
+         C1EQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743593485; x=1744198285;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VOAVNu9Kqf7PZaTRYwlcNfDlS68QrPwBXmLNyWX78Ag=;
+        b=vdA67KE7AJwbw6+5cJZzl1eQsli1qDV6CmDBBAJURs1EGrYGVEqO4tG4hcC0Tvpi/p
+         gXqNjS2+Gkvn5g7Jlj7n8yWEIgOHcWYsQrRqBs6uqMUol+WdsiTEEHLCKgUqZPxAsRJo
+         EInSvxhzyU3Ilgu17XErSezfLfPjisSs7n26wm/sdKFqhM0nU6hxoPvLLXAoEYQQ0jFF
+         YxrgiMuHil016TWw9LHNHa+hL+wzX6tYmxrslVa9cVLRaxBE8+6U4s3et5ekj6BHu0WP
+         qw9k10jYksrOh7n46kblj4UCuQr/cFBgy83sLN8FsK2Id5hxFIYHpsMXNTD/sM9RSATt
+         CSxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXJ7H9aKjA9eVcEGahWDcjZTQ8HAWV++KMnyUQgJR8d26p26576p5hbJ8aFQqe/wXT3lsNgdJd6@vger.kernel.org, AJvYcCXyKbqqdNiuiTJzn/Ggpe5nv0+LKjuLnw7ntJc8msmfa2A48DMNjrmE/z9Y0ODrfSz3o102e03cB2mC3eQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwOAEdu/KtCCGfkJSAK4M6gOaZU2zLr065PLuliCv/JTxi3s9Va
+	W7d0awnEczVOS1hQbPSg4Fi36Msx5GAeZkZa/HJ3GFjUluWUnzk4EbUGlhBtpPCGuQt7C7oIef1
+	70/p6p2ILl4gSrB3e7U182vl+SJ7lKdMy
+X-Gm-Gg: ASbGncupwAW70wl+NsN7moB1sonOxekLRyoO72dZVtpZaybivyzQDeIrXO+P7bz4ZVd
+	KSIqCMDsi7B03NptvrlYe+0u5HBekaT8TmqIAS3GrWmjAPNzo/069s1opereTugu1QSTtATapCV
+	rExT8p2rfUyf72Agig0bj5TSmstZ313+yRuG6fwzwuSKa3zCqSPGV1QQ4ZELiDmvIT60v+G20=
+X-Google-Smtp-Source: AGHT+IGDP7fN/mlgeR1ejgbnG6v2T05K9e3eS+G5D4ks1NyMNbGzNy7b9fCSqq7Gay9J6tYjG5W23A4J+hlZdsO25Ts=
+X-Received: by 2002:a05:6512:2c99:b0:54b:117c:118c with SMTP id
+ 2adb3069b0e04-54b117c11f5mr4261792e87.57.1743593484370; Wed, 02 Apr 2025
+ 04:31:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] iommu: riscv: Split 8-byte accesses on 32 bit I/O bus
- platform
-To: Xu Lu <luxu.kernel@bytedance.com>, tjeznach@rivosinc.com,
- joro@8bytes.org, will@kernel.org, alex@ghiti.fr
-Cc: lihangjing@bytedance.com, xieyongji@bytedance.com,
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- iommu@lists.linux.dev
-References: <20250325144252.27403-1-luxu.kernel@bytedance.com>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20250325144252.27403-1-luxu.kernel@bytedance.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250402085856.3348-1-vulab@iscas.ac.cn>
+In-Reply-To: <20250402085856.3348-1-vulab@iscas.ac.cn>
+From: Ryusuke Konishi <konishi.ryusuke@gmail.com>
+Date: Wed, 2 Apr 2025 20:31:08 +0900
+X-Gm-Features: AQ5f1JovFhM7rRGBrJhv4JMkrXTr2ISvt_zbXmpfVi3qcZyzfqwkEJEsTyuCYdM
+Message-ID: <CAKFNMomx3hpQrntyO0zQZviPa40LiC5KqxFa-m1PZcnZ7ku58A@mail.gmail.com>
+Subject: Re: [PATCH] nilfs2: Add pointer check for nilfs_direct_propagate()
+To: Wentao Liang <vulab@iscas.ac.cn>
+Cc: linux-nilfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2025-03-25 2:42 pm, Xu Lu wrote:
-> Introduce a new configuration CONFIG_RISCV_IOMMU_32BIT to enable
-> splitting 8-byte access into 4-byte transactions for hardware platform
-> whose I/O bus limits access to 4-byte transfers.
-> 
-> Signed-off-by: Xu Lu <luxu.kernel@bytedance.com>
+On Wed, Apr 2, 2025 at 5:59=E2=80=AFPM Wentao Liang wrote:
+>
+> In nilfs_direct_propagate(), the printer get from nilfs_direct_get_ptr()
+> need to be checked to ensure it is not an invalid pointer. A proper
+> implementation can be found in nilfs_direct_delete(). Add a value check
+> and return -ENOENT when it is an invalid pointer.
+>
+> Fixes: 10ff885ba6f5 ("nilfs2: get rid of nilfs_direct uses")
+> Cc: stable@vger.kernel.org # v2.6+
+> Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
 > ---
->   drivers/iommu/riscv/Kconfig |  9 +++++++++
->   drivers/iommu/riscv/iommu.h | 28 +++++++++++++++++++++++-----
->   2 files changed, 32 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/iommu/riscv/Kconfig b/drivers/iommu/riscv/Kconfig
-> index c071816f59a6..b7c9ea22d969 100644
-> --- a/drivers/iommu/riscv/Kconfig
-> +++ b/drivers/iommu/riscv/Kconfig
-> @@ -18,3 +18,12 @@ config RISCV_IOMMU_PCI
->   	def_bool y if RISCV_IOMMU && PCI_MSI
->   	help
->   	  Support for the PCIe implementation of RISC-V IOMMU architecture.
+>  fs/nilfs2/direct.c | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/fs/nilfs2/direct.c b/fs/nilfs2/direct.c
+> index 893ab36824cc..ff1c9fe72bec 100644
+> --- a/fs/nilfs2/direct.c
+> +++ b/fs/nilfs2/direct.c
+> @@ -273,6 +273,9 @@ static int nilfs_direct_propagate(struct nilfs_bmap *=
+bmap,
+>         dat =3D nilfs_bmap_get_dat(bmap);
+>         key =3D nilfs_bmap_data_get_key(bmap, bh);
+>         ptr =3D nilfs_direct_get_ptr(bmap, key);
+> +       if (ptr =3D=3D NILFS_BMAP_INVALID_PTR)
+> +               return -ENOENT;
 > +
-> +config RISCV_IOMMU_32BIT
-> +	bool "Support 4-Byte Accesses on RISC-V IOMMU Registers"
-> +	depends on RISCV_IOMMU
-> +	default n
-> +	help
-> +	  Support hardware platform whose I/O bus limits access to 4-byte
-> +	  transfers. When enabled, all accesses to IOMMU registers will be
-> +	  split into 4-byte accesses.
-> diff --git a/drivers/iommu/riscv/iommu.h b/drivers/iommu/riscv/iommu.h
-> index 46df79dd5495..0e3552a8142d 100644
-> --- a/drivers/iommu/riscv/iommu.h
-> +++ b/drivers/iommu/riscv/iommu.h
-> @@ -14,6 +14,10 @@
->   #include <linux/iommu.h>
->   #include <linux/types.h>
->   #include <linux/iopoll.h>
-> +#ifdef CONFIG_RISCV_IOMMU_32BIT
-> +#include <linux/io-64-nonatomic-hi-lo.h>
-> +#include <linux/io-64-nonatomic-lo-hi.h>
-> +#endif
->   
->   #include "iommu-bits.h"
->   
-> @@ -69,21 +73,35 @@ void riscv_iommu_disable(struct riscv_iommu_device *iommu);
->   #define riscv_iommu_readl(iommu, addr) \
->   	readl_relaxed((iommu)->reg + (addr))
->   
-> -#define riscv_iommu_readq(iommu, addr) \
-> -	readq_relaxed((iommu)->reg + (addr))
-> -
->   #define riscv_iommu_writel(iommu, addr, val) \
->   	writel_relaxed((val), (iommu)->reg + (addr))
->   
-> +#define riscv_iommu_readl_timeout(iommu, addr, val, cond, delay_us, timeout_us) \
-> +	readx_poll_timeout(readl_relaxed, (iommu)->reg + (addr), val, cond, \
-> +			   delay_us, timeout_us)
-> +
-> +#ifndef CONFIG_RISCV_IOMMU_32BIT
-> +#define riscv_iommu_readq(iommu, addr) \
-> +	readq_relaxed((iommu)->reg + (addr))
-> +
->   #define riscv_iommu_writeq(iommu, addr, val) \
->   	writeq_relaxed((val), (iommu)->reg + (addr))
->   
->   #define riscv_iommu_readq_timeout(iommu, addr, val, cond, delay_us, timeout_us) \
->   	readx_poll_timeout(readq_relaxed, (iommu)->reg + (addr), val, cond, \
->   			   delay_us, timeout_us)
-> +#else /* CONFIG_RISCV_IOMMU_32BIT */
-> +#define riscv_iommu_readq(iommu, addr) \
-> +	hi_lo_readq_relaxed((iommu)->reg + (addr))
->   
-> -#define riscv_iommu_readl_timeout(iommu, addr, val, cond, delay_us, timeout_us) \
-> -	readx_poll_timeout(readl_relaxed, (iommu)->reg + (addr), val, cond, \
-> +#define riscv_iommu_writeq(iommu, addr, val) \
-> +	((addr == RISCV_IOMMU_REG_IOHPMCYCLES) ? \
-> +	 lo_hi_writeq_relaxed((val), (iommu)->reg + (addr)) : \
-> +	 hi_lo_writeq_relaxed((val), (iommu)->reg + (addr)))
+>         if (!buffer_nilfs_volatile(bh)) {
+>                 oldreq.pr_entry_nr =3D ptr;
+>                 newreq.pr_entry_nr =3D ptr;
+> --
+> 2.42.0.windows.2
+>
 
-Echoing Jason's comment, what is this even trying to achieve? Nothing in 
-the spec suggests that the cycle counter register is functionally 
-different from the other PMU counter registers (other than its 
-self-contained overflow bit).
+This patch requires review and correction.
+To avoid noise, I will comment on it separately in a reply email that
+excludes the stable ML.
 
-It is not, in general, safe to do a split write to a running counter 
-either way - low-high vs. high-low just moves the problem around, 
-changing *which* combinations of values are problematic and capable of 
-overflowing into each other between the writes. If the PMU driver can't 
-write counters atomically, it will need to ensure that it only ever 
-write them while stopped (at which point the order surely shouldn't 
-matter). Conversely, though, reading from running counters is a bit more 
-reasonable, but it needs more than just hi_lo_readq to guarantee it's 
-not got a torn result.
+As a comment in advance, the commit pointed to by the Fixes tag is not
+the commit that caused the issue, and the version specification "#
+v2.6+" includes versions prior to nilfs2 mainline integration, so it
+is unnecessary.
 
-Thanks,
-Robin.
-
-> +
-> +#define riscv_iommu_readq_timeout(iommu, addr, val, cond, delay_us, timeout_us) \
-> +	readx_poll_timeout(hi_lo_readq_relaxed, (iommu)->reg + (addr), val, cond, \
->   			   delay_us, timeout_us)
-> +#endif /* CONFIG_RISCV_IOMMU_32BIT */
->   
->   #endif
-
+Regards,
+Ryusuke Konishi
