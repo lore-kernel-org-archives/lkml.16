@@ -1,106 +1,130 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CB091E521;
-	Wed,  2 Apr 2025 14:59:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D0CF23BD09;
+	Wed,  2 Apr 2025 15:00:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743605971; cv=none; b=DfQnHoKUeY3tYOqZ8nGAC7gX7cqin9YBjzGsu3Khjl7OQj+GKFxTSFzVS7kdAeopEvhnJGwtvTfq2gLVoG5tR/rpnpEhmqGvHW/GFo3mF7tNkTnQ17gj+4WOGtAEkZf2/uaS8xqdHn3yj5grEPzRjhSF26rDKyVTH+YH9FOk8iU=
+	t=1743606011; cv=none; b=Ljte44PsB67URQMiyGjpfUfCwyghn2djW88uUvqorKmTyiPajSh5lMwtRO9+wjReMTQIM69yVY4OloDr1XzpOY9LteOl5AZgWHqMGNmkaqn53/u4DdquhvSWkdTgbLgtHFSEtKhYiA+7Nq69sECfGqr/Pc5VNHYiuQ8QYirHFI0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743605971; c=relaxed/simple;
-	bh=dlLqY1u1t6/c8205XqJOIrRCz/YhzQT9F0ssufJpEow=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X48WgzAzJJoGtMJnMLi7ohKWM1Bx25dzthK0vCvw8yaKcWHv8hQkyW7Gm+STqah2Ffu3YKrILHN5gnwhDc6DZ1gAXZQCm/eMhzxJP0A+GtoCUrNQ0h150jRBsUDHGNwENMC8ubWlclhGri01Luq226floReZ6PxTmIQoNfN+NBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=T5j+Ew71; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="T5j+Ew71"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743605970; x=1775141970;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=dlLqY1u1t6/c8205XqJOIrRCz/YhzQT9F0ssufJpEow=;
-  b=T5j+Ew716casl2pfjn9n7XMxkniwD5/Zd+D3ZDLxvSTWTxesXBbo9GZk
-   l6cs8AblYoVgmDeEGblqfmMz17/XfMcCUT5lCuCNkzdRvJJG7Rnyq2XLb
-   Zc6deg3rdaxuxM+G3Wk6j3BRx8g7SGkS70+m0QSD2meAQC3NRL23XucH7
-   jyoJl4wr7JhzQZXiyiSA6s0VTllsSFpUUO6G37GYnYmeA1EMUw94MLUZj
-   KK0ZM7GOMCnDUtU2hlQ1uoY6IX1HYpOy5s0PCLhshys6CrNlj6wv6sUcg
-   RMQWOBudgiH+nk1AgiDdMKvAot9EiQ7LVSz4FIErtd52zvXN1YwrkttB/
-   A==;
-X-CSE-ConnectionGUID: mkyhhZz4QtWPxYP8mAs7bw==
-X-CSE-MsgGUID: LOOKeM1rT0qLEpxaGkIsVw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11392"; a="44232459"
-X-IronPort-AV: E=Sophos;i="6.15,182,1739865600"; 
-   d="scan'208";a="44232459"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 07:59:29 -0700
-X-CSE-ConnectionGUID: UlGiov7MSou8TYTSDLOb1Q==
-X-CSE-MsgGUID: AlQg4rPaTtq3pa3PjFbrBQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,182,1739865600"; 
-   d="scan'208";a="131848576"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa004.fm.intel.com with ESMTP; 02 Apr 2025 07:59:26 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id B3A6426D; Wed, 02 Apr 2025 17:59:25 +0300 (EEST)
-Date: Wed, 2 Apr 2025 17:59:25 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
-	linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	"open list:SPI SUBSYSTEM" <linux-spi@vger.kernel.org>,
-	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>,
-	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] spi: bcm2835: Do not call gpiod_put() on invalid
- descriptor
-Message-ID: <Z-1QzesPs7A3_FQY@black.fi.intel.com>
-References: <20250401224238.2854256-1-florian.fainelli@broadcom.com>
- <CAMRc=Mefks5RMDkO-w-WT1279rKKyz8Up9UbuNdcF+WpsOxioA@mail.gmail.com>
+	s=arc-20240116; t=1743606011; c=relaxed/simple;
+	bh=QDR3wL0XPBW/EDcrWr7RCbY09c1dPTtj1ZoruraubdI=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=CAyUx/6Ug6kOtpIwDTRl/2uyck/tDVNqS9N6rIiwoJiI2oVXCV6wS8cJ2VYtfeRMQYkBYp0MWKHZjsOV3/9Aaprrmz0DSvCyExte181e3p1vU98HuUSGsitDto0DREXSd+x9L2Ui9nzjgf+TR9MTbUfGW5l14gSOCvyFRrG87CI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=shelob.surriel.com; arc=none smtp.client-ip=96.67.55.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shelob.surriel.com
+Received: from fangorn.home.surriel.com ([10.0.13.7])
+	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.97.1)
+	(envelope-from <riel@shelob.surriel.com>)
+	id 1tzzYb-000000007Vk-0UjT;
+	Wed, 02 Apr 2025 10:59:09 -0400
+Message-ID: <9d38c61098b426777c1a748cf1baf8e57c41c334.camel@surriel.com>
+Subject: Re: [PATCH] sched/fair: Add null pointer check to pick_next_entity()
+From: Rik van Riel <riel@surriel.com>
+To: Peter Zijlstra <peterz@infradead.org>, Pat Cody <pat@patcody.io>
+Cc: mingo@redhat.com, juri.lelli@redhat.com, vincent.guittot@linaro.org, 
+	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+ mgorman@suse.de, 	vschneid@redhat.com, linux-kernel@vger.kernel.org,
+ patcody@meta.com, 	kernel-team@meta.com, stable@vger.kernel.org, Breno
+ Leitao <leitao@debian.org>
+Date: Wed, 02 Apr 2025 10:59:09 -0400
+In-Reply-To: <20250324115613.GD14944@noisy.programming.kicks-ass.net>
+References: <20250320205310.779888-1-pat@patcody.io>
+	 <20250324115613.GD14944@noisy.programming.kicks-ass.net>
+Autocrypt: addr=riel@surriel.com; prefer-encrypt=mutual;
+ keydata=mQENBFIt3aUBCADCK0LicyCYyMa0E1lodCDUBf6G+6C5UXKG1jEYwQu49cc/gUBTTk33A
+ eo2hjn4JinVaPF3zfZprnKMEGGv4dHvEOCPWiNhlz5RtqH3SKJllq2dpeMS9RqbMvDA36rlJIIo47
+ Z/nl6IA8MDhSqyqdnTY8z7LnQHqq16jAqwo7Ll9qALXz4yG1ZdSCmo80VPetBZZPw7WMjo+1hByv/
+ lvdFnLfiQ52tayuuC1r9x2qZ/SYWd2M4p/f5CLmvG9UcnkbYFsKWz8bwOBWKg1PQcaYHLx06sHGdY
+ dIDaeVvkIfMFwAprSo5EFU+aes2VB2ZjugOTbkkW2aPSWTRsBhPHhV6dABEBAAG0HlJpayB2YW4gU
+ mllbCA8cmllbEByZWRoYXQuY29tPokBHwQwAQIACQUCW5LcVgIdIAAKCRDOed6ShMTeg05SB/986o
+ gEgdq4byrtaBQKFg5LWfd8e+h+QzLOg/T8mSS3dJzFXe5JBOfvYg7Bj47xXi9I5sM+I9Lu9+1XVb/
+ r2rGJrU1DwA09TnmyFtK76bgMF0sBEh1ECILYNQTEIemzNFwOWLZZlEhZFRJsZyX+mtEp/WQIygHV
+ WjwuP69VJw+fPQvLOGn4j8W9QXuvhha7u1QJ7mYx4dLGHrZlHdwDsqpvWsW+3rsIqs1BBe5/Itz9o
+ 6y9gLNtQzwmSDioV8KhF85VmYInslhv5tUtMEppfdTLyX4SUKh8ftNIVmH9mXyRCZclSoa6IMd635
+ Jq1Pj2/Lp64tOzSvN5Y9zaiCc5FucXtB9SaWsgdmFuIFJpZWwgPHJpZWxAc3VycmllbC5jb20+iQE
+ +BBMBAgAoBQJSLd2lAhsjBQkSzAMABgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRDOed6ShMTe
+ g4PpB/0ZivKYFt0LaB22ssWUrBoeNWCP1NY/lkq2QbPhR3agLB7ZXI97PF2z/5QD9Fuy/FD/jddPx
+ KRTvFCtHcEzTOcFjBmf52uqgt3U40H9GM++0IM0yHusd9EzlaWsbp09vsAV2DwdqS69x9RPbvE/Ne
+ fO5subhocH76okcF/aQiQ+oj2j6LJZGBJBVigOHg+4zyzdDgKM+jp0bvDI51KQ4XfxV593OhvkS3z
+ 3FPx0CE7l62WhWrieHyBblqvkTYgJ6dq4bsYpqxxGJOkQ47WpEUx6onH+rImWmPJbSYGhwBzTo0Mm
+ G1Nb1qGPG+mTrSmJjDRxrwf1zjmYqQreWVSFEt26tBpSaWsgdmFuIFJpZWwgPHJpZWxAZmIuY29tP
+ okBPgQTAQIAKAUCW5LbiAIbIwUJEswDAAYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AACgkQznneko
+ TE3oOUEQgAsrGxjTC1bGtZyuvyQPcXclap11Ogib6rQywGYu6/Mnkbd6hbyY3wpdyQii/cas2S44N
+ cQj8HkGv91JLVE24/Wt0gITPCH3rLVJJDGQxprHTVDs1t1RAbsbp0XTksZPCNWDGYIBo2aHDwErhI
+ omYQ0Xluo1WBtH/UmHgirHvclsou1Ks9jyTxiPyUKRfae7GNOFiX99+ZlB27P3t8CjtSO831Ij0Ip
+ QrfooZ21YVlUKw0Wy6Ll8EyefyrEYSh8KTm8dQj4O7xxvdg865TLeLpho5PwDRF+/mR3qi8CdGbkE
+ c4pYZQO8UDXUN4S+pe0aTeTqlYw8rRHWF9TnvtpcNzZw==
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=Mefks5RMDkO-w-WT1279rKKyz8Up9UbuNdcF+WpsOxioA@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Sender: riel@surriel.com
 
-On Wed, Apr 02, 2025 at 01:36:28PM +0200, Bartosz Golaszewski wrote:
-> On Wed, Apr 2, 2025 at 12:43 AM Florian Fainelli
-> <florian.fainelli@broadcom.com> wrote:
-> >
-> > If we are unable to lookup the chip-select GPIO, the error path will
-> > call bcm2835_spi_cleanup() which unconditionally calls gpiod_put() on
-> > the cs->gpio variable which we just determined was invalid.
+On Mon, 2025-03-24 at 12:56 +0100, Peter Zijlstra wrote:
+> On Thu, Mar 20, 2025 at 01:53:10PM -0700, Pat Cody wrote:
+> > pick_eevdf() can return null, resulting in a null pointer
+> > dereference
+> > crash in pick_next_entity()
+>=20
+> If it returns NULL while nr_queued, something is really badly wrong.
+>=20
+> Your check will hide this badness.
 
-...
+Looking at the numbers, I suspect vruntime_eligible()
+is simply not allowing us to run the left-most entity
+in the rb tree.
 
-> > -       gpiod_put(bs->cs_gpio);
-> > +       if (!IS_ERR(bs->cs_gpio))
-> > +               gpiod_put(bs->cs_gpio);
+At the root level we are seeing these numbers:
 
-> We could also just set it to NULL on error in bcm2835_spi_setup() but
-> I'm fine either way.
+*(struct cfs_rq *)0xffff8882b3b80000 =3D {
+	.load =3D (struct load_weight){
+		.weight =3D (unsigned long)4750106,
+		.inv_weight =3D (u32)0,
+	},
+	.nr_running =3D (unsigned int)3,
+	.h_nr_running =3D (unsigned int)3,
+	.idle_nr_running =3D (unsigned int)0,
+	.idle_h_nr_running =3D (unsigned int)0,
+	.h_nr_delayed =3D (unsigned int)0,
+	.avg_vruntime =3D (s64)-2206158374744070955,
+	.avg_load =3D (u64)4637,
+	.min_vruntime =3D (u64)12547674988423219,
 
-I think this patch papers over the real issue:
-1) the cleanup call does everything and not split to have the exact reversed order of the setup;
-2) the GPIO here as far as I understand is not optional and on errors may contain an error pointer
-but gpiod_put() ignores that.
+Meanwhile, the cfs_rq->curr entity has a weight of=20
+4699124, a vruntime of 12071905127234526, and a
+vlag of -2826239998
 
-TL;DR: I think the proper fix is to make gpio_put() to accept an error pointer as NULL. I.o.w.
-if (desc) --> if (!IS_ERR_OR_NULL(desc)) in all conditionals related to gpiod*put*() calls.
+The left node entity in the cfs_rq has a weight
+of 107666, a vruntime of 16048555717648580,
+and a vlag of -1338888
 
--- 
-With Best Regards,
-Andy Shevchenko
+I cannot for the life of me figure out how the
+avg_vruntime number is so out of whack from what
+the vruntime numbers of the sched entities on the
+runqueue look like.
+
+The avg_vruntime code is confusing me. On the
+one hand the vruntime number is multiplied by
+the sched entity weight when adding to or
+subtracting to avg_vruntime, but on the other
+hand vruntime_eligible scales the comparison
+by the cfs_rq->avg_load number.
+
+What even protects the load number in vruntime_eligible
+from going negative in certain cases, when the current
+entity's entity_key is a negative value?
+
+The latter is probably not the bug we're seeing now, but
+I don't understand how that is supposed to behave.
 
 
+--=20
+All Rights Reversed.
