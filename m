@@ -1,100 +1,174 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A4B11C8603
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 09:21:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08C4519F40F
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 09:21:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743585662; cv=none; b=S87yWHwnR6ENepeaS6kQ8Dw57toA2OAUv2KkhZtEnhqPlxUOIoKJxM9+cdy7NM7n9Xcu3A/n9lA8ZDTTqgCW8gxYlaJf6t/ax5zL6kBJBQcdcHqq+/pJ2Jcmm4ICwJ6oB19d/aDrNu64A0CwgNqyCIGnydH3B2g4KC+GkSRGLcY=
+	t=1743585715; cv=none; b=ZHDHb++Kf7zJljB782myR89bIBS8MfkOgDhcBit5UMvUgjxuwPWvnyGHxGhm4gpfEqHcviRvFwihiEvzi/RDTlW1Mcgg7anJ2lQORq2s/K7wGK9dCV1PwUX+cD8ScuuVzrJGRMG/017dczWnxXVdD80FxS/h4+GOv0llw/AmGYs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743585662; c=relaxed/simple;
-	bh=cyRR7YwcTt1RVUuFWFxexpTiWgrITNp4gvcysQ5tmtU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fD4IJsd43b73XRV1WubOQ1zxqLCzfZmDlbv7xy6P06bOGSM4crVcHbYdyrG/gs1xrvlx4O1kzuQMoUjODnykQaOu3buamq0IgB3t5Zge5+cPmQ6B06RX1rqflBOzNRZwV3/ihnJdo/jl0fsfP8D5WtvKBWILlVB+TrurY1l+d7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Z6O36sOu; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1743585715; c=relaxed/simple;
+	bh=cZ7/ajwbjD8GIcf5QFa6HNRaYw2T8X0YKhZc5lgbrz8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WsqF4BDLm4MWM38u7xZ401CUd0H62gMu6uYFTj+W0qsD5oW9Zc2ADttz8PwvvpcBVGiMoHZnTmSbF0MyEPCC+I3nvM0qR+UF2306Sef2yNfc0ei6gWl6XtvKdJa1WQ8nZIVFfD0YYDpCLpEoWKXgi27Vkg+x8q9YG1t93x5/RAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cl19ofkn; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Z6O36sOu"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-54acc0cd458so805929e87.0
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 02:21:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1743585658; x=1744190458; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cyRR7YwcTt1RVUuFWFxexpTiWgrITNp4gvcysQ5tmtU=;
-        b=Z6O36sOufnewZxbHbgW9XPWl2THCMwLLTTow6DtxbOjoiFYQT38kANPQyXBDbVxreM
-         ntnkAED85IwQR/4tyOIkctnYf7tCgUH12IAV2OguMj4Mot6Ww+7ddkkwFa7ctq5ogzCi
-         MW+LRh+UVTM3989CbBgwdQlyHtvLnZkrpVXFM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743585658; x=1744190458;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cyRR7YwcTt1RVUuFWFxexpTiWgrITNp4gvcysQ5tmtU=;
-        b=ZB7OoPN2LLxTBlULfBnSjEHINOOgHofSe8prIRgDmyXBiBXhO8ar/kEhccrar1EbyC
-         z1sVoDeBrcoOOuljQ8y6BVkKl4joiKa7gmubWIeIS4BnJq1GDjCs2LtTCQVHTXiMqoiy
-         2fOIf5ZXVH5V90D2FuY92q2YaxizMwynlKAe/2Klwv4PpKURp07tWJv5sUq46XA24QKU
-         IhyqCLNsEnbSwQujNcdvPgBR6hzlr7QmSQpF/Zq206ggZ57UH+GHOyXa9sR7XP74Bd4l
-         H5zXA9Ie+ltvjRBizmdjBrJJ9z96UtOvqIDkhd3EJjBuGg5WNjpe/EAVeK2WES/IxzcM
-         uLqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU0nl9E1mh2EN7oZpW8Z+lpqcJjIhtsjwEIEkdLhSxCkgobYK/X+N0835qLm+U4AQ2MQdS7AQxoZB3vRzE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwfQ+ByTipuca/4PLgkMooM0zLcyvolhuK0r7Vr6rPeVxe2uv8b
-	B8/kcR8En8TcVLLzmvC4iZ4a8os2hZ3gQFRfxcY8YQUAODQB6J8eoodpWgv9P3uptzBhaGbbJiT
-	U/VynqvK3zXqEkoQM2OnJaWDTj6Ed9MStfBkp
-X-Gm-Gg: ASbGncshcMuUFhGfCnkQ6NZeo7qb2jJhL64nFcEYyoQrvRsa9mEFDaOo7Uz93CifHsI
-	z8NyMGIPTyIefIYEQECTTQ1QMSF/p6M6lII8983OSMaRbcho0jFBG3d6zBZ0Ay646PpirAMZcNF
-	S7hBK4zKxQs2sL8QplDTCf87eDIEYn5UrAbHQgdCOjHy63Fs0aV90I
-X-Google-Smtp-Source: AGHT+IFNQ8rh8uohCED3FsKCQuotU4QQf82Ifu/wJJpZo0zeWoQri2IhxtJ24b7PrATskKr8lE3tJp/lmcDLayTcKSY=
-X-Received: by 2002:a05:6512:1582:b0:53e:39e6:a1c1 with SMTP id
- 2adb3069b0e04-54c19c81f80mr468673e87.43.1743585658589; Wed, 02 Apr 2025
- 02:20:58 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cl19ofkn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743585712;
+	h=from:from:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:in-reply-to:in-reply-to:  references:references;
+	bh=sgCDsYKq2u4or2JXW0oRsRoKCnIqWshzdEf66OFf/wk=;
+	b=cl19ofknZmagUgSWaX1BgxScr/t/iqaAhxsLEp20um+YlOFSXiIPdwltT382Y/7qn5+eiR
+	H4liuYPKwP1lG+M43eZcsOYlavDZKp3/GvAbVxz/DqG/3GP0q+K/+R6dy4skTx/xV7RRCS
+	2TQATXvecq9+cEz/eyiW/sl1j1P/yOY=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-522-_E2shaWEPoat1eOwd9jpGA-1; Wed,
+ 02 Apr 2025 05:21:49 -0400
+X-MC-Unique: _E2shaWEPoat1eOwd9jpGA-1
+X-Mimecast-MFC-AGG-ID: _E2shaWEPoat1eOwd9jpGA_1743585707
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2BA6619560BB;
+	Wed,  2 Apr 2025 09:21:47 +0000 (UTC)
+Received: from redhat.com (unknown [10.42.28.12])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 463DC19560AD;
+	Wed,  2 Apr 2025 09:21:40 +0000 (UTC)
+Date: Wed, 2 Apr 2025 10:21:36 +0100
+From: Daniel =?utf-8?B?UC4gQmVycmFuZ8Op?= <berrange@redhat.com>
+To: Stefano Garzarella <sgarzare@redhat.com>
+Cc: Bobby Eshleman <bobbyeshleman@gmail.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Stefan Hajnoczi <stefanha@redhat.com>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>,
+	Bryan Tan <bryan-bt.tan@broadcom.com>,
+	Vishnu Dasa <vishnu.dasa@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	virtualization@lists.linux.dev, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+	kvm@vger.kernel.org
+Subject: Re: [PATCH v2 0/3] vsock: add namespace support to vhost-vsock
+Message-ID: <Z-0BoF4vkC2IS1W4@redhat.com>
+Reply-To: Daniel =?utf-8?B?UC4gQmVycmFuZ8Op?= <berrange@redhat.com>
+References: <20250312-vsock-netns-v2-0-84bffa1aa97a@gmail.com>
+ <r6a6ihjw3etlb5chqsb65u7uhcav6q6pjxu65iqpp76423w2wd@kmctvoaywmbu>
+ <Z-w47H3qUXZe4seQ@redhat.com>
+ <Z+yDCKt7GpubbTKJ@devvm6277.cco0.facebook.com>
+ <CAGxU2F7=64HHaAD+mYKYLqQD8rHg1CiF1YMDUULgSFw0WSY-Aw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250402083852.20624-1-angelogioacchino.delregno@collabora.com>
-In-Reply-To: <20250402083852.20624-1-angelogioacchino.delregno@collabora.com>
-From: Chen-Yu Tsai <wenst@chromium.org>
-Date: Wed, 2 Apr 2025 17:20:47 +0800
-X-Gm-Features: AQ5f1JrBOnaeLpNxIHL0qnzLitrLXH_ivJZiH5ry-mQ9PevMkY1uBQey-dy93ik
-Message-ID: <CAGXv+5Fo3-5J1Tyn1JGP0+aTeCnkUJhwxiuLt71MLUp-zVSCkg@mail.gmail.com>
-Subject: Re: [PATCH] thermal/drivers/mediatek/lvts: Fix debugfs unregister on failure
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: rafael@kernel.org, daniel.lezcano@linaro.org, rui.zhang@intel.com, 
-	lukasz.luba@arm.com, matthias.bgg@gmail.com, npitre@baylibre.com, 
-	jpanis@baylibre.com, nfraprado@collabora.com, bchihi@baylibre.com, 
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
-	kernel@collabora.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAGxU2F7=64HHaAD+mYKYLqQD8rHg1CiF1YMDUULgSFw0WSY-Aw@mail.gmail.com>
+User-Agent: Mutt/2.2.13 (2024-03-09)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-On Wed, Apr 2, 2025 at 4:39=E2=80=AFPM AngeloGioacchino Del Regno
-<angelogioacchino.delregno@collabora.com> wrote:
->
-> When running the probe function for this driver, the function
-> lvts_debugfs_init() gets called in lvts_domain_init() which, in
-> turn, gets called in lvts_probe() before registering threaded
-> interrupt handlers.
->
-> Even though it's unlikely, the last call may fail and, if it does,
-> there's nothing removing the already created debugfs folder and
-> files.
->
-> In order to fix that, instead of calling the lvts debugfs cleanup
-> function upon failure, register a devm action that will take care
-> of calling that upon failure or driver removal.
->
-> Since devm was used, also delete the call to lvts_debugfs_exit()
-> in the lvts_remove() callback, as now that's done automatically.
->
-> Fixes: f5f633b18234 ("thermal/drivers/mediatek: Add the Low Voltage Therm=
-al Sensor driver")
-> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@coll=
-abora.com>
+On Wed, Apr 02, 2025 at 10:13:43AM +0200, Stefano Garzarella wrote:
+> On Wed, 2 Apr 2025 at 02:21, Bobby Eshleman <bobbyeshleman@gmail.com> wrote:
+> >
+> > I do like Stefano's suggestion to add a sysctl for a "strict" mode,
+> > Since it offers the best of both worlds, and still tends conservative in
+> > protecting existing applications... but I agree, the non-strict mode
+> > vsock would be unique WRT the usual concept of namespaces.
+> 
+> Maybe we could do the opposite, enable strict mode by default (I think 
+> it was similar to what I had tried to do with the kernel module in v1, I 
+> was young I know xD)
+> And provide a way to disable it for those use cases where the user wants 
+> backward compatibility, while paying the cost of less isolation.
 
-Reviewed-by: Chen-Yu Tsai <wenst@chromium.org>
+I think backwards compatible has to be the default behaviour, otherwise
+the change has too high risk of breaking existing deployments that are
+already using netns and relying on VSOCK being global. Breakage has to
+be opt in.
+
+> I was thinking two options (not sure if the second one can be done):
+> 
+>   1. provide a global sysfs/sysctl that disables strict mode, but this
+>   then applies to all namespaces
+> 
+>   2. provide something that allows disabling strict mode by namespace.
+>   Maybe when it is created there are options, or something that can be
+>   set later.
+> 
+> 2 would be ideal, but that might be too much, so 1 might be enough. In 
+> any case, 2 could also be a next step.
+> 
+> WDYT?
+
+It occured to me that the problem we face with the CID space usage is
+somewhat similar to the UID/GID space usage for user namespaces.
+
+In the latter case, userns has exposed /proc/$PID/uid_map & gid_map, to
+allow IDs in the namespace to be arbitrarily mapped onto IDs in the host.
+
+At the risk of being overkill, is it worth trying a similar kind of
+approach for the vsock CID space ?
+
+A simple variant would be a /proc/net/vsock_cid_outside specifying a set
+of CIDs which are exclusively referencing /dev/vhost-vsock associations
+created outside the namespace. Anything not listed would be exclusively
+referencing associations created inside the namespace.
+
+A more complex variant would be to allow a full remapping of CIDs as is
+done with userns, via a /proc/net/vsock_cid_map, which the same three
+parameters, so that CID=15 association outside the namespace could be
+remapped to CID=9015 inside the namespace, allow the inside namespace
+to define its out association for CID=15 without clashing.
+
+IOW, mapped CIDs would be exclusively referencing /dev/vhost-vsock
+associations created outside namespace, while unmapped CIDs would be
+exclusively referencing /dev/vhost-vsock associations inside the
+namespace. 
+
+A likely benefit of relying on a kernel defined mapping/partition of
+the CID space is that apps like QEMU don't need changing, as there's
+no need to invent a new /dev/vhost-vsock-netns device node.
+
+Both approaches give the desirable security protection whereby the
+inside namespace can be prevented from accessing certain CIDs that
+were associated outside the namespace.
+
+Some rule would need to be defined for updating the /proc/net/vsock_cid_map
+file as it is the security control mechanism. If it is write-once then
+if the container mgmt app initializes it, nothing later could change
+it.
+
+A key question is do we need the "first come, first served" behaviour
+for CIDs where a CID can be arbitrarily used by outside or inside namespace
+according to whatever tries to associate a CID first ?
+
+IMHO those semantics lead to unpredictable behaviour for apps because
+what happens depends on ordering of app launches inside & outside the
+namespace, but they do sort of allow for VSOCK namespace behaviour to
+be 'zero conf' out of the box.
+
+A mapping that strictly partitions CIDs to either outside or inside
+namespace usage, but never both, gives well defined behaviour, at the
+cost of needing to setup an initial mapping/partition.
+
+With regards,
+Daniel
+-- 
+|: https://berrange.com      -o-    https://www.flickr.com/photos/dberrange :|
+|: https://libvirt.org         -o-            https://fstop138.berrange.com :|
+|: https://entangle-photo.org    -o-    https://www.instagram.com/dberrange :|
+
