@@ -1,143 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D926E23A98E;
-	Wed,  2 Apr 2025 13:21:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E5F71E5B7E
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 13:24:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743600107; cv=none; b=caPbwCP8BPW2un9T+MEOmvSX916xQdw3KGl2FtpE4r+45ovjjQeNwkwl4Dt3xyBV7/yVb2iGEmoV7Sn9ctM2Ox8w+5eDTXnx17QMneT/29xIir1KzNeBLqWSkYow57B/qySrylmRiOJ+ctltpp0MdjP48tU9L83Gl6vvet8LNwg=
+	t=1743600290; cv=none; b=mmzD6Wn1Jp12dyT07R/J7PmOBiYe0BKI2F73YAIF6jtXef0ZffStAWUzJCueppvu6SN3kwDtB6DVw5Kg/EtOZCDyqHOsC7nbatcq/xM9SzuKUjvL3CHOs2SGKru65GfEtj9CyvyMFNouDeHFEEKXUaIHm1wumwE1iPyCoOgRneM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743600107; c=relaxed/simple;
-	bh=Aih92G9gvTghe7QDVHm0e4Bv2q0GnJ+JdVDu8fRsnKw=;
+	s=arc-20240116; t=1743600290; c=relaxed/simple;
+	bh=pYbm4oKrcbp95Dq1PTEEfwDfRZYpGx1EOdUtHv6e53Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XAz0OAtXM5FjtV9PzEqUZqGsvQv2KeRa+FDPDazCA7cW7JkW1t79sdk6/rTQdU4lhcHsjN0p1OCudscm6RoBDxRTyPHBp+8VSG31/Z1rpjJ2f3B7dgkjL1+Oli4V2W0TXIx6PFdXA+HtW1DXuYCWGrPsSsb471z3NTpLE8HkhxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fg4pWlCc; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Is6tLarFYAQixjcjTteSbbphxMz51j4R2rg4XDrJlyf58MtQSCTQCE5C4DXDVjyIKE8apdJ+QPxisUKAEdd+JFbd7IuMT4X+4ldkX4T9kL1vqFzvnC7Bw8BJjb+O3n0N3zBGzAikPAIEIqUyQNUX6rd/UC+lFbBAapy3VShO4nY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=PecP5oMa; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fg4pWlCc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12E34C4CEDD;
-	Wed,  2 Apr 2025 13:21:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743600106;
-	bh=Aih92G9gvTghe7QDVHm0e4Bv2q0GnJ+JdVDu8fRsnKw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fg4pWlCcQcP7HnsKGaDEbrkfkblDOGpTcbrlRJOnedb1q2+4v9SJQIRQTXmQCdTOg
-	 VUTBigSa1YtEyYsWkGTCVTmKazYadFjIlT6RJOy8stdB2y4jBZwbd0dBJgiBI84ihI
-	 65/0GmuValgKQrIMuPgxGpm5BKw8rDX0oyWriSYp0dmSSsobwV37E7b/FBe6I0/mZB
-	 MikxeamJLxzwt62zQanPpeLf/v/vSxsFCjkcKmjlgaoY5+G7GNcDalvKndshnLiPem
-	 qunmLPDMG0pAEJ5EnMeKAjXYLOhgMvD9i0RXyqisMPmiZqPhIPKeskTjwCLkTScIhv
-	 3vri5mqzg9QfA==
-Date: Wed, 2 Apr 2025 14:21:41 +0100
-From: Simon Horman <horms@kernel.org>
-To: Ricardo =?utf-8?Q?Ca=C3=B1uelo?= Navarro <rcn@igalia.com>
-Cc: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-	Xin Long <lucien.xin@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	kernel-dev@igalia.com, linux-sctp@vger.kernel.org,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] sctp: check transport existence before processing a send
- primitive
-Message-ID: <20250402132141.GO214849@horms.kernel.org>
-References: <20250402-kasan_slab-use-after-free_read_in_sctp_outq_select_transport-v1-1-da6f5f00f286@igalia.com>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="PecP5oMa"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43ea40a6e98so25544895e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 06:24:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1743600287; x=1744205087; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=pYbm4oKrcbp95Dq1PTEEfwDfRZYpGx1EOdUtHv6e53Q=;
+        b=PecP5oMa8dowBg7EIkbM/rBwG1X7RkPAorXXoX7awMVINPcgk0Kpgr+YvwO8mdgmsc
+         KTzuaRZ1R2tKeJ/leN299rSfYWDWyPku21Awh/ild1mpuC87+Vr471mitfeCLkZ155Xx
+         rdmgEaSEioo5u0s0GaDlryIjkP3ejBNivSHiBtBW4WNimT0hfC7SFbwHc4J9hyJ1utPe
+         YCG/k9LjUfq6gr04FPPbiizOhEvmoJkApvM/vpHYuVFLn5Ptcnvhd4Ce3mQQAV9XSg0r
+         6UU4l/T/gY1llzpBEpBAzco0w3xQBd5Niua0c5KtHZg0Qf9SDjQ9drHuwotbmClPT+jP
+         AKQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743600287; x=1744205087;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pYbm4oKrcbp95Dq1PTEEfwDfRZYpGx1EOdUtHv6e53Q=;
+        b=BzZsW3Za3FJKqNzYIHhxAXO5nTLIi2CuFN2kP76nGOOYYeGS3ixDHmuqlYdxRrCpuI
+         uzTYtuhjAsS6M9E4fHobiOZkGoISnQ5gjZMvadQUmyNnyNuachDS4Bpa7I7rHjG2VAyU
+         eCyAhWC+kbUh2soUBCtXbSR47s2wptlhtXny0xAC0PrR+wQz8x/dxix+XU68AAriTNcT
+         9ogOrdwS+RNIzvMLZmYwNnwjmFFeZ3yY7D+fv2aMm8KGrMj/mShAs3semGc2RhNQUh87
+         /pHyerI7u1EgFfhE/hgHjcvHqFJDdzm1ZG/xdMO5OINbu75GYzla621qf/3ygjpzMXUf
+         LgaA==
+X-Forwarded-Encrypted: i=1; AJvYcCURKB+kUbR6M6EBKXxlS8LQf9M6wK1CFAdnM71eSr89r2fqJvBfiRcw+B73XfuhD3IH2x6i3QqllxXyBQ4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzqmfFdlCpyY4aMng6BqrCVyKBx9ZJyKMtIp1KxUWQJ/l6VaUu0
+	27+YgR5lFlU9FvQh5fohN7sZyPxRvj1ad6KPlVgMW817PbSpwqufg9+p0bK1TYs=
+X-Gm-Gg: ASbGncvpE+T2VTF139erT8s35avX0hff/ZAPGaU1o9DlfYZdyEUMGVHh9JTtx23sYd5
+	rBM7wwu8zbxzIeZn9LoXB0cI598oHTrOqnxCPuCQzLDOf4Kl46MHBFcgTG3UagsjNn7istuceuP
+	MhW4vE19anwTPSl6/H06mya7y+ZNkCAzF2vGSf+BoG+95JzEbexUtNuDcAWUjiKASKiVHi5Vnm4
+	4XhoDi3RtD96hUL0QD2ndiTOXigT8XgaLszsIYMqtXfNQxk5z9NQDmX56GL7Zd29WDJ9LUQ+JZc
+	EbB/azesG/6A7/TC2kdSfKthscnfY02tZoZhPUO3cJ+6G3k=
+X-Google-Smtp-Source: AGHT+IEkZXhkt4dJXs5ZW/Wkxvhp30py7B3KBHkoW/nccx47rr6X5SfhnzuAV8/c487Johxbo/aSgw==
+X-Received: by 2002:a05:600c:1f0e:b0:43c:f78d:82eb with SMTP id 5b1f17b1804b1-43eb5c29e54mr28042485e9.15.1743600286855;
+        Wed, 02 Apr 2025 06:24:46 -0700 (PDT)
+Received: from blackdock.suse.cz ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b79e467sm17067309f8f.79.2025.04.02.06.24.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Apr 2025 06:24:46 -0700 (PDT)
+Date: Wed, 2 Apr 2025 15:24:44 +0200
+From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
+To: Chen Yu <yu.c.chen@intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
+	Mel Gorman <mgorman@suse.de>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Michal Hocko <mhocko@kernel.org>, Roman Gushchin <roman.gushchin@linux.dev>, 
+	Shakeel Butt <shakeel.butt@linux.dev>, Muchun Song <muchun.song@linux.dev>, 
+	Andrew Morton <akpm@linux-foundation.org>, Tim Chen <tim.c.chen@intel.com>, Aubrey Li <aubrey.li@intel.com>, 
+	Rik van Riel <riel@surriel.com>, Raghavendra K T <raghavendra.kt@amd.com>, 
+	K Prateek Nayak <kprateek.nayak@amd.com>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
+	Xunlei Pang <xlpang@linux.alibaba.com>, linux-kernel@vger.kernel.org, cgroups@vger.kernel.org, 
+	linux-mm@kvack.org, Chen Yu <yu.chen.surf@foxmail.com>
+Subject: Re: [PATCH] sched/numa: Add statistics of numa balance task
+ migration and swap
+Message-ID: <ufu5fuhwzzdhjoltgt5bpoqaonqur4t44phmz4oninzqlqpop7@hbwza7jri3ly>
+References: <20250402010611.3204674-1-yu.c.chen@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="4tucdzeycj4q3iyr"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250402-kasan_slab-use-after-free_read_in_sctp_outq_select_transport-v1-1-da6f5f00f286@igalia.com>
+In-Reply-To: <20250402010611.3204674-1-yu.c.chen@intel.com>
 
-On Wed, Apr 02, 2025 at 12:25:36PM +0200, Ricardo Cañuelo Navarro wrote:
-> sctp_sendmsg() re-uses associations and transports when possible by
-> doing a lookup based on the socket endpoint and the message destination
-> address, and then sctp_sendmsg_to_asoc() sets the selected transport in
-> all the message chunks to be sent.
-> 
-> There's a possible race condition if another thread triggers the removal
-> of that selected transport, for instance, by explicitly unbinding an
-> address with setsockopt(SCTP_SOCKOPT_BINDX_REM), after the chunks have
-> been set up and before the message is sent. This causes the access to
-> the transport data in sctp_outq_select_transport(), when the association
-> outqueue is flushed, to do a use-after-free read.
-> 
-> This patch addresses this scenario by checking if the transport still
-> exists right after the chunks to be sent are set up to use it and before
-> proceeding to sending them. If the transport was freed since it was
-> found, the send is aborted. The reason to add the check here is that
-> once the transport is assigned to the chunks, deleting that transport
-> is safe, since it will also set chunk->transport to NULL in the affected
-> chunks. This scenario is correctly handled already, see Fixes below.
-> 
-> The bug was found by a private syzbot instance (see the error report [1]
-> and the C reproducer that triggers it [2]).
-> 
-> Link: https://people.igalia.com/rcn/kernel_logs/20250402__KASAN_slab-use-after-free_Read_in_sctp_outq_select_transport.txt [1]
-> Link: https://people.igalia.com/rcn/kernel_logs/20250402__KASAN_slab-use-after-free_Read_in_sctp_outq_select_transport__repro.c [2]
-> Cc: stable@vger.kernel.org
-> Fixes: df132eff4638 ("sctp: clear the transport of some out_chunk_list chunks in sctp_assoc_rm_peer")
-> Signed-off-by: Ricardo Cañuelo Navarro <rcn@igalia.com>
-> ---
->  net/sctp/socket.c | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
-> 
-> diff --git a/net/sctp/socket.c b/net/sctp/socket.c
-> index 36ee34f483d703ffcfe5ca9e6cc554fba24c75ef..9c5ff44fa73cae6a6a04790800cc33dfa08a8da9 100644
-> --- a/net/sctp/socket.c
-> +++ b/net/sctp/socket.c
-> @@ -1787,17 +1787,24 @@ static int sctp_sendmsg_check_sflags(struct sctp_association *asoc,
->  	return 1;
->  }
->  
-> +static union sctp_addr *sctp_sendmsg_get_daddr(struct sock *sk,
-> +					       const struct msghdr *msg,
-> +					       struct sctp_cmsgs *cmsgs);
-> +
->  static int sctp_sendmsg_to_asoc(struct sctp_association *asoc,
->  				struct msghdr *msg, size_t msg_len,
->  				struct sctp_transport *transport,
->  				struct sctp_sndrcvinfo *sinfo)
->  {
-> +	struct sctp_transport *aux_transport = NULL;
->  	struct sock *sk = asoc->base.sk;
-> +	struct sctp_endpoint *ep = sctp_sk(sk)->ep;
->  	struct sctp_sock *sp = sctp_sk(sk);
->  	struct net *net = sock_net(sk);
->  	struct sctp_datamsg *datamsg;
->  	bool wait_connect = false;
->  	struct sctp_chunk *chunk;
-> +	union sctp_addr *daddr;
->  	long timeo;
->  	int err;
->  
-> @@ -1869,6 +1876,15 @@ static int sctp_sendmsg_to_asoc(struct sctp_association *asoc,
->  		sctp_set_owner_w(chunk);
->  		chunk->transport = transport;
->  	}
-> +	/* Fail if transport was deleted after lookup in sctp_sendmsg() */
-> +	daddr = sctp_sendmsg_get_daddr(sk, msg, NULL);
-> +	if (daddr) {
-> +		sctp_endpoint_lookup_assoc(ep, daddr, &aux_transport);
-> +		if (!aux_transport || aux_transport != transport) {
-> +			sctp_datamsg_free(datamsg);
-> +			goto err;
 
-Hi Ricardo,
+--4tucdzeycj4q3iyr
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] sched/numa: Add statistics of numa balance task
+ migration and swap
+MIME-Version: 1.0
 
-This is not a full review, and I would suggest waiting for one from others.
-But this will result in the local variable err being used uninitialised.
+Hello Chen.
 
-Flagged by Smatch.
+On Wed, Apr 02, 2025 at 09:06:11AM +0800, Chen Yu <yu.c.chen@intel.com> wro=
+te:
+> On system with NUMA balancing enabled, it is found that tracking
+> the task activities due to NUMA balancing is helpful.
+=2E..
+> The following two new fields:
+>=20
+> numa_task_migrated
+> numa_task_swapped
+>=20
+> will be displayed in both
+> /sys/fs/cgroup/{GROUP}/memory.stat and /proc/{PID}/sched
 
-> +		}
-> +	}
->  
->  	err = sctp_primitive_SEND(net, asoc, datamsg);
->  	if (err) {
+Why is the field /proc/$pid/sched not enough?
 
--- 
-pw-bot: changes-requested
+Also, you may want to update Documentation/admin-guide/cgroup-v2.rst
+too.
+
+Thanks,
+Michal
+
+--4tucdzeycj4q3iyr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQTd6mfF2PbEZnpdoAkt3Wney77BSQUCZ+06mgAKCRAt3Wney77B
+SW8CAQCXwIcQIqtvT1iWJCuoc6huUPtKvhF+cl6qPbYfLvIufwEAltSTP9q9VKKA
+ptKpUW0AUPlg9fYltaInQYPUopxCJgk=
+=/Gj8
+-----END PGP SIGNATURE-----
+
+--4tucdzeycj4q3iyr--
