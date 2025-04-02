@@ -1,48 +1,50 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52AC0234973;
-	Wed,  2 Apr 2025 08:36:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B156D16BE17;
+	Wed,  2 Apr 2025 08:37:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743583010; cv=none; b=fS99ewqn9sepqLYdbD46QThBcJZJP+YHaHVe7PuX5b+ofo8sCOwZWAoUSkngfi9m1ucahVYszvOKHCDUpzGVrZ1JAOdtHsltg5+QiEyQkITw5k781bmQcgl1BGQKFN/w93W66OJ3fxazCYExKswOyZOoM7aluXUmJBVqpgksJbo=
+	t=1743583076; cv=none; b=iEcvcG/4F14sfpuDqqrzLmJyU+hAzw2tsUHzCY4CMkZr58+azovQmPmyVAkYr4wV4U+YztB83t8leSU/pJcw8/rdFI9xDY7Wgl5Ok6hBzGKgcFQZ8/5IGeYv138ta8bVSfjOIfQVJVH4+PusgTQ8itoWkPtXf0dlbvX/Ckad2g4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743583010; c=relaxed/simple;
-	bh=xMDFVO13IET0puhB2hPIb7ZAxgTcZW/65nx8wRbcD1U=;
+	s=arc-20240116; t=1743583076; c=relaxed/simple;
+	bh=yDctradIe4zqjP7A5QDrgdagjOau/z8asowkNepwXeg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=J8nLqJnxZRnFW3kG9NZI+Zv4eNhb/i5PNFRdJHj50xe6NEUQPccmtuIt3XBm0yhq6caJAtzpuc47VyCNXRpyYqmBagW0cjbfl8A+fuyW3sMeX3bdefk6c7LBYxKoIIvO6d9aMY3MuMPL7T1jfTu/m3piIZiY2UG4i954w1/2PgE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=hIUC9uBY; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	 In-Reply-To:Content-Type; b=osx+nOZxH7LBVG7hY2eAYhi+L2pMpyRduSKVpGLkxHvqOkV4B83cRLocqFZzwhHt8qEme+5SQUsx6SdND9/FQoX8JSUVfe+jJgVA1ZjbCt2b0hsL4IxGTfiPk9YcPh0FuwRLpH/hlXQx1uCf/+061V8Xz5zL27G4CheQQ/SfQ9o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=OIfpcDOc; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="hIUC9uBY"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5324ZaRC012757;
-	Wed, 2 Apr 2025 08:36:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="OIfpcDOc"
+Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5324cptZ010077;
+	Wed, 2 Apr 2025 10:37:40 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	cV/25+M3mVCF1xGJGR6r9EgMoCqdCNdpGsojXDr1yEU=; b=hIUC9uBYbE+K/2hx
-	EiCV5R48bOepeVoediCtYby0kgElzgVOYY9ALXhlK7GmuMyxwjvCr9yF1ZayiuEO
-	uHyG9vtkqcZ+OIv9GEGj/VLpo46olBgMFZd15V8BOatQN1DBU7UQkGpxD4iNpc0D
-	lKvwNrUDi3l20xp/G7+OXD2LaRIg4Hz3LoJjdGU15zzB4PNIww2oXUBScD6mGd9M
-	l5t0b4Y/r1PfdHnJn2ofl0RRyrEkkFLsOqKyHTvI63IloYBGbrnhGSMMW+J5wFZ8
-	49uOPz2M7zNrlL7fLrQTrsktqEkK6uwraaTLTNG0CVWH3E/cX343l9hl8ZSwbEls
-	eJezSg==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45rxbf0ma9-1
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	NNHR3YjaW7zDVlyL4yp5QsCMZPduZJ4h+U4jaf/4lpg=; b=OIfpcDOcTSHDMimh
+	Zes0ZcWs3/1a6rGoDkERxK/D1fYA/v0OZsGPkGcGK3b1jOCSvP9W4i0ai2XstgjS
+	Htn8uT5ejA3reYIlREUxibRmf5H9Q+QV3tlUQonbWC/6DXVj90+rA6rRYrbnxW1n
+	3ivh49oOw+oQTguVHjYH8t3R++0Vusq/N5hxFXmYBE9VHUSPPk/p3yI7C2riknPK
+	Cidr9WRqR5L3jdXEEaTFVtC6sEVvpolb+DVPpML2pFY/wLKs3jFlrGQYL3T7pajM
+	HnIklS7rHkktuzac1kpS6OxlfMB2H5ScasVvXcg//gM4qKIPb/IOcmI+cr8aNTxO
+	bzUgbg==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 45pua7y8by-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 02 Apr 2025 08:36:39 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5328acRO028342
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 2 Apr 2025 08:36:38 GMT
-Received: from [10.133.33.107] (10.80.80.8) by nalasex01c.na.qualcomm.com
- (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 2 Apr 2025
- 01:36:33 -0700
-Message-ID: <731bacf0-a0b6-4dfd-aff0-01723a879a7c@quicinc.com>
-Date: Wed, 2 Apr 2025 16:36:31 +0800
+	Wed, 02 Apr 2025 10:37:40 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 2EE384004A;
+	Wed,  2 Apr 2025 10:36:28 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 986D98CEC80;
+	Wed,  2 Apr 2025 10:34:18 +0200 (CEST)
+Received: from [10.252.30.87] (10.252.30.87) by SHFDAG1NODE1.st.com
+ (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 2 Apr
+ 2025 10:34:17 +0200
+Message-ID: <228ddf41-e1d0-4d06-9e0e-9e0dad841688@foss.st.com>
+Date: Wed, 2 Apr 2025 10:34:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,162 +52,66 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] coresight: fix the wrong type of the trace_id in
- coresight_path
-To: Mike Leach <mike.leach@linaro.org>
-CC: Anshuman Khandual <anshuman.khandual@arm.com>,
-        Jie Gan
-	<jie.gan@oss.qualcomm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        "James
- Clark" <james.clark@linaro.org>,
-        Tingwei Zhang <quic_tingweiz@quicinc.com>,
-        Jinlong Mao <quic_jinlmao@quicinc.com>, <coresight@lists.linaro.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>,
-        Dan Carpenter <dan.carpenter@linaro.org>
-References: <20250401014210.2576993-1-jie.gan@oss.qualcomm.com>
- <470e4a90-41c3-4974-a4d7-3073a7fcc737@arm.com>
- <CAJ9a7VinQSx9FYvw4ww0KQgMqapLhWTaU9D2qcc-120YywUu2Q@mail.gmail.com>
- <92dc9b50-5e58-4cfd-a78c-e32a4bec8e26@quicinc.com>
- <CAJ9a7Vjhm5B=3mDHQpuRj2JSE1hfYzOx5wq-yQcC3k+QqEcvAQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] media: dt-bindings: Add ST VD55G1 camera sensor
+ binding
+To: Krzysztof Kozlowski <krzk@kernel.org>
+CC: Sylvain Petinot <sylvain.petinot@foss.st.com>,
+        Mauro Carvalho Chehab
+	<mchehab@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Sakari Ailus
+	<sakari.ailus@linux.intel.com>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20250401-b4-vd55g1-v2-0-0c8ab8a48c55@foss.st.com>
+ <20250401-b4-vd55g1-v2-1-0c8ab8a48c55@foss.st.com>
+ <20250402-curvy-seriema-of-blizzard-b1c4d9@krzk-bin>
 Content-Language: en-US
-From: Jie Gan <quic_jiegan@quicinc.com>
-In-Reply-To: <CAJ9a7Vjhm5B=3mDHQpuRj2JSE1hfYzOx5wq-yQcC3k+QqEcvAQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+From: Benjamin Mugnier <benjamin.mugnier@foss.st.com>
+In-Reply-To: <20250402-curvy-seriema-of-blizzard-b1c4d9@krzk-bin>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: h9cPj4DcIr7JbeRIHrqO8skenXZKCKkZ
-X-Proofpoint-ORIG-GUID: h9cPj4DcIr7JbeRIHrqO8skenXZKCKkZ
-X-Authority-Analysis: v=2.4 cv=F/5XdrhN c=1 sm=1 tr=0 ts=67ecf717 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=7CQSdrXTAAAA:8 a=KKAkSRfTAAAA:8
- a=EUspDBNiAAAA:8 a=rk3Ip3wbNkCNmIt9PQkA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22 a=a-qgeE7W1pNrGK8U0ZQC:22 a=cvBusfyB2V15izCimMoJ:22
+X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-04-02_03,2025-04-01_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=0
- lowpriorityscore=0 mlxlogscore=999 phishscore=0 priorityscore=1501
- mlxscore=0 spamscore=0 bulkscore=0 clxscore=1015 adultscore=0
- impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504020054
 
+Hi Krzysztof,
 
-
-On 4/2/2025 4:17 PM, Mike Leach wrote:
-> Hi,
+On 4/2/25 09:08, Krzysztof Kozlowski wrote:
+> On Tue, Apr 01, 2025 at 01:05:58PM +0200, Benjamin Mugnier wrote:
+>> +    properties:
+>> +      endpoint:
+>> +        $ref: /schemas/media/video-interfaces.yaml#
+>> +        unevaluatedProperties: false
+>> +
+>> +        properties:
+>> +          data-lanes:
+>> +            items:
+>> +              const: 1
 > 
-> On Wed, 2 Apr 2025 at 01:50, Jie Gan <quic_jiegan@quicinc.com> wrote:
->>
->>
->>
->> On 4/1/2025 5:56 PM, Mike Leach wrote:
->>> Hi,
->>>
->>> On Tue, 1 Apr 2025 at 07:11, Anshuman Khandual
->>> <anshuman.khandual@arm.com> wrote:
->>>>
->>>> On 4/1/25 07:12, Jie Gan wrote:
->>>>> The trace_id in coresight_path may contain an error number which means a
->>>>> negative integer, but the current type of the trace_id is u8. Change the
->>>>> type to int to fix it.
->>>>>
->>>>> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
->>>>> Fixes: 3c03c49b2fa5 ("Coresight: Introduce a new struct coresight_path")
->>>>> Signed-off-by: Jie Gan <jie.gan@oss.qualcomm.com>
->>>>
->>>> LGTM
->>>>
->>>> Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
->>>>
->>>>> ---
->>>>>    include/linux/coresight.h | 2 +-
->>>>>    1 file changed, 1 insertion(+), 1 deletion(-)
->>>>>
->>>>> diff --git a/include/linux/coresight.h b/include/linux/coresight.h
->>>>> index d79a242b271d..c2bf10c43e7c 100644
->>>>> --- a/include/linux/coresight.h
->>>>> +++ b/include/linux/coresight.h
->>>>> @@ -337,7 +337,7 @@ static struct coresight_dev_list (var) = {                                \
->>>>>     */
->>>>>    struct coresight_path {
->>>>>         struct list_head        path_list;
->>>>> -     u8                      trace_id;
->>>>> +     int                     trace_id;
->>>>>    };
->>>>>
->>>>>    enum cs_mode {
->>>
->>> There are many places in the Coresight drivers that assign a u8
->>> traceid from the path trace ID.
->>>
->>> e.g.
->>> In coresight-etm4x-core.c : etm4_enable_perf()
->>>
->>> drvdata->trcid = path->trace_id;
->>>
->>> drvdata->trcid is defined as a u8  - the reason being trace IDs are
->>> 128 bits wide with some reserved values.
->>>
->>> Will this not just trigger the same issue if path->trace_id is changed
->>> to an int? Even if not it is inconsistent handling of the trace ID
->>> values.
->>>
->>> Trace ID errors should be handled by returning an invalid trace ID
->>> value - were the trace ID value will fail the macro
->>> IS_VALID_CS_TRACE_ID(), or separate the return of a trace ID from an
->>> error return in a function.
->>>
->>
->> Hi Mike,
->>
->> The path->trace_id is verified after it has been assigned with the logic
->> you mentioned:
->>
->> if (!IS_VALID_CS_TRACE_ID(path->trace_id))
->>          goto err_path;
->>
->> So it should be safe to assign to another u8 parameter, like you mentioned:
->>
->> In coresight-etm4x-core.c : etm4_enable_perf()
->>
->> drvdata->trcid = path->trace_id;
->>
-> 
-> It is safe but will it not trigger a warning just like the one you are
-> trying to fix as the types are mismatched?
+> Not what I asked. Now you miss number of items. Just use the syntax I
+> proposed. Or was there any issue with it?
 
-Hi Mike,
-
-It should trigger another type mismatch warning.
-
-This patch aims to fix the situation like assign a negative value to u8 
-will cause a integer toggle(it may happen and I think I should fix it), 
-e.g. -22 for 234.
-
-Thanks,
-Jie
+No issue I just misunderstood and thought const: 1 was impliying
+maxItems: 1. I'll add maxItems back.
 
 > 
-> Mike
+>> +
+>> +          link-frequencies:
+>> +            maxItems: 1
+>> +            items:
+>> +              minimum: 125000000
+>> +              maximum: 600000000
 > 
->> Thanks,
->> Jie
->>
->>
->>> Regards
->>>
->>> Mike
->>>
->>>
->>>
->>> --
->>> Mike Leach
->>> Principal Engineer, ARM Ltd.
->>> Manchester Design Centre. UK
->>
-> 
+> Best regards,
+> Krzysztof
 > 
 
+-- 
+Regards,
+Benjamin
