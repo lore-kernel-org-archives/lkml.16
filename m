@@ -1,104 +1,108 @@
-Received: from mail-pj1-f66.google.com (mail-pj1-f66.google.com [209.85.216.66])
+Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 798BD33C9;
-	Wed,  2 Apr 2025 02:39:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A768584A35;
+	Wed,  2 Apr 2025 02:40:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743561550; cv=none; b=NBicjp7ikIpnSHhcOWgtzfHFXNMZz/EqfqrsEwTt+Afyxckh2dJPUS5/29LcAu8JeLHD5JShzqu6gtpKib7ZCkQaOcSIc0IBFwJY2ldMY1omMp8icLNyF4maTV8AKMV/xpzy45gJG6Xf0h7Ob6qrpxdgo5ux/ap8Pp0uu0AEeVk=
+	t=1743561614; cv=none; b=tm5ASssAst3tbGhgJ1YV+S/sQRkzDU7k22BYwHcLqGyE92hzfk+gbzY7E9YvAldEMJbHurirgaJMANr0QQpTQCTdaCpNlqy1npf0z8Ee0Nt2YHaw6gzIOOz3QMw17xU4dOwNDfLJappQ+N8tgSWLObeM5KA+UGKRH6n9XyImPLw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743561550; c=relaxed/simple;
-	bh=3abjfXCbj/PSro5zEDsoIit1avgJG8LAE+LKPMwYcSg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=t1sWdlGTyeKHzKKMpt+H7PP/LAyBvs+53GyTWnVSacczJmRrf8T1k1UahK+8B6+m75P5aHtaa0Otd4xcFpYGcR8utJw61h98FSxFxfDduTJQflIY8Bb5HZFODUKQpHNI34VhwVeoJocB2Jeu0uFneUMQg1s6CB5SFJ2zoLszhHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iC3qMMFg; arc=none smtp.client-ip=209.85.216.66
+	s=arc-20240116; t=1743561614; c=relaxed/simple;
+	bh=a/Dm+u6pjuizxHvTTkTB3tGMpeDmkV9MptDSw5z7NEA=;
+	h=Message-ID:Date:Content-Type:MIME-Version:From:To:Cc:Subject; b=XgQjCeX1rBQIfIFpqVn+ugLZ3YdMqtejr1oh4e8DtEeOJ7ZRWkkdTAaOrGeXGRzg+j8lEctV7WrVcVL8iZlxJXWRgjbSlTuIibX4ADeBLu7RLhd/Qdyh9S+2TNlKcty2pQZQzPiaX2zJbXhJbykvQykncKxzo2/javu9hGsKIkA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PmyzG7Mi; arc=none smtp.client-ip=209.85.219.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iC3qMMFg"
-Received: by mail-pj1-f66.google.com with SMTP id 98e67ed59e1d1-2ff694d2d4dso10245451a91.0;
-        Tue, 01 Apr 2025 19:39:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PmyzG7Mi"
+Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-6e41e18137bso48436446d6.1;
+        Tue, 01 Apr 2025 19:40:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743561549; x=1744166349; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=/XwOLIHJIAy2dOsI8s3bg1wV3SaOv47d2J5QpbnBW3c=;
-        b=iC3qMMFgR+whrof74SoblxbKoPSIGk9EZ4fj2uACkSFzLYbxgNsiM/KConHCtDJkBj
-         jMM8oyrSmkyd196Vcv321dCIynZO49T1M55o22cwSsef/8sqZ6ecp72xzCYVFZEcbxOa
-         OcqvyXYAQ9LD5hhEzwH9t8pmQdmWnX1hCjPHd/+ulQub1igTVi3U7Q/0d2NhiOD8yyEU
-         aAcMl6F+hL6zfgerwZNYBgIPUHKCvkatpT8RubZBBHMBCxlW7MDMi9H7yoNgPg9OC+O/
-         Or/povy3ccsJz+rwT1OlamnvQsPvovn4e9I9q4VUQiS6GPHXVj0vUW89kkpLd2sL/PUE
-         pFNQ==
+        d=gmail.com; s=20230601; t=1743561611; x=1744166411; darn=vger.kernel.org;
+        h=subject:cc:to:from:mime-version:date:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Q9GE2K19EwxzhRGjXGYJR11XLLTVZECnfrYRAnlaA5E=;
+        b=PmyzG7MipNvG4PZDEtoHnTrBNAVY/dUgEsm71G9G3iLh1Ih169ycSyzvip6yft8rTK
+         5WAySmkYr7DzmBb+tn7Z/eYsyx/GRSo/oZTuOgRR/El+2bFlsd/JqwrIlxNFhRLBb+jE
+         H6E2P97E/5OwOF/hd142H6NCv9ImS/N9QACCMoek3ky8yhRTZqysvTU9O3Nap/yEqTz4
+         Fbun5sSjn7S4vh9A3HECKl/pUsam9Asdq8+vy/GcACQ5mnz6RATFfgDi6xhJ9rWVoJEf
+         +26f45APYzO4ahQSgZKPdG+CzSxxRdpnBsr0EyRLEe4/FpTi4gqx9GQSBkRt5qgvFj4e
+         zYaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743561549; x=1744166349;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/XwOLIHJIAy2dOsI8s3bg1wV3SaOv47d2J5QpbnBW3c=;
-        b=iuArv7BBcUGp3Fczp/TVN3ykoV0T8jQG9+Mx06Hb9Xu8CEJPUXYeXqFlVERHLpYmvP
-         +qf1wghB96lEl8oxskzfUQY6hiTo/BhqtnEKjR3pEGAte3mRHAAG+KEQzWjiHhN8s7OO
-         Wh+kZMy3b5v6xOAEujSTukEaacjX1o+GjEDyl5cq1y/38qRtL6Ts6N3zzfd/13EpJwGH
-         eeVSprSriq8nr6ruq8E60fAdmi9BrUUFMb5cjdvE173Qu4mNDGquDhnl1jAV57kIfqsR
-         3FyAXxlu2H78Yr4q10SR5px5gY5baXsVB+WeEs7mPZO8kwU2LhJDMCRG//P9/9T7CwfG
-         1Y7w==
-X-Forwarded-Encrypted: i=1; AJvYcCXROD77S8OfYj8q5P+Eyz0aErPS6zDxoBO5jaZp5vfksA2F1k2wRXrxNWyDMR6VxcRjjTIrLyBLbDnPMe4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzvPSU2d63yl4pvqvcHdDFqyxahGCswoT/tuojtpDrTtMlu7QAC
-	phS+9cvyz+5bEqNeN6vk7UmUimhpao4Zj1RL04mY3tqfCpEfowqXXKFVx39dCVBdVQ==
-X-Gm-Gg: ASbGnctgYCF8EhtcGXl+Of78NWpYddSjfWjk466JbwBg5f9TWK/6Ur2g5IiOXeC/C2T
-	FIj1DRvw6oyIwjKcAJW7t6XTH6JqZu8lXbox+MhkNcpuyZ2T0quNw58j2dHeVNsDNAXz88bMqy6
-	23xBriVw8+6tVHu7UiboQAo3gKcY0dBKsjVQQ9JcxkRIvUoImaxQUOK1oUpaxf+s5p0StcClXhl
-	4rzymg1v0ARKwR5UV7E5B0T2E47RawTJOvfhPDYIoAgXIS0yZMGGdSetFv1M3hsPxC/2oPmGTBj
-	hUshRzimEg/T8j63NVLQHP+71Eq2p0Brdx7euVjvGgMJ6oann2wOLkVbtApZOFXGjKn5y4M=
-X-Google-Smtp-Source: AGHT+IH/peSgVybRZVHTTZKlkdx+Qa99lE/p1LQoedRbFRbWsJRJo4TdosYp7h5YD5s9x7/KsLpBrQ==
-X-Received: by 2002:a17:90b:1f92:b0:2f7:e201:a8cc with SMTP id 98e67ed59e1d1-305320b1002mr27114871a91.18.1743561548511;
-        Tue, 01 Apr 2025 19:39:08 -0700 (PDT)
-Received: from henry.localdomain ([111.202.148.167])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291eeca20esm97061305ad.51.2025.04.01.19.39.06
+        d=1e100.net; s=20230601; t=1743561611; x=1744166411;
+        h=subject:cc:to:from:mime-version:date:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Q9GE2K19EwxzhRGjXGYJR11XLLTVZECnfrYRAnlaA5E=;
+        b=R7JLZztfmvCGaLJPIylXUDnC+FtT+sVZJ1gi+PSM3uLwBuWVtabuYmRtYGIC0HZEGq
+         lxULIq0KjGmaHHDYutjc/CHDHvEcn5FTzdo1kfNIsR+3RWo34lCYs6j4E7mnUL4J/djN
+         5w8e05tbGPLZXpqsmCQD+JnSG1uYoMEHa9Y77DoUz/4idFAf7b7gehSWQlI7ZgkKQ86S
+         +VlFZ58brqdfxtkjNoiCMmG8ClI7bTFDYCWeAQAlgL+8ffbOY83+Vss4Ij5CIhbm3sUF
+         wH8ZiKVZX4vp+Zyq8PnT1jyht9/yJB13jWwHpBW6JBN4cQBaSjVnCtHe61fQgcgLAnW0
+         3XCg==
+X-Forwarded-Encrypted: i=1; AJvYcCXjXe0xv4xjto2zCG3KXSDd7M9qNrYQbVMcTun2uuT71JGy6Wsw/5307114u4y7ygybqI9MifupOu6gkTM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZEVlapHUsbjbwpdIaxeO74ywXOyPJrfJN9QKB55vNph7Got6q
+	jAQpsnvu4QYkdYxTHczhrRKfLUIJqwS/BKLNGreBgdg57Ldv6Mx5sD0A35LnMho=
+X-Gm-Gg: ASbGncsz7sdz8klvPLFFctEdf46AF7/Ssp4VK/DE/R4N14koywtIMRvf+H0TZhzXQVn
+	+B0NyyhMygQ4CkUqEEaWBuRWv++Sd2CWn08e/1rZq+XB8C7wi0Igr7KVX+YZWUvznK1VistdDwr
+	EofAYSGayAFnrrdrCXPM6kLNmk9KJwzs8ZwRm6m4YVZAscl2aMwy6pL2k6a9UOZXaPpyqFcglok
+	pnaFSex+tkNLIyVUiOyS1Xh5Df6yvSf/Kl22QPbCu+BEffPvGP+eKFutMkKAVtTTbBfE3p9v1IE
+	SOCb3Vdmo7nOla3Vj1cpQIWh7UYYKM92xgRPfi+PiAbL8YkJA+DSB5jO1xuNMk9OAdyUwZnanPF
+	GnEBY2xBGwQ==
+X-Google-Smtp-Source: AGHT+IG6oBRbFTU+JNE1XfUccc29qRR2X6E2rPN3IJOPLpWVzZ+2Jtmw9GAzmXQJYrQTeGlRpNKD2Q==
+X-Received: by 2002:a05:6214:268f:b0:6e6:646e:a0f0 with SMTP id 6a1803df08f44-6ef02bc43c1mr14855456d6.12.1743561611219;
+        Tue, 01 Apr 2025 19:40:11 -0700 (PDT)
+Received: from [127.0.1.1] (c-73-123-232-110.hsd1.ma.comcast.net. [73.123.232.110])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6eec9771dbcsm69163526d6.87.2025.04.01.19.40.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Apr 2025 19:39:08 -0700 (PDT)
-From: Henry Martin <bsdhenrymartin@gmail.com>
-To: peter.ujfalusi@gmail.com,
-	vkoul@kernel.org
-Cc: dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Henry Martin <bsdhenrymartin@gmail.com>
-Subject: [PATCH v1] dmaengine: ti: Add NULL check in udma_probe()
-Date: Wed,  2 Apr 2025 10:39:00 +0800
-Message-Id: <20250402023900.43440-1-bsdhenrymartin@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        Tue, 01 Apr 2025 19:40:10 -0700 (PDT)
+Message-ID: <67eca38a.d40a0220.22c3d5.88f3@mx.google.com>
+Date: Tue, 01 Apr 2025 19:40:10 -0700 (PDT)
+Content-Type: multipart/mixed; boundary="===============4398481999678097914=="
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: gshahrouzi@gmail.com
+To: linux-media@vger.kernel.org
+Cc: andy@kernel.org, hdegoede@redhat.com, mchehab@kernel.org,
+ sakari.ailus@linux.intel.com, gregkh@linuxfoundation.org,
+ linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev
+Subject: [PATCH] staging: media: Fix indentation to use tabs instead of spaces
 
-devm_kasprintf() returns NULL when memory allocation fails. Currently,
-udma_probe() does not check for this case, which results in a NULL
-pointer dereference.
+--===============4398481999678097914==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 
-Add NULL check after devm_kasprintf() to prevent this issue.
+>From d6a08153171ac52b438b6ddc1da50ebdd3550951 Mon Sep 17 00:00:00 2001
+From: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+Date: Tue, 1 Apr 2025 22:04:25 -0400
+Subject: [PATCH] staging: media: Fix indentation to use tabs instead of spaces
 
-Fixes: 25dcb5dd7b7c ("dmaengine: ti: New driver for K3 UDMA")
-Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
+Replace spaces with tab to comply with kernel coding style.
+
+Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
 ---
- drivers/dma/ti/k3-udma.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ .../media/atomisp/pci/isp/kernels/vf/vf_1.0/ia_css_vf.host.c    | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
-index 7ed1956b4642..f1c2f8170730 100644
---- a/drivers/dma/ti/k3-udma.c
-+++ b/drivers/dma/ti/k3-udma.c
-@@ -5582,7 +5582,8 @@ static int udma_probe(struct platform_device *pdev)
- 		uc->config.dir = DMA_MEM_TO_MEM;
- 		uc->name = devm_kasprintf(dev, GFP_KERNEL, "%s chan%d",
- 					  dev_name(dev), i);
--
-+		if (!uc->name)
-+			return -ENOMEM;
- 		vchan_init(&uc->vc, &ud->ddev);
- 		/* Use custom vchan completion handling */
- 		tasklet_setup(&uc->vc.task, udma_vchan_complete);
+diff --git a/drivers/staging/media/atomisp/pci/isp/kernels/vf/vf_1.0/ia_css_vf.host.c b/drivers/staging/media/atomisp/pci/isp/kernels/vf/vf_1.0/ia_css_vf.host.c
+index ece5e3da34ee..127f12ba2214 100644
+--- a/drivers/staging/media/atomisp/pci/isp/kernels/vf/vf_1.0/ia_css_vf.host.c
++++ b/drivers/staging/media/atomisp/pci/isp/kernels/vf/vf_1.0/ia_css_vf.host.c
+@@ -114,7 +114,7 @@ configure_dma(
+ }
+ 
+ int ia_css_vf_configure(const struct ia_css_binary *binary,
+-		        const struct ia_css_frame_info *out_info,
++			const struct ia_css_frame_info *out_info,
+ 			struct ia_css_frame_info *vf_info,
+ 			unsigned int *downscale_log2)
+ {
 -- 
-2.34.1
+2.43.0
 
+
+--===============4398481999678097914==--
