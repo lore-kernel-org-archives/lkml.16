@@ -1,249 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E0A21EB183
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 21:43:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75B571D5150
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 21:44:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743630227; cv=none; b=aJ9XCep93/2+CQuUTeHz7x4JAZWQX18vVeIGECwFkGdXldAXhEYA/Ds9EJ1R0QHbzxWiPoPUWEZLE0FrpgexnHTe9x2yn2AzY/yEdePPhBfhTxeSnt2wnouxznByprkTDUjiUGQRJ5Wlqyxhe3pUxpFLRxMNMUUIcLOfD9JnF5s=
+	t=1743630265; cv=none; b=n827lg29gROf4Y6me0CQkvK98/hERgOWd3WyRvEwcxp6IPeXlKJAfOz/7Ej72xLprB/hYFS0lIVN4H2R6MmsPgzYaeW9K+GbJ7hlODkuXMeGNF3iI/vAHZEPmXd98oVG1o6s3TbUyfPy566Lfxui+aq6JuUVHtpfhcS1Gya9dkI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743630227; c=relaxed/simple;
-	bh=EmL5cMh4rUmabqQUX/yuAijaaalAS3/NDu1kKDHndk4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=aJ9oxiBlLi+dTI+TPjUmxfv+no5WEfKaL9QPcVzYkxweN5l4Wk7k3sbQ6rXp3Zi6JmMJgphVC8vFRS5ct+Sqp0M2A8Li2GlZweYNVekm4KErysQrZuSZ4cu0LXWA18exHaGWl10hl3DlHUME4sAvh0WYyx26TQDO5yr3tfhUaUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8D24C4CEDD;
-	Wed,  2 Apr 2025 21:43:45 +0000 (UTC)
-Date: Wed, 2 Apr 2025 17:44:49 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Mark Rutland <mark.rutland@arm.com>, Andrew Morton
- <akpm@linux-foundation.org>, Gabriele Monaco <gmonaco@redhat.com>, Vasily
- Gorbik <gor@linux.ibm.com>, zhoumin <teczm@foxmail.com>
-Subject: [GIT PULL] tracing: Fixes for 6.15
-Message-ID: <20250402174449.08caae28@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1743630265; c=relaxed/simple;
+	bh=FO3SVeco0QFm6hyLBiHLk8AMw/7y51N+SIbiCXOY8yI=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=pWqO7FrLMDi234+GnQZpqgsgpLSeJyKi9yJFyebwMOh9CiNg0THf2sfdK+FZg/LuD+6o1cks66c8lshgm2d7/gmncZhxESzwTwOcWGWTYc32pK/Vrbz2xCfTXM/u9H7MCet9FIi1gvYwX8Vcy0aGz6Dn+3JVV4IP9VBN7TZTEVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uwET3dMi; arc=none smtp.client-ip=209.85.210.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uwET3dMi"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-736c135f695so159505b3a.0
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 14:44:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1743630264; x=1744235064; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5dc3S/NlQ1HoLivnHDrQdFtaRf+AOoi+dCBbMdqheqM=;
+        b=uwET3dMi7X04arpId/FGZ2y/HJnOhexxSISUCkKksyeuBeADbyA85vijpNiUuaIYvU
+         lwJW3QmE6WEIV3TgDdvGG3oAzBCiJXGfkQ8sbCEDaoTU32YkFWOmv1Bs5RgHuUa5doN4
+         3xsk52KHVGZi8Kr7pDpb+4Aec9/0hQjKab9+ycMsSjEMd2I4Vidzvl+2pAO8732dACUn
+         rQXMCfpIJqm1uhAGm+/Doqi5gH88KcWxTUhdquvQV+muS0PdWEgmrM+jjp7m1FjjqNqu
+         1JfoAR6XZx1SA6qYdJ65YeVkHP/C/2u0xT6fVLR642iI7AWfSB+qXhNblORO6xBiIU3r
+         8L1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743630264; x=1744235064;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=5dc3S/NlQ1HoLivnHDrQdFtaRf+AOoi+dCBbMdqheqM=;
+        b=Nm1w2TuDTgF5JFr8w193xubvozTxYB9w9gjwO/i/RzLZ5vgtQWFPSMvpX86Isjg48t
+         lbyySxzFDDfxodTNOdW2rg6GJm5NruOghIfQBurSQADTPFihz2sKZGHVL1341oe/7qtK
+         c1hDv+8IlgUWHXCUOR/qa4gRpA/3PZN2mbV2La9rwjcGdRCBofTv37mQ1an4hiQWF5Bf
+         jIQqyF1nGZ8wkrXzjV/KXSBcOZhbFrRS1F36IFWo8gvNsprR7zPlo9ts8EaEJFYF+ZFs
+         Uz+xv4alMTeLKw2dMDz8X/0PDHYlRCs2WoQPOa6lwWoeFTcV5DN2qj70tjECENB2I/fq
+         dmIw==
+X-Forwarded-Encrypted: i=1; AJvYcCWDFUukgwhcPbSO6krTvvlOYGdFUnqgXAIhKM/h7f1m+LkLczM+S1k8ZxLid+TW7RXV+FphXmZoIKe6mNU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxNid1uHIzCfBrwPwvAu+Z8ewX5NbkKlQ38ytocunjkxUu8rYHO
+	JRPe0xImceccxdhHfEglc/UiP6xPSbDPwRx8tgrUWm+aYdk4fQOArAOglzt2x8EiCqdfzTta3/y
+	LIQ==
+X-Google-Smtp-Source: AGHT+IFRZiukULQx/2fLXpoCzka/CF3jla1TGJ8jtcm6RRL0keYWCLj/mfa9mFnxvbhxlAP78zp2a3oigdc=
+X-Received: from pfnx2.prod.google.com ([2002:aa7:84c2:0:b0:736:451f:b9f4])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:114e:b0:736:5438:ccc
+ with SMTP id d2e1a72fcca58-739d852cbb9mr388364b3a.9.1743630263625; Wed, 02
+ Apr 2025 14:44:23 -0700 (PDT)
+Date: Wed, 2 Apr 2025 14:44:22 -0700
+In-Reply-To: <63abbc66-b237-4f7f-8aec-e32ebf6c62bd@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <20250318153316.1970147-1-chao.gao@intel.com> <bd391db213179a52d68bb84531775117805d6932.camel@intel.com>
+ <63abbc66-b237-4f7f-8aec-e32ebf6c62bd@intel.com>
+Message-ID: <Z-2vtnVhKZpKS9Gz@google.com>
+Subject: Re: [PATCH v4 0/8] Introduce CET supervisor state support
+From: Sean Christopherson <seanjc@google.com>
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: Rick P Edgecombe <rick.p.edgecombe@intel.com>, Chao Gao <chao.gao@intel.com>, 
+	"x86@kernel.org" <x86@kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>, 
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "pbonzini@redhat.com" <pbonzini@redhat.com>, 
+	"ebiggers@google.com" <ebiggers@google.com>, "vigbalas@amd.com" <vigbalas@amd.com>, 
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, Chang Seok Bae <chang.seok.bae@intel.com>, 
+	"levymitchell0@gmail.com" <levymitchell0@gmail.com>, 
+	"samuel.holland@sifive.com" <samuel.holland@sifive.com>, Xin3 Li <xin3.li@intel.com>, 
+	Weijiang Yang <weijiang.yang@intel.com>, "mingo@redhat.com" <mingo@redhat.com>, 
+	"mlevitsk@redhat.com" <mlevitsk@redhat.com>, "john.allen@amd.com" <john.allen@amd.com>, 
+	Stanislav Spassov <stanspas@amazon.de>, "attofari@amazon.de" <attofari@amazon.de>, 
+	Rongqing Li <lirongqing@baidu.com>, "hpa@zytor.com" <hpa@zytor.com>, 
+	"peterz@infradead.org" <peterz@infradead.org>, 
+	"aruna.ramakrishna@oracle.com" <aruna.ramakrishna@oracle.com>, "bp@alien8.de" <bp@alien8.de>, 
+	Zhao1 Liu <zhao1.liu@intel.com>, "ubizjak@gmail.com" <ubizjak@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, Apr 02, 2025, Dave Hansen wrote:
+> On 4/2/25 14:12, Edgecombe, Rick P wrote:
+> > In any case, at this point I think we need to either double down on pol=
+ishing
+> > this thing up (by pausing other work) and have a clear =E2=80=9Cplease =
+do this with
+> > these patches" request, or declare failure and argue for the smaller ve=
+rsion.
+> >=20
+> > I guess I still lean towards keeping the optimization. But I do think i=
+t's worth
+> > considering at this point.
+>=20
+> I'm not quite feeling the same sense of panic and some need to pause
+> other work. This is thing is at v4. Between spring break and the merge
+> window, v4 hasn't gotten many eyeballs, except Chang's (thanks Chang!).
 
-Linus,
-
-tracing fixes for 6.15
-
-- Fix build error when CONFIG_PROBE_EVENTS_BTF_ARGS is not enabled
-
-  The tracing of arguments in the function tracer depends on some
-  functions that are only defined when PROBE_EVENTS_BTF_ARGS is enabled.
-  In fact, PROBE_EVENTS_BTF_ARGS also depends on all the same configs
-  as the function argument tracing requires. Just have the function
-  argument tracing depend on PROBE_EVENTS_BTF_ARGS.
-
-- Free module_delta for persistent ring buffer instance
-
-  When an instance holds the persistent ring buffer, it allocates
-  a helper array to hold the deltas between where modules are loaded
-  on the last boot and the current boot. This array needs to be freed
-  when the instance is freed.
-
-- Add cond_resched() to loop in ftrace_graph_set_hash()
-
-  The hash functions in ftrace loop over every function that can be
-  enabled by ftrace. This can be 50,000 functions or more. This
-  loop is known to trigger soft lockup warnings and requires a
-  cond_resched(). The loop in ftrace_graph_set_hash() was missing it.
-
-- Fix the event format verifier to include "%*p.." arguments
-
-  To prevent events from dereferencing stale pointers that can
-  happen if a trace event uses a dereferece pointer to something
-  that was not copied into the ring buffer and can be freed by the
-  time the trace is read, a verifier is called. At boot or module
-  load, the verifier scans the print format string for pointers
-  that can be dereferenced and it checks the arguments to make sure
-  they do not contain something that can be freed. The "%*p" was
-  not handled, which would add another argument and cause the verifier
-  to not only not verify this pointer, but it will look at the wrong
-  argument for every pointer after that.
-
-- Fix mcount sorttable building for different endian type target
-
-  When modifying the ELF file to sort the mcount_loc table in the
-  sorttable.c code, the endianess of the file and the host is used
-  to determine if the bytes need to be swapped when calculations are
-  done. A change was made to the sorting of the mcount_loc that read
-  the values from the ELF file into an array and the swap happened
-  on the filling of the array. But one of the calculations of the
-  array still did the swap when it did not need to. This caused building
-  on a little endian machine for a big endian target to not find
-  the mcount function in the 'nm' table and it zeroed it out, causing
-  there to be no functions available to trace.
-
-- Add goto out_unlock jump to rv_register_monitor() on error path
-
-  One of the error paths in rv_register_monitor() just returned the
-  error when it should have jumped to the out_unlock label to release
-  the mutex.
-
-These are all fixes that have been made within the last week.
-I based the tag off of the last pull request you did on one of my topic
-branches so that it included all the topic branches and all the fixes can
-be added together in this pull request.
-
-Please pull the latest trace-v6.15-2 tree, which can be found at:
-
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
-trace-v6.15-2
-
-Tag SHA1: ffc2ad5b831176f95fc2406a812cee19c0005815
-Head SHA1: fc0585c7faa9fffa0ecdd6e2466e3293cd3239ac
-
-
-Gabriele Monaco (1):
-      rv: Fix missing unlock on double nested monitors return path
-
-Steven Rostedt (3):
-      ftrace: Have tracing function args depend on PROBE_EVENTS_BTF_ARGS
-      tracing: Free module_delta on freeing of persistent ring buffer
-      tracing: Verify event formats that have "%*p.."
-
-Vasily Gorbik (1):
-      scripts/sorttable: Fix endianness handling in build-time mcount sort
-
-zhoumin (1):
-      ftrace: Add cond_resched() to ftrace_graph_set_hash()
-
-----
- kernel/trace/Kconfig                       | 3 +--
- kernel/trace/ftrace.c                      | 1 +
- kernel/trace/rv/rv.c                       | 3 ++-
- kernel/trace/trace.c                       | 1 +
- kernel/trace/trace_events.c                | 7 +++++++
- samples/trace_events/trace-events-sample.h | 8 ++++++--
- scripts/sorttable.c                        | 2 +-
- 7 files changed, 19 insertions(+), 6 deletions(-)
----------------------------
-diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
-index 033fba0633cf..a3f35c7d83b6 100644
---- a/kernel/trace/Kconfig
-+++ b/kernel/trace/Kconfig
-@@ -265,8 +265,7 @@ config FUNCTION_GRAPH_RETADDR
- 
- config FUNCTION_TRACE_ARGS
-        bool
--	depends on HAVE_FUNCTION_ARG_ACCESS_API
--	depends on DEBUG_INFO_BTF
-+	depends on PROBE_EVENTS_BTF_ARGS
- 	default y
- 	help
- 	  If supported with function argument access API and BTF, then
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 92015de6203d..1a48aedb5255 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -6855,6 +6855,7 @@ ftrace_graph_set_hash(struct ftrace_hash *hash, char *buffer)
- 				}
- 			}
- 		}
-+		cond_resched();
- 	} while_for_each_ftrace_rec();
- 
- 	return fail ? -EINVAL : 0;
-diff --git a/kernel/trace/rv/rv.c b/kernel/trace/rv/rv.c
-index 50344aa9f7f9..968c5c3b0246 100644
---- a/kernel/trace/rv/rv.c
-+++ b/kernel/trace/rv/rv.c
-@@ -809,7 +809,8 @@ int rv_register_monitor(struct rv_monitor *monitor, struct rv_monitor *parent)
- 	if (p && rv_is_nested_monitor(p)) {
- 		pr_info("Parent monitor %s is already nested, cannot nest further\n",
- 			parent->name);
--		return -EINVAL;
-+		retval = -EINVAL;
-+		goto out_unlock;
- 	}
- 
- 	r = kzalloc(sizeof(struct rv_monitor_def), GFP_KERNEL);
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 103b193875b3..de6d7f0e6206 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -9609,6 +9609,7 @@ static void free_trace_buffers(struct trace_array *tr)
- 		return;
- 
- 	free_trace_buffer(&tr->array_buffer);
-+	kfree(tr->module_delta);
- 
- #ifdef CONFIG_TRACER_MAX_TRACE
- 	free_trace_buffer(&tr->max_buffer);
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index 8638b7f7ff85..069e92856bda 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -470,6 +470,7 @@ static void test_event_printk(struct trace_event_call *call)
- 			case '%':
- 				continue;
- 			case 'p':
-+ do_pointer:
- 				/* Find dereferencing fields */
- 				switch (fmt[i + 1]) {
- 				case 'B': case 'R': case 'r':
-@@ -498,6 +499,12 @@ static void test_event_printk(struct trace_event_call *call)
- 						continue;
- 					if (fmt[i + j] == '*') {
- 						star = true;
-+						/* Handle %*pbl case */
-+						if (!j && fmt[i + 1] == 'p') {
-+							arg++;
-+							i++;
-+							goto do_pointer;
-+						}
- 						continue;
- 					}
- 					if ((fmt[i + j] == 's')) {
-diff --git a/samples/trace_events/trace-events-sample.h b/samples/trace_events/trace-events-sample.h
-index 999f78d380ae..1a05fc153353 100644
---- a/samples/trace_events/trace-events-sample.h
-+++ b/samples/trace_events/trace-events-sample.h
-@@ -319,7 +319,8 @@ TRACE_EVENT(foo_bar,
- 		__assign_cpumask(cpum, cpumask_bits(mask));
- 	),
- 
--	TP_printk("foo %s %d %s %s %s %s %s %s (%s) (%s) %s", __entry->foo, __entry->bar,
-+	TP_printk("foo %s %d %s %s %s %s %s %s (%s) (%s) %s [%d] %*pbl",
-+		  __entry->foo, __entry->bar,
- 
- /*
-  * Notice here the use of some helper functions. This includes:
-@@ -370,7 +371,10 @@ TRACE_EVENT(foo_bar,
- 
- 		  __get_str(str), __get_str(lstr),
- 		  __get_bitmask(cpus), __get_cpumask(cpum),
--		  __get_str(vstr))
-+		  __get_str(vstr),
-+		  __get_dynamic_array_len(cpus),
-+		  __get_dynamic_array_len(cpus),
-+		  __get_dynamic_array(cpus))
- );
- 
- /*
-diff --git a/scripts/sorttable.c b/scripts/sorttable.c
-index 7b4b3714b1af..deed676bfe38 100644
---- a/scripts/sorttable.c
-+++ b/scripts/sorttable.c
-@@ -857,7 +857,7 @@ static void *sort_mcount_loc(void *arg)
- 		for (void *ptr = vals; ptr < vals + size; ptr += long_size) {
- 			uint64_t key;
- 
--			key = long_size == 4 ? r((uint32_t *)ptr) : r8((uint64_t *)ptr);
-+			key = long_size == 4 ? *(uint32_t *)ptr : *(uint64_t *)ptr;
- 			if (!find_func(key)) {
- 				if (long_size == 4)
- 					*(uint32_t *)ptr = 0;
+This particular series is at v4, but KVM CET support was more or less ready=
+ to
+roll 4 *years* ago.  I agree there's no need to panic, but some sense of ur=
+gency
+would be nice.
