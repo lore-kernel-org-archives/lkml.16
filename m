@@ -1,118 +1,142 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+Received: from mail-vk1-f176.google.com (mail-vk1-f176.google.com [209.85.221.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 930B51F03E0
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 13:18:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB9585BAF0
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 13:20:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743599923; cv=none; b=NtfS03hEVcBryV3abPqzgCABXnJTyLfoBGZEA0pZYL+cVIVueOCB4GpYYZHgKaq6jq2Kboh1DXouv1I9NxnDQkqs6en+/+lUXunJEjbUX5LD7hQWvlWW+I5xvR4zOhCaHaKygTPw+2k+JcZ4Uzq6OFc5TlgEJeaQ/3w0o+w+CwY=
+	t=1743600037; cv=none; b=orS/A4tE83A3x6eh3IXtXP7+DuwUsbKI4c7eAGpkFEypUPPjSZHezyALRaGyC3NzKmJ0kZQBPUUhjonsMCH43yvV1v1ddzYO6UbUS/t9xhrNccFzZJajIs/BYl+3zozkKOQ6/Nxzz+A+IHOr5eX1rz2+fjKXDLkqdHioZQbJsKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743599923; c=relaxed/simple;
-	bh=hTce2fu63vILU+Nv0bLr6fat6cpDQYvpiVdtQKz7zr4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=bI2S4qb6VYq+HrShbRWOH9rdjez6lLKPorJn7uMtct2JimrhH/E0U9em9vVFFrxxZH89+csFIirrDsBQH3e8s+TWxYo21RqitT0DW6biycheK2zgGgFDe09KZqeNuSbzpd22AKg1/e38WqnppUUz6edRBl6kda38UJzQgVDn+qA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OFMrmh7M; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743600037; c=relaxed/simple;
+	bh=N+huIrTauyuCYVT6DvX3IHTIVyunCkxZO6lbTCo1G8w=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=ZukLxayNC+MsPyyPinAFFx69zN8bgFJC5g0dsmTs2GxykQSVmYcHdg3W6WlZT1FqD4qgZ9mP3I0jznQ/ssMB1NLbtEQNIM74H4r8c7kd85a8S83r18lpAJGRprefB+oStlvC9PGnn3c5GEAvHCRimQA3BaiC+ynn4tVDZm3FtkM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dZMuVrTM; arc=none smtp.client-ip=209.85.221.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OFMrmh7M"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5e5e8274a74so10808731a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 06:18:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dZMuVrTM"
+Received: by mail-vk1-f176.google.com with SMTP id 71dfb90a1353d-523f670ca99so3111715e0c.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 06:20:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743599920; x=1744204720; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=H8OOW19gYi9GtyeQ4qqZw+eawnXRnqo/rA8a2T8vrZE=;
-        b=OFMrmh7MnB7lY7NsohuVZt2nX3i2p2JZEsSsTBYXBwquTBFXwwOri3khNug4mbOm5d
-         D2XWc4ojNuYZ4G9ge3VhXFePnTL2iYOD1qBIqBGyJ5Pdee4K1eiv+NG1GjL5gr2d5wwq
-         QLShAWS6nLwseLCHILfcS8XA3A0fH2GqzeAWlg3j/JQEi5VL/obXinh7+OQb6vZ5LIal
-         nEEwqR70A57P5ENP6E2UyYX52+C6WJeD/kmen6gcQWUNWSyYo5wQTCnMdUOkOwJHhGeC
-         PycdO1u1Ip3Ufib8HJrtmxq+214L3wbs2NfdGS+KdeXZi+d3I5doR4EEKJsAlSjri9PE
-         PXCQ==
+        d=linaro.org; s=google; t=1743600035; x=1744204835; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=In+1Y69nMBfgKqa4StrtMwmuVIRitgkzeLMrf8QA0XQ=;
+        b=dZMuVrTMhF/WYw+fikvyqLZDkQgC7UaeFS2arnGqdumjbwd0CVkXkdbhOq8diJpDsQ
+         I+BZtrH47yfjTX705Rb0GIkzn7Bs7eDmqx4u9jrwFTWJMMhD4+xsg/Xolf3NbYMorUkm
+         VxOogSXzGW2oSafbMY3w7PWabZ4n+GBFAUWWYv5o6+YpR1xemFFxySPK/IPh4IyuCTGp
+         fEu379dPfrVRwRdSzhmKyjBCuySMQ1NooIIZncDdbt1fEsuWqwCh3/SM+EJUdFHo80ps
+         EAUBWp1DVhDcEIoj+I24tbpI50MFlmFdRcU39rnVkrt/t9Spge/e2xuO1Dbj5Dlyb+nJ
+         BBWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743599920; x=1744204720;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=H8OOW19gYi9GtyeQ4qqZw+eawnXRnqo/rA8a2T8vrZE=;
-        b=kqtVco0k+cMF9w9YN1as5JkzO82XWdeImUjwh36eFeIkadTgo8PvA2rQch8BEwAq0S
-         ehLnN2Lc3sIvcw6nwjdTMupadAirM93eOsxopK49umuXgh8/Sgqdv389efE75K21ZTcz
-         pjePc3hmbCbJu8gmsQn1DnSl0NXOlB36w1HGRX0nyvXPmFCgEiw+vHf3/6WS85FhS1d8
-         KQqWqyVFuNXq+kOSWjwxWQeKmc6hh9+wmlxUS4KmW/wYrcJhcU+ngnGnG2ewK9N2ypgI
-         cPguPDXdIPgPBWkiIQkZshBETwxIbmyWRq5eqk8ZLWcaeYMuDo1LmEWF3LQcf7zKSXb/
-         /Drw==
-X-Forwarded-Encrypted: i=1; AJvYcCXMhJS1Rxcoq83zFGgWWZImOwF0b4Gku2iiTDIC6nRyUKO36NL5bCYnCy87R3PM0VfeyMAwSRESST5a6ew=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yynmn8ysyCE+zEmZd1B7RU4QxiGXHgpeJVwfn3PPN8IQtm0RR2t
-	W5tyouU8SCPcUjCuoYJJpY2Vo+0uCsKL7fzYG4x6kQoQa4s/Jo3dlYP0p8dk
-X-Gm-Gg: ASbGncvfzdlZ7ObTEb/amhMFkJRxpSKuGmxqMcBVeH474/o/o9e24oRYipupH+1Peth
-	pkE9j9vjynSCijZMZj40HMJrVuyT1neOIT7uZHf0WJRjPlByUbIW4mx1N8FbaQSdTXHTEqHhWXV
-	gM5DCjLK1xRKw7HylohLshCBPctPP8fjggXSnQ3aBRKfi4REbUbu1tyv8k3jwEUpCxUKY5sB51D
-	bj8t3DEyqLeNWJ/THtx1eVMCVIXxvDR/3Sc5HT1qqw+joDMqKk6cTviwOf00fcMx4s5K5cNPwIV
-	8N+EWTmQ6k3K9bP+50ZdHdCbT02oRV7uHSlqf3AhlHiLmeOf8g==
-X-Google-Smtp-Source: AGHT+IHFUmrmlc4HA2ylOlLMlHTULjl3M+S7hQguh6s8FyPgenDwQjUTgAyjksCyMnV0khwDxKRsUA==
-X-Received: by 2002:a05:6402:42c8:b0:5e6:17d7:9a32 with SMTP id 4fb4d7f45d1cf-5edfd13ca73mr15448608a12.18.1743599919214;
-        Wed, 02 Apr 2025 06:18:39 -0700 (PDT)
-Received: from HP-650 ([105.112.228.227])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5edcaac38f4sm7793053a12.10.2025.04.02.06.18.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Apr 2025 06:18:38 -0700 (PDT)
-Date: Wed, 2 Apr 2025 14:18:24 +0100
-From: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Julia Lawall <julia.lawall@inria.fr>
-Cc: outreachy@lists.linux.dev, linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: rtl8723bs: modify struct field to use standard bool
- type
-Message-ID: <Z+05IEjV3pczMLNQ@HP-650>
+        d=1e100.net; s=20230601; t=1743600035; x=1744204835;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=In+1Y69nMBfgKqa4StrtMwmuVIRitgkzeLMrf8QA0XQ=;
+        b=pIaYAxt1Kv5d46n6cUIZWwA3CS0528rSNQ8GkMhmDjvQZuH9xVfARsSWWAmbcqcUg/
+         7EJt11OWNMNDxAaNs8ac/0oUsNc05fwQPw0ZtuPlkGG2RKK5FsDfE/nQdQ9o9kypWZMw
+         dl0pIcd5PkCHll0SpRFe20NfS+Unsl6Jm7S+OMt5ZyVhR/3pHrZJn8XCGxgUvU8tERYw
+         5AMbAJ+9uaiXrZMGYhrWhVRxqT66TAhmxsa9Xzu/mrazzvaRZXrslsPxVwxIMjJe+mwK
+         BQu4e1fxraGZEgV/bI5JB0vSI+ciI/Jkw6Sr9onmxBDFtk5sqxJLgHQqvbyGojBt0XAj
+         EYzQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX6wqL+zvfZMlqzJIj3GXYxFmJL4a+u3iVVD/0jd5VmbWNfZqIWN6Jxsto3F4YtH4GdxAk9c19UnIn5+Vo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwjKbjQNFCQq9XE8l1jkVL3pBzO/9kEi25S91CxyWb89gV/B7N1
+	EOyXLhYaUk3HcR5gunc6RAHWRTKu1qy9/zFgl3Byp8nQZOJ5UdbpJM+Hjs1ge1fgPWdgdWSS2GQ
+	QWygn2lurg0qEnmucnsI7Axp4ZqsdPR9h5EsQMA==
+X-Gm-Gg: ASbGnct9MBp5XSyWi6/vWU0/46ThKH8CDKTcCXnfuncGJyDwgZfhRujg+FEVXdIIR9X
+	PhjCz2hRvtACXvaDwUZsoBi6JXkYLYoUs5d5rsYMGG4E9uj5NsKtpyoJ1wySyd3NGkDPP160ILd
+	ZduGw1OI8QHvcK+g1MMr2lYXYhqEt+9unwXwa7+8YECXLUh2/jiHg9MjuMz2M=
+X-Google-Smtp-Source: AGHT+IFsHe2qgE/3dZ7ATZQlTlH2f6sgRKoBUonASYXuz0Bb/UAqUiZV1X4Y0sczKgfKtwF36TiHquI/NJM5jnDcsl4=
+X-Received: by 2002:a05:6122:249a:b0:526:42c2:8453 with SMTP id
+ 71dfb90a1353d-52642c2849fmr5205649e0c.7.1743600034755; Wed, 02 Apr 2025
+ 06:20:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Wed, 2 Apr 2025 18:50:23 +0530
+X-Gm-Features: AQ5f1Jq96Wf-mikRgwQXfn81V0rc9lAZ1ueGPOm8SXNAmq3Q4b2XBmmyCtKsgkM
+Message-ID: <CA+G9fYug_77HoqyonvsnJiya2q+0-hf9k4Yjk_dDn7P91Sq+3A@mail.gmail.com>
+Subject: next-20250402: riscv/mm/tlbflush.c:195:23: error: 'start' redeclared
+ as different kind of symbol
+To: linux-riscv <linux-riscv@lists.infradead.org>, 
+	open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>
+Cc: Anders Roxell <anders.roxell@linaro.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
+Content-Type: text/plain; charset="UTF-8"
 
-The struct field uses the uint values 0 and 1 to represent false and
-true values respectively.
+Regressions on riscv builds tinyconfig, allnoconfig failed with toolchains
+clang-20 and gcc-13 on the Linux next starting from next-20250328.
 
-Convert cases to use the bool type instead to conform to Linux
-coding styles and ensure consistency.
+First seen on the next-20250328
+ Good: next-20250327
+ Bad: next-20250328..next-20250402
 
-reported by Coccinelle:
+Regressions found on riscv:
+  - build/gcc-13-tinyconfig
+  - build/gcc-13-allnoconfig
+  - build/clang-20-tinyconfig
+  - build/clang-20-allnoconfig
 
-Signed-off-by: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
----
- drivers/staging/rtl8723bs/core/rtw_ap.c      | 2 +-
- drivers/staging/rtl8723bs/include/sta_info.h | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+Regression Analysis:
+ - New regression? Yes
+ - Reproducibility? Yes
 
-diff --git a/drivers/staging/rtl8723bs/core/rtw_ap.c b/drivers/staging/rtl8723bs/core/rtw_ap.c
-index ed6942e289a5..82f54f769ed1 100644
---- a/drivers/staging/rtl8723bs/core/rtw_ap.c
-+++ b/drivers/staging/rtl8723bs/core/rtw_ap.c
-@@ -389,7 +389,7 @@ void update_bmc_sta(struct adapter *padapter)
- 		psta->qos_option = 0;
- 		psta->htpriv.ht_option = false;
- 
--		psta->ieee8021x_blocked = 0;
-+		psta->ieee8021x_blocked = false;
- 
- 		memset((void *)&psta->sta_stats, 0, sizeof(struct stainfo_stats));
- 
-diff --git a/drivers/staging/rtl8723bs/include/sta_info.h b/drivers/staging/rtl8723bs/include/sta_info.h
-index b3535fed3de7..63343998266a 100644
---- a/drivers/staging/rtl8723bs/include/sta_info.h
-+++ b/drivers/staging/rtl8723bs/include/sta_info.h
-@@ -86,7 +86,7 @@ struct sta_info {
- 	uint qos_option;
- 	u8 hwaddr[ETH_ALEN];
- 
--	uint	ieee8021x_blocked;	/* 0: allowed, 1:blocked */
-+	bool ieee8021x_blocked;
- 	uint	dot118021XPrivacy; /* aes, tkip... */
- 	union Keytype	dot11tkiptxmickey;
- 	union Keytype	dot11tkiprxmickey;
--- 
-2.34.1
+Boot regression: riscv tlbflush.c error 'start' redeclared as
+different kind of symbol
 
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+
+## Build log
+arch/riscv/mm/tlbflush.c: In function 'arch_tlbbatch_add_pending':
+arch/riscv/mm/tlbflush.c:195:23: error: 'start' redeclared as
+different kind of symbol
+  195 |         unsigned long start = uaddr & PAGE_MASK;
+      |                       ^~~~~
+arch/riscv/mm/tlbflush.c:193:53: note: previous definition of 'start'
+with type 'long unsigned int'
+  193 |                 struct mm_struct *mm, unsigned long start,
+unsigned long end)
+      |                                       ~~~~~~~~~~~~~~^~~~~
+arch/riscv/mm/tlbflush.c:195:31: error: 'uaddr' undeclared (first use
+in this function)
+  195 |         unsigned long start = uaddr & PAGE_MASK;
+      |                               ^~~~~
+arch/riscv/mm/tlbflush.c:195:31: note: each undeclared identifier is
+reported only once for each function it appears in
+
+
+## Source
+* Kernel version:  6.14.0
+* Git tree: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+* Git sha: fefb886b1344e222b3218f3c0165b0fd770e8b88
+* Git describe: next-20250402
+* Project details:
+https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250402/
+* Architectures: riscv
+* Toolchains: clang-20, gcc-13
+* Kconfigs: tinyconfig, lkftconfig
+
+## Build
+* Build log: https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250402/testrun/27859100/suite/build/test/gcc-13-tinyconfig/log
+* Build history:
+https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250402/testrun/27859100/suite/build/test/gcc-13-tinyconfig/history/
+* Build details:
+https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250402/testrun/27859100/suite/build/test/gcc-13-tinyconfig/details/
+* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2v9owDFW4gzrtyDZItZlOSzN7Zd/
+* Kernel config:
+https://storage.tuxsuite.com/public/linaro/lkft/builds/2v9owDFW4gzrtyDZItZlOSzN7Zd/config
+
+## Steps to reproduce
+- tuxmake --runtime podman --target-arch riscv --toolchain clang-20
+--kconfig tinyconfig LLVM=1 LLVM_IAS=1
+
+
+--
+Linaro LKFT
+https://lkft.linaro.org
