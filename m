@@ -1,83 +1,33 @@
-Received: from fout-b3-smtp.messagingengine.com (fout-b3-smtp.messagingengine.com [202.12.124.146])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEF0720E00B;
-	Wed,  2 Apr 2025 09:10:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.146
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2F7A207A33;
+	Wed,  2 Apr 2025 09:11:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743585059; cv=none; b=hzLScNtSlSQaII0FF+Aur13841RK4WlJaQcUJ0C1pFtbUV2Zu/Oe7A1DJZH6DdLZ/JiAoGgNgPxxSJxgLUD3Lb83ZxFz8ItpkaxcUNQ9pFDzJT/Ds58fGROXj9cXEZZNGz0TkuTr5pxdB/AZtT8uGz0KasER4hMp7dNc2tY73rY=
+	t=1743585071; cv=none; b=RvUox7nn6swJdGu7Zak5uzR5e7O+XT995d1wE3u5+Lv0t8ReCHZRH3jALeL1qOpfslw1/BG1JxlEoPiFaA2MxSSGXwQSS6ErRutQVpsZLLapTVy51zn0/+ytfNBDxI7YiIOBUhvbfjIOZCVLUF/asWI4wtS7nF1WPvUEJga0eHw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743585059; c=relaxed/simple;
-	bh=VSe3OeVWWnLk2r3FC4J7BJMmPc/Q2MEG9Hs1eEpSz2A=;
+	s=arc-20240116; t=1743585071; c=relaxed/simple;
+	bh=/VyQlWtgUypii0Znr0zCT8GfRvPHoKGiB1ovC9dn1bE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=K9gG74cA6GEDfl/vEqxCGvnUgSx6Vub3l2EdNikqUhyUKCU0GyT4x5asSHGPbIQ7u3Yr1nQi7Bm3odzT29syd6i5R/glGWoxRI49pq+0Xa9AnfK37ViDpQZ04s3iN+jJSPPBJUeIoCwKI9u12i5PBsgYVuQzncw3FlO9oRwsZBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.fm; spf=pass smtp.mailfrom=fastmail.fm; dkim=pass (2048-bit key) header.d=fastmail.fm header.i=@fastmail.fm header.b=TYycLM0v; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=HM9bPB+M; arc=none smtp.client-ip=202.12.124.146
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.fm
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastmail.fm
+	 In-Reply-To:Content-Type; b=rOa3EXmKAGhOF68tk++DQ9NS+8F98T0+VU9PclJ2xXfHdn7CWx8cNwNDvMS4our6TFCiNn1oJ7BTppQSRqIemtKffGXrxnP8Bl6X1OnJDbjEkckjaaby0X1iqf0m5yX58AJX51pVgOWPkntbMI0cpf4xzvnrodRWvb6LsuZXcmk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oxR3E/75; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fastmail.fm header.i=@fastmail.fm header.b="TYycLM0v";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="HM9bPB+M"
-Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
-	by mailfout.stl.internal (Postfix) with ESMTP id B7704114011A;
-	Wed,  2 Apr 2025 05:10:55 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-02.internal (MEProxy); Wed, 02 Apr 2025 05:10:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fastmail.fm; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1743585055;
-	 x=1743671455; bh=jUcSKZNgP+Sg/DbCPgXX4khSpS1DYk5lWGNv40G5oaI=; b=
-	TYycLM0vHgClioRO+V1aCV3RpEHvVzc2wW+b7rbdK7g83WOxAie9aBNrqurSQZYx
-	VGzQGtoliTjk2XFf+g1muwvANWGHcLRxlmeF0tNvuGS9Fu0+/yjgcYf3powpXu/S
-	keKjTTyc8fhIk949Qr+RtOI4mtpmGygKw81vVP0cCL/WFDqeV9scuroDdaLngPyz
-	3ZKb/DYJoeFLwOu6poas7lKX6dCgnWYuGApajrGy3ZQ4Xr2hQ6shEQ7o4h4jaG2F
-	ywG2n9Tzf+EgWyhLfWOg0voW/pYyabd+x3K2CevizZKeeBbnrA8hY+131JY3I/0o
-	ydTFVTI6oyw0f+H5hmE7qQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1743585055; x=
-	1743671455; bh=jUcSKZNgP+Sg/DbCPgXX4khSpS1DYk5lWGNv40G5oaI=; b=H
-	M9bPB+MD7WOfJKSm9LbHnYaDx1S2wIBeP1aUYeqmRb3ftWGD4jLVJvDg4MPNZNaI
-	tS83pafPiSm45eTXg8wVVxW5ZbkoMOJc9MVbmRUEuMgBSqi1/1MXCWZDyDGxhz8X
-	SdzDDFyzbTL1ysRsKfjIZN9PeOnnyoTIlfWGlqm/yQ55ePpFwVfJOIxWvIdkfQXN
-	30TcODpqI0mGB5seOlZQGwY/lgO7StGbMTjLqw5LW34R3tx+WDduiAygqtZkW6ZI
-	Za21ou6niA1Jtcw2knzb+yfRzqPVZIuCtCEOkJ/NxPipWN5C73JiLeLqP4fp+yP2
-	q+5zU5Mk7zObJ3SgSmRfA==
-X-ME-Sender: <xms:Hv_sZyQvn7HkvJfNdnGs_meUZQBRg_NtmTzYTuAx3SuOYGPAG4v6_g>
-    <xme:Hv_sZ3yGR5ptWUUhjYu_Ox-uoFJ4VWVbg7Z96DY3mM3POSdR52IjHxzqVQWzJ4h2y
-    VMj4iIGKQJLRYME>
-X-ME-Received: <xmr:Hv_sZ_0C-GzncG3R2lblJ4BAPnwO9DH57mL7tTqe-snV5wNMyz9i02uyHaEUn9YE_yN7ucnan7SLAE5J-IctbvePngcpHW7scfTdFkZnNC6qc_41-HqY>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddukeehvdekucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtkeertddt
-    vdejnecuhfhrohhmpeeuvghrnhguucfutghhuhgsvghrthcuoegsvghrnhgurdhstghhuh
-    gsvghrthesfhgrshhtmhgrihhlrdhfmheqnecuggftrfgrthhtvghrnhepudelfedvudev
-    udevleegleffffekudekgeevlefgkeeluedvheekheehheekhfefnecuvehluhhsthgvrh
-    fuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsggvrhhnugdrshgthhhusggv
-    rhhtsehfrghsthhmrghilhdrfhhmpdhnsggprhgtphhtthhopeelpdhmohguvgepshhmth
-    hpohhuthdprhgtphhtthhopehjrggtohesuhhlshdrtghordiirgdprhgtphhtthhopehm
-    ihhklhhoshesshiivghrvgguihdrhhhupdhrtghpthhtoheplhhinhhugidqfhhsuggvvh
-    gvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghr
-    nhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegthhhrihhsthhoph
-    hhvgdrjhgrihhllhgvthesfigrnhgrughoohdrfhhrpdhrtghpthhtohepjhhorghnnhgv
-    lhhkohhonhhgsehgmhgrihhlrdgtohhmpdhrtghpthhtoheprhguuhhnlhgrphesihhnfh
-    hrrgguvggrugdrohhrghdprhgtphhtthhopehtrhgrphgvgihithesshhprgifnhdrlhhi
-    nhhkpdhrtghpthhtohepuggrvhhiugdrlhgrihhghhhtrdhlihhnuhigsehgmhgrihhlrd
-    gtohhm
-X-ME-Proxy: <xmx:H__sZ-D_Z6Q2psY0YA439HNCyavSC38TJ7Whb_y8v-F8cAIO0hksRw>
-    <xmx:H__sZ7j27s5vINVZI2ZZfoBGMgfe968pFn4DGcTOzHp3ou-_DN5N8A>
-    <xmx:H__sZ6r47k-ziJw5inLc20YGY-mHULEfNJSvrnuco0rxG9MYQ6YXpA>
-    <xmx:H__sZ-gtftfwRV8CELCSFGvpDR5VmOFG5dCnE6xOsE5lal6LpVH4bw>
-    <xmx:H__sZ8qGwNo9cRmwYSV5WpJYOCQXkbOdiYNr1vup8BThFeZeqp8WRcL7>
-Feedback-ID: id8a24192:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 2 Apr 2025 05:10:53 -0400 (EDT)
-Message-ID: <0b0a6adf-348e-425d-b375-23da3d6668d0@fastmail.fm>
-Date: Wed, 2 Apr 2025 11:10:52 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oxR3E/75"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8441C4CEE5;
+	Wed,  2 Apr 2025 09:11:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743585071;
+	bh=/VyQlWtgUypii0Znr0zCT8GfRvPHoKGiB1ovC9dn1bE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=oxR3E/75+QbnXLDtwsK/NJV3RtT0y7q+WYrUK93EkI1u2TYa9pZjoONVa2BU/sT73
+	 yjO3UtOTv0S11n1oXJGqyGKC9EtZ6bSRrrjZAILp//sfwtdZrelS11WxOytL5N4lMv
+	 z26hVAbYysOn+k2oWbnvqa3dpX7/gvw+e1uQXqtYkNdwKnt6+RCh0hQT94VajYO1cq
+	 ahaGRg1+oENM3YPCyOaK5H7JaivOXBARGj26bBRLLQ1NDzCvmlM3AvpEMk0u59eE8o
+	 A41uux80FmVjBTpEjy6orCkbRP8Xu2UyWM7hRraWu7RZPmhrelqKKnvEO842VKq+ij
+	 MyFxEXNCRCYBw==
+Message-ID: <fd874f4d-d68c-4443-8bb6-115246f4407b@kernel.org>
+Date: Wed, 2 Apr 2025 11:11:05 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -85,54 +35,91 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] fuse: Adjust readdir() buffer to requesting buffer
- size.
-To: Jaco Kroon <jaco@uls.co.za>, Miklos Szeredi <miklos@szeredi.hu>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- christophe.jaillet@wanadoo.fr, joannelkoong@gmail.com,
- rdunlap@infradead.org, trapexit@spawn.link, david.laight.linux@gmail.com
-References: <20250314221701.12509-1-jaco@uls.co.za>
- <20250401142831.25699-1-jaco@uls.co.za>
- <20250401142831.25699-3-jaco@uls.co.za>
- <CAJfpegtOGWz_r=7dbQiCh2wqjKh59BqzqJ0ruhtYtsYBB+GG2Q@mail.gmail.com>
- <19df312f-06a2-4e71-960a-32bc952b0ed2@uls.co.za>
- <CAJfpegseKMRLpu3-yS6PeU2aTmh_qKyAvJUWud_SLz1aCHY_tw@mail.gmail.com>
- <3f71532b-4fed-458a-a951-f631155c0107@uls.co.za>
- <CAJfpegtutvpYYzkW91SscwULcLt_xHeqCGLPmUHKAjozPAQQ8A@mail.gmail.com>
- <0cf44936-57ef-42f2-a484-7f69b87b2520@uls.co.za>
-From: Bernd Schubert <bernd.schubert@fastmail.fm>
-Content-Language: en-US, de-DE, fr
-In-Reply-To: <0cf44936-57ef-42f2-a484-7f69b87b2520@uls.co.za>
+Subject: Re: [PATCH v2 1/2] media: dt-bindings: Add ST VD55G1 camera sensor
+ binding
+To: Benjamin Mugnier <benjamin.mugnier@foss.st.com>
+Cc: Sylvain Petinot <sylvain.petinot@foss.st.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>,
+ linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250401-b4-vd55g1-v2-0-0c8ab8a48c55@foss.st.com>
+ <20250401-b4-vd55g1-v2-1-0c8ab8a48c55@foss.st.com>
+ <20250402-curvy-seriema-of-blizzard-b1c4d9@krzk-bin>
+ <228ddf41-e1d0-4d06-9e0e-9e0dad841688@foss.st.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <228ddf41-e1d0-4d06-9e0e-9e0dad841688@foss.st.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-
-
-On 4/2/25 10:52, Jaco Kroon wrote:
-> Hi,
+On 02/04/2025 10:34, Benjamin Mugnier wrote:
+> Hi Krzysztof,
 > 
-> On 2025/04/02 10:18, Miklos Szeredi wrote:
->> On Wed, 2 Apr 2025 at 09:55, Jaco Kroon <jaco@uls.co.za> wrote:
->>> Hi,
->>>
->>> I can definitely build on that, thank you.
->>>
->>> What's the advantage of kvmalloc over folio's here, why should it be
->>> preferred?
->> It offers the best of both worlds: first tries plain malloc (which
->> just does a folio alloc internally for size > PAGE_SIZE) and if that
->> fails, falls back to vmalloc, which should always succeed since it
->> uses order 0 pages.
+> On 4/2/25 09:08, Krzysztof Kozlowski wrote:
+>> On Tue, Apr 01, 2025 at 01:05:58PM +0200, Benjamin Mugnier wrote:
+>>> +    properties:
+>>> +      endpoint:
+>>> +        $ref: /schemas/media/video-interfaces.yaml#
+>>> +        unevaluatedProperties: false
+>>> +
+>>> +        properties:
+>>> +          data-lanes:
+>>> +            items:
+>>> +              const: 1
+>>
+>> Not what I asked. Now you miss number of items. Just use the syntax I
+>> proposed. Or was there any issue with it?
 > 
-> So basically assigns the space, but doesn't commit physical pages for
-> the allocation, meaning first access will cause a page fault, and single
-> page allocation at that point in time?  Or is it merely the fact that
-> vmalloc may return a virtual contiguous block that's not physically
-> contiguous?
+> No issue I just misunderstood and thought const: 1 was impliying
+> maxItems: 1. I'll add maxItems back.
 
+That's just longer way to express what I asked for. So I repeat the
+question: why not using the syntax I asked for?
 
-Yes vmalloc return buffers might not be physically contiguous - not
-suitable for hardware DMA. And AFAIK it is also a blocking allocation.
-
-
-Bernd
+Best regards,
+Krzysztof
