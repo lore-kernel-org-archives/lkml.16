@@ -1,190 +1,159 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-fw-80009.amazon.com (smtp-fw-80009.amazon.com [99.78.197.220])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FAF6158524
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 16:06:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9206C1426C;
+	Wed,  2 Apr 2025 16:07:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.220
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743610016; cv=none; b=RWdOsFPWlC2OXx2kNErivMmMp6CtvP+TBX8o0BgMQFin5tJYj2Qg+ZHUYFo2cYXhaWy4Xq+n4g/5ar09mX7sD4ouTKnavcAmkXyqX4KC5Rt54tbRQA6Gw3pbcXkfG4+WHNHDuN7enf3q3EiY5NcgmKgWDYb+G4QkSCgoMO6fXPc=
+	t=1743610057; cv=none; b=kZ55g6rF/k/SOer6YD+zDapZeiR/R3Crvno/2GdkDrz5CtmxS8MS7lJeY3iOptkf3+eaL4q3lgEAKb2wWqcmt8jaBkmT+3uyhPd/Bnk3lQrp2EkXuFeVy2giPxqWw9XYSrhbbII4PPvr+M5veT6sr62X2WmjOB2o+OyFt71pGa8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743610016; c=relaxed/simple;
-	bh=DNKbWC8NyM3pn4l2DB7HVuTwaM86CErRabFgu+DHeBc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Umd2d4yOImV0XhRe25+y/gjshHMX6RAqvMAl23XISLxOIxidCG2+sU5wEArFao9a8Y18Z2BpmnzboX/qxu3YEwbXirACnLjX33wYLohMX++i8qj8SWQiNbASrXRjltaNnQWUXDrzZZl91dX0jqBuNpCmkZnRDt95JX4KBdzabYE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ihK1lgdN; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=VQmEhNFu; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ihK1lgdN; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=VQmEhNFu; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1743610057; c=relaxed/simple;
+	bh=wQ6M/vT6iqrzoIUJHG42s5kf2HGU5FrKdDgxFDHWSTg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=d0DelTsMy9VzUAbN5X6DY1V0HO+Q4W7P1k28jT7LSQUTMEn4nmZB9zhXcvsbUXU9GSsIDL4DTRishEx6umHSoBGXH6EHZwxUfzk8u1cgXZBBdwwz6PsOydkSvXWTyV9Y886mbKjnI+m4txDldwNHTHD8A0uv+fBzYDFuWIR/2Xc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.uk; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=X2ON5Hw2; arc=none smtp.client-ip=99.78.197.220
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ihK1lgdN";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="VQmEhNFu";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ihK1lgdN";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="VQmEhNFu"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 5FDF31F38A;
-	Wed,  2 Apr 2025 16:06:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1743610012; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FTmL57kmDGPHrWxHn7Y0/jU2ldGmqDN2KOEd87ly/+g=;
-	b=ihK1lgdNSbaGAsdx8eEofyZ/wkCP7m00DqHtDaDYKzD2vUjlU9Cjz8N0q73p5QcfolaLbm
-	dbsWPbgp6NO/Tw4KBK44eBVN5ZeQcIR29vDCcUJn8ufacd0nmg+MsZyz731OZk65VQTJJH
-	SOzsTEYwh4yD24I/ghCc6lbBUM19AJA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1743610012;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FTmL57kmDGPHrWxHn7Y0/jU2ldGmqDN2KOEd87ly/+g=;
-	b=VQmEhNFuBb5K/rReOBQWMPr0g0W2jC6Hg6tDAAWrixHxeaCiUNs7xqICESoUyygxvT1cdd
-	/hJz3VWK7wBRB3Cg==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=ihK1lgdN;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=VQmEhNFu
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1743610012; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FTmL57kmDGPHrWxHn7Y0/jU2ldGmqDN2KOEd87ly/+g=;
-	b=ihK1lgdNSbaGAsdx8eEofyZ/wkCP7m00DqHtDaDYKzD2vUjlU9Cjz8N0q73p5QcfolaLbm
-	dbsWPbgp6NO/Tw4KBK44eBVN5ZeQcIR29vDCcUJn8ufacd0nmg+MsZyz731OZk65VQTJJH
-	SOzsTEYwh4yD24I/ghCc6lbBUM19AJA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1743610012;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FTmL57kmDGPHrWxHn7Y0/jU2ldGmqDN2KOEd87ly/+g=;
-	b=VQmEhNFuBb5K/rReOBQWMPr0g0W2jC6Hg6tDAAWrixHxeaCiUNs7xqICESoUyygxvT1cdd
-	/hJz3VWK7wBRB3Cg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 48F2A13A4B;
-	Wed,  2 Apr 2025 16:06:52 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id eX99EZxg7Wf9TQAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Wed, 02 Apr 2025 16:06:52 +0000
-Message-ID: <78c976ba-1eaf-47b7-a310-b8a99a3882e2@suse.cz>
-Date: Wed, 2 Apr 2025 18:06:51 +0200
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="X2ON5Hw2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1743610055; x=1775146055;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ykJjfCmlolWCrZ+wMpqsGGROl+iLthzyksVnMeJ/bsI=;
+  b=X2ON5Hw2Bt4jz7VsYp7HU1QsvP7dSJ5/q90O8EgxqDrQIE92kvt5uj72
+   E+KyMsi45ZdrKctXGNAm7nF26bp/jl48msmcigZ6NU3431yScLU9F2Nim
+   3JqXSjxQZDBVTeFEiFYuqL0ikp1eGsNGBGdRsgejZD6T3Tz6nARI3umM0
+   A=;
+X-IronPort-AV: E=Sophos;i="6.15,182,1739836800"; 
+   d="scan'208";a="187481073"
+Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.210])
+  by smtp-border-fw-80009.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 16:07:31 +0000
+Received: from EX19MTAEUC001.ant.amazon.com [10.0.17.79:35474]
+ by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.18.64:2525] with esmtp (Farcaster)
+ id c135015f-45aa-440b-8b20-346c1d1d6670; Wed, 2 Apr 2025 16:07:24 +0000 (UTC)
+X-Farcaster-Flow-ID: c135015f-45aa-440b-8b20-346c1d1d6670
+Received: from EX19D014EUC003.ant.amazon.com (10.252.51.184) by
+ EX19MTAEUC001.ant.amazon.com (10.252.51.193) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Wed, 2 Apr 2025 16:07:24 +0000
+Received: from EX19MTAUEA001.ant.amazon.com (10.252.134.203) by
+ EX19D014EUC003.ant.amazon.com (10.252.51.184) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Wed, 2 Apr 2025 16:07:23 +0000
+Received: from email-imr-corp-prod-iad-all-1a-6ea42a62.us-east-1.amazon.com
+ (10.43.8.2) by mail-relay.amazon.com (10.252.134.102) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id
+ 15.2.1544.14 via Frontend Transport; Wed, 2 Apr 2025 16:07:23 +0000
+Received: from dev-dsk-kalyazin-1a-a12e27e2.eu-west-1.amazon.com (dev-dsk-kalyazin-1a-a12e27e2.eu-west-1.amazon.com [172.19.103.116])
+	by email-imr-corp-prod-iad-all-1a-6ea42a62.us-east-1.amazon.com (Postfix) with ESMTPS id 2C31B431A3;
+	Wed,  2 Apr 2025 16:07:22 +0000 (UTC)
+From: Nikita Kalyazin <kalyazin@amazon.com>
+To: <akpm@linux-foundation.org>, <pbonzini@redhat.com>, <shuah@kernel.org>
+CC: <kvm@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
+	<lorenzo.stoakes@oracle.com>, <david@redhat.com>, <ryan.roberts@arm.com>,
+	<quic_eberman@quicinc.com>, <jthoughton@google.com>, <peterx@redhat.com>,
+	<graf@amazon.de>, <jgowans@amazon.com>, <roypat@amazon.co.uk>,
+	<derekmn@amazon.com>, <nsaenz@amazon.es>, <xmarcalx@amazon.com>,
+	<kalyazin@amazon.com>
+Subject: [PATCH v2 0/5] KVM: guest_memfd: support for uffd minor
+Date: Wed, 2 Apr 2025 16:07:16 +0000
+Message-ID: <20250402160721.97596-1-kalyazin@amazon.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] Implement numa node notifier
-Content-Language: en-US
-To: Oscar Salvador <osalvador@suse.de>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: David Hildenbrand <david@redhat.com>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, Hyeonggon Yoo <42.hyeyoo@gmail.com>,
- mkoutny@suse.com, Dan Williams <dan.j.williams@intel.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>
-References: <20250401092716.537512-1-osalvador@suse.de>
-From: Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <20250401092716.537512-1-osalvador@suse.de>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 5FDF31F38A
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	RCVD_TLS_ALL(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_COUNT_TWO(0.00)[2];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[redhat.com,kvack.org,vger.kernel.org,gmail.com,suse.com,intel.com,huawei.com];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -3.01
-X-Spam-Flag: NO
+Content-Type: text/plain
 
-On 4/1/25 11:27, Oscar Salvador wrote:
-> Memory notifier is a tool that allow consumers to get notified whenever
-> memory gets onlined or offlined in the system.
-> Currently, there are 10 consumers of that, but 5 out of those 10 consumers
-> are only interested in getting notifications when a numa node has changed its
-> state.
-> That means going from memoryless to memory-aware of vice versa.
-> 
-> Which means that for every {online,offline}_pages operation they get
-> notified even though the numa node might not have changed its state.
-> 
-> The first patch implements a numa node notifier that does just that, and have
-> those consumers register in there, so they get notified only when they are
-> interested.
+This series is built on top of Fuad's v7 "mapping guest_memfd backed
+memory at the host" [1].
 
-What if we had two chains:
+With James's KVM userfault [2], it is possible to handle stage-2 faults
+in guest_memfd in userspace.  However, KVM itself also triggers faults
+in guest_memfd in some cases, for example: PV interfaces like kvmclock,
+PV EOI and page table walking code when fetching the MMIO instruction on
+x86.  It was agreed in the guest_memfd upstream call on 23 Jan 2025 [3]
+that KVM would be accessing those pages via userspace page tables.  In
+order for such faults to be handled in userspace, guest_memfd needs to
+support userfaultfd.
 
-register_node_notifier()
-register_node_normal_notifier()
+Changes since v1 [4]:
+ - James, Peter: implement a full minor trap instead of a hybrid
+   missing/minor trap
+ - James, Peter: to avoid shmem- and guest_memfd-specific code in the
+   UFFDIO_CONTINUE implementation make it generic by calling
+vm_ops->fault()
 
-I think they could have shared the state #defines and struct node_notify
-would have just one nid and be always >= 0.
+While generalising UFFDIO_CONTINUE implementation helped avoid
+guest_memfd-specific code in mm/userfaulfd, userfaultfd still needs
+access to KVM code to be able to verify the VMA type when handling
+UFFDIO_REGISTER_MODE_MINOR, so I used a similar approach to what Fuad
+did for now [5].
 
-Or would it add too much extra boilerplate and only slab cares?
+In v1, Peter was mentioning a potential for eliminating taking a folio
+lock [6].  I did not implement that, but according to my testing, the
+performance of shmem minor fault handling stayed the same after the
+migration to calling vm_ops->fault() (tested on an x86).
 
-> The second patch replaces 'status_change_normal{_normal}' fields within
-> memory_notify with a 'nid', as that is only what we need for memory
-> notifer and update the only user of it (page_ext).
-> 
-> Consumers that are only interested in numa node states change are:
-> 
->  - memory-tier
->  - slub
->  - cpuset
->  - hmat
->  - cxl
-> 
-> 
-> Oscar Salvador (2):
->   mm,memory_hotplug: Implement numa node notifier
->   mm,memory_hotplug: Replace status_change_nid parameter in
->     memory_notify
-> 
->  drivers/acpi/numa/hmat.c  |  6 +--
->  drivers/base/node.c       | 19 +++++++++
->  drivers/cxl/core/region.c | 14 +++----
->  drivers/cxl/cxl.h         |  4 +-
->  include/linux/memory.h    | 37 ++++++++++++++++++
->  kernel/cgroup/cpuset.c    |  2 +-
->  mm/memory-tiers.c         |  8 ++--
->  mm/memory_hotplug.c       | 82 +++++++++++++++++++++++++++++----------
->  mm/page_ext.c             | 12 +-----
->  mm/slub.c                 | 22 +++++------
->  10 files changed, 146 insertions(+), 60 deletions(-)
-> 
+Before:
+
+./demand_paging_test -u MINOR -s shmem
+Random seed: 0x6b8b4567
+Testing guest mode: PA-bits:ANY, VA-bits:48,  4K pages
+guest physical test memory: [0x3fffbffff000, 0x3ffffffff000)
+Finished creating vCPUs and starting uffd threads
+Started all vCPUs
+All vCPU threads joined
+Total guest execution time:	10.979277020s
+Per-vcpu demand paging rate:	23876.253375 pgs/sec/vcpu
+Overall demand paging rate:	23876.253375 pgs/sec
+
+After:
+
+./demand_paging_test -u MINOR -s shmem
+Random seed: 0x6b8b4567
+Testing guest mode: PA-bits:ANY, VA-bits:48,  4K pages
+guest physical test memory: [0x3fffbffff000, 0x3ffffffff000)
+Finished creating vCPUs and starting uffd threads
+Started all vCPUs
+All vCPU threads joined
+Total guest execution time:	10.978893504s
+Per-vcpu demand paging rate:	23877.087423 pgs/sec/vcpu
+Overall demand paging rate:	23877.087423 pgs/sec
+
+Nikita
+
+[1] https://lore.kernel.org/kvm/20250318161823.4005529-1-tabba@google.com/T/
+[2] https://lore.kernel.org/kvm/20250109204929.1106563-1-jthoughton@google.com/T/
+[3] https://docs.google.com/document/d/1M6766BzdY1Lhk7LiR5IqVR8B8mG3cr-cxTxOrAosPOk/edit?tab=t.0#heading=h.w1126rgli5e3
+[4] https://lore.kernel.org/kvm/20250303133011.44095-1-kalyazin@amazon.com/T/
+[5] https://lore.kernel.org/kvm/20250318161823.4005529-1-tabba@google.com/T/#Z2e.:..:20250318161823.4005529-3-tabba::40google.com:1mm:swap.c
+[6] https://lore.kernel.org/kvm/20250303133011.44095-1-kalyazin@amazon.com/T/#m8695dc24d2cc633a6a486a8990e3f7d50d4efb79
+
+Nikita Kalyazin (5):
+  mm: userfaultfd: generic continue for non hugetlbfs
+  KVM: guest_memfd: add kvm_gmem_vma_is_gmem
+  mm: userfaultfd: allow to register continue for guest_memfd
+  KVM: guest_memfd: add support for userfaultfd minor
+  KVM: selftests: test userfaultfd minor for guest_memfd
+
+ include/linux/mm_types.h                      |  3 +
+ include/linux/userfaultfd_k.h                 | 13 ++-
+ mm/hugetlb.c                                  |  2 +-
+ mm/shmem.c                                    |  3 +-
+ mm/userfaultfd.c                              | 25 +++--
+ .../testing/selftests/kvm/guest_memfd_test.c  | 94 +++++++++++++++++++
+ virt/kvm/guest_memfd.c                        | 15 +++
+ virt/kvm/kvm_mm.h                             |  1 +
+ 8 files changed, 146 insertions(+), 10 deletions(-)
+
+
+base-commit: 3cc51efc17a2c41a480eed36b31c1773936717e0
+-- 
+2.47.1
 
