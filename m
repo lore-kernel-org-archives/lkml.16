@@ -1,218 +1,130 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9029323718F
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 11:58:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B45023814E;
+	Wed,  2 Apr 2025 11:59:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743595133; cv=none; b=NBgauQLd7NnoolI134aaEGz9Zst54YI09g1k7vCcgquDyj+QZW4lZgLX9K5HOeu5Po8MVqIXOUf6E7LGKZEwjCWVSVznUonDOshL3jX7pK7W0btenc5Td67UQFAjrAT2eIJ4PFjMNXHZHNV4mv4+nUXnROhc2jXq8C4qjKAlE7M=
+	t=1743595143; cv=none; b=VJJ7/U2ExFMluP/h8C32I8XsxiYzmYopdfcOBiQ9j+VbZbQkssQoYb2Xp6c6p0OkzRBhb0fqutheW4mK/JGXN+g8/euEN7dcXPzmbHZ0Iy/TTUBbdi+e3lRD8b4b8w0nvfAW9hYRvFJWjZPFMEcMj1gLYzwUKFJX44+Rz+LgWs8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743595133; c=relaxed/simple;
-	bh=yz2g4VlGJxKRTtOW8OVXla1bJm6KVYLvKyCbxgeOuKY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RzZsD6u/BXp2DjQo4q0fSH+DMQMkEkL96jBPyU1OU6/J0t9v44UlYCLvZFnAj7vwWvvFKGAftlYhfu9+jcG7oglmoF9MXJxv7GAOFHtndoU/4ryNlHWvn/wMs1Ji5iJDKGxQHQjmX03VLthwr/0RQC4rQdLx9oo6Kiau24Ndfuc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=ELUm4BIi; arc=none smtp.client-ip=209.85.216.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1743595143; c=relaxed/simple;
+	bh=lEgXEGc4oeSLWNn+tNIIYFjH345uNAMY4TODj7ii6hQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ovQpz04qdC6Dk3pPXBylboIzARYbBWi5Q7nF2gXCAsmBLDUy9J8bQfognPZoFtLtJtyv0IjhpuXsZd1q5uzDjnYLdgE12LdzkRNp6G1FCVG5M/lXT6Mve7mSH59+TImlzHE3ksbK3MCE8gZigVdN6x+CHPd/r+KkP50b0KratZ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZTolIx0x; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="ELUm4BIi"
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2ff784dc055so11302103a91.1
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 04:58:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1743595130; x=1744199930; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qpOpISsK92nzP8u+mrCrBVvlHehBgWb2S+ejZtPgHRk=;
-        b=ELUm4BIi7v5+Gy9Vy/jGLtAaT01El6sbRwRuGZpT/ypYuN8Li/glsAleo3FcCcQM31
-         /NNSpXMWMKdzF6V8vUMxmkmxsdFgebEQBU5vrUs3cJVXLC9zmnU/vQ8fLCs7kM1t4fWl
-         6XWhVBtVHN7ZhLh6gjQf4jGU88Rj9GkaMsH0fl0fntT40/XYYpucNFfXMrWQ4V1uoXMI
-         B8wHl4Ivklf/rlfRxG0dNRnO2YHqqoxHvoPVycnqJEnBbM9TR20HR6E6Jf1BTWfDvJCq
-         Un5jEzLCtjGWlaI7etNIhfeCHpyOM8fqmef2XY7e/dKGUOg6f+aRjt+oWulHjwi6YX2F
-         ykxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743595130; x=1744199930;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qpOpISsK92nzP8u+mrCrBVvlHehBgWb2S+ejZtPgHRk=;
-        b=FGiRDrc0awHgTGYUY86LNyvvnyehhpQVYRV0+dzStwARDS6AV1OU9dzLVx65vnjez1
-         cJanL3PSJTtS7G1AXbzllhfzjl/mH2tLTTpFGPCxcYMTINqkWXHeH/ZJ0iFlFpm9Lk0p
-         vUgdOlNAVkAblIZLD4kKs7p007r6rU8KWEKRiI90yAfv1bktaCqsS+F9DuLmQt0untp/
-         U5zCcSM9LOebPvWdOlBRPoR4qsD0H5pSaPN0hRWz2G7HbXd2L80mqRUOovn8Y51SwwjU
-         lUq0csCJ1iT8i8IpKZNayDLp2jtmhf/8LHsrAViksftZ5eYjY8t3NEYn23bODmWhisDL
-         kkyg==
-X-Forwarded-Encrypted: i=1; AJvYcCUOy87VOjKPLWm8dS3+fGpHewcHgBBwtpBy952SR9/cKMVtOmWz5avS1/REnUHyC0aV/fxHIcGG8NT3eHY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yycd7S71/9YGZ/Kq/3d5244WrfF6BM4E2d5TMkDFltAXGdLtCVc
-	NB/jJlKf3IUSquOCiV+lEONeh1eS5EtgX5u9N7hU4uewKAEPNrlnTBnhVxz+wmUeVeB6TR3NIIB
-	EA7ITew81g4cktEDJNFp7EdrYz05mZ4pEl0MSaw==
-X-Gm-Gg: ASbGnctYkT8v6DrZtlHtIdSRVQtIXURWdsMozI0Wi7hEQfes5PxJn7iw2OY8vbadAMQ
-	gfJ8MMNPDKGg6xwRwdV3cQUe2wU+Ohe+J2auL5STXOMWotgqyhAbjSeSgTw1FvaTc/staBnONgs
-	oWoiOp855fFkRqd7WA22Op/s2nWbNTAIHZz8EzWUs=
-X-Google-Smtp-Source: AGHT+IF3cEFgXzdw0KASyYJbIgo8CjfwnxgRulQ8O3ZcGZVY1greNWnfIf6SArRocnrBaky8kBjQ3GFF0cDB7r4EhsM=
-X-Received: by 2002:a17:90b:2711:b0:2ee:aed2:c15c with SMTP id
- 98e67ed59e1d1-3056ef08027mr3048369a91.28.1743595129770; Wed, 02 Apr 2025
- 04:58:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZTolIx0x"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743595142; x=1775131142;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=lEgXEGc4oeSLWNn+tNIIYFjH345uNAMY4TODj7ii6hQ=;
+  b=ZTolIx0xUsEnuob2xUOMBzm9gkSjl7TiC3Fy8BWH3y6AisZykptwgWAV
+   SqbbK1EcdJvehytJL+Qr2h4OdpqO0PAZ+XN62+7iZQ/DNPYqrnBD/COjY
+   QRTdJ/56h5cAW1jgsdObZD/2xEc6a1Cl2PY9VAnJhiTA1uDvJsLkIqocO
+   INus2wBz7uuvkhyVpqFTMQRyhVorkAdEUYoZ6cYmcpSGBIrDT10uJ2GKn
+   CvHJWDBZuibyUACp0JVCjxGDhrQz/9xRmOantpdGK9c+3FujR09UT1UyM
+   WDBal8ZGmZIne5RR3qG7nbztx0CzpV/hxaq3wHklTyUDJqS6GZPIG7x3f
+   w==;
+X-CSE-ConnectionGUID: 8g0UH4sWRYWi+wIC0yoR6Q==
+X-CSE-MsgGUID: daA3yRi/Smq922r7eTcjkg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11392"; a="48619360"
+X-IronPort-AV: E=Sophos;i="6.15,182,1739865600"; 
+   d="scan'208";a="48619360"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 04:59:01 -0700
+X-CSE-ConnectionGUID: oW1R1pqPSH+xKuAfFo/IGg==
+X-CSE-MsgGUID: bR0HajQ8S0KfDxFBNx12MA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,182,1739865600"; 
+   d="scan'208";a="126577539"
+Received: from lkp-server02.sh.intel.com (HELO e98e3655d6d2) ([10.239.97.151])
+  by orviesa010.jf.intel.com with ESMTP; 02 Apr 2025 04:58:58 -0700
+Received: from kbuild by e98e3655d6d2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tzwkB-000Afi-03;
+	Wed, 02 Apr 2025 11:58:55 +0000
+Date: Wed, 2 Apr 2025 19:58:03 +0800
+From: kernel test robot <lkp@intel.com>
+To: Hans Zhang <18255117159@163.com>, lpieralisi@kernel.org,
+	bhelgaas@google.com
+Cc: oe-kbuild-all@lists.linux.dev, kw@linux.com,
+	manivannan.sadhasivam@linaro.org, ilpo.jarvinen@linux.intel.com,
+	robh@kernel.org, jingoohan1@gmail.com, thomas.richard@bootlin.com,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Hans Zhang <18255117159@163.com>
+Subject: Re: [v7 3/5] PCI: dwc: Use common PCI host bridge APIs for finding
+ the capabilities
+Message-ID: <202504021958.YeTPCsW1-lkp@intel.com>
+References: <20250402042020.48681-4-18255117159@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250325144252.27403-1-luxu.kernel@bytedance.com> <8cfe938f-5eff-483e-95a1-c4029993e287@arm.com>
-In-Reply-To: <8cfe938f-5eff-483e-95a1-c4029993e287@arm.com>
-From: Xu Lu <luxu.kernel@bytedance.com>
-Date: Wed, 2 Apr 2025 19:58:38 +0800
-X-Gm-Features: AQ5f1JrCmdbPvgxjXXBONrqT24lyujGReyf184CCKAQbeGFTcfNc41gd0CSYnb8
-Message-ID: <CAPYmKFv_qRmsR+4s3evxCJjzVavtNb6UFRX6+JmepUW23X=ZLg@mail.gmail.com>
-Subject: Re: [External] Re: [PATCH] iommu: riscv: Split 8-byte accesses on 32
- bit I/O bus platform
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: tjeznach@rivosinc.com, joro@8bytes.org, will@kernel.org, alex@ghiti.fr, 
-	lihangjing@bytedance.com, xieyongji@bytedance.com, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	iommu@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250402042020.48681-4-18255117159@163.com>
 
-Hi Robin and Jason,
+Hi Hans,
 
-Thanks for your comments and sorry for the late reply.
+kernel test robot noticed the following build errors:
 
-The iohpmcycles register is handled specially because unlike the other
-IOMMU registers, its effective bits lies in the upper half. I want to
-ensure that all effective bits are the last ones to update. For
-example, when updating DDTP register, we update the upper half first
-which only contains its table PPN, and then update its lower half
-which contains the MODE bits which really enable translation. The main
-reason is that when software splits an 8-byte write to two 4-byte
-writes, the hardware is not aware whether it is an 8-byte write or a
-4-byte write when it receives the first write. Thus it will always
-make the value effective every time it receives a 4-byte write.
+[auto build test ERROR on acb4f33713b9f6cadb6143f211714c343465411c]
 
-On Wed, Apr 2, 2025 at 7:29=E2=80=AFPM Robin Murphy <robin.murphy@arm.com> =
-wrote:
->
-> On 2025-03-25 2:42 pm, Xu Lu wrote:
-> > Introduce a new configuration CONFIG_RISCV_IOMMU_32BIT to enable
-> > splitting 8-byte access into 4-byte transactions for hardware platform
-> > whose I/O bus limits access to 4-byte transfers.
-> >
-> > Signed-off-by: Xu Lu <luxu.kernel@bytedance.com>
-> > ---
-> >   drivers/iommu/riscv/Kconfig |  9 +++++++++
-> >   drivers/iommu/riscv/iommu.h | 28 +++++++++++++++++++++++-----
-> >   2 files changed, 32 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/drivers/iommu/riscv/Kconfig b/drivers/iommu/riscv/Kconfig
-> > index c071816f59a6..b7c9ea22d969 100644
-> > --- a/drivers/iommu/riscv/Kconfig
-> > +++ b/drivers/iommu/riscv/Kconfig
-> > @@ -18,3 +18,12 @@ config RISCV_IOMMU_PCI
-> >       def_bool y if RISCV_IOMMU && PCI_MSI
-> >       help
-> >         Support for the PCIe implementation of RISC-V IOMMU architectur=
-e.
-> > +
-> > +config RISCV_IOMMU_32BIT
-> > +     bool "Support 4-Byte Accesses on RISC-V IOMMU Registers"
-> > +     depends on RISCV_IOMMU
-> > +     default n
-> > +     help
-> > +       Support hardware platform whose I/O bus limits access to 4-byte
-> > +       transfers. When enabled, all accesses to IOMMU registers will b=
-e
-> > +       split into 4-byte accesses.
-> > diff --git a/drivers/iommu/riscv/iommu.h b/drivers/iommu/riscv/iommu.h
-> > index 46df79dd5495..0e3552a8142d 100644
-> > --- a/drivers/iommu/riscv/iommu.h
-> > +++ b/drivers/iommu/riscv/iommu.h
-> > @@ -14,6 +14,10 @@
-> >   #include <linux/iommu.h>
-> >   #include <linux/types.h>
-> >   #include <linux/iopoll.h>
-> > +#ifdef CONFIG_RISCV_IOMMU_32BIT
-> > +#include <linux/io-64-nonatomic-hi-lo.h>
-> > +#include <linux/io-64-nonatomic-lo-hi.h>
-> > +#endif
-> >
-> >   #include "iommu-bits.h"
-> >
-> > @@ -69,21 +73,35 @@ void riscv_iommu_disable(struct riscv_iommu_device =
-*iommu);
-> >   #define riscv_iommu_readl(iommu, addr) \
-> >       readl_relaxed((iommu)->reg + (addr))
-> >
-> > -#define riscv_iommu_readq(iommu, addr) \
-> > -     readq_relaxed((iommu)->reg + (addr))
-> > -
-> >   #define riscv_iommu_writel(iommu, addr, val) \
-> >       writel_relaxed((val), (iommu)->reg + (addr))
-> >
-> > +#define riscv_iommu_readl_timeout(iommu, addr, val, cond, delay_us, ti=
-meout_us) \
-> > +     readx_poll_timeout(readl_relaxed, (iommu)->reg + (addr), val, con=
-d, \
-> > +                        delay_us, timeout_us)
-> > +
-> > +#ifndef CONFIG_RISCV_IOMMU_32BIT
-> > +#define riscv_iommu_readq(iommu, addr) \
-> > +     readq_relaxed((iommu)->reg + (addr))
-> > +
-> >   #define riscv_iommu_writeq(iommu, addr, val) \
-> >       writeq_relaxed((val), (iommu)->reg + (addr))
-> >
-> >   #define riscv_iommu_readq_timeout(iommu, addr, val, cond, delay_us, t=
-imeout_us) \
-> >       readx_poll_timeout(readq_relaxed, (iommu)->reg + (addr), val, con=
-d, \
-> >                          delay_us, timeout_us)
-> > +#else /* CONFIG_RISCV_IOMMU_32BIT */
-> > +#define riscv_iommu_readq(iommu, addr) \
-> > +     hi_lo_readq_relaxed((iommu)->reg + (addr))
-> >
-> > -#define riscv_iommu_readl_timeout(iommu, addr, val, cond, delay_us, ti=
-meout_us) \
-> > -     readx_poll_timeout(readl_relaxed, (iommu)->reg + (addr), val, con=
-d, \
-> > +#define riscv_iommu_writeq(iommu, addr, val) \
-> > +     ((addr =3D=3D RISCV_IOMMU_REG_IOHPMCYCLES) ? \
-> > +      lo_hi_writeq_relaxed((val), (iommu)->reg + (addr)) : \
-> > +      hi_lo_writeq_relaxed((val), (iommu)->reg + (addr)))
->
-> Echoing Jason's comment, what is this even trying to achieve? Nothing in
-> the spec suggests that the cycle counter register is functionally
-> different from the other PMU counter registers (other than its
-> self-contained overflow bit).
->
-> It is not, in general, safe to do a split write to a running counter
-> either way - low-high vs. high-low just moves the problem around,
-> changing *which* combinations of values are problematic and capable of
-> overflowing into each other between the writes. If the PMU driver can't
-> write counters atomically, it will need to ensure that it only ever
-> write them while stopped (at which point the order surely shouldn't
-> matter). Conversely, though, reading from running counters is a bit more
-> reasonable, but it needs more than just hi_lo_readq to guarantee it's
-> not got a torn result.
+url:    https://github.com/intel-lab-lkp/linux/commits/Hans-Zhang/PCI-Refactor-capability-search-into-common-macros/20250402-122544
+base:   acb4f33713b9f6cadb6143f211714c343465411c
+patch link:    https://lore.kernel.org/r/20250402042020.48681-4-18255117159%40163.com
+patch subject: [v7 3/5] PCI: dwc: Use common PCI host bridge APIs for finding the capabilities
+config: loongarch-randconfig-001-20250402 (https://download.01.org/0day-ci/archive/20250402/202504021958.YeTPCsW1-lkp@intel.com/config)
+compiler: loongarch64-linux-gcc (GCC) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250402/202504021958.YeTPCsW1-lkp@intel.com/reproduce)
 
-You are right. It is more appropriate to ensure update iohpmcycles
-with cycle counting disabled. I will remove this redundant branch in
-the next version.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504021958.YeTPCsW1-lkp@intel.com/
 
->
-> Thanks,
-> Robin.
->
-> > +
-> > +#define riscv_iommu_readq_timeout(iommu, addr, val, cond, delay_us, ti=
-meout_us) \
-> > +     readx_poll_timeout(hi_lo_readq_relaxed, (iommu)->reg + (addr), va=
-l, cond, \
-> >                          delay_us, timeout_us)
-> > +#endif /* CONFIG_RISCV_IOMMU_32BIT */
-> >
-> >   #endif
->
+All errors (new ones prefixed by >>):
 
-Best regards,
-Xu Lu
+   In file included from drivers/pci/controller/dwc/pcie-designware.c:23:
+   drivers/pci/controller/dwc/pcie-designware.c: In function 'dw_pcie_find_capability':
+>> drivers/pci/controller/dwc/pcie-designware.c:218:38: error: 'pcie' undeclared (first use in this function); did you mean 'pci'?
+     218 |                                      pcie);
+         |                                      ^~~~
+   drivers/pci/controller/dwc/../../pci.h:114:18: note: in definition of macro 'PCI_FIND_NEXT_CAP_TTL'
+     114 |         read_cfg(args, __pos, 1, (u32 *)&__pos);                        \
+         |                  ^~~~
+   drivers/pci/controller/dwc/pcie-designware.c:218:38: note: each undeclared identifier is reported only once for each function it appears in
+     218 |                                      pcie);
+         |                                      ^~~~
+   drivers/pci/controller/dwc/../../pci.h:114:18: note: in definition of macro 'PCI_FIND_NEXT_CAP_TTL'
+     114 |         read_cfg(args, __pos, 1, (u32 *)&__pos);                        \
+         |                  ^~~~
+   drivers/pci/controller/dwc/pcie-designware.c: In function 'dw_pcie_find_ext_capability':
+   drivers/pci/controller/dwc/pcie-designware.c:224:71: error: 'pcie' undeclared (first use in this function); did you mean 'pci'?
+     224 |         return PCI_FIND_NEXT_EXT_CAPABILITY(dw_pcie_read_cfg, 0, cap, pcie);
+         |                                                                       ^~~~
+   drivers/pci/controller/dwc/../../pci.h:156:34: note: in definition of macro 'PCI_FIND_NEXT_EXT_CAPABILITY'
+     156 |                 __ret = read_cfg(args, __pos, 4, &__header);                    \
+         |                                  ^~~~
+
+
+vim +218 drivers/pci/controller/dwc/pcie-designware.c
+
+   214	
+   215	u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap)
+   216	{
+   217		return PCI_FIND_NEXT_CAP_TTL(dw_pcie_read_cfg, PCI_CAPABILITY_LIST, cap,
+ > 218					     pcie);
+   219	}
+   220	EXPORT_SYMBOL_GPL(dw_pcie_find_capability);
+   221	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
