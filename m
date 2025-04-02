@@ -1,241 +1,108 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E146FFC0A;
-	Wed,  2 Apr 2025 15:31:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D223C2E3372;
+	Wed,  2 Apr 2025 15:32:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743607918; cv=none; b=eOPuS5Gsv1eZytZcNrADdUABONOEiySIhPTpc1jo1qBvpTAkegsfkBuB0lNjhPt7SmG1OGmBnGIl1LDvcjTyMahoegxEwH459+3aH6g2O2mAHdfXchDmIqYDnv54qaFCBe0s2qqRyIUYBSM2msWyUQQNzKgpeDQsNYwl3np/O78=
+	t=1743607975; cv=none; b=GLii4fECrMYo/oW/0n4XZZYX+lK0Zxpfm5EGBCjkzaNzXN/DCq9nWn6joJ89M/wHCPBZ1RjNLoaWAKGlAGHivY+d47TMYlVyQUKy55tuz4gXQHJN7MboP+b65c/jSmzhigzqTi6jLahfSgnBbJ6KkZumATxkVcVQYMGWOJD2zjA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743607918; c=relaxed/simple;
-	bh=ZvaC7lpXSOuI4dB4ZlU0/joC5WBCSTHIFAP5Hov+n9s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=STB5Bh+j332Dku9HLAUCuGvHN7MveR1LgXfEbIMfKKg1rJ+1AhIBMvu05OM5njhriZWanBAf75/duVu8+BySJrquy/Z2oI9+SHF1UNPXjKb5iYBZdN5ItdhAo5B2Y5TJ+koX2QKYOnSMlzTmAZDEeW58BQNzwJiBke9x61R+ihQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=KWGM4J1m; arc=none smtp.client-ip=117.135.210.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1743607975; c=relaxed/simple;
+	bh=CVms+Eo1cvl/ek/0PwFSlyV0gNJLoB6YTEI8vRdZmx0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=us1k4AUmjXzonTeMi2M4IqdFZDg0cbG7z7LM3Uvo1Ul91zBIINqrJre4ywzZWP0l6NO4QhFcOvhmMr+8Q26bP2xt+5QGtZxRmj644KQdTmF2Ljcfi0YfF8vx8YBhWUeX8v7OJJXezYtJQVaJX/KIDjtW+mSkqrve0XU4ZSunrzY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZsjZmS3q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="KWGM4J1m"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=4l39NhV8qPw2Wptk13TuozTkwyJfRxy735w154HQJj0=;
-	b=KWGM4J1mEKkLeIIYNTeWY+a2WJDo9xXJ6fCGyasp8oXLKX6w2U9x2iprMzvh23
-	fRlisNkFi9JkkRNTkT4fsRf4/OjssLgnnY6B1pz8U1OFHlh3u0M9EDTi+61XP36J
-	t1SSubrhLSiiOTmuwSz5RmPOlKQ7LH3TVlU2cN5wnXCHE=
-Received: from [192.168.71.89] (unknown [])
-	by gzga-smtp-mtada-g0-3 (Coremail) with SMTP id _____wBnF84+WO1nveRSDg--.44645S2;
-	Wed, 02 Apr 2025 23:31:11 +0800 (CST)
-Message-ID: <6075b776-d2be-49d3-8321-e6af66781709@163.com>
-Date: Wed, 2 Apr 2025 23:31:10 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZsjZmS3q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F61EC4CEDD;
+	Wed,  2 Apr 2025 15:32:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743607975;
+	bh=CVms+Eo1cvl/ek/0PwFSlyV0gNJLoB6YTEI8vRdZmx0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZsjZmS3qZApuYKUw7DxfubpBy7ZRq/vJGaG5nbuA/6jSX53d8e0iWoDOU8rJnHjro
+	 0s8JLFOH5pQx7HYDSzBHjGzD/R5zGaJqTezKWchYSscwClZVFT9V4lDSPr4uMtLIDO
+	 HVsudLzFfzvr4w/oONOrejnOXIwcae22nV1O1HSiMITWo8JzHC38qINeT/9AKkm+Ib
+	 DqLF/GRx2aoRtWCsGEGuZLG27/eJ8nq4AJyltMUWTZfoWWN8TgIHGYmsNXggOTQuio
+	 biXY941wSFh65Hvo52SmzcFoe5fzwv4HWEjumTLEhohqU6yB+FSY9s37JU3MOFmBrr
+	 4g1ai4KLtE/KQ==
+Date: Wed, 2 Apr 2025 17:32:48 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: jack@suse.cz, peterz@infradead.org
+Cc: Ard Biesheuvel <ardb@kernel.org>, linux-efi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, James Bottomley <James.Bottomley@hansenpartnership.com>, 
+	mcgrof@kernel.org, hch@infradead.org, david@fromorbit.com, rafael@kernel.org, 
+	djwong@kernel.org, pavel@kernel.org, mingo@redhat.com, will@kernel.org, 
+	boqun.feng@gmail.com, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v2 2/4] fs: allow all writers to be frozen
+Message-ID: <20250402-melden-kindisch-8ea1b8c62bb4@brauner>
+References: <20250402-work-freeze-v2-0-6719a97b52ac@kernel.org>
+ <20250402-work-freeze-v2-2-6719a97b52ac@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [v7 1/5] PCI: Refactor capability search into common macros
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: lpieralisi@kernel.org, bhelgaas@google.com, kw@linux.com,
- manivannan.sadhasivam@linaro.org, robh@kernel.org, jingoohan1@gmail.com,
- thomas.richard@bootlin.com, linux-pci@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>
-References: <20250402042020.48681-1-18255117159@163.com>
- <20250402042020.48681-2-18255117159@163.com>
- <909653ac-7ba2-9da7-f519-3d849146f433@linux.intel.com>
-Content-Language: en-US
-From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <909653ac-7ba2-9da7-f519-3d849146f433@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wBnF84+WO1nveRSDg--.44645S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW3XrW3CFykXFyfZrWDZFWkJFb_yoW7Cw4xpr
-	n8CF1SyrWkJF42kwn7X3WUK342gFZ7Aayq934fGw1UXFykC3WxGr4FkF1agFy2yrZrAFy5
-	Xr1q93Z5CanIyFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07U3739UUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOh4jo2ftVsIlbAAAsz
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250402-work-freeze-v2-2-6719a97b52ac@kernel.org>
 
-
-
-On 2025/4/2 20:42, Ilpo Järvinen wrote:
-> On Wed, 2 Apr 2025, Hans Zhang wrote:
+On Wed, Apr 02, 2025 at 04:07:32PM +0200, Christian Brauner wrote:
+> During freeze/thaw we need to be able to freeze all writers during
+> suspend/hibernate. Otherwise tasks such as systemd-journald that mmap a
+> file and write to it will not be frozen after we've already frozen the
+> filesystem.
 > 
->> Introduce PCI_FIND_NEXT_CAP_TTL and PCI_FIND_NEXT_EXT_CAPABILITY macros
->> to consolidate duplicate PCI capability search logic found throughout the
->> driver tree. This refactoring:
->>
->>    1. Eliminates code duplication in capability scanning routines
->>    2. Provides a standardized, maintainable implementation
->>    3. Reduces error-prone copy-paste implementations
->>    4. Maintains identical functionality to existing code
->>
->> The macros abstract the low-level capability register scanning while
->> preserving the existing PCI configuration space access patterns. They will
->> enable future conversions of multiple capability search implementations
->> across various drivers (e.g., PCI core, controller drivers) to use
->> this centralized logic.
->>
->> Signed-off-by: Hans Zhang <18255117159@163.com>
->> ---
->>   drivers/pci/pci.h             | 81 +++++++++++++++++++++++++++++++++++
->>   include/uapi/linux/pci_regs.h |  2 +
->>   2 files changed, 83 insertions(+)
->>
->> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
->> index 2e9cf26a9ee9..f705b8bd3084 100644
->> --- a/drivers/pci/pci.h
->> +++ b/drivers/pci/pci.h
->> @@ -89,6 +89,87 @@ bool pcie_cap_has_lnkctl(const struct pci_dev *dev);
->>   bool pcie_cap_has_lnkctl2(const struct pci_dev *dev);
->>   bool pcie_cap_has_rtctl(const struct pci_dev *dev);
->>   
->> +/* Standard Capability finder */
->> +/**
->> + * PCI_FIND_NEXT_CAP_TTL - Find a PCI standard capability
->> + * @read_cfg: Function pointer for reading PCI config space
->> + * @start: Starting position to begin search
->> + * @cap: Capability ID to find
->> + * @args: Arguments to pass to read_cfg function
->> + *
->> + * Iterates through the capability list in PCI config space to find
->> + * the specified capability. Implements TTL (time-to-live) protection
->> + * against infinite loops.
->> + *
->> + * Returns: Position of the capability if found, 0 otherwise.
->> + */
->> +#define PCI_FIND_NEXT_CAP_TTL(read_cfg, start, cap, args...)		\
->> +({									\
->> +	u8 __pos = (start);						\
->> +	int __ttl = PCI_FIND_CAP_TTL;					\
->> +	u16 __ent;							\
->> +	u8 __found_pos = 0;						\
->> +	u8 __id;							\
->> +									\
->> +	read_cfg(args, __pos, 1, (u32 *)&__pos);			\
->> +									\
->> +	while (__ttl--) {						\
->> +		if (__pos < PCI_STD_HEADER_SIZEOF)			\
->> +			break;						\
->> +		__pos = ALIGN_DOWN(__pos, 4);				\
->> +		read_cfg(args, __pos, 2, (u32 *)&__ent);		\
->> +		__id = FIELD_GET(PCI_CAP_ID_MASK, __ent);		\
->> +		if (__id == 0xff)					\
->> +			break;						\
->> +		if (__id == (cap)) {					\
->> +			__found_pos = __pos;				\
->> +			break;						\
->> +		}							\
->> +		__pos = FIELD_GET(PCI_CAP_LIST_NEXT_MASK, __ent);	\
+> This has some risk of not being able to freeze processes in case a
+> process has acquired SB_FREEZE_PAGEFAULT under mmap_sem or
+> SB_FREEZE_INTERNAL under some other filesytem specific lock. If the
+> filesystem is frozen, a task can block on the frozen filesystem with
+> e.g., mmap_sem held. If some other task then blocks on grabbing that
+> mmap_sem, hibernation ill fail because it is unable to hibernate a task
+> holding mmap_sem. This could be fixed by making a range of filesystem
+> related locks use freezable sleeping. That's impractical and not
+> warranted just for suspend/hibernate. Assume that this is an infrequent
+> problem and we've given userspace a way to skip filesystem freezing
+> through a sysfs file.
 > 
-> Could you please separate the coding style cleanups into own patch that
-> is before the actual move patch. IMO, all those cleanups can be in the
-> same patch.
+> Signed-off-by: Christian Brauner <brauner@kernel.org>
+> ---
+>  include/linux/fs.h | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 > 
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+> index b379a46b5576..1edcba3cd68e 100644
+> --- a/include/linux/fs.h
+> +++ b/include/linux/fs.h
+> @@ -1781,8 +1781,7 @@ static inline void __sb_end_write(struct super_block *sb, int level)
+>  
+>  static inline void __sb_start_write(struct super_block *sb, int level)
+>  {
+> -	percpu_down_read_freezable(sb->s_writers.rw_sem + level - 1,
+> -				   level == SB_FREEZE_WRITE);
+> +	percpu_down_read_freezable(sb->s_writers.rw_sem + level - 1, true);
+>  }
 
-Hi Ilpo,
+Jan, one more thought about freezability here. We know that there will
+can be at least one process during hibernation that ends up generating
+page faults and that's systemd-journald. When systemd-sleep requests
+writing a hibernation image via /sys/power/ files it will inevitably end
+up freezing systemd-journald and it may be generating a page fault with
+->mmap_lock held. systemd-journald is now sleeping with
+SB_FREEZE_PAGEFAULT and TASK_FREEZABLE. We know this can cause
+hibernation to fail. That part is fine. What isn't is that we will very
+likely always trigger:
 
-Thanks your for reply. I don't understand. Is it like this?
+#ifdef CONFIG_LOCKDEP
+        /*
+         * It's dangerous to freeze with locks held; there be dragons there.
+         */
+        if (!(state & __TASK_FREEZABLE_UNSAFE))
+                WARN_ON_ONCE(debug_locks && p->lockdep_depth);
+#endif
 
-#define PCI_FIND_NEXT_CAP_TTL(read_cfg, start, cap, args...)		\
-({									\
-	int __ttl = PCI_FIND_CAP_TTL;					\
-	u8 __id, __found_pos = 0;					\
-	u8 __pos = (start);						\
-	u16 __ent;							\
-									\
-	read_cfg(args, __pos, 1, (u32 *)&__pos);			\
-									\
-	while (__ttl--) {						\
-		if (__pos < PCI_STD_HEADER_SIZEOF)			\
-			break;						\
-									\
-		__pos = ALIGN_DOWN(__pos, 4);				\
-		read_cfg(args, __pos, 2, (u32 *)&__ent);		\
-									\
-		__id = FIELD_GET(PCI_CAP_ID_MASK, __ent);		\
-		if (__id == 0xff)					\
-			break;						\
-									\
-		if (__id == (cap)) {					\
-			__found_pos = __pos;				\
-			break;						\
-		}							\
-									\
-		__pos = FIELD_GET(PCI_CAP_LIST_NEXT_MASK, __ent);	\
-	}								\
-	__found_pos;							\
-})
+with lockdep enabled.
 
-> You also need to add #includes for the defines you now started to use.
-> 
-
-Is that what you mean?
-
-+#include <linux/bitfield.h>
-+#include <linux/align.h>
-+#include <uapi/linux/pci_regs.h>
-
-Best regards,
-Hans
-
->> +	}								\
->> +	__found_pos;							\
->> +})
->> +
->> +/* Extended Capability finder */
->> +/**
->> + * PCI_FIND_NEXT_EXT_CAPABILITY - Find a PCI extended capability
->> + * @read_cfg: Function pointer for reading PCI config space
->> + * @start: Starting position to begin search (0 for initial search)
->> + * @cap: Extended capability ID to find
->> + * @args: Arguments to pass to read_cfg function
->> + *
->> + * Searches the extended capability space in PCI config registers
->> + * for the specified capability. Implements TTL protection against
->> + * infinite loops using a calculated maximum search count.
->> + *
->> + * Returns: Position of the capability if found, 0 otherwise.
->> + */
->> +#define PCI_FIND_NEXT_EXT_CAPABILITY(read_cfg, start, cap, args...)		\
->> +({										\
->> +	u16 __pos = (start) ?: PCI_CFG_SPACE_SIZE;				\
->> +	u16 __found_pos = 0;							\
->> +	int __ttl, __ret;							\
->> +	u32 __header;								\
->> +										\
->> +	__ttl = (PCI_CFG_SPACE_EXP_SIZE - PCI_CFG_SPACE_SIZE) / 8;		\
->> +	while (__ttl-- > 0 && __pos >= PCI_CFG_SPACE_SIZE) {			\
->> +		__ret = read_cfg(args, __pos, 4, &__header);			\
->> +		if (__ret != PCIBIOS_SUCCESSFUL)				\
->> +			break;							\
->> +										\
->> +		if (__header == 0)						\
->> +			break;							\
->> +										\
->> +		if (PCI_EXT_CAP_ID(__header) == (cap) && __pos != start) {	\
->> +			__found_pos = __pos;					\
->> +			break;							\
->> +		}								\
->> +										\
->> +		__pos = PCI_EXT_CAP_NEXT(__header);				\
->> +	}									\
->> +	__found_pos;								\
->> +})
->> +
->>   /* Functions internal to the PCI core code */
->>   
->>   #ifdef CONFIG_DMI
->> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
->> index 3445c4970e4d..a11ebbab99fc 100644
->> --- a/include/uapi/linux/pci_regs.h
->> +++ b/include/uapi/linux/pci_regs.h
->> @@ -206,6 +206,8 @@
->>   /* 0x48-0x7f reserved */
->>   
->>   /* Capability lists */
->> +#define PCI_CAP_ID_MASK		0x00ff
->> +#define PCI_CAP_LIST_NEXT_MASK	0xff00
->>   
->>   #define PCI_CAP_LIST_ID		0	/* Capability ID */
->>   #define  PCI_CAP_ID_PM		0x01	/* Power Management */
->>
-> 
-
+So we really actually need percpu_rswem_read_freezable_unsafe(), i.e.,
+TASK_FREEZABLE_UNSAFE.
