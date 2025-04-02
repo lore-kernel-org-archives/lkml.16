@@ -1,194 +1,280 @@
-Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
+Received: from mail-pg1-f231.google.com (mail-pg1-f231.google.com [209.85.215.231])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B52D2AF19;
-	Wed,  2 Apr 2025 19:41:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D9031EE013
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 19:41:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.231
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743622871; cv=none; b=PQz1LZIIBpkt57j82sJYzbcg8WMZbwEkxAy8wNfZfqg6KRZ1DHUgqDXVL/vioD5HUlccCQbRSU2/6eMExyG/e3nll8pCrwQLqTpgA/mdVIW4gCEALhTJje5keo6ze+sJrT41sZU5XbmV0ZKGowCTygJLSmOi9zDkXJVawg0CVpo=
+	t=1743622875; cv=none; b=T7z5SLbADgxwOef8XO/B8m7dIet3xkmRyCYR74AnimJBlBY91xcEHnqg7fEH6lkI6gVl5at1BvldkbDNElaeeRMQwRHTlrFxvykUoXmXNhr6lmBH1rJY7bGOGS2JI4HvBtiyD4mwovuUaqljMf8nCpf0td2cB26D0RMg3/X6F08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743622871; c=relaxed/simple;
-	bh=HQYrUf3Z4hmCPC+YCNHa1UrZ8jCM/O8ktaJyaaK/ih0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cjsbhG6NAgVfVfnApBM6JFkOdNb3Mjjnh6AYet03/DNZnTSe8p4yGzXn/XKIrokdoYLWwZ8Et7szqp3h/D8/CqQJ1oO1KfVBtofXJR4Xdt9gI2nxW75veci54l7I64WTq40RiOwTNBSdOKT11xDJtuxkJZ1LPf3ICWUc0wv1Ieo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QPRpkg7Y; arc=none smtp.client-ip=209.85.166.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743622875; c=relaxed/simple;
+	bh=iDwhdKTHkiVI/kVWHgxcQk682Wh2c/MBtb4WhOisM3I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DK9HmdSaPctr3qNrJ1ClZA1Lb1OkpxOmu+rg0+YvoONFnTbaqWUdFWgs3nxmkrFMeM/sFWTEm9GtZVvISVEYJFn/mQFQVTIswlVkciam0cmZ+h9bjwnI5rmZTHDSTMvCNo2ofNmQZqILMAU8DjOY73/kpY+ujW0h99gYc6seQ3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=XG4C9DQj; arc=none smtp.client-ip=209.85.215.231
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QPRpkg7Y"
-Received: by mail-il1-f176.google.com with SMTP id e9e14a558f8ab-3cfce97a3d9so1023175ab.2;
-        Wed, 02 Apr 2025 12:41:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="XG4C9DQj"
+Received: by mail-pg1-f231.google.com with SMTP id 41be03b00d2f7-af9a7717163so198123a12.2
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 12:41:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743622867; x=1744227667; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UUS1J/z9kQSq8/4qkw4zIETjzLEsRP7cJOaot+HzQu4=;
-        b=QPRpkg7YO04K4i4HBCrRyMVHktAD3FvaDpxWS7ECioowhpKNlFAIvQy66WHY20T2lh
-         oLw7NtNSXU+l7WF0nQVP4jO6hEsvFwsbOEUbVIuNJBRhFm43OizYArC8bksAh9xb7/p4
-         INSrSASlpz5I7x10vFlmUdNXiue5SKPvepI/Dj+R00itQPO0PeR5n+6OoyqNCky5wYMT
-         pvuAz4dgbe8cQzaVxkCqgH7Kac2a84Cfo8HaVlId7Ufo7YiHmprKp6Qmna/RffFelPTg
-         7745ijdr1V1gtTgtX1AF9ZSf9Wix6LYi54i2STKYx9rYq49csLwx4O0PD2PPbxFxd2d0
-         JOqA==
+        d=purestorage.com; s=google2022; t=1743622871; x=1744227671; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=qxIY3Gf2m8j6PJ9snlE5RC50f7NMmTNygP+VovwJ4NM=;
+        b=XG4C9DQjBmejArNQ9fOyxTiH/xy6NgqJTdyPQmwJBUDLTOQ6Qvq1Q5M153CpisJu4V
+         CuuR8zp6XBZ8zHzpa62oO64QFbx9qN4bPtf80EQyOheksGnY5O4gHaB3UWRu6mOHdR9h
+         T0ZMtcssfaTu+4KgbgCmPQEZURnjMCfUGn1Dch4cKjxN5jqCr2IhMmp3s3vfdESb2PKN
+         ijt5F/sHH1i+Gv9vLuA9OLfbst5LhSF6VTZYHwhhKes5bp7GRCuyGFpjoGZ+WZ6/Uq8m
+         Jxz/4xtECvCXNqZzpiPr0j2KFWM3gLtEH30cTwPcwqxIKAGo14B7y9ln3am630KlAok9
+         EQag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743622867; x=1744227667;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UUS1J/z9kQSq8/4qkw4zIETjzLEsRP7cJOaot+HzQu4=;
-        b=qW6i+8uk/y4nwjd5ddf/+cNGrNew+yWlVQHonE+tBJIyRTxmoqey1OV7WZqsBMp0G8
-         96Roetg1naUkIJEbbxzW6CEzJwDCD43Fur5afbQnvd+NJ5mJlFV7HRfsdd9aFgzW3rIG
-         BLTf1kLhVsQ8MScyxYAFDfwspJhhOFR0DoxZjqguxB7BFjNvmgrKlFg7L802kj1aBrCY
-         EVM1AUkN8K6tihaM6EmIrvzIg5KjlgsqRhwCOG/BL9edRNUjvWKurivLNEpYEfbflw04
-         pEicrfEsW7uxYlqT+BdXVntPbeMVsjxD7FPpu48gpR+KE5yRvoVXVUYis4HhAYWX6Eaz
-         OrYw==
-X-Forwarded-Encrypted: i=1; AJvYcCUV/PZmRQwIbViIaLEpn03Zvt8zoUgTeUUr6oZTsAA4XcczyfUxM+kIYz9lDXPk9vhhaCtwN7nq@vger.kernel.org, AJvYcCVUjyXIkWhKKe/zR63dtgV30PEIeeN6PZ5+Pjid7Xf7gq6yB1UD5eDUbsyAipMo97qB8b7evMFH+4UoNg==@vger.kernel.org, AJvYcCXuOCXNUyD6VeKDErxWKmc9hrlAuFsgdsH6/q0K4paDtibWqywbeBBQZ8lwd63felAwSaVTtFInSzfNOgs=@vger.kernel.org, AJvYcCXuiRJYDuXNdujpS5grrZS+dSvJ9tLrIITVd3lITsAKS8U8RrjaCN9LkTrsHHrexQfHnwLVtSQJ@vger.kernel.org
-X-Gm-Message-State: AOJu0YzM81CJxuP+oLf+VTeEwH5I8aXj8xh4itJyKWFUQbQKuRdHXWQf
-	wpXKVGl+/b5SmPkiCrCS4ZtAgg5GZPe/Qi8Nb0/sZ9A6g4FyGJYdC+WJFvfmgOuq5wkCDK2sQ/4
-	1PuVNEeEgvmFG8v14umYiuUjElvDa+wlZ
-X-Gm-Gg: ASbGncu3qYUw6iipZPWmVzIEByY8cld9eBpo01A9W05+VUK/3awC048Z8j+Y73Tiezb
-	0bamOt1CJm5cAeEg+DfGPWm+ZmWR950M+Xyl5cHc6iLZkB8eFN+GnhFua22ebX3SzUp6vRdrYPU
-	eDPCGEAWTmnXA8s+TQvNv8tAGjmew6cq/Zoen8zWI=
-X-Google-Smtp-Source: AGHT+IEWfma6X5ez4B84XHaA8Hg5GU9L8meSLHJ4iYrb/qIwt8c4/Ivb+o9zQV621QfArJuMXBAKElx8oRo/JcJFASg=
-X-Received: by 2002:a05:6e02:3a04:b0:3d6:cbed:3302 with SMTP id
- e9e14a558f8ab-3d6dd76c89emr2439975ab.2.1743622867040; Wed, 02 Apr 2025
- 12:41:07 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743622871; x=1744227671;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qxIY3Gf2m8j6PJ9snlE5RC50f7NMmTNygP+VovwJ4NM=;
+        b=rEN7olAaMl5mc4mvFUUa1Nbgm8v94rVKKN72Meo5XzP9lPmAY7VL3/vxUdzlRnF+q3
+         nBgPcqZi8vbMCfOzoiH4/neE0nmLgWCsLQ/Ii1o4WVefoAoPD4qwjy2EoLo95B4XF8Q7
+         Y2+uQwCJBpaJxBRwVnMIPDoExYCuOJlC7z3J6KDzmZHtc+DBe0SoC3fQOSz6vus33TQU
+         5DJgAU6iqqUR0Qjfjij+FpDsQGx45jVID/bMCSohxAfjddxFYfySBFJ0LEYGfKrd7r9q
+         nbeghOH5lECHu7JgUNU/OBjHBQyi8CIU9gwZZ8IUj0APbhWGhsFp+bi1n3DPAcg/Io57
+         yynw==
+X-Forwarded-Encrypted: i=1; AJvYcCWMMAUQbeG0MerntEYKSUcHEM3BAMgXWk/iAIwvMd4ugT3Fep30A4LbLQQiwpq07X5x3YPlmu8wr3lWADg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwCwnAAQWJqkeM2FGH/RYq+Iu1utkXzeJlnHHWBZkQYiuTMvyok
+	GZGxD8DZPTUFZG3oIP3fGCCLpw3ks6r4FadExf09CiE3O85YL9RgNY4RUf+UvgzVKG4WM0PJ/uf
+	IYfnZ5wCDkDpqFbKNvmGiK56miTPD5I1T
+X-Gm-Gg: ASbGncsiKgJ31ZRJ4AoYM4Hqjp/3d/Py3nyqrpIkIQLNdCcelKW3mPN3N/jwypE7P8C
+	fKzN/yLtwWDYBInb/OvyktUZmDUPHtVvzmYl3WJWBEym5C39QBy1n/YjmRC7W2WvhNCh33GDah7
+	Omcm4pevZua9PAGLFaWt/dAyejF5ZwKeDUQgFsNFwhoaUw/jMm4BI6CqgM9tKf6QJR2d52t794o
+	FuUZ0JE4r/E+x+8a7lMe0qg0uzdaz0Y7Tp1PXv5rBI3iqKU53y/W1ddUbWcv/DA6ThP0p3T5ehE
+	j/nsQ1gyohxgkjH/yHufz/rgpjte++Fg0fJM8Hi4UAo7ZWDdTA==
+X-Google-Smtp-Source: AGHT+IGPPdi6hp5vbdxdNWj7geNIhxy8tTekIGtN+6m/Tg45W5Kjiga5bCFvHih7NICf+2geQNrTJ/6UhdrZ
+X-Received: by 2002:a05:6a20:9f97:b0:1f5:6680:82b6 with SMTP id adf61e73a8af0-200e4cf887emr4972323637.38.1743622871548;
+        Wed, 02 Apr 2025 12:41:11 -0700 (PDT)
+Received: from c7-smtp-2023.dev.purestorage.com ([208.88.159.128])
+        by smtp-relay.gmail.com with ESMTPS id 41be03b00d2f7-af93b8a7c1esm529907a12.26.2025.04.02.12.41.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Apr 2025 12:41:11 -0700 (PDT)
+X-Relaying-Domain: purestorage.com
+Received: from dev-ushankar.dev.purestorage.com (dev-ushankar.dev.purestorage.com [10.7.70.36])
+	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id D1B503400E5;
+	Wed,  2 Apr 2025 13:41:10 -0600 (MDT)
+Received: by dev-ushankar.dev.purestorage.com (Postfix, from userid 1557716368)
+	id C312FE4018A; Wed,  2 Apr 2025 13:41:10 -0600 (MDT)
+Date: Wed, 2 Apr 2025 13:41:10 -0600
+From: Uday Shankar <ushankar@purestorage.com>
+To: Ming Lei <ming.lei@redhat.com>
+Cc: Shuah Khan <shuah@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+	linux-block@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/4] ublk: improve handling of saturated queues when ublk
+ server exits
+Message-ID: <Z+2S1uxw3/h0EgQx@dev-ushankar.dev.purestorage.com>
+References: <20250325-ublk_timeout-v1-0-262f0121a7bd@purestorage.com>
+ <20250325-ublk_timeout-v1-4-262f0121a7bd@purestorage.com>
+ <Z-OS2_J7o0NKHWmj@fedora>
+ <Z+Q/SNmX+DpVQ5ir@dev-ushankar.dev.purestorage.com>
+ <Z-SoibOdOmzOWB-C@fedora>
+ <Z+sifI6fujsc186S@dev-ushankar.dev.purestorage.com>
+ <Z-y2JGJC56ZhdYHP@fedora>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250402-kasan_slab-use-after-free_read_in_sctp_outq_select_transport-v1-1-da6f5f00f286@igalia.com>
-In-Reply-To: <20250402-kasan_slab-use-after-free_read_in_sctp_outq_select_transport-v1-1-da6f5f00f286@igalia.com>
-From: Xin Long <lucien.xin@gmail.com>
-Date: Wed, 2 Apr 2025 15:40:56 -0400
-X-Gm-Features: AQ5f1JorQaO0HCtrnUXO4s6aGuDFn3xGfel9XaXoLYeySmPI2omcRJXHShX-dDs
-Message-ID: <CADvbK_dTX3c9wgMa8bDW-Hg-5gGJ7sJzN5s8xtGwwYW9FE=rcg@mail.gmail.com>
-Subject: Re: [PATCH] sctp: check transport existence before processing a send primitive
-To: =?UTF-8?Q?Ricardo_Ca=C3=B1uelo_Navarro?= <rcn@igalia.com>
-Cc: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Simon Horman <horms@kernel.org>, kernel-dev@igalia.com, linux-sctp@vger.kernel.org, 
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z-y2JGJC56ZhdYHP@fedora>
 
-On Wed, Apr 2, 2025 at 6:26=E2=80=AFAM Ricardo Ca=C3=B1uelo Navarro <rcn@ig=
-alia.com> wrote:
->
-> sctp_sendmsg() re-uses associations and transports when possible by
-> doing a lookup based on the socket endpoint and the message destination
-> address, and then sctp_sendmsg_to_asoc() sets the selected transport in
-> all the message chunks to be sent.
->
-> There's a possible race condition if another thread triggers the removal
-> of that selected transport, for instance, by explicitly unbinding an
-> address with setsockopt(SCTP_SOCKOPT_BINDX_REM), after the chunks have
-> been set up and before the message is sent. This causes the access to
-> the transport data in sctp_outq_select_transport(), when the association
-> outqueue is flushed, to do a use-after-free read.
->
-The data send path:
+On Wed, Apr 02, 2025 at 11:59:32AM +0800, Ming Lei wrote:
+> On Mon, Mar 31, 2025 at 05:17:16PM -0600, Uday Shankar wrote:
+> > On Thu, Mar 27, 2025 at 09:23:21AM +0800, Ming Lei wrote:
+> > > On Wed, Mar 26, 2025 at 11:54:16AM -0600, Uday Shankar wrote:
+> > > > On Wed, Mar 26, 2025 at 01:38:35PM +0800, Ming Lei wrote:
+> > > > > On Tue, Mar 25, 2025 at 04:19:34PM -0600, Uday Shankar wrote:
+> > > > > > There are currently two ways in which ublk server exit is detected by
+> > > > > > ublk_drv:
+> > > > > > 
+> > > > > > 1. uring_cmd cancellation. If there are any outstanding uring_cmds which
+> > > > > >    have not been completed to the ublk server when it exits, io_uring
+> > > > > >    calls the uring_cmd callback with a special cancellation flag as the
+> > > > > >    issuing task is exiting.
+> > > > > > 2. I/O timeout. This is needed in addition to the above to handle the
+> > > > > >    "saturated queue" case, when all I/Os for a given queue are in the
+> > > > > >    ublk server, and therefore there are no outstanding uring_cmds to
+> > > > > >    cancel when the ublk server exits.
+> > > > > > 
+> > > > > > The second method detects ublk server exit only after a long delay
+> > > > > > (~30s, the default timeout assigned by the block layer). Any
+> > > > > > applications using the ublk device will be left hanging for these 30s
+> > > > > > before seeing an error/knowing anything went wrong. This problem is
+> > > > > > illustrated by running the new test_generic_02 against a ublk_drv which
+> > > > > > doesn't have the fix:
+> > > > > > 
+> > > > > > selftests: ublk: test_generic_02.sh
+> > > > > > dev id is 0
+> > > > > > dd: error writing '/dev/ublkb0': Input/output error
+> > > > > > 1+0 records in
+> > > > > > 0+0 records out
+> > > > > > 0 bytes copied, 30.0611 s, 0.0 kB/s
+> > > > > > DEAD
+> > > > > > dd took 31 seconds to exit (>= 5s tolerance)!
+> > > > > > generic_02 : [FAIL]
+> > > > > > 
+> > > > > > Fix this by instead handling the saturated queue case in the ublk
+> > > > > > character file release callback. This happens during ublk server exit
+> > > > > > and handles the issue much more quickly than an I/O timeout:
+> > > > > 
+> > > > > Another solution is to override default 30sec 'timeout'.
+> > > > 
+> > > > Yes, but that still will introduce unnecessary delays, since it is a
+> > > > polling-based solution (very similar to monitor_work we used to have).
+> > > > Also it will add complexity to the unprivileged case, since that
+> > > > actually cares about timeout and we will have to track the "real"
+> > > > timeout separately.
+> > > > 
+> > > > > 
+> > > > > > 
+> > > > > > selftests: ublk: test_generic_02.sh
+> > > > > > dev id is 0
+> > > > > > dd: error writing '/dev/ublkb0': Input/output error
+> > > > > > 1+0 records in
+> > > > > > 0+0 records out
+> > > > > > 0 bytes copied, 0.0376731 s, 0.0 kB/s
+> > > > > > DEAD
+> > > > > > generic_02 : [PASS]
+> > > > > > 
+> > > > > > Signed-off-by: Uday Shankar <ushankar@purestorage.com>
+> > > > > > ---
+> > > > > >  drivers/block/ublk_drv.c                        | 40 +++++++++++------------
+> > > > > >  tools/testing/selftests/ublk/Makefile           |  1 +
+> > > > > >  tools/testing/selftests/ublk/kublk.c            |  3 ++
+> > > > > >  tools/testing/selftests/ublk/kublk.h            |  3 ++
+> > > > > >  tools/testing/selftests/ublk/null.c             |  4 +++
+> > > > > >  tools/testing/selftests/ublk/test_generic_02.sh | 43 +++++++++++++++++++++++++
+> > > > > >  6 files changed, 72 insertions(+), 22 deletions(-)
+> > > > > > 
+> > > > > > diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
+> > > > > > index c060da409ed8a888b7e414c9065efd2cbd6d57d7..1816b2cac01056dc9d01455759594af43c5f78d6 100644
+> > > > > > --- a/drivers/block/ublk_drv.c
+> > > > > > +++ b/drivers/block/ublk_drv.c
+> > > > > > @@ -1247,8 +1247,6 @@ static void ublk_queue_cmd(struct ublk_queue *ubq, struct request *rq)
+> > > > > >  static enum blk_eh_timer_return ublk_timeout(struct request *rq)
+> > > > > >  {
+> > > > > >  	struct ublk_queue *ubq = rq->mq_hctx->driver_data;
+> > > > > > -	unsigned int nr_inflight = 0;
+> > > > > > -	int i;
+> > > > > >  
+> > > > > >  	if (ubq->flags & UBLK_F_UNPRIVILEGED_DEV) {
+> > > > > >  		if (!ubq->timeout) {
+> > > > > > @@ -1259,26 +1257,6 @@ static enum blk_eh_timer_return ublk_timeout(struct request *rq)
+> > > > > >  		return BLK_EH_DONE;
+> > > > > >  	}
+> > > > > >  
+> > > > > > -	if (!ubq_daemon_is_dying(ubq))
+> > > > > > -		return BLK_EH_RESET_TIMER;
+> > > > > > -
+> > > > > > -	for (i = 0; i < ubq->q_depth; i++) {
+> > > > > > -		struct ublk_io *io = &ubq->ios[i];
+> > > > > > -
+> > > > > > -		if (!(io->flags & UBLK_IO_FLAG_ACTIVE))
+> > > > > > -			nr_inflight++;
+> > > > > > -	}
+> > > > > > -
+> > > > > > -	/* cancelable uring_cmd can't help us if all commands are in-flight */
+> > > > > > -	if (nr_inflight == ubq->q_depth) {
+> > > > > > -		struct ublk_device *ub = ubq->dev;
+> > > > > > -
+> > > > > > -		if (ublk_abort_requests(ub, ubq)) {
+> > > > > > -			schedule_work(&ub->nosrv_work);
+> > > > > > -		}
+> > > > > > -		return BLK_EH_DONE;
+> > > > > > -	}
+> > > > > > -
+> > > > > >  	return BLK_EH_RESET_TIMER;
+> > > > > >  }
+> > > > > >  
+> > > > > > @@ -1351,6 +1329,24 @@ static int ublk_ch_open(struct inode *inode, struct file *filp)
+> > > > > >  static int ublk_ch_release(struct inode *inode, struct file *filp)
+> > > > > >  {
+> > > > > >  	struct ublk_device *ub = filp->private_data;
+> > > > > > +	bool need_schedule = false;
+> > > > > > +	int i;
+> > > > > > +
+> > > > > > +	/*
+> > > > > > +	 * Error out any requests outstanding to the ublk server. This
+> > > > > > +	 * may have happened already (via uring_cmd cancellation), in
+> > > > > > +	 * which case it is not harmful to repeat. But uring_cmd
+> > > > > > +	 * cancellation does not handle queues which are fully saturated
+> > > > > > +	 * (all requests in ublk server), because from the kernel's POV,
+> > > > > > +	 * there are no outstanding uring_cmds to cancel. This code
+> > > > > > +	 * handles such queues.
+> > > > > > +	 */
+> > > > > > +
+> > > > > > +	for (i = 0; i < ub->dev_info.nr_hw_queues; i++)
+> > > > > > +		need_schedule |= ublk_abort_requests(ub, ublk_get_queue(ub, i));
+> > > > > > +
+> > > > > > +	if (need_schedule)
+> > > > > > +		schedule_work(&ub->nosrv_work);
+> > > > > 
+> > > > > ublk_abort_requests() should be called only in case of queue dying,
+> > > > > since ublk server may open & close the char device multiple times.
+> > > > 
+> > > > Sure that is technically possible, however is any real ublk server doing
+> > > > this? Seems like a strange thing to do, and seems reasonable for the
+> > > > driver to transition the device to the nosrv state (dead or recovery,
+> > > > depending on flags) when the char device is closed, since in this case,
+> > > > no one can be handling I/O anymore.
+> > > 
+> > > ublk server should be free to open & close the char device multiple times,
+> > > but you patch limits ublk server to open & close the char device just once.
+> > > 
+> > > The limit looks too strong...
+> > 
+> > Tying a userspace daemon lifetime to the file seems to also be done in
+> > fuse, which is very similar to ublk_drv. See e.g. the description here:
+> > 
+> > https://lore.kernel.org/lkml/20240524064030.4944-1-jefflexu@linux.alibaba.com/T/
+> > 
+> > This seems required to support certain workflows, e.g. using an fdstore
+> > with ublk devices. While we still keep task references in ublk_drv,
+> > these workflows will be broken.
+> > 
+> > I am not familiar with fuse so I don't know for sure, but it sounds like
+> > if the file is closed after some setup is performed, then the connection
+> > is aborted. The analogy in ublk might be - if the file is closed while
+> > the device is LIVE, then we transition to the nosrv state. Otherwise
+> > nothing happens and the file can be reopened freely. This will allow
+> > libublksrv to continue working as it opens/closes the fd early to
+> > determine if it is accessible. Does that sound any better?
+> 
+> Yes, my point is that the close shouldn't delete disk, since it may
+> be one normal close().
+> 
+> Actually I think your patch should work by the following change:
+> 
+> - remove 'schedule_work(&ub->nosrv_work);' done in ublk_ch_release()
+> 
+> - re-initialize each ublk_queue in open()
+> 
+> Then disk won't be deleted, but any IO is `aborted` by ubq->canceling
+> if the char device isn't opened. After the char device is re-opened,
+> everything will become fine.
 
-  sctp_endpoint_lookup_assoc() ->
-  sctp_sendmsg_to_asoc()
+Yes, thanks for the suggestion, but I ideally want to replace the two
+places where we detect nosrv (uring_cmd cancellation and timeout) with
+one new place, instead of adding a third one.
 
-And the transport removal path:
+Please see the new patch at
+https://lore.kernel.org/linux-block/20250402-ublk_timeout-v2-1-249bc5523000@purestorage.com/T/#u
 
-  sctp_sf_do_asconf() ->
-  sctp_process_asconf() ->
-  sctp_assoc_rm_peer()
+It allows multiple open/close as long as device is not LIVE. This is
+similar to fuse and works with current libublksrv implementation, and is
+resilient to accidental/random environmental open/close of the character
+device, so it may be more acceptable.
 
-are both protected by the same socket lock.
+Either way, let's continue discussion on that thread.
 
-Additionally, when a path is removed, sctp_assoc_rm_peer() updates the
-transport of all existing chunks in the send queues (peer->transmitted
-and asoc->outqueue.out_chunk_list) to NULL.
-
-It will be great if you can reproduce the issue locally and help check
-how the potential race occurs.
-
-> This patch addresses this scenario by checking if the transport still
-> exists right after the chunks to be sent are set up to use it and before
-> proceeding to sending them. If the transport was freed since it was
-> found, the send is aborted. The reason to add the check here is that
-> once the transport is assigned to the chunks, deleting that transport
-> is safe, since it will also set chunk->transport to NULL in the affected
-> chunks. This scenario is correctly handled already, see Fixes below.
->
-> The bug was found by a private syzbot instance (see the error report [1]
-> and the C reproducer that triggers it [2]).
->
-> Link: https://people.igalia.com/rcn/kernel_logs/20250402__KASAN_slab-use-=
-after-free_Read_in_sctp_outq_select_transport.txt [1]
-> Link: https://people.igalia.com/rcn/kernel_logs/20250402__KASAN_slab-use-=
-after-free_Read_in_sctp_outq_select_transport__repro.c [2]
-> Cc: stable@vger.kernel.org
-> Fixes: df132eff4638 ("sctp: clear the transport of some out_chunk_list ch=
-unks in sctp_assoc_rm_peer")
-> Signed-off-by: Ricardo Ca=C3=B1uelo Navarro <rcn@igalia.com>
-> ---
->  net/sctp/socket.c | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
->
-> diff --git a/net/sctp/socket.c b/net/sctp/socket.c
-> index 36ee34f483d703ffcfe5ca9e6cc554fba24c75ef..9c5ff44fa73cae6a6a0479080=
-0cc33dfa08a8da9 100644
-> --- a/net/sctp/socket.c
-> +++ b/net/sctp/socket.c
-> @@ -1787,17 +1787,24 @@ static int sctp_sendmsg_check_sflags(struct sctp_=
-association *asoc,
->         return 1;
->  }
->
-> +static union sctp_addr *sctp_sendmsg_get_daddr(struct sock *sk,
-> +                                              const struct msghdr *msg,
-> +                                              struct sctp_cmsgs *cmsgs);
-> +
->  static int sctp_sendmsg_to_asoc(struct sctp_association *asoc,
->                                 struct msghdr *msg, size_t msg_len,
->                                 struct sctp_transport *transport,
->                                 struct sctp_sndrcvinfo *sinfo)
->  {
-> +       struct sctp_transport *aux_transport =3D NULL;
->         struct sock *sk =3D asoc->base.sk;
-> +       struct sctp_endpoint *ep =3D sctp_sk(sk)->ep;
->         struct sctp_sock *sp =3D sctp_sk(sk);
->         struct net *net =3D sock_net(sk);
->         struct sctp_datamsg *datamsg;
->         bool wait_connect =3D false;
->         struct sctp_chunk *chunk;
-> +       union sctp_addr *daddr;
->         long timeo;
->         int err;
->
-> @@ -1869,6 +1876,15 @@ static int sctp_sendmsg_to_asoc(struct sctp_associ=
-ation *asoc,
->                 sctp_set_owner_w(chunk);
->                 chunk->transport =3D transport;
->         }
-> +       /* Fail if transport was deleted after lookup in sctp_sendmsg() *=
-/
-> +       daddr =3D sctp_sendmsg_get_daddr(sk, msg, NULL);
-> +       if (daddr) {
-> +               sctp_endpoint_lookup_assoc(ep, daddr, &aux_transport);
-> +               if (!aux_transport || aux_transport !=3D transport) {
-> +                       sctp_datamsg_free(datamsg);
-> +                       goto err;
-> +               }
-> +       }
->
-We should avoid an extra hashtable lookup on this hot TX path, as it would
-negatively impact performance.
-
-Thanks.
-
->         err =3D sctp_primitive_SEND(net, asoc, datamsg);
->         if (err) {
->
-> ---
-> base-commit: 38fec10eb60d687e30c8c6b5420d86e8149f7557
-> change-id: 20250402-kasan_slab-use-after-free_read_in_sctp_outq_select_tr=
-ansport-46c9c30bcb7d
->
