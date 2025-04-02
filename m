@@ -1,254 +1,67 @@
-Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70B7C1F12FC
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 21:11:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD96742A87
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 21:12:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743628262; cv=none; b=N4bKGgZTRWr1Gs9ancSKzltps8Bi6kdcAuXz4XcClG8Nv8rly5jruHMhQLeyi/SwcH5SWOpwA/yFS5SDvLNAgGFS0ZJuY3vMYCHKc7e/HNN6ZOOTVa7ref674PjXjUXokx2DZdKZjheVV1SgBsaDAE+89B0lBUauKHNDT366ONg=
+	t=1743628352; cv=none; b=eUHBUJ1OXMsS1Qw3vlN5iQDn7ugLN6TBLLmOkAp62k0QmBcQpiDnSOGaVolYUjuxTrJ4cmHzBI1tlkcrYEk9r4LEpWLeWFmARC1D8appdf9XKVBwRTDzNTkjTvj/Mkz6MCoxCmhCwQGqbbWgANQxYVkz+L9rcg0Rxpkj09g6xnc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743628262; c=relaxed/simple;
-	bh=ETyIlupNzGiV9Nk5VRviQjoACogh2cw1bNs1XxsoM3U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KkCZ56Ygibuj4G6RoRRzIHrzIy9GWAySlicp9fJBTxG7dynZGmGUT0ptDzZxFU46k0/HGbfAF1dja2mFlEkmzR778W/aK29KzcHsyMETOSDFuuIimTBNDCk3wYUNEKJ5y8aFI60q+F9drao3E3qeCtkbWyKXHmjhO6F6i2Spcms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=AZWQK9Vr; arc=none smtp.client-ip=209.85.128.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1743628352; c=relaxed/simple;
+	bh=SfCs2dFk9sj4rEfKUcEhZVANi/RKjAIx5Xg372hU3xo=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RXiO7vrfEf03JDnJJ2LcH8PXsNF1IP5v8qECM1gP+LGDqcPXozeFICLBPnDPRQLCr16O19rQAIdGELj2BKtogIH6awU+n4H2++6pT7AT2TkEVcbPIbjxWXZ7vBMoYzJjwLus53QZL6f/gAtA127HVgf7RD9CqwfkaC15bkz2GCg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=omvOSSVu; arc=none smtp.client-ip=95.215.58.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AZWQK9Vr"
-Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-6ff37565232so2696927b3.3
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 14:11:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743628259; x=1744233059; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZHlEMV0U9vFR86q2j1+99Qrtz2VZz1COboeDVfMSzm4=;
-        b=AZWQK9Vr8cHjaZjBVv6z/Neunk0VsvAerRNka10/JCgvrvVGYMWqESegqKGePOV/DG
-         U5ZfAu5O+NfgNI1cLOoMIcZEKpklsS9dsg0Q0X87v30BBNsrOrE/JfmfsNQzkCV2a4eQ
-         9GNEY7GRrkNzG/zugB7D/iJA049WiaPDesf8WS6lFdlAWGZ6/JF/bxM4PGtOKDF0rveS
-         rK8oIYG6WFSQSO7JiQ7w/flj+xRoBJOZVymi9tNtlZAagNis86ZjgFC3OSFIBJ+h5z/y
-         Hnll7VU7nMofC5VBvdIAfHICO7a4v1znP5PH+ycwEsIkOCeNsVR/i+ByHRU+G5Mz0M3C
-         QqlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743628259; x=1744233059;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZHlEMV0U9vFR86q2j1+99Qrtz2VZz1COboeDVfMSzm4=;
-        b=kudxCbJ2k+U/i/Z0fkUG1KzON0ENPE9wCsynrFw7hXUOJSUm7hS07vdxCpk/pcW1Sj
-         LG6Yah5cQLFddSZxfczFMPkeOjyV46FzpMWiaV4NSjiQJ2tDVtpmx/g1S+60MKUezBzF
-         KgHjmx+2+ch8UB1seBsE1Y+ofzLfzQuoo8h+/30zBOiUEghiwmiCFCE9ZARGu1sfUk6l
-         4nchqI68rHuOrA3U72B1qjvxnjAEk9ykgZTrUDbj94k5SrHi+DuA+u1BRAxYxKlU/eZ9
-         KLJhKr9rCJ3663Zp9L76ZNA/DUZ5H3p+atBh+hJJvXyVQ7fdNelWwhbOQdw+F2eyqxLS
-         35GQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUM9UfnItAdvnBTo9seKBuDFfoQ1euctBG76b8gvrWEEKiny2pLBJvK2toT0C5b/JHcBJlmen9jAUzrMKg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwfnE6MwU11PQr4BFnX8KPiiRq/62cz5UBH1zyw2DhWiYVZo1Jg
-	6uNHCrxLcuCJ02AZ0Ilnul90EdDcs5HFlqnRgm5VIpIZscdp+Q9yp+kMQdjzcAkvmhLtIqTBUn2
-	yKdIilZaW5YCvQu18mhAKnvxwmj4knzSUyWMK
-X-Gm-Gg: ASbGnct0vP9Cuku9CCWX1SooVPZjkOlfuhm/4F2FIRHHMsAeV2CgPmWpRLu56p/VgJe
-	W4QT4lFs38qCxnkotfI6y3ZQgwQjvWNgOtFB//21lqqkGbWbVH6ErxalGd5j6d//706UsSN9xC4
-	iBhGFQDMpLc9wBGmc6OvVjLvCFxM8J6jfU1ZoFF82Qzb0/QLTa9/YWq/+WyxS/aTZkoQ==
-X-Google-Smtp-Source: AGHT+IErG7MiwhU3qRRn1slMSsE9CshkjX1Paa6gShbPemf8jIhSuKCfwVzgM+xEObkQjSGtzZ8Yb+0m8SB916dMXqc=
-X-Received: by 2002:a05:690c:6a07:b0:702:591a:6958 with SMTP id
- 00721157ae682-703a3ef8605mr132532867b3.22.1743628259110; Wed, 02 Apr 2025
- 14:10:59 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="omvOSSVu"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1743628347;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9dCoGpCwH6RrLl/7QL1y9s7XKeVIbd2DmNC4uWlkFd4=;
+	b=omvOSSVuBmj7jlYvpyMuRjtPDPyhP3FKDP04H1y2CgwawijSONQ8gZsXpybmYSqNUbAfA8
+	geUJfJ4tVHct1UVuFAuPvbESC/LSlz6xeC5b7il+jDlPPtCyzWuUSOJ1kubQHdLAQKy6C6
+	NsFUmYbbjSKkpqqTjfSKQY5XSOgsbfw=
+From: Oliver Upton <oliver.upton@linux.dev>
+To: mark.rutland@arm.com,
+	lpieralisi@kernel.org,
+	sudeep.holla@arm.com,
+	Chen Ni <nichen@iscas.ac.cn>,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
+Cc: Oliver Upton <oliver.upton@linux.dev>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] smccc: kvm_guest: Remove unneeded semicolon
+Date: Wed,  2 Apr 2025 14:11:14 -0700
+Message-Id: <174362825118.2996340.1658211451849411034.b4-ty@linux.dev>
+In-Reply-To: <20250326040659.1190696-1-nichen@iscas.ac.cn>
+References: <20250326040659.1190696-1-nichen@iscas.ac.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250402160721.97596-1-kalyazin@amazon.com> <20250402160721.97596-6-kalyazin@amazon.com>
-In-Reply-To: <20250402160721.97596-6-kalyazin@amazon.com>
-From: James Houghton <jthoughton@google.com>
-Date: Wed, 2 Apr 2025 14:10:23 -0700
-X-Gm-Features: AQ5f1Jo-fVQJh8iuxBPV3y8brIkvlN4bXw45TOiqX1XQbY00SvkGkBQRYA970fY
-Message-ID: <CADrL8HXm_UDKvrsNe6Guvo_pPvCN9ZJBKe=p0HM-iYZWufbEfA@mail.gmail.com>
-Subject: Re: [PATCH v2 5/5] KVM: selftests: test userfaultfd minor for guest_memfd
-To: Nikita Kalyazin <kalyazin@amazon.com>
-Cc: akpm@linux-foundation.org, pbonzini@redhat.com, shuah@kernel.org, 
-	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, lorenzo.stoakes@oracle.com, 
-	david@redhat.com, ryan.roberts@arm.com, quic_eberman@quicinc.com, 
-	peterx@redhat.com, graf@amazon.de, jgowans@amazon.com, roypat@amazon.co.uk, 
-	derekmn@amazon.com, nsaenz@amazon.es, xmarcalx@amazon.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, Apr 2, 2025 at 9:08=E2=80=AFAM Nikita Kalyazin <kalyazin@amazon.com=
-> wrote:
->
-> The test demonstrates that a minor userfaultfd event in guest_memfd can
-> be resolved via a memcpy followed by a UFFDIO_CONTINUE ioctl.
->
-> Signed-off-by: Nikita Kalyazin <kalyazin@amazon.com>
-> ---
->  .../testing/selftests/kvm/guest_memfd_test.c  | 94 +++++++++++++++++++
->  1 file changed, 94 insertions(+)
->
-> diff --git a/tools/testing/selftests/kvm/guest_memfd_test.c b/tools/testi=
-ng/selftests/kvm/guest_memfd_test.c
-> index 38c501e49e0e..9b47b796f3aa 100644
-> --- a/tools/testing/selftests/kvm/guest_memfd_test.c
-> +++ b/tools/testing/selftests/kvm/guest_memfd_test.c
-> @@ -10,12 +10,16 @@
->  #include <errno.h>
->  #include <stdio.h>
->  #include <fcntl.h>
-> +#include <pthread.h>
->
->  #include <linux/bitmap.h>
->  #include <linux/falloc.h>
-> +#include <linux/userfaultfd.h>
->  #include <sys/mman.h>
->  #include <sys/types.h>
->  #include <sys/stat.h>
-> +#include <sys/syscall.h>
-> +#include <sys/ioctl.h>
->
->  #include "kvm_util.h"
->  #include "test_util.h"
-> @@ -206,6 +210,93 @@ static void test_create_guest_memfd_multiple(struct =
-kvm_vm *vm)
->         close(fd1);
->  }
->
-> +struct fault_args {
-> +       char *addr;
-> +       volatile char value;
+On Wed, 26 Mar 2025 12:06:59 +0800, Chen Ni wrote:
+> Remove unnecessary semicolons reported by Coccinelle/coccicheck and the
+> semantic patch at scripts/coccinelle/misc/semicolon.cocci.
+> 
+> 
 
-I think you should/must put volatile on `addr` and not on `value`.
+Applied to fixes, thanks!
 
-> +};
-> +
-> +static void *fault_thread_fn(void *arg)
-> +{
-> +       struct fault_args *args =3D arg;
-> +
-> +       /* Trigger page fault */
-> +       args->value =3D *args->addr;
-> +       return NULL;
-> +}
-> +
-> +static void test_uffd_missing(int fd, size_t page_size, size_t total_siz=
-e)
+[1/1] smccc: kvm_guest: Remove unneeded semicolon
+      https://git.kernel.org/kvmarm/kvmarm/c/1f5bdd3b0c70
 
-test_uffd_minor? :)
-
-> +{
-> +       struct uffdio_register uffd_reg;
-> +       struct uffdio_continue uffd_cont;
-> +       struct uffd_msg msg;
-> +       struct fault_args args;
-> +       pthread_t fault_thread;
-> +       void *mem, *mem_nofault, *buf =3D NULL;
-> +       int uffd, ret;
-> +       off_t offset =3D page_size;
-> +       void *fault_addr;
-> +
-> +       ret =3D posix_memalign(&buf, page_size, total_size);
-> +       TEST_ASSERT_EQ(ret, 0);
-> +
-> +       uffd =3D syscall(__NR_userfaultfd, O_CLOEXEC);
-> +       TEST_ASSERT(uffd !=3D -1, "userfaultfd creation should succeed");
-> +
-> +       struct uffdio_api uffdio_api =3D {
-> +               .api =3D UFFD_API,
-> +               .features =3D UFFD_FEATURE_MISSING_SHMEM,
-
-I think you mean UFFD_FEATURE_MINOR_SHMEM...?
-
-And I'm trying to think through what feature we should expose for
-guest_memfd; UFFD_FEATURE_MINOR_SHMEM already indicates support for
-shmem.
-
-We could have UFFD_FEATURE_MINOR_GUESTMEMFD, perhaps that's enough.
-
-Or we could have UFFD_FEATURE_MINOR_GENERIC (or nothing at all!). Some
-VMAs might not support the minor mode, and the user will figure that
-out when UFFDIO_REGISTER fails.
-
-> +       };
-> +       ret =3D ioctl(uffd, UFFDIO_API, &uffdio_api);
-> +       TEST_ASSERT(ret !=3D -1, "ioctl(UFFDIO_API) should succeed");
-> +
-> +       mem =3D mmap(NULL, total_size, PROT_READ | PROT_WRITE, MAP_SHARED=
-, fd, 0);
-> +       TEST_ASSERT(mem !=3D MAP_FAILED, "mmap should succeed");
-> +
-> +       mem_nofault =3D mmap(NULL, total_size, PROT_READ | PROT_WRITE, MA=
-P_SHARED, fd, 0);
-> +       TEST_ASSERT(mem_nofault !=3D MAP_FAILED, "mmap should succeed");
-> +
-> +       uffd_reg.range.start =3D (unsigned long)mem;
-> +       uffd_reg.range.len =3D total_size;
-> +       uffd_reg.mode =3D UFFDIO_REGISTER_MODE_MINOR;
-> +       ret =3D ioctl(uffd, UFFDIO_REGISTER, &uffd_reg);
-> +       TEST_ASSERT(ret !=3D -1, "ioctl(UFFDIO_REGISTER) should succeed")=
-;
-> +
-> +       ret =3D fallocate(fd, FALLOC_FL_KEEP_SIZE | FALLOC_FL_PUNCH_HOLE,
-> +                       offset, page_size);
-> +       TEST_ASSERT(!ret, "fallocate(PUNCH_HOLE) should succeed");
-> +
-> +       fault_addr =3D mem + offset;
-> +       args.addr =3D fault_addr;
-> +
-> +       ret =3D pthread_create(&fault_thread, NULL, fault_thread_fn, &arg=
-s);
-> +       TEST_ASSERT(ret =3D=3D 0, "pthread_create should succeed");
-> +
-> +       ret =3D read(uffd, &msg, sizeof(msg));
-> +       TEST_ASSERT(ret !=3D -1, "read from userfaultfd should succeed");
-> +       TEST_ASSERT(msg.event =3D=3D UFFD_EVENT_PAGEFAULT, "event type sh=
-ould be pagefault");
-> +       TEST_ASSERT((void *)(msg.arg.pagefault.address & ~(page_size - 1)=
-) =3D=3D fault_addr,
-> +                   "pagefault should occur at expected address");
-> +
-> +       memcpy(mem_nofault + offset, buf + offset, page_size);
-> +
-> +       uffd_cont.range.start =3D (unsigned long)fault_addr;
-> +       uffd_cont.range.len =3D page_size;
-> +       uffd_cont.mode =3D 0;
-> +       ret =3D ioctl(uffd, UFFDIO_CONTINUE, &uffd_cont);
-> +       TEST_ASSERT(ret !=3D -1, "ioctl(UFFDIO_CONTINUE) should succeed")=
-;
-> +
-> +       ret =3D pthread_join(fault_thread, NULL);
-> +       TEST_ASSERT(ret =3D=3D 0, "pthread_join should succeed");
-
-And maybe also:
-
-/* Right value? */
-TEST_ASSERT(args.value =3D=3D *(char *)mem_nofault));
-/* No second fault? */
-TEST_ASSERT(args.value =3D=3D *(char *)mem);
-
-> +
-> +       ret =3D munmap(mem_nofault, total_size);
-> +       TEST_ASSERT(!ret, "munmap should succeed");
-> +
-> +       ret =3D munmap(mem, total_size);
-> +       TEST_ASSERT(!ret, "munmap should succeed");
-> +       free(buf);
-> +       close(uffd);
-> +}
-> +
->  unsigned long get_shared_type(void)
->  {
->  #ifdef __x86_64__
-> @@ -244,6 +335,9 @@ void test_vm_type(unsigned long type, bool is_shared)
->         test_fallocate(fd, page_size, total_size);
->         test_invalid_punch_hole(fd, page_size, total_size);
->
-> +       if (is_shared)
-> +               test_uffd_missing(fd, page_size, total_size);
-> +
->         close(fd);
->         kvm_vm_release(vm);
->  }
-> --
-> 2.47.1
->
+--
+Best,
+Oliver
