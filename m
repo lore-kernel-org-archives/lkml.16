@@ -1,184 +1,197 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA8622376F7
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 12:52:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87D70238D25;
+	Wed,  2 Apr 2025 12:53:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743598344; cv=none; b=dgxYJuFzo3ygnHpaOZGmX8Ya784rwaoOjKB36YFWVNW2+JDRIdziX5BMlHyICE/SEKGHrH9aJeAgmZZClotOg+O04l3acbI1FNYEcIQ/mwx3+RXpuEQTmACAQPYKhBWIbiJJFeDrsNeU+Fkxy9Bzv3LE2NCZvaS98QDkAyQsnJ0=
+	t=1743598401; cv=none; b=EWzp+a/1atZ6evzf8Se5z1zWzzSjhgD1Ho2ySFLJlKQPCAX38d69DH/kRcMlQElYoSkaCIdnyDoTbS4tJfYrwjnmTwqLOevSJK6sOPiiJJ9YBY44iGe3d2U2y2/Dva+BKaFv7Wcl/4GLUzPifTlP17oEBghCqJEX/DHsVS0KNU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743598344; c=relaxed/simple;
-	bh=89doMQQqTUXXMsk02oDFiQQEN9CjVR0H9vwo89xlW4A=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NYO0MFybO5X1Zjc41PEX6lKmTEKmJLPP6dbYxEsHrGORMSVpflXMZPswlLloUGRiEI5SKYosk20adwNMRKc3yb4AuA3SMWR8pqJeZPvULRZ2OpHI3n1Mn8/Pr1vus7NZAhkwvLoiZgJjy2AAsokA2Yk8M/o0aQcS9M4ipa5LuEI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XaVyva+f; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743598401; c=relaxed/simple;
+	bh=i+12HA/1ppKzVebGQz08npfbBGPLxXTUCObabmI6qu8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AYK2dgns5/4kCjyyhzA0LeReJi3Cv7Jb6jIK5rH5y0zDnHB0C1Vr5hyyg/7ZkQq2Exw+UYI56jMdtIPm7bmAHC88kofMYpBDA78wd0kJTjTUcz99LQs4GjDdYUaOzi3bC8h52dSF7DMaOzmrAZ1PamnfXZJl++7ZRCih0ve7nlk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=g9LbGOmC; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XaVyva+f"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-39c1ef4acf2so1731743f8f.0
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 05:52:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743598341; x=1744203141; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8nef0ixQU1wmsLTpO1b+Z0WKnVoF/EZ475EXUb+E8QY=;
-        b=XaVyva+fL4KTso/SDJp2RWax/RAjfElApgfjl6BhSuh5/z1NEVaV36HyIGMbNhq/Uz
-         i54RtNh5sKJc3j0/AHKjZasVkFkmbakkLlVABUCALXKKcpPAS82ecaNVJeEE6dF58y0f
-         FCR5DUVHDXJ2pAtYAkXZhfVjMfRdMdIym0fonCF6czkLWjOKuWpl0coI5+QyFLBEhwRg
-         9fSeJTrOGG6gHUUn/F4DSgdhEHoVKlTQjQ+t2bLiTnxWLft6YGDwnWIWDzk8wBaXa+eX
-         MaomuvHuONhm1R86/6bbYJth8pD+5mXGicaQFGzJpuN17/7qhljPyhjDTApZmyY9j4t0
-         EsTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743598341; x=1744203141;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8nef0ixQU1wmsLTpO1b+Z0WKnVoF/EZ475EXUb+E8QY=;
-        b=OV//FP+02AxGeKcGKxhev6PEzR5pmpnuNvmfXHfzNojWuy0T3I3Vlwj+DQxgIQqx7s
-         bC7wbf94Mf/KK5VemPB0OhHNKr+gjqzbzfVeE0hndgS9L1YKWC5WOdtaV8W49P4Lnmmg
-         azqSQxDWF9GOx2UmgLTICaPdScBgfwjKMYRnK4WDVkCWZqz0KsmJdLEIwXbJOXX+LW8I
-         JE3KkUiItbjSN/3QpLRjUs0JktM4UQTMIdjygSNwqXUJujKRfBq809jANH9jsxjHWVKI
-         QyJM05OqxrPTf9AF72SOX+nnKfBHwuB7gEUAI8D/LoP6BuQ6W+5lwrp15YOo3luz2Psu
-         r6Lw==
-X-Forwarded-Encrypted: i=1; AJvYcCUyVUcMwyTSuNLZpPVsn2GB5mJCYLO7DiumowZ2Fagbh+Pm0MrlAZiyeMZTe17zbsXuY/wk9g3B+goDMag=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwYe5jOyqtPwKnG67cvkTuj0FTBehHUAfYNMv9NjPFO8TdeaE1t
-	wNzcRS4yzMYa7RjjVbB/q6OJRqu6eqlDFBzoXP4cqN1j7jcKEQyY
-X-Gm-Gg: ASbGncsVF7m5NEduk4Q1KJ9+i9oItlBRc+WoaoAJ42nqB+a4V6sQrZqMnFPvakWzygf
-	VTfyDRMb97yTUFAwM/d0tbbOUGF1GXVbJhvin9rE7PY3Z51H6VSGZu/OnN3kXCO2rk4RmAxxC/Z
-	hvJceZ9he/uP/zfxxQIej3GJsvvxeyikRr8FQn4Rcp+WuPdSloQxIkYIQ6zF/VcE99GRWv1ws2M
-	IPIh7tsMazKBqQDCU29A7BirCYGubzdimzpLoEunDp3rbNfsRJG3/H39RZwbsBJqiO/2cn+M24A
-	5fqkXUPwe5tCjvbDmu20HB0t5gYuImlD8TXu4JOy2IYFf0jGEKYhd3ApKkFZWqN799aZLfh+1UB
-	339Y/jPW7m5cJQ9+ZUA==
-X-Google-Smtp-Source: AGHT+IFn02P1ukvJ8y/QRJMuhLrjtzdIpEcbiaPHVb4vw4w0ZAKBrYX5UbrSJMPI6LA4r05gYUSbyA==
-X-Received: by 2002:a05:6000:1889:b0:390:fb37:1bd with SMTP id ffacd0b85a97d-39c1211beabmr15544458f8f.46.1743598340981;
-        Wed, 02 Apr 2025 05:52:20 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b7a4498sm17307668f8f.99.2025.04.02.05.52.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Apr 2025 05:52:20 -0700 (PDT)
-Date: Wed, 2 Apr 2025 13:52:19 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <u.kleine-koenig@baylibre.com>
-Cc: Nicolas Pitre <nico@fluxnic.net>, Andrew Morton
- <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] math64: Provide an uprounding variant of
- mul_u64_u64_div_u64()
-Message-ID: <20250402135219.28b24e94@pumpkin>
-In-Reply-To: <2wwrj6aid2elnnotzfkazierqmzmzpfywyf33ahqs36xh5xz32@rszeetrztsiz>
-References: <20250319171426.175460-2-u.kleine-koenig@baylibre.com>
-	<20250321131813.6a332944@pumpkin>
-	<epuk3zijp2jt6jh72z3xi2wxneeunf5xx2h77kvim6xmzminwj@4saalgxu3enu>
-	<20250331195357.012c221f@pumpkin>
-	<mjqzvj6pujv3b3gnvo5rwgrb62gopysosg4r7su6hcssvys6sz@dzo7hpzqrgg2>
-	<20250401202640.13342a97@pumpkin>
-	<15qr98n0-q1q0-or1r-7r32-36rrq93p9oq6@onlyvoer.pbz>
-	<46368602-13n7-s878-s7o2-76sr0q67n9q4@syhkavp.arg>
-	<20250401223731.7102103d@pumpkin>
-	<2wwrj6aid2elnnotzfkazierqmzmzpfywyf33ahqs36xh5xz32@rszeetrztsiz>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="g9LbGOmC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743598400; x=1775134400;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=i+12HA/1ppKzVebGQz08npfbBGPLxXTUCObabmI6qu8=;
+  b=g9LbGOmC7KawHpNWP3tIlDBcVxXaLnx5b+XDwsDCNUj6FsyDA2Qqxz/g
+   MfB8VLHyKCgE1SipTA7TJjajopypfSgCMBlkkpGUTu1YEXYWmVZZPe3tf
+   F6Ik4eRu5csYEy+Fn09SMOD9RgMH5vCjDEGmrgEBZ85Wl0qg1bv9grdX+
+   8kvN2tMOjl+ErctXE99kscm4aSeGbN5wmBVFu3HhbRlGMqEh/J0lM3BUI
+   oP/lrprFSMmjlpFim8JU8hT2KxYGM+Plr8a+KNYNo2QybzYYR4w+5X6hi
+   JDppb9QAzusXFrXmzYCcmHhuJwOBC1H7O2EkJhtZ4Ry13oKZt6x5ECIlT
+   A==;
+X-CSE-ConnectionGUID: e9f6x1nlRY65jXaXal2Sig==
+X-CSE-MsgGUID: /HQJmEMASmOl3K9RgT4WEw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11392"; a="44844882"
+X-IronPort-AV: E=Sophos;i="6.15,182,1739865600"; 
+   d="scan'208";a="44844882"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 05:53:19 -0700
+X-CSE-ConnectionGUID: 4nNe4TxNSf2rbxkyi6MlcQ==
+X-CSE-MsgGUID: 4YUvaZTmQZOfmnN+/ALpAQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,182,1739865600"; 
+   d="scan'208";a="131885922"
+Received: from binbinwu-mobl.ccr.corp.intel.com (HELO [10.124.242.208]) ([10.124.242.208])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 05:53:12 -0700
+Message-ID: <112c4cdb-4757-4625-ad18-9402340cd47e@linux.intel.com>
+Date: Wed, 2 Apr 2025 20:53:08 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] KVM: TDX: Handle TDG.VP.VMCALL<GetQuote>
+To: "Huang, Kai" <kai.huang@intel.com>,
+ "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+ "pbonzini@redhat.com" <pbonzini@redhat.com>,
+ "seanjc@google.com" <seanjc@google.com>
+Cc: "Gao, Chao" <chao.gao@intel.com>,
+ "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+ "mikko.ylinen@linux.intel.com" <mikko.ylinen@linux.intel.com>,
+ "Li, Xiaoyao" <xiaoyao.li@intel.com>,
+ "Lindgren, Tony" <tony.lindgren@intel.com>,
+ "Hunter, Adrian" <adrian.hunter@intel.com>,
+ "Chatre, Reinette" <reinette.chatre@intel.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "Zhao, Yan Y" <yan.y.zhao@intel.com>,
+ "Yamahata, Isaku" <isaku.yamahata@intel.com>
+References: <20250402001557.173586-1-binbin.wu@linux.intel.com>
+ <20250402001557.173586-2-binbin.wu@linux.intel.com>
+ <40f3dcc964bfb5d922cf09ddf080d53c97d82273.camel@intel.com>
+Content-Language: en-US
+From: Binbin Wu <binbin.wu@linux.intel.com>
+In-Reply-To: <40f3dcc964bfb5d922cf09ddf080d53c97d82273.camel@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, 2 Apr 2025 10:16:19 +0200
-Uwe Kleine-K=C3=B6nig <u.kleine-koenig@baylibre.com> wrote:
 
-> On Tue, Apr 01, 2025 at 10:37:31PM +0100, David Laight wrote:
-> > On Tue, 1 Apr 2025 16:30:34 -0400 (EDT)
-> > Nicolas Pitre <nico@fluxnic.net> wrote:
-> >  =20
-> > > On Tue, 1 Apr 2025, Nicolas Pitre wrote:
-> > >  =20
-> > > > On Tue, 1 Apr 2025, David Laight wrote:
-> > > >    =20
-> > > > > Looking at the C version, I wonder if the two ilog2() calls are n=
-eeded.
-> > > > > They may not be cheap, and are the same as checking 'n_hi =3D=3D =
-0'.   =20
-> > > >=20
-> > > > Which two calls? I see only one.   =20
-> > >=20
-> > > Hmmm, sorry. If by ilog2() you mean the clz's then those are cheap. M=
-ost=20
-> > > CPUs have a dedicated instruction for that. The ctz, though, is more=
-=20
-> > > expensive (unless it is ARMv7 and above with an RBIT instruction). =20
-> >=20
-> > The code (6.14-rc6) starts:
-> >=20
-> > u64 mul_u64_u64_div_u64(u64 a, u64 b, u64 c)
-> > {
-> > 	if (ilog2(a) + ilog2(b) <=3D 62)
-> > 		return div64_u64(a * b, c);
-> >=20
-> > Now ilog2() is (probably) much the same as clz - but not all cpu have i=
-t.
-> > Indeed clz(a) + clz(b) >=3D 64 would be a more obvious test. =20
->=20
-> Ack, the more intuitive check might be
->=20
-> 	if (fls64(a) + fls64(b) <=3D 64)
->  		return div64_u64(a * b, c);
->=20
-> then, but maybe "intuitive" is subjective here?
 
-Depends on whether you grok 'clz' or 'fls' :-)
+On 4/2/2025 8:53 AM, Huang, Kai wrote:
 
->=20
-> > On 32bit a check for a >> 32 | b >> 32 before the multiply might be san=
-e. =20
->=20
-> Not 100% sure I'm following. `a >> 32 | b >> 32` is just an indicator
-> that a * b fits into an u64 and in that case the above check is the
-> better one as this also catches e.g. a =3D (1ULL << 32) and b =3D 42.
+[...]
+>
+> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+> index b61371f45e78..90aa7a328dc8 100644
+> --- a/Documentation/virt/kvm/api.rst
+> +++ b/Documentation/virt/kvm/api.rst
+> @@ -7162,6 +7162,25 @@ The valid value for 'flags' is:
+>     - KVM_NOTIFY_CONTEXT_INVALID -- the VM context is corrupted and not valid
+>       in VMCS. It would run into unknown result if resume the target VM.
+>   
+> +::
+> +
+> +		/* KVM_EXIT_TDX_GET_QUOTE */
+> +		struct tdx_get_quote {
+> +			__u64 ret;
+> +			__u64 gpa;
+> +			__u64 size;
+> +		};
+> +
+> +If the exit reason is KVM_EXIT_TDX_GET_QUOTE, then it indicates that a TDX
+> +guest has requested to generate a TD-Quote signed by a service hosting
+> +TD-Quoting Enclave operating on the host. The 'gpa' field and 'size' specify
+> +the guest physical address and size of a shared-memory buffer, in which the
+> +TDX guest passes a TD report.
+>
+> "TD report" -> "TD Report"?  The changelog uses the latter.
+>
+>> When completed, the generated quote is returned
+> "quote" -> "Quote"?
+>
+>> +via the same buffer. The 'ret' field represents the return value.
+>>
+> return value of the GetQuote TDVMCALL?
+Yes, thereturn code of the GetQuote TDVMCALL.
+>
+>> The userspace
+>> +should update the return value before resuming the vCPU according to TDX GHCI
+>> +spec.
+>>
+> I don't quite follow.  Why userspace should "update" the return value?
+Because only userspace knows whether the request has been queued successfully.
 
-That is to optimise the multiple as well as the divide.
-It is also a very cheap test.
+According to GHCI, TDG.VP.VMCALL<GetQuote> API allows one TD to issue multiple
+requests. This is implementation specific as to how many concurrent requests
+are allowed.  The TD should be able to handle TDG.VP.VMCALL_RETRY if it chooses
+to issue multiple requests simultaneously.
+So the userspace may set the return code as TDG.VP.VMCALL_RETRY.
 
->=20
-> > > > And please explain how it can be the same as checking 'n_hi =3D=3D =
-0'.   =20
-> > >=20
-> > > This question still stands. =20
-> >=20
-> > 'ni_hi =3D=3D 0' is exactly the condition under which you can do a 64 b=
-it divide.
-> > Since it is when 'a * b' fits in 64 bits.
-> >=20
-> > If you assume that most calls need the 128bit product (or why use the f=
-unction)
-> > then there is little point adding code to optimise for the unusual case=
-. =20
->=20
-> n_hi won't be zero when the branch
->=20
-> 	if (ilog2(a) + ilog2(b) <=3D 62)
-> 		return div64_u64(a * b, c);
->=20
-> wasn't taken?
 
-Right, but you can remove that test and check n_hi instead.
-The multiplies are cheap compared to the divide loop.
-(Especially when uint128 exists.)
+>
+>> It's an asynchronous request. After the TDVMCALL is returned and back to
+>> +TDX guest, TDX guest can poll the status field of the shared-memory area.
+>> +
+>>   ::
+>>   
+>>   		/* Fix the size of the union. */
+>> diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
+>> index b952bc673271..535200446c21 100644
+>> --- a/arch/x86/kvm/vmx/tdx.c
+>> +++ b/arch/x86/kvm/vmx/tdx.c
+>> @@ -1463,6 +1463,39 @@ static int tdx_get_td_vm_call_info(struct kvm_vcpu *vcpu)
+>>   	return 1;
+>>   }
+>>   
+>> +static int tdx_complete_get_quote(struct kvm_vcpu *vcpu)
+>> +{
+>> +	tdvmcall_set_return_code(vcpu, vcpu->run->tdx_get_quote.ret);
+>> +	return 1;
+>> +}
+>> +
+>> +static int tdx_get_quote(struct kvm_vcpu *vcpu)
+>> +{
+>> +	struct vcpu_tdx *tdx = to_tdx(vcpu);
+>> +
+>> +	u64 gpa = tdx->vp_enter_args.r12;
+>> +	u64 size = tdx->vp_enter_args.r13;
+>> +
+>> +	/* The buffer must be shared memory. */
+>> +	if (vt_is_tdx_private_gpa(vcpu->kvm, gpa) || size == 0) {
+>> +		tdvmcall_set_return_code(vcpu, TDVMCALL_STATUS_INVALID_OPERAND);
+>> +		return 1;
+>> +	}
+> It is a little bit confusing about the shared buffer check here.  There are two
+> perspectives here:
+>
+> 1) the buffer has already been converted to shared, i.e., the attributes are
+> stored in the Xarray.
+> 2) the GPA passed in the GetQuote must have the shared bit set.
+>
+> The key is we need 1) here.  From the spec, we need the 2) as well because it
+> *seems* that the spec requires GetQuote to provide the GPA with shared bit set,
+> as it says "Shared GPA as input".
+>
+> The above check only does 2).  I think we need to check 1) as well, because once
+> you forward this GetQuote to userspace, userspace is able to access it freely.
 
-I also think you can do a much better divide loop (for many cpu).
-Shift 'c' so that clz(c) is 32.
-Shift 'n_hi/n_lo' so that clz(n_hi) is 1.
-Do a 64 by 32 divide and remainder (probably about 32 or 64 clocks).
-If bits of 'c' were discarded multiple and subtract (with overflow check).
-'Rinse and repeat' with the remainder.
-Build the quotient out of all the partial values.
+Right.
 
-	David
+Another discussion is whether KVM should skip the sanity checks for GetQuote
+and let the userspace take the job.
+Considering checking the buffer is shared memory or not, KVM seems to be a
+better place.
 
->=20
-> Best regards
-> Uwe
+>
+> As a result, the comment
+>
+>    /* The buffer must be shared memory. */
+>
+> should also be updated to something like:
+>
+>    /*
+>     * The buffer must be shared. GetQuote requires the GPA to have
+>     * shared bit set.
+>     */
 
