@@ -1,114 +1,109 @@
-Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9F7B1C84C0
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 18:28:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1B2A1C860F
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 18:29:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743618536; cv=none; b=F3AObRw2PIRT8P6YAlLX/RqBZqOtM0xSmAk3pv5ewMl3+duE0baqRm3VKleUBADKjTMdb60NaJ8gECQExRhSoGhEpy2qLlfj/msvKqhRs7u5wm5vFaslwd0ncJQkvTWVqBhWdEkT7O8vsgCkuxxUN//8usFHteHTzyF5t3Lw9Es=
+	t=1743618565; cv=none; b=a+vVEY6tXFNQEWDZ3mNGc2df3tRP+gT2uv9Sf3CxHxJsViz4jedSwldjAe93l7NgLIdeuoeg5PL9rw3Iwk6c1p5QncTCzwQ/hIyRGq+J0kFNloOaVEq//3KGTOosOO7AfcV257N4J8H1uOgTiN4YGcCGC4h7ENpGXFgM5qiGZFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743618536; c=relaxed/simple;
-	bh=D3m5WoVt0h/8wkwTuJYrj8u9HKSDTlsX+T9QXbwiNP8=;
+	s=arc-20240116; t=1743618565; c=relaxed/simple;
+	bh=UGTmqaAwJLatlzaq1p3+HmP4fgE7ybtpG6cAdyQKEwY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pq+LfINE1O4jmestFeJ9GI3B2pf+tfu8TECMO2hvNOjPYxFi5aeb2yURNpaDsSXBa+XbrJdmrljK5kG/D8pk4KGqigUvhdBy6ZBmSO2+wdAhFA/HiyDDNZ2xwheFaF3gtG3ZxPaIWVbRRc0ITIImOad7nXoolbM42djbLZSNHNQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=QttT0U/t; arc=none smtp.client-ip=209.85.219.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+	 To:Cc:Content-Type; b=Z71z9QWev0JyKb+cTytNAnYyKaV3yH/6st8nuhXDZsXPqUmBDpEFHeO2rT7wrl8skXEseTmigzZiK+ukGedVwBI0cM2hQbd09QKJ6U8LWmEHxxFXaMLb3gT3ksoqEKbFze57RdpjlFPwymxc9Xu2f1a6zGr6D0YaFyQHW9xq5LI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=bBhSVL37; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="QttT0U/t"
-Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-e3978c00a5aso76453276.1
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 11:28:53 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="bBhSVL37"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5e61da95244so193311a12.2
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 11:29:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1743618532; x=1744223332; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=D3m5WoVt0h/8wkwTuJYrj8u9HKSDTlsX+T9QXbwiNP8=;
-        b=QttT0U/tgZ2RcKzvg9upsB6tlV8UjxTlJ7sIc3ekFpxKwkLqbGZWucobtggxfmi8yz
-         VAVzTWCZ0CO+Tige88YmNL7uawgDdB7RZr9/Y+CH0UCIatx5bsUf0YZgq4oGwLjrpPln
-         2tfJloeA/rXFCEiSdbtE6R0bAUm8JI26Cb1s3kK1jq5a/OLmPESlD+jHxoNf/z7/InFf
-         TBrZAjdmzXClEbmiRJugTHDHUZojPwpG4SvUbZm4BvQagJkXAK5XCySr/1KeHVVxOpYS
-         Ygq+E3GH2e0gUgNDdmOfAdJpnGg5RvaQwOIZLg0LgSko2c6G+71jHA/VXVkfFfsGlAhY
-         s04w==
+        d=linux-foundation.org; s=google; t=1743618561; x=1744223361; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZhDeiG3XZDDBldCAqMcweB0+kts9uc1sZmovY354eSM=;
+        b=bBhSVL37gY8PZ1F0LFxAUHVrkZCDWiQekYyG/kefA/6pi2Tg8pW3uZcq5adQcI34yO
+         LW5ZD2DiTspluBVNYOUgHhvJCP4ooO+9ehobEDedDEvkuNSTxcXTFcI+eOZN6EilEnV5
+         o4BbFmPzgZI4iUz4SVSwqCOeOVPDAfihw9fCs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743618532; x=1744223332;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=D3m5WoVt0h/8wkwTuJYrj8u9HKSDTlsX+T9QXbwiNP8=;
-        b=GofptoVElMTds/u1GehdWTa7g6ZSBe3VFWdnl3ocU5u/QbSECkYAbFKFU0A2bi42jC
-         oWWvEks4ssXSPPyituH8lkynk6cOnQf4ywIBU4De9VJXSKW2+UBZQTztOzXodnOuLl0I
-         ud4/PvKCn+5pzB+XAzwcN/IjYc28/ZGaPLIXUoyw9Z2/C+L3NRO+akl/xb4AHbf7z626
-         v41IzG6Mbiq02jaLWoIdVy5fwAskh+8eLquyfIgUcL/G0fCvIhv9JQkbjYnkDefJRhGT
-         Z+KyBY65t+/KZNXW1jdk4Eh7dOIIf6GrRm4LyZUphDYGK2+GShl02PcMaqjpRQmZTwlP
-         DNCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUd5DQoTZjgH2hpC87CCix+5/qi6ZZXI6wT6jMGlSmG4XCN/SeU6e1KrCMFr82dmEXxqiQ1GjBj2vK+ERo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwdUQDkfzh1D1VBJJ6JO7NxEnL34lfIfAox9S62yfx4H4jKHg9Q
-	Zr4UJ07u9WTwCI+YH/ZPLehOW76V5ZDpNeOho6qjI/QnNqfpPwRIctHL7qb/NUYxCBZgsWfR1BQ
-	SFr1jGGreS8Y23Sv57mt/YyAM2rGCMfvoQ6A2iojHX4ZpDgY=
-X-Gm-Gg: ASbGncuXNGn0qYu3u3SgsNFX2yy+rnlz9BjY3j5zreTNoNpUn/NhNHPq+5aKkj6rCrz
-	a51B9ww1WcyHcQktHtJgkly1zjWOLnOc19OjcFw66iwdbV2+fZzq14hZolNjLnqEXcL+26caT1c
-	CTZMtO2qVOltBXIq1qOEFHo2NKtQ==
-X-Google-Smtp-Source: AGHT+IHnExvPdDbkaYXl6TfzQuj2zh7liH916FifwMkueNLtDrglF+QixKyEuVLYWMHZBQP9nMP76oqS/6aEZzpPBHw=
-X-Received: by 2002:a05:690c:6986:b0:703:c3b4:45d7 with SMTP id
- 00721157ae682-703c3b44963mr40875207b3.28.1743618532599; Wed, 02 Apr 2025
- 11:28:52 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743618561; x=1744223361;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZhDeiG3XZDDBldCAqMcweB0+kts9uc1sZmovY354eSM=;
+        b=PPt9R0BzxAEX868LH73lPCOh0beXQpY0ufg4VH4jeKIotYPVuI8erTtbSznIrfXbv8
+         iWd/Fpjohch/6wPKpmFypecSRLmaIu6RW/rTV0ZFk8u5BhBxiqTLxN6qQfR+GVFHB+x/
+         R8ULuPQ1xYsRzZkO0chbKYHWYhqs7nLu0odUhTkaGE4bZy5lmsbIX8dB6icntpAzHusl
+         oF/maiZEMHLZL14jjeh/lKFNwm/Nj4m/A+8DW09qaVKHXQmuWTbrAg0vC7L5TmwgOS3r
+         wHc3Q4owtsMFpUdWs++zbpxl6zv0zPufkqjQrgFX/LzvuVmuZEfaahCOI3In5NCyqPBu
+         +HKw==
+X-Forwarded-Encrypted: i=1; AJvYcCV3a2gr1gvktGP9Hay89g+HYQgLFN3suyuo+dN7AKte1dyYa8l1XvO++C6bLNQOBn9WULUitlbB3NRXp7g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzCRroSerJihSp7VV/WQQlBnpMNwS9qDVtm1wp2uJtBTRAKaM2r
+	GCFBSvWfKu1eKst9U6TFJNmAP/rjUZYVu+L7cXOdX1sjeJPquYG0cwu4keDTn9j8S3rbTQFxV6Z
+	BNs4=
+X-Gm-Gg: ASbGncuoNAOqCWpbyPRZoomuoejEc6yExBx0NAs0UUGm4EWsGDzlzJKuHGQBqATPpeA
+	xCFDbL/6j92b6UB9gXci6rqkHT3SRhd08sfzU/st1W0ODM4oAP974joV3BhNzE/MChMc7oXERoA
+	rGDa1+XlSv9rjhVsAjzIQElN4m8+oSZuEySINk6Gm4q4n7dAhx3MlPW4mSzPpyGex/X6Buxjnfr
+	74sfcd/xuTsuH6qPyH5GfDO3mjbwJfVyx1YvtDttclFE2BllYfDL9DtInmzheeXJQgXtv0666H6
+	O+/1L4eBedtCGhERX9LclmL6K1ZU6mjdtFrxi4NbXhLYm8BzuqsF+wAhlEdWGD5sxggdaXinR93
+	CPjjHOrv1Jd+x7Q6xShbPUbLgkS32Dw==
+X-Google-Smtp-Source: AGHT+IHrlUwDRhPY2Hfb/vEHmqLom1Y9tFlXm9BurUuAqEaQoLHTzhczKf7hLUH37CCB7c7mONVFgw==
+X-Received: by 2002:a05:6402:2744:b0:5ed:79cb:116f with SMTP id 4fb4d7f45d1cf-5edfdafccefmr16453397a12.25.1743618560695;
+        Wed, 02 Apr 2025 11:29:20 -0700 (PDT)
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com. [209.85.218.41])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5edc16aae90sm9052660a12.15.2025.04.02.11.29.19
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Apr 2025 11:29:19 -0700 (PDT)
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ac2c663a3daso11708166b.2
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 11:29:19 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWaVJ7MKpk+ynfOgH2R+0ANfpX5aZ7P/MAzGQzxJXr0UlFLkQJnn9MHPmrOGQiyoat7zU0XO1pTZGxNqfs=@vger.kernel.org
+X-Received: by 2002:a17:907:97c9:b0:ac4:3d0:8bc6 with SMTP id
+ a640c23a62f3a-ac7389e1864mr1611206166b.13.1743618559154; Wed, 02 Apr 2025
+ 11:29:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <2a4f2c24-62a8-4627-88c0-776c0e005163@redhat.com>
- <20250401124018.4763-1-mowenroot@163.com> <20250402093609.GK214849@horms.kernel.org>
-In-Reply-To: <20250402093609.GK214849@horms.kernel.org>
-From: Paul Moore <paul@paul-moore.com>
-Date: Wed, 2 Apr 2025 14:28:40 -0400
-X-Gm-Features: ATxdqUGTOorUCYsRGQ4r2FDIOcagFPztRxz3oaDvDqEej0LSOzdzpbCppUGWWfU
-Message-ID: <CAHC9VhQAdxADGrqEDH4kUuoXsUS_E92UtTDcf+uF7J=QavkP3g@mail.gmail.com>
-Subject: Re: [PATCH v3] netlabel: Fix NULL pointer exception caused by CALIPSO
- on IPv4 sockets
-To: Simon Horman <horms@kernel.org>
-Cc: Debin Zhu <mowenroot@163.com>, pabeni@redhat.com, 1985755126@qq.com, 
-	kuba@kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+References: <CAGudoHEV-PFSr-xKUx5GkTf4KasJc=aNNzQbkoTnFVLisKti+A@mail.gmail.com>
+ <948fffdc-d0d8-49c4-90b6-b91f282f76c9@citrix.com>
+In-Reply-To: <948fffdc-d0d8-49c4-90b6-b91f282f76c9@citrix.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Wed, 2 Apr 2025 11:29:03 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wg4syfXPBgQhq50ePOnB=zP9Jk1U+GmjXWmDMwcQ7X7WA@mail.gmail.com>
+X-Gm-Features: AQ5f1Jq_AlPUNJYvqZOLNAUo4-IhVSzOQBj_SYuotHcClMBbp19xe924coazHiU
+Message-ID: <CAHk-=wg4syfXPBgQhq50ePOnB=zP9Jk1U+GmjXWmDMwcQ7X7WA@mail.gmail.com>
+Subject: Re: [RFC PATCH] x86: prevent gcc from emitting rep movsq/stosq for
+ inlined ops
+To: Andrew Cooper <andrew.cooper3@citrix.com>
+Cc: mjguzik@gmail.com, linux-kernel@vger.kernel.org, mingo@redhat.com, 
+	x86@kernel.org, "Peter Zijlstra (Intel)" <peterz@infradead.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 2, 2025 at 5:36=E2=80=AFAM Simon Horman <horms@kernel.org> wrot=
-e:
-> On Tue, Apr 01, 2025 at 08:40:18PM +0800, Debin Zhu wrote:
-> > When calling netlbl_conn_setattr(), addr->sa_family is used
-> > to determine the function behavior. If sk is an IPv4 socket,
-> > but the connect function is called with an IPv6 address,
-> > the function calipso_sock_setattr() is triggered.
-> > Inside this function, the following code is executed:
-> >
-> > sk_fullsock(__sk) ? inet_sk(__sk)->pinet6 : NULL;
-> >
-> > Since sk is an IPv4 socket, pinet6 is NULL, leading to a
-> > null pointer dereference.
-> >
-> > This patch fixes the issue by checking if inet6_sk(sk)
-> > returns a NULL pointer before accessing pinet6.
-> >
-> > Fixes: ceba1832b1b2("calipso: Set the calipso socket label to match the=
- secattr.")
+On Wed, 2 Apr 2025 at 11:17, Andrew Cooper <andrew.cooper3@citrix.com> wrote:
 >
-> There is probably no need to repost for this, but
-> there is a missing space in the Fixes tag. It should be like this:
+> Taking a leaf out of the repoline book, the ideal library call(s) would be:
 >
-> Fixes: ceba1832b1b2 ("calipso: Set the calipso socket label to match the =
-secattr.")
+>     CALL __x86_thunk_rep_{mov,stos}sb
+>
+> using the REP ABI (parameters in %rcx/%rdi/etc), rather than the SYSV ABI.
 
-Thanks.
+Yes. That's basically what 'rep_movs_alternative' does so that we can
+basically do a
 
-Not sure if the netdev folks are going to pick this up or if I'll end
-up taking it, but if I end up taking it I'll update the tag while
-merging.
+                ALTERNATIVE("rep movsb",
+                            "call rep_movs_alternative",
+ALT_NOT(X86_FEATURE_FSRM))
 
-> > Signed-off-by: Debin Zhu <mowenroot@163.com>
-> > Signed-off-by: Bitao Ouyang <1985755126@qq.com>
-> > Acked-by: Paul Moore <paul@paul-moore.com>
+but we only do this for user space copies exactly because we don't
+have a good way to do it for compiler-generated ones.
 
---=20
-paul-moore.com
+If gcc just did an out-of-line call, but used the 'rep movs' "calling
+convention", we would be able to basically do the rewriting
+dynamically, replacing the call with an inlined "rep movsb" where
+appropriate.
+
+                 Linus
