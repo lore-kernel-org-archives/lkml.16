@@ -1,145 +1,126 @@
-Received: from invmail3.skhynix.com (exvmail3.skhynix.com [166.125.252.90])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8899C2F5A
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 08:00:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.90
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F1977081C
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 08:00:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743580830; cv=none; b=d5Z+EopgDa5ONjppSl1aNpriNiybxfiR93oG9ouLgjjhPyQaYtzYvkm7ixh04jotxgFlXOpwZFgVnDPACpWBcdf/R6scQLW4ukpwp5NBGbE9+lQ5846BpEUFtavrlkeNC3TDgnsKNbTEkezy9GZgkEs3vbtoR9F4mLncQ7VAmXM=
+	t=1743580843; cv=none; b=SHG25zXcC7emY3S823lJf8G38h9/sz2y+xE50dlU4qyfPBlpy4S+4w+D51DQ9gSvryB8Z/IaqkF4cKLo/j9dvhuToJm/2ErpO/iKqFdVJ2vAPdRJfcJQ/7GOgWah9ouOXs4ddfBYS9lHR3kZCCpMnWd9Tld1BsnN0rQqJzv7g7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743580830; c=relaxed/simple;
-	bh=AKGE9aNPGK4LwH5V7m/8gGinPFqVG7I+LuXuQjfxaO0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nwnfjqDUHThMqcxET1FnkvLNlvy/FOhnlAs1okU0wJm445kpHo8BRYBqsBK2mwvyTUwPHbRRn9q6mQjJnlVniQm1BhvoYQw9Vs8DkVfAfWvZlUQUQv5ScLXBBksSlxZO7+qhhIDeRoCPRImryT+JcEtoBu0q9aQTXKRkO4sxroQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.90
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc59-03fff7000000aab6-f3-67ecee91e7d3
-From: "yohan.joung" <yohan.joung@sk.com>
-To: linux-f2fs-devel@lists.sourceforge.net
-Cc: chao@kernel.org,
-	jaegeuk@kernel.org,
-	linux-kernel@vger.kernel.org,
-	pilhyun.kim@sk.com,
-	yohan.joung@sk.com
-Subject: f2fs: prevent the current section from being selected as a victim during GC
-Date: Wed,  2 Apr 2025 17:00:14 +0900
-Message-ID: <20250402080015.2794-1-yohan.joung@sk.com>
-X-Mailer: git-send-email 2.49.0.windows.1
-In-Reply-To: <7440d324-03f4-44a6-b6bf-4f569c829214@kernel.org>
-References: <7440d324-03f4-44a6-b6bf-4f569c829214@kernel.org>
+	s=arc-20240116; t=1743580843; c=relaxed/simple;
+	bh=0a4g2AA3yqI2lZl/rLdcxJlvVBoXlDU/3TS7Jxz9usY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=atZb8Ssf9Xsdu4/3vmsroys2Ck5nzqsJu4CHkacljbVWds5/B5f7Ne5uXiSlTytBfu5WaxnaBPPNCK1d5jYK10e98LDTjna+8SjxmO6NqF5bGFj8JtBfJ8XBez/WqsbXRbrDImquV1Ip9CtaCIEs8dGhBHBv/2yTwzJKtPMHAp8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=E8KZeGlv; arc=none smtp.client-ip=209.85.216.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="E8KZeGlv"
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2ff6e91cff5so11203215a91.2
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 01:00:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1743580840; x=1744185640; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=ctkJhtxKsp7SbmROJ/NcWvcFC2gk/L3/qKRnLMhq/34=;
+        b=E8KZeGlvhHQ5ZBVIMXgyhFY1Z97wEupWCdkGhGcJnW4mnUxYLPUcrb3IA4sTJsln57
+         w8tVtG/OSgh9g1Akc+dNZdsCD7+HEhHOcDDMmbQ0zjtxR54U5xvQCfYz22xHnWN+GkVd
+         4isG5cZUZvE4nldLhqIc8C7U09lrtlLCOZry9cpR4BLTrXRj+QndmXZ4ZDexQLiQsK63
+         G55FnqbrYoOFjEwo+lCHNdO8RNZu9nTC9qptiplN5GOLloztonZGHTx2084ODG0xC+2G
+         OLeqp2lXDqjO0Rp/dFp7Y8PPSNyqFBEydBFmorWUL4HmafopomhOHvOVSywi1fxOrf92
+         +QTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743580840; x=1744185640;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ctkJhtxKsp7SbmROJ/NcWvcFC2gk/L3/qKRnLMhq/34=;
+        b=QjYtBla54nf6eVaNfEtAjNU4EltmZHn2rVLIrQz9qDgHqxZWtcuf562h/DyyP+O1vx
+         iO2FKnyinbJIomUvBB6oKeuj6s/25pdy16tZoHqEnRbOwQNVV67EvS8Mu0ZVlaNh6A7Q
+         nOAaj1gvQ+AiE2qjPkcto30xGBsxW+VFjivt95Wy35IsaXlu7uZOJ9egfXh7Ydc/tId6
+         d8SO6pGgXBlA0UQ2H9suYnTjbAvu4QBUPGLxG2mo+fz8uPQHX+kYNLmTctgcDerZR8ON
+         Fx+/c0nVWPykXpRj52On0WLlRTX/3rQ9Zn8cM8iOidHI4DRTQH6lVreKxp7P4lq+o3fg
+         rbQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVRM826P97AV+JvcJqAmHVeC/uQp9HJZyoGnUjgXdSO4bHTv5bHWV+J9J3dD3KesBEuLeMPBr8axbuhXag=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzBXH73QFgDrtBpIuNJ2CBMw1+ycDoVCKZy21yYCPGnMhI2VMs9
+	WHm37xJlXXQivqfrfBeE5UAmMlfLf/ocl/5QpVi0CFLreQ1/s2G6JA7AVxxJcA==
+X-Gm-Gg: ASbGncsWpymRWi4kNqm8r1844es7++dMqC24YWaEP6FVHuF8ODHSWkVbwTxXPf5YjlX
+	KYkL/68r/IIt48K2POa0i2O3Wf91BDUwDPR/vmE5Za5czi2tqbd2R8cVPVA6Qh+FGPxtPkGbblG
+	3Ol2zuendmmKCyHpOPmdm+j3ObOqqOIIg1aH+XeCCCTWxq31mwQAsRwI0F+bYCkZjvZNz9Esvpt
+	YkhYKlX/Whv+uGu/0YXnJCyoRHBoywrXoDSmqiqMaTCAfxAcI950ZJU86TH+CuarV17JbqKmUJo
+	svyOZU+Uy3n0KfrRdKzc5JadUd0O/i9PO+odo7zUtD1JnaXmGGEgQctk
+X-Google-Smtp-Source: AGHT+IGTopCX2yplsS8GSpqfdGC18AVuR2urMTzElNFnwCLQ4BxN3uKkDEM1puu2xMXe8rc89mguVQ==
+X-Received: by 2002:a17:90b:1f92:b0:2fa:15ab:4dff with SMTP id 98e67ed59e1d1-3053215b176mr5797036a91.31.1743580840354;
+        Wed, 02 Apr 2025 01:00:40 -0700 (PDT)
+Received: from thinkpad ([120.56.205.103])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3056f979d6fsm1010122a91.45.2025.04.02.01.00.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Apr 2025 01:00:39 -0700 (PDT)
+Date: Wed, 2 Apr 2025 13:30:34 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Johan Hovold <johan+linaro@kernel.org>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Jeff Johnson <jjohnson@kernel.org>, linux-pci@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, ath11k@lists.infradead.org, ath12k@lists.infradead.org, 
+	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/4] PCI/arm64/ath11k/ath12k: Rename pwrctrl Kconfig
+ symbols
+Message-ID: <bsk4s5tlbpnvds73uxeasqxydcxolxpxvmtladtejhbi65yxob@4h5gy5srxlrr>
+References: <20250328143646.27678-1-johan+linaro@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrGLMWRmVeSWpSXmKPExsXC9ZZnke7Ed2/SDfo/81icnnqWyeLJ+lnM
-	FpcWuVtc3jWHzYHFY9OqTjaP3Qs+M3l83iQXwBzFZZOSmpNZllqkb5fAldFw8jZ7wQWxivbH
-	F5gbGM8IdTFyckgImEhMmzKPBcZesnonI4jNJqAh8ae3lxnEFhHQkpjY8BcszixQKtH7fBmY
-	LSwQIrFsw3G2LkYODhYBVYlv05JBTF4BM4kfPU4QEzUldnw5zwRicwrYSXz9twXMFhKwlVh3
-	oAFsK6+AoMTJmU9YIKbLSzRvnQ20lQuo9yurxPVdc5ghBklKHFxxg2UCI/8sJD2zkPQsYGRa
-	xSiSmVeWm5iZY6xXnJ1RmZdZoZecn7uJERh6y2r/RO5g/HYh+BCjAAejEg9vA++bdCHWxLLi
-	ytxDjBIczEoivEVngUK8KYmVValF+fFFpTmpxYcYpTlYlMR5jb6VpwgJpCeWpGanphakFsFk
-	mTg4pRoYE2fMTXjyJPzrf1O7B9flb8z/q7tNQ0HhyIJjxftvTN58M2JfmvqmFPsaS4V7uf9Y
-	19idUSg/rmV5pIop67LppjR75mq351xzXxx1bu0oZvuy0+PefAtTpvxaX4mM6xPvOAh73sq+
-	fDnLJ/x8t93ZANXvF9JjWSbFtDnxyLy32vXcVyBoffsrJZbijERDLeai4kQAnvz5WDkCAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupnluLIzCtJLcpLzFFi42LhmqEyR3fiuzfpBt17GS1OTz3LZPFk/Sxm
-	i0uL3C0u75rDZjFh7lUmi/db7zE6sHlsWtXJ5rF7wWcmj2+3PTw+b5ILYInisklJzcksSy3S
-	t0vgymg4eZu94IJYRfvjC8wNjGeEuhg5OSQETCSWrN7JCGKzCWhI/OntZQaxRQS0JCY2/AWL
-	MwuUSvQ+XwZmCwuESCzbcJyti5GDg0VAVeLbtGQQk1fATOJHjxPERE2JHV/OM4HYnAJ2El//
-	bQGzhQRsJdYdaGABsXkFBCVOznzCAjFdXqJ562zmCYw8s5CkZiFJLWBkWsUokplXlpuYmWOm
-	V5ydUZmXWaGXnJ+7iREYTMtq/0zawfjtsvshRgEORiUe3gbeN+lCrIllxZW5hxglOJiVRHiL
-	zgKFeFMSK6tSi/Lji0pzUosPMUpzsCiJ83qFpyYICaQnlqRmp6YWpBbBZJk4OKUaGJddeSnN
-	ryPEcWmiUfqLu+a7lu96cCrmoKfqAi819ie3JM9tzGgUtu1ewTWLL0YjhHX3EV2mnv1v2UJW
-	tH689qioTIqxPNQh0s3xwbRK49bpT/iObm9rm7a5tPrfvmMlVXzfyn87tQs+l7Dhr+E9wxAy
-	Q3j537e7Pj6dWHWm671N8vQGvVNrriixFGckGmoxFxUnAgCqi8jCIgIAAA==
-X-CFilter-Loop: Reflected
+In-Reply-To: <20250328143646.27678-1-johan+linaro@kernel.org>
 
->On 4/2/25 08:52, yohan.joung wrote:
->> When selecting a victim using next_victim_seg in a large section, the
->> selected section might already have been cleared and designated as the
->> new current section, making it actively in use.
->> This behavior causes inconsistency between the SIT and SSA.
->>
->> F2FS-fs (dm-54): Inconsistent segment (70961) type [0, 1] in SSA and
->> SIT Call trace:
->> dump_backtrace+0xe8/0x10c
->> show_stack+0x18/0x28
->> dump_stack_lvl+0x50/0x6c
->> dump_stack+0x18/0x28
->> f2fs_stop_checkpoint+0x1c/0x3c
->> do_garbage_collect+0x41c/0x271c
->> f2fs_gc+0x27c/0x828
->> gc_thread_func+0x290/0x88c
->> kthread+0x11c/0x164
->> ret_from_fork+0x10/0x20
->>
->> issue scenario
->> segs_per_sec=2
->> - seg#0 and seg#1 are all dirty
->> - all valid blocks are removed in seg#1
->> - gc select this sec and next_victim_seg=seg#0
->> - migrate seg#0, next_victim_seg=seg#1
->> - checkpoint -> sec(seg#0, seg#1)  becomes free
->> - allocator assigns sec(seg#0, seg#1) to curseg
->> - gc tries to migrate seg#1
->>
->> Signed-off-by: yohan.joung <yohan.joung@sk.com>
->> Signed-off-by: Chao Yu <chao@kernel.org>
->> ---
->>  fs/f2fs/segment.h | 6 ++++++
->>  1 file changed, 6 insertions(+)
->>
->> diff --git a/fs/f2fs/segment.h b/fs/f2fs/segment.h index
->> 0465dc00b349..14d18bcf3559 100644
->> --- a/fs/f2fs/segment.h
->> +++ b/fs/f2fs/segment.h
->> @@ -460,6 +460,7 @@ static inline void __set_test_and_free(struct
->f2fs_sb_info *sbi,
->>  		unsigned int segno, bool inmem)
->>  {
->>  	struct free_segmap_info *free_i = FREE_I(sbi);
->> +	struct dirty_seglist_info *dirty_i = DIRTY_I(sbi);
->>  	unsigned int secno = GET_SEC_FROM_SEG(sbi, segno);
->>  	unsigned int start_segno = GET_SEG_FROM_SEC(sbi, secno);
->>  	unsigned int next;
->> @@ -476,6 +477,11 @@ static inline void __set_test_and_free(struct
->f2fs_sb_info *sbi,
->>  		if (next >= start_segno + usable_segs) {
->>  			if (test_and_clear_bit(secno, free_i->free_secmap))
->>  				free_i->free_sections++;
->> +
->> +			if (test_and_clear_bit(secno, dirty_i->victim_secmap))
->{
->> +				sbi->next_victim_seg[BG_GC] = NULL_SEGNO;
->> +				sbi->next_victim_seg[FG_GC] = NULL_SEGNO;
->
->sbi->next_victim_seg[FG_GC] relies on sbi->cur_victim_sec?
-right  
->
->If sbi->next_victim_seg[BG_GC] is not equal to secno, will we still need to
->nullify sbi->next_victim_seg[BG_GC]?
-Changed to remove only when equal
->
->We have cleared bit in victim_secmap after we tag a section as prefree,
->right?
-You are right 
-change victim_secmap to not be used
-In the end, I think I'll have to do this to directly compare segno, 
-as you suggested.
-I tested this and it worked fine.
+On Fri, Mar 28, 2025 at 03:36:42PM +0100, Johan Hovold wrote:
+> The PCI pwrctrl framework was renamed after being merged, but the
+> Kconfig symbols still reflect the old name ("pwrctl" without an "r").
+> 
+> This leads to people not knowing how to refer to the framework in
+> writing, inconsistencies in module naming, etc.
+> 
+> Let's rename also the Kconfig symbols before this gets any worse.
+> 
+> The arm64, ath11k and ath12k changes could go through the corresponding
+> subsystem trees once they have the new symbols (e.g. in the next cycle)
+> or they could all go in via the PCI tree with an ack from their
+> maintainers.
+> 
+> There are some new pwrctrl drivers and an arm64 defconfig change on the
+> lists so we may need to keep deprecated symbols for a release or two.
+> 
 
-Thanks
->
->- locate_dirty_segment
-> - __locate_dirty_segment
-> - __remove_dirty_segment
->  - clear_bit(GET_SEC_FROM_SEG(sbi, segno), dirty_i->victim_secmap);
->
->Thanks,
->
->> +			}
->>  		}
->>  	}
->>  skip_free:
+Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
+- Mani
+
+> Johan
+> 
+> 
+> Johan Hovold (4):
+>   PCI/pwrctrl: Rename pwrctrl Kconfig symbols and slot module
+>   arm64: Kconfig: switch to HAVE_PWRCTRL
+>   wifi: ath11k: switch to PCI_PWRCTRL_PWRSEQ
+>   wifi: ath12k: switch to PCI_PWRCTRL_PWRSEQ
+> 
+>  arch/arm64/Kconfig.platforms            |  2 +-
+>  drivers/net/wireless/ath/ath11k/Kconfig |  2 +-
+>  drivers/net/wireless/ath/ath12k/Kconfig |  2 +-
+>  drivers/pci/pwrctrl/Kconfig             | 27 +++++++++++++++++++------
+>  drivers/pci/pwrctrl/Makefile            |  8 ++++----
+>  5 files changed, 28 insertions(+), 13 deletions(-)
+> 
+> -- 
+> 2.48.1
+> 
+
+-- 
+மணிவண்ணன் சதாசிவம்
