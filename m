@@ -1,76 +1,77 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C8A610F9
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 15:35:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 431932AEFB
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 15:37:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743608102; cv=none; b=Yn4RM6qmLalI0tmNfWXMA27bLapeiaBcQcWInKgAseZh83EmgoWx36BvcNfGem6cMZ32werL3RNaBYYvJJWhJh+eD4owO2dp2ABukotUATx6fE7F1Lf4NdGcVa+1GZ5zFaQFoaeXYZ95TQXF2MSK9ct1bCJJheVZgx/CnkeAhpo=
+	t=1743608256; cv=none; b=i1DqsYbQjpjhlaIPW6OVaatVprts/DnI3BVSbMPUgPCZvQxF9jIAVDNAd58UIITdot7d4eZ3HKp6CN/EWZ/sFWcfXaf7rNlFI8zOlLj0tQPUdxDfRkjbVOXopqgH8q8VIpDrWoDPuhlSCcubTVER3+q8lJ1xuhEUK55KIXiOCN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743608102; c=relaxed/simple;
-	bh=K682Bd58fkkp1pJQ7mnKCEx8s1kZZBJxAHAaFRvYPxg=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=pAfOkGO/Byk3oMBK3Ngb0QgOLPwluOZBNncvBWmtwYOlRh5VsKXuFRsWX4n2O9xz8UXFPoam0X8Ob7YZjyJhrVxEc/1kUy/NXEgUdOPvywp7VrCiXob/4rpmtYfH1XFdIC0lS0kYLx2WYevbV+SuWGibN1Rxb2aPznchdLglAw8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca; spf=none smtp.mailfrom=ndufresne.ca; dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b=QrnQHdsa; arc=none smtp.client-ip=209.85.160.182
+	s=arc-20240116; t=1743608256; c=relaxed/simple;
+	bh=qOAWHJJYiFzc3hDjDpDucfpGw87omsXRrilcS4Wt21s=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=OQG6Yg5JgwywR626KGoofnUHCPP1ZmzabN/LkB2VJeVhEM+IgYl20N59S2U36J+BJU9ZK8sib8Ksl6FMNjn7z5vxDgKVt1MOEU70NTjG/W7mAaufA5qve8dUUlLAe0BHX1ZKbt1KOJ7rOxThwB+t6LYaTGq0Y0IZEx526ETdVcg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca; spf=none smtp.mailfrom=ndufresne.ca; dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b=JMOsNP21; arc=none smtp.client-ip=209.85.222.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ndufresne.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b="QrnQHdsa"
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-4769bbc21b0so61534681cf.2
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 08:35:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b="JMOsNP21"
+Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7c5f720c717so103788785a.0
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 08:37:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ndufresne-ca.20230601.gappssmtp.com; s=20230601; t=1743608099; x=1744212899; darn=vger.kernel.org;
+        d=ndufresne-ca.20230601.gappssmtp.com; s=20230601; t=1743608254; x=1744213054; darn=vger.kernel.org;
         h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=TMIWEgwFtWafyi1/bv5jf0ov4gPA0B6DmtDQeyIS7xQ=;
-        b=QrnQHdsaqIs9LFfnwAsh+/jc2YYPcPd4gsCkxbzuILcL3t4qjjymITswk+RnXZrHIy
-         ZT91neAYxeTOQUeFHAVoTf5TBVtrUlfeb+bg6rAsqXeo77zVMpl2oVCBvrICfqv3ST6l
-         QtjcbFMsVXUL1iTA7Rwg9+vgnXbkzU+kXwLcoNcS2D7ipPRPnkKT7PN94A+h+G+YzWxY
-         +3iFP9GBdansaYlsl6jUXWYcOLCOK+X9R41zJb6BEI+uOO4Hu5H2lOLDKyqD8do4pYdH
-         dqwW1eQkEmt8YvMpW7/DyKfCZ0wIlZfZ3Xl/rYkN3DSmoC373mAq2JP/p5Tr871R1R3X
-         Wzaw==
+         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rhmKnF0oiTEPkeisoeZbaGPYtFNcuzXscDMztyaRd+w=;
+        b=JMOsNP21iHgoTZypjYxuN+YvoQlf522Q16Gopmu76pyK0c+0gS6821XPQ4QEF78nYR
+         nDYWhVJuL9bQtDj0qbr8gvCeimg2JjhLIcBUo+0vnP+4WIRdIoaMMCpDSjMnEZVl0s6D
+         1IeKwamApjeeSjzgkJ4L7zMukGQdKuw2LvXYoGYlUVYu2kM2cwCaof1RR4Gq1A2jsiF+
+         kPcYO7GJ21VuqyhxswKEIP3syC7iQjciRTjE+kqzooTsryYuTUFBKPcT2K42Y8Ggy5TN
+         sMWh8qKonarghxcEUbRibUcQMKmgx9taz/QTDRz4waKDf4/32ikwLe1R5bnN4IwroNBX
+         iS2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743608099; x=1744212899;
+        d=1e100.net; s=20230601; t=1743608254; x=1744213054;
         h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=TMIWEgwFtWafyi1/bv5jf0ov4gPA0B6DmtDQeyIS7xQ=;
-        b=ga8PILHI7S2rFUfXWXzUAlC/7izP5dY8qQt7eCoXX3+uPOLcVxRKj0OMYtRr3JA1iw
-         R1Blwyr+U2y6CMoZYazzK/EK1jEK+QmRo4otAYK1pERDGj0OeVjJcxDGaq/GhoE9Dm+X
-         Vr4oskkvNtMu5zrai7Zgs3qtgXzEVMxPeCThju3uYcskKxhKlavMP4LbyLfY9F9Z+TdM
-         EmydcNx2xS4L51HjWJVDoMoNZbXUALkvD57tCOO6EDmQSVPWX2KtKFv/nC8FgmQNIt1f
-         p0ntOZ77D7V7WQUJWtf4ZlrwH5KDMLQ2WzItroR5SoxnR+P1sYH35bw8S5J0pcdZC8+S
-         Xb+g==
-X-Forwarded-Encrypted: i=1; AJvYcCWOycEtWI/oR1co/NE/SCZO33AZRrloidIxZ3CVCZaSdbFV3j3J7tAh6aFEliG+dKkJz3swgxvuEx93CbA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy4XDtS4ppD08yHD0nKlSfG0wgWv0Cq2Yyuct0iSqpRc1MqQstl
-	yT/6EUtq6gSprwYPVZTR1t8Tp9jQ3FuYeQ91q35+wDZ0TNUwe3sql7Vd/WAc55I=
-X-Gm-Gg: ASbGnct6if7q8zbW64VMMGJoWXpJvxHRSzsCJvfxiFVkK1jq4EOgFMvtz7ruUDXKIsR
-	3Do73vqNaihaU0fqo0qR4UaOZAZuwzBXkQsbJDaLT1DXPdIoj+/VZ3UnVzzpC41Lg4fUKCTc5kE
-	mSj9pZjh/aK2a4EBjWylm7yLvvBPCLiwPxvq7SR2t7dojHx3/couDpHCZ5eqbd1O9kfCEyPWaUl
-	KUpVryAGJv7vAlNEt/0nIKPFeTQGk1eFDfDiKHfHWhBygJAlfYhhx6MyNTJeLPDS3MdGr9Ow43+
-	yOc1L5qn6CQOBHTCNec/ZdXNsaCVoIdbsp3Vd+y4AWK2mOUi9A==
-X-Google-Smtp-Source: AGHT+IF86UTdqujtK2ylyC4iKj51JDYDBGg0ZkrtMCZ8qTcR6Ji/O+4OQfsimKWJomrOBg7nwZAemg==
-X-Received: by 2002:ac8:5991:0:b0:476:9e82:6515 with SMTP id d75a77b69052e-47909fa7e14mr42821291cf.23.1743608099524;
-        Wed, 02 Apr 2025 08:34:59 -0700 (PDT)
+         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=rhmKnF0oiTEPkeisoeZbaGPYtFNcuzXscDMztyaRd+w=;
+        b=lMhzCH/HsNfCu2U64KpKxezLfBFyyC9LTJAppPPIjykQHXJVIioEM04VNAGjsmnd+B
+         ekWbmp8fO4g2rBKDBSS52K61n9rwqWkfe/MOEY6SDdOytMTfkkbQGj+TYA5DlUzP5d8l
+         mKcaBCzLxxjTHYQCLkN7FaI5IhUFkZcT1gEkEmhdm3CZqdtRAsj/vZfr7hRr3bxUtJkP
+         ynzXa/TzvRNOEKSgT2VAXRTId9hrzllSIeyYXyoIOr0IkYARv3MIU4zaJdq6eo6PkGnK
+         zcUqmCJ7zphzDp2lyNOkmIA93JcJ4NoBijoImgsydxxQMnHA7v6eJsmWWqZiNTQ0K4CM
+         B+sw==
+X-Forwarded-Encrypted: i=1; AJvYcCW0SAv5PK1fL3Vb7JfuxO+kLDgHzaizEW6QM/2i63ZNIyqPCEDfsxS7eI2lYHW8sWEeMw0p/IB9PzT6muk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx4EsfEsG883diew9kXn8uKMlCfwUSSb7SF9A5GWUD4/BJIs1uG
+	Sxld51YB5jBTRiG7wSI/TR6rXOOGfsSS8ykyz2nd5gXMOliSyMe7MZwrzL6LKDc=
+X-Gm-Gg: ASbGncu+Iy7Fxx7tiqInYi5tgwqQy8v89N2GDaofXgxml3FemP8OPmeWxvtXyv9crtk
+	KTr8NvPWtp5ZWCgwCH08quvnFff40t0fFnFJcWhf1AuXFCm2cHXrYE9E36Tkxjc8K/n2VTIhwES
+	jXODC2UGJOXUFpdxkRLyrfuIs6CJZz34DD7+GcEuDnJwxRzuDf2KdrEhWgd+gxjjH1lRP+TF5Tq
+	BMHaAatofTcGJoYxDdUVv3OyrDTD0TEMx+rdO25GYaa05MH3iEdgeHGxNUEMmt4ewllSKAxbFs5
+	L8W80Jw1dHTqs5tD9x2eudF6avBFwzdX6binXUVOeyXx/XS/lA==
+X-Google-Smtp-Source: AGHT+IGt12U4LeoNV08d0rSucCuL30UKo3Q/u+eYpiDfdZNZWOV5NQwkfWw/ZI52IiTuX89vZtkt/g==
+X-Received: by 2002:a05:620a:d89:b0:7c5:9452:4a60 with SMTP id af79cd13be357-7c76c970550mr2456785a.5.1743608253843;
+        Wed, 02 Apr 2025 08:37:33 -0700 (PDT)
 Received: from ?IPv6:2606:6d00:11:e976::5ac? ([2606:6d00:11:e976::5ac])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-47782a7fbf4sm80192371cf.39.2025.04.02.08.34.58
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c5f77804a9sm796103585a.112.2025.04.02.08.37.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Apr 2025 08:34:59 -0700 (PDT)
-Message-ID: <8fe576366e52d530d0507d8475fb52210a27b6df.camel@ndufresne.ca>
-Subject: Re: [PATCH] media: mediatek: vcodec: Correct vsi_core framebuffer
- size
+        Wed, 02 Apr 2025 08:37:33 -0700 (PDT)
+Message-ID: <cfc905988dda23078b5086f3eb0975863bbb6c2d.camel@ndufresne.ca>
+Subject: Re: [PATCH] media: mtk-vcodec: Fix reference count leak in
+ mtk_vcodec_fw_scp_init
 From: Nicolas Dufresne <nicolas@ndufresne.ca>
-To: Fei Shao <fshao@chromium.org>, Hans Verkuil <hverkuil@xs4all.nl>, Mauro
- Carvalho Chehab <mchehab@kernel.org>, AngeloGioacchino Del Regno
- <angelogioacchino.delregno@collabora.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Yunfei Dong
-	 <yunfei.dong@mediatek.com>, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
-	linux-mediatek@lists.infradead.org
-Date: Wed, 02 Apr 2025 11:34:57 -0400
-In-Reply-To: <20250314075703.4167532-1-fshao@chromium.org>
-References: <20250314075703.4167532-1-fshao@chromium.org>
+To: Miaoqian Lin <linmq006@gmail.com>, Tiffany Lin
+ <tiffany.lin@mediatek.com>,  Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+ Yunfei Dong <yunfei.dong@mediatek.com>, Mauro Carvalho Chehab	
+ <mchehab@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Fullway Wang <fullwaywang@outlook.com>, 	linux-media@vger.kernel.org,
+ linux-kernel@vger.kernel.org, 	linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org
+Date: Wed, 02 Apr 2025 11:37:32 -0400
+In-Reply-To: <20250318110556.903-1-linmq006@gmail.com>
+References: <20250318110556.903-1-linmq006@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.56.0 (3.56.0-1.fc42) 
@@ -83,47 +84,52 @@ MIME-Version: 1.0
 
 Hi,
 
-Le vendredi 14 mars 2025 =C3=A0 15:56 +0800, Fei Shao a =C3=A9crit=C2=A0:
-> The framebuffer size for decoder instances was being incorrectly set -
-> inst->vsi_core->fb.y.size was assigned twice consecutively.
+Le mardi 18 mars 2025 =C3=A0 19:05 +0800, Miaoqian Lin a =C3=A9crit=C2=A0:
+> scp_get() returns a reference that needs to be released with scp_put().
+> Add missing scp_put() before returning error in mtk_vcodec_fw_scp_init().
 >=20
-> Assign the second picinfo framebuffer size to the C framebuffer instead,
-> which appears to be the intended target based on the surrounding code.
->=20
-> Fixes: 2674486aac7d ("media: mediatek: vcodec: support stateless hevc dec=
-oder")
-> Signed-off-by: Fei Shao <fshao@chromium.org>
+> Fixes: 53dbe0850444 ("media: mtk-vcodec: potential null pointer deference=
+ in SCP")
+> Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
 > ---
+> =C2=A0.../platform/mediatek/vcodec/common/mtk_vcodec_fw_scp.c=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 | 5 +++--
+> =C2=A01 file changed, 3 insertions(+), 2 deletions(-)
 >=20
-> =C2=A0.../mediatek/vcodec/decoder/vdec/vdec_hevc_req_multi_if.c=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 2 +-
-> =C2=A01 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_hev=
-c_req_multi_if.c b/drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec=
-_hevc_req_multi_if.c
-> index aa721cc43647..2725db882e5b 100644
-> --- a/drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_hevc_req_m=
-ulti_if.c
-> +++ b/drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_hevc_req_m=
-ulti_if.c
-> @@ -821,7 +821,7 @@ static int vdec_hevc_slice_setup_core_buffer(struct v=
-dec_hevc_slice_inst *inst,
-> =C2=A0	inst->vsi_core->fb.y.dma_addr =3D y_fb_dma;
-> =C2=A0	inst->vsi_core->fb.y.size =3D ctx->picinfo.fb_sz[0];
-> =C2=A0	inst->vsi_core->fb.c.dma_addr =3D c_fb_dma;
-> -	inst->vsi_core->fb.y.size =3D ctx->picinfo.fb_sz[1];
-> +	inst->vsi_core->fb.c.size =3D ctx->picinfo.fb_sz[1];
+> diff --git a/drivers/media/platform/mediatek/vcodec/common/mtk_vcodec_fw_=
+scp.c b/drivers/media/platform/mediatek/vcodec/common/mtk_vcodec_fw_scp.c
+> index ff23b225db70..11ab3bc60217 100644
+> --- a/drivers/media/platform/mediatek/vcodec/common/mtk_vcodec_fw_scp.c
+> +++ b/drivers/media/platform/mediatek/vcodec/common/mtk_vcodec_fw_scp.c
+> @@ -71,7 +71,6 @@ struct mtk_vcodec_fw *mtk_vcodec_fw_scp_init(void *priv=
+, enum mtk_vcodec_fw_use
+> =C2=A0		pr_err("Invalid fw_use %d (use a reasonable fw id here)\n", fw_us=
+e);
+> =C2=A0		return ERR_PTR(-EINVAL);
+> =C2=A0	}
+> -
 
-To Yunfei, this information is copied to be passed to the CORE, is that
-value not used by the firmware ? I can see that everything else in the
-driver uses the picinfo structure. I'm simply trying to understand why
-that didn't break anything and what is the implication before this fix,
-so I can determin is that's more or less cosmetic at the moment. That
-being asked, I'll give it my:
+Might sound nit-picky, but don't do style fixes in patches intended for
+backports. It increases the chance of conflicts.
 
-Reviewed-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-
+> =C2=A0	scp =3D scp_get(plat_dev);
+> =C2=A0	if (!scp) {
+> =C2=A0		dev_err(&plat_dev->dev, "could not get vdec scp handle");
+> @@ -79,8 +78,10 @@ struct mtk_vcodec_fw *mtk_vcodec_fw_scp_init(void *pri=
+v, enum mtk_vcodec_fw_use
+> =C2=A0	}
 > =C2=A0
-> =C2=A0	inst->vsi_core->dec.vdec_fb_va =3D (unsigned long)fb;
-> =C2=A0
+> =C2=A0	fw =3D devm_kzalloc(&plat_dev->dev, sizeof(*fw), GFP_KERNEL);
+> -	if (!fw)
+> +	if (!fw) {
+> +		scp_put(scp);
+> =C2=A0		return ERR_PTR(-ENOMEM);
+> +	}
+
+With the above style change removed:
+
+Reviewed-by: Nicolas Dufresne <nicolas.dufresne@colllabora.com>
+
+> =C2=A0	fw->type =3D SCP;
+> =C2=A0	fw->ops =3D &mtk_vcodec_rproc_msg;
+> =C2=A0	fw->scp =3D scp;
