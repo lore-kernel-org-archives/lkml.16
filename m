@@ -1,260 +1,114 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com [209.85.222.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0D462356B7
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 08:44:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A76281F9F7A
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 08:45:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743583465; cv=none; b=Nbmo149tdINk0TlNjUpoosibwfIO9cB4faMwLKp4YXO3DCDtRZFR0z5FEyI4061ajxJQPXJX9QA6wDh45RlqACGQ8XBrzvuojBVwupbc6+xKcFPf358ONgbSMj4t+hh7eHS4od1DZnE8nQcNh5L1kbvKGZiKE3UUDP3bCLcIosM=
+	t=1743583509; cv=none; b=RDMsM7xjjkeicxKAX7cGulZqczb9RxScNZWfONej9ejiccjuxhxRGiblkw9x7AQzrvw8UXzcAPGQdjX+egJAD8d01Jvw9cMi3hD8xG6Wi/76++3QpT/n/OnJUzljz+Rw5nS5WJbHG5ITQ/5t9Xm9B0v4yar9VS2cWtsryM2nCf4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743583465; c=relaxed/simple;
-	bh=mlykfrFdz84+U2IDELk3Xr0EjvW0zNxL4agbG114krw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=haOnz03b8dwXQBbYm0qfCbIFcO8X9kSRHSNTfm2Vgrs2FD3nm3yln/4iemUKUwZnUJuIBVkrkefbpuT3koCww4MJq0wxxzyPGdwGMBjpCjc/IyETtwJ6eVWWo85r+TLxECzmln7N/SDISu1f2rZrM9N3HXSDBGkqjkUuEE1NBuc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EbdWH4Oo; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1743583509; c=relaxed/simple;
+	bh=MYXtt+F82yFU/HF8RGrdrV4yjQ+SYvY33Hbn9q1VIBk=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=GPw7Z3CtP9xUFWzLFhQd6Li/N3MDDRr3+aWQ2ieEmFQaCSpJ6/85oS/uc1S9p5JQB7PtMWygZ49PpRr8GAr0xCX+FI/hKXyXRynyHEweekHoLEHffr13jhORBmLrZNgcLLS10LpypWWaLeTeUg5OYAwq1Ajg3GQz4yMCVo4ILac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nWHoCHcw; arc=none smtp.client-ip=209.85.222.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EbdWH4Oo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743583462;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=H5aT4E8IjAz62HrMcPYGYOBE62zNkPJUyzC7qjAbwrQ=;
-	b=EbdWH4Oo+j3/8ejAxCosveCLwHvar6tFL12FL4TUWIHnyCCaOEU5q8inDb2Y0Bpg6/j7g5
-	rvN+Tl7iez2ccrel8PQ0mPlS0JaO0byz0xuABQRPO6FWLNQJJuOMx5Udf5bJAV+hO5tsJ2
-	sMDn4c+k5cJ5GEiXqKK4vYQBYsX4h2g=
-Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com
- [209.85.214.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-602-WiYMaE-xNsO9AJOUiYq4EQ-1; Wed, 02 Apr 2025 04:44:21 -0400
-X-MC-Unique: WiYMaE-xNsO9AJOUiYq4EQ-1
-X-Mimecast-MFC-AGG-ID: WiYMaE-xNsO9AJOUiYq4EQ_1743583460
-Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-227ea16b03dso183082335ad.3
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 01:44:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nWHoCHcw"
+Received: by mail-ua1-f50.google.com with SMTP id a1e0cc1a2514c-86b31db3c3bso2719499241.3
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 01:45:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1743583506; x=1744188306; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=hgDb3fVVBUB/IfzwnOD3L78L7lK+HAMvWH+VtOqC03g=;
+        b=nWHoCHcwx9AU2L8fPOmIHMl1xAPKZoQ+DSeh5mK+1KiKSDYn4N2efBfFvDDuiyI3L0
+         UT4le4RGrGBt03Tia9BjuRTuetblJ+1mmKAPEpAqsl1chDySQM2WGX6Dxd87c+H5r+PP
+         mYLSVHnScBpSpXmPXU9H6NPQsxeus3mj0Z6O5kvikmYjcqoq/2zZ0AqKS/GKx9YpUV65
+         Kgsn+rArosOX81x4qoQQLJmLvTQIyrxY0tY36Y1uUDLjDV7de4ulgZXofvY8ivJo9VXE
+         7yitwSbO2mTzDWfR9kV8tVQJNo0bPMVWLUbBJI8x7x79kh+Fj3xJ7FVV8TIq09vLijmd
+         agOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743583460; x=1744188260;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=H5aT4E8IjAz62HrMcPYGYOBE62zNkPJUyzC7qjAbwrQ=;
-        b=OymHoobv4/RW8y+Y8cLvorpusKpmUSt7HMSvR6eOflkojUpIvCji0Qx+TTIJejqEWY
-         XENNdnUAnnL4UEHuHRMozdvWuFthoNmfeBKcUnW40q7pPi2rTrr4MCLfqorHGwkHsbog
-         j6UHJQKCug0MP5UZjMCAnzBkOcsWsT3lcdbbhgUekWLcz82WcWKbw7M2yxELOVe9vh+R
-         AyivYa75f6ldLecS9OCtYyxcHLzVNo6zy5b3LjZ5wbk/l18WOPxGUiMYmSnY33psCOjE
-         Ns0PuZB5G3CW8hhV1QYUCvbYAMPKQ8Q3P6SDZD4IzZ7oyueEmMTVJBA7KGZDOgltv+7q
-         yslA==
-X-Forwarded-Encrypted: i=1; AJvYcCVehbtyZhqScpIdbrNJja59GyLCQGQzTCRhNsSsN57LLSKOQ0Za+2ZDFQLgLx92r9yn6tP4UaqffrqDESM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx6c+4Z6M9jvBSF5y5n2NRs5h5v5f6Mryl3FkrugqYL/OdtvUSp
-	mB0o6DC1umHUm4xEQx/4Oyyp/Yuh3gXiTzmue5pkKtht9iClfJEbpB9v5276DT5sHd1lazwZ9w7
-	Pr/FoJ0F+e3j+s3cL+CwM+CfDHSIwSFiLjg1/He0IgS4wBmIpkfvTF08BL3bL/Q==
-X-Gm-Gg: ASbGncsnTWzSLp/l2kTwOZLhcWeSpachE9y8hnBdSDeb4qnJSUKD8eIqX0bHuN12aG8
-	XoCDXhm4qMpfXq0e+/OfABPEzc98le5e+ZlzbMKXx0dMXx37Ybkkpw9HMd42jDUH6c70ft9IpO7
-	j9y6F6epW6FKliG6Bp+zx6ZE6PY6plZLyy1zLrECVrw8T0uqzNIzaHxpA3vJjwvCikT8ETEzeV9
-	3+UaEW6YRmpQu6N+QWLvVTkzt/VVoHW6Ig65skEhu32NOfmLFglpzp224Xw56TKIIjc2m5DmeiK
-	2fSS3rU5Gp3jLkLh
-X-Received: by 2002:a17:902:f64f:b0:224:1ef:1e00 with SMTP id d9443c01a7336-2292f95d075mr263141325ad.19.1743583460400;
-        Wed, 02 Apr 2025 01:44:20 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFdcCKlcH6Z7Lv0v5Z/IkIHKmjovi+4bC2OLW8bIyHLKp5/5tomDqn7sNkO1KXXa/YLokWsTA==
-X-Received: by 2002:a17:902:f64f:b0:224:1ef:1e00 with SMTP id d9443c01a7336-2292f95d075mr263141085ad.19.1743583460084;
-        Wed, 02 Apr 2025 01:44:20 -0700 (PDT)
-Received: from zeus.elecom ([240b:10:83a2:bd00:6e35:f2f5:2e21:ae3a])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291f1f7394sm102202645ad.225.2025.04.02.01.44.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Apr 2025 01:44:19 -0700 (PDT)
-From: Ryosuke Yasuoka <ryasuoka@redhat.com>
-To: maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	drawat.floss@gmail.com,
-	jfalempe@redhat.com
-Cc: Ryosuke Yasuoka <ryasuoka@redhat.com>,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	linux-hyperv@vger.kernel.org
-Subject: [PATCH RFC drm-next 1/1] drm/hyperv: Add support for drm_panic
-Date: Wed,  2 Apr 2025 17:43:49 +0900
-Message-ID: <20250402084351.1545536-2-ryasuoka@redhat.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250402084351.1545536-1-ryasuoka@redhat.com>
-References: <20250402084351.1545536-1-ryasuoka@redhat.com>
+        d=1e100.net; s=20230601; t=1743583506; x=1744188306;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=hgDb3fVVBUB/IfzwnOD3L78L7lK+HAMvWH+VtOqC03g=;
+        b=cOA59nsCJZgaBlB463DtUdsGYzHwjx76STRY8WQfwXeU2SmC35hWWs28SgaFKgxQjM
+         z845vzd2b0/86iiYyErJH7qt3Tb3JGLhff54/g70YU+eR42gaRoYW3fAOG/jdOtxNS3X
+         iWA4v5MSuj15iJbk8+3hwFvfJcnoN9Ahe2y2w4Tv01y9Vc0uGb4RiP48Tdy6q4/C2C1F
+         4QUhRcOLE3Z16K/1TM24A0H7VasVMqmJxKPNSt1JySqicxkWXXfo38wnjRlr1bCzD/c5
+         8SbRm/wjtdF4k3O9P7GVpUtoUDzkI8L4+BXkwwjb/XOa067byShrfa0gL4JSGhl+OEul
+         4XPA==
+X-Gm-Message-State: AOJu0YysocgCfTE/LVjEB0zqqZ3EdhPnkbJrZ/tU+gs89ItnUtWKeHpw
+	z7FyybKfdyr8ZPIC2py9SmmLgG6gg5TsajD5oYbKjBv3uVa/kpo/fopfsQOnGTymrQ1kZbpQ/AA
+	ZXqpwJ4ooNMAOAiIKnyNiTPbTzh4VqbvXQwe1Zgo50XJ6b7wGs0g=
+X-Gm-Gg: ASbGncv9T3B3Abunj7QE/BHzTq1MR6IXJtvZ7CPotB9S+UNIyDmrKnNmdt0B+8ie4pc
+	FLQpMHy9kw0Hk1yC5PxzyAuNmycPel23xNILQiws0IaLZbFuzbBhK2WY2lc8oFNGcSGsFjezojH
+	BfIsDg6npWGVtkoF1p7I9DL52bkZrI6Xpy2vOcBtvkn901YGhPhdmlR6+bNw8=
+X-Google-Smtp-Source: AGHT+IE8fq6fgnNiBlF4pjBGjNOCQgZFHKYt+jyYnPaGvFt9HHKIIGxzApITzblIW2SBZ/TFBbSfqRsVUBxL6jzuEN0=
+X-Received: by 2002:a05:6102:c12:b0:4c3:9b0:9e6b with SMTP id
+ ada2fe7eead31-4c6d384b3d2mr10951298137.10.1743583505840; Wed, 02 Apr 2025
+ 01:45:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Wed, 2 Apr 2025 14:14:53 +0530
+X-Gm-Features: AQ5f1JosHeaxk-JjURpm99TBi1ldYeuLUsjGtGWwli-pgYAQe5pPal7OZ5w-kuQ
+Message-ID: <CA+G9fYtdXHVuirs3v6at3UoKNH5keuq0tpcvpz0tJFT4toLG4g@mail.gmail.com>
+Subject: qemu-i386 boot failed on mainline master - no console output
+To: open list <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>, 
+	linux-mm <linux-mm@kvack.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Vinod Koul <vkoul@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Arnd Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>, 
+	Anders Roxell <anders.roxell@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Add drm_panic module supports for hyperv drm so that panic screen can be
-displayed on panic.
+Regressions on qemu-i386 devices boot tests failed with defconfig on
+the mainline master no console output.
 
-Signed-off-by: Ryosuke Yasuoka <ryasuoka@redhat.com>
----
- drivers/gpu/drm/drm_simple_kms_helper.c     | 26 +++++++++++++
- drivers/gpu/drm/hyperv/hyperv_drm_modeset.c | 42 +++++++++++++++++++++
- include/drm/drm_simple_kms_helper.h         | 22 +++++++++++
- 3 files changed, 90 insertions(+)
+First seen on the char-misc-6.15-rc1 merge 25601e85441d ("Merge tag
+'char-misc-6.15-rc1' of...)
+ Good: [08733088b566b58283f0f12fb73f5db6a9a9de30] Merge tag
+'rust-fixes-6.15-merge'
+ Bad:  [91e5bfe317d8f8471fbaa3e70cf66cae1314a516] Merge tag 'dmaengine-6.15-rc1'
 
-diff --git a/drivers/gpu/drm/drm_simple_kms_helper.c b/drivers/gpu/drm/drm_simple_kms_helper.c
-index 250819fbc5ce..508a5961d2b0 100644
---- a/drivers/gpu/drm/drm_simple_kms_helper.c
-+++ b/drivers/gpu/drm/drm_simple_kms_helper.c
-@@ -14,6 +14,7 @@
- #include <drm/drm_managed.h>
- #include <drm/drm_probe_helper.h>
- #include <drm/drm_simple_kms_helper.h>
-+#include <drm/drm_panic.h>
- 
- /**
-  * DOC: overview
-@@ -316,6 +317,29 @@ static bool drm_simple_kms_format_mod_supported(struct drm_plane *plane,
- 	return modifier == DRM_FORMAT_MOD_LINEAR;
- }
- 
-+static int drm_simple_kms_plane_get_scanout_buffer(struct drm_plane *plane,
-+						   struct drm_scanout_buffer *sb)
-+{
-+	struct drm_simple_display_pipe *pipe;
-+
-+	pipe = container_of(plane, struct drm_simple_display_pipe, plane);
-+	if (!pipe->funcs || !pipe->funcs->get_scanout_buffer)
-+		return -EINVAL;
-+
-+	return pipe->funcs->get_scanout_buffer(pipe, sb);
-+}
-+
-+static void drm_simple_kms_plane_panic_flush(struct drm_plane *plane)
-+{
-+	struct drm_simple_display_pipe *pipe;
-+
-+	pipe = container_of(plane, struct drm_simple_display_pipe, plane);
-+	if (!pipe->funcs || !pipe->funcs->panic_flush)
-+		return;
-+
-+	pipe->funcs->panic_flush(pipe);
-+}
-+
- static const struct drm_plane_helper_funcs drm_simple_kms_plane_helper_funcs = {
- 	.prepare_fb = drm_simple_kms_plane_prepare_fb,
- 	.cleanup_fb = drm_simple_kms_plane_cleanup_fb,
-@@ -323,6 +347,8 @@ static const struct drm_plane_helper_funcs drm_simple_kms_plane_helper_funcs = {
- 	.end_fb_access = drm_simple_kms_plane_end_fb_access,
- 	.atomic_check = drm_simple_kms_plane_atomic_check,
- 	.atomic_update = drm_simple_kms_plane_atomic_update,
-+	.get_scanout_buffer = drm_simple_kms_plane_get_scanout_buffer,
-+	.panic_flush = drm_simple_kms_plane_panic_flush,
- };
- 
- static void drm_simple_kms_plane_reset(struct drm_plane *plane)
-diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c b/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
-index 6c6b57298797..8e8eacb0d07f 100644
---- a/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
-+++ b/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
-@@ -16,6 +16,7 @@
- #include <drm/drm_gem_shmem_helper.h>
- #include <drm/drm_probe_helper.h>
- #include <drm/drm_simple_kms_helper.h>
-+#include <drm/drm_panic.h>
- 
- #include "hyperv_drm.h"
- 
-@@ -146,10 +147,51 @@ static void hyperv_pipe_update(struct drm_simple_display_pipe *pipe,
- 	}
- }
- 
-+static int hyperv_pipe_get_scanout_buffer(struct drm_simple_display_pipe *pipe,
-+					  struct drm_scanout_buffer *sb)
-+{
-+	struct drm_plane_state *state = pipe->plane.state;
-+	struct hyperv_drm_device *hv;
-+	struct drm_framebuffer *fb;
-+
-+	if (!state || !state->fb || !state->visible)
-+		return -ENODEV;
-+
-+	fb = state->fb;
-+	hv = to_hv(fb->dev);
-+
-+	iosys_map_set_vaddr_iomem(&sb->map[0], hv->vram);
-+	sb->format = fb->format;
-+	sb->height = fb->height;
-+	sb->width = fb->width;
-+	sb->pitch[0] = fb->pitches[0];
-+	return 0;
-+}
-+
-+static void hyperv_pipe_panic_flush(struct drm_simple_display_pipe *pipe)
-+{
-+	struct drm_plane_state *state = pipe->plane.state;
-+	struct hyperv_drm_device *hv;
-+	struct drm_rect rect;
-+
-+	if (!state || !state->fb)
-+		return;
-+
-+	rect.x1 = 0;
-+	rect.y1 = 0;
-+	rect.x2 = state->fb->width;
-+	rect.y2 = state->fb->height;
-+
-+	hv = to_hv(state->fb->dev);
-+	hyperv_update_dirt(hv->hdev, &rect);
-+}
-+
- static const struct drm_simple_display_pipe_funcs hyperv_pipe_funcs = {
- 	.enable	= hyperv_pipe_enable,
- 	.check = hyperv_pipe_check,
- 	.update	= hyperv_pipe_update,
-+	.get_scanout_buffer = hyperv_pipe_get_scanout_buffer,
-+	.panic_flush = hyperv_pipe_panic_flush,
- 	DRM_GEM_SIMPLE_DISPLAY_PIPE_SHADOW_PLANE_FUNCS,
- };
- 
-diff --git a/include/drm/drm_simple_kms_helper.h b/include/drm/drm_simple_kms_helper.h
-index b2486d073763..126d0d170e81 100644
---- a/include/drm/drm_simple_kms_helper.h
-+++ b/include/drm/drm_simple_kms_helper.h
-@@ -10,6 +10,7 @@
- #include <drm/drm_encoder.h>
- #include <drm/drm_plane.h>
- 
-+struct drm_scanout_buffer;
- struct drm_simple_display_pipe;
- 
- /**
-@@ -226,6 +227,27 @@ struct drm_simple_display_pipe_funcs {
- 	 */
- 	void (*destroy_plane_state)(struct drm_simple_display_pipe *pipe,
- 				    struct drm_plane_state *plane_state);
-+
-+	/**
-+	 * @get_scanout_buffer:
-+	 *
-+	 * Optional, called by &drm_plane_funcs.get_scanout_buffer. Please
-+	 * read the documentation for the &drm_plane_funcs.get_scanout_buffer
-+	 * hook for more details.
-+	 *
-+	 */
-+	int (*get_scanout_buffer)(struct drm_simple_display_pipe *pipe,
-+				  struct drm_scanout_buffer *sb);
-+
-+	/**
-+	 * @panic_flush:
-+	 *
-+	 * Optional, called by &drm_plane_funcs.panic_flush. Please read the
-+	 * documentation for the &drm_plane_funcs.get_scanout_buffer hook for
-+	 * more details.
-+	 *
-+	 */
-+	void (*panic_flush)(struct drm_simple_display_pipe *pipe);
- };
- 
- /**
--- 
-2.48.1
+* qemu-i386
+ - boot
 
+Regression Analysis:
+ - New regression? Yes
+ - Reproducibility? Yes
+
+Test regression: qemu-i386 boot failed on mainline master
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+
+Anders bisected this to,
+  # first bad commit:
+    [eb0ece16027f8223d5dc9aaf90124f70577bd22a]
+    Merge tag 'mm-stable-2025-03-30-16-52' of
+git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm
+
+## Test log
+<No console output.>
+
+## Source
+* Kernel version: 6.14.0
+* Git tree: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+* Git sha: 91e5bfe317d8f8471fbaa3e70cf66cae1314a516
+* Git describe: v6.14-12245-g91e5bfe317d8
+
+## Test
+* Test log: https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/anders/tests/2vAGjk1bqJ8kqDGEyo2jXerYOcR/logs?format=txt
+* Build link: https://storage.tuxsuite.com/public/linaro/anders/builds/2vAGjX8EjBsjTTOgIxZswnitDbF/
+* Kernel config:
+https://storage.tuxsuite.com/public/linaro/anders/builds/2vAGjX8EjBsjTTOgIxZswnitDbF/config
+
+--
+Linaro LKFT
+https://lkft.linaro.org
