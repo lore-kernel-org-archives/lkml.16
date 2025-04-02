@@ -1,184 +1,194 @@
-Received: from AS8PR04CU009.outbound.protection.outlook.com (mail-westeuropeazon11011046.outbound.protection.outlook.com [52.101.70.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9915F2AF19;
-	Wed,  2 Apr 2025 19:38:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.70.46
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743622703; cv=fail; b=tFxBxDwIUdmghK3VY3meUMIf18IdJGdaQjwx4cYOtaCKInbhCe744p5x6DR6WbyOby3vGyO5DAzmkQATd+kls03Tk+yURjWFJQvu/Dw78N8s1ScElZLUZ4qwXfX9mADzBdJQnfCJcAc+t4V7nTSUGtvBK+VGZcR3r7t0b+DcKz0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743622703; c=relaxed/simple;
-	bh=IvlwZNCURwWPlPKqJUCqpoz1/QvhnyGWWewC/zDVoDw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=p8mAmH6w2TA6oZyIitO+J205/SsZXO+Su7gAnpZrg/TYDTxaQ8hv495LH6kfur/snrkcGxVCey7Op0xfBSLw2ahezc9dKdt3oS3q7mF2xW4HzsmwDedqsc9+W99Vo8hQHkYjmYx/teMDs86/TUJwWI3u53yEfBIjD5Ey3C7R83Y=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=jiCbqWPk; arc=fail smtp.client-ip=52.101.70.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B52D2AF19;
+	Wed,  2 Apr 2025 19:41:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.176
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743622871; cv=none; b=PQz1LZIIBpkt57j82sJYzbcg8WMZbwEkxAy8wNfZfqg6KRZ1DHUgqDXVL/vioD5HUlccCQbRSU2/6eMExyG/e3nll8pCrwQLqTpgA/mdVIW4gCEALhTJje5keo6ze+sJrT41sZU5XbmV0ZKGowCTygJLSmOi9zDkXJVawg0CVpo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743622871; c=relaxed/simple;
+	bh=HQYrUf3Z4hmCPC+YCNHa1UrZ8jCM/O8ktaJyaaK/ih0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cjsbhG6NAgVfVfnApBM6JFkOdNb3Mjjnh6AYet03/DNZnTSe8p4yGzXn/XKIrokdoYLWwZ8Et7szqp3h/D8/CqQJ1oO1KfVBtofXJR4Xdt9gI2nxW75veci54l7I64WTq40RiOwTNBSdOKT11xDJtuxkJZ1LPf3ICWUc0wv1Ieo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QPRpkg7Y; arc=none smtp.client-ip=209.85.166.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="jiCbqWPk"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=sN8e+uadKjgqdw5EGg+sVW/wD0aQsLPDPjWc9ZK0VKItZc/1klBBslI9wX7jlHEUcL6cc5RXhR6slNFNVpRC5Vo8zE8icQOQZi+DVqlngGb4+Bc7+BivZadWWaBbbIFR0CD8LU2p78sqEtHFtPSlpDnnEbidzeb7oQbYdAuf1Nh3Bqyi3EsEJ5wC3pojmd9brfDfhEQNM566dwAPp64HM9t9QJjXto4/bq11yjAeJv3vsfsrTGDHVWuZNrL0biO3uHQplANAjS1c66i/IgDytfIYkQDHi/Y1LZCleuq6q12T0N/nMIgwMUsN77GJhrafGjHKEIT7PaoypR5FvJ+Qug==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=s5o6AbIbvZVy/nQSqqFuCabYebHyuX3Kth3SY8r7+8c=;
- b=E+B+WzjSXVmqbItEMFah814ozYETUfZr4HQ3kqUVug/3XIEkL/0OaTizs94yayrod5Mo1uODWwf8CtHLvBYAV6BJoNnQ3whkaHR5hogn3Qxv9lkYUlr68MdeqX97T9b3D9GcV397SbHxa3DfUyqHTsTH826XnWgmUscY9e+JnNp62OThx7AsiX0vTZeinYqV37jm4soUNJlyaoZtBR4OVpa2OmCBToZxyHZN7IHx9Gf8I99sg1rWCDxQ+lRx/xZ03iwJ+xgO/+u5ZlMGQwpBiG+8oxKMYMLgOSFwawsoEg+z6h7PzetPA5KnTtSi7d5I5ybbN0DjYKf5Xm1iChKcsw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=s5o6AbIbvZVy/nQSqqFuCabYebHyuX3Kth3SY8r7+8c=;
- b=jiCbqWPkjvH8HfwvPRaOBG+dl12tGFI/AZuShjSZ2ac1aOPPZ6/WR5J3JTfnOeFf7VvT99NJS5uOnqvf2Uc4uk8xx4xc1/YBQhJPFtgoOc4F2yLO/qKc3mPWcdvUJKkusIiu/3M8QQmiBkegfphxh+L9xDDbUCRJYbSdf+KZSZQAgQYL4r0gyB7Iq1o841bGBMz+TJalhbnJzk+fzdo2YTZaE8vIJtYfYswxe5WGNbm8w02vf6ezqlcjWVNsBC82GGlbRPD76Ff8GmGNo2Koe6yx1hEnd8OSMqhK+MYkTDMq3t1JmVcy5Oso1Es4e6eLP1AlV5+aWACYjhWxALko6w==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by FRWPR04MB11223.eurprd04.prod.outlook.com (2603:10a6:d10:170::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.54; Wed, 2 Apr
- 2025 19:38:19 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%2]) with mapi id 15.20.8534.048; Wed, 2 Apr 2025
- 19:38:19 +0000
-Date: Wed, 2 Apr 2025 15:38:11 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: maudspierings@gocontroll.com
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v4 9/9] arm64: dts: Add Moduline Display boards to
- Makefiley
-Message-ID: <Z+2SIxFFTuf5Iy40@lizhi-Precision-Tower-5810>
-References: <20250402-initial_display-v4-0-9f898838a864@gocontroll.com>
- <20250402-initial_display-v4-9-9f898838a864@gocontroll.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250402-initial_display-v4-9-9f898838a864@gocontroll.com>
-X-ClientProxiedBy: SJ0PR03CA0007.namprd03.prod.outlook.com
- (2603:10b6:a03:33a::12) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QPRpkg7Y"
+Received: by mail-il1-f176.google.com with SMTP id e9e14a558f8ab-3cfce97a3d9so1023175ab.2;
+        Wed, 02 Apr 2025 12:41:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743622867; x=1744227667; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UUS1J/z9kQSq8/4qkw4zIETjzLEsRP7cJOaot+HzQu4=;
+        b=QPRpkg7YO04K4i4HBCrRyMVHktAD3FvaDpxWS7ECioowhpKNlFAIvQy66WHY20T2lh
+         oLw7NtNSXU+l7WF0nQVP4jO6hEsvFwsbOEUbVIuNJBRhFm43OizYArC8bksAh9xb7/p4
+         INSrSASlpz5I7x10vFlmUdNXiue5SKPvepI/Dj+R00itQPO0PeR5n+6OoyqNCky5wYMT
+         pvuAz4dgbe8cQzaVxkCqgH7Kac2a84Cfo8HaVlId7Ufo7YiHmprKp6Qmna/RffFelPTg
+         7745ijdr1V1gtTgtX1AF9ZSf9Wix6LYi54i2STKYx9rYq49csLwx4O0PD2PPbxFxd2d0
+         JOqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743622867; x=1744227667;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UUS1J/z9kQSq8/4qkw4zIETjzLEsRP7cJOaot+HzQu4=;
+        b=qW6i+8uk/y4nwjd5ddf/+cNGrNew+yWlVQHonE+tBJIyRTxmoqey1OV7WZqsBMp0G8
+         96Roetg1naUkIJEbbxzW6CEzJwDCD43Fur5afbQnvd+NJ5mJlFV7HRfsdd9aFgzW3rIG
+         BLTf1kLhVsQ8MScyxYAFDfwspJhhOFR0DoxZjqguxB7BFjNvmgrKlFg7L802kj1aBrCY
+         EVM1AUkN8K6tihaM6EmIrvzIg5KjlgsqRhwCOG/BL9edRNUjvWKurivLNEpYEfbflw04
+         pEicrfEsW7uxYlqT+BdXVntPbeMVsjxD7FPpu48gpR+KE5yRvoVXVUYis4HhAYWX6Eaz
+         OrYw==
+X-Forwarded-Encrypted: i=1; AJvYcCUV/PZmRQwIbViIaLEpn03Zvt8zoUgTeUUr6oZTsAA4XcczyfUxM+kIYz9lDXPk9vhhaCtwN7nq@vger.kernel.org, AJvYcCVUjyXIkWhKKe/zR63dtgV30PEIeeN6PZ5+Pjid7Xf7gq6yB1UD5eDUbsyAipMo97qB8b7evMFH+4UoNg==@vger.kernel.org, AJvYcCXuOCXNUyD6VeKDErxWKmc9hrlAuFsgdsH6/q0K4paDtibWqywbeBBQZ8lwd63felAwSaVTtFInSzfNOgs=@vger.kernel.org, AJvYcCXuiRJYDuXNdujpS5grrZS+dSvJ9tLrIITVd3lITsAKS8U8RrjaCN9LkTrsHHrexQfHnwLVtSQJ@vger.kernel.org
+X-Gm-Message-State: AOJu0YzM81CJxuP+oLf+VTeEwH5I8aXj8xh4itJyKWFUQbQKuRdHXWQf
+	wpXKVGl+/b5SmPkiCrCS4ZtAgg5GZPe/Qi8Nb0/sZ9A6g4FyGJYdC+WJFvfmgOuq5wkCDK2sQ/4
+	1PuVNEeEgvmFG8v14umYiuUjElvDa+wlZ
+X-Gm-Gg: ASbGncu3qYUw6iipZPWmVzIEByY8cld9eBpo01A9W05+VUK/3awC048Z8j+Y73Tiezb
+	0bamOt1CJm5cAeEg+DfGPWm+ZmWR950M+Xyl5cHc6iLZkB8eFN+GnhFua22ebX3SzUp6vRdrYPU
+	eDPCGEAWTmnXA8s+TQvNv8tAGjmew6cq/Zoen8zWI=
+X-Google-Smtp-Source: AGHT+IEWfma6X5ez4B84XHaA8Hg5GU9L8meSLHJ4iYrb/qIwt8c4/Ivb+o9zQV621QfArJuMXBAKElx8oRo/JcJFASg=
+X-Received: by 2002:a05:6e02:3a04:b0:3d6:cbed:3302 with SMTP id
+ e9e14a558f8ab-3d6dd76c89emr2439975ab.2.1743622867040; Wed, 02 Apr 2025
+ 12:41:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|FRWPR04MB11223:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5fa2d2a4-c88e-4653-c250-08dd721debae
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|7416014|52116014|366016|376014|38350700014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?/ZhGs7cn9B3uA68WqmhoErtXWCR3nrx+RGAwCyskGfm/t+Z3q2FPgvqeKIAx?=
- =?us-ascii?Q?jiskf9SJEPMVhDOmnVFzQfADjbAu33dZxfDTltLfOtPEZblfwYYQySIXkdnA?=
- =?us-ascii?Q?Dwt0zGSHuNO04ACqxS2uBfK6kHB27utbg0RlpyINsDWuIx3D3qPaT6Dtj5GA?=
- =?us-ascii?Q?e+oKNPtz3Oo+4AHnVr1UTkc1yA7pOWUA4fp7zdtZFvZ+gxigM0pV8V8K5Y2T?=
- =?us-ascii?Q?G6nehyt0LiB0BMwMoxz6WUBx4/DVurR9BtKM6ys7/MRpamF0A6dRm8KQB+M0?=
- =?us-ascii?Q?pyydlAFhER88f7AIq/kx66RQfa+/F93Gmf4+1hSfOdReTr4Ug9jwh0B/Ighs?=
- =?us-ascii?Q?dAvnzVp8jMXxr4urjIiU1cNx41nQA4LwilcEEhq9aLPjwbS4rWm6b+5Jnajr?=
- =?us-ascii?Q?6Y8h1I+gyEJpwN4gxmMGNQgbZrTpio79hFlaArftAeoen3mCSuukH43heHQG?=
- =?us-ascii?Q?eePzzAtx9+rs4SJNWcbEeIhMyx4znCDB5elmerGWp9bwwD8N/MmrXKJd/mLl?=
- =?us-ascii?Q?wuA2ZrQ+8hU4hLmSWyjimUkwxb3vjMfCoDnYJZENUvm+4Vi/TgV9Gizh6HlF?=
- =?us-ascii?Q?GGuFU+hWheeDOvv6w0z5KTCBG1e2DgTrWle5NEAo/yyDrTm8HhU8bWXdD1pB?=
- =?us-ascii?Q?s1ffrBidds+HOqBUkBw7fTDlWDR9JR1k5lEeAZK7ui51AM8XLqV0CGXqDkYu?=
- =?us-ascii?Q?gLTNtgv5VqCHpTBTlCMnugDXnrdS968EjBj/7qIVCj1wOVrYGtrsG8/wVPXd?=
- =?us-ascii?Q?bMrVKC/lPuWMYWjxoVUn/4C8XedGohxDZh+ch/fLFsRAqNvCrFf4OIyulfYp?=
- =?us-ascii?Q?rz0VeUvLIswRWgo519d03sHsy3h6ILkcTTaTpInBuWXWQIXRkEewUqdYtqBC?=
- =?us-ascii?Q?gnBwxkrPcjkuvIu6NBb3bPYA3iq4tOF/iuqeVRiktqfy2aw1dD4EWnJVAukI?=
- =?us-ascii?Q?lqy2u3SP1dQDFaCwjBd7p2YFJZPuopr2LXc06T8eBAWzdpen4JwGSL02Jv1y?=
- =?us-ascii?Q?PleivBno7HPMQkQDYrdLKIoXhk4Q3yzjxCRWt8I+BNP+kryKKdMrG/s0/7f2?=
- =?us-ascii?Q?iR85ZDtF5/GjwI8upmDMoNVZSMrRo/y5tgEkeT5zFeA0m6b78I+bswTIt25j?=
- =?us-ascii?Q?DU+3gvFFW9vnkCb0rJlvorPUw5ZvXKHtDU6wlh4ED6OXt3eHGX5HNNJCzzpp?=
- =?us-ascii?Q?C5Sg5ytupS+poq7sgzWpbNH01CMx9smDnKSpYopKjMS8Y8njaR0IdrwZQsJc?=
- =?us-ascii?Q?KXpViguiLnkrc0yrA7C/jY0wmCKu5b8dTQi/0PoWrspz0QXkcQJlXdApVCvz?=
- =?us-ascii?Q?ZINT0jhIli5Lzt6N2nDqS9oSC+rrenc+HX+ALZuAMi3tJ1cspvySovmuO9op?=
- =?us-ascii?Q?UwKeyP4GG90Soel9N3aZhE54J5/oscIxfa1vDeIyVSsSnIxTtjRfHcAYRjyj?=
- =?us-ascii?Q?MN1vxPasP1PS3H5oPfJ3XVtp4Zot6eTe?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(52116014)(366016)(376014)(38350700014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?TDHApxmJY2H+/Bm5R7GX/DNuJOfGtMR5WhSt6O2BTBiyWuwpJNUFtGaYhCPa?=
- =?us-ascii?Q?lRI5mA3A6QzlgnL+C7ooE0j4E68q3d4damB4oVT1TJApgUm5nVRxKk64IfBi?=
- =?us-ascii?Q?XWIXUwxXd9cKjb+XQebVdYhRAvCfAHPxsmUM0Cau6ReQdSlkrCOMHx8FMiuO?=
- =?us-ascii?Q?33iU5BWhHGMIUuBTcniKVdANzZzA0rx9u9ILoD/LOelFv8Z1XXqZPbYK70oR?=
- =?us-ascii?Q?IBsVIwB5KARx51D+QtFlvMOuPlut4pHj3Sk3qHxTalKIc+CJ8t4MldBbR6Dr?=
- =?us-ascii?Q?KNsqKotLSXYSFq5kJ2rJ8veScOIPu3dh7W++2wjauFHmPol4PrBw7xre3/80?=
- =?us-ascii?Q?beKQ0omKOio/Kd+Z+dq93xRtEqf0F3zYfZkjBALKep6uFwiVQZW3gfcDWoGu?=
- =?us-ascii?Q?unN/r2VF2vYHxHx18tIG3ep0U4+VLgf1ZXlX5uKRLXZ09cqQVvTkAmYhqEx8?=
- =?us-ascii?Q?UF1p4phhHw0ENdXVsKFDUXM6Q5ltVlYF6zW2xbVG1HKUEKoNEKGI4vvbLruJ?=
- =?us-ascii?Q?pdFygN0Oyhov9wgcGprB9Hj/WXT4ELiEkqRgXBT2rfMXLRzV1sdMIPaj3P7f?=
- =?us-ascii?Q?gtcmu2IzLbn86E19g2IhO+0D4XnRhYO6i3aeKklxuZpXWQ0bXi9CjYGHdC+d?=
- =?us-ascii?Q?w/0w5qf2UEoeRacTylDu3KeJAhvyyRqhsDFOBkMWtLgXJepyQ0KVn1/DzJel?=
- =?us-ascii?Q?cN0lhxRUUN6p6Cqv9mpMer2NTX+sT5PhlE9Oji9Ckj43lCHMpe7l67zj/bNB?=
- =?us-ascii?Q?XhDsv2nj+FozDUSFz5RC7zdJuMpcy/T0Lj/w5ttRWJfwTQG2DtfSp6tsvZls?=
- =?us-ascii?Q?B/wd95DoBznCJ+im9ZxcrCKjHO9POXbGDMdkgpxdDRu1fqYRIo7J+0/HiQZ8?=
- =?us-ascii?Q?MrgZl2hHCtuKpk4dJb2r2FMB8KD6Ds1caFph4asmvFb3c9at+vD0EllRfxO6?=
- =?us-ascii?Q?w7KDUBfn5wCl35wrEz/mCg8sPdFdXfzniX8a8k6/olc9QBbjGvbKBUH87DY0?=
- =?us-ascii?Q?a+zR07eJb4glRmR0yZ6E48CZTTiBjRqZbk6C/PweLpWV+tliVAr1UxqcMc+m?=
- =?us-ascii?Q?XdQNrVyAM4e8okHVHeEcQVAOaHtE2/TweOb/Ae89G/zXQUgZQH2XiD4VOY4Y?=
- =?us-ascii?Q?SjLD8gN4mfK3Is22TaOAdMXBf4Yvkc8P1bdE8FBmXUdZCYaBh9eAJtzoWjhb?=
- =?us-ascii?Q?oftrsp+GoCvfLw1h0MSSACzdaEedEkPGEm4f4pQ4vZDEoVSwxrAtNOFTeZID?=
- =?us-ascii?Q?ABzGxTLli6c8JQye1bc6lFcM+VYLfoA5J54mKcZ3e++wgkCxcAVoKyiD+1kF?=
- =?us-ascii?Q?azddwpHBbM0L8zUFtBsEeDVaXjEGnmtRavs9axrnMyuKgqEzem0knccFMOUE?=
- =?us-ascii?Q?pd8jYC9oc20UY5loXfJ20Ho5I720us0RfviJwP8GCu/JnCXtD/M53hbWDL3V?=
- =?us-ascii?Q?KeAgYDbcKJtOhhW+JbtaFSTXQA2V3aY+vHi3amYKim84Lt8/CcIM2/qk5TBV?=
- =?us-ascii?Q?WZ2SH2T/v+YeeL/zSimAGCr5LjX1EqU0xdw1MV+Lv/kPzgDm38+3S00+ydzH?=
- =?us-ascii?Q?n3XlPN3FObUvzTDS3vGHZYH/UoG23uTyRrGIvJuV?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5fa2d2a4-c88e-4653-c250-08dd721debae
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Apr 2025 19:38:19.1318
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: CprmNMdrXDMl53O39JbzYAGsmOGYg7mNeN4BWsrqKntga5SPu5HnWkJ86xRZ28vlHjzQjX7DuH5YaZrM1dA9wA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: FRWPR04MB11223
+References: <20250402-kasan_slab-use-after-free_read_in_sctp_outq_select_transport-v1-1-da6f5f00f286@igalia.com>
+In-Reply-To: <20250402-kasan_slab-use-after-free_read_in_sctp_outq_select_transport-v1-1-da6f5f00f286@igalia.com>
+From: Xin Long <lucien.xin@gmail.com>
+Date: Wed, 2 Apr 2025 15:40:56 -0400
+X-Gm-Features: AQ5f1JorQaO0HCtrnUXO4s6aGuDFn3xGfel9XaXoLYeySmPI2omcRJXHShX-dDs
+Message-ID: <CADvbK_dTX3c9wgMa8bDW-Hg-5gGJ7sJzN5s8xtGwwYW9FE=rcg@mail.gmail.com>
+Subject: Re: [PATCH] sctp: check transport existence before processing a send primitive
+To: =?UTF-8?Q?Ricardo_Ca=C3=B1uelo_Navarro?= <rcn@igalia.com>
+Cc: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Simon Horman <horms@kernel.org>, kernel-dev@igalia.com, linux-sctp@vger.kernel.org, 
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 02, 2025 at 09:07:12AM +0200, Maud Spierings via B4 Relay wrote:
-> From: Maud Spierings <maudspierings@gocontroll.com>
+On Wed, Apr 2, 2025 at 6:26=E2=80=AFAM Ricardo Ca=C3=B1uelo Navarro <rcn@ig=
+alia.com> wrote:
 >
-> Add the new Moduline Display boards to the Makefile to allow building
-> them.
+> sctp_sendmsg() re-uses associations and transports when possible by
+> doing a lookup based on the socket endpoint and the message destination
+> address, and then sctp_sendmsg_to_asoc() sets the selected transport in
+> all the message chunks to be sent.
 >
-> Signed-off-by: Maud Spierings <maudspierings@gocontroll.com>
+> There's a possible race condition if another thread triggers the removal
+> of that selected transport, for instance, by explicitly unbinding an
+> address with setsockopt(SCTP_SOCKOPT_BINDX_REM), after the chunks have
+> been set up and before the message is sent. This causes the access to
+> the transport data in sctp_outq_select_transport(), when the association
+> outqueue is flushed, to do a use-after-free read.
+>
+The data send path:
+
+  sctp_endpoint_lookup_assoc() ->
+  sctp_sendmsg_to_asoc()
+
+And the transport removal path:
+
+  sctp_sf_do_asconf() ->
+  sctp_process_asconf() ->
+  sctp_assoc_rm_peer()
+
+are both protected by the same socket lock.
+
+Additionally, when a path is removed, sctp_assoc_rm_peer() updates the
+transport of all existing chunks in the send queues (peer->transmitted
+and asoc->outqueue.out_chunk_list) to NULL.
+
+It will be great if you can reproduce the issue locally and help check
+how the potential race occurs.
+
+> This patch addresses this scenario by checking if the transport still
+> exists right after the chunks to be sent are set up to use it and before
+> proceeding to sending them. If the transport was freed since it was
+> found, the send is aborted. The reason to add the check here is that
+> once the transport is assigned to the chunks, deleting that transport
+> is safe, since it will also set chunk->transport to NULL in the affected
+> chunks. This scenario is correctly handled already, see Fixes below.
+>
+> The bug was found by a private syzbot instance (see the error report [1]
+> and the C reproducer that triggers it [2]).
+>
+> Link: https://people.igalia.com/rcn/kernel_logs/20250402__KASAN_slab-use-=
+after-free_Read_in_sctp_outq_select_transport.txt [1]
+> Link: https://people.igalia.com/rcn/kernel_logs/20250402__KASAN_slab-use-=
+after-free_Read_in_sctp_outq_select_transport__repro.c [2]
+> Cc: stable@vger.kernel.org
+> Fixes: df132eff4638 ("sctp: clear the transport of some out_chunk_list ch=
+unks in sctp_assoc_rm_peer")
+> Signed-off-by: Ricardo Ca=C3=B1uelo Navarro <rcn@igalia.com>
 > ---
-
-This patch should belong into pervious patch, which add dtso file.
-
-Frank
-
->  arch/arm64/boot/dts/freescale/Makefile | 6 ++++++
->  1 file changed, 6 insertions(+)
+>  net/sctp/socket.c | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
 >
-> diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
-> index b6d3fe26d621234ab84353165d20af9d2536f839..fea25c7f997cda9aef73cd643f0f0279ee0bfffe 100644
-> --- a/arch/arm64/boot/dts/freescale/Makefile
-> +++ b/arch/arm64/boot/dts/freescale/Makefile
-> @@ -214,6 +214,12 @@ dtb-$(CONFIG_ARCH_MXC) += imx8mp-skov-revc-bd500.dtb
->  dtb-$(CONFIG_ARCH_MXC) += imx8mp-skov-revc-tian-g07017.dtb
->  dtb-$(CONFIG_ARCH_MXC) += imx8mp-tqma8mpql-mba8mpxl.dtb
->  dtb-$(CONFIG_ARCH_MXC) += imx8mp-tqma8mpql-mba8mp-ras314.dtb
-> +imx8mp-tx8p-ml81-moduline-display-106-av101hdt-a10-dtbs += imx8mp-tx8p-ml81-moduline-display-106.dtb \
-> +	imx8mp-tx8p-ml81-moduline-display-106-av101hdt-a10.dtbo
-> +imx8mp-tx8p-ml81-moduline-display-106-av123z7m-n17-dtbs += imx8mp-tx8p-ml81-moduline-display-106.dtb \
-> +	imx8mp-tx8p-ml81-moduline-display-106-av123z7m-n17.dtbo
-> +dtb-$(CONFIG_ARCH_MXC) += imx8mp-tx8p-ml81-moduline-display-106-av101hdt-a10.dtb
-> +dtb-$(CONFIG_ARCH_MXC) += imx8mp-tx8p-ml81-moduline-display-106-av123z7m-n17.dtb
->  dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-som-symphony.dtb
->  dtb-$(CONFIG_ARCH_MXC) += imx8mp-venice-gw71xx-2x.dtb
->  dtb-$(CONFIG_ARCH_MXC) += imx8mp-venice-gw72xx-2x.dtb
+> diff --git a/net/sctp/socket.c b/net/sctp/socket.c
+> index 36ee34f483d703ffcfe5ca9e6cc554fba24c75ef..9c5ff44fa73cae6a6a0479080=
+0cc33dfa08a8da9 100644
+> --- a/net/sctp/socket.c
+> +++ b/net/sctp/socket.c
+> @@ -1787,17 +1787,24 @@ static int sctp_sendmsg_check_sflags(struct sctp_=
+association *asoc,
+>         return 1;
+>  }
 >
-> --
-> 2.49.0
+> +static union sctp_addr *sctp_sendmsg_get_daddr(struct sock *sk,
+> +                                              const struct msghdr *msg,
+> +                                              struct sctp_cmsgs *cmsgs);
+> +
+>  static int sctp_sendmsg_to_asoc(struct sctp_association *asoc,
+>                                 struct msghdr *msg, size_t msg_len,
+>                                 struct sctp_transport *transport,
+>                                 struct sctp_sndrcvinfo *sinfo)
+>  {
+> +       struct sctp_transport *aux_transport =3D NULL;
+>         struct sock *sk =3D asoc->base.sk;
+> +       struct sctp_endpoint *ep =3D sctp_sk(sk)->ep;
+>         struct sctp_sock *sp =3D sctp_sk(sk);
+>         struct net *net =3D sock_net(sk);
+>         struct sctp_datamsg *datamsg;
+>         bool wait_connect =3D false;
+>         struct sctp_chunk *chunk;
+> +       union sctp_addr *daddr;
+>         long timeo;
+>         int err;
 >
+> @@ -1869,6 +1876,15 @@ static int sctp_sendmsg_to_asoc(struct sctp_associ=
+ation *asoc,
+>                 sctp_set_owner_w(chunk);
+>                 chunk->transport =3D transport;
+>         }
+> +       /* Fail if transport was deleted after lookup in sctp_sendmsg() *=
+/
+> +       daddr =3D sctp_sendmsg_get_daddr(sk, msg, NULL);
+> +       if (daddr) {
+> +               sctp_endpoint_lookup_assoc(ep, daddr, &aux_transport);
+> +               if (!aux_transport || aux_transport !=3D transport) {
+> +                       sctp_datamsg_free(datamsg);
+> +                       goto err;
+> +               }
+> +       }
+>
+We should avoid an extra hashtable lookup on this hot TX path, as it would
+negatively impact performance.
+
+Thanks.
+
+>         err =3D sctp_primitive_SEND(net, asoc, datamsg);
+>         if (err) {
+>
+> ---
+> base-commit: 38fec10eb60d687e30c8c6b5420d86e8149f7557
+> change-id: 20250402-kasan_slab-use-after-free_read_in_sctp_outq_select_tr=
+ansport-46c9c30bcb7d
 >
