@@ -1,191 +1,117 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7075D1F9F7A
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 08:45:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5343E1F9F7A;
+	Wed,  2 Apr 2025 08:46:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743583536; cv=none; b=A8EcnrGpk4s6FxAGsANt5+/mcQCDPE6S0DI8WzZDngcuNHOlemx36nJxws4oWPXxZE0Bb1AdOaeLC+/tbrDf+8JykGpwsSPXp9udDsfq6vyLZ3bcIsHy7GvBn8a2seEiZbVGml5MohXUmmnCx0iDyhFgjSOY6HXwCE7/utmNi4Q=
+	t=1743583612; cv=none; b=LXMK06hCQS3QFHJovHg5XssKHmN/UeIyItKWQcSgJ5WhHsTOY1U/rkgxY+QEO8lH8L+P8YQRauvfxfv6gELW/WFSozHpjgiL1jcbNpU+6A/ZsOF39/3FbkyNshkZ692mP4xb2rtH+CPyu0pAg4d+OMFxdaaOleQLAOnXXcTi+qY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743583536; c=relaxed/simple;
-	bh=NFm7tbq0ZaH2RVNvsamjo+KHzIpxQSPgvdSp6JQoL5g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CB9BcfFH+qFmWE6gHunsb4xiwEiedhqTrBKkSr8UO6/a1NB86DBFUtY08a4PF21wD6scb6lb0KkuMEDwW2LXnonk3mfna45cX0t+Ef467hyVNO6xkbeDLMNiZxRd+jGL0bmtsGPHWuz0pD2R5WH1FJ1heCuzfg4du343UpXbSKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FgcMcc9e; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1743583612; c=relaxed/simple;
+	bh=LKTrU+sgU2OIjybj0utaZFM0waoa3ItskjDGTcF6xOA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ANk5LBlR6uNC5kCUYk4cJRENnvzdKCixOn+BAyB0olA5eGJbmWAw5Go89xxns676Jzh5/Eh4FvQ/U74tkF5D5vypL0pbOLGWUJ7PDbNtHylhd6jZDYILeEv5RSgf4VJtV445N6Llp+Kmk15TSWEjX2mP0hlmzNxxC/oDBRftaZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IliDyPib; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FgcMcc9e"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2279915e06eso131819475ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 01:45:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IliDyPib"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5e5e34f4e89so12216234a12.1;
+        Wed, 02 Apr 2025 01:46:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743583534; x=1744188334; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=zJsLeD6lgFKMBvtHYkyhM89bgWS3aRtj9tm/3qhx9hI=;
-        b=FgcMcc9eHBtYVM6u1uo6hR3HmwykYCpZkmgDTLS7aU/rETiaCNG1fwnu8xBMyQCyT7
-         Piq2glE3m6jAcFRtEeBrRRh3dhse6EjnsXcY2LjFvAH3qDmppbJLACr2ncTA5ic8gAoh
-         btR9LsRC6+F6wXqC6toURqk2TNMpA9CbLq2l4MyOHjrni2pJLFli+jK5wRAaRMACaoUw
-         dt4fgrDJ2rmxy6WyqMlDwBbDvdJv+HpGcb0jyMQy06KhvMZkZwDABHcbyKAtKpHtdn3C
-         zVo+DA+tChSFmPy+YWWgW1v+AzPCMPp/HPC3HqiwZ3U8EgR4xmmlpR+KYbJqZ5TRxgOx
-         ywnQ==
+        d=gmail.com; s=20230601; t=1743583609; x=1744188409; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qjHXYMC7zHygZVzVtYT+NoerxDkgqGuxQiQmQIb1pA4=;
+        b=IliDyPibvg1GwlwnVb4UqrZlmonIgvJcJUYoS5LHV5jclFYkdGDIMsLMYQBiZTmM/2
+         LUzsrNTgHHppfIgOFRBT9sUHH5TbSwwBYJyhUDgV8hIEvnXIhBfpZB/oNHBgsuLPKCDD
+         pway9fIKO6l7PiAhBYqQfmvuAGOY8QJ6Fy4n/4t4G3iOaPFTlsFRPaoZ21XnF7ksD8Zh
+         rWaKCnthhj5Icjz6mJS0LddJRwHO8L7n4Xs8fc3ACqrVi1kMcjKYBNfJRM1VYurJ1sM2
+         v5n9+GjT0VdRrIBEvSPNr2QtcZGuS69faF1WomGMEiwzVL+d6fUSwbmBuaLSJ0JGxIwy
+         aNxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743583534; x=1744188334;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zJsLeD6lgFKMBvtHYkyhM89bgWS3aRtj9tm/3qhx9hI=;
-        b=HfTE+fpYxoZuQv0U6P8zxlLqDaRHUX81JVkiG/kJLOtqODTgt8TuEJpUnOzETjYzoF
-         tzZW6ZjDhQRlUBq6TFOMd90ZWPY1piU9rbhbk8hs7hx/jdm2HqMRNowUgw1DmlPZwqSm
-         nwRG34Bvi0GQHzOagPV7uhUEF3UBhYSfoHtFKRXbdzS+u/d5kNXeZo+gnC4kjXnA1jYd
-         ES4XMa2flMPWgZ9j3Jfe7hCtfM5c0gr+gbXhd8b0bIgiK6SnvpsuNZM4LBgMrk15EMOe
-         OtsrluTahm3PbhwHFxYnJMdNPoaj0t+vaeXH6l5uZf7h4nazu8/Q6G7Ikt4ZGtV7s06R
-         t8Aw==
-X-Forwarded-Encrypted: i=1; AJvYcCVdgay3Mrrflz5omY8Q13+XU479uJspBWzox4vaDWQ9j49p1WIjYgIDJzP10koXro2vXPnT0y6lwcoQhS8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyFDrtMAzTv7DP1w/my/+F67TNPtsslZLuQMlAEbB0HlgfgD2Mr
-	B930bDTbghjEy2rxfSg7v7K1FBlq71yPw4E/0PVup6i97cgusGQm302B8jO4DiXDErkZDcUmQiq
-	GE0HBMPDDZmoAyywlQjzAZ4ve0vUto+rfBHLBOw==
-X-Gm-Gg: ASbGnctDk1Eh+Rj0X/Ps8RMRUQlfNB5OgZTcqvLEJMSVKTJ/w+iiCe45SY+2cqJXN93
-	qLzwlph1AJb0J747KSpvcfHlkM1YlbcrEJ14pfvINIgLgezkefkN68ddfJXd4ufg4VO9DN2284C
-	d31UIryBpI/nLTA4aFLL2oXD5F3iQ=
-X-Google-Smtp-Source: AGHT+IHI6Yu/hcdMXCreLSpHVh+HBTcQtrbpLe5Yl5Ua0D4HJd6y3JEpPE+J4Y6K6IQOUqDHmajJ8A4Nn/gDke9iJXk=
-X-Received: by 2002:a05:6a00:3288:b0:736:57cb:f2b6 with SMTP id
- d2e1a72fcca58-739803aa740mr26454210b3a.12.1743583533738; Wed, 02 Apr 2025
- 01:45:33 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743583609; x=1744188409;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qjHXYMC7zHygZVzVtYT+NoerxDkgqGuxQiQmQIb1pA4=;
+        b=fpr+qavMilsvXVFbXH6h/EMSqi9MMRcos3WctkwfmB0hfPiffx2x/4OWvOK7A5beGL
+         MlLiGXqzwNFyZLT4zLT1fE/RDWvE4aIQroAMrD3yLGkdToffq/UBWqJwEvlo6t8oEvkJ
+         xfOysUnHADYuKjqVIoKbgTPtPjP4raUdkBOZ+12uq3aEeSwV50a5hW1Xu20n4gyHREZv
+         jp0InCwV0XoKTEtg4q60aJOj7lxTc4qIRqmb+AAGpvx4MoVcfiiYUOayMHxGdufAfpTj
+         5hoYepmLa7jCTDFfzbxmWFucITwNsQ1qakv5aQjX9HFJBgSEDOBp/CdLkU9NnPWLUuoI
+         nOFg==
+X-Forwarded-Encrypted: i=1; AJvYcCUeCzyGy3LsD9W2yb0UDNjVPFXs97bk6W78goRLdCCwDE3NfMm3LTS0SF/NFqujnb1KVqlugjuHEvKY/OhP@vger.kernel.org, AJvYcCVX4sA6Ol24RhY4DDqBgqLqSHaX0JgTzGCb0pGWqPFKCSRDKm/26dMRBTahi7ReaxGcLuhHMhIniIgRy4OdDA==@vger.kernel.org, AJvYcCWIG1HmHN82lWkL+pkAhCXusJAENOIwqdCadQt/Locr0C6m2Mqrlr/WutDVOFkRjhZueWaDnQzyQgir@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyd9dP/eehkq5ZZJK8n0rU0ufWxKHfW7LgOAeiiaq0BTJU5aVxk
+	/FzQ1FsyEWtDCNTdCR0K/xiEql1iOm1MsZD8CFW2dwfDhJpORgI=
+X-Gm-Gg: ASbGnctR3CiNzMvG3c2BKZmvYjD19Ec1iwxsTruoncN4KTlT3lw1YSsSUArBu+PmZYq
+	ZOxaU4b91XpipfsJtEjPi3TPvmEPnc7NkEQIRmhWsjkTkKAUnHs4HO4FSZ9f4qixdF4VyBltZKh
+	0UgW7Fw96nOD5zkCN6ntxcXbUsZpN301SVyG3f2tMls6fSkEjfh2bRtjS7RMTJqdnVM/pZ5v0O3
+	bdTecjEC12oDTq4Lly1wGB4loJqllQ6BCrD6ROHr3seA5bAamyB4iOzKUFXQzoVhjkCtKGZ9jiI
+	PjXlIHbhG92GCsllBc0ro9nzFY3pKZQCQ+LCOdEsVTO5R5k4mQ==
+X-Google-Smtp-Source: AGHT+IFWjyFgzbzeSafB6Y2xwdXIBKz5hV5nBM0tdF/ZkuXPBUXbJ2xMKqx9XHUQ1wIRuebML/cDPQ==
+X-Received: by 2002:a05:6402:3511:b0:5e5:827d:bb1c with SMTP id 4fb4d7f45d1cf-5f04ebceedfmr1287083a12.25.1743583609329;
+        Wed, 02 Apr 2025 01:46:49 -0700 (PDT)
+Received: from alex-x1.lan ([84.226.118.249])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5edc16aae40sm8162760a12.7.2025.04.02.01.46.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Apr 2025 01:46:49 -0700 (PDT)
+From: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
+To: Bjorn Andersson <andersson@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Dmitry Baryshkov <lumag@kernel.org>,
+	Aleksandrs Vinarskis <alex.vinarskis@gmail.com>,
+	linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	maud_spierings@hotmail.com,
+	dmitry.baryshkov@oss.qualcomm.com
+Subject: [PATCH v2 1/3] dt-bindings: arm: qcom: Add Asus Zenbook A14
+Date: Wed,  2 Apr 2025 10:44:02 +0200
+Message-ID: <20250402084646.10098-2-alex.vinarskis@gmail.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250402084646.10098-1-alex.vinarskis@gmail.com>
+References: <20250402084646.10098-1-alex.vinarskis@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250311170451.611389-1-leo.yan@arm.com> <20250311170451.611389-5-leo.yan@arm.com>
- <CAJ9a7VjqGbpPPeR3-PH5vYHNMwqnPLJ+Ouik017Qh717wFOJ0g@mail.gmail.com> <20250401150019.GC115840@e132581.arm.com>
-In-Reply-To: <20250401150019.GC115840@e132581.arm.com>
-From: Mike Leach <mike.leach@linaro.org>
-Date: Wed, 2 Apr 2025 09:45:20 +0100
-X-Gm-Features: AQ5f1JpVKguSRw3Soam_GH8e7qCPQbsLVx7D2P5cFerAhYuRpuHvAGuo7V2FHvg
-Message-ID: <CAJ9a7ViKeqNp_c0+w2mkdujLvzs0UA=Xbm5bG7K-kA86AjJ=eA@mail.gmail.com>
-Subject: Re: [PATCH v3 4/6] coresight: perf: Support AUX trace pause and resume
-To: Leo Yan <leo.yan@arm.com>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>, James Clark <james.clark@linaro.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hi Leo
+Document the X1E-78-100 and X1P-42-100/X1-26-100 variants.
 
-On Tue, 1 Apr 2025 at 16:00, Leo Yan <leo.yan@arm.com> wrote:
->
-> Hi Mike,
->
-> On Tue, Apr 01, 2025 at 01:50:52PM +0100, Mike Leach wrote:
->
-> [...]
->
-> > >  static void etm_event_start(struct perf_event *event, int flags)
-> > >  {
-> > >         int cpu = smp_processor_id();
-> > > @@ -463,6 +484,14 @@ static void etm_event_start(struct perf_event *event, int flags)
-> > >         if (!csdev)
-> > >                 goto fail;
-> > >
-> >
-> > Is it possible here that the first call to etm_event_start() also has
-> > the PERF_EF_RESUME flag set?
->
-> The first call has a flow below, using flag 0 but not PERF_EF_RESUME.
->
->   etm_event_add()
->     `>  etm_event_start(event, 0);
->
+Signed-off-by: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
+---
+ Documentation/devicetree/bindings/arm/qcom.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-When I looked at the vague comments in the perf source - it seemed to
-imply that ->start() calls could overlap - so the associated event
-that resumes trace could occur at the same time as the initialising
-start from paused for the trace operations.
-
-If we are guaranteed this cannot happen then we are good to go!
-
-> Note: for the first call, the tracer should be disabled if
-> 'event->hw.aux_paused' is 1.  This is ensured by patch 03.
->
-
-Yes - I saw that.
-
-Mike
-
-> Thanks,
-> Leo
->
-> > If so it looks like we need to fall through and do a "normal" start to
-> > get all the ctxt->event_data set up.
-> >
-> > > +       if (flags & PERF_EF_RESUME) {
-> > > +               if (etm_event_resume(csdev, ctxt) < 0) {
-> > > +                       dev_err(&csdev->dev, "Failed to resume ETM event.\n");
-> > > +                       goto fail;
-> > > +               }
-> > > +               return;
-> > > +       }
-> > > +
-> > >         /* Have we messed up our tracking ? */
-> > >         if (WARN_ON(ctxt->event_data))
-> > >                 goto fail;
-> > > @@ -545,6 +574,16 @@ static void etm_event_start(struct perf_event *event, int flags)
-> > >         return;
-> > >  }
-> > >
-> > > +static void etm_event_pause(struct coresight_device *csdev,
-> > > +                           struct etm_ctxt *ctxt)
-> > > +{
-> > > +       if (!ctxt->event_data)
-> > > +               return;
-> > > +
-> > > +       /* Stop tracer */
-> > > +       coresight_pause_source(csdev);
-> > > +}
-> > > +
-> > >  static void etm_event_stop(struct perf_event *event, int mode)
-> > >  {
-> > >         int cpu = smp_processor_id();
-> > > @@ -555,6 +594,9 @@ static void etm_event_stop(struct perf_event *event, int mode)
-> > >         struct etm_event_data *event_data;
-> > >         struct coresight_path *path;
-> > >
-> > > +       if (mode & PERF_EF_PAUSE)
-> > > +               return etm_event_pause(csdev, ctxt);
-> > > +
-> > >         /*
-> > >          * If we still have access to the event_data via handle,
-> > >          * confirm that we haven't messed up the tracking.
-> > > @@ -899,7 +941,8 @@ int __init etm_perf_init(void)
-> > >         int ret;
-> > >
-> > >         etm_pmu.capabilities            = (PERF_PMU_CAP_EXCLUSIVE |
-> > > -                                          PERF_PMU_CAP_ITRACE);
-> > > +                                          PERF_PMU_CAP_ITRACE |
-> > > +                                          PERF_PMU_CAP_AUX_PAUSE);
-> > >
-> > >         etm_pmu.attr_groups             = etm_pmu_attr_groups;
-> > >         etm_pmu.task_ctx_nr             = perf_sw_context;
-> > > --
-> > > 2.34.1
-> > >
-> >
-> > If the possible issue above is prevented by perf internals
-> >
-> > Reviewed-by: Mike Leach <mike.leach@linaro.org>
-> >
-> >
-> > --
-> > Mike Leach
-> > Principal Engineer, ARM Ltd.
-> > Manchester Design Centre. UK
-
-
-
+diff --git a/Documentation/devicetree/bindings/arm/qcom.yaml b/Documentation/devicetree/bindings/arm/qcom.yaml
+index 08c329b1e919..bb589021a97a 100644
+--- a/Documentation/devicetree/bindings/arm/qcom.yaml
++++ b/Documentation/devicetree/bindings/arm/qcom.yaml
+@@ -1133,6 +1133,7 @@ properties:
+       - items:
+           - enum:
+               - asus,vivobook-s15
++              - asus,zenbook-a14-ux3407ra
+               - dell,xps13-9345
+               - hp,omnibook-x14
+               - lenovo,yoga-slim7x
+@@ -1144,6 +1145,7 @@ properties:
+ 
+       - items:
+           - enum:
++              - asus,zenbook-a14-ux3407qa
+               - qcom,x1p42100-crd
+           - const: qcom,x1p42100
+ 
 -- 
-Mike Leach
-Principal Engineer, ARM Ltd.
-Manchester Design Centre. UK
+2.45.2
+
