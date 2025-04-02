@@ -1,75 +1,72 @@
-Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAEE07DA6A
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 19:34:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 310A51DFD8B
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 19:35:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743622488; cv=none; b=U6uSBhJqWnuVBCQhT+J58lWCDxtuhswKG/ESFEn4N3g2gvU0cLSCOb3pQZRYIE/0g1vVuTcWBxot3PESc4pBDtOZENADAEiuE22/boUmD6MoU6uqtjORhGEzlcMRbT10egAloaZIxjUpdsz1yNXRKZ3Uk3Jd+nmlsW8fAm37jdw=
+	t=1743622503; cv=none; b=m6wcXrKf3wKkdXSzWP7i4g9px97AUcTrzEDy65dtxC3C1WKOIBKPKTnVgoV8DlG/wTzdZr8VxDnW/fWapszyLwYrg33XpBIyFFP2D5nnGbQVZ3a2Gl8ALyPbSwEhda9PUrp8wlxAOlrNkBzg+qvZSeYVxc4SFzE5WQQU+1ObpYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743622488; c=relaxed/simple;
-	bh=ek9FwTvpWstS6pLwqPkH9Wk/Ja/hmu8/yMqt2I2shm8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WhbjC9fT3OtW1tcPtE08ZCMIybLY0l/3rNOdWA1Vhs7Gy00G3iWIbg8u0F3N7H5Lhuy1yB3HMCUu0RnhbM4iixpHl/IHufZLJDp0ugMtRfVG7plz6QaOdUORESeYiWkSEoUJRGXpH4IyfCdC/5TVDeOm97/pzyK+akIHoiu290I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=lpCkFA4U; arc=none smtp.client-ip=209.85.222.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1743622503; c=relaxed/simple;
+	bh=q+7rDiESpW/5o/TmwAoALZFAEN0ZYQGNCvmcoJZ0byY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=a9RyYY9CoDJ/mdLK15EqHTaSKQUPk6Pwj2T+TttCGLqAjdUGcrCdgwInTDrbcBkNwAp9OhKyKGFMkMBihRSSZAKB0nRy6gyOGQIWB1EaWGhb6h37NEYVi00cfLNb0cJrw25tIgkwBERR2uzPLZOQJdOraiU+jnSKEQ+QI0SjQ0E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wkennington.com; spf=none smtp.mailfrom=wkennington.com; dkim=pass (2048-bit key) header.d=wkennington-com.20230601.gappssmtp.com header.i=@wkennington-com.20230601.gappssmtp.com header.b=mh1gFJhr; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wkennington.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=wkennington.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="lpCkFA4U"
-Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-7c542ffec37so9188385a.2
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 12:34:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=wkennington-com.20230601.gappssmtp.com header.i=@wkennington-com.20230601.gappssmtp.com header.b="mh1gFJhr"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-22580c9ee0aso2190475ad.2
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 12:35:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1743622486; x=1744227286; darn=vger.kernel.org;
+        d=wkennington-com.20230601.gappssmtp.com; s=20230601; t=1743622500; x=1744227300; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ImvdCtilJthaEiYhafhJyo2XapqFCnVc2mKBR7Opxws=;
-        b=lpCkFA4Usj+c9ww14y0XCttA78VZ6Bz3jpxRQDKFFYoKcy/MgzmJ5VF2aHppR6kx3V
-         tjR7aEQHvwMqD21XMficXcpi3JUeQNZf/MynnRZkw2OG5HiWmGoADnwOrwYFqI/vxT0x
-         lKy1InQeKPqkJrUgv+HPu/weVjveTQcsIWcQXRY2/jDYnYLJ4b60J95ildwSJt68Ua1x
-         SQmVBL9hkDBOCVAdTUBiiWnmVSjtDTMEgkE4GEDgyeB+6+jCe/j5mNw7giZ08qrgD9HH
-         Gd1KwofNoZnV1DBn0HUkcAagPF3Y//zOoTObiav9s9GniYa05DQdm6ynbIfeycsl53G4
-         NnHw==
+        bh=jdfekkXQ2BPkIkZEF2KATlxON6SfSUU4DnMu+LAjv8Q=;
+        b=mh1gFJhr8VIb/60mzOBHVQyJZEBA/oTOP+PTypE1ezh9ggv5m8PBDVV89HvaDjvgXY
+         /zyMUuGbR7XIG+0pH3P+49plttBL0CEFuH5/RSWrjXscbFEX81JNaMosGe6Kj1syr6zN
+         2LN9A9tdqExX7QUY9ZsjFfUtzTgSTM7oO4Xi6LgKOPBHBW2dTSx//qhUsClZkYCuO85I
+         DLpKq+qbQ0hL/Lg3lIgpN7vJIkNKt+CMGmqNX8GswMZ3r99HOGjnBwzZQMKtIYqHgcHR
+         i0xtXyuu1DV0QZNIjhYN+z9W0YGq1eF0LXSJQGV92dtXxj01OGqzYbHPqWgtxYdZo3kL
+         /BOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743622486; x=1744227286;
+        d=1e100.net; s=20230601; t=1743622500; x=1744227300;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ImvdCtilJthaEiYhafhJyo2XapqFCnVc2mKBR7Opxws=;
-        b=j/XJ1b7E3P5yLbU20DQKUETfo++ZW07IXh3J0bBzrXHNA7X3kL9XyoKHgzs8nuj/aN
-         JZXuK7swtkxAdgGF2hI1krvrzDJ7+vE5cZHSiNuP1TpzwLQbxZN8RJM8ewDcMignPYXA
-         8uWiVK8GWQooTbbjeUDE20c3pc1iuT3WBD02KYkbhbaB43IpnltY7ok+7WIjhWGDD9GQ
-         OR+C+63dfMzrOl9HiJjOuhXyOuecP8H4du0Ur5a3wtr3TZInsAONEX1rf2Wa7sTxLirO
-         2831Uw3pewSc/HkwAr+9tPk+CxlXaxSOFXot/uHA6rei9+FUsTLNszXNisanvk2EOgzP
-         YGCA==
-X-Gm-Message-State: AOJu0YwNXxwoQJMecgPSpGXtWx8vpCF4f5Xyc8WWm29T4On9fGUJ5to/
-	o7P0/dtfxUS+C6BJAHbwNvhT5UNNZk/PzVJ35+tUXAb1Eo9Jamxrlcc6PS4G0M4=
-X-Gm-Gg: ASbGncs7PJ/677prd+cmC0xgvMJIiYC37PyoC/O3rRzrcApVD7h1Z1OSMrQkqffwgCx
-	aKSruofoZTU3M48KHLLNHZoGkhCvPKtJpoDGCCPELIfobkwkY25aOyu6nsLmz5C2/LZmZbS0qF+
-	X8NI7Q20wEpM3Kq/D12rtabUnhmY24rpav3pchRB8j66hUHGUYhOqJJDWf3luH/KNamWzTIC74e
-	FPJiEXN1w38eNyN2JSO0VltIkyIT/PTsupebyCSI4S8Y7Zt92roFPlr7jY3LlWENU6rBfydzdRd
-	3/NJqnu6RXyiKRMJwzVM5ENAG43zxo8PxRN7w8KOGoYcnxGHCITfM1o6ZhZ8ulC+mshOUcty5SM
-	62no5DY63bt8vN4L1s1rlFsLf9ZOWvaMI
-X-Google-Smtp-Source: AGHT+IE9PJpwixkYXExJXaHEoP0KU4gHdYtznJh8E1BgbNuRx6ru/Xr7FW8dYCLFwds7hsZNLKVxhA==
-X-Received: by 2002:a05:620a:461e:b0:7c5:a513:1ff0 with SMTP id af79cd13be357-7c76645c32amr642482385a.34.1743622485812;
-        Wed, 02 Apr 2025 12:34:45 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F.lan (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c5f777dea3sm826277685a.102.2025.04.02.12.34.44
+        bh=jdfekkXQ2BPkIkZEF2KATlxON6SfSUU4DnMu+LAjv8Q=;
+        b=HlYZ7nCpHWropOF/UzgvQ0Hgta/xdyz8KZAaPsFGnxBzuXwKS6Py32Ar9kt5x51JMW
+         IZi4L8QBVsOXPFTNpKCBn60ccl/eCWdSBlmnL77aGKvcbjfY5JxfPONOWrkgf1L86djt
+         1WNc56a8PRdsQNHtOI5qfFvLhRB5GKE2gqud27Ij6sY11SSvNlua/iXs69ZeOpkYE1An
+         oSBK4tsjdJn8BNICXLjPh5etUZnL4ZA79IcbDYfh76TUI356m9Lnvini6lScrliK+fPV
+         Z784ev3gs3zIeCcWSbc98C4qJVQTznn1vIu8SRmhNsJ894arnl3GaiDl98rU9rMzM2LV
+         OajA==
+X-Forwarded-Encrypted: i=1; AJvYcCXssJV+yFJqjHzCb4EQEs0UqJrZmL4ooHChrU1RVNSTsHsljFOWcdV8kfzCFDVD7H7wDkaaozc2e1rNpeY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwvygGaiw8eq3laFu18XSHwYyPRAZozZwzg7DEobbC4x8ephtda
+	6zr8UKJ/gKEoJx+BbKAIhWe8IX2X+7P3/7vRvI5N/Lpz2ef7jvYcAIOFJqvpXpI6W3+CHz5fhUG
+	xhhI=
+X-Gm-Gg: ASbGncsSuoHudW9TdzcWJ8WpoXg4H8dgQuBdUeX41uequTwxTFAe2CUNrZZIEi5KXD+
+	gHGOOP2kHpQ6TVrzXLVJU+kyW1B4FpBdh3KvPX50cpLSoHchHwnSMlK+SwD2+Du0UdJoyoZNGjV
+	IyjCOX8YIcRqtqrt2Oc4drCqNwAPdgfi9L5dcv/1Okau9UvOMZ18ndHy4kmEz8bp9Cihx91t5od
+	gOsW5KXDn76GWL39R6Wm1UBmwZJbsY4JRfobEidq6TIVj765oeG9utBC9EAmqfY+JmFye/AeEWj
+	Q0QJcRvnDkCtD+e8lopU2xnFX5DJ8aSDsdU3jixleyfYq6EEn9PWkKIvD/jumbF2AjJcydHAou5
+	BMBFOKYKEIzmpwtjW/a79N+Wjg4ld8f3R
+X-Google-Smtp-Source: AGHT+IFKrVJio0LKpW2SzFWvHvDpGei9zMhW0Yx5z/I6qFKNcJ1k/8ZevK3YqM48GqJfPM1mqLKcUg==
+X-Received: by 2002:a17:903:189:b0:223:f9a4:3f99 with SMTP id d9443c01a7336-2292f975798mr305163525ad.29.1743622500080;
+        Wed, 02 Apr 2025 12:35:00 -0700 (PDT)
+Received: from wak-linux.svl.corp.google.com ([2a00:79e0:2e5b:9:9c70:5442:2794:3e8d])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291eedfd85sm112868025ad.77.2025.04.02.12.34.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Apr 2025 12:34:45 -0700 (PDT)
-From: Gregory Price <gourry@gourry.net>
-To: linux-cxl@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	kernel-team@meta.com,
-	dan.j.williams@intel.com,
-	vishal.l.verma@intel.com,
-	dave.jiang@intel.com,
-	dave@stgolabs.net,
-	jonathan.cameron@huawei.com,
-	alison.schofield@intel.com,
-	ira.weiny@intel.com
-Subject: [PATCH] cxl: core/region - ignore interleave granularity when ways=1
-Date: Wed,  2 Apr 2025 15:34:43 -0400
-Message-ID: <20250402193443.944654-1-gourry@gourry.net>
-X-Mailer: git-send-email 2.49.0
+        Wed, 02 Apr 2025 12:34:59 -0700 (PDT)
+From: "William A. Kennington III" <william@wkennington.com>
+To: Jean Delvare <jdelvare@suse.com>,
+	Guenter Roeck <linux@roeck-us.net>
+Cc: linux-hwmon@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"William A. Kennington III" <william@wkennington.com>
+Subject: [PATCH] hwmon: (pmbus): Introduce page_change_delay
+Date: Wed,  2 Apr 2025 12:34:52 -0700
+Message-ID: <20250402193452.3571888-1-william@wkennington.com>
+X-Mailer: git-send-email 2.49.0.472.ge94155a9ec-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,29 +75,207 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When validating decoder IW/IG when setting up regions, the granularity
-is irrelevant when iw=1 - all accesses will always route to the only
-target anyway - so all ig values are "correct". Loosen the requirement
-that `ig = (parent_iw * parent_ig)` when iw=1.
+We have some buggy pmbus devices that require a delay after performing a
+page change operation before trying to issue more commands to the
+device.
 
-Signed-off-by: Gregory Price <gourry@gourry.net>
+This allows for a configurable delay after page changes, but not
+affecting other read or write operations.
+
+Signed-off-by: William A. Kennington III <william@wkennington.com>
 ---
- drivers/cxl/core/region.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/hwmon/pmbus/pmbus.h      |  1 +
+ drivers/hwmon/pmbus/pmbus_core.c | 59 ++++++++++++++++++++++----------
+ 2 files changed, 41 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index 04bc6cad092c..dec262eadf9a 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -1553,7 +1553,7 @@ static int cxl_port_setup_targets(struct cxl_port *port,
+diff --git a/drivers/hwmon/pmbus/pmbus.h b/drivers/hwmon/pmbus/pmbus.h
+index ddb19c9726d6..742dafc44390 100644
+--- a/drivers/hwmon/pmbus/pmbus.h
++++ b/drivers/hwmon/pmbus/pmbus.h
+@@ -482,6 +482,7 @@ struct pmbus_driver_info {
+ 	 */
+ 	int access_delay;		/* in microseconds */
+ 	int write_delay;		/* in microseconds */
++	int page_change_delay;		/* in microseconds */
+ };
  
- 	if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags)) {
- 		if (cxld->interleave_ways != iw ||
--		    cxld->interleave_granularity != ig ||
-+		    (iw > 1 && cxld->interleave_granularity != ig) ||
- 		    cxled->spa_range.start != p->res->start ||
- 		    cxled->spa_range.end != p->res->end ||
- 		    ((cxld->flags & CXL_DECODER_F_ENABLE) == 0)) {
+ /* Regulator ops */
+diff --git a/drivers/hwmon/pmbus/pmbus_core.c b/drivers/hwmon/pmbus/pmbus_core.c
+index 787683e83db6..cfb724a8718b 100644
+--- a/drivers/hwmon/pmbus/pmbus_core.c
++++ b/drivers/hwmon/pmbus/pmbus_core.c
+@@ -116,6 +116,7 @@ struct pmbus_data {
+ 	int vout_high[PMBUS_PAGES];	/* voltage high margin */
+ 	ktime_t write_time;		/* Last SMBUS write timestamp */
+ 	ktime_t access_time;		/* Last SMBUS access timestamp */
++	ktime_t page_change_time;	/* Last SMBUS page change timestamp */
+ };
+ 
+ struct pmbus_debugfs_entry {
+@@ -178,24 +179,44 @@ static void pmbus_wait(struct i2c_client *client)
+ 
+ 		if (delta < info->access_delay)
+ 			fsleep(info->access_delay - delta);
+-	} else if (info->write_delay) {
++	}
++	if (info->write_delay) {
+ 		delta = ktime_us_delta(ktime_get(), data->write_time);
+ 
+ 		if (delta < info->write_delay)
+ 			fsleep(info->write_delay - delta);
+ 	}
++	if (info->page_change_delay) {
++		delta = ktime_us_delta(ktime_get(), data->page_change_time);
++
++		if (delta < info->page_change_delay)
++			fsleep(info->page_change_delay - delta);
++	}
+ }
+ 
+-/* Sets the last accessed timestamp for pmbus_wait */
+-static void pmbus_update_ts(struct i2c_client *client, bool write_op)
++#define PMBUS_OP_READ_BIT 1
++#define PMBUS_OP_WRITE_BIT 2
++#define PMBUS_OP_PAGE_CHANGE_BIT 4
++
++#define PMBUS_OP_READ PMBUS_OP_READ_BIT
++#define PMBUS_OP_WRITE PMBUS_OP_WRITE_BIT
++#define PMBUS_OP_PAGE_CHANGE (PMBUS_OP_PAGE_CHANGE_BIT | PMBUS_OP_WRITE)
++
++/* Sets the last operation timestamp for pmbus_wait */
++static void pmbus_update_ts(struct i2c_client *client, int op)
+ {
+ 	struct pmbus_data *data = i2c_get_clientdata(client);
+ 	const struct pmbus_driver_info *info = data->info;
++	ktime_t now = ktime_get();
+ 
+ 	if (info->access_delay) {
+-		data->access_time = ktime_get();
+-	} else if (info->write_delay && write_op) {
+-		data->write_time = ktime_get();
++		data->access_time = now;
++	}
++	if (info->write_delay && (op & PMBUS_OP_WRITE_BIT)) {
++		data->write_time = now;
++	}
++	if (info->page_change_delay && (op & PMBUS_OP_PAGE_CHANGE_BIT)) {
++		data->write_time = now;
+ 	}
+ }
+ 
+@@ -211,13 +232,13 @@ int pmbus_set_page(struct i2c_client *client, int page, int phase)
+ 	    data->info->pages > 1 && page != data->currpage) {
+ 		pmbus_wait(client);
+ 		rv = i2c_smbus_write_byte_data(client, PMBUS_PAGE, page);
+-		pmbus_update_ts(client, true);
++		pmbus_update_ts(client, PMBUS_OP_PAGE_CHANGE);
+ 		if (rv < 0)
+ 			return rv;
+ 
+ 		pmbus_wait(client);
+ 		rv = i2c_smbus_read_byte_data(client, PMBUS_PAGE);
+-		pmbus_update_ts(client, false);
++		pmbus_update_ts(client, PMBUS_OP_READ);
+ 		if (rv < 0)
+ 			return rv;
+ 
+@@ -231,7 +252,7 @@ int pmbus_set_page(struct i2c_client *client, int page, int phase)
+ 		pmbus_wait(client);
+ 		rv = i2c_smbus_write_byte_data(client, PMBUS_PHASE,
+ 					       phase);
+-		pmbus_update_ts(client, true);
++		pmbus_update_ts(client, PMBUS_OP_WRITE);
+ 		if (rv)
+ 			return rv;
+ 	}
+@@ -251,7 +272,7 @@ int pmbus_write_byte(struct i2c_client *client, int page, u8 value)
+ 
+ 	pmbus_wait(client);
+ 	rv = i2c_smbus_write_byte(client, value);
+-	pmbus_update_ts(client, true);
++	pmbus_update_ts(client, PMBUS_OP_WRITE);
+ 
+ 	return rv;
+ }
+@@ -286,7 +307,7 @@ int pmbus_write_word_data(struct i2c_client *client, int page, u8 reg,
+ 
+ 	pmbus_wait(client);
+ 	rv = i2c_smbus_write_word_data(client, reg, word);
+-	pmbus_update_ts(client, true);
++	pmbus_update_ts(client, PMBUS_OP_WRITE);
+ 
+ 	return rv;
+ }
+@@ -408,7 +429,7 @@ int pmbus_read_word_data(struct i2c_client *client, int page, int phase, u8 reg)
+ 
+ 	pmbus_wait(client);
+ 	rv = i2c_smbus_read_word_data(client, reg);
+-	pmbus_update_ts(client, false);
++	pmbus_update_ts(client, PMBUS_OP_READ);
+ 
+ 	return rv;
+ }
+@@ -471,7 +492,7 @@ int pmbus_read_byte_data(struct i2c_client *client, int page, u8 reg)
+ 
+ 	pmbus_wait(client);
+ 	rv = i2c_smbus_read_byte_data(client, reg);
+-	pmbus_update_ts(client, false);
++	pmbus_update_ts(client, PMBUS_OP_READ);
+ 
+ 	return rv;
+ }
+@@ -487,7 +508,7 @@ int pmbus_write_byte_data(struct i2c_client *client, int page, u8 reg, u8 value)
+ 
+ 	pmbus_wait(client);
+ 	rv = i2c_smbus_write_byte_data(client, reg, value);
+-	pmbus_update_ts(client, true);
++	pmbus_update_ts(client, PMBUS_OP_WRITE);
+ 
+ 	return rv;
+ }
+@@ -523,7 +544,7 @@ static int pmbus_read_block_data(struct i2c_client *client, int page, u8 reg,
+ 
+ 	pmbus_wait(client);
+ 	rv = i2c_smbus_read_block_data(client, reg, data_buf);
+-	pmbus_update_ts(client, false);
++	pmbus_update_ts(client, PMBUS_OP_READ);
+ 
+ 	return rv;
+ }
+@@ -2530,7 +2551,7 @@ static int pmbus_read_coefficients(struct i2c_client *client,
+ 	rv = i2c_smbus_xfer(client->adapter, client->addr, client->flags,
+ 			    I2C_SMBUS_WRITE, PMBUS_COEFFICIENTS,
+ 			    I2C_SMBUS_BLOCK_PROC_CALL, &data);
+-	pmbus_update_ts(client, true);
++	pmbus_update_ts(client, PMBUS_OP_READ | PMBUS_OP_WRITE);
+ 
+ 	if (rv < 0)
+ 		return rv;
+@@ -2734,7 +2755,7 @@ static int pmbus_init_common(struct i2c_client *client, struct pmbus_data *data,
+ 	if (!(data->flags & PMBUS_NO_CAPABILITY)) {
+ 		pmbus_wait(client);
+ 		ret = i2c_smbus_read_byte_data(client, PMBUS_CAPABILITY);
+-		pmbus_update_ts(client, false);
++		pmbus_update_ts(client, PMBUS_OP_READ);
+ 
+ 		if (ret >= 0 && (ret & PB_CAPABILITY_ERROR_CHECK)) {
+ 			if (i2c_check_functionality(client->adapter, I2C_FUNC_SMBUS_PEC))
+@@ -2750,13 +2771,13 @@ static int pmbus_init_common(struct i2c_client *client, struct pmbus_data *data,
+ 	data->read_status = pmbus_read_status_word;
+ 	pmbus_wait(client);
+ 	ret = i2c_smbus_read_word_data(client, PMBUS_STATUS_WORD);
+-	pmbus_update_ts(client, false);
++	pmbus_update_ts(client, PMBUS_OP_READ);
+ 
+ 	if (ret < 0 || ret == 0xffff) {
+ 		data->read_status = pmbus_read_status_byte;
+ 		pmbus_wait(client);
+ 		ret = i2c_smbus_read_byte_data(client, PMBUS_STATUS_BYTE);
+-		pmbus_update_ts(client, false);
++		pmbus_update_ts(client, PMBUS_OP_READ);
+ 
+ 		if (ret < 0 || ret == 0xff) {
+ 			dev_err(dev, "PMBus status register not found\n");
 -- 
-2.47.1
+2.49.0.472.ge94155a9ec-goog
 
