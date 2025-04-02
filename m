@@ -1,86 +1,101 @@
-Received: from mxct.zte.com.cn (mxct.zte.com.cn [183.62.165.209])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36A3E238155;
-	Wed,  2 Apr 2025 11:39:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=183.62.165.209
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFB3F23770B;
+	Wed,  2 Apr 2025 11:39:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743593943; cv=none; b=A+kZejH0GpiziVYMTyVgv2s7mjf389mGYOPO68csn+g5iTem8RuURkJQSdjbo6WpDTdu+cKmCABL5dT2Rp1NH0y/LyhBdYtZR024WRcsCW3kw6OtCf9kKUExzqzi8dI1qb6iPwpo620nWnrGzvIW64s5+BnEELai+2H2kdDk/5w=
+	t=1743593977; cv=none; b=ugXG8FH1vMJkTckIAuQoBGAyjxmGTUO+3vK3B29Tpb7j6DRn4LFbMPfb2AWJNuX6r6ut/1v/IAzweXXLk5a3XlzJlOA6IyQ08IOJVtyT0BAxA70M7fO3R9ce0qL9CPSxuB98HaXE9teIql2Ff9F29FpRbE/PRMc/vo1IJadhOws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743593943; c=relaxed/simple;
-	bh=zjBdgLOzPfWVyc3hsQ2yS2yL10tTO+NL6GgIw3zJGLc=;
-	h=Date:Message-ID:In-Reply-To:References:Mime-Version:From:To:Cc:
-	 Subject:Content-Type; b=qfO41UsHGogqb74V3TEwrBzMZnwDym7c6g0RlSNw8ldIYt1/MzN+iZh+jmgsL5Jx6KjXfwjUojyp0dOKtSSYolKMB+e+u8C1Iiq9l2su9TaKMiJUHgw5dh+6UzizDtCnp08Ri7t3loHQaMkg68ZPnn9P6jdpJboiWyDxsiG1MkA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=183.62.165.209
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxct.zte.com.cn (FangMail) with ESMTPS id 4ZSNDZ1dp8z51SWn;
-	Wed,  2 Apr 2025 19:38:54 +0800 (CST)
-Received: from xaxapp05.zte.com.cn ([10.99.98.109])
-	by mse-fl2.zte.com.cn with SMTP id 532BcnQq016861;
-	Wed, 2 Apr 2025 19:38:50 +0800 (+08)
-	(envelope-from shao.mingyin@zte.com.cn)
-Received: from mapi (xaxapp01[null])
-	by mapi (Zmail) with MAPI id mid32;
-	Wed, 2 Apr 2025 19:38:52 +0800 (CST)
-Date: Wed, 2 Apr 2025 19:38:52 +0800 (CST)
-X-Zmail-TransId: 2af967ed21cc086-26975
-X-Mailer: Zmail v1.0
-Message-ID: <20250402193852834atJ7eho66TlnKOIMSvpfr@zte.com.cn>
-In-Reply-To: <20250402193656279azy9TKahAE5TQ5-i4XCQT@zte.com.cn>
-References: 20250402193656279azy9TKahAE5TQ5-i4XCQT@zte.com.cn
+	s=arc-20240116; t=1743593977; c=relaxed/simple;
+	bh=gGLBNtaZV8xPDcDWijyzPW6QNFE+hAe07boPW5Z0apQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZIacXmKBzrrfQm5FWAyfqfrqBiUl83eBKbzXPKtQVeB2SrwfW9oEfGABUxh63H0oF5eYEoHKzK6V8JeW+DRL7QVzgN61tVYfCGEEyV79E/hjHgr+8FtgkhJBA4xZnEYMOzZZ2dnxuoQE+cjeEwWyvipQX22hF7JIPiNQPSwVlTg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KwuJrb1M; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KwuJrb1M"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-225887c7265so11674015ad.0;
+        Wed, 02 Apr 2025 04:39:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743593975; x=1744198775; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gGLBNtaZV8xPDcDWijyzPW6QNFE+hAe07boPW5Z0apQ=;
+        b=KwuJrb1M404mkbrK+T42T82pXaaWp+HBDnaZw5dymcITJcFyKqA6cUAAILEL89Z47G
+         jC5QjcSRA19Kg3EsaaT3mVN4GzTWdXbTC+mHzlcikZJ+RIfy/T9aed50a4+vAjGsFf7c
+         H6ybMGTCq5LuTP9v79Wbm8p4ZHFETQgJSv9Xn3SEYmHyjFd/gTm6HGncyzl3c+Mkpkgl
+         iUU+3Dvsh/ORhjFeW6mMYJm1z3Sb2ReuRp5yvlKlAicG7X0wBWk0RMewxPUMcQ6HFm6H
+         DYO2Ya7c8p7rZQP8vFN/XKqm3jUokvU5ZMccEbzevwADvloghgubvj7lXNfwavhb5iPj
+         +IHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743593975; x=1744198775;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gGLBNtaZV8xPDcDWijyzPW6QNFE+hAe07boPW5Z0apQ=;
+        b=WVu8MvIJqqIkz7yeXRBCNxVNdO9R260Oee6KDyzw+5j2NZN8D1iGOa5KD9YBKE1tFt
+         Fr6yOj0ZWkE4y8f3tQOdjscUw9YuHKn0CRKVw5C5vF+EFxJAwXvv4jqJF+2GMBClX7HX
+         Z3KaP+Kschy6GbN4pRJfm6Njo0NecDzlnN2Peam5q92W2M2lREGFfxRPDsRbpo5iwS0f
+         I7984DfkC9TPWsPhMwpDKWlsY42hL+ZQJYgdM9GxpbXXeQakoVYaOEzrqj8bXfJ6qQRx
+         82Ir9hS1kcSDPec85NvcvAt9ZBZGOMVPypOhdFGdoLh8umfSMiBeyWupLp1d5IpVR+/J
+         bN4g==
+X-Forwarded-Encrypted: i=1; AJvYcCW6EQlJLd4SYZ/JJ3RNs0GwapLmuzvNqG+4eIOUzXXdY0sld+W4e+SR/1qMsBlCyq2CeOjRfb19a4BcvkJOoQc=@vger.kernel.org, AJvYcCXGnhMQ1U/uY6ELTyg5DV1Ytk4Gui5PyfGpAT1KJ3KoMm9SUwIxf+T//5aq/4OuNZIDKR9YeHpkUvBA0hw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy1wuAif9Wm2fJj9x2BmQbNKFlMxhMzR/pYhthSwHmJH8KobFmd
+	9A7Aa8fOS8A2eUlzj2/mc3RSKu5l5ijp6jOLkqdiWC2U6Wkh2fAEK6HKlzSLo8f7sXYnSWg4V2j
+	aOA/SJz48Vc2duH2NZxUv+XH2RkA=
+X-Gm-Gg: ASbGnctttesRaR/dyLKEVENjI7QK9FTxqJY8u94da+sh5LZLDFd7K7AVblUUFG579tg
+	Y/wV7ArD2WHUGXhROsJ3RekQLHpGXD/TyQxi03ZGzwZSioSTaazTBiR0Dk8VsH9/Nth4CbWo5xf
+	QUohHk+M9VjYav+fiTRn2diD1kZQ==
+X-Google-Smtp-Source: AGHT+IGB6aBlM41FSg3WnGAb9nBpClUkKO3CDvVEPaksn8LFIvlexzrpFyaWJkBL2Wyv/uVnyThmjGOAaTYbbqRXzbA=
+X-Received: by 2002:a17:903:1b25:b0:225:abd2:5e53 with SMTP id
+ d9443c01a7336-2292f9622cdmr96678775ad.6.1743593974881; Wed, 02 Apr 2025
+ 04:39:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-From: <shao.mingyin@zte.com.cn>
-To: <thierry.reding@gmail.com>, <laurent.pinchart@ideasonboard.com>
-Cc: <mperttunen@nvidia.com>, <airlied@gmail.com>, <simona@ffwll.ch>,
-        <jonathanh@nvidia.com>, <dri-devel@lists.freedesktop.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <tomi.valkeinen@ideasonboard.com>, <maarten.lankhorst@linux.intel.com>,
-        <mripard@kernel.org>, <tzimmermann@suse.de>, <michal.simek@amd.com>,
-        <linux-arm-kernel@lists.infradead.org>, <yang.yang29@zte.com.cn>,
-        <xu.xin16@zte.com.cn>, <ye.xingchen@zte.com.cn>,
-        <zhang.enpei@zte.com.cn>
-Subject: =?UTF-8?B?W1BBVENIIGxpbnV4LW5leHQgMi8yXSBncHU6IGRybTogeGxueDogenlucW1wX2RwOiBVc2UgZGV2X2Vycl9wcm9iZSgp?=
-Content-Type: text/plain;
-	charset="UTF-8"
-X-MAIL:mse-fl2.zte.com.cn 532BcnQq016861
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 67ED21CE.000/4ZSNDZ1dp8z51SWn
+MIME-Version: 1.0
+References: <cover.1743572195.git.viresh.kumar@linaro.org> <bf2d798034e5f2c6fd5fbc561a8bd19431e6a9cb.1743572195.git.viresh.kumar@linaro.org>
+In-Reply-To: <bf2d798034e5f2c6fd5fbc561a8bd19431e6a9cb.1743572195.git.viresh.kumar@linaro.org>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Wed, 2 Apr 2025 13:39:22 +0200
+X-Gm-Features: AQ5f1JouVEcCfm4ZrKw1FeYZI-LSTYfd2JyRyUeRDyP94eqYKV3dthy5iwATm-c
+Message-ID: <CANiq72nzrjh6S2bh0GQOKtjFqMcDzrBbtSVhaL-i1kja1zW3HA@mail.gmail.com>
+Subject: Re: [PATCH V4 2/2] MAINTAINERS: Add entry for Rust bitmap API
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Yury Norov <yury.norov@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, linux-kernel@vger.kernel.org, 
+	Danilo Krummrich <dakr@redhat.com>, rust-for-linux@vger.kernel.org, 
+	Vincent Guittot <vincent.guittot@linaro.org>, Burak Emir <bqe@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Zhang Enpei <zhang.enpei@zte.com.cn>
+On Wed, Apr 2, 2025 at 7:38=E2=80=AFAM Viresh Kumar <viresh.kumar@linaro.or=
+g> wrote:
+>
+> Update the MAINTAINERS file to include the Rust abstractions for bitmap
+> API.
+>
+> Yury has indicated that he does not wish to maintain the Rust code but
+> would like to be listed as a reviewer.
 
-Replace the open-code with dev_err_probe() to simplify the code.
+Will patches go through the BITMAP API tree, then? i.e. you will
+maintain it by sending patches to Yury's tree, right? That is great,
+just wanted to confirm after all the discussions if I missed anything.
 
-Signed-off-by: Zhang Enpei <zhang.enpei@zte.com.cn>
-Signed-off-by: Shao Mingyin <shao.mingyin@zte.com.cn>
----
- drivers/gpu/drm/xlnx/zynqmp_dp.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+(By the way, the BITMAP API entry does not seem to have a `T:` field
+-- from a quick look at the latest pull, is it
+https://github.com/norov/linux?)
 
-diff --git a/drivers/gpu/drm/xlnx/zynqmp_dp.c b/drivers/gpu/drm/xlnx/zynqmp_dp.c
-index a6a4a871f197..28efa4c7ec8e 100644
---- a/drivers/gpu/drm/xlnx/zynqmp_dp.c
-+++ b/drivers/gpu/drm/xlnx/zynqmp_dp.c
-@@ -2466,10 +2466,8 @@ int zynqmp_dp_probe(struct zynqmp_dpsub *dpsub)
+Thanks!
 
- 	dp->reset = devm_reset_control_get(dp->dev, NULL);
- 	if (IS_ERR(dp->reset)) {
--		if (PTR_ERR(dp->reset) != -EPROBE_DEFER)
--			dev_err(dp->dev, "failed to get reset: %ld\n",
--				PTR_ERR(dp->reset));
--		ret = PTR_ERR(dp->reset);
-+		ret = dev_err_probe(dp->dev, PTR_ERR(dp->reset),
-+				    "failed to get reset\n");
- 		goto err_free;
- 	}
-
--- 
-2.25.1
+Cheers,
+Miguel
