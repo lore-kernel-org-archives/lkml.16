@@ -1,65 +1,65 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0569223BCF8
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 14:36:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC29223AE84
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 14:36:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743604600; cv=none; b=K2eWP1roKTwKF+/tVZqagQQuFzHvdz1B24dIBQu+bAumz2j9CmN8blRsMgCDcZuj8gD/5z9O04Inw0BBIUyfbVxlhobrGBL6v1OpZdRcbvRLGdf3RB+/g2t0J7jXxZMeOd8ovcKYemRD9hW1Xyk7JvzVviY1oZWKmxvPXNkb/+I=
+	t=1743604601; cv=none; b=mxNRCQnxyQsJA7FW0+KLIJZfA27jFXKIOjfFYe6WxJ9F80jtWheBYDodpshsVYRhDBQWC4/1p4Np69meA7ePK+JmkQdSEtH+OL9adtJooR/Y5ZY/MB+UkyZKTdP3NSX8WW8Ko3NC3fmGValao9h1zvsi7+7lH5SafTRUgHaCrHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743604600; c=relaxed/simple;
-	bh=wdbY/f0SsTEDRKIlr0J0r8jqNsTifwjpoiAj3tZNr3A=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=gLAvgQW2u7zUHQ6vhJlKYqci5er9BlqVz5ciC5RaOnzKAzinIByX/79XhDv3ECteICOeXBgMk/a9JPe8SZehBYN7Yf+o6jwfMj9tByq5IoQu29fHGGzN+aWoqI/gNk7h2UAEtdnzqUw62rBMyGP9w7fZ469i2CqMIB7WBynpvwo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nzZzMPHm; arc=none smtp.client-ip=209.85.128.51
+	s=arc-20240116; t=1743604601; c=relaxed/simple;
+	bh=8hS6GfBJNXR0FuahNdWaTupB+X7huKbQP3wOJFPU12o=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=mTGzohJGpoHTvq7Ne89//UsiSC6jPnQyf8GSWa9ipSL5swst5ZmSxvDOigpQ9Yr2tslekKkTOwIrKuV7wkIewKYabudUP+IgCVPJC2XHKQSU0a/nkhrFaUCfJhcpYFCyN6ZMp2BesUerFT2n9MXJN6kG5Q1rvHhuHDUqyRDc8tE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=u4lV3mTq; arc=none smtp.client-ip=209.85.221.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nzZzMPHm"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43cfe574976so47546375e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 07:36:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="u4lV3mTq"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-39c1efbefc6so1767470f8f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 07:36:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743604597; x=1744209397; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=8OZPFd+3nBV9zg3pKEpB8c5hVsmEiajWVSSxIoQN/J4=;
-        b=nzZzMPHmlxyOsGiT6ZOaSSblhGg9+ClMdm+d4safBzLcDWcUMZWox6AzlxBI1rPuit
-         2slLfSTT4BRkvoB4ZrCKLNkHav/Vxc9FoM7pRYo19M6azLVX8ar4349K8/tX56ni1ye9
-         zzwQZV9PRX10DOvKsi7gG/PTET3z1rW3zn+cwZ1+Ldzh8GRz1CEuupt9PHDCb1jdFVId
-         1KJyFSEYD0V3y4Ykomu5jEF3uSAWpVaO+vh7w8i1e2DFNET7KJr+ebWQt5qySxMM3MhC
-         lrcAHf2XWUPxszlrnmMG57xvBtYNWVqHUsOBO8RGxPowSZCzghgeLjmoYO6INimyiUCJ
-         PLAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743604597; x=1744209397;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=linaro.org; s=google; t=1743604598; x=1744209398; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=8OZPFd+3nBV9zg3pKEpB8c5hVsmEiajWVSSxIoQN/J4=;
-        b=pRg9SzDzk8uY+DD/EeSCBclyUkJT/D3fCDMkjDsCe2Ik6INZS6oPeYDRSe8W/10lMB
-         ZI/y2ks//GXTlVG4p2dDvxFjs/Mc9NuyFra9szf4Xkci+w9+sjhmV10+6LjHI/ulxXnE
-         Fgmpb/R6f7dbi07eLdRUy2fg6OsqiXwtDM9PhScmvUhOtsTyxjC1c6nmgNCLqUTYzPgr
-         QXtnTMs6yDmS00Vpq4cDjiaWtvatnVnOm7qjBaigW+ObvZA4hNyZCLbArCeX2kzuuGEV
-         oIE5UqEYlG2SbDM+E6Dtq8ZZjvtsIFrJcScM9ZWfOyr/ev6O3/65+X/4qsqGPt+CSFV0
-         HJZA==
-X-Forwarded-Encrypted: i=1; AJvYcCW+zTYqVGZ0bBTEv7AoU+FJt6aHmMOchiK+pdifELyBsQBi46+r99xlmCjzDLeuxDXL58Q1ybnUyqD0pxA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzP2uTumMiTHoQ1p1BPPlrUXRXCBkDbGL1sMnvizmaEdNY9etnn
-	juQq5ZDyoP5tVrrvusgw8E7my5lgEzadEpLQa+w5Y8XSpLh5ybhve02mAbj+tjs=
-X-Gm-Gg: ASbGnctD0TygZR10KSXsPSDF99uM6E5E9+lOgkdGpY+NEqyLHOX0mIIRS81OmjwWJZq
-	pqBSHtnhCUnnLFdvG8rbdysaKAosjEUw041xUCvTOe5Biz76cRk4RQgo+d2sCfENoTYsufEKcRe
-	mk0vQufCmO2yN0Htzr/JICpsFth4NVqmHw5wzIcAADkcFRmnXXVWQsmkXoXXbyVZIpcL8EHwCTK
-	PL68v3xi1cAF6EKVlGUF/8wxOy15frGKojK8La8+VqajTTU3BSdGH/eBOii0ftg4uBwsLN4Mlhz
-	OOA2g8vUdi3pAm53D+Aq6/qHkf++iGV8jowedSdVkUtWpFJ5FdAEtinqNsZwOzgectI=
-X-Google-Smtp-Source: AGHT+IGHnEjaAF6TdBWULUciMcarFp5DBhDkePCJjZ4FPYyba+CH4VGbrtlke+W2qDrPN8q0hph4gg==
-X-Received: by 2002:a05:600c:3d98:b0:43c:fa0e:4713 with SMTP id 5b1f17b1804b1-43ea7c4e76amr77872505e9.2.1743604597214;
-        Wed, 02 Apr 2025 07:36:37 -0700 (PDT)
+        bh=JzxsAOJT4Iqs9UJzPZL2Q0zcziM4hu6YpQDFHvHcut8=;
+        b=u4lV3mTqTPysPBatsAMFr7ce0+lFiFRvqfyNK8GWemGdxguoeSq6Pn/WchI+APFAPo
+         pPhcE8FRCkm9OEYy9yO+uGuKZGQsgrqNqC5qIlAjzoIQvP20r/Ag/JVlVypDFSt9MlKz
+         er8b0Zu9YgFHK+twe/20XF6KLOtGhPkG3j1nWlLkj3vKoUvsggSHklfbvOFZ8VANOPLu
+         vQyzC/9pXdH9l9yk4vtNYiDJtj0uSsfEHMPnTVhI86X+4EAKIzHyOcry2NROHwIa7Rjc
+         svNcmcurjj/LxJS3hmlM5ax0377Oh6T2x34onxxzfI6/VrJS1lgTE/haeIv0UDUd9FbX
+         95yQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743604598; x=1744209398;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JzxsAOJT4Iqs9UJzPZL2Q0zcziM4hu6YpQDFHvHcut8=;
+        b=rY3xPHgzafsKfU49+q5b3Wko5x60qU1mtTMxPZLsoBZEVQKZEnPJWN16sdgm/PMNE/
+         7nzFxBE+O8jR+R8zpUjztmdCn6IekN5r0rFD8ZI1ddLQR5Acc4CJ2DooCIPInqnO9cjz
+         0KM1mcZnw9nXuq1g+mlHb7HHrmRF66LYZUaaneLwtlZC9NyeIFvrdiz8wOQ7N0vrf1K0
+         /KLpSzjZ+kZ1D1axw//q7Wh5+zisA2iSumN2raRz2UjPxem1foyCPFjJSu6j0Jxq9LNN
+         KcEi/UdCVNAAA5uQqQTOSaeosm+bOYdICqLchXeJGyDBuEh4Jw2uQ6gBfTEep5ihQWNY
+         rHNg==
+X-Forwarded-Encrypted: i=1; AJvYcCW17yiNi0/3P1qNPh7WxpZfLGc5lfEutnftd2VmGm04TE6q2aIKd6aAMqXgbRQhXfm0AJhnrsLQjR4lzQo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxuwiVHBcSdigvIYa+oovxGCgPX00ZJzVo04T+ti5vDeqep7Wi/
+	dFBSHLU7aANOEhp+TPEm3quB7xOxkXt21g/TLN19c+PTajvkJqDDO4tBZkMARd0=
+X-Gm-Gg: ASbGnctKw81gzGuldywo3XgtNUrl5ZLRporolhJ47/wzhxJXtd31Stff8QQxdmZ5cWq
+	d7gDqQ/2q5+Ppa+OHxv2bIX+U3AVUF16XSLaANxjBhqewIqNED60oQX2F6o+Zu/+A6X4OvDTvhr
+	RSdQsJzhZ201vxJhR3PrEHLTVdXgweEnMd0ne6q2+fwkKQgjE7GSzZAG+utn4Vy7SkDQxoncbhL
+	/vqPq2ii8S1A0jhoMjlqI/mnKri8i4SVRj+5TuPp/pHB2jpIe/orwSDeu8VjzieyTL4yH6pl2Sd
+	ipPPV57vW5gY13jgN2bY8VJWan73tGFtVFZVGw/iIjISef3DreGuOfo+
+X-Google-Smtp-Source: AGHT+IGfBz/Tbc3ihv0gbUFvVnQ+Ik0K5L560vpD6awXQAxP5KkZBzRejgIatspUJzWM+LD8gckAfQ==
+X-Received: by 2002:a5d:64cd:0:b0:391:412b:e23f with SMTP id ffacd0b85a97d-39c29751a59mr2180684f8f.15.1743604598316;
+        Wed, 02 Apr 2025 07:36:38 -0700 (PDT)
 Received: from localhost ([213.215.212.194])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-43eb60d1472sm22654985e9.22.2025.04.02.07.36.36
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-39c0b662850sm16965019f8f.26.2025.04.02.07.36.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Apr 2025 07:36:36 -0700 (PDT)
+        Wed, 02 Apr 2025 07:36:37 -0700 (PDT)
 From: Christopher Obbard <christopher.obbard@linaro.org>
-Subject: [PATCH v5 0/3] Add support for OLED panel used on Snapdragon
- Lenovo T14s Gen6
-Date: Wed, 02 Apr 2025 15:36:31 +0100
-Message-Id: <20250402-wip-obbardc-qcom-t14s-oled-panel-v5-0-ff33f4d0020f@linaro.org>
+Date: Wed, 02 Apr 2025 15:36:32 +0100
+Subject: [PATCH v5 1/3] arm64: dts: qcom: x1e80100: add epd hpd pinctrl
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,12 +68,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAG9L7WcC/5XNy07DMBCF4VepvGbQ+IYbVrwH6sL2TFpLIQ52l
- YKqvDtONxR1E5b/WXznKiqXxFW87q6i8JxqymML+7QT8eTHI0Oi1kKhsqgVwiVNkEPwhSJ8xvw
- BZ2kq5IEJJj/yAMGZnklJekEUjZkK9+nrdvF+aH1K9ZzL9+1xluv6D3yWIAFtiCZQpL3yb0Maf
- cnPuRzFqs/qXrQbRAUI3IXoYkcaY3wQ9b3oNoi6icaS7ZUzTnf7B9H8igbVBtGsogxe97qBhH/
- EZVl+APQtObPHAQAA
-X-Change-ID: 20250320-wip-obbardc-qcom-t14s-oled-panel-b74fed21d600
+Message-Id: <20250402-wip-obbardc-qcom-t14s-oled-panel-v5-1-ff33f4d0020f@linaro.org>
+References: <20250402-wip-obbardc-qcom-t14s-oled-panel-v5-0-ff33f4d0020f@linaro.org>
+In-Reply-To: <20250402-wip-obbardc-qcom-t14s-oled-panel-v5-0-ff33f4d0020f@linaro.org>
 To: Douglas Anderson <dianders@chromium.org>, 
  Neil Armstrong <neil.armstrong@linaro.org>, 
  Jessica Zhang <quic_jesszhan@quicinc.com>, 
@@ -90,76 +87,48 @@ Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
  devicetree@vger.kernel.org, 
  Christopher Obbard <christopher.obbard@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2418;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=726;
  i=christopher.obbard@linaro.org; h=from:subject:message-id;
- bh=wdbY/f0SsTEDRKIlr0J0r8jqNsTifwjpoiAj3tZNr3A=;
- b=owEBbQKS/ZANAwAKAWNNxPBocEb4AcsmYgBn7Utwut02pE2oqTD8qrOzYffFgIVHdVfd9YFeN
- +epfIlBW/qJAjMEAAEKAB0WIQTxi9yLbCX5CqI9UXRjTcTwaHBG+AUCZ+1LcAAKCRBjTcTwaHBG
- +MjEEACKpIi8hW0hmQ61YYN9wbYDtip2XyYLeaZ4hRkEGeekUnSgiQz4yrznSISsLhWJ0vge/sY
- MHKaQ9i7msQFoHQDmD1yQKrYQA20gboJhP7qcs+hJWri7Ae2x1XgQDHCKIowbBBZITII/5RvyfE
- +EpPpqbnHKzbhoLMV2M2xinnjLYrYOxutwafQe5hm1ynnekZIz+PTq6Jks+b6fS+iBdoA7Hlwj/
- jWvrxdgqAxvW4osixzolkY8D/Inpof8iwJif/Jib+LZRm+SWqiRpqkz3I9DBdpRgvH24hQAspE0
- hMFKjwlEzsqm+TpcTPHnSXdtAC0Vn5BhTOC7ru4dLUJwn+sIHIDNHa8ntNXEhT+CkXKU/aKu98W
- GHxqJCzoWKprht3arBmRz9YTej1yA4yPTxdcwLEpMy0SmmjO8ULV2VtP0XZl808MaFNsp3S0SqX
- dv4oIfgu7CHazXHO9qDjBf9pxveRuQ1VoAGyE/Y5dxzJcOrOWdTwpFqRzJ2PkV/To1gh5f3BsFg
- JN7Lpef5X37vVE9Gt4ReKAl3pMgJ9WDDUqbaZUt3sDQMYEi1dZ5BPflqt+9GwWo9k1cJOwytRt2
- XFzAreywfPAqYXpmrglHYOIsR0ibGMJqY92tKoWvf0YpgAC/1zv+tRhtTZr0QSq2ETd7uxijLka
- NqXc2AcO8AFhEcA==
+ bh=8hS6GfBJNXR0FuahNdWaTupB+X7huKbQP3wOJFPU12o=;
+ b=owEBbQKS/ZANAwAKAWNNxPBocEb4AcsmYgBn7Ut0tpiNwg8/a9cbIdQZJunopxaffChO5bBV7
+ y8mLRat166JAjMEAAEKAB0WIQTxi9yLbCX5CqI9UXRjTcTwaHBG+AUCZ+1LdAAKCRBjTcTwaHBG
+ +EgcD/sE6Qds4MJdJXtaZcqzeDVC60vw8sK0/fGKt8X9MiP488uMAh8JT0+bLt14Tilx5sBgj+U
+ HvcgrTD5qU+IZEAkRLIo7I7tGxJ0/WhXa4IBHsqKXaRz+CAAxIPZXkexTO8HeFsRzRb0AJWNkd3
+ JU9IMBVgSU82sYq4Ya451T1ReBHNdwff6WX6Jb6qbfQO4p6R/0bS+ntwj8fRrcmNBlVEHn3zs8O
+ 0TbIKDbHnDF2CiaFdeSwBKAoM9WbymDcOqOHuHXjEDL8Wcdlh1OMM+yy8Kfc35X9IIiLHcf4TJF
+ IgiRjP307m0TZsBp4wApqpQjE+hmBs29HYiXF87T72y3Gx6fIy1ZAINGawxX1yRqhMQ83Q5g43A
+ C2Lxt45Gu2sZcOCrXVnttCvA4i66Ov8zyYM76Nb3d2fVLYi5N0bl7OeHmHf5x7YqS/f01e0wLoK
+ L/9pvdl5b4NhCrgkuK3HfUb012E41/x/GeCKcB2L/lZsYqjfNJuj4gBhlmoSqKGEqBujbbMXr5G
+ GiA0/ojdeHJDNVeuXXizAmahLTPdtdjs2I1y71L6Q37fmBbw3iEQ957rP1Cv4dtFOWZPTb/TpHR
+ ANbGjp9m0UMyglMTZlYYafPEYsa6/fqLuRL8ZY9Iwh8utU1yfak2XMkUwSjY6pLZXQzGaSCOalJ
+ 11J0TLAL7pkEofg==
 X-Developer-Key: i=christopher.obbard@linaro.org; a=openpgp;
  fpr=F18BDC8B6C25F90AA23D5174634DC4F0687046F8
 
-The Snapdragon Lenovo T14s Gen6 can be bought with a number of different
-panels. This patch series adds support for the OLED model which has a
-Samsung ATNA40YK20 panel.
-
-With this patch series the backlight of the OLED eDP panel does not
-illuminate since the brightness is incorrectly read from the eDP panel
-as (to be clear this is not a regression). This is fixed in [0].
-
-[0]: https://lore.kernel.org/all/20250330-wip-obbardc-qcom-t14s-oled-panel-brightness-v6-1-84ad1cd1078a@linaro.org/
+Add edp_hpd_active pinctrl to the X1E80100 device tree.
 
 Signed-off-by: Christopher Obbard <christopher.obbard@linaro.org>
 ---
-Changes in v5:
-- Move edp_hpd_active from T14s DTS into SoC DTSI (Dmitry).
-- Link to v4: https://lore.kernel.org/r/20250402-wip-obbardc-qcom-t14s-oled-panel-v4-0-41ba3f3739d0@linaro.org
+ arch/arm64/boot/dts/qcom/x1e80100.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Changes in v4:
-- Rework HPD GPIO into eDP device rather than panel (Johan).
-- Drop review tags for HPD GPIO patch.
-- Link to v3: https://lore.kernel.org/r/20250327-wip-obbardc-qcom-t14s-oled-panel-v3-0-45d5f2747398@linaro.org
+diff --git a/arch/arm64/boot/dts/qcom/x1e80100.dtsi b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
+index 46b79fce92c90d969e3de48bc88e27915d1592bb..5b1b80c445404fd02e9f6e5dab207610b03ff9c5 100644
+--- a/arch/arm64/boot/dts/qcom/x1e80100.dtsi
++++ b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
+@@ -6389,6 +6389,11 @@ data-pins {
+ 					bias-pull-up;
+ 				};
+ 			};
++
++			edp_hpd_active: edp-hpd-active-state {
++				pins = "gpio119";
++				function = "edp_hot";
++			};
+ 		};
+ 
+ 		stm@10002000 {
 
-Changes in v3:
-- Added review trailers from v2.
-- Dropped dt-binding documentation patch (applied by Douglas Anderson into
-  drm-misc-next).
-- Dropped eDP maximum brightness patch (will be sent in separate
-  series).
-- Removed duplicate nodes in T14s OLED device tree.
-- Reworked WIP comments from commit messages.
-- Link to v2: https://lore.kernel.org/r/20250325-wip-obbardc-qcom-t14s-oled-panel-v2-0-e9bc7c9d30cc@linaro.org
-
-Changes in v2:
-- Use the existing atna33xc20 driver rather than panel-edp.
-- Add eDP panel into OLED devicetree.
-- Add patch to read the correct maximum brightness from the eDP panel.
-- Link to v1: https://lore.kernel.org/r/20250320-wip-obbardc-qcom-t14s-oled-panel-v1-1-05bc4bdcd82a@linaro.org
-
----
-Christopher Obbard (3):
-      arm64: dts: qcom: x1e80100: add epd hpd pinctrl
-      arm64: dts: qcom: x1e78100-t14s: add hpd gpio to dp controller
-      arm64: dts: qcom: x1e78100-t14s-oled: add edp panel
-
- arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s-oled.dts | 8 ++++++++
- arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dtsi     | 3 +++
- arch/arm64/boot/dts/qcom/x1e80100.dtsi                          | 5 +++++
- 3 files changed, 16 insertions(+)
----
-base-commit: b6ae34803e82511009e2b78dc4fd154330ecdc2d
-change-id: 20250320-wip-obbardc-qcom-t14s-oled-panel-b74fed21d600
-
-Best regards,
 -- 
-Christopher Obbard <christopher.obbard@linaro.org>
+2.49.0
 
