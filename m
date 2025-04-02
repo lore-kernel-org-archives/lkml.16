@@ -1,141 +1,176 @@
-Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-10631.protonmail.ch (mail-10631.protonmail.ch [79.135.106.31])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F8D82AE99
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 00:01:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB7B5184;
+	Wed,  2 Apr 2025 00:06:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.31
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743552082; cv=none; b=Dj1K9YygH1qD1mp0C89eDY18r8qKz2nqCvWhUtyYOH/ygtex3Uikd4WaY9IH3UqsCK9y1SZuSf2UiDW9t0VYawlr5B/wSQ6bv5EyuwWNS4qRNqtSQCp3xCnm0HqyGBJFq0N2EO90k1WiZTg6ZSgPVBOfDpDuYKfc4Kx98thlEgM=
+	t=1743552371; cv=none; b=QcDahxYwj6GRE7Qr1f8grB2LXzBO+fMJVlelvZWbOT2czpbLBs075kcUpSJLHEZPv/uiBTLX4EbOqCWWbc8G2taKMP9MXUwgf2abOcmGkQXFl0OOddvztoc8jVLAX7BNmi5DB4ff988ldmFA0QRKNgqwXiUtk1hHseTu4hi4Ntk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743552082; c=relaxed/simple;
-	bh=TrdRJorLaPVxecxKt48+QFSNFxmprXB5Q212nUNhtk4=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=trb/mRF83ytSDdklMxnsWAixXvl6Sj/jNFoIbHZQ5tvkKPQVYoYugdPzyExFZR2Tpw5d0BRJHtjeJbpFL5fwY16fGOqf95+XzvlcMh4WiWk45EXyec34uBYiMKQArZS+NcttVsKWQmnmpXEe3eYXUzPa2yD6DM9kUkbnkDit7o4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3d458e61faaso4502655ab.0
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 17:01:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743552079; x=1744156879;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=K2uuoYBPvrcOMUlPvf+U/n5iBioNWEJiVRzUmg2n4Ow=;
-        b=r7grkadM4o6G0oKfXyXZV6BqVWmj0CjMEQBJRMdLNPq+nwTGq7m//WpzG6Rg2We+bg
-         6KdF2RG419qPv6nLFZiqHO/YNGvuB2EKHJimGvq74v/NMysXF0b2K++RiXl9quG3ke1L
-         H8IUZGyfID1n+OmIjv8GFzq8FsvzGfTJ38tJmkghaAcTshgoLgM/wE30SmC0MMioDV8Z
-         XpNByheCtTWaZZPQ2HPYtbY51RxpaL+7vtEMKwBEvpJZy9Chlpfcfr465EXyf6zU3rGy
-         vLYn85GbmNsgBYYUlnslKwgjdF78bW8J01Xg9wCm7itj71oXlrgNhA6Tr3Tioo/UUC6e
-         RhDA==
-X-Forwarded-Encrypted: i=1; AJvYcCV1U+6lHdIJRjSes9pIVAm3kVd8mEQQ9+XhhUN2f1SSxoJzlVqTE0Xtgjcl+/6bEFsxRkEiqb2klnyEYac=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/ywL92h4gdkfFoV1AUhv1Yksw4Q9SQ6kVK04iAVvUzhLUIgQ7
-	x9NqC9QbEg83t5Wsvya3k/Zs8rVueAYxUXgSx5DdlW1EVNAnh7PS2+wT4Gusxh6aVbce+MbLN21
-	EEo7HSHBCHdqZQluSqInSPVUlci38pSxPGpusYI6tl19XDepoMFoZk9A=
-X-Google-Smtp-Source: AGHT+IF5KvcqrhDjrqpuCPXMno5jZm/9WvRYSmaawrQ08I4SQxkVTeOjOXwspRamha00hCbcddlVRtDu+OZ7qkZTe0+cBmnMrh2k
+	s=arc-20240116; t=1743552371; c=relaxed/simple;
+	bh=SKvTKbz6ni8FnmJ1GP4IVeexdsrRnOKxcqNOXAHpVHk=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Bp3C+5Qvends5+zSb/IUUNONQsSCW+NPVjUVLycHNqYLlAECeYRU8GEhugKW5aLRLlfx23H1WtI9eB2ErER3LvQw8+d3FTdXmkFDkxyCkYWUQHbWB9NYFvpPqb0PHA2+Z4uTBUmLfj8l5fdftWeOIFx5X+6de1QVP4IhJFgT0+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=TDpZp3n0; arc=none smtp.client-ip=79.135.106.31
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="TDpZp3n0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=36zyj7lnbbclrifsrasst7ba2i.protonmail; t=1743552360; x=1743811560;
+	bh=GG1TKNw1ad56XFapM4VnVdkZu9HjKmQ/qsMjqEKVOoA=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=TDpZp3n0Ds4RNhIfHGagrDTveMMpe6uFvDjgRfJW4QFU2AFnVNvahozjVSxIgaVCj
+	 lZKY2rApK5LUIHTR8OJaZVDUIhMi3MC3DOLvT+fFmEkzDdLAGyQnuX004HiW7mJrmt
+	 CF9Rk8hYubo4zj9vMn7NwiiLGInLknCqMiUWsBT7ruznXUAudQ4YZ80aA6J64V8M8B
+	 EPbLuHUJt/pXPreRUg+zb4nBqbydtQfbertYomZltWa1YNHjAfXAama51ey5UZ6tjZ
+	 8BmTdHfeTEzWQyp72D1Wx+TVP+W2gmU9W7OVO4OhrGRcdngCh1Y1hWw9AmmfP0EAhr
+	 24A0eUfyPf8wg==
+Date: Wed, 02 Apr 2025 00:05:56 +0000
+To: Danilo Krummrich <dakr@kernel.org>
+From: Benno Lossin <benno.lossin@proton.me>
+Cc: Greg KH <gregkh@linuxfoundation.org>, bhelgaas@google.com, rafael@kernel.org, ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu, linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/3] rust: pci: impl TryFrom<&Device> for &pci::Device
+Message-ID: <D8VPQ5XL5NJZ.26OGZ3YML4QN3@proton.me>
+In-Reply-To: <Z-vvcPfgyaRdd0xQ@pollux>
+References: <20250321214826.140946-1-dakr@kernel.org> <Z96MrGQvpVrFqWYJ@pollux> <Z-CG01QzSJjp46ad@pollux> <D8ON7WC8WMFG.2S2JRK6G9TOSL@proton.me> <Z-GNDE68vwhk0gaV@cassiopeiae> <D8OOFRRSLHP4.1B2FHQRGH3LKW@proton.me> <Z-Ggu_YZBPM2Kf8J@cassiopeiae> <D8OPMRYE0SO5.2JQD6ZIYXHP68@proton.me> <Z-vvcPfgyaRdd0xQ@pollux>
+Feedback-ID: 71780778:user:proton
+X-Pm-Message-ID: eaab470bc2e61cf080048f1271cbbfb5ec48b355
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:ca0d:0:b0:3d3:f72c:8fd8 with SMTP id
- e9e14a558f8ab-3d6d6849f4dmr159265ab.6.1743552079653; Tue, 01 Apr 2025
- 17:01:19 -0700 (PDT)
-Date: Tue, 01 Apr 2025 17:01:19 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67ec7e4f.050a0220.31979b.0033.GAE@google.com>
-Subject: [syzbot] [input?] KCSAN: data-race in uhid_char_poll / uhid_char_read
-From: syzbot <syzbot+2775104a59cc23ddff54@syzkaller.appspotmail.com>
-To: bentiss@kernel.org, david@readahead.eu, jikos@kernel.org, 
-	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Tue Apr 1, 2025 at 3:51 PM CEST, Danilo Krummrich wrote:
+> On Mon, Mar 24, 2025 at 06:32:53PM +0000, Benno Lossin wrote:
+>> On Mon Mar 24, 2025 at 7:13 PM CET, Danilo Krummrich wrote:
+>> > On Mon, Mar 24, 2025 at 05:36:45PM +0000, Benno Lossin wrote:
+>> >> On Mon Mar 24, 2025 at 5:49 PM CET, Danilo Krummrich wrote:
+>> >> > On Mon, Mar 24, 2025 at 04:39:25PM +0000, Benno Lossin wrote:
+>> >> >> On Sun Mar 23, 2025 at 11:10 PM CET, Danilo Krummrich wrote:
+>> >> >> > On Sat, Mar 22, 2025 at 11:10:57AM +0100, Danilo Krummrich wrote=
+:
+>> >> >> >> On Fri, Mar 21, 2025 at 08:25:07PM -0700, Greg KH wrote:
+>> >> >> >> > Along these lines, if you can convince me that this is someth=
+ing that we
+>> >> >> >> > really should be doing, in that we should always be checking =
+every time
+>> >> >> >> > someone would want to call to_pci_dev(), that the return valu=
+e is
+>> >> >> >> > checked, then why don't we also do this in C if it's going to=
+ be
+>> >> >> >> > something to assure people it is going to be correct?  I don'=
+t want to
+>> >> >> >> > see the rust and C sides get "out of sync" here for things th=
+at can be
+>> >> >> >> > kept in sync, as that reduces the mental load of all of us as=
+ we travers
+>> >> >> >> > across the boundry for the next 20+ years.
+>> >> >> >>=20
+>> >> >> >> I think in this case it is good when the C and Rust side get a =
+bit
+>> >> >> >> "out of sync":
+>> >> >> >
+>> >> >> > A bit more clarification on this:
+>> >> >> >
+>> >> >> > What I want to say with this is, since we can cover a lot of the=
+ common cases
+>> >> >> > through abstractions and the type system, we're left with the no=
+t so common
+>> >> >> > ones, where the "upcasts" are not made in the context of common =
+and well
+>> >> >> > established patterns, but, for instance, depend on the semantics=
+ of the driver;
+>> >> >> > those should not be unsafe IMHO.
+>> >> >>=20
+>> >> >> I don't think that we should use `TryFrom` for stuff that should o=
+nly be
+>> >> >> used seldomly. A function that we can document properly is a much =
+better
+>> >> >> fit, since we can point users to the "correct" API.
+>> >> >
+>> >> > Most of the cases where drivers would do this conversion should be =
+covered by
+>> >> > the abstraction to already provide that actual bus specific device,=
+ rather than
+>> >> > a generic one or some priv pointer, etc.
+>> >> >
+>> >> > So, the point is that the APIs we design won't leave drivers with a=
+ reason to
+>> >> > make this conversion in the first place. For the cases where they h=
+ave to
+>> >> > (which should be rare), it's the right thing to do. There is not an=
+ alternative
+>> >> > API to point to.
+>> >>=20
+>> >> Yes, but for such a case, I wouldn't want to use `TryFrom`, since tha=
+t
+>> >> trait to me is a sign of a canonical way to convert a value.
+>> >
+>> > Well, it is the canonical way to convert, it's just that by the design=
+ of other
+>> > abstractions drivers should very rarely get in the situation of needin=
+g it in
+>> > the first place.
+>>=20
+>> I'd still prefer it though, since one can spot a
+>>=20
+>>     let dev =3D CustomDevice::checked_from(dev)?
+>>=20
+>> much better in review than the `try_from` conversion. It also prevents
+>> one from giving it to a generic interface expecting the `TryFrom` trait.
+>
+> (I plan to rebase this on my series introducing the Bound device context =
+[1].)
+>
+> I thought about this for a while and I still think TryFrom is fine here.
 
-syzbot found the following issue on:
+What reasoning do you have?
 
-HEAD commit:    1e7857b28020 x86: don't re-generate cpufeaturemasks.h so e..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=15867bcf980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=bdb65086dcaf0454
-dashboard link: https://syzkaller.appspot.com/bug?extid=2775104a59cc23ddff54
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+> At some point I want to replace this implementation with a macro, since t=
+he code
+> is pretty similar for bus specific devices. I think that's a bit cleaner =
+with
+> TryFrom compared to with a custom method, since we'd need the bus specifi=
+c
+> device to call the macro from the generic impl, i.e.
+>
+> =09impl<Ctx: DeviceContext> Device<Ctx>
+>
+> rather than a specific one, which we can't control. We can control it for
+> TryFrom though.
 
-Unfortunately, I don't have any reproducer for this issue yet.
+We could have our own trait for that. Also it's not as controllable as
+you think: anyone can implement `TryFrom<&device::Device> for &MyType`.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/08333bdf2b6c/disk-1e7857b2.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/c798f117761a/vmlinux-1e7857b2.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/a2171375da2b/bzImage-1e7857b2.xz
+> However, I also do not really object to your proposal, hence I'm willing =
+to make
+> the change.
+>
+> Do you want to make a proposal for the corresponding doc comment switchin=
+g to a
+> custom method?
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+2775104a59cc23ddff54@syzkaller.appspotmail.com
+I think have too little context what `device::Device` and `pci::Device`
+are. But I can give it a try:
 
-==================================================================
-BUG: KCSAN: data-race in uhid_char_poll / uhid_char_read
+    /// Tries to converts a generic [`Device`](device::Device) into a [`pci=
+::Device`].
+    ///
+    /// Normally, one wouldn't need to call this function, because APIs sho=
+uld directly expose the
+    /// concrete device type.
 
-read-write to 0xffff88811229d17d of 1 bytes by task 6915 on cpu 1:
- uhid_char_read+0x373/0x3f0 drivers/hid/uhid.c:711
- do_loop_readv_writev fs/read_write.c:845 [inline]
- vfs_readv+0x3e5/0x660 fs/read_write.c:1018
- do_readv+0xf7/0x230 fs/read_write.c:1078
- __do_sys_readv fs/read_write.c:1163 [inline]
- __se_sys_readv fs/read_write.c:1160 [inline]
- __x64_sys_readv+0x45/0x50 fs/read_write.c:1160
- x64_sys_call+0x2833/0x2e10 arch/x86/include/generated/asm/syscalls_64.h:20
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xc9/0x1c0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-read to 0xffff88811229d17d of 1 bytes by task 6921 on cpu 0:
- uhid_char_poll+0x89/0xc0 drivers/hid/uhid.c:793
- vfs_poll include/linux/poll.h:82 [inline]
- __io_arm_poll_handler+0x1e5/0xd40 io_uring/poll.c:583
- io_poll_add+0x70/0xf0 io_uring/poll.c:893
- __io_issue_sqe io_uring/io_uring.c:1734 [inline]
- io_issue_sqe+0x15f/0xaf0 io_uring/io_uring.c:1753
- io_queue_sqe io_uring/io_uring.c:1969 [inline]
- io_req_task_submit+0x6a/0xc0 io_uring/io_uring.c:1371
- io_poll_task_func+0x74e/0xa70 io_uring/poll.c:-1
- io_handle_tw_list+0xce/0x1d0 io_uring/io_uring.c:1057
- tctx_task_work_run+0x6e/0x1c0 io_uring/io_uring.c:1121
- tctx_task_work+0x44/0x80 io_uring/io_uring.c:1139
- task_work_run+0x13c/0x1b0 kernel/task_work.c:227
- get_signal+0xe81/0x1000 kernel/signal.c:2808
- arch_do_signal_or_restart+0x9a/0x4b0 arch/x86/kernel/signal.c:337
- exit_to_user_mode_loop kernel/entry/common.c:111 [inline]
- exit_to_user_mode_prepare include/linux/entry-common.h:329 [inline]
- __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
- syscall_exit_to_user_mode+0x62/0x120 kernel/entry/common.c:218
- do_syscall_64+0xd6/0x1c0 arch/x86/entry/syscall_64.c:100
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-value changed: 0x00 -> 0x01
-
-Reported by Kernel Concurrency Sanitizer on:
-CPU: 0 UID: 0 PID: 6921 Comm: syz.3.927 Not tainted 6.14.0-syzkaller-11144-g1e7857b28020 #0 PREEMPT(voluntary) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-==================================================================
-
+Then I think another sentence about a valid use-case of this function
+would make a lot of sense, but I don't know any.
 
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+Cheers,
+Benno
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
