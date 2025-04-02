@@ -1,584 +1,185 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9176E38DE1;
-	Wed,  2 Apr 2025 14:08:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 093A923A58D;
+	Wed,  2 Apr 2025 14:08:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743602901; cv=none; b=fpH7+RmoNjIC+slgqwc39i1hVDyeF49w783z+yYVaKAk6vpigde03dQzjv/bYS1m3fkreBTU9KYsQAUiBqYj1IWz2fhkIOVZ4vHs0VdVe2L4fEir8erLah6LhMzyLnLm6+qi4r1yWQewueIFGlB0k0h9y7cCL5gEFlFM1NWKW3U=
+	t=1743602905; cv=none; b=flMFCFJTd0zlmmHP0JzLWDDGxBt5U4K41ZHBxveCPzA/kdee4vC77XavHfuKRVJfPpyQjJlv7fN2Us4wgepNi1W3gnqnqUYiHtS5yFSRH8XVbevB9yeimNLrNWNOfPKdCOG8/kxcNu4vVyQNlJQBp1yl1i5dj+5YCJXq3Tmuew8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743602901; c=relaxed/simple;
-	bh=Cc7nPmgWOc9KXIrYzUf39/EBs1UlZGbW17HXPUFVD78=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DnKu+2mkp9PWs3KfjHCGpA24FOfMZLYfWLIe9JRJAYocPCiigPL3J1wmJVH3fo0SPxHfvqev9PUDZxakbJjN4aHVTxrdbXifWfz1O7qZbOsHsSl9hU40KNe7KCFOEvLbi8ZOBAUQEZlYpuWpiorD+NBz+tjhEvKKCZYlch0w/qs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TuVughTb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743602905; c=relaxed/simple;
+	bh=Gvnk752YhvtU7ebhJTFn0xvmqjtEjNYKA3D8tTJhnfg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=e/U/Fa+Tx7aXVg77WkdnWkVtY5xXHmFGT8T4HN/1xtH5Y+3iQMYD3gDD3oH/P7mFRcNgFBLAvNqN0E6ohmxxKVMvr1KqGmzFG1TsenbaiLnNRC9RWgYXtAZ7+nCUIB19ICuNEhQJ7qZtW51iT73R6XtNQzf/bVYHEvaboyk2PC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WCgu/xpX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TuVughTb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EC29C4CEDD;
-	Wed,  2 Apr 2025 14:08:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WCgu/xpX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48CAEC4CEDD;
+	Wed,  2 Apr 2025 14:08:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743602901;
-	bh=Cc7nPmgWOc9KXIrYzUf39/EBs1UlZGbW17HXPUFVD78=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=TuVughTb691kdC7d86JjNwMuo/tZSFVloEAlw8HWOHgACcsMvQGHNTXE2AtLhFdTZ
-	 ThG+QgYKLKULPIBkjV2i8iivliHPSqTDUFmudriNHlpbGJq+w3QzWvvgNIDxVMh1Da
-	 WClejCAvYrU1yZb44ZTMHAhdYjix0tcsfmfKMi+bQgBL/OseOtVpSZtbL3E06OALoJ
-	 rOYHypaZukiKjaXqhi6LGrkdb1pLY6srW9Z/t6I8wm/5zgIo3MKVA2tRT0Bp3sTeqC
-	 hYN2Z3s/PxdLwjOJVXcT89O5HsI+FOMeut02boc7g2HH3z1+QevA/vXR1nEKkmukC5
-	 O6Y/C8wq2KX1Q==
-From: Christian Brauner <brauner@kernel.org>
-To: linux-fsdevel@vger.kernel.org,
-	jack@suse.cz
-Cc: Christian Brauner <brauner@kernel.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	linux-efi@vger.kernel.org,
+	s=k20201202; t=1743602904;
+	bh=Gvnk752YhvtU7ebhJTFn0xvmqjtEjNYKA3D8tTJhnfg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WCgu/xpXMDkkrjiFk1GROdt5AbpPIUs+czN3BPDMYh9cBUILzBrGw89LhcTdQNQyi
+	 f5ewRSD3+ced21jheKjIKdH26KRRLR5DPDw/idzv6UE0tbk3MJgSiAGu42ro1DiQqf
+	 9r37/ezlk/pSRtlKxkJy6ObP7QG2+J4zjoyry0swKHWUPqpzLQOxdQVImkxCdihZv5
+	 ih+PQs+4O/VahlAGYLQ7sw6yj1+TQTzuPZMJ+UZLqeBejQsipw6IH5L1JBTxo2UVcG
+	 qlm058Np6gbg5mtQBoX/bAB6YbiOa0MBcpl4UUN6qv9bGRt6SyJCMp30/k5cFX9lWe
+	 EtYGFNromB2sw==
+Date: Wed, 2 Apr 2025 15:08:20 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	James Bottomley <James.Bottomley@hansenpartnership.com>,
-	mcgrof@kernel.org,
-	hch@infradead.org,
-	david@fromorbit.com,
-	rafael@kernel.org,
-	djwong@kernel.org,
-	pavel@kernel.org,
-	peterz@infradead.org,
-	mingo@redhat.com,
-	will@kernel.org,
-	boqun.feng@gmail.com
-Subject: [PATCH v2 1/4] fs: add owner of freeze/thaw
-Date: Wed,  2 Apr 2025 16:07:31 +0200
-Message-ID: <20250402-work-freeze-v2-1-6719a97b52ac@kernel.org>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250402-work-freeze-v2-0-6719a97b52ac@kernel.org>
-References: <20250402-work-freeze-v2-0-6719a97b52ac@kernel.org>
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v2 0/4] gpio: deprecate and track the removal of GPIO
+ workarounds for regulators
+Message-ID: <a484f0b2-c09a-4a6a-a30e-4c8660d755a6@sirena.org.uk>
+References: <20250401-gpio-todo-remove-nonexclusive-v2-0-7c1380797b0d@linaro.org>
+ <c8ca3c8a-3201-4dde-9050-69bc2c9152c4@sirena.org.uk>
+ <CAMRc=Mcq9yag6yBswhW0OJ8MKzGBpscwo+UGpfCo2aha93LzXA@mail.gmail.com>
+ <846010c0-7dc1-421c-8136-9ae2894c9acd@sirena.org.uk>
+ <CAMRc=Mff0TkeiHbM3TAJLJ2HYU_nnPFUpUjbWsdCnW6O4E=+gQ@mail.gmail.com>
+ <c3bb82f9-5a2f-4a14-9726-f3e10bf5d427@sirena.org.uk>
+ <CAMRc=Mc_nXwvj_9w6w8cB3K58AVLHBLCV+MOO1z_6y+uuT86Og@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Mailer: b4 0.15-dev-42535
-X-Developer-Signature: v=1; a=openpgp-sha256; l=19518; i=brauner@kernel.org; h=from:subject:message-id; bh=Cc7nPmgWOc9KXIrYzUf39/EBs1UlZGbW17HXPUFVD78=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaS/dVl55GfhE92WiDVxP9dbMBrcqFxx4tIMta9fKxhu1 914q8li21HKwiDGxSArpsji0G4SLrecp2KzUaYGzBxWJpAhDFycAjCRa7MY/kr6Gdt0fhbuvz3v ps6aq3JclZ8mLElw53vzaZpI2y+mptmMDDtKLB4pGvwNUVT+vZ9Dq9/uVNq5PTfb2sK8lu/07VG exAkA
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="zu/nnPXYuJBRrHqZ"
+Content-Disposition: inline
+In-Reply-To: <CAMRc=Mc_nXwvj_9w6w8cB3K58AVLHBLCV+MOO1z_6y+uuT86Og@mail.gmail.com>
+X-Cookie: To stay youthful, stay useful.
 
-For some kernel subsystems it is paramount that they are guaranteed that
-they are the owner of the freeze to avoid any risk of deadlocks. This is
-the case for the power subsystem. Enable it to recognize whether it did
-actually freeze the filesystem.
 
-If userspace has 10 filesystems and suspend/hibernate manges to freeze 5
-and then fails on the 6th for whatever odd reason (current or future)
-then power needs to undo the freeze of the first 5 filesystems. It can't
-just walk the list again because while it's unlikely that a new
-filesystem got added in the meantime it still cannot tell which
-filesystems the power subsystem actually managed to get a freeze
-reference count on that needs to be dropped during thaw.
+--zu/nnPXYuJBRrHqZ
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-There's various ways out of this ugliness. For example, record the
-filesystems the power subsystem managed to freeze on a temporary list in
-the callbacks and then walk that list backwards during thaw to undo the
-freezing or make sure that the power subsystem just actually exclusively
-freezes things it can freeze and marking such filesystems as being owned
-by power for the duration of the suspend or resume cycle. I opted for
-the latter as that seemed the clean thing to do even if it means more
-code changes.
+On Wed, Apr 02, 2025 at 12:05:24PM +0200, Bartosz Golaszewski wrote:
+> On Tue, Apr 1, 2025 at 11:55=E2=80=AFPM Mark Brown <broonie@kernel.org> w=
+rote:
 
-Signed-off-by: Christian Brauner <brauner@kernel.org>
----
- fs/f2fs/gc.c                |  6 ++--
- fs/gfs2/super.c             | 20 ++++++------
- fs/gfs2/sys.c               |  4 +--
- fs/ioctl.c                  |  8 ++---
- fs/super.c                  | 76 ++++++++++++++++++++++++++++++++++++---------
- fs/xfs/scrub/fscounters.c   |  4 +--
- fs/xfs/xfs_notify_failure.c |  6 ++--
- include/linux/fs.h          | 13 +++++---
- 8 files changed, 95 insertions(+), 42 deletions(-)
+> > If gpiolib were to change this API we'd need some other way of getting
+> > the same functionality, I'd be totally fine with that happening.  For
+> > regulators we don't really want the pwrseq behaviour, we want to know
+> > that there's a single underlying GPIO that we're updating.
 
-diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
-index 2b8f9239bede..3e8af62c9e15 100644
---- a/fs/f2fs/gc.c
-+++ b/fs/f2fs/gc.c
-@@ -2271,12 +2271,12 @@ int f2fs_resize_fs(struct file *filp, __u64 block_count)
- 	if (err)
- 		return err;
- 
--	err = freeze_super(sbi->sb, FREEZE_HOLDER_USERSPACE);
-+	err = freeze_super(sbi->sb, FREEZE_HOLDER_USERSPACE, NULL);
- 	if (err)
- 		return err;
- 
- 	if (f2fs_readonly(sbi->sb)) {
--		err = thaw_super(sbi->sb, FREEZE_HOLDER_USERSPACE);
-+		err = thaw_super(sbi->sb, FREEZE_HOLDER_USERSPACE, NULL);
- 		if (err)
- 			return err;
- 		return -EROFS;
-@@ -2333,6 +2333,6 @@ int f2fs_resize_fs(struct file *filp, __u64 block_count)
- out_err:
- 	f2fs_up_write(&sbi->cp_global_sem);
- 	f2fs_up_write(&sbi->gc_lock);
--	thaw_super(sbi->sb, FREEZE_HOLDER_USERSPACE);
-+	thaw_super(sbi->sb, FREEZE_HOLDER_USERSPACE, NULL);
- 	return err;
- }
-diff --git a/fs/gfs2/super.c b/fs/gfs2/super.c
-index 44e5658b896c..519943189109 100644
---- a/fs/gfs2/super.c
-+++ b/fs/gfs2/super.c
-@@ -674,7 +674,7 @@ static int gfs2_sync_fs(struct super_block *sb, int wait)
- 	return sdp->sd_log_error;
- }
- 
--static int gfs2_do_thaw(struct gfs2_sbd *sdp)
-+static int gfs2_do_thaw(struct gfs2_sbd *sdp, enum freeze_holder who, const void *freeze_owner)
- {
- 	struct super_block *sb = sdp->sd_vfs;
- 	int error;
-@@ -682,7 +682,7 @@ static int gfs2_do_thaw(struct gfs2_sbd *sdp)
- 	error = gfs2_freeze_lock_shared(sdp);
- 	if (error)
- 		goto fail;
--	error = thaw_super(sb, FREEZE_HOLDER_USERSPACE);
-+	error = thaw_super(sb, who, freeze_owner);
- 	if (!error)
- 		return 0;
- 
-@@ -703,14 +703,14 @@ void gfs2_freeze_func(struct work_struct *work)
- 	if (test_bit(SDF_FROZEN, &sdp->sd_flags))
- 		goto freeze_failed;
- 
--	error = freeze_super(sb, FREEZE_HOLDER_USERSPACE);
-+	error = freeze_super(sb, FREEZE_HOLDER_USERSPACE, NULL);
- 	if (error)
- 		goto freeze_failed;
- 
- 	gfs2_freeze_unlock(sdp);
- 	set_bit(SDF_FROZEN, &sdp->sd_flags);
- 
--	error = gfs2_do_thaw(sdp);
-+	error = gfs2_do_thaw(sdp, FREEZE_HOLDER_USERSPACE, NULL);
- 	if (error)
- 		goto out;
- 
-@@ -731,7 +731,8 @@ void gfs2_freeze_func(struct work_struct *work)
-  *
-  */
- 
--static int gfs2_freeze_super(struct super_block *sb, enum freeze_holder who)
-+static int gfs2_freeze_super(struct super_block *sb, enum freeze_holder who,
-+			     const void *freeze_owner)
- {
- 	struct gfs2_sbd *sdp = sb->s_fs_info;
- 	int error;
-@@ -744,7 +745,7 @@ static int gfs2_freeze_super(struct super_block *sb, enum freeze_holder who)
- 	}
- 
- 	for (;;) {
--		error = freeze_super(sb, FREEZE_HOLDER_USERSPACE);
-+		error = freeze_super(sb, who, freeze_owner);
- 		if (error) {
- 			fs_info(sdp, "GFS2: couldn't freeze filesystem: %d\n",
- 				error);
-@@ -758,7 +759,7 @@ static int gfs2_freeze_super(struct super_block *sb, enum freeze_holder who)
- 			break;
- 		}
- 
--		error = gfs2_do_thaw(sdp);
-+		error = gfs2_do_thaw(sdp, who, freeze_owner);
- 		if (error)
- 			goto out;
- 
-@@ -799,7 +800,8 @@ static int gfs2_freeze_fs(struct super_block *sb)
-  *
-  */
- 
--static int gfs2_thaw_super(struct super_block *sb, enum freeze_holder who)
-+static int gfs2_thaw_super(struct super_block *sb, enum freeze_holder who,
-+			   const void *freeze_owner)
- {
- 	struct gfs2_sbd *sdp = sb->s_fs_info;
- 	int error;
-@@ -814,7 +816,7 @@ static int gfs2_thaw_super(struct super_block *sb, enum freeze_holder who)
- 	atomic_inc(&sb->s_active);
- 	gfs2_freeze_unlock(sdp);
- 
--	error = gfs2_do_thaw(sdp);
-+	error = gfs2_do_thaw(sdp, who, freeze_owner);
- 
- 	if (!error) {
- 		clear_bit(SDF_FREEZE_INITIATOR, &sdp->sd_flags);
-diff --git a/fs/gfs2/sys.c b/fs/gfs2/sys.c
-index ecc699f8d9fc..748125653d6c 100644
---- a/fs/gfs2/sys.c
-+++ b/fs/gfs2/sys.c
-@@ -174,10 +174,10 @@ static ssize_t freeze_store(struct gfs2_sbd *sdp, const char *buf, size_t len)
- 
- 	switch (n) {
- 	case 0:
--		error = thaw_super(sdp->sd_vfs, FREEZE_HOLDER_USERSPACE);
-+		error = thaw_super(sdp->sd_vfs, FREEZE_HOLDER_USERSPACE, NULL);
- 		break;
- 	case 1:
--		error = freeze_super(sdp->sd_vfs, FREEZE_HOLDER_USERSPACE);
-+		error = freeze_super(sdp->sd_vfs, FREEZE_HOLDER_USERSPACE, NULL);
- 		break;
- 	default:
- 		return -EINVAL;
-diff --git a/fs/ioctl.c b/fs/ioctl.c
-index c91fd2b46a77..bedc83fc2f20 100644
---- a/fs/ioctl.c
-+++ b/fs/ioctl.c
-@@ -396,8 +396,8 @@ static int ioctl_fsfreeze(struct file *filp)
- 
- 	/* Freeze */
- 	if (sb->s_op->freeze_super)
--		return sb->s_op->freeze_super(sb, FREEZE_HOLDER_USERSPACE);
--	return freeze_super(sb, FREEZE_HOLDER_USERSPACE);
-+		return sb->s_op->freeze_super(sb, FREEZE_HOLDER_USERSPACE, NULL);
-+	return freeze_super(sb, FREEZE_HOLDER_USERSPACE, NULL);
- }
- 
- static int ioctl_fsthaw(struct file *filp)
-@@ -409,8 +409,8 @@ static int ioctl_fsthaw(struct file *filp)
- 
- 	/* Thaw */
- 	if (sb->s_op->thaw_super)
--		return sb->s_op->thaw_super(sb, FREEZE_HOLDER_USERSPACE);
--	return thaw_super(sb, FREEZE_HOLDER_USERSPACE);
-+		return sb->s_op->thaw_super(sb, FREEZE_HOLDER_USERSPACE, NULL);
-+	return thaw_super(sb, FREEZE_HOLDER_USERSPACE, NULL);
- }
- 
- static int ioctl_file_dedupe_range(struct file *file,
-diff --git a/fs/super.c b/fs/super.c
-index 3c4a496d6438..3ddded4360c6 100644
---- a/fs/super.c
-+++ b/fs/super.c
-@@ -39,7 +39,8 @@
- #include <uapi/linux/mount.h>
- #include "internal.h"
- 
--static int thaw_super_locked(struct super_block *sb, enum freeze_holder who);
-+static int thaw_super_locked(struct super_block *sb, enum freeze_holder who,
-+			     const void *freeze_owner);
- 
- static LIST_HEAD(super_blocks);
- static DEFINE_SPINLOCK(sb_lock);
-@@ -1148,7 +1149,7 @@ static void do_thaw_all_callback(struct super_block *sb, void *unused)
- 	if (IS_ENABLED(CONFIG_BLOCK))
- 		while (sb->s_bdev && !bdev_thaw(sb->s_bdev))
- 			pr_warn("Emergency Thaw on %pg\n", sb->s_bdev);
--	thaw_super_locked(sb, FREEZE_HOLDER_USERSPACE);
-+	thaw_super_locked(sb, FREEZE_HOLDER_USERSPACE, NULL);
- 	return;
- }
- 
-@@ -1195,9 +1196,9 @@ static void filesystems_freeze_callback(struct super_block *sb, void *unused)
- 		return;
- 
- 	if (sb->s_op->freeze_super)
--		sb->s_op->freeze_super(sb, FREEZE_MAY_NEST | FREEZE_HOLDER_KERNEL);
-+		sb->s_op->freeze_super(sb, FREEZE_MAY_NEST | FREEZE_HOLDER_KERNEL, NULL);
- 	else
--		freeze_super(sb, FREEZE_MAY_NEST | FREEZE_HOLDER_KERNEL);
-+		freeze_super(sb, FREEZE_MAY_NEST | FREEZE_HOLDER_KERNEL, NULL);
- 
- 	deactivate_super(sb);
- }
-@@ -1217,9 +1218,9 @@ static void filesystems_thaw_callback(struct super_block *sb, void *unused)
- 		return;
- 
- 	if (sb->s_op->thaw_super)
--		sb->s_op->thaw_super(sb, FREEZE_MAY_NEST | FREEZE_HOLDER_KERNEL);
-+		sb->s_op->thaw_super(sb, FREEZE_MAY_NEST | FREEZE_HOLDER_KERNEL, NULL);
- 	else
--		thaw_super(sb, FREEZE_MAY_NEST | FREEZE_HOLDER_KERNEL);
-+		thaw_super(sb, FREEZE_MAY_NEST | FREEZE_HOLDER_KERNEL, NULL);
- 
- 	deactivate_super(sb);
- }
-@@ -1522,10 +1523,10 @@ static int fs_bdev_freeze(struct block_device *bdev)
- 
- 	if (sb->s_op->freeze_super)
- 		error = sb->s_op->freeze_super(sb,
--				FREEZE_MAY_NEST | FREEZE_HOLDER_USERSPACE);
-+				FREEZE_MAY_NEST | FREEZE_HOLDER_USERSPACE, NULL);
- 	else
- 		error = freeze_super(sb,
--				FREEZE_MAY_NEST | FREEZE_HOLDER_USERSPACE);
-+				FREEZE_MAY_NEST | FREEZE_HOLDER_USERSPACE, NULL);
- 	if (!error)
- 		error = sync_blockdev(bdev);
- 	deactivate_super(sb);
-@@ -1571,10 +1572,10 @@ static int fs_bdev_thaw(struct block_device *bdev)
- 
- 	if (sb->s_op->thaw_super)
- 		error = sb->s_op->thaw_super(sb,
--				FREEZE_MAY_NEST | FREEZE_HOLDER_USERSPACE);
-+				FREEZE_MAY_NEST | FREEZE_HOLDER_USERSPACE, NULL);
- 	else
- 		error = thaw_super(sb,
--				FREEZE_MAY_NEST | FREEZE_HOLDER_USERSPACE);
-+				FREEZE_MAY_NEST | FREEZE_HOLDER_USERSPACE, NULL);
- 	deactivate_super(sb);
- 	return error;
- }
-@@ -1946,7 +1947,7 @@ static int wait_for_partially_frozen(struct super_block *sb)
- }
- 
- #define FREEZE_HOLDERS (FREEZE_HOLDER_KERNEL | FREEZE_HOLDER_USERSPACE)
--#define FREEZE_FLAGS (FREEZE_HOLDERS | FREEZE_MAY_NEST)
-+#define FREEZE_FLAGS (FREEZE_HOLDERS | FREEZE_MAY_NEST | FREEZE_EXCL)
- 
- static inline int freeze_inc(struct super_block *sb, enum freeze_holder who)
- {
-@@ -1977,6 +1978,21 @@ static inline bool may_freeze(struct super_block *sb, enum freeze_holder who)
- 	WARN_ON_ONCE((who & ~FREEZE_FLAGS));
- 	WARN_ON_ONCE(hweight32(who & FREEZE_HOLDERS) > 1);
- 
-+	if (who & FREEZE_EXCL) {
-+		if (WARN_ON_ONCE(!(who & FREEZE_HOLDER_KERNEL)))
-+			return false;
-+
-+		if (who & ~(FREEZE_EXCL | FREEZE_HOLDER_KERNEL))
-+			return false;
-+
-+		return (sb->s_writers.freeze_kcount +
-+			sb->s_writers.freeze_ucount) == 0;
-+	}
-+
-+	/* This filesystem is already exclusively frozen. */
-+	if (sb->s_writers.freeze_owner)
-+		return false;
-+
- 	if (who & FREEZE_HOLDER_KERNEL)
- 		return (who & FREEZE_MAY_NEST) ||
- 		       sb->s_writers.freeze_kcount == 0;
-@@ -1986,10 +2002,30 @@ static inline bool may_freeze(struct super_block *sb, enum freeze_holder who)
- 	return false;
- }
- 
-+static inline bool may_unfreeze(struct super_block *sb, enum freeze_holder who,
-+				const void *freeze_owner)
-+{
-+	WARN_ON_ONCE((who & ~FREEZE_FLAGS));
-+	WARN_ON_ONCE(hweight32(who & FREEZE_HOLDERS) > 1);
-+
-+	if (who & FREEZE_EXCL) {
-+		if (WARN_ON_ONCE(sb->s_writers.freeze_owner == NULL))
-+			return false;
-+		if (WARN_ON_ONCE(!(who & FREEZE_HOLDER_KERNEL)))
-+			return false;
-+		if (who & ~(FREEZE_EXCL | FREEZE_HOLDER_KERNEL))
-+			return false;
-+		return sb->s_writers.freeze_owner == freeze_owner;
-+	}
-+
-+	return sb->s_writers.freeze_owner == NULL;
-+}
-+
- /**
-  * freeze_super - lock the filesystem and force it into a consistent state
-  * @sb: the super to lock
-  * @who: context that wants to freeze
-+ * @freeze_owner: owner of the freeze
-  *
-  * Syncs the super to make sure the filesystem is consistent and calls the fs's
-  * freeze_fs.  Subsequent calls to this without first thawing the fs may return
-@@ -2041,7 +2077,7 @@ static inline bool may_freeze(struct super_block *sb, enum freeze_holder who)
-  * Return: If the freeze was successful zero is returned. If the freeze
-  *         failed a negative error code is returned.
-  */
--int freeze_super(struct super_block *sb, enum freeze_holder who)
-+int freeze_super(struct super_block *sb, enum freeze_holder who, const void *freeze_owner)
- {
- 	int ret;
- 
-@@ -2075,6 +2111,7 @@ int freeze_super(struct super_block *sb, enum freeze_holder who)
- 	if (sb_rdonly(sb)) {
- 		/* Nothing to do really... */
- 		WARN_ON_ONCE(freeze_inc(sb, who) > 1);
-+		sb->s_writers.freeze_owner = freeze_owner;
- 		sb->s_writers.frozen = SB_FREEZE_COMPLETE;
- 		wake_up_var(&sb->s_writers.frozen);
- 		super_unlock_excl(sb);
-@@ -2122,6 +2159,7 @@ int freeze_super(struct super_block *sb, enum freeze_holder who)
- 	 * when frozen is set to SB_FREEZE_COMPLETE, and for thaw_super().
- 	 */
- 	WARN_ON_ONCE(freeze_inc(sb, who) > 1);
-+	sb->s_writers.freeze_owner = freeze_owner;
- 	sb->s_writers.frozen = SB_FREEZE_COMPLETE;
- 	wake_up_var(&sb->s_writers.frozen);
- 	lockdep_sb_freeze_release(sb);
-@@ -2136,13 +2174,17 @@ EXPORT_SYMBOL(freeze_super);
-  * removes that state without releasing the other state or unlocking the
-  * filesystem.
-  */
--static int thaw_super_locked(struct super_block *sb, enum freeze_holder who)
-+static int thaw_super_locked(struct super_block *sb, enum freeze_holder who,
-+			     const void *freeze_owner)
- {
- 	int error = -EINVAL;
- 
- 	if (sb->s_writers.frozen != SB_FREEZE_COMPLETE)
- 		goto out_unlock;
- 
-+	if (!may_unfreeze(sb, who, freeze_owner))
-+		goto out_unlock;
-+
- 	/*
- 	 * All freezers share a single active reference.
- 	 * So just unlock in case there are any left.
-@@ -2152,6 +2194,7 @@ static int thaw_super_locked(struct super_block *sb, enum freeze_holder who)
- 
- 	if (sb_rdonly(sb)) {
- 		sb->s_writers.frozen = SB_UNFROZEN;
-+		sb->s_writers.freeze_owner = NULL;
- 		wake_up_var(&sb->s_writers.frozen);
- 		goto out_deactivate;
- 	}
-@@ -2169,6 +2212,7 @@ static int thaw_super_locked(struct super_block *sb, enum freeze_holder who)
- 	}
- 
- 	sb->s_writers.frozen = SB_UNFROZEN;
-+	sb->s_writers.freeze_owner = NULL;
- 	wake_up_var(&sb->s_writers.frozen);
- 	sb_freeze_unlock(sb, SB_FREEZE_FS);
- out_deactivate:
-@@ -2184,6 +2228,7 @@ static int thaw_super_locked(struct super_block *sb, enum freeze_holder who)
-  * thaw_super -- unlock filesystem
-  * @sb: the super to thaw
-  * @who: context that wants to freeze
-+ * @freeze_owner: owner of the freeze
-  *
-  * Unlocks the filesystem and marks it writeable again after freeze_super()
-  * if there are no remaining freezes on the filesystem.
-@@ -2197,13 +2242,14 @@ static int thaw_super_locked(struct super_block *sb, enum freeze_holder who)
-  * have been frozen through the block layer via multiple block devices.
-  * The filesystem remains frozen until all block devices are unfrozen.
-  */
--int thaw_super(struct super_block *sb, enum freeze_holder who)
-+int thaw_super(struct super_block *sb, enum freeze_holder who,
-+	       const void *freeze_owner)
- {
- 	if (!super_lock_excl(sb)) {
- 		WARN_ON_ONCE("Dying superblock while thawing!");
- 		return -EINVAL;
- 	}
--	return thaw_super_locked(sb, who);
-+	return thaw_super_locked(sb, who, freeze_owner);
- }
- EXPORT_SYMBOL(thaw_super);
- 
-diff --git a/fs/xfs/scrub/fscounters.c b/fs/xfs/scrub/fscounters.c
-index e629663e460a..9b598c5790ad 100644
---- a/fs/xfs/scrub/fscounters.c
-+++ b/fs/xfs/scrub/fscounters.c
-@@ -123,7 +123,7 @@ xchk_fsfreeze(
- {
- 	int			error;
- 
--	error = freeze_super(sc->mp->m_super, FREEZE_HOLDER_KERNEL);
-+	error = freeze_super(sc->mp->m_super, FREEZE_HOLDER_KERNEL, NULL);
- 	trace_xchk_fsfreeze(sc, error);
- 	return error;
- }
-@@ -135,7 +135,7 @@ xchk_fsthaw(
- 	int			error;
- 
- 	/* This should always succeed, we have a kernel freeze */
--	error = thaw_super(sc->mp->m_super, FREEZE_HOLDER_KERNEL);
-+	error = thaw_super(sc->mp->m_super, FREEZE_HOLDER_KERNEL, NULL);
- 	trace_xchk_fsthaw(sc, error);
- 	return error;
- }
-diff --git a/fs/xfs/xfs_notify_failure.c b/fs/xfs/xfs_notify_failure.c
-index ed8d8ed42f0a..3545dc1d953c 100644
---- a/fs/xfs/xfs_notify_failure.c
-+++ b/fs/xfs/xfs_notify_failure.c
-@@ -127,7 +127,7 @@ xfs_dax_notify_failure_freeze(
- 	struct super_block	*sb = mp->m_super;
- 	int			error;
- 
--	error = freeze_super(sb, FREEZE_HOLDER_KERNEL);
-+	error = freeze_super(sb, FREEZE_HOLDER_KERNEL, NULL);
- 	if (error)
- 		xfs_emerg(mp, "already frozen by kernel, err=%d", error);
- 
-@@ -143,7 +143,7 @@ xfs_dax_notify_failure_thaw(
- 	int			error;
- 
- 	if (kernel_frozen) {
--		error = thaw_super(sb, FREEZE_HOLDER_KERNEL);
-+		error = thaw_super(sb, FREEZE_HOLDER_KERNEL, NULL);
- 		if (error)
- 			xfs_emerg(mp, "still frozen after notify failure, err=%d",
- 				error);
-@@ -153,7 +153,7 @@ xfs_dax_notify_failure_thaw(
- 	 * Also thaw userspace call anyway because the device is about to be
- 	 * removed immediately.
- 	 */
--	thaw_super(sb, FREEZE_HOLDER_USERSPACE);
-+	thaw_super(sb, FREEZE_HOLDER_USERSPACE, NULL);
- }
- 
- static int
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 1aa578412f1b..b379a46b5576 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -1307,6 +1307,7 @@ struct sb_writers {
- 	unsigned short			frozen;		/* Is sb frozen? */
- 	int				freeze_kcount;	/* How many kernel freeze requests? */
- 	int				freeze_ucount;	/* How many userspace freeze requests? */
-+	const void			*freeze_owner;	/* Owner of the freeze */
- 	struct percpu_rw_semaphore	rw_sem[SB_FREEZE_LEVELS];
- };
- 
-@@ -2270,6 +2271,7 @@ extern loff_t vfs_dedupe_file_range_one(struct file *src_file, loff_t src_pos,
-  * @FREEZE_HOLDER_KERNEL: kernel wants to freeze or thaw filesystem
-  * @FREEZE_HOLDER_USERSPACE: userspace wants to freeze or thaw filesystem
-  * @FREEZE_MAY_NEST: whether nesting freeze and thaw requests is allowed
-+ * @FREEZE_EXCL: whether actual freezing must be done by the caller
-  *
-  * Indicate who the owner of the freeze or thaw request is and whether
-  * the freeze needs to be exclusive or can nest.
-@@ -2283,6 +2285,7 @@ enum freeze_holder {
- 	FREEZE_HOLDER_KERNEL	= (1U << 0),
- 	FREEZE_HOLDER_USERSPACE	= (1U << 1),
- 	FREEZE_MAY_NEST		= (1U << 2),
-+	FREEZE_EXCL		= (1U << 3),
- };
- 
- struct super_operations {
-@@ -2296,9 +2299,9 @@ struct super_operations {
- 	void (*evict_inode) (struct inode *);
- 	void (*put_super) (struct super_block *);
- 	int (*sync_fs)(struct super_block *sb, int wait);
--	int (*freeze_super) (struct super_block *, enum freeze_holder who);
-+	int (*freeze_super) (struct super_block *, enum freeze_holder who, const void *owner);
- 	int (*freeze_fs) (struct super_block *);
--	int (*thaw_super) (struct super_block *, enum freeze_holder who);
-+	int (*thaw_super) (struct super_block *, enum freeze_holder who, const void *owner);
- 	int (*unfreeze_fs) (struct super_block *);
- 	int (*statfs) (struct dentry *, struct kstatfs *);
- 	int (*remount_fs) (struct super_block *, int *, char *);
-@@ -2706,8 +2709,10 @@ extern int unregister_filesystem(struct file_system_type *);
- extern int vfs_statfs(const struct path *, struct kstatfs *);
- extern int user_statfs(const char __user *, struct kstatfs *);
- extern int fd_statfs(int, struct kstatfs *);
--int freeze_super(struct super_block *super, enum freeze_holder who);
--int thaw_super(struct super_block *super, enum freeze_holder who);
-+int freeze_super(struct super_block *super, enum freeze_holder who,
-+		 const void *freeze_owner);
-+int thaw_super(struct super_block *super, enum freeze_holder who,
-+	       const void *freeze_owner);
- extern __printf(2, 3)
- int super_setup_bdi_name(struct super_block *sb, char *fmt, ...);
- extern int super_setup_bdi(struct super_block *sb);
+> This is bothering me. This is the abstraction reversal I'm talking
+> about. Should the regulator drivers even be concerned about whether
+> they share resources or not? It's not like consumers of regulators are
 
--- 
-2.47.2
+For regulators there's similar issues with needing to know when things
+happen (eg, to know if the device actually got reset and needs to be
+reintialised) but it's much more likely that we'll both be sharing and
+not actually have any control at all even for unshared regulators so we
+provide notifiers for this case instead.
 
+> concerned about sharing them with other devices. I'm not saying GPIOs
+> should become reference counted - as I said in a previous email, I
+> don't believe this makes sense - but GPIOLIB is a lower-level
+> abstraction to regulators thus the latter shouldn't really reach into
+> the GPIO core and inspect its structures in order to figure out
+> whether the lines are shared. This is where an intermediate
+> abstraction layer may be helpful. The regulator drivers then just go:
+
+> handle =3D pwrseq_get(dev, "enable-gpios");
+> pwrseq_power_on(handle);
+
+> Even if we do it in multiple places, as long as the enable count is
+> balanced, we're good. The consumers are not concerned by what's
+> happening behind the scenes just as if it was a reset handle.
+
+No, it's important when (or if) the enable was physically released so we
+need to know when the actual hardware operation happened - there's some
+delay before the hardware has finished implementing the enable.
+
+> > Impossible seems pretty strong here?  Part of the thing here is that the
+> > higher level users want to understand that there is GPIO sharing going
+> > on and do something about it, the working out that the thing is shared
+> > isn't really the interesting bit it's rather the part where we do
+> > something about that.  It's not that you can't share some code but it
+> > feels more like a library than an opaque abstraction.
+
+> The part where "the higher level users want to understand that there
+> is GPIO sharing going on" does not sound correct. Let's take the
+> example of drivers/net/phy/mscc/mscc_ptp.c which uses the
+> non-exclusive flag for gpiod_get() because on one of the MIPS
+> platforms, there are four instances of this PHY that share a GPIO. IMO
+> it's a hack, this driver shouldn't care about it. It reverses the idea
+> of the DT providing hardware information to drivers and instead the
+> driver knows that the DT may describe a shared GPIO.
+
+Knowing if and when a reset line is actually asserted seems like an
+important an useful thing for a driver to know, for example if a chip is
+actually reset then we may need to do expensive reinitialisation which
+could be skipped if that didn't happen. =20
+
+> > Though now I think again some of them might be closer to the regulator
+> > enables rather than resets so those ones would not fit there and would
+> > more want to librify what regulator is doing...  Something like that
+> > would definitely not feel right being described as a power sequence.
+
+> Well, pwrseq is just a naming convention for want of a better one. It
+> really is just a subsystem that mediates usage of shared resources and
+> doesn't bind to any specific kernel subsystem.
+
+So what's the sequencing bit about then?  Having something that just
+shares resources might be useful here, but the sequencing bit seems like
+it's asking for landmines.
+
+> > I'm in no way attached to this specific solution, from my point of view
+> > the important thing is that given two devices using GPIOs we have some
+> > reasonably convenient way of telling if they're using the same underlyi=
+ng
+> > GPIO and can coordinate between the devices appropriately.
+
+> I think that logically, consumers of GPIOs shouldn't care about
+> whether they're shared. IOW: the non-exclusive flag passed to
+> gpiod_get() should go. If the opposition to using pwrseq here is
+> strong, then I'd suggest at least moving the handling of the
+> non-exclusive flag into gpiolib quirks (in gpiolib-of.c or elsewhere)
+> and not exposing it to consumers who have no business knowing it.
+
+I don't think the nonexclusive flag is essential so long as we can
+provide some way for users to discover what's going on and coordinate
+with each other.  I do think it's important for users to know about at
+least the impacts of sharing, and I suspect that for GPIOs usability
+means knowing about the sharing.
+
+> I believe pwrseq could actually be used to hide the enable counting
+> for GPIOs behind a faux GPIO chip and the consumer would never see a
+> pwrseq handle - they would instead use GPIO consumer interfaces and
+> we'd have to agree on what logic would we put behind gpiod_set_value()
+> (should it effectively work as gpiod_enable() meaning: value is 1 as
+> long as at least one user sets it to 1?) and
+> gpiod_direction_input()/output() (same thing: highest priority is
+> gpiod_direction_output(HIGH) and as long as at least one user sets it
+> as such, we keep it).
+
+Like I say that doesn't do the right thing since other users need to be
+able to see when something changes on the GPIO.  If that just happens on
+normal gpiolib then that complicates usage for the default case since
+they now have to worry about things not actually happening when
+requested which doesn't seem ideal.
+
+--zu/nnPXYuJBRrHqZ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmftRNMACgkQJNaLcl1U
+h9AybAf7ByZAYiVhzevBnsOl6hxJTH5i8v3qClBzngHAZ/rK8Wtqvwh0+p1D83vm
+N0TWkqnEUglWb9qoFg6PTReuM0xrwueCW/cNSszavMlAlyWdC62ZJUHVHu6j1TKg
+XtVuFD6Big0Tu41LabKr1WUn0aThgaCbhcIP07PJ7H5DTx6vobmG9qWQ/3XI9nPF
+xOL8EUvepBtXCSXUjIm19DjyaYQ/R0uoJhes/SVk1gkg7PFpxKecAiTriGd0jT1N
+zXj+oXkiHhp5yP3sITPG0CbHUmzMokokhqBN7ppTVHSlmRjfKBZeWDoTdGoUYz4M
+QOoAPNSy5/OG8JeGkR2MZQ/X8mfVxA==
+=BgMM
+-----END PGP SIGNATURE-----
+
+--zu/nnPXYuJBRrHqZ--
