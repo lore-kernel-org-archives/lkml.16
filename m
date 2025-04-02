@@ -1,228 +1,142 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DCFF1F37BC
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 20:59:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5111D288DA;
+	Wed,  2 Apr 2025 21:02:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743627565; cv=none; b=GF0Ni2/khIAGuWysG71oFDUtcDrDq48lVLhHV9ko6oLV2Dltyjba4Wpj3TUFATgoqM6Bgk4Gs85u/YTapmCn0MJdj6ZR22gLdamGEDv2B1ZhaKJrasCow+aUlB+rhjmQe+DVD8bFHNHmqZkfmlRN7cnO8JhM66knptl8eVTQV/o=
+	t=1743627742; cv=none; b=WGmSJY8JtHUaOTfE4B+cOwMff0ty/tTG+viLkH6VqgxAxFeo4FVyrr1Bm84V6FedOzV8F3k4tSH9DZp1Y0HExytuC8NqNfvEDXr48Px20u+lm4gS/LU9C9pI8SKoDJd2OvOLutFrhejJA3tkPo6a6HbhI0womFdf0Rd4ubVx8dg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743627565; c=relaxed/simple;
-	bh=cuapBNZyNdsxDR6Q/4sXdL588hXIJkYVNaB3sohDqwA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UsFTFNLORJNNf6jEucEApGkYJxPOziNbprwi8//OCAlkTwWb+jThgDfq73cFkos3SoRKRYPkNRgplBebxQtKNzwDy6qV5ypATHsCaLx9tIGBmMdBiOtNTE69iu3UH5X4V+ieGdE41mMyMoPhBnGL7shC8sRUI0ERoferUfCbC/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IZ3oBg3c; arc=none smtp.client-ip=209.85.221.49
+	s=arc-20240116; t=1743627742; c=relaxed/simple;
+	bh=2Gw6+EmGZ9dXPUdJNkeVng4IBOBI0JCxLKLo4CK54Hw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Lv22YUY1ya/cMIpajNBJmazRptVdhk615o4UwrZkK8FkaWJfUHzNzG43vevC41+l07rROVOOzIONI/1fHqLf/LuhABcdgeIfiESZZPX77Z36ItROVfl/TI7Pt/Q3g9gPjEXW+v1FISo576vGY1QNsjcZUxBkGBg0d9ktPlAcvCo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fBC1+Upo; arc=none smtp.client-ip=209.85.221.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IZ3oBg3c"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-38a25d4b9d4so107125f8f.0
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 13:59:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fBC1+Upo"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-39c1ee0fd43so218072f8f.0;
+        Wed, 02 Apr 2025 14:02:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743627562; x=1744232362; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nVAmhe0Lrl3o3k4eVESe7v9cB1pIfxqbntuG2PUrFk0=;
-        b=IZ3oBg3cOVRw+yRgTXdsF2JtZDn+M+E6CVr5yiyq5cgbvueueyh/sHvfQerCeLGBLX
-         76GWbYtDezz3cly1J8QWHv93R+3e36AE1qIjKnvygS/Qc/4h6n0mdmFbzQydB7ThVS7R
-         4dbnycNr5XDREoMuecXEeChkF8p2a6dEqlLPBA1GPx7Y5x93cj+K7bnMxMjWs+LlSTX9
-         Fuv5I2PghWedPBWqYa921YwREvTmeEqmm0hS4r1CA2LvaJ5MdVeKFUtoFD+D+WM3Ta4O
-         vOVJzQoLWVrovHNTs/jcZx2SVNcVNiCEclbRL9/C4bzHUjHsqRNYG8VvF+4XVzwsR+oC
-         La0Q==
+        d=gmail.com; s=20230601; t=1743627738; x=1744232538; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=IGrN/FFltZsiMZB/NzWOs/pkOG1+/TXlaHQIjn9hafc=;
+        b=fBC1+UpoT/bGjE5ZidGlhl5U9TKLr9tTohTxzBgPfVvzaRdxQ4vB9S4JuHQVAMg6XI
+         8iKtBMCFpD0uFyOvzu3YbZSLUDM4X6bC7e1eU3Tx1WiNeMWm4Qm+5/baXGJz78A+2kya
+         kKbmZxU5eLlLzupkqp2wvD/vWbPuMM+13GZgdCwFrChzHNfdD95x7+rsyj2GufV8JCxu
+         mBX9HKn2RxR+3kcVn6GDeQ522qHWKaZiA2h/cwgTyarEu3HCtceqRUfBF/KJX7kLUets
+         98lnhy6f1qhfl4mChNEiHAQu6C5FOvZoDJfnOzrFhD8jghG+1Mzp82dnL9POR1Re24u/
+         hrDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743627562; x=1744232362;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nVAmhe0Lrl3o3k4eVESe7v9cB1pIfxqbntuG2PUrFk0=;
-        b=PEUTjGXDadpTnEnG8CIvqd12KwaaXNHKfImVjn6Jss8Y3erXc7+RPkPYonGm4RqvHG
-         BP92Ix36i5Uw84Gas0uVQ8Do47ihh6mYpYdpzYhsVDfn/ue8hEcbEC5aHTpHrwzo7B/w
-         V7UDuvReTaWikIG4mxDf2pLMrwEHuiY0jlD4CQmm3NlNiJ6TDx/tTmbPbHc/9fWTFuEn
-         ob9Y4MDAdM7FaripQ091HNUsuMaggfedYhIHmtvtcdyIHckflog4a/EZ60quAkSi4Im4
-         zIdgmV8ab63J9VIjnWoP7qr1Gy+4HBx/KWBDQBX/QngdcBiocfFKLyaR1grGLEOW8gmI
-         2Jdw==
-X-Forwarded-Encrypted: i=1; AJvYcCXXSwp7OJridpcdDte5+VhWBG+xDIy8NCwPhngYAU+aqiDe43c9u3OYEvB2TAYQp1AMUlurkyXQYZv3uZ4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz+n3lTYprJznBUOQAfmTjmg5unaZoYIT2DnlKEoK1PwJ65Bgo2
-	wMx22hKIrCkbppKBM+ZIZ4baB2kTyPXjnvfTzHrDFhg+EntNd+x+
-X-Gm-Gg: ASbGncs6UWhv8Z2oyoZJJw0jccjz8RMdAf6x13ozxvFMonfzlpyBg9t4ebbGad86m+O
-	rQqd/+wyGh5WX/polsdP9d3nY1+v4wpuU3M5ZuQ9oNICbTd30trR0oalDDmuearZpAzDzAgq+YW
-	EiM1ZYq/j85xaBS59OvgE+qKmm+JyJVuTftyv1Sjtuj4HXHDNHUXdTRWQR5veo2xjyJ/kpzWAYb
-	bcNsH7SUPJGFSC88fTFjQ+SR9jk6A2owJhZx7sijj/Rgva34IkuxtV/9yL0ls7LOlptgeVIQd+C
-	g4JMHdwZHKuJmne5nkZq2WIngPNlshWimP/QAQiV+kTT/xJPtz8/M8vdp52UHNdr0HxnIfvLl4N
-	2FtN/xXc=
-X-Google-Smtp-Source: AGHT+IG9XM/04o/biomZ8comXjrN4tg2H7sTdbWaSntEyCn3iRM0q10caZqQ1Ngkt86GZqIrvtBurQ==
-X-Received: by 2002:a05:6000:1ac8:b0:39c:1a86:e473 with SMTP id ffacd0b85a97d-39c2f958dd7mr64090f8f.56.1743627561569;
-        Wed, 02 Apr 2025 13:59:21 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b6589e4sm18191121f8f.10.2025.04.02.13.59.20
+        d=1e100.net; s=20230601; t=1743627738; x=1744232538;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IGrN/FFltZsiMZB/NzWOs/pkOG1+/TXlaHQIjn9hafc=;
+        b=oLVGBr2l/A5ONBtl8aoGXmtVKOX7NNtSCkTy+/GEiyb11trzh8NdMA+tQSbI//otkP
+         Iecp41ERBd53BCbs/a/Cs4is59YPaHT2Falq8fM30c2INYXbqx0KYhiN7wqI7V4i97nu
+         oMmGSP85IGCDLore56fwjIGOFZZqndK2lTBq6z7FQ8gOCRVexw2RALLIsoHHEFnVB3sD
+         VVDnX9o4m92KkrFAalqD2fH0n6lPe8KVfn8yCOhenzlnbuOcK+p0aWYUdp/xfoEA59pv
+         EofoBz5y4HFDXGlJ2IXMDjG1Bdrobm7MWHVOj6oOX1DZYdeaKcydG/Q6ooQqKBYRQmb8
+         rxpg==
+X-Forwarded-Encrypted: i=1; AJvYcCUBgEKm7WBclQsV2ULqgp+Y56lntRTudQvTWuJmyfjaCBS+Hf6w5GkLDcGidQi4IrjrUvDgLQmhr9n3MemD@vger.kernel.org, AJvYcCUgkkhucXhJXE78/e/FHVUnLqsOhZHcNgXffTFbd8M7A+NEZ3sdDXZXmwHUEi9w+cxD008Z5zShUzKdUgu2@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy75r1MeV3JrTI8/3/cqC14SJHC+I02JXtrifON48l6jbC7aOro
+	Lghg2toGbVu5bbLzlSDQs4I5TxkzA+i+eIMrJ0+dzFWANiHwYfFl
+X-Gm-Gg: ASbGncsV9BqcL/ZtEE7p5u7lugs8jxNdLs4meAFL+9Nd1qknHVb1WvvT8GEAPwUgw2i
+	NgtReMq3IyfP3HKPkTfVAlWLn3GSxlMLN+ysytmDdvo7+o9rjibOmc7z/rGGvMaEtfsvO9mMYWV
+	rw3j6qdfWJf9CHSf94FjQkIm3CqY4VqAZq5vgfmPtyzUCaLft3FrSr6t3wtWUMpc2+p7FB86GzT
+	GMTDxp4ju80yithz/11AnOPJ2FSiZtG5ITxU7OR4e0hmaFCw7n9Zq9998xIBhSRpgXhMj5g/Fbg
+	SpMMiaw7YvMjEfC/SZJFjdw9K8OdBLWrSuVqEuNx8uKYHuSwdYIJ05wewvHC+YsMqEQG
+X-Google-Smtp-Source: AGHT+IEaUDgdXLMxhlxRry6jlYdO4J0UuBCmaj0A9eWu6Vs3YaKVL2E9JXee0QR5qTIaNE1+A1tkhQ==
+X-Received: by 2002:a05:6000:1845:b0:39c:dfa:d347 with SMTP id ffacd0b85a97d-39c2f8c674emr92803f8f.2.1743627738359;
+        Wed, 02 Apr 2025 14:02:18 -0700 (PDT)
+Received: from f (cst-prg-6-220.cust.vodafone.cz. [46.135.6.220])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b7a41c0sm17610646f8f.88.2025.04.02.14.02.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Apr 2025 13:59:21 -0700 (PDT)
-Date: Wed, 2 Apr 2025 21:59:19 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <u.kleine-koenig@baylibre.com>
-Cc: Nicolas Pitre <nico@fluxnic.net>, Andrew Morton
- <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] math64: Provide an uprounding variant of
- mul_u64_u64_div_u64()
-Message-ID: <20250402215919.2b933752@pumpkin>
-In-Reply-To: <gqqxuoz5jfrlsmrxdhwevfo7kflxjqhbkfy2ksnsdcadbk52hd@yaitrauy52xg>
-References: <20250321131813.6a332944@pumpkin>
-	<epuk3zijp2jt6jh72z3xi2wxneeunf5xx2h77kvim6xmzminwj@4saalgxu3enu>
-	<20250331195357.012c221f@pumpkin>
-	<mjqzvj6pujv3b3gnvo5rwgrb62gopysosg4r7su6hcssvys6sz@dzo7hpzqrgg2>
-	<20250401202640.13342a97@pumpkin>
-	<15qr98n0-q1q0-or1r-7r32-36rrq93p9oq6@onlyvoer.pbz>
-	<46368602-13n7-s878-s7o2-76sr0q67n9q4@syhkavp.arg>
-	<20250401223731.7102103d@pumpkin>
-	<2wwrj6aid2elnnotzfkazierqmzmzpfywyf33ahqs36xh5xz32@rszeetrztsiz>
-	<20250402135219.28b24e94@pumpkin>
-	<gqqxuoz5jfrlsmrxdhwevfo7kflxjqhbkfy2ksnsdcadbk52hd@yaitrauy52xg>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+        Wed, 02 Apr 2025 14:02:17 -0700 (PDT)
+Date: Wed, 2 Apr 2025 23:02:09 +0200
+From: Mateusz Guzik <mjguzik@gmail.com>
+To: syzbot <syzbot+5d8e79d323a13aa0b248@syzkaller.appspotmail.com>
+Cc: brauner@kernel.org, jack@suse.cz, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Subject: Re: [syzbot] [fs?] kernel BUG in may_open
+Message-ID: <5u3utx4wgzscgspbcpqhaj75gpg43gcmjnxfhbrjrgv6j6af3a@pbsz3qyoa2wk>
+References: <67ed3fb3.050a0220.14623d.0009.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <67ed3fb3.050a0220.14623d.0009.GAE@google.com>
 
-On Wed, 2 Apr 2025 17:01:49 +0200
-Uwe Kleine-K=C3=B6nig <u.kleine-koenig@baylibre.com> wrote:
+On Wed, Apr 02, 2025 at 06:46:27AM -0700, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following issue on:
+> 
+> HEAD commit:    08733088b566 Merge tag 'rust-fixes-6.15-merge' of git://gi..
+> git tree:       upstream
+> console+strace: https://syzkaller.appspot.com/x/log.txt?x=10c8a178580000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=acce2ca43d1e8c46
+> dashboard link: https://syzkaller.appspot.com/bug?extid=5d8e79d323a13aa0b248
+> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15bb094c580000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12c2b7b0580000
+> 
+> Downloadable assets:
+> disk image: https://storage.googleapis.com/syzbot-assets/2ec0ad16833c/disk-08733088.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/aaa58ee04595/vmlinux-08733088.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/9799f5b55d91/bzImage-08733088.xz
+> 
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+5d8e79d323a13aa0b248@syzkaller.appspotmail.com
+> 
+> VFS_BUG_ON_INODE(1) encountered for inode ffff888148c44000
+> ------------[ cut here ]------------
+> kernel BUG at fs/namei.c:3432!
+> Oops: invalid opcode: 0000 [#1] SMP KASAN PTI
+> CPU: 0 UID: 0 PID: 5828 Comm: syz-executor329 Not tainted 6.14.0-syzkaller-11270-g08733088b566 #0 PREEMPT(full) 
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+> RIP: 0010:may_open+0x450/0x460 fs/namei.c:3432
+> Code: 38 c1 0f 8c 95 fe ff ff 48 89 df e8 aa 3c eb ff e9 88 fe ff ff e8 10 b3 84 ff 4c 89 ef 48 c7 c6 c0 f6 58 8c e8 81 21 05 00 90 <0f> 0b 66 66 66 66 66 2e 0f 1f 84 00 00 00 00 00 90 90 90 90 90 90
+> RSP: 0018:ffffc90003ce78d8 EFLAGS: 00010246
+> RAX: 000000000000003a RBX: 00000000000fffff RCX: 8d133bf8e6cb7a00
+> RDX: 0000000000000000 RSI: 0000000080000000 RDI: 0000000000000000
+> RBP: ffffffff8ee96300 R08: ffffffff81a29bdc R09: 1ffff9200079ceb8
+> R10: dffffc0000000000 R11: fffff5200079ceb9 R12: 0000000000000006
+> R13: ffff888148c44000 R14: dffffc0000000000 R15: ffffc90003ce7ba0
+> FS:  0000555582428380(0000) GS:ffff888124fe2000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 000056466efce608 CR3: 0000000033c36000 CR4: 00000000003526f0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Call Trace:
+>  <TASK>
+>  do_open fs/namei.c:3843 [inline]
+>  path_openat+0x2b39/0x35d0 fs/namei.c:4004
+>  do_filp_open+0x284/0x4e0 fs/namei.c:4031
+>  do_sys_openat2+0x12b/0x1d0 fs/open.c:1429
+>  do_sys_open fs/open.c:1444 [inline]
+>  __do_sys_openat fs/open.c:1460 [inline]
+>  __se_sys_openat fs/open.c:1455 [inline]
+>  __x64_sys_openat+0x249/0x2a0 fs/open.c:1455
+>  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+>  do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
+>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
 
-> Hello David,
->=20
-> On Wed, Apr 02, 2025 at 01:52:19PM +0100, David Laight wrote:
-> > On Wed, 2 Apr 2025 10:16:19 +0200
-> > Uwe Kleine-K=C3=B6nig <u.kleine-koenig@baylibre.com> wrote:
-> >  =20
-> > > On Tue, Apr 01, 2025 at 10:37:31PM +0100, David Laight wrote: =20
-> > > > On Tue, 1 Apr 2025 16:30:34 -0400 (EDT)
-> > > > Nicolas Pitre <nico@fluxnic.net> wrote:
-> > > >    =20
-> > > > > On Tue, 1 Apr 2025, Nicolas Pitre wrote:
-> > > > >    =20
-> > > > > > On Tue, 1 Apr 2025, David Laight wrote:
-> > > > > >      =20
-> > > > > > > Looking at the C version, I wonder if the two ilog2() calls a=
-re needed.
-> > > > > > > They may not be cheap, and are the same as checking 'n_hi =3D=
-=3D 0'.     =20
-> > > > > >=20
-> > > > > > Which two calls? I see only one.     =20
-> > > > >=20
-> > > > > Hmmm, sorry. If by ilog2() you mean the clz's then those are chea=
-p. Most=20
-> > > > > CPUs have a dedicated instruction for that. The ctz, though, is m=
-ore=20
-> > > > > expensive (unless it is ARMv7 and above with an RBIT instruction)=
-.   =20
-> > > >=20
-> > > > The code (6.14-rc6) starts:
-> > > >=20
-> > > > u64 mul_u64_u64_div_u64(u64 a, u64 b, u64 c)
-> > > > {
-> > > > 	if (ilog2(a) + ilog2(b) <=3D 62)
-> > > > 		return div64_u64(a * b, c);
-> > > >=20
-> > > > Now ilog2() is (probably) much the same as clz - but not all cpu ha=
-ve it.
-> > > > Indeed clz(a) + clz(b) >=3D 64 would be a more obvious test.   =20
-> > >=20
-> > > Ack, the more intuitive check might be
-> > >=20
-> > > 	if (fls64(a) + fls64(b) <=3D 64)
-> > >  		return div64_u64(a * b, c);
-> > >=20
-> > > then, but maybe "intuitive" is subjective here? =20
-> >=20
-> > Depends on whether you grok 'clz' or 'fls' :-) =20
->=20
-> And it also depends on the availability of the respective functions.
-> There is a fls64 function provided by include/asm-generic/bitops/fls64.h
-> and in several arch-specific arch/*/include/asm/bitops.h, but I didn't
-> find a clz function apart from one for arch=3Darc.
->=20
-> > > > On 32bit a check for a >> 32 | b >> 32 before the multiply might be=
- sane.   =20
-> > >=20
-> > > Not 100% sure I'm following. `a >> 32 | b >> 32` is just an indicator
-> > > that a * b fits into an u64 and in that case the above check is the
-> > > better one as this also catches e.g. a =3D (1ULL << 32) and b =3D 42.=
- =20
-> >=20
-> > That is to optimise the multiple as well as the divide.
-> > It is also a very cheap test. =20
->=20
-> OK, so we have:
->=20
-> 	                                 `a >> 32 | b >> 32` | `fls64(a) + fls64=
-(b) <=3D 64`
-> 	cheap                          |          =E2=9C=93          |          =
-   =E2=9C=93
+This is issuing open on bpf:
 
-fls() isn't always cheap.
-x86 has had bsr since the 386, but I don't remember seeing it in arm32 or p=
-pc.
-The 'a >> 32 | b >> 32' is very cheap on 32bit.
+bpf(BPF_MAP_CREATE, {map_type=BPF_MAP_TYPE_DEVMAP, key_size=4, value_size=4, max_entries=3, map_flags=0,
+inner_map_fd=-1, map_name="", map_ifindex=0, btf_fd=-1, btf_key_type_id=0, btf_value_type_id=0, btf_vmlinux_value_type_id=0, map_extra=0}, 72) = 3
+openat(AT_FDCWD, "/proc/self/fd/3", O_RDWR) = ?
++++ killed by SIGSEGV +++
 
-> 	allows to skip multiplication  |          =E2=9C=93          |          =
-   =E2=9C=93
-> 	allows to skip 128bit division |          =E2=9C=93          |          =
-   =E2=9C=93
-> 	catches all skip possibilities |          x          |             =E2=
-=9C=93
->=20
-> > > > > > And please explain how it can be the same as checking 'n_hi =3D=
-=3D 0'.     =20
-> > > > >=20
-> > > > > This question still stands.   =20
-> > > >=20
-> > > > 'ni_hi =3D=3D 0' is exactly the condition under which you can do a =
-64 bit divide.
-> > > > Since it is when 'a * b' fits in 64 bits.
-> > > >=20
-> > > > If you assume that most calls need the 128bit product (or why use t=
-he function)
-> > > > then there is little point adding code to optimise for the unusual =
-case.   =20
-> > >=20
-> > > n_hi won't be zero when the branch
-> > >=20
-> > > 	if (ilog2(a) + ilog2(b) <=3D 62)
-> > > 		return div64_u64(a * b, c);
-> > >=20
-> > > wasn't taken? =20
-> >=20
-> > Right, but you can remove that test and check n_hi instead.
-> > The multiplies are cheap compared to the divide loop.
-> > (Especially when uint128 exists.) =20
->=20
-> But you can check n_hi only after you completed the multiplication, so
-> checking `ilog2(a) + ilog2(b) <=3D 62` (or `fls64(a) + fls64(b) <=3D 64` =
-or
-> `clz(a) + clz(b) >=3D 64`) sounds like a good idea to me.
+I verified i_mode & S_ISFMT is 0.
 
-Depends on how much of the time you think the multiply is needed.
-If it is needed most of the time you want to do it first.
-If it is hardly ever needed then the initial check is likely to be a gain.
-
-	David
-
->=20
-> > I also think you can do a much better divide loop (for many cpu).
-> > Shift 'c' so that clz(c) is 32.
-> > Shift 'n_hi/n_lo' so that clz(n_hi) is 1.
-> > Do a 64 by 32 divide and remainder (probably about 32 or 64 clocks).
-> > If bits of 'c' were discarded multiple and subtract (with overflow chec=
-k).
-> > 'Rinse and repeat' with the remainder.
-> > Build the quotient out of all the partial values. =20
->=20
-> I let this for Nicolas to reply. I guess he is much more into these
-> details than me.
->=20
-> Best regards
-> Uwe
-
+I don't know what expectation is, should this be some special dev
+instead?
