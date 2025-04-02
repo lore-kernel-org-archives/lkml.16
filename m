@@ -1,129 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB6A416BE17;
-	Wed,  2 Apr 2025 08:21:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AA87233D72;
+	Wed,  2 Apr 2025 08:22:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743582106; cv=none; b=p7keu9UrLzAPNtltIaOPF3Mx46Go6r2pTYtp4M9zQ/6UgE0gkwO4tjz6+bpXm4kyX0gZHTw+YcwcAB/bCrrolamKABS0q+K8Itx7QgV7Kx4ZfqrqS6n6URoH0LeTzpdYwVT9yrLBl6bNQoixd44lKPkp+mGLTyMny911vEYqzq0=
+	t=1743582149; cv=none; b=TQ0FjOs2UzWphLxd8rXqvJXQ9lWTU4Up7wvO0exu5ub6woNYCO2BBe5UNidMmMIDrUdlqeNyVPej7WpdLEkfAsDYIgDihp2gOScWILLLojJ64caLEH4+N6iVBJ5RguX/dryraHWCSmtdy1IySXjLmFUPIeBypc3fZTJ79yW3ZgY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743582106; c=relaxed/simple;
-	bh=87dNr8hwkllHn1Xfzs3QWzciTqdFJdQoj0fztR4Z4f8=;
+	s=arc-20240116; t=1743582149; c=relaxed/simple;
+	bh=YTuNCC3dzXvhWv3tOYifX7JQa2j82JyQXJk6Kj0R96Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lAZjx5cZ5tAypRySIBxU8Bm5mVCzSv0i+7Tj2mz/PrGUZdXpcUsdd2ooBz0onzpxD5CwIZ9Spk2IKwqOufrM+3KigK21oQBRq7Awb5Nufu9tW52eHnMBu+32KB+3S6ok0uZdyvzmd71Wqx7DRHgC/hh65DGnMbaBKsQqEBo3F/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LnM4RCFX; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=pM3v0/sm7qWnG5DHqv/3/2TlDc0M2v+AGq/XQJIBlVoL/8tZd+ALxm2hh3xBiFKk7RcyE5SIDkhwrI+XdpKyh+q8N6bM0D+XZQooYvzARSrTW4iM7YJXPMUQarBTJ9Uiveysz7m2iPtdaS78oDLeJgLayDLbZlkE4zIMLIJol88=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=GFnQsJ+e; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LnM4RCFX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D346C4CEDD;
-	Wed,  2 Apr 2025 08:21:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743582106;
-	bh=87dNr8hwkllHn1Xfzs3QWzciTqdFJdQoj0fztR4Z4f8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LnM4RCFX6ZyYhnp20+be1YnPxxuL68IJeWZ3S+rS1u7yoK6m/p8nka8avWxkIMP3U
-	 F13YBWNpsgQ8L4v+Yhw+9/Xv62CcWYLp/oMg4L8rpPtSZfSyfPMRqreNpkOxFXhp3X
-	 fwdtb9tIAuUwfETUe+hroJCB5/NBm08VdS96qB50DZq8Po7ttTbRuhSXP11WSUmwth
-	 xaAt0aa2XBsz2TM3MAP1qVPBR30VePoDZ5LHNGw2fsDKBYToTMHm/EGI232cB7O0Ov
-	 aFp3kXhoSpxqhtdgI5JE9iIBgfCt5JI61OONqlL0ZfYemccoKqxw5eTNb8CS4jooLv
-	 cSjhN38N/ANzw==
-Date: Wed, 2 Apr 2025 10:21:42 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: 
-	Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
-Cc: Dave Stevenson <dave.stevenson@raspberrypi.com>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, linux-media@vger.kernel.org, 
-	devicetree@vger.kernel.org, imx@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: media: i2c: imx219: Remove redundant
- description of data-lanes
-Message-ID: <20250402-real-enthusiastic-ostrich-dcc243@krzk-bin>
-References: <20250401145759.3253736-1-niklas.soderlund+renesas@ragnatech.se>
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="GFnQsJ+e"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=aT8K0h3pG+xcT+gsG2ninLrWocsNCdfYUpJ4jZt+NXE=; b=GFnQsJ+eDCdu7/SnS+ZisJ2fQg
+	t3EPgKobSwi6a+6hBjr1eHiQzmtd6AOb0LQnHlRGSL/DjUxhTjNeTBlXvZySu5VNqQTxIDiL7EobH
+	+V6cKwGJiSx+gPlvieTuTmoIjp3FKa5rGROj2NzTuuqj8nwvCky7a7OaPYmKyY336Vdq0LQDLQmi0
+	grvgGVGgpTcLZpja9hn4VjFqFtfiV9WxuFr/vRBVTGVxIqEyEPKYCQ3Sv+y3rh6zf6DVb8GLJGow9
+	3M1L2P0AC1UrW84LvTL4gj7EeGPjXBhewC3NwtO9UI/ffS6saOECDS0fqPDzOmecT/ksZ+vbTncJF
+	xtINxV0A==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1tztMb-00C4Dl-2S;
+	Wed, 02 Apr 2025 16:22:22 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Wed, 02 Apr 2025 16:22:21 +0800
+Date: Wed, 2 Apr 2025 16:22:21 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Eric Biggers <ebiggers@kernel.org>, linux-crypto@vger.kernel.org,
+	linux-kernel@vger.kernel.org, x86@kernel.org,
+	"Jason A. Donenfeld" <Jason@zx2c4.com>
+Subject: Re: [PATCH v2 0/9] crypto: x86 - stop using the SIMD helper
+Message-ID: <Z-zzvXbjt3xzquXb@gondor.apana.org.au>
+References: <20250402002420.89233-1-ebiggers@kernel.org>
+ <Z-yrf_9D2rV1Q136@gondor.apana.org.au>
+ <CAMj1kXEx__RLBriW0kVPrKnx6+DCpq8=6F-7Tmj2Us61gvGGaw@mail.gmail.com>
+ <CAMj1kXE-vo7E1U++4mAqDH2SXfc=sRZs8KganedJk5z0QF49NA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20250401145759.3253736-1-niklas.soderlund+renesas@ragnatech.se>
+In-Reply-To: <CAMj1kXE-vo7E1U++4mAqDH2SXfc=sRZs8KganedJk5z0QF49NA@mail.gmail.com>
 
-On Tue, Apr 01, 2025 at 04:57:58PM +0200, Niklas S=C3=B6derlund wrote:
-> The bindings already reference video-interfaces.yaml in the endpoint
-> node, there is no need to duplicate the description of the data-lanes
-> property.
->=20
->   An array of physical data lane indexes. Position of an entry determines
->   the logical lane number, while the value of an entry indicates physical
->   lane, e.g. for 2-lane MIPI CSI-2 bus we could have "data-lanes =3D <1 2=
->;",
->   assuming the clock lane is on hardware lane 0. If the hardware does not
->   support lane reordering, monotonically incremented values shall be used
->   from 0 or 1 onwards, depending on whether or not there is also a clock
->   lane. This property is valid for serial busses only (e.g. MIPI CSI-2).
+On Wed, Apr 02, 2025 at 09:34:30AM +0300, Ard Biesheuvel wrote:
+>
+> Ah, never mind - I see some calls on 32-bit ARM to
+> simd_skcipher_create_compat(), which have become redundant now that
+> SIMD is guaranteed to be available in softirq context.
 
-Please do not quote bindings in commit. It's never helpful.
+Thanks!
 
->=20
-> What the generic binding do not cover is the behavior if the property
-> would be omitted. But the imx219 driver have never agreed with the
-> description neither. Before commit ceddfd4493b3 ("media: i2c: imx219:
+We could also remove all the calls to crypto_simd_usable in the
+Crypto API hashing code, e.g., arch/arm64/crypto/sha1-ce-glue.c.
 
-It did not have to agree. See discussion for v3 of patch adding this bindin=
-g.
+For the lib/crypto code I think we should make it a rule to
+not allow any hardirq usage just like the Crypto API.  Does
+anyone know of any uses of lib/crypto in a hardirq?
 
-> Support four-lane operation") the driver errored out if not 2 lanes
-> where used, and after it if not 2 or 4 lanes where used.
+I thought /dev/random might do that but it looks like Jason has
+fixed it so that crypto code is no longer used in hardirqs:
 
-Then... fix the driver?
+commit e3e33fc2ea7fcefd0d761db9d6219f83b4248f5c
+Author: Jason A. Donenfeld <Jason@zx2c4.com>
+Date:   Fri May 6 18:30:51 2022 +0200
 
-This property describes hardware, not driver. Why current driver
-implementation, e.g. 1 year ago or now, would change the hardware (so
-the bindings)?
+    random: do not use input pool from hard IRQs
 
->=20
-> Signed-off-by: Niklas S=C3=B6derlund <niklas.soderlund+renesas@ragnatech.=
-se>
-> ---
-> Hello,
->=20
-> The data-lanes property is a common property and the driver have always
-> operated as the common description, it seemed silly to break the driver
-> to adhere to odd specification, then to correct the bindings. However a
-> more correct solution would be to do the work on the driver of course.
->=20
-> This is just a drive-by fix in the hope of sparing others the time to
-> discover this oddity themself. This is only tested by using the bindings
-> themself and by 'make dt_binding_check'.
-> ---
->  Documentation/devicetree/bindings/media/i2c/imx219.yaml | 9 ---------
->  1 file changed, 9 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/media/i2c/imx219.yaml b/Do=
-cumentation/devicetree/bindings/media/i2c/imx219.yaml
-> index 07d088cf66e0..31beeb2be2ea 100644
-> --- a/Documentation/devicetree/bindings/media/i2c/imx219.yaml
-> +++ b/Documentation/devicetree/bindings/media/i2c/imx219.yaml
-> @@ -55,15 +55,6 @@ properties:
->          unevaluatedProperties: false
-> =20
->          properties:
-> -          data-lanes:
-> -            description: |-
-> -              The sensor supports either two-lane, or four-lane operatio=
-n.
-> -              If this property is omitted four-lane operation is assumed.
-> -              For two-lane operation the property must be set to <1 2>.
-> -            items:
-> -              - const: 1
-> -              - const: 2
-
-So 1 lane is also fine? 8 lanes are as well? Previously lack of the
-property in DTS meant 4 lanes, now lack of property means anything.
-
-Best regards,
-Krzysztof
-
+Cheers,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
