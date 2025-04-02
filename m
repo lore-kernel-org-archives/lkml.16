@@ -1,233 +1,180 @@
-Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170])
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C2A62356B2;
-	Wed,  2 Apr 2025 09:37:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A79DA1E8358
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 09:38:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743586630; cv=none; b=hRngIFmROtQeMLkxuqQrOCKqM/oCDAXkXVKP2+8USoO904ViGy7jPFXvrknDIMB+hQD7iO6Fys8Ky4r45fJ5NqaOUqy1KzSRru9i8mAOuqrc3IK7pq0bmG/bNXVTP3Bn+ySEwmfMPh2BYR91MfMzxxkZM3cubVjl3N12K8U8dVk=
+	t=1743586698; cv=none; b=ClaGywF9hvWC4QWgcTWxF4rnvrAwYSS6ZBPwu8GsM8nqja8Zn2z+X6WVnkC3qqcKDlNm0MLdjMPrNUk6clKrimNFtQP62evYcw3CcHSt6cbqUY42rW6CEj90mVkE1HUbITySP09DaoVyjLUaSm4C+mw+tbt7I3lJ48MVzyhbxb8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743586630; c=relaxed/simple;
-	bh=t3mFS6OckXH3Afml9ZCKG2xKNNiK36cVOhzvEgyHPfk=;
+	s=arc-20240116; t=1743586698; c=relaxed/simple;
+	bh=cNejXleJqme9VajQRcc+kziIQxuHNEBzuJikNqfdGkY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dQEUpgXrcoLAHOC55VGcaAbhvjLOtmoDfREB1qsYy+Jnty2/cyGSlQuC0SC5ap9bPzMhSRMMXTq/bASjA7o3LtgTtQiSaRASaIZhofc4hBUqelHC3j3AH3h83EfOG3WxCYEZrrzlmYMXAb97p8mXTDcGsIkYya81pvX/VBbLPA4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HKTP0IeI; arc=none smtp.client-ip=209.85.221.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=iz4qXDs6jPjmgP8nHrxDpy+/S6P5+QQ1QoTASLs9nAVK6Mj187HROi+tVY9YuREPNVbZ7Z8tdF4biexlmdI6Pg7UrsvrstxIqn6B2n2YvxRrsswqw0+cu29vWCTQZ1xPxThgVQ/rf3Mw9OBWBuaQPMBAwaFyaDUiEcHa1wAH8Sg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=EvuX8XBf; arc=none smtp.client-ip=209.85.208.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HKTP0IeI"
-Received: by mail-vk1-f170.google.com with SMTP id 71dfb90a1353d-523fa0df55dso665103e0c.1;
-        Wed, 02 Apr 2025 02:37:08 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EvuX8XBf"
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-30bfed67e08so65908691fa.2
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 02:38:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743586627; x=1744191427; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1743586695; x=1744191495; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=yMeq7yNGUEta54mjsa1NjWFHIosEVWhv5GnDy/WQ2ys=;
-        b=HKTP0IeICVz04p7A8CmPiLRPmJS6ltSKBtiqb1Qavi+oMZdcN1Sj+riudI4ZEyRL2F
-         MC86/ohk/tPXBzkMKv9VonRq8rN54u+ayJF9wqUZc4EG1cfwd30I69Z+mKLTLeISJ3FG
-         kmmzDoAluHs2iOup0BrwbnxkXDowBAzfhf/CJs0RVUcLgH2PXBz88z5Yullq7JpYOiRq
-         fwjvwUvn9ZIrvSOSccw8WUP3xioJsUmt+Ur0OI8G3t5AQlK9B7emshNElurNLJ1bsyK6
-         EYVQVYEb/7X/sAgIB/ybFL8ylpw7Y8ndsgOVNjn+MI9c0gbx0mq7DqesEv5O9bxfjjy8
-         4d9w==
+        bh=x2JNszX6iZTEKfz+6ykvGTqM6KFlJFkA7aYcjD0/BdY=;
+        b=EvuX8XBfegM0w+PJzDZUk906DKGQ1kEXf/O5tAVlB/xSvl3MlkqZHQHgDQonI5VDr2
+         K6ZT8IifsQQYz14xQ0MDKCZ1XkSOe+HfJRkBfCL4XqxUvqwzsJjbJBF3A1I+AM9WaNuB
+         WAi1mSpAze6MzTNlyTkNtJ7KrNHiU8kFspZVQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743586627; x=1744191427;
+        d=1e100.net; s=20230601; t=1743586695; x=1744191495;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=yMeq7yNGUEta54mjsa1NjWFHIosEVWhv5GnDy/WQ2ys=;
-        b=FsLpWMQElNVT28XthFCIetKhBm1VmsyM8DQeEUiMwa3G6fBkvDeM+bjzntV1ZJ20Wc
-         jT9x2g5Mj7EaHsqG2kxEZyYeN8zQApMFWmfaazXs7bF0XAXKB5FTwC4awxaMfNmq/ja1
-         b2VFe7b00VKw7MN5GniP4eyFpJ8MAhAxAImuEfTGex+dxchoUCQi1rKCKDje/1pXxXqw
-         93KqAXZm6HqzSAUWhfYDOibK1MsLIUajrAuPxUAUxriyLPiQ8OeWsgS5ejSWiuwt29B/
-         Q8rbxQDOxDsgl9CpjPTWTPW/kBDlpVa5oWai954V678UguGuaCOx831ttEBt5+tm0xro
-         pdXA==
-X-Forwarded-Encrypted: i=1; AJvYcCV11RhchLiBZLIBi7m9j+gxTqfC7aKtWgpXudbJkefy3l5ifsp3uNAmAYYeRYHb8fz0pnYSaquyVHj3@vger.kernel.org, AJvYcCVTaBgY7iKFcDWxZ+S7MAzk16g58JrSpkOA1dtCJdd/fcdDa3HF2jGoQ07+5qgW2paTfts2g811oIJHbGh3nuNtA1A=@vger.kernel.org, AJvYcCWTtkp5gNP7BTb8ItoErr/zoMhZGppijU9xCIpSZfKbFKrs7Wo59jwZpWfTLNwq2FDEbSFwACIWBZw5bkiF@vger.kernel.org, AJvYcCXT/D5sJ5JmpLpPWVC+T/N7ZLf+Ybvga0U7ifmEjlD1nYMbd1kCKZU7BgM+qDpU7afUTlk+Asxs5eh9mv0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxoCvqH5mrkCvAuvVngjLDwDJ58pnWIldhBAr0H87HG52D0R5EQ
-	tW8wOnyYPfNeNecgjgHbmJ+mRWiBwW7rnbeAb6PQs/4hVIgyRzssZQs9Rrn7BMRhzuKMXStsrvy
-	Ape7pWN11Z5IYmp1mBbJchbPPI7I=
-X-Gm-Gg: ASbGncvNuy5RhyehomAesKGjFc+b18ekZht6M5D+dnW3pTtrQa083kKgksS/NE9YfHg
-	pIx87RMDR1Nhr1BHEqZrLIz/JN8BUhDeErdzFd7H8VcROofj5m0EmmqjkZNJYhFd1ziT4nBzMZJ
-	HIV/06iu7j51SgxdZW1AFAHLLVdNyqv+Wgp1UXXcFXDF33673tKZyysbMGpWc=
-X-Google-Smtp-Source: AGHT+IGuw/XBD+Ekqv7DghryCmw+w72lKEox3CENDSVzgiwNwzK/HLvoytQXUTtB9ZeiwxtlbLRh29tHI9leOwYLw0c=
-X-Received: by 2002:a05:6122:888:b0:50d:39aa:7881 with SMTP id
- 71dfb90a1353d-5274e8c2928mr590316e0c.0.1743586626869; Wed, 02 Apr 2025
- 02:37:06 -0700 (PDT)
+        bh=x2JNszX6iZTEKfz+6ykvGTqM6KFlJFkA7aYcjD0/BdY=;
+        b=iksQvZycDFOYFHBYj6W8CnzltVXLK9Vfq/VQVIm7Fxdp8RTkYwLXRm2GyrwRTJsv2x
+         UULgWIJLsWYwVdUgAXjALkYJ19GJ5r85/vIjIIQuAM8iJ5gsmuA8FbJYoRzH4kjGQLJn
+         zhE2IxajJSg/eWTusEMjNu9shVSwkfnQOx+LwNXyWX7i95iiIqjTf5dMk2t3uvXXUdU0
+         iLlnxkFkxnbwyX/QAWH5utbB7VYUbw4drtRHod1b/NOOKazvmDKdn5aUCYkNBvNwQwXE
+         Urmiibph6H6Herrze2dFT2dC4WBXjdLmcSvxopQyjIag/9gYmOvRecMtux3OeNoU75Es
+         IRwA==
+X-Forwarded-Encrypted: i=1; AJvYcCXoF56viYlGz/GJjhH9r7ArRU5PHrhtrvnjYjdvb8GboxhEixLGahU0fmLvkRb2bSx6pEZYktQzwkRMNEI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywf1ZzDqoIejlRsEp8Pot0KlSFwG+qsg9KMkGIKykoMXY3TuLna
+	3e/djeCuPohYxHQdEmNhEXl0gBGVcpcZt7B9/qu78wnOfU8nU0VXCqvbz2GMTu9GU+OIzUsJcjS
+	gYMBCai5tuKnVFdrwNSmbpDc+HyBvkdGb6awH
+X-Gm-Gg: ASbGncu2z0OOYS2rxCrXtNfqpo7zavV3I1NrCEm3CL8OB74dLPwvfwzWJ/Nh+P56thw
+	cWohxb7kJ18ZRzmQQNk48sarPMa7Q9FZaNuvOphIwXl6hPQa2RVkdO8fOtUuiOyg2u6W2ERry6W
+	m5nE3gFNQe0drcf2gZRJasuYZYbyNxAuGOZ9lZXZemdU5EFLr0HRCmRbRG2ECnVhE=
+X-Google-Smtp-Source: AGHT+IExYrNEjA4pPxITL5Kgnipvtbv102T/YS0lH31Fsyobnp9W1LSzaQUExnLdiCH6E51BoFuI8ihy0vHN4Nlyq+I=
+X-Received: by 2002:a2e:be0f:0:b0:30c:5c6:91e0 with SMTP id
+ 38308e7fff4ca-30de0231a0cmr50673981fa.2.1743586694676; Wed, 02 Apr 2025
+ 02:38:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250328173032.423322-1-tommaso.merciai.xr@bp.renesas.com>
- <20250328173032.423322-12-tommaso.merciai.xr@bp.renesas.com>
- <TY3PR01MB11346ECE31CB6C8DC33459C2486AF2@TY3PR01MB11346.jpnprd01.prod.outlook.com>
- <CA+V-a8sJQnyJb_uq9yEcjHRW7ZFOw3g2XQyygcozWTgMjrYxRQ@mail.gmail.com>
- <TY3PR01MB113462DC897E0DB681B1C020F86AF2@TY3PR01MB11346.jpnprd01.prod.outlook.com>
- <CA+V-a8ukJ+_Bhy-4nU_CFD4rMoTRxEY-q+bXHHZ-9Mz8gQ362A@mail.gmail.com> <20250402092618.GH4845@pendragon.ideasonboard.com>
-In-Reply-To: <20250402092618.GH4845@pendragon.ideasonboard.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Wed, 2 Apr 2025 10:36:40 +0100
-X-Gm-Features: AQ5f1JoeUkVJpakNsYw43BX9_QLPBh8T7CiCQojtIH3S8OJBigglcLSArnVymr0
-Message-ID: <CA+V-a8uQBqqMPMwtx337thXfQ1ai-_j5mq38GEaFf_+my6223A@mail.gmail.com>
-Subject: Re: [PATCH v5 11/17] media: rzg2l-cru: Add register mapping support
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Biju Das <biju.das.jz@bp.renesas.com>, 
-	Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>, 
-	Tommaso Merciai <tomm.merciai@gmail.com>, 
-	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, 
-	"linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, 
-	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
-	Hans Verkuil <hverkuil@xs4all.nl>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@baylibre.com>, 
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20250402083628.20111-1-angelogioacchino.delregno@collabora.com> <20250402083628.20111-5-angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20250402083628.20111-5-angelogioacchino.delregno@collabora.com>
+From: Chen-Yu Tsai <wenst@chromium.org>
+Date: Wed, 2 Apr 2025 17:38:03 +0800
+X-Gm-Features: AQ5f1Jo5jbEeaCvlhXWHAtzwNK4wbBL1go7L3GIt1qsXbC424ywOaYMmnHcwKAY
+Message-ID: <CAGXv+5E1qShE1LqgFL6rrgRzjwFUPoBqYdhO-sgNzmMqQsMS0Q@mail.gmail.com>
+Subject: Re: [PATCH v1 4/5] drm/mediatek: mtk_disp_ovl: Enable/disable
+ interrupt on bind/unbind
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: chunkuang.hu@kernel.org, p.zabel@pengutronix.de, airlied@gmail.com, 
+	simona@ffwll.ch, matthias.bgg@gmail.com, nancy.lin@mediatek.com, 
+	ck.hu@mediatek.com, djkurtz@chromium.org, littlecvr@chromium.org, 
+	bibby.hsieh@mediatek.com, dri-devel@lists.freedesktop.org, 
+	linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, kernel@collabora.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Laurent,
-
-On Wed, Apr 2, 2025 at 10:26=E2=80=AFAM Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
+On Wed, Apr 2, 2025 at 4:36=E2=80=AFPM AngeloGioacchino Del Regno
+<angelogioacchino.delregno@collabora.com> wrote:
 >
-> On Wed, Apr 02, 2025 at 08:25:06AM +0000, Lad, Prabhakar wrote:
-> > On Wed, Apr 2, 2025 at 9:20=E2=80=AFAM Biju Das wrote:
-> > > On 02 April 2025 08:35, Lad, Prabhakar wrote:
-> > > > On Wed, Apr 2, 2025 at 7:31=E2=80=AFAM Biju Das wrote:
-> > > > > > On 28 March 2025 17:30, Tommaso Merciai wrote:
-> > > > > > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > > > >
-> > > > > > Prepare for adding support for RZ/G3E and RZ/V2HP SoCs, which h=
-ave a
-> > > > > > CRU-IP that is mostly identical to RZ/G2L but with different
-> > > > > > register offsets and additional registers. Introduce a
-> > > > > > flexible register mapping mechanism to handle these
-> > > > > > variations.
-> > > > > >
-> > > > > > Define the `rzg2l_cru_info` structure to store register mapping=
-s and
-> > > > > > pass it as part of the OF match data. Update the read/write
-> > > > > > functions to check out-of-bound accesses and use indexed
-> > > > > > register offsets from `rzg2l_cru_info`, ensuring compatibility
-> > > > > > across different SoC variants.
-> > > > > >
-> > > > > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renes=
-as.com>
-> > > > > > Signed-off-by: Tommaso Merciai <tommaso.merciai.xr@bp.renesas.c=
-om>
-> > > > > > ---
-> > > > > > Changes since v2:
-> > > > > >  - Implemented new rzg2l_cru_write/read() that now are checking=
- out-of-bound
-> > > > > >    accesses as suggested by LPinchart.
-> > > > > >  - Fixed AMnMBxADDRL() and AMnMBxADDRH() as suggested by LPinch=
-art.
-> > > > > >  - Update commit body
-> > > > > >
-> > > > > > Changes since v4:
-> > > > > >  - Mark __rzg2l_cru_write_constant/__rzg2l_cru_read_constant
-> > > > > >    as __always_inline
-> > > > > >
-> > > > > >  .../platform/renesas/rzg2l-cru/rzg2l-core.c   | 46 +++++++++++=
-+-
-> > > > > >  .../renesas/rzg2l-cru/rzg2l-cru-regs.h        | 66 ++++++++++-=
---------
-> > > > > >  .../platform/renesas/rzg2l-cru/rzg2l-cru.h    |  4 ++
-> > > > > >  .../platform/renesas/rzg2l-cru/rzg2l-video.c  | 58 +++++++++++=
-+++--
-> > > > > >  4 files changed, 139 insertions(+), 35 deletions(-)
-> > > > > >
-> > > > > > diff --git a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-cor=
-e.c b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-core.c
-> > > > > > index eed9d2bd08414..abc2a979833aa 100644
-> > > > > > --- a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-core.c
-> > > > > > +++ b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-core.c
-> > > > > > @@ -22,6 +22,7 @@
-> > > > > >  #include <media/v4l2-mc.h>
-> > > > > >
-> > > > > >  #include "rzg2l-cru.h"
-> > > > > > +#include "rzg2l-cru-regs.h"
-> > > > > >
-> > > > > >  static inline struct rzg2l_cru_dev *notifier_to_cru(struct v4l=
-2_async_notifier *n)
-> > > > > >  {
-> > > > > > @@ -269,6 +270,9 @@ static int rzg2l_cru_probe(struct platform_=
-device *pdev)
-> > > > > >
-> > > > > >       cru->dev =3D dev;
-> > > > > >       cru->info =3D of_device_get_match_data(dev);
-> > > > > > +     if (!cru->info)
-> > > > > > +             return dev_err_probe(dev, -EINVAL,
-> > > > > > +                                  "Failed to get OF match data=
-\n");
-> > > > > >
-> > > > > >       irq =3D platform_get_irq(pdev, 0);
-> > > > > >       if (irq < 0)
-> > > > > > @@ -317,8 +321,48 @@ static void rzg2l_cru_remove(struct platfo=
-rm_device *pdev)
-> > > > > >       rzg2l_cru_dma_unregister(cru);  }
-> > > > > >
-> > > > > > +static const u16 rzg2l_cru_regs[] =3D {
-> > > > > > +     [CRUnCTRL] =3D 0x0,
-> > > > > > +     [CRUnIE] =3D 0x4,
-> > > > > > +     [CRUnINTS] =3D 0x8,
-> > > > > > +     [CRUnRST] =3D 0xc,
-> > > > > > +     [AMnMB1ADDRL] =3D 0x100,
-> > > > > > +     [AMnMB1ADDRH] =3D 0x104,
-> > > > > > +     [AMnMB2ADDRL] =3D 0x108,
-> > > > > > +     [AMnMB2ADDRH] =3D 0x10c,
-> > > > > > +     [AMnMB3ADDRL] =3D 0x110,
-> > > > > > +     [AMnMB3ADDRH] =3D 0x114,
-> > > > > > +     [AMnMB4ADDRL] =3D 0x118,
-> > > > > > +     [AMnMB4ADDRH] =3D 0x11c,
-> > > > > > +     [AMnMB5ADDRL] =3D 0x120,
-> > > > > > +     [AMnMB5ADDRH] =3D 0x124,
-> > > > > > +     [AMnMB6ADDRL] =3D 0x128,
-> > > > > > +     [AMnMB6ADDRH] =3D 0x12c,
-> > > > > > +     [AMnMB7ADDRL] =3D 0x130,
-> > > > > > +     [AMnMB7ADDRH] =3D 0x134,
-> > > > > > +     [AMnMB8ADDRL] =3D 0x138,
-> > > > > > +     [AMnMB8ADDRH] =3D 0x13c,
-> > > > > > +     [AMnMBVALID] =3D 0x148,
-> > > > > > +     [AMnMBS] =3D 0x14c,
-> > > > > > +     [AMnAXIATTR] =3D 0x158,
-> > > > > > +     [AMnFIFOPNTR] =3D 0x168,
-> > > > > > +     [AMnAXISTP] =3D 0x174,
-> > > > > > +     [AMnAXISTPACK] =3D 0x178,
-> > > > > > +     [ICnEN] =3D 0x200,
-> > > > > > +     [ICnMC] =3D 0x208,
-> > > > > > +     [ICnMS] =3D 0x254,
-> > > > > > +     [ICnDMR] =3D 0x26c,
-> > > > > > +};
-> > > > >
-> > > > > Do we need enum, can't we use struct instead with all these entri=
-es instead?
-> > > > >
-> > > > What benefit do you foresee when using struct? With the current app=
-roach being used a minimal diff is
-> > > > generated when switched to struct there will be lots of changes.
-> > >
-> > > The mapping is convinient when you want to iterate throught it. Here,=
- if
-> > > you just want to access the offset value from its name, a structure
-> > > looks more appropriate.
-> >
-> > Thanks, as this patch has been reviewed by Laurent a couple of times
-> > we will change this to struct If he insists.
+> The OVL driver is installing an ISR in the probe function but, if
+> the component is not bound yet, the interrupt handler may call the
+> vblank_cb ahead of time (while probing other drivers) or too late
+> (while removing other drivers), possibly accessing memory that it
+> should not try to access by reusing stale pointers.
 >
-> How would a struct look like ? I'm not sure what is being proposed.
+> In order to fix this, add a new `irq` member to struct mtk_disp_ovl
+> and then set the NOAUTOEN flag to the irq before installing the ISR
+> to manually call enable_irq() and disable_irq() in the bind and
+> unbind callbacks respectively.
 >
-Something like below:
+> Fixes: 119f5173628a ("drm/mediatek: Add DRM Driver for Mediatek SoC MT817=
+3.")
+> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@coll=
+abora.com>
+> ---
+>  drivers/gpu/drm/mediatek/mtk_disp_ovl.c | 19 +++++++++++++------
+>  1 file changed, 13 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c b/drivers/gpu/drm/me=
+diatek/mtk_disp_ovl.c
+> index df82cea4bb79..1bff3a1273f6 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
+> @@ -161,6 +161,7 @@ struct mtk_disp_ovl {
+>         struct drm_crtc                 *crtc;
+>         struct clk                      *clk;
+>         void __iomem                    *regs;
+> +       int                             irq;
+>         struct cmdq_client_reg          cmdq_reg;
+>         const struct mtk_disp_ovl_data  *data;
+>         void                            (*vblank_cb)(void *data);
+> @@ -587,12 +588,18 @@ void mtk_ovl_bgclr_in_off(struct device *dev)
+>  static int mtk_disp_ovl_bind(struct device *dev, struct device *master,
+>                              void *data)
+>  {
+> +       struct mtk_disp_ovl *priv =3D dev_get_drvdata(dev);
+> +
+> +       enable_irq(priv->irq);
+>         return 0;
+>  }
+>
+>  static void mtk_disp_ovl_unbind(struct device *dev, struct device *maste=
+r,
+>                                 void *data)
+>  {
+> +       struct mtk_disp_ovl *priv =3D dev_get_drvdata(dev);
+> +
+> +       disable_irq(priv->irq);
+>  }
+>
+>  static const struct component_ops mtk_disp_ovl_component_ops =3D {
+> @@ -605,16 +612,15 @@ static int mtk_disp_ovl_probe(struct platform_devic=
+e *pdev)
+>         struct device *dev =3D &pdev->dev;
+>         struct mtk_disp_ovl *priv;
+>         struct resource *res;
+> -       int irq;
+>         int ret;
+>
+>         priv =3D devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+>         if (!priv)
+>                 return -ENOMEM;
+>
+> -       irq =3D platform_get_irq(pdev, 0);
+> -       if (irq < 0)
+> -               return irq;
+> +       priv->irq =3D platform_get_irq(pdev, 0);
+> +       if (priv->irq < 0)
+> +               return priv->irq;
+>
+>         priv->clk =3D devm_clk_get(dev, NULL);
+>         if (IS_ERR(priv->clk))
+> @@ -635,10 +641,11 @@ static int mtk_disp_ovl_probe(struct platform_devic=
+e *pdev)
+>         priv->data =3D of_device_get_match_data(dev);
+>         platform_set_drvdata(pdev, priv);
+>
+> -       ret =3D devm_request_irq(dev, irq, mtk_disp_ovl_irq_handler,
+> +       irq_set_status_flags(priv->irq, IRQ_NOAUTOEN);
+> +       ret =3D devm_request_irq(dev, priv->irq, mtk_disp_ovl_irq_handler=
+,
+>                                IRQF_TRIGGER_NONE, dev_name(dev), priv);
 
-struct cru_regs {
-   u16 ctrl;
-   u16 ie;
-   u16 ints;
-  ...
-  ...
-};
+Use IRQF_NO_AUTOEN here? Also, IRQF_TRIGGER_NONE can be dropped.
 
-Cheers,
-Prabhakar
+Make sense otherwise.
+
+ChenYu
+
+>         if (ret < 0)
+> -               return dev_err_probe(dev, ret, "Failed to request irq %d\=
+n", irq);
+> +               return dev_err_probe(dev, ret, "Failed to request irq %d\=
+n", priv->irq);
+>
+>         pm_runtime_enable(dev);
+>
+> --
+> 2.48.1
+>
