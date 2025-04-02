@@ -1,25 +1,50 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FE8A23A98A;
-	Wed,  2 Apr 2025 13:40:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC14C201271;
+	Wed,  2 Apr 2025 13:41:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743601241; cv=none; b=BV+aMg4zE0GYlgONgFcllN4COfI44vBC/vBObhpcfF66U4d3UNllgiydFdIeh4cloZ6JOOvRorQyzbYU8iLY5MBc7vGs6pKyr36pZf0LnZGazdrIKGBvRbQUb68sRE6lM3OqeGAJTKiRFDhd1WzOVI6pbj66sAxCmTgyjAakc6k=
+	t=1743601315; cv=none; b=HNZVeEt5i77z0QXt163mmiGlHBQgk3sPGS3bUerq6KwDQ8ClQ0xE4/rO2EWDjbtvgDfLKaGMxykP2jsfgz/GenBUyrmCfAkVonbKAVRVCD9PjGsDLyIcGbs7rxrfEvrC7H9RRUAdmR9HMajzTVFCydqtvPNlTrhBQwyo2zTK2Bo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743601241; c=relaxed/simple;
-	bh=W2P+CWHKXjW9H17MAtHSuWWdCgwkZBG/UPqA/eLiqmo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AExynKa+PcIbWLg2zijBLHAAYFj7vF+g6exXR1IjmhJEp1mPLvtP2n078NvX/ElODNEHpzTpw0gP4UzDtvxnPklPyys5MJe4yYT1Yt4CCPxL36cmHoyB9ZSxPzbjIIiLs3xFMEypt+KU/DrjXzDRO7TrrXXm9U1tdvi43SeN1NA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9FF67FEC;
-	Wed,  2 Apr 2025 06:40:40 -0700 (PDT)
-Received: from [10.57.88.195] (unknown [10.57.88.195])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E601F3F694;
-	Wed,  2 Apr 2025 06:40:35 -0700 (PDT)
-Message-ID: <e809c355-7f3c-4c7b-acee-852d5b64d1c7@arm.com>
-Date: Wed, 2 Apr 2025 14:40:34 +0100
+	s=arc-20240116; t=1743601315; c=relaxed/simple;
+	bh=RlUxE1BH6NTHyg/TNSVKth95REvW2dDq2+0GHexae5I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=bPZfvZqsmz9Vbn2YduJbTgfyESM9pkbRUqoftiwx7MToCpnHqs20lFKCfRUdgFWL5rHNJQHbMX3aixEXHPn9F5wrdNL14PJPUYfwY4OMDF0W4jAZyWfg5+wAt+RpDuLr0Z+kyGIswpt/86UqvyYAQgctYa+qgxaTStQdXmN8tnM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=DNQjBjHv; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="DNQjBjHv"
+Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 532CcSaj008047;
+	Wed, 2 Apr 2025 15:41:36 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	UapWujuoCP1cmnh3Upr64ky5/xFIxLVPaPTaREX+7jU=; b=DNQjBjHv8fS2U7sE
+	fL/D3IDpFNX/FZdmjz1c9hWqgwdJ6mac1u89V/4hPOaxNtbbf3PGwH6YqwNUhcST
+	K6YcngG74K/boLFf4ndBnWT6lgYe3Io852JBeUSBUuvNYxBD9L5WkvTo8zE/F7Hf
+	2/7mLiRzaGHiG/LPs+ggWMIKMTAb1zYillZfcfHIPfk4nc0wAGnVQ/30Yz/Q/cnl
+	lbGfZz20Uk4BM6bznGNtAzoEopWCkkz/V0mKqHbyUeRdij4YuiMaOJnndiGjE40/
+	vruiu52+k4FlgdP8HeFddG+/FGfQx8Xe0cvpLkOPFaOfrRznU4FiNLkblEU6sbTh
+	4OtPog==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 45p9363dvc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 02 Apr 2025 15:41:36 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id CE8B540048;
+	Wed,  2 Apr 2025 15:40:43 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 567B083BD66;
+	Wed,  2 Apr 2025 15:40:01 +0200 (CEST)
+Received: from [10.252.30.87] (10.252.30.87) by SHFDAG1NODE1.st.com
+ (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 2 Apr
+ 2025 15:40:00 +0200
+Message-ID: <58e6a6a1-7f7c-4232-a212-59850ab03a41@foss.st.com>
+Date: Wed, 2 Apr 2025 15:39:59 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,296 +52,98 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] mm/filemap: Allow arch to request folio size for exec
- memory
-Content-Language: en-GB
-To: Kalesh Singh <kaleshsingh@google.com>
-Cc: Matthew Wilcox <willy@infradead.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- David Hildenbrand <david@redhat.com>, Dave Chinner <david@fromorbit.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
-References: <20250327160700.1147155-1-ryan.roberts@arm.com>
- <Z-WAbWfZzG1GA-4n@casper.infradead.org>
- <5131c7ad-cc37-44fc-8672-5866ecbef65b@arm.com>
- <Z-b1FmZ5nHzh5huL@casper.infradead.org>
- <ee11907a-5bd7-44ec-844c-8f10ff406b46@arm.com>
- <CAC_TJveU2v+EcokLKJVVZ8Xje2nYmmUg8bvCD8KO1oC5MgmWCA@mail.gmail.com>
- <76f5ba9b-1a8c-4973-89ce-14f504819da1@arm.com>
- <CAC_TJvemG2XDky1HtA8g=SG0nv-sONOS-ssEchdymh-_xjBecw@mail.gmail.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <CAC_TJvemG2XDky1HtA8g=SG0nv-sONOS-ssEchdymh-_xjBecw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v2 1/2] media: dt-bindings: Add ST VD55G1 camera sensor
+ binding
+To: Krzysztof Kozlowski <krzk@kernel.org>,
+        Laurent Pinchart
+	<laurent.pinchart@ideasonboard.com>
+CC: Sylvain Petinot <sylvain.petinot@foss.st.com>,
+        Mauro Carvalho Chehab
+	<mchehab@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Sakari Ailus
+	<sakari.ailus@linux.intel.com>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20250401-b4-vd55g1-v2-0-0c8ab8a48c55@foss.st.com>
+ <20250401-b4-vd55g1-v2-1-0c8ab8a48c55@foss.st.com>
+ <20250402-curvy-seriema-of-blizzard-b1c4d9@krzk-bin>
+ <228ddf41-e1d0-4d06-9e0e-9e0dad841688@foss.st.com>
+ <fd874f4d-d68c-4443-8bb6-115246f4407b@kernel.org>
+ <a0c62797-3c4c-453c-938b-d43666f3b264@foss.st.com>
+ <7d501bf2-a017-4c02-a96f-184a7d648b6a@foss.st.com>
+ <9f128ce9-6a26-435c-b133-0da80120de2d@kernel.org>
+ <20250402124605.GB13181@pendragon.ideasonboard.com>
+ <6f832ce4-03d3-46bc-afcc-86983b2ec47a@kernel.org>
+Content-Language: en-US
+From: Benjamin Mugnier <benjamin.mugnier@foss.st.com>
+In-Reply-To: <6f832ce4-03d3-46bc-afcc-86983b2ec47a@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-02_05,2025-04-02_02,2024-11-22_01
 
-On 01/04/2025 13:55, Kalesh Singh wrote:
-> On Tue, Apr 1, 2025 at 3:35 AM Ryan Roberts <ryan.roberts@arm.com> wrote:
->>
->> On 01/04/2025 03:19, Kalesh Singh wrote:
->>> On Sat, Mar 29, 2025 at 3:08 AM Ryan Roberts <ryan.roberts@arm.com> wrote:
->>>>
->>>> On 28/03/2025 15:14, Matthew Wilcox wrote:
->>>>> On Thu, Mar 27, 2025 at 04:23:14PM -0400, Ryan Roberts wrote:
->>>>>> + Kalesh
->>>>>>
->>>>>> On 27/03/2025 12:44, Matthew Wilcox wrote:
->>>>>>> On Thu, Mar 27, 2025 at 04:06:58PM +0000, Ryan Roberts wrote:
->>>>>>>> So let's special-case the read(ahead) logic for executable mappings. The
->>>>>>>> trade-off is performance improvement (due to more efficient storage of
->>>>>>>> the translations in iTLB) vs potential read amplification (due to
->>>>>>>> reading too much data around the fault which won't be used), and the
->>>>>>>> latter is independent of base page size. I've chosen 64K folio size for
->>>>>>>> arm64 which benefits both the 4K and 16K base page size configs and
->>>>>>>> shouldn't lead to any read amplification in practice since the old
->>>>>>>> read-around path was (usually) reading blocks of 128K. I don't
->>>>>>>> anticipate any write amplification because text is always RO.
+
+
+On 4/2/25 14:55, Krzysztof Kozlowski wrote:
+> On 02/04/2025 14:46, Laurent Pinchart wrote:
+>> On Wed, Apr 02, 2025 at 12:27:08PM +0200, Krzysztof Kozlowski wrote:
+>>> On 02/04/2025 11:41, Benjamin Mugnier wrote:
+>>>> On 4/2/25 11:38, Benjamin Mugnier wrote:
+>>>>> On 4/2/25 11:11, Krzysztof Kozlowski wrote:
+>>>>>> On 02/04/2025 10:34, Benjamin Mugnier wrote:
+>>>>>>> Hi Krzysztof,
 >>>>>>>
->>>>>>> Is there not also the potential for wasted memory due to ELF alignment?
->>>>>>
->>>>>> I think this is an orthogonal issue? My change isn't making that any worse.
->>>>>
->>>>> To a certain extent, it is.  If readahead was doing order-2 allocations
->>>>> before and is now doing order-4, you're tying up 0-12 extra pages which
->>>>> happen to be filled with zeroes due to being used to cache the contents
->>>>> of a hole.
->>>>
->>>> Well we would still have read them in before, nothing has changed there. But I
->>>> guess your point is more about reclaim? Because those pages are now contained in
->>>> a larger folio, if part of the folio is in use then all of it remains active.
->>>> Whereas before, if the folio was fully contained in the pad area and never
->>>> accessed, it would fall down the LRU quickly and get reclaimed.
->>>>
->>>
->>>
->>> Hi Ryan,
->>>
->>> I agree this was happening before and we don't need to completely
->>> address it here. Though with the patch it's more likely that the holes
->>> will be cached. I'd like to minimize it if possible. Since this is for
->>> EXEC mappings, a simple check we could use is to limit this to the
->>> VM_EXEC vma.
->>>
->>> + if (vm_flags & VM_EXEC) {
->>> + int order = arch_exec_folio_order();
->>> +
->>> + if (order >= 0 && ((end-address)*2) >= 1<<order) { /* Fault around case */
->>
->> I think the intent of this extra check is to ensure the folio will be fully
->> contained within the exec vma? Assuming end is the VA of the end of the vma and
->> address is the VA of the fault, I don't think the maths are quite right? What's
->> the "*2" for? And you probably mean PAGE_SIZE<<order ? But this also doesn't
->> account for alignment; the folio will be aligned down to a natural boundary in
->> the file.
-> 
-> Hi Ryan,
-> 
-> Sorry for the pseudocode. You are right it should be PAGE_SIZE. *2 is
-> because I missed that this isn't centered around the faulting address
-> as the usual fault around logic.
-> 
->>
->> But more fundamentally, I thought I suggested reducing the VMA bounds to exclude
->> padding pages the other day at LSF/MM and you said you didn't want to do that
->> because you didn't want to end up with something else mapped in the gap? So
->> doesn't that mean the padding pages are part of the VMA and this check won't help?
-> 
-> The intention was to check that we aren't reading past (more than we
-> do today) into other subsequent segments (and holes) if the exec
-> segment is small relative to 64K, in which case we fall back to the
-> conventional readahead heuristics.
-
-Gottya. I think this is probably a reasonable thing to do.
-
-> 
->>
->>>
->>> For reference I found below (coincidentally? similar) distributions on
->>> my devices
->>>
->>> == x86 Workstation ==
->>>
->>> Total unique exec segments:   906
->>>
->>> Exec segments >= 16 KB:   663 ( 73.18%)
->>> Exec segments >= 64 KB:   414 ( 45.70%)
->>
->> What are those percentages? They don't add up to more than 100...
-> 
-> The percent of segments with size >=16KB/64KB of the total number of
-> exec mappings. "Exec segments >= 64 KB" is also a subset of "Exec
-> segments >= 16 KB" it's why they don't add up to 100.
-
-Ahh got it.
-
-> 
->>
->> The numbers I included with the patch are caclulated based on actual mappings so
->> if we end up with a partially mapped 64K folio (because it runs off the end of
->> the VMA) it wouldn't have been counted as a 64K contiguous mapping. So I don't
->> think this type of change would change my numbers at all.
-> 
-> I don't think it should affect the results much (probably only a small
-> benefit from the extra preread of other segments if we aren't under
-> much memory pressure).
-
-I was referring to the my numbers that show the percentage of text mapped by
-contpte, not to the performance numbers. But I agree I wouldn't expect either to
-change.
-
-> 
-> Anyways I don't have a strong opinion, given that this shouldn't be an
-> issue once we work out Matthew and Ted's idea for the holes. So we can
-> keep it simple for now.
-
-I'll add it in and verify it doesn't affect the numbers. I think there is a
-wider decision that needs to be made below first though, so will wait for
-opinions on that.
-
-Thanks,
-Ryan
-
-> 
-> Thanks,
-> Kalesh
-> 
->>
->>>
->>> == arm64 Android Device ==
->>>
->>> Total unique exec segments:   2171
->>>
->>> Exec segments >= 16 KB:  1602 ( 73.79%)
->>> Exec segments >= 64 KB:   988 ( 45.51%)
->>>
->>> Result were using the below script:
->>>
->>> cat /proc/*/maps | grep 'r-xp' | \
->>> awk '
->>> BEGIN { OFS = "\t" }
->>> $NF ~ /^\// {
->>> path = $NF;
->>> split($1, addr, "-");
->>> size = strtonum("0x" addr[2]) - strtonum("0x" addr[1]);
->>> print size, path;
->>> }' | \
->>> sort -u | \
->>> awk '
->>> BEGIN {
->>> FS = "\t";
->>> total_segments = 0;
->>> segs_ge_16k = 0;
->>> segs_ge_64k = 0;
->>> }
->>> {
->>> total_segments++;
->>> size = $1;
->>> if (size >= 16384) segs_ge_16k++;
->>> if (size >= 65536) segs_ge_64k++;
->>> }
->>> END {
->>> if (total_segments > 0) {
->>> percent_gt_16k = (segs_ge_16k / total_segments) * 100;
->>> percent_gt_64k = (segs_ge_64k / total_segments) * 100;
->>>
->>> printf "Total unique exec segments: %d\n", total_segments;
->>> printf "\n";
->>> printf "Exec segments >= 16 KB: %5d (%6.2f%%)\n", segs_ge_16k, percent_gt_16k;
->>> printf "Exec segments >= 64 KB: %5d (%6.2f%%)\n", segs_ge_64k, percent_gt_64k;
->>> } else {
->>> print "No executable segments found.";
->>> }
->>> }'
->>>
->>>>>
->>>>>>> Kalesh talked about it in the MM BOF at the same time that Ted and I
->>>>>>> were discussing it in the FS BOF.  Some coordination required (like
->>>>>>> maybe Kalesh could have mentioned it to me rathere than assuming I'd be
->>>>>>> there?)
->>>>>>
->>>>>> I was at Kalesh's talk. David H suggested that a potential solution might be for
->>>>>> readahead to ask the fs where the next hole is and then truncate readahead to
->>>>>> avoid reading the hole. Given it's padding, nothing should directly fault it in
->>>>>> so it never ends up in the page cache. Not sure if you discussed anything like
->>>>>> that if you were talking in parallel?
->>>>>
->>>>> Ted said that he and Kalesh had talked about that solution.  I have a
->>>>> more bold solution in mind which lifts the ext4 extent cache to the
->>>>> VFS inode so that the readahead code can interrogate it.
->>>>>
->>>
->>> Sorry about the hiccup in coordination, Matthew. It was my bad for not
->>> letting you know I planned to discuss it in the MM BoF. I'd like to
->>> hear Ted and your ideas on this when possible.
->>>
->>> Thanks,
->>> Kalesh
->>>
->>>>>> Anyway, I'm not sure if you're suggesting these changes need to be considered as
->>>>>> one somehow or if you're just mentioning it given it is loosely related? My view
->>>>>> is that this change is an improvement indepently and could go in much sooner.
->>>>>
->>>>> This is not a reason to delay this patch.  It's just a downside which
->>>>> should be mentioned in the commit message.
->>>>
->>>> Fair point; I'll add a paragraph about the potential reclaim issue.
->>>>
->>>>>
->>>>>>>> +static inline int arch_exec_folio_order(void)
->>>>>>>> +{
->>>>>>>> +  return -1;
->>>>>>>> +}
+>>>>>>> On 4/2/25 09:08, Krzysztof Kozlowski wrote:
+>>>>>>>> On Tue, Apr 01, 2025 at 01:05:58PM +0200, Benjamin Mugnier wrote:
+>>>>>>>>> +    properties:
+>>>>>>>>> +      endpoint:
+>>>>>>>>> +        $ref: /schemas/media/video-interfaces.yaml#
+>>>>>>>>> +        unevaluatedProperties: false
+>>>>>>>>> +
+>>>>>>>>> +        properties:
+>>>>>>>>> +          data-lanes:
+>>>>>>>>> +            items:
+>>>>>>>>> +              const: 1
+>>>>>>>>
+>>>>>>>> Not what I asked. Now you miss number of items. Just use the syntax I
+>>>>>>>> proposed. Or was there any issue with it?
 >>>>>>>
->>>>>>> This feels a bit fragile.  I often expect to be able to store an order
->>>>>>> in an unsigned int.  Why not return 0 instead?
+>>>>>>> No issue I just misunderstood and thought const: 1 was impliying
+>>>>>>> maxItems: 1. I'll add maxItems back.
 >>>>>>
->>>>>> Well 0 is a valid order, no? I think we have had the "is order signed or
->>>>>> unsigned" argument before. get_order() returns a signed int :)
+>>>>>> That's just longer way to express what I asked for. So I repeat the
+>>>>>> question: why not using the syntax I asked for?
 >>>>>
->>>>> But why not always return a valid order?  I don't think we need a
->>>>> sentinel.  The default value can be 0 to do what we do today.
->>>>>
+>>>>> I guess I didn't understand what you asked for.
+>>>>> May I ask you to write it ? That will help me a lot.
 >>>>
->>>> But a single order-0 folio is not what we do today. Note that my change as
->>>> currently implemented requests to read a *single* folio of the specified order.
->>>> And note that we only get the order we request to page_cache_ra_order() because
->>>> the size is limited to a single folio. If the size were bigger, that function
->>>> would actually expand the requested order by 2. (although the parameter is
->>>> called "new_order", it's actually interpretted as "old_order").
->>>>
->>>> The current behavior is effectively to read 128K in order-2 folios (with smaller
->>>> folios for boundary alignment).
->>>>
->>>> So I see a few options:
+>>>> By 'it' I mean the binding.
+>>>
+>>> I wrote it last time. I don't think that copying the same here would
+>>> change anything. If I can look at v1, you can do as well.
 >>
->> Matthew,
->>
->> Did you have any thoughts on these options?
->>
->> Thanks,
->> Ryan
->>
->>>>
->>>>   - Continue to allow non-opted in arches to use the existing behaviour; in this
->>>> case we need a sentinel. This could be -1, UINT_MAX or 0. But in the latter case
->>>> you are preventing an opted-in arch from specifying that they want order-0 -
->>>> it's meaning is overridden.
->>>>
->>>>   - Force all arches to use the new approach with a default folio order (and
->>>> readahead size) of order-0. (The default can be overridden per-arch). Personally
->>>> I'd be nervous about making this change.
->>>>
->>>>   - Decouple the read size from the folio order size; continue to use the 128K
->>>> read size and only allow opting-in to a specific folio order. The default order
->>>> would be 2 (or 0). We would need to fix page_cache_async_ra() to call
->>>> page_cache_ra_order() with "order + 2" (the new order) and fix
->>>> page_cache_ra_order() to treat its order parameter as the *new* order.
->>>>
->>>> Perhaps we should do those fixes anyway (and then actually start with a folio
->>>> order of 0 - which I think you said in the past was your original intention?).
->>>>
->>>> Thanks,
->>>> Ryan
->>>>
->>
+>> Reading your comment on v1, I would have come up with the exact same
+>> result as Benjamin's v2. I can't figure out what alternative description
+>> you meant.
+> What do you mean by description? I pasted code. The *exact* code to use.
+> Benjamin used different code. Two times I asked why you cannot use the
+> code I pasted. Still no answer.
 
+I'm sorry, thanks to the help over #linux-media we realized I missed the
+'-' before const. I'm not very knowledgeable in device tree binding syntax.
+I'll push a v4 with that.
+
+> 
+> Best regards,
+> Krzysztof
+
+-- 
+Regards,
+Benjamin
