@@ -1,88 +1,95 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D401923A99C;
-	Wed,  2 Apr 2025 14:37:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2365C6F30F;
+	Wed,  2 Apr 2025 14:38:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743604631; cv=none; b=sIzF96oeuynT9m4A9e9ZbGLic952CX8uEnL9pXUqaqov4FIeRjvrK8msEh4wl/8aidxq0pYjGtaSaLMc3sHk1oqzAsB53SMwDJItfHNv0FjGjg8aUlDKGFdMkXuHom9n6JI8F73gdm+urrDjLSz6W4ME8hjT14bgNH3+cqhAxts=
+	t=1743604720; cv=none; b=LbVmDxMCThBjsKmGqpXfflqk4I31rsgrCcMDicUmYkLK7Rk0GNkwX23DhRk1iLEpHeY+rZ63cO3sxr5rVg6JTmVLGj6bcykRG67/RsFDx9hvjmcGKdLYnzphTD3PVhA26xLtfkGtggK8jGmvgIVKaWS68f2rdbMXRtmLN9bV+J4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743604631; c=relaxed/simple;
-	bh=fujc+sesAjr5IIZE1HuxIUhTSSC46ThSreyEPcnf8NE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=apXDaKb5BebyrYOkbncKZomLRYaF6GfpcIDcdKvVKK1auGieZhHPyo5B8Xoq21zsBySTXq6qTOhtO10gCoEpOqUhNT0e2pKbmyB3nNnpQqQ/QqCgcTtnHjCMftWsFvTgSVAmSHqwGIMCnuoTuR+7r9eOdI8LsiJV3jUOPQSRnL4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DMeR2ELv; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DMeR2ELv"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ac2af2f15d1so894212666b.1;
-        Wed, 02 Apr 2025 07:37:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743604628; x=1744209428; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fujc+sesAjr5IIZE1HuxIUhTSSC46ThSreyEPcnf8NE=;
-        b=DMeR2ELvnfrlbIL3dNDFF67CTof2DbfA7Kk7Vjq/9JnYs4ysGvhUC9iQGHus0pjccG
-         Euz+B4uNWwDsZC6FF2/N3Ch7eLr/LPnenUlJt1cdEUbTtKoAKBOtJT5W9CU2Q9Wj0XTg
-         toSl71Fy4W8yBa6PJeaTKxKZoActIOGfTOjyVfzZ7peHetbFM4371XtTcgZjP5MdPhAO
-         W3UmpHPB+fVuarXOP2bKYgkmTAc38SB3CvN8UdPgKtwkCVow39v9hpH8vrT3II4glhOH
-         qPYfrPMvwsXoANV/fWsuA+C1swyNSDE1EbCihiuAZJMyKiGVMaJ77v80cu9UTRvqIhQY
-         evdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743604628; x=1744209428;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fujc+sesAjr5IIZE1HuxIUhTSSC46ThSreyEPcnf8NE=;
-        b=SZsN6GK9YcrEep9O2L2h0zo+hUCYCILlerFo+pCtibvWhGB+6BlFvavJtrHxCWnA3O
-         m88s0TraNMLYTnJwKBhtWBLqQLlJ3giSlJ9IJCwvg9JuszwUc2GCX0acRJX471CavdUq
-         fO+qdsUw81Nk80SK9rBDfsP8qHQ7NQc4LmEdWTxaJPOLijKF1P1R/+vIL2z2SN5LE4n2
-         eo0eWFbloXOawOKb7FyMwpkU9YcQQZCxnZwQcOUDMlUWJcn0VXpxA5n+KmYSahk5NP5s
-         Q15/+8H+bfDfmmjTIJE7I2uT1fg0ltFhqnhOVhIWkan4xuNeg+UHjbBow3b2TX0sJ5/A
-         wKXA==
-X-Forwarded-Encrypted: i=1; AJvYcCU/TwBI6FZ9mgvUC0LCMIXhPhITQ19Tl0KOar4lHphJcNTCi4QrB66ZlcNbsv2Qxk7mpaWgEggpA/W1FnY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxhN0rutSyGCz1rAuQiAnuW33Pa9XdXYUb/ydKKlpUrjqYNyAFx
-	2NleRUYaL4YWNEMZdXSAXejpIsINbLLwxbL8OGSpN6QPh62+u7Qn7oUKU2kYXL5fPFADFkF1yPc
-	R2sjnuFiMgarmvqK52PtRJ1l0ewPuLYmviWc=
-X-Gm-Gg: ASbGnct41JfqjbFcYXyw/lmFfulXPIFtewYnSzFZQbxpcC5rh7KR74in/Z3wEn9GgcS
-	3XGuo2njoc5aAiHClr79iR7tlPwMxHC/amYJ6gfQMoj39QYfcj2nY2Qw8RIrT9K8tGV6ZFtmrK9
-	zwA3IEYZfQ9pYwtHxgcdzIMTzi+ffZ
-X-Google-Smtp-Source: AGHT+IFocfbGvbzRK8aJWLdh4mDxaWThCgh1O/7EJbYZA2Z5T7PzMh3BE0hV1pYCJ5WPoTTREpFt+GzoE5do8798C38=
-X-Received: by 2002:a17:907:2d8a:b0:abf:6b14:6cfb with SMTP id
- a640c23a62f3a-ac7a166da7fmr220944966b.5.1743604627939; Wed, 02 Apr 2025
- 07:37:07 -0700 (PDT)
+	s=arc-20240116; t=1743604720; c=relaxed/simple;
+	bh=wZa8KqNTcy8L4w+omqE+zg6Tu8PjxZ1YS0EhwHwwt0M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=S58gq2pdyvRe+VnXyEx5QB9K7+CQ8o1zDLQbspdYH76NzDnvvf4hivlgXDPHQqlUxLCSVkJvOW35I74loE4JdZCkaw1NR+2VdpJMMNGwovrQyLxpAycdi7s+IHd+ow9Y5CBdw9s6Bt8+DIgbOT7OXaEKJI/jgZt2dZS//D6W5vE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost.localdomain (unknown [124.16.141.245])
+	by APP-01 (Coremail) with SMTP id qwCowADXfP3fS+1n_YMwBQ--.25061S2;
+	Wed, 02 Apr 2025 22:38:25 +0800 (CST)
+From: Wentao Liang <vulab@iscas.ac.cn>
+To: hmh@hmh.eng.br,
+	hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com
+Cc: ibm-acpi-devel@lists.sourceforge.net,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Wentao Liang <vulab@iscas.ac.cn>,
+	stable@vger.kernel.org
+Subject: [PATCH] platform/x86: thinkpad-acpi: Add error handling for tpacpi_check_quirks
+Date: Wed,  2 Apr 2025 22:38:07 +0800
+Message-ID: <20250402143807.3650-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.42.0.windows.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250402135001.12475-1-gshahrouzi@gmail.com>
-In-Reply-To: <20250402135001.12475-1-gshahrouzi@gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Wed, 2 Apr 2025 17:36:31 +0300
-X-Gm-Features: AQ5f1Jo4kfDBVwVLmOzNt69eaOoDoSqPas9WlpNS1Q_ZWTK_Vs669mQNNkUol0A
-Message-ID: <CAHp75Vc1nB8cDN=OcCJgeti3YNr0Dd4yeKgeSBvR95piLao1rg@mail.gmail.com>
-Subject: Re: [PATCH v2] staging: media: Fix indentation to use tabs instead of spaces
-To: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-Cc: linux-media@vger.kernel.org, andy@kernel.org, hdegoede@redhat.com, 
-	mchehab@kernel.org, sakari.ailus@linux.intel.com, gregkh@linuxfoundation.org, 
-	linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qwCowADXfP3fS+1n_YMwBQ--.25061S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7Cr1ftr4DuF4xGr1UCFyfJFb_yoW8Gr17pr
+	4I9FWIyry5Ca1DZ3W7Jr4Y9Fy5ArWS93y7Gr97Cw109a4Ykry0kry5XayYyF4DGrWrGa1x
+	J3W8t3W5AanYvaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkG14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r1j
+	6r4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AKxVWU
+	AVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14
+	v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkG
+	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4U
+	MIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUf8nOUUU
+	UU=
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiBgsAA2ftA5rqzwAAs4
 
-On Wed, Apr 2, 2025 at 4:50=E2=80=AFPM Gabriel Shahrouzi <gshahrouzi@gmail.=
-com> wrote:
->
-> Replace spaces with tab to comply with kernel coding style.
+In tpacpi_battery_init(), the return value of tpacpi_check_quirks() needs
+to be checked. The battery should not be hooked if there is no matched
+battery information in quirk table.
 
-Still 'tab'. please, capitalize it to be 'TAB'.
+Add an error check and return -ENODEV immediately if the device fail
+the check.
 
-But wait a bit, the driver maintainer might do that for you whilst applying=
-.
+Fixes: 1a32ebb26ba9 ("platform/x86: thinkpad_acpi: Support battery quirk")
+Cc: stable@vger.kernel.org
+Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+---
+ drivers/platform/x86/thinkpad_acpi.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---=20
-With Best Regards,
-Andy Shevchenko
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index 2cfb2ac3f465..a3227f60aa43 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -9969,11 +9969,15 @@ static const struct tpacpi_quirk battery_quirk_table[] __initconst = {
+ 
+ static int __init tpacpi_battery_init(struct ibm_init_struct *ibm)
+ {
++	unsigned long r;
++
+ 	memset(&battery_info, 0, sizeof(battery_info));
+ 
+-	tp_features.battery_force_primary = tpacpi_check_quirks(
++	r = tp_features.battery_force_primary = tpacpi_check_quirks(
+ 					battery_quirk_table,
+ 					ARRAY_SIZE(battery_quirk_table));
++	if (!r)
++		return -ENODEV;
+ 
+ 	battery_hook_register(&battery_hook);
+ 	return 0;
+-- 
+2.42.0.windows.2
+
