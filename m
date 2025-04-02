@@ -1,50 +1,30 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBE8F10F9;
-	Wed,  2 Apr 2025 15:31:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E146FFC0A;
+	Wed,  2 Apr 2025 15:31:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743607871; cv=none; b=tJvDTVO1/kuxrf5vr7/IXpwWm33pqKBOwAvHZwnUQDAwLSFhfvzAT/iUsRXuY3bRFEjKLPBHcEjQOBl3WDAIqbuLRkWtGjS5+bnGd8VJjEGAfpvyctlPSDqoq2XjYeGBzPCpuwg/UtxQZEonMbbAWeidtGi9lKCrImucVt9WxRw=
+	t=1743607918; cv=none; b=eOPuS5Gsv1eZytZcNrADdUABONOEiySIhPTpc1jo1qBvpTAkegsfkBuB0lNjhPt7SmG1OGmBnGIl1LDvcjTyMahoegxEwH459+3aH6g2O2mAHdfXchDmIqYDnv54qaFCBe0s2qqRyIUYBSM2msWyUQQNzKgpeDQsNYwl3np/O78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743607871; c=relaxed/simple;
-	bh=DCRq2ZvCLh3oAN9gAb4UKag+DXIJpyJq8KIvPQhUQrM=;
+	s=arc-20240116; t=1743607918; c=relaxed/simple;
+	bh=ZvaC7lpXSOuI4dB4ZlU0/joC5WBCSTHIFAP5Hov+n9s=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mai7tdOR5jI5V3v+2YPSxb91KNOlhJVh3Wn9yn6He7KxO7U3X4dAk5Q4D9XALLemHBCgueP0PPJxj+LVagyfqW3F3/K+MO9MhRb3NWDgMxo5BjpWaz2o3N7/E6HXXk9QIUZjV/tyaYwaMBXDmHPQnLYau+CzW8ssJ6Uobdu4prc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fdCjRJrJ; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 In-Reply-To:Content-Type; b=STB5Bh+j332Dku9HLAUCuGvHN7MveR1LgXfEbIMfKKg1rJ+1AhIBMvu05OM5njhriZWanBAf75/duVu8+BySJrquy/Z2oI9+SHF1UNPXjKb5iYBZdN5ItdhAo5B2Y5TJ+koX2QKYOnSMlzTmAZDEeW58BQNzwJiBke9x61R+ihQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=KWGM4J1m; arc=none smtp.client-ip=117.135.210.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fdCjRJrJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743607869; x=1775143869;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=DCRq2ZvCLh3oAN9gAb4UKag+DXIJpyJq8KIvPQhUQrM=;
-  b=fdCjRJrJRN4jkPqezZRA3V+ubLn9fqN08jZk0q4QAiL/HGFIYf7ivGRn
-   el5HRB3VDkiKZ11eC2AVNkfqVodhbKJ+fmBZGcTmi14JSBPUGqVI14vVI
-   7reASz4P0o6QwgH+zXNPxOB983+kxcxg0kaWeZ+A4bIfbvb3BmQ0l8cDh
-   y+VSY/Av7uDiMj94rOmG5J+Z7YCgCiNLcuj/CzFzo/nA/hua48+IHW5O+
-   w1Gt/p1bYDRXOIJkqoFZnE4ys78Smum5rBvyMqQJ0g+4PemmYmfIDmesI
-   0SlqvsVTCKFV4JdsqYrqBCdwfhnJl4XwB40UXyKdMzNNNlk3AC7ULAVFf
-   A==;
-X-CSE-ConnectionGUID: Khp304z5Q9KUNoPd01l3uQ==
-X-CSE-MsgGUID: kYlo37VcR4GEPF+VZHpq1w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11392"; a="44886652"
-X-IronPort-AV: E=Sophos;i="6.15,182,1739865600"; 
-   d="scan'208";a="44886652"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 08:31:09 -0700
-X-CSE-ConnectionGUID: oNBDcvriQd+psnJhCqhhLQ==
-X-CSE-MsgGUID: DNoPf2d4Q2upkSzn2xrY6g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,182,1739865600"; 
-   d="scan'208";a="131719856"
-Received: from inaky-mobl1.amr.corp.intel.com (HELO [10.125.110.4]) ([10.125.110.4])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 08:31:08 -0700
-Message-ID: <c333ba8b-f01f-4413-81d8-af7efbf5454b@intel.com>
-Date: Wed, 2 Apr 2025 08:31:06 -0700
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="KWGM4J1m"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=4l39NhV8qPw2Wptk13TuozTkwyJfRxy735w154HQJj0=;
+	b=KWGM4J1mEKkLeIIYNTeWY+a2WJDo9xXJ6fCGyasp8oXLKX6w2U9x2iprMzvh23
+	fRlisNkFi9JkkRNTkT4fsRf4/OjssLgnnY6B1pz8U1OFHlh3u0M9EDTi+61XP36J
+	t1SSubrhLSiiOTmuwSz5RmPOlKQ7LH3TVlU2cN5wnXCHE=
+Received: from [192.168.71.89] (unknown [])
+	by gzga-smtp-mtada-g0-3 (Coremail) with SMTP id _____wBnF84+WO1nveRSDg--.44645S2;
+	Wed, 02 Apr 2025 23:31:11 +0800 (CST)
+Message-ID: <6075b776-d2be-49d3-8321-e6af66781709@163.com>
+Date: Wed, 2 Apr 2025 23:31:10 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,109 +32,210 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/4 v3] cxl/core: Enable Region creation on x86 with Low
- Mem Hole
-To: Robert Richter <rrichter@amd.com>
-Cc: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
- Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>, ming.li@zohomail.com,
- linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org
-References: <20250314113708.759808-1-fabio.m.de.francesco@linux.intel.com>
- <Z91Au5en7r6D7IsW@rric.localdomain> <3301434.hkbZ0PkbqX@fdefranc-mobl3>
- <Z-Zlrm8emmOtQjhu@rric.localdomain>
- <ae1e1b6f-3435-44f6-890b-7c7bd013113a@intel.com>
- <Z-0kzvPAS2JrNiIb@rric.localdomain>
+Subject: Re: [v7 1/5] PCI: Refactor capability search into common macros
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: lpieralisi@kernel.org, bhelgaas@google.com, kw@linux.com,
+ manivannan.sadhasivam@linaro.org, robh@kernel.org, jingoohan1@gmail.com,
+ thomas.richard@bootlin.com, linux-pci@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>
+References: <20250402042020.48681-1-18255117159@163.com>
+ <20250402042020.48681-2-18255117159@163.com>
+ <909653ac-7ba2-9da7-f519-3d849146f433@linux.intel.com>
 Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <Z-0kzvPAS2JrNiIb@rric.localdomain>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <909653ac-7ba2-9da7-f519-3d849146f433@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wBnF84+WO1nveRSDg--.44645S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW3XrW3CFykXFyfZrWDZFWkJFb_yoW7Cw4xpr
+	n8CF1SyrWkJF42kwn7X3WUK342gFZ7Aayq934fGw1UXFykC3WxGr4FkF1agFy2yrZrAFy5
+	Xr1q93Z5CanIyFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07U3739UUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOh4jo2ftVsIlbAAAsz
 
 
 
-On 4/2/25 4:51 AM, Robert Richter wrote:
-> Dave,
+On 2025/4/2 20:42, Ilpo Järvinen wrote:
+> On Wed, 2 Apr 2025, Hans Zhang wrote:
 > 
-> thank you for your answer.
-> 
-> On 28.03.25 14:10:00, Dave Jiang wrote:
+>> Introduce PCI_FIND_NEXT_CAP_TTL and PCI_FIND_NEXT_EXT_CAPABILITY macros
+>> to consolidate duplicate PCI capability search logic found throughout the
+>> driver tree. This refactoring:
 >>
+>>    1. Eliminates code duplication in capability scanning routines
+>>    2. Provides a standardized, maintainable implementation
+>>    3. Reduces error-prone copy-paste implementations
+>>    4. Maintains identical functionality to existing code
 >>
->> On 3/28/25 2:02 AM, Robert Richter wrote:
->>> On 25.03.25 17:13:50, Fabio M. De Francesco wrote:
-> 
->>>> Interference? Do you mean that this series would make the driver fail on 
->>>> other platforms? 
->>>
->>> No, other platforms must deal with that specific code and constrains.
->>>
->>>>
->>>> Of course I don't want anything like that. I'm not clear about it...
->>>> Would you please describe how would this series interfere and what
->>>> would happen on other platforms?
->>>
->>> Other platforms should not care about platform-specifics of others. So
->>> again, use a platform check and only enable that code there necessary.
->>> And this requires a well defined interface to common code.
+>> The macros abstract the low-level capability register scanning while
+>> preserving the existing PCI configuration space access patterns. They will
+>> enable future conversions of multiple capability search implementations
+>> across various drivers (e.g., PCI core, controller drivers) to use
+>> this centralized logic.
 >>
->> Hi Robert,
+>> Signed-off-by: Hans Zhang <18255117159@163.com>
+>> ---
+>>   drivers/pci/pci.h             | 81 +++++++++++++++++++++++++++++++++++
+>>   include/uapi/linux/pci_regs.h |  2 +
+>>   2 files changed, 83 insertions(+)
+>>
+>> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+>> index 2e9cf26a9ee9..f705b8bd3084 100644
+>> --- a/drivers/pci/pci.h
+>> +++ b/drivers/pci/pci.h
+>> @@ -89,6 +89,87 @@ bool pcie_cap_has_lnkctl(const struct pci_dev *dev);
+>>   bool pcie_cap_has_lnkctl2(const struct pci_dev *dev);
+>>   bool pcie_cap_has_rtctl(const struct pci_dev *dev);
+>>   
+>> +/* Standard Capability finder */
+>> +/**
+>> + * PCI_FIND_NEXT_CAP_TTL - Find a PCI standard capability
+>> + * @read_cfg: Function pointer for reading PCI config space
+>> + * @start: Starting position to begin search
+>> + * @cap: Capability ID to find
+>> + * @args: Arguments to pass to read_cfg function
+>> + *
+>> + * Iterates through the capability list in PCI config space to find
+>> + * the specified capability. Implements TTL (time-to-live) protection
+>> + * against infinite loops.
+>> + *
+>> + * Returns: Position of the capability if found, 0 otherwise.
+>> + */
+>> +#define PCI_FIND_NEXT_CAP_TTL(read_cfg, start, cap, args...)		\
+>> +({									\
+>> +	u8 __pos = (start);						\
+>> +	int __ttl = PCI_FIND_CAP_TTL;					\
+>> +	u16 __ent;							\
+>> +	u8 __found_pos = 0;						\
+>> +	u8 __id;							\
+>> +									\
+>> +	read_cfg(args, __pos, 1, (u32 *)&__pos);			\
+>> +									\
+>> +	while (__ttl--) {						\
+>> +		if (__pos < PCI_STD_HEADER_SIZEOF)			\
+>> +			break;						\
+>> +		__pos = ALIGN_DOWN(__pos, 4);				\
+>> +		read_cfg(args, __pos, 2, (u32 *)&__ent);		\
+>> +		__id = FIELD_GET(PCI_CAP_ID_MASK, __ent);		\
+>> +		if (__id == 0xff)					\
+>> +			break;						\
+>> +		if (__id == (cap)) {					\
+>> +			__found_pos = __pos;				\
+>> +			break;						\
+>> +		}							\
+>> +		__pos = FIELD_GET(PCI_CAP_LIST_NEXT_MASK, __ent);	\
 > 
->> Can you please share more on the background information and/or your
->> specific concerns on the possible memory holes in the other
->> platforms that need to be considered and not covered by Fabio's
->> code? Let's all get on the same page of what specifics we need to
->> consider to make this work. Preferably I want to avoid arch and
->> platform specific code in CXL if possible. Of course that may not
->> always be possible. Would like see if we can avoid a bunch of #ifdef
->> X86/ARM/INTEL/AMD and do it more cleanly. But fully understand the
->> situation first would be helpful to determine that. Thank you!
+> Could you please separate the coding style cleanups into own patch that
+> is before the actual move patch. IMO, all those cleanups can be in the
+> same patch.
 > 
-> We implement a "special" case in the main path. This adds unnecessary
-> complexity to the code, makes it hard to maintain, change or even to
-> understand in the future. It becomes more error-prone. Though it is
-> limited to x86 arch, the code runs for all platforms. A reuse for
-> other archs will enable it for all platforms of that archs too.
-> 
-> This general approach to add "special" cases does not scale. We see
-> this already with the "extended linear cache" and now the "low mem
-> hole". While I am fine with all those special cases (AMD address
-> translation is another), we need a proper way to enable and implement
-> those by reducing complexity and with a good isolation. This makes
-> future changes easier and reduces conflicts with other
-> implementations.
 
-I'm more of thinking that if those special cases are detectable rather than a set of ambiguous rules then we might address those quirks in a way better than #ifdefs. For "extended linear cache", it is detected via HMAT spec change. So while only Intel implements this right now on a platform, other vendors can and may in the future. The LMH is more difficult as there are no are no standard ways to enumerate it. Hopefully a set of clear rules will define this. It does look like Dan is trying to get the CXL spec to clearly define this and discussion in the WG is coming in the next couple weeks. The AMD translation can be detected by seeing if certain ACPI callback methods exist right? Is there more required to detect the special translation needs to be applied? But I do agree with the reducing complexity for maintenance and future implementations.  
+Hi Ilpo,
 
-> 
-> The change of this series does not much, just find a CFMWS region that
-> is unaligned to the EP decoder's range and then just shrink the used
-> SPA range of the EP to match that region. That can be implemented in a
-> very simple way if we introduce a spa_range paramater plus a custom
-> port setup. The generalized part of my address translation part alrady
-> implements this, it can be reused here. To implement LMH support only
-> the following is needed then:
-> 
->  * add a setup function with a platform check to add a custom
->    callback,
-> 
->  * the callback checks for the LMH range and adjusts the spa_range.
-> 
-> The modified spa_range matches then with the region range (no changes
-> needed here). That's it.
-> 
-> I can help making this work.
+Thanks your for reply. I don't understand. Is it like this?
 
-Code is always welcome :)
-> 
-> I hope that makes sense?
+#define PCI_FIND_NEXT_CAP_TTL(read_cfg, start, cap, args...)		\
+({									\
+	int __ttl = PCI_FIND_CAP_TTL;					\
+	u8 __id, __found_pos = 0;					\
+	u8 __pos = (start);						\
+	u16 __ent;							\
+									\
+	read_cfg(args, __pos, 1, (u32 *)&__pos);			\
+									\
+	while (__ttl--) {						\
+		if (__pos < PCI_STD_HEADER_SIZEOF)			\
+			break;						\
+									\
+		__pos = ALIGN_DOWN(__pos, 4);				\
+		read_cfg(args, __pos, 2, (u32 *)&__ent);		\
+									\
+		__id = FIELD_GET(PCI_CAP_ID_MASK, __ent);		\
+		if (__id == 0xff)					\
+			break;						\
+									\
+		if (__id == (cap)) {					\
+			__found_pos = __pos;				\
+			break;						\
+		}							\
+									\
+		__pos = FIELD_GET(PCI_CAP_LIST_NEXT_MASK, __ent);	\
+	}								\
+	__found_pos;							\
+})
 
-Yes. Appreciate you explaining. thank you!
+> You also need to add #includes for the defines you now started to use.
 > 
-> Thanks,
-> 
-> -Robert
+
+Is that what you mean?
+
++#include <linux/bitfield.h>
++#include <linux/align.h>
++#include <uapi/linux/pci_regs.h>
+
+Best regards,
+Hans
+
+>> +	}								\
+>> +	__found_pos;							\
+>> +})
+>> +
+>> +/* Extended Capability finder */
+>> +/**
+>> + * PCI_FIND_NEXT_EXT_CAPABILITY - Find a PCI extended capability
+>> + * @read_cfg: Function pointer for reading PCI config space
+>> + * @start: Starting position to begin search (0 for initial search)
+>> + * @cap: Extended capability ID to find
+>> + * @args: Arguments to pass to read_cfg function
+>> + *
+>> + * Searches the extended capability space in PCI config registers
+>> + * for the specified capability. Implements TTL protection against
+>> + * infinite loops using a calculated maximum search count.
+>> + *
+>> + * Returns: Position of the capability if found, 0 otherwise.
+>> + */
+>> +#define PCI_FIND_NEXT_EXT_CAPABILITY(read_cfg, start, cap, args...)		\
+>> +({										\
+>> +	u16 __pos = (start) ?: PCI_CFG_SPACE_SIZE;				\
+>> +	u16 __found_pos = 0;							\
+>> +	int __ttl, __ret;							\
+>> +	u32 __header;								\
+>> +										\
+>> +	__ttl = (PCI_CFG_SPACE_EXP_SIZE - PCI_CFG_SPACE_SIZE) / 8;		\
+>> +	while (__ttl-- > 0 && __pos >= PCI_CFG_SPACE_SIZE) {			\
+>> +		__ret = read_cfg(args, __pos, 4, &__header);			\
+>> +		if (__ret != PCIBIOS_SUCCESSFUL)				\
+>> +			break;							\
+>> +										\
+>> +		if (__header == 0)						\
+>> +			break;							\
+>> +										\
+>> +		if (PCI_EXT_CAP_ID(__header) == (cap) && __pos != start) {	\
+>> +			__found_pos = __pos;					\
+>> +			break;							\
+>> +		}								\
+>> +										\
+>> +		__pos = PCI_EXT_CAP_NEXT(__header);				\
+>> +	}									\
+>> +	__found_pos;								\
+>> +})
+>> +
+>>   /* Functions internal to the PCI core code */
+>>   
+>>   #ifdef CONFIG_DMI
+>> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+>> index 3445c4970e4d..a11ebbab99fc 100644
+>> --- a/include/uapi/linux/pci_regs.h
+>> +++ b/include/uapi/linux/pci_regs.h
+>> @@ -206,6 +206,8 @@
+>>   /* 0x48-0x7f reserved */
+>>   
+>>   /* Capability lists */
+>> +#define PCI_CAP_ID_MASK		0x00ff
+>> +#define PCI_CAP_LIST_NEXT_MASK	0xff00
+>>   
+>>   #define PCI_CAP_LIST_ID		0	/* Capability ID */
+>>   #define  PCI_CAP_ID_PM		0x01	/* Power Management */
+>>
 > 
 
