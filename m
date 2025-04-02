@@ -1,127 +1,76 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C47C7239581;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EA49239565;
 	Wed,  2 Apr 2025 12:23:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743596591; cv=none; b=UdPEr80dprqSh39gknfADjp+U5lfCSx2kCviQJT9dL4GdpQYIBgwr1OzsCzH0wwzdgVxraBWqjGCRiYn48kJzyKKVDtBjA/2998mvzt6bxTTxgkf65KQKgMpsl402srIt7uF6eJUC8LwnKk+pUNZMy5rukD1KCIBk2ZWedICayM=
+	t=1743596591; cv=none; b=cLZ7Y2IKOOmUFkTrk+FCVvoBmLtUf0di1nFVAdkNmP7D9EKRs//gwEOTrTTQW1SU9S6vu0soAhXuUOFrdz2AlTEarCDTC6ITTpon1rW7jz0WaGgrjzKP67U0yUwKZBPIN7u23+O/9uU1yibJE9iIKk3TtmWGNsklPR5MaHMcpLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1743596591; c=relaxed/simple;
-	bh=vF5juCg/6dnuChWLFVdhEXWfPsLDUW9kA6pZwXk5Ffo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fPLdvbmtgHc79L3E6Qcp2GWTVqWvQbLj9zOuRNjhaqo5nEyJ03sEAOpeVQpxzMmqEJWRmMx98gN4chkYFpvNrTotsOmYP6ZMKKTqLgv1JBma3FxXIRaQ7W3xoO9HiEA1YMqGn9ejQf0jAO5qnyMqZV6ZK7mH+1mrcDKzzTouLyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XEC0IT1e; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	bh=hyIORvcjc8cnOrwXJJLDQlnMlsVxwobtC9HnweVC5sY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GceIoZVk0dKlpUxyFCzOEvLm1NEZDNqvNUchYzp72gb3Cm8Y2SM1thDy8WKvyfn1SRjduOkHgWCHX1/rd2t3plo0I0g9w6cSWHoCLG2IXIjO+Mtf8oSR2IPldCtCfRXz9WGntWz9RstxXm/5BlNfVuW3wECswPzTZ90R/fIMVnQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=bLpZ6hHr; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XEC0IT1e"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743596590; x=1775132590;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=vF5juCg/6dnuChWLFVdhEXWfPsLDUW9kA6pZwXk5Ffo=;
-  b=XEC0IT1eY+Y0m0VQMlfJIt6Qb3jp0obViIPHKA3eSG2WelYGayvpvf3v
-   fHVcn1KE2z83GMwxD6ra41bwg86elB8SUgvuUthwdx5r36UCiwpOUnWy3
-   ZDhW6vDqlGW6wquiTZEdRWNKlc2um96g/svPQIAWBVJFUDqvG8P7piGW9
-   g5AuwMt+l3IrWEsxeJd0DSLDlt7DQzDM5E/j6MpTR7MCR4oTEVwGONCBf
-   lZ/DvzuZcdwenOw35LUuWQUmT01yZtfVNU/E8OLQH5f+n81QprN4/DhOd
-   LojjQmJQyGfMQNvYRRqo64eRwH55PXZdcM4SEVT9jEAbGzVyJmARXrSr8
-   Q==;
-X-CSE-ConnectionGUID: hvNlDlooSSOvxMIW4zb0oQ==
-X-CSE-MsgGUID: h+epLI7NQh+p1kUtKISDVg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11392"; a="44865041"
-X-IronPort-AV: E=Sophos;i="6.15,182,1739865600"; 
-   d="scan'208";a="44865041"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 05:23:07 -0700
-X-CSE-ConnectionGUID: kgFN5AjWR9i67zi+ofdETg==
-X-CSE-MsgGUID: 4iTbWnQjR9GqKSVfugWG7Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,182,1739865600"; 
-   d="scan'208";a="157635538"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa002.jf.intel.com with ESMTP; 02 Apr 2025 05:23:05 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 58674271; Wed, 02 Apr 2025 15:23:03 +0300 (EEST)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Mika Westerberg <westeri@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH v1 2/5] gpiolib: acpi: Remove index parameter from acpi_gpio_property_lookup()
-Date: Wed,  2 Apr 2025 15:21:17 +0300
-Message-ID: <20250402122301.1517463-3-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250402122301.1517463-1-andriy.shevchenko@linux.intel.com>
-References: <20250402122301.1517463-1-andriy.shevchenko@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="bLpZ6hHr"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=m5oPUg4ARF8TnNRDBE3jh/Qug56RDVjQifVvp49cFpw=; b=bLpZ6hHr1wVANQ2fF9WBWqeuN5
+	HVjQWpQ1OlZggMUP4tufjE3uKqSb0br7f/rT6FWm8LhBf6MhyCRlxMQs6R1eqCC9lnu1A6+Eobou1
+	m1u67bO/yEmqZ75JIdUdL/wSSunPuHVf26lfRw+VeWvfOXSXW13frBpp8eGw8qPszd/w=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1tzx7O-007mpD-0W; Wed, 02 Apr 2025 14:22:54 +0200
+Date: Wed, 2 Apr 2025 14:22:53 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Lukasz Majewski <lukma@denx.de>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, davem@davemloft.net,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Richard Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 2/4] ARM: dts: nxp: mxs: Adjust the imx28.dtsi L2
+ switch description
+Message-ID: <82fde123-4783-4d4c-a061-e07731ae7bfd@lunn.ch>
+References: <20250331103116.2223899-1-lukma@denx.de>
+ <20250331103116.2223899-3-lukma@denx.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250331103116.2223899-3-lukma@denx.de>
 
-In all cases the supplied index is the same as the passed one in
-the struct acpi_gpio_lookup. Remove index parameter and reuse one
-from the struct acpi_gpio_lookup instead.
+On Mon, Mar 31, 2025 at 12:31:14PM +0200, Lukasz Majewski wrote:
+> The current range of 'reg' property is too small to allow full control
+> of the L2 switch on imx287.
+> 
+> As this IP block also uses ENET-MAC blocks for its operation, the address
+> range for it must be included as well.
+> 
+> Moreover, some SoC common properties (like compatible, clocks, interrupts
+> numbers) have been moved to this node.
+> 
+> Signed-off-by: Lukasz Majewski <lukma@denx.de>
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/gpio/gpiolib-acpi.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+Assuming it passed the DT checking:
 
-diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
-index 878b11c81c7b..afeb8d1c7102 100644
---- a/drivers/gpio/gpiolib-acpi.c
-+++ b/drivers/gpio/gpiolib-acpi.c
-@@ -830,17 +830,17 @@ static int acpi_gpio_resource_lookup(struct acpi_gpio_lookup *lookup,
- 	return 0;
- }
- 
--static int acpi_gpio_property_lookup(struct fwnode_handle *fwnode,
--				     const char *propname, int index,
-+static int acpi_gpio_property_lookup(struct fwnode_handle *fwnode, const char *propname,
- 				     struct acpi_gpio_lookup *lookup)
- {
- 	struct fwnode_reference_args args;
-+	unsigned int index = lookup->index;
- 	unsigned int quirks = 0;
- 	int ret;
- 
- 	memset(&args, 0, sizeof(args));
--	ret = __acpi_node_get_property_reference(fwnode, propname, index, 3,
--						 &args);
-+
-+	ret = __acpi_node_get_property_reference(fwnode, propname, index, 3, &args);
- 	if (ret) {
- 		struct acpi_device *adev;
- 
-@@ -905,8 +905,7 @@ static struct gpio_desc *acpi_get_gpiod_by_index(struct acpi_device *adev,
- 	if (propname) {
- 		dev_dbg(&adev->dev, "GPIO: looking up %s\n", propname);
- 
--		ret = acpi_gpio_property_lookup(acpi_fwnode_handle(adev),
--						propname, index, &lookup);
-+		ret = acpi_gpio_property_lookup(acpi_fwnode_handle(adev), propname, &lookup);
- 		if (ret)
- 			return ERR_PTR(ret);
- 
-@@ -955,7 +954,7 @@ static struct gpio_desc *acpi_get_gpiod_from_data(struct fwnode_handle *fwnode,
- 	memset(&lookup, 0, sizeof(lookup));
- 	lookup.index = index;
- 
--	ret = acpi_gpio_property_lookup(fwnode, propname, index, &lookup);
-+	ret = acpi_gpio_property_lookup(fwnode, propname, &lookup);
- 	if (ret)
- 		return ERR_PTR(ret);
- 
--- 
-2.47.2
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
+    Andrew
