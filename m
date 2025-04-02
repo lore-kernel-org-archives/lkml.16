@@ -1,155 +1,162 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37AEC78C91;
-	Wed,  2 Apr 2025 21:39:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0B5278C91;
+	Wed,  2 Apr 2025 21:40:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743629951; cv=none; b=Jd700IWr4GzrjztplhhdXdX2l20yNgjqrh55nW1GrTEEg719FkCNSIrJOyTsVcL7SVa8ecTpmgUhHqeVY8ZoEc9Ddp53nhcMZfo6h0xchDhfM7rMo/UnGTL6atM17+RiHTWatqhQL8sLU4jlEn464sRkzBsPdVERJD2G8V4SajA=
+	t=1743630061; cv=none; b=HMKt18IcT/WKkADSMYLngEQS4MA6/Qvf3kRI+xE3HQOkDkUyzagqGYLgkO8E4+gTcixTqipdtx+YWekgMU/AGykuLqIJ4HDhbNIHqd/q0JU/SGW6egLbhTbMKY8k59ItJQRyoqTsz/r+6fjIjzaSj7l8q3iITZOe+ZzOECbebzk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743629951; c=relaxed/simple;
-	bh=TSUZ/BtivkLRiKLsU2XCL8Ugofa5D2b//TRkx+fWb90=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=QLkVgokIt+4yC+zGVavDIeaUulAB+KVZVgXKi0yZHp43aOrFNYd2Z0WjxZ9IWFdXsKWFlN1TieECixHn2Uurw+UTneAkiB+yLdsTUACFanAeIjQRTswxu59klGA6HCThwuikL2lEgbBrkkva5HYj/QPEPnd1f6Y9aS/Kf93i0u8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gd1zNfiK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743630061; c=relaxed/simple;
+	bh=FWgFicx3R6GR1dcwhsobS/nee2ZFoLoCDiDadGdYIws=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XiagXEEd4uxLgrAChtSdMP8C6ee10DI6PqZRBwuwINKe9LlyMkRxK1BB7Nd/gcwoyenPNTnVNmzHKX5Xq/eGK9145hMj6S+LyWfRMkdi3n1PVjpzLcSJwZv4UwyPHB28tIpeOsKY6T7JV8IikwDnjHjqV+zCTbvVnXUex5QUT5E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KPuSWme5; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gd1zNfiK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7B5DC4CEEA;
-	Wed,  2 Apr 2025 21:39:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743629950;
-	bh=TSUZ/BtivkLRiKLsU2XCL8Ugofa5D2b//TRkx+fWb90=;
-	h=Date:From:To:Cc:Subject:From;
-	b=Gd1zNfiK12s9/7C+9AiJxdL37Jazmrvm2NVQveKCMeStcTD8bdgZ4g5vPmXFMZfF4
-	 FHo9du/fzkGCwZ6RbnqQnnVAVTt+70lJqq33GWG6m8wnNDEJG0w9azwVqpdI0drjyN
-	 SX9I/vDWWXiKYFWADa0UgE06UZ6rTQpjCh+6YX3USklPSEWgm+OBqxTdVdy48yA4Rf
-	 VmUWYuaI3hNv7gHNaztS5eNgFmjMoxwKmtQV/qrGAnNbI+ja3b4L9wRCf89rBLRD4U
-	 MOqD3nKvhtoWRiyUN9WLal56LDporgVl4J9aJyQe6ORkhNHcgcwcZarkc6Qu7g2mr0
-	 tR8TzxA8/8sYw==
-Date: Wed, 2 Apr 2025 15:39:07 -0600
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Lyude Paul <lyude@redhat.com>, Danilo Krummrich <dakr@kernel.org>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-Cc: dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] drm/nouveau: svm: Avoid -Wflex-array-member-not-at-end
- warning
-Message-ID: <Z-2uezeHt1aaHH6x@kspp>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KPuSWme5"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43cebe06e9eso1161115e9.3;
+        Wed, 02 Apr 2025 14:40:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743630058; x=1744234858; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rrWOLaML/b83w97VJppoWPqmsyehVsKuYGtUNHZ100g=;
+        b=KPuSWme5SXsQYpDLOH+Fw/jlM1gjQ1mJa6tO7+fUTfA9W/zma+T0F/NRvCQkZ099o1
+         iYC0C5wSV79GffdJcSN4/y7ZHk2yMfTWi0P9RQpmz2TDob8qWBb0R0mrOKeDnThGeEQH
+         btJviYWShvEBMoK9zlRxS77PRiSrUbki7W367ZIiZR8ucjVWMKvCyipq6YcuqscR+Ynd
+         I4ueQCZszzZjQ/wtnA8gDPEJeL1/vO2RpF44ACl9qfH/zMbbXyvGk9eb/2gnBbFNq1QH
+         /mSlHUUoKK61IGL7+rvPk+LdWOgap6kQVkVgCiH6jGpRfHElhcPsw068qboOr50U/RPs
+         of5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743630058; x=1744234858;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rrWOLaML/b83w97VJppoWPqmsyehVsKuYGtUNHZ100g=;
+        b=dP41UlOacF9szY53Wl849aDiEg70WflFhr22CIQAmZlwl0/dqardrT7AboZn7zVrTk
+         BovN0G62TWsIDEDwMi4GVczVXRD8uv62c8wLL79FEM7dGrmDjuqljGMTXsIWcBKucrsZ
+         jlFt8Ct0wtQ3BQ8TUTsAiKrxXGa+O5po3uBFrDybBuoNgHqNnVrvbnwmPzfHM65C5pyn
+         /Be3zgJDcEaa+HS4mVDelT3AMh6l/gaZeOitTAXS6rSOABEap0WzqqwMXJm1amzUq7bm
+         mnZXIzn76xlc1aw6I585PiFXxSreqoXoIjErBIKdKvnPyZWvQ9//a6K87bvpWU8oQDin
+         fssw==
+X-Forwarded-Encrypted: i=1; AJvYcCVbBCs658nCeWmTgi1eyVPppD4V1Je04grwu2DIU+ZQhtjEBNH29HmACVsjF6W82H3IfAhg2PCnlyvaWGsL@vger.kernel.org, AJvYcCXA1WsYJECvIBdf3Nwt6ByeT/GnLhVaHKbvRY0ijLLooYs5NGoKrSNACtpyRS2TxxwlyJ4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxQR1cursw7cm87wPT49XInaApcMmfcP01cEgQCOTnozH1X5jNc
+	JyusJSau7KXmSx7Q12IETeNoPnYPpjronoGgGL3udHhxT5YCMJtYOnUOg4xpnfQqynT2v8ABJYy
+	xzeUqT/uY52pzCADXNb/H6C9CHK0=
+X-Gm-Gg: ASbGncuXQrPVNI6V+6/uEI2G7M6RQp3BWzGNWN35jtQMoofw7jXI04S3c6X+j1IrHxg
+	CPPhbiy0wkEnjHp0v1zIC7rWurLHhQskMfCTVU6U0BNK4wWGlnNTjVXfbG++J9d7+lBTkh9g/2b
+	sSVWR/I9ReMElPcP0JWnQooagDBhf0Opv425EvX8IQ8A==
+X-Google-Smtp-Source: AGHT+IGLrFnL5gA0ju1EqpbuuknG7HTGLWI5EOuD+T3KVXz9uu/m3gLfat2JhyGRlukZnEkTx2qsIvmDaWgjmgvvz24=
+X-Received: by 2002:a05:600c:1d16:b0:43c:f513:9591 with SMTP id
+ 5b1f17b1804b1-43ec13fc2d4mr2591885e9.14.1743630057985; Wed, 02 Apr 2025
+ 14:40:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20250401205245.70838-1-alexei.starovoitov@gmail.com> <umfukiohyxcxxw5g6ca5g7stq7oonnr3sbvjyjshnbqalzffeq@2nrwqsmwcrug>
+In-Reply-To: <umfukiohyxcxxw5g6ca5g7stq7oonnr3sbvjyjshnbqalzffeq@2nrwqsmwcrug>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Wed, 2 Apr 2025 14:40:46 -0700
+X-Gm-Features: AQ5f1JpPI0en9HyxhZYVLh2AoPDXtKe0u1fBU4PxVcauG58LjnEl74wDeNoCNSY
+Message-ID: <CAADnVQLHakKsVEbKiENF8eV0fEAtbVbL0b_QbJO2b0dH9r7PSw@mail.gmail.com>
+Subject: Re: [PATCH v2] locking/local_lock, mm: Replace localtry_ helpers with
+ local_trylock_t type
+To: Shakeel Butt <shakeel.butt@linux.dev>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, bpf <bpf@vger.kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+	Martin KaFai Lau <martin.lau@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Vlastimil Babka <vbabka@suse.cz>, 
+	Sebastian Sewior <bigeasy@linutronix.de>, Steven Rostedt <rostedt@goodmis.org>, 
+	Michal Hocko <mhocko@suse.com>, linux-mm <linux-mm@kvack.org>, 
+	LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
--Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-getting ready to enable it, globally.
+On Wed, Apr 2, 2025 at 1:56=E2=80=AFPM Shakeel Butt <shakeel.butt@linux.dev=
+> wrote:
+>
+> On Tue, Apr 01, 2025 at 01:52:45PM -0700, Alexei Starovoitov wrote:
+> > From: Alexei Starovoitov <ast@kernel.org>
+> >
+> > Partially revert commit 0aaddfb06882 ("locking/local_lock: Introduce lo=
+caltry_lock_t").
+> > Remove localtry_*() helpers, since localtry_lock() name might
+> > be misinterpreted as "try lock".
+> >
+> > Introduce local_trylock[_irqsave]() helpers that only work
+> > with newly introduced local_trylock_t type.
+> > Note that attempt to use local_trylock[_irqsave]() with local_lock_t
+> > will cause compilation failure.
+> >
+> > Usage and behavior in !PREEMPT_RT:
+> >
+> > local_lock_t lock;                     // sizeof(lock) =3D=3D 0
+> > local_lock(&lock);                     // preempt disable
+> > local_lock_irqsave(&lock, ...);        // irq save
+> > if (local_trylock_irqsave(&lock, ...)) // compilation error
+> >
+> > local_trylock_t lock;                  // sizeof(lock) =3D=3D 4
+>
+> Is there a reason for this 'acquired' to be int? Can it be uint8_t? No
+> need to change anything here but I plan to change it later to compact as
+> much as possible within one (or two) cachline for memcg stocks.
 
-Use the `DEFINE_RAW_FLEX()` helper for an on-stack definition of
-a flexible structure where the size of the flexible-array member
-is known at compile-time, and refactor the rest of the code,
-accordingly.
+I don't see any issue. I can make it u8 right away.
 
-So, with these changes, fix the following warning:
+> > local_lock(&lock);                     // preempt disable, acquired =3D=
+ 1
+> > local_lock_irqsave(&lock, ...);        // irq save, acquired =3D 1
+> > if (local_trylock(&lock))              // if (!acquired) preempt disabl=
+e
+> > if (local_trylock_irqsave(&lock, ...)) // if (!acquired) irq save
+>
+> For above two ", acquired =3D 1" as well.
 
-drivers/gpu/drm/nouveau/nouveau_svm.c:724:44: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+I felt it would be too verbose and not accurate anyway,
+since irq save will be done before the check.
+It's a pseudo code.
+But sure, I can add.
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/gpu/drm/nouveau/nouveau_svm.c | 39 +++++++++++++--------------
- 1 file changed, 18 insertions(+), 21 deletions(-)
+>
+> >
+> > The existing local_lock_*() macros can be used either with
+> > local_lock_t or local_trylock_t.
+> > With local_trylock_t they set acquired =3D 1 while local_unlock_*() cle=
+ars it.
+> >
+> > In !PREEMPT_RT local_lock_irqsave(local_lock_t *) disables interrupts
+> > to protect critical section, but it doesn't prevent NMI, so the fully
+> > reentrant code cannot use local_lock_irqsave(local_lock_t *) for
+> > exclusive access.
+> >
+> > The local_lock_irqsave(local_trylock_t *) helper disables interrupts
+> > and sets acquired=3D1, so local_trylock_irqsave(local_trylock_t *) from
+> > NMI attempting to acquire the same lock will return false.
+> >
+> > In PREEMPT_RT local_lock_irqsave() maps to preemptible spin_lock().
+> > Map local_trylock_irqsave() to preemptible spin_trylock().
+> > When in hard IRQ or NMI return false right away, since
+> > spin_trylock() is not safe due to explicit locking in the underneath
+> > rt_spin_trylock() implementation. Removing this explicit locking and
+> > attempting only "trylock" is undesired due to PI implications.
+> >
+> > The local_trylock() without _irqsave can be used to avoid the cost of
+> > disabling/enabling interrupts by only disabling preemption, so
+> > local_trylock() in an interrupt attempting to acquire the same
+> > lock will return false.
+> >
+> > Note there is no need to use local_inc for acquired variable,
+> > since it's a percpu variable with strict nesting scopes.
+> >
+> > Acked-by: Vlastimil Babka <vbabka@suse.cz>
+> > Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+>
+> Reviewed-by: Shakeel Butt <shakeel.butt@linux.dev>
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_svm.c b/drivers/gpu/drm/nouveau/nouveau_svm.c
-index e12e2596ed84..6fa387da0637 100644
---- a/drivers/gpu/drm/nouveau/nouveau_svm.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_svm.c
-@@ -720,10 +720,7 @@ nouveau_svm_fault(struct work_struct *work)
- 	struct nouveau_svm *svm = container_of(buffer, typeof(*svm), buffer[buffer->id]);
- 	struct nvif_object *device = &svm->drm->client.device.object;
- 	struct nouveau_svmm *svmm;
--	struct {
--		struct nouveau_pfnmap_args i;
--		u64 phys[1];
--	} args;
-+	DEFINE_RAW_FLEX(struct nouveau_pfnmap_args, args, p.phys, 1);
- 	unsigned long hmm_flags;
- 	u64 inst, start, limit;
- 	int fi, fn;
-@@ -772,11 +769,11 @@ nouveau_svm_fault(struct work_struct *work)
- 	mutex_unlock(&svm->mutex);
- 
- 	/* Process list of faults. */
--	args.i.i.version = 0;
--	args.i.i.type = NVIF_IOCTL_V0_MTHD;
--	args.i.m.version = 0;
--	args.i.m.method = NVIF_VMM_V0_PFNMAP;
--	args.i.p.version = 0;
-+	args->i.version = 0;
-+	args->i.type = NVIF_IOCTL_V0_MTHD;
-+	args->m.version = 0;
-+	args->m.method = NVIF_VMM_V0_PFNMAP;
-+	args->p.version = 0;
- 
- 	for (fi = 0; fn = fi + 1, fi < buffer->fault_nr; fi = fn) {
- 		struct svm_notifier notifier;
-@@ -802,9 +799,9 @@ nouveau_svm_fault(struct work_struct *work)
- 		 * fault window, determining required pages and access
- 		 * permissions based on pending faults.
- 		 */
--		args.i.p.addr = start;
--		args.i.p.page = PAGE_SHIFT;
--		args.i.p.size = PAGE_SIZE;
-+		args->p.addr = start;
-+		args->p.page = PAGE_SHIFT;
-+		args->p.size = PAGE_SIZE;
- 		/*
- 		 * Determine required permissions based on GPU fault
- 		 * access flags.
-@@ -832,16 +829,16 @@ nouveau_svm_fault(struct work_struct *work)
- 
- 		notifier.svmm = svmm;
- 		if (atomic)
--			ret = nouveau_atomic_range_fault(svmm, svm->drm,
--							 &args.i, sizeof(args),
-+			ret = nouveau_atomic_range_fault(svmm, svm->drm, args,
-+							 __struct_size(args),
- 							 &notifier);
- 		else
--			ret = nouveau_range_fault(svmm, svm->drm, &args.i,
--						  sizeof(args), hmm_flags,
--						  &notifier);
-+			ret = nouveau_range_fault(svmm, svm->drm, args,
-+						  __struct_size(args),
-+						  hmm_flags, &notifier);
- 		mmput(mm);
- 
--		limit = args.i.p.addr + args.i.p.size;
-+		limit = args->p.addr + args->p.size;
- 		for (fn = fi; ++fn < buffer->fault_nr; ) {
- 			/* It's okay to skip over duplicate addresses from the
- 			 * same SVMM as faults are ordered by access type such
-@@ -855,14 +852,14 @@ nouveau_svm_fault(struct work_struct *work)
- 			if (buffer->fault[fn]->svmm != svmm ||
- 			    buffer->fault[fn]->addr >= limit ||
- 			    (buffer->fault[fi]->access == FAULT_ACCESS_READ &&
--			     !(args.phys[0] & NVIF_VMM_PFNMAP_V0_V)) ||
-+			     !(args->p.phys[0] & NVIF_VMM_PFNMAP_V0_V)) ||
- 			    (buffer->fault[fi]->access != FAULT_ACCESS_READ &&
- 			     buffer->fault[fi]->access != FAULT_ACCESS_PREFETCH &&
--			     !(args.phys[0] & NVIF_VMM_PFNMAP_V0_W)) ||
-+			     !(args->p.phys[0] & NVIF_VMM_PFNMAP_V0_W)) ||
- 			    (buffer->fault[fi]->access != FAULT_ACCESS_READ &&
- 			     buffer->fault[fi]->access != FAULT_ACCESS_WRITE &&
- 			     buffer->fault[fi]->access != FAULT_ACCESS_PREFETCH &&
--			     !(args.phys[0] & NVIF_VMM_PFNMAP_V0_A)))
-+			     !(args->p.phys[0] & NVIF_VMM_PFNMAP_V0_A)))
- 				break;
- 		}
- 
--- 
-2.43.0
-
+Thanks!
