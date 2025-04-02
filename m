@@ -1,114 +1,160 @@
-Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com [209.85.222.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A76281F9F7A
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 08:45:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6984233727;
+	Wed,  2 Apr 2025 08:45:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743583509; cv=none; b=RDMsM7xjjkeicxKAX7cGulZqczb9RxScNZWfONej9ejiccjuxhxRGiblkw9x7AQzrvw8UXzcAPGQdjX+egJAD8d01Jvw9cMi3hD8xG6Wi/76++3QpT/n/OnJUzljz+Rw5nS5WJbHG5ITQ/5t9Xm9B0v4yar9VS2cWtsryM2nCf4=
+	t=1743583519; cv=none; b=S1MFhEHb85RYddHisc1LUhmPW+W5q9WdyLATxYGJKHCjSGb1REevRSYKD0xoAzU2MnFbP2P0sC2P9f2Ig8XLePJExg2laFaEv6xDzoHVWynmASgNwT2vKc6VKIevR7WD0SnoB8a5iuLQTKygQwhDhYJys27KsuiEZ3uhhpOkf44=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743583509; c=relaxed/simple;
-	bh=MYXtt+F82yFU/HF8RGrdrV4yjQ+SYvY33Hbn9q1VIBk=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=GPw7Z3CtP9xUFWzLFhQd6Li/N3MDDRr3+aWQ2ieEmFQaCSpJ6/85oS/uc1S9p5JQB7PtMWygZ49PpRr8GAr0xCX+FI/hKXyXRynyHEweekHoLEHffr13jhORBmLrZNgcLLS10LpypWWaLeTeUg5OYAwq1Ajg3GQz4yMCVo4ILac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nWHoCHcw; arc=none smtp.client-ip=209.85.222.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1743583519; c=relaxed/simple;
+	bh=W1SiKtPVp8xrFYw4pATHh1Zdo/MG/rAURuLF/VmYRC0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Amf/hZYKsNkPEHQlb4KQMm5mIb4TdIuRSUuxzaY0qGAkFtXYwyS3YVaeHWdVd7EVkr7vFYxn2BlBJ2uyO31fUoMXPuevwrBOOsl4tQkh3duJfWD3WZ7e0JzaRBn+t1T5I2LFykSumiuPrB3jnSBLiWLyCyyHukPDVY+zM5dbeRg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ki9/m1OU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nWHoCHcw"
-Received: by mail-ua1-f50.google.com with SMTP id a1e0cc1a2514c-86b31db3c3bso2719499241.3
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 01:45:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743583506; x=1744188306; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=hgDb3fVVBUB/IfzwnOD3L78L7lK+HAMvWH+VtOqC03g=;
-        b=nWHoCHcwx9AU2L8fPOmIHMl1xAPKZoQ+DSeh5mK+1KiKSDYn4N2efBfFvDDuiyI3L0
-         UT4le4RGrGBt03Tia9BjuRTuetblJ+1mmKAPEpAqsl1chDySQM2WGX6Dxd87c+H5r+PP
-         mYLSVHnScBpSpXmPXU9H6NPQsxeus3mj0Z6O5kvikmYjcqoq/2zZ0AqKS/GKx9YpUV65
-         Kgsn+rArosOX81x4qoQQLJmLvTQIyrxY0tY36Y1uUDLjDV7de4ulgZXofvY8ivJo9VXE
-         7yitwSbO2mTzDWfR9kV8tVQJNo0bPMVWLUbBJI8x7x79kh+Fj3xJ7FVV8TIq09vLijmd
-         agOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743583506; x=1744188306;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=hgDb3fVVBUB/IfzwnOD3L78L7lK+HAMvWH+VtOqC03g=;
-        b=cOA59nsCJZgaBlB463DtUdsGYzHwjx76STRY8WQfwXeU2SmC35hWWs28SgaFKgxQjM
-         z845vzd2b0/86iiYyErJH7qt3Tb3JGLhff54/g70YU+eR42gaRoYW3fAOG/jdOtxNS3X
-         iWA4v5MSuj15iJbk8+3hwFvfJcnoN9Ahe2y2w4Tv01y9Vc0uGb4RiP48Tdy6q4/C2C1F
-         4QUhRcOLE3Z16K/1TM24A0H7VasVMqmJxKPNSt1JySqicxkWXXfo38wnjRlr1bCzD/c5
-         8SbRm/wjtdF4k3O9P7GVpUtoUDzkI8L4+BXkwwjb/XOa067byShrfa0gL4JSGhl+OEul
-         4XPA==
-X-Gm-Message-State: AOJu0YysocgCfTE/LVjEB0zqqZ3EdhPnkbJrZ/tU+gs89ItnUtWKeHpw
-	z7FyybKfdyr8ZPIC2py9SmmLgG6gg5TsajD5oYbKjBv3uVa/kpo/fopfsQOnGTymrQ1kZbpQ/AA
-	ZXqpwJ4ooNMAOAiIKnyNiTPbTzh4VqbvXQwe1Zgo50XJ6b7wGs0g=
-X-Gm-Gg: ASbGncv9T3B3Abunj7QE/BHzTq1MR6IXJtvZ7CPotB9S+UNIyDmrKnNmdt0B+8ie4pc
-	FLQpMHy9kw0Hk1yC5PxzyAuNmycPel23xNILQiws0IaLZbFuzbBhK2WY2lc8oFNGcSGsFjezojH
-	BfIsDg6npWGVtkoF1p7I9DL52bkZrI6Xpy2vOcBtvkn901YGhPhdmlR6+bNw8=
-X-Google-Smtp-Source: AGHT+IE8fq6fgnNiBlF4pjBGjNOCQgZFHKYt+jyYnPaGvFt9HHKIIGxzApITzblIW2SBZ/TFBbSfqRsVUBxL6jzuEN0=
-X-Received: by 2002:a05:6102:c12:b0:4c3:9b0:9e6b with SMTP id
- ada2fe7eead31-4c6d384b3d2mr10951298137.10.1743583505840; Wed, 02 Apr 2025
- 01:45:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ki9/m1OU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4ECDAC4CEDD;
+	Wed,  2 Apr 2025 08:45:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743583516;
+	bh=W1SiKtPVp8xrFYw4pATHh1Zdo/MG/rAURuLF/VmYRC0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Ki9/m1OUpBNXZt2lOL2R1ddzvKZulxTMyO8XoBNsUC6Dl0Hn8RvRUWO3hzM9RvYg6
+	 O2YddD2vYBX+2xM3Or5lvM9191ij2YSKIFPu3NseI3bpju2jOZ5zqnYYi2xQr2O+Ku
+	 mMNfhRSeTaTvoc5xRhUXx7gWjXMhhbxxbJu69dx6CzywT9eX/vKISqBnADfahmIykE
+	 3gKakt2kB9+nsFwZdsezckhzC4s52LE1xTFczJwGMJ76t7teBZ2Bb7BDox/vaBvUuU
+	 H5pkrqKN2VGs6PPdaL/8877dKB+myaHghVj7Tvh5uK795i4XsiOlYv3MMX4aeLYy2j
+	 Qq2/d80YAZSIg==
+Message-ID: <71c301ea-0be7-4349-92d6-93b3ffc9c593@kernel.org>
+Date: Wed, 2 Apr 2025 10:45:08 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Wed, 2 Apr 2025 14:14:53 +0530
-X-Gm-Features: AQ5f1JosHeaxk-JjURpm99TBi1ldYeuLUsjGtGWwli-pgYAQe5pPal7OZ5w-kuQ
-Message-ID: <CA+G9fYtdXHVuirs3v6at3UoKNH5keuq0tpcvpz0tJFT4toLG4g@mail.gmail.com>
-Subject: qemu-i386 boot failed on mainline master - no console output
-To: open list <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>, 
-	linux-mm <linux-mm@kvack.org>, lkft-triage@lists.linaro.org, 
-	Linux Regressions <regressions@lists.linux.dev>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Vinod Koul <vkoul@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	Anders Roxell <anders.roxell@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 2/7] dt-bindings: memory-controllers: Add STM32 Octo
+ Memory Manager controller
+To: Rob Herring <robh@kernel.org>,
+ Patrice Chotard <patrice.chotard@foss.st.com>
+Cc: Conor Dooley <conor+dt@kernel.org>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Philipp Zabel <p.zabel@pengutronix.de>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ christophe.kerello@foss.st.com, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org
+References: <20250401-upstream_ospi_v6-v7-0-0ef28513ed81@foss.st.com>
+ <20250401-upstream_ospi_v6-v7-2-0ef28513ed81@foss.st.com>
+ <20250401222015.GA4071342-robh@kernel.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
+ FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
+ QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
+ gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
+ /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
+ iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
+ VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
+ 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
+ xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
+ eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
+ AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
+ MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
+ Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
+ MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
+ OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
+ GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
+ 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
+ YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
+ 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
+ BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
+ JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
+ 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
+ YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
+ Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
+ ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
+ vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
+ oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
+ lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
+ t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
+ uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
+ 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
+ 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
+In-Reply-To: <20250401222015.GA4071342-robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Regressions on qemu-i386 devices boot tests failed with defconfig on
-the mainline master no console output.
+On 02/04/2025 00:20, Rob Herring wrote:
+>> +      clocks = <&rcc CK_BUS_OSPIIOM>,
+>> +               <&scmi_clk CK_SCMI_OSPI1>,
+>> +               <&scmi_clk CK_SCMI_OSPI2>;
+>> +      clock-names = "omm", "ospi1", "ospi2";
+>> +      resets = <&rcc OSPIIOM_R>,
+>> +               <&scmi_reset RST_SCMI_OSPI1>,
+>> +               <&scmi_reset RST_SCMI_OSPI2>;
+>> +      reset-names = "omm", "ospi1", "ospi2";
+>> +      access-controllers = <&rifsc 111>;
+>> +      power-domains = <&CLUSTER_PD>;
+>> +      #address-cells = <2>;
+>> +      #size-cells = <1>;
+>> +      st,syscfg-amcr = <&syscfg 0x2c00 0x7>;
+>> +      st,omm-req2ack-ns = <0>;
+>> +      st,omm-mux = <0>;
+>> +      st,omm-cssel-ovr = <0>;
+>> +
+>> +      spi@0 {
+>> +        compatible = "st,stm32mp25-ospi";
+>> +        reg = <0 0 0x400>;
+>> +        memory-region = <&mm_ospi1>;
+>> +        interrupts = <GIC_SPI 163 IRQ_TYPE_LEVEL_HIGH>;
+>> +        dmas = <&hpdma 2 0x62 0x00003121 0x0>,
+>> +               <&hpdma 2 0x42 0x00003112 0x0>;
+>> +        dma-names = "tx", "rx";
+>> +        clocks = <&scmi_clk CK_SCMI_OSPI1>;
+>> +        resets = <&scmi_reset RST_SCMI_OSPI1>, <&scmi_reset RST_SCMI_OSPI1DLL>;
+> 
+> Looks like you are duplicating properties in the parent and child nodes. 
+> Maybe that accurately models the h/w, but if it is just so the drivers 
+> can get the resources from "the driver's node", you can always just look 
+> in the child nodes for the resources (as probably you want to drop the 
+> per instance resources from the parent).
 
-First seen on the char-misc-6.15-rc1 merge 25601e85441d ("Merge tag
-'char-misc-6.15-rc1' of...)
- Good: [08733088b566b58283f0f12fb73f5db6a9a9de30] Merge tag
-'rust-fixes-6.15-merge'
- Bad:  [91e5bfe317d8f8471fbaa3e70cf66cae1314a516] Merge tag 'dmaengine-6.15-rc1'
 
-* qemu-i386
- - boot
+The current solution was actually my suggestion because if a parent
+device has to toggle child's reset, it means it actually is the consumer
+of that reset one way or another. IOW, it is one of its resources.
 
-Regression Analysis:
- - New regression? Yes
- - Reproducibility? Yes
+This also might matter for some of the implementations because we might
+need to setup device links or do some probe-ordering (in the future)
+between parent and the reset provider.
 
-Test regression: qemu-i386 boot failed on mainline master
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+Without reset resource in the parent, I could imagine probe order:
+1. parent (pokes into the child for reset)
+2. reset and clock providers
+3. child
+which would defer between 1 and 2.
 
-Anders bisected this to,
-  # first bad commit:
-    [eb0ece16027f8223d5dc9aaf90124f70577bd22a]
-    Merge tag 'mm-stable-2025-03-30-16-52' of
-git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm
+With parent having the resource it would be re-ordered into:
+1. reset and clock providers
+2. parent
+3. child
 
-## Test log
-<No console output.>
 
-## Source
-* Kernel version: 6.14.0
-* Git tree: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-* Git sha: 91e5bfe317d8f8471fbaa3e70cf66cae1314a516
-* Git describe: v6.14-12245-g91e5bfe317d8
-
-## Test
-* Test log: https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/anders/tests/2vAGjk1bqJ8kqDGEyo2jXerYOcR/logs?format=txt
-* Build link: https://storage.tuxsuite.com/public/linaro/anders/builds/2vAGjX8EjBsjTTOgIxZswnitDbF/
-* Kernel config:
-https://storage.tuxsuite.com/public/linaro/anders/builds/2vAGjX8EjBsjTTOgIxZswnitDbF/config
-
---
-Linaro LKFT
-https://lkft.linaro.org
+Best regards,
+Krzysztof
