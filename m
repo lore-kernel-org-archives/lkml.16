@@ -1,82 +1,202 @@
-Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C92F618B03;
-	Wed,  2 Apr 2025 04:49:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 220371EA90;
+	Wed,  2 Apr 2025 04:49:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743569375; cv=none; b=acmKv/4L7ya+2NzLfnSoRkKE1XFVGoCM+Fb2EcX2Sry1YTZnAG70NhDuxBjJwbVtJFd69/qMaXP4OlQJ0/yGCaZpAei+iHWJ6SP3EEFB/9Eh+rPFxvx/sbHGFsv7AkqicQ8Ce1RSFO49okLaWw+c5yQnk6CQNhNmJqfmlCGwC2E=
+	t=1743569397; cv=none; b=ugMcmyArV7qDwn47N7orQr+k4CtJ0wLDSJK8VAySwW0BHSJ4gKXB4NGk0TWGECoSRL+ePFOTcsyuuO+3arHhZtpNKZnIcLxHuvFUofWB6BH4maZNEiKdaYriyOe6qJ4XcNpekoi+VJBRs0/7cgZRibFZLJFtnDRYEsQbtTU1Itc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743569375; c=relaxed/simple;
-	bh=qUah2WRjGc35/8pXmSNadWOP5FbZ9k3LwTQt0zZq/DY=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=N590NL81pntf1Sd9GyT/EUsoC7Ev5S3QD2ZKUanuiX2cGuE1KYWo6+FbucCLTATTOiD1CJj6Xej2gVc9INkS8Y4XPUxKFaM/OkmfVlgQ6TyuZVmiI9oPAjDq3Kqf8WggNICXaG59cnwC+iqvy9ua2QVw3KPElpXuk+Tiy66zV8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com; spf=pass smtp.mailfrom=perches.com; arc=none smtp.client-ip=216.40.44.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=perches.com
-Received: from omf12.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay08.hostedemail.com (Postfix) with ESMTP id 892CB140FFD;
-	Wed,  2 Apr 2025 04:49:15 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf12.hostedemail.com (Postfix) with ESMTPA id 0B1C517;
-	Wed,  2 Apr 2025 04:49:12 +0000 (UTC)
-Message-ID: <18c590c303e23b90efaa698b2e21017153c1945f.camel@perches.com>
-Subject: Re: [PATCH v2 10/12] checkpatch: Deprecate srcu_read_lock_lite()
- and srcu_read_unlock_lite()
-From: Joe Perches <joe@perches.com>
-To: paulmck@kernel.org
-Cc: rcu@vger.kernel.org, Joel Fernandes <joelagnelf@nvidia.com>, 
-	linux-kernel@vger.kernel.org, kernel-team@meta.com, rostedt@goodmis.org
-Date: Tue, 01 Apr 2025 21:49:11 -0700
-In-Reply-To: <62ef3d73-1a33-4357-925e-9c2fdf1ac8fb@paulmck-laptop>
-References: <eea8d42f-6d2d-485b-9bb9-4eb77a0e1f95@paulmck-laptop>
-	 <20250331210314.590622-10-paulmck@kernel.org>
-	 <5588e91ab302e21bf4e30b5208cf3d387f8e7de4.camel@perches.com>
-	 <0cbd404a-856a-4bc3-ab76-eeb839065a2d@paulmck-laptop>
-	 <d03ed9d9f7d5e9d8fddca4071e044d26c55a10e2.camel@perches.com>
-	 <62ef3d73-1a33-4357-925e-9c2fdf1ac8fb@paulmck-laptop>
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	s=arc-20240116; t=1743569397; c=relaxed/simple;
+	bh=9m0e7crQ9Tm/COI28RDj/VbGs0vzyR5dA1r/D/Csyc4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=N5fJXoHYVn8guhIlb+K/vRfDzKkfsIqXQq1oIw7DMKuBP7+7bWq1lkeoplMo0Qtx7hXAcVNEhR+tCkK9wGfLl7owCQAIAw7oVaGlvZSwagKvTNxrIUWAZ5W1FnG0Sr0HfWFogWGpkZU8MKpzAQcp90iU3Z4pPmIJEfqih6FCNY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4ZSC810KQzz13KhH;
+	Wed,  2 Apr 2025 12:49:21 +0800 (CST)
+Received: from kwepemg500010.china.huawei.com (unknown [7.202.181.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 8D420140360;
+	Wed,  2 Apr 2025 12:49:52 +0800 (CST)
+Received: from [10.174.178.209] (10.174.178.209) by
+ kwepemg500010.china.huawei.com (7.202.181.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Wed, 2 Apr 2025 12:49:51 +0800
+Message-ID: <36dc113c-383e-4b8a-88c1-6a070e712086@huawei.com>
+Date: Wed, 2 Apr 2025 12:49:50 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Rspamd-Server: rspamout03
-X-Rspamd-Queue-Id: 0B1C517
-X-Stat-Signature: t4gohoh6ez7eaisa1c4pu3538i7f88z5
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Session-ID: U2FsdGVkX1/r8TToW+Pp64WA6Mg2OxQzbVdILkAEtcc=
-X-HE-Tag: 1743569352-679309
-X-HE-Meta: U2FsdGVkX1++iRjD2fcvMBwdI6osmjlPbkPG3lB828We1v0X5+VMxBeUL526bbKWBsm7H4AQbSoeYZMuxATnv4hjKSn5vnGO1Q2fQWZ08i3Up8/1x9SilEsgvHgYgu3OQNorUS6jRNevGemPweH0bMho8lqKzht2xpln6M6QRVONJdtPfWZm7wTvM6n687AacC/gXecRaPS2FhuoO4oeVSk7v9zUsPXGzqxXsU0YBy+zlsxpDFMxHcQT7hIGpBt8AbbsX+Vq2jWZ/YjUjKcZ78LDnF3Myg6epYO7vhqdlkbwjKgdH815F3DNzOzCmA7F
+User-Agent: Mozilla Thunderbird
+Subject: Re: Fwd: [PATCH][SMB3 client] fix TCP timers deadlock after rmmod
+To: Kuniyuki Iwashima <kuniyu@amazon.com>
+CC: <edumazet@google.com>, <ematsumiya@suse.de>,
+	<linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-net@vger.kernel.org>, <smfrench@gmail.com>,
+	<zhangchangzhong@huawei.com>, <cve@kernel.org>, Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>, <sfrench@samba.org>
+References: <ac39f5a1-664a-4812-bb50-ceb9771d1d66@huawei.com>
+ <20250402020807.28583-1-kuniyu@amazon.com>
+From: Wang Zhaolong <wangzhaolong1@huawei.com>
+In-Reply-To: <20250402020807.28583-1-kuniyu@amazon.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemg500010.china.huawei.com (7.202.181.71)
 
-On Tue, 2025-04-01 at 21:23 -0700, Paul E. McKenney wrote:
-> On Tue, Apr 01, 2025 at 08:48:44PM -0700, Joe Perches wrote:
-> > On Tue, 2025-04-01 at 07:05 -0700, Paul E. McKenney wrote:
-> > > On Mon, Mar 31, 2025 at 11:53:25PM -0700, Joe Perches wrote:
-> > > > On Mon, 2025-03-31 at 14:03 -0700, Paul E. McKenney wrote:
-> > > > > Uses of srcu_read_lock_lite() and srcu_read_unlock_lite() are bet=
-ter
-> > > > > served by the new srcu_read_lock_fast() and srcu_read_unlock_fast=
-() APIs.
-> > > > > As in srcu_read_lock_lite() and srcu_read_unlock_lite() would nev=
-er have
-> > > > > happened had I thought a bit harder a few months ago.  Therefore,=
- mark
-> > > > > them deprecated.
-> > > >=20
-> > > > Would it be better to convert the 3 existing instances?
-> > >=20
-> > > Both are needed.  The point of these checkpatch.pl changes is to prev=
-ent
-> > > other instances from being added.
-> >=20
-> > If those are changed, why not remove the prototypes & functions too?
-> > That would stop more instances being added no?
->=20
-> Deprecating it for a cycle then removing the prototypes and functions
-> seems a bit more friendly to me.
+Yes, it seems the previous description might not have been entirely clear.
+I need to clearly point out that this patch, intended as the fix for CVE-2024-54680,
+does not actually address any real issues. It also fails to resolve the null pointer
+dereference problem within lockdep. On top of that, it has caused a series of
+subsequent leakage issues.
 
-OK, please remember to push a checkpatch revert or equivalent
-when it's done.  Thanks.
+We will indeed need the CNA team to update the description once the correct fix
+is merged.
+
+Best regards,
+Wang Zhaolong
+
+
+> From: Wang Zhaolong <wangzhaolong1@huawei.com>
+> Date: Tue, 1 Apr 2025 21:54:47 +0800
+>> Hi.
+>>
+>> My colleagues and I have been investigating the issue addressed by this patch
+>> and have discovered some significant concerns that require broader discussion.
+>>
+>> ### Socket Leak Issue
+>>
+>> After testing this patch extensively, I've confirmed it introduces a socket leak
+>> when TCP connections don't complete proper termination (e.g., when FIN packets
+>> are dropped). The leak manifests as a continuous increase in TCP slab usage:
+>>
+>> I've documented this issue with a reproducer in Bugzilla:
+>>
+>> https://bugzilla.kernel.org/show_bug.cgi?id=219972#c0
+>>
+>> The key issue appears to stem from the interaction between the SMB client and TCP
+>> socket lifecycle management:
+>>
+>> 1. Removing `sk->sk_net_refcnt = 1` causes TCP timers to be terminated early in
+>>      `tcp_close()` via the `inet_csk_clear_xmit_timers_sync()` call when
+>>      `!sk->sk_net_refcnt`
+>> 2. This early timer termination prevents proper reference counting resolution
+>>      when connections don't complete the 4-way TCP termination handshake
+>> 3. The resulting socket references are never fully released, leading to a leak
+>>
+>> #### Timeline of Related Changes
+>>
+>> 1. v4.2-rc1 26abe14379f8 ("net: Modify sk_alloc to not reference count the netns of kernel sockets")
+>>      - Added `sk_net_refcnt` field to distinguish user sockets (=1) from kernel sockets (=0)
+>>      - Kernel sockets don't hold netns references, which can lead to potential UAF issues
+>>
+>> 2. v6.9-rc2 151c9c724d05: ("tcp: properly terminate timers for kernel sockets")
+>>      - Modified `tcp_close()` to check `sk->sk_net_refcnt` and explicitly terminate timers for kernel sockets (=0)
+>>      - This prevents UAF when netns is destroyed before socket timers complete
+>>      - **Key change**: If `!sk->sk_net_refcnt`, call `inet_csk_clear_xmit_timers_sync()`
+>>
+>> 3. v6.12-rc7 ef7134c7fc48: ("smb: client: Fix use-after-free of network namespace")
+>>      - Fixed netns UAF in CIFS by manually setting `sk->sk_net_refcnt = 1`
+>>      - Also called `maybe_get_net()` to maintain netns references
+>>      - This effectively made kernel sockets behave like user sockets for reference counting
+>>
+>> 4. v6.13-rc4 e9f2517a3e18: ("smb: client: fix TCP timers deadlock after rmmod")
+>>      - Problem commit: Removed `sk->sk_net_refcnt = 1` setting
+>>      - Changed to using explicit `get_net()/put_net()` at CIFS layer
+>>      - This change leads to socket leaks because timers are terminated early
+>>
+>> ### Lockdep Warning Analysis
+>>
+>> I've also investigated the lockdep warning mentioned in the patch. My analysis
+>> suggests it may be a false positive rather than an actual deadlock. The crash
+>> actually occurs in the lockdep subsystem itself (null pointer dereference in
+>> `check_wait_context()`), not in the CIFS or networking code directly.
+>>
+>> The procedure for the null pointer dereference is as follows:
+>>
+>> When lockdep is enabled, the lock class "slock-AF_INET-CIFS" is set when a socket
+>> connection is established.
+>>
+>> ```
+>> cifs_do_mount
+>>     cifs_mount
+>>       mount_get_conns
+>>         cifs_get_tcp_session
+>>           ip_connect
+>>             generic_ip_connect
+>>               cifs_reclassify_socket4
+>>                 sock_lock_init_class_and_name(sk, "slock-AF_INET-CIFS",
+>>                   lockdep_init_map
+>>                     lockdep_init_map_wait
+>>                       lockdep_init_map_type
+>>                         lockdep_init_map_type
+>>                           register_lock_class
+>>                             __set_bit(class - lock_classes, lock_classes_in_use);
+>> ```
+>>
+>> When the module is unloaded, the lock class is cleaned up.
+>>
+>> ```
+>> free_mod_mem
+>>     lockdep_free_key_range
+>>       __lockdep_free_key_range
+>>         zap_class
+>>           __clear_bit(class - lock_classes, lock_classes_in_use);
+>> ```
+>>
+>> After the module is uninstalled and the network connection is restored, the
+>> timer is woken up.
+>>
+>> ```
+>> run_timer_softirq
+>>     run_timer_base
+>>       __run_timers
+>>         call_timer_fn
+>>           tcp_write_timer
+>>             bh_lock_sock
+>>               spin_lock(&((__sk)->sk_lock.slock))
+>>                 _raw_spin_lock
+>>                   lock_acquire
+>>                     __lock_acquire
+>>                       check_wait_context
+>>                         hlock_class
+>>                          if (!test_bit(class_idx, lock_classes_in_use)) {
+>>                             return NULL;
+>>                         hlock_class(next)->wait_type_inner; // Null pointer dereference
+>> ```
+>>
+>> The problem lies within lockdep, as Kuniyuki says:
+>>
+>>> I tried the repro and confirmed it triggers null deref.
+>>>
+>>> It happens in LOCKDEP internal, so for me it looks like a problem in
+>>> LOCKDEP rather than CIFS or TCP.
+>>>
+>>> I think LOCKDEP should hold a module reference and prevent related
+>>> modules from being unloaded.
+>>
+>> Regarding the deadlock issue, it is clear that the locks mentioned in the deadlock warning
+>> do not belong to the same lock instance. A deadlock should not occur.
+>>
+>> ### Discussion Points
+>>
+>> 1. API Design Question: Is this fundamentally an issue with how CIFS uses the socket
+>>      API, or is it a networking layer issue that should handle socket cleanup differently?
+>>
+>> 2. Approach to Resolution: Would it be better to:
+>>      - Revert to the original solution (setting `sk->sk_net_refcnt = 1`) from ef7134c7fc48?
+>>      - Work with networking subsystem maintainers on a more comprehensive solution that
+>>        handles socket cleanup properly?
+>>
+>> 3.  CVE Process Question: Given that CVE-2024-54680 appears to "fix" a non-existent issue
+>>       while introducing an actual vulnerability, what's the appropriate way to address this?
+> 
+> I tested on 6.14 and e9f2517a3e18, but the issue still reproduces,
+> so e9f2517a3e18 is a bogus fix, and we will need to ask the CNA team
+> to update the description once the correct fix is merged.
+> 
