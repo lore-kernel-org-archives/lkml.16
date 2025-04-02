@@ -1,115 +1,183 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C20623814A
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 12:48:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E923D23BCE7;
+	Wed,  2 Apr 2025 12:48:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743598087; cv=none; b=QBp8A4gaxcaZv6MHsQf+bI+JFs3t3UMSDIXFxjzwVAKr9s5IrknC3qZb5l9FWG6LcTF1lsWSpateXWTX6SQjYW8YvOa1YGg5ZUeukXi6aGrbmtd38VDW6VY3ymYAwK4aN1l7rp+m3o+s5JMeofltKJwnr6Ha7PDBuEmBDZC/ce4=
+	t=1743598089; cv=none; b=YGunlsKyuW2pcWK1R7xfMUUVtjF0fYrM1wy0eIjLU0kfykUbZDIdmrxYbrEqXRINUaZrnIDlwmvGdmetA/oG48A4DWa1Rd18V/d7DrugGSe4ymtKtCarIKVzsgFDI3aDjmgleVelwwX6sOx1tGa9hV9fOXzxMk05VXJNKp6o47E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743598087; c=relaxed/simple;
-	bh=nMKV+kr2cpsUbh2qAhXcIt216L96PZ43/QpfJ/+7WUw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=s/IgLe5FN5+1F9wxi/npNJGLOx4h3rHj/vAIDRJjMkB+Zpl+Iw/HLm16/xLU8OTxAE52dzV7LklfTJR0kIhpV6KXXxSZO3LTvm083zEshFWQn0OJnnMIC5u+vP2IYrCUkCcu+KGIys9I8bsCglkTC22GFL09E6SpJPPvACNZKTk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X75JvmLe; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743598089; c=relaxed/simple;
+	bh=ZbrgI1QMiyPzXZtbXyqIrXqGXB55hdcp4jkmMe1pbUU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=I1YUHZApkZTIiTdq2laLdCyq7lWgB+YZ4xPWEI22oPUJl3Cyvkv7KJn3E8Ux0n5UKa6EVPx+NySoQueOG6NM2dYNjaPPaCqAn9jSUkNKPSN1QunFIGs88pzfwSnzliRqMGbOQBBNsXb40sfRLomW5jbIPusbrs/dDR7IiQYQLwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=UFpZgsLj; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X75JvmLe"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43948f77f1aso47744275e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 05:48:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743598084; x=1744202884; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wet2FeYdwiKMwNMUdVcyeTpKdpWV/zoxt59GzOkUOvI=;
-        b=X75JvmLevfQls3MK7FX30rEDDBHUg25WDnLw7Vp9PzT0wX5hDXpiPtG4xfU1YJN2om
-         q/W21mJv0Ezf59KfNeBLLx92aQPJovShHVsy6VaodXpFv14iRDf1j1ytGHOfdUxw8xNr
-         qddsDVlPZILtO6z1SfULmFPsc37gBzfvU8UJrnR2T+qCnMxcPmOwzuTvfc8GBqVi/4/u
-         7P0KOjWhjYH400OWL8CctGv81jqFSPswVSDyBTYXbxNJI+AY3Ui3vpDT9EE8y0efaxPB
-         4wi2im7cOxxJSqLRQd9qkjwIdoalF61f+n65U8XKnnyYN9XBLImYRMnYNKkknRhsTh/V
-         Fqmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743598084; x=1744202884;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wet2FeYdwiKMwNMUdVcyeTpKdpWV/zoxt59GzOkUOvI=;
-        b=J/FYFRyjjbu2bWXbEPSyt71NM1IAJdJw9uh1cw6SJR6hGWhln+P7pBJZXzfQz1BKAy
-         ZLHxMtMMDnHMbwx4PH47D3ltyh8qqL6Y9HrtLbDoX631x8uQrkNbWUsreNfrnoB7qkTT
-         gBxTFrus943lP3qBomHLrf7ASnkeOdBZ/hl5lzc7KLJgvkBBhA4iWzrf+VXm2n4J4LH7
-         kdgYJJQZtSnKA16OQffc6vSMqjYI6qaLRjaBAgr00T0JMzbsedAvAn63y1MMKw0/814M
-         Ka7LY1j2KlDe1rKU3AfDyjPkbrQnjO6v94xLPBPsYUKppkDJash4R24oxNLb5lW320e0
-         NgUg==
-X-Forwarded-Encrypted: i=1; AJvYcCX4pUM7fTKs73HmZurXCfzoVFJXYWQd49uZ56iIcZccD2Okh5hEHtuvjtk0CKd0IePzSHSF0lFYV3Stf58=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwqWjYi9brzS6jQMXBUWoCaZPOCq0EOuDg11AoL/aEVvtfqKbuh
-	cuE2fWkPMkJH4auE1QDLUO0u2OKr+9v6ok+haOa5ajgWNbV6poabNBu4rZARw1w=
-X-Gm-Gg: ASbGncs9XPoUtBzLu6tkwOQ49fDvdQYu9e6jsCuVWw58v+EQX71wzrdqtC0fUcUcHxE
-	SX/lAuh275TCddKIvgRehRzwV3HH+nfvtekYzozS4EYHDEFgqBP9uktn5VM6DvZZ8kKrzUYbcco
-	iod4OaSjgm34bSMrlKPcfI7S65NHt+V3AXqw/hIShxOMR6JPKLrBrwZq9dFwK/8eKG7lAEic0Zt
-	JsxgIKPWWUCRglSCyDEIdMYusYWEWOYFz8TufqI8mLknmnz4gClo63tA4Tvj8yQ9neDcgrj2X3X
-	yik/8t6G/PIMXcvnIUzcqZjNgjsm6BlT1Ts2mNQ1WwAIHspMZqhz
-X-Google-Smtp-Source: AGHT+IHlWBrnUKthpg0J7fPqgoIaRxSRyaQtDJqUlOyupRqtjyvSz7tzgOJJVgRLPScsMZIJ7FswCg==
-X-Received: by 2002:a05:600c:444d:b0:43c:f85d:1245 with SMTP id 5b1f17b1804b1-43db6249f80mr142390905e9.17.1743598084244;
-        Wed, 02 Apr 2025 05:48:04 -0700 (PDT)
-Received: from pc.. ([197.155.71.138])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43eb61b6cd2sm19675985e9.39.2025.04.02.05.48.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Apr 2025 05:48:03 -0700 (PDT)
-From: Erick Karanja <karanja99erick@gmail.com>
-To: gregkh@linuxfoundation.org,
-	outreachy@lists.linux.dev
-Cc: karanja99erick@gmail.com,
-	philipp.g.hortmann@gmail.com,
-	linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/3] staging: rtl8723bs: Use true/false instead of 1/0
-Date: Wed,  2 Apr 2025 15:47:42 +0300
-Message-ID: <eca5a63d92f5bbbecb642d324a5e0641f697d0bf.1743596287.git.karanja99erick@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1743596287.git.karanja99erick@gmail.com>
-References: <cover.1743596287.git.karanja99erick@gmail.com>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="UFpZgsLj"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=yibjlCzMj7db36Ncl+n+k08WtHR8TCTohVRGWqYmZg0=; b=UFpZgsLjYa47uMUX+kbAWXcqXj
+	EAXRsVbFGjyOEQDht4LLsjdX2i6zX1P/detZLCGKl4B2bZqBP3vuGsDj76g6F2j2Je6VWPDl7nVYP
+	UatDa/505MPVEy3wGGZrB+COxlRk+tMXa/YhSgMarkAYW4y/gXTQkgS/PzfN31YyzEdo=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1tzxVc-007n1N-8p; Wed, 02 Apr 2025 14:47:56 +0200
+Date: Wed, 2 Apr 2025 14:47:56 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Lukasz Majewski <lukma@denx.de>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, davem@davemloft.net,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Richard Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 4/4] net: mtip: The L2 switch driver for imx287
+Message-ID: <8f431197-474e-4cd5-9c3e-d573c3f3e6b5@lunn.ch>
+References: <20250331103116.2223899-1-lukma@denx.de>
+ <20250331103116.2223899-5-lukma@denx.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250331103116.2223899-5-lukma@denx.de>
 
-Standardize boolean representation by replacing 1/0
-with true/false in cases where boolean logic is implied.
-This improves code clarity and aligns with the kernel’s bool type usage.
+> +static void read_atable(struct switch_enet_private *fep, int index,
+> +			unsigned long *read_lo, unsigned long *read_hi)
+> +{
+> +	unsigned long atable_base = (unsigned long)fep->hwentry;
+> +
+> +	*read_lo = readl((const void *)atable_base + (index << 3));
+> +	*read_hi = readl((const void *)atable_base + (index << 3) + 4);
+> +}
+> +
+> +static void write_atable(struct switch_enet_private *fep, int index,
+> +			 unsigned long write_lo, unsigned long write_hi)
+> +{
+> +	unsigned long atable_base = (unsigned long)fep->hwentry;
+> +
+> +	writel(write_lo, (void *)atable_base + (index << 3));
+> +	writel(write_hi, (void *)atable_base + (index << 3) + 4);
+> +}
 
-Signed-off-by: Erick Karanja <karanja99erick@gmail.com>
----
- drivers/staging/rtl8723bs/core/rtw_mlme_ext.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+It would be nice to have the mtip_ prefix on all functions.
 
-diff --git a/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c b/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
-index 952ce6dd5af9..8f2c9c3e853c 100644
---- a/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
-+++ b/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
-@@ -1173,7 +1173,7 @@ unsigned int OnAssocReq(struct adapter *padapter, union recv_frame *precv_frame)
- 
- 	/*  check if there is WMM IE & support WWM-PS */
- 	pstat->flags &= ~WLAN_STA_WME;
--	pstat->qos_option = 0;
-+	pstat->qos_option = false;
- 	pstat->qos_info = 0;
- 	pstat->has_legacy_ac = true;
- 	pstat->uapsd_vo = 0;
-@@ -1189,7 +1189,7 @@ unsigned int OnAssocReq(struct adapter *padapter, union recv_frame *precv_frame)
- 
- 					pstat->flags |= WLAN_STA_WME;
- 
--					pstat->qos_option = 1;
-+					pstat->qos_option = true;
- 					pstat->qos_info = *(p+8);
- 
- 					pstat->max_sp_len = (pstat->qos_info>>5)&0x3;
--- 
-2.43.0
+> +static int mtip_open(struct net_device *dev)
+> +{
+> +	struct mtip_ndev_priv *priv = netdev_priv(dev);
+> +	struct switch_enet_private *fep = priv->fep;
+> +	int ret, port_idx = priv->portnum - 1;
+> +
+> +	if (fep->usage_count == 0) {
+> +		clk_enable(fep->clk_ipg);
+> +		netif_napi_add(dev, &fep->napi, mtip_rx_napi);
+> +
+> +		ret = mtip_alloc_buffers(dev);
+> +		if (ret)
+> +			return ret;
 
+nitpick: You might want to turn the clock off before returning the
+error.
+
+> +	}
+> +
+> +	fep->link[port_idx] = 0;
+> +
+> +	/* Probe and connect to PHY when open the interface, if already
+> +	 * NOT done in the switch driver probe (or when the device is
+> +	 * re-opened).
+> +	 */
+> +	ret = mtip_mii_probe(dev);
+> +	if (ret) {
+> +		mtip_free_buffers(dev);
+
+I've not checked. Does this do the opposite of netif_napi_add()?
+
+> +static void mtip_set_multicast_list(struct net_device *dev)
+> +{
+> +	unsigned int i, bit, data, crc;
+> +
+> +	if (dev->flags & IFF_PROMISC) {
+> +		dev_info(&dev->dev, "%s: IFF_PROMISC\n", __func__);
+
+You can save one level of indentation with a return here.
+
+> +	} else {
+> +		if (dev->flags & IFF_ALLMULTI) {
+> +			dev_info(&dev->dev, "%s: IFF_ALLMULTI\n", __func__);
+
+and other level here.
+
+> +		} else {
+> +			struct netdev_hw_addr *ha;
+> +			u_char *addrs;
+> +
+> +			netdev_for_each_mc_addr(ha, dev) {
+> +				addrs = ha->addr;
+> +				/* Only support group multicast for now */
+> +				if (!(*addrs & 1))
+> +					continue;
+
+You could pull there CRC caluclation out into a helper. You might also
+want to search the tree and see if it exists somewhere else.
+
+> +
+> +				/* calculate crc32 value of mac address */
+> +				crc = 0xffffffff;
+> +
+> +				for (i = 0; i < 6; i++) {
+
+Is 6 the lengh of a MAC address? There is a #define for that.
+
+> +					data = addrs[i];
+> +					for (bit = 0; bit < 8;
+> +					     bit++, data >>= 1) {
+> +						crc = (crc >> 1) ^
+> +						(((crc ^ data) & 1) ?
+> +						CRC32_POLY : 0);
+> +					}
+> +				}
+> +			}
+> +		}
+> +	}
+> +}
+> +
+
+> +struct switch_enet_private *mtip_netdev_get_priv(const struct net_device *ndev)
+> +{
+> +	if (ndev->netdev_ops == &mtip_netdev_ops)
+> +		return netdev_priv(ndev);
+> +
+> +	return NULL;
+> +}
+> +
+
+> +static int __init mtip_switch_dma_init(struct switch_enet_private *fep)
+> +{
+> +	struct cbd_t *bdp, *cbd_base;
+> +	int ret, i;
+> +
+> +	/* Check mask of the streaming and coherent API */
+> +	ret = dma_set_mask_and_coherent(&fep->pdev->dev, DMA_BIT_MASK(32));
+> +	if (ret < 0) {
+> +		dev_warn(&fep->pdev->dev, "No suitable DMA available\n");
+
+Can you recover from this? Or should it be dev_err()?
+
+More later...
+
+	Andrew
