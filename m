@@ -1,69 +1,65 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61E67194C61
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 17:21:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA52C17E8E2;
+	Wed,  2 Apr 2025 17:23:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743614506; cv=none; b=aNKDZRm6AZovTI4cZsAr/I+bk7kYonK03krv9DicqX7B+em47qNY4Y4UXn8itXNu8tuiKFPqpJPrSBilRchmVKy0cADj5VB3EXf4hqUES9n09XLKsL5UBvu+OOgYB051Vjnhzw79/1pK7nHz8wDO7NkEZ6ZAeQKpxdhPUcpYmMo=
+	t=1743614590; cv=none; b=ceaeEkSOCC0wwF7NUIJSXAMWwDHqX5VHo/MV1uTrY3ttZSR3AcnybLXNXPPSB1J/Lp2iEl9TpR3rujIf0bEMGkcGr5HtKBndG7ZbjSHH2HUW49BESFduRc5iaMnByJJcIkjA3U/LQEaH94fXn6PjdOabaRTBsD+b85qK1lPTFH8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743614506; c=relaxed/simple;
-	bh=pPvUVx8w3534AH26P8xfZUy/BS8igRvD669kpXh/0jg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DKmeOG2HLvekQQ2r+2QbnvyHE5QnaSzkhwPYc1mRizUDRhqh9Lgd05mR+hQ8uABIo/KVCAEeowB7C1gfEFINawRz4cL7XMyrEp8sgTC3x2ZfbQah6Gi3DpIlq3q71JLQfwHd6FFdqMs1vXlbcP+BCHHAQK3/7MJuRVeREPZc0KA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=xet3QQAy; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=SZ3HdaK3; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=xet3QQAy; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=SZ3HdaK3; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="xet3QQAy";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="SZ3HdaK3";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="xet3QQAy";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="SZ3HdaK3"
-Received: from kitsune.suse.cz (unknown [10.100.12.127])
-	by smtp-out2.suse.de (Postfix) with ESMTP id 80AB01F38A;
-	Wed,  2 Apr 2025 17:21:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1743614501; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=CbZNo4dyJrIgS4/ORAw10xdILQG863hlxScew89HxRw=;
-	b=xet3QQAyx1rzfh7DGyedYEnaCWfJ/Gcu8tG4pb2NAvFBDB2/+IShFmzk5f00SW/E/QM4bw
-	segYhmoFKFXX6mcRYlgfgii09ruwJuU7+QcNNJGFTb/4w1ac+wmHRaoX1Tt5gkTKgUfhv6
-	iddb6yYzx7PjeB8V+phzFEHOTgQSdXg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1743614501;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=CbZNo4dyJrIgS4/ORAw10xdILQG863hlxScew89HxRw=;
-	b=SZ3HdaK3U5eYBciFrzbZ79TaFBGRFlnlbGCrrtnIv/KZp3owjEWB8fjN3xe3EddztK+gmH
-	qWK84B5sLU5pO+AA==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1743614501; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=CbZNo4dyJrIgS4/ORAw10xdILQG863hlxScew89HxRw=;
-	b=xet3QQAyx1rzfh7DGyedYEnaCWfJ/Gcu8tG4pb2NAvFBDB2/+IShFmzk5f00SW/E/QM4bw
-	segYhmoFKFXX6mcRYlgfgii09ruwJuU7+QcNNJGFTb/4w1ac+wmHRaoX1Tt5gkTKgUfhv6
-	iddb6yYzx7PjeB8V+phzFEHOTgQSdXg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1743614501;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=CbZNo4dyJrIgS4/ORAw10xdILQG863hlxScew89HxRw=;
-	b=SZ3HdaK3U5eYBciFrzbZ79TaFBGRFlnlbGCrrtnIv/KZp3owjEWB8fjN3xe3EddztK+gmH
-	qWK84B5sLU5pO+AA==
-From: Michal Suchanek <msuchanek@suse.de>
-To: 
-Cc: Michal Suchanek <msuchanek@suse.de>,
-	Peter Huewe <peterhuewe@gmx.de>,
-	Jarkko Sakkinen <jarkko@kernel.org>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	linux-integrity@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Jonathan McDowell <noodles@earth.li>
-Subject: [PATCH] tpm: tis: Increase the default for timeouts B and C
-Date: Wed,  2 Apr 2025 19:21:30 +0200
-Message-ID: <20250402172134.7751-1-msuchanek@suse.de>
-X-Mailer: git-send-email 2.47.1
+	s=arc-20240116; t=1743614590; c=relaxed/simple;
+	bh=qboEJB0XC7UZ659Q1hFuWPZyl+9SCB/g3TXKGXISjc4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=g3/m9mboRZI7USxb3enub7WAZuQAGep1H7X6+WqdVhourRMYJI1L8mk9TO+UCOeR1IjRYh8jqr4iEmk0Kx6Gqu2/7M7dXidxgyfvEC0UjQ/YW+yOXN7w6bA8yNnAiYTg4WgEvL1RcF9i2RP+FzaPXzKPuWn9UgJmP9iBuFKfJ2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fomichev.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fomichev.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-224019ad9edso1236385ad.1;
+        Wed, 02 Apr 2025 10:23:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743614587; x=1744219387;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BXBH6g4YVJFY05wco5KXKAXgGb2YFN2mifz9zT0B8qE=;
+        b=P3TKRrI4nsfSgricjPAA/CIhfHpNKR1bZZj/3r1kY1ElRr2R+2CQp2JVXIpCBQQdGx
+         9vznYN8ogQEJTesgNAn2ZNJNpwRK03RlrPZq9WHt1FeEd29hg9RgOcw3PbS/VcZlq2Yh
+         mMKNRs8031kS3Tv8r0raRfXM6cHfr/E/iTVEOLQ78l6dh2UuduK5BUQ2I4IDC8giIY4C
+         tgdU4cG3vk8XrMMmGDVzRDXl0fhIyaRFiao5N2ip61uzbptCsSaoOkCZjAKhj5D87W98
+         pGgZ0T03MZdr/YB1u9rjTysoMoLZ5HliDsXdGzrVp05IL0NplSb9Jmw+zq4PfYvZuOYA
+         PdxA==
+X-Forwarded-Encrypted: i=1; AJvYcCWNXzW/Rh3DcA/T3yne4QDod32dWLBHgfOPUyXLZ9TbFKe1CNtNEIioO2pAJbMSh52+AibBhjeLh6Ec9KI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzRIqp+GzUZvK3h6KvuM8usAEtmG+1ct3hIgCQpeSrN3I+3wdd3
+	XZ3xvhGy9xFPehI8Xk+6KhvPojksmBI0MEssMhq7xz5gYVZU95milPQrUzw=
+X-Gm-Gg: ASbGncu1LcNtgrQDLswcpXQ4dHmAwGKNSDVV1gx5Pr5XPw/9Z1SAld5trvRHMxJ0oWy
+	jwGAG0H8C+gTNSCQagAZN+HknDfi1ON/vvQZDIw03TvUbMxet0DT+7ShXJTTxTdJGMAReJxX+s6
+	X+RjHlFo+oB5lILWQ6la1N7wF4aIh2QMN3FoQzE1s0g3xxv5Oyd5Imi7lNjlAa6emqCDQQmqIkb
+	6K5gUkXXH/GYAyt5t5IUkSAgpM5/SVaVXgjrcuWlRKpnIzIVysAcU+wajS4P+BPDeo+HokMBRNB
+	LSeWvFyTTvDU6uZTF7EELvrQMrzCIK6vaamJom7T0lWk
+X-Google-Smtp-Source: AGHT+IHTvxvtH54nZoT1e/ZxWt9uP8S6VD+PvawC5K+Ig+rYK453902DT32t2dZrn9IoU/bGsw4U9g==
+X-Received: by 2002:a17:902:e892:b0:220:cd9a:a167 with SMTP id d9443c01a7336-2296c603980mr38329705ad.4.1743614586408;
+        Wed, 02 Apr 2025 10:23:06 -0700 (PDT)
+Received: from localhost ([2601:646:9e00:f56e:123b:cea3:439a:b3e3])
+        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-3056f80e9basm1919014a91.6.2025.04.02.10.23.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Apr 2025 10:23:05 -0700 (PDT)
+From: Stanislav Fomichev <sdf@fomichev.me>
+To: netdev@vger.kernel.org
+Cc: davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	paulmck@kernel.org,
+	joel@joelfernandes.org,
+	steven.price@arm.com,
+	akpm@linux-foundation.org,
+	matttbe@kernel.org,
+	anshuman.khandual@arm.com,
+	sdf@fomichev.me,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net-next] configs/debug: run and debug PREEMPT
+Date: Wed,  2 Apr 2025 10:23:05 -0700
+Message-ID: <20250402172305.1775226-1-sdf@fomichev.me>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,66 +67,33 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Level: 
-X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_MISSING_CHARSET(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-0.997];
-	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	RCVD_COUNT_ZERO(0.00)[0];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[suse.de,gmx.de,kernel.org,ziepe.ca,vger.kernel.org,earth.li];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:mid];
-	FREEMAIL_ENVRCPT(0.00)[gmx.de]
-X-Spam-Score: -2.80
-X-Spam-Flag: NO
 
-With some Infineon chips the timeouts in tpm_tis_send_data (both B and
-C) can reach up to about 2250 ms.
+Recent change [0] resulted in a "BUG: using __this_cpu_read() in
+preemptible" splat [1]. PREEMPT kernels have additional requirements
+on what can and can not run with/without preemption enabled.
+Expose those constrains in the debug kernels.
 
-Extend the timeout duration to accommodate this.
+0: https://lore.kernel.org/netdev/20250314120048.12569-2-justin.iurman@uliege.be/
+1: https://lore.kernel.org/netdev/20250402094458.006ba2a7@kernel.org/T/#mbf72641e9d7d274daee9003ef5edf6833201f1bc
 
-Link: https://lore.kernel.org/linux-integrity/Z5pI07m0Muapyu9w@kitsune.suse.cz/
-Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+Signed-off-by: Stanislav Fomichev <sdf@fomichev.me>
 ---
-An alternative would be to add an entry to vendor_timeout_overrides but
-I do not know how to determine the chip IDs to put into this table.
----
- drivers/char/tpm/tpm_tis_core.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ kernel/configs/debug.config | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/char/tpm/tpm_tis_core.h b/drivers/char/tpm/tpm_tis_core.h
-index 970d02c337c7..1ff565be2175 100644
---- a/drivers/char/tpm/tpm_tis_core.h
-+++ b/drivers/char/tpm/tpm_tis_core.h
-@@ -54,7 +54,7 @@ enum tis_int_flags {
- enum tis_defaults {
- 	TIS_MEM_LEN = 0x5000,
- 	TIS_SHORT_TIMEOUT = 750,	/* ms */
--	TIS_LONG_TIMEOUT = 2000,	/* 2 sec */
-+	TIS_LONG_TIMEOUT = 4000,	/* 2 sec */
- 	TIS_TIMEOUT_MIN_ATML = 14700,	/* usecs */
- 	TIS_TIMEOUT_MAX_ATML = 15000,	/* usecs */
- };
-@@ -64,7 +64,7 @@ enum tis_defaults {
-  */
- #define TIS_TIMEOUT_A_MAX	max_t(int, TIS_SHORT_TIMEOUT, TPM2_TIMEOUT_A)
- #define TIS_TIMEOUT_B_MAX	max_t(int, TIS_LONG_TIMEOUT, TPM2_TIMEOUT_B)
--#define TIS_TIMEOUT_C_MAX	max_t(int, TIS_SHORT_TIMEOUT, TPM2_TIMEOUT_C)
-+#define TIS_TIMEOUT_C_MAX	max_t(int, TIS_LONG_TIMEOUT, TPM2_TIMEOUT_C)
- #define TIS_TIMEOUT_D_MAX	max_t(int, TIS_SHORT_TIMEOUT, TPM2_TIMEOUT_D)
- 
- #define	TPM_ACCESS(l)			(0x0000 | ((l) << 12))
+diff --git a/kernel/configs/debug.config b/kernel/configs/debug.config
+index 8aafd050b754..e81327d2cd63 100644
+--- a/kernel/configs/debug.config
++++ b/kernel/configs/debug.config
+@@ -112,3 +112,8 @@ CONFIG_BRANCH_PROFILE_NONE=y
+ CONFIG_DYNAMIC_FTRACE=y
+ CONFIG_FTRACE=y
+ CONFIG_FUNCTION_TRACER=y
++#
++# Preemption
++#
++CONFIG_DEBUG_PREEMPT=y
++CONFIG_PREEMPT=y
 -- 
-2.47.1
+2.49.0
 
