@@ -1,99 +1,77 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1984119049B;
-	Wed,  2 Apr 2025 06:47:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2AFA1519A6;
+	Wed,  2 Apr 2025 06:48:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743576447; cv=none; b=NUAXND6KBzuG1MijcHByVdWkkORjn6zCRKKcxpSdMFtEQX2nlqvDZGyF9XVLacQRbrW+dVqRqS0o812Y3Sn4WcBKlWlyM9MNWyrHojtWP8w8E1UXL8HKFbTEELhYpmZ5zlGIuVu20EfqDNhuI8JjdApmdoYxxoZOP+paeJeEEmE=
+	t=1743576487; cv=none; b=L5tVEF/wsXN5IAzr0b3B0h/HIbzLi9Oc6QD76ojWyinn1/hlHNoBsjJyIcg1mOqS1wVByN2nOF70Dvlkw67VZMGCN3/7gLH4oRhR1XckGEFeg30Skqm5ourhNy1uuHOwylLFSX/QThtbKWYEhNcJWqW2w4ezmSTwtXKfK9M7DhY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743576447; c=relaxed/simple;
-	bh=n2QGawQ++618BOMU9y2B5+lGS8jDmBhY05os0N8/WkI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WlPX2FlqIGaUQetQsy1wjkcFoJOQU5iHup/2t+9rHrtnGgBONsfM343ooaHwT6bh5LTm/mACp5oFdO1boZrVrt/OzE9pw6tSeIgUAYpwX74aERzdGTbLVXn2RZ9GEz7o+yaPGN2qVJh8f0FZbqtmWDXBLLO/R6L1JuCB6ECvw2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=QXUCBHUN; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1743576487; c=relaxed/simple;
+	bh=iVNySqzI/ywgVujwNPF6s7qzEAhRY/BGq1Z1JGoxe+E=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MKcRkBGkDbjgucukd/ZY0FxLiaoOk2c5e6MQg9lAtZg2nYmOKjKRyPlhJHU6scjIteoiFN3PFHujxvMrIkdHVL6NThqm6USXh99PUIGpGxQAw9kMBlDtqEmFHASw8ryA2bKJYTf+aaPR7XCkIlUONs9KJVBwMZzOgJR3TQTRKkY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cWG8sByZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="QXUCBHUN"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 15CDB4432F;
-	Wed,  2 Apr 2025 06:47:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1743576442;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=91QabIyHUeDDbVbgDDW38HeCEEGmj7YCmJ79O7+U7QQ=;
-	b=QXUCBHUNUfi1vLcXOftm6Wj0p9c/FfloQ6SezD61YmMYPA3m8FcDc9A7A5C1VBwS1/4VM6
-	el1ik/ux7jYuCcCMUNnyQXiJ1dpobRl4Q+mplDZUuUb5l/lFJ35wI3/xc6t13vfxS/XvcL
-	gaWvZboR58uI/7CTkylFBvl+TjfefxRTIVXb9/5JPwRkMlyJ6/018NQEPmlC8ejjDqoXJN
-	Y7+VOnTBpK6R9nPdbIMiAnMmWbYvpQeCaL87vxT7YXxGpu8MUaQmyEMlDjHPChxdcGyeAt
-	vKzDxmEZuGFSYrz4LMt2oOqqLl8wi0juYqNTrCXir501yVdHNqWTB4hlUPrajg==
-Date: Wed, 2 Apr 2025 08:47:15 +0200
-From: Maxime Chevallier <maxime.chevallier@bootlin.com>
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: Alexander H Duyck <alexander.duyck@gmail.com>, davem@davemloft.net,
- Andrew Lunn <andrew@lunn.ch>, Jakub Kicinski <kuba@kernel.org>, Eric
- Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Heiner
- Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
- linux-arm-kernel@lists.infradead.org, Christophe Leroy
- <christophe.leroy@csgroup.eu>, Herve Codina <herve.codina@bootlin.com>,
- Florian Fainelli <f.fainelli@gmail.com>, Vladimir Oltean
- <vladimir.oltean@nxp.com>, =?UTF-8?B?S8O2cnk=?= Maincent
- <kory.maincent@bootlin.com>, Oleksij Rempel <o.rempel@pengutronix.de>,
- Simon Horman <horms@kernel.org>, Romain Gantois
- <romain.gantois@bootlin.com>
-Subject: Re: [PATCH net-next v5 09/13] net: phylink: Use phy_caps_lookup for
- fixed-link configuration
-Message-ID: <20250402084715.3090c6c2@fedora.home>
-In-Reply-To: <Z-wQ1Ml_9xNz0XtV@shell.armlinux.org.uk>
-References: <20250307173611.129125-1-maxime.chevallier@bootlin.com>
-	<20250307173611.129125-10-maxime.chevallier@bootlin.com>
-	<8d3a9c9bb76b1c6bc27d2bd01f4831b2cac83f7f.camel@gmail.com>
-	<20250328090621.2d0b3665@fedora-2.home>
-	<CAKgT0Ue_JzmJAPKBhe6XaMkDCy+YNNg5_5VvzOR6CCbqcaQg3Q@mail.gmail.com>
-	<20250331091449.155e14a4@fedora-2.home>
-	<3517cb7b3b10c29a6bf407f2e35fdebaf7a271e3.camel@gmail.com>
-	<Z-wQ1Ml_9xNz0XtV@shell.armlinux.org.uk>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cWG8sByZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96124C4CEDD;
+	Wed,  2 Apr 2025 06:48:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743576487;
+	bh=iVNySqzI/ywgVujwNPF6s7qzEAhRY/BGq1Z1JGoxe+E=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=cWG8sByZ9t/Eo9M7i7c+lQhHMsp7vCQ11v0UFyioEKWCEKKDMyVc7uTKWphqwO8rq
+	 KtwKHdrZrJEg2zq2d2PPAWfsSK10pd4XfkooOrVsx9XSkYm2/5/nkTBjv4x0AV/r9e
+	 8bpPotwmRiNM28nk1I0wEkeLAOPyCiaCwtpINYtCDWyJf0p4bjUwYCLx57ZwmIlLd3
+	 i1ax3un5Y9JXJTxlrp7euYnHVeXaPKA0rpTgey+Zz8JCGVM9OUtSr41sQJ5FbQclaJ
+	 S3K3nt2h1Wme+Z6xg1tWO7Ij+aLrI+SUoBI4kU7scldG5GQ4u1NLXG6GF7xjeiow/S
+	 2jqv1EtGAjT5g==
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-5499614d3d2so7174775e87.3;
+        Tue, 01 Apr 2025 23:48:07 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUfyr8pK55148zJKgBOgQ2cmCjxSFCdYQnI4OHFnD8mCLpMpw2W14G3K1CwB3lYYmoY2iT+2x+CbbPC@vger.kernel.org, AJvYcCV69yVf1/bAhKiNmgiHTAAwgYVLli8dreBk1emX2nXGCLKQRlIRCR+fVkYKWGKGIUEmirxu/D6b8gmSOEMw@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxcmyo+KWP4ncVszxRADGX7BXS30i6VIrOymt0yxCWYba259/PV
+	JZMOw8G7XegcF1vUuYiFqCZ0UjY0tBkgZeUhZni1OnJF8DhvGNhq1G8g7SPlF3gEt/7924QfJFq
+	BV8liA7Njdg+2qeES3hG3GLX9M1w=
+X-Google-Smtp-Source: AGHT+IHxviuonsU0zEvEJ+Udb3/Dy+1c6pqnxL3k+SX3TxRyk/NjZhQgUEtXYtRfDvPjXFW/EDAEq7EGYqjTuuKc4zY=
+X-Received: by 2002:a05:6512:2c99:b0:54b:117c:118c with SMTP id
+ 2adb3069b0e04-54b117c11f5mr3947880e87.57.1743576485964; Tue, 01 Apr 2025
+ 23:48:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddukeegleelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpeforgigihhmvgcuvehhvghvrghllhhivghruceomhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgeevledtvdevueehhfevhfelhfekveeftdfgiedufeffieeltddtgfefuefhueeknecukfhppedvrgdtudemtggsudelmeekugegheemgeeltddtmeeiheeikeemvdelsgdumeelvghfheemvgektgejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgduleemkegugeehmeegledttdemieehieekmedvlegsudemlegvfhehmegvkegtjedphhgvlhhopehfvgguohhrrgdrhhhomhgvpdhmrghilhhfrhhomhepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvddtpdhrtghpthhtoheplhhinhhugiesrghrmhhlihhnuhigrdhorhhgrdhukhdprhgtphhtthhopegrlhgvgigrnhguvghrrdguuhihtghksehgmhgrihhlrdgtohhmpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlo
- hhfthdrnhgvthdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehprggsvghnihesrhgvughhrghtrdgtohhmpdhrtghpthhtohephhhkrghllhifvghithdusehgmhgrihhlrdgtohhm
-X-GND-Sasl: maxime.chevallier@bootlin.com
+References: <20250401221600.24878-1-ebiggers@kernel.org>
+In-Reply-To: <20250401221600.24878-1-ebiggers@kernel.org>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Wed, 2 Apr 2025 09:47:53 +0300
+X-Gmail-Original-Message-ID: <CAMj1kXFQE5B=B=Ptj=8zxNU=Xiu+NdympxfSUcvYbHVyNsNGFw@mail.gmail.com>
+X-Gm-Features: AQ5f1JoAivqiRF6ZW_-JWRUhAevLivGhDUBPRKvbGoRyBb3736u6IzcEZAjTes0
+Message-ID: <CAMj1kXFQE5B=B=Ptj=8zxNU=Xiu+NdympxfSUcvYbHVyNsNGFw@mail.gmail.com>
+Subject: Re: [PATCH 0/7] More CRC kconfig option cleanups
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, 
+	linux-arch@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+On Wed, 2 Apr 2025 at 01:16, Eric Biggers <ebiggers@kernel.org> wrote:
+>
+> This series finishes cleaning up the CRC kconfig options by removing the
+> remaining unnecessary prompts and an unnecessary 'default y', removing
+> CONFIG_LIBCRC32C, and documenting all the options.
+>
+> I'm planning to take this series through the CRC tree.
+>
+> Eric Biggers (7):
+>   lib/crc: remove unnecessary prompt for CONFIG_CRC32 and drop 'default
+>     y'
+>   lib/crc: remove unnecessary prompt for CONFIG_CRC_CCITT
+>   lib/crc: remove unnecessary prompt for CONFIG_CRC16
+>   lib/crc: remove unnecessary prompt for CONFIG_CRC_T10DIF
+>   lib/crc: remove unnecessary prompt for CONFIG_CRC_ITU_T
+>   lib/crc: document all the CRC library kconfig options
+>   lib/crc: remove CONFIG_LIBCRC32C
+>
 
-> > Basically we still need the value to be screened by the pl->supported.
-> > The one change is that we have to run the extra screening on the
-> > intersect instead of skipping the screening, or doing it before we even
-> > start providing bits.
-> > 
-> > With this approach we will even allow people to use non twisted pair
-> > setups regardless of speed as long as they don't provide any twisted
-> > pair modes in the standard set.
-> > 
-> > I will try to get this tested today and if it works out I will submit
-> > it for net. I just need to test this and an SFP ksettings_set issue I
-> > found when we aren't using autoneg.  
-> 
-> This code used to be so simple... and that makes me wonder whether
-> Maxime's work is really the best approach. It seems that the old way
-> was better precisely because it was more simple.
-
-Sorry to hear you say that. Fixed-link was the main pain point with
-this work, I've stressed it out. I agree that for fixed-link, it
-ends-up not looking too good, hopefully the rest of the series
-compensate for that.
-
-Maxime
+Acked-by: Ard Biesheuvel <ardb@kernel.org>
