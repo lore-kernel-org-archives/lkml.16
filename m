@@ -1,100 +1,134 @@
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D017923A9A4;
-	Wed,  2 Apr 2025 15:27:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 05D2CEAD7;
+	Wed,  2 Apr 2025 15:30:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743607679; cv=none; b=lDTm1UmQALOiC0cxtT3JXqI3+wG1OF4RZO9zY9dQ2FIkipS8zigxagVzAhRCszOQ8/XWUcrgF4O/jSmL1Ya2lBXcCrOQ39EGxI4oCEcLSBeZr2sofbxa7l2JAI2fDBlKEbyB2u7Wlk/Icd3TDzJd+gLPrgIg+Rxf4hJu7SeJvpU=
+	t=1743607838; cv=none; b=i8SEtNtE1XXidfzL47FwDSslr780JiDMeQy/XFqaqQCIqe0D5Jj+HGRmUgZrMy/ToONk/KG0EAFdcRWA0KhUzZT3sykpan8X5+CAYBRWdho6wMCSRQIipo2TLpdM4RoY0xC875YIYEx1ANNABiLo5BXUBA5jBFXC5kjWohpjneU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743607679; c=relaxed/simple;
-	bh=84wxmOUuZguUPHRF2Z+/DPs+bRzIW2iV+gP7Vzph/AE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DGZR/95yF+vBQlY/LDvNNFKUm5FAt6WneVFhmfVyVqPqSs96/xORz7kQ63m8Zva0iSh+X1YzAaBzdzpQNSWYmLGLt0eui3kbFeZu9BEwCQNtldhRBjmwHslhlntpSxmaR45jgEUFJExW2h3ACSVGWI7N8vR0bAJGejSdjsNB4EU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=irXtTpNe; arc=none smtp.client-ip=209.85.216.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="irXtTpNe"
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-301a8b7398cso1364871a91.1;
-        Wed, 02 Apr 2025 08:27:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743607677; x=1744212477; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=84wxmOUuZguUPHRF2Z+/DPs+bRzIW2iV+gP7Vzph/AE=;
-        b=irXtTpNeG+aQ0j8bRJdbcftD4NXuArDAib5qutyV4sgUKk7/3/lQ6YJCKivSiPJa9S
-         qA0YSjFb6L3lvc+MYM1Ma/bNd4HLrclY0QEpo/MRd/dsEeKcRmnYJJZWQa5BZF9s396C
-         th3QJD8LJFDOk9Hku36iZzbs3KaPU3lE1PTL68tGft5UKDu/0yL0W9/AYRaFBRfo+ygV
-         7Yve7NY7FUXKlwiYWzR/Sh4jDQAxwVxlzPopRnLL+kC1UX1+f0V7zmMWvbj7pCiMMgE+
-         BlB3h+LXPb804fY9cFFs1FprrZA5s+gC1Q+ChIFGNFBl6H85gBom0C74qKCCjBIQ6/HS
-         rsTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743607677; x=1744212477;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=84wxmOUuZguUPHRF2Z+/DPs+bRzIW2iV+gP7Vzph/AE=;
-        b=B3RnXckP/vkY2BryAt2m7TMGAvk4/3Y68meHc7LGHPGisvMExne8S4BbJ1QXQYILb5
-         AfGe8KRcWOpJfz3ZdeFuP4wuGtK4djzYB1ZDCiP3bh6PLyKf1TNDhxDKrqcLPyUfYp6+
-         S1Ro5FSpFmjYMUk/AUJCPP2r9WET7fFA6KuRe+eT+Yzo9F0g0XrPb3uKcqb9qyKWuVX3
-         oALpAlokekCCp1S8HKVz9OzLSk8QVQS9J88XnGQ+uGC+MR98kJTUe81NHdpccPlQ33oQ
-         5FC0vY/PzhMb6Z2p+OiKGaTNa6ZazlIyAz47STob38ilA25v5oCbNCuq3Pn39SMM/xXg
-         Xn0w==
-X-Forwarded-Encrypted: i=1; AJvYcCV57gLl6zKXTfRbWWbOn7uh65F3NSHRrTGkfFYD+Ca1KHDfo/jzExa7tptnB92R4IUfMFezR169BhSPpCM=@vger.kernel.org, AJvYcCVZGJqZ5LkD0VxUjrY4E0zJ2CbCys6innNF56t+dSVfOqyeqgarhelI3x4yReu14/t/wDCUe8mw5fYN0FKTAUc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YylnAzWShVsb3ATlJITp9SIf7MZq0N6Ip89FocndryQj1oEET/1
-	+H51cojci0W7/+mEL5lecwrmjHAAindex882SmaBV5iUP6zOpiCqN+SPUeIB58/GS7rC7F5N5T9
-	ZAXvZaavQaQxVAfaPdvd500R4mpQ=
-X-Gm-Gg: ASbGncthVB+nQrV65BQGAJLDHEBwRbTV2R0ngy8yvvnfkwH9VnCNyXPtUiZb7Wlq9jL
-	lepTdUXoZOjf+NlvyyHXRMrH00VHCrPWRLSeAsoYtkP66ZDlMgkPq0W2PJZurVxrsyfnxtQZoeT
-	BKAbz5DWQqV/e4FUw1+oCpDizptg==
-X-Google-Smtp-Source: AGHT+IFgu8WJu4ETgzkoPIm09BkqQZYs+/o4m6q+OoOBxfa6QeCI+cNBBW7zBSkFSqOaR/bzrCPSWdOOUKW+krWRqlY=
-X-Received: by 2002:a17:90b:4ad2:b0:2ee:acea:9ec4 with SMTP id
- 98e67ed59e1d1-30562e636b7mr3562139a91.3.1743607677054; Wed, 02 Apr 2025
- 08:27:57 -0700 (PDT)
+	s=arc-20240116; t=1743607838; c=relaxed/simple;
+	bh=50ulFjUqXwgfIP0/hz3Pe+E09PZpugkbNUnxMO3Zl9g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kX9a3rN0qCDnVNM3wzZduTDoUtTjT9yaQi6of+1ZSNQ4WOmpUGaGemP1qhdJDTXvvvSQZ47Od3Kr7kzzueTxBY+DjLai4WaNjzZDy6cGba2QqEzhfGTju9CFNH7M9GDFSSJKOXXIJN2VlcwhcO1ycYuDgwOuyKMBE37MW7kan2M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=arm.com; spf=none smtp.mailfrom=foss.arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=foss.arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 27D3A106F;
+	Wed,  2 Apr 2025 08:30:38 -0700 (PDT)
+Received: from bogus (unknown [10.57.41.33])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3E9943F694;
+	Wed,  2 Apr 2025 08:30:32 -0700 (PDT)
+Date: Wed, 2 Apr 2025 16:30:29 +0100
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: Peng Fan <peng.fan@oss.nxp.com>
+Cc: Cristian Marussi <cristian.marussi@arm.com>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	linux-kernel@vger.kernel.org, arm-scmi@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
+	devicetree@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH v3 1/7] firmware: arm_scmi: imx: Add LMM and CPU
+ documentation
+Message-ID: <20250402-pastoral-screeching-panda-da4a45@sudeepholla>
+References: <20250303-imx-lmm-cpu-v3-0-7695f6f61cfc@nxp.com>
+ <20250303-imx-lmm-cpu-v3-1-7695f6f61cfc@nxp.com>
+ <20250401-quantum-coyote-of-admiration-bf1b68@sudeepholla>
+ <20250402123503.GA23033@nxa18884-linux>
+ <20250402-acoustic-analytic-guan-d3cda5@sudeepholla>
+ <20250402161037.GC23033@nxa18884-linux>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250401221205.52381-1-ojeda@kernel.org> <D8VPGBN60E61.1Z48FQW6TL3A@proton.me>
- <CANiq72mdvnHvWbVNQbiXSRxd1xrF+A=v0RdJO74xeY3HyhRmcg@mail.gmail.com> <CAJ-ks9nAAcoJoFF+qNPbhsM32kOh9u+LGYUwFN_n9qqudB6YhA@mail.gmail.com>
-In-Reply-To: <CAJ-ks9nAAcoJoFF+qNPbhsM32kOh9u+LGYUwFN_n9qqudB6YhA@mail.gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Wed, 2 Apr 2025 17:27:43 +0200
-X-Gm-Features: AQ5f1JoRtbxlEpwdukshR1-PkgSkh2vofg1jzjX7AuGCKpYamwkZP-wPM1fWZQo
-Message-ID: <CANiq72k36Tvwbzkg6nRdxB8VNRHLf8QzLeCXZq7sEPewccsWNw@mail.gmail.com>
-Subject: Re: [PATCH] rust: clean Rust 1.86.0 new `clippy::needless_continue` cases
-To: Tamir Duberstein <tamird@gmail.com>
-Cc: Benno Lossin <benno.lossin@proton.me>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, patches@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250402161037.GC23033@nxa18884-linux>
 
-On Wed, Apr 2, 2025 at 3:59=E2=80=AFPM Tamir Duberstein <tamird@gmail.com> =
-wrote:
->
-> Rather than disabling globally, why not `#[expect]` these instances
-> with a reason?
+On Thu, Apr 03, 2025 at 12:10:37AM +0800, Peng Fan wrote:
+> Hi Sudeep,
+> 
+> On Wed, Apr 02, 2025 at 12:46:14PM +0100, Sudeep Holla wrote:
+> >On Wed, Apr 02, 2025 at 08:35:03PM +0800, Peng Fan wrote:
+> >> Hi Sudeep,
+> >> 
+> >> Thanks for reviewing the patch.
+> >> 
+> >> For comments that I am not very clear, I marked with [TODO] for easily
+> >> jump to.
+> >> 
+> >> On Tue, Apr 01, 2025 at 03:15:46PM +0100, Sudeep Holla wrote:
+> >> >On Mon, Mar 03, 2025 at 10:53:22AM +0800, Peng Fan (OSS) wrote:
+> >> >> From: Peng Fan <peng.fan@nxp.com>
+> >> >> 
+> >> >> Add i.MX95 Logical Machine Management and CPU Protocol documentation.
+> >> >> 
+> >> >> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> >> >> ---
+> >> >>  drivers/firmware/arm_scmi/vendors/imx/imx95.rst | 801 ++++++++++++++++++++++++
+> >> >>  1 file changed, 801 insertions(+)
+> >> >> 
+> >> >> diff --git a/drivers/firmware/arm_scmi/vendors/imx/imx95.rst b/drivers/firmware/arm_scmi/vendors/imx/imx95.rst
+> >> >> index b2dfd6c46ca2f5f12f0475c24cb54c060e9fa421..74326bf2ea8586282a735713e0ab7eb90ccce8ff 100644
+> >> >> --- a/drivers/firmware/arm_scmi/vendors/imx/imx95.rst
+> >> >> +++ b/drivers/firmware/arm_scmi/vendors/imx/imx95.rst
+> >
+> >> >> +
+> >> >> +PROTOCOL_MESSAGE_ATTRIBUTES
+> >> >> +~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> >> >> +
+> >> >> +message_id: 0x2
+> >> >> +protocol_id: 0x80
+> >> >> +This command is mandatory.
+> >> >> +
+> >> >
+> >> >For completeness add parameters here for message_id as in the spec as it is
+> >> >referred in the returned value and seems incomplete without it.
+> >> 
+> >> [TODO]
+> >> Sorry, I may not get your point here. You mean below format?
+> >> 
+> >> +------------------+-----------------------------------------------------------+
+> >> |message_id: 0x2
+> >> |protocol_id: 0x80
+> >> |This command is mandatory.
+> >> +------------------+-----------------------------------------------------------+
+> >> |Return values                                                                 |
+> >> +------------------+-----------------------------------------------------------+
+> >> |Name              |Description                                                |
+> >> +------------------+-----------------------------------------------------------+
+> >> |int32 status      |SUCCESS: in case the message is implemented and available  |
+> >> |                  |to use.                                                    |
+> >> |                  |NOT_FOUND: if the message identified by message_id is      |
+> >> |                  |invalid or not implemented                                 |
+> >> +------------------+-----------------------------------------------------------+
+> >> |uint32 attributes |Flags that are associated with a specific function in the  |
+> >> |                  |protocol. For all functions in this protocol, this         |
+> >> 
+> >> message_id is not put in the table, but it is list above just below
+> >> the protocol name. I would prefer to keep current layout and align with
+> >> the MISC and BBM protocol.
+> >>
+> >
+> >I meant why is the input parameter message_id not described in the table,
+> >but is referred in the return values. For completeness, just add it even
+> >though it may match the SCMI spec in terms of input parameter.
+> 
+> I will add below only for PROTOCOL_MESSAGE_ATTRIBUTES which refer message_id
+> in the return values. Please raise if you have concern.
+> 
 
-That is an option sometimes, yeah, but in this case, writing those
-lines is also a burden -- one that is, I would say, worse than just
-using `()`.
+Ignore this. I see even existing BBM and MISC follow the same pattern for
+standard protocol commands(0x0-0x2). We can fix them all at once if it
+needs to be in the future. For now, it should be fine as is.
 
-It would also need to be `allow` here, not `expect`, because older
-versions do not complain, which makes it even worse...
-
-So it is all about what a lint gives us in exchange of those false
-positives, and about how much time people would need to spend on it. I
-have always supported adding lints (I think I added this one, long
-ago, in fact), but I don't want that we overdo it either, so I am
-happy disabling it if it is going to be too painful.
-
-Cheers,
-Miguel
+-- 
+Regards,
+Sudeep
