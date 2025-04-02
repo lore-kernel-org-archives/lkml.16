@@ -1,362 +1,246 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9A501DFF0;
-	Wed,  2 Apr 2025 22:18:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CA311F4CBF;
+	Wed,  2 Apr 2025 22:18:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743632287; cv=none; b=Xr381T9m4SA2fETDHBkhK13sv8KkhndrSSkL+z56CwLYHYDFdHDWIVyYX6anUWST75/oIzNEh3irW0TQHuUhmHusWY6fKK71exZU6p2zr02ELIZJn77siZWO9j/nM1n4QwsB9pZDasN1L2w3vmB30mFJdqz0UFRvhfVQzcIHdc4=
+	t=1743632300; cv=none; b=K+fNXdOOkuGTfO4l+euJ7W+5rfOpepl2wBa6O8Ec46vNzwdquYylzgC5rsRXmfHRu5Ux9+Rqo6TNMjlnf4/m/01nqxx4p+6fUe6T551uJkFM5HY2sQcjXw5G9aomNiFiHzB4yAt6v0lRYHg6XgfvtKqCIIGJrBDSt6xSpSRo6cs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743632287; c=relaxed/simple;
-	bh=pT4UVKbYEfRyPNXPmld0py1Q8OAyzt7KckqJsTE4kCQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=P1mTKBITmI1XnCvJIJkRjcWJrt1ERb4r0Pn7jhdnpLbY7DZbuxXN3DxTfu9v3jYr704Pfg5Sn3g1mpLjR8rH1CfiIgx1ThSeUn9i/tRUHKnlPtO2vl5C59Z7e0BfpXAmv4fJku+aw2Y5h02hnTO1HHNDr26Nzyyws7ZKlV7Z4z8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C65RtZJz; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+	s=arc-20240116; t=1743632300; c=relaxed/simple;
+	bh=83f0pETp0M1GCR4F51pZK1phNpNTkGWXfj6wjPcxxFI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=swPtKFujmN/J9DdeUBKL11lSme+/H6DXeLpEagQgAUp6nYAwv8K7CXJbNp6Af/Bz9xinAv8cKhw7ouu4xzYveRcyDVUqC5PVX07yj4R/0zVsFBsx7rfYOZlIufTR6GiIiW0PST+nJAY0Cuk1KlqhFEW3RZzVMS9BSJfjz1gUpIU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Nc2MV8ZP; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C65RtZJz"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-736c1cf75e4so188581b3a.2;
-        Wed, 02 Apr 2025 15:18:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nc2MV8ZP"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-7376e311086so329834b3a.3;
+        Wed, 02 Apr 2025 15:18:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743632285; x=1744237085; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=l0qIJI6aAuZirA6X0j6WJKBAg6RpoyeAXY/gXUYvdTg=;
-        b=C65RtZJzkqyTxcpEWAaunrCIWiIAynQ/M2PGOvzMBAWOxwso2bdnfDO5ypxrPFeAzo
-         ToZ/k1/aOmjq8VGnzD1PEXuigo402lst0bOtSeZ1rGZYeqJA50yStUVWFlGwl7HuWeBM
-         dTarGNIYAa6WsQivUS+6drOZi+uCkWZdobw6OB3OkVqgzFdjMYWdS6qLMCbNHybHI6+9
-         hKDOa9oWgi6m/olQ8We7+AJNIF7o/4tV2Aja5ur4BPy4Zr/m9sMNdHoFNlvTPFkatuJd
-         A2b8xDFnoVKMyHV3lICs5sNZ+1Kc2ikGXxnJlXouhl+M/nSkeoKECRkorgzleVgOhEfH
-         RklQ==
+        d=gmail.com; s=20230601; t=1743632297; x=1744237097; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=5LEHy4x5hnkfDI/FlX76y9wNeBb+/8QoTP8b5uw3x8I=;
+        b=Nc2MV8ZPWfwWSAC9Nj0MKz0uhW61Obkw0UhyJHL7PPeOaPCLkKcjo3KK+X4j03/eCb
+         hmCrSBNDCWeCtux5Tkr5LDkbndvrz8/TNXuHZT+9wYfGH1VV+YoPUMN2u/hgQO+se9+9
+         bIVTYxISwZWODx9WqYiLOgJVbWBu9G2HJ8vYtCdEal7KWgRM992T/1vMnHpC1x1A5vrt
+         qxJQuNZC/w12HXXc8pmiJs12Xw7zBtsEi1FFHd7P6HKtXJti6fKXTDQfSeQEUrYFdfr4
+         7QXeZIZp4w71sjyu09rMf1zLJiyL8C9+W5MhmvZnyA/WcMyuiZ+6Uulu9OIJhkGKrnJ8
+         wmXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743632285; x=1744237085;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=l0qIJI6aAuZirA6X0j6WJKBAg6RpoyeAXY/gXUYvdTg=;
-        b=RfP0tTTxV+CvFVUB9ypCEDIo4/mIr2exEPpA3oEMxlyCTZGT87qYMN6D6hoDt6VfPO
-         smkb5hqTg8E/TLhBf5vfEMYf1m3ovBz5pQ5OlPsbU37sJimLUK6YYGh+GbbUbSqRjKDN
-         pu8e2OkmEArU+Rzk6ymjAY/JefC91cJ+rFCCrr5/7epduDMIl1biOdY0EGX17JGJ+igQ
-         wnNicVNqYNcPzzaQe08YY2MXLWpBvhuvpkIurUlvMLQkm5KKlkfAJhz70QunWmuSzrLG
-         bnhslf25drxKvQktIFvCMZkxBa6ZpWVuQC3GuwJMzWrwI0EritfKisjkJje47QtpDpZw
-         3RMA==
-X-Forwarded-Encrypted: i=1; AJvYcCWnKdHa69MpZjplxftBkYuCUIFr9kNmXQRKZJYS3Dgf78mP7uo2qq+Wfb6Yv7GK3mWOn2UM8iYcTI1zMrs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwhTCpWT05qwMjGf4Wwgo1S1HfOdAn3FaXYlgyiWdAD/74LvhZ+
-	1bxwqBM6y2GEpqSltP5JjrBeC5KD14TFdJMcexf2gxz8T8ZNpd+5mt0Vyw==
-X-Gm-Gg: ASbGnctpRKPGvDIComZ594T3GFaxIqg4RgfGyD0RGIAt1ucKvifBR03Bh0DDLvOX3G3
-	DGQNV+5frE47XkGEW5y22n8/y0obzL4YLzzNpQgcjRbGg9dqpxYEGyV4njo0dnLE7xob9kNKLgr
-	L0r43JIP15UcoPswYD609sSDxHndHEGTq0uuEMv7pJAEWRMwNpaWmLaTuxGn5pBGa2JLybZvy4h
-	EsT06LMYgRKRqTjAOD2jiP5XZjb+Ble7gWmorvReSmBXWC4IHuGBaVdEFKOcCVKQg+bg7sUYH5j
-	SKpRR7DX1UqF9l999OcnAww/8r3Xgk9lFIiN2C2KPsQAtT8Eau0cHZwJcE9lHEXaiZxHLVyJhW1
-	zHTHDiAmhxLH9mD6+7g==
-X-Google-Smtp-Source: AGHT+IGe/RHqhYUg4wLEJwAqTW4x/w0JmBH323SPMCg0At7a2RHx6rU+E79RqnfTnfGTNIDvyyYEsQ==
-X-Received: by 2002:a05:6a20:9f4e:b0:1f5:8126:8a5d with SMTP id adf61e73a8af0-2009f5fdf88mr26251268637.17.1743632284859;
-        Wed, 02 Apr 2025 15:18:04 -0700 (PDT)
-Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af9a41468a2sm2685775a12.76.2025.04.02.15.18.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Apr 2025 15:18:04 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <81462799-6ef6-4079-9ebe-5b886d6e1eab@roeck-us.net>
-Date: Wed, 2 Apr 2025 15:18:03 -0700
+        d=1e100.net; s=20230601; t=1743632297; x=1744237097;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5LEHy4x5hnkfDI/FlX76y9wNeBb+/8QoTP8b5uw3x8I=;
+        b=vAd8ZGAwqNXukOc4RY78idmVFIcH7pHiHciiALQaxCO8rPv3kzJlMju2PVC5nK/k3P
+         /brorOQd+/tQgx120YvCX3M7gC5HCEjHRB0XED9clE6KUYQREk6lSjN7ARxrf6ubvPq8
+         sELItkF+7xTWsyZXToy9GJu95giogEQlyRTRppc3BpDkhxP83IGY05kKmSmjZcd4P+lT
+         pndSR/5OMiLZFSDx6bcdZShGosgZTI6Mq2DigPCWjXPAXGeHefJVN9odE+gu2cmBVfMq
+         DtV33YkUhTuXSHMyVNqEkRaJaRsEiWxTaTAuHomP9HlnpsApFkAymsgAo+ZljYr1iZBh
+         +kmw==
+X-Forwarded-Encrypted: i=1; AJvYcCWR2XKHvukDgj1zRTiUslV7ILYAri1TGkbZ0VZsr+2kEZUvxJhaUjxPCcHdTiXl+wymIWb+agHFOD494q7V@vger.kernel.org, AJvYcCWuSj7qEpTtR99EkWd0Ab6LCA+giYhHdXvlZ/jmlucUkGte30c2jo4aQ2JTtKrWjm1kGxAZO3Z/@vger.kernel.org, AJvYcCXQv6+5uyP6LPecW2MND6NfcPBnCJp+K6ZE5qGVZ+o8pPYxlXO4a5xza25/2qcSpm3vAGo=@vger.kernel.org, AJvYcCXVzpurRIOzb+mBmNYAAsdV+7/vpNNNBpGmltPKGLo/K1UenGKWeOr8/Drmju2eKbyqu9z4EgmavQuDyvgk@vger.kernel.org
+X-Gm-Message-State: AOJu0YwYmYP/YdNLIVMi923eW2Bn9sKpjE2XyIrENByp/n+B6cP9/0WM
+	RmmKdTUhAw9gbDSOPZz5E4aBffbZ1XqjnPOUEi2TQpjsp2JuJFSP
+X-Gm-Gg: ASbGnctQvLZvqv+SB6MFcq6AnSGE++/4ODemt/IAOt/SOe+vRgH95dmtldfhkxoPT5v
+	WuZTyQ/ZOviNlrA2yGsXmEbsxquF9QPrAw7MFOnIr02m578Ug1O3FLgUrLCbvcwbg/Izf8z69Gq
+	pVQuPtlPY50H6hrhN8CwzM6JXJWeYSicB9aus+4elGeDbvfuEjURA0QU5qNUG3oh82QrX5a2njp
+	Y6rsOrwoWqhJKm0STho+SqDvDIrpjAHFXKMaLUsC4VXLMUuipxPxxaZx8WzQf/LnrGPM2oFoHNW
+	+8D0RthQzLl09T2B6OC6iIZ//FUvw1dOeq+GZfSMspFLK83lhIdAQPqxASJ56kDrfov/xjgtGY8
+	9
+X-Google-Smtp-Source: AGHT+IHJEBcIMQrWstviWhStuPuGs1oGBCFqM4wEt2zZaMlsMAYkBXHcn6d960097eIHnG5Klr1wVA==
+X-Received: by 2002:aa7:88d0:0:b0:731:737c:3224 with SMTP id d2e1a72fcca58-739803b3f12mr25015506b3a.10.1743632297419;
+        Wed, 02 Apr 2025 15:18:17 -0700 (PDT)
+Received: from devvm6277.cco0.facebook.com ([2a03:2880:2ff:7::])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af93b67dc0fsm10504705a12.16.2025.04.02.15.18.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Apr 2025 15:18:16 -0700 (PDT)
+Date: Wed, 2 Apr 2025 15:18:13 -0700
+From: Bobby Eshleman <bobbyeshleman@gmail.com>
+To: Daniel =?iso-8859-1?Q?P=2E_Berrang=E9?= <berrange@redhat.com>
+Cc: Stefano Garzarella <sgarzare@redhat.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Stefan Hajnoczi <stefanha@redhat.com>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
+	Bryan Tan <bryan-bt.tan@broadcom.com>,
+	Vishnu Dasa <vishnu.dasa@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	virtualization@lists.linux.dev, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+	kvm@vger.kernel.org
+Subject: Re: [PATCH v2 0/3] vsock: add namespace support to vhost-vsock
+Message-ID: <Z+23pbK9t5ckSmLl@devvm6277.cco0.facebook.com>
+References: <20250312-vsock-netns-v2-0-84bffa1aa97a@gmail.com>
+ <r6a6ihjw3etlb5chqsb65u7uhcav6q6pjxu65iqpp76423w2wd@kmctvoaywmbu>
+ <Z-w47H3qUXZe4seQ@redhat.com>
+ <Z+yDCKt7GpubbTKJ@devvm6277.cco0.facebook.com>
+ <CAGxU2F7=64HHaAD+mYKYLqQD8rHg1CiF1YMDUULgSFw0WSY-Aw@mail.gmail.com>
+ <Z-0BoF4vkC2IS1W4@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] hwmon: (pmbus): Introduce page_change_delay
-To: "William A. Kennington III" <william@wkennington.com>,
- Jean Delvare <jdelvare@suse.com>
-Cc: linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250402193452.3571888-1-william@wkennington.com>
-Content-Language: en-US
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-In-Reply-To: <20250402193452.3571888-1-william@wkennington.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z-0BoF4vkC2IS1W4@redhat.com>
 
-On 4/2/25 12:34, William A. Kennington III wrote:
-> We have some buggy pmbus devices that require a delay after performing a
-> page change operation before trying to issue more commands to the
-> device.
+On Wed, Apr 02, 2025 at 10:21:36AM +0100, Daniel P. Berrangé wrote:
+> On Wed, Apr 02, 2025 at 10:13:43AM +0200, Stefano Garzarella wrote:
+> > On Wed, 2 Apr 2025 at 02:21, Bobby Eshleman <bobbyeshleman@gmail.com> wrote:
+> > >
+> > > I do like Stefano's suggestion to add a sysctl for a "strict" mode,
+> > > Since it offers the best of both worlds, and still tends conservative in
+> > > protecting existing applications... but I agree, the non-strict mode
+> > > vsock would be unique WRT the usual concept of namespaces.
+> > 
+> > Maybe we could do the opposite, enable strict mode by default (I think 
+> > it was similar to what I had tried to do with the kernel module in v1, I 
+> > was young I know xD)
+> > And provide a way to disable it for those use cases where the user wants 
+> > backward compatibility, while paying the cost of less isolation.
 > 
-> This allows for a configurable delay after page changes, but not
-> affecting other read or write operations.
+> I think backwards compatible has to be the default behaviour, otherwise
+> the change has too high risk of breaking existing deployments that are
+> already using netns and relying on VSOCK being global. Breakage has to
+> be opt in.
 > 
-> Signed-off-by: William A. Kennington III <william@wkennington.com>
-> ---
->   drivers/hwmon/pmbus/pmbus.h      |  1 +
->   drivers/hwmon/pmbus/pmbus_core.c | 59 ++++++++++++++++++++++----------
->   2 files changed, 41 insertions(+), 19 deletions(-)
+> > I was thinking two options (not sure if the second one can be done):
+> > 
+> >   1. provide a global sysfs/sysctl that disables strict mode, but this
+> >   then applies to all namespaces
+> > 
+> >   2. provide something that allows disabling strict mode by namespace.
+> >   Maybe when it is created there are options, or something that can be
+> >   set later.
+> > 
+> > 2 would be ideal, but that might be too much, so 1 might be enough. In 
+> > any case, 2 could also be a next step.
+> > 
+> > WDYT?
 > 
-> diff --git a/drivers/hwmon/pmbus/pmbus.h b/drivers/hwmon/pmbus/pmbus.h
-> index ddb19c9726d6..742dafc44390 100644
-> --- a/drivers/hwmon/pmbus/pmbus.h
-> +++ b/drivers/hwmon/pmbus/pmbus.h
-> @@ -482,6 +482,7 @@ struct pmbus_driver_info {
->   	 */
->   	int access_delay;		/* in microseconds */
->   	int write_delay;		/* in microseconds */
-> +	int page_change_delay;		/* in microseconds */
->   };
->   
->   /* Regulator ops */
-> diff --git a/drivers/hwmon/pmbus/pmbus_core.c b/drivers/hwmon/pmbus/pmbus_core.c
-> index 787683e83db6..cfb724a8718b 100644
-> --- a/drivers/hwmon/pmbus/pmbus_core.c
-> +++ b/drivers/hwmon/pmbus/pmbus_core.c
-> @@ -116,6 +116,7 @@ struct pmbus_data {
->   	int vout_high[PMBUS_PAGES];	/* voltage high margin */
->   	ktime_t write_time;		/* Last SMBUS write timestamp */
->   	ktime_t access_time;		/* Last SMBUS access timestamp */
-> +	ktime_t page_change_time;	/* Last SMBUS page change timestamp */
->   };
->   
->   struct pmbus_debugfs_entry {
-> @@ -178,24 +179,44 @@ static void pmbus_wait(struct i2c_client *client)
->   
->   		if (delta < info->access_delay)
->   			fsleep(info->access_delay - delta);
-> -	} else if (info->write_delay) {
-> +	}
-> +	if (info->write_delay) {
->   		delta = ktime_us_delta(ktime_get(), data->write_time);
->   
->   		if (delta < info->write_delay)
->   			fsleep(info->write_delay - delta);
->   	}
-> +	if (info->page_change_delay) {
-> +		delta = ktime_us_delta(ktime_get(), data->page_change_time);
-> +
+> It occured to me that the problem we face with the CID space usage is
+> somewhat similar to the UID/GID space usage for user namespaces.
+> 
+> In the latter case, userns has exposed /proc/$PID/uid_map & gid_map, to
+> allow IDs in the namespace to be arbitrarily mapped onto IDs in the host.
+> 
+> At the risk of being overkill, is it worth trying a similar kind of
+> approach for the vsock CID space ?
+> 
+> A simple variant would be a /proc/net/vsock_cid_outside specifying a set
+> of CIDs which are exclusively referencing /dev/vhost-vsock associations
+> created outside the namespace. Anything not listed would be exclusively
+> referencing associations created inside the namespace.
+> 
+> A more complex variant would be to allow a full remapping of CIDs as is
+> done with userns, via a /proc/net/vsock_cid_map, which the same three
+> parameters, so that CID=15 association outside the namespace could be
+> remapped to CID=9015 inside the namespace, allow the inside namespace
+> to define its out association for CID=15 without clashing.
+> 
+> IOW, mapped CIDs would be exclusively referencing /dev/vhost-vsock
+> associations created outside namespace, while unmapped CIDs would be
+> exclusively referencing /dev/vhost-vsock associations inside the
+> namespace. 
+> 
+> A likely benefit of relying on a kernel defined mapping/partition of
+> the CID space is that apps like QEMU don't need changing, as there's
+> no need to invent a new /dev/vhost-vsock-netns device node.
+> 
+> Both approaches give the desirable security protection whereby the
+> inside namespace can be prevented from accessing certain CIDs that
+> were associated outside the namespace.
+> 
+> Some rule would need to be defined for updating the /proc/net/vsock_cid_map
+> file as it is the security control mechanism. If it is write-once then
+> if the container mgmt app initializes it, nothing later could change
+> it.
+> 
+> A key question is do we need the "first come, first served" behaviour
+> for CIDs where a CID can be arbitrarily used by outside or inside namespace
+> according to whatever tries to associate a CID first ?
 
-page_change_time isn't actually set. I suggest to just use data->write_time.
-Also see below.
+I think with /proc/net/vsock_cid_outside, instead of disallowing the CID
+from being used, this could be solved by disallowing remapping the CID
+while in use?
 
-> +		if (delta < info->page_change_delay)
-> +			fsleep(info->page_change_delay - delta);
-> +	}
->   }
->   
-> -/* Sets the last accessed timestamp for pmbus_wait */
-> -static void pmbus_update_ts(struct i2c_client *client, bool write_op)
-> +#define PMBUS_OP_READ_BIT 1
-> +#define PMBUS_OP_WRITE_BIT 2
-> +#define PMBUS_OP_PAGE_CHANGE_BIT 4
+The thing I like about this is that users can check
+/proc/net/vsock_cid_outside to figure out what might be going on,
+instead of trying to check lsof or ps to figure out if the VMM processes
+have used /dev/vhost-vsock vs /dev/vhost-vsock-netns.
 
-#define<space>NAME<tab>BIT(...)
+Just to check I am following... I suppose we would have a few typical
+configurations for /proc/net/vsock_cid_outside. Following uid_map file
+format of:
+	"<local cid start>		<global cid start>		<range size>"
 
-> +
-> +#define PMBUS_OP_READ PMBUS_OP_READ_BIT
-> +#define PMBUS_OP_WRITE PMBUS_OP_WRITE_BIT
-> +#define PMBUS_OP_PAGE_CHANGE (PMBUS_OP_PAGE_CHANGE_BIT | PMBUS_OP_WRITE)
+	1. Identity mapping, current namespace CID is global CID (default
+	setting for new namespaces):
 
-That is way too complicated. Just make it
+		# empty file
 
-#define PMBUS_OP_READ		BIT(0)
-#define PMBUS_OP_WRITE		BIT(1)
-#define PMBUS_OP_PAGE_CHANGE	BIT(2)
+				OR
 
-A page change implies a write, so it is not necessary to combine the bits.
+		0    0    4294967295
 
-> +
-> +/* Sets the last operation timestamp for pmbus_wait */
-> +static void pmbus_update_ts(struct i2c_client *client, int op)
->   {
->   	struct pmbus_data *data = i2c_get_clientdata(client);
->   	const struct pmbus_driver_info *info = data->info;
-> +	ktime_t now = ktime_get();
->   
->   	if (info->access_delay) {
-> -		data->access_time = ktime_get();
-> -	} else if (info->write_delay && write_op) {
-> -		data->write_time = ktime_get();
-> +		data->access_time = now;
-> +	}
-> +	if (info->write_delay && (op & PMBUS_OP_WRITE_BIT)) {
-> +		data->write_time = now;
-> +	}
-> +	if (info->page_change_delay && (op & PMBUS_OP_PAGE_CHANGE_BIT)) {
-> +		data->write_time = now;
->   	}
+	2. Complete isolation from global space (initialized, but no mappings):
 
-Seems to me that we should only need write_time and not
-page_change_time since both will always be set together.
+		0    0    0
 
-I also think this can be simplified if ktime_get() is always called anyway.
+	3. Mapping in ranges of global CIDs
 
-	ktime_t now = ktime_get();
+	For example, global CID space starts at 7000, up to 32-bit max:
 
-	data->access_time = now;
-	if (op & (PMBUS_OP_WRITE | PMBUS_OP_PAGE_CHANGE))
-		data->write_time = now;
+		7000    0    4294960295
+	
+	Or for multiple mappings (0-100 map to 7000-7100, 1000-1100 map to
+	8000-8100) :
 
-It doesn't matter if the values are set unnecessarily if there is no delay
-because they won't be used in that case.
+		7000    0       100
+		8000    1000    100
 
->   }
->   
-> @@ -211,13 +232,13 @@ int pmbus_set_page(struct i2c_client *client, int page, int phase)
->   	    data->info->pages > 1 && page != data->currpage) {
->   		pmbus_wait(client);
->   		rv = i2c_smbus_write_byte_data(client, PMBUS_PAGE, page);
-> -		pmbus_update_ts(client, true);
-> +		pmbus_update_ts(client, PMBUS_OP_PAGE_CHANGE);
->   		if (rv < 0)
->   			return rv;
->   
->   		pmbus_wait(client);
->   		rv = i2c_smbus_read_byte_data(client, PMBUS_PAGE);
-> -		pmbus_update_ts(client, false);
-> +		pmbus_update_ts(client, PMBUS_OP_READ);
->   		if (rv < 0)
->   			return rv;
->   
-> @@ -231,7 +252,7 @@ int pmbus_set_page(struct i2c_client *client, int page, int phase)
->   		pmbus_wait(client);
->   		rv = i2c_smbus_write_byte_data(client, PMBUS_PHASE,
->   					       phase);
-> -		pmbus_update_ts(client, true);
-> +		pmbus_update_ts(client, PMBUS_OP_WRITE);
->   		if (rv)
->   			return rv;
->   	}
-> @@ -251,7 +272,7 @@ int pmbus_write_byte(struct i2c_client *client, int page, u8 value)
->   
->   	pmbus_wait(client);
->   	rv = i2c_smbus_write_byte(client, value);
-> -	pmbus_update_ts(client, true);
-> +	pmbus_update_ts(client, PMBUS_OP_WRITE);
->   
->   	return rv;
->   }
-> @@ -286,7 +307,7 @@ int pmbus_write_word_data(struct i2c_client *client, int page, u8 reg,
->   
->   	pmbus_wait(client);
->   	rv = i2c_smbus_write_word_data(client, reg, word);
-> -	pmbus_update_ts(client, true);
-> +	pmbus_update_ts(client, PMBUS_OP_WRITE);
->   
->   	return rv;
->   }
-> @@ -408,7 +429,7 @@ int pmbus_read_word_data(struct i2c_client *client, int page, int phase, u8 reg)
->   
->   	pmbus_wait(client);
->   	rv = i2c_smbus_read_word_data(client, reg);
-> -	pmbus_update_ts(client, false);
-> +	pmbus_update_ts(client, PMBUS_OP_READ);
->   
->   	return rv;
->   }
-> @@ -471,7 +492,7 @@ int pmbus_read_byte_data(struct i2c_client *client, int page, u8 reg)
->   
->   	pmbus_wait(client);
->   	rv = i2c_smbus_read_byte_data(client, reg);
-> -	pmbus_update_ts(client, false);
-> +	pmbus_update_ts(client, PMBUS_OP_READ);
->   
->   	return rv;
->   }
-> @@ -487,7 +508,7 @@ int pmbus_write_byte_data(struct i2c_client *client, int page, u8 reg, u8 value)
->   
->   	pmbus_wait(client);
->   	rv = i2c_smbus_write_byte_data(client, reg, value);
-> -	pmbus_update_ts(client, true);
-> +	pmbus_update_ts(client, PMBUS_OP_WRITE);
->   
->   	return rv;
->   }
-> @@ -523,7 +544,7 @@ static int pmbus_read_block_data(struct i2c_client *client, int page, u8 reg,
->   
->   	pmbus_wait(client);
->   	rv = i2c_smbus_read_block_data(client, reg, data_buf);
-> -	pmbus_update_ts(client, false);
-> +	pmbus_update_ts(client, PMBUS_OP_READ);
->   
->   	return rv;
->   }
-> @@ -2530,7 +2551,7 @@ static int pmbus_read_coefficients(struct i2c_client *client,
->   	rv = i2c_smbus_xfer(client->adapter, client->addr, client->flags,
->   			    I2C_SMBUS_WRITE, PMBUS_COEFFICIENTS,
->   			    I2C_SMBUS_BLOCK_PROC_CALL, &data);
-> -	pmbus_update_ts(client, true);
-> +	pmbus_update_ts(client, PMBUS_OP_READ | PMBUS_OP_WRITE);
 
-I don't immediately follow the reason for adding PMBUS_OP_READ.
+One thing I don't love is that option 3 seems to not be addressing a
+known use case. It doesn't necessarily hurt to have, but it will add
+complexity to CID handling that might never get used?
 
->   
->   	if (rv < 0)
->   		return rv;
-> @@ -2734,7 +2755,7 @@ static int pmbus_init_common(struct i2c_client *client, struct pmbus_data *data,
->   	if (!(data->flags & PMBUS_NO_CAPABILITY)) {
->   		pmbus_wait(client);
->   		ret = i2c_smbus_read_byte_data(client, PMBUS_CAPABILITY);
-> -		pmbus_update_ts(client, false);
-> +		pmbus_update_ts(client, PMBUS_OP_READ);
->   
->   		if (ret >= 0 && (ret & PB_CAPABILITY_ERROR_CHECK)) {
->   			if (i2c_check_functionality(client->adapter, I2C_FUNC_SMBUS_PEC))
-> @@ -2750,13 +2771,13 @@ static int pmbus_init_common(struct i2c_client *client, struct pmbus_data *data,
->   	data->read_status = pmbus_read_status_word;
->   	pmbus_wait(client);
->   	ret = i2c_smbus_read_word_data(client, PMBUS_STATUS_WORD);
-> -	pmbus_update_ts(client, false);
-> +	pmbus_update_ts(client, PMBUS_OP_READ);
->   
->   	if (ret < 0 || ret == 0xffff) {
->   		data->read_status = pmbus_read_status_byte;
->   		pmbus_wait(client);
->   		ret = i2c_smbus_read_byte_data(client, PMBUS_STATUS_BYTE);
-> -		pmbus_update_ts(client, false);
-> +		pmbus_update_ts(client, PMBUS_OP_READ);
->   
->   		if (ret < 0 || ret == 0xff) {
->   			dev_err(dev, "PMBus status register not found\n");
+Since options 1/2 could also be represented by a boolean (yes/no
+"current ns shares CID with global"), I wonder if we could either A)
+only support the first two options at first, or B) add just
+/proc/net/vsock_ns_mode at first, which supports only "global" and
+"local", and later add a "mapped" mode plus /proc/net/vsock_cid_outside
+or the full mapping if the need arises?
 
+This could also be how we support Option 2 from Stefano's last email of
+supporting per-namespace opt-in/opt-out.
+
+Any thoughts on this?
+
+> 
+> IMHO those semantics lead to unpredictable behaviour for apps because
+> what happens depends on ordering of app launches inside & outside the
+> namespace, but they do sort of allow for VSOCK namespace behaviour to
+> be 'zero conf' out of the box.
+> 
+> A mapping that strictly partitions CIDs to either outside or inside
+> namespace usage, but never both, gives well defined behaviour, at the
+> cost of needing to setup an initial mapping/partition.
+> 
+
+Agreed, I do like the plainness of reasoning through it.
+
+Thanks!
+Bobby
