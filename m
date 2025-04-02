@@ -1,153 +1,181 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E51E71078F;
-	Wed,  2 Apr 2025 10:10:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 476562356BD
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 10:14:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743588660; cv=none; b=uTl7LYSZmpv/T6CC16HPwLGgBjlGoyAiF2ZsNZbl/XNkTOReALS0tKtO7VgQXF6Tc5YuWClNEyLeMP7CBYCUIxgGfQbXxiUFiGJTRybmmnUeT348LPOKuuBnGu0FUN9B+TwG1jCPjFm6HDDUpURU0ZSmI7IMaJc6B4rTRbVgCBw=
+	t=1743588891; cv=none; b=BiH1xzIiah+PpHMwEJGIrg49+8A9bzyyYNeSEanob35NTp7Bh3vVkr+CL028VSDPtYd/33yWNXN9kmW0z34b/7dIfe7mvF6nsEICfp/qJl1tOEhz1RJoCCTB3Jt9tP5/KMCgZVOj5MYuPW7ABq85ErAxjXGXfcwekUsaBta/jEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743588660; c=relaxed/simple;
-	bh=YsQ+ZEpOBzRENvI3w2Cgx7tGcPpu8PZYXcUACDmq2tk=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=Czi3apyTJZOaTMIxagoI8eaO9WoSgHOeKvoAmB2+CzE0jgqYvKT0DO4wH6iMOidkRGZVWou/EPSleCtw2poewmC+JyAQVqefHAt/JEZtzti20S6y1B8Alw+IiaYoQh1Y9c/XqpXYpyhop3e0RNyKYwVGyi+5CFBgeBL5+Kqnkcw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Dg7KZ+NJ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=LkE6X16D; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1743588891; c=relaxed/simple;
+	bh=PYpXZOz364eHZ/pUDlDFDhP8CHyqbwYHxIwb2J8WZhg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RdRexaJhWtfrnm4T7ftvgpAVUDGFyF1FzLeflJdGtoF7xGGhKiigvOZA/dlbZZuVvSjwBtXBJzBhZNfdu6Imv22pGa2gqQpplkE+R7pa7r6kNBa03Zs3FlFG3C2S0IbNANQ6wWSxp9gqflZzqGh4ljQCTc4t9XGik6db92F39vI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Bp3oMV+m; arc=none smtp.client-ip=209.85.216.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Dg7KZ+NJ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="LkE6X16D"
-Date: Wed, 02 Apr 2025 10:10:48 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1743588655;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fNsUG8J4yHEKunPN03eOzFpqG1kg0r7jZKB13rFKnuw=;
-	b=Dg7KZ+NJzjYUxrj8J4qCnji9/PzRF+N3J02+UTMBJHEcWERde0GUIlVPP0zWgbmnvrBTs/
-	lxPljELBPE2uRCCaBiXr9iwQVSMr9RtBZ2A8EOGtpibjACXjikqhT7SMkt/R7gEY2j8pzW
-	63VHPzNo+Bg8uNWvaBpg2wMYXssAFMp6plzKZ2ICDGf00OaSOuF+OyZyDxF9BLJFGhpyLq
-	6jDE8UIHUmiAu3fM+DyF5VupnC77BBeze96wwVMhrycFDsgfM8vYvldpBemCW0wXYtoXBG
-	JYvni5x+xlt+cP0aNJuUhPVjsUfTfCwQ0X56LyqjqP1KtJ76BseHXbwBB77CNg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1743588655;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fNsUG8J4yHEKunPN03eOzFpqG1kg0r7jZKB13rFKnuw=;
-	b=LkE6X16Dz0SQfp1+7axnkWMUZbZ++DZNCG9XsWAYnqXwg0aCWfkJh3+NEOzkDeWdt5npz3
-	TgX6qzjZKY2vkzBQ==
-From: "tip-bot2 for Andrew Cooper" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/mm] x86/idle: Remove mb() barriers for
- X86_BUG_CLFLUSH_MONITOR in mwait_idle_with_hints()
-Cc: Andrew Cooper <andrew.cooper3@citrix.com>, Ingo Molnar <mingo@kernel.org>,
- "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
- Rik van Riel <riel@surriel.com>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Andy Lutomirski <luto@kernel.org>, Brian Gerst <brgerst@gmail.com>,
- Juergen Gross <jgross@suse.com>,
- "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250402091017.1249019-1-andrew.cooper3@citrix.com>
-References: <20250402091017.1249019-1-andrew.cooper3@citrix.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Bp3oMV+m"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-3035858c687so9080465a91.2
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 03:14:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1743588889; x=1744193689; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lw7No9CatrhunZQ4Ziy751N/t8utTcZj0hKQTdSN9jk=;
+        b=Bp3oMV+mMmSS1TFqkfPiXeV/bUm0Dj7QaoW2S9rlsFmaf36DNqSIfrNfYH2FxE1kz0
+         FltYvSrVJNLXKWkT6C55n9TdiV4z1/XRhlHAjgec9ZzNIfcPS/R5PpQ84lGB0C+3AZZc
+         ewsvywzhLq8vtzy8ZrJqEH/ncaFBD9JvYHTy8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743588889; x=1744193689;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lw7No9CatrhunZQ4Ziy751N/t8utTcZj0hKQTdSN9jk=;
+        b=JCAYjMxRQbWA1CyYh20lgJPi74VzMKedGAHCvEZQyrLV/tTynQBoNUJ5QFo3U5X2zY
+         Hl1Q+j9Sxyh8Z5+53cYxZ/KzD/T0rzA8n7UQMRfFQzzQPVcQIe59CPuERCmDpjrKZQQI
+         9WIVO3bGuxHwzCjtI5BjspksXkMV4O3jnqiEI+oMd3Gg9mJ3bEKxyBgQ9gCX0v1DvQKS
+         s0hFTYkJsCsIay8h8Ged8w0XoqfoAwel1C43t6qeo5AnZjWyrYeXH1sosN4EhofcVVcy
+         Z0oC0W/iXoNs4TstDhWA6gc0xsQmKVP8DwjcmusvaAKC+5T1tVkGBBbMp97Mh2ExBiLB
+         8Ygg==
+X-Forwarded-Encrypted: i=1; AJvYcCUcnNXUYNwN+cVh53v57g3ltCxW+dsOA99r83kp3wAiXpD9JuYQJycoctUVfEyFYQKCALtTs72IJTwcrAU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZjDL+Thcx3g2oY4yMdzxuBKQlSagKkhtbPq8OnCM4eDmUE7lb
+	DPVJMiaYN9LCLcDNRu9gQqTvPAvb7lXeGrf0oXVh5IHUKAP4TkC7xXh50P67Hef4T3JiqkXaHY4
+	z/aFij0cZ9A+FllLNvFGpQuV5PaamV7UrnJYG
+X-Gm-Gg: ASbGncs209YQ4nLnPIvJCJRqw7ljh6OXHsCcwPqJh+5ZQ1oHcn29mwcgMjjmBSzn0fe
+	JqUNlA3dx+uS/ASApLCtjXOQKH7ClBBim2h97g0syhxi5R89yTObPKO0IASu5thyVfGBIp4nO/S
+	GHhUfDYXSTv3+lWDsR8VZBMHXJNwL6skTDHcvlUW/8k4OXuaizJUkY
+X-Google-Smtp-Source: AGHT+IH4KbDIAmz8gZLfVjOiL+nuNvvi6uk1SQsIGj72ELmQEPT6v+Qk+JdsGhfa3B8h399dfK9zguZ+jHJ7xZMou58=
+X-Received: by 2002:a17:90a:d2ce:b0:2ff:5a9d:9390 with SMTP id
+ 98e67ed59e1d1-30531f957a3mr24885869a91.8.1743588889523; Wed, 02 Apr 2025
+ 03:14:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174358864842.14745.908324129810950623.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+References: <20250402083628.20111-1-angelogioacchino.delregno@collabora.com> <20250402083628.20111-2-angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20250402083628.20111-2-angelogioacchino.delregno@collabora.com>
+From: Chen-Yu Tsai <wenst@chromium.org>
+Date: Wed, 2 Apr 2025 18:14:36 +0800
+X-Gm-Features: AQ5f1Jooc0a6tL_Gl6htqIUeZsyBaGUQis_xndlOKQ_9u_xfpEMy_zMefycOXDw
+Message-ID: <CAGXv+5HUJUL342uMA7wjmm8TsBUveVa0i8k+BfB2aZXd--AoKg@mail.gmail.com>
+Subject: Re: [PATCH v1 1/5] drm/mediatek: mtk_drm_drv: Fix kobject put for
+ mtk_mutex device ptr
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: chunkuang.hu@kernel.org, p.zabel@pengutronix.de, airlied@gmail.com, 
+	simona@ffwll.ch, matthias.bgg@gmail.com, nancy.lin@mediatek.com, 
+	ck.hu@mediatek.com, djkurtz@chromium.org, littlecvr@chromium.org, 
+	bibby.hsieh@mediatek.com, dri-devel@lists.freedesktop.org, 
+	linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, kernel@collabora.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The following commit has been merged into the x86/mm branch of tip:
+On Wed, Apr 2, 2025 at 4:36=E2=80=AFPM AngeloGioacchino Del Regno
+<angelogioacchino.delregno@collabora.com> wrote:
+>
+> This driver is taking a kobject for mtk_mutex only once per mmsys
+> device for each drm-mediatek driver instance, differently from the
+> behavior with other components, but it is decrementing the kobj's
+> refcount in a loop and once per mmsys: this is not right and will
+> result in a refcount_t underflow warning when mediatek-drm returns
+> multiple probe deferrals in one boot (or when manually bound and
+> unbound).
+>
+> Besides that, the refcount for mutex_dev was not decremented for
+> error cases in mtk_drm_bind(), causing another refcount_t warning
+> but this time for overflow, when the failure happens not during
+> driver bind but during component bind.
+>
+> In order to fix one of the reasons why this is happening, remove
+> the put_device(xx->mutex_dev) loop from the mtk_drm_kms_init()'s
+> put_mutex_dev label (and drop the label) and add a single call to
+> correctly free the single incremented refcount of mutex_dev to
+> the mtk_drm_unbind() function to fix the refcount_t underflow.
+>
+> Moreover, add the same call to the error cases in mtk_drm_bind()
+> to fix the refcount_t overflow.
+>
+> Fixes: 1ef7ed48356c ("drm/mediatek: Modify mediatek-drm for mt8195 multi =
+mmsys support")
+> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@coll=
+abora.com>
 
-Commit-ID:     90a22a5f841490790ecb17166633582681d44945
-Gitweb:        https://git.kernel.org/tip/90a22a5f841490790ecb17166633582681d44945
-Author:        Andrew Cooper <andrew.cooper3@citrix.com>
-AuthorDate:    Wed, 02 Apr 2025 10:10:17 +01:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Wed, 02 Apr 2025 11:54:51 +02:00
+Reviewed-by: Chen-Yu Tsai <wenst@chromium.org>
 
-x86/idle: Remove mb() barriers for X86_BUG_CLFLUSH_MONITOR in mwait_idle_with_hints()
-
-The following commit, 12 years ago:
-
-  7e98b7192046 ("x86, idle: Use static_cpu_has() for CLFLUSH workaround, add barriers")
-
-added barriers around the CLFLUSH in mwait_idle_with_hints(), justified with:
-
-  ... and add memory barriers around it since the documentation is explicit
-  that CLFLUSH is only ordered with respect to MFENCE.
-
-The SDM currently states:
-
-  Executions of the CLFLUSH instruction are ordered with respect to each
-  other and with respect to writes, locked read-modify-write instructions,
-  and fence instructions.
-
-  https://web.archive.org/web/20090219054841/http://download.intel.com/design/xeon/specupdt/32033601.pdf
-
-With footnote 1 reading:
-
-  Earlier versions of this manual specified that executions of the CLFLUSH
-  instruction were ordered only by the MFENCE instruction.  All processors
-  implementing the CLFLUSH instruction also order it relative to the other
-  operations enumerated above.
-
-I.e. The SDM was incorrect at the time, and barriers should not have been
-inserted.  Double checking the original AAI65 errata (not available from
-intel.com any more) shows no mention of barriers either.
-
-Additionally, drop the static_cpu_has_bug() and use a plain alternative().
-The workaround is a single instruction, with identical address setup to the
-MONITOR instruction.
-
-Fixes: 7e98b7192046 ("x86, idle: Use static_cpu_has() for CLFLUSH workaround, add barriers")
-Signed-off-by: Andrew Cooper <andrew.cooper3@citrix.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Rik van Riel <riel@surriel.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Brian Gerst <brgerst@gmail.com>
-Cc: Juergen Gross <jgross@suse.com>
-Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Link: https://lore.kernel.org/r/20250402091017.1249019-1-andrew.cooper3@citrix.com
----
- arch/x86/include/asm/mwait.h |  9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
-
-diff --git a/arch/x86/include/asm/mwait.h b/arch/x86/include/asm/mwait.h
-index ce857ef..54dc313 100644
---- a/arch/x86/include/asm/mwait.h
-+++ b/arch/x86/include/asm/mwait.h
-@@ -116,13 +116,10 @@ static __always_inline void __sti_mwait(unsigned long eax, unsigned long ecx)
- static __always_inline void mwait_idle_with_hints(unsigned long eax, unsigned long ecx)
- {
- 	if (static_cpu_has_bug(X86_BUG_MONITOR) || !current_set_polling_and_test()) {
--		if (static_cpu_has_bug(X86_BUG_CLFLUSH_MONITOR)) {
--			mb();
--			clflush((void *)&current_thread_info()->flags);
--			mb();
--		}
-+		const void *addr = &current_thread_info()->flags;
- 
--		__monitor((void *)&current_thread_info()->flags, 0, 0);
-+		alternative_input("", "clflush (%[addr])", X86_BUG_CLFLUSH_MONITOR, [addr] "a" (addr));
-+		__monitor(addr, 0, 0);
- 
- 		if (!need_resched()) {
- 			if (ecx & 1) {
+> ---
+>  drivers/gpu/drm/mediatek/mtk_drm_drv.c | 17 ++++++++++-------
+>  1 file changed, 10 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/med=
+iatek/mtk_drm_drv.c
+> index e09578756de0..a8fbccb50c74 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+> @@ -464,7 +464,7 @@ static int mtk_drm_kms_init(struct drm_device *drm)
+>
+>         ret =3D drmm_mode_config_init(drm);
+>         if (ret)
+> -               goto put_mutex_dev;
+> +               return ret;
+>
+>         drm->mode_config.min_width =3D 64;
+>         drm->mode_config.min_height =3D 64;
+> @@ -483,7 +483,7 @@ static int mtk_drm_kms_init(struct drm_device *drm)
+>                 drm->dev_private =3D private->all_drm_private[i];
+>                 ret =3D component_bind_all(private->all_drm_private[i]->d=
+ev, drm);
+>                 if (ret)
+> -                       goto put_mutex_dev;
+> +                       return ret;
+>         }
+>
+>         /*
+> @@ -576,9 +576,6 @@ static int mtk_drm_kms_init(struct drm_device *drm)
+>  err_component_unbind:
+>         for (i =3D 0; i < private->data->mmsys_dev_num; i++)
+>                 component_unbind_all(private->all_drm_private[i]->dev, dr=
+m);
+> -put_mutex_dev:
+> -       for (i =3D 0; i < private->data->mmsys_dev_num; i++)
+> -               put_device(private->all_drm_private[i]->mutex_dev);
+>
+>         return ret;
+>  }
+> @@ -649,8 +646,10 @@ static int mtk_drm_bind(struct device *dev)
+>                 return 0;
+>
+>         drm =3D drm_dev_alloc(&mtk_drm_driver, dev);
+> -       if (IS_ERR(drm))
+> -               return PTR_ERR(drm);
+> +       if (IS_ERR(drm)) {
+> +               ret =3D PTR_ERR(drm);
+> +               goto err_put_dev;
+> +       }
+>
+>         private->drm_master =3D true;
+>         drm->dev_private =3D private;
+> @@ -676,6 +675,8 @@ static int mtk_drm_bind(struct device *dev)
+>         drm_dev_put(drm);
+>         for (i =3D 0; i < private->data->mmsys_dev_num; i++)
+>                 private->all_drm_private[i]->drm =3D NULL;
+> +err_put_dev:
+> +       put_device(private->mutex_dev);
+>         return ret;
+>  }
+>
+> @@ -688,6 +689,8 @@ static void mtk_drm_unbind(struct device *dev)
+>                 drm_dev_unregister(private->drm);
+>                 mtk_drm_kms_deinit(private->drm);
+>                 drm_dev_put(private->drm);
+> +
+> +               put_device(private->mutex_dev);
+>         }
+>         private->mtk_drm_bound =3D false;
+>         private->drm_master =3D false;
+> --
+> 2.48.1
+>
