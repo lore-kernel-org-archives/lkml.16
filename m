@@ -1,126 +1,322 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD9702356A0
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 13:40:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FE8A23A98A;
+	Wed,  2 Apr 2025 13:40:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743601231; cv=none; b=MauISlmxq8c8p+oeyko8mmVqcYKw0YHKbfDpXeurE9AlRmh8NIKm5ngXb7+T3APZDFPG5G+ZmvIFAILC6hUq/aX8n7dq1M4r7pQYtpnd8/dZB2ZMDCUU+BX7c85FKqe56DW0dnW3kvb+iuoieFxSbLduc0xWyQl2BXNk3E6LOKI=
+	t=1743601241; cv=none; b=BV+aMg4zE0GYlgONgFcllN4COfI44vBC/vBObhpcfF66U4d3UNllgiydFdIeh4cloZ6JOOvRorQyzbYU8iLY5MBc7vGs6pKyr36pZf0LnZGazdrIKGBvRbQUb68sRE6lM3OqeGAJTKiRFDhd1WzOVI6pbj66sAxCmTgyjAakc6k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743601231; c=relaxed/simple;
-	bh=2fd8hxX+gYJ6lDhryumm3A0+ASoxP9QgI8YrdL3sitI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ChKF0Yw9pY6iOSIW7xZzTFhcqVXtGLnX7/meTN+UuYaz0x2H8DKz+kNIm0c/h2Z2/0YoqFwNG2Gr643VTMZC3lZULa4vD6ziF/7hGi5ux79KhPJcltYfSo+TbAhijzpYq7Zh8APmfj6ig6+zebVdRZJ8tNKlxnLI7qASzdSxP8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=BSwxymEM; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="BSwxymEM"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43ea40a6e98so25722255e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 06:40:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1743601228; x=1744206028; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=2fd8hxX+gYJ6lDhryumm3A0+ASoxP9QgI8YrdL3sitI=;
-        b=BSwxymEMWGQEv0WwG9y+SQhbBaxmTDNuGhba2N68jB6Dp8uJr12geMfXlAdUlw4w7l
-         y2wFgtHrklsuEGioEL8t3twNagSp95uhyAUV0hhWZNWkcF4e9cmoSatDmfnpEclizB66
-         N0bBAw5h/SbQEWfooqpIajO8Ie+A+bOyaxf/axuWNd+Ls4VqDGIvg/djBz4nhqr+EnPU
-         G9DWSf6RGnHU+xfbNMbvyY3w1S6UoKBBQPJ1HUVgbtyd5sJ/sczgtTh0nGjtVLsHuRjX
-         hjj/vXHTwmMTxdoQ3CjqvchhEK89pbI0zIJK7yKOH6KC69xZW9hPR+1pG857BMHLRvSj
-         Cxjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743601228; x=1744206028;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2fd8hxX+gYJ6lDhryumm3A0+ASoxP9QgI8YrdL3sitI=;
-        b=eTLsqBiP5GfG6DWtG8w6dBJ9Ox87POf3KoIL4srOrrspxaZvXUS0pzoKP821aVhjdV
-         R6OkEQpXM6Iom/FTiXJl1jl3uvi5J3uaVavhbyPkb0yvKJKfXH1sxlIz5pfyWuVwwyaq
-         BHzQAY0EE1Su3x06wFJ2+V8y6FBtTRxE6B9SpiBgTgMRZVhVSr197hQkmaxf05cDJuVD
-         BQi8SV0QNc0vt/tHBi/mDtLp29tQpUHX2DDfUAKKjuu/v2hL8lKvkJy8HR3s7MYJq1SN
-         DPDgbUHnUoF79/YEbYLulUiFkZbZIGRF0StOJXlaWAv2L6QbHEXztn8jOUkzZBC/HRwV
-         SzjQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVP4x4kVTR6mw4MLjrMgv6nh66OXxBv/86GvlJvjTTPIxGdPaH4WMB4JLLZTfKjz/0mFzAHSqT4hFji4CY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyWUfSaXB4iK5EBLxDo9NcbCbS3EY6ZlP7Ts5HGhC4jVWi4lOXv
-	XEYmqhXgaAOG+AGvGCmj4Kg9VUOAmwwcQHY8QZvQ7PyeUkvIl4kfyiq4uDclT7U=
-X-Gm-Gg: ASbGncubKndm8ryc4f2DQKt9/JyTt4HMdddCL+laSLXKO3p44DHClYc5EaDtSSvUqzg
-	R1bGylV/SnwrCcug1yMk2qBAUaxneHMH5ZjX7SbC240OtfPSFb55yTv7fGzC4DmJNY2uh5PDBS3
-	04Rsvs4yAdGL2jk93pgnbuHUAmIpk7MCaT5eZ6V6xq7Badr8lrhy4vHRwO9ZooKbGBJFI4tK3aK
-	sVo/9l9YFffqCOLmymICMR4yktjL0AU151hctW50HRNyaSwvPzAzDlE1/WPNqctbk9fOuJFj3Er
-	bkMm30fqf31R6Uf3KX4Ov3HuqZQUQjtRB+5jygifRKsJEtQ=
-X-Google-Smtp-Source: AGHT+IFoylUzo0whZWEE0vZN2Ek48agc4KnhEC0CToW9yiEQ1Zbe2ioVf8m7e/VfOfiJfcet9PVsqQ==
-X-Received: by 2002:a05:600c:5026:b0:43c:f470:7605 with SMTP id 5b1f17b1804b1-43eb5c21036mr29632815e9.12.1743601228011;
-        Wed, 02 Apr 2025 06:40:28 -0700 (PDT)
-Received: from blackdock.suse.cz ([193.86.92.181])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43eb60cba2dsm21467045e9.18.2025.04.02.06.40.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Apr 2025 06:40:27 -0700 (PDT)
-Date: Wed, 2 Apr 2025 15:40:26 +0200
-From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
-To: Shakeel Butt <shakeel.butt@linux.dev>
-Cc: Johannes Weiner <hannes@cmpxchg.org>, 
-	Roman Gushchin <roman.gushchin@linux.dev>, Jingxiang Zeng <linuszeng@tencent.com>, 
-	akpm@linux-foundation.org, linux-mm@kvack.org, cgroups@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, mhocko@kernel.org, muchun.song@linux.dev, kasong@tencent.com
-Subject: Re: [RFC 2/5] memcontrol: add boot option to enable memsw account on
- dfl
-Message-ID: <4lygax4lgpkkmtmpxif6psl7broial2h74lel37faelc3dlsx3@s56hfvqiazgc>
-References: <20250319064148.774406-1-jingxiangzeng.cas@gmail.com>
- <20250319064148.774406-3-jingxiangzeng.cas@gmail.com>
- <m35wwnetfubjrgcikiia7aurhd4hkcguwqywjamxm4xnaximt7@cnscqcgwh4da>
- <7ia4tt7ovekj.fsf@castle.c.googlers.com>
- <20250320142846.GG1876369@cmpxchg.org>
- <ipskzxjtm656f5srrp42uxemh5e4jdwzsyj2isqlldfaokiyoo@ly4gfvldjc2p>
+	s=arc-20240116; t=1743601241; c=relaxed/simple;
+	bh=W2P+CWHKXjW9H17MAtHSuWWdCgwkZBG/UPqA/eLiqmo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AExynKa+PcIbWLg2zijBLHAAYFj7vF+g6exXR1IjmhJEp1mPLvtP2n078NvX/ElODNEHpzTpw0gP4UzDtvxnPklPyys5MJe4yYT1Yt4CCPxL36cmHoyB9ZSxPzbjIIiLs3xFMEypt+KU/DrjXzDRO7TrrXXm9U1tdvi43SeN1NA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9FF67FEC;
+	Wed,  2 Apr 2025 06:40:40 -0700 (PDT)
+Received: from [10.57.88.195] (unknown [10.57.88.195])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E601F3F694;
+	Wed,  2 Apr 2025 06:40:35 -0700 (PDT)
+Message-ID: <e809c355-7f3c-4c7b-acee-852d5b64d1c7@arm.com>
+Date: Wed, 2 Apr 2025 14:40:34 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="fpxy367fgz7uxy3l"
-Content-Disposition: inline
-In-Reply-To: <ipskzxjtm656f5srrp42uxemh5e4jdwzsyj2isqlldfaokiyoo@ly4gfvldjc2p>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] mm/filemap: Allow arch to request folio size for exec
+ memory
+Content-Language: en-GB
+To: Kalesh Singh <kaleshsingh@google.com>
+Cc: Matthew Wilcox <willy@infradead.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ David Hildenbrand <david@redhat.com>, Dave Chinner <david@fromorbit.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
+References: <20250327160700.1147155-1-ryan.roberts@arm.com>
+ <Z-WAbWfZzG1GA-4n@casper.infradead.org>
+ <5131c7ad-cc37-44fc-8672-5866ecbef65b@arm.com>
+ <Z-b1FmZ5nHzh5huL@casper.infradead.org>
+ <ee11907a-5bd7-44ec-844c-8f10ff406b46@arm.com>
+ <CAC_TJveU2v+EcokLKJVVZ8Xje2nYmmUg8bvCD8KO1oC5MgmWCA@mail.gmail.com>
+ <76f5ba9b-1a8c-4973-89ce-14f504819da1@arm.com>
+ <CAC_TJvemG2XDky1HtA8g=SG0nv-sONOS-ssEchdymh-_xjBecw@mail.gmail.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <CAC_TJvemG2XDky1HtA8g=SG0nv-sONOS-ssEchdymh-_xjBecw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+On 01/04/2025 13:55, Kalesh Singh wrote:
+> On Tue, Apr 1, 2025 at 3:35 AM Ryan Roberts <ryan.roberts@arm.com> wrote:
+>>
+>> On 01/04/2025 03:19, Kalesh Singh wrote:
+>>> On Sat, Mar 29, 2025 at 3:08 AM Ryan Roberts <ryan.roberts@arm.com> wrote:
+>>>>
+>>>> On 28/03/2025 15:14, Matthew Wilcox wrote:
+>>>>> On Thu, Mar 27, 2025 at 04:23:14PM -0400, Ryan Roberts wrote:
+>>>>>> + Kalesh
+>>>>>>
+>>>>>> On 27/03/2025 12:44, Matthew Wilcox wrote:
+>>>>>>> On Thu, Mar 27, 2025 at 04:06:58PM +0000, Ryan Roberts wrote:
+>>>>>>>> So let's special-case the read(ahead) logic for executable mappings. The
+>>>>>>>> trade-off is performance improvement (due to more efficient storage of
+>>>>>>>> the translations in iTLB) vs potential read amplification (due to
+>>>>>>>> reading too much data around the fault which won't be used), and the
+>>>>>>>> latter is independent of base page size. I've chosen 64K folio size for
+>>>>>>>> arm64 which benefits both the 4K and 16K base page size configs and
+>>>>>>>> shouldn't lead to any read amplification in practice since the old
+>>>>>>>> read-around path was (usually) reading blocks of 128K. I don't
+>>>>>>>> anticipate any write amplification because text is always RO.
+>>>>>>>
+>>>>>>> Is there not also the potential for wasted memory due to ELF alignment?
+>>>>>>
+>>>>>> I think this is an orthogonal issue? My change isn't making that any worse.
+>>>>>
+>>>>> To a certain extent, it is.  If readahead was doing order-2 allocations
+>>>>> before and is now doing order-4, you're tying up 0-12 extra pages which
+>>>>> happen to be filled with zeroes due to being used to cache the contents
+>>>>> of a hole.
+>>>>
+>>>> Well we would still have read them in before, nothing has changed there. But I
+>>>> guess your point is more about reclaim? Because those pages are now contained in
+>>>> a larger folio, if part of the folio is in use then all of it remains active.
+>>>> Whereas before, if the folio was fully contained in the pad area and never
+>>>> accessed, it would fall down the LRU quickly and get reclaimed.
+>>>>
+>>>
+>>>
+>>> Hi Ryan,
+>>>
+>>> I agree this was happening before and we don't need to completely
+>>> address it here. Though with the patch it's more likely that the holes
+>>> will be cached. I'd like to minimize it if possible. Since this is for
+>>> EXEC mappings, a simple check we could use is to limit this to the
+>>> VM_EXEC vma.
+>>>
+>>> + if (vm_flags & VM_EXEC) {
+>>> + int order = arch_exec_folio_order();
+>>> +
+>>> + if (order >= 0 && ((end-address)*2) >= 1<<order) { /* Fault around case */
+>>
+>> I think the intent of this extra check is to ensure the folio will be fully
+>> contained within the exec vma? Assuming end is the VA of the end of the vma and
+>> address is the VA of the fault, I don't think the maths are quite right? What's
+>> the "*2" for? And you probably mean PAGE_SIZE<<order ? But this also doesn't
+>> account for alignment; the folio will be aligned down to a natural boundary in
+>> the file.
+> 
+> Hi Ryan,
+> 
+> Sorry for the pseudocode. You are right it should be PAGE_SIZE. *2 is
+> because I missed that this isn't centered around the faulting address
+> as the usual fault around logic.
+> 
+>>
+>> But more fundamentally, I thought I suggested reducing the VMA bounds to exclude
+>> padding pages the other day at LSF/MM and you said you didn't want to do that
+>> because you didn't want to end up with something else mapped in the gap? So
+>> doesn't that mean the padding pages are part of the VMA and this check won't help?
+> 
+> The intention was to check that we aren't reading past (more than we
+> do today) into other subsequent segments (and holes) if the exec
+> segment is small relative to 64K, in which case we fall back to the
+> conventional readahead heuristics.
 
---fpxy367fgz7uxy3l
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [RFC 2/5] memcontrol: add boot option to enable memsw account on
- dfl
-MIME-Version: 1.0
+Gottya. I think this is probably a reasonable thing to do.
 
-On Thu, Mar 20, 2025 at 08:33:09AM -0700, Shakeel Butt <shakeel.butt@linux.=
-dev> wrote:
-> However I want us to discuss and decide the semantics of
-> memsw from scratch rather than adopting v1 semantics.
+> 
+>>
+>>>
+>>> For reference I found below (coincidentally? similar) distributions on
+>>> my devices
+>>>
+>>> == x86 Workstation ==
+>>>
+>>> Total unique exec segments:   906
+>>>
+>>> Exec segments >= 16 KB:   663 ( 73.18%)
+>>> Exec segments >= 64 KB:   414 ( 45.70%)
+>>
+>> What are those percentages? They don't add up to more than 100...
+> 
+> The percent of segments with size >=16KB/64KB of the total number of
+> exec mappings. "Exec segments >= 64 KB" is also a subset of "Exec
+> segments >= 16 KB" it's why they don't add up to 100.
 
-+1
+Ahh got it.
 
-> Also we should discuss how memsw and swap limits would interact and
-> what would be the appropriate default.
+> 
+>>
+>> The numbers I included with the patch are caclulated based on actual mappings so
+>> if we end up with a partially mapped 64K folio (because it runs off the end of
+>> the VMA) it wouldn't have been counted as a 64K contiguous mapping. So I don't
+>> think this type of change would change my numbers at all.
+> 
+> I don't think it should affect the results much (probably only a small
+> benefit from the extra preread of other segments if we aren't under
+> much memory pressure).
 
-Besides more complicated implementation, merged memsw won't represent an
-actual resource.
+I was referring to the my numbers that show the percentage of text mapped by
+contpte, not to the performance numbers. But I agree I wouldn't expect either to
+change.
 
-So I'd be interested in use cases (other than "used to it from v1") that
-cannot be controlled with separate memory. and swap. limits.
+> 
+> Anyways I don't have a strong opinion, given that this shouldn't be an
+> issue once we work out Matthew and Ted's idea for the holes. So we can
+> keep it simple for now.
 
+I'll add it in and verify it doesn't affect the numbers. I think there is a
+wider decision that needs to be made below first though, so will wait for
+opinions on that.
 
-0.02=E2=82=AC,
-Michal
+Thanks,
+Ryan
 
---fpxy367fgz7uxy3l
-Content-Type: application/pgp-signature; name="signature.asc"
+> 
+> Thanks,
+> Kalesh
+> 
+>>
+>>>
+>>> == arm64 Android Device ==
+>>>
+>>> Total unique exec segments:   2171
+>>>
+>>> Exec segments >= 16 KB:  1602 ( 73.79%)
+>>> Exec segments >= 64 KB:   988 ( 45.51%)
+>>>
+>>> Result were using the below script:
+>>>
+>>> cat /proc/*/maps | grep 'r-xp' | \
+>>> awk '
+>>> BEGIN { OFS = "\t" }
+>>> $NF ~ /^\// {
+>>> path = $NF;
+>>> split($1, addr, "-");
+>>> size = strtonum("0x" addr[2]) - strtonum("0x" addr[1]);
+>>> print size, path;
+>>> }' | \
+>>> sort -u | \
+>>> awk '
+>>> BEGIN {
+>>> FS = "\t";
+>>> total_segments = 0;
+>>> segs_ge_16k = 0;
+>>> segs_ge_64k = 0;
+>>> }
+>>> {
+>>> total_segments++;
+>>> size = $1;
+>>> if (size >= 16384) segs_ge_16k++;
+>>> if (size >= 65536) segs_ge_64k++;
+>>> }
+>>> END {
+>>> if (total_segments > 0) {
+>>> percent_gt_16k = (segs_ge_16k / total_segments) * 100;
+>>> percent_gt_64k = (segs_ge_64k / total_segments) * 100;
+>>>
+>>> printf "Total unique exec segments: %d\n", total_segments;
+>>> printf "\n";
+>>> printf "Exec segments >= 16 KB: %5d (%6.2f%%)\n", segs_ge_16k, percent_gt_16k;
+>>> printf "Exec segments >= 64 KB: %5d (%6.2f%%)\n", segs_ge_64k, percent_gt_64k;
+>>> } else {
+>>> print "No executable segments found.";
+>>> }
+>>> }'
+>>>
+>>>>>
+>>>>>>> Kalesh talked about it in the MM BOF at the same time that Ted and I
+>>>>>>> were discussing it in the FS BOF.  Some coordination required (like
+>>>>>>> maybe Kalesh could have mentioned it to me rathere than assuming I'd be
+>>>>>>> there?)
+>>>>>>
+>>>>>> I was at Kalesh's talk. David H suggested that a potential solution might be for
+>>>>>> readahead to ask the fs where the next hole is and then truncate readahead to
+>>>>>> avoid reading the hole. Given it's padding, nothing should directly fault it in
+>>>>>> so it never ends up in the page cache. Not sure if you discussed anything like
+>>>>>> that if you were talking in parallel?
+>>>>>
+>>>>> Ted said that he and Kalesh had talked about that solution.  I have a
+>>>>> more bold solution in mind which lifts the ext4 extent cache to the
+>>>>> VFS inode so that the readahead code can interrogate it.
+>>>>>
+>>>
+>>> Sorry about the hiccup in coordination, Matthew. It was my bad for not
+>>> letting you know I planned to discuss it in the MM BoF. I'd like to
+>>> hear Ted and your ideas on this when possible.
+>>>
+>>> Thanks,
+>>> Kalesh
+>>>
+>>>>>> Anyway, I'm not sure if you're suggesting these changes need to be considered as
+>>>>>> one somehow or if you're just mentioning it given it is loosely related? My view
+>>>>>> is that this change is an improvement indepently and could go in much sooner.
+>>>>>
+>>>>> This is not a reason to delay this patch.  It's just a downside which
+>>>>> should be mentioned in the commit message.
+>>>>
+>>>> Fair point; I'll add a paragraph about the potential reclaim issue.
+>>>>
+>>>>>
+>>>>>>>> +static inline int arch_exec_folio_order(void)
+>>>>>>>> +{
+>>>>>>>> +  return -1;
+>>>>>>>> +}
+>>>>>>>
+>>>>>>> This feels a bit fragile.  I often expect to be able to store an order
+>>>>>>> in an unsigned int.  Why not return 0 instead?
+>>>>>>
+>>>>>> Well 0 is a valid order, no? I think we have had the "is order signed or
+>>>>>> unsigned" argument before. get_order() returns a signed int :)
+>>>>>
+>>>>> But why not always return a valid order?  I don't think we need a
+>>>>> sentinel.  The default value can be 0 to do what we do today.
+>>>>>
+>>>>
+>>>> But a single order-0 folio is not what we do today. Note that my change as
+>>>> currently implemented requests to read a *single* folio of the specified order.
+>>>> And note that we only get the order we request to page_cache_ra_order() because
+>>>> the size is limited to a single folio. If the size were bigger, that function
+>>>> would actually expand the requested order by 2. (although the parameter is
+>>>> called "new_order", it's actually interpretted as "old_order").
+>>>>
+>>>> The current behavior is effectively to read 128K in order-2 folios (with smaller
+>>>> folios for boundary alignment).
+>>>>
+>>>> So I see a few options:
+>>
+>> Matthew,
+>>
+>> Did you have any thoughts on these options?
+>>
+>> Thanks,
+>> Ryan
+>>
+>>>>
+>>>>   - Continue to allow non-opted in arches to use the existing behaviour; in this
+>>>> case we need a sentinel. This could be -1, UINT_MAX or 0. But in the latter case
+>>>> you are preventing an opted-in arch from specifying that they want order-0 -
+>>>> it's meaning is overridden.
+>>>>
+>>>>   - Force all arches to use the new approach with a default folio order (and
+>>>> readahead size) of order-0. (The default can be overridden per-arch). Personally
+>>>> I'd be nervous about making this change.
+>>>>
+>>>>   - Decouple the read size from the folio order size; continue to use the 128K
+>>>> read size and only allow opting-in to a specific folio order. The default order
+>>>> would be 2 (or 0). We would need to fix page_cache_async_ra() to call
+>>>> page_cache_ra_order() with "order + 2" (the new order) and fix
+>>>> page_cache_ra_order() to treat its order parameter as the *new* order.
+>>>>
+>>>> Perhaps we should do those fixes anyway (and then actually start with a folio
+>>>> order of 0 - which I think you said in the past was your original intention?).
+>>>>
+>>>> Thanks,
+>>>> Ryan
+>>>>
+>>
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQTd6mfF2PbEZnpdoAkt3Wney77BSQUCZ+0+SAAKCRAt3Wney77B
-SReaAP9PEf6fTG7T1DvIBCBKLHUb4pZJXbS4PrfsTVvv75/n5gEA2pS1+3FrrRz3
-Mw0xE0eo8DliHcSRXj528SqePrQKZw4=
-=Wsdl
------END PGP SIGNATURE-----
-
---fpxy367fgz7uxy3l--
