@@ -1,169 +1,343 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E34A22E3372
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 15:42:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7E232E3372
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 15:43:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743608523; cv=none; b=fR5AyeCD3HQVB8nuDCRRgFGidMRO9DBGZ8WGk/x3ndPuUqj7/k2ywVtNboSf3q01dIkEXPPxxwW8iNf+YtWB7wdoGl/P8cthNXy81c2mVtqbPih32Q3U2w4nXhRWGAvvPbKLFtyuuMcMpjnbS5Tk5QK3XQGHO5QR8tQSCzpumxU=
+	t=1743608592; cv=none; b=WAYYLHfTlFohr3TxG2pOUdjU6J/R675sk3c2DaZIWsC1YjSsVxQwtbydplBU6//Noe9Si/KV3xiYPRdV1uRexC1yo4mZKTpDmKyiOuel6HpQXOdquQxBXNqdxQ9Z/LIw2bl3x6WEu5RgfPJQ3A5JPWOlIsrKpb/+taBuFEJ6eMU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743608523; c=relaxed/simple;
-	bh=J2W7LvDFGQtX8XgoFhdUO3rwtfk23G3m7HHAPLWyyrI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uMzGWNqHZ/6U5ows/f2fmPF5I1s8er8gGNfsyc379eglRhFmjCSr2flR91XtIvsk1cKfLSQU7xH/uM64YE9Czw+1bMIs30s/TSzyrC0ex6F+I9aJnUqiiTXoZ+wC/yjYP6xxmR/w0/uXpdWlsj0j4khuipfnn/9Sn7599WgDYQM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=DEKUU0rt; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=yX3/I4fR; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=XOAx7ptH; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=v3igOhzZ; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1743608592; c=relaxed/simple;
+	bh=gXWTx4KzNVCpRYOf004yG4hkyWIGaJmJ1DJ+XENGdog=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FxFRitBv+K1kO2kOXEi1QtAvWQ3h1Z/LLOq6Ybl5fPSsFrqLjQaDTsG+cKO/pbIvOV4VR/NU1DiigcPCvkakTNCFFwdXMpD3E2BfpjGgPbPBMqzijNWkyQaaQb0JkPLwVmca9gXqW5bSpN7xOwlvMDND0WBp0Lp54vLqScjUIUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=G1ky23hg; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="DEKUU0rt";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="yX3/I4fR";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="XOAx7ptH";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="v3igOhzZ"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id DD7D721190;
-	Wed,  2 Apr 2025 15:41:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1743608520; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EG22P7DxCo5cHt+oi7u2ba0p8PnBOgUBOEtLQ0J4nE0=;
-	b=DEKUU0rttV2MWjSJQi/gwRKIJ5aaZhFrc0wM6CjWsGO5NseAUgs0cuE39SSB5HcnF+psVn
-	8atC2B6ExhJZIwbObAk8M6PUfezbR5fazlU4i6EbFwpzfObVKjldNzTk14JSetjjO0ZWLN
-	aYv9aSY7ECYbVjglHjHsjxGqMqyPP5o=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1743608520;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EG22P7DxCo5cHt+oi7u2ba0p8PnBOgUBOEtLQ0J4nE0=;
-	b=yX3/I4fR3q2cI9nV6PHYWaZNTRXkS8Cp/HA74t7DOxUTb+W02zoBbGYKMGvUPo4X3fqoyX
-	FHD8LjRaWkzeqQDQ==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=XOAx7ptH;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=v3igOhzZ
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1743608519; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EG22P7DxCo5cHt+oi7u2ba0p8PnBOgUBOEtLQ0J4nE0=;
-	b=XOAx7ptHfzSQXto+VYp/gSOwLXIKLrKqD8HxJze5Jplt0OTllgPk32ynTKx2ZrgptsiSWV
-	qbOTaYDWiLJJwwgxw/p9X2iOIBxmwfIoJIQTwFiXhOtwI5B9xY+W0a9cQg28GGDuQgG9jH
-	gUlTAZFn63uY01aSJPCMMNJvCbJggK8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1743608519;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EG22P7DxCo5cHt+oi7u2ba0p8PnBOgUBOEtLQ0J4nE0=;
-	b=v3igOhzZ1nZP1cBe7tnGSAYt9rDg/L+O/ZpDPdnB5poTOkx4o27Bp9od7y4jJug3DpovSh
-	TiWWJb6bwECRsBCw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1FD8213A4B;
-	Wed,  2 Apr 2025 15:41:59 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id FPX3BMda7WcmRgAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Wed, 02 Apr 2025 15:41:59 +0000
-Date: Wed, 2 Apr 2025 17:41:57 +0200
-From: Oscar Salvador <osalvador@suse.de>
-To: Gregory Price <gourry@gourry.net>
-Cc: Rakie Kim <rakie.kim@sk.com>, akpm@linux-foundation.org,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org, joshua.hahnjy@gmail.com,
-	dan.j.williams@intel.com, ying.huang@linux.alibaba.com,
-	david@redhat.com, Jonathan.Cameron@huawei.com,
-	kernel_team@skhynix.com, honggyu.kim@sk.com, yunjeong.mun@sk.com
-Subject: Re: [PATCH v5 3/3] mm/mempolicy: Support memory hotplug in weighted
- interleave
-Message-ID: <Z-1axdrOVBYESrXo@localhost.localdomain>
-References: <20250402014906.1086-1-rakie.kim@sk.com>
- <20250402014906.1086-4-rakie.kim@sk.com>
- <Z-0IlZgYLjogZSZO@localhost.localdomain>
- <Z-1GUrdcOeYQgkE3@gourry-fedora-PF4VCD3F>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G1ky23hg"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2263428c8baso203645ad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 08:43:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1743608590; x=1744213390; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vLx926SERiuLZQCn+zwVm1b5oe6kEeJawcqBPY1JlWg=;
+        b=G1ky23hgDxxjSVOqAWTScn1JrgHrmXRaDzutwDSjKzDQjc7tYvnNQUvGHPadnFcl/I
+         bYTKfbtWgLr41nO/JRKL7UC/fi1+ULLiayg4o4YViWEqCnvTc+9/puFxmt7Wbc2Npvr4
+         2hjYKvDaTBCh6gBBVG9lKHpsSLZV3xEZgKOFDPjodxAo/MIq8nc7WLA1qk10We0OxJSR
+         mYNl/c4nF85r/JrLwozKcC2G07socM0goC6fwBL/7keNpGOhioPEbuPsGkCMLwH/SJH3
+         yybJG+fAPdAIl7HqwOie3JQr1DhrNfqyD+03xvo2bP8LJhGRw3lFwZuCbgfLPt8m94Oy
+         +PWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743608590; x=1744213390;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vLx926SERiuLZQCn+zwVm1b5oe6kEeJawcqBPY1JlWg=;
+        b=XssklxK1T2dbBbDOr3cMat7xWfbPS2ULDk9TxmPPuAvXdCyTG1juoi81un48fL9S4T
+         EfUY7cdOJD94FFkvlV9vNtnLqvcu43sjSTsjaIMDMtUbtcu/b2+93pZCv1BeQseE27rR
+         JVoOtZR0xQ9Uc//o02dIghT88ndGYh0uxJZdh8kM7zs5z2MEhNwsPaQ24bEQEYMjrAZw
+         42N2ZVyrs5jKEhM+Jrv6KY0/QZP22PlFqPmCgvjLirAkW9ENKGTA5SFjyW0WRkC0DDNp
+         e53ueeDxnPDy3bus4Qjd6u3YrLTGzu6GQbJKMmlfUEMqJfCqryZR9VosnGxgIwPen04p
+         Ctvw==
+X-Forwarded-Encrypted: i=1; AJvYcCWPv2jq7wHvmfEJCKoihwtdy1LP4x/pGGUtCpewvUeUBQxrP431CsoNRqej4vXbmuu0nNvaHofFAnMwXUQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyEqmx7xwjM9v3YWmdGfrIn4nLDQy3EHrbjbLBo9oHlxxr6n+ws
+	RtXHAXf9uJu32lss7U+ox0YQYdBECmSgQuLDjvs/A6v4+zrKZ1pTeHWZVDmhqV3mAuMKNvWPDqZ
+	JzJHxeYwR6FwipsB2I+Kdmznt/LNSWXfSXSdE
+X-Gm-Gg: ASbGnctDEPaIvi/kuM8x/fhpR5DjU3CQ2x1NXO0mh46pPATHoGkKimnhZonXTdJJOWH
+	WeMuY0nsgQ3jdx9cRyVGQv2RNz552iUs5C1ua3GVgNmtrKjKQefBrwwAG8orXuLHiH/f8ix/GmX
+	Scfz3BQnf2t8iVU4nb2y8FLUrV9GIwoE2fEF7/BqA9crGSZOc8jFfDLg==
+X-Google-Smtp-Source: AGHT+IHUU2j/octwD2z6LvcYRe4LtMPcNbJ70CbkYAKSdPaiRXvDW4hjHK3JtQAK2aTmcF6biabxxV5TPMI8t4CMHgM=
+X-Received: by 2002:a17:902:e5ca:b0:223:37ec:63be with SMTP id
+ d9443c01a7336-22969dce57cmr3357735ad.4.1743608589525; Wed, 02 Apr 2025
+ 08:43:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z-1GUrdcOeYQgkE3@gourry-fedora-PF4VCD3F>
-X-Rspamd-Queue-Id: DD7D721190
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[14];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	MIME_TRACE(0.00)[0:+];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	FREEMAIL_CC(0.00)[sk.com,linux-foundation.org,kvack.org,vger.kernel.org,gmail.com,intel.com,linux.alibaba.com,redhat.com,huawei.com,skhynix.com];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -3.01
-X-Spam-Flag: NO
+References: <20250401182347.3422199-1-irogers@google.com> <20250401182347.3422199-10-irogers@google.com>
+ <20250402143541.GM115840@e132581.arm.com>
+In-Reply-To: <20250402143541.GM115840@e132581.arm.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 2 Apr 2025 08:42:58 -0700
+X-Gm-Features: AQ5f1Jp98ZbdLZ_9VupKP8CmreTV4tjO1cqtDjJsnkA5YYhinMwNDExzc3C9hoA
+Message-ID: <CAP-5=fVqax8cxdZ4HLBP4AMxL6jADfYNrORC97T6F23mjf3N1w@mail.gmail.com>
+Subject: Re: [PATCH v1 09/48] perf tests: Silence -Wshorten-64-to-32 warnings
+To: Leo Yan <leo.yan@arm.com>
+Cc: Yury Norov <yury.norov@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Darren Hart <dvhart@infradead.org>, 
+	Davidlohr Bueso <dave@stgolabs.net>, =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>, 
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
+	James Clark <james.clark@linaro.org>, Mike Leach <mike.leach@linaro.org>, 
+	Leo Yan <leo.yan@linux.dev>, Yicong Yang <yangyicong@hisilicon.com>, 
+	Jonathan Cameron <jonathan.cameron@huawei.com>, Nathan Chancellor <nathan@kernel.org>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+	Josh Poimboeuf <jpoimboe@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, 
+	Kyle Meyer <kyle.meyer@hpe.com>, Ben Gainey <ben.gainey@arm.com>, 
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>, Kajol Jain <kjain@linux.ibm.com>, 
+	Aditya Gupta <adityag@linux.ibm.com>, Eder Zulian <ezulian@redhat.com>, 
+	Dapeng Mi <dapeng1.mi@linux.intel.com>, Kuan-Wei Chiu <visitorckw@gmail.com>, 
+	He Zhe <zhe.he@windriver.com>, Dirk Gouders <dirk@gouders.net>, 
+	Brian Geffon <bgeffon@google.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
+	Howard Chu <howardchu95@gmail.com>, Charlie Jenkins <charlie@rivosinc.com>, 
+	Colin Ian King <colin.i.king@gmail.com>, Dominique Martinet <asmadeus@codewreck.org>, 
+	Jann Horn <jannh@google.com>, Masahiro Yamada <masahiroy@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Yang Jihong <yangjihong@bytedance.com>, Dmitry Vyukov <dvyukov@google.com>, 
+	Andi Kleen <ak@linux.intel.com>, Graham Woodward <graham.woodward@arm.com>, 
+	Ilkka Koskinen <ilkka@os.amperecomputing.com>, 
+	Anshuman Khandual <anshuman.khandual@arm.com>, Zhongqiu Han <quic_zhonhan@quicinc.com>, 
+	Hao Ge <gehao@kylinos.cn>, Tengda Wu <wutengda@huaweicloud.com>, 
+	Gabriele Monaco <gmonaco@redhat.com>, Chun-Tse Shao <ctshao@google.com>, 
+	Casey Chen <cachen@purestorage.com>, "Dr. David Alan Gilbert" <linux@treblig.org>, 
+	Li Huafei <lihuafei1@huawei.com>, "Steinar H. Gunderson" <sesse@google.com>, Levi Yun <yeoreum.yun@arm.com>, 
+	Weilin Wang <weilin.wang@intel.com>, Thomas Falcon <thomas.falcon@intel.com>, 
+	Thomas Richter <tmricht@linux.ibm.com>, Andrew Kreimer <algonell@gmail.com>, 
+	=?UTF-8?Q?Krzysztof_=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, 
+	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>, Junhao He <hejunhao3@huawei.com>, 
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Xu Yang <xu.yang_2@nxp.com>, 
+	Steve Clevenger <scclevenger@os.amperecomputing.com>, Zixian Cai <fzczx123@gmail.com>, 
+	Stephen Brennan <stephen.s.brennan@oracle.com>, Yujie Liu <yujie.liu@intel.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 02, 2025 at 10:14:42AM -0400, Gregory Price wrote:
-> On Wed, Apr 02, 2025 at 11:51:17AM +0200, Oscar Salvador wrote:
-> > > +	case MEM_OFFLINE:
-> > > +		if (!node_state(nid, N_MEMORY))
-> > > +			sysfs_wi_node_release(nid);
-> > 
-> > This check is not needed.
-> > 
-> > If status_change_nid is different than NUMA_NO_NODE, it means that the memory
-> > state of the numa node was effectively changed.
-> > So doing:
-> >  
-> >   case MEM_OFFLINE:
-> >           sysfs_wi_node_release(nid)
-> >  
-> > is enough.
-> 
-> offline_pages will call this callback unconditionally any time it's
-> called (and succeeds).  If 2 dax devices online into the same node, it's
+On Wed, Apr 2, 2025 at 7:35=E2=80=AFAM Leo Yan <leo.yan@arm.com> wrote:
+>
+> On Tue, Apr 01, 2025 at 11:23:07AM -0700, Ian Rogers wrote:
+>
+> [...]
+>
+> > @@ -478,13 +478,14 @@ static int __cmd_test(struct test_suite **suites,=
+ int argc, const char *argv[],
+> >       int err =3D 0;
+> >
+> >       for (struct test_suite **t =3D suites; *t; t++) {
+> > -             int i, len =3D strlen(test_description(*t, -1));
+> > +             int i;
+> > +             int len =3D (int)strlen(test_description(*t, -1));
+>
+> Thanks for huge polish.
+>
+> Just a concern from me.  Throughout this patch, the methodology is not
+> consistent.  Some changes update variable types which is fine for me.
+>
+> But the case above it simply cast size_t to int.  Should we update the
+> variable type as 'size_t' at here?
 
-Yes, this callback will be called whenever {online,offline}_pages succeeds, but
-status_change_nid will be != NUMA_NO_NODE IFF the node state changes.
-And you already have the check
+Thanks Leo, I played around with it, but don't mind if someone wants
+to do it a different way. I was trying to make the changes minimal.
+The problem typically with size_t is we then use the value, for
+example, as a printf size modifier and need to introduce lots of casts
+back to being an int. When this isn't too great I've done it, but in
+this case I think keeping the int, the lack of casts but a cast here
+to capture that we expect test descriptions to fit in the size of an
+int is the least worst option.
 
- if (nid < 0)
-    goto out
+> >               if (width < len)
+> >                       width =3D len;
+> >
+> >               test_suite__for_each_test_case(*t, i) {
+> > -                     len =3D strlen(test_description(*t, i));
+> > +                     len =3D (int)strlen(test_description(*t, i));
+> >                       if (width < len)
+> >                               width =3D len;
+> >                       num_tests +=3D runs_per_test;
+> > diff --git a/tools/perf/tests/code-reading.c b/tools/perf/tests/code-re=
+ading.c
+> > index cf6edbe697b2..0c31d5ff77e2 100644
+> > --- a/tools/perf/tests/code-reading.c
+> > +++ b/tools/perf/tests/code-reading.c
+> > @@ -188,7 +188,7 @@ static int objdump_version(void)
+> >       char *line =3D NULL;
+> >       const char *fmt;
+> >       FILE *f;
+> > -     int ret;
+> > +     ssize_t ret;
+> >
+> >       int version_tmp, version_num =3D 0;
+> >       char *version =3D 0, *token;
+> > @@ -295,7 +295,7 @@ static int read_via_objdump(const char *filename, u=
+64 addr, void *buf,
+> >       if (len) {
+> >               pr_debug("objdump read too few bytes: %zd\n", len);
+> >               if (!ret)
+> > -                     ret =3D len;
+> > +                     ret =3D (int)len;
+>
+> A proper change is to update the function type to:
+>
+>   size_t read_via_objdump(...)
+>
+> [...]
 
-at the beginning, which means that all {offline,online}_pages operation that
-do not carry a numa node state change will be filtered out there.
+Normally the int is negative to error, 0 and more for a successful
+positive read of so many bytes. We could switch the return type to
+ssize_t but I was trying to avoid changing everything.
 
-Makes sense, or am I missing something?
+> > diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-event=
+s.c
+> > index db004d26fcb0..2762794827ce 100644
+> > --- a/tools/perf/tests/pmu-events.c
+> > +++ b/tools/perf/tests/pmu-events.c
+> > @@ -609,7 +609,7 @@ static int __test_uncore_pmu_event_aliases(struct p=
+erf_pmu_test_pmu *test_pmu)
+> >       pmu_add_sys_aliases(pmu);
+> >
+> >       /* Count how many aliases we generated */
+> > -     alias_count =3D perf_pmu__num_events(pmu);
+> > +     alias_count =3D (int)perf_pmu__num_events(pmu);
+>
+> Could we change the variable 'alias_count' to size_t type?
+>
+> Or in another way, we need to update perf_pmu__num_events() with
+> returning int type.
+>
+> My understanding is rather than using cast, we should polish code for
+> using consistent type for both variables and return values.
 
--- 
-Oscar Salvador
-SUSE Labs
+We can, I was trying to keep the size of the change down. Later the
+code will compare against matched_count which is an int, so using a
+size_t means a signed vs unsigned compare, so a multi-line change vs 1
+cast.
+
+> >       /* Count how many aliases we expect from the known table */
+> >       for (table =3D &test_pmu->aliases[0]; *table; table++)
+> > diff --git a/tools/perf/tests/sigtrap.c b/tools/perf/tests/sigtrap.c
+> > index a67c756f90b8..b7d7735f8a72 100644
+> > --- a/tools/perf/tests/sigtrap.c
+> > +++ b/tools/perf/tests/sigtrap.c
+> > @@ -154,13 +154,13 @@ sigtrap_handler(int signum __maybe_unused, siginf=
+o_t *info, void *ucontext __may
+> >  {
+> >       if (!__atomic_fetch_add(&ctx.signal_count, 1, __ATOMIC_RELAXED))
+> >               ctx.first_siginfo =3D *info;
+> > -     __atomic_fetch_sub(&ctx.tids_want_signal, syscall(SYS_gettid), __=
+ATOMIC_RELAXED);
+> > +     __atomic_fetch_sub(&ctx.tids_want_signal, (pid_t)syscall(SYS_gett=
+id), __ATOMIC_RELAXED);
+> >  }
+> >
+> >  static void *test_thread(void *arg)
+> >  {
+> >       pthread_barrier_t *barrier =3D (pthread_barrier_t *)arg;
+> > -     pid_t tid =3D syscall(SYS_gettid);
+> > +     pid_t tid =3D (pid_t)syscall(SYS_gettid);
+> >       int i;
+> >
+> >       pthread_barrier_wait(barrier);
+> > diff --git a/tools/perf/tests/switch-tracking.c b/tools/perf/tests/swit=
+ch-tracking.c
+> > index 8df3f9d9ffd2..1f0f8321ae40 100644
+> > --- a/tools/perf/tests/switch-tracking.c
+> > +++ b/tools/perf/tests/switch-tracking.c
+> > @@ -140,8 +140,8 @@ static int process_sample_event(struct evlist *evli=
+st,
+> >
+> >       evsel =3D evlist__id2evsel(evlist, sample.id);
+> >       if (evsel =3D=3D switch_tracking->switch_evsel) {
+> > -             next_tid =3D evsel__intval(evsel, &sample, "next_pid");
+> > -             prev_tid =3D evsel__intval(evsel, &sample, "prev_pid");
+> > +             next_tid =3D (int)evsel__intval(evsel, &sample, "next_pid=
+");
+> > +             prev_tid =3D (int)evsel__intval(evsel, &sample, "prev_pid=
+");
+>
+> Change 'prev_tid' and 'next_tid' to pid_t type?
+
+I agree, but I was trying to do what was minimal and use the types as
+they already were. Perhaps we should have multiple of the
+evsel__<type>val helpers. Again, I wanted to do what was minimal in
+order for the warning to be silenced.
+
+Thanks,
+Ian
+
+> Thanks,
+> Leo
+>
+> >               cpu =3D sample.cpu;
+> >               pr_debug3("sched_switch: cpu: %d prev_tid %d next_tid %d\=
+n",
+> >                         cpu, prev_tid, next_tid);
+> > @@ -262,9 +262,10 @@ static int compar(const void *a, const void *b)
+> >  {
+> >       const struct event_node *nodea =3D a;
+> >       const struct event_node *nodeb =3D b;
+> > -     s64 cmp =3D nodea->event_time - nodeb->event_time;
+> >
+> > -     return cmp;
+> > +     if (nodea->event_time =3D=3D nodeb->event_time)
+> > +             return 0;
+> > +     return nodea->event_time < nodeb->event_time ? -1 : 1;
+> >  }
+> >
+> >  static int process_events(struct evlist *evlist,
+> > @@ -398,7 +399,7 @@ static int test__switch_tracking(struct test_suite =
+*test __maybe_unused, int sub
+> >
+> >       switch_evsel =3D evlist__add_sched_switch(evlist, true);
+> >       if (IS_ERR(switch_evsel)) {
+> > -             err =3D PTR_ERR(switch_evsel);
+> > +             err =3D (int)PTR_ERR(switch_evsel);
+> >               pr_debug("Failed to create event %s\n", sched_switch);
+> >               goto out_err;
+> >       }
+> > diff --git a/tools/perf/tests/vmlinux-kallsyms.c b/tools/perf/tests/vml=
+inux-kallsyms.c
+> > index 74cdbd2ce9d0..fbdb463e965d 100644
+> > --- a/tools/perf/tests/vmlinux-kallsyms.c
+> > +++ b/tools/perf/tests/vmlinux-kallsyms.c
+> > @@ -82,7 +82,7 @@ static bool is_ignored_symbol(const char *name, char =
+type)
+> >                       return true;
+> >
+> >       for (p =3D ignored_suffixes; *p; p++) {
+> > -             int l =3D strlen(name) - strlen(*p);
+> > +             ssize_t l =3D strlen(name) - strlen(*p);
+> >
+> >               if (l >=3D 0 && !strcmp(name + l, *p))
+> >                       return true;
+> > @@ -313,7 +313,7 @@ static int test__vmlinux_matches_kallsyms(struct te=
+st_suite *test __maybe_unused
+> >                                * _really_ have a problem.
+> >                                */
+> >                               s64 skew =3D mem_end - UM(pair->end);
+> > -                             if (llabs(skew) >=3D page_size)
+> > +                             if (llabs(skew) >=3D (s64)page_size)
+> >                                       pr_debug("WARN: %#" PRIx64 ": dif=
+f end addr for %s v: %#" PRIx64 " k: %#" PRIx64 "\n",
+> >                                                mem_start, sym->name, me=
+m_end,
+> >                                                UM(pair->end));
+> > diff --git a/tools/perf/tests/wp.c b/tools/perf/tests/wp.c
+> > index 6c178985e37f..d5dd17eb5c05 100644
+> > --- a/tools/perf/tests/wp.c
+> > +++ b/tools/perf/tests/wp.c
+> > @@ -31,10 +31,10 @@ volatile u8 data2[3];
+> >  #ifndef __s390x__
+> >  static int wp_read(int fd, long long *count, int size)
+> >  {
+> > -     int ret =3D read(fd, count, size);
+> > +     ssize_t ret =3D read(fd, count, size);
+> >
+> >       if (ret !=3D size) {
+> > -             pr_debug("failed to read: %d\n", ret);
+> > +             pr_debug("failed to read: %zd\n", ret);
+> >               return -1;
+> >       }
+> >       return 0;
+> > --
+> > 2.49.0.504.g3bcea36a83-goog
+> >
+> >
