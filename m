@@ -1,188 +1,151 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F2481F4623
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 22:38:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD46C1F09B7
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 22:39:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743633510; cv=none; b=IQaXlu7vB+faragnOoxE/NJCEyc/U+XRZClYM4dI1TVLQNliKapwL7nqxFAwkPDBknIGleARZW5YmImwKE+vk3To+puJl2VefadFOO9DICHWTW8al/OGaslMoXKp5SU+HLekAXEvgFQxyA43ddaaDCuCuFk2ifcFhf8hrdb9xHw=
+	t=1743633592; cv=none; b=N3CPScrbjAxnCPXrssjhrNtuqol/UQ6ZP5SBqGdrYbBAf4/bBx0uIBAyGmPSrNBjOh4bD/8xLlbDZyRAL9y9+X1T1rv724lTRxk77Y4/50kFYsHgmfgEngY5dDlTg+8QWa1GmRU2suGwnuG/Gyop5oHlUGV60TatkVtakOzPYVc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743633510; c=relaxed/simple;
-	bh=XSwdBsp6WR8VMjqtDxobffY07V803r+VR9losvlVtcs=;
+	s=arc-20240116; t=1743633592; c=relaxed/simple;
+	bh=xc8WF1r2PaAcb8sbNqj7gu3aFa+IW8ItfCQ2FmH/4X8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LkA0+XXwlHgtFXKYvIWZBttmzfuD70UhgCVW05a2MiA0gDwK/k9UzW5ntWjZ5AS6vUSmybnBYLbMYqQvye73dXYPOMoftmG3Lj7Z/D9z53FRcGvJvbLUNGbQPSo9gBc+tF+nRJCHwmQj4F5HCQzQXKx0UZq/o21L4b+Vosd3+mk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=G5Hm5Mto; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=QKeIDle8zzTUwFr3fl8yCvoiME+hATnPWwB+XhXt6vlRT7uHRV0ct+GX6erHcGjZSBtmraY+Acl8F+nik173kqRRadpzl9efHYJe+knkWXVPm+j05+I82vt+Y2SGJ/X2tb3nRvvyC+tVskKRNNdiyjqguTnjD6CCVlftr0QAqj0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=A3M8PtdR; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="G5Hm5Mto"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-736ad42dfd6so198829b3a.3
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 15:38:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="A3M8PtdR"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-224171d6826so4110425ad.3
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 15:39:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1743633508; x=1744238308; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ynaTDnoWmvbCj4VrGm5vrQOyko6HmMR33HNBCVOjMXI=;
-        b=G5Hm5Mto49wPwB/loJnpGoTkmJmon+Nt/elcQRgxoWAKTtEjBOjfC6sALrqYwKHTx6
-         CabFUoK2pl9qQ9AeUYsSj9GwTuqgqZR4f4V1RxpvhrD6Xz1JEtkNhQJM2t8MBUwEAWQ2
-         6W7BwBqInDyQ70wrexAW4pbdUKJhZE90aAlanZ9oCmQ42/OUHpvn/EvqsCflpJ+k+Zp+
-         95kJ2uOr69bPx2D9DP3WSTX4zWe2QQL8TxMG+wLmKh+77puVFRdaqI+PKPgYHP6if8Hj
-         4AtAqC6j5QKp1N16v9xaCdRyDprc02nDjdD71aiGzfDqGJXJRoijqjBN5BbOV++Q58fI
-         Lq2Q==
+        d=google.com; s=20230601; t=1743633590; x=1744238390; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=RCUdSZJKo+DfCb7L1u9uIyzdzgr+hzjdGkAPqeN8dwI=;
+        b=A3M8PtdRIA/fEFqlfooGWTdDn/Q85hJVVjT8g94tWbRC1B3GVqZlIa7GJCFXX67M3e
+         GLgv/a3JfeurBbNvfatECeMj8WLq6UQjWPE6ctYETQ6HWRrN4XRc/MggWuW33mJIniOf
+         hE98pwY5Eh1Rqmis3AlVVsowG9jJoHZ53kpUrwQN/q8e8kNxQtmv/9XFTbC1hlal+yuq
+         yErad4hsGOLajAjV9UGsIftDc0Vz/7OXnIpukQKxtcWzxtEpniXVADeOzGlwaOBy2st+
+         IuHl0VWI3OO6l7atSGpB7SCznNZv32XByBeUHCIPlX0H1ogfNtWt3fe6cN1D8Vnp5i67
+         ZHiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743633508; x=1744238308;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ynaTDnoWmvbCj4VrGm5vrQOyko6HmMR33HNBCVOjMXI=;
-        b=oVGU3IURmFq0JDa3LqKsgg+J/8TCk2D6W8fETLZDj5fDXkTfKqFyKYqYmRJYgW39lD
-         HbyQW2TNnuFK6lxNd2eP3LPZOnoDq15DgjgrqWvO/OWa1uTqSX2XMb1krg2UvRUL+gJf
-         ZErN3eGCxwfDvMm+49Sy3qBrHp5lTVt1K8J095CWGYA8wukFeOeEuJMXxA9sFN7ShUhK
-         yV7Hrj11inetxFma1ouNa5ZbOzc7JjHm875pawvtWcmvV8Ayb5bI9ghD1RfLHFVEalF6
-         5plEBI/Ct+oly0uhg32ntXQqwuLS2X+//WGzWAXxO4zJA2yQG2ANZHRxfJ3H9tcLIIX6
-         DLOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVXlbvwUqA+zkC1Sz+AgH+Z1ZDfKhgY2pdk4gCPstuw6Puc5p3J4Gf3aPsF2AuBBzBIHH2Q1TE2YFtVh6k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YztDw6P+PxmiOjklNc7ptqDRcy8C64j4fSOcwb5Zqkp6CrCOJXZ
-	8jEHQzNBS1+Thjv7ifWKbmavWBnUvIAgfgl9NHNVoHZ9a0I7ujK9URP6LV6BCo0=
-X-Gm-Gg: ASbGncupyTqBz4lFgU2MgGNOEQKpsofJqH/G+zFxdrgB0muDCPk07HygSynpunqMwDv
-	C7ifVBUy80pbUiTn6TTDYD07SsBAJqdF86S57jpD8n9KzCvKo/luHCqRTN3VNkeDYURZBEP9kG7
-	xX3uit7Vv6l8zrsBDbPz16pWACePJcpoNRzZwWrP9P0bX/0sTiogcwRFaY6RAq/J3qr1Gl7GS+f
-	iPH+dIflqJP4li/VezvrhvsvpGAnllB2qZ6wNcPr+eb29rEBuvfk8HPb3MXgKCR7u7iLy0ce/F1
-	cYgfDJ7bYXCuMRyJZD5HtPcUCjrc+Cc2txFywnmnzxIt7nWqK8ohVe+lgYHUZAYB8SYiV0WFXVh
-	reQ2KhcyMMudylYvvKA==
-X-Google-Smtp-Source: AGHT+IEvxyZSV4gjW+quadnAWEaceKmDex5jTEGIVB8xOUn0w7lDLW/hziyx7YfhBI0zuINgXMnqTQ==
-X-Received: by 2002:a05:6a20:6f04:b0:1fd:e9c8:cf3b with SMTP id adf61e73a8af0-200e4cc69c1mr6790332637.30.1743633507527;
-        Wed, 02 Apr 2025 15:38:27 -0700 (PDT)
-Received: from dread.disaster.area (pa49-181-60-96.pa.nsw.optusnet.com.au. [49.181.60.96])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739d9ea154dsm35796b3a.112.2025.04.02.15.38.26
+        d=1e100.net; s=20230601; t=1743633590; x=1744238390;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=RCUdSZJKo+DfCb7L1u9uIyzdzgr+hzjdGkAPqeN8dwI=;
+        b=frPVgvk2aJjokzpVedC4ctE7Ncx/UNJqiCG2XFzcDq87/Z9DhKSavG/5jqLyrZGdkn
+         MnVsik3sgngWY05b1RbY0kiY7Zfi3xaRBOHjQ25gmwyf43/lFCaX3wtHDl8f9lafX5O0
+         IpPt/2nlBlhgC38RtdoqVdgMJmOyIrq3udI9OleWZ0wQ0yPutchEYkZ+lanPvzzgv3CC
+         ov2vzeDDW7zItIaqmXUHveYQGEFUYqD7JYfbX5RDCr5ZlK/UbQJigPFTMTG6brRu7m+7
+         1w7pix8JdCdl5gMOQHyHNOdJjriLgnH353LNC1DwGxftIJrJlg11uQyWLjxv6V7ehuRE
+         65Vw==
+X-Forwarded-Encrypted: i=1; AJvYcCUtYSNs1dCk87tdHX0+22kwQXn6ctHMHYbqLfOoEQyLsfMbzv4YLqJrM7TuqXIKzrBbgkoNr65alOY05l0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyBKPfWOMdEOkV+bNcX2as87exGrDdToKDPRaAQnogDkfM/PUx0
+	XSrhnM2mj9j9Gz2y6LDUZbCPLNEKw9VYHSPR54sSuhbGdjdqcT05XEgyHW6n1Q==
+X-Gm-Gg: ASbGnctGfLhlyEb+MZRcA8VEmin0U2ZhKxuWFTlPexY8vWN6OI4b5NzsUmRUfwNKBgn
+	caUDeDIz1nnCCSv9AD1LROcXKD4Ypps7vB1z8N5McTCGK5yh93DEfPgoWMPEmbjGPrIY/bnZTMk
+	tLRwMPrJdLGoE9/UXXtnkncVZsK0GuCcBpRPWrjSfdhMcA0fvw5WBEuQpO0LtMq0kMEk43eqR4B
+	XaMJqXX43zoj9GIx+TXb7NoM6TFye01TBFVKvcU7YLlTKaZdo3/vvMJapyqbeM8+45n584l/CCV
+	4bRWZlPEizqcHvccdWL+T0c4mbByUfZcr7VRREN3usNcaoOsuwPtvljIFD0vjqTKLlchVhlyLB0
+	TXCAIlKUlYb5BqBI=
+X-Google-Smtp-Source: AGHT+IF4gwMOCkgD1NLc9h9zDKSDNadcDgyOK8y59bXpjfWPpkP3E5OcoZpIKL40ijcRHOF0nPIbcQ==
+X-Received: by 2002:a17:902:b683:b0:224:1609:a74a with SMTP id d9443c01a7336-22977deaf3cmr4975415ad.34.1743633589886;
+        Wed, 02 Apr 2025 15:39:49 -0700 (PDT)
+Received: from google.com (198.103.247.35.bc.googleusercontent.com. [35.247.103.198])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2297866efb5sm921995ad.201.2025.04.02.15.39.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Apr 2025 15:38:26 -0700 (PDT)
-Received: from dave by dread.disaster.area with local (Exim 4.98)
-	(envelope-from <david@fromorbit.com>)
-	id 1u06j2-00000003idM-0JrZ;
-	Thu, 03 Apr 2025 09:38:24 +1100
-Date: Thu, 3 Apr 2025 09:38:24 +1100
-From: Dave Chinner <david@fromorbit.com>
-To: Matthew Wilcox <willy@infradead.org>
-Cc: Michal Hocko <mhocko@suse.com>, Yafang Shao <laoar.shao@gmail.com>,
-	Harry Yoo <harry.yoo@oracle.com>, Kees Cook <kees@kernel.org>,
-	joel.granados@kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-	linux-mm@kvack.org, Vlastimil Babka <vbabka@suse.cz>
-Subject: Re: [PATCH] proc: Avoid costly high-order page allocations when
- reading proc files
-Message-ID: <Z-28YCNy08rwJZhR@dread.disaster.area>
-References: <20250401073046.51121-1-laoar.shao@gmail.com>
- <3315D21B-0772-4312-BCFB-402F408B0EF6@kernel.org>
- <Z-y50vEs_9MbjQhi@harry>
- <CALOAHbBSvMuZnKF_vy3kGGNOCg5N2CgomLhxMxjn8RNwMTrw7A@mail.gmail.com>
- <Z-0gPqHVto7PgM1K@dread.disaster.area>
- <Z-0sjd8SEtldbxB1@tiehlicka>
- <Z-1yui_QgubgRAmL@casper.infradead.org>
+        Wed, 02 Apr 2025 15:39:49 -0700 (PDT)
+Date: Wed, 2 Apr 2025 15:39:45 -0700
+From: William McVicker <willmcvicker@google.com>
+To: Youngmin Nam <youngmin.nam@samsung.com>
+Cc: John Stultz <jstultz@google.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Peter Griffin <peter.griffin@linaro.org>,
+	=?iso-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>,
+	Tudor Ambarus <tudor.ambarus@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Alim Akhtar <alim.akhtar@samsung.com>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Saravana Kannan <saravanak@google.com>,
+	Krzysztof Kozlowski <krzk@kernel.org>, kernel-team@android.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
+	tigersoundkim@gmail.com
+Subject: Re: [PATCH v1 3/6] clocksource/drivers/exynos_mct: Set local timer
+ interrupts as percpu
+Message-ID: <Z-28sR02GhsNMnlg@google.com>
+References: <20250331230034.806124-1-willmcvicker@google.com>
+ <20250331230034.806124-4-willmcvicker@google.com>
+ <CANDhNCqNqXfGgvo8vNof1qi3E3jejk5KBD=oedZp2_p8RKZdjw@mail.gmail.com>
+ <CGME20250401163914epcas2p1a16e2b7a6ecac9f010ef6eb4c8efc6fb@epcas2p1.samsung.com>
+ <Z-wWA-46L08V89qK@google.com>
+ <Z+yh2UUwxUz/vRbK@perf>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <Z-1yui_QgubgRAmL@casper.infradead.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z+yh2UUwxUz/vRbK@perf>
 
-On Wed, Apr 02, 2025 at 06:24:10PM +0100, Matthew Wilcox wrote:
-> On Wed, Apr 02, 2025 at 02:24:45PM +0200, Michal Hocko wrote:
-> > On Wed 02-04-25 22:32:14, Dave Chinner wrote:
-> > > > > > >+    /*
-> > > > > > >+     * Use vmalloc if the count is too large to avoid costly high-order page
-> > > > > > >+     * allocations.
-> > > > > > >+     */
-> > > > > > >+    if (count < (PAGE_SIZE << PAGE_ALLOC_COSTLY_ORDER))
-> > > > > > >+            kbuf = kvzalloc(count + 1, GFP_KERNEL);
-> > > > > >
-> > > > > > Why not move this check into kvmalloc family?
-> > > > >
-> > > > > Hmm should this check really be in kvmalloc family?
-> > > > 
-> > > > Modifying the existing kvmalloc functions risks performance regressions.
-> > > > Could we instead introduce a new variant like vkmalloc() (favoring
-> > > > vmalloc over kmalloc) or kvmalloc_costless()?
+On 04/02/2025, Youngmin Nam wrote:
+> On Tue, Apr 01, 2025 at 09:36:19AM -0700, William McVicker wrote:
+> > On 03/31/2025, John Stultz wrote:
+> > > On Mon, Mar 31, 2025 at 4:00 PM 'Will McVicker' via kernel-team
+> > > <kernel-team@android.com> wrote:
+> > > >
+> > > > From: Hosung Kim <hosung0.kim@samsung.com>
+> > > >
+> > > > The MCT local timers can be used as a per-cpu event timer. To prevent
 > > > 
-> > > We should fix kvmalloc() instead of continuing to force
-> > > subsystems to work around the limitations of kvmalloc().
+> > > Can be used, or are used?  If it's an option, is this change important
+> > > in both cases?
+> > > 
+> > > > the timer interrupts from migrating to other CPUs, set the flag
+> > > > IRQF_PERCPU.
+> > > 
+> > > Might be work expanding this a bit to clarify why the interrupts
+> > > migrating to other cpus is undesired.
 > > 
-> > Agreed!
+> > Let me dig into this further to figure out if the IP has a limitation where the
+> > interrupts need to be handled by the CPU the timer was triggered on or if this
+> > is just an optimization.
 > > 
-> > > Have a look at xlog_kvmalloc() in XFS. It implements a basic
-> > > fast-fail, no retry high order kmalloc before it falls back to
-> > > vmalloc by turning off direct reclaim for the kmalloc() call.
-> > > Hence if the there isn't a high-order page on the free lists ready
-> > > to allocate, it falls back to vmalloc() immediately.
+> > Any chance you know this @Youngmin?
+> > 
+> > Thanks,
+> > Will
+> > 
 > 
-> ... but if vmalloc fails, it goes around again!  This is exactly why
-> we don't want filesystems implementing workarounds for MM problems.
-> What a mess.
-
-That's because we need __GFP_NOFAIL semantics for the overall
-operation, and we can't pass that to kvmalloc() because it doesn't
-support __GFP_NOFAIL. And when this code was written, vmalloc didn't
-support __GFP_NOFAIL, either. We *had* to open code nofail
-semantics, because the mm infrastructure did not provide it.
-
-Yes, we can fix this now that __vmalloc(__GFP_NOFAIL) is a thing.
-We still need to open code the kmalloc() side of the operation right
-now because....
-
-> >  	if (size > PAGE_SIZE) {
-> >  		flags |= __GFP_NOWARN;
-> >  
-> >  		if (!(flags & __GFP_RETRY_MAYFAIL))
-> >  			flags |= __GFP_NORETRY;
-
-.... this is a built-in catch-22.
-
-If we use kvmalloc(__GFP_NOFAIL), this code results in kmalloc
-with __GFP_NORETRY | __GFP_NOFAIL flags set. i.e. we are telling
-the allocation that it must not retry but it also must retry until
-it succeeds.
-
-To work around this, the caller then has to use __GFP_RETRY_MAYFAIL
-| __GFP_NOFAIL, which is telling the allocation that it is allowed
-to fail but it also must not fail. Again, this makes no sense at
-all, and on top of that it doesn't give us fast-fail semantics
-we want from the kmalloc side of kvmalloc.
-
-i.e. high order page allocation from kmalloc() is an optimisation,
-not a requirement for kvmalloc(). If high order page allocation is
-frequently more expensive than simply falling back to vmalloc(),
-then we've made the wrong optimisation choices for the kvmalloc()
-implementation...
-
-> I think it might be better to do this:
+> Hi Will.
 > 
-> 		flags |= __GFP_NOWARN;
+> Yes. In downstream, we’ve been using MCT as the clock event timer instead of the ARM timer.
+> Setting this flag allows each CPU to handle its own clock events, such as scheduling interrupts.
+
+Thanks for the explanation! I'll integrate this into the commit text.
+
+Regards,
+Will
+
 > 
-> 		if (!(flags & __GFP_RETRY_MAYFAIL))
-> 			flags |= __GFP_NORETRY;
-> +		else if (size > (PAGE_SIZE << PAGE_ALLOC_COSTLY_ORDER))
-> +			flags &= ~__GFP_DIRECT_RECLAIM;
-> 
-> I think it's entirely appropriate for a call to kvmalloc() to do
-> direct reclaim if it's asking for, say, 16KiB and we don't have any of
-> those available.
+> > > 
+> > > > Signed-off-by: Hosung Kim <hosung0.kim@samsung.com>
+> > > > [Original commit from https://android.googlesource.com/kernel/gs/+/03267fad19f093bac979ca78309483e9eb3a8d16]
+> > > > Signed-off-by: Will McVicker <willmcvicker@google.com>
+> > > 
+> > > thanks!
+> > > -john
+> > 
+> > 
 
-I disagree - we have background compaction to address the lack of
-high order folios in the allocator reserves. Let that do the work of
-resolving the internal resource shortage instead of slowing down
-allocations that *do not require high order pages to be allocated*.
 
-> Better than exacerbating the fragmentation problem by
-> allocating 4x4KiB pages, each from different groupings.
-
-We have no evidence that this allocation behaviour in XFS causes or
-exacerbates memory fragmentation. We have been running it in
-production systems for a few years now....
-
--Dave.
--- 
-Dave Chinner
-david@fromorbit.com
