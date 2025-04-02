@@ -1,237 +1,115 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6B6D1E531;
-	Wed,  2 Apr 2025 13:08:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 967A521C193
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 13:09:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743599303; cv=none; b=heeOr0CNimA8ZTZ2R8JsPPbrETYNN5LnSfaNmS24XLyQNq6RdPqF6zuwZN1ODbaMjQp+BLRdaZAb0W+3VLAFUdEswjtO4p0DX6rHzbwJJsLG4kCmrZfgirVSQbDAoCS5Ce7/I5rEzW4I1wZgPVOdjM0ZQnXNBQSCI0DRHobRQrQ=
+	t=1743599346; cv=none; b=ZnWYweeaRU1lZOfrqaqTJL8phpV2xcDWHflM++3GNFc30ksBcQ6+igWvEoVxk+2AQWHY2u0SU1NL/JB6WVnJ/n3DSgYgsy5fU5C6TAcF1TBFVE2P6jJbGyhskOqeCHh3/6tKShQXnYa/F73vQTUhfzOpfyt+9H3GNDNBvviPyRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743599303; c=relaxed/simple;
-	bh=ugF+WqKm9kgqQdaTPHY1qJ3Qavy8FobVwb/atnkcQ3M=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DsdlWDlnH3HGYPjLHa4Va+cRoXgx164K6cCnS/mdlVlyH0+5tEB74kl/ZjQHJRR7BoDjAD/YQs6+Y3kvKcBJfKtl4hE4QRtwIlLwY5fUgB8vEQqh7eV4PfZ8pPitSOI+a6DpNAew/GUKlsndi+e8UtrrANnHcRF5qDK39E6ouAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=VbgPI0Iz; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1743599346; c=relaxed/simple;
+	bh=9MP3T/ZO60PZOlnjbmqIxPJWCT2w9HJNeG3iVkpSaiU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=bhXg2jcuLIlF7ybxonlc+Ac73unAxcAhHqTa+qZ/jHEfZ1wrCKpqSO3Z3U/fEHXbu3RayUVLkBpsbjIGwrH9u4F+ywJqKcNVAfbLVQby9g2YooQzcTIGotBwXHbGGnXVVuiWWmgZmIHUOjA3yMC+GePOlrDDhixG6AgE2hoYAGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ytsUxYcM; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="VbgPI0Iz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1743599299;
-	bh=ugF+WqKm9kgqQdaTPHY1qJ3Qavy8FobVwb/atnkcQ3M=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=VbgPI0Iz0ZXGEc5WZYhLXxxncmmn6uWiWt8n/pqo5/TXE4OIu/9Nr3cN7M484OqpD
-	 ePUro6b3kpWgUcem0ZWi4GitlEHhoDQaJFh2cKo3ZKluBqWIcrOT8Sxc3aTKqNpJ1o
-	 rWS/pYTN2P1jwqZEbsBqgNLCSduUrjCT1Sdo+P0p49ykFFgCB1T2VywT1dRACBYQfA
-	 y47+XzRUaWw12pBIgAs6m2XcYtkifFGWAwdM31JPMGAxFYUhYovwqDuFllD+C80/Wa
-	 h7q3dcBGmpH4vdUfRO5yhYlHdbMdTQ1Shu9W5fV+Qlcin02UsLWecuLwH/c1TyoId/
-	 DmwgUEhNl1fkw==
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bbrezillon)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 85D3117E080B;
-	Wed,  2 Apr 2025 15:08:18 +0200 (CEST)
-Date: Wed, 2 Apr 2025 15:08:12 +0200
-From: Boris Brezillon <boris.brezillon@collabora.com>
-To: =?UTF-8?B?QWRyacOhbg==?= Larumbe <adrian.larumbe@collabora.com>
-Cc: Steven Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
- <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
- <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Sumit Semwal
- <sumit.semwal@linaro.org>, Christian =?UTF-8?B?S8O2bmln?=
- <christian.koenig@amd.com>, kernel@collabora.com,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org
-Subject: Re: [PATCH v4 3/4] drm/panthor: Label all kernel BO's
-Message-ID: <20250402150812.0595465a@collabora.com>
-In-Reply-To: <20250402115432.1469703-4-adrian.larumbe@collabora.com>
-References: <20250402115432.1469703-1-adrian.larumbe@collabora.com>
-	<20250402115432.1469703-4-adrian.larumbe@collabora.com>
-Organization: Collabora
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ytsUxYcM"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43ce71582e9so49202945e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 06:09:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1743599343; x=1744204143; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/UEtL/9X5WUxOZobblyxpCLeFiHwHXNogLMCYC6gE4I=;
+        b=ytsUxYcM14zio8HbTiKs2ZI5JdFFEq20fVeEiV65PhQqx9oqFQQlO5MMXyntAASDvi
+         TEPoeyOayXw86uaHjzEPO7dYvZ7o7fmBFS9Mr77P4vnf4LYMdTqXv/cpkCXHQOdt33bT
+         Av1mLHPoC4/61FId30jb4gaPoxa/LDRq3jlCwUC8gskC9Iy4wl8VmKoJrRS3mjjvqsoM
+         /LYaC54T+CRroxJ/YZ86aSv9lHRQyQd7xpMlH3SnpuTodyk8Pgv0/BDN/fMP5/bw3NNV
+         rLMEac/2NOKRvO0S+njh9rkXzkWyue7YWDH3p+NzGUosD4HNvVKwRG81xeVDc+P/VbTN
+         ueBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743599343; x=1744204143;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/UEtL/9X5WUxOZobblyxpCLeFiHwHXNogLMCYC6gE4I=;
+        b=PH8Ci42ohVX47ubBGr8GgohTtQJD+xkKxy8QRrg9vjdvlX5XDSlEqkb7ApHMGwbZRb
+         UiPU5+GL6lLCmqzY9GGqJ99LjjjUsSSs625y0gj217hE43+5GN/U/VIUWUZKEjviB3N3
+         Op6btsHQVY0YuZs7kicY9XGxKXFZUQ/Sx30oTohKN9Ex2kdS3736UoSgDmaCbmnt+gZ7
+         8KzmjC1LcmQ4gfJ2ypV1Jb8MYpo5RdR00idTZHbAIU/SvRCTchSP9QU49g+PWoovQNKd
+         RPsD3FutAiwlv4H5l5v9ipxOg1IlUZ3+/PbOmRSyRJBsHqu3uhTvJvpJCjtJhwqk5WjT
+         TUYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCULu8GKQwKYo058RF70P07eIMeueMCvWD1NzlSe5k1JKF8H9lPvZ9VKjHFPAJmmFGEiWjJ+4UHtvHyyw74=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyDKX5qJVFqD4XZtLRla3WM1EfVXSER7OAWHwRgEcOBldWjggtJ
+	QCa9Zv9m6enE3FXGQNysIPx4BMaXFq2qtM4fpMDUezDUmoitFm5htXZgG1CQQdE=
+X-Gm-Gg: ASbGncvH62LZC9harMLXn++ldXqBmFk6sNPhyHrzTpiu8QvQaZ6BoabsoyF5ZfdbDYk
+	Sp1hARoXvFmaxgqmhFIU7IF+ACBRNCTn9EZ0EjQOoWYfCaLMppKBcjtKXf4cqJ+4S1YxHzPJetv
+	IUkZZtrOaypIBbNwQqPVcXPiQd1SIWL3fD2CQUgeVDw47MinihptfPStHqpdEsej1lQKVjC6hhF
+	MYRo1HzGvUhEm3NvrKZfNsrAVHzz7giS95/pcily4goqThopObwO2V/2TdQudQ/kWpGfMKkDrSe
+	OEKSqoR0N3or8JT08xn0IIPphgo7vwZB7ypTtZMWenSh6d0A
+X-Google-Smtp-Source: AGHT+IHiEvQ0MheT+mvxQ1vOO/oYCbfeKX2KE7QMawCDoqtMESLqbeGooQ94FI0LJV+49shSO9078Q==
+X-Received: by 2002:a05:600c:138d:b0:43c:f44c:72b7 with SMTP id 5b1f17b1804b1-43db61ff68bmr169118785e9.14.1743599342849;
+        Wed, 02 Apr 2025 06:09:02 -0700 (PDT)
+Received: from [169.254.8.88] ([77.81.75.81])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43eb5fc67a8sm20741125e9.5.2025.04.02.06.09.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Apr 2025 06:09:02 -0700 (PDT)
+From: James Clark <james.clark@linaro.org>
+Date: Wed, 02 Apr 2025 14:07:59 +0100
+Subject: [PATCH] coresight: Break to error handler if connection can't be
+ made
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250402-james-cs-ret-break-fix-v1-1-83907d9f6b38@linaro.org>
+X-B4-Tracking: v=1; b=H4sIAK427WcC/x2M0QqDMAwAf0XyvEBbrch+Zewh2lTjWDeSIQPx3
+ y0+3sHdDsYqbHBvdlDexORTKvhbA9NCZWaUVBmCC9F1LuBKbzacDJV/OCrTC7P8kVI7eNdSjrm
+ HGn+Vq77Gj+dxnHm8CEdoAAAA
+To: Suzuki K Poulose <suzuki.poulose@arm.com>, 
+ Mike Leach <mike.leach@linaro.org>, James Clark <james.clark@linaro.org>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Suzuki.Poulose@arm.com, dan.carpenter@linaro.org
+Cc: coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org, 
+ linux-kernel@vger.kernel.org
+X-Mailer: b4 0.14.0
 
-On Wed,  2 Apr 2025 12:54:28 +0100
-Adri=C3=A1n Larumbe <adrian.larumbe@collabora.com> wrote:
+Change the return to a break so that the of_node_put()s in the error
+handler are hit on failure.
 
-> Kernel BO's aren't exposed to UM, so labelling them is the responsibility
-> of the driver itself. This kind of tagging will prove useful in further
-> commits when want to expose these objects through DebugFS.
->=20
-> Expand panthor_kernel_bo_create() interface to take a NULL-terminated
-> string. No bounds checking is done because all label strings are given
-> as statically-allocated literals, but if a more complex kernel BO naming
-> scheme with explicit memory allocation and formatting was desired in the
-> future, this would have to change.
->=20
-> Signed-off-by: Adri=C3=A1n Larumbe <adrian.larumbe@collabora.com>
-> ---
->  drivers/gpu/drm/panthor/panthor_fw.c    | 8 +++++---
->  drivers/gpu/drm/panthor/panthor_gem.c   | 3 ++-
->  drivers/gpu/drm/panthor/panthor_gem.h   | 2 +-
->  drivers/gpu/drm/panthor/panthor_heap.c  | 6 ++++--
->  drivers/gpu/drm/panthor/panthor_sched.c | 9 ++++++---
->  5 files changed, 18 insertions(+), 10 deletions(-)
->=20
-> diff --git a/drivers/gpu/drm/panthor/panthor_fw.c b/drivers/gpu/drm/panth=
-or/panthor_fw.c
-> index 4a9c4afa9ad7..36e60bb2dcc5 100644
-> --- a/drivers/gpu/drm/panthor/panthor_fw.c
-> +++ b/drivers/gpu/drm/panthor/panthor_fw.c
-> @@ -449,7 +449,8 @@ panthor_fw_alloc_queue_iface_mem(struct panthor_devic=
-e *ptdev,
->  				       DRM_PANTHOR_BO_NO_MMAP,
->  				       DRM_PANTHOR_VM_BIND_OP_MAP_NOEXEC |
->  				       DRM_PANTHOR_VM_BIND_OP_MAP_UNCACHED,
-> -				       PANTHOR_VM_KERNEL_AUTO_VA);
-> +				       PANTHOR_VM_KERNEL_AUTO_VA,
-> +				       "Queue FW interface");
->  	if (IS_ERR(mem))
->  		return mem;
-> =20
-> @@ -481,7 +482,8 @@ panthor_fw_alloc_suspend_buf_mem(struct panthor_devic=
-e *ptdev, size_t size)
->  	return panthor_kernel_bo_create(ptdev, panthor_fw_vm(ptdev), size,
->  					DRM_PANTHOR_BO_NO_MMAP,
->  					DRM_PANTHOR_VM_BIND_OP_MAP_NOEXEC,
-> -					PANTHOR_VM_KERNEL_AUTO_VA);
-> +					PANTHOR_VM_KERNEL_AUTO_VA,
-> +					"FW suspend buffer");
->  }
-> =20
->  static int panthor_fw_load_section_entry(struct panthor_device *ptdev,
-> @@ -601,7 +603,7 @@ static int panthor_fw_load_section_entry(struct panth=
-or_device *ptdev,
->  		section->mem =3D panthor_kernel_bo_create(ptdev, panthor_fw_vm(ptdev),
->  							section_size,
->  							DRM_PANTHOR_BO_NO_MMAP,
-> -							vm_map_flags, va);
-> +							vm_map_flags, va, "FW Section");
+Fixes: 3d4ff657e454 ("coresight: Dynamically add connections")
+Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+Closes: https://lore.kernel.org/linux-arm-kernel/3b026b3f-2cb2-49ef-aa20-8b14220f5324@stanley.mountain/
+Signed-off-by: James Clark <james.clark@linaro.org>
+---
+ drivers/hwtracing/coresight/coresight-platform.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-nit: Let's try to use the caps consistently in the names we assign to
-kernel BOs, like, cap on the first word only, or cap on each word, I
-don't mind, but pick one and try to stick to it.
+diff --git a/drivers/hwtracing/coresight/coresight-platform.c b/drivers/hwtracing/coresight/coresight-platform.c
+index 8192ba3279f0..39851a13ff89 100644
+--- a/drivers/hwtracing/coresight/coresight-platform.c
++++ b/drivers/hwtracing/coresight/coresight-platform.c
+@@ -267,7 +267,8 @@ static int of_coresight_parse_endpoint(struct device *dev,
+ 		new_conn = coresight_add_out_conn(dev, pdata, &conn);
+ 		if (IS_ERR_VALUE(new_conn)) {
+ 			fwnode_handle_put(conn.dest_fwnode);
+-			return PTR_ERR(new_conn);
++			ret = PTR_ERR(new_conn);
++			break;
+ 		}
+ 		/* Connection record updated */
+ 	} while (0);
 
->  		if (IS_ERR(section->mem))
->  			return PTR_ERR(section->mem);
-> =20
-> diff --git a/drivers/gpu/drm/panthor/panthor_gem.c b/drivers/gpu/drm/pant=
-hor/panthor_gem.c
-> index 7d017f9d1d52..44d027e6d664 100644
-> --- a/drivers/gpu/drm/panthor/panthor_gem.c
-> +++ b/drivers/gpu/drm/panthor/panthor_gem.c
-> @@ -81,7 +81,7 @@ void panthor_kernel_bo_destroy(struct panthor_kernel_bo=
- *bo)
->  struct panthor_kernel_bo *
->  panthor_kernel_bo_create(struct panthor_device *ptdev, struct panthor_vm=
- *vm,
->  			 size_t size, u32 bo_flags, u32 vm_map_flags,
-> -			 u64 gpu_va)
-> +			 u64 gpu_va, const char *name)
->  {
->  	struct drm_gem_shmem_object *obj;
->  	struct panthor_kernel_bo *kbo;
-> @@ -105,6 +105,7 @@ panthor_kernel_bo_create(struct panthor_device *ptdev=
-, struct panthor_vm *vm,
->  	kbo->obj =3D &obj->base;
->  	bo->flags =3D bo_flags;
-> =20
-> +	panthor_gem_kernel_bo_set_label(kbo, name);
+---
+base-commit: 5442d22da7dbff3ba8c6720fc6f23ea4934d402d
+change-id: 20250402-james-cs-ret-break-fix-ad38103af5f6
 
-nit: can we add a blank line here, and remove the one that's after the
-bo->flags assignment?
-
->  	/* The system and GPU MMU page size might differ, which becomes a
->  	 * problem for FW sections that need to be mapped at explicit address
->  	 * since our PAGE_SIZE alignment might cover a VA range that's
-> diff --git a/drivers/gpu/drm/panthor/panthor_gem.h b/drivers/gpu/drm/pant=
-hor/panthor_gem.h
-> index e18fbc093abd..49daa5088a0d 100644
-> --- a/drivers/gpu/drm/panthor/panthor_gem.h
-> +++ b/drivers/gpu/drm/panthor/panthor_gem.h
-> @@ -153,7 +153,7 @@ panthor_kernel_bo_vunmap(struct panthor_kernel_bo *bo)
->  struct panthor_kernel_bo *
->  panthor_kernel_bo_create(struct panthor_device *ptdev, struct panthor_vm=
- *vm,
->  			 size_t size, u32 bo_flags, u32 vm_map_flags,
-> -			 u64 gpu_va);
-> +			 u64 gpu_va, const char *name);
-> =20
->  void panthor_kernel_bo_destroy(struct panthor_kernel_bo *bo);
-> =20
-> diff --git a/drivers/gpu/drm/panthor/panthor_heap.c b/drivers/gpu/drm/pan=
-thor/panthor_heap.c
-> index db0285ce5812..ad122bd37ac2 100644
-> --- a/drivers/gpu/drm/panthor/panthor_heap.c
-> +++ b/drivers/gpu/drm/panthor/panthor_heap.c
-> @@ -147,7 +147,8 @@ static int panthor_alloc_heap_chunk(struct panthor_de=
-vice *ptdev,
->  	chunk->bo =3D panthor_kernel_bo_create(ptdev, vm, heap->chunk_size,
->  					     DRM_PANTHOR_BO_NO_MMAP,
->  					     DRM_PANTHOR_VM_BIND_OP_MAP_NOEXEC,
-> -					     PANTHOR_VM_KERNEL_AUTO_VA);
-> +					     PANTHOR_VM_KERNEL_AUTO_VA,
-> +					     "Tiler heap chunk");
->  	if (IS_ERR(chunk->bo)) {
->  		ret =3D PTR_ERR(chunk->bo);
->  		goto err_free_chunk;
-> @@ -550,7 +551,8 @@ panthor_heap_pool_create(struct panthor_device *ptdev=
-, struct panthor_vm *vm)
->  	pool->gpu_contexts =3D panthor_kernel_bo_create(ptdev, vm, bosize,
->  						      DRM_PANTHOR_BO_NO_MMAP,
->  						      DRM_PANTHOR_VM_BIND_OP_MAP_NOEXEC,
-> -						      PANTHOR_VM_KERNEL_AUTO_VA);
-> +						      PANTHOR_VM_KERNEL_AUTO_VA,
-> +						      "Heap pool");
->  	if (IS_ERR(pool->gpu_contexts)) {
->  		ret =3D PTR_ERR(pool->gpu_contexts);
->  		goto err_destroy_pool;
-> diff --git a/drivers/gpu/drm/panthor/panthor_sched.c b/drivers/gpu/drm/pa=
-nthor/panthor_sched.c
-> index 1a276db095ff..a0b8f1ba4ea8 100644
-> --- a/drivers/gpu/drm/panthor/panthor_sched.c
-> +++ b/drivers/gpu/drm/panthor/panthor_sched.c
-> @@ -3334,7 +3334,8 @@ group_create_queue(struct panthor_group *group,
->  						  DRM_PANTHOR_BO_NO_MMAP,
->  						  DRM_PANTHOR_VM_BIND_OP_MAP_NOEXEC |
->  						  DRM_PANTHOR_VM_BIND_OP_MAP_UNCACHED,
-> -						  PANTHOR_VM_KERNEL_AUTO_VA);
-> +						  PANTHOR_VM_KERNEL_AUTO_VA,
-> +						  "Ring buffer");
->  	if (IS_ERR(queue->ringbuf)) {
->  		ret =3D PTR_ERR(queue->ringbuf);
->  		goto err_free_queue;
-> @@ -3364,7 +3365,8 @@ group_create_queue(struct panthor_group *group,
->  					 DRM_PANTHOR_BO_NO_MMAP,
->  					 DRM_PANTHOR_VM_BIND_OP_MAP_NOEXEC |
->  					 DRM_PANTHOR_VM_BIND_OP_MAP_UNCACHED,
-> -					 PANTHOR_VM_KERNEL_AUTO_VA);
-> +					 PANTHOR_VM_KERNEL_AUTO_VA,
-> +					 "fdinfo slots");
-
-I think I'd prefer "Group job stats", just in case we end up dumping
-other stuff that's not exposed through fdinfo there.
-
-> =20
->  	if (IS_ERR(queue->profiling.slots)) {
->  		ret =3D PTR_ERR(queue->profiling.slots);
-> @@ -3495,7 +3497,8 @@ int panthor_group_create(struct panthor_file *pfile,
->  						   DRM_PANTHOR_BO_NO_MMAP,
->  						   DRM_PANTHOR_VM_BIND_OP_MAP_NOEXEC |
->  						   DRM_PANTHOR_VM_BIND_OP_MAP_UNCACHED,
-> -						   PANTHOR_VM_KERNEL_AUTO_VA);
-> +						   PANTHOR_VM_KERNEL_AUTO_VA,
-> +						   "Group sync objects");
->  	if (IS_ERR(group->syncobjs)) {
->  		ret =3D PTR_ERR(group->syncobjs);
->  		goto err_put_group;
+Best regards,
+-- 
+James Clark <james.clark@linaro.org>
 
