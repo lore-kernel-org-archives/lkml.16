@@ -1,59 +1,99 @@
-Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6AC1208A9
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 04:31:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B4682F4A;
+	Wed,  2 Apr 2025 04:34:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743568262; cv=none; b=eRKYmXAnjdfse41ZQY8n+eXDNfKpkpWcEHecta47qe+upNRTEmqBqaOv2jiHl+MLzky/Tn8ualRitHKpxUgvSA5AsQS9P19TJa9x57aUwDozSsqR1m5pf9rCfYUZ3OoPcXbtsRLwTK4yod1h75PX8glfrV9UsKDyzDSr3Qtao+I=
+	t=1743568481; cv=none; b=HaYO2AAtyw+LUuyD13VBmm4u6OaC3Kwej7dRpoN0q3AxBeEeaOVIv7nB4ZM77gNP73OG/RJQ7fj5BWEa/OvznZi340ljCVAAwJF0Dtpp3GZv3i/rklcbBe3DyY/9kEygzziroutKM1ZdzF89+h/ShMHXHfTJCJc1TNqLb79ocYs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743568262; c=relaxed/simple;
-	bh=LbXNrJhrOIJHYPRNG6ibkDGKv6FoVPDGmvtQ7vXHqQw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XRlEbztC30LcqfqTjRsoGOz/chODV8gc51gRGHHblT7hMB/ImffxAkLRVdRMFuh8sNoGDyJGNKSjzGaRK8xdFm4waCi+J7IND+mOJKJjrbFOh0uaSYaXfMdbNFnBsYrbSbL6/TFgqcfxIRXGI3cA31VyATdexCnaAqnuEhgcFeY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=US4SRlgL; arc=none smtp.client-ip=91.218.175.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1743568481; c=relaxed/simple;
+	bh=MJaQ1koZV33oEWHVV0syWWnpxgiW/LMae7AKSpde3qM=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=YNhYMRE4Gr4bga+xqA55wuhL1WFEDrrVQNsGaRQ5jAktbZ5mPx8jyFVhQc29XURdwYpQY4fvVxgfOHFUJqzTaD9C95zBaD6VPLz7BdHpkzc76o16eDRR1Jb0jJ4aiRxyIpX/7LiRekrS0836KFTUYncpVfmukew5Jxf1QVwlEr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=p4+DeTqB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="US4SRlgL"
-Date: Tue, 1 Apr 2025 21:30:51 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1743568258;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HupEOjpJ1alZUJx7rBRExFhNIIXyoCjP0X+QdCxkFQc=;
-	b=US4SRlgLuPcvnUnR2AI1sOjw2LhwvqA/VFNy5r9GOQPNFiUOH7SD/fiE7cOikvD1NV/tz+
-	eTmVAUkLpTx03lR7PImI5Ytx5AuYdmbVZpsIuvOvUbOWp0BGP34g53Ik9+NnbdY3nqbEnZ
-	4k7dPGfM8Vod8a/0RIUY24gDzbw5SF4=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, bpf@vger.kernel.org, 
-	daniel@iogearbox.net, andrii@kernel.org, martin.lau@kernel.org, 
-	akpm@linux-foundation.org, peterz@infradead.org, vbabka@suse.cz, bigeasy@linutronix.de, 
-	rostedt@goodmis.org, mhocko@suse.com, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm/page_alloc: Fix try_alloc_pages
-Message-ID: <wmjx77dvccw22xppuqh4plrv37zdq5pjsofrbpcmqdvjfygype@rj55r3iz2cut>
-References: <20250401032336.39657-1-alexei.starovoitov@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="p4+DeTqB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22024C4CEDD;
+	Wed,  2 Apr 2025 04:34:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1743568480;
+	bh=MJaQ1koZV33oEWHVV0syWWnpxgiW/LMae7AKSpde3qM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=p4+DeTqBpqvjyqhqEstOTH4YCjtN26wVOAZNLo+k4ERzuZinQ0WWvNb1euqUCZohp
+	 0nPMIvEmUSV4jcgOqaYDGtuIgmYFoYwKDcfkX8MOo2We43h20XvR11+tAa3ym1VkR0
+	 4asQ/rWozPvyTp+RxRZwTDK7fwN6O09dyjFCbOMw=
+Date: Tue, 1 Apr 2025 21:34:39 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Honggyu Kim <honggyu.kim@sk.com>
+Cc: Rakie Kim <rakie.kim@sk.com>, gourry@gourry.net,
+ kernel_team@skhynix.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ linux-cxl@vger.kernel.org, joshua.hahnjy@gmail.com,
+ dan.j.williams@intel.com, ying.huang@linux.alibaba.com, david@redhat.com,
+ Jonathan.Cameron@huawei.com, yunjeong.mun@sk.com
+Subject: Re: [PATCH v5 3/3] mm/mempolicy: Support memory hotplug in weighted
+ interleave
+Message-Id: <20250401213439.4e7a124d94aa42603d31d45e@linux-foundation.org>
+In-Reply-To: <5462e706-5b29-495d-9af9-1945e8a5445e@sk.com>
+References: <20250402014906.1086-1-rakie.kim@sk.com>
+	<20250402014906.1086-4-rakie.kim@sk.com>
+	<5462e706-5b29-495d-9af9-1945e8a5445e@sk.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250401032336.39657-1-alexei.starovoitov@gmail.com>
-X-Migadu-Flow: FLOW_OUT
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Mar 31, 2025 at 08:23:36PM -0700, Alexei Starovoitov wrote:
-> From: Alexei Starovoitov <ast@kernel.org>
-> 
-> Fix an obvious bug. try_alloc_pages() should set_page_refcounted.
-> 
-> Fixes: 97769a53f117 ("mm, bpf: Introduce try_alloc_pages() for opportunistic page allocation")
-> Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+On Wed, 2 Apr 2025 13:18:51 +0900 Honggyu Kim <honggyu.kim@sk.com> wrote:
 
-Reviewed-by: Shakeel Butt <shakeel.butt@linux.dev>
+> This is to fix the following broken status.
+> https://lore.kernel.org/linux-mm/b8ac8654-92bd-4c08-a3fc-e28a7be5e0e6@sk.com
+> 
+> So we must add the following tag for this patch.
+> Fixes: fa3bea4e1f82 ("mm/mempolicy: introduce MPOL_WEIGHTED_INTERLEAVE for 
+> weighted interleaving")
+> 
+> 
+> Hi Gregory,
+> 
+> This patch is already in Andrew's tree. Is the current version okay for you?
+> 
+> 
+> Hi Andrew,
+> 
+> I'm not sure if this is going to the final version but could you please add this
+> patch to stable with Cc: <stable@vger.kernel.org>?
+> We might need to bring the whole series to avoid conflicts to stable tree.
+
+This is all rather confused.
+
+Do we need to backport all three patches into -stable?  If so, all three
+should have Fixes:.  Preferably they all have the same Fixes: so we
+aren't backporting untested patch combinations.
+
+I presently have:
+
+Subject: mm/mempolicy: fix memory leaks in weighted interleave sysfs
+Fixes: dce41f5ae253 ("mm/mempolicy: implement the sysfs-based weighted_interleave interface")
+Cc: <stable@vger.kernel.org>
+
+Subject: mm/mempolicy: support dynamic sysfs updates for weighted interleave
+Cc: <stable@vger.kernel.org>
+
+Subject: mm/mempolicy: support memory hotplug in weighted interleave
+Fixes: fa3bea4e1f82 ("mm/mempolicy: introduce MPOL_WEIGHTED_INTERLEAVE for weighted interleaving")
+Cc: <stable@vger.kernel.org>
+
+
+[2/3] doesn't look like a fix.
+
+Perhaps the whole thing should be redone: a two-patch bugfix series,
+each with a Fixes: and a cc:stable and feature patch with neither a
+Fixes: nor a cc:stable.
+
+
+
