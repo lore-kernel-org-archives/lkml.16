@@ -1,112 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1858EA92E;
-	Wed,  2 Apr 2025 10:07:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7CBA2356B5;
+	Wed,  2 Apr 2025 10:07:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743588420; cv=none; b=S59z/RrWQ7+QhVHHKLDkhGrwjNx/88GHwrFBkhVCVIG9M2hljBc39afrTAM6CrSp39n2bv6OXzxK58C9iu91bqVl5woNRRkAhXuBvYJ41c3HqiZ5mgjDEGKE27Sr4Id9OMGVv++7Ved5OjniQgXjGSv9XZv9pQI5f9nMyp5urho=
+	t=1743588441; cv=none; b=BD+B6JrWK6TQESq4LDQ0i8Ad0u53u3YD7KsrfvTbk9SPpFMWDE2daVqvRJWtVhtjm7ESXZGfn8/Ird06BtMVKWBx67w09Q7ZBTg0XRQC7Yp0PtO5ErcY9VQbOkiTNKbHXEmgvMBPQPcQXWQosXye5GgIggHszM7YOxu3hug/wrg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743588420; c=relaxed/simple;
-	bh=irBICWazUjg9zC/J8c5JnsvICKb4bWu56+cxmqXLuHM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ecHAA4CWbR60eC8r7kQ/PhmuifRsW3JBuwmwv1eHPS/2W2KEg+IW/dyH3sGvmDTDcT0JX4coHzcdXVs4hE1qGHBmqZjxWe9wRDsjXiTujiHinktACRM3W1wCYDOire9x0vzQfqvCXHcjBe9Av5VDjVm+Xfc91eVOSvxphYPcrrQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c9pH4/Kz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743588441; c=relaxed/simple;
+	bh=2D6/DR0EXXMZUwjDNtwoQO9absaDWxDLctt6KqIzTtk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cNJi0GaCBQHpo9hn/MTpjqIIBcmYC2LSiKocoqpSU0QNSskK0/pu4FH7/GyZhbnOXX6eFSOfnBsk740feZhMo67PYd00Es3CPAGbMvEresBeE7i5W0tYY+cmbkHoX3PFTQC24iQ66ntua49f51Mc7g4YU7eD3hbWymEe09MG0TI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=OBLXlWny; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c9pH4/Kz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8084C4AF09;
-	Wed,  2 Apr 2025 10:06:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743588419;
-	bh=irBICWazUjg9zC/J8c5JnsvICKb4bWu56+cxmqXLuHM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=c9pH4/KzNTaOwBuqD1cIyO1su7aRcqZUSmqY1s2YwzZJAU38sZ3LF+RqLSf3Dr1wp
-	 VePdi+WxQZVXq/xrg3tKHcsn79oMFJA5eNEJ5C4hQo14l8Q1ZnQSbMP+7FzA/Op4s1
-	 jD6au5dOwY9fN62ycxRANHPowcspWKQB/KtIvFbjR/fxC6OYgivPZzCNxBKi5Nbf1n
-	 MR4DyKZXXKWw4HqvbHdAukjBqdQ95+uQpnawr1+liAhhzgX0rlk/99xRZRI6QozPku
-	 wtVPhU8v+J/+pzXeO0TesifrUWXSzJqtK81Z5rDBF2+8aaZcERryVoytrYHkFAOOW/
-	 Fe06WVjAAsj2g==
-Received: by mail-oa1-f54.google.com with SMTP id 586e51a60fabf-2bd2218ba4fso2529401fac.1;
-        Wed, 02 Apr 2025 03:06:59 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVU/hMKBqGzQcxgwX/aEjUA4kX8dSoeyufbKORp8tk9pQqI4JxFUr/3/pbWXtL+/zknG9XnV1Gtyc7Q@vger.kernel.org, AJvYcCWEUWj5xs2aGUlkfpewckiCqzFSwNUUiIAcNtH22uPjCO9DQUUdn1MM3Xcg9LBEYwhp5oQwxXLRLVqfiIp5@vger.kernel.org
-X-Gm-Message-State: AOJu0YyWDM3h0V60Oh7yyvwFRLE4gfkyf/Ap4fgMKk2RopAKq/kwOTnp
-	DbzGUv8JiNA4ws+TbpqmriLYzJJUID1wDrxAAgD6+FUWAgDIW5g9xVGzXRkZfftNw1UK0yaetBN
-	lgM0qMC2YgGAsw7rXsPpR+/OZTy8=
-X-Google-Smtp-Source: AGHT+IHyHEk44Pjw38ptToiDK1CORXfebWNx8bDOoxh98GOHqSdTsEMXR+gfZiqJBOQOX8uxaQzRjLd2gxqM1zwvEi4=
-X-Received: by 2002:a05:6870:7e0f:b0:2c2:3a7f:e702 with SMTP id
- 586e51a60fabf-2cc60ac20d8mr965761fac.11.1743588419202; Wed, 02 Apr 2025
- 03:06:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="OBLXlWny"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1743588438;
+	bh=2D6/DR0EXXMZUwjDNtwoQO9absaDWxDLctt6KqIzTtk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=OBLXlWnyHq6JdVN3P6jRHM/ZEfvWqjIkMff5S17AXozGFVJD8+T25e5SOJ2rDvCir
+	 VJYEPY20GmlzALb5qrFyf82SkOpkhZrCG81ToTAIUlSe1FTqTUzetppJW4aZBRMNJF
+	 l70RML5a6Aw3SaxmaRjAgqcBd0JAk7jV0/q6Pzl5Zkckd0iPFt7tlw32RC7kyMhBai
+	 Yas+vjFIwx2z9k0tQznooWZdLTYPzoWQnKCoHSorH2zYJ7zcMle6Y025AY08ApikUn
+	 psnRPM5tydbFegILx8t3Z58Mmj/gJ6CsPrLp08wKE9OnHtiJfwBDZmYkWyxxLtmzts
+	 N0LpZr/6fKs1w==
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 5B96917E02BE;
+	Wed,  2 Apr 2025 12:07:17 +0200 (CEST)
+Message-ID: <33847b76-11b5-4233-a5e6-9f8fd3c691a2@collabora.com>
+Date: Wed, 2 Apr 2025 12:07:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250402075253.1772541-1-luriwen@kylinos.cn>
-In-Reply-To: <20250402075253.1772541-1-luriwen@kylinos.cn>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 2 Apr 2025 12:06:48 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0h2w8sSer1rWMRKh10QwhXSXW6j_ePTm7CEY=4n7nJWhg@mail.gmail.com>
-X-Gm-Features: AQ5f1JpmLE-LDuqVoCSKiRJQ6XXkuPnmm98ndmwNupTxRYuKSg3LAZSf-Hq1-VU
-Message-ID: <CAJZ5v0h2w8sSer1rWMRKh10QwhXSXW6j_ePTm7CEY=4n7nJWhg@mail.gmail.com>
-Subject: Re: [PATCH v2] tools: Restore built-in rules for subdirectory tool compilation
-To: Riwen Lu <luriwen@kylinos.cn>
-Cc: o-takashi@sakamocchi.jp, rafael@kernel.org, lenb@kernel.org, 
-	linux1394-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org, 
-	linux-acpi@vger.kernel.org, yu.c.chen@intel.com, k2ci <kernel-bot@kylinos.cn>, 
-	Masahiro Yamada <masahiroy@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/2] arm64: dts: mediatek: mt8195: Add subsys clks for
+ PCIe power domains
+To: Chen-Yu Tsai <wenst@chromium.org>
+Cc: linux-mediatek@lists.infradead.org, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, matthias.bgg@gmail.com, weiyi.lu@mediatek.com,
+ tinghan.shen@mediatek.com, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ kernel@collabora.com
+References: <20250402090615.25871-1-angelogioacchino.delregno@collabora.com>
+ <20250402090615.25871-2-angelogioacchino.delregno@collabora.com>
+ <CAGXv+5GHf5D3JDh+OZ-Cxf91PTAGYk2+jvuwK1gymy=k1YOo_A@mail.gmail.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <CAGXv+5GHf5D3JDh+OZ-Cxf91PTAGYk2+jvuwK1gymy=k1YOo_A@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 2, 2025 at 9:54=E2=80=AFAM Riwen Lu <luriwen@kylinos.cn> wrote:
->
-> Prior to commit d1d096312176 ("tools: fix annoying "mkdir -p ..." logs
-> when building tools in parallel"), the top-level MAKEFLAGS=3D-rR
-> (disabling built-in rules/variables) was overridden by
-> subdirectory-specific MAKEFLAGS during tools compilation. This allowed
-> tools like pfrut and firewire to implicitly rely on Make's built-in rules=
-.
->
-> After the aforementioned commit, the -rR flags from the top-level
-> Makefile began propagating to subdirectory builds. This broke tools
-> depending on implicit rules because:
-> 1. -r (--no-builtin-rules) disabled implicit .c -> .o rules
-> 2. -R (--no-builtin-variables) hid critical implicit variables like CC
->
-> Fix this by filtering out -rR from MAKEFLAGS.
->
-> Fixes: d1d096312176 ("tools: fix annoying "mkdir -p ..." logs when buildi=
-ng tools in parallel")
+Il 02/04/25 11:34, Chen-Yu Tsai ha scritto:
+> On Wed, Apr 2, 2025 at 5:10 PM AngeloGioacchino Del Regno
+> <angelogioacchino.delregno@collabora.com> wrote:
+>>
+>> The PCIe MAC needs the sram to be powered on for internal IP
+>> access and it has always worked before because the bootloader
+>> on Chromebooks was leaving the PCIe PERI_AO MEM clocks on
+>> before booting the kernel.
+>> Add the SRAM (mem) clock as a subsystem clock on the PCIe MAC
+>> P0 and P1 to correctly describe the hardware and to avoid any
+>> issue with bootloaders behaving differently.
+>>
+>> Fixes: 2b515194bf0c ("arm64: dts: mt8195: Add power domains controller")
+>> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+>> ---
+>>   arch/arm64/boot/dts/mediatek/mt8195.dtsi | 4 ++++
+>>   1 file changed, 4 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/mediatek/mt8195.dtsi b/arch/arm64/boot/dts/mediatek/mt8195.dtsi
+>> index b33726da900b..0cb96cba727a 100644
+>> --- a/arch/arm64/boot/dts/mediatek/mt8195.dtsi
+>> +++ b/arch/arm64/boot/dts/mediatek/mt8195.dtsi
+>> @@ -792,12 +792,16 @@ power-domain@MT8195_POWER_DOMAIN_CAM_MRAW {
+>>
+>>                                  power-domain@MT8195_POWER_DOMAIN_PCIE_MAC_P0 {
+>>                                          reg = <MT8195_POWER_DOMAIN_PCIE_MAC_P0>;
+>> +                                       clocks = <&pericfg_ao CLK_PERI_AO_PCIE_P0_MEM>;
+>> +                                       clock-names = "ss-pextp0-mem";
+> 
+> Doesn't the PCIe host controller already reference this clock?
+> 
+>>                                          mediatek,infracfg = <&infracfg_ao>;
+>>                                          #power-domain-cells = <0>;
+>>                                  };
+>>
+>>                                  power-domain@MT8195_POWER_DOMAIN_PCIE_MAC_P1 {
+>>                                          reg = <MT8195_POWER_DOMAIN_PCIE_MAC_P1>;
+>> +                                       clocks = <&pericfg_ao CLK_PERI_AO_PCIE_P1_MEM>;
+>> +                                       clock-names = "ss-pextp1-mem";
+> 
+> Not this one though, since:
+> 
+>           /* Designer has connect pcie1 with peri_mem_p0 clock */
+>           <&pericfg_ao CLK_PERI_AO_PCIE_P0_MEM>;
+> 
 
-It would be good to CC the author of the above commit (added).
+I'm not sure what this comment refers to - as in, whether this is referring
+to the board designer or to the SoC//IP designer...
 
-> Reported-by: k2ci <kernel-bot@kylinos.cn>
-> Signed-off-by: Riwen Lu <luriwen@kylinos.cn>
-> ---
->  Makefile | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/Makefile b/Makefile
-> index d138b17b8840..abf9cfebaf4f 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -1431,11 +1431,11 @@ endif
->
->  tools/: FORCE
->         $(Q)mkdir -p $(objtree)/tools
-> -       $(Q)$(MAKE) LDFLAGS=3D O=3D$(abspath $(objtree)) subdir=3Dtools -=
-C $(srctree)/tools/
-> +       $(Q)$(MAKE) LDFLAGS=3D MAKEFLAGS=3D"$(filter-out rR,$(MAKEFLAGS))=
-" O=3D$(abspath $(objtree)) subdir=3Dtools -C $(srctree)/tools/
->
->  tools/%: FORCE
->         $(Q)mkdir -p $(objtree)/tools
-> -       $(Q)$(MAKE) LDFLAGS=3D O=3D$(abspath $(objtree)) subdir=3Dtools -=
-C $(srctree)/tools/ $*
-> +       $(Q)$(MAKE) LDFLAGS=3D MAKEFLAGS=3D"$(filter-out rR,$(MAKEFLAGS))=
-" O=3D$(abspath $(objtree)) subdir=3Dtools -C $(srctree)/tools/ $*
->
->  # ----------------------------------------------------------------------=
------
->  # Kernel selftest
-> --
+...but if MediaTek can clarify, I'd be happy :-)
+
+Cheers,
+Angelo
+
+> 
+> ChenYu
+> 
+>>                                          mediatek,infracfg = <&infracfg_ao>;
+>>                                          #power-domain-cells = <0>;
+>>                                  };
+>> --
+>> 2.48.1
+>>
+>>
+
