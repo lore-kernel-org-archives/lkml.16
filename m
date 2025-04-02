@@ -1,64 +1,41 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vern.gendns.com (vern.gendns.com [98.142.107.122])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8D166F30F
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 14:04:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D4A16F30F;
+	Wed,  2 Apr 2025 14:05:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=98.142.107.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743602661; cv=none; b=KMoubFoeIolG3kw4GR6LI9HWk0I0QnWcGkYwf/48/H4shNngu9fZz3DTdALfqrklRdDhXboyczUeH8ULO7pzeqyjYxewEsyDoceU0zZfCdMgvGTkQxD/R3vKCYOTGr7Yn1mT14/vOXG/7peP2XywAiN3O+Pme2opxofmg8r9Pvw=
+	t=1743602760; cv=none; b=L/kzhoaGm+nkT1sXOgHqzVz2HJxyvQDx0FFgvaS+jl+85OqqaWg0pRh5nMOeBJGFattxd61sWJsmd4mCPxcHwYrk1bLOEwgQRhzHT6pKwbtrl+dB08HFqoG5BeKwQkt9WNoVlKd1BgdyIn6/YKNLZYo3UVj5/ssYRgtTBlSdSJg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743602661; c=relaxed/simple;
-	bh=uFEjKwdxbPlbJmE5E8ERJ13H/lAAQ/MzQCZknKm8wKk=;
+	s=arc-20240116; t=1743602760; c=relaxed/simple;
+	bh=R8DQuNmDpSfFABFksXZ0gsO0cuqvCt971VMUgCpAcBo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VjK9vOlVZELZKYB4i0dLk3S+/oPa4lPJGOLwIjfZirEFq7+QqQOWNXf9kksBK5FOQerZc0YEsQD415n+4Aex7TuE8ZD1C2XTi0cUBD2S/7AEeV7tAyAWS4L/AT2bkeQrOukCbtTlWNNHMZnT5nbpr9wosA4tJRWEaV53bbu38Ro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=VWa+BuGR; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
+	 In-Reply-To:Content-Type; b=EGVH4v8tkC79h+2qrBfuK1nb0dFWuQqeVOcRVbYqZbBofhrZ3Jadg7XH9XeVfO99rIJB+pRUg/RMsZHoCqSkXtz/xl8fZYqTrWhLG7FvbSQJy7WD6kqbMEPAEoOY7rWrEDXVLzuJqjNVuZAQkVI236n/JjVd/7cbglw+SYFERAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lechnology.com; spf=pass smtp.mailfrom=lechnology.com; dkim=pass (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b=YwRdfQli; arc=none smtp.client-ip=98.142.107.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lechnology.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lechnology.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="VWa+BuGR"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43690d4605dso46646535e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 07:04:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=citrix.com; s=google; t=1743602658; x=1744207458; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=gTnvP+/lcGF/XHNdmqVIxU/QtDmThtiaFzpgnQirqGg=;
-        b=VWa+BuGRggc2CnW3jExw/TE3nJaWZW+eDC0QTdbVSKYL8QLTUdpa9Zpint8njYOCX1
-         aCGUggKQfL1RCVZU0qzxzXtZcqbwaJ1BMXCqyc1WVd9wqk3MBhNx35rLvFOL/pVJGgbR
-         YniYhTPcEwrAAM1oRkrEZcDMyy7UpRfkWh4q4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743602658; x=1744207458;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gTnvP+/lcGF/XHNdmqVIxU/QtDmThtiaFzpgnQirqGg=;
-        b=pMXxDXZr9M6PwvCFrGv0KmIup5YuiHz5b3i4e+SKWA2j9iVhtLUfDaeZYm/DvzXQHv
-         bnajaz7Q6FLAstIxT+D2M3alOzPfeoZ7B+Pqv0irLonJYR/mSxHViBSgWP/NNE4R4vrN
-         wQKbnGKYmZMI/PIWdWK4aCgOHyvcqMd0naWvTY9TLBJteaaeMTzCtPGDDodZvhdOP1ol
-         PSwPVNhPypnc/jFDrYj7D3mclLprS9MkbslBbX1C3TdFSfDEevbGYzoNHMiOYuDF8+p8
-         ggCfe7B+a1k2j3NuCgx0/vgucszXHV2rEpvDtYnpQrr7zB+r/C6ONMHTAK6JGpdpY87j
-         fHyg==
-X-Forwarded-Encrypted: i=1; AJvYcCWmvnrPvloX4DGKQrmExpdsVGDnfEkf+NS/SZxVEZYph6dUjLpL4P1D1Pw7Z6SyO6QoDrVFOAfBfTLIUWc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwGxnRKuchvJpRFvFPwl5mOxPvPcT1guhgG1ZlCl7r4W0pWyF20
-	nwLrUUrF9S59FQPk1oJlAOXBVFwn7uygGqY70DCK1DWgzspdXhq44waYef9/CmHXT+4d5itt2Yx
-	GH5Q=
-X-Gm-Gg: ASbGnctVza5/PuXOMqsSm4ODef6oXBC73O/HFjMoPPQSSsWtJlgutqt9prIR+2xKCHz
-	loKkek22jvGoi4k3hyOylV2k/l7LiXzzhjgtSJTllhRXAJvegL0OryHu04esUeHRyvyS5GpFJIo
-	m+7pRYlb/wkIp6T4g33hT8DWNXP4Qb1d6xr8WxCiq/4TEd7xaZd4pj8nhpM2mZel3611cek0hhO
-	0MpJ7eMfwdU9fQxz0iU1Zxdx2rsyfHTwA0pH433n0sv0o/NehpTrG7ZoJTVYoCBHHPa8vUXVMpa
-	UgIrdd/VGds3C7ympnD7eqZ6uIAoJaXWcyFM3V7td+DZTCaazezMXhDxD86FjJwlW52IBVt/seo
-	eBZQBbj6MrQqkJZUsC6jC
-X-Google-Smtp-Source: AGHT+IETsRUhmGqCi3w3dEttiniMj20HNAwZN7wS+pY+ColWsHwcgaT45jB01SQDnVQ3FMuAEHbuaA==
-X-Received: by 2002:a05:600c:22c1:b0:43c:f61e:6ea8 with SMTP id 5b1f17b1804b1-43dd692392cmr126357805e9.2.1743602658085;
-        Wed, 02 Apr 2025 07:04:18 -0700 (PDT)
-Received: from [192.168.1.183] (host-92-26-98-202.as13285.net. [92.26.98.202])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ea8d16d35sm39099805e9.0.2025.04.02.07.04.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Apr 2025 07:04:17 -0700 (PDT)
-Message-ID: <c49c5573-893a-4352-8437-d2d9b7af5327@citrix.com>
-Date: Wed, 2 Apr 2025 15:04:16 +0100
+	dkim=pass (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="YwRdfQli"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=lechnology.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=jBEXmkuVZBbj/vkBvtI25PFP9PSsBoHpm9hqA1Q7w/A=; b=YwRdfQliXQ7Y16o3EafHR8tYwH
+	ElJW6+ToCDlvE9Y3X2Kk8pXYrvUVpwvPYBNpeJh1LcbauUPA5if7AV60ei0grNQaJ2h+apDSniZcy
+	bDvHIKFmTiA2OunpP900XgE9hdYEJaZBkpaCt3gEfVYbE0N8V3z8c7/0Ka6JJmmEiHElf4tTIO/Gc
+	0kcX9iN5Sn1SPV31Q5wLRRPcGbbHe0Vt3xlR0ei5s6dyC+11kTTh6ySz2/ciYSMOCaxOLw2Jtv7ND
+	Dq5myvgBElYEoDdVUaZmBK5wSPXMMIRKZp7QN77pHJmedL9aJ8uPeCbOGWD/93g98gFo7i0mxn12d
+	SFcAF1FQ==;
+Received: from ip98-183-112-25.ok.ok.cox.net ([98.183.112.25]:35436 helo=[192.168.0.113])
+	by vern.gendns.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.98.1)
+	(envelope-from <david@lechnology.com>)
+	id 1tzyl8-000000002xu-2FCu;
+	Wed, 02 Apr 2025 10:05:50 -0400
+Message-ID: <6b84e7e9-4ea4-4af7-a57b-3959c5bbdd4a@lechnology.com>
+Date: Wed, 2 Apr 2025 09:05:50 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,82 +43,87 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: x86/idle: Remove barriers for X86_BUG_CLFLUSH_MONITOR
-To: Dave Hansen <dave.hansen@intel.com>, LKML <linux-kernel@vger.kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>
-References: <20250402091017.1249019-1-andrew.cooper3@citrix.com>
- <eeca95c5-5724-4205-8449-644d91eafd48@intel.com>
-Content-Language: en-GB
-From: Andrew Cooper <andrew.cooper3@citrix.com>
-Autocrypt: addr=andrew.cooper3@citrix.com; keydata=
- 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
- 6+ahAA==
-In-Reply-To: <eeca95c5-5724-4205-8449-644d91eafd48@intel.com>
+Subject: Re: clk: davinci: Add NULL check in davinci_lpsc_clk_register()
+To: Markus Elfring <Markus.Elfring@web.de>,
+ Henry Martin <bsdhenrymartin@gmail.com>, linux-clk@vger.kernel.org
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
+References: <20250401131341.26800-1-bsdhenrymartin@gmail.com>
+ <57fac291-6d7b-40e8-a4bf-8b8704662b9f@web.de>
+ <7513fb2c-3abe-4c29-aa94-42f0efe93396@lechnology.com>
+ <bb7f73c9-c004-4d2f-a54e-285d4753c583@web.de>
+Content-Language: en-US
+From: David Lechner <david@lechnology.com>
+Autocrypt: addr=david@lechnology.com; keydata=
+ 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
+In-Reply-To: <bb7f73c9-c004-4d2f-a54e-285d4753c583@web.de>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - vern.gendns.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lechnology.com
+X-Get-Message-Sender-Via: vern.gendns.com: authenticated_id: davidmain+lechnology.com/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: vern.gendns.com: davidmain@lechnology.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 
-On 02/04/2025 3:01 pm, Dave Hansen wrote:
-> On 4/2/25 02:10, Andrew Cooper wrote:
->> i.e. The SDM was incorrect at the time, and barriers should not have been
->> inserted.  Double checking the original AAI65 errata (not available from
->> intel.com any more) shows no mention of barriers either.
-> There's a near copy-and-paste of that code here:
->
->> static __cpuidle void mwait_idle(void)
->> {
->>         if (!current_set_polling_and_test()) {
->>                 if (this_cpu_has(X86_BUG_CLFLUSH_MONITOR)) {
->>                         mb(); /* quirk */
->>                         clflush((void *)&current_thread_info()->flags);
->>                         mb(); /* quirk */
->>                 }
-> Any reason it can't get the same treatment?
+On 4/2/25 2:48 AM, Markus Elfring wrote:
 
-Oh, yes that should get the same treatment.  (Sorry, too may cross-ports
-between Xen and Linux trying to untangle this mess).
+> 
+> Would you like to clarify any more why the function “kzalloc” is still called here
+> (instead of the variant “devm_kzalloc”)?
+> https://elixir.bootlin.com/linux/v6.14-rc6/source/drivers/clk/davinci/psc.c#L242
 
-I'll submit a v2.
+It is a case of "if it isn't broke, don't fix it". While there is room for
+some small improvements like that, it does come at a cost of time and energy
+to make those improvements.
 
-~Andrew
+> 
+> Regards,
+> Markus
+
