@@ -1,55 +1,55 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B58882629F
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 01:19:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DD583594C
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 01:19:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743556785; cv=none; b=eI1LsGj9bqVwmSCJUUbYkp1q3wFu7iucmGouleJLMUm51DXHpHt6P9IyPb753KMRdsFB3qdbQ58nb8Y5sFbAP5KWLe6Ufgjj/DmwGpk62sZzT4sGOvxcslBzQRFEEGdv8yqKOCVUEfJDdpf02vcVwd0OMtpteJkrZjFFozhEar0=
+	t=1743556789; cv=none; b=r/36+0dvL3D80PW3OMtw5vdzVf7tJOXgojf6fUUi+tKXYRiXyYxfF0y3UIcp/BBZbGDS5ZuYAR0XK79qb3XRLTdTWCoS1hQl6TWTdFqBz0TWqrYIFpJZlTb/xx3RV97X2gwoLPDD9eQgnuRq5kMrsViWUHEK49Qx9qIKb5uH5aw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743556785; c=relaxed/simple;
-	bh=/kYzi4agpjtq+H4NaUhrqoBOuyYEG6GuYELS7Wz6rPs=;
+	s=arc-20240116; t=1743556789; c=relaxed/simple;
+	bh=RLEiu2FiIeEhO0Opk+ML0A3mhqOEQouObnMPzTgCjTI=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=byAhpwhWbqdrNj+51BAgDvxfBLZ/pnafn85svn7kj/G5LT36pe16zqPUGigEfIE59M+mEa8u5Fcfzd2V67tJQ38ckt/u/axWF9nM+wjQPLgQTl8WYpjJoVg0oIljBFhRx/+mA2/UB3S6/bnzuGk6NUvFmo39Seni3BSLIWv5xNA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yabinc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CRVlHtAv; arc=none smtp.client-ip=209.85.216.74
+	 To:Cc:Content-Type; b=Ykj45FnrXpdWvtKPXGtNn69Y7dpvA4uI53DNyR2hJ5+Va8USXSA2y3zVrfLymCJ9E4rfkSjZngp7HGWCBecDGQUxtop+tCJKkIJe9HMFpVzw9xWBE36JMGIKXzNOAezhaBiILQq4D6T6PSdXTsdF3nEgtk32tieNM1kEuZQb578=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yabinc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=af4CLlBD; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--yabinc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CRVlHtAv"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ff8a2c7912so608700a91.1
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 18:19:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="af4CLlBD"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ff798e8c3bso10193137a91.2
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 18:19:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743556781; x=1744161581; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1743556787; x=1744161587; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=3yUz8B8UOwQKdx+ikShwAoRAzuYVj/mGC57kza1e97Q=;
-        b=CRVlHtAvj/SehFYynbwoybnM2IveM9csIlxnhYTlrMtf6zyQrDcN9gHoFjRTXMSweb
-         vhNO6J+1lYg81ka5cJMKtS+vexeGIO9KuntzMLJYKR9IYxp5KYlW9xEUuIigSWfrlKKD
-         aSpilUGCM6ssyBMcuZ7MKUzEvOcDiDCyx9f19T0I3Cn9r+unbxETttXwRIzQfDnQ0HlF
-         2Yh28qvPzis8omfZ7l/EMCJRH6rcQ9+G3OaxWE/mDvlpcv7Yb+P7uaGuu9a7NbQNxoRN
-         n6de9et7ovWncXFoJUs0lEF9aDZzXAgWN+Sv3kLniaMZbokeuHULyxNzJIF+7ZI+Y+0Y
-         oQGg==
+        bh=pSlxqnwG66RpI4NydmFyMljcKVBEXuzMCiirmmrdybk=;
+        b=af4CLlBDahzMpVzh4C07h3uMlr+A0G/lAlfiOzNOyXoXc7tuw33i/9Ni4qhTj3/QCN
+         aRD5xajP/egS9UtDraAEBu+WBgfrAZuSzybQP+MXf1j/FMtioIK9rdSg6SDU/yv9IjCH
+         MC8yYN5LESOHyuWPeeghZYycNLfG0cu95OqTqmSStIzqjXuKvsqD0o/OX7fzb1+Yscyy
+         GvJ5K1XCe+xiaph0xRfCZ+fZ9dX88uVVhMgnSYNHo/kvk0K/GnHGC1syLPUXg3MZ2WQT
+         sO+BrdpULkpedn7eNnHsvubXhOPQfeqiZfLmQU3NkEDyywhjWzQbpspHe6fiIggjkEvP
+         uzIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743556781; x=1744161581;
+        d=1e100.net; s=20230601; t=1743556787; x=1744161587;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3yUz8B8UOwQKdx+ikShwAoRAzuYVj/mGC57kza1e97Q=;
-        b=MHfOd2XQQnUebJPzPza/y1WLPibzHeBszmpoJiU6FU/OOYiOdWFUfY7w0ZUmA6BOkA
-         7FEYW/hm57jB+qzBG0c3hc+tVFfm5m/2LCenHGwKi+SE+83Xo558iQCOlksQokLlNJwx
-         vL/g83P7xFksB8gu7CuRrsGBGFjbfcNDYq2oKjQ/IJgEz64EVQCd+WAdi9+14MDMrJbj
-         mGNhnq95+rZRLcDNvpHwD4nxSVIh0Zbqq7ILkDkWXYIM7Evu1KJ/wRonrerwjbCF0cIK
-         ab+Y3iOWqog7ooR+iHu3x0Nd6AeJnG6rBcNuGfpVN0dNWb1CqwxO4Rcq2fxXDbjaHGsS
-         1DsQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVBj3Z2ungWrpqpxq7B0GUVkKOPcOVq3z4YADr+Ues3NYifnMid5xWkl95smBQb4djAc7kT5KT3dl9AUhY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxF6et9l07s+OpF4gDegxs9Lu9M6lpjkvxxQ7GouTX7DmEdqn8R
-	SiQN6j8HMJK98G61bu5TevO/x3/faIXR1YxIi63/tHTlkpHwXhvgaevCN5Wgs0wDNWTvAyTNxbN
-	V
-X-Google-Smtp-Source: AGHT+IF2odUx6KL5NWFPqm5G8r/6pPbHDFTjru8tv1QaI+AKSymC55lai62Y/Vh/TzF1U2eaSauiAA7d+M0=
-X-Received: from pjbpl10.prod.google.com ([2002:a17:90b:268a:b0:2fa:15aa:4d1e])
- (user=yabinc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:538f:b0:2ea:8aac:6ac1
- with SMTP id 98e67ed59e1d1-30572609c09mr225709a91.15.1743556781014; Tue, 01
- Apr 2025 18:19:41 -0700 (PDT)
-Date: Tue,  1 Apr 2025 18:18:31 -0700
+        bh=pSlxqnwG66RpI4NydmFyMljcKVBEXuzMCiirmmrdybk=;
+        b=fp/W5TUzHxv6w1/SGJ9ymPMnBvmPyQM7Rgc2RaCisjgc1JrrrxMZ0/2nqWr7J1tM90
+         nTdaELhOFDGUx/MGVCmMbupT4+ZC3Y29n+skCrmABVgXxKXps+DiUNxf7+4ZZwnYMifp
+         9raI++dpZn/FYAvp1aM0IF1qhiiy50omvpu44/HCqwBlC5bqRwIdfOS6llRuo5BjGjul
+         6TK1yV4DATZaMalUZEr6Piepq6A8OF9AZMwy8WjtrGjc9uHFi4e2BocT+rt+ewccl8aC
+         Z5iM3pkUtgLvXoW0lQ1RMudeW4v0mKCNx90+8IGAmpx55kx4Qs3iSoQ0jHtbfTesYoJ+
+         wCaA==
+X-Forwarded-Encrypted: i=1; AJvYcCVG/PBiiafQ9J4dCQ36NSFyFEeDvSR5yPHRX4MYf9p8M3E9YARal+z6pRKhpQFmS0dsQI5SYLlk3KYlvhY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy6XAzr69k676hwBFzjYxDOpUIM/FwIy86MnNTIpmv36VZ9RMg5
+	MRDkIGaj9y0+lJr9CZRq7VeZj11E0BEWMifxXpXLbyrjD+s88zL0hMLr7/pN6KtvdPag6lVzIqf
+	T
+X-Google-Smtp-Source: AGHT+IHJEWX5SyKsMBVrfD11mTlu3gj1TMgPFW597EbBGHguuUgIjtgGC2kPgrrqDa/yLFsO+hpRhNIFFa8=
+X-Received: from pgax9.prod.google.com ([2002:a05:6a02:2e49:b0:af3:da1d:452])
+ (user=yabinc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:3a8a:b0:1f5:520d:fb93
+ with SMTP id adf61e73a8af0-2009f639283mr27306581637.24.1743556787109; Tue, 01
+ Apr 2025 18:19:47 -0700 (PDT)
+Date: Tue,  1 Apr 2025 18:18:32 -0700
 In-Reply-To: <20250402011832.2970072-1-yabinc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,75 +59,64 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250402011832.2970072-1-yabinc@google.com>
 X-Mailer: git-send-email 2.49.0.472.ge94155a9ec-goog
-Message-ID: <20250402011832.2970072-3-yabinc@google.com>
-Subject: [PATCH v2 2/3] coresight: catu: Prevent concurrent PERF and SYSFS
- mode enablement
+Message-ID: <20250402011832.2970072-4-yabinc@google.com>
+Subject: [PATCH v2 3/3] coresight: core: Disable helpers for devices that fail
+ to enable
 From: Yabin Cui <yabinc@google.com>
 To: Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach <mike.leach@linaro.org>, 
 	James Clark <james.clark@linaro.org>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, Yabin Cui <yabinc@google.com>, Leo Yan <leo.yan@arm.com>
+	linux-kernel@vger.kernel.org, Yabin Cui <yabinc@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-A CATU device can be enabled for either PERF mode or SYSFS mode, but
-not both simultaneously. Consider the following race condition:
-
-CPU 1 enables CATU for PERF mode.
-CPU 2 enables CATU for SYSFS mode. It only increases refcnt.
-CPU 2 enables ETR for SYSFS mode.
-CPU 1 fails to enable ETR for PERF mode.
-
-This results in a CATU being enabled in PERF mode and an ETR enabled
-in SYSFS mode, leading to unknown behavior.
-
-To prevent this situation, this patch checks enabled mode of a
-CATU device before increasing its refcnt.
+When enabling a SINK or LINK type coresight device fails, the
+associated helpers should be disabled.
 
 Signed-off-by: Yabin Cui <yabinc@google.com>
-Suggested-by: James Clark <james.clark@linaro.org>
-Suggested-by: Leo Yan <leo.yan@arm.com>
+Suggested-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 ---
- drivers/hwtracing/coresight/coresight-catu.c | 6 +++++-
- drivers/hwtracing/coresight/coresight-catu.h | 1 +
- 2 files changed, 6 insertions(+), 1 deletion(-)
+ drivers/hwtracing/coresight/coresight-core.c | 12 ++++--------
+ 1 file changed, 4 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/hwtracing/coresight/coresight-catu.c b/drivers/hwtracing/coresight/coresight-catu.c
-index b1d490dd7249..0caf3a3e75ce 100644
---- a/drivers/hwtracing/coresight/coresight-catu.c
-+++ b/drivers/hwtracing/coresight/coresight-catu.c
-@@ -466,7 +466,10 @@ static int catu_enable(struct coresight_device *csdev, enum cs_mode mode,
- 		CS_UNLOCK(catu_drvdata->base);
- 		rc = catu_enable_hw(catu_drvdata, mode, data);
- 		CS_LOCK(catu_drvdata->base);
--	}
-+		if (!rc)
-+			catu_drvdata->mode = mode;
-+	} else if (catu_drvdata->mode != mode)
-+		rc = -EBUSY;
- 	if (!rc)
- 		csdev->refcnt++;
- 	return rc;
-@@ -499,6 +502,7 @@ static int catu_disable(struct coresight_device *csdev, void *__unused)
- 		CS_UNLOCK(catu_drvdata->base);
- 		rc = catu_disable_hw(catu_drvdata);
- 		CS_LOCK(catu_drvdata->base);
-+		catu_drvdata->mode = CS_MODE_DISABLED;
- 	} else {
- 		rc = -EBUSY;
- 	}
-diff --git a/drivers/hwtracing/coresight/coresight-catu.h b/drivers/hwtracing/coresight/coresight-catu.h
-index 755776cd19c5..ea406464f0a8 100644
---- a/drivers/hwtracing/coresight/coresight-catu.h
-+++ b/drivers/hwtracing/coresight/coresight-catu.h
-@@ -66,6 +66,7 @@ struct catu_drvdata {
- 	struct coresight_device *csdev;
- 	int irq;
- 	raw_spinlock_t spinlock;
-+	enum cs_mode mode;
- };
- 
- #define CATU_REG32(name, offset)					\
+diff --git a/drivers/hwtracing/coresight/coresight-core.c b/drivers/hwtracing/coresight/coresight-core.c
+index fb43ef6a3b1f..e3270d9b46c9 100644
+--- a/drivers/hwtracing/coresight/coresight-core.c
++++ b/drivers/hwtracing/coresight/coresight-core.c
+@@ -465,7 +465,7 @@ int coresight_enable_path(struct coresight_path *path, enum cs_mode mode,
+ 		/* Enable all helpers adjacent to the path first */
+ 		ret = coresight_enable_helpers(csdev, mode, path);
+ 		if (ret)
+-			goto err;
++			goto err_helper;
+ 		/*
+ 		 * ETF devices are tricky... They can be a link or a sink,
+ 		 * depending on how they are configured.  If an ETF has been
+@@ -480,14 +480,8 @@ int coresight_enable_path(struct coresight_path *path, enum cs_mode mode,
+ 		switch (type) {
+ 		case CORESIGHT_DEV_TYPE_SINK:
+ 			ret = coresight_enable_sink(csdev, mode, sink_data);
+-			/*
+-			 * Sink is the first component turned on. If we
+-			 * failed to enable the sink, there are no components
+-			 * that need disabling. Disabling the path here
+-			 * would mean we could disrupt an existing session.
+-			 */
+ 			if (ret)
+-				goto out;
++				goto err;
+ 			break;
+ 		case CORESIGHT_DEV_TYPE_SOURCE:
+ 			/* sources are enabled from either sysFS or Perf */
+@@ -507,6 +501,8 @@ int coresight_enable_path(struct coresight_path *path, enum cs_mode mode,
+ out:
+ 	return ret;
+ err:
++	coresight_disable_helpers(csdev);
++err_helper:
+ 	coresight_disable_path_from(path, nd);
+ 	goto out;
+ }
 -- 
 2.49.0.472.ge94155a9ec-goog
 
