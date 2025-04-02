@@ -1,112 +1,82 @@
-Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00AF81EDA22
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 20:38:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98B392E3385
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 20:40:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743626325; cv=none; b=uOwBuPwFszQmXi3Lu7iV7FgGNsRA5Zh71Bh2ybh1ct2NQ9KGAjpCFFQfaCJlTKvGijXZ5V4f+cq7058wPT8k+sGGlRAQWu9e68MlzGHkv6dmQ2cwoTpaLBgwJ4O52hJ42q0etCUGSkZxd9JOWgtBhKYTgiDi7jCMYlITTEy5h8I=
+	t=1743626457; cv=none; b=EXGzoIafKF4jLbAerysY0eRuZd1aMu9aYPONQuGVsEsLmXPNcShzNnKznK+W4QomTcjQEuKTlcvEK8E7NSteI+PDDW2gXv6odmzS+ZumbEoxBDhlYEcRnLdLVu9p1vxTIRkUHV3HL9dVFgzIEYo8+oaPF7v9DuemlCK5Fg/V61E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743626325; c=relaxed/simple;
-	bh=/T2pmxRuRYT5dmM8afSa07afxTtwCQy7pymfkWfY2mA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=P69X6Tz000fnzFaQuzY/em1wcyxH0KXFPQfkTY9ZL+SyJHobDcxjz5tB6sqWLSpb16jj9meux2KHydl210Wg+WM0Q3PwDJaT9g7/9eYxwDCkriGix6uGAIw5+N7MIJpKt8Q2XmiYcRSKW0LPZxiNlRdjEfVARoF2gfIPaqBxLqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=DR9Imalm; arc=none smtp.client-ip=209.85.219.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+	s=arc-20240116; t=1743626457; c=relaxed/simple;
+	bh=M6izjJ19FzNMpDoOopDflX3Gio1ppr1X73iDCJb3ilw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dVijJrtJDQkDXoi97d/EYfe6HRur/VL5jKpgrWM1yOvtR3NMlnZ7YobkO8HuLWuZimERRZt8fGDi+NhpWL6pVwlCf0vAKaSWt3X4czoHiWcWgTVh2KtabV4tuscrBTYeKJYIrXw9zry1/QyVUAmqCRDuo3idvVRFTwlNmfVA2uI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=j4fLLZig; arc=none smtp.client-ip=91.218.175.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="DR9Imalm"
-Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-e6dee579f38so199675276.0
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 13:38:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1743626323; x=1744231123; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nhuc3Y3hp1dqy1B8GUo1mAHuHRbRWFPLzCIoduBmsXk=;
-        b=DR9ImalmaLXp8R9dfeDeuvwpamKzX91NUAKDdRYYH3sJBQkRd7UVOw43ICXVClqhhS
-         AwpTD0vSszAK+NXzkWJavjk3AV+rfY4pJGVjy6qgICV5l1GLZlx7k5TpnUuUkaPKev8P
-         LHJmGM7AGBOTn6h+D1wfVbECODKHYez5TomwpznXCR1d30L+4/aGxsqP7AMGZElDpdPN
-         gIvV3FTr+5hb52A8GQaEsLgj2YsriTJD1dWsU2bcxB2NEPrdxiLDUsSn8rg3lB1ttjJC
-         1A+qkAcPuvSlvLUncNwpP7fK8+pgaARWSHx8j1Q7XoDXPqjLMe5Lh81eDTmeNNUY0EIP
-         oekA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743626323; x=1744231123;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nhuc3Y3hp1dqy1B8GUo1mAHuHRbRWFPLzCIoduBmsXk=;
-        b=uKazpHkfhe9clJ5pRqBGJP0jSG3SFvpcCJkg5t2WovVibhUQjunqgtsD9ZR4egN9Uy
-         2sac2j+RCVoP2T95aohUa97pulZQWH6VtolrfEy4Y+1yHeEV1rVbeg2fz4NTo8sjl0AB
-         SjTg+fnHxzcFW5vQ3Pi2rXsvit2QS8mgDto0ndtgJoEuw+JAUVDAEHNh+nttFsp2om9l
-         H24NoC9euB70fuV3MFxAbA87OZ1KyUHFrYDLdraX2JAhSE0yaFHVyoljVJq4RTP5SwHb
-         ndJgyY3SoX8zk1kSvJ0iGooNMlbFM9cYTSoKAro95dgZKyUI3cDhh8MYyDNJbl1Bttdw
-         ABjQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWmWJk6TXPnCjC32vH4XbTqgOAzEqZyy4XRFL3vFl/kL72GwbFZRO6qrMRy9TaEgm++BtS9VZAJ9iofL5s=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy7qjLNtqeQ1W/wKTjCyxo8WJjxpgx1/b66wz+LtGKsH4nQlV5j
-	+0nwY4P3nfPNWLR+SSahSFfRG7yOnOgIZY4+rrYxLxSYiTUeQ6O30SlEWq8mZiQEhHBHlZfyltq
-	P7FHJLPD54Cbtyqak3YZXuogW+y5nMOblHXbj
-X-Gm-Gg: ASbGncuZtegAfck8OAqbEfrAgwxnl1Qo4syoIhzV3K3KcdH7SBTXcZ0kwphlMc8Qy4x
-	iPiWGiuDLndh9eERZsD4l+o1QfDQvKW48QaMtHiZ0R/q4MWHWnmvfXKVTZqDARUxC6mghpvRNnr
-	c9X1TxxtcIGx/kWQfwAzOuClCryg==
-X-Google-Smtp-Source: AGHT+IFHjJsKKyqKBvb9el7hYxrLzC+Gwwmb3s7tqGC6agBs4p5NAHg8LnYnKViFVGx9xCuT5y4YM4gD9uoG2SB3AwU=
-X-Received: by 2002:a05:6902:2681:b0:e6d:ee69:dd3f with SMTP id
- 3f1490d57ef6-e6e0a0ffb22mr170729276.5.1743626322975; Wed, 02 Apr 2025
- 13:38:42 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="j4fLLZig"
+Date: Wed, 2 Apr 2025 13:40:38 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1743626443;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4RZMkniPgYF7yEHpJ0ur96d00xfQ37h9uWuSz7BKHZA=;
+	b=j4fLLZigrWiWx5c+0xQ49FwOeYE+R0bvmtSdTbTL+iSqEtYCA50xrfpuuscwXkZOzCdsYw
+	/LqBcCUNoX5HYXtruGk703vmpIsjPKDtwF/j8iqx8vsCTjnEKzM8gj1DR2kiPyJ/p+4uNH
+	P+Au0BtNd0aZlVeRoBhZLWKwfOr/IGE=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Shakeel Butt <shakeel.butt@linux.dev>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, 
+	Roman Gushchin <roman.gushchin@linux.dev>, Muchun Song <muchun.song@linux.dev>, 
+	Vlastimil Babka <vbabka@suse.cz>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
+	linux-mm@kvack.org, cgroups@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Meta kernel team <kernel-team@meta.com>
+Subject: Re: [PATCH 0/9] memcg: cleanup per-cpu stock
+Message-ID: <5fyk3ek22txixx74d7ww3tzrpejazhrsdmu4p26nhzc5kbf2wu@4huj4lohqbmb>
+References: <20250315174930.1769599-1-shakeel.butt@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <d0ade43454dee9c00689f03e8d9bd32a@paul-moore.com>
- <CAHk-=wjbahY4JjLCXNT4o3xVq2cejqBG69z+MNfHsN9FQBnbOw@mail.gmail.com>
- <CAHC9VhRExVqdhHqs0njs7NY6bFg0BfcE-gMpS30HW9O7MSDfWQ@mail.gmail.com>
- <CAHk-=wi9m8-_3cywQCohJQEQtuQ+teS4gOtBkWZrhFWzNy-5_A@mail.gmail.com>
- <CAHC9VhT3D7X=4SpO5xbYm=JUwJqTa7tn=J6QMDBV96c7VBUw4g@mail.gmail.com>
- <CAHk-=wiH3hoPTxX3=xTRzRuCwktf3pNzFWP45-x6AwoVAjUsUQ@mail.gmail.com>
- <CAHC9VhT5G6W7g9pB3VM6W7wCEJjWfYSUWNgWF+rRiQ4ZQbGMEQ@mail.gmail.com>
- <CAHk-=whwQhJtafHN4B1w-z2Gno__xLHS4NouKKHrYNTYa8kz3g@mail.gmail.com>
- <CA+zpnLeK2Ecj1mBod2rFe4ymd9eXiJkbyYwFh4Yrmck3DVB2SA@mail.gmail.com>
- <CAHk-=wiBH8FBL+pnXui8O-FSdyoG-yX81mUF9bsZcC6rR5ZtgQ@mail.gmail.com>
- <CA+zpnLe_AOpS_F1UBNOvN3YRswUSy_3=0jjUAy4GPxEHYumD0g@mail.gmail.com>
- <CAHk-=wgJ0gzYJD+MghfVW-YeGLW6sLU5soFY13KWmPAxobk5Mw@mail.gmail.com>
- <CABXk95AqgpqGtjzK2o=mxWJg5RUZG80dAEaKF9JdUT6n5eFENQ@mail.gmail.com>
- <CAHk-=wh1refm6JkAB__TmC8OBJyNdH2DmNQAbvcL=tKepkHrYw@mail.gmail.com>
- <CAEjxPJ6XnBmbzH44YVQxxv8WOyPN7N81fpj7OYonEOTB=rn6wg@mail.gmail.com>
- <CAHk-=wguzgJu4p_khuEXKHmh-6abSN7xLJdCTuyVEfjsopY7iQ@mail.gmail.com>
- <CAHk-=wh4H3j3TYWn6KSgznUsOXz8vfHMOfTNmFvjGr=hwULWsw@mail.gmail.com>
- <CAEjxPJ4fzoONpiy3z8QOZ55w35=WfWQ+hiTg24LMEHPpnaC87Q@mail.gmail.com>
- <CAHk-=wjbSRL7LM7CvckB+goQdUokMa_6G-iirdbtxrFSFe3mfA@mail.gmail.com>
- <CAEjxPJ4Np-_LeSQOPxRQggZjWxpJRhZm++XuEwNbMyUkZCvYjw@mail.gmail.com> <CAHC9VhS9xYg5_EaX83hyNX4EMr=c4EaDZ7N=+opv6BA6iZo+mg@mail.gmail.com>
-In-Reply-To: <CAHC9VhS9xYg5_EaX83hyNX4EMr=c4EaDZ7N=+opv6BA6iZo+mg@mail.gmail.com>
-From: Paul Moore <paul@paul-moore.com>
-Date: Wed, 2 Apr 2025 16:38:31 -0400
-X-Gm-Features: ATxdqUFyEHJS9PY6K5iY-ZrkT1ocLYPu6GuqP6AaEak7oZcZydsPhJOMs8z_xUM
-Message-ID: <CAHC9VhSpYBxkGxL0r-58q8-+CcX6tQxQeqmn0T1NNiDGXo=0DA@mail.gmail.com>
-Subject: Re: [GIT PULL] selinux/selinux-pr-20250323
-To: Stephen Smalley <stephen.smalley.work@gmail.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Jeffrey Vander Stoep <jeffv@google.com>, 
-	=?UTF-8?Q?Thi=C3=A9baud_Weksteen?= <tweek@google.com>, 
-	"Cameron K. Williams" <ckwilliams.work@gmail.com>, "Kipp N. Davis" <kippndavis.work@gmx.com>, 
-	selinux@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Nick Kralevich <nnk@google.com>, Kees Cook <kees@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250315174930.1769599-1-shakeel.butt@linux.dev>
+X-Migadu-Flow: FLOW_OUT
 
-On Fri, Mar 28, 2025 at 11:06=E2=80=AFAM Paul Moore <paul@paul-moore.com> w=
-rote:
->
-> ... I do have some other ideas that should
-> allow us to drop the bulk of the SELinux AVC calls while doing path
-> walks that I'm going to try today/soon.  I'll obviously report back if
-> it works out.
+On Sat, Mar 15, 2025 at 10:49:21AM -0700, Shakeel Butt wrote:
+> This is a cleanup series which is trying to simplify the memcg per-cpu
+> stock code, particularly it tries to remove unnecessary dependencies on
+> local_lock of per-cpu memcg stock. The eight patch from Vlastimil
+> optimizes the charge path by combining the charging and accounting.
+> 
+> This series is based on next-20250314 plus two following patches:
+> 
+> Link: https://lore.kernel.org/all/20250312222552.3284173-1-shakeel.butt@linux.dev/
+> Link: https://lore.kernel.org/all/20250313054812.2185900-1-shakeel.butt@linux.dev/
+> 
+> Shakeel Butt (8):
+>   memcg: remove root memcg check from refill_stock
+>   memcg: decouple drain_obj_stock from local stock
+>   memcg: introduce memcg_uncharge
+>   memcg: manually inline __refill_stock
+>   memcg: no refilling stock from obj_cgroup_release
+>   memcg: do obj_cgroup_put inside drain_obj_stock
+>   memcg: use __mod_memcg_state in drain_obj_stock
+>   memcg: manually inline replace_stock_objcg
+> 
+> Vlastimil Babka (1):
+>   memcg: combine slab obj stock charging and accounting
+> 
+>  mm/memcontrol.c | 195 +++++++++++++++++++++++-------------------------
+>  1 file changed, 95 insertions(+), 100 deletions(-)
+> 
 
-For those who are interested, here is a link to the patch that
-demonstrates what I was talking about earlier, with some performance
-measurements using allmodconfig on Linux v6.14.
+I am waiting for [1] to merge into linus tree and then I will rebase and
+resend this series.
 
-https://lore.kernel.org/selinux/20250402203052.237444-2-paul@paul-moore.com
-
---=20
-paul-moore.com
+[1] https://lore.kernel.org/all/20250401205245.70838-1-alexei.starovoitov@gmail.com/
