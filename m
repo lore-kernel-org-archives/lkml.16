@@ -1,82 +1,76 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70DCA1F5FD
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 07:43:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CB862AE77;
+	Wed,  2 Apr 2025 07:44:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743579810; cv=none; b=o1t0jB0h7B2Pxa7amBtHYalQJSwQh7pcDDZYvicm5CKhUUROHgjfhWEmX1n29SzuW4XV7aZfehfqrLkeKQ8Yv4bu0h49y6S2/apv2OMYTihHR5LLHD8Ib9jbQkunLhuEwRfJ83Mgh9YkroDdeV/jS+Bs6lcVUWm8rKZgkgS/ZtY=
+	t=1743579840; cv=none; b=bYHsTXKnTcRMeGE54Tk+hY0bFVVG5wuPCzko9WwCMmQapZAbA4h+W8IChpFJXKF/EaD4i8wcQOtgrh0atU7te9+F0KiTw8V3eqyzFYBHKJetjk85wPy3LyUUw/kSP89BOj/XmX9Lao9S9PfUSrLU4v1QcLA19S8VkfyvkHrqvkw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743579810; c=relaxed/simple;
-	bh=IiOhZa2RGc/ELLYpE693fE82sDNLJ1amZ3QlPXMsue8=;
+	s=arc-20240116; t=1743579840; c=relaxed/simple;
+	bh=79oZiKPNcgeMH72JXqZK4G1DEIB8nqM9lhZHMO4iaUE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ujJZowEHXP9jYlqhpNdz2htr9e+nE4HD3oR7KjXtP5nk5LNz104Hr7SXxoPTwfiv8PHRUWY23zCWywfWWto1A5yuqf2mZutHlmGJGuyFhZHIsmpvbGrsSoW0RQhImEVQZYe1X0d+A+48UOGzJbIO4qKEehH3NmBKFq2gNYyEVeg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Atneoo/5; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=gU+ExI6YH5iLMpvn2dDleGW65idYv2oBAwQKEBhSKRbD3RKmIt45jLThUtNqGzRf3xHjKuwt2ICI4GNA5Rb+VRQyLxiS6ALomUO2oSjaHE7JDm5CMAA3FZNF9hAaUr+k3faMiYt1FHNCs2Q+DD7fKPuUrO9GlZ7w247ySV4Gnb8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JnW1H/iB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Atneoo/5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2D9DC4CEDD;
-	Wed,  2 Apr 2025 07:43:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1743579810;
-	bh=IiOhZa2RGc/ELLYpE693fE82sDNLJ1amZ3QlPXMsue8=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JnW1H/iB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFEF3C4CEDD;
+	Wed,  2 Apr 2025 07:43:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743579840;
+	bh=79oZiKPNcgeMH72JXqZK4G1DEIB8nqM9lhZHMO4iaUE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Atneoo/5ap3o0C3HV0oQytsTPtd0CWYrFgCTd9vQQuPtvdgtTQq4zYa9PLWvBGyCq
-	 ZWpZB9NMUOc35Qz/TTn0e5y4drqVwWWNmziVLqX2NEXZme+om8x6awUxu5SzwWI/My
-	 +UsJtqlTgdQKAGs18HAIy3BLHftDb69OhJlu17wU=
-Date: Wed, 2 Apr 2025 08:41:59 +0100
-From: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-To: Siddh Raman Pant <siddh.raman.pant@oracle.com>
-Cc: "cve@kernel.org" <cve@kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] published: CVE-2025-0927: Fix up JSON schema.
-Message-ID: <2025040221-curtain-walnut-2540@gregkh>
-References: <2025033057-CVE-2025-0927-1436@gregkh>
- <80cd3f46783cd5702b3abd40c11f3f08f64717ec.1743576485.git.siddh.raman.pant@oracle.com>
- <2025040248-hut-sevenfold-82c3@gregkh>
- <4d521717c418c873225d220ca65fd6740c496c8f.camel@oracle.com>
+	b=JnW1H/iB0Hl7hNtigJ75OD+j3Xz+zrqKHzuL7tBeHRcXVLhoMPnhtjRN9Dsp6sbPX
+	 lQAeQReK5jaYPP4IHdjJXx5vfM/qDLhL71bGFeRdH1NsyKXVOPNH5HiKtDARmXw17I
+	 9Wq3jxfaxoHOvhR8Ts9QKMriSTd6GHEcDLbU7DCVJT4faIarC/dHr9peN8yZR8M2wk
+	 +2IXKb56uRmJJa1nk8Vv6KYxknQzAjyUDhKqHO0JB8BjhPVnYikegBcD8+ljpAMyvl
+	 VUozsVJ2PuTRPq+2mAc8CfVghRcw4Vgk/fLIRj0MJbX0EZ8xBLJajIwV5y9AnujM5R
+	 fYRJ2OAzZcW/Q==
+Date: Tue, 1 Apr 2025 21:43:58 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
+Cc: netfilter-devel@vger.kernel.org, cgroups@vger.kernel.org,
+	linux-kernel@vger.kernel.org, coreteam@netfilter.org,
+	netdev@vger.kernel.org, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>, David Ahern <dsahern@kernel.org>,
+	Pablo Neira Ayuso <pablo@netfilter.org>,
+	Eric Dumazet <edumazet@google.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Jozsef Kadlecsik <kadlec@netfilter.org>
+Subject: Re: [PATCH v3 0/3] netfilter: Make xt_cgroup independent from net_cls
+Message-ID: <Z-zqvmJFI3PkNl6R@slm.duckdns.org>
+References: <20250401115736.1046942-1-mkoutny@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <4d521717c418c873225d220ca65fd6740c496c8f.camel@oracle.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250401115736.1046942-1-mkoutny@suse.com>
 
-On Wed, Apr 02, 2025 at 07:16:33AM +0000, Siddh Raman Pant wrote:
-> On Wed, Apr 02 2025 at 12:36:20 +0530, Greg Kroah-Hartman wrote:
-> > On Wed, Apr 02, 2025 at 12:21:52PM +0530, Siddh Raman Pant wrote:
-> > > It doesn't match the schema of other CVEs as it was not generated
-> > > by bippy.
-> > 
-> > It was created by vulnogram for obvious reasons :(
-> > 
-> > Also, please cc: cve@kernel.org for stuff like this.
+On Tue, Apr 01, 2025 at 01:57:29PM +0200, Michal Koutný wrote:
+> Changes from v2 (https://lore.kernel.org/r/20250305170935.80558-1-mkoutny@suse.com):
+> - don't accept zero classid neither (Pablo N. A.)
+> - eliminate code that might rely on comparison against zero with
+>   !CONFIG_CGROUP_NET_CLASSID
 > 
-> Okay, noted.
-> 
-> > 
-> > > Fixed by hand / manually.
-> > > 
-> > > programFiles were added from the info in mbox.
-> > 
-> > So this did two different things?  Why does the layout matter here?
-> > Eventually it will be created properly when someone gets the fix
-> > upstream, I'm waiting for Canonical to do it as they are responsible for
-> > fixing this mess at the moment, but don't seem to be responding to my
-> > emails anymore...
-> 
-> Apparently, they fixed it in February and backported it:
-> 
-> https://git.launchpad.net/~ubuntu-kernel/ubuntu/+source/linux/+git/noble/commit/?h=Ubuntu-6.8.0-54.56&id=09ad3b1e99befe042ae5219e4020eb54411d98ef
-> 
-> https://ubuntu.com/security/CVE-2025-0927
+> Michal Koutný (3):
+>   netfilter: Make xt_cgroup independent from net_cls
+>   cgroup: Guard users of sock_cgroup_classid()
+>   cgroup: Drop sock_cgroup_classid() dummy implementation
 
-Yes, they did that without telling anyone, and assigned a CVE for it
-which they are not allowed to do at all, which is why I had to
-hand-create this one when it was transferred to kernel.org.  They should
-be working to get that change upstream properly, but again, they seem to
-be ignoring us totally at the moment :(
+From cgroup POV:
 
-greg k-h
+  Acked-by: Tejun Heo <tj@kernel.org>
+
+Once folks are happy, please let me know how the patches should be routed.
+
+Thanks.
+
+-- 
+tejun
