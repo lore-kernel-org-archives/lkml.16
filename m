@@ -1,114 +1,171 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 274201411DE
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 17:31:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE86E1A38E1;
+	Wed,  2 Apr 2025 17:31:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743615069; cv=none; b=GLjf/17VxzUTq4bNgZuYPv8KbF+0yHFnp9mPR21e6dk7+xY83vGm045H3NHipGtKANyV9TO9o+KIXL8moiTlOlYOzcUbKKvvkZ7LDvtvC1OjCA5Jd9fZ1Mv94VK0I3VJFYNnlmVlSblkoRA9cbJ14laMsYnAdk4pfIxKCcTV+tE=
+	t=1743615070; cv=none; b=HAWUsRDZJEsRW+rVhZ+myYBnHQlkKwCIyeXKdO85WwpetZtEvN54enxcOrqgfJ/t4YYd4E7a2dBLUtZSvvhcrcmsEA0pG6xkQwoYidOM6kfaqxKPLLYLPC+wEKECA3xaWGmlBClICJ7Sa5LStx+XkgmkPPK1dh9e5yJ/hJztHP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743615069; c=relaxed/simple;
-	bh=OLR/HRHJE/+kxAiYbmu99nXKOfk9ruZKhS2Q+yM/8Vs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=aE5QMRXDeRDNtgTA9sXMMrD5Mbk9+qHO6wuTUT8o1Roxb55DtJddKC9txGjlt6wbRsCb5rMqQHCriSvpui4HhQijjWLV8k7gZ2uMg8rAwBqoz/HpNG+IdMkRv0FAK4LFjL5SJutwzpONuIKjwMDt6Tn3A8GKh9bKkWSjDH8mMjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5733C106F;
-	Wed,  2 Apr 2025 10:31:08 -0700 (PDT)
-Received: from e132581.cambridge.arm.com (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 8AAE03F694;
-	Wed,  2 Apr 2025 10:31:03 -0700 (PDT)
-From: Leo Yan <leo.yan@arm.com>
-To: Nick Desaulniers <ndesaulniers@google.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	James Clark <james.clark@linaro.org>,
-	Kees Cook <kees@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev
-Cc: Leo Yan <leo.yan@arm.com>
-Subject: [PATCH v2] tools build: Use -fzero-init-padding-bits=all
-Date: Wed,  2 Apr 2025 18:30:56 +0100
-Message-Id: <20250402173056.829400-1-leo.yan@arm.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1743615070; c=relaxed/simple;
+	bh=hQZElL9dtPmCVL0Z4NkiVaj24cdfHIudayPnvK6PQFQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KftbyNogyOzJk7odov2040DkhJas614v1NKyDvYCTLKNR8B+FbH/7BvdUwqd3zeAeBdfJKugsiRZ3dBuDOx9qSsy6UMjvkvTwyxFS0l33FyGvUB0WXHpfs28OBRRzQNsUNKnTGZysQ7dcQUPrT4AoMdS2GAvBQEexPuDYbdoRG0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=Ht7+YlnS; arc=none smtp.client-ip=46.235.229.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="Ht7+YlnS"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
+	; s=bytemarkmx; h=Content-Type:MIME-Version:Message-ID:Subject:From:Date:From
+	:Subject; bh=owalu71vA94GLpyhv8YYokgK8S4IScde/oftkQ21Km8=; b=Ht7+YlnSYGbsiOiQ
+	B4VMnt5Pn2AHoxyaLjRZ/hiVfzaT7nmsa45kyqvhbeTU56fAdPqPgcWxmQSMfWlyAdsgud/vbGtlL
+	Vwx7SNbpyC6L6PfgyTwVY/CMYx2NHM6IBwE/PQDFDtzhSC8iOezeeWLAxztP+qmYIa1grlb/YKhoD
+	QsO4/KOIMxM95aYq0iLBCrYPWsyY5/ydRD+lsRY5U5HyTGLiKOZy4oRgvzxl/qGPkpLTbIK2VTWQw
+	7j55hR1AVq1HVek5grOLz17rMKDnrwuJGsG6nXsyru1ajESjpRGfbTzWzIfM+N6oPOZ/TmbrGJOJS
+	ycL8DO14Gdd7fSPuGQ==;
+Received: from dg by mx.treblig.org with local (Exim 4.96)
+	(envelope-from <dg@treblig.org>)
+	id 1u01vY-008d5h-1k;
+	Wed, 02 Apr 2025 17:31:00 +0000
+Date: Wed, 2 Apr 2025 17:31:00 +0000
+From: "Dr. David Alan Gilbert" <linux@treblig.org>
+To: trondmy@kernel.org, anna@kernel.org, linux-nfs@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] NFS: Remove unused function nfs_umount
+Message-ID: <Z-10VGi6E8g3gi4Q@gallifrey>
+References: <20250218215250.263709-1-linux@treblig.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+In-Reply-To: <20250218215250.263709-1-linux@treblig.org>
+X-Chocolate: 70 percent or better cocoa solids preferably
+X-Operating-System: Linux/6.1.0-21-amd64 (x86_64)
+X-Uptime: 17:30:34 up 329 days,  4:44,  1 user,  load average: 0.06, 0.04,
+ 0.00
+User-Agent: Mutt/2.2.12 (2023-09-09)
 
-GCC-15 release claims [1]:
+* linux@treblig.org (linux@treblig.org) wrote:
+> From: "Dr. David Alan Gilbert" <linux@treblig.org>
+> 
+> nfs_umount() has been unused since 2013's
+> commit 4580a92d44e2 ("NFS: Use server-recommended security flavor by
+> default (NFSv3)")
+> 
+> Remove it.
+> 
+> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
 
-  {0} initializer in C or C++ for unions no longer guarantees clearing
-  of the whole union (except for static storage duration initialization),
-  it just initializes the first union member to zero. If initialization
-  of the whole union including padding bits is desirable, use {} (valid
-  in C23 or C++) or use -fzero-init-padding-bits=unions option to
-  restore old GCC behavior.
+Hi,
+  I'd appreciate a review on this one please.
 
-As a result, this new behaviour might cause unexpected data when we
-initialize a union with using the '{ 0 }' initializer.
-
-Since commit dce4aab8441d ("kbuild: Use -fzero-init-padding-bits=all"),
-the kernel has enabled -fzero-init-padding-bits=all to zero padding bits
-in unions and structures.  This commit applies the same option for tools
-building.
-
-The option is not supported neither by any version older than GCC 15 and
-is also not supported by LLVM, this patch adds the cc-option function to
-dynamically detect the compiler option.
-
-[1] https://gcc.gnu.org/gcc-15/changes.html
-
-Signed-off-by: Leo Yan <leo.yan@arm.com>
----
-
-Changes from v1:
-Sync comments and code with scripts/Makefile.compiler. (Ian)
-
- tools/scripts/Makefile.include | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
-
-diff --git a/tools/scripts/Makefile.include b/tools/scripts/Makefile.include
-index 0aa4005017c7..51036d5fbce0 100644
---- a/tools/scripts/Makefile.include
-+++ b/tools/scripts/Makefile.include
-@@ -40,6 +40,30 @@ EXTRA_WARNINGS += -Wwrite-strings
- EXTRA_WARNINGS += -Wformat
- EXTRA_WARNINGS += -Wno-type-limits
- 
-+# output directory for tests below
-+TMPOUT = .tmp_$$$$
-+
-+# try-run
-+# Usage: option = $(call try-run, $(CC)...-o "$$TMP",option-ok,otherwise)
-+# Exit code chooses option. "$$TMP" serves as a temporary file and is
-+# automatically cleaned up.
-+try-run = $(shell set -e;		\
-+	TMP=$(TMPOUT)/tmp;		\
-+	trap "rm -rf $(TMPOUT)" EXIT;	\
-+	mkdir -p $(TMPOUT);		\
-+	if ($(1)) >/dev/null 2>&1;	\
-+	then echo "$(2)";		\
-+	else echo "$(3)";		\
-+	fi)
-+
-+# cc-option
-+# Usage: CFLAGS += $(call cc-option,-march=winchip-c6,-march=i586)
-+cc-option = $(call try-run, \
-+	$(CC) -Werror $(1) -c -x c /dev/null -o "$$TMP",$(1),$(2))
-+
-+# Explicitly clear padding bits with the initializer '{ 0 }'
-+CFLAGS += $(call cc-option,-fzero-init-padding-bits=all)
-+
- # Makefiles suck: This macro sets a default value of $(2) for the
- # variable named by $(1), unless the variable has been set by
- # environment or command line. This is necessary for CC and AR
+Dave (just going cleaning up his old patch list)
+> ---
+>  fs/nfs/internal.h   |  1 -
+>  fs/nfs/mount_clnt.c | 68 ---------------------------------------------
+>  2 files changed, 69 deletions(-)
+> 
+> diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
+> index fae2c7ae4acc..36dcbb928c5f 100644
+> --- a/fs/nfs/internal.h
+> +++ b/fs/nfs/internal.h
+> @@ -207,7 +207,6 @@ struct nfs_mount_request {
+>  };
+>  
+>  extern int nfs_mount(struct nfs_mount_request *info, int timeo, int retrans);
+> -extern void nfs_umount(const struct nfs_mount_request *info);
+>  
+>  /* client.c */
+>  extern const struct rpc_program nfs_program;
+> diff --git a/fs/nfs/mount_clnt.c b/fs/nfs/mount_clnt.c
+> index 57c9dd700b58..db8dfb920394 100644
+> --- a/fs/nfs/mount_clnt.c
+> +++ b/fs/nfs/mount_clnt.c
+> @@ -223,74 +223,6 @@ int nfs_mount(struct nfs_mount_request *info, int timeo, int retrans)
+>  	goto out;
+>  }
+>  
+> -/**
+> - * nfs_umount - Notify a server that we have unmounted this export
+> - * @info: pointer to umount request arguments
+> - *
+> - * MOUNTPROC_UMNT is advisory, so we set a short timeout, and always
+> - * use UDP.
+> - */
+> -void nfs_umount(const struct nfs_mount_request *info)
+> -{
+> -	static const struct rpc_timeout nfs_umnt_timeout = {
+> -		.to_initval = 1 * HZ,
+> -		.to_maxval = 3 * HZ,
+> -		.to_retries = 2,
+> -	};
+> -	struct rpc_create_args args = {
+> -		.net		= info->net,
+> -		.protocol	= IPPROTO_UDP,
+> -		.address	= (struct sockaddr *)info->sap,
+> -		.addrsize	= info->salen,
+> -		.timeout	= &nfs_umnt_timeout,
+> -		.servername	= info->hostname,
+> -		.program	= &mnt_program,
+> -		.version	= info->version,
+> -		.authflavor	= RPC_AUTH_UNIX,
+> -		.flags		= RPC_CLNT_CREATE_NOPING,
+> -		.cred		= current_cred(),
+> -	};
+> -	struct rpc_message msg	= {
+> -		.rpc_argp	= info->dirpath,
+> -	};
+> -	struct rpc_clnt *clnt;
+> -	int status;
+> -
+> -	if (strlen(info->dirpath) > MNTPATHLEN)
+> -		return;
+> -
+> -	if (info->noresvport)
+> -		args.flags |= RPC_CLNT_CREATE_NONPRIVPORT;
+> -
+> -	clnt = rpc_create(&args);
+> -	if (IS_ERR(clnt))
+> -		goto out_clnt_err;
+> -
+> -	dprintk("NFS: sending UMNT request for %s:%s\n",
+> -		(info->hostname ? info->hostname : "server"), info->dirpath);
+> -
+> -	if (info->version == NFS_MNT3_VERSION)
+> -		msg.rpc_proc = &clnt->cl_procinfo[MOUNTPROC3_UMNT];
+> -	else
+> -		msg.rpc_proc = &clnt->cl_procinfo[MOUNTPROC_UMNT];
+> -
+> -	status = rpc_call_sync(clnt, &msg, 0);
+> -	rpc_shutdown_client(clnt);
+> -
+> -	if (unlikely(status < 0))
+> -		goto out_call_err;
+> -
+> -	return;
+> -
+> -out_clnt_err:
+> -	dprintk("NFS: failed to create UMNT RPC client, status=%ld\n",
+> -			PTR_ERR(clnt));
+> -	return;
+> -
+> -out_call_err:
+> -	dprintk("NFS: UMNT request failed, status=%d\n", status);
+> -}
+> -
+>  /*
+>   * XDR encode/decode functions for MOUNT
+>   */
+> -- 
+> 2.48.1
+> 
 -- 
-2.34.1
-
+ -----Open up your eyes, open up your mind, open up your code -------   
+/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
+\        dave @ treblig.org |                               | In Hex /
+ \ _________________________|_____ http://www.treblig.org   |_______/
