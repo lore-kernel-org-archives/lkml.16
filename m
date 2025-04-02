@@ -1,31 +1,37 @@
-Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FF551514F6;
-	Wed,  2 Apr 2025 08:59:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DABD1514F6;
+	Wed,  2 Apr 2025 09:00:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743584368; cv=none; b=D6iz6e/kBvswC/K1Ck/z3ZB4dfna/AvZmEqTx38Vd7tJ9wrYRBp2Jncpd04SIHtGlRCNfaP4Nctv+KsU9bTPJ/GHNnYSSNm1PJgHQPtzepN0InSmiyUOQvPvXPqL7O+lxAqNpzmDWAitQQJEfZvC25vZ24FpBowmKusysWOGeV8=
+	t=1743584460; cv=none; b=VCD9zLUwc9tS0wn4WbZ/7kAhVltDVx7AQXH1PTevNrKc/FNO/EOZLFKupbB8eYXjAFtoeYWYl9q9553x3zGtEci6c4//MkS7HKj9vV9TLxWjg+0bHl0kVut/DWZ5w9zwRBQW+oHZVW9BGN0jXK/WxsVOsEiGDwWWzzoLqat5Icw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743584368; c=relaxed/simple;
-	bh=m+ytt/uyuNFiuMVG/2fqcdWnTukVvPWuh3DBXrSuYMQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Q/ZTU+xnX7J6lMuUMt9GFXo0P/peNpPwgjMIAEMNpoZRiRmugkcaWQPdH/i3ipS0ojMhWUFM33GciPl09GzCeX2wp8i707fD0j+zAAtwLV8fUlcvvMNnKIXhyJWvyVQswISAMvPOnacppMRC5WMHEVmRcQ+005bhMZiI+N1MDIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost.localdomain (unknown [124.16.141.245])
-	by APP-03 (Coremail) with SMTP id rQCowAA34z9g_Oxnew8gBQ--.16811S2;
-	Wed, 02 Apr 2025 16:59:14 +0800 (CST)
-From: Wentao Liang <vulab@iscas.ac.cn>
-To: konishi.ryusuke@gmail.com
-Cc: linux-nilfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Wentao Liang <vulab@iscas.ac.cn>,
-	stable@vger.kernel.org
-Subject: [PATCH] nilfs2: Add pointer check for nilfs_direct_propagate()
-Date: Wed,  2 Apr 2025 16:58:56 +0800
-Message-ID: <20250402085856.3348-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.42.0.windows.2
+	s=arc-20240116; t=1743584460; c=relaxed/simple;
+	bh=G40FTHvvefX8hQBeAd4JXX9O6yhMx0LCfXFbr95mreo=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=qHZJp1hmrUr4flVADZx0foFrcZhyvRLFMURxEXRf60mhjyonmarQWdR4rkLcIFQDD0t/fZMUGR687KcU2RtELS7WqoFBI+0e0wE/Zeo9U7yQxuiNcWWjw+Q6CQvtYn6gk00/VVJXdLvsIGrYkIhyUqReUJnJAANpiCvLQSoBYdw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.254])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4ZSJjY3wD6z13LHQ;
+	Wed,  2 Apr 2025 17:00:17 +0800 (CST)
+Received: from kwepemf500004.china.huawei.com (unknown [7.202.181.242])
+	by mail.maildlp.com (Postfix) with ESMTPS id 4CAFC180116;
+	Wed,  2 Apr 2025 17:00:49 +0800 (CST)
+Received: from localhost.localdomain (10.90.30.45) by
+ kwepemf500004.china.huawei.com (7.202.181.242) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Wed, 2 Apr 2025 17:00:48 +0800
+From: Jie Hai <haijie1@huawei.com>
+To: <vkoul@kernel.org>, <dmaengine@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <wangzhou1@hisilicon.com>,
+	<liulongfang@huawei.com>
+CC: <haijie1@huawei.com>
+Subject: [PATCH] MAINTAINERS: Maintainer change for hisi_dma
+Date: Wed, 2 Apr 2025 16:54:23 +0800
+Message-ID: <20250402085423.347526-1-haijie1@huawei.com>
+X-Mailer: git-send-email 2.30.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -33,51 +39,32 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:rQCowAA34z9g_Oxnew8gBQ--.16811S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7XF1DAr4ktr48Xr1xWF1xXwb_yoWDCrb_G3
-	WkJF95Z3y7KF4DA3Z3CrW3KF1IqF1fta48GFZ2vF45tF95ArsxZr1DZrn29F1xJry8uFnI
-	9rnFyr98ZF42kjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUb48FF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
-	Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
-	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
-	jxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr
-	1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkF7I0En4kS14v26r12
-	6r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI
-	0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y
-	0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
-	WUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1l
-	IxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUjO6pDUUUU
-	U==
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiBwoAA2fszLPTjwAAsm
+Content-Type: text/plain
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemf500004.china.huawei.com (7.202.181.242)
 
-In nilfs_direct_propagate(), the printer get from nilfs_direct_get_ptr()
-need to be checked to ensure it is not an invalid pointer. A proper
-implementation can be found in nilfs_direct_delete(). Add a value check
-and return -ENOENT when it is an invalid pointer.
+I am moving on to other things and longfang is going to
+take over the role of hisi_dma maintainer. Update the
+MAINTAINERS accordingly.
 
-Fixes: 10ff885ba6f5 ("nilfs2: get rid of nilfs_direct uses")
-Cc: stable@vger.kernel.org # v2.6+
-Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+Signed-off-by: Jie Hai <haijie1@huawei.com>
 ---
- fs/nilfs2/direct.c | 3 +++
- 1 file changed, 3 insertions(+)
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/nilfs2/direct.c b/fs/nilfs2/direct.c
-index 893ab36824cc..ff1c9fe72bec 100644
---- a/fs/nilfs2/direct.c
-+++ b/fs/nilfs2/direct.c
-@@ -273,6 +273,9 @@ static int nilfs_direct_propagate(struct nilfs_bmap *bmap,
- 	dat = nilfs_bmap_get_dat(bmap);
- 	key = nilfs_bmap_data_get_key(bmap, bh);
- 	ptr = nilfs_direct_get_ptr(bmap, key);
-+	if (ptr == NILFS_BMAP_INVALID_PTR)
-+		return -ENOENT;
-+
- 	if (!buffer_nilfs_volatile(bh)) {
- 		oldreq.pr_entry_nr = ptr;
- 		newreq.pr_entry_nr = ptr;
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e0045ac4327b..a9866eefda15 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -10651,7 +10651,7 @@ F:	net/dsa/tag_hellcreek.c
+ 
+ HISILICON DMA DRIVER
+ M:	Zhou Wang <wangzhou1@hisilicon.com>
+-M:	Jie Hai <haijie1@huawei.com>
++M:	Longfang Liu <liulongfang@huawei.com>
+ L:	dmaengine@vger.kernel.org
+ S:	Maintained
+ F:	drivers/dma/hisi_dma.c
 -- 
-2.42.0.windows.2
+2.22.0
 
