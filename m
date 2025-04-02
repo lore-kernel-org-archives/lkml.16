@@ -1,92 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C27682F5A;
-	Wed,  2 Apr 2025 08:05:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB22621D3E3
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 08:06:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743581111; cv=none; b=JYfFZt0PREwS3HYek9m030UoKHBKVPVdMDFIuNLtmwll0w+m2mFeIAd1FtzQ51s7EemR2bDF0sh1ZP3kiySCevHjYGpff1RHyCmXBVQ+Mso800iWnIO1x7pNmwEZqqCkqrMWoHQFinQXgzTGHpAvsqTeKE3FRqbz5DiV1Scb5IA=
+	t=1743581165; cv=none; b=uQCORc4/GGDnTpV1SI6Ep1OEyfadspPhOyDGh+A+nBW1cVxEFTHKARuaDDrWxnPNMiaz8M2yrp6jy17hI0KCbEw9g9IS31JkdrXAWDyNPZ+mqJblBm7le2M5tcvgICnqMuu/GTyA9P6EoG+bDbVVCJIaRJ50jjo7ek+haxmZSrg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743581111; c=relaxed/simple;
-	bh=4o80SK3M3bxzfeOnw59xuxykQwJv89rAJKoY5/5QRvM=;
+	s=arc-20240116; t=1743581165; c=relaxed/simple;
+	bh=N207eWCWUxkSP1EIvpo1j/kRarKKw70g0XhxUfCGvjc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DX5SsqaSgEsHag9IIzHeKY6nZ7DL9DzFvf2AkBZWisVK+fpFF0hH119ZBa35vW6avOfbzLcmmfAAXSv03/oTYaHa2yItb233kUy1I532WKBkn9euqoV5y3bMuDyLTCU4fnmElCgGKh53rs62McBmMkN8WAJ/XhOwvr4MbYhZ6ZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T1YRWaBy; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=jk70J9uI2p9wjivEk50TKDd3bg/Ft2/tCN8R820Tci2WZYPuv0Q4ENabYssXl3V+c/fk1B4DooKxYj8W/sze/1uH1ruzODQvKqEnK8ZYqUeHKwmytvKSZplWW21o2hND4M6gBHSgeE3UeCfai1aXmKrjwwB6BcSIF0NL7tprT2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Y781sa9h; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T1YRWaBy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 204F0C4CEE5;
-	Wed,  2 Apr 2025 08:05:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743581110;
-	bh=4o80SK3M3bxzfeOnw59xuxykQwJv89rAJKoY5/5QRvM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=T1YRWaByd6svTXoOHBeHK2oe9JWgeo2lY9hSv4uNBcLixX/bnttXcixL18FOlJPMH
-	 hoW+ZaWHIhmY7s8Mz6yhI48mnoFOfZevB85Yayc4Awo6HC6pa+QLQ0Hg+XnCZCF9vz
-	 oQQGQuEyp+Lq51TkKpzYX6yC7GfJsxdvECuCbukCjlR0Mhl5z38PYUJgiDhpYErT6M
-	 XNwk/IPH9ZDdfZoXUzQ04a8O544R69d58MPTGQOhFTRCY+QTtHv7BLzm+gJClT1s6w
-	 Lq4/bgZCtScnO1llmqcn01txK1CpwlO9Ap+BtipaYv4J+TikT1mFsnTdvZrUchrwOB
-	 g60XXWSBj1F3w==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1tzt62-000000002Uz-1Bab;
-	Wed, 02 Apr 2025 10:05:14 +0200
-Date: Wed, 2 Apr 2025 10:05:14 +0200
-From: Johan Hovold <johan@kernel.org>
-To: srinivas.kandagatla@linaro.org
-Cc: peda@axentia.se, broonie@kernel.org, andersson@kernel.org,
-	krzk+dt@kernel.org, ivprusov@salutedevices.com,
-	luca.ceresoli@bootlin.com, zhoubinbin@loongson.cn,
-	paulha@opensource.cirrus.com, lgirdwood@gmail.com, robh@kernel.org,
-	conor+dt@kernel.org, konradybcio@kernel.org, perex@perex.cz,
-	tiwai@suse.com, dmitry.baryshkov@oss.qualcomm.com,
-	linux-sound@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	johan+linaro@kernel.org,
-	Christopher Obbard <christopher.obbard@linaro.org>
-Subject: Re: [PATCH v6 2/6] mux: gpio: add optional regulator support
-Message-ID: <Z-zvuhz2nkA5j4RZ@hovoldconsulting.com>
-References: <20250327100633.11530-1-srinivas.kandagatla@linaro.org>
- <20250327100633.11530-3-srinivas.kandagatla@linaro.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Y781sa9h"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-227b650504fso127659235ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 01:06:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1743581163; x=1744185963; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=ECiII6vd3sPY61Owt8NhtZi2vZPZCQQbcTiouyTBaf0=;
+        b=Y781sa9hhVxHtpPjoZye05SubiMchojlBHCiUCk7sz0dG/2tvzBpCXlmSh/HtI/1tc
+         4/c1Jm7FVnLRCj5av48KwcSdqwGx8QWUTlMBDv50YAz4qsI+ipo0RR8L3MG0SNAtOruE
+         e7Xr2y70L6DJiZZLeoFBDYBtEd9mMzhK8yqTDhwYFWY9df5G4clA5mKPVvqaaCvw3xgh
+         OQR+tauxbLY6s7t0ITe6ADGGw7gKXK1vGp3CG+uCuH+WzvQpfR3dW8sBvdSV66mKiaFs
+         WgYIXIZykjoU8MxcorWtYsMNrR879FsoXskzhm+JAz5igSCCVh/q4F3qKP8jabNmnsXH
+         o7BA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743581163; x=1744185963;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ECiII6vd3sPY61Owt8NhtZi2vZPZCQQbcTiouyTBaf0=;
+        b=KN9WODUFNFcXeM/iyq/OtyBONXvSld1+Qq2uY8KYUkRB2LICrlngldV5iNK0ZR82kK
+         dpLt+fp5mpYtjta0Mn0hdn0gNNf9GeCKy2m8/SSqosv5V+VkRZwffS320VqQkHz+6D9h
+         myY8SSn6vtFx5d5ShbtwZaJb+ezph3ImorYI+DYGXiKskZHCaZWHGBN+OIQXJvD7IGQ/
+         +wQAmXNGi1sM+WKFGfFeFieCA+hf7OwSrkTDlCFMSAmPSJzcW5HC38C1CyPM/rh3K/SH
+         fcGB/Ox08fn/mytVxFjk/Xoq7SSwV4lRLsjcVBS+rleXJ/FspKIr87z7x1JLjBnzsaOu
+         H/5A==
+X-Forwarded-Encrypted: i=1; AJvYcCXZKoZKEE4qxF4VgbLXhOK6+3q41f5eDlby6xrQjDTRZ+3UD0ncoeWCzeOKEbn6IYpIZSIwI1aFKwra2EA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxES8ddWlMAn6hadcCw+o2MvPjDI5lTjCtyri/irCxy9kH2LNGQ
+	9OEf0bmG2Xu3VLLzLdYhEVh00xp8nArGeOcT6BRgT3q/44RrOshTUj3i6ATvZQ==
+X-Gm-Gg: ASbGnctzeEpPg1GlF5EXLNeh7WIlQ1nX1OToACKJ/h/CCaakBhAj25gCaE33bPfBMdS
+	0P3vciwCiuKmfpLSk6GWUPouCyocg8fc2S2GGH9XVI+iN5W+fIUMW6rJHZthLu+FbpOTdLhJbk2
+	2Yws0R1aVTpHU9ViFo/e2pO9jvnvJ2E+w9+tnF4wW7fM0vOngvc7Iht/63JzXe5jj4qSew0G8X3
+	E2pmLOKKdLksvP3sQidvldZXxTg6oyUCMFj+8Wj9suWQuAXKBTY5fnLSN9U5FIF1p6dca1TEs2C
+	+zUTzwGeFnY1mekU5FFfdBBqnF66SUSSnw4j1hnEiSsS+QsZi9kV4lHX
+X-Google-Smtp-Source: AGHT+IGVTpRRj5G1hd9jPU8e96BmRan6Ei7Kpo43greYxZi4zomLciodYcKOKqUyIfajjCtsvTFZxQ==
+X-Received: by 2002:a17:902:d2cc:b0:21f:2ded:76ea with SMTP id d9443c01a7336-2292f9d4e12mr212345135ad.36.1743581163093;
+        Wed, 02 Apr 2025 01:06:03 -0700 (PDT)
+Received: from thinkpad ([120.56.205.103])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291f1ef62asm102274055ad.217.2025.04.02.01.05.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Apr 2025 01:06:02 -0700 (PDT)
+Date: Wed, 2 Apr 2025 13:35:57 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: Marek Vasut <marek.vasut+renesas@gmail.com>, 
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Rob Herring <robh@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Serge Semin <fancer.lancer@gmail.com>, 
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Yuya Hamamachi <yuya.hamamachi.sx@renesas.com>
+Subject: Re: [PATCH] PCI: rcar-gen4: set ep BAR4 fixed size
+Message-ID: <53inwqbz7faoat5pwngx2rqgygt2ksg7yfjqkltxtde3jattvx@t2fdptqivmcn>
+References: <20250328-rcar-gen4-bar4-v1-1-10bb6ce9ee7f@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250327100633.11530-3-srinivas.kandagatla@linaro.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250328-rcar-gen4-bar4-v1-1-10bb6ce9ee7f@baylibre.com>
 
-On Thu, Mar 27, 2025 at 10:06:29AM +0000, Srinivas Kandagatla wrote:
-> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+On Fri, Mar 28, 2025 at 03:30:44PM +0100, Jerome Brunet wrote:
+> On rcar-gen4, the ep BAR4 has a fixed size of 256B.
+> Document this constraint in the epc features of the platform.
 > 
-> Some of the external muxes needs powering up using a regulator.
-> This is the case with Lenovo T14s laptop which has a external audio mux
-> to handle US/EURO headsets.
+> Fixes: e311b3834dfa ("PCI: rcar-gen4: Add endpoint mode support")
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+
+- Mani
+
+> ---
+> This was tested on rcar-gen4 r8a779f0-spider device.
+> ---
+>  drivers/pci/controller/dwc/pcie-rcar-gen4.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> Add support to the driver to handle this optional regulator.
+> diff --git a/drivers/pci/controller/dwc/pcie-rcar-gen4.c b/drivers/pci/controller/dwc/pcie-rcar-gen4.c
+> index fc872dd35029c083da58144dce23cd1ce80f9374..02638ec442e7012d61dfad70016077d9becf56a6 100644
+> --- a/drivers/pci/controller/dwc/pcie-rcar-gen4.c
+> +++ b/drivers/pci/controller/dwc/pcie-rcar-gen4.c
+> @@ -403,6 +403,7 @@ static const struct pci_epc_features rcar_gen4_pcie_epc_features = {
+>  	.msix_capable = false,
+>  	.bar[BAR_1] = { .type = BAR_RESERVED, },
+>  	.bar[BAR_3] = { .type = BAR_RESERVED, },
+> +	.bar[BAR_4] = { .type = BAR_FIXED, .fixed_size = 256 },
+>  	.bar[BAR_5] = { .type = BAR_RESERVED, },
+>  	.align = SZ_1M,
+>  };
 > 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> Tested-by: Christopher Obbard <christopher.obbard@linaro.org>
+> ---
+> base-commit: dea140198b846f7432d78566b7b0b83979c72c2b
+> change-id: 20250328-rcar-gen4-bar4-dccd1347fe38
+> 
+> Best regards,
+> -- 
+> Jerome
+> 
 
-> @@ -82,6 +83,10 @@ static int mux_gpio_probe(struct platform_device *pdev)
->  		mux_chip->mux->idle_state = idle_state;
->  	}
->  
-> +	ret = devm_regulator_get_enable_optional(dev, "mux");
-> +	if (ret && ret != -ENODEV)
-> +		return dev_err_probe(dev, ret, "Couldn't retrieve/enable gpio mux supply\n");
-
-nit: "failed to get/enable mux supply" may be more consistent with the
-other (non-capitalised error) messages and avoids repeating "gpio mux"
-which will be added by driver core.
-
-> +
->  	ret = devm_mux_chip_register(dev, mux_chip);
->  	if (ret < 0)
->  		return ret;
-
-Either way:
-
-Reviewed-by: Johan Hovold <johan+linaro@kernel.org>
-Tested-by: Johan Hovold <johan+linaro@kernel.org>
+-- 
+மணிவண்ணன் சதாசிவம்
