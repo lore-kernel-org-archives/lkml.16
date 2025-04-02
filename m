@@ -1,32 +1,32 @@
 Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 381D015575B;
-	Wed,  2 Apr 2025 21:46:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3818F1428E7;
+	Wed,  2 Apr 2025 21:46:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743630402; cv=none; b=UQaDTrwQ496OBNjRmaAmMcqPbi2H5So8vONKbozc39VYCodIoOSUVimW7ThR1LrU9q80nGxwB24CXuTImFHbDOwty6bppTh3HXMQB8TawmuSxCTbGVc5fw0JT5nmXtcE8d07yYUh3hG5XGLrSsqlsgYMT/DJpkdGqKXfz9Vucr4=
+	t=1743630403; cv=none; b=Wu8Bja0fM1azNmAdMZ72bDVvHVLcn7mWrmUOquOJDNdbX4y1abckJ5xh9gaPXZcqLgdjmIT0iy9uOTp4AoXg+DCp+S3ixvSZfeSVxG9jLhpH+YofYACRqfB6PJeZZ89rsWLoZj+/vSqxam+qcIjNZkcqOlmMPgNXIpu53kWC0AY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743630402; c=relaxed/simple;
-	bh=OrpOFY06YktwnFU5O13rxBuoIxGvGFPh3gIGitQWkQo=;
+	s=arc-20240116; t=1743630403; c=relaxed/simple;
+	bh=LuGP6+XkZVCLTpWzPvZ4xw075h0SfZrc7ZPN8LclwU4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=fUALqXzIfHviF+AizDX18JFW6sEbmpRtg6HsHLvgyQ0lOTmlatlbuN+srHQoDmm3oi2OiXTwcVlAVw+wxByYRzevHdCm8QwJxEmZDMhtbyi0JdoJcedT6KLJHxxUilvK8nGyrZxrpQdllv30L2PwLL2IraAYn0Hb/fg4DbNCsns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=k7ICMfPz; arc=none smtp.client-ip=159.69.126.157
+	 In-Reply-To:To:Cc; b=BW2vnkSWZa+/mGQvHmXj0P8ZjIfvZlHYlqW9Rbge0IPrpJRHM5slcKxjrkSP30sEwm72dveza02MBALiTQFwUOUYqSdI/MGsVj4LMyK4MJNAcJwtwFTwgFo3Z9GiZwPzH71KjFFR4U4eSzl2pbUUFz+0E6ve05dQ34smdFMNi88=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=ncyrnpif; arc=none smtp.client-ip=159.69.126.157
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="k7ICMfPz"
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="ncyrnpif"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
 	s=mail; t=1743629944;
-	bh=OrpOFY06YktwnFU5O13rxBuoIxGvGFPh3gIGitQWkQo=;
+	bh=LuGP6+XkZVCLTpWzPvZ4xw075h0SfZrc7ZPN8LclwU4=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=k7ICMfPz37jDyiRN8TWMTIy3ilQcJIxv9wB8QcEzO7M5LNaFTrIKYMY+mEGQjD0wu
-	 tujUDu8girmF26aTZ97yaGqEIhUTuaVlt/XqBsw8UAvgMycforDQ99KUPROm/YS6N8
-	 W+jG/qnvAbbtFtco3LbaKKmXbnU2sgcCfy7w25u0=
+	b=ncyrnpifAIzmd+H9MNyHucO6IN6ePiex0Fn+sqnDKxdusMLVs7QvI0AFaBC+csSvy
+	 4xMfzeIJql+iem010lBwm8XLpw+OaD4JC/N3HwTaTnr7cSvaKqqfswGQVPFdxDdr94
+	 9mkjDWjVKsiI7dlzII+3YoM9zgFaQI2j6F1+kA3o=
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Date: Wed, 02 Apr 2025 23:39:00 +0200
-Subject: [PATCH 2/2] selftests/nolibc: only consider XARCH for CFLAGS when
- requested
+Date: Wed, 02 Apr 2025 23:38:59 +0200
+Subject: [PATCH 1/2] selftests/nolibc: drop dependency from sysroot to
+ defconfig
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,7 +35,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250402-nolibc-nolibc-test-native-v1-2-62f2f8585220@weissschuh.net>
+Message-Id: <20250402-nolibc-nolibc-test-native-v1-1-62f2f8585220@weissschuh.net>
 References: <20250402-nolibc-nolibc-test-native-v1-0-62f2f8585220@weissschuh.net>
 In-Reply-To: <20250402-nolibc-nolibc-test-native-v1-0-62f2f8585220@weissschuh.net>
 To: Willy Tarreau <w@1wt.eu>, Shuah Khan <shuah@kernel.org>
@@ -43,42 +43,36 @@ Cc: linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
  Sebastian Andrzej Siewior <sebastian@breakpoint.cc>, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1743629943; l=1340;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1743629943; l=820;
  i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
- bh=OrpOFY06YktwnFU5O13rxBuoIxGvGFPh3gIGitQWkQo=;
- b=y7rOLmC0yuFSSMk+akQoVKInkOn7cD446cYeeD3AYTnlHKJTC/XRq7zjVsQhi15uyHqRJrhhb
- /stD0fmZbHkDXBvWXIiSWId6/oCPBehMwR1OTUx4SN56w/K1+1nb0NT
+ bh=LuGP6+XkZVCLTpWzPvZ4xw075h0SfZrc7ZPN8LclwU4=;
+ b=zVZOOHaUv+JNsXm8eUjcbRgX2T0rlo1Ti+J3DMVEk0ioP/13L+61edL7AEN8nPtj/T+jqAz6T
+ h8bjPt1t7S4Ag/rWcx14eHYyjjwTPT2DOlcjKYSqTZrOOl3jmMjsni2
 X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
  pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
-If no explicit XARCH is specified, use the toolchains default.
+The creation of the sysroot does not require a kernel configuration.
 
-Suggested-by: Sebastian Andrzej Siewior <sebastian@breakpoint.cc>
-Link: https://lore.kernel.org/lkml/20250326205434.bPx_kVUx@breakpoint.cc/
+Drop the dependency.
+
 Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
 ---
- tools/testing/selftests/nolibc/Makefile | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ tools/testing/selftests/nolibc/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/tools/testing/selftests/nolibc/Makefile b/tools/testing/selftests/nolibc/Makefile
-index 34d01e473c013a1400bf6023132017a5f663f75c..89ee265f7467e2e5e32edf3eb51b4ec758e8004f 100644
+index 58bcbbd029bc3ad9ccac968191b703ccf5df0717..34d01e473c013a1400bf6023132017a5f663f75c 100644
 --- a/tools/testing/selftests/nolibc/Makefile
 +++ b/tools/testing/selftests/nolibc/Makefile
-@@ -174,10 +174,13 @@ CFLAGS_s390x = -m64
- CFLAGS_s390 = -m31
- CFLAGS_mips32le = -EL -mabi=32 -fPIC
- CFLAGS_mips32be = -EB -mabi=32
-+ifeq ($(origin XARCH),command line)
-+CFLAGS_XARCH = $(CFLAGS_$(XARCH))
-+endif
- CFLAGS_STACKPROTECTOR ?= $(call cc-option,-mstack-protector-guard=global $(call cc-option,-fstack-protector-all))
- CFLAGS  ?= -Os -fno-ident -fno-asynchronous-unwind-tables -std=c89 -W -Wall -Wextra \
- 		$(call cc-option,-fno-stack-protector) $(call cc-option,-Wmissing-prototypes) \
--		$(CFLAGS_$(XARCH)) $(CFLAGS_STACKPROTECTOR) $(CFLAGS_EXTRA)
-+		$(CFLAGS_XARCH) $(CFLAGS_STACKPROTECTOR) $(CFLAGS_EXTRA)
- LDFLAGS :=
+@@ -232,7 +232,7 @@ all: run
  
- LIBGCC := -lgcc
+ sysroot: sysroot/$(ARCH)/include
+ 
+-sysroot/$(ARCH)/include: | defconfig
++sysroot/$(ARCH)/include:
+ 	$(Q)rm -rf sysroot/$(ARCH) sysroot/sysroot
+ 	$(QUIET_MKDIR)mkdir -p sysroot
+ 	$(Q)$(MAKE) -C $(srctree) outputmakefile
 
 -- 
 2.49.0
