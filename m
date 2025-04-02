@@ -1,98 +1,120 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CDD11F585B
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A2E21F6664
 	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 22:57:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743634651; cv=none; b=RnIq4Y6IYyXIDfj8rAnutrxXyscRYSShX1y7liZlYsmapBkp+J7iDp+yrTXHyVvZiqHjZTokiCWjvabdxHmgED5wmupLeUE946GKG9SQQRvwGqQ2GoOoQ8Wkp1ZwXotsWVYuakx4ilSN2b9Xk7kVJyFzwWAta5KIgLdUm9B5vuo=
+	t=1743634651; cv=none; b=Nxx2kHHR326KqNrEpN44Tio4oCZSI+rhcwcDF3sL1K7BjkchR0HUs2EEUU5mDaLqbeLLyQ5NMIZTIsDCFygKV+1QVympCnp45CPrQqh3F+Y/zIchAOuZzB+3Nw1N1aOVRXsZVb3Wh8g/gQWeNuHrYOoNX6CNNuM5Tq9V4WjILWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1743634651; c=relaxed/simple;
-	bh=yfLNRpORu85U5HqIsekOGNPdeR+i8F1qWXTiZ4cZcY8=;
-	h=Message-ID:Date:From:To:Cc:Subject; b=r4ymSN3EH6eI+mFAJRDuvf6RC55KwJiNgOjsZnNxxnaBhrJ/IRtjNdPBOivydi9n3rKq2lUO5huXTo6V3xYjRTUl726uprCfwSPbL71OO07GWTQRI8GF2jRq7duvnityycMiriQEN5Yt7AQkLGFDfLb/2t5MKK8sAat3pWgYZ/8=
+	bh=E4W35K1x9n/0/FCOiFt6Qm1Ll5SsXZbV1r9nxcBOqLs=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=A6ESG1fjszLgqpggsuOIhiJFjdVbHLTtSVBeKk7qpmLDd6cVL/0hZL4m0wgveod1TxcSI6fTd1HGRMNMEKHtEkuVjHBtW8x+Q5+YAeNJHhQQtimWGhDczuLsEx1KUHPx8HZdSR+LfzvQvI2N8yAv062E2Fy46rHZf3mUOrpyDeU=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B15E9C4CEDD;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2EF3C4CEEB;
 	Wed,  2 Apr 2025 22:57:30 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1u072Y-00000006Z0V-3snD;
-	Wed, 02 Apr 2025 18:58:34 -0400
-Message-ID: <20250402225735.849814084@goodmis.org>
+	id 1u072Z-00000006Z11-0R4r;
+	Wed, 02 Apr 2025 18:58:35 -0400
+Message-ID: <20250402225834.954719009@goodmis.org>
 User-Agent: quilt/0.68
-Date: Wed, 02 Apr 2025 18:57:35 -0400
+Date: Wed, 02 Apr 2025 18:57:36 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Subject: [for-linus][PATCH 0/4] tracing: Cleanup and simplify the persistent ring buffer for 6.15
+ Andrew Morton <akpm@linux-foundation.org>,
+ Vincent Donnefort <vdonnefort@google.com>,
+ Vlastimil Babka <vbabka@suse.cz>,
+ Mike Rapoport <rppt@kernel.org>,
+ Jann Horn <jannh@google.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [for-linus][PATCH 1/4] tracing: Enforce the persistent ring buffer to be page aligned
+References: <20250402225735.849814084@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+
+From: Steven Rostedt <rostedt@goodmis.org>
+
+Enforce that the address and the size of the memory used by the persistent
+ring buffer is page aligned. Also update the documentation to reflect this
+requirement.
+
+Link: https://lore.kernel.org/all/CAHk-=whUOfVucfJRt7E0AH+GV41ELmS4wJqxHDnui6Giddfkzw@mail.gmail.com/
+
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Vincent Donnefort <vdonnefort@google.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Mike Rapoport <rppt@kernel.org>
+Cc: Jann Horn <jannh@google.com>
+Link: https://lore.kernel.org/20250402144953.412882844@goodmis.org
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ Documentation/admin-guide/kernel-parameters.txt |  2 ++
+ Documentation/trace/debugging.rst               |  2 ++
+ kernel/trace/trace.c                            | 10 ++++++++++
+ 3 files changed, 14 insertions(+)
+
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index fb8752b42ec8..71861643ef14 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -7241,6 +7241,8 @@
+ 			This is just one of many ways that can clear memory. Make sure your system
+ 			keeps the content of memory across reboots before relying on this option.
+ 
++			NB: Both the mapped address and size must be page aligned for the architecture.
++
+ 			See also Documentation/trace/debugging.rst
+ 
+ 
+diff --git a/Documentation/trace/debugging.rst b/Documentation/trace/debugging.rst
+index 54fb16239d70..d54bc500af80 100644
+--- a/Documentation/trace/debugging.rst
++++ b/Documentation/trace/debugging.rst
+@@ -136,6 +136,8 @@ kernel, so only the same kernel is guaranteed to work if the mapping is
+ preserved. Switching to a different kernel version may find a different
+ layout and mark the buffer as invalid.
+ 
++NB: Both the mapped address and size must be page aligned for the architecture.
++
+ Using trace_printk() in the boot instance
+ -----------------------------------------
+ By default, the content of trace_printk() goes into the top level tracing
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 14c38fcd6f9e..96129985e81c 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -10774,6 +10774,16 @@ __init static void enable_instances(void)
+ 		}
+ 
+ 		if (start) {
++			/* Start and size must be page aligned */
++			if (start & ~PAGE_MASK) {
++				pr_warn("Tracing: mapping start addr %pa is not page aligned\n", &start);
++				continue;
++			}
++			if (size & ~PAGE_MASK) {
++				pr_warn("Tracing: mapping size %pa is not page aligned\n", &size);
++				continue;
++			}
++
+ 			addr = map_pages(start, size);
+ 			if (addr) {
+ 				pr_info("Tracing: mapped boot instance %s at physical memory %pa of size 0x%lx\n",
+-- 
+2.47.2
 
 
-Persistent buffer cleanups and simplifications for v6.15:
-
-It was mistaken that the physical memory returned from "reserve_mem" had to
-be vmap()'d to get to it from a virtual address. But reserve_mem already
-maps the memory to the virtual address of the kernel so a simple
-phys_to_virt() can be used to get to the virtual address from the physical
-memory returned by "reserve_mem". With this new found knowledge, the
-code can be cleaned up and simplified.
-
-- Enforce that the persistent memory is page aligned
-
-  As the buffers using the persistent memory are all going to be
-  mapped via pages, make sure that the memory given to the tracing
-  infrastructure is page aligned. If it is not, it will print a warning
-  and fail to map the buffer.
-
-- Use phys_to_virt() to get the virtual address from reserve_mem
-
-  Instead of calling vmap() on the physical memory returned from
-  "reserve_mem", use phys_to_virt() instead.
-
-  As the memory returned by "memmap" or any other means where a physical
-  address is given to the tracing infrastructure, it still needs to
-  be vmap(). Since this memory can never be returned back to the buddy
-  allocator nor should it ever be memmory mapped to user space, flag
-  this buffer and up the ref count. The ref count will keep it from
-  ever being freed, and the flag will prevent it from ever being memory
-  mapped to user space.
-
-- Use vmap_page_range() for memmap virtual address mapping
-
-  For the memmap buffer, instead of allocating an array of struct pages,
-  assigning them to the contiguous phsycial memory and then passing that to
-  vmap(), use vmap_page_range() instead
-
-- Replace flush_dcache_folio() with flush_kernel_vmap_range()
-
-  Instead of calling virt_to_folio() and passing that to
-  flush_dcache_folio(), just call flush_kernel_vmap_range() directly.
-  This also fixes a bug where if a subbuffer was bigger than PAGE_SIZE
-  only the PAGE_SIZE portion would be flushed.
-
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
-ring-buffer/fixes
-
-Head SHA1: e4d4b8670c44cdd22212cab3c576e2d317efa67c
-
-
-Steven Rostedt (4):
-      tracing: Enforce the persistent ring buffer to be page aligned
-      tracing: Have reserve_mem use phys_to_virt() and separate from memmap buffer
-      tracing: Use vmap_page_range() to map memmap ring buffer
-      ring-buffer: Use flush_kernel_vmap_range() over flush_dcache_folio()
-
-----
- Documentation/admin-guide/kernel-parameters.txt |  2 +
- Documentation/trace/debugging.rst               |  2 +
- kernel/trace/ring_buffer.c                      |  5 +-
- kernel/trace/trace.c                            | 66 ++++++++++++++++---------
- kernel/trace/trace.h                            |  1 +
- 5 files changed, 50 insertions(+), 26 deletions(-)
