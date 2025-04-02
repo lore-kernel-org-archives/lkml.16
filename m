@@ -1,132 +1,96 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 165EF1F417E
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 20:16:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5D271F03C7;
+	Wed,  2 Apr 2025 20:17:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743624986; cv=none; b=fsWJP0HCfz4xvZmG8Hp0M5vvKDmUZZmp8jnMJNpcSxggG+ljSGpFtGO4ljVQ7Jt+LIbfvABid7MQw5bblUpl9AEctGtLNTo40UnYUCZNd7YbUcUG3RkGKP5uhhKzoQsjL+0QaMe30wp8VeyG3D7W76Y5b4BSet7nGWHMo6A/XGg=
+	t=1743625046; cv=none; b=MBZXevEx+y0A30SKEEmwmBcuhoKH2vHxVKjQtibqdolC2cY0tDeb9K4d5dTOB48WSmOTakd/gPDKk8PSufZXv/DaySEJ8vJpg7yg+9WQhEbIDo9W2U4DBA3Uz82f/3iKUsyX1YMegjZ2zLia7GSQNo5Ye21YsFzjqEoopCMQXM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743624986; c=relaxed/simple;
-	bh=XJNVlfb9B6e09OVvYHlLgV02vSfa13DfWe+IMu0BsHw=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=hXid6aMff4bLu9CPEtozTPLmY7pkjuirq2zXpy/YooN5fWtdnWvmfbNLdmEaMzaV7mBEemGoORFe426ur/CE+1phSMTZ0Ad9m65XmmNW3peFIOITCapANjMtR0lrc7q6dJ20FGXIKip8u9Lod1ipR0bHuCjU5QUPjt7loEaEbhE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=p2EsBXdq; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1743625046; c=relaxed/simple;
+	bh=5wXMy1iTEVmwG+CHMzwtyEKHWRMwlIFCl6N/GqhB6A8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gJcCPK6pkd1QHGvpeP3cMfgMWRrK7s3DiSpUeVQ8mgmnuCqeG9Yw6MtMydwOl4/9vqLv/E+2R2c2TcRnWfZTL0EvmEfpGMO4e91EDpSVnSl5sROgglTlEgs/0KeTGQU3BqUvyknJ6Q/6NLU2R4ZYMwpgwdG6Sy2kINzWYVm99nM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ohven9T5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="p2EsBXdq"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ff4b130bb2so172623a91.0
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 13:16:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743624984; x=1744229784; darn=vger.kernel.org;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=B2hDS3YsXTlEuSmhORL5o7layHPktsvi9Jj/B/AMxqI=;
-        b=p2EsBXdq+WB49CIJz7a4CEZ/iN451SQ15WCnD8Ws39ZCa4ED37hwZtn41CMRTSa50q
-         STB6GmuXsBffgZr0cFyYbUP+Hql/6APVSpdqspqSyp2oOlBWw3OL7YPqATp6th3+6MYG
-         AJE772kpDtSTkosM6Tw4y1hv+BIFKwId18DgA3KkyhHoRhuz+TBmnxDxj5up5+RwjPYR
-         7+CdWs8i8mWDIjncbHn/OI51owo7QbvGd2/3Tvv3orivDa+L2DMvxntbFPR1vDI1/gQZ
-         1G7lzM/ErCVt1BaPpegr3Yuz6lHDzSqObpjUnuXcbEtP5x9Z1U1FZXKWVWgWfdOgx4uB
-         OASw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743624984; x=1744229784;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=B2hDS3YsXTlEuSmhORL5o7layHPktsvi9Jj/B/AMxqI=;
-        b=A+FtCYekAvcl91t4O8XP59wxwaOmu/ft+fo7VRNXwQ+7aZM0AEMIhT8CznA8ZwKuPE
-         MECP1/1UxkZQKYmSJhY3A0TqBTFiOMjtZJeXS2ACYbgZY2tybVOTaTGxbnYqecPVxgEj
-         XW4cZR3YxdbbTw1gMVHhq4902iktwLuHidm4d08h9WHWpA5J6JVgBuoaimQV0U5TSoFx
-         Zm88LQi6I06I3/yk/ZfG8l0RjOK65WuTBuQQWMJ36TDtA955S9Ao6CTpXPz0EjbaCoIU
-         Nv7dGNmVNJ/irYMu5jp7oMzCJhpUwg4qMYoo9DlNjJgXFqDMBivBlAVzvWWyqlSYZvuU
-         Jpqw==
-X-Forwarded-Encrypted: i=1; AJvYcCVXS7lYPthxPdAs1asIg3YZ3VMsf4DfPgybSmWDfBH+09k7/XA0EbLJeuBz+ut3fw3dJbElIhVqBKlxzmg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyik8vfOc4Pzi/a5isikU1SxdoWyAKkSrK9QtPfVaZ3mMGpYYqv
-	I7p/vx/wu6fRhSJj6f4hcOdXayJGtiu3hBD+P/0zArep7RscDA8+fN+ksNks1lEADPEka6sWnBY
-	fFuSAXg==
-X-Google-Smtp-Source: AGHT+IGWRDhVif65PZjK6L6tokXcwfnxg3KYz2H32NL1j6yAsld5CATaklhVtmImMk0tbsc8phvPpUNyY8GA
-X-Received: from pjd11.prod.google.com ([2002:a17:90b:54cb:b0:2ff:5752:a78f])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1f92:b0:2f7:e201:a8cc
- with SMTP id 98e67ed59e1d1-305320b1002mr31454142a91.18.1743624984352; Wed, 02
- Apr 2025 13:16:24 -0700 (PDT)
-Date: Wed,  2 Apr 2025 13:15:49 -0700
-In-Reply-To: <20250402201549.4090305-1-irogers@google.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ohven9T5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7076C4CEDD;
+	Wed,  2 Apr 2025 20:17:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1743625046;
+	bh=5wXMy1iTEVmwG+CHMzwtyEKHWRMwlIFCl6N/GqhB6A8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ohven9T5xPGuF2Yc19Bj7YvBHPiSxr7t3lVEB23ICJzsm1WbWhFKasYdAgirQoqUf
+	 wI0ToMFeB4Z03EYUmjIJJhP/bxFigPYZDr8XzTn1T7VDghIKFwpQe50Rhyk+ySv7LD
+	 XqXXJA6c/pjqkQRZ2qHjFvhTFSHCh7/43ekI0ObA=
+Date: Wed, 2 Apr 2025 21:15:58 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Kuniyuki Iwashima <kuniyu@amazon.com>
+Cc: cve@kernel.org, edumazet@google.com, ematsumiya@suse.de,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-net@vger.kernel.org, sfrench@samba.org, smfrench@gmail.com,
+	wangzhaolong1@huawei.com, zhangchangzhong@huawei.com
+Subject: Re: Fwd: [PATCH][SMB3 client] fix TCP timers deadlock after rmmod
+Message-ID: <2025040233-tuesday-regroup-5c66@gregkh>
+References: <2025040248-tummy-smilingly-4240@gregkh>
+ <20250402200928.4320-1-kuniyu@amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250402201549.4090305-1-irogers@google.com>
-X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
-Message-ID: <20250402201549.4090305-6-irogers@google.com>
-Subject: [PATCH v3 5/5] perf parse-events: Add debug dump of evlist if reordered
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Howard Chu <howardchu95@gmail.com>, 
-	Dominique Martinet <asmadeus@codewreck.org>, Levi Yun <yeoreum.yun@arm.com>, 
-	"Dr. David Alan Gilbert" <linux@treblig.org>, Andi Kleen <ak@linux.intel.com>, 
-	James Clark <james.clark@linaro.org>, Weilin Wang <weilin.wang@intel.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250402200928.4320-1-kuniyu@amazon.com>
 
-Add debug verbose output to show how evsels were reordered by
-parse_events__sort_events_and_fix_groups. For example:
-```
-$ perf record -v -e '{instructions,cycles}' true
-Using CPUID GenuineIntel-6-B7-1
-WARNING: events were regrouped to match PMUs
-evlist after sorting/fixing: '{cpu_atom/instructions/,cpu_atom/cycles/},{cpu_core/instructions/,cpu_core/cycles/}'
-```
+On Wed, Apr 02, 2025 at 01:09:19PM -0700, Kuniyuki Iwashima wrote:
+> From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Date: Wed, 2 Apr 2025 16:18:37 +0100
+> > On Wed, Apr 02, 2025 at 05:15:44PM +0800, Wang Zhaolong wrote:
+> > > > On Wed, Apr 02, 2025 at 12:49:50PM +0800, Wang Zhaolong wrote:
+> > > > > Yes, it seems the previous description might not have been entirely clear.
+> > > > > I need to clearly point out that this patch, intended as the fix for CVE-2024-54680,
+> > > > > does not actually address any real issues. It also fails to resolve the null pointer
+> > > > > dereference problem within lockdep. On top of that, it has caused a series of
+> > > > > subsequent leakage issues.
+> > > > 
+> > > > If this cve does not actually fix anything, then we can easily reject
+> > > > it, please just let us know if that needs to happen here.
+> > > > 
+> > > > thanks,
+> > > > 
+> > > > greg k-h
+> > > Hi Greg,
+> > > 
+> > > Yes, I can confirm that the patch for CVE-2024-54680 (commit e9f2517a3e18)
+> > > should be rejected. Our analysis shows:
+> > > 
+> > > 1. It fails to address the actual null pointer dereference in lockdep
+> > > 
+> > > 2. It introduces multiple serious issues:
+> > >    1. A socket leak vulnerability as documented in bugzilla #219972
+> > >    2. Network namespace refcount imbalance issues as described in
+> > >      bugzilla #219792 (which required the follow-up mainline fix
+> > >      4e7f1644f2ac "smb: client: Fix netns refcount imbalance
+> > >      causing leaks and use-after-free")
+> > > 
+> > > The next thing we should probably do is:
+> > >    - Reverting e9f2517a3e18
+> > >    - Reverting the follow-up fix 4e7f1644f2ac, as it's trying to fix
+> > >      problems introduced by the problematic CVE patch
+> > 
+> > Great, can you please send patches now for both of these so we can
+> > backport them to the stable kernels properly?
+> 
+> Sent to CIFS tree:
+> https://lore.kernel.org/linux-cifs/20250402200319.2834-1-kuniyu@amazon.com/
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/parse-events.c | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+You forgot to add a Cc: stable@ on the patches to ensure that they get
+picked up properly for all stable trees :(
 
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 5152fd5a6ead..7952f431f82b 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -28,6 +28,7 @@
- #include "util/evsel_config.h"
- #include "util/event.h"
- #include "util/bpf-filter.h"
-+#include "util/stat.h"
- #include "util/util.h"
- #include "tracepoint.h"
- 
-@@ -2196,14 +2197,23 @@ int __parse_events(struct evlist *evlist, const char *str, const char *pmu_filte
- 	if (ret2 < 0)
- 		return ret;
- 
--	if (ret2 && warn_if_reordered && !parse_state.wild_card_pmus)
--		pr_warning("WARNING: events were regrouped to match PMUs\n");
--
- 	/*
- 	 * Add list to the evlist even with errors to allow callers to clean up.
- 	 */
- 	evlist__splice_list_tail(evlist, &parse_state.list);
- 
-+	if (ret2 && warn_if_reordered && !parse_state.wild_card_pmus) {
-+		pr_warning("WARNING: events were regrouped to match PMUs\n");
-+
-+		if (verbose > 0) {
-+			struct strbuf sb = STRBUF_INIT;
-+
-+			evlist__uniquify_name(evlist);
-+			evlist__format_evsels(evlist, &sb, 2048);
-+			pr_debug("evlist after sorting/fixing: '%s'\n", sb.buf);
-+			strbuf_release(&sb);
-+		}
-+	}
- 	if (!ret) {
- 		struct evsel *last;
- 
--- 
-2.49.0.504.g3bcea36a83-goog
+Can you redo them?
 
+thanks,
+
+greg k-h
