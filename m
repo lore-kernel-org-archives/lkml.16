@@ -1,55 +1,55 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6E3713957E
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 16:47:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EC66194C61
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 16:47:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743612449; cv=none; b=vCZ3XeerS7r5vNAdf3bc3Q63ZySh55NTGye6qDUMA7MgTk/tHnU5EN48Us5YZajH0sMGciHqE9RQsOyj+G11jMYKX1d9YfJNgSJJfUTGTkwaK0p0Jxz5E1zsR165ECmNb/bNf+wY4IC0P7W69MKfFofciMsXC9DswRXXTrmh0FE=
+	t=1743612450; cv=none; b=SMIb30qZlXSo/uNOD43Db6yw9ooWtYWCaLwHkjqWdp8v7DWJXIvHvEhMSPycPIonTnlQuAnWK0Rc17CA7q22oYGfOtoSnVxwnsQ/KtaLsb61TN40233tjaUZL3lPB4OYBH+wuaPaN0zHT4Mu6t04Sal/ScaBi8ION7WX4iQL9zs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743612449; c=relaxed/simple;
-	bh=mdSSrhP7G24frprN16593VOBIgMZgeUhPBNK6wrZNsk=;
+	s=arc-20240116; t=1743612450; c=relaxed/simple;
+	bh=NqnWpcdFkNGPmqWCPNT6GGaIm7Gc0q9VpwYczE12dRI=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=BgqL6RkGtf8Rep9YIvg9WxHEOoqgw94dN1TYzU2kN8DktATBtk0uuCdcepT1ub3E4BtNEdlBKFbOZhcq4PJ1/4LXEVYcZBULWVvz2LdP5qOPx8GyHT7Hs5ViybNcgik29lzZOwTOm5RDVy5G3n4ZAVLa5yRtGo3LfAIcQrQt178=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CVTWEySv; arc=none smtp.client-ip=209.85.214.202
+	 To:Content-Type; b=jkDqTwgVUajV9zJdWiF4TmsOWo3/xV7ajRNuWSlSOLz0770fMPdPQq5cKp+/LfQ4g0S0o078y6dpGmctyZYdH7xjoe59Dwk1jtaEfAR0yZLlQmDGN827zj3UerM2VyMZvYxQrJeqBFd+On50nB2puYFm4gyPdz8JfT9zndQVRTE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DZtx6scp; arc=none smtp.client-ip=209.85.215.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CVTWEySv"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-227a8cdd272so419195ad.2
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 09:47:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DZtx6scp"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-af953100791so32254a12.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 09:47:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743612446; x=1744217246; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1743612449; x=1744217249; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=32l0Pu2pjVOQ0/rzRKMg0Sp9sEBo5wkzEsYD7DuEcpE=;
-        b=CVTWEySvNa2BKwtyTADx4/lW2Bg8dl0Rql0Zkn8KtOyi7OnL2rDiOzzew/nznJ0c+3
-         rdiXiNmzlU2EAgv58ya4J5NckY30yfsKwkS4P0DgITuf9x6wPQqGfq8eLkWejQe5gZ13
-         4/D9amub89+iUkrKt1AOB/6gJk30gH68IOBPFeNHWi4RLnadRLubzqACC0jIR8/WHwgz
-         sOxyIuqXbJh6SFdZ3XCeJv0er7I/bZ78JO0aNfmnVfUMkNhEIBR6LxDN3Lt/fETltqHX
-         ZpZGC+nvX6lD/HohcM+DmC48f++ZmyLRxVym0mqNwXn3kOwDqWDGs7woUFA/FIqsAH0j
-         PHtg==
+        bh=GVMZzaRI0SYaZ9HIFXqjbn9kAaASuQl6uCuXVUyZL/Q=;
+        b=DZtx6scpFfBz8rSgUPbSLmPQCvHPoa6efBBrD7egb8evAyZ1DXZOmunPS+VQ5SV528
+         5XESpzmHGrRoeKqXwBXfFOKKtg7TbqUVbCjIVo0YL55ArhNXNULC3oE72CxNOXd4uMJ8
+         KjoPSvmxSHQmuxSqossSOe2VA6Li+4SK7hKcAP1MCZVrB4+vgCACIxpeK19MIobPn170
+         qpxqRyuZ642Vwfq2m2hfw3MyAvQkl+aDbBbVOUaRgu3C6yR/TrivX+SIwubPZVUF/Hc+
+         E054taC6TgALqAuSRi3yZkL4lO98cIgKt2TSHqxWJH0Idkv9oyBOrpL6QVFab/3sjd6V
+         ZbOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743612446; x=1744217246;
+        d=1e100.net; s=20230601; t=1743612449; x=1744217249;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=32l0Pu2pjVOQ0/rzRKMg0Sp9sEBo5wkzEsYD7DuEcpE=;
-        b=gO2+XzqpaOy9F46TPB4R7HPt7R0je/1OOMUw3wPQ28rroxAnIieAHQnWPhQpDUZ/PO
-         NGyUFx7HPKVaI+/qc88uFRn0U8Od5pJKtKQqbkU4GPNrz8H610uXUYA7Ga1c4IzmPiH/
-         GOumE5MCGcEKXTTdSznN35qGizSZh5O8eDtdkFzxgcDf4jiLLVP+QR/YrSVbzEnCXrg6
-         BvDjI6KzEoZ71UVugnr+DF+GLSlD3o6FKI/H7WGq3yyS+4+zl+HLZSDo8SmbzdNDUPgT
-         qwTOGCrNacyV87xgw3Fxcdh5exQRwngjcq4J88pbawnoVSnAnEyI3+AdXLKE5ickMIFn
-         s9fQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVHHlVeLAQA01I0SJzbXGM0SgvRuBdi125d4Uv1ZNj5Mvr+qo3DGvaRS185EAroE/vhq8MBuUUZ+H3vv7U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YydQ9xE726wf23hgl+1+thFIBaKWvtMaHTicM+AUSBSuz2nn3g/
-	Cz8yyyYFjbaZWBKIeKLe+eQXo3wcEBjrcCJhLATrKc4Qgf1Xqip5ujaAVxkjCHVQA86MS5GUgiQ
-	pP33waw==
-X-Google-Smtp-Source: AGHT+IGCGqrDwBXC2WLXzmtNZD0tnxmjJy9+AtvHPheDKufpBqRlCNAGPLYftjaH/tRCYxxH1vMoPKmrSGL6
-X-Received: from plbmk14.prod.google.com ([2002:a17:903:2bce:b0:223:f487:afc6])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:19c7:b0:223:6657:5008
- with SMTP id d9443c01a7336-2292f974807mr300287625ad.24.1743612446668; Wed, 02
- Apr 2025 09:47:26 -0700 (PDT)
-Date: Wed,  2 Apr 2025 09:47:16 -0700
+        bh=GVMZzaRI0SYaZ9HIFXqjbn9kAaASuQl6uCuXVUyZL/Q=;
+        b=Mmv69gtjgPoSr8OgZ3YfmdFlYJj7xH0Wr1bEnWJvSsFF1N43+V0jBJoEECN/DRQtsa
+         D5ozJs2qEpsV6YBkEFqDO8WlRYO2O45xvi2NaG2vjsXgz8+oq/BxevPiQ3gSpS1D12VN
+         vVrZEJZURvT0IDR6OBYRNOqb3OptFCBQj3idV4MPcINIiMGFnfNFaZuCSOVQIK0R/LjG
+         wGbcBlLm4PsQgdXDpXS8xWb6hbGwTz7QgyWF2dw4+gsAr4CPN+yRGhfkRwRdAjPy5Vkk
+         DJcDXXB0VedMfvfdMbFCWAfmlcbVJk/86rLBjb/54le6LQg8liMxfeeXxldlPMV2TpdI
+         hM1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCV0G4YCzHh8e7JNzS8WZl3f1sY1woCSobwytGe048abHk/59hK02S//eddFFlHcwEi1CtQp9MghqYx1w1s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyEk8cOnkYHCHkPzapWh0rjJH7HverMNLPGwgcWDGOImOzahYuF
+	QJQRp+QtViANj4v3O9nYndfgpQLxLJcMfsGqkzUf4K4Lrn4Nv6V3ftMNg0Y3OIb7n8kvWjPmfRW
+	6HqaiJQ==
+X-Google-Smtp-Source: AGHT+IGGJmZgIYf85aQoyCz2a/j1TJQUoHxYvSUmi17IBOewaANMK1sOAl6iEA30oqxeC5Z9G95o7Gt5xxAV
+X-Received: from pjbqj14.prod.google.com ([2002:a17:90b:28ce:b0:301:1bf5:2f07])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2e4e:b0:2ee:e518:c1d8
+ with SMTP id 98e67ed59e1d1-3053215ce9bmr27226504a91.30.1743612448791; Wed, 02
+ Apr 2025 09:47:28 -0700 (PDT)
+Date: Wed,  2 Apr 2025 09:47:17 -0700
 In-Reply-To: <20250402164720.3847573-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250402164720.3847573-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
-Message-ID: <20250402164720.3847573-2-irogers@google.com>
-Subject: [PATCH v2 1/5] perf stat: Better hybrid support for the NMI watchdog warning
+Message-ID: <20250402164720.3847573-3-irogers@google.com>
+Subject: [PATCH v2 2/5] perf stat: Remove print_mixed_hw_group_error
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -74,85 +74,90 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Prior to this patch evlist__has_hybrid would return false if the
-processor wasn't hybrid or the evlist didn't contain any core
-events. If the only PMU used by events was cpu_core then it would
-true even though there are no cpu_atom events. For example:
+print_mixed_hw_group_error will print a warning when a group of events
+uses different PMUs. This isn't possible to happen as
+parse_events__sort_events_and_fix_groups will break groups when this
+happens, adding the warning at the start of perf of:
 
-```
-$ perf stat --cputype=cpu_core -e '{cycles,cycles,cycles,cycles,cycles,cycles,cycles,cycles,cycles}' true
+  WARNING: events were regrouped to match PMUs
 
- Performance counter stats for 'true':
-
-     <not counted>      cpu_core/cycles/                                                        (0.00%)
-     <not counted>      cpu_core/cycles/                                                        (0.00%)
-     <not counted>      cpu_core/cycles/                                                        (0.00%)
-     <not counted>      cpu_core/cycles/                                                        (0.00%)
-     <not counted>      cpu_core/cycles/                                                        (0.00%)
-     <not counted>      cpu_core/cycles/                                                        (0.00%)
-     <not counted>      cpu_core/cycles/                                                        (0.00%)
-     <not counted>      cpu_core/cycles/                                                        (0.00%)
-     <not counted>      cpu_core/cycles/                                                        (0.00%)
-
-       0.001981900 seconds time elapsed
-
-       0.002311000 seconds user
-       0.000000000 seconds sys
-```
-
-This patch changes evlist__has_hybrid to return true only if the
-evlist contains events from >1 core PMU. This means the NMI watchdog
-warning is shown for the case above.
+As the previous mixed group warning can never happen, remove the
+associated code.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/stat-display.c | 18 +++++++++++++++---
- 1 file changed, 15 insertions(+), 3 deletions(-)
+ tools/perf/util/stat-display.c | 31 -------------------------------
+ tools/perf/util/stat.h         |  1 -
+ 2 files changed, 32 deletions(-)
 
 diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index e852ac0d9847..1115efb380fb 100644
+index 1115efb380fb..aab3697aed63 100644
 --- a/tools/perf/util/stat-display.c
 +++ b/tools/perf/util/stat-display.c
-@@ -822,16 +822,28 @@ static bool is_mixed_hw_group(struct evsel *counter)
- 	return false;
+@@ -798,30 +798,6 @@ static void abs_printout(struct perf_stat_config *config,
+ 	print_cgroup(config, os, evsel->cgrp);
  }
  
--static bool evlist__has_hybrid(struct evlist *evlist)
-+static bool evlist__has_hybrid_pmus(struct evlist *evlist)
+-static bool is_mixed_hw_group(struct evsel *counter)
+-{
+-	struct evlist *evlist = counter->evlist;
+-	u32 pmu_type = counter->core.attr.type;
+-	struct evsel *pos;
+-
+-	if (counter->core.nr_members < 2)
+-		return false;
+-
+-	evlist__for_each_entry(evlist, pos) {
+-		/* software events can be part of any hardware group */
+-		if (pos->core.attr.type == PERF_TYPE_SOFTWARE)
+-			continue;
+-		if (pmu_type == PERF_TYPE_SOFTWARE) {
+-			pmu_type = pos->core.attr.type;
+-			continue;
+-		}
+-		if (pmu_type != pos->core.attr.type)
+-			return true;
+-	}
+-
+-	return false;
+-}
+-
+ static bool evlist__has_hybrid_pmus(struct evlist *evlist)
  {
  	struct evsel *evsel;
-+	struct perf_pmu *last_core_pmu = NULL;
- 
- 	if (perf_pmus__num_core_pmus() == 1)
- 		return false;
- 
- 	evlist__for_each_entry(evlist, evsel) {
--		if (evsel->core.is_pmu_core)
-+		if (evsel->core.is_pmu_core) {
-+			struct perf_pmu *pmu = evsel__find_pmu(evsel);
-+
-+			if (pmu == last_core_pmu)
-+				continue;
-+
-+			if (last_core_pmu == NULL) {
-+				last_core_pmu = pmu;
-+				continue;
-+			}
-+			/* A distinct core PMU. */
- 			return true;
-+		}
- 	}
- 
- 	return false;
-@@ -872,7 +884,7 @@ static void printout(struct perf_stat_config *config, struct outstate *os,
- 		ok = false;
- 
+@@ -886,8 +862,6 @@ static void printout(struct perf_stat_config *config, struct outstate *os,
  		if (counter->supported) {
--			if (!evlist__has_hybrid(counter->evlist)) {
-+			if (!evlist__has_hybrid_pmus(counter->evlist)) {
+ 			if (!evlist__has_hybrid_pmus(counter->evlist)) {
  				config->print_free_counters_hint = 1;
- 				if (is_mixed_hw_group(counter))
- 					config->print_mixed_hw_group_error = 1;
+-				if (is_mixed_hw_group(counter))
+-					config->print_mixed_hw_group_error = 1;
+ 			}
+ 		}
+ 	}
+@@ -1587,11 +1561,6 @@ static void print_footer(struct perf_stat_config *config)
+ "	echo 0 > /proc/sys/kernel/nmi_watchdog\n"
+ "	perf stat ...\n"
+ "	echo 1 > /proc/sys/kernel/nmi_watchdog\n");
+-
+-	if (config->print_mixed_hw_group_error)
+-		fprintf(output,
+-			"The events in group usually have to be from "
+-			"the same PMU. Try reorganizing the group.\n");
+ }
+ 
+ static void print_percore(struct perf_stat_config *config,
+diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
+index 2fda9acd7374..1bcd7634bf47 100644
+--- a/tools/perf/util/stat.h
++++ b/tools/perf/util/stat.h
+@@ -100,7 +100,6 @@ struct perf_stat_config {
+ 	int			 times;
+ 	int			 run_count;
+ 	int			 print_free_counters_hint;
+-	int			 print_mixed_hw_group_error;
+ 	const char		*csv_sep;
+ 	struct stats		*walltime_nsecs_stats;
+ 	struct rusage		 ru_data;
 -- 
 2.49.0.504.g3bcea36a83-goog
 
