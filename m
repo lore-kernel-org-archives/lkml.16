@@ -1,92 +1,100 @@
-Received: from irl.hu (irl.hu [95.85.9.111])
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB90617E8E2
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 17:04:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.85.9.111
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC7EA35949
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 17:06:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743613467; cv=none; b=bCEu69bUyaozQ4bOiRAORpkU6Xwpd5nB2u7vQMqzhHm/BjFInIHaLJUtspIE8A4PemQVCf4zb1SVD5nc3ftnHcnIUVqxU1/bHSzOBpN/Y5tFu2bzrgjD3qyg1J8pZMw+qMgc1Apu0h9Dq5tlud86c4YrrGR3XdgtKQkFrtyxYDc=
+	t=1743613602; cv=none; b=ea39MWNxXcUb+KMFRADrn7K1v3TNIjkQL/FcFpNMFyj/4GHqJPjh4JcndM3KmAQCRuUkqYsLuFzieScJngpbpmlVZ5N4hPQVUvoUtgs/9Uzcrcl4iLp5O5pjdOnZpaK9sjdeEOiYwY/gLGx/eK6PFJD2pNRvNH/vF+AGSkZNhls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743613467; c=relaxed/simple;
-	bh=Gc7Ragp9iuXOBeoHG5WqCjVo9Y/rcXtltf26po39z+U=;
-	h=From:To:Cc:Subject:Date:Message-ID:Mime-Version:Content-Type; b=lNpqaVI67TppccPpNMmnMClnnXTh8iiRrq307C7euFk6wFxWWFwPkMdcecEjGDxyTvEbTUzq7s6Wkc0wk0eaUUmzxfWdXBWGw4LVRqYF0klGXX6TKmhhgFDH0p9dhzM9gX7+4f6eeyotQRa7sM8eTaTYp9/iO6RCTqcOkdgD3zI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu; spf=pass smtp.mailfrom=irl.hu; arc=none smtp.client-ip=95.85.9.111
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=irl.hu
-Received: from fedori.lan (51b692a2.dsl.pool.telekom.hu [::ffff:81.182.146.162])
-  (AUTH: CRAM-MD5 soyer@irl.hu, )
-  by irl.hu with ESMTPSA
-  id 0000000000080D7C.0000000067ED6E16.0008406E; Wed, 02 Apr 2025 19:04:21 +0200
-From: Gergo Koteles <soyer@irl.hu>
-To: Harry Wentland <harry.wentland@amd.com>,
-  Leo Li <sunpeng.li@amd.com>, Rodrigo Siqueira <siqueira@igalia.com>,
-  Alex Deucher <alexander.deucher@amd.com>,
-  =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-  David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-  Alex Hung <alex.hung@amd.com>,
-  Mario Limonciello <mario.limonciello@amd.com>,
-  Tom Chung <chiahsuan.chung@amd.com>,
-  Sunil Khatri <sunil.khatri@amd.com>,
-  Aurabindo Pillai <aurabindo.pillai@amd.com>,
-  Hersen Wu <hersenxs.wu@amd.com>, Melissa Wen <mwen@igalia.com>,
-  Maxime Ripard <mripard@kernel.org>,
-  Dmitry Baryshkov <lumag@kernel.org>,
-  Thomas Zimmermann <tzimmermann@suse.de>,
-  Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Cc: amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-  linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
-  Gergo Koteles <soyer@irl.hu>
-Subject: [PATCH] drm/amd/display: do not copy invalid CRTC timing info
-Date: Wed,  2 Apr 2025 19:03:31 +0200
-Message-ID: <24439c13a014e1cd200785db6f3dcf08f4773eb3.1743612701.git.soyer@irl.hu>
-X-Mailer: git-send-email 2.49.0
+	s=arc-20240116; t=1743613602; c=relaxed/simple;
+	bh=izdVsaAoFW/PsnZjaQHd20LtqYy5ijDBJhNC7aqeBgk=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=jTwXs/WAzOqJNRJGFkslVtLf9Az2W6Tcmx4Q3hwqajwQLn26xqS96B9sbVZdVg4lQvlzOp68nUufXSvMGAGaFbiJ0WvTOH+LRErVZIN7n+lAzA2NbV77l6PZuQosT/RMotXzvH6cZGxIhcFnQ1skSjjzmtEsYTUwmG4XTnGAs5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=kBY0Dbo6; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="kBY0Dbo6"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id C0054442AB;
+	Wed,  2 Apr 2025 17:06:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1743613592;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=X33ULJkNEeFrm6fvuw+896JvktkT2V4WZKxemmZPflg=;
+	b=kBY0Dbo683L1ijljTpbIlXZ3KD0c3DAGbCnvmx5LXHf9yPsikrDdE62hnu+/atDU770P5q
+	Yr/2IObNNw3Y9VOLRCBWnFcLrYhJNNH0RiY3NjVhvNgbUtARG/tnIB3fnR7ngfeAWUSAmg
+	l3UCF4TSlCEal2jXaAX6JHPG6bLr/wDGjeOt9O6vKuZseTs293i4861eHQsKnwf2VPwI2o
+	s7kay1IWlQB7xiazqoyPh8n7VNEfm8zPRJHWVhzRTB/Zk+6cNxlYl6A11oi1+qD/XcZuJR
+	OgHk6AivUYGjyhtDu2v7QvyzVYY0vfXJuiawKhIsE0GMxm+hL01oTeMwQ/h3/w==
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: Tudor Ambarus <tudor.ambarus@linaro.org>
+Cc: Richard Weinberger <richard@nod.at>,  Vignesh Raghavendra
+ <vigneshr@ti.com>,  Santhosh Kumar K <s-k6@ti.com>,  Pratyush Yadav
+ <pratyush@kernel.org>,  Michael Walle <michael@walle.cc>,  Thomas
+ Petazzoni <thomas.petazzoni@bootlin.com>,  Steam Lin <stlin2@winbond.com>,
+  linux-mtd@lists.infradead.org,  linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 16/21] mtd: spinand: winbond: Add support for W35N01JW
+ in single mode
+In-Reply-To: <94ed8cf8-1e0d-412d-9f8f-959fe4b5b505@linaro.org> (Tudor
+	Ambarus's message of "Wed, 2 Apr 2025 16:22:41 +0100")
+References: <20250307-winbond-6-14-rc1-octal-v1-0-45c1e074ad74@bootlin.com>
+	<20250307-winbond-6-14-rc1-octal-v1-16-45c1e074ad74@bootlin.com>
+	<94ed8cf8-1e0d-412d-9f8f-959fe4b5b505@linaro.org>
+User-Agent: mu4e 1.12.7; emacs 29.4
+Date: Wed, 02 Apr 2025 19:06:29 +0200
+Message-ID: <87semqpk6i.fsf@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Mime-Autoconverted: from 8bit to 7bit by courier 1.0
+MIME-Version: 1.0
+Content-Type: text/plain
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddukeeivdduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufgjfhgffffkgggtsehttdertddtredtnecuhfhrohhmpefoihhquhgvlhcutfgrhihnrghluceomhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhephfelkedvveffleeuhfeigfdvvefhgfejgffghfeiteegteeiudegfedtjeehkeefnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhepmhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddtpdhrtghpthhtohepthhuughorhdrrghmsggrrhhusheslhhinhgrrhhordhorhhgpdhrtghpthhtoheprhhitghhrghrugesnhhougdrrghtpdhrtghpthhtohepvhhighhnvghshhhrsehtihdrtghomhdprhgtphhtthhopehsqdhkieesthhirdgtohhmpdhrtghpthhtohepphhrrghthihushhhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehmihgthhgrvghlseifrghllhgvrdgttgdprhgtp
+ hhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopehsthhlihhnvdesfihinhgsohhnugdrtghomh
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-Since b255ce4388e0, it is possible that the CRTC timing
-information for the preferred mode has not yet been
-calculated while amdgpu_dm_connector_mode_valid() is running.
+On 02/04/2025 at 16:22:41 +01, Tudor Ambarus <tudor.ambarus@linaro.org> wrote:
 
-In this case use the CRTC timing information of the actual mode.
+> On 3/7/25 3:08 PM, Miquel Raynal wrote:
+>> Add support for the W35N series by describing the smaller (single die)
+>> chip. It has 1b/512B ECC support and its own OOB layout.
+>> 
+>> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+>> ---
+>>  drivers/mtd/nand/spi/winbond.c | 54 ++++++++++++++++++++++++++++++++++++++++++
+>>  1 file changed, 54 insertions(+)
+>> 
+>> diff --git a/drivers/mtd/nand/spi/winbond.c b/drivers/mtd/nand/spi/winbond.c
+>> index 99b9f333eb3142999d8f73d43537f1ed9789c975..9b0369a077efadac8bd6be632f15b822d42a7227 100644
+>> --- a/drivers/mtd/nand/spi/winbond.c
+>> +++ b/drivers/mtd/nand/spi/winbond.c
+>> @@ -23,6 +23,16 @@
+>>   * "X4" in the core is equivalent to "quad output" in the datasheets.
+>>   */
+>>  
+>> +static SPINAND_OP_VARIANTS(read_cache_octal_variants,
+>> +		SPINAND_PAGE_READ_FROM_CACHE_FAST_1S_1S_1S_OP(0, 1, NULL, 0),
+>> +		SPINAND_PAGE_READ_FROM_CACHE_1S_1S_1S_OP(0, 1, NULL, 0));
+>
+> strange to see octal variants name, but just single SPI ops defined. I
+> see you define octal in the next two patches.
 
-Fixes: b255ce4388e0 ("drm/amdgpu: don't change mode in amdgpu_dm_connector_mode_valid()")
-Closes: https://lore.kernel.org/all/ed09edb167e74167a694f4854102a3de6d2f1433.camel@irl.hu/
-Closes: https://gitlab.freedesktop.org/drm/amd/-/issues/4085
-Signed-off-by: Gergo Koteles <soyer@irl.hu>
----
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+Octal is what supports the chip, even though at this stage it is not
+pictured. I could rename the variant somewhere later, but I don't like
+that as it makes git-blames more difficult and the result is the same
+anyway.
 
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-index bae83a129b5f..0eb25cdcb52f 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-@@ -6500,12 +6500,12 @@ decide_crtc_timing_for_drm_display_mode(struct drm_display_mode *drm_mode,
- 					const struct drm_display_mode *native_mode,
- 					bool scale_enabled)
- {
--	if (scale_enabled) {
--		copy_crtc_timing_for_drm_display_mode(native_mode, drm_mode);
--	} else if (native_mode->clock == drm_mode->clock &&
--			native_mode->htotal == drm_mode->htotal &&
--			native_mode->vtotal == drm_mode->vtotal) {
--		copy_crtc_timing_for_drm_display_mode(native_mode, drm_mode);
-+	if (scale_enabled || (
-+	    native_mode->clock == drm_mode->clock &&
-+	    native_mode->htotal == drm_mode->htotal &&
-+	    native_mode->vtotal == drm_mode->vtotal)) {
-+		if (native_mode->crtc_clock)
-+			copy_crtc_timing_for_drm_display_mode(native_mode, drm_mode);
- 	} else {
- 		/* no scaling nor amdgpu inserted, no need to patch */
- 	}
--- 
-2.49.0
+> How about squashing all 3?
 
+I prefer to keep core changes separated from manufacturer driver changes
+when possible. And for the introduction of the features, it felt correct
+to introduce a first level of feature, show the performance, and then a
+second level, show again the performance improvement. Maybe I can
+re-shuffle the patches to sort core vs. manufacturer changes and squash
+patches 17-19 and 18-20 though.
