@@ -1,52 +1,79 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90DB0205502;
-	Wed,  2 Apr 2025 07:42:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B793D233152
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 07:42:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743579736; cv=none; b=cvZr/BU33X48DHsCex6LOzYTZpwqd4hqg2CZ9p5SaAPMOeLuRCcyRMrhBl8RcS/faYOVIlyEv1QEueuUyAP3RI78Ru29kV3S5RrG9aXHruug2BvwPGrVoIhYam6UsnBcb/SuwAxbiMbRr/yarI2PUdS67Z4nMDUmgcXCgiETuRg=
+	t=1743579759; cv=none; b=ZD45XrQHU83gy4OgF5u6fUoi3EK9//0Bd6anIDzUHoI/XB+Mj5g0jCLDfjuuO7AUQa1Ce0Va2K+bkcWPpHUJQRIFECq5jDRlOQULwOwhoSkmRhbOa4L7rJ7alachY1VkQiXcB85XhrgPxfuCxpRA8weZCGIpEoRQowJQ47VRA7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743579736; c=relaxed/simple;
-	bh=KnKbDJA1kA48viXbmllalTvS/2sX0nni1xgBkhX6wLc=;
+	s=arc-20240116; t=1743579759; c=relaxed/simple;
+	bh=TpRhkR2cFz32n8h3AkysvVUllLEQTqLqKNerftuUn9o=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CB3Zbp6+WvpgjCrEfG2CZRjVMEFR83/E4NrHeDc8tFsEgI4w+/VrYViP46kYYHfF225CaEl5S8Jv6ZPHVpIATK+LvsefREVwse7H0b3fMpAdHN5i6F+JkFINuVRhZ+lKIC36sTrrbO1ek3MAC5US6YYANuZWG00+0BBZhL3zumU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=pfU5ory4; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=P8t/0myE; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=nq63WGEeOSnnO8COp5mR0MHhXaBcFC2Mb3U0x1SsBGjIGaXsYnIeQJQemQqIM/XKzYW0KRfLo7VC1Si6FqV6bVZ/7HzphtM/zhW7h92SlZwKUrsiJDO6/MLOYCqlCxmIMfK+Dc0HkQmsBc6gLVD77r8dLvBdzDX/l8yyF76IYz0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Ks9adzlA; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pfU5ory4";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="P8t/0myE"
-Date: Wed, 2 Apr 2025 09:42:11 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1743579732;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=M7FoU9Vn5b2mEEwL/fDfrwVAr2Y7ezbsNixs5npufvg=;
-	b=pfU5ory4Vq6J/siMf0uJWhDmeZ3kyBAkJWUq8udLJ9qH3frYbj21h5In3ZCtEls0OTYlww
-	7rklEfQaclTpAqzowSyGh19m4iQZ1bzZYhyLnzLgT/VH8ERYbbLFwsErG+7l67ccysZRf7
-	klNNkm4xoTb8+pO6C+EpaZ9qPd7+Uoax5NEXIu3G0MXbqgPyUqPbPYCTD2nrcf3aTnjRFF
-	y5xh9Qrt+3yyQUIB2Emz4b15q/HRmTMUc+76jKmPCd98zjlFW0qaRu5EPF+LDeS47YpGTX
-	ByzEuKSgCXIfI5EOsLws9MI+k11MPtEsN+7zsR/xvLhVX1Dd/8rNrzbySDAPkg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1743579732;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=M7FoU9Vn5b2mEEwL/fDfrwVAr2Y7ezbsNixs5npufvg=;
-	b=P8t/0myEb6v6yO7Nz73hdPoQ2klxdTV2NGQ2gTlMf454meWGTnnKcFZy7jK3sxYoOxtURW
-	Fg+qtoE+S1EiUSCQ==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: rcu@vger.kernel.org, Joel Fernandes <joelagnelf@nvidia.com>,
-	linux-kernel@vger.kernel.org, kernel-team@meta.com,
-	rostedt@goodmis.org
-Subject: Re: [PATCH v2 04/12] rcutorture: Make torture.sh --do-rt use
- CONFIG_PREEMPT_RT
-Message-ID: <20250402074211.tibxg1fJ@linutronix.de>
-References: <eea8d42f-6d2d-485b-9bb9-4eb77a0e1f95@paulmck-laptop>
- <20250331210314.590622-4-paulmck@kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ks9adzlA"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2ff69365e1dso8659784a91.3
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 00:42:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1743579757; x=1744184557; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=rMgOlHQPYSJ8f1ofF0OIpUWs9t8sgZk8UpYIpDkgg7c=;
+        b=Ks9adzlA4ECiWHnCJ2/PfDJeruhKlm7kRtPElAZyF8k8Ng3UEujokGqyqiWp0GxjoW
+         v93HZFkI7lsY7GytGNqtiagQiHjLDZc4fqc6iIC4pBkMG8bYkRZW+IwxUf5zpSYaKOSU
+         97D0d+g6axvpf2X9retsdRqJqLrJwToyiKNKPAdB7eJdqjRHncrQUFIZiOlIxIJOTzRw
+         Jl/aj5w5cCvcp7IQKA/JzGPlwWr20paWUpq8Uj2QlvXQ21qbVyKsSfqfqdVI16g4/Isi
+         RkiFfTHlHP8AWscsOmdq7Gtz7mNrl9r3EWaEbLAWfVhQHiEzikPW5ug8+BxQuV2xcca3
+         qPwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743579757; x=1744184557;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=rMgOlHQPYSJ8f1ofF0OIpUWs9t8sgZk8UpYIpDkgg7c=;
+        b=YDXEADq2tsp9tu7pn/f2UI+k3pyFhupMyX6ydZKnF8FpVvxYfvaB9Y9BScLw6XRAVx
+         pqUBZuDWo7ac8acA5QS4Esjtkz0sTBK1uKSdgWJ8mPWY9ksJyFZVhfQDrYNQ4/jiOWtX
+         XCnfDzJknetcaW/OJcx2ChIQVduIRIwykX9rQOs7dJTuPsnqIL6urMwTcHMoRS8BbCqc
+         zLY1F+F84NOfm1stXOatTmP3m4U8ncd2khqC7mGlq2MH3pqgQtcwV9ayRjI9Vx5pQ2td
+         nP3YT7K5+1u7JV2xxTimUPfgUyM5WzaRdxemQXxekf7Ep9lpNQfNxYpJ4u3i9oczkgOm
+         jtsg==
+X-Forwarded-Encrypted: i=1; AJvYcCWPUKGdKGWKdGUlfAqqNFr1GrCDdHLdztJ/d2wDCfj+XVAQgKl0aphNE92JZkB7CZeR3FTN632vb4wCvi8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxsOKATv2p75VuGbNl/JbuNPHFb5zRmxNB1AEYe64XtBcfflZg0
+	5uFvtc9eAL+C/gHHowsSDDAXA23Ei4nbEHE/oAU7VqAI5Gt7AaY1rPNV9MZvqQ==
+X-Gm-Gg: ASbGnctpYdsXDvJ/3Co2QrAPs974sX/wvqm200KWyI2TFagZU85RRTfJUfI6FL/clAh
+	4AasZBwcdvX+U/F1hOqtC05Z5mQYzogxrpRrog7GRi4RPgfXacyEoAgRzRmxAAugRfRrHO3ait6
+	/TyEhOsdLFrkYNUlPE8lXx5Mj5X1OkYWn6jrmdjFZOCBLJ3Lo1l7fi2pS/MMDppFYVWo54CUTsz
+	zNs052nEROtu0tXV8jj4opi+NbxEkuP49FfEcHchKZUoVEBMNecWeLNh+2JGQSPNOlmccSCd5iL
+	k/hLFofWXi1BgMBGOxZGC4leDKJowCVPlSWuM8+TSWvbqrEnjhU97LxD
+X-Google-Smtp-Source: AGHT+IFYu9EOA8L4Ct9XfnVjkp7ku32+Ki/Do8zouDY8YGf/vNZgqtc/Kys6Zyyr5hh4usOgGKknMQ==
+X-Received: by 2002:a17:90b:1e11:b0:2f7:4cce:ae37 with SMTP id 98e67ed59e1d1-305320b0883mr23177471a91.18.1743579757150;
+        Wed, 02 Apr 2025 00:42:37 -0700 (PDT)
+Received: from thinkpad ([120.56.205.103])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3056f880acasm887941a91.22.2025.04.02.00.42.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Apr 2025 00:42:36 -0700 (PDT)
+Date: Wed, 2 Apr 2025 13:12:30 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Mike Looijmans <mike.looijmans@topic.nl>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, linux-pci@vger.kernel.org, 
+	devicetree@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, 
+	Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Thippeswamy Havalige <thippeswamy.havalige@amd.com>, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/3] dt-bindings: PCI: xilinx-pcie: Add reset-gpios
+ for PERST#
+Message-ID: <nihqpqh42pue4hmvjpbk3bk2ogzxbsvlyexfa5diweajgwynwm@kmi6wa4pjth2>
+References: <20250325071832.21229-1-mike.looijmans@topic.nl>
+ <1b153bce-a66a-45ee-a5c6-963ea6fb1c82.949ef384-8293-46b8-903f-40a477c056ae.7424060c-f116-40af-8bb3-d789f371b07a@emailsignatures365.codetwo.com>
+ <20250325071832.21229-2-mike.looijmans@topic.nl>
+ <20250325-victorious-silky-firefly-2a3cec@krzk-bin>
+ <cad53d39-26f8-49fa-9fb2-94261e74cced@topic.nl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,31 +82,49 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250331210314.590622-4-paulmck@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <cad53d39-26f8-49fa-9fb2-94261e74cced@topic.nl>
 
-On 2025-03-31 14:03:06 [-0700], Paul E. McKenney wrote:
-> The torture.sh --do-rt command-line parameter is intended to mimic -rt
-> kernels.  Now that CONFIG_PREEMPT_RT is upstream, this commit makes this
-> mimicking more precise.
+On Wed, Mar 26, 2025 at 12:57:44PM +0100, Mike Looijmans wrote:
+> On 25-03-2025 09:17, Krzysztof Kozlowski wrote:
+> > On Tue, Mar 25, 2025 at 08:18:26AM +0100, Mike Looijmans wrote:
+> > > Introduce optional `reset-gpios` property to enable GPIO-based control
+> > > of the PCIe root port PERST# signal, as described in pci.txt.
+> > Drop pci.txt, we don't use TXT bindings anymore.
+> > 
+> > > Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
+> > > ---
+> > > 
+> > > Changes in v2:
+> > > Add binding for reset-gpios
+> > So what was in v1? Empty patch?
 > 
-> Note that testing of RCU priority boosting is disabled in favor
-> of forward-progress testing of RCU callbacks.  If it turns out to be
-> possible to make kernels built with CONFIG_PREEMPT_RT=y to tolerate
-> testing of both, both will be enabled.
+> Feedback on v1 was that I had to add bindings documentation...
+> 
+> 
+> > >   .../devicetree/bindings/pci/xlnx,axi-pcie-host.yaml          | 5 +++++
+> > >   1 file changed, 5 insertions(+)
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/pci/xlnx,axi-pcie-host.yaml b/Documentation/devicetree/bindings/pci/xlnx,axi-pcie-host.yaml
+> > > index fb87b960a250..2b0fabdd5e16 100644
+> > > --- a/Documentation/devicetree/bindings/pci/xlnx,axi-pcie-host.yaml
+> > > +++ b/Documentation/devicetree/bindings/pci/xlnx,axi-pcie-host.yaml
+> > > @@ -28,6 +28,9 @@ properties:
+> > >             ranges for the PCI memory regions (I/O space region is not
+> > >             supported by hardware)
+> > > +  reset-gpios:
+> > > +    maxItems: 1
+> > Why do you need it? It's already there, in PCI schemas, isn't it?
+> > 
+> > Why is this patch needed?
+> 
+> Apparently not needed then, sorry for the noise.
+> 
 
-Not sure what you point at here: You can build a PREEMPT_RT kernel and
-RCU boosting is enabled by default. You could disable it if needed.
+That's my bad. I missed that this property is defined in the common schema.
+Another source of confusion if you keep schemas in two different places.
 
-Config wise you set CONFIG_PREEMPT_LAZY=n but in general
-CONFIG_PREEMPT_LAZY=y should be used if possible. The preemption while
-holding a sleeping spinlock is somehow bad for performance if a lot of
-threads ask for it. But then it probably doesn't matter for testing.
+- Mani
 
-You do set rcupdate.rcu_normal and rcupdate.rcu_expedited but RT has
-rcu_normal_after_boot set by default. Not sure if this makes any
-difference but I *think* that normal wins here.
-
-> Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-
-Sebastian
+-- 
+மணிவண்ணன் சதாசிவம்
