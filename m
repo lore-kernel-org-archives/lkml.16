@@ -1,107 +1,165 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 076041A238F;
-	Wed,  2 Apr 2025 17:25:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5159919F419;
+	Wed,  2 Apr 2025 17:25:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743614714; cv=none; b=qxiJXrzQ08wrA3wpUTOec9DhsI3LA/pNvUlFIUZKtfI/y5XW8hkDT+gbGvd3d0WMbnX32SNKjbBzIzyLwq3lG66UiEC61n3G9juKj4cGiwu0vt1QfkGPf+uXOinES1/Wlf79N+4kh3gPSsrNzC+2wdsk7L0SG34qoh0ofZM/s78=
+	t=1743614734; cv=none; b=rioZif87PY8xKJhKbfngjnJlFkcOsJ0agXucAI3QVZImgeq2lTbi+CMMtAOlAiTdT1Zix4GI3jGyYCfPzDRyHdr9YDSSsH7kER+C0TSD/i5b3c4ayMDDUjS1TTZ6NzYxi6tpKLUfiPjsXViY7q+LisHaJSwj6ZVkTqbAf9NpX9s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743614714; c=relaxed/simple;
-	bh=0I4gf4qOzqd/dz3inFosaXWL+uusZbW4kRowm48cadc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QyJD3UnYgtUhl+RKCk4B54LgSueWrDW9TpmZADDQqUSGQ3wFyEDY/l4bs517j2hrI5WLA9vJ08yUqYl44It/clrE+0FWu1gg06vgz5YtQPh9QuSN5kWrcYhaE+gGq0HaQ3vQH0a5xzIf04WgE6oek1x2fxYGA0lHTS0+rM0gJpI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FUtoo639; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743614734; c=relaxed/simple;
+	bh=LfkI45sM3YwHB2enwUiXol6GeCWXUbXnj6SA8oIs1Mw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UCUF45iHzfHUsvcXaktJe/36FD5GS5KKNFm0HGO5TRcaVV4SGFZt0zVfNuFlvYvJMm5l1RaUDI8rdMhPul2hrrzGUQ38ZGlRxHfdofybhmIGBRSqSHmd5ETtP5ax7SyZ7J5MiS1xBjX5xJN9trSnC9MmKXWapRckzDi2o14atiM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=RMl6pwh7; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FUtoo639"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43948021a45so70863735e9.1;
-        Wed, 02 Apr 2025 10:25:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743614711; x=1744219511; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=VFKKbFIB0gA4Lwa0ZRTmZZ0kPFvmHe9B0sAjPCWOPmI=;
-        b=FUtoo639ATBvmct0wFF9rZZ9PUwUeUQEaOQHmXvgBzU+Oth9xtYY9EJiIBMxXNdXBT
-         iovPYiAYS29GY6MeYgFW0rADU8gZ2KHnQb9wvwewHxU4ujLx4zXjF+0HUGNb/VYR3cVl
-         YncOQXrbbmFB2+ulbit0rZX7ziZ4jzYVloMYq0liVA2Q+WYJPxB37KjjIXaOtQlDPDMQ
-         /Nclz8tzIVcywI2ELBfZQoEAkpVQy5slMZqA7w69nZWHfWF7/c5Qm7cXz1wf283WXjhI
-         /eR795DuUH4RDLZSd8C5PPza6ziw2gzidxdjYbxgsTYiR0jd2d+3V3tiNaUMG9/Lwo7X
-         hxoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743614711; x=1744219511;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=VFKKbFIB0gA4Lwa0ZRTmZZ0kPFvmHe9B0sAjPCWOPmI=;
-        b=U2KLxb3dUuMefpZVHEkTvIssqiIntMPqEsii+3zYCTJY6iKEyf4+plXDzpyJZHzm4r
-         O+bPh0L9gAdIEpUjskp6lpPlF9WBn8541Z2YB3gcOVxcCUopWrhV7AcEJGl/xjbHJ72f
-         uq1bpGa3GhN1QGY/Mwyp9cdJ8wj3/aFCHc/Ala4YMGoCDpO5AyuR6fq7k63F/ybG8laB
-         KXSgVZBVXnW3448DIao5/KZMc22FmFmPw7SIntYsIR0td9bLDPUdBsUOMHeqvWBwMHoS
-         gZhrlTXNE6+MarPHTpGSJUEefCypF0dLTPkKtuKSTOgruVj/PfEPml6RbYTQ8D7EJ3Vt
-         AiSw==
-X-Forwarded-Encrypted: i=1; AJvYcCUaCo24DBHxdWG+j77Jkk1zPG/kDj+hmxMEoVzxhY2/+XWt+oOsHdyQfNAe4Jc/WgVa+dnSEPzHAW0PPso=@vger.kernel.org, AJvYcCXHq9oUkDvtfX6NNur1Z1eVQdxJbBuXrpHM0PiLEXj7V37mEXz35Y/oQJE7IcCaEYucVvJVItiOetRK8IBP@vger.kernel.org
-X-Gm-Message-State: AOJu0Yze78N8RGU8UvNuRJBFi94Gp0qkPMYDozHngUr2zqWoEtaKl1cC
-	LFPPdWU8qHEJN6rX8kvLTKnMlNl2sqYvEs/6Dfoc9yKW1GILnDol
-X-Gm-Gg: ASbGnctwtCGovhzOYu2k4Q5GFb5Ce5rJWismIlLSvjFgCb8GxFejDY/65Qz/sfM7nFh
-	jdRODcoML13DdYAjlr0ufMVJsY0SriULdpVFOL/4uLzGgC+U/vRl+BgnEzCkACOEGW8cQgN1ej8
-	SgpEXC782t09JH3HDUqGP8/qLUJaktrBs4xwhUztAoDkZMap9Efdw6cnSaJMectvnHt6NA26U6f
-	EgBNgv5MGFA5VFIw8CdJSlSqqi42o9PSXSCCvpHzPROv6oxxTW3kYtrrmhtquR9+pyNme8y8d34
-	QA0vyOraQCRD2OcVs/Phksb78vLuo0B1t8692BHlHgJGQ80qe7PRVvsy4IA=
-X-Google-Smtp-Source: AGHT+IFoN9OKQZvEAPW0TgURl/4JHMogdjPbJRS9b++IQ3ngDtteLtDe+TYiljYQr3uSBN5W86+M1Q==
-X-Received: by 2002:a5d:64c3:0:b0:38f:2a32:abbb with SMTP id ffacd0b85a97d-39c120cb586mr12147320f8f.4.1743614711132;
-        Wed, 02 Apr 2025 10:25:11 -0700 (PDT)
-Received: from localhost.localdomain ([78.170.183.130])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b79e0basm17854445f8f.63.2025.04.02.10.25.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Apr 2025 10:25:10 -0700 (PDT)
-From: goralbaris <goralbaris@gmail.com>
-To: martin.petersen@oracle.com
-Cc: linux-scsi@vger.kernel.org,
-	target-devel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	skhan@linuxfoundation.org,
-	linux-kernel-mentees@lists.linux.dev,
-	goralbaris <goralbaris@gmail.com>
-Subject: [PATCH] change strncpy to strscpy strncpy is now depricated. It may not NUL-terminate the destination string, resulting in potential memory content exposures, unbounded reads, or crashes. Link: https://github.com/KSPP/linux/issues/90
-Date: Wed,  2 Apr 2025 20:25:04 +0300
-Message-Id: <20250402172504.101576-1-goralbaris@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="RMl6pwh7"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=xjco1YDCuCbUrUVk9eoDRqqrWkwQL1ZF+I2sBO+WXM0=; b=RMl6pwh75Bzrg4n8XUqQumdAhq
+	r7bf/esLZkLWq5tdGo7DCRJjs6s+20yHYnFhS8xLJFGqxl8IN/xYZPnl44qzWgc2FKbixRjYxUb5a
+	S8EUYlG1ovYbe545rofh7kSeu3eZzgH6MFGZOOiTvvYgX4xkuMJSAvk1K4S30TmQSM7o=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1u01q7-007pcw-SY; Wed, 02 Apr 2025 19:25:23 +0200
+Date: Wed, 2 Apr 2025 19:25:23 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Lukasz Majewski <lukma@denx.de>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, davem@davemloft.net,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Richard Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 4/4] net: mtip: The L2 switch driver for imx287
+Message-ID: <33394d5b-9a67-4acc-bdd1-bf43dc3bd8ab@lunn.ch>
+References: <20250331103116.2223899-1-lukma@denx.de>
+ <20250331103116.2223899-5-lukma@denx.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250331103116.2223899-5-lukma@denx.de>
 
-Signed-off-by: goralbaris <goralbaris@gmail.com>
----
- drivers/target/target_core_configfs.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> +struct switch_enet_private *mtip_netdev_get_priv(const struct net_device *ndev)
+> +{
+> +	if (ndev->netdev_ops == &mtip_netdev_ops)
+> +		return netdev_priv(ndev);
+> +
+> +	return NULL;
+> +}
 
-diff --git a/drivers/target/target_core_configfs.c b/drivers/target/target_core_configfs.c
-index c40217f44b1b..5c0b74e76be2 100644
---- a/drivers/target/target_core_configfs.c
-+++ b/drivers/target/target_core_configfs.c
-@@ -143,7 +143,7 @@ static ssize_t target_core_item_dbroot_store(struct config_item *item,
- 	}
- 	filp_close(fp, NULL);
- 
--	strncpy(db_root, db_root_stage, read_bytes);
-+	strscpy(db_root, db_root_stage, read_bytes);
- 	pr_debug("Target_Core_ConfigFS: db_root set to %s\n", db_root);
- 
- 	r = read_bytes;
-@@ -3664,7 +3664,7 @@ static void target_init_dbroot(void)
- 	}
- 	filp_close(fp, NULL);
- 
--	strncpy(db_root, db_root_stage, DB_ROOT_LEN);
-+	strscpy(db_root, db_root_stage, DB_ROOT_LEN);
- 	pr_debug("Target_Core_ConfigFS: db_root set to %s\n", db_root);
- }
- 
--- 
-2.34.1
+> +static bool mtip_port_dev_check(const struct net_device *ndev)
+> +{
+> +	if (!mtip_netdev_get_priv(ndev))
+> +		return false;
+> +
+> +	return true;
+> +}
+> +
 
+Rearranging the code a bit to make my point....
+
+mtip_port_dev_check() tells us if this ndev is one of the ports of
+this switch.
+
+> +/* netdev notifier */
+> +static int mtip_netdevice_event(struct notifier_block *unused,
+> +				unsigned long event, void *ptr)
+> +{
+> +	struct net_device *ndev = netdev_notifier_info_to_dev(ptr);
+> +	struct netdev_notifier_changeupper_info *info;
+> +	int ret = NOTIFY_DONE;
+> +
+> +	if (!mtip_port_dev_check(ndev))
+> +		return NOTIFY_DONE;
+
+We have received a notification about some interface. This filters out
+all but the switches interfaces.
+
+> +
+> +	switch (event) {
+> +	case NETDEV_CHANGEUPPER:
+> +		info = ptr;
+
+CHANGERUPPER is that a netdev has been added or removed from a bridge,
+or some other sort of master device, e.g. a bond.
+
+> +
+> +		if (netif_is_bridge_master(info->upper_dev)) {
+> +			if (info->linking)
+> +				ret = mtip_ndev_port_link(ndev,
+> +							  info->upper_dev);
+
+Call mtip_ndev_port_link() has been added to some bridge.
+
+> +static int mtip_ndev_port_link(struct net_device *ndev,
+> +			       struct net_device *br_ndev)
+> +{
+> +	struct mtip_ndev_priv *priv = netdev_priv(ndev);
+> +	struct switch_enet_private *fep = priv->fep;
+> +
+> +	dev_dbg(&ndev->dev, "%s: ndev: %s br: %s fep: 0x%x\n",
+> +		__func__, ndev->name,  br_ndev->name, (unsigned int)fep);
+> +
+> +	/* Check if MTIP switch is already enabled */
+> +	if (!fep->br_offload) {
+> +		if (!priv->master_dev)
+> +			priv->master_dev = br_ndev;
+> +
+> +		fep->br_offload = 1;
+> +		mtip_switch_dis_port_separation(fep);
+> +		mtip_clear_atable(fep);
+> +	}
+
+So lets consider
+
+ip link add br0 type bridge
+ip link add br1 type bridge
+ip link set dev lan1 master br0
+
+We create two bridges, and add the first port to one of the bridges.
+
+fep->br_offload should be False
+priv->master_dev should be NULL.
+
+So fep->br_offload is set to 1, priv->master_dev is set to br0 and the
+separation between the ports is removed.
+
+It seems like the hardware will now be bridging packets between the
+two interfaces, despite lan2 not being a member of any bridge....
+
+Now
+
+ip link set dev lan2 master br1
+
+I make the second port a member of some other bridge. fep->br_offload
+is True, so nothing happens.
+
+This is why i said this code needs expanding.
+
+If you look at other switch drivers, you will see each port keeps
+track of what bridge it has been joined to. There is then logic which
+iterates over the ports, finds which ports are members of the same
+bridge, and enables packets to flow between those ports.
+
+With only two ports, you can make some simplifications, but you should
+only disable the separation once both ports are the member of the same
+bridge.
+
+	Andrew
