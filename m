@@ -1,301 +1,536 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from DUZPR83CU001.outbound.protection.outlook.com (mail-northeuropeazon11013070.outbound.protection.outlook.com [52.101.67.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58F2223496B
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 10:22:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743589351; cv=fail; b=dxOUBoOcJH61w3orxpSaMzJs8QGlgGqtMIQWMFRhpIoV5a7cfZ8BKfWj3FD9ZEpzDZRjI6Sbj9Oh5byJyAsFnl5vfws0GG7CYP0kyd/1/V9f75tMWLZxzwFCF6TDlZOk0Fol0RNUTbRHGuOwzWfkz9nFAd9n9mowgnR8bmipgIA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743589351; c=relaxed/simple;
-	bh=br4Kxuw2A3kHUPuEIQ+ZKbhacNhHrh2yjJxUsNnyWj8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=nlkuxyJAWsvY1KlVsFjgaDJ2TaB0Jcpn64ibBbUawgKyKF9MNcjTQzsboDBQL4aZctfFHUUqZg4u2ofIGAqRa5hR6xuuF/ZyuI1fSsgZfXFc6AoeFBMJ9olfIg9Z5r3Mmhs7WxI/CHcgSUQciKLmEMKGbQAlH6kDnpZdtdojmc0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=TfL/G8Hf; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=crEYRkMl; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33C4D20DD4B
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 10:24:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.67.70
+ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743589457; cv=fail; b=uMBJHIAH/fV1vxEIH9ntZZ/iWtG0V2a5jpKUMikJXqbVGV8tJFeviTCTVgvz2QLgeFFNgDS1HgIJG/3f08NHc5SHSoLGNlwpksxYzmI5wCpJ9Y1TKs0amp4+Ye93btobrixybpv5u5eO5s9I9DkkkWPc5PpC9eqmXIo8cFygGXU=
+ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743589457; c=relaxed/simple;
+	bh=/VvRZgUqXqz5GL00Aa2UFkTuFOxbgGqPRSSpWqZcesE=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=hGXusthqFzzG8Z3V9/w7Q3NNAD+7F/ffc2bjLS/H7Glwa4BNrrAjqe3HuFoLOhBayEypGTQ/lrBXoAJGmhiuoPuYTSPuAOnHbj2ZcQCFRiIG+F3/eY45sSnnr71UGU9O5qG5YTpqf9F0U7Fp1OIIxk98oXnSlBlNVuHgG+J75Ks=
+ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=gGbx+jRd; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=gGbx+jRd; arc=fail smtp.client-ip=52.101.67.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="TfL/G8Hf";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="crEYRkMl"
-Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5326gKwh013085;
-	Wed, 2 Apr 2025 10:22:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2023-11-20; bh=q5waBX7dzScsYFEOrd
-	fosFLVlL/skSCx59ixsYP1uro=; b=TfL/G8HfUIHRVzXFBOgsY0tfbDl1xB6pLi
-	MW7J3mD/g788MMqQeCHtzjIv3jNl/XCvTxZZm/WDMR/bvFMx8BTvs/sy7HgjA93I
-	XQLRNghHobVyvHwj6QuAWgj30WOl91fYl9H6mKgCWOkP3qM4ptq4K9gqgcYT3HqW
-	MU+EOI92JxmH0QQnSemmZic4P2NVpWqJoxOLlyKm4xYniR4wsllT5NrO9gIWdiCP
-	y/90bp+T+J37CB03HsnWXclxE4sMRViAvKhr18SHJvAjUPQsiAKpelQ4LO/CPV/z
-	FLDKags/yY+/pUgrpIhlbEl4tC6m+RgkkgCvsJd/MmUdAdgsIyHw==
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 45p7sat4fr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 02 Apr 2025 10:22:17 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 5328PdJx033565;
-	Wed, 2 Apr 2025 10:22:16 GMT
-Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2040.outbound.protection.outlook.com [104.47.58.40])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 45p7aanrtb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 02 Apr 2025 10:22:16 +0000
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="gGbx+jRd";
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="gGbx+jRd"
+ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
+ b=NEmryl52MOkN9ZBDk2PTukqpqzN8SfrG0l/TQZtsHZByyD1Vk/8ie5otPsB2vo936hYhm0y+1LIhXyM3Y9vnfhxIHZJ4b+RVsW3sMKuiAC0RucVdHhgxe4pVH4V0LuAresib/XwSOxWWnuRyZaRPwGtetRw+NtyDg/RkiQiaHNScjSi2l/31yXSXAnTn3dIGlOqqBo1mbwLzY736UUhoREn/PNtYIzvYecMBxax9GtAiKaBUGSmScsB00wrFT7RWYncfZk34R7w6uzYGGj9zEPQzL3um5toneRhJMrxal9RMPHfZkOeWDK8VLPlDYD3+7hDpYJt9sKBRL501vSUESw==
+ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ttnXVmqFhmSc5geab/PM0crUrR28BDynNr+OT9kn0vA=;
+ b=rn7lgI1+C5GXFbpv0VBwbgbDNvl5Pvmc4rv8xvSgnVomkMVLV1qxJOrxL/2h9LCm0NbQrOmDYv8OxYlhp5QHc3yaV/xb+5Xf0bO49slAdwa4z2CvrTvqxvXxXTVVs4sIVhaRIn+9ZGFS3J9sqfCFx7Q7Qcr+PTljkrOMFeziYyNNv+7ebIVp6wk17XIRABdzatQGBGTzrqgTtmyrGi6NPiHljuewF199XiYPjxX4KJrnol8Iccgc0iXX9ecD60zKY+BsedVZJOkoCXQ9bUx91/D5h0Zoj4tVfcChVH5NVZ+GQLqfJgnDJARuLeyGq3CEHsBoT06NjcE/TSpog69/rQ==
+ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=fail (sender ip is
+ 4.158.2.129) smtp.rcpttodomain=linaro.org smtp.mailfrom=arm.com; dmarc=pass
+ (p=none sp=none pct=100) action=none header.from=arm.com; dkim=pass
+ (signature was verified) header.d=arm.com; arc=pass (0 oda=1 ltdi=1
+ spf=[1,1,smtp.mailfrom=arm.com] dkim=[1,1,header.d=arm.com]
+ dmarc=[1,1,header.from=arm.com])
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ttnXVmqFhmSc5geab/PM0crUrR28BDynNr+OT9kn0vA=;
+ b=gGbx+jRdZs9MdO8zXKusdC45ywNX1pDCQ82OM91iimJkuRJH8ICUENbQJ8EJR6VPGAaU/pLB2dlhgvHcon5FuBV/wfjwzTNT+2BdKANw8oMg5watCOsPUPUqccs/qfQhuqUwOPpsibAtrgxIP+45lqFYLGAadnM/guq6FN/Tqz4=
+Received: from AS9PR05CA0172.eurprd05.prod.outlook.com (2603:10a6:20b:496::33)
+ by DB9PR08MB7793.eurprd08.prod.outlook.com (2603:10a6:10:398::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Wed, 2 Apr
+ 2025 10:24:05 +0000
+Received: from AMS0EPF000001B2.eurprd05.prod.outlook.com
+ (2603:10a6:20b:496:cafe::9c) by AS9PR05CA0172.outlook.office365.com
+ (2603:10a6:20b:496::33) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8583.42 via Frontend Transport; Wed,
+ 2 Apr 2025 10:24:05 +0000
+X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 4.158.2.129)
+ smtp.mailfrom=arm.com; dkim=pass (signature was verified)
+ header.d=arm.com;dmarc=pass action=none header.from=arm.com;
+Received-SPF: Fail (protection.outlook.com: domain of arm.com does not
+ designate 4.158.2.129 as permitted sender) receiver=protection.outlook.com;
+ client-ip=4.158.2.129; helo=outbound-uk1.az.dlp.m.darktrace.com;
+Received: from outbound-uk1.az.dlp.m.darktrace.com (4.158.2.129) by
+ AMS0EPF000001B2.mail.protection.outlook.com (10.167.16.166) with Microsoft
+ SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8606.22
+ via Frontend Transport; Wed, 2 Apr 2025 10:24:03 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=yxw94gLm+O+1QjyRDIe7cBY94rVK8QUIsUoCQPS9gdXv5rHLuh+HiVzXDKeAcoxcZqwGLOy+MmIg6ft9tslozczT1qtS0I0+T9T8W3a02ptNa2W7rXp8KzXKRIk3wfUsVSmZ/XZ/QtsXuvIt5PUqCmMwhpyZgyGUbnhL4beGyjuFlH6WKutgZPglYTRevsBI5UFlYlzuVhOGJhi1KwLc/sqOT6aLVsNcM7TyDShj99UsAu8lnYkqiPai+dvZUFmXHwK0i0A+AoRqRB93zGtnSQBHXnlcES2b+k5uyi0fzSNNmzhe23fo2NXGwYaCM5nt2gOvbltS5ZL7e/K7iyUGDA==
+ b=T03zjwT78ghYWDVtQxirh9fTxIlLy8d+M67Kn+87q7AWeXagZxLq1YNF0ebbZLjKsjM4j4XbzggbSPn5ntR25yaPp4s7v27lxPwdtj2LG9WIF3901XpEZkBcjbqeVZ+tpII4IL9i2eAO8KhGp7IGHTWxLi5UO9cEWPQW+r8rd9UanHP137MXTKsnPxfV9t23yUoch7OsrVCNqCGWjslyKkwdMUmDkR9Wlr8Zwmix2afgaLPRFKTkTLLtrOAa+R40iHzVmhHMYgvwGyqA0KqLt/Du0iA6LPYWcviLBJjZfc6XQmsE5Emr0L+DUshPCWh5kFhKsnjDx/+Op8EpI6vVrA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=q5waBX7dzScsYFEOrdfosFLVlL/skSCx59ixsYP1uro=;
- b=Q8G2tLZCjmNVxnDtvM94SAa0mLNFEaGw8CzWJtQTb1PtYCcBAXXYOy98xAfGxaow7dZ0bFj5z9oHkan5B56IV6sZqyMSQ1KzoGKFPtIiNa8KAa6n/EXWGtaOd3P2KRIGA8CySUMC6QV58Ttz1w65c8SViXQ1OqPtkDhVg6GDJOH8NutsDmRTtdx05m2pu7Y1BjjrgS8/xAk8z4KlrEsl2Hq9hVWGFOiUmle/yY0hiBziW8HjlUfSrThnOIfgcPwZdae0sXlSC++UxbxSPHe9nvTEbVmIHrF+Zmbmc/d+PlMWKP6NfVW1/Tw3ovjHmYaikbboaFivhq1D00eilic0iQ==
+ bh=ttnXVmqFhmSc5geab/PM0crUrR28BDynNr+OT9kn0vA=;
+ b=iAbwO6xDfnTtvhLjsHqCghFnY5hCSihmrrIUHSDH/I9qOzFoYjqiKmmmqmjgSOiuM3GYOUNDgj8PMx+SJhdNwPMaz1iV/+0vcEKrrtemmkNtxEcPvPLahY8yk6coWqXDjdX0oDLU3QjzxYuLL6/iq6aWZuj4Jx1ET6bi/sdVH2sF4iPZjNaQi+wHsBANRB9lQ7W6bs+oXDgkUSOfhSs1BZze4n8tXe4T18ZbMLzSpoPsVuyg0cm3cCRoAuQIWsuNTEhq8a2aveOY7MPz6hq+5vsilmrgZbnMnfJ+5isIkmuyisOX61owdcPZeLgVSPODjbaQRUxNmPGYCnbvmhCcVw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=q5waBX7dzScsYFEOrdfosFLVlL/skSCx59ixsYP1uro=;
- b=crEYRkMlQ1OnkcScucx9YAO2sQTT/zyzSbCBB4Xc4WDaLkekc/TSSKxX+71IUQUeMXa2Xfg4zEWVaPHDb7XfQZqu1ceuneCl7xDq1vrhYAnpHqpbRYvBztZu1hw0MAo3dl+WZh7LLAV6dbEpbOx46G3RQMPJQFFb54KP+qV8R+4=
-Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
- by SJ0PR10MB4605.namprd10.prod.outlook.com (2603:10b6:a03:2d9::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8583.38; Wed, 2 Apr
- 2025 10:22:14 +0000
-Received: from DM4PR10MB8218.namprd10.prod.outlook.com
- ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
- ([fe80::2650:55cf:2816:5f2%7]) with mapi id 15.20.8583.041; Wed, 2 Apr 2025
- 10:22:14 +0000
-Date: Wed, 2 Apr 2025 11:22:11 +0100
-From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-To: syzbot <syzbot+e3385f43b2897a19be24@syzkaller.appspotmail.com>
-Cc: akpm@linux-foundation.org, jannh@google.com, liam.howlett@oracle.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        syzkaller-bugs@googlegroups.com, vbabka@suse.cz
-Subject: Re: [syzbot] [mm?] general protection fault in sys_mremap
-Message-ID: <b648feeb-d33d-4476-bdac-1d1a28eb72a1@lucifer.local>
-References: <5598853a-8f04-4bcc-8e45-984bd8556372@lucifer.local>
- <67ed0f54.050a0220.297a31.0018.GAE@google.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <67ed0f54.050a0220.297a31.0018.GAE@google.com>
-X-ClientProxiedBy: LO4P123CA0065.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:153::16) To DM4PR10MB8218.namprd10.prod.outlook.com
- (2603:10b6:8:1cc::16)
+ bh=ttnXVmqFhmSc5geab/PM0crUrR28BDynNr+OT9kn0vA=;
+ b=gGbx+jRdZs9MdO8zXKusdC45ywNX1pDCQ82OM91iimJkuRJH8ICUENbQJ8EJR6VPGAaU/pLB2dlhgvHcon5FuBV/wfjwzTNT+2BdKANw8oMg5watCOsPUPUqccs/qfQhuqUwOPpsibAtrgxIP+45lqFYLGAadnM/guq6FN/Tqz4=
+Received: from GV1PR08MB10521.eurprd08.prod.outlook.com
+ (2603:10a6:150:163::20) by AM7PR08MB5511.eurprd08.prod.outlook.com
+ (2603:10a6:20b:10d::12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Wed, 2 Apr
+ 2025 10:23:24 +0000
+Received: from GV1PR08MB10521.eurprd08.prod.outlook.com
+ ([fe80::d430:4ef9:b30b:c739]) by GV1PR08MB10521.eurprd08.prod.outlook.com
+ ([fe80::d430:4ef9:b30b:c739%6]) with mapi id 15.20.8534.043; Wed, 2 Apr 2025
+ 10:23:24 +0000
+From: Yeo Reum Yun <YeoReum.Yun@arm.com>
+To: Leo Yan <Leo.Yan@arm.com>
+CC: Suzuki Poulose <Suzuki.Poulose@arm.com>, "mike.leach@linaro.org"
+	<mike.leach@linaro.org>, "james.clark@linaro.org" <james.clark@linaro.org>,
+	"alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>,
+	"coresight@lists.linaro.org" <coresight@lists.linaro.org>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4] coresight: prevent deactivate active config while
+ enabling the config
+Thread-Topic: [PATCH v4] coresight: prevent deactivate active config while
+ enabling the config
+Thread-Index: AQHbnPFwTPg9POyxs0aDmE6nXWCAq7OD+FGAgAEQy4CACy9xeg==
+Date: Wed, 2 Apr 2025 10:23:24 +0000
+Message-ID:
+ <GV1PR08MB10521AA4C5A9DB3CECDD4E36BFBAF2@GV1PR08MB10521.eurprd08.prod.outlook.com>
+References: <20250324191740.64964-1-yeoreum.yun@arm.com>
+ <20250325151803.GD604566@e132581.arm.com> <Z+OuATAe31GbcKZ2@e129823.arm.com>
+In-Reply-To: <Z+OuATAe31GbcKZ2@e129823.arm.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-GB
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+Authentication-Results-Original: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=arm.com;
+x-ms-traffictypediagnostic:
+	GV1PR08MB10521:EE_|AM7PR08MB5511:EE_|AMS0EPF000001B2:EE_|DB9PR08MB7793:EE_
+X-MS-Office365-Filtering-Correlation-Id: 73a5a6c7-e231-4dcd-d600-08dd71d07dc1
+X-LD-Processed: f34e5979-57d9-4aaa-ad4d-b122a662184d,ExtAddr,ExtAddr
+x-checkrecipientrouted: true
+nodisclaimer: true
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam-Untrusted:
+ BCL:0;ARA:13230040|376014|1800799024|366016|38070700018|7053199007;
+X-Microsoft-Antispam-Message-Info-Original:
+ =?us-ascii?Q?HkcwrR7aByBznKzuc6IDAKADVc2E02Wfg75ypr9rQU6rYCpshv1S++Uppjel?=
+ =?us-ascii?Q?aGkdfO9d9S/agz9/ppMCf/qWrXbzd0U+RxZoStKyzsQSsZTN0zn9hPcUTkTp?=
+ =?us-ascii?Q?zfLCkyZylWEqkP087wmWFy90RuAR7KH4kQnuWgFDXhTLikoOBic7Bnibv4Is?=
+ =?us-ascii?Q?qsARO2Re6PbbLWOpQx3+9x3dW/hCedYC9Fe1lr3PY9gCsCyBy/8YyjygulhG?=
+ =?us-ascii?Q?VFmJbQPwwhWoB9IWdd5Zz/2t3N5EoSkvJwcPhxXNgOMmEujSdBK/pZTPvXa9?=
+ =?us-ascii?Q?9HWBlmzQLTIVDtgTmo7BwHe+IFUXUGRQkRVvrJfhTsMTbLFfheWAMQfEvgkH?=
+ =?us-ascii?Q?g9VchQuOTlLmKG8XViaYVuYj7z719wUTpv8b7KcWWQt1lFHIGyM1XSEgG1Hg?=
+ =?us-ascii?Q?mBmYMWQltEN5yfD0gxZBDM43og+Fxw5eWaD8jsi0JgTR3nv6o3tw3KcNHuHX?=
+ =?us-ascii?Q?SjCdkUStE47lwC1lgiQmX3j41eoRt9KloRGznIOYpnzga4AYRV65b/IWI9k5?=
+ =?us-ascii?Q?Ky5onj0Fhl12E1MP/CbdmtWIXSJy/8VTgKu4wsqsjjYiTfvP05CUyFWON8Xe?=
+ =?us-ascii?Q?R3Okb4cjlsupJ7PxLY3wYFRTsrAFyAGtug7M3aaxg7FwooicaA42q8PIUiDX?=
+ =?us-ascii?Q?SUMfuRXnYw79FAYpB1O1nXnogP6rNsaEmiAfDAjLb4yntoDAolbbUfpAQG5V?=
+ =?us-ascii?Q?8HYWlumuc5VcmiWScJyPJoJU55/MJLDCcBkOsThyO+xzXqQ5fMI7yAvhVHeV?=
+ =?us-ascii?Q?3n7Sx6nEiZpf4OVYf7hXV8EaV3ND4aAAPo6BVOlS8KbUGWF37FHbGTzm1dXb?=
+ =?us-ascii?Q?4LjeirY5WU95sOtRNUbwonR287kurGmPK56dxJT6xcjZRyh7sOZJ4OpOaxqj?=
+ =?us-ascii?Q?zsbKlH4fLeRckMj6ZdKhaDT96CghQKFe5GGE2gvo1J0Udkg9fDophdjZRdHk?=
+ =?us-ascii?Q?o43sPJTy7chsm31mVTsSvOuZwjKoFiGPTyDF7YvXvEKmTujukrfNFkYq6RZu?=
+ =?us-ascii?Q?NNj9Am1Pw+dzXWO+IyVfGu2gVaPMmGQ81lOKQwoKolP41k83cnqa1dEbi5cY?=
+ =?us-ascii?Q?+tKtPzenBHdGlibBp8cDlui6Snrk7HwrvLRoHp3pxLXBodst27IQ3N7ajCu1?=
+ =?us-ascii?Q?qNR+2qAE6CtRJ+zDKWp370mcLfJWaxMhxovfouIBxnDJr1RPyrRdscLDudmE?=
+ =?us-ascii?Q?Oc9yddHh8OKh+SQP4tWbv92GeNRHnxc24gvqUlBB7vuF9MXNs3Uq17rwCFa4?=
+ =?us-ascii?Q?3KbLpGJlqtPxqQkbEqTSAEd7RCUe38Ioi4WYSZvqT6pUvQyqnQ/Nath7uJ05?=
+ =?us-ascii?Q?98YlIgKaaP6/Buu3SF928ABb2f8IYcCqkqr+xVaRbxQHmsABiHOho2NYRwhF?=
+ =?us-ascii?Q?gl+hkZ9gpamd8XbQ87A6eLrG0tW95NwUW/jd2qnnDYIWISi//xV/rqorgocg?=
+ =?us-ascii?Q?Qjgjv+jjgM3Z/GUYjMCCgg77a9j4BDB0?=
+X-Forefront-Antispam-Report-Untrusted:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV1PR08MB10521.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(38070700018)(7053199007);DIR:OUT;SFP:1101;
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR08MB5511
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped:
+ AMS0EPF000001B2.eurprd05.prod.outlook.com
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|SJ0PR10MB4605:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8562a2ba-66ca-4004-ab21-08dd71d03c92
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
+X-MS-Office365-Filtering-Correlation-Id-Prvs:
+	b872dbe1-538c-4d0d-0940-08dd71d06655
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|1800799024|366016|7053199007|13003099007;
+	BCL:0;ARA:13230040|82310400026|36860700013|14060799003|35042699022|1800799024|376014|7053199007;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?gpg6IW8l1ynva/73g3y9iSbAb7kqD+LfYyQRVG5VOVYzrpDqXUkWnXcAfQuT?=
- =?us-ascii?Q?H5Za4ftk7D531NwDdZF3YCx3RdFGrNHlrA7hEnqx6gR4TAZuMOZXak3e46fJ?=
- =?us-ascii?Q?0fJJQaWDPYYxOW8Ty+f3lbwkaGp/uxSYD1iq4xrb8Lw0ufYDa0KY+VBLzK5u?=
- =?us-ascii?Q?tvJV3Il8pXFU5tebL2IjOeyZC8VCdcZO6PFn7dtJHsJgvEOsbvVdTvh+szwY?=
- =?us-ascii?Q?ldvKfRw9xbCT/gKYBqePfqednc6FSxZRS3djGvOHNb+DFMFXq5SIZj5XPORF?=
- =?us-ascii?Q?6CyN155s/uChEySco37t9QwkY3MwN4TTsuGuQ4DJsan+YYssxNUAbw/uBjUa?=
- =?us-ascii?Q?3UeL1r2xh9MzOthy/TR3SYrJS9s7/2ibX14Q7mNsoAi+ka5zrs+cqbBZkKSi?=
- =?us-ascii?Q?yp1j0jLQFjBd7qJvNtdij3qORczLbvPomXbv3VpBZJ0ddWRvX8vBLh11KX+U?=
- =?us-ascii?Q?wcYL+LXWlpKgUBNEyZIfkBn0W6GTbVXlWzd55x7+1qf7ORp78ZX67P3CQZsK?=
- =?us-ascii?Q?SzS2tnCRtjUHUbfsY+C7pa8GJdnWPcoxd8xWel2TrjRUIw5t2vR+ay+P1kn3?=
- =?us-ascii?Q?DArjBgVNi4Zcp3+2Smy+6sIZcK39JeAkye89DOoIuvgTEpDwl94rlh5g1o13?=
- =?us-ascii?Q?mhoYwEuODjaAyc7bGile3/nEF+qhumkUOHqAey9iCKkrRd/9nmOC0IdNmMm5?=
- =?us-ascii?Q?Ig6A7Zw7zJgdI/MEkq9cW2Ghvc08UYPBPadbVQwlKrAAwRjS3sCwijIgMzOk?=
- =?us-ascii?Q?Ja+HaRxVp+hd8o+mH9fdsyWK6rN3MwclNblQPAmkRO276gVPCDnLFjqUbRBq?=
- =?us-ascii?Q?gJOd9cDCtiYRnlose4ESqO/aix/nPpBNUojU0NhcIl9q0mtlyT7H79O0ewy4?=
- =?us-ascii?Q?DiG4pPP+mo40FJ6XIIKsT2ycLqou46ylKRPxeMPl7+0acU+Waer2JMrqroOj?=
- =?us-ascii?Q?Qn/thD+y3Iso7VqQcLr5UQ5/How3FafW68WM8lVI2OOtr54OJBs/ZeW4TuhZ?=
- =?us-ascii?Q?Xx6JFUKfwU1zzpjRXilpkisgtf1mPS+ivEdREq3qdwhhj75F4qPb5SsjPJE+?=
- =?us-ascii?Q?nu8xuJPeVtVmLgR/Q7h2vfOsQOAlViClocP6LhIIpLmpJ+Xa2igA/qWd83Fq?=
- =?us-ascii?Q?p3AdQ7xJMpdAhZ2euE9z8sOZMS00srEKKPlG9Aynr7dn/LFt1wpi+KvFYYEx?=
- =?us-ascii?Q?mdekrHYv8ng9gyjtSpjPee7Ab19e/qThbGWZFba+ALZcz9ZLvrlGKn4+HTD/?=
- =?us-ascii?Q?qlurDwcJqrP640zTHf9H45y7SaR8jqnt5W7WIHEW7dG+YYydZ00HIbHOFLvn?=
- =?us-ascii?Q?NPuhnfkFxWJQ8hYL7WGlSNDM0Rr0XxIh8O7qR3zS7LG2hfTP2H1n2HfFwqVT?=
- =?us-ascii?Q?IEqXs1M=3D?=
+	=?us-ascii?Q?rFPH8+zrKgBYRtkmlHOyXbtv8D/NNKdG4u0t0WC1s7xJ1tvXGpMwMg5uDPl8?=
+ =?us-ascii?Q?aYlptVCkQmP6xsIRfdjCQv7SXXK47bDeJXYuPZvX0iOG/1gaYxkqkzMD2L4X?=
+ =?us-ascii?Q?gUmFBQYq+yit+t8chCeACVnhoh9pUC4QYVQJEGaIffZjbly4iP4k1MOaLrEk?=
+ =?us-ascii?Q?6Nzyf2wg/474bs7BtUceyH3mnWac15N9pHWT7FMn1Q4SJzh/0HHhixOzREMs?=
+ =?us-ascii?Q?tUMLmyrK6EvyJzHRcfy2WPZFlGVZiBP9vVX67YlLHVl0XUnQ46/H5vpQg/CF?=
+ =?us-ascii?Q?Ct3lWQMJExauXH9+AO1xlQWELVFT5mrJqpwNcBZcXI8HzEuCC+Y4+FdF1DJp?=
+ =?us-ascii?Q?Hr59LxcfNCMUo37IVoC85k0KcUseiKLxq4cJkwbMypEOjagwWUxZqlJycFw3?=
+ =?us-ascii?Q?CKJXeUPyt9au0jKaai0+55SVFMmnbVlcCNbHcIvSkuW6Yfhri0exy/AEtNVt?=
+ =?us-ascii?Q?Tht6e9WBd4G8POGiyfK3/A2vyXakpQdwfNgtqW/3hbh0ig+A/R0icDGRFemF?=
+ =?us-ascii?Q?Q5Upky9/pah741MMDXGFTIof6ad0KGqCIgDKn+kaWYbVpYEr6SUKBa4RbTca?=
+ =?us-ascii?Q?xpf1iKXbzr2CS76K4De2EUnaKzj26NPG6w61M26ethNHvgLRj+aFEDvfNmFV?=
+ =?us-ascii?Q?tolBlJjGWXejzFuqxJTHTd0W32DygRSc4wkoR1Vu9zbw+RHs3Urk/wffxHJp?=
+ =?us-ascii?Q?0edot72g5PA8qaIcv8eMUOQ4Df1nSkTPz6MSaSLOsoDEF3UIfDxjHRcB/cva?=
+ =?us-ascii?Q?JrAsOV2qjXD9Gw/MDyrewWaG6NXCE/5+VP+cb1LkMR7ogYQzoU1vaysVv6va?=
+ =?us-ascii?Q?JikvVFQST7xjOHzJ5cbiubVlELGxZ+KG6wtkTS+G7UEFcwEkLensbU9koOe1?=
+ =?us-ascii?Q?CH/ERQYHVbzqA1rwkGWmUyYckR4jqE622L1dpt0B3kFtMGQWYt0UmODasAlL?=
+ =?us-ascii?Q?C07JpFM88BhE2wR0gsij3Y9620//1KS0dOuDlUwWqlTIhaWa8loGiYn+8Z9e?=
+ =?us-ascii?Q?iekU4XetIW0i+wK1olmZJRas7y9pUscAN8/SN4pIXy3CmmCMeRQ9qYIElrx4?=
+ =?us-ascii?Q?QQimEn+5iJiewh6FI6yUWxNPuNqj8qKANYfb2BsUV1dqCpZdUzg/5oYuxw4z?=
+ =?us-ascii?Q?BTwDlALgLdmmubbalCC/ODhuT4ov5cvPgvvR4nGnrOEl0WBj0Kiem2BALXHk?=
+ =?us-ascii?Q?slQKIrcDBzVPJPLr/0NXPd3q6OWB0KlTUsTp5kyrJrY2WBBCoggVykQZhp0P?=
+ =?us-ascii?Q?kMHbrjH5ctFht9mnif51DvFiKndWP9Y4FrUDhDoRHipvJj3PI6e0zdL5EHam?=
+ =?us-ascii?Q?fl3lIct8xFU+M4tMJUXdvrb86jwhDykTz3RnrTQI+Nhz2onyPk8DUq9rUONe?=
+ =?us-ascii?Q?CBRVSyzK1M0Lz11kb6jtuSNLwFOgFnRd61C2VBZCYhQClNWT6YLRb5W7IayL?=
+ =?us-ascii?Q?Ev37V66nmKiKYP+vQF58QxWDH8QpGM44Yk06sB6wGFtwJImv4abzMd107y1c?=
+ =?us-ascii?Q?BeOzCDC7Bl6yZcM=3D?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(7053199007)(13003099007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Pqj5oeSC5OSmbKrUhlTgVQjZUeyWCjSD2EPoCBm3qux3qpaylZ0kxB6I2KM7?=
- =?us-ascii?Q?QlPJd7kR8Je3v6kkHmyl2csSXl+uagC2v5bAzHPEfHnAj8aRvm3Z5ztH6oNC?=
- =?us-ascii?Q?zhF3c/8FV/VI5cBPpKSrfXMZU5039Q8hBvlNSBey79Zp1U+tbm1Popm5AvLP?=
- =?us-ascii?Q?Nb1dYIBEhPDs0uFOMYCcSIOWhRNtrFgp759Fj/tyqYaQ/TENizjy789XCY4K?=
- =?us-ascii?Q?YzIRY2gIN5vwNULh/UqerS21j4Js8amctqoxA7CWm2A9IiATZXy5UYerj6wh?=
- =?us-ascii?Q?2fPo9c8kXl9CAY1a9u/8Wu1azpGRSafDsyDlyu4wwfPisfaPa2Y2zz9kYNmm?=
- =?us-ascii?Q?+HKxV14ccfiDc6GkDcTyj9RIVN4TrbXaxl1SzhbkKenSZxchbAjSL8YMxNz1?=
- =?us-ascii?Q?sHkNZQE4AroTUtjqMlAChSBDNaDJ8ztN382rviwn9jEB7HK4S4DGDYGBSbsy?=
- =?us-ascii?Q?+BgYFOONkSszPnIBgI2qJydlgCsDRhXZlV1xkmBXsrRaav1MrtpGjaO9rASV?=
- =?us-ascii?Q?m8KKlaD8lU3Vs7HNSjRcJRHKk8zp49HIh/UwErRNhlVdfxoahNoXHGF/fOoZ?=
- =?us-ascii?Q?PYucjt+pyG3SunP0EFyKbn2/aXTvtnhyOMF7CTpUfN/yB5WtwYfQ9QZA42mD?=
- =?us-ascii?Q?ZQ8afQiZQxMsUDj/TDiVb6IJ70yUcDGOillNSPAwsNbLE8ittg2K+VNkFST9?=
- =?us-ascii?Q?lhvRQP/RLZzlt3WLjdcsU94fCwCktjkn+QJve5uOunt1K/zNujbteOaY1OkX?=
- =?us-ascii?Q?6VyGFxDLOK1uNZ+elCF2hAodOhRFDRoviVugDpwhCmuP7+ZIxoJ5qx+1b6md?=
- =?us-ascii?Q?lclCj97mDSQKy1/eNiQeq3q/lELisUDWYAyy2iNjQBt4tQb4M/U486SrHOSN?=
- =?us-ascii?Q?8RHY9jVQIn+m83UgXUBlYGttfb6RQy/gCZj337ezjAL+V1qsZd6v7mWk2SU2?=
- =?us-ascii?Q?lS1ylrLqP8JLTdLj95Dk6kh0/IRTqK3M7AQcwwKbx6nG5Fxi2+QTvJH7DZpp?=
- =?us-ascii?Q?nwkeeSr+k57K/z54pbpfFUJUa6Qc3qfY/MoRXlpbYlO8mLZYuXTtim6Z0r4s?=
- =?us-ascii?Q?y80pBqV2dMyK1fkQBak3s4K8cDMGMDZ1x1mQP2nHfBh1q/rPmWL0GX43UhHk?=
- =?us-ascii?Q?75TTZTFw13ZWBOUUoRUPR0+xF4xXe8UlmQiXyZJi4zyNmVtuY7G84YzaPbp1?=
- =?us-ascii?Q?PFC0VL1HTv+xm7Qeo0DC2YK1xp4/yl7cyTC//2KK9H9DpR1cE7FdOU1k7yIL?=
- =?us-ascii?Q?Hb1vQ/n//A495OI6OB60ShBwl4JFBdepZ3Gk/+tqgtUZ/kPDSc7lvNBrYcjJ?=
- =?us-ascii?Q?hIESWZ4tPPtG0qlosBZUY3OvgFIe40AZBiHrNg9qHEe+kLgPHr2pRg/14fLG?=
- =?us-ascii?Q?u48s5TIiNl0E2PbdaFe4lLXp9EwRPA4hL8jwAllyxdEW/jaZ93klc6F0AEYS?=
- =?us-ascii?Q?cwxKcfVWpoJUmLSvqpOOZQDS8miCPqKu7ReuQaZU6ZB2rTKaAalppP6nz5dK?=
- =?us-ascii?Q?CF67aQmGJXrn72UAuQ4aOS1jz0VQyTNRabrh9I1mj4xLqjIbI+WY3t1a7n/9?=
- =?us-ascii?Q?RcqdF/bbMschjm2SKBgf7iaLThiw957epGuVyPqz4/dYKsIjKQDUyjjRbpHp?=
- =?us-ascii?Q?hA=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	icWaJn8LPRgSSFGIo/XOChUuuM0y1lVCCsFmK9iIUx3eCchwM2Wh428xXb7L388jcp+tKBPYZzQFFZPhJ5xQwT2rekZxVJO79b4nbto9cR81DrjVYfGqRyEJ4P3s82OH7rlje4Nmj3z8awDh3dpO/Xg7/9B/3gn7JFXX1xAh2hfwPnNkJNSaDwHFdoxyL7GInF6+KvY1NquHO7vA0acR+CNpXJ75WKR0JoN9cddDHVa2CYDDp1qS/itBmYWv0FArakPVsjoEaakCxKH0qfhXAZMS2ezqgYIK+ojXXJ1LNZrpKAwANr/p7f9kmosHDOhPXaxKC2eEZGLUrhJuoKpmN3i6OcB3jPme7NRDyQfKB0L/ayEGbzD1HavfxxZP7X8qeuZ2QSjgm5lbTXnZJGqTxCe4mUX81u+4kxbWc0NyzyPT5LN4p4VOr0D/WiRRhJweHbuOPeQr6+tdazGoJoQapUK4YPEgs/Q1pNwiNNNr2ibxCJdNHjcOMoUXtaEXh6Za7A5KAQrPx722uzR8YP14zz9LzN/Hi2vbEFOs2yWwE69n+5AJHRRuY8l5PTEYE/zVskGRRVdyFTjUSBrZ3tGMcTgdT7+dzQitTWp9+8qbG7s=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8562a2ba-66ca-4004-ab21-08dd71d03c92
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Apr 2025 10:22:14.1509
+	CIP:4.158.2.129;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:outbound-uk1.az.dlp.m.darktrace.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(14060799003)(35042699022)(1800799024)(376014)(7053199007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Apr 2025 10:24:03.2376
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: MbIjyTZXOvZkKkOYaJYZPq63hRhKCel7IS4CtqGnWfPxWpdeELs8yIHuF2UYFMre1kSbjhwlBAV7Iu8hQeIgkjfqOHWd8gKVforBUS+IZgM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR10MB4605
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-02_04,2025-04-01_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0
- suspectscore=0 mlxscore=0 malwarescore=0 spamscore=0 bulkscore=0
- mlxlogscore=987 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2502280000 definitions=main-2504020065
-X-Proofpoint-GUID: W9M__4x7jD6G-d-78hmrfh_g5oZ0eFUi
-X-Proofpoint-ORIG-GUID: W9M__4x7jD6G-d-78hmrfh_g5oZ0eFUi
+X-MS-Exchange-CrossTenant-Network-Message-Id: 73a5a6c7-e231-4dcd-d600-08dd71d07dc1
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[4.158.2.129];Helo=[outbound-uk1.az.dlp.m.darktrace.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	AMS0EPF000001B2.eurprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR08MB7793
 
-On Wed, Apr 02, 2025 at 03:20:04AM -0700, syzbot wrote:
-> > Hi,
-> >
-> > This is already addressed in
-> > https://lore.kernel.org/linux-mm/b2fb6b9c-376d-4e9b-905e-26d847fd3865@lucifer.local/
-> > this just doesn't exist in -next/upstream yet.
-> >
-> > I _think_ we may be doing a 2nd PR for mm? But if not it'll be fixed in an
-> > early rc.
-> >
-> > To make the point, friendly bot - let's have you try out the fix:
-> >
-> > #syz test: git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git/ mm-stable
->
-> "git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git/" does not look like a valid git repo address.
+Gentle ping in case of forgotten.
 
-#syz test: https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git/ mm-stable
+________________________________________
+From: Yeo Reum Yun
+Sent: 26 March 2025 07:34
+To: Leo Yan
+Cc: Suzuki Poulose; mike.leach@linaro.org; james.clark@linaro.org; alexande=
+r.shishkin@linux.intel.com; coresight@lists.linaro.org; linux-arm-kernel@li=
+sts.infradead.org; linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] coresight: prevent deactivate active config while e=
+nabling the config
+
+Hi Leo,
+
+> > While enable active config via cscfg_csdev_enable_active_config(),
+> > active config could be deactivated via configfs' sysfs interface.
+> > This could make UAF issue in below scenario:
+> >
+> > CPU0                                          CPU1
+> > (sysfs enable)                                load module
+> >                                               cscfg_load_config_sets()
+> >                                               activate config. // sysfs
+> >                                               (sys_active_cnt =3D=3D 1)
+> > ...
+> > cscfg_csdev_enable_active_config()
+> >   lock(csdev->cscfg_csdev_lock)
+> >   // here load config activate by CPU1
+> >   unlock(csdev->cscfg_csdev_lock)
+> >
+> >                                               deactivate config // sysf=
+s
+> >                                               (sys_activec_cnt =3D=3D 0=
+)
+> >                                               cscfg_unload_config_sets(=
+)
+> >                                               unload module
+> >
+> >   // access to config_desc which freed
+> >   // while unloading module.
+> >   cfs_csdev_enable_config
 >
+> I am not sure if this flow can happen.  CoreSight configfs feature is
+> integrated into the CoreSight core layer, and the other CoreSight
+> modules are dependent on it.
+>
+> For example, if the ETM4x module is not removed, the kernel module
+> management will natually prevent the CoreSight core module from being
+> removed.
+>
+
+No. Suppose some user writes custom config module for etm4x using
+cscfg_load_config_sets() cscfg_unload_config_sets() in init/exit of
+module function.
+
+Although it's rare case but it can happen while  above 2 interfaces are
+EXPORTED.
+
+> > To address this, use cscfg_config_desc's active_cnt as a reference coun=
+t
+> > which will be holded when
+> >     - activate the config.
+> >     - enable the activated config.
+> > and put the module reference when config_active_cnt =3D=3D 0.
 > >
-> > Thanks, Lorenzo
+> > Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
+> > ---
+> > Since v3:
+> >   - Remove enable arguments in cscfg_config_desc_get() (from Mike).
+> >   - https://lore.kernel.org/all/20250109171956.3535294-1-yeoreum.yun@ar=
+m.com/
+> > ---
+> >  .../hwtracing/coresight/coresight-config.h    |  2 +-
+> >  .../coresight/coresight-etm4x-core.c          |  3 ++
+> >  .../hwtracing/coresight/coresight-syscfg.c    | 52 +++++++++++++------
+> >  3 files changed, 41 insertions(+), 16 deletions(-)
 > >
-> > On Wed, Apr 02, 2025 at 03:01:20AM -0700, syzbot wrote:
-> >> syzbot has found a reproducer for the following issue on:
-> >>
-> >> HEAD commit:    acc4d5ff0b61 Merge tag 'net-6.15-rc0' of git://git.kernel...
-> >> git tree:       upstream
-> >> console+strace: https://syzkaller.appspot.com/x/log.txt?x=16719404580000
-> >> kernel config:  https://syzkaller.appspot.com/x/.config?x=24f9c4330e7c0609
-> >> dashboard link: https://syzkaller.appspot.com/bug?extid=e3385f43b2897a19be24
-> >> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-> >> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=175a4fb0580000
-> >> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1687b7b0580000
-> >>
-> >> Downloadable assets:
-> >> disk image: https://storage.googleapis.com/syzbot-assets/e4bfa652b34a/disk-acc4d5ff.raw.xz
-> >> vmlinux: https://storage.googleapis.com/syzbot-assets/3d19beb8bb92/vmlinux-acc4d5ff.xz
-> >> kernel image: https://storage.googleapis.com/syzbot-assets/e7298ccc6331/bzImage-acc4d5ff.xz
-> >>
-> >> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> >> Reported-by: syzbot+e3385f43b2897a19be24@syzkaller.appspotmail.com
-> >>
-> >> Oops: general protection fault, probably for non-canonical address 0xdffffc0000000004: 0000 [#1] SMP KASAN PTI
-> >> KASAN: null-ptr-deref in range [0x0000000000000020-0x0000000000000027]
-> >> CPU: 0 UID: 0 PID: 5840 Comm: syz-executor163 Not tainted 6.14.0-syzkaller-12456-gacc4d5ff0b61 #0 PREEMPT(full)
-> >> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-> >> RIP: 0010:vrm_uncharge mm/mremap.c:964 [inline]
-> >> RIP: 0010:expand_vma_in_place mm/mremap.c:1566 [inline]
-> >> RIP: 0010:expand_vma mm/mremap.c:1621 [inline]
-> >> RIP: 0010:mremap_at mm/mremap.c:1682 [inline]
-> >> RIP: 0010:do_mremap mm/mremap.c:1727 [inline]
-> >> RIP: 0010:__do_sys_mremap mm/mremap.c:1784 [inline]
-> >> RIP: 0010:__se_sys_mremap+0x25fa/0x2c00 mm/mremap.c:1752
-> >> Code: c0 0f 85 0e 05 00 00 0f b6 9c 24 20 03 00 00 31 ff 89 de e8 d8 0d ab ff 85 db 0f 84 7b 01 00 00 e8 cb 0a ab ff e9 9e 00 00 00 <80> 78 04 00 74 0a bf 20 00 00 00 e8 26 2f 15 00 4c 8b 34 25 20 00
-> >> RSP: 0018:ffffc900040cfb40 EFLAGS: 00010246
-> >> RAX: dffffc0000000000 RBX: 0000000000000000 RCX: 1ffff92000819fca
-> >> RDX: 0000000000000000 RSI: 0000000010000000 RDI: 0000000000000000
-> >> RBP: ffffc900040cff00 R08: ffffffff821d1f24 R09: ffffffff8c271397
-> >> R10: 0000000000000004 R11: ffff888034658000 R12: 0000200000000000
-> >> R13: ffff888077fac000 R14: 00000000180000fa R15: ffffc900040cfcd0
-> >> FS:  0000555571cf3380(0000) GS:ffff888124f99000(0000) knlGS:0000000000000000
-> >> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> >> CR2: 00002000000000c0 CR3: 00000000316de000 CR4: 00000000003526f0
-> >> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> >> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> >> Call Trace:
-> >>  <TASK>
-> >>  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-> >>  do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
-> >>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-> >> RIP: 0033:0x7f4480ba0369
-> >> Code: 48 83 c4 28 c3 e8 37 17 00 00 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-> >> RSP: 002b:00007fff6c642778 EFLAGS: 00000246 ORIG_RAX: 0000000000000019
-> >> RAX: ffffffffffffffda RBX: 0000200000000000 RCX: 00007f4480ba0369
-> >> RDX: 0000000000004000 RSI: 0000000000001000 RDI: 0000200000000000
-> >> RBP: 0000200000001000 R08: 0000200000001000 R09: 0000000000000000
-> >> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000001
-> >> R13: 00007fff6c642958 R14: 0000000000000001 R15: 0000000000000001
-> >>  </TASK>
-> >> Modules linked in:
-> >> ---[ end trace 0000000000000000 ]---
-> >> RIP: 0010:vrm_uncharge mm/mremap.c:964 [inline]
-> >> RIP: 0010:expand_vma_in_place mm/mremap.c:1566 [inline]
-> >> RIP: 0010:expand_vma mm/mremap.c:1621 [inline]
-> >> RIP: 0010:mremap_at mm/mremap.c:1682 [inline]
-> >> RIP: 0010:do_mremap mm/mremap.c:1727 [inline]
-> >> RIP: 0010:__do_sys_mremap mm/mremap.c:1784 [inline]
-> >> RIP: 0010:__se_sys_mremap+0x25fa/0x2c00 mm/mremap.c:1752
-> >> Code: c0 0f 85 0e 05 00 00 0f b6 9c 24 20 03 00 00 31 ff 89 de e8 d8 0d ab ff 85 db 0f 84 7b 01 00 00 e8 cb 0a ab ff e9 9e 00 00 00 <80> 78 04 00 74 0a bf 20 00 00 00 e8 26 2f 15 00 4c 8b 34 25 20 00
-> >> RSP: 0018:ffffc900040cfb40 EFLAGS: 00010246
-> >> RAX: dffffc0000000000 RBX: 0000000000000000 RCX: 1ffff92000819fca
-> >> RDX: 0000000000000000 RSI: 0000000010000000 RDI: 0000000000000000
-> >> RBP: ffffc900040cff00 R08: ffffffff821d1f24 R09: ffffffff8c271397
-> >> R10: 0000000000000004 R11: ffff888034658000 R12: 0000200000000000
-> >> R13: ffff888077fac000 R14: 00000000180000fa R15: ffffc900040cfcd0
-> >> FS:  0000555571cf3380(0000) GS:ffff888124f99000(0000) knlGS:0000000000000000
-> >> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> >> CR2: 00002000000000c0 CR3: 00000000316de000 CR4: 00000000003526f0
-> >> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> >> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> >> ----------------
-> >> Code disassembly (best guess), 1 bytes skipped:
-> >>    0:	0f 85 0e 05 00 00    	jne    0x514
-> >>    6:	0f b6 9c 24 20 03 00 	movzbl 0x320(%rsp),%ebx
-> >>    d:	00
-> >>    e:	31 ff                	xor    %edi,%edi
-> >>   10:	89 de                	mov    %ebx,%esi
-> >>   12:	e8 d8 0d ab ff       	call   0xffab0def
-> >>   17:	85 db                	test   %ebx,%ebx
-> >>   19:	0f 84 7b 01 00 00    	je     0x19a
-> >>   1f:	e8 cb 0a ab ff       	call   0xffab0aef
-> >>   24:	e9 9e 00 00 00       	jmp    0xc7
-> >> * 29:	80 78 04 00          	cmpb   $0x0,0x4(%rax) <-- trapping instruction
-> >>   2d:	74 0a                	je     0x39
-> >>   2f:	bf 20 00 00 00       	mov    $0x20,%edi
-> >>   34:	e8 26 2f 15 00       	call   0x152f5f
-> >>   39:	4c                   	rex.WR
-> >>   3a:	8b                   	.byte 0x8b
-> >>   3b:	34 25                	xor    $0x25,%al
-> >>   3d:	20 00                	and    %al,(%rax)
-> >>
-> >>
-> >> ---
-> >> If you want syzbot to run the reproducer, reply with:
-> >> #syz test: git://repo/address.git branch-or-commit-hash
-> >> If you attach or paste a git patch, syzbot will apply it before testing.
+> > diff --git a/drivers/hwtracing/coresight/coresight-config.h b/drivers/h=
+wtracing/coresight/coresight-config.h
+> > index b9ebc9fcfb7f..90fd937d3bd8 100644
+> > --- a/drivers/hwtracing/coresight/coresight-config.h
+> > +++ b/drivers/hwtracing/coresight/coresight-config.h
+> > @@ -228,7 +228,7 @@ struct cscfg_feature_csdev {
+> >   * @feats_csdev:references to the device features to enable.
+> >   */
+> >  struct cscfg_config_csdev {
+> > -   const struct cscfg_config_desc *config_desc;
+> > +   struct cscfg_config_desc *config_desc;
+> >     struct coresight_device *csdev;
+> >     bool enabled;
+> >     struct list_head node;
+> > diff --git a/drivers/hwtracing/coresight/coresight-etm4x-core.c b/drive=
+rs/hwtracing/coresight/coresight-etm4x-core.c
+> > index e5972f16abff..ef96028fa56b 100644
+> > --- a/drivers/hwtracing/coresight/coresight-etm4x-core.c
+> > +++ b/drivers/hwtracing/coresight/coresight-etm4x-core.c
+> > @@ -1020,6 +1020,9 @@ static void etm4_disable_sysfs(struct coresight_d=
+evice *csdev)
+> >     smp_call_function_single(drvdata->cpu, etm4_disable_hw, drvdata, 1)=
+;
+> >
+> >     raw_spin_unlock(&drvdata->spinlock);
+> > +
+> > +   cscfg_csdev_disable_active_config(csdev);
+> > +
+>
+> In general, we need to split changes into several patches if each
+> addresses a different issue.  From my understanding, the change above is
+> to fix missing to disable config when disable Sysfs mode.
+>
+> If so, could we use a seperate patch for this change?
+>
+
+It's not a differnt issue. Without this line, the active count wouldn't
+decrese and it raise another issue -- unloadable moudle for active_cnt :(
+So I think it should be included in this patch.
+
+> >     cpus_read_unlock();
+> >
+> >     /*
+> > diff --git a/drivers/hwtracing/coresight/coresight-syscfg.c b/drivers/h=
+wtracing/coresight/coresight-syscfg.c
+> > index a70c1454b410..6d8c212ad434 100644
+> > --- a/drivers/hwtracing/coresight/coresight-syscfg.c
+> > +++ b/drivers/hwtracing/coresight/coresight-syscfg.c
+> > @@ -391,14 +391,17 @@ static void cscfg_owner_put(struct cscfg_load_own=
+er_info *owner_info)
+> >  static void cscfg_remove_owned_csdev_configs(struct coresight_device *=
+csdev, void *load_owner)
+> >  {
+> >     struct cscfg_config_csdev *config_csdev, *tmp;
+> > +   unsigned long flags;
+> >
+> >     if (list_empty(&csdev->config_csdev_list))
+> >             return;
+> >
+> > +   raw_spin_lock_irqsave(&csdev->cscfg_csdev_lock, flags);
+>
+> I think we should use spinlock to guard the condition checking
+> list_empty().
+>
+> Here the race condition is the 'config_csdev_list' list and
+> configurations on the list.  For atomicity, we should use lock to
+> protect any operations on the list (read, add, delete, etc).
+
+Interesting... Would you let me know which race it is?
+here to check list_empty(), it already guarded with "cscfg_mutex".
+However list_del() is special case because iterating config_csdev_list
+can be done without cscfg_mutex -- see
+cscfg_csdev_enable_active_config().
+This gurad with spinlock purpose to guard race unloading and
+get the config in cscfg_csdev_enable_active_config()
+(Please see my response below...).
+
+the emptiness of config_csdev_list is guarded with cscfg_mutex.
+therefore, It seems enough to guard iterating part with spinlock :)
+
+> A side topic, as here it adds locks for protecting 'config_csdev_list',
+> I am wandering why we do not do the same thing for
+> 'feature_csdev_list' (See cscfg_remove_owned_csdev_features() and
+> cscfg_get_feat_csdev()).
+
+In case of feature, It's okay since it couldn't be accessed when it
+gets failed to get related config.
+
+When we see cscfg_csdev_enable_active_config(), the config could be
+accessed without cscfg_mutex lock. so the config need to be guarded with
+spin_lock otherwise it could be acquired while unload module
+(after get active_cnt in search logic cscfg_csdev_enable_active_config()
+and other running unloading process)
+
+But feature list is depends on config, If config is safe from
+load/unload, this is not an issue so we don't need it.
+
+Thanks for your review!
+
+> >     list_for_each_entry_safe(config_csdev, tmp, &csdev->config_csdev_li=
+st, node) {
+> >             if (config_csdev->config_desc->load_owner =3D=3D load_owner=
+)
+> >                     list_del(&config_csdev->node);
+> >     }
+> > +   raw_spin_unlock_irqrestore(&csdev->cscfg_csdev_lock, flags);
+> >  }
+> >
+> >  static void cscfg_remove_owned_csdev_features(struct coresight_device =
+*csdev, void *load_owner)
+> > @@ -867,6 +870,25 @@ void cscfg_csdev_reset_feats(struct coresight_devi=
+ce *csdev)
+> >  }
+> >  EXPORT_SYMBOL_GPL(cscfg_csdev_reset_feats);
+> >
+> > +static bool cscfg_config_desc_get(struct cscfg_config_desc *config_des=
+c)
+> > +{
+> > +   if (!atomic_fetch_inc(&config_desc->active_cnt)) {
+> > +           /* must ensure that config cannot be unloaded in use */
+> > +           if (unlikely(cscfg_owner_get(config_desc->load_owner))) {
+> > +                   atomic_dec(&config_desc->active_cnt);
+> > +                   return false;
+> > +           }
+> > +   }
+> > +
+> > +   return true;
+> > +}
+> > +
+> > +static void cscfg_config_desc_put(struct cscfg_config_desc *config_des=
+c)
+> > +{
+> > +   if (!atomic_dec_return(&config_desc->active_cnt))
+> > +           cscfg_owner_put(config_desc->load_owner);
+> > +}
+> > +
+> >  /*
+> >   * This activate configuration for either perf or sysfs. Perf can have=
+ multiple
+> >   * active configs, selected per event, sysfs is limited to one.
+> > @@ -890,22 +912,17 @@ static int _cscfg_activate_config(unsigned long c=
+fg_hash)
+> >                     if (config_desc->available =3D=3D false)
+> >                             return -EBUSY;
+> >
+> > -                   /* must ensure that config cannot be unloaded in us=
+e */
+> > -                   err =3D cscfg_owner_get(config_desc->load_owner);
+> > -                   if (err)
+> > +                   if (!cscfg_config_desc_get(config_desc)) {
+> > +                           err =3D -EINVAL;
+> >                             break;
+> > +                   }
+> > +
+> >                     /*
+> >                      * increment the global active count - control chan=
+ges to
+> >                      * active configurations
+> >                      */
+> >                     atomic_inc(&cscfg_mgr->sys_active_cnt);
+>
+> Seems to me, it is more reasonable to use 'sys_active_cnt' to acquire
+> the module reference instead of 'config_desc->active_cnt'.  The reason
+> is 'sys_active_cnt' is a global counter.
+>
+> > -                   /*
+> > -                    * mark the descriptor as active so enable config o=
+n a
+> > -                    * device instance will use it
+> > -                    */
+> > -                   atomic_inc(&config_desc->active_cnt);
+> > -
+> >                     err =3D 0;
+> >                     dev_dbg(cscfg_device(), "Activate config %s.\n", co=
+nfig_desc->name);
+> >                     break;
+> > @@ -920,9 +937,8 @@ static void _cscfg_deactivate_config(unsigned long =
+cfg_hash)
+> >
+> >     list_for_each_entry(config_desc, &cscfg_mgr->config_desc_list, item=
+) {
+> >             if ((unsigned long)config_desc->event_ea->var =3D=3D cfg_ha=
+sh) {
+> > -                   atomic_dec(&config_desc->active_cnt);
+> >                     atomic_dec(&cscfg_mgr->sys_active_cnt);
+> > -                   cscfg_owner_put(config_desc->load_owner);
+> > +                   cscfg_config_desc_put(config_desc);
+> >                     dev_dbg(cscfg_device(), "Deactivate config %s.\n", =
+config_desc->name);
+> >                     break;
+> >             }
+> > @@ -1047,7 +1063,7 @@ int cscfg_csdev_enable_active_config(struct cores=
+ight_device *csdev,
+> >                                  unsigned long cfg_hash, int preset)
+> >  {
+> >     struct cscfg_config_csdev *config_csdev_active =3D NULL, *config_cs=
+dev_item;
+> > -   const struct cscfg_config_desc *config_desc;
+> > +   struct cscfg_config_desc *config_desc;
+> >     unsigned long flags;
+> >     int err =3D 0;
+> >
+> > @@ -1062,8 +1078,8 @@ int cscfg_csdev_enable_active_config(struct cores=
+ight_device *csdev,
+> >     raw_spin_lock_irqsave(&csdev->cscfg_csdev_lock, flags);
+> >     list_for_each_entry(config_csdev_item, &csdev->config_csdev_list, n=
+ode) {
+> >             config_desc =3D config_csdev_item->config_desc;
+> > -           if ((atomic_read(&config_desc->active_cnt)) &&
+> > -               ((unsigned long)config_desc->event_ea->var =3D=3D cfg_h=
+ash)) {
+> > +           if (((unsigned long)config_desc->event_ea->var =3D=3D cfg_h=
+ash) &&
+> > +                           cscfg_config_desc_get(config_desc)) {
+>
+> This seems to me not right.  Why a config descriptor is get in multiple
+> places?  One time getting a config descriptor is in
+> _cscfg_activate_config(), another is at here.
+>
+> To be honest, I am not clear what is the difference between 'activate'
+> config and 'enable active' config.  Literally, I think we only need to
+> acquire the config at its creating phase (maybe match to activate
+> config?).
+>
+> >                     config_csdev_active =3D config_csdev_item;
+> >                     csdev->active_cscfg_ctxt =3D (void *)config_csdev_a=
+ctive;
+> >                     break;
+> > @@ -1097,7 +1113,11 @@ int cscfg_csdev_enable_active_config(struct core=
+sight_device *csdev,
+> >                             err =3D -EBUSY;
+> >                     raw_spin_unlock_irqrestore(&csdev->cscfg_csdev_lock=
+, flags);
+> >             }
+> > +
+> > +           if (err)
+> > +                   cscfg_config_desc_put(config_desc);
+> >     }
+> > +
+> >     return err;
+> >  }
+> >  EXPORT_SYMBOL_GPL(cscfg_csdev_enable_active_config);
+> > @@ -1136,8 +1156,10 @@ void cscfg_csdev_disable_active_config(struct co=
+resight_device *csdev)
+> >     raw_spin_unlock_irqrestore(&csdev->cscfg_csdev_lock, flags);
+> >
+> >     /* true if there was an enabled active config */
+> > -   if (config_csdev)
+> > +   if (config_csdev) {
+> >             cscfg_csdev_disable_config(config_csdev);
+> > +           cscfg_config_desc_put(config_csdev->config_desc);
+> > +   }
+> >  }
+> >  EXPORT_SYMBOL_GPL(cscfg_csdev_disable_active_config);
+> >
+> > --
+> > LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
+> >
