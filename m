@@ -1,98 +1,132 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42F581EE7C2;
-	Wed,  2 Apr 2025 19:56:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4386A2AF14;
+	Wed,  2 Apr 2025 19:57:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743623806; cv=none; b=n3R5DvvwSBLuggHcQAtpeK1Rw4UJU0kzyWnTklIJtQVgnZB+1cT/ND4ea6wBP2dDGMKSxesxAof31dH45mLuY5OHYNNt3UhTfQfLX565t8p628aMDAr0Sq2I66fS4gX28gZF/rcKWoulxcqaQgJb90e+44V8RIDZQaEJDG2jp+8=
+	t=1743623840; cv=none; b=ecMmrHnNr5N7v8A6QjwlBv3Bj6z7xmKfTrWj47TnC1+mooF7hMEtDMb/+T5bBQv4FyF4l7dG+bmlkrkVjtsrz8oCz0TTABd1/2fXFS++Xwjs/9XdS5skG+qk3hn/MLPb6EHRHfSxO3rAwAInmIHWeiZHX6jWmpGD7fU5AlNBPFI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743623806; c=relaxed/simple;
-	bh=momLojQ/gzc39QlT8N9SPT3tOf55duwwyeqwYHFwRTo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f03Ft6XsPDUPMGtkzHnQKYkRf9qRel4219RMqaeutv1YbskFB/OwhbhqTwlyrA4uD495w05OqK9q3xkrwDrZu3a37IUSJ8DDJKKm3h9WarYx2vUCRGE1WDF14hpwjBVRb3EMKKpO6XQLdz55R4aikuiScRDHoCLmVtPtXO7/Xl4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GGH2pdGw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743623840; c=relaxed/simple;
+	bh=itiUqbRyWCcAqB/OnCayoEuY0XPsKzVujyc14WRDtCI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ns9EkqAnyptamqmHudrvQW/04otHRaz6ssZX1yS2xALQrDYaehL0fZWBUYz2r/Y00baDkx+Zw2kJDhvYhkoGet5Pk1LoUqUIN7wB1+LIdyhhb2BRfVNLdWeEy6yjOhrHI8jAFsG4U9qjRJmfUW0mV9x7K51ZcMj6dbMcTh/tMb0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K8VLjEnw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GGH2pdGw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B2E9C4CEDD;
-	Wed,  2 Apr 2025 19:56:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K8VLjEnw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 236DCC4CEDD;
+	Wed,  2 Apr 2025 19:57:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743623805;
-	bh=momLojQ/gzc39QlT8N9SPT3tOf55duwwyeqwYHFwRTo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GGH2pdGw+qt5CjQfKwckzDLxz3QSD1BrPZM5yFvAG/jd5CQ0etct53jalcbtZu8gE
-	 2pmqCgK7SIfozXsqJdjDZWMCh0kE4bxYNxhRw+vSIBrE7IiHSuMhHwRdayB2ANOwCi
-	 klyAhtvvV8JoxXr7obTjCiYpb1mX3CnfHwLeysxbx+EU6wbuh3Zy6fplNLvm1yDTuS
-	 nwdiITgXjaqhsnAOLDYYs7RzMSWuLxMGXkbiEX86iLQ2JD8IyyratdvskOWHVPKx7N
-	 oT0sRUlaFkI5HcR2JWFqQwIJQ/czFfay/cy2V1yK8oZ0W5/zX7nBe8R4eyrMLdYFN/
-	 GFCtSfGxNXYfQ==
-Date: Wed, 2 Apr 2025 20:56:39 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Markus Elfring <Markus.Elfring@web.de>
-Cc: Henry Martin <bsdhenrymartin@gmail.com>, linux-sound@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>,
-	Amadeusz =?utf-8?B?U8WCYXdpxYRza2k=?= <amadeuszx.slawinski@linux.intel.com>,
-	Bard Liao <yung-chuan.liao@linux.intel.com>,
-	Cezary Rojewski <cezary.rojewski@intel.com>,
-	Ethan Carter Edwards <ethan@ethancedwards.com>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Jerome Brunet <jbrunet@baylibre.com>,
-	Julia Lawall <julia.lawall@inria.fr>,
-	Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-	Peter Ujfalusi <peter.ujfalusi@linux.intel.com>,
-	Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,
-	Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-	Takashi Iwai <tiwai@suse.com>
-Subject: Re: [PATCH v2] ASoC: Intel: avs: Fix null-ptr-deref in
- avs_component_probe()
-Message-ID: <6ad612ff-4bef-46ac-89c9-c97bfe8fa617@sirena.org.uk>
-References: <20250402141411.44972-1-bsdhenrymartin@gmail.com>
- <4481af92-9573-4f40-ad65-a2d6b3ca2e0e@web.de>
+	s=k20201202; t=1743623839;
+	bh=itiUqbRyWCcAqB/OnCayoEuY0XPsKzVujyc14WRDtCI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=K8VLjEnwftFWTAHCuMGzWuovnB4vJxe3UjPp/W0qkkm4eoIMG87dM8yQ+qCuanGz/
+	 JPaqs/0kHfy11K0zVShA7cW5up7W/8WkuDqarU+kHJ2kJsoCiuz4g67aPXnwwpOQeO
+	 aPf7CB4z6lRDMVBUtaUmmSR4rwA/klecI3rViPDn2hLyUrW7Rhv4aKNsH7LQNOkOUg
+	 sldtow17O6dYCBzcaNe1uNP/poAxtnh5RHEB5QEmq456nGTN/56o+ZPosLX3HqY3cz
+	 pTYf91o1IYqfbAftCN5UcqZAiHFGyga97T/qnPIQj9VCG6dyptpRI5S/M8Ji9niUKd
+	 Ma+ngw7MSVg6A==
+Message-ID: <45eeecc0-cc97-4d87-b650-f45c3aa99a67@kernel.org>
+Date: Wed, 2 Apr 2025 14:57:18 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="mhPyN08Z6mviwWrV"
-Content-Disposition: inline
-In-Reply-To: <4481af92-9573-4f40-ad65-a2d6b3ca2e0e@web.de>
-X-Cookie: To stay youthful, stay useful.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] cpufreq/amd-pstate: Prefix setup messages with FW_BUG
+To: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>,
+ "Gautham R . Shenoy" <gautham.shenoy@amd.com>,
+ Perry Yuan <perry.yuan@amd.com>
+Cc: "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)"
+ <linux-kernel@vger.kernel.org>,
+ "open list:CPU FREQUENCY SCALING FRAMEWORK" <linux-pm@vger.kernel.org>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ Paul Menzel <pmenzel@molgen.mpg.de>
+References: <20250320214132.664522-1-superm1@kernel.org>
+ <e75a4f57-37ac-4c43-8385-8b476d3b94db@amd.com>
+Content-Language: en-US
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <e75a4f57-37ac-4c43-8385-8b476d3b94db@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
+On 3/28/2025 2:20 AM, Dhananjay Ugwekar wrote:
+> On 3/21/2025 3:11 AM, Mario Limonciello wrote:
+>> From: Mario Limonciello <mario.limonciello@amd.com>
+>>
+>> To make it clearer that amd-pstate failing to setup is a problem
+>> with the firmware, prefix several messages with FW_BUG.
+>>
+>> Suggested-by: Paul Menzel <pmenzel@molgen.mpg.de>
+>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+>> ---
+>>   drivers/cpufreq/amd-pstate.c | 6 +++---
+>>   1 file changed, 3 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/cpufreq/amd-pstate.c b/drivers/cpufreq/amd-pstate.c
+>> index 024d33d5e3670..0a9d6fe426d1c 100644
+>> --- a/drivers/cpufreq/amd-pstate.c
+>> +++ b/drivers/cpufreq/amd-pstate.c
+>> @@ -931,13 +931,13 @@ static int amd_pstate_init_freq(struct amd_cpudata *cpudata)
+>>   	 * Check _CPC in ACPI table objects if any values are incorrect
+>>   	 */
+>>   	if (min_freq <= 0 || max_freq <= 0 || nominal_freq <= 0 || min_freq > max_freq) {
+>> -		pr_err("min_freq(%d) or max_freq(%d) or nominal_freq(%d) value is incorrect\n",
+>> +		pr_err(FW_BUG "min_freq(%d) or max_freq(%d) or nominal_freq(%d) value is incorrect\n",
+>>   			min_freq, max_freq, nominal_freq);
+>>   		return -EINVAL;
+>>   	}
+>>   
+>>   	if (lowest_nonlinear_freq <= min_freq || lowest_nonlinear_freq > nominal_freq) {
+>> -		pr_err("lowest_nonlinear_freq(%d) value is out of range [min_freq(%d), nominal_freq(%d)]\n",
+>> +		pr_err(FW_BUG "lowest_nonlinear_freq(%d) value is out of range [min_freq(%d), nominal_freq(%d)]\n",
+>>   			lowest_nonlinear_freq, min_freq, nominal_freq);
+>>   		return -EINVAL;
+>>   	}
+>> @@ -1505,7 +1505,7 @@ static int amd_pstate_epp_cpu_init(struct cpufreq_policy *policy)
+>>   	return 0;
+>>   
+>>   free_cpudata1:
+>> -	pr_warn("Failed to initialize CPU %d: %d\n", policy->cpu, ret);
+>> +	pr_warn(FW_BUG "Failed to initialize CPU %d: %d\n", policy->cpu, ret);
+> 
+> Just thinking are we sure that we land here only through a firmware bug?
+> 
+> If not, we should probably use FW_WARN ?,
+> or
+> Should we add to the error message the specific firmware issue that might cause
+> each of the functions to fail (e.g. amd_pstate_init_perf(), amd_pstate_init_freq(),
+> etc).
 
---mhPyN08Z6mviwWrV
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I looked at the call paths and I'm not convinced that they will all be 
+firmware bugs.  In any case I want to know whenever there is a failure 
+here so we can evaluate if it's a firmware bug or a software bug.
 
-On Wed, Apr 02, 2025 at 09:18:27PM +0200, Markus Elfring wrote:
-> > devm_kasprintf() returns NULL when memory allocation fails. Currently,
-> =E2=80=A6
->                                                        failed?
->=20
-> Can a summary phrase like =E2=80=9CPrevent null pointer dereference
-> in avs_component_probe()=E2=80=9D a bit nicer?
+If it's a software bug we'll obviously work on it, and if it's a 
+firmware bug do our best to notify the firmware developer.
 
-Feel free to ignore Markus, he has a long history of sending
-unhelpful review comments and continues to ignore repeated requests
-to stop.
+So I will abandon this patch, thanks for the great feedback.
 
---mhPyN08Z6mviwWrV
-Content-Type: application/pgp-signature; name="signature.asc"
+> 
+> Comments for the macros, for reference,
+> 
+>   * FW_BUG
+>   * Add this to a message where you are sure the firmware is buggy or behaves
+>   * really stupid or out of spec. Be aware that the responsible BIOS developer
+>   * should be able to fix this issue or at least get a concrete idea of the
+>   * problem by reading your message without the need of looking at the kernel
+>   * code.
+>   *
+>   * Use it for definite and high priority BIOS bugs.
+>   *
+>   * FW_WARN
+>   * Use it for not that clear (e.g. could the kernel messed up things already?)
+>   * and medium priority BIOS bugs.
+> 
+>>   	kfree(cpudata);
+>>   	return ret;
+>>   }
+> 
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmftlnYACgkQJNaLcl1U
-h9DIKAf/c4tEasLOGCJe5UTVxS97dZyN7F3MzxUyFCcK75lfYxxvbbViJEh748CU
-Jd52IHBUFIssi6h+TQvPfBBsPOILCvE2y/TySbsEMShLgOBd2VEawBtN7l/Ee1aZ
-C6sj4VFARsVtseRYQEMeL1+ZW9yS6rtGWDasYA50yBU8qX3s5CHeK1amN/cP9TQI
-0nRzKCYA3G8YDut7MxsFQhX72l+P6WeV91SRGqpzisIcGJebTHogjB7BI+b1AHsv
-M7nP9tF3vPY8IxfpHEYpaWaieWeGp233MJaYmmCFbUN40dz+9i/F3iVXBJVfUkzm
-kVielGvenoFK5CHEwSCtJCvExWXDGQ==
-=MqqG
------END PGP SIGNATURE-----
-
---mhPyN08Z6mviwWrV--
