@@ -1,163 +1,151 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7776439FD9
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 15:44:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B389434545;
+	Wed,  2 Apr 2025 15:46:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743608667; cv=none; b=tyJBGwhBonTcZoP30ITfhgFstX4u7a1SHnt1138Ng5KM78yhsChlNaj/87MKZdBHP4cidwjHzv0GCAyXwz8KGw4btzWCULAzCrrnuQfBV2cxXfN4DyIRl6lSvESJ0U/88wvds+BqR0Xb7Z+yroIVBq7BQ3tsHGTF73Hnaw6MH5I=
+	t=1743608786; cv=none; b=dpZQbMxXHNnLSH7TMWABbuxn5x6828IyjvmGBxhqa72uPkx06zfiCjiRxa6nud7xN5lprfPKPOF1AVr8amy5fx6qzSJMi9y9oSa9M5pznpQBGJVwTsGUnUfWb0ymDyzfPtzRsEmiZTzENMnKCPhLWxvqWRTtPGvxnqvhbIL1IIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743608667; c=relaxed/simple;
-	bh=a+jzbY8HG5fDsHMKsIn9+P1jaVjiV3EsjcvsWqE6Nnc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=rrC2S2wQM4t2yfGwVvdiVqvxhllO2h8LlnrWmUZXdvD3GrtnE5N16bZrtysKO10h79HaKjqiDWVmzKB1dp30JhXROEiI8qAv+QUqIllcLKP7AYfkWSK1+TdA4azWaeie+H8nfcSdT/VVrWs23u9UBq5GbcL8kTDBsFfHFT6iGLU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca; spf=none smtp.mailfrom=ndufresne.ca; dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b=qHVtGo2N; arc=none smtp.client-ip=209.85.160.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ndufresne.ca
+	s=arc-20240116; t=1743608786; c=relaxed/simple;
+	bh=/CczPmzk4htdqxZ07yuqfEg7FuP+4yK+x6bwN6hz4pQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Nb1qOLGSCb0nE3yNfBcMsOHZ+Fb+tDzQbtDzpdcoWJ9Ljee51t9jwFTM6//M2eUP9gF2QZ6PmzvnjtHs/lRViYmcHq+poyPPtsKeg5e+UieQK9X1ZzDYjhF7L50WxCKQ3H67ndOCMV1rDWlYUz+OltFI5UiLio6ks/gaC3UJu3Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PKgAC7xz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b="qHVtGo2N"
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-476977848c4so67528671cf.1
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 08:44:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ndufresne-ca.20230601.gappssmtp.com; s=20230601; t=1743608665; x=1744213465; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=a+jzbY8HG5fDsHMKsIn9+P1jaVjiV3EsjcvsWqE6Nnc=;
-        b=qHVtGo2NJqhEI+lMJQEj+aNJf/XSiU4XeXq+EgzDWCFHrzXinI7wgzYwHSx7Ql5vr6
-         kfgT/7JP3MpvwkNe+JPsw8UiIDjrgAPdJ2nYB2hzQllbdTzgqFWN6z03JWy/LpFWYmux
-         GEesm5o6YjeIgl1x9s9TpHY163ENwP2Inf59cJJfZSJyi5erRkTalKKrsR1Bn8SRIy0m
-         0LOX6smHR/QSghc2vHNLMPW4nMPaeiusN1keQldS1U5lI/DaVI+iWXBp1p7rsLxqenud
-         B2P1ogIfJnXCOiN4ewtyaLE7PecFvv05yX6F8B2dOaRrkhk727BfnI74wVj+YI6XggwS
-         U56g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743608665; x=1744213465;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=a+jzbY8HG5fDsHMKsIn9+P1jaVjiV3EsjcvsWqE6Nnc=;
-        b=Cb8uMQKUKrEpuvDv+h9r6tA9GcrugjQ4kZe6Hs0vXMUC3Nxy1a+aDu0sB0LPyRjRf0
-         nChSAPjDcL4kff83wRxlNj4LVH7GDorEn3SMZVw2MVvTtwhdc6fNgl8D/OpqI7rHKddV
-         t9qLJpp/tIJjonMv+tkPo6VXTZ4YH/PW4VBjv7EdhVaTwxl04m3knrJDid71EvySsLOi
-         fkLNicmVriSMN3iwsG1QmM65wArPBORR2dt7eOglHSTe0ryXfN5ImN7pCnVJn0qzx9fw
-         3QaUubb5HaatJHjgyrGPymyxDC7vrMzqsjGAAWkiAOauimZyO9qp+tCvlgmjsT1V10Ka
-         0w5w==
-X-Forwarded-Encrypted: i=1; AJvYcCW69LLfyZestZ2xocw5C/C2lg/KaqVJRaFHmkw6VJdePdQEjZCn/3Z1v1+bUFWMI5IJqMXhMtLykS/5O1A=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxpt1lsHepNi5YGftSrtftaSUKVZlptFiIPyfBY/0/65v7d73B8
-	E6oqoTlqRQsVD+o8x7QlpDJjtJ3NOiyhE5zD6SYnxIgA9XC1AWqtTvxN5VyIPv0=
-X-Gm-Gg: ASbGncsJOGzlyKoBCoHQkuF3bkhqMNCABqlc4+Ek9LbjIn7r//FmJt+Ot9d7OsdqWgN
-	wiidSa8GoHXuXIOtyvZQhIN7aFgLQmGNHlChGcN6dWjM/Fm6xOMjo1jXTL985Ldlji1HNuNnwY4
-	SR9vyax8Jese1sZXKji+OL8vylqOYWt1NV3rHjPrA7jW0RVDqopKLqHbbYtokjBHlND8zNBvNYn
-	ADA7pQ6hJPbR4rl3jlV/EbtOdMnfATyyWgRZzMwMwvpyP6Akjc546waWHa0MWEehFZ4x022/X7f
-	SbaT2u4eCUPBxCSVjb7X0o/xdvVkgj8d8XLyuIGqifoxw65y3Q==
-X-Google-Smtp-Source: AGHT+IEc+BZhUW+/6NwnShxb96e828exddiZl8c+iUpF+yyVytLTniyS9bVUuXTF/eUSpSRYwnxUUQ==
-X-Received: by 2002:a05:622a:1820:b0:476:980c:109f with SMTP id d75a77b69052e-477e4b69912mr233296321cf.19.1743608665282;
-        Wed, 02 Apr 2025 08:44:25 -0700 (PDT)
-Received: from ?IPv6:2606:6d00:11:e976::5ac? ([2606:6d00:11:e976::5ac])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-47782a4a62fsm81446731cf.25.2025.04.02.08.44.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Apr 2025 08:44:24 -0700 (PDT)
-Message-ID: <9f22aaa07b1fa11e7e1dee35598bafe5a3461ea7.camel@ndufresne.ca>
-Subject: Re: [RESEND PATCH v0 0/3] Performance improvement of decoder
-From: Nicolas Dufresne <nicolas@ndufresne.ca>
-To: "Jackson.lee" <jackson.lee@chipsnmedia.com>, mchehab@kernel.org, 
-	hverkuil-cisco@xs4all.nl, sebastian.fricke@collabora.com, 
-	bob.beckett@collabora.com, dafna.hirschfeld@collabora.com
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	lafley.kim@chipsnmedia.com, b-brnich@ti.com, hverkuil@xs4all.nl, 
-	nas.chung@chipsnmedia.com
-Date: Wed, 02 Apr 2025 11:44:23 -0400
-In-Reply-To: <20250319035034.111-1-jackson.lee@chipsnmedia.com>
-References: <20250319035034.111-1-jackson.lee@chipsnmedia.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.0 (3.56.0-1.fc42) 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PKgAC7xz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FFCCC4CEDD;
+	Wed,  2 Apr 2025 15:46:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743608786;
+	bh=/CczPmzk4htdqxZ07yuqfEg7FuP+4yK+x6bwN6hz4pQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=PKgAC7xzHY6k0QUaYYV14uhfv11ft7ietVtaCorow10JUU5ky5dfrX5EyIzq3qIOm
+	 r/dx7Rf+Zep8zNfB4yByLENkqIJxUQrct9BlVyeBX29GVjUVOwRibMBfGZkILznzMo
+	 F2NDpPi2LYLBstUr8n5DrG2V219tqZpuhTVCRSf/UJ77jb+n5ZyBD4siokZ8Zxcx4X
+	 eB642WT8HevtYVDrPZEywlJsQJwoFn+uyQ43fcxxQm4oWdf0cO5PTmbLG0St1D7iIG
+	 UsQxm8QJ0i/8ID0DT1+5saKK1qHIT+0BDoeelgehULxvJzwylh9kibuLSREvmIB1nq
+	 t3t9soj4px+vw==
+From: Christian Brauner <brauner@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Christian Brauner <brauner@kernel.org>,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [GIT PULL] vfs fixes
+Date: Wed,  2 Apr 2025 17:46:12 +0200
+Message-ID: <20250402-vfs-fixes-a079545d90a9@brauner>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3346; i=brauner@kernel.org; h=from:subject:message-id; bh=/CczPmzk4htdqxZ07yuqfEg7FuP+4yK+x6bwN6hz4pQ=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaS/jT6aycWne/++nVHrzxLV1ONXDtlu9Zm1+1OF4v88d bZ1m6NtOkpZGMS4GGTFFFkc2k3C5ZbzVGw2ytSAmcPKBDKEgYtTACby+CrD/6DDm/PnSEx6dvFj 3FyhnKenbvnf37bF4YFESjYze9skHSFGhg6j4N1fb/Q+i2u/VNfCe4xhQs+kcmfphdpqu45sPf1 1PTcA
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 
-Hi,
+Hey Linus,
 
-Le mercredi 19 mars 2025 =C3=A0 12:50 +0900, Jackson.lee a =C3=A9crit=C2=A0=
-:
-> From: Jackson Lee <jackson.lee@chipsnmedia.com>
->=20
-> The wave5 codec driver is a stateful encoder/decoder.
-> The following patches is for improving decoder performance.=20
->=20
-> v4l2-compliance results:
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->=20
-> v4l2-compliance 1.28.1-5233, 64 bits, 64-bit time_t
->=20
-> Buffer ioctls:
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 warn: v4l2-test-buffers.cpp(693): VIDIOC_CREATE_BUFS not=
- supported
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 warn: v4l2-test-buffers.cpp(693): VIDIOC_CREATE_BUFS not=
- supported
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 test VIDIOC_REQBUFS/CREATE_BUF=
-S/QUERYBUF: OK
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 test CREATE_BUFS maximum buffe=
-rs: OK
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 test VIDIOC_EXPBUF: OK
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 test Requests: OK (Not Support=
-ed)
->=20
-> Total for wave5-dec device /dev/video0: 46, Succeeded: 46, Failed: 0, War=
-nings: 2=20
-> Total for wave5-enc device /dev/video1: 46, Succeeded: 46, Failed: 0, War=
-nings: 0
->=20
-> Fluster test results:
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->=20
-> Running test suite JCT-VC-HEVC_V1 with decoder GStreamer-H.265-V4L2-Gst1.=
-0 Using 1 parallel job(s)
-> Ran 133/147 tests successfully=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 in 68.517 secs
->=20
-> (1 test fails because of not supporting to parse multi frames, 1 test fai=
-ls because of a missing frame and slight corruption,
-> =C2=A02 tests fail because of sizes which are incompatible with the IP, 1=
-1 tests fail because of unsupported 10 bit format)
->=20
-> Running test suite JVT-AVC_V1 with decoder GStreamer-H.264-V4L2-Gst1.0 Us=
-ing 1 parallel job(s)
-> Ran 78/135 tests successfully=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 in 35.015 secs
+/* Summary */
 
-I'd be more confortable if I could get test report using 2 or 3
-parallel instances.
+This contains various fixes for this cycle:
 
-Also, have you conducted manual "seek" tests, and stress tested the
-dynamic resolution changes ? We don't have automated tests for these
-anywhere yet.
+- Add a new maintainer for configfs.
 
-Nicolas
+- Fix exportfs module description.
 
->=20
-> (57 fail because the hardware is unable to decode=C2=A0 MBAFF / FMO / Fie=
-ld / Extended profile streams.)
->=20
->=20
-> Jackson Lee (3):
-> =C2=A0 media: chips-media: wave5: Improve performance of decoder
-> =C2=A0 media: chips-media: wave5: Reduce high CPU load
-> =C2=A0 media: chips-media: wave5: Fix Null reference while testing fluste=
-r
->=20
-> =C2=A0.../platform/chips-media/wave5/wave5-helper.c |=C2=A0 10 +-
-> =C2=A0.../chips-media/wave5/wave5-vpu-dec.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 | 361 ++++++++++--------
-> =C2=A0.../chips-media/wave5/wave5-vpu-enc.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 8 +-
-> =C2=A0.../platform/chips-media/wave5/wave5-vpu.c=C2=A0=C2=A0=C2=A0 |=C2=
-=A0 69 +++-
-> =C2=A0.../platform/chips-media/wave5/wave5-vpuapi.c |=C2=A0 25 +-
-> =C2=A0.../platform/chips-media/wave5/wave5-vpuapi.h |=C2=A0 12 +-
-> =C2=A06 files changed, 307 insertions(+), 178 deletions(-)
+- Place flexible array memeber at the end of an internal struct in the
+  mount code.
+
+- Add new maintainer for netfslib as Jeff Layton is stepping down as
+  current co-maintainer.
+
+- Fix error handling in cachefiles_get_directory().
+
+- Cleanup do_notify_pidfd().
+
+- Fix syscall number definitions in pidfd selftests.
+
+- Fix racy usage of fs_struct->in exec during multi-threaded exec.
+
+- Ensure correct exit code is reported when pidfs_exit() is called from
+  release_task() for a delayed thread-group leader exit.
+
+- Fix conflicting iomap flag definitions.
+
+/* Testing */
+
+gcc version 14.2.0 (Debian 14.2.0-6)
+Debian clang version 16.0.6 (27+b1)
+
+No build failures or warnings were observed.
+
+/* Conflicts */
+
+Merge conflicts with mainline
+=============================
+
+No known conflicts.
+
+Merge conflicts with other trees
+================================
+
+No known conflicts.
+
+The following changes since commit 2df0c02dab829dd89360d98a8a1abaa026ef5798:
+
+  x86 boot build: make git ignore stale 'tools' directory (2025-03-24 23:09:14 -0700)
+
+are available in the Git repository at:
+
+  git@gitolite.kernel.org:pub/scm/linux/kernel/git/vfs/vfs tags/vfs-6.15-rc1.fixes
+
+for you to fetch changes up to 923936efeb74b3f42e5ad283a0b9110bda102601:
+
+  iomap: Fix conflicting values of iomap flags (2025-03-28 10:45:00 +0100)
+
+Please consider pulling these changes from the signed vfs-6.15-rc1.fixes tag.
+
+Thanks!
+Christian
+
+----------------------------------------------------------------
+vfs-6.15-rc1.fixes
+
+----------------------------------------------------------------
+Andreas Hindborg (1):
+      MAINTAINERS: configfs: add Andreas Hindborg as maintainer
+
+Arnd Bergmann (1):
+      exportfs: add module description
+
+Gustavo A. R. Silva (1):
+      fs: namespace: Avoid -Wflex-array-member-not-at-end warning
+
+Jeff Layton (1):
+      netfs: add Paulo as maintainer and remove myself as Reviewer
+
+Marc Dionne (1):
+      cachefiles: Fix oops in vfs_mkdir from cachefiles_get_directory
+
+Oleg Nesterov (4):
+      pidfs: cleanup the usage of do_notify_pidfd()
+      selftests/pidfd: fixes syscall number defines
+      exec: fix the racy usage of fs_struct->in_exec
+      exit: fix the usage of delay_group_leader->exit_code in do_notify_parent() and pidfs_exit()
+
+Ritesh Harjani (IBM) (1):
+      iomap: Fix conflicting values of iomap flags
+
+ CREDITS                                           |  4 ++++
+ MAINTAINERS                                       |  7 ++++---
+ fs/cachefiles/namei.c                             |  7 ++++---
+ fs/exec.c                                         | 15 +++++++++------
+ fs/exportfs/expfs.c                               |  1 +
+ fs/namespace.c                                    |  4 +++-
+ include/linux/iomap.h                             | 15 +++++++--------
+ kernel/exit.c                                     | 11 +++++------
+ kernel/signal.c                                   |  8 +++-----
+ tools/testing/selftests/clone3/clone3_selftests.h |  2 +-
+ tools/testing/selftests/pidfd/pidfd.h             |  8 ++++----
+ 11 files changed, 45 insertions(+), 37 deletions(-)
