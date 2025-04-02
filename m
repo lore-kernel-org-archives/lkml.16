@@ -1,717 +1,435 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from AS8PR03CU001.outbound.protection.outlook.com (mail-westeuropeazon11012037.outbound.protection.outlook.com [52.101.71.37])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CED33231A41;
-	Wed,  2 Apr 2025 06:12:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743574367; cv=none; b=KbPGwB/znFfWLyv7d1YwSeCFYlkipW/3Fj18+RdKXJNFGrIohHWyqvsfU/UHrV2qmv0WsbGD5PBOS8ckdxZmaobFKd0WrF+FQX0cAO55PlvjKYZrCoWKMQS326crmIut0rrGsGdWVqM4ufAcedSiViEnvBkZ3w8Khu76jnC4TWE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743574367; c=relaxed/simple;
-	bh=rVktkbhZ73qxhxvZdI9XYvy0vnRRMgoRCdhnvs8LSms=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=YVqfHk9ml6y0ygVk17osK/p5t/eh5nrsJo7BgJZLsF2Gdz+rdSc45eCUh2peczDfOFdWM6pLYgyB/8PeoCBUhA7ebmQeZvOw8GTKuB/82kT4JqVZEKCdrtqHuhkC//juXmDNLA15CqDYJlugNDYAHX8T+J+0Fi8ZGV7QuWGMtX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K//bFwEo; arc=none smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9018230BE3;
+	Wed,  2 Apr 2025 06:14:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.71.37
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743574472; cv=fail; b=s2cs5AproV+CTw1d3gzErcCQzL6IcGvjHhei6IFOWCGKSzHLaQsj8TVOlAhyqiQ/NWilB9zyFgqbCAuZPqFEodqcx3FUqEnCOvVq32Be1oaOa9gQ6m4q9lPfeLJyOq75O8CKBmD4tLKN4WBp4aScdmC52mjjWRApcXY9ZTOZLQU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743574472; c=relaxed/simple;
+	bh=8qGSR+1rHOSjas8Np/8cWpYsMTTFNQr7W/nn0H+4f5w=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=cxxAiHgeh/p7YudVwSG+ADC3Yg9ctuSpXjECWHbjJ5pa6S0QvjleiLcGjhFL8ZsbLE4i7UtIlbvO2+r+e7tFrwyEWSUE3e0tLa0Z1puiK2tvR17MKgxBrj+yN4d3n00n+s+IS1JiZi9cFFKJb7G7+qn56bzkz0Z/y0M73LRzROw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=ehodUl6y; arc=fail smtp.client-ip=52.101.71.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K//bFwEo"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-30db1bc464dso55765531fa.0;
-        Tue, 01 Apr 2025 23:12:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743574363; x=1744179163; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=cV5ZHUICuxYNvHb937fMWFTBE1PnQy7W5glkS0eNxdA=;
-        b=K//bFwEovblM5WZFfDLQcX+p7nvkc8vaI8KbHhCkTDt3jG33UUcIBxyOzPjA0nebEp
-         rAq883z8j78ec6CuMVwRikVtoArehm+eGzRbKPYL4GWqdm3foAqT6lFgueeeMT0QeFL+
-         pqJc3wYd5YrHIMc0ZUrQDLgttfK5qP4I/hhdMdP9/C+8y9E3S5Q5OGDqz5ufSddEoFdV
-         8afwuIrudJTXNyHVniDnMBCtmFzP7eVlrc5S8bYeovE+Mq1fPRPW2L/xY3OVQXUa0/bR
-         wFapQPhxBW30UVRXSPoW6G28WNgyWWXRA1j4dxuwJ773Fu+Ny5JWgogX7he1R44mj4GT
-         P+NA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743574363; x=1744179163;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cV5ZHUICuxYNvHb937fMWFTBE1PnQy7W5glkS0eNxdA=;
-        b=lwHLk2E79HVGyndpi2V7Hv9v4drkBRWnAVPQbdqxBgtLR/mE4ZmsFrFYGBfx0N9CI3
-         uh54q5rzWCd83lN4W/aBMA+MfO7H7FmuCAxXlU8e35AoHiQgBfx8calJkrb7sknG9H44
-         7Ikc0q3lUpM9gGJlFQxnkCOpC3u+nAQsdGYUp4S1QNyIFoIhyvU0RDnWyLpHg+w1giOE
-         6rHonPZx84s2jEYkTfMpw30cexegPQEyUoy50Euw343e+o1XbffTgRntB0jJtB2EVakr
-         C0HawSQthplCbnSyHRYu6Z5dmf8fm7ZHB3QDrmwe0OmifmJyw8Tr2ShXHIexNW81/MGE
-         q0XA==
-X-Forwarded-Encrypted: i=1; AJvYcCUqpYuoMtQMimdofSQTaB2StCDTzOthdwbB3SLbm/R7c5uhq4dthXMdjCA+uz5aY7xR5Lfb0fP3THv4rziV@vger.kernel.org, AJvYcCWAN3+G2jmCLQX8EAlz2xRhblg+jecg3MnVJp1tjYwqly1WlN2gSCOedoHem4ou6OQ/EIHBGC2BOiAI@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw4ZJbbthgsd3ep6/SD5jRRgs/YdNaFHC5ulHKv+/yScwiTiasQ
-	lv2HB3MrLg69fYT7lpXVnR9M3WFowBWv4AzJLHwZDkJuPqdo2Mf6QCaC/HR4Qgo=
-X-Gm-Gg: ASbGnctXu1t8xsupWTfMEjaX+IpQFowrLbqhNCWI3Tt6pDLl8ZDCOvy2M0U/whOzAEK
-	srZt293gN9hJG/l/hN/8jhIC4C6pov5w1LnSlJvdg405gqyMpkIu4yS4hXWh0uNuxEG7NdYvV0y
-	mpW8tpe6beCIkrMRK32IZKi7l/ZLHmmePRR3s8C1OQpPoptj4n9Ph3QkctDI1wZTEa/dT18lmSP
-	9q12Zsy+szhmi3hzwoSUfvmOR6aAJVxBm8VXyva6vFQ1KebGLmY0JW/c2k2Fz4k9cj7pPebEkBT
-	ax4G7fZu6Am8fYmMDt/1SA2VNjk/JC93uN6q4htzXFR5JrmXGz27DR9j/Kl2lYHBqPJ6Te310oX
-	sbLyedKk9Gt5s
-X-Google-Smtp-Source: AGHT+IHUj/Ty9pge8mfDlUOKnw6ytZHiet7VpbtZXmZmXojKYPFOv1Gq3ZqDeYGdlJUdlZePoxZnjQ==
-X-Received: by 2002:a05:651c:220d:b0:30b:b9e4:13c5 with SMTP id 38308e7fff4ca-30ef90ccfd1mr3413681fa.4.1743574362795;
-        Tue, 01 Apr 2025 23:12:42 -0700 (PDT)
-Received: from [192.168.1.11] (83-233-6-197.cust.bredband2.com. [83.233.6.197])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30dd2aa9118sm19336801fa.14.2025.04.01.23.12.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Apr 2025 23:12:41 -0700 (PDT)
-From: Marcus Folkesson <marcus.folkesson@gmail.com>
-Date: Wed, 02 Apr 2025 08:12:11 +0200
-Subject: [PATCH 2/3] drm/st7571-i2c: add support for Sitronix ST7571 LCD
- controller
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="ehodUl6y"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=nGF06cNH2Sj8lVG+08s8+Kzm9TTcXsvrrPTdr6SyQeP8boFIDuGsiCE7Q9z7+dfVx2MvbQzFznZQ05SbKUFu8Kp6QXmWNmdWRi9V/EiDxrPEBZGKmPh3UEqwMqYgZ7cPEaiGF3g8wFc2ZK2yofxlwvYAtd55meLpDghNW1yDoveScXjH8/nXj/FijeXZgPQYqafFyXVFuBvmdTpI9ajHvE4wDBXGKDSCDSZisoqY0jZLL6WnvEeCWy546CLF+WANZmbUW2VJ01xX8+AuW+3VvBEY7rvbaDSll7fsOOmuK5hMJHhU4BEIPXi6PrJDVkThDXoGT59pyHnswYtnoeXUqQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=5N6+7mBQcUxHEViJ8CdAkiyA2RrWZsoMi+JC+QVpmKk=;
+ b=nVgBCauAau17+3xWS1Aw4JEE98e2eOloDI6lVbDvDciF8HDzismfSptYgmLLcrWvZZhsZ+pcPcfukgrui5gPw95cqNm2ZJMb1/79gmklK3J43oIzE8CRUANG2YZYSsDOrpY2OkvWG8bMQTU9+ZdNyozIt45XhB8gQfGjv8cpUWrDTHAyxXNJmoiJiktEnGKC6Y6cwkWMB3nRU4J6Lyscjgu4UQrDnAB/n1U5SFHe7YVUughiMr9dGtStUlgLMEpVXJBfZkwYzy9rlikmYhM4ZUJ7MfdoWu2u9TqqjqADOvi9gxMQ3nYeddq7GfsF2q6tJug4lehNO1MUlogDxlbF8w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5N6+7mBQcUxHEViJ8CdAkiyA2RrWZsoMi+JC+QVpmKk=;
+ b=ehodUl6y8ZjkUsJez2+WYzatOFfq4gUtZKBz5AufaYsHzPNRw2WuR+vJdWeGqdYXna6AGxqSDOvjh0T1PYf9To4+SSwY/DSfllkftpkrDmywM5cC2vLy3yOKLuvYt5klWPIkZIm9cycrkbYzBs8CL6hV96GUJsMK+0vF+NIAY3OLJhY1ssDo25BDFLG7CyAkHK4WJaSPdwOck+kErpVzlrQwEIFfEVK1s0SG/U3+fNZ6AcmIM6rRJ3G8Zji4c6Xb4cYnz8vWxVxaCGdlAOJ+AYOT78P8LW/NTegKtvDGq85Ce8g2Ezd2pdCG7I+4+9fxgKIpFamMMJ54QMDYcW74DA==
+Received: from AM9PR04MB8604.eurprd04.prod.outlook.com (2603:10a6:20b:43b::21)
+ by AM0PR04MB6819.eurprd04.prod.outlook.com (2603:10a6:208:17f::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.52; Wed, 2 Apr
+ 2025 06:14:27 +0000
+Received: from AM9PR04MB8604.eurprd04.prod.outlook.com
+ ([fe80::e751:223e:aa3d:5827]) by AM9PR04MB8604.eurprd04.prod.outlook.com
+ ([fe80::e751:223e:aa3d:5827%5]) with mapi id 15.20.8534.048; Wed, 2 Apr 2025
+ 06:14:26 +0000
+From: Pankaj Gupta <pankaj.gupta@nxp.com>
+To: Frank Li <frank.li@nxp.com>
+CC: Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Shawn Guo
+	<shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix
+ Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"imx@lists.linux.dev" <imx@lists.linux.dev>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Subject: RE: [PATCH v14 4/6] firmware: imx: add driver for NXP EdgeLock
+ Enclave
+Thread-Topic: [PATCH v14 4/6] firmware: imx: add driver for NXP EdgeLock
+ Enclave
+Thread-Index: AQHbnlEZ/rAD+YPIT0yUa1mjl0COqbOFjCkAgAkkShCAAT9OIA==
+Date: Wed, 2 Apr 2025 06:14:26 +0000
+Message-ID:
+ <AM9PR04MB86042908192F7C5C7E9B139395AF2@AM9PR04MB8604.eurprd04.prod.outlook.com>
+References: <20250327-imx-se-if-v14-0-2219448932e4@nxp.com>
+ <20250327-imx-se-if-v14-4-2219448932e4@nxp.com>
+ <Z+QePoixgnheYQTW@lizhi-Precision-Tower-5810>
+ <AM9PR04MB86040127423D0A657103589D95AC2@AM9PR04MB8604.eurprd04.prod.outlook.com>
+In-Reply-To:
+ <AM9PR04MB86040127423D0A657103589D95AC2@AM9PR04MB8604.eurprd04.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: yes
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: AM9PR04MB8604:EE_|AM0PR04MB6819:EE_
+x-ms-office365-filtering-correlation-id: 922cc523-ea6c-4eec-678a-08dd71ad9f1e
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|7416014|376014|366016|1800799024|4053099003|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?YphVJqPN4xMLIlE0aAO9AUWFqRnkFMuLNJ3sOe+EzH45zDjcX4HyxYm1gAEe?=
+ =?us-ascii?Q?vjSJh2iroYxZePS6M45YeOclqT0HIT1RYkcugY15RNXkCShptvV+oa2uOfKS?=
+ =?us-ascii?Q?xbp/1iPxccAXzGhVFEzL5HHhFRFgHPLBzJnmKQnGNaR2E88kcz36+MEKdlEQ?=
+ =?us-ascii?Q?7EbzO9c33TQ4twGHlxSeh1iQapmrVrICMKfELJf81zITKCn4UlxP2g9Z1MqV?=
+ =?us-ascii?Q?a4U45b77/KAuZUDsHJYwBVphNl/0A0tE9yvsYv51sLGtU+3HDLK/6ZpLyOMa?=
+ =?us-ascii?Q?zfs+rgEXuj8SjyExISpoVOKM8egTdcbgOtdzTS4L2RQUNPT89S9j9QwVqYix?=
+ =?us-ascii?Q?/OgUY5vmmAbo95o2j9bKXvVU9cnAhbByoypJRatIuut85rwxDuTcDWuf8KeL?=
+ =?us-ascii?Q?3XgiPkmZeOtf6IZX5/Kp9uhGQ9Vfrx/IbQ/jO/yOWyfPoQZFGK3Qn0DAXx/+?=
+ =?us-ascii?Q?go14nfJdaArptsEWGzdiEVEMU3JTmGST9gnh3M6hpLl1FlXH5ZP5ukDLqBmK?=
+ =?us-ascii?Q?FCoQxmR2Pt+J1uAx4/6QqlTlL+rdK3Ihdia6u3K5YE1nou/qsl4CrP/R7/t3?=
+ =?us-ascii?Q?DyDt4ZJ8gymROB3eAlypYtLVpnY0C6vk1dBjoFWy4QPNbcsB26IgZHLdC6nN?=
+ =?us-ascii?Q?9Imivuzv0UBKWgJgQkGIaDbg95oawbNX/n4oMYdW4DB5471NSweNlfZtqS7x?=
+ =?us-ascii?Q?y6yfzieb26nc0dzYuCauS2zk5IlZ96+h85/s+nJ+o015HDP+971gIvQmwO6e?=
+ =?us-ascii?Q?oAArmNE7PqJVVxGvpkqEcZPPe/LKy1MNkzRrc2GtxpFrOoaoK5kklDJpNr9a?=
+ =?us-ascii?Q?XkphvDQSftBj9w6dRVqU1QgEV5U86Xp6jdLW58adfCJGxL/Bt86qBGbvAI9k?=
+ =?us-ascii?Q?3APLysVESIkmJSyzO+l23aq5Rhzc+YPORdNTxFcLo/x30Xemyy19uyGbHxI1?=
+ =?us-ascii?Q?tLM8RYjWBaIE8v5kvmajWM095UEU/E7AulWDz5iv3X3GIHVrAkuDr82L9moV?=
+ =?us-ascii?Q?48AofRIqe55PaGqTTd5b/CPnpmM9Z62vJuR7wcDynXoRA0Iq38fsPE7UGlEJ?=
+ =?us-ascii?Q?XeVv4xP+EHcMNF9L6PYhFwdolt1CCYX+Ytkab4eCxJeUbBCiA9/Q7WQBKRxv?=
+ =?us-ascii?Q?I1jrE2r5v7XHeULkG3RmqX4cJ1uX3aukVh37vKvtQK9zFoX+sSVV9YAwkmyt?=
+ =?us-ascii?Q?nRGEgqeKAuizyvu3RL9lbJSM0th0IyfNgh2F0+Zo4ficG86MgdAyRG5u96D7?=
+ =?us-ascii?Q?1nm32gfBI6owP0HHpbZ1CEN62BxRQ+4Dg0wgY6ErnPddRDwIU5rz98gaaZ5o?=
+ =?us-ascii?Q?tx/W9IsUKSHN6Tzgy60PfOej3WlxBnIPSRzQN+O+a//miYB+mnxrXfce/KWb?=
+ =?us-ascii?Q?jO9pttlx7UYgSj6HPt3KBZXibg0idm5JyVIGUS4CA6H/1Tg5mT1Z2P9TDzgF?=
+ =?us-ascii?Q?FmZKk0EPWM+6O792edFBkCZIlX6hpwWd?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM9PR04MB8604.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024)(4053099003)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?5fVRiV0fljoqFSkeimpdvf0dYGi5WadxweXpfssMg/8zCowu7IrOahcH8mlb?=
+ =?us-ascii?Q?0zaH82sf40oxwnRiMmHVz25IMOeL2wRRm19kVGFY44x8US5X7ihhOVVlH6qH?=
+ =?us-ascii?Q?gWmFS6UUw1yd8REZjkk1FOic/VXtWvxBZyqPVp80y/xAdZT0bR7j7ANChVoF?=
+ =?us-ascii?Q?K//eOoYqaHxhm3SayG1fptLXNL6qLzMm8adxA7wwyDRe/5VpkMCPaz1CcycK?=
+ =?us-ascii?Q?DRf+4rSgknZIInfzDXVkVSqRd6ExHYGUjcKNCr/Prj+54wIrAH51BlkFKTu1?=
+ =?us-ascii?Q?PDUiixuvY2E1TY0hwDyYRibJHs6bZJNGiVhJm0s9zYvrj218/EvXaCiIO7MI?=
+ =?us-ascii?Q?iFsCPXnG59S/CXNKShRHFX8yZsonOX0ET/FzH2F6KMy0yO7dCtsp5qrvxcPD?=
+ =?us-ascii?Q?R8nEZPNQcptbJPHrg3F8JPzqHyTLKMyHITAJZi+qV2XmBgOaE2nkzKqhxlye?=
+ =?us-ascii?Q?7Vy8VoYwQWZaJ4Hr2E0bhRGRHW1VHr4JCHHUm0gu7SpLTAVPZTi1WkoUwTdI?=
+ =?us-ascii?Q?ftZCzUZ+MLQLZw3oa8yX8YhZlpY57vlzwLyfKu9InczT2f1RHM1CVNuS0DTg?=
+ =?us-ascii?Q?UmB8mdSKyWS90g5iB+U9eqyAOUbtupbnMala7T/4p1UnJHnlCBsm70JRhQBJ?=
+ =?us-ascii?Q?lKt5zoDzT0CvX3i7wFY8E0+cZIOvuOE0xi5ZazA1/6G/nYb7exbgWldJADAW?=
+ =?us-ascii?Q?4AAbKLaKzsrKEtlqtZkh7RRZnZmgwLDgj0iOHyRpRsTXaD1g5ojc45zwxatb?=
+ =?us-ascii?Q?BnS/5vlec+FDpU/7q3TxwN22g9qwFmM9mywkuHN6hG+ZGg/X7+f8g4wMKUb6?=
+ =?us-ascii?Q?Y8JSBQE9reKvn4r231JmfqI2/++yATZFy/T1mRe8lQ751Wc3q1AFlf/PiTNC?=
+ =?us-ascii?Q?8TOxzxAgRwc1fpa+yT5Bmjb9IkXL+f5cwqfB2xxCEttCglCu9k6aNR/TB7VG?=
+ =?us-ascii?Q?YniLhHTCcv8kaa3bbEYNDf5o14YvDAWRdNv17aAtH/kgGi5D1QRWIsiELd8k?=
+ =?us-ascii?Q?JtjfMrlla+6tcAWqMnWzfwmBZ6hAeQimC2CUeTlFxQXDkLJN10dnt2HKaEFu?=
+ =?us-ascii?Q?tax/UkEQNpABVW2yBhAwqePnwJ2edWfnUkgletvCnEi7DfgQF0hWbgKvC72L?=
+ =?us-ascii?Q?MYgshTbzhNE2QMzsqISu7HucuvBWyFIeUNjfYXgduNcMtN1XVPzEfDk3CcUg?=
+ =?us-ascii?Q?ehyLF4rRddonOgpl3yKOCNskY95armLTR5Zv7/B0QYitYegWe2uImfMbNbMK?=
+ =?us-ascii?Q?H7RiKk4PxcWjBATyL925hEnLHFWwqaCKgY15JKQPqZ9GV0nQYwpNBBNzqrTl?=
+ =?us-ascii?Q?gEZmDeLBoO1/GyZO0QNYE0gklUCqaHQdcOiy1QkGb7ryhR/s2pTCFzLvx0kH?=
+ =?us-ascii?Q?bEM5Yh3Zhl5I+H0Oq1CHxRUv6wde4P3qgSYFQOn34s8+VnbgbyK0QKo4R3Ir?=
+ =?us-ascii?Q?sdxVcmqdIN2jCfjIvYlcNmwjsE/zUJPcWvhAzxB0bSC6Z1vh2pVLhEMSc47N?=
+ =?us-ascii?Q?gBqkOFuJwTYwOv0vY7/fS/MimCWoSdTJyEYJfqd4kfjnjFhno+I3LFWPEzGb?=
+ =?us-ascii?Q?S0SuI3C3hX+WlYnqrF1jAc335pg2g2SOGrO840b/?=
+Content-Type: multipart/signed;
+	protocol="application/x-pkcs7-signature";
+	micalg=SHA1;
+	boundary="----=_NextPart_000_01A5_01DBA3C4.93635640"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: AM9PR04MB8604.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 922cc523-ea6c-4eec-678a-08dd71ad9f1e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Apr 2025 06:14:26.9126
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: fc6wZJDgzXq5ztmwBVsiBnrlKBs5QYb5WOvbiD/rh9eqBXIFtFTG7DDRe//EJSAjmfQkVwLs7njKmb8fK6gxvg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6819
+
+------=_NextPart_000_01A5_01DBA3C4.93635640
+Content-Type: text/plain;
+	charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250402-st7571-v1-2-351d6b9eeb4a@gmail.com>
-References: <20250402-st7571-v1-0-351d6b9eeb4a@gmail.com>
-In-Reply-To: <20250402-st7571-v1-0-351d6b9eeb4a@gmail.com>
-To: David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Marcus Folkesson <marcus.folkesson@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=18061;
- i=marcus.folkesson@gmail.com; h=from:subject:message-id;
- bh=rVktkbhZ73qxhxvZdI9XYvy0vnRRMgoRCdhnvs8LSms=;
- b=owEBbQKS/ZANAwAIAYiATm9ZXVIyAcsmYgBn7NVM4LNkqygoDLJOBkg20tJVmzcYus9680fly
- SskpFIKZEyJAjMEAAEIAB0WIQQFUaLotmy1TWTBLGWIgE5vWV1SMgUCZ+zVTAAKCRCIgE5vWV1S
- MsaGD/oCrpPWO1u0rg3G0BqD9nVmzHRtsjZ0WdnmyjkT9nF+BMCEvo8Uggi9LoglvvQHW3cS1i+
- h0fTiOBWRAUIov40EmGUs+JAw/VbXqq1HwcCQ/5TU2QxuDOB04F+RJhR/mXLX6YbnWfzfo744S4
- lKXJbcX/drXtj1HItgDWbqZYv32Gg410KYqz4N+HD4dyTcfFYRJ/Lgs4fq4DDZk9Gq8dwkpHjiU
- nHWdureiFq+knrXm+Sa3AQ6VN2hy0FpVTrYYhH/ct9BnRIv5kjsKOpTfoW6+tsHhCpBAwJvMGdF
- EPb/sveXo5gQjVnUymftzyKz5CEUzveDPyoFeVRzLh0fbnvNBNcmz1+kznG4BPMaK0OzoheQiOy
- 6L1g6onUMBRK0FASpqWpcXGzsMv4fccD9gK8S3XD133X47VFeK7TUxJ16HRNaP6f4fOzsMW2jfM
- RsoK+fkbzxOKua6zp2idQ9jOBDUC6temS7ItKvPXmUOvAO4x6PqdYdmjhzV8A/sPUhoiwnXQJ4u
- TDm518O45+gnEoAXGyAj2XDXD8hbo7o3PAI3N8bKwJieYhLAsJGClMUtB82FSjTkOJlAGThhU2K
- +dF28+ZoEvvLD/h/Z5ceZyMUo3aA5I8pjwYVTpERNYFyfiGjWCS+Y3S4u69v3//ip11DaVQGyIz
- m6sPSFxwTS9u4hQ==
-X-Developer-Key: i=marcus.folkesson@gmail.com; a=openpgp;
- fpr=AB91D46C7E0F6E6FB2AB640EC0FE25D598F6C127
 
-Sitronix ST7571 is a 4bit gray scale dot matrix LCD controller.
-The controller has a SPI, I2C and 8bit parallel interface, this
-driver is for the I2C interface only.
+>> diff --git a/drivers/firmware/imx/ele_common.c
+...
+>> + *
+>> + * Return:
+>> + *  0: if the input length is not 4 byte aligned, or num of words < 5.
+>> + *  chksum: calculated word by word.
+>> + */
+>> +u32 se_add_msg_chksum(u32 *msg, u32 msg_len) {
+>> +	u32 nb_words = msg_len / (u32)sizeof(u32);
+>> +	u32 chksum = 0;
+>> +	u32 i;
+>> +
+>> +	if (nb_words < 5)
+>> +		return chksum;
 
-Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
----
- drivers/gpu/drm/tiny/Kconfig      |  12 +
- drivers/gpu/drm/tiny/Makefile     |   1 +
- drivers/gpu/drm/tiny/st7571-i2c.c | 563 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 576 insertions(+)
+For msg_length = 8 bytes or nb_words = 2, execution flow will never continue
+after the above check.
 
-diff --git a/drivers/gpu/drm/tiny/Kconfig b/drivers/gpu/drm/tiny/Kconfig
-index 94cbdb1337c07f1628a33599a7130369b9d59d98..14096031e7c2d8f73c06c88e08f35aa5a3790a54 100644
---- a/drivers/gpu/drm/tiny/Kconfig
-+++ b/drivers/gpu/drm/tiny/Kconfig
-@@ -232,6 +232,18 @@ config TINYDRM_ST7586
- 
- 	  If M is selected the module will be called st7586.
- 
-+config TINYDRM_ST7571_I2C
-+	tristate "DRM support for Sitronix ST7571 display panels (I2C)"
-+	depends on DRM && I2C
-+	select DRM_KMS_HELPER
-+	select DRM_GEM_DMA_HELPER
-+	select DRM_GEM_SHMEM_HELPER
-+	select REGMAP_I2C
-+	help
-+	  DRM driver for Sitronix ST7571 panels controlled over I2C.
-+
-+	  if M is selected the module will be called st7571-i2c.
-+
- config TINYDRM_ST7735R
- 	tristate "DRM support for Sitronix ST7715R/ST7735R display panels"
- 	depends on DRM && SPI
-diff --git a/drivers/gpu/drm/tiny/Makefile b/drivers/gpu/drm/tiny/Makefile
-index 60816d2eb4ff93b87228ed8eadd60a0a33a1144b..343813a965e13326bbb8520a5c34d272ec7821d5 100644
---- a/drivers/gpu/drm/tiny/Makefile
-+++ b/drivers/gpu/drm/tiny/Makefile
-@@ -17,3 +17,4 @@ obj-$(CONFIG_TINYDRM_REPAPER)		+= repaper.o
- obj-$(CONFIG_TINYDRM_SHARP_MEMORY)	+= sharp-memory.o
- obj-$(CONFIG_TINYDRM_ST7586)		+= st7586.o
- obj-$(CONFIG_TINYDRM_ST7735R)		+= st7735r.o
-+obj-$(CONFIG_TINYDRM_ST7571_I2C)	+= st7571-i2c.o
-diff --git a/drivers/gpu/drm/tiny/st7571-i2c.c b/drivers/gpu/drm/tiny/st7571-i2c.c
-new file mode 100644
-index 0000000000000000000000000000000000000000..c26ecf8a4fd2115b808b126cccda74ea9079cd7c
---- /dev/null
-+++ b/drivers/gpu/drm/tiny/st7571-i2c.c
-@@ -0,0 +1,563 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Driver for Sitronix ST7571, a 4 level gray scale dot matrix LCD controller
-+ *
-+ * Copyright (C) 2025 Marcus Folkesson <marcus.folkesson@gmail.com>
-+ */
-+
-+#include <linux/delay.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/i2c.h>
-+#include <linux/module.h>
-+#include <linux/regmap.h>
-+
-+#include <drm/clients/drm_client_setup.h>
-+#include <drm/drm_atomic_helper.h>
-+#include <drm/drm_connector.h>
-+#include <drm/drm_damage_helper.h>
-+#include <drm/drm_drv.h>
-+#include <drm/drm_fb_helper.h>
-+#include <drm/drm_fbdev_dma.h>
-+#include <drm/drm_fourcc.h>
-+#include <drm/drm_framebuffer.h>
-+#include <drm/drm_gem_atomic_helper.h>
-+#include <drm/drm_gem_framebuffer_helper.h>
-+#include <drm/drm_gem_shmem_helper.h>
-+#include <drm/drm_modeset_helper_vtables.h>
-+#include <drm/drm_module.h>
-+#include <drm/drm_probe_helper.h>
-+#include <drm/drm_simple_kms_helper.h>
-+
-+#define ST7571_COMMAND_MODE			(0x00)
-+#define ST7571_DATA_MODE			(0x40)
-+
-+/* Normal mode command set */
-+#define ST7571_DISPLAY_OFF			(0xae)
-+#define ST7571_DISPLAY_ON			(0xaf)
-+#define ST7571_OSC_ON				(0xab)
-+#define ST7571_SET_COLUMN_LSB(c)		(0x00 | ((c) & 0xf))
-+#define ST7571_SET_COLUMN_MSB(c)		(0x10 | ((c) >> 4))
-+#define ST7571_SET_COM0_LSB(x)			((x) & 0x7f)
-+#define ST7571_SET_COM0_MSB			(0x44)
-+#define ST7571_SET_COM_SCAN_DIR(d)		(0xc0 | (((d) << 3) & 0x8))
-+#define ST7571_SET_CONTRAST_LSB(c)		((c) & 0x3f)
-+#define ST7571_SET_CONTRAST_MSB			(0x81)
-+#define ST7571_SET_DISPLAY_DUTY_LSB(d)		((d) & 0xff)
-+#define ST7571_SET_DISPLAY_DUTY_MSB		(0x48)
-+#define ST7571_SET_ENTIRE_DISPLAY_ON(p)		(0xa4 | ((p) & 0x1))
-+#define ST7571_SET_LCD_BIAS(b)			(0x50 | ((b) & 0x7))
-+#define ST7571_SET_MODE_LSB(m)			((m) & 0xfc)
-+#define ST7571_SET_MODE_MSB			(0x38)
-+#define ST7571_SET_PAGE(p)			(0xb0 | (p))
-+#define ST7571_SET_POWER(p)			(0x28 | ((p) & 0x7))
-+#define ST7571_SET_REGULATOR_REG(r)		(0x20 | ((r) & 0x7))
-+#define ST7571_SET_REVERSE(r)			(0xa6 | ((r) & 0x1))
-+#define ST7571_SET_SEG_SCAN_DIR(d)		(0xa0 | ((d) & 0x1))
-+#define ST7571_SET_START_LINE_LSB(l)		((l) & 0x3f)
-+#define ST7571_SET_START_LINE_MSB		(0x40)
-+
-+/* Extension command set 3 */
-+#define ST7571_COMMAND_SET_3			(0x7b)
-+#define ST7571_SET_COLOR_MODE(c)		(0x10 | ((c) & 0x1))
-+#define ST7571_COLOR_MODE_BLACKWHITE		(1)
-+#define ST7571_COLOR_MODE_GRAY			(0)
-+#define ST7571_COMMAND_SET_NORMAL		(0x00)
-+
-+#define DRIVER_NAME "st7571-i2c"
-+#define DRIVER_DESC "ST7571 DRM driver"
-+#define DRIVER_MAJOR 1
-+#define DRIVER_MINOR 0
-+
-+#define to_st7571(_dev) container_of(_dev, struct st7571_device, dev)
-+
-+struct st7571_device {
-+	struct drm_device	       dev;
-+	struct drm_simple_display_pipe pipe;
-+	struct drm_connector	       conn;
-+	struct drm_display_mode mode;
-+	struct regmap *regmap;
-+	struct i2c_client *client;
-+	struct gpio_desc *reset;
-+	u8 bpp;
-+	u32 width_mm;
-+	u32 height_mm;
-+	u32 nlines;
-+	u32 startline;
-+	bool ignore_nak;
-+};
-+
-+static int st7571_regmap_write(void *context, const void *data, size_t count)
-+{
-+	struct i2c_client *client = context;
-+	struct st7571_device *st7571 = i2c_get_clientdata(client);
-+	int ret;
-+
-+	struct i2c_msg msg = {
-+		.addr = st7571->client->addr,
-+		.flags = st7571->ignore_nak ? I2C_M_IGNORE_NAK : 0,
-+		.len = count,
-+		.buf = (u8 *)data
-+	};
-+
-+	ret = i2c_transfer(st7571->client->adapter, &msg, 1);
-+	if (ret < 0)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static int st7571_regmap_read(void *context, const void *reg_buf,
-+			       size_t reg_size, void *val_buf, size_t val_size)
-+{
-+	return -EOPNOTSUPP;
-+}
-+
-+static int st7571_send_command_list(struct st7571_device *st7571,
-+				    const u8 *cmd_list, size_t len)
-+{
-+	int ret;
-+
-+	for (int i = 0; i < len; i++) {
-+		ret = regmap_write(st7571->regmap, ST7571_COMMAND_MODE, cmd_list[i]);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
-+	return ret;
-+}
-+
-+static inline u8 st7571_transform_xy(const char *p, int x, int y)
-+{
-+	int xrest = x % 8;
-+	u8 result = 0;
-+
-+	/*
-+	 * Transforms an (x, y) pixel coordinate into a vertical 8-bit
-+	 * column from the framebuffer. It calculates the corresponding byte in the
-+	 * framebuffer, extracts the bit at the given x position across 8 consecutive
-+	 * rows, and packs those bits into a single byte.
-+	 *
-+	 * Return an 8-bit value representing a vertical column of pixels.
-+	 */
-+	x = x / 8;
-+	y = (y / 8) * 8;
-+
-+	for (int i = 0; i < 8; i++) {
-+		int row_idx = y + i;
-+		u8 byte = p[row_idx * 16 + x];
-+		u8 bit = (byte >> (7-xrest)) & 1;
-+
-+		result |= (bit << i);
-+	}
-+
-+	return result;
-+}
-+
-+static int st7571_set_position(struct st7571_device *st7571, int x, int y)
-+{
-+	u8 cmd_list[] = {
-+		ST7571_SET_COLUMN_LSB(x),
-+		ST7571_SET_COLUMN_MSB(x),
-+		ST7571_SET_PAGE(y/8),
-+	};
-+
-+	return st7571_send_command_list(st7571, cmd_list, ARRAY_SIZE(cmd_list));
-+}
-+
-+static int st7571_fb_blit_rect(struct drm_framebuffer *fb,
-+			       const struct iosys_map *vmap,
-+			       struct drm_rect *rect)
-+{
-+	struct st7571_device *st7571 = to_st7571(fb->dev);
-+
-+	char row[256];
-+	char *pixel = vmap->vaddr;
-+	int x1 = rect->x1 * st7571->bpp;
-+	int x2 = rect->x2 * st7571->bpp;
-+
-+	for (int y = rect->y1; y < rect->y2; y += 8) {
-+		for (int x = x1; x < x2; x++)
-+			row[x] = st7571_transform_xy(pixel, x, y);
-+
-+		st7571_set_position(st7571, rect->x1, y);
-+
-+		/* TODO: Investige why we can't write multiple bytes at once */
-+		for (int x = x1; x < x2; x++)
-+			regmap_bulk_write(st7571->regmap, ST7571_DATA_MODE, row + x, 1);
-+	}
-+
-+	return 0;
-+}
-+
-+static int st7571_fb_blit_fullscreen(struct drm_framebuffer *fb,
-+				     const struct iosys_map *map)
-+{
-+	struct drm_rect fullscreen = {
-+		.x1 = 0,
-+		.x2 = fb->width,
-+		.y1 = 0,
-+		.y2 = fb->height,
-+	};
-+
-+	return st7571_fb_blit_rect(fb, map, &fullscreen);
-+}
-+
-+static int st7571_conn_get_modes(struct drm_connector *conn)
-+{
-+	struct st7571_device *st7571 = to_st7571(conn->dev);
-+
-+	return drm_connector_helper_get_modes_fixed(conn, &st7571->mode);
-+}
-+
-+static const struct drm_connector_helper_funcs st7571_conn_helper_funcs = {
-+	.get_modes = st7571_conn_get_modes,
-+};
-+
-+static const struct drm_connector_funcs st7571_conn_funcs = {
-+	.fill_modes = drm_helper_probe_single_connector_modes,
-+	.destroy = drm_connector_cleanup,
-+	.reset = drm_atomic_helper_connector_reset,
-+	.atomic_duplicate_state = drm_atomic_helper_connector_duplicate_state,
-+	.atomic_destroy_state = drm_atomic_helper_connector_destroy_state,
-+};
-+
-+static int st7571_conn_init(struct st7571_device *st7571)
-+{
-+	drm_connector_helper_add(&st7571->conn, &st7571_conn_helper_funcs);
-+	return drm_connector_init(&st7571->dev, &st7571->conn,
-+				  &st7571_conn_funcs, DRM_MODE_CONNECTOR_Unknown);
-+
-+}
-+
-+
-+static void st7571_pipe_enable(struct drm_simple_display_pipe *pipe,
-+			       struct drm_crtc_state *crtc_state,
-+			       struct drm_plane_state *plane_state)
-+{
-+	struct drm_shadow_plane_state *shadow_plane_state = to_drm_shadow_plane_state(plane_state);
-+
-+	st7571_fb_blit_fullscreen(plane_state->fb, &shadow_plane_state->data[0]);
-+}
-+
-+static void st7571_pipe_update(struct drm_simple_display_pipe *pipe,
-+			       struct drm_plane_state *old_state)
-+{
-+	struct drm_plane_state *state = pipe->plane.state;
-+	struct drm_shadow_plane_state *shadow_plane_state = to_drm_shadow_plane_state(state);
-+	struct drm_rect rect;
-+
-+	if (state->fb && drm_atomic_helper_damage_merged(old_state, state, &rect))
-+		st7571_fb_blit_rect(state->fb, &shadow_plane_state->data[0], &rect);
-+}
-+
-+static const struct drm_simple_display_pipe_funcs st7571_pipe_funcs = {
-+	.enable	    = st7571_pipe_enable,
-+	.update	    = st7571_pipe_update,
-+	DRM_GEM_SIMPLE_DISPLAY_PIPE_SHADOW_PLANE_FUNCS,
-+};
-+
-+static const uint32_t st7571_formats[] = {
-+	DRM_FORMAT_C1,
-+	DRM_FORMAT_C2,
-+};
-+
-+static const uint64_t st7571_modifiers[] = {
-+	DRM_FORMAT_MOD_LINEAR,
-+	DRM_FORMAT_MOD_INVALID
-+};
-+
-+static int st7571_pipe_init(struct st7571_device *st7571)
-+{
-+	return drm_simple_display_pipe_init(&st7571->dev,
-+					    &st7571->pipe,
-+					    &st7571_pipe_funcs,
-+					    st7571_formats,
-+					    ARRAY_SIZE(st7571_formats),
-+					    st7571_modifiers,
-+					    &st7571->conn);
-+}
-+
-+static int st7571_set_pixel_format(struct st7571_device *st7571,
-+				   u32 pixel_format)
-+{
-+	u8 cmd_list[] = {
-+		ST7571_COMMAND_SET_3,
-+		ST7571_SET_COLOR_MODE(ST7571_COLOR_MODE_BLACKWHITE),
-+		ST7571_COMMAND_SET_NORMAL,
-+	};
-+
-+	switch (pixel_format) {
-+	case DRM_FORMAT_C1:
-+		cmd_list[1] = ST7571_SET_COLOR_MODE(ST7571_COLOR_MODE_BLACKWHITE);
-+		st7571->bpp = 1;
-+		break;
-+	case DRM_FORMAT_C2:
-+		cmd_list[1] = ST7571_SET_COLOR_MODE(ST7571_COLOR_MODE_GRAY);
-+		st7571->bpp = 2;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return st7571_send_command_list(st7571, cmd_list, ARRAY_SIZE(cmd_list));
-+}
-+
-+static struct drm_framebuffer*
-+st7571_fb_create(struct drm_device *dev, struct drm_file *file_priv,
-+		 const struct drm_mode_fb_cmd2 *mode_cmd)
-+{
-+	int ret = st7571_set_pixel_format(to_st7571(dev), mode_cmd->pixel_format);
-+
-+	if (ret)
-+		return ERR_PTR(ret);
-+
-+	return drm_gem_fb_create_with_dirty(dev, file_priv, mode_cmd);
-+}
-+
-+static const struct drm_mode_config_funcs st7571_mode_config_funcs = {
-+	.fb_create = st7571_fb_create,
-+	.atomic_check = drm_atomic_helper_check,
-+	.atomic_commit = drm_atomic_helper_commit,
-+};
-+
-+static int st7571_mode_config_init(struct st7571_device *st7571)
-+{
-+	struct drm_device *dev = &st7571->dev;
-+	int ret;
-+
-+	ret = drmm_mode_config_init(dev);
-+	if (ret)
-+		return ret;
-+
-+	dev->mode_config.min_width = 0;
-+	dev->mode_config.min_height = 0;
-+	dev->mode_config.max_width = 128;
-+	dev->mode_config.max_height = 128;
-+	dev->mode_config.preferred_depth = 1;
-+	dev->mode_config.prefer_shadow = 0;
-+	dev->mode_config.funcs = &st7571_mode_config_funcs;
-+
-+	return 0;
-+}
-+
-+DEFINE_DRM_GEM_FOPS(st7571_fops);
-+
-+static const struct drm_driver st7571_driver = {
-+	.driver_features = DRIVER_MODESET | DRIVER_GEM | DRIVER_ATOMIC,
-+
-+	.name		 = DRIVER_NAME,
-+	.desc		 = DRIVER_DESC,
-+	.major		 = DRIVER_MAJOR,
-+	.minor		 = DRIVER_MINOR,
-+
-+	.fops		 = &st7571_fops,
-+	DRM_GEM_SHMEM_DRIVER_OPS,
-+	DRM_FBDEV_DMA_DRIVER_OPS,
-+};
-+
-+static const struct regmap_bus st7571_regmap_bus = {
-+	.read = st7571_regmap_read,
-+	.write = st7571_regmap_write,
-+};
-+
-+static const struct regmap_config st7571_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+	.use_single_write = true,
-+};
-+
-+static int st7571_parse_dt(struct st7571_device *st7571)
-+{
-+	struct device *dev = &st7571->client->dev;
-+	struct device_node *np = dev->of_node;
-+
-+	of_property_read_u32(np, "sitronix,panel-width-mm", &st7571->width_mm);
-+	of_property_read_u32(np, "sitronix,panel-height-mm", &st7571->height_mm);
-+	of_property_read_u32(np, "sitronix,panel-start-line", &st7571->startline);
-+	of_property_read_u32(np, "sitronix,panel-nlines", &st7571->nlines);
-+
-+	if (st7571->width_mm == 0 || st7571->height_mm == 0) {
-+		dev_err(dev, "Invalid panel dimensions\n");
-+		return -EINVAL;
-+	}
-+
-+	/* Default to 128 lines if not specified */
-+	if (!st7571->nlines)
-+		st7571->nlines = 128;
-+
-+	if (st7571->startline + st7571->nlines > 128) {
-+		dev_err(dev, "Invalid line configuration (start-line=%i, nlines=%i)\n",
-+			st7571->startline, st7571->nlines);
-+		return -EINVAL;
-+	}
-+
-+	st7571->reset = devm_gpiod_get(dev, "reset", GPIOD_OUT_HIGH);
-+	if (IS_ERR(st7571->reset))
-+		return PTR_ERR(st7571->reset);
-+
-+	return 0;
-+}
-+
-+static void st7571_create_mode(struct st7571_device *st7571)
-+{
-+	struct drm_display_mode st7571_mode = {
-+		DRM_SIMPLE_MODE(128, st7571->nlines, st7571->width_mm, st7571->height_mm),
-+	};
-+
-+	memcpy(&st7571->mode, &st7571_mode, sizeof(st7571_mode));
-+}
-+
-+static void st7571_reset(struct st7571_device *st7571)
-+{
-+	gpiod_set_value_cansleep(st7571->reset, 0);
-+	mdelay(20);
-+	gpiod_set_value_cansleep(st7571->reset, 1);
-+}
-+
-+static int st7571_initialize(struct st7571_device *st7571)
-+{
-+	/*
-+	 * Most of the initialization sequence is taken directly from the
-+	 * referential initial code in the ST7571 datasheet.
-+	 */
-+	u8 commands[] = {
-+		ST7571_DISPLAY_OFF,
-+		ST7571_SET_MODE_MSB,
-+
-+		ST7571_SET_MODE_LSB(0x94),
-+		ST7571_SET_SEG_SCAN_DIR(0),
-+		ST7571_SET_COM_SCAN_DIR(1),
-+
-+		ST7571_SET_COM0_MSB,
-+		ST7571_SET_COM0_LSB(0x00),
-+
-+		ST7571_SET_START_LINE_MSB,
-+		ST7571_SET_START_LINE_LSB(st7571->startline),
-+
-+		ST7571_OSC_ON,
-+		ST7571_SET_REGULATOR_REG(5),
-+		ST7571_SET_CONTRAST_MSB,
-+		ST7571_SET_CONTRAST_LSB(0x33),
-+		ST7571_SET_LCD_BIAS(0x04),
-+		ST7571_SET_DISPLAY_DUTY_MSB,
-+		ST7571_SET_DISPLAY_DUTY_LSB(st7571->nlines),
-+
-+
-+		ST7571_SET_POWER(0x4),	/* Power Control, VC: ON, VR: OFF, VF: OFF */
-+		ST7571_SET_POWER(0x6),	/* Power Control, VC: ON, VR: ON, VF: OFF */
-+		ST7571_SET_POWER(0x7),	/* Power Control, VC: ON, VR: ON, VF: ON */
-+
-+		ST7571_SET_REVERSE(0),
-+		ST7571_SET_ENTIRE_DISPLAY_ON(0),
-+
-+		ST7571_DISPLAY_ON,
-+	};
-+
-+	/* Perform a reset before initializing the controller */
-+	st7571_reset(st7571);
-+
-+	return st7571_send_command_list(st7571, commands, ARRAY_SIZE(commands));
-+}
-+
-+
-+static int st7571_probe(struct i2c_client *client)
-+{
-+	struct drm_device *dev;
-+	struct st7571_device *st7571;
-+	int ret;
-+
-+	st7571 = devm_drm_dev_alloc(&client->dev, &st7571_driver,
-+				    struct st7571_device, dev);
-+	if (IS_ERR(st7571))
-+		return PTR_ERR(st7571);
-+
-+	dev = &st7571->dev;
-+	st7571->client = client;
-+	i2c_set_clientdata(client, st7571);
-+
-+	ret = st7571_parse_dt(st7571);
-+	if (ret)
-+		return ret;
-+
-+	/* Create mode with parsed values */
-+	st7571_create_mode(st7571);
-+
-+	/*
-+	 * The chip nacks some messages but still works as expected.
-+	 * If the adapter does not support protocol mangling do
-+	 * not set the I2C_M_IGNORE_NAK flag at the expense * of possible
-+	 * cruft in the logs.
-+	 */
-+	if (i2c_check_functionality(client->adapter, I2C_FUNC_PROTOCOL_MANGLING))
-+		st7571->ignore_nak = true;
-+
-+	st7571->regmap = devm_regmap_init(&client->dev, &st7571_regmap_bus,
-+					   client, &st7571_regmap_config);
-+	if (IS_ERR(st7571->regmap)) {
-+		dev_err(&client->dev, "Failed to initialize regmap\n");
-+		return PTR_ERR(st7571->regmap);
-+	}
-+
-+	ret = st7571_initialize(st7571);
-+	if (ret)
-+		return ret;
-+
-+	ret = st7571_mode_config_init(st7571);
-+	if (ret)
-+		return ret;
-+
-+	ret = st7571_conn_init(st7571);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = st7571_pipe_init(st7571);
-+	if (ret < 0)
-+		return ret;
-+
-+	drm_plane_enable_fb_damage_clips(&st7571->pipe.plane);
-+	drm_mode_config_reset(dev);
-+
-+	ret = drm_dev_register(dev, 0);
-+	if (ret)
-+		return ret;
-+
-+	drm_client_setup(dev, NULL);
-+	return 0;
-+}
-+
-+static void st7571_remove(struct i2c_client *client)
-+{
-+	struct st7571_device *st7571 = i2c_get_clientdata(client);
-+
-+	drm_dev_unplug(&st7571->dev);
-+	drm_atomic_helper_shutdown(&st7571->dev);
-+}
-+
-+static const struct of_device_id st7571_of_match[] = {
-+	{ .compatible = "sitronix,st7571-i2c" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, st7571_of_match);
-+
-+
-+static const struct i2c_device_id st7571_id[] = {
-+	{ "st7571-i2c", 0 },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(i2c, st7571_id);
-+
-+static struct i2c_driver st7571_i2c_driver = {
-+	.driver = {
-+		.name = "st7571-i2c",
-+		.of_match_table = st7571_of_match,
-+	},
-+	.probe = st7571_probe,
-+	.remove = st7571_remove,
-+	.id_table = st7571_id,
-+};
-+
-+module_i2c_driver(st7571_i2c_driver);
-+
-+MODULE_AUTHOR("Marcus Folkesson <marcus.folkesson@gmail.com>");
-+MODULE_DESCRIPTION("DRM Driver for Sitronix ST7571 LCD controller");
-+MODULE_LICENSE("GPL");
+>> +
+>> +	if (msg_len % SE_MSG_WORD_SZ) {
+>> +		pr_err("Msg-len is not 4-byte aligned.");
+>> +		return chksum;
+>> +	}
+>> +
+>> +	for (i = 0; i < nb_words - 1; i++)
+>> +		chksum ^= *(msg + i);
 
--- 
-2.48.1
+> if msg_len is 8, nv_words is 2,
+For msg_length = 8 bytes or nb_words = 2, execution flow will never here.
 
+> Only first *(msg + 0) is calcucate, is it what your expected?  If yes,
+> need comments said why *(msg + 1) needn't calcuate.
+
+Since msg_len also includes the 4 bytes (or 1word) to store the checksum
+value. Hence, *(msg + 1) needn't be calcuated
+Will add that as a comment.
+
+>> +
+>> +	return chksum;
+>> +}
+>> +
+
+
+>> +int ele_msg_rcv(struct se_if_priv *priv,
+>> +		struct se_clbk_handle *se_clbk_hdl) {
+>> +	int err = 0;
+>> +
+>> +	do {
+>> +		err = wait_for_completion_interruptible(&se_clbk_hdl->done);
+>> +		if (err == -ERESTARTSYS) {
+>> +			if (priv->waiting_rsp_clbk_hdl.rx_msg) {
+>> +				priv->waiting_rsp_clbk_hdl.signal_rcvd =
+true;
+>> +				continue;
+
+> Is possible dead loop here?
+No. it will be the same condition with or without continue.
+- With using ctrl + c, in case of no response from FW, it will continue to
+wait indefinitely. There will be no impact of using ctrl + c on this.
+- Without using ctrl + c, in case of no response from FW, it will continue
+to wait indefinitely, 
+
+So, this code leg was implemented to handle the scenario, where the FW is
+always responsive and "ctrl + c", is pressed to stop an ongoing task.
+It will gracefully exits after completing the full exchange.
+
+>> +			}
+
+------=_NextPart_000_01A5_01DBA3C4.93635640
+Content-Type: application/pkcs7-signature;
+	name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment;
+	filename="smime.p7s"
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExCzAJBgUrDgMCGgUAMIAGCSqGSIb3DQEHAQAAoIImZTCCBaIw
+ggOKoAMCAQICCE4Rpu+H69FRMA0GCSqGSIb3DQEBCwUAMGUxIjAgBgNVBAMMGU5YUCBJbnRlcm5h
+bCBQb2xpY3kgQ0EgRzIxCzAJBgNVBAsMAklUMREwDwYDVQQKDAhOWFAgQi5WLjESMBAGA1UEBwwJ
+RWluZGhvdmVuMQswCQYDVQQGEwJOTDAeFw0yMzA0MjEwNjQzNDVaFw0yODA0MTkwNjQzNDVaMIG2
+MRwwGgYDVQQDDBNOWFAgRW50ZXJwcmlzZSBDQSA1MQswCQYDVQQLDAJJVDERMA8GA1UECgwITlhQ
+IEIuVi4xEjAQBgNVBAcMCUVpbmRob3ZlbjEWMBQGA1UECAwNTm9vcmQtQnJhYmFudDETMBEGCgmS
+JomT8ixkARkWA3diaTETMBEGCgmSJomT8ixkARkWA254cDETMBEGCgmSJomT8ixkARkWA2NvbTEL
+MAkGA1UEBhMCTkwwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDAWrnSkYP60A8wj4AO
+kATDjnbdgLv6waFfyXE/hvatdWz2YYtb1YSRi5/wXW+Pz8rsTmSj7iusI+FcLP8WEaMVLn4sEIQY
+NI8KJUCz21tsIArYs0hMKEUFeCq3mxTJfPqzdj9CExJBlZ5vWS4er8eJI8U8kZrt4CoY7De0FdJh
+35Pi5QGzUFmFuaLgXfV1N5yukTzEhqz36kODoSRw+eDHH9YqbzefzEHK9d93TNiLaVlln42O0qaI
+MmxK1aNcZx+nQkFsF/VrV9M9iLGA+Qb/MFmR20MJAU5kRGkJ2/QzgVQM3Nlmp/bF/3HWOJ2j2mpg
+axvzxHNN+5rSNvkG2vSpAgMBAAGjggECMIH/MFIGCCsGAQUFBwEBBEYwRDBCBggrBgEFBQcwAoY2
+aHR0cDovL253dy5wa2kubnhwLmNvbS9jZXJ0cy9OWFBJbnRlcm5hbFBvbGljeUNBRzIuY2VyMB0G
+A1UdDgQWBBRYlWDuTnTvZSKqve0ZqSt6jhedBzASBgNVHRMBAf8ECDAGAQH/AgEAMEUGA1UdHwQ+
+MDwwOqA4oDaGNGh0dHA6Ly9ud3cucGtpLm54cC5jb20vY3JsL05YUEludGVybmFsUG9saWN5Q0FH
+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
+ggEKAoIBAQCsljsxzffby7IAt42e7cJH7K+49RL+7i56h3ORt8dS8WNVSdDlejp6uS6mLk/UX0wn
+sSxDK1S5KquGJQzaT/3gxE8tdgvfFNBVdrgr48DeCVwWDr1o/UF3RmGcMdxqRz1M/oLDJ03C8n6h
+L/0JXiwsNx0KZJoqDrN/48yX5TkoeKJmHFftZ5Op57xV0WkZJ/yLxSC1Om75jOG/UPdqsDzl+wi7
+YVj5egV24hoaXgHBxtCeJzUgsHcJlo9nFtGe11j6H1vqFzkPzN9ydjRmhQATV/WLqpG8uot79u0m
+6n7Mjwsd/HmJf+8xpovMcHPO2a0axppssKso/3APP6mR1FuVAgMBAAGjggORMIIDjTAOBgNVHQ8B
+Af8EBAMCB4AwHQYDVR0lBBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMAwGA1UdEwEB/wQCMAAwHQYD
+VR0OBBYEFLNr0DCWM1fCXv4ubOt/elkvcoiaMEUGA1UdEQQ+MDygJAYKKwYBBAGCNxQCA6AWDBRw
+YW5rYWouZ3VwdGFAbnhwLmNvbYEUcGFua2FqLmd1cHRhQG54cC5jb20wHwYDVR0jBBgwFoAU5TJ6
+9GbBR5Ykf/wngDlY3ysX4rswggFKBgNVHR8EggFBMIIBPTCCATmgggE1oIIBMYaByGxkYXA6Ly8v
+Q049TlhQJTIwRW50ZXJwcmlzZSUyMENBJTIwNCxDTj1ubGFtc3BraTAwMDQsQ049Q0RQLENOPVB1
+YmxpYyUyMEtleSUyMFNlcnZpY2VzLENOPVNlcnZpY2VzLENOPUNvbmZpZ3VyYXRpb24sREM9d2Jp
+LERDPW54cCxEQz1jb20/Y2VydGlmaWNhdGVSZXZvY2F0aW9uTGlzdD9iYXNlP29iamVjdENsYXNz
+PWNSTERpc3RyaWJ1dGlvblBvaW50hjFodHRwOi8vbnd3LnBraS5ueHAuY29tL2NybC9OWFAtRW50
+ZXJwcmlzZS1DQTQuY3JshjFodHRwOi8vd3d3LnBraS5ueHAuY29tL2NybC9OWFAtRW50ZXJwcmlz
+ZS1DQTQuY3JsMIIBEAYIKwYBBQUHAQEEggECMIH/MIG7BggrBgEFBQcwAoaBrmxkYXA6Ly8vQ049
+TlhQJTIwRW50ZXJwcmlzZSUyMENBJTIwNCxDTj1BSUEsQ049UHVibGljJTIwS2V5JTIwU2Vydmlj
+ZXMsQ049U2VydmljZXMsQ049Q29uZmlndXJhdGlvbixEQz13YmksREM9bnhwLERDPWNvbT9jQUNl
+cnRpZmljYXRlP2Jhc2U/b2JqZWN0Q2xhc3M9Y2VydGlmaWNhdGlvbkF1dGhvcml0eTA/BggrBgEF
+BQcwAoYzaHR0cDovL253dy5wa2kubnhwLmNvbS9jZXJ0cy9OWFAtRW50ZXJwcmlzZS1DQTQuY2Vy
+MDwGCSsGAQQBgjcVBwQvMC0GJSsGAQQBgjcVCIWCwH6BjvRVhu2FOILrmUuaklY/hMbNXILljX4C
+AWQCAT8wJwYJKwYBBAGCNxUKBBowGDAKBggrBgEFBQcDAjAKBggrBgEFBQcDBDANBgkqhkiG9w0B
+AQsFAAOCAQEAWS4IrHXWhCGNWk5vn20xV7mlLkM7JPwltVJzB6MRzwUB438upbyUMwNHcEgAmHcs
+xL9hafErN+n9rLL00wEqZsCV732s7YOxSRRjZTE3CmZQ2+TYjXR7A6AzQKo0fv/x43bpSes8ttQ6
+Qtt8nzIbGBkDAcI7wfXsUPF5o0NwLOxre+Z+JCPNH0eaOj2J7EKD2ERLCClmvohrYdlmu85iXfyi
+nJo42eq9g08FtnxTXVQSIZCtiETiGtXA7+t2Aa8429XXunsijRznaYw2SwI/s4sVmvaK3XHaif0D
+QaUYxQp4s2ctzgz3eU6hK68OnNzbhBtF/lx6PHbifqHDzrtUbzCCB+8wggbXoAMCAQICEy0ACwRu
+JYOozH+yQuYAAQALBG4wDQYJKoZIhvcNAQELBQAwgbYxHDAaBgNVBAMME05YUCBFbnRlcnByaXNl
+IENBIDUxCzAJBgNVBAsMAklUMREwDwYDVQQKDAhOWFAgQi5WLjESMBAGA1UEBwwJRWluZGhvdmVu
+MRYwFAYDVQQIDA1Ob29yZC1CcmFiYW50MRMwEQYKCZImiZPyLGQBGRYDd2JpMRMwEQYKCZImiZPy
+LGQBGRYDbnhwMRMwEQYKCZImiZPyLGQBGRYDY29tMQswCQYDVQQGEwJOTDAeFw0yMzEyMjAwOTIw
+NDdaFw0yNTEyMTkwOTIwNDdaMIGaMRMwEQYKCZImiZPyLGQBGRYDY29tMRMwEQYKCZImiZPyLGQB
+GRYDbnhwMRMwEQYKCZImiZPyLGQBGRYDd2JpMQwwCgYDVQQLEwNOWFAxCzAJBgNVBAsTAklOMRYw
+FAYDVQQLEw1NYW5hZ2VkIFVzZXJzMRMwEQYDVQQLEwpEZXZlbG9wZXJzMREwDwYDVQQDEwhueGEx
+ODcxNzCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAL2JT+kRihW1mBdeZFOoCLGIl4DZ
+VL7FWt3V1iFFJJe/bZDw/SUf5z1HeA8xv9+S8rqMyybjlSRHFLgiMm7qrGpVEDniKe8eiqP8Un4Y
+3fHgK5FKZIVVn0KlaMuD5G30AMk9HyUdc2MkVRL8YSQCewkQDEVjB8gnx/e6xfbWEVHf5+dOWJoR
+aket5+0JKV0l/dPV7cT4hL3BFtiBhq8976Li6rn8gxIi63u0G3qvm9Scqk+EHzemDhw/W+eMmGR4
+nwKVLKzumxko8l6EOnnvqqF4vj2hKTpB+2lsEXH1giireMEsvB2RY40lnRUXVQ0FDklOIQV4Qdgi
+EJfUdq/ZhCUCAwEAAaOCBA4wggQKMDwGCSsGAQQBgjcVBwQvMC0GJSsGAQQBgjcVCIWCwH6BjvRV
+hu2FOILrmUuaklY/gbeCPIPthzICAWQCAT4wEwYDVR0lBAwwCgYIKwYBBQUHAwQwDgYDVR0PAQH/
+BAQDAgUgMAwGA1UdEwEB/wQCMAAwGwYJKwYBBAGCNxUKBA4wDDAKBggrBgEFBQcDBDCBlAYJKoZI
+hvcNAQkPBIGGMIGDMAsGCWCGSAFlAwQBKjALBglghkgBZQMEAS0wCwYJYIZIAWUDBAEWMAsGCWCG
+SAFlAwQBGTALBglghkgBZQMEAQIwCwYJYIZIAWUDBAEFMAoGCCqGSIb3DQMHMAcGBSsOAwIHMA4G
+CCqGSIb3DQMCAgIAgDAOBggqhkiG9w0DBAICAgAwHQYDVR0OBBYEFMJ81PK4p3H8Q7gn7u/5OwWx
+uAwGMEUGA1UdEQQ+MDygJAYKKwYBBAGCNxQCA6AWDBRwYW5rYWouZ3VwdGFAbnhwLmNvbYEUcGFu
+a2FqLmd1cHRhQG54cC5jb20wHwYDVR0jBBgwFoAUWJVg7k5072Uiqr3tGakreo4XnQcwggFGBgNV
+HR8EggE9MIIBOTCCATWgggExoIIBLYaByGxkYXA6Ly8vQ049TlhQJTIwRW50ZXJwcmlzZSUyMENB
+JTIwNSxDTj1ubGFtc3BraTAwMDUsQ049Q0RQLENOPVB1YmxpYyUyMEtleSUyMFNlcnZpY2VzLENO
+PVNlcnZpY2VzLENOPUNvbmZpZ3VyYXRpb24sREM9d2JpLERDPW54cCxEQz1jb20/Y2VydGlmaWNh
+dGVSZXZvY2F0aW9uTGlzdD9iYXNlP29iamVjdENsYXNzPWNSTERpc3RyaWJ1dGlvblBvaW50hi9o
+dHRwOi8vbnd3LnBraS5ueHAuY29tL2NybC9OWFBFbnRlcnByaXNlQ0E1LmNybIYvaHR0cDovL3d3
+dy5wa2kubnhwLmNvbS9jcmwvTlhQRW50ZXJwcmlzZUNBNS5jcmwwggEQBggrBgEFBQcBAQSCAQIw
+gf8wgbsGCCsGAQUFBzAChoGubGRhcDovLy9DTj1OWFAlMjBFbnRlcnByaXNlJTIwQ0ElMjA1LENO
+PUFJQSxDTj1QdWJsaWMlMjBLZXklMjBTZXJ2aWNlcyxDTj1TZXJ2aWNlcyxDTj1Db25maWd1cmF0
+aW9uLERDPXdiaSxEQz1ueHAsREM9Y29tP2NBQ2VydGlmaWNhdGU/YmFzZT9vYmplY3RDbGFzcz1j
+ZXJ0aWZpY2F0aW9uQXV0aG9yaXR5MD8GCCsGAQUFBzAChjNodHRwOi8vbnd3LnBraS5ueHAuY29t
+L2NlcnRzL05YUC1FbnRlcnByaXNlLUNBNS5jZXIwDQYJKoZIhvcNAQELBQADggEBALwIIuww1PaF
+EbpQoy5vgJ/4N3xS+niIpFTKyYNAD0Ar38FcUlSnj0FIHKRj8rUmZP9WTky3U8m5B3LOyhJ14FPh
+iy1EwkhZmds9fJiZyEEFiwQWYDG/uknu6zIKOTlLmtlYPfbzfi58keGcjD3T5H8D8DpCGWI1lAwe
+clR9fJCbcYnQSQnuicSCfrHjjXiDZ2O8h7WbE1CC6Cj/qwo5nmS0lMv7yoG94rTNBvYe8iqOkcav
+7KiZA6SdhXms3ppvFmBukI6pTheMvT39SM0S6E0dgeqZSGSxHrM7dcxUdAL4fnYMv3Sa+GAgyXB6
+rihWC11+goz2eawt5TRU2w45TmcxggSzMIIErwIBATCBzjCBtjEcMBoGA1UEAwwTTlhQIEVudGVy
+cHJpc2UgQ0EgNDELMAkGA1UECwwCSVQxETAPBgNVBAoMCE5YUCBCLlYuMRIwEAYDVQQHDAlFaW5k
+aG92ZW4xFjAUBgNVBAgMDU5vb3JkLUJyYWJhbnQxEzARBgoJkiaJk/IsZAEZFgN3YmkxEzARBgoJ
+kiaJk/IsZAEZFgNueHAxEzARBgoJkiaJk/IsZAEZFgNjb20xCzAJBgNVBAYTAk5MAhM/AAV1goSs
+wyqoLYNbAAUABXWCMAkGBSsOAwIaBQCgggK5MBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJ
+KoZIhvcNAQkFMQ8XDTI1MDQwMjA2MTQyMVowIwYJKoZIhvcNAQkEMRYEFEWf2kt2Yjg8HtX4Op8D
++Pe5SrtBMIGTBgkqhkiG9w0BCQ8xgYUwgYIwCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBFjAKBggq
+hkiG9w0DBzALBglghkgBZQMEAQIwDgYIKoZIhvcNAwICAgCAMA0GCCqGSIb3DQMCAgFAMAcGBSsO
+AwIaMAsGCWCGSAFlAwQCAzALBglghkgBZQMEAgIwCwYJYIZIAWUDBAIBMIHfBgkrBgEEAYI3EAQx
+gdEwgc4wgbYxHDAaBgNVBAMME05YUCBFbnRlcnByaXNlIENBIDUxCzAJBgNVBAsMAklUMREwDwYD
+VQQKDAhOWFAgQi5WLjESMBAGA1UEBwwJRWluZGhvdmVuMRYwFAYDVQQIDA1Ob29yZC1CcmFiYW50
+MRMwEQYKCZImiZPyLGQBGRYDd2JpMRMwEQYKCZImiZPyLGQBGRYDbnhwMRMwEQYKCZImiZPyLGQB
+GRYDY29tMQswCQYDVQQGEwJOTAITLQALBG4lg6jMf7JC5gABAAsEbjCB4QYLKoZIhvcNAQkQAgsx
+gdGggc4wgbYxHDAaBgNVBAMME05YUCBFbnRlcnByaXNlIENBIDUxCzAJBgNVBAsMAklUMREwDwYD
+VQQKDAhOWFAgQi5WLjESMBAGA1UEBwwJRWluZGhvdmVuMRYwFAYDVQQIDA1Ob29yZC1CcmFiYW50
+MRMwEQYKCZImiZPyLGQBGRYDd2JpMRMwEQYKCZImiZPyLGQBGRYDbnhwMRMwEQYKCZImiZPyLGQB
+GRYDY29tMQswCQYDVQQGEwJOTAITLQALBG4lg6jMf7JC5gABAAsEbjANBgkqhkiG9w0BAQEFAASC
+AQAfS35pfCLCd+IoRhCiOA83wbyZ/M9zPA2LUoOjGJW0XbY4e7pnjalpA3qRcGiRCaMzcQNzhkpb
+z3jica1uAgZlQ29qPnkYmIZAU6bWvz3T86hBQgw4kJ49t5Lbh4mhiy6PHLiY/uXs0b/AjDwc5frt
+B0lTSXsCnAGJSwHmOk8FeeNjGOSxgaU8Rbqu7omCL9fr3UgPUGHJKsTsB83sywAhpC1q9JsJlJ8u
+W6r6ZqkCMCxoGWYhptYfMx6lkLCh6L+/MwQ5mWy0ZUGH4pO+FMf/ENMcAbDzZCF3AoLdUEqf7NNk
+bcEqY/ZmMk8L4DfMOq9Qxf51rXF+oI/XoAf+YgYAAAAAAAAA
+
+------=_NextPart_000_01A5_01DBA3C4.93635640--
