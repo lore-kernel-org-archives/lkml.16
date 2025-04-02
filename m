@@ -1,1944 +1,323 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A317223957C;
-	Wed,  2 Apr 2025 12:32:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743597177; cv=none; b=VnyB9XnYNhE49pgSWbd5ubxDVxtpunOj+MuAGKroy5LyqC74RU6l4Xseu7BGHINcYl7UxYrUFf2WhYZzFrKx1smJAV2BLWo7KS+7fqLM5fPgZ1rFepcRIHE2Pj682zDwDp/KP80bZUMC1DP/pj19cqI/qgXdOhBdHCwT9piJN9Y=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743597177; c=relaxed/simple;
-	bh=yrUbeNEcjyelpvaxTJZWuxrwA8qhq4dr5mEPQ+7/oZE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XMkw0PLHny3Oxi6AE+yuxtn9sciTNioMWhwN/t5sP3fyhZZRklNWxtfrx2OK6YO624cBpKKqLu53Pt4GvdlHut3SWM0SVjzlW7ta4/jQMWR9s+/prqqltyv24hulIlrm6nlbqJAXTDr+yeO/FTpl1y0kArMAcm7i0DA8zpYw9OA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=KB9MJjvX; arc=none smtp.client-ip=117.135.210.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 137D14C8E
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 12:33:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743597226; cv=fail; b=KivtnjlUxwH0n/o05jg2Y8EjDwZ3j+VTrJNK7sweeCE7mxN5raubltVvfjQ1hp+i4QKeQyBOd96XXDNwOs/3iwatnyKpZbrST+FD+GVQK5ijzuDw4s10GLcNwsQjXaWv9181JfHce7leKkP64slPIAX/fh7aI/KjuKltamRcsFU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743597226; c=relaxed/simple;
+	bh=lFQS5q2oemY0R4QDo8h11OqwonAfvZmME3J296NzTg0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=ZCwa8iJS2hLi8TvDOJTV5g2N10oGub0UCqmWZD7LiKLc4jIKSjDtoL2Q9MYYrostu0LW8oRdzxV7cmNSek37rDr5cKN8wsFkeKrSay7x2mkf1T/mL4QbAc7dz3+WjqzQkojLRcpPl19SRxA0vx7ssXGlUKvvpnHXiecLkmCICJA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=BXvtVgWo; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=0GqtRscj; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="KB9MJjvX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-ID:MIME-Version; bh=73lFm
-	s+gOb4OUsHmwZs/2rCT35x2LYfoJha12tZAvOE=; b=KB9MJjvX13cj2hyxiij0i
-	qOl7KS3z/ngpALJQEA3lJabgbz5u+W6IOyv/LIKaqJ729rRjqrwMfLFDsHDlTOLE
-	TZ0Qsl49haPVpgXBswQ5pGXs0vfbtCtL9Te+HxHqOukrl6naC/LtVwrJ+3ZVS22i
-	OloF2u6lTCH+D2QsrYPGrU=
-Received: from ProDesk.. (unknown [])
-	by gzsmtp4 (Coremail) with SMTP id PygvCgDnd405Lu1nJwOJBA--.36321S9;
-	Wed, 02 Apr 2025 20:32:04 +0800 (CST)
-From: Andy Yan <andyshrk@163.com>
-To: heiko@sntech.de
-Cc: conor+dt@kernel.org,
-	krzk+dt@kernel.org,
-	robh@kernel.org,
-	hjc@rock-chips.com,
-	mripard@kernel.org,
-	neil.armstrong@linaro.org,
-	dmitry.baryshkov@oss.qualcomm.com,
-	devicetree@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	Andy Yan <andy.yan@rock-chips.com>
-Subject: [PATCH v3 7/7] drm/rockchip: inno-hdmi: Convert to drm bridge
-Date: Wed,  2 Apr 2025 20:31:41 +0800
-Message-ID: <20250402123150.238234-8-andyshrk@163.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250402123150.238234-1-andyshrk@163.com>
-References: <20250402123150.238234-1-andyshrk@163.com>
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="BXvtVgWo";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="0GqtRscj"
+Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5326g8cG012887;
+	Wed, 2 Apr 2025 12:33:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=corp-2023-11-20; bh=4oyF/i3l1pPU2543j2
+	ZroRkUQ1tud2+jdGZJgsxB1cA=; b=BXvtVgWo3Wo4dcX89UTm/kR2/bYlubGze7
+	yXOLarYq/mQf8gf/ELCnBFwPoRf+EmsFY7WDod8Uj4fGNFlPOYREgNvK46d+rNqr
+	QEPvnPTHbsfZQ+bW1JzQVAY1m+2Dd64d8IohWK4D2jWvEU3+AZhLFm54PjIq+rEC
+	LA4rjMqXGff/GVgOY8c/DwS+LOfD7zS9ZMX+PfFcn2IIbU18Ake0I2eTsQoklkOt
+	WOx9ZxuAVLM96lcCVAtuqJdpjHSl0SGrpHrzWN148Rw+l9W7WeOvamL1vYTXq7ID
+	8H6kq5dVKvhde5aYyWO7rV6PBtFUedWgc2RuYq6oRkEqtwNDu7eQ==
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 45p7satacs-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 02 Apr 2025 12:33:01 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 532BmgH8004460;
+	Wed, 2 Apr 2025 12:33:01 GMT
+Received: from nam02-sn1-obe.outbound.protection.outlook.com (mail-sn1nam02lp2041.outbound.protection.outlook.com [104.47.57.41])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 45p7aahxqu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 02 Apr 2025 12:33:01 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=gZ6K/wM7uTKHCSdlGN67mdDjrd3YzCHEhcNkV7S6lVlCJ0ok/54Kk3EYg+I7Nhv+i49ahkUGKMMcGutxzSfxvrVFFmmN1ulWvGhkxGiYYQUuqn4MMHpOWPzXVQqx1BL3pJqQjiKZ1a3gnl8iXWhAUyExS9vvJMFtqux2dmnPLL90uUmNqYLM4v/3K4+LYgDbAH7Z8uucVd9BU/7LkNrPKBISWL15P/Qh6KHflspmf7qL9stT67zQkRYOmjH3an/AsHmy5/CzL1L6IEqNF/MEQ5Q6HDaeyBYnQB7STq/KzVqY30iUJ9IHwO0gV8TVBv0nQWgMJcfnIZvw5rOwwEsMqw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=4oyF/i3l1pPU2543j2ZroRkUQ1tud2+jdGZJgsxB1cA=;
+ b=dA4N3r5mxBuXIxkEC27zgooRA6mA76ERDBcRNE56Ele/wBX5xH69KT5HVIv6uiJDW6JFBcZXYrQl1ofsxYWGAZ4fgqZHvlbf9eK6ftJJDzCFOiCARjPUIYHADuLaBf15umDj9p9Prddpar06lnDFi179bek570Vt/8a4ht8sART2wVfuwH1vsBtAlKtgvsPcSg89YWnQM/Jod00IKQOdJejlIUjXDLVLDZqVuJgiMCUAlFjwDJjT4N8HiOIqojQIYmbigc2Qo1DzDxHNu+YFjDr3aqGb+6BXkja2NRHJX7cNddqR7Qt6QXQYOedF4tHjfGl+SWp6PKSKxDetQQDapw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4oyF/i3l1pPU2543j2ZroRkUQ1tud2+jdGZJgsxB1cA=;
+ b=0GqtRscj/FxtZoOaDcyAYKtaITwz7EJgQaD9csiN3GaAqgaOtzYRnjtgXNk7LiuCjDL36MFgKCKyE/2u56tiHSsPlFx6x7UuadfdhgG27wFBj1F+Vhl0gtYI2dWbosj0Za6zv0+aPOH3kFnHUxNzdujxNBfcuh/mIFZyoUJwSD8=
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
+ by CH0PR10MB4875.namprd10.prod.outlook.com (2603:10b6:610:de::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8583.39; Wed, 2 Apr
+ 2025 12:32:58 +0000
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2%7]) with mapi id 15.20.8583.041; Wed, 2 Apr 2025
+ 12:32:58 +0000
+Date: Wed, 2 Apr 2025 13:32:55 +0100
+From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org,
+        xingwei lee <xrivendell7@gmail.com>,
+        yuxin wang <wang1315768607@163.com>,
+        Marius Fleischer <fleischermarius@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        Dan Carpenter <dan.carpenter@linaro.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, Rik van Riel <riel@surriel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Peter Xu <peterx@redhat.com>
+Subject: Re: [PATCH v3] x86/mm/pat: Fix VM_PAT handling when fork() fails in
+ copy_page_range()
+Message-ID: <18b18a90-9850-4015-8038-35e2e083ece5@lucifer.local>
+References: <20250325191951.471185-1-david@redhat.com>
+ <7b6f57b5-c99f-4be7-b89c-1db06788d2b5@redhat.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7b6f57b5-c99f-4be7-b89c-1db06788d2b5@redhat.com>
+X-ClientProxiedBy: LO4P265CA0234.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:315::11) To DM4PR10MB8218.namprd10.prod.outlook.com
+ (2603:10b6:8:1cc::16)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:PygvCgDnd405Lu1nJwOJBA--.36321S9
-X-Coremail-Antispam: 1Uf129KBjvAXoWDXr4UJr17ArykJFWrAFy3twb_yoW7tFyfXo
-	Z7JFnxXw18Zr1xZr4DG3WI9rsrZ3Wxtrn3Xw1rAFWkZasrJw4qga47KryFvF9FqFyrKr98
-	Cw1kKFn3Gr93AF4Dn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7v73VFW2AGmfu7bjvjm3
-	AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUIk9NUUUUU
-X-CM-SenderInfo: 5dqg52xkunqiywtou0bp/xtbB0gUjXmftK+o5lQACsP
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|CH0PR10MB4875:EE_
+X-MS-Office365-Filtering-Correlation-Id: 49880c19-6fb8-4b1d-8372-08dd71e27fec
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?CKABqGc/CC9/Pqi1TAXg/7JgXAy/tYtgBfwIAHJK9zVlgLmpOVL6FM+AEZEO?=
+ =?us-ascii?Q?FMTBy32wJiBnimR2lv14m+Oj4adeOx9NPPxIsPvEaVzIHUs4BQYAPZj1Z17G?=
+ =?us-ascii?Q?5jmNsh2xxCwWJ2RduI8qDLle4hpBUTlle9lhy6nJyQO86Ef60HLMp2ENG2pq?=
+ =?us-ascii?Q?27mI/WHQFYBl1DSwdRI11rq4dysfHgi6j5cwzBwzLGD2Y74gzc2pnXOisiSd?=
+ =?us-ascii?Q?gylxyfGUqlKX/gV4RcfO8T1RxX0jRqE0QbJgN/GJT5zQrHgRJ4j3Ru9Lbmvu?=
+ =?us-ascii?Q?cP7t6FAnPeLH0+4ziwgaNE3vGTk4nNsbAAxUOt6FDjCqG8PkzrRdoc3Ozsj3?=
+ =?us-ascii?Q?qZobQLnHm3ce4vn24Qk2gu7rJHbaantn/w7S3Hl+bXrV/k4kHUnNc5D9Z/SR?=
+ =?us-ascii?Q?xQp4A+7sL9NVu3RK0NDRcPR+eo38FBRcdQWifFhLkp2QJpszG5mgbteF9sRB?=
+ =?us-ascii?Q?5gVGikPKvxmgvXQ80GrlHltTvKkw/5lEPSnvxkUIvzwE0B+WSGDo4HgUU/lK?=
+ =?us-ascii?Q?Cg5m2DvJfXI3U5jmWx9SyxEAu3fL0DUEcefPDoA30+6t8FhUPOni+EIMveUj?=
+ =?us-ascii?Q?qKOa5eTD+ebIJfU47WZyajam/noABDQ70cj5ROjG6CIAFo7zP8LHtNAYOQFt?=
+ =?us-ascii?Q?wCRYaaW/JswkPaGQmDzrRlwcd6mhmj5WFLxi3HH4hQ8jaWRqP/zqJrkKG6no?=
+ =?us-ascii?Q?/1tiNXB2yMGxDStYaZL7yt/Tso/QL9+im5ruaVW2/RfNIO8O7P4zqOVWbAIi?=
+ =?us-ascii?Q?6qKiXryD06LtTKpHe1k+luXSLzUcpizt76IEDOimEueqdSGDjCycjxijVJZ3?=
+ =?us-ascii?Q?5mOK6twOkky6chf6qkbQPamSlzfitMoHWJd2wFbCE6yuTHuGlFVKGjtwkME4?=
+ =?us-ascii?Q?ylNX2DjpIiX9tGk1G72r7xRTfwqFRHYC/vIlxyW48e5nU/mRMGzGXubvC+KW?=
+ =?us-ascii?Q?W7gapMioJs2KqwAYR8ZDzG2jAaXyYJYvXQH/nF9r6cjru5HrW5OSSQygNZL2?=
+ =?us-ascii?Q?Hkgp41nyaRoOzJk0NZEu7sZpSPURk9YcE+SZqo0lsPInzLj5jl+hJW0KB1t6?=
+ =?us-ascii?Q?VmKMkmcoqwkVtYljqwJhh19mHf/bcF+qZKBIvUPAwFEAioYfbx3cRUf1TOOu?=
+ =?us-ascii?Q?vXV6Mn4St1iTQarltWICdqAj028HHqQc8IcaoM0e1+d+Fcy5foMce1fzZ+nS?=
+ =?us-ascii?Q?in/T1Xee8T297kGguRJKZb0AT/V8eac9NpI0MGR8/4MHXoeKYSgn8hQjF4i/?=
+ =?us-ascii?Q?yxmXytjTZ4YCn23gKY3Fp6YFXcGR0Y10vuOAaqHN7Wot9/8/z69sUTezwRHY?=
+ =?us-ascii?Q?BAB1c5yPIummEP/S/t4fItc/tKINnWfKZEymoiHPjGCtzU9yr2TMmRGFE0eG?=
+ =?us-ascii?Q?nXzwmAvLHIglm06gdp+mP0cOCF85iJ8JdtmZILqT93w17aUQdA=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?yyeIIIngM7KdIJh9FrIx5xkB4CD2L5Js6MtUr3WucmzZn38t1ID55RMt9mpl?=
+ =?us-ascii?Q?8IqvhfGHGLtF1PCwkhGGoo10ID99+fl4uuvzB3xImhV8vMYb9BPpa6MCjQlL?=
+ =?us-ascii?Q?UN2Qtl9FOQBKBypnwoEwHu71IeznfE7vhzZDBrMrx/IwSFo8TQN2z5BknnMp?=
+ =?us-ascii?Q?+wD0g3PMf2tb6joEcaYNyZ4cnCk+gHgv1YvBLdjpU/GM7EquqIWRY6t/v3Vr?=
+ =?us-ascii?Q?xur9zyinmFm5JoOe0J+Qnyk7pMl/Ofs1BYuDoVeqoj2/w52/DktraLWnOh2j?=
+ =?us-ascii?Q?U5biZcJKoXME/y/t+BNkdJlvAfFQBejPvl3QM7x0yzh3aCwLh+oGuQUfhRPy?=
+ =?us-ascii?Q?0BOXVpLTnQXO+WG4E+a4r7kXeJ+Kj5+0JTGxtfpRshT6oVIBrlVi5audxOb1?=
+ =?us-ascii?Q?+/sTX8uhIKAXv9xowZbTnTt4l2Jk0yCvoyIlfLqrnVhMXNe2BI7nHmcAYMB2?=
+ =?us-ascii?Q?WoKWvGep7u6OXQhZjFCrx7DNmJxHKYluvbXaM22+lWlH1gjLPJhiWIALyLdJ?=
+ =?us-ascii?Q?OldqLdHjz9FgKUCEAGJEuDc3suiKuy/zfbwVBGHJHzZLC7P+xh2qv0739eqO?=
+ =?us-ascii?Q?ju97UAri//H2hx2fGCSP3BvQ+tOFZkM9rgAoRxzs4hrFK3XW6Bjz2CwnwkuA?=
+ =?us-ascii?Q?ds7M4AfHTYtCVm5VlmrHrr5pFgT4jLkyG5KTKQlhMN6RigHkRw4bYSEiPrmr?=
+ =?us-ascii?Q?yKsdlGXr7oSIBx0fMOP3Wi82hqDyC7L44ADBHKDd21M7AwpGPyVftWdDP8vE?=
+ =?us-ascii?Q?dYNBNCmp09cjVzszMLToaaUYAfKB43R2Eb6JB81K/5X/eB7JjPovMN3Breal?=
+ =?us-ascii?Q?xRb/iK3BZvQgJFky70gyELY1CCklzWrpx5aBrkWHXnOpKZPYsrYAJjs/dbfz?=
+ =?us-ascii?Q?T/h3ml9EmERfuhQqByM+0w2ruUHCoDhZ+1Mg9elUhygQ9i3Z5c2NQe3g/fnf?=
+ =?us-ascii?Q?flJPhdK1FA9OOB4H/bOdU2NdIQxGSBsDC+tMPkV+D9ZKctlPEueSFltX/3Hc?=
+ =?us-ascii?Q?uFmsXgBfr/L+rS8nQIKRCj2u+h7V6mRAYm5VatDhjCKZUC+RXZl5FHBgraaq?=
+ =?us-ascii?Q?WfXMU1bVeJK6pe6wFu03gpHbZZZIjUDdciLlsyvKs6nhJWDfapXRNP4fmy+Z?=
+ =?us-ascii?Q?c5jzwwsaSUal44O6gvPGM1eYhi7q6qaVVQiAGchiG+EwyONgREQRGTMsweSq?=
+ =?us-ascii?Q?+jrvrg3pBpzGcwPo91HdHx5fQIZHRk3WqHuyxf+WbvxonzOViOCSJbgf8bDD?=
+ =?us-ascii?Q?IND1nlvfZxdVibi6hDRaar7/h30QmNihMhix2kCG8wGqyuPenDA5V8JUkRip?=
+ =?us-ascii?Q?0nKL0Bcb+LC7q1AmOZNj7rg25egj9CyDmbLTxqbortpZQ74V9XDdJMveuKhk?=
+ =?us-ascii?Q?6IU70SRcyqb5xGZ4K6L7btfwDzy/Cg4EAEZpo/6AYfQrCBvUjgUaHIxrk/mL?=
+ =?us-ascii?Q?69ssXlr3kWsSJmRHXwL7LkaHVqBhxvSj3ZYFCGnrCryslcUU+10icD/DWQd4?=
+ =?us-ascii?Q?977XBzV1wIu2mJNLpzlM9vpImuHB80EFXGEOtRpKDauU0yZ4ejIXMITTVth4?=
+ =?us-ascii?Q?44m40m0vBSgcjCgh79ZqKrX2V4ScHh30adK9mfHiGeKkoqxlg+YPbrkOSgQu?=
+ =?us-ascii?Q?1w=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	uw0SXVT+eN+DTP9G96pdFIq30HzaC2m4d2Ww2e+yDhkYgont1f8NtPca3i/f4pjCowYxymYZLfaUnJNarWD/eTRlhgKOTBTVKOFX1GGAsC00eWkgy7RPH3JDiEN6U4cSzyiVTNpi9PaT6rKC7RTi5v4AduvhBC+D6VKBfLbJx/GROxDjjiuYZbYW9dE+iw7bwk5PijbI6ISMO20i4bIxtOOeEhPTqOc51kSeqWL8qOBHJtZeMCbex5Qim2apmphUJxMVq7LNBi1jwirfrozTUBuXEN7UgMlHfJEMA3KjPCJhvbGVUCooQ6hisxLg+4bhGWZRKakfpLlD0yFSBLBChIptm9EvfwZWP5EfIaNIIgafEYBvuCOPSVOeV002LNz6Y44o9xd4XmQI/dr9BGF6/Pdg7pL0aRsE3wDwEhaZfqLjUkNLMf9h0Ca4TtXjKbkMa/ii9UmiSybD6TpVaLdP5NbBxN49f8Bd4fsH5ZHW18Cu6BF+x11OSRRCyWG3VF4ap3QskuYaGavYTOw+juhfq5/DOABOmd1KmM6JIYp676iCnfr+8RufdLtPMaFjK0cHCf97pIxXt+WzmwQS4XmS/3PHMl93qyCu5LxGgErYUFU=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 49880c19-6fb8-4b1d-8372-08dd71e27fec
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Apr 2025 12:32:58.0769
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: AnSVV+NRnNkaD9V29xVFeZTTRvMo4jGFOBJLddFBAWpIHRb8HksFUiJbo2E9AnF/ONl8V1NNDfp11pAvMv6koi78yXkyP8IYMXmnN6APQbs=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR10MB4875
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-02_05,2025-04-01_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 adultscore=0 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2502280000
+ definitions=main-2504020079
+X-Proofpoint-GUID: laNhX96UHCFDyM0Sidd4-IMhxoa2Rd--
+X-Proofpoint-ORIG-GUID: laNhX96UHCFDyM0Sidd4-IMhxoa2Rd--
 
-From: Andy Yan <andy.yan@rock-chips.com>
+For the whole thing with this fix-patch:
 
-Convert it to drm bridge driver, it will be convenient for us to
-migrate the connector part to the display driver later.
+Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 
-Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+On Wed, Apr 02, 2025 at 01:36:32PM +0200, David Hildenbrand wrote:
+> On 25.03.25 20:19, David Hildenbrand wrote:
+> > If track_pfn_copy() fails, we already added the dst VMA to the maple
+> > tree. As fork() fails, we'll cleanup the maple tree, and stumble over
+> > the dst VMA for which we neither performed any reservation nor copied
+> > any page tables.
+> >
+> > Consequently untrack_pfn() will see VM_PAT and try obtaining the
+> > PAT information from the page table -- which fails because the page
+> > table was not copied.
+> >
+> > The easiest fix would be to simply clear the VM_PAT flag of the dst VMA
+> > if track_pfn_copy() fails. However, the whole thing is about "simply"
+> > clearing the VM_PAT flag is shaky as well: if we passed track_pfn_copy()
+> > and performed a reservation, but copying the page tables fails, we'll
+> > simply clear the VM_PAT flag, not properly undoing the reservation ...
+> > which is also wrong.
+> >
+> > So let's fix it properly: set the VM_PAT flag only if the reservation
+> > succeeded (leaving it clear initially), and undo the reservation if
+> > anything goes wrong while copying the page tables: clearing the VM_PAT
+> > flag after undoing the reservation.
+> >
+> > Note that any copied page table entries will get zapped when the VMA will
+> > get removed later, after copy_page_range() succeeded; as VM_PAT is not set
+> > then, we won't try cleaning VM_PAT up once more and untrack_pfn() will be
+> > happy. Note that leaving these page tables in place without a reservation
+> > is not a problem, as we are aborting fork(); this process will never run.
+> >
+> > A reproducer can trigger this usually at the first try:
+> >
+> >    https://gitlab.com/davidhildenbrand/scratchspace/-/raw/main/reproducers/pat_fork.c
+> >
+> >    [   45.239440] WARNING: CPU: 26 PID: 11650 at arch/x86/mm/pat/memtype.c:983 get_pat_info+0xf6/0x110
+> >    [   45.241082] Modules linked in: ...
+> >    [   45.249119] CPU: 26 UID: 0 PID: 11650 Comm: repro3 Not tainted 6.12.0-rc5+ #92
+> >    [   45.250598] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-2.fc40 04/01/2014
+> >    [   45.252181] RIP: 0010:get_pat_info+0xf6/0x110
+> >    ...
+> >    [   45.268513] Call Trace:
+> >    [   45.269003]  <TASK>
+> >    [   45.269425]  ? __warn.cold+0xb7/0x14d
+> >    [   45.270131]  ? get_pat_info+0xf6/0x110
+> >    [   45.270846]  ? report_bug+0xff/0x140
+> >    [   45.271519]  ? handle_bug+0x58/0x90
+> >    [   45.272192]  ? exc_invalid_op+0x17/0x70
+> >    [   45.272935]  ? asm_exc_invalid_op+0x1a/0x20
+> >    [   45.273717]  ? get_pat_info+0xf6/0x110
+> >    [   45.274438]  ? get_pat_info+0x71/0x110
+> >    [   45.275165]  untrack_pfn+0x52/0x110
+> >    [   45.275835]  unmap_single_vma+0xa6/0xe0
+> >    [   45.276549]  unmap_vmas+0x105/0x1f0
+> >    [   45.277256]  exit_mmap+0xf6/0x460
+> >    [   45.277913]  __mmput+0x4b/0x120
+> >    [   45.278512]  copy_process+0x1bf6/0x2aa0
+> >    [   45.279264]  kernel_clone+0xab/0x440
+> >    [   45.279959]  __do_sys_clone+0x66/0x90
+> >    [   45.280650]  do_syscall_64+0x95/0x180
+> >
+> > Likely this case was missed in commit d155df53f310 ("x86/mm/pat: clear
+> > VM_PAT if copy_p4d_range failed")
+> >
+> > ... and instead of undoing the reservation we simply cleared the VM_PAT flag.
+> >
+> > Keep the documentation of these functions in include/linux/pgtable.h,
+> > one place is more than sufficient -- we should clean that up for the other
+> > functions like track_pfn_remap/untrack_pfn separately.
+> >
+> > Reported-by: xingwei lee <xrivendell7@gmail.com>
+> > Reported-by: yuxin wang <wang1315768607@163.com>
+> > Closes: https://lore.kernel.org/lkml/CABOYnLx_dnqzpCW99G81DmOr+2UzdmZMk=T3uxwNxwz+R1RAwg@mail.gmail.com/
+> > Reported-by: Marius Fleischer <fleischermarius@gmail.com>
+> > Closes: https://lore.kernel.org/lkml/CAJg=8jwijTP5fre8woS4JVJQ8iUA6v+iNcsOgtj9Zfpc3obDOQ@mail.gmail.com/
+> > Fixes: d155df53f310 ("x86/mm/pat: clear VM_PAT if copy_p4d_range failed")
+> > Fixes: 2ab640379a0a ("x86: PAT: hooks in generic vm code to help archs to track pfnmap regions - v3")
+> > Cc: Ingo Molnar <mingo@kernel.org>
+> > Cc: Borislav Petkov <bp@alien8.de>
+> > Cc: Dan Carpenter <dan.carpenter@linaro.org>
+> > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> > Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> > Cc: Andy Lutomirski <luto@kernel.org>
+> > Cc: Peter Zijlstra <peterz@infradead.org>
+> > Cc: Rik van Riel <riel@surriel.com>
+> > Cc: "H. Peter Anvin" <hpa@zytor.com>
+> > Cc: Peter Xu <peterx@redhat.com>
+> > Signed-off-by: David Hildenbrand <david@redhat.com>
+> > ---
+>
+> Apparently smatch is not happy about some scenarios. The following might
+> make it happy, and make track_pfn_copy() obey the documentation "pfn set if
+> rc == 0".
+>
+> diff --git a/arch/x86/mm/pat/memtype.c b/arch/x86/mm/pat/memtype.c
+> index d721cc19addbd..a51d21d2e5198 100644
+> --- a/arch/x86/mm/pat/memtype.c
+> +++ b/arch/x86/mm/pat/memtype.c
+> @@ -992,8 +992,10 @@ int track_pfn_copy(struct vm_area_struct *dst_vma,
+>         pgprot_t pgprot;
+>         int rc;
+>
+> -       if (!(src_vma->vm_flags & VM_PAT))
+> +       if (!(src_vma->vm_flags & VM_PAT)) {
+> +               *pfn = 0;
+>                 return 0;
+> +       }
+>
+>         /*
+>          * Duplicate the PAT information for the dst VMA based on the src
+> diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
+> index 4c107e17c547e..d4b564aacab8f 100644
+> --- a/include/linux/pgtable.h
+> +++ b/include/linux/pgtable.h
+> @@ -1515,6 +1515,7 @@ static inline void track_pfn_insert(struct
+> vm_area_struct *vma, pgprot_t *prot,
+>  static inline int track_pfn_copy(struct vm_area_struct *dst_vma,
+>                 struct vm_area_struct *src_vma, unsigned long *pfn)
+>  {
+> +       *pfn = 0;
+>         return 0;
+>  }
 
----
+OK interesting, I would have thought it'd be setting the pfn in the local var,
+but this is probably actually better + clearer so we consistently set the value
+in track_pfn_copy() (in non-error case).
 
-Changes in v3:
-- First included in v3
-- Link to V2: https://lore.kernel.org/dri-devel/20250325132944.171111-1-andyshrk@163.com/
-
- drivers/gpu/drm/bridge/Kconfig                |   7 +
- drivers/gpu/drm/bridge/Makefile               |   1 +
- .../inno_hdmi.c => bridge/inno-hdmi.c}        | 924 ++++++++++--------
- drivers/gpu/drm/rockchip/Kconfig              |   1 +
- drivers/gpu/drm/rockchip/Makefile             |   2 +-
- drivers/gpu/drm/rockchip/inno_hdmi-rockchip.c | 187 ++++
- drivers/gpu/drm/rockchip/inno_hdmi.h          | 349 -------
- include/drm/bridge/inno_hdmi.h                |  33 +
- 8 files changed, 741 insertions(+), 763 deletions(-)
- rename drivers/gpu/drm/{rockchip/inno_hdmi.c => bridge/inno-hdmi.c} (52%)
- create mode 100644 drivers/gpu/drm/rockchip/inno_hdmi-rockchip.c
- delete mode 100644 drivers/gpu/drm/rockchip/inno_hdmi.h
- create mode 100644 include/drm/bridge/inno_hdmi.h
-
-diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
-index d20f1646dac27..39ba511181d9b 100644
---- a/drivers/gpu/drm/bridge/Kconfig
-+++ b/drivers/gpu/drm/bridge/Kconfig
-@@ -98,6 +98,13 @@ config DRM_I2C_NXP_TDA998X
-        help
-          Support for NXP Semiconductors TDA998X HDMI encoders.
- 
-+config DRM_INNO_HDMI
-+	tristate
-+	select DRM_BRIDGE_CONNECTOR
-+	select DRM_DISPLAY_HDMI_HELPER
-+	select DRM_DISPLAY_HELPER
-+	select DRM_KMS_HELPER
-+
- config DRM_ITE_IT6263
- 	tristate "ITE IT6263 LVDS/HDMI bridge"
- 	depends on OF
-diff --git a/drivers/gpu/drm/bridge/Makefile b/drivers/gpu/drm/bridge/Makefile
-index 245e8a27e3fc5..efe049afa4d27 100644
---- a/drivers/gpu/drm/bridge/Makefile
-+++ b/drivers/gpu/drm/bridge/Makefile
-@@ -10,6 +10,7 @@ obj-$(CONFIG_DRM_FSL_LDB) += fsl-ldb.o
- tda998x-y := tda998x_drv.o
- obj-$(CONFIG_DRM_I2C_NXP_TDA998X) += tda998x.o
- 
-+obj-$(CONFIG_DRM_INNO_HDMI) += inno-hdmi.o
- obj-$(CONFIG_DRM_ITE_IT6263) += ite-it6263.o
- obj-$(CONFIG_DRM_ITE_IT6505) += ite-it6505.o
- obj-$(CONFIG_DRM_LONTIUM_LT8912B) += lontium-lt8912b.o
-diff --git a/drivers/gpu/drm/rockchip/inno_hdmi.c b/drivers/gpu/drm/bridge/inno-hdmi.c
-similarity index 52%
-rename from drivers/gpu/drm/rockchip/inno_hdmi.c
-rename to drivers/gpu/drm/bridge/inno-hdmi.c
-index db4b4038e51d5..2e8c19a438fed 100644
---- a/drivers/gpu/drm/rockchip/inno_hdmi.c
-+++ b/drivers/gpu/drm/bridge/inno-hdmi.c
-@@ -3,12 +3,14 @@
-  * Copyright (C) Rockchip Electronics Co., Ltd.
-  *    Zheng Yang <zhengyang@rock-chips.com>
-  *    Yakir Yang <ykk@rock-chips.com>
-+ *    Andy Yan <andyshrk@163.com>
-  */
- 
- #include <linux/irq.h>
- #include <linux/clk.h>
- #include <linux/delay.h>
- #include <linux/err.h>
-+#include <linux/i2c.h>
- #include <linux/hdmi.h>
- #include <linux/mfd/syscon.h>
- #include <linux/mod_devicetable.h>
-@@ -17,45 +19,370 @@
- #include <linux/platform_device.h>
- #include <linux/regmap.h>
- 
-+#include <drm/bridge/inno_hdmi.h>
- #include <drm/drm_atomic.h>
- #include <drm/drm_atomic_helper.h>
- #include <drm/drm_edid.h>
- #include <drm/drm_of.h>
-+#include <drm/drm_print.h>
- #include <drm/drm_probe_helper.h>
- #include <drm/drm_simple_kms_helper.h>
- 
- #include <drm/display/drm_hdmi_helper.h>
- #include <drm/display/drm_hdmi_state_helper.h>
- 
--#include "rockchip_drm_drv.h"
-+#define INNO_HDMI_MIN_TMDS_CLOCK  25000000U
- 
--#include "inno_hdmi.h"
-+#define DDC_SEGMENT_ADDR		0x30
-+
-+#define HDMI_SCL_RATE			(100 * 1000)
-+#define DDC_BUS_FREQ_L			0x4b
-+#define DDC_BUS_FREQ_H			0x4c
-+
-+#define HDMI_SYS_CTRL			0x00
-+#define m_RST_ANALOG			BIT(6)
-+#define v_RST_ANALOG			(0 << 6)
-+#define v_NOT_RST_ANALOG		BIT(6)
-+#define m_RST_DIGITAL			BIT(5)
-+#define v_RST_DIGITAL			(0 << 5)
-+#define v_NOT_RST_DIGITAL		BIT(5)
-+#define m_REG_CLK_INV			BIT(4)
-+#define v_REG_CLK_NOT_INV		(0 << 4)
-+#define v_REG_CLK_INV			BIT(4)
-+#define m_VCLK_INV			BIT(3)
-+#define v_VCLK_NOT_INV			(0 << 3)
-+#define v_VCLK_INV			BIT(3)
-+#define m_REG_CLK_SOURCE		BIT(2)
-+#define v_REG_CLK_SOURCE_TMDS		(0 << 2)
-+#define v_REG_CLK_SOURCE_SYS		BIT(2)
-+#define m_POWER				BIT(1)
-+#define v_PWR_ON			(0 << 1)
-+#define v_PWR_OFF			BIT(1)
-+#define m_INT_POL			(1 << 0)
-+#define v_INT_POL_HIGH			1
-+#define v_INT_POL_LOW			0
-+
-+#define HDMI_VIDEO_CONTRL1		0x01
-+#define m_VIDEO_INPUT_FORMAT		(7 << 1)
-+#define m_DE_SOURCE			(1 << 0)
-+#define v_VIDEO_INPUT_FORMAT(n)		((n) << 1)
-+#define v_DE_EXTERNAL			1
-+#define v_DE_INTERNAL			0
-+enum {
-+	VIDEO_INPUT_SDR_RGB444 = 0,
-+	VIDEO_INPUT_DDR_RGB444 = 5,
-+	VIDEO_INPUT_DDR_YCBCR422 = 6
-+};
- 
--#define HIWORD_UPDATE(val, mask)	((val) | (mask) << 16)
-+#define HDMI_VIDEO_CONTRL2		0x02
-+#define m_VIDEO_OUTPUT_COLOR		(3 << 6)
-+#define m_VIDEO_INPUT_BITS		(3 << 4)
-+#define m_VIDEO_INPUT_CSP		(1 << 0)
-+#define v_VIDEO_OUTPUT_COLOR(n)		(((n) & 0x3) << 6)
-+#define v_VIDEO_INPUT_BITS(n)		((n) << 4)
-+#define v_VIDEO_INPUT_CSP(n)		((n) << 0)
-+enum {
-+	VIDEO_INPUT_12BITS = 0,
-+	VIDEO_INPUT_10BITS = 1,
-+	VIDEO_INPUT_REVERT = 2,
-+	VIDEO_INPUT_8BITS = 3,
-+};
- 
--#define INNO_HDMI_MIN_TMDS_CLOCK  25000000U
-+#define HDMI_VIDEO_CONTRL		0x03
-+#define m_VIDEO_AUTO_CSC		BIT(7)
-+#define v_VIDEO_AUTO_CSC(n)		((n) << 7)
-+#define m_VIDEO_C0_C2_SWAP		(1 << 0)
-+#define v_VIDEO_C0_C2_SWAP(n)		((n) << 0)
-+enum {
-+	C0_C2_CHANGE_ENABLE = 0,
-+	C0_C2_CHANGE_DISABLE = 1,
-+	AUTO_CSC_DISABLE = 0,
-+	AUTO_CSC_ENABLE = 1,
-+};
-+
-+#define HDMI_VIDEO_CONTRL3		0x04
-+#define m_COLOR_DEPTH_NOT_INDICATED	BIT(4)
-+#define m_SOF				BIT(3)
-+#define m_COLOR_RANGE			BIT(2)
-+#define m_CSC				(1 << 0)
-+#define v_COLOR_DEPTH_NOT_INDICATED(n)	((n) << 4)
-+#define v_SOF_ENABLE			(0 << 3)
-+#define v_SOF_DISABLE			BIT(3)
-+#define v_COLOR_RANGE_FULL		BIT(2)
-+#define v_COLOR_RANGE_LIMITED		(0 << 2)
-+#define v_CSC_ENABLE			1
-+#define v_CSC_DISABLE			0
-+
-+#define HDMI_AV_MUTE			0x05
-+#define m_AVMUTE_CLEAR			BIT(7)
-+#define m_AVMUTE_ENABLE			BIT(6)
-+#define m_AUDIO_MUTE			BIT(1)
-+#define m_VIDEO_BLACK			(1 << 0)
-+#define v_AVMUTE_CLEAR(n)		((n) << 7)
-+#define v_AVMUTE_ENABLE(n)		((n) << 6)
-+#define v_AUDIO_MUTE(n)			((n) << 1)
-+#define v_VIDEO_MUTE(n)			((n) << 0)
-+
-+#define HDMI_VIDEO_TIMING_CTL		0x08
-+#define v_HSYNC_POLARITY(n)		((n) << 3)
-+#define v_VSYNC_POLARITY(n)		((n) << 2)
-+#define v_INETLACE(n)			((n) << 1)
-+#define v_EXTERANL_VIDEO(n)		((n) << 0)
-+
-+#define HDMI_VIDEO_EXT_HTOTAL_L		0x09
-+#define HDMI_VIDEO_EXT_HTOTAL_H		0x0a
-+#define HDMI_VIDEO_EXT_HBLANK_L		0x0b
-+#define HDMI_VIDEO_EXT_HBLANK_H		0x0c
-+#define HDMI_VIDEO_EXT_HDELAY_L		0x0d
-+#define HDMI_VIDEO_EXT_HDELAY_H		0x0e
-+#define HDMI_VIDEO_EXT_HDURATION_L	0x0f
-+#define HDMI_VIDEO_EXT_HDURATION_H	0x10
-+#define HDMI_VIDEO_EXT_VTOTAL_L		0x11
-+#define HDMI_VIDEO_EXT_VTOTAL_H		0x12
-+#define HDMI_VIDEO_EXT_VBLANK		0x13
-+#define HDMI_VIDEO_EXT_VDELAY		0x14
-+#define HDMI_VIDEO_EXT_VDURATION	0x15
-+
-+#define HDMI_VIDEO_CSC_COEF		0x18
-+
-+#define HDMI_AUDIO_CTRL1		0x35
-+enum {
-+	CTS_SOURCE_INTERNAL = 0,
-+	CTS_SOURCE_EXTERNAL = 1,
-+};
-+
-+#define v_CTS_SOURCE(n)			((n) << 7)
-+
-+enum {
-+	DOWNSAMPLE_DISABLE = 0,
-+	DOWNSAMPLE_1_2 = 1,
-+	DOWNSAMPLE_1_4 = 2,
-+};
-+
-+#define v_DOWN_SAMPLE(n)		((n) << 5)
-+
-+enum {
-+	AUDIO_SOURCE_IIS = 0,
-+	AUDIO_SOURCE_SPDIF = 1,
-+};
-+
-+#define v_AUDIO_SOURCE(n)		((n) << 3)
-+
-+#define v_MCLK_ENABLE(n)		((n) << 2)
-+
-+enum {
-+	MCLK_128FS = 0,
-+	MCLK_256FS = 1,
-+	MCLK_384FS = 2,
-+	MCLK_512FS = 3,
-+};
-+
-+#define v_MCLK_RATIO(n)			(n)
-+
-+#define AUDIO_SAMPLE_RATE		0x37
-+
-+enum {
-+	AUDIO_32K = 0x3,
-+	AUDIO_441K = 0x0,
-+	AUDIO_48K = 0x2,
-+	AUDIO_882K = 0x8,
-+	AUDIO_96K = 0xa,
-+	AUDIO_1764K = 0xc,
-+	AUDIO_192K = 0xe,
-+};
- 
--#define RK3036_GRF_SOC_CON2	0x148
--#define RK3036_HDMI_PHSYNC	BIT(4)
--#define RK3036_HDMI_PVSYNC	BIT(5)
-+#define AUDIO_I2S_MODE			0x38
- 
--enum inno_hdmi_dev_type {
--	RK3036_HDMI,
--	RK3128_HDMI,
-+enum {
-+	I2S_CHANNEL_1_2 = 1,
-+	I2S_CHANNEL_3_4 = 3,
-+	I2S_CHANNEL_5_6 = 7,
-+	I2S_CHANNEL_7_8 = 0xf
- };
- 
--struct inno_hdmi_phy_config {
--	unsigned long pixelclock;
--	u8 pre_emphasis;
--	u8 voltage_level_control;
-+#define v_I2S_CHANNEL(n)		((n) << 2)
-+
-+enum {
-+	I2S_STANDARD = 0,
-+	I2S_LEFT_JUSTIFIED = 1,
-+	I2S_RIGHT_JUSTIFIED = 2,
-+};
-+
-+#define v_I2S_MODE(n)			(n)
-+
-+#define AUDIO_I2S_MAP			0x39
-+#define AUDIO_I2S_SWAPS_SPDIF		0x3a
-+#define v_SPIDF_FREQ(n)			(n)
-+
-+#define N_32K				0x1000
-+#define N_441K				0x1880
-+#define N_882K				0x3100
-+#define N_1764K				0x6200
-+#define N_48K				0x1800
-+#define N_96K				0x3000
-+#define N_192K				0x6000
-+
-+#define HDMI_AUDIO_CHANNEL_STATUS	0x3e
-+#define m_AUDIO_STATUS_NLPCM		BIT(7)
-+#define m_AUDIO_STATUS_USE		BIT(6)
-+#define m_AUDIO_STATUS_COPYRIGHT	BIT(5)
-+#define m_AUDIO_STATUS_ADDITION		(3 << 2)
-+#define m_AUDIO_STATUS_CLK_ACCURACY	(2 << 0)
-+#define v_AUDIO_STATUS_NLPCM(n)		(((n) & 1) << 7)
-+#define AUDIO_N_H			0x3f
-+#define AUDIO_N_M			0x40
-+#define AUDIO_N_L			0x41
-+
-+#define HDMI_AUDIO_CTS_H		0x45
-+#define HDMI_AUDIO_CTS_M		0x46
-+#define HDMI_AUDIO_CTS_L		0x47
-+
-+#define HDMI_DDC_CLK_L			0x4b
-+#define HDMI_DDC_CLK_H			0x4c
-+
-+#define HDMI_EDID_SEGMENT_POINTER	0x4d
-+#define HDMI_EDID_WORD_ADDR		0x4e
-+#define HDMI_EDID_FIFO_OFFSET		0x4f
-+#define HDMI_EDID_FIFO_ADDR		0x50
-+
-+#define HDMI_PACKET_SEND_MANUAL		0x9c
-+#define HDMI_PACKET_SEND_AUTO		0x9d
-+#define m_PACKET_GCP_EN			BIT(7)
-+#define m_PACKET_MSI_EN			BIT(6)
-+#define m_PACKET_SDI_EN			BIT(5)
-+#define m_PACKET_VSI_EN			BIT(4)
-+#define v_PACKET_GCP_EN(n)		(((n) & 1) << 7)
-+#define v_PACKET_MSI_EN(n)		(((n) & 1) << 6)
-+#define v_PACKET_SDI_EN(n)		(((n) & 1) << 5)
-+#define v_PACKET_VSI_EN(n)		(((n) & 1) << 4)
-+
-+#define HDMI_CONTROL_PACKET_BUF_INDEX	0x9f
-+
-+enum {
-+	INFOFRAME_VSI = 0x05,
-+	INFOFRAME_AVI = 0x06,
-+	INFOFRAME_AAI = 0x08,
- };
- 
--struct inno_hdmi_variant {
--	enum inno_hdmi_dev_type dev_type;
--	struct inno_hdmi_phy_config *phy_configs;
--	struct inno_hdmi_phy_config *default_phy_config;
-+#define HDMI_CONTROL_PACKET_ADDR	0xa0
-+#define HDMI_MAXIMUM_INFO_FRAME_SIZE	0x11
-+
-+enum {
-+	AVI_COLOR_MODE_RGB = 0,
-+	AVI_COLOR_MODE_YCBCR422 = 1,
-+	AVI_COLOR_MODE_YCBCR444 = 2,
-+	AVI_COLORIMETRY_NO_DATA = 0,
-+
-+	AVI_COLORIMETRY_SMPTE_170M = 1,
-+	AVI_COLORIMETRY_ITU709 = 2,
-+	AVI_COLORIMETRY_EXTENDED = 3,
-+
-+	AVI_CODED_FRAME_ASPECT_NO_DATA = 0,
-+	AVI_CODED_FRAME_ASPECT_4_3 = 1,
-+	AVI_CODED_FRAME_ASPECT_16_9 = 2,
-+
-+	ACTIVE_ASPECT_RATE_SAME_AS_CODED_FRAME = 0x08,
-+	ACTIVE_ASPECT_RATE_4_3 = 0x09,
-+	ACTIVE_ASPECT_RATE_16_9 = 0x0A,
-+	ACTIVE_ASPECT_RATE_14_9 = 0x0B,
- };
- 
-+#define HDMI_HDCP_CTRL			0x52
-+#define m_HDMI_DVI			BIT(1)
-+#define v_HDMI_DVI(n)			((n) << 1)
-+
-+#define HDMI_INTERRUPT_MASK1		0xc0
-+#define HDMI_INTERRUPT_STATUS1		0xc1
-+#define	m_INT_ACTIVE_VSYNC		BIT(5)
-+#define m_INT_EDID_READY		BIT(2)
-+
-+#define HDMI_INTERRUPT_MASK2		0xc2
-+#define HDMI_INTERRUPT_STATUS2		0xc3
-+#define m_INT_HDCP_ERR			BIT(7)
-+#define m_INT_BKSV_FLAG			BIT(6)
-+#define m_INT_HDCP_OK			BIT(4)
-+
-+#define HDMI_STATUS			0xc8
-+#define m_HOTPLUG			BIT(7)
-+#define m_MASK_INT_HOTPLUG		BIT(5)
-+#define m_INT_HOTPLUG			BIT(1)
-+#define v_MASK_INT_HOTPLUG(n)		(((n) & 0x1) << 5)
-+
-+#define HDMI_COLORBAR                   0xc9
-+
-+#define HDMI_PHY_SYNC			0xce
-+#define HDMI_PHY_SYS_CTL		0xe0
-+#define m_TMDS_CLK_SOURCE		BIT(5)
-+#define v_TMDS_FROM_PLL			(0 << 5)
-+#define v_TMDS_FROM_GEN			BIT(5)
-+#define m_PHASE_CLK			BIT(4)
-+#define v_DEFAULT_PHASE			(0 << 4)
-+#define v_SYNC_PHASE			BIT(4)
-+#define m_TMDS_CURRENT_PWR		BIT(3)
-+#define v_TURN_ON_CURRENT		(0 << 3)
-+#define v_CAT_OFF_CURRENT		BIT(3)
-+#define m_BANDGAP_PWR			BIT(2)
-+#define v_BANDGAP_PWR_UP		(0 << 2)
-+#define v_BANDGAP_PWR_DOWN		BIT(2)
-+#define m_PLL_PWR			BIT(1)
-+#define v_PLL_PWR_UP			(0 << 1)
-+#define v_PLL_PWR_DOWN			BIT(1)
-+#define m_TMDS_CHG_PWR			(1 << 0)
-+#define v_TMDS_CHG_PWR_UP		(0 << 0)
-+#define v_TMDS_CHG_PWR_DOWN		(1 << 0)
-+
-+#define HDMI_PHY_CHG_PWR		0xe1
-+#define v_CLK_CHG_PWR(n)		(((n) & 1) << 3)
-+#define v_DATA_CHG_PWR(n)		(((n) & 7) << 0)
-+
-+#define HDMI_PHY_DRIVER			0xe2
-+#define v_CLK_MAIN_DRIVER(n)		((n) << 4)
-+#define v_DATA_MAIN_DRIVER(n)		((n) << 0)
-+
-+#define HDMI_PHY_PRE_EMPHASIS		0xe3
-+#define v_PRE_EMPHASIS(n)		(((n) & 7) << 4)
-+#define v_CLK_PRE_DRIVER(n)		(((n) & 3) << 2)
-+#define v_DATA_PRE_DRIVER(n)		(((n) & 3) << 0)
-+
-+#define HDMI_PHY_FEEDBACK_DIV_RATIO_LOW		0xe7
-+#define v_FEEDBACK_DIV_LOW(n)			((n) & 0xff)
-+#define HDMI_PHY_FEEDBACK_DIV_RATIO_HIGH	0xe8
-+#define v_FEEDBACK_DIV_HIGH(n)			((n) & 1)
-+
-+#define HDMI_PHY_PRE_DIV_RATIO		0xed
-+#define v_PRE_DIV_RATIO(n)		((n) & 0x1f)
-+
-+#define HDMI_CEC_CTRL			0xd0
-+#define m_ADJUST_FOR_HISENSE		BIT(6)
-+#define m_REJECT_RX_BROADCAST		BIT(5)
-+#define m_BUSFREETIME_ENABLE		BIT(2)
-+#define m_REJECT_RX			BIT(1)
-+#define m_START_TX			(1 << 0)
-+
-+#define HDMI_CEC_DATA			0xd1
-+#define HDMI_CEC_TX_OFFSET		0xd2
-+#define HDMI_CEC_RX_OFFSET		0xd3
-+#define HDMI_CEC_CLK_H			0xd4
-+#define HDMI_CEC_CLK_L			0xd5
-+#define HDMI_CEC_TX_LENGTH		0xd6
-+#define HDMI_CEC_RX_LENGTH		0xd7
-+#define HDMI_CEC_TX_INT_MASK		0xd8
-+#define m_TX_DONE			BIT(3)
-+#define m_TX_NOACK			BIT(2)
-+#define m_TX_BROADCAST_REJ		BIT(1)
-+#define m_TX_BUSNOTFREE			(1 << 0)
-+
-+#define HDMI_CEC_RX_INT_MASK		0xd9
-+#define m_RX_LA_ERR			BIT(4)
-+#define m_RX_GLITCH			BIT(3)
-+#define m_RX_DONE			(1 << 0)
-+
-+#define HDMI_CEC_TX_INT			0xda
-+#define HDMI_CEC_RX_INT			0xdb
-+#define HDMI_CEC_BUSFREETIME_L		0xdc
-+#define HDMI_CEC_BUSFREETIME_H		0xdd
-+#define HDMI_CEC_LOGICADDR		0xde
-+
- struct inno_hdmi_i2c {
- 	struct i2c_adapter adap;
- 
-@@ -68,41 +395,18 @@ struct inno_hdmi_i2c {
- 
- struct inno_hdmi {
- 	struct device *dev;
--
-+	struct drm_bridge bridge;
- 	struct clk *pclk;
- 	struct clk *refclk;
- 	void __iomem *regs;
- 	struct regmap *grf;
- 
--	struct drm_connector	connector;
--	struct rockchip_encoder	encoder;
--
- 	struct inno_hdmi_i2c *i2c;
- 	struct i2c_adapter *ddc;
--
--	const struct inno_hdmi_variant *variant;
-+	const struct inno_hdmi_plat_data *plat_data;
-+	unsigned int colorimetry;
- };
- 
--struct inno_hdmi_connector_state {
--	struct drm_connector_state	base;
--	unsigned int			colorimetry;
--};
--
--static struct inno_hdmi *encoder_to_inno_hdmi(struct drm_encoder *encoder)
--{
--	struct rockchip_encoder *rkencoder = to_rockchip_encoder(encoder);
--
--	return container_of(rkencoder, struct inno_hdmi, encoder);
--}
--
--static struct inno_hdmi *connector_to_inno_hdmi(struct drm_connector *connector)
--{
--	return container_of(connector, struct inno_hdmi, connector);
--}
--
--#define to_inno_hdmi_conn_state(conn_state) \
--	container_of_const(conn_state, struct inno_hdmi_connector_state, base)
--
- enum {
- 	CSC_RGB_0_255_TO_ITU601_16_235_8BIT,
- 	CSC_RGB_0_255_TO_ITU709_16_235_8BIT,
-@@ -145,23 +449,15 @@ static const char coeff_csc[][24] = {
- 	},
- };
- 
--static struct inno_hdmi_phy_config rk3036_hdmi_phy_configs[] = {
--	{  74250000, 0x3f, 0xbb },
--	{ 165000000, 0x6f, 0xbb },
--	{      ~0UL, 0x00, 0x00 }
--};
--
--static struct inno_hdmi_phy_config rk3128_hdmi_phy_configs[] = {
--	{  74250000, 0x3f, 0xaa },
--	{ 165000000, 0x5f, 0xaa },
--	{      ~0UL, 0x00, 0x00 }
--};
-+static struct inno_hdmi *bridge_to_inno_hdmi(struct drm_bridge *bridge)
-+{
-+	return container_of(bridge, struct inno_hdmi, bridge);
-+}
- 
- static int inno_hdmi_find_phy_config(struct inno_hdmi *hdmi,
- 				     unsigned long pixelclk)
- {
--	const struct inno_hdmi_phy_config *phy_configs =
--						hdmi->variant->phy_configs;
-+	const struct inno_hdmi_phy_config *phy_configs = hdmi->plat_data->phy_configs;
- 	int i;
- 
- 	for (i = 0; phy_configs[i].pixelclock != ~0UL; i++) {
-@@ -233,12 +529,12 @@ static void inno_hdmi_power_up(struct inno_hdmi *hdmi,
- 	int ret = inno_hdmi_find_phy_config(hdmi, mpixelclock);
- 
- 	if (ret < 0) {
--		phy_config = hdmi->variant->default_phy_config;
-+		phy_config = hdmi->plat_data->default_phy_config;
- 		DRM_DEV_ERROR(hdmi->dev,
- 			      "Using default phy configuration for TMDS rate %lu",
- 			      mpixelclock);
- 	} else {
--		phy_config = &hdmi->variant->phy_configs[ret];
-+		phy_config = &hdmi->plat_data->phy_configs[ret];
- 	}
- 
- 	inno_hdmi_sys_power(hdmi, false);
-@@ -255,32 +551,46 @@ static void inno_hdmi_power_up(struct inno_hdmi *hdmi,
- 	inno_hdmi_sys_power(hdmi, true);
- };
- 
--static void inno_hdmi_reset(struct inno_hdmi *hdmi)
-+static void inno_hdmi_init_hw(struct inno_hdmi *hdmi)
- {
- 	u32 val;
- 	u32 msk;
- 
- 	hdmi_modb(hdmi, HDMI_SYS_CTRL, m_RST_DIGITAL, v_NOT_RST_DIGITAL);
--	udelay(100);
-+	usleep_range(100, 150);
- 
- 	hdmi_modb(hdmi, HDMI_SYS_CTRL, m_RST_ANALOG, v_NOT_RST_ANALOG);
--	udelay(100);
-+	usleep_range(100, 150);
- 
- 	msk = m_REG_CLK_INV | m_REG_CLK_SOURCE | m_POWER | m_INT_POL;
- 	val = v_REG_CLK_INV | v_REG_CLK_SOURCE_SYS | v_PWR_ON | v_INT_POL_HIGH;
- 	hdmi_modb(hdmi, HDMI_SYS_CTRL, msk, val);
- 
- 	inno_hdmi_standby(hdmi);
-+
-+	/*
-+	 * When the controller isn't configured to an accurate
-+	 * video timing and there is no reference clock available,
-+	 * then the TMDS clock source would be switched to PCLK_HDMI,
-+	 * so we need to init the TMDS rate to PCLK rate, and
-+	 * reconfigure the DDC clock.
-+	 */
-+	if (hdmi->refclk)
-+		inno_hdmi_i2c_init(hdmi, clk_get_rate(hdmi->refclk));
-+	else
-+		inno_hdmi_i2c_init(hdmi, clk_get_rate(hdmi->pclk));
-+
-+	/* Unmute hotplug interrupt */
-+	hdmi_modb(hdmi, HDMI_STATUS, m_MASK_INT_HOTPLUG, v_MASK_INT_HOTPLUG(1));
- }
- 
--static int inno_hdmi_disable_frame(struct drm_connector *connector,
--				   enum hdmi_infoframe_type type)
-+static int inno_hdmi_bridge_clear_infoframe(struct drm_bridge *bridge,
-+					    enum hdmi_infoframe_type type)
- {
--	struct inno_hdmi *hdmi = connector_to_inno_hdmi(connector);
-+	struct inno_hdmi *hdmi = bridge_to_inno_hdmi(bridge);
- 
- 	if (type != HDMI_INFOFRAME_TYPE_AVI) {
--		drm_err(connector->dev,
--			"Unsupported infoframe type: %u\n", type);
-+		drm_err(bridge->dev, "Unsupported infoframe type: %u\n", type);
- 		return 0;
- 	}
- 
-@@ -289,20 +599,19 @@ static int inno_hdmi_disable_frame(struct drm_connector *connector,
- 	return 0;
- }
- 
--static int inno_hdmi_upload_frame(struct drm_connector *connector,
--				  enum hdmi_infoframe_type type,
--				  const u8 *buffer, size_t len)
-+static int inno_hdmi_bridge_write_infoframe(struct drm_bridge *bridge,
-+					    enum hdmi_infoframe_type type,
-+					    const u8 *buffer, size_t len)
- {
--	struct inno_hdmi *hdmi = connector_to_inno_hdmi(connector);
-+	struct inno_hdmi *hdmi = bridge_to_inno_hdmi(bridge);
- 	ssize_t i;
- 
- 	if (type != HDMI_INFOFRAME_TYPE_AVI) {
--		drm_err(connector->dev,
--			"Unsupported infoframe type: %u\n", type);
-+		drm_err(bridge->dev, "Unsupported infoframe type: %u\n", type);
- 		return 0;
- 	}
- 
--	inno_hdmi_disable_frame(connector, type);
-+	inno_hdmi_bridge_clear_infoframe(bridge, type);
- 
- 	for (i = 0; i < len; i++)
- 		hdmi_writeb(hdmi, HDMI_CONTROL_PACKET_ADDR + i, buffer[i]);
-@@ -310,17 +619,9 @@ static int inno_hdmi_upload_frame(struct drm_connector *connector,
- 	return 0;
- }
- 
--static const struct drm_connector_hdmi_funcs inno_hdmi_hdmi_connector_funcs = {
--	.clear_infoframe	= inno_hdmi_disable_frame,
--	.write_infoframe	= inno_hdmi_upload_frame,
--};
--
--static int inno_hdmi_config_video_csc(struct inno_hdmi *hdmi)
-+static int inno_hdmi_config_video_csc(struct inno_hdmi *hdmi, struct drm_connector *connector)
- {
--	struct drm_connector *connector = &hdmi->connector;
- 	struct drm_connector_state *conn_state = connector->state;
--	struct inno_hdmi_connector_state *inno_conn_state =
--					to_inno_hdmi_conn_state(conn_state);
- 	int c0_c2_change = 0;
- 	int csc_enable = 0;
- 	int csc_mode = 0;
-@@ -356,7 +657,7 @@ static int inno_hdmi_config_video_csc(struct inno_hdmi *hdmi)
- 			return 0;
- 		}
- 	} else {
--		if (inno_conn_state->colorimetry == HDMI_COLORIMETRY_ITU_601) {
-+		if (hdmi->colorimetry == HDMI_COLORIMETRY_ITU_601) {
- 			if (conn_state->hdmi.output_format == HDMI_COLORSPACE_YUV444) {
- 				csc_mode = CSC_RGB_0_255_TO_ITU601_16_235_8BIT;
- 				auto_csc = AUTO_CSC_DISABLE;
-@@ -374,8 +675,7 @@ static int inno_hdmi_config_video_csc(struct inno_hdmi *hdmi)
- 	}
- 
- 	for (i = 0; i < 24; i++)
--		hdmi_writeb(hdmi, HDMI_VIDEO_CSC_COEF + i,
--			    coeff_csc[csc_mode][i]);
-+		hdmi_writeb(hdmi, HDMI_VIDEO_CSC_COEF + i, coeff_csc[csc_mode][i]);
- 
- 	value = v_SOF_DISABLE | csc_enable | v_COLOR_DEPTH_NOT_INDICATED(1);
- 	hdmi_writeb(hdmi, HDMI_VIDEO_CONTRL3, value);
-@@ -389,15 +689,11 @@ static int inno_hdmi_config_video_csc(struct inno_hdmi *hdmi)
- static int inno_hdmi_config_video_timing(struct inno_hdmi *hdmi,
- 					 struct drm_display_mode *mode)
- {
--	int value, psync;
--
--	if (hdmi->variant->dev_type == RK3036_HDMI) {
--		psync = mode->flags & DRM_MODE_FLAG_PHSYNC ? RK3036_HDMI_PHSYNC : 0;
--		value = HIWORD_UPDATE(psync, RK3036_HDMI_PHSYNC);
--		psync = mode->flags & DRM_MODE_FLAG_PVSYNC ? RK3036_HDMI_PVSYNC : 0;
--		value |= HIWORD_UPDATE(psync, RK3036_HDMI_PVSYNC);
--		regmap_write(hdmi->grf, RK3036_GRF_SOC_CON2, value);
--	}
-+	const struct inno_hdmi_plat_ops *plat_ops = hdmi->plat_data->ops;
-+	u32 value;
-+
-+	if (plat_ops && plat_ops->enable)
-+		plat_ops->enable(hdmi->dev, mode);
- 
- 	/* Set detail external video timing polarity and interlace mode */
- 	value = v_EXTERANL_VIDEO(1);
-@@ -446,14 +742,16 @@ static int inno_hdmi_config_video_timing(struct inno_hdmi *hdmi,
- 	return 0;
- }
- 
--static int inno_hdmi_setup(struct inno_hdmi *hdmi,
--			   struct drm_atomic_state *state)
-+static int inno_hdmi_setup(struct inno_hdmi *hdmi, struct drm_atomic_state *state)
- {
--	struct drm_connector *connector = &hdmi->connector;
--	struct drm_display_info *display = &connector->display_info;
-+	struct drm_bridge *bridge = &hdmi->bridge;
-+	struct drm_connector *connector;
-+	struct drm_display_info *info;
- 	struct drm_connector_state *new_conn_state;
- 	struct drm_crtc_state *new_crtc_state;
- 
-+	connector = drm_atomic_get_new_connector_for_encoder(state, bridge->encoder);
-+
- 	new_conn_state = drm_atomic_get_new_connector_state(state, connector);
- 	if (WARN_ON(!new_conn_state))
- 		return -EINVAL;
-@@ -462,17 +760,18 @@ static int inno_hdmi_setup(struct inno_hdmi *hdmi,
- 	if (WARN_ON(!new_crtc_state))
- 		return -EINVAL;
- 
-+	info = &connector->display_info;
-+
- 	/* Mute video and audio output */
- 	hdmi_modb(hdmi, HDMI_AV_MUTE, m_AUDIO_MUTE | m_VIDEO_BLACK,
- 		  v_AUDIO_MUTE(1) | v_VIDEO_MUTE(1));
- 
- 	/* Set HDMI Mode */
--	hdmi_writeb(hdmi, HDMI_HDCP_CTRL,
--		    v_HDMI_DVI(display->is_hdmi));
-+	hdmi_writeb(hdmi, HDMI_HDCP_CTRL, v_HDMI_DVI(info->is_hdmi));
- 
- 	inno_hdmi_config_video_timing(hdmi, &new_crtc_state->adjusted_mode);
- 
--	inno_hdmi_config_video_csc(hdmi);
-+	inno_hdmi_config_video_csc(hdmi, connector);
- 
- 	drm_atomic_helper_connector_hdmi_update_infoframes(connector, state);
- 
-@@ -493,9 +792,11 @@ static int inno_hdmi_setup(struct inno_hdmi *hdmi,
- 	return 0;
- }
- 
--static enum drm_mode_status inno_hdmi_display_mode_valid(struct inno_hdmi *hdmi,
--							 const struct drm_display_mode *mode)
-+static enum drm_mode_status inno_hdmi_bridge_mode_valid(struct drm_bridge *bridge,
-+							const struct drm_display_info *info,
-+							const struct drm_display_mode *mode)
- {
-+	struct inno_hdmi *hdmi = bridge_to_inno_hdmi(bridge);
- 	unsigned long mpixelclk, max_tolerance;
- 	long rounded_refclk;
- 
-@@ -525,189 +826,78 @@ static enum drm_mode_status inno_hdmi_display_mode_valid(struct inno_hdmi *hdmi,
- 	return MODE_OK;
- }
- 
--static void inno_hdmi_encoder_enable(struct drm_encoder *encoder,
--				     struct drm_atomic_state *state)
--{
--	struct inno_hdmi *hdmi = encoder_to_inno_hdmi(encoder);
--
--	inno_hdmi_setup(hdmi, state);
--}
--
--static void inno_hdmi_encoder_disable(struct drm_encoder *encoder,
--				      struct drm_atomic_state *state)
--{
--	struct inno_hdmi *hdmi = encoder_to_inno_hdmi(encoder);
--
--	inno_hdmi_standby(hdmi);
--}
--
--static int
--inno_hdmi_encoder_atomic_check(struct drm_encoder *encoder,
--			       struct drm_crtc_state *crtc_state,
--			       struct drm_connector_state *conn_state)
--{
--	struct rockchip_crtc_state *s = to_rockchip_crtc_state(crtc_state);
--	struct drm_display_mode *mode = &crtc_state->adjusted_mode;
--	u8 vic = drm_match_cea_mode(mode);
--	struct inno_hdmi_connector_state *inno_conn_state =
--					to_inno_hdmi_conn_state(conn_state);
--
--	s->output_mode = ROCKCHIP_OUT_MODE_P888;
--	s->output_type = DRM_MODE_CONNECTOR_HDMIA;
--
--	if (vic == 6 || vic == 7 ||
--	    vic == 21 || vic == 22 ||
--	    vic == 2 || vic == 3 ||
--	    vic == 17 || vic == 18)
--		inno_conn_state->colorimetry = HDMI_COLORIMETRY_ITU_601;
--	else
--		inno_conn_state->colorimetry = HDMI_COLORIMETRY_ITU_709;
--
--	return 0;
--}
--
--static const struct drm_encoder_helper_funcs inno_hdmi_encoder_helper_funcs = {
--	.atomic_check	= inno_hdmi_encoder_atomic_check,
--	.atomic_enable	= inno_hdmi_encoder_enable,
--	.atomic_disable	= inno_hdmi_encoder_disable,
--};
--
--static enum drm_connector_status
--inno_hdmi_connector_detect(struct drm_connector *connector, bool force)
-+static enum drm_connector_status inno_hdmi_bridge_detect(struct drm_bridge *bridge)
- {
--	struct inno_hdmi *hdmi = connector_to_inno_hdmi(connector);
-+	struct inno_hdmi *hdmi = bridge_to_inno_hdmi(bridge);
- 
- 	return (hdmi_readb(hdmi, HDMI_STATUS) & m_HOTPLUG) ?
- 		connector_status_connected : connector_status_disconnected;
- }
- 
--static int inno_hdmi_connector_get_modes(struct drm_connector *connector)
-+static const struct drm_edid *
-+inno_hdmi_bridge_edid_read(struct drm_bridge *bridge, struct drm_connector *connector)
- {
--	struct inno_hdmi *hdmi = connector_to_inno_hdmi(connector);
-+	struct inno_hdmi *hdmi = bridge_to_inno_hdmi(bridge);
- 	const struct drm_edid *drm_edid;
--	int ret = 0;
--
--	if (!hdmi->ddc)
--		return 0;
- 
--	drm_edid = drm_edid_read_ddc(connector, hdmi->ddc);
--	drm_edid_connector_update(connector, drm_edid);
--	ret = drm_edid_connector_add_modes(connector);
--	drm_edid_free(drm_edid);
-+	drm_edid = drm_edid_read_ddc(connector, bridge->ddc);
-+	if (!drm_edid)
-+		dev_dbg(hdmi->dev, "failed to get edid\n");
- 
--	return ret;
-+	return drm_edid;
- }
- 
--static enum drm_mode_status
--inno_hdmi_connector_mode_valid(struct drm_connector *connector,
--			       const struct drm_display_mode *mode)
-+static void inno_hdmi_bridge_atomic_enable(struct drm_bridge *bridge,
-+					   struct drm_atomic_state *state)
- {
--	struct inno_hdmi *hdmi = connector_to_inno_hdmi(connector);
-+	struct inno_hdmi *hdmi = bridge_to_inno_hdmi(bridge);
- 
--	return  inno_hdmi_display_mode_valid(hdmi, mode);
-+	inno_hdmi_setup(hdmi, state);
- }
- 
--static void
--inno_hdmi_connector_destroy_state(struct drm_connector *connector,
--				  struct drm_connector_state *state)
-+static void inno_hdmi_bridge_atomic_disable(struct drm_bridge *bridge,
-+					    struct drm_atomic_state *state)
- {
--	struct inno_hdmi_connector_state *inno_conn_state =
--						to_inno_hdmi_conn_state(state);
-+	struct inno_hdmi *hdmi = bridge_to_inno_hdmi(bridge);
- 
--	__drm_atomic_helper_connector_destroy_state(&inno_conn_state->base);
--	kfree(inno_conn_state);
-+	inno_hdmi_standby(hdmi);
- }
- 
--static void inno_hdmi_connector_reset(struct drm_connector *connector)
--{
--	struct inno_hdmi_connector_state *inno_conn_state;
--
--	if (connector->state) {
--		inno_hdmi_connector_destroy_state(connector, connector->state);
--		connector->state = NULL;
--	}
--
--	inno_conn_state = kzalloc(sizeof(*inno_conn_state), GFP_KERNEL);
--	if (!inno_conn_state)
--		return;
--
--	__drm_atomic_helper_connector_reset(connector, &inno_conn_state->base);
--	__drm_atomic_helper_connector_hdmi_reset(connector, connector->state);
--
--	inno_conn_state->colorimetry = HDMI_COLORIMETRY_ITU_709;
--}
-+static int inno_hdmi_bridge_atomic_check(struct drm_bridge *bridge,
-+					 struct drm_bridge_state *bridge_state,
-+					 struct drm_crtc_state *crtc_state,
-+					 struct drm_connector_state *conn_state)
- 
--static struct drm_connector_state *
--inno_hdmi_connector_duplicate_state(struct drm_connector *connector)
- {
--	struct inno_hdmi_connector_state *inno_conn_state;
--
--	if (WARN_ON(!connector->state))
--		return NULL;
--
--	inno_conn_state = kmemdup(to_inno_hdmi_conn_state(connector->state),
--				  sizeof(*inno_conn_state), GFP_KERNEL);
--
--	if (!inno_conn_state)
--		return NULL;
-+	struct inno_hdmi *hdmi = bridge_to_inno_hdmi(bridge);
-+	struct drm_display_mode *mode = &crtc_state->adjusted_mode;
-+	u8 vic = drm_match_cea_mode(mode);
- 
--	__drm_atomic_helper_connector_duplicate_state(connector,
--						      &inno_conn_state->base);
-+	if (vic == 6 || vic == 7 ||
-+	    vic == 21 || vic == 22 ||
-+	    vic == 2 || vic == 3 ||
-+	    vic == 17 || vic == 18)
-+		hdmi->colorimetry = HDMI_COLORIMETRY_ITU_601;
-+	else
-+		hdmi->colorimetry = HDMI_COLORIMETRY_ITU_709;
- 
--	return &inno_conn_state->base;
-+	return 0;
- }
- 
--static const struct drm_connector_funcs inno_hdmi_connector_funcs = {
--	.fill_modes = drm_helper_probe_single_connector_modes,
--	.detect = inno_hdmi_connector_detect,
--	.reset = inno_hdmi_connector_reset,
--	.atomic_duplicate_state = inno_hdmi_connector_duplicate_state,
--	.atomic_destroy_state = inno_hdmi_connector_destroy_state,
--};
--
--static struct drm_connector_helper_funcs inno_hdmi_connector_helper_funcs = {
--	.atomic_check = drm_atomic_helper_connector_hdmi_check,
--	.get_modes = inno_hdmi_connector_get_modes,
--	.mode_valid = inno_hdmi_connector_mode_valid,
-+static const struct drm_bridge_funcs inno_hdmi_bridge_funcs = {
-+	.atomic_duplicate_state = drm_atomic_helper_bridge_duplicate_state,
-+	.atomic_destroy_state = drm_atomic_helper_bridge_destroy_state,
-+	.atomic_reset = drm_atomic_helper_bridge_reset,
-+	.atomic_enable = inno_hdmi_bridge_atomic_enable,
-+	.atomic_disable = inno_hdmi_bridge_atomic_disable,
-+	.atomic_check = inno_hdmi_bridge_atomic_check,
-+	.detect = inno_hdmi_bridge_detect,
-+	.edid_read = inno_hdmi_bridge_edid_read,
-+	.hdmi_clear_infoframe = inno_hdmi_bridge_clear_infoframe,
-+	.hdmi_write_infoframe = inno_hdmi_bridge_write_infoframe,
-+	.mode_valid = inno_hdmi_bridge_mode_valid,
- };
- 
--static int inno_hdmi_register(struct drm_device *drm, struct inno_hdmi *hdmi)
--{
--	struct drm_encoder *encoder = &hdmi->encoder.encoder;
--	struct device *dev = hdmi->dev;
--
--	encoder->possible_crtcs = drm_of_find_possible_crtcs(drm, dev->of_node);
--
--	/*
--	 * If we failed to find the CRTC(s) which this encoder is
--	 * supposed to be connected to, it's because the CRTC has
--	 * not been registered yet.  Defer probing, and hope that
--	 * the required CRTC is added later.
--	 */
--	if (encoder->possible_crtcs == 0)
--		return -EPROBE_DEFER;
--
--	drm_encoder_helper_add(encoder, &inno_hdmi_encoder_helper_funcs);
--	drm_simple_encoder_init(drm, encoder, DRM_MODE_ENCODER_TMDS);
--
--	hdmi->connector.polled = DRM_CONNECTOR_POLL_HPD;
--
--	drm_connector_helper_add(&hdmi->connector,
--				 &inno_hdmi_connector_helper_funcs);
--	drmm_connector_hdmi_init(drm, &hdmi->connector,
--				 "Rockchip", "Inno HDMI",
--				 &inno_hdmi_connector_funcs,
--				 &inno_hdmi_hdmi_connector_funcs,
--				 DRM_MODE_CONNECTOR_HDMIA,
--				 hdmi->ddc,
--				 BIT(HDMI_COLORSPACE_RGB),
--				 8);
--
--	drm_connector_attach_encoder(&hdmi->connector, encoder);
--
--	return 0;
--}
--
- static irqreturn_t inno_hdmi_i2c_irq(struct inno_hdmi *hdmi)
- {
- 	struct inno_hdmi_i2c *i2c = hdmi->i2c;
-@@ -725,6 +915,15 @@ static irqreturn_t inno_hdmi_i2c_irq(struct inno_hdmi *hdmi)
- 	return IRQ_HANDLED;
- }
- 
-+static irqreturn_t inno_hdmi_irq(int irq, void *dev_id)
-+{
-+	struct inno_hdmi *hdmi = dev_id;
-+
-+	drm_helper_hpd_irq_event(hdmi->bridge.dev);
-+
-+	return IRQ_HANDLED;
-+}
-+
- static irqreturn_t inno_hdmi_hardirq(int irq, void *dev_id)
- {
- 	struct inno_hdmi *hdmi = dev_id;
-@@ -743,15 +942,6 @@ static irqreturn_t inno_hdmi_hardirq(int irq, void *dev_id)
- 	return ret;
- }
- 
--static irqreturn_t inno_hdmi_irq(int irq, void *dev_id)
--{
--	struct inno_hdmi *hdmi = dev_id;
--
--	drm_helper_hpd_irq_event(hdmi->connector.dev);
--
--	return IRQ_HANDLED;
--}
--
- static int inno_hdmi_i2c_read(struct inno_hdmi *hdmi, struct i2c_msg *msgs)
- {
- 	int length = msgs->len;
-@@ -775,8 +965,7 @@ static int inno_hdmi_i2c_write(struct inno_hdmi *hdmi, struct i2c_msg *msgs)
- 	 * we assume that each word write to this i2c adapter
- 	 * should be the offset of EDID word address.
- 	 */
--	if ((msgs->len != 1) ||
--	    ((msgs->addr != DDC_ADDR) && (msgs->addr != DDC_SEGMENT_ADDR)))
-+	if (msgs->len != 1 || (msgs->addr != DDC_ADDR && msgs->addr != DDC_SEGMENT_ADDR))
- 		return -EINVAL;
- 
- 	reinit_completion(&hdmi->i2c->cmp);
-@@ -867,7 +1056,7 @@ static struct i2c_adapter *inno_hdmi_i2c_adapter(struct inno_hdmi *hdmi)
- 	strscpy(adap->name, "Inno HDMI", sizeof(adap->name));
- 	i2c_set_adapdata(adap, hdmi);
- 
--	ret = i2c_add_adapter(adap);
-+	ret = devm_i2c_add_adapter(hdmi->dev, adap);
- 	if (ret) {
- 		dev_warn(hdmi->dev, "cannot add %s I2C adapter\n", adap->name);
- 		devm_kfree(hdmi->dev, i2c);
-@@ -876,177 +1065,86 @@ static struct i2c_adapter *inno_hdmi_i2c_adapter(struct inno_hdmi *hdmi)
- 
- 	hdmi->i2c = i2c;
- 
--	DRM_DEV_INFO(hdmi->dev, "registered %s I2C bus driver\n", adap->name);
-+	dev_info(hdmi->dev, "registered %s I2C bus driver\n", adap->name);
- 
- 	return adap;
- }
- 
--static int inno_hdmi_bind(struct device *dev, struct device *master,
--				 void *data)
-+struct inno_hdmi *inno_hdmi_bind(struct device *dev,
-+				 struct drm_encoder *encoder,
-+				 const struct inno_hdmi_plat_data *plat_data)
- {
- 	struct platform_device *pdev = to_platform_device(dev);
--	struct drm_device *drm = data;
- 	struct inno_hdmi *hdmi;
--	const struct inno_hdmi_variant *variant;
- 	int irq;
- 	int ret;
- 
-+	if (!plat_data->phy_configs || !plat_data->default_phy_config) {
-+		dev_err(dev, "Missing platform PHY ops\n");
-+		return ERR_PTR(-ENODEV);
-+	}
-+
- 	hdmi = devm_kzalloc(dev, sizeof(*hdmi), GFP_KERNEL);
- 	if (!hdmi)
--		return -ENOMEM;
-+		return ERR_PTR(-ENOMEM);
- 
- 	hdmi->dev = dev;
--
--	variant = of_device_get_match_data(hdmi->dev);
--	if (!variant)
--		return -EINVAL;
--
--	hdmi->variant = variant;
-+	hdmi->plat_data = plat_data;
- 
- 	hdmi->regs = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(hdmi->regs))
--		return PTR_ERR(hdmi->regs);
--
--	hdmi->pclk = devm_clk_get(hdmi->dev, "pclk");
--	if (IS_ERR(hdmi->pclk))
--		return dev_err_probe(dev, PTR_ERR(hdmi->pclk), "Unable to get HDMI pclk\n");
-+		return ERR_CAST(hdmi->regs);
- 
--	ret = clk_prepare_enable(hdmi->pclk);
--	if (ret)
--		return dev_err_probe(dev, ret, "Cannot enable HDMI pclk: %d\n", ret);
--
--	hdmi->refclk = devm_clk_get_optional(hdmi->dev, "ref");
--	if (IS_ERR(hdmi->refclk)) {
--		ret = dev_err_probe(dev, PTR_ERR(hdmi->refclk), "Unable to get HDMI refclk\n");
--		goto err_disable_pclk;
-+	hdmi->pclk = devm_clk_get_enabled(hdmi->dev, "pclk");
-+	if (IS_ERR(hdmi->pclk)) {
-+		dev_err(dev, "Unable to get HDMI pclk\n");
-+		return ERR_CAST(hdmi->pclk);
- 	}
- 
--	ret = clk_prepare_enable(hdmi->refclk);
--	if (ret) {
--		ret = dev_err_probe(dev, ret, "Cannot enable HDMI refclk: %d\n", ret);
--		goto err_disable_pclk;
-+	hdmi->refclk = devm_clk_get_enabled(hdmi->dev, "ref");
-+	if (IS_ERR(hdmi->refclk)) {
-+		dev_err(dev, "Unable to get HDMI refclk\n");
-+		return ERR_CAST(hdmi->refclk);
- 	}
- 
--	if (hdmi->variant->dev_type == RK3036_HDMI) {
--		hdmi->grf = syscon_regmap_lookup_by_phandle(dev->of_node, "rockchip,grf");
--		if (IS_ERR(hdmi->grf)) {
--			ret = dev_err_probe(dev, PTR_ERR(hdmi->grf),
--					    "Unable to get rockchip,grf\n");
--			goto err_disable_clk;
--		}
--	}
-+	inno_hdmi_init_hw(hdmi);
- 
- 	irq = platform_get_irq(pdev, 0);
--	if (irq < 0) {
--		ret = irq;
--		goto err_disable_clk;
--	}
--
--	inno_hdmi_reset(hdmi);
--
--	hdmi->ddc = inno_hdmi_i2c_adapter(hdmi);
--	if (IS_ERR(hdmi->ddc)) {
--		ret = PTR_ERR(hdmi->ddc);
--		hdmi->ddc = NULL;
--		goto err_disable_clk;
--	}
--
--	/*
--	 * When the controller isn't configured to an accurate
--	 * video timing and there is no reference clock available,
--	 * then the TMDS clock source would be switched to PCLK_HDMI,
--	 * so we need to init the TMDS rate to PCLK rate, and
--	 * reconfigure the DDC clock.
--	 */
--	if (hdmi->refclk)
--		inno_hdmi_i2c_init(hdmi, clk_get_rate(hdmi->refclk));
--	else
--		inno_hdmi_i2c_init(hdmi, clk_get_rate(hdmi->pclk));
--
--	ret = inno_hdmi_register(drm, hdmi);
--	if (ret)
--		goto err_put_adapter;
--
--	dev_set_drvdata(dev, hdmi);
--
--	/* Unmute hotplug interrupt */
--	hdmi_modb(hdmi, HDMI_STATUS, m_MASK_INT_HOTPLUG, v_MASK_INT_HOTPLUG(1));
-+	if (irq < 0)
-+		return ERR_PTR(ret);
- 
- 	ret = devm_request_threaded_irq(dev, irq, inno_hdmi_hardirq,
- 					inno_hdmi_irq, IRQF_SHARED,
- 					dev_name(dev), hdmi);
--	if (ret < 0)
--		goto err_cleanup_hdmi;
--
--	return 0;
--err_cleanup_hdmi:
--	hdmi->connector.funcs->destroy(&hdmi->connector);
--	hdmi->encoder.encoder.funcs->destroy(&hdmi->encoder.encoder);
--err_put_adapter:
--	i2c_put_adapter(hdmi->ddc);
--err_disable_clk:
--	clk_disable_unprepare(hdmi->refclk);
--err_disable_pclk:
--	clk_disable_unprepare(hdmi->pclk);
--	return ret;
--}
--
--static void inno_hdmi_unbind(struct device *dev, struct device *master,
--			     void *data)
--{
--	struct inno_hdmi *hdmi = dev_get_drvdata(dev);
--
--	hdmi->connector.funcs->destroy(&hdmi->connector);
--	hdmi->encoder.encoder.funcs->destroy(&hdmi->encoder.encoder);
--
--	i2c_put_adapter(hdmi->ddc);
--	clk_disable_unprepare(hdmi->refclk);
--	clk_disable_unprepare(hdmi->pclk);
--}
-+	if (ret)
-+		return ERR_PTR(ret);
- 
--static const struct component_ops inno_hdmi_ops = {
--	.bind	= inno_hdmi_bind,
--	.unbind	= inno_hdmi_unbind,
--};
-+	hdmi->bridge.driver_private = hdmi;
-+	hdmi->bridge.funcs = &inno_hdmi_bridge_funcs;
-+	hdmi->bridge.ops = DRM_BRIDGE_OP_DETECT |
-+			   DRM_BRIDGE_OP_EDID |
-+			   DRM_BRIDGE_OP_HDMI |
-+			   DRM_BRIDGE_OP_HPD;
-+	hdmi->bridge.of_node = pdev->dev.of_node;
-+	hdmi->bridge.type = DRM_MODE_CONNECTOR_HDMIA;
-+	hdmi->bridge.vendor = "Inno";
-+	hdmi->bridge.product = "Inno HDMI";
-+
-+	hdmi->bridge.ddc = inno_hdmi_i2c_adapter(hdmi);
-+	if (IS_ERR(hdmi->bridge.ddc))
-+		return ERR_CAST(hdmi->bridge.ddc);
-+
-+	ret = devm_drm_bridge_add(dev, &hdmi->bridge);
-+	if (ret)
-+		return ERR_PTR(ret);
- 
--static int inno_hdmi_probe(struct platform_device *pdev)
--{
--	return component_add(&pdev->dev, &inno_hdmi_ops);
--}
-+	ret = drm_bridge_attach(encoder, &hdmi->bridge, NULL, DRM_BRIDGE_ATTACH_NO_CONNECTOR);
-+	if (ret)
-+		return ERR_PTR(ret);
- 
--static void inno_hdmi_remove(struct platform_device *pdev)
--{
--	component_del(&pdev->dev, &inno_hdmi_ops);
-+	return hdmi;
- }
--
--static const struct inno_hdmi_variant rk3036_inno_hdmi_variant = {
--	.dev_type = RK3036_HDMI,
--	.phy_configs = rk3036_hdmi_phy_configs,
--	.default_phy_config = &rk3036_hdmi_phy_configs[1],
--};
--
--static const struct inno_hdmi_variant rk3128_inno_hdmi_variant = {
--	.dev_type = RK3128_HDMI,
--	.phy_configs = rk3128_hdmi_phy_configs,
--	.default_phy_config = &rk3128_hdmi_phy_configs[1],
--};
--
--static const struct of_device_id inno_hdmi_dt_ids[] = {
--	{ .compatible = "rockchip,rk3036-inno-hdmi",
--	  .data = &rk3036_inno_hdmi_variant,
--	},
--	{ .compatible = "rockchip,rk3128-inno-hdmi",
--	  .data = &rk3128_inno_hdmi_variant,
--	},
--	{},
--};
--MODULE_DEVICE_TABLE(of, inno_hdmi_dt_ids);
--
--struct platform_driver inno_hdmi_driver = {
--	.probe  = inno_hdmi_probe,
--	.remove = inno_hdmi_remove,
--	.driver = {
--		.name = "innohdmi-rockchip",
--		.of_match_table = inno_hdmi_dt_ids,
--	},
--};
-+EXPORT_SYMBOL_GPL(inno_hdmi_bind);
-+MODULE_AUTHOR("Andy Yan <andyshrk@163.com>");
-+MODULE_DESCRIPTION("INNOSILICON HDMI transmitter library");
-+MODULE_LICENSE("GPL");
-diff --git a/drivers/gpu/drm/rockchip/Kconfig b/drivers/gpu/drm/rockchip/Kconfig
-index 26c4410b2407c..06cd969ce4f85 100644
---- a/drivers/gpu/drm/rockchip/Kconfig
-+++ b/drivers/gpu/drm/rockchip/Kconfig
-@@ -10,6 +10,7 @@ config DRM_ROCKCHIP
- 	select DRM_ANALOGIX_DP if ROCKCHIP_ANALOGIX_DP
- 	select DRM_DW_HDMI if ROCKCHIP_DW_HDMI
- 	select DRM_DW_HDMI_QP if ROCKCHIP_DW_HDMI_QP
-+	select DRM_INNO_HDMI if ROCKCHIP_INNO_HDMI
- 	select DRM_DW_MIPI_DSI if ROCKCHIP_DW_MIPI_DSI
- 	select DRM_DW_MIPI_DSI2 if ROCKCHIP_DW_MIPI_DSI2
- 	select GENERIC_PHY if ROCKCHIP_DW_MIPI_DSI
-diff --git a/drivers/gpu/drm/rockchip/Makefile b/drivers/gpu/drm/rockchip/Makefile
-index 2b867cebbc121..11176db14af6e 100644
---- a/drivers/gpu/drm/rockchip/Makefile
-+++ b/drivers/gpu/drm/rockchip/Makefile
-@@ -14,7 +14,7 @@ rockchipdrm-$(CONFIG_ROCKCHIP_DW_HDMI) += dw_hdmi-rockchip.o
- rockchipdrm-$(CONFIG_ROCKCHIP_DW_HDMI_QP) += dw_hdmi_qp-rockchip.o
- rockchipdrm-$(CONFIG_ROCKCHIP_DW_MIPI_DSI) += dw-mipi-dsi-rockchip.o
- rockchipdrm-$(CONFIG_ROCKCHIP_DW_MIPI_DSI2) += dw-mipi-dsi2-rockchip.o
--rockchipdrm-$(CONFIG_ROCKCHIP_INNO_HDMI) += inno_hdmi.o
-+rockchipdrm-$(CONFIG_ROCKCHIP_INNO_HDMI) += inno_hdmi-rockchip.o
- rockchipdrm-$(CONFIG_ROCKCHIP_LVDS) += rockchip_lvds.o
- rockchipdrm-$(CONFIG_ROCKCHIP_RGB) += rockchip_rgb.o
- rockchipdrm-$(CONFIG_ROCKCHIP_RK3066_HDMI) += rk3066_hdmi.o
-diff --git a/drivers/gpu/drm/rockchip/inno_hdmi-rockchip.c b/drivers/gpu/drm/rockchip/inno_hdmi-rockchip.c
-new file mode 100644
-index 0000000000000..d1f37bd92b89c
---- /dev/null
-+++ b/drivers/gpu/drm/rockchip/inno_hdmi-rockchip.c
-@@ -0,0 +1,187 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (C) Rockchip Electronics Co., Ltd.
-+ *    Zheng Yang <zhengyang@rock-chips.com>
-+ *    Andy Yan <andy.yan@rock-chips.com>
-+ */
-+#include <linux/err.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+
-+#include <drm/bridge/inno_hdmi.h>
-+#include <drm/drm_bridge_connector.h>
-+#include <drm/drm_of.h>
-+
-+#include "rockchip_drm_drv.h"
-+
-+#define HIWORD_UPDATE(val, mask)	((val) | (mask) << 16)
-+
-+#define RK3036_GRF_SOC_CON2	0x148
-+#define RK3036_HDMI_PHSYNC	BIT(4)
-+#define RK3036_HDMI_PVSYNC	BIT(5)
-+
-+enum inno_hdmi_dev_type {
-+	RK3036_HDMI,
-+	RK3128_HDMI,
-+};
-+
-+struct inno_hdmi_connector_state {
-+	struct drm_connector_state	base;
-+	unsigned int			colorimetry;
-+};
-+
-+struct rockchip_inno_hdmi {
-+	struct inno_hdmi *base;
-+	struct device *dev;
-+	struct regmap *grf;
-+	struct rockchip_encoder encoder;
-+};
-+
-+static struct inno_hdmi_phy_config rk3036_hdmi_phy_configs[] = {
-+	{  74250000, 0x3f, 0xbb },
-+	{ 165000000, 0x6f, 0xbb },
-+	{      ~0UL, 0x00, 0x00 }
-+};
-+
-+static struct inno_hdmi_phy_config rk3128_hdmi_phy_configs[] = {
-+	{  74250000, 0x3f, 0xaa },
-+	{ 165000000, 0x5f, 0xaa },
-+	{      ~0UL, 0x00, 0x00 }
-+};
-+
-+static void inno_hdmi_rk3036_enable(struct device *dev, struct drm_display_mode *mode)
-+{
-+	struct rockchip_inno_hdmi *hdmi = dev_get_drvdata(dev);
-+	int value, psync;
-+
-+	psync = mode->flags & DRM_MODE_FLAG_PHSYNC ? RK3036_HDMI_PHSYNC : 0;
-+	value = HIWORD_UPDATE(psync, RK3036_HDMI_PHSYNC);
-+	psync = mode->flags & DRM_MODE_FLAG_PVSYNC ? RK3036_HDMI_PVSYNC : 0;
-+	value |= HIWORD_UPDATE(psync, RK3036_HDMI_PVSYNC);
-+	regmap_write(hdmi->grf, RK3036_GRF_SOC_CON2, value);
-+}
-+
-+static int inno_hdmi_encoder_atomic_check(struct drm_encoder *encoder,
-+					  struct drm_crtc_state *crtc_state,
-+					  struct drm_connector_state *conn_state)
-+{
-+	struct rockchip_crtc_state *s = to_rockchip_crtc_state(crtc_state);
-+
-+	s->output_mode = ROCKCHIP_OUT_MODE_P888;
-+	s->output_type = DRM_MODE_CONNECTOR_HDMIA;
-+
-+	return 0;
-+}
-+
-+static const struct drm_encoder_helper_funcs inno_hdmi_rockchip_encoder_helper_funcs = {
-+	.atomic_check	= inno_hdmi_encoder_atomic_check,
-+};
-+
-+static int inno_hdmi_rockchip_bind(struct device *dev, struct device *master, void *data)
-+{
-+	struct drm_device *drm = data;
-+	struct drm_connector *connector;
-+	struct drm_encoder *encoder;
-+	struct rockchip_inno_hdmi *hdmi;
-+	const struct inno_hdmi_plat_data *plat_data;
-+	int ret;
-+
-+	hdmi = devm_kzalloc(dev, sizeof(*hdmi), GFP_KERNEL);
-+	if (!hdmi)
-+		return -ENOMEM;
-+
-+	hdmi->dev = dev;
-+
-+	plat_data = of_device_get_match_data(hdmi->dev);
-+	if (!plat_data)
-+		return -EINVAL;
-+
-+	if (of_device_is_compatible(dev->of_node, "rockchip,rk3036-inno-hdmi")) {
-+		hdmi->grf = syscon_regmap_lookup_by_phandle(dev->of_node, "rockchip,grf");
-+		if (IS_ERR(hdmi->grf))
-+			return dev_err_probe(dev, PTR_ERR(hdmi->grf), "Unable to get rockchip,grf\n");
-+	}
-+
-+	encoder = &hdmi->encoder.encoder;
-+	encoder->possible_crtcs = drm_of_find_possible_crtcs(drm, dev->of_node);
-+
-+	/*
-+	 * If we failed to find the CRTC(s) which this encoder is
-+	 * supposed to be connected to, it's because the CRTC has
-+	 * not been registered yet.  Defer probing, and hope that
-+	 * the required CRTC is added later.
-+	 */
-+	if (encoder->possible_crtcs == 0)
-+		return -EPROBE_DEFER;
-+
-+	ret = drmm_encoder_init(drm, encoder, NULL, DRM_MODE_ENCODER_TMDS, NULL);
-+	if (ret)
-+		return ret;
-+
-+	drm_encoder_helper_add(encoder, &inno_hdmi_rockchip_encoder_helper_funcs);
-+
-+	dev_set_drvdata(dev, hdmi);
-+
-+	hdmi->base = inno_hdmi_bind(dev, encoder, plat_data);
-+
-+	connector = drm_bridge_connector_init(drm, encoder);
-+	if (IS_ERR(connector)) {
-+		ret = PTR_ERR(connector);
-+		dev_err(hdmi->dev, "failed to init bridge connector: %d\n", ret);
-+		return ret;
-+	}
-+
-+	return drm_connector_attach_encoder(connector, encoder);
-+}
-+
-+static const struct component_ops inno_hdmi_rockchip_ops = {
-+	.bind	= inno_hdmi_rockchip_bind,
-+};
-+
-+static int inno_hdmi_rockchip_probe(struct platform_device *pdev)
-+{
-+	return component_add(&pdev->dev, &inno_hdmi_rockchip_ops);
-+}
-+
-+static void inno_hdmi_rockchip_remove(struct platform_device *pdev)
-+{
-+	component_del(&pdev->dev, &inno_hdmi_rockchip_ops);
-+}
-+
-+static const struct inno_hdmi_plat_ops rk3036_inno_hdmi_plat_ops = {
-+	.enable = inno_hdmi_rk3036_enable,
-+};
-+
-+static const struct inno_hdmi_plat_data rk3036_inno_hdmi_plat_data = {
-+	.ops = &rk3036_inno_hdmi_plat_ops,
-+	.phy_configs = rk3036_hdmi_phy_configs,
-+	.default_phy_config = &rk3036_hdmi_phy_configs[1],
-+};
-+
-+static const struct inno_hdmi_plat_data rk3128_inno_hdmi_plat_data = {
-+	.phy_configs = rk3128_hdmi_phy_configs,
-+	.default_phy_config = &rk3128_hdmi_phy_configs[1],
-+};
-+
-+static const struct of_device_id inno_hdmi_rockchip_dt_ids[] = {
-+	{ .compatible = "rockchip,rk3036-inno-hdmi",
-+	  .data = &rk3036_inno_hdmi_plat_data,
-+	},
-+	{ .compatible = "rockchip,rk3128-inno-hdmi",
-+	  .data = &rk3128_inno_hdmi_plat_data,
-+	},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, inno_hdmi_rockchip_dt_ids);
-+
-+struct platform_driver inno_hdmi_driver = {
-+	.probe  = inno_hdmi_rockchip_probe,
-+	.remove = inno_hdmi_rockchip_remove,
-+	.driver = {
-+		.name = "innohdmi-rockchip",
-+		.of_match_table = inno_hdmi_rockchip_dt_ids,
-+	},
-+};
-diff --git a/drivers/gpu/drm/rockchip/inno_hdmi.h b/drivers/gpu/drm/rockchip/inno_hdmi.h
-deleted file mode 100644
-index 8b7ef3fac4853..0000000000000
---- a/drivers/gpu/drm/rockchip/inno_hdmi.h
-+++ /dev/null
-@@ -1,349 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0-only */
--/*
-- * Copyright (C) Rockchip Electronics Co., Ltd.
-- *    Zheng Yang <zhengyang@rock-chips.com>
-- *    Yakir Yang <ykk@rock-chips.com>
-- */
--
--#ifndef __INNO_HDMI_H__
--#define __INNO_HDMI_H__
--
--#define DDC_SEGMENT_ADDR		0x30
--
--#define HDMI_SCL_RATE			(100*1000)
--#define DDC_BUS_FREQ_L			0x4b
--#define DDC_BUS_FREQ_H			0x4c
--
--#define HDMI_SYS_CTRL			0x00
--#define m_RST_ANALOG			(1 << 6)
--#define v_RST_ANALOG			(0 << 6)
--#define v_NOT_RST_ANALOG		(1 << 6)
--#define m_RST_DIGITAL			(1 << 5)
--#define v_RST_DIGITAL			(0 << 5)
--#define v_NOT_RST_DIGITAL		(1 << 5)
--#define m_REG_CLK_INV			(1 << 4)
--#define v_REG_CLK_NOT_INV		(0 << 4)
--#define v_REG_CLK_INV			(1 << 4)
--#define m_VCLK_INV			(1 << 3)
--#define v_VCLK_NOT_INV			(0 << 3)
--#define v_VCLK_INV			(1 << 3)
--#define m_REG_CLK_SOURCE		(1 << 2)
--#define v_REG_CLK_SOURCE_TMDS		(0 << 2)
--#define v_REG_CLK_SOURCE_SYS		(1 << 2)
--#define m_POWER				(1 << 1)
--#define v_PWR_ON			(0 << 1)
--#define v_PWR_OFF			(1 << 1)
--#define m_INT_POL			(1 << 0)
--#define v_INT_POL_HIGH			1
--#define v_INT_POL_LOW			0
--
--#define HDMI_VIDEO_CONTRL1		0x01
--#define m_VIDEO_INPUT_FORMAT		(7 << 1)
--#define m_DE_SOURCE			(1 << 0)
--#define v_VIDEO_INPUT_FORMAT(n)		(n << 1)
--#define v_DE_EXTERNAL			1
--#define v_DE_INTERNAL			0
--enum {
--	VIDEO_INPUT_SDR_RGB444 = 0,
--	VIDEO_INPUT_DDR_RGB444 = 5,
--	VIDEO_INPUT_DDR_YCBCR422 = 6
--};
--
--#define HDMI_VIDEO_CONTRL2		0x02
--#define m_VIDEO_OUTPUT_COLOR		(3 << 6)
--#define m_VIDEO_INPUT_BITS		(3 << 4)
--#define m_VIDEO_INPUT_CSP		(1 << 0)
--#define v_VIDEO_OUTPUT_COLOR(n)		(((n) & 0x3) << 6)
--#define v_VIDEO_INPUT_BITS(n)		(n << 4)
--#define v_VIDEO_INPUT_CSP(n)		(n << 0)
--enum {
--	VIDEO_INPUT_12BITS = 0,
--	VIDEO_INPUT_10BITS = 1,
--	VIDEO_INPUT_REVERT = 2,
--	VIDEO_INPUT_8BITS = 3,
--};
--
--#define HDMI_VIDEO_CONTRL		0x03
--#define m_VIDEO_AUTO_CSC		(1 << 7)
--#define v_VIDEO_AUTO_CSC(n)		(n << 7)
--#define m_VIDEO_C0_C2_SWAP		(1 << 0)
--#define v_VIDEO_C0_C2_SWAP(n)		(n << 0)
--enum {
--	C0_C2_CHANGE_ENABLE = 0,
--	C0_C2_CHANGE_DISABLE = 1,
--	AUTO_CSC_DISABLE = 0,
--	AUTO_CSC_ENABLE = 1,
--};
--
--#define HDMI_VIDEO_CONTRL3		0x04
--#define m_COLOR_DEPTH_NOT_INDICATED	(1 << 4)
--#define m_SOF				(1 << 3)
--#define m_COLOR_RANGE			(1 << 2)
--#define m_CSC				(1 << 0)
--#define v_COLOR_DEPTH_NOT_INDICATED(n)	((n) << 4)
--#define v_SOF_ENABLE			(0 << 3)
--#define v_SOF_DISABLE			(1 << 3)
--#define v_COLOR_RANGE_FULL		(1 << 2)
--#define v_COLOR_RANGE_LIMITED		(0 << 2)
--#define v_CSC_ENABLE			1
--#define v_CSC_DISABLE			0
--
--#define HDMI_AV_MUTE			0x05
--#define m_AVMUTE_CLEAR			(1 << 7)
--#define m_AVMUTE_ENABLE			(1 << 6)
--#define m_AUDIO_MUTE			(1 << 1)
--#define m_VIDEO_BLACK			(1 << 0)
--#define v_AVMUTE_CLEAR(n)		(n << 7)
--#define v_AVMUTE_ENABLE(n)		(n << 6)
--#define v_AUDIO_MUTE(n)			(n << 1)
--#define v_VIDEO_MUTE(n)			(n << 0)
--
--#define HDMI_VIDEO_TIMING_CTL		0x08
--#define v_HSYNC_POLARITY(n)		(n << 3)
--#define v_VSYNC_POLARITY(n)		(n << 2)
--#define v_INETLACE(n)			(n << 1)
--#define v_EXTERANL_VIDEO(n)		(n << 0)
--
--#define HDMI_VIDEO_EXT_HTOTAL_L		0x09
--#define HDMI_VIDEO_EXT_HTOTAL_H		0x0a
--#define HDMI_VIDEO_EXT_HBLANK_L		0x0b
--#define HDMI_VIDEO_EXT_HBLANK_H		0x0c
--#define HDMI_VIDEO_EXT_HDELAY_L		0x0d
--#define HDMI_VIDEO_EXT_HDELAY_H		0x0e
--#define HDMI_VIDEO_EXT_HDURATION_L	0x0f
--#define HDMI_VIDEO_EXT_HDURATION_H	0x10
--#define HDMI_VIDEO_EXT_VTOTAL_L		0x11
--#define HDMI_VIDEO_EXT_VTOTAL_H		0x12
--#define HDMI_VIDEO_EXT_VBLANK		0x13
--#define HDMI_VIDEO_EXT_VDELAY		0x14
--#define HDMI_VIDEO_EXT_VDURATION	0x15
--
--#define HDMI_VIDEO_CSC_COEF		0x18
--
--#define HDMI_AUDIO_CTRL1		0x35
--enum {
--	CTS_SOURCE_INTERNAL = 0,
--	CTS_SOURCE_EXTERNAL = 1,
--};
--#define v_CTS_SOURCE(n)			(n << 7)
--
--enum {
--	DOWNSAMPLE_DISABLE = 0,
--	DOWNSAMPLE_1_2 = 1,
--	DOWNSAMPLE_1_4 = 2,
--};
--#define v_DOWN_SAMPLE(n)		(n << 5)
--
--enum {
--	AUDIO_SOURCE_IIS = 0,
--	AUDIO_SOURCE_SPDIF = 1,
--};
--#define v_AUDIO_SOURCE(n)		(n << 3)
--
--#define v_MCLK_ENABLE(n)		(n << 2)
--enum {
--	MCLK_128FS = 0,
--	MCLK_256FS = 1,
--	MCLK_384FS = 2,
--	MCLK_512FS = 3,
--};
--#define v_MCLK_RATIO(n)			(n)
--
--#define AUDIO_SAMPLE_RATE		0x37
--enum {
--	AUDIO_32K = 0x3,
--	AUDIO_441K = 0x0,
--	AUDIO_48K = 0x2,
--	AUDIO_882K = 0x8,
--	AUDIO_96K = 0xa,
--	AUDIO_1764K = 0xc,
--	AUDIO_192K = 0xe,
--};
--
--#define AUDIO_I2S_MODE			0x38
--enum {
--	I2S_CHANNEL_1_2 = 1,
--	I2S_CHANNEL_3_4 = 3,
--	I2S_CHANNEL_5_6 = 7,
--	I2S_CHANNEL_7_8 = 0xf
--};
--#define v_I2S_CHANNEL(n)		((n) << 2)
--enum {
--	I2S_STANDARD = 0,
--	I2S_LEFT_JUSTIFIED = 1,
--	I2S_RIGHT_JUSTIFIED = 2,
--};
--#define v_I2S_MODE(n)			(n)
--
--#define AUDIO_I2S_MAP			0x39
--#define AUDIO_I2S_SWAPS_SPDIF		0x3a
--#define v_SPIDF_FREQ(n)			(n)
--
--#define N_32K				0x1000
--#define N_441K				0x1880
--#define N_882K				0x3100
--#define N_1764K				0x6200
--#define N_48K				0x1800
--#define N_96K				0x3000
--#define N_192K				0x6000
--
--#define HDMI_AUDIO_CHANNEL_STATUS	0x3e
--#define m_AUDIO_STATUS_NLPCM		(1 << 7)
--#define m_AUDIO_STATUS_USE		(1 << 6)
--#define m_AUDIO_STATUS_COPYRIGHT	(1 << 5)
--#define m_AUDIO_STATUS_ADDITION		(3 << 2)
--#define m_AUDIO_STATUS_CLK_ACCURACY	(2 << 0)
--#define v_AUDIO_STATUS_NLPCM(n)		((n & 1) << 7)
--#define AUDIO_N_H			0x3f
--#define AUDIO_N_M			0x40
--#define AUDIO_N_L			0x41
--
--#define HDMI_AUDIO_CTS_H		0x45
--#define HDMI_AUDIO_CTS_M		0x46
--#define HDMI_AUDIO_CTS_L		0x47
--
--#define HDMI_DDC_CLK_L			0x4b
--#define HDMI_DDC_CLK_H			0x4c
--
--#define HDMI_EDID_SEGMENT_POINTER	0x4d
--#define HDMI_EDID_WORD_ADDR		0x4e
--#define HDMI_EDID_FIFO_OFFSET		0x4f
--#define HDMI_EDID_FIFO_ADDR		0x50
--
--#define HDMI_PACKET_SEND_MANUAL		0x9c
--#define HDMI_PACKET_SEND_AUTO		0x9d
--#define m_PACKET_GCP_EN			(1 << 7)
--#define m_PACKET_MSI_EN			(1 << 6)
--#define m_PACKET_SDI_EN			(1 << 5)
--#define m_PACKET_VSI_EN			(1 << 4)
--#define v_PACKET_GCP_EN(n)		((n & 1) << 7)
--#define v_PACKET_MSI_EN(n)		((n & 1) << 6)
--#define v_PACKET_SDI_EN(n)		((n & 1) << 5)
--#define v_PACKET_VSI_EN(n)		((n & 1) << 4)
--
--#define HDMI_CONTROL_PACKET_BUF_INDEX	0x9f
--enum {
--	INFOFRAME_VSI = 0x05,
--	INFOFRAME_AVI = 0x06,
--	INFOFRAME_AAI = 0x08,
--};
--
--#define HDMI_CONTROL_PACKET_ADDR	0xa0
--#define HDMI_MAXIMUM_INFO_FRAME_SIZE	0x11
--enum {
--	AVI_COLOR_MODE_RGB = 0,
--	AVI_COLOR_MODE_YCBCR422 = 1,
--	AVI_COLOR_MODE_YCBCR444 = 2,
--	AVI_COLORIMETRY_NO_DATA = 0,
--
--	AVI_COLORIMETRY_SMPTE_170M = 1,
--	AVI_COLORIMETRY_ITU709 = 2,
--	AVI_COLORIMETRY_EXTENDED = 3,
--
--	AVI_CODED_FRAME_ASPECT_NO_DATA = 0,
--	AVI_CODED_FRAME_ASPECT_4_3 = 1,
--	AVI_CODED_FRAME_ASPECT_16_9 = 2,
--
--	ACTIVE_ASPECT_RATE_SAME_AS_CODED_FRAME = 0x08,
--	ACTIVE_ASPECT_RATE_4_3 = 0x09,
--	ACTIVE_ASPECT_RATE_16_9 = 0x0A,
--	ACTIVE_ASPECT_RATE_14_9 = 0x0B,
--};
--
--#define HDMI_HDCP_CTRL			0x52
--#define m_HDMI_DVI			(1 << 1)
--#define v_HDMI_DVI(n)			(n << 1)
--
--#define HDMI_INTERRUPT_MASK1		0xc0
--#define HDMI_INTERRUPT_STATUS1		0xc1
--#define	m_INT_ACTIVE_VSYNC		(1 << 5)
--#define m_INT_EDID_READY		(1 << 2)
--
--#define HDMI_INTERRUPT_MASK2		0xc2
--#define HDMI_INTERRUPT_STATUS2		0xc3
--#define m_INT_HDCP_ERR			(1 << 7)
--#define m_INT_BKSV_FLAG			(1 << 6)
--#define m_INT_HDCP_OK			(1 << 4)
--
--#define HDMI_STATUS			0xc8
--#define m_HOTPLUG			(1 << 7)
--#define m_MASK_INT_HOTPLUG		(1 << 5)
--#define m_INT_HOTPLUG			(1 << 1)
--#define v_MASK_INT_HOTPLUG(n)		((n & 0x1) << 5)
--
--#define HDMI_COLORBAR                   0xc9
--
--#define HDMI_PHY_SYNC			0xce
--#define HDMI_PHY_SYS_CTL		0xe0
--#define m_TMDS_CLK_SOURCE		(1 << 5)
--#define v_TMDS_FROM_PLL			(0 << 5)
--#define v_TMDS_FROM_GEN			(1 << 5)
--#define m_PHASE_CLK			(1 << 4)
--#define v_DEFAULT_PHASE			(0 << 4)
--#define v_SYNC_PHASE			(1 << 4)
--#define m_TMDS_CURRENT_PWR		(1 << 3)
--#define v_TURN_ON_CURRENT		(0 << 3)
--#define v_CAT_OFF_CURRENT		(1 << 3)
--#define m_BANDGAP_PWR			(1 << 2)
--#define v_BANDGAP_PWR_UP		(0 << 2)
--#define v_BANDGAP_PWR_DOWN		(1 << 2)
--#define m_PLL_PWR			(1 << 1)
--#define v_PLL_PWR_UP			(0 << 1)
--#define v_PLL_PWR_DOWN			(1 << 1)
--#define m_TMDS_CHG_PWR			(1 << 0)
--#define v_TMDS_CHG_PWR_UP		(0 << 0)
--#define v_TMDS_CHG_PWR_DOWN		(1 << 0)
--
--#define HDMI_PHY_CHG_PWR		0xe1
--#define v_CLK_CHG_PWR(n)		((n & 1) << 3)
--#define v_DATA_CHG_PWR(n)		((n & 7) << 0)
--
--#define HDMI_PHY_DRIVER			0xe2
--#define v_CLK_MAIN_DRIVER(n)		(n << 4)
--#define v_DATA_MAIN_DRIVER(n)		(n << 0)
--
--#define HDMI_PHY_PRE_EMPHASIS		0xe3
--#define v_PRE_EMPHASIS(n)		((n & 7) << 4)
--#define v_CLK_PRE_DRIVER(n)		((n & 3) << 2)
--#define v_DATA_PRE_DRIVER(n)		((n & 3) << 0)
--
--#define HDMI_PHY_FEEDBACK_DIV_RATIO_LOW		0xe7
--#define v_FEEDBACK_DIV_LOW(n)			(n & 0xff)
--#define HDMI_PHY_FEEDBACK_DIV_RATIO_HIGH	0xe8
--#define v_FEEDBACK_DIV_HIGH(n)			(n & 1)
--
--#define HDMI_PHY_PRE_DIV_RATIO		0xed
--#define v_PRE_DIV_RATIO(n)		(n & 0x1f)
--
--#define HDMI_CEC_CTRL			0xd0
--#define m_ADJUST_FOR_HISENSE		(1 << 6)
--#define m_REJECT_RX_BROADCAST		(1 << 5)
--#define m_BUSFREETIME_ENABLE		(1 << 2)
--#define m_REJECT_RX			(1 << 1)
--#define m_START_TX			(1 << 0)
--
--#define HDMI_CEC_DATA			0xd1
--#define HDMI_CEC_TX_OFFSET		0xd2
--#define HDMI_CEC_RX_OFFSET		0xd3
--#define HDMI_CEC_CLK_H			0xd4
--#define HDMI_CEC_CLK_L			0xd5
--#define HDMI_CEC_TX_LENGTH		0xd6
--#define HDMI_CEC_RX_LENGTH		0xd7
--#define HDMI_CEC_TX_INT_MASK		0xd8
--#define m_TX_DONE			(1 << 3)
--#define m_TX_NOACK			(1 << 2)
--#define m_TX_BROADCAST_REJ		(1 << 1)
--#define m_TX_BUSNOTFREE			(1 << 0)
--
--#define HDMI_CEC_RX_INT_MASK		0xd9
--#define m_RX_LA_ERR			(1 << 4)
--#define m_RX_GLITCH			(1 << 3)
--#define m_RX_DONE			(1 << 0)
--
--#define HDMI_CEC_TX_INT			0xda
--#define HDMI_CEC_RX_INT			0xdb
--#define HDMI_CEC_BUSFREETIME_L		0xdc
--#define HDMI_CEC_BUSFREETIME_H		0xdd
--#define HDMI_CEC_LOGICADDR		0xde
--
--#endif /* __INNO_HDMI_H__ */
-diff --git a/include/drm/bridge/inno_hdmi.h b/include/drm/bridge/inno_hdmi.h
-new file mode 100644
-index 0000000000000..20eec29bd2a27
---- /dev/null
-+++ b/include/drm/bridge/inno_hdmi.h
-@@ -0,0 +1,33 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+/*
-+ * Copyright (c) 2025 Rockchip Electronics Co., Ltd.
-+ */
-+
-+#ifndef __INNO_HDMI_QP__
-+#define __INNO_HDMI_QP__
-+
-+struct device;
-+struct drm_encoder;
-+struct drm_display_mode;
-+struct inno_hdmi;
-+
-+struct inno_hdmi_plat_ops {
-+	void (*enable)(struct device *pdev, struct drm_display_mode *mode);
-+};
-+
-+struct inno_hdmi_phy_config {
-+	unsigned long pixelclock;
-+	u8 pre_emphasis;
-+	u8 voltage_level_control;
-+};
-+
-+struct inno_hdmi_plat_data {
-+	const struct inno_hdmi_plat_ops *ops;
-+	struct inno_hdmi_phy_config *phy_configs;
-+	struct inno_hdmi_phy_config *default_phy_config;
-+};
-+
-+struct inno_hdmi *inno_hdmi_bind(struct device *pdev,
-+				 struct drm_encoder *encoder,
-+				 const struct inno_hdmi_plat_data *plat_data);
-+#endif /* __INNO_HDMI__ */
--- 
-2.43.0
-
+>
+>
+>
+> --
+> Cheers,
+>
+> David / dhildenb
+>
