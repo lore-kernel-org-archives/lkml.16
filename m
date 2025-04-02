@@ -1,221 +1,106 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E43EB27735
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 15:56:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E764827735;
+	Wed,  2 Apr 2025 15:56:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743609369; cv=none; b=oW73eSbRjegF7bKrX4QnfKJU/U8B+t/7gbRSkJRrM3qaQHBljErsOPktC4yFCfrBawI/jcJ7Vy16ielTOKzQafTVznc72XFiW2IYukMTeiCfgRpkQlji7obg2tHcFZfO90d13JjS0PKOtTF0/NSNh4TA/Xa2VcShBiuGBSuwnXc=
+	t=1743609409; cv=none; b=hpCCaVqieM1yEPUusu/ZDj1yTUUSUguw1CaRpJd8Ujz0l6JugwTAIrQk3cC3yrN/hdyO/geRacNahp/Hz3/YJTo8IO5rGAwyseBQEzA2a3P1N0fEFgPwVuCFjqgD1JlLDmd8s0AmOMClIcD2ALVtWTBKsvlHo+k3gb9GRfqn1fg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743609369; c=relaxed/simple;
-	bh=XyKWvti3hY0z1mAL7iZwtV9RhqKk9pL7yLKr6k17Vo0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RTeNL+UsvMeVZvTQzqDXIsl0E/8u2qUQdQujRG3sVDlnerqmkfed97+u0mWpOYldYAcIRucky0aa34msK/saAT501OIUjSy0cAL5338nhRIz0ul9OIXbxqHIA9x4iy1rV5/XMMaWkX9oEYUtiIEkBF1DVMRiW11GGpBx5WaDg9w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EZGwfC3C; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1743609409; c=relaxed/simple;
+	bh=9IBr0FS/13M0tI5AejLntdZXtYUuAWZZY60/9sUoth0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=msHKALDTQ0C2YlfpCoOxy0GV+45nVY5yH9Vbhjn7ku26a5RcDIXu30DXeetEylf2+3lCQ+Gw3CjrRp0BLs9T3gdQop+KREpeveb7+rLj9TmgyByzG9mN1eKWiGV6jpPrNP2QhjTM5YmE5FUamctquQnllQzfebGp3ncRUXejLXY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d0AZUXQ8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EZGwfC3C"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2263428c8baso207275ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 08:56:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743609367; x=1744214167; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PNIV6sAGnQHOVULr8YLORl8QJ6tuDPUwRvq/LUw32V4=;
-        b=EZGwfC3CWr0bFnLkj71GDCVXohUy0Lyzpbh+Wt0p2YE8iXpV+qcIP4G5bhPjcYIC3C
-         Ov+763Vqckbys6cyVSXAIgDoJALTg+NU79lONSHocojDjV5P4EOy1VqpAfzoQQn73sF3
-         gNwGRSGgnw44XTxNHcl5LrBQ8h7SrG3TtwZRC9VKxFCqawB8SEAaqUgFPblp0gVYTMDq
-         tu8lb6GevrEWh+YLs+rTzi4Rv42l5IyrBp6+zQ4t8OTbc898xMZKOOZRMQztesAqagwq
-         n9rudgiKhl3gZhB9FXvyzgSPkm8Le2OKeWHFRTTLmB31rudZBS0R0Ehgdfh9oBAV4OS6
-         XJyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743609367; x=1744214167;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PNIV6sAGnQHOVULr8YLORl8QJ6tuDPUwRvq/LUw32V4=;
-        b=XHTwy0E2uySjtr+UapuM3gGXUS0nGkUE1tfDwEt6bEA9Oj0JTSnUtaXTJ3Vv6ex0SN
-         HExazpeihKPnE+JOCXerUzu+U8zhRiDKETHpL5MzMW7sm/HiHdWTNMK580st2kAUUDVo
-         eEwksXM1ot+1eoIHyjle3YisA8MzzehBEiVdVN8LE5C8OkX+78Chp8KxamqY8kAkyq0z
-         yf3I8ye3q+0W89KoCwqzF7AulttjqJVkBzzUcZLsudlKRS9su+Hw+a92sOHNO+QcukUb
-         gEQmNXQPiozOyHauApLYQIuuleETIdijiJb49iH856XBvMw341o7s5O3K0g0NRs15AWj
-         kjGw==
-X-Forwarded-Encrypted: i=1; AJvYcCUv5yOF78SEuCE1GvDkDg5sqdZ/KWzXYB3NXFL+qF6fNLKLXbH/BuOQsO2rNEdbawuup+O+7pXPcTUm99U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyReEmGt111odpzYXcm/sBVCaTk0rx2EFp7Lur6RCwUGBYNED/k
-	lPsOFA5yUAmHHz8rmrFUrpS1DPxdmdlOpOMHvM9F+E2s9vjowsaQT6vVY37D/xL4Du2Da6GHbZJ
-	PC0gtqHDhNXSow8ZVVkhVatfxyJWEAObEKZIR
-X-Gm-Gg: ASbGncsNOYE2nmHGDIMuvsgYrjSZ33DMco8Ougs/YqLKaqeK1l0LR8jgT3w/tu3LCK3
-	3C+sKY968Gj4AGeVVMU03SLkGqjH1vBCodmDFOFXVW3B+UWRgxVb7oF4rBeAT/4cUpb0LZknB6M
-	YNvtLbrc5BYkosZqfQcq6tTN7brfjDK/nT0MWm9Fv012hz6knGLA+FPw==
-X-Google-Smtp-Source: AGHT+IFzrgWVYDk+TtJJE6DjKy6EC96iuo5v0H9HJQj8F7da7ncAwuctzGF+VTodNwtBQT2yGiZ9Bh8gH2JawBjPj6Y=
-X-Received: by 2002:a17:902:ccd1:b0:215:9ab0:402 with SMTP id
- d9443c01a7336-22969e8bbcdmr4328925ad.18.1743609366923; Wed, 02 Apr 2025
- 08:56:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d0AZUXQ8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2578C4CEDD;
+	Wed,  2 Apr 2025 15:56:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743609408;
+	bh=9IBr0FS/13M0tI5AejLntdZXtYUuAWZZY60/9sUoth0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=d0AZUXQ8rY6bZ/Hrftgz655U8dgV6ZrBtye0/aQxJVWnPBk2r1iKzwnxXOEfxKNuR
+	 nRyDDa7FeXqbzjInFRzqnTFiN5j5eRSxkPcxfEYxMF9BebBSCSX4PI4ZqUUyAGuX2v
+	 ioD4dPeMepFmDSTxsYVcvHmqEBxfKOb5Kv8xSUZc9dsRizm+YWfeBIjiiPOft/Y11w
+	 V7L6kms2fKvfKQUempGy5cCQu/sHvEQM/y5qBQZivJb9JoSILnB8eH5f+FbvZACRoy
+	 CPszJIW5Ng5egkn3/0z2uW+srYD5SWBBQrEEDhYf8FeAd+mx1VWbqrmwYu0gQYYu8g
+	 BUTZCOozgYOow==
+Message-ID: <ffe49998-f809-458e-8eda-002d0c0fc32a@kernel.org>
+Date: Wed, 2 Apr 2025 17:56:41 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250318041442.321230-1-irogers@google.com> <20250318041442.321230-4-irogers@google.com>
- <a1d59121-f56d-409d-88e9-32fe0b748aa2@linux.intel.com>
-In-Reply-To: <a1d59121-f56d-409d-88e9-32fe0b748aa2@linux.intel.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 2 Apr 2025 08:55:55 -0700
-X-Gm-Features: AQ5f1Jo2iRe2Ngg7VrH4fUw31urDjxhb_isUqel5DFqkmdjYPwU52b61WPr6uCU
-Message-ID: <CAP-5=fWdvhoiKd41PUewR5TaaYOcuUPp5WThoOzt0rDrjTfruQ@mail.gmail.com>
-Subject: Re: [PATCH v1 3/5] perf evlist: Refactor evlist__scnprintf_evsels
-To: "Liang, Kan" <kan.liang@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Howard Chu <howardchu95@gmail.com>, 
-	Weilin Wang <weilin.wang@intel.com>, Levi Yun <yeoreum.yun@arm.com>, 
-	"Dr. David Alan Gilbert" <linux@treblig.org>, Andi Kleen <ak@linux.intel.com>, 
-	James Clark <james.clark@linaro.org>, Dominique Martinet <asmadeus@codewreck.org>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] dt-bindings: watchdog: Add NXP Software Watchdog
+ Timer
+To: Daniel Lezcano <daniel.lezcano@linaro.org>, wim@linux-watchdog.org
+Cc: linux@roeck-us.net, linux-watchdog@vger.kernel.org,
+ linux-kernel@vger.kernel.org, S32@nxp.com, ghennadi.procopciuc@nxp.com,
+ thomas.fossati@linaro.org, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, devicetree@vger.kernel.org
+References: <20250402154942.3645283-1-daniel.lezcano@linaro.org>
+ <20250402154942.3645283-2-daniel.lezcano@linaro.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250402154942.3645283-2-daniel.lezcano@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 2, 2025 at 8:26=E2=80=AFAM Liang, Kan <kan.liang@linux.intel.co=
-m> wrote:
->
->
->
-> On 2025-03-18 12:14 a.m., Ian Rogers wrote:
-> > Switch output to using a strbuf so the storage can be resized. Rename
-> > as scnprintf is no longer used.
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/builtin-record.c |  9 ++++++---
-> >  tools/perf/util/evlist.c    | 19 +++++++++----------
-> >  tools/perf/util/evlist.h    |  3 ++-
-> >  3 files changed, 17 insertions(+), 14 deletions(-)
-> >
-> > diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> > index ba20bf7c011d..cea5959adadc 100644
-> > --- a/tools/perf/builtin-record.c
-> > +++ b/tools/perf/builtin-record.c
-> > @@ -51,6 +51,7 @@
-> >  #include "util/clockid.h"
-> >  #include "util/off_cpu.h"
-> >  #include "util/bpf-filter.h"
-> > +#include "util/strbuf.h"
-> >  #include "asm/bug.h"
-> >  #include "perf.h"
-> >  #include "cputopo.h"
-> > @@ -2784,13 +2785,15 @@ static int __cmd_record(struct record *rec, int=
- argc, const char **argv)
-> >               record__auxtrace_snapshot_exit(rec);
-> >
-> >       if (forks && workload_exec_errno) {
-> > -             char msg[STRERR_BUFSIZE], strevsels[2048];
-> > +             char msg[STRERR_BUFSIZE];
-> >               const char *emsg =3D str_error_r(workload_exec_errno, msg=
-, sizeof(msg));
-> > +             struct strbuf sb =3D STRBUF_INIT;
-> >
-> > -             evlist__scnprintf_evsels(rec->evlist, sizeof(strevsels), =
-strevsels);
-> > +             evlist__format_evsels(rec->evlist, &sb);
-> >
-> >               pr_err("Failed to collect '%s' for the '%s' workload: %s\=
-n",
-> > -                     strevsels, argv[0], emsg);
-> > +                     sb.buf, argv[0], emsg);
-> > +             strbuf_release(&sb);
-> >               err =3D -1;
-> >               goto out_child;
-> >       }
-> > diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-> > index 49e10d6981ad..96cfc7ed1512 100644
-> > --- a/tools/perf/util/evlist.c
-> > +++ b/tools/perf/util/evlist.c
-> > @@ -35,6 +35,7 @@
-> >  #include "util/util.h"
-> >  #include "util/env.h"
-> >  #include "util/intel-tpebs.h"
-> > +#include "util/strbuf.h"
-> >  #include <signal.h>
-> >  #include <unistd.h>
-> >  #include <sched.h>
-> > @@ -2468,23 +2469,21 @@ struct evsel *evlist__find_evsel(struct evlist =
-*evlist, int idx)
-> >       return NULL;
-> >  }
-> >
-> > -int evlist__scnprintf_evsels(struct evlist *evlist, size_t size, char =
-*bf)
-> > +void evlist__format_evsels(struct evlist *evlist, struct strbuf *sb)
-> >  {
-> >       struct evsel *evsel;
-> > -     int printed =3D 0;
-> > +     bool first =3D true;
-> >
-> >       evlist__for_each_entry(evlist, evsel) {
-> >               if (evsel__is_dummy_event(evsel))
-> >                       continue;
-> > -             if (size > (strlen(evsel__name(evsel)) + (printed ? 2 : 1=
-))) {
-> > -                     printed +=3D scnprintf(bf + printed, size - print=
-ed, "%s%s", printed ? "," : "", evsel__name(evsel));
-> > -             } else {
-> > -                     printed +=3D scnprintf(bf + printed, size - print=
-ed, "%s...", printed ? "," : "");
-> > -                     break;
-> > -             }
-> > -     }
-> >
-> > -     return printed;
-> > +             if (!first)
-> > +                     strbuf_addch(sb, ',');
-> > +> +          strbuf_addstr(sb, evsel__name(evsel));
->
-> The evlist may include hundreds of events. The error msg will be too
-> huge for the case.
+On 02/04/2025 17:49, Daniel Lezcano wrote:
+> Describe the Software Watchdog Timer available on the S32G platforms.
+> 
+> Cc: Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>
+> Cc: Thomas Fossati <thomas.fossati@linaro.org>
+> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 
-I hear you, lots of uncore PMUs :-) I keep wanting to the PMU with an
-evsel to be a list. As you suggest in the next feedback, let's add an
-option to have some maximum for the perf record use case.
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Thanks,
-Ian
-
-
-> Thanks,
-> Kan
->
-> > +             first =3D false;
-> > +     }
-> >  }
-> >
-> >  void evlist__check_mem_load_aux(struct evlist *evlist)
-> > diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-> > index edcbf1c10e92..5fe5cfbbebb1 100644
-> > --- a/tools/perf/util/evlist.h
-> > +++ b/tools/perf/util/evlist.h
-> > @@ -20,6 +20,7 @@ struct pollfd;
-> >  struct thread_map;
-> >  struct perf_cpu_map;
-> >  struct record_opts;
-> > +struct strbuf;
-> >  struct target;
-> >
-> >  /*
-> > @@ -430,7 +431,7 @@ int event_enable_timer__process(struct event_enable=
-_timer *eet);
-> >
-> >  struct evsel *evlist__find_evsel(struct evlist *evlist, int idx);
-> >
-> > -int evlist__scnprintf_evsels(struct evlist *evlist, size_t size, char =
-*bf);
-> > +void evlist__format_evsels(struct evlist *evlist, struct strbuf *sb);
-> >  void evlist__check_mem_load_aux(struct evlist *evlist);
-> >  void evlist__warn_user_requested_cpus(struct evlist *evlist, const cha=
-r *cpu_list);
-> >  void evlist__uniquify_name(struct evlist *evlist);
->
+Best regards,
+Krzysztof
