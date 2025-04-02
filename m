@@ -1,100 +1,80 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp.domeneshop.no (smtp.domeneshop.no [194.63.252.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4C5118C936;
-	Wed,  2 Apr 2025 16:41:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26E5215A86B
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 16:41:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.63.252.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743612064; cv=none; b=EQTw1EJlqv6z545S0tJ8zEjTQWMuwd96MUrx4MRe/cD/TFtSZAkq8TBzFR4x6/KBTeAbDxjXAC8VAmAErcXymVyieHuvIcUEtj1sUqXyg5ZXr389+A007MLgvOlKhFx2ihiGbmG59UM/FIyp+a2aK9xRJWRJJ0yWNq5KVK+6lLg=
+	t=1743612091; cv=none; b=rIM7td446ih1ZPTrcRktHT25ADEy2jQvjCWMen0voDl6PnOpO5r/YORrc7z4ap0mU3YPXHGWWoA+zy4brKJSsgTmLWrgUUeC3Bdh7QSuRarbPlhwGz9/6Q6W4nnhrLwWHRGGoZIe6tOwt2UBJ3G6GcUfTy7r3sETsKDs1ccR4Lk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743612064; c=relaxed/simple;
-	bh=JL3Fc6Tx+Y7KKkGF51EOD/8yZESEW5Hbu4AYBc2UUrI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mJuLUIgHZ5uDCweDuKyAefuDOfL4JyPalIlTltWr7GoKN0VEHbpRAWI13OSAqmmvEPp2oIREa3l37iBqCHHOys00fzy2JjokWiBMPkghHU1sADq36iKmAIlFcA+k/BkDUzwa6FxZTGwGBs3i/TFnWdyBO0mfWwY+rjxGbrjSafw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JZ9/WGpi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743612091; c=relaxed/simple;
+	bh=nmsaXvfnIFl6NmwVoYD46lxTCuO515WxPZdTX66Qo3Q=;
+	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=YXNbGSNliifZDr6lG5rXjLJ0jBCo6U79Z2VzP4oVSSLgtA3UHJNX2o7QypCBlC9GGKobZ8wqvInfH7dnCMVDkmpaZeRDIlwUgQmm0u8uNOxG6ODxlPQh8kQA0CfWFDcG8EAYMXrPeNrHAruXOQXALVeDqjV9gsBhqAvRYnJ0g6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bit-philosophy.net; spf=pass smtp.mailfrom=bit-philosophy.net; dkim=pass (2048-bit key) header.d=bit-philosophy.net header.i=@bit-philosophy.net header.b=L/viaXhn; arc=none smtp.client-ip=194.63.252.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bit-philosophy.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bit-philosophy.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JZ9/WGpi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14142C4CEDD;
-	Wed,  2 Apr 2025 16:41:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743612063;
-	bh=JL3Fc6Tx+Y7KKkGF51EOD/8yZESEW5Hbu4AYBc2UUrI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JZ9/WGpiBdApatkU/d5aXIEl+WX0smTkXKrSB3ldd+SYl+KKwiJfRxS3Ffosk/QIE
-	 A870YcJT/MKSH0geGokVXHyBKxhEKl1t0PSQ3m9qS+S+0lKlTK/PIZGvwzlGIQRB+l
-	 5QEm0Een/ahWUEQpOxsWE83ohXUbfW86/OPkRrGjtLmUejFzt14QHVHVFqtcWsHjMl
-	 loy/psVrs21p1kTL0YmeuH06KfbmZJdWlZJyQnzRhiVjfM2mIXmAXplt7qZgUOazFv
-	 jsaeCLzl7m1UFch4Whr5CPBrxwEUTL9BO35nPnQ8R8vq/PPhNbLOOTlgoUUKvEZuak
-	 m/O6nScePRV5g==
-Date: Wed, 2 Apr 2025 09:41:01 -0700
-From: Eric Biggers <ebiggers@kernel.org>
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: linux-kernel@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
-	linux-crypto@vger.kernel.org, linux-arch@vger.kernel.org
-Subject: Re: [PATCH 1/7] lib/crc: remove unnecessary prompt for CONFIG_CRC32
- and drop 'default y'
-Message-ID: <20250402164101.GC1235@sol.localdomain>
-References: <20250401221600.24878-1-ebiggers@kernel.org>
- <20250401221600.24878-2-ebiggers@kernel.org>
- <2c1cbb51-cc16-4292-ad30-482d93935d91@infradead.org>
- <20250402035107.GA317606@sol.localdomain>
- <81aac5ff-8698-4059-92a2-bccb998eb000@infradead.org>
- <20250402050234.GB317606@sol.localdomain>
- <b5589b7d-d4a1-4b12-a845-afdbb26ed845@infradead.org>
+	dkim=pass (2048-bit key) header.d=bit-philosophy.net header.i=@bit-philosophy.net header.b="L/viaXhn"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=bit-philosophy.net; s=ds202411; h=Content-Transfer-Encoding:Content-Type:
+	Subject:From:To:MIME-Version:Date:Message-ID:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=+A+81ucsh8zPhiyFojiWYCgzq0MGXiREO35Wvym6X50=; b=L/viaXhnz57XdEjH6QZHbDsyOZ
+	G3xa8PS0HkXltx0UQxnXJ/RSqZI7lEDdgu1mfn5GfGFvgPumvQOuY3MHTgSiX37vT6/GK5MninqYH
+	CgCbZ8JAet0M5F7JtpCRK3Mg29b4C/cn2RZq2Md98UCS2iG0VtUfPO09ud7xGHgZoHdVJi0uEJIWg
+	1uZO3EbnADp4hiSj9Sm6Xs5fx1a8DLBJn+WsA+QR3Th54imseWQOXyp8DpsjMfTxs7C6XUdA64kXN
+	8edlI9oLCxDh5ghh27+Qa2pAT5N4FfU277IHDWibKQ/gR/xaaSVXn2v0fIuSoCWeMLCdG6Eokia+c
+	s3NjuadA==;
+Received: from smtp
+	by smtp.domeneshop.no with esmtpsa (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	id 1u019V-000Up2-Er
+	for linux-kernel@vger.kernel.org;
+	Wed, 02 Apr 2025 18:41:21 +0200
+Message-ID: <28b2454d-61fe-430b-846e-d3727552f257@bit-philosophy.net>
+Date: Wed, 2 Apr 2025 18:41:20 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b5589b7d-d4a1-4b12-a845-afdbb26ed845@infradead.org>
+User-Agent: Mozilla Thunderbird
+To: linux-kernel@vger.kernel.org
+From: =?UTF-8?Q?Ywe_C=C3=A6rlyn?= <ywe@bit-philosophy.net>
+Subject: Seinfeld Satan
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 01, 2025 at 10:56:32PM -0700, Randy Dunlap wrote:
-> 
-> 
-> On 4/1/25 10:02 PM, Eric Biggers wrote:
-> > On Tue, Apr 01, 2025 at 09:50:57PM -0700, Randy Dunlap wrote:
-> >>
-> >>
-> >> On 4/1/25 8:51 PM, Eric Biggers wrote:
-> >>> On Tue, Apr 01, 2025 at 08:42:41PM -0700, Randy Dunlap wrote:
-> >>>> Hi 
-> >>>>
-> >>>> On 4/1/25 3:15 PM, Eric Biggers wrote:
-> >>>>> From: Eric Biggers <ebiggers@google.com>
-> >>>>>
-> >>>>> All modules that need CONFIG_CRC32 already select it, so there is no
-> >>>>> need to bother users about the option, nor to default it to y.
-> >>>>>
-> >>>>
-> >>>> My memory from 10-20 years ago could be foggy, but ISTR that someone made at least
-> >>>> CRC16 and CRC32 user-selectable in order to support out-of-tree modules...
-> >>>> FWIW.
-> >>>> But they would not need to be default y.
-> >>>
-> >>> That's not supported by upstream, though.
-> >>
-> >> Which part is not supported by upstream?
-> > 
-> > Having prompts for library kconfig options solely because out-of-tree modules
-> > might need them.
-> 
-> Well, I think that is was supported for many years. I don't see how it would become
-> unsupported all of a sudden. IMHO.
+Some may have noticed how some people laugh when mentioning Satan. 
+Seinfeld actually used the effect for his comedy show.
 
-Most kernel-internal options aren't user-selectable, though.  It's mainly just
-some older ones that were made user-selectable for some reason, and that is a
-mistake that has been getting cleaned up over time.
+On c64 a "coding genious" knew how to use the interrupt for rasterline 
+effects, such as "border scroll". (Changing screenmode on bottom, doing 
+scroll via sprites.
 
-Consider that the upstream community has no visibility into out-of-tree modules
-in general, so there is no reasonable policy that could be applied in deciding
-which options should be user-selectable purely for the benefit of out-of-tree
-modules.  The only reasonable policy is to consider in-tree users only.  Just
-like we don't add EXPORT_SYMBOL() just because an out-of-tree module wants it.
+On Amiga the 7chan playroutine known through Chris Huelsbeck and the 
+Turrican game, was even more genious.
 
-And of course downstreams always can, and do, just add a new kconfig option that
-selects any non-visible options they want.
+However this 7 chan fed sample-by-sample to the processor without use of 
+hardware looping in the soundchip.
 
-- Eric
+But this is forbidden for Satan.
+
+If appropriate resouces was used it could have been much better.
+
+Hans Reiser axed his wife, due to Satanic belief. He, in confusion 
+thought it was good for the cause.
+
+It also means to Satan, do not use cache appropriately.
+
+"Hahaha" ?
+
+I do not really think so.
+
+Light,
+Ywe.
+https://bit-philosophy.net/
