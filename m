@@ -1,33 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39EA929CE1
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 02:22:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6885812FF6F;
+	Wed,  2 Apr 2025 02:22:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743560553; cv=none; b=SQuVeHAe4F3eLRuqNn9fSRkixVhtRgWSlX/TjqWyOo5cPO1Otl8RCsqPbsdE18NVoz5QIWrChSRI2LcjNNxf0PPX91VoETIV6WdovcWuJNJznIMUDJy5RC8S8fsokOc6e0dC8Mb/Sfbfy4K1/3YcoMb2CHgUFAPloC+PbNu47LE=
+	t=1743560553; cv=none; b=ArjeVGqZxuvVzTsO/brxlrdwqAiDFjWrkrv+96sKk4XGpQdpkQPl1P/h66kG/joZSeT0sapcoij/HEfrqq6ZTF1hZR1wsYqb2XTmgUpfF4M1MUOGeNeU4s4O79Q156b4qWe+iivokMVqzaJMofuGv0pRMRuKmJX8j80S4lKEUBQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1743560553; c=relaxed/simple;
-	bh=DCxRafmm3bkIwxe7XnDiqfCO1qxNMhwVeQxCFNCrA6w=;
+	bh=CaUW0ta9y1HPT2mikD1OR2HWLEd3oigGjMY+qI7XmjI=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=WOueT1xuwRwi9JiiJXQ3uyvFRrJlgvFQN2SybnOLpFVMGH+9RgPw+dJQxehn9jo0/vMIiuYrLXpOTBFkwFx8w6zg0AkWu9eX8+6y6A4eHhtncYsPpdT5IuiaMds0nlQ5eNbpwekVl7q8DxfQ+OtW7xZdpPITw1UcDPwutL/JQZU=
+	 Content-Type; b=d2pYtNUjEfVn61Kl+tW88Q0cvTvXFZgDieTp5Yl653dUWcStUWYFq0YrEfizH7domnpxaw/+NXb8OKaH3SihbsaF26TcG1F7qeL5xIHdcRYjFzEgSBuGCHyqkmhs28k7A8nYeQfkmLrs3yNpizbhLeKW3KxpB5QA/BmyW4T7pcs=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCB5DC4CEE8;
-	Wed,  2 Apr 2025 02:22:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A33AC4CEF3;
+	Wed,  2 Apr 2025 02:22:33 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1tznlP-00000006MNq-02B2;
+	id 1tznlP-00000006MOo-1T4Y;
 	Tue, 01 Apr 2025 22:23:35 -0400
-Message-ID: <20250402022334.856216750@goodmis.org>
+Message-ID: <20250402022335.198455535@goodmis.org>
 User-Agent: quilt/0.68
-Date: Tue, 01 Apr 2025 22:23:10 -0400
+Date: Tue, 01 Apr 2025 22:23:12 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Subject: [for-linus][PATCH 2/4] tracing: Free module_delta on freeing of persistent ring buffer
+ Andrew Morton <akpm@linux-foundation.org>,
+ stable@vger.kernel.org,
+ Libo Chen <libo.chen@oracle.com>
+Subject: [for-linus][PATCH 4/4] tracing: Verify event formats that have "%*p.."
 References: <20250402022308.372786127@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -39,32 +41,86 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Steven Rostedt <rostedt@goodmis.org>
 
-If a persistent ring buffer is created, a "module_delta" array is also
-allocated to hold the module deltas of loaded modules that match modules
-in the scratch area. If this buffer gets freed, the module_delta array is
-not freed and causes a memory leak.
+The trace event verifier checks the formats of trace events to make sure
+that they do not point at memory that is not in the trace event itself or
+in data that will never be freed. If an event references data that was
+allocated when the event triggered and that same data is freed before the
+event is read, then the kernel can crash by reading freed memory.
 
+The verifier runs at boot up (or module load) and scans the print formats
+of the events and checks their arguments to make sure that dereferenced
+pointers are safe. If the format uses "%*p.." the verifier will ignore it,
+and that could be dangerous. Cover this case as well.
+
+Also add to the sample code a use case of "%*pbl".
+
+Link: https://lore.kernel.org/all/bcba4d76-2c3f-4d11-baf0-02905db953dd@oracle.com/
+
+Cc: stable@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Link: https://lore.kernel.org/20250401124525.1f9ac02a@gandalf.local.home
-Fixes: 35a380ddbc65 ("tracing: Show last module text symbols in the stacktrace")
+Fixes: 5013f454a352c ("tracing: Add check of trace event print fmts for dereferencing pointers")
+Link: https://lore.kernel.org/20250327195311.2d89ec66@gandalf.local.home
+Reported-by: Libo Chen <libo.chen@oracle.com>
+Reviewed-by: Libo Chen <libo.chen@oracle.com>
+Tested-by: Libo Chen <libo.chen@oracle.com>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/trace.c | 1 +
- 1 file changed, 1 insertion(+)
+ kernel/trace/trace_events.c                | 7 +++++++
+ samples/trace_events/trace-events-sample.h | 8 ++++++--
+ 2 files changed, 13 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 103b193875b3..de6d7f0e6206 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -9609,6 +9609,7 @@ static void free_trace_buffers(struct trace_array *tr)
- 		return;
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index 8638b7f7ff85..069e92856bda 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -470,6 +470,7 @@ static void test_event_printk(struct trace_event_call *call)
+ 			case '%':
+ 				continue;
+ 			case 'p':
++ do_pointer:
+ 				/* Find dereferencing fields */
+ 				switch (fmt[i + 1]) {
+ 				case 'B': case 'R': case 'r':
+@@ -498,6 +499,12 @@ static void test_event_printk(struct trace_event_call *call)
+ 						continue;
+ 					if (fmt[i + j] == '*') {
+ 						star = true;
++						/* Handle %*pbl case */
++						if (!j && fmt[i + 1] == 'p') {
++							arg++;
++							i++;
++							goto do_pointer;
++						}
+ 						continue;
+ 					}
+ 					if ((fmt[i + j] == 's')) {
+diff --git a/samples/trace_events/trace-events-sample.h b/samples/trace_events/trace-events-sample.h
+index 999f78d380ae..1a05fc153353 100644
+--- a/samples/trace_events/trace-events-sample.h
++++ b/samples/trace_events/trace-events-sample.h
+@@ -319,7 +319,8 @@ TRACE_EVENT(foo_bar,
+ 		__assign_cpumask(cpum, cpumask_bits(mask));
+ 	),
  
- 	free_trace_buffer(&tr->array_buffer);
-+	kfree(tr->module_delta);
+-	TP_printk("foo %s %d %s %s %s %s %s %s (%s) (%s) %s", __entry->foo, __entry->bar,
++	TP_printk("foo %s %d %s %s %s %s %s %s (%s) (%s) %s [%d] %*pbl",
++		  __entry->foo, __entry->bar,
  
- #ifdef CONFIG_TRACER_MAX_TRACE
- 	free_trace_buffer(&tr->max_buffer);
+ /*
+  * Notice here the use of some helper functions. This includes:
+@@ -370,7 +371,10 @@ TRACE_EVENT(foo_bar,
+ 
+ 		  __get_str(str), __get_str(lstr),
+ 		  __get_bitmask(cpus), __get_cpumask(cpum),
+-		  __get_str(vstr))
++		  __get_str(vstr),
++		  __get_dynamic_array_len(cpus),
++		  __get_dynamic_array_len(cpus),
++		  __get_dynamic_array(cpus))
+ );
+ 
+ /*
 -- 
 2.47.2
 
