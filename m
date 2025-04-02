@@ -1,197 +1,133 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87D70238D25;
-	Wed,  2 Apr 2025 12:53:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20E41238D25;
+	Wed,  2 Apr 2025 12:53:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743598401; cv=none; b=EWzp+a/1atZ6evzf8Se5z1zWzzSjhgD1Ho2ySFLJlKQPCAX38d69DH/kRcMlQElYoSkaCIdnyDoTbS4tJfYrwjnmTwqLOevSJK6sOPiiJJ9YBY44iGe3d2U2y2/Dva+BKaFv7Wcl/4GLUzPifTlP17oEBghCqJEX/DHsVS0KNU8=
+	t=1743598420; cv=none; b=RUa35taEkiFaLCSSsAxbGWa63Ksd+Ru2mYDq+S7CIR/mX2XSS9IqRTjggw+rMG2XC4XXpvcQBpJXtNUfhsGuOK/UHS/6rJ+vySIcZ5b7LhmrZMvKKmeeD0zZ54IZw0VpEVPS51wRs3TU1ez7ksLd4JxPLwyXK/cq11YHLtXbU0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743598401; c=relaxed/simple;
-	bh=i+12HA/1ppKzVebGQz08npfbBGPLxXTUCObabmI6qu8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AYK2dgns5/4kCjyyhzA0LeReJi3Cv7Jb6jIK5rH5y0zDnHB0C1Vr5hyyg/7ZkQq2Exw+UYI56jMdtIPm7bmAHC88kofMYpBDA78wd0kJTjTUcz99LQs4GjDdYUaOzi3bC8h52dSF7DMaOzmrAZ1PamnfXZJl++7ZRCih0ve7nlk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=g9LbGOmC; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1743598420; c=relaxed/simple;
+	bh=QWAHrdoHZQWrK4dNu2Qq9in6lH220oPuPQXNfKYeiJU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=deqUaxpcVOiNfoe+DNcpZFNrgmBNaC2QRY9jXFB4GVdKN+8SYl1yaG2wMM8rcHUBpT8jPpfm6zD9KNdI70cYetxtlu4k8tcPuA057mJ7LkbCSOl3zrB/zTXcLAB3p+ECJ4x+1pIHP+2LsNhxGVBj+hWumEVI9kwuk4X4LDkWjaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EgpS6NSX; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="g9LbGOmC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743598400; x=1775134400;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=i+12HA/1ppKzVebGQz08npfbBGPLxXTUCObabmI6qu8=;
-  b=g9LbGOmC7KawHpNWP3tIlDBcVxXaLnx5b+XDwsDCNUj6FsyDA2Qqxz/g
-   MfB8VLHyKCgE1SipTA7TJjajopypfSgCMBlkkpGUTu1YEXYWmVZZPe3tf
-   F6Ik4eRu5csYEy+Fn09SMOD9RgMH5vCjDEGmrgEBZ85Wl0qg1bv9grdX+
-   8kvN2tMOjl+ErctXE99kscm4aSeGbN5wmBVFu3HhbRlGMqEh/J0lM3BUI
-   oP/lrprFSMmjlpFim8JU8hT2KxYGM+Plr8a+KNYNo2QybzYYR4w+5X6hi
-   JDppb9QAzusXFrXmzYCcmHhuJwOBC1H7O2EkJhtZ4Ry13oKZt6x5ECIlT
-   A==;
-X-CSE-ConnectionGUID: e9f6x1nlRY65jXaXal2Sig==
-X-CSE-MsgGUID: /HQJmEMASmOl3K9RgT4WEw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11392"; a="44844882"
-X-IronPort-AV: E=Sophos;i="6.15,182,1739865600"; 
-   d="scan'208";a="44844882"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 05:53:19 -0700
-X-CSE-ConnectionGUID: 4nNe4TxNSf2rbxkyi6MlcQ==
-X-CSE-MsgGUID: 4YUvaZTmQZOfmnN+/ALpAQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,182,1739865600"; 
-   d="scan'208";a="131885922"
-Received: from binbinwu-mobl.ccr.corp.intel.com (HELO [10.124.242.208]) ([10.124.242.208])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 05:53:12 -0700
-Message-ID: <112c4cdb-4757-4625-ad18-9402340cd47e@linux.intel.com>
-Date: Wed, 2 Apr 2025 20:53:08 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EgpS6NSX"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5efe8d9ebdfso6051460a12.3;
+        Wed, 02 Apr 2025 05:53:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743598417; x=1744203217; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QWAHrdoHZQWrK4dNu2Qq9in6lH220oPuPQXNfKYeiJU=;
+        b=EgpS6NSXnqOTQAIJU98K8tAar5bA0gF42DZu5boRp9Pd070HYbxTEAnzOcrC9FvOJJ
+         0Fe8Yu4qdb6R++x2duj9yMPo9hBOXMZu4WdrMwp4H+XLpU00sok0Jn6pBMIeuM5u8LJU
+         Xzr+iEIeEyGUtcXlI8Fndac2127tcI2deqmSut4FSTOJ8zadWJOE/0npr37748bFmf9R
+         gjeMdQS9wDGyi051SORP+tL092SIwrFAWHaEStbwf0QEawe4zdc1MLVM5FH/W/mGP4NZ
+         42Q1jzoAixzdvSstJ9yZGFziTGNqsL4OCujBHuhwN/s9ZknsWvoila4RNBBWAXQnReNG
+         7Ylg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743598417; x=1744203217;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QWAHrdoHZQWrK4dNu2Qq9in6lH220oPuPQXNfKYeiJU=;
+        b=Z0JO4Dg9QcGUCx8nZ3D+41/EyN5OIcCLGqXMLx0OYAuZJ+8AUC8wZ+Escj7ZTt5vTZ
+         lS1ydUeHRI4Y4+JMpwJyF95Ajgshfrl92oimH4b7uVCRq1k2kwcOAgvweCU/9ji2XBMs
+         QNHPboqFzCjiIAZbyJA+/JoqHuj7YpKcYP8Ztpl8Cxl9R5QKyngcW2OsdwAwN679yuSb
+         KtvDExK6unTpxFuG7RbPSll7eauvpJ/T3aZGKeQt2RgJ8Nmfn8mA9Q3RUjR7uSl7dqbq
+         FWfYRUw/g8mToBWbkcslOqHdHgki91iI59+6/GHtfEzTL8iuzqdPGWrZAQ1cBAenXrjb
+         3kAQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUccaZyYkirq9bTsMj0N5DZIeFeorRpD/CGSnX32kVXsqqTiCLmwKiT8YdBFBmxKcP0St8j0kEExnIBfMs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YztbdbXI3dACorNjaiAuu2GBumkSET1Sa/Em5kmb7NQaKxI3sEe
+	riROsZIzuXhVNYAtfgVKzyfaQFJfRwxZNsIjxmEdN0ox3m228IoM8nEmJXVzte1qtfYeQdjKhSA
+	IfxKQIwhuSsDLf0d7Y66XXnV2kIo=
+X-Gm-Gg: ASbGnctCeM5445x/402F94JfMVKB+8OOo/H9X4/sac9PsvCvK6YoIO5bJsB2bEsp9p6
+	NQbP1/mpu+HU6vIhG9KNwHZyOZGssymRLODL60WltB9pJ3aJKWG9/sf0aDsk9ytFxeOh92AQLCa
+	3BOkyFFEeVDuyGmhVCvt4Q+dnFCjfkBDPgwy61oSQ=
+X-Google-Smtp-Source: AGHT+IGxDgr+/GaLpKlsw9St3w6GJvEPpvjphaV5hDOM2BUJ91HNibOwkf5Ij8wA/sKQqWEOmB+VBIEys451X/p7yBI=
+X-Received: by 2002:a17:906:6a0b:b0:ac7:9937:e259 with SMTP id
+ a640c23a62f3a-ac79937e35bmr225555866b.0.1743598417114; Wed, 02 Apr 2025
+ 05:53:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] KVM: TDX: Handle TDG.VP.VMCALL<GetQuote>
-To: "Huang, Kai" <kai.huang@intel.com>,
- "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
- "pbonzini@redhat.com" <pbonzini@redhat.com>,
- "seanjc@google.com" <seanjc@google.com>
-Cc: "Gao, Chao" <chao.gao@intel.com>,
- "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
- "mikko.ylinen@linux.intel.com" <mikko.ylinen@linux.intel.com>,
- "Li, Xiaoyao" <xiaoyao.li@intel.com>,
- "Lindgren, Tony" <tony.lindgren@intel.com>,
- "Hunter, Adrian" <adrian.hunter@intel.com>,
- "Chatre, Reinette" <reinette.chatre@intel.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "Zhao, Yan Y" <yan.y.zhao@intel.com>,
- "Yamahata, Isaku" <isaku.yamahata@intel.com>
-References: <20250402001557.173586-1-binbin.wu@linux.intel.com>
- <20250402001557.173586-2-binbin.wu@linux.intel.com>
- <40f3dcc964bfb5d922cf09ddf080d53c97d82273.camel@intel.com>
-Content-Language: en-US
-From: Binbin Wu <binbin.wu@linux.intel.com>
-In-Reply-To: <40f3dcc964bfb5d922cf09ddf080d53c97d82273.camel@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <67eca38a.d40a0220.22c3d5.88f3@mx.google.com> <CAHp75Vf4abzcNFwo2W-=-fOr1_j51RAUPxDbGNVX9F-Soxbs3A@mail.gmail.com>
+ <CAKUZ0z+mqGwyEt8oem7gLMXbNp6D3MPPMXEH5GCdA4_768d=5g@mail.gmail.com>
+In-Reply-To: <CAKUZ0z+mqGwyEt8oem7gLMXbNp6D3MPPMXEH5GCdA4_768d=5g@mail.gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Wed, 2 Apr 2025 15:53:00 +0300
+X-Gm-Features: AQ5f1JpDktiw_Kd3xROZdIkDbnI11lgI5EHYRPHPVopQZ4eLDQiCWlbTGKfxrq0
+Message-ID: <CAHp75Vdr9YO6GJmomumP=tksZfVj4BtDHx=Rb9Cr4gSQPnt+eg@mail.gmail.com>
+Subject: Re: [PATCH] staging: media: Fix indentation to use tabs instead of spaces
+To: Gabriel <gshahrouzi@gmail.com>
+Cc: linux-media@vger.kernel.org, andy@kernel.org, hdegoede@redhat.com, 
+	mchehab@kernel.org, sakari.ailus@linux.intel.com, gregkh@linuxfoundation.org, 
+	linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, Apr 2, 2025 at 3:28=E2=80=AFPM Gabriel <gshahrouzi@gmail.com> wrote=
+:
+> On Wed, Apr 2, 2025 at 3:12=E2=80=AFAM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+> > On Wed, Apr 2, 2025 at 5:40=E2=80=AFAM <gshahrouzi@gmail.com> wrote:
+> >
+> > Is it your first patch to the Linux kernel? See my comments below.
+> It's among the first patches I've submitted.
 
+Good start!
 
-On 4/2/2025 8:53 AM, Huang, Kai wrote:
+...
 
-[...]
->
-> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-> index b61371f45e78..90aa7a328dc8 100644
-> --- a/Documentation/virt/kvm/api.rst
-> +++ b/Documentation/virt/kvm/api.rst
-> @@ -7162,6 +7162,25 @@ The valid value for 'flags' is:
->     - KVM_NOTIFY_CONTEXT_INVALID -- the VM context is corrupted and not valid
->       in VMCS. It would run into unknown result if resume the target VM.
->   
-> +::
-> +
-> +		/* KVM_EXIT_TDX_GET_QUOTE */
-> +		struct tdx_get_quote {
-> +			__u64 ret;
-> +			__u64 gpa;
-> +			__u64 size;
-> +		};
-> +
-> +If the exit reason is KVM_EXIT_TDX_GET_QUOTE, then it indicates that a TDX
-> +guest has requested to generate a TD-Quote signed by a service hosting
-> +TD-Quoting Enclave operating on the host. The 'gpa' field and 'size' specify
-> +the guest physical address and size of a shared-memory buffer, in which the
-> +TDX guest passes a TD report.
->
-> "TD report" -> "TD Report"?  The changelog uses the latter.
->
->> When completed, the generated quote is returned
-> "quote" -> "Quote"?
->
->> +via the same buffer. The 'ret' field represents the return value.
->>
-> return value of the GetQuote TDVMCALL?
-Yes, thereturn code of the GetQuote TDVMCALL.
->
->> The userspace
->> +should update the return value before resuming the vCPU according to TDX GHCI
->> +spec.
->>
-> I don't quite follow.  Why userspace should "update" the return value?
-Because only userspace knows whether the request has been queued successfully.
+> > > >From d6a08153171ac52b438b6ddc1da50ebdd3550951 Mon Sep 17 00:00:00 20=
+01
+> > > From: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+> > > Date: Tue, 1 Apr 2025 22:04:25 -0400
+> > > Subject: [PATCH] staging: media: Fix indentation to use tabs instead =
+of spaces
+> >
+> > First of all, your patch is mangled. You want to use proper tools,
+> > perhaps. One of which is `git format-patch ...` and another one is
+> > `git send-email ...`
+> I was using git format-patch but not git send-email which seems to
+> have been the issue. The meta-data from the patch was getting appended to
+> the top.
 
-According to GHCI, TDG.VP.VMCALL<GetQuote> API allows one TD to issue multiple
-requests. This is implementation specific as to how many concurrent requests
-are allowed.  The TD should be able to handle TDG.VP.VMCALL_RETRY if it chooses
-to issue multiple requests simultaneously.
-So the userspace may set the return code as TDG.VP.VMCALL_RETRY.
+These are just normal headers for an email. They may be used by tools
+such as `git send-email ...` or `mutt -H ...`.
 
+...
 
->
->> It's an asynchronous request. After the TDVMCALL is returned and back to
->> +TDX guest, TDX guest can poll the status field of the shared-memory area.
->> +
->>   ::
->>   
->>   		/* Fix the size of the union. */
->> diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
->> index b952bc673271..535200446c21 100644
->> --- a/arch/x86/kvm/vmx/tdx.c
->> +++ b/arch/x86/kvm/vmx/tdx.c
->> @@ -1463,6 +1463,39 @@ static int tdx_get_td_vm_call_info(struct kvm_vcpu *vcpu)
->>   	return 1;
->>   }
->>   
->> +static int tdx_complete_get_quote(struct kvm_vcpu *vcpu)
->> +{
->> +	tdvmcall_set_return_code(vcpu, vcpu->run->tdx_get_quote.ret);
->> +	return 1;
->> +}
->> +
->> +static int tdx_get_quote(struct kvm_vcpu *vcpu)
->> +{
->> +	struct vcpu_tdx *tdx = to_tdx(vcpu);
->> +
->> +	u64 gpa = tdx->vp_enter_args.r12;
->> +	u64 size = tdx->vp_enter_args.r13;
->> +
->> +	/* The buffer must be shared memory. */
->> +	if (vt_is_tdx_private_gpa(vcpu->kvm, gpa) || size == 0) {
->> +		tdvmcall_set_return_code(vcpu, TDVMCALL_STATUS_INVALID_OPERAND);
->> +		return 1;
->> +	}
-> It is a little bit confusing about the shared buffer check here.  There are two
-> perspectives here:
->
-> 1) the buffer has already been converted to shared, i.e., the attributes are
-> stored in the Xarray.
-> 2) the GPA passed in the GetQuote must have the shared bit set.
->
-> The key is we need 1) here.  From the spec, we need the 2) as well because it
-> *seems* that the spec requires GetQuote to provide the GPA with shared bit set,
-> as it says "Shared GPA as input".
->
-> The above check only does 2).  I think we need to check 1) as well, because once
-> you forward this GetQuote to userspace, userspace is able to access it freely.
+> > Change itself is okay, but is this the only one case in the entire
+> > driver (which is something like 100k LoCs long)? Even though, and
+> > while for the training purposes this is fine, you can also think about
+> > checking the common style of other functions, which may be shifted
+> > with TABs, but still having not enough spaces or so.
 
-Right.
+> Good point. Regarding formatting, it probably makes the most sense to
+> address these issues comprehensively in a single cleanup pass (similar
+> to https://lore.kernel.org/linux-staging/cover.1743524096.git.karanja99er=
+ick@gmail.com/T/#t).
+> This particular instance caught my attention because I initially
+> thought the author might have accidentally used spaces instead of
+> tabs. The line in question used 2 tabs + 8 spaces, while subsequent
+> similarly-aligned lines used 3 tabs. However, after examining
+> different files in the driver, I noticed that while the formatting
+> appears inconsistent, it likely exists for specific reasons. It's
+> probably better to avoid changing a single detail without considering
+> the broader formatting approach, and to treat checkpatch.pl more as a
+> guide than the final authority.
 
-Another discussion is whether KVM should skip the sanity checks for GetQuote
-and let the userspace take the job.
-Considering checking the buffer is shared memory or not, KVM seems to be a
-better place.
+Okay! In any case this patch is fine to me in case you want to send a v2.
 
->
-> As a result, the comment
->
->    /* The buffer must be shared memory. */
->
-> should also be updated to something like:
->
->    /*
->     * The buffer must be shared. GetQuote requires the GPA to have
->     * shared bit set.
->     */
-
+--=20
+With Best Regards,
+Andy Shevchenko
