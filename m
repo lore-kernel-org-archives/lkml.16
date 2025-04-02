@@ -1,162 +1,121 @@
-Received: from mout.web.de (mout.web.de [212.227.17.11])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AE58B674;
-	Wed,  2 Apr 2025 20:18:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2147F1917E7
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 20:18:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743625104; cv=none; b=k4cF2ZdPzwg/zInsXLaz3tCsOO3k7/zNSn4DVoBodBjreLNQUD1+J1fZpE2YctcVug/OrfJwvFdQqJzhDhkNFrYt1c42HwsqzoIUumJ9PqbkuBX7xTieOa4yEgBuijDjwdt2D2eerB3VCqikTIms0WG5k5isEjW+ysnVJSBxcno=
+	t=1743625135; cv=none; b=qxtURwcOTE0MCsExumh1Dr9wGX6IDTPMamsgW6ITLIod6/Qd9U9hUbnt8y38R4h1Ap20BzSmoq44nBApGAk8U8BA0OS3KfKyjeohgKCy6Zz0IGQoGSh1YV9vYQahHF7oJRt2Zrr5XBEumX3UvsiUPXTOvhVh6cVCFR7u7UlSxuY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743625104; c=relaxed/simple;
-	bh=MpJVhRgZ7LUpR6onJCeLiTRp0b5MlWrOY5kpXQCMI6E=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=WsIjAAtQSfaAK0PgzVvcjus+iNBDBVqad+YP6fZwiPKqXoPoYKKDs0jtekQp1alZq6f5an2k8lpStzkzKjQmeJqO4SkQsHy/xozuDgTqIXd3Z4cmmYIMQSjmjsFT6PhRhU1JhOHepb9phVg22mLfGQEv7KJOBWxgD2F1fhVu9t4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=frank.scheiner@web.de header.b=aeXuR7TP; arc=none smtp.client-ip=212.227.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1743625135; c=relaxed/simple;
+	bh=pvzNF8A+AU0+tZ3YWDTE0Myk5ztkcNzWkwDUUigP80o=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=jB35caivYpX3RP6/7u5Ar5uUVAs+kUZxCTtwUjOdJJpDoGCaTpUskAh47Kc6XamcIC3vJcVatWdwqW6SwT6WsOLTL1XP6DsqjnnPdVnzThygeP0ml8ry9nCmlrI+bcYSFO0XyJZPtiWvljdMiEJZAxISwVQgiQZkpSZllSvuBwA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=desiato.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Nfrz3ROG; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=desiato.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=frank.scheiner@web.de header.b="aeXuR7TP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1743625082; x=1744229882; i=frank.scheiner@web.de;
-	bh=MpJVhRgZ7LUpR6onJCeLiTRp0b5MlWrOY5kpXQCMI6E=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=aeXuR7TPnwSGVB4U/f7Y7uFNws62V3DfUtBmR95q0IsesgzjcZSTu7XIwsvg7VXk
-	 ZvcKeai3Ody349fmfzpjrD/33ibD9nHfpMLNfpph4l8YyhxSBFZcNZgDHcn+bvmZl
-	 fyK/KxoxFBi8Hv4lpclPR6kRjc+Ku8CYmJw8ct9qgBYN0TahshpX5xVBe9Keteo+H
-	 0JhLbrls2eoU5ycIr5W49wziCBrBGNNVkoAKf6PjuMl2NCzi8Eo0l9YdHzDOWsKO7
-	 eTzN4NqcuZWXO/nxm+T2bagxPLjbwBx/uc7Hjk1jllpbgKwtc/imbMNkLTTvsw/Pv
-	 uoe2H6vrfgWTpfz4yQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.30] ([84.152.244.176]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1N4eGT-1szcNR1dgd-017Br7; Wed, 02
- Apr 2025 22:18:02 +0200
-Message-ID: <0855440c-8448-4e56-858c-49d0d2adca34@web.de>
-Date: Wed, 2 Apr 2025 22:18:01 +0200
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Nfrz3ROG"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Sender:Content-Transfer-Encoding:
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+	Reply-To:Content-Type:Content-ID:Content-Description;
+	bh=QLbPJRlyqVSx0cIJ3mGyFLKANvzzRuV5I+YYDBn/Qb0=; b=Nfrz3ROGXN0O80DToFCDxfu6XG
+	yoyUyBkZqiwBQIjSx0CUpkS7l7FsHD3njuvDumbfUaGa2zSt7S3oisW9uQx3hTFhvpXaN/ObTk1Ow
+	gQYkewg0TLVGgufwQ78yCM45XNjHzaEJAtcCOXjNSF0I0vubrHOQdr9/G43iAC1nHsMByQhY9dP3w
+	XKK0ICk6AId5UHnCNKEAMKtzPshdkmLVAE4G9El40B82ioTzorcncoc3p8Uq/idZY3MdIIQxeeCtd
+	HbfA5xi6ZzxM42IQRE/iQIBKVE7I+/KmNBg30BWFZRouqfIlIM7+NAQU01c3e+5geZbpIasnFrSaN
+	nfD3oIvw==;
+Received: from [2001:8b0:10b:1::ebe] (helo=i7.infradead.org)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1u04Xr-0000000759n-0W23;
+	Wed, 02 Apr 2025 20:18:43 +0000
+Received: from dwoodhou by i7.infradead.org with local (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1u04Xp-0000000DcH8-2kho;
+	Wed, 02 Apr 2025 21:18:41 +0100
+From: David Woodhouse <dwmw2@infradead.org>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	"Sauerwein, David" <dssauerw@amazon.de>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	David Hildenbrand <david@redhat.com>,
+	Marc Zyngier <maz@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mike Rapoport <rppt@linux.ibm.com>,
+	Will Deacon <will@kernel.org>,
+	kvmarm@lists.cs.columbia.edu,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: [RFC PATCH 2/3] mm: Implement for_each_valid_pfn() for CONFIG_FLATMEM
+Date: Wed,  2 Apr 2025 21:18:40 +0100
+Message-ID: <20250402201841.3245371-2-dwmw2@infradead.org>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250402201841.3245371-1-dwmw2@infradead.org>
+References: <Z-vn-sMtNfwyJ9VW@kernel.org>
+ <20250402201841.3245371-1-dwmw2@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: torvalds@linux-foundation.org
-Cc: =?UTF-8?B?VG9tw6HFoSBHbG96YXI=?= <tglozar@gmail.com>,
- Sergei Trofimovich <slyich@gmail.com>, linux-kernel@vger.kernel.org,
- Linux-Arch <linux-arch@vger.kernel.org>, linux-ia64@vger.kernel.org,
- t2@t2sde.org
-References: <CAHk-=wg7TO09Si5tTPyhdrLLvyYtVmCf+GGN4kVJ0=Xk=5TE3g@mail.gmail.com>
-Subject: Re: Linux 6.14
-Content-Language: en-US
-From: Frank Scheiner <frank.scheiner@web.de>
-In-Reply-To: <CAHk-=wg7TO09Si5tTPyhdrLLvyYtVmCf+GGN4kVJ0=Xk=5TE3g@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:gLIE8kUPbJpq3dfTDSLsXMSKwPWNv9IhzTqgT+H3ShyfNcv1jv7
- vPajAoWwif0jKL5OEN0pnLgZkcfH4D0A887fmLBMKo3JBn6FvLHaSZWvstGKodDCwt9Y3p6
- nza8IEkbeHY+6SP2K6fTdQuI8efoYHMxMq0X6+cb2uAdU0pFb/rykHadFY7SUWQX3n2ycT0
- RHQrX/yQb8ntwutsyb9RA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:jQX54MUzdow=;x1DpACLCAXa5S8IbRzOz3O4PdyD
- pMxvsdTUJ/N+j64jtj7fhlVj/zSX3FCoayWsY5i0FEoGp7y1fAPGNq0Ezi9PLeQBKWWWRjHkk
- x+p1JSfyL0HPYKatY8BKQ6X7IIulSfsSnjL1GNgUlZy8aWHSznNqiUDD1sDdD19+WBXDa/dW3
- 32xphPqssFoQIWgsYcukZkKIkYQwnMiLn0nV03KycoFqXull9Efdx8uyNpElazDH+QpilGXy7
- cWODCfEHG2YV1vZHC08nSQBvORWrXsiulpG5yNcOCLK9B1o3Y6C2iYXuFnnnZXXt5oVyCJ1us
- 1+c37CVNM6QRmKY0Vc6kDcXUc+cjnCxX1JwmiohbCwj0u8ee4Hgd1cnZj7y59uU+5DisbP+Sn
- zjgS0BByjM/zhyF1CXp8KHHGmZBWw6bAlNYwO50rzlnt4q9pJ0Z94spAFeux71od3T3pXVLK1
- PAwzRIRKzwmPRs8uc1+NrHBW/whi5dnbScQI+Pa7CgvCDMGuzVy6QOl1lv5dkH7Lo3THja+q+
- IjlJT5gw8TyfmsOM/87uYkYl//jC27QKEymPGUc5RXnm5w3Bmg7x8uW1JD/nD3eiXxw04RJBo
- bMxScLX+RdYcWud+IZ1iZXvhUgB6OBtQUL3uuA+GIAxws1t/rkpaw7BkfgUOIA+h2VmFuA1Ny
- yVJV6lefuBkuKDpdWx0sj2B0ba6VxbOb6hfqecR9XYwsCGEY0zJwC8T42EKD0Isx1hgSK7K1U
- zX4DQSGG3y39yrdWX62QqsDwrOFkZm5t/AUDclzksu0F/C595WKMIphxQ0dZ8fX5C9vT8Tz04
- 8Ez+EYtksN0JnT7GdmLWn3m7durFjRIyEJt1qSkYiYa1aV9Yp087nB7cWef7p8lQbf4CxMx8s
- xs5Y+Lo3umXEAZe8KaNJV2IJdDuh0Dmz8Ls5uv9agas/sC+aRykXs2Etq4Z+sziK17ux1vYaq
- oQ3niUyQLkjPwzr2DKZPXVzuTtBz6iMcRyJgR6eX6FIM9Si8Ex7kSaaq9C2pDl4e5jgBNkndq
- Y9xsSM9PjoH1z/vgrgUd3lGITOcy258calokFf7XRXHc8v7yLyO5NEfumoOmartfbSo85uCXz
- +bekwBpQCh3LDAeib4BTTtkxhpZh18F/WCbfAEB6jGP9e5QtY+AXeo6GW9nj3RKeq+XyqSmej
- C2t5zLSK0gmRsthqeyVlGPxyRZC7wTeL9EtJFu+FqQWnSSHmJaxBdpYsBwiK/iEy4SyhjiS9q
- 8A6pIMjRmND+77l5T87vxbvf2b9TUOJb9lT0VNZh8BM1b0gnAaT7OAq3Ury1DE6hRtEgtaLCu
- RIyDaso/kV6TZxN9vHpgWLL6f9z7wJQd7380bJPOGWIKcHkd7RcfEJwbHBowl+Qmc3IFTWrto
- pQNILT62nDmf9jAeo3XSLvqb+A6N59mcx9WEIqYXMc+doiRiM6IVhA0i5jQ4gd25m/wHDIA4O
- Jq1Y09Jw5HN6FwTUywj2vf0nCLpQoNPETCphq4rJs+maH0+IZ
+Content-Transfer-Encoding: 8bit
+Sender: David Woodhouse <dwmw2@infradead.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
 
-Dear all,
+From: David Woodhouse <dwmw@amazon.co.uk>
 
-here comes the update on Linux/ia64, unfortunately a little later than
-usual. This one is for v6.14, but as we're already in the midst of the
-merge window for v6.15 I can report on the progress there, too.
+In the FLATMEM case, the default pfn_valid() just checks that the PFN is
+within the range [ ARCH_PFN_OFFSET .. ARCH_PFN_OFFSET + max_mapnr ).
 
-So, IIRC the merge window for v6.14 required a really low effort, much
-less involvement than the one for v6.13. Still I didn't manage to extend
-testing also to on-disk installations during the v6.14 cycle. But a new
-hardware "target" could be made available for testing - a BL860c blade
-server. A description of the process still needs to be done so others
-can repeat it, it's not that hard to accomplish. So this makes six real
-machines and one simulated machine avilable for regular testing:
+The for_each_valid_pfn() function can therefore be a simple for() loop
+using those as min/max respectively.
 
-* rx2620
-* rx4640
-* rx2660
-* BL860c
-* rx6600
-* rx2800 i2
-* Ski/hp-sim
+Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
+---
+ include/asm-generic/memory_model.h | 26 +++++++++++++++++++++++++-
+ 1 file changed, 25 insertions(+), 1 deletion(-)
 
-You'll find more details about these here (incl. boot logs):
-
-http://epic-linux.org/#!/machines/
-
-But also other vendors once made ia64 machines. Some really cool ones
-were the Altixen from SGI and there has been a real progress in bringing
-Linux support closer to newer kernels for these just recently. To the
-best of my knowledge, this has never worked with anything newer than
-3.x.y in the past. Well, guess what, running a numalinked 32-processor
-Altix 3700 or a smaller numalinked Altix 350 is now possible with
-4.19.325. Later kernels still make problems, but 4.19.325 is a good
-resting point as CIP ([1]) still supports 4.19.x.
-
-[1]: https://www.cip-project.org/
-
-****
-
-But as real hardware is still hard to get and quite expensive unless
-you're lucky, a focus has been put on Ski, the only ready-to-use closest
-thing to a real ia64 machine that's available for free right now. As it
-is still something not that well-known, an overview and outlook article
-has been created for it, partly the reason why this update is so late
-:-). If you're interested in working with ia64 "machines" w/o much
-investment, Ski is currently the way to go. Have a look here for a
-start:
-
-http://epic-linux.org/#!articles/ski-the-undiscovered-country.md
-
-****
-
-So the merge window for v6.15 looks good so far, despite being a more
-involved one, as can be seen by the number of failed runs for the Linux
-mainline autobuilder ([2]). First manual kernel builds were done based
-on [3] with binutils 2.42 and GCC 15-20250330 and have been
-boot-to-login tested on all available hardware. The HP Sim patch set
-will require an update though. More extensive testing was done on the
-rx2800 i2 with building new packages for EPIC Slack for a few hours,
-that also went well.
-
-[2]: https://github.com/johnny-mnemonic/linux-mainline-autobuilds/actions
-
-[3]: https://github.com/johnny-mnemonic/linux-ia64/commit/4e82c87058f45e79eeaa4d5bcc3b38dd3dce7209
-
-****
-
-Find the last Linux/ia64 update on [4].
-
-[4]: https://lore.kernel.org/all/53e3e309-4d66-40fe-9d47-dac6a61461d0@web.de/
-
-****
-
-Thank you all for your hard work on Linux!
-
-Cheers,
-Frank et al
+diff --git a/include/asm-generic/memory_model.h b/include/asm-generic/memory_model.h
+index a3b5029aebbd..4fe7dd3bc09c 100644
+--- a/include/asm-generic/memory_model.h
++++ b/include/asm-generic/memory_model.h
+@@ -30,7 +30,31 @@ static inline int pfn_valid(unsigned long pfn)
+ 	return pfn >= pfn_offset && (pfn - pfn_offset) < max_mapnr;
+ }
+ #define pfn_valid pfn_valid
+-#endif
++
++static inline bool first_valid_pfn(unsigned long *pfn)
++{
++	/* avoid <linux/mm.h> include hell */
++	extern unsigned long max_mapnr;
++	unsigned long pfn_offset = ARCH_PFN_OFFSET;
++
++	if (*pfn < pfn_offset) {
++		*pfn = pfn_offset;
++		return true;
++	}
++
++	if ((*pfn - pfn_offset) < max_mapnr)
++		return true;
++
++	return false;
++}
++
++#ifndef for_each_valid_pfn
++#define for_each_valid_pfn(pfn, start_pfn, end_pfn)			       \
++	for (pfn = max_t(unsigned long  start_pfn, ARCH_PFN_OFFSET);	       \
++	     pfn < min_t(unsigned long, end_pfn, ARCH_PFN_OFFSET + max_mapnr); \
++			 pfn++)
++#endif /* for_each_valid_pfn */
++#endif /* valid_pfn */
+ 
+ #elif defined(CONFIG_SPARSEMEM_VMEMMAP)
+ 
+-- 
+2.49.0
 
