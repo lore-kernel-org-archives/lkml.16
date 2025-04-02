@@ -1,192 +1,198 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEF8C199FA2;
-	Wed,  2 Apr 2025 17:10:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14DF715CD46
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 17:11:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743613858; cv=none; b=ocAd3k5q3HGoLMPVpQP74TqEv8plRBdvONRB+Smp/P1555mo5Yfa2RzAO9sDS82Jys7sUfX/svVeqgg0kteYN4xLH/mIjplYPlEURFzlR7C805PTaDIbmjqUTGczg0C3Wao9DhZBMfrc02XnyX6epIf2LTmGMBRP8aZa8hGe3bw=
+	t=1743613881; cv=none; b=ppGxdTasqCmSa8krtCLvHKX8xPoqVn2Xwv7SM4L+1iHx/BUszQ/UAJ+bpy2xEzeaVBTHvU4Y8w5xKjO/ln/N/kQKm/2rqKjY58Ij6gUkLN1I2AGLQaC2V613ADPDyR3JqmtY4Dd2mPFZCtEgAeCGPPluMLNJ050zG8hvqHhq50A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743613858; c=relaxed/simple;
-	bh=wSx7e2w+XUvq/bWfVnhanzRLJGiwjcG/p3Sa1L09MwI=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=gSJWRlJ8dzlNuUQpy5SbEdRrxhgPPcpK7trraPefASuukSr7d7wfl61Csg/ioCOxhkmQCjITg10uk3smysxlYtaf2rGnHFeamKqFqOfK4nit3jdStWAad3pQkux0ll8hnoZ67DcmSGjkW16FybkAaAyhUkfQaO2JObLeM4Ig4iU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=desiato.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=qbGgmRuY; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=desiato.srs.infradead.org
+	s=arc-20240116; t=1743613881; c=relaxed/simple;
+	bh=+wJNA6oLLunSeEPuZaI+eRVSIe5qi71OKIi76K84Xb0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=LLUkEFncTgbyYvfPdno46yj7VQTSNCyjpq9yAzYO3CwS0SLOe10zZt3I4MUrQXOTlpT2r5kAVQ68bcLPxrLnEQBihOE0ZrQNJbiyiVFcfIy2dEzpKRlM+2D5UbrQsAvJcFEtRURhxlk3UMyY3iVYI7HdLjT+NWGUCuqoi9rdK6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Z4OSZv57; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qbGgmRuY"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=MIME-Version:Content-Type:References:
-	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=wSx7e2w+XUvq/bWfVnhanzRLJGiwjcG/p3Sa1L09MwI=; b=qbGgmRuYcrHfI+0tLpWs5pJ2jg
-	Nx0NSR0gQoIOYKaF3m62ih8jPYC8uVhXuFu8e/apj9At3lg5vErEAEGoDTxpM+o5L7XOC1X+W1RSN
-	QXqICgz5gNdExPDidMu68YMpOlc8QYuSom9QAvji0d5ZEWZAZhAWwx2jfUkYcs03ztSZCPMT8d4Ui
-	0weB+xRstRYekuUHToMnpyjZ+cj3Ju7cFiABHdqd75lNK9L0C1bgIup5knLUkuEk92MvpLqMPuYkF
-	nFzUJjLNjUlSIkOzdnxpLiTf44XpBJ+KFghwhh/XSP+zH9RBP68iixtXncVbAayaQL7ecaZXHvRFi
-	NOkDifGw==;
-Received: from [172.31.31.145] (helo=u09cd745991455d.ant.amazon.com)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u01c5-000000074NJ-2lI1;
-	Wed, 02 Apr 2025 17:10:53 +0000
-Message-ID: <eaef09ab218900a53347987a62fee1787283d9ed.camel@infradead.org>
-Subject: Re: [RFC PATCH 1/3] content: Add VIRTIO_F_SWIOTLB to negotiate use
- of SWIOTLB bounce buffers
-From: David Woodhouse <dwmw2@infradead.org>
-To: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: virtio-comment@lists.linux.dev, hch@infradead.org, Claire Chang
- <tientzu@chromium.org>, linux-devicetree <devicetree@vger.kernel.org>, Rob
- Herring <robh+dt@kernel.org>, =?ISO-8859-1?Q?J=F6rg?= Roedel
- <joro@8bytes.org>,  iommu@lists.linux-foundation.org,
- linux-kernel@vger.kernel.org, graf@amazon.de
-Date: Wed, 02 Apr 2025 18:10:53 +0100
-In-Reply-To: <20250402124131-mutt-send-email-mst@kernel.org>
-References: <20250402112410.2086892-1-dwmw2@infradead.org>
-	 <20250402112410.2086892-2-dwmw2@infradead.org>
-	 <20250402105137-mutt-send-email-mst@kernel.org>
-	 <19ba662feeb93157bc8a03fb0b11cb5f2eca5e40.camel@infradead.org>
-	 <20250402111901-mutt-send-email-mst@kernel.org>
-	 <6b3b047f1650d91abe5e523dd7f862c6f7ee6611.camel@infradead.org>
-	 <20250402114757-mutt-send-email-mst@kernel.org>
-	 <965ccf2f972c5d5f1f4edacb227f03171f20e887.camel@infradead.org>
-	 <20250402124131-mutt-send-email-mst@kernel.org>
-Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
-	boundary="=-SiZIUCcYluAFPJkLll1S"
-User-Agent: Evolution 3.52.3-0ubuntu1 
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Z4OSZv57"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743613878; x=1775149878;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=+wJNA6oLLunSeEPuZaI+eRVSIe5qi71OKIi76K84Xb0=;
+  b=Z4OSZv57xtZy1JdopHf/UCBwegrHUU25RR4IRf2jMywnkS1Q+3x+BWdq
+   pdiE3P9jJFkMbVhgFnzC9HXbAfnynAcLX+y/9iKSYw4mtDUZIzZdqqWWg
+   fUX9jagwz1Nd73mmw48eCBOiC+dJYPGdZEe0uZsb0SqYx4JLp036rhK+x
+   oKYjUO77tcATxif70uYLGGVvlmSkgBl+eh2Mq37wVEH7VV9dxG1ldkEMo
+   9fO4Xts3A/9hnR7YP3qwXxdRgMF9R6MAHrizOoS7a4PXo/D1OPvCgYq02
+   KnqHFNPdbhjLIQMqh8QjagYUm6ngUJRTFpkf0B8Kk44qOjygp+cEvm0rC
+   g==;
+X-CSE-ConnectionGUID: buy0o/xnQ6Gb+oAeRUUPQQ==
+X-CSE-MsgGUID: yJgaH78wSEm29zBLbSdBpA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11392"; a="55658607"
+X-IronPort-AV: E=Sophos;i="6.15,182,1739865600"; 
+   d="scan'208";a="55658607"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 10:11:17 -0700
+X-CSE-ConnectionGUID: Pv6p3CwCQd28FbptNbWIPA==
+X-CSE-MsgGUID: ZEd2JhQTRHW+zf79yvqNDw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,182,1739865600"; 
+   d="scan'208";a="157755129"
+Received: from inaky-mobl1.amr.corp.intel.com (HELO [10.125.110.4]) ([10.125.110.4])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 10:11:17 -0700
+Message-ID: <47d36f29-6507-43bd-b39f-f19a4170551a@intel.com>
+Date: Wed, 2 Apr 2025 10:11:13 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH fwctl] pds_fwctl: fix type and endian complaints
+To: Shannon Nelson <shannon.nelson@amd.com>, jgg@nvidia.com,
+ saeedm@nvidia.com, Jonathan.Cameron@huawei.com, leonro@nvidia.com,
+ brett.creeley@amd.com, lkp@intel.com, oe-kbuild-all@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+References: <20250402165630.24288-1-shannon.nelson@amd.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20250402165630.24288-1-shannon.nelson@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
---=-SiZIUCcYluAFPJkLll1S
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2025-04-02 at 12:43 -0400, Michael S. Tsirkin wrote:
->=20
-> yes.
->=20
-> I know a bit more about PCI, and for PCI I prefer just not saying
-> anything. The platform already defines whether it is behind an iommu
-> or not, and duplication is not good.
+On 4/2/25 9:56 AM, Shannon Nelson wrote:
+> Fix a number of type and endian complaints from the sparse checker.
+> 
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202504020246.Dfbhxoo9-lkp@intel.com/
+> Signed-off-by: Shannon Nelson <shannon.nelson@amd.com>
+> ---
+>  drivers/fwctl/pds/main.c | 33 ++++++++++++++++++++-------------
+>  1 file changed, 20 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/fwctl/pds/main.c b/drivers/fwctl/pds/main.c
+> index 284c4165fdd4..9b9d1f6b5556 100644
+> --- a/drivers/fwctl/pds/main.c
+> +++ b/drivers/fwctl/pds/main.c
+> @@ -105,12 +105,14 @@ static int pdsfc_identify(struct pdsfc_dev *pdsfc)
+>  static void pdsfc_free_endpoints(struct pdsfc_dev *pdsfc)
+>  {
+>  	struct device *dev = &pdsfc->fwctl.dev;
+> +	u32 num_endpoints;
+>  	int i;
+>  
+>  	if (!pdsfc->endpoints)
+>  		return;
+>  
+> -	for (i = 0; pdsfc->endpoint_info && i < pdsfc->endpoints->num_entries; i++)
+> +	num_endpoints = le32_to_cpu(pdsfc->endpoints->num_entries);
+> +	for (i = 0; pdsfc->endpoint_info && i < num_endpoints; i++)
+>  		mutex_destroy(&pdsfc->endpoint_info[i].lock);
+>  	vfree(pdsfc->endpoint_info);
+>  	pdsfc->endpoint_info = NULL;
+> @@ -199,7 +201,7 @@ static int pdsfc_init_endpoints(struct pdsfc_dev *pdsfc)
+>  	ep_entry = (struct pds_fwctl_query_data_endpoint *)pdsfc->endpoints->entries;
+>  	for (i = 0; i < num_endpoints; i++) {
+>  		mutex_init(&pdsfc->endpoint_info[i].lock);
+> -		pdsfc->endpoint_info[i].endpoint = ep_entry[i].id;
+> +		pdsfc->endpoint_info[i].endpoint = le32_to_cpu(ep_entry[i].id);
+>  	}
+>  
+>  	return 0;
+> @@ -214,6 +216,7 @@ static struct pds_fwctl_query_data *pdsfc_get_operations(struct pdsfc_dev *pdsfc
+>  	struct pds_fwctl_query_data *data;
+>  	union pds_core_adminq_cmd cmd;
+>  	dma_addr_t data_pa;
+> +	u32 num_entries;
+>  	int err;
+>  	int i;
+>  
+> @@ -246,8 +249,9 @@ static struct pds_fwctl_query_data *pdsfc_get_operations(struct pdsfc_dev *pdsfc
+>  	*pa = data_pa;
+>  
+>  	entries = (struct pds_fwctl_query_data_operation *)data->entries;
+> -	dev_dbg(dev, "num_entries %d\n", data->num_entries);
+> -	for (i = 0; i < data->num_entries; i++) {
+> +	num_entries = le32_to_cpu(data->num_entries);
+> +	dev_dbg(dev, "num_entries %d\n", num_entries);
+> +	for (i = 0; i < num_entries; i++) {
+>  
+>  		/* Translate FW command attribute to fwctl scope */
+>  		switch (entries[i].scope) {
+> @@ -267,7 +271,7 @@ static struct pds_fwctl_query_data *pdsfc_get_operations(struct pdsfc_dev *pdsfc
+>  			break;
+>  		}
+>  		dev_dbg(dev, "endpoint %d operation: id %x scope %d\n",
+> -			ep, entries[i].id, entries[i].scope);
+> +			ep, le32_to_cpu(entries[i].id), entries[i].scope);
+>  	}
+>  
+>  	return data;
+> @@ -280,24 +284,26 @@ static int pdsfc_validate_rpc(struct pdsfc_dev *pdsfc,
+>  	struct pds_fwctl_query_data_operation *op_entry;
+>  	struct pdsfc_rpc_endpoint_info *ep_info = NULL;
+>  	struct device *dev = &pdsfc->fwctl.dev;
+> +	u32 num_entries;
+>  	int i;
+>  
+>  	/* validate rpc in_len & out_len based
+>  	 * on ident.max_req_sz & max_resp_sz
+>  	 */
+> -	if (rpc->in.len > pdsfc->ident.max_req_sz) {
+> +	if (rpc->in.len > le32_to_cpu(pdsfc->ident.max_req_sz)) {
+>  		dev_dbg(dev, "Invalid request size %u, max %u\n",
+> -			rpc->in.len, pdsfc->ident.max_req_sz);
+> +			rpc->in.len, le32_to_cpu(pdsfc->ident.max_req_sz));
 
-Not a hill for me to die on I suppose, but I would personally prefer to
-spell it out in words of one syllable or fewer, to make *sure* that
-device and driver authors get it right even though it's "obvious".
+Maybe use a local var for max_req_sz. I'm seeing that getting converted more than once in the same function.
 
-After all, if we could trust them to do their thinking, we would never
-have had the awful situation that led to VIRTIO_F_ACCESS_PLATFORM
-existing in the first place; the legacy behaviour we get when that bit
-*isn't* set would never have happened.
+>  		return -EINVAL;
+>  	}
+>  
+> -	if (rpc->out.len > pdsfc->ident.max_resp_sz) {
+> +	if (rpc->out.len > le32_to_cpu(pdsfc->ident.max_resp_sz)) {
+>  		dev_dbg(dev, "Invalid response size %u, max %u\n",
+> -			rpc->out.len, pdsfc->ident.max_resp_sz);
+> +			rpc->out.len, le32_to_cpu(pdsfc->ident.max_resp_sz));
 
-> For mmio it is my understanding that the "restricted" does the same
-> already? or is it required in the spec for some reason?
+Same for max_res_sz.
 
-No, it's exactly the same. But I still don't trust driver authors to
-realise the obvious, or VMM implementations either for that matter.
+DJ
 
-I'm not sure I see the *harm* in spelling out explicitly for the hard-
-of-thinking.
+>  		return -EINVAL;
+>  	}
+>  
+> -	for (i = 0; i < pdsfc->endpoints->num_entries; i++) {
+> +	num_entries = le32_to_cpu(pdsfc->endpoints->num_entries);
+> +	for (i = 0; i < num_entries; i++) {
+>  		if (pdsfc->endpoint_info[i].endpoint == rpc->in.ep) {
+>  			ep_info = &pdsfc->endpoint_info[i];
+>  			break;
+> @@ -326,8 +332,9 @@ static int pdsfc_validate_rpc(struct pdsfc_dev *pdsfc,
+>  
+>  	/* reject unsupported and/or out of scope commands */
+>  	op_entry = (struct pds_fwctl_query_data_operation *)ep_info->operations->entries;
+> -	for (i = 0; i < ep_info->operations->num_entries; i++) {
+> -		if (PDS_FWCTL_RPC_OPCODE_CMP(rpc->in.op, op_entry[i].id)) {
+> +	num_entries = le32_to_cpu(ep_info->operations->num_entries);
+> +	for (i = 0; i < num_entries; i++) {
+> +		if (PDS_FWCTL_RPC_OPCODE_CMP(rpc->in.op, le32_to_cpu(op_entry[i].id))) {
+>  			if (scope < op_entry[i].scope)
+>  				return -EPERM;
+>  			return 0;
+> @@ -402,7 +409,7 @@ static void *pdsfc_fw_rpc(struct fwctl_uctx *uctx, enum fwctl_rpc_scope scope,
+>  	cmd = (union pds_core_adminq_cmd) {
+>  		.fwctl_rpc = {
+>  			.opcode = PDS_FWCTL_CMD_RPC,
+> -			.flags = PDS_FWCTL_RPC_IND_REQ | PDS_FWCTL_RPC_IND_RESP,
+> +			.flags = cpu_to_le16(PDS_FWCTL_RPC_IND_REQ | PDS_FWCTL_RPC_IND_RESP),
+>  			.ep = cpu_to_le32(rpc->in.ep),
+>  			.op = cpu_to_le32(rpc->in.op),
+>  			.req_pa = cpu_to_le64(in_payload_dma_addr),
 
---=-SiZIUCcYluAFPJkLll1S
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Transfer-Encoding: base64
-
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCD9Aw
-ggSOMIIDdqADAgECAhAOmiw0ECVD4cWj5DqVrT9PMA0GCSqGSIb3DQEBCwUAMGUxCzAJBgNVBAYT
-AlVTMRUwEwYDVQQKEwxEaWdpQ2VydCBJbmMxGTAXBgNVBAsTEHd3dy5kaWdpY2VydC5jb20xJDAi
-BgNVBAMTG0RpZ2lDZXJ0IEFzc3VyZWQgSUQgUm9vdCBDQTAeFw0yNDAxMzAwMDAwMDBaFw0zMTEx
-MDkyMzU5NTlaMEExCzAJBgNVBAYTAkFVMRAwDgYDVQQKEwdWZXJva2V5MSAwHgYDVQQDExdWZXJv
-a2V5IFNlY3VyZSBFbWFpbCBHMjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMjvgLKj
-jfhCFqxYyRiW8g3cNFAvltDbK5AzcOaR7yVzVGadr4YcCVxjKrEJOgi7WEOH8rUgCNB5cTD8N/Et
-GfZI+LGqSv0YtNa54T9D1AWJy08ZKkWvfGGIXN9UFAPMJ6OLLH/UUEgFa+7KlrEvMUupDFGnnR06
-aDJAwtycb8yXtILj+TvfhLFhafxroXrflspavejQkEiHjNjtHnwbZ+o43g0/yxjwnarGI3kgcak7
-nnI9/8Lqpq79tLHYwLajotwLiGTB71AGN5xK+tzB+D4eN9lXayrjcszgbOv2ZCgzExQUAIt98mre
-8EggKs9mwtEuKAhYBIP/0K6WsoMnQCcCAwEAAaOCAVwwggFYMBIGA1UdEwEB/wQIMAYBAf8CAQAw
-HQYDVR0OBBYEFIlICOogTndrhuWByNfhjWSEf/xwMB8GA1UdIwQYMBaAFEXroq/0ksuCMS1Ri6en
-IZ3zbcgPMA4GA1UdDwEB/wQEAwIBhjAdBgNVHSUEFjAUBggrBgEFBQcDBAYIKwYBBQUHAwIweQYI
-KwYBBQUHAQEEbTBrMCQGCCsGAQUFBzABhhhodHRwOi8vb2NzcC5kaWdpY2VydC5jb20wQwYIKwYB
-BQUHMAKGN2h0dHA6Ly9jYWNlcnRzLmRpZ2ljZXJ0LmNvbS9EaWdpQ2VydEFzc3VyZWRJRFJvb3RD
-QS5jcnQwRQYDVR0fBD4wPDA6oDigNoY0aHR0cDovL2NybDMuZGlnaWNlcnQuY29tL0RpZ2lDZXJ0
-QXNzdXJlZElEUm9vdENBLmNybDARBgNVHSAECjAIMAYGBFUdIAAwDQYJKoZIhvcNAQELBQADggEB
-ACiagCqvNVxOfSd0uYfJMiZsOEBXAKIR/kpqRp2YCfrP4Tz7fJogYN4fxNAw7iy/bPZcvpVCfe/H
-/CCcp3alXL0I8M/rnEnRlv8ItY4MEF+2T/MkdXI3u1vHy3ua8SxBM8eT9LBQokHZxGUX51cE0kwa
-uEOZ+PonVIOnMjuLp29kcNOVnzf8DGKiek+cT51FvGRjV6LbaxXOm2P47/aiaXrDD5O0RF5SiPo6
-xD1/ClkCETyyEAE5LRJlXtx288R598koyFcwCSXijeVcRvBB1cNOLEbg7RMSw1AGq14fNe2cH1HG
-W7xyduY/ydQt6gv5r21mDOQ5SaZSWC/ZRfLDuEYwggWbMIIEg6ADAgECAhAH5JEPagNRXYDiRPdl
-c1vgMA0GCSqGSIb3DQEBCwUAMEExCzAJBgNVBAYTAkFVMRAwDgYDVQQKEwdWZXJva2V5MSAwHgYD
-VQQDExdWZXJva2V5IFNlY3VyZSBFbWFpbCBHMjAeFw0yNDEyMzAwMDAwMDBaFw0yODAxMDQyMzU5
-NTlaMB4xHDAaBgNVBAMME2R3bXcyQGluZnJhZGVhZC5vcmcwggIiMA0GCSqGSIb3DQEBAQUAA4IC
-DwAwggIKAoICAQDali7HveR1thexYXx/W7oMk/3Wpyppl62zJ8+RmTQH4yZeYAS/SRV6zmfXlXaZ
-sNOE6emg8WXLRS6BA70liot+u0O0oPnIvnx+CsMH0PD4tCKSCsdp+XphIJ2zkC9S7/yHDYnqegqt
-w4smkqUqf0WX/ggH1Dckh0vHlpoS1OoxqUg+ocU6WCsnuz5q5rzFsHxhD1qGpgFdZEk2/c//ZvUN
-i12vPWipk8TcJwHw9zoZ/ZrVNybpMCC0THsJ/UEVyuyszPtNYeYZAhOJ41vav1RhZJzYan4a1gU0
-kKBPQklcpQEhq48woEu15isvwWh9/+5jjh0L+YNaN0I//nHSp6U9COUG9Z0cvnO8FM6PTqsnSbcc
-0j+GchwOHRC7aP2t5v2stVx3KbptaYEzi4MQHxm/0+HQpMEVLLUiizJqS4PWPU6zfQTOMZ9uLQRR
-ci+c5xhtMEBszlQDOvEQcyEG+hc++fH47K+MmZz21bFNfoBxLP6bjR6xtPXtREF5lLXxp+CJ6KKS
-blPKeVRg/UtyJHeFKAZXO8Zeco7TZUMVHmK0ZZ1EpnZbnAhKE19Z+FJrQPQrlR0gO3lBzuyPPArV
-hvWxjlO7S4DmaEhLzarWi/ze7EGwWSuI2eEa/8zU0INUsGI4ywe7vepQz7IqaAovAX0d+f1YjbmC
-VsAwjhLmveFjNwIDAQABo4IBsDCCAawwHwYDVR0jBBgwFoAUiUgI6iBOd2uG5YHI1+GNZIR//HAw
-HQYDVR0OBBYEFFxiGptwbOfWOtMk5loHw7uqWUOnMDAGA1UdEQQpMCeBE2R3bXcyQGluZnJhZGVh
-ZC5vcmeBEGRhdmlkQHdvb2Rob3Uuc2UwFAYDVR0gBA0wCzAJBgdngQwBBQEBMA4GA1UdDwEB/wQE
-AwIF4DAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwewYDVR0fBHQwcjA3oDWgM4YxaHR0
-cDovL2NybDMuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNybDA3oDWgM4YxaHR0
-cDovL2NybDQuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNybDB2BggrBgEFBQcB
-AQRqMGgwJAYIKwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmRpZ2ljZXJ0LmNvbTBABggrBgEFBQcwAoY0
-aHR0cDovL2NhY2VydHMuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNydDANBgkq
-hkiG9w0BAQsFAAOCAQEAQXc4FPiPLRnTDvmOABEzkIumojfZAe5SlnuQoeFUfi+LsWCKiB8Uextv
-iBAvboKhLuN6eG/NC6WOzOCppn4mkQxRkOdLNThwMHW0d19jrZFEKtEG/epZ/hw/DdScTuZ2m7im
-8ppItAT6GXD3aPhXkXnJpC/zTs85uNSQR64cEcBFjjoQDuSsTeJ5DAWf8EMyhMuD8pcbqx5kRvyt
-JPsWBQzv1Dsdv2LDPLNd/JUKhHSgr7nbUr4+aAP2PHTXGcEBh8lTeYea9p4d5k969pe0OHYMV5aL
-xERqTagmSetuIwolkAuBCzA9vulg8Y49Nz2zrpUGfKGOD0FMqenYxdJHgDCCBZswggSDoAMCAQIC
-EAfkkQ9qA1FdgOJE92VzW+AwDQYJKoZIhvcNAQELBQAwQTELMAkGA1UEBhMCQVUxEDAOBgNVBAoT
-B1Zlcm9rZXkxIDAeBgNVBAMTF1Zlcm9rZXkgU2VjdXJlIEVtYWlsIEcyMB4XDTI0MTIzMDAwMDAw
-MFoXDTI4MDEwNDIzNTk1OVowHjEcMBoGA1UEAwwTZHdtdzJAaW5mcmFkZWFkLm9yZzCCAiIwDQYJ
-KoZIhvcNAQEBBQADggIPADCCAgoCggIBANqWLse95HW2F7FhfH9bugyT/danKmmXrbMnz5GZNAfj
-Jl5gBL9JFXrOZ9eVdpmw04Tp6aDxZctFLoEDvSWKi367Q7Sg+ci+fH4KwwfQ8Pi0IpIKx2n5emEg
-nbOQL1Lv/IcNiep6Cq3DiyaSpSp/RZf+CAfUNySHS8eWmhLU6jGpSD6hxTpYKye7PmrmvMWwfGEP
-WoamAV1kSTb9z/9m9Q2LXa89aKmTxNwnAfD3Ohn9mtU3JukwILRMewn9QRXK7KzM+01h5hkCE4nj
-W9q/VGFknNhqfhrWBTSQoE9CSVylASGrjzCgS7XmKy/BaH3/7mOOHQv5g1o3Qj/+cdKnpT0I5Qb1
-nRy+c7wUzo9OqydJtxzSP4ZyHA4dELto/a3m/ay1XHcpum1pgTOLgxAfGb/T4dCkwRUstSKLMmpL
-g9Y9TrN9BM4xn24tBFFyL5znGG0wQGzOVAM68RBzIQb6Fz758fjsr4yZnPbVsU1+gHEs/puNHrG0
-9e1EQXmUtfGn4InoopJuU8p5VGD9S3Ikd4UoBlc7xl5yjtNlQxUeYrRlnUSmdlucCEoTX1n4UmtA
-9CuVHSA7eUHO7I88CtWG9bGOU7tLgOZoSEvNqtaL/N7sQbBZK4jZ4Rr/zNTQg1SwYjjLB7u96lDP
-sipoCi8BfR35/ViNuYJWwDCOEua94WM3AgMBAAGjggGwMIIBrDAfBgNVHSMEGDAWgBSJSAjqIE53
-a4blgcjX4Y1khH/8cDAdBgNVHQ4EFgQUXGIam3Bs59Y60yTmWgfDu6pZQ6cwMAYDVR0RBCkwJ4ET
-ZHdtdzJAaW5mcmFkZWFkLm9yZ4EQZGF2aWRAd29vZGhvdS5zZTAUBgNVHSAEDTALMAkGB2eBDAEF
-AQEwDgYDVR0PAQH/BAQDAgXgMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDBDB7BgNVHR8E
-dDByMDegNaAzhjFodHRwOi8vY3JsMy5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVtYWlsRzIu
-Y3JsMDegNaAzhjFodHRwOi8vY3JsNC5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVtYWlsRzIu
-Y3JsMHYGCCsGAQUFBwEBBGowaDAkBggrBgEFBQcwAYYYaHR0cDovL29jc3AuZGlnaWNlcnQuY29t
-MEAGCCsGAQUFBzAChjRodHRwOi8vY2FjZXJ0cy5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVt
-YWlsRzIuY3J0MA0GCSqGSIb3DQEBCwUAA4IBAQBBdzgU+I8tGdMO+Y4AETOQi6aiN9kB7lKWe5Ch
-4VR+L4uxYIqIHxR7G2+IEC9ugqEu43p4b80LpY7M4KmmfiaRDFGQ50s1OHAwdbR3X2OtkUQq0Qb9
-6ln+HD8N1JxO5nabuKbymki0BPoZcPdo+FeRecmkL/NOzzm41JBHrhwRwEWOOhAO5KxN4nkMBZ/w
-QzKEy4PylxurHmRG/K0k+xYFDO/UOx2/YsM8s138lQqEdKCvudtSvj5oA/Y8dNcZwQGHyVN5h5r2
-nh3mT3r2l7Q4dgxXlovERGpNqCZJ624jCiWQC4ELMD2+6WDxjj03PbOulQZ8oY4PQUyp6djF0keA
-MYIDuzCCA7cCAQEwVTBBMQswCQYDVQQGEwJBVTEQMA4GA1UEChMHVmVyb2tleTEgMB4GA1UEAxMX
-VmVyb2tleSBTZWN1cmUgRW1haWwgRzICEAfkkQ9qA1FdgOJE92VzW+AwDQYJYIZIAWUDBAIBBQCg
-ggE3MBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDQwMjE3MTA1
-M1owLwYJKoZIhvcNAQkEMSIEIGLX0gNkdfd5VPloUxTU3BtEppEhY3c2k3Iq/ba9tB39MGQGCSsG
-AQQBgjcQBDFXMFUwQTELMAkGA1UEBhMCQVUxEDAOBgNVBAoTB1Zlcm9rZXkxIDAeBgNVBAMTF1Zl
-cm9rZXkgU2VjdXJlIEVtYWlsIEcyAhAH5JEPagNRXYDiRPdlc1vgMGYGCyqGSIb3DQEJEAILMVeg
-VTBBMQswCQYDVQQGEwJBVTEQMA4GA1UEChMHVmVyb2tleTEgMB4GA1UEAxMXVmVyb2tleSBTZWN1
-cmUgRW1haWwgRzICEAfkkQ9qA1FdgOJE92VzW+AwDQYJKoZIhvcNAQEBBQAEggIA01ckTLhNrxxe
-zDRU5YznJMKsTephJd86V6rGxQpAmmRdcfBiEsi9XsUHtZ/zyjrImoq/AxJqRnVXFOA8JDrgWYdn
-uBo5OC24Ei+tAJ0w99+VTiWBV6YPXC8vrIMhP4yXJgd8R7gd9AYGsxE/ar68w/qVyoqMnCXYdwh1
-ZA+PYfTTBUmD+7Ci7RY7t8dxzyWlt65wfXlC0RxYtHPB3SH6iE+BYw5rvmaVReNfwTFGmdpot/0X
-OVj35EZJYV6bFaaFs40R83fg5b8s09FIYl2i08lqtIrW9kTMlstpjJ8mRrKjPdPA8sNXbs+hjms1
-YZkI94E2XPL8H0gicc0jq0WhEP0hUXme5do5Mq/u7VvLIpV2DOFXoes4oenKN8vLSoa+ESZntxw3
-ED0AA8IpZgFqEnS73PeIU6nSGHByV0FiJT16sVfAOD8FaMFeICx28k93xDhtNLVXiGhN8fR1fvaq
-iGE/+P0Qj1BIJHjd5TAYKuDH7mEQ3z2jus41tN1cXtDOUXSwFU/R7pkU9qM1PwfYWCPsz7WrsT9b
-jMeKQwEHicqMuYX4z8no7VJ2nvjItVRwfl1lGJNSNYHQK9agmuemHzIfmZJpesQNU0HuU5EwunK/
-iy6wL7/YsKZWuWmwNQdtJ51RsrlIWbEamL+EOHh9yoSi3jlH7D/ZNXEYseCsDagAAAAAAAA=
-
-
---=-SiZIUCcYluAFPJkLll1S--
