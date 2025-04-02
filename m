@@ -1,186 +1,268 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2053.outbound.protection.outlook.com [40.107.223.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 208F42AE77
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 10:33:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743590037; cv=none; b=LyQiqVEfcDIcXOk4je+K2Vyib3LnDHhmwuPKLw/L1QWOwgft8DgY2rnZDAu4Uc5pCKDSTOrnKldilrcoxT89GDYkzM0UvnDAXnrmJFCyGMOVW0f4hvLCO2oFBDoZPgM4AV/RYq5anMc7yqxgmGRBhOJ5yGuwYvVh/jgDMtEKuYE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743590037; c=relaxed/simple;
-	bh=+c62+BLJfen9Ttm94HHmisCGwfcbkwogtCorMaUFAt8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nblvU2VmQhFr889JZ6RC5qAbybtAZJyrns5w+gurEucOnZzLI6P30Rd4oATrfdnjP7iIoMM5Wemu8Qv1M80uZHniSxLNG//dYyJf4zaw/YdwaLK+aRpX+vNRIaMIIlbfOMEkBG4BWqcGpI8xyMtkyIXz7gGA6c19ilrRYvnHR2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=R/9dczPs; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1B3F2AE77;
+	Wed,  2 Apr 2025 10:34:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.53
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743590089; cv=fail; b=FeisYL144LfELslNhxjBOhRvL2inIFwCdDH9ENMNELgpuGG9M7zaAxUhDrsRrA1M3JeMavVzxWCNd0SjA/zxoQf3XAY1frMP66cNezCtXmXApQNtCoWzqZpv3TFZT5a5lWaN/TlyQoULUbWbQvZMpxJofmPdeRamLPW5BwdYwiY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743590089; c=relaxed/simple;
+	bh=THEk2Lm0o6CsjH8zDYGsN76R+Uk6u4KW5ep/KnxD3Qg=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=Rv6d+1XMh3L44rUMS9D4ZkVpN/aUhHNHxkSHGl2LDuBtjTgZYs0fuo9aHRkZU8HmWOTqTogX42I7r9jCxCPhlH+4aMkxpQCzcAElWSl86fHir9yvy2sClrej0o+0sJ0N6TSPikL12O8A4TRWqpBi9pfy9ndlO+J8aU0nzRchOmQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=mblwOenL; arc=fail smtp.client-ip=40.107.223.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="R/9dczPs"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-225477548e1so117118615ad.0
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 03:33:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1743590035; x=1744194835; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=+c62+BLJfen9Ttm94HHmisCGwfcbkwogtCorMaUFAt8=;
-        b=R/9dczPs0VPEjtoDsdkS6e6M3phTNerhxkJvsGbaxfDOhjIaxFzZEF9gdN+tZw+ccB
-         yNXpSZywtXcydAdoojxeAPBlw5gQWJGsfTGRjlrWtYZ/2vgb63vXUcQd6e7bjze8HP1E
-         b0mMP+cr9XT3W5BOB5TBXA+6Ez7FsteHhHKH4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743590035; x=1744194835;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+c62+BLJfen9Ttm94HHmisCGwfcbkwogtCorMaUFAt8=;
-        b=gEpX+vMcP4lw24BGsB4kWu978Es3dxkK+i6VfctmXvgDIm86nKfqHpa+SqGS8/ONbt
-         D/57AQZkc7hxafJy9gQidhFEO7XjBqfTxVuhq/sv97ZZLQ166jZVaRz7oCVvfik6w0kA
-         WBirsFNChg2JpWChiPMhutxm2mjVXkcU9IcNzDx3RUXb7Qd5AykaAcSKSjasZXHTTFRe
-         beXoQry/BdqnmsVFrrt7IwJuS0bQxhKjH8hlie0bNQ/BPk+0RIZJewNWxlFK38VF0K3t
-         JYdyoCRvcHnziLpxsR+rIkXHj2cq5PpUXLv7cAy1taD419jn8ZwF49049vSZDZQblsHL
-         i0tQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXKabNeO8LiTEnhFLyyS6eQNA0lExp/gxK04FHipFhGjE+j0r8GGbfFwdxLkdjNZeblnzMFOG/pmdj4z/c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxBTe/AA0rtHPgHl1Z9y4s3EAgj78cso2967KJxN5jLQl1qVvFd
-	cnhpROCRI3fUDy/HSi/2XjiJNwE27G9o9b57fkd8or6v1rU86fFK0SLE0rNabnQV45RTg5WgAyV
-	9cjQJE9rvbqHO1mqDauVzvX56On6IrQHfpYpj
-X-Gm-Gg: ASbGncvqkemCpVlipMWB9F1tcpXZRmceQMUX07LiBlX8C1Cc9cSLB2Y6fTlD6jkVQwn
-	Wkb48y4EC0BlctIWwaZ+raWUdoHFmneCC5XWF9nrOk86U09zCWni85TbZXYLlz11yan9nTCQWBc
-	xI5idrpqAZw1CctHH12r7dgZofZYg=
-X-Google-Smtp-Source: AGHT+IG7q0m14b0EbRkjX4UxkEapOIV+YmN2OqqxdMH3EGKIGp7LCJxKLEc79QHRw76ytulgD9SGJIYyI6D6yx9GcME=
-X-Received: by 2002:a05:6a00:2181:b0:739:56c2:b661 with SMTP id
- d2e1a72fcca58-7398038250fmr23158926b3a.12.1743590035289; Wed, 02 Apr 2025
- 03:33:55 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="mblwOenL"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=iOfAEyC72ToTKYCMLzVl5EDLFtVzTtyNjQ+r9WcLOK8B/WOKvtFvHHtGKUkGNyPUIZMAOq0JSjhUQYTfk609uZfilXFhuW2v6vHQDNDKiQu8PfSA33iiYlT1v/MxOV5udLZ1Ldj3OGAQGUuxzFmhHDzgyfgKjBjSM6EfHwxyalw8MsvkMktzOhlFPt2YmZ6OcH0Glx5xRDjfTivy8Dauzcnx/C6Mp5oJpIHJJYVCbbqr09Tf0CKmizcNOAz+AwdQ523EvfyZhqxl31lkFQ3IHY2LhMoygvJSAPWeiDx7Ry1IAP9Lmu4/5lmn6trSyrNnvZSQQyOMkilO0Ic+4032zQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=EV3mmkqDt97D6I9nEAhtdhc0YUMzEdgQNS7e8IFgUaQ=;
+ b=UsX5vEXXimATBT/DnmINbV3J97DGyd8ILOrWuE25oe86w7mAHjCShXXQDcD3Dk1KgTebm+IA/Mv9fqbXQptv/7VLz48BLyrvQ8OFTzNElwzhCXCn4l2/nnoH117u4ahHTuRUusUeS1pofzKt9TnMAHalsu2wK9XsyseHzzWKc0ZwUO6hVFiCxhyioHbqthjbWc9JhxCtThPu6o6h5eLcwB5IMqmf+sstO+h1wiMp79RsPlGVw286AjgGLxEVMwR1hrtCWPWbTP+15LN1IdT+LIXc8a/kTpKtpFuuS8RZ9LSpSjYvpUeXd7TjKmcpM0en/lE5OdmTNzgEl14tX9lrLw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EV3mmkqDt97D6I9nEAhtdhc0YUMzEdgQNS7e8IFgUaQ=;
+ b=mblwOenLVVuYanI6GOtHOet2PnoLoWjctICwJm2yEwBFZ48AIlIJyAh4biH6V84EI45MHzBPy9POfN03va5InG69jrpCMFvW7SgSdkirdWQCZvua1XerMqNjbyroKLfT6cYxMD1XblZKw4nlL1qnUv64uVA6SACBslWHQwOtzwg=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DS0PR12MB6608.namprd12.prod.outlook.com (2603:10b6:8:d0::10) by
+ MN2PR12MB4175.namprd12.prod.outlook.com (2603:10b6:208:1d3::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.53; Wed, 2 Apr
+ 2025 10:34:45 +0000
+Received: from DS0PR12MB6608.namprd12.prod.outlook.com
+ ([fe80::b71d:8902:9ab3:f627]) by DS0PR12MB6608.namprd12.prod.outlook.com
+ ([fe80::b71d:8902:9ab3:f627%4]) with mapi id 15.20.8534.043; Wed, 2 Apr 2025
+ 10:34:45 +0000
+Message-ID: <18538e70-aadf-4891-964e-4f8a06d85e5a@amd.com>
+Date: Wed, 2 Apr 2025 16:04:34 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC v2 01/17] x86/apic: Add new driver for Secure AVIC
+To: Borislav Petkov <bp@alien8.de>
+Cc: linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+ dave.hansen@linux.intel.com, Thomas.Lendacky@amd.com, nikunj@amd.com,
+ Santosh.Shukla@amd.com, Vasant.Hegde@amd.com, Suravee.Suthikulpanit@amd.com,
+ David.Kaplan@amd.com, x86@kernel.org, hpa@zytor.com, peterz@infradead.org,
+ seanjc@google.com, pbonzini@redhat.com, kvm@vger.kernel.org,
+ kirill.shutemov@linux.intel.com, huibo.wang@amd.com, naveen.rao@amd.com
+References: <20250226090525.231882-1-Neeraj.Upadhyay@amd.com>
+ <20250226090525.231882-2-Neeraj.Upadhyay@amd.com>
+ <20250320155150.GNZ9w5lh9ndTenkr_S@fat_crate.local>
+ <a7422464-4571-4eb3-b90c-863d8b74adca@amd.com>
+ <20250321135540.GCZ91v3N5bYyR59WjK@fat_crate.local>
+ <e0362a96-4b3a-44b1-8d54-806a6b045799@amd.com>
+ <20250321171138.GDZ92dykj1kOmNrUjZ@fat_crate.local>
+ <38edfce2-72c7-44a6-b657-b5ed9c75ed51@amd.com>
+ <20250402094736.GAZ-0HuG0uVznq5wX_@fat_crate.local>
+Content-Language: en-US
+From: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
+In-Reply-To: <20250402094736.GAZ-0HuG0uVznq5wX_@fat_crate.local>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SG2PR02CA0033.apcprd02.prod.outlook.com
+ (2603:1096:3:18::21) To DS0PR12MB6608.namprd12.prod.outlook.com
+ (2603:10b6:8:d0::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <b37b02ec-59fb-4b3b-8e51-ae866eb8ecc9@gmail.com> <20250401223503.GA1686962@bhelgaas>
-In-Reply-To: <20250401223503.GA1686962@bhelgaas>
-From: Pavan Chebbi <pavan.chebbi@broadcom.com>
-Date: Wed, 2 Apr 2025 16:03:42 +0530
-X-Gm-Features: AQ5f1JrXgc6t4BzK_3N0025H0cL-avvbz3cN-am3DRSvn75xlaHIDiEapM0nCV8
-Message-ID: <CALs4sv3awP3oA3-mvjSUmHCk=KZjF5F75SnnaE79ZUGqDC=orw@mail.gmail.com>
-Subject: Re: PCI VPD checksum ambiguity
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Heiner Kallweit <hkallweit1@gmail.com>, Michael Chan <mchan@broadcom.com>, 
-	Potnuri Bharat Teja <bharat@chelsio.com>, netdev@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Leon Romanovsky <leon@kernel.org>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="000000000000b69d210631c9309a"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR12MB6608:EE_|MN2PR12MB4175:EE_
+X-MS-Office365-Filtering-Correlation-Id: dcef1b68-3aa9-4242-398d-08dd71d1fc01
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Y0dyelRMSytRclFFQmZoZHB2WkFJSmdmNldCeUN1ZlRrVnlESFFuRmhtQ2F4?=
+ =?utf-8?B?NDRaSGZnd3EwS2QxR1lJd2JCTmRYdTE3dXJSdE50eVhMWXY0TVNQYXNkamZ5?=
+ =?utf-8?B?ZG1WeUkya2dad1hkaHNzZ1ZvVUNFaHdMOUJ0cy9kdnMyUlM4Y08zcFFLVWVD?=
+ =?utf-8?B?d0s2RGIrUEphbU56T2JyNHROQTdCakN3ZVpFcXk2TE11bnNaSFBCYUcvSEYx?=
+ =?utf-8?B?ZUo2NWxMR2dDSnQvYU1CQlJSeW5XVWEzNDMzV1FMa0JNMDAxYnhUaFVxaVQx?=
+ =?utf-8?B?S0EwemtMUWR0WW1uYXZ4cUE1QzQ5bVdHZzhWd3ppNjFVV0U5ZjVwNFFZS08z?=
+ =?utf-8?B?TmdodkRVZFpaK0ZKNEx6Mk5Vd3VYM2hEMFNVcHZmcUIxQXZlOUkxb1NycTM2?=
+ =?utf-8?B?WHBocXhyT0ZZc1B3cXVnTVF1UkpTbnhSYTlZL1pLaWdHaWp6RER2YTUya2dV?=
+ =?utf-8?B?eGtTL1VVUE9YdmVhZUU1RVE1UHNQRXcvaFJmNmpXWEhFbDQwRGdLbVNsbWp3?=
+ =?utf-8?B?dkxKRWVsbUhhenhWM2o0RFRoVUcza21UM1VKUFVLcnZNQ3hKT0c0ZytlSjgx?=
+ =?utf-8?B?NExUeGNCaFdPNHVTOVJXUVdaUnIweUFBNW9QRkRVNXlzd3hxOE9IU0xUcG02?=
+ =?utf-8?B?N2V2d016T25pejJZZVJUTGY0VFJGMFdWQTZ0NVZtaHd5d1Ara1pFSGwyL1Rs?=
+ =?utf-8?B?a1VHMlI1SGdYRW81Z3ZrMHdya2hmdjlObVIvdGNKbHdBNis3WExQVWQvMzhX?=
+ =?utf-8?B?c2U1em9lNWZ0SEk4WU1NQnBkNCtvdnRPZHZlWlRXQ3pYOE10WnFwd2ZDUmZS?=
+ =?utf-8?B?anpWVnlQN29zZU4rU0Z0dmFsRnJ4ckdiVHEyMXZlMjZXcGZaUGJWd01Ndi9y?=
+ =?utf-8?B?cmc2SUFHMTN4Z1A1RnA2SVc3dE93VFF0RU1vWHRtdi8zOXRCaWp2ZjczTkdq?=
+ =?utf-8?B?VUdHZlM1MjRpcklURnlrRUpwR1BJNDVxM3ZvL09TNTQ5cWVkQ1hxYy9lYkdl?=
+ =?utf-8?B?R2N5Z0k3T0szWGEyWWdHd3F4Z2lxQU5jMjY2T2U4dWVRR3V4N3lDaXJnUFN2?=
+ =?utf-8?B?YlQzdmZOWFY0dDBzVk1HNmQyWjN0S0p0azQ0OHk0Vyt5SnprYXdlY0pGYVlt?=
+ =?utf-8?B?Zk54ZndPMzBUS0N0MUVWdzRZbDh4OGtpT3hneEJjV1BWUXhOZ3ZIUC9QSEVF?=
+ =?utf-8?B?U29PM29XbWVPdzV3RHNHYy8zdGRlVk5nbkQ4MU55VnFHRm9ka1BsVHl3RlBm?=
+ =?utf-8?B?QnNtV2M2UzNIRWhSaHkwOEVTcUVIWFB4aU53ZFNjVzNxY1NmUkNibmxVaWV6?=
+ =?utf-8?B?M0VWSWl6d1hSYTFsZFk3citMakV2VTRnOVNkQmdTOWdoYnoyOUJPTUk5UEEx?=
+ =?utf-8?B?RlpaRnFMdEVxblFkbEtiZWNMQjdzbjJHdDVtdzY3d0h4NzZvWWdyYWJZQXNQ?=
+ =?utf-8?B?YzVma2JWZThLMGdFNnp4b0JhMzE4ODBuRWp2WEtmd0VqbnJpRDFvM3hINHBG?=
+ =?utf-8?B?R2J4TDFmTG5xQ1BPcFZjQ1JoaW9meThGZzR3YTdxMHREVEVHSlAxNWNtd3l5?=
+ =?utf-8?B?MjdnU2h3ZDJzSkdSb3czaFJ4dmd2SFhJVnNlais1Q1FpMTlRV1BnY0hCbnZS?=
+ =?utf-8?B?Q0J0ZjRnMlZLdGNmQkxTUUU4N2lRNmRUNGZUcTJiN0llaUVxa2d4YW5uRmsz?=
+ =?utf-8?B?dXF3RUpVL21LMlk3UXlOU0tucUVCRXJWK1VxNmtuSmg0by9ITmVKVDRHMjZm?=
+ =?utf-8?B?ZThlZjljUy9PeE1QVGdhTlY4MjJMNXhyR2IrQW53TGUvR1ZWcWIyd2xKZHMr?=
+ =?utf-8?B?WHR1TWVFcnhJall6eFRwQT09?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB6608.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?VGhJQ3F4ZzlSODkwQ3RITGxaL3M0OXc0QlJaa0hCOVY3NDhoN0piTlQ4djJO?=
+ =?utf-8?B?azc0U0s3U0ZXV1pjdHJweGFTcEhvNUs0UjdhYXNkbzVoTlJoSzBvSHE1V1pp?=
+ =?utf-8?B?cFE0VVdURHBGSDg0WkRSK2ZxNzc5dFBBUTZFbGZ0SmRuMndBVHErMWtnY3VN?=
+ =?utf-8?B?TVE4UzNvajhSRE55clA0cWRWQWJGbThiRVNlaHdDR3RoazBKRTF2enJOR2Zj?=
+ =?utf-8?B?NWdKQlZUdVdvbHBkamdUbXJLSnd3VTE1Qml4STRoTUorYXNlNFJtc0Y4MUZW?=
+ =?utf-8?B?b1pjSHhrOXZjbG1YVXd6ZHlEVUYxUGJDTWFpQTRXYlJtN0xCSFRuMk5nS0xH?=
+ =?utf-8?B?ZVhLbGZFVDVBWUI3TVlIdUpkQTlwRmd3QzJnRFpHcHlFUXhrRHdLMEtUQ2FP?=
+ =?utf-8?B?QkxhK3FucjhLODcxNkI4TVFUNG9sbUVkM2loek5CUDNmdEJtOVZ1YXFnYmhj?=
+ =?utf-8?B?VnpyYndodGt4cXdRaXRyV2xWdUdHU3d6RjlhUW1xS3UyZkNNZDhoU1YyaXJQ?=
+ =?utf-8?B?eWVhM2hlL1ZoU0Nrb3FidHpnSHVORTZHZ3pjUEx3Z0FXcUpsNXNNYTduakR3?=
+ =?utf-8?B?UHVXbXJmUWtXM0FOSHBMV2c1WGdaaVd4cW5DYnpqTGtXUzRXM0xHRmdzMG9O?=
+ =?utf-8?B?dGFNV2djSFNZd3NHR3ZrZ3NOeWpoSXBWUEVkVkxQUGNPdjBoOWRtWWUwaTl1?=
+ =?utf-8?B?b3FQbjBTeWU0S05jQTFhc0tDcy9uVW5DUkg2cVdVaGFzdkVqd1RnekNBYUZx?=
+ =?utf-8?B?NDNmVkl1T3JFcy8rTmdDTUN4N2FncURKeG9NTFR4d21nSjlqK21MWEJUMGZF?=
+ =?utf-8?B?bmx2N3RDUFRZQnlMaVlETHlreld0b0o3dit3bEtySnVxN3c1RElBdnN3bnVr?=
+ =?utf-8?B?SHVOa0ZOck1XdGFibjBjbTIxYWRyTSswMDFOR3hnZGtmYkdDcWNaemdYdkUz?=
+ =?utf-8?B?NXQ3YzI0N0pSdE9PYk9DbE15eVJsUlZ2RnNmb2hRdjRXLzZKbjc4czZiWnVn?=
+ =?utf-8?B?elB4dzVaWjM0Sm4xOWIyQzhFSUtyVElmOWIvUjN2dndGa0M1MFlLMlErQk5I?=
+ =?utf-8?B?KzNhQVNQbUdBSzE0TDVuVjVHUldHUFdsZGx5Y0x2Vys3VFNxVllVN1RUWXpn?=
+ =?utf-8?B?bHpOKzlSZ0k4NnVUZ3lIR0d6Z0tUMXN3L29TSnkyK0FvZnMrV1pMYlhrUHE0?=
+ =?utf-8?B?c0VPZ0gvVlFrTGF4b1pTQzZ3VEx3VFpmWGhKWnE0MFRlRm9UU0pVVngvNzhK?=
+ =?utf-8?B?VXJ0YzB4REJ0QWtFM04vaHVMMkEreFdyOTNzVFhmMXZ0VklZWGQ5K1ZOYUhi?=
+ =?utf-8?B?REd3ZkJxeXZwWS80OWhISTJ6eHk0S1FNZzB1b2l5UWh4TDBSRkFZc0xRcEl2?=
+ =?utf-8?B?SDhZQ0REcFpxMUtZQ1pIRHZEcWZ0MDhSLzlzY1RUczVqblpDaXlLZ0w3aW9l?=
+ =?utf-8?B?SVBpZ21odllnbmp4M2crNUdrYVNLamVCNmtUeC85emVCaHNWS05iSVdTYTNj?=
+ =?utf-8?B?NTNkV3RqQmhrWUhZdStLbXkvTnJEV0RqeFNMRkNaMUhzY3IrQlJ6RjVLMFY2?=
+ =?utf-8?B?cVNKbW01Nm1KMmp5djNFUk9vcXo3a0ZuVDNPR0RyYXZuRndtd2Z6NFBhRzhC?=
+ =?utf-8?B?MENHK3FMMXJITmprRFQ3NkVtbm5hWE85N3FCVEhtcE4veVhIdkk5eWtHb2Fo?=
+ =?utf-8?B?dkFoR1BmTnZXL1NObWdScFRlSUpnQkdqclRRZWhYVFFjVWhSYnZqNW9TcWlw?=
+ =?utf-8?B?ZzZVL1FzeVlSMWN4M0hHOUFyR2prYnZVa3B1Y1IxZDZVUFdMQ0twdDdJcThO?=
+ =?utf-8?B?cWd6RXRudVY4M3E4OWgyTUZyU1RhU0VMWUtZbXRvYTM5MjE5ZGUvd3pSSExi?=
+ =?utf-8?B?QnlMQ2JTdithL09LSXJZbXMyelM1OThRck5salBCcXRXWHhnaG9jTEYxbHFs?=
+ =?utf-8?B?djZpOTBuNnJyOTQzMlp1QkRKY0FEcUx1ZVVNQ3hNdWtmTUNaelo4ckVRL21R?=
+ =?utf-8?B?S1lYZURDY1AwdTM1SDVFNzhqZ3dVeGY0ZjZvK3ZyaWZPSFN2VmFKS0R3enRD?=
+ =?utf-8?B?eHZuYXhPMTJ5WkJvQWRUSVBxSWlDOUdTTlVIS1lwMGhJTUMwTnBwc0xtZ1hn?=
+ =?utf-8?Q?Cqyy7Xl4ZaR0JG36FGApzsDUO?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: dcef1b68-3aa9-4242-398d-08dd71d1fc01
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB6608.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Apr 2025 10:34:45.0736
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: AzQIM/NdM0EXqfsursaojNyMAKn8wBV+7I9/DO+reJHkFzbuJmlkxgd7vvjgpTRuhJs54r/sGYyKSIbe1GDdyA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4175
 
---000000000000b69d210631c9309a
-Content-Type: text/plain; charset="UTF-8"
 
-> > >
-> > > Any idea how devices in the field populate their VPD?
-> > >
 
-I took a quick look at our manufacturing tool, and it does look like
-the computation simply starts at address 0.
+On 4/2/2025 3:17 PM, Borislav Petkov wrote:
+> On Tue, Apr 01, 2025 at 10:42:17AM +0530, Neeraj Upadhyay wrote:
+>>> diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+>>> index edc31615cb67..ecf86b8a6601 100644
+>>> --- a/arch/x86/include/asm/msr-index.h
+>>> +++ b/arch/x86/include/asm/msr-index.h
+>>> @@ -685,8 +685,14 @@
+>>>  #define MSR_AMD64_SNP_VMSA_REG_PROT	BIT_ULL(MSR_AMD64_SNP_VMSA_REG_PROT_BIT)
+>>>  #define MSR_AMD64_SNP_SMT_PROT_BIT	17
+>>>  #define MSR_AMD64_SNP_SMT_PROT		BIT_ULL(MSR_AMD64_SNP_SMT_PROT_BIT)
+>>> +
+>>>  #define MSR_AMD64_SNP_SECURE_AVIC_BIT	18
+>>> -#define MSR_AMD64_SNP_SECURE_AVIC 	BIT_ULL(MSR_AMD64_SNP_SECURE_AVIC_BIT)
+>>> +#ifdef CONFIG_AMD_SECURE_AVIC
+>>> +#define MSR_AMD64_SNP_SECURE_AVIC	BIT_ULL(MSR_AMD64_SNP_SECURE_AVIC_BIT)
+>>> +#else
+>>> +#define MSR_AMD64_SNP_SECURE_AVIC	0
+>>> +#endif
+>>> +
+>>
+>> I missed this part. I think this does not work because if CONFIG_AMD_SECURE_AVIC
+>> is not enabled, MSR_AMD64_SNP_SECURE_AVIC bit becomes 0 in both SNP_FEATURES_IMPL_REQ
+>> and SNP_FEATURES_PRESENT.
+>>
+>> So, snp_get_unsupported_features() won't report SECURE_AVIC feature as not being
+>> enabled in guest launched with SECURE_AVIC vmsa feature enabled. Thoughts?
+> 
+> Your formulations are killing me :-P
+> 
+> ... won't report.. as not being enabled ... with feature enabled.
+> 
+> Double negation with a positive at the end.
+> 
+> So this translates to
+> 
+> "will report as enabled when enabled"
+> 
+> which doesn't make too much sense.
+> 
+> *IF* you have CONFIG_AMD_SECURE_AVIC disabled, then you don't have SAVIC
+> support and then SAVIC VMSA feature bit better be 0.
+> 
+> Or what do you mean?
+> 
 
-> > > Can you share any VPD dumps from devices that include an RV keyword
-> > > item?
+My bad. Let me try again.
 
-A couple of devices I could find: hope it helps..
-000100: 822f0042 726f6164 636f6d20 4e657458 7472656d 65204769 67616269 74204574
-000120: 6865726e 65742043 6f6e7472 6f6c6c65 7200904b 00504e08 42434d39 35373230
-000140: 45430931 30363637 392d3135 534e0a30 31323334 35363738 394d4e04 31346534
-000160: 52561d1d 00000000 00000000 00000000 000000
+In previous sentence
 
-000100: 822f0042 726f6164 636f6d20 4e657458 7472656d 65204769 67616269 74204574
-000120: 6865726e 65742043 6f6e7472 6f6c6c65 7200904b 00504e08 42434d39 35373139
-000140: 45430931 30363637 392d3135 534e0a30 31323334 35363738 394d4e04 31346534
-000160: 52561d15 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+"SECURE_AVIC feature as not being enabled" - SAVIC not enabled inside guest.
+"SECURE_AVIC vmsa feature enabled"  - SAVIC enabled/active in hypervisor for that guest.
 
-> >
-> > I have only very dated devices which likely date back to before
-> > the existence of PCIe r6.0. So their VPD dump may not really help.
-> >
-> > IIRC there's an ongoing discussion regarding making VPD content
-> > user-readable on mlx5 devices. Maybe check with the Mellanox/Nvidia
-> > guys how they interpret the spec and implemented VPD checksumming.
->
-> Good idea, cc'd.
+This is basically continuation of our previous discussion here [1]
 
---000000000000b69d210631c9309a
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
+- "sev_status" reports the SEV features enabled/active in Hypervisor for a guest.
 
-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
-OltyqaGBuzv+bJTUL+bmV7E4QBLIqGt4jVr1R9hJdH6KxXwJdyfHZ9C6qXmoe2NQhiFUyBOJ0wgk
-dB9Z1IU7nCwvNKYg2JMoJs93tIgbhPJg/D7pqW8gabkCAwEAAaOCAdowggHWMA4GA1UdDwEB/wQE
-AwIFoDCBowYIKwYBBQUHAQEEgZYwgZMwTgYIKwYBBQUHMAKGQmh0dHA6Ly9zZWN1cmUuZ2xvYmFs
-c2lnbi5jb20vY2FjZXJ0L2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNydDBBBggrBgEFBQcw
-AYY1aHR0cDovL29jc3AuZ2xvYmFsc2lnbi5jb20vZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAw
-TQYDVR0gBEYwRDBCBgorBgEEAaAyASgKMDQwMgYIKwYBBQUHAgEWJmh0dHBzOi8vd3d3Lmdsb2Jh
-bHNpZ24uY29tL3JlcG9zaXRvcnkvMAkGA1UdEwQCMAAwSQYDVR0fBEIwQDA+oDygOoY4aHR0cDov
-L2NybC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWduMmNhMjAyMC5jcmwwJAYDVR0R
-BB0wG4EZcGF2YW4uY2hlYmJpQGJyb2FkY29tLmNvbTATBgNVHSUEDDAKBggrBgEFBQcDBDAfBgNV
-HSMEGDAWgBSWM9HmWBdbNHWKgVZk1b5I3qGPzzAdBgNVHQ4EFgQUEV6y/89alKPoFbKUaJXsvWu5
-fdowDQYJKoZIhvcNAQELBQADggEBAEHSIB6g652wVb+r2YCmfHW47Jo+5TuCBD99Hla8PYhaWGkd
-9HIyD3NPhb6Vb6vtMWJW4MFGQF42xYRrAS4LZj072DuMotr79rI09pbOiWg0FlRRFt6R9vgUgebu
-pWSH7kmwVXcPtY94XSMMak4b7RSKig2mKbHDpD4bC7eGlwl5RxzYkgrHtMNRmHmQor5Nvqe52cFJ
-25Azqtwvjt5nbrEd81iBmboNTEnLaKuxbbCtLaMEP8xKeDjAKnNOqHUMps0AsQT8c0EGq39YHpjp
-Wn1l67VU0rMShbEFsiUf9WYgE677oinpdm0t2mdCjxr35tryxptoTZXKHDxr/Yy6l6ExggJgMIIC
-XAIBATBrMFsxCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMTEwLwYDVQQD
-EyhHbG9iYWxTaWduIEdDQyBSMyBQZXJzb25hbFNpZ24gMiBDQSAyMDIwAgwV/XkICjVscn4SNZMw
-DQYJYIZIAWUDBAIBBQCggccwLwYJKoZIhvcNAQkEMSIEIFy/cFTohhczi5nHnQ/475TGTXrWNW/V
-OLG4GPLEjOrfMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDQw
-MjEwMzM1NVowXAYJKoZIhvcNAQkPMU8wTTALBglghkgBZQMEASowCwYJYIZIAWUDBAEWMAsGCWCG
-SAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQcwCwYJYIZIAWUDBAIBMA0GCSqGSIb3DQEB
-AQUABIIBAJuH6kAEjNVpNAkDjHg3hg11ZJ7nIoTZQgJxcmvnCDq+hH3aC8g5ZmHjwgG5o1CBev6j
-gS/hKopzxGipYtM82Q+iQ77jWgcF1En8Y5GMgwxf6uZew5Ih205eiibBZxBHDD3W7l3D11tsMc14
-+fQYxeb2Ba1ZFMTdCSTrcx8o+wws/X/thgEVQY4YtNmLwXZMx0Gd/7iZ4um1ett9aiMmgjeqX6ZH
-5hVdHz8IcdEkQIqVbbaDbSILyuq/Ugcmf0V7HwkUTwJw/1yxP1sUL39B4YNcDZAXPGXU9G36NP/5
-+3PVR/i72HDxhbeU1tvS3zWeP4oMsK3N+gMNC+NhAPcc9pg=
---000000000000b69d210631c9309a--
+- If guest is launched (qemu/VMM launch) with SAVIC VMSA feature enabled, hypervisor
+  uses SAVIC interrupt injection flow for that guest.
+
+  SAVIC VMSA feature is reported in "sev_status" and tells guest that SAVIC 
+  functionality is active (in hypervisor) for that guest.
+
+- snp_get_unsupported_features() looks like below.
+  It checks that, for the feature bits which are part of SNP_FEATURES_IMPL_REQ,
+  if they are enabled in hypervisor (and so reported in sev_status),
+  guest need to implement/enable those features. SAVIC also falls in that category
+  of SNP features.
+
+  So, if CONFIG_AMD_SECURE_AVIC is disabled, guest would run with SAVIC feature
+  disabled in guest. This would cause undefined behavior for that guest if SAVIC
+  feature is active for that guest in hypervisor.
+
+ 
+  u64 snp_get_unsupported_features(u64 status)  << status = sev_status
+  {
+        if (!(status & MSR_AMD64_SEV_SNP_ENABLED))
+                return 0;
+
+        return status & SNP_FEATURES_IMPL_REQ & ~SNP_FEATURES_PRESENT;
+  }
+
+  /*
+   * SNP_FEATURES_IMPL_REQ is the mask of SNP features that will need
+   * guest side implementation for proper functioning of the guest. If any
+   * of these features are enabled in the hypervisor but are lacking guest
+   * side implementation, the behavior of the guest will be undefined. The
+   * guest could fail in non-obvious way making it difficult to debug.
+   */
+  #define SNP_FEATURES_IMPL_REQ ...
+
+
+
+ 
+
+[1] https://lore.kernel.org/lkml/20241009110224.GGZwZiwD27ZvME841d@fat_crate.local/#t
+
+
+- Neeraj
+
