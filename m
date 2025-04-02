@@ -1,101 +1,139 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CACF1A3156;
-	Wed,  2 Apr 2025 17:44:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51B0E1E4A4
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 17:46:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743615902; cv=none; b=UmvunodwwSQqtGxkOuwo5m+lNOz3IUBnANOpKUFXCcTu0aMzzqzstLTh9ORqIB9AeCiwvCXAw+5mCq0Tb/Diq1ypQX3E1mBJS7QrfGkv4OaIHg9rh23D/cvYN2qr4OfaP4WM6vIl76eiTPQMiUsMXw3LsCZWrwDjEFGdJLWBrgc=
+	t=1743615998; cv=none; b=XNcTp8STF1z5EpFQJhDy0DjlvabRIA1Bm0b4NzTqyJOS3ebl19cI/Y86AB2dkZ/sPmSGTgP+uORaiVzpUqlLm104t8PJcsXZJ3yO0PNIBEz3PhWAhGU0Q5/vMNIA8mZM9TOfUqG4oErEz+G20LGn1vm6YFncGAwhx5aAQjnuQOQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743615902; c=relaxed/simple;
-	bh=srpIceCgkPJ9GUI3k+Z5EprFXkZTsifVhAWS6EXrPxA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kxsAJ9VbEESZto09lqZqGQhMXKi6U71fVquYHMpn1/HtIkdM8sb3ODDlQpM0M1wbkrd06ZjOsAqJNqVd8/lAJuJpFljjhhVcmvCTtoiO71zDm0xb5DLqeKtCSwWNJUjNYBDdkU/El1Ae1YAUfu1gi5xtk6IJW4iC2YMSlNBPbDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=Y+GbdSvD; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+	s=arc-20240116; t=1743615998; c=relaxed/simple;
+	bh=ZAM0NRncp3/C0HdE7bQJ/OItovivxBBfaaJK67GIIv8=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=SlF/k1obWHESj7LkmqfeW09ogbUOTIHKqUoB+hGWlYGKkIE97ukh5g0FoCQzMOW0i5v5tgn8lPfn0xHaNSK1moUF6ybimw/doJcLXikj0B5UBQ0LyYDDBBfYXEhn0xJ0NfB7AxtgcHL7xlpo5Q/gTROGRxOAjmo9Ndq7C5uqZq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WNTiAPOR; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="Y+GbdSvD"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=Content-Type:MIME-Version:Message-ID:Subject:From:Date:From
-	:Subject; bh=R98V4fWIBT97doh+FdllktzDEOGq5n+le8g6zWGxnrE=; b=Y+GbdSvDxDWc8tKE
-	0LSFem4xFryQ4aRNR7zIUKKg4hguo4DCcMWJ8XLnTBXIrgZhcZmi3kbLnYy/9Cpq78V7IV87WYU9s
-	osVcVRfM4I2sUJ1Hxq/VZ4r+ZbMsQVLPVVXc5ymPx8WW7nDjcgbcplDcc17dhygQecbdJGsmAaDU8
-	OaNVXJ9CW4+9xiNNFnguwsXENfvW2Oo/fgNVWb7akUOODjIJZmxvJluAY+2QlztjMxeuwrPlpQDSX
-	uNi2qpyodeU59ZY9mZwDNTH2QtV0RYiBcjgMrlfm7Us5QALmD7Veuv+aM7jT7ln7vrPPiqPDV+R2L
-	SEt1rQSuKkAfJga60g==;
-Received: from dg by mx.treblig.org with local (Exim 4.96)
-	(envelope-from <dg@treblig.org>)
-	id 1u0290-008dFx-3B;
-	Wed, 02 Apr 2025 17:44:54 +0000
-Date: Wed, 2 Apr 2025 17:44:54 +0000
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
-To: srinivas.kandagatla@linaro.org
-Cc: corbet@lwn.net, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/3] Remove nvmem deadcode
-Message-ID: <Z-13lseyUTqtVhyS@gallifrey>
-References: <20250221015841.209458-1-linux@treblig.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WNTiAPOR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743615995;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=M8tq3Ac2LCgq0tpaPoX9b/VjI7pxLnGx+4+0fVvmu3M=;
+	b=WNTiAPOR/rNwK3d5GslVwOQPaplRdU2zGxg1Zf9n7CHSQ0hcPJCtxG1MZ1OCq6Jw/NdQAq
+	v7UoxGwDSnrMSPOwzmwBzYeKaZyRBkNCX387aKunSGTLzJAjMNjo1fQXqcJAp1/kYil5AV
+	6vDNuz8I9B4DCREJZVWnvXtvslLQi/c=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-670-CsplDWmqMEeu1I_y5ZaLCQ-1; Wed,
+ 02 Apr 2025 13:46:32 -0400
+X-MC-Unique: CsplDWmqMEeu1I_y5ZaLCQ-1
+X-Mimecast-MFC-AGG-ID: CsplDWmqMEeu1I_y5ZaLCQ_1743615990
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9E3D71800257;
+	Wed,  2 Apr 2025 17:46:29 +0000 (UTC)
+Received: from [127.0.1.1] (unknown [10.44.32.79])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 1AA38180174E;
+	Wed,  2 Apr 2025 17:46:22 +0000 (UTC)
+From: Sergio Lopez <slp@redhat.com>
+Subject: [PATCH v2 0/2] drm/virtio: introduce the HOST_PAGE_SIZE feature
+Date: Wed, 02 Apr 2025 19:45:59 +0200
+Message-Id: <20250402-virtio-gpu-host-page-size-v2-0-0afdc8c16cb9@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-In-Reply-To: <20250221015841.209458-1-linux@treblig.org>
-X-Chocolate: 70 percent or better cocoa solids preferably
-X-Operating-System: Linux/6.1.0-21-amd64 (x86_64)
-X-Uptime: 17:44:30 up 329 days,  4:58,  1 user,  load average: 0.09, 0.02,
- 0.01
-User-Agent: Mutt/2.2.12 (2023-09-09)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIANd37WcC/x2MQQqAMAzAviI9WxhlgvoV8SBbnb24saqIw787P
+ AaSFFDOwgpjUyDzJSpxr0BtA25b9sAovjKQoc5YQ3hJPiRiSCduUQ9MS3VUHkbqyQ2DX9laB7V
+ PmVe5//c0v+8HZo2n+WsAAAA=
+X-Change-ID: 20250402-virtio-gpu-host-page-size-282c99dfe44c
+To: David Airlie <airlied@redhat.com>, Gerd Hoffmann <kraxel@redhat.com>, 
+ Gurchetan Singh <gurchetansingh@chromium.org>, 
+ Chia-I Wu <olvaffe@gmail.com>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ Simona Vetter <simona@ffwll.ch>, "Michael S. Tsirkin" <mst@redhat.com>, 
+ Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
+ =?utf-8?q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
+ Gurchetan Singh <gurchetansingh@chromium.org>, 
+ Rob Clark <robdclark@gmail.com>, 
+ Dmitry Osipenko <dmitry.osipenko@collabora.com>
+Cc: dri-devel@lists.freedesktop.org, virtualization@lists.linux.dev, 
+ linux-kernel@vger.kernel.org, Sergio Lopez <slp@redhat.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2063; i=slp@redhat.com;
+ h=from:subject:message-id; bh=ZAM0NRncp3/C0HdE7bQJ/OItovivxBBfaaJK67GIIv8=;
+ b=owEBbQKS/ZANAwAIAfRpJ40vDAI1AcsmYgBn7Xfrg7BYQwZ9cPC3ftS9ZuMvWFjEkoif/R9dC
+ 8U+2uR0nJyJAjMEAAEIAB0WIQS+1fz3US2GgJFC6KL0aSeNLwwCNQUCZ+136wAKCRD0aSeNLwwC
+ NfBCD/0c5I88+rTwl0J7ptGd5rMF5G1auRnLUjwnz3rv30ohXabt9ptbB1E62yEyQ0UfJk1GvAT
+ VgKozBk/1SQM/n0bFJN6i89x3bwislJhRwuItJ7fs7u94bla8tCsi3vJGaemaYwh2vJy0Ct8+3/
+ xWVfwVEaN4qwnJ1KsZEe9hT0J2DMl/roMHx5Mz3nybGIp0TCuXSxh137YhtgaNmwkpwlOP+oSKi
+ Dc6bWV5MLtz6DEQWe6Q3J5pT5dtbiuHBn7+UZ2Wy5+hwAzd3CknxpNSbXwGE+Rng3cydSkGWBgt
+ tvSLMoBeL762RLsT4+NoOFzrEOSRFgxWXmXny1PSJOfoFjfNTwPfe/CjpVaRKkEvkD48mTC4f7i
+ D6IbfU/l157+gARu7t8Y1lSFZIDbyddOeFn4V3vbtOO4trQsmzJ10Lh79ubKCAvi3v61oY7W2y9
+ 9m3nQl5l9fYIh0Bb7sQr1F8And7Dizz+Qt7DIkpVofh74TXHcNPIiRlv7u5nV0Ep2XpPp85ZzdG
+ JgBFpM6q4K3L1ZSOLHvagxyCloslE0C9VvhEIrK1sYNW/JyAF7radalx7YN7rHO7iWD1SXeejU3
+ JWXUgaDp2ishZUDXXSalDSzUGPhFz+FInbuiE0QQEAyHL9NmEssLlrDpw/U5LAPBoC5DslLA0WV
+ dZaG1WsTzLIbn9g==
+X-Developer-Key: i=slp@redhat.com; a=openpgp;
+ fpr=BED5FCF7512D86809142E8A2F469278D2F0C0235
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-* linux@treblig.org (linux@treblig.org) wrote:
-> From: "Dr. David Alan Gilbert" <linux@treblig.org>
-> 
-> Hi,
->   This series removes some uncalled deadcode in nvmem.
-> The third patch probably deserves a bit closer inspection.
-> 
-> The first one removes nvmem_device_cell_read/write functions
-> that haven't been used in ~10 years.
-> 
-> The second removes nvmem_add/del_cell_table - again this is
-> removing uncalled functions; nvmem_add_cell_table is unused
-> after the removal of the Davinci machines.
-> 
-> The third one removes the remaining nvmem_cell_table code - including
-> a function that's called ( nvmem_add_cells_from_table ) - but
-> my reading is that from the previous patch there's no way for this
-> function to do anything active any more since the list it walks is
-> empty.
-> 
-> Build tested only.
-> 
-> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+There's an incresing number of machines supporting multiple page sizes
+and on these machines the host and a guest can be running, each one,
+with a different page size.
 
-Hi,
-  I'd appreciate a review on this series if you get a chance.
+For what pertains to virtio-gpu, this is not a problem if the page size
+of the guest happens to be bigger or equal than the host, but will
+potentially lead to failures in memory allocations and/or mappings
+otherwise.
 
-Dave (cleaning up his patch queue)
-> 
-> 
-> Dr. David Alan Gilbert (3):
->   nvmem: core: Remove unused nvmem_device_cell_(read|write)
->   nvmem: core: Remove nvmem_(add|del)_cell_table
->   nvmem: core: Remove remains of nvmem_cell_table
-> 
->  Documentation/driver-api/nvmem.rst |  23 ------
->  drivers/nvmem/core.c               | 126 -----------------------------
->  include/linux/nvmem-consumer.h     |   4 -
->  include/linux/nvmem-provider.h     |  24 ------
->  4 files changed, 177 deletions(-)
-> 
-> -- 
-> 2.48.1
-> 
+To improve this situation, we introduce here the HOST_PAGE_SIZE feature.
+This feature indicates that the host has an extended virtio_gpu_config
+structure that include it's own page size a new field.
+
+On the second commit, we also add a new param that can be read with
+VIRTGPU_GETPARAM by userspace applications running in the guest to
+obtain the host's page size and find out the right alignment to be used
+in shared memory allocations.
+
+There has been a discussion in virtio-comments about whether the
+information about alignment restrictions must be shared in a generic or
+in a device-specific way, favoring the latter:
+
+https://lore.kernel.org/virtio-comment/CY8PR12MB7195B5E575099CD9CA1F2F39DCAF2@CY8PR12MB7195.namprd12.prod.outlook.com/T/#t
+
+v2:
+ - Rebase on top of current upstream.
+ - Make a reference in the cover to the discussion about how device
+   page alignment restrictions should be shared with the driver.
+
+Signed-off-by: Sergio Lopez <slp@redhat.com>
+---
+Sergio Lopez (2):
+      drm/virtio: introduce the HOST_PAGE_SIZE feature
+      drm/virtio: add VIRTGPU_PARAM_HOST_PAGE_SIZE to params
+
+ drivers/gpu/drm/virtio/virtgpu_drv.c   |  1 +
+ drivers/gpu/drm/virtio/virtgpu_drv.h   |  2 ++
+ drivers/gpu/drm/virtio/virtgpu_ioctl.c |  5 +++++
+ drivers/gpu/drm/virtio/virtgpu_kms.c   | 13 ++++++++++---
+ include/uapi/drm/virtgpu_drm.h         |  1 +
+ include/uapi/linux/virtio_gpu.h        |  5 +++++
+ 6 files changed, 24 insertions(+), 3 deletions(-)
+---
+base-commit: acc4d5ff0b61eb1715c498b6536c38c1feb7f3c1
+change-id: 20250402-virtio-gpu-host-page-size-282c99dfe44c
+
+Best regards,
 -- 
- -----Open up your eyes, open up your mind, open up your code -------   
-/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
-\        dave @ treblig.org |                               | In Hex /
- \ _________________________|_____ http://www.treblig.org   |_______/
+Sergio Lopez <slp@redhat.com>
+
