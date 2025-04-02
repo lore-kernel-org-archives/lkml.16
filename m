@@ -1,126 +1,201 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D53D2233707
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 07:58:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9BED20D4E4
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 07:58:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743580711; cv=none; b=tiXoOevf0TlXCmefJun38payKslfz5xfbyiajmz+z44W9mlXkVCHzVXt4TU0eJWvM79VyVvUfwcYrAsNZuqR0ZltJLJZAajXFiaB0G+I/+CDHAOCVUjGZBP4gLwQWscv9tsyH97l5prw8o/6NLq5ghE6UwNYKhxOro7elI4i7fM=
+	t=1743580732; cv=none; b=KbiW1tUNGbRYlyzYfAjHjIhEBkFTobuJ+xqSc/ZwctAYev9zeMIwSOnfHjS1J3KBqg1WznFlWL1pj2+8mVj7kx9sPMAd9W4woxO+PSUIa7nBdG9LSmR8exBVkEB05MzaaXADzwlOWplVjvp6Q/S7FDfYZsrySTNxeSw21E0/EKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743580711; c=relaxed/simple;
-	bh=xNZG4kFoGbGB7pheqiYG3iEXKZBGzv6hERVCUWp27mQ=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=GNQUxGi+9UiaTAoVm4VRd/iDFVGhX9DY0p2u7ZANv3cQ4eni7tLRndV6LH4O73qwp5oUVMhAoE1B9BahgZ+uDPfHkM1nalsSP9ZIP6AftoU+Lem/QE+X1cuI5j3idiJWXtqRHya8XrX3rB8zv2Sv/Pn0tP1K/zSkajyTqpXiIGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TF6tKAZg; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1743580732; c=relaxed/simple;
+	bh=pDGRzcr+Vz616POJpo1zyplccBQpABjKMBcTPZAsCZM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FSmJdpvupBQKng6vq3NiwN8RTh4v9ikPTGC+ncO31znEqP+IDXSokFdyr/8YvDSaQw0eMtMUEZnegKKkkUf9Xt7OpM+LRLlbYZwFtVcQ+3zyPc9/taoq/AQEpRWZuoKnzixTdS3oA/pCYuLX9ZpUcDYIMiDFMkge82SzZ+CSMk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FcFAV2q/; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TF6tKAZg"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FcFAV2q/"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743580709;
+	s=mimecast20190719; t=1743580729;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xNZG4kFoGbGB7pheqiYG3iEXKZBGzv6hERVCUWp27mQ=;
-	b=TF6tKAZgY3OnyDfVa38C/GBuaJwBAtv8OGEu+47r0k7UsPZowXnAgG9t4Sg9wDQ8oR9nEb
-	nh/MnTn1OO81qxvQXPpYhow0buDoW80VVEgtBocgT93LOj5aNbEoJPipAtmM6LBFJEOQVf
-	WSL7ZJ6wcKIivb0RlVimC9kz9tMu9ag=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=/qzqugcqTgi9VPjAotGENv6vPtewRXyYrP/8HKRxPHM=;
+	b=FcFAV2q/YZhCzpY8hd9VDoOw0TlzAuRMNjfNh663I9PNRaKJWc6VoRnMQlg/vf0dlPyhWZ
+	V1tWI9K5avYKrBbTI1zvv7NelyToO/3K4oUbFtAW9t66slRsgX2fXljwfMPRa0NHhyiKMo
+	6E7W12vEfnnNjZZlzRFdxlRdXQYLuDk=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-416-AR6EqWimN52MwICGhQnTGQ-1; Wed, 02 Apr 2025 03:58:27 -0400
-X-MC-Unique: AR6EqWimN52MwICGhQnTGQ-1
-X-Mimecast-MFC-AGG-ID: AR6EqWimN52MwICGhQnTGQ_1743580707
-Received: by mail-ed1-f72.google.com with SMTP id 4fb4d7f45d1cf-5ed2a1bfec7so5272868a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 00:58:27 -0700 (PDT)
+ us-mta-640-ooI0yeleNLuu1cebuTyqIw-1; Wed, 02 Apr 2025 03:58:48 -0400
+X-MC-Unique: ooI0yeleNLuu1cebuTyqIw-1
+X-Mimecast-MFC-AGG-ID: ooI0yeleNLuu1cebuTyqIw_1743580727
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3912a0439afso2772699f8f.3
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 00:58:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743580706; x=1744185506;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=xNZG4kFoGbGB7pheqiYG3iEXKZBGzv6hERVCUWp27mQ=;
-        b=jGnp0weHTIj0YUBAt5nqWv8t/I/HSpVJdw97YHzdhK5A0nUQBpVQ9Rky+TGRQld4Yi
-         O3Whfi/WFNf47T9mATL4jCwwOiQj4Mzt06biZukXF065iGbw+hV1dz/Xk82sbJoTnHX2
-         L9TjwYk4zAG73OP8kzhJeub+vsDRTGvRqlFMXs2E8xwCraRsY7KxZ8jH2jsw3cTR3pwp
-         EkAJpF+J8Gk8px3stu2ij3IT69SDdWUBBVz/p1+tEOkFFILAu5ZKV3aNFcSrrbTba8hp
-         qOFax7Y9pioPoMoit/SB2WR0XqaKeS785VoAMqMo6uFQXAlrSQUVwXfk4QTTrHsMAh57
-         G7jg==
-X-Forwarded-Encrypted: i=1; AJvYcCX1X26fVTDpE7Cxc32s/ucbl4fVNwLzM1Mzz6CgN22k20lUnbDe+/CU3/7HrmTqpfUUPe436fnHxYRDEwM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxcYXAjBKv7FER+RNhcHclUarTnQ+DYeqBfTarKMpYMuKYuZk41
-	+7xQB1JMZ6KHhS2f5QOOFfCrQiM+s+Br7HYqATY3jsRlIqznaGch9JwM8nbTUnfV/+5FvD3GgFe
-	UjxyrsW0aHVSHDdx32jR3v7mUtVZB1CfCh5hITq0hdJiiQakz6hsgKm/2Gz1+GA==
-X-Gm-Gg: ASbGnctUf2SqPE/7xEppF7MuwdJ+CJMU9090yXhdt7lWGIocceT5qMOyQiwZxnt+WNk
-	hrFr5C/EP/ZmVibecQSaUruE46tYPhn4yhKqdRohpMuhyeOyUfgNRYy1t6Z4hsCh6pSypA5jHFd
-	TcwAjnc2zFB50hfH9jb2Gy2zIekjGFuFWEN0CC85PTgGGN9wrAHjbp0Lu4k/farcrugYJKJ2Yqm
-	j0w72iNMdRvqFutx+im4Ru6iGS3y3G3Z7rG7a6tAEkONcw4g1xKhdxOLTEuiVHozQPjuz+2b4Va
-	PVDdxvBXlV3od0nv4tIXBONgm2zycAYlzdOVfwL6IDfdkRadP8Vo+a6uHNNjIdUElDgbltW8r4f
-	9/Fo62NmbwlCbim68bq9OPYMpzn1axG4eGGGHEuBoIxkwYLTy75A=
-X-Received: by 2002:a17:907:7215:b0:ac2:c06:ad9d with SMTP id a640c23a62f3a-ac7a16c1267mr109993666b.14.1743580706555;
-        Wed, 02 Apr 2025 00:58:26 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEYj6cd0a2ZmOIrY2+9xoa0kFQ790CUzhth/mn7wiW3bHJ2mcwrNEVMrfPgd8xSJJfNJC6BBQ==
-X-Received: by 2002:a17:907:7215:b0:ac2:c06:ad9d with SMTP id a640c23a62f3a-ac7a16c1267mr109991066b.14.1743580706042;
-        Wed, 02 Apr 2025 00:58:26 -0700 (PDT)
-Received: from ?IPv6:2001:16b8:2d97:6a00:6929:a9f6:5863:aac5? (200116b82d976a006929a9f65863aac5.dip.versatel-1u1.de. [2001:16b8:2d97:6a00:6929:a9f6:5863:aac5])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac719223e1esm877349966b.7.2025.04.02.00.58.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Apr 2025 00:58:25 -0700 (PDT)
-Message-ID: <323da53fe2ec06c9cc5d1939a9e003c5bd2a0716.camel@redhat.com>
-Subject: Re: [PATCH 0/2] PCI: Remove pcim_iounmap_regions()
-From: Philipp Stanner <pstanner@redhat.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Philipp Stanner
-	 <phasta@kernel.org>
-Cc: Jonathan Corbet <corbet@lwn.net>, Jens Axboe <axboe@kernel.dk>, Bjorn
- Helgaas <bhelgaas@google.com>, Mark Brown <broonie@kernel.org>, David
- Lechner <dlechner@baylibre.com>, Damien Le Moal <dlemoal@kernel.org>, Yang
- Yingliang <yangyingliang@huawei.com>, Zijun Hu <quic_zijuhu@quicinc.com>,
- Hannes Reinecke <hare@suse.de>, Al Viro <viro@zeniv.linux.org.uk>, Li Zetao
- <lizetao1@huawei.com>,  Anuj Gupta <anuj20.g@samsung.com>,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-block@vger.kernel.org, linux-pci@vger.kernel.org
-Date: Wed, 02 Apr 2025 09:58:24 +0200
-In-Reply-To: <Z-U5vIbVDZLe9QnM@smile.fi.intel.com>
-References: <20250327110707.20025-2-phasta@kernel.org>
-	 <Z-U5vIbVDZLe9QnM@smile.fi.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+        d=1e100.net; s=20230601; t=1743580727; x=1744185527;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=/qzqugcqTgi9VPjAotGENv6vPtewRXyYrP/8HKRxPHM=;
+        b=U3xc2Xyj31RjYeAzlA8CwuHW4lX/UO59SwQ8KBvlT1ph6WBQdRbqQX/CGPi5H0vu8S
+         yWPJhiweuOqBLQb5UfX1Vhpffo8EI5ghrfN1yaaTyWNISEffxjvRHekGuWXa3OvbiMw4
+         Zqtt0t1GtV4Rx/00+sMuMYhLxdILvyjx9axAh2/x+U3PTW6MyEVJAyqPltZZKrGBED+z
+         2VX8hmzWTinM6J0lJ7u88GgIEHc1PqtRy3x7YnnGGTTJkIxF3f8ihqlg1IY3YgQSA6az
+         0mBlNRuKFlfTETFF20ZlYhTCVUeeFSoHmvL1K/8de6TTTo7p8UPkl1k2MrZkfOLXeXcR
+         rmSg==
+X-Forwarded-Encrypted: i=1; AJvYcCU46Tei2+7itDLz0oea5ygtBXb8QFE8aYejbhu2A3UY3rsPgEnCOP/tuviFwwG2kYubChO9x/SIGbgGdqM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywju2C+gDCc1IxkD1M+2oNax0vJo8NWyJk8nxQPBqCglNmrJyt4
+	skk+FnBjuZqiEnf1ety86Z1AgUKMCj5kTGIBzmp5a00dJyZO5wmj6wERJqHGkrqTq2gt3jO101Y
+	wKagfeYiI3+LInG6AJUpjoH4KCbFvWO9j3rbTHxm4c5riWzLwShgc0QydkF9tgBEmVVzVvA==
+X-Gm-Gg: ASbGncsbB7nIqkmg0tbT591GpCmBazfpFjfFbCu8/+MC/oJwAhf7xsP+GOfwZ06+/Xb
+	xDYac/oc2wcA3YVmRmbwLxOHqmLJ4AknIKzwRsHvOm8Hmu1reaTl3ymp09ZVVnxypZFD6PiDuyr
+	ZVzctLj5zvEV+y9D2adqeLXiltLRhi9+fcywf4GtS8Y865L8fZaUTmZ8n4Eh2sV0HTBlaLb+bQt
+	t9cMlMLBcr+AKLyj4J4+ow81R9tJV+NJDCsbDClW9i/aGm7763Lp+i5Vq9VMsCOPULTUgKXJeEr
+	d5rjh0hMqfuvWXzpnS8MH1faEcyhE7SsMhXKkSS3yeH+bpXUPNnLOW/I7FQiztH9mFUnzxtbdRe
+	zy8NtxOQmSquaHlaIJSFr/b2ev3kQXktZLPHBug7V
+X-Received: by 2002:a05:6000:4210:b0:391:481a:5e75 with SMTP id ffacd0b85a97d-39c29752ecbmr989769f8f.22.1743580727435;
+        Wed, 02 Apr 2025 00:58:47 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEoWuvsfy5xF6bkdlVGypDlh3ubwbzhQVFsDkTtwPKuyMVXi0AWgYf/0f/qDjf7zhTdPGJ7hw==
+X-Received: by 2002:a05:6000:4210:b0:391:481a:5e75 with SMTP id ffacd0b85a97d-39c29752ecbmr989745f8f.22.1743580726988;
+        Wed, 02 Apr 2025 00:58:46 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c70f:cd00:4066:4674:d08:9535? (p200300cbc70fcd00406646740d089535.dip0.t-ipconnect.de. [2003:cb:c70f:cd00:4066:4674:d08:9535])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b79e141sm16270730f8f.77.2025.04.02.00.58.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Apr 2025 00:58:46 -0700 (PDT)
+Message-ID: <1789e1cf-ab35-4730-8c75-8ea037e590f6@redhat.com>
+Date: Wed, 2 Apr 2025 09:58:45 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] DAX: warn when kmem regions are truncated for memory
+ block alignment.
+To: Gregory Price <gourry@gourry.net>, linux-cxl@vger.kernel.org
+Cc: nvdimm@lists.linux.dev, linux-kernel@vger.kernel.org,
+ kernel-team@meta.com, dan.j.williams@intel.com, vishal.l.verma@intel.com,
+ dave.jiang@intel.com
+References: <20250402015920.819077-1-gourry@gourry.net>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250402015920.819077-1-gourry@gourry.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, 2025-03-27 at 13:42 +0200, Andy Shevchenko wrote:
-> On Thu, Mar 27, 2025 at 12:07:06PM +0100, Philipp Stanner wrote:
-> > The last remaining user of pcim_iounmap_regions() is mtip32 (in
-> > Linus's
-> > current master)
-> >=20
-> > So we could finally remove this deprecated API. I suggest that this
-> > gets
-> > merged through the PCI tree.
->=20
-> Good god! One API less, +1 to support this move.
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
->=20
-> > (I also suggest we watch with an eagle's
-> > eyes for folks who want to re-add calls to that function before the
-> > next
-> > merge window opens).
->=20
-> Instead of this I suggest that PCI can take this before merge window
-> finishes
-> and cooks the (second) PR with it. In such a case we wouldn't need to
-> care,
-> the developers will got broken builds.
->=20
+On 02.04.25 03:59, Gregory Price wrote:
+> Device capacity intended for use as system ram should be aligned to the
+> archite-defined memory block size or that capacity will be silently
+> truncated and capacity stranded.
+> 
+> As hotplug dax memory becomes more prevelant, the memory block size
+> alignment becomes more important for platform and device vendors to
+> pay attention to - so this truncation should not be silent.
+> 
+> This issue is particularly relevant for CXL Dynamic Capacity devices,
+> whose capacity may arrive in spec-aligned but block-misaligned chunks.
+> 
+> Suggested-by: David Hildenbrand <david@redhat.com>
+> Suggested-by: Dan Williams <dan.j.williams@intel.com>
+> Signed-off-by: Gregory Price <gourry@gourry.net>
+> ---
+>   drivers/dax/kmem.c | 10 +++++++++-
+>   1 file changed, 9 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/dax/kmem.c b/drivers/dax/kmem.c
+> index e97d47f42ee2..32fe3215e11e 100644
+> --- a/drivers/dax/kmem.c
+> +++ b/drivers/dax/kmem.c
+> @@ -13,6 +13,7 @@
+>   #include <linux/mman.h>
+>   #include <linux/memory-tiers.h>
+>   #include <linux/memory_hotplug.h>
+> +#include <linux/string_helpers.h>
+>   #include "dax-private.h"
+>   #include "bus.h"
+>   
+> @@ -68,7 +69,7 @@ static void kmem_put_memory_types(void)
+>   static int dev_dax_kmem_probe(struct dev_dax *dev_dax)
+>   {
+>   	struct device *dev = &dev_dax->dev;
+> -	unsigned long total_len = 0;
+> +	unsigned long total_len = 0, orig_len = 0;
+>   	struct dax_kmem_data *data;
+>   	struct memory_dev_type *mtype;
+>   	int i, rc, mapped = 0;
+> @@ -97,6 +98,7 @@ static int dev_dax_kmem_probe(struct dev_dax *dev_dax)
+>   	for (i = 0; i < dev_dax->nr_range; i++) {
+>   		struct range range;
+>   
+> +		orig_len += range_len(&dev_dax->ranges[i].range);
+>   		rc = dax_kmem_range(dev_dax, i, &range);
+>   		if (rc) {
+>   			dev_info(dev, "mapping%d: %#llx-%#llx too small after alignment\n",
+> @@ -109,6 +111,12 @@ static int dev_dax_kmem_probe(struct dev_dax *dev_dax)
+>   	if (!total_len) {
+>   		dev_warn(dev, "rejecting DAX region without any memory after alignment\n");
+>   		return -EINVAL;
+> +	} else if (total_len != orig_len) {
+> +		char buf[16];
+> +
+> +		string_get_size((orig_len - total_len), 1, STRING_UNITS_2,
+> +				buf, sizeof(buf));
+> +		dev_warn(dev, "DAX region truncated by %s due to alignment\n", buf);
 
-Normally Bjorn / PCI lets changes settle on a branch for >1 week before
-throwing them at mainline =E2=80=93 but if we ask him very very nicely, may=
-be
-he would make an exception for this special case? :)
+Acked-by: David Hildenbrand <david@redhat.com>
 
-P.
+-- 
+Cheers,
+
+David / dhildenb
 
