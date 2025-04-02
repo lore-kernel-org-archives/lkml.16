@@ -1,108 +1,108 @@
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8479E13AA27
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 05:30:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
+Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C38AC10E9;
+	Wed,  2 Apr 2025 05:32:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743571819; cv=none; b=NpfI9aRiaOqS65JE+svGWMfBFYEYtR2BvCm23jXvXcCWnA41HISNICST76X+Z/DDCPQVFzdGseZzMAi7NvfsZMtN7Huwqha6HnHuUqIyHfvhi4ifsB6Jv+9O8SjGftDnTudIx9ldawTwWRSOfED1INZ8Iel0LEc7rmeMeHpikUI=
+	t=1743571933; cv=none; b=q1tqoWIrpANVCT75EIMiHHxH64/NToyzrO+rCxUUQ2R0zWPmGlKQbPd40ON4ogw6Z2lgOhUGGdIwHVcR1o5DW3AnJu9A7sC5n+KqPBn6KIE9uMLJ/v0nzIAwt82Lwnp9LeyoA3LiSbB02fTRwFkmBheqWmGzsNFSOH5P4rq1NH8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743571819; c=relaxed/simple;
-	bh=JwpKu/+tGG2LlLB7gE/cIZ2fMysXP9H0X8/B1275Z2k=;
-	h=Message-ID:Date:Content-Type:MIME-Version:From:To:Cc:Subject; b=XtRKE+qW13oViOOkv0XjekzYi6IRNrIwMcKpmBZ2glEoXqV16vc9pD7zUtQHIW1BIPipqqVGxP04txACTcSwfJOQ/axbsabY3mTY/Y0QYmlB2TlE5H7980y96wlA5+4/3sGN6zMySIHW88Bd6FME1ym3SrM5RfLoI/HulQs4qyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S0ioUDuy; arc=none smtp.client-ip=209.85.222.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S0ioUDuy"
-Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-7c58974ed57so662393685a.2
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 22:30:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743571816; x=1744176616; darn=vger.kernel.org;
-        h=subject:cc:to:from:mime-version:date:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=idNiOgMZsEH2VTfUxWSO5JKrc2BwA/5DisQk46kD/dU=;
-        b=S0ioUDuyqjitEYVxKW52mQ427Mn0qEJkUkeYyZCvTkA/BIE/likiWMzsCSNr0G1EgI
-         ku/aPACIAPwpQlR7krjP4RbCzLgUs9AofCwTIQeK9PbmElDc7OVyLkvp7n45r+b2GSd7
-         MLkJsRQmjivjIypE6C+FJljiPdcvdc1CAvc8hRdfADmhZWKkBIhydt2w0VnaG/hfzAoJ
-         cSKTPUKzh3LggPQ0WAjIz81mjjtjq/dQeLN2eEKARXepYoeQxT+b+D4PCzB1bK4wfewX
-         A0dATmyi6RBUUvQfLzcbHK7LykSGjmN+KF/aJwrqK0iB8ZvT2WmfhjM9SJpNqa5AWVsJ
-         WTbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743571816; x=1744176616;
-        h=subject:cc:to:from:mime-version:date:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=idNiOgMZsEH2VTfUxWSO5JKrc2BwA/5DisQk46kD/dU=;
-        b=oXXCmSBfjOM3W1YWFOF5E3jDk6FP+5RQKl92tkNV/nACpU04fRvNd6S1yuiZLYG3Ss
-         0dUIzKbftAYOaVngaAKbzJOzqX1fSsm7Vg47KekF/tH1b9CsmpSurydllDzFARfNVWdZ
-         5fvV/x5BKfnjTQ5hJx82gxXO6dESOsmHPaChx0FMNWnD06784oDxJk42mtfrviiQryP/
-         H/iLwYdMTJrFybdITzp+BJqsqYd0hCYwlL3Na11bwnc3WV6QypFEn783pb9zpdH7upDz
-         iPci/DhVRdowKBUSA7OryMziU0+pJgSb9UeMDBaT91XtTvikelqYljVMuBHlNwMHmcE8
-         SRSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWXn2y5aeEL7KG9ayrtI5+lTuNb8z6RBCLNjbeFNA8fhrwTT939yxFyUPYv4ASGEQWwzsCGiAX1ySmsotQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxFielk7HCpatNU/p26qJ9geG8oV499YRkG1pnzECqSMv/BdOd3
-	yqXwjBLaA4lg6Vs+N6d+Hw0exQefDwdpU0W8kwti89m63ILzwaztbm8qH4YWs1A=
-X-Gm-Gg: ASbGncuYoiFVnOC08XM4lsmnddciswZ3RXi+mPgzOu0Gy0iOtMwZ0jnfQKRIbpA7MlT
-	gvsDSgflL/XVw547JjbC13AOsdHKjqBYopj5iCVni1hdzCvHnjAC6dZiBtXnBStOCPHDomWK5mj
-	DZA0TZCtA88F0HeCwB0T123jgk7M6t3ISCsCdLtalaciYgM2VPx2vInvGmNYkhQb2zYDYNPer4D
-	wqWZOxfeFDMTy1R7tLEVz2L3g9JdGJbcze8ARbKxUVBA+K2SCZU5yFU9Jd00le1ihny9r8rEROI
-	4H2IN5AEizF4kiR9CZXFj0NT0h47cd+YtVdklUwfxktHjg==
-X-Google-Smtp-Source: AGHT+IE4I0NZwNVd4uEbHMV8JQvvGeLpr9v5J/IbgjMUWDtDQ/W/PsoyRIIZ7Psng/SgNcvpsazy3Q==
-X-Received: by 2002:a05:620a:2726:b0:7c5:3ca5:58f5 with SMTP id af79cd13be357-7c75ba71f5fmr767116185a.3.1743571816129;
-        Tue, 01 Apr 2025 22:30:16 -0700 (PDT)
-Received: from [127.0.1.1] ([73.123.232.110])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c5f7764e60sm750934985a.86.2025.04.01.22.30.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Apr 2025 22:30:15 -0700 (PDT)
-Message-ID: <67eccb67.050a0220.dd435.b100@mx.google.com>
-Date: Tue, 01 Apr 2025 22:30:15 -0700 (PDT)
-Content-Type: multipart/mixed; boundary="===============2708167609590510838=="
+	s=arc-20240116; t=1743571933; c=relaxed/simple;
+	bh=MQT3+UmWpcqnB98CQgT2riHqMD8EpeHRAZeoOZrRWFo=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=l4AG+LORNP/DttcyYfNcQgDXcWL1nUk8DFMgpq1sK9EApGRvcdflhcb/c1smmRYZaSI7NEATadclWmWOPAB8ITaaLyDR2FKp9GogQMyxrksm9bc+5hst17M91d41S1bJsMF6gl1YpJ0/Em/5AlmXHrnKGf43nobnjWuglkgC7AQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-669ff7000002311f-59-67eccbd394c9
+Message-ID: <62664200-c087-48ed-960f-264f340cf7af@sk.com>
+Date: Wed, 2 Apr 2025 14:32:03 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: gshahrouzi@gmail.com
-To: linux-staging@lists.linux.dev
-Cc: gregkh@linuxfoundation.org, philipp.g.hortmann@gmail.com,
- eamanu@riseup.net, linux-kernel@vger.kernel.org,
- kernel-mentees@lists.linux.dev, skhan@linuxfoundation.org,
- gshahrouzi@gmail.com
-Subject: [PATCH] staging: rtl8723bs: Remove trailing whitespace
-
---===============2708167609590510838==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Cc: kernel_team@skhynix.com, Rakie Kim <rakie.kim@sk.com>,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+ joshua.hahnjy@gmail.com, dan.j.williams@intel.com,
+ ying.huang@linux.alibaba.com, david@redhat.com, Jonathan.Cameron@huawei.com,
+ yunjeong.mun@sk.com
+Subject: Re: [PATCH v5 3/3] mm/mempolicy: Support memory hotplug in weighted
+ interleave
+Content-Language: ko
+To: Gregory Price <gourry@gourry.net>,
+ Andrew Morton <akpm@linux-foundation.org>
+References: <20250402014906.1086-1-rakie.kim@sk.com>
+ <20250402014906.1086-4-rakie.kim@sk.com>
+ <5462e706-5b29-495d-9af9-1945e8a5445e@sk.com>
+ <20250401213439.4e7a124d94aa42603d31d45e@linux-foundation.org>
+ <Z-zIBM4zQ0LbGPYZ@gourry-fedora-PF4VCD3F>
+From: Honggyu Kim <honggyu.kim@sk.com>
+In-Reply-To: <Z-zIBM4zQ0LbGPYZ@gourry-fedora-PF4VCD3F>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprMIsWRmVeSWpSXmKPExsXC9ZZnke6V02/SDW42sVjMWb+GzWL61AuM
+	Fl/X/2K2+Hn3OLvFqoXX2CyOb53HbnF+1ikWi8u75rBZ3Fvzn9Vi9ZoMBy6PnbPusnt0t11m
+	92g58pbVY/Gel0wemz5NYvc4MeM3i8fOh5Ye7/ddZfP4vEkugDOKyyYlNSezLLVI3y6BK+P+
+	5fUsBZ85K9ZNe87WwHiXvYuRk0NCwETi1uY2Rhi7+9tfsDivgKXEnEurmUFsFgEViZkbr7BB
+	xAUlTs58wgJiiwrIS9y/NQOonouDWWAxk8SztefAmoUFIiU2TLrOBGIzC4hIzO5sAxskIhAk
+	8fnpWiaQBiGBP4wSE/ovgm1mE1CTuPJyElgDp4CZRHPzf2aIZjOJrq1djBC2vMT2t3OYQZol
+	BJrZJWa8vw51tqTEwRU3WCYwCs5CcuEsJMtnIZk1C8msBYwsqxiFMvPKchMzc0z0MirzMiv0
+	kvNzNzECo2pZ7Z/oHYyfLgQfYhTgYFTi4W3gfZMuxJpYVlyZe4hRgoNZSYQ34uvLdCHelMTK
+	qtSi/Pii0pzU4kOM0hwsSuK8Rt/KU4QE0hNLUrNTUwtSi2CyTBycUg2MvFpvnsjt6m+wYDr/
+	Kjn9zU6VW/wLN78MOf18+yIzsX2Cz46ke/+w5amekvxw4s7YP7NtUgJS/i689XLWhdNOgit3
+	fbXdz3OAheGq7UGlm/ujRQK+Mrgc5BVU+qS46XLnj9shJzKWXfN7t7h0/TI93uu10YLGj7aJ
+	qrrJvV3wp+b72tSu/Z+uH1NiKc5INNRiLipOBADUiO7npgIAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupgkeLIzCtJLcpLzFFi42LhmqGlp3v59Jt0g4/LLCzmrF/DZjF96gVG
+	i6/rfzFb/Lx7nN1i1cJrbBbHt85jtzg89ySrxflZp1gsLu+aw2Zxb81/VotD156zWqxek2Hx
+	e9sKNgdej52z7rJ7dLddZvdoOfKW1WPxnpdMHps+TWL3ODHjN4vHzoeWHu/3XWXz+Hbbw2Px
+	iw9MHp83yQVwR3HZpKTmZJalFunbJXBl3L+8nqXgM2fFumnP2RoY77J3MXJySAiYSHR/+wtm
+	8wpYSsy5tJoZxGYRUJGYufEKG0RcUOLkzCcsILaogLzE/VszgOq5OJgFFjNJPFt7DqxZWCBS
+	YsOk60wgNrOAiMTszjawQSICQRKfn65lAmkQEvjDKDGh/yIjSIJNQE3iystJYA2cAmYSzc3/
+	mSGazSS6tnYxQtjyEtvfzmGewMg3C8khs5DsmIWkZRaSlgWMLKsYRTLzynITM3NM9YqzMyrz
+	Miv0kvNzNzEC42dZ7Z+JOxi/XHY/xCjAwajEwyvQ8yZdiDWxrLgy9xCjBAezkghvxNeX6UK8
+	KYmVValF+fFFpTmpxYcYpTlYlMR5vcJTE4QE0hNLUrNTUwtSi2CyTBycUg2MU7ZKeHEUntyU
+	qP49+derTmVVYR/36v0XPZ9ujH/y8UjA9d+3k++4Sm4903TlxddwoT0lv/3uqZaJMX8Ka7jW
+	nXRWKV9a9Poslm3OBTPP/9n57SXz80+8DffLJgQ/Ld73ZcI35s0zihpVDvwuqF8ja3HUd+9E
+	12Ube+v+RJjvL1v9TMfYpeDJbCWW4oxEQy3mouJEALRH1nWbAgAA
+X-CFilter-Loop: Reflected
 
->From 3ffe31ac00fdfb94ffc521d8ab0fa60196e69c7a Mon Sep 17 00:00:00 2001
-From: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-Date: Wed, 2 Apr 2025 01:22:59 -0400
-Subject: [PATCH] staging: rtl8723bs: Remove trailing whitespace
+Hi Gregory,
 
-Remove trailing whitespace to comply with kernel coding style.
+On 4/2/2025 2:15 PM, Gregory Price wrote:
+> On Tue, Apr 01, 2025 at 09:34:39PM -0700, Andrew Morton wrote:
+>>> I'm not sure if this is going to the final version but could you please add this
+>>> patch to stable with Cc: <stable@vger.kernel.org>?
+>>> We might need to bring the whole series to avoid conflicts to stable tree.
+>>
+>> This is all rather confused.
+>>
+>> Do we need to backport all three patches into -stable?  If so, all three
+>> should have Fixes:.  Preferably they all have the same Fixes: so we
+>> aren't backporting untested patch combinations.
+>>
+> 
+> I'd just as soon leave the entire thing out of stable backports.
+> 
+> Only the first patch actually fixes a bug (very small memory leak
+> during system tear down, so it's not even a critical bug). This could
+> be added to stable.
+> 
+> Patches 2 and 3 aren't fixes, they're desired behavioral changes
+> to the feature. An interface being confusing doesn't mean it's broken.
 
-Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
----
- drivers/staging/rtl8723bs/include/hal_pwr_seq.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/staging/rtl8723bs/include/hal_pwr_seq.h b/drivers/staging/rtl8723bs/include/hal_pwr_seq.h
-index b93d74a5b9a5..48bf7f66a06e 100644
---- a/drivers/staging/rtl8723bs/include/hal_pwr_seq.h
-+++ b/drivers/staging/rtl8723bs/include/hal_pwr_seq.h
-@@ -209,7 +209,7 @@
- #define RTL8723B_TRANS_END															\
- 	/* format */																\
- 	/* { offset, cut_msk, fab_msk|interface_msk, base|cmd, msk, value }, comments here*/								\
--	{0xFFFF, PWR_CUT_ALL_MSK, PWR_FAB_ALL_MSK, PWR_INTF_ALL_MSK, 0, PWR_CMD_END, 0, 0}, 
-+	{0xFFFF, PWR_CUT_ALL_MSK, PWR_FAB_ALL_MSK, PWR_INTF_ALL_MSK, 0, PWR_CMD_END, 0, 0},
- 
- 
- extern struct wlan_pwr_cfg rtl8723B_power_on_flow[RTL8723B_TRANS_CARDEMU_TO_ACT_STEPS+RTL8723B_TRANS_END_STEPS];
--- 
-2.43.0
+I think those are fixes but I also agree that this is behavioral changes as
+well.  So I'm fine leaving these out of stable backports.
 
 
---===============2708167609590510838==--
+Hi Andrew,
+
+I won't ask changes so please keep the current status as is.  Sorry for making
+confusion.
+
+Thanks,
+Honggyu
+
+> 
+> ~Gregory
+
