@@ -1,76 +1,39 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE472233152;
-	Wed,  2 Apr 2025 07:42:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70DCA1F5FD
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 07:43:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743579765; cv=none; b=k1NxpZvlVmEGJT3FH9Zj658vXLCxe7ENMQ3gZX/6tcH81vMHFGFjn7FvgLmBBg4IzuIj52S7lDy6I0DIe+X6R3qy+dSxpjH8vQygDzEymElyKYztvdMm4WWHj9JryJ6Q1A+MjRqNay/tORJNB1fTOUfWAIX4Bz2Mvt09XiqCe0k=
+	t=1743579810; cv=none; b=o1t0jB0h7B2Pxa7amBtHYalQJSwQh7pcDDZYvicm5CKhUUROHgjfhWEmX1n29SzuW4XV7aZfehfqrLkeKQ8Yv4bu0h49y6S2/apv2OMYTihHR5LLHD8Ib9jbQkunLhuEwRfJ83Mgh9YkroDdeV/jS+Bs6lcVUWm8rKZgkgS/ZtY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743579765; c=relaxed/simple;
-	bh=cwAu0TWkyiB0nK/W2YP6Fcl7ajWNrQiJK7yNUIwH54U=;
+	s=arc-20240116; t=1743579810; c=relaxed/simple;
+	bh=IiOhZa2RGc/ELLYpE693fE82sDNLJ1amZ3QlPXMsue8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LR7QMT4tDYinIwFqMwuGq6t1tChcSA/2zwHK/qRKuKOZPCRKGX63kwRgfKEEkMO8RRwV45CFdjChtfVb8wJpu2Foq783+Wgp8EkUAAktr1ep+AoWEgPmuNJtRx2b7HUhGTgz1pUfxJwJkQmzKqVR4k+VV/XwueArexvXLegCDlA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=UbgPGhXY; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=ujJZowEHXP9jYlqhpNdz2htr9e+nE4HD3oR7KjXtP5nk5LNz104Hr7SXxoPTwfiv8PHRUWY23zCWywfWWto1A5yuqf2mZutHlmGJGuyFhZHIsmpvbGrsSoW0RQhImEVQZYe1X0d+A+48UOGzJbIO4qKEehH3NmBKFq2gNYyEVeg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Atneoo/5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UbgPGhXY"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=uwSUjXhnpPVALtfn6H/0Ef+Hu/5PlKbVNs0zSo5MJgI=; b=UbgPGhXYcAW7Ecq25uYBAa81JB
-	YejYfLTgWYPRfCDH2TETkjUUcMvwoBl851u/SlwbYNyM+yFIyh1vaxj3MsprEfF1FK26n5zhpDDHd
-	0RYGNmo+SUBtmS4ReHBp3tzeFKK0va69/75S9gYtFYaalaORY5Hw/o8guEL/XrRBXYj8AEbukW2Md
-	LGryWJxcZ1Mzcn3518Ul0AimhzGe/TBpi+hQ2z98XSyzcgUfOVyd2mTc3oBmaQQd81PMoT1r62W1T
-	CuUM7rCOZBxmcgETDmqQzITfoRPWmm3VOCvo6KMNAoKgoYfkVSHQQuqvcIPvXatsDpO3fjOfsgBNA
-	eJdGDGWg==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1tzsjs-00000006zGs-2jZ9;
-	Wed, 02 Apr 2025 07:42:21 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id C032230049D; Wed,  2 Apr 2025 09:42:19 +0200 (CEST)
-Date: Wed, 2 Apr 2025 09:42:19 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Alessandro Carminati <acarmina@redhat.com>,
-	linux-kselftest@vger.kernel.org, David Airlie <airlied@gmail.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	=?iso-8859-1?Q?Ma=EDra?= Canal <mcanal@igalia.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Kees Cook <keescook@chromium.org>,
-	Daniel Diaz <daniel.diaz@linaro.org>,
-	David Gow <davidgow@google.com>,
-	Arthur Grillo <arthurgrillo@riseup.net>,
-	Brendan Higgins <brendan.higgins@linux.dev>,
-	Naresh Kamboju <naresh.kamboju@linaro.org>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Maxime Ripard <mripard@kernel.org>,
-	Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Alessandro Carminati <alessandro.carminati@gmail.com>,
-	Jani Nikula <jani.nikula@intel.com>,
-	dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com,
-	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-	linux-sh@vger.kernel.org, loongarch@lists.linux.dev, x86@kernel.org,
-	Linux Kernel Functional Testing <lkft@linaro.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>
-Subject: Re: [PATCH v4 06/14] x86: Add support for suppressing warning
- backtraces
-Message-ID: <20250402074219.GP5880@noisy.programming.kicks-ass.net>
-References: <20250313114329.284104-1-acarmina@redhat.com>
- <20250313114329.284104-7-acarmina@redhat.com>
- <20250401170829.GO5880@noisy.programming.kicks-ass.net>
- <ddc7939f-fb98-43af-aed1-0bc0594ecc41@roeck-us.net>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Atneoo/5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2D9DC4CEDD;
+	Wed,  2 Apr 2025 07:43:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1743579810;
+	bh=IiOhZa2RGc/ELLYpE693fE82sDNLJ1amZ3QlPXMsue8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Atneoo/5ap3o0C3HV0oQytsTPtd0CWYrFgCTd9vQQuPtvdgtTQq4zYa9PLWvBGyCq
+	 ZWpZB9NMUOc35Qz/TTn0e5y4drqVwWWNmziVLqX2NEXZme+om8x6awUxu5SzwWI/My
+	 +UsJtqlTgdQKAGs18HAIy3BLHftDb69OhJlu17wU=
+Date: Wed, 2 Apr 2025 08:41:59 +0100
+From: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+To: Siddh Raman Pant <siddh.raman.pant@oracle.com>
+Cc: "cve@kernel.org" <cve@kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] published: CVE-2025-0927: Fix up JSON schema.
+Message-ID: <2025040221-curtain-walnut-2540@gregkh>
+References: <2025033057-CVE-2025-0927-1436@gregkh>
+ <80cd3f46783cd5702b3abd40c11f3f08f64717ec.1743576485.git.siddh.raman.pant@oracle.com>
+ <2025040248-hut-sevenfold-82c3@gregkh>
+ <4d521717c418c873225d220ca65fd6740c496c8f.camel@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,24 +42,41 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ddc7939f-fb98-43af-aed1-0bc0594ecc41@roeck-us.net>
+In-Reply-To: <4d521717c418c873225d220ca65fd6740c496c8f.camel@oracle.com>
 
-On Tue, Apr 01, 2025 at 10:53:46AM -0700, Guenter Roeck wrote:
-
-> > > @@ -92,7 +102,8 @@ do {								\
-> > >   do {								\
-> > >   	__auto_type __flags = BUGFLAG_WARNING|(flags);		\
-> > >   	instrumentation_begin();				\
-> > > -	_BUG_FLAGS(ASM_UD2, __flags, ANNOTATE_REACHABLE(1b));	\
-> > > +	if (!KUNIT_IS_SUPPRESSED_WARNING(__func__))			\
-> > > +		_BUG_FLAGS(ASM_UD2, __flags, ANNOTATE_REACHABLE(1b));	\
-> > >   	instrumentation_end();					\
-> > >   } while (0)
+On Wed, Apr 02, 2025 at 07:16:33AM +0000, Siddh Raman Pant wrote:
+> On Wed, Apr 02 2025 at 12:36:20 +0530, Greg Kroah-Hartman wrote:
+> > On Wed, Apr 02, 2025 at 12:21:52PM +0530, Siddh Raman Pant wrote:
+> > > It doesn't match the schema of other CVEs as it was not generated
+> > > by bippy.
 > > 
-> > NAK, this grows the BUG site for now appreciable reason.
+> > It was created by vulnogram for obvious reasons :(
+> > 
+> > Also, please cc: cve@kernel.org for stuff like this.
 > 
-> Only if CONFIG_KUNIT_SUPPRESS_BACKTRACE is enabled. Why does that warrant a NACK ?
+> Okay, noted.
+> 
+> > 
+> > > Fixed by hand / manually.
+> > > 
+> > > programFiles were added from the info in mbox.
+> > 
+> > So this did two different things?  Why does the layout matter here?
+> > Eventually it will be created properly when someone gets the fix
+> > upstream, I'm waiting for Canonical to do it as they are responsible for
+> > fixing this mess at the moment, but don't seem to be responding to my
+> > emails anymore...
+> 
+> Apparently, they fixed it in February and backported it:
+> 
+> https://git.launchpad.net/~ubuntu-kernel/ubuntu/+source/linux/+git/noble/commit/?h=Ubuntu-6.8.0-54.56&id=09ad3b1e99befe042ae5219e4020eb54411d98ef
+> 
+> https://ubuntu.com/security/CVE-2025-0927
 
-And isn't that something distros will want enabled? All I'm seeing is
-bloating every single UD2 site, and no real justification. As Josh said,
-this should be done on the other side of the trap if at all.
+Yes, they did that without telling anyone, and assigned a CVE for it
+which they are not allowed to do at all, which is why I had to
+hand-create this one when it was transferred to kernel.org.  They should
+be working to get that change upstream properly, but again, they seem to
+be ignoring us totally at the moment :(
+
+greg k-h
