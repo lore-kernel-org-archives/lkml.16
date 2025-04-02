@@ -1,340 +1,130 @@
-Received: from mx10.gouders.net (mx10.gouders.net [202.61.206.94])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E0231F4C8B;
-	Wed,  2 Apr 2025 21:37:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.61.206.94
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04F451F4CAE;
+	Wed,  2 Apr 2025 21:37:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743629856; cv=none; b=Xnsx4A6w96lfhDNGAS5BKzYkZkJ1E3p6DKgjRzp6WS8UDXulTjkKIxzYfjWgaNjNr7cX+ZKDjc9tVASBis9O6z7r7gdPEEIq8mbuatq+ci402MeHZI97rmTPMfGTIwdP9RjIERbb5pr/Cz/OH7espNmof3G6X7WZ+GIHtRk/16c=
+	t=1743629858; cv=none; b=cQyvdK/VWGeveeoE4DD2jwsuXWwVrnE8gNWr0ywdIN0X9Ui8ihzFLTnk/PeDFKP7BQ1oEpvQX38YdhJSt+NfWffYG5q3tAmB2zbsFYMoHeqb2aq3k/zXwtBhqtxlspGNFN6fMx3STJGuETp0JVLsvPXJkudpUtlLXcn2+5Ni1nA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743629856; c=relaxed/simple;
-	bh=MTCvIyCFkt1ZD21YOEh+cRwWjkmrYfLmaqh3tH2V79o=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=p1+np9NCzhzOi4HHmYBLGDV6FSPgqvSbEafJGNMyjgvpK+UKOr/CBUt7glsGtPdFV1o2q6PMCTdvxHYTz6nK1hYvz0NJu82zyP4If4pKGH2B7D0EgRAso6fE3zIGqqROXVEdNt5Wr59rQYrn9ePWejhbMqut9TNIDhrFZ1rav8E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gouders.net; spf=pass smtp.mailfrom=gouders.net; dkim=pass (1024-bit key) header.d=gouders.net header.i=@gouders.net header.b=YVPNn/Ew; arc=none smtp.client-ip=202.61.206.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gouders.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gouders.net
+	s=arc-20240116; t=1743629858; c=relaxed/simple;
+	bh=mtnLhAvunP0n3HodqhA9V08lj5tMi88b4TwFRp404lw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jLO5BsGFxrJ4++OE0y+jFs8kkejrsePtAyX8gi9kQ3Jbjdgp17lLXXuGPyJQZFnnaqP+wHSZqcufdWVPjtgj27Y+fvdySxGnbk7/Vtsc8b8R4FZPwP4Pgj2+rps0xYy3E4QpasXDhHTEGzR/fYqVbTzd5bIQfH/xGE6PtQKaOvI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nJFOLt0V; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=gouders.net header.i=@gouders.net header.b="YVPNn/Ew"
-Received: from localhost (ip-109-42-179-236.web.vodafone.de [109.42.179.236])
-	(authenticated bits=0)
-	by mx10.gouders.net (8.17.1.9/8.17.1.9) with ESMTPSA id 532LOmnX030757
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-	Wed, 2 Apr 2025 23:24:48 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gouders.net; s=gnet;
-	t=1743629089; bh=MTCvIyCFkt1ZD21YOEh+cRwWjkmrYfLmaqh3tH2V79o=;
-	h=From:To:Cc:Subject:Date;
-	b=YVPNn/Ew1rG+/9VZhvku7uYbJxYlAb5mPU7q0ei0HZRISi7ixTSZELj0X2/IR8MZi
-	 K0U/cgMlxvO7948C9tSDK3r5KIHGq955Rs62W+reESSYGa1sxEEGeJJYDMw6mWgxTx
-	 CtRndyqnCvgXGw/SY+2rROqYupgj2Q0TGa1c/eo8=
-From: Dirk Gouders <dirk@gouders.net>
-To: Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>
-Cc: Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
-        Dirk Gouders <dirk@gouders.net>, LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org
-Subject: [PATCH 1/3] perf bench sched pipe: add -p/--nprocs to run more than 2 workers
-Date: Wed,  2 Apr 2025 23:15:26 +0200
-Message-ID: <20250402212402.15658-2-dirk@gouders.net>
-X-Mailer: git-send-email 2.45.3
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nJFOLt0V"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743629858; x=1775165858;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=mtnLhAvunP0n3HodqhA9V08lj5tMi88b4TwFRp404lw=;
+  b=nJFOLt0VuQM2vVqowadu1sCOkZwj6PpwsY1nA4kwq2nh47bplY/nByuo
+   w3wsYj6EOMJ4vEPtUISZBRCOXh+H2JI5+hLTGIx/H0Oa3+XPR8oNcuna/
+   S+b7bw8hVSURNaJwoHlB7r2fjRZL98TAclybCRQFfZ3oMjaJopiilaG60
+   tNfBHlven79rXYDUaZDLt6hkhfPPv/LDS9aJYrYKJwWBUT/HZkj2aWvIJ
+   0jhXte8ydPNKY1KrIlcuTro4h/PEhey9VxFzYMYtwOfDQyQj9eqUUBE04
+   3Vf1Y8dMHzEjguxnNXc9gMalCzjwz/O7Fa4AQo8MaEhJuCfpRXf7hk8Mg
+   A==;
+X-CSE-ConnectionGUID: c6jikhPQSPOw4bm7uxXyaw==
+X-CSE-MsgGUID: 8bvkixRLRWmGHQEJ9F0HhQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11392"; a="55212840"
+X-IronPort-AV: E=Sophos;i="6.15,183,1739865600"; 
+   d="scan'208";a="55212840"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 14:37:37 -0700
+X-CSE-ConnectionGUID: WC9oK6hdTe2zuwQdamU5tg==
+X-CSE-MsgGUID: 7yKzRoXySry1ctdq0HqdvA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,183,1739865600"; 
+   d="scan'208";a="127727297"
+Received: from johunt-mobl9.ger.corp.intel.com (HELO [10.124.222.41]) ([10.124.222.41])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 14:37:33 -0700
+Message-ID: <a287cfc1-da35-4cd4-9278-4920bb579b5c@intel.com>
+Date: Wed, 2 Apr 2025 14:37:32 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 3/8] x86/fpu/xstate: Add CET supervisor xfeature
+ support
+To: "Chang S. Bae" <chang.seok.bae@intel.com>, Chao Gao <chao.gao@intel.com>,
+ x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+ tglx@linutronix.de, seanjc@google.com, pbonzini@redhat.com
+Cc: peterz@infradead.org, rick.p.edgecombe@intel.com,
+ weijiang.yang@intel.com, john.allen@amd.com, bp@alien8.de,
+ xin3.li@intel.com, Maxim Levitsky <mlevitsk@redhat.com>,
+ Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, Mitchell Levy <levymitchell0@gmail.com>,
+ Samuel Holland <samuel.holland@sifive.com>,
+ Aruna Ramakrishna <aruna.ramakrishna@oracle.com>,
+ Vignesh Balasubramanian <vigbalas@amd.com>
+References: <20250318153316.1970147-1-chao.gao@intel.com>
+ <20250318153316.1970147-4-chao.gao@intel.com>
+ <d472f88d-96b3-4a57-a34f-2af6da0e2cc6@intel.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <d472f88d-96b3-4a57-a34f-2af6da0e2cc6@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Partly, sched-pipe.c looks as if it was designed to run more than two
-workers, but that possibility is still missing.
+On 4/1/25 10:15, Chang S. Bae wrote:
+> In V3, you moved this patch further back to position 8 out of 10. Now,
+> in this version, you've placed it at position 3 out of 8.
+> 
+> This raises the question of whether you've fully internalized his advice.
 
-Introduce a new option -p/--nprocs to specify the number of
-processes/threads to run the worker function.
-The worker function remains to simulate a ring structure, analogous
-to lmbench.
+Uh huh.
 
-Signed-off-by: Dirk Gouders <dirk@gouders.net>
----
- tools/perf/Documentation/perf-bench.txt |  13 ++
- tools/perf/bench/sched-pipe.c           | 152 ++++++++++++++++--------
- 2 files changed, 113 insertions(+), 52 deletions(-)
-
-diff --git a/tools/perf/Documentation/perf-bench.txt b/tools/perf/Documentation/perf-bench.txt
-index 8331bd28b10e..5c8dc99e1c57 100644
---- a/tools/perf/Documentation/perf-bench.txt
-+++ b/tools/perf/Documentation/perf-bench.txt
-@@ -118,6 +118,16 @@ options (20 sender and receiver processes per group)
- Suite for pipe() system call.
- Based on pipe-test-1m.c by Ingo Molnar.
- 
-+Create a number of processes (default is 2) and a pipe for each of
-+them.  Then, send tokens using the pipe ends for a specified number of
-+loops (default 1,000,000).
-+
-+By default, theses Processes send tokens of length 4 (an int) by
-+simulating a ring structure which means each process has two peers.
-+It sends the tokens to one of its peers and receives them from its other
-+peer (in case of 2 processes those peers are identical and just the other
-+process).
-+
- Options of *pipe*
- ^^^^^^^^^^^^^^^^^
- -l::
-@@ -131,6 +141,9 @@ This is useful to check cgroup context switching overhead.
- Note that perf doesn't create nor delete the cgroups, so users should
- make sure that the cgroups exist and are accessible before use.
- 
-+-p::
-+--nprocs=::
-+Number of processes to use for sending tokens along the pipes.
- 
- Example of *pipe*
- ^^^^^^^^^^^^^^^^^
-diff --git a/tools/perf/bench/sched-pipe.c b/tools/perf/bench/sched-pipe.c
-index 70139036d68f..89a54d33eee0 100644
---- a/tools/perf/bench/sched-pipe.c
-+++ b/tools/perf/bench/sched-pipe.c
-@@ -32,7 +32,9 @@
- #include <pthread.h>
- 
- struct thread_data {
--	int			nr;
-+	unsigned int		nr;		/* index of this worker */
-+	struct thread_data	*td;		/* The data for all workers (including us).*/
-+	pid_t			pid;
- 	int			pipe_read;
- 	int			pipe_write;
- 	struct epoll_event      epoll_ev;
-@@ -42,14 +44,15 @@ struct thread_data {
- };
- 
- #define LOOPS_DEFAULT 1000000
--static	int			loops = LOOPS_DEFAULT;
-+static	unsigned int		loops = LOOPS_DEFAULT;
- 
- /* Use processes by default: */
- static bool			threaded;
-+static unsigned int		nr_threads = 2;
- 
- static bool			nonblocking;
--static char			*cgrp_names[2];
--static struct cgroup		*cgrps[2];
-+static char			**cgrp_names;
-+static struct cgroup		**cgrps;
- 
- static int parse_two_cgroups(const struct option *opt __maybe_unused,
- 			     const char *str, int unset __maybe_unused)
-@@ -86,7 +89,8 @@ static int parse_two_cgroups(const struct option *opt __maybe_unused,
- 
- static const struct option options[] = {
- 	OPT_BOOLEAN('n', "nonblocking",	&nonblocking,	"Use non-blocking operations"),
--	OPT_INTEGER('l', "loop",	&loops,		"Specify number of loops"),
-+	OPT_UINTEGER('p', "nprocs",	&nr_threads,    "Number of processes"),
-+	OPT_UINTEGER('l', "loop",	&loops,		"Specify number of loops"),
- 	OPT_BOOLEAN('T', "threaded",	&threaded,	"Specify threads/process based task setup"),
- 	OPT_CALLBACK('G', "cgroups", NULL, "SEND,RECV",
- 		     "Put sender and receivers in given cgroups",
-@@ -185,81 +189,117 @@ static inline int read_pipe(struct thread_data *td)
- 	return ret;
- }
- 
-+/*
-+ * Worker thread for nodes forming a ring, receiving tokens from the left
-+ * neighbor and sending them to the right one.
-+ */
- static void *worker_thread(void *__tdata)
- {
--	struct thread_data *td = __tdata;
--	int i, ret, m = 0;
-+	struct thread_data *this_thread = __tdata;
-+	struct thread_data *threads_all = this_thread->td;
-+
-+	unsigned int right;
-+	unsigned int i;
-+	int ret, m = 0;
-+	int write_fd;
- 
--	ret = enter_cgroup(td->nr);
-+	ret = enter_cgroup(this_thread->nr);
- 	if (ret < 0) {
--		td->cgroup_failed = true;
-+		this_thread->cgroup_failed = true;
- 		return NULL;
- 	}
- 
- 	if (nonblocking) {
--		td->epoll_ev.events = EPOLLIN;
--		td->epoll_fd = epoll_create(1);
--		BUG_ON(td->epoll_fd < 0);
--		BUG_ON(epoll_ctl(td->epoll_fd, EPOLL_CTL_ADD, td->pipe_read, &td->epoll_ev) < 0);
-+		this_thread->epoll_ev.events = EPOLLIN;
-+		this_thread->epoll_fd = epoll_create(1);
-+		BUG_ON(this_thread->epoll_fd < 0);
-+		BUG_ON(epoll_ctl(this_thread->epoll_fd, EPOLL_CTL_ADD, this_thread->pipe_read, &this_thread->epoll_ev) < 0);
- 	}
- 
-+	right = (this_thread->nr + 1) % nr_threads;
-+	write_fd = threads_all[right].pipe_write;
-+
- 	for (i = 0; i < loops; i++) {
--		ret = write(td->pipe_write, &m, sizeof(int));
-+		ret = write(write_fd, &m, sizeof(int));
- 		BUG_ON(ret != sizeof(int));
--		ret = read_pipe(td);
-+		ret = read_pipe(this_thread);
- 		BUG_ON(ret != sizeof(int));
- 	}
- 
- 	return NULL;
- }
- 
-+static int create_pipes(struct thread_data *tdata)
-+{
-+	int __maybe_unused flags = 0;
-+	int pipe_fds[2];
-+	unsigned int i;
-+
-+	if (nonblocking)
-+		flags |= O_NONBLOCK;
-+
-+	for (i = 0; i < nr_threads; i++) {
-+		BUG_ON(pipe2(pipe_fds, flags));
-+
-+		tdata[i].pipe_read = pipe_fds[0];
-+		tdata[i].pipe_write = pipe_fds[1];
-+	}
-+	return 0;
-+}
-+
-+static struct thread_data *create_thread_data(void)
-+{
-+	unsigned int i;
-+	struct thread_data *threads;
-+
-+	threads = malloc(nr_threads * sizeof(struct thread_data));
-+
-+	if (!threads) {
-+		fprintf(stderr, "Allocation of thread data memory failed.");
-+		exit(1);
-+	}
-+
-+	for (i = 0; i < nr_threads; i++) {
-+		threads[i].td = threads;
-+		threads[i].nr = i;
-+	}
-+
-+	create_pipes(threads);
-+
-+	return threads;
-+}
-+
- int bench_sched_pipe(int argc, const char **argv)
- {
--	struct thread_data threads[2] = {};
-+	struct thread_data *threads;
- 	struct thread_data *td;
--	int pipe_1[2], pipe_2[2];
-+
- 	struct timeval start, stop, diff;
- 	unsigned long long result_usec = 0;
--	int nr_threads = 2;
--	int t;
-+	unsigned int t;
- 
- 	/*
- 	 * why does "ret" exist?
- 	 * discarding returned value of read(), write()
- 	 * causes error in building environment for perf
- 	 */
--	int __maybe_unused ret, wait_stat, flags = 0;
--	pid_t pid, retpid __maybe_unused;
-+	int __maybe_unused ret, wait_stat;
-+	pid_t retpid __maybe_unused;
- 
- 	argc = parse_options(argc, argv, options, bench_sched_pipe_usage, 0);
- 
--	if (nonblocking)
--		flags |= O_NONBLOCK;
-+	threads = create_thread_data();
- 
--	BUG_ON(pipe2(pipe_1, flags));
--	BUG_ON(pipe2(pipe_2, flags));
-+	cgrp_names = calloc(nr_threads, sizeof(char *));
-+	cgrps = calloc(nr_threads, sizeof(struct cgroup *));
- 
- 	gettimeofday(&start, NULL);
- 
--	for (t = 0; t < nr_threads; t++) {
--		td = threads + t;
--
--		td->nr = t;
--
--		if (t == 0) {
--			td->pipe_read = pipe_1[0];
--			td->pipe_write = pipe_2[1];
--		} else {
--			td->pipe_write = pipe_1[1];
--			td->pipe_read = pipe_2[0];
--		}
--	}
--
- 	if (threaded) {
- 		for (t = 0; t < nr_threads; t++) {
- 			td = threads + t;
- 
--			ret = pthread_create(&td->pthread, NULL, worker_thread, td);
-+			ret = pthread_create(&td->pthread, NULL, worker_thread, threads + t);
- 			BUG_ON(ret);
- 		}
- 
-@@ -270,18 +310,26 @@ int bench_sched_pipe(int argc, const char **argv)
- 			BUG_ON(ret);
- 		}
- 	} else {
--		pid = fork();
--		assert(pid >= 0);
--
--		if (!pid) {
--			worker_thread(threads + 0);
--			exit(0);
--		} else {
--			worker_thread(threads + 1);
-+		/*
-+		 * Start at '1', because the parent eventually also becomes a
-+		 * worker.
-+		 */
-+		for (t = 1; t < nr_threads; t++) {
-+			threads[t].pid = fork();
-+			assert(threads[t].pid >= 0);
-+
-+			if (!threads[t].pid) {
-+				worker_thread(threads + t);
-+				exit(0);
-+			}
- 		}
- 
--		retpid = waitpid(pid, &wait_stat, 0);
--		assert((retpid == pid) && WIFEXITED(wait_stat));
-+		worker_thread(threads);
-+
-+		for (t = 1; t < nr_threads; t++) {
-+			retpid = waitpid(threads[t].pid, &wait_stat, 0);
-+			assert((retpid == threads[t].pid) && WIFEXITED(wait_stat));
-+		}
- 	}
- 
- 	gettimeofday(&stop, NULL);
-@@ -295,8 +343,8 @@ int bench_sched_pipe(int argc, const char **argv)
- 
- 	switch (bench_format) {
- 	case BENCH_FORMAT_DEFAULT:
--		printf("# Executed %d pipe operations between two %s\n\n",
--			loops, threaded ? "threads" : "processes");
-+		printf("# Executed %d pipe operations between %u %s\n\n", loops,
-+		       nr_threads, threaded ? "threads" : "processes");
- 
- 		result_usec = diff.tv_sec * USEC_PER_SEC;
- 		result_usec += diff.tv_usec;
--- 
-2.45.3
-
+1. Refactor/fix existing code
+2. Add new infrastructure
+3. Add new feature
