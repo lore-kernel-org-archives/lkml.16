@@ -1,73 +1,51 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C25AE214A8D;
-	Wed,  2 Apr 2025 11:21:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BE602356DF;
+	Wed,  2 Apr 2025 11:24:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743592894; cv=none; b=n6gS9T9t6rRxYhFlNWFpgt5pNfVDuqT/TYheZR5gwEX8rvR4RaeMWoKxLbmT4ytaD0+kuBdQxAQR7j6nNyevadaX1ghrpRsxEMlsraqk9LzmkfkvZ7LDFNyFaly5dBBx4g2/Yk7rUKWk9C/4igrVH25iDg1DtaG9eZViJH+TyRE=
+	t=1743593064; cv=none; b=EOLDby3hKHOF0wR41oZO1GrSbOSRkEmlCupj3dY41b+pdm6MaPHqqbvWlsnPpTTD91PZGSVDnueM6BgCL4QyLEDCcIo4DbTrsdDeoie2GVzJBk8xFia+5Wz9ioK8g2/p1dnx79+r10tzedxXjC4Xmnbxsa6wn/mqBpVK+Wtj254=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743592894; c=relaxed/simple;
-	bh=uw7YZxMSPgwgS0/w0ttLN3VboYk2jJM2s2mmZ6bJuKc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=HHg/bt3fOZl3AHgQeIYbCDRAjKFtGRUJTyFbXypW/Pra/zItkg3wXspjCe2oPecMx0MZ22tTcVN2vnnoDXW1p+2Aw0bE/SyKxywLmdv9UyG/SBFJTuu9Fv8QcDIMRFyyF+8kjf/KWY29t1Vi09Q+0kSnJwTpLAI4QE8yn9+g0TU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GSs2B4Gh; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743593064; c=relaxed/simple;
+	bh=73p/wTwfev2tcjoMCquBB87TbDvWfM+Y56RbnEPz3qQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=kYJT1b1uEvDDbTw3ZNf6zd/NFHVGi0Ix/WepWpErHMAWZVo9ZbQ+3DvzXq6yfSXAykaMjFaErNLqbouw8ULuJfcX5w+5KDBEw5010aZs0sBBuDfRAUUVDNuKCeXDzxXGNy+i+9za+slYaUH8xQPy/swUmwQcXnbdlIUF7WPgwU8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=desiato.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=LolnzeCT; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=desiato.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GSs2B4Gh"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-39149bccb69so5796315f8f.2;
-        Wed, 02 Apr 2025 04:21:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743592891; x=1744197691; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=FPzQ7GZzqncp+Ak5yeGvcwYVrSmu2MRVGApRTYglHVU=;
-        b=GSs2B4GhKWmYhjIIz+kZltKAujsWx2Wm5u2kirV1YCZaxxJPTuGJtkq3b5iloWYWAV
-         SH/5tWZLbpnpV8d9r9dxDNw1eSCrJ9p7dI+RPd0i7ut6E0zRtBXEpVeVsf21ZWHD/rOv
-         S9SaebMA0cM5IQLDhBmvhm4jthOehgb48R0HHNlYE8lJq7U0XosQjdTDKDr7Kzl733D/
-         8YJucKR273vePevqNdzf5Fa3i5NIIElLJt/mvG4+Z20vmk7mvbtkt7BzA0OA6/TpWqkQ
-         +E/CTYCVNMOWZzPQW03eOlMQAlOj3ymUbWJLWQxe41ifiwaPpoTBTCSoTYdZPUh+WPg0
-         kEAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743592891; x=1744197691;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=FPzQ7GZzqncp+Ak5yeGvcwYVrSmu2MRVGApRTYglHVU=;
-        b=oz7nQJKypz5pAHuFrQWXeTQVOmScDm8BjoKU12d5+NwHVQLAUv1ibrVfQ+AkpHTj93
-         EHlo+v9K2JeVmXvDmICDo2ZY5ONvhddCFbHFnz2xVLeNrdZpKDiL1bWr3M5l+UaLpBUW
-         GVmjpGRekvqzNdU2Gqk22k8D3IgmwDJDx9RMRp6sMBwEmfcGVJxD0UWLe2LH7XuatSYU
-         VtPD//NMv+ugHFDs9480X42lid9tekKVsfCqMxSHqzeUig+tFYbfHTX2KbfI8IZaJ9Fl
-         rs2nJPd9cSN7S+UHSDjZMmiQTI4YV7nneU9NCmVo6CRyPwL+G7J/wM5eNtLH1n05sNib
-         8nqg==
-X-Forwarded-Encrypted: i=1; AJvYcCU7SoRK6+Je6prHf1d4AlwCGhppEPA3mjkynkKyX+DGejALdgKO06/naqdC57yh+sTt+AqDxFr+FFq10g==@vger.kernel.org, AJvYcCUNDh96GTPtMmc/EkP8nHz9DGkhR1zvP2YPj2ZsHOkhWxGp0INAIG1pes2Qy0FdZlKVnYwGg9unJrNU0QFr@vger.kernel.org
-X-Gm-Message-State: AOJu0YzsWR6ygH+W11/MopxNQmXutr8VPK6rVlNS+ZY9bKxnTO7B563k
-	QugugFJDfuTgH5n/icobh0JUxS8/9tgfPYhBbya+C1Fm1kVkB75C
-X-Gm-Gg: ASbGnctgY5nv/Q3/bETjFjZhSl4g4k3Zy6mEuV2Ui+YxPMub+ku5YgiGoMH/8w5q3lX
-	hCHpf3Pu+LOLHmEfFLFoi1AoNYy4tEo+/PUqdzDOrQ0+y8JMwdGQzPWyl0yZxPJrcIZqMXb1Wc2
-	m8qzCjhrNDWr4MVKmUzYfm2F1Sln6jF+6xQyaxc9dbcJZOWRv0fk7XmYpuEzP/gKWBY+6pIeqj5
-	yrW/6GDzdvn1AvFHVZZ5no2XeZi2DaPKWLKfpZxbbREULe8a5SAxVMnlQcdwfujUjrSkSD/iDSB
-	kUiv6sL8I93+G25RbjSRhU7GWSCHQbWevgDCcksatPPhxg==
-X-Google-Smtp-Source: AGHT+IFtLceKzRoy2pv/fkhslNAg68rmy5sUu4mawdA0Qc9efkyj/+Q7apuHGHok1OVMvfuuCqRKrw==
-X-Received: by 2002:a5d:6dad:0:b0:38d:e304:7470 with SMTP id ffacd0b85a97d-39c297675dbmr1560992f8f.25.1743592890830;
-        Wed, 02 Apr 2025 04:21:30 -0700 (PDT)
-Received: from localhost ([194.120.133.58])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-43eb6138f3esm17406925e9.36.2025.04.02.04.21.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Apr 2025 04:21:30 -0700 (PDT)
-From: Colin Ian King <colin.i.king@gmail.com>
-To: Even Xu <even.xu@intel.com>,
-	Xinpeng Sun <xinpeng.sun@intel.com>,
-	Jiri Kosina <jikos@kernel.org>,
-	Benjamin Tissoires <bentiss@kernel.org>,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-	Mark Pearson <mpearson-lenovo@squebb.ca>,
-	linux-input@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] HID: intel-thc-hid: intel-thc: make read-only arrays static const
-Date: Wed,  2 Apr 2025 12:21:29 +0100
-Message-ID: <20250402112129.410320-1-colin.i.king@gmail.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LolnzeCT"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Sender:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=2ERaQu54KYGFkx50hM6qIWLoD04DS7K1oXQsT484Kg0=; b=LolnzeCTTeM7ec0l28Q3rfhxRc
+	iCKGv/i+XBsNAxqmDx86wyV0psEAbbqIPuNMfGKNaSACTnXGSnZKAX0ZIlSmk/Pc0AW7T6qqVQkAh
+	RRjWE7DD++pv2etRGYliyrA/zMMiasCTHyijJKpAAZTZ9fpBfNVxPQbAV1aUUQFjDpsryef6jQ8O7
+	FFYnl1qnjDNQHrckq0xtBmqic7D9E+zPxRsJYTPZvKSP6Gkf+TOs/hwr8/FGTOniiQ6L5ca+CBUKu
+	uvfptV6CT6SFwDERxIj9mv7bURM3pHANo5F1qbS1If/iVn+FbZHi/XdRJGHY9RwY3Z3lLV/ms/Cpu
+	xo9ukqtQ==;
+Received: from [2001:8b0:10b:1::ebe] (helo=i7.infradead.org)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1tzwCb-000000070eL-2dlx;
+	Wed, 02 Apr 2025 11:24:13 +0000
+Received: from dwoodhou by i7.infradead.org with local (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1tzwCa-00000008sIA-1CWq;
+	Wed, 02 Apr 2025 12:24:12 +0100
+From: David Woodhouse <dwmw2@infradead.org>
+To: virtio-comment@lists.linux.dev
+Cc: mst@redhat.com,
+	hch@infradead.org,
+	Claire Chang <tientzu@chromium.org>,
+	linux-devicetree <devicetree@vger.kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	=?UTF-8?q?J=C3=B6rg=20Roedel?= <joro@8bytes.org>,
+	iommu@lists.linux-foundation.org,
+	linux-kernel@vger.kernel.org,
+	graf@amazon.de
+Subject: [RFC PATCH 0/3] Add Software IOTLB bounce buffer support
+Date: Wed,  2 Apr 2025 12:04:44 +0100
+Message-ID: <20250402112410.2086892-1-dwmw2@infradead.org>
 X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -75,39 +53,60 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Sender: David Woodhouse <dwmw2@infradead.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
 
-Don't populate the read-only arrays frequency and frequency_div on
-the stack at run time, instead make them static const.
+With confidential computing, the hypervisor/VMM component which implements
+a virtio device model may not have access to arbitrary guest system memory.
 
-Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
----
- drivers/hid/intel-thc-hid/intel-thc/intel-thc-dev.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+There are various ways to deal with this restriction. Enlightenments in
+the core guest operating system can ensure that DMA buffers are shared,
+or unencrypted, depending on the type of protection. But that does need
+the OS core to support such new mechanisms.
 
-diff --git a/drivers/hid/intel-thc-hid/intel-thc/intel-thc-dev.c b/drivers/hid/intel-thc-hid/intel-thc/intel-thc-dev.c
-index 4fc78b5a04b5..c105df7f6c87 100644
---- a/drivers/hid/intel-thc-hid/intel-thc/intel-thc-dev.c
-+++ b/drivers/hid/intel-thc-hid/intel-thc/intel-thc-dev.c
-@@ -1121,7 +1121,7 @@ EXPORT_SYMBOL_NS_GPL(thc_port_select, "INTEL_THC");
- 
- static u8 thc_get_spi_freq_div_val(struct thc_device *dev, u32 spi_freq_val)
- {
--	int frequency[] = {
-+	static const int frequency[] = {
- 		THC_SPI_FREQUENCY_7M,
- 		THC_SPI_FREQUENCY_15M,
- 		THC_SPI_FREQUENCY_17M,
-@@ -1130,7 +1130,7 @@ static u8 thc_get_spi_freq_div_val(struct thc_device *dev, u32 spi_freq_val)
- 		THC_SPI_FREQUENCY_31M,
- 		THC_SPI_FREQUENCY_41M,
- 	};
--	u8 frequency_div[] = {
-+	static const u8 frequency_div[] = {
- 		THC_SPI_FRQ_DIV_2,
- 		THC_SPI_FRQ_DIV_1,
- 		THC_SPI_FRQ_DIV_7,
--- 
-2.49.0
+Some IOMMU hardware now supports two-stage operation, where true device
+DMA is translated first through guest IOVA→GPA page tables, and then
+through GPA→HPA page tables provided by the hypervisor. Such a setup
+works well enough for physical devices, but hardware designers working
+on such IOMMUs usually 'forget' to expose details like IOTLB flushes to
+the hypervisor, making it impractical even for 'trusted' software like
+pKVM to snoop on the stage 1 page tables and permit VMM access where
+such access would be permitted to a real device.
 
+Implementing a virtio-iommu is another possibility, although such would
+often have to be implemented in the trusted part of the hypervisor (e.g.
+pKVM) *and* it would often have to live alongside the true 2-stage IOMMU
+passed through for physical devices, with corresponding indications to
+the guest about which device lives behind which IOMMU.
+
+The simplest option by far is just to allow for a virtio device which
+conceptually doesn't do DMA at all. It just has an "on-device" memory
+region and does all its data transfer to/from that region.
+
+In fact, this should basically already work for virtio-mmio devices in
+the device-tree, as DT bindings for a `restricted-dma-pool` were defined
+in 2021 which apply to *all* devices:
+https://lore.kernel.org/all/20210624155526.2775863-1-tientzu@chromium.org/
+
+The `restricted-dma-pool` DT binding doesn't specifically address virtio,
+and didn't make any attempt at handling backward compatibility. If an
+operating system recognises the `restricted-dma-pool` and does the right
+thing, yay! Else, it would just continue to use system DMA addresses as
+before, which may or may not work.
+
+This series adds a VIRTIO_F_SWIOTLB feature to negotiate the use of a 
+buffer region which is provided by the transport, and documents the
+`restricted-dma-pool` option on the virtio-mmio transport. Then adds
+a similar capability via VIRTIO_PCI_CAP_SWIOTLB for the PCI transport.
+
+David Woodhouse (3):
+      content: Add VIRTIO_F_SWIOTLB to negotiate use of SWIOTLB bounce buffers
+      transport-mmio: Document restricted-dma-pool SWIOTLB bounce buffer
+      transport-pci: Add SWIOTLB bounce buffer capability
+
+ content.tex        | 12 ++++++++++++
+ transport-mmio.tex | 33 +++++++++++++++++++++++++++++++++
+ transport-pci.tex  | 33 +++++++++++++++++++++++++++++++++
+ 3 files changed, 78 insertions(+)
