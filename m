@@ -1,126 +1,87 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EA8D73477
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 23:16:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AF811F2377
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 23:16:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743635764; cv=none; b=dVsrMuoFZieUFWj2IRjc0Wv/Zg46/MYaY+xPQOkBocOB50lL+13rrsehqr4iEPM26hRqbZVeZifZ+wtiB3GSWdaP/4lMFKu4ceAKNIDfr2LKBODqtxyLisy168PZruN1uaxS86FE+bDUGFd3xjPIn6NkIv8dKJjMxXn+7FQoaoU=
+	t=1743635787; cv=none; b=gZmDnq6toWclxWgYAndNm9/ivVmdTt1vv2dqfcLW84mjZnUSTbHjldHLHr9cMYltuLHdsFjo9rl/oO/3m7kpnPzDaihd/rupaHtAaVA0mVYnr2RyKxgisNNgtJsQgmjOR+vT6MUcF/XZWBdQNRt7GR0oKiS/7LUNLC9SRXkB0U0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743635764; c=relaxed/simple;
-	bh=D6WHhLKBp86v20UDdy7+nirAk/plKGSxIhni9ahn7EU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=i3sJmiMnanvfNy6/1etiWA5l4Y/FYMxoGPuYY0jqKZs4o/Vh5/IoATYYIVWUhS2yh7Ky2HFEqi4SCtfpanxDyFtJaLkVUQfDzq9+Q/R4GPEvYkwTqWDysMJcCjG3j8hjlx7yHEm2oFAqRCG/2Qcy9vZrbm/hWzQ6jfUJvY6JriA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KCXGj0/B; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743635787; c=relaxed/simple;
+	bh=gYdyl/xs9NszjtT8OQAgXzR0bFHdlz0ehH5k6XmLY04=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=I2/cKTq0G1wdFMuLcs5LcyEt20dUIAv0+8gOMtWkoxnA6/NW2FNDHH/bGZHdc1MMUIPM0vwuZCesDbyW4fH46KG6vvC/eyiALZho26ogGf6yEfbJQUS6RAH4tK/ABfbuGUkiQhEqbrStOqK1yC3Gv4FQWWdtimvteud7jjy5wxo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NgphsMYl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KCXGj0/B"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5eb5ecf3217so612091a12.3
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 16:16:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743635761; x=1744240561; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=D6WHhLKBp86v20UDdy7+nirAk/plKGSxIhni9ahn7EU=;
-        b=KCXGj0/Bh8vvo9jrSJp3WNk0NWtC+j2nEc7y/2zOivEDKgSJPkI6PnQTiUgCJq3FXh
-         4WUWq80Kbkbj/0MzWadRwvapewbOCKVnsUMKR8UvYKvipjHIJM31lM+33orZnPqq/NW9
-         4gxV/uXyX9SGkhhS61tinr4TFethwWj4LFlFEYAl04GF+WnWrlZhyv26Iu3cyY690za9
-         h57Bqfcz3JOU0TPtujwn62idGaRjWOjmyLQw23SpjwdJnmyConehfOh2fnV0KbBj4glq
-         +dPBfx1hF4URdoiQQIEonhX5c/X/3B9m/SkdGxhdybltvMfMXqhtjuzKPkn91CZK+sEq
-         ecCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743635761; x=1744240561;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=D6WHhLKBp86v20UDdy7+nirAk/plKGSxIhni9ahn7EU=;
-        b=GWWSSnAy4ZTsTyf+jcWy9c+9jDBw24By6BaM5OnFSr5O1jA9fGLiuZO2Yke7m2gScv
-         m1PKGgoxq4sD3KQd/D+/eNip7feZEnUfTnAbCxAtmClFXq27mjCvPq8JH0BOD1z+s9HC
-         XL9WZtS0QyhkKOppZIGEW6snWrAj4rK4uiU2oP/JhiwTCC/bYCrXokQmul6/BrzcP1Tu
-         6oj3MyfGK14BU1wtQTDV9knbNg2sPIQvBTfdjN3ogDPvQXJhI2fDEhIhL73+GkqNErJ8
-         HbRl1ER/nkqlt030Fjn+oAOp8vjq2eyghrNm88LlMBlBQgs/r6f0TQ/bj1Ou44/lF7Be
-         eA0w==
-X-Forwarded-Encrypted: i=1; AJvYcCV7QHPPOru72NJbTz6pGvo+qxP61NjgA1sWRiArsJ20GCBln1d783lZ/0HznrTahSAX6gLZT0VWvK5V+JE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxLsJF3OecNYC5fFvXkNyew3WzQPFGC3tBKcBBAGk/9++YtU+bH
-	I4i3BYjn3X8oEdJB25BEiDlSDQjl2nvIbozHPDNHM7LkR978pRO6xGhAiqy2Q5Vwwux0EegFMhd
-	+6w2yTCn80fEY9mUpHTdA5blENIU=
-X-Gm-Gg: ASbGncubhHSq1wrPLjUtJk1n3ylbKRItPiHhpdmMioTHvProE5J00N50oaMGqrklZPr
-	zEiaaXXsUPBXJMPe37PxUvPzfZmtSNOM0B/xNQR2x0Dz8lTYAV0WOWIMdWpFA4yk+Mzoo8dAW1C
-	SnxTWhSCcH+nqGn31Srfy7gzE7
-X-Google-Smtp-Source: AGHT+IEARbTxgh5FA+rBMEx/4Klvx4Zxwn9QSAdfavUMJLPO/02lrpmhOhisS1MMIbcCqSC+m/BlRL203UUTe7Qt9c0=
-X-Received: by 2002:a05:6402:4305:b0:5e5:e78a:c4d7 with SMTP id
- 4fb4d7f45d1cf-5f0871ccefbmr265710a12.12.1743635760501; Wed, 02 Apr 2025
- 16:16:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NgphsMYl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B875C4CEDD;
+	Wed,  2 Apr 2025 23:16:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743635787;
+	bh=gYdyl/xs9NszjtT8OQAgXzR0bFHdlz0ehH5k6XmLY04=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NgphsMYlcU3zJqkYe8q0MT4PirpI2icfW8R9/HgqJWypfnhoiMVw9jHpk3p5mxk5A
+	 bbC8CC/rl6CBc/scGR3m3WoBwKScOJm8VMav0tTXImwzAWqBB9ic8vRRzwHuXd9jpU
+	 v4RVxuZ3RjN9CKosudcoyLL/Mk4ZGD/kKwx8lfK9WoC1uquDYpshaGTYGzHFyo8P6H
+	 6sc+89Cpb8iivDBZMw9Zdy89PIn2iwIYz6Np8axxOzJtMIYhXofbCe/t9KFR47pics
+	 BeYDyQOMKIF8aF9DZTg9S30gb8YeoM7pEj14NddEndT3tZBqbXBbf0isZIDXDvzHN0
+	 jwgklcXAgnpaA==
+Date: Thu, 3 Apr 2025 00:16:20 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Marc Zyngier <maz@kernel.org>, James Morse <james.morse@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
+	Oliver Upton <oliver.upton@linux.dev>
+Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+	linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+	Eric Auger <eauger@redhat.com>,
+	Wilco Dijkstra <wilco.dijkstra@arm.com>,
+	Eric Auger <eric.auger@redhat.com>,
+	Florian Weimer <fweimer@redhat.com>, Fuad Tabba <tabba@google.com>,
+	Jeremy Linton <jeremy.linton@arm.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	James Clark <james.clark@linaro.org>
+Subject: Re: [PATCH 00/10] KVM: arm64: Backport of SVE fixes to v5.15
+Message-ID: <1b4ce8d2-2e0e-49ef-ab91-4a831e22b8ed@sirena.org.uk>
+References: <20250402-stable-sve-5-15-v1-0-84d0e5ff1102@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <xmzxiwno5q3ordgia55wyqtjqbefxpami5wevwltcto52fehbv@ul44rsesp4kw> <20250402232917.6978ffa3@pumpkin>
-In-Reply-To: <20250402232917.6978ffa3@pumpkin>
-From: Mateusz Guzik <mjguzik@gmail.com>
-Date: Thu, 3 Apr 2025 01:15:48 +0200
-X-Gm-Features: AQ5f1JpMqkenAIEGOxzdCY120sRHOh6u3tt5gadZVW3gdAMGFIkiUFq_-P0r_jY
-Message-ID: <CAGudoHFRbAf=3xWTe_asYLb38D1qr59nCTYmJcGcdetiUgyHLA@mail.gmail.com>
-Subject: Re: [RFC PATCH] x86: prevent gcc from emitting rep movsq/stosq for
- inlined ops
-To: David Laight <david.laight.linux@gmail.com>
-Cc: torvalds@linux-foundation.org, mingo@redhat.com, x86@kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="S9KKK3S9kgEoh+0f"
+Content-Disposition: inline
+In-Reply-To: <20250402-stable-sve-5-15-v1-0-84d0e5ff1102@kernel.org>
+X-Cookie: To stay youthful, stay useful.
 
-On Thu, Apr 3, 2025 at 12:29=E2=80=AFAM David Laight
-<david.laight.linux@gmail.com> wrote:
->
-> On Wed, 2 Apr 2025 15:42:40 +0200
-> Mateusz Guzik <mjguzik@gmail.com> wrote:
->
-> > Not a real submission yet as I would like results from other people.
-> >
-> > tl;dr when benchmarking compilation of a hello-world program I'm gettin=
-g
-> > a 1.7% increase in throughput on Sapphire Rapids when convincing the
-> > compiler to only use regular stores for inlined memset and memcpy
-> >
-> > Note this uarch does have FSRM and still benefits from not using it for
-> > some cases.
-> >
-> > I am not in position to bench this on other CPUs, would be nice if
-> > someone did it on AMD.
->
-> I did some benchmarking of 'rep movsb' on a zen 5.
-> Test is: mfence; rdpmc; mfence; test_code; mfence; rdpmc; mfence.
-> For large copies you get 64 bytes/clock.
-> Short copies (less than 128 bytes) are usually very cheap - maybe 5 clock=
-s
-> But it then jumps to 38 clocks.
-> And the 'elephant in the room' is when (dest - src) % 4096 is between 1 a=
-nd 63.
-> In that case short copies jump to 55 clocks.
-> Otherwise alignment doesn't make much difference.
->
 
-I think this roughly follows the advice on how to do benchmarks, but
-at the same time I think it has too much potential to distort
-differences when it comes to these routines.
+--S9KKK3S9kgEoh+0f
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-The fence forces the CPU to get rid of the state accumulated prior and
-probably prevents it from speculatively messing with instructions
-after. But what if uarchs tolerate a mov loop better than rep mov? (up
-to a point of course)
+On Wed, Apr 02, 2025 at 11:59:32PM +0100, Mark Brown wrote:
+> This series backports some recent fixes for SVE/KVM interactions from
+> Mark Rutland to v5.15.
 
-Based on my tests with running the compiler, Sapphire Rapids does
-prefer the loop approach at least till 256 bytes, despite Fast Short
-REP MOV. This can be seen in sync_regs() for example.
+*sigh* Forgot Greg and the stable list here - will resend, sorry for the
+noise.
 
-If you are up to it, I would appreciate if you ran the actual bench as
-described in my opening mail. It is not hard to set up, but it does
-require rebuilding the kernel. Perhaps you can do it in a vm, it's not
-a scalability bench.
+--S9KKK3S9kgEoh+0f
+Content-Type: application/pgp-signature; name="signature.asc"
 
---=20
-Mateusz Guzik <mjguzik gmail.com>
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmftxUMACgkQJNaLcl1U
+h9DEHAf+JffhKVeSblMyoIP9HGnMagF8mZmvHmPVPJTR2HwxahEyIsFeBvCEMc08
+b4h5AANF8kjtAX/9YhBHwFmHQ3RpCcgVcJk/kPB6NcUTJ9hhtMluXBMp54Y59Fad
+oUtxQyjK9p1x3zKh+Ub+KU651q10D0oMOA9C1QJAmococbJEMp4ELnlECoKqDqyv
++I29xOo+X7XAuyO+z0kxxCuPxz78sEjVycHKUyLKRLjHiQHMS+3qeKvblvKkBxkW
+q/+vTWIPozAZHnPaTcFWRIqlGtGsvx2Z5Pchhlz114SZFYLLtoRi8mTf+R09nOWG
+aW4ZoQt8JmuviREoFTfYhC//tTtJ4A==
+=2GZQ
+-----END PGP SIGNATURE-----
+
+--S9KKK3S9kgEoh+0f--
