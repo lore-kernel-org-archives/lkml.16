@@ -1,96 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD9FC233158;
-	Wed,  2 Apr 2025 07:12:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F21051DE2B4
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 07:14:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743577976; cv=none; b=YXElkD50hHDLnaTFlULkD3JDxaEL8JisWczOIxkPXpRGer4KPkFw3QXn4zTTRp66GiA9cywKKiSq3tL9rO5i0qd56rx+l6e2l7TQLFTY6QBtThrxarzc5Z91GV/GkLMUe94K7AM43+/fby9pTV0uzKMAv9bw4wEZCstDM9nHEoQ=
+	t=1743578100; cv=none; b=Me93OtDIUBqteM00o7gyZac5a4Ka2bjjIv7TD66b/NT84jwmKiTQIv+F16+UGlS0QdzDhQ8dldhT180dRylmbqzYga/di+Kh5kCw2LcVUMwa5UM1UduPERlO/JYRBVx7aATopr3M6AkRaeJ2j2vvCZ0XwHUXDRHYXTln1djanVE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743577976; c=relaxed/simple;
-	bh=lAG+bncEH0vbkZKk8N7eZX+5HWev1dEYKoZ509gNiwg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nxkVbJiKnM/Z9/UDWMWxQtliFhArHLVx+wwoGjDbvOk/P2aHdwUjPhjiXMa7y3y9ReibWtTOgYwy4NGMotnl+KfGL8AC4AbC0r+cXyI3YRJ9PyzSTirSquj7K/p4lof6OG5kT/eF5dEvsmn4Rb+Q9xlWUwwGhmRazVbzDW5yqbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bSzWrfpE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743578100; c=relaxed/simple;
+	bh=FOtpYeBp4zVQl3ctHjTlko2k1XohN/LrcFybr1axKz4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AsB+zTWUJFuiUHs85lLMso9egOKhnifjOvZavUWH4KXt+1iqv+8XLpUksVEf/U/qc5OCSR0Xst7Q89wajl5jzSJPTDk0tdc7TwDxTzqzlOntmQjq/LE9Lf4dzUpW6J51hbMY536dM6+ntesXdH649PeA65FsJgRpGfY356jhLLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eQ2VJsyE; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bSzWrfpE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FC0FC4CEDD;
-	Wed,  2 Apr 2025 07:12:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743577976;
-	bh=lAG+bncEH0vbkZKk8N7eZX+5HWev1dEYKoZ509gNiwg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bSzWrfpEIuzeUZx64IXnJ+BXFlpcGzGYkxkuGmaoSa+89NIgenFh/nzkLVyZIXuy5
-	 9JnJ/7uShO+7f8Q/AEK00r14flarGeHwYkBaJujX4Ys6KA74n5TkOtg73kAZ5bR6Us
-	 7k1+v2yVE11j4UIODkPLA7xGmUAuU5kR6eebGkVJLgxc5Xb3Y9k1+n3hRYSWXc2lQs
-	 CXHLBgyGdwXifAThwrZdyBBlsc/KUnGZkAwXI3ZNdFP5cO0mfP34UxW7E45/r5U1al
-	 nW6kAnoOgVYixwuw3aFRHwj0/sBGd6Aij/m4mOX+acY5ekheJ4KQIeJtAahDQHw90C
-	 LVbzI7TgLxinQ==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1tzsHU-000000006ut-084m;
-	Wed, 02 Apr 2025 09:13:00 +0200
-Date: Wed, 2 Apr 2025 09:13:00 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Clayton Craft <clayton@craftyguy.net>
-Cc: Johan Hovold <johan+linaro@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] soc: qcom: pmic_glink_altmode: fix spurious DP hotplug
- events
-Message-ID: <Z-zjfLyRjPplXLHV@hovoldconsulting.com>
-References: <20250324132448.6134-1-johan+linaro@kernel.org>
- <dd1bc01c-75f4-4071-a2ac-534a12dd3029@craftyguy.net>
- <Z-JqCUu13US1E5wY@hovoldconsulting.com>
- <Z-QSg7LH8u7uAfLg@hovoldconsulting.com>
- <7e287401-98c4-413f-8108-134d5e43d279@craftyguy.net>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eQ2VJsyE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743578094;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=qh1ya57MIjo5Lkmn722x+JI5fDV/4skd8xfb1oy7zXs=;
+	b=eQ2VJsyEhmmqbjyJKvRKn7MXWDXPQrqFWH12HyyJ5roLbY3+PDxozHytyj9efK9ybjR2ae
+	C1BmHEjRnTn7/1e7DC4PvQZziuVp9zS2uv06YLbdcwd0r//I0cTVfyVQT6Ua7YVyFZrdC8
+	Ap0OgBBTIjcdTTtbCs6faAv0VhroUqc=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-328-XcjVldcLPfmmluMdhWpxZg-1; Wed,
+ 02 Apr 2025 03:14:49 -0400
+X-MC-Unique: XcjVldcLPfmmluMdhWpxZg-1
+X-Mimecast-MFC-AGG-ID: XcjVldcLPfmmluMdhWpxZg_1743578087
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 591C11955BC9;
+	Wed,  2 Apr 2025 07:14:47 +0000 (UTC)
+Received: from gmonaco-thinkpadt14gen3.rmtit.com (unknown [10.45.224.220])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 11FE3180174E;
+	Wed,  2 Apr 2025 07:14:43 +0000 (UTC)
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: linux-kernel@vger.kernel.org,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Gabriele Monaco <gmonaco@redhat.com>,
+	linux-trace-kernel@vger.kernel.org
+Cc: kernel test robot <lkp@intel.com>,
+	Julia Lawall <julia.lawall@inria.fr>
+Subject: [PATCH] rv: Fix missing unlock on double nested monitors return path
+Date: Wed,  2 Apr 2025 09:13:52 +0200
+Message-ID: <20250402071351.19864-2-gmonaco@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7e287401-98c4-413f-8108-134d5e43d279@craftyguy.net>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-On Tue, Apr 01, 2025 at 11:18:49AM -0700, Clayton Craft wrote:
-> On 3/26/25 07:43, Johan Hovold wrote:
-> > On Tue, Mar 25, 2025 at 09:32:10AM +0100, Johan Hovold wrote:
+RV doesn't support nested monitors having children monitors themselves
+and exits with the EINVAL code. However, it returns without unlocking
+the rv_interface_lock.
 
-> >> I didn't realise you were also using a display/dock. Bjorn mentioned
-> >> that he has noticed issues with one of his monitors (e.g. built-in hub
-> >> reenumerating repeatedly iirc) which may be related.
-> 
-> Sorry for the confusion, let me clarify:
-> 
-> The original issue I reported to you on IRC was *without* a 
-> dock/external display attached, only a PD adapter was attached. With 
-> your patch, I no longer see these drm hotplug events in this scenario.
-> 
-> After confirming that your patch resolved the spurious hotplug events 
-> when using a PD charger, I connected a dock+external display to see if 
-> the patch caused any regressions there for me. It was here that I 
-> noticed a periodic hotplug event firing 2 times every 30 seconds was 
-> still showing up. I don't know if this is expected or not, I've never 
-> noticed it before because I wasn't monitoring udev events.
+Unlock the lock before returning from the initialisation function.
 
-Got it, thanks for clarifying.
+Fixes: cb85c660fcd4 ("rv: Add option for nested monitors and include sched")
+Reported-by: kernel test robot <lkp@intel.com>
+Reported-by: Julia Lawall <julia.lawall@inria.fr>
+Closes: https://lore.kernel.org/r/202503310200.UBXGitB4-lkp@intel.com
+Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
+---
 
-Did you get a chance to try the patch enabling UCSI and USB-PD? That one
-may possibly help with the dock issue:
+This fix is not critical since currently no nested monitor registers
+nested monitors and doing so would require another review for inclusion
+in the kernel code.
 
-	https://lore.kernel.org/lkml/20250326124944.6338-1-johan+linaro@kernel.org/
+ kernel/trace/rv/rv.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-> >> Did it help with the display flickering too? Was that only on the
-> >> external display?
-> 
-> The flickering was only on the internal display, and your patch here 
-> seems to have resolved that.
+diff --git a/kernel/trace/rv/rv.c b/kernel/trace/rv/rv.c
+index 50344aa9f7f93..968c5c3b02464 100644
+--- a/kernel/trace/rv/rv.c
++++ b/kernel/trace/rv/rv.c
+@@ -809,7 +809,8 @@ int rv_register_monitor(struct rv_monitor *monitor, struct rv_monitor *parent)
+ 	if (p && rv_is_nested_monitor(p)) {
+ 		pr_info("Parent monitor %s is already nested, cannot nest further\n",
+ 			parent->name);
+-		return -EINVAL;
++		retval = -EINVAL;
++		goto out_unlock;
+ 	}
+ 
+ 	r = kzalloc(sizeof(struct rv_monitor_def), GFP_KERNEL);
 
-Good. Is there any flickering on either screen when you see the spurious
-HP events with the dock?
+base-commit: acc4d5ff0b61eb1715c498b6536c38c1feb7f3c1
+-- 
+2.49.0
 
-Johan
