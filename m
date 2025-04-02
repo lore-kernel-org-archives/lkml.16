@@ -1,71 +1,72 @@
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 051CD238144
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 12:06:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E14D238166
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 12:06:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743595584; cv=none; b=APM2lDyrLhmWdbbWC8+lx9pNFdDN2YaF1K7gGYKkPr9pDhtUgiQ9tinW+YgitBQVJ/e60CDKKj8uJ0SjdJNC9Cq3I+J5YUZW3jEd1lUmowZh5J0R31bjsfWKJy+bsWCxfabY12pmETHsEFHwZ7Wa0ZcLINiNLt/Xgxa88HbfJXI=
+	t=1743595586; cv=none; b=tuEQVqVzFa1pR6d+MbnIDkfZqYbnaHaaGDqhyUjW+5HR0lq9kqHOcK7/rz6WT/ZYdbx8p7GHa05LSBnY0m4hR3Qx6K4OBQrOsxp5UhGAK/q6NYYHWqGGEPys4C2L6rsbyExwQR0npRVSqz02I1LAH3GGlqLejHBGD8os+yIHlmU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743595584; c=relaxed/simple;
-	bh=NqsU/+7oxZL1YCnN3qRWYdYhLF155n2ACcMqk7+Lz9c=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tPDjProv3o88327IJJeQ2bkIYFLjB+UHtxxxqsZJQJ79Q4qSPCYmiuKqJW3DKWoZpwz2NsRzos1CwUsgPgX7j+1UZVe3BMX/jJvDmCkS/XIVX2b+gmdBApM8+B/ddma5MRXsc1+IaMn4zoDCYFhbtb/kzh5escZ++sXPY3elz64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hyA4rq+R; arc=none smtp.client-ip=209.85.167.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1743595586; c=relaxed/simple;
+	bh=7swfiKnH8hrUC9s3SQdoobfGIfZ4drxEBqFdEd8mRQ0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ZszQFDUc9wcAkQBjnJRW1aqXxXuCjrpoXzh9fxMQ4+E4YQCPRnHfIYVC4HkJrz07wuqLFPBAFe78OjSeXKbYZhusGUiz2V1JZr/5S6Yhy4pki1RtRX6S4qpFAC+MSMtgF5dJr2ZNQdrahcwiwaMBECObAZTNgT1kMz1emzCDQ68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mvista.com; spf=pass smtp.mailfrom=mvista.com; dkim=pass (1024-bit key) header.d=mvista.com header.i=@mvista.com header.b=ONw4wMCY; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mvista.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mvista.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hyA4rq+R"
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-54af20849adso772389e87.1
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 05:06:22 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=mvista.com header.i=@mvista.com header.b="ONw4wMCY"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-227aaa82fafso127842675ad.2
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 05:06:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743595581; x=1744200381; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=zEG4gecI8tD+Jl0eEYFS/WRbrree3429dPKL1Yhc7hE=;
-        b=hyA4rq+Rv0BaMBUL7rFuBVDKN/CL4czjJlF/soLUu/NDqDAPgZv7p05t0Hr30tsVWq
-         T24ID3iRivFwbDgPUpEvodTxPddaF4vacyV9kCTjrNfJafp+soVcxJXy2qv3+ir8diuN
-         SFihR6ZvAYRQVkz+OpiMRBdCDHln368SsqzulhTau1FaP4tIcACWlqn/zHNcAItBvVjn
-         wgEAminPRWgrRn5uJvR7xNqqMwEveq9TippRF3AKuOE5FXNF5m0uOsIdZOCugwWlqR75
-         F/GFgfUB7SWmzbxDnoxu7x7AwrSdU4BBCbx1V3+yHPkOvZ43P81KjtxHEO2vFhpi/bcF
-         jxwA==
+        d=mvista.com; s=google; t=1743595583; x=1744200383; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kCigWhMrmcJBolyuUgV3lJ1qYbCm1dkqPLc5H/XoqqE=;
+        b=ONw4wMCYvnabXnHu9xVJTe8LNJLzjU21VxG+3v49040zDt2maSNIvBIiQjB24kf81T
+         EPlnTttvx04oeSx71Uol91DiTJvK58kq7jWpq4De2417pQMZUrlaBI4NiwGMXOO8BVoF
+         MZYe52SfU27oZOrIJ99uTiNKw3uOTSc0AvQvQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743595581; x=1744200381;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zEG4gecI8tD+Jl0eEYFS/WRbrree3429dPKL1Yhc7hE=;
-        b=bHP4yhvutjPh6c+00kyhI+fXDnDxRuijlfowEQDOBCRQIX+ODopEnwEVz8U1XL+GXY
-         jnuoTg7a6fLJRDj1+qIIVXpwqRWHVW6bli1CAKRaIghAVZP97sl8Q+c9XuCyxUI/ONKJ
-         nFmtldD9zbymIi5D5moS42+uL3CAEjX609p24j36qSCeGj17++ca4ENieN60z/ZpPmfn
-         wUMvTIQEu4PHeSxLQVk/jExKsFZ8UI4XD+uLYICmTmaJtUWnBE87YUSDFqjU9ZgnxdXE
-         1bzs/LaOWpUh91uB54hAtzXaj5ZtEcu5imE2iJkDf960scjFhxOr5JZRkxWA1DbLGku5
-         SYmA==
-X-Forwarded-Encrypted: i=1; AJvYcCVvBzJAw6VWSzNXBDJF7Ye/Yy/2OjdLpDlDxCWiZzV6koUuYx4Bf09wDBb+y7Kl6y0njT9neUbko5pR24k=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw+eHXtWS4shaYlu32rQ2rKjj+IrHGJ2geXYab8QACrOlh6lolb
-	J7E02yU+cP5jsnuCUMpN22fkKUrq89QTksrzoCqTONb7jsNqBWSpYZiDzkfgCiFr0+6isAP+wf+
-	D
-X-Gm-Gg: ASbGncvIs2mUUOJcEhdrcSRHCKAf45NFCOnmYwwlwIUv0sqUwCE+6oC9Aa2LxM3wrJ7
-	6oIZst4TxV49tUE/t8N0d4b0Mi1RcTdea8aysf/bz1SHhWjMihio1iozlrShilbDVqC1N96X68n
-	2418K+Gwtuu72/AglTSYQLpvEIq6XNHDZkN09yP5VwAOMgbHkY4Jf3rXQ/jb6HoiaueiPZoEdPH
-	LlfhZYV+eq4L5z424Oiq2x7yhx2Kf54OX6wE0dW/+3bW76T4psPQKpXFed+Dc/K5vByi1wZrzoi
-	crks0PwAT+wRpbDnTW3g0H8Cyi+lFxQXAbCfjO1FO7/YxXCVPGLse0aTz8xX+8zBqfjrV7v+LSV
-	c0s0lcKSoMdFwmopk8KI=
-X-Google-Smtp-Source: AGHT+IHAorU5HIF63fzGnkivetyexueQYMJ3ZBC4Gy8XB0gdbMI3Klf829/ZF7PMB3Gu1bJ9VZlDzw==
-X-Received: by 2002:a05:6512:3d28:b0:548:878b:ccb3 with SMTP id 2adb3069b0e04-54c1a1daf7dmr682827e87.25.1743595581025;
-        Wed, 02 Apr 2025 05:06:21 -0700 (PDT)
-Received: from uffe-tuxpro14.. (h-178-174-189-39.A498.priv.bahnhof.se. [178.174.189.39])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54b09591bc4sm1594858e87.166.2025.04.02.05.06.19
+        d=1e100.net; s=20230601; t=1743595584; x=1744200384;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kCigWhMrmcJBolyuUgV3lJ1qYbCm1dkqPLc5H/XoqqE=;
+        b=DpQfo1P1RbpUlKWTdTrvyBJwOFCahrF16aSoKuFrvf9giYcRnEuVTaMxLgNdDnHH1i
+         Q+RMtN15tDNpRY8SO/pmEPrdoW3x1n3hxy2hwj6ngo4UbV5ZCtK5pRf4zDROteqJioXe
+         qwqHipj9gU3lCkgE5xKBBPU0UxCRzurafdtJr5bMFh/W24Sl5ItJyHNTt3bY8BwXFA1S
+         zPkkYnfuVOGh6eQqiguXo8ug+Kj+vV5hR27pPb5cJxEwEYrlFHo6vwCwi8WGLI2hZeIt
+         Mix9Chm6Ia5F5yepoyZAvxTrf3QHu/egP5+KDRL1ShT0QAytMkEvAM84wtEUkqA5Wo7k
+         og2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWyEJZR/ePyY7zr16LIt/QlbSE+Q+DiBG1RjY5o7wZXvfVY6ySB0kX14spQsHA0X4RJC91I9z3k93PXPNY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzitNkTW1Gn6ZrRgojx7XxxN68brBB3aAPuabQhG8az81SfGIuJ
+	No3V3EmYCQb7VhXdyB8jg68HCw3M9g+xKEJT7G6x1GIUautQ1aGB0z/PtzB1x7M=
+X-Gm-Gg: ASbGncucb/WB7I+uJLTYBQ4nGpnnPLBL7t3Asw8Kr3m7SxN4xB6TcM4SBNEMVs6hLYO
+	lQkUVqACBgTuPwARX3UVHBj1DunNS5D4flvv3OrbWzDsRMIBQZ1AKlHLmJX5aNQm7Taps9/uCW8
+	O5Rv4VJ7TMD03ZVk3zCXPph/ZqX/ejbZgnBbYEBuyTP6jRUqIM+PouJacjYKIFPFHOvOS7V8IPS
+	RbKjkIcskbGg+msEyf4tvSlZrhGP8eh/v55Cli20oMO696gryFLy3puDWTerv0LI3rNL7e4a8U0
+	/2R7D9xPJyulJGF41AI+Eukrp0j+GVU6kxpHlOkqDvANhkJn/5tphFcLfWg=
+X-Google-Smtp-Source: AGHT+IH7SJCT5w1JE7ro6lt0SJ18bG6a/eylqAKOqWZO3IB/4aC4Rj6hZeZDRT9PoKTBRqHp6AQqjQ==
+X-Received: by 2002:a17:902:e549:b0:224:a79:5fe4 with SMTP id d9443c01a7336-2292f942f58mr212724095ad.2.1743595583576;
+        Wed, 02 Apr 2025 05:06:23 -0700 (PDT)
+Received: from niyas-desktop.mvista.com ([182.74.28.237])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291eedd2bcsm106477375ad.65.2025.04.02.05.06.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Apr 2025 05:06:20 -0700 (PDT)
-From: Ulf Hansson <ulf.hansson@linaro.org>
-To: Ulf Hansson <ulf.hansson@linaro.org>,
-	linux-pm@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] pmdomain: core: Reset genpd->states to avoid freeing invalid data
-Date: Wed,  2 Apr 2025 14:06:13 +0200
-Message-ID: <20250402120613.1116711-1-ulf.hansson@linaro.org>
-X-Mailer: git-send-email 2.43.0
+        Wed, 02 Apr 2025 05:06:23 -0700 (PDT)
+From: nmydeen@mvista.com
+To: alexandre.belloni@bootlin.com
+Cc: linux-rtc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	cminyard@mvista.com,
+	"A. Niyas Ahamed Mydeen" <nmydeen@mvista.com>
+Subject: [PATCH v2] rtc-m41t62: kickstart ocillator upon failure
+Date: Wed,  2 Apr 2025 17:35:46 +0530
+Message-Id: <20250402120546.336657-2-nmydeen@mvista.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250402120546.336657-1-nmydeen@mvista.com>
+References: <20250401090454fb0ccf16@mail.local>
+ <20250402120546.336657-1-nmydeen@mvista.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,32 +75,129 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-If genpd_alloc_data() allocates data for the default power-states for the
-genpd, let's make sure to also reset the pointer in the error path. This
-makes sure a genpd provider driver doesn't end up trying to free the data
-again, but using an invalid pointer.
+From: "A. Niyas Ahamed Mydeen" <nmydeen@mvista.com>
 
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+The ocillator on the m41t62 (and other chips of this type) needs
+a kickstart upon a failure; the RTC read routine will notice the
+oscillator failure and fail reads.  This is added in the RTC write
+routine; this allows the system to know that the time in the RTC
+is accurate.  This is following the procedure described in section
+3.11 of  "https://www.st.com/resource/en/datasheet/m41t62.pdf"
+
+Signed-off-by: A. Niyas Ahamed Mydeen <nmydeen@mvista.com>
+Reviewed-by: Corey Minyard <cminyard@mvista.com>
+Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 ---
- drivers/pmdomain/core.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/rtc/rtc-m41t80.c | 68 ++++++++++++++++++++++++++++------------
+ 1 file changed, 48 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/pmdomain/core.c b/drivers/pmdomain/core.c
-index 9b2f28b34bb5..c179464047fe 100644
---- a/drivers/pmdomain/core.c
-+++ b/drivers/pmdomain/core.c
-@@ -2229,8 +2229,10 @@ static int genpd_alloc_data(struct generic_pm_domain *genpd)
+diff --git a/drivers/rtc/rtc-m41t80.c b/drivers/rtc/rtc-m41t80.c
+index 1f58ae8b151e..7074d086f1c8 100644
+--- a/drivers/rtc/rtc-m41t80.c
++++ b/drivers/rtc/rtc-m41t80.c
+@@ -22,6 +22,7 @@
+ #include <linux/slab.h>
+ #include <linux/mutex.h>
+ #include <linux/string.h>
++#include <linux/delay.h>
+ #ifdef CONFIG_RTC_DRV_M41T80_WDT
+ #include <linux/fs.h>
+ #include <linux/ioctl.h>
+@@ -204,7 +205,7 @@ static int m41t80_rtc_read_time(struct device *dev, struct rtc_time *tm)
+ 		return flags;
+ 
+ 	if (flags & M41T80_FLAGS_OF) {
+-		dev_err(&client->dev, "Oscillator failure, data is invalid.\n");
++		dev_err(&client->dev, "Oscillator failure, time may not be accurate, write time to RTC to fix it.\n");
+ 		return -EINVAL;
+ 	}
+ 
+@@ -227,21 +228,31 @@ static int m41t80_rtc_read_time(struct device *dev, struct rtc_time *tm)
  	return 0;
- put:
- 	put_device(&genpd->dev);
--	if (genpd->free_states == genpd_free_default_power_state)
-+	if (genpd->free_states == genpd_free_default_power_state) {
- 		kfree(genpd->states);
-+		genpd->states = NULL;
+ }
+ 
+-static int m41t80_rtc_set_time(struct device *dev, struct rtc_time *tm)
++static int m41t80_rtc_set_time(struct device *dev, struct rtc_time *in_tm)
+ {
+ 	struct i2c_client *client = to_i2c_client(dev);
+ 	struct m41t80_data *clientdata = i2c_get_clientdata(client);
++	struct rtc_time tm = *in_tm;
+ 	unsigned char buf[8];
+ 	int err, flags;
++	time64_t time = 0;
+ 
++	flags = i2c_smbus_read_byte_data(client, M41T80_REG_FLAGS);
++	if (flags < 0)
++		return flags;
++	if (flags & M41T80_FLAGS_OF) {
++		/* add 4sec of oscillator stablize time otherwise we are behind 4sec */
++		time = rtc_tm_to_time64(&tm);
++		rtc_time64_to_tm(time + 4, &tm);
 +	}
- free:
- 	if (genpd_is_cpu_domain(genpd))
- 		free_cpumask_var(genpd->cpus);
+ 	buf[M41T80_REG_SSEC] = 0;
+-	buf[M41T80_REG_SEC] = bin2bcd(tm->tm_sec);
+-	buf[M41T80_REG_MIN] = bin2bcd(tm->tm_min);
+-	buf[M41T80_REG_HOUR] = bin2bcd(tm->tm_hour);
+-	buf[M41T80_REG_DAY] = bin2bcd(tm->tm_mday);
+-	buf[M41T80_REG_MON] = bin2bcd(tm->tm_mon + 1);
+-	buf[M41T80_REG_YEAR] = bin2bcd(tm->tm_year - 100);
+-	buf[M41T80_REG_WDAY] = tm->tm_wday;
++	buf[M41T80_REG_SEC] = bin2bcd(tm.tm_sec);
++	buf[M41T80_REG_MIN] = bin2bcd(tm.tm_min);
++	buf[M41T80_REG_HOUR] = bin2bcd(tm.tm_hour);
++	buf[M41T80_REG_DAY] = bin2bcd(tm.tm_mday);
++	buf[M41T80_REG_MON] = bin2bcd(tm.tm_mon + 1);
++	buf[M41T80_REG_YEAR] = bin2bcd(tm.tm_year - 100);
++	buf[M41T80_REG_WDAY] = tm.tm_wday;
+ 
+ 	/* If the square wave output is controlled in the weekday register */
+ 	if (clientdata->features & M41T80_FEATURE_SQ_ALT) {
+@@ -260,17 +271,34 @@ static int m41t80_rtc_set_time(struct device *dev, struct rtc_time *tm)
+ 		dev_err(&client->dev, "Unable to write to date registers\n");
+ 		return err;
+ 	}
+-
+-	/* Clear the OF bit of Flags Register */
+-	flags = i2c_smbus_read_byte_data(client, M41T80_REG_FLAGS);
+-	if (flags < 0)
+-		return flags;
+-
+-	err = i2c_smbus_write_byte_data(client, M41T80_REG_FLAGS,
+-					flags & ~M41T80_FLAGS_OF);
+-	if (err < 0) {
+-		dev_err(&client->dev, "Unable to write flags register\n");
+-		return err;
++	if (flags & M41T80_FLAGS_OF) {
++		/* OF cannot be immediately reset: oscillator has to be restarted. */
++		dev_warn(&client->dev, "OF bit is still set, kickstarting clock.\n");
++		err = i2c_smbus_write_byte_data(client, M41T80_REG_SEC, M41T80_SEC_ST);
++		if (err < 0) {
++			dev_err(&client->dev, "Can't set ST bit\n");
++			return err;
++		}
++		err = i2c_smbus_write_byte_data(client, M41T80_REG_SEC, flags & ~M41T80_SEC_ST);
++		if (err < 0) {
++			dev_err(&client->dev, "Can't clear ST bit\n");
++			return err;
++		}
++		/* oscillator must run for 4sec before we attempt to reset OF bit */
++		msleep(4000);
++		/* Clear the OF bit of Flags Register */
++		err = i2c_smbus_write_byte_data(client, M41T80_REG_FLAGS, flags & ~M41T80_FLAGS_OF);
++		if (err < 0) {
++			dev_err(&client->dev, "Unable to write flags register\n");
++			return err;
++		}
++		flags = i2c_smbus_read_byte_data(client, M41T80_REG_FLAGS);
++		if (flags < 0) {
++			return flags;
++		} else if (flags & M41T80_FLAGS_OF) {
++			dev_err(&client->dev, "Can't clear the OF bit check battery\n");
++			return err;
++		}
+ 	}
+ 
+ 	return err;
 -- 
-2.43.0
+2.34.1
 
