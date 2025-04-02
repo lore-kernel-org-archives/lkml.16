@@ -1,124 +1,123 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3293A19307F
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 16:27:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BA4519C54C
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 16:27:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743611235; cv=none; b=bulzYz0s6J6Z9hvHQhREK4YE/5kprthTyeXWLgaTBwxOqSgDORTZCiX1WxNuS0cdNuXvvYkwleq5I2s1KIKpx/aN9QMd80jHayMVbEmc4CgZiiGIrnDEFbsRLzSNxf/J6RMQHjsmJBjqyHezdidxtOK/OhFBOxulwVs2iXqTrwY=
+	t=1743611238; cv=none; b=abgzDHQzZqeFRx2x6k2813ArYwXeL3e5/WjlcO4PXU9aSKMbnp2an5IxUtwpH9k8oOBNUJZ2jniB562NI4G1ssJWGHe+L5BhWrlCeg64+nHhN0zlo4i6QBs1HwBl1HUUxIev90Z0rwn7YhmVWmvrsYy+E68zTrl0v+HGzjqYdao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743611235; c=relaxed/simple;
-	bh=9YW9rJHLIGdRGLO4GFRhV8IbkrEU3vBnytV2vJcRvwc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=SEadxcZFH52D2XEXfqn3UO4VHyDwIzHS7jCK3sQ0s8NbTwxQkFV71aEb1JepuAY3d/pUlhbLTBDCUXx8NtPpUPI0DccZQ9j+VwldyA5cYE7KYYdsd21SyIsd4nwrN1skja1MOKlZMGFZmpt+yrmMx1HI/cqXgtowt1z03Vvb3K0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BeOO101i; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1743611238; c=relaxed/simple;
+	bh=44k7kmF9Heh1axcX60vhvBSddhWWyYlpyTedqElkVy8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IYPOxCAh6okN+GE/iH9txBrn6za5GsdD2TXFmUcmAQt4ZebSmHqm6k4GMQNsG542b25SvADOPLtjsJqan3RMrS4diut0QUG/OUmZ+an3BBYjRxLUsi8BI1CxjQsSjsqROxqKuA5jgdYW9yoUjenOqvNa03TcArli4lNbrivVols=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OwmcdSes; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BeOO101i"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743611233;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=j19z0lwtHbM624baP4fRU9+KrIrspaRG92RuhXMc604=;
-	b=BeOO101iXkvN9BRxwuL7yPNfbi831LRICWsQggM9p4sDaQXDWNNslmWx8Zh86Uh1j7hqSV
-	7x/z7i6OpT/2g6Fzv0QopIMXRg/WdbuhyKnSMe8J7/qFOjF+SQxv8VAIY8MBDx9XDg9EER
-	Tat88bj9rNVpIlH38wh6LxvicVjOgiQ=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-648-R5eTwx_MNKCxFe4SifAJhA-1; Wed,
- 02 Apr 2025 12:27:08 -0400
-X-MC-Unique: R5eTwx_MNKCxFe4SifAJhA-1
-X-Mimecast-MFC-AGG-ID: R5eTwx_MNKCxFe4SifAJhA_1743611224
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7C48C1955BC1;
-	Wed,  2 Apr 2025 16:27:04 +0000 (UTC)
-Received: from asrivats-na.rmtustx.csb (unknown [10.2.16.30])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 6DAF2192C7C6;
-	Wed,  2 Apr 2025 16:27:00 +0000 (UTC)
-From: Anusha Srivatsa <asrivats@redhat.com>
-Date: Wed, 02 Apr 2025 11:23:59 -0400
-Subject: [PATCH 21/30] panel/newvision-nv3051d: Use refcounted allocation
- in place of devm_kzalloc()
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OwmcdSes"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5eb92df4fcbso33234a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 09:27:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743611234; x=1744216034; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=44k7kmF9Heh1axcX60vhvBSddhWWyYlpyTedqElkVy8=;
+        b=OwmcdSesdWannAZEv6wpwSsXAebR76OvLFJUPjXdZFnbYFQi5L+IqwCoGr3JZJAnbp
+         CsUQVol0IQPBDBE+WLoISMkRNiOlo1O3svLuo4TzmGSrGTi53cDMY0SDtj31b0Oy95eG
+         HQiTAPreJkg5JUF4bHX8Jgv0te7AKhKsOiztnjPmsmYE6D93DfhOQJW2rzeyCW+spe/T
+         msCW3lrDfLcmUFRdeoYc1BIJf62CiXJhjWgQQmrh/TsXKqyt2hoFLHMCklmhcqHAEjzh
+         1c6cd6ZfZsXzyRqNg5L+f1OJnXQdhqTldjl9caTQTMnn7ptcqG58FObHo2Ff0o8+J88u
+         7YnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743611234; x=1744216034;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=44k7kmF9Heh1axcX60vhvBSddhWWyYlpyTedqElkVy8=;
+        b=D0bXKUolb0R6TsqvTZlofc7x1pHzg0HFcCKb3QUGOdFJ//cg08CSY95wZeySM5c5z8
+         p3VBdw8BcDGB3v03Q25AHpnPi8K0LHK2k43w4Xlm1lO7RoVZeeSHfk0ISScYpItgizFM
+         6VQaILurqll6retCLprpNGBG85HvLfxCn7nnczf8P7JgY8z25w1hqzSXKuiDaPukINp7
+         o0XbTgyYsiesbOxzBRP9RwPOVOhao8c4TCx07cE9YSrs79kbQIk6gqe4ak93YmQ75z61
+         U1iamXHY3q4qsdrAk27IZ5Pc/RAz3/NtxD7lxRk4ICdHKL/S+/7l4RRDFSFUPufnavAS
+         WWlw==
+X-Forwarded-Encrypted: i=1; AJvYcCUbPN+OZ91zo6+jQJBTy06erBxhmhxoMrWRCdJzhSVVr/4Ezchg3hdwO6lyiRekQHFUfmibHonRfyY1UvA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzqrmLAodXPj4bFFMMLSG0i3zmxMQyo1DGVwPmPTWkgxd2lNdMS
+	LR5AMWmBX4LkMu4wzi7lTeR8gCky7plwsvWLYxEtk+mEonBbmEYuktTkjU2Dma7mQ+RqQYmR2wE
+	aZXB5GLqUs2IVDEDoc/EdkhpWSiI=
+X-Gm-Gg: ASbGncvIhRcYEH5Guc/wgy0j9BKW4oqr165wFNHBfeQ5sSmhsYe+FtBP9c3L40H9zp3
+	hvH9ZccaP36yRPCqTSL80eOGCUByuDX5ME3+gpFHm2yGaKfS2DfT+7PTvxM/AmjncXBOfdVxbcq
+	Vc2lyzWnCYg7X4eLdr4HH7q50z3/iPcrs0wI4=
+X-Google-Smtp-Source: AGHT+IEnOHT6hOVDHiNqwvM3gOQnQeSxW+1KveJ2xpZBmOQfzfFxPoaWlwyo7ThKDEbEHo5q7T2hTL1FbZ2eK4mhbTQ=
+X-Received: by 2002:a05:6402:2706:b0:5e5:3610:8b7a with SMTP id
+ 4fb4d7f45d1cf-5edfcfe6179mr14596201a12.17.1743611234211; Wed, 02 Apr 2025
+ 09:27:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250402-b4-drm_panel_mass_convert_part2-v1-21-903b70999ea6@redhat.com>
-References: <20250402-b4-drm_panel_mass_convert_part2-v1-0-903b70999ea6@redhat.com>
-In-Reply-To: <20250402-b4-drm_panel_mass_convert_part2-v1-0-903b70999ea6@redhat.com>
-To: Neil Armstrong <neil.armstrong@linaro.org>, 
- Jessica Zhang <quic_jesszhan@quicinc.com>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Icenowy Zheng <icenowy@aosc.io>, Jagan Teki <jagan@amarulasolutions.com>, 
- Ondrej Jirman <megi@xff.cz>, Javier Martinez Canillas <javierm@redhat.com>, 
- Michael Trimarchi <michael@amarulasolutions.com>, 
- Michael Walle <mwalle@kernel.org>, Jagan Teki <jagan@edgeble.ai>, 
- =?utf-8?q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>, 
- Purism Kernel Team <kernel@puri.sm>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Jianhua Lu <lujianhua000@gmail.com>, Stefan Mavrodiev <stefan@olimex.com>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
- Anusha Srivatsa <asrivats@redhat.com>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1743607440; l=1350;
- i=asrivats@redhat.com; s=20250122; h=from:subject:message-id;
- bh=9YW9rJHLIGdRGLO4GFRhV8IbkrEU3vBnytV2vJcRvwc=;
- b=/7SG9D90J9C8RfkGeq9/2mxMEkRV5cXebMrOoT0sD5WKISiQ4Hy996ipS/r5XGa5J6h0/Ip1E
- tmQWR0RRJ/ZBhtqtek7Teg/jx2MTCpsFzsjZsGmcMlGgsuoghp+GkUl
-X-Developer-Key: i=asrivats@redhat.com; a=ed25519;
- pk=brnIHkBsUZEhyW6Zyn0U92AeIZ1psws/q8VFbIkf1AU=
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+References: <xmzxiwno5q3ordgia55wyqtjqbefxpami5wevwltcto52fehbv@ul44rsesp4kw> <CAHk-=wgk+upuXn7-wsDs4psxOJO4wW7G2g-Sxvv0axCibFua1w@mail.gmail.com>
+In-Reply-To: <CAHk-=wgk+upuXn7-wsDs4psxOJO4wW7G2g-Sxvv0axCibFua1w@mail.gmail.com>
+From: Mateusz Guzik <mjguzik@gmail.com>
+Date: Wed, 2 Apr 2025 18:27:02 +0200
+X-Gm-Features: AQ5f1JoDofdtjUwMStWknBzTyrnCYW_pJ4WVgjQ6yTTt1NBqqY87USBqCHJng_M
+Message-ID: <CAGudoHEV-PFSr-xKUx5GkTf4KasJc=aNNzQbkoTnFVLisKti+A@mail.gmail.com>
+Subject: Re: [RFC PATCH] x86: prevent gcc from emitting rep movsq/stosq for
+ inlined ops
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: mingo@redhat.com, x86@kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Move to using the new API devm_drm_panel_alloc() to allocate the
-panel.
+On Wed, Apr 2, 2025 at 6:22=E2=80=AFPM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> On Wed, 2 Apr 2025 at 06:42, Mateusz Guzik <mjguzik@gmail.com> wrote:
+> >
+> >
+> > +ifdef CONFIG_CC_IS_GCC
+> > +#
+> > +# Inline memcpy and memset handling policy for gcc.
+> > +#
+> > +# For ops of sizes known at compilation time it quickly resorts to iss=
+uing rep
+> > +# movsq and stosq. On most uarchs rep-prefixed ops have a significant =
+startup
+> > +# latency and it is faster to issue regular stores (even if in loops) =
+to handle
+> > +# small buffers.
+> > +#
+> > +# This of course comes at an expense in terms of i-cache footprint. bl=
+oat-o-meter
+> > +# reported 0.23% increase for enabling these.
+> > +#
+> > +# We inline up to 256 bytes, which in the best case issues few movs, i=
+n the
+> > +# worst case creates a 4 * 8 store loop.
+> > +#
+> > +# The upper limit was chosen semi-arbitrarily -- uarchs wildly differ =
+between a
+> > +# threshold past which a rep-prefixed op becomes faster, 256 being the=
+ lowest
+> > +# common denominator. Someone(tm) should revisit this from time to tim=
+e.
+> > +#
+> > +KBUILD_CFLAGS +=3D -mmemcpy-strategy=3Dunrolled_loop:256:noalign,libca=
+ll:-1:noalign
+> > +KBUILD_CFLAGS +=3D -mmemset-strategy=3Dunrolled_loop:256:noalign,libca=
+ll:-1:noalign
+> > +endif
+>
+> Please make this a gcc bug-report instead - I really don't want to
+> have random compiler-specific tuning options in the kernel.
+>
+> Because that whole memcpy-strategy thing is something that gets tuned
+> by a lot of other compiler options (ie -march and different versions).
+>
 
-Signed-off-by: Anusha Srivatsa <asrivats@redhat.com>
----
- drivers/gpu/drm/panel/panel-newvision-nv3051d.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/gpu/drm/panel/panel-newvision-nv3051d.c b/drivers/gpu/drm/panel/panel-newvision-nv3051d.c
-index 5d115ecd5dd44c8e5e7d1fb8afe573324e987f59..083e314310c5ea15268a32c7011a9191e30cc16c 100644
---- a/drivers/gpu/drm/panel/panel-newvision-nv3051d.c
-+++ b/drivers/gpu/drm/panel/panel-newvision-nv3051d.c
-@@ -361,9 +361,11 @@ static int panel_nv3051d_probe(struct mipi_dsi_device *dsi)
- 	struct panel_nv3051d *ctx;
- 	int ret;
- 
--	ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
--	if (!ctx)
--		return -ENOMEM;
-+	ctx = devm_drm_panel_alloc(dev, struct panel_nv3051d, panel,
-+				   &panel_nv3051d_funcs,
-+				   DRM_MODE_CONNECTOR_DSI);
-+	if (IS_ERR(ctx))
-+		return PTR_ERR(ctx);
- 
- 	ctx->dev = dev;
- 
-@@ -391,9 +393,6 @@ static int panel_nv3051d_probe(struct mipi_dsi_device *dsi)
- 	dsi->format = MIPI_DSI_FMT_RGB888;
- 	dsi->mode_flags = ctx->panel_info->mode_flags;
- 
--	drm_panel_init(&ctx->panel, &dsi->dev, &panel_nv3051d_funcs,
--		       DRM_MODE_CONNECTOR_DSI);
--
- 	ret = drm_panel_of_backlight(&ctx->panel);
- 	if (ret)
- 		return ret;
-
--- 
-2.48.1
-
+Ok.
+--=20
+Mateusz Guzik <mjguzik gmail.com>
