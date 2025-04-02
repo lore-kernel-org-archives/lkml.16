@@ -1,202 +1,130 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29AE310F9
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 16:39:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F64D10F9
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 16:39:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743611944; cv=none; b=fGz/p/dk7V+aZUUXw0NCb5xW3+7Gv+DIw/L9QEVgySVVBxpkR00r7GhXXZPyGDJEv6wutQR7NEe/cVakhvJDr6H5AItiPwBrRpy6Uk8AxCrY0GrYM8vWWhAOChS2RO3JfHEpM3/N5FZEEpv/hexwp9EiENoYq7tfQs1TmcLRQLs=
+	t=1743611978; cv=none; b=AwoywZ0ZMg6N2qwCCMXkkmmOi41OHBZMYuYwGNAS4d79TwsvmvBLnF36xdZzHefO17FRgFNvQk8aaWINycsxPjrpVEAAlNgk2Ar1B2IyP5OHLYuRKItRBz7Yb+YPweMwHkhiN+iB04aICnT8WaM0lRXQIt+GPDEz43mgHf0FJiA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743611944; c=relaxed/simple;
-	bh=JbpQGyS2k2ae5y5xVtR1Gxoy3SaqtFSjvZ/rBlydswQ=;
-	h=From:In-Reply-To:References:MIME-Version:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TnFGXtqH9g4uzGg7OnxvQi+twzragdiSldbieP7gKHypzbp290xuWe0gapSCO5hql6drdnDOcHjgzrqGMAwDY3KmGu5klQz6js4yB8ADFKiNspDzl5NBR4deTI4LHyM0PMzatV7VE+FcOoFb/8FQC6HfXJx9Kd9WO8GFiWJxrPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=etBGqs3u; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1743611978; c=relaxed/simple;
+	bh=9c1qI+fAK7gVzVfX02PhmX5G1z8VEY/ylfjEmXpdwiA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JC8qWGanmzWVoqcjfzJcT+sV7QSNrZxUO02JjvX7/rXfD1ffr0eh6TtA+sY8jCHKH1mLpgGU6Avtd2mWJEPZYf/yvklC5a9NCfw3yW78QTRn720ymcgOfOqGFjU4wfQ61orTTvh26mj6L0s2kVNCPEnIk7C5A4S5r5nZ0ldq7k4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=QQpiJkHR; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=oAtJW5Uu; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=IgWQc9F+; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=M54Af+Bk; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="etBGqs3u"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743611939;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="QQpiJkHR";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="oAtJW5Uu";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="IgWQc9F+";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="M54Af+Bk"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 913371F6E6;
+	Wed,  2 Apr 2025 16:39:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1743611975; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=jA07gZAckB5bQhywn6Vwf6YGCI+Gg9x9Lpp/1wjtdSQ=;
-	b=etBGqs3uXVxdyuDntip6FyhlNGsF2sPyk7/zlYITsWy522iYH8mMBxCNOyWGh7RPmqB1c5
-	qaaQLbIvMtCNka6si77ckLNOEhkih7aPzEshNfpPlMa2ugnb4TNnDSeBqIeRpFd4OcxIvM
-	l4E4zIrzp5Cs5IPaKbjCdec15ayD7CQ=
-Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com
- [209.85.216.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-290-bpxYVQP6MRGIetaLhITenA-1; Wed, 02 Apr 2025 12:38:57 -0400
-X-MC-Unique: bpxYVQP6MRGIetaLhITenA-1
-X-Mimecast-MFC-AGG-ID: bpxYVQP6MRGIetaLhITenA_1743611935
-Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-2ff68033070so11541561a91.2
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 09:38:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743611935; x=1744216735;
-        h=content-transfer-encoding:cc:to:subject:message-id:date
-         :mime-version:references:in-reply-to:from:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=jA07gZAckB5bQhywn6Vwf6YGCI+Gg9x9Lpp/1wjtdSQ=;
-        b=ioOTf/yu3Ecc9saUmGBWdWV6bh0KXkIWo+gkt9Xm6HZ6+lPNlZrS0Owa8fDav2FVfd
-         BkxTG232ZqFIaNUNzfCfcHlYf8w0VubUnpWR7UP7BOwgU0gZeHPTX5RIEGqssuFkR7C6
-         Dt3RoISCmQUWq1d46COF9e3d6yyINR8QuhsCpOcgOyNL3cn6Bfk4AY8nlaUkb18wGvqb
-         pHFe9r9HypcoDkoWFwZO5tG9aGV6zDJ6y7mKGOY8MSSvoaJRLynDZIsGjnm7VBrvMUhY
-         cnmga8ZIfeZvOUXG+xGw8fFTj0C6dZaVYNHk1Db1avAwiDpf+8YTpmYYwPj+iF2svuCh
-         33cQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWQvl6FAottCwGVeabaOFndCfwCmfNHIbeY6BN3WjJ9GPhA3X1E8eb1cCJwfNPZfjgidsRWkyY0h0T8Czw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyJi9H1GvefSi5utwt68aPxJQagZz2w7n2WdjuqFNMDO3jWP6cB
-	15CU+F9O5sH+kGaq9JDHXLXTcwrriKgWdNYcNNhyo+MrCHLZLH/Wi0/KY6wkDFr26So8SVK1HoY
-	3fWXkjK+ZWJ2bSye6Un2RJ6oCuoXXForL3mO7skEwdnB444eNHcUBskPgPugoAyBWNfCsK8dBp/
-	9lJGNLtP3SsKMSwBsQz651/IrLh7dusQVdr1Yq
-X-Gm-Gg: ASbGncvdtLtVr38Bk634jduWk9/cmr/9ChCrOX+S0zqk3yBNHxDJ5rGeLNV8+KFX7Al
-	FFe0epKCVI+pJrI8ULrOJAMgd+3dEvhB0KnRYdmJGr15GSJ/E71laFPNXmrtVSZzr6/sC8g==
-X-Received: by 2002:a17:90a:e183:b0:2ff:5e4e:861 with SMTP id 98e67ed59e1d1-3056094b28amr11892721a91.24.1743611935197;
-        Wed, 02 Apr 2025 09:38:55 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFJeSWFRN5z2wxWXtKvRsOPT5CfAHrY7buz3TM6wH9tz9gjBfwFVkgsnjlHEgDTEqYebTRrhaxUSg2BrAW/4wM=
-X-Received: by 2002:a17:90a:e183:b0:2ff:5e4e:861 with SMTP id
- 98e67ed59e1d1-3056094b28amr11892695a91.24.1743611934877; Wed, 02 Apr 2025
- 09:38:54 -0700 (PDT)
-Received: from 753933720722 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 2 Apr 2025 18:38:54 +0200
-From: Sergio Lopez Pascual <slp@redhat.com>
-In-Reply-To: <CAAfnVBki816fSPuQ_FcvuwYzbSwiS_WaYsGSA1AyitmAA5OsXg@mail.gmail.com>
-References: <20240723114914.53677-1-slp@redhat.com> <942afa37-a24c-48ed-ae10-c811849165bf@collabora.com>
- <CAAiTLFV6mAgrMj=itcxoBCibvYRyrAk02wYp-gYJ8kxhF0EPmw@mail.gmail.com>
- <CAAfnVBkWKn3+YEhNz0CTmw-T_jjL72axkWqYgkzkSa72t_Gf0A@mail.gmail.com>
- <CAF6AEGsnpEYFsCfZUAPopWzY=wv_GWn0P5f5D6U9y-JrWGQVnw@mail.gmail.com> <CAAfnVBki816fSPuQ_FcvuwYzbSwiS_WaYsGSA1AyitmAA5OsXg@mail.gmail.com>
+	bh=imE5/18rdw2xcdM8hxfvUIiLq2U1qbZPwyKYWRV0hQw=;
+	b=QQpiJkHRThIpzB5lckjfeQncwvMZioxai0+bSuErHTZG2hQ5khk4//u+eQzTs4bvZdDuKl
+	NIeTgDuPAF9zQHQ6C9zACOIXJO8a9N02vfdiutTPGxNNn/Vj51DLs1Y7t0iibyKrMq2Wuy
+	gLzXzuNImAYkl63l9CKHEvx1CP4x7g8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1743611975;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=imE5/18rdw2xcdM8hxfvUIiLq2U1qbZPwyKYWRV0hQw=;
+	b=oAtJW5UurW+8nVy4W39GWhyVBJOCZ9JxKTyiMOQ6izu7SZo5xJQPjhzuY+Wmchv597s/+d
+	3QaMt6D57qCQGbCw==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1743611973; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=imE5/18rdw2xcdM8hxfvUIiLq2U1qbZPwyKYWRV0hQw=;
+	b=IgWQc9F+ROLTodGAcY98WImE9khLUtf2i4iAnx/k9ZkUMkLSruHBEjT88IRWYy5Y+lVgmU
+	yCtYIGM8xLK7OFv71sjHcoyPf1m3UTFICeqt7Z9A/LZk8iwNsNUZaYyBuXjwYfyPddWLab
+	HI/cESZXopb4lBQ+BGpdnrLVpHwlfXs=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1743611973;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=imE5/18rdw2xcdM8hxfvUIiLq2U1qbZPwyKYWRV0hQw=;
+	b=M54Af+BkJ3YRhh8SeXAfaC+npAVEsD35vWbgdTyS/JMrinnj+Hf8AZHZEvMy4Heb9bKft6
+	f3XCXumN6IDN39DQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 77281137D4;
+	Wed,  2 Apr 2025 16:39:33 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 3lSrGkVo7WcxWAAAD6G6ig
+	(envelope-from <dwagner@suse.de>); Wed, 02 Apr 2025 16:39:33 +0000
+Date: Wed, 2 Apr 2025 18:39:32 +0200
+From: Daniel Wagner <dwagner@suse.de>
+To: Christoph Hellwig <hch@lst.de>
+Cc: Daniel Wagner <wagi@kernel.org>, 
+	James Smart <james.smart@broadcom.com>, Sagi Grimberg <sagi@grimberg.me>, 
+	Chaitanya Kulkarni <kch@nvidia.com>, Hannes Reinecke <hare@suse.de>, Keith Busch <kbusch@kernel.org>, 
+	linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 06/18] nvmet-fcloop: sync targetport removal
+Message-ID: <f222500d-0be0-4b1b-8bd3-44cf098cc607@flourine.local>
+References: <20250318-nvmet-fcloop-v3-0-05fec0fc02f6@kernel.org>
+ <20250318-nvmet-fcloop-v3-6-05fec0fc02f6@kernel.org>
+ <20250321060832.GD3007@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Wed, 2 Apr 2025 18:38:54 +0200
-X-Gm-Features: AQ5f1Jqh3JlHDowKtF1SlejjtYnTX8s9zM8BYZmloreOmj3oPMj4ojBdK_5F-_E
-Message-ID: <CAAiTLFWOfX+TOcLFKpgqZvGoC6xSbDyHcefET-jtbm=bCTtqeQ@mail.gmail.com>
-Subject: Re: [PATCH 0/2] drm/virtio: introduce the HOST_PAGE_SIZE feature
-To: Gurchetan Singh <gurchetansingh@chromium.org>, Rob Clark <robdclark@gmail.com>
-Cc: Dmitry Osipenko <dmitry.osipenko@collabora.com>, tzimmermann@suse.de, mripard@kernel.org, 
-	olvaffe@gmail.com, kraxel@redhat.com, daniel@ffwll.ch, 
-	maarten.lankhorst@linux.intel.com, airlied@redhat.com, 
-	linux-kernel@vger.kernel.org, virtualization@lists.linux.dev, 
-	dri-devel@lists.freedesktop.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250321060832.GD3007@lst.de>
+X-Spam-Score: -4.30
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-Gurchetan Singh <gurchetansingh@chromium.org> writes:
+On Fri, Mar 21, 2025 at 07:08:32AM +0100, Christoph Hellwig wrote:
+> On Tue, Mar 18, 2025 at 11:40:00AM +0100, Daniel Wagner wrote:
+> > The nvmet-fc uses references on the targetport to ensure no UAFs
+> > happens. The consequence is that when the targetport is unregistered,
+> > not all resources are freed immediately. Ensure that all activities from
+> > the unregister call have been submitted (deassocication) before
+> > continuing with the shutdown sequence.
+> 
+> This needs to explain why that is needed.  In general a completion
+> waiting for references to go away is a bit of an anti-patter, so
+> it should come with a good excuse.
 
-> On Tue, Aug 6, 2024 at 1:15=E2=80=AFPM Rob Clark <robdclark@gmail.com> wr=
-ote:
->
->> On Tue, Aug 6, 2024 at 9:15=E2=80=AFAM Gurchetan Singh
->> <gurchetansingh@chromium.org> wrote:
->> >
->> >
->> >
->> > On Mon, Aug 5, 2024 at 2:14=E2=80=AFAM Sergio Lopez Pascual <slp@redha=
-t.com>
->> wrote:
->> >>
->> >> Dmitry Osipenko <dmitry.osipenko@collabora.com> writes:
->> >>
->> >> > On 7/23/24 14:49, Sergio Lopez wrote:
->> >> >> There's an incresing number of machines supporting multiple page
->> sizes
->> >> >> and on these machines the host and a guest can be running, each on=
-e,
->> >> >> with a different page size.
->> >> >>
->> >> >> For what pertains to virtio-gpu, this is not a problem if the page
->> size
->> >> >> of the guest happens to be bigger or equal than the host, but will
->> >> >> potentially lead to failures in memory allocations and/or mappings
->> >> >> otherwise.
->> >> >
->> >> > Please describe concrete problem you're trying to solve. Guest memo=
-ry
->> >> > allocation consists of guest pages, I don't see how knowledge of ho=
-st
->> >> > page size helps anything in userspace.
->> >> >
->> >> > I suspect you want this for host blobs, but then it should be
->> >> > virtio_gpu_vram_create() that should use max(host_page_sz,
->> >> > guest_page_size), AFAICT. It's kernel who is responsible for memory
->> >> > management, userspace can't be trusted for doing that.
->> >>
->> >> Mesa's Vulkan/Venus uses CREATE_BLOB to request the host the creation
->> >> and mapping into the guest of device-backed memory and shmem regions.
->> >> The CREATE_BLOB ioctl doesn't update drm_virtgpu_resource_create->siz=
-e,
->> >> so the guest kernel (and, as a consequence, the host kernel) can't
->> >> override the user's request.
->> >>
->> >> I'd like Mesa's Vulkan/Venus in the guest to be able to obtain the ho=
-st
->> >> page size to align the size of the CREATE_BLOB requests as required.
->> >
->> >
->> > gfxstream solves this problem by putting the relevant information in t=
-he
->> capabilities obtained from the host:
->> >
->> >
->> https://android.googlesource.com/platform/hardware/google/gfxstream/+/re=
-fs/heads/main/host/virtio-gpu-gfxstream-renderer.cpp#1691
->> >
->> > If you want to be paranoid, you can also validate the
->> ResourceCreateBlob::size is properly host-page aligned when that request
->> reaches the host.
->> >
->> > So you can probably solve this problem using current interfaces.
->> Whether it's cleaner for all context types to use the capabilities, or h=
-ave
->> all VMMs to expose VIRTIO_GPU_F_HOST_PAGE_SIZE, would be the cost/benefi=
-t
->> tradeoff.
->> >
->>
->> I guess solving it in a context-type specific way is possible.  But I
->> think it is a relatively universal constraint.  And maybe it makes
->> sense for virtgpu guest kernel to enforce alignment (at least it can
->> return an error synchronously) in addition to the host.
->>
->
-> virtio-media may have support for VIRTIO_MEDIA_CMD_MMAP too, so could run
-> into this issue.
->
-> https://github.com/chromeos/virtio-media?tab=3Dreadme-ov-file#shared-memo=
-ry-regions
->
-> virtio-fs also has the DAX window which uses the same memory mapping
-> mechanism.
->
-> https://virtio-fs.gitlab.io/design.html
->
-> Maybe this should not be a virtio-gpu thing, but a virtio thing?
-
-There seem to be certain consensus that the information about alignment
-restrictions must be shared in a device-specific way:
-
-https://lore.kernel.org/virtio-comment/CY8PR12MB7195B5E575099CD9CA1F2F39DCA=
-F2@CY8PR12MB7195.namprd12.prod.outlook.com/T/#t
-
-There's also the precedent of virtio-fs already sharing the alignment
-restrictions through FUSE_INIT (from VIRTIO SPECS 1.3, section
-5.11.6.4).
-
----
-The driver maps a file range into the DAX window using the
-FUSE_SETUPMAPPING request. Alignment
-constraints for FUSE_SETUPMAPPING and FUSE_REMOVEMAPPING requests are
-communicated dur-
-ing FUSE_INIT negotiation.
----
-
-Given this information, I'm going to rebase and respin this series.
-
-Thanks,
-Sergio.
-
+FWIW, I was able to drop this patch and also the similar code for the
+lport object. The reason is with the 'nvmet-fcloop: allocate/free
+fcloop_lsreq directly' patch this is not necessary anymore.
