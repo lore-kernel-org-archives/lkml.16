@@ -1,290 +1,120 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ED4423A98F;
-	Wed,  2 Apr 2025 12:23:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A3BF20E01D;
+	Wed,  2 Apr 2025 12:23:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743596593; cv=none; b=ldpS1n1IRGC3Qks8Y5oIXW0p2Z0Xs66TBuPx5K937dvYmCOWDODoZY36jVjLfhGjfy6vCtHiClUPUtLv9Ov1Me4P0TvhriSovm3gWiSQivvKe7kJnWk1ltMshimym4zwIlBGc1SEJQX5/co7Let/z2bj4rR2SVeX41QmBRcuTeE=
+	t=1743596623; cv=none; b=OUOrlSsQZQldqcnYSo16go3xxtokFFFNxXEhIogsmRwB+2wdNrgm0weG7WyIGSBiOvLWehKUv64T8ba/9IWBwSjF9/UnK3PC4+T6jcFa96DM06+JMsfW255VY+TntriKolbYTEHqBxy103Jk81hkyMK2KGhpwSdXjoEgZR+vR04=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743596593; c=relaxed/simple;
-	bh=ipW7SukMx+y4OYBPi1rirqi+iPYrDFo8757SlZ1abVc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=foKKQ0KH1a1tmhWtFZvWMeRAK/T+O0WL2vloPAYFch0sZ3LQST+gkjzhSo1VW8p51NXuX5YnPxLctz7H+HBphlPo/OzhcxfZ82wC6Z8ltmVZRcWAQc/YGjzdymGNWKN47UKrQaXv1LTNjcVz1cFrYPv+8XUtmLcfKZM4+mQvSJo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PvRjJ+/L; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1743596623; c=relaxed/simple;
+	bh=sxRCMN2UqFzJH+4agENHp4HExEaVEUjCHCJeJ/xTgX4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=XFxW6WjooFvPu8TmkF3Ahl4L0oVufXwE7Tw2uUlpu/YmgcACSlrQ+JMhEPvJvS1uWzVIJGhjPK8bPUHVABqwdnP7oIxZ1yGTGKt1fTO3oxiR2eQsjTxnQ1OGpvweKLfbc173VPnvooP7tNCDEFzChAh0GT63yXRmg84bAFHagJA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=oTvPllBL; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PvRjJ+/L"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743596592; x=1775132592;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=ipW7SukMx+y4OYBPi1rirqi+iPYrDFo8757SlZ1abVc=;
-  b=PvRjJ+/Len21IgzbPBU9jMWsaCE/TduAPe32MNAhjJfWveWGgmy2gQoU
-   n6CDkXzvgtt2tfxblZsmKu9QH5kCRsFyfomXzMNJa/1bcTNcUN15UP5oq
-   nxf+m/CX3gHOPIBIg4skF8RoxS3K/7ooneV9l16uIWxlEhY0xSSZESTxd
-   2d64kuCciqk/cMcR7qUUYumoEeSfrNWM+pwNsEoswkNzXqFX55R3ZqI4+
-   H2SBSLdJQXPTiaSlpAJXG1bX6KQQdrtr9Dcg4jrlJekImq0+TIz7FMk2y
-   Qin6IeZfYm5VZ5OvnM7ECWWzNDJc0qCYNe6rmFLs2lg6UuyuQdKMk0Lg2
-   Q==;
-X-CSE-ConnectionGUID: 3iLmoYUuS4qBxuosFrARFA==
-X-CSE-MsgGUID: vrbLpepmS9Cx6BNS2V763w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11392"; a="44865054"
-X-IronPort-AV: E=Sophos;i="6.15,182,1739865600"; 
-   d="scan'208";a="44865054"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 05:23:10 -0700
-X-CSE-ConnectionGUID: wM3iTc2ITBevt+9P9ReMjQ==
-X-CSE-MsgGUID: Y+IjvnIMTXCANZURAb0Jtw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,182,1739865600"; 
-   d="scan'208";a="157635548"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa002.jf.intel.com with ESMTP; 02 Apr 2025 05:23:08 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 804CB597; Wed, 02 Apr 2025 15:23:03 +0300 (EEST)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Mika Westerberg <westeri@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH v1 5/5] gpiolib: acpi: Deduplicate some code in __acpi_find_gpio()
-Date: Wed,  2 Apr 2025 15:21:20 +0300
-Message-ID: <20250402122301.1517463-6-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250402122301.1517463-1-andriy.shevchenko@linux.intel.com>
-References: <20250402122301.1517463-1-andriy.shevchenko@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="oTvPllBL"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 532C0JZY007268;
+	Wed, 2 Apr 2025 12:23:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	xkcFHpWEAlY4rM9aIyFAYhMCRoLN5VKa+BwF+yLsfpc=; b=oTvPllBLGAaIe5u+
+	OmbTk8Im+MvIdNV3CJREpZ4yrkl+jITWrbvM2mKbOp7xe01eCoB9Vpiyw1g9pFy8
+	tXWfy6KJLnirJ+IaweQMrA3c0ZjzclLO5/BbOEBjroqJpV7Cg2EgP7UjfYbgwuBg
+	06gVEQtZHVFQ01cY3r3oRHElotfs46J+h3z/qFwuGALsipAviWg1OAa7TL9MmTkY
+	OZ3XWeUXLHXOBwl42D5Ady7H95ZlySWzCerm8oNEOHRs9Z9SDRBv9izc617JumQk
+	CqZm+P6NohzDA+cDHnjzlOqampYFP6Od+dPhtLswOsYY3bINrtYYtUwRVXXeKwt6
+	uN4+bA==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45rh7yk8gc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 02 Apr 2025 12:23:28 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 532CNRO8021059
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 2 Apr 2025 12:23:28 GMT
+Received: from [10.231.195.71] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 2 Apr 2025
+ 05:23:25 -0700
+Message-ID: <1eb3933d-9aac-4e47-a7a5-818aa18b137a@quicinc.com>
+Date: Wed, 2 Apr 2025 20:23:23 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] wifi: ath11k: allow APs combination when dual stations
+ are supported
+To: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
+CC: <ath11k@lists.infradead.org>, <jjohnson@kernel.org>, <kvalo@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-wireless@vger.kernel.org>,
+        <quic_cjhuang@quicinc.com>, <vbenes@redhat.com>
+References: <d410576f-2fc7-4de1-af51-29fbe8b14948@quicinc.com>
+ <20250115130359.138890-1-jtornosm@redhat.com>
+ <748a5a75-1385-4691-85c1-e9cc5eb4ffc2@oss.qualcomm.com>
+Content-Language: en-US
+From: "Yu Zhang (Yuriy)" <quic_yuzha@quicinc.com>
+In-Reply-To: <748a5a75-1385-4691-85c1-e9cc5eb4ffc2@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=IYWHWXqa c=1 sm=1 tr=0 ts=67ed2c41 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=tPUOBYC6UmroMFteW7gA:9
+ a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: 4Q3ha7XTLwWm7TH7As6SR4qYtZIU77iW
+X-Proofpoint-ORIG-GUID: 4Q3ha7XTLwWm7TH7As6SR4qYtZIU77iW
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-02_05,2025-04-01_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=786
+ priorityscore=1501 mlxscore=0 malwarescore=0 bulkscore=0 suspectscore=0
+ lowpriorityscore=0 adultscore=0 impostorscore=0 clxscore=1011 spamscore=0
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504020078
 
-__acpi_find_gpio() calls two functions depending on the supplied con_id
-and possibility to fallback to _CRS lookup. Those functions have the same
-pieces of code that can be done only in one place. Do it so.
 
-This gives an impressive shrink of the generated code for x86_64:
 
-add/remove: 0/2 grow/shrink: 0/4 up/down: 0/-1204 (-1204)
-Function                                     old     new   delta
-acpi_find_gpio.__UNIQUE_ID_ddebug478          56       -     -56
-acpi_dev_gpio_irq_wake_get_by.__UNIQUE_ID_ddebug480      56       -     -56
-acpi_find_gpio                               354     216    -138
-acpi_get_gpiod_by_index                      456     307    -149
-__acpi_find_gpio                             877     638    -239
-acpi_dev_gpio_irq_wake_get_by                695     129    -566
-Total: Before=15358, After=14154, chg -7.84%
+On 1/16/2025 8:31 AM, Jeff Johnson wrote:
+> On 1/15/2025 5:03 AM, Jose Ignacio Tornos Martinez wrote:
+>> Hello Yuriy,
+>>
+>> Thank you for the information.
+>> My platform, as you said, is just wcn6855 hw2.1, but using NetworkManager
+>> with the default configuration.
+>> If this is the only stopper, you can skip and not consider as a wrong case,
+>> because (sorry for repeating) it is just a matter of the number of available
+>> resources that can be adjusted after some research from us.
+>>
+>> Thanks
+>>
+>> Best regards
+>> Jose Ignacio
+> 
+> Thanks,
+> 
+> I was hesitant to take Yuriv's patch since your problem was not fixed. But I
+> guess you are already broken with the current code, so I'll take his patch,
+> and then we can work on fixing any other issues from there.
+> 
+> Kalle, can you review? You currently have this deferred in patchwork:
+> https://patchwork.kernel.org/project/linux-wireless/patch/20240829064420.3074140-1-quic_yuzha@quicinc.com/
+> 
+> /jeff
+> 
+Jeff
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/gpio/gpiolib-acpi.c | 103 +++++++++++++++++-------------------
- 1 file changed, 49 insertions(+), 54 deletions(-)
+Could you help it?
 
-diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
-index 750724601106..5c6ef419f875 100644
---- a/drivers/gpio/gpiolib-acpi.c
-+++ b/drivers/gpio/gpiolib-acpi.c
-@@ -804,8 +804,7 @@ static int acpi_populate_gpio_lookup(struct acpi_resource *ares, void *data)
- 	return 1;
- }
- 
--static int acpi_gpio_resource_lookup(struct acpi_gpio_lookup *lookup,
--				     struct acpi_gpio_info *info)
-+static int acpi_gpio_resource_lookup(struct acpi_gpio_lookup *lookup)
- {
- 	struct acpi_device *adev = lookup->info.adev;
- 	struct list_head res_list;
-@@ -824,8 +823,6 @@ static int acpi_gpio_resource_lookup(struct acpi_gpio_lookup *lookup,
- 	if (!lookup->desc)
- 		return -ENOENT;
- 
--	if (info)
--		*info = lookup->info;
- 	return 0;
- }
- 
-@@ -871,97 +868,83 @@ static int acpi_gpio_property_lookup(struct fwnode_handle *fwnode, const char *p
-  * acpi_get_gpiod_by_index() - get a GPIO descriptor from device resources
-  * @adev: pointer to a ACPI device to get GPIO from
-  * @propname: Property name of the GPIO (optional)
-- * @index: index of GpioIo/GpioInt resource (starting from %0)
-- * @info: info pointer to fill in (optional)
-+ * @lookup: pointer to struct acpi_gpio_lookup to fill in
-  *
-- * Function goes through ACPI resources for @adev and based on @index looks
-+ * Function goes through ACPI resources for @adev and based on @lookup.index looks
-  * up a GpioIo/GpioInt resource, translates it to the Linux GPIO descriptor,
-- * and returns it. @index matches GpioIo/GpioInt resources only so if there
-- * are total %3 GPIO resources, the index goes from %0 to %2.
-+ * and returns it. @lookup.index matches GpioIo/GpioInt resources only so if there
-+ * are total 3 GPIO resources, the index goes from 0 to 2.
-  *
-  * If @propname is specified the GPIO is looked using device property. In
-  * that case @index is used to select the GPIO entry in the property value
-  * (in case of multiple).
-  *
-  * Returns:
-- * GPIO descriptor to use with Linux generic GPIO API.
-- * If the GPIO cannot be translated or there is an error an ERR_PTR is
-- * returned.
-+ * 0 on success, negative errno on failure.
-+ *
-+ * The @lookup is filled with GPIO descriptor to use with Linux generic GPIO API.
-+ * If the GPIO cannot be translated an error will be returned.
-  *
-  * Note: if the GPIO resource has multiple entries in the pin list, this
-  * function only returns the first.
-  */
--static struct gpio_desc *acpi_get_gpiod_by_index(struct acpi_device *adev,
--						 const char *propname,
--						 int index,
--						 struct acpi_gpio_info *info)
-+static int acpi_get_gpiod_by_index(struct acpi_device *adev, const char *propname,
-+				   struct acpi_gpio_lookup *lookup)
- {
--	struct acpi_gpio_lookup lookup;
--	struct acpi_gpio_params *par = &lookup.par;
-+	struct acpi_gpio_info *info = &lookup->info;
-+	struct acpi_gpio_params *par = &lookup->par;
- 	int ret;
- 
--	memset(&lookup, 0, sizeof(lookup));
--	par->crs_entry_index = index;
--
- 	if (propname) {
- 		dev_dbg(&adev->dev, "GPIO: looking up %s\n", propname);
- 
--		ret = acpi_gpio_property_lookup(acpi_fwnode_handle(adev), propname, &lookup);
-+		ret = acpi_gpio_property_lookup(acpi_fwnode_handle(adev), propname, lookup);
- 		if (ret)
--			return ERR_PTR(ret);
-+			return ret;
- 
- 		dev_dbg(&adev->dev, "GPIO: _DSD returned %s %u %u %u\n",
--			dev_name(&lookup.info.adev->dev),
-+			dev_name(&info->adev->dev),
- 			par->crs_entry_index, par->line_index, par->active_low);
- 	} else {
--		dev_dbg(&adev->dev, "GPIO: looking up %d in _CRS\n", index);
--		lookup.info.adev = adev;
-+		dev_dbg(&adev->dev, "GPIO: looking up %u in _CRS\n", par->crs_entry_index);
-+		info->adev = adev;
- 	}
- 
--	ret = acpi_gpio_resource_lookup(&lookup, info);
--	return ret ? ERR_PTR(ret) : lookup.desc;
-+	return acpi_gpio_resource_lookup(lookup);
- }
- 
- /**
-  * acpi_get_gpiod_from_data() - get a GPIO descriptor from ACPI data node
-  * @fwnode: pointer to an ACPI firmware node to get the GPIO information from
-  * @propname: Property name of the GPIO
-- * @index: index of GpioIo/GpioInt resource (starting from %0)
-- * @info: info pointer to fill in (optional)
-+ * @lookup: pointer to struct acpi_gpio_lookup to fill in
-  *
-  * This function uses the property-based GPIO lookup to get to the GPIO
-  * resource with the relevant information from a data-only ACPI firmware node
-  * and uses that to obtain the GPIO descriptor to return.
-  *
-  * Returns:
-- * GPIO descriptor to use with Linux generic GPIO API.
-- * If the GPIO cannot be translated or there is an error an ERR_PTR is
-- * returned.
-+ * 0 on success, negative errno on failure.
-+ *
-+ * The @lookup is filled with GPIO descriptor to use with Linux generic GPIO API.
-+ * If the GPIO cannot be translated an error will be returned.
-  */
--static struct gpio_desc *acpi_get_gpiod_from_data(struct fwnode_handle *fwnode,
--						  const char *propname,
--						  int index,
--						  struct acpi_gpio_info *info)
-+static int acpi_get_gpiod_from_data(struct fwnode_handle *fwnode, const char *propname,
-+				    struct acpi_gpio_lookup *lookup)
- {
--	struct acpi_gpio_lookup lookup;
--	struct acpi_gpio_params *par = &lookup.par;
- 	int ret;
- 
- 	if (!is_acpi_data_node(fwnode))
--		return ERR_PTR(-ENODEV);
-+		return -ENODEV;
- 
- 	if (!propname)
--		return ERR_PTR(-EINVAL);
-+		return -EINVAL;
- 
--	memset(&lookup, 0, sizeof(lookup));
--	par->crs_entry_index = index;
--
--	ret = acpi_gpio_property_lookup(fwnode, propname, &lookup);
-+	ret = acpi_gpio_property_lookup(fwnode, propname, lookup);
- 	if (ret)
--		return ERR_PTR(ret);
-+		return ret;
- 
--	ret = acpi_gpio_resource_lookup(&lookup, info);
--	return ret ? ERR_PTR(ret) : lookup.desc;
-+	return acpi_gpio_resource_lookup(lookup);
- }
- 
- static bool acpi_can_fallback_to_crs(struct acpi_device *adev,
-@@ -983,17 +966,24 @@ __acpi_find_gpio(struct fwnode_handle *fwnode, const char *con_id, unsigned int
- 		 bool can_fallback, struct acpi_gpio_info *info)
- {
- 	struct acpi_device *adev = to_acpi_device_node(fwnode);
-+	struct acpi_gpio_lookup lookup;
- 	struct gpio_desc *desc;
- 	char propname[32];
-+	int ret;
-+
-+	memset(&lookup, 0, sizeof(lookup));
-+	lookup.par.crs_entry_index = idx;
- 
- 	/* Try first from _DSD */
- 	for_each_gpio_property_name(propname, con_id) {
- 		if (adev)
--			desc = acpi_get_gpiod_by_index(adev,
--						       propname, idx, info);
-+			ret = acpi_get_gpiod_by_index(adev, propname, &lookup);
- 		else
--			desc = acpi_get_gpiod_from_data(fwnode,
--							propname, idx, info);
-+			ret = acpi_get_gpiod_from_data(fwnode, propname, &lookup);
-+		if (ret)
-+			continue;
-+
-+		desc = lookup.desc;
- 		if (PTR_ERR(desc) == -EPROBE_DEFER)
- 			return desc;
- 
-@@ -1002,8 +992,13 @@ __acpi_find_gpio(struct fwnode_handle *fwnode, const char *con_id, unsigned int
- 	}
- 
- 	/* Then from plain _CRS GPIOs */
--	if (can_fallback)
--		return acpi_get_gpiod_by_index(adev, NULL, idx, info);
-+	if (can_fallback) {
-+		ret = acpi_get_gpiod_by_index(adev, NULL, &lookup);
-+		if (ret)
-+			return ERR_PTR(ret);
-+
-+		return lookup.desc;
-+	}
- 
- 	return ERR_PTR(-ENOENT);
- }
--- 
-2.47.2
+Thanks,
+Yuriy
 
