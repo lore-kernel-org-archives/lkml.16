@@ -1,112 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4A6523643E;
-	Wed,  2 Apr 2025 14:16:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A7EE2376E1
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 14:18:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743603419; cv=none; b=HPp9IjDDjJHtVcNtyW7qjZEnD1Wbuuotd2dmMcf6VHpYBLpcEbtjB4wF1VtuNeaFuQPOZ0OYgUAdFFQRpzTJbCOg+q5joA/kaoD/Y37Ku3GW02S6RerHAyB2Gg7vincWCBlWPNYaWlUzdnqSblhFTbo5+vx/M1ZK3RD4ez/qJLU=
+	t=1743603522; cv=none; b=DjH03cQslbHO6f06uYObtsQCgs3Kn2usF63a5EAwV0LUR/ZPCc47WWc+ps+XgTw3RF3gHKNuhNjahuB6l2hmG8hlsejW+0YuKX68sH+WqK/4KX1L8eF8TwRduDnP5NnpzFPxSzuPRnHR4PfBR3VV4LiM4CiZP+eKPTyFM0vdBiI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743603419; c=relaxed/simple;
-	bh=orHRFiP7tPTIweKu8AyOtAuC/svXlElWERYo0NHQ05U=;
+	s=arc-20240116; t=1743603522; c=relaxed/simple;
+	bh=SVse8nLg1k64iqJlreSoM8jE2NNKWRf+8WCh6pZMTAU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YBcFzPwstvvi/WoKhwPEJpKkNZG3Wln+tBl8ckb2Ab6n+TiGtDrTOprFfvHfI6gOb6gqc4X0U5F73phHe0bW0sccHzIA87MSgy7eHtLw5Ecfz/btRoH51HpKj0eSwvqn+AuU9A1AgTijKPWkHM5EKMkfs3AqzIdyiuIWXupRobc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XPbzLk2W; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=nFTAbcNjpY8QIQ3giIMnJgXW4nrBLG+82OynTRxs6gK5yFEOBF9BPmqrDc6zpDR9K3zvHcVnE3ByR2h1+/r2/HxNzbOdIh27msWsWjlKwkeIaUGPUuBpIWq4yfB6FqfL9wWp8dBPc1bq57xhjoEnT5eY48oIteJb/MLIsOyzOHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=Guy1lzh7; arc=none smtp.client-ip=209.85.219.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XPbzLk2W"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B38FDC4CEDD;
-	Wed,  2 Apr 2025 14:16:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743603419;
-	bh=orHRFiP7tPTIweKu8AyOtAuC/svXlElWERYo0NHQ05U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XPbzLk2W95Fs76RlRux729HFKI25VSLcTyyg5hCIpvl1Bjq+zf453YhNAkhTzb1s9
-	 5twhBgIQpokA8lWUp9y4mgMrWItD2PjjD1W+x/OuedKjNKWtUc673mMciGloQ/SMKp
-	 gzeCkh/hibxVJr5NYh4Dk/ZpcXViLSK3zF7RfY/ld/zG3FTGKNYKG1nbOt5jxFk+qY
-	 aZyZrVYLb96vaf0GbzJGX3ukKtZ329RHRqEtULIoEls81Wawz/IdiMvRqx0bt9kbR8
-	 /Ynfq0UwkJCMfGM/8cS9xitNhtoVK5K10ct3t0O4nqd1FLehgtkSTr5o5EMN1LLEys
-	 qsAvIlxgAVHmw==
-Date: Wed, 2 Apr 2025 07:16:55 -0700
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: "Shah, Amit" <Amit.Shah@amd.com>
-Cc: "bp@alien8.de" <bp@alien8.de>, "corbet@lwn.net" <corbet@lwn.net>, 
-	"pawan.kumar.gupta@linux.intel.com" <pawan.kumar.gupta@linux.intel.com>, "kai.huang@intel.com" <kai.huang@intel.com>, 
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "andrew.cooper3@citrix.com" <andrew.cooper3@citrix.com>, 
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, 
-	"daniel.sneddon@linux.intel.com" <daniel.sneddon@linux.intel.com>, "Lendacky, Thomas" <Thomas.Lendacky@amd.com>, 
-	"boris.ostrovsky@oracle.com" <boris.ostrovsky@oracle.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"seanjc@google.com" <seanjc@google.com>, "mingo@redhat.com" <mingo@redhat.com>, 
-	"pbonzini@redhat.com" <pbonzini@redhat.com>, "tglx@linutronix.de" <tglx@linutronix.de>, 
-	"Moger, Babu" <Babu.Moger@amd.com>, "Das1, Sandipan" <Sandipan.Das@amd.com>, 
-	"dwmw@amazon.co.uk" <dwmw@amazon.co.uk>, "hpa@zytor.com" <hpa@zytor.com>, 
-	"peterz@infradead.org" <peterz@infradead.org>, "Kaplan, David" <David.Kaplan@amd.com>, 
-	"x86@kernel.org" <x86@kernel.org>
-Subject: Re: [PATCH v2 1/2] x86/bugs: Don't fill RSB on VMEXIT with
- eIBRS+retpoline
-Message-ID: <g5xe26esmtoqevdgxueapvtvojgi63z3lsdzr3jyyo3cmcb2tj@gpeofgbzjzch>
-References: <cover.1732219175.git.jpoimboe@kernel.org>
- <9bd7809697fc6e53c7c52c6c324697b99a894013.1732219175.git.jpoimboe@kernel.org>
- <20241130153125.GBZ0svzaVIMOHBOBS2@fat_crate.local>
- <20241202233521.u2bygrjg5toyziba@desk>
- <20241203112015.GBZ07pb74AGR-TDWt7@fat_crate.local>
- <20241205231207.ywcruocjqtyjsvxx@jpoimboe>
- <6bfb74e5f05ab8d4cecda1c09a235ccc59c84be6.camel@amd.com>
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="Guy1lzh7"
+Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-6ecfc7ed0c1so57813196d6.3
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 07:18:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1743603520; x=1744208320; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ccje2Q6QXF1byar7KCxtZebQOr9wampoK+PfuNMS7dI=;
+        b=Guy1lzh7sz6janTj62G6bz2CQA6FjhQToGLoqHfpKujawGhyOwhRGDTbjr/aiusbIg
+         mQLuHXp/TadZ6LP0f4I+gg8c3t45MQNHfEm6IkNWJ/KgFRuZuxaZm6FEacQfSs7ok9SL
+         i8KtAeSz0mwbsucgcN4KqBaBYcc4zlgvMxLJjMS80+xqBejHa6x4ppEV8G1jYg7sUNPU
+         9CK6I4+vV52FwLnYDtqy8rIYO/wg/g84UVZwO/JMRbtstZJn6MVuZuEUfcI2xT2UffxT
+         BlLtEyMF6srKZEi2ZFIAUpiV0eZXdc/jq/9K1Pf+nwo4AflSENZlqBPCu6gfTeXoCdvb
+         KUZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743603520; x=1744208320;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ccje2Q6QXF1byar7KCxtZebQOr9wampoK+PfuNMS7dI=;
+        b=QhxAzZrhuDb3t5OygVH50GDzuWN67uFC526DEFjaU6jflgntf51R9A8+EISxELrmiv
+         QH5i1CCCrt5pcnTf5s0Lx0/2XYW0iCzYQUgE3Yjo2Rz/30ZohLYlqvECzn5sXEKfeVZ7
+         MEb5nbzRIvIfxWI5QGpVEdHaHRZXMk1sTCnaicsngd6svbIZm6/qTkLbpVawX/1AUqqJ
+         GosBAuGz+arHV/AXrv+Zc8kZWYkTYiT8QG5/Fk8BvpTpfl13sqt7yHkLgJm5gPV9jpsA
+         +4otEU3zKnyG50kElXhQxe5HLWP/AUM5KxAyIIe4be9QXvdTSt5adX1QtItHQ3CRoo+J
+         c1zQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVtluLAzXpzbfiJxdFs+2/nWjbZCWvTD6+T2Itfw9YEEPm7YW0j1L+z3z2VRdFXcGfECNStwfn/zqRdWAk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx2YaF6d5MkudtfLgK3XJu4twhx8nOKXbNQFt1CbD5p5f7aREtb
+	mkVqxiKmjWn7HK40zH+GKw9TCtXhro7XMsrq8fK99PU+aGyTPMfBvSs0fAkC3vQ=
+X-Gm-Gg: ASbGncs18Emnu3q8KIYtzeTdUsOXVxjHCCdsLxeWF164cvjbAdf+ezQV23i40O9smRK
+	UmFmPaAnI6ebGyc7bTP0b7Q7JU/sXvW7NsS9UXrknworQ0x53ABtuTkb7LiBJta3S+FbHym0xWP
+	ousBanNDMpEQdlfZKcil4YQ7pYM8UxT33aon/GYaTeyCMLCvyDqD9/M5nS/ohsZdknsDLBgLRxk
+	3pKWInZPctQEA1d08mBzMnp7jjvV3NjYbwhcb5WW+ZkBCbjhrvkxnPZOVVQOE6pAe7CIuHN9tL3
+	NrFgx1HKO7+cf5O9mJAm/1NcIqVvAc9+XDAGDNVLhPljeHQx6Hv9poxAZewLEVRyoT2lf7YcItF
+	tORlUwhiHIb0Wn101fGNa2JyWKik=
+X-Google-Smtp-Source: AGHT+IEc72cMstQuXqnedf70W46ont8VDgoRyCW+a/CSp5jMBokRXM6GrglR5RZE02gJalJhlKcaJg==
+X-Received: by 2002:ad4:5f07:0:b0:6d8:a8e1:b57b with SMTP id 6a1803df08f44-6ef02d3a6c7mr53648286d6.36.1743603520198;
+        Wed, 02 Apr 2025 07:18:40 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6eec9797b3asm74517846d6.100.2025.04.02.07.18.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Apr 2025 07:18:39 -0700 (PDT)
+Date: Wed, 2 Apr 2025 10:18:38 -0400
+From: Gregory Price <gourry@gourry.net>
+To: "Zhijian Li (Fujitsu)" <lizhijian@fujitsu.com>
+Cc: "lsf-pc@lists.linux-foundation.org" <lsf-pc@lists.linux-foundation.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: CXL Boot to Bash - Section 2a (Drivers): CXL Decoder Programming
+Message-ID: <Z-1HPqufU7MnQ6ii@gourry-fedora-PF4VCD3F>
+References: <Z226PG9t-Ih7fJDL@gourry-fedora-PF4VCD3F>
+ <Z6OMcLt3SrsZjgvw@gourry-fedora-PF4VCD3F>
+ <Z8o2HfVd0P_tMhV2@gourry-fedora-PF4VCD3F>
+ <cf7b97d8-4393-424c-89fc-aa810d907a67@fujitsu.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <6bfb74e5f05ab8d4cecda1c09a235ccc59c84be6.camel@amd.com>
+In-Reply-To: <cf7b97d8-4393-424c-89fc-aa810d907a67@fujitsu.com>
 
-On Wed, Apr 02, 2025 at 09:19:19AM +0000, Shah, Amit wrote:
-> On Thu, 2024-12-05 at 15:12 -0800, Josh Poimboeuf wrote:
-> > On Tue, Dec 03, 2024 at 12:20:15PM +0100, Borislav Petkov wrote:
-> > > On Mon, Dec 02, 2024 at 03:35:21PM -0800, Pawan Gupta wrote:
-> > > > It is in this doc:
-> > > > 
-> > > >  
-> > > > https://www.intel.com/content/www/us/en/developer/articles/technical/software-security-guidance/technical-documentation/indirect-branch-restricted-speculation.html
-> > > > 
-> > > 
-> > > I hope those URLs remain more stable than past experience shows.
-> > > 
-> > > >   "Processors with enhanced IBRS still support the usage model
-> > > > where IBRS is
-> > > >   set only in the OS/VMM for OSes that enable SMEP. To do this,
-> > > > such
-> > > >   processors will ensure that guest behavior cannot control the
-> > > > RSB after a
-> > > >   VM exit once IBRS is set, even if IBRS was not set at the time
-> > > > of the VM
-> > > >   exit."
-> > > 
-> > > ACK, thanks.
-> > > 
-> > > Now, can we pls add those excerpts to Documentation/ and point to
-> > > them from
-> > > the code so that it is crystal clear why it is ok?
-> > 
-> > Ok, I'll try to write up a document.  I'm thinking it should go in
-> > its
-> > own return-based-attacks.rst file rather than spectre.rst, which is
-> > more
-> > of an outdated historical document at this point.  And we want this
-> > document to actually be read (and kept up to date) by developers
-> > instead
-> > of mostly ignored like the others.
-> > 
+On Wed, Apr 02, 2025 at 06:45:33AM +0000, Zhijian Li (Fujitsu) wrote:
+> Hi Gregory,
 > 
-> Hey Josh,
 > 
-> Do you plan to submit a v3 with the changes?
+> On 07/03/2025 07:56, Gregory Price wrote:
+> > What if instead, we had two 256MB endpoints on the same host bridge?
+> > 
+> > ```
+> > CEDT
+> >             Subtable Type : 01 [CXL Fixed Memory Window Structure]
+> >                  Reserved : 00
+> >                    Length : 002C
+> >                  Reserved : 00000000
+> >       Window base address : 0000000100000000   <- Memory Region
+> >               Window size : 0000000020000000   <- 512MB
+> > Interleave Members (2^n) : 00                 <- Not interleaved
+> > 
+> > Memory Map:
+> >    [mem 0x0000000100000000-0x0000000120000000] usable  <- SPA
+> > 
+> > Decoders
+> >                              decoder0.0
+> >                    range=[0x100000000, 0x120000000]
+> >                                  |
+> >                              decoder1.0
+> >                    range=[0x100000000, 0x120000000]
+> >                    /                              \
+> >              decoded2.0                        decoder3.0
+> >    range=[0x100000000, 0x110000000]   range=[0x110000000, 0x120000000]
+> > ```
+> 
+> It reminds me that during construct_region(), it requires decoder range in the
+> switch/host-bridge is exact same with the endpoint decoder. see
+> match_switch_decoder_by_range()
+> 
+> If so, does following decoders make sense?
+> 
+> 
+>   Decoders
+>                                decoder0.0
+>                      range=[0x100000000, 0x120000000]
+>                                    |
+>                       +------------+-----------+
+>                      /                          \
+>                     |      Host-bridge contains  |
+>               decoder1.0     2 decoders       decoder1.1
+>       range=[0x100000000, 0x110000000]     range=[0x110000000, 0x120000000]
+>                      /                              \
+>                decoded2.0                        decoder3.0
+>      range=[0x100000000, 0x110000000]   range=[0x110000000, 0x120000000]
+>
 
-Thanks for the reminder, I actually had the patches ready to go a few
-months ago (with a fancy new doc) and then forgot to post.  Let me dust
-off the cobwebs.
-
--- 
-Josh
+You are correct, i'll update this.
