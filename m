@@ -1,278 +1,112 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5D111EE7DF
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 10:05:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1858EA92E;
+	Wed,  2 Apr 2025 10:07:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743588339; cv=none; b=lUnZlVrQJ2Ya3yAS6lBYe/P6JlWtY1jWIfs2Hmun1dmtNAcGASPzkA655JZJNWa+hdCRqCKIaqBLZxds3l3QyL0eT4Lv8l/zmRvI+nSNY4CMU0e1oKhBTRbULJsHcDswHJiHHmZgiN/f2MEkb9btnMYQ875sD8zjvqmcG4TGN4I=
+	t=1743588420; cv=none; b=S59z/RrWQ7+QhVHHKLDkhGrwjNx/88GHwrFBkhVCVIG9M2hljBc39afrTAM6CrSp39n2bv6OXzxK58C9iu91bqVl5woNRRkAhXuBvYJ41c3HqiZ5mgjDEGKE27Sr4Id9OMGVv++7Ved5OjniQgXjGSv9XZv9pQI5f9nMyp5urho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743588339; c=relaxed/simple;
-	bh=wuEudmfT+UaCFRR0buvXi+PfV+9lKQen0q6Dl1nOL7o=;
+	s=arc-20240116; t=1743588420; c=relaxed/simple;
+	bh=irBICWazUjg9zC/J8c5JnsvICKb4bWu56+cxmqXLuHM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Yodzeh876kH92uEuINhC+0FwhrOetHt9+OO+VStIhnNm6QDjOEzsO/06k5ubqOx6iqde/Xty2ZH14GK8ChUSt85bw2brf9hOUB7skLYp/UP6EKc5JIbpmJxg6kqVg9eBE1PuLAgr4fGCa78NJnjil0LyfExtHsau5Y9/GNYsR+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Fmn+kWFN; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	 To:Cc:Content-Type; b=ecHAA4CWbR60eC8r7kQ/PhmuifRsW3JBuwmwv1eHPS/2W2KEg+IW/dyH3sGvmDTDcT0JX4coHzcdXVs4hE1qGHBmqZjxWe9wRDsjXiTujiHinktACRM3W1wCYDOire9x0vzQfqvCXHcjBe9Av5VDjVm+Xfc91eVOSvxphYPcrrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c9pH4/Kz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Fmn+kWFN"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-30db1bc464dso57420371fa.0
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 03:05:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1743588336; x=1744193136; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=45OLyXeTgKUOUsJtTp3PVAUqi5d9Bj6zKNzxi7O5qYo=;
-        b=Fmn+kWFNvVGzw8QlUdeT8/aSCBPyb6vrvE4UCvV9JhvQ1GL9Av8Mb0ljAEklOiJIW0
-         7pOuSqmc3Ch8IO8wiZZFcPVUi53jLATKXQjMkECIxUNcXFtB8Fbpcc+/eBdC2Vd7Yk3e
-         6v+t8yjS1QdK3EJTryqasAOnrZp2c151d6HzGuZwzgI4uc4bYi5iF6cv+1N3sGDdYsug
-         LWm7VpKutSYNZ8uJJq8m4HS+/ghHY4Tw+u7ByxSqN3h3Idcp8t13+NudFoXIOUK44nOg
-         TlUiIheGAqC1ojC0jYdPB4YQLH+xPENJ3oACbwjB2YprnoigdwCoT3tCLXWjkWrdlab+
-         IwnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743588336; x=1744193136;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=45OLyXeTgKUOUsJtTp3PVAUqi5d9Bj6zKNzxi7O5qYo=;
-        b=qDJ6XJcwJd9w8M8w3Nr4qF/DXR6IMJopqF0EnbgmnRyKIcyJi/VhSV7T3NR3sf8ivz
-         Bh0U+ccXjGyHILqa0JxMn23grjf8qeb2AZBfnSik98C+gWlK3bxJ7AxCWIChkpByVi/g
-         fvM1zPdthoNHL/fItE0nvCrMb1rZV4xjq5D18pCjJP4RYxqCR3QffYSZY9u4MzZvQ55n
-         zsQMAm92jjRKeV7kQUJEsyLlyjBeHuHWM3sVevjUpGJ+ChPyGD68PbWgHhll/Dgs8kZj
-         MbnXRaW4XWW8akgTIn4bW3enDAdKKTc0PRO8voSQ624iJuKB+SGUo5z1zGpC2DDYrYAJ
-         UB/A==
-X-Forwarded-Encrypted: i=1; AJvYcCXqkfoh7gKZkVUecgkxjr4XYPpL+A/9DmhpcyGmYXd+uvF+CQJYO9cjXGhkgvDX4IJ/coVJjqtlk9S35ZM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyKL2jSMkrUktQrqa6O3/vX8CzQ1G6/sEmza8BlWz4PS6cK1LZy
-	w3aqb8GXyoWMDRnD+D/FMvZGchbuomItsAO2knRniqOUtMosPl68bzOZ6t5jH0gRyjZ9pbtW+Pg
-	D3Fidnuanv0wuNe6ijYLx2e+eMMJR1D1Tb1GORg==
-X-Gm-Gg: ASbGncvhTVwclWfVfNWNmCaUt1ipE8nDmsinxX/ndGyDi3M0UzlURDWNYt8uYYJVzuz
-	lztwhw0iw+2qYrDaBsjrQ8K4Q4KGLAcAlOgWchgn471T5gwbOyJFc2F9lxctq7fiOWdor7kM8OP
-	nKQi5HfNPFuZoDijrpPOh/XFs1V0ercw1IYlLXVjxro7sCQsnCx0HFQmi+Dg==
-X-Google-Smtp-Source: AGHT+IGat+Z5mgq28hdi6/NxDSImvrh52D9hoFmdKI0jIwx96YGLWnxNGezLTeRpDrq45eVB6cVH0ojBLTMTByyD5MM=
-X-Received: by 2002:a2e:bc0e:0:b0:304:4e03:f9d9 with SMTP id
- 38308e7fff4ca-30ef91b0b7bmr7332861fa.28.1743588335626; Wed, 02 Apr 2025
- 03:05:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c9pH4/Kz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8084C4AF09;
+	Wed,  2 Apr 2025 10:06:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743588419;
+	bh=irBICWazUjg9zC/J8c5JnsvICKb4bWu56+cxmqXLuHM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=c9pH4/KzNTaOwBuqD1cIyO1su7aRcqZUSmqY1s2YwzZJAU38sZ3LF+RqLSf3Dr1wp
+	 VePdi+WxQZVXq/xrg3tKHcsn79oMFJA5eNEJ5C4hQo14l8Q1ZnQSbMP+7FzA/Op4s1
+	 jD6au5dOwY9fN62ycxRANHPowcspWKQB/KtIvFbjR/fxC6OYgivPZzCNxBKi5Nbf1n
+	 MR4DyKZXXKWw4HqvbHdAukjBqdQ95+uQpnawr1+liAhhzgX0rlk/99xRZRI6QozPku
+	 wtVPhU8v+J/+pzXeO0TesifrUWXSzJqtK81Z5rDBF2+8aaZcERryVoytrYHkFAOOW/
+	 Fe06WVjAAsj2g==
+Received: by mail-oa1-f54.google.com with SMTP id 586e51a60fabf-2bd2218ba4fso2529401fac.1;
+        Wed, 02 Apr 2025 03:06:59 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVU/hMKBqGzQcxgwX/aEjUA4kX8dSoeyufbKORp8tk9pQqI4JxFUr/3/pbWXtL+/zknG9XnV1Gtyc7Q@vger.kernel.org, AJvYcCWEUWj5xs2aGUlkfpewckiCqzFSwNUUiIAcNtH22uPjCO9DQUUdn1MM3Xcg9LBEYwhp5oQwxXLRLVqfiIp5@vger.kernel.org
+X-Gm-Message-State: AOJu0YyWDM3h0V60Oh7yyvwFRLE4gfkyf/Ap4fgMKk2RopAKq/kwOTnp
+	DbzGUv8JiNA4ws+TbpqmriLYzJJUID1wDrxAAgD6+FUWAgDIW5g9xVGzXRkZfftNw1UK0yaetBN
+	lgM0qMC2YgGAsw7rXsPpR+/OZTy8=
+X-Google-Smtp-Source: AGHT+IHyHEk44Pjw38ptToiDK1CORXfebWNx8bDOoxh98GOHqSdTsEMXR+gfZiqJBOQOX8uxaQzRjLd2gxqM1zwvEi4=
+X-Received: by 2002:a05:6870:7e0f:b0:2c2:3a7f:e702 with SMTP id
+ 586e51a60fabf-2cc60ac20d8mr965761fac.11.1743588419202; Wed, 02 Apr 2025
+ 03:06:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250401-gpio-todo-remove-nonexclusive-v2-0-7c1380797b0d@linaro.org>
- <c8ca3c8a-3201-4dde-9050-69bc2c9152c4@sirena.org.uk> <CAMRc=Mcq9yag6yBswhW0OJ8MKzGBpscwo+UGpfCo2aha93LzXA@mail.gmail.com>
- <846010c0-7dc1-421c-8136-9ae2894c9acd@sirena.org.uk> <CAMRc=Mff0TkeiHbM3TAJLJ2HYU_nnPFUpUjbWsdCnW6O4E=+gQ@mail.gmail.com>
- <c3bb82f9-5a2f-4a14-9726-f3e10bf5d427@sirena.org.uk>
-In-Reply-To: <c3bb82f9-5a2f-4a14-9726-f3e10bf5d427@sirena.org.uk>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 2 Apr 2025 12:05:24 +0200
-X-Gm-Features: AQ5f1JqoCngqlGK07DPic2wMtJyn1bxEpIchjqMW-t59V4hE3p7ylOAGrHnVG0M
-Message-ID: <CAMRc=Mc_nXwvj_9w6w8cB3K58AVLHBLCV+MOO1z_6y+uuT86Og@mail.gmail.com>
-Subject: Re: [PATCH v2 0/4] gpio: deprecate and track the removal of GPIO
- workarounds for regulators
-To: Mark Brown <broonie@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+References: <20250402075253.1772541-1-luriwen@kylinos.cn>
+In-Reply-To: <20250402075253.1772541-1-luriwen@kylinos.cn>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 2 Apr 2025 12:06:48 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0h2w8sSer1rWMRKh10QwhXSXW6j_ePTm7CEY=4n7nJWhg@mail.gmail.com>
+X-Gm-Features: AQ5f1JpmLE-LDuqVoCSKiRJQ6XXkuPnmm98ndmwNupTxRYuKSg3LAZSf-Hq1-VU
+Message-ID: <CAJZ5v0h2w8sSer1rWMRKh10QwhXSXW6j_ePTm7CEY=4n7nJWhg@mail.gmail.com>
+Subject: Re: [PATCH v2] tools: Restore built-in rules for subdirectory tool compilation
+To: Riwen Lu <luriwen@kylinos.cn>
+Cc: o-takashi@sakamocchi.jp, rafael@kernel.org, lenb@kernel.org, 
+	linux1394-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org, 
+	linux-acpi@vger.kernel.org, yu.c.chen@intel.com, k2ci <kernel-bot@kylinos.cn>, 
+	Masahiro Yamada <masahiroy@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 1, 2025 at 11:55=E2=80=AFPM Mark Brown <broonie@kernel.org> wro=
-te:
+On Wed, Apr 2, 2025 at 9:54=E2=80=AFAM Riwen Lu <luriwen@kylinos.cn> wrote:
 >
-> On Tue, Apr 01, 2025 at 08:57:56PM +0200, Bartosz Golaszewski wrote:
-> > On Tue, Apr 1, 2025 at 6:00=E2=80=AFPM Mark Brown <broonie@kernel.org> =
-wrote:
-> > > On Tue, Apr 01, 2025 at 04:42:40PM +0200, Bartosz Golaszewski wrote:
+> Prior to commit d1d096312176 ("tools: fix annoying "mkdir -p ..." logs
+> when building tools in parallel"), the top-level MAKEFLAGS=3D-rR
+> (disabling built-in rules/variables) was overridden by
+> subdirectory-specific MAKEFLAGS during tools compilation. This allowed
+> tools like pfrut and firewire to implicitly rely on Make's built-in rules=
+.
 >
-> > > > You have two users and one goes gpiod_set_value(desc, 0), the other=
-:
-> > > > gpiod_set_value(desc, 1). Who is right? Depending on the timing the
-> > > > resulting value may be either.
+> After the aforementioned commit, the -rR flags from the top-level
+> Makefile began propagating to subdirectory builds. This broke tools
+> depending on implicit rules because:
+> 1. -r (--no-builtin-rules) disabled implicit .c -> .o rules
+> 2. -R (--no-builtin-variables) hid critical implicit variables like CC
 >
-> > > That's why we need to figure out if there's sharing - the usage here =
-is
-> > > that we have some number of regulators all of which share the same GP=
-IO
-> > > and we want to know that this is the case, provide our own reference
-> > > counting and use that to decide when to both update the GPIO and do t=
-he
-> > > additional stuff like delays that are required.  When the API was num=
-ber
-> > > based we could look up the GPIO numbers for each regulator, compare t=
-hem
-> > > with other GPIOs we've already got to identify sharing and then reque=
-st
-> > > only once.
+> Fix this by filtering out -rR from MAKEFLAGS.
 >
-> > That's not a good design though either, is it? For one: it relies on
-> > an implementation detail for which there's no API contract, namely the
->
-> There is an API contract as far as I'm concerned, this was discussed
-> when Russell was converting things over to use descriptors since we need
-> something to maintain functionality.  I agree that this is an interface
-> that is more convenient than elegant but it's what was on offer, I think
-> the enthusiasm for converting to gpiod was such people were OK with it
-> since it does actually do the right thing.
->
+> Fixes: d1d096312176 ("tools: fix annoying "mkdir -p ..." logs when buildi=
+ng tools in parallel")
 
-Something having been discussed years ago in times of a different
-maintainer does not really constitute an API contract :). I understand
-the reasoning at the time but I really dislike comparing raw pointers
-in particular and this whole abstraction reversal in general. I'd like
-to at least have something like gpiod_cmp() or gpiod_is_equivalent()
-that would hide the actual logic. Even if, for now, it just remains a
-simple pointer comparison.
+It would be good to CC the author of the above commit (added).
 
-> > idea that the address of the struct gpiod_descr handed out by the call
-> > to gpiod_get() is the same for the same hardware offset on the same
-> > chip. It does work like that at the moment but it's a fragile
-> > assumption. The way pwrseq is implemented for instance, the
-> > "descriptor" obtained from the call to pwrseq_get() is instantiated
-> > per-user, meaning that each user of the same sequence has their own,
-> > unique descriptor. I don't see why such an approach could not be used
-> > in GPIOLIB one day. IOW: nobody ever said that there's a single struct
-> > gpiod_desc per GPIO line.
+> Reported-by: k2ci <kernel-bot@kylinos.cn>
+> Signed-off-by: Riwen Lu <luriwen@kylinos.cn>
+> ---
+>  Makefile | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 >
-> If gpiolib were to change this API we'd need some other way of getting
-> the same functionality, I'd be totally fine with that happening.  For
-> regulators we don't really want the pwrseq behaviour, we want to know
-> that there's a single underlying GPIO that we're updating.
+> diff --git a/Makefile b/Makefile
+> index d138b17b8840..abf9cfebaf4f 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -1431,11 +1431,11 @@ endif
 >
-
-This is bothering me. This is the abstraction reversal I'm talking
-about. Should the regulator drivers even be concerned about whether
-they share resources or not? It's not like consumers of regulators are
-concerned about sharing them with other devices. I'm not saying GPIOs
-should become reference counted - as I said in a previous email, I
-don't believe this makes sense - but GPIOLIB is a lower-level
-abstraction to regulators thus the latter shouldn't really reach into
-the GPIO core and inspect its structures in order to figure out
-whether the lines are shared. This is where an intermediate
-abstraction layer may be helpful. The regulator drivers then just go:
-
-handle =3D pwrseq_get(dev, "enable-gpios");
-pwrseq_power_on(handle);
-
-Even if we do it in multiple places, as long as the enable count is
-balanced, we're good. The consumers are not concerned by what's
-happening behind the scenes just as if it was a reset handle.
-
-> > > That's exactly what the regulator code was doing, as far as the GPIO =
-API
-> > > saw there was only ever one user at once.  Since we can't look up
-> > > numbers any more what we now do is use non-exclusive requests and che=
-ck
-> > > to see if we already have the GPIO descriptor, if we do then we group
-> > > together like we were doing based on the GPIO numbers.  The multiple
-> > > gets are just there because that's how the gpiod API tells us if we'v=
-e
-> > > got two references to the same underlying GPIO, only one thing ever
-> > > actually configures the GPIO.
+>  tools/: FORCE
+>         $(Q)mkdir -p $(objtree)/tools
+> -       $(Q)$(MAKE) LDFLAGS=3D O=3D$(abspath $(objtree)) subdir=3Dtools -=
+C $(srctree)/tools/
+> +       $(Q)$(MAKE) LDFLAGS=3D MAKEFLAGS=3D"$(filter-out rR,$(MAKEFLAGS))=
+" O=3D$(abspath $(objtree)) subdir=3Dtools -C $(srctree)/tools/
 >
-> > That's not an unusual situation. For reset-gpios we now have the
-> > implicit wrapper in the form of the reset-gpio.c driver. Unfortunately
-> > we cannot just make it the fallback for all kinds of shared GPIOs so I
-> > suggested a bit more generalized approach with pwrseq. In any case:
-> > having this logic in the regulator core is not only wonky but also
-> > makes it impossible to unduplicate similar use-cases in audio and
-> > networking where shared GPIOs have nothing to do with regulators.
+>  tools/%: FORCE
+>         $(Q)mkdir -p $(objtree)/tools
+> -       $(Q)$(MAKE) LDFLAGS=3D O=3D$(abspath $(objtree)) subdir=3Dtools -=
+C $(srctree)/tools/ $*
+> +       $(Q)$(MAKE) LDFLAGS=3D MAKEFLAGS=3D"$(filter-out rR,$(MAKEFLAGS))=
+" O=3D$(abspath $(objtree)) subdir=3Dtools -C $(srctree)/tools/ $*
 >
-> Impossible seems pretty strong here?  Part of the thing here is that the
-> higher level users want to understand that there is GPIO sharing going
-> on and do something about it, the working out that the thing is shared
-> isn't really the interesting bit it's rather the part where we do
-> something about that.  It's not that you can't share some code but it
-> feels more like a library than an opaque abstraction.
->
-
-The part where "the higher level users want to understand that there
-is GPIO sharing going on" does not sound correct. Let's take the
-example of drivers/net/phy/mscc/mscc_ptp.c which uses the
-non-exclusive flag for gpiod_get() because on one of the MIPS
-platforms, there are four instances of this PHY that share a GPIO. IMO
-it's a hack, this driver shouldn't care about it. It reverses the idea
-of the DT providing hardware information to drivers and instead the
-driver knows that the DT may describe a shared GPIO.
-
-> > > The sound use cases are roughly the same one - there's a bunch of aud=
-io
-> > > designs where we've got shared reset lines, they're not actually doin=
-g
-> > > the reference counting since the use cases mean that practically
-> > > speaking all the users will make the same change at the same time (or=
- at
-> > > least never have actively conflicting needs) so practically it all en=
-ds
-> > > up working fine.  IIRC the long term plan was to move over to the res=
-et
-> > > API to clean this up rather than redoing the reference counting, if
-> > > we're doing this properly we do want to get the thing the regulator A=
-PI
-> > > has where we know and can control when an actual transition happens.
->
-> > If they actually exist as "reset-gpios" in DT then they could probably
-> > use the reset-gpio.c driver. I will take a look.
->
-> Yes, that was the idea - there was some issue I can't remember that
-> meant it needed a bit of work on the reset API the last time someone
-> looked at it.  The properties might have different names reflecting the
-> pins or something but that seems like a readily solvable problem.
->
-
-As long as the hardware description says it's a reset GPIO, we're
-fine. It's when people try to use the reset framework for something
-that's not a reset when DT maintainers complain.
-
-> Though now I think again some of them might be closer to the regulator
-> enables rather than resets so those ones would not fit there and would
-> more want to librify what regulator is doing...  Something like that
-> would definitely not feel right being described as a power sequence.
->
-
-Well, pwrseq is just a naming convention for want of a better one. It
-really is just a subsystem that mediates usage of shared resources and
-doesn't bind to any specific kernel subsystem.
-
-[snip]
-
->
-> > > It's also not clear to me that pwrseq doesn't just have the same prob=
-lem
-> > > with trying to figure out if two GPIO properties are actually pointin=
-g
-> > > to the same underlying GPIO that everything else does?  It seems like
-> > > the base issue you've got here is that we can't figure out if we've g=
-ot
-> > > two things referencing the same GPIO without fully requesting it.
->
-> > Whether that's feasible (I think it is but I'll have a definite answer
-> > once I spend more time on this) is one question. Another is: do you
-> > have anything against removing this flag given it's replaced with a
-> > better solution? If not, then I'd still like to apply this series and
-> > we can discuss the actual solution once I send out the code. I hope
-> > this will at least start happening this release cycle.
->
-> I'm in no way attached to this specific solution, from my point of view
-> the important thing is that given two devices using GPIOs we have some
-> reasonably convenient way of telling if they're using the same underlying
-> GPIO and can coordinate between the devices appropriately.
-
-I think that logically, consumers of GPIOs shouldn't care about
-whether they're shared. IOW: the non-exclusive flag passed to
-gpiod_get() should go. If the opposition to using pwrseq here is
-strong, then I'd suggest at least moving the handling of the
-non-exclusive flag into gpiolib quirks (in gpiolib-of.c or elsewhere)
-and not exposing it to consumers who have no business knowing it.
-
-I believe pwrseq could actually be used to hide the enable counting
-for GPIOs behind a faux GPIO chip and the consumer would never see a
-pwrseq handle - they would instead use GPIO consumer interfaces and
-we'd have to agree on what logic would we put behind gpiod_set_value()
-(should it effectively work as gpiod_enable() meaning: value is 1 as
-long as at least one user sets it to 1?) and
-gpiod_direction_input()/output() (same thing: highest priority is
-gpiod_direction_output(HIGH) and as long as at least one user sets it
-as such, we keep it).
-
-Bartosz
+>  # ----------------------------------------------------------------------=
+-----
+>  # Kernel selftest
+> --
