@@ -1,138 +1,163 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AF9923A9A4;
-	Wed,  2 Apr 2025 12:47:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1D1423AE7C;
+	Wed,  2 Apr 2025 12:47:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743598043; cv=none; b=hLxwtbjmNLOVIwKJBrfQ8+P1z7zxzq7mV2Ux4IxqDtQBq3EFnrt4tGc6u6p3/YExpZ/9iPvD/GwQJsZFENhCxviUZZFdWPpyhkG43VxvtrcPOXBM78KQcuLDGCUceJDP1cYDgtTmmkVREsgDtfyfYIpbYg283B0H1hjgJbO928c=
+	t=1743598046; cv=none; b=PXiGxocH5m5lGB2c/bfr53ZrhFJHc1PdOmUYa7tNnwB483e7nXzM82xr74v0k4otQiEjHqDK+mf7rOc1430gX5y/SAcMdGF8J0hdh/zqvofFa2metYrhKjbYbNT4NSxkioPLzb4IihikCiPJAdWg0msr0Ixmbf7uFK4PS8nBXzA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743598043; c=relaxed/simple;
-	bh=I0q8yuccgOTwPasdvh8g2GR8Zcmx2hyT3zKwoj4ieVM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TaNXjCaXmqQBok5jkMpceextMCQFhF9X/Mzf91VDbkg9omiTSNHMHGMajpjc7+tL6BeWoUjv1aZn88YG4aGkMB2voIYgHIPtQOiZlHF69mxFijq9TOgtvSjju38+hwToRqvpmWz99uXdElmmHiHt4P3km1lW+/SI6gsjvGGpP94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=F/Yn087g; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1743598046; c=relaxed/simple;
+	bh=7kBGJe/b/YJonwEAB/pAg4Y102PYNZxoPCYFTwNHLo0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=jFgqiuhUu71DOTN5kc/TtJJwKx96sRkI1NLgOEt5roA/+52radAOd7VdpHF87Fplw5t6rklHdBP0BZmrok6r00AxketqWzIPApxLF/HKm3C2XdMMrIF8OezaPSSvBenQSTrL3dqCYXEZ7ol8pgyyInbCHiLoLjTeVB3cL6jnn+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=INWVAHr2; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="F/Yn087g"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=iNrXwLiaCyxw5lMHmTmgzkArPeaL8QrC1vfZuM5wnc4=; b=F/Yn087gqPQgTAh2YdjKH/VtZ5
-	NU/GYeFc9oCxswyI2Y0uLKR+owwsSciPOgIoAkecu/HWGBS7g0rEdkJ0FXrVo5E39sbEooN8Nv8k4
-	ZJlpu+UdPZDOwuRUHnP2vjxNxnnLOZUaBVlwW4gD+4US5UPYYeZ7MsP2N8QatRVoSuv8nGyj4CyG3
-	brkMQRuxSOc17oj+BYJejgnoMSEtJTb8RkXJ0YVHKtvw/o6xR/Ovyp1GCBjjwlvPBw+vhUS0AA/ax
-	u8qTbhqPFkJoi0kVc1TR+hEgmUrREjo51ZfXVD00KIa6BjqwCm5UMPucUkMwseDLYhaA/ztgyDFES
-	ye1dYBHA==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1tzxUu-000000071Gk-2xtB;
-	Wed, 02 Apr 2025 12:47:12 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 4A6CF30049D; Wed,  2 Apr 2025 14:47:12 +0200 (CEST)
-Date: Wed, 2 Apr 2025 14:47:12 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Harshit Agarwal <harshit@nutanix.com>
-Cc: Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	linux-kernel@vger.kernel.org, Jon Kohler <jon@nutanix.com>,
-	Gauri Patwardhan <gauri.patwardhan@nutanix.com>,
-	Rahul Chunduru <rahul.chunduru@nutanix.com>,
-	Will Ton <william.ton@nutanix.com>, stable@vger.kernel.org
-Subject: Re: [PATCH v3] sched/rt: Fix race in push_rt_task
-Message-ID: <20250402124712.GN25239@noisy.programming.kicks-ass.net>
-References: <20250225180553.167995-1-harshit@nutanix.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="INWVAHr2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743598045; x=1775134045;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=7kBGJe/b/YJonwEAB/pAg4Y102PYNZxoPCYFTwNHLo0=;
+  b=INWVAHr2uWIoQNgne0nAIHtMqgNp1sq/BiVF5dUm8Jo2t2vjy7eEAVaH
+   CKhkDvYHlZgYZwmKRXcB8o/1J5Gw3vDUE80yCLky/HFJ2RpPaxITmRtWr
+   h/c8A5tt+X/+prkDVoF+aocf5/pDF5aXkWADu8UBclPrX2S0nQmJz96XU
+   isdh/9OMYyEpqRSex38hphvNnvDLr+V9vZ+oyXLqA0Ld2HP3suSlWr0Cn
+   u9PC/pC8AFKRCGwin8lNmS/P5nsCP5R95u0VbqYfbG38h3VORXth07JLi
+   aztLwj7zK85domIhlkel33FHx584W7jXuMhYjE0F+hVfwtH3rZSqJoVX7
+   g==;
+X-CSE-ConnectionGUID: TofBpnvtRkOe23/UQMX98Q==
+X-CSE-MsgGUID: an2RyJrCQySGnUikn5YE9w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11392"; a="55953463"
+X-IronPort-AV: E=Sophos;i="6.15,182,1739865600"; 
+   d="scan'208";a="55953463"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 05:47:25 -0700
+X-CSE-ConnectionGUID: +zVGJ6EMTLWImVrf0u5jjw==
+X-CSE-MsgGUID: mvzKh6FUQhGJp6x2yeLDWQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,182,1739865600"; 
+   d="scan'208";a="127180616"
+Received: from bergbenj-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.246.73])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 05:47:20 -0700
+From: Jani Nikula <jani.nikula@intel.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+	linux-kernel@vger.kernel.org
+Cc: jani.nikula@intel.com,
+	Jason Gunthorpe <jgg@nvidia.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona.vetter@ffwll.ch>,
+	linux-kbuild@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	intel-xe@lists.freedesktop.org,
+	intel-gfx@lists.freedesktop.org
+Subject: [PATCH v2 2/4] drm: switch to generic header check facility
+Date: Wed,  2 Apr 2025 15:46:54 +0300
+Message-Id: <20250402124656.629226-3-jani.nikula@intel.com>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250402124656.629226-1-jani.nikula@intel.com>
+References: <20250402124656.629226-1-jani.nikula@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250225180553.167995-1-harshit@nutanix.com>
 
-On Tue, Feb 25, 2025 at 06:05:53PM +0000, Harshit Agarwal wrote:
+Switch to the generic header check facility, and sunset the copy-pasted
+local version.
 
-> Details
-> =======
-> Let's look at the following scenario to understand this race.
-> 
-> 1) CPU A enters push_rt_task
->   a) CPU A has chosen next_task = task p.
->   b) CPU A calls find_lock_lowest_rq(Task p, CPU Z’s rq).
->   c) CPU A identifies CPU X as a destination CPU (X < Z).
->   d) CPU A enters double_lock_balance(CPU Z’s rq, CPU X’s rq).
->   e) Since X is lower than Z, CPU A unlocks CPU Z’s rq. Someone else has
->      locked CPU X’s rq, and thus, CPU A must wait.
-> 
-> 2) At CPU Z
->   a) Previous task has completed execution and thus, CPU Z enters
->      schedule, locks its own rq after CPU A releases it.
->   b) CPU Z dequeues previous task and begins executing task p.
->   c) CPU Z unlocks its rq.
->   d) Task p yields the CPU (ex. by doing IO or waiting to acquire a
->      lock) which triggers the schedule function on CPU Z.
->   e) CPU Z enters schedule again, locks its own rq, and dequeues task p.
->   f) As part of dequeue, it sets p.on_rq = 0 and unlocks its rq.
-> 
-> 3) At CPU B
->   a) CPU B enters try_to_wake_up with input task p.
->   b) Since CPU Z dequeued task p, p.on_rq = 0, and CPU B updates
->      B.state = WAKING.
->   c) CPU B via select_task_rq determines CPU Y as the target CPU.
-> 
-> 4) The race
->   a) CPU A acquires CPU X’s lock and relocks CPU Z.
->   b) CPU A reads task p.cpu = Z and incorrectly concludes task p is
->      still on CPU Z.
->   c) CPU A failed to notice task p had been dequeued from CPU Z while
->      CPU A was waiting for locks in double_lock_balance. If CPU A knew
->      that task p had been dequeued, it would return NULL forcing
->      push_rt_task to give up the task p's migration.
->   d) CPU B updates task p.cpu = Y and calls ttwu_queue.
->   e) CPU B locks Ys rq. CPU B enqueues task p onto Y and sets task
->      p.on_rq = 1.
->   f) CPU B unlocks CPU Y, triggering memory synchronization.
->   g) CPU A reads task p.on_rq = 1, cementing its assumption that task p
->      has not migrated.
->   h) CPU A decides to migrate p to CPU X.
-> 
-> This leads to A dequeuing p from Y's queue and various crashes down the
-> line.
-> 
-> Solution
-> ========
-> The solution here is fairly simple. After obtaining the lock (at 4a),
-> the check is enhanced to make sure that the task is still at the head of
-> the pushable tasks list. If not, then it is anyway not suitable for
-> being pushed out.
-> 
-> Testing
-> =======
-> The fix is tested on a cluster of 3 nodes, where the panics due to this
-> are hit every couple of days. A fix similar to this was deployed on such
-> cluster and was stable for more than 30 days.
-> 
-> Co-developed-by: Jon Kohler <jon@nutanix.com>
-> Signed-off-by: Jon Kohler <jon@nutanix.com>
-> Co-developed-by: Gauri Patwardhan <gauri.patwardhan@nutanix.com>
-> Signed-off-by: Gauri Patwardhan <gauri.patwardhan@nutanix.com>
-> Co-developed-by: Rahul Chunduru <rahul.chunduru@nutanix.com>
-> Signed-off-by: Rahul Chunduru <rahul.chunduru@nutanix.com>
-> Signed-off-by: Harshit Agarwal <harshit@nutanix.com>
-> Tested-by: Will Ton <william.ton@nutanix.com>
-> Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> Cc: stable@vger.kernel.org
-> ---
+Keep CONFIG_DRM_HEADER_TEST around for fine-grained control of what gets
+checked. To be unified later.
 
-Thanks, I've picked this up to land after -rc1.
+Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
+Closes: https://lore.kernel.org/r/CAHk-=wjMrqzuUmH-mFbR_46EWEFS=bB=J7h9ABMVy56Vi81PKQ@mail.gmail.com
+Fixes: 62ae45687e43 ("drm: ensure drm headers are self-contained and pass kernel-doc")
+Cc: Masahiro Yamada <masahiroy@kernel.org>
+Cc: David Airlie <airlied@gmail.com>
+Cc: Simona Vetter <simona.vetter@ffwll.ch>
+Signed-off-by: Jani Nikula <jani.nikula@intel.com>
 
+---
+
+Cc: linux-kbuild@vger.kernel.org
+Cc: dri-devel@lists.freedesktop.org
+Cc: intel-xe@lists.freedesktop.org
+Cc: intel-gfx@lists.freedesktop.org
+---
+ drivers/gpu/drm/Kconfig  |  2 +-
+ drivers/gpu/drm/Makefile | 15 +--------------
+ include/drm/Makefile     | 15 +--------------
+ 3 files changed, 3 insertions(+), 29 deletions(-)
+
+diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
+index 2cba2b6ebe1c..10189d0ec30d 100644
+--- a/drivers/gpu/drm/Kconfig
++++ b/drivers/gpu/drm/Kconfig
+@@ -505,7 +505,7 @@ config DRM_WERROR
+ 
+ config DRM_HEADER_TEST
+ 	bool "Ensure DRM headers are self-contained and pass kernel-doc"
+-	depends on DRM && EXPERT && BROKEN
++	depends on DRM && HEADER_CHECK
+ 	default n
+ 	help
+ 	  Ensure the DRM subsystem headers both under drivers/gpu/drm and
+diff --git a/drivers/gpu/drm/Makefile b/drivers/gpu/drm/Makefile
+index ed54a546bbe2..fb2642d46f29 100644
+--- a/drivers/gpu/drm/Makefile
++++ b/drivers/gpu/drm/Makefile
+@@ -225,19 +225,6 @@ obj-$(CONFIG_DRM_LOONGSON) += loongson/
+ obj-$(CONFIG_DRM_POWERVR) += imagination/
+ 
+ # Ensure drm headers are self-contained and pass kernel-doc
+-hdrtest-files := \
++header-check-$(CONFIG_DRM_HEADER_TEST) += \
+ 	$(shell cd $(src) && find . -maxdepth 1 -name 'drm_*.h') \
+ 	$(shell cd $(src) && find display lib -name '*.h')
+-
+-always-$(CONFIG_DRM_HEADER_TEST) += \
+-	$(patsubst %.h,%.hdrtest, $(hdrtest-files))
+-
+-# Include the header twice to detect missing include guard.
+-quiet_cmd_hdrtest = HDRTEST $(patsubst %.hdrtest,%.h,$@)
+-      cmd_hdrtest = \
+-		$(CC) $(c_flags) -fsyntax-only -x c /dev/null -include $< -include $<; \
+-		$(srctree)/scripts/kernel-doc -none $(if $(CONFIG_WERROR)$(CONFIG_DRM_WERROR),-Werror) $<; \
+-		touch $@
+-
+-$(obj)/%.hdrtest: $(src)/%.h FORCE
+-	$(call if_changed_dep,hdrtest)
+diff --git a/include/drm/Makefile b/include/drm/Makefile
+index a7bd15d2803e..ed0567a7956a 100644
+--- a/include/drm/Makefile
++++ b/include/drm/Makefile
+@@ -1,18 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0
+ 
+ # Ensure drm headers are self-contained and pass kernel-doc
+-hdrtest-files := \
++header-check-$(CONFIG_DRM_HEADER_TEST) += \
+ 	$(shell cd $(src) && find * -name '*.h' 2>/dev/null)
+-
+-always-$(CONFIG_DRM_HEADER_TEST) += \
+-	$(patsubst %.h,%.hdrtest, $(hdrtest-files))
+-
+-# Include the header twice to detect missing include guard.
+-quiet_cmd_hdrtest = HDRTEST $(patsubst %.hdrtest,%.h,$@)
+-      cmd_hdrtest = \
+-		$(CC) $(c_flags) -fsyntax-only -x c /dev/null -include $< -include $<; \
+-		$(srctree)/scripts/kernel-doc -none $(if $(CONFIG_WERROR)$(CONFIG_DRM_WERROR),-Werror) $<; \
+-		touch $@
+-
+-$(obj)/%.hdrtest: $(src)/%.h FORCE
+-	$(call if_changed_dep,hdrtest)
+-- 
+2.39.5
 
