@@ -1,182 +1,190 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 947C620F07D;
-	Wed,  2 Apr 2025 11:54:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19CF820F07D;
+	Wed,  2 Apr 2025 11:54:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743594858; cv=none; b=tL969HYseCKdvfM391hPHIIUggxttSl/X+LFHCp5j+TdRV37MM3nl1uwn6WZQH9bNw5U+lagfUWNOHPz8mZHM9PAubqWUrJpalJ/QI/LiYY6OYE9f7scpQPZrk0n36KRyKjTcj09UT8Ih6qogg0OEf0cKtVXCYmuFTtdkdvpIOg=
+	t=1743594889; cv=none; b=YeksScLq/YXMFned+0IfXbQPySDPgc7TcQ6HiQfyYay9SCjIq0C6i6ceqhyw5INSxYhCbEOkCj5WIY9kpwhoxS1HvRbL2zSuJVcS2mqKuflJqhlghh30HUUouwUmKiNGxu9Byoo6aowDxJVFCubNlyFO4kgR3D9B1h1+gtfJfYg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743594858; c=relaxed/simple;
-	bh=2Ua8xGnzQmFoDDoihWOJWU4MrZ5rcLtSCeGpEWXLOCU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=gy2uFlpQTncxXfa1kgTqSPyyh0mckQaF3bySzJ0UPrep+xel9WCo/Hwqb/mUwtxDvPg0v/4sdPcFEoMgQmixtSsQ+A6tZLNfQHOI2tuJdfJya08oQyBsUKaXLHtuO/ykXoXMzgG7pqucrWHjouZeBz4xNy6f1UlzvGqGIP0w2fE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VoQnwDAz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743594889; c=relaxed/simple;
+	bh=wWGayYP/hKKwUZK12OK3t67zfmerVRmMA32CFVG32/Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mzMrJO87d1LRlhoICyv30ko270IxTolYeDRMiHsiKqTyPTmvw4TDaJgGqjBcYD+WdFpeNk+JQgB0kK06j45rvsY8Fqzlm+EaCxaBDxCq7GP4vbcvB++VCsR9vacnLYgtUtGoYq476IHFwjd3rImUBV5riEvENeL7rnnIRi4scUo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KSOVj4vh; arc=none smtp.client-ip=209.85.219.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VoQnwDAz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B34E4C4CEDD;
-	Wed,  2 Apr 2025 11:54:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743594858;
-	bh=2Ua8xGnzQmFoDDoihWOJWU4MrZ5rcLtSCeGpEWXLOCU=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=VoQnwDAz8UNT7tYFJN1lQ76ONyM3sSJhMpKElJSzTQUQ1Sw6Vv2fXzkrjY05pZe13
-	 UhNQLf8YzsoY7bAzyy7MZK7hOD6v+IqgxCEpIAofSzK0FlqyvMhKvO4kM5tXnUUifZ
-	 MT8jfP6y80HrJx+MWEsMhHlK1XltQBPIHGdgwDFprW8BvGEJO3TC1TWhqR/rkvyvHI
-	 Om9a2NG1vsMJw/IbmOAj3bzZvmC0LHWbRAkKva9P0qkVdcYgL2TFAczC1GM4pMQZtP
-	 iFOuwBAj94CQ+z5qPWpSBmccjxIJiYsno4aZeN2rILbMTIHtGcNAe+AcGFAXQYqyfo
-	 TjcoXHii66FGA==
-Message-ID: <aded0940-45d8-4063-a1a2-f0763d509095@kernel.org>
-Date: Wed, 2 Apr 2025 14:54:12 +0300
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KSOVj4vh"
+Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-e46ebe19489so5506661276.2;
+        Wed, 02 Apr 2025 04:54:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743594887; x=1744199687; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vy9/NJXhvn4mIwhmDZnkXdRgiPzF0YdRinTdxKRE0Rw=;
+        b=KSOVj4vhqTTnu5K1QPojNIa7RdrQOls6dznf9PXNwHJZl+k9JMRRb8cxy9y9DvwpV/
+         gwWUejVzl1JY2MUK/deDqtzPcknd6cbChN0LuSbtojkBk5i0v0gQN5AkQ70K7MXPdDvF
+         stBNX72UvVPXpfxVpQ5CIkUu+9pWB8xldYzApSsHdbzzxcK6QopctR8n+nmRJeGzzHmd
+         Mhg45WaYgTSYNM05QlOKa40Mu3MMyXwWmBwBPsfn8OTzOBkK7bpNfBimofao3vniN0fj
+         FJe61965qVEvhdZvLa8AySKpPEssF2UYYoqJazO0+GxtQ/TUyfxxH0RwK14XQtp+9Z6A
+         3BJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743594887; x=1744199687;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vy9/NJXhvn4mIwhmDZnkXdRgiPzF0YdRinTdxKRE0Rw=;
+        b=PzPBPHOaENF9NDlikcwQdoCnB0YVDBQz4bhq787QCzigomeFEW9o8V9PROf5aHeITR
+         m3N9GZC/RNQwbLePK4xOpRk4eao3mjGv30urWgvGR1IJ4jDuF+iCnYPOytkyP/Pe6LjF
+         x1D2irrIkNSZk8JrJeIGRzXvUx9Rgif1+8Tkn+9pRjHW32iOAGSHfbjoCRot9imEpcLx
+         y5n/Q4NyoX1xDATHzEZ4FbCDXNfxCnAroO2bmCv6HD8jNcoNm3Vzq1wxmuFg1RTrQI30
+         UGHlED78hoSN6uW57kHaQQ/kNZTwv1n56EzenxnzjH0SPZSOVoROxW5TVSbEa0ppaLZb
+         vtaA==
+X-Forwarded-Encrypted: i=1; AJvYcCUFKwCd89Z/Dsk/LKA0WMxhhrWdLVyNcNFlWYOCj5qXIXNSt5Ai2GbwMP/2ArrTDh4aRjqZpjPEMGbsK7hlo9c=@vger.kernel.org, AJvYcCWk6HG6klR2vZOx2ee6U2/K1yjMyJPsiAG+oizIcQDtAUcf6xmv7njjJI194MsiL6eLhehtEsDszS/dAOg=@vger.kernel.org, AJvYcCWvv7q49mBrRDowbWDTxSxoQuF+oPFIqXaXJBg02dn7h94x04ktV8peyUNcZXYGoJdtAIGrhMFUE+cH@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz78P4DdpTaSI9hxNh/CAfozld55ihoXKB928IvjApiYfA4AnEH
+	dTljXoiN4P+09e6PRHAnJp9pGwI5npY27w7Vm17J5V3ixMro4PL06IppQYM56BZMm4KDu7xImvz
+	Sc4IxLiW6kHuqOpUwdIEiV2UESJM=
+X-Gm-Gg: ASbGncuyrUTBEG/1YlIIvG4M2T9xbQXhuNYDZL4TwI8xNojy/F+chzlkInTD1DX7eOb
+	KKigSh7odJy/3LSreiD2KDLKx3Bx1p94OXRVZMIlr520OYe7tR2tp7hIiW5n9djXGCuvktiBPCL
+	o+635r1Vd7yj1n8+jX6w1eyztq
+X-Google-Smtp-Source: AGHT+IFNDtBcIAQYO7+mpC5YBdxcpT/tGHFxiQO0PB6nI3IzfmthfCbTHs6kmv4TBqJ5DaKFjmvLCaVtnbat1OZZT2c=
+X-Received: by 2002:a05:6902:2289:b0:e69:371d:6861 with SMTP id
+ 3f1490d57ef6-e6b838d5499mr22764455276.8.1743594886959; Wed, 02 Apr 2025
+ 04:54:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] ARM: dts: omap4: panda: cleanup bluetooth
-To: Andreas Kemnade <andreas@kemnade.info>, Rob Herring <robh@kernel.org>,
- Kevin Hilman <khilman@baylibre.com>, linux-omap@vger.kernel.org,
- Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
- Aaro Koskinen <aaro.koskinen@iki.fi>, devicetree@vger.kernel.org,
- Tony Lindgren <tony@atomide.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>
-References: <20250330151401.444956-1-andreas@kemnade.info>
- <20250330151401.444956-3-andreas@kemnade.info>
-Content-Language: en-US
-From: Roger Quadros <rogerq@kernel.org>
-In-Reply-To: <20250330151401.444956-3-andreas@kemnade.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250328143646.27678-1-johan+linaro@kernel.org> <20250328143646.27678-2-johan+linaro@kernel.org>
+In-Reply-To: <20250328143646.27678-2-johan+linaro@kernel.org>
+From: Jonas Gorski <jonas.gorski@gmail.com>
+Date: Wed, 2 Apr 2025 13:54:36 +0200
+X-Gm-Features: AQ5f1Joz82s1WEmRV4TLp7DwBdkZ7lMGLaFCty5_AWjWPHUmCYB4oGRiYB1dCkM
+Message-ID: <CAOiHx=mo6Qd+7WrO2JvBLhqjGR7oHds14FwFFAVoEkVWLnbhdA@mail.gmail.com>
+Subject: Re: [PATCH 1/4] PCI/pwrctrl: Rename pwrctrl Kconfig symbols and slot module
+To: Johan Hovold <johan+linaro@kernel.org>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Jeff Johnson <jjohnson@kernel.org>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, linux-pci@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, ath11k@lists.infradead.org, 
+	ath12k@lists.infradead.org, linux-wireless@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Andreas,
+Hi,
 
-On 30/03/2025 18:14, Andreas Kemnade wrote:
-> Bluetooth is available on the other Panda board versions, too, so move
-> stuff to common and specify the needed clock properly.
-> 
-> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+I have some nitpicks ...
+
+On Fri, Mar 28, 2025 at 3:41=E2=80=AFPM Johan Hovold <johan+linaro@kernel.o=
+rg> wrote:
+>
+> Commits b88cbaaa6fa1 ("PCI/pwrctrl: Rename pwrctl files to pwrctrl") and
+> 3f925cd62874 ("PCI/pwrctrl: Rename pwrctrl functions and structures")
+> renamed the "pwrctl" framework to "pwrctrl" for consistency reasons.
+>
+> Rename also the Kconfig symbols so that they reflect the new name while
+> adding entries for the deprecated ones. The old symbols can be removed
+> once everything that depends on them has been updated.
+>
+> The new slot module is also renamed to reflect the framework name and
+> match the other pwrctrl modules.
+>
+> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 > ---
->  .../boot/dts/ti/omap/omap4-panda-common.dtsi  | 31 ++++++++++++++++--
->  arch/arm/boot/dts/ti/omap/omap4-panda-es.dts  | 32 -------------------
->  2 files changed, 28 insertions(+), 35 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/ti/omap/omap4-panda-common.dtsi b/arch/arm/boot/dts/ti/omap/omap4-panda-common.dtsi
-> index c860b590142a..05c871d31d7b 100644
-> --- a/arch/arm/boot/dts/ti/omap/omap4-panda-common.dtsi
-> +++ b/arch/arm/boot/dts/ti/omap/omap4-panda-common.dtsi
-> @@ -367,10 +367,8 @@ OMAP4_IOPAD(0x130, PIN_INPUT_PULLUP | MUX_MODE0)	/* i2c4_sda */
->  	 */
->  	wl12xx_gpio: wl12xx-gpio-pins {
->  		pinctrl-single,pins = <
-> -			OMAP4_IOPAD(0x066, PIN_OUTPUT | MUX_MODE3)		/* gpmc_a19.gpio_43 */
-> -			OMAP4_IOPAD(0x06c, PIN_OUTPUT | MUX_MODE3)		/* gpmc_a22.gpio_46 */
-> +			OMAP4_IOPAD(0x066, PIN_OUTPUT | MUX_MODE3)		/* gpmc_a19.gpio_43 - WLAN_EN */
->  			OMAP4_IOPAD(0x070, PIN_OUTPUT_PULLUP | MUX_MODE3)	/* gpmc_a24.gpio_48 */
-
-Apparently GPIO 48 is FM audio related and has nothing to do with wl12xx?
-So should we drop it from here?
-
-> -			OMAP4_IOPAD(0x072, PIN_OUTPUT_PULLUP | MUX_MODE3)	/* gpmc_a25.gpio_49 */
->  		>;
->  	};
->  
-> @@ -393,6 +391,22 @@ button_pins: button-pins {
->  			OMAP4_IOPAD(0x114, PIN_INPUT_PULLUP | MUX_MODE3)	/* gpio_121 */
->  		>;
->  	};
+>  drivers/pci/pwrctrl/Kconfig  | 27 +++++++++++++++++++++------
+>  drivers/pci/pwrctrl/Makefile |  8 ++++----
+>  2 files changed, 25 insertions(+), 10 deletions(-)
+>
+> diff --git a/drivers/pci/pwrctrl/Kconfig b/drivers/pci/pwrctrl/Kconfig
+> index 990cab67d413..62f176e42e33 100644
+> --- a/drivers/pci/pwrctrl/Kconfig
+> +++ b/drivers/pci/pwrctrl/Kconfig
+> @@ -1,19 +1,19 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+>
+> -config HAVE_PWRCTL
+> +config HAVE_PWRCTRL
+>         bool
+>
+> -config PCI_PWRCTL
+> +config PCI_PWRCTRL
+>         tristate
+>
+> -config PCI_PWRCTL_PWRSEQ
+> +config PCI_PWRCTRL_PWRSEQ
+>         tristate
+>         select POWER_SEQUENCING
+> -       select PCI_PWRCTL
+> +       select PCI_PWRCTRL
+>
+> -config PCI_PWRCTL_SLOT
+> +config PCI_PWRCTRL_SLOT
+>         tristate "PCI Power Control driver for PCI slots"
+> -       select PCI_PWRCTL
+> +       select PCI_PWRCTRL
+>         help
+>           Say Y here to enable the PCI Power Control driver to control th=
+e power
+>           state of PCI slots.
+> @@ -21,3 +21,18 @@ config PCI_PWRCTL_SLOT
+>           This is a generic driver that controls the power state of diffe=
+rent
+>           PCI slots. The voltage regulators powering the rails of the PCI=
+ slots
+>           are expected to be defined in the devicetree node of the PCI br=
+idge.
 > +
-> +	bt_pins: bt-pins {
-> +		pinctrl-single,pins = <
-> +			OMAP4_IOPAD(0x06c, PIN_OUTPUT | MUX_MODE3)	  /* gpmc_a22.gpio_46 - BTEN */
-> +			OMAP4_IOPAD(0x072, PIN_OUTPUT_PULLUP | MUX_MODE3) /* gpmc_a25.gpio_49 - BTWAKEUP */
-> +		>;
-> +	};
+> +# deprecated
+> +config HAVE_PWRCTL
+> +       bool
+> +       select HAVE_PWRCTRL
+
+I'm not sure this will work as intended. This symbol can only be !=3D n
+if anything selects it, but there may also be (outdated) config
+symbols that depend on its value. E.g. ath1*k has "select
+PCI_PWRCTL_PWRSEQ if HAVE_PWRCTL", and if there is nothing selecting
+HAVE_PWRCTL, but HAVE_PWRCTRL directly instead, HAVE_PWRCTL will be =3Dn
+and the condition will fail.
+
+Since you rename the only one selecting HAVE_PWRCTL in patch 2/4, but
+update ath1*k in 3/4 and 4/4, their select PCI_PWRCT(R)L_PWRSEQ use is
+temporarily ineffective. Moving the arm64 patch last would avoid that
+though, at least for the current state.
+
+The alternative would be split this by config symbol instead of per
+tree, so all users would be atomatically updated as well. These
+patches need to go through the same tree anyways, so I see no issue
+doing it that way.
+
 > +
-> +	uart2_pins: uart2-pins {
-> +		pinctrl-single,pins = <
-> +			OMAP4_IOPAD(0x118, PIN_INPUT_PULLUP | MUX_MODE0)  /* uart2_cts.uart2_cts - HCI */
-> +			OMAP4_IOPAD(0x11a, PIN_OUTPUT | MUX_MODE0)	  /* uart2_rts.uart2_rts */
-> +			OMAP4_IOPAD(0x11c, PIN_INPUT_PULLUP | MUX_MODE0)  /* uart2_rx.uart2_rx */
-> +			OMAP4_IOPAD(0x11e, PIN_OUTPUT | MUX_MODE0)	  /* uart2_tx.uart2_tx */
-> +		>;
-> +	};
->  };
->  
->  &omap4_pmx_wkup {
-> @@ -531,8 +545,19 @@ &twl_usb_comparator {
->  };
->  
->  &uart2 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&uart2_pins>;
->  	interrupts-extended = <&wakeupgen GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH
->  			       &omap4_pmx_core OMAP4_UART2_RX>;
+> +# deprecated
+> +config PCI_PWRCTL_PWRSEQ
+> +       tristate
+> +       select PCI_PWRCTRL_PWRSEQ
+
+Similar issue, but there are no conditionals based on this, so this may be =
+fine.
+
 > +
-> +	bluetooth {
-> +		compatible = "ti,wl1271-st";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&bt_pins>;
-> +		enable-gpios = <&gpio2 14 GPIO_ACTIVE_HIGH>;	/* GPIO_46 */
-> +		clocks = <&twl 0>;
-> +		clock-names = "ext_clock";
-> +	};
->  };
->  
->  &uart3 {
-> diff --git a/arch/arm/boot/dts/ti/omap/omap4-panda-es.dts b/arch/arm/boot/dts/ti/omap/omap4-panda-es.dts
-> index fe7b156d10ed..a933fe560834 100644
-> --- a/arch/arm/boot/dts/ti/omap/omap4-panda-es.dts
-> +++ b/arch/arm/boot/dts/ti/omap/omap4-panda-es.dts
-> @@ -49,22 +49,6 @@ button_pins: button-pins {
->  			OMAP4_IOPAD(0x0fc, PIN_INPUT_PULLUP | MUX_MODE3) /* gpio_113 */
->  		>;
->  	};
-> -
-> -	bt_pins: bt-pins {
-> -		pinctrl-single,pins = <
-> -			OMAP4_IOPAD(0x06c, PIN_OUTPUT | MUX_MODE3)		/* gpmc_a22.gpio_46 - BTEN */
-> -			OMAP4_IOPAD(0x072, PIN_OUTPUT_PULLUP | MUX_MODE3)	/* gpmc_a25.gpio_49 - BTWAKEUP */
-> -		>;
-> -	};
-> -
-> -	uart2_pins: uart2-pins {
-> -		pinctrl-single,pins = <
-> -			OMAP4_IOPAD(0x118, PIN_INPUT_PULLUP | MUX_MODE0)	/* uart2_cts.uart2_cts - HCI */
-> -			OMAP4_IOPAD(0x11a, PIN_OUTPUT | MUX_MODE0)		/* uart2_rts.uart2_rts */
-> -			OMAP4_IOPAD(0x11c, PIN_INPUT_PULLUP | MUX_MODE0)	/* uart2_rx.uart2_rx */
-> -			OMAP4_IOPAD(0x11e, PIN_OUTPUT | MUX_MODE0)		/* uart2_tx.uart2_tx */
-> -		>;
-> -	};
->  };
->  
->  &led_wkgpio_pins {
-> @@ -96,19 +80,3 @@ buttonS2 {
->  &gpio1_target {
->  	 ti,no-reset-on-init;
->  };
-> -
-> -&wl12xx_gpio {
-> -	pinctrl-single,pins = <
-> -		OMAP4_IOPAD(0x066, PIN_OUTPUT | MUX_MODE3)		/* gpmc_a19.gpio_43 */
-> -		OMAP4_IOPAD(0x070, PIN_OUTPUT_PULLUP | MUX_MODE3)	/* gpmc_a24.gpio_48 */
-> -	>;
-> -};
-> -
-> -&uart2 {
-> -	pinctrl-names = "default";
-> -	pinctrl-0 = <&uart2_pins &bt_pins>;
-> -	bluetooth: tiwi {
-> -		compatible = "ti,wl1271-st";
-> -		enable-gpios = <&gpio2 14 GPIO_ACTIVE_HIGH>;	/* GPIO_46 */
-> -	};
-> -};
+> +# deprecated
+> +config PCI_PWRCTL_SLOT
+> +       tristate
+> +       select PCI_PWRCTRL_SLOT
 
-otherwise,
+This one won't work. Its value will be automatically calculated based
+on other symbols selecting it, and since there is nothing selecting
+it, it will always be n, regardless what any existing .config says.
 
-Reviewed-by: Roger Quadros <rogerq@kernel.org>
+So unless you make this a user selectable symbol as well, this will
+(potentially) break existing .configs since its value will be then
+automatically calculated as =3Dn, and the new symbol takes the default
+=3Dn (unless explicitly enabled, or selected by ath1*k).
 
--- 
-cheers,
--roger
-
+Best regards,
+Jonas
