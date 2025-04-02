@@ -1,114 +1,235 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E510E1EA7DE;
-	Wed,  2 Apr 2025 12:46:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 752241EA7DE
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 12:47:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743598008; cv=none; b=EbFPuuIqJ+OoSEvwX/R6ByexbxOUFN2GtsNO3wkPwwQhyj+8VzbvljPqTiJvywhNY3GszjpSlDdb8GRFpoZbuB9IYpdyEq/5EIaDlT4cUEnhdzv+AZZMEacdAkrThuCAKQkXbcZ+1DXzniDSAOsEezTiELuUBCwN+nxNQ1bscXI=
+	t=1743598028; cv=none; b=I6nIjyL3wQK9UEuc7vOIWmP3YDKG0NtM8HZWHnaZgh58T3Tkp9KSI5kUF2vdUBSh4XJVhxbzoVIPm8O0O5PAc/w8ThYcfHD7hqN5CPH9Q2T1OSBUfZux0KD1Z8Trqzwfy9oMvRgFAz68gG67mPuk7fS8Qk4wSVNCGuAIW9UIc1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743598008; c=relaxed/simple;
-	bh=fuDw+v9E63a/aSleIffar11221krG7wOgWHTJ1Q3/68=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KqGtonnqIi0b41d3imOnyv+0XfiWgfW2CKFMki1S56baiFtdOsB1J7iXlVBIuqOBwhJN84kG5XKj62/GRWnN7vRzuVZ2oQG/ywhIqlruhYz5K6dV9MT/rQTHqZDULde9MEsrFXc9EmEfCdTRneOOvAH5kjGVOGXwd/wwixODxn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aUgtls2H; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743598028; c=relaxed/simple;
+	bh=q4QAZWL05vzCVVCfGsFAB1fGWnJTOhsJMa6MRoKeV7Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oC6D5/f+9En7BfmKPOAU4C0RXdtFId/jqc52ocbOHmj4AAQJq3+p9waisR/sID7786DWPzYf8vb4T5Qc2iyolrsyeEG/nWh4NjwgAmN/8CLgP0DJ4faOzOQ2w41LJ+M86ut+eToiUASAhkkvhf82xA9pwLaNUbs8dYKE0EJ0Hro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=dlDLPCQC; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=iAPsw+WH; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=xz/WrCm2; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=w1q0GM1x; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aUgtls2H"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10F69C4CEDD;
-	Wed,  2 Apr 2025 12:46:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743598007;
-	bh=fuDw+v9E63a/aSleIffar11221krG7wOgWHTJ1Q3/68=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aUgtls2HhODVEH5+qLIKQLomvMF7ELxBw2MKKL+6p9VihJy6d4ilR7aZw4VM6bG22
-	 zDUpLBwkinARXAebf2dC5uy5D27Sf/uK9zqZ+B49O6LNTG0nTIxRRy+6zHt6uiHuw7
-	 5boShg/yXA5K3U142BUMUiz436tWHj7ha92cEpTGGgLBqz/uaRfxU/SobFsCzamk+8
-	 MRnsgcyxYuQPHtOHzvmlrpD/jnUXZMC+dmrLYm6NsqGgAmSGJcY2+AWKZYdyihL0Pw
-	 MkhiMnL7XaCGdAeekj/PX+fUOfk5PZyZhgr3fkpy2FJwN+zM/a5KhPh4b6M1nvbjWq
-	 /VGfAQG+QNTyA==
-Date: Wed, 2 Apr 2025 15:46:37 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Andy Lutomirski <luto@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-	"David S. Miller" <davem@davemloft.net>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org,
-	Naresh Kamboju <naresh.kamboju@linaro.org>,
-	lkft-triage@lists.linaro.org,
-	Linux Regressions <regressions@lists.linux.dev>
-Subject: Re: [PATCH v2 10/13] arch, mm: set high_memory in free_area_init()
-Message-ID: <Z-0xrWyff9-9bJRf@kernel.org>
-References: <20250313135003.836600-1-rppt@kernel.org>
- <20250313135003.836600-11-rppt@kernel.org>
- <20250402140521-bf9b3743-094e-4097-a189-10cdf1db9255@linutronix.de>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="dlDLPCQC";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="iAPsw+WH";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="xz/WrCm2";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="w1q0GM1x"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id D9EFA21172;
+	Wed,  2 Apr 2025 12:47:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1743598024; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=ElqFvgxjPkjYF8Bx7orqIMCixUoDwOI1ydmXi7drOuk=;
+	b=dlDLPCQC38s2Vt6YYlfh0ut1JJ8AsrLItkXFLL4AILVBIEGekiycdqRzY0QdAssUG3WxYg
+	ZUf1VbRecELLcC6kwo0nZ1PvVLL/RAl5ixpYUSt3ZE0ipGNCsD3uZpCDT//thyprqqN5JB
+	9/V2mBQ3gYWiajkO++UprZQMlBm9Q1k=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1743598024;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=ElqFvgxjPkjYF8Bx7orqIMCixUoDwOI1ydmXi7drOuk=;
+	b=iAPsw+WHlZ6ogDEFS8dDqdqBcmo/HrZb4GS4lUV9KIJ2s782QTZe45/JYP12CDQXWs0JfM
+	AJoXCKnIC09+RACQ==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1743598023; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=ElqFvgxjPkjYF8Bx7orqIMCixUoDwOI1ydmXi7drOuk=;
+	b=xz/WrCm29cg4d7/Lt5WxE9R5HtWiI518of+Ew5FF1FdSG7fIQ+CsVOTPn1DN6dHif8fr34
+	lPXdtHUTaWv/gaiMKbrB1aAef1doNrGouQrDHkRVH5rw87gD6HqWgGJJ4MyaqFdIKENjVG
+	++fl+7cT3xhEGqZK8gr6SnaesSZEAy4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1743598023;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=ElqFvgxjPkjYF8Bx7orqIMCixUoDwOI1ydmXi7drOuk=;
+	b=w1q0GM1xEyIPatRyh7jNfqyudtvlDS2FNfqnM55Ml+hrnEXjv4R/8t9t1jP4flzkVLqt7g
+	69puapUqy2yVZmCw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 79111137D4;
+	Wed,  2 Apr 2025 12:47:03 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id VaUzHMcx7WfsBwAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Wed, 02 Apr 2025 12:47:03 +0000
+Message-ID: <ea4f4059-7748-4bfd-9205-8e95222144da@suse.de>
+Date: Wed, 2 Apr 2025 14:47:03 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v20 09/10] drm/shmem-helper: Switch
+ drm_gem_shmem_vmap/vunmap to use pin/unpin
+To: Dmitry Osipenko <dmitry.osipenko@collabora.com>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Gerd Hoffmann <kraxel@redhat.com>, Qiang Yu <yuq825@gmail.com>,
+ Steven Price <steven.price@arm.com>,
+ Boris Brezillon <boris.brezillon@collabora.com>,
+ Frank Binns <frank.binns@imgtec.com>, Matt Coster <matt.coster@imgtec.com>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ kernel@collabora.com
+References: <20250322212608.40511-1-dmitry.osipenko@collabora.com>
+ <20250322212608.40511-10-dmitry.osipenko@collabora.com>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <20250322212608.40511-10-dmitry.osipenko@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250402140521-bf9b3743-094e-4097-a189-10cdf1db9255@linutronix.de>
+X-Spam-Score: -4.30
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_TO(0.00)[collabora.com,gmail.com,ffwll.ch,linux.intel.com,kernel.org,amd.com,redhat.com,arm.com,imgtec.com];
+	RCPT_COUNT_TWELVE(0.00)[15];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,collabora.com:email,suse.de:mid]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On Wed, Apr 02, 2025 at 02:19:01PM +0200, Thomas Weißschuh wrote:
-> (drop all the non-x86 and non-mm recipients)
-> 
-> Hi,
-> 
-> On Thu, Mar 13, 2025 at 03:50:00PM +0200, Mike Rapoport wrote:
-> > From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-> > 
-> > high_memory defines upper bound on the directly mapped memory.
-> > This bound is defined by the beginning of ZONE_HIGHMEM when a system has
-> > high memory and by the end of memory otherwise.
-> > 
-> > All this is known to generic memory management initialization code that
-> > can set high_memory while initializing core mm structures.
-> > 
-> > Add a generic calculation of high_memory to free_area_init() and remove
-> > per-architecture calculation except for the architectures that set and
-> > use high_memory earlier than that.
-> 
-> This change (in mainline as commit e120d1bc12da ("arch, mm: set high_memory in free_area_init()")
-> breaks booting i386 on QEMU for me (and others [0]).
-> The boot just hangs without output.
-> 
-> It's easily reproducible with kunit:
-> ./tools/testing/kunit/kunit.py run --arch i386
-> 
-> See below for the specific problematic hunk.
-> 
-> [0] https://lore.kernel.org/lkml/CA+G9fYtdXHVuirs3v6at3UoKNH5keuq0tpcvpz0tJFT4toLG4g@mail.gmail.com/
-> 
-> 
-> > diff --git a/arch/x86/mm/init_32.c b/arch/x86/mm/init_32.c
-> > index 6d2f8cb9451e..801b659ead0c 100644
-> > --- a/arch/x86/mm/init_32.c
-> > +++ b/arch/x86/mm/init_32.c
-> > @@ -643,9 +643,6 @@ void __init initmem_init(void)
-> >  		highstart_pfn = max_low_pfn;
-> >  	printk(KERN_NOTICE "%ldMB HIGHMEM available.\n",
-> >  		pages_to_mb(highend_pfn - highstart_pfn));
-> > -	high_memory = (void *) __va(highstart_pfn * PAGE_SIZE - 1) + 1;
-> > -#else
-> > -	high_memory = (void *) __va(max_low_pfn * PAGE_SIZE - 1) + 1;
-> >  #endif
-> 
-> Reverting this hunk fixes the issue for me.
- 
-This is already done by d893aca973c3 ("x86/mm: restore early initialization
-of high_memory for 32-bits").
-  
-> >  	memblock_set_node(0, PHYS_ADDR_MAX, &memblock.memory, 0);
+Hi
+
+Am 22.03.25 um 22:26 schrieb Dmitry Osipenko:
+> The vmapped pages shall be pinned in memory and previously get/put_pages()
+> were implicitly hard-pinning/unpinning the pages. This will no longer be
+> the case with addition of memory shrinker because pages_use_count > 0 won't
+> determine anymore whether pages are hard-pinned (they will be soft-pinned),
+> while the new pages_pin_count will do the hard-pinning. Switch the
+> vmap/vunmap() to use pin/unpin() functions in a preparation of addition
+> of the memory shrinker support to drm-shmem.
+
+I've meanwhile rediscovered this patch and I'm sure this is not correct. 
+Vmap should not pin AFAIK. It is possible to vmap if the buffer has been 
+pinned, but that's not automatic.Â  For other vmaps it is necessary to 
+hold the reservation lock to prevent the buffer from moving.
+
+Best regards
+Thomas
+
+>
+> Acked-by: Maxime Ripard <mripard@kernel.org>
+> Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
+> Signed-off-by: Dmitry Osipenko <dmitry.osipenko@collabora.com>
+> ---
+>   drivers/gpu/drm/drm_gem_shmem_helper.c | 6 +++---
+>   include/drm/drm_gem_shmem_helper.h     | 2 +-
+>   2 files changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/drm_gem_shmem_helper.c b/drivers/gpu/drm/drm_gem_shmem_helper.c
+> index 6fb96e790abd..84a196bbe44f 100644
+> --- a/drivers/gpu/drm/drm_gem_shmem_helper.c
+> +++ b/drivers/gpu/drm/drm_gem_shmem_helper.c
+> @@ -360,7 +360,7 @@ int drm_gem_shmem_vmap_locked(struct drm_gem_shmem_object *shmem,
+>   			return 0;
+>   		}
+>   
+> -		ret = drm_gem_shmem_get_pages_locked(shmem);
+> +		ret = drm_gem_shmem_pin_locked(shmem);
+>   		if (ret)
+>   			goto err_zero_use;
+>   
+> @@ -383,7 +383,7 @@ int drm_gem_shmem_vmap_locked(struct drm_gem_shmem_object *shmem,
+>   
+>   err_put_pages:
+>   	if (!drm_gem_is_imported(obj))
+> -		drm_gem_shmem_put_pages_locked(shmem);
+> +		drm_gem_shmem_unpin_locked(shmem);
+>   err_zero_use:
+>   	shmem->vmap_use_count = 0;
+>   
+> @@ -420,7 +420,7 @@ void drm_gem_shmem_vunmap_locked(struct drm_gem_shmem_object *shmem,
+>   			return;
+>   
+>   		vunmap(shmem->vaddr);
+> -		drm_gem_shmem_put_pages_locked(shmem);
+> +		drm_gem_shmem_unpin_locked(shmem);
+>   	}
+>   
+>   	shmem->vaddr = NULL;
+> diff --git a/include/drm/drm_gem_shmem_helper.h b/include/drm/drm_gem_shmem_helper.h
+> index 3a4be433d5f0..8b9bba87ae63 100644
+> --- a/include/drm/drm_gem_shmem_helper.h
+> +++ b/include/drm/drm_gem_shmem_helper.h
+> @@ -130,7 +130,7 @@ int drm_gem_shmem_madvise_locked(struct drm_gem_shmem_object *shmem, int madv);
+>   static inline bool drm_gem_shmem_is_purgeable(struct drm_gem_shmem_object *shmem)
+>   {
+>   	return (shmem->madv > 0) &&
+> -		!shmem->vmap_use_count && shmem->sgt &&
+> +		!refcount_read(&shmem->pages_pin_count) && shmem->sgt &&
+>   		!shmem->base.dma_buf && !drm_gem_is_imported(&shmem->base);
+>   }
+>   
 
 -- 
-Sincerely yours,
-Mike.
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
+
