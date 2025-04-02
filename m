@@ -1,105 +1,125 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-b5-smtp.messagingengine.com (fhigh-b5-smtp.messagingengine.com [202.12.124.156])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E02A214A8D
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 11:02:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C38B1EB9F3;
+	Wed,  2 Apr 2025 11:04:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743591766; cv=none; b=fQ+pMKtEvGyhmsO5ITso/r+CYuU3UBi2ShjjagqF2zKLbzhJFM2amsWheKq7xOK7rPMoo0sMb9BzVfPN7eyMUmrOfeVDqZWUqCNZxT9WADfwmFGWthKvBfLH2OXQLBUab6m5eYgk/eQ7bofIKwyW6ValSN1J13S0kYI2V03oaR0=
+	t=1743591854; cv=none; b=MsQ3mMiDfytT+Wn3H7gGYYhY7jNjRrTlt+2j41g2HOaFxXpbBYqk79gXWm9gtnr8n2lDgAFu7KiELAf4WaP0s/423AnLGMTMbX398JQNTQOF1GzmTKHIEmsw+3g5xNq3OJpmGnxjt8Wb47czerqh1plXz+lDq7mH7+7u23RY7vA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743591766; c=relaxed/simple;
-	bh=/ksHMeBu/p/asNzn0ejbgAzHS7nmF3zhaWIA6ZgUn2M=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=adfxFe00w/MuCBH4MnL+vLjMul9eXh0NOplaZjbeXEXnLIqnnd7wnTusP0DfSz/P4LT/77qQw1dpGe4AQHFdJW9jYIUBbTbYezr3oqTThLms/5EaVBw59aEe9ebCx1LN3ECEMdEoouYPVP858UTM8XmaRW5zKbBwaKDbpZv3+KM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FOSbTBU2; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1743591854; c=relaxed/simple;
+	bh=6d9OGw+GQO0uLw1dN+Q6U55NaS4IXjOQQRF2LeeTj7E=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=chfYdlTS1E1JfpfQKnk0JhswWONdm5huDK6Xr56e/K2ZpxhXDz5oDa6ibb9NGRpWFJShn34v8Eg/C90yCqtPNoqz1q2C9OWdTf8hkmFtFWmH4eCwxX9Y2ivxKoc75GTvBkn2H067YzGl/Jbg636kTEcn6nnYa7iEHU5uy8Oo6fU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=cj8brkGv; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=FDGJ2ZJO; arc=none smtp.client-ip=202.12.124.156
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FOSbTBU2"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43d04dc73b7so71519195e9.3
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 04:02:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743591763; x=1744196563; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=GPszXvzT1nBu1lLTF10nosvpBa1AQVUmdaJflyBmnvA=;
-        b=FOSbTBU2yUZDuXFdijjS/bTo04BelqhiKRVjT8rPHXrXERtTdR/4Vg8C95WgQTWUkp
-         rm3cT+b25kcM//rOIcqxfs71vOnUfnGTgF7NhotEUTzfZeFRMsAbRnVnMBeuwtrS2Spp
-         0vN3RuVElf5bIcdr6iHX/BYrt+LpQbEpkUuwVM9KWZIJcH4JjjT3kWNZoGJUPlyKYwV/
-         IWELFqtkq9W4FLbrnbhu2glbTUs8VVClvDXiw3bniidG0XaV5H1EBC9dBagaQknYeLBz
-         ZBlziqjpRuGEPfE2XBdko3ozr+mbnu/UuqlKSZh8VYeTSwZkhy8OXs1hGzzNH3coiV09
-         EzVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743591763; x=1744196563;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GPszXvzT1nBu1lLTF10nosvpBa1AQVUmdaJflyBmnvA=;
-        b=YfeaiRLuoS1W80A7be8owkDZ/IfjotG89P/eMGBgK+7VHKNkryGDtt+ZP0Cpjns9mo
-         6lY23GfqFelaafhlxYihJbljDZ/DOlcmHzOeY1oZZ0VcJeC8ZczeQlw9jtv1EaimVx5P
-         Jknm8IHpO0xfelqTvXuPM33IJ7lKz3kv32qlkrNNzyw5yzD8LFFdF0fOCNJPEHYJ8+Sl
-         8QtBjKuhRtAtxQehyf8K5BuNaE40yqDEndWhI71+ZIWk7y4ywJFUodBJtEiIzzz0Tiix
-         +TRImJVUgJP5IO3gXlZWOLWPFQIHTcqEDOfl90AK5KZAAqFl/JBmoytaGffT0Z/buZSx
-         a9Tw==
-X-Forwarded-Encrypted: i=1; AJvYcCWXRaIpLDJEGMQWvrfpBICk5szaob2MOPCuefC4KoE72kOZcMC8F0Ao0bJN5E84gQ9+BaUwK8FAwzD6Puk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwJONrSDRRVbtIwGKpzt2axZ3vPuCvKut48Ri3sJ7/GTAi8e96A
-	gU4vwjSk1YuciVU0DrUUk4AXkDYk85897DetPH/PwsbAWwe0x+rpDDvh4Lhz1UA=
-X-Gm-Gg: ASbGnct0HLfLoNyG75xe1HKHtapUJjapbe58dmzNb8spEzLskjlEMQXUBPQIDCSgEjl
-	D4mR9+ZV73B7mT5Xp2g7m3DZXv6sDvzVBCjyKdchVDkhSJOQNWQvCaNkXIJnR89htmMdzqvs+w5
-	UO9Zq7QKN/H7dFTwAGkV5oqNHt69K9wtGmGbd3eJybLPWe/JApB8NFo4sjwRKeVmRIK8sbjryKK
-	8rrQOZdrCXH0Mb/oLQ0WATh/519K3Lq4+6YxvnHRgO0QubvMBcEq6VEi4IyUNaToP5Nk5OKub2w
-	n/gwc+qXMYCt/yVy8u3zs/81xy/AJ/doYtQ0/pww6vJBDwDsVg==
-X-Google-Smtp-Source: AGHT+IH2PxxnwoGmEekj/JPGQfhyg6WywOXDfzxclh3b+yJlm63bf//RxWl96Bfbtzsi6wSpbo9I/Q==
-X-Received: by 2002:a05:6000:40e0:b0:391:4977:5060 with SMTP id ffacd0b85a97d-39c1211d5b0mr12864765f8f.53.1743591762880;
-        Wed, 02 Apr 2025 04:02:42 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-39c0b7a41b4sm16396725f8f.85.2025.04.02.04.02.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Apr 2025 04:02:42 -0700 (PDT)
-Date: Wed, 2 Apr 2025 14:02:40 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
-	Sagi Grimberg <sagi@grimberg.me>, linux-nfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: [PATCH] nfs: Add missing release on error in
- nfs_lock_and_join_requests()
-Message-ID: <3aaaa3d5-1c8a-41e4-98c7-717801ddd171@stanley.mountain>
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="cj8brkGv";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="FDGJ2ZJO"
+Received: from phl-compute-07.internal (phl-compute-07.phl.internal [10.202.2.47])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 0CEC22540224;
+	Wed,  2 Apr 2025 07:04:10 -0400 (EDT)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-07.internal (MEProxy); Wed, 02 Apr 2025 07:04:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1743591849;
+	 x=1743678249; bh=0+2nC1yRWO2krIGNS9hPJRkYfq3R8kYhi3T6ukOvaHI=; b=
+	cj8brkGv0OS41KWvxOndfLmENKO3MsZH1cH2HAh97cmzpxFnmPgIqtQu75EqQ1lf
+	fDoud6Hf5DjH5m4c1ZyAaVZpNrbGXgebn2VI6j6P3o/5KukoTHtpQrNV7AOtxJsp
+	FQ6DemD38e4eYbJ22Hc9myzjT16XI5pe62qDxFSZ56TM9mcb2M7edzYUpesxa7p5
+	Q8tMpTBkIrddRZkGYuajIghr10Tc4TJtReP7w6+TFXGxURW1CzaSwv91jaCrTxYh
+	0dnb91j5bX6Fr67Bat3HDONGrRW8euYli8Fy6GhZ5hGdQ9vdmmJ6RB/ifT7sE473
+	SKlIeWYrvJoMaeKXOWoqEQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1743591849; x=
+	1743678249; bh=0+2nC1yRWO2krIGNS9hPJRkYfq3R8kYhi3T6ukOvaHI=; b=F
+	DGJ2ZJOEMKQAABJUWyvR2R0wygnWFFAChKs5AbbZkvyrlyILDrP12bZNOq/DECrG
+	XK5m7cbzolhhGS+XW4RkuAzz2GplAWEPA/Kg1FMBckGOtINVnHeX7QwqFBNqRr6q
+	KohzskG7D8Ja3GuIOpQ1jY1j4TqpBxkSGc1D18zX+drV6a6ccNer8vtmnC6M2844
+	LOPOuF2iRfA1tBiygTWsXHpVcP3LtzbTwAJFTB4ngPDAJz8FBS9bu8/ny7XlHPH8
+	wmwDUBrEnr+KMTxDlfC1pQvarbxncwo6KsaCS91gZ8FptE9JZTiSnZeBBcnJ0iPs
+	nSZM4L2lBEPUGswSoqb7g==
+X-ME-Sender: <xms:qRntZ000e9FiA9fULog-htIlqrdDQ0meUAx1NE17y9t5nhahmWMLbA>
+    <xme:qRntZ_GOZCe6ALDh55TQFupueBRj8BYj6Rx0n3a8ij8BiVEiMgllQxwp303Womfnv
+    Ui5_DO6GK5vPCCoA3o>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddukeehhedtucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
+    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
+    gsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeet
+    fefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
+    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
+    uddtpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegrkhhshhgrhidrghhuphhtrg
+    esrghmugdrtghomhdprhgtphhtthhopegrnhgrnhgurdhumhgrrhhjihesrghmugdrtgho
+    mhdprhgtphhtthhopehgrghuthhhrghmrdhshhgvnhhohiesrghmugdrtghomhdprhgtph
+    htthhopehmrghrihhordhlihhmohhntghivghllhhosegrmhgurdgtohhmpdhrtghpthht
+    ohepnhgrvhgvvghnkhhrihhshhhnrgdrtghhrghtrhgrughhihesrghmugdrtghomhdprh
+    gtphhtthhopehshhihrghmqdhsuhhnuggrrhdrshdqkhesrghmugdrtghomhdprhgtphht
+    thhopehgrhgvghhkhheslhhinhhugihfohhunhgurghtihhonhdrohhrghdprhgtphhtth
+    hopehlihhnuhigsehrohgvtghkqdhushdrnhgvthdprhgtphhtthhopehlihhnuhigqdhh
+    fihmohhnsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:qRntZ866ydlzsrFrJA1n1NjZGLxirmSTg8bCAH4YZrhkViGVjJdPWA>
+    <xmx:qRntZ90JhRc7C4yKx0FarM6GmMEWipQugPvrkOcSY2jKfTzAjp2H4w>
+    <xmx:qRntZ3GFgYTSLmm8T7rdwSksl-TWYbge5YzMN4LhVCfY9iTq9wmCvg>
+    <xmx:qRntZ2_zG0xqqBZpwXQVbY936XMekcU0p7qj8lWq2SainAN_yydwHA>
+    <xmx:qRntZxfmGW-MItUq8AZGXgaJZyny80z7MpA5MQzIrfg5RAAEL0ECuxY3>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 44A552220074; Wed,  2 Apr 2025 07:04:09 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
+X-ThreadId: T2646875b90204225
+Date: Wed, 02 Apr 2025 13:03:49 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Akshay Gupta" <akshay.gupta@amd.com>, linux-hwmon@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: "Guenter Roeck" <linux@roeck-us.net>,
+ "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, shyam-sundar.s-k@amd.com,
+ gautham.shenoy@amd.com, "Mario Limonciello" <mario.limonciello@amd.com>,
+ naveenkrishna.chatradhi@amd.com, anand.umarji@amd.com
+Message-Id: <af416dbf-240c-4c21-954f-d69420f6bd3d@app.fastmail.com>
+In-Reply-To: <20250402055840.1346384-4-akshay.gupta@amd.com>
+References: <20250402055840.1346384-1-akshay.gupta@amd.com>
+ <20250402055840.1346384-4-akshay.gupta@amd.com>
+Subject: Re: [PATCH v7 03/10] misc: amd-sbi: Move hwmon device sensor as separate
+ entity
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-Call nfs_release_request() on this error path before returning.
+On Wed, Apr 2, 2025, at 07:58, Akshay Gupta wrote:
 
-Fixes: c3f2235782c3 ("nfs: fold nfs_folio_find_and_lock_request into nfs_lock_and_join_requests")
-Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
----
-From static analysis and untested.  Pretty sure it's correct, though.  ;)
+> +
+> +int create_hwmon_sensor_device(struct device *dev, struct sbrmi_data *data)
+> +{
+> +	if (IS_REACHABLE(CONFIG_HWMON)) {
+> +		struct device *hwmon_dev;
+> +
+> +		hwmon_dev = devm_hwmon_device_register_with_info(dev, "sbrmi", data,
+> +								 &sbrmi_chip_info, NULL);
+> +		return PTR_ERR_OR_ZERO(hwmon_dev);
+> +	}
+> +	return 0;
 
- fs/nfs/write.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+I just one more problems with this bit. This was already in the
+existing code, but should still be addressed:
 
-diff --git a/fs/nfs/write.c b/fs/nfs/write.c
-index aa3d8bea3ec0..23df8b214474 100644
---- a/fs/nfs/write.c
-+++ b/fs/nfs/write.c
-@@ -579,8 +579,10 @@ static struct nfs_page *nfs_lock_and_join_requests(struct folio *folio)
- 
- 	while (!nfs_lock_request(head)) {
- 		ret = nfs_wait_on_request(head);
--		if (ret < 0)
-+		if (ret < 0) {
-+			nfs_release_request(head);
- 			return ERR_PTR(ret);
-+		}
- 	}
- 
- 	/* Ensure that nobody removed the request before we locked it */
--- 
-2.47.2
+Using IS_REACHABLE() is usually a sign that the Kconfig dependencies
+are wrong. Fix the dependencies instead so the hwmon driver can
+only be enabled if the subsystem is enabled. You can either add a
+separate Kconfig symbol or make the driver 'depends on HWMON || !HWMON'
+to express this.
 
+       Arnd
