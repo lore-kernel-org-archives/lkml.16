@@ -1,60 +1,233 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com [209.85.221.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6C8C9444;
-	Wed,  2 Apr 2025 08:24:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4806B9444;
+	Wed,  2 Apr 2025 08:25:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743582271; cv=none; b=gNevdFenTjJMxp79OfOyp3rmcRB/UPYvNo61b1r4L4LstD7Nq7DQKlEL9HAKk/ADsMWs4AoRl8L2HW8hrRyI8xygPERmbSwf8jv2gBs0FlWG9v0JyKsHYABWyutf5QTxij2ng2vphFefkzNE7hIhF7nnxkqSf5lwmwdWCaAKi3I=
+	t=1743582334; cv=none; b=chHodMYgG/wEfT/H2PwAoQHRaOZAU4tNHI/M+KVj8/NNBCxAGMRd4Jz8lVyjUZPjG+Bej3wwK+i8dAo/t8eI354i6dKc1EX2B+hWeGM+kZbd54+YiorKU8ICuVkKVlrNyYWsTSiCLB1PVXc4VlCz9w1VaZKdM1Ik3pmQzpVbVYI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743582271; c=relaxed/simple;
-	bh=gJTIWAo+mu6QnQlOUikh3g6htCbJXhBr8Ndes+q9IC4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nH4w0Tbnd510QffYh4sUZ+XTj2tHmdUR09RQgEUmfA4tGjFJQux8Vm23o5jqvxgWjiNs5S01swHym5/BdJht+ipZeFESEr/uZ6IN0o2UETTA9aeSHr/LLEhwTEDFhxfKF2oZHO6KuZ5jpXxfpwwtwWkZoEZDjbGC5wOlKZAfsf0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h8Dnf2Sl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743582334; c=relaxed/simple;
+	bh=zlFt7xTIP5SFpdSJFTXcqz9RHlPuF2E34wMlfeMVbps=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=A0RfHrvqwu+dAh2zTamrKmVB/CBxDzMmpwogMWFQxwrQ7grJy300D8dL6BNVLoj2hw1gWYwJx0KNNtT1ch1RawCWizTFtcMDoytxgMwwJ/UDmwsE4isSIFRdK6jefcKAx3QOjLNj20l+BooSe4vI7E2Z7/eKovu4DW+/5Wnr9fg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KKBgBBmy; arc=none smtp.client-ip=209.85.221.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h8Dnf2Sl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61003C4CEDD;
-	Wed,  2 Apr 2025 08:24:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743582270;
-	bh=gJTIWAo+mu6QnQlOUikh3g6htCbJXhBr8Ndes+q9IC4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=h8Dnf2SlDrGknfsTX8nPHtK3B2sAVQ1tzQh5H48VXouY5xcvihoC4Oce8Bpj77NRI
-	 xhaetJ5KvQvH0qVBAub/SzRQ/djkA2ruTfygqKhPcTS67whyrsYOuyxqY2IFsYc905
-	 EpPA3Hv0jzfjhTZexuu8niKHhO+y7w8/TVHoDQNwDR5BdwUBKKT/pCn0KypDlLj2//
-	 4oAIjynHHrzbzIaG+8oBBkSli05agdGgllmut7rhkfiqMrd9QMsvDqXl0NDqcjhxL9
-	 UdMaZ7oF05WcLzUMDnNsVvdKIlaUhwHwQFYFNNFp7YGO5EHItYbvZ+6mTkaBPml2WO
-	 E48PrOp4bAkwg==
-Date: Wed, 2 Apr 2025 08:24:27 +0000
-From: Tzung-Bi Shih <tzungbi@kernel.org>
-To: Slawomir Rosek <srosek@chromium.org>
-Cc: Benson Leung <bleung@chromium.org>, Guenter Roeck <groeck@chromium.org>,
-	chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org,
-	ukaszb@chromium.org
-Subject: Re: [PATCH v1] platform/chrome: cros_ec_proto: allow to build as
- module
-Message-ID: <Z-z0O4KafHMVZquk@google.com>
-References: <20250328132612.511471-1-srosek@chromium.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KKBgBBmy"
+Received: by mail-vk1-f179.google.com with SMTP id 71dfb90a1353d-51eb1818d4fso7399904e0c.1;
+        Wed, 02 Apr 2025 01:25:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743582332; x=1744187132; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DiMvA2R0QAEb0vWod2q2PapwyW50uwj1io/aQ/jToHU=;
+        b=KKBgBBmyJDqByeATbZ7LZWzZ2VhJzBEqiiDnFalnT/FNxc+ooyajn7j1udbpaWsmNv
+         KTvI8EF9FxvgOvIKdKI7Mx6FlVwEQWf+/PG8Re8us8oK4X4kmbw42Po2WHYyNczfKMgI
+         lzUqg9Gj4+erzfhnN33l+NnlLPMjmpzBvhgwXsY6lzh2ugO/5YtGKR0KBDcVCaR0EZfm
+         hgo84kdWIx9LBVW1RuJ5ZOq8azxm66E59h3Q0ZQvTTJxmwT5myLrrHQstJ5K1iYDKdbi
+         oObNYq2rYR0dXkwDAeIUi/P9FTIrlYyDXIugoAY2KHHIfszgs3clQyHl+iBarQVJ0NNa
+         NiSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743582332; x=1744187132;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DiMvA2R0QAEb0vWod2q2PapwyW50uwj1io/aQ/jToHU=;
+        b=tj8E2MEWqA3fhA0+IwNMoiahST8aIxznD77w3Jaq02JKCUxUiEt7Pc46HXDD7CVBfA
+         950rpVn3nG3bmSBx9SfMkbQugV+RPtDHPYo4nxAdDjoey9ZoFcrMem0bmunUH/Q1fYHL
+         kwT7VMvOW7TyGubFWvmeYG4NrU2tZgR9Trvrux82AUI7fd3q7CWT63x5nVG4YFwNTwUB
+         SuG9fJE2XCKPfYymBgJuRJPkkplgEbVm8ae0/PdjuOTP59MzZr/MmExfnWT0QXifGDC7
+         hOsbrzTkPrO08dHNnhncsD3KQLooyZhDxtpxERInwb9hoO6Sx9t+orG7O4vWglHcZTY3
+         C8vw==
+X-Forwarded-Encrypted: i=1; AJvYcCU1zCiOrR9E2Nb4tkZFUelIrtSU/qNVQMcFApgaRi+LjTeTwCDIUAKHaTbqTJkP41UGJ3ey5kcYsuJF@vger.kernel.org, AJvYcCX9VmsTJscoLE3DzLO5RfQL6jiP8O1P1E3BHfVxHyk1CshZCg34cigVA9op0f0Ya7fLGvQgjV4xWemyTjU6Zd6Y/iA=@vger.kernel.org, AJvYcCXLcNvAp5jO7Dd1eib+oi80oLjTVrVZ6HEk3mpLVfbdzpL3nxAImpsRh6a58jTnR7La9GJeJrK6N3l2oPI=@vger.kernel.org, AJvYcCXM/zEYmJ3Ryd/MdVPgmOxb83kpsOviZOFkGZ0KXp+9txqdf9sWYMMgSZt/upliZZjt1dW0xkqiHcEBBjTl@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywhv2/OSXb1Q3ns96F4nm3No7O1CqBUcB3tsSq7TJWaE2qGYIfl
+	J1b4H/55EZovwgeQNnJmw+KpHMIeOBX83TDl3chxy954YInIZaqvN7O0UO8c5P/asPCD2cxJx6k
+	+n2jk1JgIdUOWWMewOv7iybBT+ec=
+X-Gm-Gg: ASbGncssRnBFQiMRI6FnUn+RyF8gCirveI4KLuVuw7HVTju6UZ5MPKX3zUnGHae23jd
+	bfyVdAPzsNls+P92Ni1dVkOUBtaw7IKyc71OGk58lKgJXmShsLIwk7sNbNX/lMOjtoL3+A8Kkwt
+	nTRgakniKCrhlsv095sAdhp7IIkw==
+X-Google-Smtp-Source: AGHT+IGEza2bVtTwtRmSAs/NNDaZtNvXBtS/D0th8cc1Is+4i46Iq1wBx+fD6hlSsRdGu0AYMBrPkbyoT7nfU9LC3ug=
+X-Received: by 2002:a05:6122:1244:b0:526:2356:f3fb with SMTP id
+ 71dfb90a1353d-5262356f58emr7130706e0c.11.1743582332025; Wed, 02 Apr 2025
+ 01:25:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250328132612.511471-1-srosek@chromium.org>
+References: <20250328173032.423322-1-tommaso.merciai.xr@bp.renesas.com>
+ <20250328173032.423322-12-tommaso.merciai.xr@bp.renesas.com>
+ <TY3PR01MB11346ECE31CB6C8DC33459C2486AF2@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+ <CA+V-a8sJQnyJb_uq9yEcjHRW7ZFOw3g2XQyygcozWTgMjrYxRQ@mail.gmail.com> <TY3PR01MB113462DC897E0DB681B1C020F86AF2@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+In-Reply-To: <TY3PR01MB113462DC897E0DB681B1C020F86AF2@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Wed, 2 Apr 2025 08:25:06 +0000
+X-Gm-Features: AQ5f1Jp8NGZw00CGd-a4AZnjRUOyrLaWrs-yExBW6FK3j1kIvzzjEC3LTPcS2Ng
+Message-ID: <CA+V-a8ukJ+_Bhy-4nU_CFD4rMoTRxEY-q+bXHHZ-9Mz8gQ362A@mail.gmail.com>
+Subject: Re: [PATCH v5 11/17] media: rzg2l-cru: Add register mapping support
+To: Biju Das <biju.das.jz@bp.renesas.com>
+Cc: Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>, 
+	Tommaso Merciai <tomm.merciai@gmail.com>, 
+	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, 
+	"linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, 
+	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
+	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, 
+	Hans Verkuil <hverkuil@xs4all.nl>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@baylibre.com>, 
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 28, 2025 at 01:26:12PM +0000, Slawomir Rosek wrote:
-> This allows to build ChromeOS EC communication protocol helpers as
+Hi Biju,
 
-s/This allows/Allow/.
+On Wed, Apr 2, 2025 at 9:20=E2=80=AFAM Biju Das <biju.das.jz@bp.renesas.com=
+> wrote:
+>
+> Hi Prabhakar,
+>
+> > -----Original Message-----
+> > From: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+> > Sent: 02 April 2025 08:35
+> > Subject: Re: [PATCH v5 11/17] media: rzg2l-cru: Add register mapping su=
+pport
+> >
+> > Hi Biju,
+> >
+> > Thank you for the review.
+> >
+> > On Wed, Apr 2, 2025 at 7:31=E2=80=AFAM Biju Das <biju.das.jz@bp.renesas=
+.com> wrote:
+> > >
+> > > Hi Tommaso,
+> > >
+> > > Thanks for the patch.
+> > >
+> > > > -----Original Message-----
+> > > > From: Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>
+> > > > Sent: 28 March 2025 17:30
+> > > > Subject: [PATCH v5 11/17] media: rzg2l-cru: Add register mapping
+> > > > support
+> > > >
+> > > > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > > >
+> > > > Prepare for adding support for RZ/G3E and RZ/V2HP SoCs, which have =
+a
+> > > > CRU-IP that is mostly identical to RZ/G2L but with different
+> > > > register offsets and additional registers. Introduce a flexible reg=
+ister mapping mechanism to
+> > handle these variations.
+> > > >
+> > > > Define the `rzg2l_cru_info` structure to store register mappings an=
+d
+> > > > pass it as part of the OF match data. Update the read/write
+> > > > functions to check out-of-bound accesses and use indexed register o=
+ffsets from `rzg2l_cru_info`,
+> > ensuring compatibility across different SoC variants.
+> > > >
+> > > > Signed-off-by: Lad Prabhakar
+> > > > <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > > > Signed-off-by: Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>
+> > > > ---
+> > > > Changes since v2:
+> > > >  - Implemented new rzg2l_cru_write/read() that now are checking out=
+-of-bound
+> > > >    accesses as suggested by LPinchart.
+> > > >  - Fixed AMnMBxADDRL() and AMnMBxADDRH() as suggested by LPinchart.
+> > > >  - Update commit body
+> > > >
+> > > > Changes since v4:
+> > > >  - Mark __rzg2l_cru_write_constant/__rzg2l_cru_read_constant
+> > > >    as __always_inline
+> > > >
+> > > >  .../platform/renesas/rzg2l-cru/rzg2l-core.c   | 46 ++++++++++++-
+> > > >  .../renesas/rzg2l-cru/rzg2l-cru-regs.h        | 66 ++++++++++-----=
+----
+> > > >  .../platform/renesas/rzg2l-cru/rzg2l-cru.h    |  4 ++
+> > > >  .../platform/renesas/rzg2l-cru/rzg2l-video.c  | 58 ++++++++++++++-=
+-
+> > > >  4 files changed, 139 insertions(+), 35 deletions(-)
+> > > >
+> > > > diff --git a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-core.c
+> > > > b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-core.c
+> > > > index eed9d2bd08414..abc2a979833aa 100644
+> > > > --- a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-core.c
+> > > > +++ b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-core.c
+> > > > @@ -22,6 +22,7 @@
+> > > >  #include <media/v4l2-mc.h>
+> > > >
+> > > >  #include "rzg2l-cru.h"
+> > > > +#include "rzg2l-cru-regs.h"
+> > > >
+> > > >  static inline struct rzg2l_cru_dev *notifier_to_cru(struct
+> > > > v4l2_async_notifier *n)  { @@ -269,6
+> > > > +270,9 @@ static int rzg2l_cru_probe(struct platform_device *pdev)
+> > > >
+> > > >       cru->dev =3D dev;
+> > > >       cru->info =3D of_device_get_match_data(dev);
+> > > > +     if (!cru->info)
+> > > > +             return dev_err_probe(dev, -EINVAL,
+> > > > +                                  "Failed to get OF match data\n")=
+;
+> > > >
+> > > >       irq =3D platform_get_irq(pdev, 0);
+> > > >       if (irq < 0)
+> > > > @@ -317,8 +321,48 @@ static void rzg2l_cru_remove(struct platform_d=
+evice *pdev)
+> > > >       rzg2l_cru_dma_unregister(cru);  }
+> > > >
+> > > > +static const u16 rzg2l_cru_regs[] =3D {
+> > > > +     [CRUnCTRL] =3D 0x0,
+> > > > +     [CRUnIE] =3D 0x4,
+> > > > +     [CRUnINTS] =3D 0x8,
+> > > > +     [CRUnRST] =3D 0xc,
+> > > > +     [AMnMB1ADDRL] =3D 0x100,
+> > > > +     [AMnMB1ADDRH] =3D 0x104,
+> > > > +     [AMnMB2ADDRL] =3D 0x108,
+> > > > +     [AMnMB2ADDRH] =3D 0x10c,
+> > > > +     [AMnMB3ADDRL] =3D 0x110,
+> > > > +     [AMnMB3ADDRH] =3D 0x114,
+> > > > +     [AMnMB4ADDRL] =3D 0x118,
+> > > > +     [AMnMB4ADDRH] =3D 0x11c,
+> > > > +     [AMnMB5ADDRL] =3D 0x120,
+> > > > +     [AMnMB5ADDRH] =3D 0x124,
+> > > > +     [AMnMB6ADDRL] =3D 0x128,
+> > > > +     [AMnMB6ADDRH] =3D 0x12c,
+> > > > +     [AMnMB7ADDRL] =3D 0x130,
+> > > > +     [AMnMB7ADDRH] =3D 0x134,
+> > > > +     [AMnMB8ADDRL] =3D 0x138,
+> > > > +     [AMnMB8ADDRH] =3D 0x13c,
+> > > > +     [AMnMBVALID] =3D 0x148,
+> > > > +     [AMnMBS] =3D 0x14c,
+> > > > +     [AMnAXIATTR] =3D 0x158,
+> > > > +     [AMnFIFOPNTR] =3D 0x168,
+> > > > +     [AMnAXISTP] =3D 0x174,
+> > > > +     [AMnAXISTPACK] =3D 0x178,
+> > > > +     [ICnEN] =3D 0x200,
+> > > > +     [ICnMC] =3D 0x208,
+> > > > +     [ICnMS] =3D 0x254,
+> > > > +     [ICnDMR] =3D 0x26c,
+> > > > +};
+> > >
+> > > Do we need enum, can't we use struct instead with all these entries i=
+nstead?
+> > >
+> > What benefit do you foresee when using struct? With the current approac=
+h being used a minimal diff is
+> > generated when switched to struct there will be lots of changes.
+>
+> The mapping is convinient when you want to iterate throught it. Here, if
+> you just want to access the offset value from its name, a structure
+> looks more appropriate.
+>
+Thanks, as this patch has been reviewed by Laurent a couple of times
+we will change this to struct If he insists.
 
-> kernel module which is particularly useful for Android GKI (Generic
-> Kernel Image) configuration. With this change the ChromeOS Platform
-> (CONFIG_CHROME_PLATFORMS=y) can be enabled directly from the vendor
-> kconfig fragment whithout additional configuration in gki_defconfig.
-
-Does it work?  CROS_EC_PROTO is "selected" by other Kconfigs.  Wouldn't it
-be either =y or =n?
+Cheers,
+Prabhakar
