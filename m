@@ -1,38 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A2E21F6664
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 22:57:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 796C61F7069;
+	Wed,  2 Apr 2025 22:57:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743634651; cv=none; b=Nxx2kHHR326KqNrEpN44Tio4oCZSI+rhcwcDF3sL1K7BjkchR0HUs2EEUU5mDaLqbeLLyQ5NMIZTIsDCFygKV+1QVympCnp45CPrQqh3F+Y/zIchAOuZzB+3Nw1N1aOVRXsZVb3Wh8g/gQWeNuHrYOoNX6CNNuM5Tq9V4WjILWM=
+	t=1743634651; cv=none; b=E672WPwrSwJVDisrSbqz5F5iB81D5PSnBjqdabCmkd9fjcUCYqHN6sOgwAA5o2o2CxqU1cIQHvj0FPZu38pXMiwmma6n/el0HQwmRgXpsWE4BY10K8UkgzXP6NIp5nCZAjhUqsjtRbyWSpqfLQ4GO6jHFLLcKLlRqMzPF5NOOGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1743634651; c=relaxed/simple;
-	bh=E4W35K1x9n/0/FCOiFt6Qm1Ll5SsXZbV1r9nxcBOqLs=;
+	bh=vGIq4dsFR4Rj0DOR4i84KnH+g25lukcU+8tDpHWA0Z8=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=A6ESG1fjszLgqpggsuOIhiJFjdVbHLTtSVBeKk7qpmLDd6cVL/0hZL4m0wgveod1TxcSI6fTd1HGRMNMEKHtEkuVjHBtW8x+Q5+YAeNJHhQQtimWGhDczuLsEx1KUHPx8HZdSR+LfzvQvI2N8yAv062E2Fy46rHZf3mUOrpyDeU=
+	 Content-Type; b=NRaK8lxE/3DXBwAiz4HdI58hH8Xq4x1ueUH9JXbWl1lPzsUWlxx2jPsWLkp9CSefU3NT1nDuenW6O7o68sMi+KLQLXe62bCkyND33iT70AoedC3iX6EuNB+GFAtqRW7Bsu+MwZo1lGKY/VFk/cWcI/QGIrH8jyYAqTNIW8GrWrM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2EF3C4CEEB;
-	Wed,  2 Apr 2025 22:57:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5874AC4CEDD;
+	Wed,  2 Apr 2025 22:57:31 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1u072Z-00000006Z11-0R4r;
+	id 1u072Z-00000006Z2U-2cT5;
 	Wed, 02 Apr 2025 18:58:35 -0400
-Message-ID: <20250402225834.954719009@goodmis.org>
+Message-ID: <20250402225835.476356782@goodmis.org>
 User-Agent: quilt/0.68
-Date: Wed, 02 Apr 2025 18:57:36 -0400
+Date: Wed, 02 Apr 2025 18:57:39 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Andrew Morton <akpm@linux-foundation.org>,
+ stable@vger.kernel.org,
+ Linus Torvalds <torvalds@linux-foundation.org>,
  Vincent Donnefort <vdonnefort@google.com>,
  Vlastimil Babka <vbabka@suse.cz>,
  Mike Rapoport <rppt@kernel.org>,
- Jann Horn <jannh@google.com>,
- Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [for-linus][PATCH 1/4] tracing: Enforce the persistent ring buffer to be page aligned
+ Jann Horn <jannh@google.com>
+Subject: [for-linus][PATCH 4/4] ring-buffer: Use flush_kernel_vmap_range() over flush_dcache_folio()
 References: <20250402225735.849814084@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -44,12 +45,26 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Steven Rostedt <rostedt@goodmis.org>
 
-Enforce that the address and the size of the memory used by the persistent
-ring buffer is page aligned. Also update the documentation to reflect this
-requirement.
+Some architectures do not have data cache coherency between user and
+kernel space. For these architectures, the cache needs to be flushed on
+both the kernel and user addresses so that user space can see the updates
+the kernel has made.
 
-Link: https://lore.kernel.org/all/CAHk-=whUOfVucfJRt7E0AH+GV41ELmS4wJqxHDnui6Giddfkzw@mail.gmail.com/
+Instead of using flush_dcache_folio() and playing with virt_to_folio()
+within the call to that function, use flush_kernel_vmap_range() which
+takes the virtual address and does the work for those architectures that
+need it.
 
+This also fixes a bug where the flush of the reader page only flushed one
+page. If the sub-buffer order is 1 or more, where the sub-buffer size
+would be greater than a page, it would miss the rest of the sub-buffer
+content, as the "reader page" is not just a page, but the size of a
+sub-buffer.
+
+Link: https://lore.kernel.org/all/CAG48ez3w0my4Rwttbc5tEbNsme6tc0mrSN95thjXUFaJ3aQ6SA@mail.gmail.com/
+
+Cc: stable@vger.kernel.org
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
@@ -57,63 +72,37 @@ Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Vincent Donnefort <vdonnefort@google.com>
 Cc: Vlastimil Babka <vbabka@suse.cz>
 Cc: Mike Rapoport <rppt@kernel.org>
-Cc: Jann Horn <jannh@google.com>
-Link: https://lore.kernel.org/20250402144953.412882844@goodmis.org
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Link: https://lore.kernel.org/20250402144953.920792197@goodmis.org
+Fixes: 117c39200d9d7 ("ring-buffer: Introducing ring-buffer mapping functions");
+Suggested-by: Jann Horn <jannh@google.com>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- Documentation/admin-guide/kernel-parameters.txt |  2 ++
- Documentation/trace/debugging.rst               |  2 ++
- kernel/trace/trace.c                            | 10 ++++++++++
- 3 files changed, 14 insertions(+)
+ kernel/trace/ring_buffer.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index fb8752b42ec8..71861643ef14 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -7241,6 +7241,8 @@
- 			This is just one of many ways that can clear memory. Make sure your system
- 			keeps the content of memory across reboots before relying on this option.
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index f25966b3a1fc..d4b0f7b55cce 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -6016,7 +6016,7 @@ static void rb_update_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
+ 	meta->read = cpu_buffer->read;
  
-+			NB: Both the mapped address and size must be page aligned for the architecture.
-+
- 			See also Documentation/trace/debugging.rst
+ 	/* Some archs do not have data cache coherency between kernel and user-space */
+-	flush_dcache_folio(virt_to_folio(cpu_buffer->meta_page));
++	flush_kernel_vmap_range(cpu_buffer->meta_page, PAGE_SIZE);
+ }
  
+ static void
+@@ -7319,7 +7319,8 @@ int ring_buffer_map_get_reader(struct trace_buffer *buffer, int cpu)
  
-diff --git a/Documentation/trace/debugging.rst b/Documentation/trace/debugging.rst
-index 54fb16239d70..d54bc500af80 100644
---- a/Documentation/trace/debugging.rst
-+++ b/Documentation/trace/debugging.rst
-@@ -136,6 +136,8 @@ kernel, so only the same kernel is guaranteed to work if the mapping is
- preserved. Switching to a different kernel version may find a different
- layout and mark the buffer as invalid.
+ out:
+ 	/* Some archs do not have data cache coherency between kernel and user-space */
+-	flush_dcache_folio(virt_to_folio(cpu_buffer->reader_page->page));
++	flush_kernel_vmap_range(cpu_buffer->reader_page->page,
++				buffer->subbuf_size + BUF_PAGE_HDR_SIZE);
  
-+NB: Both the mapped address and size must be page aligned for the architecture.
-+
- Using trace_printk() in the boot instance
- -----------------------------------------
- By default, the content of trace_printk() goes into the top level tracing
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 14c38fcd6f9e..96129985e81c 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -10774,6 +10774,16 @@ __init static void enable_instances(void)
- 		}
+ 	rb_update_meta_page(cpu_buffer);
  
- 		if (start) {
-+			/* Start and size must be page aligned */
-+			if (start & ~PAGE_MASK) {
-+				pr_warn("Tracing: mapping start addr %pa is not page aligned\n", &start);
-+				continue;
-+			}
-+			if (size & ~PAGE_MASK) {
-+				pr_warn("Tracing: mapping size %pa is not page aligned\n", &size);
-+				continue;
-+			}
-+
- 			addr = map_pages(start, size);
- 			if (addr) {
- 				pr_info("Tracing: mapped boot instance %s at physical memory %pa of size 0x%lx\n",
 -- 
 2.47.2
 
