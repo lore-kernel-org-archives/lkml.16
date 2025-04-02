@@ -1,150 +1,316 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+Received: from mx.denx.de (mx.denx.de [89.58.32.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11F1E20E00B;
-	Wed,  2 Apr 2025 09:08:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57E8C233129;
+	Wed,  2 Apr 2025 09:09:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743584901; cv=none; b=tNhtrwqf64HPipgVk0MMvlrqhvnvVhPJwDiJ0nrUt/LaWYA7ZIkUkVMGQLY1hzQDsqaX9MDioKMzm6T3ICO81DXG2kdpipshXM8UH0HRkNAT79Jgw8aU0upqui9JBfvnkXUgjrzMnm0nggoZig1HzxO9TDjK7u8E44Boyd7KSDA=
+	t=1743584952; cv=none; b=HsMFzuGLWC+CUO5UrGc6G32Cb/7Of7YZ69pAaET1bfjoW8EfbfBy2ADAHOpbYobghqvNqMXinTCRG1RZv06EJ+G8bEaz2lInxQfc35KiR8ocwYtSJaCfR7Gba5uxdOnHCg98gJjhEgRsp1DWoAYTKuqx41oBIDOhhiGWiA2f1hw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743584901; c=relaxed/simple;
-	bh=oyrcuxauaAc+wQY/a4+bXAF6rGhrCF8xphP5Y43wdEs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RM0BmQeYRjAgyQZJd5k+fFoCjyM+ItYrLWE8bWTD74jXw+EKfqsOSJv/TrBHyIyuPwFShkCl/dIEM1llrP4xff4mWDxk9f4s/AElYjTd5y0I5usr6uL/HpIY7rqHbK5zd7Jt3S6DXJmhHVryAHt/rpCdtJfo/moADKgAs7x8aQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com; spf=pass smtp.mailfrom=gmx.com; dkim=pass (2048-bit key) header.d=gmx.com header.i=quwenruo.btrfs@gmx.com header.b=Ahb+1E7z; arc=none smtp.client-ip=212.227.17.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.com
+	s=arc-20240116; t=1743584952; c=relaxed/simple;
+	bh=l9yAr0wAEJgeNm6nW7xi8ljAC/OGlVK+n3Mp4tG6MWM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=rgqJuTA5e6q2GUVEYTzq+tkMVjebTSGkQKwoICCkD59KOYY4Zo9zUcYwgbNdW9sRM1N2UU4yZDcLrHTUx7arAebWKBcvS0uyJeAnie8LjdGFaqtRke6STEGrjIwoiU71blSLETjcRaMuzzyyD1mZ4RlRXOj3BE4/E01gSGEwX7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=CqkqJPFc; arc=none smtp.client-ip=89.58.32.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.com header.i=quwenruo.btrfs@gmx.com header.b="Ahb+1E7z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.com;
-	s=s31663417; t=1743584893; x=1744189693; i=quwenruo.btrfs@gmx.com;
-	bh=oyrcuxauaAc+wQY/a4+bXAF6rGhrCF8xphP5Y43wdEs=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=Ahb+1E7zuyMmSITH1UX6J2EzRsxRD0TQdkM2aCzKKI3kX02c37dMrhCj5KR5QDkn
-	 JLqOi3gLkCV2K5E/8QSW+ueO1B5haIpEoMMPgsNFB4atBYbqJxmWE8C0Le+X7g1Us
-	 0qlELzsMWbATz2Wl/z17C+D50kq0xSGUYxbJ/97+mxs7pxDehJ35HTVs5ilspe9fj
-	 N1D6/FyZfr2dt5Vr+2Z+F3JzpEsFa/WYLvQkVKuHl6FuB+onE6qLKTmwWcJHKrdAF
-	 I/uCFGGM6EOwNelCAusVX0ieQK0vyl0VvL86NFfWDCw0YPHrqtHkN3yloQmnE9pK2
-	 mdZ9sIZbykLEAkOL3w==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [172.16.0.191] ([159.196.52.54]) by mail.gmx.net (mrgmx104
- [212.227.17.174]) with ESMTPSA (Nemesis) id 1MIdif-1tucjx20kX-00Eq0a; Wed, 02
- Apr 2025 11:08:12 +0200
-Message-ID: <e3e5f96a-8b46-4e61-a66b-253d2dbe6aa4@gmx.com>
-Date: Wed, 2 Apr 2025 19:38:07 +1030
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="CqkqJPFc"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 41F29102780A3;
+	Wed,  2 Apr 2025 11:09:03 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
+	t=1743584947; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 in-reply-to:references; bh=HCl71+B/mWDteASs/fx+ejiotd32rdy+bdrr9fbBE6E=;
+	b=CqkqJPFcH1TcNaBCn2t6uGeAIdCw2h1slnVMqXrmW/JT7ppsePNm2Vx3Q2fLQ7nvPxArQ+
+	J1K5fTD3ipeu1yjmqhLq0RRyvx7shceWlUM1p+ib55UYqtU2i/kqpILONhteDluRPFdrYI
+	JDIye+0JirnA0n1JJfFIhZkOXMWfI6dS9lTDkYxilQtHqHo2dATH/kBIPgczgkR+b0DoNu
+	eWqx7dqwKSpEhbOHAPM6aW7JvYsMK/chP/8Y5BoulEJCYTd+jI6yKtW37M3REMvtaxrC8d
+	ccoh8qVabatxQ/hZhOQvuwZPRPG1yf9BSSkSIClM8Xasovt/AFmIFnKWOeR8Zw==
+Date: Wed, 2 Apr 2025 11:09:00 +0200
+From: Lukasz Majewski <lukma@denx.de>
+To: Rob Herring <robh@kernel.org>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, davem@davemloft.net, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+ <pabeni@redhat.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
+ <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Richard Cochran
+ <richardcochran@gmail.com>, netdev@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 1/4] dt-bindings: net: Add MTIP L2 switch description
+Message-ID: <20250402110900.6141cc1b@wsk>
+In-Reply-To: <20250401230346.GA28557-robh@kernel.org>
+References: <20250331103116.2223899-1-lukma@denx.de>
+	<20250331103116.2223899-2-lukma@denx.de>
+	<20250331235518.GA2823373-robh@kernel.org>
+	<20250401123507.2e3bf0a6@wsk>
+	<20250401230346.GA28557-robh@kernel.org>
+Organization: denx.de
+X-Mailer: Claws Mail 3.19.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] btrfs: zstd: add `zstd-fast` alias mount option for fast
- modes
-To: Daniel Vacek <neelx@suse.com>, dsterba@suse.cz
-Cc: Qu Wenruo <wqu@suse.com>, Chris Mason <clm@fb.com>,
- Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
- Nick Terrell <terrelln@fb.com>, linux-btrfs@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250331082347.1407151-1-neelx@suse.com>
- <2a759601-aebf-4d28-8649-ca4b1b3e755c@suse.com>
- <CAPjX3Fdru3v6vezwzgSgkBcQ28uYvjsEquWHBHPFGNFOE8arjQ@mail.gmail.com>
- <b1437d32-8c85-4e5d-9c68-76938dcf6573@gmx.com>
- <20250331225705.GN32661@twin.jikos.cz>
- <CAPjX3Ff2nTrF6K+6Uk707WBfvgKOsDcmbSfXLeRyzWbqN7-xQw@mail.gmail.com>
-Content-Language: en-US
-From: Qu Wenruo <quwenruo.btrfs@gmx.com>
-Autocrypt: addr=quwenruo.btrfs@gmx.com; keydata=
- xsBNBFnVga8BCACyhFP3ExcTIuB73jDIBA/vSoYcTyysFQzPvez64TUSCv1SgXEByR7fju3o
- 8RfaWuHCnkkea5luuTZMqfgTXrun2dqNVYDNOV6RIVrc4YuG20yhC1epnV55fJCThqij0MRL
- 1NxPKXIlEdHvN0Kov3CtWA+R1iNN0RCeVun7rmOrrjBK573aWC5sgP7YsBOLK79H3tmUtz6b
- 9Imuj0ZyEsa76Xg9PX9Hn2myKj1hfWGS+5og9Va4hrwQC8ipjXik6NKR5GDV+hOZkktU81G5
- gkQtGB9jOAYRs86QG/b7PtIlbd3+pppT0gaS+wvwMs8cuNG+Pu6KO1oC4jgdseFLu7NpABEB
- AAHNIlF1IFdlbnJ1byA8cXV3ZW5ydW8uYnRyZnNAZ214LmNvbT7CwJQEEwEIAD4CGwMFCwkI
- BwIGFQgJCgsCBBYCAwECHgECF4AWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCZxF1YAUJEP5a
- sQAKCRDCPZHzoSX+qF+mB/9gXu9C3BV0omDZBDWevJHxpWpOwQ8DxZEbk9b9LcrQlWdhFhyn
- xi+l5lRziV9ZGyYXp7N35a9t7GQJndMCFUWYoEa+1NCuxDs6bslfrCaGEGG/+wd6oIPb85xo
- naxnQ+SQtYLUFbU77WkUPaaIU8hH2BAfn9ZSDX9lIxheQE8ZYGGmo4wYpnN7/hSXALD7+oun
- tZljjGNT1o+/B8WVZtw/YZuCuHgZeaFdhcV2jsz7+iGb+LsqzHuznrXqbyUQgQT9kn8ZYFNW
- 7tf+LNxXuwedzRag4fxtR+5GVvJ41Oh/eygp8VqiMAtnFYaSlb9sjia1Mh+m+OBFeuXjgGlG
- VvQFzsBNBFnVga8BCACqU+th4Esy/c8BnvliFAjAfpzhI1wH76FD1MJPmAhA3DnX5JDORcga
- CbPEwhLj1xlwTgpeT+QfDmGJ5B5BlrrQFZVE1fChEjiJvyiSAO4yQPkrPVYTI7Xj34FnscPj
- /IrRUUka68MlHxPtFnAHr25VIuOS41lmYKYNwPNLRz9Ik6DmeTG3WJO2BQRNvXA0pXrJH1fN
- GSsRb+pKEKHKtL1803x71zQxCwLh+zLP1iXHVM5j8gX9zqupigQR/Cel2XPS44zWcDW8r7B0
- q1eW4Jrv0x19p4P923voqn+joIAostyNTUjCeSrUdKth9jcdlam9X2DziA/DHDFfS5eq4fEv
- ABEBAAHCwHwEGAEIACYCGwwWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCZxF1gQUJEP5a0gAK
- CRDCPZHzoSX+qHGpB/kB8A7M7KGL5qzat+jBRoLwB0Y3Zax0QWuANVdZM3eJDlKJKJ4HKzjo
- B2Pcn4JXL2apSan2uJftaMbNQbwotvabLXkE7cPpnppnBq7iovmBw++/d8zQjLQLWInQ5kNq
- Vmi36kmq8o5c0f97QVjMryHlmSlEZ2Wwc1kURAe4lsRG2dNeAd4CAqmTw0cMIrR6R/Dpt3ma
- +8oGXJOmwWuDFKNV4G2XLKcghqrtcRf2zAGNogg3KulCykHHripG3kPKsb7fYVcSQtlt5R6v
- HZStaZBzw4PcDiaAF3pPDBd+0fIKS6BlpeNRSFG94RYrt84Qw77JWDOAZsyNfEIEE0J6LSR/
-In-Reply-To: <CAPjX3Ff2nTrF6K+6Uk707WBfvgKOsDcmbSfXLeRyzWbqN7-xQw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: multipart/signed; boundary="Sig_/0sOa=FWTe.Vb=8T9Ymlk/qv";
+ protocol="application/pgp-signature"; micalg=pgp-sha512
+X-Last-TLS-Session-Version: TLSv1.3
+
+--Sig_/0sOa=FWTe.Vb=8T9Ymlk/qv
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:D96aRiH348KHI0l9t2jMqU9cX7AXFj+NMnIQ675tyrHgHFxqTmi
- DeDTKuXqw1C2rANq4oN/A4x6UpGEpV10e/Yf/k+caD1ZSHl8lpvsGvfPbIBp67wvgtRGuaS
- bUAJ4pOPYBxfu8TGx4QYszslHYt/2pPVSOgbToWcCpA75SrQBmijCTGhiaWClTl0dB1ZZvk
- u3GmjWwzNE4hVDqYeGH0g==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:8AlOhUPYLRQ=;u/KOUngyzgp5ZYAd0hkriB6WFEu
- VU4fxRDhFHA995aRJcm3/FP0AuoP0aBIf5AUrim1SIGrgivgXX3GyJPFvSw47r8Mj+1kuTbs+
- AGN0M8OXML+PcdFQFA3H4TyTyE0EjJ4ApC5pIB6O1SlbUsf5kY/qeXDK9mdarqkAzgkscICcf
- A79Uk8WfQeVNGYZ0m73bgOH263lan8yw29iBeHikzu72sg/MvJf4vuOejp69TjdYQpMI3fISP
- 3qihUFlQPp30H9ntSdl3dYKjJm2iEgmviV8QLCQ4o7zq7TgxXG318n/4KeXKiKc38vtYQmbyu
- K3WVR4JV2T9uz3WS/8WusH+giNkfzSQDXDu3zqAKbQOo5BahYlN1bz25WPe8Oi4gz3wymgjyL
- WVVtGtHCjUdzJQDc7po/nNLCgAbHPGsZieTGrlPUAnSz1pYpITbeCaZBnz6w6UVlMU+BjSNGZ
- WOcnuCqQ3nHtbj4XjNhiSmuMmdH1gdpXxo7V1J1KFfK3ShOrR6G7C4wwhUxVicJcCmBf3Nroi
- 3z0LqgaY9lBdJUHpcqFB7V3W+sIqew+xguMaSohfhZ6eeRdJic/KacWf6Ygm4va17uO+XNviI
- 17jxckvNoYs3IKCzx6uyfU9QfkeLHZp2OX5FVUwM3CGvznium16aolJ+toh5CqKnSC68HBYCx
- 6h5Kh4sz1sw7cCp326T5yZYqtcftootctTW1wuzMABLOWcyAETiOc7p/6Rk1sd+3qqwXZPONE
- 13Nhsvm9dx+N4BewhCdjjVJAooQPJZ7dXJAVaBnzKKB45bMH8uIAlzr3qrsamtAW9/n0tnRhY
- laZpqWVXkAeugdUi539KTzkavvrWbqleRwiqTNTVQioWQYtsA5A8k91IWgR29qw5SEyPo1nXr
- /iH01IHlH8hoeZvKJZnT2imPHF9FmlRTT7TJdmpCmn76e5TCRR8wa39Z+pNKvbTJIkZBtdqnX
- oz8t/zlI8bxCRzckyHGUHBGxMklwwJR389Xe/WlrtPNYMK1PTH6miJWlxJH0ek+RU57OqoBxe
- n8CkXs6wxAFy/OY0H2CQPFelRJgwDcGPpkIi69lipokoJQiJwYKMkFWLknCcAcwq9JduyG7fv
- soGPKy91t6JwLlWClXvXTxpnpcFyeVmz20YhWnmVapkZxnYNAIVU6cd6Y7Oy1bbXGV4MnGU4L
- dD4TfF/L314I/DVjMj8BC16+c3Qa8VEG69lvwhcbeqbWFLa83ebTuhmFsIqrVDoyw01wgRRiM
- NSeWVLLV4/Bs6dlvmlyCYiS3HVpll+OaVZQ1dsIn+dv6RoW8p8pnE17s2O3g9AmG2lISYN3Vp
- aqI9lP4Pybd0maOzGyFrLZU/wVFMGoVSW5+K4oaCjnqKAIupJtfbqnkF8HPDg5IWFW+VBeqjX
- GjGMJ1Ve6lyvLDji1ROEuSb+RslXo6gpFpy2iR7s5ASyabofQWADbN2Vj/TLfxURjVj3CeLp2
- 5ZCgmaQ==
+
+On Tue, 1 Apr 2025 18:03:46 -0500
+Rob Herring <robh@kernel.org> wrote:
+
+> On Tue, Apr 01, 2025 at 12:35:07PM +0200, Lukasz Majewski wrote:
+> > Hi Rob,
+> >  =20
+> > > On Mon, Mar 31, 2025 at 12:31:13PM +0200, Lukasz Majewski wrote: =20
+> > > > This patch provides description of the MTIP L2 switch available
+> > > > in some NXP's SOCs - e.g. imx287.
+> > > >=20
+> > > > Signed-off-by: Lukasz Majewski <lukma@denx.de>
+> > > > ---
+> > > > Changes for v2:
+> > > > - Rename the file to match exactly the compatible
+> > > >   (nxp,imx287-mtip-switch)
+> > > >=20
+> > > > Changes for v3:
+> > > > - Remove '-' from const:'nxp,imx287-mtip-switch'
+> > > > - Use '^port@[12]+$' for port patternProperties
+> > > > - Drop status =3D "okay";
+> > > > - Provide proper indentation for 'example' binding (replace 8
+> > > >   spaces with 4 spaces)
+> > > > - Remove smsc,disable-energy-detect; property
+> > > > - Remove interrupt-parent and interrupts properties as not
+> > > > required
+> > > > - Remove #address-cells and #size-cells from required properties
+> > > > check
+> > > > - remove description from reg:
+> > > > - Add $ref: ethernet-switch.yaml#
+> > > > ---
+> > > >  .../bindings/net/nxp,imx287-mtip-switch.yaml  | 154
+> > > > ++++++++++++++++++ 1 file changed, 154 insertions(+)
+> > > >  create mode 100644
+> > > > Documentation/devicetree/bindings/net/nxp,imx287-mtip-switch.yaml
+> > > >=20
+> > > > diff --git
+> > > > a/Documentation/devicetree/bindings/net/nxp,imx287-mtip-switch.yaml
+> > > > b/Documentation/devicetree/bindings/net/nxp,imx287-mtip-switch.yaml
+> > > > new file mode 100644 index 000000000000..98eba3665f32 ---
+> > > > /dev/null +++
+> > > > b/Documentation/devicetree/bindings/net/nxp,imx287-mtip-switch.yaml
+> > > > @@ -0,0 +1,154 @@ +# SPDX-License-Identifier: (GPL-2.0-only OR
+> > > > BSD-2-Clause) +%YAML 1.2
+> > > > +---
+> > > > +$id:
+> > > > http://devicetree.org/schemas/net/nxp,imx287-mtip-switch.yaml#
+> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml# +
+> > > > +title: NXP SoC Ethernet Switch Controller (L2 MoreThanIP
+> > > > switch) +
+> > > > +maintainers:
+> > > > +  - Lukasz Majewski <lukma@denx.de>
+> > > > +
+> > > > +description:
+> > > > +  The 2-port switch ethernet subsystem provides ethernet packet
+> > > > (L2)
+> > > > +  communication and can be configured as an ethernet switch. It
+> > > > provides the
+> > > > +  reduced media independent interface (RMII), the management
+> > > > data input
+> > > > +  output (MDIO) for physical layer device (PHY) management.
+> > > > +
+> > > > +$ref: ethernet-switch.yaml#   =20
+> > >=20
+> > > This needs to be: ethernet-switch.yaml#/$defs/ethernet-ports
+> > >=20
+> > > With that, you can drop much of the below part. More below...
+> > >  =20
+> > > > +
+> > > > +properties: =20
+> >=20
+> > So it shall be after the "properties:"
+> >=20
+> > $ref: ethernet-switch.yaml#/$defs/ethernet-ports   [*] =20
+>=20
+> It can stay where it is, just add "/$defs/ethernet-ports"
+>=20
+>=20
+> > > > +  compatible:
+> > > > +    const: nxp,imx287-mtip-switch
+> > > > +
+> > > > +  reg:
+> > > > +    maxItems: 1
+> > > > +
+> > > > +  phy-supply:
+> > > > +    description:
+> > > > +      Regulator that powers Ethernet PHYs.
+> > > > +
+> > > > +  clocks:
+> > > > +    items:
+> > > > +      - description: Register accessing clock
+> > > > +      - description: Bus access clock
+> > > > +      - description: Output clock for external device - e.g.
+> > > > PHY source clock
+> > > > +      - description: IEEE1588 timer clock
+> > > > +
+> > > > +  clock-names:
+> > > > +    items:
+> > > > +      - const: ipg
+> > > > +      - const: ahb
+> > > > +      - const: enet_out
+> > > > +      - const: ptp
+> > > > +
+> > > > +  interrupts:
+> > > > +    items:
+> > > > +      - description: Switch interrupt
+> > > > +      - description: ENET0 interrupt
+> > > > +      - description: ENET1 interrupt
+> > > > +
+> > > > +  pinctrl-names: true
+> > > > +   =20
+> > >  =20
+> > > > +  ethernet-ports: =20
+> >=20
+> > And then this "node" can be removed as it has been referenced above
+> > [*]? =20
+>=20
+> Well, you have to keep it to have 'required' in the child nodes.
+>=20
+> >=20
+> > (I shall only keep the properties, which are not standard to [*] if
+> > any).
+> >  =20
+> > > > +    type: object
+> > > > +    additionalProperties: false
+> > > > +
+> > > > +    properties:
+> > > > +      '#address-cells':
+> > > > +        const: 1
+> > > > +      '#size-cells':
+> > > > +        const: 0
+> > > > +
+> > > > +    patternProperties:
+> > > > +      '^port@[12]+$':   =20
+> > >=20
+> > > Note that 'ethernet-port' is the preferred node name though
+> > > 'port' is allowed. =20
+> >=20
+> > Ok. That would be the correct define:
+> >=20
+> > ethernet-ports {
+> >      mtip_port1: ethernet-port@1 {
+> >                reg =3D <1>;
+> >                label =3D "lan0";
+> >                local-mac-address =3D [ 00 00 00 00 00 00 ];
+> >                phy-mode =3D "rmii";
+> >                phy-handle =3D <&ethphy0>;
+> > 	       };
+> >=20
+> >                mtip_port2: port@2 { =20
+>=20
+> And here...
+>=20
+> > 		....
+> > 	       };
+> >  =20
+> > >  =20
+> > > > +        type: object
+> > > > +        description: MTIP L2 switch external ports
+> > > > +
+> > > > +        $ref: ethernet-controller.yaml#
+> > > > +        unevaluatedProperties: false
+> > > > +
+> > > > +        properties:
+> > > > +          reg:
+> > > > +            items:
+> > > > +              - enum: [1, 2]
+> > > > +            description: MTIP L2 switch port number
+> > > > +
+> > > > +          label:
+> > > > +            description: Label associated with this port
+> > > > +
+> > > > +        required:
+> > > > +          - reg
+> > > > +          - label
+> > > > +          - phy-mode
+> > > > +          - phy-handle   =20
+> > >=20
+> > > All the above under 'ethernet-ports' can be dropped though you
+> > > might want to keep 'required' part. =20
+> >=20
+> > Ok, I will keep it. =20
+>=20
+> So I think you just want this:
+>=20
+> ethernet-ports:
+>   type: object
+>   additionalProperties: true  # Check if you need this
+>=20
+>   patternProperties:
+>     '^ethernet-port@[12]$':
+>       required:
+>         - label
+>         - phy-mode
+>         - phy-handle
+>=20
+
+I had to add:
+
+$ref: ethernet-switch.yaml#/$defs/ethernet-ports
+patternProperties:
+  "^(ethernet-)?ports$":
+    type: object
+    additionalProperties: true
+
+after the=20
+description:
+
+to avoid issues when checking DT schema.
+
+Simple adding=20
+
+   patternProperties:
+     '^ethernet-port@[12]$':
+       required:
+         - label
+         - phy-mode
+         - phy-handle
+
+Causes more errors.
+
+> Rob
 
 
 
-=E5=9C=A8 2025/4/2 19:07, Daniel Vacek =E5=86=99=E9=81=93:
-> On Tue, 1 Apr 2025 at 00:57, David Sterba <dsterba@suse.cz> wrote:
-[...]
->>>> I thought this was solid. Or would you rather bail out with -EINVAL?
->>>
->>> I prefer to bail out with -EINVAL, but it's only my personal choice.
->>
->> I tend to agree with you, the idea for the alias was based on feedback
->> that upstream zstd calls the levels fast, not by the negative numbers.
->> So I think we stick to the zstd: and zstd-fast: prefixes followed only
->> by the positive numbers.
->
-> Hmm, so for zlib and zstd if the level is out of range, it's just
-> clipped and not failed as invalid. I guess zstd-fast should also do
-> the same to be consistent.
 
-Or we can change the zlib/zstd level checks so that it can return
--EINVAL when invalid levels are provided.
+Best regards,
 
-But to avoid huge surprise, I'd recommend to add warning/error messages
-first.
+Lukasz Majewski
 
-I'm not a huge fan when invalid values are silently clamped, even it's
-just an optional level parameter.
+--
 
-Thanks,
-Qu
+DENX Software Engineering GmbH,      Managing Director: Erika Unter
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
 
->
->> We can make this change before 6.15 final so it's not in any released
->> kernel and we don't have to deal with compatibility.
->
+--Sig_/0sOa=FWTe.Vb=8T9Ymlk/qv
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCgAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAmfs/qwACgkQAR8vZIA0
+zr086wgA5Jn0IbIaaEpVjBvcYY2ArHgPvw/BZFmTl1ybvb3477EmZI1iEIn1UHyW
+qMO4jx5mlSoR9QkP/GfI9DE99ySe+EQgqSqPqcY79JPlqq6WeT578E9NBqLO7YT5
+h59WwQShvBR4np37X5r26HtcdP8CXEWYUFITteTqh+EYiXDKPeXi4e6KiGmcJAuJ
+jT4riux80AJ4ImCRjnj9S/pv3ODm6Q//Rd9DKse/k/RPUKRrqCM9MvLval02tdzV
+SD+MsepkMI+j/NXayLHABP++2Lcl3lNNW3fnAGKckvqdGBPmIRlS4MnqN+PzAprB
+tkiD4bkrDW3Eu65fMpIQtsnOT47bkA==
+=9mZL
+-----END PGP SIGNATURE-----
+
+--Sig_/0sOa=FWTe.Vb=8T9Ymlk/qv--
