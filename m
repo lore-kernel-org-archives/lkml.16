@@ -1,259 +1,231 @@
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2080.outbound.protection.outlook.com [40.107.102.80])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B739232373;
-	Wed,  2 Apr 2025 05:59:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.80
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743573589; cv=fail; b=qzLgTlFRj9KJyLsHmq16ClaVPE66Yb3APpc/5EbOCCBqauCyjx4+tuyzGZJ39OAlZHqfBahtyIcbeOy2nQgiR/ZsrV9FUxo7Qph0RhDseBSCTbZixIwIRhlQ9sk5II2ADXH84jl7ly/NixcSA55ZrEunvGDaZYpK2xZPs4LG4+I=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743573589; c=relaxed/simple;
-	bh=dPMPc0Usg40kN+udOdYGeDCJvdkak7BM53gcoefoweE=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UGrjhr9ArnSWiVaurLFrvuHV1FhZj1nuLi596Bzt86uUvgcsZr0AtIRRrukRCTPgPA5dunrSKZlCaBE9onU2NvPRBiWBcvu0vF5bctXgJBclVg38f/jfywUm5zrWax/kicHWKcImNXX99bs42m1kgA4fXuzKMGZ7ih3om5xwZiI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ME+vniLm; arc=fail smtp.client-ip=40.107.102.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8886204F85
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 06:02:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743573748; cv=none; b=MscXgAycqPdf1GAOLK79z0zxitClZRQNwApftV8laabQG4kAh0+1VB6Q2C717Tc4NozPUwluvU5Y98XCzgXTZJ0SCwwn8k5p5YuZRVfCcr+NwyOYKmOFTwxY9pWDUPr/SvadW9MMMSP9U8W9w54zUT4Rv0z/cavEciUcjAJasRU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743573748; c=relaxed/simple;
+	bh=wFoBMSzK4NpZw+UmRIp53Lw67dBhRYws9fCWeqmmtIY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dme6xzaRhJQqoLJ7tFfrrWTX3S8hvrcZatUk49QNFrAR/E9v94wi8DnP1YUeSnfuqZVBC2SQNoMjVN8GFo2M5dWwrC29nVH0ALd+xM9h8H9IAqePJs5bIK1EvMDCuXAr5K8NEywTPNFimuxlRN8ChnMkdxpQq/J1VSlT1jrNvW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sBLc54bM; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ME+vniLm"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=s2bs1FxQ45QuaN4v7jRuKCo/2W46focq/ig9dBjGL+C/oQk+pcnFq+JeKL9VISnLT4WnKkh4pYNBL2oG8uSj8VRJ98MmHG9ZiQRAaI+gU4nRQ6qv1kwh+EYFFIUMFkbhGXOQBHM+UNmdgCb8QukK9Sa1MLxrA8mEoi9QWOJKErC9u6bRCZuGWE2pDzmJTq9vAvjI+X/aE1vvFk+3XrcQAFNrCyE4Tee5MZosLwwvtN23/WiXki7dptsN/0MvdMaOXI4npDH6iGyJsF2BZCXQ2Hbl9nvDXIbI+sfoVs/jV4RjOKbfLZenKPs2ZSbjyFW28ghndg9Q+OxN46IbPF6V6A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FHujq7DyttN1eYQVIB8OlncK8O5lfjEwmmARUiuITlg=;
- b=EjNobOCpCQwY3MkKnHstD6rbtH18EQkaGowyp8BEM3Pm9WZXUK9w0fv8AZGiEFK4KfZ1MMyJnYFoK5GXT6zjoi5LIhN9XMyRKWHWUIgtWMm6moZ8N7JMGwRsUf3+qWoVaVUZY64kyPLgDWngd2wITlUX7gkrOCFnH5MnGdgO+9mXc5Aqomb6drNIPEmR9KQTPRT8aj7siQbcjSmFiHF2qyQ06y344lsva0QnnsP4tiK8/Hj+eh7YyUxuNaM8ai5vWqg/nh5uYd1dVJ0S+SMQPc1ctrA4zNXA4dfPqRDzb40GhuWP1UaKM2pFFXYjjRxxoRJ0CC1RUHsgP7MKJs8Edg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FHujq7DyttN1eYQVIB8OlncK8O5lfjEwmmARUiuITlg=;
- b=ME+vniLmelkOuh4fawhwr6pjf/53K3Sh4sPyVEzcn4GgPV6cmaYY5bKYDJNMJT5hsGDtrFo32BZ11MD/Lmk/BeRyJglepc4HsoFWlMKxloo9osLKjXWBTIIdARBth3jzsdMfiUjv87pYXqes2CuB7kqPbirUDFEe10GSzniqzg8=
-Received: from MW4PR03CA0359.namprd03.prod.outlook.com (2603:10b6:303:dc::34)
- by PH0PR12MB7095.namprd12.prod.outlook.com (2603:10b6:510:21d::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.54; Wed, 2 Apr
- 2025 05:59:42 +0000
-Received: from MWH0EPF000971E8.namprd02.prod.outlook.com
- (2603:10b6:303:dc:cafe::a4) by MW4PR03CA0359.outlook.office365.com
- (2603:10b6:303:dc::34) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8583.41 via Frontend Transport; Wed,
- 2 Apr 2025 05:59:42 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- MWH0EPF000971E8.mail.protection.outlook.com (10.167.243.68) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8606.22 via Frontend Transport; Wed, 2 Apr 2025 05:59:42 +0000
-Received: from amd.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 2 Apr
- 2025 00:59:38 -0500
-From: Akshay Gupta <akshay.gupta@amd.com>
-To: <linux-hwmon@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <linux@roeck-us.net>, <gregkh@linuxfoundation.org>, <arnd@arndb.de>,
-	<shyam-sundar.s-k@amd.com>, <gautham.shenoy@amd.com>,
-	<mario.limonciello@amd.com>, <naveenkrishna.chatradhi@amd.com>,
-	<anand.umarji@amd.com>, Akshay Gupta <akshay.gupta@amd.com>
-Subject: [PATCH v7 10/10] misc: amd-sbi: Add document for AMD SB IOCTL description
-Date: Wed, 2 Apr 2025 05:58:40 +0000
-Message-ID: <20250402055840.1346384-11-akshay.gupta@amd.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250402055840.1346384-1-akshay.gupta@amd.com>
-References: <20250402055840.1346384-1-akshay.gupta@amd.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sBLc54bM"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2241053582dso108841365ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 23:02:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1743573745; x=1744178545; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=XSPVI8TUn/isK4noC55TC4qkMMEfDFkjVI/2eFz1WUo=;
+        b=sBLc54bMO1oGmgtvH7gIGW0iJyMIrVBQsEWT53r90OBmFKbCj6ld5CIi04+5nJX9pg
+         eQsSYMkvw2Wz99gjJPZNZUrdbQaSgr6fmZr1JqNTWuIgWd+Y8UEM4Yu99XRU/vTcOY1o
+         wwHAqDWVJ06jq+lx0SRyaXNkxVD4LbukuKmNSzuZGmhLyNyj/bCm/09TZsO/keitgplf
+         UoMkrmjvaTPRlX42EG8rziPoAsgJfTvczMkvA3GksHc1IhhSa81vN/8sRk3ms23wxZRt
+         /+R077ehCzp9Q7aW8yE/o2OfYgm6LkbnY9d6e6YLvKJtrwxqKAmZfdMfMldm/BUdGI9n
+         X8kg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743573745; x=1744178545;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XSPVI8TUn/isK4noC55TC4qkMMEfDFkjVI/2eFz1WUo=;
+        b=DSt8tRpBDcOPuQIx7PhaN55CM/8KHCPFtrB8D8jPNc43Xa0CHZLHu1JP2FQnXhKeNp
+         GyDTEt4LI7WZUiG4HKXCTlkHdz4CC04ppZBCWZSf26OZb0qm/57JQU70EeScweibjlq4
+         Rm+ocWoWDNSfnkavPFqecyQI5PfP190WMIO4j6L/Ucl4fMU1WHEBeog3uLKhz+oe/QGT
+         nNPt/8RehHGcLly34x7fyLcCFJ3lT9O9HYDm7u/YSaAN3YQixOzbPapMVgh5cFWHEwB8
+         hzo9cuBHPu1SAwflnxFYsATzAkZ28eA8paHckSZssne8OAOZ8uQwB0mqf+E5KOoFxOFg
+         mI4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUysYDoburf4FT5KvUgn23sNHdWTg1lKO4POtA0XkO9vghFhmn6TY5VQktjwRcxANj8OPSs9WdAfEgXr1E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzDOLlf60iQtAQGInZISm7Rje7NPqSEBAczFcanu8yo3uIVYSir
+	1L7ERx7KmFRzda+YyOykp8jQzWUzK/WyF5Yh1uEryY3VOZKx5DWtUsK0fPrb3w==
+X-Gm-Gg: ASbGncuzLNo5vcXwvK8vTLQi6VIcOCdkzHUyN24hrS3eTSkCIcEySJB2gngSm45nhUn
+	No6oOhuqWVf7y40128WklhZJMJVDLqTWv+yr02jV5Yuv9afgjPx5mJNhWxpweV67vYd6YnOwkNu
+	g6CKiQJW+WZdifn2fttGPZDZFKUywbjjBiUzZsC5yf8UXZVKDQFh3K+j9nzJUT56ls7/t0CGVnp
+	LLFtTw0LSp1nwbeIDV/rO8MZl8MCXpjZ/f9E4j/37FxCxWoxwX+R2Z9d38ytd2DX8QPU/FpL4zA
+	VIFGxAXLt8DywEjf/qnGNlD+moz1dy2rVUrYKhCJW77V3jZ3AZgQUW/L
+X-Google-Smtp-Source: AGHT+IH0V718KRlf/K5+UQm5rQKFssSsYgy9kQmxhhjMozcy/p40GYl5cS1u4E7j5U8om1rF1JIOqw==
+X-Received: by 2002:a05:6a00:148a:b0:736:5c8e:baaa with SMTP id d2e1a72fcca58-7398033ad19mr19011284b3a.2.1743573745001;
+        Tue, 01 Apr 2025 23:02:25 -0700 (PDT)
+Received: from thinkpad ([120.56.205.103])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7397106c7b7sm10030584b3a.116.2025.04.01.23.02.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Apr 2025 23:02:24 -0700 (PDT)
+Date: Wed, 2 Apr 2025 11:32:16 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Cc: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Jingoo Han <jingoohan1@gmail.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, quic_mrana@quicinc.com, 
+	quic_vbadigan@quicinc.com
+Subject: Re: [PATCH v8 4/4] PCI: dwc: Add support for configuring lane
+ equalization presets
+Message-ID: <utswwqjgfy3iybt54ilyqnfss77vzit7kegctjp3tef636hc3p@724xe3dzlpip>
+References: <20250316-preset_v6-v8-0-0703a78cb355@oss.qualcomm.com>
+ <20250316-preset_v6-v8-4-0703a78cb355@oss.qualcomm.com>
+ <3sbflmznjfqpcja52v6bso74vhouv7ncuikrba5zlb74tqqb5u@ovndmib3kgqf>
+ <92c4854d-033e-c7b5-ca92-cf44a1a8c0cc@oss.qualcomm.com>
+ <mslh75np4tytzzk3dvwj5a3ulqmwn73zkj5cq4qmld5adkkldj@ad3bt3drffbn>
+ <5fece4ac-2899-4e7d-8205-3b1ebba4b56b@oss.qualcomm.com>
+ <abgqh3suczj2fckmt4m2bkqazfgwsfj43762ddzrpznr4xvftg@n5dkemffktyv>
+ <622788fa-a067-49ac-b5b1-e4ec339e026f@oss.qualcomm.com>
+ <4rep2gvymazkk7pgve36cw7moppozaju7h6aqc3gflxrvkskig@62ykri6v4trs>
+ <ed8a59ce-0527-4514-91f8-c27972d799d4@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MWH0EPF000971E8:EE_|PH0PR12MB7095:EE_
-X-MS-Office365-Filtering-Correlation-Id: 03e6c206-cdd0-410e-d484-08dd71ab8ff3
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|36860700013|376014|82310400026|13003099007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?kJbwwL8vAulzjpfgOTeIQhXzGaIK0HdaoE2wetZ81WRqhDoO36s5oLDpsLH7?=
- =?us-ascii?Q?EUGnNqmtdb1XujqkKk205gQ1PPZwfG5/2zMIHpBpDs0GSylF/iToa0r/o+vP?=
- =?us-ascii?Q?m1C2/PvRXKYs5vvHFDiThuKOPRiyriJh285Vjw8S93hUnt05/8gp4WgE4MsV?=
- =?us-ascii?Q?Q8jI09CMy7X8R88iKvklXzEHUzTWaPr2OTg1jbQGDy614qpmAjw2ivYccq9z?=
- =?us-ascii?Q?ZGneqjLgmc7oWcpxBpwAja8mdEL4nJhZ4iblfvVS33OCmoBK2yzT8hECy6P6?=
- =?us-ascii?Q?I2zJtjzfMU+A4XpQJtwYLgzV7ajPKhUvomrHQcLBTFAnxsj+MGPxNGtSFMy2?=
- =?us-ascii?Q?MgeeWtOUyS5ySeiVKN7U4B+q94vVkXfZESO29prqXRRko6KFHV/6aPRiSyGJ?=
- =?us-ascii?Q?Ul8Mu+A9futLFBA80i8TG+vF1uGOe7WDFB5Q1Xv6U8HcXypMFnP05wh+ySk1?=
- =?us-ascii?Q?+a1JUrsTr/nWl+gjO3tKDiQdGmdiNiAPhiQhewWNL64EN7l/xjb1SXX8McW1?=
- =?us-ascii?Q?fSloZy2ACWFdfVpQ3ObFVyHep4R7oxd+5tohy6rVDrmSzSy2um+HIC5ZOLne?=
- =?us-ascii?Q?URBK/AvScgmd4xh+Ak7v6OpIa7YXNwxnXX/AlZ6INWoYlZ8vD2L4eMft9N5X?=
- =?us-ascii?Q?inE9uYkQloXZglVjndLohOKSCylF/OCghUPga5pPesYexI+hR3JasNANMrPO?=
- =?us-ascii?Q?tabUmhP8715HvLSyJQTMSkD+omodZ69VyzV4MnWFqy7TxhnYP7HH5reGYHEM?=
- =?us-ascii?Q?jwvev0GBMzQJ3fyRRyliDpxUvY+3+VhvSrnheWDY6AnuPFhw1dK7ll3XBXLU?=
- =?us-ascii?Q?/gQWTES3wougzNGh33dWWlnvRZa934XZF9oeqfh2qqDRO99MTqdhtOMypLy3?=
- =?us-ascii?Q?vXSTKe0pHcUnztzZ/0dQkxKr0d0qAvc3sPyhaB3vza9011rAZzqNdE7/MzpG?=
- =?us-ascii?Q?BRPTwfRwED2nGfORgk0GoPIHTnUu9McuSH0Arrnyz2+uHz1CuEtrArDSZddg?=
- =?us-ascii?Q?qJGLGb0z7+Y7XSss8Qg3aC9G4jpUTJNC/aoKfKSlbtxrAAwLW3GUbKwOu+rA?=
- =?us-ascii?Q?Rfo5aPAWVeceSAuzv2FVk/cu5H/OLLrKEtToghp2xeDybqeUihYFXytJLt7o?=
- =?us-ascii?Q?1Tq5VK7xyre3skSjsWgloQz9IeraACuXGWUq2aN2BXkPmPmziJJLTNtMAmOj?=
- =?us-ascii?Q?OlbXtUA+Qq+pZk00SYeWev2V7hQAx1vm3ZuuNzIqZs79/lUllRRN9IzjA4tp?=
- =?us-ascii?Q?wmTPeV/nckdQXHx3vbqkT4njKD68HoiF+g2atY3gQ9qaavdox8L2Tcw/W1bW?=
- =?us-ascii?Q?z/UPInOOC1VGps++ACBnEKqbeaOcJPFb1JRmQtHX3wGi7mNaNxeDjxXkA4hI?=
- =?us-ascii?Q?gkxx38TbuDvT5tcV0ZpPV7lw3+vRQbgE4IuROSMOk011XhcGZ9lFPhMDTrmf?=
- =?us-ascii?Q?Ihes8YHmWoeaqLZ9yx5eWJ4bAyQaJBDsY6N+mdbx00oKXZZ7UKeTEc/rmoQK?=
- =?us-ascii?Q?MmXtTakoKlH+lSGvSSCmCnARaqQ4jG7sV9OyEyPD3ARpJMwyvU2frzsc2w?=
- =?us-ascii?Q?=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(376014)(82310400026)(13003099007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Apr 2025 05:59:42.3540
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 03e6c206-cdd0-410e-d484-08dd71ab8ff3
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	MWH0EPF000971E8.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB7095
+In-Reply-To: <ed8a59ce-0527-4514-91f8-c27972d799d4@oss.qualcomm.com>
 
-- This document provides AMD side band IOCTL description defined
-  for APML and its usage.
-  Multiple AMD custom protocols defined for side band system
-  management uses this IOCTL.
-  User space C-APIs are made available by esmi_oob_library [1],
-  which is provided by the E-SMS project [2].
+On Sat, Mar 29, 2025 at 12:42:02PM +0100, Konrad Dybcio wrote:
+> On 3/29/25 10:39 AM, Manivannan Sadhasivam wrote:
+> > On Sat, Mar 29, 2025 at 09:59:46AM +0100, Konrad Dybcio wrote:
+> >> On 3/29/25 7:30 AM, Manivannan Sadhasivam wrote:
+> >>> On Fri, Mar 28, 2025 at 10:53:19PM +0100, Konrad Dybcio wrote:
+> >>>> On 3/28/25 7:45 AM, Manivannan Sadhasivam wrote:
+> >>>>> On Fri, Mar 28, 2025 at 11:04:11AM +0530, Krishna Chaitanya Chundru wrote:
+> >>>>>>
+> >>>>>>
+> >>>>>> On 3/28/2025 10:23 AM, Manivannan Sadhasivam wrote:
+> >>>>>>> On Sun, Mar 16, 2025 at 09:39:04AM +0530, Krishna Chaitanya Chundru wrote:
+> >>>>>>>> PCIe equalization presets are predefined settings used to optimize
+> >>>>>>>> signal integrity by compensating for signal loss and distortion in
+> >>>>>>>> high-speed data transmission.
+> >>>>>>>>
+> >>>>>>>> Based upon the number of lanes and the data rate supported, write
+> >>>>>>>> the preset data read from the device tree in to the lane equalization
+> >>>>>>>> control registers.
+> >>>>>>>>
+> >>>>>>>> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+> >>>>>>>> ---
+> >>>>>>>>   drivers/pci/controller/dwc/pcie-designware-host.c | 60 +++++++++++++++++++++++
+> >>>>>>>>   drivers/pci/controller/dwc/pcie-designware.h      |  3 ++
+> >>>>>>>>   include/uapi/linux/pci_regs.h                     |  3 ++
+> >>>>>>>>   3 files changed, 66 insertions(+)
+> >>>>>>>>
+> >>>>>>>> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> >>>>>>>> index dd56cc02f4ef..7c6e6a74383b 100644
+> >>>>>>>> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> >>>>>>>> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> >>>>>>>> @@ -507,6 +507,10 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
+> >>>>>>>>   	if (pci->num_lanes < 1)
+> >>>>>>>>   		pci->num_lanes = dw_pcie_link_get_max_link_width(pci);
+> >>>>>>>> +	ret = of_pci_get_equalization_presets(dev, &pp->presets, pci->num_lanes);
+> >>>>>>>> +	if (ret)
+> >>>>>>>> +		goto err_free_msi;
+> >>>>>>>> +
+> >>>>>>>>   	/*
+> >>>>>>>>   	 * Allocate the resource for MSG TLP before programming the iATU
+> >>>>>>>>   	 * outbound window in dw_pcie_setup_rc(). Since the allocation depends
+> >>>>>>>> @@ -808,6 +812,61 @@ static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
+> >>>>>>>>   	return 0;
+> >>>>>>>>   }
+> >>>>>>>> +static void dw_pcie_program_presets(struct dw_pcie_rp *pp, enum pci_bus_speed speed)
+> >>>>>>>> +{
+> >>>>>>>> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> >>>>>>>> +	u8 lane_eq_offset, lane_reg_size, cap_id;
+> >>>>>>>> +	u8 *presets;
+> >>>>>>>> +	u32 cap;
+> >>>>>>>> +	int i;
+> >>>>>>>> +
+> >>>>>>>> +	if (speed == PCIE_SPEED_8_0GT) {
+> >>>>>>>> +		presets = (u8 *)pp->presets.eq_presets_8gts;
+> >>>>>>>> +		lane_eq_offset =  PCI_SECPCI_LE_CTRL;
+> >>>>>>>> +		cap_id = PCI_EXT_CAP_ID_SECPCI;
+> >>>>>>>> +		/* For data rate of 8 GT/S each lane equalization control is 16bits wide*/
+> >>>>>>>> +		lane_reg_size = 0x2;
+> >>>>>>>> +	} else if (speed == PCIE_SPEED_16_0GT) {
+> >>>>>>>> +		presets = pp->presets.eq_presets_Ngts[EQ_PRESET_TYPE_16GTS - 1];
+> >>>>>>>> +		lane_eq_offset = PCI_PL_16GT_LE_CTRL;
+> >>>>>>>> +		cap_id = PCI_EXT_CAP_ID_PL_16GT;
+> >>>>>>>> +		lane_reg_size = 0x1;
+> >>>>>>>> +	} else {
+> >>>>>>>
+> >>>>>>> Can you add conditions for other data rates also? Like 32, 64 GT/s. If
+> >>>>>>> controller supports them and if the presets property is defined in DT, then you
+> >>>>>>> should apply the preset values.
+> >>>>>>>
+> >>>>>>> If the presets property is not present in DT, then below 'PCI_EQ_RESV' will
+> >>>>>>> safely return.
+> >>>>>>>
+> >>>>>> I am fine to add it, but there is no GEN5 or GEN6 controller support
+> >>>>>> added in dwc, isn't it best to add when that support is added and
+> >>>>>> tested.
+> >>>>>>
+> >>>>>
+> >>>>> What is the guarantee that this part of the code will be updated once the
+> >>>>> capable controllers start showing up? I don't think there will be any issue in
+> >>>>> writing to these registers.
+> >>>>
+> >>>> Let's not make assumptions about the spec of a cross-vendor mass-deployed IP
+> >>>>
+> >>>
+> >>> I have seen the worse... The problem is, if those controllers start to show up
+> >>> and define preset properties in DT, there will be no errors whatsoever to
+> >>> indicate that the preset values were not applied, resulting in hard to debug
+> >>> errors.
+> >>
+> >> else {
+> >> 	dev_warn(pci->dev, "Missing equalization presets programming sequence\n");
+> >> }
+> >>
+> > 
+> > Then we'd warn for controllers supporting GEN5 or more if they do not pass the
+> > presets property (which is optional).
+> 
+> Ohh, I didn't think about that - and I can only think about solutions that are
+> rather janky.. with perhaps the least janky one being changing the else case I
+> proposed above into:
+> 
+> else if (speed >= PCIE_SPEED_32_0GT && eq_presets_Ngts[speed - PCIE_SPEED_16_0GT][0] != PCI_EQ_RESV) {
 
-Link: https://github.com/amd/esmi_oob_library [1]
-Link: https://www.amd.com/en/developer/e-sms.html [2]
+s/PCIE_SPEED_16_0GT/PCIE_SPEED_32_0GT
 
-Reviewed-by: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
-Signed-off-by: Akshay Gupta <akshay.gupta@amd.com>
----
-Changes since v6:
-- Rebased patch, previously patch 11
+> 	...
 
-Changes since v4:
-- Previously patch 9
-- Update description as per review comment
-- Address the review comments for documentation warning
+So this I read as: Oh, your controller supports 32 GT/s and you firmware also
+wanted to apply the custom preset offsets, but sorry we didn't do it because we
+don't know if it would work or not. So please let us know so that we can work
+with you test it and then finally we can apply the presets.
 
-Changes since v3:
-- Address the review comments
+> }> 
+> >>>
+> >>> I'm not forseeing any issue in this part of the code to support higher GEN
+> >>> speeds though.
+> >>
+> >> I would hope so as well, but both not programming and misprogramming are
+> >> equally hard to detect
+> >>
+> > 
+> > I don't disagree. I wanted to have it since there is no sensible way of warning
+> > users that this part of the code needs to be updated in the future.
+> 
+> I understand, however I'm worried that the programming sequence or register
+> may change for higher speeds in a way that would be incompatible with what
+> we assume here
+> 
 
-Changes since v2:
-- update the MACROS name as per feedback
+Honestly, I don't know why you are having this opinion. This piece of code is
+not in Qcom driver and the registers are the same for 8 GT/s, 16 GT/s as per the
+PCIe spec. So the hardware programming sequence and other arguments doesn't
+apply here (atleast to me).
 
-Changes since v1:
-- New patch
+- Mani
 
- Documentation/misc-devices/amd-sbi.rst | 87 ++++++++++++++++++++++++++
- 1 file changed, 87 insertions(+)
- create mode 100644 Documentation/misc-devices/amd-sbi.rst
-
-diff --git a/Documentation/misc-devices/amd-sbi.rst b/Documentation/misc-devices/amd-sbi.rst
-new file mode 100644
-index 000000000000..9fbb01b33032
---- /dev/null
-+++ b/Documentation/misc-devices/amd-sbi.rst
-@@ -0,0 +1,87 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+=======================
-+AMD SIDE BAND interface
-+=======================
-+
-+Some AMD Zen based processors supports system management
-+functionality via side-band interface (SBI) called
-+Advanced Platform Management Link (APML). APML is an I2C/I3C
-+based 2-wire processor target interface. APML is used to
-+communicate with the Remote Management Interface
-+(SB Remote Management Interface (SB-RMI)
-+and SB Temperature Sensor Interface (SB-TSI)).
-+
-+More details on the interface can be found in chapter
-+"5 Advanced Platform Management Link (APML)" of the family/model PPR [1]_.
-+
-+.. [1] https://www.amd.com/content/dam/amd/en/documents/epyc-technical-docs/programmer-references/55898_B1_pub_0_50.zip
-+
-+
-+SBRMI device
-+============
-+
-+apml_sbrmi driver under the drivers/misc/amd-sbi creates miscdevice
-+/dev/sbrmi-* to let user space programs run APML mailbox, CPUID,
-+MCAMSR and register xfer commands.
-+
-+Register sets is common across APML protocols. IOCTL is providing synchronization
-+among protocols as transactions may create race condition.
-+
-+$ ls -al /dev/sbrmi-3c
-+crw-------    1 root     root       10,  53 Jul 10 11:13 /dev/sbrmi-3c
-+
-+apml_sbrmi driver registers hwmon sensors for monitoring power_cap_max,
-+current power consumption and managing power_cap.
-+
-+Characteristics of the dev node:
-+ * message ids are defined to run differnet xfer protocols:
-+	* Mailbox:		0x0 ... 0x999
-+	* CPUID:		0x1000
-+	* MCA_MSR:		0x1001
-+	* Register xfer:	0x1002
-+
-+Access restrictions:
-+ * Only root user is allowed to open the file.
-+ * APML Mailbox messages and Register xfer access are read-write,
-+ * CPUID and MCA_MSR access is read-only.
-+
-+Driver IOCTLs
-+=============
-+
-+.. c:macro:: SBRMI_IOCTL_CMD
-+.. kernel-doc:: include/uapi/misc/amd-apml.h
-+   :doc: SBRMI_IOCTL_CMD
-+
-+User-space usage
-+================
-+
-+To access side band interface from a C program.
-+First, user need to include the headers::
-+
-+  #include <uapi/misc/amd-apml.h>
-+
-+Which defines the supported IOCTL and data structure to be passed
-+from the user space.
-+
-+Next thing, open the device file, as follows::
-+
-+  int file;
-+
-+  file = open("/dev/sbrmi-*", O_RDWR);
-+  if (file < 0) {
-+    /* ERROR HANDLING */
-+    exit(1);
-+  }
-+
-+The following IOCTL is defined:
-+
-+``#define SB_BASE_IOCTL_NR      0xF9``
-+``#define SBRMI_IOCTL_CMD          _IOWR(SB_BASE_IOCTL_NR, 0, struct apml_message)``
-+
-+
-+User space C-APIs are made available by esmi_oob_library, hosted at
-+[2]_ which is provided by the E-SMS project [3]_.
-+
-+.. [2] https://github.com/amd/esmi_oob_library
-+.. [3] https://www.amd.com/en/developer/e-sms.html
 -- 
-2.25.1
-
+மணிவண்ணன் சதாசிவம்
