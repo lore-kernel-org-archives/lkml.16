@@ -1,94 +1,63 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B2071DB92A;
-	Wed,  2 Apr 2025 18:56:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 721CE1DB92A;
+	Wed,  2 Apr 2025 18:56:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743620196; cv=none; b=Ay8WH50Qnn0ac4lAlsZaADv0G3JNc2HedEop3LoabdJiwGXb0bBoGmly6Htay5+9juJZkM1vqrm0JJZt4CE2RVjaANr6bU7WEFK5XVU/6SbY0z+wfk8YxRkD2ybB3zt6C9dbpM6Biz2MQzBuFhbgPgELUpc4OU4Fcbm/6KXOVNY=
+	t=1743620213; cv=none; b=sZL9Rbi68vvVMzj3CY8fAr08fcb/jlKLo5n0CWjhieL7+IPkF8PKxNwF2EdPm3NF9YEljyxvy2aGF03cmDfvngF7o20qPaz4Mt+E5G4AZDXdcblyeZgWtz3fUFA/XN0Rt3EsAdTojjVv92fcxSZ9QLmUPddLd7FwMDlWJXaStBQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743620196; c=relaxed/simple;
-	bh=xmznKTQXjh7m9NClIWACppmUCWNDHM2Fnwfp/mZYh6A=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=SNJQp3wQGBpyp/qLi+Tm0Wy7zjBNHoYpYOBRtFM4WjapL43pCqskhEbn4a9l0QpSmD975Idx/UEdllNuuTMpfodGuoEo2GdqdZDG+dSZQnm8ENyOirENhlO6wdSR/sJuUEmPxdLlGX/T0yUJ6wBBsqZqO1oYFLSBBMYEaxrjQWA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VGqamARA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743620213; c=relaxed/simple;
+	bh=cz0x8uEQhsD9AvaX4nn6mYGilvPUd8AoSrVT+BjCaUk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EO1HconLadPKE+5E9+LOZfgM2S16EmAuXSmCE46SZx/Tzt+Z8DfyW3dx0oREoUj5vamePsb/4oVPzNoWeyiqacrRZOPQ4Kdxiz9MK7DKTJBv/Sbrn2ydxLbl2aQJWkNcTH4+DKpgUD1dgYYnpeL6/QM0Z020Ibcom7avkecYqyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I1xq8r7M; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VGqamARA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2BFDC4CEDD;
-	Wed,  2 Apr 2025 18:56:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I1xq8r7M"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 292AEC4CEDD;
+	Wed,  2 Apr 2025 18:56:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743620196;
-	bh=xmznKTQXjh7m9NClIWACppmUCWNDHM2Fnwfp/mZYh6A=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=VGqamARAY3FnSJ1x5qs7X/OPBN/OpQ0Ta2ueXCo5bQ8PdUmmeJ6+czpzt1198ht0R
-	 1Q6iRYdLqBLZiGHeB83NXgMyVlEdlZ1XWX+IFU+R4jKiLHziNwF8NlbVzo+Ficb/Ol
-	 VxAGgO5rFBN+7idluRIu5vxeDCknUY8kweQ72biok6Z29e8IqoXljRUr3dPO6Gbz+Z
-	 QRz9FUAWZjJrH9FC67w/h5ltxZP0o7vy7z/C6Fi+qtsmGi1oufS2X1Lt3uv3p5nnUx
-	 k/i4nmJ0LKLlNVeK14g58NzXu3sey+HCJtu34U9PVUAc2m5v3zL2djhO9BUrhL2dA0
-	 AcqJxL9YXtUrg==
-Date: Wed, 02 Apr 2025 13:56:34 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=k20201202; t=1743620212;
+	bh=cz0x8uEQhsD9AvaX4nn6mYGilvPUd8AoSrVT+BjCaUk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=I1xq8r7MCzhFbYR8FBrdhKZASZTJJW/ZT0mVF5kgE04ZGefS1LzhalPV8vKANSM5M
+	 5awJhfQVvcF82bxmmZA/D37K9+ziA26kAgXYfCOlhi7qfRfgJjMpIUJ2qCjzy+GWOe
+	 8z/eTn2RsFRbvh3FZBqw7YJp3tssDHrFEl81jS3PxBvQX1R2sHXMbYVRU1yRX3Xrsw
+	 qHUS0sxxWMt2Lgm6DDZ7rUc0U/oY5VnPn3ZWnGYpx622z7XhhWoOtFQSwY/DkBS+6M
+	 76wJn40r1s4nUImwXOGPsvvOjxNe75scz2N1Vk2YI5P38aM8sxCsRnqvAhcKM8qQj+
+	 WLJ/T7Sm3WMiQ==
+Date: Wed, 2 Apr 2025 19:56:47 +0100
+From: Simon Horman <horms@kernel.org>
+To: Jijie Shao <shaojijie@huawei.com>
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, andrew+netdev@lunn.ch, shenjian15@huawei.com,
+	wangpeiyang1@huawei.com, liuyonglong@huawei.com,
+	chenhao418@huawei.com, jonathan.cameron@huawei.com,
+	shameerali.kolothum.thodi@huawei.com, salil.mehta@huawei.com,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net 2/7] net: hibmcge: fix incorrect multicast filtering
+ issue
+Message-ID: <20250402185647.GV214849@horms.kernel.org>
+References: <20250402133905.895421-1-shaojijie@huawei.com>
+ <20250402133905.895421-3-shaojijie@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, S32@nxp.com, 
- wim@linux-watchdog.org, krzk+dt@kernel.org, linux@roeck-us.net, 
- conor+dt@kernel.org, ghennadi.procopciuc@nxp.com, 
- linux-kernel@vger.kernel.org, thomas.fossati@linaro.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-In-Reply-To: <20250402154942.3645283-2-daniel.lezcano@linaro.org>
-References: <20250402154942.3645283-1-daniel.lezcano@linaro.org>
- <20250402154942.3645283-2-daniel.lezcano@linaro.org>
-Message-Id: <174362019496.367085.18177836404576070514.robh@kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: watchdog: Add NXP Software
- Watchdog Timer
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250402133905.895421-3-shaojijie@huawei.com>
 
-
-On Wed, 02 Apr 2025 17:49:39 +0200, Daniel Lezcano wrote:
-> Describe the Software Watchdog Timer available on the S32G platforms.
+On Wed, Apr 02, 2025 at 09:39:00PM +0800, Jijie Shao wrote:
+> The driver does not support multicast filtering,
+> the mask must be set to 0xFFFFFFFF. Otherwise,
+> incorrect filtering occurs.
 > 
-> Cc: Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>
-> Cc: Thomas Fossati <thomas.fossati@linaro.org>
-> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> ---
->  .../bindings/watchdog/nxp,s32g2-swt.yaml      | 42 +++++++++++++++++++
->  1 file changed, 42 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/watchdog/nxp,s32g2-swt.yaml
+> This patch fixes this problem.
 > 
+> Fixes: 37b367d60d0f ("net: hibmcge: Add unicast frame filter supported in this module")
+> Signed-off-by: Jijie Shao <shaojijie@huawei.com>
 
-My bot found errors running 'make dt_binding_check' on your patch:
-
-yamllint warnings/errors:
-./Documentation/devicetree/bindings/watchdog/nxp,s32g2-swt.yaml:17:7: [warning] wrong indentation: expected 4 but found 6 (indentation)
-
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/watchdog/nxp,s32g2-swt.yaml: ignoring, error in schema: properties: compatible
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/watchdog/nxp,s32g2-swt.yaml: properties:compatible: [{'const': 'nxp,s32g2-swt'}, {'items': [{'const': 'nxp,s32g3-swt'}, {'const': 'nxp,s32g2-swt'}]}] is not of type 'object', 'boolean'
-	from schema $id: http://json-schema.org/draft-07/schema#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/watchdog/nxp,s32g2-swt.yaml: properties:compatible: [{'const': 'nxp,s32g2-swt'}, {'items': [{'const': 'nxp,s32g3-swt'}, {'const': 'nxp,s32g2-swt'}]}] is not of type 'object', 'boolean'
-	from schema $id: http://devicetree.org/meta-schemas/keywords.yaml#
-Documentation/devicetree/bindings/watchdog/nxp,s32g2-swt.example.dts:18.29-23.11: Warning (unit_address_format): /example-0/watchdog@0x40100000: unit name should not have leading "0x"
-Documentation/devicetree/bindings/watchdog/nxp,s32g2-swt.example.dtb: /example-0/watchdog@0x40100000: failed to match any schema with compatible: ['nxp,s32g2-swt']
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250402154942.3645283-2-daniel.lezcano@linaro.org
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+Reviewed-by: Simon Horman <horms@kernel.org>
