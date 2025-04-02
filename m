@@ -1,29 +1,29 @@
-Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C818F23E321;
-	Wed,  2 Apr 2025 13:46:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8943723E34A;
+	Wed,  2 Apr 2025 13:46:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743601573; cv=none; b=OmG2iLZnCpSWTOmU+KZwhIvRpE0lG5TqpBiXbpLdyr38UHtKxJY3EAVwWZ/jOM0Xsj0TE/iDYH/OmJDk8PdqmmHCogg1vFXvot//1bgGJLl6iFwzPo+fzJAxjVspztIqAajCOh2EtmqT80Lshc3s9A7w9DzwfO849fSicjqsvLI=
+	t=1743601573; cv=none; b=kmETiOcpUJt59JhAXePwM4j/28U3IpYYtOsTu1dpMzMo7nkQB5gVxbEaGbc6XpoiK8NypEkiVnNHdhJOhiaGahWp7sMPTtVDwEkjSicGHnQsWZynsDZBZKFRqz5EgZfukjhZ9O5e7AQUUlwMOiwIfjzEzwHZLj8MKbkox7D9Z4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1743601573; c=relaxed/simple;
-	bh=yWQgH7ApFMZf5ObyEv92ELyomVJTsdwjvQl3F4z7H5o=;
+	bh=o3/0sPGZz9dV7SG0UNXlsf4x2Gv66UiX7OX/Cm6sb7c=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mifKLPOfHjMxF8zW39uYn2RxVn7yn7aGTjvhEhh+S5gcu26/4icdjKQRSh11rqqXCkpbb3yiUMd/KTwbDFfHoTDvra+qvXC4c3K+d+m4I7KFFz3K8sH9Avu1ieUOs/t5q9QdtPJ3AMfo1r0zQ3jHrRzha1mtScbNl9LFoBzQkuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
+	 MIME-Version:Content-Type; b=TTMx971P5MUiVWIlkRG3EaylZFkJyZbMvhvyxe6RhhmlXqDJaCj6V+hancLxAMUGcASmC5wXCfQwjJBDlmqTMi9+DONvuoOLVj+oAF78cqTw91B2SBRpPvDgIaeQiU4bgfEPxPOSxt0W1hmCCbbQoSY+5Jx6mdtaP/cDyfjdGdY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.112])
-	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4ZSQxj1hWRz1f1NR;
-	Wed,  2 Apr 2025 21:41:13 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.44])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4ZSQzR59Srz2CcG4;
+	Wed,  2 Apr 2025 21:42:43 +0800 (CST)
 Received: from kwepemk100013.china.huawei.com (unknown [7.202.194.61])
-	by mail.maildlp.com (Postfix) with ESMTPS id 5446F140109;
-	Wed,  2 Apr 2025 21:46:02 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id D6BC71402CD;
+	Wed,  2 Apr 2025 21:46:03 +0800 (CST)
 Received: from localhost.localdomain (10.90.30.45) by
  kwepemk100013.china.huawei.com (7.202.194.61) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 2 Apr 2025 21:46:01 +0800
+ 15.2.1544.11; Wed, 2 Apr 2025 21:46:03 +0800
 From: Jijie Shao <shaojijie@huawei.com>
 To: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
 	<pabeni@redhat.com>, <andrew+netdev@lunn.ch>, <horms@kernel.org>
@@ -32,9 +32,9 @@ CC: <shenjian15@huawei.com>, <wangpeiyang1@huawei.com>,
 	<jonathan.cameron@huawei.com>, <shameerali.kolothum.thodi@huawei.com>,
 	<salil.mehta@huawei.com>, <netdev@vger.kernel.org>,
 	<linux-kernel@vger.kernel.org>, <shaojijie@huawei.com>
-Subject: [PATCH net 2/7] net: hibmcge: fix incorrect multicast filtering issue
-Date: Wed, 2 Apr 2025 21:39:00 +0800
-Message-ID: <20250402133905.895421-3-shaojijie@huawei.com>
+Subject: [PATCH net 5/7] net: hibmcge: fix the incorrect np_link fail state issue.
+Date: Wed, 2 Apr 2025 21:39:03 +0800
+Message-ID: <20250402133905.895421-6-shaojijie@huawei.com>
 X-Mailer: git-send-email 2.30.0
 In-Reply-To: <20250402133905.895421-1-shaojijie@huawei.com>
 References: <20250402133905.895421-1-shaojijie@huawei.com>
@@ -49,47 +49,45 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
  kwepemk100013.china.huawei.com (7.202.194.61)
 
-The driver does not support multicast filtering,
-the mask must be set to 0xFFFFFFFF. Otherwise,
-incorrect filtering occurs.
+In the debugfs file, the driver displays the np_link fail state
+based on the HBG_NIC_STATE_NP_LINK_FAIL.
 
-This patch fixes this problem.
+However, HBG_NIC_STATE_NP_LINK_FAIL is cleared in hbg_service_task()
+So, this value of np_link fail is always false.
 
-Fixes: 37b367d60d0f ("net: hibmcge: Add unicast frame filter supported in this module")
+This patch directly reads the related register to display the real state.
+
+Fixes: e0306637e85d ("net: hibmcge: Add support for mac link exception handling feature")
 Signed-off-by: Jijie Shao <shaojijie@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hibmcge/hbg_hw.c  | 4 ++++
- drivers/net/ethernet/hisilicon/hibmcge/hbg_reg.h | 2 ++
- 2 files changed, 6 insertions(+)
+ drivers/net/ethernet/hisilicon/hibmcge/hbg_debugfs.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hibmcge/hbg_hw.c b/drivers/net/ethernet/hisilicon/hibmcge/hbg_hw.c
-index 7d3bbd3e2adc..9b65eef62b3f 100644
---- a/drivers/net/ethernet/hisilicon/hibmcge/hbg_hw.c
-+++ b/drivers/net/ethernet/hisilicon/hibmcge/hbg_hw.c
-@@ -234,6 +234,10 @@ void hbg_hw_set_mac_filter_enable(struct hbg_priv *priv, u32 enable)
+diff --git a/drivers/net/ethernet/hisilicon/hibmcge/hbg_debugfs.c b/drivers/net/ethernet/hisilicon/hibmcge/hbg_debugfs.c
+index 9c09e4835990..01ad82d2f5cc 100644
+--- a/drivers/net/ethernet/hisilicon/hibmcge/hbg_debugfs.c
++++ b/drivers/net/ethernet/hisilicon/hibmcge/hbg_debugfs.c
+@@ -106,6 +106,7 @@ static int hbg_dbg_nic_state(struct seq_file *s, void *unused)
  {
- 	hbg_reg_write_field(priv, HBG_REG_REC_FILT_CTRL_ADDR,
- 			    HBG_REG_REC_FILT_CTRL_UC_MATCH_EN_B, enable);
+ 	struct net_device *netdev = dev_get_drvdata(s->private);
+ 	struct hbg_priv *priv = netdev_priv(netdev);
++	bool np_link_fail;
+ 
+ 	seq_printf(s, "event handling state: %s\n",
+ 		   state_str_true_false(priv, HBG_NIC_STATE_EVENT_HANDLING));
+@@ -117,8 +118,10 @@ static int hbg_dbg_nic_state(struct seq_file *s, void *unused)
+ 		   reset_type_str[priv->reset_type]);
+ 	seq_printf(s, "need reset state: %s\n",
+ 		   state_str_true_false(priv, HBG_NIC_STATE_NEED_RESET));
+-	seq_printf(s, "np_link fail state: %s\n",
+-		   state_str_true_false(priv, HBG_NIC_STATE_NP_LINK_FAIL));
 +
-+	/* only uc filter is supported, so set all bits of mc mask reg to 1 */
-+	hbg_reg_write64(priv, HBG_REG_STATION_ADDR_LOW_MSK_0, U64_MAX);
-+	hbg_reg_write64(priv, HBG_REG_STATION_ADDR_LOW_MSK_1, U64_MAX);
++	np_link_fail = !hbg_reg_read_field(priv, HBG_REG_AN_NEG_STATE_ADDR,
++					   HBG_REG_AN_NEG_STATE_NP_LINK_OK_B);
++	seq_printf(s, "np_link fail state: %s\n", str_true_false(np_link_fail));
+ 
+ 	return 0;
  }
- 
- void hbg_hw_set_pause_enable(struct hbg_priv *priv, u32 tx_en, u32 rx_en)
-diff --git a/drivers/net/ethernet/hisilicon/hibmcge/hbg_reg.h b/drivers/net/ethernet/hisilicon/hibmcge/hbg_reg.h
-index fd623cfd13de..a6e7f5e62b48 100644
---- a/drivers/net/ethernet/hisilicon/hibmcge/hbg_reg.h
-+++ b/drivers/net/ethernet/hisilicon/hibmcge/hbg_reg.h
-@@ -135,6 +135,8 @@
- #define HBG_REG_STATION_ADDR_HIGH_4_ADDR	(HBG_REG_SGMII_BASE + 0x0224)
- #define HBG_REG_STATION_ADDR_LOW_5_ADDR		(HBG_REG_SGMII_BASE + 0x0228)
- #define HBG_REG_STATION_ADDR_HIGH_5_ADDR	(HBG_REG_SGMII_BASE + 0x022C)
-+#define HBG_REG_STATION_ADDR_LOW_MSK_0		(HBG_REG_SGMII_BASE + 0x0230)
-+#define HBG_REG_STATION_ADDR_LOW_MSK_1		(HBG_REG_SGMII_BASE + 0x0238)
- 
- /* PCU */
- #define HBG_REG_TX_FIFO_THRSLD_ADDR		(HBG_REG_SGMII_BASE + 0x0420)
 -- 
 2.33.0
 
