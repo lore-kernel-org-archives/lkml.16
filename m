@@ -1,192 +1,298 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8319920D519
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 10:44:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743590696; cv=none; b=UqR6fNGCVfqMw4UUddMQC53Yj9geFCjdWFgPQR0mxWP36D9uWDmiPIYSGLgIPge8RZ7O2rY4Vi+jw00tUQJharJOwf9AQ4lX0nf3WJPLBwMhZlWJNAIisgCINswB6QLYQUjzm08kpJL2U/4UIWxnK63gM5iN4LcZ361MN5CMVFY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743590696; c=relaxed/simple;
-	bh=+uB5iUofgagnRdSq6+dSLbB0qAKAimYmRXFsyrrPlaE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pNwarySZ+oYR3MLczCBCTS7s9yoGDDKnsteepNwdAbO7+xoSY0vt8L017VptbhN8msmyZ63rJ6rfhpLcCMYdzKMooQtl/wi4fFPGT3A+c9g8qvXfFar3GFpGCnADNxIjuClc2rm9uRy/XF5vavHh7XzC3B9DarnITTkVZ8TUiA8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=EplJr8+B; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=qpuImgyh; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=EplJr8+B; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=qpuImgyh; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2FE353BE;
+	Wed,  2 Apr 2025 10:45:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.19
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743590716; cv=fail; b=kZQaNdWKu7LUgSGWjXGpy+olBfoFxVGYh/nc3WAB5yTKwl3Z2T6g3mTva6J8I6aOqU7jKBFA7MhDCGfASmCXMt1cT6MNBLxJLImMY/G7Wh5aituGEJ6WFxyR4kR/dcWaZ92aJQ3fm/ZhbL4s93ewPvpOe/5DdPIXlcr+lAV3J8k=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743590716; c=relaxed/simple;
+	bh=76r8cAOsoR3AI7ktiPMzt2YT8euqfgX6AsaCNTg3iSI=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=T0DXXXaUpIpa1NaeNRaV2JdHRDcsPDCVJOiSX3vulTegbFa+J5dKc+4USrVvKrUyxGRh1hZupt1pVzJV5WxDDLh8iGLEbRj7xbP9YqBdIU9vmLbi9lUPzztctJKBvNlOyRl7/5fDUDInM6N/Febbjv4hdLWmJtQ1IzPs6l7XFn8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bBk2zBRX; arc=fail smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="EplJr8+B";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="qpuImgyh";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="EplJr8+B";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="qpuImgyh"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 29DF41F38A;
-	Wed,  2 Apr 2025 10:44:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1743590692; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=V44jQhfXZFRMaYV7EYWgg+brV+qQ7i8rYGkA/MtWj1Q=;
-	b=EplJr8+BK+pJm2YQ2ZJTFdqc3XPtJ6TX8dVEmw1CaQVIW8ZW6up9Vj7BaoHUkMftbqZL50
-	3/HQjChFzrNoqULvi0jw88k5gKQ6vBVq1Uo8WDjWgXVmCJ85Y2Wv0tQ2mNAD4gtygKQFxH
-	AMU7nqKMSyog8qUZzOqbfvU/RPD7sII=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1743590692;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=V44jQhfXZFRMaYV7EYWgg+brV+qQ7i8rYGkA/MtWj1Q=;
-	b=qpuImgyhZeem5DOPN+L2+Zs5U1kwMSecOMXLIJNHGhsvo3XNUFJZIzGqYI1po9FczHpLC+
-	QFhDLGC/oxP2HnAg==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=EplJr8+B;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=qpuImgyh
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1743590692; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=V44jQhfXZFRMaYV7EYWgg+brV+qQ7i8rYGkA/MtWj1Q=;
-	b=EplJr8+BK+pJm2YQ2ZJTFdqc3XPtJ6TX8dVEmw1CaQVIW8ZW6up9Vj7BaoHUkMftbqZL50
-	3/HQjChFzrNoqULvi0jw88k5gKQ6vBVq1Uo8WDjWgXVmCJ85Y2Wv0tQ2mNAD4gtygKQFxH
-	AMU7nqKMSyog8qUZzOqbfvU/RPD7sII=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1743590692;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=V44jQhfXZFRMaYV7EYWgg+brV+qQ7i8rYGkA/MtWj1Q=;
-	b=qpuImgyhZeem5DOPN+L2+Zs5U1kwMSecOMXLIJNHGhsvo3XNUFJZIzGqYI1po9FczHpLC+
-	QFhDLGC/oxP2HnAg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 860F4137D4;
-	Wed,  2 Apr 2025 10:44:51 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id CfIsHyMV7WcKXgAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Wed, 02 Apr 2025 10:44:51 +0000
-Message-ID: <3f387b13-5482-46ed-9f52-4a9ed7001e67@suse.cz>
-Date: Wed, 2 Apr 2025 12:44:50 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bBk2zBRX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743590715; x=1775126715;
+  h=date:from:to:cc:subject:message-id:references:
+   content-transfer-encoding:in-reply-to:mime-version;
+  bh=76r8cAOsoR3AI7ktiPMzt2YT8euqfgX6AsaCNTg3iSI=;
+  b=bBk2zBRXqdAzWbf69Bh10Egewh8DgT1nWFP1UpbX4SwcaqrHheyXxbGQ
+   Ke8Fpd7/Fx+MnfxfYlAADP6Pi9zzdV+N8An7E9R4KiR/A9O8V4zHmTLs+
+   Pd9GcHnLtqOp3h9NsMeVRa5I11ArGCf3PYiIR5yauf+JXDJzKhA0yEl4o
+   M8QmZp/TM3r8OtvpsgUmn11CTNd7ZZB9LUD2rNeR/XE/t6X+eRqQ7BUYH
+   VUzOs0sxqcSruLYrD5ce2tKwq/D04dnH/SuAC4umoIZhCE+BMxbhbV4Yp
+   zMdOdDSkTuRwRzRe/Lh2M3BIGiL11AWIVqGz/LZ9/SWZjiWxA1QrjKtYI
+   A==;
+X-CSE-ConnectionGUID: 5gJptniHQiuMKsS1nKsmEw==
+X-CSE-MsgGUID: 7LdUp7NdR7W4w6TrLdkbEw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11391"; a="44095335"
+X-IronPort-AV: E=Sophos;i="6.14,182,1736841600"; 
+   d="scan'208";a="44095335"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 03:45:14 -0700
+X-CSE-ConnectionGUID: uUU12KukRwSuvbH0jhPwpw==
+X-CSE-MsgGUID: S322LuH6To6phEhHD671dQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,182,1736841600"; 
+   d="scan'208";a="126640673"
+Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
+  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 03:45:13 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Wed, 2 Apr 2025 03:45:12 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Wed, 2 Apr 2025 03:45:12 -0700
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.171)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Wed, 2 Apr 2025 03:45:12 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=kxtHPnxy9iLd8+9OkzXilnJhH23Tt0UXdkqi3LZthvMUVfwGWbRytcv1fyoziGPmqNtMIc85fitoi+PdZP7A7fCIqmf3iuBSR8r5oI6jvQ0RisUwoE19qzicIXQLBNUo0tGKoj9nNRXBVoRZtGmMLnj/HDY6MsMesgNa1e9YRgATBCgxGB66/39oe2f4BCn0p33HjmZZ3htQKuaoA0GpvOe6IFTVpiw+EseLNoNVz8tFsJS007ztnAhdQ2hhTmqruqHBdP1Jegtdd8HLa7iNnSZUxo5COi0MgnPxI9nG08CM/oKuPA21cjftb5PtjJJAGh1LUrP7oNRrEz+MQkCvzA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=fHWlQR1IBN7+1RjymV5Z47R/DA5AWEFPmme4qlkhZqQ=;
+ b=JLGVKvjl466k9yuYF3iZLfPX8vS8ucUttRQUab0sEmQ1iLIrcMy6TKUvg7DQr7KzwUw/nNFQiImH+6fI3q6NAP0l7PU+IXRWVeJR4ntL+MGNmMdfYJPlrbglvflVmQGmKt6qjgwFVC+9rOPmue7s3rbMkP10rQaAnLIlR9Axgt2OoO9AtS4889DpNjeOX6acPwpGAUL6324PMFlTLBv0Z7fE9HQNhmF/1oHj6BTXYTn1uSUVYOo1Jt3F6C/HUmhotGzm/qu0iMvRJI8PJTGQKG79pOD9GbUdY2H7agU1sgNdeXsTEPyriTUf77SIT4hhhMlazVha4kTmGrdgw7Is4Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DM4PR11MB5373.namprd11.prod.outlook.com (2603:10b6:5:394::7) by
+ SJ0PR11MB5199.namprd11.prod.outlook.com (2603:10b6:a03:2dd::6) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8534.44; Wed, 2 Apr 2025 10:45:03 +0000
+Received: from DM4PR11MB5373.namprd11.prod.outlook.com
+ ([fe80::927a:9c08:26f7:5b39]) by DM4PR11MB5373.namprd11.prod.outlook.com
+ ([fe80::927a:9c08:26f7:5b39%4]) with mapi id 15.20.8583.041; Wed, 2 Apr 2025
+ 10:45:02 +0000
+Date: Wed, 2 Apr 2025 12:44:59 +0200
+From: =?utf-8?Q?Micha=C5=82?= Winiarski <michal.winiarski@intel.com>
+To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+CC: <linux-pci@vger.kernel.org>, <intel-xe@lists.freedesktop.org>,
+	<dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>,
+	"Bjorn Helgaas" <bhelgaas@google.com>, Christian =?utf-8?B?S8O2bmln?=
+	<christian.koenig@amd.com>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?=
+	<kw@linux.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, Michal Wajdeczko
+	<michal.wajdeczko@intel.com>, Lucas De Marchi <lucas.demarchi@intel.com>,
+	Thomas =?utf-8?Q?Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+	"Maarten Lankhorst" <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+	<mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
+	<airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Matt Roper
+	<matthew.d.roper@intel.com>
+Subject: Re: [PATCH v6 6/6] drm/xe/pf: Set VF LMEM BAR size
+Message-ID: <gi24rnidkfgmcgszvi53kpmq4wxd36xhs5hd3hqaa4ihzeageg@bqlqtt4knjod>
+References: <20250320110854.3866284-1-michal.winiarski@intel.com>
+ <20250320110854.3866284-7-michal.winiarski@intel.com>
+ <bdfe5413-547a-67b0-b822-9852d3f94cc5@linux.intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <bdfe5413-547a-67b0-b822-9852d3f94cc5@linux.intel.com>
+X-ClientProxiedBy: VI1PR07CA0135.eurprd07.prod.outlook.com
+ (2603:10a6:802:16::22) To DM4PR11MB5373.namprd11.prod.outlook.com
+ (2603:10b6:5:394::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC] slab: introduce auto_kfree macro
-Content-Language: en-US
-To: Przemek Kitszel <przemyslaw.kitszel@intel.com>,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- torvalds@linux-foundation.org, peterz@infradead.org,
- Kees Cook <keescook@chromium.org>, Jann Horn <jannh@google.com>
-Cc: andriy.shevchenko@linux.intel.com, intel-wired-lan@lists.osuosl.org,
- netdev@vger.kernel.org, Harry Yoo <harry.yoo@oracle.com>,
- Matthew Wilcox <willy@infradead.org>, Christoph Lameter <cl@gentwo.org>
-References: <20250401134408.37312-1-przemyslaw.kitszel@intel.com>
-From: Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <20250401134408.37312-1-przemyslaw.kitszel@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 29DF41F38A
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.cz:dkim,suse.cz:mid,intel.com:email];
-	DKIM_TRACE(0.00)[suse.cz:+]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -4.51
-X-Spam-Flag: NO
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR11MB5373:EE_|SJ0PR11MB5199:EE_
+X-MS-Office365-Filtering-Correlation-Id: 355956af-ca68-4260-05c2-08dd71d36c17
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|7416014|366016;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?YWhzN2p0clpUbEhTMmRtVy9PaW52Mm9oTDlLRVUyOU9nTWVHOEhQT2VsOEJL?=
+ =?utf-8?B?OENIMGR0aVR5UFErM2xUdDNZeXZRV05HeU9EL0FCYTZHUFltVEpTQm1icnRm?=
+ =?utf-8?B?TG5mV0dIaEFWc1hFU1FjakQyekZobndRZ1lBd0JmQUNQSDI3ZGdRZUlZc2tG?=
+ =?utf-8?B?VG1DclVCbHZEMjV6emxPZ0lJbUxIQ1NCa1QyaklhWEkzNzVvUGZiNDg2YzJK?=
+ =?utf-8?B?cVFWcmdTeStYdEVWdU9XQ2NVckx1NG02ZWp5VVB3T1djV24vYmRMeEJWWGc3?=
+ =?utf-8?B?bG5mbDhVamdZNW9LSU5uWFZia3N5dFF2S2ZiWHpEMjgyRjRFVGpYTEJFenFD?=
+ =?utf-8?B?RTcyWlh1M08vZEl5N2hKVWhEZHBWWVR6OWN3STZuQ3ZuRDEyM1NHQ29oWTdx?=
+ =?utf-8?B?OVB2YUEwRjJSTFEyNmxGaEhqZDl3SUZpbTVqVEhrOXl1OGF0VmNyeG92d2Va?=
+ =?utf-8?B?OUU2T2JDeDZDaWhQQng4a3A4RWtKckxYWGdCOTRZdDlHS2wybjZ6TFlqcGY2?=
+ =?utf-8?B?ZzU2RU0veTZtVEdPSUU4TnM1bXVzdXM3M1JWZG9UdjU4cnduSU5VVnZ3cEdh?=
+ =?utf-8?B?YUs1eDZLdzh0VFFQQ2hibTl1dEhKeGZyMnN1Zmt2TlJJbEI0UlNqSUgxRFBQ?=
+ =?utf-8?B?UW05RVZHSFFCcm5haGNFbno5YUR0S1U0d0daQWtFYXQ5bU5DeFRPT3JoVHYz?=
+ =?utf-8?B?R1VYWGcwTUFzVXk4cFFpaG5pWWtnbXdVVHpTV2FzNy9ScTFxSWczQ01ncFVq?=
+ =?utf-8?B?U2NRMHBSZ1pYM0c3UDIzWjhRRkx2NDBvQWxkd0k2c3VXbmhGYnE2emJkdTQ0?=
+ =?utf-8?B?VDhRY3RNSFQ4am1pRmNJNVNueE03Z2ZMM3RuMFRZaFRZTTRhek5iUzdNMDRx?=
+ =?utf-8?B?V1NuRWhNOFlLZ2l3WS80SWE0dTFxRUhPVWh4OGs2TGgxOFZUM3RvQlNiZGhI?=
+ =?utf-8?B?RWNZYXYvZzN2bnp1ZDcwRDVPTnBsMlJOY2lVL0E0Q29tUUd4MllWeC9KK1VY?=
+ =?utf-8?B?RzZTSmxlMHhDMStNSys2WnpQQ2FvSnlsLzVqMFhGZ3dmaVU3V1I3N3o0Y1ZF?=
+ =?utf-8?B?dGxJanFrWTJBWCtKOGY4bm9KcFlETE1QLzFQeGk1bW9ZV1VhVTRkSG05Uksr?=
+ =?utf-8?B?akdYNUFNMTRnWnRZZTVrYitXcjdSSGpyZ3hQbHduQjBtbTk1MXZaUU8weHhZ?=
+ =?utf-8?B?cmlJcGdUVUUxendSNFpWK2VmK0ZYTVlaTlNGeEpYTXVmd3YrQkNuTzNQK2w4?=
+ =?utf-8?B?VFdSZnByYzVOT0pZZ1RwdStzcTdoOW5EaFpHSmExZElwTS9pU0VITS9FRDE3?=
+ =?utf-8?B?RHNZdTVlNU8yekNQZVNqN1o0M2s3YXJQVWJQdmtpdkkyT2ltaFo4c2k1eWN5?=
+ =?utf-8?B?MUd4S3JaNVdLQy96alI3MjJYd3EwTDlSUytiSmdrNWZFcHNwbDArd0p5WmlH?=
+ =?utf-8?B?UDVsSUNnTFBEem9pVEl4a3I2eFg4ZWlnSS8xNnE4WEZvTS82QWhOcE9lSjd6?=
+ =?utf-8?B?YnJKb25PWTl5S1RmTTZXRWZCS0FZUjBiR3JiQlZMaE5hYUZmS3FDMFJMK08v?=
+ =?utf-8?B?TGlYVEdNM3N0VzA0ajM0SFozUWhSWWswcmJpMDZLZFd6QUhScWZoN1F1OHRK?=
+ =?utf-8?B?NlZ1UlNNMGxXcmJ4QllVMElabkR2c2ZGY0FUdnRLRWx5ODBFSnNhOFprNEtv?=
+ =?utf-8?B?UkQvT2tOU2pNd0lUY08rbFIyMG9JWk1IaklFZGtuaXVqb2xDSVg4RzJPV0p3?=
+ =?utf-8?B?YzdrQTJYbkw3YmliUk1lY2NuQXBEcWpJQStBaTlRMmpPZVc0WmJ1STJCdm5v?=
+ =?utf-8?B?N2JSTHJhbVJLWG9UR29ZQjFUZC9uelZncGFnb0xxSVZQQ0VpZUpNNU0yVXl6?=
+ =?utf-8?Q?Oo8wj9VAPWh56?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR11MB5373.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(7416014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?WHYwME5MTU5Manp6ekphU3gvQWhldGZ2WE9IYlRzdG9WTUgwV0tzMmlTMUQ3?=
+ =?utf-8?B?bnRXQVZZWVljaEQ4MHlXOXBvOUNrZ3l5SkRVTk1Qd0JOMkFUMzdwUllEVTVF?=
+ =?utf-8?B?MkdNbzcxZlAvejBjdWZXeWRUODBPeEZBZ3l6Wkt6aFpXRVdtODU2QytMTlpw?=
+ =?utf-8?B?TnNENFR2ekpsVVIycnNvUTZjWmlyak5HNm90NkhEdG5HRkR0MXJGcFZxZW4y?=
+ =?utf-8?B?QWdtUG1VTktUajF3alJTc25IM3JpZnIvQW5ETVZRb0ZJL0VFZjlMSk9sdzBM?=
+ =?utf-8?B?QnBKTU5SZTc1Ky9SVzNiWFpuSklaQXdCckVMOUpUYUFtWThHQVFKY2lyS25P?=
+ =?utf-8?B?MVU1bHlNdDlkZ1pFbVl6b1JnRlA5MnJnOGJPWW1YdVo4ajBYdzVnZERWclBS?=
+ =?utf-8?B?M2YxQmxvbFFTMGxIUjRTV2JMN0M5bEwxZllON0JXdkxqL2FuS3lTMkdjVWt6?=
+ =?utf-8?B?ZnB0RlAvSzNtOFF0L1FscVVxcHV0dVVvZ0psSHdJc29nUWZiWXpod2FyL3l5?=
+ =?utf-8?B?V1Y5bW1qdzZIZytsYkxzeVlJNUg0NE1QSHVnUWdkc0dxWUdwSjdGcE9xT1Bm?=
+ =?utf-8?B?bXJ0STRqeFRIdHdjcFB3R2JORHJxMXBzbWppTjlyL3RXMXUyV016czVHSnpu?=
+ =?utf-8?B?VHNNVTFHa0NYdFB6SWRnMEtDYjZYdnIyUlQrRGNOVDJzTFc3Uis4aklyYXJx?=
+ =?utf-8?B?VFArM2ZvUStWT1VnMFpEcmQybEVCNEZiN0xURjR4ZnRmcytGRHhCZkZXaVQ4?=
+ =?utf-8?B?eUp4ckxnY1pNbVM5WUpxeGk0K2ZtQlE3U01HK2xNKzNYZWR1bUU5aHJIbDA3?=
+ =?utf-8?B?NHk2UmRXZmUxOGFkaDZkRGhHam01R05walZmM3BMTHR1NXN3L2JINEpLc0pW?=
+ =?utf-8?B?ZTFOM1hUaGthZGh1anNySE8xa1BJTGxtcWdaM3ZzWWx1S1pHRHpZRjNEVlVU?=
+ =?utf-8?B?SFRRSnRaYWpIVEFtU2VKbi9GSm42L1hjUzZIc2lOVWgwamtVRGQwSXQ2cVFm?=
+ =?utf-8?B?M1l3Z0FmeXpLZFVlVWtwZlJWSjZDRCtYdkZNOENhc1ZHc2FEaFI4OEduV3R1?=
+ =?utf-8?B?ZThXMmt5TlVzaVd3TTU3WTVuZUdUTDNHYnovTE1ZTjBISmRHNWZlU1ZMQ2Fh?=
+ =?utf-8?B?MjZIbnpqTlpHMmtRbEV6ajhpN0tyN2hZSnpPb0JMOCs4YytyY3lwVEkvaExP?=
+ =?utf-8?B?cVUvSjh4enRPRzJDVzg2SzlIa0FEOURvM0NjaDRrYjZUZU5tR1cvOUhhMmpK?=
+ =?utf-8?B?T3g1YUtIemM3ei85QnBBdGpsRnVRaXh3YnprUFNCTllzdy8wTk1LWGRMWVlI?=
+ =?utf-8?B?Q2QySUlFdzRYZ3lWK0Vub3EvVXZ2V2dzOER0azdXWk81eng4MW5XbkJCeGZX?=
+ =?utf-8?B?SEU0WHo0M2gvVG1Rc2ttRW5Nc2tYQjdLMHExU0pmMyt0NzcyWXFCUVpiNE1u?=
+ =?utf-8?B?WHhSdlRLdkhqVGFPYUFyY1Z6WW1rbTBEdHZkbnYwc0VkUVUwUElUdUJkTkdP?=
+ =?utf-8?B?ZDE3VUd5ZHFJY2VFTy9pNWZ1WVROcDV6QytGWm5ndW9JMWJCc090UU1hMGZj?=
+ =?utf-8?B?MFF0Z1VXUE9yZWhXZzRyeUVHWUN1a3c4UTkxSk5yUkRSc0w4VE1xM1R6UUpK?=
+ =?utf-8?B?QXo2K09yRnpReHNHaE5sazA3WVRoOFkrUlpMQi9JZlVXYUdKZFp4TFBRa2VU?=
+ =?utf-8?B?cDNLZmZiZmRzdXp6RzVkYTV0Zzk4NXJGR1FvZVRFNWhjQ1RHRS9ZelhlZWtM?=
+ =?utf-8?B?TGpEaVFFK3pVVlJnSDBzZVNUNEE1YXdPdXg4dXVRK1JoK1MvcVVnTDhWK0wv?=
+ =?utf-8?B?V3pFV2F4aWRGZ0hRcU5rUFZGbFNNZU5JalpnYmZqa1dVOXJMQTBNbkZLTlg2?=
+ =?utf-8?B?ei9QaFUrSzdmU0FsVFRyTDNjVlBPbC9URGEzZUlTRnU4SExvM0srd1pCR0hJ?=
+ =?utf-8?B?ekVOSmxiRmxtUmdEc0ZBdnp4U2UzaUV1NXZVSnF5QlNWcWxrUGtIbVd0a2o5?=
+ =?utf-8?B?dTVnMk1aVHR2Mkh6L2JzbStGVmsvUkMreHJxajZ6V0QxS1c2V29zczlCZXJV?=
+ =?utf-8?B?Rmg3UzZ1VHhhcWVCUmxXajBkWjdpSEZUbmxnQllCVG8zdXlDQ3FpYzZuY2oy?=
+ =?utf-8?B?VnNkRnpTSjR6cTVqSTFmL3FpaUQxNUNiMURNN0gxaEx6T2tjS1RURk9YNTdK?=
+ =?utf-8?B?cEE9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 355956af-ca68-4260-05c2-08dd71d36c17
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR11MB5373.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Apr 2025 10:45:02.3383
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: sZOP2k8bvvtaM0vtp3maIDIcTsvGPxU9VrwNuuP5qjIecFzXph+gPLyV0vnyjZcOHBE49UDpd2BCSIy7usU73bNGx6pKUnM05CPRIDL5Pns=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR11MB5199
+X-OriginatorOrg: intel.com
 
-Cc Kees and others from his related efforts:
+On Wed, Mar 26, 2025 at 05:29:31PM +0200, Ilpo Järvinen wrote:
+> On Thu, 20 Mar 2025, Michał Winiarski wrote:
+> 
+> > LMEM is partitioned between multiple VFs and we expect that the more
+> > VFs we have, the less LMEM is assigned to each VF.
+> > This means that we can achieve full LMEM BAR access without the need to
+> > attempt full VF LMEM BAR resize via pci_resize_resource().
+> > 
+> > Always set the largest possible BAR size that allows to fit the number
+> > of enabled VFs.
+> > 
+> > Signed-off-by: Michał Winiarski <michal.winiarski@intel.com>
+> > ---
+> >  drivers/gpu/drm/xe/regs/xe_bars.h |  1 +
+> >  drivers/gpu/drm/xe/xe_pci_sriov.c | 22 ++++++++++++++++++++++
+> >  2 files changed, 23 insertions(+)
+> > 
+> > diff --git a/drivers/gpu/drm/xe/regs/xe_bars.h b/drivers/gpu/drm/xe/regs/xe_bars.h
+> > index ce05b6ae832f1..880140d6ccdca 100644
+> > --- a/drivers/gpu/drm/xe/regs/xe_bars.h
+> > +++ b/drivers/gpu/drm/xe/regs/xe_bars.h
+> > @@ -7,5 +7,6 @@
+> >  
+> >  #define GTTMMADR_BAR			0 /* MMIO + GTT */
+> >  #define LMEM_BAR			2 /* VRAM */
+> > +#define VF_LMEM_BAR			9 /* VF VRAM */
+> >  
+> >  #endif
+> > diff --git a/drivers/gpu/drm/xe/xe_pci_sriov.c b/drivers/gpu/drm/xe/xe_pci_sriov.c
+> > index aaceee748287e..57cdeb41ef1d9 100644
+> > --- a/drivers/gpu/drm/xe/xe_pci_sriov.c
+> > +++ b/drivers/gpu/drm/xe/xe_pci_sriov.c
+> > @@ -3,6 +3,10 @@
+> >   * Copyright © 2023-2024 Intel Corporation
+> >   */
+> >  
+> > +#include <linux/bitops.h>
+> > +#include <linux/pci.h>
+> > +
+> > +#include "regs/xe_bars.h"
+> >  #include "xe_assert.h"
+> >  #include "xe_device.h"
+> >  #include "xe_gt_sriov_pf_config.h"
+> > @@ -62,6 +66,18 @@ static void pf_reset_vfs(struct xe_device *xe, unsigned int num_vfs)
+> >  			xe_gt_sriov_pf_control_trigger_flr(gt, n);
+> >  }
+> >  
+> > +static int resize_vf_vram_bar(struct xe_device *xe, int num_vfs)
+> > +{
+> > +	struct pci_dev *pdev = to_pci_dev(xe->drm.dev);
+> > +	u32 sizes;
+> > +
+> > +	sizes = pci_iov_vf_bar_get_sizes(pdev, VF_LMEM_BAR, num_vfs);
+> > +	if (!sizes)
+> > +		return 0;
+> > +
+> > +	return pci_iov_vf_bar_set_size(pdev, VF_LMEM_BAR, __fls(sizes));
+> > +}
+> > +
+> >  static int pf_enable_vfs(struct xe_device *xe, int num_vfs)
+> >  {
+> >  	struct pci_dev *pdev = to_pci_dev(xe->drm.dev);
+> > @@ -88,6 +104,12 @@ static int pf_enable_vfs(struct xe_device *xe, int num_vfs)
+> >  	if (err < 0)
+> >  		goto failed;
+> >  
+> > +	if (IS_DGFX(xe)) {
+> > +		err = resize_vf_vram_bar(xe, num_vfs);
+> > +		if (err)
+> > +			xe_sriov_info(xe, "Failed to set VF LMEM BAR size: %d\n", err);
+> 
+> If you intended this error to not result in failure, please mention it 
+> in the changelog so that it's recorded somewhere for those who have to 
+> look up things from the git history one day :-).
 
-https://lore.kernel.org/all/20250321202620.work.175-kees@kernel.org/
+I'll rephrase the commit message into something like:
 
-On 4/1/25 15:44, Przemek Kitszel wrote:
-> Add auto_kfree macro that acts as a higher level wrapper for manual
-> __free(kfree) invocation, and sets the pointer to NULL - to have both
-> well defined behavior also for the case code would lack other assignement.
+"Always try to set the largest possible BAR size that allows to fit the
+number of enabled VFs and inform the user in case the resize attempt is
+not succesfull."
+
 > 
-> Consider the following code:
-> int my_foo(int arg)
-> {
-> 	struct my_dev_foo *foo __free(kfree); /* no assignement */
+> > +	}
+> > +
+> >  	err = pci_enable_sriov(pdev, num_vfs);
+> >  	if (err < 0)
+> >  		goto failed;
 > 
-> 	foo = kzalloc(sizeof(*foo), GFP_KERNEL);
-> 	/* ... */
-> }
+> Seems pretty straightforward after reading the support code on the PCI 
+> core side,
 > 
-> So far it is fine and even optimal in terms of not assigning when
-> not needed. But it is typical to don't touch (and sadly to don't
-> think about) code that is not related to the change, so let's consider
-> an extension to the above, namely an "early return" style to check
-> arg prior to allocation:
-> int my_foo(int arg)
-> {
->         struct my_dev_foo *foo __free(kfree); /* no assignement */
-> +
-> +	if (!arg)
-> +		return -EINVAL;
->         foo = kzalloc(sizeof(*foo), GFP_KERNEL);
->         /* ... */
-> }
-> Now we have uninitialized foo passed to kfree, what likely will crash.
-> One could argue that `= NULL` should be added to this patch, but it is
-> easy to forgot, especially when the foo declaration is outside of the
-> default git context.
+> Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+
+Thanks,
+-Michał
+
 > 
-> With new auto_kfree, we simply will start with
-> 	struct my_dev_foo *foo auto_kfree;
-> and be safe against future extensions.
-> 
-> I believe this will open up way for broader adoption of Scope Based
-> Resource Management, say in networking.
-> I also believe that my proposed name is special enough that it will
-> be easy to know/spot that the assignement is hidden.
-> 
-> Signed-off-by: Przemek Kitszel <przemyslaw.kitszel@intel.com>
-> ---
->  include/linux/slab.h | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/include/linux/slab.h b/include/linux/slab.h
-> index 98e07e9e9e58..b943be0ce626 100644
-> --- a/include/linux/slab.h
-> +++ b/include/linux/slab.h
-> @@ -471,6 +471,7 @@ void kfree_sensitive(const void *objp);
->  size_t __ksize(const void *objp);
->  
->  DEFINE_FREE(kfree, void *, if (!IS_ERR_OR_NULL(_T)) kfree(_T))
-> +#define auto_kfree __free(kfree) = NULL
->  DEFINE_FREE(kfree_sensitive, void *, if (_T) kfree_sensitive(_T))
->  
->  /**
+> -- 
+>  i.
 
