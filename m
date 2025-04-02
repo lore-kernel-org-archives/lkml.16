@@ -1,158 +1,278 @@
-Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 357FD199948
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 10:01:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5D111EE7DF
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 10:05:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743588082; cv=none; b=PoNwJGKOxJTg7qOSiNkJfZ8GMfTtaZOe9/UtSvWU9BwAVkai7twbQMFTIXV+YnCsWUD1BBTges+ime8Mkby7TrSbU3kpdXlMfEUlPeEspEoxPhU2VXDIfQ9QlpvW4L2pCXVlW7xd00UgAHlON6iT4zCOA16fG+63Nx1sJUpkthI=
+	t=1743588339; cv=none; b=lUnZlVrQJ2Ya3yAS6lBYe/P6JlWtY1jWIfs2Hmun1dmtNAcGASPzkA655JZJNWa+hdCRqCKIaqBLZxds3l3QyL0eT4Lv8l/zmRvI+nSNY4CMU0e1oKhBTRbULJsHcDswHJiHHmZgiN/f2MEkb9btnMYQ875sD8zjvqmcG4TGN4I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743588082; c=relaxed/simple;
-	bh=5zDWPBQx2le1Ivbva5c1ttBmu8Sf/QmV+6wl5+8XbGE=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=exV2218F1EQQp13XEclKUtJEz4BWDFwjSd425Yp/4Rlmj2Rp7gj93G1YQ5+2JuoZ8wWeaG7Y8rQiWpTEJEMN89dMqZzCa/lzeCTCAebx6c5qK4S2QhofALmji4DrMLIfampEwgl83+TKB7bqlnhyNWXxOjZgYurHv163qyIIRt0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3d458e61faaso7949865ab.0
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 03:01:20 -0700 (PDT)
+	s=arc-20240116; t=1743588339; c=relaxed/simple;
+	bh=wuEudmfT+UaCFRR0buvXi+PfV+9lKQen0q6Dl1nOL7o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Yodzeh876kH92uEuINhC+0FwhrOetHt9+OO+VStIhnNm6QDjOEzsO/06k5ubqOx6iqde/Xty2ZH14GK8ChUSt85bw2brf9hOUB7skLYp/UP6EKc5JIbpmJxg6kqVg9eBE1PuLAgr4fGCa78NJnjil0LyfExtHsau5Y9/GNYsR+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Fmn+kWFN; arc=none smtp.client-ip=209.85.208.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Fmn+kWFN"
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-30db1bc464dso57420371fa.0
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 03:05:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1743588336; x=1744193136; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=45OLyXeTgKUOUsJtTp3PVAUqi5d9Bj6zKNzxi7O5qYo=;
+        b=Fmn+kWFNvVGzw8QlUdeT8/aSCBPyb6vrvE4UCvV9JhvQ1GL9Av8Mb0ljAEklOiJIW0
+         7pOuSqmc3Ch8IO8wiZZFcPVUi53jLATKXQjMkECIxUNcXFtB8Fbpcc+/eBdC2Vd7Yk3e
+         6v+t8yjS1QdK3EJTryqasAOnrZp2c151d6HzGuZwzgI4uc4bYi5iF6cv+1N3sGDdYsug
+         LWm7VpKutSYNZ8uJJq8m4HS+/ghHY4Tw+u7ByxSqN3h3Idcp8t13+NudFoXIOUK44nOg
+         TlUiIheGAqC1ojC0jYdPB4YQLH+xPENJ3oACbwjB2YprnoigdwCoT3tCLXWjkWrdlab+
+         IwnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743588080; x=1744192880;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=l3xZDafEEtYWM+rcMpEpLNTs7hEOvGbfXHnpXhkG/qQ=;
-        b=c6/z+BtukeOZBG3rzGyyc746Tjkzelr/NhX53HIBobx8Oa+IPMbNXJDR5RovpvLiMY
-         ZcxfIiqD4SNhFX8SjvA30wAXqcWddkmf68Zfnz4O3DFmOuphviZZsh9dDh1zmUoLkP/T
-         ecLOyCq9gSYjnUnwF/+KC5AlLryzYczTv5u9TmozBv3xqywYTYfxk6R66Q/oFFNXOtYJ
-         crVKbuV5T8oUKeDmqCVrRSuomkglzOA/FoWL0jng6+ZDodc8oUPd+wDE1wxjOKUb0kku
-         G03hv0zHfd1AR0s+PsZESuVdrTGNrsFnoVHwzJOIy2BswTiFTyldD/Pz4Eaa7u4hFxwu
-         OlXg==
-X-Forwarded-Encrypted: i=1; AJvYcCU9OTKtc+H+keC4w2Bd8xHUb1WDps/YFzcXMJrEjoD3oMBQSMMtjaDBrx0wcSmcVo1aw1PrypEoeaVprqQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy5QNI3CXTAnhUR8T8r6trNurSXLjoLVJDlkjkVSkqPMRub5E+Z
-	zCLNBTNa2WDyiPobLHnu8MlqbNniDEX94boW9LMgb5UiOwE4HCP5E2gwU6cvCKWEMhjPsmpBTiM
-	X0ynDOJAXjT7VhrpHeNVfIU4jMbQkfHiXA666P6+V1DMYkwoo/n750c0=
-X-Google-Smtp-Source: AGHT+IHQOdDwtFOTU+AfHbp7DS7+qaTMROmpQtqlziho7sXhiREA/l1Ym9Us2Iq0uvmffvuNz04n2aEMQ+kmtvsaKjstL0obBWEj
+        d=1e100.net; s=20230601; t=1743588336; x=1744193136;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=45OLyXeTgKUOUsJtTp3PVAUqi5d9Bj6zKNzxi7O5qYo=;
+        b=qDJ6XJcwJd9w8M8w3Nr4qF/DXR6IMJopqF0EnbgmnRyKIcyJi/VhSV7T3NR3sf8ivz
+         Bh0U+ccXjGyHILqa0JxMn23grjf8qeb2AZBfnSik98C+gWlK3bxJ7AxCWIChkpByVi/g
+         fvM1zPdthoNHL/fItE0nvCrMb1rZV4xjq5D18pCjJP4RYxqCR3QffYSZY9u4MzZvQ55n
+         zsQMAm92jjRKeV7kQUJEsyLlyjBeHuHWM3sVevjUpGJ+ChPyGD68PbWgHhll/Dgs8kZj
+         MbnXRaW4XWW8akgTIn4bW3enDAdKKTc0PRO8voSQ624iJuKB+SGUo5z1zGpC2DDYrYAJ
+         UB/A==
+X-Forwarded-Encrypted: i=1; AJvYcCXqkfoh7gKZkVUecgkxjr4XYPpL+A/9DmhpcyGmYXd+uvF+CQJYO9cjXGhkgvDX4IJ/coVJjqtlk9S35ZM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyKL2jSMkrUktQrqa6O3/vX8CzQ1G6/sEmza8BlWz4PS6cK1LZy
+	w3aqb8GXyoWMDRnD+D/FMvZGchbuomItsAO2knRniqOUtMosPl68bzOZ6t5jH0gRyjZ9pbtW+Pg
+	D3Fidnuanv0wuNe6ijYLx2e+eMMJR1D1Tb1GORg==
+X-Gm-Gg: ASbGncvhTVwclWfVfNWNmCaUt1ipE8nDmsinxX/ndGyDi3M0UzlURDWNYt8uYYJVzuz
+	lztwhw0iw+2qYrDaBsjrQ8K4Q4KGLAcAlOgWchgn471T5gwbOyJFc2F9lxctq7fiOWdor7kM8OP
+	nKQi5HfNPFuZoDijrpPOh/XFs1V0ercw1IYlLXVjxro7sCQsnCx0HFQmi+Dg==
+X-Google-Smtp-Source: AGHT+IGat+Z5mgq28hdi6/NxDSImvrh52D9hoFmdKI0jIwx96YGLWnxNGezLTeRpDrq45eVB6cVH0ojBLTMTByyD5MM=
+X-Received: by 2002:a2e:bc0e:0:b0:304:4e03:f9d9 with SMTP id
+ 38308e7fff4ca-30ef91b0b7bmr7332861fa.28.1743588335626; Wed, 02 Apr 2025
+ 03:05:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:450f:b0:3d6:d838:8b93 with SMTP id
- e9e14a558f8ab-3d6d838915fmr4831595ab.7.1743588080237; Wed, 02 Apr 2025
- 03:01:20 -0700 (PDT)
-Date: Wed, 02 Apr 2025 03:01:20 -0700
-In-Reply-To: <67ec7e14.050a0220.31979b.0030.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67ed0af0.050a0220.31979b.0041.GAE@google.com>
-Subject: Re: [syzbot] [mm?] general protection fault in sys_mremap
-From: syzbot <syzbot+e3385f43b2897a19be24@syzkaller.appspotmail.com>
-To: Liam.Howlett@oracle.com, akpm@linux-foundation.org, jannh@google.com, 
-	liam.howlett@oracle.com, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	lorenzo.stoakes@oracle.com, syzkaller-bugs@googlegroups.com, vbabka@suse.cz
+References: <20250401-gpio-todo-remove-nonexclusive-v2-0-7c1380797b0d@linaro.org>
+ <c8ca3c8a-3201-4dde-9050-69bc2c9152c4@sirena.org.uk> <CAMRc=Mcq9yag6yBswhW0OJ8MKzGBpscwo+UGpfCo2aha93LzXA@mail.gmail.com>
+ <846010c0-7dc1-421c-8136-9ae2894c9acd@sirena.org.uk> <CAMRc=Mff0TkeiHbM3TAJLJ2HYU_nnPFUpUjbWsdCnW6O4E=+gQ@mail.gmail.com>
+ <c3bb82f9-5a2f-4a14-9726-f3e10bf5d427@sirena.org.uk>
+In-Reply-To: <c3bb82f9-5a2f-4a14-9726-f3e10bf5d427@sirena.org.uk>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 2 Apr 2025 12:05:24 +0200
+X-Gm-Features: AQ5f1JqoCngqlGK07DPic2wMtJyn1bxEpIchjqMW-t59V4hE3p7ylOAGrHnVG0M
+Message-ID: <CAMRc=Mc_nXwvj_9w6w8cB3K58AVLHBLCV+MOO1z_6y+uuT86Og@mail.gmail.com>
+Subject: Re: [PATCH v2 0/4] gpio: deprecate and track the removal of GPIO
+ workarounds for regulators
+To: Mark Brown <broonie@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-syzbot has found a reproducer for the following issue on:
+On Tue, Apr 1, 2025 at 11:55=E2=80=AFPM Mark Brown <broonie@kernel.org> wro=
+te:
+>
+> On Tue, Apr 01, 2025 at 08:57:56PM +0200, Bartosz Golaszewski wrote:
+> > On Tue, Apr 1, 2025 at 6:00=E2=80=AFPM Mark Brown <broonie@kernel.org> =
+wrote:
+> > > On Tue, Apr 01, 2025 at 04:42:40PM +0200, Bartosz Golaszewski wrote:
+>
+> > > > You have two users and one goes gpiod_set_value(desc, 0), the other=
+:
+> > > > gpiod_set_value(desc, 1). Who is right? Depending on the timing the
+> > > > resulting value may be either.
+>
+> > > That's why we need to figure out if there's sharing - the usage here =
+is
+> > > that we have some number of regulators all of which share the same GP=
+IO
+> > > and we want to know that this is the case, provide our own reference
+> > > counting and use that to decide when to both update the GPIO and do t=
+he
+> > > additional stuff like delays that are required.  When the API was num=
+ber
+> > > based we could look up the GPIO numbers for each regulator, compare t=
+hem
+> > > with other GPIOs we've already got to identify sharing and then reque=
+st
+> > > only once.
+>
+> > That's not a good design though either, is it? For one: it relies on
+> > an implementation detail for which there's no API contract, namely the
+>
+> There is an API contract as far as I'm concerned, this was discussed
+> when Russell was converting things over to use descriptors since we need
+> something to maintain functionality.  I agree that this is an interface
+> that is more convenient than elegant but it's what was on offer, I think
+> the enthusiasm for converting to gpiod was such people were OK with it
+> since it does actually do the right thing.
+>
 
-HEAD commit:    acc4d5ff0b61 Merge tag 'net-6.15-rc0' of git://git.kernel...
-git tree:       upstream
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=16719404580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=24f9c4330e7c0609
-dashboard link: https://syzkaller.appspot.com/bug?extid=e3385f43b2897a19be24
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=175a4fb0580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1687b7b0580000
+Something having been discussed years ago in times of a different
+maintainer does not really constitute an API contract :). I understand
+the reasoning at the time but I really dislike comparing raw pointers
+in particular and this whole abstraction reversal in general. I'd like
+to at least have something like gpiod_cmp() or gpiod_is_equivalent()
+that would hide the actual logic. Even if, for now, it just remains a
+simple pointer comparison.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/e4bfa652b34a/disk-acc4d5ff.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/3d19beb8bb92/vmlinux-acc4d5ff.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/e7298ccc6331/bzImage-acc4d5ff.xz
+> > idea that the address of the struct gpiod_descr handed out by the call
+> > to gpiod_get() is the same for the same hardware offset on the same
+> > chip. It does work like that at the moment but it's a fragile
+> > assumption. The way pwrseq is implemented for instance, the
+> > "descriptor" obtained from the call to pwrseq_get() is instantiated
+> > per-user, meaning that each user of the same sequence has their own,
+> > unique descriptor. I don't see why such an approach could not be used
+> > in GPIOLIB one day. IOW: nobody ever said that there's a single struct
+> > gpiod_desc per GPIO line.
+>
+> If gpiolib were to change this API we'd need some other way of getting
+> the same functionality, I'd be totally fine with that happening.  For
+> regulators we don't really want the pwrseq behaviour, we want to know
+> that there's a single underlying GPIO that we're updating.
+>
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+e3385f43b2897a19be24@syzkaller.appspotmail.com
+This is bothering me. This is the abstraction reversal I'm talking
+about. Should the regulator drivers even be concerned about whether
+they share resources or not? It's not like consumers of regulators are
+concerned about sharing them with other devices. I'm not saying GPIOs
+should become reference counted - as I said in a previous email, I
+don't believe this makes sense - but GPIOLIB is a lower-level
+abstraction to regulators thus the latter shouldn't really reach into
+the GPIO core and inspect its structures in order to figure out
+whether the lines are shared. This is where an intermediate
+abstraction layer may be helpful. The regulator drivers then just go:
 
-Oops: general protection fault, probably for non-canonical address 0xdffffc0000000004: 0000 [#1] SMP KASAN PTI
-KASAN: null-ptr-deref in range [0x0000000000000020-0x0000000000000027]
-CPU: 0 UID: 0 PID: 5840 Comm: syz-executor163 Not tainted 6.14.0-syzkaller-12456-gacc4d5ff0b61 #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-RIP: 0010:vrm_uncharge mm/mremap.c:964 [inline]
-RIP: 0010:expand_vma_in_place mm/mremap.c:1566 [inline]
-RIP: 0010:expand_vma mm/mremap.c:1621 [inline]
-RIP: 0010:mremap_at mm/mremap.c:1682 [inline]
-RIP: 0010:do_mremap mm/mremap.c:1727 [inline]
-RIP: 0010:__do_sys_mremap mm/mremap.c:1784 [inline]
-RIP: 0010:__se_sys_mremap+0x25fa/0x2c00 mm/mremap.c:1752
-Code: c0 0f 85 0e 05 00 00 0f b6 9c 24 20 03 00 00 31 ff 89 de e8 d8 0d ab ff 85 db 0f 84 7b 01 00 00 e8 cb 0a ab ff e9 9e 00 00 00 <80> 78 04 00 74 0a bf 20 00 00 00 e8 26 2f 15 00 4c 8b 34 25 20 00
-RSP: 0018:ffffc900040cfb40 EFLAGS: 00010246
-RAX: dffffc0000000000 RBX: 0000000000000000 RCX: 1ffff92000819fca
-RDX: 0000000000000000 RSI: 0000000010000000 RDI: 0000000000000000
-RBP: ffffc900040cff00 R08: ffffffff821d1f24 R09: ffffffff8c271397
-R10: 0000000000000004 R11: ffff888034658000 R12: 0000200000000000
-R13: ffff888077fac000 R14: 00000000180000fa R15: ffffc900040cfcd0
-FS:  0000555571cf3380(0000) GS:ffff888124f99000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00002000000000c0 CR3: 00000000316de000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f4480ba0369
-Code: 48 83 c4 28 c3 e8 37 17 00 00 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007fff6c642778 EFLAGS: 00000246 ORIG_RAX: 0000000000000019
-RAX: ffffffffffffffda RBX: 0000200000000000 RCX: 00007f4480ba0369
-RDX: 0000000000004000 RSI: 0000000000001000 RDI: 0000200000000000
-RBP: 0000200000001000 R08: 0000200000001000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000001
-R13: 00007fff6c642958 R14: 0000000000000001 R15: 0000000000000001
- </TASK>
-Modules linked in:
----[ end trace 0000000000000000 ]---
-RIP: 0010:vrm_uncharge mm/mremap.c:964 [inline]
-RIP: 0010:expand_vma_in_place mm/mremap.c:1566 [inline]
-RIP: 0010:expand_vma mm/mremap.c:1621 [inline]
-RIP: 0010:mremap_at mm/mremap.c:1682 [inline]
-RIP: 0010:do_mremap mm/mremap.c:1727 [inline]
-RIP: 0010:__do_sys_mremap mm/mremap.c:1784 [inline]
-RIP: 0010:__se_sys_mremap+0x25fa/0x2c00 mm/mremap.c:1752
-Code: c0 0f 85 0e 05 00 00 0f b6 9c 24 20 03 00 00 31 ff 89 de e8 d8 0d ab ff 85 db 0f 84 7b 01 00 00 e8 cb 0a ab ff e9 9e 00 00 00 <80> 78 04 00 74 0a bf 20 00 00 00 e8 26 2f 15 00 4c 8b 34 25 20 00
-RSP: 0018:ffffc900040cfb40 EFLAGS: 00010246
-RAX: dffffc0000000000 RBX: 0000000000000000 RCX: 1ffff92000819fca
-RDX: 0000000000000000 RSI: 0000000010000000 RDI: 0000000000000000
-RBP: ffffc900040cff00 R08: ffffffff821d1f24 R09: ffffffff8c271397
-R10: 0000000000000004 R11: ffff888034658000 R12: 0000200000000000
-R13: ffff888077fac000 R14: 00000000180000fa R15: ffffc900040cfcd0
-FS:  0000555571cf3380(0000) GS:ffff888124f99000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00002000000000c0 CR3: 00000000316de000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-----------------
-Code disassembly (best guess), 1 bytes skipped:
-   0:	0f 85 0e 05 00 00    	jne    0x514
-   6:	0f b6 9c 24 20 03 00 	movzbl 0x320(%rsp),%ebx
-   d:	00
-   e:	31 ff                	xor    %edi,%edi
-  10:	89 de                	mov    %ebx,%esi
-  12:	e8 d8 0d ab ff       	call   0xffab0def
-  17:	85 db                	test   %ebx,%ebx
-  19:	0f 84 7b 01 00 00    	je     0x19a
-  1f:	e8 cb 0a ab ff       	call   0xffab0aef
-  24:	e9 9e 00 00 00       	jmp    0xc7
-* 29:	80 78 04 00          	cmpb   $0x0,0x4(%rax) <-- trapping instruction
-  2d:	74 0a                	je     0x39
-  2f:	bf 20 00 00 00       	mov    $0x20,%edi
-  34:	e8 26 2f 15 00       	call   0x152f5f
-  39:	4c                   	rex.WR
-  3a:	8b                   	.byte 0x8b
-  3b:	34 25                	xor    $0x25,%al
-  3d:	20 00                	and    %al,(%rax)
+handle =3D pwrseq_get(dev, "enable-gpios");
+pwrseq_power_on(handle);
 
+Even if we do it in multiple places, as long as the enable count is
+balanced, we're good. The consumers are not concerned by what's
+happening behind the scenes just as if it was a reset handle.
 
----
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+> > > That's exactly what the regulator code was doing, as far as the GPIO =
+API
+> > > saw there was only ever one user at once.  Since we can't look up
+> > > numbers any more what we now do is use non-exclusive requests and che=
+ck
+> > > to see if we already have the GPIO descriptor, if we do then we group
+> > > together like we were doing based on the GPIO numbers.  The multiple
+> > > gets are just there because that's how the gpiod API tells us if we'v=
+e
+> > > got two references to the same underlying GPIO, only one thing ever
+> > > actually configures the GPIO.
+>
+> > That's not an unusual situation. For reset-gpios we now have the
+> > implicit wrapper in the form of the reset-gpio.c driver. Unfortunately
+> > we cannot just make it the fallback for all kinds of shared GPIOs so I
+> > suggested a bit more generalized approach with pwrseq. In any case:
+> > having this logic in the regulator core is not only wonky but also
+> > makes it impossible to unduplicate similar use-cases in audio and
+> > networking where shared GPIOs have nothing to do with regulators.
+>
+> Impossible seems pretty strong here?  Part of the thing here is that the
+> higher level users want to understand that there is GPIO sharing going
+> on and do something about it, the working out that the thing is shared
+> isn't really the interesting bit it's rather the part where we do
+> something about that.  It's not that you can't share some code but it
+> feels more like a library than an opaque abstraction.
+>
+
+The part where "the higher level users want to understand that there
+is GPIO sharing going on" does not sound correct. Let's take the
+example of drivers/net/phy/mscc/mscc_ptp.c which uses the
+non-exclusive flag for gpiod_get() because on one of the MIPS
+platforms, there are four instances of this PHY that share a GPIO. IMO
+it's a hack, this driver shouldn't care about it. It reverses the idea
+of the DT providing hardware information to drivers and instead the
+driver knows that the DT may describe a shared GPIO.
+
+> > > The sound use cases are roughly the same one - there's a bunch of aud=
+io
+> > > designs where we've got shared reset lines, they're not actually doin=
+g
+> > > the reference counting since the use cases mean that practically
+> > > speaking all the users will make the same change at the same time (or=
+ at
+> > > least never have actively conflicting needs) so practically it all en=
+ds
+> > > up working fine.  IIRC the long term plan was to move over to the res=
+et
+> > > API to clean this up rather than redoing the reference counting, if
+> > > we're doing this properly we do want to get the thing the regulator A=
+PI
+> > > has where we know and can control when an actual transition happens.
+>
+> > If they actually exist as "reset-gpios" in DT then they could probably
+> > use the reset-gpio.c driver. I will take a look.
+>
+> Yes, that was the idea - there was some issue I can't remember that
+> meant it needed a bit of work on the reset API the last time someone
+> looked at it.  The properties might have different names reflecting the
+> pins or something but that seems like a readily solvable problem.
+>
+
+As long as the hardware description says it's a reset GPIO, we're
+fine. It's when people try to use the reset framework for something
+that's not a reset when DT maintainers complain.
+
+> Though now I think again some of them might be closer to the regulator
+> enables rather than resets so those ones would not fit there and would
+> more want to librify what regulator is doing...  Something like that
+> would definitely not feel right being described as a power sequence.
+>
+
+Well, pwrseq is just a naming convention for want of a better one. It
+really is just a subsystem that mediates usage of shared resources and
+doesn't bind to any specific kernel subsystem.
+
+[snip]
+
+>
+> > > It's also not clear to me that pwrseq doesn't just have the same prob=
+lem
+> > > with trying to figure out if two GPIO properties are actually pointin=
+g
+> > > to the same underlying GPIO that everything else does?  It seems like
+> > > the base issue you've got here is that we can't figure out if we've g=
+ot
+> > > two things referencing the same GPIO without fully requesting it.
+>
+> > Whether that's feasible (I think it is but I'll have a definite answer
+> > once I spend more time on this) is one question. Another is: do you
+> > have anything against removing this flag given it's replaced with a
+> > better solution? If not, then I'd still like to apply this series and
+> > we can discuss the actual solution once I send out the code. I hope
+> > this will at least start happening this release cycle.
+>
+> I'm in no way attached to this specific solution, from my point of view
+> the important thing is that given two devices using GPIOs we have some
+> reasonably convenient way of telling if they're using the same underlying
+> GPIO and can coordinate between the devices appropriately.
+
+I think that logically, consumers of GPIOs shouldn't care about
+whether they're shared. IOW: the non-exclusive flag passed to
+gpiod_get() should go. If the opposition to using pwrseq here is
+strong, then I'd suggest at least moving the handling of the
+non-exclusive flag into gpiolib quirks (in gpiolib-of.c or elsewhere)
+and not exposing it to consumers who have no business knowing it.
+
+I believe pwrseq could actually be used to hide the enable counting
+for GPIOs behind a faux GPIO chip and the consumer would never see a
+pwrseq handle - they would instead use GPIO consumer interfaces and
+we'd have to agree on what logic would we put behind gpiod_set_value()
+(should it effectively work as gpiod_enable() meaning: value is 1 as
+long as at least one user sets it to 1?) and
+gpiod_direction_input()/output() (same thing: highest priority is
+gpiod_direction_output(HIGH) and as long as at least one user sets it
+as such, we keep it).
+
+Bartosz
