@@ -1,37 +1,52 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC96623BF91
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 13:47:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FC6623C8A0;
+	Wed,  2 Apr 2025 13:47:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743601643; cv=none; b=SDuoBnVwW33hHzIUrXzV9QnfsqdMEHp2uFveNTZQ60VgrPuu5D5/wOdzIKRye5G0z+eTWekBuToccdPrjt8iE0iad6VmXHpqbxOkOHVp6EdLmE6HzHj9DIdO/uzH4zI3iFuJn6PkThdaLo9z8Qdq+zW78B9do73S4rx/pUEm7Fw=
+	t=1743601649; cv=none; b=dGQtDOa3dPl/wYLvncGF/UjRiGmRPp3Ov4iw7WGVS6OWDFFZF5UMLu0Z6j9iMoulRCrOlrdpoGkKKydKGuKRuW4NJG4HdCX51nrycSm+0TZK3sNaz5SQsDDSsq3LJzH21awXISfafpu7ZC+bLZPsYGSeim7iKVf064xOBh4myLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743601643; c=relaxed/simple;
-	bh=3HWKRBvWms/Fm5yIa6e9Ac6OSfU4w3fGrLtKzdLJgXw=;
+	s=arc-20240116; t=1743601649; c=relaxed/simple;
+	bh=mqlsTKVrn+AgGvdUDfL4V1yyT+cMX8N7L5XXQmEr3Yo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TukUXRVdW4tu3Mbn9M8BQoKgsjn+27Ytz764bhrIeEHZ+xMabKY1ngy73x31yRGr0OULNN4KIqB8n6aQWcMTU+Dziwk63Rwu3MUidDmoYp7HiWBjIYDr660tFoIc5P6LlCJOfdHMlLLrsP8JEPLdhhv1DgVFLc6V8ZRSwW1N2zM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D7C26FEC;
-	Wed,  2 Apr 2025 06:47:23 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 79BF33F694;
-	Wed,  2 Apr 2025 06:47:20 -0700 (PDT)
-Date: Wed, 2 Apr 2025 14:47:16 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: Yabin Cui <yabinc@google.com>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Mike Leach <mike.leach@linaro.org>,
-	James Clark <james.clark@linaro.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] coresight: catu: Prevent concurrent PERF and
- SYSFS mode enablement
-Message-ID: <20250402134716.GK115840@e132581.arm.com>
-References: <20250402011832.2970072-1-yabinc@google.com>
- <20250402011832.2970072-3-yabinc@google.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=gREnRzrHeasxBx0yCuw5dFN7Q/AEpMmQCE1cF0sacdvCZuV0Bd9tSA1yYjJGIUEgIZjewq29VbuLV10KAfF8v5jMQKRRLCkDMybGlm/mYaBcNuX6oao88old7llfyvJ8o2Qhnf7qQLcFZZYHf+j1GFlduRoDRsDP9/vx1BV0W2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g/o5JVCQ; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g/o5JVCQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 714F0C4CEDD;
+	Wed,  2 Apr 2025 13:47:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743601648;
+	bh=mqlsTKVrn+AgGvdUDfL4V1yyT+cMX8N7L5XXQmEr3Yo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=g/o5JVCQG+s/zpSNBsc2udu6u3eF1njWqXvag/0VmwJLHFrNy9dtkIAELz8/OXM3t
+	 8EoMZk22fAUMhMiwnmZ5UVKvOYFAoSKAbcLkHDf3PA2zQNlwQkQcRrJO+lETPEzTkp
+	 ipGfjXqV1nLY/xqXrvpDZeJ1KEZrcG2P9Dkg6HDj+Ty7Jl+C1xjrqbVNUNl91JZrud
+	 KpRC+Fi+0xUXFl2+wgyc2KJkPpdspeGYbUAeciYUZrE4GkyuooaZsDk8oSqzbEIycw
+	 yhf/iY9lSk5iST5iWWdKaapkJ1XUp+dmSyosSxt693xE7kXNaycLxsxvr1g77h/THd
+	 LY9628QXysVCw==
+Date: Wed, 2 Apr 2025 08:47:25 -0500
+From: Rob Herring <robh@kernel.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Patrice Chotard <patrice.chotard@foss.st.com>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, christophe.kerello@foss.st.com,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v7 2/7] dt-bindings: memory-controllers: Add STM32 Octo
+ Memory Manager controller
+Message-ID: <20250402134725.GA145044-robh@kernel.org>
+References: <20250401-upstream_ospi_v6-v7-0-0ef28513ed81@foss.st.com>
+ <20250401-upstream_ospi_v6-v7-2-0ef28513ed81@foss.st.com>
+ <20250401222015.GA4071342-robh@kernel.org>
+ <71c301ea-0be7-4349-92d6-93b3ffc9c593@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,81 +55,64 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250402011832.2970072-3-yabinc@google.com>
+In-Reply-To: <71c301ea-0be7-4349-92d6-93b3ffc9c593@kernel.org>
 
-On Tue, Apr 01, 2025 at 06:18:31PM -0700, Yabin Cui wrote:
-> A CATU device can be enabled for either PERF mode or SYSFS mode, but
-> not both simultaneously. Consider the following race condition:
+On Wed, Apr 02, 2025 at 10:45:08AM +0200, Krzysztof Kozlowski wrote:
+> On 02/04/2025 00:20, Rob Herring wrote:
+> >> +      clocks = <&rcc CK_BUS_OSPIIOM>,
+> >> +               <&scmi_clk CK_SCMI_OSPI1>,
+> >> +               <&scmi_clk CK_SCMI_OSPI2>;
+> >> +      clock-names = "omm", "ospi1", "ospi2";
+> >> +      resets = <&rcc OSPIIOM_R>,
+> >> +               <&scmi_reset RST_SCMI_OSPI1>,
+> >> +               <&scmi_reset RST_SCMI_OSPI2>;
+> >> +      reset-names = "omm", "ospi1", "ospi2";
+> >> +      access-controllers = <&rifsc 111>;
+> >> +      power-domains = <&CLUSTER_PD>;
+> >> +      #address-cells = <2>;
+> >> +      #size-cells = <1>;
+> >> +      st,syscfg-amcr = <&syscfg 0x2c00 0x7>;
+> >> +      st,omm-req2ack-ns = <0>;
+> >> +      st,omm-mux = <0>;
+> >> +      st,omm-cssel-ovr = <0>;
+> >> +
+> >> +      spi@0 {
+> >> +        compatible = "st,stm32mp25-ospi";
+> >> +        reg = <0 0 0x400>;
+> >> +        memory-region = <&mm_ospi1>;
+> >> +        interrupts = <GIC_SPI 163 IRQ_TYPE_LEVEL_HIGH>;
+> >> +        dmas = <&hpdma 2 0x62 0x00003121 0x0>,
+> >> +               <&hpdma 2 0x42 0x00003112 0x0>;
+> >> +        dma-names = "tx", "rx";
+> >> +        clocks = <&scmi_clk CK_SCMI_OSPI1>;
+> >> +        resets = <&scmi_reset RST_SCMI_OSPI1>, <&scmi_reset RST_SCMI_OSPI1DLL>;
+> > 
+> > Looks like you are duplicating properties in the parent and child nodes. 
+> > Maybe that accurately models the h/w, but if it is just so the drivers 
+> > can get the resources from "the driver's node", you can always just look 
+> > in the child nodes for the resources (as probably you want to drop the 
+> > per instance resources from the parent).
 > 
-> CPU 1 enables CATU for PERF mode.
-> CPU 2 enables CATU for SYSFS mode. It only increases refcnt.
-> CPU 2 enables ETR for SYSFS mode.
-> CPU 1 fails to enable ETR for PERF mode.
 > 
-> This results in a CATU being enabled in PERF mode and an ETR enabled
-> in SYSFS mode, leading to unknown behavior.
+> The current solution was actually my suggestion because if a parent
+> device has to toggle child's reset, it means it actually is the consumer
+> of that reset one way or another. IOW, it is one of its resources.
 > 
-> To prevent this situation, this patch checks enabled mode of a
-> CATU device before increasing its refcnt.
-
-Yes.  We have also observed the same issue.  I am currently working on
-refactoring the Arm CoreSight locking, my plan is to use coresight_path
-to maintain mode.
-
-Given it is uncommon case to use two modes concurrently in Arm
-CoreSight, I assume this is not an urgent issue.  Could we defer this
-patch?  My understanding is that this issue will be prevented with
-checking the path mode, rather than checking modes in seperate modules.
-
-To be clear, I am fine with other two patches in the series.
-
-Thanks,
-Leo
-
-> Signed-off-by: Yabin Cui <yabinc@google.com>
-> Suggested-by: James Clark <james.clark@linaro.org>
-> Suggested-by: Leo Yan <leo.yan@arm.com>
-> ---
->  drivers/hwtracing/coresight/coresight-catu.c | 6 +++++-
->  drivers/hwtracing/coresight/coresight-catu.h | 1 +
->  2 files changed, 6 insertions(+), 1 deletion(-)
+> This also might matter for some of the implementations because we might
+> need to setup device links or do some probe-ordering (in the future)
+> between parent and the reset provider.
 > 
-> diff --git a/drivers/hwtracing/coresight/coresight-catu.c b/drivers/hwtracing/coresight/coresight-catu.c
-> index b1d490dd7249..0caf3a3e75ce 100644
-> --- a/drivers/hwtracing/coresight/coresight-catu.c
-> +++ b/drivers/hwtracing/coresight/coresight-catu.c
-> @@ -466,7 +466,10 @@ static int catu_enable(struct coresight_device *csdev, enum cs_mode mode,
->  		CS_UNLOCK(catu_drvdata->base);
->  		rc = catu_enable_hw(catu_drvdata, mode, data);
->  		CS_LOCK(catu_drvdata->base);
-> -	}
-> +		if (!rc)
-> +			catu_drvdata->mode = mode;
-> +	} else if (catu_drvdata->mode != mode)
-> +		rc = -EBUSY;
->  	if (!rc)
->  		csdev->refcnt++;
->  	return rc;
-> @@ -499,6 +502,7 @@ static int catu_disable(struct coresight_device *csdev, void *__unused)
->  		CS_UNLOCK(catu_drvdata->base);
->  		rc = catu_disable_hw(catu_drvdata);
->  		CS_LOCK(catu_drvdata->base);
-> +		catu_drvdata->mode = CS_MODE_DISABLED;
->  	} else {
->  		rc = -EBUSY;
->  	}
-> diff --git a/drivers/hwtracing/coresight/coresight-catu.h b/drivers/hwtracing/coresight/coresight-catu.h
-> index 755776cd19c5..ea406464f0a8 100644
-> --- a/drivers/hwtracing/coresight/coresight-catu.h
-> +++ b/drivers/hwtracing/coresight/coresight-catu.h
-> @@ -66,6 +66,7 @@ struct catu_drvdata {
->  	struct coresight_device *csdev;
->  	int irq;
->  	raw_spinlock_t spinlock;
-> +	enum cs_mode mode;
->  };
->  
->  #define CATU_REG32(name, offset)					\
-> -- 
-> 2.49.0.472.ge94155a9ec-goog
+> Without reset resource in the parent, I could imagine probe order:
+> 1. parent (pokes into the child for reset)
+> 2. reset and clock providers
+> 3. child
+> which would defer between 1 and 2.
 > 
+> With parent having the resource it would be re-ordered into:
+> 1. reset and clock providers
+> 2. parent
+> 3. child
+
+Okay, fair enough.
+
+Rob
