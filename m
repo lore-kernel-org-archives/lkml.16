@@ -1,189 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F29AE1EF38D;
-	Wed,  2 Apr 2025 13:49:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2548F43AA4;
+	Wed,  2 Apr 2025 13:50:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743601755; cv=none; b=M9LQJPdYkEWkmCl5duGmQG4UlIeFqoJDvHBVwuzT23Ih/SluNejW9K68qeJ6DAtC9opaK0ccCwuEYGhTAdY+45uPyDsa2KhNhqSzh9sQ7P1UMb4M1mUcEqkFBF+2BzN3gQf/qrpq8aldvtC8+ciTYk5ToD71aTU24p7FVn0MYK0=
+	t=1743601810; cv=none; b=FXDPdlXeQNVXeUMdp1m5Ra4c3oP6CvfBSpcjgyT2iMsquR8roXTm+lI4uCP6hr2XccJGJ2GW6Yo1P5sNkyVj7jShLqN9h3fLGFJnE8V1QQqY3LHDRReDKekcgnB8WVLDgphwTUH38/TGQTEKBE9SJ1jJf7TV8u2qReVkmFe+YRg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743601755; c=relaxed/simple;
-	bh=oFf412cXfutRgSqUrPxli9S1At7qotc4OCtaaSVbMx0=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=HDSL7Gm4ec99fisoUwZItSrYQgf1dAI/M8aFd15TgQxebcxm+pkLtDPrmL0p+s+GP0hVpHaYXrE7za2F8tU4fCZMbLH01qL7GBAkE+Xhohk1RMwyLVuewJwjJhrQG02rNYHf20v6A+H850YwxqGv7AmGPW9at3xi7gmcMIpjwm8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OnVPKf7H; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743601810; c=relaxed/simple;
+	bh=khdQRjKa1cJsLk+at6y8zDWPs5nydHHfCistC3DVK/M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=D4JG1B+h9e8VqS0MryLjXmeT/C6ibCvwvlfgFVhH4FTrU8u4LicRgKtc9A7SRuOVqC246plCzGGGW9KAMcRyp+y/Hna/HfBGylKxJqw3QnyaBTIO1yfgsFPVbN7jeUvG7cuGqEM7O1N66sccPWO96YBJ+g0beK/hWzp6EDq3LAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kFG7Op67; arc=none smtp.client-ip=209.85.160.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OnVPKf7H"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A0EAC4CEDD;
-	Wed,  2 Apr 2025 13:49:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743601754;
-	bh=oFf412cXfutRgSqUrPxli9S1At7qotc4OCtaaSVbMx0=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=OnVPKf7Hf27t39Fk86fdhNvv2xsitnH01gic5nravAkyQCE1LyW01hiL2NTvzTlW5
-	 MI3s1G0pcHByRfp+4R1v6wdcX4cyXoia6wJ/uEeraShkuasUPpuodm+C3ykkcFam/9
-	 BbiWr+tDRx5d3GtH2nFaKJ7LPQUEuh1K0B8m3p9NRskT88tz74cQZ1PREtWkhzLMJd
-	 65hfrZoKVxR3WVEhka9ljpmWnBrDbN6YG0BKboziI9pGTaW1PcLfFlPSdg4QUbhRHk
-	 LLfoTH9gpPp36Z4qjmvXSHtXR4zBn6UwVEvRW24o2QQKe+4DoQq+S3M1/iSnMMefyg
-	 KhUQf2d/YbARQ==
-Date: Wed, 02 Apr 2025 08:49:12 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kFG7Op67"
+Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-47662449055so35340911cf.1;
+        Wed, 02 Apr 2025 06:50:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743601808; x=1744206608; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=UpIRlo9dkfMDRtvBdGX/Xo5MPiwW/uzBzcuJlURA8sM=;
+        b=kFG7Op67of3JC5g93uxYdcBXpotzEPzFynlMmmD8Q2TPs/yQnKllmXm8u448UwP0RD
+         RMvvrpFKPdJu3UzIubXSfa1+jRmx/f76Ko6mk5wMFTvDCIRhKizCM4Ptbr3h8a3PQpYS
+         tK4tkULyK9B8luYCZp9v1xnMwQSOGKnnx3FpC/piKG31bU7Q9ifgIOqecBy8Lv6EJPYv
+         wyqlaGV7r07wz4Z9Gzaay9P+mrUjrwEB5w4uUDmjDP4kFss7QQ/UgomZtby9xLBBsNhD
+         BenJlQeH6LhC33HBdyYCdlQuQkoVNRkHVvKPPWLm/DQxAfbDwggywMjuyvbzO5bbICoN
+         ehBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743601808; x=1744206608;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=UpIRlo9dkfMDRtvBdGX/Xo5MPiwW/uzBzcuJlURA8sM=;
+        b=oCEbUqiwt3eHJHTutWs0lSJ8A6P+adQFOWmPdiEr+8HBFRQDKB+Pv+OOFIbCftvaow
+         WIsuvsxL82ZGOaQJdU7jzmilb/+pdaMkwgYzzyiiNztC7CxRSlpv6P7eHlPc8mlkj7dN
+         v+A1DPxCBROY56TJB0MAlfgV2hxMQeTQ3fOx7BVSrdHXgir4qHUH/7KyC21sETq02GmU
+         5Scw/JODtnRDsWFvqRIwHbhfcPiaBVSV/kn5kPUl6LI6ubP+lTm/poJXLY/u0noNImtY
+         BG/WhtyjeGNp6EbEyoxGzdI4aOtWGlyCf70hVcf6jOXL7dShMtk57A61cCryQ+BMf2ZK
+         lReg==
+X-Forwarded-Encrypted: i=1; AJvYcCXcDOQirFuzPTzeSw/wl0BcwMWtZD/8WLuomDbWODnVt4LHN6EF6hJGcHxTScmM24va1yR6pBWlsncx8ss=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw9zkMPN0cPEQ3zo2U7Kr33QhiopED2zU5Yr04l2cHG8XwVmrN9
+	1tMNj26ZVr3C7ILGkr2ID4a3B7DOLxWqyzy5UN1WTk+oSIWRw8vFdbLoRXRpZD8=
+X-Gm-Gg: ASbGnctpj4VxB8yRtWjJCZ2RXrmU15gvR7l6N3tIhVp8khO/l9ng8v2E3oS1oUZqBNw
+	rblZcKm8dhf7dl2UB3hgbTaxzo/vVd6wRaYfd+r805+/7UzBs7fMx6pgI2Niy+gLFC7FOYVZF1G
+	361cOJ1Ar9kbHTVva9PLMFliMkDjbBtJpiU01JMhRvLXaV4mGb8Yq+W/7TmjaULJDIq2gEGyoG4
+	nYkxmVdcLm4lkHLoPMulujhoKcASbcU3jJspn99TnYeWVkdAqSusbxsBsl3l9vz20EA2dFNUJyw
+	smIZc2QAryK8Q415Qy3OOSN4EPo1fgRhEF/oMNAIRzrVLy3scx+oYAZ99js8tGkejE5lLfLNXWv
+	cTC9pm1bJCULPCOWqAVEKK8k=
+X-Google-Smtp-Source: AGHT+IGO8ahOi/G3jO/2cQgbGPiOCEtcsk4bHdTRa6rUhoN3n0aVnWghLd31gahPKyxhXN71T2kuCw==
+X-Received: by 2002:a05:6214:dab:b0:6e8:f88f:b96b with SMTP id 6a1803df08f44-6eed5f616e6mr292528906d6.9.1743601807617;
+        Wed, 02 Apr 2025 06:50:07 -0700 (PDT)
+Received: from theriatric.mshome.net (c-73-123-232-110.hsd1.ma.comcast.net. [73.123.232.110])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6eec97bc7besm74799826d6.122.2025.04.02.06.50.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Apr 2025 06:50:07 -0700 (PDT)
+From: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+To: linux-media@vger.kernel.org
+Cc: andy@kernel.org,
+	hdegoede@redhat.com,
+	mchehab@kernel.org,
+	sakari.ailus@linux.intel.com,
+	gregkh@linuxfoundation.org,
+	linux-kernel@vger.kernel.org,
+	linux-staging@lists.linux.dev,
+	gshahrouzi@gmail.com
+Subject: [PATCH v2] staging: media: Fix indentation to use tabs instead of spaces
+Date: Wed,  2 Apr 2025 09:50:01 -0400
+Message-ID: <20250402135001.12475-1-gshahrouzi@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Dmitry Baryshkov <lumag@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
- linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- maud_spierings@hotmail.com, Conor Dooley <conor+dt@kernel.org>, 
- Bjorn Andersson <andersson@kernel.org>, dmitry.baryshkov@oss.qualcomm.com, 
- Konrad Dybcio <konradybcio@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>
-To: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
-In-Reply-To: <20250402084646.10098-1-alex.vinarskis@gmail.com>
-References: <20250402084646.10098-1-alex.vinarskis@gmail.com>
-Message-Id: <174360168717.154053.3856433383315659237.robh@kernel.org>
-Subject: Re: [PATCH v2 0/3] X1E Asus Zenbook A14 support
+Content-Transfer-Encoding: 8bit
 
+Replace spaces with tab to comply with kernel coding style.
 
-On Wed, 02 Apr 2025 10:44:01 +0200, Aleksandrs Vinarskis wrote:
-> Introduce support for the mentioned laptop.
-> 
-> Particular device exists in two model numbers:
-> * UX3407QA: X1P-42-100 or X1-26-100 (as tested)
-> * UX3407RA: X1E-78-100
-> 
-> Mostly similar to other X1-based laptops. Notable differences are:
-> * Wifi/Bluetooth combo being Qualcomm FastConnect 6900 on UX3407QA
->   and Qualcomm FastConnect 7800 on UX3407RA
-> * USB Type-C retimers are Parade PS8833, appear to behave identical
->   to Parade PS8830
-> * gpio90 is TZ protected
-> 
-> When comparing device firmware between UX3407QA, UX3407RA, it seems
-> that only ADSP firmware is different, CDSP and GPU firmware appears to
-> be the same. (At least assuming the GPU firmware name in both cases is
-> `qcdxkmsuc8380.mbn`). Since at least some blobs are different betweeen
-> X1E and X1/X1P, define new firmware directory for `qcom/x1p42100`. This
-> also makes it easier for distros to automatically extract firmware from
-> Windows and place all blobs for the model under the same path. If/When
-> firmware blobs make it to linux-firmware, same blobs can be easily
-> symlinked between `qcom/x1e80100` and `qcom/x1p42100`.
-> 
-> NVMe SSD depends on [1]. USB Type-A over USB MP controller  depends on
-> [2], or equivalent proposed solution.
-> 
-> Qualcomm FastConnect 6900 on UX3407QA did not work out of the box, and
-> additionally required both newer firmware and patches to `board-2.bin`.
-> I added a short how-to [3], as it is not exactly trivial.
-> 
-> ACPI dumps can be found on aarch64-laptops' github [4]. HWids on
-> dtbloader's github [5].
-> 
-> [1] https://lore.kernel.org/linux-arm-msm/20250319094544.3980357-1-quic_wenbyao@quicinc.com/
-> [2] https://lore.kernel.org/all/20250318-xps13-fingerprint-v1-1-fbb02d5a34a7@oss.qualcomm.com/
-> [3] https://github.com/alexVinarskis/linux-x1e80100-zenbook-a14?tab=readme-ov-file#wcn688x-wifi
-> [4] https://github.com/aarch64-laptops/build/pull/134/files
-> [5] https://github.com/TravMurav/dtbloader/pull/4/files
-> 
-> Changes to v1:
-> * Drop PS8833 variant, fallback to PS8830 as they behave the same
-> * Drop wrong pcie6a_phy compatible revert
-> * Drop redundant comments, fix order of properties in the device-tree
-> * Fix device name bindings, express in model names instead of the soc
-> * Fix GPU firmware name for UX3407QA
-> * Fix model string, enclose variant in parenthesis
-> * Added missing new lines before 'status = "okay";'
-> * Updated cover letter to reflect some of the above changes
-> * Left SPI10 disabled as it is unknown how/what for to use it as of now
-> Link to v1: https://lore.kernel.org/all/20250331215720.19692-1-alex.vinarskis@gmail.com/
-> 
-> Aleksandrs Vinarskis (3):
->   dt-bindings: arm: qcom: Add Asus Zenbook A14
->   firmware: qcom: scm: Allow QSEECOM on Asus Zenbook A14
->   arm64: dts: qcom: Add support for X1-based Asus Zenbook A14
-> 
->  .../devicetree/bindings/arm/qcom.yaml         |    2 +
->  arch/arm64/boot/dts/qcom/Makefile             |    2 +
->  arch/arm64/boot/dts/qcom/x1-zenbook-a14.dtsi  | 1258 +++++++++++++++++
->  .../dts/qcom/x1e80100-asus-zenbook-a14.dts    |   45 +
->  .../dts/qcom/x1p42100-asus-zenbook-a14.dts    |   48 +
->  drivers/firmware/qcom/qcom_scm.c              |    2 +
->  6 files changed, 1357 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/qcom/x1-zenbook-a14.dtsi
->  create mode 100644 arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dts
->  create mode 100644 arch/arm64/boot/dts/qcom/x1p42100-asus-zenbook-a14.dts
-> 
-> --
-> 2.45.2
-> 
-> 
-> 
+Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+---
+Changes in v2:
+	- Resend using git send-email to fix formatting issues in email body.
+---
+ .../media/atomisp/pci/isp/kernels/vf/vf_1.0/ia_css_vf.host.c    | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-
-My bot found new DTB warnings on the .dts files added or changed in this
-series.
-
-Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
-are fixed by another series. Ultimately, it is up to the platform
-maintainer whether these warnings are acceptable or not. No need to reply
-unless the platform maintainer has comments.
-
-If you already ran DT checks and didn't see these error(s), then
-make sure dt-schema is up to date:
-
-  pip3 install dtschema --upgrade
-
-
-This patch series was applied (using b4) to base:
- Base: attempting to guess base-commit...
- Base: tags/next-20250401 (exact match)
-
-If this is not the correct base, please add 'base-commit' tag
-(or use b4 which does this automatically)
-
-New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/qcom/' for 20250402084646.10098-1-alex.vinarskis@gmail.com:
-
-arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dtb: bluetooth: 'vddrfacmn-supply' is a required property
-	from schema $id: http://devicetree.org/schemas/net/bluetooth/qualcomm-bluetooth.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dtb: bluetooth: 'vddaon-supply' is a required property
-	from schema $id: http://devicetree.org/schemas/net/bluetooth/qualcomm-bluetooth.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dtb: bluetooth: 'vddwlcx-supply' is a required property
-	from schema $id: http://devicetree.org/schemas/net/bluetooth/qualcomm-bluetooth.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dtb: bluetooth: 'vddwlmx-supply' is a required property
-	from schema $id: http://devicetree.org/schemas/net/bluetooth/qualcomm-bluetooth.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dtb: bluetooth: 'vddrfa0p8-supply' is a required property
-	from schema $id: http://devicetree.org/schemas/net/bluetooth/qualcomm-bluetooth.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dtb: bluetooth: 'vddrfa1p2-supply' is a required property
-	from schema $id: http://devicetree.org/schemas/net/bluetooth/qualcomm-bluetooth.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dtb: bluetooth: 'vddrfa1p8-supply' is a required property
-	from schema $id: http://devicetree.org/schemas/net/bluetooth/qualcomm-bluetooth.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dtb: pinctrl@f100000: Unevaluated properties are not allowed ('bt-en-sleep' was unexpected)
-	from schema $id: http://devicetree.org/schemas/pinctrl/qcom,x1e80100-tlmm.yaml#
-arch/arm64/boot/dts/qcom/x1p42100-asus-zenbook-a14.dtb: bluetooth: 'vddrfacmn-supply' is a required property
-	from schema $id: http://devicetree.org/schemas/net/bluetooth/qualcomm-bluetooth.yaml#
-arch/arm64/boot/dts/qcom/x1p42100-asus-zenbook-a14.dtb: bluetooth: 'vddaon-supply' is a required property
-	from schema $id: http://devicetree.org/schemas/net/bluetooth/qualcomm-bluetooth.yaml#
-arch/arm64/boot/dts/qcom/x1p42100-asus-zenbook-a14.dtb: bluetooth: 'vddwlcx-supply' is a required property
-	from schema $id: http://devicetree.org/schemas/net/bluetooth/qualcomm-bluetooth.yaml#
-arch/arm64/boot/dts/qcom/x1p42100-asus-zenbook-a14.dtb: bluetooth: 'vddwlmx-supply' is a required property
-	from schema $id: http://devicetree.org/schemas/net/bluetooth/qualcomm-bluetooth.yaml#
-arch/arm64/boot/dts/qcom/x1p42100-asus-zenbook-a14.dtb: bluetooth: 'vddbtcmx-supply' is a required property
-	from schema $id: http://devicetree.org/schemas/net/bluetooth/qualcomm-bluetooth.yaml#
-arch/arm64/boot/dts/qcom/x1p42100-asus-zenbook-a14.dtb: bluetooth: 'vddrfa0p8-supply' is a required property
-	from schema $id: http://devicetree.org/schemas/net/bluetooth/qualcomm-bluetooth.yaml#
-arch/arm64/boot/dts/qcom/x1p42100-asus-zenbook-a14.dtb: bluetooth: 'vddrfa1p2-supply' is a required property
-	from schema $id: http://devicetree.org/schemas/net/bluetooth/qualcomm-bluetooth.yaml#
-arch/arm64/boot/dts/qcom/x1p42100-asus-zenbook-a14.dtb: bluetooth: 'vddrfa1p8-supply' is a required property
-	from schema $id: http://devicetree.org/schemas/net/bluetooth/qualcomm-bluetooth.yaml#
-arch/arm64/boot/dts/qcom/x1p42100-asus-zenbook-a14.dtb: pinctrl@f100000: Unevaluated properties are not allowed ('bt-en-sleep' was unexpected)
-	from schema $id: http://devicetree.org/schemas/pinctrl/qcom,x1e80100-tlmm.yaml#
-
-
-
-
+diff --git a/drivers/staging/media/atomisp/pci/isp/kernels/vf/vf_1.0/ia_css_vf.host.c b/drivers/staging/media/atomisp/pci/isp/kernels/vf/vf_1.0/ia_css_vf.host.c
+index ece5e3da34ee..127f12ba2214 100644
+--- a/drivers/staging/media/atomisp/pci/isp/kernels/vf/vf_1.0/ia_css_vf.host.c
++++ b/drivers/staging/media/atomisp/pci/isp/kernels/vf/vf_1.0/ia_css_vf.host.c
+@@ -114,7 +114,7 @@ configure_dma(
+ }
+ 
+ int ia_css_vf_configure(const struct ia_css_binary *binary,
+-		        const struct ia_css_frame_info *out_info,
++			const struct ia_css_frame_info *out_info,
+ 			struct ia_css_frame_info *vf_info,
+ 			unsigned int *downscale_log2)
+ {
+-- 
+2.43.0
 
