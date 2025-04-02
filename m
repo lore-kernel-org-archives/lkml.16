@@ -1,118 +1,113 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9971023B0;
-	Wed,  2 Apr 2025 11:31:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B5722356BD;
+	Wed,  2 Apr 2025 11:32:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743593488; cv=none; b=hfHdSvLxG2sYGTvNVAR/gEXQ4yo9j9LC17TSXpNoR8wkZLGqyG35dPTmvGVvfiWzCwUO9Ov8u5ZEodKfUPGW0a9v29BMQMebcmEGg+vTS14MiZUq9gdM6uNSkHkjaKEBY0yg+C6klMk9GCMfbRZUJuGyTY5Lax8hFdmidqa4kaQ=
+	t=1743593532; cv=none; b=iXL6RqGvRBQ8edHuK4t2mzEGgXqoW7qxiBeOdEIERD7vetEZMJ45RU0Tk6hZMjnSE0uSI+C4LFDVf4mqorO7D3bnVr/B0rm9uqMvLVQ8qC+jzDdE1h4QWwLQvrok1o9XkFSPcDxiQs/ck2GJE/08vdk0uPgg8OyXUxe/vEUHTCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743593488; c=relaxed/simple;
-	bh=k1UyVXVWg2z8ebfSXRRxAGOouyZA/x1/w5HRrCKSSeE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LWYICxTcEjO1/4n2xdDrFH7gSc1QywKbSC/1p1qvaA0JiiELP9HOtVyY6LFPAVaMKJMoFNh8HPGspb9magPcVardXLqNnumyDUknRvm4X+C4u8BiEYOSixg/FPB3SkByhVgyTdg76ldJ+O9GP9mU9hZ0ZwRJM9Nhh0HlpWKTNC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cJq/UmwN; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743593532; c=relaxed/simple;
+	bh=Jqq+tZb2iwvIgau84/D9AjPWpg3COyHfFgvOtSB+djA=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=UmfbDv1LYcye0n01VOJA8wc57xQTtqRB8OPJm/72TzSFdELHJZGTdQecj7agwMr3we6O+bzHEETKv3cbG5pgAPZEBbVc/Ee2GYoypdEKZ0hEelAcabxExMqLbZNFgFz0NAoP2JwXs2B9jFO4esMhFuEBrnBPUFWnToqzRfgtFas=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=MXAwXoil; arc=none smtp.client-ip=198.47.23.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cJq/UmwN"
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-54acc04516fso6275728e87.0;
-        Wed, 02 Apr 2025 04:31:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743593485; x=1744198285; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VOAVNu9Kqf7PZaTRYwlcNfDlS68QrPwBXmLNyWX78Ag=;
-        b=cJq/UmwNsnm6BB47UEoGq890CcvjzKwUw85HuQbuKaMo4gX62zoQfVRcCYYTxqhNA5
-         nnj22pQ4pW0aqXEPoDmEl+6O34WRb33xmnFkyt/YTkB8arh+YJQ/cwAmdoROnFRSAF54
-         fpYr3IvAtenOly8YR84ksBq74qV9Fm6z5J+yWNrowYX49wOZKf+H2lLW7xQe9/1CTSer
-         H/DJgAXe2pIj0xJUs0vyTIzraxQF0SbfnvfnR/tQJcupze4MlK0PJmkq0xM+xgsZD7VG
-         ++dXhjDshFOrhC+ynCC+iTQR5NB4flA+nZxpJ68bDnUbu16yWggcHeDg5UKvKwNlvzIH
-         C1EQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743593485; x=1744198285;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VOAVNu9Kqf7PZaTRYwlcNfDlS68QrPwBXmLNyWX78Ag=;
-        b=vdA67KE7AJwbw6+5cJZzl1eQsli1qDV6CmDBBAJURs1EGrYGVEqO4tG4hcC0Tvpi/p
-         gXqNjS2+Gkvn5g7Jlj7n8yWEIgOHcWYsQrRqBs6uqMUol+WdsiTEEHLCKgUqZPxAsRJo
-         EInSvxhzyU3Ilgu17XErSezfLfPjisSs7n26wm/sdKFqhM0nU6hxoPvLLXAoEYQQ0jFF
-         YxrgiMuHil016TWw9LHNHa+hL+wzX6tYmxrslVa9cVLRaxBE8+6U4s3et5ekj6BHu0WP
-         qw9k10jYksrOh7n46kblj4UCuQr/cFBgy83sLN8FsK2Id5hxFIYHpsMXNTD/sM9RSATt
-         CSxQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXJ7H9aKjA9eVcEGahWDcjZTQ8HAWV++KMnyUQgJR8d26p26576p5hbJ8aFQqe/wXT3lsNgdJd6@vger.kernel.org, AJvYcCXyKbqqdNiuiTJzn/Ggpe5nv0+LKjuLnw7ntJc8msmfa2A48DMNjrmE/z9Y0ODrfSz3o102e03cB2mC3eQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwOAEdu/KtCCGfkJSAK4M6gOaZU2zLr065PLuliCv/JTxi3s9Va
-	W7d0awnEczVOS1hQbPSg4Fi36Msx5GAeZkZa/HJ3GFjUluWUnzk4EbUGlhBtpPCGuQt7C7oIef1
-	70/p6p2ILl4gSrB3e7U182vl+SJ7lKdMy
-X-Gm-Gg: ASbGncupwAW70wl+NsN7moB1sonOxekLRyoO72dZVtpZaybivyzQDeIrXO+P7bz4ZVd
-	KSIqCMDsi7B03NptvrlYe+0u5HBekaT8TmqIAS3GrWmjAPNzo/069s1opereTugu1QSTtATapCV
-	rExT8p2rfUyf72Agig0bj5TSmstZ313+yRuG6fwzwuSKa3zCqSPGV1QQ4ZELiDmvIT60v+G20=
-X-Google-Smtp-Source: AGHT+IGDP7fN/mlgeR1ejgbnG6v2T05K9e3eS+G5D4ks1NyMNbGzNy7b9fCSqq7Gay9J6tYjG5W23A4J+hlZdsO25Ts=
-X-Received: by 2002:a05:6512:2c99:b0:54b:117c:118c with SMTP id
- 2adb3069b0e04-54b117c11f5mr4261792e87.57.1743593484370; Wed, 02 Apr 2025
- 04:31:24 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="MXAwXoil"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 532BW34r3915796
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 2 Apr 2025 06:32:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1743593523;
+	bh=sX5h5CFojGv8LnhPEfyz9Mo/ZRxnuXNUcaxTQXypESI=;
+	h=From:To:CC:Subject:Date;
+	b=MXAwXoil58eJQ8IWzzweFdwgwECINiQYjhl8HmFBDifDlzNSj1wd7VnQe+mYlrl6z
+	 AAAMhWayMGWrToZ2jXvO3RexlcBY3aOtl0XmVyVxmlW7orr4H+Sh8PY894bW2wQNdv
+	 E/nll3EicOETX6va6myashBGoMw6Yu1bgtbZ2mFk=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 532BW3Dd013316
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 2 Apr 2025 06:32:03 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 2
+ Apr 2025 06:32:03 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 2 Apr 2025 06:32:03 -0500
+Received: from localhost (jayesh-hp-z2-tower-g5-workstation.dhcp.ti.com [10.24.68.210])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 532BW1jn017249;
+	Wed, 2 Apr 2025 06:32:02 -0500
+From: Jayesh Choudhary <j-choudhary@ti.com>
+To: <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <nm@ti.com>, <vigneshr@ti.com>, <afd@ti.com>, <s-vadapalli@ti.com>,
+        <linux-kernel@vger.kernel.org>
+CC: <kristo@kernel.org>, <rogerq@kernel.org>, <kishon@kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <j-choudhary@ti.com>
+Subject: [PATCH v2 0/5] Use ti,j784s4-pcie-ctrl for PCIe CTRL spaces
+Date: Wed, 2 Apr 2025 17:01:56 +0530
+Message-ID: <20250402113201.151195-1-j-choudhary@ti.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250402085856.3348-1-vulab@iscas.ac.cn>
-In-Reply-To: <20250402085856.3348-1-vulab@iscas.ac.cn>
-From: Ryusuke Konishi <konishi.ryusuke@gmail.com>
-Date: Wed, 2 Apr 2025 20:31:08 +0900
-X-Gm-Features: AQ5f1JovFhM7rRGBrJhv4JMkrXTr2ISvt_zbXmpfVi3qcZyzfqwkEJEsTyuCYdM
-Message-ID: <CAKFNMomx3hpQrntyO0zQZviPa40LiC5KqxFa-m1PZcnZ7ku58A@mail.gmail.com>
-Subject: Re: [PATCH] nilfs2: Add pointer check for nilfs_direct_propagate()
-To: Wentao Liang <vulab@iscas.ac.cn>
-Cc: linux-nilfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Wed, Apr 2, 2025 at 5:59=E2=80=AFPM Wentao Liang wrote:
->
-> In nilfs_direct_propagate(), the printer get from nilfs_direct_get_ptr()
-> need to be checked to ensure it is not an invalid pointer. A proper
-> implementation can be found in nilfs_direct_delete(). Add a value check
-> and return -ENOENT when it is an invalid pointer.
->
-> Fixes: 10ff885ba6f5 ("nilfs2: get rid of nilfs_direct uses")
-> Cc: stable@vger.kernel.org # v2.6+
-> Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
-> ---
->  fs/nilfs2/direct.c | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/fs/nilfs2/direct.c b/fs/nilfs2/direct.c
-> index 893ab36824cc..ff1c9fe72bec 100644
-> --- a/fs/nilfs2/direct.c
-> +++ b/fs/nilfs2/direct.c
-> @@ -273,6 +273,9 @@ static int nilfs_direct_propagate(struct nilfs_bmap *=
-bmap,
->         dat =3D nilfs_bmap_get_dat(bmap);
->         key =3D nilfs_bmap_data_get_key(bmap, bh);
->         ptr =3D nilfs_direct_get_ptr(bmap, key);
-> +       if (ptr =3D=3D NILFS_BMAP_INVALID_PTR)
-> +               return -ENOENT;
-> +
->         if (!buffer_nilfs_volatile(bh)) {
->                 oldreq.pr_entry_nr =3D ptr;
->                 newreq.pr_entry_nr =3D ptr;
-> --
-> 2.42.0.windows.2
->
+Hello all,
 
-This patch requires review and correction.
-To avoid noise, I will comment on it separately in a reply email that
-excludes the stable ML.
+Now that we have ti,j784s4-pcie-ctrl[0] let's use it. This makes these
+K3 SoCs all match what is already done for J784s4.
 
-As a comment in advance, the commit pointed to by the Fixes tag is not
-the commit that caused the issue, and the version specification "#
-v2.6+" includes versions prior to nilfs2 mainline integration, so it
-is unnecessary.
+No functional change, DT changes are fully backwards and forwards
+compatible.
 
-Regards,
-Ryusuke Konishi
+[0]: commit cc1965b02d6c ("dt-bindings: mfd: syscon: Add ti,j784s4-pcie-ctrl compatible")
+<https://lore.kernel.org/all/20240204090336.3209063-1-s-vadapalli@ti.com/>
+
+Posting next revision for PCIe control node cleanup with minor changes
+to new overlays added after v1 was posted.
+
+NOTE: Once the bindings are in the mainline tree, scm_conf will be
+converted to "simple-bus" compatible which will unblock other
+items like audio_refclk in scm_conf required for audio support
+for TI SoC J721S2-EVM (currently giving dtbs_check warnings)
+
+v1: <https://lore.kernel.org/all/20241016233044.240699-1-afd@ti.com/>
+
+Changelog v1->v2:
+- Change property description and add example in the binding
+- Add changes in additional overlays using pcie*_ctrl node
+
+Andrew Davis (5):
+  dt-bindings: soc: ti: ti,j721e-system-controller: Add PCIe ctrl
+    property
+  arm64: dts: ti: k3-j721e: Add PCIe ctrl node to scm_conf region
+  arm64: dts: ti: k3-j7200: Add PCIe ctrl node to scm_conf region
+  arm64: dts: ti: k3-j721s2: Add PCIe ctrl node to scm_conf region
+  arm64: dts: ti: k3-am64: Add PCIe ctrl node to main_conf region
+
+ .../soc/ti/ti,j721e-system-controller.yaml    | 10 +++++++
+ arch/arm64/boot/dts/ti/k3-am64-main.dtsi      |  7 ++++-
+ .../boot/dts/ti/k3-am642-evm-pcie0-ep.dtso    |  2 +-
+ .../ti/k3-am68-sk-base-board-pcie1-ep.dtso    |  2 +-
+ .../boot/dts/ti/k3-j7200-evm-pcie1-ep.dtso    |  2 +-
+ arch/arm64/boot/dts/ti/k3-j7200-main.dtsi     |  7 ++++-
+ .../boot/dts/ti/k3-j721e-evm-pcie0-ep.dtso    |  2 +-
+ .../boot/dts/ti/k3-j721e-evm-pcie1-ep.dtso    |  2 +-
+ arch/arm64/boot/dts/ti/k3-j721e-main.dtsi     | 28 ++++++++++++++++---
+ .../boot/dts/ti/k3-j721s2-evm-pcie1-ep.dtso   |  2 +-
+ arch/arm64/boot/dts/ti/k3-j721s2-main.dtsi    |  7 ++++-
+ 11 files changed, 58 insertions(+), 13 deletions(-)
+
+-- 
+2.34.1
+
