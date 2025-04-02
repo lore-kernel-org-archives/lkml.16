@@ -1,149 +1,156 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 882D69444;
-	Wed,  2 Apr 2025 09:07:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9C3723372B
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 09:07:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743584825; cv=none; b=uGPMzZMxAby7JuhuElmmnOU5iP3P1poNESOE0Wu9AHWbqx7bqtgOtk5ao7bxjdFg6s6cHlJ+pq/drNtmg5GXUiiRXMhWhT/0QbsUgyA+EaT7ZYKwTJy+DzoQjA1+tZjkYZ2hYhSSQ/sQPVFJR2HqL5e0vEHP7rfpNhsQw3Q/yLY=
+	t=1743584845; cv=none; b=SDNJhTrrAf0r+k97DfzjTpn/BOqsQ1sDjO+bq5JSKCoCtOCajDoolyBTT20ildagLe3Y2Od4QQ+/IOvhHfOc6Wnx+yGlnvFEGLzuAx0QFe9wuFUtd2feQhK3gcyGKb5LcXg+qabRAvu80+k3ToNxaFtmQ4Ao4KVFifBydeeNamI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743584825; c=relaxed/simple;
-	bh=r2rtmCc79vq/OjG5/vXgJGsw5iwUgo0hY/2m6fdooM0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hpzTOGxk7ioosX1c4iDDrxKJkOKlSV5VcY6lC+/F0NYqO41xOTMB3sgq+8kS9yqjGyrIgIQB+rAGqHjCa9u2908K20Ip7k4LeBOIf0nYqAZQV353a/B4ZKkpyd5zpkLWq38k357yPuLdqogPpt8ux+Q/VYXTZNw7ZKcuh95lDXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N9q8Wqx5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743584845; c=relaxed/simple;
+	bh=Xp7NjTmdRWtkvSxci/5Q7T8swps/gmF6h+YZGeiBWFs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=qpdmscezgmSExnISnXa2gloX6EKRDv3odVv0AOHC9mm/Xl43GX+8xCQ2iRKe/RvlBtqNuu4q3TXgJLpaSa6V0sSB5fHAyp7iZ7QefYXzDIXWaBtXEHFgvNLUGGik96ZTcGyy7olBQghvy91aO1z+ZXovp2t7r2uwtElYdsqI4yE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EEaLNOk7; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N9q8Wqx5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18BA4C4CEDD;
-	Wed,  2 Apr 2025 09:07:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743584825;
-	bh=r2rtmCc79vq/OjG5/vXgJGsw5iwUgo0hY/2m6fdooM0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=N9q8Wqx5JMlYZJ6ku4ji1U9b10nIJHClhzMYL9QKU2YvlauYr1aWZWep5qk/Q32m/
-	 P0q80HKB3M2nDqxc7bhwgQWB9Dd2JMeiF4YhGVQSIuLwQnXSkbb/dipDQHQenrKHje
-	 ZSj/F+QdyKX0rXmMLCg57jv+2c2S3E1eapdBeQ9hGCU6lK7Q5bpl1txn+XWygFP5qj
-	 11+rFUMGmJVUm4MFkLbnPtrTrUqz30q7SgHPk/pw9+hzHIgR5G1TjZLAdWiKfBd3xh
-	 lfqZfZPhhkHJxoCZ+Xjp18fuT6ynCphiiF+WKq9+UTQY30U+Bywr8Tirw9/y8oxv/e
-	 I7N/toVCuSU6g==
-Date: Wed, 2 Apr 2025 11:06:59 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Benno Lossin <benno.lossin@proton.me>
-Cc: Greg KH <gregkh@linuxfoundation.org>, bhelgaas@google.com,
-	rafael@kernel.org, ojeda@kernel.org, alex.gaynor@gmail.com,
-	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
-	a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu,
-	linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 2/3] rust: pci: impl TryFrom<&Device> for &pci::Device
-Message-ID: <Z-z-M3g3FFz2HbrR@pollux>
-References: <20250321214826.140946-1-dakr@kernel.org>
- <Z96MrGQvpVrFqWYJ@pollux>
- <Z-CG01QzSJjp46ad@pollux>
- <D8ON7WC8WMFG.2S2JRK6G9TOSL@proton.me>
- <Z-GNDE68vwhk0gaV@cassiopeiae>
- <D8OOFRRSLHP4.1B2FHQRGH3LKW@proton.me>
- <Z-Ggu_YZBPM2Kf8J@cassiopeiae>
- <D8OPMRYE0SO5.2JQD6ZIYXHP68@proton.me>
- <Z-vvcPfgyaRdd0xQ@pollux>
- <D8VPQ5XL5NJZ.26OGZ3YML4QN3@proton.me>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EEaLNOk7"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-39149bccb69so5670533f8f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 02:07:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1743584842; x=1744189642; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=3udIIdXkF3HY5AYksdUCIcCpP+zIarfpBsTfRd4m5lE=;
+        b=EEaLNOk7jl16AF/8cHyXGPSc56t3cLQPrh0/R/vl87zkQaKeaBEGTpWzTJjoq9Yay2
+         2IgvR9r+gHaw8DMxeRNZuhe+tco2h9LjMibm7ZTpqOB89irN5l4LfZzddlWU9Z3L8NYx
+         brJRtkhjIWqckOx8W0k9vjnv3b6kDRb1iNZ6IzgXAO31ipsQxy07XWHvhIY5RY/9HPav
+         YsqYCiYp763O3PzL/N4mY4td+R6Lu/NlI4iHfEvIeLUQQgdwylneFWxLoVOM//Xh2WME
+         CQtKzyFAO89MQ9C7G5bZ5ecieUI1oMVfNb9yBgKk3QqxXZ/fpzcqNSsvzqa+bQ8ymo+5
+         nSiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743584842; x=1744189642;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3udIIdXkF3HY5AYksdUCIcCpP+zIarfpBsTfRd4m5lE=;
+        b=vVqta+RmIrLZcNdDMVLTy2XnRmU34sihMiJFk6W+QgmCdcanInqyrx2kc/7eyy8tHX
+         tSQqXtgkVsddTS2uZHOSs6nUWZiqgulVPnOvQLMr4jEZwIgf23oWaL1XRW1iuSEOlMcq
+         c73DG9faDfDevVa4SE0pi6ninqoZwlec4876T8G/5CA0gyQoQffpiJ7jC6gItnRaGsBZ
+         BfVQ7PzL6xsDRwE5Y8mQR0XXglS/+1ZCwNd0ZmR0J+ZaHrf6sutf5YkfBe/3Tr9PiK0E
+         1eLrAOlQref8XlaLw5nQCAt3fVHg/nf8G4iJsO83UrLNzfSDlAElmGa6Zs1yO0B1FfGb
+         7AAw==
+X-Gm-Message-State: AOJu0YykIMYOzombGSublrCUwLZFdLe6TJUj2GPHgpvh5GSOhZgQC8Mn
+	pc81PjpkTIDnH/VFEm+lpS+V29WIsJyZQUCXcLGUBXzXkSHYSyjoIIWOoQ17rbK43OzGmMkYqJs
+	j
+X-Gm-Gg: ASbGnctV4x+hVTxEuBWK7vou8UTSQyUrvXQf7bBvfwc1Ld7l2AHAbCjzJIG5pumOQmn
+	WEhGboLOvqDHMVqPhQgmCt6DrzrTdd10mGCG1yt10KwMzWgSPcuCnPPOUMUFjGpEo1YNATbMguq
+	6JElU7Q45b7Xb8054Gf32rci162g2h6QcEkpntmwKRXUABuQU8Aim43YN/sGo2ZaCHU8xC5xP8x
+	xbO8+6t9XH1y+ZG35u71PQuU/lnM2bEnzXS+Hf9XtGsjKCvjmxlmOMjPMFQPMEc9xW8tLJSyFaF
+	94HIMzUUI+0ie8wpFQTpC1gwl1T1w9/QJo4c7HkEi3DRk7EEEWRmqycCGtGFyxTEJWYwBO8=
+X-Google-Smtp-Source: AGHT+IH/gWHH6q9gUtsBn3nzctAro0gqQPBm2kyxBQlei3/mM8qB/SGkhOkiY94zTQT2R9T56TpIXg==
+X-Received: by 2002:a05:6000:1a89:b0:39c:1258:7e19 with SMTP id ffacd0b85a97d-39c2980a18fmr1040941f8f.58.1743584841917;
+        Wed, 02 Apr 2025 02:07:21 -0700 (PDT)
+Received: from mai.. (146725694.box.freepro.com. [130.180.211.218])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b65b4fcsm16680724f8f.11.2025.04.02.02.07.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Apr 2025 02:07:21 -0700 (PDT)
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+To: daniel.lezcano@linaro.org,
+	tglx@linutronix.de
+Cc: linux-kernel@vger.kernel.org,
+	thomas.fossati@linaro.org,
+	Larisa.Grigore@nxp.com,
+	ghennadi.procopciuc@nxp.com,
+	krzysztof.kozlowski@linaro.org,
+	S32@nxp.com
+Subject: [PATCH v4 0/2] Add the System Timer Module for the NXP S32 architecture
+Date: Wed,  2 Apr 2025 11:07:10 +0200
+Message-ID: <20250402090714.3548055-1-daniel.lezcano@linaro.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <D8VPQ5XL5NJZ.26OGZ3YML4QN3@proton.me>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 02, 2025 at 12:05:56AM +0000, Benno Lossin wrote:
-> On Tue Apr 1, 2025 at 3:51 PM CEST, Danilo Krummrich wrote:
-> > On Mon, Mar 24, 2025 at 06:32:53PM +0000, Benno Lossin wrote:
-> >> On Mon Mar 24, 2025 at 7:13 PM CET, Danilo Krummrich wrote:
-> >> > On Mon, Mar 24, 2025 at 05:36:45PM +0000, Benno Lossin wrote:
-> >> >> On Mon Mar 24, 2025 at 5:49 PM CET, Danilo Krummrich wrote:
-> >> >> > On Mon, Mar 24, 2025 at 04:39:25PM +0000, Benno Lossin wrote:
-> >> >> >> On Sun Mar 23, 2025 at 11:10 PM CET, Danilo Krummrich wrote:
-> >> >> >> > On Sat, Mar 22, 2025 at 11:10:57AM +0100, Danilo Krummrich wrote:
-> >> >> >> >> On Fri, Mar 21, 2025 at 08:25:07PM -0700, Greg KH wrote:
-> >> >> >> >> > Along these lines, if you can convince me that this is something that we
-> >> >> >> >> > really should be doing, in that we should always be checking every time
-> >> >> >> >> > someone would want to call to_pci_dev(), that the return value is
-> >> >> >> >> > checked, then why don't we also do this in C if it's going to be
-> >> >> >> >> > something to assure people it is going to be correct?  I don't want to
-> >> >> >> >> > see the rust and C sides get "out of sync" here for things that can be
-> >> >> >> >> > kept in sync, as that reduces the mental load of all of us as we travers
-> >> >> >> >> > across the boundry for the next 20+ years.
-> >> >> >> >> 
-> >> >> >> >> I think in this case it is good when the C and Rust side get a bit
-> >> >> >> >> "out of sync":
-> >> >> >> >
-> >> >> >> > A bit more clarification on this:
-> >> >> >> >
-> >> >> >> > What I want to say with this is, since we can cover a lot of the common cases
-> >> >> >> > through abstractions and the type system, we're left with the not so common
-> >> >> >> > ones, where the "upcasts" are not made in the context of common and well
-> >> >> >> > established patterns, but, for instance, depend on the semantics of the driver;
-> >> >> >> > those should not be unsafe IMHO.
-> >> >> >> 
-> >> >> >> I don't think that we should use `TryFrom` for stuff that should only be
-> >> >> >> used seldomly. A function that we can document properly is a much better
-> >> >> >> fit, since we can point users to the "correct" API.
-> >> >> >
-> >> >> > Most of the cases where drivers would do this conversion should be covered by
-> >> >> > the abstraction to already provide that actual bus specific device, rather than
-> >> >> > a generic one or some priv pointer, etc.
-> >> >> >
-> >> >> > So, the point is that the APIs we design won't leave drivers with a reason to
-> >> >> > make this conversion in the first place. For the cases where they have to
-> >> >> > (which should be rare), it's the right thing to do. There is not an alternative
-> >> >> > API to point to.
-> >> >> 
-> >> >> Yes, but for such a case, I wouldn't want to use `TryFrom`, since that
-> >> >> trait to me is a sign of a canonical way to convert a value.
-> >> >
-> >> > Well, it is the canonical way to convert, it's just that by the design of other
-> >> > abstractions drivers should very rarely get in the situation of needing it in
-> >> > the first place.
-> >> 
-> >> I'd still prefer it though, since one can spot a
-> >> 
-> >>     let dev = CustomDevice::checked_from(dev)?
-> >> 
-> >> much better in review than the `try_from` conversion. It also prevents
-> >> one from giving it to a generic interface expecting the `TryFrom` trait.
-> >
-> > (I plan to rebase this on my series introducing the Bound device context [1].)
-> >
-> > I thought about this for a while and I still think TryFrom is fine here.
-> 
-> What reasoning do you have?
+These couple of changes bring the System Timer Module - STM which is
+part of the NXP S32 architecture.
 
-The concern in terms of abuse is that one could try to randomly guess the
-"outer" device type (if any), which obiously indicates a fundamental design
-issue.
+The timer module has one counter and four comparators, an interrupt
+line when one of the comparator matches the counter. That means the
+interrupt is shared across the comparator.
 
-But that's not specific to devices; it is a common anti-pattern in OOP to
-randomly guess the subclass type of an object instance.
+The number of STM is equal to the number of core available on the
+system. For the s32g2 variant, there are three Cortex-M3 and four
+Cortex-A53, consequently there are seven STM modules dedicated to
+those.
 
-So, I don't think the situation here is really that special such that it needs
-an extra highlight.
+In addition, there is a STM variant which is read-only, so the counter
+can not be set because it is tied to another STM module dedicated to
+timestamp. These special STM modules are apart and will be handled
+differently as they can not be used as a clockevent. They are not part
+of these changes.
 
-> > At some point I want to replace this implementation with a macro, since the code
-> > is pretty similar for bus specific devices. I think that's a bit cleaner with
-> > TryFrom compared to with a custom method, since we'd need the bus specific
-> > device to call the macro from the generic impl, i.e.
-> >
-> > 	impl<Ctx: DeviceContext> Device<Ctx>
-> >
-> > rather than a specific one, which we can't control. We can control it for
-> > TryFrom though.
-> 
-> We could have our own trait for that.
+The choice is to have one STM instance, aka one STM description in the
+device tree, which initialize a clocksource and a clockevent per
+CPU. The latter is assigned to a CPU given the order of their
+description. First is CPU0, second is CPU1, etc ...
 
-I don't think we should have a trait specific for devices for this. If we really
-think the above anti-pattern deserves special attention, then we should have a
-generic trait (e.g. FromSuper<T>) instead.
+Changelog:
 
-But I'm not sure that we really need to put special attention on that.
+ - v4
+   - Removed useless compatible string (Krzysztof Kozlowski)
+   - Dropped of_match_ptr() (Krzysztof Kozlowski)
+
+ - v3
+   - Fixed bindings, compatible description and name (Krzysztof Kozlowski)
+   - Fixed bindings filename to fit the compatible (Krzysztof Kozlowski)
+   - Fixed a couple of typos in the driver changelog (Ghennadi Procopciuc)
+   - Enclosed macro into parenthesis (Ghennadi Procopciuc)
+   - Replaced irq_of_parse_and_map() by platform_get_irq() (Ghennadi Procopciuc)
+   - Fixed checkpatch --script reports
+   - Removed debugfs as the driver is not considered complex enough (Arnd Bergmann)
+
+ - v2:
+   - Fixed errors reported by 'make dt_binding_check' (Rob Herring)
+   - Removed unneeded '|' symbol (Rob Herring)
+   - Removed 'clocks' description (Rob Herring)
+   - Removed 'clock-names' because there is only one description (Rob Herring)
+   - Renamed 'stm@' to 'timer@' in the DT binding example (Rob Herring)
+   - Fixed dt bindings patch subject (Krzysztof Kozlowski)
+   - Dropped 'OneOf' in the DT bindings (Krzysztof Kozlowski)
+   - Dropped the STM instances structure
+   - Use the dev_err_probe() helper (Krzysztof Kozlowski)
+   - Use the dev_err_probe() helper (Krzysztof Kozlowski)
+   - Use devm_clk_get_enabled() (Krzysztof Kozlowski)
+   - Removed unneeded headers (Ghennadi Procopciuc)
+   - Removed unused macro (Ghennadi Procopciuc)
+   - Replaced 'int' by 'unsigned int' (Ghennadi Procopciuc)
+   - Removed dev_set_drvdata() (Ghennadi Procopciuc)
+   - Prevent disabling the entire module and set min delta (Ghennadi Procopciuc)
+   - Factored out the clocksource / clockevent init routine (Ghennadi Procopciuc)
+   - Use devm_request_irq() (Ghennadi Procopciuc.)
+   - Use irq_dispose_mapping() for error rollbacking (Ghennadi Procopciuc)
+
+ - v1: initial post
+
+Daniel Lezcano (2):
+  dt-bindings: timer: Add NXP System Timer Module
+  clocksource/drivers/nxp-timer: Add the System Timer Module for the
+    s32gx platforms
+
+ .../bindings/timer/nxp,s32g2-stm.yaml         |  53 ++
+ drivers/clocksource/Kconfig                   |   9 +
+ drivers/clocksource/Makefile                  |   2 +
+ drivers/clocksource/timer-nxp-stm.c           | 495 ++++++++++++++++++
+ 4 files changed, 559 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/timer/nxp,s32g2-stm.yaml
+ create mode 100644 drivers/clocksource/timer-nxp-stm.c
+
+-- 
+2.43.0
+
