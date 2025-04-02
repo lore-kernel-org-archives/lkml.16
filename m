@@ -1,145 +1,354 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E72A12356BB
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 11:42:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7075D236456
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 11:42:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743594141; cv=none; b=Dla6lLn/vYC5lf8BdLZKdB3n4Wop/5/1mxRlcYqqDfsFWeSL/pgD8rUDAIyVVCPCPec+EHE6Tsa+PtaCTglbbG2+ohznOmSgVykSYlW5Heq1/v/0gaY0CjGfOHeg8D0Xjz+JdBheRp9iyU5Bi6GCysz/tut5Fnodo7RMM62KxQE=
+	t=1743594177; cv=none; b=kiX4jKVUJWmr3jkRrY0iDJpAx1Av4wG32XMB+Wma49zWrtzm+AYQShBITaiJ3QCTm+WH6yyFokB83UwlvPOkar7EU0oiurEtJ77fCDdRm2ZuZq6kwa0EyDof3pUBeOBGfr/SWoHvUg8ZozRaM6X1LoZkZ996If/W98oboRXq4ac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743594141; c=relaxed/simple;
-	bh=br6xgjpyF0FbbDpugM+ibdJL1SvA1hVnKm/fceQ7q4k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Fh5FvQXgKaEsQ2SuZTSw55Bhp/kYu4+XfJSufD6QBn7g+3O4Z+JtJBjc+9pTHic3jlkFy30sQOjaLO7i1SsYeoaOheA8lOrBDiFCiVCXlWg+8drXGXXpb31ZadHV1Eclg5PUXA/taejEfURE5EHecW7xay5c5mrK+8/GpZC/b90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=Rk44w3Cx; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1743594177; c=relaxed/simple;
+	bh=KkTsGy5CsRwJadCXUu6zsFgtqT/OTeC9ctEnA4BXfTQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lVNFGpH+fZGkwmdw7QOQuOWI2TQI5xNJWrsDZWqx+M98J50jbidUs4crBklXXpbjlpbClX/vGZjxgQKy2OOQiqQ1KQfEs+Vq2jEDlPM5Bb2ExmAfVs13EVqR4IDJozybQw9/c/CDX7o4gT7eiLTej2Rcx14JVjoeCpTSgxMNbNk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=GpdsdZfv; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Rk44w3Cx"
-Received: from [192.168.88.20] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 8D6336A2;
-	Wed,  2 Apr 2025 13:40:24 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1743594025;
-	bh=br6xgjpyF0FbbDpugM+ibdJL1SvA1hVnKm/fceQ7q4k=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Rk44w3Cxmi/ojwfgpzH+kURiqrJU8vCttpX/VK3vTY9gnS0I7VZCKj4+JBl6bDmHv
-	 tIOoXwXOnDSRitmeGUm8eILwsjNeC+M2l8HWmUPHIp/HhrAp7Y0ZqiLvJsdb0s9tg/
-	 yUm748WA5c3fETWPvqsKiLAgVt5T9P8WrC0AdutM=
-Message-ID: <5465d2dd-d81a-4e33-b76f-cbbd3386c725@ideasonboard.com>
-Date: Wed, 2 Apr 2025 14:42:14 +0300
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="GpdsdZfv"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-54963160818so7306282e87.2
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 04:42:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1743594173; x=1744198973; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rnyFGkuf+ZlsYRxDUDzYYevuVifSXRHynvisVvI+KPo=;
+        b=GpdsdZfvQvHuGnJy/Nkc2neqyg+v/5yIVawGGQDExWebhuuC6g7TsPrRrcLUZQWePn
+         P/CRE2TWtOKPF8p6PXf5GPZzqsHjrV+5xnH7LwCYzpsRB5qgNW58k9CBtqP+WO+fPEwC
+         pWRKSJN1Kwc+luo5RM+2MRoPpu+WQMtT4b5EZDLFIKWinmf+Mg0A7KE4ahatztj8gv+I
+         FULFeDjWoc5XcmMqybjfW4npXlpPgwAXPHLbEBbWLrBdOluEDufMfWWiIWBiXYL9Nq2t
+         HtHgwxtNNx2RWSlEaMc4NWuGODhW71KWEWRie0q8aLavvDDQPbfZpytyCVmG9rsU0F6t
+         g9Nw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743594173; x=1744198973;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rnyFGkuf+ZlsYRxDUDzYYevuVifSXRHynvisVvI+KPo=;
+        b=vtM7nIl2p34dELKIHVg3EuyGRMTrXY8RHPtJWz3QQYxRtXTrg7LZ/mxiNcVRNf5RbH
+         nTzMBFVeQOYmHK/WES16Ewhkv/Nd5iObXAg1jZlh5QrenDrv2MbIr0gnyxcKMDUYWzDN
+         ryxOjjnmD1T7fYXr+ZwP4H70dE32NS+pjQTe9jp/qzOinHQGoOhr/L8s8hV9dkNzh6ih
+         5hOG7dq4JorMcOcvw/kVy8kt1bpzfjR2Q3yTHy7UMq4JOUCyK2vefXifrGTpgaqeDgth
+         fEcOnmZonOM8OrNm+9mYJo03hzDxdv7406SZNYbbpspXZq56XG7qweeN4ErvrZxkRAGE
+         Igaw==
+X-Forwarded-Encrypted: i=1; AJvYcCU0BUScUW13fVfZc+ZNMBebW/8WMWdN50My3HKU4bg3DZYjw5CRifnGcERwUA5ufEdNQDsPWsET3LsOfs4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxWlzQyKPY1DFB0kWTSNJywYOzRu238hkPQlxtZFZ1cQgsgNnyP
+	pOQXYbDSiVGZek5wOqNLawFmE2soZkHzEJW/XAtRpG+R86kC/C6JxnP/KUSDguE4oL4n03JHgGl
+	Okbg6zuIxFjh/hNTejeLieQ2vzIxM2eTEIc27cCIu/DR8+Xk7lRU=
+X-Gm-Gg: ASbGncs4XFHsBO7BuCokHOY+p9toOsrs3TUOieipBvQtwHBGMktV9tftFzhRKB12fLE
+	FDYJiZKS93W97uvITDtSCQcd//a73dc4KpeSC6kQfOZpOTTSW6FN5m3BC9Wv6j8MX7H/PsqaP3y
+	iOCz0KEVyiC6XXawCgQwtwj151kw/6h69t8hJ5X+zvWAWzK0Mp2BF3xJqATVg=
+X-Google-Smtp-Source: AGHT+IF4FJ1w+jiLp0Ti0X7tN2e/4jQiASB+2SdRqOfy/3p5/H5Gs+xlfgZWVDpPr5jQmB4ObvaJ0rc1Wvapx2P5RHI=
+X-Received: by 2002:a05:6512:3dac:b0:54b:ed9:2cf8 with SMTP id
+ 2adb3069b0e04-54b10db7a82mr5263140e87.10.1743594173425; Wed, 02 Apr 2025
+ 04:42:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] phy: cadence: cdns-dphy: Update calibration wait
- time for startup state machine
-To: Devarsh Thakkar <devarsht@ti.com>
-Cc: sakari.ailus@linux.intel.com, u.kleine-koenig@baylibre.com,
- vigneshr@ti.com, aradhya.bhatia@linux.dev, s-jain1@ti.com,
- r-donadkar@ti.com, vkoul@kernel.org, kishon@kernel.org, mripard@kernel.org,
- linux-phy@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20250326152320.3835249-1-devarsht@ti.com>
- <20250326152320.3835249-3-devarsht@ti.com>
-Content-Language: en-US
-From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
- 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
-In-Reply-To: <20250326152320.3835249-3-devarsht@ti.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250315194002.13778-1-marco.crivellari@suse.com>
+ <20250315194002.13778-2-marco.crivellari@suse.com> <alpine.DEB.2.21.2503211146001.35806@angie.orcam.me.uk>
+ <CAAofZF4gy6WJKLK4TzF5aV7+ca3gob5jVz3XQZyGrTpfnCsn_Q@mail.gmail.com>
+ <alpine.DEB.2.21.2503211747150.35806@angie.orcam.me.uk> <CAAofZF5yaGMG0Kyax+ksfGngQ0T6AxvN5-60SnasQh7=OabaOg@mail.gmail.com>
+ <alpine.DEB.2.21.2503260300290.29685@angie.orcam.me.uk> <alpine.DEB.2.21.2503281345010.47733@angie.orcam.me.uk>
+ <CAAofZF65p+DnH8xA0+sfuZv=VO63Zgv4rQ6frrdEzQYoZ0MaWA@mail.gmail.com> <alpine.DEB.2.21.2503311348560.47733@angie.orcam.me.uk>
+In-Reply-To: <alpine.DEB.2.21.2503311348560.47733@angie.orcam.me.uk>
+From: Marco Crivellari <marco.crivellari@suse.com>
+Date: Wed, 2 Apr 2025 13:42:42 +0200
+X-Gm-Features: AQ5f1JpZUgtL2TOq7uImkDhamnm4M177atcJvXYiPZxvQbXGcOihm9yVWRFSpr8
+Message-ID: <CAAofZF6Gnzm9isPt3NUuSPBmBWQsj56O43pPZAf64WEP8no2Rg@mail.gmail.com>
+Subject: Re: [PATCH v6 1/1] MIPS: Fix idle VS timer enqueue
+To: "Maciej W. Rozycki" <macro@orcam.me.uk>
+Cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Frederic Weisbecker <frederic@kernel.org>, 
+	Anna-Maria Behnsen <anna-maria@linutronix.de>, Thomas Gleixner <tglx@linutronix.de>, 
+	Peter Zijlstra <peterz@infradead.org>, Huacai Chen <chenhuacai@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Hi Maciej,
 
-On 26/03/2025 17:23, Devarsh Thakkar wrote:
-> Use system characterized reset value specified in TRM [1] to program
-> calibration wait time which defines number of cycles to wait for after
-> startup state machine is in bandgap enable state.
-> 
-> This fixes PLL lock timeout error faced while using RPi DSI Panel on TI's
-> AM62L and J721E SoC [2].
-> 
-> [1] AM62P TRM (Section ):
-> https://www.ti.com/lit/pdf/spruj83
-> 
-> [2]:
-> Link: https://gist.github.com/devarsht/89e4830e886774fcd50aa6e29cce3a79
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: 7a343c8bf4b5 ("phy: Add Cadence D-PHY support")
-> Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
-> ---
-> V2: Introduced this as as separate patch
-> 
->   drivers/phy/cadence/cdns-dphy.c | 3 +++
->   1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/phy/cadence/cdns-dphy.c b/drivers/phy/cadence/cdns-dphy.c
-> index c4de9e4d3e93..11fbffe5aafd 100644
-> --- a/drivers/phy/cadence/cdns-dphy.c
-> +++ b/drivers/phy/cadence/cdns-dphy.c
-> @@ -30,6 +30,7 @@
->   
->   #define DPHY_CMN_SSM			DPHY_PMA_CMN(0x20)
->   #define DPHY_CMN_SSM_EN			BIT(0)
-> +#define DPHY_CMN_SSM_CAL_WAIT_TIME	GENMASK(8, 1)
->   #define DPHY_CMN_TX_MODE_EN		BIT(9)
->   
->   #define DPHY_CMN_PWM			DPHY_PMA_CMN(0x40)
-> @@ -405,6 +406,8 @@ static int cdns_dphy_configure(struct phy *phy, union phy_configure_opts *opts)
->   	reg = FIELD_PREP(DPHY_BAND_CFG_LEFT_BAND, band_ctrl) |
->   	      FIELD_PREP(DPHY_BAND_CFG_RIGHT_BAND, band_ctrl);
->   	writel(reg, dphy->regs + DPHY_BAND_CFG);
-> +	writel(FIELD_PREP(DPHY_CMN_SSM_CAL_WAIT_TIME, 0x14) | DPHY_CMN_SSM_EN | DPHY_CMN_TX_MODE_EN,
-> +	       dphy->regs + DPHY_CMN_SSM);
+> Well, you should be able to set a breakpoint at `rollback_handle_int' and
+> fiddle with $epc by hand to see if the code sequence correctly skips over
+> WAIT.  Though I reckon QEMU used to have an issue with presenting the MIP=
+S
+> privileged context over its debug stub.  Has the issue been fixed?  Eithe=
+r
+> way you should be able to just operate on the copy in $k0 retrieved with
+> (D)MFC0.
 
-This sounds like a TI specific characterized value, but the function 
-here is a generic one. Also, is the value same for all TI SoCs? Or is it 
-per-soc?
+Nope, seems not fixed so far. But yes, changing $k0 is working fine.
+With the cpu in idle code (executing "wait"), ctrl+c, then placed a bp
+in rollback_handle_init+4. Then "c" to hit the bp.
+When the bp is hit, I can see $k0 =3D r4k_wait_exit.
 
-  Tomi
+I changed $k0 with an address inside the region, and setting a bp on "bne",
+ the value is equal to $k1. I'm assuming the value is also saved
+correctly in $epc,
+considering it points correctly to r4k_wait_exit.
 
+> See Section 3.5 of the latter manual for further
+> discussion of the ISA bit.
+
+Thank you, I found the manuals for rev. 5,
+I still didn't have enough time to take a look anyhow.
+
+> See the comment at said macro in <linux/compiler_types.h> and also commit
+> 6727ad9e206c ("nmi_backtrace: generate one-line reports for idle cpus").
+
+Aha, thanks!
+
+ > Hmm, "skipover" maybe?
+
+Now that I'm looking at the code, shouldn't it be better to address this in=
+ a
+separate patch or another time?
+
+I can see the rollback_handler* is exported also in arch/mips/kernel/traps.=
+c
+And there are a few parts that makes use of the "rollback" name; I'm
+wondering if also
+the code should be refactored a bit then,
+eg arch/mips /include/asm/idle.h:using_rollback_handler()
+
+
+Thank you!
+
+
+On Mon, Mar 31, 2025 at 10:09=E2=80=AFPM Maciej W. Rozycki <macro@orcam.me.=
+uk> wrote:
+>
+> On Mon, 31 Mar 2025, Marco Crivellari wrote:
+>
+> > > There's some complication here coming from the need to factor in the =
+ISA
+> > > bit in the microMIPS mode; something that hasn't been discussed so fa=
+r.
+> > > The `.fill 0' approach is a hack and it has struck me that we need to=
+ add
+> > > a `.noinsn' pseudo-op to GAS for this purpose, complementing `.insn',=
+ but
+> > > we need to stick with the hack for now anyway as it will take years u=
+ntil
+> > > we can rely on a new feature in the assembler.
+> >
+> > Ah, interesting. So de facto having the "repeat" to 0, will generate no=
+thing.
+>
+>  Correct, and as a side effect this pseudo-op clears the ISA bit on any
+> label attached, as it is not an instruction.
+>
+> > > I can't imagine how we'd advance past WAIT without these instructions=
+,
+> > > what do you have in mind?
+> >
+> > I've not been precise, sorry.
+> > I meant to remove the instructions like they are now because the
+> > region would have
+> > been different, then.
+> > So, those instructions would have needed a change, in practice.
+>
+>  OK, so this is precisely what happened here with my proposal.  Thanks fo=
+r
+> clarifying.
+>
+> > > NB how do you actually verify this stuff with QEMU?  Is it by injecti=
+ng
+> > > an interrupt by hand at a chosen code location via GDB attached to QE=
+MU's
+> > > built-in debug stub?
+> >
+> > Short answer: I am not able to fully test this, I can only boot.
+> >
+> > The reason is that gdb-multiarch is not working as expected.
+> > The binary in my distribution has the python support broken. So when I =
+try to
+> > inject the interrupt, I'm receiving a python error (actually, I receive=
+ the same
+> > error after the "target remote" command).
+> > I've also tried to compile the binary from source, but again,
+> > I understand why in OBS the build I found is broken...
+>
+>  Well, you should be able to set a breakpoint at `rollback_handle_int' an=
+d
+> fiddle with $epc by hand to see if the code sequence correctly skips over
+> WAIT.  Though I reckon QEMU used to have an issue with presenting the MIP=
+S
+> privileged context over its debug stub.  Has the issue been fixed?  Eithe=
+r
+> way you should be able to just operate on the copy in $k0 retrieved with
+> (D)MFC0.
+>
+> > > Below I've included a complete change based on the outline above.  It
+> > > seems to do the right thing for a couple of my configurations, but I'=
+ve
+> > > only eyeballed the resulting code and haven't tried running it.  Most=
+ of
+> > > my hardware doesn't implement the WAIT instruction anyway.
+> >
+> > It means it would be better to have someone else try the resulting
+> > patch, I guess.
+>
+>  Exhaustive run-time verification is not always necessary if you can
+> demonstrate that your code is correct via other means, including
+> proofreading.
+>
+>  FAOD I have one MIPS32r2 system wired for testing, but that might not be
+> the most interesting configuration to verify as it'll now just use EI/EHB
+> to enable interrupts ahead of WAIT.  I could try an R1 kernel instead, bu=
+t
+> I'm not sure if it can be made to work owing to the differences in the FP=
+U
+> between R1 and R2 for the MIPS32 ISA.  I used to have a MIPS64 (R1) syste=
+m
+> there, but the CPU daughtercard sadly stopped working 3 years ago and I
+> wasn't able to repair it, owing to the lack of available spare parts (it'=
+s
+> most likely a dead CPU).
+>
+> > > Let me know if you find anything here unclear or have any questions o=
+r
+> > > comments.
+> >
+> > 1)
+> >
+> > > /* Keep the ISA bit clear for calculations on local labels here. */
+> >
+> > The ISA bit should be the bit 0, correct?
+> > So, also in the macro code, it's done to preserve that bit.
+>
+>  Correct, the bit will be set according to the ISA mode at the time the
+> originating machine instruction is executed, in EPC or any other register
+> the PC is copied to, e.g. $ra.  Likewise any instruction setting the PC
+> such as JR or ERET will set the ISA mode from the ISA bit of the source
+> register (the ISA bit for exception entry is set from CP0 Config3.ISAOnEx=
+c
+> register bit).
+>
+>  All code labels in microMIPS code will have the bit set, so that
+> relocations correctly calculate immediates used to make register jumps.
+>
+>  The ISA mode can be switched explicitly with the JALX instruction (you
+> can mix regular MIPS and microMIPS code as long as hardware supports the
+> other ISA mode; either or both can be implemented in a given piece of
+> silicon).
+>
+>  Other immediate jumps and branches preserve the current ISA mode, but th=
+e
+> assembler and linker verify you don't attempt to use these instructions t=
+o
+> pass control to code in the other mode; this is an assembly or link error
+> depending at what stage the label reference is resolved.
+>
+>  FYI the documents for the microMIPS mode of operation are respectively:
+>
+> - "MIPS Architecture For Programmers Volume I-B: Introduction to the
+>    microMIPS32 Architecture"
+>
+> - "MIPS Architecture for Programmers Volume II-B: The microMIPS32
+>    Instruction Set"
+>
+> and their microMIPS64 counterparts (although the first document is almost
+> an exact copy of its regular MIPS variant).  Be sure to download revision
+> 5.xx, because revision 6.xx describes an entirely different ISA which we
+> currently have no support for (downstream patches were never submitted;
+> also microMIPSr6 removed branch delay slots, which caused all sorts of
+> portability issues).  See Section 3.5 of the latter manual for further
+> discussion of the ISA bit.
+>
+> > 2)
+> > .section .cpuidle.text,"ax"
+> >
+> > This should be a single patch, right?
+> > Based on what I understood, 'a' should be the allocation, and 'x' the
+> > executable attribute.
+>
+>  Both correct (see the GAS manual for the section flags); this just
+> matches the __cpuidle macro from <linux/compiler_types.h>.
+>
+> > This should be in order to mark those symbols like "cpuidle text":
+> >
+> > $ nm -n vmlinux | grep -A3 "cpuidle_text"
+> > ffffffff80a127e0 T __cpuidle_text_start
+> > ffffffff80a127e0 T r4k_wait
+> > ffffffff80a12800 t r4k_wait_insn
+> > ffffffff80a12804 t r4k_wait_exit
+> > --
+> > ffffffff80a12c00 T __cpuidle_text_end
+> > ffffffff80a12c00 T __noinstr_text_end
+> > ffffffff80a12c00 t rest_init
+> > ffffffff80a12ccc t kernel_init
+> >
+> > I guess it is used in order to understand if the instruction pointer is=
+ inside
+> > one of these functions / labels.
+>
+>  See the comment at said macro in <linux/compiler_types.h> and also commi=
+t
+> 6727ad9e206c ("nmi_backtrace: generate one-line reports for idle cpus").
+>
+> > How does a commit description sound like this?
+> >
+> > "
+> > mips: Add dedicated .cpuidle.text section for CPU idle routines
+> >
+> > Add a dedicated executable section for CPU idle code to properly organi=
+ze
+> > and identify idle-related functions inside the .text section.
+> > "
+>
+>  How about:
+>
+> "
+> MIPS: Move __r4k_wait() to .cpuidle.text section
+>
+> Fix missing .cpuidle.text section assignment for __r4k_wait() to correct
+> backtracing with nmi_backtrace().
+>
+> Fixes: 97c8580e85cf ("MIPS: Annotate cpu_wait implementations with __cpui=
+dle")
+> "
+>
+> or suchlike (based on the commit referred)?
+>
+>  This probably does not itself qualify for linux-stable as the issue is
+> only annoying rather than fatal, but I think the annotation should be
+> there in case someone wants to backport it downstream.
+>
+> > 3)
+> >
+> > > I think we also need to replace "rollback" with
+> > > another name as with new code we don't roll back anymore.
+> >
+> > Should be changed with "region", instead of rollback, maybe?
+> > Do you have something better to suggest?
+>
+>  Hmm, "skipover" maybe?
+>
+>   Maciej
+
+
+
+--
+
+Marco Crivellari
+
+L3 Support Engineer, Technology & Product
+
+
+
+
+marco.crivellari@suse.com
