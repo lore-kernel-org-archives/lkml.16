@@ -1,98 +1,105 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C877B2376F5
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 12:18:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD1E92376E6;
+	Wed,  2 Apr 2025 12:18:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743596287; cv=none; b=NZh2U+4hul1DR7qW9qwnt83dabTSlgXASG42VbJ/8L6O5agINIIzigj6VgNuDpZdDbLDthNzOb7u++MWVZsxonvv2Q5yKBPuvA6fnthQ9p3FaIATyAV8NkwwxlxZtrCc9rKgcd1AlWwegAtvZ2zmjE796aoRbaiL87lq9eHzIcQ=
+	t=1743596306; cv=none; b=jDNiJbVI7al99rGRaa9tnlf/NTd1aB+Iw2UcWa92FyNPfAgU7sBxtphD7WVXK/OAJnyjoW2udI5WNJ9a4dUTvHz5H7qq1pSqQNCps1HCF52Odh8WRsYcIryQ9w0G9m1/V0cNQ/wJI/kKp6S0H/0QyRAx8TFPH7pFbTiIJblw2sA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743596287; c=relaxed/simple;
-	bh=cXmfE8Zo73fyB/QHPWw+99Wun31tm3+a46xHnHmRHs0=;
-	h=From:To:cc:Subject:MIME-Version:Content-Type:Date:Message-ID; b=oNLxZ8kdfkzJMChrx+MGitrOZpAA+aPNpR9/cFm0NIY0oHHQy0C2OqZs8K2chRYs9caxFQT4DFq+oiBPUhsy5Ia+139H8DORr4RCAYBoE7fa5qdYtWWOtkC2hP+XGmR75DQc4ydRTY0soXE3L8cSmCAW5DMArD+9n0HVkQ64k6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cLsHekaW; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1743596306; c=relaxed/simple;
+	bh=ggqz5lWHakn7J6Ha4/MaJKM/TUSGVUDkL/qWbNeHIzA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O6tB4beAqIAz3zGVs9fSi/NKkCOWV0WDyb+pXwQ0Hhux2XuEk/GHKawaq6bP3AyfIOEnfX9SmHtwPoDZWL1liEGHxFKY+fz/2Jw+Mz+/OEYi11wSKpMQncE6m/F34KX2tN59cBBOc7w+bIsIba91aPPePFoKaTpNJS6L6iIqzqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=FC8Yn2z4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cLsHekaW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743596284;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-	bh=68lHblWFUM177oZ82WUmwq6fKcjyGzBb+/ilfrtKAuU=;
-	b=cLsHekaWgSXX8qAnQe1mjgBbBA2oPRhH5ooR2sntazdnWAQnZ/gg/D4xliWkSZbwDEMAaS
-	5TNE7DgqBUHlfU4HWQ8kZg2eskSkqnlyeQzPgZJuXC6w4QV6hqzqOc3jjHe4bRyUjDYqL9
-	EvJ56quJGyTYaPrQtFQ8dm52shwknSI=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-335-aCqRoR2WMt2CF3Di-QaNGQ-1; Wed,
- 02 Apr 2025 08:18:01 -0400
-X-MC-Unique: aCqRoR2WMt2CF3Di-QaNGQ-1
-X-Mimecast-MFC-AGG-ID: aCqRoR2WMt2CF3Di-QaNGQ_1743596278
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 69F24180AF52;
-	Wed,  2 Apr 2025 12:17:58 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.40])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id D46033001D14;
-	Wed,  2 Apr 2025 12:17:55 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-To: Christian Brauner <brauner@kernel.org>
-cc: dhowells@redhat.com, Giuseppe Scrivano <gscrivan@redhat.com>,
-    Debarshi Ray <dray@redhat.com>, Eric Sandeen <sandeen@redhat.com>,
-    linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] devpts: Fix type for uid and gid params
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="FC8Yn2z4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D171EC4CEDD;
+	Wed,  2 Apr 2025 12:18:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1743596306;
+	bh=ggqz5lWHakn7J6Ha4/MaJKM/TUSGVUDkL/qWbNeHIzA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FC8Yn2z4v08go6nDgD7NKILEDLsuUOktHQwGyl+HRIqjIj0QjeKZnlNFvC9EYyUR1
+	 Vj3voJwcmAdfdShj9SldXpO+ZFs7/Oiky2ix9i0SKpx3PRUzduL99/YjXmHmJR/4Y5
+	 NFmK5WVyIAhihzZ3Fvu950X88DtRPsS1FdtUhZFo=
+Date: Wed, 2 Apr 2025 13:16:58 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Akshay Gupta <akshay.gupta@amd.com>, linux-hwmon@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
+	shyam-sundar.s-k@amd.com, gautham.shenoy@amd.com,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	naveenkrishna.chatradhi@amd.com, anand.umarji@amd.com
+Subject: Re: [PATCH v7 07/10] misc: amd-sbi: Add support for CPUID protocol
+Message-ID: <2025040258-snap-aerospace-6e43@gregkh>
+References: <20250402055840.1346384-1-akshay.gupta@amd.com>
+ <20250402055840.1346384-8-akshay.gupta@amd.com>
+ <c7efb154-9e44-402f-b0fb-c9bce54645b2@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <759133.1743596274.1@warthog.procyon.org.uk>
-Date: Wed, 02 Apr 2025 13:17:54 +0100
-Message-ID: <759134.1743596274@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c7efb154-9e44-402f-b0fb-c9bce54645b2@app.fastmail.com>
 
-    
-Fix devpts to parse uid and gid params using the correct type so that they
-get interpreted in the context of the user namespace.
+On Wed, Apr 02, 2025 at 02:13:22PM +0200, Arnd Bergmann wrote:
+> On Wed, Apr 2, 2025, at 07:58, Akshay Gupta wrote:
+> > - AMD provides custom protocol to read Processor feature
+> >   capabilities and configuration information through side band.
+> >   The information is accessed by providing CPUID Function,
+> >   extended function and thread ID to the protocol.
+> >   Undefined function returns 0.
+> >
+> > Reviewed-by: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
+> > Signed-off-by: Akshay Gupta <akshay.gupta@amd.com>
+> > ---
+> > Changes since v6:
+> > - Address Arnd comment
+> >   - Add padding to the uapi structure
+> > - Rebased patch, previously patch 8
+> 
+> This changes the UAPI again. since you change the common structure
+> layout.
+> 
+> > @@ -134,6 +279,9 @@ static long sbrmi_ioctl(struct file *fp, unsigned 
+> > int cmd, unsigned long arg)
+> >  		/* Mailbox protocol */
+> >  		ret = rmi_mailbox_xfer(data, &msg);
+> >  		break;
+> > +	case APML_CPUID:
+> > +		ret = rmi_cpuid_read(data, &msg);
+> > +		break;
+> >  	default:
+> >  		return -EINVAL;
+> 
+> As I previously commented, I would prefer to have a highl-level
+> interface per specific mailbox item you transfer, but I think that
+> is something we can debate, in particular if Greg or the x86
+> maintainers think it's ok, I'm not going to object.
+> 
+> However, having a combined ioctl command and data structure
+> for rmi_mailbox_xfer(), rmi_cpuid_read() and the commands
+> you add later seems to cause a lot of the extra complexity,
+> and I think this really has to be done differently, using
+> distinct ioctl command numbers for each of them, with an
+> appropriate structure to go along with it.
+> 
+> This does mean the existing userspace tool will be incompatible
+> with the upstream driver, but it can be easily updated to
+> support both kernel interfaces (trying the new one first,
+> and falling back to the old on after -ENOTTY).
 
-Fixes: cc0876f817d6 ("vfs: Convert devpts to use the new mount API")
-Reported-by: Debarshi Ray <dray@redhat.com>
-Closes: https://github.com/containers/podman/issues/25751
-Signed-off-by: Giuseppe Scrivano <gscrivan@redhat.com>
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Eric Sandeen <sandeen@redhat.com>
-cc: linux-fsdevel@vger.kernel.org
----
- fs/devpts/inode.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Different structures per ioctl is the way to go.  It's more
+self-describing and easier to audit for reviewing that the code is
+working properly both in userspace and in the kernel (i.e. tools like
+strace work better.)
 
-diff --git a/fs/devpts/inode.c b/fs/devpts/inode.c
-index 42e4d6eeb29f..9c20d78e41f6 100644
---- a/fs/devpts/inode.c
-+++ b/fs/devpts/inode.c
-@@ -89,12 +89,12 @@ enum {
- };
- 
- static const struct fs_parameter_spec devpts_param_specs[] = {
--	fsparam_u32	("gid",		Opt_gid),
-+	fsparam_gid	("gid",		Opt_gid),
- 	fsparam_s32	("max",		Opt_max),
- 	fsparam_u32oct	("mode",	Opt_mode),
- 	fsparam_flag	("newinstance",	Opt_newinstance),
- 	fsparam_u32oct	("ptmxmode",	Opt_ptmxmode),
--	fsparam_u32	("uid",		Opt_uid),
-+	fsparam_uid	("uid",		Opt_uid),
- 	{}
- };
- 
+So I agree with you here.
 
+thanks,
+
+greg k-h
