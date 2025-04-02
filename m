@@ -1,134 +1,135 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout-a4-smtp.messagingengine.com (fout-a4-smtp.messagingengine.com [103.168.172.147])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF2E72AE77;
-	Wed,  2 Apr 2025 08:06:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A5A51A5BB0;
+	Wed,  2 Apr 2025 08:07:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743581215; cv=none; b=cWrEH6TiQNRxbAPEdRJMRiPK0ZfzV3T1CuDxebL+wUinxkxCjGvWwWeTQtlM2blwm8LFOLeoF009OlaFdAEo97/vLESV05xVHwAEVqSb3597yfh1EVRYqTOed4m8XURQ6BwEOhynDyf4aQzscsgwFp7ld9QVyeJTXjvYmKwIdfk=
+	t=1743581262; cv=none; b=Xlu2eWSmehrpSVelxMCjT3JfD8wPdG35l6smUxt4zVMuC40qONlgj9RAbAE5lp0h/hvv5MMjG5lrOWId5AEgNT0XDVy7gaKb1A/XV0ahmmKOTq70tIikUJazin2e6rzUt+K0bZ6ZEBFHC8IPfbd/zwyRp4IeDbR8jje5CZvmRv0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743581215; c=relaxed/simple;
-	bh=/VjWcZ5cH+0vCcujemH1+2cZi3cTODx4qemJPcVGxqk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jBlRV5LJh/F9+rrXqgJ5QJmZ1jKZusJoGKmLUP5veYFO6hhVo1z1i/7F5jRx1BB6d3Qzuv+BmravGYnQjcdbX/BU2kfEtLrg2iSfUI4cC5B0tfCTCfGB9cHT0Wg6v0DE8wRWXCCnpH5a9ft4VZFP7yNaPdcdzsaueXeuy7J7jnI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mbyweyVm; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743581262; c=relaxed/simple;
+	bh=dILsRyul19rRohUBWYDTKQTUeRSXe9LRlKp+uzuo8to=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ow4Ggtwb8yMectilK10FMGYV1UiYH9LJ51MhREMMzE6+/ugqA8lFap9E8xZKLKLGCMTC0eYIqkZRREdCSa4mA+uWW3wagaDrxY5IjXK0xCkCzRIwccvqrT7hISM3oPmC2nazrbZoS5xwmaMrGfw/9UAJ0XqRI43TIkAhxauGfR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com; spf=pass smtp.mailfrom=kroah.com; dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b=WZ0r+nuy; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=qcJ0CwLz; arc=none smtp.client-ip=103.168.172.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kroah.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mbyweyVm"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-22622ddcc35so54767975ad.2;
-        Wed, 02 Apr 2025 01:06:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743581212; x=1744186012; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XKmxocXjRUA/4+7XD5VePtJPwnQ6HQ3HUsu9TwT0U+k=;
-        b=mbyweyVm18wNPgYVsVVIosOcHGlMsdziUE8wJDyHMtPrEYQ6dhGFFjpsjP21PS0Vjp
-         gRkRM2Qk57OJ/TirXoi+iq4Uem57lBNZipFCv7Obgord6K6LOW3OpBs01qTVz2degCGU
-         8iR8S4/U+o7AEU8pmXp5JM63O6ume6RCaeRH8ziSLvoW4nXONAYzUczS75/p30t/gg84
-         WhBtYxgKJBW0NiiuKSoDq53ar5No66+D+ZjZmA8atCa0j1dtnbGs4RSJmJVai0kP1s1f
-         ypJrYNjiiOoSpTy12z78/ZRf8IZpGM0wFkB7oBixk8lm8AfXZK69l1mOuRo8BJQXFN0A
-         Wayw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743581212; x=1744186012;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XKmxocXjRUA/4+7XD5VePtJPwnQ6HQ3HUsu9TwT0U+k=;
-        b=VOnhvo/3HvdoeKQ+LTc9zkqOXjRMygCJPuh8ilrW2+3Vv1jL4wpXJbjf6dniXynC9F
-         bFSuJqmRuXojP+apdoRDbplx2cyMvY+0241vIg0KmIgLoFjukSps8IYYfj6mb+R2+O8X
-         SYuxASjloUoouS3DrgySUQbZer5s5Xi+nVjREnTGLDWIdZL70sp+Lp3Hdt8g8sP91BmL
-         IEZcgBvZoGdCotWKbD7W8eTxZ8U4u5+ZRwLpWUX1A37ghuOy7HZs72dNJzlcFoOE56AN
-         Xnyvjyl3kLher1ykrX/pRqYOxOtJ3ImJm7c1DS8fTequ3645u7HqI/C/jKQ7zN2S+T6p
-         3Gpg==
-X-Forwarded-Encrypted: i=1; AJvYcCWMk5/NPa8KAetucwFUeyNQgGatGNpvJefnMTijNrDiRY7vT+jV8m0VwMdyFEny10U6ljN6sSqqiY5r/c0=@vger.kernel.org, AJvYcCX4aymH/Ju3YIhM2gUOtQV5BmOZ7CD72nf06PL3i8DmJNAtxPWuyge9MPvmOWD2abSlO4MnuGM6/ykD@vger.kernel.org
-X-Gm-Message-State: AOJu0YynalgDbEUfcujj1LLLm7+oD4IJ0tJyvK7hKZY8CIzvzSKvD+wF
-	h0X8xQeGk0mWJuJypu6dy8sb4sm+Sq6Mwc/IjPsINYxRygj1yK5/
-X-Gm-Gg: ASbGncsuorqi6CSXFPfG6/8A0SluLhtfRORlJnbLafhF2O+UUFZlQvKPOblrjceYXlr
-	rfikwQTuq5dKYcryQBlnhL4PKPf9U7fEk7JBtTyZAcjfvK6kPU8dScuJ3WJ4vqm6HY8EGPvEfCI
-	CrNNsYSu3Bs3c/axqgeG2TR59aTVQQf5gEqAjTReVlTEcMzIUDlFOUaBzJNAOwud57ZPIS9noQh
-	rqBdA+RKIrkUld+T4McU6rMpVujhfVUq8vD9JXhlM2ZcsMTRwNh3EQYC7/RbBkbb87zDqoe93SX
-	OK8rF6fNfbSJOmh4AB1AbCyzwx6JbxTW98ZoHrQmUoxy9zuqKs//IbeMOnTrUsP3mmB6
-X-Google-Smtp-Source: AGHT+IG2F8OBzvyqb24RWg2VBhzCvhJab9tiERehzg+VCEhjAAZnxtN+DMo7uNe4mpJxkLUIzqh6TA==
-X-Received: by 2002:a05:6a00:1945:b0:736:a8db:93b8 with SMTP id d2e1a72fcca58-739c784f91bmr2353308b3a.3.1743581211895;
-        Wed, 02 Apr 2025 01:06:51 -0700 (PDT)
-Received: from mi-ThinkStation-K.mioffice.cn ([43.224.245.231])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739710dccbdsm10639665b3a.179.2025.04.02.01.06.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Apr 2025 01:06:51 -0700 (PDT)
-From: Ying Lu <luying526@gmail.com>
-To: oneukum@suse.com,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com
-Cc: netdev@vger.kernel.org,
-	linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	gregkh@linuxfoundation.org,
-	Ying Lu <luying1@xiaomi.com>
-Subject: [PATCH v3 1/1] usbnet:fix NPE during rx_complete
-Date: Wed,  2 Apr 2025 16:06:29 +0800
-Message-ID: <11211b6967816ce4eac2ff5341d78b09de4f6747.1743580881.git.luying1@xiaomi.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <cover.1743580881.git.luying1@xiaomi.com>
-References: <cover.1743580881.git.luying1@xiaomi.com>
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="WZ0r+nuy";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="qcJ0CwLz"
+Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
+	by mailfout.phl.internal (Postfix) with ESMTP id 317BC13801E1;
+	Wed,  2 Apr 2025 04:07:39 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-12.internal (MEProxy); Wed, 02 Apr 2025 04:07:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1743581259;
+	 x=1743667659; bh=AiQWnnkwVCft+VdCJ47zJgEAcjD9KFU9Ll8SRROiTHo=; b=
+	WZ0r+nuy/zKfN+f/tfyiflR/qMtPUfnSJGU5+WMUfZFIpVl3NodzWmdxBSmjQjpy
+	h2jfbL1Gl2wX9GiZVdLrH0f1aXER6oRcowRsGLasgPBWLQ6mbXtnKeRy+YwIdCCu
+	PQZCRLuiWNrxBASZtIb7PImhANASsxMssvecKnQUmCvB41N4Sbel84BrvQ1Xww5m
+	qWVfD3PQDizPibdrJHhwLbc8hufI/Sb8mfGsE+iJphodtYaaFGz0PAqu/K+cr1mO
+	LF3rLQnvrnu5RJ2qkyXvTzsqDRxHVv4ZSwl5bMCCC3qb8gxS06RYyc8TXjN7aX6G
+	6kARneTKjpY8XmipERzc4g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1743581259; x=
+	1743667659; bh=AiQWnnkwVCft+VdCJ47zJgEAcjD9KFU9Ll8SRROiTHo=; b=q
+	cJ0CwLzvPFZYr6PvejgvoxUn4WC6sq11eJf31xD7XVPKxQfykc4rzr1erRurgJGh
+	swqn5zAwiqjvmJzNUlShb493vrLEURCoM9UnHIrZ5OOdayruzxbUnhOrqAXotBje
+	FKLX1i760RJrDnOkU7aFAU+v79MsSalhy2Hjwtk5bsauR8MDJvaMguB3ey0mbm5Z
+	ORyujnU+R2peMh/ZAu6zEGhRMcX3wfmEdGQSGWHeBJ/nvKsn0pejicE76mtP9lvQ
+	JqoQTWViJ/XMYQyigRShv/jkUJBrELnQmMFnPcCiWsXPkT+sGQq1fR8Q3TT8gV9y
+	/Oq4GpgdfY1HIvXcYEm4g==
+X-ME-Sender: <xms:SvDsZ83E-eGyaFokdheVlblRV3zkKFIgyJTx_Z3uQQxej2KXzChcRg>
+    <xme:SvDsZ3EVGxkY6leuxLcaKptaktqcPvrzZqN_IZI71IOcijRsEGhoKNCMSy1DSZvGF
+    TYVtFVrfe5RAw>
+X-ME-Received: <xmr:SvDsZ07_V7-ndsczdCI6x-Unftg0vF_XPznuc4dGDpnZIa_S4OifbvdkyUY>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddukeehudegucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggugfgjsehtkeertddt
+    tdejnecuhfhrohhmpefirhgvghcumffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenuc
+    ggtffrrghtthgvrhhnpeelkeehjeejieehjedvteehjeevkedugeeuiefgfedufefgfffh
+    feetueeikedufeenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrh
+    fuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorghhrdgt
+    ohhmpdhnsggprhgtphhtthhopedvtddpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoh
+    epmhgrrhhkuhhsrdgvlhhfrhhinhhgseifvggsrdguvgdprhgtphhtthhopehqrghsuggv
+    vhdttdesghhmrghilhdrtghomhdprhgtphhtthhopehlihhnuhigqdhinhhpuhhtsehvgh
+    gvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshihiigsohhtodguhedvtdegtggs
+    sgguugelvddufhdufhejtggrugesshihiihkrghllhgvrhdrrghpphhsphhothhmrghilh
+    drtghomhdprhgtphhtthhopehsthgrsghlvgesvhhgvghrrdhkvghrnhgvlhdrohhrghdp
+    rhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+    dprhgtphhtthhopegsvghnthhishhssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehj
+    rghsohhnrdhgvghrvggtkhgvseifrggtohhmrdgtohhmpdhrtghpthhtohepjhhikhhosh
+    eskhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:SvDsZ100o8xkKJ9wsMArBEJaHJe7mgI7ojaGpo-4bFn8iy3BM-yjzw>
+    <xmx:SvDsZ_GdiOrF0aZj3SZlWgHjjd64BvDRZYtTR-BE13g7nR9cO3Ghvw>
+    <xmx:SvDsZ-9hJLMmJWWNZwTFgWG1dg-Csl7sxotaYq-dNOAZYqM7xokiYA>
+    <xmx:SvDsZ0n-a_NQ_0hBnFaKC39RQcOueZsHr6apxYuFispc7hiBr8aWMw>
+    <xmx:S_DsZ_nbQHsgkUhVffWcD5x_93c5jGKtWG8P5zk4-o8S_87JBXes6lZU>
+Feedback-ID: i787e41f1:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 2 Apr 2025 04:07:38 -0400 (EDT)
+Date: Wed, 2 Apr 2025 09:06:06 +0100
+From: Greg KH <greg@kroah.com>
+To: Markus Elfring <Markus.Elfring@web.de>
+Cc: Qasim Ijaz <qasdev00@gmail.com>, linux-input@vger.kernel.org,
+	syzbot+d5204cbbdd921f1f7cad@syzkaller.appspotmail.com,
+	stable@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+	Benjamin Tissoires <bentiss@kernel.org>,
+	Jason Gerecke <jason.gerecke@wacom.com>,
+	Jiri Kosina <jikos@kernel.org>, Ping Cheng <ping.cheng@wacom.com>
+Subject: Re: [PATCH v2] HID: wacom: fix shift OOB in kfifo allocation for
+ zero pktlen
+Message-ID: <2025040200-serotonin-equivocal-b264@gregkh>
+References: <20250401214703.7809-1-qasdev00@gmail.com>
+ <1f6f6fe9-ae81-4154-8553-dfb4ca2b1cd2@web.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <1f6f6fe9-ae81-4154-8553-dfb4ca2b1cd2@web.de>
 
-From: Ying Lu <luying1@xiaomi.com>
+On Wed, Apr 02, 2025 at 10:03:25AM +0200, Markus Elfring wrote:
+> …
+> > To fix this, we should handle cases where wacom_compute_pktlen()
+> > results in 0.
+> 
+> See also once more:
+> https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?h=v6.14#n94
+> 
+> Regards,
+> Markus
+> 
 
-Missing usbnet_going_away Check in Critical Path.
-The usb_submit_urb function lacks a usbnet_going_away
-validation, whereas __usbnet_queue_skb includes this check.
+Hi,
 
-This inconsistency creates a race condition where:
-A URB request may succeed, but the corresponding SKB data
-fails to be queued.
+This is the semi-friendly patch-bot of Greg Kroah-Hartman.
 
-Subsequent processes:
-(e.g., rx_complete → defer_bh → __skb_unlink(skb, list))
-attempt to access skb->next, triggering a NULL pointer
-dereference (Kernel Panic).
+Markus, you seem to have sent a nonsensical or otherwise pointless
+review comment to a patch submission on a Linux kernel developer mailing
+list.  I strongly suggest that you not do this anymore.  Please do not
+bother developers who are actively working to produce patches and
+features with comments that, in the end, are a waste of time.
 
-Fixes: 04e906839a05 ("usbnet: fix cyclical race on disconnect with work queue")
-Signed-off-by: Ying Lu <luying1@xiaomi.com>
----
- drivers/net/usb/usbnet.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Patch submitter, please ignore Markus's suggestion; you do not need to
+follow it at all.  The person/bot/AI that sent it is being ignored by
+almost all Linux kernel maintainers for having a persistent pattern of
+behavior of producing distracting and pointless commentary, and
+inability to adapt to feedback.  Please feel free to also ignore emails
+from them.
 
-diff --git a/drivers/net/usb/usbnet.c b/drivers/net/usb/usbnet.c
-index 44179f4e807f..5161bb5d824b 100644
---- a/drivers/net/usb/usbnet.c
-+++ b/drivers/net/usb/usbnet.c
-@@ -519,7 +519,8 @@ static int rx_submit (struct usbnet *dev, struct urb *urb, gfp_t flags)
- 	    netif_device_present (dev->net) &&
- 	    test_bit(EVENT_DEV_OPEN, &dev->flags) &&
- 	    !test_bit (EVENT_RX_HALT, &dev->flags) &&
--	    !test_bit (EVENT_DEV_ASLEEP, &dev->flags)) {
-+	    !test_bit (EVENT_DEV_ASLEEP, &dev->flags) &&
-+	    !usbnet_going_away(dev)) {
- 		switch (retval = usb_submit_urb (urb, GFP_ATOMIC)) {
- 		case -EPIPE:
- 			usbnet_defer_kevent (dev, EVENT_RX_HALT);
-@@ -540,8 +541,7 @@ static int rx_submit (struct usbnet *dev, struct urb *urb, gfp_t flags)
- 			tasklet_schedule (&dev->bh);
- 			break;
- 		case 0:
--			if (!usbnet_going_away(dev))
--				__usbnet_queue_skb(&dev->rxq, skb, rx_start);
-+			__usbnet_queue_skb(&dev->rxq, skb, rx_start);
- 		}
- 	} else {
- 		netif_dbg(dev, ifdown, dev->net, "rx: stopped\n");
--- 
-2.49.0
+thanks,
 
+greg k-h's patch email bot
