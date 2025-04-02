@@ -1,103 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F26C62376F7;
-	Wed,  2 Apr 2025 12:55:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3296E218ADD;
+	Wed,  2 Apr 2025 12:55:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743598528; cv=none; b=E/1PKff598L8O1uA+vNKNpC2LDzaWXPMvvZO8dhgh8sW5ecl4L9PFh1gczLkgwjKxxD4X8jxqJqfJVVvE+BEX9WmKUyzM4dbn7xWqIMyUOmY1Bu1/2wr2sY7I77VZ8c+ttzkp1effRTneGR8LV9whd1OIsniZ8V80JEadyWZSpM=
+	t=1743598545; cv=none; b=hvMKQmYQ1Eqd+T/JQf2YOk0qAeNMnGRaKwTFFbGcA3ljdOmhfhvq7AlZBAxmvUCSyPakvBs07vG1TVdhG6+DCcNAgalfjplIBmAdLGzgYpaJFTsOLLMakgwuu1BWuCh4PFAxHrfCx8UehoVBVKOsVGY+8Y0ci4CMnJcLMAD+S6k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743598528; c=relaxed/simple;
-	bh=KLUcO4PETxRtJ7bSzZDcl4QzL3KsG5+5Tq3fAEUTpLQ=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=C/MBhKiXO3h62QCY3BgPMjq2f04Sgqln4eWoUgf6wM7Ll3aUp42/LimVokcKLdrQtmatbl3dyG+Glp38Ia00pGArgyhufPBQCP8Tl3skQWQ6KJ9iYmy3PttvWSjNiFI7mtSo6mwzWG8H8ylVb8/KFH0aqsfKPHA3yrbLSdkeWoY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IXkHxxk4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743598545; c=relaxed/simple;
+	bh=TXtLquoRRAqtrc02VbnTtQ9X9BjOAMh9LtUpk4wHJVY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HNoFK9zuKGOX64cpRiTU8MaSLZIwLur4E34V/MNt5rMaI+3Oj4BW8SvtWEpZR2xIS0frE6IqIZ3QYfrj7EsBnBj5/+ygiq7vhEYH1Hw/TuDb5kF+dRAnKuP+Sb+nDpf21xoXgAoaEws0WUKYXMKfO7i9ReemIlTVkridj6ghvN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LSs8p4TL; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IXkHxxk4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2860C4CEDD;
-	Wed,  2 Apr 2025 12:55:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743598527;
-	bh=KLUcO4PETxRtJ7bSzZDcl4QzL3KsG5+5Tq3fAEUTpLQ=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=IXkHxxk41GO44tK70RVcRfKfgdhBtcyxVbaLKM7n4Z3jxTjVgb3zuO0Sb3Dzzu+22
-	 wdHoqCt+9NhCXNfexVLwZU1cheoCxr6z97bLZF5ZMoGy/p3Kg0kGcKtU0mcka0FdhB
-	 LRJGQD+ODZNaI6ID56uO1l9rR7hjfxaD5is34slsc3l+sRBEt05yah6cGDXNSSr1+o
-	 vVAXjen+z1rwrHTUvB1Rzg+wQ0F9Gs6+O2Fy6nbLmVtfQ2dc03MGPh2pCCddjauqNR
-	 d9rBiHU91AUWGHp2Y3l86l3+Jly/zOTeMBsW7/Fbp7FMRR+g2jWIkcW/QhwNQ+frK7
-	 zlCYyYqqzbigA==
-Date: Wed, 02 Apr 2025 07:55:26 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LSs8p4TL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743598545; x=1775134545;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=TXtLquoRRAqtrc02VbnTtQ9X9BjOAMh9LtUpk4wHJVY=;
+  b=LSs8p4TLXKntODjuiLjsV3xe8XE1hMKVbTOLuYg7aLvJJZWapRbXcjU/
+   XKNgUjBDeOEykp+XFBr2koeVRtETY7fCI6KooWWQLdYYAHsxwVwD/MFfD
+   nJ13QaRIod5DKhI7dPECALqveoW4yDloFIW+D0XOqQPnaZFXiWSY299u7
+   6iPitRKgev4ou10EZsuRyqAoTUAZ7s/MZP8tmNIi3pBSpZMqNXKBibFk8
+   yNPPIllo/iCiVvCLcHJnUQcrUT6MECkWu+0vOWb7bSXmQdV+CsOiBhrSW
+   F7huz5TWeXUbHaBCX7JgHHnw/W6WdbEHkuzTaKx8lTtPiwtlT2X7ZdgxU
+   Q==;
+X-CSE-ConnectionGUID: 6zoZj8oeSYW8RhVMqWAKFQ==
+X-CSE-MsgGUID: SxfbFDUPRFauchmAwORIHQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11392"; a="55955133"
+X-IronPort-AV: E=Sophos;i="6.15,182,1739865600"; 
+   d="scan'208";a="55955133"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 05:55:44 -0700
+X-CSE-ConnectionGUID: zOjX9rwPToG2JDLyvrPKUA==
+X-CSE-MsgGUID: LT6rlRGDQG61zNwAkljtKg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,182,1739865600"; 
+   d="scan'208";a="126650218"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 05:55:42 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tzxd4-00000008ToG-2Zb4;
+	Wed, 02 Apr 2025 15:55:38 +0300
+Date: Wed, 2 Apr 2025 15:55:38 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, vbabka@suse.cz,
+	torvalds@linux-foundation.org, intel-wired-lan@lists.osuosl.org,
+	netdev@vger.kernel.org
+Subject: Re: [RFC] slab: introduce auto_kfree macro
+Message-ID: <Z-0zykUvrF-73MXI@smile.fi.intel.com>
+References: <20250401134408.37312-1-przemyslaw.kitszel@intel.com>
+ <Z-0SU8cYkTTbprSh@smile.fi.intel.com>
+ <20250402122104.GK25239@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: linux-kernel@vger.kernel.org, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- linux-remoteproc@vger.kernel.org, 
- Mathieu Poirier <mathieu.poirier@linaro.org>, hailong.fan@mediatek.com, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
- Bjorn Andersson <andersson@kernel.org>, 
- Xiangzhi Tang <Xiangzhi.Tang@mediatek.com>, 
- linux-mediatek@lists.infradead.org, 
- Project_Global_Chrome_Upstream_Group@mediatek.com, jjian.zhou@mediatek.com, 
- Conor Dooley <conor+dt@kernel.org>, 
- Matthias Brugger <matthias.bgg@gmail.com>
-To: Xiangzhi Tang <xiangzhi.tang@mediatek.com>
-In-Reply-To: <20250402092134.12293-2-xiangzhi.tang@mediatek.com>
-References: <20250402092134.12293-1-xiangzhi.tang@mediatek.com>
- <20250402092134.12293-2-xiangzhi.tang@mediatek.com>
-Message-Id: <174359852621.53914.11998352307162389918.robh@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: remoteproc: Add VCP support for
- mt8196
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250402122104.GK25239@noisy.programming.kicks-ass.net>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-
-On Wed, 02 Apr 2025 17:19:24 +0800, Xiangzhi Tang wrote:
-> Add the new binding document for MediaTek Video Companion
-> Processor(VCP) on MediaTek mt8196.
+On Wed, Apr 02, 2025 at 02:21:04PM +0200, Peter Zijlstra wrote:
+> On Wed, Apr 02, 2025 at 01:32:51PM +0300, Andy Shevchenko wrote:
+> > What would be better in my opinion is to have it something like DEFINE_*()
+> > type, which will look more naturally in the current kernel codebase
+> > (as we have tons of DEFINE_FOO().
+> > 
+> > 	DEFINE_AUTO_KFREE_VAR(name, struct foo);
 > 
-> Signed-off-by: Xiangzhi Tang <xiangzhi.tang@mediatek.com>
-> ---
->  .../remoteproc/mediatek,mt8196-vcp.yaml       | 174 ++++++++++++++++++
->  1 file changed, 174 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/remoteproc/mediatek,mt8196-vcp.yaml
-> 
+> Still weird. Much better to have the compiler complain about the
+> obvious use of uninitialized.
 
-My bot found errors running 'make dt_binding_check' on your patch:
+That would be ideal!
 
-yamllint warnings/errors:
+-- 
+With Best Regards,
+Andy Shevchenko
 
-dtschema/dtc warnings/errors:
-Documentation/devicetree/bindings/remoteproc/mediatek,mt8196-vcp.example.dts:26:18: fatal error: dt-bindings/power/mt8196-power.h: No such file or directory
-   26 |         #include <dt-bindings/power/mt8196-power.h>
-      |                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-compilation terminated.
-make[2]: *** [scripts/Makefile.dtbs:131: Documentation/devicetree/bindings/remoteproc/mediatek,mt8196-vcp.example.dtb] Error 1
-make[2]: *** Waiting for unfinished jobs....
-make[1]: *** [/builds/robherring/dt-review-ci/linux/Makefile:1522: dt_binding_check] Error 2
-make: *** [Makefile:248: __sub-make] Error 2
-
-doc reference errors (make refcheckdocs):
-Warning: Documentation/devicetree/bindings/remoteproc/mediatek,mt8196-vcp.yaml references a file that doesn't exist: Documentation/devicetree/bindings/mailbox/mediatek,mt8196-vcp-mbox.yaml
-Documentation/devicetree/bindings/remoteproc/mediatek,mt8196-vcp.yaml: Documentation/devicetree/bindings/mailbox/mediatek,mt8196-vcp-mbox.yaml
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250402092134.12293-2-xiangzhi.tang@mediatek.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
 
