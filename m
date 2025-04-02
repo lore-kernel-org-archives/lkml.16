@@ -1,313 +1,127 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FBFB235354
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 09:02:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C66BE2356CA;
+	Wed,  2 Apr 2025 09:03:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743584576; cv=none; b=LY6fOFuH1j+qqkuX9GmMVbCE2L5hfKBAkR6GQqJTcEmZnOw/vhvLfUPRKssjqzrlPZpPFkw7LdLy9q4WN+be3HhC0jEYeNppe6RRP9Uksssifu8o7GDbO9A0VyQ7en/c/NrL7zhpqGyNl/fgbke+wqN4TKh5R4sgChq3uxx26Oc=
+	t=1743584582; cv=none; b=RkNa9FnLI7tAXkoYo4+1wDguSpSZOC5t8UjggzEyymKtttCkLQiQfOISs31eY1HVyC6mJu8/jb63AQV166GwsIcyMMnIvAn6sY4SulQEfR4R83BoRqrM/sEZMxHAK5+8ROacIOeCXHnsE8hYpnCoqNjRTX56Aiib/Wok4NdwYrk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743584576; c=relaxed/simple;
-	bh=ktTx9xtc4Slo5Czxl/jNm8Y83TVDmYTQOH/8R2zzeRQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=faOEaI/PUC6ZFVs/crPYBIEEgX0zRxt1Q7/MvBHbk+3MjjHeqcJCsNoAY9ljzgsTvKUnf6FUsTtZAQ1BA0OUIZYRN1E+CrtTbE2KIdpat8upMgUP1L07XJFkhTfWdPlEvTgJLXR012PSAy1iPDFzoIQM3FAw2AP9D6X12+6LRyg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=up426dt/; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=VbQzgEAU; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=up426dt/; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=VbQzgEAU; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1743584582; c=relaxed/simple;
+	bh=kPI8+m6kjrBpwYbQqzYKlo2bm8lf82CiCj4PT2Ly8Yk=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=YfAQDLvjd7Ceyq1oykscZxcaUfLMFDX8H00YCv1luY6Gja+J0XsioK/Rj1BLG+REGVbNfdhxIEzGWN1VVATWovXF+MtN66ytLOPiICGs018HOq+3L0bYxavLq0m1NLrbgolFNgZmTAl72Q9OUR1ZYKD6RDosNIKtB5RkBxynTbY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=i5T7LZdI; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="up426dt/";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="VbQzgEAU";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="up426dt/";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="VbQzgEAU"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 9E0FA1F455;
-	Wed,  2 Apr 2025 09:02:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1743584571; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EOMQWK3ChVizaeK2FCjKPQYIKHNhrgOGcfTl9Rl4IG0=;
-	b=up426dt/AtPt3hmLYqxGQxSjgFbEJYSohTG3yILtK3WfJ5UrbJNAPo0wWePFvfrb/pW5OB
-	gBma+zH2pG8IHjJspy4E09Gsx9MpJB4lpaTaBRmCZ3yVCu65FeiWOX2rRnMdAgwPIVS68b
-	KhnxpNl2CPrwxqPZSR4xmD6F304dNT4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1743584571;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EOMQWK3ChVizaeK2FCjKPQYIKHNhrgOGcfTl9Rl4IG0=;
-	b=VbQzgEAUmcVoZNz5Sp8WYo5xWccRjKSP5mWDZOCQhhyTSr2MXXCvEDeK0m/5HQy6a+MaWO
-	4GNaTbPkr76+NwAg==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b="up426dt/";
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=VbQzgEAU
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1743584571; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EOMQWK3ChVizaeK2FCjKPQYIKHNhrgOGcfTl9Rl4IG0=;
-	b=up426dt/AtPt3hmLYqxGQxSjgFbEJYSohTG3yILtK3WfJ5UrbJNAPo0wWePFvfrb/pW5OB
-	gBma+zH2pG8IHjJspy4E09Gsx9MpJB4lpaTaBRmCZ3yVCu65FeiWOX2rRnMdAgwPIVS68b
-	KhnxpNl2CPrwxqPZSR4xmD6F304dNT4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1743584571;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EOMQWK3ChVizaeK2FCjKPQYIKHNhrgOGcfTl9Rl4IG0=;
-	b=VbQzgEAUmcVoZNz5Sp8WYo5xWccRjKSP5mWDZOCQhhyTSr2MXXCvEDeK0m/5HQy6a+MaWO
-	4GNaTbPkr76+NwAg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 6EA5B13A4B;
-	Wed,  2 Apr 2025 09:02:51 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id LHa2Gjv97GdOPAAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Wed, 02 Apr 2025 09:02:51 +0000
-Message-ID: <62dd026d-1290-49cb-a411-897f4d5f6ca7@suse.cz>
-Date: Wed, 2 Apr 2025 11:02:51 +0200
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="i5T7LZdI"
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5325gfaI010091;
+	Wed, 2 Apr 2025 11:02:52 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=selector1; bh=eskE5Y77HHK+7D5qMo1eVg
+	7hZS0cZSUbXVc6OhLjd/k=; b=i5T7LZdIOu29jzuGSXLTk+bXTYdWcjnB+ZybW4
+	jAA4mX1bYf61x4wCAsZ7zoq2V/yR7pS8jSqmdkNWNoSGE2KQHd1vcZOwbVMsXcbd
+	kk+yd4EoUIaiA2NyCAZveHU37oXaWUgbCljDpTnAp2hazrhErH+fD5qbCUeebBxu
+	oC7Du1IlC/ZGeVyCtj4JsxfL8NKOoMJI8R//WJHOca+BJjCk3a2h7KKM2MY0nNSj
+	HFFg19o9nckWfwJ/3qOOShlX9TLvWJaC0tjd/tLrLWOXm5RTu7a0FERm2OUZXEi2
+	ZCXFtfIIyy0ScqNhwxpbbno5WP9vvHGmdGBXebArW711jmOQ==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 45p6vd9g36-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 02 Apr 2025 11:02:52 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id E7160400B3;
+	Wed,  2 Apr 2025 11:01:48 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 45DDB8FCAFC;
+	Wed,  2 Apr 2025 11:00:38 +0200 (CEST)
+Received: from localhost (10.252.30.87) by SHFDAG1NODE1.st.com (10.75.129.69)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 2 Apr
+ 2025 11:00:37 +0200
+From: Benjamin Mugnier <benjamin.mugnier@foss.st.com>
+Subject: [PATCH v3 0/2] media: Add support for ST VD55G1 camera sensor
+Date: Wed, 2 Apr 2025 11:00:18 +0200
+Message-ID: <20250402-b4-vd55g1-v3-0-393985404759@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] locking/local_lock, mm: Replace localtry_ helpers with
- local_trylock_t type
-Content-Language: en-US
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, bpf@vger.kernel.org,
- daniel@iogearbox.net, andrii@kernel.org, martin.lau@kernel.org,
- akpm@linux-foundation.org, peterz@infradead.org, rostedt@goodmis.org,
- shakeel.butt@linux.dev, mhocko@suse.com, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-References: <20250401005134.14433-1-alexei.starovoitov@gmail.com>
- <20250402073032.rqsmPfJs@linutronix.de>
-From: Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <20250402073032.rqsmPfJs@linutronix.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 9E0FA1F455
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	RCPT_COUNT_TWELVE(0.00)[14];
-	ARC_NA(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FREEMAIL_TO(0.00)[linutronix.de,gmail.com];
-	MIME_TRACE(0.00)[0:+];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.cz:email,suse.cz:dkim,suse.cz:mid]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -3.01
-X-Spam-Flag: NO
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAKL87GcC/22NzQ7CIBAGX6XhLA0sRcGT72E88NtysBhoiKbpu
+ 0t70RqPs9mZb0bZpeAyOjczSq6EHOJYgR0aZAY19g4HWxkBAU4AONYdLpbznmJttSRWOyY1Q/X
+ /kZwPz611vVUeQp5iem3pQtfrv0qhmGBmuSICPPFKXnzMuc1Ta+J9zW4OA/HrCEuPulMn6WHvr
+ NsFPnsdod8uVJcYobRQnTCc791lWd7gzTAPFAEAAA==
+X-Change-ID: 20250225-b4-vd55g1-bdb90dbe39b3
+To: Benjamin Mugnier <benjamin.mugnier@foss.st.com>,
+        Sylvain Petinot
+	<sylvain.petinot@foss.st.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Sakari Ailus
+	<sakari.ailus@linux.intel.com>
+CC: <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+X-Mailer: b4 0.14.2
+X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-02_03,2025-04-01_01,2024-11-22_01
 
-On 4/2/25 09:30, Sebastian Andrzej Siewior wrote:
-> On 2025-03-31 17:51:34 [-0700], Alexei Starovoitov wrote:
->> From: Alexei Starovoitov <ast@kernel.org>
->> 
->> Partially revert commit 0aaddfb06882 ("locking/local_lock: Introduce localtry_lock_t").
->> Remove localtry_*() helpers, since localtry_lock() name might
->> be misinterpreted as "try lock".
-> 
-> So we back to what you suggested initially. I was more a fan of
-> explicitly naming things but if this is misleading so be it. So
-> 
-> Acked-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> 
-> While at it, could you look at the hunk below and check if it worth it?
-> The struct duplication and hoping that the first part remains the same,
-> is hoping. This still relies that the first part remains the same but…
+Hi,
 
-I've updated your fixups to v2
-https://lore.kernel.org/all/20250401205245.70838-1-alexei.starovoitov@gmail.com/
+This serie adds support for the STMicroelectronics VD55G1 camera sensor.
+The VD55G1 is a monochrome global shutter camera with a 804x704 maximum
+resolution with RAW8 and RAW10 bytes per pixel.
+Datasheets and other documentation can be found at st.com [1].
+A lot of inspiration was taken from the imx219 and the vd56g3 serie.
+It is compatible with libcamera. Tested on Raspberry Pi 4 and 5, with and
+without libcamera.
 
-and to support runtime local_trylock_init(), and it's at the end of my e-mail
+[1] https://www.st.com/en/imaging-and-photonics-solutions/vd55g1.html#documentation
 
-But I also thought we could go all the way with removing casting in
-that way and stop relying on the same layout implicitly.
-
-So I rewrote this:
-
-#define __local_lock_acquire(lock)                                      \
-        do {                                                            \
-                local_trylock_t *tl;                                    \
-                local_lock_t *l;                                        \
-                                                                        \
-                _Generic((lock),                                        \
-                        local_lock_t *: ({                      	\
-                                l = this_cpu_ptr(lock);                 \
-                        }),                                             \
-                        local_trylock_t *: ({                   	\
-                                tl = this_cpu_ptr(lock);                \
-                                l = &tl->llock;                         \
-                                lockdep_assert(tl->acquired == 0);      \
-                                WRITE_ONCE(tl->acquired, 1);            \
-                        }),                                             \
-                        default:(void)0);                               \
-                local_lock_acquire(l);                                  \
-        } while (0)
-
-But I'm getting weird errors:
-
-./include/linux/local_lock_internal.h:107:36: error: assignment to ‘local_trylock_t *’ from incompatible pointer type ‘local_lock_t *’ [-Wincompatible-pointer-types]
-  107 |                                 tl = this_cpu_ptr(lock);                \
-
-coming from the guard expansions. I don't understand why it goes to the
-_Generic() "branch" of local_trylock_t * with a local_lock_t *.
-
-----8<----
-From eeeb928ccc6d86e93cb573fb93ce4f6aeb8576fb Mon Sep 17 00:00:00 2001
-From: Vlastimil Babka <vbabka@suse.cz>
-Date: Wed, 2 Apr 2025 10:13:28 +0200
-Subject: [PATCH] fixup! locking/local_lock, mm: Replace localtry_ helpers with
- local_trylock_t type
+Regards,
+Benjamin
 
 ---
- include/linux/local_lock.h          |  5 +++++
- include/linux/local_lock_internal.h | 23 +++++++++++++----------
- mm/memcontrol.c                     |  2 +-
- 3 files changed, 19 insertions(+), 11 deletions(-)
+Changes in v3:
+- Add maxItems to data-lanes in binding
+- Drop redondant 'binding' in binding commit message
+- Link to v2: https://lore.kernel.org/r/20250401-b4-vd55g1-v2-0-0c8ab8a48c55@foss.st.com
 
-diff --git a/include/linux/local_lock.h b/include/linux/local_lock.h
-index 7ac9385cd475..16a2ee4f8310 100644
---- a/include/linux/local_lock.h
-+++ b/include/linux/local_lock.h
-@@ -51,6 +51,11 @@
- #define local_unlock_irqrestore(lock, flags)			\
- 	__local_unlock_irqrestore(lock, flags)
- 
-+/**
-+ * local_lock_init - Runtime initialize a lock instance
-+ */
-+#define local_trylock_init(lock)	__local_trylock_init(lock)
-+
- /**
-  * local_trylock - Try to acquire a per CPU local lock
-  * @lock:	The lock variable
-diff --git a/include/linux/local_lock_internal.h b/include/linux/local_lock_internal.h
-index 2389ae4f69a6..6ccb2c4ef86f 100644
---- a/include/linux/local_lock_internal.h
-+++ b/include/linux/local_lock_internal.h
-@@ -17,15 +17,8 @@ typedef struct {
- 
- /* local_trylock() and local_trylock_irqsave() only work with local_trylock_t */
- typedef struct {
--#ifdef CONFIG_DEBUG_LOCK_ALLOC
--	struct lockdep_map	dep_map;
--	struct task_struct	*owner;
--#endif
--	/*
--	 * Same layout as local_lock_t with 'acquired' field at the end.
--	 * (local_trylock_t *) will be cast to (local_lock_t *).
--	 */
--	int acquired;
-+	local_lock_t	llock;
-+	int		acquired;
- } local_trylock_t;
- 
- #ifdef CONFIG_DEBUG_LOCK_ALLOC
-@@ -37,6 +30,9 @@ typedef struct {
- 	},						\
- 	.owner = NULL,
- 
-+# define LOCAL_TRYLOCK_DEBUG_INIT(lockname)		\
-+	.llock = { LOCAL_LOCK_DEBUG_INIT((lockname).llock) },
-+
- static inline void local_lock_acquire(local_lock_t *l)
- {
- 	lock_map_acquire(&l->dep_map);
-@@ -64,6 +60,7 @@ static inline void local_lock_debug_init(local_lock_t *l)
- }
- #else /* CONFIG_DEBUG_LOCK_ALLOC */
- # define LOCAL_LOCK_DEBUG_INIT(lockname)
-+# define LOCAL_TRYLOCK_DEBUG_INIT(lockname)
- static inline void local_lock_acquire(local_lock_t *l) { }
- static inline void local_trylock_acquire(local_lock_t *l) { }
- static inline void local_lock_release(local_lock_t *l) { }
-@@ -71,6 +68,7 @@ static inline void local_lock_debug_init(local_lock_t *l) { }
- #endif /* !CONFIG_DEBUG_LOCK_ALLOC */
- 
- #define INIT_LOCAL_LOCK(lockname)	{ LOCAL_LOCK_DEBUG_INIT(lockname) }
-+#define INIT_LOCAL_TRYLOCK(lockname)	{ LOCAL_TRYLOCK_DEBUG_INIT(lockname) }
- 
- #define __local_lock_init(lock)					\
- do {								\
-@@ -80,9 +78,11 @@ do {								\
- 	lockdep_init_map_type(&(lock)->dep_map, #lock, &__key,  \
- 			      0, LD_WAIT_CONFIG, LD_WAIT_INV,	\
- 			      LD_LOCK_PERCPU);			\
--	local_lock_debug_init((local_lock_t *)lock);		\
-+	local_lock_debug_init(lock);				\
- } while (0)
- 
-+#define __local_trylock_init(lock) __local_lock_init(lock.llock)
-+
- #define __spinlock_nested_bh_init(lock)				\
- do {								\
- 	static struct lock_class_key __key;			\
-@@ -215,12 +215,15 @@ typedef spinlock_t local_lock_t;
- typedef spinlock_t local_trylock_t;
- 
- #define INIT_LOCAL_LOCK(lockname) __LOCAL_SPIN_LOCK_UNLOCKED((lockname))
-+#define INIT_LOCAL_TRYLOCK(lockname) __LOCAL_SPIN_LOCK_UNLOCKED((lockname))
- 
- #define __local_lock_init(l)					\
- 	do {							\
- 		local_spin_lock_init((l));			\
- 	} while (0)
- 
-+#define __local_trylock_init(l)			__local_lock_init(l)
-+
- #define __local_lock(__lock)					\
- 	do {							\
- 		migrate_disable();				\
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index bca86961754e..0401fb7b6c6a 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -1754,7 +1754,7 @@ struct memcg_stock_pcp {
- #define FLUSHING_CACHED_CHARGE	0
- };
- static DEFINE_PER_CPU(struct memcg_stock_pcp, memcg_stock) = {
--	.stock_lock = INIT_LOCAL_LOCK(stock_lock),
-+	.stock_lock = INIT_LOCAL_TRYLOCK(stock_lock),
- };
- static DEFINE_MUTEX(percpu_charge_mutex);
- 
+Changes in v2:
+- Fix device tree binding mistakes
+- Drop linux media git from MAINTAINERS file
+- Fix coding style mistakes
+- Drop vd55g1_err_probe wrapper
+- Fix 32bits build
+- Fix config symbol help paragraph being too short for checkpatch
+- Link to v1: https://lore.kernel.org/r/20250328-b4-vd55g1-v1-0-8d16b4a79f29@foss.st.com
+
+---
+Benjamin Mugnier (2):
+      media: dt-bindings: Add ST VD55G1 camera sensor
+      media: i2c: Add driver for ST VD55G1 camera sensor
+
+ .../devicetree/bindings/media/i2c/st,vd55g1.yaml   |  133 ++
+ MAINTAINERS                                        |    9 +
+ drivers/media/i2c/Kconfig                          |   11 +
+ drivers/media/i2c/Makefile                         |    1 +
+ drivers/media/i2c/vd55g1.c                         | 1993 ++++++++++++++++++++
+ 5 files changed, 2147 insertions(+)
+---
+base-commit: b2c4bf0c102084e77ed1b12090d77a76469a6814
+change-id: 20250225-b4-vd55g1-bdb90dbe39b3
+
+Best regards,
 -- 
-2.49.0
-
+Benjamin Mugnier <benjamin.mugnier@foss.st.com>
 
