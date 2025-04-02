@@ -1,177 +1,271 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 938601EF37D
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 11:11:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60BF41EF37D;
+	Wed,  2 Apr 2025 11:11:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743592262; cv=none; b=mUqZai6di6gXPTU/VJ/EU0j5dvRFQFBq1WsR6ryjVWJMVaNy+LbK0GFHLBZr9m2cVPH0S0IjzzErpMgAH4+VaUu2nnZCL27Z2cvzbtswpXA+cfZ6zY9dP7Kn7YSnZnD8p5oSOYfHcdV6wA42EVXtii3MxXFdFVx2KYCOvlNopIE=
+	t=1743592312; cv=none; b=P12qKwBwYfm0EaPphondCGF4IcYMZ/W51OtRGArFe2J7ZwEz2BUE579J+iU8dCSH1ukTc0GSa54gQxpaNziA8tk/uKUt6SB/ncYqk49njggVPtGUkJbetZVbrv9JX4zcaDCXsuUy8JpNyJfradd+rMAv6kOX/Rk5LAc9sfuZJF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743592262; c=relaxed/simple;
-	bh=EWrgD18r2nfU1tBqbRK5IiJug7+Vse8FsJKY0eEvPCg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SPP6vF9Dqfewr7I0wEPmvCIgmHrt6oi0NhU4ksxtHUn+a4Lw455cw/pOkKs/KS+ROzHW8gOy+hK0EwGNL4RyobrsUW9xfBkgQkH7XnTeIBK4cbpfb2VBiRLIBSdQJ81fg1vVcH1sgYuRCutKg8lKMzCJf+T8rM4T19j1PGltu2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cLnfcCH4; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1743592312; c=relaxed/simple;
+	bh=UqhKSL65Dxgk2dVyb4tCArOqKN+10TQqPqttHJ0QJO8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=G6V1XTjT9C6BZArYJNoeuGnsUxQ5h3YaLroFo/By86RBpOfUN9x95Vg5+DPxRsLK4BerX14th285qZDRV9o9oTL3lufQ1U/08MnxI/BI7sobui1BCI4XYKoWQkBx4pxDDpRkgwu9PNBuH0Iqy0QWzD8MyFsXVQkRX8a8Yr9t9J0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Js1F89MZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cLnfcCH4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743592259;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VgTSlcWUxY8a6JwJYyv7GJqNtqyp4QlKElc3qaVOgZs=;
-	b=cLnfcCH4am2r9gPjcQePZzXFIuIAVDk8tlBrco5I4GXKwMabxdjxpbWuTUKDa5uP/H69y4
-	TXdilvHsw1lBoWVQXIFxnq1NES74LG+SVu6bjRQU9+DEd0KS5alttEbQkOc1SHZVSwOPw+
-	5VRKZQnqL/GFA6VPD+FAurqua8eueso=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-457-xDKcHiZ4NxqXSrHBPqvjqA-1; Wed,
- 02 Apr 2025 07:10:56 -0400
-X-MC-Unique: xDKcHiZ4NxqXSrHBPqvjqA-1
-X-Mimecast-MFC-AGG-ID: xDKcHiZ4NxqXSrHBPqvjqA_1743592253
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 70F521809CA6;
-	Wed,  2 Apr 2025 11:10:51 +0000 (UTC)
-Received: from f39 (unknown [10.45.225.130])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 738421828A80;
-	Wed,  2 Apr 2025 11:10:25 +0000 (UTC)
-Date: Wed, 2 Apr 2025 13:10:22 +0200
-From: Eder Zulian <ezulian@redhat.com>
-To: Ian Rogers <irogers@google.com>
-Cc: Yury Norov <yury.norov@gmail.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Darren Hart <dvhart@infradead.org>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	=?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>,
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
-	James Clark <james.clark@linaro.org>,
-	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
-	Yicong Yang <yangyicong@hisilicon.com>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Al Viro <viro@zeniv.linux.org.uk>, Kyle Meyer <kyle.meyer@hpe.com>,
-	Ben Gainey <ben.gainey@arm.com>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	Kajol Jain <kjain@linux.ibm.com>,
-	Aditya Gupta <adityag@linux.ibm.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	Kuan-Wei Chiu <visitorckw@gmail.com>, He Zhe <zhe.he@windriver.com>,
-	Dirk Gouders <dirk@gouders.net>, Brian Geffon <bgeffon@google.com>,
-	Ravi Bangoria <ravi.bangoria@amd.com>,
-	Howard Chu <howardchu95@gmail.com>,
-	Charlie Jenkins <charlie@rivosinc.com>,
-	Colin Ian King <colin.i.king@gmail.com>,
-	Dominique Martinet <asmadeus@codewreck.org>,
-	Jann Horn <jannh@google.com>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Yang Jihong <yangjihong@bytedance.com>,
-	Dmitry Vyukov <dvyukov@google.com>, Andi Kleen <ak@linux.intel.com>,
-	Graham Woodward <graham.woodward@arm.com>,
-	Ilkka Koskinen <ilkka@os.amperecomputing.com>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Zhongqiu Han <quic_zhonhan@quicinc.com>, Hao Ge <gehao@kylinos.cn>,
-	Tengda Wu <wutengda@huaweicloud.com>,
-	Gabriele Monaco <gmonaco@redhat.com>,
-	Chun-Tse Shao <ctshao@google.com>,
-	Casey Chen <cachen@purestorage.com>,
-	"Dr. David Alan Gilbert" <linux@treblig.org>,
-	Li Huafei <lihuafei1@huawei.com>,
-	"Steinar H. Gunderson" <sesse@google.com>,
-	Levi Yun <yeoreum.yun@arm.com>, Weilin Wang <weilin.wang@intel.com>,
-	Thomas Falcon <thomas.falcon@intel.com>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	Andrew Kreimer <algonell@gmail.com>,
-	Krzysztof =?utf-8?Q?=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>,
-	Junhao He <hejunhao3@huawei.com>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	Xu Yang <xu.yang_2@nxp.com>,
-	Steve Clevenger <scclevenger@os.amperecomputing.com>,
-	Zixian Cai <fzczx123@gmail.com>,
-	Stephen Brennan <stephen.s.brennan@oracle.com>,
-	Yujie Liu <yujie.liu@intel.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v1 04/48] x86/insn: Silence -Wshorten-64-to-32 warnings
-Message-ID: <Z-0bHg4aX5uX33CU@f39>
-References: <20250401182347.3422199-1-irogers@google.com>
- <20250401182347.3422199-5-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Js1F89MZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00991C4CEDD;
+	Wed,  2 Apr 2025 11:11:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743592311;
+	bh=UqhKSL65Dxgk2dVyb4tCArOqKN+10TQqPqttHJ0QJO8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Js1F89MZ7mNqy+1Rx8WRbvLFGAnn2kyc2xk0D+jRJgnpYglHNNXsre5BwSajoXQfx
+	 z/7Xu4ofH+VNbrxEI5IbjrJOkoE0xTlmrWLfz4E9roXufyg/9MaSMoMpV4JdsYxzw6
+	 dLR1Li/2S8SAU5llwUTxs7P38xefN0Rr1OGrSAblHNcJzpFfeb3J3QV/TCKO7LEqs0
+	 X9wkOlEipCmvqyd+482RTngII0StYMWDcxMWTO5EYbqYXMCSPFjbu6UKAhc0RTmnee
+	 k2nqn36OmTL57W9u9X8XDLieQAs/ax7pDXmDmjp1pa6gW9jG9JlXDd4Erraijhkr28
+	 dC985VtQWHccA==
+Message-ID: <860ae623-f33f-4cfe-be08-6bb6524ecf94@kernel.org>
+Date: Wed, 2 Apr 2025 13:11:43 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250401182347.3422199-5-irogers@google.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] dt-bindings: remoteproc: Add VCP support for mt8196
+To: Xiangzhi Tang <xiangzhi.tang@mediatek.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Mathieu Poirier <mathieu.poirier@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org,
+ Project_Global_Chrome_Upstream_Group@mediatek.com, jjian.zhou@mediatek.com,
+ hailong.fan@mediatek.com
+References: <20250402092134.12293-1-xiangzhi.tang@mediatek.com>
+ <20250402092134.12293-2-xiangzhi.tang@mediatek.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250402092134.12293-2-xiangzhi.tang@mediatek.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello, apologies if I'm missing something, but
+On 02/04/2025 11:19, Xiangzhi Tang wrote:
+> +
+> +description:
+> +  The MediaTek VCP enables the SoC control the MediaTek Video Companion Risc-V coprocessor.
 
-On Tue, Apr 01, 2025 at 11:23:02AM -0700, Ian Rogers wrote:
-> The clang warning -Wshorten-64-to-32 can be useful to catch
-> inadvertent truncation. In some instances this truncation can lead to
-> changing the sign of a result, for example, truncation to return an
-> int to fit a sort routine. Silence the warning by making the implicit
-> truncation explicit.
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/arch/x86/lib/insn.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/arch/x86/lib/insn.c b/tools/arch/x86/lib/insn.c
-> index e91d4c4e1c16..5fa8697498fe 100644
-> --- a/tools/arch/x86/lib/insn.c
-> +++ b/tools/arch/x86/lib/insn.c
-> @@ -92,7 +92,7 @@ static int __insn_get_emulate_prefix(struct insn *insn,
->  			goto err_out;
->  	}
->  
-> -	insn->emulate_prefix_size = len;
-> +	insn->emulate_prefix_size = (int)len;
+Wrap at coding style.
 
-wouldn't something like 
-+ insn->emulate_prefix_size = !!len;
-be preferable in this case?
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - mediatek,mt8196-vcp
+> +
+> +  reg:
+> +    items:
+> +      - description: sram base
+> +      - description: cfg group IO
+> +      - description: cfg core group IO
+> +      - description: cfg sec group IO
+> +      - description: vcp rdy group IO
+> +
+> +  reg-names:
+> +    items:
+> +      - const: sram
+> +      - const: cfg
+> +      - const: cfg_core
+> +      - const: cfg_sec
+> +      - const: vcp_vlp_ao_rsvd7
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  mboxes:
+> +    description:
+> +      Using mailbox to communicate with VCP, it should have this
+> +      property and list of phandle, mailbox specifiers. See
+> +      Documentation/devicetree/bindings/mailbox/mediatek,mt8196-vcp-mbox.yaml
+> +      for details.
 
-Apparently the 'insn->emulate_prefix_size' is only used in
-'insn_has_emulate_prefix()'. Perhaps both the flag 'emulate_prefix_size'
-(currently an 'int') and the 'insn_has_emulate_prefix()' function return
-type could be changed to boolean?
+Drop entire description, redundant.
 
->  	insn->next_byte += len;
+> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> +
 
-My knowledge of this part of the code is limited, however IMO it seems
-strange to have the 'emulate_prefix_size' flag affected implictly or
-explicitly by truncation and the pointer 'insn->next_byte' advanced
-regardless.
+No, you do not get your own type. Instead list items or just maxItems.
 
->  
->  	return 1;
-> -- 
-> 2.49.0.504.g3bcea36a83-goog
-> 
 
+> +  mbox-names:
+> +    maxItems: 5
+
+No, you must list the items.
+
+> +
+> +  power-domains:
+> +    description:
+> +      A phandle and PM domain specifier as defined by bindings
+> +      of the power controller specified by phandle. See
+> +      Documentation/devicetree/bindings/power/power-domain.yaml for details.
+
+Look how other bindings do it. Do not repeat obvious stuff, do not
+develop bindings entirely different than all others.
+
+> +    maxItems: 1
+> +
+> +  iommus:
+> +    description:
+> +      Using MediaTek iommu to apply larb ports for Multimedia Memory
+> +      Management Unit and address translation
+> +      Documentation/devicetree/bindings/iommu/arm,smmu-v3.yaml
+
+Really, look at other code first.
+
+> +
+> +  memory-region:
+> +    maxItems: 1
+> +
+> +  vcp-mem-tbl:
+> +    description:
+> +      Manage reserved memory for VCP RTOS FW and various features.
+
+No, reserved memory is in memory-region. Drop property.
+
+> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+> +    minItems: 2
+> +    maxItems: 12
+> +
+> +patternProperties:
+> +  "^vcp_[a-f0-9]+$":
+
+Follow DTS coding style.
+
+Heh, nothing here was really tested and you have obvious bugs pointed
+out by simple testing of DTS.
+
+Why these children are needed in the first place? Offsets are implied by
+parent compatible.
+
+> +    type: object
+> +    description:
+> +      The MediaTek VCP integrated to SoC might be a multi-core version.
+> +      The other cores are represented as child nodes of the boot core.
+> +      There are some integration differences for the IP like the usage of
+> +      address translator for translating SoC bus addresses into address
+> +      space for the processor.
+> +
+> +      The SRAM are shared by all cores, each VCP core only using a piece
+> +      SRAM memory. The power of SRAM should be enabled before booting VCP cores.
+> +      The size of SRAM are varied on differnt SoCs.
+> +
+> +      The VCP cores has differences on different SoCs to support for
+> +      Hart.
+> +
+> +    properties:
+> +      compatible:
+> +        enum:
+> +          - mediatek,vcp-core
+> +          - mediatek,mmup-core
+> +
+> +      twohart:
+
+Missing vendor prefix, look at writing bindings and other examples.
+
+> +        enum: [0, 1]
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+> +
+> +      sram-offset:
+> +        description:
+> +          Allocated SRAM memory for each VCP core used.
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+> +
+> +    required:
+> +      - compatible
+> +      - twohart
+> +      - sram-offset
+> +
+> +    additionalProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - reg-names
+> +  - interrupts
+> +  - mboxes
+> +  - mbox-names
+> +  - power-domains
+> +  - iommus
+> +  - memory-region
+> +  - vcp-mem-tbl
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    #include <dt-bindings/power/mt8196-power.h>
+> +
+> +    vcp: vcp@31800000 {
+> +        compatible = "mediatek,mt8196-vcp";
+> +        reg = <0x31800000 0x60000>,
+> +              <0x31a04000 0xa000>,
+> +              <0x31bd0000 0x1000>,
+> +              <0x31a70020 0x100>,
+> +              <0x1c00091c 0x4>;
+
+Quite different address,  are you sure this is still part of this
+device? Looks like on register.
+
+
+Best regards,
+Krzysztof
