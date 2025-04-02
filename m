@@ -1,55 +1,55 @@
 Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03B571A3156
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 16:47:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05B8A1ACED1
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 16:47:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743612455; cv=none; b=XH03teiUXhjoHGKLp/AjSiJUa/GXB7wu/GXX+TL3UCSlJ7fxL67arLRyTHDrNFm9Sq2+M3moGaKOu2qQn9sSmgte2X/v6TS0yZRZQFUHBc/MxrKkxn4Kynn3NBmGqG2MICbZTIO3Vo9yWx4h8ZgweDH1jiFFDrhEFdU9XKDZkak=
+	t=1743612457; cv=none; b=jSsql2NMJbnSN0hGEl1VhS4NjN8KuIIVFXQkF0bIlIH5DUrzbt4qIKMq7J9RPGkP3M/vXj5oN2kdKSkLJ3dv3Lv4g9HqDXc/fma5A4n3Ls3OPglURCbitvJGeJ2m75ssOV/b1cZy9LSSGAYGh4HqwJU+H+rwf/GL8RHNShuKp98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743612455; c=relaxed/simple;
-	bh=WStuIdPt8lRJg1FWf8KPFEILp1PnsGADoTb7+XPTPCo=;
+	s=arc-20240116; t=1743612457; c=relaxed/simple;
+	bh=IoNk4f+pHHqP7GqFc1Z3S9xs2ShDQotfi0G7WwroLJk=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=CYF6qFUt16WXf2NHy0mj6g/g5sOSBLAWDEwgFXONCog5jDQQcrctC4xasXaPazRbLguf7kugRiRHT8OtnQWkA0p2l6jBBsInxkeeAJ/snnJHDVd8v0qiu6LpE93zoIsZqFR13VNtz0L7GXDV5z6AJk+UaFw0LlBuFaf7GRWGnWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dE+dlHNT; arc=none smtp.client-ip=209.85.214.201
+	 To:Content-Type; b=tWM2dWLRbGPWNxo3yjoEVXyhkt/8dRbmy/QDykQG3L3ynrJfarMBd0TYIy4G3MfbbASin/JPvSTeJviZLcQaHyt4C3cz0YhiQZ7XhCRJ1gj/OE464oTCOrQceQ/sCTezdwi4zLpEhpDuBqeTAr4A0fNLOqM4u8+6unEcOJTf1VY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nIzUNnJT; arc=none smtp.client-ip=209.85.214.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dE+dlHNT"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-224364f2492so421705ad.3
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 09:47:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nIzUNnJT"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-224192ff68bso485285ad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 09:47:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743612453; x=1744217253; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1743612455; x=1744217255; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=3tDmbLrtoU9NWl61/Y1ycLMfPN40NbRlPLTERdTcD4c=;
-        b=dE+dlHNTq3YirW3NFy8clKeJAAOzOtUAdAhbtce5yzaZJTvgjX5G+u1xdKrO2jpK7S
-         0/M5kPyQ9j9ghKkWLl9AnLV4vsR3Zku1iSZA+VpbtDtshEUnR6yaGaVo5KMMwr+uJeie
-         SpGlWNfJLAv/PPeMZbu4sCqDAP2xW/Ch8vlApvsetWJANTrMZ1x63FhRD3E8EnWxVqOV
-         QiYLzKW5pl2qLvvua07bwx4bUj1jvQio4aFi3oXxqxcjxg/wRXlU/XRKfgLKsqxigxG2
-         xMB1aUrzqL8PkC50c0TaqvmLz0JsukIjgLTC3GkK/17na6ppGUr4gNjZkn3eQ4b05YMy
-         GrSA==
+        bh=+2uO9pmTjsejVD/zY6cyyd9PztZvdMOJJd4Zz+Pr1QE=;
+        b=nIzUNnJTWSdpDMFyTDHhB7gcUH9rCFZk+/7QenY86iTiOxH5lktBr7V5eiDgkVDwKT
+         3hEVHfSQpPlEFDclz9/Fw/7mooxmB/wdy2d6pmX3WkH7z1msTRAA/Lz351qgwHRomoZG
+         ZKeWiLOGgeirjOmiv9rMrgcx0r2skOXV3pEN6JGCKBtMxFzQUEkBlzuZGY1lMCTJi/WB
+         oC4QhUnzLMicP3ex6m4oyZmDEkWxdcsF1YbEyiDVjbviNLLwk2sT7pfidLU4JTFw8HKf
+         9GHwdSqFLoQivgvjnUuLqnUI+uGu1icNU+HgUouk6T3wZh2FCyBve7aDVMHJZQ36piEL
+         5RTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743612453; x=1744217253;
+        d=1e100.net; s=20230601; t=1743612455; x=1744217255;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3tDmbLrtoU9NWl61/Y1ycLMfPN40NbRlPLTERdTcD4c=;
-        b=fvF5kdkBM1/Yl/pCiYH0MxwL2ZIrD+TFg/MuHVQN+ZGiKAEUMm4Ql3y/OZgVyYFpPI
-         BBvSZIzIYW6Zl9qs80bizzwkkZeznP595XZ/DFoYV13ucY/3Jow2riRqehG5AKUwGG8o
-         YNNGjATpIGIMOwmdsieZNgYZNdx7Pqp5OeEXE36Nb4FYZcGV1SMlanzec/ZBi/YCHOMf
-         nW6r3jgUjoyR/2khkKsesNnjg5SnkMzTlQ3eM3IOpZElw5nlavnVZLWznHo6fPGFS6rt
-         M8g6i7l0SuC5nBuksQlC6icvFT6+uaX6QmfcaUhmw4AV8bjWJTO+nPTQARaNxTDmkLb/
-         VX5A==
-X-Forwarded-Encrypted: i=1; AJvYcCUDM+NSUDQniI9C+q8vpRA2PyPENQT/O5t/EbNN7gnnvUxyp2AVWm5xZxlpm5NiaXXaYGBBnQpq3S47wiQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz8/KVKo8ev4YlOg2kr+Y17j4JAE2VRQa4VpRAJ6ivy4BpC60Jg
-	y4DxjEgzQoksX47lrh9sELY0hMrUJZLjfFPAKMVCUdjxbNYnB79+hgoBa0l5MjdKLgcMhTjTfVB
-	HXt8pZQ==
-X-Google-Smtp-Source: AGHT+IGIMigwhhEQhcpTdE67GN3lzf59G15dcpWYK309Deu8nT4TCreokRGg9L3IKZhgBwbjjUECr6htPw05
-X-Received: from plsa4.prod.google.com ([2002:a17:902:b584:b0:223:432c:56d4])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:ce81:b0:224:584:6eef
- with SMTP id d9443c01a7336-2292f9e8275mr302417375ad.41.1743612453276; Wed, 02
- Apr 2025 09:47:33 -0700 (PDT)
-Date: Wed,  2 Apr 2025 09:47:19 -0700
+        bh=+2uO9pmTjsejVD/zY6cyyd9PztZvdMOJJd4Zz+Pr1QE=;
+        b=v7KHB54T0XVOuN97XMkcccQRN/dA5NgHLpG9BH6Dz18m8/8ZxPqUVpyp/zYGrcvctm
+         eQ1StYdqYJbjfedMWiiH2WnOW1oJss0kWfEFfnzAD0ag7DFhgOeS/JFvdJvSKEiqyKuo
+         /nagsS0qOm5ieosNCkRzsFih+7B3WZtfjar0bsahrPRQ7jsRTwfD4bUwDWrywSZshJ0f
+         AV/bj+MX1INZcvjprdEFY4si4GIypaAQtT+biERU/bdOCOcX5GV0a6yKRV/OlqSSffdv
+         2iEaKpAR/xeKmYwipeApZnyKm5cHBpBe11yP+Mvs1EzHwvaKRwe7j+OvdSz1wumKnVIv
+         PA0A==
+X-Forwarded-Encrypted: i=1; AJvYcCUle/Dajoya8lzmgqdl4gf7r/qjGvdWEIH6vAxOIKdjdGeauWio9g7JuwusHa99fjnKWGlv3MWzBy6jgtA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz9U4V919Ivts9E9/RqbRCzlZoJc/U8OLsz8tTXXgIa/JRfrPdP
+	g0wbxXva1hvfWa9yhXB2qKHlmvwPemQheceJSmqfHA5N2GIP+EIRJi8VmeDn3XUFEX6n93lQ3Vo
+	lPfodHA==
+X-Google-Smtp-Source: AGHT+IGzG/3y+ietfy34xtDoKHmB1Af67pToNGHEdvk/vvMUa8iuexUCdCA+6jNAoMtTewR2ka6+Lq6tSf3v
+X-Received: from plks2.prod.google.com ([2002:a17:903:2c2:b0:223:49cb:8f99])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:2312:b0:223:fb3a:8647
+ with SMTP id d9443c01a7336-2296c8606e2mr41385685ad.41.1743612455185; Wed, 02
+ Apr 2025 09:47:35 -0700 (PDT)
+Date: Wed,  2 Apr 2025 09:47:20 -0700
 In-Reply-To: <20250402164720.3847573-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250402164720.3847573-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
-Message-ID: <20250402164720.3847573-5-irogers@google.com>
-Subject: [PATCH v2 4/5] perf evlist: Add groups to evlist__format_evsels
+Message-ID: <20250402164720.3847573-6-irogers@google.com>
+Subject: [PATCH v2 5/5] perf parse-events: Add debug dump of evlist if reordered
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -74,61 +74,59 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Make groups visible in output:
-
-Before:
-{cycles,instructions} ->
-cpu_atom/cycles/,cpu_atom/instructions/,cpu_core/cycles/,cpu_core/instructions/
-
-After:
-{cycles,instructions} ->
-{cpu_atom/cycles/,cpu_atom/instructions/},{cpu_core/cycles/,cpu_core/instructions/}
+Add debug verbose output to show how evsels were reordered by
+parse_events__sort_events_and_fix_groups. For example:
+```
+$ perf record -v -e '{instructions,cycles}' true
+Using CPUID GenuineIntel-6-B7-1
+WARNING: events were regrouped to match PMUs
+evlist after sorting/fixing: '{cpu_atom/instructions/,cpu_atom/cycles/},{cpu_core/instructions/,cpu_core/cycles/}'
+```
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/evlist.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ tools/perf/util/parse-events.c | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index ffb5be41a465..6ebe0795e1c9 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -2471,13 +2471,18 @@ struct evsel *evlist__find_evsel(struct evlist *evlist, int idx)
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index 5152fd5a6ead..0f8fd5bee3a7 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -28,6 +28,7 @@
+ #include "util/evsel_config.h"
+ #include "util/event.h"
+ #include "util/bpf-filter.h"
++#include "util/stat.h"
+ #include "util/util.h"
+ #include "tracepoint.h"
  
- void evlist__format_evsels(struct evlist *evlist, struct strbuf *sb, size_t max_length)
- {
--	struct evsel *evsel;
-+	struct evsel *evsel, *leader = NULL;
- 	bool first = true;
+@@ -2196,14 +2197,23 @@ int __parse_events(struct evlist *evlist, const char *str, const char *pmu_filte
+ 	if (ret2 < 0)
+ 		return ret;
  
- 	evlist__for_each_entry(evlist, evsel) {
-+		struct evsel *new_leader = evsel__leader(evsel);
+-	if (ret2 && warn_if_reordered && !parse_state.wild_card_pmus)
+-		pr_warning("WARNING: events were regrouped to match PMUs\n");
+-
+ 	/*
+ 	 * Add list to the evlist even with errors to allow callers to clean up.
+ 	 */
+ 	evlist__splice_list_tail(evlist, &parse_state.list);
+ 
++	if (ret2 && warn_if_reordered && !parse_state.wild_card_pmus) {
++		pr_warning("WARNING: events were regrouped to match PMUs\n");
 +
- 		if (evsel__is_dummy_event(evsel))
- 			continue;
- 
-+		if (leader != new_leader && leader && leader->core.nr_members > 1)
-+			strbuf_addch(sb, '}');
++		if (verbose > 0) {
++			struct strbuf sb = STRBUF_INIT;
 +
- 		if (!first)
- 			strbuf_addch(sb, ',');
++			evlist__uniquify_name(evlist);
++			evlist__format_evsels(evlist, &sb, 1024);
++			pr_debug("evlist after sorting/fixing: '%s'\n", sb.buf);
++			strbuf_release(&sb);
++		}
++	}
+ 	if (!ret) {
+ 		struct evsel *last;
  
-@@ -2485,9 +2490,15 @@ void evlist__format_evsels(struct evlist *evlist, struct strbuf *sb, size_t max_
- 			strbuf_addstr(sb, "...");
- 			return;
- 		}
-+		if (leader != new_leader && new_leader->core.nr_members > 1)
-+			strbuf_addch(sb, '{');
-+
- 		strbuf_addstr(sb, evsel__name(evsel));
- 		first = false;
-+		leader = new_leader;
- 	}
-+	if (leader && leader->core.nr_members > 1)
-+		strbuf_addch(sb, '}');
- }
- 
- void evlist__check_mem_load_aux(struct evlist *evlist)
 -- 
 2.49.0.504.g3bcea36a83-goog
 
