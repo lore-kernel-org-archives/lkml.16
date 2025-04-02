@@ -1,156 +1,124 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F23B623E33A
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Apr 2025 13:31:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F161523E34C;
+	Wed,  2 Apr 2025 13:31:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743600695; cv=none; b=nrKnjLKyzQQiyxjIL1rMOfG2MIJRalh3GqjWjmyXu3TcMZBxkmOQhLqhGz1lpyBKf5SYnL5TLsG2fTxYPNsidkceHXby3cljNM5xRsP4IWMN5aoP24AcRM/mjYfAkt9pMsr4mo1xwsxJjMZC7Qi8yH5l1klAPAJPOS+43+TIhIE=
+	t=1743600697; cv=none; b=nwCz6+mlDFSmRTeqqmZWaxr26vwboX8MM2Rk1+sbh7N9nlTapmRRfX4zOiNhPGg6Vc6jgKa3ee3sYNGoibmEmwRCyIdHmo4VBxhqAnM+cBNCF6buWWI54Jz1ybrX8K0kdTfJz8pkJgrlVgVG4IlWjDpNYe5CncGaAzWnszRIjfY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743600695; c=relaxed/simple;
-	bh=terDw8VLDSycV/I6fcyF4BbvPpfjEASKJADXJuIxv/I=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=M5LFyzRzodQA98yfB537J9+3fwOUoCnDwyrFjUPVlZ6UHI5AdkFBH9rNV+e0wbm3J5RDeOYt9rvNc3pxfvP6Voo/maZOmKOximghD/welXR0lCGd8W8iawwOdc4J5iwR31Io51XWLHkyBcjVEVee++jgHnnzR3sxQkJgydlg8FU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=ho2aCxgA; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1743600697; c=relaxed/simple;
+	bh=xpGMji0YZmUXXHAPeUj9m6SFNLOshUfsUcIsr8DGjDw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=iZEWUZnp8XapQJEiVvdCnw+vGNu+hAZ/lXUJmTtbzeoMH8DWIb4+qjABdu6ZxICRj/sbNE2XPN9J0mVkkGw3u7m5/nbI8w4bliK2H4TXGhRQjixfpQDc6vqRsqAJtDVzO3xUB8rrX2gU/3xhZ9SmN8ifzyT+uzDs7cixh8mhAaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=X8d7ecwP; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="ho2aCxgA"
-Received: from [127.0.1.1] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 4FDB82434;
-	Wed,  2 Apr 2025 15:29:33 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1743600574;
-	bh=terDw8VLDSycV/I6fcyF4BbvPpfjEASKJADXJuIxv/I=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=ho2aCxgA2Wca4y/Fx9LV5m1CBUTqC0FR0oSA/lDRGCmWLPztwKzsQPOJj22M3kFil
-	 IYprW4tjzvrcF2DR+kVKOevgomS3+CFYqqw0qkPfA/143TfoLsxKl8863mmnzEvJ9n
-	 OcaX1ac63U/AVoDZaATIUXUV5fw2xY6xoLJ+RJes=
-From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Date: Wed, 02 Apr 2025 16:30:52 +0300
-Subject: [PATCH v2 10/18] drm/bridge: cdns-dsi: Fix event mode
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="X8d7ecwP"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 532DVT4D3970940
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+	Wed, 2 Apr 2025 08:31:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1743600689;
+	bh=1Sbk3WYt97BLD57wNauxaWmXUwdOVCVaTQXaTrqR47I=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=X8d7ecwPSlAJazla41Z2AAm/SUqFX4/DEhZd+RDXMxnzyM9fz+vsrUyM+5HPafsv+
+	 B/3rBFL6eypylGDWL1sH/FJFhHrJVf1fqoTikD45R/V+7SPdMHqYEKmcBQBmk8a2fR
+	 Vv831rCo0X3GM27UfMx1bLtRXygaCp+YIXoS3m2g=
+Received: from DLEE110.ent.ti.com (dlee110.ent.ti.com [157.170.170.21])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTP id 532DVTwR091719;
+	Wed, 2 Apr 2025 08:31:29 -0500
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 2
+ Apr 2025 08:31:29 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 2 Apr 2025 08:31:29 -0500
+Received: from [172.24.227.40] (pratham-workstation-pc.dhcp.ti.com [172.24.227.40])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 532DVQIE059761;
+	Wed, 2 Apr 2025 08:31:27 -0500
+Message-ID: <f7105c10-7e36-4914-a9e8-e83eb61f0189@ti.com>
+Date: Wed, 2 Apr 2025 19:01:25 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC 1/2] crypto: ti: Add support for SHA224/256/384/512 in
+ DTHE V2 driver
+To: Herbert Xu <herbert@gondor.apana.org.au>
+CC: "David S. Miller" <davem@davemloft.net>, <linux-crypto@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Vignesh Raghavendra <vigneshr@ti.com>,
+        Praneeth Bajjuri <praneeth@ti.com>,
+        Kamlesh Gurudasani <kamlesh@ti.com>,
+        Manorit Chawdhry <m-chawdhry@ti.com>
+References: <20250218104943.2304730-1-t-pratham@ti.com>
+ <20250218104943.2304730-2-t-pratham@ti.com>
+ <Z8QSVLoucZxG1xlc@gondor.apana.org.au>
+Content-Language: en-US
+From: T Pratham <t-pratham@ti.com>
+In-Reply-To: <Z8QSVLoucZxG1xlc@gondor.apana.org.au>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250402-cdns-dsi-impro-v2-10-4a093eaa5e27@ideasonboard.com>
-References: <20250402-cdns-dsi-impro-v2-0-4a093eaa5e27@ideasonboard.com>
-In-Reply-To: <20250402-cdns-dsi-impro-v2-0-4a093eaa5e27@ideasonboard.com>
-To: Jyri Sarha <jyri.sarha@iki.fi>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, 
- Andrzej Hajda <andrzej.hajda@intel.com>, 
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
- linux-phy@lists.infradead.org, Francesco Dolcini <francesco@dolcini.it>, 
- Aradhya Bhatia <aradhya.bhatia@linux.dev>, 
- Devarsh Thakkar <devarsht@ti.com>, 
- Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-X-Mailer: b4 0.15-dev-c25d1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2987;
- i=tomi.valkeinen@ideasonboard.com; h=from:subject:message-id;
- bh=terDw8VLDSycV/I6fcyF4BbvPpfjEASKJADXJuIxv/I=;
- b=owEBbQKS/ZANAwAIAfo9qoy8lh71AcsmYgBn7Twe/tVteqeFa2Ic65dsnEnKHbgdu1Loaivie
- SSxoDo3+RmJAjMEAAEIAB0WIQTEOAw+ll79gQef86f6PaqMvJYe9QUCZ+08HgAKCRD6PaqMvJYe
- 9ci7D/9OtgQL1krF/aw7wnzN0htt0P7N47K84a6EPWb7y4IMK5MQZdsqKuijjPHF6z/ClvNgiho
- /Uh3mJCxDtp18WXVfLy0TAJUKJi+4tatoj2RES+oBDmP/auadigIcKTSDlvNlUI6S5GOj64hBj/
- d04YpnuXZeHpteVxUqAm4s8Dj+g33JB7Ap2Ly2yEfa9rAJb4PNIKnaa9qxe6E7Iu8ZuspmNVh/Y
- UvgJhurgvGHO3BSZmce9Oh47/cSrMRLP4W14nbEioXRe9YebaqD8f5WC5xaIiFaM7272U5WFbt8
- 15fZpF4ZkzmURY1FFy8Hq68NDl/WDQ7Ic0v2tTokcLCbp+pq7fDQSrlRoYiK+ZT/xRYdi/0AZIj
- V1+fwOK+OHvcDlfFzi/1AaixDq1jwghtIIIwVuCqunKxiuBWzOJgknZchoodaFTHC8B3k5GPy3L
- 1XC2GIHNbRbShvhwwUFPNJiEiPLLZuE3lFL8XZAAn8Y66SMZdoYfaNc5GZKEc0gNAP5NiqqOwhZ
- +VZul9N6SNqO4BbaYctQboVh37y8drjWLuH0DtGp/8lbU3dgTD3AOd6iv5q4k+RWEHQVax+IH1W
- 9SMnLFY2gscCgs8XoE4PfVB6ZJbS5AvkzRqtPvXhKU2G27ZyiAFO9Dlj6ke6vQx64dSnFTZrgqs
- V/6UA0/8jBLtslg==
-X-Developer-Key: i=tomi.valkeinen@ideasonboard.com; a=openpgp;
- fpr=C4380C3E965EFD81079FF3A7FA3DAA8CBC961EF5
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-The timings calculation gets it wrong for DSI event mode, resulting in
-too large hbp value. Fix the issue by taking into account the
-pulse/event mode difference.
+Hi Herbert
 
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
----
- drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c | 33 ++++++++++++++++++--------
- 1 file changed, 23 insertions(+), 10 deletions(-)
+On 02/03/25 13:39, Herbert Xu wrote:
+> On Tue, Feb 18, 2025 at 04:19:42PM +0530, T Pratham wrote:
+>> +struct dthe_hash_ctx {
+>> +	enum dthe_hash_algSel mode;
+>> +	u16 block_size;
+>> +	u8 digest_size;
+>> +	u8 phash_available;
+>> +	u32 phash[SHA512_DIGEST_SIZE / sizeof(u32)];
+> Is this format identical to the software sha512 hash? If so please
+> make the export/import functions translate to and from struct
+> sha512_state.
+>
+> That way we can export and resume using the software sha512 in case
+> something goes wrong (e.g., memory allocation failure).
+>
+> Ditto with all the other hash algorithms.
+>
+> Thanks,
 
-diff --git a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
-index 62811631341b..9797e6faa29d 100644
---- a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
-+++ b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
-@@ -417,7 +417,8 @@
- #define DSI_OUTPUT_PORT			0
- #define DSI_INPUT_PORT(inputid)		(1 + (inputid))
- 
--#define DSI_HBP_FRAME_OVERHEAD		12
-+#define DSI_HBP_FRAME_PULSE_OVERHEAD	12
-+#define DSI_HBP_FRAME_EVENT_OVERHEAD	16
- #define DSI_HSA_FRAME_OVERHEAD		14
- #define DSI_HFP_FRAME_OVERHEAD		6
- #define DSI_HSS_VSS_VSE_FRAME_OVERHEAD	4
-@@ -503,12 +504,18 @@ static int cdns_dsi_mode2cfg(struct cdns_dsi *dsi,
- 
- 	bpp = mipi_dsi_pixel_format_to_bpp(output->dev->format);
- 
--	dsi_cfg->hbp = dpi_to_dsi_timing(dpi_hbp + (sync_pulse ? 0 : dpi_hsa),
--					 bpp, DSI_HBP_FRAME_OVERHEAD);
-+	if (sync_pulse) {
-+		dsi_cfg->hbp = dpi_to_dsi_timing(dpi_hbp, bpp,
-+						 DSI_HBP_FRAME_PULSE_OVERHEAD);
- 
--	if (sync_pulse)
--		dsi_cfg->hsa =
--			dpi_to_dsi_timing(dpi_hsa, bpp, DSI_HSA_FRAME_OVERHEAD);
-+		dsi_cfg->hsa = dpi_to_dsi_timing(dpi_hsa, bpp,
-+						 DSI_HSA_FRAME_OVERHEAD);
-+	} else {
-+		dsi_cfg->hbp = dpi_to_dsi_timing(dpi_hbp + dpi_hsa, bpp,
-+						 DSI_HBP_FRAME_EVENT_OVERHEAD);
-+
-+		dsi_cfg->hsa = 0;
-+	}
- 
- 	dsi_cfg->hact = dpi_to_dsi_timing(dpi_hact, bpp, 0);
- 
-@@ -532,9 +539,12 @@ static int cdns_dsi_adjust_phy_config(struct cdns_dsi *dsi,
- 	unsigned int dsi_hfp_ext;
- 	unsigned int lanes = output->dev->lanes;
- 
--	dsi_htotal = dsi_cfg->hbp + DSI_HBP_FRAME_OVERHEAD;
--	if (output->dev->mode_flags & MIPI_DSI_MODE_VIDEO_SYNC_PULSE)
-+	if (output->dev->mode_flags & MIPI_DSI_MODE_VIDEO_SYNC_PULSE) {
-+		dsi_htotal = dsi_cfg->hbp + DSI_HBP_FRAME_PULSE_OVERHEAD;
- 		dsi_htotal += dsi_cfg->hsa + DSI_HSA_FRAME_OVERHEAD;
-+	} else {
-+		dsi_htotal = dsi_cfg->hbp + DSI_HBP_FRAME_EVENT_OVERHEAD;
-+	}
- 
- 	dsi_htotal += dsi_cfg->hact;
- 	dsi_htotal += dsi_cfg->hfp + DSI_HFP_FRAME_OVERHEAD;
-@@ -607,9 +617,12 @@ static int cdns_dsi_check_conf(struct cdns_dsi *dsi,
- 		return -EINVAL;
- 	}
- 
--	dsi_hss_hsa_hse_hbp = dsi_cfg->hbp + DSI_HBP_FRAME_OVERHEAD;
--	if (output->dev->mode_flags & MIPI_DSI_MODE_VIDEO_SYNC_PULSE)
-+	if (output->dev->mode_flags & MIPI_DSI_MODE_VIDEO_SYNC_PULSE) {
-+		dsi_hss_hsa_hse_hbp = dsi_cfg->hbp + DSI_HBP_FRAME_PULSE_OVERHEAD;
- 		dsi_hss_hsa_hse_hbp += dsi_cfg->hsa + DSI_HSA_FRAME_OVERHEAD;
-+	} else {
-+		dsi_hss_hsa_hse_hbp = dsi_cfg->hbp + DSI_HBP_FRAME_EVENT_OVERHEAD;
-+	}
- 
- 	/*
- 	 * Make sure DPI(HFP) > DSI(HSS+HSA+HSE+HBP) to guarantee that the FIFO
+I noticed that you are making changes to the export format of hash
+algorithms (s390 hmac
+<https://lore.kernel.org/linux-crypto/Z-AJFwndherQBH2W@gondor.apana.org.au/#r>,
+caam hashing
+<https://lore.kernel.org/linux-crypto/Z-AJx1oPRE2_X1GE@gondor.apana.org.au/#r>).
+I was in process of finalizing my driver for a v2 and had some queries
+about the above feedback from you.
 
--- 
-2.43.0
+In my dthe_hash_ctx struct below:
+
++struct dthe_hash_ctx { + enum dthe_hash_algSel mode; + u16 block_size;
++ u8 digest_size; + u8 phash_available; + u32 phash[SHA512_DIGEST_SIZE /
+sizeof(u32)]; + u32 phash_size; + u32 digestcnt; + u8
+data_buf[SHA512_BLOCK_SIZE]; + u8 buflen; + struct completion
+hash_compl; +};
+
+You are correct in the sense that the format is /mostly/ identical to
+struct sha512_state. phash[], data_buf[] and digestcnt are same as in
+sha512_state. Rest of the members I can reinitialize at import. The only
+one which stores some kind of state is *buflen*, which requires its
+value to be restored while importing. The current driver implementation
+processes input in multiples of block size and stores the remainder data
+in data_buf[] if the input is not a multiple of block size. buflen has
+the length of data in data_buf[].
+
+How are you planning to restore such states in import if the export is
+to be made compatible with sha512_state? Do you have any pointers for me
+on how to change the import/export before sending the next revision of
+my driver?
+
+Regards
+T Pratham <t-pratham@ti.com>
 
