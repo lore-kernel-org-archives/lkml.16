@@ -1,265 +1,104 @@
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+Received: from mail-m15595.qiye.163.com (mail-m15595.qiye.163.com [101.71.155.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BEA4233727;
-	Wed,  2 Apr 2025 09:22:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1689F2356C3;
+	Wed,  2 Apr 2025 09:22:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.71.155.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743585751; cv=none; b=KY50t6h4aJKA5z8dC3JRb4pxP524VMp3aDpHmMexNnDEmiUTUJ5dfoYJj+r5OS4sMSQsRFS5FFQLzypToWuByNjgtfBMplGfB7srhSqKngtdPQZyesnTXE0faL5L6zqZXzflJtm7sdV6r72evJ7g18w9o/PywrHYy9zooEWlgmM=
+	t=1743585768; cv=none; b=qsZx/xugdkmL0ctvHTz9UMPzEMgxOwktMj8Afa4P+FblBx9Tdf+RQwDKowsNBDCIA2io/DkhlemUsTit0kGleIoEbOCvrXA4CMGi+ZoJXMuWaufMOxhEzq4bNg9EOSQ0bWQd0SmdXhd8SaRaWfnNMzdDbZElj7dM8ggyBCP79LY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743585751; c=relaxed/simple;
-	bh=tdl7VWFJysjw1NSogVxTKvhInXibBa6bqokALmozYFA=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=p41flac94b4LyL6tnHX4ndpmLMAs3RNj1ZNp3F5IlIAwyu9t+RoKBTDJT4jeAMP4qnhJxTk32l4gQXU7wA+NjHUZpTTMmqAMNs/uNKuBM8B7kkCYICwVYlBcFKL3BX+xg+zxTvOmwy9yamS0mEbH/KJU0nlhw1/YOvwb+zK6H5o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=c0+sBvnY; arc=none smtp.client-ip=210.61.82.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	s=arc-20240116; t=1743585768; c=relaxed/simple;
+	bh=3bUvsKQx9rR3VdIidIu3W5+wjactKFssNxj9ejgwtzM=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=F+c5tjzat0p1qC67NHvxyww/AJMTtQKqWPTjvItMk8MLyq07gTQZX8KX8Xl36G4+2F0fxuiGHT4wU/oAQlLltas4iBOY/h7hV7DN5JlTfeb7lvnkDgPeBNrapx88DjOpIYQ8/d2rYq36dVD97LC0qRrR2ikmabIysOi6LJ7nFbE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=ezHqbO70; arc=none smtp.client-ip=101.71.155.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="c0+sBvnY"
-X-UUID: fb17ef9e0fa311f08eb9c36241bbb6fb-20250402
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=s2JMCg2JclTEEd0N3Q75VPRJx5xkg3/cUf95k4E332A=;
-	b=c0+sBvnYGovMZPbcSrmjfIV54AyF4q2ZFg30P7r6vuin1DYirhmI4Wm74lVi8ye9vt4uV3EazuBMrskyOBbQkzAmoerEYK7Y04tguEiA3a05gEoKi35oaVFGKLcztoyLKeiC5Z8Bl3REDFqCARujRbhG9Q1MGVKy+as3gU7chPo=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.2.1,REQID:1c5473bc-b968-4335-9eea-c4bab9335324,IP:0,UR
-	L:25,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:25
-X-CID-META: VersionHash:0ef645f,CLOUDID:d258248d-f5b8-47d5-8cf3-b68fe7530c9a,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:81|82|102,TC:nil,Content:0|50,EDM:-3
-	,IP:nil,URL:11|83|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OS
-	A:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULN
-X-UUID: fb17ef9e0fa311f08eb9c36241bbb6fb-20250402
-Received: from mtkmbs09n1.mediatek.inc [(172.21.101.35)] by mailgw02.mediatek.com
-	(envelope-from <xiangzhi.tang@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1910110246; Wed, 02 Apr 2025 17:22:21 +0800
-Received: from mtkmbs13n2.mediatek.inc (172.21.101.108) by
- mtkmbs13n1.mediatek.inc (172.21.101.193) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.39; Wed, 2 Apr 2025 17:22:20 +0800
-Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
- mtkmbs13n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1258.39 via Frontend Transport; Wed, 2 Apr 2025 17:22:19 +0800
-From: Xiangzhi Tang <xiangzhi.tang@mediatek.com>
-To: Bjorn Andersson <andersson@kernel.org>, Mathieu Poirier
-	<mathieu.poirier@linaro.org>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Matthias
- Brugger <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>, Xiangzhi Tang
-	<Xiangzhi.Tang@mediatek.com>
-CC: <linux-remoteproc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-mediatek@lists.infradead.org>,
-	<Project_Global_Chrome_Upstream_Group@mediatek.com>,
-	<jjian.zhou@mediatek.com>, <hailong.fan@mediatek.com>, Xiangzhi Tang
-	<xiangzhi.tang@mediatek.com>
-Subject: [PATCH 1/2] dt-bindings: remoteproc: Add VCP support for mt8196
-Date: Wed, 2 Apr 2025 17:19:24 +0800
-Message-ID: <20250402092134.12293-2-xiangzhi.tang@mediatek.com>
-X-Mailer: git-send-email 2.46.0
-In-Reply-To: <20250402092134.12293-1-xiangzhi.tang@mediatek.com>
-References: <20250402092134.12293-1-xiangzhi.tang@mediatek.com>
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="ezHqbO70"
+Received: from [172.16.12.129] (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 10721275b;
+	Wed, 2 Apr 2025 16:06:59 +0800 (GMT+08:00)
+Message-ID: <e340a408-2e21-1bca-7267-46b84690f66f@rock-chips.com>
+Date: Wed, 2 Apr 2025 16:06:55 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.13.1
+Cc: shawn.lin@rock-chips.com, =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?=
+ <kwilczynski@kernel.org>, linux-pci@vger.kernel.org,
+ linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: rockchip: Fix order of rockchip_pci_core_rsts
+To: Jensen Huang <jensenhuang@friendlyarm.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Heiko Stuebner <heiko@sntech.de>, Philipp Zabel <p.zabel@pengutronix.de>,
+ Anand Moon <linux.amoon@gmail.com>
+References: <20250328105822.3946767-1-jensenhuang@friendlyarm.com>
+From: Shawn Lin <shawn.lin@rock-chips.com>
+In-Reply-To: <20250328105822.3946767-1-jensenhuang@friendlyarm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGh0aQ1YdTE4aSB1IGhhPQkhWFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
+	hVSktLVUpCS0tZBg++
+X-HM-Tid: 0a95f58a0bdb09cckunm10721275b
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NT46SDo*HTIBCw49PC8JDjEi
+	PQsaFE1VSlVKTE9ITkNKSUlKTkxKVTMWGhIXVQgTGgwVVRcSFTsJFBgQVhgTEgsIVRgUFkVZV1kS
+	C1lBWU5DVUlJVUxVSkpPWVdZCAFZQUlMSkk3Bg++
+DKIM-Signature:a=rsa-sha256;
+	b=ezHqbO70EDBQxmzrLCl8NxYSVUIU6/oSSOrrNjkXlFPkG0MhWO2zqfrPwMD+crfahb9VQ1m3kShzgfpQbI8wgdNEnAHGAtsDOuLtpEIdG+1QMvlGT+S5LhC/FOXk1qrMY7NsgRhBCxRrvsvg0BnAuJl1ih/3WP2Qg3lLjEQY2yE=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
+	bh=tNpsgBqjJ9UNRLTVKNe5wOYMfZoRUBD/vq55ueB1bPY=;
+	h=date:mime-version:subject:message-id:from;
 
-Add the new binding document for MediaTek Video Companion
-Processor(VCP) on MediaTek mt8196.
+在 2025/03/28 星期五 18:58, Jensen Huang 写道:
+> The order of rockchip_pci_core_rsts follows the previous comments suggesting
+> to avoid reordering. However, reset_control_bulk_deassert() applies resets in
+> reverse, which may lead to the link downgrading to 2.5 GT/s.
+> 
+> This patch restores the deassert order and comments for core_rsts, introduced in
+> commit 58c6990c5ee7 ("PCI: rockchip: Improve the deassert sequence of four reset pins").
+> 
+> Tested on NanoPC-T4 with Samsung 970 Pro.
 
-Signed-off-by: Xiangzhi Tang <xiangzhi.tang@mediatek.com>
----
- .../remoteproc/mediatek,mt8196-vcp.yaml       | 174 ++++++++++++++++++
- 1 file changed, 174 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/remoteproc/mediatek,mt8196-vcp.yaml
+Acked-by:  Shawn Lin <shawn.lin@rock-chips.com>
 
-diff --git a/Documentation/devicetree/bindings/remoteproc/mediatek,mt8196-vcp.yaml b/Documentation/devicetree/bindings/remoteproc/mediatek,mt8196-vcp.yaml
-new file mode 100644
-index 000000000000..0c2926e29c02
---- /dev/null
-+++ b/Documentation/devicetree/bindings/remoteproc/mediatek,mt8196-vcp.yaml
-@@ -0,0 +1,174 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/remoteproc/mediatek,mt8196-vcp.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: MediaTek Video Companion Processor (VCP)
-+
-+maintainers:
-+  - Xiangzhi Tang <Xiangzhi.Tang@mediatek.com>
-+
-+description:
-+  The MediaTek VCP enables the SoC control the MediaTek Video Companion Risc-V coprocessor.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - mediatek,mt8196-vcp
-+
-+  reg:
-+    items:
-+      - description: sram base
-+      - description: cfg group IO
-+      - description: cfg core group IO
-+      - description: cfg sec group IO
-+      - description: vcp rdy group IO
-+
-+  reg-names:
-+    items:
-+      - const: sram
-+      - const: cfg
-+      - const: cfg_core
-+      - const: cfg_sec
-+      - const: vcp_vlp_ao_rsvd7
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  mboxes:
-+    description:
-+      Using mailbox to communicate with VCP, it should have this
-+      property and list of phandle, mailbox specifiers. See
-+      Documentation/devicetree/bindings/mailbox/mediatek,mt8196-vcp-mbox.yaml
-+      for details.
-+    $ref: /schemas/types.yaml#/definitions/phandle-array
-+
-+  mbox-names:
-+    maxItems: 5
-+
-+  power-domains:
-+    description:
-+      A phandle and PM domain specifier as defined by bindings
-+      of the power controller specified by phandle. See
-+      Documentation/devicetree/bindings/power/power-domain.yaml for details.
-+    maxItems: 1
-+
-+  iommus:
-+    description:
-+      Using MediaTek iommu to apply larb ports for Multimedia Memory
-+      Management Unit and address translation
-+      Documentation/devicetree/bindings/iommu/arm,smmu-v3.yaml
-+
-+  memory-region:
-+    maxItems: 1
-+
-+  vcp-mem-tbl:
-+    description:
-+      Manage reserved memory for VCP RTOS FW and various features.
-+    $ref: /schemas/types.yaml#/definitions/uint32-array
-+    minItems: 2
-+    maxItems: 12
-+
-+patternProperties:
-+  "^vcp_[a-f0-9]+$":
-+    type: object
-+    description:
-+      The MediaTek VCP integrated to SoC might be a multi-core version.
-+      The other cores are represented as child nodes of the boot core.
-+      There are some integration differences for the IP like the usage of
-+      address translator for translating SoC bus addresses into address
-+      space for the processor.
-+
-+      The SRAM are shared by all cores, each VCP core only using a piece
-+      SRAM memory. The power of SRAM should be enabled before booting VCP cores.
-+      The size of SRAM are varied on differnt SoCs.
-+
-+      The VCP cores has differences on different SoCs to support for
-+      Hart.
-+
-+    properties:
-+      compatible:
-+        enum:
-+          - mediatek,vcp-core
-+          - mediatek,mmup-core
-+
-+      twohart:
-+        enum: [0, 1]
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+
-+      sram-offset:
-+        description:
-+          Allocated SRAM memory for each VCP core used.
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+
-+    required:
-+      - compatible
-+      - twohart
-+      - sram-offset
-+
-+    additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - reg-names
-+  - interrupts
-+  - mboxes
-+  - mbox-names
-+  - power-domains
-+  - iommus
-+  - memory-region
-+  - vcp-mem-tbl
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    #include <dt-bindings/power/mt8196-power.h>
-+
-+    vcp: vcp@31800000 {
-+        compatible = "mediatek,mt8196-vcp";
-+        reg = <0x31800000 0x60000>,
-+              <0x31a04000 0xa000>,
-+              <0x31bd0000 0x1000>,
-+              <0x31a70020 0x100>,
-+              <0x1c00091c 0x4>;
-+        reg-names = "sram",
-+                    "cfg",
-+                    "cfg_core",
-+                    "cfg_sec",
-+                    "vcp_vlp_ao_rsvd7";
-+
-+        interrupts = <GIC_SPI 787 IRQ_TYPE_LEVEL_HIGH 0>;
-+
-+        mboxes = <&vcp_mailbox0>,
-+                 <&vcp_mailbox1>,
-+                 <&vcp_mailbox2>,
-+                 <&vcp_mailbox3>,
-+                 <&vcp_mailbox4>;
-+        mbox-names = "mbox0", "mbox1", "mbox2", "mbox3", "mbox4";
-+
-+        power-domains = <&scpsys MT8196_POWER_DOMAIN_MM_PROC_DORMANT>;
-+        iommus = <&mm_smmu 160>;
-+        memory-region = <&vcp_resv_mem>;
-+        vcp-mem-tbl = <0 0x1a00000>,
-+                      <1 0x30000>,
-+                      <2 0x12000>,
-+                      <3 0x1000>,
-+                      <4 0x1000>,
-+                      <5 0x1000>;
-+        vcp_0 {
-+            compatible = "mediatek,vcp-core";
-+            twohart = <1>;
-+            sram-offset = <0x0>;
-+        };
-+
-+        vcp_1 {
-+            compatible = "mediatek,mmup-core";
-+            twohart = <0>;
-+            sram-offset = <0x31000>;
-+        };
-+    };
--- 
-2.45.2
-
+> 
+> Fixes: 18715931a5c0 ("PCI: rockchip: Simplify reset control handling by using reset_control_bulk*() function")
+> Signed-off-by: Jensen Huang <jensenhuang@friendlyarm.com>
+> ---
+>   drivers/pci/controller/pcie-rockchip.h | 10 +++++++---
+>   1 file changed, 7 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-rockchip.h b/drivers/pci/controller/pcie-rockchip.h
+> index 11def598534b..4f63a03d535c 100644
+> --- a/drivers/pci/controller/pcie-rockchip.h
+> +++ b/drivers/pci/controller/pcie-rockchip.h
+> @@ -320,11 +320,15 @@ static const char * const rockchip_pci_pm_rsts[] = {
+>   	"aclk",
+>   };
+>   
+> +/*
+> + * Please don't reorder the deassert sequence of the following
+> + * four reset pins.
+> + */
+>   static const char * const rockchip_pci_core_rsts[] = {
+> -	"mgmt-sticky",
+> -	"core",
+> -	"mgmt",
+>   	"pipe",
+> +	"mgmt",
+> +	"core",
+> +	"mgmt-sticky",
+>   };
+>   
+>   struct rockchip_pcie {
