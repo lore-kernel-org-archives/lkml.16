@@ -1,55 +1,55 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17EE42517A0
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 16:57:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4314D2528F2
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 16:57:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743699433; cv=none; b=HVYQINFJpbST2cs1ngxkPKkArN4b3/BWzqj+O0UKb+YmpgHtRLXSAR/BcJ+8NUvtKstnfI3pDj6HzmKF0OFn0wLQYaULR2T6+t9sfWwPehww0NGHd8IQvD7Jp4yI2Nxq7xlMJBjp/ChyHY55C1TuBBvib8vANPmFccMVRVj0UQA=
+	t=1743699437; cv=none; b=lZ5WWaxtERlIwrzfvcV9O3OOJPRfZqlwQMjP1E4wYEoi3PR87c34SlgJjl9h9W52AZ1mEH78Y48p47eHow75Ep1UjAWNc2Cka0qjmu3UruiBQ/6zY8GuX5hEYfDRTvvYCn5qXPQ0L29Ze8ZJbrIhBuftmOxlD/9JU6O+fprnCio=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743699433; c=relaxed/simple;
-	bh=EZ3OctgXrov4m1SIQQP0GA1CjxgdmMYx1wr5mwi8Yqk=;
+	s=arc-20240116; t=1743699437; c=relaxed/simple;
+	bh=Qz0QomEC//r00eQAz30vgB3K0BsSHU+UqMrkppYie2E=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=VfMYHnj5Lcaoef90sSmuEGxLaBTaDQH/gLOTEFGZt92LYN0VuryPGDVZRwpxl/C4z9BSRx7hG3ktS1zn071R6iNjHWNdijDrQo+SeVqG82qNvxUGrkPpGgtAlA2TmVDiFEocx+vd9eacRRiXkuuZ/AiHu7ap3050CVT6gJxn+Ik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OgU7Xa/H; arc=none smtp.client-ip=209.85.214.202
+	 To:Content-Type; b=CxkqhtHJ+E7rnnLace5MtnqlCe3fTifP+Yrx0CDreP/IZKRf7RljxPPVQPIyFxSx0/d9iYLDWfy7SrcZMM9IEJkSMDQwnBZrW5RoQHiRKm5MBarPkLsDb6VJEwd72HJGDMMEEZAZY+PrlPORfnTMq/AuuPpqySgLieWUpWpiPlg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=B1o3lMzw; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OgU7Xa/H"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2242ade807fso18529305ad.2
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 09:57:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B1o3lMzw"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ff854a2541so1051048a91.0
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 09:57:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743699431; x=1744304231; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1743699433; x=1744304233; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=2vMMUbWfGWJtt6qJg5TEjuYkc7LyjFLPOch4giCzBAE=;
-        b=OgU7Xa/HYF5IzkO29gyfVS1HKvcN3DWqUnzGJ/wNcJHfe+oPg5b1QyhCIRxI9jmWtJ
-         BAOzlGID9msHTmJcl51z+A2aDZmu6YNjI0HL1Ls18FLIoN6EO1yBN0KrL2mwbObxhaVh
-         D4yGE7B7aex2fXpFE+RKEe6uRykh5t5VXZE7l/tH6KrSPhc002keSPgOvZLyu6P6TSNV
-         L5SxDe863uULVLW4G9ogKEnvBxTIp8oZBr6unndaNdHmXZ8rrCrAjQkFAZOjhoILL4z6
-         TYXr35eXJsk63DFj/b2DXo0K2F6Po3nJc0pS8MLkYMsj8t7YNCtIDvqNo3YAgH5Fg8rT
-         d+7g==
+        bh=qW8HptWxtTGnb+NyUFSz4Rsqb7n3gW/Agd38GBuyPl4=;
+        b=B1o3lMzwD14k3bQAZ1MkTFtPfdRm57m0XkwJqZ56pieytS+1MjjhvMb7ZdPIUxJs2a
+         cz82DsWEbendEHhSFmw+048SMdpzyZBBc97CSh07M9o3nEevDV9fC5kuboK8XTTJG2Tb
+         e5wS4UniK/VCDtThybyK7zLV/NVEGEmKAVRAJ1FE7MRnmPbw7lZ+iory8vrslXWYRnvH
+         BmhO0fSiBeq9s220qz29hVGwzZ+EnU5EhDyTzyGxd+YRrHH2MJvELwMtgcS4R3mjHMLX
+         jysuxpCKJA0F5o9Rx4zuh2MOIMtHiQ/+msHugU26XdY9lvbNBWd7Luqcnv+FWr+IWwWZ
+         24vg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743699431; x=1744304231;
+        d=1e100.net; s=20230601; t=1743699433; x=1744304233;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2vMMUbWfGWJtt6qJg5TEjuYkc7LyjFLPOch4giCzBAE=;
-        b=QdOwQd6LCWHqo0v6oWHmOkxyxqxCzVmBibNRpemwgbW2zF1aV8FxDsxVTD3unksFVZ
-         jChIfr++krrRMUYJMAQt6JpamDwV8cgwvT7jxEMjJpcPjzdv100mwv9tKPun96QXUElS
-         7ZAcidI51atDF89lp9tKP7GBz7kLPdYeBrGQODqca7TOyCEK5YqMLTOhxNOaOPa8ygf0
-         HzxTWrYxwGK1HFiDl7Lm+7EYnTEbvvKZEl/CfmErktWVXvOvUCGwByYLy2eHmat1Q3fD
-         LeoGVWl4YtWk1HKRV4vEg4ritnesFVixAsDu/UTzyjcRXUEPhqZySOVl4EwZqn6ot9N8
-         ScRA==
-X-Forwarded-Encrypted: i=1; AJvYcCXWKF+1SpHkPCsdMFc+FKNSOcrhnSdn1LZ1jlJMi1Vlhf1mgS286oJ9VxnmLyu3+xUY5/6VrnFoxwER9HU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YytDjpnwWBPmK28wb+3gMxMy0aDC5Kaqz4ATe01L1rMilShOc2S
-	oL1HtT/FMmlpFriBgc/n+5FYmeVwGl8qB9/dCjeQPJRYPIx4YBRhklRyRpQZcdcMfDNqtaNGVsN
-	Bjv+uwA==
-X-Google-Smtp-Source: AGHT+IHVdW6EuuBxX0sM92CTGs0VCjkpUZ5/eKwIrxGT0OKUKkZpfgTf7TdCK0KWd6NyRz82u0in6WUHraY0
-X-Received: from plsd21.prod.google.com ([2002:a17:902:b715:b0:224:2ae9:b271])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:f552:b0:224:f12:3734
- with SMTP id d9443c01a7336-2292f9e298bmr322176305ad.30.1743699431571; Thu, 03
- Apr 2025 09:57:11 -0700 (PDT)
-Date: Thu,  3 Apr 2025 09:56:59 -0700
+        bh=qW8HptWxtTGnb+NyUFSz4Rsqb7n3gW/Agd38GBuyPl4=;
+        b=vgVDjtndF3+9dG3dBjB5Ihn5XYKUhUETVEoi1/rypRZiU+sVND4rVnooM/z31mJMym
+         3MJ06Kk+0uHRNCNHNNdHZoH4m3Z6Yd2ZEtOak30MCss/AQ+VTEiuK8xSjPnFMwTOkFu9
+         jNYyrS+En37xe7GQz8sFl0VTE/YSE+/JFsCxsYyTXLwJlLbwI3S32IHzjZCMk0VjPxwz
+         ZMoAKnv2Bo6KdraiHCUtCkNlFvBddH5gzN6weDrOvyAldoVXgsNhb6huxOwZDmgMk9nE
+         k9Uw1paQyDOibq/swFbQG12qznRB7VqA0SySQoerPzQn43kjzIhiaW7IwrgggEjG+zbi
+         +qbw==
+X-Forwarded-Encrypted: i=1; AJvYcCW/DjO2xvLm1hRt0THVlcTKzhQ+OjE1n4GRtzaJp0jl4OrK5nZT8KtEL45IjGKoVR8mQUDWsf/4zLyP9M8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YweKG43Ob45qZ7oWFZG9r9I7RMHPAfuSRqXDoeDsUlliNHpat+0
+	FItXsKvVKPg88XbcbKG8x3ud28l37yWtzhuv72+TBSHnaPI5DzvkvnEm6EiKKM/hCDFjHS0hhSD
+	oa0dx3Q==
+X-Google-Smtp-Source: AGHT+IF0CIOoJJeJRQHOUC3EpHHqa58y0n4/IbXEbLHpY4GALdcPXwOZpF/CmwFTc4V9Kvparfq+Lmxq0y9x
+X-Received: from pjd11.prod.google.com ([2002:a17:90b:54cb:b0:2ff:5752:a78f])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1b0d:b0:2ff:52e1:c4b4
+ with SMTP id 98e67ed59e1d1-306a4b8597emr236433a91.32.1743699433573; Thu, 03
+ Apr 2025 09:57:13 -0700 (PDT)
+Date: Thu,  3 Apr 2025 09:57:00 -0700
 In-Reply-To: <20250403165702.396388-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250403165702.396388-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
-Message-ID: <20250403165702.396388-3-irogers@google.com>
-Subject: [PATCH v1 2/5] bitmap: Silence a clang -Wshorten-64-to-32 warning
+Message-ID: <20250403165702.396388-4-irogers@google.com>
+Subject: [PATCH v1 3/5] bitops: Silence a clang -Wshorten-64-to-32 warning
 From: Ian Rogers <irogers@google.com>
 To: Yury Norov <yury.norov@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
 	Arnd Bergmann <arnd@arndb.de>, Nathan Chancellor <nathan@kernel.org>, 
@@ -79,22 +79,22 @@ truncation explicit.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- include/linux/bitmap.h | 2 +-
+ include/asm-generic/bitops/fls64.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/bitmap.h b/include/linux/bitmap.h
-index 595217b7a6e7..4395e0a618f4 100644
---- a/include/linux/bitmap.h
-+++ b/include/linux/bitmap.h
-@@ -442,7 +442,7 @@ static __always_inline
- unsigned int bitmap_weight(const unsigned long *src, unsigned int nbits)
- {
- 	if (small_const_nbits(nbits))
--		return hweight_long(*src & BITMAP_LAST_WORD_MASK(nbits));
-+		return (int)hweight_long(*src & BITMAP_LAST_WORD_MASK(nbits));
- 	return __bitmap_weight(src, nbits);
+diff --git a/include/asm-generic/bitops/fls64.h b/include/asm-generic/bitops/fls64.h
+index 866f2b2304ff..9ad3ff12f454 100644
+--- a/include/asm-generic/bitops/fls64.h
++++ b/include/asm-generic/bitops/fls64.h
+@@ -21,7 +21,7 @@ static __always_inline int fls64(__u64 x)
+ 	__u32 h = x >> 32;
+ 	if (h)
+ 		return fls(h) + 32;
+-	return fls(x);
++	return fls((__u32)x);
  }
- 
+ #elif BITS_PER_LONG == 64
+ static __always_inline int fls64(__u64 x)
 -- 
 2.49.0.504.g3bcea36a83-goog
 
