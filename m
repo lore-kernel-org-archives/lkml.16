@@ -1,299 +1,183 @@
-Received: from esa5.hgst.iphmx.com (esa5.hgst.iphmx.com [216.71.153.144])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E93A2405EB;
-	Thu,  3 Apr 2025 07:26:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=216.71.153.144
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743665184; cv=fail; b=cu3TJhDTF7k5OQ8UYowqEa4hazR99VwFPRop4VAsWvWr56rkT6bF7iNiAxw8M7Q6MHyczStHeNW3hm6P/sVzNHMtrLDJGiic+cVNJIchvr4RhGlivNOcTr3yIWrlP9ibG22ZT0LcUuCsribngTR2eiQ7zQhK6oC4WrCvIFq0szQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743665184; c=relaxed/simple;
-	bh=VNE+s3gfJcXq80WStw6BdGdSGSEv59KpDYMq4lgzPD8=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=qJCu4ivDE0e8cOexuVJK31y/gb+gMKFLsZkOZh/9qB3hi+b2LKjyRvPKsiKcX33S8+erPOqLBn9MNjQTOK68zBv5irJmsa+BytpAAOq2NN4beiFuuw9ook9YuO/AKqr0mSYmpJ0NgPVs+JU43FnCSm1NZb01k/fsPZfZvQ3fjEc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=YWUzBjwu; dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b=h+f4P0VK; arc=fail smtp.client-ip=216.71.153.144
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8799221F2D
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 07:27:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743665232; cv=none; b=fRfKnX0V6u1/t8qtQEoJd8Is2uPB7mDk9w08L196BOqQDpsxo0r5rb4n+kYwH1wB+zk1pz+sVfzHmQjpJnoP9Qza0oGbxgNKTAJvbvgo0D87ZkEkP17RVVN1eBL6D99XtVBZ+o2W1v4jBx+N8VZBMfz1YSLJxQs+YHic3YLSBi8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743665232; c=relaxed/simple;
+	bh=YiQE/rbxd6T+0Sl12/HPKQOH2Wjbican48ns51RS/Gg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KxgsdWyGrYKjVpXAmWDo4OgEeWp9SbiLb8FZrTN5aBCxJ/qYdAnKLK70EFCVtVd/MXVCFZqNfaeyrxtRXi8aZTJ3ytfh1sJNFmwD92pBP04JCspqRVUHORvfbBv35kqFOnD5VGyNMB1IzwkSr9R6+ZPy4Pueg0uul9zQGAiZSC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Lp3njvUm; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="YWUzBjwu";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="h+f4P0VK"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1743665182; x=1775201182;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=VNE+s3gfJcXq80WStw6BdGdSGSEv59KpDYMq4lgzPD8=;
-  b=YWUzBjwuFTx2VIvZ7H8h+65dT9NJEEeqVwAiK5eyJuZ1scCL5WVf/pg9
-   +6GWYd6Kcxb06hPBf7pp61X9zvrSMD92aw/UlF4aKmS0QV1EuiCa03i8/
-   q9KNS3PqfP73nnzUTSK0kL4NNt8A9pWcRDb4o0RtbrJ635B/Cd5ukuO4y
-   M4p2EPJ8XKtQNGfTkkc8uqRTmP8MdQ9e1eXK92o/2h4c0mTdZWhcGPCoF
-   0riGlNX7aiVav/kwwqzg7JVBfu4hD6RebQm4Lk0++xvm24nPV9eQLn6d/
-   JPlkplvCCpE/afJXhLg2xn0SehOz4sjuOrfGJtQ+vTU0iDw0QkcqiT1Lq
-   A==;
-X-CSE-ConnectionGUID: laAfOlFpRAeNcDg+qlJapA==
-X-CSE-MsgGUID: XpxXqSm6RNu2Dspo3P53OQ==
-X-IronPort-AV: E=Sophos;i="6.15,184,1739808000"; 
-   d="scan'208";a="68570227"
-Received: from mail-westcentralusazlp17012037.outbound.protection.outlook.com (HELO CY7PR03CU001.outbound.protection.outlook.com) ([40.93.6.37])
-  by ob1.hgst.iphmx.com with ESMTP; 03 Apr 2025 15:26:13 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ag1rtvCAUzGyJ6iP/JNoVCrw82hG7JSYaMUIB6iLHF/yaNLhw2VgLwgtmv4PimkieAp2bS4rIDamR0QjCoC9GwNriW33nyUkUgJ8siTi9WVAy0Tetj9s4V+e6Y4XIKMNtGwsM2PDt/7WzySgQfUkADLLdGGLwM+JBM1GaqfR1tQABMUaQ7+zvHixPHsdUpTeIQyKDeWJMCsDN8KNs5pWpHYoxumxS2isBHmylaKuUNPB6Spf31R/sMhuPUCTfa6k55mBRzaKryDXJaYNm2UreiYng517/YBW8Vz8vXNDPrcD7SGjSIGQXIrxC/PgOEpsVv9lXmRvx53dLWqlbMmHXQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=uiaf4iI8TxcpsAH9U+M9YUVSuOUeNJliuTGxpN6IA28=;
- b=A6k7tL+lc5KR+jV+fhwG7FEkY+DKr49UWPWbn+Yfdz2nFRNri2DxVRCL/XmgpjdwG787fDMhUXLSk+A6o5Gd/WQQWdN/VmELfWiMQOCEczIJxxmjNVnBoFp/XvTuejJDTeHQ5RNobCcPxf0brwdzKs+8rMZMgXu+8oZJjF50WNyxgeVzZ36uGN3r03/NdHNdJa0WdbyocyGaWhHaHtZRX2YIVuoAor4Z7SLhXJs7IP27xkKyBWbFSETWfAckTsvZIbNFIcDdJoUtiQ0yGp1+46fGZaHejJ+bY1h0C/Es9NJabRZb+w6nc1SWl/35qcrTEojSpU/2v87DHckoYRKlaA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uiaf4iI8TxcpsAH9U+M9YUVSuOUeNJliuTGxpN6IA28=;
- b=h+f4P0VKfm/ORd7xLtGdrfUBxDkcP2u4TTZDH1qZh6q6bwSgMMYtuh2EC9Jvj9Ntrj5h3kEaEiflmw2qj3sQWZ+qdNw0750B0gor46akqMM/uVgTqQbC0BVGc45AGbY2P1IYsoWoB+3jSPPxIwDuLtWPEYsxgphq1n1Jd9MPBmk=
-Received: from DM8PR04MB8037.namprd04.prod.outlook.com (2603:10b6:8:f::6) by
- SA2PR04MB7691.namprd04.prod.outlook.com (2603:10b6:806:140::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.50; Thu, 3 Apr
- 2025 07:26:11 +0000
-Received: from DM8PR04MB8037.namprd04.prod.outlook.com
- ([fe80::b27f:cdfa:851:e89a]) by DM8PR04MB8037.namprd04.prod.outlook.com
- ([fe80::b27f:cdfa:851:e89a%7]) with mapi id 15.20.8534.045; Thu, 3 Apr 2025
- 07:26:11 +0000
-From: Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-To: Zhang Yi <yi.zhang@huaweicloud.com>
-CC: "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-	"linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
-	"linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-	"dm-devel@lists.linux.dev" <dm-devel@lists.linux.dev>,
-	"linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-	"linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-	"linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, hch
-	<hch@lst.de>, "tytso@mit.edu" <tytso@mit.edu>, "djwong@kernel.org"
-	<djwong@kernel.org>, "john.g.garry@oracle.com" <john.g.garry@oracle.com>,
-	"bmarzins@redhat.com" <bmarzins@redhat.com>, "chaitanyak@nvidia.com"
-	<chaitanyak@nvidia.com>, "yi.zhang@huawei.com" <yi.zhang@huawei.com>,
-	"chengzhihao1@huawei.com" <chengzhihao1@huawei.com>, "yukuai3@huawei.com"
-	<yukuai3@huawei.com>, "yangerkun@huawei.com" <yangerkun@huawei.com>
-Subject: Re: [PATCH blktests 1/3] scsi/010: add unmap write zeroes tests
-Thread-Topic: [PATCH blktests 1/3] scsi/010: add unmap write zeroes tests
-Thread-Index: AQHbl9iRLG9wT5WiKUmWJdNkg3daDrORo6YA
-Date: Thu, 3 Apr 2025 07:26:10 +0000
-Message-ID: <krhbty6cnaj3zv4bka4jmpwmm74v7k3cts6csp6yoc7xjexoyu@6yrwd7rr2rip>
-References: <20250318072835.3508696-1-yi.zhang@huaweicloud.com>
- <20250318072835.3508696-2-yi.zhang@huaweicloud.com>
-In-Reply-To: <20250318072835.3508696-2-yi.zhang@huaweicloud.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=wdc.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DM8PR04MB8037:EE_|SA2PR04MB7691:EE_
-x-ms-office365-filtering-correlation-id: d638b98f-ca80-4251-47c5-08dd7280ceea
-x-ld-processed: b61c8803-16f3-4c35-9b17-6f65f441df86,ExtAddr
-wdcipoutbound: EOP-TRUE
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|1800799024|366016|376014|7416014|38070700018;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?kSzopheMWZO0E5JW5Oid8iT/ctaaDKkbpsxfvFqz4FikrN6zb8q1E3vnc/3Y?=
- =?us-ascii?Q?GilK/3+FFwA7LERy2AFzU/mana45Fzw6uGGR+eqV71Ew0+Cx9YLLkLCF5ZI3?=
- =?us-ascii?Q?WQB60fzfHTzAZN3C4SoPJDnsKEBvIKnEljAMKSIgsjirnGMAqm3taImHybN2?=
- =?us-ascii?Q?EoXs0HoaxIFYQpXghLeKMCHzLmqUioUVSvOrNyDOxbIlTO1nuNd/NtUWU/6V?=
- =?us-ascii?Q?gpFZCtButh5+72jpWlIzt4Os71xyZJvMY0mpyhXDpwryOEJbzgYLXkyZ8Hag?=
- =?us-ascii?Q?o0C/flZ/t2h8ekt/1H16CpkX63nMTXglx3EaemmfAbUnJrVVicrLCSdbjmwV?=
- =?us-ascii?Q?2I3cPo1eWIkZq8eTbgGmCzg1tlYg5q3sDlWbry1HbZ+EwyI9sg8eZFVJJxot?=
- =?us-ascii?Q?m52cxYao7M7BungbX8b8xPnOND3ndYV+pTlxZhStNiSWcOZahv+JtSkvwG35?=
- =?us-ascii?Q?TifY+TO+rwCR0fjlF6F9t/uIL7e+AzxcVW92O//4umpNebEmUeAYGKmtgGBk?=
- =?us-ascii?Q?buLePwcbXRfYBH9iH9Zo2khpJGWkgifIMnZN1/6fIDx0NuTGx2zuaAzg2cdH?=
- =?us-ascii?Q?iTVtHimkIZxJPM3va/tASItccHpEvrCK/X41XWPXhu216sNdavYkVMUjU3uk?=
- =?us-ascii?Q?MPN9iMgNH+vUsD6b/9bvZ40SWPL8xWBvpnTTT0I/UEleFDqnih9WzHZLr+jI?=
- =?us-ascii?Q?eVHrWi9u9r5ohDNuWOBtfWRAFa/Jx57jMS4kVKiZyv4g994SUE1U+hDAeLOk?=
- =?us-ascii?Q?A+MOmzXUF7wUW07ooE8KlhrRTW73p2Imgg1SrbLoumHZB0sMU5NzWp+sYjSQ?=
- =?us-ascii?Q?QxEA1CohM6xzz7Qu8zZWNt8ntuHxudFdWdMTsGj+GXjoEooUUO1gJWRKNeA0?=
- =?us-ascii?Q?5ESy9OZSn5Eg2U4315QSsl1lRiLKHtNDbdb/pIycrCSast7T41+7tzwQRDof?=
- =?us-ascii?Q?ObdZP9q51l/3Tfz8t6wsodXg6jzjw/m7RkMBi61uR5tTtsGa4ZQ1tTWVNDK4?=
- =?us-ascii?Q?8LSxS2bj0CyNdR6UQ9EeYHimy/XUa222/WgisyTXh8oZB07oLkwsHE5NzZoM?=
- =?us-ascii?Q?87MByMfcI6V5blR9JSgh1XC/P6xBFRkKzkfHvIgux4iGJFp9vWYLPskMoEXK?=
- =?us-ascii?Q?8FpScA33m/T0siXmbQO3J/SMJRPeF1LywawUvq5wBaNLhtiod/vAvPcTW17V?=
- =?us-ascii?Q?OeR6jpD16ljOfkVMHEJv9ZdXiR0cMMdSqUDj6z5LxAEFfBtdopcvVslGzZcZ?=
- =?us-ascii?Q?ZJWuW8payPzZ8t7dsXDR8fxneJhCeNEQtJqTyg0Wixr2LJSQEVjmUpD8iURC?=
- =?us-ascii?Q?BvgMw8LvCahmPCFBw0YyDPxHsC44yNpZFwNgRx5aso/hX12D8wpPOHANh7J1?=
- =?us-ascii?Q?ytEiqugei4sR2JRLB4IcOSU5930U0TPebv4xALhk1tsCfzWaNKhcBSfvFvoB?=
- =?us-ascii?Q?BdrZ7ilcbQXUp2mS42O3N4SUHBlIkay7?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM8PR04MB8037.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?uFsdn4H5bzx27ou+G7YE1YLvKi5QppiOZpCug9TILF/gp7zEoMIJVMLIbzlQ?=
- =?us-ascii?Q?WZgdqS/fX16Frb/9DarC6wJfEpK+Ne3AB6qZ65gR+prCojhrjnkck2veI53H?=
- =?us-ascii?Q?ypkrEkKEh2Q4TcZtNz7psJr8doHYZTTpgyEhlu0d3v5AxisK7B+jlULofZX5?=
- =?us-ascii?Q?MVoxTgsW1XBGG6VTp/wBtrcTT25rYFBbbLg4Bm4Vn+k6bF9KdNh4Z61jBg7+?=
- =?us-ascii?Q?a2FtSgnrVcsS2GS4aTrxU/578H8fIxmEPSJ5Ahua3KINLX4nj2zophuw8hjQ?=
- =?us-ascii?Q?AtIKXtG8EgZ0IWR1O8+7TU/G7zvrkogeFDSnxdjFwIeEXzci4D84j5dDxlFl?=
- =?us-ascii?Q?fAAbvmIGtWY8RgbRwK1pNqa2qwwKjB+z6XNqrYDBDZ5ZeGDnoUF+16bO2YFr?=
- =?us-ascii?Q?SC3+nU7rUXeFVlSJrQEK76/XLGUNcxpogOJFA+9jtzOpZswN5zDFIW8yT/jS?=
- =?us-ascii?Q?hvRfRmxFA/wR8igfTV/gtLUu5/i47Uj7bUvMFGbGPJdx2tmJmTVmo+RHirH+?=
- =?us-ascii?Q?akKWUeBIUiZXsPNnm/bX+sSiETg758iOvah/HXGn1RTQK/5r3zCwHRTqaJQQ?=
- =?us-ascii?Q?RW+nHA/ysPXH8voafJuUfyJRm5pwm1cJrkNDZNZ2BtuipHp36l0kSr+IR95W?=
- =?us-ascii?Q?8GgFjPQufg+fHQ+MDLeES5kB3UFuaCHFCtvD7ikUbcKYiNEuNpWVuBhhzajl?=
- =?us-ascii?Q?AyJUre9m1sBS4sn49kpMFcGMwz3VrUU3FeBbOlXBFfZREfYW98dyxLWr+C+Q?=
- =?us-ascii?Q?0pgvw0jSuHGkcq+ZmikIkl3hrAvMMSgmUxB3x1jXg4uXPgtWsHjcrxqYg2up?=
- =?us-ascii?Q?5i48R2Ck+x56AEU6FFZRPFlkPpEVSfJZSXuSPTsBuwhkaciJLuq10jCUp2NR?=
- =?us-ascii?Q?orvd4CF8EOyLzvGV4RCq8EFgENzjVjFT+EazihstTdGacFxzvx8btYG9VR+2?=
- =?us-ascii?Q?foGza8vCAfkdftehfrYtH4rJXgSEoSbRwp2P3XFWvUOSHhHaneoQeD8YZqBO?=
- =?us-ascii?Q?X2KjTdjl/rtzpqTY3lYnPa5do5024M4znCe+wQM/oOFvgeWkcktyUmy1//mR?=
- =?us-ascii?Q?Vmn6sdO/lz2elWKf9V8k0TStwr+XF3oNU0hsQ4gxl6Pvxvz0z4m29NPcDAxF?=
- =?us-ascii?Q?jPjJm7VVaO/5R0THDtJUMhH3uZdPHpNGJlMsj/NuvcUdrwV3FHRi2RUpvURV?=
- =?us-ascii?Q?m1TrjGqWacGWsqTV4fmKYi/FoPTbqSKhRUFaxOa/wL7/6jDciA6t/5zyoDf5?=
- =?us-ascii?Q?qI91JVAIR3CZhXDLGnr/8sux1K9VbtvwFYkOmIjxK3CXb0YM9TwKsnOyQZyR?=
- =?us-ascii?Q?lODnZT8q2beebxQzi4bXKpJ9paN1J/oGg6SE3ohj4gvlQHD+ZvQrtaeBONcs?=
- =?us-ascii?Q?WHdJ8e7yNtSbtYcQWYMF12d7qBFvpueD0/jdYCmF069uYJGC5qvYEq44vS1q?=
- =?us-ascii?Q?AaT5vtVxUG/xjb6IIR9+iIwVDVGKViGslpBu/MNxmRGyEnDIETMlFGQH7iqA?=
- =?us-ascii?Q?m9sTWbT4wZ887YAB2C6Vk3ZRkKnh4fqoOGVqkpMpo0UTP0+RBf4dNVyEw9t1?=
- =?us-ascii?Q?ufo+nZYt3PzpJNUwgDj7fSnWerfxQHL/zkE0mBMuNpBtoZtX9NrvrITaQeCU?=
- =?us-ascii?Q?yUvqcmjVdVN3ZbeHkBRRWGo=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <3744485F21AEAF4C8CEFD63BE6E8C4E6@namprd04.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Lp3njvUm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743665229;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nC2q6NcPEOSq5O/QwSWUVvMEBJ0OfjzBc7t2dBxH+Kg=;
+	b=Lp3njvUmbrbxL0+7DL/0/z86UK+/TT1w/MCT0oVKk//ENSyTpprpySURxIlR79PtsieW0U
+	qE+8MYIVHSqe0pNzJXVcS9xG7lByaAcmRTQvoAT0B6PjfZvSkZ2GtpSzIkNmaREWcw8G6k
+	ht+UHBX8PaSDT1HM5OYcTm0XJb1nSjI=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-612-cyrSZuyjMo-G_PQ_WmtyrA-1; Thu, 03 Apr 2025 03:27:08 -0400
+X-MC-Unique: cyrSZuyjMo-G_PQ_WmtyrA-1
+X-Mimecast-MFC-AGG-ID: cyrSZuyjMo-G_PQ_WmtyrA_1743665227
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43ceb011ea5so3263825e9.2
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 00:27:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743665227; x=1744270027;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nC2q6NcPEOSq5O/QwSWUVvMEBJ0OfjzBc7t2dBxH+Kg=;
+        b=NA1M451Kj1jpasuuf5DWO+k6KBOzQIApK8x/ldHbMNvM3S+tV8AzkcTLSZZ2m6zHxp
+         1zLqQuIjjkdq5jMY9kv9SGvyRGwFOcvRZWEwm1TVOyu5pvrrpOkrSL3vvueZP+XjLnuC
+         B0QckLgGq9KRjxrklvJu9DG6UDo4EXUyaGmNudj7KON/5ZZcPEFapKdXjxnMmtn8zr6Y
+         5X/ZNz8RVK4ipMo8Lvs5JyY8DKfvstC39TUCXSnldytTUiLM60MOZs+xT78bqYMMAWzt
+         gB3jlAxyl4eBOGh7XgTZHbsej3bTtomadlmaxGBX8xhn+CqvNEi+VkgwC+YtV3dIzX6K
+         zy4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXDV8Hb6dm09Uv4z78Ry4rH9DvrDTwtFNBnqRoH7PI1mhZoQlDQsflVMgv2ONFGrzJNuzNbU8vbbQmyALM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwOS6uu6z8W3aRJK9FnpilPqDGg0uJv5TU99zhPNC+uneUMwkiC
+	hkPQNb4I6NVgRv/vUwLJ1n8QJ4YeTirNpzJPhHv5hot6UQcN1/usoqLpCEx1WhTOjN5/YTMJfsv
+	LSl/ieqMQqEfo1Swi/3wY4Cp9FxiiExrmt7DqR4DpJ+rNrfm2lqdxS/0hQDAhxg==
+X-Gm-Gg: ASbGnctmBTu/zzR50nz90RALAoQnFsJTnhrNxEm3iM3UNcnue1PUpek/9zwT5Jmf6Vg
+	inQcEDyrLjD/g8XP+gpNp9iA/B4uOzIqJXUd7sUMOcnyxmWcbpbk7/CJXwACAJJMPpxww03Cllv
+	a3H3ArozQZ3OoAXRAPkSDm4YU7qPriTY476m88H9N+uKtJH1svTLY0MmezwOTVS3AS3A3qcBNuW
+	rdUgK+sQbP5bn14vv1H9y0m6GOLSdeCKxxm7ig5NufRaKfgyMPI8Gs3YJVtdCaZSYRGqhcFLzAM
+	Duf3OtOEaQ==
+X-Received: by 2002:a05:600c:3ca4:b0:43c:f3e4:d6f6 with SMTP id 5b1f17b1804b1-43ec15363efmr13351695e9.31.1743665227182;
+        Thu, 03 Apr 2025 00:27:07 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH+6CSWPKPgeTjCe2MsfTh7Yn/OPPZT5EMebursV8pLb7slkNAelNKYRkjtjUZ6I5WEFJ9Hgw==
+X-Received: by 2002:a05:600c:3ca4:b0:43c:f3e4:d6f6 with SMTP id 5b1f17b1804b1-43ec15363efmr13351455e9.31.1743665226782;
+        Thu, 03 Apr 2025 00:27:06 -0700 (PDT)
+Received: from redhat.com ([2a0d:6fc0:1517:1000:ea83:8e5f:3302:3575])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec1663060sm13393335e9.14.2025.04.03.00.27.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Apr 2025 00:27:06 -0700 (PDT)
+Date: Thu, 3 Apr 2025 03:27:02 -0400
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: David Woodhouse <dwmw2@infradead.org>
+Cc: virtio-comment@lists.linux.dev, hch@infradead.org,
+	Claire Chang <tientzu@chromium.org>,
+	linux-devicetree <devicetree@vger.kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	=?iso-8859-1?Q?J=F6rg?= Roedel <joro@8bytes.org>,
+	iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+	graf@amazon.de, Zhu Lingshan <lingshan.zhu@amd.com>
+Subject: Re: [RFC PATCH 3/3] transport-pci: Add SWIOTLB bounce buffer
+ capability
+Message-ID: <20250403032152-mutt-send-email-mst@kernel.org>
+References: <20250402112410.2086892-1-dwmw2@infradead.org>
+ <20250402112410.2086892-4-dwmw2@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	EnuCssR42N+s5hywRQ3dpCiYybcxZ11TrpEoKgCuPUD+EsA5HQLemMyA9mRJsv0eGvlVnGlzFKnbhZK1rLUR9HuLSoyDUvem3WW/RLPvi2PiJvIpuZx5QVYXIs+xkMKwTcZu+uwnqnodPE6G7pvTFbsbWUtAof4P5Whjm19wLCYubCD9su/7effsA6jO7I24AOBqR7R0IB/ng8kFhGga1QV+iDbbDqR+7BC5c+GqG1Y3GwUlEGC2OixbkKzyAXW59fClnmgPiC4H1TuwXK1V2+aQkqrJelN8qPmeljsye6r0kN9E4d70t5HjHreCPAl/R9CwSGaQYMvcp77/Y9vRVAoRVb8InQ88QcEkshqYGhmWAnPga8kDByygXu8P5xjjpmPpOTo5CQ9rapsSTd60tgkiSbCngnRhGm0hsErhBGmeXuQXRyDET1YJJvIxC+2sJpyLtBHE7NDxBybgvkUULifSYVfBJvFmFRRkxLLpisxLAA7RFCCFb/oWnSkkuXXTBvOBZ+K8B0lj4H3pBCBLRXUB1xgpGi/6XGrI0zVP7ct9qvVvULFRzeFOlR6cPOYGupE0FFJBMC5VvrcoA//OvBDukfR9CEUixltfUCzUANGHoY68HYJsEL/YdgxsYc96
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM8PR04MB8037.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d638b98f-ca80-4251-47c5-08dd7280ceea
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Apr 2025 07:26:10.9288
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: oi4lhEd7seKWzB53ezgrw94PYfhK+Y3k/AnnBnt5b/hJGZMwx4EOKANn1Ky5NatTcMQUXuI84N8MOlPrFHo5lh3Z7BHup+6K0wBnJP7GyBg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA2PR04MB7691
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250402112410.2086892-4-dwmw2@infradead.org>
 
-Hello Zhang, thank you for the patches.
-
-On Mar 18, 2025 / 15:28, Zhang Yi wrote:
-> From: Zhang Yi <yi.zhang@huawei.com>
->=20
-> Test block device unmap write zeroes sysfs interface with various SCSI
-> debug devices. The /sys/block/<disk>/queue/write_zeroes_unmap interface
-> should return 1 if the SCSI device enable the WRITE SAME command with
-> unmap functionality, and it should return 0 otherwise.
->=20
-> Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
+On Wed, Apr 02, 2025 at 12:04:47PM +0100, David Woodhouse wrote:
+> From: David Woodhouse <dwmw@amazon.co.uk>
+> 
+> Add a VIRTIO_PCI_CAP_SWIOTLB capability which advertises a SWIOTLB bounce
+> buffer similar to the existing `restricted-dma-pool` device-tree feature.
+> 
+> The difference is that this is per-device; each device needs to have its
+> own. Perhaps we should add a UUID to the capability, and have a way for
+> a device to not *provide* its own buffer, but just to reference the UUID
+> of a buffer elsewhere?
+> 
+> Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
 > ---
->  tests/scsi/010     | 56 ++++++++++++++++++++++++++++++++++++++++++++++
->  tests/scsi/010.out |  2 ++
->  2 files changed, 58 insertions(+)
->  create mode 100755 tests/scsi/010
->  create mode 100644 tests/scsi/010.out
->=20
-> diff --git a/tests/scsi/010 b/tests/scsi/010
-> new file mode 100755
-> index 0000000..27a672c
-> --- /dev/null
-> +++ b/tests/scsi/010
-> @@ -0,0 +1,56 @@
-> +#!/bin/bash
-> +# SPDX-License-Identifier: GPL-3.0+
-> +# Copyright (C) 2025 Huawei.
-> +#
-> +# Test block device unmap write zeroes sysfs interface with various scsi
-> +# devices.
+>  transport-pci.tex | 33 +++++++++++++++++++++++++++++++++
+>  1 file changed, 33 insertions(+)
+> 
+> diff --git a/transport-pci.tex b/transport-pci.tex
+> index a5c6719..23e0d57 100644
+> --- a/transport-pci.tex
+> +++ b/transport-pci.tex
+> @@ -129,6 +129,7 @@ \subsection{Virtio Structure PCI Capabilities}\label{sec:Virtio Transport Option
+>  \item ISR Status
+>  \item Device-specific configuration (optional)
+>  \item PCI configuration access
+> +\item SWIOTLB bounce buffer
+>  \end{itemize}
+>  
+>  Each structure can be mapped by a Base Address register (BAR) belonging to
+> @@ -188,6 +189,8 @@ \subsection{Virtio Structure PCI Capabilities}\label{sec:Virtio Transport Option
+>  #define VIRTIO_PCI_CAP_SHARED_MEMORY_CFG 8
+>  /* Vendor-specific data */
+>  #define VIRTIO_PCI_CAP_VENDOR_CFG        9
+> +/* Software IOTLB bounce buffer */
+> +#define VIRTIO_PCI_CAP_SWIOTLB           10
+>  \end{lstlisting}
+>  
+>          Any other value is reserved for future use.
+> @@ -744,6 +747,36 @@ \subsubsection{Vendor data capability}\label{sec:Virtio
+>  The driver MUST qualify the \field{vendor_id} before
+>  interpreting or writing into the Vendor data capability.
+>  
+> +\subsubsection{Software IOTLB bounce buffer capability}\label{sec:Virtio
+> +Transport Options / Virtio Over PCI Bus / PCI Device Layout /
+> +Software IOTLB bounce buffer capability}
 > +
-> +. tests/scsi/rc
-> +. common/scsi_debug
+> +The optional Software IOTLB bounce buffer capability allows the
+> +device to provide a memory region which can be used by the driver
+> +driver for bounce buffering. This allows a device on the PCI
+> +transport to operate without DMA access to system memory addresses.
 > +
-> +DESCRIPTION=3D"test unmap write zeroes sysfs interface with scsi devices=
-"
-> +QUICK=3D1
+> +The Software IOTLB region is referenced by the
+> +VIRTIO_PCI_CAP_SWIOTLB capability. Bus addresses within the referenced
+> +range are not subject to the requirements of the VIRTIO_F_ORDER_PLATFORM
+> +capability, if negotiated.
 > +
-> +requires() {
-> +	_have_scsi_debug
-> +}
+> +\devicenormative{\paragraph}{Software IOTLB bounce buffer capability}{Virtio
+> +Transport Options / Virtio Over PCI Bus / PCI Device Layout /
+> +Software IOTLB bounce buffer capability}
 > +
-> +device_requries() {
-> +	_require_test_dev_sysfs queue/write_zeroes_unmap
-> +}
+> +Devices which present the Software IOTLB bounce buffer capability
+> +SHOULD also offer the VIRTIO_F_SWIOTLB feature.
+> +
+> +\drivernormative{\paragraph}{Software IOTLB bounce buffer capability}{Virtio
+> +Transport Options / Virtio Over PCI Bus / PCI Device Layout /
+> +Software IOTLB bounce buffer capability}
+> +
+> +The driver SHOULD use the offered buffer in preference to passing system
+> +memory addresses to the device. If the driver accepts the VIRTIO_F_SWIOTLB
+> +feature, then the driver MUST use the offered buffer and never pass system
+> +memory addresses to the device.
+> +
+>  \subsubsection{PCI configuration access capability}\label{sec:Virtio Transport Options / Virtio Over PCI Bus / PCI Device Layout / PCI configuration access capability}
+>  
+>  The VIRTIO_PCI_CAP_PCI_CFG capability
+> -- 
+> 2.49.0
+> 
 
-The device_requries() hook does not work for test cases which implement tes=
-t().
-It is rather dirty, but I think we need to delay the check for
-write_zeroes_unmap sysfs attribute availability until test() gets called.
-See below for my idea.
 
-> +
-> +test() {
-> +	echo "Running ${TEST_NAME}"
-> +
-> +	# disable WRITE SAME with unmap
-> +	if ! _configure_scsi_debug lbprz=3D0; then
-> +		return 1
-> +	fi
 
-I suggest to check queue/write_zeroes_unmap here. If it's not available, se=
-t
-SKIP_REASONS and return like this (totally untested):
+So on the PCI option. The normal mapping (ioremap) for BAR is uncached. If done
+like this, performance will suffer. But if you do normal WB, since device
+accesses do not go on the bus, they do not get synchronized with driver
+writes and there's really no way to synchronize them.
 
-	if [[ ! -f /sys/block/${SCSI_DEBUG_DEVICES[0]}/queue/write_zeroes_unmap ]]=
-; then
-		_exit_scsi_debug
-		SKIP_REASONS+=3D("kernel does not support unmap write zeroes sysfs interf=
-ace")
-		return 1
-	fi
+First, this needs to be addressed.
 
-> +	umap=3D"$(cat "/sys/block/${SCSI_DEBUG_DEVICES[0]}/queue/write_zeroes_u=
-nmap")"
-> +	if [[ $umap -ne 0 ]]; then
-> +		echo "Test disable WRITE SAME with unmap failed."
-> +	fi
-> +	_exit_scsi_debug
-> +
-> +	# enable WRITE SAME(16) with unmap
-> +	if ! _configure_scsi_debug lbprz=3D1 lbpws=3D1; then
-> +		return 1
-> +	fi
-> +	umap=3D"$(cat "/sys/block/${SCSI_DEBUG_DEVICES[0]}/queue/write_zeroes_u=
-nmap")"
-> +	if [[ $umap -ne 1 ]]; then
-> +		echo "Test enable WRITE SAME(16) with unmap failed."
-> +	fi
-> +	_exit_scsi_debug
-> +
-> +	# enable WRITE SAME(10) with unmap
-> +	if ! _configure_scsi_debug lbprz=3D1 lbpws10=3D1; then
-> +		return 1
-> +	fi
-> +	umap=3D"$(cat "/sys/block/${SCSI_DEBUG_DEVICES[0]}/queue/write_zeroes_u=
-nmap")"
-> +	if [[ $umap -ne 1 ]]; then
-> +		echo "Test enable WRITE SAME(10) with unmap failed."
-> +	fi
-> +	_exit_scsi_debug
-> +
-> +	echo "Test complete"
-> +}
-> diff --git a/tests/scsi/010.out b/tests/scsi/010.out
-> new file mode 100644
-> index 0000000..6581d5e
-> --- /dev/null
-> +++ b/tests/scsi/010.out
-> @@ -0,0 +1,2 @@
-> +Running scsi/010
-> +Test complete
-> --=20
-> 2.46.1
-> =
+In this age of accelerators for everything, building pci based
+interfaces that can't be efficiently accelerated seems shortsighted ...
+
+-- 
+MST
+
