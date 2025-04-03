@@ -1,123 +1,202 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE8BE245022
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 09:03:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D289A24BC00
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 09:03:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743671021; cv=none; b=b/vLKDad5BppnjdHC4Y3IGH8uzsuqnPXjVTI7ICDrNcBXEPGBTnFmheJxUeEZAluUU7bDk1FzQczvjqEj6Gf30NUi4mgZhPSVf1Az2HnYUa5PpsH0IPYrpZP/upTZxNkw5NcYHc2jvwqhOLwbmlx2FclNDrUBIE7vRVUSJcFerE=
+	t=1743671031; cv=none; b=DUeukoDPfKhYdaZSWqrdZ2WmUnh2QfR74u0ydDnyzltuaK6jWgZJrFZpyc+z0eBgJNRzdF4CEDfwwk/ATsFsq0MTUdvbGo7wdr/N01v7mT2iIAegNFjKkJIE7CDdXYBXifvD8oO2XUS9N4kwExFdDH8678VyPytI5FAluuDB0V0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743671021; c=relaxed/simple;
-	bh=V7ZGOwuXQ0pcRqAldH/+ETedOGLTXRvg2tS03VFoYl8=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=oE5Hh90hOIswW7MbuS4MTfb0ITG9tX5rv8mQbx3d6jgQ+WtGUwRn9W98oGQMvP5aM8E5ekzEBWKwRjR9vJ6OfjjVyDKmHHX1+14frWxNVPrVhpb7MPGx8ftdGyxkL8XDdbL5avdqDWGVzGa7w1vEXGah0TWn4TQ71uhQrUJ9F6Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fp65+uOF; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1743671031; c=relaxed/simple;
+	bh=Zm3UfkLkf9JOvDt1YLZ1WiQhqcQXN2ei5hUgD3649oM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=D9y5C6m3sA8geHrJ0DaHczNxzpPugLJidJADk1LJbNLbRZWQlSdK9MQfTrwqT/knVH1NQtYCNS7EfSLUZcoGs1pXnauCpH7yk9RQoXUwYrplWOV961GsbC/AG5lPmyaV93DyUT06HM223GDrcEqSXnw525zCxVVrCuV+YsZxTkY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=BouCKMcz; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fp65+uOF"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43cf680d351so9738305e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 02:03:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="BouCKMcz"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2295d78b433so6660545ad.2
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 02:03:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743671018; x=1744275818; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=V7ZGOwuXQ0pcRqAldH/+ETedOGLTXRvg2tS03VFoYl8=;
-        b=fp65+uOFT3jV1rTXprfMnQ8fkjS9JHtc6KXkQfx979FtY1MfCH1l62LYXThJrhlyJd
-         M9JgR2ctYQEeh7JdNh5vvEPcIEgxqIwHcASLOy2A64Y+epsGB+Ciw/f6R1rz2xwpdTzn
-         VtU/8soP9xq85TOa66ro5al1rh3gwyPQ7v/hVVhVM4eUKuyELscrtLHIRBGWuPJqqdQq
-         qJXHcZVWQMElgeNYDSBlFsjgxYGtYQf5yanmN/KBQjHuF17sRgZzqNaZ31d0rPWVMXwY
-         9zlKLocfN01DkiKAeiAiuyzaXQ5GQtYxqwotWdxhpTbiwr70lt8Un1zgpMjjipWzPmmh
-         9AQQ==
+        d=bytedance.com; s=google; t=1743671029; x=1744275829; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=AHPTYMQZL/LE7wiI5rF/tVcf8BGV6JGb59TmAXBJq30=;
+        b=BouCKMczgK/BlPXhpLuFL/F3awCRzmgFQkrHNouSmn6vXiBUrqIc3FW++7q+3J4m70
+         exZPa5Y2WtX5zZtxHwD8o8O7RyJUepYkirxCBtpDiNR/Hd8qvD0F20shjI4RrkQlrpzx
+         GW2cm7BRY0+o5AaD0ORTxObQsuxg7g/WfgGX2WDkI5V80juQV28ow4gf2VnUPJhZQwHa
+         GNUDqB8m2H9XMbcmszg9AFDdy9N3T6R0+xl5CwhZohNuTq/b8XBM7Up0FNHJTqNPVtKZ
+         fm5GaBmCrkKpw95AwlSwBFnDkyOtY/g21gjc1l/ihQNFF2gHB1TXEoTPdvPAZfqDnmOR
+         0iZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743671018; x=1744275818;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=V7ZGOwuXQ0pcRqAldH/+ETedOGLTXRvg2tS03VFoYl8=;
-        b=aH9II5Z5fo/u8N1TP/ToUFhpYStNGtJr2VghrrHvrkvnhAD6LcNUR2tLRL9qkO8bjY
-         JhTphX1j4ZYBO0adM6q2c5VUpwJZ1Qo7OElZRLMWbYgn5vA9kABPm5QvPK7KRiPzyj8E
-         xSzO9LrNvUSj2nLd4Wn9ZNC1tpOUTydwvQgi96V75RUf+NHuc7Uvq7PVxgZCcHx0YR1E
-         2zV/rQ55qpi3AnOfPvJbQsMPjLUJ3q7crEVh2UxEsCFt/KHgBv09hvaEHpOBtxJIfqwC
-         zQ8EEAE6vs3LJlyI1aBon/WNcgbmkMRppTR/QF3vh5hZ0XN0+x51N/DBB7Se9Fxnh5CV
-         5IUw==
-X-Forwarded-Encrypted: i=1; AJvYcCXLelV3cNOeIbBEQwMqFtKcvjRV3kqytXqqQwT+V4acQxD6V5n6A7zt2j2onrrp8KY1kcVjM54arAs+e7c=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx76yuyy3R5GgRmUpZcnyJ3C753t0ChLjPAhaskFM8NuKDMGPKc
-	8s3cxRV6kN28LoOJKXh/aGtvtp+HoUWvMtPMbhpK07mV13ah8aq0CeCqBg4ogz6+y2BDFrvFc+w
-	/yBE=
-X-Gm-Gg: ASbGncu4q/gDGy1LaqrfjOQIIDVlAUjjahekH+ffwF71djmzwZK6BptLT7rzix1E3xZ
-	ewhk8NLJS0B6lmKHveFH9sVP8A7tBT+CVgQI9Sc4T4Q4gblNNsUHxM2w5GfhIN54vYpKltec614
-	i1qmBL3B5DBhRlkanfmh9mwEJ9zpXd0Axo2SgQuyqAQyqyGAdc75XMDWvKZB0HMSdWRwkQrT0OT
-	/FoOPrQEXZ34fA5gN5s0qYh10TLAHpRstUaJthsx8Alef/5ntr3ksC8SDcP37ICwagKPiT87qTr
-	dO08F4niBeRZGCWbIJkwnqDrwHYC6zuOlhjlsd2aabWkh8zmkg==
-X-Google-Smtp-Source: AGHT+IF1Z0N/QR0bqygtyF1b7lJRQ+31HK0rLhXx57VHXUlp5Pl0d/+tHSmMb5mQV4oCrGHlzNUhKA==
-X-Received: by 2002:a05:600c:83c3:b0:43c:ed33:a500 with SMTP id 5b1f17b1804b1-43ec630446dmr10583585e9.10.1743671018265;
-        Thu, 03 Apr 2025 02:03:38 -0700 (PDT)
-Received: from [10.1.1.109] ([80.111.64.44])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec16602bbsm15576925e9.9.2025.04.03.02.03.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Apr 2025 02:03:37 -0700 (PDT)
-Message-ID: <d9a0547a9b042e5824009e73f43b808e149d5d9f.camel@linaro.org>
-Subject: Re: [PATCH] power: reset: reboot-mode: better compatibility with DT
- (replace ' ,/')
-From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
-To: Sebastian Reichel <sre@kernel.org>
-Cc: Peter Griffin <peter.griffin@linaro.org>, Tudor Ambarus	
- <tudor.ambarus@linaro.org>, Will McVicker <willmcvicker@google.com>, 
-	kernel-team@android.com, linux-pm@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Date: Thu, 03 Apr 2025 10:03:36 +0100
-In-Reply-To: <20250307-reboot-mode-chars-v1-1-d83ff95da524@linaro.org>
-References: <20250307-reboot-mode-chars-v1-1-d83ff95da524@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.2-1 
+        d=1e100.net; s=20230601; t=1743671029; x=1744275829;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AHPTYMQZL/LE7wiI5rF/tVcf8BGV6JGb59TmAXBJq30=;
+        b=bLksWSu3kB91FvI52ow6VGio1bQUH16Me6oaZEgfz3kHTMv3nXfCGNmcL0C4KCX8Jt
+         IwZ3sMvzCTGZJd7FT8+FSWqG4ToaLTvLmnGBY/DJ9ZT79jLna4lV5nwo19aJ8UlpGfvb
+         FqfLCIrM7AAiPxWOMXJFbQtyhzpGbY3dsJsRhGL1PWFKK8Ma1FDC1JClli5kOo+JZPC3
+         HHAszbs3GxRnU36GQ4w/F9A3yKe9chdGJUNlB/9mxyqk8IcTz3RFsaixp++N1dql4l1E
+         bi4xo+7okixacUgUOH94HRhiPItfFx9kFVJ3PF50vioxweH4xVbAZ9MRkv6SrrJIj41B
+         RRwA==
+X-Forwarded-Encrypted: i=1; AJvYcCUpO5xxB2Hu8PN8lzsW+XfTiMosy5JfHhZjMUgpXZuMhyuLP6KngUm3P2SaD2T/RLuoGjtLrMpk+RJhfIQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzn/+iLkpUfh/BRsTT6SLvO1GivWsdRfkgfhP0ZLth1XuKuJNQD
+	LAZPaM4fshxbMrNEgUxoB6+6wsMQwBm+QiNV6j+j+yjkxxHvXcQ5NKwaJ9SOQpw=
+X-Gm-Gg: ASbGnctBBCdF6lxtfkrPBxkrlo6sbwMZ1hAetga7tolJ+1CXpiwD4klFYMy8w6fJpNZ
+	LXbD64i/D7bqRMBTXxxD+YiL4085PnrJ6RMKbeXYsrFbqHbIvfViZjc/ky4yMUHWr4aWfSQsafq
+	NyVHrnpWtYF8ZW1bEYTvx31rQ/zDUrCA4vJE0z6bVwIcuX4Necly6sgS9dM5unm0Fe0yIMUiHXT
+	vuHWdZJzJ+DhDtv0G4Sb5YOp2KZ0XGtpmpcRIZKBf/14GmNWvvZmusojn0rxGId/7FgbOqv4jHa
+	PtgRiVRlhxjQuGHyx8vUbS+IPSIW2scwZx7m8gnBYIIu2+liHRaqTEajvSNbuqI73qWZXqtpQwF
+	9ZPHVkCEdhWG0Uw==
+X-Google-Smtp-Source: AGHT+IHJTH5IXTdhlfHTNlklonReyoT3ZXsvJX9ID9s0cIQoqLFk+sBnhdfnbbBFM7qc+8LKQFWG+A==
+X-Received: by 2002:a17:902:cf0f:b0:220:fe51:1aab with SMTP id d9443c01a7336-22977e0fa71mr33414205ad.38.1743671029007;
+        Thu, 03 Apr 2025 02:03:49 -0700 (PDT)
+Received: from L6YN4KR4K9.bytedance.net ([139.177.225.251])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2297866e90dsm9421275ad.196.2025.04.03.02.03.43
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Thu, 03 Apr 2025 02:03:48 -0700 (PDT)
+From: Yunhui Cui <cuiyunhui@bytedance.com>
+To: gregkh@linuxfoundation.org,
+	jirislaby@kernel.org,
+	john.ogness@linutronix.de,
+	pmladek@suse.com,
+	arnd@arndb.de,
+	andriy.shevchenko@linux.intel.com,
+	namcao@linutronix.de,
+	benjamin.larsson@genexis.eu,
+	schnelle@linux.ibm.com,
+	linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org
+Cc: Yunhui Cui <cuiyunhui@bytedance.com>
+Subject: [PATCH] serial: 8250: fix panic due to PSLVERR
+Date: Thu,  3 Apr 2025 17:03:36 +0800
+Message-Id: <20250403090336.16643-1-cuiyunhui@bytedance.com>
+X-Mailer: git-send-email 2.39.2 (Apple Git-143)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Hi,
+When the PSLVERR_RESP_EN parameter is set to 1, the device generates
+an error response if an attempt is made to read an empty RBR (Receive
+Buffer Register) while the FIFO is enabled.
 
-On Fri, 2025-03-07 at 07:50 +0000, Andr=C3=A9 Draszik wrote:
-> This driver's purpose is to parse boot modes described in DT, via key
-> (node name) / value pairs, and to match them to a reboot mode requested
-> by the kernel. Unfortunately, DT node names can not contain certain
-> characters, like space ' ' or comma ',' or slash '/', while the
-> requested reboot mode may.
->=20
-> This is a problem because it makes it impossible to match reboot modes
-> containing any of those characters.
->=20
-> For example, this makes it impossible to communicate DM verity errors
-> to the boot loader - DM verity errors trigger a reboot with mode
-> "dm-verity device corrupted" in drivers/md/dm-verity-target.c and
-> devices typically have to take action in that case [1]. Changing this
-> string itself is not feasible, see e.g. discussion in [2], but would
-> also just cover this one case.
->=20
-> Another example is Android, which may use comma in the reboot mode
-> string, e.g. as "shutdown,thermal" in [3].
->=20
-> The kernel also shouldn't prescribe what characters are allowed inside
-> the boot mode string for a user to set. It hasn't done this so far, and
-> introducing such a restriction would be an interface break and
-> arbitrarily enforce a random new policy.
->=20
-> Therefore, update this driver to do another round of string matching,
-> after replacing the common characters mentioned above with dash '-', if
-> a match hasn't been found without doing said replacement.
-> This now allows us to have DT entries of e.g.:
->=20
-> =C2=A0=C2=A0=C2=A0 mode-dm-verity-device-corrupted =3D <...>
->=20
-> and so on.
+In serial8250_do_startup, calling serial_port_out(port, UART_LCR,
+UART_LCR_WLEN8) triggers dw8250_check_lcr(), which invokes
+dw8250_force_idle() and serial8250_clear_and_reinit_fifos(). The latter
+function enables the FIFO via serial_out(p, UART_FCR, p->fcr).
+Execution proceeds to the dont_test_tx_en label:
+...
+serial_port_in(port, UART_RX);
+This satisfies the PSLVERR trigger condition.
 
-Another friendly ping. Any thoughts on this?
+Because another CPU(e.g., using printk) is accessing the UART (UART
+is busy), the current CPU fails the check (value & ~UART_LCR_SPAR) ==
+(lcr & ~UART_LCR_SPAR), causing it to enter dw8250_force_idle().
 
-Cheers,
-Andre'
+To resolve this issue, relevant serial_port_out operations should be
+placed in a critical section, and UART_RX data should only be read
+when the UART_LSR DR bit is set.
+
+Panic message:
+[    0.442336] Oops - unknown exception [#1]
+[    0.442337] Modules linked in:
+[    0.442339] CPU: 3 UID: 0 PID: 1 Comm: swapper/0 Tainted: G        W          6.12.13-00102-gf1f43e345877 #1
+[    0.442342] Tainted: [W]=WARN
+[    0.442343] epc : dw8250_serial_in32+0x1e/0x4a
+[    0.442351]  ra : serial8250_do_startup+0x2c8/0x88e
+[    0.442354] epc : ffffffff8064efca ra : ffffffff8064af28 sp : ffff8f8000103990
+[    0.442355]  gp : ffffffff815bad28 tp : ffffaf807e36d400 t0 : ffffaf80804cf080
+[    0.442356]  t1 : 0000000000000001 t2 : 0000000000000000 s0 : ffff8f80001039a0
+[    0.442358]  s1 : ffffffff81626fc0 a0 : ffffffff81626fc0 a1 : 0000000000000000
+[    0.442359]  a2 : 0000000000000000 a3 : 0000000000000000 a4 : ffffffff81626fc0
+[    0.442360]  a5 : ffff8f800012d900 a6 : 000000000000000f a7 : 000000000fc648c1
+[    0.442361]  s2 : 0000000000000000 s3 : 0000000200000022 s4 : 0000000000000000
+[    0.442362]  s5 : ffffffff81626fc0 s6 : ffffaf8085227000 s7 : ffffffff81073c58
+[    0.442363]  s8 : 0000000000500000 s9 : ffffaf80851a5a60 s10: ffffaf80851a5a60
+[    0.442365]  s11: ffffffff80e85980 t3 : ffffaf807e324600 t4 : 0000000000000002
+[    0.442365]  t5 : 0000000000000003 t6 : ffffaf80804cf072
+[    0.442366] status: 0000000200000120 badaddr: 0000000000000000 cause: 0000000000000013
+[    0.442368] [<ffffffff8064efca>] dw8250_serial_in32+0x1e/0x4a
+[    0.442371] [<ffffffff8064af28>] serial8250_do_startup+0x2c8/0x88e
+[    0.442373] [<ffffffff8064b514>] serial8250_startup+0x26/0x2e
+[    0.442375] [<ffffffff806428a2>] uart_startup+0x13a/0x308
+[    0.442377] [<ffffffff80642aa4>] uart_port_activate+0x34/0x50
+[    0.442378] [<ffffffff8062ab6a>] tty_port_open+0xb4/0x110
+[    0.442383] [<ffffffff8063f548>] uart_open+0x22/0x36
+[    0.442389] [<ffffffff806234b4>] tty_open+0x1be/0x5e6
+[    0.442396] [<ffffffff802f2d52>] chrdev_open+0x10a/0x2a8
+[    0.442400] [<ffffffff802e7ab6>] do_dentry_open+0xf6/0x34e
+[    0.442405] [<ffffffff802e9456>] vfs_open+0x2a/0xb4
+[    0.442408] [<ffffffff80300124>] path_openat+0x676/0xf36
+[    0.442410] [<ffffffff80300a58>] do_filp_open+0x74/0xfa
+[    0.442412] [<ffffffff802e9900>] file_open_name+0x84/0x144
+[    0.442414] [<ffffffff802e99f6>] filp_open+0x36/0x54
+[    0.442416] [<ffffffff80a01232>] console_on_rootfs+0x26/0x70
+[    0.442420] [<ffffffff80a0154e>] kernel_init_freeable+0x2d2/0x30e
+[    0.442422] [<ffffffff8099c730>] kernel_init+0x2a/0x15e
+[    0.442427] [<ffffffff809a7666>] ret_from_fork+0xe/0x1c
+[    0.442430] Code: e022 e406 0800 4683 0c15 691c 872a 96bb 00d5 97b6 (439c) 851b
+[    0.442432] ---[ end trace 0000000000000000 ]---
+[    0.442434] Kernel panic - not syncing: Fatal exception in interrupt
+[    0.442435] SMP: stopping secondary CPUs
+[    0.451111] ---[ end Kernel panic - not syncing: Fatal exception in interrupt ]---
+
+Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
+---
+ drivers/tty/serial/8250/8250_port.c | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
+index 3f256e96c722..6909c81109db 100644
+--- a/drivers/tty/serial/8250/8250_port.c
++++ b/drivers/tty/serial/8250/8250_port.c
+@@ -2264,13 +2264,16 @@ int serial8250_do_startup(struct uart_port *port)
+ 	 * Clear the FIFO buffers and disable them.
+ 	 * (they will be reenabled in set_termios())
+ 	 */
++	uart_port_lock_irqsave(port, &flags);
+ 	serial8250_clear_fifos(up);
++	uart_port_unlock_irqrestore(port, flags);
+ 
+ 	/*
+ 	 * Clear the interrupt registers.
+ 	 */
+-	serial_port_in(port, UART_LSR);
+-	serial_port_in(port, UART_RX);
++	lsr = serial_port_in(port, UART_LSR);
++	if (lsr & UART_LSR_DR)
++		serial_port_in(port, UART_RX);
+ 	serial_port_in(port, UART_IIR);
+ 	serial_port_in(port, UART_MSR);
+ 
+@@ -2380,9 +2383,9 @@ int serial8250_do_startup(struct uart_port *port)
+ 	/*
+ 	 * Now, initialize the UART
+ 	 */
++	uart_port_lock_irqsave(port, &flags);
+ 	serial_port_out(port, UART_LCR, UART_LCR_WLEN8);
+ 
+-	uart_port_lock_irqsave(port, &flags);
+ 	if (up->port.flags & UPF_FOURPORT) {
+ 		if (!up->port.irq)
+ 			up->port.mctrl |= TIOCM_OUT1;
+@@ -2435,8 +2438,9 @@ int serial8250_do_startup(struct uart_port *port)
+ 	 * saved flags to avoid getting false values from polling
+ 	 * routines or the previous session.
+ 	 */
+-	serial_port_in(port, UART_LSR);
+-	serial_port_in(port, UART_RX);
++	lsr = serial_port_in(port, UART_LSR);
++	if (lsr & UART_LSR_DR)
++		serial_port_in(port, UART_RX);
+ 	serial_port_in(port, UART_IIR);
+ 	serial_port_in(port, UART_MSR);
+ 	up->lsr_saved_flags = 0;
+-- 
+2.39.2
 
