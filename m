@@ -1,104 +1,93 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42328188A3A
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 15:29:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C07DD188A3A;
+	Thu,  3 Apr 2025 15:29:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743694149; cv=none; b=dL6XK6e69dX7cTB/vdiHEhQv6zMlzZOJ8/MmH2uSOE8CVluLbCXD4gC4+3I7P1anSm5HcBc17yhGQbo7jtKCXDwGZqmguj9H34zbSQlAsF0eAV96cQGS9sMCL5HsXIG9IKW2vRNEgrBsIBr1ovv6ec6Zg6sVGy6qmie0AHyyT68=
+	t=1743694167; cv=none; b=t9bPHbTEgTDLSJJo1KWghFzV8Sr4SSuaGFx47bbw5raQiX/hCp9nmN8tlhl9ASBJak/ztseGfzulUpGbZXwouj4sfNaDm5H8D3cgq/ASAhUy6xZwRp3tmwmyGKbFzHVWCCY+uOhw7JVbWWT44yRiWBAtXfYcNbrO0ExqnG6tTaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743694149; c=relaxed/simple;
-	bh=1soCiRYfYgFYJkqcHhSND4Hu+3WH6iJ7mCH3l5a9bdE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F5W2F4RSCPGZMTOWlda1lB0wSIJaOHUf848YLmoH+H4CXD87C1dYDjbcjGAzOSoMdFWmFdNY8GBo7oYUptxxPjDYGqg/4Nks5JJbqrDEePLN5Z54wYXsCRcOqV+JgsRuVx04CH+dPIhNmr332yYKdqFBzqUVYECWqNecrxAKGX0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GY3RWa+C; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743694167; c=relaxed/simple;
+	bh=Bgq41wO06U/uAv1x2bdgMUv74XXWVKv/4GQnQMRuXSM=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=hNqFIveRd6BPJr5QiSWewEHAIw005KMtf0Nact9Sby5AxpU8EmfVmZn2877O29DoWqAfPBuwv80Fg5dH0aklMwL+zjSOxEmfdxi2oZg1DVS/uwKyTvNY3+W6PmLfxJdY1DqQ75k+DX9t+JLJD3FhR0S0CXBGlv5gy8nd4UT19DU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i7Zra+8K; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GY3RWa+C"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8FC7C4CEE3;
-	Thu,  3 Apr 2025 15:29:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i7Zra+8K"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0976C4CEE3;
+	Thu,  3 Apr 2025 15:29:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743694148;
-	bh=1soCiRYfYgFYJkqcHhSND4Hu+3WH6iJ7mCH3l5a9bdE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GY3RWa+CxqL2KozO6NIHBPISPK83QrfVWmlzHqrVhRR88WkARuuh5VLhl3qqsJROA
-	 KMSQI5YF04Ypc3oRskIAv6LukjToU0d38TL2+oFMFonjrWLlHbkSLQwVQuBarCWH3c
-	 dh8vsU3nvMsPP7vzmA+hQFabXDQWz6sR7j4Yp73lhDj0A7YJ9XjTYuTyItccfmQWKM
-	 0BsRPOsxx7YQIVdIMBW/Go+KaYRIVFi6W38LRz/oNiBaFAyu6IFO2rOkP2k+MvcK00
-	 EsA/hWFu13Hp1na4OhXD5504d+D4UXSlBMsr9yCaD5N/yW/sG+Mh249D7xEJ2Ep7pF
-	 CV3iPyqEG4MoA==
-Date: Thu, 3 Apr 2025 17:29:04 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Nikolay Borisov <nik.borisov@suse.com>
-Cc: linux-kernel@vger.kernel.org, Juergen Gross <jgross@suse.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH 37/49] x86/alternatives: Move text_poke_array completion
- from smp_text_poke_batch_finish() and smp_text_poke_batch_flush() to
- smp_text_poke_batch_process()
-Message-ID: <Z-6pQPDuNkshB04F@gmail.com>
-References: <20250328132704.1901674-1-mingo@kernel.org>
- <20250328132704.1901674-38-mingo@kernel.org>
- <65e8ed9d-0fff-4f70-b095-8df52493ebec@suse.com>
- <Z-6PWWyopb86UC6y@gmail.com>
- <a64bc000-4226-4d5c-8486-a230f4ff5065@suse.com>
- <Z-6XkEpiXg4stqLY@gmail.com>
- <b0b87bd7-e104-4c9b-b9e2-0682dfef28e9@suse.com>
+	s=k20201202; t=1743694167;
+	bh=Bgq41wO06U/uAv1x2bdgMUv74XXWVKv/4GQnQMRuXSM=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=i7Zra+8KODyTzoQfJUyH1kWy2yTZ61f20dK6Eqb25GYQq6h9Ak9jIQWMdpwHcThU3
+	 Zln7ZWPtrsEna2ZvwDnef6Yqu5aon7pxRrgqBFOuKl/r684TyR+vU9vNnKbz91ygVS
+	 xjoQT5wApv/lTcO+3JvK14/e3RrrPEvPl9iXfp5wFvovlnYwu26GV0/CUUgfs85llO
+	 Nba2d61UvNrBo/5ZZMFE+R/97zZVg01lNcYbxkY5iEpFM9FpuqeL6yxs4Sh1XWYQDp
+	 8iCE7WWlgEUvh0U5MBV2SzBNZOt6axEUlyky77eKmeZ0Rw/EUdtnyCWpLZkd8M+ktn
+	 Zc9LSEPl557Gg==
+Date: Thu, 03 Apr 2025 10:29:25 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b0b87bd7-e104-4c9b-b9e2-0682dfef28e9@suse.com>
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: konradybcio@kernel.org, jarkko.nikula@linux.intel.com, 
+ devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, andersson@kernel.org, conor+dt@kernel.org, 
+ linux-i3c@lists.infradead.org, krzk+dt@kernel.org, 
+ alexandre.belloni@bootlin.com
+To: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
+In-Reply-To: <20250403134644.3935983-2-quic_msavaliy@quicinc.com>
+References: <20250403134644.3935983-1-quic_msavaliy@quicinc.com>
+ <20250403134644.3935983-2-quic_msavaliy@quicinc.com>
+Message-Id: <174369416594.2973751.10281214414907199841.robh@kernel.org>
+Subject: Re: [PATCH v3 1/3] dt-bindings: i3c: Add support for Qualcomm I3C
+ controller
 
 
-* Nikolay Borisov <nik.borisov@suse.com> wrote:
-
-> I meant doing this:
+On Thu, 03 Apr 2025 19:16:42 +0530, Mukesh Kumar Savaliya wrote:
+> Add device tree bindings for the Qualcomm I3C controller. This includes
+> the necessary documentation and properties required to describe the
+> hardware in the device tree.
 > 
-> diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-> index 5b1a6252a4b9..b6a781b9de26 100644
-> --- a/arch/x86/kernel/alternative.c
-> +++ b/arch/x86/kernel/alternative.c
-> @@ -2587,12 +2587,16 @@ noinstr int smp_text_poke_int3_trap_handler(struct
-> pt_regs *regs)
->   *               replacing opcode
->   *     - SMP sync all CPUs
->   */
-> -static void smp_text_poke_batch_process(void)
-> +void smp_text_poke_batch_finish(void)
->  {
->         unsigned char int3 = INT3_INSN_OPCODE;
->         unsigned int i;
->         int do_sync;
+> Signed-off-by: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
+> ---
+>  .../bindings/i3c/qcom,geni-i3c.yaml           | 63 +++++++++++++++++++
+>  1 file changed, 63 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/i3c/qcom,geni-i3c.yaml
 > 
-> +
-> +       if (!text_poke_array.nr_entries)
-> +               return;
 
-> -               smp_text_poke_batch_process();
-> +               smp_text_poke_batch_finish();
+My bot found errors running 'make dt_binding_check' on your patch:
 
-I suppose we could do this - it adds one more check to 
-smp_text_poke_batch_add() though.
+yamllint warnings/errors:
 
-> AFAICS this doesn't change the semantics. I.e smp_text_poke_batch_add 
-> will call poke_batch_finish iff the address to be added violates the 
-> sorted order of text_poke_array. The net effect is we have 1 less 
-> function name to care about.
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/i3c/qcom,geni-i3c.yaml: ignoring, error in schema: properties: compatible
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/i3c/qcom,geni-i3c.yaml: properties:compatible: ['qcom,geni-i3c'] is not of type 'object', 'boolean'
+	from schema $id: http://json-schema.org/draft-07/schema#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/i3c/qcom,geni-i3c.yaml: properties:compatible: ['qcom,geni-i3c'] is not of type 'object', 'boolean'
+	from schema $id: http://devicetree.org/meta-schemas/keywords.yaml#
+Documentation/devicetree/bindings/i3c/qcom,geni-i3c.example.dtb: /example-0/i3c@884000: failed to match any schema with compatible: ['qcom,geni-i3c']
 
-Yeah, it doesn't change semantics, but it's a very small 
-deoptimization.
+doc reference errors (make refcheckdocs):
 
-Mind sending a patch? It does simplify the facility some more and that 
-single branch will wash away against costs like the CR3 flushes done 
-...
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250403134644.3935983-2-quic_msavaliy@quicinc.com
 
-Thanks,
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
 
-	Ingo
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
