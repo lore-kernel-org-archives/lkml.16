@@ -1,202 +1,132 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD3C2210FB
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 13:54:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FE3F29408;
+	Thu,  3 Apr 2025 13:54:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743688451; cv=none; b=Epz+Tzb0YlHQLKK5T+u6XbVoGc5QmKSFrRbG9UYBARZR90+9YicZ2Smck73rw9a1wbeuqPCKqvIY9/KcoMCnOonR8iAlMjox1zwhx8YhjDpXUX2vJ5oGxH2WukGW7Vvhfl7COWDHSyxpvB9yxQvBgBPyAW8HFrZmmrjZK/5mWGk=
+	t=1743688469; cv=none; b=meO4chdVylIh+4t+2xW3f2c8WNkooUj4p1ejPcPnMNJtb5DYRC+AXFbhRkLBKsjMGp+7zu6ZsI/pJMKOGesMW3t4TRqo8Mrui6fBVKcZvDN5qxbjEIqosdF4zSHdFV1eOzc4dDi1y8uky8dc7B6iPLZtt9JcV3CVPDRDgMzZl70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743688451; c=relaxed/simple;
-	bh=jsleVz6RlPhJ6njd+OaCl7+w8VCP3UYS3mLnSoD4Uzs=;
+	s=arc-20240116; t=1743688469; c=relaxed/simple;
+	bh=lyNXz735Z2cTKcDUQuDQ893qwBJi5amYRPfXvdsMpwM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FCUGUzwDPfY69tYxOmM0NHpL724Hos6XjJUlCo+IluScHNTnUkGmIxnGFyXKvMs4UAaQvY3SPAWZLx/RKTWRWFmab1JNGE6HXOiAeH3MkSg72lRnyQPM8TQ+89nDX74b30zpIbpzvmK7Z4guHZPFo/DE5IZcML5gZpXjPi7pELE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=KqL/VT8I; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=PrrAl1bKlo3uRFilk8z5F13rCzz7u29YhQiAM8Wfa1TqHogtuRQy4EetWkk5APGCTrZEI4lobLnsdC+WATULE+JtDzkf7pnfzkSIdboTgrL+aEo9tvOLFdP7cFjmGNYaxfO/rNxrtj5pGDNDXeuk1ux6VXWbTt7dLs2ZJCSHNBY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q4R2uHOn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="KqL/VT8I"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF8B9C4CEE3;
-	Thu,  3 Apr 2025 13:54:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1743688451;
-	bh=jsleVz6RlPhJ6njd+OaCl7+w8VCP3UYS3mLnSoD4Uzs=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q4R2uHOn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AE2AC4CEE3;
+	Thu,  3 Apr 2025 13:54:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743688468;
+	bh=lyNXz735Z2cTKcDUQuDQ893qwBJi5amYRPfXvdsMpwM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KqL/VT8I0lYk9J4E2tqA3+oJFzTrffNbdYAl1gSET15FD6yrwkvssnm/5SNk9tJDx
-	 lHaPIsmnaFhlqJR/7ohgDqGKDLPX6/0RBq3NM8NXNVtAMsBWadQ43Ai+LC83T9DQPe
-	 xUOdC3f9ZfU4z3HkD0D3PGpqusxgm/wVdrduZ1IA=
-Date: Thu, 3 Apr 2025 14:52:43 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 00/13] nvmem: patches (set 1) for 6.15
-Message-ID: <2025040347-isolating-eastcoast-bfea@gregkh>
-References: <20250309145703.12974-1-srinivas.kandagatla@linaro.org>
- <2025040143-espionage-poison-2345@gregkh>
- <47a3a851-f737-4772-87c6-98613347435c@linaro.org>
- <2025040230-showoff-spray-ac83@gregkh>
- <283ac88b-c8d4-47c8-9ff7-935770eca566@linaro.org>
- <b6e7abf3-b263-410a-8f4c-eb9a8e2efa2b@oss.qualcomm.com>
- <e8c91706-1a94-4e3d-b2a9-9d670021bbc8@linaro.org>
- <CAO9ioeVYYy-10ZBmNLMzZK2+mZ5mKf_ZtGwRVf__Dg8GA=Sf0Q@mail.gmail.com>
- <56cbe0a0-048e-45a2-87f2-e2515c7e7414@linaro.org>
- <139a5c4c-b984-4e32-aefb-81dfce2ea0af@oss.qualcomm.com>
+	b=q4R2uHOnSA+w0i5dCg4AB8+JL2u7dKOIXLE5xx2LjUYq/Qw49cqeVRKqbviu8I9ro
+	 uzzMb1hZGQ16Rrew5uc2TA9u9w0vo4MzIVcsYmEPwtMLNWuFVoeleFvrwxjAG8OVnX
+	 LbZ90j0P0jaxFWfNHKZvROWMafJlqr9KpuMZUsne2fFKyxA0T0Q5Kp3cpWmB3+gyck
+	 NiUolxQ53qG5fzVwqIfsrpdX9IX8WZ9+RN5NvwPNAyU/EAvOTJD2C0CMMuL+4OBg18
+	 JFI1sY6a4MHEDlkakmwfjJcwL3Rux2ZC+7G3ydjQIQGECEmKW2R0l7B7HB7EK/3M4H
+	 uONVovjMtNU9Q==
+Date: Thu, 3 Apr 2025 15:54:22 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Andrii Nakryiko <andrii@kernel.org>
+Cc: linux-trace-kernel@vger.kernel.org, peterz@infradead.org,
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-team@meta.com, mhocko@kernel.org, rostedt@goodmis.org,
+	oleg@redhat.com, brauner@kernel.org, glider@google.com,
+	mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+	akpm@linux-foundation.org
+Subject: Re: [PATCH v2] exit: move and extend sched_process_exit() tracepoint
+Message-ID: <Z-6TDh1MUT49lvjk@gmail.com>
+References: <20250402180925.90914-1-andrii@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <139a5c4c-b984-4e32-aefb-81dfce2ea0af@oss.qualcomm.com>
+In-Reply-To: <20250402180925.90914-1-andrii@kernel.org>
 
-On Thu, Apr 03, 2025 at 12:38:03PM +0300, Dmitry Baryshkov wrote:
-> On 03/04/2025 12:35, Srinivas Kandagatla wrote:
-> > 
-> > 
-> > On 03/04/2025 10:31, Dmitry Baryshkov wrote:
-> > > On Thu, 3 Apr 2025 at 12:27, Srinivas Kandagatla
-> > > <srinivas.kandagatla@linaro.org> wrote:
-> > > > 
-> > > > 
-> > > > 
-> > > > On 03/04/2025 10:25, Dmitry Baryshkov wrote:
-> > > > > On 03/04/2025 12:18, Srinivas Kandagatla wrote:
-> > > > > > 
-> > > > > > 
-> > > > > > On 02/04/2025 12:31, Greg KH wrote:
-> > > > > > > On Wed, Apr 02, 2025 at 09:19:17AM +0100, Srinivas Kandagatla wrote:
-> > > > > > > > HI Greg,
-> > > > > > > > 
-> > > > > > > > On 01/04/2025 20:18, Greg KH wrote:
-> > > > > > > > > On Sun, Mar 09, 2025 at 02:56:50PM +0000,
-> > > > > > > > > srinivas.kandagatla@linaro.org wrote:
-> > > > > > > > > > From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> > > > > > > > > > 
-> > > > > > > > > > Hi Greg,
-> > > > > > > > > > 
-> > > > > > > > > > Here are few nvmem patches for 6.15, Could you queue
-> > > > > > > > > > these for 6.15.
-> > > > > > > > > > 
-> > > > > > > > > > patche include
-> > > > > > > > > >      - updates to bindings to include MSM8960, X1E80100, MS8937,
-> > > > > > > > > >        IPQ5018
-> > > > > > > > > >      - add support to bit offsets for register strides exceeding
-> > > > > > > > > >        single byte
-> > > > > > > > > >      - add rockchip-otp variants.
-> > > > > > > > > >      - Few enhancements in qfprom and rochchip nvmem providers.
-> > > > > > > > > 
-> > > > > > > > > Ok, I wanted to apply these, and tried to, but they fail horribly
-> > > > > > > > > because:
-> > > > > > > > > 
-> > > > > > > > > Commit: 1b14625bd6d4 ("nvmem: qfprom: switch
-> > > > > > > > > to 4-byte aligned reads")
-> > > > > > > > >      Fixes tag: Fixes: 11ccaa312111 ("nvmem: core: verify cell's
-> > > > > > > > > raw_len")
-> > > > > > > > >      Has these problem(s):
-> > > > > > > > >          - Target SHA1 does not exist
-> > > > > > > > > Commit: a8a7c7e34093 ("nvmem: core: update raw_len if the bit
-> > > > > > > > > reading is required")
-> > > > > > > > >      Fixes tag: Fixes: 11ccaa312111 ("nvmem: core: verify cell's
-> > > > > > > > > raw_len")
-> > > > > > > > >      Has these problem(s):
-> > > > > > > > >          - Target SHA1 does not exist
-> > > > > > > > > Commit: d44f60348d8c ("nvmem: core: fix bit offsets of more than
-> > > > > > > > > one byte")
-> > > > > > > > >      Fixes tag: Fixes: 11ccaa312111 ("nvmem: core: verify cell's
-> > > > > > > > > raw_len")
-> > > > > > > > >      Has these problem(s):
-> > > > > > > > >          - Target SHA1 does not exist
-> > > > > > > > 
-> > > > > > > > Looks some of your scripts or b4 is picking up
-> > > > > > > > older version v1 of the
-> > > > > > > > patchset
-> > > > > > > > 
-> > > > > > > > None of the above patches have Fixes tags in the V2 patches that I
-> > > > > > > > shared
-> > > > > > > > aswell as patches in linux-next.
-> > > > > > > 
-> > > > > > > Yes, that looks odd, it looks like b4 pulled in the
-> > > > > > > wrong series, yes.
-> > > > > > > 
-> > > > > > 
-> > > > > > Even that looked incorrect, as the v1 series only had one
-> > > > > > patch("[PATCH 12/14] nvmem: make the misaligned raw_len non-fatal")
-> > > > > > that had fixes tag. Not sure how these 3 patches are tagged as fixes.
-> > > > > > 
-> > > > > > > But, that's even worse.  Those "fixes" are now not actually marked as
-> > > > > > > fixes of the previous patch.  So that information is
-> > > > > > > totally lost, and
-> > > > > > 
-> > > > > > Its because this patch("PATCH 12/14] nvmem: make the misaligned
-> > > > > > raw_len non-fatal") is taken as fixup patch and wrapped into the
-> > > > > > original patch ("nvmem: core: verify cell's raw_len"), Also the sha
-> > > > > > will not be valid for linus or char-misc tree.
-> > > > > > 
-> > > > > > > again, the first commit here, "nvmem: core: verify cell's raw_len" is
-> > > > > > > broken so much that it took 3 other changes to fix it, which implies
-> > > > > > > that bisection would cause problems if you hit it in the middle here.
-> > > > > > > 
-> > > > > > 
-> > > > > > All the patches related to this are enhancements to nvmem core to
-> > > > > > allow specifying bit offsets for nvmem cell that have 4 bytes strides.
-> > > > > > 
-> > > > > > Specially this check is also an additional check in core to make sure
-> > > > > > that cell offsets are aligned to register strides.
-> > > > > > 
-> > > > > > > While fixing patches is great, and something we do
-> > > > > > > in the tree all the
-> > > > > > > time, let's not purposefully break things and then fix them up in the
-> > > > > > > same exact patch series please.  That's just sloppy engineering.
-> > > > > > > 
-> > > > > > > Please redo this series completely.  I can take the
-> > > > > > > "new device support"
-> > > > > > 
-> > > > > > I can send them but its going to be exactly same series, I dont think
-> > > > > > anything will change as all of these patches are enhancements and
-> > > > > > there are no fixes.
-> > > > > > 
-> > > > > > I hope this clarifies a bit, Please let me know if you still want me
-> > > > > > to resend this series, which is going to be exactly same.
-> > > > > 
-> > > > > I think Greg is asking to squash the fixup into the relevant patch.
-> > > > 
-> > > > Its already squashed up in v2.
-> > > 
-> > > Then there should be no Fixes tags. Is the series that you are sending
-> > > visible somewhere?
-> > 
-> > Yes, there is no fixes tags in v2 series,
-> > 
-> > Here is what is sent to as v2:
-> > https://lore.kernel.org/lkml/47a3a851-
-> > f737-4772-87c6-98613347435c@linaro.org/T/
-> > #r01449e17cf6f9396967a822a0460ad4b1245e914
+
+* Andrii Nakryiko <andrii@kernel.org> wrote:
+
+> It is useful to be able to access current->mm at task exit to, say,
+> record a bunch of VMA information right before the task exits (e.g., for
+> stack symbolization reasons when dealing with short-lived processes that
+> exit in the middle of profiling session). Currently,
+> trace_sched_process_exit() is triggered after exit_mm() which resets
+> current->mm to NULL making this tracepoint unsuitable for inspecting
+> and recording task's mm_struct-related data when tracing process
+> lifetimes.
 > 
-> LGTM, thanks. Then I don't understand what is causing the controversy from
-> Greg's side. The only piece of information that got lost is that Mark has
-> found an issue with the previous version of the patch (I'd have added that
-> information between the tags as you've squashed the patches).
+> There is a particularly suitable place, though, right after
+> taskstats_exit() is called, but before we do exit_mm() and other
+> exit_*() resource teardowns. taskstats performs a similar kind of
+> accounting that some applications do with BPF, and so co-locating them
+> seems like a good fit. So that's where trace_sched_process_exit() is
+> moved with this patch.
+> 
+> Also, existing trace_sched_process_exit() tracepoint is notoriously
+> missing `group_dead` flag that is certainly useful in practice and some
+> of our production applications have to work around this. So plumb
+> `group_dead` through while at it, to have a richer and more complete
+> tracepoint.
+> 
+> Note that we can't use sched_process_template anymore, and so we use
+> TRACE_EVENT()-based tracepoint definition.
 
-Yeah, I'm confused here as well.  In v1, there were 3 patches that were
-marked as "Fixes" for a previous patch in the series.  In v2, no Fixes
-were marked at all, BUT the patches were still in the series.
+ But all the field names and
+> order, as well as assign and output logic remain intact. We just add one
+> extra field at the end in backwards-compatible way.
+> 
+> Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+> ---
+>  include/trace/events/sched.h | 28 +++++++++++++++++++++++++---
+>  kernel/exit.c                |  2 +-
+>  2 files changed, 26 insertions(+), 4 deletions(-)
+> 
+> diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
+> index 8994e97d86c1..05a14f2b35c3 100644
+> --- a/include/trace/events/sched.h
+> +++ b/include/trace/events/sched.h
+> @@ -328,9 +328,31 @@ DEFINE_EVENT(sched_process_template, sched_process_free,
+>  /*
+>   * Tracepoint for a task exiting:
+>   */
+> -DEFINE_EVENT(sched_process_template, sched_process_exit,
+> -	     TP_PROTO(struct task_struct *p),
+> -	     TP_ARGS(p));
+> +TRACE_EVENT(sched_process_exit,
+> +
+> +	TP_PROTO(struct task_struct *p, bool group_dead),
+> +
+> +	TP_ARGS(p, group_dead),
+> +
+> +	TP_STRUCT__entry(
+> +		__array(	char,	comm,	TASK_COMM_LEN	)
+> +		__field(	pid_t,	pid			)
+> +		__field(	int,	prio			)
+> +		__field(	bool,	group_dead		)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		memcpy(__entry->comm, p->comm, TASK_COMM_LEN);
+> +		__entry->pid		= p->pid;
+> +		__entry->prio		= p->prio; /* XXX SCHED_DEADLINE */
+> +		__entry->group_dead	= group_dead;
+> +	),
+> +
+> +	TP_printk("comm=%s pid=%d prio=%d group_dead=%s",
+> +		  __entry->comm, __entry->pid, __entry->prio,
+> +		  __entry->group_dead ? "true" : "false"
+> +	)
 
-So what went wrong?  Was the v2 version of the original patch changed so
-that the 3 other ones were not needed somehow?  If so, why were they in
-the list again?
+This feels really fragile, could you please at least add a comment that 
+points out that this is basically an extension of 
+sched_process_template, and that it should remain a subset of it, or 
+something to that end?
 
-Anyway, I'm confused...
+Thanks,
 
-Please send a v3 of this series, NOT in response to any email thread so
-that b4 does NOT get confused in any way, and I'll be glad to review
-them and apply them to the proper branch after -rc1 is out next week or
-so.
-
-And document the heck out of what has changed in the series in the
-different patches please.
-
-thanks,
-
-greg k-h
+	Ingo
