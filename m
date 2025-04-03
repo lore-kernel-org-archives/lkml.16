@@ -1,70 +1,116 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 927492417E6;
-	Thu,  3 Apr 2025 08:28:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8927F241CA0;
+	Thu,  3 Apr 2025 08:28:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743668906; cv=none; b=mGZ23Yw9R6VmJ7MuRIAXeB5vrqH7BGsrmMgg2W/zlEK+aqP6lMQtk4KJ3Dq9M+7d3S1m3g7dLzk/vEGdIfbusCWwlOYl2ZWn5NSctALWX6Zd4Fpwyd9zb+9ytv8VIQnKf1Wj0R5JPlkGakPnYDi2cY26rL6tHhwPRXMNufpv5EI=
+	t=1743668939; cv=none; b=Kdtjd0sGSwvaVfDYF9PdnGgzl+3ADKdVOnFGB/LSvia0IihcLPgJ7SiByrD9wSTvGToe/EluZA3a+w2Lsmpo5KCnMIDZNjqIw1tmCuJEdZlGouLR0Cy40/ntqgBid1YRyvCkLbbVl8I0Laf/n/4aqTOAR1ms64eI2oVLD9YamsY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743668906; c=relaxed/simple;
-	bh=0N/rEQuyTC6PaZ4nhkwBNvr/kXRCa6azJUbuvQONoCI=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=qSB9UffVQcbs5XSJro3QDXb1KeMpxlD1I3D0mOoXqE6NrGCubLk6hZr8xMFV1qz8RNTFJFZNs7BcFa1em2+SSr9J3DO00sHarD77ddyAhW3LwJJr7BnU1HKB05F8V0StBPW7jHuUI9ioDcPhWavYyBYxcQZw/CIYpfEyW2kFFqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=ik/7ZNXR; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+	s=arc-20240116; t=1743668939; c=relaxed/simple;
+	bh=5kg6MD3nj0ohpaJDH609Gk9VsSrlSJjglviZAc+FxdM=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
+	 In-Reply-To:Content-Type; b=S2BO1RfOzJOCfhzszoBcZsMpAM+XRJ19PeZVOiWjIV1tjAbmZOUpZTsCy/flWOUgDDkStyddkVZ1d8cqDUJCxtYRPYwuLrzBv0EQX0eEGPiQH5wE65n5nIj1dQZgYiDGg5fCW1vlzla1q1LGtdxm/+MXwRHfcy7hxB09gNt88LY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=YL/rs92E; arc=none smtp.client-ip=198.47.23.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="ik/7ZNXR"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=0N/rEQuyTC6PaZ4nhkwBNvr/kXRCa6azJUbuvQONoCI=;
-	t=1743668904; x=1744878504; b=ik/7ZNXRflWQrvT0snJYaYb/uBeK1vMt7O3ka4WUEs6WDfN
-	w5wHqkEH8Yq/JAFGSy/oLAqOxLMWu3rQ/cbJEuwlHzna9hWrHSTn1mMycuUuEBNIUy5PlojS8pegn
-	G1IQrbUsnyvfki2anbo5uxZO5s66QW9nWQsKYE4F088OuNLQnct5t555rBDTGdfuHOCrgajxar4r4
-	44V8ujeRTDCvsP/JRdhPDVL+B/HR5nTeonJzQGaGrf0EYOwF92GyX1Zi1qu7w9PwW9eUx08o2UMeQ
-	dPP8nWw6Sdjhp6Hj6nMFvb1+UgohZM3PilHff0h2ceqqjgPXtauUlBJVIlbQSEmg==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.98.1)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1u0Fvl-0000000Ejz9-2DwC;
-	Thu, 03 Apr 2025 10:28:10 +0200
-Message-ID: <694ac5d71aca5ea08674fbfa0b803589c3cea315.camel@sipsolutions.net>
-Subject: Re: [PATCH] IPC MUX: Add error handling for
- ipc_mux_dl_acb_send_cmds().
-From: Johannes Berg <johannes@sipsolutions.net>
-To: Wentao Liang <vulab@iscas.ac.cn>, m.chetan.kumar@intel.com, 
-	loic.poulain@linaro.org, ryazanov.s.a@gmail.com, andrew+netdev@lunn.ch, 
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Thu, 03 Apr 2025 10:28:08 +0200
-In-Reply-To: <20250403082449.2183-1-vulab@iscas.ac.cn>
-References: <20250403082449.2183-1-vulab@iscas.ac.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="YL/rs92E"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 5338SpqO4158497
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 3 Apr 2025 03:28:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1743668931;
+	bh=M0TpbzeGdF6pMQfqxvB4s130TjuGSPYhHFX+qsY8DBE=;
+	h=Date:Subject:From:To:CC:References:In-Reply-To;
+	b=YL/rs92EvS/D7C96FT2KyYOdobBV3w3Y4ouWfdRgdMHkR+YprR+10JQnUux69bTCf
+	 TWSZmhw1UA7IMD/G+YS9M+4memZ0Bon1uEgt2NNlksgj7StUYivuK84pHeLukKCMrd
+	 LnPz28Hdj4SkXmVdu69KeFYsbise6XCBeZbfMvRY=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 5338SpQ9033456
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 3 Apr 2025 03:28:51 -0500
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 3
+ Apr 2025 03:28:51 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 3 Apr 2025 03:28:51 -0500
+Received: from [172.24.227.40] (pratham-workstation-pc.dhcp.ti.com [172.24.227.40])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 5338Slil049858;
+	Thu, 3 Apr 2025 03:28:48 -0500
+Message-ID: <104cdd15-8763-49fc-9f4b-9b21020bd6a1@ti.com>
+Date: Thu, 3 Apr 2025 13:58:47 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC 1/2] crypto: ti: Add support for SHA224/256/384/512 in
+ DTHE V2 driver
+From: T Pratham <t-pratham@ti.com>
+To: Herbert Xu <herbert@gondor.apana.org.au>
+CC: "David S. Miller" <davem@davemloft.net>, <linux-crypto@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Vignesh Raghavendra <vigneshr@ti.com>,
+        Praneeth Bajjuri <praneeth@ti.com>,
+        Kamlesh Gurudasani <kamlesh@ti.com>,
+        Manorit Chawdhry <m-chawdhry@ti.com>
+References: <20250218104943.2304730-1-t-pratham@ti.com>
+ <20250218104943.2304730-2-t-pratham@ti.com>
+ <Z8QSVLoucZxG1xlc@gondor.apana.org.au>
+ <f7105c10-7e36-4914-a9e8-e83eb61f0189@ti.com>
+Content-Language: en-US
+In-Reply-To: <f7105c10-7e36-4914-a9e8-e83eb61f0189@ti.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Thu, 2025-04-03 at 16:24 +0800, Wentao Liang wrote:
-> The ipc_mux_dl_acbcmd_decode() calls the ipc_mux_dl_acb_send_cmds(),
-> but does not report the error if ipc_mux_dl_acb_send_cmds() fails.
-> This makes it difficult to detect command sending failures. A proper
-> implementation can be found in ipc_mux_dl_cmd_decode().
->=20
-> Add error reporting to the call, logging an error message using dev_err()
-> if the command sending fails.
->=20
-> Fixes: 1f52d7b62285 ("net: wwan: iosm: Enable M.2 7360 WWAN card support"=
-)
+Hi Herbert
 
-That should've given you a hint for your own patch's subject :)
+On 02/04/25 19:01, T Pratham wrote:
+> Hi Herbert
+>
+> On 02/03/25 13:39, Herbert Xu wrote:
+>> On Tue, Feb 18, 2025 at 04:19:42PM +0530, T Pratham wrote:
+>>> +struct dthe_hash_ctx {
+>>> +	enum dthe_hash_algSel mode;
+>>> +	u16 block_size;
+>>> +	u8 digest_size;
+>>> +	u8 phash_available;
+>>> +	u32 phash[SHA512_DIGEST_SIZE / sizeof(u32)];
+>> Is this format identical to the software sha512 hash? If so please
+>> make the export/import functions translate to and from struct
+>> sha512_state.
+>>
+>> That way we can export and resume using the software sha512 in case
+>> something goes wrong (e.g., memory allocation failure).
+>>
+>> Ditto with all the other hash algorithms.
+>>
+>> Thanks,
+> [...]
+>
+> You are correct in the sense that the format is /mostly/ identical to
+> struct sha512_state. phash[], data_buf[] and digestcnt are same as in
+> sha512_state. Rest of the members I can reinitialize at import. The only
+> one which stores some kind of state is *buflen*, which requires its
+> value to be restored while importing. The current driver implementation
+> processes input in multiples of block size and stores the remainder data
+> in data_buf[] if the input is not a multiple of block size. buflen has
+> the length of data in data_buf[].
+>
+> [...]
+>
+I'm so sorry, for it slipped out of my mind that `u8 phash_available`
+also needs to be restored at import. It's just stores a boolean 0/1. How
+to go about handling this?
+Thanks for your help.
 
-johannes
+Regards
+T Pratham <t-pratham@ti.com>
+
