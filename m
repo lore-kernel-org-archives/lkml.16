@@ -1,228 +1,115 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B1062505C6;
-	Thu,  3 Apr 2025 13:33:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FAF22512E7
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 13:33:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743687228; cv=none; b=XpnNZHGWANQnXZPpByZS6JiycVHjmkACegyHHKdAVLv1YAOYMKq/mXOUu98rAH+GthflQ1YJUUVzSt0aGcvctuiRgoo3YYpEP7KpuJzNbon90FNVksbCoogvA57GgLDRG8R5tlgm26yNDpXUpCCn+QwPo2Bnvq0aPSIv8+Uaims=
+	t=1743687230; cv=none; b=pgyAd+nE++44vOWgOUXaQ5l1WyCVQ7PcyQc0VWVN08D/CqjYEQa57DwX5xu36JO0IRMfk739w8F7ZDoUxvW92YWV2OhpAtMJoZAakU6q117VmqeKnAVO9qCQq5ue0uie+o1DCt+4s8zlK3bTCBu/+yX2CF1BfDHqhRoXUxr/Mfg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743687228; c=relaxed/simple;
-	bh=uhjcSpFtBDjLRDUtRnxBHi7CnOXD7wN3uYc8vH18wJs=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=lOCOal/PSqELioKJu5Vmu99xamtm/BPlLEfEgeQi1iGWgDlXEbYqFZ79VM69Szsk+M4m1/xz/erwIUSIa13vyXzfvlTZmzTtW8CaorMBR2Osg1S0ZiBE4V9V33NoM+WuX/0nPCpa2hgWclM3BvxnsxSWvCLlJZL7jnXMW3P9sYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=juqUjugd; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=HAW8UTRr; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1743687230; c=relaxed/simple;
+	bh=lc2kPBAUmFssEFHlFoZTIb5ZMulQItOIPpogF+GOBDc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fjavdH69w/B5evtPs/6lW3ifO/9sUXRGj/R1hzhpvi1YouCyhICyXUzTRthZ/0liioNN1DfhgCFIexfu/UcqwBqzs2Jjbbo80LIGuSRu07YjkxYc0hCGo2nSimLs+bK+cJ/YifKRo72x06oOW9g/KnO+OKFUyh5oXb7eYVwbXXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=MS2BBpK4; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="juqUjugd";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HAW8UTRr"
-Date: Thu, 03 Apr 2025 13:33:43 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1743687224;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4t0GVqqoEaOKHTP3A31s7T5TVXWT9yknbDhYcA5lXEM=;
-	b=juqUjugdcV3zR3vPWF92GsfN2hVxJCGX7TGXUzzj1xOUTo/kHHklG3VnyOOrOrNVQOG/oK
-	Sd+wCkCGUK/HnagYExYpxtByuf76aLbIRHSer8qO6LV6bajQG4s78DnPo2IchQ9PB7vaYd
-	34oHf2FugNdkVIMRkJNZZ88Dt6+Ed0JOcdgWVmhOWfh36pEx4X/YJZFKhKoK/dMzvfj8hT
-	Ib99bMG8bfmdTn0yuJxT9aiymAJIh6CIt9rcUCRfs5mhiH3aoGQfFsq8jsdIVTQhLABJjM
-	P2Jk1I2+eDY5ALIO8MvTON+VJm8Ked9wYtZ+yRnJXPfN+mf0BdSRskm7jFPVEA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1743687224;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4t0GVqqoEaOKHTP3A31s7T5TVXWT9yknbDhYcA5lXEM=;
-	b=HAW8UTRrptjd5WUVFmcDXwaY8nZxXbrqLyu6I6IuHRlox8QeVAy2XU/eU9n2sFW27J7qOu
-	44FgKneEw6CgX6DA==
-From: "tip-bot2 for Sohil Mehta" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/nmi] x86/nmi: Simplify unknown NMI panic handling
-Cc: Sohil Mehta <sohil.mehta@intel.com>, Ingo Molnar <mingo@kernel.org>,
- "Peter Zijlstra (Intel)" <peterz@infradead.org>,
- Nikolay Borisov <nik.borisov@suse.com>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250327234629.3953536-2-sohil.mehta@intel.com>
-References: <20250327234629.3953536-2-sohil.mehta@intel.com>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="MS2BBpK4"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-39bf44be22fso662907f8f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 06:33:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1743687227; x=1744292027; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=lc2kPBAUmFssEFHlFoZTIb5ZMulQItOIPpogF+GOBDc=;
+        b=MS2BBpK4jF96H1cgO9M1r1+ao2T5RFgHwAJnpbz1/0lPyIUTnimEJW13nV4ugNUUIP
+         lqcxa+eNdau4Ox+kneB6LMt6+1zpPMDjCTz39pQMflNmtKq0KCy4Y0LpgfPZT8ZH6DqY
+         +mHc+XZIPyTMrc51qN6CcvIIyO9q5yCRnMoMMwYGZwwPZNx+aVwxzv8EhqJrXhqEKsYL
+         HmKnOCz7tNHdOrd1W9RMDNlaX4XniRyJth8V+k2zJ9MWfGLnTkz8VdfPjJoY3H+LAAOx
+         icVm5/Wy/Qt6xX28LmwZscnDFb+WM23EOwDFkvt60AxXY2YlDtTW5FH1zc8TeBZvHorq
+         NoxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743687227; x=1744292027;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lc2kPBAUmFssEFHlFoZTIb5ZMulQItOIPpogF+GOBDc=;
+        b=lcRdoSwyQY8YC6mYiGOmOUTnHCqHMTv+2B9gvMjMCYm5bykucQS45lsumglxPxSjDq
+         xef9bJrpGxEYmgvZnQ6U5O55rAPxifeANi025P7RQKG/6u5598FCz/5J7o4pVD4Fs1+f
+         H8wLCwwHnzgxFrW4W9DDyR0kqfBLMeuCVZ6XRgDbnHFOxk5+eYP0QUU9v7mkHrM+RGQN
+         Ukl+E+v07KB/4eqDcUkWFtGHSHOYIpd3jXTACH9Tx6gF+e4t5qu1fY1k5bldVhrZXGM6
+         4GXURHHcordobW/M3w3F3glxXIUDbpPFh3O48o2nio6O7pCTrLj04VgvXbcthQi6+0Ki
+         F9sQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXG/uBKKsZuuZ+JLZpt6exOIs/B+medBILoMUZegPJXOMY/ZP+C3Y4kf7h9uhKEvLVlP1Qzgfzj9cAxZ1c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxuEqziGtqJ5/9vVw7Hz1CaAvzMNxRff9aFwi86oROfspxzke4O
+	tvYjKN/clphj1fKgiL5rXtmpK/GTuY8r9vdC5E69oFoOivs5on/iikTCaY0PRLY=
+X-Gm-Gg: ASbGncuwzuv2yUgI05bM1QSBxOUbDVROn6pdHZqpw6a3YvRWaliAhIRoOJHWaEqnAIN
+	Pay1F5oTka4OuroiGnycvQpcgYX8HxSil1VrJuWfRMX6Ppx8zT5LbpvtojTt0CpKNoutJqVu3zk
+	2g/eVZv8qCpem9ovEm8BnFxAmeRBP7IJK/+sJ9c65usR9I84WMl56GQNgvpZGlU5GVJDEIHICNG
+	Us0tIFjBCkonnQG2f72MjJimahGghRePNY/byqe1wtG1Nxbu+48UYMsC2KCb6x0jVL+ihmRleu6
+	R2BYSuJX2i0P0Q1SRXzLU0Lu8yse4I4EcS5ri+Jtptp2Yuc=
+X-Google-Smtp-Source: AGHT+IGPQ6nwxEwKgFP3ExKTxhy07cHsFvtpQAvnmiKOVMha0c8lkk/HwjAtM+b4ugng/LTLNl3c5A==
+X-Received: by 2002:a5d:64e8:0:b0:39c:d05:37d3 with SMTP id ffacd0b85a97d-39c29769556mr6233270f8f.34.1743687226677;
+        Thu, 03 Apr 2025 06:33:46 -0700 (PDT)
+Received: from blackdock.suse.cz ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c30226959sm1768861f8f.82.2025.04.03.06.33.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Apr 2025 06:33:46 -0700 (PDT)
+Date: Thu, 3 Apr 2025 15:33:44 +0200
+From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
+To: Waiman Long <longman@redhat.com>
+Cc: Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Shuah Khan <shuah@kernel.org>, cgroups@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 05/10] cgroup/cpuset: Don't allow creation of local
+ partition over a remote one
+Message-ID: <c5akoqcuatispflklzykfwjn65zk7y22pq6q6ejseo35dw5nh2@yvm7pbhh5bi4>
+References: <20250330215248.3620801-1-longman@redhat.com>
+ <20250330215248.3620801-6-longman@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174368722390.30396.10003781910348300433.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="pjejnus3mirkel3g"
+Content-Disposition: inline
+In-Reply-To: <20250330215248.3620801-6-longman@redhat.com>
 
-The following commit has been merged into the x86/nmi branch of tip:
 
-Commit-ID:     2e016da1cbbd013368095270c040e065678c38f7
-Gitweb:        https://git.kernel.org/tip/2e016da1cbbd013368095270c040e065678c38f7
-Author:        Sohil Mehta <sohil.mehta@intel.com>
-AuthorDate:    Thu, 27 Mar 2025 23:46:21 
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 01 Apr 2025 22:25:41 +02:00
+--pjejnus3mirkel3g
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Subject: Re: [PATCH 05/10] cgroup/cpuset: Don't allow creation of local
+ partition over a remote one
+MIME-Version: 1.0
 
-x86/nmi: Simplify unknown NMI panic handling
+On Sun, Mar 30, 2025 at 05:52:43PM -0400, Waiman Long <longman@redhat.com> wrote:
+> Currently, we don't allow the creation of a remote partition underneath
+> another local or remote partition. However, it is currently possible to
+> create a new local partition with an existing remote partition underneath
+> it if top_cpuset is the parent. However, the current cpuset code does
+> not set the effective exclusive CPUs correctly to account for those
+> that are taken by the remote partition.
 
-The unknown_nmi_panic variable is used to control whether the kernel
-should panic on unknown NMIs. There is a sysctl entry under:
+That sounds like
+Fixes: 181c8e091aae1 ("cgroup/cpuset: Introduce remote partition")
 
-  /proc/sys/kernel/unknown_nmi_panic
+(but it's merge, so next time :-)
 
-which can be used to change the behavior at runtime.
+Michal
 
-However, it seems that in some places, the option unnecessarily depends
-on CONFIG_X86_LOCAL_APIC. Other code in nmi.c uses unknown_nmi_panic
-without such a dependency. This results in a few messy #ifdefs
-splattered across the code. The dependency was likely introduce due to a
-potential build bug reported a long time ago:
+--pjejnus3mirkel3g
+Content-Type: application/pgp-signature; name="signature.asc"
 
-  https://lore.kernel.org/lkml/40BC67F9.3000609@myrealbox.com/
+-----BEGIN PGP SIGNATURE-----
 
-This build bug no longer exists.
+iHUEABYKAB0WIQTd6mfF2PbEZnpdoAkt3Wney77BSQUCZ+6ONgAKCRAt3Wney77B
+SU6VAP4ynbl5wnoim3pRoEDFYW9TwsFFO1oqvsJdRQbrLPKb/QEAsizzl8zjyzkV
+3IT57x5+x3Tpe2KO9CLsl/Pj29WW2Ac=
+=P059
+-----END PGP SIGNATURE-----
 
-Also, similar NMI panic options, such as panic_on_unrecovered_nmi and
-panic_on_io_nmi, do not have an explicit dependency on the local APIC
-either.
-
-Though, it's hard to imagine a production system without the local APIC
-configuration, making a specific NMI sysctl option dependent on it
-doesn't make sense.
-
-Remove the explicit dependency between unknown NMI handling and the
-local APIC to make the code cleaner and more consistent.
-
-While at it, reorder the header includes to maintain alphabetical order.
-
-[ mingo: Cleaned up the changelog a bit, truly ordered the headers ... ]
-
-Signed-off-by: Sohil Mehta <sohil.mehta@intel.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Nikolay Borisov <nik.borisov@suse.com>
-Link: https://lore.kernel.org/r/20250327234629.3953536-2-sohil.mehta@intel.com
----
- arch/x86/include/asm/nmi.h |  4 ++--
- arch/x86/kernel/setup.c    | 35 +++++++++++++++--------------------
- 2 files changed, 17 insertions(+), 22 deletions(-)
-
-diff --git a/arch/x86/include/asm/nmi.h b/arch/x86/include/asm/nmi.h
-index f677382..9cf96cc 100644
---- a/arch/x86/include/asm/nmi.h
-+++ b/arch/x86/include/asm/nmi.h
-@@ -14,10 +14,10 @@ extern void release_perfctr_nmi(unsigned int);
- extern int reserve_evntsel_nmi(unsigned int);
- extern void release_evntsel_nmi(unsigned int);
- 
--extern int unknown_nmi_panic;
--
- #endif /* CONFIG_X86_LOCAL_APIC */
- 
-+extern int unknown_nmi_panic;
-+
- #define NMI_FLAG_FIRST	1
- 
- enum {
-diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index c7164a8..ecf4c13 100644
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -11,6 +11,7 @@
- #include <linux/crash_dump.h>
- #include <linux/dma-map-ops.h>
- #include <linux/efi.h>
-+#include <linux/hugetlb.h>
- #include <linux/ima.h>
- #include <linux/init_ohci1394_dma.h>
- #include <linux/initrd.h>
-@@ -18,21 +19,19 @@
- #include <linux/memblock.h>
- #include <linux/panic_notifier.h>
- #include <linux/pci.h>
-+#include <linux/random.h>
- #include <linux/root_dev.h>
--#include <linux/hugetlb.h>
--#include <linux/tboot.h>
--#include <linux/usb/xhci-dbgp.h>
- #include <linux/static_call.h>
- #include <linux/swiotlb.h>
--#include <linux/random.h>
-+#include <linux/tboot.h>
-+#include <linux/usb/xhci-dbgp.h>
-+#include <linux/vmalloc.h>
- 
- #include <uapi/linux/mount.h>
- 
- #include <xen/xen.h>
- 
- #include <asm/apic.h>
--#include <asm/efi.h>
--#include <asm/numa.h>
- #include <asm/bios_ebda.h>
- #include <asm/bugs.h>
- #include <asm/cacheinfo.h>
-@@ -47,18 +46,16 @@
- #include <asm/mce.h>
- #include <asm/memtype.h>
- #include <asm/mtrr.h>
--#include <asm/realmode.h>
-+#include <asm/nmi.h>
-+#include <asm/numa.h>
- #include <asm/olpc_ofw.h>
- #include <asm/pci-direct.h>
- #include <asm/prom.h>
- #include <asm/proto.h>
-+#include <asm/realmode.h>
- #include <asm/thermal.h>
- #include <asm/unwind.h>
- #include <asm/vsyscall.h>
--#include <linux/vmalloc.h>
--#if defined(CONFIG_X86_LOCAL_APIC)
--#include <asm/nmi.h>
--#endif
- 
- /*
-  * max_low_pfn_mapped: highest directly mapped pfn < 4 GB
-@@ -151,6 +148,13 @@ int bootloader_type, bootloader_version;
- 
- static const struct ctl_table x86_sysctl_table[] = {
- 	{
-+		.procname       = "unknown_nmi_panic",
-+		.data           = &unknown_nmi_panic,
-+		.maxlen         = sizeof(int),
-+		.mode           = 0644,
-+		.proc_handler   = proc_dointvec,
-+	},
-+	{
- 		.procname	= "panic_on_unrecovered_nmi",
- 		.data		= &panic_on_unrecovered_nmi,
- 		.maxlen		= sizeof(int),
-@@ -185,15 +189,6 @@ static const struct ctl_table x86_sysctl_table[] = {
- 		.mode		= 0644,
- 		.proc_handler	= proc_dointvec,
- 	},
--#if defined(CONFIG_X86_LOCAL_APIC)
--	{
--		.procname       = "unknown_nmi_panic",
--		.data           = &unknown_nmi_panic,
--		.maxlen         = sizeof(int),
--		.mode           = 0644,
--		.proc_handler   = proc_dointvec,
--	},
--#endif
- #if defined(CONFIG_ACPI_SLEEP)
- 	{
- 		.procname	= "acpi_video_flags",
+--pjejnus3mirkel3g--
