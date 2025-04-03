@@ -1,328 +1,127 @@
-Received: from webmail.webked.de (webmail.webked.de [159.69.203.94])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1DC41FDE2A;
-	Thu,  3 Apr 2025 21:25:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.203.94
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11F631FECA4
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 21:25:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743715515; cv=none; b=WgfjGKMmSsBkkB6VULM7gn4Sk/dBoS5+Cce1+1TKWbSpnM0a+m6D+Qa3f3nJ0YiYhfQF1Jty+wisSd3PPuYZslX0ZYVpp0pwtl47Zizz9kNGz3qU4rNrUJTOe1qiOiVVUX4kok43hzBWmQ5pNxaHJTuCkBDsQr+V7EsSyR7tY3s=
+	t=1743715518; cv=none; b=kobK9dSK5a0G0O7jTdqApLhMfLu38LO8U/018rImQodZHjCXbc7HaZuTOIJS3Ba5Zd1GleQxir89rF/53oC3mLv8cdzIR+IuLUKzJ0Jr8AseFmnzp6EiORmrGipMGaKAzAb1T5uzoBFUl+S2v/3ulilUoCOS5f+khCz10e4p3jc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743715515; c=relaxed/simple;
-	bh=mx/QdCJg4au4/8IIFPo4RZ8AGGwHpjAaAGeq/qHk+z0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=jw2QSYGqTGWx15qY1zFT12fecq2nzDjyD7oLtuHqFI5wKEXPu4EZ2HEBnpTL4GQvMU78j9kPMWJU+cCdj1jF0ZRlSzHRtvs8pzs1PKF/48Elby+YlcdTlEcEdFT36dS5fwG604VjBAOD9CBrhJwFMbmMlgDDEYK4m62S+1m4ktg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=webked.de; spf=pass smtp.mailfrom=webked.de; arc=none smtp.client-ip=159.69.203.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=webked.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=webked.de
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 29AF161A78;
-	Thu,  3 Apr 2025 23:24:48 +0200 (CEST)
-Message-ID: <fa9aec4d5d5148cff37a17d076b90ab835b8c7ef.camel@webked.de>
-Subject: Re: [REGRESSION] Massive virtio-net throughput drop in guest VM
- with Linux 6.8+
-From: Markus Fohrer <markus.fohrer@webked.de>
-To: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: virtualization@lists.linux-foundation.org, jasowang@redhat.com, 
-	davem@davemloft.net, edumazet@google.com, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Date: Thu, 03 Apr 2025 23:24:43 +0200
-In-Reply-To: <20250403170543-mutt-send-email-mst@kernel.org>
-References: <1d388413ab9cfd765cd2c5e05b5e69cdb2ec5a10.camel@webked.de>
-	 <20250403090001-mutt-send-email-mst@kernel.org>
-	 <f8909f5bbc2532ea234cdaa8dbdb46a48249803f.camel@webked.de>
-	 <20250403100206-mutt-send-email-mst@kernel.org>
-	 <da1c8647c4efcfcf7e7d2ba7e6235afc7b0f63ae.camel@webked.de>
-	 <20250403170543-mutt-send-email-mst@kernel.org>
-Organization: WEBKED IT Markus Fohrer
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.3-0ubuntu1 
+	s=arc-20240116; t=1743715518; c=relaxed/simple;
+	bh=0/kXhDAduzOSSgTL+4Zi3+Km7r2/W7VB8G2TxN8OZo4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=dB/dpvLr1ua5XG3fwYugwUuPZ+Z/1R6P/5XWOGd4cWXrWxkqK3szKQxLNHPQn2AaC3zFE7Xl9/vjPTskbebfRM7BAk4ItlqKvXdgpQqAZ8sV02pbYlh6V5WIPgsTa50pI5zVqlMCUbMC10LJGIWgGGo6nuU8zLpfVgkq1ycEq4k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ElZL8y6L; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ElZL8y6L"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743715516;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oZogQhu6L1XhZkbvs0tNuQg2uimzHUPkU3Z9auuq3EM=;
+	b=ElZL8y6LtVhiUL4M224HOxXfuy9QlLcpGXN5ktLjmjx/aKW9Ryce2JZVRdDd+2xFiGSJB0
+	+yGvbNTdpkr3qrNVzyTollz5yXnUcc9Bg82pmsP6JmwMQr89FAazRRMOgyY36Mmw6338vb
+	RaxyNCAx3cngQ8a73wa5tdCsW3isJKs=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-253-xOUKERzDMGumsLjLuqsv5g-1; Thu,
+ 03 Apr 2025 17:25:11 -0400
+X-MC-Unique: xOUKERzDMGumsLjLuqsv5g-1
+X-Mimecast-MFC-AGG-ID: xOUKERzDMGumsLjLuqsv5g_1743715509
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id F00C71800EC5;
+	Thu,  3 Apr 2025 21:25:08 +0000 (UTC)
+Received: from asrivats-na.rmtustx.csb (unknown [10.2.16.30])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id A5B1A180A803;
+	Thu,  3 Apr 2025 21:25:04 +0000 (UTC)
+From: Anusha Srivatsa <asrivats@redhat.com>
+Date: Thu, 03 Apr 2025 16:21:07 -0400
+Subject: [PATCH 36/46] panel/tpo-tpg110: Use refcounted allocation in place
+ of devm_kzalloc()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250403-b4-drm_panel_mass_driver_convert_part3-v1-36-965b15ad5b8e@redhat.com>
+References: <20250403-b4-drm_panel_mass_driver_convert_part3-v1-0-965b15ad5b8e@redhat.com>
+In-Reply-To: <20250403-b4-drm_panel_mass_driver_convert_part3-v1-0-965b15ad5b8e@redhat.com>
+To: Neil Armstrong <neil.armstrong@linaro.org>, 
+ Jessica Zhang <quic_jesszhan@quicinc.com>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Robert Chiras <robert.chiras@nxp.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Markuss Broks <markuss.broks@gmail.com>, 
+ Artur Weber <aweber.kernel@gmail.com>, 
+ Dzmitry Sankouski <dsankouski@gmail.com>, 
+ Jagan Teki <jagan@amarulasolutions.com>, 
+ =?utf-8?q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>, 
+ Purism Kernel Team <kernel@puri.sm>, Ondrej Jirman <megi@xff.cz>, 
+ Sasha Finkelstein <fnkl.kernel@gmail.com>, Janne Grunau <j@jannau.net>, 
+ Michael Trimarchi <michael@amarulasolutions.com>, 
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ asahi@lists.linux.dev, Anusha Srivatsa <asrivats@redhat.com>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1743711639; l=1256;
+ i=asrivats@redhat.com; s=20250122; h=from:subject:message-id;
+ bh=0/kXhDAduzOSSgTL+4Zi3+Km7r2/W7VB8G2TxN8OZo4=;
+ b=/+zSXqIQwuMsfQCYR1gmY4Ew+e7nuP8k91qd5elC6ommAtALz7vQ1422Q/TajcBwVflSiCp+W
+ zs2v2JlrALHCSq1/Hptk9MWIG5OWAWY+N+itEtVqwQ5+SAZAehkfy8J
+X-Developer-Key: i=asrivats@redhat.com; a=ed25519;
+ pk=brnIHkBsUZEhyW6Zyn0U92AeIZ1psws/q8VFbIkf1AU=
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-Am Donnerstag, dem 03.04.2025 um 17:06 -0400 schrieb Michael S.
-Tsirkin:
-> On Thu, Apr 03, 2025 at 10:07:12PM +0200, Markus Fohrer wrote:
-> > Am Donnerstag, dem 03.04.2025 um 10:03 -0400 schrieb Michael S.
-> > Tsirkin:
-> > > On Thu, Apr 03, 2025 at 03:51:01PM +0200, Markus Fohrer wrote:
-> > > > Am Donnerstag, dem 03.04.2025 um 09:04 -0400 schrieb Michael S.
-> > > > Tsirkin:
-> > > > > On Wed, Apr 02, 2025 at 11:12:07PM +0200, Markus Fohrer
-> > > > > wrote:
-> > > > > > Hi,
-> > > > > >=20
-> > > > > > I'm observing a significant performance regression in KVM
-> > > > > > guest
-> > > > > > VMs
-> > > > > > using virtio-net with recent Linux kernels (6.8.1+ and
-> > > > > > 6.14).
-> > > > > >=20
-> > > > > > When running on a host system equipped with a Broadcom
-> > > > > > NetXtreme-E
-> > > > > > (bnxt_en) NIC and AMD EPYC CPUs, the network throughput in
-> > > > > > the
-> > > > > > guest drops to 100=E2=80=93200 KB/s. The same guest configurati=
-on
-> > > > > > performs
-> > > > > > normally (~100 MB/s) when using kernel 6.8.0 or when the VM
-> > > > > > is
-> > > > > > moved to a host with Intel NICs.
-> > > > > >=20
-> > > > > > Test environment:
-> > > > > > - Host: QEMU/KVM, Linux 6.8.1 and 6.14.0
-> > > > > > - Guest: Linux with virtio-net interface
-> > > > > > - NIC: Broadcom BCM57416 (bnxt_en driver, no issues at host
-> > > > > > level)
-> > > > > > - CPU: AMD EPYC
-> > > > > > - Storage: virtio-scsi
-> > > > > > - VM network: virtio-net, virtio-scsi (no CPU or IO
-> > > > > > bottlenecks)
-> > > > > > - Traffic test: iperf3, scp, wget consistently slow in
-> > > > > > guest
-> > > > > >=20
-> > > > > > This issue is not present:
-> > > > > > - On 6.8.0=20
-> > > > > > - On hosts with Intel NICs (same VM config)
-> > > > > >=20
-> > > > > > I have bisected the issue to the following upstream commit:
-> > > > > >=20
-> > > > > > =C2=A0 49d14b54a527 ("virtio-net: Suppress tx timeout warning
-> > > > > > for
-> > > > > > small
-> > > > > > tx")
-> > > > > > =C2=A0 https://git.kernel.org/linus/49d14b54a527
-> > > > >=20
-> > > > > Thanks a lot for the info!
-> > > > >=20
-> > > > >=20
-> > > > > both the link and commit point at:
-> > > > >=20
-> > > > > commit 49d14b54a527289d09a9480f214b8c586322310a
-> > > > > Author: Eric Dumazet <edumazet@google.com>
-> > > > > Date:=C2=A0=C2=A0 Thu Sep 26 16:58:36 2024 +0000
-> > > > >=20
-> > > > > =C2=A0=C2=A0=C2=A0 net: test for not too small csum_start in
-> > > > > virtio_net_hdr_to_skb()
-> > > > > =C2=A0=C2=A0=C2=A0=20
-> > > > >=20
-> > > > > is this what you mean?
-> > > > >=20
-> > > > > I don't know which commit is "virtio-net: Suppress tx timeout
-> > > > > warning
-> > > > > for small tx"
-> > > > >=20
-> > > > >=20
-> > > > >=20
-> > > > > > Reverting this commit restores normal network performance
-> > > > > > in
-> > > > > > affected guest VMs.
-> > > > > >=20
-> > > > > > I=E2=80=99m happy to provide more data or assist with testing a
-> > > > > > potential
-> > > > > > fix.
-> > > > > >=20
-> > > > > > Thanks,
-> > > > > > Markus Fohrer
-> > > > >=20
-> > > > >=20
-> > > > > Thanks! First I think it's worth checking what is the setup,
-> > > > > e.g.
-> > > > > which offloads are enabled.
-> > > > > Besides that, I'd start by seeing what's doing on. Assuming
-> > > > > I'm
-> > > > > right
-> > > > > about
-> > > > > Eric's patch:
-> > > > >=20
-> > > > > diff --git a/include/linux/virtio_net.h
-> > > > > b/include/linux/virtio_net.h
-> > > > > index 276ca543ef44d8..02a9f4dc594d02 100644
-> > > > > --- a/include/linux/virtio_net.h
-> > > > > +++ b/include/linux/virtio_net.h
-> > > > > @@ -103,8 +103,10 @@ static inline int
-> > > > > virtio_net_hdr_to_skb(struct
-> > > > > sk_buff *skb,
-> > > > > =C2=A0
-> > > > > =C2=A0		if (!skb_partial_csum_set(skb, start, off))
-> > > > > =C2=A0			return -EINVAL;
-> > > > > +		if (skb_transport_offset(skb) < nh_min_len)
-> > > > > +			return -EINVAL;
-> > > > > =C2=A0
-> > > > > -		nh_min_len =3D max_t(u32, nh_min_len,
-> > > > > skb_transport_offset(skb));
-> > > > > +		nh_min_len =3D skb_transport_offset(skb);
-> > > > > =C2=A0		p_off =3D nh_min_len + thlen;
-> > > > > =C2=A0		if (!pskb_may_pull(skb, p_off))
-> > > > > =C2=A0			return -EINVAL;
-> > > > >=20
-> > > > >=20
-> > > > > sticking a printk before return -EINVAL to show the offset
-> > > > > and
-> > > > > nh_min_len
-> > > > > would be a good 1st step. Thanks!
-> > > > >=20
-> > > >=20
-> > > >=20
-> > > > Hi Eric,
-> > > >=20
-> > > > thanks a lot for the quick response =E2=80=94 and yes, you're
-> > > > absolutely
-> > > > right.
-> > > >=20
-> > > > Apologies for the confusion: I mistakenly wrote the wrong
-> > > > commit
-> > > > description in my initial mail.
-> > > >=20
-> > > > The correct commit is indeed:
-> > > >=20
-> > > > commit 49d14b54a527289d09a9480f214b8c586322310a
-> > > > Author: Eric Dumazet <edumazet@google.com>
-> > > > Date:=C2=A0=C2=A0 Thu Sep 26 16:58:36 2024 +0000
-> > > >=20
-> > > > =C2=A0=C2=A0=C2=A0 net: test for not too small csum_start in
-> > > > virtio_net_hdr_to_skb()
-> > > >=20
-> > > > This is the one I bisected and which causes the performance
-> > > > regression
-> > > > in my environment.
-> > > >=20
-> > > > Thanks again,
-> > > > Markus
-> > >=20
-> > >=20
-> > > I'm not Eric but good to know.
-> > > Alright, so I would start with the two items: device features and
-> > > printk.
-> > >=20
-> >=20
-> > as requested, here=E2=80=99s the device/feature information from the gu=
-est
-> > running kernel 6.14 (mainline):
-> >=20
-> > Interface: ens18
-> >=20
-> > ethtool -i ens18:
-> > driver: virtio_net
-> > version: 1.0.0
-> > firmware-version:=20
-> > expansion-rom-version:=20
-> > bus-info: 0000:00:12.0
-> > supports-statistics: yes
-> > supports-test: no
-> > supports-eeprom-access: no
-> > supports-register-dump: no
-> > supports-priv-flags: no
-> >=20
-> >=20
-> > ethtool -k ens18:
-> > Features for ens18:
-> > rx-checksumming: on [fixed]
-> > tx-checksumming: on
-> > 	tx-checksum-ipv4: off [fixed]
-> > 	tx-checksum-ip-generic: on
-> > 	tx-checksum-ipv6: off [fixed]
-> > 	tx-checksum-fcoe-crc: off [fixed]
-> > 	tx-checksum-sctp: off [fixed]
-> > scatter-gather: on
-> > 	tx-scatter-gather: on
-> > 	tx-scatter-gather-fraglist: off [fixed]
-> > tcp-segmentation-offload: on
-> > 	tx-tcp-segmentation: on
-> > 	tx-tcp-ecn-segmentation: on
-> > 	tx-tcp-mangleid-segmentation: off
-> > 	tx-tcp6-segmentation: on
-> > generic-segmentation-offload: on
-> > generic-receive-offload: on
-> > large-receive-offload: off [fixed]
-> > rx-vlan-offload: off [fixed]
-> > tx-vlan-offload: off [fixed]
-> > ntuple-filters: off [fixed]
-> > receive-hashing: off [fixed]
-> > highdma: on [fixed]
-> > rx-vlan-filter: on [fixed]
-> > vlan-challenged: off [fixed]
-> > tx-gso-robust: on [fixed]
-> > tx-fcoe-segmentation: off [fixed]
-> > tx-gre-segmentation: off [fixed]
-> > tx-gre-csum-segmentation: off [fixed]
-> > tx-ipxip4-segmentation: off [fixed]
-> > tx-ipxip6-segmentation: off [fixed]
-> > tx-udp_tnl-segmentation: off [fixed]
-> > tx-udp_tnl-csum-segmentation: off [fixed]
-> > tx-gso-partial: off [fixed]
-> > tx-tunnel-remcsum-segmentation: off [fixed]
-> > tx-sctp-segmentation: off [fixed]
-> > tx-esp-segmentation: off [fixed]
-> > tx-udp-segmentation: off
-> > tx-gso-list: off [fixed]
-> > tx-nocache-copy: off
-> > loopback: off [fixed]
-> > rx-fcs: off [fixed]
-> > rx-all: off [fixed]
-> > tx-vlan-stag-hw-insert: off [fixed]
-> > rx-vlan-stag-hw-parse: off [fixed]
-> > rx-vlan-stag-filter: off [fixed]
-> > l2-fwd-offload: off [fixed]
-> > hw-tc-offload: off [fixed]
-> > esp-hw-offload: off [fixed]
-> > esp-tx-csum-hw-offload: off [fixed]
-> > rx-udp_tunnel-port-offload: off [fixed]
-> > tls-hw-tx-offload: off [fixed]
-> > tls-hw-rx-offload: off [fixed]
-> > rx-gro-hw: on
-> > tls-hw-record: off [fixed]
-> > rx-gro-list: off
-> > macsec-hw-offload: off [fixed]
-> > rx-udp-gro-forwarding: off
-> > hsr-tag-ins-offload: off [fixed]
-> > hsr-tag-rm-offload: off [fixed]
-> > hsr-fwd-offload: off [fixed]
-> > hsr-dup-offload: off [fixed]
-> >=20
-> > ethtool ens18:
-> > Settings for ens18:
-> > 	Supported ports: [=C2=A0 ]
-> > 	Supported link modes:=C2=A0=C2=A0 Not reported
-> > 	Supported pause frame use: No
-> > 	Supports auto-negotiation: No
-> > 	Supported FEC modes: Not reported
-> > 	Advertised link modes:=C2=A0 Not reported
-> > 	Advertised pause frame use: No
-> > 	Advertised auto-negotiation: No
-> > 	Advertised FEC modes: Not reported
-> > 	Speed: Unknown!
-> > 	Duplex: Unknown! (255)
-> > 	Auto-negotiation: off
-> > 	Port: Other
-> > 	PHYAD: 0
-> > 	Transceiver: internal
-> > netlink error: Operation not permitted
-> > 	Link detected: yes
-> >=20
-> >=20
-> > Kernel log (journalctl -k):
-> > Apr 03 19:50:37 kb-test.allod.com kernel: virtio_scsi virtio2:
-> > 4/0/0
-> > default/read/poll queues=C2=A0=20
-> > Apr 03 19:50:37 kb-test.allod.com kernel: virtio_net virtio1 ens18:
-> > renamed from eth0
-> >=20
-> > Let me know if you=E2=80=99d like comparison data from kernel 6.11 or a=
-ny
-> > additional tests
->=20
->=20
-> I think let's redo bisect first then I will suggest which traces to
-> add.
->=20
+Move to using the new API devm_drm_panel_alloc() to allocate the
+panel.
 
-The build with the added printk is currently running. I=E2=80=99ll test it
-shortly and report the results.
+Signed-off-by: Anusha Srivatsa <asrivats@redhat.com>
+---
+ drivers/gpu/drm/panel/panel-tpo-tpg110.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
-Should the bisect be done between v6.11 and v6.12, or v6.11 and v6.14?
+diff --git a/drivers/gpu/drm/panel/panel-tpo-tpg110.c b/drivers/gpu/drm/panel/panel-tpo-tpg110.c
+index f6a212e542cb9301cab1ad19c43e00e4ea07b128..0beba5c08956571aee5c253e460a9d020b800009 100644
+--- a/drivers/gpu/drm/panel/panel-tpo-tpg110.c
++++ b/drivers/gpu/drm/panel/panel-tpo-tpg110.c
+@@ -405,9 +405,11 @@ static int tpg110_probe(struct spi_device *spi)
+ 	struct tpg110 *tpg;
+ 	int ret;
+ 
+-	tpg = devm_kzalloc(dev, sizeof(*tpg), GFP_KERNEL);
+-	if (!tpg)
+-		return -ENOMEM;
++	tpg = devm_drm_panel_alloc(dev, struct tpg110, panel,
++				   &tpg110_drm_funcs, DRM_MODE_CONNECTOR_DPI);
++	if (IS_ERR(tpg))
++		return PTR_ERR(tpg);
++
+ 	tpg->dev = dev;
+ 
+ 	/* We get the physical display dimensions from the DT */
+@@ -438,9 +440,6 @@ static int tpg110_probe(struct spi_device *spi)
+ 	if (ret)
+ 		return ret;
+ 
+-	drm_panel_init(&tpg->panel, dev, &tpg110_drm_funcs,
+-		       DRM_MODE_CONNECTOR_DPI);
+-
+ 	ret = drm_panel_of_backlight(&tpg->panel);
+ 	if (ret)
+ 		return ret;
+
+-- 
+2.48.1
 
