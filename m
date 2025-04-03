@@ -1,122 +1,114 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F10354F81;
-	Thu,  3 Apr 2025 08:04:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A640A7081A;
+	Thu,  3 Apr 2025 08:05:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743667494; cv=none; b=IxVMRCd3a/r3hHnnhtUCNtupecLMR+MHmEPyirPQ5qD+YaUZx1Dzj3h4ZjeofcCQ6Cn+Jy4/1+Ft/+jQTeGGl364KFx5eah9nD3Ml7aSb4U0D2HUoBo9ZD4fyNUuOE7gKmcvQ+UhemrfU83A2yklmBh7hYtpHDeUF6jQ+pY+G9I=
+	t=1743667524; cv=none; b=bctzqxzKYyDV8KcjEOz0eyzApXMyQo5gOylFaDfEDR6FoD5ILraVF/lPs2+g75hul+qhg6+3EwATRMCw+RA4ZZQvbNXSPQFIKbH7a46LHcDvBpNKQjrpYwRn0btXn72j8yLI07v7XRm/VNL3T7H8ZcRDW84zEKM3/YDziXxlJUg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743667494; c=relaxed/simple;
-	bh=JVbI1Dn54KbuV9qUQjUy7ja97plsdfx1f9OQTp70h2g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lIgn9V45jydTaO1EbbDcpO/qKEegzdgVKr8kXKgQDCFAj+1YnXqbOaz+jmgx70EztxxrhQRepgdvq7wDdF/xv0qQZixnHhflLVNm7n99TK64m0ewQpzoGIhuEMSW05uhKAN6oqtu9OdvT1SfdJ5tGXJn2C0kMvkfAifxdsxnbUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=btOCtacp; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1743667524; c=relaxed/simple;
+	bh=3jgx9m/tc8Q/3nq8eQJ9H+Pb7YFZEbjz/3rHdIWLlt4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=MdkCGdEuE2y5M1HX1JHyjTvOGLdYa8wowKnW9IZIlD47YjuuxMp4GN0VMm/PGWPBkxyahl8Gx9i8H9dxJvPGp1hvlx5iE3AEULZRGwXt4mYHfNxAADm7/lTFccWR7RPNfNSy4MsFELmRZ5iLo14b2oaf+rZ38otZYl2J8KbvUUU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=mOguEV4K; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="btOCtacp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743667493; x=1775203493;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=JVbI1Dn54KbuV9qUQjUy7ja97plsdfx1f9OQTp70h2g=;
-  b=btOCtacpaKDgye0y8FHFEkoQWFY2ivkEYOWFKEdX9ALWRrIiZTslbUp8
-   Al13I+R7hSs1q8saeN8TS4bnSZOPEr4xA8am9V4gz0rYW26sgRs8mc6UG
-   TX1jniaDKD0iADSM1YdlhZw9n7KUGOR+17Yx7GEPfOPR5I4DOJDiHHXiH
-   X4ujdLimmUNbCVoelx2Gq3k0VdUOAHqwq9ptiif12BrVl9VGO3oPsSWEx
-   ZuN2wu6ucs6jnPnFbPcmf3tkXVSLm1qQ87Jld90NJAnw+RiPyrhIm3nfD
-   Xt2eBn7U6ldR3eBLtcuzvq3FtrLMBPv/fmfToawCsdxd0Z5+kOT3xuLZ8
-   w==;
-X-CSE-ConnectionGUID: 0fGXLnF5QZ6Ni8hTTcub5Q==
-X-CSE-MsgGUID: tP7KPkyBSt6f5v37+01qog==
-X-IronPort-AV: E=McAfee;i="6700,10204,11392"; a="44211356"
-X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
-   d="scan'208";a="44211356"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 01:04:52 -0700
-X-CSE-ConnectionGUID: JkeVQOk4QEqt+esSEFzL+A==
-X-CSE-MsgGUID: XO1EVzt6RLary3QP7TaQZw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
-   d="scan'208";a="157893793"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 01:04:50 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u0FZ9-00000008jhr-180G;
-	Thu, 03 Apr 2025 11:04:47 +0300
-Date: Thu, 3 Apr 2025 11:04:47 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v1 1/1] gpiolib: Make gpiod_put() error pointer aware
-Message-ID: <Z-5BHzTEed607Afz@smile.fi.intel.com>
-References: <20250402152000.1572764-1-andriy.shevchenko@linux.intel.com>
- <CAMRc=MfzRVy85NR_eSQc3ZX_OmgCRUKuBdd6TqCu=Adwh9drrA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="mOguEV4K"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1743667520;
+	bh=3jgx9m/tc8Q/3nq8eQJ9H+Pb7YFZEbjz/3rHdIWLlt4=;
+	h=From:Date:Subject:To:Cc:From;
+	b=mOguEV4KvjPQo8ewEkVvdMIuyU2YpiHN/rTPLbICbi9j9HAIr26DNSfYQClWtb1K8
+	 4IJXR60OeMn2Rt4Tldnppu7rDY4DXP/4YDgpIs5Q9OlXkW8hXOBrR2ngQo6dy6tpvI
+	 RTRPHnOLeKpBDx4sKADOG8ErTnhMJDmeT4MQ8wYTuNJV3ya61e6PLL7tdy5zLaETj+
+	 KJXVFYAtvURgRHZ5bK9DfV6Y3iFQ8/aTwdAcd/pwPFudmPhgRAlYmAiimYBP8r2tgq
+	 NdmuQzfze5Di/rOJZzR/Nyq45mbtrKhQlcPn23L39hcNHHoIR4It2Y/Xa7Ut+JnwMy
+	 W3bSrZ9RWJ64w==
+Received: from yukiji.home (amontpellier-657-1-116-247.w83-113.abo.wanadoo.fr [83.113.51.247])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: laeyraud)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 3BB0C17E00A3;
+	Thu,  3 Apr 2025 10:05:20 +0200 (CEST)
+From: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
+Date: Thu, 03 Apr 2025 10:05:16 +0200
+Subject: [PATCH] arm64: dts: mediatek: mt8390-genio-common: Fix pcie
+ pinctrl dtbs_check error
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=MfzRVy85NR_eSQc3ZX_OmgCRUKuBdd6TqCu=Adwh9drrA@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250403-mt8390-genio-common-fix-pcie-dtbs-check-error-v1-1-70d11fc1482e@collabora.com>
+X-B4-Tracking: v=1; b=H4sIADtB7mcC/y2NywqDMBBFf0Vm3YGofWh/pbjQeKtDMbGTtAjiv
+ zdol+dyOWelABUEumcrKb4SxLsE+SkjO7ZuAEufmApTXMzZFDzFqqwND3Di2fpp8o6fsvBsBdz
+ HLrAdYV8MVa+cl52pkN/M1daUnLMinffeozlY8f6kbDxG6tqA3Svxnjkskf/pkppt+wHpJwcYs
+ AAAAA==
+X-Change-ID: 20250402-mt8390-genio-common-fix-pcie-dtbs-check-error-13b08e1706c9
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: kernel@collabora.com, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-mediatek@lists.infradead.org, 
+ Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1743667520; l=1463;
+ i=louisalexis.eyraud@collabora.com; s=20250113; h=from:subject:message-id;
+ bh=3jgx9m/tc8Q/3nq8eQJ9H+Pb7YFZEbjz/3rHdIWLlt4=;
+ b=DGJlIapdDR+iZz5p9XnvZUlxdGgftQwKuv0ds4ImZlAWeMW7/VvuzhIpiG7xZddEfaFXHyw1j
+ KonucL+EtDPCuNnqQE2RQbWmAxj9E8xpnnwyVyHwHgNhU+lh89/iE3Z
+X-Developer-Key: i=louisalexis.eyraud@collabora.com; a=ed25519;
+ pk=CHFBDB2Kqh4EHc6JIqFn69GhxJJAzc0Zr4e8QxtumuM=
 
-On Thu, Apr 03, 2025 at 08:58:09AM +0200, Bartosz Golaszewski wrote:
-> On Wed, Apr 2, 2025 at 5:20 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> >
-> > When non-optional GPIO is requested and failed, the variable that holds
-> > the (invalid) descriptor can contain an error pointer. However, gpiod_put()
-> > ignores that fact and tries to cleanup never requested descriptor.
-> > Make sure gpiod_put() ignores that as well.
-> >
-> > While at it, do the same for the gpiod_put_array().
-> >
-> > Note, it arguable needs to be present in the stubs as those are usually
-> > called when CONFIG_GPIOLIB=n and GPIOs are requested using gpiod_get_optional()
-> > or similar APIs.
+Rename pcie pinctrl definition to fix the following dtbs_check error
+for mt8370-genio-510-evk and mt8390-genio-700-evk devicetree files:
+```
+pinctrl@10005000: 'pcie-default' does not match any of the regexes:
+  '-pins$', 'pinctrl-[0-9]+'
+```
 
-> I'm not a fan of this. Silently ignoring NULL makes sense in the
-> context of _optional() calls where we want to do nothing on GPIOs that
-> aren't there.
+Signed-off-by: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
+---
+ arch/arm64/boot/dts/mediatek/mt8390-genio-common.dtsi | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-> But this encourages people to get sloppy and just ignore
-> error pointers returned from gpiod_get()?
+diff --git a/arch/arm64/boot/dts/mediatek/mt8390-genio-common.dtsi b/arch/arm64/boot/dts/mediatek/mt8390-genio-common.dtsi
+index 60139e6dffd8e0e326690d922f3360d829ed026b..e9d57f44475b00f19983a968ae113deb4d86bf12 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8390-genio-common.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8390-genio-common.dtsi
+@@ -501,7 +501,7 @@ &mt6359codec {
+ 
+ &pcie {
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&pcie_pins_default>;
++	pinctrl-0 = <&pcie_default_pins>;
+ 	status = "okay";
+ };
+ 
+@@ -874,8 +874,8 @@ pins-rst {
+ 		};
+ 	};
+ 
+-	pcie_pins_default: pcie-default {
+-		mux {
++	pcie_default_pins: pcie-default-pins {
++		pins {
+ 			pinmux = <PINMUX_GPIO47__FUNC_I1_WAKEN>,
+ 				 <PINMUX_GPIO48__FUNC_O_PERSTN>,
+ 				 <PINMUX_GPIO49__FUNC_B1_CLKREQN>;
 
-From where did you come to this conclusion, please? We have many subsystems
-that ignore invalid resource on the release stage, starting from platform
-device driver core.
+---
+base-commit: 9eb5f358d46764a8be92f04a7b4340366f715c5b
+change-id: 20250402-mt8390-genio-common-fix-pcie-dtbs-check-error-13b08e1706c9
 
-> Also: all other calls error out on IS_ERR(desc) so why would we make it an
-> exception?
-
-Because it's _release_ stage that participates in the cleaning up of
-the allocated resources in error paths. It's a common approach in
-the kernel. I would rather ask what makes GPIOLIB so special about it?
-
-> If anything, the broadcom SPI driver this is about should store the return
-> value of gpiod_get() in a local variable, check it and then assign NULL to
-> the actual descriptor stored in the driver data.
-
-Broadcom SPI driver just reveals this disadvantage in GPIOLIB.
-
-> We return errors for a reason, I don't like the idea of just ignoring
-> them in gpiod_put().
-
-Yes, how does one links to the other, please?
-
+Best regards,
 -- 
-With Best Regards,
-Andy Shevchenko
-
+Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
 
