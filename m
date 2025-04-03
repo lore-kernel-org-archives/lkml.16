@@ -1,81 +1,160 @@
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDC85149E13;
-	Thu,  3 Apr 2025 02:48:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12703149E13
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 02:48:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743648487; cv=none; b=u5um8yXN2HCNN1/VrINtnJ+c4RN6p9FiEr+XAMJrNd9EYJNb9PaHqVldDe+c+CDqePBjFs7Std8ipmQZv1Tq40RAu988vcjJtWrDu0/EqlOR2pODybDQ2yO4PGciWspMMOrwv68GnUpoZknWQwsOAZNFbuAjVzg1u8D2OgsgE00=
+	t=1743648493; cv=none; b=Y38DqLwquHF3ii3ICMhQadbOcOxiDUAbgWtKdEWrttXH7Fm9TJ6tCFEtCWYTPcoPk+F213hRveAobzGWvEBJ4zFw+q1BCz0/QN4ZDnoqWi81I0Z+JBKEbkxaX9y64BD2eujmEgtS6dGqSsBbW88far3TCf/I2zMgBpHfIMjVOYQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743648487; c=relaxed/simple;
-	bh=JiZ0yPlBWbC5qsQiWdQY4dY24O4HAbX6YfiLK1mqrMI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rT+R7PPy8Agwt2hMgThFUXj0iGCzwtXFvtUoiI9ec15fT0G8GPWRLeFKRX0NVjCKxx7CDR3BsT25/FLsw0sHirrBNjcWwPUuuHcHp+KCpZHtzqVtHkHDrgeOsE0liIGzE77I0/fhZKQ4DbIcONpjowm4cRB41hp0AFFS02GZzGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=CcUAl6+E; arc=none smtp.client-ip=62.89.141.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="CcUAl6+E"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=roPnxm69DeI/ZOuBMC0ueKqZy9g2rUju3cPHwkdIQ/Y=; b=CcUAl6+E/ERnHURJdS+ub+D08w
-	ctBSZqWZHa5wa1ieAfXu4NhaVhBuKj76uDOf/xD9Q+p1KKrKL/x/OKV2ltHAYCjC/Hzx8thK3WFqx
-	m08QxpFdtzIiu7ZIKgAeKIyVv3I7k8QUiPZgUPlW8I2h3aCwBKZJOE3Fp4BZ0hF2iFVpabmT3oOM2
-	Rws6l6Ql0vMdjeDkpPUI95//bEwZePnlZV4Vb1srfZRqYiklg7enVZrk4oavcVAiujCl8+eeoa1Oz
-	j4Y/I9lSlF7N3qIZnFM4VxMcF8vZgU6TfAbSq858hEe2+O9hKMFyk+X8rtUdUA1AFiQCZMvkllpvd
-	qvOaCzpg==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u0AcW-0000000A0S1-0Zkd;
-	Thu, 03 Apr 2025 02:47:56 +0000
-Date: Thu, 3 Apr 2025 03:47:56 +0100
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: Xiaole He <hexiaole1994@126.com>
-Cc: James Bottomley <James.Bottomley@hansenpartnership.com>,
-	"brauner@kernel.org" <brauner@kernel.org>,
-	"jack@suse.cz" <jack@suse.cz>,
-	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1] fs/super.c: Add NULL check for type in
- iterate_supers_type
-Message-ID: <20250403024756.GL2023217@ZenIV>
-References: <20250402034529.12642-1-hexiaole1994@126.com>
- <35a8d2093ba4c4b60ce07f1efc17ff2595f6964d.camel@HansenPartnership.com>
- <4ee2fdcb.1854a.195f9828c86.Coremail.hexiaole1994@126.com>
+	s=arc-20240116; t=1743648493; c=relaxed/simple;
+	bh=cKD/uq5gRClbepJa8muRX6JDWvbLXhWsZqu0fN23jlM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Cks1liplJ2S9JSdcV6HaPysWSt6yInxLkkCq4Gqwpy5hv1sz5vj2HLEvdJ10JacF/t42+dRZOROeB8ATw8Jo+uNJuXNdcXLXnp2SMBOpDkDpCbfIU+s7OvNv3xBd3qMrKchozlF0aiW0qNm+J5UG/DwpqmZNgwaOa/oHFNCkMM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4ZSmKq0chQzHrDQ;
+	Thu,  3 Apr 2025 10:44:47 +0800 (CST)
+Received: from kwepemk500005.china.huawei.com (unknown [7.202.194.90])
+	by mail.maildlp.com (Postfix) with ESMTPS id B33E31800EB;
+	Thu,  3 Apr 2025 10:48:07 +0800 (CST)
+Received: from [10.174.179.234] (10.174.179.234) by
+ kwepemk500005.china.huawei.com (7.202.194.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Thu, 3 Apr 2025 10:48:05 +0800
+Message-ID: <82bf1b64-d887-c50b-17b1-2de978896d44@huawei.com>
+Date: Thu, 3 Apr 2025 10:48:04 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4ee2fdcb.1854a.195f9828c86.Coremail.hexiaole1994@126.com>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Subject: Re: [PATCH v13 2/5] arm64: add support for ARCH_HAS_COPY_MC
+To: "Luck, Tony" <tony.luck@intel.com>
+CC: Catalin Marinas <catalin.marinas@arm.com>, Mark Rutland
+	<mark.rutland@arm.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Mauro
+ Carvalho Chehab <mchehab+huawei@kernel.org>, Will Deacon <will@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>, James Morse <james.morse@arm.com>,
+	Robin Murphy <robin.murphy@arm.com>, Andrey Konovalov <andreyknvl@gmail.com>,
+	Dmitry Vyukov <dvyukov@google.com>, Vincenzo Frascino
+	<vincenzo.frascino@arm.com>, Michael Ellerman <mpe@ellerman.id.au>, Nicholas
+ Piggin <npiggin@gmail.com>, Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	Alexander Potapenko <glider@google.com>, Christophe Leroy
+	<christophe.leroy@csgroup.eu>, Aneesh Kumar K.V <aneesh.kumar@kernel.org>,
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, Thomas Gleixner
+	<tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
+	<bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, <x86@kernel.org>,
+	"H. Peter Anvin" <hpa@zytor.com>, Madhavan Srinivasan <maddy@linux.ibm.com>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-mm@kvack.org>,
+	<linuxppc-dev@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
+	<kasan-dev@googlegroups.com>, <wangkefeng.wang@huawei.com>, Guohanjun
+	<guohanjun@huawei.com>
+References: <20241209024257.3618492-1-tongtiangen@huawei.com>
+ <20241209024257.3618492-3-tongtiangen@huawei.com> <Z6zKfvxKnRlyNzkX@arm.com>
+ <df40840d-e860-397d-60bd-02f4b2d0b433@huawei.com>
+ <Z-GOKgBNxKWQ21w4@agluck-desk3>
+From: Tong Tiangen <tongtiangen@huawei.com>
+In-Reply-To: <Z-GOKgBNxKWQ21w4@agluck-desk3>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemk500005.china.huawei.com (7.202.194.90)
 
-On Thu, Apr 03, 2025 at 10:37:17AM +0800, Xiaole He wrote:
-> Thank you for your feedback.
-> While I acknowledge your points, I would like to clarify the rationale
-> behind submitting this patch.
-> During my experimentation with an external module interacting with the
-> superblock, I utilized iterate_supers_type (from fs/super.c) as it is
-> an exported symbol. However, I observed a potential vulnerability in
-> its implementation: the type argument can be passed as NULL, leading
-> to a null pointer dereference. To verify this, I deliberately triggered
-> a scenario where type was set to NULL, resulting in the following dmesg
-> output:
 
-> After this observasion, I worry about if this vulnerability can cause
-> the whole kernel crash if the type argument is passed by a
-> unintentional NULL in the kernel code rather than in the external
-> module.
-> Thus I submitted the patch to address the missing null-check.
-> Thank you for your review.
 
-You do realize that passing it NULL as the second (function pointer) argument
-would also oops, right?  Passing (void (*)(struct super_block *))kfree
-there would do even more unpleasant things, etc.
+在 2025/3/25 0:54, Luck, Tony 写道:
+> On Fri, Feb 14, 2025 at 09:44:02AM +0800, Tong Tiangen wrote:
+>>
+>>
+>> 在 2025/2/13 0:21, Catalin Marinas 写道:
+>>> (catching up with old threads)
+>>>
+>>> On Mon, Dec 09, 2024 at 10:42:54AM +0800, Tong Tiangen wrote:
+>>>> For the arm64 kernel, when it processes hardware memory errors for
+>>>> synchronize notifications(do_sea()), if the errors is consumed within the
+>>>> kernel, the current processing is panic. However, it is not optimal.
+>>>>
+>>>> Take copy_from/to_user for example, If ld* triggers a memory error, even in
+>>>> kernel mode, only the associated process is affected. Killing the user
+>>>> process and isolating the corrupt page is a better choice.
+>>>
+>>> I agree that killing the user process and isolating the page is a better
+>>> choice but I don't see how the latter happens after this patch. Which
+>>> page would be isolated?
+>>
+>> The SEA is triggered when the page with hardware error is read. After
+>> that, the page is isolated in memory_failure() (mf). The processing of
+>> mf is mentioned in the comments of do_sea().
+>>
+>> /*
+>>   * APEI claimed this as a firmware-first notification.
+>>   * Some processing deferred to task_work before ret_to_user().
+>>   */
+>>
+>> Some processing include mf.
+>>
+>>>
+>>>> Add new fixup type EX_TYPE_KACCESS_ERR_ZERO_MEM_ERR to identify insn
+>>>> that can recover from memory errors triggered by access to kernel memory,
+>>>> and this fixup type is used in __arch_copy_to_user(), This make the regular
+>>>> copy_to_user() will handle kernel memory errors.
+>>>
+>>> Is the assumption that the error on accessing kernel memory is
+>>> transient? There's no way to isolate the kernel page and also no point
+>>> in isolating the destination page either.
+>>
+>> Yes, it's transient, the kernel page in mf can't be isolated, the
+>> transient access (ld) of this kernel page is currently expected to kill
+>> the user-mode process to avoid error spread.
+>>
+>>
+>> The SEA processes synchronization errors. Only hardware errors on the
+>> source page can be detected (Through synchronous ld insn) and processed.
+>> The destination page cannot be processed.
+> 
+> I've considered the copy_to_user() case as only partially fixable. There
+> are lots of cases to consider:
+> 
+> 1) Many places where drivers copy to user in ioctl(2) calls.
+>     Killing the application solves the immediate problem, but if
+>     the problem with kernel memory is not transient, then you
+>     may run into it again.
+> 
+> 2) Copy from Linux page cache to user for a read(2) system call.
+>     This one is a candidate for recovery. Might need help from the
+>     file system code. If the kernel page is a clean copy of data in
+>     the file system, then drop this page and re-read from storage
+>     into a new page. Then resume the copy_to_user().
+>     If the page is modified, then need some file system action to
+>     somehow mark this range of addresses in the file as lost forever.
+>     First step in tackling this case is identifying that the source
+>     address is a page cache page.
+> 
+> 3) Probably many other places where the kernel copies to user for
+>     other system calls. Would need to look at these on a case by case
+>     basis. Likely most have the same issue as ioctl(2) above.
 
-Sure, it's exported - so's strlen().  While we are at it, checking just for
-NULL is not the limit - what if the caller gives it ERR_PTR(...) as argument?
+1) 3)
+Yes, in extreme cases, user-mode processes may be killed all the time.
+The hardware error that repeatedly triggered in the same page, in this
+case, firmware maybe report a fatal error, if yes, this problem can be
+solved.
+
+2)
+This is indeed a workaround, somewhat complex, but it seems worthwhile
+to avoid kernel panic.
+
+Sorry for didn't catch your reply in time:)
+
+Thanks,
+Tong.
+
+> 
+> -Tony
+> 
+> .
