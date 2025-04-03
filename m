@@ -1,142 +1,178 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpcmd11116.aruba.it (smtpcmd11116.aruba.it [62.149.156.116])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EF531A23B9;
-	Thu,  3 Apr 2025 07:51:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A71E1A23B9
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 07:52:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.149.156.116
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743666696; cv=none; b=fpai96uLkJfbEcmL/dvWFRsuVMf16HXC1Sf8AvrfEaJTSloxNmjgEWLbb+9YPD1t9AA0qWtLSLdCMhkY0TljhiA2AhjnJm9Pma6CUBDiw7wDTvz1af7aGVFhplQvHhf2pvtATV2ucuCiN/nBFfNdFkzNAPwWeOva/ORgMAlGL04=
+	t=1743666741; cv=none; b=uRkDM3Ba1TcFk+Q6snaxwm8MBfO+xzXow8659+MB6KF2Cd6ivvJmQuTVIUqKbWSYXDu5hmPO2rZiKUXBXw5vAdbdpZZLKkW6ZB/Vb9QbX0GBkH5V2BfmK3P0c1ELZBYQWS9/msoiac4edtTcxLuHKzfiJ98fw/87rudMvxoIJAU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743666696; c=relaxed/simple;
-	bh=HgREi2TEwo6N2+hYXWlTaI98UuKWyJ62RZLvA9oS6nA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iaUeZedYtW0EejsfwkpH5Ns/djBEhTOVOgosdwNUoJPVtpZpBSxn+IxyyiiPn3al7CXd4ZXEB43lUI1UbNpugJ9fgbe/rWu4o/dyw2cPgAMIUOXdZpOB8LgJgCY05tVQ/RUQINexLBHp+U/vZOSIxaxZ8jL1lksMTzOp0nLldeU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y+mLFcXG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743666741; c=relaxed/simple;
+	bh=7WkQ902+KCYS/p0UfE59EQX3GK8GAxuBezBGmDR/EAY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Xp+Aeko60NiVRhTCGN8tnll9AfMT6RaDpKHvc/ckQt4s/ZqjxIMnqsj5t2tGmZf+Tz4EofP4j36GnwKZ65f0d7NpbZtmXYIViRLb7K1Cg4z4hxcnBuLIHU6ck8XwdO/H1MEFE8dO0UasFtDtUn/OE2TuxvywiUbsc4sh7O6HwHI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=enneenne.com; spf=pass smtp.mailfrom=enneenne.com; dkim=temperror (0-bit key) header.d=aruba.it header.i=@aruba.it header.b=BqJHnuA7; arc=none smtp.client-ip=62.149.156.116
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=enneenne.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=enneenne.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y+mLFcXG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF2EAC4CEE8;
-	Thu,  3 Apr 2025 07:51:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743666696;
-	bh=HgREi2TEwo6N2+hYXWlTaI98UuKWyJ62RZLvA9oS6nA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Y+mLFcXGiS0krmDPDIt3U/rcqzp19bD4yRsgaVMJN2Aj8/NUCGyM0CEv9oaB3/wCu
-	 WXg/VBCBr4hNzNGMC0S7utiqtnkJSwL0pjp7hV8OyRQS2dr5Gcug/Y52DF4OiAd++V
-	 L1GEAHOI5+6lE2lgDfVv+NEkKBn8xlnIf1LmdgNpAXJv05ZbM06Q2IXYeUlLsMKoz1
-	 IyO4dNHKJBlwwE1R0bf3uPPpsca2VuVFWHmAVOqpurC47SKkfi1KODHKV2HMlsFkUS
-	 q+Vj/wwtJVeXouFLu7kuLvKF91C58Q3+Tf7fm6y2DuFyJiGE5oMPNJDM4bnYu3POyg
-	 H+2o9lx7QpQjA==
-Date: Thu, 3 Apr 2025 09:51:31 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, quic_mrana@quicinc.com,
-	quic_vbadigan@quicinc.com, quic_ramkri@quicinc.com,
-	quic_vpernami@quicinc.com
-Subject: Re: [PATCH] PCI: qcom: Implement shutdown() callback
-Message-ID: <Z-4-A29UddizBUPz@ryzen>
-References: <20250401-shutdown-v1-1-f699859403ae@oss.qualcomm.com>
- <Z-0xJpBrO4wN9UzN@ryzen>
- <798f9a15-f3de-18fa-1b8f-2c9973e8be61@oss.qualcomm.com>
+	dkim=temperror (0-bit key) header.d=aruba.it header.i=@aruba.it header.b="BqJHnuA7"
+Received: from [192.168.1.57] ([79.0.204.227])
+	by Aruba SMTP with ESMTPSA
+	id 0FJzuSeGotr9d0FJzu8HdI; Thu, 03 Apr 2025 09:49:07 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=aruba.it; s=a1;
+	t=1743666547; bh=7WkQ902+KCYS/p0UfE59EQX3GK8GAxuBezBGmDR/EAY=;
+	h=Date:MIME-Version:Subject:To:From:Content-Type;
+	b=BqJHnuA7444KMjubVUqYpX9sHcg8hpddR5EO8zdlepOTWWF+gOmJwZHZKV/ZjLcfi
+	 AShhpDtyUGb1vQVvgApT4lSupdDDoExEhB06K5tHlb0svlYvqfom3BGg+X+DFw0+sF
+	 aUjiEgS99ZNL0QDziAjD1n92kx+jPNtO6AmBkHB+/rNBXsSH6MW00lcnqSjVrV/37+
+	 64/bjTRcxgIGG5cW31+eFppCFXRu4c8tGTJBNkR3AQZx6/yjtgFMH0vD8/HzgqugjL
+	 3TnpJJJukGhQn3vdEUkkLb20rkpieFAErPruFX3See1ve89VfghCCo+e504teTwSNE
+	 7EMtMNbu1iL0Q==
+Message-ID: <636c5ad9-25ad-44f7-9454-a7787de7a6aa@enneenne.com>
+Date: Thu, 3 Apr 2025 09:49:06 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <798f9a15-f3de-18fa-1b8f-2c9973e8be61@oss.qualcomm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] pps: fix poll support
+Content-Language: en-US
+To: Denis OSTERLAND-HEIM <denis.osterland@diehl.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "stable@vger.kernel.org" <stable@vger.kernel.org>
+References: <0231dfc22dd34a5aaee09a6a19074de1@diehl.com>
+From: Rodolfo Giometti <giometti@enneenne.com>
+In-Reply-To: <0231dfc22dd34a5aaee09a6a19074de1@diehl.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4xfHbkBv7pm3c1jDM4YSW1irVeFNQIfkTfP2aPCtOV7mxrFv9WPHTyKT8HvX83RNFMHyGcXnhHwV3EMk5qWnHEQOG7OKXpELlofHGp9qLwO/iyUsxzTZ85
+ 2A3DAozxNdQyhM7N3kBXg0XmlK7hWKxCzSn/7p/C58sSOgHpqGz6Pf4E3JHWVNksXQQZoNJw9yuUoweZtfG9AsUfcdcBtcM/qvAV3Zo1npT/v0A7plJ8G8NT
+ ew/PNAePSE/18uc2v0lbtGat8Aaeh7QEUEgfKfds74w=
 
-Hello Krishna,
-
-On Thu, Apr 03, 2025 at 09:26:08AM +0530, Krishna Chaitanya Chundru wrote:
-> On 4/2/2025 6:14 PM, Niklas Cassel wrote:
-> > 
-> > Out of curiosity, I tried something similar to on pcie-dw-rockchip.c
-> > 
-> > Simply having a ->shutdown() callback that only calls dw_pcie_host_deinit()
-> > was enough for me to produce:
-> > 
-> > [   40.209887] r8169 0004:41:00.0 eth0: Link is Down
-> > [   40.216572] ------------[ cut here ]------------
-> > [   40.216986] called from state HALTED
-> > [   40.217317] WARNING: CPU: 7 PID: 265 at drivers/net/phy/phy.c:1630 phy_stop+0x134/0x1a0
-> > [   40.218024] Modules linked in: rk805_pwrkey hantro_vpu v4l2_jpeg v4l2_vp9 v4l2_h264 v4l2_mem2mem videobuf2_v4l2 videobuf2_dma_contig videobuf2_memops videobuf2_common vidf
-> > [   40.220267] CPU: 7 UID: 0 PID: 265 Comm: init Not tainted 6.14.0+ #134 PREEMPT
-> > [   40.220908] Hardware name: Radxa ROCK 5B (DT)
-> > [   40.221289] pstate: 60400009 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-> > [   40.221899] pc : phy_stop+0x134/0x1a0
-> > [   40.222222] lr : phy_stop+0x134/0x1a0
-> > [   40.222546] sp : ffff800082213820
-> > [   40.222836] x29: ffff800082213820 x28: ffff45ec84b30000 x27: 0000000000000000
-> > [   40.223463] x26: 0000000000000000 x25: 0000000000000000 x24: ffffbe8df7fde030
-> > [   40.224088] x23: ffff800082213990 x22: 0000000000000001 x21: ffff45ec80e10000
-> > [   40.224714] x20: ffff45ec82cb40c8 x19: ffff45ec82ccc000 x18: 0000000000000006
-> > [   40.225340] x17: 000000040044ffff x16: 005000f2b5503510 x15: 0720072007200720
-> > [   40.225966] x14: 0720072007200720 x13: 0720072007200720 x12: 0720072007200720
-> > [   40.226592] x11: 0000000000000058 x10: 0000000000000018 x9 : ffffbe8df556469c
-> > [   40.227217] x8 : 0000000000000268 x7 : ffffbe8df7a48648 x6 : ffffbe8df7a48648
-> > [   40.227842] x5 : 0000000000017fe8 x4 : 0000000000000000 x3 : 0000000000000000
-> > [   40.228468] x2 : 0000000000000000 x1 : 0000000000000000 x0 : ffff45ec84b30000
-> > [   40.229093] Call trace:
-> > [   40.229308]  phy_stop+0x134/0x1a0 (P)
-> > [   40.229634]  rtl8169_down+0x34/0x280
-> > [   40.229952]  rtl8169_close+0x64/0x100
-> > [   40.230275]  __dev_close_many+0xbc/0x1f0
-> > [   40.230621]  dev_close_many+0x94/0x160
-> > [   40.230951]  unregister_netdevice_many_notify+0x14c/0x9c0
-> > [   40.231426]  unregister_netdevice_queue+0xe4/0x100
-> > [   40.231848]  unregister_netdev+0x2c/0x60
-> > [   40.232193]  rtl_remove_one+0xa0/0xe0
-> > [   40.232517]  pci_device_remove+0x4c/0xf8
-> > [   40.232864]  device_remove+0x54/0x90
-> > [   40.233182]  device_release_driver_internal+0x1d4/0x238
-> > [   40.233643]  device_release_driver+0x20/0x38
-> > [   40.234019]  pci_stop_bus_device+0x84/0xe0
-> > [   40.234381]  pci_stop_bus_device+0x40/0xe0
-> > [   40.234741]  pci_stop_root_bus+0x48/0x80
-> > [   40.235087]  dw_pcie_host_deinit+0x34/0xe0
-> > [   40.235452]  rockchip_pcie_shutdown+0x24/0x48
-> > [   40.235839]  platform_shutdown+0x2c/0x48
-> > [   40.236187]  device_shutdown+0x150/0x278
-> > [   40.236533]  kernel_restart+0x4c/0xb8
-> > [   40.236859]  __do_sys_reboot+0x178/0x280
-> > [   40.237206]  __arm64_sys_reboot+0x2c/0x40
-> > [   40.237561]  invoke_syscall+0x50/0x120
-> > [   40.237891]  el0_svc_common.constprop.0+0x48/0xf0
-> > [   40.238305]  do_el0_svc+0x24/0x38
-> > [   40.238597]  el0_svc+0x30/0xd0
-> > [   40.238868]  el0t_64_sync_handler+0x10c/0x138
-> > [   40.239251]  el0t_64_sync+0x198/0x1a0
-> > [   40.239575] ---[ end trace 0000000000000000 ]---
-> > 
-> Hi Niklas,
+On 03/04/25 08:06, Denis OSTERLAND-HEIM wrote:
+> Hi Rodolfo,
 > 
-> The issue which you are seeing with specific to the RealTek ethernet
-> driver and should be fixed by RealTek driver nothing to do with the host
-> controller.
+> Do you think that there is a chance that this patch make it in the current merge window?
 
-The warning comes from:
-drivers/net/phy/phy.c:phy_stop()
-so from the networking phylib.
+Honestly, I don't know, it's up to Greg or Andrew to proceed for inclusion.
 
-Doing a simple:
-$ git grep -p phy_stop
+Ciao,
 
-shows that practially all Ethernet drivers call phy_stop() from the
-.ndo_stop() callback.
+Rodolfo
 
-So after your suggested patch, you should see this warning appear with
-any NIC, if connected to your PCIe controller.
+> -----Original Message-----
+> From: Rodolfo Giometti <giometti@enneenne.com>
+> Sent: Monday, March 3, 2025 12:54 PM
+> To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>; Andrew Morton <akpm@linux-foundation.org>
+> Cc: linux-kernel@vger.kernel.org; Denis OSTERLAND-HEIM <denis.osterland@diehl.com>; stable@vger.kernel.org
+> Subject: [EXT] Re: [PATCH] pps: fix poll support
+> 
+> [EXTERNAL EMAIL]
+>   
+> 
+> On 03/03/25 09:02, Denis OSTERLAND-HEIM wrote:
+>> [BUG]
+>> A user space program that calls select/poll get always an immediate data
+>> ready-to-read response. As a result the intended use to wait until next
+>> data becomes ready does not work.
+>>
+>> User space snippet:
+>>
+>>       struct pollfd pollfd = {
+>>         .fd = open("/dev/pps0", O_RDONLY),
+>>         .events = POLLIN|POLLERR,
+>>         .revents = 0 };
+>>       while(1) {
+>>         poll(&pollfd, 1, 2000/*ms*/); // returns immediate, but should wait
+>>         if(revents & EPOLLIN) { // always true
+>>           struct pps_fdata fdata;
+>>           memset(&fdata, 0, sizeof(memdata));
+>>           ioctl(PPS_FETCH, &fdata); // currently fetches data at max speed
+>>         }
+>>       }
+>>
+>> [CAUSE]
+>> pps_cdev_poll() returns unconditionally EPOLLIN.
+>>
+>> [FIX]
+>> Remember the last fetch event counter and compare this value in
+>> pps_cdev_poll() with most recent event counter
+>> and return 0 if they are equal.
+>>
+>> Signed-off-by: Denis OSTERLAND-HEIM <denis.osterland@diehl.com>
+>> Co-developed-by: Rodolfo Giometti <giometti@enneenne.com>
+>> Signed-off-by: Rodolfo Giometti <giometti@enneenne.com>
+> 
+> Acked-by: Rodolfo Giometti <giometti@enneenne.com>
+> 
+> If needed. :)
+> 
+>> Fixes: eae9d2ba0cfc ("LinuxPPS: core support")
+>> CC: stable@vger.linux.org # 5.4+
+>> ---
+>>    drivers/pps/pps.c          | 11 +++++++++--
+>>    include/linux/pps_kernel.h |  1 +
+>>    2 files changed, 10 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/pps/pps.c b/drivers/pps/pps.c
+>> index 6a02245ea35f..9463232af8d2 100644
+>> --- a/drivers/pps/pps.c
+>> +++ b/drivers/pps/pps.c
+>> @@ -41,6 +41,9 @@ static __poll_t pps_cdev_poll(struct file *file, poll_table *wait)
+>>    
+>>    	poll_wait(file, &pps->queue, wait);
+>>    
+>> +	if (pps->last_fetched_ev == pps->last_ev)
+>> +		return 0;
+>> +
+>>    	return EPOLLIN | EPOLLRDNORM;
+>>    }
+>>    
+>> @@ -186,9 +189,11 @@ static long pps_cdev_ioctl(struct file *file,
+>>    		if (err)
+>>    			return err;
+>>    
+>> -		/* Return the fetched timestamp */
+>> +		/* Return the fetched timestamp and save last fetched event  */
+>>    		spin_lock_irq(&pps->lock);
+>>    
+>> +		pps->last_fetched_ev = pps->last_ev;
+>> +
+>>    		fdata.info.assert_sequence = pps->assert_sequence;
+>>    		fdata.info.clear_sequence = pps->clear_sequence;
+>>    		fdata.info.assert_tu = pps->assert_tu;
+>> @@ -272,9 +277,11 @@ static long pps_cdev_compat_ioctl(struct file *file,
+>>    		if (err)
+>>    			return err;
+>>    
+>> -		/* Return the fetched timestamp */
+>> +		/* Return the fetched timestamp and save last fetched event  */
+>>    		spin_lock_irq(&pps->lock);
+>>    
+>> +		pps->last_fetched_ev = pps->last_ev;
+>> +
+>>    		compat.info.assert_sequence = pps->assert_sequence;
+>>    		compat.info.clear_sequence = pps->clear_sequence;
+>>    		compat.info.current_mode = pps->current_mode;
+>> diff --git a/include/linux/pps_kernel.h b/include/linux/pps_kernel.h
+>> index c7abce28ed29..aab0aebb529e 100644
+>> --- a/include/linux/pps_kernel.h
+>> +++ b/include/linux/pps_kernel.h
+>> @@ -52,6 +52,7 @@ struct pps_device {
+>>    	int current_mode;			/* PPS mode at event time */
+>>    
+>>    	unsigned int last_ev;			/* last PPS event id */
+>> +	unsigned int last_fetched_ev;		/* last fetched PPS event id */
+>>    	wait_queue_head_t queue;		/* PPS event queue */
+>>    
+>>    	unsigned int id;			/* PPS source unique ID */
+> 
 
-You might not care, which is fine, I simply wanted to inform you about it,
-since it is not only realtek, it is any NIC.
+-- 
+GNU/Linux Solutions                  e-mail: giometti@enneenne.com
+Linux Device Driver                          giometti@linux.it
+Embedded Systems                     phone:  +39 349 2432127
+UNIX programming
 
-
-Kind regards,
-Niklas
