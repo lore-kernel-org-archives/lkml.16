@@ -1,65 +1,43 @@
-Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A85EF2512C9
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 16:48:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.48
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743698894; cv=none; b=pImtZKrc6xRbxa58HvVOLtGYjuL+qVw0J7nA1EA6TdtOeKgD+wXdpCbXvevsHgus6LyXbRzQOCuHn41pAv/W5468Q8e+hqnk8QBs0X8QFzveCpdS27pyaNXsk4tDE6m/TyJ8er8IQq9J/fqTy1xhrV6P3eHRKY4QxX846FkFJhY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743698894; c=relaxed/simple;
-	bh=4wuv9Dt/9rj9cF2a6+xai4em1wNvUS1HPV5q6UbrWUc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BDugB5TiVZaCCU6PAiJVpZl04ueqfUc1MvF+4wVArkNTpi5NULtBW9T8G9XnntES+xOlYDr9g+HYY6wSuDJCfjwxAcMCojUPpAhUGPmFff95tqgKzYjMs8u3PrMnhV48I4I0io4sHXKKDTwnxcVZCaX7CJY2tY3KDgCSrktK9lI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=qcI5+E/B; arc=none smtp.client-ip=209.85.210.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 315152512C9
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 16:50:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743699023; cv=pass; b=OrMuYboc0O6LXIsJnYBT5A6CHEE1iFJuy8Q/pRxS1cNPzZjjI0jiF1CKaXKynOyQaXv+3iQ1kJNbj36DfXUlRtPEpySUjR1hp2pY5IjSRVRAIcNIr/dMEAUALXC/xdStwED7rx7MZ4yIGzVhkIssvY8qjbq924lenOqp1r+liUo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743699023; c=relaxed/simple;
+	bh=blezhu7YjLW2CMRJ43xTdaPHOppB3SWN1OEYpf3TZ5A=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=k++f7UMk3de8rzI09TOzPLZA8fraogUdw9CkwM3nlvL46WnLyyHykV55tFdO2IQ24avmhBrle+ooO7fujqGbgAOll6u0d7EGXE6hfwUr+CfT38k04G/zdLpHNLVyJ64cXrqhKcXOA2Uo4VKd7N35bqWuQRwnkIoWzW3Bmtul0i0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b=aNiXaaf4; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="qcI5+E/B"
-Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-72c3b863b8eso764008a34.2
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 09:48:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1743698891; x=1744303691; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=YSC+FUFy0d9lpIsypY5Nl8Mx6gi/Bcekgwf80nw84HU=;
-        b=qcI5+E/BAMUqLNMLWOxjRN+MGmAaw/lfkN8AYIMxn9c52qcobC/3x8AiMyfeBpR353
-         Ld2gtJnmGa/G9qvTeVl5TSw7ApYH3RnoFtC9uwxKd9QXy5QEXojXnzh6jQkq059ZaRub
-         Ysrm+M0I7fmFRY1zFNV98+Z5cmhJCU+aM+0xQ5hpfu+OyMBZxm7SR/DWnyO1qQEKxv7Z
-         VINdf5/gw0PmUbDPCwdwb/h3K3SiI+o3uKYFQm4A/mnAueisCrvCTiwvJD9MTOHmoUaj
-         ITpfimb6PgHKSvuUFtzLIzuICpyQP6W/sL5i5JHC2qHIZCim6/e17TBTszKJIr/ou/S4
-         dXJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743698891; x=1744303691;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YSC+FUFy0d9lpIsypY5Nl8Mx6gi/Bcekgwf80nw84HU=;
-        b=URS/nZl1Bs8RKUWEiIOmc6dhhgt93NC2FvaZPu6NTIDU6p/Rk8YdlNSy1Amg6kaZue
-         fXnKdep/BzIbBjJ9XX4OqCHY9c85vV5IU02bT1SbOOgKpkJoKRPneizWHKIhMmPbBXh0
-         G74Xa3qQ6q7acFamsRYooYfmz8hhF96zoMMJpQrmW0WNhH/EyA/o1LgvQHcJWz+vW1DZ
-         F3mO7tMDNhrrVGnu/9JKURDY59+kb6bFGxysrS2DcHszomD97SCANG7M+wJXYnFIhETW
-         cRwFl/x35lqCHJ+EVBnvvJfIxT/UE9hwh4uU60hwziAwO9sUo14C6wvz1Qcu2Rp9IdkZ
-         MBOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWSpbdCrz4hLykKxqRe5uPxNDIHCMO90P7hWMlaMDsszG+XOYqBENsVv5u6Qc94N8NQ/4V/NL3hNzQ+TW4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyNoSGZap17nVeDB4RgyeiQ0Gy+C8sZW6zNxhuPvRXJZM5/7Pdy
-	EhzFZOygTMsuo5165TKXuhp8/41U+Y451W+U/ajhvi6lcXl0KpULqXQOOV7Fqrk=
-X-Gm-Gg: ASbGncviChOzIL5O8Ie6IKAy3t7PQBxZSbAjyCIhgpc/8ix+9tyFOZTgbTnVGonoMeg
-	+1sRiaN+FTJojkSScJXigVdpE/AwHSNlX3+FC5HuLHP4PsfGlRPorQvd/9TBNOwdhpV4ceYXJQz
-	8jK0YLFtB9QfNG5XPoQteo6zxY/nGns3q7yGWXXEaYAyDxIrrIiFQD6hdMnsDuMtQmFmihp3Hok
-	4wyURZRa0IiP3BnQxxJ11V1mWM2JP62YGg+mgNGP8KqhUuSXQMayc62xah5XQ/NIsfXkJ5BMETo
-	lREw/p8cTXJm7hcFdZYUl5wZopt+JGIcgf19QOLHBDR/snPI64njAdybRXsQSJnV9acOcAn2nu0
-	VmzsO7Q==
-X-Google-Smtp-Source: AGHT+IHMO8mKj7XI4u0FpdUX8+XWGlKjBQ/8BZn9Gd3V/HfCKgUeXNkn3/hksONPqG77YFoErY/6nA==
-X-Received: by 2002:a05:6830:4987:b0:72a:1d2a:4acf with SMTP id 46e09a7af769-72e3696f946mr147011a34.17.1743698890734;
-        Thu, 03 Apr 2025 09:48:10 -0700 (PDT)
-Received: from [192.168.0.113] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-72e30511237sm281580a34.15.2025.04.03.09.48.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Apr 2025 09:48:10 -0700 (PDT)
-Message-ID: <c146175f-6a21-4039-8c81-5933a9ef5ef6@baylibre.com>
-Date: Thu, 3 Apr 2025 11:48:09 -0500
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b="aNiXaaf4"
+ARC-Seal: i=1; a=rsa-sha256; t=1743698989; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=PvL03y2mKKtDbbzoWadMFpA42dP9rW5Iw1NgTcLbcu7hKx+2gqR4xU1z7ZTeMxocXamSXkLLTcrzF5kSQCe9nOBJwqv8UtuWDiGtMZ4Kqyrk5aLxdtdl6z4i8tbG21sMWFirwjyLXBvRRt6vdnsNW4NMFcZP85GO4R9JM9zdIXA=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1743698989; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=P0rUllkZNhOc/K0eG/q1fbeiU31K6a1atlL6dbjH7wE=; 
+	b=i9MK+YZ5xuihinl3YOhhoHziQDdTzb2QCsh2wck1oW/uJ/ebaeyaEu+d0QiQCUeESFleEQ1pLBVKNKLdxvV/F4dbrbj5vx5KepiCMx+MbJ9nFe8pXd3x23tWkrzL2BqZKtYYVk5sgTeMD682cFxqLwdSuWuAio2z1CMexWjeKck=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=dmitry.osipenko@collabora.com;
+	dmarc=pass header.from=<dmitry.osipenko@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1743698989;
+	s=zohomail; d=collabora.com; i=dmitry.osipenko@collabora.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:From:From:To:To:Cc:Cc:References:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=P0rUllkZNhOc/K0eG/q1fbeiU31K6a1atlL6dbjH7wE=;
+	b=aNiXaaf4g0jwjm3d/BOjz0l0JVkD8GN+/9I0GCoSECKfPXw26XacfwJ+XGD21kor
+	TTJgky4Ez0+0FsxkoKEQBggZnNtINWTGQjvgSQEWqJ0WmynR1cKrYzJY4lKu8yc70Si
+	6G8YSPmhXJHBowD4yKamYmtihlrao9BxfYsuRuLQ=
+Received: by mx.zohomail.com with SMTPS id 1743698987522585.1673470029504;
+	Thu, 3 Apr 2025 09:49:47 -0700 (PDT)
+Message-ID: <9af42e2f-7c5c-4b71-822d-eb39946448df@collabora.com>
+Date: Thu, 3 Apr 2025 19:49:41 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,27 +45,59 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/3] iio: ad7606: add SPI offload support
-To: Angelo Dureghello <adureghello@baylibre.com>,
- Lars-Peter Clausen <lars@metafoo.de>,
- Michael Hennerich <Michael.Hennerich@analog.com>,
- Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-References: <20250403-wip-bl-spi-offload-ad7606-v1-0-1b00cb638b12@baylibre.com>
+Subject: Re: [PATCH v2 1/2] drm/virtio: introduce the HOST_PAGE_SIZE feature
+From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
+To: Sergio Lopez <slp@redhat.com>, David Airlie <airlied@redhat.com>,
+ Gerd Hoffmann <kraxel@redhat.com>,
+ Gurchetan Singh <gurchetansingh@chromium.org>, Chia-I Wu
+ <olvaffe@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ Simona Vetter <simona@ffwll.ch>, "Michael S. Tsirkin" <mst@redhat.com>,
+ Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+ =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>,
+ Rob Clark <robdclark@gmail.com>
+Cc: dri-devel@lists.freedesktop.org, virtualization@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+References: <20250402-virtio-gpu-host-page-size-v2-0-0afdc8c16cb9@redhat.com>
+ <20250402-virtio-gpu-host-page-size-v2-1-0afdc8c16cb9@redhat.com>
+ <712de3a8-83c2-4ae7-8a5c-dd1baa3d50e4@collabora.com>
 Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <20250403-wip-bl-spi-offload-ad7606-v1-0-1b00cb638b12@baylibre.com>
+In-Reply-To: <712de3a8-83c2-4ae7-8a5c-dd1baa3d50e4@collabora.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-ZohoMailClient: External
 
-On 4/3/25 11:19 AM, Angelo Dureghello wrote:
-> Add SPI offload support for the ad7606 ADC.
+On 4/2/25 20:55, Dmitry Osipenko wrote:
+> On 4/2/25 20:46, Sergio Lopez wrote:
+>> diff --git a/include/uapi/linux/virtio_gpu.h b/include/uapi/linux/virtio_gpu.h
+>> index bf2c9cabd20793e3851e749baadf210341445501..adc264df4e458e9c754936c3015c069e5ee6b899 100644
+>> --- a/include/uapi/linux/virtio_gpu.h
+>> +++ b/include/uapi/linux/virtio_gpu.h
+>> @@ -64,6 +64,10 @@
+>>   * context_init and multiple timelines
+>>   */
+>>  #define VIRTIO_GPU_F_CONTEXT_INIT        4
+>> +/*
+>> + * Config struct contains host page size
+>> + */
+>> +#define VIRTIO_GPU_F_HOST_PAGE_SIZE      5
+>>  
+>>  enum virtio_gpu_ctrl_type {
+>>  	VIRTIO_GPU_UNDEFINED = 0,
+>> @@ -364,6 +368,7 @@ struct virtio_gpu_config {
+>>  	__le32 events_clear;
+>>  	__le32 num_scanouts;
+>>  	__le32 num_capsets;
+>> +	__le32 host_page_size;
+>>  };
 > 
-> Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
-> ---
+> Hi, this is still a spec change and the virtio-gpu spec update is need.
+> Please send the spec patch, I'd want to see that it won't have new
+> objections before merging the kernel patches.
 
-Reviewed-by: David Lechner <dlechner@baylibre.com>
+Noticed the virtio-spec patch now. My bad for missing it a day ago,
+thanks for sending it!
 
+-- 
+Best regards,
+Dmitry
