@@ -1,117 +1,98 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB6E52907
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 06:26:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 192941DFF7;
+	Thu,  3 Apr 2025 06:27:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743661618; cv=none; b=i6qIBfvLjKfnQ6XK1aZJq4mVjQtF8vELWeUG7Yn9w7G83PrGGASSDEMO3hBRN7f52D1EvlNCA2ziHKa8C5QTLnEU9HRMlCfw+Lluqh1kvxx9gPuHSNnLEQKf09tnAEIfkHoMD0JKuUdHbwsQTxXSOtEIhbJqSu8kbRbjB7HW5V0=
+	t=1743661638; cv=none; b=HEiDzgzOY++c/v2UA9FPlMzrEWV1Uhr6JyBbDZxqUHv0eR+QIUN5nq74kzbckvGPNp0utsF/WI1cZzjMVT01iss0tW0iCV6MCxD5oMOwf4ohePOaD3VDe9NjhlvGz7Kc6FROn5Hoywm7kHhlSzOHZ8AH1JHO+blItQ1ZzaaBxf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743661618; c=relaxed/simple;
-	bh=fXrJUM8SeTerC0x9RnCZjNaU2MJi1ObxumgAG3z2PmU=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=siN9bcuEUst9qae+Ixo910u6KGCoiPuSZGENR78nDsO17NJl8qx4zYGBjQPnXkx8AeHkKxUS3W+on+iJfSjuFcT1kvKyeLgl1lU8WKOoE3Ie34BrimHaOICaq9NJNFzhPGUhnPjH3VmiDIeqKVf2P0Psdosoon4l5sOVrhZewn4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZnZodorr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743661638; c=relaxed/simple;
+	bh=X8V6uIOiffOO7xHmNHXIgtQraGK/QDMtWqEVtPA3lXQ=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=R6G2S9NAbvk1JwY5rWgHBVsQMav+WuTXR7+zrBPYdLLBShMoVxoJ6s2c8POUNgRUe5KTPmrzi2caXvYf5BBQU3vDPAxq2uSjxNzWB9yhvBTYTiFH3F/rQWp7LFhWPL8J6CF4qQ9dm+XQjWYnISzA191FW87BxaROeNMbwEnBuDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GZ86fbcj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZnZodorr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DE4CC4CEE9;
-	Thu,  3 Apr 2025 06:26:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GZ86fbcj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A8F2C4CEE8;
+	Thu,  3 Apr 2025 06:27:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743661618;
-	bh=fXrJUM8SeTerC0x9RnCZjNaU2MJi1ObxumgAG3z2PmU=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=ZnZodorrqaY28iosFNvCGb6554ZQmXVNAbOUXZtG8yfiI2XoOSt3EXCsKDVOBtmIV
-	 EuRUCgboPsDxu45o/cJ8+zOVIosM5BHSeTFZecyffaZ1AJMn3MojxnQ6gzRKZlWrtI
-	 d6PqAsRIIooPyfkS1L7mhY4CgL/bd6H6w/I0+Lre/+VAhmx9apxmG5nwCELquvYB2n
-	 UORX65QowVHd7pDq9EhJbd8ORZcJf0t+tSo44DPEG5nozTq7wSL0g7o9+YFrp9HWkc
-	 g2fwKR7hmQNdrsIKn67NbzlTCOSbKDU0GeMklAlu3sJVkUjI9enPg13o1nqmJWyKGA
-	 qMsfMODpDRMTw==
-Message-ID: <002ea626-8468-4587-b481-10d8b9bd7a0f@kernel.org>
-Date: Thu, 3 Apr 2025 14:26:59 +0800
+	s=k20201202; t=1743661637;
+	bh=X8V6uIOiffOO7xHmNHXIgtQraGK/QDMtWqEVtPA3lXQ=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=GZ86fbcjQcd7Oqk1o64brBniMeBX1Vz/gd30Ooo19UlPV/oA39fduqzKMEv52sKpd
+	 2tFFYqNsS0z56Bhnm/VgABGFjjx1d+34T7uMoCUdbdnvGSzuFK0ycMftFzyf8b+II8
+	 yxJid/4TEKAZfDz5TyqNI9lfrOXCLimGCLIEq6K93OnF1I2L5qo2cKTbv1gcr3E2jE
+	 L5rfcNQVkPibGkEG5wRE2wWd2fjztFuFIv5fVwCy5ssizxarHTozgKqyQlJSmBGTGk
+	 tQCX7PiPdeQe4UV0DYl8DYc07zKXh72LhcQcDQXN32Jw0ljSP6t6Ps9ueBp+SutpCt
+	 Lec083sKmnzBg==
+Date: Thu, 03 Apr 2025 01:27:16 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: chao@kernel.org, linux-f2fs-devel@lists.sourceforge.net,
- linux-kernel@vger.kernel.org, pilhyun.kim@sk.com
-Subject: Re: [PATCH v3] f2fs: prevent the current section from being selected
- as a victim during GC
-To: "yohan.joung" <yohan.joung@sk.com>, jaegeuk@kernel.org
-References: <20250402080428.2811-1-yohan.joung@sk.com>
-Content-Language: en-US
-From: Chao Yu <chao@kernel.org>
-In-Reply-To: <20250402080428.2811-1-yohan.joung@sk.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Michael Hennerich <Michael.Hennerich@analog.com>, 
+ Lars-Peter Clausen <lars@metafoo.de>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-iio@vger.kernel.org, 
+ Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>
+To: Kim Seer Paller <kimseer.paller@analog.com>
+In-Reply-To: <20250403-togreg-v3-2-d4b06a4af5a9@analog.com>
+References: <20250403-togreg-v3-0-d4b06a4af5a9@analog.com>
+ <20250403-togreg-v3-2-d4b06a4af5a9@analog.com>
+Message-Id: <174366163644.1411732.10426808100774096920.robh@kernel.org>
+Subject: Re: [PATCH v3 2/3] dt-bindings: iio: dac: Add adi,ad3530r.yaml
 
-On 2025/4/2 16:04, yohan.joung wrote:
-> When selecting a victim using next_victim_seg in a large section, the
-> selected section might already have been cleared and designated as the
-> new current section, making it actively in use.
-> This behavior causes inconsistency between the SIT and SSA.
+
+On Thu, 03 Apr 2025 13:33:56 +0800, Kim Seer Paller wrote:
+> Document the AD3530/AD3530R (8-channel) and AD3531/AD3531R (4-channel)
+> low-power, 16-bit, buffered voltage output DACs with software-
+> programmable gain controls. They provide full-scale output spans of 2.5V
+> or 5V for reference voltages of 2.5V. These devices operate on a single
+> 2.7V to 5.5V supply and are guaranteed to be monotonic by design.
+> The "R" variants include a 2.5V, 5ppm/°C internal reference, which is
+> disabled by default.
 > 
-> F2FS-fs (dm-54): Inconsistent segment (70961) type [0, 1] in SSA and SIT
-> Call trace:
-> dump_backtrace+0xe8/0x10c
-> show_stack+0x18/0x28
-> dump_stack_lvl+0x50/0x6c
-> dump_stack+0x18/0x28
-> f2fs_stop_checkpoint+0x1c/0x3c
-> do_garbage_collect+0x41c/0x271c
-> f2fs_gc+0x27c/0x828
-> gc_thread_func+0x290/0x88c
-> kthread+0x11c/0x164
-> ret_from_fork+0x10/0x20
-> 
-> issue scenario
-> segs_per_sec=2
-> - seg#0 and seg#1 are all dirty
-> - all valid blocks are removed in seg#1
-> - gc select this sec and next_victim_seg=seg#0
-> - migrate seg#0, next_victim_seg=seg#1
-> - checkpoint -> sec(seg#0, seg#1)  becomes free
-> - allocator assigns sec(seg#0, seg#1) to curseg
-> - gc tries to migrate seg#1
-> 
-> Signed-off-by: yohan.joung <yohan.joung@sk.com>
-> Signed-off-by: Chao Yu <chao@kernel.org>
+> Signed-off-by: Kim Seer Paller <kimseer.paller@analog.com>
 > ---
->   fs/f2fs/segment.h | 6 ++++++
->   1 file changed, 6 insertions(+)
+>  .../devicetree/bindings/iio/dac/adi,ad3530r.yaml   | 99 ++++++++++++++++++++++
+>  MAINTAINERS                                        |  7 ++
+>  2 files changed, 106 insertions(+)
 > 
-> diff --git a/fs/f2fs/segment.h b/fs/f2fs/segment.h
-> index 0465dc00b349..129df633d656 100644
-> --- a/fs/f2fs/segment.h
-> +++ b/fs/f2fs/segment.h
-> @@ -476,6 +476,12 @@ static inline void __set_test_and_free(struct f2fs_sb_info *sbi,
->   		if (next >= start_segno + usable_segs) {
->   			if (test_and_clear_bit(secno, free_i->free_secmap))
->   				free_i->free_sections++;
-> +
-> +			if (GET_SEC_FROM_SEG(sbi->next_victim_seg[BG_GC]) == secno)
-> +				sbi->next_victim_seg[BG_GC] = NULL_SEGNO;
-> +
-> +			if (GET_SEC_FROM_SEG(sbi->next_victim_seg[FG_GC]) == secno)
-> +				sbi->next_victim_seg[FG_GC] = NULL_SEGNO;
 
-Only need to reset next_victim_seg[] when setting section free?
+My bot found errors running 'make dt_binding_check' on your patch:
 
-if (!test_and_clear_bit(secno, free_i->free_secmap))
-	goto skip_free;
+yamllint warnings/errors:
 
-free_i->free_sections++;
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/iio/adc/adi,axi-adc.example.dtb: adc@0: pwm-names: ['convst1'] is too short
+	from schema $id: http://devicetree.org/schemas/iio/adc/adi,ad7606.yaml#
 
-if (GET_SEC_FROM_SEG(sbi->next_victim_seg[BG_GC]) == secno)
-	sbi->next_victim_seg[BG_GC] = NULL_SEGNO;
-if (GET_SEC_FROM_SEG(sbi->next_victim_seg[FG_GC]) == secno)
-	sbi->next_victim_seg[FG_GC] = NULL_SEGNO;
+doc reference errors (make refcheckdocs):
+Warning: Documentation/arch/powerpc/cxl.rst references a file that doesn't exist: Documentation/ABI/testing/sysfs-class-cxl
+Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
+Warning: lib/Kconfig.debug references a file that doesn't exist: Documentation/dev-tools/fault-injection/fault-injection.rst
+Documentation/arch/powerpc/cxl.rst: Documentation/ABI/testing/sysfs-class-cxl
+MAINTAINERS: Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
+lib/Kconfig.debug: Documentation/dev-tools/fault-injection/fault-injection.rst
 
-Thanks,
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250403-togreg-v3-2-d4b06a4af5a9@analog.com
 
->   		}
->   	}
->   skip_free:
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
 
