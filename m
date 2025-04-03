@@ -1,77 +1,109 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D117FD53C;
-	Thu,  3 Apr 2025 02:12:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74E18D53C;
+	Thu,  3 Apr 2025 02:14:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743646356; cv=none; b=FVdGkflC6SYhdinjOxSV3BGLD+uURlNvNOMh6D+wkizdxiKcAvOq6MzVhsuD2G99+rNW30bKV8wSr287LTjtZ+s7dpg9SCXL3IfqjwWx0Y/0IYBfkTnKP9NpBd1WGwLMl5E60/o8xW/S8gPOyG2r/f72BLiAxAKc1dw+MM+WoNw=
+	t=1743646498; cv=none; b=SHM6VNyv+wXoKudB3Ox3qDFPcm009LxZJbPiWvUfZ4V60H3M1k8rMdruZO2cwhni38AqKiSBSXp+NCb5hvrW5v1+DZCr3gqs2qVo01rnJs6CQBmgR4GDmFNcAdspaXElBbuyTcyve4FCCeQSTqnhNo0ShKyw+SpXd/FSrMx9nJ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743646356; c=relaxed/simple;
-	bh=l16JiU5Qi1DyC6yHUMRNW3rvykHizycMqj2EsgnSnZU=;
+	s=arc-20240116; t=1743646498; c=relaxed/simple;
+	bh=ohUdiALX3TVu9ruR9N6SrCug5+ZDXXSpI9Wx76zbLzA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cuHi47WqzkgIgIoGZSB6Kimpcxes6h4QOeGO4QW2il6dkl1gvwo73RmHfF+fcgqvi3O4p8Levz0Jro6vlYYfzVhinSiav90Y4G7RWPXC4UAtFMM3xVYnrRMWHZN3vtBBEl87YrzBc2A63nxYme/5VD3dnR8b6WQhUni3IqL231E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jtsO8qBS; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=eAw/cF2JL0mZwrtNX9KkVj7+xyYFJYyFqHfLRMHXkiQWWsVDwbj3Pw5Z7vssvaeQtO1+hGLierb1pBfOmlHRhwG9HZVK4Kyr2OD0BdSXWmjyXFaavoU3yXXncPOxQWr828jshB7+CWu2X3nT4OV3nT7vma2lapt9/OXKYH4wtSY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wi8YY+RK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jtsO8qBS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3787BC4CEDD;
-	Thu,  3 Apr 2025 02:12:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wi8YY+RK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A11DC4CEDD;
+	Thu,  3 Apr 2025 02:14:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743646356;
-	bh=l16JiU5Qi1DyC6yHUMRNW3rvykHizycMqj2EsgnSnZU=;
+	s=k20201202; t=1743646495;
+	bh=ohUdiALX3TVu9ruR9N6SrCug5+ZDXXSpI9Wx76zbLzA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jtsO8qBSgqz7FuooZx2Ey42nayWea9A/KwWMs3XaxJ9nxqWioHSSnHRNzIXhHqc3H
-	 9bTPLS2ALSsPmXZhyV+mN7totGag4bqMKT7okAxZWlrSjtpACjaqz609p9ZRuYzJY3
-	 4iVOcZ4A+G8HEtxx4b3BulE8s+SebA/kQc3eDujEI9sWoeyldWR3Cgs0571hfz6yNr
-	 Q3SytHBKxlZaxOsflqWKbJ2Iyby+nb7vOYhHm3I5D86OyeurLgbhT2ApmjMoUvS3/Y
-	 n+A/BkoC+XGu4OuTIle894XyHFZ+qWGAhDIX8LfZzKnJCPE9TOWG4YKaGTPyxytxnS
-	 qQl+vxE+60Bow==
-Date: Wed, 2 Apr 2025 19:12:32 -0700
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, amit@kernel.org, 
-	kvm@vger.kernel.org, amit.shah@amd.com, bp@alien8.de, tglx@linutronix.de, 
-	peterz@infradead.org, pawan.kumar.gupta@linux.intel.com, corbet@lwn.net, 
-	mingo@redhat.com, dave.hansen@linux.intel.com, hpa@zytor.com, seanjc@google.com, 
-	pbonzini@redhat.com, daniel.sneddon@linux.intel.com, kai.huang@intel.com, 
-	sandipan.das@amd.com, boris.ostrovsky@oracle.com, Babu.Moger@amd.com, 
-	david.kaplan@amd.com, dwmw@amazon.co.uk, andrew.cooper3@citrix.com
-Subject: Re: [PATCH v3 2/6] x86/bugs: Use SBPB in __write_ibpb() if applicable
-Message-ID: <5fnlcvhbmgtfxa7ivg6lks3vcnvcrrufl7xe2p2ifzhzkb65qo@2vgpex7e3g6b>
-References: <cover.1743617897.git.jpoimboe@kernel.org>
- <df47d38d252b5825bc86afaf0d021b016286bf06.1743617897.git.jpoimboe@kernel.org>
- <1e34033b-3e3a-bd23-af5a-866e68d5a98a@amd.com>
+	b=Wi8YY+RK/IRCaQWpmm2LJuCf1JCitHvJRs8Cci3FFBCMxjm3vXJtv0l0CIjAqnV07
+	 CPX8z+Aa8BVbG7R28/9OaNDSAQGGALdAXOmqJ/GwgSZGN8N4BdeoQwXdoYAk9i40V/
+	 ae8wRjlF2RavV2qPUt1NAVPyjhJQ/lfyMpzvgWkEVBau7+a8vNFDMw5fv5qlkdqkuZ
+	 4vEE8Xb39zPql6jgXdvpnoovtkmiFjqPXGgurkMKeyfzfBaMe2ncNF+GfEtOdd+M1v
+	 dAIDqkFokX9M/iCeWp31ltkx5OL7MAYHB9fMlLJJ3C0SDM33E6zi3zPyqARzJDc6wW
+	 KvWx4PHLXgmGg==
+Date: Thu, 3 Apr 2025 02:14:53 +0000
+From: Eric Biggers <ebiggers@kernel.org>
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Ard Biesheuvel <ardb@kernel.org>, linux-crypto@vger.kernel.org,
+	linux-kernel@vger.kernel.org, x86@kernel.org,
+	"Jason A. Donenfeld" <Jason@zx2c4.com>
+Subject: Re: [PATCH v2 0/9] crypto: x86 - stop using the SIMD helper
+Message-ID: <20250403021453.GA2872965@google.com>
+References: <20250402002420.89233-1-ebiggers@kernel.org>
+ <Z-yrf_9D2rV1Q136@gondor.apana.org.au>
+ <CAMj1kXEx__RLBriW0kVPrKnx6+DCpq8=6F-7Tmj2Us61gvGGaw@mail.gmail.com>
+ <CAMj1kXE-vo7E1U++4mAqDH2SXfc=sRZs8KganedJk5z0QF49NA@mail.gmail.com>
+ <Z-zzvXbjt3xzquXb@gondor.apana.org.au>
+ <20250402171930.GD1235@sol.localdomain>
+ <Z-3jkYNtZpTDtKGf@gondor.apana.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1e34033b-3e3a-bd23-af5a-866e68d5a98a@amd.com>
+In-Reply-To: <Z-3jkYNtZpTDtKGf@gondor.apana.org.au>
 
-On Wed, Apr 02, 2025 at 03:41:25PM -0500, Tom Lendacky wrote:
-> On 4/2/25 13:19, Josh Poimboeuf wrote:
-> > __write_ibpb() does IBPB, which (among other things) flushes branch type
-> > predictions on AMD.  If the CPU has SRSO_NO, or if the SRSO mitigation
-> > has been disabled, branch type flushing isn't needed, in which case the
-> > lighter-weight SBPB can be used.
+On Thu, Apr 03, 2025 at 09:25:37AM +0800, Herbert Xu wrote:
+> On Wed, Apr 02, 2025 at 10:19:30AM -0700, Eric Biggers wrote:
+> >
+> > This seems premature.  crypto_shash is documented to be usable in any context.
+> > See the "Context:" comments in include/crypto/hash.h.  Similarly, developers
+> > expect lib/ functions to be available in any context unless otherwise
+> > documented.
 > 
-> Maybe add something here that indicates the x86_pred_cmd variable tracks
-> this optimization so switch to using that variable vs the hardcoded IBPB?
+> Doing slow computations in a hard IRQ is a bad idea.  The whole
+> point of a hard IRQ handler is to set a flag and defer everything
+> to a different context.
+> 
+> Please show me one good reason why we should allow crypto in
+> a hard IRQ.
+>  
+> > IMO, doing it for lib/ too would be going too far though.  The lib/ functions
+> > should be easy to use and not have random requirements on the calling context.
+> > And since they're just functions, it's easy for them to fall back to the generic
+> > functions when needed.  Also note that for very short inputs it can actually be
+> > faster to use no-SIMD code, as that avoids the overhead of a kernel-mode SIMD
+> > section.  So the fallback sometimes exists anyway for that.
+> 
+> We already disallow SIMD in hard IRQs anyway (may_use_simd is
+> always false in that context).  The only thing you could use
+> is the generic implementation.
+> 
+> So making this change in lib/crypto does not take any functionality
+> away.  You could still invoke the generic lib/crypto code directly.
+> 
+> It does mean that we take away a completely useless check for
+> people who are actually doing crypto because crypto work should
+> never be done in a hard IRQ.
 
-Indeed, adding a second paragraph to clarify that:
+It's not the 90s anymore.  Crypto is fast now, and used ubiquitously.
 
-  x86/bugs: Use SBPB in write_ibpb() if applicable
+And "crypto" doesn't necessarily mean a large operation.  It can be hashing just
+a few bytes of data, for example.
 
-  write_ibpb() does IBPB, which (among other things) flushes branch type
-  predictions on AMD.  If the CPU has SRSO_NO, or if the SRSO mitigation
-  has been disabled, branch type flushing isn't needed, in which case the
-  lighter-weight SBPB can be used.
+Also as you know, the crypto API includes some non-cryptographic algorithms too.
 
-  The 'x86_pred_cmd' variable already keeps track of whether IBPB or SBPB
-  should be used.  Use that instead of hardcoding IBPB.
+BTW, x86 does allow SIMD in hardirq context in some cases.
 
--- 
-Josh
+Certainly agreed that crypto in hardirqs is something to be avoided in general,
+though.
+
+So maybe your proposal is okay, if it's done properly.
+
+The thing I actually have more of a problem with is that you tend to start
+making random API changes without any of the necessary prerequisites like
+updating documentation, or adding debug assertions to catch violations of new
+requirements.  You've already started removing the fallbacks from shash (commit
+3846c01d42526bc31), but neither of those things have been done.  So we're
+currently in a weird state where the shash API is explicitly documented to work
+in all contexts, but you've broken that.
+
+- Eric
