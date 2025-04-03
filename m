@@ -1,97 +1,115 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F35D26A0A2;
-	Thu,  3 Apr 2025 19:06:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62BE526A0D5;
+	Thu,  3 Apr 2025 19:06:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743707178; cv=none; b=fZk1EfwJ0DSZioM20m+pP9pgeOwBMCcICmG+llwynwDcl06z9b9tANWqZ+AraJlZLKgUl1zNWjgnejee3RTiyf421fhCXip7JZKKPW11BM/oB/IktUWwvXf+ivsiWQ89YZayPoQhoXzf77xLO41xvreLdg9ytae84Ghr5tESvO4=
+	t=1743707180; cv=none; b=CBfgCKUe5u+bHXSSreOWyv+f4KidGzCUjdyYmZUcAdRzbiug2XZDMeb4Dq+U9QE58VO1BjuvaG+kmVZmcUUJsHMNq9Dqfq4bJEQFVGZRQf1B14H1XkB/jWKdlndOMtLoEsOvxmS1aKVjtfb4g/9Vmj9PgbLND3uKzr0LCuEtnSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743707178; c=relaxed/simple;
-	bh=0+wjraBOKQcfYMWpbGZu3h4vudmozFUF00WLgRV4iaw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=SRtS+nEuDn2LZSsbib9LCGDq14vbAvE/L1g4OEp1AolWRP4lA4w8R7KIn4PAgmmdkZ1dakoMTTla4aygPp5u0Fxn4gBg1k8C7RlEIjQUKwAuJnOAi7u+F2HXcJrWfIC3P0KzlwhT+mz9o9u8U5J2ZwgYa1/4BvispxcQvqqQJE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I9p3KYJK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743707180; c=relaxed/simple;
+	bh=oNNjA8EC+8Tze8+EjqGh3HwWCcanNkzZDN6YsmK0UfY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lLZsd52AaE3T4lxeNFqMMSA3Y0bIB3Kh5qnibtXeeI1hnu9PpDeofy+hNlAue54VZe1n+q3QhcVXeA3Cyi0+5bA/5cUEdn9SlPO11VkNIF0dyG4bjwVt3nrzqHe0GWSvENASYsB7o4mz5lin7CgkN2AFiRh5kyHxppfJl9IQbQM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sjyQtAk5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I9p3KYJK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74882C4CEE8;
-	Thu,  3 Apr 2025 19:06:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sjyQtAk5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2E1BC4CEE8;
+	Thu,  3 Apr 2025 19:06:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743707178;
-	bh=0+wjraBOKQcfYMWpbGZu3h4vudmozFUF00WLgRV4iaw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=I9p3KYJKg7bhpsjf5eWsxEut0Lplh3cYQgyFfNqr9GbSbBvJ7KoqA5iVlb+V2LjDR
-	 5HH0JsRXhASLXw5SGKb9iJDiF2JSQKNsGdGnqKDxQmIedcRKxO37PeL98uOcYfJW9W
-	 LEkl+Mbwq3tL/vSpoFDGB6ip5dmxLn0pUZd/8vGmT4UbkOajPHAt2k5c6pQbTtUdV2
-	 dosKZEjUYN67vsOcVP/u9AZvnGyxL1Pf8EpYPBFo6Vd4KrgDzRmsQKokw72FvHCV4i
-	 Inl0xQ73z5+zzm/4xSsmhh4rHZzRirtC29qvUn5deU34u9/DOCSOi2ffc5DT44NFNh
-	 R34sltuKpJRIQ==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Chao Yu <chao@kernel.org>,
-	Jaegeuk Kim <jaegeuk@kernel.org>,
-	Sasha Levin <sashal@kernel.org>,
-	linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 6.12 09/47] f2fs: don't retry IO for corrupted data scenario
-Date: Thu,  3 Apr 2025 15:05:17 -0400
-Message-Id: <20250403190555.2677001-9-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250403190555.2677001-1-sashal@kernel.org>
-References: <20250403190555.2677001-1-sashal@kernel.org>
+	s=k20201202; t=1743707180;
+	bh=oNNjA8EC+8Tze8+EjqGh3HwWCcanNkzZDN6YsmK0UfY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sjyQtAk5SiQP0qmcsCbTK/1US2OVDIxOkxm4hOmOfP+0OKZNpm5TO04oiD6fEUo9m
+	 OkUMjeL+GrFSvLDWIy2N372ogBwF4dZJ3AI/jIun8Yb4gdKlhOoyKjP7Wh0CBjRVEy
+	 M5KsJuWXiIksRZBeVoB4P2HgGDk30tM0c7rzsvfnN1hn2agZgNHXGfsd21PUa8ChX7
+	 J9RZ+eH1bo5nKmsEwzh72UNKPE96x1aBUBduolDOQ+vFdrq+1Kegyv2RKHlom7Cxgq
+	 eU5wZdzgmQJxnzJM5bR5HEENjggrvE6KIT1ObuHMsZWvXO3HCstHt13Gx3vG+FTB93
+	 4pZrzh1E3TELw==
+Date: Thu, 3 Apr 2025 22:06:15 +0300
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Stefano Garzarella <sgarzare@redhat.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>,
+	Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
+	"H. Peter Anvin" <hpa@zytor.com>, linux-coco@lists.linux.dev,
+	linux-integrity@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
+	Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Joerg Roedel <jroedel@suse.de>,
+	Dionna Glaze <dionnaglaze@google.com>,
+	Claudio Carvalho <cclaudio@linux.ibm.com>,
+	James Bottomley <James.Bottomley@hansenpartnership.com>,
+	linux-kernel@vger.kernel.org, Dov Murik <dovmurik@linux.ibm.com>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v6 4/4] x86/sev: register tpm-svsm platform device
+Message-ID: <Z-7cJyB1LXi75Z0F@kernel.org>
+References: <20250403100943.120738-1-sgarzare@redhat.com>
+ <20250403100943.120738-5-sgarzare@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.12.21
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250403100943.120738-5-sgarzare@redhat.com>
 
-From: Chao Yu <chao@kernel.org>
+On Thu, Apr 03, 2025 at 12:09:42PM +0200, Stefano Garzarella wrote:
+> From: Stefano Garzarella <sgarzare@redhat.com>
+> 
+> SNP platform can provide a vTPM device emulated by SVSM.
+> 
+> The "tpm-svsm" device can be handled by the platform driver added
+> by the previous commit in drivers/char/tpm/tpm_svsm.c
+> 
+> Register the device unconditionally. The support check (e.g. SVSM, cmd)
+> is in snp_svsm_vtpm_probe(), keeping all logic in one place.
+> This function is called during the driver's probe along with other
+> setup tasks like memory allocation.
+> 
+> Reviewed-by: Tom Lendacky <thomas.lendacky@amd.com>
+> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+> ---
+> v6:
+> - added Tom's R-b
+> v4:
+> - explained better why we register it anyway in the commit message
+> ---
+>  arch/x86/coco/sev/core.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
+> index efb43c9d3d30..acbd9bc526b1 100644
+> --- a/arch/x86/coco/sev/core.c
+> +++ b/arch/x86/coco/sev/core.c
+> @@ -2689,6 +2689,11 @@ static struct platform_device sev_guest_device = {
+>  	.id		= -1,
+>  };
+>  
+> +static struct platform_device tpm_svsm_device = {
+> +	.name		= "tpm-svsm",
+> +	.id		= -1,
+> +};
+> +
+>  static int __init snp_init_platform_device(void)
+>  {
+>  	if (!cc_platform_has(CC_ATTR_GUEST_SEV_SNP))
+> @@ -2697,6 +2702,9 @@ static int __init snp_init_platform_device(void)
+>  	if (platform_device_register(&sev_guest_device))
+>  		return -ENODEV;
+>  
+> +	if (platform_device_register(&tpm_svsm_device))
+> +		return -ENODEV;
+> +
+>  	pr_info("SNP guest platform device initialized.\n");
+>  	return 0;
+>  }
+> -- 
+> 2.49.0
+> 
+> 
 
-[ Upstream commit 1534747d3170646ddeb9ea5f7caaac90359707cf ]
+Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
 
-F2FS-fs (dm-105): inconsistent node block, nid:430, node_footer[nid:2198964142,ino:598252782,ofs:118300154,cpver:5409237455940746069,blkaddr:2125070942]
-F2FS-fs (dm-105): inconsistent node block, nid:430, node_footer[nid:2198964142,ino:598252782,ofs:118300154,cpver:5409237455940746069,blkaddr:2125070942]
-F2FS-fs (dm-105): inconsistent node block, nid:430, node_footer[nid:2198964142,ino:598252782,ofs:118300154,cpver:5409237455940746069,blkaddr:2125070942]
-F2FS-fs (dm-105): inconsistent node block, nid:430, node_footer[nid:2198964142,ino:598252782,ofs:118300154,cpver:5409237455940746069,blkaddr:2125070942]
-F2FS-fs (dm-105): inconsistent node block, nid:430, node_footer[nid:2198964142,ino:598252782,ofs:118300154,cpver:5409237455940746069,blkaddr:2125070942]
-F2FS-fs (dm-105): inconsistent node block, nid:430, node_footer[nid:2198964142,ino:598252782,ofs:118300154,cpver:5409237455940746069,blkaddr:2125070942]
-F2FS-fs (dm-105): inconsistent node block, nid:430, node_footer[nid:2198964142,ino:598252782,ofs:118300154,cpver:5409237455940746069,blkaddr:2125070942]
-F2FS-fs (dm-105): inconsistent node block, nid:430, node_footer[nid:2198964142,ino:598252782,ofs:118300154,cpver:5409237455940746069,blkaddr:2125070942]
-F2FS-fs (dm-105): inconsistent node block, nid:430, node_footer[nid:2198964142,ino:598252782,ofs:118300154,cpver:5409237455940746069,blkaddr:2125070942]
-F2FS-fs (dm-105): inconsistent node block, nid:430, node_footer[nid:2198964142,ino:598252782,ofs:118300154,cpver:5409237455940746069,blkaddr:2125070942]
-
-If node block is loaded successfully, but its content is inconsistent, it
-doesn't need to retry IO.
-
-Signed-off-by: Chao Yu <chao@kernel.org>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/f2fs/inode.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
-index 10780e37fc7b6..6135eee771cc9 100644
---- a/fs/f2fs/inode.c
-+++ b/fs/f2fs/inode.c
-@@ -751,8 +751,12 @@ void f2fs_update_inode_page(struct inode *inode)
- 		if (err == -ENOENT)
- 			return;
- 
-+		if (err == -EFSCORRUPTED)
-+			goto stop_checkpoint;
-+
- 		if (err == -ENOMEM || ++count <= DEFAULT_RETRY_IO_COUNT)
- 			goto retry;
-+stop_checkpoint:
- 		f2fs_stop_checkpoint(sbi, false, STOP_CP_REASON_UPDATE_INODE);
- 		return;
- 	}
--- 
-2.39.5
-
+BR, Jarkko
