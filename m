@@ -1,278 +1,142 @@
-Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 513FB19D090;
-	Thu,  3 Apr 2025 05:17:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E32C45339D;
+	Thu,  3 Apr 2025 05:18:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743657427; cv=none; b=JMKzqFumutX9v0Ue33n0ZLox9QcEYqmRa1zo1aalqr0xYkFZFb+lbrfXBlflNlXHCwctPvsD9nSaB1yFCLj5druCVVf7YQHIHjlogcEAbK1+ySZmJMDtZOer6reGSwCq3TeubfuAT4p7Ux9mr24e2kd/w75PB+fkSpMsk1Dbt+E=
+	t=1743657538; cv=none; b=DCocnTyO9JjU/I9I3bXRP5j6V0z2wlVCPSV5bhcNlAQbzOC100r93xkT2jgYx4l0p4FiARMShcyAjbmKNdspuKFX1w4Ern4bj2dq3z8tzw/d2nvDonAs2tLJ3ibpgsgag67YH0obAcGuSdwmsmlNwldvWMvgB7jqpbLsUkVIogM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743657427; c=relaxed/simple;
-	bh=txRbKITvS/AtWf6LOUsKXnNuO+6vusIA8xLHBxZU7C0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=LbdPq+8DEmbLmaGzxIkANE/MRQVYju/aZoliX4zXcnQ3G2207qr1rmmD/53n2kMMRta+9a6Yk+sXAoLOsqztrxQ43yHPnpR38oKLPIX7nyACUXs5iOYmol1a5KHT52tlC4MfCd72UW7cTF+6dY9/THHcSOhO+7GUnLeEOVRGvFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=ZMgX/zcO; arc=none smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+	s=arc-20240116; t=1743657538; c=relaxed/simple;
+	bh=SbruppALhz0jiFblb2Kdub02TWtG8ZzvjkPIvhFGY1A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mzo9FO5DlKPCUs/ricjlN06k/Yi034E44FPSGY5pQof5j0C4QNVGzktmiUK0s1e5Dc8Njmu/Emq5X93SF7Eh2kt+Iem4YhYNwQrcVkI/AfjzHah3hMKXzvPsGnPo+nPc9dyhhG4HT1kHUy7VzWaP9YCnLdMNza8SjSKz1VbD/4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ck7jLQ9x; arc=none smtp.client-ip=209.85.167.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="ZMgX/zcO"
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5331f2nQ023310;
-	Thu, 3 Apr 2025 01:16:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=DKIM; bh=wBdJr
-	moiib9KaqpfrbyGqo0f94kQ0Agwz5qQnoK1vYM=; b=ZMgX/zcO9zwGuqJ5JX1Sh
-	JDfTzF690yy6fVwFwSVd8leS19pgZNNGl1r+JfaP8o80juEeauXUOxnIebdaqoGe
-	SBbuLGfv7VQ0Yiu3dwFN1XgXW6P/OlLmK5Vm80z8XYph6BzmO/JGnRKqiL7Noxv+
-	ATX4cC/wPX7Ed5QG6Dc//3xjxVXyAkusH9TiQC/G0NqLrtssu9G+z84KosUshRg8
-	O13fZz01LmM0vAOhGeDwmTHWA6He9DX8qbDbGL64oU/TsbJgnlTBeFdX+ewyChVv
-	F/93BSEwKvlW1RG1XLWzb4SczM+gUQy+DEv4WDjOvXioZs2L//mTfomuU2BJ3CLd
-	A==
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 45rcrwkvc9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 03 Apr 2025 01:16:51 -0400 (EDT)
-Received: from ASHBMBX8.ad.analog.com (ASHBMBX8.ad.analog.com [10.64.17.5])
-	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 5335Goqs051013
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 3 Apr 2025 01:16:50 -0400
-Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.14; Thu, 3 Apr 2025
- 01:16:49 -0400
-Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server id 15.2.986.14 via Frontend
- Transport; Thu, 3 Apr 2025 01:16:49 -0400
-Received: from ATORRENO-L02.ad.analog.com ([10.117.223.13])
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 5335GSPU006832;
-	Thu, 3 Apr 2025 01:16:42 -0400
-From: Alexis Czezar Torreno <alexisczezar.torreno@analog.com>
-Date: Thu, 3 Apr 2025 13:16:19 +0800
-Subject: [PATCH v2 2/2] hwmon: (pmbus/max3440): add support adpm12160
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ck7jLQ9x"
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-54af20849bbso577911e87.0;
+        Wed, 02 Apr 2025 22:18:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743657535; x=1744262335; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=d+vyPAE39gromhmoTHVrC91GtciRJneVkgJKPcyS5xU=;
+        b=ck7jLQ9xDd7Sz7PO0loX2dnQYqkGsbxxqxSg5tb1zrlObzE8tVo59LDybxtUIJSHeN
+         UKnVju4lSWIflD8iqDrdSM6fbPj4P5nAQSExA+eI5opmgfFGUdcyVoT+sLn4NwAG4ecT
+         JHvMGWyit4JBMZulbkVCc7f7l/t3vIrHzzSS3y0zEKBuAjisUV3v4QDIGR0KjcNUmer0
+         JlyWj8Fb9dEyC0iwmI3LgYOqIqHGJ8mjk9QYBMV0kGRFEdG1OQWgVCI5//ctFVyW4ytU
+         EBP3qHrTkJMgJVILRqi/G1zVNgqn38WQFMA/U3x9DtluVTcBKSoXz/PZgCJU9QS0Nd1F
+         m1ow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743657535; x=1744262335;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=d+vyPAE39gromhmoTHVrC91GtciRJneVkgJKPcyS5xU=;
+        b=UKs2kvqgGb0By3xmBM61c2PagWWGoW28KMDhfDZb7lXJMV9AguUsGuIxfY4Y4v8l/7
+         O8uVY8Yxoe2b1EC66KrvsmST4Daq6SWZesLNz9J5SFbcXj0KzmgTy2AkEmhdf3BN56za
+         18d3TQKaomRLgmxkLJ1WDLtg/UkC03L8+/q8M+nMRaEc85bp9dyzS/0h4gOue+VqdX9q
+         xAjp/SGtqz2jg+yRFXMgfFwsCTlhPhSj0dR929cG3CxHEnGBLj+IcPkrz3aefTWPyfx6
+         UWX+s58ri5uSluXMKOEKhEqNAZ+l1nvxoRhcLnyIZJ0/IBGLIRkwdt+qFAN6o7vh1faF
+         QDKw==
+X-Forwarded-Encrypted: i=1; AJvYcCU2nwLImf0NSfL2RIV4ToTRVbp7sflvJ2vrp5ylPN9jkgQXV5WlkpTdn9r7AqZzow9ZzFad5IECiNED@vger.kernel.org, AJvYcCX0mdhxe0Pn7rPxnOBbCnka8UI4xkzjCXNAJMFK7SDNsiB84KtctRfUrfYTeLqc1wETEG57QURhiAUOS0XW@vger.kernel.org, AJvYcCXjZc+4nFNinWrY3G1TX77AkiWXaJSsqJ6K5QEFFxQESQ5eg0siOQOZDcxO52n+55p+nmjgQfA3p0kx@vger.kernel.org
+X-Gm-Message-State: AOJu0YxxfmeOET3GRA2Ypqi/N5+zmR6udEILpmioYTKMtF9yBmFUnwVP
+	IqeXv2dGbNQhxaS3RnbE0kFyRxc6D01ZYg1TZfOJPIK0ponM1ALXU5dzVg==
+X-Gm-Gg: ASbGncuUTXo+UDl7ib4IR2FEFTcnKDuhRaiB7xkFLiz+vKETmZDp4yCiAhuca6GDT8g
+	68LcdGE8630hfbKqY4ZwbfBrCelcoYb4nfIb/ewVpgh/euarF1xdAR/ESsTJ2k8ph5kFrk1rJHz
+	obPZSeD/S/e6qiqAVf0xjzfX0rsCFPUesa0NwHLPMXAGhx3j+apdJS/8JBp0/RmKWX8KJn2vOBi
+	7pXriYBMLNWBATvlPH5eXzkDndjFZ/CnJ64yztU6wSQdgh3P9hvDed6YSYX8b9IuM7mPxpR5eMn
+	VoUdEhe+kVDiRdS4Z0JJs/Zbmkkg0koUBIIRkMoY4CYGKXS/vFbvJ5dGRFZ+C6HYwdhl6j37sps
+	MBUsshjFtmF76pijijpamKHuIPQ==
+X-Google-Smtp-Source: AGHT+IFLK1ciS0hj0hBGAjCkmO7GMuKiPVBSBmt6+VYOv0vIsu7oz37xfqO/3ciKv6sdUsEAC3KwJA==
+X-Received: by 2002:a05:6512:693:b0:545:5a5:b69f with SMTP id 2adb3069b0e04-54c1d89952dmr347234e87.9.1743657534833;
+        Wed, 02 Apr 2025 22:18:54 -0700 (PDT)
+Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54c1e635b3fsm52203e87.149.2025.04.02.22.18.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Apr 2025 22:18:54 -0700 (PDT)
+Message-ID: <078ee3c4-bb55-479b-85ff-3cab5f9a9eff@gmail.com>
+Date: Thu, 3 Apr 2025 08:18:52 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC v2 7/7] iio: ti-adc128s052: Drop variable vref
+To: David Lechner <dlechner@baylibre.com>,
+ Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen
+ <lars@metafoo.de>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Nuno Sa <nuno.sa@analog.com>,
+ Javier Carrasco <javier.carrasco.cruz@gmail.com>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <cover.1743573284.git.mazziesaccount@gmail.com>
+ <dda9e0710a9293a9f52e64c092f79afd4b719536.1743573284.git.mazziesaccount@gmail.com>
+ <c42b1dc3-34d9-4419-ae2e-5bacffa070b6@baylibre.com>
+Content-Language: en-US, en-AU, en-GB, en-BW
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+In-Reply-To: <c42b1dc3-34d9-4419-ae2e-5bacffa070b6@baylibre.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-ID: <20250403-dev_adpm12160-v2-2-bbf40faae988@analog.com>
-References: <20250403-dev_adpm12160-v2-0-bbf40faae988@analog.com>
-In-Reply-To: <20250403-dev_adpm12160-v2-0-bbf40faae988@analog.com>
-To: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Delphine CC Chiu
-	<Delphine_CC_Chiu@Wiwynn.com>
-CC: <linux-hwmon@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
-        Alexis Czezar
- Torreno <alexisczezar.torreno@analog.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1743657389; l=6847;
- i=alexisczezar.torreno@analog.com; s=20250213; h=from:subject:message-id;
- bh=txRbKITvS/AtWf6LOUsKXnNuO+6vusIA8xLHBxZU7C0=;
- b=oeGUx8H/r778IQLuKM/rEGyn078DJKchn4Z4eVUXEj0xffzDaTbHYEX8DCsrLphC9xK8endPs
- mHTrzhYa4njBRhG5gv1O4ArBLcHTEkS/l2m7bMXN6fiZZKbZPDM91HA
-X-Developer-Key: i=alexisczezar.torreno@analog.com; a=ed25519;
- pk=XpXmJnRjnsKdDil6YpOlj9+44S+XYXVFnxvkbmaZ+10=
-X-ADIRuleOP-NewSCL: Rule Triggered
-X-Proofpoint-GUID: tPCBtczMHPa95fgOWEAmmWSBhz7hO61Z
-X-Proofpoint-ORIG-GUID: tPCBtczMHPa95fgOWEAmmWSBhz7hO61Z
-X-Authority-Analysis: v=2.4 cv=Aszu3P9P c=1 sm=1 tr=0 ts=67ee19c3 cx=c_pps a=PpDZqlmH/M8setHirZLBMw==:117 a=PpDZqlmH/M8setHirZLBMw==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=gAnH3GRIAAAA:8 a=_jlGtV7tAAAA:8 a=jS6xk1c62BX-HoiQEUMA:9 a=QEXdDO2ut3YA:10
- a=nlm17XC03S6CtCLSeiRr:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-03_01,2025-04-02_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxscore=0
- malwarescore=0 mlxlogscore=999 spamscore=0 clxscore=1015 impostorscore=0
- bulkscore=0 priorityscore=1501 phishscore=0 suspectscore=0
- lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504030026
 
-ASPM12160 is a quarter brick DC/DC Power Module. It is a high
-power non-isolated converter capable of delivering a fully
-regulated 12V, with continuous power level of 1600W with peak
-power at 2400W for a limited time. Uses PMBus Configuration.
+On 02/04/2025 23:49, David Lechner wrote:
+> On 4/2/25 1:10 AM, Matti Vaittinen wrote:
+>> According to Jonathan, variable reference voltages are very rare. It is
+>> unlikely it is needed, and supporting it makes the code a bit more
+>> complex.
+> 
+> There is also around 60 other drivers where we could do something like this
+> in case anyone is bored. :-p
+> 
+>>
+>> Simplify the driver and drop the variable vref support.
+>>
+>> Suggested-by: Jonathan Cameron <jic23@kernel.org>
+>> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
+>> ---
+>> Revision History:
+>>   v2:
+>>    - New patch
+>> ---
+>>   drivers/iio/adc/ti-adc128s052.c | 29 ++++++-----------------------
+>>   1 file changed, 6 insertions(+), 23 deletions(-)
+>>
+>> diff --git a/drivers/iio/adc/ti-adc128s052.c b/drivers/iio/adc/ti-adc128s052.c
+>> index 0f93c6266527..0bfe4e558c69 100644
+>> --- a/drivers/iio/adc/ti-adc128s052.c
+>> +++ b/drivers/iio/adc/ti-adc128s052.c
+>> @@ -29,13 +29,12 @@ struct adc128_configuration {
+>>   struct adc128 {
+>>   	struct spi_device *spi;
+>>   
+>> -	struct regulator *reg;
+>>   	/*
+>>   	 * Serialize the SPI 'write-channel + read data' accesses and protect
+>>   	 * the shared buffer.
+>>   	 */
+>>   	struct mutex lock;
+>> -
+>> +	int vref;
+> 
+> Units in the name are helpful: vref_uv.
+> 
+> Could also consider doing division in probe and storing vref_mv instead
+> since we never use the microvolts part.
 
-Signed-off-by: Alexis Czezar Torreno <alexisczezar.torreno@analog.com>
----
- Documentation/hwmon/max34440.rst | 30 ++++++++++++++++------
- drivers/hwmon/pmbus/max34440.c   | 54 +++++++++++++++++++++++++++++++++++++---
- 2 files changed, 73 insertions(+), 11 deletions(-)
+Ah, thanks for the suggestions. I agree with both.
 
-diff --git a/Documentation/hwmon/max34440.rst b/Documentation/hwmon/max34440.rst
-index 162d289f08140341e8e76ab7033834ba07a8b935..8591a7152ce580a04b6965301f9bacd9b0a1a661 100644
---- a/Documentation/hwmon/max34440.rst
-+++ b/Documentation/hwmon/max34440.rst
-@@ -3,6 +3,14 @@ Kernel driver max34440
- 
- Supported chips:
- 
-+  * ADI ADPM12160
-+
-+    Prefixes: 'adpm12160'
-+
-+    Addresses scanned: -
-+
-+    Datasheet: -
-+
-   * Maxim MAX34440
- 
-     Prefixes: 'max34440'
-@@ -67,13 +75,14 @@ Author: Guenter Roeck <linux@roeck-us.net>
- Description
- -----------
- 
--This driver supports hardware monitoring for Maxim MAX34440 PMBus 6-Channel
--Power-Supply Manager, MAX34441 PMBus 5-Channel Power-Supply Manager
--and Intelligent Fan Controller, and MAX34446 PMBus Power-Supply Data Logger.
--It also supports the MAX34451, MAX34460, and MAX34461 PMBus Voltage Monitor &
--Sequencers. The MAX34451 supports monitoring voltage or current of 12 channels
--based on GIN pins. The MAX34460 supports 12 voltage channels, and the MAX34461
--supports 16 voltage channels.
-+This driver supports multiple devices: hardware monitoring for Maxim MAX34440
-+PMBus 6-Channel Power-Supply Manager, MAX34441 PMBus 5-Channel Power-Supply
-+Manager and Intelligent Fan Controller, and MAX34446 PMBus Power-Supply Data
-+Logger; PMBus Voltage Monitor and Sequencers for MAX34451, MAX34460, and
-+MAX34461; PMBus DC/DC Power Module ADPM12160. The MAX34451 supports monitoring
-+voltage or current of 12 channels based on GIN pins. The MAX34460 supports 12
-+voltage channels, and the MAX34461 supports 16 voltage channels. The ADPM1260
-+also monitors both input and output of voltage and current.
- 
- The driver is a client driver to the core PMBus driver. Please see
- Documentation/hwmon/pmbus.rst for details on PMBus client drivers.
-@@ -128,7 +137,10 @@ in[1-6]_highest		Historical maximum voltage.
- in[1-6]_reset_history	Write any value to reset history.
- ======================= =======================================================
- 
--.. note:: MAX34446 only supports in[1-4].
-+.. note::
-+
-+    - MAX34446 only supports in[1-4].
-+    - ADPM12160 only supports in[1-2]. Label is "vin1" and "vout1" respectively.
- 
- Curr
- ~~~~
-@@ -150,6 +162,7 @@ curr[1-6]_reset_history	Write any value to reset history.
- 
-     - in6 and curr6 attributes only exist for MAX34440.
-     - MAX34446 only supports curr[1-4].
-+    - For ADPM12160, curr[1] is "iin1" and curr[2-6] are "iout[1-5].
- 
- Power
- ~~~~~
-@@ -185,6 +198,7 @@ temp[1-8]_reset_history	Write any value to reset history.
- .. note::
-    - temp7 and temp8 attributes only exist for MAX34440.
-    - MAX34446 only supports temp[1-3].
-+   - ADPM12160 only supports temp[1].
- 
- 
- .. note::
-diff --git a/drivers/hwmon/pmbus/max34440.c b/drivers/hwmon/pmbus/max34440.c
-index 585746806663409bc97042647f6c0aba4c6f520a..2e9c5756fbf3b79f16fe038e8ccf15cfba90d08d 100644
---- a/drivers/hwmon/pmbus/max34440.c
-+++ b/drivers/hwmon/pmbus/max34440.c
-@@ -14,7 +14,15 @@
- #include <linux/i2c.h>
- #include "pmbus.h"
- 
--enum chips { max34440, max34441, max34446, max34451, max34460, max34461 };
-+enum chips {
-+	adpm12160,
-+	max34440,
-+	max34441,
-+	max34446,
-+	max34451,
-+	max34460,
-+	max34461,
-+};
- 
- #define MAX34440_MFR_VOUT_PEAK		0xd4
- #define MAX34440_MFR_IOUT_PEAK		0xd5
-@@ -81,7 +89,8 @@ static int max34440_read_word_data(struct i2c_client *client, int page,
- 					   MAX34440_MFR_VOUT_PEAK);
- 		break;
- 	case PMBUS_VIRT_READ_IOUT_AVG:
--		if (data->id != max34446 && data->id != max34451)
-+		if (data->id != max34446 && data->id != max34451 &&
-+		    data->id != adpm12160)
- 			return -ENXIO;
- 		ret = pmbus_read_word_data(client, page, phase,
- 					   MAX34446_MFR_IOUT_AVG);
-@@ -165,7 +174,8 @@ static int max34440_write_word_data(struct i2c_client *client, int page,
- 	case PMBUS_VIRT_RESET_IOUT_HISTORY:
- 		ret = pmbus_write_word_data(client, page,
- 					    MAX34440_MFR_IOUT_PEAK, 0);
--		if (!ret && (data->id == max34446 || data->id == max34451))
-+		if (!ret && (data->id == max34446 || data->id == max34451 ||
-+			     data->id == adpm12160))
- 			ret = pmbus_write_word_data(client, page,
- 					MAX34446_MFR_IOUT_AVG, 0);
- 
-@@ -309,6 +319,41 @@ static int max34451_set_supported_funcs(struct i2c_client *client,
- }
- 
- static struct pmbus_driver_info max34440_info[] = {
-+	[adpm12160] = {
-+		.pages = 19,
-+		.format[PSC_VOLTAGE_IN] = direct,
-+		.format[PSC_VOLTAGE_OUT] = direct,
-+		.format[PSC_CURRENT_IN] = direct,
-+		.format[PSC_CURRENT_OUT] = direct,
-+		.format[PSC_TEMPERATURE] = direct,
-+		.m[PSC_VOLTAGE_IN] = 1,
-+		.b[PSC_VOLTAGE_IN] = 0,
-+		.R[PSC_VOLTAGE_IN] = 0,
-+		.m[PSC_VOLTAGE_OUT] = 1,
-+		.b[PSC_VOLTAGE_OUT] = 0,
-+		.R[PSC_VOLTAGE_OUT] = 0,
-+		.m[PSC_CURRENT_IN] = 1,
-+		.b[PSC_CURRENT_IN] = 0,
-+		.R[PSC_CURRENT_IN] = 2,
-+		.m[PSC_CURRENT_OUT] = 1,
-+		.b[PSC_CURRENT_OUT] = 0,
-+		.R[PSC_CURRENT_OUT] = 2,
-+		.m[PSC_TEMPERATURE] = 1,
-+		.b[PSC_TEMPERATURE] = 0,
-+		.R[PSC_TEMPERATURE] = 2,
-+		/* absent func below [18] are not for monitoring */
-+		.func[2] = PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT,
-+		.func[4] = PMBUS_HAVE_IOUT | PMBUS_HAVE_STATUS_IOUT,
-+		.func[5] = PMBUS_HAVE_IOUT | PMBUS_HAVE_STATUS_IOUT,
-+		.func[6] = PMBUS_HAVE_IOUT | PMBUS_HAVE_STATUS_IOUT,
-+		.func[7] = PMBUS_HAVE_IOUT | PMBUS_HAVE_STATUS_IOUT,
-+		.func[8] = PMBUS_HAVE_IOUT | PMBUS_HAVE_STATUS_IOUT,
-+		.func[9] = PMBUS_HAVE_VIN | PMBUS_HAVE_STATUS_INPUT,
-+		.func[10] = PMBUS_HAVE_IIN | PMBUS_HAVE_STATUS_INPUT,
-+		.func[18] = PMBUS_HAVE_TEMP | PMBUS_HAVE_STATUS_TEMP,
-+		.read_word_data = max34440_read_word_data,
-+		.write_word_data = max34440_write_word_data,
-+	},
- 	[max34440] = {
- 		.pages = 14,
- 		.format[PSC_VOLTAGE_IN] = direct,
-@@ -538,6 +583,8 @@ static int max34440_probe(struct i2c_client *client)
- 		rv = max34451_set_supported_funcs(client, data);
- 		if (rv)
- 			return rv;
-+	} else if (data->id == adpm12160) {
-+		data->pmbus_addr_fixed = true;
- 	}
- 
- 	if (data->pmbus_addr_fixed) {
-@@ -552,6 +599,7 @@ static int max34440_probe(struct i2c_client *client)
- }
- 
- static const struct i2c_device_id max34440_id[] = {
-+	{"adpm12160", adpm12160},
- 	{"max34440", max34440},
- 	{"max34441", max34441},
- 	{"max34446", max34446},
+> 
+>>   	union {
+>>   		__be16 rx_buffer;
+>>   		u8 tx_buffer[2];
+> 
 
--- 
-2.34.1
+Yours,
+	-- Matti
 
