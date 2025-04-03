@@ -1,117 +1,135 @@
-Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4F89253F0E
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 19:08:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34EB128FFEE;
+	Thu,  3 Apr 2025 19:08:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743707331; cv=none; b=XaABVa15Bt4sKmEhL9aPxyMtKHydsFROgHCEx+x9Tei78l8x/5u8s8AVyzgSb6oPnTqcyq3lSYLBOrPLptybY/8H/mKCazylnE0SxZQt3Ww+fFnxI8RbO57XPYUsf9KS0aiq6PKTQCsXnV54bNB1M+I9lsmv26Q+zvlGiX1jc4g=
+	t=1743707334; cv=none; b=JEaMeXOxCRmrPzx6OoxZhQkYf5DwnQJAK3Oln+xrUr8Lv209YoHqQedy5GpSZGYDJuqHPdUCcPYqDFoDDzkGZGI8HRhJG+chOcMwoyNASdctQ+qIizeAndpJJRmAodoT49AKUj8VLXQHeICRMWN0IlI3OV0QSs9xlyHR/yO6WsE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743707331; c=relaxed/simple;
-	bh=eQsh8m6hMOt+s3jstiFbzZuYBXHxmqe0tzYTkubXJCs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IEN/DrRrt5pDOrs3ooVBM6b4zAa20de8zUDNXmkkSlO6Fe8g4RVICf37VS8Cd8xKMj8ACIKO9AYrdzeu2C0koYMXecu+ZXRmh8ZMdGnKNgOHdjJ5h+0fqyLixiSZwd1NQI18s3VldZa0GQY1avQBJg5zv2Ttbeu5KkdlCldEwwk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=JmDe/8X4; arc=none smtp.client-ip=95.215.58.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1743707334; c=relaxed/simple;
+	bh=BQHYQJIVbXuJLgndoLY9T8Cj9IjvO/VwSr7GTgZ5ukU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=k0mU/JkuRadgkJ85YQ3msR0ZIxboKIFG7qf9QCY8YRs1pgbg/jwPPp0An88sfdCa56+r2LO4osGAxwL7XVdiXQ5rYsxjgNSUGziV/Rc+ks1YrHzoctvs7kfkdiZzWSdlMNaGOKCDeEnNO7FCeh+lXmewZmTNNc/g+HqtkuNb5EE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g2L+FGpR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="JmDe/8X4"
-Message-ID: <a3d33b5c-e0e3-4980-9556-beb36b985e84@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1743707317;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Y59/c//cpQ59oY9i14cYGQHeNS5BEqmX5s/uupb1vtg=;
-	b=JmDe/8X4luR40/rIhQqNsKJaEO70WjYqBzT4rVg2cEIUDHlUHZrRMvFjsy7kIx62ID12ZY
-	indm9pPHWR0L1DgMjYhjTqvZdEp9xj9a+AK3Ps2OVn+PQJWBe1j7y4oTrbUgo490arOdZQ
-	Cnm8UXop0zZtr3viPbPQAYMI+dE77os=
-Date: Thu, 3 Apr 2025 15:08:31 -0400
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g2L+FGpR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0C5DC4CEE8;
+	Thu,  3 Apr 2025 19:08:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743707334;
+	bh=BQHYQJIVbXuJLgndoLY9T8Cj9IjvO/VwSr7GTgZ5ukU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=g2L+FGpRj8opx9ktMOVLiKvbC8ydHQy0aUzPv10gYAnxKoPCPU+5WPVDLNIkb2Zih
+	 UVlq/Qsn162G4smXzUVrBxwkd/LUCFzIwvjTa5YhphjubPLz41oUIAM6JN8p+JpWUs
+	 ty8XnMaJQ9sMaPPHnvnY/oCnGHfg7QhYAHjdQy3bMU4C3yxD7ROdYAi/UFxlFDUn0H
+	 6icjbPQepdqA2YBacrX3FWXsJVlp5fwajX5u+01HncIBIeHX1cUJGlGK2N9LhWtr3W
+	 lpmX2ZdvPlxsxmjrdu9VJzTnhj6+DcuXpY5BX8s40cuvt5KImkzuVXzmGORqQeS2K9
+	 Fgfzjb3Xa3NDQ==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Zhongqiu Han <quic_zhonhan@quicinc.com>,
+	syzbot+df6cdcb35904203d2b6d@syzkaller.appspotmail.com,
+	Dave Kleikamp <dave.kleikamp@oracle.com>,
+	Sasha Levin <sashal@kernel.org>,
+	shaggy@kernel.org,
+	aha310510@gmail.com,
+	eadavis@qq.com,
+	dmantipov@yandex.ru,
+	jfs-discussion@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 6.1 03/18] jfs: Fix uninit-value access of imap allocated in the diMount() function
+Date: Thu,  3 Apr 2025 15:08:29 -0400
+Message-Id: <20250403190845.2678025-3-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250403190845.2678025-1-sashal@kernel.org>
+References: <20250403190845.2678025-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [RFC net-next PATCH 06/13] net: phy: Export some functions
-To: Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org,
- Andrew Lunn <andrew+netdev@lunn.ch>, "David S . Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Russell King <linux@armlinux.org.uk>
-Cc: linux-kernel@vger.kernel.org, Christian Marangi <ansuelsmth@gmail.com>,
- upstream@airoha.com, Heiner Kallweit <hkallweit1@gmail.com>
-References: <20250403181907.1947517-1-sean.anderson@linux.dev>
- <20250403181907.1947517-7-sean.anderson@linux.dev>
- <0e2a50d9-ee7c-4c15-8c31-a42fff1522e6@gmail.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Sean Anderson <sean.anderson@linux.dev>
-In-Reply-To: <0e2a50d9-ee7c-4c15-8c31-a42fff1522e6@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.1.132
+Content-Transfer-Encoding: 8bit
 
-On 4/3/25 14:37, Florian Fainelli wrote:
-> On 4/3/25 11:19, Sean Anderson wrote:
->> Export a few functions so they can be used outside the phy subsystem:
->>
->> get_phy_c22_id is useful when probing MDIO devices which present a
->> phy-like interface despite not using the Linux ethernet phy subsystem.
->>
->> mdio_device_bus_match is useful when creating MDIO devices manually
->> (e.g. on non-devicetree platforms).
->>
->> Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
->> ---
->>
->>   drivers/net/phy/mdio_device.c | 1 +
->>   drivers/net/phy/phy_device.c  | 3 ++-
->>   include/linux/phy.h           | 1 +
->>   3 files changed, 4 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/net/phy/mdio_device.c b/drivers/net/phy/mdio_device.c
->> index e747ee63c665..cce3f405d1a4 100644
->> --- a/drivers/net/phy/mdio_device.c
->> +++ b/drivers/net/phy/mdio_device.c
->> @@ -45,6 +45,7 @@ int mdio_device_bus_match(struct device *dev, const struct device_driver *drv)
->>         return strcmp(mdiodev->modalias, drv->name) == 0;
->>   }
->> +EXPORT_SYMBOL_GPL(mdio_device_bus_match);
->>     struct mdio_device *mdio_device_create(struct mii_bus *bus, int addr)
->>   {
->> diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
->> index 675fbd225378..45d8bc13eb64 100644
->> --- a/drivers/net/phy/phy_device.c
->> +++ b/drivers/net/phy/phy_device.c
->> @@ -859,7 +859,7 @@ static int get_phy_c45_ids(struct mii_bus *bus, int addr,
->>    * valid, %-EIO on bus access error, or %-ENODEV if no device responds
->>    * or invalid ID.
->>    */
->> -static int get_phy_c22_id(struct mii_bus *bus, int addr, u32 *phy_id)
->> +int get_phy_c22_id(struct mii_bus *bus, int addr, u32 *phy_id)
->>   {
->>       int phy_reg;
->>   @@ -887,6 +887,7 @@ static int get_phy_c22_id(struct mii_bus *bus, int addr, u32 *phy_id)
->>         return 0;
->>   }
->> +EXPORT_SYMBOL_GPL(get_phy_c22_id);
->>     /* Extract the phy ID from the compatible string of the form
->>    * ethernet-phy-idAAAA.BBBB.
->> diff --git a/include/linux/phy.h b/include/linux/phy.h
->> index a2bfae80c449..c648f1699c5c 100644
->> --- a/include/linux/phy.h
->> +++ b/include/linux/phy.h
->> @@ -1754,6 +1754,7 @@ struct phy_device *phy_device_create(struct mii_bus *bus, int addr, u32 phy_id,
->>                        bool is_c45,
->>                        struct phy_c45_device_ids *c45_ids);
->>   #if IS_ENABLED(CONFIG_PHYLIB)
->> +int get_phy_c22_id(struct mii_bus *bus, int addr, u32 *phy_id);
-> 
-> Seems like you will need to provide an empty inline stub for when CONFIG_PHYLIB=n?
+From: Zhongqiu Han <quic_zhonhan@quicinc.com>
 
-The only user (CONFIG_PCS_XILINX) selects CONFIG_PHYLINK which selects
-CONFIG_PHYLIB. So I don't think this can occur yet.
+[ Upstream commit 9629d7d66c621671d9a47afe27ca9336bfc8a9ea ]
 
---Sean
+syzbot reports that hex_dump_to_buffer is using uninit-value:
+
+=====================================================
+BUG: KMSAN: uninit-value in hex_dump_to_buffer+0x888/0x1100 lib/hexdump.c:171
+hex_dump_to_buffer+0x888/0x1100 lib/hexdump.c:171
+print_hex_dump+0x13d/0x3e0 lib/hexdump.c:276
+diFree+0x5ba/0x4350 fs/jfs/jfs_imap.c:876
+jfs_evict_inode+0x510/0x550 fs/jfs/inode.c:156
+evict+0x723/0xd10 fs/inode.c:796
+iput_final fs/inode.c:1946 [inline]
+iput+0x97b/0xdb0 fs/inode.c:1972
+txUpdateMap+0xf3e/0x1150 fs/jfs/jfs_txnmgr.c:2367
+txLazyCommit fs/jfs/jfs_txnmgr.c:2664 [inline]
+jfs_lazycommit+0x627/0x11d0 fs/jfs/jfs_txnmgr.c:2733
+kthread+0x6b9/0xef0 kernel/kthread.c:464
+ret_from_fork+0x6d/0x90 arch/x86/kernel/process.c:148
+ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+
+Uninit was created at:
+slab_post_alloc_hook mm/slub.c:4121 [inline]
+slab_alloc_node mm/slub.c:4164 [inline]
+__kmalloc_cache_noprof+0x8e3/0xdf0 mm/slub.c:4320
+kmalloc_noprof include/linux/slab.h:901 [inline]
+diMount+0x61/0x7f0 fs/jfs/jfs_imap.c:105
+jfs_mount+0xa8e/0x11d0 fs/jfs/jfs_mount.c:176
+jfs_fill_super+0xa47/0x17c0 fs/jfs/super.c:523
+get_tree_bdev_flags+0x6ec/0x910 fs/super.c:1636
+get_tree_bdev+0x37/0x50 fs/super.c:1659
+jfs_get_tree+0x34/0x40 fs/jfs/super.c:635
+vfs_get_tree+0xb1/0x5a0 fs/super.c:1814
+do_new_mount+0x71f/0x15e0 fs/namespace.c:3560
+path_mount+0x742/0x1f10 fs/namespace.c:3887
+do_mount fs/namespace.c:3900 [inline]
+__do_sys_mount fs/namespace.c:4111 [inline]
+__se_sys_mount+0x71f/0x800 fs/namespace.c:4088
+__x64_sys_mount+0xe4/0x150 fs/namespace.c:4088
+x64_sys_call+0x39bf/0x3c30 arch/x86/include/generated/asm/syscalls_64.h:166
+do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+do_syscall_64+0xcd/0x1e0 arch/x86/entry/common.c:83
+entry_SYSCALL_64_after_hwframe+0x77/0x7f
+=====================================================
+
+The reason is that imap is not properly initialized after memory
+allocation. It will cause the snprintf() function to write uninitialized
+data into linebuf within hex_dump_to_buffer().
+
+Fix this by using kzalloc instead of kmalloc to clear its content at the
+beginning in diMount().
+
+Signed-off-by: Zhongqiu Han <quic_zhonhan@quicinc.com>
+Reported-by: syzbot+df6cdcb35904203d2b6d@syzkaller.appspotmail.com
+Closes: https://lore.kernel.org/lkml/67b5d07e.050a0220.14d86d.00e6.GAE@google.com/
+Signed-off-by: Dave Kleikamp <dave.kleikamp@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/jfs/jfs_imap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/jfs/jfs_imap.c b/fs/jfs/jfs_imap.c
+index c72e97f065798..309b5f6e977d7 100644
+--- a/fs/jfs/jfs_imap.c
++++ b/fs/jfs/jfs_imap.c
+@@ -102,7 +102,7 @@ int diMount(struct inode *ipimap)
+ 	 * allocate/initialize the in-memory inode map control structure
+ 	 */
+ 	/* allocate the in-memory inode map control structure. */
+-	imap = kmalloc(sizeof(struct inomap), GFP_KERNEL);
++	imap = kzalloc(sizeof(struct inomap), GFP_KERNEL);
+ 	if (imap == NULL)
+ 		return -ENOMEM;
+ 
+-- 
+2.39.5
+
