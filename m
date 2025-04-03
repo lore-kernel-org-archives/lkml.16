@@ -1,92 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C074A24EF7E;
-	Thu,  3 Apr 2025 15:31:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2DC5190679
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 15:31:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743694294; cv=none; b=USlBhv8dk/l8tmxsbsgE6pjdpmzIi1+1abeHZB7lxIxehhIFkMC33QHz+ucikzOr69ywxUrpdPS/TUaVvLKqfr2asb/9DKRqZRAv+52NRVCdh4wXU3deTjKoNJzwG8d6mGsDtl2oEcGTWX5ODfU20BkgEsUuMlGTN2vVrwjfKgo=
+	t=1743694315; cv=none; b=KXJyVVUqSmR0cbNFNCmZxrHRMY7rMmr/h+DX/ejX6m6b8BNuMGxFWgwXi2rAX1Iw8etq8thK5Svq7hMBaNEVRAOvEzXupWBK8jxIw5ZBNlZcdyeLSA+QDZkeVRQw7R7Tq6PLk68BEOZm4mu3SV3NijLevCsUMSNpgPXt6FFvYK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743694294; c=relaxed/simple;
-	bh=ywX+w2ejjtUoTP/P9MQhvoCasOtZWG+Jw8XsR6yk9go=;
+	s=arc-20240116; t=1743694315; c=relaxed/simple;
+	bh=KPQddjkqY2woTfI2cLtPZbW+MJntKMtuNGsZM5WDnFU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PB+r0mlW45NhU2zrus+QhWbuI8e90HUnN1qlPZffDaD8WMvkOiYNsezZRD9Sh11coAKellXCXTvPsgkkAXP9YFfE5jteeW9fO4ZzQRic0FOImWBi6IMy9CHl0q1SwfweifXP7nCvkFTcvcVgnAlFnyLmNsvWHn1AQNAkJxf+rKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lqfZ6V6U; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=T9lpLxeMxQv3NFbkIopqyOgG/yIXBtaen2PE+1tEkrP2GmeIoQkk59nrAL1ady28/opK+atgTf01b336n2J3R4aphq1duHoh/n5OxlDCq0xBwd80Ejg0KaCajMaMRl9KW3HZ3e1tZGAOl95oEhirX0y8EuKSkFJlLpCVm2q+E34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YkKulaQa; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lqfZ6V6U"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6767C4CEE3;
-	Thu,  3 Apr 2025 15:31:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743694294;
-	bh=ywX+w2ejjtUoTP/P9MQhvoCasOtZWG+Jw8XsR6yk9go=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lqfZ6V6UNUu3lFHFKlnWCFVf8rHkyRYnqyntQk3cBIEeN9D4/LoxCTSZJgW7yfBFw
-	 miqP/U+jpNlGpizBr3zB6cTiljXWfDLbAYLk+uRYUpf+vZ5Vq6EL0PPf7LHOEBuP6/
-	 vZ6IlzmuWuJ3ExrrU8Z2/cwIhh631e1RU4YiY1+VZUxfvvoAsWFmajL2dyn0AjxSma
-	 oCAMfxcoCySUelgF0jbMD7mQWKiXkECfibQzjHMBpa0Hi4lN8mDa2jZUaweIfFi3MA
-	 PSx5rzUZimG/QHVy+IrlfNtDP+2+y5nTp/2sSL4wqQKtCSLOxrCavn6nlDNngJfQAi
-	 5ofujHMot9g8A==
-Date: Thu, 3 Apr 2025 16:31:27 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Yeoreum Yun <yeoreum.yun@arm.com>
-Cc: catalin.marinas@arm.com, will@kernel.org, anshuman.khandual@arm.com,
-	joey.gouly@arm.com, yury.khrustalev@arm.com, maz@kernel.org,
-	oliver.upton@linux.dev, frederic@kernel.org,
-	shameerali.kolothum.thodi@huawei.com, james.morse@arm.com,
-	mark.rutland@arm.com, huangxiaojia2@huawei.com,
-	akpm@linux-foundation.org, surenb@google.com, robin.murphy@arm.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org
-Subject: Re: [PATCH 3/3] Documentation/arm64: reflects FEAT_MTE_TAGGED_FAR
- description
-Message-ID: <93497fc3-3da9-43f1-8b22-cf0d3f3e7de2@sirena.org.uk>
-References: <20250403141535.23496-1-yeoreum.yun@arm.com>
- <20250403141535.23496-4-yeoreum.yun@arm.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YkKulaQa"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5ed43460d6bso1708175a12.0
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 08:31:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1743694312; x=1744299112; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=2SVexGeljhSdSxj9UAkbIi7n+kiPxQUm8cURRQIGIRA=;
+        b=YkKulaQa6F8vJw9Pb8lzcWw9wVsDUgmRAUzMmVowwq0u63Pv4ZDEvAuDSL4Ht2v6Sj
+         l46HvQLnNqrVAyHXn75HozmxIzdXH9Aao9T5IMw56g+MX5gzRNVcA5MshuJN3rUFcapm
+         H9KwdIfMG/bnrSeqyKik9Lg7wi3OsHtndJM3LKMb9PPhOdE9MaBbpMeHYukWdEj+Kl84
+         c9bUwetUDb64huosAsM6bRjq8vMFTclh6tlm0pWIXdOvUS+wVxikLY+LTbVKH9cVuHXw
+         XuYsmNZddEeXVQ0P2VXbckjPU47uzm3xFl7R+Cf+VprP/VfCM/yS+hfE2T6y8cjUUgsk
+         0SZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743694312; x=1744299112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2SVexGeljhSdSxj9UAkbIi7n+kiPxQUm8cURRQIGIRA=;
+        b=skmaeH7cNKbQf/opOU0MHGDK3t8tSBYxbEwi5vpSDD5q1gXlGvmHie6TvLsE0DP9fB
+         oDPmVqXLCL4vc4goL7FZozlLV+O1SDq8yZbPrUIyIGX7utqYKQDlBNs3hlguoVHxX2J3
+         6q9DILOtbD8myu+py0mPxrbOvM030VZXEckbouWS86TexefFxu5JrCI5IK7+UXnrhcS7
+         uUtgC7dU7de4lUEHRtHaG7eIYtwxu/8CL1o7t5j1TuM6JZsaQ1qLjh4swrpnczH677OQ
+         7b8vS8pgZRWAfEZWBKU9nhqKL2RlKszfYg5DxjFHFrS46ewPP+ImWJ0lrP6LMZ3lPTvs
+         V29g==
+X-Forwarded-Encrypted: i=1; AJvYcCXOpLuKOoM9uVk7UkXVDzjL2x63EVNHsTQfuNahe04Kax7y5aeCdIIB2SCxvo9H0BRvyoPSl+0jqzCUYBg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxL5kVzXigZ2Jt3CWRFPm08rVKS2ll4t/J8xx8S2OyEMPwxX+V6
+	tNPKd9+XFNSYBj4BKSAWFNygXXeacFtdopYfgyQXxH7qAFUpAl18ZgOZAGgvZA==
+X-Gm-Gg: ASbGnctw1oR4fEDi4k5Cva8Nq6Ah/UhyR9QFcSDb32wk5E1KvquKOK1Nc/xHO7slWJz
+	LC76DIPUmNeR7k+j7YGRLC5z4tQKffJhF9Q1+F3I8HC80m7iME6oxCmzcTYgEC4ycWYDEY4HJuE
+	l32CUSkIILiPSSZSw5PNXI70JbrYqICg5raqb5yMJZMEgTHJGX8CCnqPz9vn2aveFCGqImTgbZZ
+	zFutqYTnzse52J3vGdw6x0PsFczhELcH4dIYOM7PUDmPECPMKmci35Q0JsBLhG8/tedkzfVoaCf
+	Dka902gtHHC9TSpht3YO4nqnVnb+cUF3uwg33CE8PrB7VBZO0JTjSe1w7USvvg4qrYOVWgZP8of
+	x6tTgrlFxWBP7Sy0g
+X-Google-Smtp-Source: AGHT+IEGEPfe6jLP9yTD8EczNIfaOYVt4yM5HvzJTIY1ayuEiVqh4iVP20QX+O0oM2W0n9OiZudOCQ==
+X-Received: by 2002:a05:6402:1e8e:b0:5e1:dac1:fa22 with SMTP id 4fb4d7f45d1cf-5edfdafe39dmr16976129a12.21.1743694311816;
+        Thu, 03 Apr 2025 08:31:51 -0700 (PDT)
+Received: from google.com (40.162.204.35.bc.googleusercontent.com. [35.204.162.40])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f0880a4027sm1097010a12.73.2025.04.03.08.31.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Apr 2025 08:31:50 -0700 (PDT)
+Date: Thu, 3 Apr 2025 15:31:47 +0000
+From: Quentin Perret <qperret@google.com>
+To: Vincent Donnefort <vdonnefort@google.com>
+Cc: maz@kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com,
+	suzuki.poulose@arm.com, yuzenghui@huawei.com,
+	catalin.marinas@arm.com, will@kernel.org,
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org, kernel-team@android.com
+Subject: Re: [PATCH v2 3/9] KVM: arm64: Add a range to
+ __pkvm_host_unshare_guest()
+Message-ID: <Z-6p49EcsZKid7L1@google.com>
+References: <20250306110038.3733649-1-vdonnefort@google.com>
+ <20250306110038.3733649-4-vdonnefort@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="oxRN7uTMagz9u5lh"
-Content-Disposition: inline
-In-Reply-To: <20250403141535.23496-4-yeoreum.yun@arm.com>
-X-Cookie: Logic is the chastity belt of the mind!
-
-
---oxRN7uTMagz9u5lh
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250306110038.3733649-4-vdonnefort@google.com>
 
-On Thu, Apr 03, 2025 at 03:15:35PM +0100, Yeoreum Yun wrote:
-> When FEAT_MTE_TAGGED_FAR feature is supported, the value of address bits
-> [63:60] is preserved on synchronous tag check fault.
->=20
-> This patch reflects the above feature in the documentation.
->=20
-> Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
-> ---
->  Documentation/arch/arm64/tagged-pointers.rst | 11 ++++++-----
->  1 file changed, 6 insertions(+), 5 deletions(-)
+On Thursday 06 Mar 2025 at 11:00:32 (+0000), Vincent Donnefort wrote:
+> @@ -1012,51 +1011,52 @@ static int __check_host_shared_guest(struct pkvm_hyp_vm *vm, u64 *__phys, u64 ip
+>  		return ret;
+>  	if (!kvm_pte_valid(pte))
+>  		return -ENOENT;
+> -	if (level != KVM_PGTABLE_LAST_LEVEL)
+> +	if (kvm_granule_size(level) != size)
+>  		return -E2BIG;
+>  
+> -	state = guest_get_page_state(pte, ipa);
+> -	if (state != PKVM_PAGE_SHARED_BORROWED)
+> -		return -EPERM;
+> +	ret = __guest_check_page_state_range(vm, ipa, size, PKVM_PAGE_SHARED_BORROWED);
+> +	if (ret)
+> +		return ret;
 
-I saw the subject line and was looking for the elf_hwcaps.rst update in
-this patch, though really it should be in patch 1.
+Given that hard rely on kvm_granule_size(level) == size above, we should
+be guaranteed that the PTE covers the entire range we're interested in.
+So is there a point in starting a new page-table walk here? Could we
+just keep guest_get_page_state() directly?
 
---oxRN7uTMagz9u5lh
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmfuqc8ACgkQJNaLcl1U
-h9DNfwf+LDTdUjy+phURiCQ64ZN0TgTHnloTqsXKJJLs2WB63AGO04uu9pLprQ8q
-H5VcxoVmgSoFdTh0eRWorj5490VGcxWXOEBKfL3oe6/EC+KH+5uWu1RzUuV0W5Ff
-Rr6NRfix45cj4OaYCiTOxdC7+5Tbb5R76t5R+UFJn3Ap7fIOlT5l8PAnLMmsNzNu
-atAAI9WFGAS7I7Vu9CKjnFEwOhL200RgJNFpzyS+gg6WXlfMc3zaRCEoJQ0K/fgF
-wLhgmuFE2xk+ZoOBykztgNhGy0JtnrW/5csyLC1cGyEYsxz6L3S2bFqjuxiruCcO
-rM8gtkBASbMayS6KsVHTWp8RlbIZIg==
-=BWMY
------END PGP SIGNATURE-----
-
---oxRN7uTMagz9u5lh--
+>  
+>  	phys = kvm_pte_to_phys(pte);
+> -	ret = check_range_allowed_memory(phys, phys + PAGE_SIZE);
+> +	ret = check_range_allowed_memory(phys, phys + size);
+>  	if (WARN_ON(ret))
+>  		return ret;
+>  
+> -	page = hyp_phys_to_page(phys);
+> -	if (page->host_state != PKVM_PAGE_SHARED_OWNED)
+> -		return -EPERM;
+> -	if (WARN_ON(!page->host_share_guest_count))
+> -		return -EINVAL;
+> +	for_each_hyp_page(phys, size, page) {
+> +		if (page->host_state != PKVM_PAGE_SHARED_OWNED)
+> +			return -EPERM;
+> +		if (WARN_ON(!page->host_share_guest_count))
+> +			return -EINVAL;
+> +	}
+>  
+>  	*__phys = phys;
+>  
+>  	return 0;
+>  }
