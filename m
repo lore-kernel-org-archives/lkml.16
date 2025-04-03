@@ -1,170 +1,168 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 736B524337D;
-	Thu,  3 Apr 2025 15:17:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C44EB24337D
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 15:17:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743693426; cv=none; b=ZQSHdyjKALIbMuwhi2S+D7dtUNaEuosCBF8uki0dZ0iHZVD1lsh4E9eOvnZU4rlqlTDRtgApwnX+Fj/RFexlWElHfHCXc2M+NaNKKyOH+tlHH9tHf4td5lcNMmKBPvAqz/UZF641mpmOp0jbDPvfo7Vu6rjlEHBCK439FXJ9a1U=
+	t=1743693474; cv=none; b=UTNf1rc7JdPdpxuM1YTQPCOlUQf0+pUD/tQ8lbB4+XZnmVSXQ6KU18OP883a1Q3UfdxwBoch+ZiHW06ZFrkWSdKof4KmYMqSX0+81z36dfteBZjUakilE1O7Z2dKIZvzQ8+wPKjUu300EdYwPnuupy0zpwBhlC83Wg9jCLSikvo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743693426; c=relaxed/simple;
-	bh=m3kC4tz7noRERlVMyBS8eOyyMWXXtshmKA59iy5yIFU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=ISSgf4jYTX95KXGn9yvGMW3QDYEuNUtaM2zc00wPv2w1afESNGOPqQ1vgr0j5S0WOJJr0G2XeNmB5dVtxeRZ9QcowRjKxUCVS9U6N0S5ycRxNre+FSJaQ6W/kb2MM0Jal2djd69lBKCxo1uj3rOIX1YzZi4MHEbn1dkk+CGPOtU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M1vQiIOe; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1743693474; c=relaxed/simple;
+	bh=2Qzt83/ngQEHCLu8BEV5TvgfhcfJXL98fFg73ZyxLQk=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=jg7XTkFbCPzChzQAWdlLxUg5xc2zDoIdCWcLPbO0SZDMIcaY0Labzd3Qn8dm2OoTPs5/MEChxdj1zs+YOGBzg57SbDuRwktCsVd6/v2U3cgUpKijY5vyhWt+BGNUWEO+atwRC+1DL3kuSHvkCGl9z8ngsSbBhuFw7BJXCdBL1YU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hj6IaQft; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M1vQiIOe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743693424; x=1775229424;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=m3kC4tz7noRERlVMyBS8eOyyMWXXtshmKA59iy5yIFU=;
-  b=M1vQiIOeTQkxweY0aPxyXfadNxi17xL9prhz/x15FrL/Vn4ulvSf2NSY
-   kOxcNhEySO/CUfagJEXUEERvt/RXizgME9Eo8tpHuu5mC9v4NAiA+Abe6
-   efDXiaUq9xdyUtSVcr7aoK8tsNsXbCgl5Aaus5ez4g/kr3rKfRKeZrnLi
-   j1fd6k2U/SNOl9lS80XdPnMDqBVPCAcnU4cj4OcLkbEg95eOqAtGrGQ/0
-   /4Ti+/INUMCcbJDigZdYQQI+lknD4Uuma466t6HbKH1kON41/UW6oR7jJ
-   UcTMoAVOi38gZkwFJbZyywRBaqI/KIE/rhVqsSXLGvsVFM0+NoRiCz4ug
-   w==;
-X-CSE-ConnectionGUID: zDtoC5LVSGC6udWho5jzZA==
-X-CSE-MsgGUID: TCVLntgYQ1W+uKrWRTp35w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11393"; a="48974788"
-X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
-   d="scan'208";a="48974788"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 08:17:03 -0700
-X-CSE-ConnectionGUID: swrIOS9FSL2P447QyT0c2Q==
-X-CSE-MsgGUID: mWwZKqiiSqCw/9mtRwBuKw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
-   d="scan'208";a="131763763"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 08:17:03 -0700
-Received: from [10.246.136.14] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.14])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hj6IaQft"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743693471;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=FHOzoCPihGTExJUSS35Q5qFYB4w7e9yK1puyfm64FGc=;
+	b=hj6IaQft4Fk5obaY30H1bGhEQBDAuSI/7TSkQGikw3zJfvBH2FGhyznlwfUNmLdh38fXgb
+	m4BoK2hNFgYc2NZ1iSNrFW9TAdpXiGCRwsr20nFuXplcMptSMS+0+EQwhX/d14EfRypF5U
+	FJGEPwujFCs0d3Btff/uOSna3XxourA=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-470-hGowlwQQOBWi7fMbzZJ1_Q-1; Thu,
+ 03 Apr 2025 11:17:48 -0400
+X-MC-Unique: hGowlwQQOBWi7fMbzZJ1_Q-1
+X-Mimecast-MFC-AGG-ID: hGowlwQQOBWi7fMbzZJ1_Q_1743693466
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id C208F20B5736;
-	Thu,  3 Apr 2025 08:17:00 -0700 (PDT)
-Message-ID: <0924de97-67ec-4c8a-8c5c-66264bdd2748@linux.intel.com>
-Date: Thu, 3 Apr 2025 11:16:59 -0400
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 47D441955F34;
+	Thu,  3 Apr 2025 15:17:44 +0000 (UTC)
+Received: from asrivats-na.rmtustx.csb (unknown [10.2.16.30])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 354081801752;
+	Thu,  3 Apr 2025 15:17:37 +0000 (UTC)
+From: Anusha Srivatsa <asrivats@redhat.com>
+Subject: [PATCH v2 00/30] drm/panel: Use refcounted allocation in place of
+ devm_kzalloc() - Part2
+Date: Thu, 03 Apr 2025 10:16:07 -0400
+Message-Id: <20250403-b4-drm_panel_mass_convert_part2-v2-0-260c8a44c56b@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 3/4] perf parse-events: Set is_pmu_core for legacy
- hardware events
-To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Leo Yan <leo.yan@arm.com>, Yoshihiro Furudera <fj5100bi@fujitsu.com>,
- Weilin Wang <weilin.wang@intel.com>, Andi Kleen <ak@linux.intel.com>,
- James Clark <james.clark@linaro.org>,
- Dominique Martinet <asmadeus@codewreck.org>,
- Yicong Yang <yangyicong@hisilicon.com>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250210183808.130522-1-irogers@google.com>
- <20250210183808.130522-4-irogers@google.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20250210183808.130522-4-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIACeY7mcC/42NQQ6CMBAAv0L2bM1SqVpP/sMQUmCRJtKSbdNoS
+ P9u5QUeZw4zGwRiSwFu1QZMyQbrXQF5qGCYjXuSsGNhkCgVNihF34iRl241jl7dYkLoBu8ScSy
+ KoxRqkuraoyFFBkplZZrsez882sKzDdHzZx+m+mf/b6daoNB46i+otSZzvjONs4nHwS/Q5py/8
+ vXWI88AAAA=
+X-Change-ID: 20250402-b4-drm_panel_mass_convert_part2-5f258b0ae5ea
+To: Neil Armstrong <neil.armstrong@linaro.org>, 
+ Jessica Zhang <quic_jesszhan@quicinc.com>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Icenowy Zheng <icenowy@aosc.io>, Jagan Teki <jagan@amarulasolutions.com>, 
+ Ondrej Jirman <megi@xff.cz>, Javier Martinez Canillas <javierm@redhat.com>, 
+ Michael Trimarchi <michael@amarulasolutions.com>, 
+ Michael Walle <mwalle@kernel.org>, Jagan Teki <jagan@edgeble.ai>, 
+ =?utf-8?q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>, 
+ Purism Kernel Team <kernel@puri.sm>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Jianhua Lu <lujianhua000@gmail.com>, Stefan Mavrodiev <stefan@olimex.com>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ Anusha Srivatsa <asrivats@redhat.com>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1743689775; l=5387;
+ i=asrivats@redhat.com; s=20250122; h=from:subject:message-id;
+ bh=2Qzt83/ngQEHCLu8BEV5TvgfhcfJXL98fFg73ZyxLQk=;
+ b=VnDbWg8Vi1y6AJlsO456Og9Iim6s3V6ccCu0L+H+DVRXgLdrtMHy1Gd/zeupWENoc6YqWa9Mf
+ nwrs6sMwxKwC3EnS5K3+W8dClWNdQxDY+m3PJjiK/zedXC4zbg5zkYk
+X-Developer-Key: i=asrivats@redhat.com; a=ed25519;
+ pk=brnIHkBsUZEhyW6Zyn0U92AeIZ1psws/q8VFbIkf1AU=
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
+Start converting drivers to use the API - devm_drm_panel_alloc().
 
+Sending next 30 drivers. Sending in batches for easier review.
 
-On 2025-02-10 1:38 p.m., Ian Rogers wrote:
-> Also set the CPU map to all online CPU maps. This is done so the
-> behavior of legacy hardware and hardware cache events better matches
-> that of sysfs and json events during
-> __perf_evlist__propagate_maps. Fix missing cpumap put in "Synthesize
-> attr update" test.
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/tests/event_update.c |  1 +
->  tools/perf/util/parse-events.c  | 37 ++++++++++++++++++++-------------
->  2 files changed, 24 insertions(+), 14 deletions(-)
-> 
-> diff --git a/tools/perf/tests/event_update.c b/tools/perf/tests/event_update.c
-> index d6b4ce3ef4ee..9301fde11366 100644
-> --- a/tools/perf/tests/event_update.c
-> +++ b/tools/perf/tests/event_update.c
-> @@ -109,6 +109,7 @@ static int test__event_update(struct test_suite *test __maybe_unused, int subtes
->  	TEST_ASSERT_VAL("failed to synthesize attr update name",
->  			!perf_event__synthesize_event_update_name(&tmp.tool, evsel, process_event_name));
->  
-> +	perf_cpu_map__put(evsel->core.own_cpus);
->  	evsel->core.own_cpus = perf_cpu_map__new("1,2,3");
->  
->  	TEST_ASSERT_VAL("failed to synthesize attr update cpus",
-> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-> index 6c36b98875bc..8cccf1e22cdf 100644
-> --- a/tools/perf/util/parse-events.c
-> +++ b/tools/perf/util/parse-events.c
-> @@ -231,21 +231,30 @@ __add_event(struct list_head *list, int *idx,
->  	    struct perf_cpu_map *cpu_list, u64 alternate_hw_config)
->  {
->  	struct evsel *evsel;
-> -	struct perf_cpu_map *cpus = perf_cpu_map__is_empty(cpu_list) && pmu ? pmu->cpus : cpu_list;
-> +	bool is_pmu_core;
-> +	struct perf_cpu_map *cpus;
->  
-> -	cpus = perf_cpu_map__get(cpus);
-> -	if (pmu)
-> +	if (pmu) {
-> +		is_pmu_core = pmu->is_core;
-> +		cpus = perf_cpu_map__get(perf_cpu_map__is_empty(cpu_list) ? pmu->cpus : cpu_list);
->  		perf_pmu__warn_invalid_formats(pmu);
-> -
-> -	if (pmu && (attr->type == PERF_TYPE_RAW || attr->type >= PERF_TYPE_MAX)) {
-> -		perf_pmu__warn_invalid_config(pmu, attr->config, name,
-> -					      PERF_PMU_FORMAT_VALUE_CONFIG, "config");
-> -		perf_pmu__warn_invalid_config(pmu, attr->config1, name,
-> -					      PERF_PMU_FORMAT_VALUE_CONFIG1, "config1");
-> -		perf_pmu__warn_invalid_config(pmu, attr->config2, name,
-> -					      PERF_PMU_FORMAT_VALUE_CONFIG2, "config2");
-> -		perf_pmu__warn_invalid_config(pmu, attr->config3, name,
-> -					      PERF_PMU_FORMAT_VALUE_CONFIG3, "config3");
-> +		if (attr->type == PERF_TYPE_RAW || attr->type >= PERF_TYPE_MAX) {
-> +			perf_pmu__warn_invalid_config(pmu, attr->config, name,
-> +						PERF_PMU_FORMAT_VALUE_CONFIG, "config");
-> +			perf_pmu__warn_invalid_config(pmu, attr->config1, name,
-> +						PERF_PMU_FORMAT_VALUE_CONFIG1, "config1");
-> +			perf_pmu__warn_invalid_config(pmu, attr->config2, name,
-> +						PERF_PMU_FORMAT_VALUE_CONFIG2, "config2");
-> +			perf_pmu__warn_invalid_config(pmu, attr->config3, name,
-> +						PERF_PMU_FORMAT_VALUE_CONFIG3, "config3");
-> +		}
-> +	} else {
-> +		is_pmu_core = (attr->type == PERF_TYPE_HARDWARE ||
-> +			       attr->type == PERF_TYPE_HW_CACHE);
-> +		if (perf_cpu_map__is_empty(cpu_list))
-> +			cpus = is_pmu_core ? perf_cpu_map__new_online_cpus() : NULL;
+Part 1 of the series : https://patchwork.freedesktop.org/series/147082/
 
-All online CPUs? Is there a problem for hybrid?
+Signed-off-by: Anusha Srivatsa <asrivats@redhat.com>
+---
+Changes in v2:
+- Remove drm_panel_init() from probe function in ilitek-ili9341 driver. 
+- Link to v1: https://lore.kernel.org/r/20250402-b4-drm_panel_mass_convert_part2-v1-0-903b70999ea6@redhat.com
 
-Thanks,
-Kan> +		else
-> +			cpus = perf_cpu_map__get(cpu_list);
->  	}
->  	if (init_attr)
->  		event_attr_init(attr);
-> @@ -260,7 +269,7 @@ __add_event(struct list_head *list, int *idx,
->  	evsel->core.cpus = cpus;
->  	evsel->core.own_cpus = perf_cpu_map__get(cpus);
->  	evsel->core.requires_cpu = pmu ? pmu->is_uncore : false;
-> -	evsel->core.is_pmu_core = pmu ? pmu->is_core : false;
-> +	evsel->core.is_pmu_core = is_pmu_core;
->  	evsel->auto_merge_stats = auto_merge_stats;
->  	evsel->pmu = pmu;
->  	evsel->alternate_hw_config = alternate_hw_config;
+---
+Anusha Srivatsa (30):
+      panel/panel-elida-kd35t133: Refcounted allocation
+      panel/elida-kd35t133: Use refcounted allocation in place of devm_kzalloc()
+      panel/fy07024di26a30d: Use refcounted allocation in place of devm_kzalloc()
+      panel/himax-hx83112a: Use refcounted allocation in place of devm_kzalloc()
+      panel/himax-hx8394: Use refcounted allocation in place of devm_kzalloc()
+      panel/ilitek-ili9322: Use refcounted allocation in place of devm_kzalloc()
+      panel/ilitek-ili9341: Use refcounted allocation in place of devm_kzalloc()
+      panel/panel-ili9805: Use refcounted allocation in place of devm_kzalloc()
+      panel/ilitek-ili9806e: Use refcounted allocation in place of devm_kzalloc()
+      panel/ilitek-ili9881c: Use refcounted allocation in place of devm_kzalloc()
+      panel/innolux-ej030na: Use refcounted allocation in place of devm_kzalloc()
+      panel/innolux-p079zca: Use refcounted allocation in place of devm_kzalloc()
+      panel/jadard-jd9365da-h3: Use refcounted allocation in place of devm_kzalloc()
+      panel/jdi-fhd-r63452: Use refcounted allocation in place of devm_kzalloc()
+      panel/ltk050h3146w: Use refcounted allocation in place of devm_kzalloc()
+      panel/ltk500hd1829: Use refcounted allocation in place of devm_kzalloc()
+      panel/lg-lg4573: Use refcounted allocation in place of devm_kzalloc()
+      panel/lincolntech-lcd197: Use refcounted allocation in place of devm_kzalloc()
+      panel/magnachip-d53e6ea8966: Use refcounted allocation in place of devm_kzalloc()
+      panel/mantix-mlaf057we51: Use refcounted allocation in place of devm_kzalloc()
+      panel/newvision-nv3051d: Use refcounted allocation in place of devm_kzalloc()
+      panel/newvision-nv3052c: Use refcounted allocation in place of devm_kzalloc()
+      panel/novatek-nt35510: Use refcounted allocation in place of devm_kzalloc()
+      panel/novatek-nt35560: Use refcounted allocation in place of devm_kzalloc()
+      panel/novatek-nt35950: Use refcounted allocation in place of devm_kzalloc()
+      panel/novatek-nt36523: Use refcounted allocation in place of devm_kzalloc()
+      panel/novatek-nt36672e: Use refcounted allocation in place of devm_kzalloc()
+      panel/novatek-nt39016: Use refcounted allocation in place of devm_kzalloc()
+      panel/lcd-olinuxino: Use refcounted allocation in place of devm_kzalloc()
+      panel/orisetech-ota5601a: Use refcounted allocation in place of devm_kzalloc()
+
+ drivers/gpu/drm/panel/panel-elida-kd35t133.c          | 10 ++++------
+ drivers/gpu/drm/panel/panel-feixin-k101-im2ba02.c     | 11 +++++------
+ drivers/gpu/drm/panel/panel-feiyang-fy07024di26a30d.c | 10 ++++------
+ drivers/gpu/drm/panel/panel-himax-hx83112a.c          | 10 +++++-----
+ drivers/gpu/drm/panel/panel-himax-hx8394.c            | 11 +++++------
+ drivers/gpu/drm/panel/panel-ilitek-ili9322.c          | 10 ++++------
+ drivers/gpu/drm/panel/panel-ilitek-ili9341.c          | 10 +++++-----
+ drivers/gpu/drm/panel/panel-ilitek-ili9805.c          | 12 ++++++------
+ drivers/gpu/drm/panel/panel-ilitek-ili9806e.c         | 10 ++++------
+ drivers/gpu/drm/panel/panel-ilitek-ili9881c.c         | 11 +++++------
+ drivers/gpu/drm/panel/panel-innolux-ej030na.c         | 11 +++++------
+ drivers/gpu/drm/panel/panel-innolux-p079zca.c         | 11 +++++------
+ drivers/gpu/drm/panel/panel-jadard-jd9365da-h3.c      | 10 ++++------
+ drivers/gpu/drm/panel/panel-jdi-fhd-r63452.c          | 10 +++++-----
+ drivers/gpu/drm/panel/panel-leadtek-ltk050h3146w.c    | 11 +++++------
+ drivers/gpu/drm/panel/panel-leadtek-ltk500hd1829.c    | 11 +++++------
+ drivers/gpu/drm/panel/panel-lg-lg4573.c               | 11 +++++------
+ drivers/gpu/drm/panel/panel-lincolntech-lcd197.c      | 11 +++++------
+ drivers/gpu/drm/panel/panel-magnachip-d53e6ea8966.c   | 11 +++++------
+ drivers/gpu/drm/panel/panel-mantix-mlaf057we51.c      | 11 +++++------
+ drivers/gpu/drm/panel/panel-newvision-nv3051d.c       | 11 +++++------
+ drivers/gpu/drm/panel/panel-newvision-nv3052c.c       | 10 ++++------
+ drivers/gpu/drm/panel/panel-novatek-nt35510.c         | 12 ++++++------
+ drivers/gpu/drm/panel/panel-novatek-nt35560.c         | 12 ++++++------
+ drivers/gpu/drm/panel/panel-novatek-nt35950.c         | 10 ++++------
+ drivers/gpu/drm/panel/panel-novatek-nt36523.c         |  9 +++++----
+ drivers/gpu/drm/panel/panel-novatek-nt36672e.c        | 10 +++++-----
+ drivers/gpu/drm/panel/panel-novatek-nt39016.c         | 10 ++++------
+ drivers/gpu/drm/panel/panel-olimex-lcd-olinuxino.c    | 11 +++++------
+ drivers/gpu/drm/panel/panel-orisetech-ota5601a.c      | 11 +++++------
+ 30 files changed, 145 insertions(+), 174 deletions(-)
+---
+base-commit: de04bb0089a96cc00d13b12cbf66a088befe3057
+change-id: 20250402-b4-drm_panel_mass_convert_part2-5f258b0ae5ea
+
+Best regards,
+-- 
+Anusha Srivatsa <asrivats@redhat.com>
 
