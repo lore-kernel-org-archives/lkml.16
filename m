@@ -1,218 +1,181 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2074.outbound.protection.outlook.com [40.107.220.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C33316EB54
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 03:28:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.74
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743650938; cv=fail; b=KYsn3LUkZUUGAGtaMHmrWIcWa0NK8/EhaWqnrXogbFFCoLLSnvkoUxKEFpEqmyaNr+b/s6A8GMWsKPe1mPPdd5G5Cjq1h7cVTf14DvBG2NG1lvCkoJcivPpOBsNmCjDhiPh+4+ohpccSSxurIfijOAyaMNEWfH9ZtE4SqutE4Mw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743650938; c=relaxed/simple;
-	bh=kN7fkBsuZBm/kSOHFZXEtjJ8vGwj+Y2X6zgge1ipcgI=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=TF4hAqLvmSreNrYyDCD5HMe73BZFpDXh+9ZftFSPbMe4+i4c2oveR1ZYq+gGGi98eCw1Q0dsxnU766A3D8JNUYgetA0Em6AgLtvS/aqVCvwB5+DvsN2WEfqNyyUVhPoGFkusQuk1+4jLfXsGEedLu4F5JptyBEjnzO0VI/FRsdw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=rrCLHw0o; arc=fail smtp.client-ip=40.107.220.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F81CB672;
+	Thu,  3 Apr 2025 03:32:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.53
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743651169; cv=none; b=j9zgA20+NyLgW0ORLoMj66OmIjaPdZvtEjCpyxQE+ZOeJUg2ZVW/gJsP4jYcb7QGvusP2KVCGHYrwDulxeFgc4/frV3oona8us7z1MsvA1j8Kns23w6kyApF1WWlzDmycxMTmloZh35kX25rZKJpJoggmtKJQLJhSGpYYZUK7aE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743651169; c=relaxed/simple;
+	bh=Kvfr5kL7jbmC0Xtin82L19uIHAUE+wM26oS+0d0/nsg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DQbCzgeiUqHn3p8kwI15w4+EzSNALNRLHiH58ZI0lQXxIzsKKOZO75mvde5XeZSzIw1kehrtj8AsDZx7iENQ40gczt/CfzgfxNoo1pCS+1NHf8lNolUsdLJAV3w7MPmqKkzfoxzZndsBagwx08eNAO4j8r3jW6X9KTmNxi4FpPY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RZOt/76W; arc=none smtp.client-ip=209.85.219.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="rrCLHw0o"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=MioBFtvfYKCGjxQeD+1GXC/ngZv11zEZgay0ickxJJAGr4Vi6Ke1YUwshjwQWzYn9q35dZ/3SZjYMVBDj7fsaOuQ/8pjeG6KoDYOOkJszvgJfIG1bLRzbAuMnWaHnReSsnt2KIksTWzOZMS0w/qlEdkSNqvZR5AOCjUsmgC+MlxFvTAgjbdhYFW8LaRfxp/5Vr+f9ebp4Reu3Puno4IwYB75ZCz3kOBhriFhIvIsNZKCUbqZDdFcAjFZbCNvWM0UnAPgNpgvpAT/aucMXKpZV24u608JOtwnFJqNvNjtXDoRs2roVioMqt9zTKdOA6O0mezH0WVbmjaQWtTw1wHtPA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=mm8tX3WIPJcIJmlPEvXnxDqmosQy2E0TWxfup/fCYgM=;
- b=Kts6ubd33ld7+VJi2bwGe1XElXn9n/Dr3m2bkDdtHsEtQUpMcifRZIFLpwCi65ZzF6x25Xag0Jvp4cyTXS0kqTSyS5LamGE9nTdFLPZFGOe2cQsvC++3AcrrqeWTOflKZK86HwquUkpOlJkp4YwT12DMFzom1Ai/HTg0b7vao/LEojBmLRgEkpkGTJeAFZn6v6YHLA6zjrpQcvL/SlGIXNHfFzKd5/pOibewnlrL1tnTpOYy5Pbubo16jMT2RSf2XKk6cRqf6pUalady3bTyc37mKFLCqgA31EXVRHQ92PfePKLJKXY4jZvCHZQqxjpkDRTAfxUkZdzYFJqEHJmP5g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mm8tX3WIPJcIJmlPEvXnxDqmosQy2E0TWxfup/fCYgM=;
- b=rrCLHw0oD9xbXuYLdHEzcUdSLx8IKBq5vmEjOqa02kLlc+YUEEBn2Pksv+J9H7zmTxFVODLW0OzniJTR0kql0wbMc5AtbUFRriA1m+A7pUPUfTIPsATzfT6WTe2a0+Ds5AhqvRku7SI6N+/iDtPnSauaiFY9zwXUxVF+AxRF5q4=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from IA1PR12MB6435.namprd12.prod.outlook.com (2603:10b6:208:3ad::10)
- by CYYPR12MB8923.namprd12.prod.outlook.com (2603:10b6:930:bc::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.50; Thu, 3 Apr
- 2025 03:28:53 +0000
-Received: from IA1PR12MB6435.namprd12.prod.outlook.com
- ([fe80::273a:80c9:35fc:6941]) by IA1PR12MB6435.namprd12.prod.outlook.com
- ([fe80::273a:80c9:35fc:6941%4]) with mapi id 15.20.8534.052; Thu, 3 Apr 2025
- 03:28:52 +0000
-Message-ID: <885bf81e-0aa4-4fe7-af81-a4a4485474b7@amd.com>
-Date: Thu, 3 Apr 2025 11:28:41 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 7/7] drm/virtio: implement userptr: add interval tree
-To: Demi Marie Obenour <demiobenour@gmail.com>,
- Dmitry Osipenko <dmitry.osipenko@collabora.com>,
- David Airlie <airlied@redhat.com>, Gerd Hoffmann <kraxel@redhat.com>,
- Gurchetan Singh <gurchetansingh@chromium.org>, Chia-I Wu
- <olvaffe@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- Simona Vetter <simona@ffwll.ch>, Rob Clark <robdclark@gmail.com>,
- Huang Rui <ray.huang@amd.com>
-Cc: dri-devel@lists.freedesktop.org, virtualization@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20250321080029.1715078-1-honglei1.huang@amd.com>
- <20250321080029.1715078-8-honglei1.huang@amd.com>
- <810789ec-c034-4bdd-961a-f49c67336e45@collabora.com>
- <6e796751-86f3-42e5-b0a6-3a3602d3af13@amd.com>
- <975582a3-313b-4989-aac2-c3b309ba55b6@collabora.com>
- <6fb21077-c254-49a7-97fd-64c87322ea43@gmail.com>
-Content-Language: en-US
-From: "Huang, Honglei1" <Honglei1.Huang@amd.com>
-In-Reply-To: <6fb21077-c254-49a7-97fd-64c87322ea43@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SG2PR01CA0191.apcprd01.prod.exchangelabs.com
- (2603:1096:4:189::6) To IA1PR12MB6435.namprd12.prod.outlook.com
- (2603:10b6:208:3ad::10)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RZOt/76W"
+Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-6e8fb83e137so4448076d6.0;
+        Wed, 02 Apr 2025 20:32:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743651167; x=1744255967; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xN89JI2VQ7k82pxEYojzTPPzefEph7bPqyCjL2FCwjs=;
+        b=RZOt/76W/DiEJEOheNFKY93iwJaqsT/ItrVDI7G96nZunyjI40WTmJjMmlltrJyLHp
+         FNBCfdrjGrSb/ku7x1kT6Blu+t8gwIvMt8VCq0tbBkwwMGLTbwRgQP2nN0jUF5Tn6HGD
+         lKaBaQuWK59m1n2+duXeVmXIi0m6fhTJR36ClODKZuAp7KZOZE/mzGE/8qKK4lNAQXoN
+         tEpwOHEgXyQb2jk/X3tWF+6R+z22z65NS3Cok9/uo1CGaafQhPBkRAjpIP9ctDSVgcqS
+         3LKyzS1Rl74ELjB9u4x/ahGieAE5NvNo6YnGCKgMsbH8B+6BpLP+4BHGEjL29UVIAyEP
+         1fZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743651167; x=1744255967;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xN89JI2VQ7k82pxEYojzTPPzefEph7bPqyCjL2FCwjs=;
+        b=aQh//BhlXu2kCywySTT9tO0Uapfcvmjrd4HmD5ma2IbVw9FjbB5/Yn8b06ZOLCems8
+         wzpfPDD06cR7np7Y4kiBEWSDsbtZ1MOFoV2DW7v2ILcn/8BIYcK9NOFHR2hBItG7Z/u7
+         ypY0FM6ejRITOPJPF3lnQwPG4uza2IZQoBfY8cGAclxQpsHP1k31NMrXlEBbai9Lhyqw
+         QLRx65r+gq4A2Rft0z/MCmVAca+Xp+8H2j7q2xihDCrrukcfQ/8ymwS+PIHQcH9CXLwx
+         9KIalnglwktSmt1nLZDdiqcIwbSgjTfiApDT726mNjiXZneUW1kYRtsPihnfNqI+SMB2
+         VlUg==
+X-Forwarded-Encrypted: i=1; AJvYcCUTF7LKhYQUBtOrLsxlKTwriYne35ArXDc+8Uou1NSWMDjRQm4CNbxXRdLE5zDhpm9N7tA0DRlq3Ef1zzrz@vger.kernel.org, AJvYcCX6M6O2trPXanuf9VaOD0DlaNg5wuNumIHo8Y6tfWdEbqk9FWaOM0eEZzLs0PnkmjKb1K/bHgmuzDkzp/Ut@vger.kernel.org
+X-Gm-Message-State: AOJu0YxMKmCSptiT/2qvyTXdOJJx4JJ4VqJd2iWkLh0vlQJEsu7WU17j
+	j8aTNyv1arZbuVTW5jzoy80M7ce3IpKPMfloCeB0xy1+Qv7f8WjWCca8iVwI8JEuNpqC53sBPZu
+	LfDItYGUtYS+/1mtOrRFCONHlYGw=
+X-Gm-Gg: ASbGncsfbw4Pp7nDaloSVwQTbunVQBvwjd56aR452Nzd9dSVgHkOTqGWIzcd4rrsFSu
+	s+73o3U8IdxV0B6rhX/ab54eR+hY5i/l0EWqnCSM2C1llKSOPcCyNs76MsR3w6J5WHkwrVOeunO
+	dGrGJydtJ+KIUBE0dJoPvNB95S2IA=
+X-Google-Smtp-Source: AGHT+IFUg4ZAqjvgc5pcOSRgS/+j30sZrK9LRS7T6zrlZ59bfE+yMCiIgfxNFAGq5EqcJ4aApveq8wVzT5JQTS15L2I=
+X-Received: by 2002:ad4:5ba1:0:b0:6ea:d033:284c with SMTP id
+ 6a1803df08f44-6ef02a84e08mr88985886d6.0.1743651166795; Wed, 02 Apr 2025
+ 20:32:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: IA1PR12MB6435:EE_|CYYPR12MB8923:EE_
-X-MS-Office365-Filtering-Correlation-Id: ec349abe-3533-46ec-67b6-08dd725fa7da
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|1800799024|366016|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?a1k4MCtmRnRaMGhUYW5RZWk1b294WUFjV3h0MUsyV00rcVJQT0NnTzRrSjc5?=
- =?utf-8?B?dGpVa2pJUURCSXJmZndzYWtyYkdoVEs2SUVKamVvbmFZdmFERXB0RzlIZzlW?=
- =?utf-8?B?YXpUekdIQStxSi9FZzFRUnZLZXUyVjVuVUJESDh4SDNxY0RQUjBTOFd4K3pu?=
- =?utf-8?B?MVhvTTNGM3NaNHhwdExic3k4K3hpMUhZcEs4MUhsMmdISHdiZVZ5ZFpjekl3?=
- =?utf-8?B?dXhlSG5ZdkRiL1dFVTJXeHhFL251NktqL1FXMHBYTnVhVnBIeXoxNi9nSWpI?=
- =?utf-8?B?N3ZpanEyWXd0RTRqaW9JaWFBT0ZUVmV5RG9mdXFZQUFwS1U2SmFXSldCcmhh?=
- =?utf-8?B?L3FmbDMyNVF5a0Mvd2FhQndoUnBQUWQrbENpcXlkL0pHNlNjTnJJb1hwdE0z?=
- =?utf-8?B?VXRjTGtQcHV1K1hlQ2RtZ0twY3I0NFUvckZNLzUxbTVmb0FDdUJMdHlYMjRa?=
- =?utf-8?B?SkxlRVg2aU1RK3h4TzB4eTRKcEMvajY1Uk02RmUvZkEydXRKbzF5OFE2L25E?=
- =?utf-8?B?akpLaTFrc296Y0dkM1o4WUJaTHR6Ti9ibC9kRTRpTVI4WVJYczNaRmNuVmxr?=
- =?utf-8?B?alRGY0FrT3RXUGNrZ3VsSHpSdWRIMnBLMHA4emhPalV0T1VPVTJDVHF2R3Ax?=
- =?utf-8?B?bGtKdyt3L0JsRzNFNkNIcTZnSDV1R29XdXQzN3ZVNXR0WklsMUhnZjYrR3Bl?=
- =?utf-8?B?Q3ZmbHYrNk40VFdPZDdDWTlQLy9WanFmYUQraHhxSnIxVmNCNGFldzhqb2Nh?=
- =?utf-8?B?R1RtWndxTElPenpwWjZ2eEZPVVpoMTZKYXFNNjVQMWVidTFPdDlReUVzejF6?=
- =?utf-8?B?aEptdHQ2QUtSUE4vUDNMeUlZSkwrWEJVdTVjbXkvekV1eC9PSjZUakhZcGxv?=
- =?utf-8?B?QjNaTEw3ajNEWlhMbldDN2ZiTzR4bS9NellUdzI0QStINTRqS0E5bEFrRFN4?=
- =?utf-8?B?OEJKZk9FVUtLYmdaTGRlUUJUQ25sQUNsdVh6Z1gwWU51VTBhWmVqUVlkN3Vh?=
- =?utf-8?B?WERiZHRvN2VJemwwZTJhV1ZpM2xtY3Bnc3VjRE1seTBUdzJweTVkZGV6ME9h?=
- =?utf-8?B?QU5rcVdGbWpzZUdZQ1JtdzRVRDRWWHR6WnMxRnVIYkEvMUZXQllSZ2g5U05Y?=
- =?utf-8?B?aW5QYmNXN3NkUlcwa0M1Z2hhTkRpUTFzcS82cTU4TlJnTHJNeTJWZ1dKVUly?=
- =?utf-8?B?T2J6cm9EZlE2cndHYU92VEg3M1o2YjUvL3ZaUXQ4TmpkanlrZEpTMzFYTjRy?=
- =?utf-8?B?Mm8vUUJqbVlkcjJtQmVFcC9kcHBWTThPZWVGUi9JLy92MkRhMVI2NTU1R2pz?=
- =?utf-8?B?UXo2azEycHNwem5EbjRvMnkzRzZsNFNNeUhHTmxyTk5qUktLL1lzN2lJTjJV?=
- =?utf-8?B?RTJCc1ZRUnpMcnZLR3pxYlZXUytZOUNzKzBhLzdTcjFPZEU3NXlaRE1mZmhO?=
- =?utf-8?B?Z01udDNwd2Z4TDJHcjBHY3NHZTZ0d09IcGZvdllWak9VTVA0NDNKMzVNUWpF?=
- =?utf-8?B?MlNNbCtjSTZwZlNIcDZEbE1qWk1RSjhIYzc0ZzdaQ3Rtbk11bFZ0a1lzZVp0?=
- =?utf-8?B?L1Qxc2d1aWVxZHd4UWlVcWlUQUpRK3VCWGpBL0Rjc2VzU1RjVCtqVEZwdElk?=
- =?utf-8?B?d3A2cytqVlc1TmlkWFVKbUsxQ1haTmhyTkplS3FESzNPaEVVYXJybStNUWdT?=
- =?utf-8?B?OXNJNTA2aVp6SzA2N1FKWDZnM21vK3AzVHRma2ZxM21TT1N3dTBkUG5SdkRN?=
- =?utf-8?B?ek9PLzd5RlJkZE5jQnJPeS9DL2tManRET3IzV0NUb29GYTRxOThkY1FXdmdh?=
- =?utf-8?B?WER6bXJCejNsVUFFRTEwNEsreFloSGZaQnhzdk0rV0RhUUpvOExLdHM3QmtZ?=
- =?utf-8?B?ZjNYNC9lTTFBbGxtelBDLzVuZmF3cXZDVlB6Vy9HZU12d0pyS0VRMzNKOUU0?=
- =?utf-8?Q?eb2vjh0pkCo=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR12MB6435.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?bzZCQUxobGsxdW1yMURBV3NFZFB3akVONzhRSWZlc3NUUDI4UXpEMHV2WDJO?=
- =?utf-8?B?ODU3YW1YbXArL1I4MVpqZ3czVmhZQkJ2akRTME41QmxBY0NKTk44UWpQZHls?=
- =?utf-8?B?R2lJSmR3V1U2YTVDeUtoc1k0TjNuays4YVB4UHd6dTVoTzlENjIvb005SFdV?=
- =?utf-8?B?WWU5N1VTWkUwTm1DMkEvSm1vSEhvOVZkZzRtYTZKS1laUVRmSDA3ZVNJRmpO?=
- =?utf-8?B?aGVFd0hBQXQ1d09VL0lBMU5FcGdUMkpkeFZJSVo5MStZV3pVVVIwb1BiWU52?=
- =?utf-8?B?cXFZbGNISURhNi9FbkVSeE9Xd2lXVllkVmlSaDJscnhTcU9ramNsZkV1VlQy?=
- =?utf-8?B?Q2FieDllbThOUHV0OE55VHJQNGF2T0w3a1pRak9XYThNUW85QTBiVkZMbkdx?=
- =?utf-8?B?YzNXUkhqU1phcnlCc2VkL0ozRmJXSGo1eW0zSjBKdC90Qnk2K2lzODFadFlC?=
- =?utf-8?B?SHRkd1p0bTJ5QUhjTE0rMmZvK3FOemgrNHFMSkxWN1l0aC8wdjNvTzhPVUZD?=
- =?utf-8?B?ZGdQandWbDN3aDdqK1pocDFTYXJoYi9uV2ZtdmpNUmtJV0xPYTUxMEVzN3Jo?=
- =?utf-8?B?THFnS29LazF0aUI4d0JOcWlmRTllcFUzdkI2YjBzWGwvZ3c2M3B6K1IxeTZS?=
- =?utf-8?B?bHh1a0I1aGtNVjBkVGRRNVNoQ0hiektvRVhOME9yc2ZRMWdyclgzeUZjNUZq?=
- =?utf-8?B?U2NZQUg2NjhZNVdNc1MyUmVHUk1GRE5vNytlMnpycUVCNDNIbzllMzRDOVlp?=
- =?utf-8?B?QTBKOExKTEpGd2VDODY5L2VmSDVxTk1PZEl0andQbWwzZ1VCRGFuMmNURkJ1?=
- =?utf-8?B?VHRtWW13NDVTY3V5ZTYrWEZwQm1ONjh4M3B2aHEvUytQbVU1SWpxNE51WWV2?=
- =?utf-8?B?bit1ZWpWVDZSdUtNT01FaXc1Mm5lWFpnWHZWM1d0NnU4RmNiczEveFF1Rm5l?=
- =?utf-8?B?SzYrZncxNFNXaWN0MkpLNTFmYUFlR3M5cmRiZ2F6NGVVVmdDNGVFdTkxUUYr?=
- =?utf-8?B?YUhlZVdGNDJFRTlJT1pValpOQ25wQnI3MkpDQ2RSRVpoWFFCWkVDM01Vcnlw?=
- =?utf-8?B?OVViUEU4QkdtOUdGdTRna0pMNEpWU0cycEQxcFBKMHJyRnUrdDhhalhxTjdI?=
- =?utf-8?B?bEdTd0VpaU1ZRmdhNXlTdS9oWWdJdk9CNGRwRk9pUHFWcW1SOEZqQkdGSFY0?=
- =?utf-8?B?V2ZKN1ZVR3c0TWNkU3dxdGVuZ0FHVWpyUmoxQVh0elEvREE0SllDN0VYQUJQ?=
- =?utf-8?B?elBFWlZHdU9YRDB0ZGxpMWt0UStwZzNTdlB1U21lQXlGNjU2N2hHZXk4TGZM?=
- =?utf-8?B?NE5Rd3UybVdLemNtMEt0OEN3eG1KL0kvRm0xUmZYeFpoWmYzRDBZM1EyT05x?=
- =?utf-8?B?OVY2OThlQU5ZUk5EMUhNRENSUzZvbUdtajU5VU5nL3lTU3h3QU1hVTdjSnFz?=
- =?utf-8?B?Yk9kRTFPNVV2MnczLzVBY0Rrc05oaGdRSzVhTENQVUtYYTRpdm9UQmlhZHlS?=
- =?utf-8?B?ZC9MZ1RiQ2xpQUhhRm1ZU3kzWmZwajFFQklrazZ4amNQWnhORXpaUFBvMEhx?=
- =?utf-8?B?d091NEx6emx3a0JzREhEKzVndjhPY3d2RmRhRFZKb1BHYUNnV1c2OXV4clIx?=
- =?utf-8?B?a3MzdnBXOUlMNlo2U2ZBbCt3aG40b0xLYU5XbGk1YTlMWC9ZUzBOcjVPdDR0?=
- =?utf-8?B?UndMWmdEWjhoMWZJN3lGeVc3UmhBaytFbStHVi95YmpvbGpnUE1jUEJuc2NY?=
- =?utf-8?B?T0xtd3Fwc2tZajQyWmN5Wk53YU5GSVJsVVdQazhNM25jVkJYK3ZIZnRtSHZx?=
- =?utf-8?B?TWcvcUFVUVB6Wnc1YkZrTld2THBjWWFBejRwemh1bit2cFoyN2pPeGhYbXlZ?=
- =?utf-8?B?SWVva1gxbXdnY0tQU2J5bXNQKzlIMnVjK2dHSE12bDRPWEZLS3JBRGpBbzd6?=
- =?utf-8?B?WXdiNkhUdllkR3F0a09nTzRIeXVKRlVIWU1udXZrSjRFUmhCSHBUUU94K2Js?=
- =?utf-8?B?MFZINDZUOWtrRU5oc2s3QmFVUkkxWDA0UjArelZZL0RBVFBadGpzK0pwVDZC?=
- =?utf-8?B?K2xTRXRhR1hDb296MXFFM1BEVDhDRmdzUGVsSjZkREl1eDV1VnJXS1I1Lzl5?=
- =?utf-8?Q?tDs42EAjjj/kWIFTJ9h8b200c?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ec349abe-3533-46ec-67b6-08dd725fa7da
-X-MS-Exchange-CrossTenant-AuthSource: IA1PR12MB6435.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Apr 2025 03:28:52.3801
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: vm9TNnB+b4Ssn2dU5dB069u6JL9I4rvLkPBGh3q7fyPsZjPLHqSxD1FYY4GQRPeXXeWkHKNr1Xw3Io1H3KqfTQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYYPR12MB8923
+References: <20250401073046.51121-1-laoar.shao@gmail.com> <3315D21B-0772-4312-BCFB-402F408B0EF6@kernel.org>
+ <Z-y50vEs_9MbjQhi@harry> <CALOAHbBSvMuZnKF_vy3kGGNOCg5N2CgomLhxMxjn8RNwMTrw7A@mail.gmail.com>
+ <Z-0gPqHVto7PgM1K@dread.disaster.area> <Z-0sjd8SEtldbxB1@tiehlicka>
+ <Z-2pSF7Zu0CrLBy_@dread.disaster.area> <b7qr6djsicpkecrkjk6473btzztfrvxifiy34u2vdb4cp5ktjf@lvg3rtwrbmsx>
+ <Z-3i1wATGh6vI8x8@dread.disaster.area>
+In-Reply-To: <Z-3i1wATGh6vI8x8@dread.disaster.area>
+From: Yafang Shao <laoar.shao@gmail.com>
+Date: Thu, 3 Apr 2025 11:32:10 +0800
+X-Gm-Features: ATxdqUFkqq208cw4cDch-CknV3k9kx8MlaesikBMQDQvSW8KA9P4N_gPOjl9ANA
+Message-ID: <CALOAHbCn=AETSFf_kPb7w2kjZp_4JnEcmoOKMEUQucYUQuWEUA@mail.gmail.com>
+Subject: Re: [PATCH] proc: Avoid costly high-order page allocations when
+ reading proc files
+To: Dave Chinner <david@fromorbit.com>, Uladzislau Rezki <urezki@gmail.com>, npiggin@gmail.com
+Cc: Shakeel Butt <shakeel.butt@linux.dev>, Michal Hocko <mhocko@suse.com>, 
+	Harry Yoo <harry.yoo@oracle.com>, Kees Cook <kees@kernel.org>, joel.granados@kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Josef Bacik <josef@toxicpanda.com>, linux-mm@kvack.org, Vlastimil Babka <vbabka@suse.cz>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, Apr 3, 2025 at 9:22=E2=80=AFAM Dave Chinner <david@fromorbit.com> w=
+rote:
+>
+> On Wed, Apr 02, 2025 at 04:10:06PM -0700, Shakeel Butt wrote:
+> > On Thu, Apr 03, 2025 at 08:16:56AM +1100, Dave Chinner wrote:
+> > > On Wed, Apr 02, 2025 at 02:24:45PM +0200, Michal Hocko wrote:
+> > > > On Wed 02-04-25 22:32:14, Dave Chinner wrote:
+> > > > > Have a look at xlog_kvmalloc() in XFS. It implements a basic
+> > > > > fast-fail, no retry high order kmalloc before it falls back to
+> > > > > vmalloc by turning off direct reclaim for the kmalloc() call.
+> > > > > Hence if the there isn't a high-order page on the free lists read=
+y
+> > > > > to allocate, it falls back to vmalloc() immediately.
+> > > > >
+> > > > > For XFS, using xlog_kvmalloc() reduced the high-order per-allocat=
+ion
+> > > > > overhead by around 80% when compared to a standard kvmalloc()
+> > > > > call. Numbers and profiles were documented in the commit message
+> > > > > (reproduced in whole below)...
+> > > >
+> > > > Btw. it would be really great to have such concerns to be posted to=
+ the
+> > > > linux-mm ML so that we are aware of that.
+> > >
+> > > I have brought it up in the past, along with all the other kvmalloc
+> > > API problems that are mentioned in that commit message.
+> > > Unfortunately, discussion focus always ended up on calling context
+> > > and API flags (e.g. whether stuff like GFP_NOFS should be supported
+> > > or not) no the fast-fail-then-no-fail behaviour we need.
+> > >
+> > > Yes, these discussions have resulted in API changes that support
+> > > some new subset of gfp flags, but the performance issues have never
+> > > been addressed...
+> > >
+> > > > kvmalloc currently doesn't support GFP_NOWAIT semantic but it does =
+allow
+> > > > to express - I prefer SLAB allocator over vmalloc.
+> > >
+> > > The conditional use of __GFP_NORETRY for the kmalloc call is broken
+> > > if we try to use __GFP_NOFAIL with kvmalloc() - this causes the gfp
+> > > mask to hold __GFP_NOFAIL | __GFP_NORETRY....
+> > >
+> > > We have a hard requirement for xlog_kvmalloc() to provide
+> > > __GFP_NOFAIL semantics.
+> > >
+> > > IOWs, we need kvmalloc() to support kmalloc(GFP_NOWAIT) for
+> > > performance with fallback to vmalloc(__GFP_NOFAIL) for
+> > > correctness...
+> >
+> > Are you asking the above kvmalloc() semantics just for xfs or for all
+> > the users of kvmalloc() api?
+>
+> I'm suggesting that fast-fail should be the default behaviour for
+> everyone.
+>
+> If you look at __vmalloc() internals, you'll see that it turns off
+> __GFP_NOFAIL for high order allocations because "reclaim is too
+> costly and it's far cheaper to fall back to order-0 pages".
 
-Hi Dmitry:
+This behavior was introduced in commit 7de8728f55ff ("mm: vmalloc:
+refactor vm_area_alloc_pages()") and only applies when
+HAVE_ARCH_HUGE_VMALLOC is enabled (added in commit 121e6f3258fe,
+"mm/vmalloc: hugepage vmalloc mappings").
 
-Really sorry for missed this comment. Yes it can be done in UMD, 
-actually the interval tree is used with the MMU notifier normally,
-it is for preventing create same MMU notifier for overlapped areas.
-Cause this version patch set doesn't have MMU notifier, removing 
-interval tree is reasonable.
+Instead of disabling __GFP_NOFAIL for hugevmalloc allocations, perhaps
+we could simply enforce "vmap_allow_huge=3D false" when __GFP_NOFAIL is
+specified. Or we could ...
 
-Hi Demi:
-Adding interval tree can make virtio userptr has robust check, it can be 
-done in UMD. And for AMD userptr driver, it is a SVM type driver, it has
-both interval tree and MMU notifier but userptr memory is moveable in 
-it. No interval tree for Intel i386, not sure about the Intel XE driver.
+>
+> That's pretty much exactly what we are doing with xlog_kvmalloc(),
+> and what I'm suggesting that kvmalloc should be doing by default.
+>
+> i.e. If it's necessary for mm internal implementations to avoid
+> high-order reclaim when there is a faster order-0 allocation
+> fallback path available for performance reasons, then we should be
+> using that same behaviour anywhere optimisitic high-order allocation
+> is used as an optimisation for those same performance reasons.
+>
+> The overall __GFP_NOFAIL requirement is something XFS needs, but it
+> is most definitely not something that should be enabled by default.
+> However, it needs to work with kvmalloc(), and it is not possible to
+> do so right now.
 
-Maybe I can remove the interval tree in next version.
+1. Introduce a new vmalloc() flag to explicitly disable hugepage
+mappings when needed (e.g., for __GFP_NOFAIL cases).
+2. Extend kvmalloc() with finer control by allowing separate GFP flags
+for kmalloc and vmalloc, plus an option to disable hugevmalloc:
 
+  kvmalloc(size_t size, gfp_t kmalloc_flags, gfp_t vmalloc_flags, bool
+allow_hugevmalloc);
 
-On 2025/4/3 2:45, Demi Marie Obenour wrote:
-> On 4/2/25 8:34 AM, Dmitry Osipenko wrote:
->> On 4/2/25 04:53, Huang, Honglei1 wrote:
->>>
->>> On 2025/3/30 19:57, Dmitry Osipenko wrote:
->>>> If the purpose of this feature is to dedup usrptr BOs of a the single
->>>> process/application, can this can be done in userspace?
->>
->> I assume it can be done in userspace, don't see why it needs to be in
->> kernel.
-> 
-> The kernel definitely does not need to be responsible for deduplication,
-> but is it safe to allow userspace to create overlapping BOs, especially
-> ones that are partially but not entirely overlapping?  If the userspace
-> libraries ~everyone will be using refuse to create such BOs, then
-> overlapping BOs will be tested by ~nobody, and untested kernel code is
-> a good place for security vulnerabilities to linger.
-> 
-> If there are no legitimate use-cases for overlapping BOs, I would treat
-> attempts to create them as an errors and return -EINVAL, indicating that
-> the userspace code attempting to create them is buggy.  Userspace can
-> deduplicate the BOs itself if necessary.  Of course, there need to be
-> tests for userspace attempting to create overlapping BOs, including
-> attempting to do so concurrently from multiple threads.
-> 
-> That said, probably the most important part is consistency with userptr
-> in other (non-virtio) drivers, such as Intel and AMD.  If they allow
-> overlapping userptr BOs, then virtio should too; if they do not, then
-> virtio should also forbid them.
+Then we can replace the xlog_cil_kvmalloc() with:
 
+  kvmalloc(size, GFP_NOWAIT, __GFP_NOFAIL, false);
+
+This is just a preliminary idea...
+
+--=20
+Regards
+Yafang
