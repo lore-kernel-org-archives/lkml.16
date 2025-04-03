@@ -1,134 +1,126 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F1E218DB17;
-	Thu,  3 Apr 2025 13:05:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F91425776;
+	Thu,  3 Apr 2025 13:06:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743685503; cv=none; b=Y/xqDfJE1YqFkQyn8Oksqks3QPgo6x76Zuw1+KZYGQXMPThWOaMfi8DvOhMmeNa4RCk2I96UMa0VaftuFLmUfKm3GT156XAqbr+SduOjz3naNLToNm273Q5C+3xjLpRxF8oprz1aJMIfycnFbfRC1n/UbxXuwwhdZwbi+1i736c=
+	t=1743685564; cv=none; b=p0UEQEFAxRg9X7bywVc02CEGqWgzAORg7oG2DTti/Qg8klGpZ+x8HjvSjacb9arx/KqA4PNMayDrinodUJOGbzW3JcS04KUxgPVrdYzYt9Q3yLhlyzOBrM5Nz5dd9/O36JL+KRNlJStH+ZPK4aMIS9d+i3o0ZDMay6InD/96u0s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743685503; c=relaxed/simple;
-	bh=DtW9p7sIFn3Lr0thD0opZfYZCvln0+vg+bFmQmtjCb4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=uSmSfJXuL4+nq778T55dBy2oPH6cGgUrsFhJ6xT0amtttQMmL2k/7uk8RlIakfkEaACVv+qOqOd6jxZOqoCx/lhjvONsVi4jWhKoE3C8a7n9dDVaXOIoVsx8FtCIwSro4FCG+YjK34mGA1VFWWI1nF5FriB8P1w6OtU4RIQe3qg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iWQ3skjl; arc=none smtp.client-ip=209.85.128.50
+	s=arc-20240116; t=1743685564; c=relaxed/simple;
+	bh=lsJeZZZY/2URMCsjtrIPjM8KEvccXHmoZdYqAmsM62o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FZSs6zqByylJkocrCp6FgwLOzOHQPLxDXXpaYB2lfi7ZxCvH2MlJB7JYHlGZJtbQsCvojLIptubkQMz0BQymr+TYZcwiu12mH06OgAB4VWvwPYwX5ccFj45R/zBjydMbPhk6xOfNbBq500kbfVTmxvQOFfqX0JVDObHMTGoJpew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QbO8ZoUg; arc=none smtp.client-ip=209.85.222.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iWQ3skjl"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43cef035a3bso5926505e9.1;
-        Thu, 03 Apr 2025 06:05:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QbO8ZoUg"
+Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-86feb84877aso414474241.3;
+        Thu, 03 Apr 2025 06:06:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743685500; x=1744290300; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=9+8olWxBi1dycgdk6iFY3F5FhW2cFaD8o5hGv/hrFiY=;
-        b=iWQ3skjlOeCAInjQMo0jXA7pqx2GeWM+FzkB6piaXjaAUI+MMnUVlAMqQIGAtP43Yw
-         0or+r0TkMkcc2S4XtYvn73Zh8jYHAz3BmeNToCinzAD2QIFPJPPsEBnUW559QR5jMneW
-         /7dQX/euv264qcSlTkeLIgIuhRz2CkSNYjcVYz8Z04DRCV0lp2hM4lFJXa+Ue8TlmNBu
-         NfmKIgdwukOFb5Hk/8qQmDgBfbIjn6GnlVhOzMsdsYMKJFJ9SI6GVpROin3iHo31TifD
-         N+kf0DCpt7mbI2o2pjmfFYSEFQa4G/0mDm8Ia4zasNAb+FD4NgBs2ZR66uA3rBMq1uv7
-         0P6w==
+        d=gmail.com; s=20230601; t=1743685562; x=1744290362; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lsJeZZZY/2URMCsjtrIPjM8KEvccXHmoZdYqAmsM62o=;
+        b=QbO8ZoUgyWjiul967SmErDlE55XLGMpg++wYws+DKbqbc805ZcJfEO1sFdxAJNA/HG
+         WQmIoBlWuvBkyuRXsa5jQTsROKkmlvKq5GT1XgdcsIe35XJEmrI3RK37zY6g63LZO3Vq
+         +2EquwSUU5Zq2/C5gKCErh6/R/+sLwmOdEKdYYCXQHX/1gmE7v26wleCIeW0h+YGOpl0
+         Kugiz0RWtMY0PJzOIFo93LYKTJ5FzUJgj2o3xlwdGQc3zrBMhqHy4yE8UrI0/TpDfEpj
+         PZA/EWCDbzHc2HysIKD2E/m9rReuQX86/57V5Wxlts66d17y8bePDYBUbYkplt4PlbZv
+         ARgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743685500; x=1744290300;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9+8olWxBi1dycgdk6iFY3F5FhW2cFaD8o5hGv/hrFiY=;
-        b=aZ1TjCAEGyobWrIglZt+QMRXaTKEysZdRsaAEI0sgssqSewfhK141u4CjZih876HOx
-         /qTQSK9WvaIjspMcCappfOk6smHLiXZ6SBDbYdQI0B3/Thl42EIcOopbzTdYGWshF82p
-         qq7BfAl4OjnM8NpmULX/TETsTM4YcqaBYtcxklpSSSyOuBE7YRQ662I5WaoPhYjDvx2J
-         Wiggkc2vlZEI1deh5+FM06sgNItbQMhHQU3IbazY3hbhuyE17iu8hq/2NmkSLqsVnW1P
-         dShviNVQLAYMyk1K/Rz40KJrlcNftC2Xvfl4bHLKOfUiUO2g3hnPPZ+5C9Z95HVEeugf
-         y37A==
-X-Forwarded-Encrypted: i=1; AJvYcCVzAiHZxJTn69e5N5pUGKiX/MojNLPzHFJ1v0wSe8L8nfDUa3P4L3Zq14/HpfRKJcpMagGrcWUomlJc/8w=@vger.kernel.org, AJvYcCWaw4BHsMSpQZXGDGGEAW2K3l7n56l9vfMCiS6Oe4LxTmpidi1l9MPdTIKGBhF6pgoImhbASJaCHMFP0GFjJiomkD03FQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx0+Sy1PFykEtR4wfink4JqInBYPps/6ZcIAF4MZxZUpLJnRJ0R
-	fAH+dXNEIDDJyb+rQZuumfqh5FyLUZRU9SwpptBgoji5DRXeDDNO
-X-Gm-Gg: ASbGncsKZ1axZyJ4jZL7uHhtYd67FbDCB4SspAEjro0mAZNnhnDgqITAnC2KhFRmKVY
-	vJViQekbaA7a09wLF5sSut/VlvvLr4JT/p2ncWp4XKWBgbmNrIDk4ycIG72DKkDy2/1kNl8VzAZ
-	QfRItBU7vZlYs7iyWXx9jWQe1q7BtPD3E0O3rTedadJo45G4RnHCNYha/CZrDqfCTTgseTIkV9/
-	EVnnYeF42nrMlNP7FhMCPdyHN8wRd7WUrMPYWP5eqffQ5P7ASMyX1Nd7dQ4bjzn++I4fimI5yUu
-	A87DSdQ3uZl60KqUaXPoNbifrzhuQm7Emzrc+gLIlxOHbcACIf3uUWQfur24XJdefvU=
-X-Google-Smtp-Source: AGHT+IF36mXfPM6LXf1+QB4CuMc7FZc2Txv9gwkUvWzcwTVAsbLY7z9AlkUqyPOVCZxDFff/gFSJDw==
-X-Received: by 2002:a5d:64ed:0:b0:39c:1257:c7a2 with SMTP id ffacd0b85a97d-39c2f96b901mr1945534f8f.58.1743685499593;
-        Thu, 03 Apr 2025 06:04:59 -0700 (PDT)
-Received: from pop-os.fkkt.uni-lj.si ([2001:1470:ffef:fe01:1a5c:bca6:cf6d:45c2])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c301b76f2sm1767672f8f.53.2025.04.03.06.04.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Apr 2025 06:04:59 -0700 (PDT)
-From: =?UTF-8?q?Ga=C5=A1per=20Nemgar?= <gasper.nemgar@gmail.com>
-To: ikepanhc@gmail.com
-Cc: hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	=?UTF-8?q?Ga=C5=A1per=20Nemgar?= <gasper.nemgar@gmail.com>
-Subject: [PATCHv4] platform/x86: ideapad-laptop: added support for some new buttons
-Date: Thu,  3 Apr 2025 15:04:48 +0200
-Message-Id: <20250403130448.16242-1-gasper.nemgar@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        d=1e100.net; s=20230601; t=1743685562; x=1744290362;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lsJeZZZY/2URMCsjtrIPjM8KEvccXHmoZdYqAmsM62o=;
+        b=WqhFTKf7qWy8Y58gapIhusBMzdoWiZhoQTUAtiFFTQtW9WMOApRNSUSYzfVfm7bl2i
+         mMkRFZ5oYGwDeU+IiH1FPu7DCJLVXkvhhIYnJDBLznqa9l3ZA5drOSI+rh8N75cPBLDC
+         XHk+RQXN+cDHN8qaNpt3HVMVHmU3k+t7MgKdkzykZyl544H8TiGsMkCnuFB76Wkc1bl6
+         03Gu9VoOl0XmYybxXpDc/DQKmFHcMPAZhmzKgwRNQbGFwsv0D2YNtKSB3LeAqY4NLFmO
+         B3O2n/gmPyTCNYmoLJyFMQNnUCqaBUlJvDiYnhOQEEJMl4ykwTCGOTER1LKfwsw7tm7J
+         fGAQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV0MpY33EHPwxKB8ufzzPqy2uU14FhF0Vh/xM5iOJGNNqWTVpq7nsCIURl+PFZYiUIzFbC9DQEjVJC0Y27p@vger.kernel.org, AJvYcCV1jQ2c9ByItYNAyi7UcX1B9Yalztir7ZtHMZFWAXq5+Mzqjl6JZIgOA/GSdTJyxIdaSRm8KSlUlzEkVck=@vger.kernel.org, AJvYcCVTcCP5ZjYVFTnRlJbZXmwP+x7OgvgiffBhggP4wDga8qJ+m9NgmP6isiDu8CkJv32rgyKS+TBTDSY=@vger.kernel.org, AJvYcCWkM545kr+u4ePkBHTbMPNXcDSsLCNWYyTneR6Xzz+uXMZA7Z4+ZlUnJiNwpEIoIiQe9tzG0SQwTMa3Vwl6Ug67mmE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YybgLmHSz3F9sEhHAvOYCByA+W8+OReJp5qqab+82aDxX8W0+qb
+	Me6Hg9s4KqZDd5/PUNQPKeXP75FhE7G+N4MM2OemRBzCJZF1JNnXdGC75r5jNEpwCLDgh1WxgdY
+	A6X3o2/jptOlmLzMOOovX9Hc+ego=
+X-Gm-Gg: ASbGncuWBVN4S9UU4z4qF1VHzkh1qOBW0jpDYhEgGM6eEGRNp4A3gIM423fIQPEs0z0
+	tC5TA4+xUnr1talaXDiJ4neertAl/r+fXrqk4xJbo5pABOxxsIDl6bcDKZOAaNSU3YVJno0jLSI
+	pOh/AaGfLDr/J8xfTSII2NO+rrLg==
+X-Google-Smtp-Source: AGHT+IEzDE80EE6cbpeTM2EC/NmVx7bAKo2MiBYm9Z2gGy1h1pAWOHdYS27tRyPRKUwbhW2DvGquTwMOzOZsv1SPcGw=
+X-Received: by 2002:a05:6122:91a:b0:50b:e9a5:cd7b with SMTP id
+ 71dfb90a1353d-52758ecb40emr1666317e0c.9.1743685561913; Thu, 03 Apr 2025
+ 06:06:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20250330210717.46080-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <49b12329-87d8-4f6f-8498-0ff7430e31e6@ideasonboard.com>
+In-Reply-To: <49b12329-87d8-4f6f-8498-0ff7430e31e6@ideasonboard.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Thu, 3 Apr 2025 13:05:35 +0000
+X-Gm-Features: ATxdqUGr8IaAK5c_xkyz_zr7rT2-bUSRn-Mh8kf-15JIdRrzS-lrWmVXghuwU2A
+Message-ID: <CA+V-a8uW0sqOCqwpK2J3P9_MOaonpz8uA_CbOjqUiBxwPuXFEQ@mail.gmail.com>
+Subject: Re: [PATCH 00/17] Add support for DU and DSI on the Renesas RZ/V2H(P) SoC
+To: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, 
+	linux-clk@vger.kernel.org, Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Andrzej Hajda <andrzej.hajda@intel.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Biju Das <biju.das.jz@bp.renesas.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
+	Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Philipp Zabel <p.zabel@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Added entries to unsuported wmi codes in ideapad_keymap[]
-and one check in wmi_nofify in order to get wmi code 0x13d to trigger platform_profile_cycle
+Hi Tomi,
 
-Signed-off-by: Gašper Nemgar <gasper.nemgar@gmail.com>"
----
-Changes in v4:
- - Changed performace button to KE_IGNORE
-Changes in v3:
- - Minor changes
-Changes in v2:
- - Added more codes that trigger with key combos (Fn+N, Fn+M, ...)
- - Added performence toggle in wmi_notify()
-Changes in v1:
- - Added codes for buttons on laptop(performance, star, ...)
----
- drivers/platform/x86/ideapad-laptop.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+On Thu, Apr 3, 2025 at 12:52=E2=80=AFPM Tomi Valkeinen
+<tomi.valkeinen+renesas@ideasonboard.com> wrote:
+>
+> Hi,
+>
+> On 31/03/2025 00:06, Prabhakar wrote:
+> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >
+> > Hi All,
+> >
+> > This patch series adds support for the Display Unit (DU) and MIPI DSI
+> > interface on the Renesas RZ/V2H(P) SoC. The inital patches add PLLDSI
+> > clocks and reset entries for the DSI and LCDC and the later patches add
+> > support for the DU and DSI drivers. The DU block is similar to the
+> > RZ/G2L SoC, but the DSI interface is slightly different. The patches
+> > include updates to the device tree bindings, clock and reset
+> > controllers, and the DU driver to accommodate these changes.
+> >
+> > Note, my initail intention was to split the clock patches and the DU/DS=
+I
+> > driver patches into two separate series. However, I found that sending
+> > them together will make it easier for the reviewers to understand clock
+> > related changes.
+> >
+> > Note, the clock patches aplly on top of the following patch series:
+> > - https://lore.kernel.org/all/20250228202655.491035-1-prabhakar.mahadev=
+-lad.rj@bp.renesas.com/
+> > - https://lore.kernel.org/all/20250328200105.176129-1-prabhakar.mahadev=
+-lad.rj@bp.renesas.com/
+>
+> This is missing dri-devel list from the to/cc. Did you use
+> scripts/get_maintainer.pl?
+>
+Apologies, I did use get_maintainer.pl but must have missed dri-devel.
+Thanks for pointing this out.
 
-diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-index 17a09b778..72d3306ef 100644
---- a/drivers/platform/x86/ideapad-laptop.c
-+++ b/drivers/platform/x86/ideapad-laptop.c
-@@ -1294,6 +1294,16 @@ static const struct key_entry ideapad_keymap[] = {
- 	/* Specific to some newer models */
- 	{ KE_KEY,	0x3e | IDEAPAD_WMI_KEY, { KEY_MICMUTE } },
- 	{ KE_KEY,	0x3f | IDEAPAD_WMI_KEY, { KEY_RFKILL } },
-+	/* Star- (User Asignable Key) */
-+	{ KE_KEY,	0x44 | IDEAPAD_WMI_KEY, { KEY_PROG1 } },
-+	/* Eye */
-+	{ KE_KEY,	0x45 | IDEAPAD_WMI_KEY, { KEY_PROG3 } },
-+	/* Performance toggle also Fn+Q, handled inside ideapad_wmi_notify() */
-+	{ KE_IGNORE,	0x3d | IDEAPAD_WMI_KEY, { KEY_PROG4 } },
-+	/* shift + prtsc */
-+	{ KE_KEY,   0x2d | IDEAPAD_WMI_KEY, { KEY_CUT } },
-+	{ KE_KEY,   0x29 | IDEAPAD_WMI_KEY, { KEY_TOUCHPAD_TOGGLE } },
-+	{ KE_KEY,   0x2a | IDEAPAD_WMI_KEY, { KEY_ROOT_MENU } },
- 
- 	{ KE_END },
- };
-@@ -2080,6 +2090,14 @@ static void ideapad_wmi_notify(struct wmi_device *wdev, union acpi_object *data)
- 		dev_dbg(&wdev->dev, "WMI fn-key event: 0x%llx\n",
- 			data->integer.value);
- 
-+		/* performance button triggered by 0x3d  */
-+		if (data->integer.value == 0x3d) {
-+			if (priv->dytc) {
-+				platform_profile_cycle();
-+				break;
-+			}
-+		}
-+
- 		/* 0x02 FnLock, 0x03 Esc */
- 		if (data->integer.value == 0x02 || data->integer.value == 0x03)
- 			ideapad_fn_lock_led_notify(priv, data->integer.value == 0x02);
--- 
-2.34.1
-
+Cheers,
+Prabhakar
