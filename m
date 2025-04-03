@@ -1,125 +1,208 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D681119E7D1
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 08:54:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC0E019E7D1
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 08:56:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743670443; cv=none; b=QnjTpXRWOU+4Chmi/xkVMoISHWREvW6EAe6gteQocFHNIDq+mBqAmhJTBli7/u5EnI4PEjlhONTOCQf5OK0zrGIk9xv3FTS+jRB+u4AOT1BZ++37vdi59gV1aVyuddi0Uscgi4SuZqFcGnbKdl/aWdJ/Iqzv4rdQtWivfAWiDSw=
+	t=1743670589; cv=none; b=aFGPMxd2fQl1+Awq6VqATsZOxwSCyRP4Fx+uIU6mE//njS+383Tzcp323cpnvOILuvIG6uPmQEXi0t+2Uh3hKzzNeW0kxQHCMSK2SuM60WzRdXL4Q9cg54LvwplwSenlXijMB1BVvW2/jHmgdaEZbpMRixWY7ViIBhoit/aDoRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743670443; c=relaxed/simple;
-	bh=EA9RHBwK/f1GdxBdtnI2Cjac/r8+/qisQMVWLtHUsuk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=jmrKYjVLhtdwZ4JeFEm9bQj4y5sqcWycz6ucMI/7DP+VM0fjMNjkJl0HY8yKUG4mgUGcbF8N7wD2afBYiP1Qrqw/d11VrbhIEMfZ3NegH343W/hZVW6O8WJY95tTXRcLXkNzz6MJjoUt35FklUIWiJSsp1Ho/uucVQzizKZDmH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ABIvI39V; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1743670589; c=relaxed/simple;
+	bh=Hd4Si+xILJyJIG5jtkXwM+Ouh5/HNXXQ/bqZuHD2lkg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nJC2h4CHNrdQu5lOOfoiGRGZfwUkB6vKhhFLjc2xsvnT7KB0HDbOD0XNS+DRkjFBevDn7HgGwUzvjb7UuIg16nzb0oWO2Nf75sLkxAOCSow6dkOInXr6jI8IMBmFe2FX+rtXn4c7xFVrffHGjgqqGYiIAMGJnMTuwb+LG+jfrWk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qMkB3gUS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ABIvI39V"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 81DB44420D;
-	Thu,  3 Apr 2025 08:53:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1743670432;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EA9RHBwK/f1GdxBdtnI2Cjac/r8+/qisQMVWLtHUsuk=;
-	b=ABIvI39VyrC0zNsI+cRa2wsu8Koh5x0Xkuv6CzhDw+SV6N7Hs2YvvMa6EPtitlGXktl5PQ
-	Q3Wn9Md5bf5AAVPbSng9wo8t8J6iy3xqn6DJFaPk4BFwZPW6rUrwmkow8YS55m/i+cSa82
-	Ijat24UrwbZQzS5PmeneCTaYvygCzjrcpfuyeqlu3SGWHQ5ZY0cMnpV7g/HGtmk7ryh4X/
-	PPOGoxHWTWkdOj/9qyK9yWzVV1AYyPp6Rsxb0W7Z2M07QU3ciYkoexuMW+0/tf60pkcYxO
-	ipH+f4M7bvUeuyE0hAcs0hK5ypm+O3J/G44hgwTrU6iyoIF5q7Vz5XD2HrpvMw==
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: Tudor Ambarus <tudor.ambarus@linaro.org>
-Cc: Richard Weinberger <richard@nod.at>,  Vignesh Raghavendra
- <vigneshr@ti.com>,  Santhosh Kumar K <s-k6@ti.com>,  Pratyush Yadav
- <pratyush@kernel.org>,  Michael Walle <michael@walle.cc>,  Thomas
- Petazzoni <thomas.petazzoni@bootlin.com>,  Steam Lin <stlin2@winbond.com>,
-  linux-mtd@lists.infradead.org,  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 15/21] mtd: spinand: winbond: Rename DTR variants
-In-Reply-To: <5463acad-ee29-45de-9d22-16eb7947002c@linaro.org> (Tudor
-	Ambarus's message of "Thu, 3 Apr 2025 07:19:15 +0100")
-References: <20250307-winbond-6-14-rc1-octal-v1-0-45c1e074ad74@bootlin.com>
-	<20250307-winbond-6-14-rc1-octal-v1-15-45c1e074ad74@bootlin.com>
-	<3ebd53ef-c7fd-4c8c-96f3-32e97b355b6b@linaro.org>
-	<871puaqz6m.fsf@bootlin.com>
-	<5463acad-ee29-45de-9d22-16eb7947002c@linaro.org>
-User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Thu, 03 Apr 2025 10:53:49 +0200
-Message-ID: <87cydty6aq.fsf@bootlin.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qMkB3gUS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71A89C4CEE3;
+	Thu,  3 Apr 2025 08:56:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743670588;
+	bh=Hd4Si+xILJyJIG5jtkXwM+Ouh5/HNXXQ/bqZuHD2lkg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=qMkB3gUSUFZc++3tM2UnDjv0v4LSLp8w18anwy5n5hU/+AtuiohT1AiQCyNivPKpi
+	 YrEf4qtZuv9Kz9U1UiJNKBCMnvAX/RUcPW9kbq0E4H6Df4gx2m1CuXyqZf51+QsODZ
+	 g1oK0Js6xkKdiOSMwCzMbJYcfyCYRtRVTw2kwaRVRDEcKabNfUNa71199Gf4kTlVT9
+	 CwgZ6Q+m8DvL46DODPaUHl2l1YRPZY+tIGYxkz4R1Jmlqz59frM1pwy9WTqgDaL/FG
+	 njiw1M2P5qZzd6cZ2BFjzguUfPvyvjGLlPYIPUTDZpZb47Kj/kGTg8JenOqrZ6fCgy
+	 IJQCCBoTrkgfw==
+From: Borislav Petkov <bp@kernel.org>
+To: X86 ML <x86@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	"Borislav Petkov (AMD)" <bp@alien8.de>
+Subject: [PATCH] x86/tlb: Simplify choose_new_asid()
+Date: Thu,  3 Apr 2025 10:56:23 +0200
+Message-ID: <20250403085623.20824-1-bp@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddukeekudefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufgjfhgffffkgggtgfesthhqredttderjeenucfhrhhomhepofhiqhhuvghlucftrgihnhgrlhcuoehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeffgefhjedtfeeigeduudekudejkedtiefhleelueeiueevheekvdeludehiedvfeenucfkphepledvrddukeegrdduuddtrdduleelnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledvrddukeegrdduuddtrdduleelpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedutddprhgtphhtthhopehtuhguohhrrdgrmhgsrghruhhssehlihhnrghrohdrohhrghdprhgtphhtthhopehrihgthhgrrhgusehnohgurdgrthdprhgtphhtthhopehvihhgnhgvshhhrhesthhirdgtohhmpdhrtghpthhtohepshdqkheisehtihdrtghomhdprhgtphhtthhopehprhgrthihuhhshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhhitghhrggvlhesfigrlhhlvgdrtggtp
- dhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtohepshhtlhhinhdvseifihhnsghonhgurdgtohhm
-X-GND-Sasl: miquel.raynal@bootlin.com
+Content-Transfer-Encoding: 8bit
 
-Hello Tudor,
+From: "Borislav Petkov (AMD)" <bp@alien8.de>
 
-On 03/04/2025 at 07:19:15 +01, Tudor Ambarus <tudor.ambarus@linaro.org> wro=
-te:
+Have it return the two things it does return:
 
-> On 4/2/25 5:57 PM, Miquel Raynal wrote:
->> Hello Tudor,
->>=20
->> First, thanks a lot for the time spent reviewing, much appreciated.
->>=20
->> On 02/04/2025 at 16:19:00 +01, Tudor Ambarus <tudor.ambarus@linaro.org> =
-wrote:
->>=20
->>> Hi, Miquel,
->>>
->>> On 3/7/25 3:08 PM, Miquel Raynal wrote:
->>>> -static SPINAND_OP_VARIANTS(read_cache_dtr_variants,
->>>> +static SPINAND_OP_VARIANTS(read_cache_dual_quad_dtr_variants,
->>>
->>> why not read_cache_single_dual_quad_dtr_variants? I see single dtr too
->>> in the supported ops.
->>=20
->> That's true, but single modes are literally always supported, so it is
->
-> literally, meaning from experience I guess, or is it mandatory that
-> dual, quad or octal dtr to imply single dtr as well? That's fine either
-> way, just curious.
+ - a new ASID and
+ - the need to flush the TLB or not,
 
-Yes, I do not know any chip not supporting single SDR mode, just because
-we need a common ground to perform the discovery? The core would anyway
-not be ready for such chips if they were about to come.
+in a struct which fits in a single 32-bit register and whack the IO
+parameters.
 
-> Does quad dtr imply dual dtr? And octal dtr imply quad dtr and dual dtr?
-> If so, then maybe name it by the maximum IO dtr supported.
+No functional changes.
 
-Unfortunately not. Chips supporting quad may also support dual, but not
-always. These chips flagged 'dual_quad' indeed support both. However in
-this particular case, octal chips do not support dual or quad
-opcodes. Hence my idea to name the variants about what is supported,
-behind 1S opcodes.
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+---
+ arch/x86/mm/tlb.c | 63 +++++++++++++++++++++++++----------------------
+ 1 file changed, 34 insertions(+), 29 deletions(-)
 
-> btw, not strictly related to this patch, but for the overall
-> architecture picture, why do the SPI NAND flashes need to define their
-> supported ops? SPI NORs for example are capable of discovering their
-> supported ops by parsing at runtime some SFDP tables that describe most
-> of the flash parameters and setting. I see SFDP standard (jesd216g)
-> mentions SPI NAND devices as well. Have you or anybody else played with
-> SPI NANDs SFDP?
+diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
+index e459d97ef397..d00ae21d0ee2 100644
+--- a/arch/x86/mm/tlb.c
++++ b/arch/x86/mm/tlb.c
+@@ -215,16 +215,20 @@ static void clear_asid_other(void)
+ 
+ atomic64_t last_mm_ctx_id = ATOMIC64_INIT(1);
+ 
++struct new_asid {
++	unsigned int asid	: 16;
++	unsigned int need_flush : 1;
++};
+ 
+-static void choose_new_asid(struct mm_struct *next, u64 next_tlb_gen,
+-			    u16 *new_asid, bool *need_flush)
++static struct new_asid choose_new_asid(struct mm_struct *next, u64 next_tlb_gen)
+ {
++	struct new_asid ns;
+ 	u16 asid;
+ 
+ 	if (!static_cpu_has(X86_FEATURE_PCID)) {
+-		*new_asid = 0;
+-		*need_flush = true;
+-		return;
++		ns.asid = 0;
++		ns.need_flush = 1;
++		return ns;
+ 	}
+ 
+ 	/*
+@@ -235,9 +239,9 @@ static void choose_new_asid(struct mm_struct *next, u64 next_tlb_gen,
+ 		u16 global_asid = mm_global_asid(next);
+ 
+ 		if (global_asid) {
+-			*new_asid = global_asid;
+-			*need_flush = false;
+-			return;
++			ns.asid = global_asid;
++			ns.need_flush = 0;
++			return ns;
+ 		}
+ 	}
+ 
+@@ -249,22 +253,23 @@ static void choose_new_asid(struct mm_struct *next, u64 next_tlb_gen,
+ 		    next->context.ctx_id)
+ 			continue;
+ 
+-		*new_asid = asid;
+-		*need_flush = (this_cpu_read(cpu_tlbstate.ctxs[asid].tlb_gen) <
+-			       next_tlb_gen);
+-		return;
++		ns.asid = asid;
++		ns.need_flush = (this_cpu_read(cpu_tlbstate.ctxs[asid].tlb_gen) < next_tlb_gen);
++		return ns;
+ 	}
+ 
+ 	/*
+ 	 * We don't currently own an ASID slot on this CPU.
+ 	 * Allocate a slot.
+ 	 */
+-	*new_asid = this_cpu_add_return(cpu_tlbstate.next_asid, 1) - 1;
+-	if (*new_asid >= TLB_NR_DYN_ASIDS) {
+-		*new_asid = 0;
++	ns.asid = this_cpu_add_return(cpu_tlbstate.next_asid, 1) - 1;
++	if (ns.asid >= TLB_NR_DYN_ASIDS) {
++		ns.asid = 0;
+ 		this_cpu_write(cpu_tlbstate.next_asid, 1);
+ 	}
+-	*need_flush = true;
++	ns.need_flush = true;
++
++	return ns;
+ }
+ 
+ /*
+@@ -781,9 +786,9 @@ void switch_mm_irqs_off(struct mm_struct *unused, struct mm_struct *next,
+ 	bool was_lazy = this_cpu_read(cpu_tlbstate_shared.is_lazy);
+ 	unsigned cpu = smp_processor_id();
+ 	unsigned long new_lam;
++	struct new_asid ns;
+ 	u64 next_tlb_gen;
+-	bool need_flush;
+-	u16 new_asid;
++
+ 
+ 	/* We don't want flush_tlb_func() to run concurrently with us. */
+ 	if (IS_ENABLED(CONFIG_PROVE_LOCKING))
+@@ -854,7 +859,7 @@ void switch_mm_irqs_off(struct mm_struct *unused, struct mm_struct *next,
+ 		/* Check if the current mm is transitioning to a global ASID */
+ 		if (mm_needs_global_asid(next, prev_asid)) {
+ 			next_tlb_gen = atomic64_read(&next->context.tlb_gen);
+-			choose_new_asid(next, next_tlb_gen, &new_asid, &need_flush);
++			ns = choose_new_asid(next, next_tlb_gen);
+ 			goto reload_tlb;
+ 		}
+ 
+@@ -889,8 +894,8 @@ void switch_mm_irqs_off(struct mm_struct *unused, struct mm_struct *next,
+ 		 * TLB contents went out of date while we were in lazy
+ 		 * mode. Fall through to the TLB switching code below.
+ 		 */
+-		new_asid = prev_asid;
+-		need_flush = true;
++		ns.asid = prev_asid;
++		ns.need_flush = true;
+ 	} else {
+ 		/*
+ 		 * Apply process to process speculation vulnerability
+@@ -918,21 +923,21 @@ void switch_mm_irqs_off(struct mm_struct *unused, struct mm_struct *next,
+ 			cpumask_set_cpu(cpu, mm_cpumask(next));
+ 		next_tlb_gen = atomic64_read(&next->context.tlb_gen);
+ 
+-		choose_new_asid(next, next_tlb_gen, &new_asid, &need_flush);
++		ns = choose_new_asid(next, next_tlb_gen);
+ 	}
+ 
+ reload_tlb:
+ 	new_lam = mm_lam_cr3_mask(next);
+-	if (need_flush) {
+-		VM_WARN_ON_ONCE(is_global_asid(new_asid));
+-		this_cpu_write(cpu_tlbstate.ctxs[new_asid].ctx_id, next->context.ctx_id);
+-		this_cpu_write(cpu_tlbstate.ctxs[new_asid].tlb_gen, next_tlb_gen);
+-		load_new_mm_cr3(next->pgd, new_asid, new_lam, true);
++	if (ns.need_flush) {
++		VM_WARN_ON_ONCE(is_global_asid(ns.asid));
++		this_cpu_write(cpu_tlbstate.ctxs[ns.asid].ctx_id, next->context.ctx_id);
++		this_cpu_write(cpu_tlbstate.ctxs[ns.asid].tlb_gen, next_tlb_gen);
++		load_new_mm_cr3(next->pgd, ns.asid, new_lam, true);
+ 
+ 		trace_tlb_flush(TLB_FLUSH_ON_TASK_SWITCH, TLB_FLUSH_ALL);
+ 	} else {
+ 		/* The new ASID is already up to date. */
+-		load_new_mm_cr3(next->pgd, new_asid, new_lam, false);
++		load_new_mm_cr3(next->pgd, ns.asid, new_lam, false);
+ 
+ 		trace_tlb_flush(TLB_FLUSH_ON_TASK_SWITCH, 0);
+ 	}
+@@ -941,7 +946,7 @@ void switch_mm_irqs_off(struct mm_struct *unused, struct mm_struct *next,
+ 	barrier();
+ 
+ 	this_cpu_write(cpu_tlbstate.loaded_mm, next);
+-	this_cpu_write(cpu_tlbstate.loaded_mm_asid, new_asid);
++	this_cpu_write(cpu_tlbstate.loaded_mm_asid, ns.asid);
+ 	cpu_tlbstate_update_lam(new_lam, mm_untag_mask(next));
+ 
+ 	if (next != prev) {
+-- 
+2.43.0
 
-Not at all! SPI NANDs commonly advertise a parameter page which is way
-more succinct, but no SFDP table.
-
->> not very discriminant, and here my goal is to differentiate the variants
->> supported by the dual/quad chips vs. the variants supported by the octal
->> chips (which are not capable of dual/quad transfers). What do you think?
->
-> I find it fine to differentiate between the variants.
-
-Ok, thanks.
-
-Miqu=C3=A8l
