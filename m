@@ -1,74 +1,74 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDE862505D6
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 16:14:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64DCB223708;
+	Thu,  3 Apr 2025 16:15:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743696896; cv=none; b=TNWtpuIxdxaH8CmjMbdcq8tF2+DNoJrxDnBMG7BuU+WzVKfgE+bNClLHNkHkTQMFzH7wK3lbBdv33/KG2MjzEgqPJqwwvj3mHXoathi3C9dWihfrOH7SPCmJAu4uhc9hM4/jjF71btMYkPQsUfg/BL/ojWj9kF2kQoACP/e+rDU=
+	t=1743696917; cv=none; b=LbzpPYyXytEJMfvf1aa1h7Cs5Gow+An34WmfH08uzlTGbc9SbRwxyOVXPEmahUb0S77psMk9wwb39HF+HUF9nW5GR1/DNwXylR8pTAyFczZlNG/O5+J4UBsIX+FUdZi58bz04GYPiYXOfSzZiRk5gGnKVs4MsFYZu1lveJD0olg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743696896; c=relaxed/simple;
-	bh=lMxjdbVlogar1x6TACc28yrwZY0Hr3g26oRXM732pUc=;
+	s=arc-20240116; t=1743696917; c=relaxed/simple;
+	bh=z/dr+HxZ5s1Xkt0TYhRvQEgeAL2nEwsNt/AN9f2tRoA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Af50JLdZ7qSEBTYv/2W8PELq412PZg80HsQDTWro2IpohDzjxMFC6NAt/n7YTy9DnVASfrhTshyB71NzBksdtsUVGtjiTha9FUJRx6x0ckZnCQV/yGMr5Y6y/Vvbs+804Qpvu4QlKSyD9KmZjmaQ027gv5mlVZ6S+IhIzdXJr94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QYL3Ebdo; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=KHqI8y+RhQnQmAlvGoE3fwDSCmCqC4tKi/RagWa14hXrsvIC0uWxOkrc5CuhdLpPfu0bu4qz2pw6CzNjRN/w5PVHc8LJ7vODaO/bM4a1mhEa8enUhf4Eed5TukeCI1bLp9hjGze5KZWBs0fHevsH7DRpz5RHJ0VIb8D32GC+qbU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dINPapUH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QYL3Ebdo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32CB4C4CEE3;
-	Thu,  3 Apr 2025 16:14:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dINPapUH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB4E5C4CEE3;
+	Thu,  3 Apr 2025 16:15:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743696896;
-	bh=lMxjdbVlogar1x6TACc28yrwZY0Hr3g26oRXM732pUc=;
+	s=k20201202; t=1743696914;
+	bh=z/dr+HxZ5s1Xkt0TYhRvQEgeAL2nEwsNt/AN9f2tRoA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QYL3Ebdo2egcQxLrRTXZ8I2cAHDqgjpZHcFl3jbUMnxL7uEmrqeiEo3heZ0lNvIrt
-	 ytBVWbgg+HVv/ZfJGN6CXiFHRW5jas4NV8WvcLZMJYSxFFHeaMFjhGV3OioRRMHtIb
-	 oWhNq388njjseYIJbF0F87K/k4c3tQ4TNtcP0fHSKpXvKc+ETDgHxgN7Vqv5o4v2ZE
-	 PfWyPcN5eAxHNx7vuiSb9PE5LmzcvlW0fW65MZpG0nVdVFL3zccJFII2PRcYcBdeki
-	 6+ECfHbgoZNeUORXOA+55zLEDZPMshxEGCnEnAiO0NjLLtRTl/ztUewWWUSw/ifSLc
-	 cC61ckwTTwN1w==
-Date: Thu, 3 Apr 2025 09:14:54 -0700
-From: Kees Cook <kees@kernel.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Petr Mladek <pmladek@suse.com>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	John Ogness <john.ogness@linutronix.de>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org
-Subject: Re: [GIT PULL] more printk for 6.15
-Message-ID: <202504030913.B50F046CB7@keescook>
-References: <Z-00cAEKkfvyNto2@pathway.suse.cz>
- <CAHk-=wgfX9nBGE0Ap9GjhOy7Mn=RSy=rx0MvqfYFFDx31KJXqQ@mail.gmail.com>
- <Z-2EVf5BvJ-BoYkU@surfacebook.localdomain>
- <CAHk-=wic_SpqRhtFF+_9wFOiUf-NZcTsNH+jNdi0xLPxexNGXg@mail.gmail.com>
- <CAHp75Vf=tYmWXDUZDqcMK4i8k6_VBqGttw6-mEgt6VhvRVFwuA@mail.gmail.com>
+	b=dINPapUHBWgp6N0BwPS4qM+caQW/7mrWzJQgcs2xXMITStkF0Ddnjn8dBN4Q7FZbo
+	 4uwYzdSPHDY/jK93YGrR+1lOmmT+GNm61hslq2Q6jossk31FAdR/mMf74zgU945VIv
+	 CgcYj3TjGnG3xKT3MIQRkn5XuooADRXFDKMXpdzlGDd6XZZ1HZ7AvDlEqXV+zioW7c
+	 EsLfk43Q6jt0o+bu5ZrpRDivNUVQllt8qZPS6ficx5gnZ1yFjDL0TaXMP8k1fv1LRq
+	 5K5WpANpFyBDz2Lu+wEY23yySI7CahoahqTiCBJ+w8vqL05tRw1Nm15wm+yJZ3N+z2
+	 sxgDFEzO88wHQ==
+Date: Thu, 3 Apr 2025 06:15:13 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
+Cc: Waiman Long <longman@redhat.com>, Johannes Weiner <hannes@cmpxchg.org>,
+	Shuah Khan <shuah@kernel.org>, cgroups@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 01/10] cgroup/cpuset: Fix race between newly created
+ partition and dying one
+Message-ID: <Z-60Ec41f8cQayOg@slm.duckdns.org>
+References: <20250330215248.3620801-1-longman@redhat.com>
+ <20250330215248.3620801-2-longman@redhat.com>
+ <Z-zsGazxeHK9uaA6@slm.duckdns.org>
+ <hsbn4pcb6gpipjfacn7tbutheolot6rfia2j6nyit3bpf4adys@mpaop37aps55>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <CAHp75Vf=tYmWXDUZDqcMK4i8k6_VBqGttw6-mEgt6VhvRVFwuA@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <hsbn4pcb6gpipjfacn7tbutheolot6rfia2j6nyit3bpf4adys@mpaop37aps55>
 
-On Wed, Apr 02, 2025 at 10:25:46PM +0300, Andy Shevchenko wrote:
-> I actually don't know what the benefit of __printf() attribute from
-> security (?) point of view is. I may speculate that this helps to
-> validate the format string and arguments (when provided as ...) and
-> helps with potential wrong argument sizes, etc. Kees, what do you
-> think about Linus' proposal?
+Hello,
 
-It's a bit low on the severity list since we long ago removed %n, but
-it's effectively a form of type-checking for arguments to printf. I look
-at it more as a robustness/correctness checker. If we can make it work,
-it's good to have. And it looks like Nathan's suggestion will make it
-feasible.
+On Thu, Apr 03, 2025 at 03:34:05PM +0200, Michal Koutný wrote:
+> On Tue, Apr 01, 2025 at 09:49:45PM -1000, Tejun Heo <tj@kernel.org> wrote:
+> > On Sun, Mar 30, 2025 at 05:52:39PM -0400, Waiman Long wrote:
+> ...
+> > > Add a new cpuset_css_killed() function to reset the partition state of
+> > > a valid partition root if it is being killed.
+> ...
+> > 
+> > Applied to cgroup/for-6.15-fixes.
+> 
+> To be on the same page -- Tejun, this is a mistaken message, right?
+> css_killed callback is unoptimal way to go.
 
--Kees
+I couldn't think of a way which is substantially better and so did apply it.
+I'm completely open to backtracking for a better idea.
+
+Thanks.
 
 -- 
-Kees Cook
+tejun
