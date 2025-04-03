@@ -1,94 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C59651F4CBA;
-	Thu,  3 Apr 2025 14:44:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BFA613B5B6
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 14:45:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743691480; cv=none; b=RBXx325OPpqRdpmztW2O7P/T/1DQMcwG1pFT0ujj8K5aVn/X1AO6cztmjFzCLaFq4xiDaYDUFBtbXbcCDq/AGhr8n8aFmATe1yMZGSxu6SXYDc+O2+/1bkp/CzqAalocl+FVYwP1X3qtkhgfs+HdQftmmRlFShiOkycsGSqZMSg=
+	t=1743691521; cv=none; b=S0EatedMMLqcqsjAL6XLJ8m7L8Je+UPCOOYojREi/WBErEBRq7AAHbEnEfsMoGNhmyOfhexqsAFUPZemecGuXnw3Gz2z7JgDSQcTtQkWboOqy5PTSLvzQawjXa3FyxYVlgzAQxtr24sjs+MXiFB5zZyH0Aglc+dNjoJkdc45er8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743691480; c=relaxed/simple;
-	bh=5cs+eJv9Izu47I2J3NXxyVbwPDeNCqJD2YuijQFC92o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Si4a0CiEn3Uit6ji+8kf0vZLdTVPLUms3QOCObvYW78c4zS7hIp8VeuhSQQAMhIn2jHbxOxu9nuEdvKIyOsHplFOYwV4ZNhI1oFPajHB9Lzs+v0LXU7Dl8LmbiWqCP1zZB69TtTvg7V2MWdO7r4lfVput5OgDP7SVIGjAX3/38s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ExO5LxSL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743691521; c=relaxed/simple;
+	bh=3btxJzNX1nWC5uaW8M/gZ6MXHb0T1ZAXwTOrALLVBbg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=ovQxcYhlOG4aXs0ZxQu976H/b3injDnKx9JhaR5Z8g8Eh4h43860/BM8EVnmPhAObmkwCC/Kjfk9/+MxuSshgCKrIRS7SIkc4gXnEn73lfrzeXfTV/vnpsC9kWM8DypZxj2Sjul6nDqO6wxktx/ZhLAh3PSt2rM2l7lYYr+bhSo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mXz59f3l; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ExO5LxSL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3AFDC4CEE3;
-	Thu,  3 Apr 2025 14:44:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743691480;
-	bh=5cs+eJv9Izu47I2J3NXxyVbwPDeNCqJD2YuijQFC92o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ExO5LxSLKI8SpDKDmAe2trw+n1wCOphVhp8nC42JmUFBPWkCpVbITDZt9hWyttE0Z
-	 mY2sOHy8Efvzxs2cuY47HJjV6hjtMDVGZzMH/o/KAZL2vnAbyomCRJusrs0s8rQi3k
-	 hqWlwE1e/UFjquaxc/+qXZhaoezXaNuxS/yFztiJTrJTkSbfCz0qgU+HoXnTeOB/wE
-	 m61GM8Mmin7+Geyfy8dXXC4txdkAQNjJ1QH+bWG3f/dUbuZEeaCOuZlEbFDPPndZeC
-	 EPqpcCUHZfbq5DMMjggmPz7ZQPrg58z08jzZXh59VLrAKmpXkPTtxz3soiuWir3iRO
-	 SCca/CttFJXVw==
-Date: Thu, 3 Apr 2025 16:44:37 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, linux-pwm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pwm: rcar: include linux/bitfield.h
-Message-ID: <oliggucdkxoowajjgszzxips77x4p4y6v4wav56r6cqzu6cdil@rghywo2xqrrm>
-References: <20250403132406.81003-1-arnd@kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mXz59f3l"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-39c266c2dd5so870995f8f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 07:45:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1743691517; x=1744296317; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=GZUZF1QD+6bbOsbzh5V9brmPQr4qnHCysNrbSkqr6FQ=;
+        b=mXz59f3lt3tRrQWTDt/NDcMhEsYzCW9zaB/fE7uMohaNO6t/NDA6+O54/Q0+AMrq5b
+         D4UEUlS08jLQJH8t3sAHJsKuUHRuhYqOTKetm9H1praMbg1X6kdtVHyrXQf9FxNEp/60
+         5wjD9el8h5jjRta2dYPP/41/ysyJrd+gyYWpuzM6QAiojd1pn5SUctKw+zsugMM7ToYp
+         RlVix2dQYi0+0eg1JpqWSQHe0fzG9G2NWXWbe3/j2f+aH6reo9LQvw3zGxzrdn9bMXmW
+         Uuk6lSDe/lLMS2HfSc6qg7fv/niApIkk2cBmXugTSojhsXtQlKjlHNUPgjQ1hUqaK7lo
+         wtcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743691517; x=1744296317;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GZUZF1QD+6bbOsbzh5V9brmPQr4qnHCysNrbSkqr6FQ=;
+        b=Rrru1MNV1h0aev9qmUZSmj7KnDDeYjDxcyj9o31Os8LQZl5mWdAC6792RcfTRY5vOC
+         t33vsKYVNpvXaAoj7S6XzgzAwhDR3+enSA9qkA+ha2PFUiLKHdCf46stIcl1ReMVSKEe
+         XNxwvSGHveuzoFuykKKBoudba6rYmMvKDBkJ33RpyUewpHU2w/xXVT/WoooMwsgtNbfb
+         g7C6W+tmIqvkT6dqiCVsjnVqmIGGdC/SzqSP+VSdFtpdEqUjhmM9DZ7pibUyFlJCL94Z
+         erCFc3QJT2w7z7Kk9B64UCeQsP1mLYnd2u6Uhp1O5N7jXHa1XNhkjxejLftDUwrffF+E
+         YybA==
+X-Gm-Message-State: AOJu0YyI5SwLbqYXexf4IV3Yb04pMTgxirdIH3IqR/axfmlTIE5/Dw7H
+	zOxs2ApjJ5rBXqbd0avUZ+5JILh5L3Sa8fs+FS1cs8p5ykY+xEVqlkcli0JzA/g=
+X-Gm-Gg: ASbGncv88AT1AF6VZ/XGkC/m7VMsWkykv1vIjs1ounHBrAgt0km0Rxk7dIb/I4xWP4g
+	wIWZDR4o3iJmA9cvWyHrMxt9uNP5r0BEx0ofmaloxy4VmIbNHuqANo3PPrMlbtpVw2LcpkyWLM7
+	cN6cDwpUDp74HSibEvKGY69vqkJ5oqD8xqax3kjHRHGliLxn2cuI1fDjmWJIseaxlZ5eKU56BEm
+	ENsypX98P/G49bddYC2jgwaYoZ+WHBQM44FIIL9sQrvmvEUEyF9sQ3zSnGbQKA0o35iVxbW7PTh
+	ZUYWBbZVIyY/5IlDGbWGUCWWXOiLNUbO/yjunTPK4jIAzCXacWHKdSdWdiZUefXcVmVbrw==
+X-Google-Smtp-Source: AGHT+IFwGqSF3ppKW0jbks5OeUqQqeJKL+jLvvT07/7XZSduLFdne0ThNLK5QOgfqHjvfFmWHsNrUw==
+X-Received: by 2002:a05:6000:4021:b0:391:38a5:efa with SMTP id ffacd0b85a97d-39c120e07e4mr17271906f8f.23.1743691517543;
+        Thu, 03 Apr 2025 07:45:17 -0700 (PDT)
+Received: from localhost.localdomain ([5.133.47.210])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c3020d661sm2044374f8f.66.2025.04.03.07.45.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Apr 2025 07:45:16 -0700 (PDT)
+From: srinivas.kandagatla@linaro.org
+To: gregkh@linuxfoundation.org
+Cc: linux-kernel@vger.kernel.org,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH v3 00/13] nvmem: patches (set 1) for 6.15
+Date: Thu,  3 Apr 2025 15:44:48 +0100
+Message-Id: <20250403144501.202742-1-srinivas.kandagatla@linaro.org>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="vjcxojrerajqyepf"
-Content-Disposition: inline
-In-Reply-To: <20250403132406.81003-1-arnd@kernel.org>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1994; i=srinivas.kandagatla@linaro.org; h=from:subject; bh=pldFi6GXiqRfTJjrT/iHq66ZPOyHtGoAlV0wtFyRVZU=; b=owEBbQGS/pANAwAKAXqh/VnHNFU3AcsmYgBn7p7cUDaBl0d7vH4hGUdlU7OBon6wd7WqiH3AZ 5KEFv6kmtaJATMEAAEKAB0WIQQi509axvzi9vce3Y16of1ZxzRVNwUCZ+6e3AAKCRB6of1ZxzRV N4tjCACbBq8D57aRV8Xuj8dre59pglx40RpzxedSaq2g8Ww4zXCS2S0LMwPUt7hZnGp+2JQtk+U Pbea2ENjU/6ceiXZtzQ6xng98N4WS9cdQkp2iHQSIqgIg27ZJwrUhuyZWJTlkZm8fOQRHkSxDQE o2N7UJH5ukp1kNJll5Qp5GE24umMPpMQG0HcDLig8Gnj4Bua/acrXJAltg39N8X41wSwhbzRBng qVfRj20SmYeJYP4mpVN7jB7lCvcYzU4C6V1bj1pDBAJuxi1G02vmMjHcevpo5yGpDFHn7z/E23A yYgOWCM+8cVC78mOnFDezA3uvwcxJGig6LcVcVxDcsCLUbzD
+X-Developer-Key: i=srinivas.kandagatla@linaro.org; a=openpgp; fpr=ED6472765AB36EC43B3EF97AD77E3FC0562560D6
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+
+Hi Greg,
+
+Here are few nvmem patches for 6.15, Could you queue
+these for 6.15.
+
+patche include
+	- updates to bindings to include MSM8960, X1E80100, MS8937,
+	  IPQ5018
+	- add support to bit offsets for register strides exceeding
+	  single byte
+	- add rockchip-otp variants.
+	- Few enhancements in qfprom and rochchip nvmem providers.
+
+Thanks,
+Srini
 
 
---vjcxojrerajqyepf
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] pwm: rcar: include linux/bitfield.h
+Changes since v2:
+  - no changes in patches, just resending as Greg's requested.
+
+Changes since v1:
+ - Merged fixup "nvmem: make the misaligned raw_len non-fatal" into
+  "nvmem: core: verify cell's raw_len"
+
+
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hello Arnd,
+Akhil P Oommen (1):
+  dt-bindings: nvmem: qfprom: Add X1E80100 compatible
 
-On Thu, Apr 03, 2025 at 03:23:59PM +0200, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
->=20
-> The use of FIELD_MAX() breaks in some configurations because of
-> a missing header:
->=20
-> drivers/pwm/pwm-rcar.c:114:12: error: call to undeclared function 'FIELD_=
-MAX'; ISO C99 and later do not support implicit function declarations [-Wim=
-plicit-function-declaration]
->   114 |         if (tmp > FIELD_MAX(RCAR_PWMCNT_CYC0_MASK))
->       |                   ^
->=20
-> Fixes: edd549f4956b ("pwm: rcar: Improve register calculation")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Barnabás Czémán (1):
+  dt-bindings: nvmem: Add compatible for MS8937
 
-I already fixed that in my pwm/for-next branch. I did exactly what you
-did and squashed that in the offending commit.
+Dmitry Baryshkov (5):
+  dt-bindings: nvmem: fixed-cell: increase bits start value to 31
+  nvmem: core: fix bit offsets of more than one byte
+  nvmem: core: verify cell's raw_len
+  nvmem: core: update raw_len if the bit reading is required
+  nvmem: qfprom: switch to 4-byte aligned reads
 
-Thanks for caring
-Uwe
+Heiko Stuebner (4):
+  nvmem: rockchip-otp: Move read-offset into variant-data
+  dt-bindings: nvmem: rockchip,otp: add missing limits for clock-names
+  dt-bindings: nvmem: rockchip,otp: Add compatible for RK3576
+  nvmem: rockchip-otp: add rk3576 variant data
 
---vjcxojrerajqyepf
-Content-Type: application/pgp-signature; name="signature.asc"
+Rudraksha Gupta (1):
+  dt-bindings: nvmem: Add compatible for MSM8960
 
------BEGIN PGP SIGNATURE-----
+Sricharan Ramabadhran (1):
+  dt-bindings: nvmem: Add compatible for IPQ5018
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmfuntMACgkQj4D7WH0S
-/k76Xgf/Zzgpc8cJHu8poSgQZDscT002xpFBpC/b6bZvJr0a3kuyFsOmwGeFCUgh
-cKHRNTinIIWfhPTJLq3Zz5Ys23P5auhQ0K7TojrWPqOfEAV+9speGL2Phtgn0xWJ
-L4ZS3JOGF0otVkw/5nzdA9Ys8hJaoWxktxOl+rP3rhlCNof6LVxT3luHIVHkdIoE
-bjwdPB6adc8BowfGInDG57zD5BBn6YjNjduitEco3Hf3/cfAOkEag4/j3U/jeei9
-pDINFtccx7HU05M4I7j0BhyBe+YGH7SDAA9GtiS8llC6B31zotb5mj4Wrsa4F9/v
-gt66wr70v+hbSMpYRjVSTFs4URqQeQ==
-=miw2
------END PGP SIGNATURE-----
+ .../bindings/nvmem/layouts/fixed-cell.yaml    |  2 +-
+ .../bindings/nvmem/qcom,qfprom.yaml           |  4 ++
+ .../bindings/nvmem/rockchip,otp.yaml          | 25 ++++++++++++
+ drivers/nvmem/core.c                          | 40 +++++++++++++++----
+ drivers/nvmem/qfprom.c                        | 26 +++++++++---
+ drivers/nvmem/rockchip-otp.c                  | 17 +++++++-
+ 6 files changed, 97 insertions(+), 17 deletions(-)
 
---vjcxojrerajqyepf--
+-- 
+2.25.1
+
