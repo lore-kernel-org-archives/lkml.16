@@ -1,107 +1,227 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1A802512CB
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 16:52:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 690AB2512C9;
+	Thu,  3 Apr 2025 16:54:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743699133; cv=none; b=iSqDOZSbfj76qERXM4QaHTwJDjscBAsB3RXeyOgP24SyJI6yk2hDVP9wtlowbddlAX0Ls3sd07oxjq1R9INUF00Ma47/9l8VibAPQcpo3bGZWYlmGE/jo8g+QPpvl78MYJb3gPp4nM8pruDaMWBKdpZMjBcvzk09liM5gZXXpco=
+	t=1743699293; cv=none; b=caZVgsTGq3mHdKjWwJ5WNF5TOeHqEu4KmiLaz8JUZyT6qaGOD7lGz29rZ+e5YPZNkyFkJDuLi10rrFsqOTNOZPb8Youi3vI+9zBJmRoZq7tWWlFuLwbY0S85lDFFePRWFbqTtXDk4+RtR4SHS70xeKnG2t85JxJhfvL8H2aUGxQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743699133; c=relaxed/simple;
-	bh=c4k/wLTjjWRN0G3MQ4/ueWmzFfj6tAoe+LhodSB0qc8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mMd2Os5VA2Zzy+kBYvnhAvroomESKaVl1ngpvNeRXErsBZFxLcx1wz4XQg04ORo21/2eg00QtZ8jJan3k3R+Xrmu2Y5xD+sDslHSvIEOLJyWQg82c5Z6XHhjveTu0VIUENhBkB0dQJNcujIL1LoImA1C0uFiVJEsNfq8H/ojPnk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Qv7aYP79; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1743699293; c=relaxed/simple;
+	bh=sxhZhxhLY0BwekVxfSgxhKbAPa1FnVtYBhNgH8ZGXAU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=h7srVelrz6S3toyjSVeQT2iMoiKY+sHkJ/ParfsYhtEBwkuwvJN+TJshh9hACuxIcUtpOIRo0nPCNLBPZazZNOMf7ViynAwbzO3/ISmtF8sUC6jq7K0WMIjzpbNO9SwD12S6rm72CccNFGU2baEEVzusVepA1g2U5dKi4E4HlWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XuHJyOdK; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Qv7aYP79"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5ec9d24acfbso4109036a12.0
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 09:52:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XuHJyOdK"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-736ad42dfd6so962206b3a.3;
+        Thu, 03 Apr 2025 09:54:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1743699130; x=1744303930; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=zxz3ZOpXSZ7yPtvl/GON9cIiqoopL7kPorpXa/Hocqg=;
-        b=Qv7aYP79p0E9XYjOP35plaGcc3ao8rtOdXjwg7+BaxhFka4M1dqj6XAvsAZfgv+ZYt
-         WjNriiZBFwzCdBMymnYVDZWJUEIVq58wP9GkFPOEwMI7va97nQqYxnWfEZIg+cLYYQwn
-         LgNBmxuD54tE5UuinSw7sXgj9Y6KyiwAR5cIw=
+        d=gmail.com; s=20230601; t=1743699291; x=1744304091; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=FDa5eNS7BwA8fLuFV+VPTYw9CpDmGbyK6UKEScOkVlM=;
+        b=XuHJyOdKp+KVpWNaET6cFMoTxJIM/4nv7V8IeCvUq59U31+InKeHemM/Bc4IcL95Yq
+         +dhkCL/H8qjPjUj4/wSF8aovobwUPN1M/mLNWzcz6D77JVML54l+tpBUpatZ+bhxlTpI
+         3b74nbi66vyghgxXeEGx069jmcAZ8oKkczIthUyxJlZzBe1wdZ3h82plE7RNtFu/2yIz
+         gSrWvYkyB59Z78ZH7bD6H0a9MBDxjYipFC9F5bt1wmNmatU2KFda5uwr45MVgJ4UAkD0
+         G0aIHJtllGRPjP0wzz/daclw+/z0VPpg18wqXBWImoMgEOle/UyjQPIqQmf0jSFk43BE
+         x8EA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743699130; x=1744303930;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zxz3ZOpXSZ7yPtvl/GON9cIiqoopL7kPorpXa/Hocqg=;
-        b=SX+U/L7swkaZ8Hpojj5yX38UZ4OXE7mN4MuGfvlqcuYkNg8nS0rvrOXLVst2sTdWM2
-         JW9Kcw4LDIdsJE+UMYonM8GcV3fPwfzOjIPWVH664Mnx7yru2pb3N/F7ddYPjZ/YJjy/
-         YzbHmZZlXT1//wk+aSBPAR+Hs4zbUVHTma3r5Lwlofraq9u4mJXlPeLr76FXPX3ArtKu
-         0JfzmMrOYhWS77H9Ru2aDFA8pRp7zlR9bd1+apGxO7dFeOmcHqfMBk99qew37aX6B2Z7
-         31jFU1+dcf4CF3dTnsKkJpDbSNEHaulbKN8spSbDkBwPcKrAPH/dqaBo7UZn0tiZ5kqu
-         iQXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVIhI2J+GVoVKOfaSF9S9N6q3ohmKGva+dIreceRuBR6RaR50Ia74wj/P8qmaQfTO8sNk5D7IvdnB6jOuU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwgOonykxqwoBonl2q2CDR82MRQUyhiAa2VNWqLoqb8al4hr3Ig
-	6HD6byULwVjXKZ1Bh/VsyxNGmz4eevC0EA9iAQrA0XCx+PosVuhZQjTd78tJ6O8hZsAAb0Tpghu
-	1794=
-X-Gm-Gg: ASbGncsEgayUCMuOaak0HqYoWcDqr44wJ9obV8YtZvdD57g/qdML6wQaBMnGwU1Ae+f
-	KpNKXbRM/KkeLjyEPKd2gRiBJMRfJ7HDN63NenGF+563Gz4y1j9vXA++qOxXFDq+Hn88jSk+geN
-	s0/GvY9KE2AaSK/Ja5LY7FFsmxS9+f+qdyiNssYf+LLnA8PuSwstGg7m6tqawJ8/jHPisMphD07
-	ZLtveSU0WIh9Pm86mcsXpqhQYZyr3NKpufuB30DOlLlU5VXnUw8Jk9PgiZPpV8Z1c2m0B3rqrzT
-	yV7PGwO5Y9u2pLp+PFD2awXU56CxEs96SjFKnndBTKK4d82ej68G8QhZqz1jZpJT5MMFUBNKHYW
-	k7JMFzThb5cWnqEcbiPM=
-X-Google-Smtp-Source: AGHT+IEx2C8kZSu/0pev1oeyb7uHKzMlnGC9wv+H+yX9ustSDXv0KkLzIpuxO2BIu5vlTbDZPBr59A==
-X-Received: by 2002:a17:907:7291:b0:ac7:380b:8443 with SMTP id a640c23a62f3a-ac7d2fb85d8mr886166b.19.1743699129855;
-        Thu, 03 Apr 2025 09:52:09 -0700 (PDT)
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com. [209.85.218.46])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7bfe5c93asm120135566b.14.2025.04.03.09.52.08
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Apr 2025 09:52:08 -0700 (PDT)
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ac2a089fbbdso201832566b.1
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 09:52:08 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVTQshbUGDdFdlwE8y7/RHxZx/hJuP/MgbJadwYWFYSWvtRs9SfhTSjfxvxa6ruYT4mIhu7wdteat9oVOY=@vger.kernel.org
-X-Received: by 2002:a17:907:970c:b0:ac7:3028:6d67 with SMTP id
- a640c23a62f3a-ac7d2e9734cmr3856966b.16.1743699127992; Thu, 03 Apr 2025
- 09:52:07 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743699291; x=1744304091;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=FDa5eNS7BwA8fLuFV+VPTYw9CpDmGbyK6UKEScOkVlM=;
+        b=CxLFKeD0H5yOyMnkH4xuBCV1gSZtyRaAvmhKyGlT1Mwplgv5jw5E2QxFW9KF8hh3bw
+         DpwCWPCZgP3lmHXTmwAv5tRWVwM9IG+nMuF9vSSx1+4R9OiJWHh5DLxFkPabJ1z7eCOO
+         EKHncUAieKbW3UhUMyLWX0yRlZmg81R+FcUIb54n6sGH5Osf5lXoJRvE+5H+rdcbGYeo
+         HXhWcnrAoa2UfqXnmcJgavSmo5U8x1J7goX6+ft4gWzPfIB0SKqw3jvTzrc6MN+Ss+SL
+         65Jkiux/7y73NsIOMG87D2ZB+KFMAEyzzaBV03hQCJFnz5GDBTxDxKRBVGBEu9DFkr2H
+         1Q+g==
+X-Forwarded-Encrypted: i=1; AJvYcCU2W99SAYZxS02LIpy509IQX8JTENKvbvdAPEwvg5y8MhOLI1HQJXwjDrn+gs+Ld/g73dDEmR0TH1J9JFlg@vger.kernel.org, AJvYcCUMDHJFxqHJsSsyZhRX/j4UErk8K/3g3bsi+5toyRING3fN/+gUFW3D8HjDrTfXyfLEjttd8W2mN6PAujA=@vger.kernel.org, AJvYcCUl8dGL8RqG4wJvJtpSeAwEpJwPoQQAEnBxTXpaBEvDp72WLdsLqwQsWjyDWJ2445dfLoheAAjz2I/0PUU=@vger.kernel.org, AJvYcCWF96Fz+zXCDbd/mEEseXR7+zN6LMv26KkkYua3m6bJ4KGyshv5eqRTjIOMigxyy8PPwJG3J+Au@vger.kernel.org, AJvYcCX8uHRTEvajhEcj3dCefQUMC8NavVsjxBmWXzvPfDV7CsWtoL6rPoNzsqWomWbPrDrbd2qkq+c2cY9i5sD/wuE=@vger.kernel.org, AJvYcCXSQRdVApxfh5D3QSt0S55XSeRcYDZY9JQpg51RYtd+Z6+hEinnYS2OiR8d7Lrv30vKCwUJP9roVQIK7gp2@vger.kernel.org, AJvYcCXzhjpL7eidVcIl+LGJ4UGZboao8pihnLnzVuX7uAg20fu9hyfMHEmAXU2aTk+jMeAG25E=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw8tQ4aNmYwQgAay/SdGInF3tAUrPfGPJ+gvXGMpxv1xtENu9qf
+	VR02SZhWK1FO0F5avJhhHGlx2NqHJTo898wfC4gZvenaaCD2hvCC
+X-Gm-Gg: ASbGnct5JWGCRoe3VZIPBwky2akTdA+uvK1NUNrKyRJbPCRhA4dlz3tqndh1dQIIikI
+	Xzw5Hway+WHDNStrCQg6Fd8wkjC59n7u9cAQAewlAoIrwQDQ0Es6zps2jtx2QDuxHEmAVk+S+a/
+	pQmkdxONjaqkaUW9+lBaVwUCikG0HK4fxdXXL9stR9/YZZgsEpGT9gvVGIe8NJfb/ljduRhKTjC
+	JD6ZU1uwjGXqxJXRV9fDh/2N5muCNFa2kYrNhzFlfcPLheEkJAPYp+l2n9516Dh6nft0WuYj48P
+	N1hzw7y64PelhNuzI7MF4D3/7p6GUpiIFgJ/etIG3G0xGixWNPF17vjlX03ifzYKK3F34evv
+X-Google-Smtp-Source: AGHT+IFzbU3WoJeacDQdqibpo5DgjipppPJR8PTe9f3lGsTZ/tQbuHLEeyPY/scxBj5Gc9UqWtPEbg==
+X-Received: by 2002:a05:6a21:9011:b0:1f3:418c:6281 with SMTP id adf61e73a8af0-2010446ceb8mr238059637.4.1743699290513;
+        Thu, 03 Apr 2025 09:54:50 -0700 (PDT)
+Received: from visitorckw-System-Product-Name ([140.113.216.168])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af9bc31c00csm1453293a12.20.2025.04.03.09.54.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Apr 2025 09:54:49 -0700 (PDT)
+Date: Fri, 4 Apr 2025 00:54:40 +0800
+From: Kuan-Wei Chiu <visitorckw@gmail.com>
+To: Yury Norov <yury.norov@gmail.com>, "H. Peter Anvin" <hpa@zytor.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>,
+	David Laight <david.laight.linux@gmail.com>,
+	Andrew Cooper <andrew.cooper3@citrix.com>,
+	Laurent.pinchart@ideasonboard.com, airlied@gmail.com,
+	akpm@linux-foundation.org, alistair@popple.id.au,
+	andrew+netdev@lunn.ch, andrzej.hajda@intel.com,
+	arend.vanspriel@broadcom.com, awalls@md.metrocast.net, bp@alien8.de,
+	bpf@vger.kernel.org, brcm80211-dev-list.pdl@broadcom.com,
+	brcm80211@lists.linux.dev, dave.hansen@linux.intel.com,
+	davem@davemloft.net, dmitry.torokhov@gmail.com,
+	dri-devel@lists.freedesktop.org, eajames@linux.ibm.com,
+	edumazet@google.com, eleanor15x@gmail.com,
+	gregkh@linuxfoundation.org, hverkuil@xs4all.nl,
+	jernej.skrabec@gmail.com, jirislaby@kernel.org, jk@ozlabs.org,
+	joel@jms.id.au, johannes@sipsolutions.net, jonas@kwiboo.se,
+	jserv@ccns.ncku.edu.tw, kuba@kernel.org, linux-fsi@lists.ozlabs.org,
+	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-media@vger.kernel.org, linux-mtd@lists.infradead.org,
+	linux-serial@vger.kernel.org, linux-wireless@vger.kernel.org,
+	linux@rasmusvillemoes.dk, louis.peens@corigine.com,
+	maarten.lankhorst@linux.intel.com, mchehab@kernel.org,
+	mingo@redhat.com, miquel.raynal@bootlin.com, mripard@kernel.org,
+	neil.armstrong@linaro.org, netdev@vger.kernel.org,
+	oss-drivers@corigine.com, pabeni@redhat.com,
+	parthiban.veerasooran@microchip.com, rfoss@kernel.org,
+	richard@nod.at, simona@ffwll.ch, tglx@linutronix.de,
+	tzimmermann@suse.de, vigneshr@ti.com, x86@kernel.org
+Subject: Re: [PATCH v3 00/16] Introduce and use generic parity16/32/64 helper
+Message-ID: <Z+69UOemf+H/EHvN@visitorckw-System-Product-Name>
+References: <Z824SgB9Dt5zdWYc@visitorckw-System-Product-Name>
+ <Z9CyuowYsZyez36c@thinkpad>
+ <80771542-476C-493E-858A-D2AF6A355CC1@zytor.com>
+ <Z9GtcNJie8TRKywZ@thinkpad>
+ <Z9G2Tyypb3iLoBjn@visitorckw-System-Product-Name>
+ <Z9KMKwnZXA2mkD2s@visitorckw-System-Product-Name>
+ <Z+AlyB461xwMxMtG@visitorckw-System-Product-Name>
+ <eec0dfd7-5e4f-4a08-928c-b7714dbc4a17@zytor.com>
+ <Z+6dh1ZVIKWWOKaP@visitorckw-System-Product-Name>
+ <Z-6zzP2O-Q7zvTLt@thinkpad>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250331143426.947281958@goodmis.org> <20250331143532.459810712@goodmis.org>
- <CAHk-=whUOfVucfJRt7E0AH+GV41ELmS4wJqxHDnui6Giddfkzw@mail.gmail.com>
- <20250331133906.48e115f5@gandalf.local.home> <202504030941.E0AA2E023@keescook>
-In-Reply-To: <202504030941.E0AA2E023@keescook>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Thu, 3 Apr 2025 09:51:51 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgwSx8Bm6c=UEe0Xh6MvkZ9aAYhYBTwUxYk3Fu6GehHVg@mail.gmail.com>
-X-Gm-Features: ATxdqUGzamms3HBwS2oeFKY1M4I1ihINB3lWR76jBDO6-iwI1TuKjoGv0rxX3qw
-Message-ID: <CAHk-=wgwSx8Bm6c=UEe0Xh6MvkZ9aAYhYBTwUxYk3Fu6GehHVg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] tracing: ring-buffer: Have the ring buffer code do
- the vmap of physical memory
-To: Kees Cook <kees@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Vincent Donnefort <vdonnefort@google.com>, 
-	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, Tony Luck <tony.luck@intel.com>, 
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z-6zzP2O-Q7zvTLt@thinkpad>
 
-On Thu, 3 Apr 2025 at 09:45, Kees Cook <kees@kernel.org> wrote:
+On Thu, Apr 03, 2025 at 12:14:04PM -0400, Yury Norov wrote:
+> On Thu, Apr 03, 2025 at 10:39:03PM +0800, Kuan-Wei Chiu wrote:
+> > On Tue, Mar 25, 2025 at 12:43:25PM -0700, H. Peter Anvin wrote:
+> > > On 3/23/25 08:16, Kuan-Wei Chiu wrote:
+> > > > 
+> > > > Interface 3: Multiple Functions
+> > > > Description: bool parity_odd8/16/32/64()
+> > > > Pros: No need for explicit casting; easy to integrate
+> > > >        architecture-specific optimizations; except for parity8(), all
+> > > >        functions are one-liners with no significant code duplication
+> > > > Cons: More functions may increase maintenance burden
+> > > > Opinions: Only I support this approach
+> > > > 
+> > > 
+> > > OK, so I responded to this but I can't find my reply or any of the
+> > > followups, so let me go again:
+> > > 
+> > > I prefer this option, because:
+> > > 
+> > > a. Virtually all uses of parity is done in contexts where the sizes of the
+> > > items for which parity is to be taken are well-defined, but it is *really*
+> > > easy for integer promotion to cause a value to be extended to 32 bits
+> > > unnecessarily (sign or zero extend, although for parity it doesn't make any
+> > > difference -- if the compiler realizes it.)
+> > > 
+> > > b. It makes it easier to add arch-specific implementations, notably using
+> > > __builtin_parity on architectures where that is known to generate good code.
+> > > 
+> > > c. For architectures where only *some* parity implementations are
+> > > fast/practical, the generic fallbacks will either naturally synthesize them
+> > > from components via shift-xor, or they can be defined to use a larger
+> > > version; the function prototype acts like a cast.
+> > > 
+> > > d. If there is a reason in the future to add a generic version, it is really
+> > > easy to do using the size-specific functions as components; this is
+> > > something we do literally all over the place, using a pattern so common that
+> > > it, itself, probably should be macroized:
+> > > 
+> > > #define parity(x) 				\
+> > > ({						\
+> > > 	typeof(x) __x = (x);			\
+> > > 	bool __y;				\
+> > > 	switch (sizeof(__x)) {			\
+> > > 		case 1:				\
+> > > 			__y = parity8(__x);	\
+> > > 			break;			\
+> > > 		case 2:				\
+> > > 			__y = parity16(__x);	\
+> > > 			break;			\
+> > > 		case 4:				\
+> > > 			__y = parity32(__x);	\
+> > > 			break;			\
+> > > 		case 8:				\
+> > > 			__y = parity64(__x);	\
+> > > 			break;			\
+> > > 		default:			\
+> > > 			BUILD_BUG();		\
+> > > 			break;			\
+> > > 	}					\
+> > > 	__y;					\
+> > > })
+> > >
+> > Thank you for your detailed response and for explaining the rationale
+> > behind your preference. The points you outlined in (a)–(d) all seem
+> > quite reasonable to me.
+> > 
+> > Yury,
+> > do you have any feedback on this?
+> > Thank you.
+> 
+> My feedback to you:
+> 
+> I asked you to share any numbers about each approach. Asm listings,
+> performance tests, bloat-o-meter. But you did nothing or very little
+> in that department. You move this series, and it means you should be
+> very well aware of alternative solutions, their pros and cons.
 >
-> pstore tries to work with either real RAM or with iomem things. What
-> is there now Currently Works Fine, but should this be using
-> vmap_page_range()?
+I'm willing to run micro-benchmarks, but even with performance data, I
+lack the domain knowledge to determine which users care about parity
+efficiency. No one in Cc has clarified this either.
 
-Yes, I don't see the point of using vmap() on something that is
-contiguous but is made to look like a collection of random pfns.
+> Instead, you started a poll to pick the best solution. This is not
+> what I expected, and this is not how the best solution can be found.
+> 
+> To H. Peter and everyone:
+> 
+> Thank you for sharing your opinion on this fixed parity(). Your
+> arguments may or may not be important, depending on what existing
+> users actually need. Unfortunately, Kuan-Wei didn't collect
+> performance numbers and opinions from those proposed users.
+> 
+> I already told that, and I will say again: with the lack of any
+> evidence that performance and/or code generation is important here,
+> the best solution is one that minimizes maintainers' (my!) burden.
+> 
+> In other words, bool parity(unsigned long long). I'm OK to maintain
+> a macro, as well. I understand that more complicated solutions may be
+> more effective. I will take them only if they will be well advocated.
+> 
+Before Peter suggested an arch-specific implementation, I planned to go
+with approach #1, as it minimizes maintenance overhead in the absence
+of clear user requirements.
 
-IOW, that whole 'pages[]' array (and the kmalloc/kfree) seems pointless.
+Peter,
+Have you identified any users who care about parity efficiency?
+If not, do we still need to introduce an arch-specific implementation?
 
-I *suspect* the history is simply that 'vmap()' predates 'vmap_page_range()'.
+Regards,
+Kuan-Wei
 
-But maybe I'm missing something, and there is some limitation to
-vmap_page_range() that I'm not seeing.
-
-             Linus
+> I hope this will help us to stop moving this discussion back and forth
+> and save our time, guys.
+> 
+> Thanks,
+> Yury
