@@ -1,120 +1,49 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 241D5250C16;
-	Thu,  3 Apr 2025 17:50:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E44424CEE8;
+	Thu,  3 Apr 2025 17:52:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743702613; cv=none; b=OlOMd/7NyAqHxcJKV6IyDKplIOjfLQ3QPHU/WlkL+Q7NYMGwvDhcMg/Nm7Kv5bAtWJf9Zq6/AL80SxARN+bxQwKjnQStolqKy/P792fCRvo5uvvJMNpJlMMRQv7RsFQ4rxXyAKIdaGWtDBf7QCaEP42N5+6OV0bG1LR7h+qOrOw=
+	t=1743702747; cv=none; b=du3v3u32F5mjoeBlG10+/pz3w6797xKcOlFa0poAU5IJLPOBYrWSmQ/mJxKyVw+2CpPcLiM4HphKUexXF5BnHHHgtynFFGvQG5/QApHO/VU1/tzREJ/SKi/TfzMFEN98yOn4ZUxjVtmlz75bzxQh0+EI8f82B4jGRmgGQTcqtpM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743702613; c=relaxed/simple;
-	bh=UPGMlSF/FpTS0gjQBFwpi/aCoqZhru+VpIxxEDgIdLI=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NLR1aos9ZWUZrj6/GH8iKZnvJY7BjzF6hEIHF+8jFnjrCYIyPMXOb4XaUOMHWeZ71IsBUyBtvhGrNImIqQv18yxQ/UM/29pnQeTxXAxWvH/CcPdxNlNoi7qRVKhvHpst3AZeeJCvEGXZZqpS/wPmvjgOkoGs+IcPJ1nONMxFfYI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oEWoXS8y; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oEWoXS8y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85771C4CEE3;
-	Thu,  3 Apr 2025 17:50:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743702612;
-	bh=UPGMlSF/FpTS0gjQBFwpi/aCoqZhru+VpIxxEDgIdLI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=oEWoXS8y3UmyKJpgkuIIsrxk5K4An9PBriFGth1yrBYy779+IfJV2I03pxIyeiMmd
-	 G7Lru65enhHMrC/Wnx5vSVhuV5qEl5WochlbZiqrgmOXSkREVPGFIu/vNM9UYBgpon
-	 +dnjB6bnPDIlWGDAerxUvFwlpZQI61VUH6OOoIvog8Hs99r/xo6WkVjpC1DN36QBzd
-	 MrBKYJyNYm6bIaGXviKy5Li+OQhOd8/IglAKk6PG+0eP36R/Opz3b9PTHiO8S1+oTI
-	 PtTvza/cAW9Q3KpIxIdsTY1MTzLBe5DMdNH+v++0ug3gHUshvVoDLYpa0r0P9EeMCl
-	 kyjfG2XMT6jqA==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=lobster-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1u0Ohe-0022Kw-1K;
-	Thu, 03 Apr 2025 18:50:10 +0100
-Date: Thu, 03 Apr 2025 18:50:12 +0100
-Message-ID: <8734epyw17.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Christian Bruel <christian.bruel@foss.st.com>
-Cc: <tglx@linutronix.de>,
-	<robh@kernel.org>,
-	<krzk+dt@kernel.org>,
-	<conor+dt@kernel.org>,
-	<mcoquelin.stm32@gmail.com>,
-	<alexandre.torgue@foss.st.com>,
-	<linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>,
-	<devicetree@vger.kernel.org>,
-	<linux-stm32@st-md-mailman.stormreply.com>
-Subject: Re: [PATCH 2/3] irqchip/gic: Use 0x10000 offset to access GICC_DIR on STM32MP2
-In-Reply-To: <20250403122805.1574086-3-christian.bruel@foss.st.com>
-References: <20250403122805.1574086-1-christian.bruel@foss.st.com>
-	<20250403122805.1574086-3-christian.bruel@foss.st.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	s=arc-20240116; t=1743702747; c=relaxed/simple;
+	bh=lX2sDl/bFxUKj8k9SLE4kTNfkyRlRSDVIfDAZaT6YJU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=G86tYNHkcK/MDH9vTTwUCJzj8EmBR6TWaSCe0KIDfCb3NTne9JmJtXLBr9ZhHGCoAukFkFCIwuVpxGJ4qvjwloP3cP8SD+liUs1Mu2MIHlLQfyaOvXQx3GGgpY7YeHdCyEeZpt8FPuLdOB1xrZFeylMuytmR/143JqqmB41T++k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2420C4CEE3;
+	Thu,  3 Apr 2025 17:52:25 +0000 (UTC)
+Date: Thu, 3 Apr 2025 13:53:31 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org,
+ peterz@infradead.org, mingo@kernel.org, bpf@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kernel-team@meta.com, oleg@redhat.com,
+ mhiramat@kernel.org, ast@kernel.org
+Subject: Re: [PATCH tip/perf] uprobes: avoid false lockdep splat in uprobe
+ timer callback
+Message-ID: <20250403135331.1b8e8fc0@gandalf.local.home>
+In-Reply-To: <20250403174917.OLHfwBp-@linutronix.de>
+References: <20250403171831.3803479-1-andrii@kernel.org>
+	<20250403174917.OLHfwBp-@linutronix.de>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: christian.bruel@foss.st.com, tglx@linutronix.de, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Transfer-Encoding: 7bit
 
-On Thu, 03 Apr 2025 13:28:04 +0100,
-Christian Bruel <christian.bruel@foss.st.com> wrote:
+On Thu, 3 Apr 2025 19:49:17 +0200
+Sebastian Andrzej Siewior <bigeasy@linutronix.de> wrote:
+
+> > +	/* See free_ret_instance() for notes on seqcount use.  
 > 
-> When GIC_4KNOT64K bit in the GIC configuration register is
-> 0 (64KB), address block is modified in such a way than only the
-> first 4KB of the GIC cpu interface are accessible with default
-> offsets.
-> With this bit mapping GICC_DIR register is accessible at
-> offset 0x10000 instead of 0x1000, thus remap accordingly
+> This is not a proper multi line comment.
 
-And I'm pretty sure the whole of the GICC range is correctly
-accessible at offset 0xF000, giving you the full 8kB you need. That's
-because each page of the GIC is aliased over two 64kB blocks, as per
-the integration guidelines so that MMU isolation can be provided on a
-64kB boundary.
+It's only proper in the networking code, but not the rest of the kernel.
 
-Funnily enough, all it takes is to adjust GICC region. You can either:
-
-- make it 128kB wide, and the driver will take care of it (details in
-  gic_check_eoimode()). On one of my boxes that is similarly
-  configured, I get:
-
-  [    0.000000] NR_IRQS: 64, nr_irqs: 64, preallocated irqs: 0
-  [    0.000000] GIC: Adjusting CPU interface base to 0x00000000780af000
-  [    0.000000] Root IRQ handler: gic_handle_irq
-  [    0.000000] GIC: Using split EOI/Deactivate mode
-
-  See below for what I expect to be the correct fix.
-  
-- make it 8kB wide from offset 0xF000.
-
-Unless the ST HW folks have been even more creative, none of this
-overly complicated stuff should be necessary. Just describe the HW
-correctly.
-
-	M.
-
-diff --git a/arch/arm64/boot/dts/st/stm32mp251.dtsi b/arch/arm64/boot/dts/st/stm32mp251.dtsi
-index f3c6cdfd7008..97b7a7106a02 100644
---- a/arch/arm64/boot/dts/st/stm32mp251.dtsi
-+++ b/arch/arm64/boot/dts/st/stm32mp251.dtsi
-@@ -120,7 +120,7 @@ intc: interrupt-controller@4ac00000 {
- 		#address-cells = <1>;
- 		interrupt-controller;
- 		reg = <0x0 0x4ac10000 0x0 0x1000>,
--		      <0x0 0x4ac20000 0x0 0x2000>,
-+		      <0x0 0x4ac20000 0x0 0x20000>,
- 		      <0x0 0x4ac40000 0x0 0x2000>,
- 		      <0x0 0x4ac60000 0x0 0x2000>;
- 	};
-
--- 
-Jazz isn't dead. It just smells funny.
+-- Steve
