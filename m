@@ -1,139 +1,113 @@
-Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF95024EF8C
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 15:40:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 442CF18DB36
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 15:41:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743694835; cv=none; b=ZSc2S2DIvNAvaFRks33gNYdGoULrEOOaKdr9m+/LNNt5GZ/HR5rfjstUh4zgo0snaNIL/28v0cHvaioO5n0+Gbher+ehY5KyoUzqOXscCt0HC03KaRAq6nQMyHFHsC0fvO/yFFCDUAl+P/Wb01USThALvdUzyUgzdD1MuAEi8Mc=
+	t=1743694898; cv=none; b=kT3Hyt0r1s1o5b16XZUkd9CTjkriuWLyEVsV1J4wuwNnvFPT5UZIfm54ECVjNEbTewWQUR0jtkKPxH4kMfJ/VQBAHDJDD80ywHJwyeHxFzlG89g3p1HyhIpvt4qTQjHfuv72rh0FjMh8CaDc1gYWXvHB3Wdrn1ufJ8+MQY+GnvM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743694835; c=relaxed/simple;
-	bh=LLyahjp8dUbS0PTJb6Wv/3FQc531IuBzGwgR5Q4UtNA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Yxy6RSavCqqyFnXt7jaZXw4XhBtBunqcS3KGmtKyyJrztpyILYd7tHtWIdUKIsFbsw5JxxA7Pyr+woYItknMfhg/vSs0iOj6SdnU05XuRAxmx1Mb+Aa+9Zgm1pfkKBRmrCsBbgG1GtNaEpPx8/y+ZxO7DeIC3St6WwjXE3H5vu8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=QeQXEowk; arc=none smtp.client-ip=209.85.219.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+	s=arc-20240116; t=1743694898; c=relaxed/simple;
+	bh=xcukwwqhDfJieZETAY0kTlbjmlmGEsg3Rvg8ss6Sgrw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=X6s7KMLRxbdWsMYEQU5iryo8CmSPwBI2G+wHRMZlSGCBJ2Vx3AGk8lTH5S/0hMGIORLzl0tzf7srpMmxGqjO/AxskF6UU8SQH31QEcv80hjzMwHo8E8KC7Vt4oXZirGQFjHHQwsuAGPrmqPCF8KZu22i3Ui6F9fubEhXFl5z8lg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IfU8UFx/; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="QeQXEowk"
-Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-e6e09fb66c7so784718276.2
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 08:40:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1743694831; x=1744299631; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/pTVLra0u+1FpM17aNh7S4PmJQcdVxjLqXOG1m/fwvo=;
-        b=QeQXEowk7VwrlECW0aMxDJtXbk4ovJZAPkYUVLhmOxhnJythwjDdY3DDTVTsBjoJ6R
-         jdG682+EQksSL2X2YeVbDOKy+k3To6cG8vkVBxitxmqo8s/09wO4Yc4rXgU0U+97rRAl
-         l7AlSgyFDKKINJd3mljwcFzeq39lSFDDZ+DMaH62ao9spGSKGJqfTfUUGjPYy8bwhd+a
-         FvcRRITt/gsqdM22I3FjbPNqsUl0SN9LAA1Wy6+uEbl/bYUEB8uiYdSD0DZbtDUkKExy
-         wj/3Ij2PEIZNlpyKLOsYSvAwPs14fu+iKWG1Rg1Rsq/B++BAR4gfyFXGALtx2GtC50tm
-         qrDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743694831; x=1744299631;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/pTVLra0u+1FpM17aNh7S4PmJQcdVxjLqXOG1m/fwvo=;
-        b=pOuOflNrRSBwNczgs3Iu8vRoM3oCP/NBhr3koqMcOFV/qn16tszd3geodqgLyI8zXO
-         qpKPxVany5ad5RRvQPE1bCC6PPAMI/VxkK1l5b6jxXJuvLZkMRNTMrXO9hEiKUnTTzG2
-         8QjjzE8p2q8E6HES9l3mepXJdJ0BA+bH6yhDh/y3RbxD5XlMS12zyAdeMGgptS5TD4xS
-         igMFI3PHW72x29e2tdII+kgm9YS4tSvXykkYxYuuI+zdjwItIe5V7ZvxBRZvb2COnn+E
-         HjEfVgOAz48QlJfYKaH0VXcxjFtNr/2FPrIpcLcZm4DwOv/7geAMg5qp2tcijZp2/TG9
-         Vbyg==
-X-Forwarded-Encrypted: i=1; AJvYcCX5X3dht+uWWcPPeI7hl8avSxbHNhC51DJ+o/MwWcCW15KCmCxL/dNiCm9jKX+6Dsyx9vQVDE5XNH4Rvn0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw6ll4gqINw32zQicvHc8n3XdQ8hISA+fsPQhR+YqdPBqDNe6KG
-	2nhZObIZ0gFJUthy2ksszJ4TwpAjybq8X0+Rpodse7d1//7vLu58QM9dwYHTCYZ0wIKFOivTFK9
-	eIdhvjwLm6QGAhbo6RXuyw/TO1bEVUB5Miqrf
-X-Gm-Gg: ASbGncsUJAojc9WujQ+0ZTdPRhLdJ1Jn03KlfvoNrP8RIZ5Ssyk7Ci5pPLxrZ78q3XF
-	Q/UjTdQQ9o6xLHYfvffko0JCAfIwOW/QoNkt4Y/pgk3sLODF7a0B8b0KlpmgRNsRgb6BNORh9Qd
-	gvn7kVW75/U1CHvTgTjukyhW0v8g==
-X-Google-Smtp-Source: AGHT+IE5YGq8DRNeSsm9U1iNJDEvoCJMUq0s3fKOzK6HVx45MwQM6mHF9XCGCBw2DL/ytY3QnYWSaOU0LU4h9G7Y1qw=
-X-Received: by 2002:a05:6902:1a49:b0:e65:450f:47b4 with SMTP id
- 3f1490d57ef6-e6e1c2c0d02mr83229276.21.1743694831610; Thu, 03 Apr 2025
- 08:40:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IfU8UFx/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743694896; x=1775230896;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=xcukwwqhDfJieZETAY0kTlbjmlmGEsg3Rvg8ss6Sgrw=;
+  b=IfU8UFx/AxRAoIhrNfkwIa2zU8YnTq8AJW7aCR1pUanqSlg0sQg+96Ah
+   pncFM68rsRnKFJ4nCuCxNnYPMyanHB0ZZ/CflrmVMR1MlOR8+IjPOZrxv
+   TdP4hb73gS+TUIqL1HCmcCh96fwP0RsfqT8vO7fnpXW4CnCOP+sYlG129
+   RH5/V4rNs1hVWa3lH1MhPXl2uOMJXaIe0FUN/cNgDVHrzWIH9XEXiP8WQ
+   OTNUnJjSUM3ZUEZncLxc7YNAEglJ75kKFBRyuLX8iIuI7/7M5A8RhP9D9
+   tNyjGtUUIHFTw6ryhWW6TQdrFNiPdDLM7TEnXuvTdOdqhjv5aUeN/xq7K
+   Q==;
+X-CSE-ConnectionGUID: MzqTkV8uR2qLW0QJtILfoQ==
+X-CSE-MsgGUID: ev81/5VbSBi5UNVzNnYTTw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11393"; a="48905385"
+X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
+   d="scan'208";a="48905385"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 08:41:34 -0700
+X-CSE-ConnectionGUID: k0M6nDAuSF6gLwdPz5UjCA==
+X-CSE-MsgGUID: Mw//yhTfSJGKkgLWHYULlg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
+   d="scan'208";a="132026236"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 08:41:33 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1u0Mh7-00000008r1n-0RJY;
+	Thu, 03 Apr 2025 18:41:29 +0300
+Date: Thu, 3 Apr 2025 18:41:28 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Uros Bizjak <ubizjak@gmail.com>, x86@kernel.org,
+	linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [PATCH -tip 2/4] x86/idle: Use MONITOR and MWAIT mnemonics in
+ <asm/mwait.h>
+Message-ID: <Z-6sKELOFl9d8KVe@smile.fi.intel.com>
+References: <20250402180827.3762-1-ubizjak@gmail.com>
+ <20250402180827.3762-2-ubizjak@gmail.com>
+ <Z-6pDGR0pQavVQfq@black.fi.intel.com>
+ <Z-6poX1TFKLKn4mB@black.fi.intel.com>
+ <Z-6qZP00cj_K7x-_@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250321164537.16719-1-bboscaccy@linux.microsoft.com> <20250321164537.16719-2-bboscaccy@linux.microsoft.com>
-In-Reply-To: <20250321164537.16719-2-bboscaccy@linux.microsoft.com>
-From: Paul Moore <paul@paul-moore.com>
-Date: Thu, 3 Apr 2025 11:40:20 -0400
-X-Gm-Features: ATxdqUFIj4dyrFJX231ICUhqYjHRv0Gra_aYTiiiEKPjs4MluovUd6s356bhD14
-Message-ID: <CAHC9VhR6J+G7MqBSBQemwQsYXdatEhhKCDJ2o13fpXpMgfY66g@mail.gmail.com>
-Subject: Re: [RFC PATCH security-next 1/4] security: Hornet LSM
-To: Blaise Boscaccy <bboscaccy@linux.microsoft.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, David Howells <dhowells@redhat.com>, 
-	Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, 
-	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, 
-	Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nicolas Schier <nicolas@fjasle.eu>, Shuah Khan <shuah@kernel.org>, 
-	=?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
-	=?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, Jarkko Sakkinen <jarkko@kernel.org>, 
-	Jan Stancek <jstancek@redhat.com>, Neal Gompa <neal@gompa.dev>, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, keyrings@vger.kernel.org, 
-	linux-crypto@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	bpf@vger.kernel.org, llvm@lists.linux.dev, nkapron@google.com, 
-	teknoraver@meta.com, roberto.sassu@huawei.com, xiyou.wangcong@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z-6qZP00cj_K7x-_@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Fri, Mar 21, 2025 at 12:46=E2=80=AFPM Blaise Boscaccy
-<bboscaccy@linux.microsoft.com> wrote:
->
-> This adds the Hornet Linux Security Module which provides signature
-> verification of eBPF programs.
->
-> Hornet uses a similar signature verification scheme similar to that of
-> kernel modules. A pkcs#7 signature is appended to the end of an
-> executable file. During an invocation of bpf_prog_load, the signature
-> is fetched from the current task's executable file. That signature is
-> used to verify the integrity of the bpf instructions and maps which
-> where passed into the kernel. Additionally, Hornet implicitly trusts any
-> programs which where loaded from inside kernel rather than userspace,
-> which allows BPF_PRELOAD programs along with outputs for BPF_SYSCALL
-> programs to run.
->
-> Hornet allows users to continue to maintain an invariant that all code
-> running inside of the kernel has been signed and works well with
-> light-skeleton based loaders, or any statically generated program that
-> doesn't require userspace instruction rewriting.
->
-> Signed-off-by: Blaise Boscaccy <bboscaccy@linux.microsoft.com>
-> ---
->  Documentation/admin-guide/LSM/Hornet.rst |  51 +++++
->  crypto/asymmetric_keys/pkcs7_verify.c    |  10 +
->  include/linux/kernel_read_file.h         |   1 +
->  include/linux/verification.h             |   1 +
->  include/uapi/linux/lsm.h                 |   1 +
->  security/Kconfig                         |   3 +-
->  security/Makefile                        |   1 +
->  security/hornet/Kconfig                  |  11 ++
->  security/hornet/Makefile                 |   4 +
->  security/hornet/hornet_lsm.c             | 239 +++++++++++++++++++++++
->  10 files changed, 321 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/admin-guide/LSM/Hornet.rst
->  create mode 100644 security/hornet/Kconfig
->  create mode 100644 security/hornet/Makefile
->  create mode 100644 security/hornet/hornet_lsm.c
+On Thu, Apr 03, 2025 at 05:33:56PM +0200, Ingo Molnar wrote:
+> * Andy Shevchenko <andriy.shevchenko@intel.com> wrote:
+> > On Thu, Apr 03, 2025 at 06:28:13PM +0300, Andy Shevchenko wrote:
+> > > On Wed, Apr 02, 2025 at 08:08:06PM +0200, Uros Bizjak wrote:
 
-A reminder that you'll need to take responsibility for maintaining
-Hornet and provide a corresponding entry in the MAINTAINERS file too.
-I'm not nice enough to maintain Hornet for you ;)  If you have any
-questions about any of the fields, let me know.
+...
 
-I believe you've seen this already, but as a general FYI we do have
-some guidelines for new LSMs:
+> > > > No functional change intended.
+> > > 
+> > > Hmm... Is it only me who gets these, please?
+> > > 
+> > > In file included from acpi/cstate.c:18:
+> > > asm/mwait.h:30:15: error: invalid operand for instruction
+> > >    30 |         asm volatile("monitor %0, %1, %2" :: "a" (eax), "c" (ecx), "d" (edx));
+> > >       |                      ^
+> > > <inline asm>:1:16: note: instantiated into assembly here
+> > >     1 |         monitor %rax, %ecx, %edx
+> > >       |                       ^~~~~
+> > > In file included from acpi/cstate.c:18:
+> > > asm/mwait.h:95:15: error: instruction requires: Not 64-bit mode
+> > >    95 |         asm volatile("sti; mwait %0, %1" :: "a" (eax), "c" (ecx));
+> > >       |                      ^
+> > > <inline asm>:1:7: note: instantiated into assembly here
+> > >     1 |         sti; mwait %eax, %ecx
+> > >       |              ^
+> > 
+> > FWIW, revert fixes the issue.
+> 
+> All gone already, tomorrow's -next should be fine.
 
-https://web.git.kernel.org/pub/scm/linux/kernel/git/pcmoore/lsm.git/tree/RE=
-ADME.md
+Thanks!
 
---=20
-paul-moore.com
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
