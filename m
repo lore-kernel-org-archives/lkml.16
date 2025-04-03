@@ -1,134 +1,145 @@
-Received: from invmail3.skhynix.com (exvmail3.skhynix.com [166.125.252.90])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC006225A31
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 07:01:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.90
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEAEC22ACF1;
+	Thu,  3 Apr 2025 07:02:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743663722; cv=none; b=BFWzizhRmSXmTdypWJst+IV0AC+Sq+3PjfT5M9x6ZhCcLxGN7lgJqGN17MhkmYsDcm0VwKTrmNkKyGEJG/9lPf3TbAOtj/jxCi5HB0WByJoHrDifN7irsWerDSvjAG5YVP44Y1Li+TIiTmT7eo+JMwbWifMcmFPUuZ74Dgd5qg4=
+	t=1743663750; cv=none; b=Y23KgJ5p318vruJHePIZVv5iIM/BCcrpTw2ZKrEF/B3UHoWX1ijgQbODn7uQoHHN0UPRarFbQ3lMAiHs8h0ILNK290V+AhwbR621bRq9BSGNd9uKJWLNWZtSNUVnpn4oys7sSDZj66v3a2AS7dbIjaG88G6hD2hnVUswCNDsjMU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743663722; c=relaxed/simple;
-	bh=T2bDbnyLgtIwbRSnddgDmQrC1ahlmIgD3bQi0Zs3sTA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TYpc8F+ntCSiNILlmx/2IMg943FPRXR0++J4j031FSpo4HcqHHU6HwLzYvxnM0HD2A6zggCv3fC4Cq79g2nRNvqWUs65qATxufHdQzgqLFRzPWxsXL1Rcrq3O9ApobRTu/XeLRjaMTNnvBywyvRBYDV6CVbkvUYoOoJE2USGmpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.90
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc59-03fff7000000aab6-42-67ee3261a423
-From: "yohan.joung" <yohan.joung@sk.com>
-To: linux-f2fs-devel@lists.sourceforge.net
-Cc: chao@kernel.org,
-	jaegeuk@kernel.org,
-	linux-kernel@vger.kernel.org,
-	pilhyun.kim@sk.com,
-	yohan.joung@sk.com
-Subject: Re: [f2fs-dev] [PATCH v3] f2fs: prevent the current section from being selected as a victim during GC
-Date: Thu,  3 Apr 2025 16:01:51 +0900
-Message-ID: <20250403070151.2894-1-yohan.joung@sk.com>
-X-Mailer: git-send-email 2.49.0.windows.1
-In-Reply-To: <002ea626-8468-4587-b481-10d8b9bd7a0f@kernel.org>
-References: <002ea626-8468-4587-b481-10d8b9bd7a0f@kernel.org>
+	s=arc-20240116; t=1743663750; c=relaxed/simple;
+	bh=7nJmuh6CufgTiLPYB6Psq6lj20Vj0015Pk78CwmGqH0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ue2EBfh+g5VwKwQHP8RtilMYCGhICZCrLmdSKzgFBCDRmNn60tFjDcjxY66pVpqwq2fvIEAIp4Si5RTMXAfJSjefFB0D9cZ0cQf1nGtU7tU//LC0SM7AlyAeE6Ih7nzqsqq26KGC2us1TenlgfZjW/H6USNdBuSXYA3CmN1bvbI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PHuJ79Uj; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PHuJ79Uj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F6D7C4CEE8;
+	Thu,  3 Apr 2025 07:02:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743663750;
+	bh=7nJmuh6CufgTiLPYB6Psq6lj20Vj0015Pk78CwmGqH0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=PHuJ79UjBVTum60/yjQkQCw2labuWiZzHxp8QFkVD7HtSN1WuRVGabLtMhELf5scH
+	 DQANUNJL9x/xgCKmHMbQ2PbqMRewesEEHpeHKXf2yn+VxIjVWWefLP6CKm9GJ/CwaT
+	 qPJfyRzOED2K8Me8vpgjUrRslXPGWSgVkwNE+rOrkQcUYIkk3OpUKvLaMW5w6rfaGl
+	 JqKqkLQMCMPcTZZa1sZa/ok3Oj8tWoPcyQ3LUJSaZtazBeE7JHfFFZNItTAJiKnRE/
+	 cRJx67raYaGouM+39cQX4ERzOaucOlku6AgJ49DOdu1O+SH0nKp3SNRTloq+ZEgfsx
+	 Tyj7DwKJbILRg==
+Message-ID: <6d6e85e2-a339-4904-a596-f2866d37739b@kernel.org>
+Date: Thu, 3 Apr 2025 09:02:23 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/3] dt-bindings: iio: dac: Add adi,ad3530r.yaml
+To: "Paller, Kim Seer" <KimSeer.Paller@analog.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen
+ <lars@metafoo.de>, "Hennerich, Michael" <Michael.Hennerich@analog.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+References: <20250403-togreg-v3-0-d4b06a4af5a9@analog.com>
+ <20250403-togreg-v3-2-d4b06a4af5a9@analog.com>
+ <20250403-ebony-coua-of-tornado-71d4ad@krzk-bin>
+ <PH0PR03MB7141FEBAD45D612440B85698F9AE2@PH0PR03MB7141.namprd03.prod.outlook.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <PH0PR03MB7141FEBAD45D612440B85698F9AE2@PH0PR03MB7141.namprd03.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrGLMWRmVeSWpSXmKPExsXC9ZZnkW6i0bt0g31H1C1OTz3LZPFk/Sxm
-	i0uL3C0u75rD5sDisWlVJ5vH7gWfmTw+b5ILYI7isklJzcksSy3St0vgymidcIGp4IJoxfqj
-	f5kbGC8LdjFycEgImEh8bU6DMd8diu9i5ORgE9CQ+NPbywxiiwhoSUxs+MsIYjMLlEr0Pl8G
-	ZgsL5EmcOnSdCcRmEVCV+HB8O5jNK2AmcbTlEguILSGgKbHjy3mwOKeAncSHYwfBeoUEbCWu
-	dDaxQNQLSpyc+YQFYr68RPPW2UB7uYB6v7JKTLn1gAlikKTEwRU3WCYw8s9C0jMLSc8CRqZV
-	jCKZeWW5iZk5xnrF2RmVeZkVesn5uZsYgaG3rPZP5A7GbxeCDzEKcDAq8fB2XHubLsSaWFZc
-	mXuIUYKDWUmEt1ALKMSbklhZlVqUH19UmpNafIhRmoNFSZzX6Ft5ipBAemJJanZqakFqEUyW
-	iYNTqoGxZPn1cp6IzSI/Xmgpveu2KH7OZPlO1dH852rHDdO92+sl2+7LtdcpsBzzkZToblrw
-	/M9Ts/9CafV7ErekpT+caeDj1qydf45RIMP9VOLeUK9H7LGyKxpKn8xWMuLdqvHoxdzjddUl
-	G345tx5cpV6t7iG0I1ZGudHSbdu5G4s23z/51Tp9AZcSS3FGoqEWc1FxIgBUN6phOQIAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprALMWRmVeSWpSXmKPExsXCNUNljm6i0bt0g9efxC1OTz3LZPFk/Sxm
-	i0uL3C0u75rDZjFh7lUmi/db7zE6sHlsWtXJ5rF7wWcmj2+3PTw+b5ILYInisklJzcksSy3S
-	t0vgymidcIGp4IJoxfqjf5kbGC8LdjFycEgImEi8OxTfxcjJwSagIfGnt5cZxBYR0JKY2PCX
-	EcRmFiiV6H2+DMwWFsiTOHXoOhOIzSKgKvHh+HYwm1fATOJoyyUWEFtCQFNix5fzYHFOATuJ
-	D8cOgvUKCdhKXOlsYoGoF5Q4OfMJC8R8eYnmrbOZJzDyzEKSmoUktYCRaRWjSGZeWW5iZo6Z
-	XnF2RmVeZoVecn7uJkZgOC2r/TNpB+O3y+6HGAU4GJV4eC+YvE0XYk0sK67MPcQowcGsJMJb
-	qAUU4k1JrKxKLcqPLyrNSS0+xCjNwaIkzusVnpogJJCeWJKanZpakFoEk2Xi4JRqYLT8uuud
-	YOi0D6sTJuk7pUk+5vZoe3jt/6nYLnaPRo/fy9J9Hbq+HFyqmPFLmX/GxO1ms5NuzLuyQmz2
-	z4kX5zNOq/i8VaPz85LXz7NYFS/GbdlcdvePl/6vQrnrHT1sq8xYqiTjOmVu7XxWy/MjUkZH
-	M+/Wnuiq7VvOi6gvWP3O4sJNl0InNRUlluKMREMt5qLiRABvm3ajIwIAAA==
-X-CFilter-Loop: Reflected
 
-On Thu, 3 Apr 2025 14:26:59 +0800 Chao Yu via Linux-f2fs-devel <linux-f2fs-devel@lists.sourceforge.net> wrote:
-> On 2025/4/2 16:04, yohan.joung wrote:
-> > When selecting a victim using next_victim_seg in a large section, the
-> > selected section might already have been cleared and designated as the
-> > new current section, making it actively in use.
-> > This behavior causes inconsistency between the SIT and SSA.
-> > 
-> > F2FS-fs (dm-54): Inconsistent segment (70961) type [0, 1] in SSA and SIT
-> > Call trace:
-> > dump_backtrace+0xe8/0x10c
-> > show_stack+0x18/0x28
-> > dump_stack_lvl+0x50/0x6c
-> > dump_stack+0x18/0x28
-> > f2fs_stop_checkpoint+0x1c/0x3c
-> > do_garbage_collect+0x41c/0x271c
-> > f2fs_gc+0x27c/0x828
-> > gc_thread_func+0x290/0x88c
-> > kthread+0x11c/0x164
-> > ret_from_fork+0x10/0x20
-> > 
-> > issue scenario
-> > segs_per_sec=2
-> > - seg#0 and seg#1 are all dirty
-> > - all valid blocks are removed in seg#1
-> > - gc select this sec and next_victim_seg=seg#0
-> > - migrate seg#0, next_victim_seg=seg#1
-> > - checkpoint -> sec(seg#0, seg#1)  becomes free
-> > - allocator assigns sec(seg#0, seg#1) to curseg
-> > - gc tries to migrate seg#1
-> > 
-> > Signed-off-by: yohan.joung <yohan.joung@sk.com>
-> > Signed-off-by: Chao Yu <chao@kernel.org>
-> > ---
-> >   fs/f2fs/segment.h | 6 ++++++
-> >   1 file changed, 6 insertions(+)
-> > 
-> > diff --git a/fs/f2fs/segment.h b/fs/f2fs/segment.h
-> > index 0465dc00b349..129df633d656 100644
-> > --- a/fs/f2fs/segment.h
-> > +++ b/fs/f2fs/segment.h
-> > @@ -476,6 +476,12 @@ static inline void __set_test_and_free(struct f2fs_sb_info *sbi,
-> >   		if (next >= start_segno + usable_segs) {
-> >   			if (test_and_clear_bit(secno, free_i->free_secmap))
-> >   				free_i->free_sections++;
-> > +
-> > +			if (GET_SEC_FROM_SEG(sbi->next_victim_seg[BG_GC]) == secno)
-> > +				sbi->next_victim_seg[BG_GC] = NULL_SEGNO;
-> > +
-> > +			if (GET_SEC_FROM_SEG(sbi->next_victim_seg[FG_GC]) == secno)
-> > +				sbi->next_victim_seg[FG_GC] = NULL_SEGNO;
-> 
-> Only need to reset next_victim_seg[] when setting section free?
-Ah, I missed that. I'll put up the patch again right away.
-Thanks. 
-> 
-> if (!test_and_clear_bit(secno, free_i->free_secmap))
-> 	goto skip_free;
-> 
-> free_i->free_sections++;
-> 
-> if (GET_SEC_FROM_SEG(sbi->next_victim_seg[BG_GC]) == secno)
-> 	sbi->next_victim_seg[BG_GC] = NULL_SEGNO;
-> if (GET_SEC_FROM_SEG(sbi->next_victim_seg[FG_GC]) == secno)
-> 	sbi->next_victim_seg[FG_GC] = NULL_SEGNO;
-> 
-> Thanks,
-> 
-> >   		}
-> >   	}
-> >   skip_free:
+On 03/04/2025 08:59, Paller, Kim Seer wrote:
 > 
 > 
+>> -----Original Message-----
+>> From: Krzysztof Kozlowski <krzk@kernel.org>
+>> Sent: Thursday, April 3, 2025 2:44 PM
+>> To: Paller, Kim Seer <KimSeer.Paller@analog.com>
+>> Cc: Jonathan Cameron <jic23@kernel.org>; Lars-Peter Clausen
+>> <lars@metafoo.de>; Hennerich, Michael <Michael.Hennerich@analog.com>;
+>> Rob Herring <robh@kernel.org>; Krzysztof Kozlowski <krzk+dt@kernel.org>;
+>> Conor Dooley <conor+dt@kernel.org>; linux-iio@vger.kernel.org; linux-
+>> kernel@vger.kernel.org; devicetree@vger.kernel.org
+>> Subject: Re: [PATCH v3 2/3] dt-bindings: iio: dac: Add adi,ad3530r.yaml
+>>
+>> [External]
+>>
+>> On Thu, Apr 03, 2025 at 01:33:56PM +0800, Kim Seer Paller wrote:
+>>> Document the AD3530/AD3530R (8-channel) and AD3531/AD3531R (4-
+>> channel)
+>>> low-power, 16-bit, buffered voltage output DACs with software-
+>>> programmable gain controls. They provide full-scale output spans of
+>>> 2.5V or 5V for reference voltages of 2.5V. These devices operate on a
+>>> single 2.7V to 5.5V supply and are guaranteed to be monotonic by design.
+>>> The "R" variants include a 2.5V, 5ppm/°C internal reference, which is
+>>> disabled by default.
+>>>
+>>> Signed-off-by: Kim Seer Paller <kimseer.paller@analog.com>
+>>> ---
+>>>  .../devicetree/bindings/iio/dac/adi,ad3530r.yaml   | 99
+>> ++++++++++++++++++++++
+>>>  MAINTAINERS                                        |  7 ++
+>>>  2 files changed, 106 insertions(+)
+>>
+>> You got report about error in v2, which you did not respond to.
+>>
+>> You send v3... with same error. I don't understand this.
 > 
-> _______________________________________________
-> Linux-f2fs-devel mailing list
-> Linux-f2fs-devel@lists.sourceforge.net
-> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
+> I'm not sure, but based on the information provided, the errors might be
+> unrelated to the driver, or I might have missed something.
+
+It's your job to respond to errors one way or another (unless there are
+obviously false positives). Ignoring them means this is marked as
+"changes requested".
+
+Best regards,
+Krzysztof
