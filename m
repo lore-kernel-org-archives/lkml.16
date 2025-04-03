@@ -1,190 +1,75 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 602D81A0731;
-	Thu,  3 Apr 2025 08:33:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C84051A0731;
+	Thu,  3 Apr 2025 08:34:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743669200; cv=none; b=ELXuIGQXyFIZFvEfZqQoaXAr3D3IDWuPzO4uezDzrDxlJus/ie8m82gfnBNL7qF+HKIMCRm62HDCu7muLwm8BDdiz/dBbgWq7fd2psguqAiC15rJDE3t9A5M+TMHaM5UV+FysnFmRg8JUiNZulC4BJGn6Aj+YpUHkKrKjoo3FKQ=
+	t=1743669259; cv=none; b=jjoDkYcOWEYTH9zNYruSVpxCp2njBEGm+Bh6zmzqQUCjvuEKPnJdXw81A/yyrY2JUe+kVglOxeLtVBFHuNj9Aib6cCiqzhBE4x+HgxONrrOchiJ3Ipww/3jZB1mvXvyqLbtR2UX2jN+5PAgdF1gjWHZq8Zoid3a8C+yvg81SvvE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743669200; c=relaxed/simple;
-	bh=cYPE4hxj2E/+XBZrJpUbI6pIfd/alhO++G3MPN6trQY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Do+E41zFgW0lwsuEDGduWFVxEdEMlzYMzGsdK6Z04r2RCE4y7/dXUvfOMBkp9ca3veOjKo6XX+weiUyUwYUpF4dR/aV8zOxYMEBrSpVZA93/bDZ3S1gQ0kq4wEZOufLeb9PQSTYSkPbcZpW7C4SryB+Sg1UlhVtUsTL62Dx9Foc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h8Cb4AP4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743669259; c=relaxed/simple;
+	bh=wsQILO7hA49jzp8HRadJYXymQRE4ziUNrNRVayRBDFM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=twdKpq+wxPvVqsPr/ZutX1Fx66Ab+eN9pxb/7PX9pfODE68jzgu1kxbmD5uZ4NCq/7eIsKVXvPWFe3T5cVp7ooSgxT8BCl0iHL6awZLvxkPq96I9zibpZQtdZWDyxrdGqEw7Ba2ZVWL049ZeJfiqOQ7/8Z/1NKeLe7CBJk5ngUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=UvRQap42; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h8Cb4AP4"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id C862BC4CEE9;
-	Thu,  3 Apr 2025 08:33:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743669199;
-	bh=cYPE4hxj2E/+XBZrJpUbI6pIfd/alhO++G3MPN6trQY=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=h8Cb4AP4OpYpLjYYj+z1vZ5xN6W9HulpbhR1bg2gJQjnjRCUWJqloCjGebGRqdPSY
-	 qHZkeVaccaQ4sKzOjZ5sy+Jtp046Dgcr2UL9cCee/U7MkUhxwxtxT8LKCcnX/U3Y/D
-	 CsxENjjO2Ly3SMMog+EtQgvaroGjKyOqKBkOkcz7OjQHzR8SYlFBZiLfTCtv/C9Eds
-	 eyTMbPNPm/fD3BFeFoPs2rV9Rgsfy9dZifU1ecORJKIKCKNOyFpeGC6+Cjqybsz9DO
-	 wYWp2rIjYm2l7ZS5PjjJz3JleLYG+cuvVy7dOcTkDNrPFExyncgtF+a4WCg4ImTt8k
-	 gjrnMFsCLo0Fw==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEF06C369A0;
-	Thu,  3 Apr 2025 08:33:19 +0000 (UTC)
-From: Xianwei Zhao via B4 Relay <devnull+xianwei.zhao.amlogic.com@kernel.org>
-Date: Thu, 03 Apr 2025 16:33:15 +0800
-Subject: [PATCH v3 2/2] dts: arm64: amlogic: add a5 pinctrl node
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="UvRQap42"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id D30DF4314D;
+	Thu,  3 Apr 2025 08:34:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1743669248;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wsQILO7hA49jzp8HRadJYXymQRE4ziUNrNRVayRBDFM=;
+	b=UvRQap427zmxaiWhYahVbFqmNWa61FRKhjZQkeZct7xnRE5tb0GbVKvIZHWZ9e18RdcLx0
+	tEMtVvdMfZ98W7nAZT0sWmylth0yFpFOHnCDNn4fA6UfydGxyrQIlHzgYEjTqAJymqP/fL
+	SlhA7NWn633IdcYY5pkofOuBwyjvjyt9wolYrxVw9IF8qxlGdje/PPHdpvk5RDNGyKlebv
+	KpOqZElnQzBfcgDbPXoH2HxUl0ymxstZIJDGjrjjh6kGm7VGleUzUwBRC/xUb2kMx2DXIU
+	qQssf2U3w+8chvvK9kP+7kzPDurS5YUG/to5QJ1vO1B+YNmvwyBEDAfUBrnWrQ==
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: Ivan Abramov <i.abramov@mt-integration.ru>
+Cc: Alexander Aring <alex.aring@gmail.com>,  Stefan Schmidt
+ <stefan@datenfreihafen.org>,  "David S. Miller" <davem@davemloft.net>,
+  Eric Dumazet <edumazet@google.com>,  Jakub Kicinski <kuba@kernel.org>,
+  Paolo Abeni <pabeni@redhat.com>,  Simon Horman <horms@kernel.org>,
+  <linux-wpan@vger.kernel.org>,  <netdev@vger.kernel.org>,
+  <linux-kernel@vger.kernel.org>,  <lvc-project@linuxtesting.org>
+Subject: Re: [PATCH net v2 0/3] Avoid calling WARN_ON() on allocation
+ failure in cfg802154_switch_netns()
+In-Reply-To: <20250403082021.990667-1-i.abramov@mt-integration.ru> (Ivan
+	Abramov's message of "Thu, 3 Apr 2025 11:20:18 +0300")
+References: <20250403082021.990667-1-i.abramov@mt-integration.ru>
+User-Agent: mu4e 1.12.7; emacs 29.4
+Date: Thu, 03 Apr 2025 10:34:06 +0200
+Message-ID: <87plhtmyo1.fsf@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250403-a5-pinctrl-v3-2-a8c067e22295@amlogic.com>
-References: <20250403-a5-pinctrl-v3-0-a8c067e22295@amlogic.com>
-In-Reply-To: <20250403-a5-pinctrl-v3-0-a8c067e22295@amlogic.com>
-To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Neil Armstrong <neil.armstrong@linaro.org>, 
- Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: linux-amlogic@lists.infradead.org, linux-gpio@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, 
- Xianwei Zhao <xianwei.zhao@amlogic.com>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1743669198; l=3211;
- i=xianwei.zhao@amlogic.com; s=20231208; h=from:subject:message-id;
- bh=zTXCd3mjrQB2UAQ+DUxS9Et3VYgrEbPO04Lv0RVd3Dc=;
- b=VfTnLhiqD/DvQpUxxaX0qvX6jYrBOat90xLSzkT4YNw6bb7j1G8Vy1HCZ3t+WhBoWOpkxIzSS
- tiQLCDxrljbD0aViwoDiGHA0apIDhoLk3Gmh7OL8e49ubWi8QzzYf/N
-X-Developer-Key: i=xianwei.zhao@amlogic.com; a=ed25519;
- pk=o4fDH8ZXL6xQg5h17eNzRljf6pwZHWWjqcOSsj3dW24=
-X-Endpoint-Received: by B4 Relay for xianwei.zhao@amlogic.com/20231208 with
- auth_id=107
-X-Original-From: Xianwei Zhao <xianwei.zhao@amlogic.com>
-Reply-To: xianwei.zhao@amlogic.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddukeektdelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufgjfhgffffkgggtgfesthhqredttderjeenucfhrhhomhepofhiqhhuvghlucftrgihnhgrlhcuoehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeffgefhjedtfeeigeduudekudejkedtiefhleelueeiueevheekvdeludehiedvfeenucfkphepledvrddukeegrdduuddtrdduleelnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledvrddukeegrdduuddtrdduleelpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeduvddprhgtphhtthhopehirdgrsghrrghmohhvsehmthdqihhnthgvghhrrghtihhonhdrrhhupdhrtghpthhtoheprghlvgigrdgrrhhinhhgsehgmhgrihhlrdgtohhmpdhrtghpthhtohepshhtvghfrghnsegurghtvghnfhhrvghihhgrfhgvnhdrohhrghdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrt
+ ghomhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopehhohhrmhhssehkvghrnhgvlhdrohhrgh
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+On 03/04/2025 at 11:20:18 +03, Ivan Abramov <i.abramov@mt-integration.ru> w=
+rote:
 
-Add pinctrl device to support Amlogic A5.
+> This series was inspired by Syzkaller report on warning in
+> cfg802154_switch_netns().
 
-Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
----
- arch/arm64/boot/dts/amlogic/amlogic-a5.dtsi | 90 +++++++++++++++++++++++++++++
- 1 file changed, 90 insertions(+)
+This series has received reviews under the form of Reviewed-by tags. You
+are in charge of carrying those tags over versions. Please collect and
+resubmit the series with all of them (a tag on the cover letter applies
+to all patches).
 
-diff --git a/arch/arm64/boot/dts/amlogic/amlogic-a5.dtsi b/arch/arm64/boot/dts/amlogic/amlogic-a5.dtsi
-index 32ed1776891b..844302db2133 100644
---- a/arch/arm64/boot/dts/amlogic/amlogic-a5.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/amlogic-a5.dtsi
-@@ -4,6 +4,7 @@
-  */
- 
- #include "amlogic-a4-common.dtsi"
-+#include <dt-bindings/pinctrl/amlogic,pinctrl.h>
- #include <dt-bindings/power/amlogic,a5-pwrc.h>
- / {
- 	cpus {
-@@ -50,6 +51,95 @@ pwrc: power-controller {
- };
- 
- &apb {
-+	periphs_pinctrl: pinctrl@4000 {
-+		compatible = "amlogic,pinctrl-a5",
-+			     "amlogic,pinctrl-a4";
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges = <0x0 0x0 0x0 0x4000 0x0 0x300>;
-+
-+		gpioz: gpio@c0 {
-+			reg = <0x0 0xc0 0x0 0x40>,
-+			      <0x0 0x18 0x0 0x8>;
-+			reg-names = "gpio", "mux";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_Z<<8) 16>;
-+		};
-+
-+		gpiox: gpio@100 {
-+			reg = <0x0 0x100 0x0 0x40>,
-+			      <0x0 0xc   0x0 0xc>;
-+			reg-names = "gpio", "mux";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_X<<8) 20>;
-+		};
-+
-+		gpiot: gpio@140 {
-+			reg = <0x0 0x140 0x0 0x40>,
-+			      <0x0 0x2c  0x0 0x8>;
-+			reg-names = "gpio", "mux";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_T<<8) 14>;
-+		};
-+
-+		gpiod: gpio@180 {
-+			reg = <0x0 0x180 0x0 0x40>,
-+			      <0x0 0x40  0x0 0x8>;
-+			reg-names = "gpio", "mux";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_D<<8) 16>;
-+		};
-+
-+		gpioe: gpio@1c0 {
-+			reg = <0x0 0x1c0 0x0 0x40>,
-+			      <0x0 0x48  0x0 0x4>;
-+			reg-names = "gpio", "mux";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_E<<8) 2>;
-+		};
-+
-+		gpioc: gpio@200 {
-+			reg = <0x0 0x200 0x0 0x40>,
-+			      <0x0 0x24  0x0 0x8>;
-+			reg-names = "gpio", "mux";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_C<<8) 11>;
-+		};
-+
-+		gpiob: gpio@240 {
-+			reg = <0x0 0x240 0x0 0x40>,
-+			      <0x0 0x0   0x0 0x8>;
-+			reg-names = "gpio", "mux";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_B<<8) 14>;
-+		};
-+
-+		gpioh: gpio@280 {
-+			reg = <0x0 0x280 0x0 0x40>,
-+			      <0x0 0x4c  0x0 0x4>;
-+			reg-names = "gpio", "mux";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_H<<8) 5>;
-+		};
-+
-+		gpio_test_n: gpio@2c0 {
-+			reg = <0x0 0x2c0 0x0 0x40>,
-+			      <0x0 0x3c  0x0 0x4>;
-+			reg-names = "gpio", "mux";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_TEST_N<<8) 1>;
-+		};
-+	};
-+
- 	gpio_intc: interrupt-controller@4080 {
- 		compatible = "amlogic,a5-gpio-intc",
- 			     "amlogic,meson-gpio-intc";
-
--- 
-2.37.1
-
-
+Thanks,
+Miqu=C3=A8l
