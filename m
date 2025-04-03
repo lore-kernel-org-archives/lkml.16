@@ -1,54 +1,64 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C424C8828;
-	Thu,  3 Apr 2025 02:33:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 566FCB666
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 02:36:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743647620; cv=none; b=dS0e2gCmXIa1D9ZKNZGU508Jb/8l8lXtvcMXo4L3NSNCl+IBca2i/ypuhje3AAukbX1In0CLPCcLCXvyvP2Ky74akdRfgAQOL9RZ8WM0NmFA/UH4eLYgX+pYVbYhLADNrGMGoOT9wITNz2exXbI6R6CrXnj68TWdfbBwjnsL7jw=
+	t=1743647779; cv=none; b=JVgxNbtLFM1WlGeVPYm+ssiE7QKeAgp+IEnbiVDO0cK+kuB/tnhW4k/Y+ZkOsfqvQKe0wSSbiVYOC2gBpJgeiYtD0ZxdMy2vPjbQ6pwAEXqOH3nJIoVDJs+JbA08yQzXdoHRhQNjA9bFFwtkzXMQ/QidrKS94U9xOTHGYwyO8EE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743647620; c=relaxed/simple;
-	bh=mZEH9KP0rG4OJgz7xRS+8Enm0WcKmn8TTdTEu7MCrrg=;
+	s=arc-20240116; t=1743647779; c=relaxed/simple;
+	bh=NZBuTBYfIwLshdQDTbcROAiQdSt6dnB12ilYyCOQhL8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GcKxKn385dir9OyuFpntU8YeKvPLK7ae02+pXedMtmR9iOftHDbmmfMGFY+ypCBt0UhJKS3qQ5sbSu3oygA2pGVjqU+fxSQS8cBFU53E4uo+yoEnnu8PPI8AbQHAVLnFi4BLAboVJkOtF/ZPsqTENBtYiArmzuVa5jr2aaewF+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=AKZC5Y+S; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	 Content-Type:Content-Disposition:In-Reply-To; b=JhGpVlbvja+JoMrEvOi/jltqpcDLDt4e8+BGM3wYx6V21FC5SIG/m8wyuBCMBfo5pLAkrR3RSYWTafiJiILlLfK8sT6OvI0j+GkkWebBo5u2b1xpY3CjqgQePLyQS4bLrcVq8R4/hJcMBY9wlJGTreiGdgwixnJF0VEhi6ir2BQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FhrN2AtP; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="AKZC5Y+S"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=qfn0RHsgPDoPqoC1r7+j/kf0VdcV4uMNStpbKM8IwAg=; b=AKZC5Y+SClnmFFLkweM4OMgI7K
-	HFk3lR2DT3eHmAGjXiQkqsPTRFl8IIa2K+zdHV/u2CFhWM9C3qAC6h1DF5VZZ09OjqLmQm6HUMRlp
-	s73wgoTECsRocTd1n3lqIk1F1efFLj8XSUCbdHCN4fltV+56zmdoOiZtWGmnAg4uSHL9AaTvzKlhl
-	2/gal++M30IbdBzOoTOzvXRrSHZ4XyrWi/z5htDI8Px7MB21nGV48951WdBnYl/9TlKHW0NOGnU6i
-	fFk9bkeywPvhlJGjyW2P6cDlsyXP16+niO4gSW9kWzIn/Agjl4x0QcLbrZ11Pg586w2avpg3R0rk3
-	i+mUHy0Q==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1u0AOa-00CL1E-0C;
-	Thu, 03 Apr 2025 10:33:33 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Thu, 03 Apr 2025 10:33:32 +0800
-Date: Thu, 3 Apr 2025 10:33:32 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: Ard Biesheuvel <ardb@kernel.org>, linux-crypto@vger.kernel.org,
-	linux-kernel@vger.kernel.org, x86@kernel.org,
-	"Jason A. Donenfeld" <Jason@zx2c4.com>
-Subject: [PATCH] crypto: hash - Do not use shash in hard IRQs
-Message-ID: <Z-3zfJ5hRl3_tZxJ@gondor.apana.org.au>
-References: <20250402002420.89233-1-ebiggers@kernel.org>
- <Z-yrf_9D2rV1Q136@gondor.apana.org.au>
- <CAMj1kXEx__RLBriW0kVPrKnx6+DCpq8=6F-7Tmj2Us61gvGGaw@mail.gmail.com>
- <CAMj1kXE-vo7E1U++4mAqDH2SXfc=sRZs8KganedJk5z0QF49NA@mail.gmail.com>
- <Z-zzvXbjt3xzquXb@gondor.apana.org.au>
- <20250402171930.GD1235@sol.localdomain>
- <Z-3jkYNtZpTDtKGf@gondor.apana.org.au>
- <20250403021453.GA2872965@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FhrN2AtP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743647777; x=1775183777;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=NZBuTBYfIwLshdQDTbcROAiQdSt6dnB12ilYyCOQhL8=;
+  b=FhrN2AtPZLoUszvH9HCk1yGflb37pYgjvuWVyjo8Sz6nE0Eu73TtgJAw
+   xw7qtwXvyiowM0fc+754bZ+kPrWuLIMfZPWK6mnk3xt/6M52piV/gBInx
+   SH8yTIUcD+YExkrOmxXB/H1UkvSjyNEeLBeXW3Qnwa9bBW01oiEFtsn1z
+   FU7cUnaTwPIyoqPovnf8GCXmX8RPhf6cx01JK+BjE7ii+yLIvA3PI+bkh
+   zO9S5l1vzxnQrX7q9vCaqtBCmSpMNlGn5s9JnLfmuYOTTxlCYYrFJ41IQ
+   SQCy448xnphgCBdHynaDcr3p8M2mHoIYh7VPHoW5PxTKhGu8j06N7/BgI
+   g==;
+X-CSE-ConnectionGUID: WTUkjsETTKG3vJySIH8kfA==
+X-CSE-MsgGUID: Zu/RKN/iTqe8SJEcdAFXHw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11392"; a="45137213"
+X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
+   d="scan'208";a="45137213"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 19:36:17 -0700
+X-CSE-ConnectionGUID: V8R3s9rmT/iw0v9OBTeU7w==
+X-CSE-MsgGUID: RO4mmT0+Tv6uFP43y6mfrw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
+   d="scan'208";a="126634125"
+Received: from lkp-server02.sh.intel.com (HELO e98e3655d6d2) ([10.239.97.151])
+  by orviesa009.jf.intel.com with ESMTP; 02 Apr 2025 19:36:14 -0700
+Received: from kbuild by e98e3655d6d2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u0ARA-000BAu-1E;
+	Thu, 03 Apr 2025 02:36:12 +0000
+Date: Thu, 3 Apr 2025 10:35:47 +0800
+From: kernel test robot <lkp@intel.com>
+To: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>,
+	outreachy@lists.linux.dev
+Cc: oe-kbuild-all@lists.linux.dev, gregkh@linuxfoundation.org,
+	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org,
+	julia.lawall@inria.fr,
+	Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
+Subject: Re: [PATCH 5/5] staging: rtl8723bs: modify variable names to comply
+ with kernel naming convention
+Message-ID: <202504031009.mcD22ETY-lkp@intel.com>
+References: <dd32dfe6c837d88dd13a546aadcb0bc207b997d6.1743163801.git.abrahamadekunle50@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,113 +67,64 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250403021453.GA2872965@google.com>
+In-Reply-To: <dd32dfe6c837d88dd13a546aadcb0bc207b997d6.1743163801.git.abrahamadekunle50@gmail.com>
 
-On Thu, Apr 03, 2025 at 02:14:53AM +0000, Eric Biggers wrote:
->
-> The thing I actually have more of a problem with is that you tend to start
-> making random API changes without any of the necessary prerequisites like
-> updating documentation, or adding debug assertions to catch violations of new
-> requirements.  You've already started removing the fallbacks from shash (commit
-> 3846c01d42526bc31), but neither of those things have been done.  So we're
-> currently in a weird state where the shash API is explicitly documented to work
-> in all contexts, but you've broken that.
+Hi Abraham,
 
-The documentation is easy enough to fix.
+kernel test robot noticed the following build warnings:
 
----8<---
-Update the documentation to be consistent with the fact that shash
-may not be used in hard IRQs.
+[auto build test WARNING on staging/staging-testing]
 
-Reported-by: Eric Biggers <ebiggers@kernel.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+url:    https://github.com/intel-lab-lkp/linux/commits/Abraham-Samuel-Adekunle/staging-rtl8723bs-correct-coding-style-by-preventing-lines-from-ending-with/20250328-204628
+base:   staging/staging-testing
+patch link:    https://lore.kernel.org/r/dd32dfe6c837d88dd13a546aadcb0bc207b997d6.1743163801.git.abrahamadekunle50%40gmail.com
+patch subject: [PATCH 5/5] staging: rtl8723bs: modify variable names to comply with kernel naming convention
+config: i386-randconfig-063-20250403 (https://download.01.org/0day-ci/archive/20250403/202504031009.mcD22ETY-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250403/202504031009.mcD22ETY-lkp@intel.com/reproduce)
 
-diff --git a/include/crypto/hash.h b/include/crypto/hash.h
-index 58f9d3c9d006..5fde27039a06 100644
---- a/include/crypto/hash.h
-+++ b/include/crypto/hash.h
-@@ -847,7 +847,7 @@ static inline void *shash_desc_ctx(struct shash_desc *desc)
-  * cipher handle must point to a keyed message digest cipher in order for this
-  * function to succeed.
-  *
-- * Context: Any context.
-+ * Context: Softirq or process context.
-  * Return: 0 if the setting of the key was successful; < 0 if an error occurred
-  */
- int crypto_shash_setkey(struct crypto_shash *tfm, const u8 *key,
-@@ -864,7 +864,7 @@ int crypto_shash_setkey(struct crypto_shash *tfm, const u8 *key,
-  * crypto_shash_update and crypto_shash_final. The parameters have the same
-  * meaning as discussed for those separate three functions.
-  *
-- * Context: Any context.
-+ * Context: Softirq or process context.
-  * Return: 0 if the message digest creation was successful; < 0 if an error
-  *	   occurred
-  */
-@@ -884,7 +884,7 @@ int crypto_shash_digest(struct shash_desc *desc, const u8 *data,
-  * directly, and it allocates a hash descriptor on the stack internally.
-  * Note that this stack allocation may be fairly large.
-  *
-- * Context: Any context.
-+ * Context: Softirq or process context.
-  * Return: 0 on success; < 0 if an error occurred.
-  */
- int crypto_shash_tfm_digest(struct crypto_shash *tfm, const u8 *data,
-@@ -902,7 +902,7 @@ int crypto_hash_digest(struct crypto_ahash *tfm, const u8 *data,
-  * caller-allocated output buffer out which must have sufficient size (e.g. by
-  * calling crypto_shash_descsize).
-  *
-- * Context: Any context.
-+ * Context: Softirq or process context.
-  * Return: 0 if the export creation was successful; < 0 if an error occurred
-  */
- int crypto_shash_export(struct shash_desc *desc, void *out);
-@@ -916,7 +916,7 @@ int crypto_shash_export(struct shash_desc *desc, void *out);
-  * the input buffer. That buffer should have been generated with the
-  * crypto_ahash_export function.
-  *
-- * Context: Any context.
-+ * Context: Softirq or process context.
-  * Return: 0 if the import was successful; < 0 if an error occurred
-  */
- int crypto_shash_import(struct shash_desc *desc, const void *in);
-@@ -929,7 +929,7 @@ int crypto_shash_import(struct shash_desc *desc, const void *in);
-  * operational state handle. Any potentially existing state created by
-  * previous operations is discarded.
-  *
-- * Context: Any context.
-+ * Context: Softirq or process context.
-  * Return: 0 if the message digest initialization was successful; < 0 if an
-  *	   error occurred
-  */
-@@ -951,7 +951,7 @@ static inline int crypto_shash_init(struct shash_desc *desc)
-  *
-  * Updates the message digest state of the operational state handle.
-  *
-- * Context: Any context.
-+ * Context: Softirq or process context.
-  * Return: 0 if the message digest update was successful; < 0 if an error
-  *	   occurred
-  */
-@@ -968,7 +968,7 @@ int crypto_shash_update(struct shash_desc *desc, const u8 *data,
-  * into the output buffer. The caller must ensure that the output buffer is
-  * large enough by using crypto_shash_digestsize.
-  *
-- * Context: Any context.
-+ * Context: Softirq or process context.
-  * Return: 0 if the message digest creation was successful; < 0 if an error
-  *	   occurred
-  */
-@@ -985,7 +985,7 @@ int crypto_shash_final(struct shash_desc *desc, u8 *out);
-  * crypto_shash_update and crypto_shash_final. The parameters have the same
-  * meaning as discussed for those separate functions.
-  *
-- * Context: Any context.
-+ * Context: Softirq or process context.
-  * Return: 0 if the message digest creation was successful; < 0 if an error
-  *	   occurred
-  */
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504031009.mcD22ETY-lkp@intel.com/
+
+sparse warnings: (new ones prefixed by >>)
+>> drivers/staging/rtl8723bs/core/rtw_efuse.c:13:4: sparse: sparse: symbol 'fake_efuse_bank' was not declared. Should it be static?
+>> drivers/staging/rtl8723bs/core/rtw_efuse.c:14:5: sparse: sparse: symbol 'fake_efuse_used_bytes' was not declared. Should it be static?
+>> drivers/staging/rtl8723bs/core/rtw_efuse.c:15:4: sparse: sparse: symbol 'fake_efuse_content' was not declared. Should it be static?
+>> drivers/staging/rtl8723bs/core/rtw_efuse.c:16:4: sparse: sparse: symbol 'fake_efuse_init_map' was not declared. Should it be static?
+>> drivers/staging/rtl8723bs/core/rtw_efuse.c:17:4: sparse: sparse: symbol 'fake_efuse_modified_map' was not declared. Should it be static?
+>> drivers/staging/rtl8723bs/core/rtw_efuse.c:19:5: sparse: sparse: symbol 'bte_fuse_used_bytes' was not declared. Should it be static?
+>> drivers/staging/rtl8723bs/core/rtw_efuse.c:20:4: sparse: sparse: symbol 'bte_fuse_content' was not declared. Should it be static?
+>> drivers/staging/rtl8723bs/core/rtw_efuse.c:21:4: sparse: sparse: symbol 'bte_use_init_map' was not declared. Should it be static?
+>> drivers/staging/rtl8723bs/core/rtw_efuse.c:22:4: sparse: sparse: symbol 'bte_use_modified_map' was not declared. Should it be static?
+>> drivers/staging/rtl8723bs/core/rtw_efuse.c:24:5: sparse: sparse: symbol 'fakebte_fuse_used_bytes' was not declared. Should it be static?
+>> drivers/staging/rtl8723bs/core/rtw_efuse.c:25:4: sparse: sparse: symbol 'fakebte_fuse_content' was not declared. Should it be static?
+>> drivers/staging/rtl8723bs/core/rtw_efuse.c:26:4: sparse: sparse: symbol 'fakebte_use_init_map' was not declared. Should it be static?
+>> drivers/staging/rtl8723bs/core/rtw_efuse.c:27:4: sparse: sparse: symbol 'fakebte_use_modified_map' was not declared. Should it be static?
+
+vim +/fake_efuse_bank +13 drivers/staging/rtl8723bs/core/rtw_efuse.c
+
+    10	
+    11	
+    12	/* Define global variables */
+  > 13	u8 fake_efuse_bank;
+  > 14	u32 fake_efuse_used_bytes;
+  > 15	u8 fake_efuse_content[EFUSE_MAX_HW_SIZE] = {0};
+  > 16	u8 fake_efuse_init_map[EFUSE_MAX_MAP_LEN] = {0};
+  > 17	u8 fake_efuse_modified_map[EFUSE_MAX_MAP_LEN] = {0};
+    18	
+  > 19	u32 bte_fuse_used_bytes;
+  > 20	u8 bte_fuse_content[EFUSE_MAX_BT_BANK][EFUSE_MAX_HW_SIZE];
+  > 21	u8 bte_use_init_map[EFUSE_BT_MAX_MAP_LEN] = {0};
+  > 22	u8 bte_use_modified_map[EFUSE_BT_MAX_MAP_LEN] = {0};
+    23	
+  > 24	u32 fakebte_fuse_used_bytes;
+  > 25	u8 fakebte_fuse_content[EFUSE_MAX_BT_BANK][EFUSE_MAX_HW_SIZE];
+  > 26	u8 fakebte_use_init_map[EFUSE_BT_MAX_MAP_LEN] = {0};
+  > 27	u8 fakebte_use_modified_map[EFUSE_BT_MAX_MAP_LEN] = {0};
+    28	
+
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
