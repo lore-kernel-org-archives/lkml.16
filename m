@@ -1,27 +1,27 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AD092505DE;
-	Thu,  3 Apr 2025 15:26:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6498924E4B2;
+	Thu,  3 Apr 2025 15:27:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743693970; cv=none; b=cRNeeQ5OuBoK7ywarW7dHxVAnkxDx4TwxkN93rAHwmCF554RyO9uC/ryI61HqrjfT82QS7rzgYy5dLOsSulT8WBZBdTlfK9dGMXGm+IUPqFIpSTS1kFjWOqIwcMXrCdVOZ7uVvhCTLOQmAlNIMShxgiCd3re8WDfMnO6qZwDTTo=
+	t=1743694036; cv=none; b=XZq/RZfCUZWAh1o/YCrhpGEqCZqTq0F6DITrEfOvUTuLPnZsWfkFEl77MvDBgU/BVXFsXX0QgZHasr5AgL6nB8wVGLeUqFvY33CHNxW/u0N7qLlLjb8YAim0AuqWk1z6O9iZ/iDXNHCvr/hdD6x7dTogCUVGqUR5anZC6ZJ1Tjs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743693970; c=relaxed/simple;
-	bh=zD3sLcrr7AiPTDhQQ22ezRNOpgw+79oBjucXKnkTFZ8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=c7j3AraqNNcRyE6shjoISdcR6wi7Cvt6ddNJqZNkpyZlUJyYwoVYW51y9IyVDnMIZdz5fmLe/ei3U4GaAkI8/28cfZL1blbTERb92FeCZ715amhnZB9iL1fCae854CUEwNMjk5gW8LwLTHOIy/B2TS7ofYFctqb0dWzn7ytaavU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=T4Hv+G+c; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743694036; c=relaxed/simple;
+	bh=ddWj3Z13XW8uzI3RDW2AgxXUlibDcIvQOoriVbRvwhg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MrYcdYeQABkwjorT521P9Dgbzxc2wlNPcqE7XaPcYR5BnUN+ovCbPhuOFW4y8Zsv1n3q051kRJ6EX98HSc0yHLVDgg+5+HcNJbD1U6EWVrlNN2HNDQQ5wulEivmfu3QcrftxyoZT8+PuJVxg/7up83VyvrgyqBNCRQIj4aePeKw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=y5KZNVVR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="T4Hv+G+c"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE8D1C4CEE3;
-	Thu,  3 Apr 2025 15:26:09 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="y5KZNVVR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA23EC4CEE5;
+	Thu,  3 Apr 2025 15:27:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1743693970;
-	bh=zD3sLcrr7AiPTDhQQ22ezRNOpgw+79oBjucXKnkTFZ8=;
+	s=korg; t=1743694036;
+	bh=ddWj3Z13XW8uzI3RDW2AgxXUlibDcIvQOoriVbRvwhg=;
 	h=From:To:Cc:Subject:Date:From;
-	b=T4Hv+G+caXHZ/e8h6WuLyvE3dNi1/GQzMlN2J8T9W9xiYLB0FYF2Xx5baaLRPPSjX
-	 klgiWUNPovyneDm3aNjZlb5I6au+p+E78npg11hf5V1a0jVJdqUBuKNUZP+HypvPrX
-	 rFP/Zowyk7yW5jd1s/yx8H78suThyH//L9UYvjEo=
+	b=y5KZNVVRybc5Y/mlrSMuLsLkN6Q5BqtxDbqToeoqB263DDxbqONdsnahMJCin3x2z
+	 w65RE92CAn5pYnNT31ccGNrISWJhzm6/T6hs+svw9Z+osGoBgHxoBOujhzu5xDVZAN
+	 KBO+hmWNHBDpQR87iDSf/loxHZzO+Wu9SfZiaTFg=
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To: stable@vger.kernel.org
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -42,9 +42,9 @@ Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	conor@kernel.org,
 	hargar@microsoft.com,
 	broonie@kernel.org
-Subject: [PATCH 6.13 00/23] 6.13.10-rc1 review
-Date: Thu,  3 Apr 2025 16:20:17 +0100
-Message-ID: <20250403151622.273788569@linuxfoundation.org>
+Subject: [PATCH 6.6 00/26] 6.6.86-rc1 review
+Date: Thu,  3 Apr 2025 16:20:21 +0100
+Message-ID: <20250403151622.415201055@linuxfoundation.org>
 X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -55,16 +55,16 @@ MIME-Version: 1.0
 User-Agent: quilt/0.68
 X-stable: review
 X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.13.10-rc1.gz
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.86-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-6.13.y
+X-KernelTest-Branch: linux-6.6.y
 X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 6.13.10-rc1
+X-KernelTest-Version: 6.6.86-rc1
 X-KernelTest-Deadline: 2025-04-05T15:16+00:00
 Content-Transfer-Encoding: 8bit
 
-This is the start of the stable review cycle for the 6.13.10 release.
-There are 23 patches in this series, all will be posted as a response
+This is the start of the stable review cycle for the 6.6.86 release.
+There are 26 patches in this series, all will be posted as a response
 to this one.  If anyone has any issues with these being applied, please
 let me know.
 
@@ -72,9 +72,9 @@ Responses should be made by Sat, 05 Apr 2025 15:16:11 +0000.
 Anything received after that time might be too late.
 
 The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.13.10-rc1.gz
+	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.86-rc1.gz
 or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.13.y
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
 and the diffstat can be found below.
 
 thanks,
@@ -85,28 +85,16 @@ greg k-h
 Pseudo-Shortlog of commits:
 
 Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 6.13.10-rc1
+    Linux 6.6.86-rc1
 
-Kent Overstreet <kent.overstreet@linux.dev>
-    bcachefs: bch2_ioctl_subvolume_destroy() fixes
+Abhishek Tamboli <abhishektamboli9@gmail.com>
+    usb: gadget: uvc: Fix ERR_PTR dereference in uvc_v4l2.c
 
 John Keeping <jkeeping@inmusicbrands.com>
     serial: 8250_dma: terminate correct DMA in tx_dma_flush()
 
-Cheick Traore <cheick.traore@foss.st.com>
-    serial: stm32: do not deassert RS485 RTS GPIO prematurely
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    perf tools: Fix up some comments and code to properly use the event_source bus
-
 Luo Qiu <luoqiu@kylinsec.com.cn>
     memstick: rtsx_usb_ms: Fix slab-use-after-free in rtsx_usb_ms_drv_remove
-
-Michal Pecio <michal.pecio@gmail.com>
-    usb: xhci: Apply the link chain quirk on NEC isoc endpoints
-
-Michal Pecio <michal.pecio@gmail.com>
-    usb: xhci: Don't skip on Stopped - Length Invalid
 
 Dominique Martinet <dominique.martinet@atmark-techno.com>
     net: usb: usbnet: restore usb%d name exception for local mac addresses
@@ -132,20 +120,41 @@ William Breathitt Gray <wbg@kernel.org>
 Fabrice Gasnier <fabrice.gasnier@foss.st.com>
     counter: stm32-lptimer-cnt: fix error handling when enabling
 
-Andres Traumann <andres.traumann.01@gmail.com>
-    ALSA: hda/realtek: Bass speaker fixup for ASUS UM5606KA
-
 Dhruv Deshpande <dhrv.d@proton.me>
     ALSA: hda/realtek: Support mute LED on HP Laptop 15s-du3xxx
 
 Maxim Mikityanskiy <maxtram95@gmail.com>
     netfilter: socket: Lookup orig tuple for IPv6 SNAT
 
-Abel Wu <wuyun.abel@bytedance.com>
-    cgroup/rstat: Fix forceidle time in cpu.stat
+Manivannan Sadhasivam <mani@kernel.org>
+    scsi: ufs: qcom: Only free platform MSIs when ESI is enabled
 
-Scott Mayhew <smayhew@redhat.com>
-    nfsd: fix legacy client tracking initialization
+Changhuang Liang <changhuang.liang@starfivetech.com>
+    reset: starfive: jh71x0: Fix accessing the empty member on JH7110 SoC
+
+Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+    mm/page_alloc: fix memory accept before watermarks gets initialized
+
+Wayne Lin <Wayne.Lin@amd.com>
+    drm/amd/display: Don't write DP_MSTM_CTRL after LT
+
+Imre Deak <imre.deak@intel.com>
+    drm/dp_mst: Add a helper to queue a topology probe
+
+Imre Deak <imre.deak@intel.com>
+    drm/dp_mst: Factor out function to queue a topology probe work
+
+Alex Hung <alex.hung@amd.com>
+    drm/amd/display: Check denominator crb_pipes before used
+
+Yanjun Yang <yangyj.ee@gmail.com>
+    ARM: Remove address checking for MMUless devices
+
+Kees Cook <keescook@chromium.org>
+    ARM: 9351/1: fault: Add "cut here" line for prefetch aborts
+
+Kees Cook <keescook@chromium.org>
+    ARM: 9350/1: fault: Implement copy_from_kernel_nofault_allowed()
 
 Minjoong Kim <pwn9uin@gmail.com>
     atm: Fix NULL pointer dereference
@@ -161,32 +170,29 @@ Terry Junge <linuxhid@cosmicgizmosystems.com>
 
 Diffstat:
 
- Makefile                                  |   4 +-
- drivers/counter/microchip-tcb-capture.c   |  19 ++++
- drivers/counter/stm32-lptimer-cnt.c       |  24 +++--
- drivers/hid/hid-plantronics.c             | 144 ++++++++++++++----------------
- drivers/memstick/host/rtsx_usb_ms.c       |   1 +
- drivers/net/usb/qmi_wwan.c                |   2 +
- drivers/net/usb/usbnet.c                  |  21 +++--
- drivers/tty/serial/8250/8250_dma.c        |   2 +-
- drivers/tty/serial/8250/8250_pci.c        |  46 ++++++++++
- drivers/tty/serial/fsl_lpuart.c           |  17 ++++
- drivers/tty/serial/stm32-usart.c          |   4 +-
- drivers/usb/host/xhci-ring.c              |   4 +
- drivers/usb/host/xhci.h                   |  13 ++-
- fs/bcachefs/fs-ioctl.c                    |   6 +-
- fs/nfsd/nfs4recover.c                     |   1 -
- kernel/cgroup/rstat.c                     |  29 +++---
- net/atm/mpc.c                             |   2 +
- net/ipv6/netfilter/nf_socket_ipv6.c       |  23 +++++
- sound/pci/hda/patch_realtek.c             |   2 +
- sound/usb/mixer_quirks.c                  |  51 +++++++++++
- tools/perf/Documentation/intel-hybrid.txt |  12 +--
- tools/perf/Documentation/perf-list.txt    |   2 +-
- tools/perf/arch/x86/util/iostat.c         |   2 +-
- tools/perf/builtin-stat.c                 |   2 +-
- tools/perf/util/mem-events.c              |   2 +-
- tools/perf/util/pmu.c                     |   4 +-
- 26 files changed, 308 insertions(+), 131 deletions(-)
+ Makefile                                           |   4 +-
+ arch/arm/mm/fault.c                                |   8 ++
+ drivers/counter/microchip-tcb-capture.c            |  19 +++
+ drivers/counter/stm32-lptimer-cnt.c                |  24 ++--
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c  |  16 +--
+ .../drm/amd/display/dc/dcn315/dcn315_resource.c    |   2 +-
+ drivers/gpu/drm/display/drm_dp_mst_topology.c      |  36 +++++-
+ drivers/hid/hid-plantronics.c                      | 144 ++++++++++-----------
+ drivers/memstick/host/rtsx_usb_ms.c                |   1 +
+ drivers/net/usb/qmi_wwan.c                         |   2 +
+ drivers/net/usb/usbnet.c                           |  21 ++-
+ drivers/reset/starfive/reset-starfive-jh71x0.c     |   3 +
+ drivers/tty/serial/8250/8250_dma.c                 |   2 +-
+ drivers/tty/serial/8250/8250_pci.c                 |  46 +++++++
+ drivers/tty/serial/fsl_lpuart.c                    |  17 +++
+ drivers/ufs/host/ufs-qcom.c                        |   4 +-
+ drivers/usb/gadget/function/uvc_v4l2.c             |  12 +-
+ include/drm/display/drm_dp_mst_helper.h            |   2 +
+ mm/page_alloc.c                                    |  14 +-
+ net/atm/mpc.c                                      |   2 +
+ net/ipv6/netfilter/nf_socket_ipv6.c                |  23 ++++
+ sound/pci/hda/patch_realtek.c                      |   1 +
+ sound/usb/mixer_quirks.c                           |  51 ++++++++
+ 23 files changed, 340 insertions(+), 114 deletions(-)
 
 
