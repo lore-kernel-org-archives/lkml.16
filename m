@@ -1,122 +1,112 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C22C23F42D
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 07:22:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85A5F23F42D;
+	Thu,  3 Apr 2025 07:23:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743664969; cv=none; b=ceU3dyVwziSEDPhUUmLc1fpFcEiSgIHmEgCBBOf4nc9Et6ODFqbi41/64jrjDPVrTXhGse5wT2uivY7GEs+KgnRjV13dhbnpp2UnBRfj9Yp5nT75MLXJ7KlHG04frtKI1x0JwsM3nHFMFg0wFzUchxcydS5YR1YI+9q6aGVusjs=
+	t=1743664982; cv=none; b=IxQLaM4chgFpAL0YfupPcPuaH/Uj/oJm5r2+jRiVfOgeh3RE/hjH1AO6WjFG8zMzFIhbIrkShxQaBVuwtHgo9AqF8T6bPkzS6fykLBz9sc/KCYqvS5BK7+HF39VFLgagFBQ54M2nEk0IRNUtLevWVdaxxZXAaLCjN2taUulifig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743664969; c=relaxed/simple;
-	bh=FO410BSFVlQOV0QN78f0n3VXDiOcSF0PfN3Jjykz7Ak=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lcFiCif0vgEYAqSbjY4apZJOagefwItjMaTMXsybz0SLVxK9MbAkq+xEKqmBgqJoAoFmmSLVXHSyl9r+8nW/EtGnZOih6AIwm9yLJmF+zR/Pswl8sjVD8NrloSM9f1o7S6z16dhah/MTm3+HECBgOK+uGcA1vS0/jHWBnHMdf0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=TSWHoy7q; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1743664982; c=relaxed/simple;
+	bh=qF/6twPYnAMUicUtlKfxUrETUTqICv90PRL1kTQcIdI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IgotVd/Cj9ViZl362yiEy/3iPPB+EDaYcq5uj+adiQxTCo2kk/NkGXaQGbQ3it+KeRRnBazoGikjkbwkHnwEsst/IprXW6ZENLwkh39QxeS2vS++ztv1Nf68rSXgmQ4vyXNnoTa2pKRiK6pjk0mY3kLr4MBEQnh3CiNQy+ZghQU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y2AE6PEO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="TSWHoy7q"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43cfdc2c8c9so2692845e9.2
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 00:22:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1743664965; x=1744269765; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=5qsvZgx94LpNiH7bsvaOm+wd6d767CLq7Qj7GevcR80=;
-        b=TSWHoy7qKAJt/HvzZu7+aNWc/lf76c6P3FMLZGecoEHISZbHjLkJwTwBJvRkkFlCuB
-         je5/E8o8OgYzmmbxI09Q82omAvb9Y7SwN9nWypinosLK+y1EpsAxtd4vtsXaMjPYWrsw
-         qwDS1eirPVc4q8l5a+QoLW2FdqSSCV82qKQULOo0896D9VECI8y9j7CeOqWxmhEaSjon
-         gdmzAVaNh/nitcYkihhTK4E6CMQRaHYoz0upf6e1uhxOjBsBYNEZO3PZdyTzJ3i9Uhku
-         bDCnBNuZmpelIhc+s6hnzi9nz663hdruU8L7Sit1zVX066zjA/m0jpINDwgoSdRQvVJd
-         B5sg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743664965; x=1744269765;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5qsvZgx94LpNiH7bsvaOm+wd6d767CLq7Qj7GevcR80=;
-        b=r8lNL710SsNKIWLwFDP9iupIOBe4PD8ODwqXJq73qINBNb8rQiMIs7XgkSJHUA8oL9
-         3lT7iXfW44t4Npi+z66gm3xSr1/8v3PyRjQFCSwdICFwfNwqAS94JPVuwbQamMWlMr1i
-         Va7YC9C0qjlzZPMq0G+IeYH7hVBBm5xcmEVqU9mKo/cubqR5xmbif+wTZQdnFkj8kLWD
-         asuTfT2dG6mniu+UkZQtChm/K+uM8wJ+awVyemEVywHQ4CTwwuRkZHrdTWlTd9h8ojqr
-         MApyj+/15go9aDSg6rnVOAH0FE+p4PXXwVcUIVLVr38B0TDdp2Sq+AX+jCK1+8KPDOvr
-         xxqA==
-X-Forwarded-Encrypted: i=1; AJvYcCWycD55TsEXBrbmcL+PePbWQ9uBy+TuOH7NaVifOFNmZGk/+fSrTLScPYS1dN+83uKMZfdih0/o0G4S6Sc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQe0Uih5roC/25vuhpkkwM5Ww3DO7Ypyo87SswMwkHilKQcHm/
-	Mxs3Da9xn66VkijllHAqOvL2R9jSVv9dCR8PWgnwqXPJXHTDyECFUZ29mVoF2mE=
-X-Gm-Gg: ASbGncu7bUiuuZzWCQ4Pb5eK4xdT7AMNIfec5kCccEahowEleSsYsDHgrloGbdBVaF4
-	5q2s1pOzkfV2putaCIbW7PRSGe1nNLeh+QOFwfXEsDRqU8iWOENTUhlRl+SAz57CkgE+dcow+Lr
-	dQRT+SUPTgsKhmke1Chh5OP6jn6Iuyl+tvWq5kpoBXSCGNO48lyI6KzzDMQ8sf40S8vdZ+gs0je
-	YQs4S9u1ohbd0TbMOHGPEZmADCnd0Ac21kwaMREx1MbJ01k5sbU4BWB2rgQ+xpRWQVJtowWS4Rn
-	t9DJiwNP6hHPqBSuBM2pdd55cSuF0O9kvsvaOfw2YNFEG7coFvNX5K0=
-X-Google-Smtp-Source: AGHT+IFghQQVMJEwJv3TH5fwoOtmpQiB/vJEk3mApbx86ikuS8MDaGrsUMgmPS2nUiK//ZwBDckelQ==
-X-Received: by 2002:a05:600c:1e21:b0:43c:ec28:d301 with SMTP id 5b1f17b1804b1-43eb5c70cc3mr52822185e9.26.1743664965426;
-        Thu, 03 Apr 2025 00:22:45 -0700 (PDT)
-Received: from localhost (109-81-82-69.rct.o2.cz. [109.81.82.69])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-43ec342babfsm9992235e9.1.2025.04.03.00.22.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Apr 2025 00:22:45 -0700 (PDT)
-Date: Thu, 3 Apr 2025 09:22:43 +0200
-From: Michal Hocko <mhocko@suse.com>
-To: Shakeel Butt <shakeel.butt@linux.dev>
-Cc: Dave Chinner <david@fromorbit.com>, Yafang Shao <laoar.shao@gmail.com>,
-	Harry Yoo <harry.yoo@oracle.com>, Kees Cook <kees@kernel.org>,
-	joel.granados@kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-	linux-mm@kvack.org, Vlastimil Babka <vbabka@suse.cz>
-Subject: Re: [PATCH] proc: Avoid costly high-order page allocations when
- reading proc files
-Message-ID: <Z-43Q__lSUta2IrM@tiehlicka>
-References: <20250401073046.51121-1-laoar.shao@gmail.com>
- <3315D21B-0772-4312-BCFB-402F408B0EF6@kernel.org>
- <Z-y50vEs_9MbjQhi@harry>
- <CALOAHbBSvMuZnKF_vy3kGGNOCg5N2CgomLhxMxjn8RNwMTrw7A@mail.gmail.com>
- <Z-0gPqHVto7PgM1K@dread.disaster.area>
- <Z-0sjd8SEtldbxB1@tiehlicka>
- <zeuszr6ot5qdi46f5gvxa2c5efy4mc6eaea3au52nqnbhjek7o@l43ps2jtip7x>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y2AE6PEO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8A7FC4CEE8;
+	Thu,  3 Apr 2025 07:22:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743664982;
+	bh=qF/6twPYnAMUicUtlKfxUrETUTqICv90PRL1kTQcIdI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Y2AE6PEOUUiKwlR3zBFbFrxfG2LV1In1L/mMvbDKX/5caSct69Chucp1EiVq9nHzD
+	 ZgeeQfqpmxLd7fSVWRbOV0SBdTgLI2HDnhkBfnb4ZYEQWewZ3SJcivPHJLL3BrlMRt
+	 esmULP8vA+j5NzvFVG/DldPO9CMNzc2UBhF/Ft+c3+2tWwwAQjIqzUZCmU5vVTIWVV
+	 A3YdQz0siJH9dE03Kz5HuHTOJWiZ4msioJJarDg2xKrlqP7PiXc86g867pWFYZbqpG
+	 wkD8JDfALmgaYdN4nV+8WMM8L7OKfn2yxXt3j6b3wDWbGZKxxm2i9pi3HCPJvkZIxB
+	 IfVZIk20y6v3A==
+Message-ID: <6b3caec6-9fea-4d25-b05c-2578f973a36c@kernel.org>
+Date: Thu, 3 Apr 2025 09:22:56 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <zeuszr6ot5qdi46f5gvxa2c5efy4mc6eaea3au52nqnbhjek7o@l43ps2jtip7x>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/3] dt-bindings: iio: dac: Add adi,ad3530r.yaml
+To: Kim Seer Paller <kimseer.paller@analog.com>,
+ Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
+ Michael Hennerich <Michael.Hennerich@analog.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org
+References: <20250403-togreg-v3-0-d4b06a4af5a9@analog.com>
+ <20250403-togreg-v3-2-d4b06a4af5a9@analog.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
+ FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
+ QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
+ gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
+ /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
+ iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
+ VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
+ 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
+ xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
+ eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
+ AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
+ MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
+ Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
+ MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
+ OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
+ GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
+ 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
+ YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
+ 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
+ BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
+ JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
+ 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
+ YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
+ Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
+ ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
+ vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
+ oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
+ lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
+ t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
+ uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
+ 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
+ 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
+In-Reply-To: <20250403-togreg-v3-2-d4b06a4af5a9@analog.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed 02-04-25 21:37:40, Shakeel Butt wrote:
-> On Wed, Apr 02, 2025 at 02:24:45PM +0200, Michal Hocko wrote:
-> > diff --git a/mm/util.c b/mm/util.c
-> > index 60aa40f612b8..8386f6976d7d 100644
-> > --- a/mm/util.c
-> > +++ b/mm/util.c
-> > @@ -601,14 +601,18 @@ static gfp_t kmalloc_gfp_adjust(gfp_t flags, size_t size)
-> >  	 * We want to attempt a large physically contiguous block first because
-> >  	 * it is less likely to fragment multiple larger blocks and therefore
-> >  	 * contribute to a long term fragmentation less than vmalloc fallback.
-> > -	 * However make sure that larger requests are not too disruptive - no
-> > -	 * OOM killer and no allocation failure warnings as we have a fallback.
-> > +	 * However make sure that larger requests are not too disruptive - i.e.
-> > +	 * do not direct reclaim unless physically continuous memory is preferred
-> > +	 * (__GFP_RETRY_MAYFAIL mode). We still kick in kswapd/kcompactd to start
-> > +	 * working in the background but the allocation itself.
-> >  	 */
-> >  	if (size > PAGE_SIZE) {
-> >  		flags |= __GFP_NOWARN;
-> >  
-> >  		if (!(flags & __GFP_RETRY_MAYFAIL))
-> >  			flags |= __GFP_NORETRY;
-> > +		else
-> > +			flags &= ~__GFP_DIRECT_RECLAIM;
+On 03/04/2025 07:33, Kim Seer Paller wrote:
+> Document the AD3530/AD3530R (8-channel) and AD3531/AD3531R (4-channel)
+> low-power, 16-bit, buffered voltage output DACs with software-
+> programmable gain controls. They provide full-scale output spans of 2.5V
+> or 5V for reference voltages of 2.5V. These devices operate on a single
+> 2.7V to 5.5V supply and are guaranteed to be monotonic by design.
+> The "R" variants include a 2.5V, 5ppm/°C internal reference, which is
+> disabled by default.
 > 
-> I think you wanted the following instead:
-> 
-> 		if (!(flags & __GFP_RETRY_MAYFAIL))
-> 			flags &= ~__GFP_DIRECT_RECLAIM;
+> Signed-off-by: Kim Seer Paller <kimseer.paller@analog.com>
+> ---
 
-You are absolutely right. Not sure what I was thinking... I will send a
-full patch with a changelog to wrap the situation up.
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
--- 
-Michal Hocko
-SUSE Labs
+Best regards,
+Krzysztof
