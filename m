@@ -1,111 +1,127 @@
-Received: from mail-pl1-f196.google.com (mail-pl1-f196.google.com [209.85.214.196])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EF032E339D;
-	Thu,  3 Apr 2025 03:45:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F18201632C8;
+	Thu,  3 Apr 2025 03:48:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743651930; cv=none; b=MVxAlhXPh+2RoEPrCQn5wwZg2+YBkILrJToQw4imb9Xy5vt3OYcBv1wEuKeYzqmtopqifzgkti6MUEIIY80cx9at4akUJ40MZ6k1BeEBMzrLGsp452gYhS3Ny0O8W5gCGEgbKPjhnIG0/XJVhQsZFMErY5mk9SY8LgBJ3Kuy8mQ=
+	t=1743652134; cv=none; b=qxPlHouOvuBsntodosWk9fOOONuyc/x3lYRBCgqoBDWJaEwjq5+EcJ13EfzXOQtmjCI2o6xvrsZS8rSWtuGEKmJIuApxciEsofLnspr2nlrbFEp63XiyJVxFLv8g81lGMdpBHeHtw6+spCmN0lK4BGVGjva12XNdUXEipv3aP8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743651930; c=relaxed/simple;
-	bh=wzGWIf2FB1q0DOg13NZ39UTzns9D7dBSNr9vPGyZCb0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VMu1sJHI/OAtFtMKWgzyhtEPO8CPY0qHOfSrM6U/jibIbI0igw4dn/STaHUksHMxBNJAhwYreJ40zRVWXotFt6Sn1EJ1HJRzz4YcH0oxJtSDMZoF9QDX24JrjI8Ae7CG50JgMZaYq6Hy6MPsiC2w5DwRuJXgVxHGNIBHv+gPPqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UYfTfa7P; arc=none smtp.client-ip=209.85.214.196
+	s=arc-20240116; t=1743652134; c=relaxed/simple;
+	bh=nQsffHB85D3ZdvJ1iGaLJP3iXAutWcm/wOTfqKIhpVI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lFK0KOpBKmcXPIqU3r9jsfFbgvTpC78fu1sdn9e/oXQi4RKwKRCW6p6bifV/swSd7kZL5P5OVSfmiiJ2aqQJR5oqNajgxo4oFyCVlZC5flv5wVFiUFimDxQp4cLg1/iXSyjp63q0GRtiPTFdjIHanIMefN07+eumEGRX/+7eoRU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jDoV4msK; arc=none smtp.client-ip=209.85.128.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UYfTfa7P"
-Received: by mail-pl1-f196.google.com with SMTP id d9443c01a7336-22928d629faso4520425ad.3;
-        Wed, 02 Apr 2025 20:45:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jDoV4msK"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43cf848528aso2798265e9.2;
+        Wed, 02 Apr 2025 20:48:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743651928; x=1744256728; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Tw2FNjZg97zEj3C90ptNSlwRVtq6qjFq0b/HRBNiad4=;
-        b=UYfTfa7PSE6aTW/3xEGtePQjbSTNu3WFOx5nZvIWAXic2z4rENdGBLSoOi+06yant4
-         iw048VzLXx2GFTDKOiA6heXQuY9m6qQpuLmbCnGKf9jYLkkQQJu/rMfBv1ngE4VGos/D
-         tTfED3obb4S6NB+piynIgzn66j+gMYPDuPyirzupefJOTfNcRCFbqI0p62WnHh2E6mYP
-         me+O5vUhSykCYnyYybI7E+qKs3QSBYDy3JWqTzUODsmhf5W+YRlxK+Knq3J1fB3Euj9J
-         vH5d3ikCLtGBryHgD/0aMORdWCWgPiBcsezee+jMigv8dfJUqSJiyMlQwriQqxPiK0h0
-         jpwQ==
+        d=gmail.com; s=20230601; t=1743652131; x=1744256931; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2jc94mRlC9jV6xS8JzhLYqXI7SHfqDbj2Tw2Yylylsk=;
+        b=jDoV4msKrhpvBwjkc3atbheFgZg2nJBmNFUWOoGX9e5KlwgzkicExhYaB3x8oxnc8o
+         6LX57N9gbygO3sl3iLXTnW+4b4MKkECvKW3PzlUd0K227RQJQ480E3DQG/HmupGvw4CL
+         sbelBcCFKz6cgmdyLZMFDoyUC+E3l9qfvBq1QvIVJbz+tpC0RaZvJn8aTm5UcuurqhC2
+         R0a1+b06YyvZAFSV3qCrLnD9PwuHEuc+l+XZjuPzw3OGWlsyOw41J4cUceackWg57d42
+         LUevaJk1n9B9MdLCF8BFqcGFw4YhkkIBSFMHy51kjChKOzjFJRvem5T384v1vm+HEQZ5
+         DsWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743651928; x=1744256728;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Tw2FNjZg97zEj3C90ptNSlwRVtq6qjFq0b/HRBNiad4=;
-        b=fykJNLJVZSuWFW8H8ndqElHWkCdkds8dCQZym7CZzfjCjv5jIXxEA+9SHzQ53m9879
-         J8HAOYFG4gUhd6CrKBOnst7DbohS2yOdMUja8kNu7WllyBeAreHxmwNEqKA05zPX23NU
-         1mgxnM26cxxevMmqkyuzZ2VRsAX056Ie9b2pOItLswZTK+wbRRmCSnirP7B8eGpMlEqR
-         g2ZgeeUrklpTFcQ7ISpDLptJFsW8iIbppNGvSClTJD8fXMUeZL0m0X9rF20MzS2F/gKP
-         d9TeL07a5bN+60qK43QONGel17laqWVzH2BIAsuElDLoXDBU487L3pgcH4nlQ/ZRoXF6
-         yOEg==
-X-Forwarded-Encrypted: i=1; AJvYcCUZWzuG5s0n6Mm3XT9PmbnhdMBDqp972X/eL2JW5HeWjVWjKCt+q12awQ6ga1MJjoh53W+ygYOSQ8s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzhaWYoKxW3Cu/H6dHacOZ4wHO0ww8haz6YLfVmeGHbf70oqqQ5
-	Nh2EuvI8hnig6tV51YFXaaah9Qt75vGjC1CvalgWVQkJX+hw0Um2
-X-Gm-Gg: ASbGncueZ2sCuKQm+WxaJ/Apd7Ed0bOrVC/fgUDwIwDqU7qlmP7X6feTW7SJ99bSEM2
-	043ZF1ChGZmu44C3AW7xVtLyDR54ON+L7ZXA8WxG2zewTqf3EtouVJQPydvgrceUvlqvvzrvSH7
-	2hmtFVZqYoDe6qWHV2S9+vwn2cJpj2cTTBHvajmXPD2gXdK4MtL3yD6CfWR/V5wjnkQgusyZQlh
-	XKVJgOIiWKG7Dzuik47mfm+yoVO7wrWcuG5cfzs5MX+uyPqAncGmkG1GWInA9KBZNQS6MAg1WUM
-	wPypmaHYiEYlKfC+cSI0vCdsa07bNUIj2d4cKtb3F1Yy/2b9T7SiCNkdzh4poU4qyNCHXiM=
-X-Google-Smtp-Source: AGHT+IEsZviSPWU5erAdmB+yYTEcid7r7jqoBDS4VRoer2qsYY99qTObr9INv6/B7nY2jDRez/iJ4Q==
-X-Received: by 2002:a17:903:19ef:b0:223:33cb:335f with SMTP id d9443c01a7336-2292f9493e3mr300357035ad.3.1743651928403;
-        Wed, 02 Apr 2025 20:45:28 -0700 (PDT)
-Received: from henry.localdomain ([111.202.148.167])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-229785ada60sm4037155ad.3.2025.04.02.20.45.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Apr 2025 20:45:27 -0700 (PDT)
-From: Henry Martin <bsdhenrymartin@gmail.com>
-To: dlemoal@kernel.org,
-	cassel@kernel.org,
-	linux-ide@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Henry Martin <bsdhenrymartin@gmail.com>
-Subject: [PATCH v1] [ARM] pata_pxa: Fix null-ptr-deref in pxa_ata_probe()
-Date: Thu,  3 Apr 2025 11:45:20 +0800
-Message-Id: <20250403034520.59597-1-bsdhenrymartin@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        d=1e100.net; s=20230601; t=1743652131; x=1744256931;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2jc94mRlC9jV6xS8JzhLYqXI7SHfqDbj2Tw2Yylylsk=;
+        b=lMJ8+EM/noPL0Cu9juC7vmHPKxpgEs95a2//kPWtxinx/J3EtAmX6wkpU5MyAibyqu
+         amb1v9OmrO3ekjP103TDKtRfgV6XxPYZKcdjhvJZ1IWqdzF6wGreliW4gBYDqfdq8P1z
+         amW5oGtWZE4tX0ZBgo6uZkrK+DoPlunN3tpYh3lCZgQmOlvBXSJRPwN7ZYymCFx+3bXW
+         ZDrbp2uhWJZuoy0dgHuo0eTO7q2MPe1n3P5aWUIpJD4YM242vrKW95ozHzFbGgzr4ArH
+         C5VBInQX6LaXwhJR9izDFsgoYpW1ir+qHGIulfwmvviPMdGTwYu7/SIAOlVLbdQDcuAQ
+         v5cQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWP9x5GGWOoGAqVeEct7OoShvXN4SEqLXUBTqz0t2B7kMUbmybRTbNyPAu5yB6C3JCypmo6EoU/F0SkTuk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxG7CZmMAw1rnqfbmDRVN8ccPdGtFJzYC4RveD6jGKMsUGxL/w3
+	ec9ycPqnFIyj+tMSF4XHaf7D9DJowUB3/Frbtrz2DNnq9ql2acKo9kySMLJ0Q6OIDbS/AOLhehw
+	3dJOAiA80YYX0ayXTXIe0N6hA/hxNAYQT
+X-Gm-Gg: ASbGnctsaeA2pOEbX/jzXWpCK3cZs6Xco99ftRyAhvDYhpZhRW/HaHkTxfQ6hdrgljg
+	azUvyS83H+3MmrmqzyXEu4xQxunHLy/zPVdm8S6ChXmFLJFLeFhE78eD3uHTRLOVPlTI1d8fEAZ
+	60uj8M5/B4woM6j2dV7xBz0pqcnzI0ZYOLLNIckEh33P4JyCz5Q5bb
+X-Google-Smtp-Source: AGHT+IEdKia2hHGcNebu4xjqUqFuxpX3KUAd5XBr9m+mg2qKCJlK/lkaqdG0lNnDFGWxGfmwx/cyFN5y11yGDkj4ycs=
+X-Received: by 2002:a05:6000:1a89:b0:39c:1258:7e19 with SMTP id
+ ffacd0b85a97d-39c2980a18fmr3078830f8f.58.1743652131047; Wed, 02 Apr 2025
+ 20:48:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250403025514.41186-1-alexei.starovoitov@gmail.com> <20250402201252.8926c547a327ce91c61fd620@linux-foundation.org>
+In-Reply-To: <20250402201252.8926c547a327ce91c61fd620@linux-foundation.org>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Wed, 2 Apr 2025 20:48:39 -0700
+X-Gm-Features: ATxdqUEdMaYxpb-nMIHBSdqMPKo17lPBVgJom9Ls--fu9Rhqk2F36cE6qD6dAk8
+Message-ID: <CAADnVQ+Uy_sctUkEFN4P6GEO_=5Q6n2XNonWaJYfz7uW90QWTQ@mail.gmail.com>
+Subject: Re: [PATCH v3] locking/local_lock, mm: Replace localtry_ helpers with
+ local_trylock_t type
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: bpf <bpf@vger.kernel.org>, linux-mm <linux-mm@kvack.org>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Vlastimil Babka <vbabka@suse.cz>, 
+	Sebastian Sewior <bigeasy@linutronix.de>, Steven Rostedt <rostedt@goodmis.org>, 
+	Shakeel Butt <shakeel.butt@linux.dev>, Michal Hocko <mhocko@suse.com>, 
+	LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-devm_ioremap() returns NULL on error. Currently, pxa_ata_probe() does
-not check for this case, which results in a NULL pointer dereference.
+On Wed, Apr 2, 2025 at 8:12=E2=80=AFPM Andrew Morton <akpm@linux-foundation=
+.org> wrote:
+>
+> On Wed,  2 Apr 2025 19:55:14 -0700 Alexei Starovoitov <alexei.starovoitov=
+@gmail.com> wrote:
+>
+> > Partially revert commit 0aaddfb06882 ("locking/local_lock: Introduce lo=
+caltry_lock_t").
+> > Remove localtry_*() helpers, since localtry_lock() name might
+> > be misinterpreted as "try lock".
+> >
+>
+> So many macros grumble.
+>
+> +#define local_trylock_init(lock)       __local_trylock_init(lock)
+> +#define local_trylock(lock)            __local_trylock(lock)
+> +#define local_trylock_irqsave(lock, flags)                     \
+> +#define __local_trylock_init(lock) __local_lock_init(lock.llock)
+> +#define __local_lock_acquire(lock)                                     \
+> +#define __local_trylock(lock)                                  \
+> +#define __local_trylock_irqsave(lock, flags)                   \
+> +#define __local_lock_release(lock)                                     \
+> +#define __local_unlock(lock)                                   \
+> +#define __local_unlock_irq(lock)                               \
+> +#define __local_unlock_irqrestore(lock, flags)                 \
+> +#define __local_lock_nested_bh(lock)                           \
+> +#define __local_unlock_nested_bh(lock)                         \
+> +#define __local_trylock_init(l)                        __local_lock_init=
+(l)
+> +#define __local_trylock(lock)                                  \
+> +#define __local_trylock_irqsave(lock, flags)                   \
+>
+> I expect many of these could have been implemented as static inlines.
+>
+> Oh well, that's a separate project for someone sometime.
 
-Add NULL check after devm_ioremap() to prevent this issue.
+They need to be macroses otherwise _Generic() trick won't work.
 
-Fixes: 2dc6c6f15da9 ("[ARM] pata_pxa: DMA-capable PATA driver")
-Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
----
- drivers/ata/pata_pxa.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+Thanks for applying v3.
 
-diff --git a/drivers/ata/pata_pxa.c b/drivers/ata/pata_pxa.c
-index 434f380114af..cc76290a3b1a 100644
---- a/drivers/ata/pata_pxa.c
-+++ b/drivers/ata/pata_pxa.c
-@@ -223,11 +223,16 @@ static int pxa_ata_probe(struct platform_device *pdev)
- 
- 	ap->ioaddr.cmd_addr	= devm_ioremap(&pdev->dev, cmd_res->start,
- 						resource_size(cmd_res));
-+	if (!ap->ioaddr.cmd_addr)
-+		return -ENOMEM;
- 	ap->ioaddr.ctl_addr	= devm_ioremap(&pdev->dev, ctl_res->start,
- 						resource_size(ctl_res));
-+	if (!ap->ioaddr.ctl_addr)
-+		return -ENOMEM;
- 	ap->ioaddr.bmdma_addr	= devm_ioremap(&pdev->dev, dma_res->start,
- 						resource_size(dma_res));
--
-+	if (!ap->ioaddr.bmdma_addr)
-+		return -ENOMEM;
- 	/*
- 	 * Adjust register offsets
- 	 */
--- 
-2.34.1
+Do you want to take "mm/page_alloc: Avoid second trylock of zone->lock"
+fix as well ?
 
+https://lore.kernel.org/all/20250331002809.94758-1-alexei.starovoitov@gmail=
+.com/
+
+or should I ?
