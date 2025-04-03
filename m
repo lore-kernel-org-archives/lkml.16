@@ -1,198 +1,211 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6498924E4B2;
-	Thu,  3 Apr 2025 15:27:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A013F2505DD
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 15:27:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743694036; cv=none; b=XZq/RZfCUZWAh1o/YCrhpGEqCZqTq0F6DITrEfOvUTuLPnZsWfkFEl77MvDBgU/BVXFsXX0QgZHasr5AgL6nB8wVGLeUqFvY33CHNxW/u0N7qLlLjb8YAim0AuqWk1z6O9iZ/iDXNHCvr/hdD6x7dTogCUVGqUR5anZC6ZJ1Tjs=
+	t=1743694043; cv=none; b=XlenbyrJwzeAS538Zu8KieLrwBpZFtr1HL1YX6V20f69OMzCgU1GmTiHJkHUdXfsEvptJMT4r9j7MNpyIVl6TIDZR4qJn8J8H3f/xPEBCyTQaHIIoBj8RZzEqgnYiZmYJzGqKK15XBsrTg93slAdEPUc7HNai9y5nMDLcipMD6o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743694036; c=relaxed/simple;
-	bh=ddWj3Z13XW8uzI3RDW2AgxXUlibDcIvQOoriVbRvwhg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MrYcdYeQABkwjorT521P9Dgbzxc2wlNPcqE7XaPcYR5BnUN+ovCbPhuOFW4y8Zsv1n3q051kRJ6EX98HSc0yHLVDgg+5+HcNJbD1U6EWVrlNN2HNDQQ5wulEivmfu3QcrftxyoZT8+PuJVxg/7up83VyvrgyqBNCRQIj4aePeKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=y5KZNVVR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743694043; c=relaxed/simple;
+	bh=REhjuZvcA3i8G0dTb+3RkycXOZa+eB7qm8HZB2lP/Jg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cYRmMSYKFa+/3rqQUtJkITV86lo2HS/EUalUrNEURsaxONYGbLv3q7ayBWTNX5wl7+2ChrJWW3CzRdK2TOxBEXkYyCkS+s03CYiuN2U1LsowxlUt16IBmeQDBXLRCAtLRgSohEB2T0p0yYcg0K9tv7tIQ8P6wPF0/WV1bzZK5co=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tzSoEL+p; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="y5KZNVVR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA23EC4CEE5;
-	Thu,  3 Apr 2025 15:27:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1743694036;
-	bh=ddWj3Z13XW8uzI3RDW2AgxXUlibDcIvQOoriVbRvwhg=;
-	h=From:To:Cc:Subject:Date:From;
-	b=y5KZNVVRybc5Y/mlrSMuLsLkN6Q5BqtxDbqToeoqB263DDxbqONdsnahMJCin3x2z
-	 w65RE92CAn5pYnNT31ccGNrISWJhzm6/T6hs+svw9Z+osGoBgHxoBOujhzu5xDVZAN
-	 KBO+hmWNHBDpQR87iDSf/loxHZzO+Wu9SfZiaTFg=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: stable@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	torvalds@linux-foundation.org,
-	akpm@linux-foundation.org,
-	linux@roeck-us.net,
-	shuah@kernel.org,
-	patches@kernelci.org,
-	lkft-triage@lists.linaro.org,
-	pavel@denx.de,
-	jonathanh@nvidia.com,
-	f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com,
-	srw@sladewatkins.net,
-	rwarsow@gmx.de,
-	conor@kernel.org,
-	hargar@microsoft.com,
-	broonie@kernel.org
-Subject: [PATCH 6.6 00/26] 6.6.86-rc1 review
-Date: Thu,  3 Apr 2025 16:20:21 +0100
-Message-ID: <20250403151622.415201055@linuxfoundation.org>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tzSoEL+p"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5e673822f76so1823053a12.2
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 08:27:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1743694040; x=1744298840; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=JTskUv4HRecH8zkwhc0nWGv0insFCOczgkdAhLL+Odk=;
+        b=tzSoEL+pcs2db5j0mdfjR1d4j+NimgVWvtB4nyyV/RLAFWaZix0/st17mKFeXlHP4C
+         EVC9JLuS7dcQs7PN51s6jiNU52RkTzEBOzIXnAmMNVdeA8mAIKEtnKV+HTcsLSwOYWv/
+         uefcLBpX1CB1uEc/wXbrV5JpYD6iC65lJAgj/FRZpIEVZJKZUG13YbuszLufAYB3fqQn
+         NEc9QuMbzbZbKLMgC0S+WNDpRNosdcCLqvf34nH/8WbyXb1OiDYqwe63hmo6Dsq++aog
+         yF/JUaVLLtRoFOWYWT3aR4QkTIvGh6GHQhcOn6OHOVRckmJDmkpMj7Thl3iYdmL2t0Fy
+         6wqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743694040; x=1744298840;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JTskUv4HRecH8zkwhc0nWGv0insFCOczgkdAhLL+Odk=;
+        b=FHJ2TFN2HdKRIf+4zFy08Nwk42LOblmXF58+axbe43RVl44zALLXwK4SnUHC/G4Aov
+         T2FCvGl70XgApdCtJoh0/5ovGKWdxmL74GozrKAweSlwxy1iJ5XBtympstn5HoOUvhbo
+         S8HX+D8p1uG3VkQwLOqf64uSjVFtK3LcvYL7o4qrIcoSmz2MHPY8XcgJuRXECtl5QCq3
+         qPaC6Ndc589+Zf4DZ7HrgSbkBNtYgeJd//tiz6Hw5mjh9jL2HEQoo31OjNKHfvsghsAi
+         1h7aLyM7RE6GDC50WT4+mq0l5/kjCxMdAfp+q22xpLaL4wri21Os2NPQrX1+5ldM8A96
+         pbFA==
+X-Forwarded-Encrypted: i=1; AJvYcCUucNSFCMNS0U1CirUcZsMKWK1jRyU3nvvGXLZU4ZQ2/xR4r2i9X15QoYuZo+fe4HXtHFfvd0i6FlsBvOk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywo2SUwTuxdiEPTzbsV8TGSxNRQG1F2ksEQgerABxo7FvMfCLON
+	3h45f9ILMdDjAP3tuJHyO6dSRXvlf+QDf6H+TsgOzLfS1yiuB3/tbq5D4Xktzw==
+X-Gm-Gg: ASbGncvL1VD/r1ysLEO49nDLHkDG5r12lvpV5hho37maeSo4OsHGUTC7bghsEt0+MFR
+	Om2fzvM+NwKk1e/1fPKH2xVT0J9HNuwqTDs3RFAsvR7Pub702BbbEtJEy6HIs053DVt+5wZsXVr
+	K/9ocEvItV8k+JCX1s3SQYL4w8/nLcrfpDfRR0R9KeozYF4GEWs71Bh/LtuPlW+rydGdmB5nPv3
+	kWRWn9F9xoXvKtB4selU4KcJ0kwdxnZFrRnPYhRBadhMCOeqpEVSrzdWFij9M2vXWBuDRH+Bw3e
+	eieoAqpoLQh40gkLgBs2DfB95BisEalohOcXVpo9mvgUkBjAO30oV6h2fTUrEAuXjPyxFzxcOQw
+	xjAHbpw==
+X-Google-Smtp-Source: AGHT+IFfmyWrTKMc40a2U0IAHYIOZlLiCjW5rNWsqaDLQ9B5AQ5QDUuo3j6YMdMQxsUaTDXfNwPjYg==
+X-Received: by 2002:a17:907:94c2:b0:ac2:a50a:51ad with SMTP id a640c23a62f3a-ac7d1893010mr177366b.14.1743694039740;
+        Thu, 03 Apr 2025 08:27:19 -0700 (PDT)
+Received: from google.com (40.162.204.35.bc.googleusercontent.com. [35.204.162.40])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7c013ec0esm108015266b.98.2025.04.03.08.27.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Apr 2025 08:27:18 -0700 (PDT)
+Date: Thu, 3 Apr 2025 15:27:15 +0000
+From: Quentin Perret <qperret@google.com>
+To: Vincent Donnefort <vdonnefort@google.com>
+Cc: maz@kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com,
+	suzuki.poulose@arm.com, yuzenghui@huawei.com,
+	catalin.marinas@arm.com, will@kernel.org,
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org, kernel-team@android.com
+Subject: Re: [PATCH v2 2/9] KVM: arm64: Add a range to
+ __pkvm_host_share_guest()
+Message-ID: <Z-6o0zcLa4Aw0N6R@google.com>
+References: <20250306110038.3733649-1-vdonnefort@google.com>
+ <20250306110038.3733649-3-vdonnefort@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: quilt/0.68
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.86-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-6.6.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 6.6.86-rc1
-X-KernelTest-Deadline: 2025-04-05T15:16+00:00
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250306110038.3733649-3-vdonnefort@google.com>
 
-This is the start of the stable review cycle for the 6.6.86 release.
-There are 26 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
+On Thursday 06 Mar 2025 at 11:00:31 (+0000), Vincent Donnefort wrote:
+> +int __pkvm_host_share_guest(u64 pfn, u64 gfn, u64 nr_pages, struct pkvm_hyp_vcpu *vcpu,
+>  			    enum kvm_pgtable_prot prot)
+>  {
+>  	struct pkvm_hyp_vm *vm = pkvm_hyp_vcpu_to_hyp_vm(vcpu);
+>  	u64 phys = hyp_pfn_to_phys(pfn);
+>  	u64 ipa = hyp_pfn_to_phys(gfn);
+> +	enum pkvm_page_state state;
+>  	struct hyp_page *page;
+> +	u64 size;
+>  	int ret;
+>  
+>  	if (prot & ~KVM_PGTABLE_PROT_RWX)
+>  		return -EINVAL;
+>  
+> -	ret = check_range_allowed_memory(phys, phys + PAGE_SIZE);
+> +	ret = __guest_check_transition_size(phys, ipa, nr_pages, &size);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = check_range_allowed_memory(phys, phys + size);
+>  	if (ret)
+>  		return ret;
+>  
+>  	host_lock_component();
+>  	guest_lock_component(vm);
+>  
+> -	ret = __guest_check_page_state_range(vcpu, ipa, PAGE_SIZE, PKVM_NOPAGE);
+> +	ret = __guest_check_page_state_range(vm, ipa, size, PKVM_NOPAGE);
+>  	if (ret)
+>  		goto unlock;
+>  
+> -	page = hyp_phys_to_page(phys);
+> -	switch (page->host_state) {
+> +	state = hyp_phys_to_page(phys)->host_state;
+> +	for_each_hyp_page(phys, size, page) {
+> +		if (page->host_state != state) {
+> +			ret = -EPERM;
+> +			goto unlock;
+> +		}
+> +	}
+> +
+> +	switch (state) {
+>  	case PKVM_PAGE_OWNED:
+> -		WARN_ON(__host_set_page_state_range(phys, PAGE_SIZE, PKVM_PAGE_SHARED_OWNED));
+> +		WARN_ON(__host_set_page_state_range(phys, size, PKVM_PAGE_SHARED_OWNED));
+>  		break;
+>  	case PKVM_PAGE_SHARED_OWNED:
+> -		if (page->host_share_guest_count)
+> -			break;
+> -		/* Only host to np-guest multi-sharing is tolerated */
+> -		WARN_ON(1);
+> -		fallthrough;
+> +		for_each_hyp_page(phys, size, page) {
+> +			/* Only host to np-guest multi-sharing is tolerated */
+> +			if (WARN_ON(!page->host_share_guest_count)) {
+> +				ret = -EPERM;
+> +				goto unlock;
+> +			}
+> +		}
+> +		break;
+>  	default:
+>  		ret = -EPERM;
+>  		goto unlock;
+>  	}
+>  
+> -	WARN_ON(kvm_pgtable_stage2_map(&vm->pgt, ipa, PAGE_SIZE, phys,
+> +	WARN_ON(kvm_pgtable_stage2_map(&vm->pgt, ipa, size, phys,
+>  				       pkvm_mkstate(prot, PKVM_PAGE_SHARED_BORROWED),
+>  				       &vcpu->vcpu.arch.pkvm_memcache, 0));
+> -	page->host_share_guest_count++;
+> +	__host_update_share_guest_count(phys, size, true);
 
-Responses should be made by Sat, 05 Apr 2025 15:16:11 +0000.
-Anything received after that time might be too late.
+So we're walking the entire phys range 3 times;
 
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.86-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
-and the diffstat can be found below.
+	1. to check the host_state is consistent with that of the first
+	page;
 
-thanks,
+	2. to set the state to SHARED_OWNED or to check the
+	host_share_guest_count;
 
-greg k-h
+	3. and then again here to update the host share guest count
 
--------------
-Pseudo-Shortlog of commits:
+I feel like we could probably remove at least one loop with a pattern
+like so:
 
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 6.6.86-rc1
+	for_each_hyp_page(phys, size, page) {
+		switch (page->state) {
+		case PKVM_PAGE_OWNED:
+			continue;
+		case PKVM_PAGE_SHARED_BORROWED:
+			if (page->host_shared_guest_count)
+				continue;
+			fallthrough;
+		default;
+			ret = -EPERM;
+			goto unlock;
+		}
+	}
 
-Abhishek Tamboli <abhishektamboli9@gmail.com>
-    usb: gadget: uvc: Fix ERR_PTR dereference in uvc_v4l2.c
+	for_each_hyp_page(phys, size, page) {
+		page->host_state = PKVM_PAGE_SHARED_OWNED;
+		page->host_share_guest_count++;
+	}
 
-John Keeping <jkeeping@inmusicbrands.com>
-    serial: 8250_dma: terminate correct DMA in tx_dma_flush()
+That would also tolerate a mix of OWNED and SHARED_OWNED page in the
+range, which I'm not sure is needed but it doesn't cost us anything to
+support so ... :-)
 
-Luo Qiu <luoqiu@kylinsec.com.cn>
-    memstick: rtsx_usb_ms: Fix slab-use-after-free in rtsx_usb_ms_drv_remove
+Wdyt?
 
-Dominique Martinet <dominique.martinet@atmark-techno.com>
-    net: usb: usbnet: restore usb%d name exception for local mac addresses
-
-Fabio Porcedda <fabio.porcedda@gmail.com>
-    net: usb: qmi_wwan: add Telit Cinterion FE990B composition
-
-Fabio Porcedda <fabio.porcedda@gmail.com>
-    net: usb: qmi_wwan: add Telit Cinterion FN990B composition
-
-Sherry Sun <sherry.sun@nxp.com>
-    tty: serial: fsl_lpuart: disable transmitter before changing RS485 related registers
-
-Cameron Williams <cang1@live.co.uk>
-    tty: serial: 8250: Add Brainboxes XC devices
-
-Cameron Williams <cang1@live.co.uk>
-    tty: serial: 8250: Add some more device IDs
-
-William Breathitt Gray <wbg@kernel.org>
-    counter: microchip-tcb-capture: Fix undefined counter channel state on probe
-
-Fabrice Gasnier <fabrice.gasnier@foss.st.com>
-    counter: stm32-lptimer-cnt: fix error handling when enabling
-
-Dhruv Deshpande <dhrv.d@proton.me>
-    ALSA: hda/realtek: Support mute LED on HP Laptop 15s-du3xxx
-
-Maxim Mikityanskiy <maxtram95@gmail.com>
-    netfilter: socket: Lookup orig tuple for IPv6 SNAT
-
-Manivannan Sadhasivam <mani@kernel.org>
-    scsi: ufs: qcom: Only free platform MSIs when ESI is enabled
-
-Changhuang Liang <changhuang.liang@starfivetech.com>
-    reset: starfive: jh71x0: Fix accessing the empty member on JH7110 SoC
-
-Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-    mm/page_alloc: fix memory accept before watermarks gets initialized
-
-Wayne Lin <Wayne.Lin@amd.com>
-    drm/amd/display: Don't write DP_MSTM_CTRL after LT
-
-Imre Deak <imre.deak@intel.com>
-    drm/dp_mst: Add a helper to queue a topology probe
-
-Imre Deak <imre.deak@intel.com>
-    drm/dp_mst: Factor out function to queue a topology probe work
-
-Alex Hung <alex.hung@amd.com>
-    drm/amd/display: Check denominator crb_pipes before used
-
-Yanjun Yang <yangyj.ee@gmail.com>
-    ARM: Remove address checking for MMUless devices
-
-Kees Cook <keescook@chromium.org>
-    ARM: 9351/1: fault: Add "cut here" line for prefetch aborts
-
-Kees Cook <keescook@chromium.org>
-    ARM: 9350/1: fault: Implement copy_from_kernel_nofault_allowed()
-
-Minjoong Kim <pwn9uin@gmail.com>
-    atm: Fix NULL pointer dereference
-
-Terry Junge <linuxhid@cosmicgizmosystems.com>
-    HID: hid-plantronics: Add mic mute mapping and generalize quirks
-
-Terry Junge <linuxhid@cosmicgizmosystems.com>
-    ALSA: usb-audio: Add quirk for Plantronics headsets to fix control names
-
-
--------------
-
-Diffstat:
-
- Makefile                                           |   4 +-
- arch/arm/mm/fault.c                                |   8 ++
- drivers/counter/microchip-tcb-capture.c            |  19 +++
- drivers/counter/stm32-lptimer-cnt.c                |  24 ++--
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c  |  16 +--
- .../drm/amd/display/dc/dcn315/dcn315_resource.c    |   2 +-
- drivers/gpu/drm/display/drm_dp_mst_topology.c      |  36 +++++-
- drivers/hid/hid-plantronics.c                      | 144 ++++++++++-----------
- drivers/memstick/host/rtsx_usb_ms.c                |   1 +
- drivers/net/usb/qmi_wwan.c                         |   2 +
- drivers/net/usb/usbnet.c                           |  21 ++-
- drivers/reset/starfive/reset-starfive-jh71x0.c     |   3 +
- drivers/tty/serial/8250/8250_dma.c                 |   2 +-
- drivers/tty/serial/8250/8250_pci.c                 |  46 +++++++
- drivers/tty/serial/fsl_lpuart.c                    |  17 +++
- drivers/ufs/host/ufs-qcom.c                        |   4 +-
- drivers/usb/gadget/function/uvc_v4l2.c             |  12 +-
- include/drm/display/drm_dp_mst_helper.h            |   2 +
- mm/page_alloc.c                                    |  14 +-
- net/atm/mpc.c                                      |   2 +
- net/ipv6/netfilter/nf_socket_ipv6.c                |  23 ++++
- sound/pci/hda/patch_realtek.c                      |   1 +
- sound/usb/mixer_quirks.c                           |  51 ++++++++
- 23 files changed, 340 insertions(+), 114 deletions(-)
-
-
+>  unlock:
+>  	guest_unlock_component(vm);
+> diff --git a/arch/arm64/kvm/pkvm.c b/arch/arm64/kvm/pkvm.c
+> index 930b677eb9b0..00fd9a524bf7 100644
+> --- a/arch/arm64/kvm/pkvm.c
+> +++ b/arch/arm64/kvm/pkvm.c
+> @@ -361,7 +361,7 @@ int pkvm_pgtable_stage2_map(struct kvm_pgtable *pgt, u64 addr, u64 size,
+>  		return -EINVAL;
+>  
+>  	lockdep_assert_held_write(&kvm->mmu_lock);
+> -	ret = kvm_call_hyp_nvhe(__pkvm_host_share_guest, pfn, gfn, prot);
+> +	ret = kvm_call_hyp_nvhe(__pkvm_host_share_guest, pfn, gfn, 1, prot);
+>  	if (ret) {
+>  		/* Is the gfn already mapped due to a racing vCPU? */
+>  		if (ret == -EPERM)
+> -- 
+> 2.48.1.711.g2feabab25a-goog
+> 
