@@ -1,113 +1,93 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA38F253B4E
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 18:38:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17B3A1DA5F;
+	Thu,  3 Apr 2025 18:38:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743705491; cv=none; b=Qv0XRfGIjlUVSHozO0OnpkMwVlnUC6lnIpXLesPrZzYcsR0lnYDi7CkPsdwSyoVqwD/VDnkzJGnoRDLre0IvwNSHf9XUOuOCQTH6CqFfxIWbp8cAuqFitx5odCtZC6+H1ObmZgp98yLV6JnAiYykcs3Znp6Wvz17wWho8RwA250=
+	t=1743705531; cv=none; b=SUHYmftUL7uSmJ5ZCyUl9PnhACAYpHvX9lQpN9KGyKQcf4fyosEp9AaX6dkgJBkdTqonjG1OQk3Cu+bXCszSOKNERhy3BT0+pZOyDyqW07xc1PbxDy6kWaMtjb2NCreOIwLNJHrXP1fX680wG5sAGEgQM/IusDtvPBcNQJ9OYMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743705491; c=relaxed/simple;
-	bh=qORaiLaULs6L5dF+BXjhP23XyfyDBYFgK2j1vKkDrsk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=HYM4dcPdKlhNpXCcfoZ0RqwApViquiy61EZ9grGjcoAA7FSZ3acuJoOSxoAOdIyEgYFpTqFPVCex/Aog93lwz5W4Tu9EdbWR58k4HB0t3ych9CG1jaZPTSIpdpnTBX+0bT+7v2tyep0Q3fZzLaoMiaIc/6+akq90miW2ham3vC0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=U/XFVTIb; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1743705531; c=relaxed/simple;
+	bh=nOQIOEoiwz2UPGEUjwxqisj2bkBWUcs3VcWP/J11NGg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tX+20MfLlkjl32RL8lQ1XEEh1MhFWvnPsNvea9wgX2ZkTxDW6WN4dy3RxVJ0BLRXfOCB/G5bIBjtMkz4MkjCHLI0kiYres0g78KQbRU8d3yyOr6Se6hIhF1Il4L97MU/Jvp9hCQovOYvWbGrCw1JDvIkH6wv94VEWgm6g8CuP5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aszIuPaG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="U/XFVTIb"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3913958ebf2so900546f8f.3
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 11:38:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1743705488; x=1744310288; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=RAUmoadrt4LgkAajp/0Serm5kZVa1HxkqsvCZqwwdbs=;
-        b=U/XFVTIblEWLgsY55e4vq3yJvS7xtveO1iAoi7MscgeBo12Vtxz1dZgBU48L5dKkGf
-         gQ5DLZl1+lCXDcoq1V7+8w7iijPhJ/3EdvSbOy+n9SFxK2yIgq65gOvqq+5JxXbBGcYs
-         2OkqiGMBPDEmzpvgndac5AhxWAydpoQWam+PQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743705488; x=1744310288;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=RAUmoadrt4LgkAajp/0Serm5kZVa1HxkqsvCZqwwdbs=;
-        b=Y3eLjdu3uTbjw0Yy92p8QMKs2MKlPOxEnWVCLNAeR33KPQ0+ay3SKnAX+sFrMtF0XW
-         LX22t+XtjvvOAqe4XwPfRsPDaHLNkyX2tPFTcuQccjKi8b0SlPyN3UxtnRDO8FSRLk66
-         jiWmcOdVKEdufjFHzj4GgCBK60Q7xU/l9bLiIw3lskepv+GtFkEd66PpSqBpe61pNcCK
-         6+QQObWQCfuzCvpkDs3nZk1ur5zUHp5aaUByDPwduHw3oe4zGo+k7Mzged5llFzSA3B+
-         xj5wxa8Nc7YMZn+5hE3B3T89yQy21N1lTGTtQfd569oHecksE9/yzpt5nOsZIvpNtY7D
-         sVGQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW7tnnUI8VNpLZPhbx2uJp0bNq5sypj4Efx6TZ7f7bOdB9rSFuZQ4Apqodkz8I667tMi5/8dleoCv8ZA+w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyLaPtbV35hEMmy5Dr89qFHM9VLQjjb6ED3T/RkFt3/XlBYUGZt
-	OO0vAzBQF3VagwYSFnqIjDXUlZ4ySwt2w3j1zM2+kmCFd3u0s/gEivsu73PJaw==
-X-Gm-Gg: ASbGncsfls7/iQzxH2DLjFv76KQXAxoGPXHZXsTob4fxwS6/PdmquqnTVaUFkALmsqm
-	e5nkb4dP6e0mfiysMLGSNTsYrG1I1Jsr0RXKwwhearFUGw0dX/egTZkHw+2k0HJMwZD/ptUzbuP
-	WaOZZBYvCEBrkQchDhC+vLk3gJWmkh7I5ZST8ThIhY8eMZb5DDPDkvoJI6ZcBmqXjNA0E3cPlLi
-	8NDr8Jk+DqVKH6Z/FjK/XUKT+CWZ3dsH08u+TdNOeFz9afnDbqWCs0BJIuvm+Vib/aXwcK54h1z
-	0SL6EP9eXnx7EiA6m/iJyEaNI5ZH+R/m0WDYMnmUAaozBnES/doE5X1FcmbhNJNS+hzknPIfY/F
-	pakCX0xr7pCz9LKk76yWjTzQZCX66
-X-Google-Smtp-Source: AGHT+IFU+JA0wj4Gwdhmn0pvtzq12d4oTDVMfB0PZk2I2SR11ArXvCwfIkLV7Wt6NWMVRvs/m32Wsg==
-X-Received: by 2002:a05:6000:400a:b0:391:2fe4:de0a with SMTP id ffacd0b85a97d-39cb357b0ccmr382060f8f.2.1743705488199;
-        Thu, 03 Apr 2025 11:38:08 -0700 (PDT)
-Received: from orzel1.c.googlers.com.com (105.168.195.35.bc.googleusercontent.com. [35.195.168.105])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c30096896sm2503496f8f.19.2025.04.03.11.38.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Apr 2025 11:38:07 -0700 (PDT)
-From: "=?UTF-8?q?Kornel=20Dul=C4=99ba?=" <korneld@chromium.org>
-X-Google-Original-From: =?UTF-8?q?Kornel=20Dul=C4=99ba?= <korneld@google.com>
-To: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>
-Cc: Steve Capper <steve.capper@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	ssradjacoumar@google.com,
-	chromeos-krk-upstreaming@google.com,
-	=?UTF-8?q?Kornel=20Dul=C4=99ba?= <korneld@google.com>
-Subject: [PATCH] arm64: Support ARM64_VA_BITS=52 when setting ARCH_MMAP_RND_BITS_MAX
-Date: Thu,  3 Apr 2025 18:36:38 +0000
-Message-ID: <20250403183638.3386628-1-korneld@google.com>
-X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aszIuPaG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2D93C4CEE3;
+	Thu,  3 Apr 2025 18:38:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743705530;
+	bh=nOQIOEoiwz2UPGEUjwxqisj2bkBWUcs3VcWP/J11NGg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=aszIuPaGmDMu1omT3wn0gZ1lJ2JK+QS2YwE7qOb/P+y5d5oEPNRM+o8GgvOXOxIfg
+	 apwCIW5KTz328BdEruJXPCz1nHquEyBjkRzyeCvMAUo1074lJ32320iTR12wYun6/F
+	 vZkhtt1oWa2uwsNMUFSLme7Y/kHAvLJEf9KmpTYwroo1AbiUuJLRZrw6agYmOyPQnr
+	 Y1ZN3/UgGUz7xAs7aJQPOCsBeBOanuPt6qYwXZFWS5vMrDwsODwHG5Vr+GojtCxGeu
+	 VfcWKuRpdx26BRGKiKBTA6n9XWcaNY7NzYiQqKt22qLKj7toZfGeBhdF0ILNqD/EYV
+	 J/aFhG0z1w63A==
+Date: Thu, 3 Apr 2025 21:38:45 +0300
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Michal Suchanek <msuchanek@suse.de>
+Cc: Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
+	linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Jonathan McDowell <noodles@earth.li>
+Subject: Re: [PATCH] tpm: tis: Increase the default for timeouts B and C
+Message-ID: <Z-7VtSv675dPIsTu@kernel.org>
+References: <20250402172134.7751-1-msuchanek@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250402172134.7751-1-msuchanek@suse.de>
 
-When the 52-bit virtual addressing was enabled the select like
-ARCH_MMAP_RND_BITS_MAX logic was never updated to account for it.
-Because of that the rnd max bits would be set to the default value of
-18 when ARM64_VA_BITS=52.
-Fix this by setting ARCH_MMAP_RND_BITS_MAX to the same value that would
-be used if 48-bit addressing was used. That's because the 52-bit
-addressing is used only if the caller provides a hint to mmap, with a
-fallback to 48-bit addressing.
+On Wed, Apr 02, 2025 at 07:21:30PM +0200, Michal Suchanek wrote:
+> With some Infineon chips the timeouts in tpm_tis_send_data (both B and
+> C) can reach up to about 2250 ms.
+> 
+> Extend the timeout duration to accommodate this.
+> 
+> Link: https://lore.kernel.org/linux-integrity/Z5pI07m0Muapyu9w@kitsune.suse.cz/
+> Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+> ---
+> An alternative would be to add an entry to vendor_timeout_overrides but
+> I do not know how to determine the chip IDs to put into this table.
+> ---
+>  drivers/char/tpm/tpm_tis_core.h | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/char/tpm/tpm_tis_core.h b/drivers/char/tpm/tpm_tis_core.h
+> index 970d02c337c7..1ff565be2175 100644
+> --- a/drivers/char/tpm/tpm_tis_core.h
+> +++ b/drivers/char/tpm/tpm_tis_core.h
+> @@ -54,7 +54,7 @@ enum tis_int_flags {
+>  enum tis_defaults {
+>  	TIS_MEM_LEN = 0x5000,
+>  	TIS_SHORT_TIMEOUT = 750,	/* ms */
+> -	TIS_LONG_TIMEOUT = 2000,	/* 2 sec */
+> +	TIS_LONG_TIMEOUT = 4000,	/* 2 sec */
 
-Fixes: b6d00d47e81a ("arm64: mm: Introduce 52-bit Kernel VAs")
-Signed-off-by: Kornel Dulęba <korneld@google.com>
----
- arch/arm64/Kconfig | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+/* 4 secs */
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 748c34dc953c..38e0bac567f5 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -332,9 +332,9 @@ config ARCH_MMAP_RND_BITS_MAX
- 	default 24 if ARM64_VA_BITS=39
- 	default 27 if ARM64_VA_BITS=42
- 	default 30 if ARM64_VA_BITS=47
--	default 29 if ARM64_VA_BITS=48 && ARM64_64K_PAGES
--	default 31 if ARM64_VA_BITS=48 && ARM64_16K_PAGES
--	default 33 if ARM64_VA_BITS=48
-+	default 29 if (ARM64_VA_BITS=48 || ARM64_VA_BITS=52) && ARM64_64K_PAGES
-+	default 31 if (ARM64_VA_BITS=48 || ARM64_VA_BITS=52) && ARM64_16K_PAGES
-+	default 33 if (ARM64_VA_BITS=48 || ARM64_VA_BITS=52)
- 	default 14 if ARM64_64K_PAGES
- 	default 16 if ARM64_16K_PAGES
- 	default 18
--- 
-2.49.0.504.g3bcea36a83-goog
+>  	TIS_TIMEOUT_MIN_ATML = 14700,	/* usecs */
+>  	TIS_TIMEOUT_MAX_ATML = 15000,	/* usecs */
+>  };
+> @@ -64,7 +64,7 @@ enum tis_defaults {
+>   */
+>  #define TIS_TIMEOUT_A_MAX	max_t(int, TIS_SHORT_TIMEOUT, TPM2_TIMEOUT_A)
+>  #define TIS_TIMEOUT_B_MAX	max_t(int, TIS_LONG_TIMEOUT, TPM2_TIMEOUT_B)
+> -#define TIS_TIMEOUT_C_MAX	max_t(int, TIS_SHORT_TIMEOUT, TPM2_TIMEOUT_C)
+> +#define TIS_TIMEOUT_C_MAX	max_t(int, TIS_LONG_TIMEOUT, TPM2_TIMEOUT_C)
+>  #define TIS_TIMEOUT_D_MAX	max_t(int, TIS_SHORT_TIMEOUT, TPM2_TIMEOUT_D)
+>  
+>  #define	TPM_ACCESS(l)			(0x0000 | ((l) << 12))
+> -- 
+> 2.47.1
+> 
+> 
 
+BR, Jarkko
