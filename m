@@ -1,126 +1,92 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF08A24EF7A
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 15:12:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1C042505B3;
+	Thu,  3 Apr 2025 15:13:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743693147; cv=none; b=RYBDrZ5TiBHdLg15wQj551uM+qOufIU8Tm3wGX0XsUbk30A0D1AXTGMyLXYwO042GlaWlV8z8WY7h9uzW699GHAuO5I7RP+V+cKaB7lXbCZ/OT60MuumvmqtfRtzGMYswmGWgD+q9veHQjhzs4cZfWfbjpDLQYRmlwWfxAVo8+M=
+	t=1743693214; cv=none; b=MvsNk2L4aaVsJMB2Gi0bU4iTRocuvA7VngLtMloWr8ywSTDvwVMUJEquSxZdrDpRpt95q46So0aOp9b7kDUYAiAbmGLLQ1cbqhQ5gKzmZsqsdw3aWr4vDqwALDwo5jsolWnK++mNNwl2pH4cYZ7TAZfC93rkXOE/jGblBKFVLLw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743693147; c=relaxed/simple;
-	bh=3gjydt2TC4vMJfz4qHVICOd8+FIPjb6F+uyQT8/1luw=;
+	s=arc-20240116; t=1743693214; c=relaxed/simple;
+	bh=nbiBXDXZAlOQvo10+zoofvtVEMUN+xY7qBqGVHhpers=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D9DvW+22Tx8hRLlQ/ThehZZdHRNDYKWtRW85U5HJ4eGQaaR28JIuC6Eh4N4anDhu7K8Cqo5lixQHzANnvXmtqByHv8vPH5etONffCIC7j+3fTMi9jY8Pf/ncFpf/uF/cxTNx1sSpUhv97qhPD6OekNZ7y1+M7kAYn5tO/ESOKrk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=G2pLHuLv; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=RRJA3yhyDjh7/v29lzsNJh9rksgke5i08FDicc8aff+LVCAqS7ZWojrJMREDqFMlkDYX9N6CRQXL2Y3xPF5N5zBBwKPViX3T/OvxhFFttxkCoZs8zSIMrhn7xdVWQLsCmyWhkfv2kr7cOcw0bFm/FnZShs7M7V5fQVuEc4il4M8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZJGDlWGI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="G2pLHuLv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743693146; x=1775229146;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=3gjydt2TC4vMJfz4qHVICOd8+FIPjb6F+uyQT8/1luw=;
-  b=G2pLHuLvulaxT7MbOayOQXpoW8G2AoLF8xwSr6c7N2uzKKAcW1BN5aLE
-   H4d2bHKhtS240a8Z092FoDSSPaBV93iZYpaswPcFqw2dw09Zf18bXB5+V
-   NeZ38heIeZGZ1NPDWrhzYL9Vz32LlA0zV5yiLr9tvP1FOuQ4DlE7R+Ua0
-   5dEcM1e1/4pCQNKIt06jlSBmwygIqarILlAhIkNqT0Eysj2EaWdiIa8ID
-   PxcF0NZ9TfmruQ9fWAXBkFpb+5MqEvrM4Q+5hIhn+Jiikvybyqz0lbm+Z
-   waEQoPoLv43UsB1L6S9KypZTCX6cjb49HCVjG+1wM5zhTvC6SzBwAezRv
-   w==;
-X-CSE-ConnectionGUID: /NjGjkTiTRKK+yP0QnRjZw==
-X-CSE-MsgGUID: 0t0XpxNoTMOZMpV+kcv5Cw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11393"; a="62511360"
-X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
-   d="scan'208";a="62511360"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 08:12:25 -0700
-X-CSE-ConnectionGUID: O4KOqqr8RlyiyBfrdQnwlw==
-X-CSE-MsgGUID: ZVAHIrC1TxO248fxWBM8wg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
-   d="scan'208";a="127561670"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by orviesa007.jf.intel.com with ESMTP; 03 Apr 2025 08:12:23 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u0MEs-0000VD-3C;
-	Thu, 03 Apr 2025 15:12:18 +0000
-Date: Thu, 3 Apr 2025 23:11:22 +0800
-From: kernel test robot <lkp@intel.com>
-To: Raag Jadav <raag.jadav@intel.com>, gregkh@linuxfoundation.org,
-	david.m.ertman@intel.com, ira.weiny@intel.com, lee@kernel.org,
-	andriy.shevchenko@linux.intel.com
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Raag Jadav <raag.jadav@intel.com>
-Subject: Re: [PATCH v1] mfd: core: Support auxiliary device
-Message-ID: <202504032243.j5qqE6VB-lkp@intel.com>
-References: <20250403110053.1274521-1-raag.jadav@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZJGDlWGI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA41CC4CEE5;
+	Thu,  3 Apr 2025 15:13:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743693213;
+	bh=nbiBXDXZAlOQvo10+zoofvtVEMUN+xY7qBqGVHhpers=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZJGDlWGIp+23uurxjtN0FzliArNVEFGXTjWhDmwmumYQxf4YwG8X1V/gDTSBeSAng
+	 xK9QCLMq8OR0Z57WW9Y0yMUZsZwKqgJiGlvv6PGmSApSOOMIs7S4wvmE77eFgV3cGD
+	 /5bksFqBt1wfCpxGAxdUdArvKPb0ngAKYR7iGJmbCAovdg6vYjd63rpR0VMfi28dGU
+	 yAxdO3cQNZXt5Og7Q9Gyl/9rQu5o3UiejFQenpS6ZK3Oq1S0CsJTlGH/U6j9KT5Um4
+	 nr8Nkioo6nmpPCC3TkBJ2pO6MrqM9YpRI90fTHJzkA95r3PCrn9O3Cpgb1JD3HXapD
+	 qth2JFVXEfElw==
+Date: Thu, 3 Apr 2025 16:13:27 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Yeoreum Yun <yeoreum.yun@arm.com>
+Cc: catalin.marinas@arm.com, will@kernel.org, anshuman.khandual@arm.com,
+	joey.gouly@arm.com, yury.khrustalev@arm.com, maz@kernel.org,
+	oliver.upton@linux.dev, frederic@kernel.org,
+	shameerali.kolothum.thodi@huawei.com, james.morse@arm.com,
+	mark.rutland@arm.com, huangxiaojia2@huawei.com,
+	akpm@linux-foundation.org, surenb@google.com, robin.murphy@arm.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Subject: Re: [PATCH 1/3] arm64: add FEAT_MTE_TAGGED_FAR feature
+Message-ID: <e397283e-4c53-495f-a699-16c2f556837f@sirena.org.uk>
+References: <20250403141535.23496-1-yeoreum.yun@arm.com>
+ <20250403141535.23496-2-yeoreum.yun@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="bl3Aw4IbGSVKLODu"
+Content-Disposition: inline
+In-Reply-To: <20250403141535.23496-2-yeoreum.yun@arm.com>
+X-Cookie: Logic is the chastity belt of the mind!
+
+
+--bl3Aw4IbGSVKLODu
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250403110053.1274521-1-raag.jadav@intel.com>
+Content-Transfer-Encoding: quoted-printable
 
-Hi Raag,
+On Thu, Apr 03, 2025 at 03:15:33PM +0100, Yeoreum Yun wrote:
+> Add FEAT_MTE_TAGGED_FAR cpucap which makes FAR_ELx report
+> all non-address bits on a synchronous MTE tag check fault since Armv8.9
+>=20
+> Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
+> ---
+>  arch/arm64/include/asm/hwcap.h      | 1 +
+>  arch/arm64/include/uapi/asm/hwcap.h | 1 +
+>  arch/arm64/kernel/cpufeature.c      | 9 +++++++++
+>  arch/arm64/kernel/cpuinfo.c         | 1 +
+>  arch/arm64/tools/cpucaps            | 1 +
+>  5 files changed, 13 insertions(+)
 
-kernel test robot noticed the following build errors:
+Please also add this to the hwcaps kselftest.
 
-[auto build test ERROR on driver-core/driver-core-testing]
-[also build test ERROR on driver-core/driver-core-next driver-core/driver-core-linus lee-mfd/for-mfd-next lee-leds/for-leds-next linus/master v6.14 next-20250403]
-[cannot apply to lee-mfd/for-mfd-fixes]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+--bl3Aw4IbGSVKLODu
+Content-Type: application/pgp-signature; name="signature.asc"
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Raag-Jadav/mfd-core-Support-auxiliary-device/20250403-190322
-base:   driver-core/driver-core-testing
-patch link:    https://lore.kernel.org/r/20250403110053.1274521-1-raag.jadav%40intel.com
-patch subject: [PATCH v1] mfd: core: Support auxiliary device
-config: csky-randconfig-001-20250403 (https://download.01.org/0day-ci/archive/20250403/202504032243.j5qqE6VB-lkp@intel.com/config)
-compiler: csky-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250403/202504032243.j5qqE6VB-lkp@intel.com/reproduce)
+-----BEGIN PGP SIGNATURE-----
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504032243.j5qqE6VB-lkp@intel.com/
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmfupZYACgkQJNaLcl1U
+h9D64wf+Nr2Llm6/mPq6+NvuhzVcdPF1hydswJcaFKW0vvrsQNZ4lVoKSvIjEpQd
+UHlSgRORZ7WqXD/8CYs3nqGOyESHVPG+lASZ+KVOjQgfdA/ASEPCkeJqnzmOODnC
+Y8chXEeiY/mdbjpKYs7VhLrJq/W5GroettA59pxxDW4W04aEp9hNXDFABAUEQDnV
+56fOv3kdPrm56oGB6CAeMtcEfK4VGjnPJj/tQ1aMuWxnKtlmDwIpUpsfH+HX+675
+AFu56782gvNwKp9Fxfgc3SKDtZ3nGoyHHYPxzjoBpHYL/IckhFsjGVDPR6Dzbubl
+SlQlNnf5roMqmEubfwaHKVrFsGi0yA==
+=yyPx
+-----END PGP SIGNATURE-----
 
-All error/warnings (new ones prefixed by >>):
-
-   In file included from drivers/base/auxiliary_sysfs.c:6:
-   include/linux/auxiliary_bus.h: In function 'auxiliary_device_uninit':
->> include/linux/auxiliary_bus.h:246:17: error: implicit declaration of function 'kfree' [-Wimplicit-function-declaration]
-     246 |                 kfree(auxdev->resource);
-         |                 ^~~~~
-   In file included from drivers/base/auxiliary_sysfs.c:7:
-   include/linux/slab.h: At top level:
->> include/linux/slab.h:472:6: warning: conflicting types for 'kfree'; have 'void(const void *)'
-     472 | void kfree(const void *objp);
-         |      ^~~~~
-   include/linux/auxiliary_bus.h:246:17: note: previous implicit declaration of 'kfree' with type 'void(const void *)'
-     246 |                 kfree(auxdev->resource);
-         |                 ^~~~~
-
-
-vim +/kfree +246 include/linux/auxiliary_bus.h
-
-   242	
-   243	static inline void auxiliary_device_uninit(struct auxiliary_device *auxdev)
-   244	{
-   245		if (auxdev->resource)
- > 246			kfree(auxdev->resource);
-   247	
-   248		mutex_destroy(&auxdev->sysfs.lock);
-   249		put_device(&auxdev->dev);
-   250	}
-   251	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+--bl3Aw4IbGSVKLODu--
