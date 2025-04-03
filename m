@@ -1,90 +1,132 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 181F0C8E0;
-	Thu,  3 Apr 2025 18:47:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CED15C8E0;
+	Thu,  3 Apr 2025 18:48:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743706032; cv=none; b=A2IN5/RzJ8LfaBlm3MCzjArVeVcbdBZHbcbLMTZ/RMHhQmImgxYbLBVYwWiS4RQ2tMkIqSbFczagIvO3vudRXblLVubrr6OoiLEA4jjGasYvnVMQBzG1yhYVZICiim0OMv1454RDgbgSIE9ocXfnVIRoDsWOsm9wTJDyl59BRjM=
+	t=1743706115; cv=none; b=FEBQmcYBnhODkfAxrnJWYwKmTlPVQec6JOGPeR5O3BNpmioS5bDA0x1mo/X+goJs3eABrrLxhKGZ8UHRMUhI2h5syE1MXVNFS1lCvn0DH3t4r6R6Fwcl8VbiJc7OFxTEpfPOa43VZQbUeUpdOhbWVNCYmMp6mZ0PJTI9RkbksHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743706032; c=relaxed/simple;
-	bh=S8lX3+2jjlV9EDSpRH8ptbR8hdsbyeTq5/HGywWkDqE=;
-	h=Message-ID:Date:MIME-Version:To:CC:References:Subject:From:
-	 In-Reply-To:Content-Type; b=pEpnOIlOBhIw+tntO0sgx7N4/Tz9C3DYam5g7nBzIeK3QC3kie1VF2+cPJXyh1IqfuNWosmyKFIPGulSz8bY3u1NOdz2Pv7HJOJfj2D77feLjQb0z9Ptj6SiN8m7HFox+2KRTU8FLLfqxpurUSp8oshmdXYIgYsHNY0c7Umx0O0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=h238Tgn9; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1743706115; c=relaxed/simple;
+	bh=G44VUuTUzqb06IaItXqVoqS3bWxbLoRLOeLD7CzOGNs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ar+PyBfJhUvaDUNEpreJDW/ru2OI+qkZHbSqvBcjCjJifTcGxp6cKQxzHYPYimFSfld+q1OApmmPrAcD0uotZIxsZrwRRUqoKM6SfhZJWfy8X17GZHQsqLfcPMs038fFYiNcwPmOxiH56MPB2XpZVSEtciuOh3RS4mLy4m8dIug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lUNOYoG1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="h238Tgn9"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 533IVSPY001346;
-	Thu, 3 Apr 2025 18:47:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	x1+5DE93SgzZCZ3haePFVy5C9q7r4YPsE5IK6TRqgwI=; b=h238Tgn9QeivoGYN
-	EL8S19fi059mR9qMzXxXMh9998ZXWAZBTKUpTlzM36DuoaWpaEAStXZwTmY1BRn7
-	Gr039q3TcbusntFbU25WUtPvRhqjRcsI4v6vgXI/J+RL7mQqX7e/FcYn2rRLcWf5
-	W8cyRjZx1GOlZVKptqZxmOBtDYmo8fKPmrUy9lKw0cNzWVpn42igCSwqFO04tNDA
-	mj26IIPHXlUrSvXkZDHEVPu7MD5/VJiacNltMjuBL2gndgVtTPyZ763Jy9WTyg6n
-	NLcp3/DaWgoXiFE9gIuR6Nk2CMwcgBA/c62KcAc8ek40Uzo7tLN1A48IyGJP7l7s
-	n0WHsg==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45se4g2rjx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 03 Apr 2025 18:47:07 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 533Il7aC010710
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 3 Apr 2025 18:47:07 GMT
-Received: from [10.216.27.125] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 3 Apr 2025
- 11:47:03 -0700
-Message-ID: <88c96fb0-0546-4642-a968-900ac3233909@quicinc.com>
-Date: Fri, 4 Apr 2025 00:16:37 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lUNOYoG1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 431F8C4AF09;
+	Thu,  3 Apr 2025 18:48:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743706114;
+	bh=G44VUuTUzqb06IaItXqVoqS3bWxbLoRLOeLD7CzOGNs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=lUNOYoG1s3T6OPcj1N8KKeVwZiFQFOKb5A3o9Q1V4uD9cgqTmBYCIVuV+xAPkj51Y
+	 wrUAi2DLYs45bBWexwhQPRuGn/XD2SA9nLTp3E1ptvDUcIouCOyLPyXGev5cCDLKNW
+	 h6VbutjJpIPBV5HF+t/TgqTEg9SQpPHjKv+EdeYd1VlCAnoeF3tGJMu69H6cq9XgOs
+	 lFYR1Zb+d2wbNInETEwDt5NaHvU0/kC8hg4nw2NxghuenoUuCNcqcau1MYeiFvAtBe
+	 x3nCiO/iTVRnv7diK3y9hPes+/58Rcg2p0LX3K+s2mucxoK0dzxnl64NtfRv8NthFC
+	 jQMh4+eXc4USQ==
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5e5e0caa151so2259703a12.0;
+        Thu, 03 Apr 2025 11:48:34 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUMBknAtU1vWSj1ES8+qrsjMSheWnKe/srVOYzTVU/x1MAVm+Bokj7CyAMNLc8RmClc/NgdRNnNt2I3TxsZ@vger.kernel.org, AJvYcCWFxEc36ReRQNnVwoXn0IDNdR5A+9R6FxVTEbjuot3b/qJvpY8jhtn/Fy4wNXw5MN3A3O2ZRLlf/idFtfB+wrU=@vger.kernel.org, AJvYcCXdrEUWrz+9JeCh7+98u8nC7PyGp7L0myUbpPQ5S6EUuhv/tdFKtyBqxDVaaWMJ9zO9+9xrP1T2hWNS@vger.kernel.org, AJvYcCXn/HygmfMfjXjgya8NXMpjsEJrGVc1StzGwzWLWQqab6MablQM3PmK8cdd/KjxIcIsG/gFzLxRdscQ5g==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHtYWAQPWOmjNCSf72Df3EaI5LqJP5SU7Q5f9e5Ed9lQDrQzui
+	dMm7sqfz9el5uyt6nGGp7M4ax7uE62A8V2sURLWdT5z9JJg2djdgqC65nOO/1qPJg3DRuD9Dyhf
+	NCSrYORW/ApS2iKDOhuVDmYbkOg==
+X-Google-Smtp-Source: AGHT+IHgm8pbYdOS0F5PQ7kYibUeJKz/5qpM9TqFT6ZWudl3bYWCBJzuo/+oLo6fusub0DHm1l8JfiMG1rG1XEMl3xU=
+X-Received: by 2002:a05:6402:26c7:b0:5e5:dbcd:185e with SMTP id
+ 4fb4d7f45d1cf-5f0b3b8a5f1mr168010a12.13.1743706112738; Thu, 03 Apr 2025
+ 11:48:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: <andersson@kernel.org>
-CC: <conor+dt@kernel.org>, <devicetree@vger.kernel.org>,
-        <konrad.dybcio@oss.qualcomm.com>, <konradybcio@kernel.org>,
-        <krzk+dt@kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <lumag@kernel.org>, <robh@kernel.org>
-References: <79504e6d-5ccb-4909-a88e-307280c5d359@quicinc.com>
-Subject: Re: [PATCH] arm64: dts: qcom: qcs8300: add the pcie smmu node
-Content-Language: en-US
-From: Pratyush Brahma <quic_pbrahma@quicinc.com>
-In-Reply-To: <79504e6d-5ccb-4909-a88e-307280c5d359@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: H9QvqqFbBQJXz2wDq-e6AgrmwFPRvO_z
-X-Authority-Analysis: v=2.4 cv=a8Iw9VSF c=1 sm=1 tr=0 ts=67eed7ab cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=iUS7yFBv8MyuA1rBbmIA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: H9QvqqFbBQJXz2wDq-e6AgrmwFPRvO_z
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-03_08,2025-04-03_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 impostorscore=0
- adultscore=0 phishscore=0 priorityscore=1501 mlxscore=0 lowpriorityscore=0
- suspectscore=0 bulkscore=0 mlxlogscore=577 malwarescore=0 spamscore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504030097
+References: <20250326171411.590681-1-remo@buenzli.dev> <20250326171411.590681-4-remo@buenzli.dev>
+ <Z-UPJyD41LOMM3o2@smile.fi.intel.com> <CAL_Jsq+tJvGsbw1dGdgmBM8+cL4vN71OMTvX9tkmBLNk=6T9KQ@mail.gmail.com>
+ <Z-60LwRrw30cq4YE@smile.fi.intel.com> <CAL_JsqKiYCh7ukDoqc_toyn75=3wOM4WyOTGvogoOfdz9T_7Ow@mail.gmail.com>
+ <Z-7LcXoGw7uNWBUE@smile.fi.intel.com>
+In-Reply-To: <Z-7LcXoGw7uNWBUE@smile.fi.intel.com>
+From: Rob Herring <robh@kernel.org>
+Date: Thu, 3 Apr 2025 13:48:19 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqLCa8AjwsUpS-N9FWymG67w7DjmmBZCKW7G7BAfY78vWw@mail.gmail.com>
+X-Gm-Features: ATxdqUHA5DvtfxZYWFohpa6BUX3SjkGJ9QCPri0mQnJJCjTfhmdWcw0nmXvsWnQ
+Message-ID: <CAL_JsqLCa8AjwsUpS-N9FWymG67w7DjmmBZCKW7G7BAfY78vWw@mail.gmail.com>
+Subject: Re: [PATCH 03/10] device property: Add fwnode_property_read_int_array()
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Miguel Ojeda <ojeda@kernel.org>
+Cc: Remo Senekowitsch <remo@buenzli.dev>, Daniel Scally <djrscally@gmail.com>, 
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, Dirk Behme <dirk.behme@de.bosch.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Saravana Kannan <saravanak@google.com>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, linux-kernel@vger.kernel.org, 
+	linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Bjorn
+On Thu, Apr 3, 2025 at 12:55=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Thu, Apr 03, 2025 at 11:36:38AM -0500, Rob Herring wrote:
+> > On Thu, Apr 3, 2025 at 11:15=E2=80=AFAM Andy Shevchenko
+> > <andriy.shevchenko@linux.intel.com> wrote:
+> > > On Thu, Apr 03, 2025 at 11:04:32AM -0500, Rob Herring wrote:
+> > > > On Thu, Mar 27, 2025 at 3:41=E2=80=AFAM Andy Shevchenko
+> > > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > > > On Wed, Mar 26, 2025 at 06:13:42PM +0100, Remo Senekowitsch wrote=
+:
+> > > > > > The rust bindings for reading device properties has a single
+> > > > > > implementation supporting differing sizes of integers. The fwno=
+de C API
+> > > > > > already has a similar interface, but it is not exposed with the
+> > > > > > fwnode_property_ API. Add the fwnode_property_read_int_array() =
+wrapper.
+>
+> ...
+>
+> > > > > > +EXPORT_SYMBOL_GPL(fwnode_property_read_int_array);
+> > > > >
+> > > > > I'm not sure about this. We have a lot of assumptions in the code=
+ that the
+> > > > > arrays beneath are only represented by the selected number of int=
+eger types.
+> > > > > This opens a Pandora's box, e.g., reading in u24, which is not su=
+pported by
+> > > > > the upper layers..
+> > > >
+> > > > We can probably drop the export if it is just that which you object=
+ to.
+> > >
+> > > Yes, this is main point, but dropping it does not prevent from still =
+using in
+> > > the complied-in code. Is it possible to hide it better?
+> >
+> > Don't put any declaration in the header and declare it in the rust
+> > code? But lack of declaration generates warnings.
+>
+> Exactly. And I believe we have the typed versions of int_array for a reas=
+on.
+> Otherwise what's the point in having them to begin with?
+> (The first what comes to my mind is a compile time type checking, so we d=
+on't
+>  try to load u8 with u32 data or any other dirty tricks.)
+>
+> Maybe it deserves a header that can be included explicitly in the rust st=
+uff
+> and being checked at compile time to avoid people using that? Can we achi=
+eve
+> something like C preprocessor
+>
+> #ifndef FOO
+> #error This header must not be included directly
+> #endif
 
-Can this be considered for merge given that no concerns have been raised
-in the past few weeks?
+Looks there are RUST_BINDGEN or __BINDGEN__ define which could be used
+here. Don't need a header, just wrap the declaration. No idea which
+one would be preferred as there's exactly 1 use of each. Miguel?
 
--- 
-Thanks and Regards
-Pratyush Brahma
-
+Rob
