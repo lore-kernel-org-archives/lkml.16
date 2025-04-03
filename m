@@ -1,76 +1,182 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63C3F8460;
-	Thu,  3 Apr 2025 05:15:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 323ED8460;
+	Thu,  3 Apr 2025 05:16:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743657352; cv=none; b=Nxaei+mP7sDZR4/xibnbvwwioQaBPKGsMj6sfF91PnaE6KYLa+z5Lq9hCADX+QF9To5tvOBg91/SCxKgnLRo6da+Y/zo0wrT/b3n+5gn6+cV8SLgIR5IzV+brkera1rAMl1pgePvQRSHovX3dFpEo5norP5PIUV/iJU+X5PfqiM=
+	t=1743657409; cv=none; b=m4cL4ak+bupfClNRVjcsAgujjtt9v9GItoanzPBU8mMrkgp5cLS8SnUkA4rNCdm/CU0hnjoTloBp8kaQ1nSby21DByCdxeWlJe8QtiMnM4+xGOEiQjkZyG6VAnllNgb4syxJrcVUK1sfikr2C9tlB4Jp6R+6V3AAXw05H+Rsbr8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743657352; c=relaxed/simple;
-	bh=9Uo8OyaMiPKcyfNuYPU/mQOe58fUo5WXbR7MlZclq24=;
-	h=Date:From:To:Cc:Subject:Message-Id:Mime-Version:Content-Type; b=t516Xjurqu/oX45aWMTcRlx4O9/wQo/ORZiJjl1l3tJTvnIW0Fje/LE85IzvQQgNG2cvtIUiVKb4aIBtMwvk1SOnv2wRmtYIOuovWRCLsqLIghmjvGkupa+UbbW9lpBocrExonbI3A3GFig1I24IjGATNNZkMTBq8k2i8CEIsU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=SD21SrxR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743657409; c=relaxed/simple;
+	bh=lNEwq541WDDDm2IgFe5/GIfhWT4xyzg68oQsT7TD30c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=i9lyG7ikv9WMHs1/4q+KxrIssSRQxIwjaoXz1s25qzEk3WWjIUl2FrwJZvvsXhxBW2k7Mc/WgxTy20pa7WOEjhlpM1f0SVidaa9PrM1a46x631fpHZ2NuOWoLmG0+69CZgLT08MkvTsDogmeYslaEaCYDNi28cVHLnuM6VaJz94=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NNB/FTcK; arc=none smtp.client-ip=209.85.208.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="SD21SrxR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFFB3C4CEE3;
-	Thu,  3 Apr 2025 05:15:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1743657351;
-	bh=9Uo8OyaMiPKcyfNuYPU/mQOe58fUo5WXbR7MlZclq24=;
-	h=Date:From:To:Cc:Subject:From;
-	b=SD21SrxR0V6V9kWYxhDK1fg/cBoCWX7zfLKUAOpdQZ6TiIQwQKnYVia9HJP4twAv1
-	 fMCtP1ymjzEVZsF5KGigQY7lBPf7HP/fKNRs17PsKoy5B0FsJA2D8dIVjzT9hK803N
-	 WJBvwiMTtrpulclhDiE45TkZBS6GS74PRO1JDI7A=
-Date: Wed, 2 Apr 2025 22:15:51 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- mm-commits@vger.kernel.org
-Subject: [GIT PULL] Additional non-MM updates for 6.15-rc1
-Message-Id: <20250402221551.4d682cf5ee222b9e5b6a1a8b@linux-foundation.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NNB/FTcK"
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-30db1bc464dso4434851fa.0;
+        Wed, 02 Apr 2025 22:16:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743657405; x=1744262205; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=lUnfrWM8O0y0Hox6uRP5nfk3TnR4bWTw87hOsdjgoNg=;
+        b=NNB/FTcK+tMMyZ6dUau4j02MiRiTHzcKpMSXCDLBr1F5xUwfVQfZDj3cgn8MzwcS2I
+         qKHgMwfRkXmEmyPIPnOLRrHcem3UxpMwcAxzQoqEtbLeCTFJH4kiOQM+hVodU9Np1Wmh
+         6xbGPEjiANlS3p9P+v4eadfqwdIUOaEXZSByfUIccDuaiw0giRgUOfQTQiepj1naECP9
+         yK5tpvRLtYF8N41eWVVaxGul/+jx5lQRDzk6uEBBZOhPFREfeo/Sp96v4pBuWdOrw93p
+         mkbRy35rGVUzkaeGIShPIIS634MVxrYBgdmjvSSyWlIWeQnoZLP5OgPIA6nUqsfW8X5J
+         HoBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743657405; x=1744262205;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=lUnfrWM8O0y0Hox6uRP5nfk3TnR4bWTw87hOsdjgoNg=;
+        b=To773Nr74UJOhCeDiHyP5hhfWjaVRtf283pRSbQakfYH9ha6VwDfpKd+nce0MtuREE
+         IH9igaEio2NSU9lYZMflVqoOHRyMo+lQmFD+tSswOJvWAQ7VHyqxUQ2n3k6NcGXzPFQa
+         LcMUFi3+U3/GUzlJ9olmnaZImV7p/B4X9Q2eSA4AG9cr3CNv0FcKAJPIV8uHDXDlnhi8
+         Ob9dlQpBOemqbfJdWiLO5thW1uxcDHNaGU8wCviKvbZX8eBkHzGnOpuMBkf2/fG5J65C
+         EF95GwF7kDAe2iEMsBn61GZ0oM0l+Mag+57D6jSuuRtgxXtlbqm9PNPf1aAFU/D7bIVI
+         EpCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVQr5dbfbI5jdckJG4r5ztbYNBqQreHObGvssDvm4PbjdOUUzgN/KqnX45T88w6IsCZnXx3b9UyMWMs@vger.kernel.org, AJvYcCVqIFa8vVOw6rJIq1lNmhdUr1Nr8nuAHlqQDyvVzJa4maERMh9X6GuoQ+jfS2R6l2xWcBlulK9tq45M@vger.kernel.org, AJvYcCWNv/U8Tm8m/D+SmUIRVaKEjgsgy+3elbj2b0OOt2+vqU9p07gmE93a6iihQEn/SKn5/bnj1naPWmOqHS6F@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy+r/kaCwb5QcNhWpjroElLvxtRMqcy8ReRi+TFTxCDv22yEkst
+	23pJaVj0TclpOiZRkhP/iCj0CYQd7h2x5HeTsQTdk8GFv54zxgMW
+X-Gm-Gg: ASbGncsAojDXjcrLyrjVn4tbA5w0cj6DRylsEh4WSiZ0isw9LobTPWbRhi/+q5QkgnQ
+	ehidnNeQgJxeDhDrn4NsIv13IVBNDOEw0dDZFKg9F0gFpmO4FX7B073P4eHI/jyohoiQTWVr8d3
+	KNfiezYwgHa+lTtWu/EFZNM4PXY9tj28h1Y9+upGmu0quGVZIdzXVr328eoHAeEEcRPtWjwHeYl
+	nsPyySpGGAfLnbd7msLGEgCrbbmMWm66t0xVmo3CMv4ng73ZJvtYYQPRmHm4PSVAVCZ5I/YhSq9
+	SKN9q8OaLlCzbCdLKoO3s0xCa/ZSvDwegF63HsfqkhYvo+CP4EGN1HISP55DLCrhtWDRG4z6WN3
+	UnckdCe8pQI4WpVL7Qx+Jvd1J0Q==
+X-Google-Smtp-Source: AGHT+IGo6U30lLCPfVEYuHbUU2svN+XQS4RolYNy9mZ6oSYmU0C6mOzGLsPpQarJYB1Hd0HHA1mvyw==
+X-Received: by 2002:a2e:bc8f:0:b0:30c:4610:9e9e with SMTP id 38308e7fff4ca-30ef91cd073mr17825741fa.35.1743657405008;
+        Wed, 02 Apr 2025 22:16:45 -0700 (PDT)
+Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30f031bcdb1sm828641fa.80.2025.04.02.22.16.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Apr 2025 22:16:44 -0700 (PDT)
+Message-ID: <1189b539-adb4-46f9-9783-c6577b57a304@gmail.com>
+Date: Thu, 3 Apr 2025 08:16:43 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/7] iio: adc: ti-adc128s052: Simplify using
+ be16_to_cpu()
+To: David Lechner <dlechner@baylibre.com>,
+ Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen
+ <lars@metafoo.de>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Nuno Sa <nuno.sa@analog.com>,
+ Javier Carrasco <javier.carrasco.cruz@gmail.com>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <cover.1743573284.git.mazziesaccount@gmail.com>
+ <feeabbfd3d3916c7497dfd94423ff83ef5f654f1.1743573284.git.mazziesaccount@gmail.com>
+ <4c3e0d23-2582-4acf-8e90-542c8f8c385f@baylibre.com>
+Content-Language: en-US, en-AU, en-GB, en-BW
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+In-Reply-To: <4c3e0d23-2582-4acf-8e90-542c8f8c385f@baylibre.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
+On 03/04/2025 00:04, David Lechner wrote:
+> On 4/2/25 1:09 AM, Matti Vaittinen wrote:
+>> The register data is 12-bit big-endian data. Use be16_to_cpu() to do
+>> the conversion, and simple bitwise AND for masking to make it more
+>> obvious.
+>>
+>> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
+>> ---
+>> Revision history:
+>> v1 => v2:
+>>   - Fix commit msg to reflect the fact there was no bug
+>>   - Drop Fixes tag
+>>   - Use union for rx / tx buffer to avoid casting
+>>   - Keep the shared message protected by the mutex
+>> ---
+>>   drivers/iio/adc/ti-adc128s052.c | 18 ++++++++++--------
+>>   1 file changed, 10 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/drivers/iio/adc/ti-adc128s052.c b/drivers/iio/adc/ti-adc128s052.c
+>> index a456ea78462f..3e69a5fce010 100644
+>> --- a/drivers/iio/adc/ti-adc128s052.c
+>> +++ b/drivers/iio/adc/ti-adc128s052.c
+>> @@ -28,32 +28,34 @@ struct adc128 {
+>>   	struct regulator *reg;
+>>   	struct mutex lock;
+>>   
+>> -	u8 buffer[2] __aligned(IIO_DMA_MINALIGN);
+>> +	union {
+>> +		__be16 rx_buffer;
+>> +		u8 tx_buffer[2];
+>> +	} __aligned(IIO_DMA_MINALIGN);
+>>   };
+>>   
+>>   static int adc128_adc_conversion(struct adc128 *adc, u8 channel)
+>>   {
+>>   	int ret;
+>> +	char *msg = &adc->tx_buffer[0];
+>>   
+>>   	mutex_lock(&adc->lock);
+>>   
+>> -	adc->buffer[0] = channel << 3;
+>> -	adc->buffer[1] = 0;
+>> +	msg[0] = channel << 3;
+>> +	msg[1] = 0;
+>>   
+>> -	ret = spi_write(adc->spi, &adc->buffer, 2);
+>> +	ret = spi_write(adc->spi, msg, sizeof(adc->tx_buffer));
+>>   	if (ret < 0) {
+>>   		mutex_unlock(&adc->lock);
+>>   		return ret;
+>>   	}
+>>   
+>> -	ret = spi_read(adc->spi, &adc->buffer, 2);
+>> -
+>> +	ret = spi_read(adc->spi, &adc->rx_buffer, 2);
+>>   	mutex_unlock(&adc->lock);
+>> -
+>>   	if (ret < 0)
+>>   		return ret;
+>>   
+>> -	return ((adc->buffer[0] << 8 | adc->buffer[1]) & 0xFFF);
+>> +	return be16_to_cpu(adc->rx_buffer) & 0xFFF;
+> 
+> 
+> The cast isn't exactly beautiful, but this would save a lot of
+> lines of diff and a few lines of code by avoiding the need for
+> the union and the local msg variable.
+> 
+> 	return be16_to_cpup((__be16 *)adc->buffer) & 0xFFF;
 
-Linus, please merge this second set of non-MM updates, thanks.
+Thanks again for the review David :)
 
+I am unsure which way to go. I kind of like having the __be16 in the 
+struct, as it immediately yells "data from device is big-endian". OTOH, 
+I've never loved unions (and, it silences the above "yelling" quite a 
+bit). I still think this might be the first time I really see a valid 
+use-case for an union :) And, you're right this adds more lines, 
+besides, the cast doesn't look that ugly to me. Yet, I originally had a 
+cast probably as simple as this (and I also had the __be16 in the 
+struct), and Jonathan suggested using union to avoid it...
 
-The following changes since commit 25601e85441dd91cf7973b002f27af4c5b8691ea:
+At the end of the day, I suppose I am Okay with any of these 3 
+approaches. Original cast, union or this cast you suggest. Jonathan, any 
+preferences on your side?
 
-  Merge tag 'char-misc-6.15-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc (2025-04-01 11:26:08 -0700)
+> 
+>>   }
+>>   
+>>   static int adc128_read_raw(struct iio_dev *indio_dev,
+> 
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm tags/mm-nonmm-stable-2025-04-02-22-12
-
-for you to fetch changes up to 8b46fdaea819a679da176b879e7b0674a1161a5e:
-
-  lib: scatterlist: fix sg_split_phys to preserve original scatterlist offsets (2025-04-01 15:20:46 -0700)
-
-----------------------------------------------------------------
-One bugfix and a couple of small late-arriving updates.
-
-----------------------------------------------------------------
-Kent Overstreet (1):
-      lib/sort.c: add _nonatomic() variants with cond_resched()
-
-Nicolas Schier (1):
-      mailmap: add an entry for Nicolas Schier
-
-T Pratham (1):
-      lib: scatterlist: fix sg_split_phys to preserve original scatterlist offsets
-
- .mailmap             |   2 +
- include/linux/sort.h |  11 ++++++
- lib/sg_split.c       |   2 -
- lib/sort.c           | 110 ++++++++++++++++++++++++++++++++++++---------------
- 4 files changed, 92 insertions(+), 33 deletions(-)
+Yours,
+	-- Matti
 
