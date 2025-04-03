@@ -1,122 +1,150 @@
-Received: from mail-pg1-f195.google.com (mail-pg1-f195.google.com [209.85.215.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB94F2206BA;
-	Thu,  3 Apr 2025 06:53:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB753198E75;
+	Thu,  3 Apr 2025 06:54:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743663184; cv=none; b=HDN5qEWDpFIMBUMJRpo2uGZUq1HLuzRvfDo/reKTxYV5qm+AvCkWn9uOBuwhWdfbO8NlokNDtnXHNosU7EroSTltNwZUA248f7MIkm/ik9zYE3mv9eSPmNR/y5SIFyUx1p/3iOKrzzEQRf1o+6iL+x5zRGTjy5kpxnF65h9u85Q=
+	t=1743663260; cv=none; b=mxjVktPY5H26GCNC6rxJPUoPBTk7BKWe7L14Qa7M5FMgtBVYCsoIfqO1NIf3s6ARHgROEYYwJR1Etggu2GR1CO4mtH4L7qZUuUwhDWoA5R59+4xur2pTIX5vOqGtbba+fFVrJrzjPqfDNsKD0gzOsOSC+58RCqRfyyUhjPrbKyI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743663184; c=relaxed/simple;
-	bh=3LMMyPWYrPaO1cDrSCXeewS3gpsknQrqdu/udRmPNoI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YX1X/aPyw62yzb0ABveOqDZnQ3FBflE4FzFdcZ65YXLL0btzyogDeig4RJMI6RzgwJMzRzuD3s/jR/KdNr/UzHZnGi35nYch0qX6P0woDd88RBC6V4OCscUNiMM1JZK183RbxicabGd7HqZUxBPRP3eH1ibGcVstegoHevzyeK0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G5jSSbz4; arc=none smtp.client-ip=209.85.215.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743663260; c=relaxed/simple;
+	bh=KHk0LlW3CtH57DvJVXX8I9LqP93HSfda2BD9pDiyaFo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pdYbVlPoLOUdvB5hbP2lVB2AbTLUvf0YxnAgxAlypo0EyfQ21zZIybp5f7h6V1IQMdloFHAn3vP1mbot9teIKqQFncroprcjtiUNMTO8V5NP50/gbVZhOYoDGBU3w6V10UB5ZTXABqsDKSik9fwZ0tGS/+IwJNJZVl4C509Ux+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PKTQZ4IA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G5jSSbz4"
-Received: by mail-pg1-f195.google.com with SMTP id 41be03b00d2f7-ae727e87c26so404617a12.0;
-        Wed, 02 Apr 2025 23:53:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743663182; x=1744267982; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=IYpub62Wj/3iZGVbuufafvobpQVv5WnPv4mXzMUeJJg=;
-        b=G5jSSbz4s5ShfzPkrROH1r5TTO5M2hjvOCZt8lIWZs0+E4juui/RxHuStvrC4w4rV+
-         MQ+6NDr4SpM3bNFfJ3x11R20mn8X2BtF0dnG6EPm4n76vkPybY9OoAcjUwXiWe6Hvyjb
-         npKK/VJw3SJ3QRbVJP72WHzieXMQ98sgJjoNiwpf/pbcx8BIKo3A8oMuvlCfyUkOt4Wv
-         Ikqlvx9W5ofUzln4Nsq//RidlH6b6RGx6pJK+i4bp6Cu8RIZy3BTDQVhN1xb8j5GRB/D
-         kQWDs9Iz+Z1AhzdF5rRzFjQBd1aiBccyt/ufOUilOOnD80NcT4YuddbbXCHRx3L2sFvb
-         GoSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743663182; x=1744267982;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=IYpub62Wj/3iZGVbuufafvobpQVv5WnPv4mXzMUeJJg=;
-        b=aVDrJtj8kFcAAndFTMXjz8Srk+761e9RCgPetUWN93Gg5+87Ze315WBaLwnsP4N2k/
-         y7LVcJ7xintEHeuRb/3AdjwnJET/LY1ELrrhYEopIrR3WD9KkZ2Jwyf7t5Z1UV2zMNWy
-         cTzDOHitaDzRKylL46nEA0vh24MUYIq8z4OiwmFQFtotkDm9VWvOKerY0KWuUfAlYRG2
-         VhnvMzVATkASSaeEtfpAos36j8Ua2IBo6tNHebrtdxkExMr5brQNtzU3eDLE6rMLnOA7
-         Fl5r5EpVsxO54EeYoNv7oG8S2BYlYaW5t5QpUI9bF2KX8XJ8b1EslXG80FyaYjSevsz3
-         UsDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXpacQ7ohQIa1nGA57mTUSiMw3V7PIHbX0sn7cWeOHpnyYEbopj17G3iPf73hVaXo/dp8ycaGzCqHS1M7c=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzd1/f3ZM2EDr3efJ8Czlr5RZMXeikFC5k9fhZV1hLyiHSo4vcD
-	VylucYavXTTjdoluerzP886x44jxvckZt+uVvHVmA3Uk5TsYyZ03
-X-Gm-Gg: ASbGncvv7/Z4HIHmg1sTML/wvYDGP38uH2p1NbgS6TD95JuBdhjQErTdR4lLRp0qnkL
-	Xow2g2gEIr8UXrSYMbd+b/yIxXOOmWOVTkZvcn9fCdYVzkVsfeBVbJcqUHCYmaYv4roXZ7EvVmv
-	QMJMrxzBABIwAdBqCWfoYN7eZYxMOWHw5osX6sUtozqZLYD1GrpKr+ctxKuhk8FNAsyECND6dzs
-	LUnXy8tI/bUQ7horMQwoAeN9Y7aMZCyrtYZJODrfSVxEGkfVvXWjefqXyiTJcRsj1C0pt9DY0dR
-	WF8VjcQPqd2uAW5lpj2Qx24fRDjELVlByiEgt1Hc67C6f0ejmUunyVNO02zWDC2J50fcii4=
-X-Google-Smtp-Source: AGHT+IGCE0kTnOZqlcdKdPI+1K7KQk4hgTqPsTiKisFEbAoBuiq5zTXBPIVyS00/eWSAdgWF3j/lhQ==
-X-Received: by 2002:a05:6a21:6d8f:b0:1ee:dcd3:80d7 with SMTP id adf61e73a8af0-200f8a6dee2mr2134125637.0.1743663182000;
-        Wed, 02 Apr 2025 23:53:02 -0700 (PDT)
-Received: from henry.localdomain ([111.202.148.167])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af9bc2cff95sm541118a12.15.2025.04.02.23.52.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Apr 2025 23:53:01 -0700 (PDT)
-From: Henry Martin <bsdhenrymartin@gmail.com>
-To: nbd@nbd.name,
-	lorenzo@kernel.org,
-	ryder.lee@mediatek.com,
-	shayne.chen@mediatek.com,
-	sean.wang@mediatek.com,
-	matthias.bgg@gmail.com,
-	angelogioacchino.delregno@collabora.com,
-	chui-hao.chiu@mediatek.com,
-	wiagn233@outlook.com,
-	chad@monroe.io,
-	bsdhenrymartin@gmail.com
-Cc: linux-wireless@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: [PATCH v1] wifi: mt76: mt7915: Fix null-ptr-deref in mt7915_mmio_wed_init()
-Date: Thu,  3 Apr 2025 14:52:51 +0800
-Message-Id: <20250403065251.64749-1-bsdhenrymartin@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PKTQZ4IA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 731C0C4CEE3;
+	Thu,  3 Apr 2025 06:54:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743663260;
+	bh=KHk0LlW3CtH57DvJVXX8I9LqP93HSfda2BD9pDiyaFo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PKTQZ4IA9Il4jTt8qh8w6B+f1SH04MfsUYWxKERU4Y1mk6rdjSC36kSeU4r2LXqBB
+	 vspxyAxHnPMEkQPf2/Wf3XX9/ulGahuh2MXpZpuf+leOhuk68jhO6kwrwuG6XUvPJT
+	 hLzmZ2A7bOb0UXvdAu6qByBD2y+dtd74wQCAGJ5fX1IPwTV4DryMvC5fpeSnRiWIb/
+	 Hn2KdRZluYC+6RH0lr25X3fcMRCe0Nd26jFgcTes7uRFIynRzJZt7S+GUHWT441T7S
+	 YjK2DXlz7AuGqzJEsM7I02GUtOxF2YazAbUaR6RQU+YSt2oxGPmwKnCGIUHikc0ZCl
+	 92R2pnRZQoEKw==
+Date: Thu, 3 Apr 2025 08:54:16 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Justin Chen <justin.chen@broadcom.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	florian.fainelli@broadcom.com, conor+dt@kernel.org, krzk+dt@kernel.org, robh@kernel.org, 
+	jassisinghbrar@gmail.com, bcm-kernel-feedback-list@broadcom.com
+Subject: Re: [PATCH v2 1/2] dt-bindings: mailbox: Add devicetree binding for
+ bcm74110 mbox
+Message-ID: <20250403-misty-jovial-duck-8f1cd8@krzk-bin>
+References: <20250402223619.358818-1-justin.chen@broadcom.com>
+ <20250402223619.358818-2-justin.chen@broadcom.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250402223619.358818-2-justin.chen@broadcom.com>
 
-devm_ioremap() returns NULL on error. Currently, mt7915_mmio_wed_init()
-does not check for this case, which results in a NULL pointer
-dereference.
+On Wed, Apr 02, 2025 at 03:36:18PM -0700, Justin Chen wrote:
+> diff --git a/Documentation/devicetree/bindings/mailbox/brcm,bcm74110-mbox.yaml b/Documentation/devicetree/bindings/mailbox/brcm,bcm74110-mbox.yaml
+> new file mode 100644
+> index 000000000000..8c3dfffa515f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mailbox/brcm,bcm74110-mbox.yaml
+> @@ -0,0 +1,70 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/mailbox/brcm,bcm74110-mbox.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Broadcom BCM74110 Mailbox
+> +
 
-Add NULL check after devm_ioremap() to prevent this issue.
+A nit, subject: drop second/last, redundant "devicetree binding for". The
+"dt-bindings" prefix is already stating that these are bindings.
+See also:
+https://elixir.bootlin.com/linux/v6.7-rc8/source/Documentation/devicetree/bindings/submitting-patches.rst#L18
 
-Fixes: 4f831d18d12d ("wifi: mt76: mt7915: enable WED RX support")
-Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
----
- drivers/net/wireless/mediatek/mt76/mt7915/mmio.c | 4 ++++
- 1 file changed, 4 insertions(+)
+> +maintainers:
+> +  - Justin Chen <justin.chen@broadcom.com>
+> +  - Florian Fainelli <florian.fainelli@broadcom.com>
+> +
+> +description: Broadcom mailbox hardware first introduced with 74110
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - brcm,bcm74110-mbox
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 2
 
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7915/mmio.c b/drivers/net/wireless/mediatek/mt76/mt7915/mmio.c
-index 876f0692850a..e1f2e32c4bdd 100644
---- a/drivers/net/wireless/mediatek/mt76/mt7915/mmio.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt7915/mmio.c
-@@ -651,6 +651,8 @@ int mt7915_mmio_wed_init(struct mt7915_dev *dev, void *pdev_ptr,
- 		wed->wlan.base = devm_ioremap(dev->mt76.dev,
- 					      pci_resource_start(pci_dev, 0),
- 					      pci_resource_len(pci_dev, 0));
-+		if (!wed->wlan.base)
-+			return -ENOMEM;
- 		wed->wlan.phy_base = pci_resource_start(pci_dev, 0);
- 		wed->wlan.wpdma_int = pci_resource_start(pci_dev, 0) +
- 				      MT_INT_WED_SOURCE_CSR;
-@@ -678,6 +680,8 @@ int mt7915_mmio_wed_init(struct mt7915_dev *dev, void *pdev_ptr,
- 		wed->wlan.bus_type = MTK_WED_BUS_AXI;
- 		wed->wlan.base = devm_ioremap(dev->mt76.dev, res->start,
- 					      resource_size(res));
-+		if (!wed->wlan.base)
-+			return -ENOMEM;
- 		wed->wlan.phy_base = res->start;
- 		wed->wlan.wpdma_int = res->start + MT_INT_SOURCE_CSR;
- 		wed->wlan.wpdma_mask = res->start + MT_INT_MASK_CSR;
--- 
-2.34.1
+This changed... You need now list items instead.
+
+> +
+> +  "#mbox-cells":
+> +    const: 2
+> +    description:
+> +      The first cell is channel type and second cell is shared memory slot
+> +
+> +  brcm,tx:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: Mailbox transmit doorbell
+> +
+> +  brcm,rx:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: Mailbox receive doorbell
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - "#mbox-cells"
+> +  - brcm,tx
+> +  - brcm,rx
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+
+... and where do you use it?
+
+> +
+> +    brcm_mailbox: brcm_mailbox@a552000 {
+
+Only partially improved.
+
+Node names should be generic. See also an explanation and list of
+examples (not exhaustive) in DT specification:
+https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
+
+> +        #mbox-cells = <0x2>;
+> +        brcm,rx = <0x7>;
+> +        brcm,tx = <0x6>;
+> +        compatible = "brcm,bcm74110-mbox";
+
+Nothing improved. Didi you read the DTS coding style?
+
+> +        reg = <0xa552000 0x1104>;
+> +        interrupts = <0x0 0x67 0x4>, /* DQM 7 */
+> +                     <0x0 0x66 0x4>; /* DQM 6 */
+
+Looks like standard flags, so use proper defines.
+
+> +    };
+> +
+> +    scmi {
+
+Drop the node, not related.
+
+Best regards,
+Krzysztof
 
