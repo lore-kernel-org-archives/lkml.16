@@ -1,94 +1,161 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from webmail.webked.de (webmail.webked.de [159.69.203.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69BBB24C08D;
-	Thu,  3 Apr 2025 13:50:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42F97210FB;
+	Thu,  3 Apr 2025 13:51:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.203.94
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743688235; cv=none; b=aQ04SH7VwFaMXUXuQfAuFAvOU0JtvxGs/83Q7BX+AVJ2DpqB4Tv6IZp2KuNXPIcAuZ8Iyzgoz13W4VxJMND/RzvdQjBOuVq9vMxj0jTHnRNyivvCetaElbgDi3bt4bkrrELW+NjR8nIQC0OAkdalsVW/BMuUgdDfzhxlj3DPHzA=
+	t=1743688281; cv=none; b=RlVZ4fnQpx0tC0SBwJ26KYwxIqkpwomNsxluxa7XbrAnwIuGyA4nZlVyvRCnUtU62FKiH2y7OOB4/9w0aKLHnlyLFI9hdI2TGp63CooixDVqorcazrT6h3n0k66zo0BQfmHA2vfOh3r5hCQeK0iShJyn3r/d/kUKOSlWSaGTJbU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743688235; c=relaxed/simple;
-	bh=Gcptn4zrh9L38cLYTQcWVT7DNxrzdPy+X9aTv/u0Kb0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dbx5l73a8sB3vVOD7y9Qt+LTRsxfY1afuIGtJgqV+hm3MyZT+vVRzwmf+rwPg0kk42nTh2l4rWUQKislFbW57bbw+fy0HkyKK+r5RTrrKsHksjah5651X9Gkj66vXv/rQ1xr0EsTZ0qN9ISEiJ2FvRvM8QIuHvv1DvHOeuenN/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=a3jnh+b9; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=6AaDrZr+; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="a3jnh+b9";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="6AaDrZr+"
-Date: Thu, 3 Apr 2025 15:50:31 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1743688232;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uGAAC3uk9NMoi2172cPUUUlkrcEUwohz8LdYAstOFdY=;
-	b=a3jnh+b9aokO3yIQi/gautXLqCvyX/H+X82FhB6LQM/ai8+PCU1oWdaUjiwB3M7N4GQM/5
-	++1C167sjeapSn6AVJdjgx86aJuRwTe347mtBZQ5QSyx3y4TH5xuZMUnc+81m4ixIljH2a
-	K337tx/N6e2krMJTJj1u+6bpR782vgOZETJl1tM/2oc8NbZdU1TlfB4N5h+BU432Y/NAOc
-	/xpNjcnT+1a2H11UNJDvlRwoe9hhPWKqjEq+dLVpalMGv8hYlKJY336620F3J6SBGL2Aza
-	eQ0x2DeUxsj2haIS9gcoBu+Yo5tM0hg+57Bt2AKprpcfWPGttVl1pBPYQRCFuw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1743688232;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uGAAC3uk9NMoi2172cPUUUlkrcEUwohz8LdYAstOFdY=;
-	b=6AaDrZr+kPS/vNAu7u2Ann1iY7IDmsGumN2AKO+bE7sqxNYMKbYqUMzgSpiqVKEcJJfOa+
-	SJgt2+1EW67GesDg==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Borislav Petkov <bp@alien8.de>, linux-rtc@vger.kernel.org,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Mateusz =?utf-8?Q?Jo=C5=84czyk?= <mat.jonczyk@o2.pl>,
-	lkml <linux-kernel@vger.kernel.org>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [ BUG: Invalid wait context ] rtc_lock at: mc146818_avoid_UIP
-Message-ID: <20250403135031.giGKVTEO@linutronix.de>
-References: <20250330113202.GAZ-krsjAnurOlTcp-@fat_crate.local>
- <87sempv17b.ffs@tglx>
+	s=arc-20240116; t=1743688281; c=relaxed/simple;
+	bh=PYOLKGBNbojeHf2wSjQRj8K0nWnUXCKnUDzo2jhYuVE=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=S0rGXymQNKO6CBJgCcw2M2OrroLtF44F/g1ch6c9PwAYroHsuR5NQELO6Dv2rgi0GsDde3xpeIqGccbklqa7FxdOmJ2gIMtNWfSE5IBlzcqiEeHJH+z8Ol0044RUBdcRrToep7VxX1cCxXaQnMPGkBdRB7sMngy7Pw2WzaliBdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=webked.de; spf=pass smtp.mailfrom=webked.de; arc=none smtp.client-ip=159.69.203.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=webked.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=webked.de
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 465FC62BDA;
+	Thu,  3 Apr 2025 15:51:02 +0200 (CEST)
+Message-ID: <f8909f5bbc2532ea234cdaa8dbdb46a48249803f.camel@webked.de>
+Subject: Re: [REGRESSION] Massive virtio-net throughput drop in guest VM
+ with Linux 6.8+
+From: Markus Fohrer <markus.fohrer@webked.de>
+To: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: virtualization@lists.linux-foundation.org, jasowang@redhat.com, 
+	davem@davemloft.net, edumazet@google.com, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Date: Thu, 03 Apr 2025 15:51:01 +0200
+In-Reply-To: <20250403090001-mutt-send-email-mst@kernel.org>
+References: <1d388413ab9cfd765cd2c5e05b5e69cdb2ec5a10.camel@webked.de>
+	 <20250403090001-mutt-send-email-mst@kernel.org>
+Organization: WEBKED IT Markus Fohrer
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <87sempv17b.ffs@tglx>
+X-Last-TLS-Session-Version: TLSv1.3
 
-On 2025-04-03 15:12:08 [+0200], Thomas Gleixner wrote:
-> Converting it to a raw lock "fixes" the problem, but RT people will hunt
-> you down with a big latency bat.
-> 
-> But this is not related to the commit above and not new.
-> 
-> timekeeping_suspend() has always invoked mach_get_cmos_time() with the
-> freeze lock held and mc146818_get_time() has always locked rtc_lock.
-> 
-> I wonder, why this splat hasn't popped before. On RT lockdep should have
-> complained forever. Sebastian???
+Am Donnerstag, dem 03.04.2025 um 09:04 -0400 schrieb Michael S.
+Tsirkin:
+> On Wed, Apr 02, 2025 at 11:12:07PM +0200, Markus Fohrer wrote:
+> > Hi,
+> >=20
+> > I'm observing a significant performance regression in KVM guest VMs
+> > using virtio-net with recent Linux kernels (6.8.1+ and 6.14).
+> >=20
+> > When running on a host system equipped with a Broadcom NetXtreme-E
+> > (bnxt_en) NIC and AMD EPYC CPUs, the network throughput in the
+> > guest drops to 100=E2=80=93200 KB/s. The same guest configuration perfo=
+rms
+> > normally (~100 MB/s) when using kernel 6.8.0 or when the VM is
+> > moved to a host with Intel NICs.
+> >=20
+> > Test environment:
+> > - Host: QEMU/KVM, Linux 6.8.1 and 6.14.0
+> > - Guest: Linux with virtio-net interface
+> > - NIC: Broadcom BCM57416 (bnxt_en driver, no issues at host level)
+> > - CPU: AMD EPYC
+> > - Storage: virtio-scsi
+> > - VM network: virtio-net, virtio-scsi (no CPU or IO bottlenecks)
+> > - Traffic test: iperf3, scp, wget consistently slow in guest
+> >=20
+> > This issue is not present:
+> > - On 6.8.0=20
+> > - On hosts with Intel NICs (same VM config)
+> >=20
+> > I have bisected the issue to the following upstream commit:
+> >=20
+> > =C2=A0 49d14b54a527 ("virtio-net: Suppress tx timeout warning for small
+> > tx")
+> > =C2=A0 https://git.kernel.org/linus/49d14b54a527
+>=20
+> Thanks a lot for the info!
+>=20
+>=20
+> both the link and commit point at:
+>=20
+> commit 49d14b54a527289d09a9480f214b8c586322310a
+> Author: Eric Dumazet <edumazet@google.com>
+> Date:=C2=A0=C2=A0 Thu Sep 26 16:58:36 2024 +0000
+>=20
+> =C2=A0=C2=A0=C2=A0 net: test for not too small csum_start in virtio_net_h=
+dr_to_skb()
+> =C2=A0=C2=A0=C2=A0=20
+>=20
+> is this what you mean?
+>=20
+> I don't know which commit is "virtio-net: Suppress tx timeout warning
+> for small tx"
+>=20
+>=20
+>=20
+> > Reverting this commit restores normal network performance in
+> > affected guest VMs.
+> >=20
+> > I=E2=80=99m happy to provide more data or assist with testing a potenti=
+al
+> > fix.
+> >=20
+> > Thanks,
+> > Markus Fohrer
+>=20
+>=20
+> Thanks! First I think it's worth checking what is the setup, e.g.
+> which offloads are enabled.
+> Besides that, I'd start by seeing what's doing on. Assuming I'm right
+> about
+> Eric's patch:
+>=20
+> diff --git a/include/linux/virtio_net.h b/include/linux/virtio_net.h
+> index 276ca543ef44d8..02a9f4dc594d02 100644
+> --- a/include/linux/virtio_net.h
+> +++ b/include/linux/virtio_net.h
+> @@ -103,8 +103,10 @@ static inline int virtio_net_hdr_to_skb(struct
+> sk_buff *skb,
+> =C2=A0
+> =C2=A0		if (!skb_partial_csum_set(skb, start, off))
+> =C2=A0			return -EINVAL;
+> +		if (skb_transport_offset(skb) < nh_min_len)
+> +			return -EINVAL;
+> =C2=A0
+> -		nh_min_len =3D max_t(u32, nh_min_len,
+> skb_transport_offset(skb));
+> +		nh_min_len =3D skb_transport_offset(skb);
+> =C2=A0		p_off =3D nh_min_len + thlen;
+> =C2=A0		if (!pskb_may_pull(skb, p_off))
+> =C2=A0			return -EINVAL;
+>=20
+>=20
+> sticking a printk before return -EINVAL to show the offset and
+> nh_min_len
+> would be a good 1st step. Thanks!
+>=20
 
-I sure haven't seen it. But it has to.
 
-> Suspend, whether it's suspend to idle or regular suspend, are weird
-> contexts as there is no concurrency possible because interrupts are
-> disabled and it is guaranteed that there is only a single CPU which is
-> operational. The other CPUs are either in a deep idle state or when they
-> are on the way back, they serialize on tick_freeze_lock.
-> 
-> So taking the non-raw spinlock in that context is safe, but obviously
-> lockdep does not know about that.
-> 
-> Peter, any ideas?
+Hi Eric,
 
-We can tell lockdep that. I will look into this.
+thanks a lot for the quick response =E2=80=94 and yes, you're absolutely ri=
+ght.
 
-> Thanks,
-> 
->         tglx
+Apologies for the confusion: I mistakenly wrote the wrong commit
+description in my initial mail.
 
-Sebastian
+The correct commit is indeed:
+
+commit 49d14b54a527289d09a9480f214b8c586322310a
+Author: Eric Dumazet <edumazet@google.com>
+Date:   Thu Sep 26 16:58:36 2024 +0000
+
+    net: test for not too small csum_start in virtio_net_hdr_to_skb()
+
+This is the one I bisected and which causes the performance regression
+in my environment.
+
+Thanks again,
+Markus
+
