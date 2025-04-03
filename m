@@ -1,64 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 658731DD9AB
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 23:17:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F06ED1C7008
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 23:17:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743722226; cv=none; b=YHsiKoZylIwjPb36lcqtm12yQ5h0OwwOrTKps6aaPvSgWXIp8cN4D19YmnhTbIXynDvuJOVE65hQaj40E9ac9GuXp6WV/fZXOecfWZpiHMlqTxf7nYkr898Xw18X89Zws2+Uv+VrgnwSIMbsUI6KLaAtYeON0+lb1dYLI2TA+X8=
+	t=1743722245; cv=none; b=YTu+JhKf5hcKqYW8tHE1eqiQDwDbUZ6QSzAeYZxJ0QiBXRaPXuKau172Tq42m7Lv0LtePi6a3s/Git2ZKuBTwReIVeI2+dCm3C9HCZO+iKSqLmqknDCr3YEfZ555iXtwC9rIJB41C0ymUEpY0wZ878rc4WCS5lTrERAAyYOzL7k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743722226; c=relaxed/simple;
-	bh=98ZkWjc1GFp3AdT5drHDlDX8CLiz9J0bBm5R8H6wPC8=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=tDeUkx+5b3P/WvFZHjgF9ijmobfVDjbWG+kfUdmT+1DXFQBVUYeNw30fod6RXXckd4lOUjMnyBJV1G7x9lit7KhzSnQx8ffxpFFDTw7dqmwtIo+JxuiOQxRY+kBjnswSNxr4ea6WJItaMm4keS9GSV/6u0UkAFOd/6awN9HituQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pParzxYf; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pParzxYf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41A44C4CEE3;
-	Thu,  3 Apr 2025 23:17:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743722226;
-	bh=98ZkWjc1GFp3AdT5drHDlDX8CLiz9J0bBm5R8H6wPC8=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=pParzxYfyZs59r5cY93lCXRDWUxgKkK7PZFLxnxJWyuNO1ZxrX9+1SfIX7iZo8Wan
-	 y9YLbfbI5fTT7HFS481Vokh13NrzK3OMzatgxLd4E2ZYLejhB6LBpAAbZU9yOXdmjI
-	 +oXpGHz/tnhROWuU5SkaoCpYi330eBfdKbl4mynnOSoC6NXiPwHPKDFynmFGL/L8/9
-	 xOhiW7cfevD8xMAuAxbNJubZZz6TUFuOqxtCA/V2x6OUCFBQr1qNdzTPpa8ZNzEWJw
-	 t+lhLDNHA6W0YF8rDy4pnMEIU211Xs2HLIG0Zw7GlcNFnY37TGs/kJ/Wt4gYZw6pWm
-	 cO7NCVJvhZeLA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 73262380664C;
-	Thu,  3 Apr 2025 23:17:44 +0000 (UTC)
-Subject: Re: [GIT PULL] tracing: Cleanup and simplify the persistent ring buffer
- for 6.15
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20250403113116.5760d1d8@gandalf.local.home>
-References: <20250403113116.5760d1d8@gandalf.local.home>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20250403113116.5760d1d8@gandalf.local.home>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git trace-ringbuffer-v6.15-3
-X-PR-Tracked-Commit-Id: e4d4b8670c44cdd22212cab3c576e2d317efa67c
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 6cb0bd94c08e37236f7ba2ff474c1e70c8318484
-Message-Id: <174372226318.2716716.14575893965335500062.pr-tracker-bot@kernel.org>
-Date: Thu, 03 Apr 2025 23:17:43 +0000
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, LKML <linux-kernel@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Mike Rapoport <rppt@kernel.org>, Jann Horn <jannh@google.com>
+	s=arc-20240116; t=1743722245; c=relaxed/simple;
+	bh=RpXeLaqMrSqz6yak/7SXmz4WRNuwyIe4mw0ER99HSy4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=o5y58row/OUYUuTVV90OHQ0aCGo6aNm8zMQgMUPCCAhpOiBtVd6RnSFaQxDS75Rt1DeSZ/m8iZpvtpg8kTyz7KRpGmC7ztcUSYJTs5qTArjdfWAdg8k7EK2oql9tug4bgSJBrHuIUmri+53v7g+Yc8rAC9xBPQjMgvjrwPqM/Xg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <m.grzeschik@pengutronix.de>)
+	id 1u0ToH-00033S-Vm; Fri, 04 Apr 2025 01:17:21 +0200
+Received: from dude04.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::ac])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <m.grzeschik@pengutronix.de>)
+	id 1u0ToH-003B2f-0b;
+	Fri, 04 Apr 2025 01:17:21 +0200
+Received: from localhost ([::1] helo=dude04.red.stw.pengutronix.de)
+	by dude04.red.stw.pengutronix.de with esmtp (Exim 4.96)
+	(envelope-from <m.grzeschik@pengutronix.de>)
+	id 1u0ToH-004fv9-0P;
+	Fri, 04 Apr 2025 01:17:21 +0200
+From: Michael Grzeschik <m.grzeschik@pengutronix.de>
+Date: Fri, 04 Apr 2025 01:17:20 +0200
+Subject: [PATCH] usb: typec: tcpci: add regulator support
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250404-ml-topic-tcpci-v1-1-4442c7d0ee1e@pengutronix.de>
+X-B4-Tracking: v=1; b=H4sIAAAX72cC/x2NQQqDMBAAvyJ7diGG6KFfEQ/JZtWFNIZES0H8e
+ 5ceZ2CYGxpX4Qav7obKH2lyZIWh74B2nzdGicpgjR2NMw7fCc+jCOFJhQRH6+IQp7ByZNAo+MY
+ Yqs+0a5avlFSWyqt8/5d5eZ4fg85xgHUAAAA=
+To: Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ kernel@pengutronix.de, Michael Grzeschik <m.grzeschik@pengutronix.de>
+X-Mailer: b4 0.12.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1278;
+ i=m.grzeschik@pengutronix.de; h=from:subject:message-id;
+ bh=RpXeLaqMrSqz6yak/7SXmz4WRNuwyIe4mw0ER99HSy4=;
+ b=owEBbQKS/ZANAwAKAb9pWET5cfSrAcsmYgBn7xcAnSx83oJbZeJ0LiRRAM0tl2Yw3MX4X6hqo
+ 0LLW34aScyJAjMEAAEKAB0WIQQV2+2Fpbqd6fvv0Gi/aVhE+XH0qwUCZ+8XAAAKCRC/aVhE+XH0
+ q7lkD/sGvI4O3vKtrpfxcq4V02geminY/CI78Ly/cO7VGYgT6dFr2P8lVXnYr+ntajwaYuetYwR
+ JfB0nlb/Lqa7WB8OR7Fofz7STbASHSkXjg9QhDLdIBDgptQyKbDGURbkirpRDP1ASuDUi04cEwG
+ dHGZltdbdsBbKU7Q5mAYdGv4EB7PxYAcPsxne2a58kqTXLXt/bnSW0LtkpL9IfwMJqNzQ5QP6fG
+ Hp8Jm/gyI44vDxWd/9c/jhre1EVteX+mbXYKakrj0PS2Sd00lgHPUjoMGFPo/WtZ9aVzG1Uarzb
+ jmolfNP45XhGizcC1uW/zKagePOOOX5QKonQl3SMl4Xlxe+tIyUN45qoRtMv2I/fasgk/CcdWSu
+ eWCFfn1ZTp04w2j5FUbPl8EDCP5OZU+TTpDiP/fOZ4E8BI8TehXk9A/w7M2szhUk9yHt8/0QEtz
+ 8Fsv9RuaQwCzMU51j/kCds3tvzHedm/BUxH9J97MrZGGXP7MAKJcLKDIMFB5XX0XtzIMMM6oq0D
+ Yet2MekCmSUuOjobYpuW6O1N+idDfMmxV9eQE+XC3qVvLIhY9sLlsO2+r/1vSNB5Q8dL2Vtjliv
+ 53Cu/Wl2+QdOBZU+oCgv48ubJzmI2PBLNkZkBLNgYtwIzv1pAKqnmXfZ9tdFBLSDKsQPIxj5rkP
+ JH/nPLCoZHgCChQ==
+X-Developer-Key: i=m.grzeschik@pengutronix.de; a=openpgp;
+ fpr=957BC452CE953D7EA60CF4FC0BE9E3157A1E2C64
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: m.grzeschik@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 3 Apr 2025 11:31:16 -0400:
+The tcpci chip vbus pin is possibly driven by an regulator. This patch
+is adding support to enable an optional vdd regulator before probing.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git trace-ringbuffer-v6.15-3
+Signed-off-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
+---
+ drivers/usb/typec/tcpm/tcpci.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/6cb0bd94c08e37236f7ba2ff474c1e70c8318484
+diff --git a/drivers/usb/typec/tcpm/tcpci.c b/drivers/usb/typec/tcpm/tcpci.c
+index 19ab6647af706..a56e31b20c214 100644
+--- a/drivers/usb/typec/tcpm/tcpci.c
++++ b/drivers/usb/typec/tcpm/tcpci.c
+@@ -17,6 +17,7 @@
+ #include <linux/usb/tcpci.h>
+ #include <linux/usb/tcpm.h>
+ #include <linux/usb/typec.h>
++#include <linux/regulator/consumer.h>
+ 
+ #define	PD_RETRY_COUNT_DEFAULT			3
+ #define	PD_RETRY_COUNT_3_0_OR_HIGHER		2
+@@ -905,6 +906,10 @@ static int tcpci_probe(struct i2c_client *client)
+ 	int err;
+ 	u16 val = 0;
+ 
++	err = devm_regulator_get_enable_optional(&client->dev, "vdd");
++	if (err && err != -ENODEV)
++		return dev_err_probe(&client->dev, err, "Failed to get regulator\n");
++
+ 	chip = devm_kzalloc(&client->dev, sizeof(*chip), GFP_KERNEL);
+ 	if (!chip)
+ 		return -ENOMEM;
 
-Thank you!
+---
+base-commit: a1b5bd45d4ee58af4f56e49497b8c3db96d8f8a3
+change-id: 20250404-ml-topic-tcpci-524d1d6bfede
 
+Best regards,
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Michael Grzeschik <m.grzeschik@pengutronix.de>
+
