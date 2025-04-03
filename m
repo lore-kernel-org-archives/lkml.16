@@ -1,95 +1,114 @@
-Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D9B81993B1
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 16:47:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D0C019CC39
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 16:48:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743698866; cv=none; b=DS8C4l+Fw7str/4F1MnLlNnPf24a00SbrUCSkFZs40uVlNoFtPd1Q4tf39p4zXyCCIfHBZxcGUoVi6WMREjNFLhZ4Ygz8Vwy2I1bEzgjspQvwR1kvzK14wekel/vGNa6tyyHhl7e5Ctw1cL+jO+WOQWY+NArkzBzTUHO7lSuJT0=
+	t=1743698893; cv=none; b=VobXEuWS+TD/kBXiqD5033asJ0w/YYxRBRV6hfJBld8Ov3Wql5sEU0R9RKoQapFeU5YSBXillGMrufpucOUenCg8x4hY4J/pYSVYARgQZ24NwKt6zqGa09fjcPgUU78A2I/cfH9Rbu3+mGs5PMdNEusjTqYb5d7hjswmmysE8Hs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743698866; c=relaxed/simple;
-	bh=hDTReC1/mrfRfARGTXPr2AFJZNz3CIDF1/HOyaOPQg8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VYSfh6VFjr7U/Ru4VB2hPCvItCbUvDTMEuFiHHkLFo9rAZz45EHAu74QAFR3BE9icEC41SyxTwlvNQdlqpuCJWDhjk6zQXD1BfLtEfINjm+YjB7FnKviiqA2Z6CcHIMEXJRN14qF21pWZaTWw21XUrlNuH7+GTUx5ic9hIQyIF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=fiUhHyuY; arc=none smtp.client-ip=209.85.219.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
+	s=arc-20240116; t=1743698893; c=relaxed/simple;
+	bh=tOhPfAjNck/fuEMBPjbaUAakEcHx5aW4W6Mm4+qEg6o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jC6zsR3Pvlrc+2n5ymfLyovUzArWfLpGxdyxn85NLW7oFmjON/uAz04Sd8vEC7SkBKTI1I8C51Nkj2y8wkdNHElENF4z+DtlrAS/+T6XpzoUVdhk8Lv3X/LC61IWvwQDW+svohdaWRFrChaQk1Qp5wvQ+LDG70Sde/zZvcRdVP0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=B2QY69jc; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="fiUhHyuY"
-Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-6e41e17645dso12533946d6.2
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 09:47:43 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="B2QY69jc"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-abec8b750ebso182273366b.0
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 09:48:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1743698863; x=1744303663; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=1Nud2fc5RcW4evh9vy/G4Ts8NFlLn8W5YgcQMx1TJsk=;
-        b=fiUhHyuY6IFVq3Avo+eX/Zt1DvpKrJWqObukeHkd9jBWHgZcebFF9zaSulluvFQ8K+
-         /p2qIb6TrP7cu3ZaZV9zYjzlIZ06e64htc2D+ENki+EdMmTvVR++gsOz05VYVREJXZ78
-         uHUM1gjJmDvXgoY4Vhrjuj8AZPdRCjAusY8mn3l3xZSPC+G1YwV8SzOFnZ5iqaQ0ATiP
-         irEh0HDvEODv+AfYQ/7JrlItFJndjVHDRchLlFJOSWtUmoKXwUmOVjjtxTMGeeIH9lAh
-         AOZcuc3tfGxAJGr7HaTTBUcvhyM14IQiPu7JJZ4yqYVQYsMrS9vkL1Q7cmQVP3rE0z7q
-         FQlg==
+        d=linux-foundation.org; s=google; t=1743698890; x=1744303690; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=5IeBQ5EurNMkDT+fQ3nS/eQb46kO76MprunhtwmK6a4=;
+        b=B2QY69jciSslWGGIl5tSiU2zq7lhABiHbYUXup0NlogFaNrgwMz6jXR4NDoPRwyUQd
+         KGAkQa3l//maVeWHxghTr9f43zkVpDnaBY4MXfFP443p+tSl9rucCfIEA5YqJo0Ux1Dg
+         oLX32nf9h+4ejZ392+WqZkQ1RQIt7GD29FhF8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743698863; x=1744303663;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1Nud2fc5RcW4evh9vy/G4Ts8NFlLn8W5YgcQMx1TJsk=;
-        b=h+rk5//Y3gaiPcPIF9fdb73k72PMacAIuIsoe6Ob1bBCYIoDpb64qiKpYg6sba5j9v
-         as5XqYECCYQTNbi6bvJr/N8o/5Ty6nZ/B1q0IzeukJ7jEgL+o5wDn54y7mlhQ0mrvOFa
-         4B1lh9e9TO6Xr5zfEX6QuuUjtB3YTHVN3o2QdOhoILNdMYtav7jjRMV8/337hNaMJuLK
-         ppHKnV7q+GtdCIvSQimemjFCghUoGHIakM7/ckHzgE7YRZs+2HQ9Cxv1UxmXaC4rJ/dD
-         SXcvLTZX0xFNnEmrO0KgOPT4OlG6Jz3/4pZh5uUkpeuaz8MviOAs1WkBqBF74FfpyaUs
-         fG4A==
-X-Forwarded-Encrypted: i=1; AJvYcCXet+KDfdjlJysGCQmtcHvVldgnG3V/dNBYm1ZCuo0lpW7jStNvNuaczUeNmgzK/zQhXoykuu2E5GU1MkU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXbAY4Rkqn/JYt+kPskO8w4bNEbhdzi98OJ8UIvgJxtFGyij2U
-	36RSqXhnY9Bhjbmi4e14qbgnQp+fGY1a7ugwYdn8SJZV+zGwdTFw1zDIjCRHwWc=
-X-Gm-Gg: ASbGncsHIdSpOqmwyqGKubShJcPR7s/xOzEmQDQoZC8t31qvMy8yyeUl11d2Hax/ulx
-	cNt6nT4QrBEaLr/cd0VQ4SExpq9aQYzzllj77ORwTsTHu5AG9iS1x7YE2hms/YSRZtrqWSDkmX1
-	BBNDNzWyIe7UbOT+4SLRS3+f7U/7XOZfhinZR3BcssglJei6rMqHep5RSQSlQjYVS1XAGtioRcA
-	57ibt0SEuE98MImQ8SUsDzfLPLWBnrZpbYsuHZn0AQRjXxi9+g0qI0yPMQ45xbcMy9VQYIHy+ve
-	ig2hAkry9OAYOyHKonqNLYylTGV054VvsO648jPYiPgwRzOv3OF1pg==
-X-Google-Smtp-Source: AGHT+IGn0LSk8HdIMSVIgWA75foWE+TwNl3UlrFotjqft5M0lp3yVrvEm+t6kj+IPVcJKWN1kUU2DA==
-X-Received: by 2002:a05:6214:2241:b0:6e8:fb7e:d33b with SMTP id 6a1803df08f44-6eed629b6bamr345313326d6.33.1743698862969;
-        Thu, 03 Apr 2025 09:47:42 -0700 (PDT)
-Received: from localhost ([2603:7000:c01:2716:da5e:d3ff:fee7:26e7])
-        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7c76ea59e42sm97209685a.77.2025.04.03.09.47.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Apr 2025 09:47:42 -0700 (PDT)
-Date: Thu, 3 Apr 2025 12:47:41 -0400
-From: Johannes Weiner <hannes@cmpxchg.org>
-To: Shakeel Butt <shakeel.butt@linux.dev>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Michal Hocko <mhocko@kernel.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Muchun Song <muchun.song@linux.dev>, linux-mm@kvack.org,
-	cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Meta kernel team <kernel-team@meta.com>
-Subject: Re: [PATCH] memcg: vmalloc: simplify MEMCG_VMALLOC updates
-Message-ID: <20250403164741.GB368504@cmpxchg.org>
-References: <20250403053326.26860-1-shakeel.butt@linux.dev>
+        d=1e100.net; s=20230601; t=1743698890; x=1744303690;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5IeBQ5EurNMkDT+fQ3nS/eQb46kO76MprunhtwmK6a4=;
+        b=Gl/fFPkQZ9H5T20qa+nEtCXNAAVArFdE2x26N8Z8tdfF6B3bKkJuef/txbHRWVVeik
+         W1+Iq2lS8V0W0qEwywf8qMHt4+h+DKrSX0hS3GBkpA49NSA9W7BDmE+hp7hky1w/w1rd
+         pKvHNl7TB+K7L2Eb6aux3V9rBLEcijeB0yJpfcl9PDJ4Sc/S9hvGlwlH1uP0PhrMjmeV
+         2U77WsS0oPxmJR7QpvXTXusBWiMrnl63TXrdrar69o3/hIA0B7yRGU1MWJmm05XxkhJw
+         aAonZ1W1J8dQNZkbDmQt7HIFf7AI9214PaIXWSvmZfSuQtEhjcvTrZZzI8IhZ//0bvyx
+         IYxw==
+X-Forwarded-Encrypted: i=1; AJvYcCVow1ZTVaKXJovQ+vcM0de0LYiUJtYeBRDlZsr6QHYAxCDKMftQHKcsarFU+kySRYcvh52ML6IT5L1EBp0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy83FLvo1mmI3zzosY9pZdXy8WM7ApLrR6QU5Kvui+aJsEMJmYe
+	RRs0MaDZISg4soCbmNiSEseM4Y52uLpeDZpAsBAKhUHZ+e1sEUWMjunrDt4LZ+mNdFZOwo/OzX5
+	adxY=
+X-Gm-Gg: ASbGncsj7sEsF9ILg/nir5U5bnBuafDrbAMrpS9SUFaJCzGWCqaR7ftl8Qy17cdAyCc
+	KJaMNNyXXq5ASmOW2ERSKd1qcOxZ4I0fymoEIX3np8+76xtzqjZIdW4BZYbgTwimzwj5n/8Vdzq
+	ZnsGu5T3RY7oUTnAFECozB2yaSVpKkoHbWCBnUa56/Xelt6xTfpO0vxMAaZySw4eWMWrrG0FjMz
+	Duc+05GmWBx8kL9+iOJPdk5xRQBzB0IOtVK3xMyy0odWN5B79/SInZkVNB0S6J0W2rQv+ZGMxwS
+	QDCTr01D3D53spiiA0nTRPbCoKP9xefF7S957/eFyER/HGSkSe1I5mnTu/XnuoQBRWa2dVAb0fB
+	GEuz8+S41VPXLk5EadVo=
+X-Google-Smtp-Source: AGHT+IEKJyd6de0YPCoan1HREXgL49jXgCs+wTNOU/QJ19r8aGqKYa7yHkS4eKLzj2gqPboG3Iwx7w==
+X-Received: by 2002:a17:906:f5a9:b0:ac7:b363:862f with SMTP id a640c23a62f3a-ac7d1918b56mr24704466b.28.1743698889576;
+        Thu, 03 Apr 2025 09:48:09 -0700 (PDT)
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com. [209.85.218.49])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7c0185f84sm120101366b.140.2025.04.03.09.48.08
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Apr 2025 09:48:09 -0700 (PDT)
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-abec8b750ebso182270766b.0
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 09:48:08 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVGJAeI1dTnh0PEy+raE4RO9nARb+EgLtZ/tjWfRzYbn81L3ggVSmnbR1wp85P0h8ylqrxCzdyekPZOoXk=@vger.kernel.org
+X-Received: by 2002:a17:907:3da3:b0:ac2:7a97:87fb with SMTP id
+ a640c23a62f3a-ac7d199c916mr29245166b.33.1743698888537; Thu, 03 Apr 2025
+ 09:48:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250403053326.26860-1-shakeel.butt@linux.dev>
+References: <CAHk-=wg0wQb+CbUk2GY0CeVuTQvq67-oYR0nL8wGgySia3ce7g@mail.gmail.com>
+ <Z-4jzImykAbHK2Gz@gondor.apana.org.au>
+In-Reply-To: <Z-4jzImykAbHK2Gz@gondor.apana.org.au>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Thu, 3 Apr 2025 09:47:51 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whch6fMKH8FadOigqm_xrXfgWJyn=jz32GM6tUuM=nqvg@mail.gmail.com>
+X-Gm-Features: ATxdqUEfHA6tq4tIjCHeUdY_kmVbwhB0XtABIt9Eygs4AQmADpeBZZvH_WAQpHA
+Message-ID: <CAHk-=whch6fMKH8FadOigqm_xrXfgWJyn=jz32GM6tUuM=nqvg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] tracing: ring-buffer: Have the ring buffer code do
+ the vmap of physical memory
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: rostedt@goodmis.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, mhiramat@kernel.org, mark.rutland@arm.com, 
+	mathieu.desnoyers@efficios.com, akpm@linux-foundation.org, 
+	vdonnefort@google.com, vbabka@suse.cz, rppt@kernel.org, kees@kernel.org, 
+	tony.luck@intel.com, gpiccoli@igalia.com, linux-hardening@vger.kernel.org, 
+	willy@infradead.org, Eric Biggers <ebiggers@kernel.org>, 
+	Michael Ellerman <mpe@ellerman.id.au>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Apr 02, 2025 at 10:33:26PM -0700, Shakeel Butt wrote:
-> The vmalloc region can either be charged to a single memcg or none. At
-> the moment kernel traverses all the pages backing the vmalloc region to
-> update the MEMCG_VMALLOC stat. However there is no need to look at all
-> the pages as all those pages will be charged to a single memcg or none.
-> Simplify the MEMCG_VMALLOC update by just looking at the first page of
-> the vmalloc region.
-> 
-> Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
+On Wed, 2 Apr 2025 at 23:00, Herbert Xu <herbert@gondor.apana.org.au> wrote:
+>
+> There is no fallback implementation of flush_dcache_range for the
+> architectures that don't need it.
 
-It's definitely pointless to handle each page with the stat being
-per-cgroup only. But I do wonder why it's not a regular vmstat item.
+Yeah, that literally looks like an oversight.
 
-There is no real reason it *should* be a private memcg stat, is there?
+Probably because nobody needed it - or people didn't realize it was an
+option and did the "loop over each page by hand" as in your example.
+
+So yeah, I think it would be good to just expose flush_dcache_range()
+as a dummy empty function in <asm-generic/cacheflush.h>, with the
+usual "if the architecture defines this, that will override it" rule.
+
+However, part of the problem is likely just unclear semantics. Because
+the existing flush_cache_range() is about pure virtual caches and how
+they need to be flushed before the TLB is flushed.
+
+Also about D$ aliasing, but there isn't necessarily any TLB issues.
+
+Honestly, I'd personally be perfectly fine saying "nobody sane cares,
+and if your D$ isn't coherent, your perf mmap won't work".
+
+                Linus
