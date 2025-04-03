@@ -1,125 +1,141 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2588F24C68B;
-	Thu,  3 Apr 2025 13:24:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08C6E24E00C
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 13:25:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743686696; cv=none; b=RKi7XmCmqyX8FoN7D/FlzbWDBnZHhgZXSKj1tsbzzYB+mA6wTJOvZ0Xtj0CGr+ZJkU5jKjAPcnoiSdoZYI+xH75rxQcQo1j3id1HGmvYTH4oN97lwyL5gTs7D5DEnY/HeRx83MNnbS+RQWRpc6JT5bTwXXyPo1+2G9wXf+Gp9FM=
+	t=1743686752; cv=none; b=EIyZnvkErZv6MicdT+cEY+NcLeLHLTqoQ3ihNIO+ioD1lRSbIv0VtyuarQnO3RAASQfvRLl3wJxpSd9Agn1Mjep5x/KyvKvmWnM3dGrbmPSRATDt5wGuXosojOPHkCaAZ3ap35kZ89NCH5z4V+bSVjHUpHtUmpa6NEEAJh+Lwy8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743686696; c=relaxed/simple;
-	bh=zS1b+ewkxjZ9q16cuZO6C5M+mfDDxBaiA4TcvnzbzmM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FcqNI+JNHauoD9ptxY8060HT1+J1OGJMLvuQtwXNJEu6ffyOkpOPQHBkedoU/sw5aJFzNV2TNe1Pu5LyEzKoBHxh0tY7fv+uS/mBxlMVYIzKO9EJWXBeMPSeLtJ3ezuTLZSXvo4l++Y0HP1fSUpmZkIVKmg88mrbf6pwlhnbwXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Znz686GN; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1743686752; c=relaxed/simple;
+	bh=hkBlPiDPeUzOPJ7aPN9rgVflLfz6Y//z/CKhpFSMiXY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sebqbNMnqZKL44ir20O9mFW/18ZyS6wRn9A7VYDEk+hOanpkvDPQaIqtw7XsSzhNROprQcz+xDJ9TTR2fYRHMMzw691uyGrv/I5XdEIcfZUWivHCSLzdxdLtQ1N04t9UfRB0onsRHEIWQCV15PxfUkHJVggd3ExAKy9pP9SEyek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=R4RF6n/v; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=6sM1FTFA; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=R4RF6n/v; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=6sM1FTFA; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Znz686GN"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 0C67B44261;
-	Thu,  3 Apr 2025 13:24:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1743686692;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=YlMY3SI/X5WusPn3PyHwVi5oITazInDj/ajZUa0Xja0=;
-	b=Znz686GN18na5G2qxHBiqFHrOnP4aO7JA0aBXSuuh6Fbu5p2/kAlKZoniBnbFmNRLwFh1k
-	UHcDZD7++NoUKrohM/En+nrDQs6sDlr6HutRCaq7u+fvadI3xk0ZVn7AtiLJ8n89+ucHjo
-	ufrzwdFnHx0ysVDomUu0857LOiqAb3MuZY9rjwc0YN2CDSFmR+LF96LX7OIIU/A+wFs8a/
-	I6ckGQLJY2o8bc1w2Eaf76E++q2RndDXcmmdErjrovCZROnVS8aGJ8J4yP8rC9VG63amwf
-	dOIvOyM2n2toyMWZ1H3VnGbQ9s7G5Zm29aFPbf6Ey2IXA1f4q6OpxRFeJlCZdA==
-From: Maxime Chevallier <maxime.chevallier@bootlin.com>
-To: davem@davemloft.net,
-	Andrew Lunn <andrew@lunn.ch>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Eric Dumazet <edumazet@google.com>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	thomas.petazzoni@bootlin.com,
-	Simon Horman <horms@kernel.org>,
-	Michal Kubecek <mkubecek@suse.cz>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Kory Maincent <kory.maincent@bootlin.com>
-Subject: [PATCH net] net: ethtool: Don't call .cleanup_data when prepare_data fails
-Date: Thu,  3 Apr 2025 15:24:46 +0200
-Message-ID: <20250403132448.405266-1-maxime.chevallier@bootlin.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="R4RF6n/v";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="6sM1FTFA";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="R4RF6n/v";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="6sM1FTFA"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 079181F38A;
+	Thu,  3 Apr 2025 13:25:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1743686749; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nrXwiMbjUIu9vc4AlIXwze08l1ErHWYbmIRvdf20zr8=;
+	b=R4RF6n/vkcW//39vcdLeA5pmIXZCmPPoCWtg9ejfR7E76+BmuPhJzY3k7RbKEHRxjD9nXH
+	y68mSgDgFDgK+wYey6Ci6qOPw5BixPqf6NQFEmy8v+l4j5uyOFBiHef8sw5j510ymNnacH
+	lqdijfGo5NvvGUC2TCoS2LibwxRIOz8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1743686749;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nrXwiMbjUIu9vc4AlIXwze08l1ErHWYbmIRvdf20zr8=;
+	b=6sM1FTFA5onYSDdZvH3BM/+YhYK1wa/D9ZRQobOT4syqKWvjlcK3dlWCTikUC5KITCqaEw
+	Ro0ema/kLzTAr8AQ==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="R4RF6n/v";
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=6sM1FTFA
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1743686749; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nrXwiMbjUIu9vc4AlIXwze08l1ErHWYbmIRvdf20zr8=;
+	b=R4RF6n/vkcW//39vcdLeA5pmIXZCmPPoCWtg9ejfR7E76+BmuPhJzY3k7RbKEHRxjD9nXH
+	y68mSgDgFDgK+wYey6Ci6qOPw5BixPqf6NQFEmy8v+l4j5uyOFBiHef8sw5j510ymNnacH
+	lqdijfGo5NvvGUC2TCoS2LibwxRIOz8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1743686749;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nrXwiMbjUIu9vc4AlIXwze08l1ErHWYbmIRvdf20zr8=;
+	b=6sM1FTFA5onYSDdZvH3BM/+YhYK1wa/D9ZRQobOT4syqKWvjlcK3dlWCTikUC5KITCqaEw
+	Ro0ema/kLzTAr8AQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E0E0E13A2C;
+	Thu,  3 Apr 2025 13:25:48 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id nsp7NFyM7meCQQAAD6G6ig
+	(envelope-from <dwagner@suse.de>); Thu, 03 Apr 2025 13:25:48 +0000
+Date: Thu, 3 Apr 2025 15:25:48 +0200
+From: Daniel Wagner <dwagner@suse.de>
+To: Hannes Reinecke <hare@suse.de>
+Cc: Daniel Wagner <wagi@kernel.org>, 
+	James Smart <james.smart@broadcom.com>, Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, 
+	Chaitanya Kulkarni <kch@nvidia.com>, Keith Busch <kbusch@kernel.org>, linux-nvme@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 08/18] nvmet-fcloop: add missing
+ fcloop_callback_host_done
+Message-ID: <4cb3543d-c3a3-4cf5-9615-ea13780b31d0@flourine.local>
+References: <20250318-nvmet-fcloop-v3-0-05fec0fc02f6@kernel.org>
+ <20250318-nvmet-fcloop-v3-8-05fec0fc02f6@kernel.org>
+ <931e5618-f85c-43ed-96a2-696c23a57857@suse.de>
+ <db31e99f-364a-49ce-b54f-b697e76eca11@flourine.local>
+ <eb8ef257-72d0-43df-9e46-c6fb8b1dbb7c@flourine.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddukeekieejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhmvgcuvehhvghvrghllhhivghruceomhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhephedtheeufeeutdekudelfedvfefgieduveetveeuhffgffekkeehueffueehhfeunecukfhppedvrgdtudemtggsudelmeekugegheemgeeltddtmeeiheeikeemvdelsgdumeelvghfheemvgektgejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgduleemkegugeehmeegledttdemieehieekmedvlegsudemlegvfhehmegvkegtjedphhgvlhhopehfvgguohhrrgdrhhhomhgvpdhmrghilhhfrhhomhepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudefpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepvgguuhhmrgiiv
- ghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehprggsvghnihesrhgvughhrghtrdgtohhmpdhrtghpthhtohepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdprhgtphhtthhopehnvghtuggvvhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-GND-Sasl: maxime.chevallier@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <eb8ef257-72d0-43df-9e46-c6fb8b1dbb7c@flourine.local>
+X-Rspamd-Queue-Id: 079181F38A
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	MIME_TRACE(0.00)[0:+];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:dkim];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -4.51
+X-Spam-Flag: NO
 
-There's a consistent pattern where the .cleanup_data() callback is
-called when .prepare_data() fails, when it should really be called to
-clean after a successfull .prepare_data() as per the documentation.
+On Wed, Apr 02, 2025 at 07:08:06PM +0200, Daniel Wagner wrote:
+> > There is NULL pointer check in fcloop_call_host_done eventually. It is
+> > in 'nvmet-fcloop: update refs on tfcp_req'. That hunk should be in this
+> > patch though.
+> 
+> Looking again with fresh eyes. Patch #3 is adding ref counting to the
+> lport. 'nvmet-fcloop: update refs on tfcp_req' (the patch before this
+> one) adds the NULL check. Nothing will crash here. Actually, I've run
+> into this crash when testing before the NULL check was there :)
 
-Rewrite the error-handling paths to make sure we don't cleanup
-un-prepared data.
-
-Fixes: 728480f12442 ("ethtool: default handlers for GET requests")
-Reviewed-by: Kory Maincent <kory.maincent@bootlin.com>
-Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
----
- net/ethtool/netlink.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
-
-diff --git a/net/ethtool/netlink.c b/net/ethtool/netlink.c
-index a163d40c6431..977beeaaa2f9 100644
---- a/net/ethtool/netlink.c
-+++ b/net/ethtool/netlink.c
-@@ -500,7 +500,7 @@ static int ethnl_default_doit(struct sk_buff *skb, struct genl_info *info)
- 		netdev_unlock_ops(req_info->dev);
- 	rtnl_unlock();
- 	if (ret < 0)
--		goto err_cleanup;
-+		goto err_dev;
- 	ret = ops->reply_size(req_info, reply_data);
- 	if (ret < 0)
- 		goto err_cleanup;
-@@ -560,7 +560,7 @@ static int ethnl_default_dump_one(struct sk_buff *skb, struct net_device *dev,
- 	netdev_unlock_ops(dev);
- 	rtnl_unlock();
- 	if (ret < 0)
--		goto out;
-+		goto out_cancel;
- 	ret = ethnl_fill_reply_header(skb, dev, ctx->ops->hdr_attr);
- 	if (ret < 0)
- 		goto out;
-@@ -569,6 +569,7 @@ static int ethnl_default_dump_one(struct sk_buff *skb, struct net_device *dev,
- out:
- 	if (ctx->ops->cleanup_data)
- 		ctx->ops->cleanup_data(ctx->reply_data);
-+out_cancel:
- 	ctx->reply_data->dev = NULL;
- 	if (ret < 0)
- 		genlmsg_cancel(skb, ehdr);
-@@ -793,7 +794,7 @@ static void ethnl_default_notify(struct net_device *dev, unsigned int cmd,
- 	ethnl_init_reply_data(reply_data, ops, dev);
- 	ret = ops->prepare_data(req_info, reply_data, &info);
- 	if (ret < 0)
--		goto err_cleanup;
-+		goto err_rep;
- 	ret = ops->reply_size(req_info, reply_data);
- 	if (ret < 0)
- 		goto err_cleanup;
-@@ -828,6 +829,7 @@ static void ethnl_default_notify(struct net_device *dev, unsigned int cmd,
- err_cleanup:
- 	if (ops->cleanup_data)
- 		ops->cleanup_data(reply_data);
-+err_rep:
- 	kfree(reply_data);
- 	kfree(req_info);
- 	return;
--- 
-2.49.0
-
+After a bit more testing and a new KASAN report, it looks like yet
+another life tracking for tfcp_req/fcpreq is a bit off. The whole
+conditional free/put indicates a something is wrong IMO. Let me see if I
+can resovle this a bit cleaner.
