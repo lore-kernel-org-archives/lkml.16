@@ -1,55 +1,55 @@
 Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 121C4258CDC
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 19:43:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3559926738B
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 19:43:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743709436; cv=none; b=XtvyTqUjV3CSPag5aL21uSXOYe0qgHaWnb+gCUYMZD0JndZ9CgtqJJ2prwtlqp/nGBaL9e8v1gv5pvLKqd/95FDXsYTS+Vw1efTN07UOEy3iHmpTlwhILrPgcDiTWN4ljx0IsUBZYtNGXC52WuWgxWp8gB888GDJzZ++lKySTNY=
+	t=1743709439; cv=none; b=JpkJIVhZWa1DV67FPxqNFhM667dgSfTGEPHQ7tfsAr1ZrfxJhRpoDA6Nwb6ZufCVAcHRkjzh2Lm/jeF11+asf15wMpl+1lx5X2t/xnBykstgRa1nnmn/Zrs2BTdAyepzK7uyzA9cSHsCnOCXsFSkAFC+mhEz7qu3YlCdw98JJ6k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743709436; c=relaxed/simple;
-	bh=ru7u7pKXS/EaVzSTBdHYNt3QsjMHV+QaLj4tONySshs=;
+	s=arc-20240116; t=1743709439; c=relaxed/simple;
+	bh=QIZAAAk/MdLupLUpiD23XMSohaw76ST55IymoNR7/t4=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=eM8lsiVSjd9v14uOLF5hply4i3g2nlBKQzWxPe9ZU3WedkihV6ro1bGbO/dSyla4xEIHfoKHnkAoaAcZArEG26mus4OybEMD+VoUHq/gtDcCmiMWqG4Kqv2uk6OSTXk2mmBd5ENZn4BA07IkGsRDl8dPlVuwRWzQr76qhddxwXM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=t6yYlCgz; arc=none smtp.client-ip=209.85.216.73
+	 To:Content-Type; b=Hho9/B4vHHfg5VcVFBdnzDKBvZwdbc6PFTLP3IDGDaI6JOuD2qCSXvW91Lq0qlRwFyJrYrmKLCIQnhh9+YBjtcfuE4VttkVR2ssMHDpu12uTmL/dC1KHi4M3fsHWIowjqqW8vKlK9mutYjXxR8PU8dYZb9r7FG8H6RnR/bPJ208=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=G0vx7jiJ; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="t6yYlCgz"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ff7aecba07so1252557a91.2
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 12:43:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G0vx7jiJ"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ff62f96b10so2719705a91.0
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 12:43:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743709434; x=1744314234; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1743709436; x=1744314236; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=I5Pfi1jEe5jcwyGvVBhtjGFb4NLTmTQnKdr17Cg5Kpc=;
-        b=t6yYlCgzn6riXEF4+vmNxtH5wvqkcfcT0wG2qcpL7zBgbWajHv+VpeJ9fcYroKZpLx
-         JqeK9RO8HOONjc0f3E9MsMzQk0RGxgWd5gCyk2y+YyxP0CDU/LM8r+AZu63zEBwtJ1tX
-         psPo1zT6NCLPt3u6lD4E3af+PRMZV+vq+Gxy39e2iOjDoFrFS7XuFULAP69bjyfuguht
-         1i4W6tFyS7/b/dZzT017yE1L0B22kVY86BTisYdIPDNnLMOYy2480uUE4mDvRjgQ1TjS
-         E8IxG/JplHpqbpX9WaXzWo4ejSzvumPlHPLv2DU2vgFLQbR3A6RPaH6bo1cYk/veTO4E
-         P6qQ==
+        bh=/yB/Gn9tHctPRNXn6w3PLBCiw087uLsUcXZZ/fWypWo=;
+        b=G0vx7jiJiykxIrcG7OROFFpA/z+3PPqoWOXbx3UfH1PLGPxtTCpw0DD+/NYE8WDEqZ
+         Odu73KISAhpSyPgnIla384+aEDeU4x1THx+MGRWUSb9Trn6lC1mfWnWVT9Slwbsrdx7T
+         s3nrMnb8gRPEYHZgdhK9FarXRMrWU03nhq7uyWefT+B/6HqQLLVriR2U4gddLc0fiPhF
+         LlBURa29d2qlO1hNzBb7xF9zWj+B7YEBmO1Cu4//mFeP5vezgJe5tipic7Nq1OipGtfx
+         AkwtZZl6zpl3t/1KCue/fMdyGIY6bRjXyvaoeJLmAcV81JwGhAA7cjegL0aGYNaTVqOa
+         J/CA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743709434; x=1744314234;
+        d=1e100.net; s=20230601; t=1743709436; x=1744314236;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=I5Pfi1jEe5jcwyGvVBhtjGFb4NLTmTQnKdr17Cg5Kpc=;
-        b=bnotUC3KILNtk4vQfyUu9c34K1mPip3ZwkcmZ26v1DchdFgvuPJD3O+NgrxBzrEG2F
-         zMv+fl9KdbSxtUOl3Nhnn7eGtAGK/xvxzNValfhf1lMY97iY3s3T8X3nbLj7fr6PNMSr
-         +obFYw5KPgd5mSVTqDQZVsKUuCvi8z5W6zAJOoGSfPQ+atknWbH9h9pLXkkO1k2IgLa6
-         OHeYUEUNQceSPX/cS7Ig/R10S1m12T1tLL6n/4xIBUkV3CRN7wgvvCjg5+iJlYsc8CmD
-         bnzLnWOcV3qUmQFV+kNSaxFMQHCjPbVAN62bk7KDOhOdAX74HsYMSJ3lxcMxPHd1RgT1
-         G9Vg==
-X-Forwarded-Encrypted: i=1; AJvYcCXIT/+0Ynhl96OOY2F5vAfrn23x7zWxRklqWhiPKLxwmfxOBci1qy9qK1vflnbrq6IpV9jWcKujl9hfL98=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxhjpZvWFFLS50qDYcgoXSpcwQ3cwnEsGs5wQLT2I6RqfEWwuVM
-	RUzIeuxh0YuH5rTNGy2qkhFPba0VVvvRj/lgb0BoQTjCjgzjHdWxO1+FPhNA6m/RJEjJM/bbDJx
-	fw7jwFg==
-X-Google-Smtp-Source: AGHT+IG1CI93Af9+RSqQ2ONFXYqX+CMo0v2Jgy+naLqDvO/26ArW4PrhUNUcnhD4A9oMbqfEqoZvzEkKAVbf
-X-Received: from pjx14.prod.google.com ([2002:a17:90b:568e:b0:2fa:1481:81f5])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1f86:b0:2f9:c144:9d13
- with SMTP id 98e67ed59e1d1-306a4908a75mr1034365a91.24.1743709434338; Thu, 03
- Apr 2025 12:43:54 -0700 (PDT)
-Date: Thu,  3 Apr 2025 12:43:34 -0700
+        bh=/yB/Gn9tHctPRNXn6w3PLBCiw087uLsUcXZZ/fWypWo=;
+        b=o/kyRUzMZpP6xJjBx5Bm+JozWQiiK4hsgf8HcVK8Aj6S2stfiPSjWVGDivIMYCtYur
+         /vDdexHf9umQ1YD9IqwsHntIAZGI8rNynVTaybOHb0tRr5uXDlSdzQfAurBsZboBCzwE
+         ddhXsHJ9HRbwZ/rMYk6uc2AdohcZlXv3lZyp3sYai2rSbp1jQYgTWrMLLQTegAWVvl7g
+         IRF9BhARxG8xAKl8bRAEbAaOJOqtsL8dXoxhef8W2/mnZ6pjFzGnsRJ81EId+H+p1SNe
+         n1I0d9sr1piu+0WX4ca3oeL+oAuy3rYsm/nM1h7bjhHshFcx1yp8dF5GuD2VxWq9tuNR
+         6dYA==
+X-Forwarded-Encrypted: i=1; AJvYcCXGnZKsPHZede3L0fPbZo/c283KfUEqs8sQn5U6QjQ0eDnzT8j201uUu7pyF7DpMw4DtWEoUOp5dPIA/r4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyDP9pPfo/BRN0nVd/2+rtn6W2NFSrHn6vbRO8Rl/tsjk+56vGS
+	8nsLujyJvC8T9d5CqgGt1TrO571bWFMMRa5Rlh30r1uQg4/4EkfiMGUKFltrrlhz5zvnAYc70BB
+	Fk5QFTA==
+X-Google-Smtp-Source: AGHT+IHPrUcrSNE9tHepYVbX0KrHTiLPITA768YB/Ndnpp5L3XAiSB2Op4yPgZ2vCjpVSVdiYY4nuFOZlI6t
+X-Received: from pjbpq18.prod.google.com ([2002:a17:90b:3d92:b0:2f8:49ad:406c])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5247:b0:2ff:556f:bf9
+ with SMTP id 98e67ed59e1d1-306a4e62893mr773485a91.4.1743709436490; Thu, 03
+ Apr 2025 12:43:56 -0700 (PDT)
+Date: Thu,  3 Apr 2025 12:43:35 -0700
 In-Reply-To: <20250403194337.40202-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,9 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250403194337.40202-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
-Message-ID: <20250403194337.40202-2-irogers@google.com>
-Subject: [PATCH v6 1/4] libperf cpumap: Add ability to create CPU from a
- single CPU number
+Message-ID: <20250403194337.40202-3-irogers@google.com>
+Subject: [PATCH v6 2/4] perf stat: Use counter cpumask to skip zero values
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -75,49 +74,66 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Add perf_cpu_map__new_int so that a CPU map can be created from a
-single integer.
+When a counter is 0 it may or may not be skipped. For uncore counters
+it is common they are only valid on 1 logical CPU and all other CPUs
+should be skipped. The PMU's cpumask was used for the skip
+calculation, but that cpumask may not reflect user
+overrides. Similarly a counter on a core PMU may explicitly not
+request a CPU be gathered. If the counter on this CPU's value is 0
+then the counter should be skipped as it wasn't requested. Switch from
+using the PMU cpumask to that associated with the evsel to support
+these cases.
+
+Avoid potential crash with --per-thread mode where config->aggr_get_id
+is NULL. Add some examples for the tool event 0 counter skipping.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/lib/perf/cpumap.c              | 10 ++++++++++
- tools/lib/perf/include/perf/cpumap.h |  2 ++
- 2 files changed, 12 insertions(+)
+ tools/perf/util/stat-display.c | 21 +++++++++++++--------
+ 1 file changed, 13 insertions(+), 8 deletions(-)
 
-diff --git a/tools/lib/perf/cpumap.c b/tools/lib/perf/cpumap.c
-index 4454a5987570..b20a5280f2b3 100644
---- a/tools/lib/perf/cpumap.c
-+++ b/tools/lib/perf/cpumap.c
-@@ -242,6 +242,16 @@ struct perf_cpu_map *perf_cpu_map__new(const char *cpu_list)
- 	return cpus;
- }
+diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+index e852ac0d9847..4afe963c6a93 100644
+--- a/tools/perf/util/stat-display.c
++++ b/tools/perf/util/stat-display.c
+@@ -1022,8 +1022,16 @@ static bool should_skip_zero_counter(struct perf_stat_config *config,
+ 		return true;
  
-+struct perf_cpu_map *perf_cpu_map__new_int(int cpu)
-+{
-+	struct perf_cpu_map *cpus = perf_cpu_map__alloc(1);
+ 	/*
+-	 * Many tool events are only gathered on the first index, skip other
+-	 * zero values.
++	 * In per-thread mode the aggr_map and aggr_get_id functions may be
++	 * NULL, assume all 0 values should be output in that case.
++	 */
++	if (!config->aggr_map || !config->aggr_get_id)
++		return false;
 +
-+	if (cpus)
-+		RC_CHK_ACCESS(cpus)->map[0].cpu = cpu;
-+
-+	return cpus;
-+}
-+
- static int __perf_cpu_map__nr(const struct perf_cpu_map *cpus)
- {
- 	return RC_CHK_ACCESS(cpus)->nr;
-diff --git a/tools/lib/perf/include/perf/cpumap.h b/tools/lib/perf/include/perf/cpumap.h
-index 8c1ab0f9194e..58cc5c5fa47c 100644
---- a/tools/lib/perf/include/perf/cpumap.h
-+++ b/tools/lib/perf/include/perf/cpumap.h
-@@ -37,6 +37,8 @@ LIBPERF_API struct perf_cpu_map *perf_cpu_map__new_online_cpus(void);
-  *                     perf_cpu_map__new_online_cpus is returned.
-  */
- LIBPERF_API struct perf_cpu_map *perf_cpu_map__new(const char *cpu_list);
-+/** perf_cpu_map__new_int - create a map with the one given cpu. */
-+LIBPERF_API struct perf_cpu_map *perf_cpu_map__new_int(int cpu);
- LIBPERF_API struct perf_cpu_map *perf_cpu_map__get(struct perf_cpu_map *map);
- LIBPERF_API int perf_cpu_map__merge(struct perf_cpu_map **orig,
- 				    struct perf_cpu_map *other);
++	/*
++	 * Tool events may be gathered on all logical CPUs, for example
++	 * system_time, but for many the first index is the only one used, for
++	 * example num_cores. Don't skip for the first index.
+ 	 */
+ 	if (evsel__is_tool(counter)) {
+ 		struct aggr_cpu_id own_id =
+@@ -1031,15 +1039,12 @@ static bool should_skip_zero_counter(struct perf_stat_config *config,
+ 
+ 		return !aggr_cpu_id__equal(id, &own_id);
+ 	}
+-
+ 	/*
+-	 * Skip value 0 when it's an uncore event and the given aggr id
+-	 * does not belong to the PMU cpumask.
++	 * Skip value 0 when the counter's cpumask doesn't match the given aggr
++	 * id.
+ 	 */
+-	if (!counter->pmu || !counter->pmu->is_uncore)
+-		return false;
+ 
+-	perf_cpu_map__for_each_cpu(cpu, idx, counter->pmu->cpus) {
++	perf_cpu_map__for_each_cpu(cpu, idx, counter->core.cpus) {
+ 		struct aggr_cpu_id own_id = config->aggr_get_id(config, cpu);
+ 
+ 		if (aggr_cpu_id__equal(id, &own_id))
 -- 
 2.49.0.504.g3bcea36a83-goog
 
