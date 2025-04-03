@@ -1,128 +1,153 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D229C8E0;
-	Thu,  3 Apr 2025 18:25:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C78B11A254E
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 18:25:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743704700; cv=none; b=pffqsiclpns7t9NHIgrq/17Ak26kZWo55Nhzl6PS5iv+QM4OTNIb5U7jrWdzUHE8of+kj4aZxRomWB4ZkUtLXuS3UJyXLfVABM/O9t3ZghOT19nctlObWos9FNRm7jSZJZuCCqy/GMQ3BZYfEwLKYotg1iZYsohd8TLxSnvjSR8=
+	t=1743704728; cv=none; b=CWdsauVLLqlVOKhM+wvr6TGqUdIrZgeu8BKZ4VesJ/KhUUNCMW3bmT/ozXq2esxzxnTDM3RZpdV7H2KRLojtmi4vmuO8wV2jX9fJGy6QggUj5A9iZbESc8k1Dc7S7eiJj8Ob+JezcsVYUoUeCEd9p00Nrs1i08xohb2BDsp9OOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743704700; c=relaxed/simple;
-	bh=aiXxBo+XB+avNcnabNeMd/n9QGO6oulYrV99ZYreH/k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mY2NBcnpsGK0hmXNF2C0pi7Dobs2qbE6TrRnhJ8rhnloz4o3ib+FjxFgLONgOL2dZ0APiBXc75je5mZ7obNKi5pAsEJpJEPfHYo72++Lv2lgRIJUw1XFkimQeZyQ9+YU4iXPYzVeMix/R5Cx1htBSEfeyfvLx+w6Uw7O6rfWfNc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CHBOJkcM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743704728; c=relaxed/simple;
+	bh=4U7Y4TPzjdvwwWwbTnsBFI7iUaIV2E7tt6vh6whq3WM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Ot4xKt5Hpblf+N+4YlN95eVwr9yYCLBq83zhlzbrfzAoFngxd/hBFGfUAQEDuFJvkeLja7/gTuNElmnZi+vJIP920gsrpOOgt5tR5AeEaWMkTaDcLoE6wDaMb1A0eJKJ76mn0WiEamz0Pf5cAK8WY8B7iTZvrMl03MSKnaORAiA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=cScnM1Fo; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=cK10crev; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=cScnM1Fo; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=cK10crev; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CHBOJkcM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D948C4CEE3;
-	Thu,  3 Apr 2025 18:24:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743704700;
-	bh=aiXxBo+XB+avNcnabNeMd/n9QGO6oulYrV99ZYreH/k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CHBOJkcMeA87g4A6QkAJ843PjhMKVKakEzbDaMebQPAdlOeGzKVvTPeOOMbzuYZmE
-	 p0nZCh6N6uSeIPHvb6WK0kFW6kT7D4UjYIGJ+W/ZNrtIk0j9n3RPlFjeVbl03wJ2gd
-	 FjPJg5n0pABMPhyCdg7vlmS475iZ6/979tmoDK8OcA5de+0AEPZt1M1tbsrOvrWxRk
-	 BLtoR5lfAuzRgjFHSwWp+iGwvGeZyd0FUz/Xah/Uq7PDFjFh1521t9UNSeN7e0FPYr
-	 ukDZ+VcTJBrB9EOUYCUIge8vklTztq3ytS/B8IqOar8m8iSrKcpr0MM/XTWBDAODJj
-	 u1E7KU56PD5/A==
-Date: Thu, 3 Apr 2025 21:24:55 +0300
-From: Leon Romanovsky <leon@kernel.org>
-To: Christian Brauner <brauner@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-	pr-tracker-bot@kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [GIT PULL] vfs mount
-Message-ID: <20250403182455.GI84568@unreal>
-References: <20250322-vfs-mount-b08c842965f4@brauner>
- <174285005920.4171303.15547772549481189907.pr-tracker-bot@kernel.org>
- <20250401170715.GA112019@unreal>
- <20250403-bankintern-unsympathisch-03272ab45229@brauner>
- <20250403-quartal-kaltstart-eb56df61e784@brauner>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="cScnM1Fo";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="cK10crev";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="cScnM1Fo";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="cK10crev"
+Received: from kitsune.suse.cz (unknown [10.100.12.127])
+	by smtp-out1.suse.de (Postfix) with ESMTP id D656421179;
+	Thu,  3 Apr 2025 18:25:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1743704724; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zcub6AXHtOqkOPyJyMCA+ii3fMPs0JO17FsFZGM4v2E=;
+	b=cScnM1Foyg6ZxlKP3iJojJZNFFZrH6oG19ZtpSlfda43mjBFQZG4lvviRyxFfnivYDplwc
+	0kScRmyjs8yCxtIyLdPutBOkJIB4sI7tJaP8odKkx6hqV9Dqj2dEH4aYfY6GVZxifRKMo3
+	ke5jPHIRTvy/53Q8YfFUK7vUCFXKlT0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1743704724;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zcub6AXHtOqkOPyJyMCA+ii3fMPs0JO17FsFZGM4v2E=;
+	b=cK10crevpA8ZlP29uLSegL1Tn/9FGKwhb+ApVtqr4XguCBn9A8d9wuaVHMdZszpUfh0Jk8
+	jQnH5ItKbNIwjvAw==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1743704724; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zcub6AXHtOqkOPyJyMCA+ii3fMPs0JO17FsFZGM4v2E=;
+	b=cScnM1Foyg6ZxlKP3iJojJZNFFZrH6oG19ZtpSlfda43mjBFQZG4lvviRyxFfnivYDplwc
+	0kScRmyjs8yCxtIyLdPutBOkJIB4sI7tJaP8odKkx6hqV9Dqj2dEH4aYfY6GVZxifRKMo3
+	ke5jPHIRTvy/53Q8YfFUK7vUCFXKlT0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1743704724;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zcub6AXHtOqkOPyJyMCA+ii3fMPs0JO17FsFZGM4v2E=;
+	b=cK10crevpA8ZlP29uLSegL1Tn/9FGKwhb+ApVtqr4XguCBn9A8d9wuaVHMdZszpUfh0Jk8
+	jQnH5ItKbNIwjvAw==
+From: Michal Suchanek <msuchanek@suse.de>
+To: 
+Cc: Michal Suchanek <msuchanek@suse.de>,
+	Peter Huewe <peterhuewe@gmx.de>,
+	Jarkko Sakkinen <jarkko@kernel.org>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	linux-integrity@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Jonathan McDowell <noodles@earth.li>
+Subject: [PATCH] tpm: tis: Increase the default for timeout B
+Date: Thu,  3 Apr 2025 20:25:05 +0200
+Message-ID: <20250403182519.8412-1-msuchanek@suse.de>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <Z-6Gau3aCB7B3pB9@earth.li>
+References: <Z-6Gau3aCB7B3pB9@earth.li>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250403-quartal-kaltstart-eb56df61e784@brauner>
+X-Spam-Level: 
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_MISSING_CHARSET(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	RCVD_COUNT_ZERO(0.00)[0];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FREEMAIL_CC(0.00)[suse.de,gmx.de,kernel.org,ziepe.ca,vger.kernel.org,earth.li];
+	TO_DN_SOME(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmx.de]
+X-Spam-Score: -2.80
+X-Spam-Flag: NO
 
-On Thu, Apr 03, 2025 at 05:15:38PM +0200, Christian Brauner wrote:
-> On Thu, Apr 03, 2025 at 10:29:37AM +0200, Christian Brauner wrote:
-> > On Tue, Apr 01, 2025 at 08:07:15PM +0300, Leon Romanovsky wrote:
-> > > On Mon, Mar 24, 2025 at 09:00:59PM +0000, pr-tracker-bot@kernel.org wrote:
-> > > > The pull request you sent on Sat, 22 Mar 2025 11:13:18 +0100:
-> > > > 
-> > > > > git@gitolite.kernel.org:pub/scm/linux/kernel/git/vfs/vfs tags/vfs-6.15-rc1.mount
-> > > > 
-> > > > has been merged into torvalds/linux.git:
-> > > > https://git.kernel.org/torvalds/c/fd101da676362aaa051b4f5d8a941bd308603041
-> > > 
-> > > I didn't bisect, but this PR looks like the most relevant candidate.
-> > > The latest Linus's master generates the following slab-use-after-free:
-> > 
-> > Sorry, did just see this today. I'll take a look now.
-> 
-> So in light of "Liberation Day" and the bug that caused this splat it's
-> time to quote Max Liebermann:
-> 
-> "Ich kann nicht so viel fressen, wie ich kotzen möchte."
+With some Infineon chips the timeouts in tpm_tis_send_data (both B and
+C) can reach up to about 2250 ms.
 
-> From 8822177b7a8a7315446b4227c7eb7a36916a6d6d Mon Sep 17 00:00:00 2001
-> From: Christian Brauner <brauner@kernel.org>
-> Date: Thu, 3 Apr 2025 16:43:50 +0200
-> Subject: [PATCH] fs: actually hold the namespace semaphore
-> 
-> Don't use a scoped guard use a regular guard to make sure that the
-> namespace semaphore is held across the whole function.
-> 
-> Signed-off-by: Christian Brauner <brauner@kernel.org>
-> ---
->  fs/namespace.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/fs/namespace.c b/fs/namespace.c
-> index 16292ff760c9..348008b9683b 100644
-> --- a/fs/namespace.c
-> +++ b/fs/namespace.c
-> @@ -2478,7 +2478,8 @@ struct vfsmount *clone_private_mount(const struct path *path)
->  	struct mount *old_mnt = real_mount(path->mnt);
->  	struct mount *new_mnt;
->  
-> -	scoped_guard(rwsem_read, &namespace_sem)
-> +	guard(rwsem_read, &namespace_sem);
+Timeout C is retried since
+commit de9e33df7762 ("tpm, tpm_tis: Workaround failed command reception on Infineon devices")
 
-I'm looking at Linus's master commit a2cc6ff5ec8f ("Merge tag
-'firewire-updates-6.15' of git://git.kernel.org/pub/scm/linux/kernel/git/ieee1394/linux1394")
-and guard is declared as macro which gets only one argument: include/linux/cleanup.h
-  318 #define guard(_name) \
-  319         CLASS(_name, __UNIQUE_ID(guard))
+Timeout B still needs to be extended.
 
+Link: https://lore.kernel.org/linux-integrity/Z5pI07m0Muapyu9w@kitsune.suse.cz/
+Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+---
+V2: Only extend timeout B
+---
+ drivers/char/tpm/tpm_tis_core.h | 2 +-
+ include/linux/tpm.h             | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/char/tpm/tpm_tis_core.h b/drivers/char/tpm/tpm_tis_core.h
+index 970d02c337c7..c272c25eb9d4 100644
+--- a/drivers/char/tpm/tpm_tis_core.h
++++ b/drivers/char/tpm/tpm_tis_core.h
+@@ -54,7 +54,7 @@ enum tis_int_flags {
+ enum tis_defaults {
+ 	TIS_MEM_LEN = 0x5000,
+ 	TIS_SHORT_TIMEOUT = 750,	/* ms */
+-	TIS_LONG_TIMEOUT = 2000,	/* 2 sec */
++	TIS_LONG_TIMEOUT = 4000,	/* 4 sec */
+ 	TIS_TIMEOUT_MIN_ATML = 14700,	/* usecs */
+ 	TIS_TIMEOUT_MAX_ATML = 15000,	/* usecs */
+ };
+diff --git a/include/linux/tpm.h b/include/linux/tpm.h
+index 6c3125300c00..3db0b6a87d45 100644
+--- a/include/linux/tpm.h
++++ b/include/linux/tpm.h
+@@ -224,7 +224,7 @@ enum tpm2_const {
+ 
+ enum tpm2_timeouts {
+ 	TPM2_TIMEOUT_A          =    750,
+-	TPM2_TIMEOUT_B          =   2000,
++	TPM2_TIMEOUT_B          =   4000,
+ 	TPM2_TIMEOUT_C          =    200,
+ 	TPM2_TIMEOUT_D          =     30,
+ 	TPM2_DURATION_SHORT     =     20,
+-- 
+2.47.1
 
-20:52:24  fs/namespace.c: In function 'clone_private_mount':
-20:52:24  fs/namespace.c:2481:41: error: macro "guard" passed 2 arguments, but takes just 1
-20:52:24   2481 |         guard(rwsem_read, &namespace_sem);
-20:52:24        |                                         ^
-20:52:24  In file included from ./include/linux/preempt.h:11,
-20:52:24                   from ./include/linux/spinlock.h:56,
-20:52:24                   from ./include/linux/wait.h:9,
-20:52:24                   from ./include/linux/wait_bit.h:8,
-20:52:24                   from ./include/linux/fs.h:7,
-20:52:24                   from ./include/uapi/linux/aio_abi.h:31,
-20:52:24                   from ./include/linux/syscalls.h:83,
-20:52:24                   from fs/namespace.c:11:
-20:52:24  ./include/linux/cleanup.h:318:9: note: macro "guard" defined here
-20:52:24    318 | #define guard(_name) \
-20:52:24        |         ^~~~~
-20:52:24  fs/namespace.c:2481:9: error: 'guard' undeclared (first use in this function)
-20:52:24   2481 |         guard(rwsem_read, &namespace_sem);
-20:52:24        |         ^~~~~
-20:52:24  fs/namespace.c:2481:9: note: each undeclared identifier is reported only once for each function it appears in
-
-Do I need to apply extra patch?
-
-Thanks
