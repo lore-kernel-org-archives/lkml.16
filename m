@@ -1,84 +1,115 @@
-Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25ADE24EAA2
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 13:48:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5E3F33F7
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 13:48:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743688095; cv=none; b=O7Lw6vHCRKsX5bqwGjZ+GtlzL6K3FHqU2wnuByCS8+21+D2yEGVdC32p3QqWWdZqapJljb9UNEvEeSTABGensmHxQwYgoO/AZScAKyhVPSH5oSUrtRabBqgxXDoeeuiMRnHlYkMf9fgqknEdNCtJaHgZYFt2v4EwOjkxiqDW1U8=
+	t=1743688132; cv=none; b=RD//ivbZ2zQmFmfEE+nUY33TMygMAJzFy//p7lErjFOdIt8q58e8FSf1KXwVt3srAWQBxzC7e2tVTgcyBY9KuZ1nQJ89qZq0Vrn56Y83uaZ7lEP1ONm4REVzcfwL9ybiBcLQK2i3ae/O9KoOTIrxbwloaOMQ6rHPP2XdtZKBrpA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743688095; c=relaxed/simple;
-	bh=uxaRy2FsrAxL1iEHbTh9550wYWJvRGKCMBgK882Fytc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lp2DMIw5KlHJ2u3nPgBJUvHPFUazHi2xzRvoZhEzNHutfVgaWTv+aVd5tzQOrwKDZfW0aXpIG+418jHg1VpN9s+Gdz9s0nZeFWbo/IKTW3mXIoDCr0XaNxTUL7JA5Vjw4oMPxcBltlfBWJhsEgCYZzlXP853QLpaYS44gjKKhwQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost.localdomain (unknown [221.222.48.127])
-	by APP-01 (Coremail) with SMTP id qwCowAAHqvqGke5n5ouGBQ--.42939S2;
-	Thu, 03 Apr 2025 21:47:52 +0800 (CST)
-From: Wentao Liang <vulab@iscas.ac.cn>
-To: miquel.raynal@bootlin.com,
-	richard@nod.at,
-	vigneshr@ti.com
-Cc: linux-mtd@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Wentao Liang <vulab@iscas.ac.cn>
-Subject: [PATCH] mtd: bcm47xxnflash: Add error handling for bcm47xxnflash_ops_bcm4706_ctl_cmd().
-Date: Thu,  3 Apr 2025 21:47:31 +0800
-Message-ID: <20250403134731.2054-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.42.0.windows.2
+	s=arc-20240116; t=1743688132; c=relaxed/simple;
+	bh=X8K2hZQqJMCGMpB1ml3pgOIG+WSAB71YixBcihVOC/4=;
+	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=kBaFbXkYZpiDOkMvGrxXsYHEYGfDUh3oJMuGEbiegpGZHhX3F4EHrSaLjGTKi3isBiY1qBNWoRthy6dkdjwp4Tg7u4D3uo67iNrEBgjJyAIm0MObGwxCCBiyCq1ZJucYIdlYQexPE+Yk8Fd66mWY+Y8vv8npNhFL+tzPuumWUPg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RxuFddhc; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RxuFddhc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743688129;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9lyWZ8gblDVHe120rUXUjARVSAokRrQ5lvfAATMT9n4=;
+	b=RxuFddhcpcQW+aUzlq8UzlU5/I1i6g2uZGG8bu5ObxfSb7y79VZdDGskT51z8woEr70nPA
+	3yhmXKtkCdKopuDYsJEZN4rV9ibwE2bJpQmBT5Gx08cdAZaAcqDrsbySqBMPNRmZ8KwNs5
+	0mYg3U6bZlcMnYdZdeb3uwBEA36agX4=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-608-gy4bIXoCO6ecsTanYcVMtw-1; Thu, 03 Apr 2025 09:48:48 -0400
+X-MC-Unique: gy4bIXoCO6ecsTanYcVMtw-1
+X-Mimecast-MFC-AGG-ID: gy4bIXoCO6ecsTanYcVMtw_1743688127
+Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-4769273691dso15355531cf.1
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 06:48:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743688126; x=1744292926;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:user-agent:mime-version:date:message-id:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9lyWZ8gblDVHe120rUXUjARVSAokRrQ5lvfAATMT9n4=;
+        b=j1HvILJ+RZDHHSs6Icls4MSPCj0U04xVfzgsrkQeYRkrIZWh0G8OL5svirpyVHGPwI
+         1gJ6mfPF1GcoHt1HZGNoAbhQ95gnsfoD9UN3IKRBq8sPxBRu3lKj78YgmHZtmT5WxZAn
+         gu1qyS3FwQz6OOIOmIFYmc9G+WsERYLPLsZhIL0CDZ0u0WBlQPf/r5OhUxL3q8VYHKI1
+         qwfKuUKnDUbjnUYH7YlFKrVipLWEGmrt/aX7lYKEkW9bx1Lqrfkh7zVWcKtaTCAwuBcH
+         IcLi3YjyB11ZwG4Rz5POnd+Jn4f9+5JZcXscjPlMnhlCdNDo6Lk5nc6vzw9qjcQamjRB
+         R3fg==
+X-Forwarded-Encrypted: i=1; AJvYcCXCZ+WjvELy7x/AkYjXr3UERUXn0sevECXKmxYRfwqTdzn8oiW86MWGenL6aHK9FxcdFUT+rNKy4Ka86c4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxx63k5l6tuB570jIyRGi3UGfN2z4x0xJVJADoXkNDV73OOVNOL
+	ZoNcJnr2lMwsiduBGfslgknP3PqusCjg79FuvbJ3ZG+xwB88sLNA7BzWi4agRjrYPMacYt8SVvv
+	CJAIQ7OD5Xg1qdIo4gxzBtPzNUiDBl7hQR6JerOxD3/CjjHn3FzFUqhYH8epXXOphyXVVpw==
+X-Gm-Gg: ASbGncuWCNPTvDcByhk3PZdUA52N+n8vQAgHKkXjD3v1Z3d7fCH2Xy0RSJld673lA3f
+	P+AyCiTjO2OF1xpKz7SAvqDZ+qZevcU1+rp52GbYCZ0YMWSuCisHERiNVAcGnI0QrTHIwwrbgHU
+	N7PwXoGFpAoTHc0/zXWgs1QgPsDgQox8EHUbSoEkpKWzQTbYdp4jd+j5d6SJEvxZNRhvtrcFaP3
+	0/Tt5VF+n+0XPuGyTPIT0gjwEJdk2RWxPFwP92LrzxKa6TiBUhmU9X9nnaJl+Nz76tRwiJt5+4N
+	SAmr6nPb7z3aC4yC6iulpit/FvDXczxLZ3OROlpN/8oe8W56eXAr+HCUyatYLA==
+X-Received: by 2002:ac8:7d84:0:b0:476:98d6:141c with SMTP id d75a77b69052e-477e4b66bedmr383982071cf.18.1743688126648;
+        Thu, 03 Apr 2025 06:48:46 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHo7x51vzTVDAQ2P95L9od9uzm0Cwj9FDry+VsenXXfp21aleo/hYZIXBJiuOhWfUblZcxwtQ==
+X-Received: by 2002:ac8:7d84:0:b0:476:98d6:141c with SMTP id d75a77b69052e-477e4b66bedmr383981751cf.18.1743688126419;
+        Thu, 03 Apr 2025 06:48:46 -0700 (PDT)
+Received: from ?IPV6:2601:188:c100:5710:315f:57b3:b997:5fca? ([2601:188:c100:5710:315f:57b3:b997:5fca])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4791b088346sm7967391cf.41.2025.04.03.06.48.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Apr 2025 06:48:45 -0700 (PDT)
+From: Waiman Long <llong@redhat.com>
+X-Google-Original-From: Waiman Long <longman@redhat.com>
+Message-ID: <2d1b9c9e-a63b-4385-b706-0eee73688343@redhat.com>
+Date: Thu, 3 Apr 2025 09:48:44 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 05/10] cgroup/cpuset: Don't allow creation of local
+ partition over a remote one
+To: =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>
+Cc: Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
+ Shuah Khan <shuah@kernel.org>, cgroups@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+References: <20250330215248.3620801-1-longman@redhat.com>
+ <20250330215248.3620801-6-longman@redhat.com>
+ <c5akoqcuatispflklzykfwjn65zk7y22pq6q6ejseo35dw5nh2@yvm7pbhh5bi4>
+Content-Language: en-US
+In-Reply-To: <c5akoqcuatispflklzykfwjn65zk7y22pq6q6ejseo35dw5nh2@yvm7pbhh5bi4>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qwCowAAHqvqGke5n5ouGBQ--.42939S2
-X-Coremail-Antispam: 1UD129KBjvdXoWrZry3ZF4DCr4kZrW8CFWxJFb_yoWkKFb_GF
-	4avr9Fy3yYyw1xZFn5Ar4kA3sIqr4kurnYqwsIyr43G3y3uF18Wa4kZr1Ygr40yF48tF15
-	ArWSvF4Fq3WkGjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUb48FF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
-	Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
-	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
-	jxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr
-	1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkF7I0En4kS14v26r12
-	6r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI
-	0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y
-	0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
-	WUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1l
-	IxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUjuHq7UUUU
-	U==
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiBwwBA2fuaeJ4fQAAsO
 
-The bcm47xxnflash_ops_bcm4706_cmd_ctrl() calls
-bcm47xxnflash_ops_bcm4706_ctl_cmd() without printing error message. A
-proper implementation can be found in bcm47xxnflash_ops_bcm4706_write().
+On 4/3/25 9:33 AM, Michal Koutný wrote:
+> On Sun, Mar 30, 2025 at 05:52:43PM -0400, Waiman Long <longman@redhat.com> wrote:
+>> Currently, we don't allow the creation of a remote partition underneath
+>> another local or remote partition. However, it is currently possible to
+>> create a new local partition with an existing remote partition underneath
+>> it if top_cpuset is the parent. However, the current cpuset code does
+>> not set the effective exclusive CPUs correctly to account for those
+>> that are taken by the remote partition.
+> That sounds like
+> Fixes: 181c8e091aae1 ("cgroup/cpuset: Introduce remote partition")
+>
+> (but it's merge, so next time :-)
 
-Add error log to the bcm47xxnflash_ops_bcm4706_ctl_cmd() to prevent
-selent failure.
+Commit ee8dde0cd2ce ("cpuset: Add new v2 cpuset.sched.partition flag") 
+is actually the first commit that introduces the concept of cpuset 
+partition which is basically the local partition that I am referring to 
+now. It is that commit that did the  partition cleanup in 
+cpuset_css_offline() which is now being moved to the new 
+cpuset_css_killed() callback function.
 
-Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
----
- drivers/mtd/nand/raw/bcm47xxnflash/ops_bcm4706.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Thanks,
+Longman
 
-diff --git a/drivers/mtd/nand/raw/bcm47xxnflash/ops_bcm4706.c b/drivers/mtd/nand/raw/bcm47xxnflash/ops_bcm4706.c
-index 6487dfc64258..c89129588bb6 100644
---- a/drivers/mtd/nand/raw/bcm47xxnflash/ops_bcm4706.c
-+++ b/drivers/mtd/nand/raw/bcm47xxnflash/ops_bcm4706.c
-@@ -182,7 +182,8 @@ static void bcm47xxnflash_ops_bcm4706_cmd_ctrl(struct nand_chip *nand_chip,
- 	if (cmd != NAND_CMD_RESET)
- 		code |= NCTL_CSA;
- 
--	bcm47xxnflash_ops_bcm4706_ctl_cmd(b47n->cc, code);
-+	if (bcm47xxnflash_ops_bcm4706_ctl_cmd(b47n->cc, code))
-+		pr_err("%s ctl_cmd didn't work!\n", __func__);
- }
- 
- /* Default nand_select_chip calls cmd_ctrl, which is not used in BCM4706 */
--- 
-2.42.0.windows.2
 
