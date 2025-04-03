@@ -1,269 +1,129 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-io1-f78.google.com (mail-io1-f78.google.com [209.85.166.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B118E23ED68
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 07:03:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF7B423ED53
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 07:04:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743663829; cv=none; b=UcRYLkAgKuBDOAnleh8WbUfXcF5A7zYkgxEQe+WzV30eb3V5PxY27aqumrtnMIRAi8I4xdoU/EHlw8R7FUCvZo2qKj3rU0Rg29Kg+nXbsnizNhrNIpmnZ7HAGT3hBwzn7UltTyST5JZi3I6rno3d84Zzi7/czyd1GyKCFYE8uTU=
+	t=1743663860; cv=none; b=id3iPwc0901P2mq+la3oRVuCm6XOh4gPPdflDSg/ISEn8/tn8oWryosFLSy6aD5vTB0lPMNTP3X9DUcOdx/9u5iOPg1/6S+mZa83ehsDDOQRFp3oeV7BNKxMNvrL4Fb5H5Ci7I8v0qC8hOEvORPOW+B9eo1Za+paQJ7DO6gLVEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743663829; c=relaxed/simple;
-	bh=X9cstAyAZZzsjrj7QpYnFTbuAIuhAT4RT6rKvHgr10k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ui9+HwF7y31FJ95Pw9Tu3OREOr8/tZIjFS9U4UOtsi2gVUYOCE8ohQrcmtOMkVITY2brCam8PxGmS+16jPl+5qLw7VQWGHIWd7vJa3WXTQbqreO8pkVUm0E1iECexKiVwjT+KvqWaQZT/mDtdIUu/i3qgKNkkJRU/fL/4NSdoG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=HyMI5ZVC; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=oWQ1tBVQ; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=HyMI5ZVC; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=oWQ1tBVQ; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="HyMI5ZVC";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="oWQ1tBVQ";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="HyMI5ZVC";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="oWQ1tBVQ"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 7BB1F21180;
-	Thu,  3 Apr 2025 07:03:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1743663825; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=qWUXZlns8wK6Yy/2YTDMOM0tFvpWwWjKHsqGMrmvUw0=;
-	b=HyMI5ZVC1tDuhF6ihciW1NdUdEBPSTgpiemgFPW+REAr3/PpMAJhFD8nyIWW0XZo4YmWv0
-	UB09iBSA/rx2kCkPiXjOys4msT4UHx5B9jrDtxejrOt159wl730Pf7f2KH//AYmGVtaIWK
-	+5GllV10B6hDr1OmEMexOc/JWa3uNR0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1743663825;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=qWUXZlns8wK6Yy/2YTDMOM0tFvpWwWjKHsqGMrmvUw0=;
-	b=oWQ1tBVQ3j6i8rm5+QW9poGHIj077LX5rQAVVVIAm0upIc24irN5lLu98EiaQ55xNRcJMA
-	pnGC9ECKvxhb6uAw==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1743663825; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=qWUXZlns8wK6Yy/2YTDMOM0tFvpWwWjKHsqGMrmvUw0=;
-	b=HyMI5ZVC1tDuhF6ihciW1NdUdEBPSTgpiemgFPW+REAr3/PpMAJhFD8nyIWW0XZo4YmWv0
-	UB09iBSA/rx2kCkPiXjOys4msT4UHx5B9jrDtxejrOt159wl730Pf7f2KH//AYmGVtaIWK
-	+5GllV10B6hDr1OmEMexOc/JWa3uNR0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1743663825;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=qWUXZlns8wK6Yy/2YTDMOM0tFvpWwWjKHsqGMrmvUw0=;
-	b=oWQ1tBVQ3j6i8rm5+QW9poGHIj077LX5rQAVVVIAm0upIc24irN5lLu98EiaQ55xNRcJMA
-	pnGC9ECKvxhb6uAw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1594713A2C;
-	Thu,  3 Apr 2025 07:03:45 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id epgFBNEy7mfZPgAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Thu, 03 Apr 2025 07:03:45 +0000
-Message-ID: <4a32a492-0ff7-49fc-b208-0ae8b4d2369d@suse.de>
-Date: Thu, 3 Apr 2025 09:03:44 +0200
+	s=arc-20240116; t=1743663860; c=relaxed/simple;
+	bh=atUgTzXsaeC3dRMkaoBUId/Y+NIEHliKUbEIi9237/Y=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=lzZ0sBWRI3BLd5Rk+Vde+6yAN91gS5EKAzgzbiErTIV2BvECW5HQK4UF3PK/xcjLvph6HOTgNHtwYFk0oZ4q7xsNdn2W7FgGS8MC7QsfrjPcLgUjhuqajZf5gTphEQIDCmm+yifq2UBIZMBcDoBH3TZ1kS5Q5VBOKsY0S+KEk2g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f78.google.com with SMTP id ca18e2360f4ac-85b53875729so168089839f.2
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 00:04:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743663858; x=1744268658;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=41qFJQvtYOEgdXsNKiWCUQolljvfI1RxAoSFkmI6I4s=;
+        b=YpQ1CRtLSgiBE5Iek/LtqU77ySFJlLD1b0nlI6xlecDhYk8qdS5TGK9hpTkdt7Moq3
+         VTVu7Jj3jwNq7nQitpFK1rVkUOC0ZaGgBQX/eL6PlyIJc5yjNX9m9LOVwCLxYfV3j//4
+         1OElJCSS7RpL+Y/vxDhhZU3PcTMLpAMJb/pQ/OD7S7axLoRKGFqbvnNZF0mnBO+ADg4Z
+         +ue4aLigy9Afe6G9YnPpP1H3vE29cyMoO0R7I9ySaS4r/TXRGhMJcIsGP7ZVvK08yFFn
+         jcgT92muW7cEkGLAie6QDgtaKr2ox8AFbobt3Z62MeusDS6Ds6v9gbB+1qibKemPMAJd
+         NQPw==
+X-Forwarded-Encrypted: i=1; AJvYcCX4sD2HbhTmMK1+8zd7ynaqQ+4WX8wm7XINz6SfBJkpYfliJjO2kk3wgYqzPem/9VRVf05xOup/KFcMFOw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzXjJq8VigSBMYxOSuDA9oSIMsU4S3dzN/fLHKi9zW8S8+vUyn7
+	2ThiEtHi9lfp2IB4Pc5s0oGb9ZASDo3lEfFzeiQokGX+M31UhgsE0CuS8Y4CAtgCWfEUHDlgyWv
+	2g+iU/DDML3oPbQTzyvvdD1/j6apFbJx3bmKBQPPLQ/npjdYJz27ld+Q=
+X-Google-Smtp-Source: AGHT+IEn8LjjklgQSVl25kDq+vbsbiVfvSYHd2OKkTF4Csfum0CQ3AYlbgYY3VMe9TJfCTAx4+caf+mnmn5lg+h1vWoAeUJ6R7Ez
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v20 00/10] Add generic DRM-shmem memory shrinker (part 1)
-To: Lucas De Marchi <lucas.demarchi@intel.com>,
- Dmitry Osipenko <dmitry.osipenko@collabora.com>
-Cc: David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Gerd Hoffmann <kraxel@redhat.com>, Qiang Yu <yuq825@gmail.com>,
- Steven Price <steven.price@arm.com>,
- Boris Brezillon <boris.brezillon@collabora.com>,
- Frank Binns <frank.binns@imgtec.com>, Matt Coster <matt.coster@imgtec.com>,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- kernel@collabora.com, chaitanya.kumar.borah@intel.com
-References: <20250322212608.40511-1-dmitry.osipenko@collabora.com>
- <yt2vhw5pkhivn27johxyskpmcobika6ze3undthzdxfcy6yaac@t5u72u4auisi>
-Content-Language: en-US
-From: Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
- AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
- AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
- lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
- U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
- vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
- 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
- j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
- T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
- 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
- GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
- hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
- EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
- C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
- yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
- SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
- Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
- 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
-In-Reply-To: <yt2vhw5pkhivn27johxyskpmcobika6ze3undthzdxfcy6yaac@t5u72u4auisi>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.993];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_TLS_ALL(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[17];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[gmail.com,ffwll.ch,linux.intel.com,kernel.org,amd.com,redhat.com,arm.com,collabora.com,imgtec.com,lists.freedesktop.org,vger.kernel.org,intel.com];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
-X-Spam-Score: -4.30
-X-Spam-Flag: NO
+X-Received: by 2002:a92:d308:0:b0:3d2:b72d:a507 with SMTP id
+ e9e14a558f8ab-3d6de7e5cb7mr8307925ab.19.1743663858030; Thu, 03 Apr 2025
+ 00:04:18 -0700 (PDT)
+Date: Thu, 03 Apr 2025 00:04:18 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67ee32f2.050a0220.9040b.014d.GAE@google.com>
+Subject: [syzbot] [io-uring?] KCSAN: data-race in io_req_task_cancel / io_wq_free_work
+From: syzbot <syzbot+903a2ad71fb3f1e47cf5@syzkaller.appspotmail.com>
+To: asml.silence@gmail.com, axboe@kernel.dk, io-uring@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hi
+Hello,
 
-Am 03.04.25 um 02:37 schrieb Lucas De Marchi:
-> On Sun, Mar 23, 2025 at 12:25:58AM +0300, Dmitry Osipenko wrote:
->> Hi,
->>
->> This a continuation of a year-old series that adds generic DRM-shmem
->> shrinker [1]. The old series became too big with too many patches, more
->> reasonable to split it up into multiple smaller patchsets. Here is
->> the firtst part that makes preparatory DRM changes.
->>
->> [1] 
->> https://lore.kernel.org/dri-devel/20240105184624.508603-1-dmitry.osipenko@collabora.com/
->
-> After these patches got merged I started seeing this on ast driver
-> and a similar one qemu-cirrus:
+syzbot found the following issue on:
 
-Same here with simpledrm. I wanted to bisect today.
+HEAD commit:    92b71befc349 Merge tag 'objtool-urgent-2025-04-01' of git:..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=11195404580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=a8120cade23cf14e
+dashboard link: https://syzkaller.appspot.com/bug?extid=903a2ad71fb3f1e47cf5
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
 
-Best regards
-Thomas
+Unfortunately, I don't have any reproducer for this issue yet.
 
->
-> [   88.731560] fbcon: astdrmfb (fb0) is primary device
-> [   88.767100] Console: switching to colour frame buffer device 128x48
-> [   88.768982] ------------[ cut here ]------------
-> [   88.768989] ast 0000:02:00.0: [drm] Dirty helper failed: ret=-12
-> [   88.769016] WARNING: CPU: 0 PID: 10 at 
-> drivers/gpu/drm/drm_fbdev_shmem.c:118 
-> drm_fbdev_shmem_helper_fb_dirty+0xcc/0xd0 [drm_shmem_helper]
-> ...
-> [   88.769092] CPU: 0 UID: 0 PID: 10 Comm: kworker/0:1 Not tainted 
-> 6.14.0-xe+ #2
-> ...
-> [   88.769095] Workqueue: events drm_fb_helper_damage_work 
-> [drm_kms_helper]
-> [   88.769109] RIP: 0010:drm_fbdev_shmem_helper_fb_dirty+0xcc/0xd0 
-> [drm_shmem_helper]
-> [   88.769112] Code: 4d 8b 6c 24 50 4d 85 ed 75 04 4d 8b 2c 24 4c 89 
-> e7 e8 98 36 a9 e0 89 d9 4c 89 ea 48 c7 c7 d8 65 54 a1 48 89 c6 e8 64 
-> f4 ee df <0f> 0b eb 8b 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 
-> 0f 1f
-> [   88.769113] RSP: 0018:ffa00000003e7da0 EFLAGS: 00010246
-> [   88.769115] RAX: 0000000000000000 RBX: 00000000fffffff4 RCX: 
-> 0000000000000000
-> [   88.769117] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 
-> 0000000000000000
-> [   88.769117] RBP: ffa00000003e7db8 R08: 0000000000000000 R09: 
-> 0000000000000000
-> [   88.769118] R10: 0000000000000000 R11: 0000000000000000 R12: 
-> ff11000122c190c8
-> [   88.769119] R13: ff11000118588a10 R14: ff1100010f4a04c0 R15: 
-> ff1100019750b588
-> [   88.769120] FS:  0000000000000000(0000) GS:ff11007e7d000000(0000) 
-> knlGS:0000000000000000
-> [   88.769121] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [   88.769122] CR2: 00007e43af4056f0 CR3: 00000080c89f0003 CR4: 
-> 0000000000f73ef0
-> [   88.769123] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 
-> 0000000000000000
-> [   88.769124] DR3: 0000000000000000 DR6: 00000000fffe07f0 DR7: 
-> 0000000000000400
-> [   88.769125] PKRU: 55555554
-> [   88.769126] Call Trace:
-> [   88.769127]  <TASK>
-> [   88.769129]  ? show_regs.cold+0x19/0x20
-> [   88.769132]  ? drm_fbdev_shmem_helper_fb_dirty+0xcc/0xd0 
-> [drm_shmem_helper]
-> [   88.769134]  ? __warn.cold+0xd2/0x17f
-> [   88.769136]  ? drm_fbdev_shmem_helper_fb_dirty+0xcc/0xd0 
-> [drm_shmem_helper]
-> [   88.769139]  ? report_bug+0x114/0x160
-> [   88.769143]  ? handle_bug+0x6e/0xb0
-> [   88.769146]  ? exc_invalid_op+0x18/0x80
-> [   88.769147]  ? asm_exc_invalid_op+0x1b/0x20
-> [   88.769153]  ? drm_fbdev_shmem_helper_fb_dirty+0xcc/0xd0 
-> [drm_shmem_helper]
-> [   88.769156]  drm_fb_helper_damage_work+0x8a/0x190 [drm_kms_helper]
-> [   88.769164]  process_one_work+0x224/0x5f0
-> [   88.769170]  worker_thread+0x1d4/0x3e0
-> [   88.769173]  ? __pfx_worker_thread+0x10/0x10
-> [   88.769175]  kthread+0x10b/0x260
-> [   88.769178]  ? __pfx_kthread+0x10/0x10
-> [   88.769181]  ret_from_fork+0x44/0x70
-> [   88.769184]  ? __pfx_kthread+0x10/0x10
-> [   88.769186]  ret_from_fork_asm+0x1a/0x30
-> [   88.769193]  </TASK>
-> [   88.769194] irq event stamp: 430275
-> [   88.769195] hardirqs last  enabled at (430281): 
-> [<ffffffff81505836>] vprintk_emit+0x416/0x470
-> [   88.769198] hardirqs last disabled at (430286): 
-> [<ffffffff81505868>] vprintk_emit+0x448/0x470
-> [   88.769200] softirqs last  enabled at (428924): 
-> [<ffffffff8143977d>] __irq_exit_rcu+0x12d/0x150
-> [   88.769203] softirqs last disabled at (428861): 
-> [<ffffffff8143977d>] __irq_exit_rcu+0x12d/0x150
-> [   88.769205] ---[ end trace 0000000000000000 ]---
-> [   88.769375] ast 0000:02:00.0: [drm] fb0: astdrmfb frame buffer device
-> [   88.802554] ast 0000:02:00.0: [drm:drm_fb_helper_hotplug_event 
-> [drm_kms_helper]]
-> I confirmed that reverting the series (together with 2 patches for 
-> accel/ivpu on top)
-> makes the warning go away. Any idea what's going on?
->
->
-> Lucas De Marchi
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/2e7df7bc2f52/disk-92b71bef.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/be59123d5efb/vmlinux-92b71bef.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/7c9eff86053e/bzImage-92b71bef.xz
 
--- 
---
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Frankenstrasse 146, 90461 Nuernberg, Germany
-GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
-HRB 36809 (AG Nuernberg)
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+903a2ad71fb3f1e47cf5@syzkaller.appspotmail.com
 
+==================================================================
+BUG: KCSAN: data-race in io_req_task_cancel / io_wq_free_work
+
+write to 0xffff888117207448 of 8 bytes by task 3861 on cpu 1:
+ req_set_fail io_uring/io_uring.h:-1 [inline]
+ io_req_defer_failed io_uring/io_uring.c:927 [inline]
+ io_req_task_cancel+0x7c/0x1a0 io_uring/io_uring.c:1360
+ io_handle_tw_list+0x194/0x1d0 io_uring/io_uring.c:1057
+ tctx_task_work_run+0x6e/0x1c0 io_uring/io_uring.c:1121
+ tctx_task_work+0x44/0x80 io_uring/io_uring.c:1139
+ task_work_run+0x13c/0x1b0 kernel/task_work.c:227
+ get_signal+0xee2/0x1080 kernel/signal.c:2809
+ arch_do_signal_or_restart+0x9a/0x4b0 arch/x86/kernel/signal.c:337
+ exit_to_user_mode_loop kernel/entry/common.c:111 [inline]
+ exit_to_user_mode_prepare include/linux/entry-common.h:329 [inline]
+ __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
+ syscall_exit_to_user_mode+0x62/0x120 kernel/entry/common.c:218
+ do_syscall_64+0xd6/0x1c0 arch/x86/entry/syscall_64.c:100
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+read to 0xffff888117207448 of 8 bytes by task 3871 on cpu 0:
+ req_ref_put_and_test io_uring/refs.h:22 [inline]
+ io_wq_free_work+0x24/0x1b0 io_uring/io_uring.c:1799
+ io_worker_handle_work+0x4c9/0x9f0 io_uring/io-wq.c:618
+ io_wq_worker+0x277/0x850 io_uring/io-wq.c:669
+ ret_from_fork+0x4b/0x60 arch/x86/kernel/process.c:153
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+value changed: 0x0000000000180051 -> 0x0000000000980111
+
+Reported by Kernel Concurrency Sanitizer on:
+CPU: 0 UID: 0 PID: 3871 Comm: iou-wrk-3861 Not tainted 6.14.0-syzkaller-12508-g92b71befc349 #0 PREEMPT(voluntary) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+==================================================================
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
