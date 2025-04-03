@@ -1,133 +1,217 @@
-Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [85.215.255.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A134E2CA6;
-	Thu,  3 Apr 2025 09:25:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.50
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743672358; cv=pass; b=qGgfeS39uCV62hakTjoSqgMw0PfbcGfuyKDr2yjSpjz3zn+ybfFavAoJbYIc04lgawZP9Qd2dlQkQysgJO1+TFpbfiEmIETokulPWmytp5TRld77oJavYT2Mg7CqW7T7KRq+OyuUxHcEL2+QpAZILgSgd27wsqrcrNuwKU3tE7s=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743672358; c=relaxed/simple;
-	bh=ZaU3J1fmHydhssquNZyjdSb0tPHJaEyQq/qJztBvzzI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=Lz/ioZP7ZRZQlncrxd7IfE5kH91vLx4ppdU1Wzo9vPU72PCyj8IfQsyllAys/Ok/DeGyD7f1T22qibsxuIFlgA4CSnKo+C+0NeBYGawnjMdRAT8Bz8QvFci+XrtKT/cG9A14RExezzd7rzYt/jJoJxcdmVxjRFh6XG0gjyaGKR0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=outer-limits.org; spf=none smtp.mailfrom=outer-limits.org; dkim=pass (2048-bit key) header.d=outer-limits.org header.i=@outer-limits.org header.b=DG+lbhQB; dkim=permerror (0-bit key) header.d=outer-limits.org header.i=@outer-limits.org header.b=HNXU8utf; arc=pass smtp.client-ip=85.215.255.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=outer-limits.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=outer-limits.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8A2519340B
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 09:26:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743672406; cv=none; b=V9WCGGp7AwPSFtJnUYkEIFMA3z1J5IHegrSE/mJ+5cYLhHDWw0cFdqpOHfMKSyjSXelt/6Bb3khqTdUYTXzz0o84HvIqFa7KDyYUFNVp5zAgSclr4XwymgOSjv8d5g+265uXvvgry1AoBlAcz4Gl1mBUQ51q1H+rxDTv+y4YTJg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743672406; c=relaxed/simple;
+	bh=3kt8uZWFqgd+7TiQBoV1mBy2E5+2zlC3Ohx8tCaBTJg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rfmy7qOSsh2Ra++uo7dpWCcNDKbNZMxJKaRRac+8jP8eoRxLvjRglyfiKeHE+coZBU/lF3OAbWbiTBSrHU2/GGgeBNjN2H0eNH5bNeZihZD6b3/sF3j1TkNOGuN4FJhipsNw/W8XkjAWiV+or2Yau4j0nHqF6sVKkKOjmuUxQmI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Go74T+tU; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Yo5K1YJs; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Go74T+tU; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Yo5K1YJs; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outer-limits.org header.i=@outer-limits.org header.b="DG+lbhQB";
-	dkim=permerror (0-bit key) header.d=outer-limits.org header.i=@outer-limits.org header.b="HNXU8utf"
-ARC-Seal: i=1; a=rsa-sha256; t=1743671270; cv=none;
-    d=strato.com; s=strato-dkim-0002;
-    b=aSU0BnEGRHh1YGEkj1AcjBGVdUqYvhvRj9zM1Z8YE9rblhYlGD/f1357z/5Uad1U/j
-    bPIXBNh+La7kf//NVMs8oEBn0st8PmlNl1cslIUHI/aWekWN6RFeP9CZASzrcg7Ayv6R
-    jJ9bopWzoGKFyLUxPcxRyfYhxbm1PWO8ZDLrlh2oL8ZRDgZBgc3OGxjuIhwJo4puxhWw
-    cGMrakGvvzqTrlv/p/UgJ/kK/eOn4OlpRAyH8JJRXE1IFAiE6tiqQTp2bN75ux4WUocH
-    b0R97GIUU6eXo+SQXGV6dlC9ebi6luzL77v0T8byENZSymiBxid4n2LSXPuaoIj3yqOK
-    E7Gg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1743671270;
-    s=strato-dkim-0002; d=strato.com;
-    h=Message-Id:Date:Subject:Cc:To:From:Cc:Date:From:Subject:Sender;
-    bh=QK5fQh3feLuhI4LW5vvRHPmtihZ/zFwSfYaWfAjF9UQ=;
-    b=DKmvOOJ5aR905E699cu+3w7CV+DzRrdxqTb0+Jp5GQ1TGnqMjpqHpx2FSEziVx/vJ4
-    xZlYi4QyIOT9jVl+Cdb8fUsbkoIluBDOPluaFvM2rzI0m7tqdwV0RW2FjbK6eLpdy5pl
-    e6w1kNmksUB9k7P681faJbKmPoHHFqW3pR2MmObKp/F1HewivKA0URPTpc/VXagnf6YW
-    qru/fpgAhE2SUiMQfZHD8WgkGMVQyGkRkbK0sIlfg2PqqNwwL7jFh3DzfBJ0VEpHzcQ9
-    0mYJW4+ix9TSBlEZPUD8W8ldVqCpoOLg4qpE0r2tjN4bsbet+wLwI5TzpTE7U8BVxEH/
-    390Q==
-ARC-Authentication-Results: i=1; strato.com;
-    arc=none;
-    dkim=none
-X-RZG-CLASS-ID: mo01
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1743671270;
-    s=strato-dkim-0002; d=outer-limits.org;
-    h=Message-Id:Date:Subject:Cc:To:From:Cc:Date:From:Subject:Sender;
-    bh=QK5fQh3feLuhI4LW5vvRHPmtihZ/zFwSfYaWfAjF9UQ=;
-    b=DG+lbhQBjeBZzuVRTuy2Z9sF/fVlfTby5jb9JmHNzvPZn+OgBchpyXAfAcanlg0pxa
-    NASM48wp+33BvP/bwScPNJMSoCm/UEzyujeY2B6bWz4mQuzXWKx14j1tmaszOPk4qHsE
-    bG0ErNZZg5F9w7qsZ+4FdXrL1ZGyfg8PQ1MAVMdkD6kL880gHrcQlceJZqO551iTtye2
-    5btormhFEwKlJXQzcCHfl6/qOusM+1MqHpFblsO7A/061DfcJUG51aGAp1e2IQDZrYsd
-    pZLdbZXFwH5KyWFlMWy5qLIJOfpuQpMIKrvQvVMueJ6d/4w0Yvxyfsvtngrp78i7peLd
-    RAJg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1743671270;
-    s=strato-dkim-0003; d=outer-limits.org;
-    h=Message-Id:Date:Subject:Cc:To:From:Cc:Date:From:Subject:Sender;
-    bh=QK5fQh3feLuhI4LW5vvRHPmtihZ/zFwSfYaWfAjF9UQ=;
-    b=HNXU8utfTU1nNRhqRN8h2j2qVMY+dd9Cbtl1j8OKhxYyPWoWO7ce6V9yQijOmZSBhY
-    1bADIml/aZMWJj2vWsAg==
-X-RZG-AUTH: ":JnkIfEGmW/AMJS6HttH4FbRVwc4dHlPLCp4e/IoHo8zEMMHAgwTfqBEHcVJSv9P5mRTGd2ImeA=="
-Received: from ws2104.lan.kalrayinc.com
-    by smtp.strato.de (RZmta 51.3.0 AUTH)
-    with ESMTPSA id J2b11013397ndSj
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-	(Client did not present a certificate);
-    Thu, 3 Apr 2025 11:07:49 +0200 (CEST)
-From: Julian Vetter <julian@outer-limits.org>
-To: Arnd Bergmann <arnd@arndb.de>,
-	Louis Peens <louis.peens@corigine.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Shannon Nelson <shannon.nelson@amd.com>,
-	Vladimir Oltean <vladimir.oltean@nxp.com>,
-	Arthur Kiyanovski <akiyano@amazon.com>,
-	Caleb Sander Mateos <csander@purestorage.com>,
-	Florian Fainelli <florian.fainelli@broadcom.com>
-Cc: oss-drivers@corigine.com,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Julian Vetter <julian@outer-limits.org>
-Subject: [PATCH] Remove __get_unaligned_cpu32 from netronome drivers
-Date: Thu,  3 Apr 2025 11:07:43 +0200
-Message-Id: <20250403090743.3878309-1-julian@outer-limits.org>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Go74T+tU";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Yo5K1YJs";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Go74T+tU";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Yo5K1YJs"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 3946C2119C;
+	Thu,  3 Apr 2025 09:26:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1743672396; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=g5JBiagd/IaphZnNyD5cE9CP+4ou/BNEE11+z/xpLv8=;
+	b=Go74T+tUMTM6OYdgLA37QBOkBLwM+KvGmRKuScprELaI3wS+y+CEE0CAGHNeZpSu42E4HC
+	PS4zr7Qb+kuj+u0fqs7wZGYgJs+8ZJTPubY1mLgqZrdVKHNGouW1eOPXNA83eeDL7OXWaT
+	wz/auDH67aPVt+xsgV9PkVm2z0QNIrQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1743672396;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=g5JBiagd/IaphZnNyD5cE9CP+4ou/BNEE11+z/xpLv8=;
+	b=Yo5K1YJsEQjD37r4hoFAPojI/47BnHdlm4EGwH/fr7Ve751Vut4k5R/Mwyg8w3kGQRfuid
+	PkQezbA8/O+1sSCQ==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1743672396; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=g5JBiagd/IaphZnNyD5cE9CP+4ou/BNEE11+z/xpLv8=;
+	b=Go74T+tUMTM6OYdgLA37QBOkBLwM+KvGmRKuScprELaI3wS+y+CEE0CAGHNeZpSu42E4HC
+	PS4zr7Qb+kuj+u0fqs7wZGYgJs+8ZJTPubY1mLgqZrdVKHNGouW1eOPXNA83eeDL7OXWaT
+	wz/auDH67aPVt+xsgV9PkVm2z0QNIrQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1743672396;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=g5JBiagd/IaphZnNyD5cE9CP+4ou/BNEE11+z/xpLv8=;
+	b=Yo5K1YJsEQjD37r4hoFAPojI/47BnHdlm4EGwH/fr7Ve751Vut4k5R/Mwyg8w3kGQRfuid
+	PkQezbA8/O+1sSCQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 146AD13A2C;
+	Thu,  3 Apr 2025 09:26:36 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id JThnBExU7mdkbgAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Thu, 03 Apr 2025 09:26:36 +0000
+Message-ID: <78c2d3be-aa8e-4bb7-8883-7f144a06f866@suse.cz>
+Date: Thu, 3 Apr 2025 11:26:35 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] locking/local_lock, mm: Replace localtry_ helpers with
+ local_trylock_t type
+Content-Language: en-US
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+ Shakeel Butt <shakeel.butt@linux.dev>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, bpf
+ <bpf@vger.kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau
+ <martin.lau@kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Sebastian Sewior <bigeasy@linutronix.de>,
+ Steven Rostedt <rostedt@goodmis.org>, Michal Hocko <mhocko@suse.com>,
+ linux-mm <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
+References: <20250401205245.70838-1-alexei.starovoitov@gmail.com>
+ <umfukiohyxcxxw5g6ca5g7stq7oonnr3sbvjyjshnbqalzffeq@2nrwqsmwcrug>
+ <CAADnVQLHakKsVEbKiENF8eV0fEAtbVbL0b_QbJO2b0dH9r7PSw@mail.gmail.com>
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <CAADnVQLHakKsVEbKiENF8eV0fEAtbVbL0b_QbJO2b0dH9r7PSw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="us-ascii"
+X-Spam-Level: 
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com,linux.dev];
+	ARC_NA(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[14];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	TO_DN_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.cz:email,suse.cz:mid,linux.dev:email]
+X-Spam-Score: -2.80
+X-Spam-Flag: NO
 
-The __{get,put}_unaligned_cpu{16,32,64} functions are deprecated, and
-only a small number of drivers still use them. So, replace it here with
-the more generic get_unaligned() function and just cast the input
-parameter.
+On 4/2/25 23:40, Alexei Starovoitov wrote:
+> On Wed, Apr 2, 2025 at 1:56 PM Shakeel Butt <shakeel.butt@linux.dev> wrote:
+>>
+>> On Tue, Apr 01, 2025 at 01:52:45PM -0700, Alexei Starovoitov wrote:
+>> > From: Alexei Starovoitov <ast@kernel.org>
+>> >
+>> > Partially revert commit 0aaddfb06882 ("locking/local_lock: Introduce localtry_lock_t").
+>> > Remove localtry_*() helpers, since localtry_lock() name might
+>> > be misinterpreted as "try lock".
+>> >
+>> > Introduce local_trylock[_irqsave]() helpers that only work
+>> > with newly introduced local_trylock_t type.
+>> > Note that attempt to use local_trylock[_irqsave]() with local_lock_t
+>> > will cause compilation failure.
+>> >
+>> > Usage and behavior in !PREEMPT_RT:
+>> >
+>> > local_lock_t lock;                     // sizeof(lock) == 0
+>> > local_lock(&lock);                     // preempt disable
+>> > local_lock_irqsave(&lock, ...);        // irq save
+>> > if (local_trylock_irqsave(&lock, ...)) // compilation error
+>> >
+>> > local_trylock_t lock;                  // sizeof(lock) == 4
+>>
+>> Is there a reason for this 'acquired' to be int? Can it be uint8_t? No
+>> need to change anything here but I plan to change it later to compact as
+>> much as possible within one (or two) cachline for memcg stocks.
+> 
+> I don't see any issue. I can make it u8 right away.
 
-Signed-off-by: Julian Vetter <julian@outer-limits.org>
----
- drivers/net/ethernet/netronome/nfp/nfd3/dp.c | 2 +-
- drivers/net/ethernet/netronome/nfp/nfdk/dp.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+Are you planning to put the lock near other <64bit sized values in memcg
+stock? Otherwise it will be padded anyway?
 
-diff --git a/drivers/net/ethernet/netronome/nfp/nfd3/dp.c b/drivers/net/ethernet/netronome/nfp/nfd3/dp.c
-index f1c6c47564b1..08086eb76996 100644
---- a/drivers/net/ethernet/netronome/nfp/nfd3/dp.c
-+++ b/drivers/net/ethernet/netronome/nfp/nfd3/dp.c
-@@ -779,7 +779,7 @@ nfp_nfd3_parse_meta(struct net_device *netdev, struct nfp_meta_parsed *meta,
- 		case NFP_NET_META_CSUM:
- 			meta->csum_type = CHECKSUM_COMPLETE;
- 			meta->csum =
--				(__force __wsum)__get_unaligned_cpu32(data);
-+				(__force __wsum)get_unaligned((u32 *)data);
- 			data += 4;
- 			break;
- 		case NFP_NET_META_RESYNC_INFO:
-diff --git a/drivers/net/ethernet/netronome/nfp/nfdk/dp.c b/drivers/net/ethernet/netronome/nfp/nfdk/dp.c
-index ebeb6ab4465c..ab3cd06ed63e 100644
---- a/drivers/net/ethernet/netronome/nfp/nfdk/dp.c
-+++ b/drivers/net/ethernet/netronome/nfp/nfdk/dp.c
-@@ -779,7 +779,7 @@ nfp_nfdk_parse_meta(struct net_device *netdev, struct nfp_meta_parsed *meta,
- 		case NFP_NET_META_CSUM:
- 			meta->csum_type = CHECKSUM_COMPLETE;
- 			meta->csum =
--				(__force __wsum)__get_unaligned_cpu32(data);
-+				(__force __wsum)get_unaligned((u32 *)data);
- 			data += 4;
- 			break;
- 		case NFP_NET_META_RESYNC_INFO:
--- 
-2.34.1
+I hope it won't hurt the performance though, AFAIK at least sub-word atomics
+are much slower than using a full word. But we use only read/write once for
+acquired so hopefully it's fine?
+
+>> > local_lock(&lock);                     // preempt disable, acquired = 1
+>> > local_lock_irqsave(&lock, ...);        // irq save, acquired = 1
+>> > if (local_trylock(&lock))              // if (!acquired) preempt disable
+>> > if (local_trylock_irqsave(&lock, ...)) // if (!acquired) irq save
+>>
+>> For above two ", acquired = 1" as well.
+> 
+> I felt it would be too verbose and not accurate anyway,
+> since irq save will be done before the check.
+> It's a pseudo code.
+> But sure, I can add.
+> 
+>>
+>> >
+>> > The existing local_lock_*() macros can be used either with
+>> > local_lock_t or local_trylock_t.
+>> > With local_trylock_t they set acquired = 1 while local_unlock_*() clears it.
+>> >
+>> > In !PREEMPT_RT local_lock_irqsave(local_lock_t *) disables interrupts
+>> > to protect critical section, but it doesn't prevent NMI, so the fully
+>> > reentrant code cannot use local_lock_irqsave(local_lock_t *) for
+>> > exclusive access.
+>> >
+>> > The local_lock_irqsave(local_trylock_t *) helper disables interrupts
+>> > and sets acquired=1, so local_trylock_irqsave(local_trylock_t *) from
+>> > NMI attempting to acquire the same lock will return false.
+>> >
+>> > In PREEMPT_RT local_lock_irqsave() maps to preemptible spin_lock().
+>> > Map local_trylock_irqsave() to preemptible spin_trylock().
+>> > When in hard IRQ or NMI return false right away, since
+>> > spin_trylock() is not safe due to explicit locking in the underneath
+>> > rt_spin_trylock() implementation. Removing this explicit locking and
+>> > attempting only "trylock" is undesired due to PI implications.
+>> >
+>> > The local_trylock() without _irqsave can be used to avoid the cost of
+>> > disabling/enabling interrupts by only disabling preemption, so
+>> > local_trylock() in an interrupt attempting to acquire the same
+>> > lock will return false.
+>> >
+>> > Note there is no need to use local_inc for acquired variable,
+>> > since it's a percpu variable with strict nesting scopes.
+>> >
+>> > Acked-by: Vlastimil Babka <vbabka@suse.cz>
+>> > Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+>>
+>> Reviewed-by: Shakeel Butt <shakeel.butt@linux.dev>
+> 
+> Thanks!
 
