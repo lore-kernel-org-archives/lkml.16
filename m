@@ -1,82 +1,51 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E66032512C0
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 16:22:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5A9D190679;
+	Thu,  3 Apr 2025 16:24:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743697343; cv=none; b=sad58W38EOj7mayKXpwh1/wMVS22D/Mmoru+hKAWExVQpFjwTv7Ob4TETx5lnL2cGOchFFhjML0nc8PiN3U9jLqSepTKvv4f8ywrI2ytYcSYqYyd6nbewx7U41/0591N92O0jjhrXI3LY9puBGKtLVPXIgITw6h4JYM0zqIaatc=
+	t=1743697457; cv=none; b=DH/GGeA+1QAXVkKcPVIDXmXUr+DZFZSqBGMOc2rKIh6fv3RTde1AFin0qq9W+ROGgZXfpGRIPr5Twn4rURoscKpveXSCynm85ZyRlTZN9SIrs1QIY3RY+4h3SupwB2MwImewRzd5JvRQd/SbQojZJaVg0vDK1ziKKAo/wzaGQ8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743697343; c=relaxed/simple;
-	bh=Idn2TfVzRRLn92uPIS/0vao33NCByC0CnVRf/UX/0js=;
+	s=arc-20240116; t=1743697457; c=relaxed/simple;
+	bh=vhrl4p3qftt6QxANAuIi+azQRkD9hhqzoqCdg7PCsT8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lbjXQcALMTP2C/1hlXWQPSUplVp2yj/ymEuKnYkWy9SluoIsSfgkrHYZvnC9Mh7M2XLGs7ZSikwh3X3mBdJ1dMZK1prMCOLNiFRCZCHigoYuCnk7cmLBcJMEmmNf1rVo7dPo5FpD4EB0vCbZKmnJZIse0MoEMx6T6zoc/zmKJpQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=kbiyfj7F; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=FBAWPdu7cXR40ujx2OejRXRWSG01FXlBSheePfNW1Ct+FsHW/f8EPDIGSgsmfcEBadP0accwsCSGkxpQRwj5fBVBxfiR5qCX2h1ohpuLTTNKhSpdDwMydZxu5Y8sEgjrnVpD9a+PYXnL5UiytEawGIKigvMBUjllHV+iKoceFG0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rbbT45SN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="kbiyfj7F"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 533FV121021272
-	for <linux-kernel@vger.kernel.org>; Thu, 3 Apr 2025 16:22:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=a4ZiUBpEMErH6vhZC0bvf+Nx
-	MJ405qBza7xtHCdCF6A=; b=kbiyfj7FxcvZVRDu1TkF4gr23XPokr0wJ7bZDwRo
-	65aaP7zPnU1u3Rkz+5UIaO9Z6SZ6ykx57aLPUsVLnCwsHhvrv5KXrzIrU3OnPOQM
-	0mYC+EU8QdzRzzIz1A1J7oeW095AOoZMwAIlXSy9GoYjpVwHD0IKy/QIAwdvw9CD
-	7NBNKOhWAXaAmn4RkYUkCDraDMYgVO/11KTXwTahZpg6PZmCqhUuss3nbaaf/4tf
-	R9z/tBPZlNAldAX66qHMicJqGQ8jEdMKmc8oAmLqwvOL/wsrIpMmC/9Q8YTpYhHl
-	I5tix2QCTG4xdw1se3t4xfgPI8THLTDEOJRldVd7YbMppw==
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45rbq00bcg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 16:22:19 +0000 (GMT)
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7c5c82c6d72so191193585a.2
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 09:22:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743697338; x=1744302138;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=a4ZiUBpEMErH6vhZC0bvf+NxMJ405qBza7xtHCdCF6A=;
-        b=vIPR2q3rc7ys6C8nfchpExP/OPaQ/uwds1XvFvNlb2Pp8LeLCdvp9+K/cUKSLEMMJ/
-         q1FQ9qy5ttxLTzHqnV5niZM/zu2KyiMCiXxcuTCXsEPss+AbWVOw2QYuwtwUpWrFl7N+
-         8YVSHvlSUTZYAgr8Uo7GcPsuxO0I0I8UXXyUiNysjB0OaNE79JY0LXoAN17P9OCfHJcX
-         O++sWihmnQaam6chHLcvXJsRkprhr3RU+aoycc7UhV/tdLoM4CdXSaGOTnXIEoGcSC8t
-         uI53PGj8m097MHa7T3XHbtpoayEHqcLxSxakydiAvz+BWhyRYE24KpptiNb6lqnsvX9C
-         A8xw==
-X-Forwarded-Encrypted: i=1; AJvYcCV9VfQhBD3RLnVGHo5KS1Deywf8cGCxaFmNHoi9UcDpwsbmzPav+yYMaHEjinYFTJGlFGSZFbdsR/5wNz0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxidTFIL/1jY+4eUmZdFwS7X8FY984AUr9+spwNWBqFoN48yeum
-	jbKwk21gThlVRD2Fjv6/+powTZv4LJQbA5jjsnox3dsrCKGmD8lGrRXpSBVPU5No9FblVE4SkOO
-	azz6HcapiDkvrs39KMX8mU9LhWqGMkDvcxcAqSMfxq6ezgiZmw1GT9hlacEBG22s=
-X-Gm-Gg: ASbGnctVGlMkgqPSYxR6Yjm68waziZ88xaolR4XNCj1bcclUP/weAJfDie6LlAXHnZQ
-	tN+HO5fczGUIgU2Bv0t8bvuMtWBwQMIJSZXSxllKXDz/f9GzeK05XbGzRfecwIZw1dfGGmtCYC8
-	oUt2KBZPkqZDV1VY5Fpjx7ub8p79lDvIyOXy8K/dFF028mkv6t2ynhNTRHhCg8318fsbz6xmCCM
-	fQ6lO47q1MRqhVhSECirho9SWhW9Lbaeq3qtd605rrPw4Vi1CgqFx3jnk+XdVN26tzYgbv1wVKT
-	dCIHPsl0kmxBPVwFR4CPM/dzqf7P2oeXYCR5Agch/7oIYqeWq8TPl9UoAgzpCUBgop6/IjllTEO
-	Z2Ew=
-X-Received: by 2002:a05:620a:2801:b0:7c5:5003:81b0 with SMTP id af79cd13be357-7c6865ea99fmr3047301185a.23.1743697338576;
-        Thu, 03 Apr 2025 09:22:18 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEkLhLG71dtjwxNTqmaM0NknH0c5V9tBLqCnHK8weksJGXsW38VvS3W8gt0C9UKJrHhUHuRrQ==
-X-Received: by 2002:a05:620a:2801:b0:7c5:5003:81b0 with SMTP id af79cd13be357-7c6865ea99fmr3047297085a.23.1743697338145;
-        Thu, 03 Apr 2025 09:22:18 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30f031bcd9asm2659021fa.71.2025.04.03.09.22.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Apr 2025 09:22:17 -0700 (PDT)
-Date: Thu, 3 Apr 2025 19:22:15 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: srinivas.kandagatla@linaro.org
-Cc: broonie@kernel.org, lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
-        pierre-louis.bossart@linux.dev, linux-sound@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, Manikantan R <quic_manrav@quicinc.com>
-Subject: Re: [PATCH v4 2/2] ASoC: codecs:lpass-wsa-macro: Fix logic of
- enabling vi channels
-Message-ID: <ypt3vurwlmyxkmba7lrmgcmpeszx2afbqp5hwrdwcliwcf23ik@jvg45kffehxx>
-References: <20250403160209.21613-1-srinivas.kandagatla@linaro.org>
- <20250403160209.21613-3-srinivas.kandagatla@linaro.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rbbT45SN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D490C4CEE3;
+	Thu,  3 Apr 2025 16:24:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743697457;
+	bh=vhrl4p3qftt6QxANAuIi+azQRkD9hhqzoqCdg7PCsT8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rbbT45SNiUqNV3TyRh2EOo0pHftvGWFWRH6vBPJudMPmwiLb6WS7wgiK5Q59kVq/l
+	 /YJb64mzcTT2KqJ9UYP5d2xZ5n9/Jvr/cWUkrkbGnIXzQjEBIO38AGnM9vTtABopU/
+	 YAJHsePiJIqDiBQELEuWxMPSSa2HKRV53DWvBXptAhBL1IgRu2Lxwm90pLLwMLv38o
+	 ONUPyD3uH/jCdrUJkyhbEpCcdp2Ys7NwBdEd1sF/A4gIxp7Hoyh0Cl3b9gddvXT4lz
+	 XKzokxWQ8vKM0QK/Wccns5rkNWZemPG6vH3fGD9ZTEESdQgFsLCw6SC2OTh/RL0pZI
+	 yU+rwKUcUY4TA==
+Date: Thu, 3 Apr 2025 09:24:13 -0700
+From: Kees Cook <kees@kernel.org>
+To: Bhupesh <bhupesh@igalia.com>
+Cc: akpm@linux-foundation.org, kernel-dev@igalia.com,
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org, oliver.sang@intel.com, lkp@intel.com,
+	laoar.shao@gmail.com, pmladek@suse.com, rostedt@goodmis.org,
+	mathieu.desnoyers@efficios.com, arnaldo.melo@gmail.com,
+	alexei.starovoitov@gmail.com, andrii.nakryiko@gmail.com,
+	mirq-linux@rere.qmqm.pl, peterz@infradead.org, willy@infradead.org,
+	david@redhat.com, viro@zeniv.linux.org.uk, ebiederm@xmission.com,
+	brauner@kernel.org, jack@suse.cz, mingo@redhat.com,
+	juri.lelli@redhat.com, bsegall@google.com, mgorman@suse.de,
+	vschneid@redhat.com
+Subject: Re: [PATCH v2 3/3] kthread: Use 'task_struct->full_name' to store
+ kthread's full name
+Message-ID: <202504030923.1FE7874F@keescook>
+References: <20250331121820.455916-1-bhupesh@igalia.com>
+ <20250331121820.455916-4-bhupesh@igalia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -85,43 +54,77 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250403160209.21613-3-srinivas.kandagatla@linaro.org>
-X-Proofpoint-GUID: uFiiRimOD_gzzjQBnuoKv0Yi1GNHJH5L
-X-Proofpoint-ORIG-GUID: uFiiRimOD_gzzjQBnuoKv0Yi1GNHJH5L
-X-Authority-Analysis: v=2.4 cv=ZNLXmW7b c=1 sm=1 tr=0 ts=67eeb5bb cx=c_pps a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=KKAkSRfTAAAA:8 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=EUspDBNiAAAA:8 a=uZvtCs0-YMtpQNQJbqIA:9
- a=CjuIK1q_8ugA:10 a=PEH46H7Ffwr30OY-TuGO:22 a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-03_07,2025-04-03_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- lowpriorityscore=0 clxscore=1015 mlxscore=0 adultscore=0 mlxlogscore=573
- priorityscore=1501 bulkscore=0 suspectscore=0 malwarescore=0 phishscore=0
- impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504030081
+In-Reply-To: <20250331121820.455916-4-bhupesh@igalia.com>
 
-On Thu, Apr 03, 2025 at 05:02:09PM +0100, srinivas.kandagatla@linaro.org wrote:
-> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+On Mon, Mar 31, 2025 at 05:48:20PM +0530, Bhupesh wrote:
+> Commit 6986ce24fc00 ("kthread: dynamically allocate memory to store
+> kthread's full name"), added 'full_name' in parallel to 'comm' for
+> kthread names.
 > 
-> Existing code only configures one of WSA_MACRO_TX0 or WSA_MACRO_TX1
-> paths eventhough we enable both of them. Fix this bug by adding proper
-> checks and rearranging some of the common code to able to allow setting
-> both TX0 and TX1 paths
+> Now that we have added 'full_name' added to 'task_struct' itself,
+> drop the additional 'full_name' entry from 'struct kthread' and also
+> its usage.
 > 
-> Without this patch only one channel gets enabled in VI path instead of 2
-> channels. End result would be 1 channel recording instead of 2.
-> 
-> Fixes: 2c4066e5d428 ("ASoC: codecs: lpass-wsa-macro: add dapm widgets and route")
-> Cc: stable@vger.kernel.org
-> Co-developed-by: Manikantan R <quic_manrav@quicinc.com>
-> Signed-off-by: Manikantan R <quic_manrav@quicinc.com>
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> Signed-off-by: Bhupesh <bhupesh@igalia.com>
+
+I'd like to see this patch be the first patch in the series. This show
+the existing use for "full_name". (And as such it'll probably need bits
+from patch 1.)
+
+-Kees
+
 > ---
->  sound/soc/codecs/lpass-wsa-macro.c | 108 +++++++++++++++++------------
->  1 file changed, 63 insertions(+), 45 deletions(-)
+>  kernel/kthread.c | 9 +++------
+>  1 file changed, 3 insertions(+), 6 deletions(-)
+> 
+> diff --git a/kernel/kthread.c b/kernel/kthread.c
+> index 5dc5b0d7238e..46fe19b7ef76 100644
+> --- a/kernel/kthread.c
+> +++ b/kernel/kthread.c
+> @@ -66,8 +66,6 @@ struct kthread {
+>  #ifdef CONFIG_BLK_CGROUP
+>  	struct cgroup_subsys_state *blkcg_css;
+>  #endif
+> -	/* To store the full name if task comm is truncated. */
+> -	char *full_name;
+>  	struct task_struct *task;
+>  	struct list_head hotplug_node;
+>  	struct cpumask *preferred_affinity;
+> @@ -108,12 +106,12 @@ void get_kthread_comm(char *buf, size_t buf_size, struct task_struct *tsk)
+>  {
+>  	struct kthread *kthread = to_kthread(tsk);
+>  
+> -	if (!kthread || !kthread->full_name) {
+> +	if (!kthread || !tsk->full_name) {
+>  		strscpy(buf, tsk->comm, buf_size);
+>  		return;
+>  	}
+>  
+> -	strscpy_pad(buf, kthread->full_name, buf_size);
+> +	strscpy_pad(buf, tsk->full_name, buf_size);
+>  }
+>  
+>  bool set_kthread_struct(struct task_struct *p)
+> @@ -153,7 +151,6 @@ void free_kthread_struct(struct task_struct *k)
+>  	WARN_ON_ONCE(kthread->blkcg_css);
+>  #endif
+>  	k->worker_private = NULL;
+> -	kfree(kthread->full_name);
+>  	kfree(kthread);
+>  }
+>  
+> @@ -430,7 +427,7 @@ static int kthread(void *_create)
+>  		kthread_exit(-EINTR);
+>  	}
+>  
+> -	self->full_name = create->full_name;
+> +	self->task->full_name = create->full_name;
+>  	self->threadfn = threadfn;
+>  	self->data = data;
+>  
+> -- 
+> 2.38.1
 > 
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 -- 
-With best wishes
-Dmitry
+Kees Cook
