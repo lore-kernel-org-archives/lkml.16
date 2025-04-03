@@ -1,177 +1,232 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2081.outbound.protection.outlook.com [40.107.243.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1457C746E;
-	Thu,  3 Apr 2025 06:07:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743660459; cv=none; b=NeKSEXk4nci6GTNNePgWqTrKRQiQSsCkgVfr+MinS9ORVf/aDqgWaq+1Hkj8kiER0diHELBA3O6w1QVcJwezPFHxxfkGoS1Zi/a/z4oppgwU7vOgdB7VqZaw7ykwJZCLGmFPMnFxYApMRmg21GS74KKxiBXe2UFWCBXnJU+XPMU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743660459; c=relaxed/simple;
-	bh=XZfW8Qfq7tJ+JELoDYv5ETSuD7d87c5jDCiqNfZKaQc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aoLb/pUcPxXBy1pFIwFZ0z1U7d8DIUEZVpZR9uHQh821V2rH+L8mTOnTU9AvQliyDLeLHB9LPS15fW3Hd4g4BswdmRcsxKYCK5c0+XOE015AQV7Rbbi98a57hyetY9AfSeDWoXrrlolDh/6ZDDhFyiWV1EsMdbbVxnTe1FR3vro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EwjBgjq4; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC45F746E;
+	Thu,  3 Apr 2025 06:08:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.81
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743660487; cv=fail; b=WJHUd3drsmRNmoXUYdY4or7FcJdGpmzViHEK/Bfnqr36w4FVyvljbam+RmGIWTs6qaZnKWCi26gl+Toi86BEhvzwKF+Fo6Pag+0biscXavpUZZDyZWwq635UtOdKtYJcZgbQ93GIBg0RFJQ1tnB3GuBsQXjsuTS22TPuc4QqhvI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743660487; c=relaxed/simple;
+	bh=JW61rHA9pfWQ8chX6x4Uw4uDfONKGZGeYJCN/aXPH48=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=eer/Q6sGb0L03kr63vXEM7CSfDM3ufPgtkkTwdHBiFJoMNb1jjYXZ/lWIqmXJsiQi98gJdSmrAD/ZHpfkV26e9S9WiByhqpNR8AaqcP76ZyXlQOicT9dth4jiNIFQUxWkpG4PKo6M+ZXefuPKM5SsoKtP3p1Vc2ukP8LzlUYwAw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=k92Na10M; arc=fail smtp.client-ip=40.107.243.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EwjBgjq4"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ac25d2b2354so85997566b.1;
-        Wed, 02 Apr 2025 23:07:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743660456; x=1744265256; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0y1chSLTgq4by+/iKzl7cqrc4OIVMXRZ18Ndod/oVA4=;
-        b=EwjBgjq4WnT7bRLdrAq34LMP6NOa+mM9xuFpW1UUtwZq+cptRrc7fTLcKQwLcMNmK1
-         pr7L8OSzIfSgNn1yYkeS23CGsYgiWxtiD9AFhr6GWm69/7k7IvjMhLkGWu29S0ouDLJb
-         //RfBTTIgoTO8YjyZnqZQaaE/ChKJzlUHNmVK3HsLN87CYZuLN0ib1xgDcmI4tnh/egg
-         NfJNK0m6dznUNSeLUSBlDMfjG5gO7zQx3njt6jcziKP3oGPW9IdewEEc6rhAaEgWGa/D
-         XHCX416Tfxz6tHyIN27zXbgEmAJh+h/MvJM38sdEItU1IAw7aOwaofeDSCGLT792rpwp
-         DDGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743660456; x=1744265256;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0y1chSLTgq4by+/iKzl7cqrc4OIVMXRZ18Ndod/oVA4=;
-        b=NeR8CL6IIMeiYDA+xMacLSOBbk9upweqlZ8C73abQHzm7OotErwk+A0RnNDKPPYOJn
-         ouD61zBueBDKyMGx5sRrvdW+FQum95laklfsgmfXmCXq/X71MKVqVNfOMMw5I8L44AtL
-         Oqr3YJh+2KM1qXsiBP9GA38b4AVpaxo2cKypgirxQ8Yve8+3eXD/7o9F3LtCW6XeKrX9
-         FlmuwOQVxOe6ZjO+wqY/V1VDxYDCc91tenspTsHBKldbeKwoRNl9oJQj6VXbbdztcpLs
-         DD3uWvrI3E/WeBfodzlqh0wlJzxikhxLOUS871K9HmZeh2EQnso0VgTqKOqAy9Yy/6sv
-         SNRA==
-X-Forwarded-Encrypted: i=1; AJvYcCUL1Nutt0G8G2ROoNb3fhW1b3Mo27rBxzbT/A3fJ5+UfGom6Q83N5SoKU8GC5eH6wygZf2KKUwTGyjdnUM=@vger.kernel.org, AJvYcCXWbQUcDDL2jONNlQKkoP8uWNHW6qJfaT2YaYPVDhiWKcfxeIuApnHz0D5ML+gBjoq5exQH0KQW6XapiBg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz6Viq9DcppeoknBShucuBfonP3FTrnI0sMYaRRCUQjM6hEUsWN
-	e6jKgYH2ZkLySuxzaV2C099n+NmS3yLzamK0zaCIplh5LZEIfIGVewm8I5UrIaUSnHpop3+ge1j
-	2ro+Bgs2ED0HpAGwQE693muMDRRM=
-X-Gm-Gg: ASbGncss5OxpNVzHbWOHjSOUyBasYJyDDBKTIUeqJQ4BldT/GAguvOoMAwrqvpMEDFZ
-	f1OFxlT+YSaTqB20MeJDCFJrGlAKRBQpHqm6nIRnxkfZrPBs9jPXZUpAGGA7MPTrbRmnrvthtsv
-	DOM9UZqeRR4LmNSTRTgaAc3ghvr8u1cDAyki8=
-X-Google-Smtp-Source: AGHT+IEf6my0Oevy7HxSEvSBLIVZB6UUtRLQAMtnvT9ULs0ZmHL4HufuJOz3Xwan6rPv7/6qdLH2tQeyB4bomKzEbiI=
-X-Received: by 2002:a17:906:7955:b0:ac1:e00c:a566 with SMTP id
- a640c23a62f3a-ac738bbe6e9mr1868178566b.45.1743660456051; Wed, 02 Apr 2025
- 23:07:36 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="k92Na10M"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=N5Rj97Pm29F0CLMCkPYXpP08IJwf1SC67ULAPlMXhsnx+SEO3nYzOoUmnaYN4x1o4V6eDw5/a6Jt8eVBjGEQImvgH2VOwpZ1u7kMVS+xW9SSL4S0P1jigbmhpnqjfhqQRsTli96cKvqMESXrd+8Py07Kb7lKU6fuhN1xwzMOq69Bh2mYLOMrmxa3lpzhewwdpTJBPygnoXzNelSFgFgIg1OFya2VkZ+fVrtq5c/EyNZwTaV3Nmq4qfnWZXyS0/pvdWLBmUykNIC8Ip0VCPFo0GqExO15dPbBgKdY+NY1vDWxusjI64ePim0GpD5kbGindvG5HRuR67xRDnu0nKcvNw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=o2DLHTShggAXu3Nz3KUM+KLlp98uV3OAEbBsRiDNdKY=;
+ b=cvH4tDSnoy15LNd3lOav++x1tZGora7So8dMy6LlUMyWIolfSp4R3vqJCdhC+j2+yf3x2yClu3wFv1HPKNaBVovAmnpZA3Wy4uJVDoU3DRH7X7NNsRzn5WluyvFppBx1m25r7dxcJEbapXrvcPa/Bc50uW+feyTqbynXkzq2AEwBbypHOIQz9xf2stINstJ83hH/OrxKrivfTTWdMeJg6y8Lf8OdNK3LON+5GwHT0TJYoe4KYBj1OBv4ulC3J2GsI4GXDofsdaEvaC526inMMvCjYO3M55oM5VeePoTQqaQE9cYUbZnyP+gd1rPI4xTyXopK2kcMk1K2z30DHgjvyA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=o2DLHTShggAXu3Nz3KUM+KLlp98uV3OAEbBsRiDNdKY=;
+ b=k92Na10MNt8UQ/D4smSDDTFM7tXDmh4n2BGl82of8QL4daAFmRmkuUTaYyacrX0fMbXnpNMfxwQv95Tadqj6xxxQ3jD6apdYpUbQuj4GS2VqErFC8d4Vc9doC/2uMFrH2Uwrkg/wZvjgOEL4z6KLmwwegso9+3xY/bIpNKuUAw8=
+Received: from LV2PR12MB5798.namprd12.prod.outlook.com (2603:10b6:408:17a::6)
+ by SJ2PR12MB9138.namprd12.prod.outlook.com (2603:10b6:a03:565::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Thu, 3 Apr
+ 2025 06:08:02 +0000
+Received: from LV2PR12MB5798.namprd12.prod.outlook.com
+ ([fe80::6f3e:b003:209b:9c9f]) by LV2PR12MB5798.namprd12.prod.outlook.com
+ ([fe80::6f3e:b003:209b:9c9f%3]) with mapi id 15.20.8534.052; Thu, 3 Apr 2025
+ 06:08:02 +0000
+From: "Kaszewski, Dominik" <Dominik.Kaszewski@amd.com>
+To: Stephen Rothwell <sfr@canb.auug.org.au>, "Pillai, Aurabindo"
+	<Aurabindo.Pillai@amd.com>
+CC: Alex Deucher <alexdeucher@gmail.com>, "Deucher, Alexander"
+	<Alexander.Deucher@amd.com>, Linux Kernel Mailing List
+	<linux-kernel@vger.kernel.org>, Linux Next Mailing List
+	<linux-next@vger.kernel.org>
+Subject: RE: linux-next: build warning after merge of the amdgpu tree
+Thread-Topic: linux-next: build warning after merge of the amdgpu tree
+Thread-Index: AQHbmLItYB1lWj/+TkuBSnfih77gVbN6M4jQgBdWyACAAAFYYA==
+Date: Thu, 3 Apr 2025 06:08:02 +0000
+Message-ID:
+ <LV2PR12MB579831B9500F1EDE3D2CC6CDF0AE2@LV2PR12MB5798.namprd12.prod.outlook.com>
+References: <20250319203449.386f9e00@canb.auug.org.au>
+	<LV2PR12MB579836A210FC20C79513D268F0D92@LV2PR12MB5798.namprd12.prod.outlook.com>
+ <20250403170134.504f5801@canb.auug.org.au>
+In-Reply-To: <20250403170134.504f5801@canb.auug.org.au>
+Accept-Language: en-US
+Content-Language: en-US
+X-Mentions: Aurabindo.Pillai@amd.com
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_ActionId=698d27aa-109f-4b57-a0bb-fe41521ce746;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_ContentBits=0;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Enabled=true;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Method=Standard;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Name=AMD
+ Internal Distribution
+ Only;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SetDate=2025-04-03T06:06:22Z;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Tag=10,
+ 3, 0, 1;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: LV2PR12MB5798:EE_|SJ2PR12MB9138:EE_
+x-ms-office365-filtering-correlation-id: b7209e05-ee51-47a3-5746-08dd7275e459
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|376014|366016|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?JVCdsHWsyCQAfQW4u4iEx6qVxD5d4JJ2FnGqzQUnkCiCxBdM/8pi58sHDRaC?=
+ =?us-ascii?Q?X8n+HJp4vQc2NPuYQzLqsD0xB5r1GWG9bfdmP/Wmejah4Hpe0GOMer6m/osN?=
+ =?us-ascii?Q?/Fe9FO5xfFO/waCa4dVMkLUmbiKl1pFGUwPBwtwfX1RXAHdvy3eu2CdBFSkP?=
+ =?us-ascii?Q?m7DEhvZbQicHYDvQb9sLIGfPb15bRaJ5gls2zfdleVtAEoZtCLwrjhP/BC9A?=
+ =?us-ascii?Q?r00aB35lWQHDDpqrrSZw8jcnueMjDQMzgDiMX8PUxKRS0JdPM/dPMXqiqVlo?=
+ =?us-ascii?Q?+Gs4mrkAp94hNNudEK6gH/HNtmFdkuZ/i+ntgd+BOfT5LYCNgcbdNkYE0bi8?=
+ =?us-ascii?Q?lLcqIbsb6xDTBGfkDWZA5lWye3Yy7ry1KdW/ubLL/4ux13msqCv9b6Rr+S61?=
+ =?us-ascii?Q?Cqc7fefleB8+NDYzBBSWMAFEuRdYN3nU4yKeyzpIdX8WaAaokjVH0r/cCAFK?=
+ =?us-ascii?Q?Yaud/xNOHpG4+FI5cP6LBJQMlnWLOeLO9PHwABlwK20lhNKNDqhqsdDvIXNa?=
+ =?us-ascii?Q?rRnlK8GQ8fF8BktwrDrQwx3HmzCroCZsJfAoXzS7uxVhA6I/tFKZAWdPykia?=
+ =?us-ascii?Q?D5fY27PSuJ1J4OrJhAO3lGmAm4Kbd5BKtAmhHmRFOUhTdNF0UYKpOlw3kSu7?=
+ =?us-ascii?Q?KwRXcwFtsasfhlwyJwXacUV/ckMiJRxs9MAxXtMUTBTQ2uZnbeUGAHWsEyRx?=
+ =?us-ascii?Q?qsGCN7RQba2iPuqMYcpXMMumdXdLhJ4zWMr6VUekPnUAE8+2LRwHhbuHjrFc?=
+ =?us-ascii?Q?2YET69aM4HOhiMQ2MHpHFxqsaofRRg2zwi72IbzzrRiOld3wc6prme+VyHGK?=
+ =?us-ascii?Q?Qvaqa02YE4F2899xaTOiubX9gB8fm7ThumZlNay37wUSZvDHrfp24HObqrR+?=
+ =?us-ascii?Q?Yg1khe0XgKp85VWbpTaF0tiUt5GIHodmh80W6DmV1kOs5ihgSmGvhUIFKJ8+?=
+ =?us-ascii?Q?svbASUNTtqJZdtfSkLoVwNxVnqQQU90clC7WHQNo32pCxKmrbvDMJveDhqtk?=
+ =?us-ascii?Q?snvcIehLLc4ZOtPLvh8efbvtmbdy0uZKqG4kvU8wDFD2HWP+ihWWYmyymOpH?=
+ =?us-ascii?Q?lmBOzRl8Bu8BiWugJOX3Z+gUoUIliXBko2De/Z12vNFB5mpbtYS9Cuw7HKlJ?=
+ =?us-ascii?Q?TELrLf+LVIxqZnVkeFuuMMCP8gz1C/bOwAtDSZaqi3OAfou1/H7L8OGuHSh6?=
+ =?us-ascii?Q?oFZnzpbXk48DnRCdrIQ++IgbmX5UTw2qc7IcnimdvWm1BE/WLAP/EVoxYeZ+?=
+ =?us-ascii?Q?aKXTMmq5xBkAwvUt+iR+NQgbzwISNLc4ZhCpZsbz4wQYx6A3NowoMV3xjOE1?=
+ =?us-ascii?Q?aD7TZHGqf4yjKdK6TBbZATA4HpatGBZcZe7Rp1Rk7BRAWkCMxBCrmafsVccj?=
+ =?us-ascii?Q?5Rawp18d0FQlLowCRSWyffqhG4cQUBr5NJ7QDw/IKkfKb1JfFYwcyFq1hhl7?=
+ =?us-ascii?Q?46rfI1zQ+HKn02I/ZErP1h+Qx/EYjedw?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR12MB5798.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?DuQSwiz8anxC6Hde/R7n6drITIUeAl4Q4Qp4c+h00F4GoM8Js3qg8YTWy7ck?=
+ =?us-ascii?Q?ZNC7BrB2tBR4GEM9GZlVuph56Dcu5SXQflXxlqHO06IR+m+b+iApESwJm7eT?=
+ =?us-ascii?Q?fkFSso3IWqNPoC1yy+jqz3HSGTJQ5Fb0pqNLvAATSMV5eBchX+5pSq9lrgk0?=
+ =?us-ascii?Q?sVyb7ZifAie5of/8sbWuq1ebSrhRg56Vv0usJPPiTqOLqSVobz413fwO0Dps?=
+ =?us-ascii?Q?v2CD7gIk8ujAvOsT6NrQFacWo82kh9QHJJH0Q0wb/To6kJFSXXs9ZE1ZlrjE?=
+ =?us-ascii?Q?0XB0G9PVqenS6UcjM9s4vfJUKVaSbgxOLuqmcXf0DX7fnlgEkdwQEpaQnlY5?=
+ =?us-ascii?Q?/kpxEMp4dKT79vNJs4ivLmMhmwJpzTTKTwVC2a4835P2rRIvkwKTS/dVgT+7?=
+ =?us-ascii?Q?8e3cp9uOfrjrl9ymz4k5MGQ85F3RPz3+PxoGyK0BY11zsVKuls6r8PdeYK7x?=
+ =?us-ascii?Q?jx/8lAFtDx293ypM2Be2GYqm+whEXRt7VsR2u3Xf2DF4+8dnbj1XxHICB09+?=
+ =?us-ascii?Q?X2acw+ddAh2P8k7f6dFHrw4L402iLJqH+49xLDQAnCndF9r/Kwl3iMxsiZ7F?=
+ =?us-ascii?Q?+axuQGhlDKa3OPTdbuW7KBicaMmIKshYaoiBLuxB7ZukSsGbWiTNTGSrGcwf?=
+ =?us-ascii?Q?nYG3blf2L1STpPV0OfWAraudEjPxdcWY/v4E9cfygYPqFtBJWLyln62X9eqr?=
+ =?us-ascii?Q?1jD/0tID/oJWoo4z/+/dYR1eVmH0eoiP3Pv1o9wdcfjke5TKOouCF9KUq9/X?=
+ =?us-ascii?Q?U3islckhpa0uRAj2aLsHK/gAnF4avVEKoa/q+NCjZ2zlzxDyacRQf/mEfv5j?=
+ =?us-ascii?Q?4ECG+/vbApn2jYPIq/wdnl+MVgfD81hcGjlLs9CGNUe+KH6jlIcim5Pj4DZS?=
+ =?us-ascii?Q?inlBiIDafxj3OnHcIXZOqSrMgT30RRM0ygQiCorv3oTPYTfByhbOUlM/uNXb?=
+ =?us-ascii?Q?rczW0NXTjl5OdgMrCaA0Zhf2Bl1S3X70lY3h0Vc1eBfObFW6b0lYTNGF+Oq7?=
+ =?us-ascii?Q?dzn4IV0oJsHzdPyUdeaEHLvU7jSAXpHqHWqhyNy9azcv8SmkBne/uE+4p2na?=
+ =?us-ascii?Q?2bk715NZRy3TL1L8ZGX7eOSv2ZlEm+oWf2BAHGg7zTCLYIW+WqW/Nw9qwI1P?=
+ =?us-ascii?Q?lD/Xo5nHw/QtGNPCg2/GAxcu7Tth+8x8kv0prZHhFG963Ty6UW723sxQ+RaX?=
+ =?us-ascii?Q?ur8pSv/W94Lk+UrNPdhvC5t0AyynP13ZdeN9gAb4ckI5bhUeIcRoQgzjMGpF?=
+ =?us-ascii?Q?xzVX+Ttafeb40q4C0r5A1FitRzUK/JR9ib/+b1ESNDdqDW4RvIUql4uOKAc6?=
+ =?us-ascii?Q?O9n/VyYqkaihEqepfUrNPfarl0NHlZBv9nSBmhhQA7K1SZ78WgfoJ9DmccIZ?=
+ =?us-ascii?Q?9Wm9eMu14HrjsmJBgwnYaQXdFN3hbiYJ3ZxPjrrbGwlvQ+DjqXFiPFydkl6W?=
+ =?us-ascii?Q?1GqhRA6xGwp8uCQ9iZL1fZl1ex+ua/yDBoE0JrAlyMo/d2daV4lvkkTAoPiP?=
+ =?us-ascii?Q?VfLYzQVdAoTPvzYmaqj4k998A5AAoLgI09WLHMwI+60SS01oQq53dY6zRKxQ?=
+ =?us-ascii?Q?IF7AkYxXY2OESnlfCSk=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250310-dmem-cgroups-v1-0-2984c1bc9312@kernel.org>
- <f5fdc666-dd72-4a4f-9270-b539a3179382@amd.com> <20250310-eccentric-wonderful-puffin-ddbb26@houat>
- <CAPM=9tzkLXOz=-3eujUbbjMHunR+_5JZ4oQaqNmbrWWF9WZJ0w@mail.gmail.com> <e08f10da-b0cd-444b-8e0b-11009b05b161@amd.com>
-In-Reply-To: <e08f10da-b0cd-444b-8e0b-11009b05b161@amd.com>
-From: Dave Airlie <airlied@gmail.com>
-Date: Thu, 3 Apr 2025 16:07:24 +1000
-X-Gm-Features: AQ5f1JqIs6baj7zESBDpkv7pR6DzQLKEPOII2QRNAbnnHufJyGkPQs5rKDbOWPQ
-Message-ID: <CAPM=9twgFt43OKqUY0TNopTmibnR_d891xmV=wFM91n604NUCw@mail.gmail.com>
-Subject: Re: [PATCH RFC 00/12] dma: Enable dmem cgroup tracking
-To: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-Cc: Maxime Ripard <mripard@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Marek Szyprowski <m.szyprowski@samsung.com>, Robin Murphy <robin.murphy@arm.com>, 
-	Sumit Semwal <sumit.semwal@linaro.org>, 
-	Benjamin Gaignard <benjamin.gaignard@collabora.com>, Brian Starkey <Brian.Starkey@arm.com>, 
-	John Stultz <jstultz@google.com>, "T.J. Mercier" <tjmercier@google.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	Simona Vetter <simona@ffwll.ch>, Tomasz Figa <tfiga@chromium.org>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, Ben Woodard <woodard@redhat.com>, 
-	Hans Verkuil <hverkuil@xs4all.nl>, 
-	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, iommu@lists.linux.dev, 
-	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	linaro-mm-sig@lists.linaro.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: LV2PR12MB5798.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b7209e05-ee51-47a3-5746-08dd7275e459
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Apr 2025 06:08:02.4215
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: GsjAl0Bs1BMx/5JHdwHr1CO0ltFnVlT9Fdt1QDzQEgWlAvL/PEvMrajX9m7TaBga75KwJc14KDvo8xmcuS0OWg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB9138
 
-On Tue, 1 Apr 2025 at 21:03, Christian K=C3=B6nig <christian.koenig@amd.com=
-> wrote:
->
-> Am 31.03.25 um 22:43 schrieb Dave Airlie:
-> > On Tue, 11 Mar 2025 at 00:26, Maxime Ripard <mripard@kernel.org> wrote:
-> >> Hi,
-> >>
-> >> On Mon, Mar 10, 2025 at 03:16:53PM +0100, Christian K=C3=B6nig wrote:
-> >>> [Adding Ben since we are currently in the middle of a discussion
-> >>> regarding exactly that problem]
-> >>>
-> >>> Just for my understanding before I deep dive into the code: This uses
-> >>> a separate dmem cgroup and does not account against memcg, don't it?
-> >> Yes. The main rationale being that it doesn't always make sense to
-> >> register against memcg: a lot of devices are going to allocate from
-> >> dedicated chunks of memory that are either carved out from the main
-> >> memory allocator, or not under Linux supervision at all.
-> >>
-> >> And if there's no way to make it consistent across drivers, it's not t=
-he
-> >> right tool.
-> >>
-> > While I agree on that, if a user can cause a device driver to allocate
-> > memory that is also memory that memcg accounts, then we have to
-> > interface with memcg to account that memory.
->
-> This assumes that memcg should be in control of device driver allocated m=
-emory. Which in some cases is intentionally not done.
->
-> E.g. a server application which allocates buffers on behalves of clients =
-gets a nice deny of service problem if we suddenly start to account those b=
-uffers.
+[AMD Official Use Only - AMD Internal Distribution Only]
 
-Yes we definitely need the ability to transfer an allocation between
-cgroups for this case.
+Hi Stephen,
 
->
-> That was one of the reasons why my OOM killer improvement patches never l=
-anded (e.g. you could trivially kill X/Wayland or systemd with that).
->
-> > The pathological case would be a single application wanting to use 90%
-> > of RAM for device allocations, freeing it all, then using 90% of RAM
-> > for normal usage. How to create a policy that would allow that with
-> > dmem and memcg is difficult, since if you say you can do 90% on both
-> > then the user can easily OOM the system.
->
-> Yeah, completely agree.
->
-> That's why the GTT size limit we already have per device and the global 5=
-0% TTM limit doesn't work as expected. People also didn't liked those limit=
-s and because of that we even have flags to circumvent them, see AMDGPU_GEM=
-_CREATE_PREEMPTIBLE and  TTM_TT_FLAG_EXTERNAL.
->
-> Another problem is when and to which process we account things when evict=
-ion happens? For example process A wants to use VRAM that process B current=
-ly occupies. In this case we would give both processes a mix of VRAM and sy=
-stem memory, but how do we account that?
->
-> If we account to process B then it can be that process A fails because of=
- process Bs memcg limit. This creates a situation which is absolutely not t=
-raceable for a system administrator.
->
-> But process A never asked for system memory in the first place, so we can=
-'t account the memory to it either or otherwise we make the process respons=
-ible for things it didn't do.
->
-> There are good argument for all solutions and there are a couple of block=
-s which rule out one solution or another for a certain use case. To summari=
-ze I think the whole situation is a complete mess.
->
-> Maybe there is not this one solution and we need to make it somehow confi=
-gurable?
+I have sent out a patch adding a missing semicolon a month ago. I did not g=
+et any notification that it got merged, I am not familiar with AMD's upstre=
+aming process.
 
-My feeling is that we can't solve the VRAM eviction problem super
-effectively, but it's also probably not going to be a major common
-case, I don't think we should double account memcg/dmem just in case
-we have to evict all of a users dmem at some point, maybe if there was
-some kind of soft memcg limit we could add as an accounting but not
-enforced overhead it might be useful to track evictions, but yes we
-can't have A allocating memory causing B to fall over because we evict
-memory into it's memcg space and it fails to allocate the next time it
-tries, or having A fail in that case.
++@Pillai, Aurabindo
 
-For the UMA GPU case where there is no device memory or eviction
-problem, perhaps a configurable option to just say account memory in
-memcg for all allocations done by this process, and state yes you can
-work around it with allocation servers or whatever but the behaviour
-for well behaved things is at least somewhat defined.
+Best regards,
+Dominik Kaszewski
+Senior Software Engineer
+SW - Display NPI
 
-Dave.
+-----Original Message-----
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Sent: Thursday, April 3, 2025 8:02 AM
+To: Kaszewski, Dominik <Dominik.Kaszewski@amd.com>
+Cc: Alex Deucher <alexdeucher@gmail.com>; Deucher, Alexander <Alexander.Deu=
+cher@amd.com>; Linux Kernel Mailing List <linux-kernel@vger.kernel.org>; Li=
+nux Next Mailing List <linux-next@vger.kernel.org>
+Subject: Re: linux-next: build warning after merge of the amdgpu tree
+
+Hi Dominik,
+
+On Wed, 19 Mar 2025 09:38:50 +0000 "Kaszewski, Dominik" <Dominik.Kaszewski@=
+amd.com> wrote:
+>
+> [AMD Official Use Only - AMD Internal Distribution Only]
+>
+> Hi,
+>
+> I don't understand this warning, the enum it cannot find has been introdu=
+ced in the same commit immediately below:
+>
+> +       /**
+> +        * @DC_HDCP_LC_ENABLE_SW_FALLBACK If set, upon HDCP Locality Chec=
+k FW
+> +        * path failure, retry using legacy SW path.
+> +        */
+> +       DC_HDCP_LC_ENABLE_SW_FALLBACK =3D 0x100000,
+>
+> Could it perhaps be about the missing colon before "If set"?
+
+Yes, probably could be.
+
+> -----Original Message-----
+> From: Stephen Rothwell <sfr@canb.auug.org.au>
+> Sent: Wednesday, March 19, 2025 10:35 AM
+> To: Alex Deucher <alexdeucher@gmail.com>
+> Cc: Deucher, Alexander <Alexander.Deucher@amd.com>; Kaszewski, Dominik <D=
+ominik.Kaszewski@amd.com>; Linux Kernel Mailing List <linux-kernel@vger.ker=
+nel.org>; Linux Next Mailing List <linux-next@vger.kernel.org>
+> Subject: linux-next: build warning after merge of the amdgpu tree
+>
+> Hi all,
+>
+> After merging the amdgpu tree, today's linux-next build (htmldocs) produc=
+ed this warning:
+>
+> drivers/gpu/drm/amd/include/amd_shared.h:369: warning: Incorrect use of k=
+ernel-doc format:          * @DC_HDCP_LC_ENABLE_SW_FALLBACK If set, upon HD=
+CP Locality Check FW
+> drivers/gpu/drm/amd/include/amd_shared.h:369: warning: Incorrect use of k=
+ernel-doc format:          * @DC_HDCP_LC_ENABLE_SW_FALLBACK If set, upon HD=
+CP Locality Check FW
+> drivers/gpu/drm/amd/include/amd_shared.h:373: warning: Enum value 'DC_HDC=
+P_LC_ENABLE_SW_FALLBACK' not described in enum 'DC_DEBUG_MASK'
+>
+> Introduced by commit
+>
+>   84ff5895399c ("drm/amdgpu: Add debug masks for HDCP LC FW testing")
+
+So, I am still seeing this warning and that commit is now in Linus' tree.
+
+--
+Cheers,
+Stephen Rothwell
