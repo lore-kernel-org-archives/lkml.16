@@ -1,102 +1,145 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E490E241684;
-	Thu,  3 Apr 2025 07:45:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CFFA241672
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 07:45:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743666333; cv=none; b=JoJCA3t0Di878TXJ74BeA5+xHiI0UmA+O8baxzo1uHAgNAFoozzTQgrD4VdDdqVvh0lA9ksHFNAA3Vv0H8e83rvgQlIoIu96xzwNzftxmJbMcBLjqpJg0kmFjGMUNjcG6kDCdaYPdo9nTRSWhBRfSEyt5fYo/2p9HoDQXoZLH7g=
+	t=1743666344; cv=none; b=Pmx6dFVLtp8q74ZqytedWKA8p1zFM0rG0XK+IhFz7TdaVTv6gzjvPkrjgc0uDh/D6B/Z+1lV4bZqTrWhZCGGTXIjYaSQr62VH7ObbWTo/pkfsQeCkALmVbjhWUruVSZ/C3/jr2GShaYa0Mjc7m15u4+pdXBUJcChuGrSK/Z8COg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743666333; c=relaxed/simple;
-	bh=osvwpmSaeCnsa2oIl3mVNrpD251AR8ZQaiVxUgCaMak=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dnut3S9rinZxHaZYgFcL8Bs+DG8f7qQlT1HWtZAZw4GhZ34h4AUvoJ/FThVkOadsyDHoKLg/pZg1WSlZZjKwwDZ+QtB660TX2djFkOb9E/YH9q7KF+m4QYJN71uWb/LBqLI+xEniq4lJiQ+wLsPnUoG0hoOKNekkFx86Rh2BG0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZvNMq/fP; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1743666344; c=relaxed/simple;
+	bh=hymi5Qn+fhcA2FOy03MhSS9012ysRlJkBS7t2tuXSxY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=p5BHcFeRk6NUXeoB4BV3TRElRf9SMMfbrCL4f0gi6HKhHPCy24bjmFR+reBU9hBlOE0QtapijLykttCwnENBkMlMxLKJ7ExjBtT2q9t+qVEamJWH4sM04mTobdd4iAO0eBlNp+qIr4KvBzq7Raj2kqBTaZI/Pwz616aBSg5KgUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=ET4z4w0P; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZvNMq/fP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743666329; x=1775202329;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=osvwpmSaeCnsa2oIl3mVNrpD251AR8ZQaiVxUgCaMak=;
-  b=ZvNMq/fPyPRwhsjWubaE6PiPvgOItSPS9c0uTg/Q+qs0uJbWpbeBPuCq
-   J/5LGm+IjBRy1ZNJh54rx6DNugU9KsW0tsugQfo3Gr2BRjSK5AjZZVV8i
-   jvcWf/Qeoru6twBF7RsHV4GhN38odxApEJ4D1zG5NDnvCr02bgBxhUeXX
-   VhQIhKyrn5SCGCiE5M+uBXSN4FqOaePyZoWeu//KTdTBAqKkY+cjlKkII
-   jXvKSao7MysRCoadz8O3/LA9lsKFdpB89M/5sgjP00iun6ooi65Nd/tpu
-   rpvpiretoD+TeRrS54KP/xOP9M1LZCWLKo5uwIMG5uBOKoajFAMhnC7kV
-   g==;
-X-CSE-ConnectionGUID: 4Uph/TVXTfm7bgyHXy026Q==
-X-CSE-MsgGUID: W+6VGDN9SwCRPJ5w6iJZsA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11392"; a="48721624"
-X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
-   d="scan'208";a="48721624"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 00:45:28 -0700
-X-CSE-ConnectionGUID: c0HY7SxsRnyopPxLmYOGkw==
-X-CSE-MsgGUID: h+84VRRCSkCsIdZIPSZQSg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
-   d="scan'208";a="164159449"
-Received: from jraag-z790m-itx-wifi.iind.intel.com ([10.190.239.23])
-  by orviesa001.jf.intel.com with ESMTP; 03 Apr 2025 00:45:26 -0700
-From: Raag Jadav <raag.jadav@intel.com>
-To: rafael@kernel.org,
-	mahesh@linux.ibm.com,
-	oohall@gmail.com,
-	bhelgaas@google.com
-Cc: linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	lukas.wunner@intel.com,
-	Raag Jadav <raag.jadav@intel.com>
-Subject: [PATCH v1] PCI/AER: Avoid power state transition during system suspend
-Date: Thu,  3 Apr 2025 13:14:25 +0530
-Message-Id: <20250403074425.1181053-1-raag.jadav@intel.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="ET4z4w0P"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-39c266c2dd5so475398f8f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 00:45:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1743666340; x=1744271140; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=5VAk2UK6ZWJVQD+p+NwG0TWAjSp74Ywmjjho6zwF9q0=;
+        b=ET4z4w0PfYhS2Rvf/83e5Bbitm6mewBmMkETa2bIJFS38QcYekeoBswrWemSk4cJeM
+         4CsXIRg7ilN19cjXwDwziFGshVfbjRIkfZdLp/4HPfODhaj7I9EsEvkHJaTMdaPXdupM
+         0ZLxT/xBwe2MVkqmHJFSwqLFmUL3I1+veFdQxJqwSyFPkhlJZ0f1HdqygQ8bDqKRygQN
+         WRPGJFq07742vzswTgNeFSuXFyjhx/DH+w7WPjGh2Sn9+3nOO5cxqPsPe5XgqhGNXAFF
+         AmuD8bzThCKeAtRhTStCpgJYqf834TkVzKcfUvfP6MnSNC+o1zKrHr6e6YY6yqhk5cnd
+         pOzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743666340; x=1744271140;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5VAk2UK6ZWJVQD+p+NwG0TWAjSp74Ywmjjho6zwF9q0=;
+        b=TthJqBBBPefego28a6RTC6F309qfOhsgnutGzuQG91UDzn9I1dQXtMyGO6wcnHQgoq
+         wxA9E5WXMhZuj5obaJtJICjcalQZ38/9HU3tSQ1JtfaA1m/1elRsLioVVqPKq+7E0AHJ
+         WbPvze2SLzyK78eIl2DEvRIq3a/mz+4C+Ka97J3HvQ8XD8MqAz4TH/9rDr8SHICSQkTv
+         3SkjgpziZnLlSfKSUlIW3OWPDFRhp1qo5lt05pCzzvlZoxhHzdOqQ3L1BUHiAyy6BqkP
+         4Z3BYBLcqQDT2Pncp9RHrGdk+AZWLa9D51La/8LVbp8ot+jRdKdhb9+uBHEvBmzWIa1C
+         /P+w==
+X-Forwarded-Encrypted: i=1; AJvYcCW9inWvcJtKLfNWitsPuSAVTuEGwxp1TypsVeunLC4kROhzSyRWY0ltwJIUW4cYaaHvtWeDdw6/BZFCEpc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxgyr0pf963ASZgG7w2AEoz5uYmRh2jsGCjLcka5mjKJrOFaxOa
+	rtHb2bToRJ0uR1Bumj1r+IVjvAjzr5KD9vWHnCHww7DEHq4jHLsal5QAC9mrO3s=
+X-Gm-Gg: ASbGncvDfu+vu3w6vYokd3E90fe9IXpghbuiUtLwXQ6wCcv1v8vwiT34kNYx/nLQds9
+	iaa9hgCAJlie4iwr91APoV36FmvkxK4C22nz5feLAl+DtDdpvfZnIItnyqJDqUwgTA3Z0Np1vcB
+	ELYYmJWdb7wSoGHqII25ATlWHa8csPu/HN6ikcJh6hWE0A2p+rwg2CM2Lxt5Men5pCcoEK7m1SA
+	6EPgSbJCxBUFt1aQEsof4A+nKkp7iHSGy9RXaB8mm40RAzHo79B5LgIkIERrJf2lQeLxxCadfLb
+	jW96GEYqAK7ZG8iKeZBZ9xdkHEY9aJZXrx7J6PS+bB546D5lPo/wx1g=
+X-Google-Smtp-Source: AGHT+IFVtsVP5aa9ArTL0eTRZ7z7nYosq4DIG82dzzri9OCIBx4/ZOUO1Sez8TySKMOSMj7BQjQj8A==
+X-Received: by 2002:a05:6000:1789:b0:39c:cc7:3c62 with SMTP id ffacd0b85a97d-39c1211b6edmr16117808f8f.51.1743666340279;
+        Thu, 03 Apr 2025 00:45:40 -0700 (PDT)
+Received: from localhost (109-81-82-69.rct.o2.cz. [109.81.82.69])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-39c301a79aasm1048844f8f.35.2025.04.03.00.45.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Apr 2025 00:45:39 -0700 (PDT)
+Date: Thu, 3 Apr 2025 09:45:38 +0200
+From: Michal Hocko <mhocko@suse.com>
+To: Shakeel Butt <shakeel.butt@linux.dev>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Muchun Song <muchun.song@linux.dev>, linux-mm@kvack.org,
+	cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Meta kernel team <kernel-team@meta.com>
+Subject: Re: [PATCH] memcg: vmalloc: simplify MEMCG_VMALLOC updates
+Message-ID: <Z-48ortj_IhiPxHg@tiehlicka>
+References: <20250403053326.26860-1-shakeel.butt@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250403053326.26860-1-shakeel.butt@linux.dev>
 
-If an error is triggered while system suspend is in progress, any bus
-level power state transition will result in unpredictable error handling.
-Mark skip_bus_pm flag as true to avoid this.
+On Wed 02-04-25 22:33:26, Shakeel Butt wrote:
+> The vmalloc region can either be charged to a single memcg or none. At
+> the moment kernel traverses all the pages backing the vmalloc region to
+> update the MEMCG_VMALLOC stat. However there is no need to look at all
+> the pages as all those pages will be charged to a single memcg or none.
+> Simplify the MEMCG_VMALLOC update by just looking at the first page of
+> the vmalloc region.
 
-Signed-off-by: Raag Jadav <raag.jadav@intel.com>
----
+I do not rememeber why this was done on page by page but I suspect
+originally we could have mixed more memcgs on one vm.
 
-Ideally we'd want to defer recovery until system resume, but this is
-good enough to prevent device suspend.
+The patch makes sense.
 
-More discussion at [1].
-[1] https://lore.kernel.org/r/Z-38rPeN_j7YGiEl@black.fi.intel.com
+> Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
 
- drivers/pci/pcie/aer.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+Acked-by: Michal Hocko <mhocko@suse.com>
 
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index 508474e17183..5acf4efc2df3 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -1108,6 +1108,12 @@ static void pci_aer_handle_error(struct pci_dev *dev, struct aer_err_info *info)
- 
- static void handle_error_source(struct pci_dev *dev, struct aer_err_info *info)
- {
-+	/*
-+	 * Avoid any power state transition if an error is triggered during
-+	 * system suspend.
-+	 */
-+	dev->skip_bus_pm = true;
-+
- 	cxl_rch_handle_error(dev, info);
- 	pci_aer_handle_error(dev, info);
- 	pci_dev_put(dev);
+Thanks!
+
+> ---
+>  mm/vmalloc.c | 13 +++++--------
+>  1 file changed, 5 insertions(+), 8 deletions(-)
+> 
+> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> index 3ed720a787ec..cdae76994488 100644
+> --- a/mm/vmalloc.c
+> +++ b/mm/vmalloc.c
+> @@ -3370,12 +3370,12 @@ void vfree(const void *addr)
+>  
+>  	if (unlikely(vm->flags & VM_FLUSH_RESET_PERMS))
+>  		vm_reset_perms(vm);
+> +	if (vm->nr_pages && !(vm->flags & VM_MAP_PUT_PAGES))
+> +		mod_memcg_page_state(vm->pages[0], MEMCG_VMALLOC, -vm->nr_pages);
+>  	for (i = 0; i < vm->nr_pages; i++) {
+>  		struct page *page = vm->pages[i];
+>  
+>  		BUG_ON(!page);
+> -		if (!(vm->flags & VM_MAP_PUT_PAGES))
+> -			mod_memcg_page_state(page, MEMCG_VMALLOC, -1);
+>  		/*
+>  		 * High-order allocs for huge vmallocs are split, so
+>  		 * can be freed as an array of order-0 allocations
+> @@ -3671,12 +3671,9 @@ static void *__vmalloc_area_node(struct vm_struct *area, gfp_t gfp_mask,
+>  		node, page_order, nr_small_pages, area->pages);
+>  
+>  	atomic_long_add(area->nr_pages, &nr_vmalloc_pages);
+> -	if (gfp_mask & __GFP_ACCOUNT) {
+> -		int i;
+> -
+> -		for (i = 0; i < area->nr_pages; i++)
+> -			mod_memcg_page_state(area->pages[i], MEMCG_VMALLOC, 1);
+> -	}
+> +	if (gfp_mask & __GFP_ACCOUNT && area->nr_pages)
+> +		mod_memcg_page_state(area->pages[0], MEMCG_VMALLOC,
+> +				     area->nr_pages);
+>  
+>  	/*
+>  	 * If not enough pages were obtained to accomplish an
+> -- 
+> 2.47.1
+
 -- 
-2.34.1
-
+Michal Hocko
+SUSE Labs
