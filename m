@@ -1,95 +1,145 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D7C7171E49;
-	Thu,  3 Apr 2025 18:05:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C3A32512E7
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 18:10:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743703534; cv=none; b=X7fJf2DzpsEOP0oW/6pGunQLxpgSnFhURnys6JyR8fVkZtsNAQYGJTlC3twpzbDxiGC1nmG/gJqzeknyp33i+t4FdFFJkjsyvL99Vja5iPyyHM4Xoy3OiIDhXmW9amU5Gcn+H2ld3fvlfx4Ccvlnm/GqkJa+Tpp8MIBFF8zDIKc=
+	t=1743703804; cv=none; b=o4G8XJ2V6gbe2hP3ea3OZP61i6m/3s3SZJ+6v22PH7VyIipcfDb7BHFBOHRsbUk/9YFbh/Lrnpdt6Ar5NHu7B+uFS2flNkEbXvC9LIrfFLJ4AKufbEabbtLPzYbOQmnAQtLoWwSIWOcstPZ9QAFvQENPY5keo+PUVQi/LoUH7ac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743703534; c=relaxed/simple;
-	bh=OSIlxw/JlNYSrjfBNSS34lfG1ghonqudBLTdZExWEdw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Oy2WOurvY+fAPFAY9HkI/epknGAwT4yr1yAvx4BhvNSPdQTCvkO3epeUiTiOj2cpH+1MIse0ZTNytlAjtF8VZyPS4MKc7BdqfG3vnIL9xGUilbkc3ErIKf+xXeZTG4AblymcZISGaT4wyZ3B81h47ZETPUcYARklj8aJ0HyugmE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SyMr+DOT; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743703804; c=relaxed/simple;
+	bh=tRaMCDQsFxTh97DR7LSJJp2UP+PKxOH/yGDNF3oor4Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WnlOM24NLOZV6CuVBP8kx7ouJ2AG4EePDPL4azvt0jCUPWa9NPmY+fMKg1jb9ytCl678F5mAm/jSTBSgHgDRd802f4MG34C7y/Be2+DfkOfFv+FRcJV4zLD/9BAeGFVqVryMGBFTcn3lpvh04puf1hlyvYoesyM/Ay3/wTImokg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=C7WEIsNz; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SyMr+DOT"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2243803b776so18590875ad.0;
-        Thu, 03 Apr 2025 11:05:32 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="C7WEIsNz"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ab78e6edb99so174904466b.2
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 11:10:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743703532; x=1744308332; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=OSIlxw/JlNYSrjfBNSS34lfG1ghonqudBLTdZExWEdw=;
-        b=SyMr+DOTaeglb1MetYzawnrGBKeVq1jRBQC9Zs/4Av+3FdhAPYo7WLQei8h2r7RlqL
-         Io1pLbfLymZllN3W0f0cgkHgbqzO243x7YD31VQQSKgqtIRaEqAr1ZGI0x+miTJ54wif
-         6FNCo2RS8GuaxOWfbCIV5J25Rr2LV/rTRkZGDsTV8MnfpbcBs6cYDwqi5D8O44z7JmBo
-         meFwGM/KEZYxVimFQVTEZvr8oGmqlxNxUegZ3ys16O/ajkc67v+4b864mkhz9ZA5borZ
-         Bg0mZus88I6n1cWkGfCLcPZ8hlAUP6BQ5/ZDWRmU4fcp4umZKDg4ruDQwjw5MFSAhEFp
-         hbqQ==
+        d=linux-foundation.org; s=google; t=1743703800; x=1744308600; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=HcEDrrFsrxiP1Wl9E660bs5VgrcHtAAgyYumdG4aXRY=;
+        b=C7WEIsNztGwdeyW70eWkzmRnk9zqvnh+JCVBxlCAJNwCr9zgXBU37z79jepUoyDdqp
+         tRrXMgf8LlZkabMEFIrbud8PBGlBxRF7ULkN9riQO4I5b3InmGajvV0TTogsNSWXafpe
+         Zke32bhEuUW3ZhZLoC9AMYrFBsBnnODxifPEg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743703532; x=1744308332;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OSIlxw/JlNYSrjfBNSS34lfG1ghonqudBLTdZExWEdw=;
-        b=GWt1yo6As3jSS8+3TfGnXWa2uB28CiPPO0wRM53M2/qnsHMcJNgVpTt01fHl64upwd
-         d6aR91Zt5XK/c9yr3dv9kyxmkGH3gpM8spSnhhu3vilPK33hYkbAqcY4wwxqcLzvbSpF
-         ItYL32IJVWXmzfwnHSrPXNUdHcXKjeRUCsC926lPe30zMvzRFzPjrxdUrpbI/w41Gjs5
-         Zq7vZG2P1LSLqKNm9nfPA9DJaDgHksGHz4K16NLLKdOuIyFsvovxtPFfTpIcqwZ2NBqr
-         +Szt2XEJK5GJcg0lpmOgdONAJ3uAHCYS2yaq6HrEqdo94IOyJqldaMT0zKorwA0cY1Ht
-         +PvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVqfDMADt8uiUFHaWRkflwDaAf31KQIPnzYqOhN/AOSLnj02hNDlCNSLZpL03mpHT3SSMdz56eARxgOuA8=@vger.kernel.org, AJvYcCXbJkKTPLhXC4ilMhYxMRW+XdNzds5873wQ59NpmtLfKXOySugj46IJoJRZmUAPPGyKQ3f8OwMF@vger.kernel.org
-X-Gm-Message-State: AOJu0YwgiX4z7y9pBC/dQ6IE2J7szEsX1odduGMvC8N6m4XKac4zrPkY
-	fe0rNWee4vcEWUzVyP1MG+pmybjHLMuDNiSy4kAc+GWPsZ7Figw=
-X-Gm-Gg: ASbGnctGvZRfakM7193YM8m4CS7xv090vStOSTPZXme8H4T9JaEAZn7iLSwqJ6idfHt
-	hOMkGt2LpHOlIJPn26VK4n7b3eupF8M0Ifev71cKaygIw88oojx1VdDSAeLYKl+BrifVf9bR2D7
-	99fiDxzdqLasYDjCZWrhzyy14HqJM2f0EFokJOD53z6bVt1EDzRPCMNcFHzjREFSejFQYDEch82
-	V5Q3eXBQffc3/L39bp/6drbIXnY/LIayhMgrHncIG4JJsUDsF8p079kxLsaDqDW3nFX8p1cOg2N
-	RUp2AkHTUj7x+F9nd8o5tTFDVnh5RS0UcyS0WZFqsOL2LS/VCLfTuCM=
-X-Google-Smtp-Source: AGHT+IErL23saF+fSa8Z7JyTc/w3Be7817zaFvi5ASpq2H4qkfDiIYb6Af+QjmWHk7RI8h6lnHlQKA==
-X-Received: by 2002:a17:903:41c3:b0:220:ff3f:6cba with SMTP id d9443c01a7336-22a8a0a23cdmr845635ad.38.1743703532443;
-        Thu, 03 Apr 2025 11:05:32 -0700 (PDT)
-Received: from localhost ([2601:646:9e00:f56e:123b:cea3:439a:b3e3])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-2297866e1ccsm17645105ad.174.2025.04.03.11.05.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Apr 2025 11:05:31 -0700 (PDT)
-Date: Thu, 3 Apr 2025 11:05:31 -0700
-From: Stanislav Fomichev <stfomichev@gmail.com>
-To: Ivan Abramov <i.abramov@mt-integration.ru>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	syzbot+1df6ffa7a6274ae264db@syzkaller.appspotmail.com,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Kuniyuki Iwashima <kuniyu@amazon.com>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Ahmed Zaki <ahmed.zaki@intel.com>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	"Eric W. Biederman" <ebiederm@xmission.com>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, lvc-project@linuxtesting.org
-Subject: Re: [PATCH net v2] net: Avoid calling WARN_ON() on -ENOMEM in
- netif_change_net_namespace()
-Message-ID: <Z-7N60DKIDLS2GXe@mini-arch>
-References: <20250403113519.992462-1-i.abramov@mt-integration.ru>
+        d=1e100.net; s=20230601; t=1743703800; x=1744308600;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HcEDrrFsrxiP1Wl9E660bs5VgrcHtAAgyYumdG4aXRY=;
+        b=Q1Xvnfiuea4c0Tc5KrpS7jtVBvT2/tD0b03jHsD7FRd9LKRp4fkA5EyocK005PHroN
+         qAcM56FeV/aJwxpBjRlixd5mJLWegfSF4hyTZn/pPhZ9/Jp0Hp4Mv9rgGjZtSWhdY0mq
+         eZTKMrSSAJhuOqANVvQVZqrG1Kf4fxZ8ZNin0ys70RLatNe14HqweenS2uDEK03nJ+iC
+         yxmBvSVzZXRlTFpZ5+yA4Klflh9f5TDzjuPlPL3dQEJ3x6iYoBYmQKdDAM0M1+ffd3G7
+         TqbYYjBAt0MfDB+pfzeNdbrosVxuTbGusKLhUW0pxjPLBWZjFnTy13h5+6J0kFWz5BED
+         1IBg==
+X-Forwarded-Encrypted: i=1; AJvYcCUZDMr+rC9DBeG/sc71ugtqp30+Uv0RFK0x2hMCw8xXrjMpV6Qjb5Ko8lU5IRq3pyZU/QEbi2XNi/998kg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyXe2albRWiJP48x0RQb+VWb4fBasSSU1oR7PaxzP63llGZSenG
+	g+wPk71yqW2UoEuxSgkekMJ/5JBx8wGQUZtMIdGr3yqrhW6+eeooxTkdXgP8uZHdCA+bGkHfvOn
+	uMTM=
+X-Gm-Gg: ASbGncvNUKCHQi7SndPYOWmv2nnL1PaShMkfNRH2njojwzcySkT+Jp9SJn9FCSMKkXU
+	KC+QkqYpG3WkMFhADQ2HmsrxXfwZWfRHpB1Yg8xZBF2Izxs/DiLEpcI1//6i/0qdrdAVfLoe7Rv
+	wpu/SKYsHhPeKbUaOGcWn3w+hUClXc7Mtrl7lquVPC2MW8wMgwVqk0lkrQBE/6C5ZjxTMqwaIZF
+	sk1hDwietuacQ3JcEBDZZd1IoWOMO7wp2KafccCI76o52Id0TAdPhHyZ9eAjsk5e4PWvfRnt3oq
+	qkb+smyeNMvWAmeYFHj8FdKBJoEz2ys8F9lt+y0EPFY6f7n+nA0RDHKagWVoWCJO1XYAExB7vOT
+	26mWoEFw2yd6EzXFjEkU=
+X-Google-Smtp-Source: AGHT+IHCodMIBmboTv6a60mDwUgukM1p+s4eolivHS2UAinIE6gUP9NJmwo0fUaTe0XEfbEyVvE+rQ==
+X-Received: by 2002:a17:906:dc8a:b0:ac4:4d2:3867 with SMTP id a640c23a62f3a-ac7d188b8aemr55806266b.23.1743703800371;
+        Thu, 03 Apr 2025 11:10:00 -0700 (PDT)
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com. [209.85.218.54])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7bfe5bd17sm130985066b.10.2025.04.03.11.09.59
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Apr 2025 11:09:59 -0700 (PDT)
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ac2bdea5a38so197257366b.0
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 11:09:59 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWCcEpMS057Y2DpBKCFREGemauvaAN+QCMxQtWjEq8kGJsHYrWLo5i+j/0tTqfXsJyl4BIFonBAJQfN+yo=@vger.kernel.org
+X-Received: by 2002:a17:907:971c:b0:ac3:84d5:a911 with SMTP id
+ a640c23a62f3a-ac7d18e240emr44635266b.28.1743703798814; Thu, 03 Apr 2025
+ 11:09:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250403113519.992462-1-i.abramov@mt-integration.ru>
+References: <20250322-vfs-mount-b08c842965f4@brauner> <174285005920.4171303.15547772549481189907.pr-tracker-bot@kernel.org>
+ <20250401170715.GA112019@unreal> <20250403-bankintern-unsympathisch-03272ab45229@brauner>
+ <20250403-quartal-kaltstart-eb56df61e784@brauner> <196c53c26e8f3862567d72ed610da6323e3dba83.camel@HansenPartnership.com>
+ <6pfbsqikuizxezhevr2ltp6lk6vqbbmgomwbgqfz256osjwky5@irmbenbudp2s>
+In-Reply-To: <6pfbsqikuizxezhevr2ltp6lk6vqbbmgomwbgqfz256osjwky5@irmbenbudp2s>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Thu, 3 Apr 2025 11:09:41 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjksLMWq8At_atu6uqHEY9MnPRu2EuRpQtAC8ANGg82zw@mail.gmail.com>
+X-Gm-Features: AQ5f1JqNbQoAaPP_wXcc41hTXOvOxh-9Wv4SKJz_lr5r38JumKJCxYASdK1ME88
+Message-ID: <CAHk-=wjksLMWq8At_atu6uqHEY9MnPRu2EuRpQtAC8ANGg82zw@mail.gmail.com>
+Subject: Re: [GIT PULL] vfs mount
+To: Mateusz Guzik <mjguzik@gmail.com>
+Cc: James Bottomley <James.Bottomley@hansenpartnership.com>, 
+	Christian Brauner <brauner@kernel.org>, Leon Romanovsky <leon@kernel.org>, pr-tracker-bot@kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 04/03, Ivan Abramov wrote:
-> It's pointless to call WARN_ON() in case of an allocation failure in
-> device_rename(), since it only leads to useless splats caused by deliberate
-> fault injections, so avoid it.
+On Thu, 3 Apr 2025 at 10:21, Mateusz Guzik <mjguzik@gmail.com> wrote:
+>
+> I would argue it would be best if a language wizard came up with a way
+> to *demand* explicit use of { } and fail compilation if not present.
 
-What if this happens in a non-fault injection environment? Suppose
-the user shows up and says that he's having an issue with device
-changing its name after netns change. There will be no way to diagnose
-it, right?
+I tried to think of some sane model for it, but there isn't any good syntax.
+
+The only way to enforce it would be to also have a "end" marker, ie do
+something like
+
+        scoped_guard(x) {
+                ...
+        } end_scoped_guard;
+
+and that you could more-or-less enforce by having
+
+    #define scoped_guard(..) ... real guard stuff .. \
+                do {
+
+    #define end_scope } while (0)
+
+where in addition we could add some dummy variable declaration inside
+scoped_guard(), and have a dummy use of that variable in the
+end_scope, just to further make sure the two pair up.
+
+It does have the advantage of allowing more flexibility with fewer
+tricks when you can define your scope in the macros. Right now
+"scoped_guard()" plays some rather ugly games internally, just in
+order to avoid this pattern.
+
+And that pattern isn't actually new. We *used* to have this pattern in
+
+        do_each_thread(g, t) {
+                ...
+        } while_each_thread(g, t);
+
+and honestly, people seemed to hate it.
+
+(Also, sparse has that pattern as
+
+        FOR_EACH_PTR(filelist, file) {
+                ...
+        } END_FOR_EACH_PTR(file);
+
+and it actually works quite well and once you get used to it it's
+nice, but I do think people tend to find it really really odd)
+
+> This would also provide a nice side effect of explicitly delineating
+> what's protected.
+
+Sadly, I think we have too many uses for this to be worth it any more.
+And I do suspect people would hate the odd "both beginning and end"
+thing even if it adds some safety.
+
+I dunno. I personally don't mind the "delineate both the beginning and
+the end", but we don't have a great history of it.
+
+               Linus
