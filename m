@@ -1,267 +1,359 @@
-Received: from smtp-fw-52005.amazon.com (smtp-fw-52005.amazon.com [52.119.213.156])
+Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4D3D19ABD4;
-	Thu,  3 Apr 2025 17:02:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.156
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5630019ABD4;
+	Thu,  3 Apr 2025 17:04:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743699771; cv=none; b=sa4/hcjZFm/k2bx+p5pg4NY+iAjuKM9E3BX/EBhA8tve3NBDC+8Y5zNixNpZw6UzKfTw+HbdleqZ96dWE/8svulU6Ch+rm6xz9tvGlE5V9tNAm8d7tYFLikoFewLzoJA0GOfOsNZGk2ojHrP/z+Jba5LRuaLc03tvQX/hTXF4w0=
+	t=1743699895; cv=none; b=VQFVr0yRAMpKgiC31EoYdmaufH4g8MGG0FkLjV1WEjr1QYbItuJyTo0VAtNcZv6dbo3J/P/uz8SQycyyIhdEMFS51jXtjmp73KkP0Yr4xIg981jXls/j5R6/8KLLY6V2GivBE9jLcm51/PWWRJLGrPlg9oRwA4eLog2K4h4Kxpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743699771; c=relaxed/simple;
-	bh=kFT6oxDCykTTfkfLTYfDgqn37UR0XWhepmm8AHbLFBw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=HsxxCu8X3gPwY1ZlKefMNj1DK5t+R2Y5XZysRkNkqiAM1+gNmXIcbnsEO6XH8ugY1ocy+zXem48+5fvA9Vt62J248ahOCvF/kiJBt/ca9rQ6lOr+eXP59kTU6TD/kLI1ZG/GHuRoFwb4NMU19DfLdWBBPXO59dx2NtSoGQaEabQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.uk; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=TNbtjHjz; arc=none smtp.client-ip=52.119.213.156
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.uk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="TNbtjHjz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1743699767; x=1775235767;
-  h=message-id:date:mime-version:reply-to:subject:to:cc:
-   references:from:in-reply-to:content-transfer-encoding;
-  bh=Vrt8HAH7HRkAvVDOOCvogEGI+tUnOxBHeVj88MXjLY4=;
-  b=TNbtjHjzXToCY00p+2aRCdnVdvlhIkACn+HFS739aD3rTPYa+mOwP3nD
-   TkZ71xxfblk2i+PnYhWMeWKopcw1xThBC83yDNvFOR+I+UHHdZ/4v6yoe
-   VyNEZDkMPK/qFAD85UF0wFeq9Y/dYPCCjV8zxWSkbeDEoK/Jvdi7yKnaz
-   g=;
-X-IronPort-AV: E=Sophos;i="6.15,184,1739836800"; 
-   d="scan'208";a="732644750"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
-  by smtp-border-fw-52005.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 17:02:39 +0000
-Received: from EX19MTAEUB001.ant.amazon.com [10.0.43.254:54330]
- by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.0.201:2525] with esmtp (Farcaster)
- id 80ec3721-3f59-4f72-add9-63b260817a4d; Thu, 3 Apr 2025 17:02:38 +0000 (UTC)
-X-Farcaster-Flow-ID: 80ec3721-3f59-4f72-add9-63b260817a4d
-Received: from EX19D022EUC002.ant.amazon.com (10.252.51.137) by
- EX19MTAEUB001.ant.amazon.com (10.252.51.28) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Thu, 3 Apr 2025 17:02:38 +0000
-Received: from [192.168.28.77] (10.106.82.23) by EX19D022EUC002.ant.amazon.com
- (10.252.51.137) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14; Thu, 3 Apr 2025
- 17:02:37 +0000
-Message-ID: <3a54adea-98d0-4af3-a121-6574b0c18f80@amazon.com>
-Date: Thu, 3 Apr 2025 18:02:36 +0100
+	s=arc-20240116; t=1743699895; c=relaxed/simple;
+	bh=yxD2RUGCoUv9KFxeKH+EgZNjLoLeN1AaFgsM7EKHvtE=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=bUEWgb8SFhd/GtkgTWmyOSihmj6AjKc9iauvRhm9ZuWK63UnTIGVBpbMfTalm0BhmIcoUrBUtcLIR9nmcWrl0i/i6RWhxQ/7d8lDp2zyIP+ziez2JPtEDIv7mhisuMfwAMZq3VxKt3vOy7BXOLXupXe+bieQkwD/FmQ29xn7QVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev; spf=pass smtp.mailfrom=buenzli.dev; arc=none smtp.client-ip=80.241.56.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=buenzli.dev
+Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4ZT7Q23hTPz9t47;
+	Thu,  3 Apr 2025 19:04:42 +0200 (CEST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Reply-To: <kalyazin@amazon.com>
-Subject: Re: [PATCH v2 5/5] KVM: selftests: test userfaultfd minor for
- guest_memfd
-To: James Houghton <jthoughton@google.com>
-CC: <akpm@linux-foundation.org>, <pbonzini@redhat.com>, <shuah@kernel.org>,
-	<kvm@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
-	<lorenzo.stoakes@oracle.com>, <david@redhat.com>, <ryan.roberts@arm.com>,
-	<quic_eberman@quicinc.com>, <peterx@redhat.com>, <graf@amazon.de>,
-	<jgowans@amazon.com>, <roypat@amazon.co.uk>, <derekmn@amazon.com>,
-	<nsaenz@amazon.es>, <xmarcalx@amazon.com>
-References: <20250402160721.97596-1-kalyazin@amazon.com>
- <20250402160721.97596-6-kalyazin@amazon.com>
- <CADrL8HXm_UDKvrsNe6Guvo_pPvCN9ZJBKe=p0HM-iYZWufbEfA@mail.gmail.com>
-Content-Language: en-US
-From: Nikita Kalyazin <kalyazin@amazon.com>
-Autocrypt: addr=kalyazin@amazon.com; keydata=
- xjMEY+ZIvRYJKwYBBAHaRw8BAQdA9FwYskD/5BFmiiTgktstviS9svHeszG2JfIkUqjxf+/N
- JU5pa2l0YSBLYWx5YXppbiA8a2FseWF6aW5AYW1hem9uLmNvbT7CjwQTFggANxYhBGhhGDEy
- BjLQwD9FsK+SyiCpmmTzBQJnrNfABQkFps9DAhsDBAsJCAcFFQgJCgsFFgIDAQAACgkQr5LK
- IKmaZPOpfgD/exazh4C2Z8fNEz54YLJ6tuFEgQrVQPX6nQ/PfQi2+dwBAMGTpZcj9Z9NvSe1
- CmmKYnYjhzGxzjBs8itSUvWIcMsFzjgEY+ZIvRIKKwYBBAGXVQEFAQEHQCqd7/nb2tb36vZt
- ubg1iBLCSDctMlKHsQTp7wCnEc4RAwEIB8J+BBgWCAAmFiEEaGEYMTIGMtDAP0Wwr5LKIKma
- ZPMFAmes18AFCQWmz0MCGwwACgkQr5LKIKmaZPNTlQEA+q+rGFn7273rOAg+rxPty0M8lJbT
- i2kGo8RmPPLu650A/1kWgz1AnenQUYzTAFnZrKSsXAw5WoHaDLBz9kiO5pAK
-In-Reply-To: <CADrL8HXm_UDKvrsNe6Guvo_pPvCN9ZJBKe=p0HM-iYZWufbEfA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: EX19D009EUA003.ant.amazon.com (10.252.50.105) To
- EX19D022EUC002.ant.amazon.com (10.252.51.137)
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 03 Apr 2025 19:04:38 +0200
+Message-Id: <D8X60PODTV0B.2ENFYEXH7EZP0@buenzli.dev>
+Cc: "Daniel Scally" <djrscally@gmail.com>, "Heikki Krogerus"
+ <heikki.krogerus@linux.intel.com>, "Sakari Ailus"
+ <sakari.ailus@linux.intel.com>, "Dirk Behme" <dirk.behme@de.bosch.com>,
+ "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, "Danilo Krummrich" <dakr@kernel.org>, "Saravana
+ Kannan" <saravanak@google.com>, "Miguel Ojeda" <ojeda@kernel.org>, "Alex
+ Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary
+ Guo" <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, "Benno Lossin" <benno.lossin@proton.me>,
+ "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl"
+ <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
+ <linux-kernel@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
+ <devicetree@vger.kernel.org>, <rust-for-linux@vger.kernel.org>
+Subject: Re: [PATCH 03/10] device property: Add
+ fwnode_property_read_int_array()
+From: "Remo Senekowitsch" <remo@buenzli.dev>
+To: "Rob Herring" <robh@kernel.org>, "Andy Shevchenko"
+ <andriy.shevchenko@linux.intel.com>
+References: <20250326171411.590681-1-remo@buenzli.dev>
+ <20250326171411.590681-4-remo@buenzli.dev>
+ <Z-UPJyD41LOMM3o2@smile.fi.intel.com>
+ <D8WA3WIHEQRN.3LQS84K8Z46OW@buenzli.dev>
+ <Z-6NG7fSfyKH-vW_@smile.fi.intel.com>
+ <CAL_JsqLPZc1LB09auMOJp90hbhJin75Yaa09h12ziZZgExSsBg@mail.gmail.com>
+In-Reply-To: <CAL_JsqLPZc1LB09auMOJp90hbhJin75Yaa09h12ziZZgExSsBg@mail.gmail.com>
+X-Rspamd-Queue-Id: 4ZT7Q23hTPz9t47
 
-
-
-On 02/04/2025 22:10, James Houghton wrote:
-> On Wed, Apr 2, 2025 at 9:08 AM Nikita Kalyazin <kalyazin@amazon.com> wrote:
+On Thu Apr 3, 2025 at 6:08 PM CEST, Rob Herring wrote:
+> On Thu, Apr 3, 2025 at 8:29=E2=80=AFAM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
 >>
->> The test demonstrates that a minor userfaultfd event in guest_memfd can
->> be resolved via a memcpy followed by a UFFDIO_CONTINUE ioctl.
+>> On Wed, Apr 02, 2025 at 06:04:13PM +0200, Remo Senekowitsch wrote:
+>> > On Thu Mar 27, 2025 at 9:41 AM CET, Andy Shevchenko wrote:
+>> > > On Wed, Mar 26, 2025 at 06:13:42PM +0100, Remo Senekowitsch wrote:
+>> > >> The rust bindings for reading device properties has a single
+>> > >> implementation supporting differing sizes of integers. The fwnode C=
+ API
+>> > >> already has a similar interface, but it is not exposed with the
+>> > >> fwnode_property_ API. Add the fwnode_property_read_int_array() wrap=
+per.
 >>
->> Signed-off-by: Nikita Kalyazin <kalyazin@amazon.com>
->> ---
->>   .../testing/selftests/kvm/guest_memfd_test.c  | 94 +++++++++++++++++++
->>   1 file changed, 94 insertions(+)
+>> ...
 >>
->> diff --git a/tools/testing/selftests/kvm/guest_memfd_test.c b/tools/testing/selftests/kvm/guest_memfd_test.c
->> index 38c501e49e0e..9b47b796f3aa 100644
->> --- a/tools/testing/selftests/kvm/guest_memfd_test.c
->> +++ b/tools/testing/selftests/kvm/guest_memfd_test.c
->> @@ -10,12 +10,16 @@
->>   #include <errno.h>
->>   #include <stdio.h>
->>   #include <fcntl.h>
->> +#include <pthread.h>
+>> > >> +EXPORT_SYMBOL_GPL(fwnode_property_read_int_array);
+>> > >
+>> > > I'm not sure about this. We have a lot of assumptions in the code th=
+at the
+>> > > arrays beneath are only represented by the selected number of intege=
+r types.
+>> > > This opens a Pandora's box, e.g., reading in u24, which is not suppo=
+rted by
+>> > > the upper layers..
+>> > >
+>> > >> +int fwnode_property_read_int_array(const struct fwnode_handle *fwn=
+ode, const char *propname,
+>> > >> +                             unsigned int elem_size, void *val, si=
+ze_t nval);
+>> >
+>> > Here's an alternative approach using a macro to map each integer type =
+explicitly
+>> > to its corresponding read function. There are some additional changes =
+that will
+>> > be necessary to make the rest work, but this is the gist of it.
 >>
->>   #include <linux/bitmap.h>
->>   #include <linux/falloc.h>
->> +#include <linux/userfaultfd.h>
->>   #include <sys/mman.h>
->>   #include <sys/types.h>
->>   #include <sys/stat.h>
->> +#include <sys/syscall.h>
->> +#include <sys/ioctl.h>
->>
->>   #include "kvm_util.h"
->>   #include "test_util.h"
->> @@ -206,6 +210,93 @@ static void test_create_guest_memfd_multiple(struct kvm_vm *vm)
->>          close(fd1);
->>   }
->>
->> +struct fault_args {
->> +       char *addr;
->> +       volatile char value;
-> 
-> I think you should/must put volatile on `addr` and not on `value`.
+>> I don;'t know Rust to tell anything about this, but at least it feels mu=
+ch
+>> better approach.
+>
+> I know a little Rust and it is much worse. It is implementing the same
+> code 8 times instead of 1 time just to work-around the C API.
 
-This was to prevent the compiler from omitting the write to the value, 
-because it's never read later on.
+I prepared a functioning version of the macro-based approach. I'll post
+the patch for reference and discussion. We don't have to go with it.
 
-> 
->> +};
->> +
->> +static void *fault_thread_fn(void *arg)
->> +{
->> +       struct fault_args *args = arg;
->> +
->> +       /* Trigger page fault */
->> +       args->value = *args->addr;
->> +       return NULL;
->> +}
->> +
->> +static void test_uffd_missing(int fd, size_t page_size, size_t total_size)
-> 
-> test_uffd_minor? :)
-> 
->> +{
->> +       struct uffdio_register uffd_reg;
->> +       struct uffdio_continue uffd_cont;
->> +       struct uffd_msg msg;
->> +       struct fault_args args;
->> +       pthread_t fault_thread;
->> +       void *mem, *mem_nofault, *buf = NULL;
->> +       int uffd, ret;
->> +       off_t offset = page_size;
->> +       void *fault_addr;
->> +
->> +       ret = posix_memalign(&buf, page_size, total_size);
->> +       TEST_ASSERT_EQ(ret, 0);
->> +
->> +       uffd = syscall(__NR_userfaultfd, O_CLOEXEC);
->> +       TEST_ASSERT(uffd != -1, "userfaultfd creation should succeed");
->> +
->> +       struct uffdio_api uffdio_api = {
->> +               .api = UFFD_API,
->> +               .features = UFFD_FEATURE_MISSING_SHMEM,
-> 
-> I think you mean UFFD_FEATURE_MINOR_SHMEM...?
-> 
-> And I'm trying to think through what feature we should expose for
-> guest_memfd; UFFD_FEATURE_MINOR_SHMEM already indicates support for
-> shmem.
-> 
-> We could have UFFD_FEATURE_MINOR_GUESTMEMFD, perhaps that's enough.
+Remo
 
-Yes, I will introduce UFFD_FEATURE_MINOR_GUEST_MEMFD in the next version.
+---
+ rust/kernel/property.rs | 124 +++++++++++++++++++++++++---------------
+ 1 file changed, 77 insertions(+), 47 deletions(-)
 
-> 
-> Or we could have UFFD_FEATURE_MINOR_GENERIC (or nothing at all!). Some
-> VMAs might not support the minor mode, and the user will figure that
-> out when UFFDIO_REGISTER fails.
-
-My concern is the exact reason of the failure may not be apparent to the 
-caller in that case.
-
-> 
->> +       };
->> +       ret = ioctl(uffd, UFFDIO_API, &uffdio_api);
->> +       TEST_ASSERT(ret != -1, "ioctl(UFFDIO_API) should succeed");
->> +
->> +       mem = mmap(NULL, total_size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
->> +       TEST_ASSERT(mem != MAP_FAILED, "mmap should succeed");
->> +
->> +       mem_nofault = mmap(NULL, total_size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
->> +       TEST_ASSERT(mem_nofault != MAP_FAILED, "mmap should succeed");
->> +
->> +       uffd_reg.range.start = (unsigned long)mem;
->> +       uffd_reg.range.len = total_size;
->> +       uffd_reg.mode = UFFDIO_REGISTER_MODE_MINOR;
->> +       ret = ioctl(uffd, UFFDIO_REGISTER, &uffd_reg);
->> +       TEST_ASSERT(ret != -1, "ioctl(UFFDIO_REGISTER) should succeed");
->> +
->> +       ret = fallocate(fd, FALLOC_FL_KEEP_SIZE | FALLOC_FL_PUNCH_HOLE,
->> +                       offset, page_size);
->> +       TEST_ASSERT(!ret, "fallocate(PUNCH_HOLE) should succeed");
->> +
->> +       fault_addr = mem + offset;
->> +       args.addr = fault_addr;
->> +
->> +       ret = pthread_create(&fault_thread, NULL, fault_thread_fn, &args);
->> +       TEST_ASSERT(ret == 0, "pthread_create should succeed");
->> +
->> +       ret = read(uffd, &msg, sizeof(msg));
->> +       TEST_ASSERT(ret != -1, "read from userfaultfd should succeed");
->> +       TEST_ASSERT(msg.event == UFFD_EVENT_PAGEFAULT, "event type should be pagefault");
->> +       TEST_ASSERT((void *)(msg.arg.pagefault.address & ~(page_size - 1)) == fault_addr,
->> +                   "pagefault should occur at expected address");
->> +
->> +       memcpy(mem_nofault + offset, buf + offset, page_size);
->> +
->> +       uffd_cont.range.start = (unsigned long)fault_addr;
->> +       uffd_cont.range.len = page_size;
->> +       uffd_cont.mode = 0;
->> +       ret = ioctl(uffd, UFFDIO_CONTINUE, &uffd_cont);
->> +       TEST_ASSERT(ret != -1, "ioctl(UFFDIO_CONTINUE) should succeed");
->> +
->> +       ret = pthread_join(fault_thread, NULL);
->> +       TEST_ASSERT(ret == 0, "pthread_join should succeed");
-> 
-> And maybe also:
-> 
-> /* Right value? */
-> TEST_ASSERT(args.value == *(char *)mem_nofault));
-> /* No second fault? */
-> TEST_ASSERT(args.value == *(char *)mem);
-
-Good idea, thanks.  I don't need the volatile anymore :)
-
-> 
->> +
->> +       ret = munmap(mem_nofault, total_size);
->> +       TEST_ASSERT(!ret, "munmap should succeed");
->> +
->> +       ret = munmap(mem, total_size);
->> +       TEST_ASSERT(!ret, "munmap should succeed");
->> +       free(buf);
->> +       close(uffd);
->> +}
->> +
->>   unsigned long get_shared_type(void)
->>   {
->>   #ifdef __x86_64__
->> @@ -244,6 +335,9 @@ void test_vm_type(unsigned long type, bool is_shared)
->>          test_fallocate(fd, page_size, total_size);
->>          test_invalid_punch_hole(fd, page_size, total_size);
->>
->> +       if (is_shared)
->> +               test_uffd_missing(fd, page_size, total_size);
->> +
->>          close(fd);
->>          kvm_vm_release(vm);
->>   }
->> --
->> 2.47.1
->>
+diff --git a/rust/kernel/property.rs b/rust/kernel/property.rs
+index ceedd1a82..78dcc189e 100644
+--- a/rust/kernel/property.rs
++++ b/rust/kernel/property.rs
+@@ -4,7 +4,7 @@
+ //!
+ //! C header: [`include/linux/property.h`](srctree/include/linux/property.=
+h)
+=20
+-use core::{ffi::c_void, mem::MaybeUninit, ptr};
++use core::{mem::MaybeUninit, ptr};
+=20
+ use crate::{
+     alloc::KVec,
+@@ -13,7 +13,7 @@
+     error::{to_result, Result},
+     prelude::*,
+     str::{CStr, CString},
+-    types::{ARef, Integer, Opaque},
++    types::{ARef, Opaque},
+ };
+=20
+ impl Device {
+@@ -43,7 +43,7 @@ pub fn property_match_string(&self, name: &CStr, match_st=
+r: &CStr) -> Result<usi
+     }
+=20
+     /// Returns firmware property `name` integer array values in a KVec
+-    pub fn property_read_array_vec<'fwnode, 'name, T: Integer>(
++    pub fn property_read_array_vec<'fwnode, 'name, T: PropertyInt>(
+         &'fwnode self,
+         name: &'name CStr,
+         len: usize,
+@@ -52,7 +52,7 @@ pub fn property_read_array_vec<'fwnode, 'name, T: Integer=
+>(
+     }
+=20
+     /// Returns integer array length for firmware property `name`
+-    pub fn property_count_elem<T: Integer>(&self, name: &CStr) -> Result<u=
+size> {
++    pub fn property_count_elem<T: PropertyInt>(&self, name: &CStr) -> Resu=
+lt<usize> {
+         self.fwnode().property_count_elem::<T>(name)
+     }
+=20
+@@ -148,24 +148,17 @@ pub fn property_match_string(&self, name: &CStr, matc=
+h_str: &CStr) -> Result<usi
+     }
+=20
+     /// Returns firmware property `name` integer array values in a KVec
+-    pub fn property_read_array_vec<'fwnode, 'name, T: Integer>(
++    pub fn property_read_array_vec<'fwnode, 'name, T: PropertyInt>(
+         &'fwnode self,
+         name: &'name CStr,
+         len: usize,
+     ) -> Result<PropertyGuard<'fwnode, 'name, KVec<T>>> {
+         let mut val: KVec<T> =3D KVec::with_capacity(len, GFP_KERNEL)?;
+=20
+-        // SAFETY: `name` is non-null and null-terminated. `self.as_raw` i=
+s valid
+-        // because `self` is valid. `val.as_ptr` is valid because `val` is=
+ valid.
+-        let err =3D unsafe {
+-            bindings::fwnode_property_read_int_array(
+-                self.as_raw(),
+-                name.as_char_ptr(),
+-                T::SIZE as u32,
+-                val.as_ptr() as *mut c_void,
+-                len,
+-            )
+-        };
++        // SAFETY: `val.as_mut_ptr()` is valid because `KVec::with_capacit=
+y`
++        // didn't return an error and it has at least space for `len` numb=
+er
++        // of elements.
++        let err =3D unsafe { T::read_array_out_param(self, name, val.as_mu=
+t_ptr(), len) };
+         let res =3D if err < 0 {
+             Err(Error::from_errno(err))
+         } else {
+@@ -181,19 +174,11 @@ pub fn property_read_array_vec<'fwnode, 'name, T: Int=
+eger>(
+     }
+=20
+     /// Returns integer array length for firmware property `name`
+-    pub fn property_count_elem<T: Integer>(&self, name: &CStr) -> Result<u=
+size> {
++    pub fn property_count_elem<T: PropertyInt>(&self, name: &CStr) -> Resu=
+lt<usize> {
+         // SAFETY: `name` is non-null and null-terminated. `self.as_raw` i=
+s valid
+         // because `self` is valid. Passing null pointer buffer is valid t=
+o obtain
+         // the number of elements in the property array.
+-        let ret =3D unsafe {
+-            bindings::fwnode_property_read_int_array(
+-                self.as_raw(),
+-                name.as_char_ptr(),
+-                T::SIZE as u32,
+-                ptr::null_mut(),
+-                0,
+-            )
+-        };
++        let ret =3D unsafe { T::read_array_out_param(self, name, ptr::null=
+_mut(), 0) };
+         to_result(ret)?;
+         Ok(ret as usize)
+     }
+@@ -201,8 +186,8 @@ pub fn property_count_elem<T: Integer>(&self, name: &CS=
+tr) -> Result<usize> {
+     /// Returns the value of firmware property `name`.
+     ///
+     /// This method is generic over the type of value to read. Informally,
+-    /// the types that can be read are booleans, strings, integers and arr=
+ays
+-    /// of integers.
++    /// the types that can be read are booleans, strings, unsigned integer=
+s and
++    /// arrays of unsigned integers.
+     ///
+     /// Reading a `KVec` of integers is done with the
+     /// separate method [Self::property_read_array_vec], because it takes =
+an
+@@ -300,6 +285,9 @@ pub fn property_get_reference_args(
+             NArgs::N(nargs) =3D> (ptr::null(), nargs),
+         };
+=20
++        // SAFETY: `self.0.get()` is valid. `prop.as_char_ptr()` is valid =
+and
++        // zero-terminated. `nargs_prop` is valid and zero-terminated if `=
+nargs`
++        // is zero, otherwise it is allowed to be a null-pointer.
+         let ret =3D unsafe {
+             bindings::fwnode_property_get_reference_args(
+                 self.0.get(),
+@@ -388,34 +376,76 @@ fn read(fwnode: &FwNode, name: &CStr) -> Result<Self>=
+ {
+         Ok(str.try_into()?)
+     }
+ }
+-impl<T: Integer, const N: usize> Property for [T; N] {
++/// Implemented for all integers that can be read as properties.
++///
++/// This helper trait is needed to associate the integer types of various =
+sizes
++/// with their corresponding `fwnode_property_read_*_array` functions.
++pub trait PropertyInt: Property {
++    /// # Safety
++    ///
++    /// Callers must ensure that if `len` is non-zero, `out_param` must be
++    /// valid and point to memory that has enough space to hold at least `=
+len`
++    /// number of elements.
++    unsafe fn read_array_out_param(
++        fwnode: &FwNode,
++        name: &CStr,
++        out_param: *mut Self,
++        len: usize,
++    ) -> ffi::c_int;
++}
++// This macro generates implementations of the traits `Property` and
++// `PropertyInt` for integers of various sizes. Its input is a list
++// of pairs separated by commas. The first element of the pair is the
++// type of the integer, the second one is the name of its corresponding
++// `fwnode_property_read_*_array` function.
++macro_rules! impl_property_for_int {
++    ($($int:ty: $f:ident),* $(,)?) =3D> { $(
++        impl Property for $int {
++            fn read(fwnode: &FwNode, name: &CStr) -> Result<Self> {
++                let val: [_; 1] =3D <[$int; 1] as Property>::read(fwnode, =
+name)?;
++                Ok(val[0])
++            }
++        }
++        impl PropertyInt for $int {
++            unsafe fn read_array_out_param(
++                fwnode: &FwNode,
++                name: &CStr,
++                out_param: *mut Self,
++                len: usize,
++            ) -> ffi::c_int {
++                // SAFETY: `name` is non-null and null-terminated.
++                // `fwnode.as_raw` is valid because `fwnode` is valid.
++                // `out_param` is valid and has enough space for at least
++                // `len` number of elements as per the safety requirement.
++                unsafe {
++                    bindings::$f(fwnode.as_raw(), name.as_char_ptr(), out_=
+param, len)
++                }
++            }
++        }
++    )* };
++}
++impl_property_for_int! {
++    u8: fwnode_property_read_u8_array,
++    u16: fwnode_property_read_u16_array,
++    u32: fwnode_property_read_u32_array,
++    u64: fwnode_property_read_u64_array,
++}
++impl<T: PropertyInt, const N: usize> Property for [T; N] {
+     fn read(fwnode: &FwNode, name: &CStr) -> Result<Self> {
+         let mut val: [MaybeUninit<T>; N] =3D [const { MaybeUninit::uninit(=
+) }; N];
+=20
+-        // SAFETY: `name` is non-null and null-terminated. `fwnode.as_raw`=
+ is valid
+-        // because `fwnode` is valid. `val.as_ptr` is valid because `val` =
+is valid.
+-        let ret =3D unsafe {
+-            bindings::fwnode_property_read_int_array(
+-                fwnode.as_raw(),
+-                name.as_char_ptr(),
+-                T::SIZE as u32,
+-                val.as_mut_ptr().cast(),
+-                val.len(),
+-            )
+-        };
++        // SAFETY: `name` is non-null and null-terminated. `fwnode.as_raw`=
+ is
++        // valid because `fwnode` is valid. `val.as_ptr` is valid because =
+`val`
++        // is valid. Casting from `*mut MaybeUninit<T>` to `*mut T` is saf=
+e
++        // because `MaybeUninit<T>` has the same memory layout as `T`.
++        let ret =3D unsafe { T::read_array_out_param(fwnode, name, val.as_=
+mut_ptr().cast(), N) };
+         to_result(ret)?;
+=20
+         // SAFETY: `val` is always initialized when
+-        // fwnode_property_read_int_array is successful.
++        // fwnode_property_read_$t_array is successful.
+         Ok(val.map(|v| unsafe { v.assume_init() }))
+     }
+ }
+-impl<T: Integer> Property for T {
+-    fn read(fwnode: &FwNode, name: &CStr) -> Result<T> {
+-        let val: [_; 1] =3D <[T; 1] as Property>::read(fwnode, name)?;
+-        Ok(val[0])
+-    }
+-}
+=20
+ /// The number of arguments of a reference.
+ pub enum NArgs<'a> {
+--=20
+2.49.0
 
