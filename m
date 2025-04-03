@@ -1,65 +1,73 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CBF924C08D
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 13:49:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74FAA24CEE9
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 13:49:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743688176; cv=none; b=IVdM0vspcxGrsL/bEjrMOD9wh9pTv2lVEdLQQwL4OsKWxwXS6AMYj9n4tKXlkTcyUsgzMweGOlvOT5r6Po4WbUbmLn3HWxrYI3EdE0HqbhdSed0NC8remVqD1UP8iJmwukU8GbymSn1Hr1gcIUF+40y9OYfzuj+Q8VCBDg9RrZA=
+	t=1743688198; cv=none; b=GT6XHVx1AXDNvR43NdZURzQ8/lh+10Bq7C0C7Kq6nex/KMqw4HxLMhZw5NdUiELIinwQ75oXh+yky/zwFUsBIaSlXIDUKtO60jvUhHjiz6gZfPca0Kz2ua7Syv2YAupRXns5Xz8lrkhZd/fmTbLS0KPttaC95aNuDvg8kkDWNkw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743688176; c=relaxed/simple;
-	bh=dmBi8Z4Puvc/iWOE8+hwaz+c4m0DMk7B1xt1gvWi3uY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jZIXGjzLCjS/JQ3q/H7Lrp0Op0fRYolWK8H9QCWtuQSQeR+IPOYoXVJjUggc8viRehz+iitIuq5eVXw9HcNA0guAKVctFj0blAUIEvpFMSULhPiqSZaVJUx75uvYr1+ehkI6HU9FmlncNQqpSzZx4y6tzkrhMxB40kA1BuWpu8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=THOWBo1P; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1743688198; c=relaxed/simple;
+	bh=8wd++/QS/xpM3EXXxc69GzFn6SgURG8H5mMkQefQd1M=;
+	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=YM0SpbdArLoAn1styfazkbmEliFa7ro0GR3CQ/FCU+vzCL9cqg9ToJGDhV1a2QC3+jBj7DkgzNHpDAK62nyBvwoYkuuQrJjOmdtUFy7q4vM54hdAfOzE9+jxJ7UBPvK+PwUqc+9xVwthKZNP4RLUJ+6h19svS/rWsY2B+jxVrfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EGe7An1w; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="THOWBo1P"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43cec5cd73bso5197885e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 06:49:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743688172; x=1744292972; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=+Lbun0GNki6Idmi3A3g8x7YFlOE4BIKGs03UY95gVCA=;
-        b=THOWBo1PhH/DolX4Sut/QzyvEmLXXvoj+SKwyUwHJ3CQyVus9J8UgUBAK05jUUPUvX
-         hrPDREEWbVCJa1R4E66S6h89dd87+QWaJ1aUzoeZIkxGQDt8t6eH3PT7QeEpjOydFNDz
-         qIizmvuw0PvIm2g25Xyu90CdJVx2aNA9fwuwRGYVEtXjyU2cjrMtPLJY/Pb71OusI/LL
-         zWswUO0jQCw/ur/gTKm/hFwLS5OQK5IBYF+nSSXjByb4npZceXtKfA716T27DU3bP+aF
-         6KIm2tkTQ8L9bdjf04OppkFyrHNbkUxX3TSZghTClsMF4UZH3QL2gxoiPOAG5ilkefJe
-         ZYVQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EGe7An1w"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743688195;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0eAoy1aQ30yuScjB2LdD2aKFWnFzP7D/Q7jd8pjdm/k=;
+	b=EGe7An1w60vMu0idRaQLbb8TJHgfNkLzRggtUllvcsvv4F5qEpgsU6wxOrmWrEPtovYdz6
+	hQJYzwcHE/Dd2YLmh3DkjVsh+YgB9KVk4uSIvljly1crAQGCwHlJPxnWzxsh1I7AtiiDuc
+	N3XINdJLbux401MCNMLAajCuxM4elOg=
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
+ [209.85.219.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-199-ytSdaI2uPFy44Ocj2F6wLw-1; Thu, 03 Apr 2025 09:49:53 -0400
+X-MC-Unique: ytSdaI2uPFy44Ocj2F6wLw-1
+X-Mimecast-MFC-AGG-ID: ytSdaI2uPFy44Ocj2F6wLw_1743688191
+Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6e905e89798so12996546d6.3
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 06:49:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743688172; x=1744292972;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1743688191; x=1744292991;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:user-agent:mime-version:date:message-id:from
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+Lbun0GNki6Idmi3A3g8x7YFlOE4BIKGs03UY95gVCA=;
-        b=BpFjcZSOOY5jLPWuGnEuyGKIo+hqM3GtJXvuxDhIinxbnjTVDYufe+m50mhMh5UPNx
-         1joU1qosYp/TOa0iytsIWSkV6CkAQmT2sUL4vfGs8JbNJQIW5v7ufmIsvrBcDqInFPeY
-         hZP8ID3VraBrVFgtyiQxWJG7TtneJlL2CMomWr84ukju9NG42bcE4Dlkx1jbPCx1Gc6t
-         2YtM9iq/t1NcFCtzqNgnfvGRC9G1yeSc6Q9qLrmSs/bd7l5gBky6pJJXFj+BtJkBKVyA
-         OHfhPKvPs015/8o6YkCtSMi+bNxhB5Jcp/j7j/N3TFyslO5onq/ldmw8qSubhkAgGYmP
-         mrhg==
-X-Forwarded-Encrypted: i=1; AJvYcCUlXyPqh6p0MmW/LFsV0r4tormaaldbFnRjxbYGeB04HKigMOxW6xU12LwTdp7A/nCEDntS+zSKJwEDNfA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXLTVk8hxlP+Pl8sp1+oqX9Ex3ozrkHTQk1Z6W8AjDL6jGCDBF
-	5JHkuU141SMTLT2EABrRsipS0RZ6uXmX9Q4X9CRgpiL95vDt9Dnx9EIXeYgbGsA=
-X-Gm-Gg: ASbGncvi32/1fo6UnZmfSRBBnwjOgSBkJKYyu/1G8pychg0VaoJT1IUiYbXfk5nWWfX
-	cxU55FGlhww0tiDle6LDDNIm9MXy3Wj4rhlhz3B2FH+d/OCc11k5+VtptFU655NirYD4lmBv1Sa
-	PpdTvAjlCrfUkQgO44QTy3eP71tRUDrtoSXc8FYIksRLt9CuMfOtZo4dpwqsIC0yxP6G0BGEebD
-	1V83O9OR3Ot4YUU1WcgOcnrHalZO2dlDkcHTTojkpPnCKhu8u+7Rr8OuZYpOhYxxeViGLJ8R2lt
-	GFPK5M9ai+DvzR7mtewa3naP28C+L9fMLR6Pq7tad8EKU4b+6f53ZY/pn/+6UQ5aD+tK1Lj5FA=
-	=
-X-Google-Smtp-Source: AGHT+IE9rPmpD+lql1OOhXGIwaIr3nFGx77QjAL7GITh3M6FkiFPLNOqADUYHdezax8BrNQwiF0+bA==
-X-Received: by 2002:a05:600c:4589:b0:43d:300f:fa51 with SMTP id 5b1f17b1804b1-43eb5c187e8mr59872065e9.9.1743688172289;
-        Thu, 03 Apr 2025 06:49:32 -0700 (PDT)
-Received: from [192.168.68.117] ([5.133.47.210])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-43ec1692ba4sm22202575e9.16.2025.04.03.06.49.31
+        bh=0eAoy1aQ30yuScjB2LdD2aKFWnFzP7D/Q7jd8pjdm/k=;
+        b=hBIo662CVSstV6tBvSebHS2v+6tfNVnysrR70ZUn+So2WOsRX6taI3Uw91yj1OO9EJ
+         JqLc3LD4rj2w2lauMVd0sntYFyb4yUh7pfWnrHd+jxylwW4N6vPWYcpuHpF6HkJU4t0z
+         ifr21FhbguFdVkuECHv5M4a0pnqIjlITpva6XdeHsmghsbsQflIBkvZgJWL+nxDYdhKm
+         9YHyrU0gm9TP0dNz/Q27+xJymmro1wr0c8SdvsCK66vMY3vGjlkNUPVbfp0aEcOdAD9W
+         ZP6qergvoVZ0ywOzhO6+zfmifsz0mEWQWlmF1lAO0lk4bzMVo3clwCNA4ldFwlO/3Zg6
+         rNXg==
+X-Forwarded-Encrypted: i=1; AJvYcCXUM0sfw/UU5vEyAZ3xcI/6Z1GxDsYEPxXF6pc+/k6zWnduS0kTn1hfl4U3axb1XIyOhDClvC8xdwUdr6M=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywe2sarg0pC+++GQrZoycIfVLtrCdmoR7u0+n7Qwj0iEl0yHWuy
+	7lnW5fMoQb/wdL90GVe39sfo37gww+PMTOgpV5AI2Qvi4jeh8WHRVbO+Nzml/Jhtfg33Ra4pH5i
+	rd9Fgggp9vSuNgXAh2N0PlnbW/DTAHBenC90vt88I2U7PqvihrL3BO/LFJIY0ag==
+X-Gm-Gg: ASbGnct/GIZJ8aQtfQtHy0R5QKUNqYXU+yQ1kK6nvh+HgyfS/u8tk2KHnETHLm/b6Hu
+	o7er14iCyFDTXD3CkzMX6OK8ZHDDWzYj5UJOSRYKoU/bV0dkFpRX1LMAxnZJ7D4foLo08KeTQ/l
+	98M97gekqnhqzVTCAPqmVZ8uGCAjHSY1GmfAhZ++3TFl6cIOgvF32tOnBR4SSJtaC2OeV2Vvt2j
+	4mBXPs3oAwzWNJ9HibNLH5X2mI5xx68FrcS8ZfPEr6MTTJ03k9T0fVHZDi+jgr0QgkMIEP8+3Ti
+	T7U5PVrm83hp/DMGEJ2uCnWXi7F70cqkMxN7ZiR6v4Hjc6c/cxq4+ZZWHfMG9Q==
+X-Received: by 2002:a05:6214:d45:b0:6ea:d604:9e59 with SMTP id 6a1803df08f44-6ef02b7fe83mr105374956d6.9.1743688191331;
+        Thu, 03 Apr 2025 06:49:51 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFbzjYUkcoGjF250F0Pl2Phd2PHHM5mJucKy2fKCWScw+uUZHWYUOwP0vKoI8Pljh7xHfeTTw==
+X-Received: by 2002:a05:6214:d45:b0:6ea:d604:9e59 with SMTP id 6a1803df08f44-6ef02b7fe83mr105374666d6.9.1743688190985;
+        Thu, 03 Apr 2025 06:49:50 -0700 (PDT)
+Received: from ?IPV6:2601:188:c100:5710:315f:57b3:b997:5fca? ([2601:188:c100:5710:315f:57b3:b997:5fca])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6ef0f14cf41sm7678356d6.105.2025.04.03.06.49.50
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Apr 2025 06:49:31 -0700 (PDT)
-Message-ID: <fe188552-3f1c-49f3-96ef-6e5aca6896ca@linaro.org>
-Date: Thu, 3 Apr 2025 14:49:31 +0100
+        Thu, 03 Apr 2025 06:49:50 -0700 (PDT)
+From: Waiman Long <llong@redhat.com>
+X-Google-Original-From: Waiman Long <longman@redhat.com>
+Message-ID: <2fa642e3-4ee9-497f-8c3c-49abb712a679@redhat.com>
+Date: Thu, 3 Apr 2025 09:49:49 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,121 +75,54 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/3] misc: fastrpc: add support for gpdsp remoteproc
-To: Ekansh Gupta <ekansh.gupta@oss.qualcomm.com>,
- Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: Ling Xu <quic_lxu5@quicinc.com>, andersson@kernel.org,
- konradybcio@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, amahesh@qti.qualcomm.com, arnd@arndb.de,
- gregkh@linuxfoundation.org, quic_kuiw@quicinc.com,
- quic_ekangupt@quicinc.com, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- dri-devel@lists.freedesktop.org
-References: <20250320091446.3647918-1-quic_lxu5@quicinc.com>
- <20250320091446.3647918-3-quic_lxu5@quicinc.com>
- <30bba296-8e6f-41ee-880e-2d5ecc8fe5a4@linaro.org>
- <qhriqbm6fcy5vcclfounaaepxcvnck2lb7k2gcpbtrojqzehua@khv5lwdgbysc>
- <9962c517-5c0e-4d46-ac0c-2a7bab550156@linaro.org>
- <412fe24e-ce70-4733-ace5-d3fbe43476c4@oss.qualcomm.com>
- <c27a97ed-c765-421a-a48c-3abbae3bac93@oss.qualcomm.com>
- <bfa29a76-f89a-4398-b6b3-1be7ae6cf8b3@oss.qualcomm.com>
+Subject: Re: [PATCH 07/10] cgroup/cpuset: Remove unneeded goto in
+ sched_partition_write() and rename it
+To: =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>
+Cc: Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
+ Shuah Khan <shuah@kernel.org>, cgroups@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+References: <20250330215248.3620801-1-longman@redhat.com>
+ <20250330215248.3620801-8-longman@redhat.com>
+ <t5gojwcnwdb36ppkhq6hpujmyatckg5wd5eigsnmt2kndfofe7@ymc7tiury62o>
 Content-Language: en-US
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-In-Reply-To: <bfa29a76-f89a-4398-b6b3-1be7ae6cf8b3@oss.qualcomm.com>
+In-Reply-To: <t5gojwcnwdb36ppkhq6hpujmyatckg5wd5eigsnmt2kndfofe7@ymc7tiury62o>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
 
+On 4/3/25 9:33 AM, Michal Koutný wrote:
+> On Sun, Mar 30, 2025 at 05:52:45PM -0400, Waiman Long <longman@redhat.com> wrote:
+>> The goto statement in sched_partition_write() is not needed. Remove
+>> it and rename sched_partition_write()/sched_partition_show() to
+>> cpuset_partition_write()/cpuset_partition_show().
+>>
+>> Signed-off-by: Waiman Long <longman@redhat.com>
+>> ---
+>>   kernel/cgroup/cpuset.c | 15 ++++++---------
+>>   1 file changed, 6 insertions(+), 9 deletions(-)
+> ...
+>
+> Also noticed (here or for the preceding comments&cleanup patch):
+>
+> --- a/kernel/cgroup/cpuset.c
+> +++ b/kernel/cgroup/cpuset.c
+> @@ -3525,8 +3525,8 @@ static int cpuset_css_online(struct cgroup_subsys_state *css)
+>    * in the default hierarchy where only changes in partition
+>    * will cause repartitioning.
+>    *
+> - * If the cpuset has the 'sched.partition' flag enabled, simulate
+> - * turning 'sched.partition" off.
+> + * If the cpuset has the 'cpus.partition' flag enabled, simulate
+> + * turning 'cpus.partition" off.
+>    */
+>
+>   static void cpuset_css_offline(struct cgroup_subsys_state *css)
+>
+>
+> Next time...
 
-On 03/04/2025 05:44, Ekansh Gupta wrote:
-> 
-> On 4/2/2025 2:12 PM, Dmitry Baryshkov wrote:
->> On 02/04/2025 11:38, Ekansh Gupta wrote:
->>>
->>> On 3/21/2025 5:53 PM, Srinivas Kandagatla wrote:
->>>>
->>>> On 20/03/2025 18:43, Dmitry Baryshkov wrote:
->>>>> On Thu, Mar 20, 2025 at 05:11:20PM +0000, Srinivas Kandagatla wrote:
->>>>>>
->>>>>> On 20/03/2025 09:14, Ling Xu wrote:
->>>>>>> The fastrpc driver has support for 5 types of remoteprocs. There are
->>>>>>> some products which support GPDSP remoteprocs. Add changes to support
->>>>>>> GPDSP remoteprocs.
->>>>>>>
->>>>>>> Reviewed-by: Dmitry Baryshkov<dmitry.baryshkov@oss.qualcomm.com>
->>>>>>> Signed-off-by: Ling Xu<quic_lxu5@quicinc.com>
->>>>>>> ---
->>>>>>>      drivers/misc/fastrpc.c | 10 ++++++++--
->>>>>>>      1 file changed, 8 insertions(+), 2 deletions(-)
->>>>>>>
->>>>>>> diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
->>>>>>> index 7b7a22c91fe4..80aa554b3042 100644
->>>>>>> --- a/drivers/misc/fastrpc.c
->>>>>>> +++ b/drivers/misc/fastrpc.c
->>>>>>> @@ -28,7 +28,9 @@
->>>>>>>      #define SDSP_DOMAIN_ID (2)
->>>>>>>      #define CDSP_DOMAIN_ID (3)
->>>>>>>      #define CDSP1_DOMAIN_ID (4)
->>>>>>> -#define FASTRPC_DEV_MAX        5 /* adsp, mdsp, slpi, cdsp, cdsp1 */
->>>>>>> +#define GDSP0_DOMAIN_ID (5)
->>>>>>> +#define GDSP1_DOMAIN_ID (6)
->>>>>> We have already made the driver look silly here, Lets not add domain ids for
->>>>>> each instance, which is not a scalable.
->>>>>>
->>>>>> Domain ids are strictly for a domain not each instance.
->>>>> Then CDSP1 should also be gone, correct?
->>>> Its already gone as part of the patch that I shared in this discussion.
->>>>
->>>> I will send a proper patch to list once Ling/Ekansh has agree with it.
->>>>
->>> Thanks, Srini, for sharing this clean-up patch. It looks proper to
->>> me, but I was thinking if we could remove the domain_id dependency
->>> from the fastrpc driver. The addition of any new DSP will frequently
->>> require changes in the driver. Currently, its usage is for creating
->>> different types of device nodes and transferring memory ownership to
->>> SLPI when a memory region is added.
->>>
->>> The actual intention behind different types of device nodes can be
->>> defined as follows:
->>>
->>> fastrpc-xdsp-secure: Used for signed (privileged) PD offload and for daemons.
->>> fastrpc-xdsp: Should be used only for unsigned (less privileged) PD offload.
->>>
->>> The reason for this constraint is to prevent any untrusted process
->>> from communicating with any privileged PD on DSP, which poses a security risk.
->>> The access to different device nodes can be provided/restricted based on UID/GID
->>> (still need to check more on this; on Android-like systems, this is controlled by
->>> SELinux).
->>>
->>> There is already a qcom,non-secure-domain device tree property[1] which doesn't
->>> have a proper definition as of today. The actual way to differentiate between
->>> secure and non-secure DSP should be based on its ability to support unsigned PD.
->>>
->>> One way to remove the domain_id dependency that I can think of is to use this
->>> property to create different types of device nodes. Essentially, if unsigned PD
->>> is supported (e.g., CDSP, GPDSP), we add this property to the DT node and create
->>> both types of device nodes based on this. Otherwise, only the secure device node
->>> is created.
->> This sounds like breaking backwards compatibility on the userspace side. You can not do that.
-> Okay, I thought if the property is added for all older platforms, that will ensure backward
-> compatibility is maintained for old built applications.
-> 
->  From userspace, the expected device open sequence is to try with the secure device node and
-> fallback to the default/non-secure node if the secure node is not available/accessible.
-> I understand the ABI cannot be broken, and this expectation should be added for new
-> applications/platforms.
-> 
-> This is still a security issue that needs to be fixed in some way. I'll try to find out if any other
-> approach can address this.
-In the past I have suggested you to update the dt-bindings so that any 
-new platforms that get added will not use the qcom,non-secure-domain 
-flag. The usage of this flag is still confusing for any new users, as 
-per the dt bindings its open to be used.
+Thanks for catching that. Will fix in a follow up commit.
 
-As we can not break the backwards compatibility, why not just restrict 
-that to those platforms for now, and enforce new platforms to use not 
-use it for for domains like adsp.
-
---srini
-
+Cheers,
+Longman
 
