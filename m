@@ -1,61 +1,36 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DD58219E4;
-	Thu,  3 Apr 2025 20:27:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4991C1F9AA6
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 20:27:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743712055; cv=none; b=q6OxMdr95JYtcBqaZsQ9UwLrZk7bXzPanhZD2LMf38MRIbggMkJnq57GMBpcRwJrjQhuVT/m9wMNZl2Yy+3jS0Syo0nIXSWRR1hKAtxEzDuVrXn38Vna2pQFs5oHduv/CyVdPiNLZFdtz9zIGeZmMLm+OH4/ij9cuNcxQwU0tSE=
+	t=1743712079; cv=none; b=S90N23Hij3RrOE3f0FDoa09ZYZwwtgYyHJGG/hY5U8U8IfT5MiTEJtwEu1m0jGchmVID6J3DEGt0O9ti96HioRbUU3gIGKhmVSYEO8QRofK1q4jrtJVmoEmXko6I9XsHFwLbvT1lb+eg80bM4E5Av+bmUdDREEimDcFi4HA3FMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743712055; c=relaxed/simple;
-	bh=z20xVVv3gTB8lJMCA/nIoSqVAYFn3QUgaQn044WvAA0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KrLuhhKkU1rdDjFbE6dMqSGp56+hvd8gmIp/zu8PQO99k2eT4f2juTI5KVyRbBW2PJUnXbLiBUi62eafBUnmPYroxMlsAsb3sS3r7RXL0Axl8ehrOt0DHvHoNAypt+CKhg7tnj+jb1YJP+75VUY/SYtjTkI1+/5t6uWMl/RQE0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=UL/+Kbaq; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1743712079; c=relaxed/simple;
+	bh=o34Wm7N9yvonWKFJ1FAFCqSY8wLl2H0sf0PCziZvgZ4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=j8qsQ95Gq4i4NKPAUgXVgRyQ2+G0B/28pcwk2PdZK5mlv5VGEP3AR8DHcmtWht5uzWXqAmIsisW7mgFPvWMjRFdq7c9fnNKjh5yiKbS65xp0AZSStxDykBU4FaQd4lVlG1rOuY9/R1s0dW9Q4ck5hTg2WM3dnenUlzlJgKY4NwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=VYIFNzKn; arc=none smtp.client-ip=91.218.175.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="UL/+Kbaq"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=ikKQhOvjTFsxhuP/UUycw802kvwD0C3mBIi4Nalcuk0=; b=UL/+KbaqYkQjwWdJ/s1IhbWwr8
-	CEdOBhqCajp9OPBlHlITyxVYIfTpLVzJFHSLB4ngKCbhDcJENF9PDg4bAUbBsqreZGc9IR8fw17gY
-	6hoPotAgb+LuDYkgtY4XBJ2s7ujD8aJ7EFe+hj1vhYHF5JIICVMua7rK+7fs9uQb1pnSf7WfbtkfJ
-	FJJKqYBjz4c95HCzZMC6iSLYQawU7yofU1w8pDOXFmJHFqrOA4MdFi+W6XK6YZ0cfJNNq6hVdpdFI
-	YQb5q0ZY+1sw9SqqiopiTBwBEmyU62Q+jyi5HwnAAqwWS63KumrPKnGMeQ5vDla8ctpoRjrec0YwT
-	FHPCemxQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:50296)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1u0R9i-0000ts-2k;
-	Thu, 03 Apr 2025 21:27:20 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1u0R9e-00053J-03;
-	Thu, 03 Apr 2025 21:27:14 +0100
-Date: Thu, 3 Apr 2025 21:27:13 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Sean Anderson <sean.anderson@linux.dev>
-Cc: netdev@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	Christian Marangi <ansuelsmth@gmail.com>, upstream@airoha.com,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Michal Simek <michal.simek@amd.com>,
-	Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>,
-	Robert Hancock <robert.hancock@calian.com>,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [RFC net-next PATCH 07/13] net: pcs: Add Xilinx PCS driver
-Message-ID: <Z-7vIbvtjIGS5hzr@shell.armlinux.org.uk>
-References: <20250403181907.1947517-1-sean.anderson@linux.dev>
- <20250403181907.1947517-8-sean.anderson@linux.dev>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="VYIFNzKn"
+Date: Thu, 3 Apr 2025 16:27:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1743712073;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=Qfyn75EUB+C3hjqxdtPQcTgA+wSvijx5zHVJq88++QU=;
+	b=VYIFNzKn5YY6Ntl+YyuuRgwQaGalweqhxWmlJr2gsfXjFkjhE7WOQ+bcrX5srLnZo2aDQZ
+	ArgUlsO/WbX2fhqGFygp9dH6PwOLl++ATE9T41izB5nzBv4EzXGiMWL4ivN5q/oDyQEmLm
+	NQQrFxdxibMeOP64dls3q0Zjuhu36Rs=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] bcachefs fixes for 6.15-rc1
+Message-ID: <6xmil47xtrx6n7aimj4jf3yvobcyfqqfljj2d2fju7etuguquy@r4j6oyqaicmo>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,67 +39,116 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250403181907.1947517-8-sean.anderson@linux.dev>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, Apr 03, 2025 at 02:19:01PM -0400, Sean Anderson wrote:
-> +static int xilinx_pcs_validate(struct phylink_pcs *pcs,
-> +			       unsigned long *supported,
-> +			       const struct phylink_link_state *state)
-> +{
-> +	__ETHTOOL_DECLARE_LINK_MODE_MASK(xilinx_supported) = { 0 };
-> +
-> +	phylink_set_port_modes(xilinx_supported);
-> +	phylink_set(xilinx_supported, Autoneg);
-> +	phylink_set(xilinx_supported, Pause);
-> +	phylink_set(xilinx_supported, Asym_Pause);
-> +	switch (state->interface) {
-> +	case PHY_INTERFACE_MODE_SGMII:
-> +		/* Half duplex not supported */
-> +		phylink_set(xilinx_supported, 10baseT_Full);
-> +		phylink_set(xilinx_supported, 100baseT_Full);
-> +		phylink_set(xilinx_supported, 1000baseT_Full);
-> +		break;
-> +	case PHY_INTERFACE_MODE_1000BASEX:
-> +		phylink_set(xilinx_supported, 1000baseX_Full);
-> +		break;
-> +	case PHY_INTERFACE_MODE_2500BASEX:
-> +		phylink_set(xilinx_supported, 2500baseX_Full);
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	linkmode_and(supported, supported, xilinx_supported);
-> +	return 0;
+this looks bigger than it is, thanks to the 'kill btree_iter.trans'
+patch...
 
-You can not assume that an interface mode implies any particular media.
-For example, you can not assume that just because you have SGMII, that
-the only supported media is BaseT. This has been a fundamental principle
-in phylink's validation since day one.
+The following changes since commit 650f5353dcc9b6e690a1c763754fa1e98d217bfc:
 
-Phylink documentation for the pcs_validate() callback states:
+  bcachefs: fix bch2_write_point_to_text() units (2025-03-30 20:04:16 -0400)
 
- * Validate the interface mode, and advertising's autoneg bit, removing any
- * media ethtool link modes that would not be supportable from the supported
- * mask. Phylink will propagate the changes to the advertising mask. See the
- * &struct phylink_mac_ops validate() method.
+are available in the Git repository at:
 
-and if we look at the MAC ops validate (before it was removed):
+  git://evilpiepirate.org/bcachefs.git tags/bcachefs-2025-04-03
 
-- * Clear bits in the @supported and @state->advertising masks that
-- * are not supportable by the MAC.
-- *
-- * Note that the PHY may be able to transform from one connection
-- * technology to another, so, eg, don't clear 1000BaseX just
-- * because the MAC is unable to BaseX mode. This is more about
-- * clearing unsupported speeds and duplex settings. The port modes
-- * should not be cleared; phylink_set_port_modes() will help with this.
+for you to fetch changes up to 77ad1df82b9e8d169e3ec9ee8b7caabfa45872ce:
 
-PHYs can and do take SGMII and provide both BaseT and BaseX or BaseR
-connections. A PCS that is not directly media facing can not dictate
-the link modes.
+  bcachefs: Fix "journal stuck" during recovery (2025-04-03 12:11:43 -0400)
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+----------------------------------------------------------------
+bcachefs fixes for 6.15-rc1
+
+More notable fixes:
+
+- Fix for striping behaviour on tiering filesystems where replicas
+  exceeds durability on destination target
+- Fix a race in device removal where deleting alloc info races with the
+  discard worker
+- Some small stack usage improvements: this is just enough for KMSAN
+  builds to not blow the stack, more is queued up for 6.16.
+
+----------------------------------------------------------------
+Bharadwaj Raju (1):
+      bcachefs: use nonblocking variant of print_string_as_lines in error path
+
+Eric Biggers (1):
+      bcachefs: add missing selection of XARRAY_MULTI
+
+Kent Overstreet (13):
+      bcachefs: Fix striping behaviour
+      bcachefs: Fix field spanning write warning
+      bcachefs: Fix null ptr deref in bch2_write_endio()
+      bcachefs: fix ref leak in btree_node_read_all_replicas
+      bcachefs: Split up bch_dev.io_ref
+      bcachefs: do_trace_key_cache_fill()
+      bcachefs: Kill btree_iter.trans
+      bcachefs: bch_dev_usage_full
+      bcachefs: Fix scheduling while atomic from logging changes
+      bcachefs: Fix check_snapshot_exists() restart handling
+      bcachefs: Fix null ptr deref in invalidate_one_bucket()
+      bcachefs: backpointer_get_key: check for null from peek_slot()
+      bcachefs: Fix "journal stuck" during recovery
+
+Wentao Liang (1):
+      bcachefs: Add error handling for zlib_deflateInit2()
+
+ fs/bcachefs/Kconfig                 |   1 +
+ fs/bcachefs/acl.c                   |   4 +-
+ fs/bcachefs/alloc_background.c      |  95 +++++++++---------
+ fs/bcachefs/alloc_background.h      |   6 +-
+ fs/bcachefs/alloc_foreground.c      |  79 +++++++++++----
+ fs/bcachefs/backpointers.c          |  24 +++--
+ fs/bcachefs/bcachefs.h              |   7 +-
+ fs/bcachefs/btree_gc.c              |   4 +-
+ fs/bcachefs/btree_io.c              |  17 +++-
+ fs/bcachefs/btree_iter.c            | 188 ++++++++++++++++++------------------
+ fs/bcachefs/btree_iter.h            | 122 ++++++++++++-----------
+ fs/bcachefs/btree_key_cache.c       |  32 +++---
+ fs/bcachefs/btree_node_scan.c       |   8 +-
+ fs/bcachefs/btree_types.h           |   1 -
+ fs/bcachefs/btree_update.c          |  26 ++---
+ fs/bcachefs/btree_update_interior.c |  12 +--
+ fs/bcachefs/btree_write_buffer.c    |  10 +-
+ fs/bcachefs/buckets.c               |  16 ++-
+ fs/bcachefs/buckets.h               |  21 ++--
+ fs/bcachefs/buckets_types.h         |   5 +
+ fs/bcachefs/chardev.c               |  14 +--
+ fs/bcachefs/compress.c              |   5 +-
+ fs/bcachefs/data_update.c           |   8 +-
+ fs/bcachefs/debug.c                 |   4 +-
+ fs/bcachefs/dirent.c                |  16 +--
+ fs/bcachefs/disk_accounting.c       |   4 +-
+ fs/bcachefs/disk_groups.c           |   4 +-
+ fs/bcachefs/ec.c                    |  18 ++--
+ fs/bcachefs/error.c                 |   7 +-
+ fs/bcachefs/extent_update.c         |   6 +-
+ fs/bcachefs/fs-io-buffered.c        |   6 +-
+ fs/bcachefs/fs-io.c                 |  14 +--
+ fs/bcachefs/fs.c                    |  24 ++---
+ fs/bcachefs/fsck.c                  |  30 +++---
+ fs/bcachefs/inode.c                 |  18 ++--
+ fs/bcachefs/io_misc.c               |  18 ++--
+ fs/bcachefs/io_read.c               |  14 +--
+ fs/bcachefs/io_write.c              |  40 +++++---
+ fs/bcachefs/journal.c               |  14 ++-
+ fs/bcachefs/journal_io.c            |   8 +-
+ fs/bcachefs/migrate.c               |   4 +-
+ fs/bcachefs/move.c                  |  14 +--
+ fs/bcachefs/movinggc.c              |   8 +-
+ fs/bcachefs/namei.c                 |  38 ++++----
+ fs/bcachefs/quota.c                 |   2 +-
+ fs/bcachefs/rebalance.c             |  12 +--
+ fs/bcachefs/recovery.c              |   6 +-
+ fs/bcachefs/reflink.c               |  23 ++---
+ fs/bcachefs/sb-members.h            |  23 ++---
+ fs/bcachefs/snapshot.c              |  13 +--
+ fs/bcachefs/str_hash.c              |   2 +-
+ fs/bcachefs/str_hash.h              |   8 +-
+ fs/bcachefs/subvolume.c             |   4 +-
+ fs/bcachefs/subvolume.h             |  14 +--
+ fs/bcachefs/super-io.c              |  21 ++--
+ fs/bcachefs/super.c                 |  85 +++++++++++-----
+ fs/bcachefs/tests.c                 |  30 +++---
+ fs/bcachefs/xattr.c                 |   2 +-
+ 58 files changed, 710 insertions(+), 549 deletions(-)
