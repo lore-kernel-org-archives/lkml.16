@@ -1,110 +1,129 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD35F22E403
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 19:19:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73A4622F17A;
+	Thu,  3 Apr 2025 19:19:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743707950; cv=none; b=Keq/ftpMln2pYSfBABIBtGEJi+6zF3zYkduvTa+UFtXJHxWbXbYDfFPCHPiozZ1MlecXq2KpZq6LUJZolCzZoticylYBBPSMK5VgkPOfjAtM5xuY+JLFOenlENaf93MiCQJAldgRezg5tz+hDnUnKkz1T785kEjHHVb+/kJTqOc=
+	t=1743707950; cv=none; b=B1x3AQH0mYK+KFfs7nD1zVCBjfvCEi02j3dtrA1XwnjU5b3VCSKw4ZWrjT6NHxyuKxs95R+rHIvgqazy7TCv01ivL+9njXU3dD6wfAPGhTH8dLN27XHaxqzBU9rnTBS+P/Smxf1df1wUuULXTp+8vBBqZjqZkYDeTaDYnOBmjUg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1743707950; c=relaxed/simple;
-	bh=T5uoDV9HKncHWI6WuWJr72wllf/CE9rQIuIo7jAU41E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sGfHdXqLfgs1GXItKwpyHrpUPKY+Sgmhp+nQNA4Omxzv8ueHBZsjOsQrY1tW152x9C+S2PCvh3vkTQQhRNQ+/MYpCxb6ZYcerFrmiX8hzjMgqzlCfMHQuJmnF3H/Em5HANRQ7mTcUD3+KKovwKG+hWqyE3TYQtU84GFr6qS8THQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=A4QKqm0D; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	bh=fBQsgzhOFTxDhActCtAHHoEV/ZR75bscRiQhnUnzfL0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=rx9j3n2inHxzGNi01mNhhWYeDhc7Q8gYYCnPqdv1pr/Vi3o3WmuMJZ3NUxcl8tvS3TVV1WQRgnZOMiZCZr+2Rx/be8AINJd0f/k+Jx3ucyWOq0QWx76OosxaTfEO29b+nvg+7w6irXQG6tuKTA+6a6OvFtiax/k5idBjPY87DmI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S+NKIu71; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="A4QKqm0D"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ac6e8cf9132so244677766b.2
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 12:19:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1743707944; x=1744312744; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=xOJ+a6c7HX+Aw8dr/wh7QGl7onl6cqWKpJLTwkfT2G8=;
-        b=A4QKqm0DKMkO8/9BQrvm3PoaYGAuSdnYKTO7weA7DN+7Ya0rqZPCMmWHmnPv/FBfx8
-         cWx7xoTDaPxSVbsC02Tb0OLWhh8Y6BKJMn5Fkayqtk3iF5pJiOLRPaEZqAW8LE2KPtnD
-         J8hL67DjpGQgms90Ys4QkJY8rlXN8JgEOCGek=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743707944; x=1744312744;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xOJ+a6c7HX+Aw8dr/wh7QGl7onl6cqWKpJLTwkfT2G8=;
-        b=XkyVFuScgCGAnHiLooXCJPOg/zeeJEDHvMh1RNdXPQGgbjBsklXsbKFtKhw8XEzo0k
-         ZTljaWGzjmtEx/1pIpr/3Dnj1opx8kTNZ052T/1g5vQRj9LCrPGzkJqIOahOdcx0mp6x
-         7RGlAFfFsNa1m7e5oBhJk4brJkH8Y8MIFGkMsZ7mNCcr/RRCQOWxDmWFI/eltNQu9vet
-         ZVtP4MLRwRikZEEPRj4/jLm5IxNqW0zHWx133NnfqoTeSCINsPd0IUOJXnYeNVNbmcpA
-         qUe+5CCRa/OFxpwNgFA4LX2NmxnyhPD4TMHBcL4kt/hBw9P8FhxRmk46gl04BQqY4GbQ
-         1Afg==
-X-Forwarded-Encrypted: i=1; AJvYcCX7BqqO9lEyZyn7c8RiWoNFLJ/kYdttou/y1j0SpV0xRPv/8Rv86er/bMABeoENVKXl1Fl4R8qTfqSrGDw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxA+uUXrn9inDR/9FeNrY7duLb/TFy49HVg5H/ISonhrnLrD1IB
-	BK8KwGqoS2tOr0wLmCn++6KFIM9oGqziIwX60zFVmpEEnRvXAsOBqBXdCVutOq+/YYE8/rDJ9c2
-	lew0=
-X-Gm-Gg: ASbGncuqbdUmhunvOQR1kmXnN7Yp3l+8ILG/7nx//Ja0FC87/jYm61nd6lyT5Z0WD8p
-	mvSbcZYJJCipUOyoZrrLyVQPwd1rS3NU2D8f/rE/hp9ZXYJIIGPBcT5POuR4SFL7KO7Qs0FbnKZ
-	KTWPuzhvFnzgPO3RxNPAyY44b1OUW/sKu0xkUUikMWgpTbB5vvzLI66Txv/76vHAbif2WSfvwU3
-	52GQ4K2kn8/Go8raQBmI68v/JK1iuGnrPj8wb21bcwZBhIFTmCdzzQ9kpxhuRsVMbf/e8i0VJos
-	Aar9Mi13/nJgSN8FMF/IwBQVmmgHQn4wxH4xcg3vUvLrbNyV5fS+5MX/8epqiIHLTO1NUVbYPqY
-	MpV/OUU3ax1wXDtLcizI=
-X-Google-Smtp-Source: AGHT+IGwvElIm8guevE6awAaOwvOgMQ6K9RqPCXQEu66OA9uXOo81HHLqpnCNCqfBnA46lFPQ8+bfw==
-X-Received: by 2002:a17:906:c153:b0:ac7:364b:7ec6 with SMTP id a640c23a62f3a-ac7d1306b84mr72286166b.0.1743707943862;
-        Thu, 03 Apr 2025 12:19:03 -0700 (PDT)
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com. [209.85.218.45])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7c013f660sm134197166b.89.2025.04.03.12.19.03
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Apr 2025 12:19:03 -0700 (PDT)
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ac3eb3fdd2eso221577166b.0
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 12:19:03 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXU12CJnpIbyrQ+d4cJbLQ0Aw66NPXhxrvCxCpvFHwoQpwsQXK+PF/3WQYmtA9Sp3tfmFy071vv8OUBKAU=@vger.kernel.org
-X-Received: by 2002:a17:907:9801:b0:ac7:33d0:dbe with SMTP id
- a640c23a62f3a-ac7d18cb7f9mr80311566b.33.1743707942619; Thu, 03 Apr 2025
- 12:19:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S+NKIu71"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A05E4C4CEE8;
+	Thu,  3 Apr 2025 19:19:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743707950;
+	bh=fBQsgzhOFTxDhActCtAHHoEV/ZR75bscRiQhnUnzfL0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=S+NKIu71KaEFa6t8+4Ipl2wn5os/2W2N8qxrBwyNFx5aDCVuWdXYiKyvcH5Bfk+Bq
+	 x1DnODZ5/Xo1lIQPwruYW6XTlk/PVfDWZDIIRwKsapBbnBmjuiHY80QcpvNX2vs+aC
+	 JQfLAMOcYkNBoCpSSPzeym60vJqbAdJ3oPirhKjCYflbQU6/Jc4wheNlzCV4J9YMpe
+	 AzQrb982MW7T9dP1iRMfO8Nixk9L2+yae6dYphqtYruMWvdCKBDIVUdfM26maiP/Wh
+	 tR6f8LwSRLYMe6Koohb3qvHhx09kSeHcE5+2Jn9W3rGymZx9nE8Fzqztd2g0U13aI7
+	 mqBw/EbUV4d+Q==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Sasha Levin <sashal@kernel.org>,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 21/23] tracing: probe-events: Add comments about entry data storing code
+Date: Thu,  3 Apr 2025 15:18:14 -0400
+Message-Id: <20250403191816.2681439-21-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250403191816.2681439-1-sashal@kernel.org>
+References: <20250403191816.2681439-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250322-vfs-mount-b08c842965f4@brauner> <174285005920.4171303.15547772549481189907.pr-tracker-bot@kernel.org>
- <20250401170715.GA112019@unreal> <20250403-bankintern-unsympathisch-03272ab45229@brauner>
- <20250403-quartal-kaltstart-eb56df61e784@brauner> <20250403182455.GI84568@unreal>
-In-Reply-To: <20250403182455.GI84568@unreal>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Thu, 3 Apr 2025 12:18:45 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wj7wDF1FQL4TG1Bf-LrDr1RrXNwu0-cnOd4ZQRjFZB43A@mail.gmail.com>
-X-Gm-Features: ATxdqUFMslVpxLZQwg1CWi9MwTwtlcmOR2f0G9_2Lk6dEltjaQ2iJobffD6Dc_o
-Message-ID: <CAHk-=wj7wDF1FQL4TG1Bf-LrDr1RrXNwu0-cnOd4ZQRjFZB43A@mail.gmail.com>
-Subject: Re: [GIT PULL] vfs mount
-To: Leon Romanovsky <leon@kernel.org>
-Cc: Christian Brauner <brauner@kernel.org>, pr-tracker-bot@kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.6.85
+Content-Transfer-Encoding: 8bit
 
-On Thu, 3 Apr 2025 at 11:25, Leon Romanovsky <leon@kernel.org> wrote:
-> >
-> > -     scoped_guard(rwsem_read, &namespace_sem)
-> > +     guard(rwsem_read, &namespace_sem);
->
-> I'm looking at Linus's master commit a2cc6ff5ec8f ("Merge tag
-> 'firewire-updates-6.15' of git://git.kernel.org/pub/scm/linux/kernel/git/ieee1394/linux1394")
-> and guard is declared as macro which gets only one argument: include/linux/cleanup.h
->   318 #define guard(_name) \
->   319         CLASS(_name, __UNIQUE_ID(guard))
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 
-Christian didn't test his patch, obviously.
+[ Upstream commit bb9c6020f4c3a07a90dc36826cb5fbe83f09efd5 ]
 
-It should be
+Add comments about entry data storing code to __store_entry_arg() and
+traceprobe_get_entry_data_size(). These are a bit complicated because of
+building the entry data storing code and scanning it.
 
-        guard(rwsem_read)(&namespace_sem);
+This just add comments, no behavior change.
 
-the guard() macro is kind of odd, but the oddity relates to how it
-kind of takes a "class" thing as it's argument, and that then expands
-to the constructor that may or may not take arguments itself.
+Link: https://lore.kernel.org/all/174061715004.501424.333819546601401102.stgit@devnote2/
 
-That made some of the macros simpler, although in retrospect the odd
-syntax probably wasn't worth it.
+Reported-by: Steven Rostedt <rostedt@goodmis.org>
+Closes: https://lore.kernel.org/all/20250226102223.586d7119@gandalf.local.home/
+Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ kernel/trace/trace_probe.c | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
-            Linus
+diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+index 8c73156a7eb94..606190239c877 100644
+--- a/kernel/trace/trace_probe.c
++++ b/kernel/trace/trace_probe.c
+@@ -769,6 +769,10 @@ static int check_prepare_btf_string_fetch(char *typename,
+ 
+ #ifdef CONFIG_HAVE_FUNCTION_ARG_ACCESS_API
+ 
++/*
++ * Add the entry code to store the 'argnum'th parameter and return the offset
++ * in the entry data buffer where the data will be stored.
++ */
+ static int __store_entry_arg(struct trace_probe *tp, int argnum)
+ {
+ 	struct probe_entry_arg *earg = tp->entry_arg;
+@@ -792,6 +796,20 @@ static int __store_entry_arg(struct trace_probe *tp, int argnum)
+ 		tp->entry_arg = earg;
+ 	}
+ 
++	/*
++	 * The entry code array is repeating the pair of
++	 * [FETCH_OP_ARG(argnum)][FETCH_OP_ST_EDATA(offset of entry data buffer)]
++	 * and the rest of entries are filled with [FETCH_OP_END].
++	 *
++	 * To reduce the redundant function parameter fetching, we scan the entry
++	 * code array to find the FETCH_OP_ARG which already fetches the 'argnum'
++	 * parameter. If it doesn't match, update 'offset' to find the last
++	 * offset.
++	 * If we find the FETCH_OP_END without matching FETCH_OP_ARG entry, we
++	 * will save the entry with FETCH_OP_ARG and FETCH_OP_ST_EDATA, and
++	 * return data offset so that caller can find the data offset in the entry
++	 * data buffer.
++	 */
+ 	offset = 0;
+ 	for (i = 0; i < earg->size - 1; i++) {
+ 		switch (earg->code[i].op) {
+@@ -825,6 +843,16 @@ int traceprobe_get_entry_data_size(struct trace_probe *tp)
+ 	if (!earg)
+ 		return 0;
+ 
++	/*
++	 * earg->code[] array has an operation sequence which is run in
++	 * the entry handler.
++	 * The sequence stopped by FETCH_OP_END and each data stored in
++	 * the entry data buffer by FETCH_OP_ST_EDATA. The FETCH_OP_ST_EDATA
++	 * stores the data at the data buffer + its offset, and all data are
++	 * "unsigned long" size. The offset must be increased when a data is
++	 * stored. Thus we need to find the last FETCH_OP_ST_EDATA in the
++	 * code array.
++	 */
+ 	for (i = 0; i < earg->size; i++) {
+ 		switch (earg->code[i].op) {
+ 		case FETCH_OP_END:
+-- 
+2.39.5
+
