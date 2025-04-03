@@ -1,133 +1,339 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E7C22505C6
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 13:33:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA248253333
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 13:33:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743687235; cv=none; b=K9ZPbOtubmlCCl4xENHh/kcGkZ0xAzlPlMj7qpXBdiUOkT1h2HGLZU3yaoeq2T03dPgH/2gADonQFmWoRK/ByDTPi6UalPzeJgxtRZoVNyEIwlL4AMaNW2SY3eJ/KhKnTS8YgV//Ty6csvBROHvarm7WHzNC7f7FcG2ox4a+SEU=
+	t=1743687234; cv=none; b=ouZObGvoN5jk7K9d358yO4uvA3lZ7DB00BbSopXwPlo/WpSMY6t8Vb1o5P/NrSHmazZlVLhMSoBMFW+k+OaBSHE1CoA6pVNvpBs0jgDshG/NQYtSudVCyjxvRUS2CfWQp/Tb6IUtsoqxm8c/zUTEQNaRD2Mub7NFKo0jTcqu0yA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743687235; c=relaxed/simple;
-	bh=Q07mWvgDiSZF+9VUo0WcTnHiHZHGL0kzb9D3hs8lea4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QReBSXV1UUrztYdkUt+GOjCxm+P4PpqLhs5nXiERn9Uf8mu2r5O6PC7FyzT6IVzYd59sOFw5lkbc6rEYurOJhqBY9pg0phUxyBaflDQ30Q6FDg/SO7W3Ng+t0C1EOIgYVFsJt/Ls8jmGRVNp34erb8dCWutPXoarQOCIVMcm6+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=LfzWIVBo; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1743687234; c=relaxed/simple;
+	bh=hMXyl/o28HCBQcio/Vf3sP3GQUcIbXdFe9WHjTM8Fjg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=RV9I3XUopwz9by2ldCcUnm8/kvlvPfp3xrcxAcFkwDxkJhHJJJMj4no6UmTwrqoYFMWQXa6A+TDXbokfxWomcOQVSPeCZb6QtN+FOnbIcwk3qYzsQ1DtY+KUc278LL2H/U7BcKCQGveOj4jukwdG0PAAtwbFGqOCNwTHmafmxmw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fFYDb8c+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="LfzWIVBo"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-39c0dfad22aso570594f8f.2
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 06:33:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1743687230; x=1744292030; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Cb/KD7IWlOthI8ejHCX33gR2BZkT9SE1o2UTiT51BYM=;
-        b=LfzWIVBohE3rdoNwFpKbYWfTxDM12NPk/H0nZWVO748r0S9rQn2wt5iW9p7d3G4xD5
-         wXF1Z3QrQRGp20OtFnBIo6StQifkwHXX4+inBWfj9pSHtDrzkLabPUMsQHOCRPIkDe2+
-         7USNC7AcRj5YzmxSFVs30DRZSLyOcM+DDYUoDLWgtCSEqalLCnXYU7+PyCZErbqn0/UQ
-         jiqfQSoE8Or6XUiwdV+drlmQJByKNbCf8hpDnoMIE4GM5eahqvHBTeBvvK/vlnZ3yuH2
-         QZYoZvG+Wa8l5/a1eOl5cyX3RPvH+3Wjbu8FJmXnnIksKoqwSxFx9yPCJYgLRwmhucD/
-         Vigw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743687230; x=1744292030;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Cb/KD7IWlOthI8ejHCX33gR2BZkT9SE1o2UTiT51BYM=;
-        b=XYU/+4sDkJTdVpCbUm90FkFt4Glkayn8Im/gJWJbRSxfn8EkKuUzimQ4MFwkLSOrjc
-         gvbaXrRYp3dB1clPumjJWFG0tx9Extun0Kh9e9+/q1XfRfjljiB64ZuGzWaRi3SyCtG0
-         Igrm2d1dXROpClflqvpthnQDSiG2JXKjNAtJRTRHN4yoHu/qNRUU6X7w3jgyuVKtE1t3
-         PrhTGD+bIDzxi4NZLRsvBnvcH+xvGWIkFOmBCcz/lgB01fFMmgNmy5c2QZrOJf3MeTj/
-         7PZ4LKwBb4xt93GRG96l+ez1AEAyqbVK0f8U35YDKc+m6Z9hEV4nLDONZaNwGMobQuLE
-         O1fQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU86L2AYsDpgwNHZnOFyonoarjjx4YtiBTTSUpg6f0y7X5S0g6yhe3BvW8d4J6Wq0LjjEVnEoIe7WUMzyg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxYnLSPg8Bs0yHzCCXU9vZUSw6j0d13uCy0ugnGeV5/M/RxENFb
-	XF8wOxZoAm79R36DRCduvPuzyumv80ilbwFit3av/bRwpkg1+Q8GiwnnQz0Alus=
-X-Gm-Gg: ASbGncscjbgxAgoEsEVqLni9uaVba8Ra6wEzbfoKgxQS5U0Xm0WkDsYx7f1XO92RcJZ
-	8oJjqTQi7qupc3bPdlK/fBYCe+VsKs8NDbUh7NYr1ivZAcp/ruR/Vhj7+j/u+iSUEPk2PsEDqfS
-	U/HJsMLACB/yuAXhScBWhC67mH6+34cRHWkFerZbSyVibyoXMbUxAQRbQ7mIfengjPBeT0TBkAN
-	FGNgYAe7MNOigCh3HwknIznudNj5X120WunmAZX/x3SbEX8E04ToNHTKuHfpuLwH0j4iYA37N0d
-	uVbuvVyla9YoEXcixLtsT8Ac2kfbc2HjGIQqyMX1cMOxlH8=
-X-Google-Smtp-Source: AGHT+IGOeun1szqzJaIz2NJQIc9/iKO4ZbIcGfY69/y5m+JQZGEzXRK+PyNfyfrTvktlbhWekNevrQ==
-X-Received: by 2002:a05:6000:2902:b0:391:3157:7717 with SMTP id ffacd0b85a97d-39c3033ae28mr2293896f8f.34.1743687230579;
-        Thu, 03 Apr 2025 06:33:50 -0700 (PDT)
-Received: from blackdock.suse.cz ([193.86.92.181])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c301a7225sm1816334f8f.26.2025.04.03.06.33.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Apr 2025 06:33:50 -0700 (PDT)
-Date: Thu, 3 Apr 2025 15:33:48 +0200
-From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
-To: Waiman Long <longman@redhat.com>
-Cc: Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Shuah Khan <shuah@kernel.org>, cgroups@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 07/10] cgroup/cpuset: Remove unneeded goto in
- sched_partition_write() and rename it
-Message-ID: <t5gojwcnwdb36ppkhq6hpujmyatckg5wd5eigsnmt2kndfofe7@ymc7tiury62o>
-References: <20250330215248.3620801-1-longman@redhat.com>
- <20250330215248.3620801-8-longman@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fFYDb8c+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1064C4CEE5;
+	Thu,  3 Apr 2025 13:33:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743687234;
+	bh=hMXyl/o28HCBQcio/Vf3sP3GQUcIbXdFe9WHjTM8Fjg=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=fFYDb8c+ymb+FThbz5S66LzuzIlEmTagnsBzHN+4WB/dn+oaKsnCtqOl/FKxUUAnj
+	 R3egR4ORvs/j+6eVL1V3vpLZM86m9aH+5lYQMVZzcmpUpq7N2qxBbeaywu/AKII1Wv
+	 xv7u/Q+Zva9F9hpoN259KRX1UubvPoL9sW81wSQEPFO1Xk9Q4AUK5g0v6wTtyQMI86
+	 26DF7vXWSSCFh+/r7Urrg+oBaghk32w6BJSvf1A4G/s29RGryB7aidJe5mBi+Lkke+
+	 4KsVzunC14pehqmyMtnPhi+aA3fZvndoiCDBm71q6+am357vEVUYjb0/JJcOlSiYQa
+	 U+bSPR9ix0uKA==
+From: Maxime Ripard <mripard@kernel.org>
+Date: Thu, 03 Apr 2025 15:33:33 +0200
+Subject: [PATCH v2 4/4] drm/vc4: tests: Retry pv-muxing tests when EDEADLK
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="bgvd7fl2ji2twwup"
-Content-Disposition: inline
-In-Reply-To: <20250330215248.3620801-8-longman@redhat.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250403-drm-vc4-kunit-failures-v2-4-e09195cc8840@kernel.org>
+References: <20250403-drm-vc4-kunit-failures-v2-0-e09195cc8840@kernel.org>
+In-Reply-To: <20250403-drm-vc4-kunit-failures-v2-0-e09195cc8840@kernel.org>
+To: Dave Stevenson <dave.stevenson@raspberrypi.com>, 
+ =?utf-8?q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>, 
+ Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+ Simona Vetter <simona@ffwll.ch>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ Maxime Ripard <mripard@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=8413; i=mripard@kernel.org;
+ h=from:subject:message-id; bh=hMXyl/o28HCBQcio/Vf3sP3GQUcIbXdFe9WHjTM8Fjg=;
+ b=owGbwMvMwCX2+D1vfrpE4FHG02pJDOnv+oxazp7jtlO+vjvaklNjRUIw55wc6XLLI9GWv9erz
+ 3tTIG3fUcrCIMbFICumyBIjbL4k7tSs151sfPNg5rAygQxh4OIUgIkEzWf4K7pIt+vamZv7Eq4z
+ 7RQXu/0i/7pXi9muPzIh+zUfhoRu+cjw32tfJafSG5nvnI8bQ1TeLyy88Mo2J+YPh/f1N5PS5sy
+ +wgIA
+X-Developer-Key: i=mripard@kernel.org; a=openpgp;
+ fpr=BE5675C37E818C8B5764241C254BCFC56BF6CE8D
 
+Some functions used by the HVS->PV muxing tests can return with EDEADLK,
+meaning the entire sequence should be restarted. It's not a fatal error
+and we should treat it as a recoverable error, and recover, instead of
+failing the test like we currently do.
 
---bgvd7fl2ji2twwup
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 07/10] cgroup/cpuset: Remove unneeded goto in
- sched_partition_write() and rename it
-MIME-Version: 1.0
+Fixes: 76ec18dc5afa ("drm/vc4: tests: Add unit test suite for the PV muxing")
+Signed-off-by: Maxime Ripard <mripard@kernel.org>
+---
+ drivers/gpu/drm/vc4/tests/vc4_test_pv_muxing.c | 113 ++++++++++++++++++++++++-
+ 1 file changed, 112 insertions(+), 1 deletion(-)
 
-On Sun, Mar 30, 2025 at 05:52:45PM -0400, Waiman Long <longman@redhat.com> =
-wrote:
-> The goto statement in sched_partition_write() is not needed. Remove
-> it and rename sched_partition_write()/sched_partition_show() to
-> cpuset_partition_write()/cpuset_partition_show().
->=20
-> Signed-off-by: Waiman Long <longman@redhat.com>
-> ---
->  kernel/cgroup/cpuset.c | 15 ++++++---------
->  1 file changed, 6 insertions(+), 9 deletions(-)
-=2E..
+diff --git a/drivers/gpu/drm/vc4/tests/vc4_test_pv_muxing.c b/drivers/gpu/drm/vc4/tests/vc4_test_pv_muxing.c
+index 52c04ef33206bf4f9e21e3c8b7cea932824a67fa..d1f694029169adf6a907a72614bc66afd745017e 100644
+--- a/drivers/gpu/drm/vc4/tests/vc4_test_pv_muxing.c
++++ b/drivers/gpu/drm/vc4/tests/vc4_test_pv_muxing.c
+@@ -685,20 +685,34 @@ static void drm_vc4_test_pv_muxing(struct kunit *test)
+ 
+ 	drm_modeset_acquire_init(&ctx, 0);
+ 
+ 	vc4 = priv->vc4;
+ 	drm = &vc4->base;
++
++retry:
+ 	state = drm_kunit_helper_atomic_state_alloc(test, drm, &ctx);
+ 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, state);
+ 	for (i = 0; i < params->nencoders; i++) {
+ 		enum vc4_encoder_type enc_type = params->encoders[i];
+ 
+ 		ret = vc4_mock_atomic_add_output(test, state, enc_type);
++		if (ret == -EDEADLK) {
++			drm_atomic_state_clear(state);
++			ret = drm_modeset_backoff(&ctx);
++			if (!ret)
++				goto retry;
++		}
+ 		KUNIT_ASSERT_EQ(test, ret, 0);
+ 	}
+ 
+ 	ret = drm_atomic_check_only(state);
++	if (ret == -EDEADLK) {
++		drm_atomic_state_clear(state);
++		ret = drm_modeset_backoff(&ctx);
++		if (!ret)
++			goto retry;
++	}
+ 	KUNIT_EXPECT_EQ(test, ret, 0);
+ 
+ 	KUNIT_EXPECT_TRUE(test,
+ 			  check_fifo_conflict(test, state));
+ 
+@@ -726,21 +740,35 @@ static void drm_vc4_test_pv_muxing_invalid(struct kunit *test)
+ 
+ 	drm_modeset_acquire_init(&ctx, 0);
+ 
+ 	vc4 = priv->vc4;
+ 	drm = &vc4->base;
++
++retry:
+ 	state = drm_kunit_helper_atomic_state_alloc(test, drm, &ctx);
+ 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, state);
+ 
+ 	for (i = 0; i < params->nencoders; i++) {
+ 		enum vc4_encoder_type enc_type = params->encoders[i];
+ 
+ 		ret = vc4_mock_atomic_add_output(test, state, enc_type);
++		if (ret == -EDEADLK) {
++			drm_atomic_state_clear(state);
++			ret = drm_modeset_backoff(&ctx);
++			if (!ret)
++				goto retry;
++		}
+ 		KUNIT_ASSERT_EQ(test, ret, 0);
+ 	}
+ 
+ 	ret = drm_atomic_check_only(state);
++	if (ret == -EDEADLK) {
++		drm_atomic_state_clear(state);
++		ret = drm_modeset_backoff(&ctx);
++		if (!ret)
++			goto retry;
++	}
+ 	KUNIT_EXPECT_LT(test, ret, 0);
+ 
+ 	drm_modeset_drop_locks(&ctx);
+ 	drm_modeset_acquire_fini(&ctx);
+ }
+@@ -811,17 +839,30 @@ static void drm_test_vc5_pv_muxing_bugs_subsequent_crtc_enable(struct kunit *tes
+ 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, vc4);
+ 
+ 	drm_modeset_acquire_init(&ctx, 0);
+ 
+ 	drm = &vc4->base;
++retry_first:
+ 	state = drm_kunit_helper_atomic_state_alloc(test, drm, &ctx);
+ 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, state);
+ 
+ 	ret = vc4_mock_atomic_add_output(test, state, VC4_ENCODER_TYPE_HDMI0);
++	if (ret == -EDEADLK) {
++		drm_atomic_state_clear(state);
++		ret = drm_modeset_backoff(&ctx);
++		if (!ret)
++			goto retry_first;
++	}
+ 	KUNIT_ASSERT_EQ(test, ret, 0);
+ 
+ 	ret = drm_atomic_check_only(state);
++	if (ret == -EDEADLK) {
++		drm_atomic_state_clear(state);
++		ret = drm_modeset_backoff(&ctx);
++		if (!ret)
++			goto retry_first;
++	}
+ 	KUNIT_ASSERT_EQ(test, ret, 0);
+ 
+ 	new_hvs_state = vc4_hvs_get_new_global_state(state);
+ 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, new_hvs_state);
+ 
+@@ -834,17 +875,30 @@ static void drm_test_vc5_pv_muxing_bugs_subsequent_crtc_enable(struct kunit *tes
+ 	KUNIT_ASSERT_TRUE(test, new_hvs_state->fifo_state[hdmi0_channel].in_use);
+ 
+ 	ret = drm_atomic_helper_swap_state(state, false);
+ 	KUNIT_ASSERT_EQ(test, ret, 0);
+ 
++retry_second:
+ 	state = drm_kunit_helper_atomic_state_alloc(test, drm, &ctx);
+ 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, state);
+ 
+ 	ret = vc4_mock_atomic_add_output(test, state, VC4_ENCODER_TYPE_HDMI1);
++	if (ret == -EDEADLK) {
++		drm_atomic_state_clear(state);
++		ret = drm_modeset_backoff(&ctx);
++		if (!ret)
++			goto retry_second;
++	}
+ 	KUNIT_ASSERT_EQ(test, ret, 0);
+ 
+ 	ret = drm_atomic_check_only(state);
++	if (ret == -EDEADLK) {
++		drm_atomic_state_clear(state);
++		ret = drm_modeset_backoff(&ctx);
++		if (!ret)
++			goto retry_second;
++	}
+ 	KUNIT_ASSERT_EQ(test, ret, 0);
+ 
+ 	new_hvs_state = vc4_hvs_get_new_global_state(state);
+ 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, new_hvs_state);
+ 
+@@ -885,20 +939,39 @@ static void drm_test_vc5_pv_muxing_bugs_stable_fifo(struct kunit *test)
+ 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, vc4);
+ 
+ 	drm_modeset_acquire_init(&ctx, 0);
+ 
+ 	drm = &vc4->base;
++retry_first:
+ 	state = drm_kunit_helper_atomic_state_alloc(test, drm, &ctx);
+ 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, state);
+ 
+ 	ret = vc4_mock_atomic_add_output(test, state, VC4_ENCODER_TYPE_HDMI0);
++	if (ret == -EDEADLK) {
++		drm_atomic_state_clear(state);
++		ret = drm_modeset_backoff(&ctx);
++		if (!ret)
++			goto retry_first;
++	}
+ 	KUNIT_ASSERT_EQ(test, ret, 0);
+ 
+ 	ret = vc4_mock_atomic_add_output(test, state, VC4_ENCODER_TYPE_HDMI1);
++	if (ret == -EDEADLK) {
++		drm_atomic_state_clear(state);
++		ret = drm_modeset_backoff(&ctx);
++		if (!ret)
++			goto retry_first;
++	}
+ 	KUNIT_ASSERT_EQ(test, ret, 0);
+ 
+ 	ret = drm_atomic_check_only(state);
++	if (ret == -EDEADLK) {
++		drm_atomic_state_clear(state);
++		ret = drm_modeset_backoff(&ctx);
++		if (!ret)
++			goto retry_first;
++	}
+ 	KUNIT_ASSERT_EQ(test, ret, 0);
+ 
+ 	new_hvs_state = vc4_hvs_get_new_global_state(state);
+ 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, new_hvs_state);
+ 
+@@ -919,17 +992,30 @@ static void drm_test_vc5_pv_muxing_bugs_stable_fifo(struct kunit *test)
+ 	KUNIT_ASSERT_TRUE(test, new_hvs_state->fifo_state[old_hdmi1_channel].in_use);
+ 
+ 	ret = drm_atomic_helper_swap_state(state, false);
+ 	KUNIT_ASSERT_EQ(test, ret, 0);
+ 
++retry_second:
+ 	state = drm_kunit_helper_atomic_state_alloc(test, drm, &ctx);
+ 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, state);
+ 
+ 	ret = vc4_mock_atomic_del_output(test, state, VC4_ENCODER_TYPE_HDMI0);
++	if (ret == -EDEADLK) {
++		drm_atomic_state_clear(state);
++		ret = drm_modeset_backoff(&ctx);
++		if (!ret)
++			goto retry_second;
++	}
+ 	KUNIT_ASSERT_EQ(test, ret, 0);
+ 
+ 	ret = drm_atomic_check_only(state);
++	if (ret == -EDEADLK) {
++		drm_atomic_state_clear(state);
++		ret = drm_modeset_backoff(&ctx);
++		if (!ret)
++			goto retry_second;
++	}
+ 	KUNIT_ASSERT_EQ(test, ret, 0);
+ 
+ 	new_hvs_state = vc4_hvs_get_new_global_state(state);
+ 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, new_hvs_state);
+ 
+@@ -979,29 +1065,54 @@ drm_test_vc5_pv_muxing_bugs_subsequent_crtc_enable_too_many_crtc_state(struct ku
+ 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, vc4);
+ 
+ 	drm_modeset_acquire_init(&ctx, 0);
+ 
+ 	drm = &vc4->base;
++retry_first:
+ 	state = drm_kunit_helper_atomic_state_alloc(test, drm, &ctx);
+ 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, state);
+ 
+ 	ret = vc4_mock_atomic_add_output(test, state, VC4_ENCODER_TYPE_HDMI0);
++	if (ret == -EDEADLK) {
++		drm_atomic_state_clear(state);
++		ret = drm_modeset_backoff(&ctx);
++		if (!ret)
++			goto retry_first;
++	}
+ 	KUNIT_ASSERT_EQ(test, ret, 0);
+ 
+ 	ret = drm_atomic_check_only(state);
++	if (ret == -EDEADLK) {
++		drm_atomic_state_clear(state);
++		ret = drm_modeset_backoff(&ctx);
++		if (!ret)
++			goto retry_first;
++	}
+ 	KUNIT_ASSERT_EQ(test, ret, 0);
+-
+ 	ret = drm_atomic_helper_swap_state(state, false);
+ 	KUNIT_ASSERT_EQ(test, ret, 0);
+ 
++retry_second:
+ 	state = drm_kunit_helper_atomic_state_alloc(test, drm, &ctx);
+ 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, state);
+ 
+ 	ret = vc4_mock_atomic_add_output(test, state, VC4_ENCODER_TYPE_HDMI1);
++	if (ret == -EDEADLK) {
++		drm_atomic_state_clear(state);
++		ret = drm_modeset_backoff(&ctx);
++		if (!ret)
++			goto retry_second;
++	}
+ 	KUNIT_ASSERT_EQ(test, ret, 0);
+ 
+ 	ret = drm_atomic_check_only(state);
++	if (ret == -EDEADLK) {
++		drm_atomic_state_clear(state);
++		ret = drm_modeset_backoff(&ctx);
++		if (!ret)
++			goto retry_second;
++	}
+ 	KUNIT_ASSERT_EQ(test, ret, 0);
+ 
+ 	new_vc4_crtc_state = get_vc4_crtc_state_for_encoder(test, state,
+ 							    VC4_ENCODER_TYPE_HDMI0);
+ 	KUNIT_EXPECT_NULL(test, new_vc4_crtc_state);
 
-Also noticed (here or for the preceding comments&cleanup patch):
+-- 
+2.49.0
 
---- a/kernel/cgroup/cpuset.c
-+++ b/kernel/cgroup/cpuset.c
-@@ -3525,8 +3525,8 @@ static int cpuset_css_online(struct cgroup_subsys_sta=
-te *css)
-  * in the default hierarchy where only changes in partition
-  * will cause repartitioning.
-  *
-- * If the cpuset has the 'sched.partition' flag enabled, simulate
-- * turning 'sched.partition" off.
-+ * If the cpuset has the 'cpus.partition' flag enabled, simulate
-+ * turning 'cpus.partition" off.
-  */
-
- static void cpuset_css_offline(struct cgroup_subsys_state *css)
-
-
-Next time...
-
---bgvd7fl2ji2twwup
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQTd6mfF2PbEZnpdoAkt3Wney77BSQUCZ+6OOgAKCRAt3Wney77B
-Se2AAQDOabbdX+KFiR+uz9cakVFtI5Fcv68ZnaABDprIt9e9ZQEAhpLShxYbiO8G
-AVAavan6wMIIW9sN9bq1d6mXXD4Vjgk=
-=JSS+
------END PGP SIGNATURE-----
-
---bgvd7fl2ji2twwup--
