@@ -1,132 +1,173 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FFFF35942;
-	Thu,  3 Apr 2025 12:44:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BBB524C07E
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 12:45:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743684259; cv=none; b=DpxutWhnxtqeJx4UN7lOffPXjZ2T9GhJ0Ib187vMAFOz1KgCbOLV5P8Qt6hokXIZbJ4m2S1M6aBxTWfxfsLpZqmEMYgTWAJkyfu6xzyE/YbHFvaUdWg8s70/el+rWKMXZaY6EsLi8UQHk7g8/2KTWa37+xGwi6VirGAufm6K1D8=
+	t=1743684331; cv=none; b=Z7LIsAI+XfwfXMIIPd0MuxMu6np1XgtBfDok/Zk6H006kHIBpJ27OdM1sbOpDM81s+F7pwY4m3lB8AE2ZjVpmbiaRUOQoGfAnNJaD9BnhBN1TLdLm+brDUzFC8AubaiQ0XRiGs65z1b2HXLgfDaUdCFtjwogm92qrglKOrEd5UA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743684259; c=relaxed/simple;
-	bh=dr+SFjooIEDN+L1BBO81AAg0EZwIrLQpIuSx3JNdTQI=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TQ9YvfozUzBYBlWGNdFkoQO8tzyJIvULGb8LNADqHM53UigJphlI/LoSp7Q1Z3gkcTDP1q3A6L3Plfi22Dy+sVyD6zfLC8C1ig9Mb9LAG/Zmd7LqgCw+L2lGI5ZErCi0zwRS1GhNAl7yP5LLRiYG0Yt4ogvI93iLp7Yk/I5FwBg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZT1YD30wTz6L75h;
-	Thu,  3 Apr 2025 20:40:32 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id B4266140557;
-	Thu,  3 Apr 2025 20:44:12 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 3 Apr
- 2025 14:44:12 +0200
-Date: Thu, 3 Apr 2025 13:44:10 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Oscar Salvador <osalvador@suse.de>
-CC: Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand
-	<david@redhat.com>, <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-	Vlastimil Babka <vbabka@suse.cz>, Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-	<mkoutny@suse.com>, Dan Williams <dan.j.williams@intel.com>,
-	<linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH 1/2] mm,memory_hotplug: Implement numa node notifier
-Message-ID: <20250403134410.000006c7@huawei.com>
-In-Reply-To: <20250401092716.537512-2-osalvador@suse.de>
-References: <20250401092716.537512-1-osalvador@suse.de>
-	<20250401092716.537512-2-osalvador@suse.de>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1743684331; c=relaxed/simple;
+	bh=A6e81UtQYHRwDIYoR39khjOEwBu6hr4kRVxzMB4RqyM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=qPoxuZ2i/b/enUux2pTJv0LCbSIbrRZdkJXAQqes/BitZ99cvAidRVNnoyx+r4FwszTlP/++mEP+KoLsvEhwTakG3z7N/0E+P8+49M3qhqd6bssu/re7iKgP7ynIovuR7ndXVojEE0ip1htBOUEEGYGsgmjxYY28/Cm/IM4GtPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HOpvV9jA; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HOpvV9jA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743684328;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+zUuhfiHJkUSWQXDL0fBuXOf75iyVHdbfcp2d7edlyk=;
+	b=HOpvV9jAONUJDYMJX3bMfWoqeCW42Nuoz6V6lQwtNrlnTda38dvZ7+gJViu7nKOzTPwv6z
+	+JysWHd7GFN14V5ZrtbYjQweknokG6ebXXUXTMR+w3Ci5F1TU3M4Z9zgI+N9VAEL6NAvv6
+	ihzjEdHYvTVw70LtyNDdoPEwmczZrGk=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-368-XxZIPzKVM3CiS8V4Zr-fDQ-1; Thu,
+ 03 Apr 2025 08:45:24 -0400
+X-MC-Unique: XxZIPzKVM3CiS8V4Zr-fDQ-1
+X-Mimecast-MFC-AGG-ID: XxZIPzKVM3CiS8V4Zr-fDQ_1743684322
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8A43C19560B0;
+	Thu,  3 Apr 2025 12:45:22 +0000 (UTC)
+Received: from localhost (unknown [10.45.225.37])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 36FEA1809B6A;
+	Thu,  3 Apr 2025 12:45:20 +0000 (UTC)
+From: Cornelia Huck <cohuck@redhat.com>
+To: David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org
+Cc: linux-s390@vger.kernel.org, virtualization@lists.linux.dev,
+ kvm@vger.kernel.org, David Hildenbrand <david@redhat.com>, Chandra Merla
+ <cmerla@redhat.com>, Stable@vger.kernel.org, Thomas Huth
+ <thuth@redhat.com>, Halil Pasic <pasic@linux.ibm.com>, Eric Farman
+ <farman@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik
+ <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, Christian
+ Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle
+ <svens@linux.ibm.com>, "Michael S. Tsirkin" <mst@redhat.com>, Wei Wang
+ <wei.w.wang@intel.com>
+Subject: Re: [PATCH v1] s390/virtio_ccw: don't allocate/assign airqs for
+ non-existing queues
+In-Reply-To: <20250402203621.940090-1-david@redhat.com>
+Organization: "Red Hat GmbH, Sitz: Werner-von-Siemens-Ring 12, D-85630
+ Grasbrunn, Handelsregister: Amtsgericht =?utf-8?Q?M=C3=BCnchen=2C?= HRB
+ 153243,
+ =?utf-8?Q?Gesch=C3=A4ftsf=C3=BChrer=3A?= Ryan Barnhart, Charles Cachera,
+ Michael O'Neill, Amy
+ Ross"
+References: <20250402203621.940090-1-david@redhat.com>
+User-Agent: Notmuch/0.38.3 (https://notmuchmail.org)
+Date: Thu, 03 Apr 2025 14:45:17 +0200
+Message-ID: <87v7rl9zxe.fsf@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500009.china.huawei.com (7.191.174.84) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-On Tue,  1 Apr 2025 11:27:15 +0200
-Oscar Salvador <osalvador@suse.de> wrote:
+On Wed, Apr 02 2025, David Hildenbrand <david@redhat.com> wrote:
 
-> There are at least four consumers of hotplug_memory_notifier that what they
-> really are interested in is whether any numa node changed its state, e.g: going
-> from being memory aware to becoming memoryless.
+> If we finds a vq without a name in our input array in
+> virtio_ccw_find_vqs(), we treat it as "non-existing" and set the vq pointer
+> to NULL; we will not call virtio_ccw_setup_vq() to allocate/setup a vq.
+>
+> Consequently, we create only a queue if it actually exists (name != NULL)
+> and assign an incremental queue index to each such existing queue.
+>
+> However, in virtio_ccw_register_adapter_ind()->get_airq_indicator() we
+> will not ignore these "non-existing queues", but instead assign an airq
+> indicator to them.
+>
+> Besides never releasing them in virtio_ccw_drop_indicators() (because
+> there is no virtqueue), the bigger issue seems to be that there will be a
+> disagreement between the device and the Linux guest about the airq
+> indicator to be used for notifying a queue, because the indicator bit
+> for adapter I/O interrupt is derived from the queue index.
+>
+> The virtio spec states under "Setting Up Two-Stage Queue Indicators":
+>
+> 	... indicator contains the guest address of an area wherein the
+> 	indicators for the devices are contained, starting at bit_nr, one
+> 	bit per virtqueue of the device.
+>
+> And further in "Notification via Adapter I/O Interrupts":
+>
+> 	For notifying the driver of virtqueue buffers, the device sets the
+> 	bit in the guest-provided indicator area at the corresponding
+> 	offset.
+>
+> For example, QEMU uses in virtio_ccw_notify() the queue index (passed as
+> "vector") to select the relevant indicator bit. If a queue does not exist,
+> it does not have a corresponding indicator bit assigned, because it
+> effectively doesn't have a queue index.
+>
+> Using a virtio-balloon-ccw device under QEMU with free-page-hinting
+> disabled ("free-page-hint=off") but free-page-reporting enabled
+> ("free-page-reporting=on") will result in free page reporting
+> not working as expected: in the virtio_balloon driver, we'll be stuck
+> forever in virtballoon_free_page_report()->wait_event(), because the
+> waitqueue will not be woken up as the notification from the device is
+> lost: it would use the wrong indicator bit.
+>
+> Free page reporting stops working and we get splats (when configured to
+> detect hung wqs) like:
+>
+>  INFO: task kworker/1:3:463 blocked for more than 61 seconds.
+>        Not tainted 6.14.0 #4
+>  "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+>  task:kworker/1:3 [...]
+>  Workqueue: events page_reporting_process
+>  Call Trace:
+>   [<000002f404e6dfb2>] __schedule+0x402/0x1640
+>   [<000002f404e6f22e>] schedule+0x3e/0xe0
+>   [<000002f3846a88fa>] virtballoon_free_page_report+0xaa/0x110 [virtio_balloon]
+>   [<000002f40435c8a4>] page_reporting_process+0x2e4/0x740
+>   [<000002f403fd3ee2>] process_one_work+0x1c2/0x400
+>   [<000002f403fd4b96>] worker_thread+0x296/0x420
+>   [<000002f403fe10b4>] kthread+0x124/0x290
+>   [<000002f403f4e0dc>] __ret_from_fork+0x3c/0x60
+>   [<000002f404e77272>] ret_from_fork+0xa/0x38
+>
+> There was recently a discussion [1] whether the "holes" should be
+> treated differently again, effectively assigning also non-existing
+> queues a queue index: that should also fix the issue, but requires other
+> workarounds to not break existing setups.
+>
+> Let's fix it without affecting existing setups for now by properly ignoring
+> the non-existing queues, so the indicator bits will match the queue
+> indexes.
+>
+> [1] https://lore.kernel.org/all/cover.1720611677.git.mst@redhat.com/
+>
+> Fixes: a229989d975e ("virtio: don't allocate vqs when names[i] = NULL")
+> Reported-by: Chandra Merla <cmerla@redhat.com>
+> Cc: <Stable@vger.kernel.org>
+> Cc: Cornelia Huck <cohuck@redhat.com>
+> Cc: Thomas Huth <thuth@redhat.com>
+> Cc: Halil Pasic <pasic@linux.ibm.com>
+> Cc: Eric Farman <farman@linux.ibm.com>
+> Cc: Heiko Carstens <hca@linux.ibm.com>
+> Cc: Vasily Gorbik <gor@linux.ibm.com>
+> Cc: Alexander Gordeev <agordeev@linux.ibm.com>
+> Cc: Christian Borntraeger <borntraeger@linux.ibm.com>
+> Cc: Sven Schnelle <svens@linux.ibm.com>
+> Cc: "Michael S. Tsirkin" <mst@redhat.com>
+> Cc: Wei Wang <wei.w.wang@intel.com>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+>  drivers/s390/virtio/virtio_ccw.c | 16 ++++++++++++----
+>  1 file changed, 12 insertions(+), 4 deletions(-)
 
-Cover letter says 5.  Whilst that's at least 4, maybe update this if you do
-a v2 to say at least 5 :)
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
 
-> 
-> Implement a specific notifier for numa nodes when their state gets changed,
-> and have those consumers that only care about numa node state changes use it.
-> 
-> Signed-off-by: Oscar Salvador <osalvador@suse.de>
-
-A couple of trivial things below.  To me this looks fine otherwise.
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
-> +#define hotplug_node_notifier(fn, pri) ({		\
-> +	static __meminitdata struct notifier_block fn##_node_nb =\
-> +		{ .notifier_call = fn, .priority = pri };\
-> +	register_node_notifier(&fn##_node_nb);			\
-> +})
-
-Trivial but spacing before \ seems rather random. Maybe I'm missing
-how it is consistent.
-
-> +
->  #ifdef CONFIG_NUMA
->  void memory_block_add_nid(struct memory_block *mem, int nid,
->  			  enum meminit_context context);
-
-> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> index 75401866fb76..4bb9ff282ec9 100644
-> --- a/mm/memory_hotplug.c
-> +++ b/mm/memory_hotplug.c
-
-
-> @@ -2106,27 +2143,32 @@ int offline_pages(unsigned long start_pfn, unsigned long nr_pages,
->  	 * Make sure to mark the node as memory-less before rebuilding the zone
->  	 * list. Otherwise this node would still appear in the fallback lists.
->  	 */
-> -	node_states_clear_node(node, &arg);
-> +	node_states_clear_node(node, &node_arg);
->  	if (!populated_zone(zone)) {
->  		zone_pcp_reset(zone);
->  		build_all_zonelists(NULL);
->  	}
->  
-> -	if (arg.status_change_nid >= 0) {
-> +	if (node_arg.status_change_nid >= 0) {
->  		kcompactd_stop(node);
->  		kswapd_stop(node);
-> +		/*Node went memoryless. Notifiy interested consumers */
-
-Trivial: missing space after *
-
-> +		node_notify(NODE_BECAME_MEMORYLESS, &node_arg);
->  	}
->  
->  	writeback_set_ratelimit();
->  
-> -	memory_notify(MEM_OFFLINE, &arg);
-> +	memory_notify(MEM_OFFLINE, &mem_arg);
->  	remove_pfn_range_from_zone(zone, start_pfn, nr_pages);
->  	return 0;
->  
->  failed_removal_isolated:
->  	/* pushback to free area */
->  	undo_isolate_page_range(start_pfn, end_pfn, MIGRATE_MOVABLE);
-> -	memory_notify(MEM_CANCEL_OFFLINE, &arg);
-> +	if (cancel_node_notifier_on_err)
-> +		node_notify(NODE_CANCEL_MEMORYLESS, &node_arg);
-> +	if (cancel_mem_notifier_on_err)
-> +		memory_notify(MEM_CANCEL_OFFLINE, &mem_arg);
->  failed_removal_pcplists_disabled:
->  	lru_cache_enable();
->  	zone_pcp_enable(zone);
-
+[I assume that one of the IBM folks can simply pick this up?]
 
