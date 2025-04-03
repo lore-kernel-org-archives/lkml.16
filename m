@@ -1,137 +1,134 @@
-Received: from mout.web.de (mout.web.de [212.227.15.4])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D90E25290F;
-	Thu,  3 Apr 2025 17:47:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65752250C16;
+	Thu,  3 Apr 2025 17:49:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743702448; cv=none; b=Sm8JwQJSRntlnZRAt6zqNFURgrNyQzyIjaCkt22xZQZfSPyR5xRYCJwK2BqwmhIsWqNdKRrBudhOPIe4LcV5a0sEBKJsJ1Oi2NoOQKGwEzSMq3NTSIKoGbzHnxJdCX3TdnVBYdgadEf6iX3nvhYtNhz+Pic3fZsk1FxEaOormjY=
+	t=1743702564; cv=none; b=EAOtmMyngcYNohHDBpO4kCdCLcLlyArmGYLiStBGT0hqYGvxmm7sp5MNQsxDx9iSyNalwbTfRpsnDFxUkZFUdRcmliXZ0eXvGskxgqVIfxbf4bS0JxsJTLAPqULSNu3PzX3DsbtcuVryWsZhlvYbTCOS3cX741KLDLO5cex22dY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743702448; c=relaxed/simple;
-	bh=KnIkky881MVh3vPKqjE4oYQv0uJJfiv3nzCYlzLw3T4=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=ZDU610VJs8QPlF6KinB653cQADFXouyyIf06qc3SweNC33l6Hk18r3X2G2u/+jLTHD2CNrJEQf7xKEv9HTtboFhcMUF9slxYKXJS9SGXYdYpc9fWWUUNbw7ZnsuLoWL2I8uMCwI0Wr3RJhDlX8ykbKPo/kNBCz47Vf7IWusoeZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=frank.scheiner@web.de header.b=I1RUVEfj; arc=none smtp.client-ip=212.227.15.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1743702564; c=relaxed/simple;
+	bh=uC8A235nV5hDJs26eYs9bsiXlIDfQqbrWSJ+0H8VMh0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Jae/0RkgLmEDNwlqWtm6Uf0eEgFamwkMrW4dEG01BjgVGyYfx9rjq7jLG3QuipU1tESmIrWovh5P4+RiMD5LYRwFBEuM6XELqPdcDhWBsxg9mon3u4EtigY1ePN2hDD2QKa4bfhzAZEPBcKFge5Mc/PC5t6mk1UDl8XON39G0Ro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=TntbLmk2; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NXw6ETOn; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=frank.scheiner@web.de header.b="I1RUVEfj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1743702418; x=1744307218; i=frank.scheiner@web.de;
-	bh=H1sIW/fE2PWhkLk+OKhCS+zpamXiY+kKyuMISklWwjg=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:From:Subject:To:
-	 Cc:References:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=I1RUVEfj6M/lrSVs2nXUN+F3Za0oLDTfoIUwyR6Bu/LpFTSVVYPEWG2SfVFyq95c
-	 787U9IXeSotxvVgAc4BABi6gFmZ8WEZpiiypd8fC46jeCY03yV5b0RFRHmWS412FT
-	 k54lKBckaqGH5m1NxtS0ZnCai28WcWeJVwN9VQ8S1CCFJqXtOTyWTwix8SLEAQGka
-	 GH8cmvRQF6HaRXhaIXCwlzH95HwJV8/qfJibrvHmeM3mNIxVdwhcLV/qneCnY7qaI
-	 p540z3cH0BZ+7+H2ToDBlg38AL7lb/KOMR2DNDUJiwHQtO8A55jL+LMRIS47vZXOG
-	 FS8Fh0iMQwQ+4468oQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.30] ([84.152.250.142]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MPKB7-1tk7Fn0k6n-00WvM9; Thu, 03
- Apr 2025 19:46:58 +0200
-Message-ID: <703d6f83-f054-48ec-a6da-6d0bbb9e65d4@web.de>
-Date: Thu, 3 Apr 2025 19:46:52 +0200
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TntbLmk2";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NXw6ETOn"
+Date: Thu, 3 Apr 2025 19:49:17 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1743702558;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=x3miVKVcAqJiYVnZa0G3WVeXM1wcDhomDqNBC5jtQKs=;
+	b=TntbLmk2ICoXpOGltxhXn7TsZr9vndRCGVMtQq9v9A4aMUfYK5VRA1IlrrJmfk+A14SmOM
+	wZ2OP6HKwTXXebuuHvHRMTqodziWBt/fei1gUrOxWmdLcBseqRU0dTk6GZ7dQ+Mrabe2Tb
+	v6eZpuZtVlPb8DRl3yLMo/lwOoWbWySBYB37QemmoP3+oRbkXghOdgjM+eaARxjbQLQTxr
+	69cVbSM2bNts3UodDqGpUdlCKkA6HN6v6MPI2SJpxFl1h/ynKyYqhahfdEn6Nop4o1DGrq
+	E/pWzLzdrEchRLIAwUQXkvU6CrKbz1/+GiNGiw/qBAvE07CaeuZTz9WnhFgtyw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1743702558;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=x3miVKVcAqJiYVnZa0G3WVeXM1wcDhomDqNBC5jtQKs=;
+	b=NXw6ETOnxAJl6TipKslu2W01i4S8aiY9G/05eWVVQxIQoSxs7QnDURKhkS/2k9NiztUCz3
+	tuyjhgpRzEpAwtBQ==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Andrii Nakryiko <andrii@kernel.org>
+Cc: linux-trace-kernel@vger.kernel.org, peterz@infradead.org,
+	mingo@kernel.org, bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-team@meta.com, rostedt@goodmis.org, oleg@redhat.com,
+	mhiramat@kernel.org, ast@kernel.org
+Subject: Re: [PATCH tip/perf] uprobes: avoid false lockdep splat in uprobe
+ timer callback
+Message-ID: <20250403174917.OLHfwBp-@linutronix.de>
+References: <20250403171831.3803479-1-andrii@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Frank Scheiner <frank.scheiner@web.de>
-Subject: Re: [PATCH v6 04/10] genirq: Introduce common
- irq_force_complete_move() implementation
-To: Thomas Gleixner <tglx@linutronix.de>, apatel@ventanamicro.com
-Cc: ajones@ventanamicro.com, andrew@lunn.ch, anup@brainfault.org,
- atishp@atishpatra.org, bp@alien8.de, dave.hansen@linux.intel.com,
- gregory.clement@bootlin.com, hpa@zytor.com, imx@lists.linux.dev,
- kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
- maz@kernel.org, mingo@redhat.com, palmer@dabbelt.com,
- paul.walmsley@sifive.com, s.hauer@pengutronix.de,
- sebastian.hesselbarth@gmail.com, shawnguo@kernel.org,
- sunilvl@ventanamicro.com, x86@kernel.org, linux-ia64@vger.kernel.org
-References: <20250217085657.789309-5-apatel@ventanamicro.com>
- <667d272f-2b51-49d6-84ea-1156027e00a7@web.de> <87plhtuw18.ffs@tglx>
-Content-Language: en-US
-In-Reply-To: <87plhtuw18.ffs@tglx>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:6MNV5zoHY7hCQ09bvOvJwv3kuECz3WxUa2bfbadzKiu8Nz/PUk3
- r4khTzLDonSLMS3CB0XogqYaE7OGkBBDVuYsfF7qkxe8x0p0ZXmBcDc+d+D3/cCMpa95o/j
- UunubNqjcMWGWkDIi36mSeYWey1wj5Vc325jNhAElfvL0lItLmH5oJW4HJ5twGTwB3HdGoR
- efZJC73+zd6VD6Ca/b8yQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:vihVRggBLIw=;40mu8nvRzyn28pHYR+tyRa+glGA
- L9dS9EZZnssU8CZpd3S0dRgfmlpEQMuKMP36srLrat7dg5KrFfS5QcrpJSNuOyhAv8VTFe4wi
- eM5ASGmb4b5QPFNc64n1mPnJRMMnXF3OoAzouVuuussBJmCsgg1so5ORWeak/+WHLezyKpJic
- jaATezrrWdJ0nig2NE3MOAwfQqd5v6gCARk8fafoldUX7MVaL9Q7SDYyFq8pdgHNG7hdU6z7J
- njGKJCpE2tFVXuvZb/En9b24JwPRRbOBvQdat55Ww2oZGd3JKtzA/AYdHHailozKEDkiPX3rt
- i8iNamTaevB0GZZFVK2HrRFWW96+lcMx4wcNNDK0f12+TDMKseXGzou55pLMupGdGoeXCc6/6
- JTOyTCOl+soVnuCNxVuQHfhLbIHXRyRMj0tsAq53kgWxEAr+hiKOl5gLeC2RbPl6JBgWeAXFH
- +ngvCfZWtwvqUmZLakj4oK7mRkJlcyy19zHS6Umr+McoUXVf0xm3AWpHTaVwvuoydLGiKXed8
- R5dRi61Tpuk4p6X4Pbslq+PkNiecpXPYHqZkxUFZn2rgiV/f63abYRkHPFrkFVM11XmP/1jJZ
- Dq11OJT/XaumPqPD+UoCq7AtjXnkmMYzPvwsNF2/LVNRGPRNK5HGz5hNCCpnc0nOcI5IiXzYR
- Ph0nGHt85yOBMhE1bdwtb9tLpTECZ9v6Jd5MArIhEd4hAuofPQ11mNN2iM5t9U56JMVP1+ATc
- TrAz8UmO1f1NH0GV20zn4+SYOWiu6YWGGvJFxjco7QworCrMR1mQlEaWMjRHWfcUSW6eRtPfM
- 3MoF+2DBb+3E7G+hY7Oc7vzzEtckiRR3OzrYmOE1FokZgb71WdlLUDbdo1xHsnpKJZgKAyqfJ
- 9fX78iSu0CNN/8We7scRn3oMFmpi1CsidTvnZMEeL91sKLGP0dnO3ilrb2UCDbVru0uCBjL1m
- nOA+AWsMUTXmrTrczxCNEoXyE93d7wqj2y1xprwW8AEaLcrmJxGwrpRo/5CnY9MLet6uYYJWw
- bUzI6SKOIrkZdJhURWeF/BJzhFokJLtc9N9XzoDf3HOc8klP1P335Ss/i+rxI52jA9VUZNFc3
- qHQuKxHyyiSpE4Y/QQumO0K4y4Y06LGxpmmeXnhOXvuGGYqq7mCGw+ruDiovKdLg/usdctrsI
- dWLoSkllh27rNJcFiCSIM0Yc9Rkge2gf5KphceWpSY2PWU0fGMp/awsUa7bu0Ffre5l6TfyUj
- DyZQavkfN3Mlj7dDrPIapKO5jtRpoRYCXTLl/L6qeloJk4C3zRQJf2fMKOqjO6BuYfbZO3vOn
- tCDlr4+pNXnGH59LWm3v32wIVYTpPn+zG6o0NGy5NW+qBTi0juCMJN3xnKTKuTe9ZjT9VW0Dd
- 2FWe00Y0QziOltsETzc+OWc2wZ58YY0J0IUYZU/WcO2ZYprxjRmytNS282nz4TEdkGNtJ+VCp
- C7w/BVQ==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250403171831.3803479-1-andrii@kernel.org>
 
-On 03.04.25 17:03, Thomas Gleixner wrote:
-> On Thu, Apr 03 2025 at 15:13, Frank Scheiner wrote:
->> this change, specfically the introduction of irq_force_complete_move()
->> to `kernel/irq/migration.c`, strangely breaks our builds for the hp-sim
->> platform (i.e. Linux/ia64 for Ski):
->
-> arch/itanic has hit the iceberg and sank with the release of v6.7...
+On 2025-04-03 10:18:31 [-0700], Andrii Nakryiko wrote:
+> Avoid a false-positive lockdep warning in PREEMPT_RT configuration when
+> using write_seqcount_begin() in uprobe timer callback by using
+> raw_write_* APIs. Uprobe's use of timer callback is guaranteed to not
+> race with itself, and as such seqcount's insistence on having hardirqs
+preemption, not hardirqs
 
-Ha, ha, not in our waters. :-) Still I'm glad I could help finding
-errors in Linux by building for ia64.
+> disabled on the writer side is irrelevant. So switch to raw_ variants of
+> seqcount API instead of disabling hardirqs unnecessarily.
+> 
+> Also, point out in the comments more explicitly why we use seqcount
+> despite our reader side being rather simple and never retrying. We favor
+> well-maintained kernel primitive in favor of open-coding our own memory
+> barriers.
 
+Thank you.
 
->> So I guess, either the requirement in `linux/include/linux/irq.h` needs
->> to go, or the use of "d->parent_data" or the whole of
->> irq_force_complete_move() and its use needs to be guarded as well.
->
-> Guessing is not a really good approach to solve a technical problem :)
-
-Thanks for the advice, though guessing was not involved here. It's just
-a way to say that I'm not sure what the right solution might be in this
-case. And then I'd rather leave such fixes to the experts in the
-specific field.
-
+> Link: https://lore.kernel.org/bpf/CAADnVQLLOHZmPO4X_dQ+cTaSDvzdWHzA0qUqQDhLFYL3D6xPxg@mail.gmail.com/
+> Reported-by: Alexei Starovoitov <ast@kernel.org>
+> Suggested-by: Sebastian Sewior <bigeasy@linutronix.de>
+> Fixes: 8622e45b5da1 ("uprobes: Reuse return_instances between multiple uretprobes within task")
+> Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
 > ---
-> --- a/kernel/irq/migration.c
-> +++ b/kernel/irq/migration.c
-> @@ -37,7 +37,7 @@ bool irq_fixup_move_pending(struct irq_d
->
->  void irq_force_complete_move(struct irq_desc *desc)
->  {
-> -	for (struct irq_data *d =3D irq_desc_get_irq_data(desc); d; d =3D d->p=
-arent_data) {
-> +	for (struct irq_data *d =3D irq_desc_get_irq_data(desc); d; d =3D irqd=
-_get_parent_data(d)) {
->  		if (d->chip && d->chip->irq_force_complete_move) {
->  			d->chip->irq_force_complete_move(d);
->  			return;
->
+>  kernel/events/uprobes.c | 13 +++++++++++--
+>  1 file changed, 11 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> index 70c84b9d7be3..6d7e7da0fbbc 100644
+> --- a/kernel/events/uprobes.c
+> +++ b/kernel/events/uprobes.c
+> @@ -1944,6 +1944,9 @@ static void free_ret_instance(struct uprobe_task *utask,
+>  	 * to-be-reused return instances for future uretprobes. If ri_timer()
+>  	 * happens to be running right now, though, we fallback to safety and
+>  	 * just perform RCU-delated freeing of ri.
+> +	 * Admittedly, this is a rather simple use of seqcount, but it nicely
+> +	 * abstracts away all the necessary memory barriers, so we use
+> +	 * a well-supported kernel primitive here.
+>  	 */
+>  	if (raw_seqcount_try_begin(&utask->ri_seqcount, seq)) {
+>  		/* immediate reuse of ri without RCU GP is OK */
+> @@ -2004,12 +2007,18 @@ static void ri_timer(struct timer_list *timer)
+>  	/* RCU protects return_instance from freeing. */
+>  	guard(rcu)();
+>  
+> -	write_seqcount_begin(&utask->ri_seqcount);
 
-This fxes the build for me for that file. Much obliged.
-```
-  CC      kernel/irq/migration.o
-```
+> +	/* See free_ret_instance() for notes on seqcount use.
 
-Cheers,
-Frank
+This is not a proper multi line comment.
+
+> +	 * We also employ raw API variants to avoid lockdep false-positive
+> +	 * warning complaining about hardirqs not being disabled. We have
+
+s/hardirqs/preemption. The warning is about missing disabled preemption.
+
+> +	 * a guarantee that this timer callback won't race with itself, so no
+> +	 * need to disable hardirqs.
+
+The timer can only be invoked once for a uprobe_task. Therefore there
+can only be one writer. The reader does not require an even sequence
+count so it is okay to remain preemptible on PREEMPT_RT. 
+
+> +	 */
+> +	raw_write_seqcount_begin(&utask->ri_seqcount);
+>  
+>  	for_each_ret_instance_rcu(ri, utask->return_instances)
+>  		hprobe_expire(&ri->hprobe, false);
+>  
+> -	write_seqcount_end(&utask->ri_seqcount);
+> +	raw_write_seqcount_end(&utask->ri_seqcount);
+>  }
+>  
+>  static struct uprobe_task *alloc_utask(void)
+
+Sebastian
