@@ -1,415 +1,313 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D612253F24;
-	Thu,  3 Apr 2025 19:06:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743707201; cv=none; b=HckC0ME6njh2ht4zA18y8jo/uk0GhiT3f/y9yVVWz4rJbg2TQPJx5jEVudu0xXjXMZpiezKazD7Xag2Kf1FrU6Dbmj05rEliOmgr6tn/tA3KNzOBuvftyNeJb9167Yd0KSxpUXFPeHi5iypF4ShkSkwc4JqE/dowloA4TO7RNck=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743707201; c=relaxed/simple;
-	bh=jIkrr0BKoZs4bojjeUgy2B5lY90v34XciT+gvun4GCE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=UIy6DqdcetHrOmu4J53OecU5wnIwLiQeKmOfjriiUizHrZQHeiFRkHugyfoE8OtLNzeeQ+Pdfo3Yg3FZYuilGL+3UeQEg0BZJLMYz92mRJCHdS3RL/BhcRWYiaKw1DtSoQtSbbzViVNA5TM8Ut4nByEJdeltX2fVlL3zfQY9MQw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ed7ZYavG; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA4FB26B958
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 19:06:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.17
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743707202; cv=fail; b=M+1WArkbFY4Lab2SEMKfvnm2yuIVSB8keHrl7vRaGDLZMR3PIT7WgdvMWKwfHLcugKpiuSnklrHklsPuiXuzX0K6iuUA7U9HxdiDcKwHvlazSBaTEJ3LWDzS7izzJe9ND/ZTIxQeSMEX2dCjy1rPreZROobxi/oAJuxs50RrXvQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743707202; c=relaxed/simple;
+	bh=fRRoTIs/bUruAvHa5EhysrQrkM5kNy5LPvA5T6o5zeo=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=CXpdajSQQKNLQKIzJRC5oOPD9SqlR65qlsH9ZFsTonisoEXX9EMXzFoYPdoluj26JokXqv1eZfwlI8Z70IaaEo+xkJcCOTZpu2raexT+UenOniW1d6S2SrmmPRVCeV6Xf6Au/9FwQ4DS4EkOUUVXgykOlnQsiMNWCZz/H0pJVMI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XWeJ6oip; arc=fail smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ed7ZYavG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFD2FC4CEE9;
-	Thu,  3 Apr 2025 19:06:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743707201;
-	bh=jIkrr0BKoZs4bojjeUgy2B5lY90v34XciT+gvun4GCE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Ed7ZYavGH1uTJ3xAnwW6vL2qrNn2yPC+UdmxFRQmKftETWuZ6w/fTHYBNsfyqYsrD
-	 EeBeipK5Mq1mYWEaJ2ixFBRyrHw0slRRNz0NHQxvMwh0/f//n+tWhzSrUjc9mGynby
-	 jv1TxDYBojCZ+F3jB7EFe/ekgQlPVc2xNKnGlTGZ0URYyDttiQdJpQBKU5/RXQpxHu
-	 l/+8D2JmAoh7CPWOOspBSjhxy4wnGwP9LCBgxSKtb7XAWE2MMoJ6Fmq7gwIkV8E6VD
-	 feG5fiDxN0QssY+P8t90AAHWqDfoFl9GLNRmkNHluafPwyIcDF43cj38vVs6NN5Wdg
-	 jPbhE5OcG/QbQ==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Paolo Abeni <pabeni@redhat.com>,
-	Mat Martineau <martineau@kernel.org>,
-	Matthieu Baerts <matttbe@kernel.org>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Sasha Levin <sashal@kernel.org>,
-	davem@davemloft.net,
-	edumazet@google.com,
-	netdev@vger.kernel.org,
-	mptcp@lists.linux.dev
-Subject: [PATCH AUTOSEL 6.12 18/47] mptcp: move the whole rx path under msk socket lock protection
-Date: Thu,  3 Apr 2025 15:05:26 -0400
-Message-Id: <20250403190555.2677001-18-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250403190555.2677001-1-sashal@kernel.org>
-References: <20250403190555.2677001-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XWeJ6oip"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743707200; x=1775243200;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=fRRoTIs/bUruAvHa5EhysrQrkM5kNy5LPvA5T6o5zeo=;
+  b=XWeJ6oipSIl8RjVlUqUpoVr6avYp50C7/8E67u9B4fJK0fhsw3I2bFso
+   6JCztdp+NlI1x9C6xS1kJu+8t5mhnjMNPWcQTcYCCoOQbKGKLYuh2C4Yx
+   8EoAvdGleGid64zaRXgqrWykoOoX0I7Zj+KI5gnt8LTghoWn/V6thK42n
+   UcPNYzCPNZ7MWuP97igSoj+yPTsg1ug3iYfC791ZMkfXaKKHbfFOn0dKL
+   anKThq+qHJFPxI0gcTsBpC3qdF6/Rd2peC5ugiqhPqmlTn1yYWIQYO3jI
+   67D49Os/DImnf+zEEQEwN3YIY9/n78BpFMm3e5JDAYCzXzL6CgN+HMCsM
+   g==;
+X-CSE-ConnectionGUID: Uj7SAIHbQCuEb9ivELgJlQ==
+X-CSE-MsgGUID: kvuyQLHESb6Jk1WBxd2bMQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11393"; a="45019083"
+X-IronPort-AV: E=Sophos;i="6.15,186,1739865600"; 
+   d="scan'208";a="45019083"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 12:06:39 -0700
+X-CSE-ConnectionGUID: 0dgNA+IjQJq5OaY8PQ86cw==
+X-CSE-MsgGUID: VpMeisjwTvmKpEHb4k6vPg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,186,1739865600"; 
+   d="scan'208";a="128018454"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 12:06:39 -0700
+Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.2.1544.14; Thu, 3 Apr 2025 12:06:38 -0700
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ orsmsx603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44 via Frontend Transport; Thu, 3 Apr 2025 12:06:38 -0700
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.172)
+ by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Thu, 3 Apr 2025 12:06:38 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=oBR6g5AeOUEBs0BFcIog2KqixQiNqBqy67eQ3YWbi7gtc9LdPeRzgzdPliAnIVRJqAW+bNqqZPIo57L0b1KnwqTMN4QGIRABS1FgAPJ4fuB2KvI0m4EfBMN55fSFVUTiHfblLNpyQ3YWTQjSzCO9BfpikhjOpQ5tGoNMXezQ19aoUohb3jb4ogUpQahp5uBeKIQfFFyPT31BNoJZtPXczKgUt6fVIma2iJP7qHGk+p77I4J8bb9fMSeiW08fx9RReMD7IJAC10T8VwuR6sbbTfCf0M7KyXPQHdE0IQjml71zEaBd13SzxC2qhXE/bUPORHK41MQogT2Hjff3MSK63Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=g3yW0LWLFKuyDUDAijQDrhyN7VXdPlKy+aHa0Lcq7ls=;
+ b=H0Pm1hZos1gNRhYnj6/7B3/MRd1dUG3wUSnzf8NCDeEeSEVXEb7Bjo0D4UNikWZZPKG6c4Sr4ZKlAzy5KJXz8YU9nhpJxUbQx5Af1KC2zLwMiL5xhSANqXPuA6c6h++sVs8IyzKisvsIxmKutsJfgyP5XaHdO5OPOX3vQvhGlCv0IEaofzjYglxL8wQgdR4wmx6oaTv67tUSKRxIHZnMvFdcopvUJf78/oMpBQUzuoYOQdV5nYooc9er0rEkc18baZDbG2Ss/fZ2Ckv4Fcb9lshZBkuoKQT1Z1UJlxfMV4sUDnglgWmpQMGjCWDHTQy6uPJsfT6SU+4dTUwTU95GRA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by CH0PR11MB5265.namprd11.prod.outlook.com (2603:10b6:610:e0::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8583.41; Thu, 3 Apr
+ 2025 19:06:34 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8%3]) with mapi id 15.20.8583.041; Thu, 3 Apr 2025
+ 19:06:33 +0000
+Date: Thu, 3 Apr 2025 12:06:29 -0700
+From: Dan Williams <dan.j.williams@intel.com>
+To: "Naveen N Rao (AMD)" <naveen@kernel.org>, <linux-kernel@vger.kernel.org>,
+	<x86@kernel.org>, <linux-coco@lists.linux.dev>
+CC: Dave Hansen <dave.hansen@linux.intel.com>, Borislav Petkov <bp@alien8.de>,
+	Vishal Annapurve <vannapurve@google.com>, Kirill Shutemov
+	<kirill.shutemov@linux.intel.com>, Dan Williams <dan.j.williams@intel.com>,
+	Nikolay Borisov <nik.borisov@suse.com>, Tom Lendacky
+	<thomas.lendacky@amd.com>, Kevin Loughlin <kevinloughlin@google.com>
+Subject: Re: [RFC PATCH] x86/sev: Disallow userspace access to BIOS region
+ for SEV-SNP guests
+Message-ID: <67eedc35be77d_464ec29462@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20250403120228.2344377-1-naveen@kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250403120228.2344377-1-naveen@kernel.org>
+X-ClientProxiedBy: MW4P220CA0017.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:303:115::22) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.12.21
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|CH0PR11MB5265:EE_
+X-MS-Office365-Filtering-Correlation-Id: 749dd24e-4d2b-4ba5-253b-08dd72e2a636
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014|7053199007;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?0IP/JSW/8bvPpGGCxwIyQGPwQds/LmuQs0u+iSO7cda40RlsRiAU62i4gTZZ?=
+ =?us-ascii?Q?NoWGtrLpRpskJ3qbj37OlsOLmF2YGZA3XnMQAd3Hns3GUJFT7A6C/FIAqSzU?=
+ =?us-ascii?Q?mfzhJSfOp0eiKZuJGXBlcMtq/pPZvqV75jLMSXMH/mVCe1Sp2yBXyNoYY8uk?=
+ =?us-ascii?Q?zzC4kK18APcgAZ0/fXCuWSnDepIys+fD3ApI2qx+YeE7tnZt1cQ29ZZIc51H?=
+ =?us-ascii?Q?Nff3JxWTM33rotg5cVXVRjkgwJZH5cGTVGaQz8J8lu5Mt2HRv8mZn/1UBwfP?=
+ =?us-ascii?Q?zi/9jfI6gHWzAco+okmPzoik5jh05CShqifongtEkRhRljuZ3O17JwKi+tvk?=
+ =?us-ascii?Q?YeMhsbvTlPwWzaPdWZ0+Kjco1oOkG8fjlX6ts7wImhAtr9nCBuBK08FSkclu?=
+ =?us-ascii?Q?glVoqbZwVQMvw7p/WuCRCAuXyPOJlSCGjpr0E9dG33GYgLbdNRIRzBDSCclt?=
+ =?us-ascii?Q?SNbird7PXGXIclQHyVcTOZdRhtvYgmjgfXdhPIaq/M53bgNA0hfkOq4psO3b?=
+ =?us-ascii?Q?nSn4zxzgakEe3E3Q507setSO1SNoVWoANY6J2RExXuew56cMblL+PJrR2gxl?=
+ =?us-ascii?Q?0a/GFRAs+gQwTsj2qHJm/0ypMS3524UebnGeWS6ZtYIY68umpODDmCxDkUPz?=
+ =?us-ascii?Q?ruV64YtTrTSPsI1FnB1d18I58UrrEkB4OvpaOB7FzkTwO86rML5KHIqDpO9U?=
+ =?us-ascii?Q?1RXAn9jBuzC1q+4hnf/CaFmRPHroaokAcc9Wwf2iLNmVv5qp9UhHWtk5n3DT?=
+ =?us-ascii?Q?tnauKcg1UAmKLmNPozvnt55G3XhEAdGqSOq8IbpIFgSRm9rMsVD6K7sTYCrJ?=
+ =?us-ascii?Q?Rv7XhzJmqKeq0Vi59WzOYTLoP+pqAjiac9fD8D8AcYiuOjmjcgpFpJMR3V6E?=
+ =?us-ascii?Q?/Hot3bQBN3tiemhqpuq4QJk+o/MAvfIpLFwuItdP4CisODBF9k6r+BdWYiqJ?=
+ =?us-ascii?Q?XLg9oFUHWqWgxEuB4XVwwPj+5z2fJ+78d89QdkK67oJQMeyRyMsUXNfKftYG?=
+ =?us-ascii?Q?KIDmV5vqzFn6Gboh9cURMYDNn1Qc1eMoxGxF3PiH2GwqBZ76osJnxKme/xOo?=
+ =?us-ascii?Q?wMPKspDajPoVRZs2GLFTMgK7vtvXYlrtl5UZvNfnO3PBuFpuyTmJtbRM//bJ?=
+ =?us-ascii?Q?wu2ecZMBYfTjq86H6D/9U/WjhBhZjAmLoueahzMHrCJHR/kpdSVYcUP8slrl?=
+ =?us-ascii?Q?3MmrpTAugRWpOySExbE++u7Ep4IoyqXwwC9KDYBTaROVLxiZ3KUDKgWyptJo?=
+ =?us-ascii?Q?66Cx7lWvO6D/SroaAptAZZt05uPsIV2nQxd/TMCrl+a19FJpgjcZpDmO6NJV?=
+ =?us-ascii?Q?iy4Azz6juzso2ppno0yCpm6/Ft+aXX9oBasOLVls/32tD/jQitrX1lQwOOQb?=
+ =?us-ascii?Q?+7X7CMzmEJR8UUNOzjHp4LSwgJBv?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?PuWDsD6ksb+zz89bQQi9c+Ml2jNcvlXakpzxtQdznPArs9yA0tz8iuPfiwEa?=
+ =?us-ascii?Q?4Gn+6D7zvVwEaJrZcKQe3k5t6UVz3K8q0l+GTtLPAPlZrmaQk+wsJvj/cz1D?=
+ =?us-ascii?Q?w3l79fCrVFhAaJ4TZKOzEE18jhl91HB+VYckbbAoE6tSNm4Wsr5+gizfm5/2?=
+ =?us-ascii?Q?Nw1duszZZ/EcnWDQyjP8EDSK1wFrjirXJeLcz1pBD7J8B6ylXJFBoug9Po2q?=
+ =?us-ascii?Q?9ZpEgZI6QFGh0cJOeVmtVTSlY+EAVB7kUqk934ev7LVO3PAI8zFBNx3UDtts?=
+ =?us-ascii?Q?rQr+eHMQnZumY9AFwVduta0Er3/yEEIngulluP6DgtUjacaVs7853+FxompF?=
+ =?us-ascii?Q?4U0IPXRi9zGLiatxK/O6vIgcs4KSQhd+r9MN9TRgWiwqb/GrC3VAk40AKGl1?=
+ =?us-ascii?Q?al5QyBYExpLLOxtytukZY7pI4vQ5XyAJ2Oyl7Hj/9GwZOs5wfnBjs+u3oggW?=
+ =?us-ascii?Q?qQx87wGJSg1ec3uOEecvZzFVyxUpRrCKnyRF8od19XAlVVhnSsV0kNXuMF9E?=
+ =?us-ascii?Q?9e2WiLIL4aqCBRl+CpAVkfjkrOWJI7vtYJq0A+z3aGekIcprhQC9ghJg+2Wp?=
+ =?us-ascii?Q?l7NDAxAAdqe2hnlZdwSeYOGp6lR6o1NwdgAsraStnSTbF+YXGwWaMKgf1deE?=
+ =?us-ascii?Q?Bbkc7fVQQJABZ19sIV972l2yn7bcriFPbaVHU6hN79hdjcsXdZY4oNe+Pmcx?=
+ =?us-ascii?Q?VjfezLC5jUKJ8N3tVS7ayuoghJPzMCWRzvHrK2BzPJibkhLydxUvVxAQ8sbO?=
+ =?us-ascii?Q?IM/ruMKkQHsGNyGuz4UmjUrEPw/+YTELp0nvKl7tTW3v8GyMJLJpewc5pQwk?=
+ =?us-ascii?Q?pm2aB90gWLzZMLAud4ER6xdxMXys9f6hLU1/AToc9aTVObQmyuklWzDhz643?=
+ =?us-ascii?Q?Bf/89GPqgHYe5P4GQqhMS9P507tqUSNyDFtYSryFeRN5ZylPFE4C4FdkUVof?=
+ =?us-ascii?Q?3xQcLhH6iubx19L4lBH/ev7OidajgmQlstMoesEnUs7z1jHemZmB7tEq4tmo?=
+ =?us-ascii?Q?k3LEXgBhvBy9/zBW0+Oed2H+EVKGkJAU9mQ4B978RKkugeQFpWgLW9prP8c6?=
+ =?us-ascii?Q?mHLRXzvTbud0cG/jr3XKpGyMGH4LmAufDLRJhWnb0wCYPB8Q6lXHzAa98odG?=
+ =?us-ascii?Q?g/tUJfmDhBI6uVGpUWo17zg2Knr6UIyQeFw5uuROC19kqB8p2epJ7R44+0vf?=
+ =?us-ascii?Q?f4tp2nFjYI3Cl5q0YPRXzUA8v+Mx1aItIbcsLBf0fjODwqOsOBs/dKSmDZNw?=
+ =?us-ascii?Q?dSxqPjboFABbhB/2qk53yMYXD2ouxamtDuMWGLM7TbIDw+tQ7/awp/qFZByI?=
+ =?us-ascii?Q?KHvKC0PIBSH/SWiaMZyPjsMCC8k4XDz/bRpe96ST+Oh6milIZ+320ZT7iJRB?=
+ =?us-ascii?Q?5CWQtKxjOzTpwkzWMP5IltFm4WnuxvEUKmd6jDjoTKTs8ykdv/86YVtgRFef?=
+ =?us-ascii?Q?V0EKQRJzQqWzERE4B/WmA7Vi8rqiWg67bJeH08IwBhU7KMytZpL4XpVstbQG?=
+ =?us-ascii?Q?Dtlw5Pb1UQ7f61uclFh/uZjIy49KJNgjEpnAy6bmMjI3xpjg8PGvs+IFUtNd?=
+ =?us-ascii?Q?SNWx9MW66oMAjp25aMcpbtdnaRQcvWeXpc0DcUgEyxvwBqMgxgtbPFGSIgm8?=
+ =?us-ascii?Q?HQ=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 749dd24e-4d2b-4ba5-253b-08dd72e2a636
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Apr 2025 19:06:33.5426
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: RTork+Cho8eoE93o577xSmhGniHs12PBPMmP69Tb2SSaHM9yg8mVzgFg1Y4yw+FVHjt37Z7qlklPnlg/JoW/yE7IQczg8I+ArPXYIGCxzjY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR11MB5265
+X-OriginatorOrg: intel.com
 
-From: Paolo Abeni <pabeni@redhat.com>
+Naveen N Rao (AMD) wrote:
+> Commit 9704c07bf9f7 ("x86/kernel: Validate ROM memory before accessing
+> when SEV-SNP is active") added code to validate the ROM region from
+> 0xc0000 to 0xfffff in a SEV-SNP guest since that region can be accessed
+> during kernel boot. That address range is not part of the system RAM, so
+> it needed to be validated separately.
+> 
+> Commit 0f4a1e80989a ("x86/sev: Skip ROM range scans and validation for
+> SEV-SNP guests") reverted those changes and instead chose to prevent the
+> guest from accessing the ROM region since SEV-SNP guests did not rely on
+> data from that region. However, while the kernel itself no longer
+> accessed the ROM region, there are userspace programs that probe this
+> region through /dev/mem and they started crashing due to this change. In
+> particular, fwupd (up until versions released last year that no longer
+> link against libsmbios) and smbios utilities such as smbios-sys-info
+> crash with a cryptic message in dmesg:
+>   Wrong/unhandled opcode bytes: 0x8b, exit_code: 0x404, rIP: 0x7fe5404d3840
+>   SEV: Unsupported exit-code 0x404 in #VC exception (IP: 0x7fe5404d3840)
+> 
+> Deny access to the BIOS region (rather than just the video ROM range)
+> via /dev/mem to address this. Restrict changes to CONFIG_STRICT_DEVMEM=y
+> which is enabled by default on x86. Add a new x86_platform_ops callback
+> so Intel can customize the address range to block.
+> 
+> Fixes: 0f4a1e80989a ("x86/sev: Skip ROM range scans and validation for SEV-SNP guests")
+> Signed-off-by: Naveen N Rao (AMD) <naveen@kernel.org>
+> ---
+>  arch/x86/coco/sev/core.c        | 13 +++++++++++++
+>  arch/x86/include/asm/sev.h      |  2 ++
+>  arch/x86/include/asm/x86_init.h |  2 ++
+>  arch/x86/kernel/x86_init.c      |  2 ++
+>  arch/x86/mm/init.c              |  3 +++
+>  arch/x86/mm/mem_encrypt_amd.c   |  1 +
+>  6 files changed, 23 insertions(+)
+> 
+> diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
+> index b0c1a7a57497..4e10701536d4 100644
+> --- a/arch/x86/coco/sev/core.c
+> +++ b/arch/x86/coco/sev/core.c
+> @@ -43,6 +43,7 @@
+>  #include <asm/apic.h>
+>  #include <asm/cpuid.h>
+>  #include <asm/cmdline.h>
+> +#include <asm/e820/types.h>
+>  
+>  #define DR7_RESET_VALUE        0x400
+>  
+> @@ -761,6 +762,18 @@ static u64 __init get_jump_table_addr(void)
+>  	return ret;
+>  }
+>  
+> +bool sev_snp_pfn_access_allowed(unsigned long pfn)
+> +{
+> +	/*
+> +	 * Reject access to BIOS address range (0xa0000 to 0x100000) for SEV-SNP guests
+> +	 * as that address range is not validated, so access can cause #VC exception
+> +	 */
+> +	if (pfn << PAGE_SHIFT >= BIOS_BEGIN && pfn << PAGE_SHIFT < BIOS_END)
+> +		return 0;
+> +
+> +	return 1;
+> +}
+> +
+>  static void __head
+>  early_set_pages_state(unsigned long vaddr, unsigned long paddr,
+>  		      unsigned long npages, enum psc_op op)
+> diff --git a/arch/x86/include/asm/sev.h b/arch/x86/include/asm/sev.h
+> index ba7999f66abe..721498c0a055 100644
+> --- a/arch/x86/include/asm/sev.h
+> +++ b/arch/x86/include/asm/sev.h
+> @@ -454,6 +454,7 @@ static inline int pvalidate(unsigned long vaddr, bool rmp_psize, bool validate)
+>  struct snp_guest_request_ioctl;
+>  
+>  void setup_ghcb(void);
+> +bool sev_snp_pfn_access_allowed(unsigned long pfn);
+>  void early_snp_set_memory_private(unsigned long vaddr, unsigned long paddr,
+>  				  unsigned long npages);
+>  void early_snp_set_memory_shared(unsigned long vaddr, unsigned long paddr,
+> @@ -496,6 +497,7 @@ static inline void sev_enable(struct boot_params *bp) { }
+>  static inline int pvalidate(unsigned long vaddr, bool rmp_psize, bool validate) { return 0; }
+>  static inline int rmpadjust(unsigned long vaddr, bool rmp_psize, unsigned long attrs) { return 0; }
+>  static inline void setup_ghcb(void) { }
+> +static inline bool sev_snp_pfn_access_allowed(unsigned long pfn) { return true; }
+>  static inline void __init
+>  early_snp_set_memory_private(unsigned long vaddr, unsigned long paddr, unsigned long npages) { }
+>  static inline void __init
+> diff --git a/arch/x86/include/asm/x86_init.h b/arch/x86/include/asm/x86_init.h
+> index 36698cc9fb44..d559587dee48 100644
+> --- a/arch/x86/include/asm/x86_init.h
+> +++ b/arch/x86/include/asm/x86_init.h
+> @@ -307,6 +307,7 @@ struct x86_hyper_runtime {
+>   * @realmode_reserve:		reserve memory for realmode trampoline
+>   * @realmode_init:		initialize realmode trampoline
+>   * @hyper:			x86 hypervisor specific runtime callbacks
+> + * @pfn_access_allowed:		filter accesses to pages
+>   */
+>  struct x86_platform_ops {
+>  	unsigned long (*calibrate_cpu)(void);
+> @@ -324,6 +325,7 @@ struct x86_platform_ops {
+>  	void (*set_legacy_features)(void);
+>  	void (*realmode_reserve)(void);
+>  	void (*realmode_init)(void);
+> +	bool (*pfn_access_allowed)(unsigned long pfn);
+>  	struct x86_hyper_runtime hyper;
+>  	struct x86_guest guest;
+>  };
+> diff --git a/arch/x86/kernel/x86_init.c b/arch/x86/kernel/x86_init.c
+> index 0a2bbd674a6d..3679a92a3881 100644
+> --- a/arch/x86/kernel/x86_init.c
+> +++ b/arch/x86/kernel/x86_init.c
+> @@ -142,6 +142,7 @@ static bool enc_cache_flush_required_noop(void) { return false; }
+>  static void enc_kexec_begin_noop(void) {}
+>  static void enc_kexec_finish_noop(void) {}
+>  static bool is_private_mmio_noop(u64 addr) {return false; }
+> +static bool pfn_access_allowed_noop(unsigned long pfn) { return true; }
+>  
+>  struct x86_platform_ops x86_platform __ro_after_init = {
+>  	.calibrate_cpu			= native_calibrate_cpu_early,
+> @@ -156,6 +157,7 @@ struct x86_platform_ops x86_platform __ro_after_init = {
+>  	.restore_sched_clock_state	= tsc_restore_sched_clock_state,
+>  	.realmode_reserve		= reserve_real_mode,
+>  	.realmode_init			= init_real_mode,
+> +	.pfn_access_allowed		= pfn_access_allowed_noop,
 
-[ Upstream commit bc68b0efa1bf923cef1294a631d8e7416c7e06e4 ]
+Is there any driving need to allow devmem at all for TVM access at this
+point?
 
-After commit c2e6048fa1cf ("mptcp: fix race in release_cb") we can
-move the whole MPTCP rx path under the socket lock leveraging the
-release_cb.
+I would be in favor of making this clearly tied to devmem, call it
+".devmem_is_allowed" for symmetry with the mm/init.c helper, and make
+the default implementation be:
 
-We can drop a bunch of spin_lock pairs in the receive functions, use
-a single receive queue and invoke __mptcp_move_skbs only when subflows
-ask for it.
+static bool platform_devmem_is_allowed(unsigned long pfn)
+{
+	return !cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT));
+}
 
-This will allow more cleanup in the next patch.
-
-Some changes are worth specific mention:
-
-The msk rcvbuf update now always happens under both the msk and the
-subflow socket lock: we can drop a bunch of ONCE annotation and
-consolidate the checks.
-
-When the skbs move is delayed at msk release callback time, even the
-msk rcvbuf update is delayed; additionally take care of such action in
-__mptcp_move_skbs().
-
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Reviewed-by: Mat Martineau <martineau@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Link: https://patch.msgid.link/20250218-net-next-mptcp-rx-path-refactor-v1-3-4a47d90d7998@kernel.org
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- net/mptcp/fastopen.c |   1 +
- net/mptcp/protocol.c | 123 ++++++++++++++++++++-----------------------
- net/mptcp/protocol.h |   2 +-
- 3 files changed, 60 insertions(+), 66 deletions(-)
-
-diff --git a/net/mptcp/fastopen.c b/net/mptcp/fastopen.c
-index a29ff901df758..305f4c48ec158 100644
---- a/net/mptcp/fastopen.c
-+++ b/net/mptcp/fastopen.c
-@@ -49,6 +49,7 @@ void mptcp_fastopen_subflow_synack_set_params(struct mptcp_subflow_context *subf
- 	MPTCP_SKB_CB(skb)->has_rxtstamp = TCP_SKB_CB(skb)->has_rxtstamp;
- 
- 	mptcp_data_lock(sk);
-+	DEBUG_NET_WARN_ON_ONCE(sock_owned_by_user_nocheck(sk));
- 
- 	mptcp_set_owner_r(skb, sk);
- 	__skb_queue_tail(&sk->sk_receive_queue, skb);
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 42b239d9b2b3c..e4db98968e64d 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -643,18 +643,6 @@ static bool __mptcp_move_skbs_from_subflow(struct mptcp_sock *msk,
- 	bool more_data_avail;
- 	struct tcp_sock *tp;
- 	bool done = false;
--	int sk_rbuf;
--
--	sk_rbuf = READ_ONCE(sk->sk_rcvbuf);
--
--	if (!(sk->sk_userlocks & SOCK_RCVBUF_LOCK)) {
--		int ssk_rbuf = READ_ONCE(ssk->sk_rcvbuf);
--
--		if (unlikely(ssk_rbuf > sk_rbuf)) {
--			WRITE_ONCE(sk->sk_rcvbuf, ssk_rbuf);
--			sk_rbuf = ssk_rbuf;
--		}
--	}
- 
- 	pr_debug("msk=%p ssk=%p\n", msk, ssk);
- 	tp = tcp_sk(ssk);
-@@ -722,7 +710,7 @@ static bool __mptcp_move_skbs_from_subflow(struct mptcp_sock *msk,
- 		WRITE_ONCE(tp->copied_seq, seq);
- 		more_data_avail = mptcp_subflow_data_available(ssk);
- 
--		if (atomic_read(&sk->sk_rmem_alloc) > sk_rbuf) {
-+		if (atomic_read(&sk->sk_rmem_alloc) > sk->sk_rcvbuf) {
- 			done = true;
- 			break;
- 		}
-@@ -846,11 +834,30 @@ static bool move_skbs_to_msk(struct mptcp_sock *msk, struct sock *ssk)
- 	return moved > 0;
- }
- 
-+static void __mptcp_rcvbuf_update(struct sock *sk, struct sock *ssk)
-+{
-+	if (unlikely(ssk->sk_rcvbuf > sk->sk_rcvbuf))
-+		WRITE_ONCE(sk->sk_rcvbuf, ssk->sk_rcvbuf);
-+}
-+
-+static void __mptcp_data_ready(struct sock *sk, struct sock *ssk)
-+{
-+	struct mptcp_sock *msk = mptcp_sk(sk);
-+
-+	__mptcp_rcvbuf_update(sk, ssk);
-+
-+	/* over limit? can't append more skbs to msk, Also, no need to wake-up*/
-+	if (__mptcp_rmem(sk) > sk->sk_rcvbuf)
-+		return;
-+
-+	/* Wake-up the reader only for in-sequence data */
-+	if (move_skbs_to_msk(msk, ssk) && mptcp_epollin_ready(sk))
-+		sk->sk_data_ready(sk);
-+}
-+
- void mptcp_data_ready(struct sock *sk, struct sock *ssk)
- {
- 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
--	struct mptcp_sock *msk = mptcp_sk(sk);
--	int sk_rbuf, ssk_rbuf;
- 
- 	/* The peer can send data while we are shutting down this
- 	 * subflow at msk destruction time, but we must avoid enqueuing
-@@ -859,19 +866,11 @@ void mptcp_data_ready(struct sock *sk, struct sock *ssk)
- 	if (unlikely(subflow->disposable))
- 		return;
- 
--	ssk_rbuf = READ_ONCE(ssk->sk_rcvbuf);
--	sk_rbuf = READ_ONCE(sk->sk_rcvbuf);
--	if (unlikely(ssk_rbuf > sk_rbuf))
--		sk_rbuf = ssk_rbuf;
--
--	/* over limit? can't append more skbs to msk, Also, no need to wake-up*/
--	if (__mptcp_rmem(sk) > sk_rbuf)
--		return;
--
--	/* Wake-up the reader only for in-sequence data */
- 	mptcp_data_lock(sk);
--	if (move_skbs_to_msk(msk, ssk) && mptcp_epollin_ready(sk))
--		sk->sk_data_ready(sk);
-+	if (!sock_owned_by_user(sk))
-+		__mptcp_data_ready(sk, ssk);
-+	else
-+		__set_bit(MPTCP_DEQUEUE, &mptcp_sk(sk)->cb_flags);
- 	mptcp_data_unlock(sk);
- }
- 
-@@ -1944,16 +1943,17 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
- 
- static void mptcp_rcv_space_adjust(struct mptcp_sock *msk, int copied);
- 
--static int __mptcp_recvmsg_mskq(struct mptcp_sock *msk,
-+static int __mptcp_recvmsg_mskq(struct sock *sk,
- 				struct msghdr *msg,
- 				size_t len, int flags,
- 				struct scm_timestamping_internal *tss,
- 				int *cmsg_flags)
- {
-+	struct mptcp_sock *msk = mptcp_sk(sk);
- 	struct sk_buff *skb, *tmp;
- 	int copied = 0;
- 
--	skb_queue_walk_safe(&msk->receive_queue, skb, tmp) {
-+	skb_queue_walk_safe(&sk->sk_receive_queue, skb, tmp) {
- 		u32 offset = MPTCP_SKB_CB(skb)->offset;
- 		u32 data_len = skb->len - offset;
- 		u32 count = min_t(size_t, len - copied, data_len);
-@@ -1988,7 +1988,7 @@ static int __mptcp_recvmsg_mskq(struct mptcp_sock *msk,
- 			/* we will bulk release the skb memory later */
- 			skb->destructor = NULL;
- 			WRITE_ONCE(msk->rmem_released, msk->rmem_released + skb->truesize);
--			__skb_unlink(skb, &msk->receive_queue);
-+			__skb_unlink(skb, &sk->sk_receive_queue);
- 			__kfree_skb(skb);
- 			msk->bytes_consumed += count;
- 		}
-@@ -2113,54 +2113,46 @@ static void __mptcp_update_rmem(struct sock *sk)
- 	WRITE_ONCE(msk->rmem_released, 0);
- }
- 
--static void __mptcp_splice_receive_queue(struct sock *sk)
-+static bool __mptcp_move_skbs(struct sock *sk)
- {
-+	struct mptcp_subflow_context *subflow;
- 	struct mptcp_sock *msk = mptcp_sk(sk);
--
--	skb_queue_splice_tail_init(&sk->sk_receive_queue, &msk->receive_queue);
--}
--
--static bool __mptcp_move_skbs(struct mptcp_sock *msk)
--{
--	struct sock *sk = (struct sock *)msk;
- 	unsigned int moved = 0;
- 	bool ret, done;
- 
-+	/* verify we can move any data from the subflow, eventually updating */
-+	if (!(sk->sk_userlocks & SOCK_RCVBUF_LOCK))
-+		mptcp_for_each_subflow(msk, subflow)
-+			__mptcp_rcvbuf_update(sk, subflow->tcp_sock);
-+
-+	if (__mptcp_rmem(sk) > sk->sk_rcvbuf)
-+		return false;
-+
- 	do {
- 		struct sock *ssk = mptcp_subflow_recv_lookup(msk);
- 		bool slowpath;
- 
--		/* we can have data pending in the subflows only if the msk
--		 * receive buffer was full at subflow_data_ready() time,
--		 * that is an unlikely slow path.
--		 */
--		if (likely(!ssk))
-+		if (unlikely(!ssk))
- 			break;
- 
- 		slowpath = lock_sock_fast(ssk);
--		mptcp_data_lock(sk);
- 		__mptcp_update_rmem(sk);
- 		done = __mptcp_move_skbs_from_subflow(msk, ssk, &moved);
--		mptcp_data_unlock(sk);
- 
- 		if (unlikely(ssk->sk_err))
- 			__mptcp_error_report(sk);
- 		unlock_sock_fast(ssk, slowpath);
- 	} while (!done);
- 
--	/* acquire the data lock only if some input data is pending */
- 	ret = moved > 0;
- 	if (!RB_EMPTY_ROOT(&msk->out_of_order_queue) ||
--	    !skb_queue_empty_lockless(&sk->sk_receive_queue)) {
--		mptcp_data_lock(sk);
-+	    !skb_queue_empty(&sk->sk_receive_queue)) {
- 		__mptcp_update_rmem(sk);
- 		ret |= __mptcp_ofo_queue(msk);
--		__mptcp_splice_receive_queue(sk);
--		mptcp_data_unlock(sk);
- 	}
- 	if (ret)
- 		mptcp_check_data_fin((struct sock *)msk);
--	return !skb_queue_empty(&msk->receive_queue);
-+	return ret;
- }
- 
- static unsigned int mptcp_inq_hint(const struct sock *sk)
-@@ -2168,7 +2160,7 @@ static unsigned int mptcp_inq_hint(const struct sock *sk)
- 	const struct mptcp_sock *msk = mptcp_sk(sk);
- 	const struct sk_buff *skb;
- 
--	skb = skb_peek(&msk->receive_queue);
-+	skb = skb_peek(&sk->sk_receive_queue);
- 	if (skb) {
- 		u64 hint_val = READ_ONCE(msk->ack_seq) - MPTCP_SKB_CB(skb)->map_seq;
- 
-@@ -2214,7 +2206,7 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
- 	while (copied < len) {
- 		int err, bytes_read;
- 
--		bytes_read = __mptcp_recvmsg_mskq(msk, msg, len - copied, flags, &tss, &cmsg_flags);
-+		bytes_read = __mptcp_recvmsg_mskq(sk, msg, len - copied, flags, &tss, &cmsg_flags);
- 		if (unlikely(bytes_read < 0)) {
- 			if (!copied)
- 				copied = bytes_read;
-@@ -2223,7 +2215,7 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
- 
- 		copied += bytes_read;
- 
--		if (skb_queue_empty(&msk->receive_queue) && __mptcp_move_skbs(msk))
-+		if (skb_queue_empty(&sk->sk_receive_queue) && __mptcp_move_skbs(sk))
- 			continue;
- 
- 		/* only the MPTCP socket status is relevant here. The exit
-@@ -2249,7 +2241,7 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
- 				/* race breaker: the shutdown could be after the
- 				 * previous receive queue check
- 				 */
--				if (__mptcp_move_skbs(msk))
-+				if (__mptcp_move_skbs(sk))
- 					continue;
- 				break;
- 			}
-@@ -2293,9 +2285,8 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
- 		}
- 	}
- 
--	pr_debug("msk=%p rx queue empty=%d:%d copied=%d\n",
--		 msk, skb_queue_empty_lockless(&sk->sk_receive_queue),
--		 skb_queue_empty(&msk->receive_queue), copied);
-+	pr_debug("msk=%p rx queue empty=%d copied=%d\n",
-+		 msk, skb_queue_empty(&sk->sk_receive_queue), copied);
- 
- 	release_sock(sk);
- 	return copied;
-@@ -2822,7 +2813,6 @@ static void __mptcp_init_sock(struct sock *sk)
- 	INIT_LIST_HEAD(&msk->join_list);
- 	INIT_LIST_HEAD(&msk->rtx_queue);
- 	INIT_WORK(&msk->work, mptcp_worker);
--	__skb_queue_head_init(&msk->receive_queue);
- 	msk->out_of_order_queue = RB_ROOT;
- 	msk->first_pending = NULL;
- 	WRITE_ONCE(msk->rmem_fwd_alloc, 0);
-@@ -3407,12 +3397,8 @@ void mptcp_destroy_common(struct mptcp_sock *msk, unsigned int flags)
- 	mptcp_for_each_subflow_safe(msk, subflow, tmp)
- 		__mptcp_close_ssk(sk, mptcp_subflow_tcp_sock(subflow), subflow, flags);
- 
--	/* move to sk_receive_queue, sk_stream_kill_queues will purge it */
--	mptcp_data_lock(sk);
--	skb_queue_splice_tail_init(&msk->receive_queue, &sk->sk_receive_queue);
- 	__skb_queue_purge(&sk->sk_receive_queue);
- 	skb_rbtree_purge(&msk->out_of_order_queue);
--	mptcp_data_unlock(sk);
- 
- 	/* move all the rx fwd alloc into the sk_mem_reclaim_final in
- 	 * inet_sock_destruct() will dispose it
-@@ -3455,7 +3441,8 @@ void __mptcp_check_push(struct sock *sk, struct sock *ssk)
- 
- #define MPTCP_FLAGS_PROCESS_CTX_NEED (BIT(MPTCP_PUSH_PENDING) | \
- 				      BIT(MPTCP_RETRANSMIT) | \
--				      BIT(MPTCP_FLUSH_JOIN_LIST))
-+				      BIT(MPTCP_FLUSH_JOIN_LIST) | \
-+				      BIT(MPTCP_DEQUEUE))
- 
- /* processes deferred events and flush wmem */
- static void mptcp_release_cb(struct sock *sk)
-@@ -3489,6 +3476,11 @@ static void mptcp_release_cb(struct sock *sk)
- 			__mptcp_push_pending(sk, 0);
- 		if (flags & BIT(MPTCP_RETRANSMIT))
- 			__mptcp_retrans(sk);
-+		if ((flags & BIT(MPTCP_DEQUEUE)) && __mptcp_move_skbs(sk)) {
-+			/* notify ack seq update */
-+			mptcp_cleanup_rbuf(msk, 0);
-+			sk->sk_data_ready(sk);
-+		}
- 
- 		cond_resched();
- 		spin_lock_bh(&sk->sk_lock.slock);
-@@ -3725,7 +3717,8 @@ static int mptcp_ioctl(struct sock *sk, int cmd, int *karg)
- 			return -EINVAL;
- 
- 		lock_sock(sk);
--		__mptcp_move_skbs(msk);
-+		if (__mptcp_move_skbs(sk))
-+			mptcp_cleanup_rbuf(msk, 0);
- 		*karg = mptcp_inq_hint(sk);
- 		release_sock(sk);
- 		break;
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 7e2f70f22b05b..e32325417c131 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -124,6 +124,7 @@
- #define MPTCP_FLUSH_JOIN_LIST	5
- #define MPTCP_SYNC_STATE	6
- #define MPTCP_SYNC_SNDBUF	7
-+#define MPTCP_DEQUEUE		8
- 
- struct mptcp_skb_cb {
- 	u64 map_seq;
-@@ -324,7 +325,6 @@ struct mptcp_sock {
- 	struct work_struct work;
- 	struct sk_buff  *ooo_last_skb;
- 	struct rb_root  out_of_order_queue;
--	struct sk_buff_head receive_queue;
- 	struct list_head conn_list;
- 	struct list_head rtx_queue;
- 	struct mptcp_data_frag *first_pending;
--- 
-2.39.5
-
+...if a TVM technology wants more leniency, it can override.
