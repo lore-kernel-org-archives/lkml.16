@@ -1,159 +1,96 @@
-Received: from mail-m3276.qiye.163.com (mail-m3276.qiye.163.com [220.197.32.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48C901F4619
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 10:38:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 001971F4619;
+	Thu,  3 Apr 2025 10:39:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743676721; cv=none; b=bE8b3/t1q3VDRQT3/htalORXkE9rzeiIByERIbXCfTLjTwAYSV7Gx5gqpiRnZ8sFeR5teYcbzfFTC74t5RHhN/stc9zAln3zgXqOziiKN+5l+RjUXy8u5nLHh6yGQFCdMa+kNRgTiqZMNaUSvx3ZG2qefOte6eI4nTvig6h42mY=
+	t=1743676759; cv=none; b=iL4fSPO+vMf6T0HJGL0VECXpytc+n1gBEFdZb8lp9DIQIc+jyVmNXkuhNm0ve2O0VDwixOo5SNdGkp4M8e4iQ+FgsF2EplTNGgm+zUZGAnRu0POoFzkEgSsoslz8wer3E9RHnNSmTPF1yIJ8bUnsbCWBdmQrxOKtayKhSENj0DQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743676721; c=relaxed/simple;
-	bh=TZuSjjPVVMh5QjkxWHiyyAQuAU1YntQa8GkY3GzIpsI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=App2+zyDvzxo4gx8LBhVBps2H4IMxbUOGg3YT7oMrw/PAc4b5d0Ibl9YExMTpeSAKPThNxQm6x6cpTbH442jtqkKUz3+XJeczdUZIILTox8+dTFwlbYFvEXp4VBEX7k33Xdi/ryrYjUcFYCoWfLiYM/eFnLCV5dWuNk2klrQDO8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hj-micro.com; spf=pass smtp.mailfrom=hj-micro.com; arc=none smtp.client-ip=220.197.32.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hj-micro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hj-micro.com
-Received: from localhost.localdomain (unknown [122.224.147.158])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 109206eca;
-	Thu, 3 Apr 2025 15:09:24 +0800 (GMT+08:00)
-From: Hongbo Yao <andy.xu@hj-micro.com>
-To: will@kernel.org,
-	robin.murphy@arm.com
-Cc: mark.rutland@arm.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	andy.xu@hj-micro.com,
-	allen.wang@hj-micro.com,
-	peter.du@hj-micro.com
-Subject: [PATCH v3] perf: arm-ni: Unregister PMUs on probe failure
-Date: Thu,  3 Apr 2025 15:09:18 +0800
-Message-ID: <20250403070918.4153839-1-andy.xu@hj-micro.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1743676759; c=relaxed/simple;
+	bh=f2s72k6hZXE1+MxAuCu9EHvm4hPGdXoA6i/NXrk3yh4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DShq9bi7FONStPS7IX6fEWHmeFmUFfogpr4zpfgoB+0znATKTV+nxJpfz51ud+tU29zSRBOkwUieCoNMKK7Vmxsz7MvH5j+hPCrFahSjg3t/3woNQjpZWw7XtM8XhKbzSWT3rIk/pOcsM+zZBmYb0Bf4ssY0GycKEi3Y2BnN56Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Rz5e6qXf; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rz5e6qXf"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5e5bc066283so1220231a12.0;
+        Thu, 03 Apr 2025 03:39:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743676756; x=1744281556; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=f2s72k6hZXE1+MxAuCu9EHvm4hPGdXoA6i/NXrk3yh4=;
+        b=Rz5e6qXf1Kt9mj25TRzJ2EWsBhCb6dTweg1WS/PAZWr+L8eABgOMat4qQ9BnGvAxlw
+         UlRyRhXZH3SJ31aTCE8m8zJB1GoQ/grbW/PxWEuCg9BmMGPKrEiDn0e62Uqg+kqi0wpH
+         dtF2wT96KX3riQP8A5i7VyZ4dzg8DM3S8Xjdl4P4iaD7UTR3fHAx1ZSjpRlENodAErGd
+         XIZ2JAe7TfMycZY6QZaEwvKgapMJREnt2qrBlbZnerX476bQb1m6ZLjZ4hw1vTf/bK6c
+         IxSUFQYp9om+vhApg+AuthbBKL3b0dbQeLV+5cGTIrPQaVEow5B/FC/sgmMYMJUrY7zJ
+         VWBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743676756; x=1744281556;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=f2s72k6hZXE1+MxAuCu9EHvm4hPGdXoA6i/NXrk3yh4=;
+        b=bs+DeeYROw604nU7Ftz5xgcuFG5jHuon+s5EPHmyOTuO53E7kysd3Ma4EqIdu8B9qo
+         Be822rDV0MJPWFM0ODqKDpORGWAWWVy1nlDNG7eLZSMdgL028Q1ErfAAA1eG73ttUZXz
+         c/Gv/3fCcWQRAk/LpGVVd8KZaUBYxbKQsFZMz9Q61sXb9d4Y1cUtbkdX7Nu2jKLm4wxS
+         3betVrXKzVU63YCEaM07Zg2cXDgsTzg5vBVlv0zfv0muy14E3fAuNdsu2g9ciTRHhJyQ
+         epCfghCRqfTfPvioq66cVau4Jw+hSWF4bBPUSwz/TihVHWuOe7GJmgaTI3VPRoYmR2Vv
+         vJ/w==
+X-Forwarded-Encrypted: i=1; AJvYcCV6Pa4x3rpQSYixwDtaf3qdESZRRapw0RB+IhER0Qekq3QnlrW98uTzZmE3MpdpdZ3Pd9OL2SdmQNvD2+Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwnRpFEXwQXHv6y7OnfTbHcYfVmlCHnupIQj4JqQyPkLnYCejn1
+	AFhKFAEgWO09yUbEX1KM9MggOMytA+EGAJLdLwXPQ71otQrpO8oz7DLfaSRMQ1WFq/weP6IgdiE
+	BMM5s0WLvNVaPqDHvj6tPR6L8dyYmdg==
+X-Gm-Gg: ASbGnctJs9Z0UdJXR3I0R0yH8QjNRIIMsCnmh2gKkQSMfOyKb0j0yBaC0P9e0RjVmh2
+	kd4xIrafwr4QPkc+sAlfdlBXMacjkzTfUXu6QuAwfI2a5w19/LV6A95mDdiE07gAQhnLTgl/uNP
+	qFU51RFhCX4xOmGfZOD0qF+RZ/
+X-Google-Smtp-Source: AGHT+IHIukhkHjVflcnny2IBC7gWeeYwrnVBl16nslGqunjb8kJjosZ/URQlVF4IQKhdSqnYdsRU46Yv7gVE8StzJak=
+X-Received: by 2002:a05:6402:510a:b0:5e7:97d2:6d10 with SMTP id
+ 4fb4d7f45d1cf-5edfdf190cdmr17128321a12.28.1743676756107; Thu, 03 Apr 2025
+ 03:39:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkZS0pCVhpLHRpDGE0dS01DGVYVFAkWGhdVEwETFh
-	oSFyQUDg9ZV1kYEgtZQVlKSUlVSUlPVUpPTFVKTkNZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0hVSk
-	tLVUpCS0tZBg++
-X-HM-Tid: 0a95fa7baff103afkunm109206eca
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6OBw6Mzo5FzJNKQIXFkkaURk5
-	GgMKCz1VSlVKTE9ITU1PSk1OQkxLVTMWGhIXVRoVHwJVAw47ExFWFhIYCRRVGBQWRVlXWRILWUFZ
-	SklJVUlJT1VKT0xVSk5DWVdZCAFZQU9JS003Bg++
+References: <20250401050847.1071675-1-mjguzik@gmail.com> <20250401-erwehren-zornig-bc18d8f139e6@brauner>
+ <CAGudoHF_Nfjq1nLZhMbFr3GJz-z=9Z4goacCgXbifxrQX7yiwA@mail.gmail.com> <20250403-tunnel-lethargisch-810d83030763@brauner>
+In-Reply-To: <20250403-tunnel-lethargisch-810d83030763@brauner>
+From: Mateusz Guzik <mjguzik@gmail.com>
+Date: Thu, 3 Apr 2025 12:39:04 +0200
+X-Gm-Features: ATxdqUFvI8tyQVh3jshVUVLys_2xhv_TOu-2NG0ecAf6L454qwG69K9BNf7diuk
+Message-ID: <CAGudoHFWrxxy8eMO1gz782aUA-7JobSTWYpuxuD-iR=UvYofmA@mail.gmail.com>
+Subject: Re: [PATCH] fs: remove stale log entries from fs/namei.c
+To: Christian Brauner <brauner@kernel.org>
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-When a resource allocation fails in one clock domain of an NI device,
-we need to properly roll back all previously registered perf PMUs in
-other clock domains of the same device.
+On Thu, Apr 3, 2025 at 10:39=E2=80=AFAM Christian Brauner <brauner@kernel.o=
+rg> wrote:
+> I'm thoroughly confused how this would be a meaningful April fools joke?
+>
+> The comments in that file are literally 20+ years old and no one has
+> ever bothered to add new updates there even though Al, Neil, Jeff,
+> myself and a lot of others probably rewrote that file a gazillion number
+> of times together or significantly or at least subtly changed the rules.
+>
 
-Otherwise, it can lead to kernel panics.
+I agree they need to go. The joke part was not the removal, but the
+addition my own log entry stating the removal has happened.
 
-Calling arm_ni_init+0x0/0xff8 [arm_ni] @ 2374
-arm-ni ARMHCB70:00: Failed to request PMU region 0x1f3c13000
-arm-ni ARMHCB70:00: probe with driver arm-ni failed with error -16
-list_add corruption: next->prev should be prev (fffffd01e9698a18),
-but was 0000000000000000. (next=ffff10001a0decc8).
-pstate: 6340009 (nZCv daif +PAN -UAO +TCO +DIT -SSBS BTYPE=--)
-pc : list_add_valid_or_report+0x7c/0xb8
-lr : list_add_valid_or_report+0x7c/0xb8
-Call trace:
- __list_add_valid_or_report+0x7c/0xb8
- perf_pmu_register+0x22c/0x3a0
- arm_ni_probe+0x554/0x70c [arm_ni]
- platform_probe+0x70/0xe8
- really_probe+0xc6/0x4d8
- driver_probe_device+0x48/0x170
- __driver_attach+0x8e/0x1c0
- bus_for_each_dev+0x64/0xf0
- driver_add+0x138/0x260
- bus_add_driver+0x68/0x138
- __platform_driver_register+0x2c/0x40
- arm_ni_init+0x14/0x2a [arm_ni]
- do_init_module+0x36/0x298
----[ end trace 0000000000000000 ]---
-Kernel panic - not syncing: Oops - BUG: Fatal exception
-SMP: stopping secondary CPUs
+A genuine removal might have ran into opposition and I'm happy it did not.
 
-Fixes: 4d5a7680f2b4 ("perf: Add driver for Arm NI-700 interconnect PMU")
-Signed-off-by: Hongbo Yao <andy.xu@hj-micro.com>
----
-Changes in v3:
- - Simplify the fix with the existing pmu_base logic. 
- - v2: https://lore.kernel.org/linux-arm-kernel/a1cf32e8-c711-476d-a827-e3affedba780@hj-micro.com/T/#ma3347cf5dca2c3cedbfd475f76931ca7b2751019
+That said, my "submission" does not even have a commit message.
 
----
- drivers/perf/arm-ni.c | 39 +++++++++++++++++++++------------------
- 1 file changed, 21 insertions(+), 18 deletions(-)
-
-diff --git a/drivers/perf/arm-ni.c b/drivers/perf/arm-ni.c
-index bdb9e6af8732..de7b6cce4d68 100644
---- a/drivers/perf/arm-ni.c
-+++ b/drivers/perf/arm-ni.c
-@@ -575,6 +575,23 @@ static int arm_ni_init_cd(struct arm_ni *ni, struct arm_ni_node *node, u64 res_s
- 	return err;
- }
- 
-+static void arm_ni_remove(struct platform_device *pdev)
-+{
-+	struct arm_ni *ni = platform_get_drvdata(pdev);
-+
-+	for (int i = 0; i < ni->num_cds; i++) {
-+		struct arm_ni_cd *cd = ni->cds + i;
-+
-+		if (!cd->pmu_base)
-+			continue;
-+
-+		writel_relaxed(0, cd->pmu_base + NI_PMCR);
-+		writel_relaxed(U32_MAX, cd->pmu_base + NI_PMINTENCLR);
-+		perf_pmu_unregister(&cd->pmu);
-+		cpuhp_state_remove_instance_nocalls(arm_ni_hp_state, &cd->cpuhp_node);
-+	}
-+}
-+
- static void arm_ni_probe_domain(void __iomem *base, struct arm_ni_node *node)
- {
- 	u32 reg = readl_relaxed(base + NI_NODE_TYPE);
-@@ -657,8 +674,11 @@ static int arm_ni_probe(struct platform_device *pdev)
- 				reg = readl_relaxed(pd.base + NI_CHILD_PTR(c));
- 				arm_ni_probe_domain(base + reg, &cd);
- 				ret = arm_ni_init_cd(ni, &cd, res->start);
--				if (ret)
-+				if (ret) {
-+					ni->cds[cd.id].pmu_base = NULL;
-+					arm_ni_remove(pdev);
- 					return ret;
-+				}
- 			}
- 		}
- 	}
-@@ -666,23 +686,6 @@ static int arm_ni_probe(struct platform_device *pdev)
- 	return 0;
- }
- 
--static void arm_ni_remove(struct platform_device *pdev)
--{
--	struct arm_ni *ni = platform_get_drvdata(pdev);
--
--	for (int i = 0; i < ni->num_cds; i++) {
--		struct arm_ni_cd *cd = ni->cds + i;
--
--		if (!cd->pmu_base)
--			continue;
--
--		writel_relaxed(0, cd->pmu_base + NI_PMCR);
--		writel_relaxed(U32_MAX, cd->pmu_base + NI_PMINTENCLR);
--		perf_pmu_unregister(&cd->pmu);
--		cpuhp_state_remove_instance_nocalls(arm_ni_hp_state, &cd->cpuhp_node);
--	}
--}
--
- #ifdef CONFIG_OF
- static const struct of_device_id arm_ni_of_match[] = {
- 	{ .compatible = "arm,ni-700" },
--- 
-2.43.0
-
+Perhaps it would be most expedient if you committed the removal and
+repurposed part of your response. No need to mention in any capacity
+in such a change.
+--=20
+Mateusz Guzik <mjguzik gmail.com>
