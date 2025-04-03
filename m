@@ -1,86 +1,83 @@
-Received: from the.earth.li (the.earth.li [93.93.131.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76D522010E8;
-	Thu,  3 Apr 2025 20:43:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.93.131.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E43C19E806
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 20:46:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743713010; cv=none; b=Nw3++sy0rxICtSM65pF5Zcm0ijkSKMo5u4ri4yM2Ts0J2UP3QEf+LcMgwDNjyahCIK/uL1/nix2jo0CLbdlcqjvZf3n4SfPB18DBKmt7yN/ADn/iFk+CPly/6RV1TdCFxDwyq7UjSC576DJFljRyEwSRH1pB22ZomqBvfp7nYP0=
+	t=1743713181; cv=none; b=IFOYMuSz6j7n/yjsHXa3vTKimPW3Rbhuk20jRHssgpos3Enx6OUxBcRPwvhnPqxSAMD1WGfZ7GP0y5Ti0fxleKXsIt864XlVY4qvTv/vLKNHOq1IxPQ91vjEMyPff+HeEBKUO+r1FpbXGQF5veT3DdpbfURnVgzZUEanT5DoYvA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743713010; c=relaxed/simple;
-	bh=Z6AjCiX55b2ls3ukJbErpaiU+cdMDwLkhdMXgsJVwDU=;
+	s=arc-20240116; t=1743713181; c=relaxed/simple;
+	bh=Szc8VnwQoP4VqpeVJiUuu+aMgDMRlaq2GQXDBHTkSfE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JCI9Ha/zHKh6nlRfxeNwK8Gynet+ffBSiHIpacH7MLBhhShakSvQMWdekNKWq7oVgq4EO5YtOEFUmE5cI3fsv2e5trTogDxRvVehMaempOYfWEEVwiQsTBhjzaA9bOnCeJh+Yeq5DeQviEXthvGIYCUwtxWYWFsjGkKsbS4QtM4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=earth.li; spf=pass smtp.mailfrom=earth.li; dkim=pass (2048-bit key) header.d=earth.li header.i=@earth.li header.b=OCTXJd4s; arc=none smtp.client-ip=93.93.131.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=earth.li
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=earth.li
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=earth.li header.i=@earth.li header.b="OCTXJd4s"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=earth.li;
-	s=the; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:Subject:
-	Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=fZj5xEBVPcFI3ae7bqQp+lq69uF7xTX+XTtVKf/jG+A=; b=OCTXJd4swL2/t46/ZwVEzf2BDl
-	HCeuiVJsGDYbPxYeHr3X5iT4vVThPE5O3SiBDtvLIbuq19ycBbDIKp3GI8s0z1g+wqMp4MBnHHh16
-	K2gtUoZ37E91iz0rOflZvhTKIarFFTxicg7s07cPt53MMjrHpJF4aHrlunXh//JdbjGHPbTuzDaxt
-	wScyyhD2w6gWgzfgHP30xlj0AgKB89SzWkYZDoEIpvErsuDtPX2JZ/22KgoFydUpI2n+8kbh/rPTt
-	lQLZhidzdTzWV7x2K90Chxfd3MhR/N3NyveVd+yLorSC0Ljm9L5ZgYiDMmQe72qY4kUHZSF8LKME4
-	O4isR4YQ==;
-Received: from noodles by the.earth.li with local (Exim 4.96)
-	(envelope-from <noodles@earth.li>)
-	id 1u0RPD-00DdeO-0u;
-	Thu, 03 Apr 2025 21:43:19 +0100
-Date: Thu, 3 Apr 2025 21:43:19 +0100
-From: Jonathan McDowell <noodles@earth.li>
-To: Jarkko Sakkinen <jarkko@kernel.org>
-Cc: Michal Suchanek <msuchanek@suse.de>, Peter Huewe <peterhuewe@gmx.de>,
-	Jason Gunthorpe <jgg@ziepe.ca>, linux-integrity@vger.kernel.org,
+	 Content-Type:Content-Disposition:In-Reply-To; b=a71G31ZluKAEuAo5imBF87xAjCiQ/RkkLflCDUSnVEkCPlbvVqZ0F/2IYrYqczXVNVrLByNsrg7pGOsHpRtx1L0lbnwxI4CprazON5b19/1XOXc/V2qTX4VIgjBR1DFY9LV3U2xa3OkFl1rmaHwnpUElzpFv6AF/+9DA0d43CJY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A795EC4CEE3;
+	Thu,  3 Apr 2025 20:46:16 +0000 (UTC)
+Date: Thu, 3 Apr 2025 21:46:13 +0100
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Ryan Roberts <ryan.roberts@arm.com>
+Cc: Will Deacon <will@kernel.org>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	David Hildenbrand <david@redhat.com>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Kevin Brodsky <kevin.brodsky@arm.com>,
+	linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] tpm: tis: Increase the default for timeouts B and C
-Message-ID: <Z-7y5x3u6wVGFjj-@earth.li>
-References: <20250402172134.7751-1-msuchanek@suse.de>
- <Z-13xOebA3LvQQ-8@earth.li>
- <Z-7XQYP7_tXYR2Ik@kernel.org>
+Subject: Re: [PATCH v3 01/11] arm64: hugetlb: Cleanup huge_pte size discovery
+ mechanisms
+Message-ID: <Z-7zlcVCrsw4SkwX@arm.com>
+References: <20250304150444.3788920-1-ryan.roberts@arm.com>
+ <20250304150444.3788920-2-ryan.roberts@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z-7XQYP7_tXYR2Ik@kernel.org>
+In-Reply-To: <20250304150444.3788920-2-ryan.roberts@arm.com>
 
-On Thu, Apr 03, 2025 at 09:45:21PM +0300, Jarkko Sakkinen wrote:
->On Wed, Apr 02, 2025 at 06:45:40PM +0100, Jonathan McDowell wrote:
->> On Wed, Apr 02, 2025 at 07:21:30PM +0200, Michal Suchanek wrote:
->> > With some Infineon chips the timeouts in tpm_tis_send_data (both B and
->> > C) can reach up to about 2250 ms.
->> >
->> > Extend the timeout duration to accommodate this.
->>
->> The problem here is the bump of timeout_c is going to interact poorly with
->> the Infineon errata workaround, as now we'll wait 4s instead of 200ms to
->> detect the stuck status change.
->>
->> (Also shouldn't timeout_c already end up as 750ms, as it's
->> max(TIS_SHORT_TIMEOUT, TPM2_TIMEOUT_C), and TIS_SHORT_TIMEOUT is 750 vs 200
->> for TPM2_TIMEOUT_C? That doesn't seem to be borne out by your logs, nor my
->> results.)
->
->Just noticed that the commit did not end up having fixes etc. tags:
->
->https://web.git.kernel.org/pub/scm/linux/kernel/git/jarkko/linux-tpmdd.git/commit/?id=de9e33df7762abbfc2a1568291f2c3a3154c6a9d
->
->Should we forward to stable?
+On Tue, Mar 04, 2025 at 03:04:31PM +0000, Ryan Roberts wrote:
+> Not all huge_pte helper APIs explicitly provide the size of the
+> huge_pte. So the helpers have to depend on various methods to determine
+> the size of the huge_pte. Some of these methods are dubious.
+> 
+> Let's clean up the code to use preferred methods and retire the dubious
+> ones. The options in order of preference:
+> 
+>  - If size is provided as parameter, use it together with
+>    num_contig_ptes(). This is explicit and works for both present and
+>    non-present ptes.
+> 
+>  - If vma is provided as a parameter, retrieve size via
+>    huge_page_size(hstate_vma(vma)) and use it together with
+>    num_contig_ptes(). This is explicit and works for both present and
+>    non-present ptes.
+> 
+>  - If the pte is present and contiguous, use find_num_contig() to walk
+>    the pgtable to find the level and infer the number of ptes from
+>    level. Only works for *present* ptes.
+> 
+>  - If the pte is present and not contiguous and you can infer from this
+>    that only 1 pte needs to be operated on. This is ok if you don't care
+>    about the absolute size, and just want to know the number of ptes.
+> 
+>  - NEVER rely on resolving the PFN of a present pte to a folio and
+>    getting the folio's size. This is fragile at best, because there is
+>    nothing to stop the core-mm from allocating a folio twice as big as
+>    the huge_pte then mapping it across 2 consecutive huge_ptes. Or just
+>    partially mapping it.
+> 
+> Where we require that the pte is present, add warnings if not-present.
+> 
+> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
 
-It's a TPM bug rather than a kernel issue, so I don't think there's a 
-valid Fixes: for it, but it's certainly stable material in my mind.
-
-J.
-
--- 
-... "It only counts as a lie-in if you don't get dressed before tea time."
-     -- Steve Willison
+Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
