@@ -1,48 +1,64 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 234D61494D8;
-	Thu,  3 Apr 2025 10:13:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81FE5243387
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 10:13:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743675215; cv=none; b=qqQ4GjqCfZY8bi8mfd2Fw3DVJhgudK/br/sKFzNuopKL7CASWdzhUjh1GuQ4wziKcbCI9z38xAba5F9EFeQSgOIzjAk1F4+4ngtYKRrApURozHPd3CzJfsWI1gj5Jqun/JMNHXwtmREEodJfakVleY36un6ya/bykW3g+5WF4AE=
+	t=1743675224; cv=none; b=rqQdRp9/Cv8Q1Om83IRn6OqmJ9ty5MWTzxYiW9YX4t58MDn/cq9keFePET1BJpBRoymGn4nTp4MBUboKJHlJFvB/lTfLxjRXILYTqVci0ucMcxjEJAlLoZxzxaAR2yjxW9WByRlagFruYoCRxTDJJZ8xuE8FszSc4tbrMCvdRYM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743675215; c=relaxed/simple;
-	bh=01MeoMdgRxAVrAckVIAvBLc/gYcrfZ7ucXaVfCHHKug=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=O62yehQUIMNOrRueKmPKvXlwDypEnT1JCuMah+j2dvvlh45gSitsz9/M3hMV104f9YXkna9uem9bndI8y4spyqnSInfLjWOEVh7d49NmbwpDm0oaMeB5uJ/45efZhqliYMVqgdlNEpyVGANI09ZxiAdglj8j31wcYDd/7KNV7oY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=JrpYDDl8; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1743675224; c=relaxed/simple;
+	bh=2DnvMNbbTTKN68Y02RIluOUJeuLsASazfcS+24h4DWY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SrzMJkHcg3HeSq7usZJ7qEjAgKct0QgHOcSXI/R2qnvz68Ar/zFql+4LYYr4oqb6Y+A8Q5cQmkkmkUJhcd76nC4GMxFnppGNfGJzS3OZDZMgpWijwLH2GN+ekV0fiA5SkCwXKRA+WWh8rOr074S8d10SxH0DfIsOWFiWzG+KsTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QtkfzBLD; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="JrpYDDl8"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5339rw6f021462;
-	Thu, 3 Apr 2025 10:13:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	+1tIqhAWCJvJ3CMT+y5CBlACyfbXSMkpcdM6/ucOvxU=; b=JrpYDDl8YNsCAZvc
-	gtCR8T7s2hvDqcMg6HzHwahmSP/aQWu7BMthXYHZHW4Y9uVnlbLt0lKEj86vHEaE
-	ieZApWzKyp36/eMKR2eMhtm1ojwsWT9JSSsgu2KQVNeLV8puf36Q2+vcwVqoMEvO
-	OmD3LVvXtyV+zgzf8Sg9FZ8Xo2/87f4rnCmeMg39noD1MaTakSOJclGgmXflwbB6
-	uJf9zlpg3+lk3tCkeNCDCrtGKrCRIGkulbLBTHTwOcGgiZOsx9dolrU6RT53nKPX
-	W5FpRpKBxOGRCoUYZqivdTheIsKvJ64Z2BddVoXHTzZ2G9bW9NtL+IFhnI9II1ch
-	YYONqg==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45sbxy1qrm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 03 Apr 2025 10:13:13 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 533ADCIq003801
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 3 Apr 2025 10:13:12 GMT
-Received: from [10.133.33.118] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 3 Apr 2025
- 03:13:08 -0700
-Message-ID: <94dac340-2f92-40a3-be56-ba8bd2298328@quicinc.com>
-Date: Thu, 3 Apr 2025 18:13:05 +0800
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QtkfzBLD"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3913b539aabso394896f8f.2
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 03:13:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1743675221; x=1744280021; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=MUuASJ5hScoSUmLABElHv3yXRMZ9c2GHR1Zzdm5d/R4=;
+        b=QtkfzBLDwAYi1dMJKvjbQpDEJo58ayRinpgnHeYd/OWqEGmpGk8rx4ANLZ0tZ7FYO9
+         JuMCVhTAhKJ56YOipwDLgWIKBaZ4vABhQboLhqP24ekosq6lT/YzNfeusmQEY8Y4KEWo
+         3LXFk3B38R14oYccqCrsCuA0Nc5lmfL9eD5MP/wDgf3LJTj/UrAvfyApBK3BRDWLnL/n
+         lRY/p8rQytkNW5ZAgrncwYLSV75PhfJW3tIX4GUXTfunG8BKA5YV2kiKUi5v8ZijWUdL
+         XTHmBlmIZuczVrJed8gKrqV9LrJJAAYa0tMwmZ8qpdLphcaHpKULpWru2XRS4QTp0UjU
+         EGZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743675221; x=1744280021;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=MUuASJ5hScoSUmLABElHv3yXRMZ9c2GHR1Zzdm5d/R4=;
+        b=LPg/jcWWg9pyX2BwDpFRxL4+ZQxWkSBB4sPxYL89gzkvoRg6PLsE0QpRZOuCpK3vDy
+         2V0NY2EE/BUYHl0FA+u5t43uy22EI+o+Vs5onHEN0xAAp3E9dsjnO228C+7MYx8pv3Qf
+         MEmGk9ELIsIJdWQp+ilAbTCJz8H+Kks8r3QV6sWr7imd0TIZAAXhMaJh8MGPerifmeod
+         yfR7mzoC0rdALZzqPhf96D3LkLpRqg47do1pkWf+YzScZ2zmhSFWBGvOnEfQgl2MSxlH
+         dzn/cR21x2n0uQp/J23bUbqsSigioHJY9UrBz/4kPyV4aQ/QtKSfq87wvaWkw2/V3Cm9
+         J8tA==
+X-Forwarded-Encrypted: i=1; AJvYcCWNSizlDxNPvH7imY5hI+qKtnzI3mOi1xyszu3R3y9PepDWXudm9YzkKI9+bgaX5Ap/QAXSwi9ylAfaPyU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwQovvPC9i6F2oFlCHKLfKg7TMjMb3/rDbnqhDMtF6nG+EQLIiN
+	KtB83Syy9seMIfeiS993cx7irgRdj02zzYEmqoz9rXJqaiq0sIgWP7J3Vd6VZaA=
+X-Gm-Gg: ASbGncvyfoNgzOxJ1YZejm8U3KCawq9DXXSdqiKw6JFleXPYFplMR4JRtZjgLvB9qTv
+	XyjKrw2enCgwz8ykliB+AjWM3Kp1YDYgZPG8YPxpbc+oe3T1B+EKR/OdRB3DXceFvAXCH3xmuR3
+	WlRmXPmtv6TfnL+xDw+jIqoLwuL8LTbDMUrgXwDYVQOu0gOAQV6Z6iawkZAIJu1V3JP61QAHzuG
+	hCUmvHMHpeLzCs8ok8DIyxJr6NarSB0c7tPfpuYPy2+G2HMmxy5/jatJEbX5DzA5V+1y+cXYckL
+	vY5Y5cRbxXAjruXtvKdBxbLiW23Yu4E+Y1+yoVXKrFklqX53NNXXBQ==
+X-Google-Smtp-Source: AGHT+IG0GXKdP7mN6ZM/48dDYRe92ebXdTmaY+mvl8i2Uj/cu3M+nWimnnDDLEpFfJIJ4V2pGTnsuQ==
+X-Received: by 2002:a5d:598d:0:b0:39c:30d8:f104 with SMTP id ffacd0b85a97d-39c30d8f30dmr1230973f8f.6.1743675220783;
+        Thu, 03 Apr 2025 03:13:40 -0700 (PDT)
+Received: from [192.168.0.14] ([79.115.63.146])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec342babfsm14099235e9.1.2025.04.03.03.13.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Apr 2025 03:13:40 -0700 (PDT)
+Message-ID: <05c0fc18-f50f-4f62-bc64-a297cbf927fd@linaro.org>
+Date: Thu, 3 Apr 2025 11:13:36 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,121 +66,40 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] PCI: Remove pcim_iounmap_regions()
-To: Philipp Stanner <phasta@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-        Jens Axboe <axboe@kernel.dk>, Bjorn Helgaas <bhelgaas@google.com>,
-        Mark Brown
-	<broonie@kernel.org>,
-        David Lechner <dlechner@baylibre.com>,
-        Philipp Stanner
-	<pstanner@redhat.com>,
-        Damien Le Moal <dlemoal@kernel.org>,
-        Andy Shevchenko
-	<andriy.shevchenko@linux.intel.com>,
-        Yang Yingliang
-	<yangyingliang@huawei.com>,
-        Hannes Reinecke <hare@suse.de>, Al Viro
-	<viro@zeniv.linux.org.uk>,
-        Li Zetao <lizetao1@huawei.com>, Anuj Gupta
-	<anuj20.g@samsung.com>
-CC: <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-block@vger.kernel.org>, <linux-pci@vger.kernel.org>
-References: <20250327110707.20025-2-phasta@kernel.org>
- <20250327110707.20025-4-phasta@kernel.org>
+Subject: Re: [PATCH v2 19/19] mtd: spinand: winbond: Add support for W35N02JW
+ and W35N04JW chips
+To: Miquel Raynal <miquel.raynal@bootlin.com>,
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
+ Santhosh Kumar K <s-k6@ti.com>
+Cc: Pratyush Yadav <pratyush@kernel.org>, Michael Walle <michael@walle.cc>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ Steam Lin <stlin2@winbond.com>, linux-mtd@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20250403-winbond-6-14-rc1-octal-v2-0-7846bd88fe83@bootlin.com>
+ <20250403-winbond-6-14-rc1-octal-v2-19-7846bd88fe83@bootlin.com>
 Content-Language: en-US
-From: Zijun Hu <quic_zijuhu@quicinc.com>
-In-Reply-To: <20250327110707.20025-4-phasta@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+In-Reply-To: <20250403-winbond-6-14-rc1-octal-v2-19-7846bd88fe83@bootlin.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 3W9z93NkZwxm7a7kjWSLINJPYXmxd6Gc
-X-Proofpoint-ORIG-GUID: 3W9z93NkZwxm7a7kjWSLINJPYXmxd6Gc
-X-Authority-Analysis: v=2.4 cv=PNAP+eqC c=1 sm=1 tr=0 ts=67ee5f39 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=20KFwNOVAAAA:8 a=COk6AnOGAAAA:8 a=YDoAUpYN6iqzQeISu80A:9
- a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-03_04,2025-04-02_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 suspectscore=0
- malwarescore=0 adultscore=0 phishscore=0 clxscore=1011 mlxscore=0
- lowpriorityscore=0 impostorscore=0 mlxlogscore=999 priorityscore=1501
- bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504030036
 
-On 3/27/2025 7:07 PM, Philipp Stanner wrote:
-> From: Philipp Stanner <pstanner@redhat.com>
-> 
-> All users of the deprecated function pcim_iounmap_regions() have been
-> ported by now. Remove it.
-> 
-> Signed-off-by: Philipp Stanner <pstanner@redhat.com>
-> ---
->  .../driver-api/driver-model/devres.rst        |  1 -
->  drivers/pci/devres.c                          | 24 -------------------
->  include/linux/pci.h                           |  1 -
->  3 files changed, 26 deletions(-)
-> 
-> diff --git a/Documentation/driver-api/driver-model/devres.rst b/Documentation/driver-api/driver-model/devres.rst
-> index d75728eb05f8..601f1a74d34d 100644
-> --- a/Documentation/driver-api/driver-model/devres.rst
-> +++ b/Documentation/driver-api/driver-model/devres.rst
-> @@ -396,7 +396,6 @@ PCI
->    pcim_iomap_regions()		: do request_region() and iomap() on multiple BARs
->    pcim_iomap_table()		: array of mapped addresses indexed by BAR
->    pcim_iounmap()		: do iounmap() on a single BAR
-> -  pcim_iounmap_regions()	: do iounmap() and release_region() on multiple BARs
->    pcim_pin_device()		: keep PCI device enabled after release
->    pcim_set_mwi()		: enable Memory-Write-Invalidate PCI transaction
->  
-> diff --git a/drivers/pci/devres.c b/drivers/pci/devres.c
-> index 3431a7df3e0d..c60441555758 100644
-> --- a/drivers/pci/devres.c
-> +++ b/drivers/pci/devres.c
-> @@ -946,30 +946,6 @@ int pcim_request_all_regions(struct pci_dev *pdev, const char *name)
->  }
->  EXPORT_SYMBOL(pcim_request_all_regions);
->  
-> -/**
-> - * pcim_iounmap_regions - Unmap and release PCI BARs (DEPRECATED)
-> - * @pdev: PCI device to map IO resources for
-> - * @mask: Mask of BARs to unmap and release
-> - *
-> - * Unmap and release regions specified by @mask.
-> - *
-> - * This function is DEPRECATED. Do not use it in new code.
-> - * Use pcim_iounmap_region() instead.
-> - */
-> -void pcim_iounmap_regions(struct pci_dev *pdev, int mask)
-> -{
-> -	int i;
-> -
-> -	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
-> -		if (!mask_contains_bar(mask, i))
-> -			continue;
-> -
-> -		pcim_iounmap_region(pdev, i);
-> -		pcim_remove_bar_from_legacy_table(pdev, i);
-> -	}
-> -}
-> -EXPORT_SYMBOL(pcim_iounmap_regions);
-> -
->  /**
->   * pcim_iomap_range - Create a ranged __iomap mapping within a PCI BAR
->   * @pdev: PCI device to map IO resources for
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 47b31ad724fa..7661f10913ca 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -2323,7 +2323,6 @@ void pcim_iounmap(struct pci_dev *pdev, void __iomem *addr);
->  void __iomem * const *pcim_iomap_table(struct pci_dev *pdev);
->  int pcim_request_region(struct pci_dev *pdev, int bar, const char *name);
->  int pcim_iomap_regions(struct pci_dev *pdev, int mask, const char *name);
-> -void pcim_iounmap_regions(struct pci_dev *pdev, int mask);
->  void __iomem *pcim_iomap_range(struct pci_dev *pdev, int bar,
->  				unsigned long offset, unsigned long len);
->  
+Hi, Miquel,
 
-Reviewed-by: Zijun Hu <quic_zijuhu@quicinc.com>
+On 4/3/25 10:19 AM, Miquel Raynal wrote:
+> These chips support single SPI, octal SPI and octal DDR SPI.
+> 
+> For now, only the SDR protocols are supported.
+> 
+> Tested with the W35N02JW variant, but the 04 one just has twice more
+> dies and is described in the same datasheet, so we can reasonably expect
+> that it will behave identically.
+> 
+> Reviewed-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+
+Checked patches 15-19 now, I'm ok with them. When applying, please
+substitute my Reviewed-by tag with Acked-by for patches from 7 to 21.
+I explained why in the reply of v2 14/19. Thanks.
+
+Cheers,
+ta
