@@ -1,226 +1,432 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 206DC35942
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 12:37:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C35D35942;
+	Thu,  3 Apr 2025 12:37:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743683834; cv=none; b=SwjmsIsdPCzKmfph67ALq7bclk4Ddz05+pP1ff80/YSYg8QOQ/ExHglbU5VZAePl5ZnWpzvYRpDmhhpIZGaD53Wgr3G3bepYSXH1RaKHJ+IMepb2s/m2dmdDFNpUTFKxlvWqMsXrvuQVxZEUxHyb1vVto/PFbRVB+05wLpxFnOs=
+	t=1743683850; cv=none; b=NvsecIjuikyX3mEjLNtaPH8yHNh/FnidNWS/8k4TxmeWYCzLjbPxbnLyZ5N1RMnr4Fr2ybO7ACB6Rgs9iIFbxKYgcqaQ4/hqqmc1OpqyRhfbZXB2+7tUi4IDyKBZDuD1b49M05G/z1PP7LpC3nd815jvuIbHnPb1peu8MRA6uVA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743683834; c=relaxed/simple;
-	bh=9JfbGM5lU7PuxknVqe46Se3WgOsZiWSxCpdCcxfyr90=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Y3YrBN62T+9aI94uTyW8nHyiLY6B4mmVC4sOOXn3w2505Dtx4YG1Ne1U6eNtF1o9S6yg0iz1wX4hE+kxa6+658nTeJQ4aBJh4ykAzGILPMFDA9nioCAi6muQgysoluGE51XZOmoGOV6HBhFeMbpOPl1FegGj0vfr/q0p6Pm9bIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E69BC106F;
-	Thu,  3 Apr 2025 05:37:05 -0700 (PDT)
-Received: from [10.1.31.52] (e127648.arm.com [10.1.31.52])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5B82B3F59E;
-	Thu,  3 Apr 2025 05:36:59 -0700 (PDT)
-Message-ID: <54919a25-b898-407c-a4d7-4ce53907cf75@arm.com>
-Date: Thu, 3 Apr 2025 13:36:57 +0100
+	s=arc-20240116; t=1743683850; c=relaxed/simple;
+	bh=Bf/cfNxshTlQzJMgijVW/D8OCmO7Vte65scldhDo0wA=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=dJj3uEVvjaI1KwWGBO13Xzkp63shSK5JxLdcNQp3HSKGTwC9/5nMlikMDswpakN7ERK5Aum139ghjWDu32mGLY4SUfRbO3803sxTtk1cU+XrBRbv0E2C2IRRp4fS872d82JjhrzCl9eQBeSqHnHuYT86j2MHJHOLmmit1JDgitk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iGSt36im; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iGSt36im"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743683848; x=1775219848;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=Bf/cfNxshTlQzJMgijVW/D8OCmO7Vte65scldhDo0wA=;
+  b=iGSt36im9tsfLWR4bYISZbImOi0CY+ELulQ8h4CBIdH+2wHNc8sd1ePP
+   lg+9tasV0U58lhDQtuyrkAJihWvMWUxVt0/AjtZTF48F/dP+9I8YdS5xb
+   FxZQPsGEcymbsaFdi7LkqvH4j4/ywyEGhG5Pon2C5qZuzWudz/gPLRbTi
+   VqwJyownJv1sFZO6vbmwOlcu+sTtue/odXhY31R1O/h+vMvjCtjON1pph
+   iXngXl+vcMkbWeY8id+OB4L5geGCmj3ys7i6cAeHWkpV/lnG+TC6C24fY
+   3AbhS4TsM9qIgnH2EqlRx/nsi26yqa/R3mW0MeSMHc6BKUawf7fOQrqB0
+   Q==;
+X-CSE-ConnectionGUID: ziU458oYSvG9z0AP7NPP5Q==
+X-CSE-MsgGUID: 4fEGFF4lTI2mZ+mA9NScmA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11393"; a="44239752"
+X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
+   d="scan'208";a="44239752"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 05:37:27 -0700
+X-CSE-ConnectionGUID: o92YcWimRymk9Vnucg65Kw==
+X-CSE-MsgGUID: HcQyWSR6QnyU0r2LkPbggg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
+   d="scan'208";a="131713295"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.152])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 05:37:25 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 3 Apr 2025 15:37:21 +0300 (EEST)
+To: Yen-Chi Huang <jesse.huang@portwell.com.tw>
+cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, jay.chen@canonical.com
+Subject: Re: [PATCH] platform/x86: portwell-ec: Add GPIO and WDT driver for
+ Portwell EC
+In-Reply-To: <3ec9d070-2d2a-45ff-af78-923ff1628c08@portwell.com.tw>
+Message-ID: <ae9e7c27-e5b0-b431-2811-c5d8d3549e43@linux.intel.com>
+References: <3ec9d070-2d2a-45ff-af78-923ff1628c08@portwell.com.tw>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/7 v5] sched/fair: Rework EAS to handle more cases
-To: Vincent Guittot <vincent.guittot@linaro.org>, mingo@redhat.com,
- peterz@infradead.org, juri.lelli@redhat.com, dietmar.eggemann@arm.com,
- rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
- vschneid@redhat.com, lukasz.luba@arm.com, rafael.j.wysocki@intel.com,
- pierre.gondois@arm.com, linux-kernel@vger.kernel.org
-Cc: qyousef@layalina.io, hongyan.xia2@arm.com, luis.machado@arm.com,
- qperret@google.com
-References: <20250302210539.1563190-1-vincent.guittot@linaro.org>
-Content-Language: en-US
-From: Christian Loehle <christian.loehle@arm.com>
-In-Reply-To: <20250302210539.1563190-1-vincent.guittot@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 
-On 3/2/25 21:05, Vincent Guittot wrote:
-> The current Energy Aware Scheduler has some known limitations which have
-> became more and more visible with features like uclamp as an example. This
-> serie tries to fix some of those issues:
-> - tasks stacked on the same CPU of a PD
-> - tasks stuck on the wrong CPU.
+On Thu, 3 Apr 2025, Yen-Chi Huang wrote:
+
+Please add watchdog drivers people/lists from MAINTAINERS file into the 
+next submission.
+
+> Adds a driver for the ITE Embedded Controller (EC) on Portwell boards.
+> It integrates with the Linux GPIO and watchdog subsystems to provide:
 > 
-> Patch 1 fixes the case where a CPU is wrongly classified as overloaded
-> whereas it is capped to a lower compute capacity. This wrong classification
-> can prevent periodic load balancer to select a group_misfit_task CPU
-> because group_overloaded has higher priority.
+> - Control/monitoring of up to 8 EC GPIO pins.
+> - Hardware watchdog timer with 1-255 second timeouts.
 > 
-> Patch 2 creates a new EM interface that will be used by Patch 3
+> The driver communicates with the EC via I/O port 0xe300 and identifies
+> the hardware by the "PWG" firmware signature. This enables enhanced
+> system management for Portwell embedded/industrial platforms.
 > 
-> Patch 3 fixes the issue of tasks being stacked on same CPU of a PD whereas
-> others might be a better choice. feec() looks for the CPU with the highest
-> spare capacity in a PD assuming that it will be the best CPU from a energy
-> efficiency PoV because it will require the smallest increase of OPP.
-> This is often but not always true, this policy filters some others CPUs
-> which would be as efficients because of using the same OPP but with less
-> running tasks as an example.
-> In fact, we only care about the cost of the new OPP that will be
-> selected to handle the waking task. In many cases, several CPUs will end
-> up selecting the same OPP and as a result having the same energy cost. In
-> such cases, we can use other metrics to select the best CPU with the same
-> energy cost. Patch 3 rework feec() to look 1st for the lowest cost in a PD
-> and then the most performant CPU between CPUs. At now, this only tries to
-> evenly spread the number of runnable tasks on CPUs but this can be
-> improved with other metric like the sched slice duration in a follow up
-> series.
+> Signed-off-by: Yen-Chi Huang <jesse.huang@portwell.com.tw>
+> ---
+>  MAINTAINERS                        |   6 +
+>  drivers/platform/x86/Kconfig       |  14 ++
+>  drivers/platform/x86/Makefile      |   3 +
+>  drivers/platform/x86/portwell-ec.c | 224 +++++++++++++++++++++++++++++
+>  4 files changed, 247 insertions(+)
+>  create mode 100644 drivers/platform/x86/portwell-ec.c
 > 
-> perf sched pipe on a dragonboard rb5 has been used to compare the overhead
-> of the new feec() vs current implementation.
-> 
-> 9 iterations of perf bench sched pipe -T -l 80000
->                 ops/sec  stdev 
-> tip/sched/core  16634    (+/- 0.5%)
-> + patches 1-3   17434    (+/- 1.2%)  +4.8%
-> 
-> 
-> Patch 4 removed the now unused em_cpu_energy()
-> 
-> Patch 5 solves another problem with tasks being stuck on a CPU forever
-> because it doesn't sleep anymore and as a result never wakeup and call
-> feec(). Such task can be detected by comparing util_avg or runnable_avg
-> with the compute capacity of the CPU. Once detected, we can call feec() to
-> check if there is a better CPU for the stuck task. The call can be done in
-> 2 places:
-> - When the task is put back in the runnnable list after its running slice
->   with the balance callback mecanism similarly to the rt/dl push callback.
-> - During cfs tick when there is only 1 running task stuck on the CPU in
->   which case the balance callback can't be used.
-> 
-> This push callback mecanism with the new feec() algorithm ensures that
-> tasks always get a chance to migrate on the best suitable CPU and don't
-> stay stuck on a CPU which is no more the most suitable one. As examples:
-> - A task waking on a big CPU with a uclamp max preventing it to sleep and
->   wake up, can migrate on a smaller CPU once it's more power efficient.
-> - The tasks are spread on CPUs in the PD when they target the same OPP.
-> 
-> Patch 6 adds task misfit migration case in the cfs tick and push callback
-> mecanism to prevent waking up an idle cpu unnecessarily.
-> 
-> Patch 7 removes the need of testing uclamp_min in cpu_overutilized to
-> trigger the active migration of a task on another CPU.
-> 
-> Compared to v4:
-> - Fixed check_pushable_task for !SMP
-> 
-> Compared to v3:
-> - Fixed the empty functions
-> 
-> Compared to v2:
-> - Renamed the push and tick functions to ease understanding what they do.
->   Both are kept in the same patch as they solve the same problem.
-> - Created some helper functions
-> - Fixing some typos and comments
-> - The task_stuck_on_cpu() condition remains unchanged. Pierre suggested to
->   take into account the min capacity of the CPU but the is not directly
->   available right now. It can trigger feec() when uclamp_max is very low
->   compare to the min capacity of the CPU but the feec() should keep 
->   returning the same CPU. This can be handled in a follow on patch
-> 
-> Compared to v1:
-> - The call to feec() even when overutilized has been removed
-> from this serie and will be adressed in a separate series. Only the case
-> of uclamp_min has been kept as it is now handled by push callback and
-> tick mecanism.
-> - The push mecanism has been cleanup, fixed and simplified.
-> 
-> This series implements some of the topics discussed at OSPM [1]. Other
-> topics will be part of an other serie
-> 
-> [1] https://youtu.be/PHEBAyxeM_M?si=ZApIOw3BS4SOLPwp
-> 
-> Vincent Guittot (7):
->   sched/fair: Filter false overloaded_group case for EAS
->   energy model: Add a get previous state function
->   sched/fair: Rework feec() to use cost instead of spare capacity
->   energy model: Remove unused em_cpu_energy()
->   sched/fair: Add push task mechanism for EAS
->   sched/fair: Add misfit case to push task mecanism for EAS
->   sched/fair: Update overutilized detection
-> 
->  include/linux/energy_model.h | 111 ++----
->  kernel/sched/fair.c          | 721 ++++++++++++++++++++++++-----------
->  kernel/sched/sched.h         |   2 +
->  3 files changed, 518 insertions(+), 316 deletions(-)
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index d5dfb9186962..c52f819786dc 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -19132,6 +19132,12 @@ F:	kernel/time/itimer.c
+>  F:	kernel/time/posix-*
+>  F:	kernel/time/namespace.c
+>  
+> +PORTWELL EC DRIVER
+> +M:	Yen-Chi Huang <jesse.huang@portwell.com.tw>
+> +L:	platform-driver-x86@vger.kernel.org
+> +S:	Maintained
+> +F:	drivers/platform/x86/portwell-ec.c
+> +
+>  POWER MANAGEMENT CORE
+>  M:	"Rafael J. Wysocki" <rafael@kernel.org>
+>  L:	linux-pm@vger.kernel.org
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index 43407e76476b..5b61ab422953 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -779,6 +779,20 @@ config PCENGINES_APU2
+>  	  To compile this driver as a module, choose M here: the module
+>  	  will be called pcengines-apuv2.
+>  
+> +config PORTWELL_EC
+> +	tristate "Portwell Embedded Controller driver"
+> +	depends on X86 && WATCHDOG && GPIOLIB
+> +	help
+> +	  This driver provides support for the GPIO pins and watchdog timer
+> +	  embedded in Portwell's EC.
+> +
+> +	  Theoretically, this driver should work on multiple Portwell platforms,
+> +	  but it has only been tested on the Portwell NANO-6064 board.
+> +	  If you encounter any issues on other boards, please report them.
+> +
+> +	  To compile this driver as a module, choose M here: the module
+> +	  will be called portwell-ec.
+> +
+>  config BARCO_P50_GPIO
+>  	tristate "Barco P50 GPIO driver for identify LED/button"
+>  	depends on GPIOLIB
+> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+> index 650dfbebb6c8..83dd82e04457 100644
+> --- a/drivers/platform/x86/Makefile
+> +++ b/drivers/platform/x86/Makefile
+> @@ -92,6 +92,9 @@ obj-$(CONFIG_XO1_RFKILL)	+= xo1-rfkill.o
+>  # PC Engines
+>  obj-$(CONFIG_PCENGINES_APU2)	+= pcengines-apuv2.o
+>  
+> +# Portwell
+> +obj-$(CONFIG_PORTWELL_EC)	+= portwell-ec.o
+> +
+>  # Barco
+>  obj-$(CONFIG_BARCO_P50_GPIO)	+= barco-p50-gpio.o
+>  
+> diff --git a/drivers/platform/x86/portwell-ec.c b/drivers/platform/x86/portwell-ec.c
+> new file mode 100644
+> index 000000000000..59c51b80a148
+> --- /dev/null
+> +++ b/drivers/platform/x86/portwell-ec.c
+> @@ -0,0 +1,224 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/*
+> + * portwell-ec.c: Portwell embedded controller driver.
+> + *
+> + * Tested on:
+> + *  - Portwell NANO-6064
+> + *
+> + * This driver provides support for GPIO and Watchdog Timer
+> + * functionalities of the Portwell boards with ITE embedded controller (EC).
+> + * The EC is accessed through I/O ports and provides:
+> + *  - 8 GPIO pins for control and monitoring
+> + *  - Hardware watchdog with 1-255 second timeout range
+> + *
+> + * It integrates with the Linux GPIO and Watchdog subsystems, allowing
+> + * userspace interaction with EC GPIO pins and watchdog control,
+> + * ensuring system stability and configurability.
+> + *
+> + * (C) Copyright 2025 Portwell, Inc.
+> + * Author: Yen-Chi Huang (jesse.huang@portwell.com.tw)
+> + *
+
+Remove the extra line.
+
+> + */
+> +
+> +#include <linux/init.h>
+> +#include <linux/module.h>
+> +#include <linux/gpio/driver.h>
+> +#include <linux/watchdog.h>
+> +#include <linux/io.h>
+> +#include <linux/string.h>
+
+Please sort alphabetically.
+
+> +
+> +#define PORTWELL_EC_IOSPACE 0xe300
+> +#define PORTWELL_GPIO_PINS 8
+> +#define PORTWELL_GPIO_DIR_REG 0x2b
+> +#define PORTWELL_GPIO_VAL_REG 0x2c
+> +
+> +#define PORTWELL_WDT_EC_CONFIG_ADDR    0x06
+> +#define PORTWELL_WDT_EC_COUNT_MIN_ADDR 0x07
+> +#define PORTWELL_WDT_EC_COUNT_SEC_ADDR 0x08
+> +#define PORTWELL_WDT_EC_MAX_COUNT_SECOND 255
+> +#define PORTWELL_EC_FW_VENDOR_ADDRESS  0x4d
+> +#define PORTWELL_EC_FW_VENDOR_LENGTH   3
+> +#define PORTWELL_EC_FW_VENDOR_NAME "PWG"
+> +
+> + /* Functions for access EC via IOSPACE*/
+
+Missing space.
+
+> +static void pwec_write(u8 index, u8 data)
+> +{
+> +	outb(data, PORTWELL_EC_IOSPACE + index);
+> +}
+> +
+> +static u8 pwec_read(u8 address)
+> +{
+> +	return inb(PORTWELL_EC_IOSPACE + address);
+
+IIRC, CONFIG_HAS_IOPORT is these days required for iob/outb() so you 
+should add depends on HAS_IOPORT into Kconfig.
+
+> +}
+> +
+> +/* GPIO functions*/
+
+Missing space.
+
+> +static int pwec_gpio_get(struct gpio_chip *chip, unsigned int offset)
+> +{
+> +	return (pwec_read(PORTWELL_GPIO_VAL_REG) & (1 << offset)) ? 1 : 0;
+> +}
+> +
+> +static void pwec_gpio_set(struct gpio_chip *chip, unsigned int offset, int val)
+> +{
+> +	u8 tmp = pwec_read(PORTWELL_GPIO_VAL_REG);
+> +
+> +	if (val)
+> +		tmp |= (1 << offset);
+> +	else
+> +		tmp &= ~(1 << offset);
+> +	pwec_write(PORTWELL_GPIO_VAL_REG, tmp);
+> +}
+> +
+> +static int pwec_gpio_get_direction(struct gpio_chip *chip, unsigned int offset)
+> +{
+> +	return (pwec_read(PORTWELL_GPIO_DIR_REG) & (1 << offset))
+> +			? GPIO_LINE_DIRECTION_IN : GPIO_LINE_DIRECTION_OUT;
+
+Please move ? to the preceeding line
+
+I'd add a local variable for the read result to make this more readable.
+
+> +}
+> +
+> +static int pwec_gpio_direction_input(struct gpio_chip *gc, unsigned int offset)
+> +{
+> +	/* Changing direction causes issues on some boards, so it's disabled for now. */
+> +	return -EOPNOTSUPP;
+> +}
+> +
+> +static int pwec_gpio_direction_output(struct gpio_chip *gc, unsigned int offset, int value)
+> +{
+> +	/* Changing direction causes issues on some boards, so it's disabled for now. */
+
+Perhaps just one comment above both functions would suffice. The functions 
+are right after another so it seems overkill to have the same comment for 
+both.
+
+> +	return -EOPNOTSUPP;
+> +}
+> +
+> +static struct gpio_chip pwec_gpio_chip = {
+> +	.label = "portwell-ec-gpio",
+> +	.get_direction = pwec_gpio_get_direction,
+> +	.direction_input = pwec_gpio_direction_input,
+> +	.direction_output = pwec_gpio_direction_output,
+> +	.get = pwec_gpio_get,
+> +	.set = pwec_gpio_set,
+> +	.ngpio = PORTWELL_GPIO_PINS,
+> +};
+> +
+> +/* Watchdog functions*/
+
+Missing space
+
+> +static int pwec_wdt_start(struct watchdog_device *wdd)
+> +{
+> +	int retry = 10;
+> +	u8 timeout;
+> +
+> +	do {
+> +		pwec_write(PORTWELL_WDT_EC_COUNT_SEC_ADDR, wdd->timeout);
+> +		pwec_write(PORTWELL_WDT_EC_CONFIG_ADDR, 0x01); // WDTCFG[1:0]=01
+
+Please use named defines and FIELD_PREP() instead of comments.
+
+> +		timeout = pwec_read(PORTWELL_WDT_EC_COUNT_SEC_ADDR);
+> +		retry--;
+> +	} while (timeout != wdd->timeout && retry > 0);
+> +	pr_info("Portwell EC: Watchdog started with timeout: %d seconds\n", wdd->timeout);
+> +	return (retry > 0) ? 0 : -EIO;
+> +}
+> +
+> +static int pwec_wdt_stop(struct watchdog_device *wdd)
+> +{
+> +	pwec_write(PORTWELL_WDT_EC_CONFIG_ADDR, 0x00);
+> +	pr_info("Portwell EC: Watchdog stopped\n");
+> +	return 0;
+> +}
+> +
+> +static int pwec_wdt_trigger(struct watchdog_device *wdd)
+> +{
+> +	int retry = 10;
+> +	u8 timeout;
+> +
+> +	pr_info("Portwell EC: Watchdog triggered with timeout: %d seconds\n", wdd->timeout);
+
+This going to be pretty noisy.
+
+> +	do {
+> +		pwec_write(PORTWELL_WDT_EC_COUNT_SEC_ADDR, wdd->timeout);
+> +		pwec_write(PORTWELL_WDT_EC_CONFIG_ADDR, 0x01); // WDTCFG[1:0]=01
+> +		timeout = pwec_read(PORTWELL_WDT_EC_COUNT_SEC_ADDR);
+> +		retry--;
+> +	} while (timeout != wdd->timeout && retry > 0);
+> +	return (retry > 0) ? 0 : -EIO;
+
+Duplicated code.
+
+> +}
+> +
+> +static int pwec_wdt_set_timeout(struct watchdog_device *wdd, unsigned int timeout)
+> +{
+> +	if (timeout == 0 || timeout > PORTWELL_WDT_EC_MAX_COUNT_SECOND)
+> +		return -EINVAL;
+> +	wdd->timeout = timeout;
+> +	pwec_write(PORTWELL_WDT_EC_COUNT_SEC_ADDR, wdd->timeout);
+> +	pr_info("Portwell EC: Watchdog timeout is set: %d seconds\n", wdd->timeout);
+> +	return 0;
+> +}
+> +
+> +static unsigned int pwec_wdt_get_timeleft(struct watchdog_device *wdd)
+> +{
+> +	unsigned int timeout;
+> +
+> +	timeout = pwec_read(PORTWELL_WDT_EC_COUNT_SEC_ADDR);
+> +	pr_info("Portwell EC: Watchdog timeout left: %d seconds\n", timeout);
+> +	return timeout;
+> +}
+> +
+> +static const struct watchdog_ops pwec_wdt_ops = {
+> +	.owner = THIS_MODULE,
+> +	.start = pwec_wdt_start,
+> +	.stop = pwec_wdt_stop,
+> +	.ping = pwec_wdt_trigger,
+> +	.set_timeout = pwec_wdt_set_timeout,
+> +	.get_timeleft = pwec_wdt_get_timeleft,
+> +};
+> +
+> +static struct watchdog_device ec_wdt_dev = {
+> +	.info = &(struct watchdog_info){
+> +	.options = WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE,
+> +	.identity = "Portwell EC Watchdog",
+> +	},
+> +	.ops = &pwec_wdt_ops,
+> +	.timeout = 10,
+> +	.min_timeout = 1,
+> +	.max_timeout = PORTWELL_WDT_EC_MAX_COUNT_SECOND,
+> +};
+> +
+> +static int pwec_firmware_vendor_check(void)
+> +{
+> +	u8 buf[PORTWELL_EC_FW_VENDOR_LENGTH+1];
+
+Add spaces around +
+
+> +	u8 i;
+> +
+> +	for (i = 0; i < PORTWELL_EC_FW_VENDOR_LENGTH; i++)
+> +		buf[i] = pwec_read(PORTWELL_EC_FW_VENDOR_ADDRESS+i);
+
+Spaces around +
+
+> +	buf[PORTWELL_EC_FW_VENDOR_LENGTH] = '\0';
+> +	return (strcmp(PORTWELL_EC_FW_VENDOR_NAME, buf) == 0) ? 0 : -ENODEV;
+> +}
+> +
+> +static int __init pwec_init(void)
+> +{
+> +	int result;
+> +
+> +	result = pwec_firmware_vendor_check();
+
+So this goes immediately to poke some io ports? On any x86 machine?
+The cases should be narrowed down first with dmi matching.
+
+> +	if (result < 0)
+> +		return result;
+> +
+> +	result = gpiochip_add_data(&pwec_gpio_chip, NULL);
+> +	if (result < 0) {
+> +		pr_err("Failed to register Portwell EC GPIO\n");
+> +		return result;
+> +	}
+> +
+> +	result = watchdog_register_device(&ec_wdt_dev);
+> +	if (result < 0) {
+> +		gpiochip_remove(&pwec_gpio_chip);
+> +		pr_err("Failed to register Portwell EC Watchdog\n");
+> +		return result;
+> +	}
+> +
+> +	pr_info("Portwell EC driver initialized\n");
+
+Ok path should be silent.
+
+> +	return 0;
+> +}
+> +
+> +static void __exit pwec_exit(void)
+> +{
+> +	watchdog_unregister_device(&ec_wdt_dev);
+> +	gpiochip_remove(&pwec_gpio_chip);
+> +	pr_info("Portwell EC driver removed\n");
+
+Remove print.
+
+> +}
+> +
+> +module_init(pwec_init);
+> +module_exit(pwec_exit);
+> +
+> +MODULE_AUTHOR("Yen-Chi Huang");
+> +MODULE_DESCRIPTION("Portwell EC Driver");
+> +MODULE_LICENSE("GPL");
 > 
 
-Hi Vincent,
-so I've invested some time into running tests with the series.
-To further narrow down which patch we can attribute a change in
-behavior I've compared the following:
-- Patches 1 to 3 applied, comparing your proposed feec() (B)
-only to the baseline feec() (A).
-- All patches applied, using a static branch to enable (C) and
-disable (D) push mechanism for misfit tasks (if disabled only
-the 'tasks stuck on CPU' mechanism triggers here).
+-- 
+ i.
 
-I've looked at
-1) YouTube 4K video playback
-2) Dr.Arm (in-house ARM game)
-3) VideoScroller which loads a new video every 3s
-4) Idle screen on
-5) Speedometer2.0 in Chromium
-
-The device tested is the Pixel6 with 6.12 kernel + backported
-scheduler patches.
-For power measurements the onboard energy-meter is used [1].
-
-Mainline feec() A is the baseline for all. All workloads are run for
-10mins with the exception of Speedometer 2.0
-(one iteration each for 5 iterations with cooldowns).
-
-1) YouTube 4K video
-+4.5% power with all other tested (the regression already shows with B,
-no further change with C & D).
-(cf. +18.5% power with CAS).
-The power regression comes from increased average frequency on all
-3 clusters.
-No dropped frames in all tested A to D.
-
-2)  Dr.Arm (in-house ARM game)
-+9.9% power with all other tested (the regression already shows with B,
-no further change with C & D).
-(cf. +3.7% power with CAS, new feec() performs worse than CAS here.)
-The power regression comes from increased average frequency on all
-3 clusters.
-
-3) VideoScroller
-No difference in terms of power for A to D.
-Specifically even the push mechanism with misfit enabled/disabled
-doesn't make a noticeable difference in per-cluster energy numbers.
-
-4) Idle screen on
-No difference in power for all for A to D.
-
-5) Speedometer2.0 in Chromium
-Both power and score comparable for A to D.
-
-As mentioned in the thread already the push mechanism
-(without misfit tasks) (D) triggers only once every 2-20 minutes,
-depending on the workload (all tested here were without any
-UCLAMP_MAX tasks).
-I also used the device manually just to check if I'm not missing
-anything here, I wasn't.
-This push task mechanism shouldn't make any difference without
-UCLAMP_MAX.
-
-The increased average frequency in 1) and 2) is caused by the
-deviation from max-spare-cap in feec(), which previously ensured
-as much headroom as possible until we have to raise the OPP of the
-cluster.
-
-So all in all this regresses power on some crucial EAS workloads.
-I couldn't find a real-world workload where the
-'less co-scheduling/contention' strategy of feec() showed a benefit.
-Did you have a specific workload for this in mind?
-
-[1]
-https://tooling.sites.arm.com/lisa/latest/sections/api/generated/lisa.analysis.pixel6.Pixel6Analysis.html#lisa.analysis.pixel6.Pixel6Analysis.df_power_meter
