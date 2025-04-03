@@ -1,84 +1,183 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99009EAD7;
-	Thu,  3 Apr 2025 11:45:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2EA31F584E
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 11:45:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743680739; cv=none; b=i6adEqG+52a8SK/Df7qG9f0mE3rIDq2IgmJykD9sPg0JM54Z9g8TpfCBZy33l4qX1nS/lBRvg+U5FZLzlzEuUGljNALiXKlc8QeLMx6k8B1HaE0xBY7ljEUOrDF8CNBpJBmS98OYNq3c2wpk7iSwR+nDArzNEmirqzGup9DdoYw=
+	t=1743680763; cv=none; b=so4bTpUxpGGAkfL0OnzC1SUACa2iK2R7nO5nEye2cSM56NbHGq7uvdPYV0ylnBJu60Yqz8duAwNqKFsAwnUo09OpU13E5PWv3ZUDY7r+WaxI4VSIIO5a+GUnjwvm2d/hX6wUuQUDQ06QypDPQCwrXYvXcXkJ3WIPD2IZiIGULwQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743680739; c=relaxed/simple;
-	bh=F8vYjQ7pqAlWMomctD7e5fDvI6nmFvIPV/DvTTQWtN4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=imJmCS4yTttn6C3F1MuUZqP5GxlkI8e8SWtJ4stZnD6odBrR7RG8NdsNhaTXdyVAYK31pshgDDyVKH2A3XeJzS8CAStPJtMRbb7ucvZ99I5VoWKcYb6KK0ZbuwgkvVHOVMBg6Nzu7yyW6ky54wchJ/fq+Geta26zVC436GzexM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Q3PZrBgN; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=fvXfcmQe; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1743680763; c=relaxed/simple;
+	bh=6seZVMT4mxgUw2pvw23TXxODsiaG8bqs2GuUNLWPHfM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jtiI+WQRUxGJkBgi94wAxoym++ZJFFkGCTtPp9MOn7b7UAmmC4OVh5vmncJibv4Icgm8x0w6/r2e2CaAcFben0i9ui1HeF5irdNLv9lQn6eSy47quMTCHibFL8qb7DjImND3ivGRxGqrzEtHpMEL22Fl46q1nWmHHyfnTqTYPxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=NoZEQAO7; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Q3PZrBgN";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fvXfcmQe"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1743680735;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mes+eN7AREiOf/WQemPyHFwC3IiAGpqNnHV5kzLcAVA=;
-	b=Q3PZrBgN4UALpvDDT4cJEJpe/bJjBfLeEcajftTjzj9b/0eEPKNlPU7thFN0IYh6qTe0/g
-	k9DXGpCcb8s/nXbL+Oxrgl/oRicE/onkYC21bIz0oKz4f9dhPg6w/KPyrUgamDHFDR8It2
-	/1B20ubVLqp9ltq4zxdY/PZNXV2M1NR2m9JBS/gEcmFLHm4IPtxBrID/AlM95n4hj2pkmy
-	PfR0/qrKnFPCHYp3y9jU32NdWnCGmn9564LvreIEtcaKSb92GiCGs4axFUT2tTcd0f24pn
-	Yl/H12X+D6CxbmkYi7TeazJD7LA0f9mFUUsMXV21Rg6UAb32CI9Ekz+MNT2A0w==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1743680735;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mes+eN7AREiOf/WQemPyHFwC3IiAGpqNnHV5kzLcAVA=;
-	b=fvXfcmQeHTyHf9BS6HLTi5c2SJxu9A0JexXAu1CWSYVCIUxD2J6L7E/Abw9hsxlKkM6Ej5
-	8yQpMF5zfHp+qMDg==
-To: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>, linux-kernel@vger.kernel.org
-Cc: bp@alien8.de, mingo@redhat.com, dave.hansen@linux.intel.com,
- Thomas.Lendacky@amd.com, nikunj@amd.com, Santosh.Shukla@amd.com,
- Vasant.Hegde@amd.com, Suravee.Suthikulpanit@amd.com, David.Kaplan@amd.com,
- x86@kernel.org, hpa@zytor.com, peterz@infradead.org, seanjc@google.com,
- pbonzini@redhat.com, kvm@vger.kernel.org, kirill.shutemov@linux.intel.com,
- huibo.wang@amd.com, naveen.rao@amd.com, francescolavra.fl@gmail.com
-Subject: Re: [PATCH v3 06/17] x86/apic: Add support to send IPI for Secure AVIC
-In-Reply-To: <20250401113616.204203-7-Neeraj.Upadhyay@amd.com>
-References: <20250401113616.204203-1-Neeraj.Upadhyay@amd.com>
- <20250401113616.204203-7-Neeraj.Upadhyay@amd.com>
-Date: Thu, 03 Apr 2025 13:45:35 +0200
-Message-ID: <87y0whv57k.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="NoZEQAO7"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ac345bd8e13so133611266b.0
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 04:45:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1743680758; x=1744285558; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xT0elqA6Ab35N4vIgDBgG0DeM4CG/y6atakTcDGWwVY=;
+        b=NoZEQAO7c8wzygUE1SPK8/X/r8K/LGLGO2dhpAxNUWSzn5XtszJnaaiGQ4unlVDXv5
+         ONsFyJgAA0/HrnCUWQR0zKTz7tFYwHkc/mjG1TEUsB/u0EXEqEq8z17dz3qlDDR49rsA
+         Gcjz024pgSbXCBcx6rIPUR8gV1Zx4g0QADjc2mjJ8yoHhndQtENB/hTDjF/kliRkyBSD
+         8nbPGJWMnyo443urzDXOMlML+Dw0udz8uIV2xjwyrowWe1VTW5jWRHj1Vf+FIGn1W0F1
+         2GXYV2PdkYVwlZpv/CSASob6oCa6iGdUA9ScrCfrnuhYO1lYGDrd4Db5E+i6dscaPf/F
+         UlBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743680758; x=1744285558;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xT0elqA6Ab35N4vIgDBgG0DeM4CG/y6atakTcDGWwVY=;
+        b=STgoWNuHdkwdZd/T3f89rlitTXq0dFNLhNwv22PBnoroB76MvbaufiOEE4Dl7UGECs
+         UQJRMr2wUxGYFyPfE3gIu23gopjfc+H1k8yGYAQNPde2WMmpTOr5wJo1xPaN6NHwlT6S
+         OM+aLiaR1ig1/ZWk13ag7McBqo6+P4JAyIYM77o9A2byXSgjtZVjkNG9VnHidypoKpTb
+         6JKwJHAVdRni49ksVWS6uwRDc5GWEpLx0yD4fD1v3o8miOtWeoFf5c6sgyNPKdzpt6IC
+         t6KpJpy4Fc0R0bpzfLHjJwnIxwgv7+/Vg2VAPxCGNDqh52ZwTlq2um3uqVE3XrYrvxuL
+         /N7w==
+X-Forwarded-Encrypted: i=1; AJvYcCXqJ7+Ks2koIorWDsOH3JqS7jyTPqOkqxWqg+n9eSE9jR4x26LKxEKpkRy1Hk1AyNKFoJ0nnPnotFoXutI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzCzkp7r8iTEQh8bpjYS33bUeJoLwd4YPyzrPmZi+7m+8BOPlvF
+	Wvvu0GLa81Wl2pbEsb6mReFuQzf+OEwzAPiFw4QWEL+6Mf2SIv3Gmp0NEfeF/VKJl4AOptbLhu3
+	DQqmITBdJ5fBXUI0BmDb1b58i4WCvRJBWRo/vB2fCyqz8FfYgCHw=
+X-Gm-Gg: ASbGncu6um+/tLib51rVW9keZwDX+PN23OJrMUlRxQ8dBs6fzeYMuWlCO1Pcy2jjwsa
+	EfMqXoTv7KSFXwT6NZxxGzuS09SputV2Nc2gC61fuXmym3Q1cuHw1Ps34DviEXboM5NRUX3G+WU
+	29bFmcKHBvZgJctaxwEmBP6CCvyA+Td152OWkq7Gau1pvtTAaI8y8AH14aNxQ=
+X-Google-Smtp-Source: AGHT+IFEoSrJqV3CuTWmq5VUsEKTKD2aQ7X1u8XmIfa8FBxx9myROHVSeAT9MVg3SGJ6Q068sZDIjLAYp1E/afFvhsQ=
+X-Received: by 2002:a17:907:2cc5:b0:ac6:d142:2c64 with SMTP id
+ a640c23a62f3a-ac7a16c1272mr538034766b.18.1743680757983; Thu, 03 Apr 2025
+ 04:45:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20250402-iio-adc-ad7380-fix-event-threshold-shift-v1-1-ad4975c296b2@baylibre.com>
+In-Reply-To: <20250402-iio-adc-ad7380-fix-event-threshold-shift-v1-1-ad4975c296b2@baylibre.com>
+From: Julien Stephan <jstephan@baylibre.com>
+Date: Thu, 3 Apr 2025 13:45:41 +0200
+X-Gm-Features: AQ5f1JrIaOCDhWTTME3ilw0spgYzdZsMYgvmtZS5ARs3HjvqzcXVm1pdZCCYC84
+Message-ID: <CAEHHSvbt7v7OCbW4PEwgop74n_5NW8Una1-R3w3yUqu8-22=Dg@mail.gmail.com>
+Subject: Re: [PATCH] iio: adc: ad7380: fix event threshold shift
+To: David Lechner <dlechner@baylibre.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, Michael Hennerich <michael.hennerich@analog.com>, 
+	=?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, linux-iio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 01 2025 at 17:06, Neeraj Upadhyay wrote:
-> --- a/arch/x86/kernel/apic/x2apic_savic.c
-> +++ b/arch/x86/kernel/apic/x2apic_savic.c
-> @@ -46,6 +46,25 @@ static __always_inline void set_reg(unsigned int offset, u32 val)
->  
->  #define SAVIC_ALLOWED_IRR	0x204
->  
-> +static inline void update_vector(unsigned int cpu, unsigned int offset,
-> +				 unsigned int vector, bool set)
+Le jeu. 3 avr. 2025 =C3=A0 01:56, David Lechner <dlechner@baylibre.com> a =
+=C3=A9crit :
+>
+> Add required bit shift to the event threshold read function to get
+> correct scaling.
+>
+> When alert support was added, the write function correctly included the
+> required shift needed to convert the threshold register value to the
+> same scale as the raw ADC value. However, the shift got missed in the
+> read function.
 
-Why aren't you placing that function right away there instead of adding
-it first somewhere else and then shuffle it around?
+Hi David,
 
-> -static void __send_ipi_mask(const struct cpumask *mask, int vector, bool excl_self)
-> +static void send_ipi_mask(const struct cpumask *mask, unsigned int vector, bool excl_self)
+Thank you for fixing that. LGTM
+
+Reviewed-by: Julien Stephan <jstephan@baylibre.com>
+
+>
+> Fixes: 27d1a4dbe1e1 ("iio: adc: ad7380: add alert support")
+> Signed-off-by: David Lechner <dlechner@baylibre.com>
+> ---
+>  drivers/iio/adc/ad7380.c | 25 +++++++++++++++++++------
+>  1 file changed, 19 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/iio/adc/ad7380.c b/drivers/iio/adc/ad7380.c
+> index 4fcb49fdf56639784098f0147a9faef8dcb6b0f6..f3962a45e1e5b88cebf712cc8=
+67fbb576d3ca058 100644
+> --- a/drivers/iio/adc/ad7380.c
+> +++ b/drivers/iio/adc/ad7380.c
+> @@ -1611,11 +1611,25 @@ static int ad7380_write_event_config(struct iio_d=
+ev *indio_dev,
+>         return ret;
+>  }
+>
+> -static int ad7380_get_alert_th(struct ad7380_state *st,
+> +static int ad7380_get_alert_th(struct iio_dev *indio_dev,
+> +                              const struct iio_chan_spec *chan,
+>                                enum iio_event_direction dir,
+>                                int *val)
 >  {
-> -	unsigned long query_cpu;
-> -	unsigned long this_cpu;
-> +	unsigned int this_cpu;
-> +	unsigned int cpu;
-
-Again. Do it right in the first place and not later. Same for the
-underscores of the function name.
-
+> -       int ret, tmp;
+> +       struct ad7380_state *st =3D iio_priv(indio_dev);
+> +       const struct iio_scan_type *scan_type;
+> +       int ret, tmp, shift;
+> +
+> +       scan_type =3D iio_get_current_scan_type(indio_dev, chan);
+> +       if (IS_ERR(scan_type))
+> +               return PTR_ERR(scan_type);
+> +
+> +       /*
+> +        * The register value is 12-bits and is compared to the most sign=
+ificant
+> +        * bits of raw value, therefore a shift is required to convert th=
+is to
+> +        * the same scale as the raw value.
+> +        */
+> +       shift =3D scan_type->realbits - 12;
+>
+>         switch (dir) {
+>         case IIO_EV_DIR_RISING:
+> @@ -1625,7 +1639,7 @@ static int ad7380_get_alert_th(struct ad7380_state =
+*st,
+>                 if (ret)
+>                         return ret;
+>
+> -               *val =3D FIELD_GET(AD7380_ALERT_HIGH_TH, tmp);
+> +               *val =3D FIELD_GET(AD7380_ALERT_HIGH_TH, tmp) << shift;
+>                 return IIO_VAL_INT;
+>         case IIO_EV_DIR_FALLING:
+>                 ret =3D regmap_read(st->regmap,
+> @@ -1634,7 +1648,7 @@ static int ad7380_get_alert_th(struct ad7380_state =
+*st,
+>                 if (ret)
+>                         return ret;
+>
+> -               *val =3D FIELD_GET(AD7380_ALERT_LOW_TH, tmp);
+> +               *val =3D FIELD_GET(AD7380_ALERT_LOW_TH, tmp) << shift;
+>                 return IIO_VAL_INT;
+>         default:
+>                 return -EINVAL;
+> @@ -1648,7 +1662,6 @@ static int ad7380_read_event_value(struct iio_dev *=
+indio_dev,
+>                                    enum iio_event_info info,
+>                                    int *val, int *val2)
+>  {
+> -       struct ad7380_state *st =3D iio_priv(indio_dev);
+>         int ret;
+>
+>         switch (info) {
+> @@ -1656,7 +1669,7 @@ static int ad7380_read_event_value(struct iio_dev *=
+indio_dev,
+>                 if (!iio_device_claim_direct(indio_dev))
+>                         return -EBUSY;
+>
+> -               ret =3D ad7380_get_alert_th(st, dir, val);
+> +               ret =3D ad7380_get_alert_th(indio_dev, chan, dir, val);
+>
+>                 iio_device_release_direct(indio_dev);
+>                 return ret;
+>
+> ---
+> base-commit: f8ffc92ae9052e6615896052f0c5b808bfc17520
+> change-id: 20250402-iio-adc-ad7380-fix-event-threshold-shift-b614db1a307f
+>
+> Best regards,
+> --
+> David Lechner <dlechner@baylibre.com>
+>
