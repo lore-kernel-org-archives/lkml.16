@@ -1,104 +1,96 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BA9724E002;
-	Thu,  3 Apr 2025 12:29:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3304F23F299;
+	Thu,  3 Apr 2025 12:30:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743683402; cv=none; b=t+Jq3uzQLWs7zdrl+VL6puOVCTs80GjlwRClSQ5FL3zzqnf8Br5fek4PYIT4ke+TUeGVQPWFrMzcN0xHIXXWCFDgMKk6Em4mdqeU6JKNwImT0ELKNFBFW5S9WjLOcHmUualDWpl81nuWUs3kE9o8Cyvd5kTk0j08ktVZ9Ehv6bM=
+	t=1743683432; cv=none; b=TMqUWcew3+GSIGpIGXsvwNgnUb+S4/IhGfCP28Xkh+0qMoolvgfW9reDoXmRPnwD4h/Bu8CL1Rxmv1XlNLAiwQGMc6iX6tvuV3aGgWFni98mLklTxYAX1irc2TKONyYCE+nQ7kJRfHJMCh2V1LHbt9TZTu8lgBLsr22NdIr+w+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743683402; c=relaxed/simple;
-	bh=0RmaEk9oTb0vgvKAW0oPD/3qyuPhFRsSlfy/FfKh3q0=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OOeMkDcWnOPY841hO1mk7hXtcHW9V8+2Jy4GFr4I/O7DFi9nPaU5MoQt+lWEy0itdiG+1oODcWi7hzdGkpnm5LeSjhWXSA3iOUSVkfvNdIRY3j8rRIED9a7Os3+8CO4jcUSRvMkO0FQanfDUkvpazMEroGZ+LVy6+N6Y2GnpnJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZT1Dm3dg6z6M4j7;
-	Thu,  3 Apr 2025 20:26:16 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id C576A14050C;
-	Thu,  3 Apr 2025 20:29:56 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 3 Apr
- 2025 14:29:56 +0200
-Date: Thu, 3 Apr 2025 13:29:54 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Oscar Salvador <osalvador@suse.de>
-CC: Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand
-	<david@redhat.com>, <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-	Vlastimil Babka <vbabka@suse.cz>, Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-	<mkoutny@suse.com>, Dan Williams <dan.j.williams@intel.com>,
-	<linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH 0/2] Implement numa node notifier
-Message-ID: <20250403132954.0000779f@huawei.com>
-In-Reply-To: <20250401092716.537512-1-osalvador@suse.de>
-References: <20250401092716.537512-1-osalvador@suse.de>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1743683432; c=relaxed/simple;
+	bh=xHPaGWyu4iy631NXynjk1n63h1VYqw03s+9kAQh7EZo=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=F7EYruXa1rHOPmC2/RLH9IIae394KqgMh77K+IHCoWtBMBPfWMCwLK/kvmWwG3PBgVLmywmI3LcqJO2FPeIaVHjklQhizOmNH0EDMj5u6q3YNC5O24t/UOtz8oQXzpki8PP1GqmnGreWXdwdyuWONbbm2mNqUBVKvlrUaaFm3kE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=cpyDjXYj; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="cpyDjXYj"
+Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 533BM3S8024194;
+	Thu, 3 Apr 2025 14:30:21 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	pKML0WZjxBIyltj3JPMcWXIsE/1e9bbTAtcZvdraRW0=; b=cpyDjXYjv9jmG3w/
+	oz33rqsrjwzcF2NuUda+5gLMNuy9q/ekUUUD3Dpfb4AyjkWkium0ejmuBAL4BNY4
+	wm51tmmTtwS8V6Usn7wRzswusKpvBWCWmtwVCZ/WUnyZywztg4VGJ1xLpDL2wvyG
+	duMwyI4F4Bne1NBLsEo5e/kZMSGZS/1PzWNunB580do4Oqe0qGxb0d5wn/0Ck67a
+	UEX7b0EWcjx0fZTLZr9EldmUnHn24Brdi7cbE5jwsUvbq92cv0KetHO8sQfRfqfB
+	jbOgYL80n0E1rcRwOR/wwtdSTwc1fGqG9C6YJqu21sXQKWKNC3pC4SIT4eDwgywR
+	TvzMSg==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 45s2c7ef05-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 03 Apr 2025 14:30:21 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 16C7C40045;
+	Thu,  3 Apr 2025 14:29:17 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 647AF8EEC9B;
+	Thu,  3 Apr 2025 14:28:35 +0200 (CEST)
+Received: from localhost (10.130.77.120) by SHFDAG1NODE3.st.com (10.75.129.71)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 3 Apr
+ 2025 14:28:35 +0200
+From: Christian Bruel <christian.bruel@foss.st.com>
+To: <maz@kernel.org>, <tglx@linutronix.de>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@foss.st.com>
+CC: <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Christian Bruel <christian.bruel@foss.st.com>
+Subject: [PATCH 3/3] arm64: dts: st: add st,stm32mp2-cortex-a7-gic in intc node in stm32mp251.dtsi
+Date: Thu, 3 Apr 2025 14:28:05 +0200
+Message-ID: <20250403122805.1574086-4-christian.bruel@foss.st.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250403122805.1574086-1-christian.bruel@foss.st.com>
+References: <20250403122805.1574086-1-christian.bruel@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE3.st.com
+ (10.75.129.71)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-03_05,2025-04-02_03,2024-11-22_01
 
-On Tue,  1 Apr 2025 11:27:14 +0200
-Oscar Salvador <osalvador@suse.de> wrote:
+Add st,stm32mp2-cortex-a7-gic to enable the GICC_DIR register remap
 
-> Memory notifier is a tool that allow consumers to get notified whenever
-> memory gets onlined or offlined in the system.
-> Currently, there are 10 consumers of that, but 5 out of those 10 consumers
-> are only interested in getting notifications when a numa node has changed its
-> state.
-> That means going from memoryless to memory-aware of vice versa.
-> 
-> Which means that for every {online,offline}_pages operation they get
-> notified even though the numa node might not have changed its state.
-> 
-> The first patch implements a numa node notifier that does just that, and have
-> those consumers register in there, so they get notified only when they are
-> interested.
-> 
-> The second patch replaces 'status_change_normal{_normal}' fields within
-> memory_notify with a 'nid', as that is only what we need for memory
-> notifer and update the only user of it (page_ext).
-> 
-> Consumers that are only interested in numa node states change are:
-> 
->  - memory-tier
->  - slub
->  - cpuset
->  - hmat
->  - cxl
-> 
-Hi Oscar,
+Signed-off-by: Christian Bruel <christian.bruel@foss.st.com>
+---
+ arch/arm64/boot/dts/st/stm32mp251.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Idea seems good to me.
-
-+CC linux-cxl for information of others not on the thread.
-
-> 
-> Oscar Salvador (2):
->   mm,memory_hotplug: Implement numa node notifier
->   mm,memory_hotplug: Replace status_change_nid parameter in
->     memory_notify
-> 
->  drivers/acpi/numa/hmat.c  |  6 +--
->  drivers/base/node.c       | 19 +++++++++
->  drivers/cxl/core/region.c | 14 +++----
->  drivers/cxl/cxl.h         |  4 +-
->  include/linux/memory.h    | 37 ++++++++++++++++++
->  kernel/cgroup/cpuset.c    |  2 +-
->  mm/memory-tiers.c         |  8 ++--
->  mm/memory_hotplug.c       | 82 +++++++++++++++++++++++++++++----------
->  mm/page_ext.c             | 12 +-----
->  mm/slub.c                 | 22 +++++------
->  10 files changed, 146 insertions(+), 60 deletions(-)
-> 
+diff --git a/arch/arm64/boot/dts/st/stm32mp251.dtsi b/arch/arm64/boot/dts/st/stm32mp251.dtsi
+index f3c6cdfd7008..030e5da67a7e 100644
+--- a/arch/arm64/boot/dts/st/stm32mp251.dtsi
++++ b/arch/arm64/boot/dts/st/stm32mp251.dtsi
+@@ -115,7 +115,7 @@ scmi_vdda18adc: regulator@7 {
+ 	};
+ 
+ 	intc: interrupt-controller@4ac00000 {
+-		compatible = "arm,cortex-a7-gic";
++		compatible = "st,stm32mp2-cortex-a7-gic", "arm,cortex-a7-gic";
+ 		#interrupt-cells = <3>;
+ 		#address-cells = <1>;
+ 		interrupt-controller;
+-- 
+2.34.1
 
