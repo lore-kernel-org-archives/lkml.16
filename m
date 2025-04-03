@@ -1,166 +1,111 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2DBBB672
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 03:41:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FF4A13A244;
+	Thu,  3 Apr 2025 03:42:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743651667; cv=none; b=rpnruuvngl2mQ0rwcNVQRHN6icdc4Kgqcjhk2gupaPj3oQcROAj4IsitMiKP/GyA2xM4xvRBiLF1gVd4FLrUfcEllynYjTSUt02hIjBmaj6ExbjgdBSivKzk9sv/VwFXij3EjwA0/tSgIhEXlt1irRkJ5fpctO+JBXZ4iqctBmw=
+	t=1743651762; cv=none; b=hVC8Ol8KA20/IsSR1npKQu/BPJQyBAkGVmqo/Tvcxan6x40x0NbgJ5hTeuEdrcW15PMIIulRrvdiBrWMHXFAFP3LITmGxfIL5vNQpHH4tarhKls3Mqdrg//XARHXgIPTEoQiSQVwdrRzY6bZf2M2v4avm4InqDwIJB+O8GDZmus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743651667; c=relaxed/simple;
-	bh=4aTH+S+5/DaE7SK3f14o739lz7d4vHx+nHgg53Ilpic=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qL/zdyPkkmJoLvgFLml4DVwhQpbYu4OmLr6LvAUIesLp/QpMM6BRiUVwbcDkz1whwANukuhxBZ44l/X0rjeRzdKMC8hl+jpDtcydlrQVkFgakP3HBujQSu+9wRJZ8+yjeM8+wtIpTnYuuxRvp2D8kvFUELuhZhXgCInnvzj0N5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lyY9CgLj; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1743651762; c=relaxed/simple;
+	bh=nlEfIQXVFSXU2WXk90DKBYPjTtBBUFJlgKi+bnMnsNw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=L5QO9y6AsKcrP8GySmtk17KrMm+4YzcGQahWFZ1VM5SQDJw/gjl4frer1g67CrSopwmioscUsRhgQtN+V+hGxbklt6RnzcGxb9AJ9txMR2i8i90A/zlYqOH6toqe5FyrAJFWXa2yUYaumFYJSuMVChOMd+omUwI46QS0KT+Mkug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=G6kyT1pn; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lyY9CgLj"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-227914acd20so17724135ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 20:41:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743651665; x=1744256465; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Q0tEj5kz4If7Ej673fi5hk/2hJig3VYxT41dAgyMOLI=;
-        b=lyY9CgLjw5w/omaCCOXRmGOkLC04kzcy2leKTC+7T42kKoJTSdWKzNmOjhxgW3UxzO
-         /97cz3bumayZzjInyeK17jY03f/x4aX3euSUjs0n3saU/BlKKpLEVHdZpIiqIV92Pqx+
-         zcKezlq1zGycE/WtglYmo6de0b7VO3G5Ec2iIENeXiCptQvvD7/hSZajDdjKem9M+ORD
-         UwdrdCwkPk0tLGrKlTyyB8vRBz3mEQKchMX6EjK3tzKja9nCZNtAz1GlpdiPLcWHjuby
-         NCQxszMh9hmSQiP/677re+qjNIBv5V/KtX+aTnkgLnNmsVejO7FoNzTE2/tTjI3Al5HK
-         Ixiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743651665; x=1744256465;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Q0tEj5kz4If7Ej673fi5hk/2hJig3VYxT41dAgyMOLI=;
-        b=qKYqpx5zXwrsi8XcJHNvYvA0dKVAS1AGcmTCXn+KQBavXJ+s9xKSKoGiNaFtjaGg+W
-         +FU8N3+EP819Op72UnUyUDXefL2C15iibnAkgQ+Px020KjRmDgKhhKg/ucQjQXXvc/LP
-         Pu5zk7KswfpQBC1G7SxHJqWDjOUL6RcJo3GhU6arF9PYG022jOi2O0X3eYnHw/DClqXa
-         Y3eotAUDOp52yFOwNgnfCj3Kmglxo3chPBogQnPsN/pwaGYc3pd6OjeQ7QKGZY7tF0Pj
-         rb/PtAOuwgQkUpg1oPx1IJub8fXWHC7m9XGr/EZzk4Km22yhK8eOJBnx1bbp0GFbeEzh
-         9Z0A==
-X-Forwarded-Encrypted: i=1; AJvYcCVdQ0qKDXdbnsKXqSJYsoGR1zalyUGnNJXvLgwN6E2QY1XGAtqemJAw3Xb/eomouO0RV+Qy0eWt01CC6YQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzLgUUJEJDr0scrgOTsqYjmVC9I3mV5Na+WJAPew4NHhsy79KI1
-	1FThsoX1M8ZTwTOeEvUGsSxebdcSOU0O+SP77XJm2CS+2pwULbOBHBFx8b0g4A==
-X-Gm-Gg: ASbGncu4g60khqz864a73QKT0cp80bR0ajMqbPYm4SFUwrxUOjvb0odMLZyOyrsx+gW
-	B17bTZ338gX97SJfEDkGeUI5gzwsCmpcv7VyZmPf5Gme+T5pBx5kDeT9K6Jh1e+H80XJab1tJmz
-	hI6lDAZfkJNxdAdJTSxrrOVtdTdRiPjGMFuf1h2VLTSlsTElX4cVh8S5IIg+Ewo6oT06nneUQwr
-	CIaUS5izDT2BBbEqXRzrzskvpd8GAvcF+DVRL0vEWsxjeKqnl4wkhshhoi0MXVovy827Q8bVEDs
-	5xWViqEUk6e1oYI+ZlK9TwJZALFwxGyKX3eRG4mEWLnwQ3AZsk9tPUG46SKr2xm5TxY080qwoYI
-	O28y+V5rPjlusiPHvv/S9x9Fk/UlpVUgfhCwVApfGOTs=
-X-Google-Smtp-Source: AGHT+IF+aLQLn6pLeab1Mot3xJ/DQBJV5mL7CVD5eHdMlU/bvNw7/84AH4TtA5RPRM1hKWlLyvBvkA==
-X-Received: by 2002:a17:902:ccca:b0:215:58be:3349 with SMTP id d9443c01a7336-229765ecb95mr30013415ad.14.1743651664993;
-        Wed, 02 Apr 2025 20:41:04 -0700 (PDT)
-Received: from ?IPV6:2a00:79e0:2e14:7:33af:bd9c:23d7:88c5? ([2a00:79e0:2e14:7:33af:bd9c:23d7:88c5])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2297865e483sm3887005ad.116.2025.04.02.20.41.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Apr 2025 20:41:04 -0700 (PDT)
-Message-ID: <7c7cff17-2c53-4dcd-8760-50c72760de5b@google.com>
-Date: Wed, 2 Apr 2025 20:41:02 -0700
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="G6kyT1pn"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=vYeenMdn6I2y0o1BiN7xKeWa4HgHTA70mF73ckMYMbw=; b=G6kyT1pnZOdhnSovrf0UM4IfLk
+	tjwCogFC1Llkff4olUSBLWbnbyLL01v6OD8vhaA3uuTiNpKD99YEbS/T211vsL7WFwgG6vKpHaatT
+	hsfY0r3Cl/xQzcHHDlJRJ1EZjI82SDikhg64FVslk5xqqrGnDUphQ+i52sgAsTPL9J26H9FLnhvWE
+	l/iHId/CNmLVv3DJffZ8+ijuZtNgdyDAljNOAnKo1FtSUExiEZDVALERcBrfV8QdhrVo9RITO/kRm
+	9b2ElPxvCj8WLBiymk5+cyghFV9uldtMj1ih/L5qZql5VPUt/6gnt4CJKvMj4AluDhjUtAjLkzcop
+	W4GvaAOA==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1u0BTO-00CMAh-1W;
+	Thu, 03 Apr 2025 11:42:35 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Thu, 03 Apr 2025 11:42:34 +0800
+Date: Thu, 3 Apr 2025 11:42:34 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: Ard Biesheuvel <ardb@kernel.org>, linux-crypto@vger.kernel.org,
+	linux-kernel@vger.kernel.org, x86@kernel.org,
+	"Jason A. Donenfeld" <Jason@zx2c4.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Banning crypto in hardirq context (was: [PATCH v2 0/9] crypto: x86 -
+ stop using the SIMD helper)
+Message-ID: <Z-4DqsRApwQi6Xju@gondor.apana.org.au>
+References: <20250402002420.89233-1-ebiggers@kernel.org>
+ <Z-yrf_9D2rV1Q136@gondor.apana.org.au>
+ <CAMj1kXEx__RLBriW0kVPrKnx6+DCpq8=6F-7Tmj2Us61gvGGaw@mail.gmail.com>
+ <CAMj1kXE-vo7E1U++4mAqDH2SXfc=sRZs8KganedJk5z0QF49NA@mail.gmail.com>
+ <Z-zzvXbjt3xzquXb@gondor.apana.org.au>
+ <20250402171930.GD1235@sol.localdomain>
+ <Z-3jkYNtZpTDtKGf@gondor.apana.org.au>
+ <20250403021453.GA2872965@google.com>
+ <Z-344xAsx1uTE9OK@gondor.apana.org.au>
+ <20250403032008.GA129577@sol.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/5] Add support for Battery Status & Battery Caps AMS in
- TCPM
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Badhri Jagan Sridharan <badhri@google.com>,
- Sebastian Reichel <sre@kernel.org>,
- Heikki Krogerus <heikki.krogerus@linux.intel.com>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <len.brown@intel.com>,
- Pavel Machek <pavel@kernel.org>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
- linux-pm@vger.kernel.org, RD Babiera <rdbabiera@google.com>,
- Kyle Tso <kyletso@google.com>
-References: <20250312-batt_ops-v1-0-88e0bb3129fd@google.com>
- <20250313-determined-wild-seahorse-f7871a@krzk-bin>
- <914a0df4-96d0-4cd4-ac87-3826fa9c1440@google.com>
- <3f65fe16-56f8-4887-bb91-994b181ce5a9@kernel.org>
- <9852e5a8-843d-48ae-90d0-7991628e93b3@google.com>
- <442bebf4-4de1-42d1-a14b-2bb509fea12f@kernel.org>
-Content-Language: en-US
-From: Amit Sunil Dhamne <amitsd@google.com>
-In-Reply-To: <442bebf4-4de1-42d1-a14b-2bb509fea12f@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250403032008.GA129577@sol.localdomain>
 
+On Wed, Apr 02, 2025 at 08:20:08PM -0700, Eric Biggers wrote:
+>
+> Also, riscv has scalar AES instructions.  (They aren't used by the kernel yet,
+> but they could be.  The CRC code already uses scalar carryless multiplication.)
 
-On 3/21/25 12:51 AM, Krzysztof Kozlowski wrote:
-> On 20/03/2025 22:11, Amit Sunil Dhamne wrote:
->> On 3/16/25 9:52 AM, Krzysztof Kozlowski wrote:
->>> On 15/03/2025 01:49, Amit Sunil Dhamne wrote:
->>>> Hi Krzysztof,
->>>>
->>>> Thanks for the review!
->>>>
->>>> On 3/13/25 1:50 AM, Krzysztof Kozlowski wrote:
->>>>> On Wed, Mar 12, 2025 at 04:42:00PM -0700, Amit Sunil Dhamne wrote:
->>>>>> Support for Battery Status & Battery Caps messages in response to
->>>>>> Get_Battery_Status & Get_Battery_Cap request is required by USB PD devices
->>>>>> powered by battery, as per "USB PD R3.1 V1.8 Spec", "6.13 Message
->>>>>> Applicability" section. This patchset adds support for these AMSes
->>>>>> to achieve greater compliance with the spec.
->>>>> Which board uses it? I would be happy to see that connection between
->>>>> batteries and USB connector on the schematics of some real device. How
->>>>> does it look like?
->>>> Any board that uses a USB Type-C connector that supplies power into or
->>> If you keep responding like this, you will got nowhere, so let me
->>> re-iterate:
->>>
->>> Which upstream DTS (or upstream supported hardware) is going to use this
->>> binding, so I can see how you are going to implement it there in the
->>> entire system?
->> This is for maxim,max33359 Type-C controller.
-> Stop deflecting the questions. max33359 is not a board. I already asked
-> two times.
->
-> Apparently admitting "no upstream users" is impossible, so let's state
-> the obvious:
->
-> There are no upstream users of this.
+It still doesn't mean that it's a good idea to use AES in a
+hard IRQ handler, especially if the code is meant to be portable.
 
-max33359 controller has an upstream user i.e., gs101-oriole (Pixel 6) 
-board. Totally agree that at the moment there are no upstream 
-devices/drivers for the Fuel Gauge (that my patchset has a dependency 
-on) in gs101-oriole board. gs101-oriole uses max77759 fuel gauge device. 
-I see that there's an effort for upstreaming it 
-(https://lore.kernel.org/all/20250102-b4-gs101_max77759_fg-v2-0-87959abeb7ff@uclouvain.be/). 
-I will mark my patches as dependent on it + demonstrate the relationship 
-of the devices in the gs101-oriole board. Hope that's okay?
+> Also, as I said already, x86 does support SIMD instructions in hardirq context
+> in some cases.  Whether anyone actually uses that, I don't know, but it is
+> explicitly supported.  Check out irq_fpu_usable().
 
+This is more of an accident than some deliberate strategy of
+supporting FPU usage in hard IRQs.  This test was initially
+added for aesni:
 
-Thanks,
+commit 54b6a1bd5364aca95cd6ffae00f2b64c6511122c
+Author: Ying Huang <huang.ying.caritas@gmail.com>
+Date:   Sun Jan 18 16:28:34 2009 +1100
 
-Amit
+    crypto: aes-ni - Add support to Intel AES-NI instructions for x86_64 platform
 
->> This would property would have been present for the connector present in
->> the typec device for gs101-oriole board (that uses the max33359
->> controller).
->
-> But it is not.
->
->
->> However, I will be exploring existing bindings to describe the
->> relationship for now.
->>
->>>> out of a battery while operating in sink or source mode respectively.
->>>> The VBUS is connected to the (battery + buck boost IC's CHGin/Vin) or a
->>>> companion IFPMIC connected to a battery.  In our board we have USB
->>>> Connector <-> IFPMIC <-> Battery.
->>> Which board is that?
->> gs101-oriole board.
->
-> Then why this is not used? The board was released some years ago, so I
-> do not see a problem in using it.
->
-> Best regards,
-> Krzysztof
+It was then improved by:
+
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon Feb 13 13:56:14 2012 -0800
+
+    i387: make irq_fpu_usable() tests more robust
+    
+    Some code - especially the crypto layer - wants to use the x86
+    FP/MMX/AVX register set in what may be interrupt (typically softirq)
+    context.
+
+At no point was there any intention of using this in a hardirq
+context.
+
+Until such a time when you have a valid application for using
+lib/crypto code in a hardirq context, I don't think we should
+be supporting that at the expense of real users who are in
+process/softirq context only.
+
+Cheers,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
