@@ -1,71 +1,72 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFB4524C08C
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 14:45:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65F0324EF8A
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 14:45:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743691522; cv=none; b=lqodCLcHPO7IB8euWfarbjqBJh7IUS2XmgNCYEsylSHKY05jaijbLFYYkdM2U+cIxY1VRSu4ZiuqOW71s9IgYHJ0rQ8IWjHO+Kp5WbO3viqczXHwXqozCKsAfmFAH2Lm8zwbRoAJ2qejsk64V+UE3JbgmOUYyQocBbKR9J28a/0=
+	t=1743691524; cv=none; b=kycKMLkck+/nIPKtsfYclmh+xvXHd0Xvpqm8UxxHlmA+F5wjNtMX2quufBI3m6y0q2n03GLmJE1TsD0ZdQ85BCxm8XI28Z2TJz7z3mw2E7z4uHwAIfIrmTgV0MKlLFUVCh3r6j65QALauhUrGI90ljxgP9HykJWCYn4QvWmLgEs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743691522; c=relaxed/simple;
-	bh=b5drFIBe75sGDj5pYe0brea2ZUmu6wtu9bzah0lST80=;
+	s=arc-20240116; t=1743691524; c=relaxed/simple;
+	bh=4g9wUdzBEHF2DXwrsn4sDVm7Nmec/oEeQKsxWFnBuaA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=QHBtFRV4NY0NytszMdbWs+5Dr7mlr9cPknLN/EMLfqOZrY3g1bUp4OSa6s9RBowLPBfek7GOrzT/91wSCoVLJ1jSfvw9xMMjCGrOAJHMva77/E2P6MsKKwSfBPqs2BhDbI87EMy2UldbFSYK7zPp6SC133/LEaPW9jCOWcFqPhI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nrxC0dOb; arc=none smtp.client-ip=209.85.128.54
+	 MIME-Version; b=DlevPi8DKNguFzJIsVNZAOMJU9/OMPUE37Kxl85z5dF+3cVQyKg5QNVupELPyQwZqMq7raPhBK3C1y6iZDOv6FNlyw8Wc5Fpc3A4VcU/PPfMoS9Axzc5IKHhHsm/3edGpcrMoPNytfJlovMm82aZ1/JHY9Nw/PSNq25zTsQ5trE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jOUn3Anl; arc=none smtp.client-ip=209.85.221.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nrxC0dOb"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43948f77f1aso7726515e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 07:45:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jOUn3Anl"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-39c0e0bc733so851075f8f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 07:45:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743691519; x=1744296319; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1743691521; x=1744296321; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=KyzR9vVasmK/SdhNh8h5VH0sOIqi40QOhEUqjrHqr/I=;
-        b=nrxC0dOb+MehyNNoVqUwA4+NEi3opQVKe4Y4yttJntKzXqVvPjDuCRHkyEyFeAHTh5
-         OB1B6ZlzTyxI7M1xeRMz2nSTqaE2cD7sf1tNHKORmxpn5iCeVxe3fjgBffOqossr0tC4
-         xQGqR/BMxQLBCIu6YBafysLRaLMWCQ0OSgvLanT0gunYPj2NJgljRP1PjlwEsbPcTff+
-         HtpXJf9CnPY5OJ+nL74VdBkNqcphQs3DTYXeO0USDMv/olE/q5lezMeU8w2LFhStQvDi
-         Hv61t3A4f5N7rTZpvrXSSkjoAho8bEyTfEB5gDH7OZzdZTPsn9vQlb8TwVKkh7honc9I
-         +AlQ==
+        bh=zoVQYZpiH0Di4cmCzPcvMx2OkQBw+j3GHZ8ITdSC16E=;
+        b=jOUn3Anl1fhXfGLOdkln2AYeubwj/T8UT1341fOgBzdwQb/HNhOb3N98hZoZ3TS1VR
+         1Vg/PJ97Z4jd3uyVpB4bOEz28NBoCmRrREOgirC549dCk3m5ssN0/ypkjpWZZFZFbOZj
+         cL2Xu6badHlst9A7zL0PKXxncOU4qdONLbRepG7jW61w+8CVPH8M8XMUoYrW9P6+PBIf
+         ViAIf8pGmcas6pDCWrY2uCoB+MvQajlcRtjq0WtJbf9wMyhInvLnAHsB2eoJ1qyrZMMy
+         JbR3tt4bJiuMWag6OXJ8GkEKNv9oTEaAhqrOwlI50T/1l2jZR2YErpH6OpdX65JQaY9M
+         WnlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743691519; x=1744296319;
+        d=1e100.net; s=20230601; t=1743691521; x=1744296321;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=KyzR9vVasmK/SdhNh8h5VH0sOIqi40QOhEUqjrHqr/I=;
-        b=eJ7ogwUtYxqKvX9SplOFnpGA6VxcDEa2PVobJtEbCDmLfkacxlQvBw4tr8v23IwAJd
-         KHezWT7IVcKppDJe6JyazH5xM2XyxN6wy6rB56Ocmkv8j6hVaHulvFjb5uYvdOGyHztM
-         qr5BIRPlOYVumNDgISvwgl1Q/kZenP5cYQR3QxP41Pqe+9TjIHVyw8e/usgPSRLgdnVx
-         dLTW+a7NU52sUklxO8L+i+u7SMNPa0WeVCN7g/gfXcuvszL1dsrIMGZ4YMogTeeplkFO
-         rwDHV6eUCh0PAr4h/wGlVGo4GSFf+FbNbfR/as0jpB6yNCoMUgqYN9fTa+Z4OSzKW62E
-         A5hg==
-X-Gm-Message-State: AOJu0YylioJAD8yOtLQj/wOpN9Iga5CgMPtHGorrsSLgHEv3eQ8gcEYo
-	GLWR1htBgP12e00wsUH8/hC8bbSql5c+Fx6dkTeKSXfi/RloN3oHhhA9KIaO1EYZHmAnzAmy0dh
-	VWhg=
-X-Gm-Gg: ASbGncs9luV6njYVp7x06IIbFMc+SLaGWDelVp6bkcw5+e3kmvcPlj33Wq0LdlTR45a
-	lty5LLfD1WYkTzyosBS3m85GK/5wB8Np7eDxK9ieu63ILIfngY4I0lJdvpo1Yv8OsC/z5JjFQO7
-	3E/Q0OKDlMURo+l3VNykpEbNemRLt80R3frXll8DpTuGQeNnylPNWOIe0yXFIsNbV7AmE/5s+XE
-	K4zXXxz3lavCQsG638+QaklZ+0kRcqAfaw+9HysGBFv7YLr2k/TE+781CYRwF/ZYyGHxDBkO5NG
-	9b3jLr0cVpbvJrJEHGwtEHFm1kaBsjonvVqJiyflwgnICbIHhxBz2ZVQPONcg63zBHCMYA==
-X-Google-Smtp-Source: AGHT+IH0iMeKKMC+wZydMrOah60Xbr+10s98wL7yVa6NAvfm2lz08QmrbfSKu+pAk+G9NeRjOqsXmw==
-X-Received: by 2002:a5d:59a8:0:b0:391:4674:b10f with SMTP id ffacd0b85a97d-39c2f951024mr2831126f8f.36.1743691518912;
-        Thu, 03 Apr 2025 07:45:18 -0700 (PDT)
+        bh=zoVQYZpiH0Di4cmCzPcvMx2OkQBw+j3GHZ8ITdSC16E=;
+        b=A13sR94a4eg9WL0YqGyprndOxBZx0S6sqp0+2ipyT293nF0RMSKFbxOGgkTkI55Pf7
+         3TvNlL/Qb9hriJnv0/c6tqYVjT18mlJ6UwSvPfz+qCu2o5+Emy06Q1+W2xrVKcHonUl+
+         taCuqvxKgQDA5KRM5aqpeogGAluqJhchnpW9fqiJG5LMA8Jsv80auQkqyEHw6Ivei5TP
+         YriEzdS/X8zJIDclYWKU+2UggsEfD1+f0gmtfXdg0kbtq5cAyxVQZaHL9IdN6pani8/S
+         PKOr7TINtOsohj7Ue/rmwSvj/wPAeajhPykda17u75fDuJu9X20o889qKbcsbCRJgJw0
+         i8bg==
+X-Gm-Message-State: AOJu0YyLNno7Iu4TNAgwqoF1bo/o8ijDVsUoGaBpfu0/ofWidNm1wV+S
+	VYP9ImKq/vgzj9b7InKLSY3Auezej2xViSx30HCyINN6E4VJ8WtDQYHL0gJSF+k=
+X-Gm-Gg: ASbGncv33QtbBu3cqtzVca9IdC6jNphYXNNs86ya1EBDfHaYqZi29V7MQxvqwkGvpGu
+	iA8WkSrSZ+4F5aVF48jqumhglHJ3rj4LWieiPA7mcKPOZ+/reX4qrL+5TDPzMZZ/q1oVmGXnR5G
+	/SZluwIuCIK1wc0l6eawLbs9ecM/rm27pNxnoskIwrQO5VqOy0VccVEfFXgwqCiQAx1qoaZZJHM
+	0dOHrrzOW8/ylNDA1Ib/DZaIYv8oGlUqHMNUljhp2q4GamIQYTSVWV6HgOZ2hvK4ebK2sVpma/p
+	Jww5WypIesgnIgh50e/cgjn1O9VUjs0x2WMKZEYdKt0lU59tPI+P/cW6VvUneJhRIFXJdw==
+X-Google-Smtp-Source: AGHT+IGcixCHeUvxVA+SokVzbkM0TdI4VCHTRUpdymwjpifxBEFybnXh8mPiF+Vct2sLKpvJWpNQHg==
+X-Received: by 2002:a05:6000:4313:b0:391:3049:d58d with SMTP id ffacd0b85a97d-39c2f85ef42mr2705028f8f.0.1743691520634;
+        Thu, 03 Apr 2025 07:45:20 -0700 (PDT)
 Received: from localhost.localdomain ([5.133.47.210])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c3020d661sm2044374f8f.66.2025.04.03.07.45.17
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c3020d661sm2044374f8f.66.2025.04.03.07.45.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Apr 2025 07:45:17 -0700 (PDT)
+        Thu, 03 Apr 2025 07:45:19 -0700 (PDT)
 From: srinivas.kandagatla@linaro.org
 To: gregkh@linuxfoundation.org
 Cc: linux-kernel@vger.kernel.org,
 	Heiko Stuebner <heiko@sntech.de>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor.dooley@microchip.com>,
 	Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
 	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH v3 01/13] nvmem: rockchip-otp: Move read-offset into variant-data
-Date: Thu,  3 Apr 2025 15:44:49 +0100
-Message-Id: <20250403144501.202742-2-srinivas.kandagatla@linaro.org>
+Subject: [PATCH v3 02/13] dt-bindings: nvmem: rockchip,otp: add missing limits for clock-names
+Date: Thu,  3 Apr 2025 15:44:50 +0100
+Message-Id: <20250403144501.202742-3-srinivas.kandagatla@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20250403144501.202742-1-srinivas.kandagatla@linaro.org>
 References: <20250403144501.202742-1-srinivas.kandagatla@linaro.org>
@@ -75,64 +76,47 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1949; i=srinivas.kandagatla@linaro.org; h=from:subject; bh=XTvrcZqujpYXE39Dy8u7O/ipvxv7YOZitDWD3sP10jE=; b=owEBbQGS/pANAwAKAXqh/VnHNFU3AcsmYgBn7p7iMkQcXUBxWRmO53FvtV/c/ywna5XAFDj66 YJ243dNYNeJATMEAAEKAB0WIQQi509axvzi9vce3Y16of1ZxzRVNwUCZ+6e4gAKCRB6of1ZxzRV N8wfB/9uB118OSywUpiguq2Y7sDE9F8oluYNO+2FFJQvBINm9M7VHVnH6+c2dItsxZYu90Y09Y/ Z7HTprs6P4U9mFcRPN9yig3ccWdNRWiAc0oae4GPMHvGpZKPQwLDaxlIsirbKbyGq7KCttAknfz bRTG5Kx4EjXtrTsP/YMUFgdWwjqWLi6doP0XJD/DCw0mhEQbePf4frEbX8gecrrFeA9caRCqeD4 B5JxneBOj9IF8mHGk9WxLv+PPImEPEVon7PZsVuTwKHZFcUuO/9ok1vMf6eQjRH84N3O13KNl3Z h9Uc3xNd8j+3bh/KuO5qslZciOkCNm9Cz+ehibn5SSmCzChy
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1303; i=srinivas.kandagatla@linaro.org; h=from:subject; bh=UQK0J97pNwCPOKGAeMM7qvUdjF+FdCoH8EtiOEwCJys=; b=owEBbQGS/pANAwAKAXqh/VnHNFU3AcsmYgBn7p7i+g2DzChB+wfimV6C2cDoSMG8RnsgqbIoU f2SZtwwcu+JATMEAAEKAB0WIQQi509axvzi9vce3Y16of1ZxzRVNwUCZ+6e4gAKCRB6of1ZxzRV Nw9PB/4nSbjEtuTJNOJjKTciKFqApfqpV8WGhxi0PQIGU3aavZ9RK84PuKh9Sozwa6BEowDcB4A k9yhZ/kFDmAgHWZH9nSoNb9pVCDnpdH/tf4N1zbiafUm4dCBXm3lLg6btghQBjhFUQ7C4M6FaRB FzkSiEOHKOZJaJ0ttCdSfXdoBMem98ef00+NBENWO4H7OP3RTXeDQvv/BaWbpTgFXzsoqUb39oI h3BX9A4TpUY4+1totge6pCy/cak2RI22hmnMy41ASQ7o+BDcQXr8gz5u2MXSzRBs1ADKY6Qv3hM aaGFgfxAA+jiION/KIknceYCJTSXnpdRw/7KVYNUQRmPOz2L
 X-Developer-Key: i=srinivas.kandagatla@linaro.org; a=openpgp; fpr=ED6472765AB36EC43B3EF97AD77E3FC0562560D6
 Content-Transfer-Encoding: 8bit
 
 From: Heiko Stuebner <heiko@sntech.de>
 
-The RK3588 has an offset into the OTP area where the readable area begins
-and automatically adds this to the start address.
-Other variants are very much similar to rk3588, just with a different
-offset, so move that value into variant-data.
+The clocks property correctly declares minItems and maxItems for its
+variants, but clock-names does not. Both properties are always used
+together, so should declare the same limits.
 
-To match the size in bytes, store this value also in bytes and not in
-number of blocks.
-
+Suggested-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 Tested-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- drivers/nvmem/rockchip-otp.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/nvmem/rockchip,otp.yaml | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/nvmem/rockchip-otp.c b/drivers/nvmem/rockchip-otp.c
-index ebc3f0b24166..3edfbfc2d722 100644
---- a/drivers/nvmem/rockchip-otp.c
-+++ b/drivers/nvmem/rockchip-otp.c
-@@ -59,7 +59,6 @@
- #define RK3588_OTPC_AUTO_EN		0x08
- #define RK3588_OTPC_INT_ST		0x84
- #define RK3588_OTPC_DOUT0		0x20
--#define RK3588_NO_SECURE_OFFSET		0x300
- #define RK3588_NBYTES			4
- #define RK3588_BURST_NUM		1
- #define RK3588_BURST_SHIFT		8
-@@ -69,6 +68,7 @@
- 
- struct rockchip_data {
- 	int size;
-+	int read_offset;
- 	const char * const *clks;
- 	int num_clks;
- 	nvmem_reg_read_t reg_read;
-@@ -196,7 +196,7 @@ static int rk3588_otp_read(void *context, unsigned int offset,
- 	addr_start = round_down(offset, RK3588_NBYTES) / RK3588_NBYTES;
- 	addr_end = round_up(offset + bytes, RK3588_NBYTES) / RK3588_NBYTES;
- 	addr_len = addr_end - addr_start;
--	addr_start += RK3588_NO_SECURE_OFFSET;
-+	addr_start += otp->data->read_offset / RK3588_NBYTES;
- 
- 	buf = kzalloc(array_size(addr_len, RK3588_NBYTES), GFP_KERNEL);
- 	if (!buf)
-@@ -280,6 +280,7 @@ static const char * const rk3588_otp_clocks[] = {
- 
- static const struct rockchip_data rk3588_data = {
- 	.size = 0x400,
-+	.read_offset = 0xc00,
- 	.clks = rk3588_otp_clocks,
- 	.num_clks = ARRAY_SIZE(rk3588_otp_clocks),
- 	.reg_read = rk3588_otp_read,
+diff --git a/Documentation/devicetree/bindings/nvmem/rockchip,otp.yaml b/Documentation/devicetree/bindings/nvmem/rockchip,otp.yaml
+index a44d44b32809..3201ff8f9334 100644
+--- a/Documentation/devicetree/bindings/nvmem/rockchip,otp.yaml
++++ b/Documentation/devicetree/bindings/nvmem/rockchip,otp.yaml
+@@ -62,6 +62,8 @@ allOf:
+       properties:
+         clocks:
+           maxItems: 3
++        clock-names:
++          maxItems: 3
+         resets:
+           maxItems: 1
+         reset-names:
+@@ -78,6 +80,8 @@ allOf:
+       properties:
+         clocks:
+           minItems: 4
++        clock-names:
++          minItems: 4
+         resets:
+           minItems: 3
+         reset-names:
 -- 
 2.25.1
 
