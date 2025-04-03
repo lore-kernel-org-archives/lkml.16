@@ -1,121 +1,183 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D342624BC04;
-	Thu,  3 Apr 2025 11:12:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 747A8481B6;
+	Thu,  3 Apr 2025 11:15:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743678762; cv=none; b=kkuo+WRJBAgYwha8ohTOZ0Ib1r5a9db+ibH1dwBwyCBaihU5SoAi0Q+kQRKbzoS3+44ISgRLVis69ix1r53PL9aUDDUE5wojGr/pWnb+uchnD/67Xy2CrXBQHW2wf2p8N1XyXcIxQYm2PsSJavjOCS9sG/sunmV+sEHs/aAIVFk=
+	t=1743678933; cv=none; b=b9dIZ4HeraQUNo95mgKrr4N6aC4ImiZhxAiZEkfN5aEpGR+mgEWfX6Aacrs4nvTjFao8DN51f7KKiahfi+SZVkik7gRFznRyEulcFXKNIXW6tQMfTAGGmD++g1ntD/ry7gX/h71DaJUqZ7JAuQKRRy89Qhx2G88FNqslpZQzx4c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743678762; c=relaxed/simple;
-	bh=4/aIbPlVUJb5I1OOF/VHKAkwFUzsF2LiycF0Dt3QCnw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KG6f1ejjcshQJBT6SY7WMPaZrYzfnW9sztv5u4nag4piFlUPJoHqOI4Yz2ZClX0gNyA+ivFtPQb59QINpGqLMZe/vkHTPaWYJXJlHduJOXQJek5xB56lmwdBwDNWs7K7t+MCU5sDeD4x0SBp+2traBuZoBt4bjO7IkBDg+wOqMg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PmhpLgle; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1743678933; c=relaxed/simple;
+	bh=hiHWGoy3TfSy1ZTXTxz57Op4hmlZMwz8uSjR3DobCU0=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Bs2KitN5MwXIQBZeSt5y3Q9GiJ0c8+0IHMBFyc8qo44QJtliBfOMHhH1rSjlawokSOt//Ad22EHUo+VB0wNb+4w+al2TstGklJn5k8/+P7QG+DV85cbX56khNmASaCl3QdoVyatIEbgPDyEuOraTVbu7b12vCf9n1j+eZNJVZdw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P6vyvNds; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PmhpLgle"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743678761; x=1775214761;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=4/aIbPlVUJb5I1OOF/VHKAkwFUzsF2LiycF0Dt3QCnw=;
-  b=PmhpLgleB0mUgu8zIdvGMdswCihWua8n6H3FGy6g0tbFMQTjFccC6uL/
-   XluWbiM+biAnoCyDLWlhn28Ptpm2Hzu+ev8FDSF7rHPSli2Oh1ASxAqoU
-   0qFUTTJT1aHa8auOVhk1f/btQiALKef/X/iLw7I8yWDniKcnXoHbPSKJq
-   ZKdH5Zt0tTUW2FD5cwYHlaeurn7lBxdahWZcVEF3W11OqDhhwdi/B0tLL
-   w1XAg52jZExssiuHz/WwipIfjeovikFG62VYCPWUp4izG3pCZOfageSfu
-   ZmzpESSZV8wg2bFQBT5ZGJZdbuwhAUi2KhbAuwm2M7KP4hHLjQaP/0ozF
-   A==;
-X-CSE-ConnectionGUID: QIfWYKSuQaKat0bSVtIbBA==
-X-CSE-MsgGUID: VsmGTbyoRkmZXV9ORBOwwQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11392"; a="62480791"
-X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
-   d="scan'208";a="62480791"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 04:12:40 -0700
-X-CSE-ConnectionGUID: 9g+PDe2WRg+iYP9BED3VNg==
-X-CSE-MsgGUID: fsgBnStYTlW6X71GsCzaRw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
-   d="scan'208";a="157953236"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 04:12:39 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u0IUu-00000008mgy-0OEz;
-	Thu, 03 Apr 2025 14:12:36 +0300
-Date: Thu, 3 Apr 2025 14:12:35 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	Jai Luthra <jai.luthra@ideasonboard.com>,
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Mauro Carvalho Chehab <mchehab@kernel.org>
-Subject: Re: [PATCH v1 1/1] media: i2c: ds90ub960: Remove of_node assignment
-Message-ID: <Z-5tI_WVF2YQQ837@smile.fi.intel.com>
-References: <20250312174123.4111661-1-andriy.shevchenko@linux.intel.com>
- <2e6599fd-0b79-430b-9e94-f731b60e1705@ideasonboard.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P6vyvNds"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43cf06eabdaso6322355e9.2;
+        Thu, 03 Apr 2025 04:15:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743678930; x=1744283730; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=hiHWGoy3TfSy1ZTXTxz57Op4hmlZMwz8uSjR3DobCU0=;
+        b=P6vyvNdsupziMIn3B17zEGWeHANwKGHUrzfCzJDYnVYLLe83n4tuPOlLjPOUpfPpYN
+         nF9DrWUIfvU3aXN7EfvEJO8NU1Gs01VyWsoBv1qLtL3LoLwR/gwMxITlt3yJpPe5YO5R
+         Fr8rCGAPq13CPAGuoB9sm5DdWXRvUjJQyDphIcQmPKCX44oE1WQ0IfAVKjtqB9pJ+mJS
+         BZkghjM6LO6xgdqCqOe/8Ae3m7yRZNtApXNzLIVge22O5yIhx9JzlfRBkAMo68GDwxbk
+         Be1i8PWPc1e6zPcgXhyWHR0jCGpchukW0YMgTg4ndBxR9tg283aKw+7AHN9vn8iqCuUK
+         nxIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743678930; x=1744283730;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=hiHWGoy3TfSy1ZTXTxz57Op4hmlZMwz8uSjR3DobCU0=;
+        b=SXy5fJQd+DR8uFJVmeKLAhxSCmxnIrCvrr41A29ihx8TeHQwRcKC6QwYbxnB7HXSZg
+         +y+I4YFUdIrrIB8Kr7Xe3IKD+W7W7Dqm10Cn+IytQ+AujIy23SYqUL3ytfrS6GwBNVLs
+         h1zf8fxOq3bwyAfkfNFaKpICOXSZ2wni/Ch3dsoPnWe7OKMD6EPkRYJ3h/iMlm47qlOv
+         lQlDoaCZAtJtZbCyb1oMBTxBYLKsMb9TItdv4ODKnqK4NRVc/XEjXTq7l0Hf3exiFRRx
+         yIlRK6cm7Ki64CLA8bmclX1TyQyZ2ZGvExJOGBmZSSPC7TEwSAlV20ZgtP8H9uOvJOqI
+         Hw3w==
+X-Forwarded-Encrypted: i=1; AJvYcCULj+cNnvD1WVFViglCCBJX4JTsD8UBFSAPJmqDjX4HqZUqa1HM1404bNF+PRWKve6CVh9PiG8q91V+mXAI@vger.kernel.org, AJvYcCVANmCY5kAmxgzWQDQoO+omVUcDhgz2XgZLM8LNAYiNLjjSZY6H3So62vq7U7tpXJ953h7YkVqDmwK6@vger.kernel.org
+X-Gm-Message-State: AOJu0YzitGRtfBhotD+NKtBawAOgIOUHoSjSCaAkkuoDtYEs44uThvhf
+	j1XNJ1vM3ndHYyeVLIqk+uleVLfx8K+4Dx5dxVwnX4S8FnbwEfJivCnaZRc4Cfg=
+X-Gm-Gg: ASbGncs0+botVtPCKWQ7rgDQygAEILbFkV10uJ0Oo1x73NwTYS5tSoLdQiSjXvtIUmf
+	RmzbPJbSzjOaJI8S4TScOmAQYoKNfVBWUDkbNoLMPFbN7QvRiT5dCe2qdwnErRxb2ss0viRy5Lb
+	YqJ3uwl9hs2W4zbjj/XehWU43oxQlW3TQvaIZcF7DOqAEJCHaY/OuUU6bkOkOECyZCR1mrG0X0E
+	UPxEjumVu/+dUBZxzKzexa0oMHF+tSlIa9hzmkmmKcQlF2w/K3o1eqZhlJC65OLFL5vGLpy4CIr
+	OJs+SpQhUAu7qcTeAdniNVUocUurREt22hh4vggXl06IcrM4wz3tMRcmB/9GxFbB2fhhzl8Egby
+	w1HZVJ+kp0BAToWq4
+X-Google-Smtp-Source: AGHT+IEW5ki3AoxruBMnNGyEvSVtl7GToIRQYVQ5Fb2tPTJE3GsnsJfpbLNttRdS9ddC0XQ+Dt4fGw==
+X-Received: by 2002:a05:600c:358c:b0:43c:e7ae:4bc9 with SMTP id 5b1f17b1804b1-43ec13247admr14727665e9.1.1743678929452;
+        Thu, 03 Apr 2025 04:15:29 -0700 (PDT)
+Received: from ?IPv6:2001:818:ea8e:7f00:2575:914:eedd:620e? ([2001:818:ea8e:7f00:2575:914:eedd:620e])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec366a699sm15116095e9.38.2025.04.03.04.15.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Apr 2025 04:15:28 -0700 (PDT)
+Message-ID: <b2082b59fcbffe9f546bb681eb33276a3c5896c5.camel@gmail.com>
+Subject: Re: [PATCH v3 2/3] dt-bindings: iio: dac: Add adi,ad3530r.yaml
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: Kim Seer Paller <kimseer.paller@analog.com>, Jonathan Cameron	
+ <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
+	 <Michael.Hennerich@analog.com>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org
+Date: Thu, 03 Apr 2025 12:15:28 +0100
+In-Reply-To: <20250403-togreg-v3-2-d4b06a4af5a9@analog.com>
+References: <20250403-togreg-v3-0-d4b06a4af5a9@analog.com>
+	 <20250403-togreg-v3-2-d4b06a4af5a9@analog.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.0 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2e6599fd-0b79-430b-9e94-f731b60e1705@ideasonboard.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Thu, Apr 03, 2025 at 02:01:40PM +0300, Tomi Valkeinen wrote:
-> On 12/03/2025 19:41, Andy Shevchenko wrote:
-> > Remove of_node assignment which duplicates fwnode in struct i2c_board_info.
-> > In general drivers must not set both, it's quite confusing. The I²C core
-> > will consider fwnode with a priority and of_node is subject to remove from
-> > above mentioned data structure.
 
-...
+Hi Kim,
 
-> >   	struct device *dev = &priv->client->dev;
-> >   	struct ds90ub9xx_platform_data *ser_pdata = &rxport->ser.pdata;
-> >   	struct i2c_board_info ser_info = {
-> > -		.of_node = to_of_node(rxport->ser.fwnode),
-> >   		.fwnode = rxport->ser.fwnode,
-> >   		.platform_data = ser_pdata,
-> >   	};
-> 
-> This sounds logical, but breaks the driver for me.
+On Thu, 2025-04-03 at 13:33 +0800, Kim Seer Paller wrote:
+> Document the AD3530/AD3530R (8-channel) and AD3531/AD3531R (4-channel)
+> low-power, 16-bit, buffered voltage output DACs with software-
+> programmable gain controls. They provide full-scale output spans of 2.5V
+> or 5V for reference voltages of 2.5V. These devices operate on a single
+> 2.7V to 5.5V supply and are guaranteed to be monotonic by design.
+> The "R" variants include a 2.5V, 5ppm/=C2=B0C internal reference, which i=
+s
+> disabled by default.
+>=20
+> Signed-off-by: Kim Seer Paller <kimseer.paller@analog.com>
+> ---
+> =C2=A0.../devicetree/bindings/iio/dac/adi,ad3530r.yaml=C2=A0=C2=A0 | 99
+> ++++++++++++++++++++++
+> =C2=A0MAINTAINERS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 7 ++
+> =C2=A02 files changed, 106 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/iio/dac/adi,ad3530r.yaml
+> b/Documentation/devicetree/bindings/iio/dac/adi,ad3530r.yaml
+> new file mode 100644
+> index
+> 0000000000000000000000000000000000000000..cf4a3eb98f1fa30afdeb0740bba7f05=
+2d8ec
+> 2cd4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/dac/adi,ad3530r.yaml
+> @@ -0,0 +1,99 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/dac/adi,ad3530r.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Analog Devices AD3530R and Similar DACs
+> +
+> +maintainers:
+> +=C2=A0 - Kim Seer Paller <kimseer.paller@analog.com>
+> +
+> +description: |
+> +=C2=A0 The AD3530/AD3530R (8-channel) and AD3531/AD3531R (4-channel) are=
+ low-
+> power,
+> +=C2=A0 16-bit, buffered voltage output digital-to-analog converters (DAC=
+s) with
+> +=C2=A0 software-programmable gain controls, providing full-scale output =
+spans of
+> 2.5V
+> +=C2=A0 or 5V for reference voltages of 2.5V. These devices operate from =
+a single
+> 2.7V
+> +=C2=A0 to 5.5V supply and are guaranteed monotonic by design. The "R" va=
+riants
+> +=C2=A0 include a 2.5V, 5ppm/=C2=B0C internal reference, which is disable=
+d by default.
+> +=C2=A0 Datasheet can be found here:
+> +=C2=A0
+> https://www.analog.com/media/en/technical-documentation/data-sheets/ad353=
+0_ad530r.pdf
+> +
+> +properties:
+> +=C2=A0 compatible:
+> +=C2=A0=C2=A0=C2=A0 enum:
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - adi,ad3530
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - adi,ad3530r
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - adi,ad3531
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - adi,ad3531r
+> +
+> +=C2=A0 reg:
+> +=C2=A0=C2=A0=C2=A0 maxItems: 1
+> +
+> +=C2=A0 spi-max-frequency:
+> +=C2=A0=C2=A0=C2=A0 maximum: 50000000
+> +
+> +=C2=A0 vdd-supply:
+> +=C2=A0=C2=A0=C2=A0 description: Power Supply Input.
+> +
+> +=C2=A0 iovdd-supply:
+> +=C2=A0=C2=A0=C2=A0 description: Digital Power Supply Input.
+> +
+> +=C2=A0 io-channels:
+> +=C2=A0=C2=A0=C2=A0 description:
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ADC channel used to monitor internal die =
+temperature, output voltages,
+> and
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 current of a selected channel via the MUX=
+OUT pin.
+> +=C2=A0=C2=A0=C2=A0 maxItems: 1
+>=20
 
-The above assignments are still confusing, but I think I understand what's
-going on. You run on OF based environment and some code uses of_*() APIs
-instead of fwnode ones. That's why the current implementation in the I²C core
-doesn't work.
+I'm a bit puzzled... Isn't this device the provider of such a channel?
+Therefore, I believe we should have #io-channel-cells, right?
 
-> I also couldn't find this documented and didn't immediately find this from
-> the i2c core implementation side.
-
-The current code does this:
-
-	client->dev.of_node = of_node_get(info->of_node);
-	client->dev.fwnode = info->fwnode;
-
-when it should do something like device_set_node() instead.
-
-> Or am I missing some patch (running on v6.14)?
-
-Yeah, there is a series in the mailing list [1], but it has no comments and
-no move so far...
-
-TL;DR: it seems in this change is incomplete.
-
-[1]: https://lore.kernel.org/r/20250312185137.4154173-1-andriy.shevchenko@linux.intel.com
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+- Nuno S=C3=A1
 
