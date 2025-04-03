@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60E2F25178D;
-	Thu,  3 Apr 2025 16:20:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3053250C0F
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 16:20:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743697201; cv=none; b=AH+EROHW/fwzvuOmnQJNKFLKHjAUN6qofIARQIhsa8i6QCjybwq1584FQYBHv9Ag39fCdvMfmArU2UfH249qJG1DQO4NtfGGALNn6hzkogqy6xi3FQHkrinBvmj5/droNj2t2q4eb4Viv01PP3279ZdDxkBkcpSY3nYWNmESOj0=
+	t=1743697202; cv=none; b=Zp8QRINr1ZOSQxMlhtnod9cKLNNlpMylPT3kXn5bnlTabjyDXhgmi2u9wdeiwtYUPccWbjSQtAC4ir7aBNwvTLfvLqrXA4XIjBb/uW6gc8jotQpyPug0xzt86h+ataz2alT47lO6SVHz/B8PDgToivxveltkLaEejP2I9ztJ5Uk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743697201; c=relaxed/simple;
-	bh=j/Zw1Us83CYLMh45YX1P1HpPGlpHRPs3sHFliCIKkXI=;
+	s=arc-20240116; t=1743697202; c=relaxed/simple;
+	bh=bX/eqFqTAZib4IifIZyHWRQYMwAIbQlXwCICt6K1lso=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=KtiZPA+BTkHD7b8TzVOD80SU66nXcYYh+zkhwIGXS5qL5VI0EVoAfis+vQpa54hMtpYtBECI82EiUYNOu645cy3zfZG/x+E2jpNLWSWSk2vZmZz/S/YtmQIAcGwaKST6RQ1d7t7RXMBU5N+OpUuXGnXLxr34wdPxA1SAS5dGSdI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ciE/kNK4; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=I9wzaXK9f4xF/NrOwacE15UR4wTPQja5NGGdFBMtut4/u8NoFZ9ynebUHB1dkVkdMMcr+px4QZWVg3X8Rcpr1TwK+Hic0GnjEc8/qt4wFTCn3yJHliSmSLLqVyDH08Pr0osGcR18pL3Hdg7EhGDqCar5f81Jv8PemohLg4VNKBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PA2z4Ni3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ciE/kNK4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9CA2C4CEEB;
-	Thu,  3 Apr 2025 16:20:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PA2z4Ni3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4742FC4CEE3;
+	Thu,  3 Apr 2025 16:20:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743697200;
-	bh=j/Zw1Us83CYLMh45YX1P1HpPGlpHRPs3sHFliCIKkXI=;
+	s=k20201202; t=1743697202;
+	bh=bX/eqFqTAZib4IifIZyHWRQYMwAIbQlXwCICt6K1lso=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=ciE/kNK4XWjcVK1j+oCSiVf1OBJ9HzSBIf2Hk9xjTMiNznLTc5BnwMm5nMhSB3eeM
-	 dvyTPj8chqr/oWJMadaBcEpwFj2HjJu6jf5jEzS5vAQCW5bVJbYvW7HtvK6QbCEI4S
-	 odc4NG9Z0XyXmPgWNWRCa9gWjL2rbXGlGL15S/JFErhUPRxyxHQokqhIljMFn51qAf
-	 n9pCsOp2+89eiORD45yciDJmHcLzWB2hTqBjL0a3rbmoE16C/0JEZwPFrwJ/ZhiBLA
-	 hlGlkFqB2rrBLDs4EYfqzfUKbpIH8zinEC87Nuk+MklnNxSMCMYwjXvoOHmNeVA6x0
-	 f4UolNqzcRc9A==
+	b=PA2z4Ni3NHkaparTHZPL+uyTig9fbaFWAexoEt2ORhGOC2jyu5dqfj6oz5Oc0JKeT
+	 OuVNZeCiqkHezq3cX6aRPJjuyZEBwqe7AfyYMwd2n44nE0pFU1F/qvYiPW8D4Qgajg
+	 th4VQiF64ThMHqu0IlzzbG9upBmGs7o3zIAFqIbJsXs2voJB+cnCWXjm4jHGkt3400
+	 oLQbwd8FroYOJRqHO9rBhNMdzCZCigHraTsgAzdQBZwfMEr6neZPMmsRcVd78uyj0w
+	 +PnKpADnP/TPkiSKgQHkun7BLIy+LIqPJTuFdRw7LJkS//2BIVRkRhB6vUXSsVZq26
+	 wggFu5zQ7UWnw==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB361380664C;
-	Thu,  3 Apr 2025 16:20:38 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70D3C380664C;
+	Thu,  3 Apr 2025 16:20:40 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,39 +37,37 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v2] selftests: riscv: fix v_exec_initval_nolibc.c
+Subject: Re: [PATCH] riscv: Make sure toolchain supports zba before using zba
+ instructions
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <174369723749.2563936.8850444880196164283.git-patchwork-notify@kernel.org>
-Date: Thu, 03 Apr 2025 16:20:37 +0000
-References: <20250306-fix-v_exec_initval_nolibc-v2-1-97f9dc8a7faf@iencinas.com>
-In-Reply-To: <20250306-fix-v_exec_initval_nolibc-v2-1-97f9dc8a7faf@iencinas.com>
-To: Ignacio Encinas <ignacio@iencinas.com>
-Cc: linux-riscv@lists.infradead.org, linux-kernel-mentees@lists.linux.dev,
- skhan@linuxfoundation.org, paul.walmsley@sifive.com, palmer@dabbelt.com,
- alex@ghiti.fr, charlie@rivosinc.com, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org
+ <174369723899.2563936.11573121851709668346.git-patchwork-notify@kernel.org>
+Date: Thu, 03 Apr 2025 16:20:38 +0000
+References: <20250328115422.253670-1-alexghiti@rivosinc.com>
+In-Reply-To: <20250328115422.253670-1-alexghiti@rivosinc.com>
+To: Alexandre Ghiti <alexghiti@rivosinc.com>
+Cc: linux-riscv@lists.infradead.org, paul.walmsley@sifive.com,
+ palmer@dabbelt.com, alex@ghiti.fr, linux-kernel@vger.kernel.org,
+ lkp@intel.com
 
 Hello:
 
 This patch was applied to riscv/linux.git (for-next)
 by Alexandre Ghiti <alexghiti@rivosinc.com>:
 
-On Thu, 06 Mar 2025 20:49:27 +0100 you wrote:
-> Vector registers are zero initialized by the kernel. Stop accepting
-> "all ones" as a clean value.
+On Fri, 28 Mar 2025 12:54:22 +0100 you wrote:
+> Old toolchain like gcc 8.5.0 does not support zba, so we must check that
+> the toolchain supports this extension before using it in the kernel.
 > 
-> Note that this was not working as expected given that
-> 	value == 0xff
-> can be assumed to be always false by the compiler as value's range is
-> [-128, 127]. Both GCC (-Wtype-limits) and clang
-> (-Wtautological-constant-out-of-range-compare) warn about this.
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202503281836.8pntHm6I-lkp@intel.com/
+> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
 > 
 > [...]
 
 Here is the summary with links:
-  - [v2] selftests: riscv: fix v_exec_initval_nolibc.c
-    https://git.kernel.org/riscv/c/79ba5c1c7767
+  - riscv: Make sure toolchain supports zba before using zba instructions
+    https://git.kernel.org/riscv/c/8a2f20ac8e14
 
 You are awesome, thank you!
 -- 
