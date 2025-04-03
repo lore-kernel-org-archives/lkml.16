@@ -1,189 +1,113 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1BE43597B;
-	Thu,  3 Apr 2025 11:50:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F33563597B
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 11:50:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743681011; cv=none; b=MVhRs9bJYJUeYuw1MSks/W2G02jGM316q5y63qlEXuJO6VsAWJ9DtOBtZ6s1oM3WxdWitCPSTh61zc0chiMKmd3dI4GAqmqZ6fvLTRxaPcWCVtRZyzfDFhuO3h9MarmsD/wLRYTgRHxhkVRqo34f2h+cfuQ3SfltlZ3rfmnH4C0=
+	t=1743681041; cv=none; b=Yt1ghwXOKjmBKim1mhqiWYQjBgNfJs3uaFLw/LmHFKKeMxbzDmN7c1thQRcXTwcFLuWQ1kkhzF5I7EweOykkM2IpMbavgXu4iXeqGugx3VP7y2Hm89tL42z3xfojmvdXB+GCThRf3Qe+wyHiXLRVxi0ICoPUco5Kqb/fPVvk3Bs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743681011; c=relaxed/simple;
-	bh=+LzFNjsmL3SNfJqe9YQUZ3eFxQ82oCA4DlG+FYehnoY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FArvfbMxoOPHXMy6I4TJf+zNCe/yxfaYazgzJ2FF0MJ9nInnW5mqZkwKt7NCnThcNcmZP9yW3//J7FQQ8tzD8+YooH0VO6uYUoQExd2lXedeUXyxSoKaNNlaGo85+r5CjKhIppKnCBeP0JaJMBZKfjjU/Q2TXebT76uxbiKzV34=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OtHUJ8xk; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1743681041; c=relaxed/simple;
+	bh=JNO28fWoaC+tM1jLqwaTtDbEJcdNZKd7TIPKVu78nOo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hW/QTHerGA2hfgUlzpqeW03XVJ6TTBvw0Vgx5Y9wIg7a2a9XBdlEspoD67Hlvl4k17iaqS+VYVSK/Kcqwvlr3OMA4Nw/in1nDSckFpjsoeaNJYyTfV31sJ1ndABiuQ+31aPDwwX+6Bw1l055Tvpo212YkF5NCVAZmmbK6wAnDnM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Bo3ce4VE; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OtHUJ8xk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743681010; x=1775217010;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=+LzFNjsmL3SNfJqe9YQUZ3eFxQ82oCA4DlG+FYehnoY=;
-  b=OtHUJ8xkoE35f3IiWOODeZENJQK8I1QLJVI/wlPHbPThow0wjlw90QpA
-   MQeOY0ZeeDkZWBRgihPVu8J0iHC+ZK3AA4COS1OSS5GhH08FzRmD+auIt
-   lds/ieJfH9qJG8QnqOUQZKBuOK7QF+gG3XART6WG7pDwXugqxJJgBfb1W
-   ZFb+1AuIzMXou+pW9zX2IghiLxASH5YKBcOfArk04Rns0B7UB6zqIH6oh
-   sAXlmEBSv9RJOLnVe3zA7yXbJrYibYbM2Ai49yqbv2MSa12CUJai1HZWi
-   ZhedwykYvWNBqxLokJ4iq9+DOyszxu2cv0yzDv4v8P+1gJo+c9A6FOYWJ
-   A==;
-X-CSE-ConnectionGUID: IlCM+875Sf2bINgpgi8C4w==
-X-CSE-MsgGUID: KrVWz+hwQJqTFVLq/u4L6g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11392"; a="48948884"
-X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
-   d="scan'208";a="48948884"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 04:50:09 -0700
-X-CSE-ConnectionGUID: RO5pSAYPQyynUlSBkqdI9Q==
-X-CSE-MsgGUID: c7UTmJr3Rm+sVlAgTflMhg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
-   d="scan'208";a="127836746"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 04:50:06 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u0J59-00000008nHc-2pLF;
-	Thu, 03 Apr 2025 14:50:03 +0300
-Date: Thu, 3 Apr 2025 14:50:03 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Yunhui Cui <cuiyunhui@bytedance.com>
-Cc: gregkh@linuxfoundation.org, jirislaby@kernel.org,
-	john.ogness@linutronix.de, pmladek@suse.com, arnd@arndb.de,
-	namcao@linutronix.de, benjamin.larsson@genexis.eu,
-	schnelle@linux.ibm.com, linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org
-Subject: Re: [PATCH] serial: 8250: fix panic due to PSLVERR
-Message-ID: <Z-51629pjyiZUIVy@smile.fi.intel.com>
-References: <20250403090336.16643-1-cuiyunhui@bytedance.com>
- <Z-5yr2mFaDt8kxC-@smile.fi.intel.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Bo3ce4VE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743681038;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7Zj6XuVGPfM2793V/JcD1kmv5tyZDJv7xCPhThA49yQ=;
+	b=Bo3ce4VE57If01R0F6eImRYYH8NQzUAkCk75j6IYpFH4KQL+DDBkaIZ7efMpcS4KUj6N9+
+	OE+gSsZoq6EhpxR88R5qAp7/ZUdcEGvHPiP8RV7r1LDT3CK23Y2lcj1QmpIm56wKqd0844
+	QZV4M/zccx7I1abL9CxUZ+cKkyzypUY=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-423-p7P899QUPeO7PnEard5NTA-1; Thu, 03 Apr 2025 07:50:36 -0400
+X-MC-Unique: p7P899QUPeO7PnEard5NTA-1
+X-Mimecast-MFC-AGG-ID: p7P899QUPeO7PnEard5NTA_1743681036
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43e9a3d2977so5419545e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 04:50:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743681035; x=1744285835;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7Zj6XuVGPfM2793V/JcD1kmv5tyZDJv7xCPhThA49yQ=;
+        b=N/d7pGWOdhqf6Xq+FoewAqcOTPJEoyGqUcyjwKyPYUiyeon1zWiRg9eirR9sxnqaz1
+         fi1k5Eim8rSQOGs/1fHaayxLu6al0O2Z2KUNU/5tpJx5JP6JMDHY5KbeLz6qom+TA8gz
+         l2bQOqVGwStUZk6ER1RO47VuRi0FPBLcZe6kr+3iE8ldDMtojKwQJcsGdXEmHHjTwq4a
+         IjT5K4Zf9+YREKt/PGyA0I0lNUwFT19SO3rxSuvIGwjWodwsP/xc4DccMo80sYVlewdf
+         uMpfefPj5AeD1yCoKOgB/j2eEIpqF4HOBMmjtnBezJHrMfhOXVfb6sVejlKgjhxEuaWI
+         uPyg==
+X-Forwarded-Encrypted: i=1; AJvYcCUEgw1D2ORoK8o3i8+DG7ecDMR6h9LIi0U8jCK5haSPvaSSb8RiTV7G8+sqgLTDlou/ZcuTolvMc+7Ehgo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwNUZyd7Qz1dAalrAEUAa7s11065mnqGzuuvOtoXqY1exhnmtrw
+	FnywKZcfFbxA/9ygjtID1tto5zeVMjAbPOMgWaRH2sYU1LL8YK95ucmn8b67/zV/zZHOawoiZO6
+	vJJT4StS8xjhZj4PdGPpIzY/NC2gN5/xo2ketOB8euV9b9WfNreiAe/eS4dN5ig==
+X-Gm-Gg: ASbGncvgXXEABLejf1E9mwEr72TLk8m0XKhc/lUm37eE004vr9frG/Rhuu1RKQI07vJ
+	+Mw4UuhmQ1B3e54CtNh0ndcYTf7jzgnC3R9TFY9FLg1vucQ9c38PHCLJ1p6oBE560HcaOSphVKV
+	3yvZqGAOxFFnI1DP8ukAWyrao8MsyUew/7mYwRwoy/yCLnP5HxK83CcCtbggheatw5E7lsSOA4l
+	IXswIT0PyVAuvM90E+owcoSdpwd2v57igdC7SVeeVOs488Gam2D+HR4JZ+x6SWJk+hnarTdTH0K
+	K3o6e0IGDMMkj1XYlYE+LfPpndqoT6HtseOGPnZ2SIes7A==
+X-Received: by 2002:a05:600c:b9b:b0:43c:fcbc:9680 with SMTP id 5b1f17b1804b1-43db62bdfecmr172952585e9.25.1743681035517;
+        Thu, 03 Apr 2025 04:50:35 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHojKG7yA9MWLduc/LIVM8C18XHcC83gwQjAA4NdlpUvz16wfBun2O1hXFQ+pazdcIgaa5zEQ==
+X-Received: by 2002:a05:600c:b9b:b0:43c:fcbc:9680 with SMTP id 5b1f17b1804b1-43db62bdfecmr172952385e9.25.1743681035160;
+        Thu, 03 Apr 2025 04:50:35 -0700 (PDT)
+Received: from [192.168.88.253] (146-241-68-231.dyn.eolo.it. [146.241.68.231])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec34bf193sm16244985e9.24.2025.04.03.04.50.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Apr 2025 04:50:34 -0700 (PDT)
+Message-ID: <fe13ece8-67ea-48c0-a155-0cb6d2bcfc52@redhat.com>
+Date: Thu, 3 Apr 2025 13:50:33 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z-5yr2mFaDt8kxC-@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net v3] ipv6: sit: fix skb_under_panic with overflowed
+ needed_headroom
+To: Wang Liang <wangliang74@huawei.com>, davem@davemloft.net,
+ dsahern@kernel.org, edumazet@google.com, kuba@kernel.org, horms@kernel.org,
+ kuniyu@amazon.com
+Cc: yuehaibing@huawei.com, zhangchangzhong@huawei.com,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250401021617.1571464-1-wangliang74@huawei.com>
+Content-Language: en-US
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <20250401021617.1571464-1-wangliang74@huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Apr 03, 2025 at 02:36:16PM +0300, Andy Shevchenko wrote:
-> On Thu, Apr 03, 2025 at 05:03:36PM +0800, Yunhui Cui wrote:
+On 4/1/25 4:16 AM, Wang Liang wrote:
+> @@ -1452,7 +1457,9 @@ static int ipip6_tunnel_init(struct net_device *dev)
+>  	tunnel->dev = dev;
+>  	strcpy(tunnel->parms.name, dev->name);
+>  
+> -	ipip6_tunnel_bind_dev(dev);
+> +	err = ipip6_tunnel_bind_dev(dev);
+> +	if (err)
+> +		return err;
+>  
+>  	err = dst_cache_init(&tunnel->dst_cache, GFP_KERNEL);
+>  	if (err)
 
-A couple of more questions here:
-1) what is the DW IP version and where did you get the PSLVERR_RESP_EN
-parameter from?
-2) what is the setting of the UART_16550_COMPATIBLE parameter?
+I think you additionally need to propagate the error in
+ipip6_tunnel_update() and handle it in ipip6_changelink() and
+ipip6_tunnel_change().
 
-> > When the PSLVERR_RESP_EN parameter is set to 1, the device generates
-> > an error response if an attempt is made to read an empty RBR (Receive
-> > Buffer Register) while the FIFO is enabled.
-> > 
-> > In serial8250_do_startup, calling serial_port_out(port, UART_LCR,
-> 
-> serial8250_do_startup()
-> 
-> > UART_LCR_WLEN8) triggers dw8250_check_lcr(), which invokes
-> > dw8250_force_idle() and serial8250_clear_and_reinit_fifos(). The latter
-> > function enables the FIFO via serial_out(p, UART_FCR, p->fcr).
-> > Execution proceeds to the dont_test_tx_en label:
-> > ...
-> > serial_port_in(port, UART_RX);
-> > This satisfies the PSLVERR trigger condition.
-> > 
-> > Because another CPU(e.g., using printk) is accessing the UART (UART
-> 
-> printk()
-> 
-> > is busy), the current CPU fails the check (value & ~UART_LCR_SPAR) ==
-> > (lcr & ~UART_LCR_SPAR), causing it to enter dw8250_force_idle().
-> > 
-> > To resolve this issue, relevant serial_port_out operations should be
-> 
-> serial_port_out()
-> 
-> > placed in a critical section, and UART_RX data should only be read
-> > when the UART_LSR DR bit is set.
-> 
-> The last one is made in the common code, are you sure that all supported UARTs
-> will be okay with such a change?
-> 
-> > Panic message:
-> 
-> Please, read this
-> https://www.kernel.org/doc/html/latest/process/submitting-patches.html#backtraces-in-commit-messages
-> and act accordingly.
-> 
-> > [    0.442336] Oops - unknown exception [#1]
-> > [    0.442337] Modules linked in:
-> > [    0.442339] CPU: 3 UID: 0 PID: 1 Comm: swapper/0 Tainted: G        W          6.12.13-00102-gf1f43e345877 #1
-> 
-> Is it still reproducible on v6.14 (and soon v6.15-rc1)?
-> 
-> > [    0.442342] Tainted: [W]=WARN
-> > [    0.442343] epc : dw8250_serial_in32+0x1e/0x4a
-> > [    0.442351]  ra : serial8250_do_startup+0x2c8/0x88e
-> > [    0.442354] epc : ffffffff8064efca ra : ffffffff8064af28 sp : ffff8f8000103990
-> > [    0.442355]  gp : ffffffff815bad28 tp : ffffaf807e36d400 t0 : ffffaf80804cf080
-> > [    0.442356]  t1 : 0000000000000001 t2 : 0000000000000000 s0 : ffff8f80001039a0
-> > [    0.442358]  s1 : ffffffff81626fc0 a0 : ffffffff81626fc0 a1 : 0000000000000000
-> > [    0.442359]  a2 : 0000000000000000 a3 : 0000000000000000 a4 : ffffffff81626fc0
-> > [    0.442360]  a5 : ffff8f800012d900 a6 : 000000000000000f a7 : 000000000fc648c1
-> > [    0.442361]  s2 : 0000000000000000 s3 : 0000000200000022 s4 : 0000000000000000
-> > [    0.442362]  s5 : ffffffff81626fc0 s6 : ffffaf8085227000 s7 : ffffffff81073c58
-> > [    0.442363]  s8 : 0000000000500000 s9 : ffffaf80851a5a60 s10: ffffaf80851a5a60
-> > [    0.442365]  s11: ffffffff80e85980 t3 : ffffaf807e324600 t4 : 0000000000000002
-> > [    0.442365]  t5 : 0000000000000003 t6 : ffffaf80804cf072
-> > [    0.442366] status: 0000000200000120 badaddr: 0000000000000000 cause: 0000000000000013
-> > [    0.442368] [<ffffffff8064efca>] dw8250_serial_in32+0x1e/0x4a
-> > [    0.442371] [<ffffffff8064af28>] serial8250_do_startup+0x2c8/0x88e
-> > [    0.442373] [<ffffffff8064b514>] serial8250_startup+0x26/0x2e
-> > [    0.442375] [<ffffffff806428a2>] uart_startup+0x13a/0x308
-> > [    0.442377] [<ffffffff80642aa4>] uart_port_activate+0x34/0x50
-> > [    0.442378] [<ffffffff8062ab6a>] tty_port_open+0xb4/0x110
-> > [    0.442383] [<ffffffff8063f548>] uart_open+0x22/0x36
-> > [    0.442389] [<ffffffff806234b4>] tty_open+0x1be/0x5e6
-> > [    0.442396] [<ffffffff802f2d52>] chrdev_open+0x10a/0x2a8
-> > [    0.442400] [<ffffffff802e7ab6>] do_dentry_open+0xf6/0x34e
-> > [    0.442405] [<ffffffff802e9456>] vfs_open+0x2a/0xb4
-> > [    0.442408] [<ffffffff80300124>] path_openat+0x676/0xf36
-> > [    0.442410] [<ffffffff80300a58>] do_filp_open+0x74/0xfa
-> > [    0.442412] [<ffffffff802e9900>] file_open_name+0x84/0x144
-> > [    0.442414] [<ffffffff802e99f6>] filp_open+0x36/0x54
-> > [    0.442416] [<ffffffff80a01232>] console_on_rootfs+0x26/0x70
-> > [    0.442420] [<ffffffff80a0154e>] kernel_init_freeable+0x2d2/0x30e
-> > [    0.442422] [<ffffffff8099c730>] kernel_init+0x2a/0x15e
-> > [    0.442427] [<ffffffff809a7666>] ret_from_fork+0xe/0x1c
-> > [    0.442430] Code: e022 e406 0800 4683 0c15 691c 872a 96bb 00d5 97b6 (439c) 851b
-> > [    0.442432] ---[ end trace 0000000000000000 ]---
-> > [    0.442434] Kernel panic - not syncing: Fatal exception in interrupt
-> > [    0.442435] SMP: stopping secondary CPUs
-> > [    0.451111] ---[ end Kernel panic - not syncing: Fatal exception in interrupt ]---
-> 
-> Fixes tag?
-> Cc to stable@?
-> 
-> ...
-> 
-> >  	/*
-> >  	 * Now, initialize the UART
-> >  	 */
-> 
-> + Blank line.
-> 
-> > +	uart_port_lock_irqsave(port, &flags);
-> >  	serial_port_out(port, UART_LCR, UART_LCR_WLEN8);
-> >  
-> > -	uart_port_lock_irqsave(port, &flags);
-> >  	if (up->port.flags & UPF_FOURPORT) {
-> >  		if (!up->port.irq)
-> >  			up->port.mctrl |= TIOCM_OUT1;
+Side note: possibly other virtual devices are prone to similar issue. I
+suspect vxlan and gre. Could you please have a look?
 
--- 
-With Best Regards,
-Andy Shevchenko
+Thanks,
 
+Paolo
 
