@@ -1,114 +1,94 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F1811E04AC;
-	Thu,  3 Apr 2025 10:42:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F315D1F4CBA;
+	Thu,  3 Apr 2025 10:43:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743676926; cv=none; b=e1Xkw5rY+k7nbK2HbRCay57BGxokmZWwCCEicL8wHL/AQxzbZTLQP9UzkLKDo0X7FO498FbzCSleuWF/ryqi+Ftb0qsY1MYITesLwiqplolO4SflWY4aoKQX4ueHO7w+X+WPIeLjz7poWfdsK2K0hv+zi626NkZSSwvfE7c2+jU=
+	t=1743676994; cv=none; b=Be+pHeo3YyeqdLBzVSM4wkjlPHIXnS9ityv3vsph5hxpsAO28BRROBcLZgIEq7L6SQIzTbhCjHS7oGSr5q1sVqUkG8KtghcIrg39hDzTTUuMeEKCiaxb60+HGY6X5STjnZDZARL1jrasH6GWnQPB97kiZGA2s0prW5kszPd9JcM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743676926; c=relaxed/simple;
-	bh=cQ+xu78fnQL2dNMW5nTACbZbpn5DUyuQK9MC0D500po=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=UhVfI/1ZTr4QYIFvSC0PaXWj17gBF8654Ix5XO56C0NLwkqPTyM6vKRQXx8EJ4d3rM2jFitavDkpGBUyC8qHssQjE7G6giAzUi3flZg90iNmOJjKHHewZx7ymvTNfNOjeqe9M/O5suwqnjOhlT02Euno8XtyjOxszbnu1O2us7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nahMCi8D; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743676994; c=relaxed/simple;
+	bh=Zqp997HLp8WyLh7fXbv/lo9UezZBRX9g065XQWLDcjE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=t0qD2nlyWow0MmRVoJl6E+f/sgHT7+pLL4MH4bTJtdo3OpjKp55kos0jJAZtAEefcPDBUrjPBH5mdlQPU0boPg4OtvHkGRfxjkcmIKY0CE4QQxbX7Mgb1IvFmns1NRJ63HDwt55CBADwtmA7cCDRym6EaRch/+el8FYmHwk9rZ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a594eN2p; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nahMCi8D"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 991DDC4CEE3;
-	Thu,  3 Apr 2025 10:41:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a594eN2p"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77211C4AF0B;
+	Thu,  3 Apr 2025 10:43:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743676925;
-	bh=cQ+xu78fnQL2dNMW5nTACbZbpn5DUyuQK9MC0D500po=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=nahMCi8DfymJdPrdn7QdiDD3Q8rDwmGOvJf1NoMlk42yNhXZCmhH8ZeJoSeZVMRGe
-	 mlLn7120CdMWVO+pvpRFrjFMysdwrEUOH93be8/cDYcrfqL2wLp0eMqudzz1g7b9Wc
-	 tGXtxBwGirpcKDB14QfW1H6Y3MC4HHvJuaXYtv9nMHguhCBJg44ZzkNrFbo3+X+bfo
-	 ZOi7GyCd1H9ZDWQiEAmuasS4pR8NpKq8PBjgV7CMcTxaFKBXqj7/rOFb+0yWZRmEsK
-	 qRlnBZI82XIyl0QFDyYLaATLWm0SgrvsM8SxHTbmTHTDSV0hxac8K7/3iJEQqnGtup
-	 HLlsP/XuITz0w==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: "FUJITA Tomonori" <fujita.tomonori@gmail.com>
-Cc: <linux-kernel@vger.kernel.org>,  <daniel.almeida@collabora.com>,
-  <boqun.feng@gmail.com>,  <gary@garyguo.net>,  <me@kloenk.dev>,
-  <rust-for-linux@vger.kernel.org>,  <netdev@vger.kernel.org>,
-  <andrew@lunn.ch>,  <hkallweit1@gmail.com>,  <tmgross@umich.edu>,
-  <ojeda@kernel.org>,  <alex.gaynor@gmail.com>,
-  <bjorn3_gh@protonmail.com>,  <benno.lossin@proton.me>,
-  <a.hindborg@samsung.com>,  <aliceryhl@google.com>,
-  <anna-maria@linutronix.de>,  <frederic@kernel.org>,
-  <tglx@linutronix.de>,  <arnd@arndb.de>,  <jstultz@google.com>,
-  <sboyd@kernel.org>,  <mingo@redhat.com>,  <peterz@infradead.org>,
-  <juri.lelli@redhat.com>,  <vincent.guittot@linaro.org>,
-  <dietmar.eggemann@arm.com>,  <rostedt@goodmis.org>,
-  <bsegall@google.com>,  <mgorman@suse.de>,  <vschneid@redhat.com>,
-  <tgunders@redhat.com>,  <david.laight.linux@gmail.com>
-Subject: Re: [PATCH v11 4/8] rust: time: Introduce Instant type
-In-Reply-To: <20250403.134038.2188356790179825602.fujita.tomonori@gmail.com>
-	(FUJITA Tomonori's message of "Thu, 03 Apr 2025 13:40:38 +0900")
-References: <20250220070611.214262-1-fujita.tomonori@gmail.com>
-	<20250220070611.214262-5-fujita.tomonori@gmail.com>
-	<87iko1b213.fsf@kernel.org>
-	<pk-Wz6K7ID9UBJQ5yv7aHqGztuRNqPlZv0ACr8K6kOMOzdan60fYn3vqlQFrf4NwwY5cXXp0jnYlX1nKpdlaGA==@protonmail.internalid>
-	<20250403.134038.2188356790179825602.fujita.tomonori@gmail.com>
-User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Thu, 03 Apr 2025 12:41:52 +0200
-Message-ID: <87cydtv85r.fsf@kernel.org>
+	s=k20201202; t=1743676993;
+	bh=Zqp997HLp8WyLh7fXbv/lo9UezZBRX9g065XQWLDcjE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=a594eN2p0ofJIrF0IfEXOc7t4aIzGzvjJ9gbksLaJxBKHMJLVtuTuTF8EQV6rU5nH
+	 MrE3xcozsL5w3kf1rxLZcdhpTgLZbXQu5locovy97vEooK6ywGgH2AThZsU/i7UZ0u
+	 KvZJaf6O4eL9+0XiGtjPvmO/acgMCafnp/1ianiS9wBSTmTjBIXnkxAf4MDrydG9HH
+	 NuGanR3xur1Oy6lZFKB+xCaUDUVfwdJawxxhat9VXahBFOlcNMtdo90mM2a4JzTKQ6
+	 nLIUHr90g9lEy33qPhEld+DSMQIwnMil0GrvKPaM7dZ/e0Mnckq5lesSjs92iuH7Fz
+	 8nFSbaYqgL5rg==
+Received: by mail-ot1-f46.google.com with SMTP id 46e09a7af769-72c172f1de1so459678a34.3;
+        Thu, 03 Apr 2025 03:43:13 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUjGcOrcZoMeWDtdhicZW8/gP0bXWg7FZE4rMIDeC62Xc/hr1OT3xAyaSlUGhLosG/6lOEd6/h9WvHpencI@vger.kernel.org, AJvYcCXoU1Hb7cufiTsqhPS2TVT3glLjaX7LwXkVJ1abdmMNn6nCkmXZF8rpreXjb21x3HPXEBgJvshI6Ss=@vger.kernel.org, AJvYcCXuMfVCo5heIv+dQZ7nJxIyXyjPo8KZInBe22LS5qI8gyTqL6cjng8oFTrV2opSgnbkUeCk98TsexXq@vger.kernel.org
+X-Gm-Message-State: AOJu0YycYEktGtNvSLPWOCtn9REro3qZmhGgFXqVzEAucHDO3AMsjyvK
+	jONQUVKWWqd3IvhCaN3VfbLnG5Sd+N3gEtqc60o5WJEwOZJA+oswCImAFMrcHhyj9PKoCDAx27r
+	ThgGhlRRyexK3Fr5M+bfkWLtOevM=
+X-Google-Smtp-Source: AGHT+IG3AWB7CaPZwf0Tb0Ajn3mv8KyCE2OKLilFuXZicoSYb86Eb+BE+cNvbfGSivr8mtIxQOT9rNbcg1Tvna0Ct4k=
+X-Received: by 2002:a9d:4788:0:b0:72b:8fd3:e2dc with SMTP id
+ 46e09a7af769-72c63816953mr12541972a34.21.1743676992741; Thu, 03 Apr 2025
+ 03:43:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20250328143040.9348-1-ggherdovich@suse.cz> <20250328143040.9348-2-ggherdovich@suse.cz>
+ <SJ0PR11MB66228319834B1C7B48FCE52EF5AD2@SJ0PR11MB6622.namprd11.prod.outlook.com>
+ <CAJZ5v0gC3DzanSdPqQiJ4JQppgNeRA7Z9Cge7NxmTO_shoUyOA@mail.gmail.com>
+ <7a14ea42462a346958954f328933f583dcf9cb52.camel@intel.com>
+ <CAJZ5v0juH2kYx-fyyfoFLBTjg30y59Dwj1wBYXxuHvU2c7X31w@mail.gmail.com> <29626e175f3238ae04451477e38bad875794a61c.camel@intel.com>
+In-Reply-To: <29626e175f3238ae04451477e38bad875794a61c.camel@intel.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 3 Apr 2025 12:42:59 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0g0mBTkxeHBWff0koYG4NhkN2wFwkKR5_4XUq-1U0maFg@mail.gmail.com>
+X-Gm-Features: AQ5f1JrbzgGfC6WbwtpYyvFFJNoFRh9ods5kRfcRZ2ufljOl_lvM5LSdxrCl_Wo
+Message-ID: <CAJZ5v0g0mBTkxeHBWff0koYG4NhkN2wFwkKR5_4XUq-1U0maFg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] ACPI: processor: idle: Remove obsolete comment
+To: "Zhang, Rui" <rui.zhang@intel.com>
+Cc: "rafael@kernel.org" <rafael@kernel.org>, "ggherdovich@suse.cz" <ggherdovich@suse.cz>, 
+	"linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "lenb@kernel.org" <lenb@kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-"FUJITA Tomonori" <fujita.tomonori@gmail.com> writes:
-
-> On Sat, 22 Mar 2025 14:58:16 +0100
-> Andreas Hindborg <a.hindborg@kernel.org> wrote:
+On Thu, Apr 3, 2025 at 4:54=E2=80=AFAM Zhang, Rui <rui.zhang@intel.com> wro=
+te:
 >
->> FUJITA Tomonori <fujita.tomonori@gmail.com> writes:
->>
->>> Introduce a type representing a specific point in time. We could use
->>> the Ktime type but C's ktime_t is used for both timestamp and
->>> timedelta. To avoid confusion, introduce a new Instant type for
->>> timestamp.
->>>
->>> Rename Ktime to Instant and modify their methods for timestamp.
->>>
->>> Implement the subtraction operator for Instant:
->>>
->>> Delta = Instant A - Instant B
->>>
->>> Tested-by: Daniel Almeida <daniel.almeida@collabora.com>
->>> Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
->>> Reviewed-by: Gary Guo <gary@garyguo.net>
->>> Reviewed-by: Fiona Behrens <me@kloenk.dev>
->>> Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
->>
->>
->> Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
->>
->>
->> As Boqun mentioned, we should make this generic over `ClockId` when the
->> hrtimer patches land.
+> On Tue, 2025-04-01 at 14:13 +0200, Rafael J. Wysocki wrote:
+> >
+> > > So I'm proposing to return the index of the highest valid state
+> > > directly
+> > > in acpi_processor_power_verify() and then we don't need this loop any
+> > > more.
+> >
+> > OK, so I'd prefer to first rename power.count to power.max_index
+> > (which it really is) and then make the changes you have proposed.
 >
-> Seems that I overlooked his mail. Can you give me a pointer?
+> well, in other cases, like in acpi_processor_evaluate_cst() and in the
+> _LPI case, power.count is still set and used as the total number of
+> cstates.
 >
-> I assume that you want the Instance type to vary depending on the
-> clock source.
+> in this acpi_processor_get_cstate_info() case, maybe we should drop this
+> change
+> -               working++;
+> +               working =3D i;
+> So power.count is still consistent in all these cases.
 
-Yea, basically it is only okay to subtract instants if they are derived
-from the same clock source. Boqun suggested here [1] before hrtimer
-patches landed I think.
+OK
 
-At any rate, now we have `kernel::time::ClockId`. It is an enum though,
-so I am not sure how to go about it in practice. But we would want
-`Instant<RealTime> - Instant<BootTime>` to give a compiler error.
+> For the current for loop that overrides power.count, I think we can just
+> drop it, because no one checks power.count after it, which means no one
+> actually uses power.count as max_index.
 
-
-Best regards,
-Andreas Hindborg
-
-
-[1] https://lore.kernel.org/all/ZxwFyl0xIje5gv7J@Boquns-Mac-mini.local
-
+Sounds good to me.
