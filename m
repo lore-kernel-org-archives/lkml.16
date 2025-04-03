@@ -1,50 +1,50 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3D99250C16
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 15:19:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BD57250C16
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 15:19:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743693559; cv=none; b=O7MuHuPf1Y3NNzAic7QgMmNk/2Gh8qltRUr0mocNyKfxCKxlPXgwzRtQnHg142Xq/7D3TMCn3fV3FUycxP6zHtmxHLTe1YWIrbjegy+7TqUAfgPAPED+PprMGehIOpY+syXfHkfE2I/189Ki8DDNlDrSWQxUaFxMRBa+Q7A36Co=
+	t=1743693564; cv=none; b=h6lvusgVDwuXy1l9J6W5SnO53s7ggi28f+5ATtrogrlblkQtnDz2bWZMwKiv8pGHDdk+qNU/LX3qB5ohfIO3IsBRsyNg5B4jgG5z6+KoigDNMlndcXqSuTAaIyW+HM151eRDlWrbTagDWCv3UEpov2M53jL8c/De4E6V02tWrQY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743693559; c=relaxed/simple;
-	bh=ivekhNNXLgy47sf15VedzyJGzNnLprsWSCrRsqDwUjc=;
+	s=arc-20240116; t=1743693564; c=relaxed/simple;
+	bh=EI+tsgjmay2fitW+KazTBhcVCZR8HgeELnVAaQAP2bo=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=YSoxC1v4PG4W1ZJwYXZgD2RK/UPuYR2Ig2yPf6viifFEyM+MNmEDjOcHMCtOxgoWceqaSML56dfHmPeR4aNEtdE7qaMtKDDIWNZWJbcLalHqEMplnTXC405MIMyFfNmz9jF/pTefAaUS7lNk8eOmkaXMDcVjmMSACrt95oR0G3w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Gma/QZdu; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:To:Cc; b=adP/LeCkxyzlAQcWHA/CuAUEkOdcvhAYiXsPeZb675Vxni9hZNF5HUuTJ0EyXG8pjwXlE8RjXcZzv5R9mXx3FJnuLEK7TCMavxKT9epJxm8iaAVEunAZYWugyLm5xZe6xcEqYrzZxwG9iQDZZFfr8lpF/GMURTl9TxSZzb31QXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=I2+elsda; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Gma/QZdu"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="I2+elsda"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743693556;
+	s=mimecast20190719; t=1743693561;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=X7DMmMZXzdF8LXmcYrCvtE/dHZ3PGksX88vhJy1Fbto=;
-	b=Gma/QZduDf6EdLBG6FzqhKy3qGhr3piBbELkC9tA3aHu90Upd4Zcndx0skwtkZEqypaHh2
-	kQ0BiAheCeikUaXC3bbMZ2hnTHEykcHZsy5s4NkcjM9nj8jAbXhq+9yQltsk1kFtOQvSyc
-	tjk8aBNGzVeLvj8BouxjwK4x64x+Gzc=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+	bh=vt9nmE2W6fAP5x7WHE2AxHpH1utj7r9hW1CF65sgUZU=;
+	b=I2+elsdaHSiwBSR299138UTI0hXRhsFO6RoMDXaUJ2IvfviDiajJDSE7UgKz34RJvWILFP
+	cm+GOtrKT7ob0256WRcAhjdjHrhfJvjaDNPxS+uhVOBl0VRMFqLxugUQP+nA4anTDnLPR6
+	FFsD4mYXsWkEIyHpxKvgov4mDWogegE=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-154-pKqar8g1NA6JHj2UnsrDCA-1; Thu,
- 03 Apr 2025 11:19:11 -0400
-X-MC-Unique: pKqar8g1NA6JHj2UnsrDCA-1
-X-Mimecast-MFC-AGG-ID: pKqar8g1NA6JHj2UnsrDCA_1743693547
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-17-Qz1623huNSqpc82YGhX4qQ-1; Thu,
+ 03 Apr 2025 11:19:15 -0400
+X-MC-Unique: Qz1623huNSqpc82YGhX4qQ-1
+X-Mimecast-MFC-AGG-ID: Qz1623huNSqpc82YGhX4qQ_1743693552
 Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id ABEAF1801A07;
-	Thu,  3 Apr 2025 15:19:07 +0000 (UTC)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 300E3195609E;
+	Thu,  3 Apr 2025 15:19:12 +0000 (UTC)
 Received: from asrivats-na.rmtustx.csb (unknown [10.2.16.30])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id BA3881801752;
-	Thu,  3 Apr 2025 15:19:03 +0000 (UTC)
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 0662D1801752;
+	Thu,  3 Apr 2025 15:19:07 +0000 (UTC)
 From: Anusha Srivatsa <asrivats@redhat.com>
-Date: Thu, 03 Apr 2025 10:16:25 -0400
-Subject: [PATCH v2 18/30] panel/lincolntech-lcd197: Use refcounted
+Date: Thu, 03 Apr 2025 10:16:26 -0400
+Subject: [PATCH v2 19/30] panel/magnachip-d53e6ea8966: Use refcounted
  allocation in place of devm_kzalloc()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -54,7 +54,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250403-b4-drm_panel_mass_convert_part2-v2-18-260c8a44c56b@redhat.com>
+Message-Id: <20250403-b4-drm_panel_mass_convert_part2-v2-19-260c8a44c56b@redhat.com>
 References: <20250403-b4-drm_panel_mass_convert_part2-v2-0-260c8a44c56b@redhat.com>
 In-Reply-To: <20250403-b4-drm_panel_mass_convert_part2-v2-0-260c8a44c56b@redhat.com>
 To: Neil Armstrong <neil.armstrong@linaro.org>, 
@@ -72,11 +72,11 @@ To: Neil Armstrong <neil.armstrong@linaro.org>,
  Jianhua Lu <lujianhua000@gmail.com>, Stefan Mavrodiev <stefan@olimex.com>
 Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
  Anusha Srivatsa <asrivats@redhat.com>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1743689775; l=1484;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1743689775; l=1437;
  i=asrivats@redhat.com; s=20250122; h=from:subject:message-id;
- bh=ivekhNNXLgy47sf15VedzyJGzNnLprsWSCrRsqDwUjc=;
- b=346C1nWjrEdcK+Kimp4OdelZiEooQuqMqIziJyblxGUgPicN6/KC8QgwW+zzDkZD/jgrmmnaY
- Kf7Wuv679sXBLsqtEPzULVjIti2AjfkGr+DiXWh3GzDEmr8cpA55Ye2
+ bh=EI+tsgjmay2fitW+KazTBhcVCZR8HgeELnVAaQAP2bo=;
+ b=bL90yP/YOvSR6+LHZNo/7S2R0LSzWO+uOeoC7kC5cVeM+0Squ0rxBZFwKyisFOMN0+AEi+hNX
+ cinCU/DMwxUAykRtbJ42nQdnAdP8ep+Ew3MT2bjKRZJgQLgke1HxF/E
 X-Developer-Key: i=asrivats@redhat.com; a=ed25519;
  pk=brnIHkBsUZEhyW6Zyn0U92AeIZ1psws/q8VFbIkf1AU=
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
@@ -88,38 +88,38 @@ Signed-off-by: Anusha Srivatsa <asrivats@redhat.com>
 ---
 v2: none.
 ---
- drivers/gpu/drm/panel/panel-lincolntech-lcd197.c | 11 +++++------
+ drivers/gpu/drm/panel/panel-magnachip-d53e6ea8966.c | 11 +++++------
  1 file changed, 5 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/gpu/drm/panel/panel-lincolntech-lcd197.c b/drivers/gpu/drm/panel/panel-lincolntech-lcd197.c
-index 032c542aab0f788e8a244721c838d9d740af98fb..54ad17704072213b00292df487a9f28cffd45f6c 100644
---- a/drivers/gpu/drm/panel/panel-lincolntech-lcd197.c
-+++ b/drivers/gpu/drm/panel/panel-lincolntech-lcd197.c
-@@ -190,9 +190,11 @@ static int lincoln_lcd197_panel_probe(struct mipi_dsi_device *dsi)
- 	dsi->mode_flags = (MIPI_DSI_MODE_VIDEO |
- 			   MIPI_DSI_MODE_VIDEO_BURST);
+diff --git a/drivers/gpu/drm/panel/panel-magnachip-d53e6ea8966.c b/drivers/gpu/drm/panel/panel-magnachip-d53e6ea8966.c
+index 799c2161fc85b24e1fb236fd63b397bf66fc15c8..ee225286ce6df0ce48cf7a2c60d600332d02ed86 100644
+--- a/drivers/gpu/drm/panel/panel-magnachip-d53e6ea8966.c
++++ b/drivers/gpu/drm/panel/panel-magnachip-d53e6ea8966.c
+@@ -370,9 +370,11 @@ static int d53e6ea8966_probe(struct spi_device *spi)
+ 		.node = NULL,
+ 	};
  
--	lcd = devm_kzalloc(&dsi->dev, sizeof(*lcd), GFP_KERNEL);
--	if (!lcd)
+-	db = devm_kzalloc(dev, sizeof(*db), GFP_KERNEL);
+-	if (!db)
 -		return -ENOMEM;
-+	ctx = devm_drm_panel_alloc(dev, struct lincoln_lcd197_panel, panel,
-+				   &lincoln_lcd197_panel_funcs,
-+				   DRM_MODE_CONNECTOR_DSI);
-+	if (IS_ERR(ctx))
-+		return PTR_ERR(ctx);
++	db = devm_drm_panel_alloc(dev, struct ili9881c, panel,
++				  &d53e6ea8966_panel_funcs,
++				  DRM_MODE_CONNECTOR_DSI);
++	if (IS_ERR(db))
++		return PTR_ERR(db);
  
- 	mipi_dsi_set_drvdata(dsi, lcd);
- 	lcd->dsi = dsi;
-@@ -214,9 +216,6 @@ static int lincoln_lcd197_panel_probe(struct mipi_dsi_device *dsi)
- 		return dev_err_probe(dev, PTR_ERR(lcd->reset_gpio),
- 				     "failed to get reset gpio");
+ 	spi_set_drvdata(spi, db);
  
--	drm_panel_init(&lcd->panel, dev,
--		       &lincoln_lcd197_panel_funcs, DRM_MODE_CONNECTOR_DSI);
+@@ -425,9 +427,6 @@ static int d53e6ea8966_probe(struct spi_device *spi)
+ 	db->dsi_dev->mode_flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_BURST |
+ 			  MIPI_DSI_MODE_LPM | MIPI_DSI_MODE_NO_EOT_PACKET;
+ 
+-	drm_panel_init(&db->panel, dev, &d53e6ea8966_panel_funcs,
+-		       DRM_MODE_CONNECTOR_DSI);
 -
- 	err = drm_panel_of_backlight(&lcd->panel);
- 	if (err)
- 		return err;
+ 	if (db->panel_info->backlight_register) {
+ 		ret = db->panel_info->backlight_register(db);
+ 		if (ret < 0)
 
 -- 
 2.48.1
