@@ -1,119 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 495FD248868;
-	Thu,  3 Apr 2025 09:37:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21D762459FB
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 09:38:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743673049; cv=none; b=nKtltPSprvliOdX2RYkMFG/jA+5A7GV1FJq3b4AQGJ0t8uzz+8GsVdZt1FvcHbCqc2RG7bo7mN0mmsQyjrnu+FHNL/l4nWRo8SCD2sTZjBtES7f6z9MXg5z+RHooiBCtkSz5QEJjdkqLtQzrNbELVSyM/vlttY3Xti7U3x5M+bw=
+	t=1743673092; cv=none; b=VtVJDGusaiVST3HfkNL13BFLR6zDnxvrA4L/m+lbpfUt/McZKK/2KTe1pdeFrAD3zGJU46jm3aFZW5WUfqP7Q8ebtvQ3Rlu5wuTuzI/2KvCd+iiy8vSFEOmWNU9A/Vwt9SIbOQbmpHu/weEUmhNx3Oo7kvGLPIt9wgt7u3HGSQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743673049; c=relaxed/simple;
-	bh=Coan5fmk6E+RdsNlnuGPbdLAJylFKtntjKLClwzjJaM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dzi1PXCwaV3gXAw88T6tFy7BknM1j0pihjDnZfbbiSSYMAwergX2vqUvHwpl3GhwczX7C8f+432rBAz/2p2d+DkAFWE37BcZgx2DRwIzdgzDxVNQrramaH5Y5+gzsbpUdN59vADeHtOX2NLLUOPO7oDd6UwZuaZreI+EE2TNIJY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ig+s+hYa; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ig+s+hYa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5BCFC4CEE3;
-	Thu,  3 Apr 2025 09:37:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743673048;
-	bh=Coan5fmk6E+RdsNlnuGPbdLAJylFKtntjKLClwzjJaM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Ig+s+hYaQHzELTAg91ITV3teiTpfEPSBqrj1zwv+43dLClfpkRJkweKQjDhZi5/DD
-	 60T+pB1Vsw8mwP1oep0aPlOJB3J1sbGZD7lp7GYk6YOedMHnmUAQRf0zVwyIoRUDsq
-	 JQjwivrt7PURqX7GDdNgCHbrHqJQlKZsTlKbRmHVATsX7EOD8Wo1dAZVyp9S4z9JzS
-	 q0B+Xx8rUulz4PdpXr+1A5LEZS/AERYSxxHDdJT9A0NtWH17lr3ClT3RPpzmty4d4o
-	 MziNvs8DbfXpSbqeH4MLoUf+23Pamfd4fXKme6Rp4ccnEZv+rBVl5CT1SPb16UNyjm
-	 C0mrk8uMmXKlg==
-Message-ID: <78b2d2ad-4e0e-41b7-95b4-b7fe945dfe13@kernel.org>
-Date: Thu, 3 Apr 2025 11:37:19 +0200
+	s=arc-20240116; t=1743673092; c=relaxed/simple;
+	bh=1O5Q4hnDttQpETR9W72KDLMuVDBqZKdtBJ0LLq6WGUA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KQm+GKoRtihFHVzy4XSGMahCxYEKn7NP18WPZqhJqZCiMKhDcfvNYa984BGXFoEL2PSPS/CLKRsY1pclgnG5V1F/dthx3GrD4kSMknrx1y+vKfc7r5McBvfKN0AbKIWZXoTzJZCz42X22WCVxsotr603zoC1LpftPLnUSjJfXSI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost.localdomain (unknown [124.16.141.245])
+	by APP-05 (Coremail) with SMTP id zQCowAA3dg71Vu5nvi1sBQ--.44416S2;
+	Thu, 03 Apr 2025 17:37:59 +0800 (CST)
+From: Wentao Liang <vulab@iscas.ac.cn>
+To: gregkh@linuxfoundation.org,
+	philipp.g.hortmann@gmail.com
+Cc: linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Wentao Liang <vulab@iscas.ac.cn>
+Subject: [PATCH] staging: rtl8723bs: Add error handling for sd_read().
+Date: Thu,  3 Apr 2025 17:37:41 +0800
+Message-ID: <20250403093741.2372-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.42.0.windows.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH bpf v2 2/2] selftests/bpf: add perf test for
- adjust_{head,meta}
-To: Jakub Kicinski <kuba@kernel.org>, Jiayuan Chen <jiayuan.chen@linux.dev>
-Cc: bpf@vger.kernel.org, mrpre@163.com, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
- <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>,
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
- Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>, Mykola Lysenko <mykolal@fb.com>,
- Shuah Khan <shuah@kernel.org>, Willem de Bruijn <willemb@google.com>,
- Jason Xing <kerneljasonxing@gmail.com>,
- Anton Protopopov <aspsk@isovalent.com>,
- Abhishek Chauhan <quic_abchauha@quicinc.com>,
- Jordan Rome <linux@jordanrome.com>,
- Martin Kelly <martin.kelly@crowdstrike.com>,
- David Lechner <dlechner@baylibre.com>, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org, linux-kselftest@vger.kernel.org,
- kernel-team <kernel-team@cloudflare.com>
-References: <20250331032354.75808-1-jiayuan.chen@linux.dev>
- <20250331032354.75808-3-jiayuan.chen@linux.dev>
- <20250402172447.75ed447f@kernel.org>
-Content-Language: en-US
-From: Jesper Dangaard Brouer <hawk@kernel.org>
-In-Reply-To: <20250402172447.75ed447f@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:zQCowAA3dg71Vu5nvi1sBQ--.44416S2
+X-Coremail-Antispam: 1UD129KBjvJXoWrtFyUCFyrAryDZw1DWFW8Xrb_yoW8JrWUpF
+	4kKas0yr45Ga4UZ3W7Kr95Ar9YkayxGFWDG3yjkw4SvFn8ZwsavrWrKa4Utr4UWr17Aw4Y
+	vF10ka15Ww1DGFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkC14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+	6r4UJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7CjxVAaw2AFwI0_
+	JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67
+	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIY
+	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14
+	v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8
+	JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfU8miiUU
+	UUU
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiBwsBA2fuKuu+YgAAsa
 
+The sdio_read32() calls sd_read(), but does not handle the error if
+sd_read() fails. This could lead to subsequent operations processing
+invalid data. A proper implementation can be found in sdio_readN().
 
+Add error handling to the sd_read(), ensuring that the memcpy() is
+only performed when the read operation is successful.
 
-On 03/04/2025 02.24, Jakub Kicinski wrote:
-> On Mon, 31 Mar 2025 11:23:45 +0800 Jiayuan Chen wrote:
->> which is negligible for the net stack.
->>
->> Before memset
->> ./test_progs -a xdp_adjust_head_perf -v
->> run adjust head with size 6 cost 56 ns
->> run adjust head with size 20 cost 56 ns
->> run adjust head with size 40 cost 56 ns
->> run adjust head with size 200 cost 56 ns
->>
->> After memset
->> ./test_progs -a xdp_adjust_head_perf -v
->> run adjust head with size 6 cost 58 ns
->> run adjust head with size 20 cost 58 ns
->> run adjust head with size 40 cost 58 ns
->> run adjust head with size 200 cost 66 ns
-> 
-> FWIW I'm not sure if this is "negligible" for XDP like you say,
-> but I defer to Jesper :)
+Fixes: 554c0a3abf21 ("staging: Add rtl8723bs sdio wifi driver")
+Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+---
+ drivers/staging/rtl8723bs/hal/sdio_ops.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-It would be too much for the XDP_DROP use-case, e.g. DDoS protection and
-driver hardware eval. But this is changing a BPF-helper, which means it
-is opt-in by the BPF-programmer.  Thus, we can accept larger perf
-overhead here.
+diff --git a/drivers/staging/rtl8723bs/hal/sdio_ops.c b/drivers/staging/rtl8723bs/hal/sdio_ops.c
+index 21e9f1858745..86776d924c15 100644
+--- a/drivers/staging/rtl8723bs/hal/sdio_ops.c
++++ b/drivers/staging/rtl8723bs/hal/sdio_ops.c
+@@ -185,9 +185,11 @@ static u32 sdio_read32(struct intf_hdl *intfhdl, u32 addr)
+ 			return SDIO_ERR_VAL32;
+ 
+ 		ftaddr &= ~(u16)0x3;
+-		sd_read(intfhdl, ftaddr, 8, tmpbuf);
+-		memcpy(&le_tmp, tmpbuf + shift, 4);
+-		val = le32_to_cpu(le_tmp);
++		err = sd_read(intfhdl, ftaddr, 8, tmpbuf);
++		if (!err) {
++			memcpy(&le_tmp, tmpbuf + shift, 4);
++			val = le32_to_cpu(le_tmp);
++		}
+ 
+ 		kfree(tmpbuf);
+ 	}
+-- 
+2.42.0.windows.2
 
-I suspect your 2 nanosec overhead primarily comes from the function call
-overhead.  On my AMD production system with SRSO mitigation enabled I
-expect to see around 6 ns overhead (5.699 ns), which is sad.
-
-I've done a lot of benchmarking of memset (see [1]). One take-away is
-that memset with small const values will get compiled into very fast
-code that avoids the function call (basically QWORD MOVs).  E.g. memset
-with const 32 is extremely fast[2], on my system it takes 0.673 ns (and
-0.562 ns comes from for-loop overhead).  Thus, it is possible to do
-something faster, as we are clearing very small values. I.e. using a
-duff's device construct like I did for remainder in [2].
-
-In this case, as this is a BPF-helper, I am uncertain if it is worth the
-complexity to add such optimizations... I guess not.
-This turned into a long way of saying, I'm okay with this change.
-
-[1] 
-https://github.com/netoptimizer/prototype-kernel/blob/master/kernel/lib/time_bench_memset.c
-
-[2] 
-https://github.com/netoptimizer/prototype-kernel/blob/35b1716d0c300e7fa2c8b6d8cfed2ec81df8f3a4/kernel/lib/time_bench_memset.c#L520-L521
-
---Jesper
