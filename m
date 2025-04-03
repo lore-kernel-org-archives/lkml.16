@@ -1,97 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-183.mta0.migadu.com (out-183.mta0.migadu.com [91.218.175.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E30425F79F;
-	Thu,  3 Apr 2025 19:04:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EA1325F7A1
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 19:04:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743707058; cv=none; b=sFLXTGnuthnnfOnkLbz9lX4iSKK0Rls4jA6n6vx+q/bki3rfcQ590niEDKTAX2QjPKPegBckbfwHkX3TK5ufKADjxqZf2ZTylNJyKbU4GWBbwM4N8O0AD1/5MaNl330lsi/t8YqCUbPKF5JtPIIJ94YEZ30gI23wpLLLGyj5YOs=
+	t=1743707059; cv=none; b=XgMRN71M+0hFUDzSsYaKiWEVWRRAWKNqIa1gLDeYteJCiPgOBkqDUF+cx4hLAIErvqHNQ3UkUl1ZQbvI0gTRjbDTpTyruueoq/UY7qc/rhZl99DoJSEZOPsXU4c0OLFmxgiJmsIycbO5EQigs5SZrC90EydXRyYofRuBD6z85g0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743707058; c=relaxed/simple;
-	bh=h6gEOvJDv34HYKXsMSuwpbVEHLjPxh7/tkY5Otm+ikw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=SXsuTDFT3UbtDbRV8ZNW0FFY2IuB9ou7n8wZzGx/m5qj5pGehAiVfodXtqalkFQFFN1db1sqWwGan4/n0PhjZklACyxzAjuej3FUsxlP6cCbhqXnfyzXrXRxSkhvztyhdjaE5BMYG30NKQRb4IHndBdq8Y2nvmxijTFUzRLFetA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m7POJJEn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743707059; c=relaxed/simple;
+	bh=iuOOwB3RhF2+wmWM3TB/6mKD+N4PJ/l0AgT6T28qZdc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Oe3R2YpOz1DEg4cWkaDexm95bpQyw+sl5PG34QxR4t/5HkpGpOFF9NJqgIi2kIcPWARSt/rWw+4FsVQo1Q5qGe5t/FZ6s1/39raOwhD0Rhjp2Kisy2WE7ofTE7geZCmUa7L+SvRqovvdVZ5FHSuukBXnruszlvEF+nMnCnubL9s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Jn7Fb+Ug; arc=none smtp.client-ip=91.218.175.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m7POJJEn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE134C4CEE9;
-	Thu,  3 Apr 2025 19:04:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743707056;
-	bh=h6gEOvJDv34HYKXsMSuwpbVEHLjPxh7/tkY5Otm+ikw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=m7POJJEnvEvhiA5KcJHi2m+HEFbKK8XwJIR1BrBn956egCurh8UMZJ/KVf8Kea6fJ
-	 QBF8aqrtPgJR9NW8zzNeZmu6yWBvJijQFKHEEEtb0LEbS6qEEkswXPenbFPxN1fs48
-	 YNLnytXj1hD4HkZlN5keHzwKk2AokoUR1Cmz+6OCWEh3dREZRxtG95fC7+QYcO+huy
-	 mHZGuz8hOw5HnSFxVYslx6ViKgSM3Y4LYOI5RhY8Q1uv965V9ud+jVgq6GZj0TuK//
-	 O1iR5YvEut5uOuLi8jae/yFbqkd1MosHSeoHDu9yoAmdp46QTMDQuwY18ms25jstKd
-	 hDmD5HYpjUdcQ==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: P Praneesh <quic_ppranees@quicinc.com>,
-	Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
-	Sasha Levin <sashal@kernel.org>,
-	jjohnson@kernel.org,
-	ath12k@lists.infradead.org
-Subject: [PATCH AUTOSEL 6.13 04/49] wifi: ath12k: Fix invalid entry fetch in ath12k_dp_mon_srng_process
-Date: Thu,  3 Apr 2025 15:03:23 -0400
-Message-Id: <20250403190408.2676344-4-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250403190408.2676344-1-sashal@kernel.org>
-References: <20250403190408.2676344-1-sashal@kernel.org>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Jn7Fb+Ug"
+Message-ID: <0eb36d4f-ab6c-4bb3-aad0-99c09bcd56ec@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1743707053;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OR6tAQCdTqWMdGnoueGRPKReRRRQNdIbvhVIHJWD5vI=;
+	b=Jn7Fb+UgY/OlS/fnuFJSgz2OVlcdAmgKv8H1oVFoc46n/wT4ubopRD4mJlVLWxZMgP1Wnu
+	05Q7iiyh/mwHPQ6Dw+H10z3jRi2jjgr8S6+WImf8VczgxbWlw9h7NRIvnmN38tQ9ge6NVM
+	kpjzXJKKqFnlUwXJb1TnwDaYvPaqCNs=
+Date: Thu, 3 Apr 2025 15:04:08 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.13.9
+Subject: Re: [RFC net-next PATCH 11/13] of: property: Add device link support
+ for PCS
+To: Saravana Kannan <saravanak@google.com>
+Cc: netdev@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S . Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Russell King <linux@armlinux.org.uk>,
+ Christian Marangi <ansuelsmth@gmail.com>,
+ Heiner Kallweit <hkallweit1@gmail.com>, linux-kernel@vger.kernel.org,
+ upstream@airoha.com, Rob Herring <robh@kernel.org>,
+ devicetree@vger.kernel.org
+References: <20250403181907.1947517-1-sean.anderson@linux.dev>
+ <20250403182758.1948569-1-sean.anderson@linux.dev>
+ <CAGETcx9v610XhvU705R=Mjth=iAbCU04rqNnQPhQua37Jc4TRQ@mail.gmail.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sean Anderson <sean.anderson@linux.dev>
+In-Reply-To: <CAGETcx9v610XhvU705R=Mjth=iAbCU04rqNnQPhQua37Jc4TRQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-From: P Praneesh <quic_ppranees@quicinc.com>
+On 4/3/25 14:32, Saravana Kannan wrote:
+> On Thu, Apr 3, 2025 at 11:28 AM Sean Anderson <sean.anderson@linux.dev> wrote:
+>>
+>> This adds device link support for PCS devices, providing
+>> better probe ordering.
+>>
+>> Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
+>> ---
+>>
+>>  drivers/of/property.c | 2 ++
+>>  1 file changed, 2 insertions(+)
+>>
+>> diff --git a/drivers/of/property.c b/drivers/of/property.c
+>> index c1feb631e383..f3e0c390ddba 100644
+>> --- a/drivers/of/property.c
+>> +++ b/drivers/of/property.c
+>> @@ -1379,6 +1379,7 @@ DEFINE_SIMPLE_PROP(pses, "pses", "#pse-cells")
+>>  DEFINE_SIMPLE_PROP(power_supplies, "power-supplies", NULL)
+>>  DEFINE_SUFFIX_PROP(regulators, "-supply", NULL)
+>>  DEFINE_SUFFIX_PROP(gpio, "-gpio", "#gpio-cells")
+>> +DEFINE_SIMPLE_PROP(pcs_handle, "pcs-handle", NULL)
+>>
+>>  static struct device_node *parse_gpios(struct device_node *np,
+>>                                        const char *prop_name, int index)
+>> @@ -1535,6 +1536,7 @@ static const struct supplier_bindings of_supplier_bindings[] = {
+>>                 .parse_prop = parse_post_init_providers,
+>>                 .fwlink_flags = FWLINK_FLAG_IGNORE,
+>>         },
+>> +       { .parse_prop = parse_pcs_handle, },
+> 
+> Can you add this in the right order please? All the simple ones come
+> before the SUFFIX ones so that it's less expensive/fewer comparisons
+> before you parse the simple properties.
 
-[ Upstream commit 63fdc4509bcf483e79548de6bc08bf3c8e504bb3 ]
+Ah, I couldn't figure out what the intended order was so I just stuck
+it at the end.
 
-Currently, ath12k_dp_mon_srng_process uses ath12k_hal_srng_src_get_next_entry
-to fetch the next entry from the destination ring. This is incorrect because
-ath12k_hal_srng_src_get_next_entry is intended for source rings, not destination
-rings. This leads to invalid entry fetches, causing potential data corruption or
-crashes due to accessing incorrect memory locations. This happens because the
-source ring and destination ring have different handling mechanisms and using
-the wrong function results in incorrect pointer arithmetic and ring management.
-
-To fix this issue, replace the call to ath12k_hal_srng_src_get_next_entry with
-ath12k_hal_srng_dst_get_next_entry in ath12k_dp_mon_srng_process. This ensures
-that the correct function is used for fetching entries from the destination
-ring, preventing invalid memory accesses.
-
-Tested-on: QCN9274 hw2.0 PCI WLAN.WBE.1.3.1-00173-QCAHKSWPL_SILICONZ-1
-Tested-on: WCN7850 hw2.0 WLAN.HMT.1.0.c5-00481-QCAHMTSWPL_V1.0_V2.0_SILICONZ-3
-
-Signed-off-by: P Praneesh <quic_ppranees@quicinc.com>
-Link: https://patch.msgid.link/20241223060132.3506372-7-quic_ppranees@quicinc.com
-Signed-off-by: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/wireless/ath/ath12k/dp_mon.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/wireless/ath/ath12k/dp_mon.c b/drivers/net/wireless/ath/ath12k/dp_mon.c
-index 494984133a919..a168640c27625 100644
---- a/drivers/net/wireless/ath/ath12k/dp_mon.c
-+++ b/drivers/net/wireless/ath/ath12k/dp_mon.c
-@@ -2545,7 +2545,7 @@ int ath12k_dp_mon_rx_process_stats(struct ath12k *ar, int mac_id,
- 		dest_idx = 0;
- move_next:
- 		ath12k_dp_mon_buf_replenish(ab, buf_ring, 1);
--		ath12k_hal_srng_src_get_next_entry(ab, srng);
-+		ath12k_hal_srng_dst_get_next_entry(ab, srng);
- 		num_buffs_reaped++;
- 	}
- 
--- 
-2.39.5
-
+--Sean
