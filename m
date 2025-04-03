@@ -1,129 +1,135 @@
-Received: from mail-io1-f78.google.com (mail-io1-f78.google.com [209.85.166.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF7B423ED53
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 07:04:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05F1219F41C;
+	Thu,  3 Apr 2025 07:04:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743663860; cv=none; b=id3iPwc0901P2mq+la3oRVuCm6XOh4gPPdflDSg/ISEn8/tn8oWryosFLSy6aD5vTB0lPMNTP3X9DUcOdx/9u5iOPg1/6S+mZa83ehsDDOQRFp3oeV7BNKxMNvrL4Fb5H5Ci7I8v0qC8hOEvORPOW+B9eo1Za+paQJ7DO6gLVEo=
+	t=1743663872; cv=none; b=WGZfqjf2ARtrM+I34dx6boJa3u4yAb+mIyiZr+QZhgad3Au38Whpx6dMe9WxH31JxG24HnraQP9us2W/Ux2YEbaARsB+La0v5fpD3/6ew2r+ZhmunU5kyCZ2ynnh79yO1r3onlwWzBzcC8yYT8e7s+5QmhIBOYRgHnfB23EaPe0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743663860; c=relaxed/simple;
-	bh=atUgTzXsaeC3dRMkaoBUId/Y+NIEHliKUbEIi9237/Y=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=lzZ0sBWRI3BLd5Rk+Vde+6yAN91gS5EKAzgzbiErTIV2BvECW5HQK4UF3PK/xcjLvph6HOTgNHtwYFk0oZ4q7xsNdn2W7FgGS8MC7QsfrjPcLgUjhuqajZf5gTphEQIDCmm+yifq2UBIZMBcDoBH3TZ1kS5Q5VBOKsY0S+KEk2g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f78.google.com with SMTP id ca18e2360f4ac-85b53875729so168089839f.2
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 00:04:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743663858; x=1744268658;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=41qFJQvtYOEgdXsNKiWCUQolljvfI1RxAoSFkmI6I4s=;
-        b=YpQ1CRtLSgiBE5Iek/LtqU77ySFJlLD1b0nlI6xlecDhYk8qdS5TGK9hpTkdt7Moq3
-         VTVu7Jj3jwNq7nQitpFK1rVkUOC0ZaGgBQX/eL6PlyIJc5yjNX9m9LOVwCLxYfV3j//4
-         1OElJCSS7RpL+Y/vxDhhZU3PcTMLpAMJb/pQ/OD7S7axLoRKGFqbvnNZF0mnBO+ADg4Z
-         +ue4aLigy9Afe6G9YnPpP1H3vE29cyMoO0R7I9ySaS4r/TXRGhMJcIsGP7ZVvK08yFFn
-         jcgT92muW7cEkGLAie6QDgtaKr2ox8AFbobt3Z62MeusDS6Ds6v9gbB+1qibKemPMAJd
-         NQPw==
-X-Forwarded-Encrypted: i=1; AJvYcCX4sD2HbhTmMK1+8zd7ynaqQ+4WX8wm7XINz6SfBJkpYfliJjO2kk3wgYqzPem/9VRVf05xOup/KFcMFOw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzXjJq8VigSBMYxOSuDA9oSIMsU4S3dzN/fLHKi9zW8S8+vUyn7
-	2ThiEtHi9lfp2IB4Pc5s0oGb9ZASDo3lEfFzeiQokGX+M31UhgsE0CuS8Y4CAtgCWfEUHDlgyWv
-	2g+iU/DDML3oPbQTzyvvdD1/j6apFbJx3bmKBQPPLQ/npjdYJz27ld+Q=
-X-Google-Smtp-Source: AGHT+IEn8LjjklgQSVl25kDq+vbsbiVfvSYHd2OKkTF4Csfum0CQ3AYlbgYY3VMe9TJfCTAx4+caf+mnmn5lg+h1vWoAeUJ6R7Ez
+	s=arc-20240116; t=1743663872; c=relaxed/simple;
+	bh=axQRKKtAZkQVbK9Zn3xtCbGhWKRBGumuitQB4lzISSI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VP9N7ePJxYnRvbuw9dcxtPu+V56At8eGsDgDKDYJGM0blYJP7HLOm6q38IUZ/EJb9NzbEoRByUDj0cz6b8FHSK3Q0d5MRaGyuN/UcY9PUfSUjyHTjhj/aKLQqNGpWeDBu9eOFvYN8mj4nvqO/7PtQAXe0i9B6dgHkKvTjk3wSkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DULEKQOb; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DULEKQOb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3B13C4CEE3;
+	Thu,  3 Apr 2025 07:04:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743663871;
+	bh=axQRKKtAZkQVbK9Zn3xtCbGhWKRBGumuitQB4lzISSI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DULEKQObjDOFleA0YwEKsQL8DNbEOgLvR49c2+gBEbLdWdpMCC1f9Dox3JsG2cD4+
+	 CV3eOs9orM6i4QNYHz12Zecw3Z9+h4Dgzm80uRCIBMcWoIHOlRE+VzwRqIuXI0rm+c
+	 VCi8vphgVRQzfnRBN3j390MUQJaMVBuKRUZjhXQgoyi9KBeGz3t5ovMFMm4SOty2Ic
+	 3j9rE379MF+9Asvbzy/W/w/7ubfZeTleHOGhUzHqVWdguzHRwCdRGfab9unGqXDH9P
+	 p06I3hpccJ1Qn1ACFCrYaLOU1N5guo6q8NKKDB+qdkH+gmFgtdPhQgsvrhKsSPpST1
+	 h4Ly07jbRBj4g==
+Date: Thu, 3 Apr 2025 09:04:28 +0200
+From: Maxime Ripard <mripard@kernel.org>
+To: Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>
+Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, 
+	Sumit Semwal <sumit.semwal@linaro.org>, Benjamin Gaignard <benjamin.gaignard@collabora.com>, 
+	Brian Starkey <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>, 
+	"T.J. Mercier" <tjmercier@google.com>, Mattijs Korpershoek <mkorpershoek@kernel.org>, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org
+Subject: Re: [PATCH v2 1/2] dma-buf: heaps: system: Remove global variable
+Message-ID: <20250403-elated-cinnamon-tortoise-7b6cb8@houat>
+References: <20250401-dma-buf-ecc-heap-v2-0-043fd006a1af@kernel.org>
+ <20250401-dma-buf-ecc-heap-v2-1-043fd006a1af@kernel.org>
+ <e268d75d-c75a-499e-872d-09f91defed6b@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:d308:0:b0:3d2:b72d:a507 with SMTP id
- e9e14a558f8ab-3d6de7e5cb7mr8307925ab.19.1743663858030; Thu, 03 Apr 2025
- 00:04:18 -0700 (PDT)
-Date: Thu, 03 Apr 2025 00:04:18 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67ee32f2.050a0220.9040b.014d.GAE@google.com>
-Subject: [syzbot] [io-uring?] KCSAN: data-race in io_req_task_cancel / io_wq_free_work
-From: syzbot <syzbot+903a2ad71fb3f1e47cf5@syzkaller.appspotmail.com>
-To: asml.silence@gmail.com, axboe@kernel.dk, io-uring@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-
-Hello,
-
-syzbot found the following issue on:
-
-HEAD commit:    92b71befc349 Merge tag 'objtool-urgent-2025-04-01' of git:..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=11195404580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a8120cade23cf14e
-dashboard link: https://syzkaller.appspot.com/bug?extid=903a2ad71fb3f1e47cf5
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/2e7df7bc2f52/disk-92b71bef.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/be59123d5efb/vmlinux-92b71bef.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/7c9eff86053e/bzImage-92b71bef.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+903a2ad71fb3f1e47cf5@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KCSAN: data-race in io_req_task_cancel / io_wq_free_work
-
-write to 0xffff888117207448 of 8 bytes by task 3861 on cpu 1:
- req_set_fail io_uring/io_uring.h:-1 [inline]
- io_req_defer_failed io_uring/io_uring.c:927 [inline]
- io_req_task_cancel+0x7c/0x1a0 io_uring/io_uring.c:1360
- io_handle_tw_list+0x194/0x1d0 io_uring/io_uring.c:1057
- tctx_task_work_run+0x6e/0x1c0 io_uring/io_uring.c:1121
- tctx_task_work+0x44/0x80 io_uring/io_uring.c:1139
- task_work_run+0x13c/0x1b0 kernel/task_work.c:227
- get_signal+0xee2/0x1080 kernel/signal.c:2809
- arch_do_signal_or_restart+0x9a/0x4b0 arch/x86/kernel/signal.c:337
- exit_to_user_mode_loop kernel/entry/common.c:111 [inline]
- exit_to_user_mode_prepare include/linux/entry-common.h:329 [inline]
- __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
- syscall_exit_to_user_mode+0x62/0x120 kernel/entry/common.c:218
- do_syscall_64+0xd6/0x1c0 arch/x86/entry/syscall_64.c:100
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-read to 0xffff888117207448 of 8 bytes by task 3871 on cpu 0:
- req_ref_put_and_test io_uring/refs.h:22 [inline]
- io_wq_free_work+0x24/0x1b0 io_uring/io_uring.c:1799
- io_worker_handle_work+0x4c9/0x9f0 io_uring/io-wq.c:618
- io_wq_worker+0x277/0x850 io_uring/io-wq.c:669
- ret_from_fork+0x4b/0x60 arch/x86/kernel/process.c:153
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
-
-value changed: 0x0000000000180051 -> 0x0000000000980111
-
-Reported by Kernel Concurrency Sanitizer on:
-CPU: 0 UID: 0 PID: 3871 Comm: iou-wrk-3861 Not tainted 6.14.0-syzkaller-12508-g92b71befc349 #0 PREEMPT(voluntary) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-==================================================================
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="gld5fz6ykqjpt6sc"
+Content-Disposition: inline
+In-Reply-To: <e268d75d-c75a-499e-872d-09f91defed6b@amd.com>
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+--gld5fz6ykqjpt6sc
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2 1/2] dma-buf: heaps: system: Remove global variable
+MIME-Version: 1.0
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+On Tue, Apr 01, 2025 at 05:28:43PM +0200, Christian K=F6nig wrote:
+>=20
+>=20
+> Am 01.04.25 um 17:12 schrieb Maxime Ripard:
+> > The system heap has been using its struct dma_heap pointer but wasn't
+> > using it anywhere.
+> >
+> > Since we'll need additional parameters to attach to that heap type,
+> > let's create a private structure and set it as the dma_heap drvdata,
+> > removing the global variable in the process.
+> >
+> > Signed-off-by: Maxime Ripard <mripard@kernel.org>
+> > ---
+> >  drivers/dma-buf/heaps/system_heap.c | 17 ++++++++++++-----
+> >  1 file changed, 12 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/drivers/dma-buf/heaps/system_heap.c b/drivers/dma-buf/heap=
+s/system_heap.c
+> > index 26d5dc89ea1663a0d078e3a5723ca3d8d12b935f..adf422eaa33a52794f952d9=
+d4260b8743d37f421 100644
+> > --- a/drivers/dma-buf/heaps/system_heap.c
+> > +++ b/drivers/dma-buf/heaps/system_heap.c
+> > @@ -19,11 +19,13 @@
+> >  #include <linux/module.h>
+> >  #include <linux/scatterlist.h>
+> >  #include <linux/slab.h>
+> >  #include <linux/vmalloc.h>
+> > =20
+> > -static struct dma_heap *sys_heap;
+> > +struct system_heap {
+> > +	struct dma_heap *heap;
+> > +};
+> > =20
+> >  struct system_heap_buffer {
+> >  	struct dma_heap *heap;
+> >  	struct list_head attachments;
+> >  	struct mutex lock;
+> > @@ -422,17 +424,22 @@ static const struct dma_heap_ops system_heap_ops =
+=3D {
+> >  };
+> > =20
+> >  static int __init system_heap_create(void)
+> >  {
+> >  	struct dma_heap_export_info exp_info;
+> > +	struct system_heap *sys_heap;
+> > +
+> > +	sys_heap =3D kzalloc(sizeof(*sys_heap), GFP_KERNEL);
+> > +	if (!sys_heap)
+> > +		return -ENOMEM;
+> > =20
+> >  	exp_info.name =3D "system";
+> >  	exp_info.ops =3D &system_heap_ops;
+> > -	exp_info.priv =3D NULL;
+> > +	exp_info.priv =3D sys_heap;
+>=20
+> Why do you even need this?
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
+Urgh, sorry. I'm not even sure how I ended up with that patch, but
+you're correct. I'll send a much simpler version.
 
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
+Maxime
 
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
+--gld5fz6ykqjpt6sc
+Content-Type: application/pgp-signature; name="signature.asc"
 
-If you want to undo deduplication, reply with:
-#syz undup
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCZ+4y+wAKCRDj7w1vZxhR
+xYtuAP9h8qpbfSL8QdI6gkSoBqCm6iJd/D34aA/O+lgHIZmeZAEA8kN4XsbG3As+
+6Hk8D0ZvINLOC3KUYPipNQqNfDSiewQ=
+=QlbU
+-----END PGP SIGNATURE-----
+
+--gld5fz6ykqjpt6sc--
