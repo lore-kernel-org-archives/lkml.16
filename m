@@ -1,140 +1,155 @@
-Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B41D633981
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 12:49:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D81C2E3385
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 12:51:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743684574; cv=none; b=t7JOEM0GusF//Fjbb4joym4SYmWO4a7BZ4oynvhcLmP8O51yVzQBvbZQFYrSrxloMeImO5OA0uYgQGF6lSj4DNPA7+DSogBLZbXkeqStkj8RVbppokOqbhir0/ejeRoVIQ58dUUOGIvFPFWjGiMaLDTKQd8SuUxZyCF976XFyx0=
+	t=1743684678; cv=none; b=oqrfDO3O0Ksf6Tyx3rGnWQIfmEahx+cpxXutePUaw9Vc26c49poYWFTaUFTGifdKJVSJXmBeaeDmls3srDpMpUrQb1lRu8GE5IowbDj2Wc8Y9EawVzkLf0rq8N3OyG+3wvZqZ/w0fVyrC5Kk/2PXjB8JPOU0IpKLt+g+0ZsMRfc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743684574; c=relaxed/simple;
-	bh=Qk5d8xbhxNwjUd64AgFuXiKUrSyH4a2/vsRsybz6QzM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nfTtgPHWmRkLUq9Vn1oiHQVg2DlzPFcjCct9/rTR+NxMue/CIQH1+CpfcMG2OGStxJkCdz5161jYpRgPYSfDSx4gR6H9xpMappTJ2NAXkIYlKQL6YM6yjTprktMPm/RvBacFSBumRMpKu+O7MPaf6JzE3ROBxz4KBJhkENXHHNI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=B1eA6UdH; arc=none smtp.client-ip=209.85.167.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1743684678; c=relaxed/simple;
+	bh=goDJOm2WtH3P76uOTy+Ogm1vvi1nHLbS9KmvqmiPc0k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ft07t/TamytSI/JYAg9Gtn9mYughyFcT8DT3KfNYj6ziTktfeSFSMYH6KO2WxTGpkfdOMlqyeibvzkjJfYuRKsilGiuaqYhvTefhGmrZOg6KpcXifWTzrdjCX7A5c0+Eq+uBfgUX++WE3gEq3M9Jhz5CqJJRlOMDwTbjtYqMQ+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PoVsJ7D7; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="B1eA6UdH"
-Received: by mail-oi1-f171.google.com with SMTP id 5614622812f47-3f9a7cbc8f1so238002b6e.0
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 05:49:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PoVsJ7D7"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ac2dfdf3c38so161234366b.3
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 05:51:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1743684571; x=1744289371; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=51Q3WOkegbyCBnKA5QrZibFPvAKsNArPzBsm1Qz0W+g=;
-        b=B1eA6UdHhEXX9igZV9sXFUUVZ5hxgccTScez7ClCM0P+JOQXFZGx352Y/z+3a6F3PG
-         Hmoi6zFWq8Y4lEeqOmLucJkfLfAZBjh+DKZBw00tetI5ikssNaM0G4Kba2cekfeXgoIH
-         HqyCebbrp7oAE5PwiHpc+lp3imeNkIbdoG1wu4uW0XZKjfPoPx+3KNHSd2U/rCiogPnX
-         uq3iEukOwQV2E/Qf21uTOshn5SHxg8DeLdcldi4f4PjFy9GsmAO58jeZ/jbxJE3BeARe
-         QxBsirwITavKKn16KKPbuKdJxce78cjyg1vI/ANfvtxuz+J4x7kmuoTD53jxBGHu276R
-         sB6A==
+        d=gmail.com; s=20230601; t=1743684674; x=1744289474; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/HODa0fMEkQK7P4UL+fQYUBWzJ2WYl+i0BBb1rGI3xY=;
+        b=PoVsJ7D77KfZk5fjXcY7DVIO5Cs93w1Cu8eMaMPVcTzfJqpJAF3Y8ANei+AoJAUm6w
+         evapWHrDQMgcNSemm4yBcfxMNLKyJu/c7ZlL1Khd41sjmeIf6eecE2wk927pvczLtKi3
+         m4EKQL4xm/tPHuNV43LRB/xkGaWhVnVIA1Fe0XEYoWMy/tAgK7jEG5QqcL66zHdCU8Wc
+         iiNJp5mcBzyrBnujwpu45N3+jpW4/IfvhavjfRH/hLKYNw2cMtFWQRoV33a/2iAHF2TT
+         I4wQAQC9TSt8GnnFM14wMP67srByHNPxJdU7vdNri/T+5t9Eewqfv+7Wrq7QSW6HXN2r
+         kt+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743684571; x=1744289371;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=51Q3WOkegbyCBnKA5QrZibFPvAKsNArPzBsm1Qz0W+g=;
-        b=rU93Lnt4HkMT0YDG5BGAi6mMwVCZhGGwtTz/INI+wKuAuC+x6k9+ntGwnizPPOtrYP
-         C7vCxc5wXOB49g9jbO2jMf7/L7FpuRGpAqBW5SGjmEDkwnJb8EgThPKNt6C9Jidajvr+
-         NsyU4dlkmJyaNdTB8dri9G+Qb0Bd24awq2o/57LBmHDDJABgHjjFl5o4xZ5c/J1weGe/
-         speLftPod0uvE4Z1Xuu207iAVEe9egYcb27/rMD5JgZZYeQUQSrR3VLBgkmw18Pki3yG
-         91oeAFXNHOW20IZKJQTjFiSu1fx7b7uav0WYNZ12+jHPbnlWp1vw1wKjSLwpJhO2AzZp
-         w9/w==
-X-Forwarded-Encrypted: i=1; AJvYcCVXTi9Sn2TGK8QPlUqB6Ww/MGkPe9aYzaEV9tO+JqsfP7VK68/pU2dp/7wuscQiYe2fSNgIFALWKJX+3kQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwKj1pxMlOe+Mex9txid/jdPpobcKW+RsLtK51C6YNAuJs4s1/C
-	xVGCoroGPPlSdqZdkLPPnlSHxFK3yuoVAUotelknPdsWPTTRpuSz3YJq9iU8W/+FkyUfMWqwCaK
-	4vefDk9Ld3V2aW/1ylVHE6Z0cTJ6RSdDf3pP+tQ==
-X-Gm-Gg: ASbGncvWgFFA7tdczWK9Feizv4AmoxkMa0M8+/VsBP2hdStFirabTalw/21Cm6P2LK7
-	riHimEDJ4dgcxzX1hAZqJm62VhK1Z3FhyhUKipIZCZMtVmgZ+b0NkwW/1AnfI5l0sywnEocwq/H
-	cnI95yyz5Q1eEOHQGpbQ2Sue+Xtvw0
-X-Google-Smtp-Source: AGHT+IHHKd105pMUM7hpNrdHw+DbdrnqZ5EC6cx99kZCwpvRgGxoGb+A1fhqNQ5wFNuzoFZcndivxdAsgOXkV0/lbpk=
-X-Received: by 2002:a05:6808:2f16:b0:3f4:bc5:d478 with SMTP id
- 5614622812f47-400363134a7mr3524712b6e.25.1743684571646; Thu, 03 Apr 2025
- 05:49:31 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743684674; x=1744289474;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/HODa0fMEkQK7P4UL+fQYUBWzJ2WYl+i0BBb1rGI3xY=;
+        b=UZsRdNz4A461Z3F8XtWp7MTzggaQ/HnL2bUQwXj+4T/TC7G1Rxz5uADLbA2NK+6V4m
+         Y9flSDvu4fwscYewcqc4OKTZaCKIC5zC2TktyDxhs2q4E8ZMprmvsUF6A9h/KRnWfPCg
+         4rF2Au+4hrhbFtj6zRxxa/ZqwrodNBw53CQQ4OiDE5OSpTekQVlrQTIMcyfPwN1ZY0nz
+         HfpufLYCzweVZQLeq7BbdtjcVIrips3/uHcH9NCaMSCU43m1SmTF5nPHYVghtNkklZah
+         uUww8Fw4hFz+NNna1HY3ZjyQGK6AYQSjXx0QPJkfgT/zor53AMT5obYSwU+l/PTk0yMK
+         omFA==
+X-Forwarded-Encrypted: i=1; AJvYcCW0rUPktn/k4kqZ4m7ldsuDvG6pwkYsD+Hul66BzLejoBMbschN6/ECiyKMYs5Gx3pjHefsPv6ZPCbRsGM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxUnaZ7OKAiocEFiojJI1VCeAxLfiy7+26scAr0FptV1VrDrC5p
+	q+HjbRrhqkLER4AjWJTozj2DDGICFqv0PehhgX6XjLk5/oV/oa1C
+X-Gm-Gg: ASbGncvVZcQZ9cvFY8k+OQ9BB8P7frdax+OP4iLj1dqAW/AtjGXTC8uvDXqmksmtMiw
+	g+4ukTs9zb/qfw3QmCSTr4NtqzqV3+yFabalv4OX0RWfQ4MSxLrv8Xt8Dwf2pHVsAYGbGR6hqj4
+	Tu2UaSQAc44uNlalPTQOJeKMKVRrqwZGnVHPKreOegU/NNoSMGRKzrBW0DhIAQL3lnnKJDTHHkT
+	6XRvs3lI8NxKEJnRSSuVEevJhy+wsIbcAY4/2lC2gejRqzmXYdLouznvpHsPOYlXVbH0nq0eACc
+	O9KSqkb2jky/3NkJy8XSpEcIL61pHf0/l4iR
+X-Google-Smtp-Source: AGHT+IGn8RWitN/YS5UgGxUr27qx/wG+Hd7bJ2UpBYOwe3t7/0//MWZ1nlKAp4++Py+28p/gXgEAwg==
+X-Received: by 2002:a17:907:2cc5:b0:ac3:3d10:6f with SMTP id a640c23a62f3a-ac7bc066a2dmr166310266b.8.1743684674287;
+        Thu, 03 Apr 2025 05:51:14 -0700 (PDT)
+Received: from fedora.. ([193.77.86.199])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7bfe5d3d8sm89292966b.31.2025.04.03.05.51.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Apr 2025 05:51:13 -0700 (PDT)
+From: Uros Bizjak <ubizjak@gmail.com>
+To: x86@kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Uros Bizjak <ubizjak@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@kernel.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>
+Subject: [PATCH -tip v3] x86/idle: Use MONITOR and MWAIT mnemonics in <asm/mwait.h>
+Date: Thu,  3 Apr 2025 14:50:45 +0200
+Message-ID: <20250403125111.429805-1-ubizjak@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250403090336.16643-1-cuiyunhui@bytedance.com> <84iknl5uex.fsf@jogness.linutronix.de>
-In-Reply-To: <84iknl5uex.fsf@jogness.linutronix.de>
-From: yunhui cui <cuiyunhui@bytedance.com>
-Date: Thu, 3 Apr 2025 20:49:20 +0800
-X-Gm-Features: AQ5f1JpnMmubUJfEadYVURd58tuRsHjz_7_L8SWcbm5caDG690SroX2z58Xym34
-Message-ID: <CAEEQ3wkOQUh03Ggpf=mBWzNt1_Qtcv53gNXm7JH5Nban3tOtvQ@mail.gmail.com>
-Subject: Re: [External] Re: [PATCH] serial: 8250: fix panic due to PSLVERR
-To: John Ogness <john.ogness@linutronix.de>
-Cc: gregkh@linuxfoundation.org, jirislaby@kernel.org, pmladek@suse.com, 
-	arnd@arndb.de, andriy.shevchenko@linux.intel.com, namcao@linutronix.de, 
-	benjamin.larsson@genexis.eu, schnelle@linux.ibm.com, 
-	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi John,
+Current minimum required version of binutils is 2.25,
+which supports MONITOR and MWAIT instruction mnemonics.
 
-On Thu, Apr 3, 2025 at 7:58=E2=80=AFPM John Ogness <john.ogness@linutronix.=
-de> wrote:
->
-> On 2025-04-03, Yunhui Cui <cuiyunhui@bytedance.com> wrote:
-> > When the PSLVERR_RESP_EN parameter is set to 1, the device generates
-> > an error response if an attempt is made to read an empty RBR (Receive
-> > Buffer Register) while the FIFO is enabled.
-> >
-> > In serial8250_do_startup, calling serial_port_out(port, UART_LCR,
-> > UART_LCR_WLEN8) triggers dw8250_check_lcr(), which invokes
-> > dw8250_force_idle() and serial8250_clear_and_reinit_fifos(). The latter
-> > function enables the FIFO via serial_out(p, UART_FCR, p->fcr).
-> > Execution proceeds to the dont_test_tx_en label:
-> > ...
-> > serial_port_in(port, UART_RX);
-> > This satisfies the PSLVERR trigger condition.
-> >
-> > Because another CPU(e.g., using printk) is accessing the UART (UART
-> > is busy), the current CPU fails the check (value & ~UART_LCR_SPAR) =3D=
-=3D
-> > (lcr & ~UART_LCR_SPAR), causing it to enter dw8250_force_idle().
->
-> Didn't this[0] patch resolve this exact issue?
->
-> John Ogness
->
-> [0] https://lore.kernel.org/lkml/20220713131722.2316829-1-vamshigajjela@g=
-oogle.com
+Replace the byte-wise specification of MONITOR and
+MWAIT with these proper mnemonics.
 
-No, these are two separate issues. This[0] patch is necessary, as
-expressed in this comment:
+No functional change intended.
 
-/*
-* With PSLVERR_RESP_EN parameter set to 1, the device generates an
-* error response when an attempt to read an empty RBR with FIFO
-* enabled.
-*/
+Note: LLVM assembler is not able to assemble correct forms of MONITOR
+and MWAIT instructions with explicit operands and reports [1]:
 
-The current patch addresses the following scenario:
+  error: invalid operand for instruction
+          monitor %rax,%ecx,%edx
+                       ^~~~
 
-cpuA is accessing the UART via printk(), causing the UART to be busy.
-cpuB follows the CallTrace path:
--serial8250_do_startup()
---serial_port_out(port, UART_LCR, UART_LCR_WLEN8);
----dw8250_serial_out32
-----dw8250_check_lcr
------dw8250_force_idle (triggered by UART busy)
-------serial8250_clear_and_reinit_fifos
--------serial_out(p, UART_FCR, p->fcr); (enables FIFO here)
-cpuB proceeds to the dont_test_tx_en label:
-   ...
-   serial_port_in(port, UART_RX); //FIFO is enabled, and the UART has
-no data to read, causing the device to generate a PSLVERR error and
-panic.
+Use instruction mnemonics with implicit operands to
+work around this issue.
 
-Our solution:
-Relevant serial_port_out operations should be placed in a critical section.
-Before reading UART_RX, check if data is available (e.g., by verifying
-the UART_LSR DR bit is set).
+[1] https://lore.kernel.org/oe-kbuild-all/202504030802.2lEVBSpN-lkp@intel.com/
 
-Thanks,
-Yunhui
+Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+---
+v3: Use instruction mnemonics with implicit operands.
+---
+ arch/x86/include/asm/mwait.h | 17 ++++++++---------
+ 1 file changed, 8 insertions(+), 9 deletions(-)
+
+diff --git a/arch/x86/include/asm/mwait.h b/arch/x86/include/asm/mwait.h
+index 6a2ec2083043..26b68ee5b6a5 100644
+--- a/arch/x86/include/asm/mwait.h
++++ b/arch/x86/include/asm/mwait.h
+@@ -27,9 +27,9 @@
+ 
+ static __always_inline void __monitor(const void *eax, u32 ecx, u32 edx)
+ {
+-	/* "monitor %eax, %ecx, %edx;" */
+-	asm volatile(".byte 0x0f, 0x01, 0xc8;"
+-		     :: "a" (eax), "c" (ecx), "d"(edx));
++	/* Use the instruction mnemonic with implicit operands, as the LLVM
++	   assembler fails to assemble the mnemonic with explicit operands. */
++	asm volatile("monitor" :: "a" (eax), "c" (ecx), "d" (edx));
+ }
+ 
+ static __always_inline void __monitorx(const void *eax, u32 ecx, u32 edx)
+@@ -43,9 +43,9 @@ static __always_inline void __mwait(u32 eax, u32 ecx)
+ {
+ 	mds_idle_clear_cpu_buffers();
+ 
+-	/* "mwait %eax, %ecx;" */
+-	asm volatile(".byte 0x0f, 0x01, 0xc9;"
+-		     :: "a" (eax), "c" (ecx));
++	/* Use the instruction mnemonic with implicit operands, as the LLVM
++	   assembler fails to assemble the mnemonic with explicit operands. */
++	asm volatile("mwait" :: "a" (eax), "c" (ecx));
+ }
+ 
+ /*
+@@ -95,9 +95,8 @@ static __always_inline void __mwaitx(u32 eax, u32 ebx, u32 ecx)
+ static __always_inline void __sti_mwait(u32 eax, u32 ecx)
+ {
+ 	mds_idle_clear_cpu_buffers();
+-	/* "mwait %eax, %ecx;" */
+-	asm volatile("sti; .byte 0x0f, 0x01, 0xc9;"
+-		     :: "a" (eax), "c" (ecx));
++
++	asm volatile("sti; mwait" :: "a" (eax), "c" (ecx));
+ }
+ 
+ /*
+-- 
+2.49.0
+
