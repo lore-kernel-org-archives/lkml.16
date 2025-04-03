@@ -1,270 +1,347 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 485EA1EE7D5;
-	Thu,  3 Apr 2025 21:01:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.13
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743714112; cv=fail; b=flhic05ADE9ETPmcrif73T1/7TS8XfwD7XGRi6bVuC2A5oJ9RNp+oXVomjsmnCIH3iJQ8LtEoNLCHHbUKIiI4i3HShqDArvxj1rCpCPRELAajVg+a/PVrPLfbqudsaG7C6DQZ2UWGlOqNnC3o/mRuq0s4tNdPD23hlcCqnvolrQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743714112; c=relaxed/simple;
-	bh=KUodNTW1X1mNht48GXRCp6GGy1L9c8oI58TZTNqet2M=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=qak0ym/dB0Bo3La19EQvPir/2CGpJQhvn5b1yPNeZ6Gl8RRkyFb+fT2Lnsv06fLc1mTdNfbcYuk2mehDX9GMqQeqUcEsG8Pk+TAcRnheLok8hkx4Z/n8kJ3DVw4M2RQ+3dCtZqa0lNiDE+Nj+56d0xQOIv1Jx1gVA+KvD7DST7U=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QuAWdIsf; arc=fail smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C5FE19D065
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 21:06:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743714371; cv=none; b=SsxdBB+wLZwgYEB+ylaN8TM1ers8t/9zuc7y+4nPKONbjhgEchLUncf1InMjlYFVEFZ4OAIXHjK+GzcynLJY45umvaaryxnA2ulUbSqmGSxThk4Ce6hjlteMmIqgOf4xMUYFS4i1fEoKFNp9csmiB4UZqcynxbXvL/INzeMuw3Y=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743714371; c=relaxed/simple;
+	bh=gJ5wrIvReAv5QqxtqNCJ9FujkFKj0dFoDyjRW8MTRmI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NmBULdFRZ+MRKfazMwaguGyDQSAMzjhT6nIBO7fTSWdQISR7Jt7J0o89qN3m0odcy3gz19ZZzoeepJFkT1ln75RBL2n2zXdQ5n1fyfP0rOeatuO1BUGT8/C2B3c8dotjB61elo62xFjTWBQfUuraqiRKrpVlBlklEYsQ/HazGx8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GKoUdlKs; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QuAWdIsf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743714111; x=1775250111;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=KUodNTW1X1mNht48GXRCp6GGy1L9c8oI58TZTNqet2M=;
-  b=QuAWdIsfVjrrfwKw12TVQAtQvPno5i4MX3RP7FdmHem7up24ylLHt4v2
-   3/jKYD/72Q6sruZ5qaHRCkPT5aW0ZYsBjalVfVNxueKeL1S+Zrwx/+wJi
-   hNX+9THxn7ru9TLV+NQZnTuunGBW3Q3hdev1Z+2Vq9CN3XuYJppHXyxmx
-   BkfR5rLT0CqA76pQz4qeMsvn/pV9aJXkZRLVSwYBr36wqPodeVPYzq8oV
-   mWCG53iZ1BMVeDDHpRL2V1CnboCTVT/6xh9cs7iO9kuYFkM65sDMNodjT
-   PeFFPBxCM4wq1F462SlbGoxSWGPFigCVSniLKStOY+eiSS3lY11ywqN0X
-   A==;
-X-CSE-ConnectionGUID: oIYosgbWRwG37XeY2Yoemg==
-X-CSE-MsgGUID: rOlwnlUNTqOsiffErpZsXQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11393"; a="56132702"
-X-IronPort-AV: E=Sophos;i="6.15,186,1739865600"; 
-   d="scan'208";a="56132702"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 14:01:50 -0700
-X-CSE-ConnectionGUID: n+0ef/BjS0GtEHzZiCVP0g==
-X-CSE-MsgGUID: UNFvUSUxS1O5RF27s3ZpYg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,186,1739865600"; 
-   d="scan'208";a="158112591"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 14:01:48 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Thu, 3 Apr 2025 14:01:47 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Thu, 3 Apr 2025 14:01:47 -0700
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.46) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Thu, 3 Apr 2025 14:01:45 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=LvFbhP0IE7lQmMpt2yZXtIp0clnIfPSAlajN+/XEl2BLYYbl5CfEscsuQRYsmfstTuaikZq31MBQ3v9tSwOZma32KUGI8SgFOJzDepOpsAPIUcRrfsVYdc99l6Glc60Oih086pSGrENduBuyIdj8uADDaKJaas0SIrspdLC2Na4Jza0cTstepW6LqdETGe/1byrTWQUTze6KXn3zt5xRNAoq3ivTxNwfRxwyuaDo3fYxxr4WF+co5T/hVhDZE3GgAjD//nlqUUmVjTj/Q5059zK90ETTxHNEPZTSEp3kM9sUjTgU5mTkPS05KjxtCB9pOvlt0OdFPoFFN0s8xDxwFA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=pIeW1Ux1GJ8FuGZdyMwpQoZHQERuQrn5ILkOOZL0pcw=;
- b=aPPVAV1Q+hb9ZRpCY3+o0NH3gKUxnNDFuvEtLIz8v1HeDGeylUTWWRNLPs8XQGGupyuynoJDa0nCVhg2iD6Xa0X/Jc0ByqRs/qwub9oQBUNvN29gtB5pEXj0spXIMZyFmr4b44QTPtHSvV7Ap1cpyiy297zkP1/C92c3wIuS9hKvxsfvGrcTwYbjcWoMpNVoP2FJnynv6pe+0N9/4xAcBKJ+0s2TN/8jD8jkyp51XS9z6Ax35ISPCzo6gWqsdSnhvPosjw3DssLJKXTSM9rfVsSijmkj1U2HOgNC5Nm1r85MGoq5l27qup/tr6B+5auPi0FoUnCGSpxiHRMw11oX6g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by MW3PR11MB4601.namprd11.prod.outlook.com (2603:10b6:303:59::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Thu, 3 Apr
- 2025 21:01:28 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8%3]) with mapi id 15.20.8583.041; Thu, 3 Apr 2025
- 21:01:28 +0000
-Date: Thu, 3 Apr 2025 14:01:24 -0700
-From: Dan Williams <dan.j.williams@intel.com>
-To: kernel test robot <lkp@intel.com>, Yuquan Wang
-	<wangyuquan1236@phytium.com.cn>, <Jonathan.Cameron@huawei.com>,
-	<dan.j.williams@intel.com>, <rppt@kernel.org>, <rafael@kernel.org>,
-	<lenb@kernel.org>, <akpm@linux-foundation.org>, <alison.schofield@intel.com>,
-	<rrichter@amd.com>, <bfaccini@nvidia.com>, <haibo1.xu@intel.com>,
-	<david@redhat.com>
-CC: <oe-kbuild-all@lists.linux.dev>, <linux-acpi@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
-	<chenbaozi@phytium.com.cn>, Yuquan Wang <wangyuquan1236@phytium.com.cn>,
-	<linux-cxl@vger.kernel.org>, <loongarch@lists.linux.dev>,
-	<chenhuacai@kernel.org>, <kernel@xen0n.name>
-Subject: Re: [PATCH v2] mm: numa_memblks: introduce numa_add_reserved_memblk
-Message-ID: <67eef72411bec_464ec29434@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20250328092132.2695299-1-wangyuquan1236@phytium.com.cn>
- <202503282026.QNaOAK79-lkp@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <202503282026.QNaOAK79-lkp@intel.com>
-X-ClientProxiedBy: MW4PR04CA0178.namprd04.prod.outlook.com
- (2603:10b6:303:85::33) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GKoUdlKs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743714368;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VQPSgYV8xh79P5dCNHj8YipiJGf0W9F/2BqM6SXAVZc=;
+	b=GKoUdlKshdKsThZbK5zOqZbl78Sjg3Ump3tG/GZlZdXFRr3vXK/J5CxnyIbwzm74Plcipd
+	YVayzEU+FPjYZ7IBTKW3CYFmFyau1i5KgYHzzNQ0kqLjrXQmj8g/ViB98boDrRS4oBJQZU
+	sNQs5Lm8AyVXOKgkmTLRWUC5lGbB0wk=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-449-eTZDf_6WOraG59RNqqlpHA-1; Thu, 03 Apr 2025 17:06:07 -0400
+X-MC-Unique: eTZDf_6WOraG59RNqqlpHA-1
+X-Mimecast-MFC-AGG-ID: eTZDf_6WOraG59RNqqlpHA_1743714366
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43cf446681cso9156685e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 14:06:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743714365; x=1744319165;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=VQPSgYV8xh79P5dCNHj8YipiJGf0W9F/2BqM6SXAVZc=;
+        b=piPXo3IOTAHOh2kxkyEvv4YuQivTB4T4Tl08L4dVoN4jgWhYZw1pOItLZEduJNIYZ9
+         rA9B6BnSp97haxfvkcR0JECdLLywK2Px+IEKHRGhxO+l9tF9syfsFXhz6HL/A/kQHJeH
+         fURvU33LW7hZaLVO6eOA4cRT6rPxQYVP2nvdqOQzV8WDsL6/1kOtK1I30I9mpH/z6PoP
+         ueelVTj0CNVHfWcMeb3XQRSAHz7TP1ZYBReCVGzkfeQQ6w+TjNAx9h9lZwXMzq8dKB75
+         FcGB8wVjR/49phyblG3cEv4QhePRhOYrJl6W0IxLx9oBiC2X7W67q7UzSph6X2Lvy3FU
+         ZExQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXCH1u4FT+v5niglS4CfanWsxLA6gZV0/44g/g5E3l9SQevw3a8wcHIwv7l3kU6vUTI1DScdece7Kzxp5Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxobjL9LjNtFRGDahknp7/qwBirOFn2jFR0nFfRDJrZE7/V+0Dp
+	qnYUqhujjCd+EM06pit2+4n2M39YQwhppCtmyzQkUdthLxr6fi+PbJHgDwWFWRGYW7hSH8SlWWo
+	ekRsphKbIxOn6NP+/Ya95tMNtwBcxvlNk6kT2POzd5n/4fySDW+7yxiht8bStREuAzF5KOA==
+X-Gm-Gg: ASbGncsS7YoBCLYq+pOySiNeTg514AW7NmqAOlPDVAFgvMiEvPQQYy7gd9LDb+zKKQd
+	clvHUJSD9jKuqM5gWhin8+5EthJABBJyVJUH1VEwSMqD1c9zMkG0G+oYfKrGizaBahyqLed8+1o
+	jpKoCJ/pwd1yqzfH/YMX0gyOZfdVJwpl2kgxdXvwg1ww2fZRIITj+SGTJ7xYc9Xa3G/Hc53Z5Ku
+	I5eHjCMzVjom7Zpn/ojB1In4q4c/5oQZn773znK7Mh5hcrQabvAWiElwG/MuwXxTsQmKKXiw5Rs
+	5X6r0O+U7g==
+X-Received: by 2002:a05:600c:4695:b0:43d:8ea:8d7a with SMTP id 5b1f17b1804b1-43ed0db3646mr1629485e9.28.1743714365526;
+        Thu, 03 Apr 2025 14:06:05 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGKIXS5hwbzfgThNhAktLRgRbRw/FEpi7tWXoj6bda4No5E7hvlK67fZzMkXDe5GScLwGcYoA==
+X-Received: by 2002:a05:600c:4695:b0:43d:8ea:8d7a with SMTP id 5b1f17b1804b1-43ed0db3646mr1629325e9.28.1743714365119;
+        Thu, 03 Apr 2025 14:06:05 -0700 (PDT)
+Received: from redhat.com ([2a0d:6fc0:1517:1000:ea83:8e5f:3302:3575])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c30226da7sm2788385f8f.98.2025.04.03.14.06.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Apr 2025 14:06:04 -0700 (PDT)
+Date: Thu, 3 Apr 2025 17:06:01 -0400
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: Markus Fohrer <markus.fohrer@webked.de>
+Cc: virtualization@lists.linux-foundation.org, jasowang@redhat.com,
+	davem@davemloft.net, edumazet@google.com, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [REGRESSION] Massive virtio-net throughput drop in guest VM with
+ Linux 6.8+
+Message-ID: <20250403170543-mutt-send-email-mst@kernel.org>
+References: <1d388413ab9cfd765cd2c5e05b5e69cdb2ec5a10.camel@webked.de>
+ <20250403090001-mutt-send-email-mst@kernel.org>
+ <f8909f5bbc2532ea234cdaa8dbdb46a48249803f.camel@webked.de>
+ <20250403100206-mutt-send-email-mst@kernel.org>
+ <da1c8647c4efcfcf7e7d2ba7e6235afc7b0f63ae.camel@webked.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|MW3PR11MB4601:EE_
-X-MS-Office365-Filtering-Correlation-Id: e78213a1-492b-4d88-d5d3-08dd72f2b3f3
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|1800799024|376014|921020;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?higcMwvAiNU1lisWu2dyidp5BNXYavcLXB8pjZyWSiSJk19wJvzBSEyqbze+?=
- =?us-ascii?Q?cSAX0vSLFQSRLDPj1heQOMsP1sxgOFXWiREu7YmFXNw8UDwyjVRgRIOVSpI8?=
- =?us-ascii?Q?gPfBvdxJQvc7eqGksVuWRe/qFOrYb40+Kulhvrv4mL+wn31xzktJqtG0M9IB?=
- =?us-ascii?Q?dZr8e6JXS/6tSZwchKZNofO6DRutIkMjVhOsQ0Jb1RtrzrPBZIwL2Ttn2AON?=
- =?us-ascii?Q?AZEqCBu2prnWRIUKr3D+aXBqbJ8L61MFm8IreJi6rcRCvQ2VQe1dzSwGjVty?=
- =?us-ascii?Q?YuHWU7GdJhkLRGNWT+c9JGe/MwlZno8IB15Z8A95DoUKL5tfZ+n1MTYjjUu8?=
- =?us-ascii?Q?d8GS8k3hp08ci1Dw8/eHDPcvXF8CyDJheAnsU/BVt1OWtVrvTbM8Lp9Fktrm?=
- =?us-ascii?Q?sLnLSBavacqOoF9/MgXrDsqMUHcJDBjAgTnz5SyCLTyTh4WJD/Zh8ItJsp5L?=
- =?us-ascii?Q?Hdb1hplJuWyovuMmzFTh7/Ee6QPoiA+gr9Q6rPrIvHl/ikdxT1HEMqtxUpUr?=
- =?us-ascii?Q?+LO5iZkHaYClklU6WVturpyqUlbmMX3Owl1sexJ9dcPHTzFhnuyiwVaAoq2P?=
- =?us-ascii?Q?Rxu8rk2pO6nb8+v/OUVnl73NPyPxyLepNwFvubeOEk4ShFTqjZrST5ybORS5?=
- =?us-ascii?Q?Ey0IwTTu6nomvFQNO3WEoVlE3L24wjNBzpG2af27iovlRQ7BYjQNCLN6S74/?=
- =?us-ascii?Q?M7EG+C6UWzayairUYthaYeSjW6H/FoKybewah8CLBLAw7OKW45OaAbFsc+os?=
- =?us-ascii?Q?KxYV+6zpZr2F5lgXihM85Unw4RuP9jdnlEqswW1KkA9ZGY9K9J/MVbvd7d7f?=
- =?us-ascii?Q?T7160CsYpK5UDQIcYkjj5S5zRcyvc+ELcfVjo2+xeq/xTIyOxapJpmlJ/15C?=
- =?us-ascii?Q?eK/BtbELwKNOS/Icib8aBbdxvD4EwmR1g5zJyzHm8m4FvyjVjMLVVcRI/FTn?=
- =?us-ascii?Q?Fsm1KQHTpovnZ17pUv4g273j6LOiUdiAw7PbRiZ7AhlRyXP+UizhPKicZ1fD?=
- =?us-ascii?Q?Onoqj9mwkwXY0C3U/Fxj40jZiRGfvazlueHFZ2CUZLr3xKLgzp64jn4X5UE1?=
- =?us-ascii?Q?dCuhvbLmW1icobTXS0JQ3V5wXH2lC/KBFp7HmJ8/+H2dk2AujNjSeiHr6lfa?=
- =?us-ascii?Q?PCP6/W4LNWkNX00X949zIfdIIn5hXOOpku2dGQMVKe4+1zLp9Lxh6qyA7Jw7?=
- =?us-ascii?Q?AluTcvBB9YdeaHiY2mGo+Hb9rpBPaH2mgUiisxRXnaupYEL2z/Puz5FBBsq5?=
- =?us-ascii?Q?aT+sx2hVZZrEhzW7u4eGmuk5q/FGOW6Ifrga2B3DSMQoEFceO2BouJZ5ymDn?=
- =?us-ascii?Q?Vxupv8yXshUOBaOkTTLW8nl7jaUWa2C0uBzsAJIRxHUt8Pw2TYZI4rcKErrh?=
- =?us-ascii?Q?wUc2De1yd4VhA3HXEV1lAqClfygM?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(1800799024)(376014)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?X06mOzojTO3JOYOsltUcxoge3BNNdZJ5I1up5LeEChUiRc03FnZwkdWFBKsI?=
- =?us-ascii?Q?uV3WUY/sOCdUfanIFF26C4k9AaQWif5ovJKQwNhLKdbC4Agoy7AG/m1eGL1T?=
- =?us-ascii?Q?Ryk1Bnra5fhGUWLair5joXQKn+RudWkNXwEbZ0YSqgS63xhJi83s2Hubwmt6?=
- =?us-ascii?Q?QZuUxbg6Ru0J31y7hko2OLlXi6IxTHgf3oA10lCG9EHErcnwHNjk+/xup+Dt?=
- =?us-ascii?Q?sU7psE765iBpJfgZkE3W0hnbDs6ssMx+NWh07QL/lFYfUwVnL1NK1BAFzO0P?=
- =?us-ascii?Q?TemUV+KeuEhWMNi818trvwnYFJ6iRXqjb3Rc5/v5jwXAu0tRS2YN15gYOKJu?=
- =?us-ascii?Q?VA3CRGD3ht/wnfOx73MvNFIhEv4WeB/HlZbxgxp8IhZM2VjNfoBaMqF0FLnp?=
- =?us-ascii?Q?faxoSEefxjROFkEQnpXvUx6hRH3YfcOANGYPGa5AbMCFkQezMRnnZ1QDerMq?=
- =?us-ascii?Q?LH08v4xy7JSvTs+u7noZAycd77y2cl1cUfCYzFxZYFtAAdrUScmPG/lkPHpP?=
- =?us-ascii?Q?tJs5immdbYrfUB6kKi2Aj+5vS5ut6KeJX4PHyjHLoMVKUXPjCWTC7URY59HF?=
- =?us-ascii?Q?x+RAdRsodp4T92fyH9hI+M7zZYNS6JZjA5MOiLh75qfk/4rzyZp53p7WfutL?=
- =?us-ascii?Q?bRlKL0T56XYgsnwHpn0iU+Wk4+HE8lSMhP4e6UaLE83zlXeysyuCWVTmhUaJ?=
- =?us-ascii?Q?dxHoFgXiDFK4E9r/40mSGTvspLK+LeAuTAHFU7L/gMew3T7XTpwEFJWm6Olu?=
- =?us-ascii?Q?CpRjPzVYyklIju0HUA/DCFipO1K4jp9RNCniGfWo2iZB/jQhFPgSUZTMju6t?=
- =?us-ascii?Q?tfu0pMDMq+zeHzap12//WJy2856StcnojXH+fs+fxZPhKmu2SHjEz0kUnijo?=
- =?us-ascii?Q?dvJGkrKhDfJfYvNmCwXUIdiIvreFhiq7xgXGMk/xGBGnjX9Bs/7wTSG0A4Qe?=
- =?us-ascii?Q?LZISSKH/dwWgB/deOf3xwdeEf00m9N4/izh68mZjVIDt+LVmeDXIaKJHjlY0?=
- =?us-ascii?Q?G44xhG9t/OtLjTm/4hdk0onkY4UykJ1dKej0Mk+rBf5vErns+A3YaZ/HKsdf?=
- =?us-ascii?Q?y2/uX+5xpv+8/cW1ysl6/704u6kVam+ItBjRKL6Dsy26VPUPsFv0EBEocQ1C?=
- =?us-ascii?Q?NuZzsa6CgABalQern9ojR9rSxXJxkvu4x/9LGLtHuOHexWZBYClvMs0fq38V?=
- =?us-ascii?Q?k6M7UeMsHTFUSI0XvjQEscFAsKL8kKhtLZYPIoDnKBLw9pWmCyLWmpqjTEBs?=
- =?us-ascii?Q?qYlgAzQlzdA67n46/a6t3tyGopcl0nYGcOmbu1LbUbADQkt9K3Ti6DPfKait?=
- =?us-ascii?Q?IiGIVAhbKVTgAep63H6R6y8ZvDVTFPSkyfvKYZGnyx1D3yqmjgNnJlByAkl3?=
- =?us-ascii?Q?N6gwG6+mUr9CfAAYqCFtOHNz1OxhEI4rr4yOCl3SIY4ogix1ODCEaYVfAn/c?=
- =?us-ascii?Q?lB2IA1snmPAerjcJ4g7w1Lnlxz/UcicnwrF4vZXBxDlp+dwn0MyzkOdspZA8?=
- =?us-ascii?Q?UlYaR/dwDumBRnuSJbuD3KHUJDuikZwXHL2TISnLt6yF1OoRGdGJE5hmR/Ol?=
- =?us-ascii?Q?trHFhKcAm9nvVopu9lpvvhUDb9pWom3M59OX+xEEUd3PzVrRNVwALJbY/Kkd?=
- =?us-ascii?Q?aw=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: e78213a1-492b-4d88-d5d3-08dd72f2b3f3
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Apr 2025 21:01:28.5229
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 7Qq7o97kvbyQaG6dkFMYtYVNQ3jMFiTtmDiz6EDv/Ro46Ba26wRMQQ4ZunEytg8SrXrX/Q+7o4cDzu2G+WDhJhKULuXratGsY+ccXRLsOZE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR11MB4601
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <da1c8647c4efcfcf7e7d2ba7e6235afc7b0f63ae.camel@webked.de>
 
-[add loongarch folks, cc linux-cxl ]
+On Thu, Apr 03, 2025 at 10:07:12PM +0200, Markus Fohrer wrote:
+> Am Donnerstag, dem 03.04.2025 um 10:03 -0400 schrieb Michael S.
+> Tsirkin:
+> > On Thu, Apr 03, 2025 at 03:51:01PM +0200, Markus Fohrer wrote:
+> > > Am Donnerstag, dem 03.04.2025 um 09:04 -0400 schrieb Michael S.
+> > > Tsirkin:
+> > > > On Wed, Apr 02, 2025 at 11:12:07PM +0200, Markus Fohrer wrote:
+> > > > > Hi,
+> > > > > 
+> > > > > I'm observing a significant performance regression in KVM guest
+> > > > > VMs
+> > > > > using virtio-net with recent Linux kernels (6.8.1+ and 6.14).
+> > > > > 
+> > > > > When running on a host system equipped with a Broadcom
+> > > > > NetXtreme-E
+> > > > > (bnxt_en) NIC and AMD EPYC CPUs, the network throughput in the
+> > > > > guest drops to 100–200 KB/s. The same guest configuration
+> > > > > performs
+> > > > > normally (~100 MB/s) when using kernel 6.8.0 or when the VM is
+> > > > > moved to a host with Intel NICs.
+> > > > > 
+> > > > > Test environment:
+> > > > > - Host: QEMU/KVM, Linux 6.8.1 and 6.14.0
+> > > > > - Guest: Linux with virtio-net interface
+> > > > > - NIC: Broadcom BCM57416 (bnxt_en driver, no issues at host
+> > > > > level)
+> > > > > - CPU: AMD EPYC
+> > > > > - Storage: virtio-scsi
+> > > > > - VM network: virtio-net, virtio-scsi (no CPU or IO
+> > > > > bottlenecks)
+> > > > > - Traffic test: iperf3, scp, wget consistently slow in guest
+> > > > > 
+> > > > > This issue is not present:
+> > > > > - On 6.8.0 
+> > > > > - On hosts with Intel NICs (same VM config)
+> > > > > 
+> > > > > I have bisected the issue to the following upstream commit:
+> > > > > 
+> > > > >   49d14b54a527 ("virtio-net: Suppress tx timeout warning for
+> > > > > small
+> > > > > tx")
+> > > > >   https://git.kernel.org/linus/49d14b54a527
+> > > > 
+> > > > Thanks a lot for the info!
+> > > > 
+> > > > 
+> > > > both the link and commit point at:
+> > > > 
+> > > > commit 49d14b54a527289d09a9480f214b8c586322310a
+> > > > Author: Eric Dumazet <edumazet@google.com>
+> > > > Date:   Thu Sep 26 16:58:36 2024 +0000
+> > > > 
+> > > >     net: test for not too small csum_start in
+> > > > virtio_net_hdr_to_skb()
+> > > >     
+> > > > 
+> > > > is this what you mean?
+> > > > 
+> > > > I don't know which commit is "virtio-net: Suppress tx timeout
+> > > > warning
+> > > > for small tx"
+> > > > 
+> > > > 
+> > > > 
+> > > > > Reverting this commit restores normal network performance in
+> > > > > affected guest VMs.
+> > > > > 
+> > > > > I’m happy to provide more data or assist with testing a
+> > > > > potential
+> > > > > fix.
+> > > > > 
+> > > > > Thanks,
+> > > > > Markus Fohrer
+> > > > 
+> > > > 
+> > > > Thanks! First I think it's worth checking what is the setup, e.g.
+> > > > which offloads are enabled.
+> > > > Besides that, I'd start by seeing what's doing on. Assuming I'm
+> > > > right
+> > > > about
+> > > > Eric's patch:
+> > > > 
+> > > > diff --git a/include/linux/virtio_net.h
+> > > > b/include/linux/virtio_net.h
+> > > > index 276ca543ef44d8..02a9f4dc594d02 100644
+> > > > --- a/include/linux/virtio_net.h
+> > > > +++ b/include/linux/virtio_net.h
+> > > > @@ -103,8 +103,10 @@ static inline int
+> > > > virtio_net_hdr_to_skb(struct
+> > > > sk_buff *skb,
+> > > >  
+> > > >  		if (!skb_partial_csum_set(skb, start, off))
+> > > >  			return -EINVAL;
+> > > > +		if (skb_transport_offset(skb) < nh_min_len)
+> > > > +			return -EINVAL;
+> > > >  
+> > > > -		nh_min_len = max_t(u32, nh_min_len,
+> > > > skb_transport_offset(skb));
+> > > > +		nh_min_len = skb_transport_offset(skb);
+> > > >  		p_off = nh_min_len + thlen;
+> > > >  		if (!pskb_may_pull(skb, p_off))
+> > > >  			return -EINVAL;
+> > > > 
+> > > > 
+> > > > sticking a printk before return -EINVAL to show the offset and
+> > > > nh_min_len
+> > > > would be a good 1st step. Thanks!
+> > > > 
+> > > 
+> > > 
+> > > Hi Eric,
+> > > 
+> > > thanks a lot for the quick response — and yes, you're absolutely
+> > > right.
+> > > 
+> > > Apologies for the confusion: I mistakenly wrote the wrong commit
+> > > description in my initial mail.
+> > > 
+> > > The correct commit is indeed:
+> > > 
+> > > commit 49d14b54a527289d09a9480f214b8c586322310a
+> > > Author: Eric Dumazet <edumazet@google.com>
+> > > Date:   Thu Sep 26 16:58:36 2024 +0000
+> > > 
+> > >     net: test for not too small csum_start in
+> > > virtio_net_hdr_to_skb()
+> > > 
+> > > This is the one I bisected and which causes the performance
+> > > regression
+> > > in my environment.
+> > > 
+> > > Thanks again,
+> > > Markus
+> > 
+> > 
+> > I'm not Eric but good to know.
+> > Alright, so I would start with the two items: device features and
+> > printk.
+> > 
+> 
+> as requested, here’s the device/feature information from the guest
+> running kernel 6.14 (mainline):
+> 
+> Interface: ens18
+> 
+> ethtool -i ens18:
+> driver: virtio_net
+> version: 1.0.0
+> firmware-version: 
+> expansion-rom-version: 
+> bus-info: 0000:00:12.0
+> supports-statistics: yes
+> supports-test: no
+> supports-eeprom-access: no
+> supports-register-dump: no
+> supports-priv-flags: no
+> 
+> 
+> ethtool -k ens18:
+> Features for ens18:
+> rx-checksumming: on [fixed]
+> tx-checksumming: on
+> 	tx-checksum-ipv4: off [fixed]
+> 	tx-checksum-ip-generic: on
+> 	tx-checksum-ipv6: off [fixed]
+> 	tx-checksum-fcoe-crc: off [fixed]
+> 	tx-checksum-sctp: off [fixed]
+> scatter-gather: on
+> 	tx-scatter-gather: on
+> 	tx-scatter-gather-fraglist: off [fixed]
+> tcp-segmentation-offload: on
+> 	tx-tcp-segmentation: on
+> 	tx-tcp-ecn-segmentation: on
+> 	tx-tcp-mangleid-segmentation: off
+> 	tx-tcp6-segmentation: on
+> generic-segmentation-offload: on
+> generic-receive-offload: on
+> large-receive-offload: off [fixed]
+> rx-vlan-offload: off [fixed]
+> tx-vlan-offload: off [fixed]
+> ntuple-filters: off [fixed]
+> receive-hashing: off [fixed]
+> highdma: on [fixed]
+> rx-vlan-filter: on [fixed]
+> vlan-challenged: off [fixed]
+> tx-gso-robust: on [fixed]
+> tx-fcoe-segmentation: off [fixed]
+> tx-gre-segmentation: off [fixed]
+> tx-gre-csum-segmentation: off [fixed]
+> tx-ipxip4-segmentation: off [fixed]
+> tx-ipxip6-segmentation: off [fixed]
+> tx-udp_tnl-segmentation: off [fixed]
+> tx-udp_tnl-csum-segmentation: off [fixed]
+> tx-gso-partial: off [fixed]
+> tx-tunnel-remcsum-segmentation: off [fixed]
+> tx-sctp-segmentation: off [fixed]
+> tx-esp-segmentation: off [fixed]
+> tx-udp-segmentation: off
+> tx-gso-list: off [fixed]
+> tx-nocache-copy: off
+> loopback: off [fixed]
+> rx-fcs: off [fixed]
+> rx-all: off [fixed]
+> tx-vlan-stag-hw-insert: off [fixed]
+> rx-vlan-stag-hw-parse: off [fixed]
+> rx-vlan-stag-filter: off [fixed]
+> l2-fwd-offload: off [fixed]
+> hw-tc-offload: off [fixed]
+> esp-hw-offload: off [fixed]
+> esp-tx-csum-hw-offload: off [fixed]
+> rx-udp_tunnel-port-offload: off [fixed]
+> tls-hw-tx-offload: off [fixed]
+> tls-hw-rx-offload: off [fixed]
+> rx-gro-hw: on
+> tls-hw-record: off [fixed]
+> rx-gro-list: off
+> macsec-hw-offload: off [fixed]
+> rx-udp-gro-forwarding: off
+> hsr-tag-ins-offload: off [fixed]
+> hsr-tag-rm-offload: off [fixed]
+> hsr-fwd-offload: off [fixed]
+> hsr-dup-offload: off [fixed]
+> 
+> ethtool ens18:
+> Settings for ens18:
+> 	Supported ports: [  ]
+> 	Supported link modes:   Not reported
+> 	Supported pause frame use: No
+> 	Supports auto-negotiation: No
+> 	Supported FEC modes: Not reported
+> 	Advertised link modes:  Not reported
+> 	Advertised pause frame use: No
+> 	Advertised auto-negotiation: No
+> 	Advertised FEC modes: Not reported
+> 	Speed: Unknown!
+> 	Duplex: Unknown! (255)
+> 	Auto-negotiation: off
+> 	Port: Other
+> 	PHYAD: 0
+> 	Transceiver: internal
+> netlink error: Operation not permitted
+> 	Link detected: yes
+> 
+> 
+> Kernel log (journalctl -k):
+> Apr 03 19:50:37 kb-test.allod.com kernel: virtio_scsi virtio2: 4/0/0
+> default/read/poll queues  
+> Apr 03 19:50:37 kb-test.allod.com kernel: virtio_net virtio1 ens18:
+> renamed from eth0
+> 
+> Let me know if you’d like comparison data from kernel 6.11 or any
+> additional tests
 
-kernel test robot wrote:
-> Hi Yuquan,
-> 
-> kernel test robot noticed the following build errors:
-> 
-> [auto build test ERROR on akpm-mm/mm-everything]
-> 
-> url:    https://github.com/intel-lab-lkp/linux/commits/Yuquan-Wang/mm-numa_memblks-introduce-numa_add_reserved_memblk/20250328-172428
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
-> patch link:    https://lore.kernel.org/r/20250328092132.2695299-1-wangyuquan1236%40phytium.com.cn
-> patch subject: [PATCH v2] mm: numa_memblks: introduce numa_add_reserved_memblk
-> config: loongarch-randconfig-002-20250328 (https://download.01.org/0day-ci/archive/20250328/202503282026.QNaOAK79-lkp@intel.com/config)
-> compiler: loongarch64-linux-gcc (GCC) 14.2.0
-> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250328/202503282026.QNaOAK79-lkp@intel.com/reproduce)
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202503282026.QNaOAK79-lkp@intel.com/
-> 
-> All errors (new ones prefixed by >>):
-> 
->    In file included from include/linux/build_bug.h:5,
->                     from include/linux/container_of.h:5,
->                     from include/linux/list.h:5,
->                     from include/linux/module.h:12,
->                     from drivers/acpi/numa/srat.c:10:
->    drivers/acpi/numa/srat.c: In function 'acpi_parse_cfmws':
-> >> drivers/acpi/numa/srat.c:461:13: error: implicit declaration of function 'numa_add_reserved_memblk' [-Wimplicit-function-declaration]
->      461 |         if (numa_add_reserved_memblk(node, start, end) < 0) {
->          |             ^~~~~~~~~~~~~~~~~~~~~~~~
 
-So it looks like loongarch was left out of the numa_memblks conversion:
-87482708210f ("mm: introduce numa_memblks")
+I think let's redo bisect first then I will suggest which traces to add.
 
-I think the update needed is something like this (untested):
-
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index 2b8bd27a852f..cac16c827159 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -183,6 +183,7 @@ config LOONGARCH
- 	select MODULES_USE_ELF_RELA if MODULES
- 	select NEED_PER_CPU_EMBED_FIRST_CHUNK
- 	select NEED_PER_CPU_PAGE_FIRST_CHUNK
-+	select NUMA_MEMBLKS
- 	select OF
- 	select OF_EARLY_FLATTREE
- 	select PCI
-diff --git a/arch/loongarch/include/asm/numa.h b/arch/loongarch/include/asm/numa.h
-index b5f9de9f102e..bbf9f70bd25f 100644
---- a/arch/loongarch/include/asm/numa.h
-+++ b/arch/loongarch/include/asm/numa.h
-@@ -22,20 +22,6 @@ extern int numa_off;
- extern s16 __cpuid_to_node[CONFIG_NR_CPUS];
- extern nodemask_t numa_nodes_parsed __initdata;
- 
--struct numa_memblk {
--	u64			start;
--	u64			end;
--	int			nid;
--};
--
--#define NR_NODE_MEMBLKS		(MAX_NUMNODES*2)
--struct numa_meminfo {
--	int			nr_blks;
--	struct numa_memblk	blk[NR_NODE_MEMBLKS];
--};
--
--extern int __init numa_add_memblk(int nodeid, u64 start, u64 end);
--
- extern void __init early_numa_add_cpu(int cpuid, s16 node);
- extern void numa_add_cpu(unsigned int cpu);
- extern void numa_remove_cpu(unsigned int cpu);
-diff --git a/arch/loongarch/kernel/numa.c b/arch/loongarch/kernel/numa.c
-index 84fe7f854820..57b21082e893 100644
---- a/arch/loongarch/kernel/numa.c
-+++ b/arch/loongarch/kernel/numa.c
-@@ -18,6 +18,7 @@
- #include <linux/efi.h>
- #include <linux/irq.h>
- #include <linux/pci.h>
-+#include <linux/numa_memblks.h>
- #include <asm/bootinfo.h>
- #include <asm/loongson.h>
- #include <asm/numa.h>
-
-Could someone from the loongarch side propose the fixups needed here so
-Yuquan can land this patch?
