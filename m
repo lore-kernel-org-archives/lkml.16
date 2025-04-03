@@ -1,91 +1,115 @@
-Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 279F41F1936
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 18:28:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2435C8E0;
+	Thu,  3 Apr 2025 18:29:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743704889; cv=none; b=i8D+YMvOWGOKNaFS8I6Bdj6feyWinImN11fOpK8BkethcQRYUHp6VhAxHDOTTyBELQokWPV/C+zVirVXhUD8mSyihT5VeGs3XXcAa6cj2t0Pk0+EbcC2DvxeksdQTFRCjtg/M+iCyBXd2ebN9YRwOVIIHKJbtvqT0isHWy2UmFM=
+	t=1743704945; cv=none; b=OkYjhuAzm+hPC1fbKgYilk8TpNbQISpO7laqJt3+KlOGomJyjqSQf99k9Xuifu77CySmX18T1+NLOMr8U3PpC/qwHI9V7lHG39zmo+CfcIhk0Fdu8b1A5RW+TXv2Mq6FdyGYrav5+Qd3QrWdpvh5MxE6pJQwcYlcuRpIV4G1rA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743704889; c=relaxed/simple;
-	bh=9HGE9TrTnweO7XWnG7nBAZmG3PDk6spnJoz3hkJLqqI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=GxN8QdVkiKKmBo6PJew3hp+M1212wNHSNE0tNtgrpKFRsd6F/cJVkR+U5XECd0FTbkjRTLVDa8OkiElxgPVYSy1IgtwweyNXHXeXQI+RjTt++llJ/YXSVfh78EwlL9iSOCd/oi2ps/bZJLORtbiBPORmqwfCXj7AnNsDAIhQXmM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=cxbq0a7U; arc=none smtp.client-ip=91.218.175.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1743704945; c=relaxed/simple;
+	bh=BJ6MF4X3xZZJF9aGkDdtTPJx0QtX8gqmfIDuSD47caI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aS45SHz7fUwTFeeZkB2HaHVNan3NwMqbfO9euXKoxv9EUpF9MTjzFMdaHqYdHEHghu5f7mcNXayo+69yXAT/p3Q52yEzk/SW8Xa+y4EFcmFyevmpFFzMUa7Z+vdKPiQVAaDw1RDYfHA9X3PlTKlgabTJr4VjY9ybYAmE+YOtihE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mZwuFLae; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="cxbq0a7U"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1743704885;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Njrew+KPtIbVI7168u+BMm4Bpq3YCah2uEWKUu7PAkQ=;
-	b=cxbq0a7UzfbxH/r2tUwZ0WkuPqJ7YnzwAeFVyMHWCoJ0Zst6vO3m8gXxWLoYciv3bL9ut+
-	oamE/EvbXhJiprCtkBUlOYvkHIys/lWQ7aam54wB4dcR0LIErvkB3iJKa4wUljnpzr3aKM
-	yNEC9YoBzE8dGMysZJECpKt6XGLfJ68=
-From: Sean Anderson <sean.anderson@linux.dev>
-To: netdev@vger.kernel.org,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Russell King <linux@armlinux.org.uk>
-Cc: Christian Marangi <ansuelsmth@gmail.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	upstream@airoha.com,
-	Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	devicetree@vger.kernel.org,
-	Sean Anderson <sean.anderson@linux.dev>
-Subject: [RFC net-next PATCH 11/13] of: property: Add device link support for PCS
-Date: Thu,  3 Apr 2025 14:27:58 -0400
-Message-Id: <20250403182758.1948569-1-sean.anderson@linux.dev>
-In-Reply-To: <20250403181907.1947517-1-sean.anderson@linux.dev>
-References: <20250403181907.1947517-1-sean.anderson@linux.dev>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mZwuFLae"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43ce71582e9so8564445e9.1;
+        Thu, 03 Apr 2025 11:29:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743704942; x=1744309742; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=l0xXXnmcQUMSAV1rDZydtKV9m1RhcaPoKdR17ygBDjk=;
+        b=mZwuFLaeOj4GM/hourMDy7pI6zSktu+gkXmQoiNqfIfx5LWsUZeQvcf3hXGrXrj9J+
+         oH7jktlNOnZ6SVzNX+8kQE+5ndql7PiY9ymIpyKX3qB0l7wzOKSDywTjS70gwvCBAczi
+         2Kt0PhY+zwTNXEyaScRvSwkcJdCfI61jHEkVIZaVG/TFFI2Wp9/vyJ4mUiSezqS9rwJm
+         pmCDGKMeEi30yzJ5Iox4FITjB4rG1Nz0/91VdPbl/dB5o/rEv6UECmhGDWnQFBp+ZzUe
+         JR1p0/KRff3xAVNJWWktDDYumldQxWW4lnyylr7sRVEagFXijmfweBB8VcgHB+37/Ptd
+         Fm9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743704942; x=1744309742;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=l0xXXnmcQUMSAV1rDZydtKV9m1RhcaPoKdR17ygBDjk=;
+        b=VtWixn7J6nNvCHs7IaZwPywR5fWrkIMUtlPHeDo8kvS0ENJ6F0cmvMpXF6RTEkf+8E
+         FB7S2SF98IaP+yA2WDBW7yIyFHnML16E1GzLfMvghvmMYMP5gQj4pLy6JJpe5zbqG2Nl
+         +KoA/8xZtvYDJUSgHyArH+TptkZOKKub/i0V06rZ/J4KMo/PHHE7+4N26s+FgfbVRD4p
+         i9o9PanI3HuEerHt3UEux7TiqhawFuBEO4/LUKLGWzFFm2pskoED78XqoRI/yY2pXLNZ
+         zU/EughUHpHnkxmMCF4nY+FAYg5UDJluj44g+P1m6Qg2bZUX53CRoMVKr/3NawESHsUx
+         MaJA==
+X-Forwarded-Encrypted: i=1; AJvYcCUQad/ERMSetDgZqJXlLbNVtNWzPSv9x1V3VrpOiCUVRyw3TbCrzBPlC1nEKS+7KLSpKLETQREt+/PH3A==@vger.kernel.org, AJvYcCXuUEZ8Bdoqiudv2f9zT4ibhJdib7ZH57pm3iH+j5JfJF7WB7Q1d4tl10eLR/yBW2iwjzrfhRZ+SfwRRWg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywd+K4zerJAb0/lhlzd3gqzpIYDW+3yHmvzHaz0DoiMJFveaU34
+	jg6AuTO6kOgb3gVhXyOJsVCEqSO4JwZbS5ybyEWaY9j+IX/qnjSb
+X-Gm-Gg: ASbGnct/36rqeHY8P6PVVXCnvQR1B87XR1avffVlVz/ommIYnvxC9Ju/1mNl5/5mw6e
+	G+Pel9aJ+pCWHD1dJjfsJsj/sPgwjlWTJN5I995X12hVNdH6THoOrJQP0JC8bVBWtBQ9ab/SQgJ
+	Mc5F1c7b9ofaNBlxT89Sy0YO+9ERAo9HSC70tSKiAbSQwF+GtJ9BB3j3MW9xk0R7/gLuRFm788D
+	KEwX00xdRyZDwQ8EoIAiXSKbcXnrUlXQL+OJCWF4gEfC+ygtytQAEb65UfRiezczdVSMqDsrnAE
+	4tWGDDPdvj8zHUNxofgkuDMeuQ42fUwu/vzukJ6XGys0TxfUMMPQZ5JcsqOgW0r5Qg==
+X-Google-Smtp-Source: AGHT+IH7ukEB039raJgrsIcDoJubZVtxahaG0Ai1QHumd2mPTT/OvQNVxuZUvzclFKZ2rMvZDmDwnw==
+X-Received: by 2002:a05:600c:46ca:b0:43d:54a:221c with SMTP id 5b1f17b1804b1-43ecfa45a81mr1044925e9.18.1743704941876;
+        Thu, 03 Apr 2025 11:29:01 -0700 (PDT)
+Received: from [172.27.62.155] ([193.47.165.251])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c3020d943sm2459508f8f.74.2025.04.03.11.28.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Apr 2025 11:29:01 -0700 (PDT)
+Message-ID: <0e08292e-9280-4ef6-baf7-e9f642d33177@gmail.com>
+Date: Thu, 3 Apr 2025 21:28:57 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] net/mlx5e: fix potential null dereference in
+ mlx5e_tc_nic_create_miss_table
+To: Charles Han <hanchunchao@inspur.com>, saeedm@nvidia.com, leon@kernel.org,
+ andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, maord@nvidia.com, lariel@nvidia.com,
+ paulb@nvidia.com
+Cc: netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Tariq Toukan <tariqt@nvidia.com>
+References: <20250402093221.3253-1-hanchunchao@inspur.com>
+Content-Language: en-US
+From: Tariq Toukan <ttoukan.linux@gmail.com>
+In-Reply-To: <20250402093221.3253-1-hanchunchao@inspur.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-This adds device link support for PCS devices, providing
-better probe ordering.
 
-Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
----
 
- drivers/of/property.c | 2 ++
- 1 file changed, 2 insertions(+)
+On 02/04/2025 12:32, Charles Han wrote:
+> mlx5_get_flow_namespace() may return a NULL pointer, dereferencing it
+> without NULL check may lead to NULL dereference.
+> Add a NULL check for ns.
+> 
+> Fixes: 66cb64e292d2 ("net/mlx5e: TC NIC mode, fix tc chains miss table")
+> Signed-off-by: Charles Han <hanchunchao@inspur.com>
+> ---
+>   drivers/net/ethernet/mellanox/mlx5/core/en_tc.c | 4 ++++
+>   1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c b/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
+> index 9ba99609999f..9c524d8c0e5a 100644
+> --- a/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
+> +++ b/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
+> @@ -5216,6 +5216,10 @@ static int mlx5e_tc_nic_create_miss_table(struct mlx5e_priv *priv)
+>   	ft_attr.level = MLX5E_TC_MISS_LEVEL;
+>   	ft_attr.prio = 0;
+>   	ns = mlx5_get_flow_namespace(priv->mdev, MLX5_FLOW_NAMESPACE_KERNEL);
+> +	if (!ns) {
+> +		mlx5_core_warn(priv->mdev, "Failed to get flow namespace\n");
 
-diff --git a/drivers/of/property.c b/drivers/of/property.c
-index c1feb631e383..f3e0c390ddba 100644
---- a/drivers/of/property.c
-+++ b/drivers/of/property.c
-@@ -1379,6 +1379,7 @@ DEFINE_SIMPLE_PROP(pses, "pses", "#pse-cells")
- DEFINE_SIMPLE_PROP(power_supplies, "power-supplies", NULL)
- DEFINE_SUFFIX_PROP(regulators, "-supply", NULL)
- DEFINE_SUFFIX_PROP(gpio, "-gpio", "#gpio-cells")
-+DEFINE_SIMPLE_PROP(pcs_handle, "pcs-handle", NULL)
- 
- static struct device_node *parse_gpios(struct device_node *np,
- 				       const char *prop_name, int index)
-@@ -1535,6 +1536,7 @@ static const struct supplier_bindings of_supplier_bindings[] = {
- 		.parse_prop = parse_post_init_providers,
- 		.fwlink_flags = FWLINK_FLAG_IGNORE,
- 	},
-+	{ .parse_prop = parse_pcs_handle, },
- 	{}
- };
- 
--- 
-2.35.1.1320.gc452695387.dirty
+In this function netdev_err API is being used for error prints.
+
+> +		return -EOPNOTSUPP;
+> +	}
+>   
+>   	*ft = mlx5_create_auto_grouped_flow_table(ns, &ft_attr);
+>   	if (IS_ERR(*ft)) {
 
