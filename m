@@ -1,48 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3AB226F469;
-	Thu,  3 Apr 2025 19:06:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADFEB26FA45;
+	Thu,  3 Apr 2025 19:06:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743707215; cv=none; b=tBWDS58xbmWh+xDe3/L7G1JHpp+ANTlmnQk7fae3mKq00nPdJKMh7fjOYs2ZfRD/ZIEtyVNM9hBEW7Uao4HunA35jk6KeActC6ihHwigEofmIB3tjg5PIqVtbTDhEiN5AXdcFpRZd5kmSQMA7JJJd8kayyXDLNaywgIzIKVDEc8=
+	t=1743707216; cv=none; b=fgxUF6kbtokfU0bnFZPgrwxdrACe5HvQYpCGanODSPAtcOjwuva8a4MMh6RyP8WaJQsQOmuDVGMqBNM06cDNxGDqXtPlOUDe3qCexekGg+GgZ9DDSlX9E+RRzQs8YaGhvfMXQw6kkT2J6key3iF7NxmxWrHYAyA/VXS6f38ZOdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743707215; c=relaxed/simple;
-	bh=DKtMNqkGSl3Jk+kOCm2sYF+Agp8jjR0lL5uamaFFRtQ=;
+	s=arc-20240116; t=1743707216; c=relaxed/simple;
+	bh=biff+y5CO/LGp/6H2MKDDrr1C1tIENa+pvU9gLtDvNc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=OqBSjU2rcSL8QkP3gm0+FhJIgzRr1t3vq61HbtEh3ofug7zK11DwrrfO9VJKe53fTRQxFF2KDtlH7pIRPjcruGmh8hISXYo47xT38nHq9IhelUsqWJaeMS2ma/SpJsxF10WMipee2XKhpuN31dZJzu/uismojLvS5dRDRqODEvo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tTc7Vm+L; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=IB8IsiMWK2EbXvXgoUA7+JCuVAkaTRUsRBStXHi61ACMlbSBMko2fe06h45BOdPSPmObNeVz7IoYfa9RPLB5F4kezQ9ZFoKRZ0cY9pT/7Aqm8BEe+udsCEz6oq+PpSwkDJL5bLxiSrisWbb8YzXQsv+jl4kw9whv+TdBq0V0bjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a3xsnZng; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tTc7Vm+L"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3AABC4CEE3;
-	Thu,  3 Apr 2025 19:06:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a3xsnZng"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30670C4CEE3;
+	Thu,  3 Apr 2025 19:06:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743707213;
-	bh=DKtMNqkGSl3Jk+kOCm2sYF+Agp8jjR0lL5uamaFFRtQ=;
+	s=k20201202; t=1743707216;
+	bh=biff+y5CO/LGp/6H2MKDDrr1C1tIENa+pvU9gLtDvNc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tTc7Vm+LmyI2KEa1wx6htyzjJhlSw/rNscU4izdzVPkQWjigTWeIeKnr4Qton/3my
-	 8ko+7Lxclfivp6Zv9/ldraKeUET+DBrgLomO7OSY8dVdAbx8TI6vJbixdRzb9X0XaF
-	 t4CUUo5n8U4R4b0tB8AzMgPc9PfrW/CmwKU4+Xhy5UzYdEQ5bgKDcb5+7SPnd9KZAD
-	 OU5lK/2yKyS1XeZMf5Nl73qmWZJGk8TaJSSwgEZSenz/JhSn6CGCaWp8s/iBHKzy8t
-	 NjmOEiLyLHKChNzzWslhcXLskUwUiLAP0ra/iG3fERhFrzd5ZJoDXMuxCJvWKdZC/Z
-	 x4dBAaFdR5hgg==
+	b=a3xsnZngJbpgt5uQP5sxng9Mziasi/H4pxAxTHRMnOQewj2HlSIlaiWP2ONuveMkK
+	 o+qqKp9oa57D+2KwBcZowxed3ktHszB7t61sitsomHtSkY62sc8LmpLdAzSpoSKCF+
+	 t6YX2q74Zas6vd3mEm7BnFmDf04OB89SrqhR0txaYUSrABCBv3s+ArmTraI7WDTet4
+	 US7otHs2xkZrpzGnN7SW0Rgfw/K/qwTa/iwgwHjrGTNLt9cD7ZZI0vsxdBhdAuTtLH
+	 97vgh39oLWd4IgDIyfzu6RUutlc5kSAE+m1EnpndRawOYv4NPnM/68UQf4Mvsk2e4V
+	 om+KYUvkR8uCA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Edward Adam Davis <eadavis@qq.com>,
-	syzbot+7c808908291a569281a9@syzkaller.appspotmail.com,
-	Dave Kleikamp <dave.kleikamp@oracle.com>,
+Cc: Birger Koblitz <mail@birger-koblitz.de>,
+	Daniel Golle <daniel@makrotopia.org>,
+	Jakub Kicinski <kuba@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	shaggy@kernel.org,
-	rand.sec96@gmail.com,
-	ghanshyam1898@gmail.com,
-	aha310510@gmail.com,
-	rbrasga@uci.edu,
-	niharchaithanya@gmail.com,
-	jfs-discussion@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 6.12 22/47] jfs: add sanity check for agwidth in dbMount
-Date: Thu,  3 Apr 2025 15:05:30 -0400
-Message-Id: <20250403190555.2677001-22-sashal@kernel.org>
+	linux@armlinux.org.uk,
+	andrew@lunn.ch,
+	hkallweit1@gmail.com,
+	davem@davemloft.net,
+	edumazet@google.com,
+	pabeni@redhat.com,
+	netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 24/47] net: sfp: add quirk for 2.5G OEM BX SFP
+Date: Thu,  3 Apr 2025 15:05:32 -0400
+Message-Id: <20250403190555.2677001-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250403190555.2677001-1-sashal@kernel.org>
 References: <20250403190555.2677001-1-sashal@kernel.org>
@@ -57,39 +57,40 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.21
 Content-Transfer-Encoding: 8bit
 
-From: Edward Adam Davis <eadavis@qq.com>
+From: Birger Koblitz <mail@birger-koblitz.de>
 
-[ Upstream commit ddf2846f22e8575d6b4b6a66f2100f168b8cd73d ]
+[ Upstream commit a85035561025063125f81090e4f2bd65da368c83 ]
 
-The width in dmapctl of the AG is zero, it trigger a divide error when
-calculating the control page level in dbAllocAG.
+The OEM SFP-2.5G-BX10-D/U SFP module pair is meant to operate with
+2500Base-X. However, in their EEPROM they incorrectly specify:
+Transceiver codes   : 0x00 0x12 0x00 0x00 0x12 0x00 0x01 0x05 0x00
+BR, Nominal         : 2500MBd
 
-To avoid this issue, add a check for agwidth in dbAllocAG.
+Use sfp_quirk_2500basex for this module to allow 2500Base-X mode anyway.
+Tested on BananaPi R3.
 
-Reported-and-tested-by: syzbot+7c808908291a569281a9@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=7c808908291a569281a9
-Signed-off-by: Edward Adam Davis <eadavis@qq.com>
-Signed-off-by: Dave Kleikamp <dave.kleikamp@oracle.com>
+Signed-off-by: Birger Koblitz <mail@birger-koblitz.de>
+Reviewed-by: Daniel Golle <daniel@makrotopia.org>
+Link: https://patch.msgid.link/20250218-b4-lkmsub-v1-1-1e51dcabed90@birger-koblitz.de
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/jfs/jfs_dmap.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/phy/sfp.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/fs/jfs/jfs_dmap.c b/fs/jfs/jfs_dmap.c
-index 9ac1fc2ed05bc..0e1019382cf51 100644
---- a/fs/jfs/jfs_dmap.c
-+++ b/fs/jfs/jfs_dmap.c
-@@ -204,6 +204,10 @@ int dbMount(struct inode *ipbmap)
- 	bmp->db_aglevel = le32_to_cpu(dbmp_le->dn_aglevel);
- 	bmp->db_agheight = le32_to_cpu(dbmp_le->dn_agheight);
- 	bmp->db_agwidth = le32_to_cpu(dbmp_le->dn_agwidth);
-+	if (!bmp->db_agwidth) {
-+		err = -EINVAL;
-+		goto err_release_metapage;
-+	}
- 	bmp->db_agstart = le32_to_cpu(dbmp_le->dn_agstart);
- 	bmp->db_agl2size = le32_to_cpu(dbmp_le->dn_agl2size);
- 	if (bmp->db_agl2size > L2MAXL2SIZE - L2MAXAG ||
+diff --git a/drivers/net/phy/sfp.c b/drivers/net/phy/sfp.c
+index dcec92625cf65..9a5de80acd2f7 100644
+--- a/drivers/net/phy/sfp.c
++++ b/drivers/net/phy/sfp.c
+@@ -515,6 +515,8 @@ static const struct sfp_quirk sfp_quirks[] = {
+ 
+ 	SFP_QUIRK_F("OEM", "SFP-10G-T", sfp_fixup_rollball_cc),
+ 	SFP_QUIRK_M("OEM", "SFP-2.5G-T", sfp_quirk_oem_2_5g),
++	SFP_QUIRK_M("OEM", "SFP-2.5G-BX10-D", sfp_quirk_2500basex),
++	SFP_QUIRK_M("OEM", "SFP-2.5G-BX10-U", sfp_quirk_2500basex),
+ 	SFP_QUIRK_F("OEM", "RTSFP-10", sfp_fixup_rollball_cc),
+ 	SFP_QUIRK_F("OEM", "RTSFP-10G", sfp_fixup_rollball_cc),
+ 	SFP_QUIRK_F("Turris", "RTSFP-2.5G", sfp_fixup_rollball),
 -- 
 2.39.5
 
