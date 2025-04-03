@@ -1,114 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC3E72E62B8
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 23:34:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 374DE1DD9D3
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 23:34:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743723289; cv=none; b=QldeFqlvMnoCGoWTq2NkWxC17Obh1TChhz3EYai+cM3BvvItvz8P5n+ODJkVCB6GWnT1rQy7XX35VHxINQwm5l3L+CwxTLiBpm7rs8Cmkc3ssodV3yLsPOxH1dqRKhDHAYk8FdbFohqrv+KRBYlddHpIzq5a5MyREbdIX0xwcKc=
+	t=1743723291; cv=none; b=rPXdJoF64XAEz5yNeKLK3m3o/Dh956m/nxNxsF7IurfZEErJ03lpy6R3pvEuKAkf/d/gxuEdFvlQNATo/daWgkLu97SyWLOczGut+0Nbl9gICPHjwllk0bQMS4TtXDzjictAbMd4pqUu1mXTzVQunsoFCaNjxje5Q24ez6/Xj2U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743723289; c=relaxed/simple;
-	bh=0Kbv4kpwPVwQk1EHNve/zA/ml+BS0JZbsxhjWNumtT0=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=GWBFHxUjDyMf596wY/WjjGvqneoeQQA9+lGIlm2ffpbWrIcadTk1FNVR19TnRvF6edmBs0NsIO9cXtE4CMNHzNRscCQ6/8NK6wTkVaJ3PwFZTDmvfRwBJ2UcOfbwTprgf0XfjFHOsxKtclOyUMwVPIZQqCUOIZpWkfCwPBgOlSQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N758/Alh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743723291; c=relaxed/simple;
+	bh=yPfUoEabLqKntQr8q5pur3n1i93VDPliNk27Nfw4Yc4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DYFpVg+1sM5p9LggbghGtgI+WqT3+GOEFvmsLGsUC5x+w++IXFsoRsSDSLOgudjCRTw1ITR07v7PMpgQ17a8MGL0jRFutpd5w2MCUQPsxSzSjC3AQt2n380a1XgZ8A2+vS2rso/KQxdcE6zbn4Enq41kHnM2UGHA2QrDk9vfim4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aU61gBdf; arc=none smtp.client-ip=209.85.221.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N758/Alh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2600CC4CEEA;
-	Thu,  3 Apr 2025 23:34:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743723288;
-	bh=0Kbv4kpwPVwQk1EHNve/zA/ml+BS0JZbsxhjWNumtT0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=N758/Alhf0E/X0t9YYuUaWHzckOP2M7HbjD5BPWS1wmfTLXbm3Y9lfG9GwFwqqNse
-	 x8wHpuBfO6SOJ+U4UgVpr9cVGMWXA1e7ynqqSDwTHf2DGDr4zM1Q+Kd8EeChwPG5Ni
-	 K1/uW30aR0r3xfCIc9I+g0vGR8zN+NsyTakOIrMR6TauZ2rDjXppu5JxN7nyyEhFTz
-	 KoXxWFob7zuIGu8yKU62oes/eYLtUHgBXvGroav3HjwaE9UprbHTlFs8Ed6hIl8GIu
-	 2NHRnB3lo41aMZEP+eCZsJNuiljB8JlHpFnfsPcH4puIj7M3JF0CSbboVl3SNdx54Y
-	 llV6leMhv7QMg==
-Date: Fri, 4 Apr 2025 08:34:42 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Qinxin Xia <xiaqinxin@huawei.com>, Mark Rutland <mark.rutland@arm.com>
-Cc: <yangyicong@huawei.com>, <catalin.marinas@arm.com>, <will@kernel.org>,
- <naveen.n.rao@linux.ibm.com>, <anil.s.keshavamurthy@intel.com>,
- <davem@davemloft.net>, <linuxarm@huawei.com>,
- <linux-kernel@vger.kernel.org>, <fanghao11@huawei.com>,
- <prime.zeng@hisilicon.com>, <xuwei5@huawei.com>,
- <jonathan.cameron@huawei.com>
-Subject: Re: [PATCH v7] arm64: kprobe: Enable OPTPROBE for arm64
-Message-Id: <20250404083442.5317827966254c89382cc3f4@kernel.org>
-In-Reply-To: <20250216070044.1792872-1-xiaqinxin@huawei.com>
-References: <20250216070044.1792872-1-xiaqinxin@huawei.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aU61gBdf"
+Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-5259327a937so642017e0c.0
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 16:34:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743723289; x=1744328089; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=avbDQjcLHqr7esMYO8nwxUtIxsYjEDsKF3924zpDBE0=;
+        b=aU61gBdfWyUpb3HoM5Mqz2LREy79t4vloMgbqu28wqEd2EzJgx8hUA0w1wmrO8pbgn
+         B3qMNVE/K/eKsEHxMzR39QHYpNENOpzYHlJpDv1l910NQNu1Ko6bQZyg7B4Bq32RB9ii
+         K5LZvzjVdNHFRYfeIeFArp5GGMsx8CfoMeBmAim+174xFE1b8dLTdTKKaNUVv34uAUWI
+         anwdLu8bopgF+WQt4J42h5xj7nGtioelzlATQ0HEDScxFE5jIHp5wLBmHX+ss4yzLw3n
+         PUfp33GKp3z4r9ZB8BoaupiRdkkGslxAjjmIVlVMOG1E2dhPkAGhjxheTCu+fM+V1GK1
+         DmPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743723289; x=1744328089;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=avbDQjcLHqr7esMYO8nwxUtIxsYjEDsKF3924zpDBE0=;
+        b=upGtZ0Rrfo2IS4uFsWQRTxzBor7bgna/6rBvucjIwosqpcQ+2zjhvFo/iuFSO53na0
+         UGlYz00w72EkNqwii6k8wuSC5ASIGHtHCptFL1B4EbTlA9iT6iUo+lGLDIv7HwCjWPo6
+         cI3WZ/LGx4o+Brmd4KhT7KvhamOmsLuEw6B1SZ+AVQEn2UiXuNfvH4O5j8T9rkolPLCp
+         gcWP2796kT9k7J+IbGRIMubh+faiqSsDlJbqbDkPQiFBudNEHw2RvZQCNLFvYqsXaRr5
+         N2XkSzKX5uYgS2Q5PUmSayf0xFRbYkTQWOEpU0AMYVXO2Wz4alxDfL8VAJwNI40mwiEz
+         ZRuQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWEnKkyyIm4RWe6jFIzZwkSM9UQZJDGQn7cCO7beeXPCvFGkfwLLmw4dsZDOerciJS7TikyRftELmqe8yU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyrMOpcIYtWy3rr0B6mS/8Klmzp2+nSwJlnVmDIGRCql7y9Xvlp
+	X4/988bxLEAt1mCyauBIWY18ueC/bH0td70kJcwHIGhUGhIu1yt0FaETy2ruDsgo0+evOrBIpQV
+	pu8ZPB8DVdA/xencFzCJ13vd2y+Q=
+X-Gm-Gg: ASbGncvLyjeQkqAr+B2m3A+t/Z6H9meJIPbmmDBHShxHNOvuyf35UvzVTpmXX7sdkTg
+	M9JpXAQJeNsIy6VAT+t2TSMuKoRJA420dCZBdfI/umAds+qxQpw737TIjtapyYoJ/K6FoaezgUY
+	pVC9jOoIhqTEFdMUutyAS6Lu8zcJs1fWwf7nRlfw==
+X-Google-Smtp-Source: AGHT+IE0jVTAdZK/1z5sRC69OvaJbihukmG2bfl5C4hSu/+suvfXKUqs00L2PVJ92KBbTrochuTagRBujIH4Xq+OURE=
+X-Received: by 2002:a05:6122:16a6:b0:51f:fc9d:875d with SMTP id
+ 71dfb90a1353d-52764573f29mr1079951e0c.8.1743723289031; Thu, 03 Apr 2025
+ 16:34:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+References: <cover.1743685415.git.abrahamadekunle50@gmail.com>
+ <1325d06f5a4eb18eb52eb20d5af89207504c46b6.1743685415.git.abrahamadekunle50@gmail.com>
+ <Z-6PlWGmn09hYYKU@smile.fi.intel.com>
+In-Reply-To: <Z-6PlWGmn09hYYKU@smile.fi.intel.com>
+From: Samuel Abraham <abrahamadekunle50@gmail.com>
+Date: Fri, 4 Apr 2025 00:34:40 +0100
+X-Gm-Features: ATxdqUE2HQCOn8HmmyJdYwJeZCngwFtMlNx29UmcDIb26j6tvHO7ChxpInIanIg
+Message-ID: <CADYq+fY-y1BqnzK7fCvjPhLfvpTgMeiK5_XCoF_BZqiYyX_1bw@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] staging: rtl8723bs: Prevent duplicate NULL tests
+ on a value
+To: Andy Shevchenko <andy@kernel.org>
+Cc: outreachy@lists.linux.dev, julia.lawall@inria.fr, 
+	gregkh@linuxfoundation.org, linux-staging@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, hdegoede@redhat.com, mchehab@kernel.org, 
+	sakari.ailus@linux.intel.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, 16 Feb 2025 15:00:44 +0800
-Qinxin Xia <xiaqinxin@huawei.com> wrote:
+On Thu, Apr 3, 2025 at 2:40=E2=80=AFPM Andy Shevchenko <andy@kernel.org> wr=
+ote:
+>
+> On Thu, Apr 03, 2025 at 02:26:43PM +0100, Abraham Samuel Adekunle wrote:
+> > When a value has been tested for NULL in an expression, a
+> > second NULL test on the same value in another expression
+> > is unnecessary when the value has not been assigned NULL.
+> >
+> > Remove unnecessary duplicate NULL tests on the same value that
+> > has previously been NULL tested.
+> >
+> > Found by Coccinelle
+>
+> Missing period.
 
-> 
-> +#define        OPT_SLOT_SIZE   65536
-> +
-> +	.global optinsn_slot
-> +optinsn_slot:
-> +	.space  OPT_SLOT_SIZE
-> +
-> +SYM_CODE_START(optprobe_common)
-> +	stp x2, x3, [sp, #S_X2]
-> +	stp x4, x5, [sp, #S_X4]
-> +	stp x6, x7, [sp, #S_X6]
-> +	stp x8, x9, [sp, #S_X8]
-> +	stp x10, x11, [sp, #S_X10]
-> +	stp x12, x13, [sp, #S_X12]
-> +	stp x14, x15, [sp, #S_X14]
-> +	stp x16, x17, [sp, #S_X16]
-> +	stp x18, x19, [sp, #S_X18]
-> +	stp x20, x21, [sp, #S_X20]
-> +	stp x22, x23, [sp, #S_X22]
-> +	stp x24, x25, [sp, #S_X24]
-> +	stp x26, x27, [sp, #S_X26]
-> +	stp x28, x29, [sp, #S_X28]
-> +	add x2, sp, #PT_REGS_SIZE
-> +	str x2, [sp, #S_SP]
-> +	/* Construct a useful saved PSTATE */
-> +	mrs x2, nzcv
-> +	mrs x3, daif
-> +	orr x2, x2, x3
-> +	mrs x3, CurrentEL
-> +	orr x2, x2, x3
-> +	mrs x3, SPSel
-> +	orr x2, x2, x3
-> +	adr x1, 2f
-> +	stp x1, x2, [sp, #S_PC]
-> +
-> +	/* set the pt_regs address to x1 */
-> +	mov x1, sp
-> +	/* store lr of optprobe_common temporary */
-> +	stp x29, x30, [sp, #-16]!
-> +	mov x29, sp
-> +
-> +	bl optprobe_optimized_callback
-> +
-> +	ldp x29, x30, [sp], #16
-> +
-> +	ldr x0, [sp, #S_PSTATE]
-> +	and x0, x0, #(PSR_N_BIT | PSR_Z_BIT | PSR_C_BIT | PSR_V_BIT)
-> +	msr nzcv, x0
+Noted.
+...
+> > +                                     psta->BA_starting_seqctrl[pattrib=
+->priority & 0x0f] =3D (tx_seq+1)&0xfff;
+>
+> While at it, make this more readable:
+>
+>                                         psta->BA_starting_seqctrl[pattrib=
+->priority & 0x0f] =3D
+>                                                 (tx_seq + 1) & 0xfff;
+>
+>
+> > +                                     pattrib->ampdu_en =3D true;/* AGG=
+ EN */
+> > +                             } else {
+>
+> > +                                     psta->BA_starting_seqctrl[pattrib=
+->priority & 0x0f] =3D (pattrib->seqnum+1)&0xfff;
+>
+> Ditto.
+>
+> Also consider to use module operator as it shows the exact amount of the
+> records we support in the circular buffer.
+>
+>                                         psta->BA_starting_seqctrl[pattrib=
+->priority & 0x0f] =3D
+>                                                 (pattrib->seqnum + 1) % 4=
+096;
+>
+> Since it's power-of-two denominator, it will be optimised by the compiler=
+ to
+> the same code as it's now.
+>
+> > +                                     pattrib->ampdu_en =3D true;/* AGG=
+ EN */
+> >                               }
+>
+>
+Thank you very much for the review
+I will send an updated Patchset
 
-BTW, can this code save all registers including flags?
-Previously I talked with Mark and he mentioned there is no way to
-save pstate register correctly. That is why we could not implement
-this feature.
-
-
-Thank you,
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Adekunle
