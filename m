@@ -1,128 +1,183 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10C2924CEF8
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 15:21:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBC3524CEE5;
+	Thu,  3 Apr 2025 15:23:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743693681; cv=none; b=kzu/UpuN7GGz7MaWxkACsy0KWF5vf4+ZZW/V14setCp4CRCJrkfZwmF6LbpfCKIRlOwVZgrWUVOYxGHfzKM8QVegwVwtCCyG7Qlz/Ecg8zNsKDmyw9/6HMj93mCFZi5eXhaYQvd3yquoPXzfQ4cwDSBzpyRLhcqQc/eemuEzers=
+	t=1743693800; cv=none; b=eGUKtxzXpxJNwAhrPPxuFvxrsGrmm62n68BgogqsIXFWNxzOv8dnScpfLomV2Er2kPEgf7FPiI9K5Kl8K38/W4RFUiU84/sA/Bd7r+lOQIzqK8+2EvX5mpdckwLQGuQf0MctcmBARj6Oq55o95Yf2OVlACyRCAmyMBrOSdQ29m0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743693681; c=relaxed/simple;
-	bh=7BYAU7FWqgp7VAH8vNjlWZeSog6QTqHnJvWr0crzcfg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=l8vwm3Hbtxa7N7MOgEi3VAwxFd6OC7m9+CokXHdJphiAkPyBPt65VNdv4aJOK+vreIYF1KGGe21jOny8GPqClXbLo1jV1NGQ1IEzjMzoCLOBwHzj8AQIrsXL0rq72Fr4OP9pYwBhX8mNeIZz3ZPzUry1FWa7iRlmmNPWORA/XFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AhroqBEX; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1743693800; c=relaxed/simple;
+	bh=6ZFaM/Uvwrkarz4SIQ5+CwXUuMrp3QkS4FpU3Q8kCKU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=O0h6mcqovC3onpnvEQq/fMC86yECR4ZiWXaQNpi2rRp3i6r0rcmNkOBd55dd6JPvNgPXcmJUGLM/mNucc0Iwf41fUBgEHm7yLF8oHVZjFujZmV8fncQ0B1wYjpvZ+AZxtoW/3Bh/+b0XRBTbd9pmlw/JeCA+awi6ZfIXtUzpGZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=QiZ9KL90; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AhroqBEX"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43ce70f9afbso10734215e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 08:21:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743693678; x=1744298478; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=LLzRxbLbGYqFEY7hyGVV9DDJqGfYqDcrqrelLGxLjeg=;
-        b=AhroqBEXbCFTlHKBfAgoMN0g5OWIMnoaPsVMASuHluxkFNWXLBthuR1n8IGtRLzwmQ
-         IYZl6Aex2c1DIvMtdWdYNMyegFPg0r6llYdXu2TuUba5pstb5B5lIdWcPWI51ydVG3qm
-         YwrcMNWiX0wKD3UqfpbZwm7tXG573ZrEpQWOzgu6b8qIHdOGfynIjgC0G5cD0QwfVrsg
-         yifvAude2NCcnH3FYyq+TeI1ipIfSZk2plZr8qyPg6rZFTWGYRbjK5HEmPqBu9pzwUhx
-         HvDDl/Ah6KgmQlkDpEag+86mZKjisQ1CG5OD5ClW58q80y2sA4+x8HEOzwjEo3ZJoAt3
-         PIvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743693678; x=1744298478;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LLzRxbLbGYqFEY7hyGVV9DDJqGfYqDcrqrelLGxLjeg=;
-        b=S8DApI7ztyXq7izrwk6fhlHHUCIWoHgAIwjWNd6qoGwKlER54eolBmaBJVibgUDSGc
-         uFpqRKdgJlhTpcB4/8vdwdNyJ/u0bJY3oSlxPbAOmfcTi9nw3AuPN/P3TxgsxL6fM3jK
-         ixhopCasedx80UsXfrPROoFTXdiuH/Z52w1BfJuxFtokOK/mP6SJBoPkw1+pIe/V5Nib
-         d3K16hrJ/Er23zTXpZAoCehYwfVNfNMIGDxKVmKy5LmOZEnUtp9u71pzjgoSTrPZIdVL
-         3NzFqOXFWLDN0WfdR+NHb9pKsh0iWz4GHF/Mi7wNT1wtrgqUA/Vo+ElmXw24Zjh4oxFG
-         v5Jw==
-X-Gm-Message-State: AOJu0Yw9R00rKpUia2DDbnwNuECAiEBSNtfnb9oFYfkRmPzJY9EMMp5y
-	aJKQQNmQ9b6EAKdDw2mhYDfLJ0atD4meB6MYj559cNrlBYy5y4xHw3azh/fRmI8=
-X-Gm-Gg: ASbGncsisgaYBKVhlRcYjhd5Lhdi0MljBKuFIkUIp+x0Ian8FD3sThrYxRo5lJAIw5k
-	xf1VBat0SySYNbOtSC8lTsTRY2dx+wSHakr2ACGfpQITMkJl8qrxuINs9zj6zQBU7blFd8Wxkir
-	mFqbjDZyop4lg05snPplEHEyMFjr85W0EwNjFdhpHql4zyqhHC39t1MyE+B9sYR943CDSHfFKaK
-	y1okdbVrZTIlhn9xgtzwjwtMySLBhuRbdEvZhKgSgzDlQHeX7iDGksqk/4oc3hKKjJTyYcWdOAk
-	TjTHX+XQIQiLRN5OHBC0M1hvRqvCa4PnILVoNATodp9oCVQHqKEYUOqCzhBMCpPwBV6fMBdpQpw
-	Z1r5BzbaU
-X-Google-Smtp-Source: AGHT+IGw5ghzd9cHyGdFKWQ5WVPa7dVeNteHj1/e+hjpE89/v7AeOKF8SPeYMkbL/YLt+h17xVXsbA==
-X-Received: by 2002:a5d:5c84:0:b0:39c:1efd:ed8f with SMTP id ffacd0b85a97d-39c1efdedbemr11060254f8f.50.1743693678287;
-        Thu, 03 Apr 2025 08:21:18 -0700 (PDT)
-Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-43ec34bbd9csm21302405e9.20.2025.04.03.08.21.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Apr 2025 08:21:17 -0700 (PDT)
-Message-ID: <67daf656-0e08-471d-afce-22ba8f2fa1f2@linaro.org>
-Date: Thu, 3 Apr 2025 17:21:16 +0200
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="QiZ9KL90"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DE23C4CEE3;
+	Thu,  3 Apr 2025 15:23:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1743693799;
+	bh=6ZFaM/Uvwrkarz4SIQ5+CwXUuMrp3QkS4FpU3Q8kCKU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=QiZ9KL90481kNW4i2W9iQvuJzEvjruf/nTcf4kWgSxiANkHQnAB22hnblsFMLWW3D
+	 CBCT3rldjvvDOWz+P/aUgaTl2hNKUMD+64tlhkUOaF2qekmYxJw4ff8Qoha8BXttm8
+	 Agq5TMAhoBDM9zfWGYbEzS9tMfkIY1df+yrsmDcw=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: stable@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	torvalds@linux-foundation.org,
+	akpm@linux-foundation.org,
+	linux@roeck-us.net,
+	shuah@kernel.org,
+	patches@kernelci.org,
+	lkft-triage@lists.linaro.org,
+	pavel@denx.de,
+	jonathanh@nvidia.com,
+	f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com,
+	srw@sladewatkins.net,
+	rwarsow@gmx.de,
+	conor@kernel.org,
+	hargar@microsoft.com,
+	broonie@kernel.org
+Subject: [PATCH 6.1 00/22] 6.1.133-rc1 review
+Date: Thu,  3 Apr 2025 16:19:55 +0100
+Message-ID: <20250403151620.960551909@linuxfoundation.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/2] dt-bindings: timer: Add NXP System Timer Module
-To: Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>, tglx@linutronix.de
-Cc: linux-kernel@vger.kernel.org, thomas.fossati@linaro.org,
- Larisa.Grigore@nxp.com, ghennadi.procopciuc@nxp.com,
- krzysztof.kozlowski@linaro.org, S32@nxp.com, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
- <devicetree@vger.kernel.org>,
- "moderated list:ARM/STM32 ARCHITECTURE"
- <linux-stm32@st-md-mailman.stormreply.com>,
- "moderated list:ARM/STM32 ARCHITECTURE"
- <linux-arm-kernel@lists.infradead.org>
-References: <20250402090714.3548055-1-daniel.lezcano@linaro.org>
- <20250402090714.3548055-2-daniel.lezcano@linaro.org>
- <2503deb2-b993-7fd1-adf3-cafa1e7bd2f4@oss.nxp.com>
-Content-Language: en-US
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-In-Reply-To: <2503deb2-b993-7fd1-adf3-cafa1e7bd2f4@oss.nxp.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+User-Agent: quilt/0.68
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.133-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-6.1.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 6.1.133-rc1
+X-KernelTest-Deadline: 2025-04-05T15:16+00:00
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 03/04/2025 08:33, Ghennadi Procopciuc wrote:
-> On 4/2/2025 12:07 PM, Daniel Lezcano wrote:
-> [ ... ]
->> +examples:
->> +  - |
->> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
->> +
->> +    timer@4011c000 {
->> +        compatible = "nxp,s32g2-stm";
->> +        reg = <0x4011c000 0x3000>;
->> +        interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
->> +        clocks = <&clks 0x3b>;
->> +    };
-> 
-> The S32G reference manual specifies two clocks for the STM module: one
-> for the registers and another for the counter itself. Shouldn't both
-> clocks be represented in the bindings?
+This is the start of the stable review cycle for the 6.1.133 release.
+There are 22 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-AFAICS, there are two clocks as described in the documentation for the 
-s32g2 page 843, section 23.7.3 Timer modules.
+Responses should be made by Sat, 05 Apr 2025 15:16:11 +0000.
+Anything received after that time might be too late.
 
-The module and the register clock are fed by the XBAR_DIV3_CLK which is 
-an system clock always-on.
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.133-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
+and the diffstat can be found below.
 
-page 1994, 40.5.4 Clocking, the documentation says: "This module has no 
-clocking considerations."
+thanks,
 
- From my understanding, we should not describe the XBAR_DIV3_CLK as it 
-is a system clock.
+greg k-h
+
+-------------
+Pseudo-Shortlog of commits:
+
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 6.1.133-rc1
+
+Stefan Eichenberger <stefan.eichenberger@toradex.com>
+    ARM: dts: imx6qdl-apalis: Fix poweroff on Apalis iMX6
+
+Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+    media: i2c: et8ek8: Don't strip remove function when driver is builtin
+
+Andrei Kuchynski <akuchynski@chromium.org>
+    usb: typec: ucsi: Fix NULL pointer access
+
+Abhishek Tamboli <abhishektamboli9@gmail.com>
+    usb: gadget: uvc: Fix ERR_PTR dereference in uvc_v4l2.c
+
+John Keeping <jkeeping@inmusicbrands.com>
+    serial: 8250_dma: terminate correct DMA in tx_dma_flush()
+
+Luo Qiu <luoqiu@kylinsec.com.cn>
+    memstick: rtsx_usb_ms: Fix slab-use-after-free in rtsx_usb_ms_drv_remove
+
+Dominique Martinet <dominique.martinet@atmark-techno.com>
+    net: usb: usbnet: restore usb%d name exception for local mac addresses
+
+Fabio Porcedda <fabio.porcedda@gmail.com>
+    net: usb: qmi_wwan: add Telit Cinterion FE990B composition
+
+Fabio Porcedda <fabio.porcedda@gmail.com>
+    net: usb: qmi_wwan: add Telit Cinterion FN990B composition
+
+Cameron Williams <cang1@live.co.uk>
+    tty: serial: 8250: Add Brainboxes XC devices
+
+Cameron Williams <cang1@live.co.uk>
+    tty: serial: 8250: Add some more device IDs
+
+William Breathitt Gray <wbg@kernel.org>
+    counter: microchip-tcb-capture: Fix undefined counter channel state on probe
+
+Fabrice Gasnier <fabrice.gasnier@foss.st.com>
+    counter: stm32-lptimer-cnt: fix error handling when enabling
+
+Dhruv Deshpande <dhrv.d@proton.me>
+    ALSA: hda/realtek: Support mute LED on HP Laptop 15s-du3xxx
+
+Maxim Mikityanskiy <maxtram95@gmail.com>
+    netfilter: socket: Lookup orig tuple for IPv6 SNAT
+
+Alex Hung <alex.hung@amd.com>
+    drm/amd/display: Check denominator crb_pipes before used
+
+Yanjun Yang <yangyj.ee@gmail.com>
+    ARM: Remove address checking for MMUless devices
+
+Kees Cook <keescook@chromium.org>
+    ARM: 9351/1: fault: Add "cut here" line for prefetch aborts
+
+Kees Cook <keescook@chromium.org>
+    ARM: 9350/1: fault: Implement copy_from_kernel_nofault_allowed()
+
+Minjoong Kim <pwn9uin@gmail.com>
+    atm: Fix NULL pointer dereference
+
+Terry Junge <linuxhid@cosmicgizmosystems.com>
+    HID: hid-plantronics: Add mic mute mapping and generalize quirks
+
+Terry Junge <linuxhid@cosmicgizmosystems.com>
+    ALSA: usb-audio: Add quirk for Plantronics headsets to fix control names
 
 
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+-------------
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Diffstat:
+
+ Makefile                                           |   4 +-
+ arch/arm/boot/dts/imx6qdl-apalis.dtsi              |  10 +-
+ arch/arm/mm/fault.c                                |   8 ++
+ drivers/counter/microchip-tcb-capture.c            |  19 +++
+ drivers/counter/stm32-lptimer-cnt.c                |  24 ++--
+ .../drm/amd/display/dc/dcn315/dcn315_resource.c    |   2 +-
+ drivers/hid/hid-plantronics.c                      | 144 ++++++++++-----------
+ drivers/media/i2c/et8ek8/et8ek8_driver.c           |   4 +-
+ drivers/memstick/host/rtsx_usb_ms.c                |   1 +
+ drivers/net/usb/qmi_wwan.c                         |   2 +
+ drivers/net/usb/usbnet.c                           |  21 ++-
+ drivers/tty/serial/8250/8250_dma.c                 |   2 +-
+ drivers/tty/serial/8250/8250_pci.c                 |  46 +++++++
+ drivers/usb/gadget/function/uvc_v4l2.c             |  12 +-
+ drivers/usb/typec/ucsi/ucsi.c                      |  13 +-
+ net/atm/mpc.c                                      |   2 +
+ net/ipv6/netfilter/nf_socket_ipv6.c                |  23 ++++
+ sound/pci/hda/patch_realtek.c                      |   1 +
+ sound/usb/mixer_quirks.c                           |  51 ++++++++
+ 19 files changed, 279 insertions(+), 110 deletions(-)
+
+
