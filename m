@@ -1,212 +1,174 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09FB424E016;
-	Thu,  3 Apr 2025 14:18:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DB23433D1;
+	Thu,  3 Apr 2025 14:19:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743689930; cv=none; b=GUxl68F9FLktwqmBCHxDlduo7QNCqIo9DDect2wdiT2cp1c/artmr38o/pEQKmXUQcUOvFkqxB9BmLzDZNsvojZ71U1EIXXRLhrCt6uZiKDG7IkVDwP3nYC2Az4qg61Ospi5B9pNl/ZrkZE2Z+0FEPxwjqaLlMNut5tqRPZVPPE=
+	t=1743689958; cv=none; b=cychoOKjs3adroCMNDzke607mLSggZkt6f60uOgw4DqETHbt6zm/oXKyxrmZXstK8eyuTYnr/GhgE7yUkveT216amfXumYkyrAil4XufzEzja1EnKf2yAMbLkq/5lFCuEHV07tC3DUboIK8PO4wYgFw2WTIuhcHymPjFbqq1li4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743689930; c=relaxed/simple;
-	bh=Iswj5llC+bCivl9I7vNMk/SGqfO4NmXyJ7I05pVoD6Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LlxRgnouuB0sQZBUNm7YFs9H0Irp2SJPb6DF9drdBlvSdPsB3CpT21GOn9vGk4SvILAsU6C2xH3YewrOw722OnaxJeR+URHDY+l4TpZLxtNEDhlpwCI7KkA1aUrTFkAiZiPSlYp5qwuAaN1iUnfvjRgASWoJn7c3U7SQi7As+kk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=GQ6VNzh8; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1743689958; c=relaxed/simple;
+	bh=2r3U8ewcuEhS2Jqw1TNGNFLFh3bbW+ULJZIAPbc7h8g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OWbIWT/a0hN0eYxjprsBbkF+1VV4nKb9gF34EE2da8F8apt85fOixkSPijgZPTswxN3grMeXv2ybH3oggXsO4IOYwZIZKPgJPyfE9hcukBxERXKhp+sykufjFLGZH/Jg2WET0dltF2KvzubDMmQ6KJfeTlaUZEhNdjOHAcmLvw8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hF7daB+/; arc=none smtp.client-ip=209.85.215.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="GQ6VNzh8"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 533E5HpB007071;
-	Thu, 3 Apr 2025 14:18:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=UdVFC3
-	gMmR8A8vEKwuLjQ+oaRxh3zvSCFaxNtJgaW1o=; b=GQ6VNzh8vfeTp9lu0x6ShU
-	whpfSP3lf6++B7Am22Epr/po/qLnx/RGoRcZb85QG9JKHoXGUoTIfGrUbi2bQnHF
-	eXcjFeznSUYWvEZjhMJt9JQMCmzicDsA/84DrwtQHEq0/KwOT79gAWTR0Y//oxmB
-	/gbFSUDsSNom/L92YX44ofu2RA232NpdOzyhdfjO+FqwlnJDiU3/KdBaeTd+y5ft
-	WoO8cwTmgn9FXbhfX1w3eQCu01dhV0Se6DywqeWJGxp31tX/rPeaw8X9novgYNLq
-	Bg2sdzM4U+3N9EcPkTC8pUU9EQwr6vst0GthStulX0+a3WsC6oF4uC4zqe/IosMg
-	==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45sjq9ts8x-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 03 Apr 2025 14:18:43 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 533AOe9H009999;
-	Thu, 3 Apr 2025 14:18:41 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45pv6p55p4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 03 Apr 2025 14:18:41 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 533EIbkq53149986
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 3 Apr 2025 14:18:37 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8EB0B20074;
-	Thu,  3 Apr 2025 14:18:37 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5C6662006C;
-	Thu,  3 Apr 2025 14:18:37 +0000 (GMT)
-Received: from li-ce58cfcc-320b-11b2-a85c-85e19b5285e0 (unknown [9.152.224.212])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu,  3 Apr 2025 14:18:37 +0000 (GMT)
-Date: Thu, 3 Apr 2025 16:18:36 +0200
-From: Halil Pasic <pasic@linux.ibm.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        virtualization@lists.linux.dev, kvm@vger.kernel.org,
-        Chandra Merla
- <cmerla@redhat.com>, Stable@vger.kernel.org,
-        Cornelia Huck
- <cohuck@redhat.com>, Thomas Huth <thuth@redhat.com>,
-        Eric Farman
- <farman@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik
- <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian
- Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle
- <svens@linux.ibm.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Wei Wang
- <wei.w.wang@intel.com>, Halil Pasic <pasic@linux.ibm.com>
-Subject: Re: [PATCH v1] s390/virtio_ccw: don't allocate/assign airqs for
- non-existing queues
-Message-ID: <20250403161836.7fe9fea5.pasic@linux.ibm.com>
-In-Reply-To: <20250402203621.940090-1-david@redhat.com>
-References: <20250402203621.940090-1-david@redhat.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hF7daB+/"
+Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-af19b9f4c8cso713238a12.2;
+        Thu, 03 Apr 2025 07:19:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743689957; x=1744294757; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=khXp6kOEsTlpiucdkkgdxNh1P5TojGz8UwRxJaqxnCw=;
+        b=hF7daB+/AkE7Y2g16TF5zbyArB4MzOAuBkkO44kfT6BhW1Z5GY18WT2QrEaG5w21zs
+         FFPdqxshRfvceHjLvRoO1d2v3z8MocHaEIfIC3NlHJGMFcVpXueyEjSa9TqTqXWO3BzS
+         LiFIJhGy7M0xfUvYpBPoYnyEV9falFc8Y+wfYkiSvN/7tF0Ckt4lizw5IX5uAQcps8Ev
+         PThT606dq79RCheV3ENBMcbWII2GFc+OcxNw6EVrr5dBpcF3MwpK7DcSDC56rHfZv3k1
+         d9KKkEo8xG3z3qRAdLsj8U2f2GG+nXiK4Q4e3sDwLOjqxVSbuQY1B+v1PriP53eIaWVs
+         C7Mg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743689957; x=1744294757;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=khXp6kOEsTlpiucdkkgdxNh1P5TojGz8UwRxJaqxnCw=;
+        b=kaj1L3CbVw7OJ3ayx9+2QKLj9JIMb9nIkMR3msDPqGIGdAD3TXst34iPiry/IpUMSS
+         MjIZ+MfDRlib+gdsYWYO8rY2nwIHC1ohYhfZuG77zVAfAC7HPefrCAK/aqrAS6+VIaK4
+         w5DMexMya7DiB+YbznZ5kXzwSHwwxOheO5M1IFXxtO1wiouU9jr/wmAIzCnEdCE0HqtK
+         Twc1d3lQ+nWCwWM5g0Yr/iSCWi6eZpecytTHoCQmH+ur+XARwWg09vuQve8KJ1bsIrHV
+         6DP6yUaGwjY3Cu6OD94+XSYkAGLoGxVjWiq4C8qkCT+B1rBmxlOWNNHPZYqDnCFE7S1w
+         LUyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVPuofHEHrnn29czEaeixg7exqoattSwXXGlYyncr3S0gNo9q61pEDOcNHX+VKrK3pu43piR7vAtyR+jOl1oQEkfA==@vger.kernel.org, AJvYcCW0opmxmHgLx+fATb8U+ryVxxjAmPhhD3/HWsk5pjc0CFDc7xidBXN8KERW0ERKoUklr+lCGbzpPAOFTuU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YznAqhxPRBj+ixIBVGAoS9fcTVT6a/xpah+9WbkGeY7AQIXoC53
+	W5x0/YeMxzO+fOA1KCBiILhz8ajWJmt2e1XLUKoN8S/o+0rM4+98
+X-Gm-Gg: ASbGncucOyZnU5eJAhOxuZAed+rMcgrdvcrjZGR5fbk5NRFPxaKnvM7rRMPdScJqI8W
+	Un1XrF4yrWFQLD+728MpwMo8mg0eqeRTEFtiBBxAdSUeKCDmG5+3fMqpB2FTv5ai5dMYnT+JQvs
+	o5QbcEu5BPX07wTxg7VFaehZsmGzfmHGITpR985BsyJ+l2pWyWyEbFOpluF+wDJUyzVitZ+HSii
+	uAXfWSQQLVajUOH5y949RLIiZHE3O0I/x2f4aCc1pYLsJyFVqZLPmqWTKbRJsSkYmiIl61W7hZF
+	f0d1QgHniqBGq9bsyjJC6SKs71bqNcSJc3774vQ5o66x
+X-Google-Smtp-Source: AGHT+IFsE/53OqOyMfyP3T9KIucSDYD9e9PKK/5G+B7y8ncBc+uPWVYiOMM6K5nKTFIC+KJNWKGDsg==
+X-Received: by 2002:a05:6a20:9f4e:b0:1f5:8126:8a5d with SMTP id adf61e73a8af0-2009f5fdf88mr29869754637.17.1743689956462;
+        Thu, 03 Apr 2025 07:19:16 -0700 (PDT)
+Received: from localhost ([216.228.125.129])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af9bc2d331csm1252459a12.12.2025.04.03.07.19.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Apr 2025 07:19:15 -0700 (PDT)
+Date: Thu, 3 Apr 2025 10:19:13 -0400
+From: Yury Norov <yury.norov@gmail.com>
+To: Ian Rogers <irogers@google.com>
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Darren Hart <dvhart@infradead.org>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	=?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>,
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+	James Clark <james.clark@linaro.org>,
+	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Al Viro <viro@zeniv.linux.org.uk>, Kyle Meyer <kyle.meyer@hpe.com>,
+	Ben Gainey <ben.gainey@arm.com>,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+	Kajol Jain <kjain@linux.ibm.com>,
+	Aditya Gupta <adityag@linux.ibm.com>,
+	Eder Zulian <ezulian@redhat.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	Kuan-Wei Chiu <visitorckw@gmail.com>, He Zhe <zhe.he@windriver.com>,
+	Dirk Gouders <dirk@gouders.net>, Brian Geffon <bgeffon@google.com>,
+	Ravi Bangoria <ravi.bangoria@amd.com>,
+	Howard Chu <howardchu95@gmail.com>,
+	Charlie Jenkins <charlie@rivosinc.com>,
+	Colin Ian King <colin.i.king@gmail.com>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	Jann Horn <jannh@google.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Yang Jihong <yangjihong@bytedance.com>,
+	Dmitry Vyukov <dvyukov@google.com>, Andi Kleen <ak@linux.intel.com>,
+	Graham Woodward <graham.woodward@arm.com>,
+	Ilkka Koskinen <ilkka@os.amperecomputing.com>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Zhongqiu Han <quic_zhonhan@quicinc.com>, Hao Ge <gehao@kylinos.cn>,
+	Tengda Wu <wutengda@huaweicloud.com>,
+	Gabriele Monaco <gmonaco@redhat.com>,
+	Chun-Tse Shao <ctshao@google.com>,
+	Casey Chen <cachen@purestorage.com>,
+	"Dr. David Alan Gilbert" <linux@treblig.org>,
+	Li Huafei <lihuafei1@huawei.com>,
+	"Steinar H. Gunderson" <sesse@google.com>,
+	Levi Yun <yeoreum.yun@arm.com>, Weilin Wang <weilin.wang@intel.com>,
+	Thomas Falcon <thomas.falcon@intel.com>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	Andrew Kreimer <algonell@gmail.com>,
+	Krzysztof =?utf-8?Q?=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>,
+	Junhao He <hejunhao3@huawei.com>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	Xu Yang <xu.yang_2@nxp.com>,
+	Steve Clevenger <scclevenger@os.amperecomputing.com>,
+	Zixian Cai <fzczx123@gmail.com>,
+	Stephen Brennan <stephen.s.brennan@oracle.com>,
+	Yujie Liu <yujie.liu@intel.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev
+Subject: Re: [PATCH v1 05/48] tools lib: Silence -Wshorten-64-to-32 warnings
+Message-ID: <Z-6Y4dH0bhs6VXmj@thinkpad>
+References: <20250401182347.3422199-1-irogers@google.com>
+ <20250401182347.3422199-6-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: XIIU7-lVPLDDOvh_qH_h0D0LfjkTeoHj
-X-Proofpoint-ORIG-GUID: XIIU7-lVPLDDOvh_qH_h0D0LfjkTeoHj
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-03_06,2025-04-02_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- malwarescore=0 mlxlogscore=999 clxscore=1011 impostorscore=0 mlxscore=0
- suspectscore=0 phishscore=0 spamscore=0 bulkscore=0 adultscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2504030064
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250401182347.3422199-6-irogers@google.com>
 
-On Wed,  2 Apr 2025 22:36:21 +0200
-David Hildenbrand <david@redhat.com> wrote:
-
-> If we finds a vq without a name in our input array in
-> virtio_ccw_find_vqs(), we treat it as "non-existing" and set the vq pointer
-> to NULL; we will not call virtio_ccw_setup_vq() to allocate/setup a vq.
+On Tue, Apr 01, 2025 at 11:23:03AM -0700, Ian Rogers wrote:
+> The clang warning -Wshorten-64-to-32 can be useful to catch
+> inadvertent truncation. In some instances this truncation can lead to
+> changing the sign of a result, for example, truncation to return an
+> int to fit a sort routine. Silence the warning by making the implicit
+> truncation explicit.
 > 
-> Consequently, we create only a queue if it actually exists (name != NULL)
-> and assign an incremental queue index to each such existing queue.
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
 
-First and foremost: thank you for addressing this! I have to admit, I'm
-still plagued by some cognitive dissonance here. Please bear with me.
+...
 
-For starters the commit message of a229989d975e ("virtio: don't
-allocate vqs when names[i] = NULL") goes like this:
-"""
-    virtio: don't allocate vqs when names[i] = NULL
-    
-    Some vqs may not need to be allocated when their related feature bits
-    are disabled. So callers may pass in such vqs with "names = NULL".
-    Then we skip such vq allocations.
-"""
+> diff --git a/tools/lib/bitmap.c b/tools/lib/bitmap.c
+> index 2178862bb114..87bd15e3968e 100644
+> --- a/tools/lib/bitmap.c
+> +++ b/tools/lib/bitmap.c
+> @@ -32,7 +32,7 @@ size_t bitmap_scnprintf(unsigned long *bitmap, unsigned int nbits,
+>  			char *buf, size_t size)
+>  {
+>  	/* current bit is 'cur', most recently seen range is [rbot, rtop] */
+> -	unsigned int cur, rbot, rtop;
+> +	size_t cur, rbot, rtop;
+>  	bool first = true;
+>  	size_t ret = 0;
 
-In my reading it does not talk about "non-existent" queues, but queues
-that do not need to be allocated. This could make sense for something
-like virtio-net where controlq 2N is with N being max_virtqueue_pairs.
+Maybe instead typecast find_next_bit()? We don't expect any of those
+to overflow the 'unsigned int'.
 
-I guess for the guest it could make sense to not set up some of the
-queues initially, but those, I guess would be perfectly existent queues
-spec-wise and we would expect the index of controlq being 2N. And the
-queues that don't get set up initially can get set up later. At least
-this is my naive understanding at the moment.
-
-Now apparently there is a different case where queues may or may not
-exist, but we would, for some reason like to have the non-existent
-queues in the array, because for an other set of features negotiated
-those queues would actually exist and occupy and index. Frankly
-I don't fully comprehend it at the moment, but I will have another look
-at the code and at the spec.
-
-So lookign at the spec for virtio-ballon I see:
-
-
-
-5.5.2 Virtqueues
-
-0
-    inflateq 
-1
-    deflateq 
-2
-    statsq 
-3
-    free_page_vq 
-4
-    reporting_vq
-
-statsq only exists if VIRTIO_BALLOON_F_STATS_VQ is set.
-
-free_page_vq only exists if VIRTIO_BALLOON_F_FREE_PAGE_HINT is set.
-
-reporting_vq only exists if VIRTIO_BALLOON_F_PAGE_REPORTING is set. 
-
-Which is IMHO weird.  I used to think about the number in front of the
-name as the virtqueue index. But based on this patch I'm wondering if
-that is compatible with the approach of this patch.
-
-What does for example mean if we have VIRTIO_BALLOON_F_STATS_VQ not
-offered, VIRTIO_BALLOON_F_FREE_PAGE_HINT offered but not negotiated
-and VIRTIO_BALLOON_F_PAGE_REPORTING negotiated.
-
-One reading of the things is that statq is does not exist for sure,
-free_page_vq is a little tricky because "is set" is not precise enough,
-and reporting_vq exists for sure. And in your reading of the spec, if
-I understood you correctly and we assume that free_page_vq does not
-exist, it has index 2. But I from the top of my head, I don't know why
-interpreting the spec like it reporting_vq has index 4 and indexes 2
-and 3 are not mapped to existing-queues would be considered wrong.
-
-And even if we do want reportig_vq to have index 2, the virtio-balloon
-code could still give us an array where reportig_vq is at index 2. Why
-not?
-
-Sorry this ended up being a very long rant. the bottom line is that, I
-lack conceptual clarity on where the problem exactly is and how it needs
-to be addressed. I would like to understand this properly before moving
-forward.
-
-[..]
-> 
-> There was recently a discussion [1] whether the "holes" should be
-> treated differently again, effectively assigning also non-existing
-> queues a queue index: that should also fix the issue, but requires other
-> workarounds to not break existing setups.
-> 
-
-Sorry I have to have a look at that discussion. Maybe it will answer
-some my questions.
-
-> Let's fix it without affecting existing setups for now by properly ignoring
-> the non-existing queues, so the indicator bits will match the queue
-> indexes.
-
-Just one question. My understanding is that the crux is that Linux
-and QEMU (or the driver and the device) disagree at which index
-reporting_vq is actually sitting. Is that right?
-
-Regards,
-Halil
+Thanks,
+Yury
