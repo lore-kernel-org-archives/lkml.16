@@ -1,134 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 092449450;
-	Thu,  3 Apr 2025 01:18:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7621278F39;
+	Thu,  3 Apr 2025 01:21:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743643136; cv=none; b=WMqOGAhipysDblHf13fbvtU9sHNtcLV2mRru2RBOXK7eFQ4BrXjsABh4XtNW9iSJKnj7yS7ewjVlYA45RIPY82c3dmuhuzF074K8Pi3fXhWmHYAqIqy41y+RXkcrKXi7BNOPgR+A4+ksGUil8RdjShAHGoUy0DV+yTUVz3JYLi8=
+	t=1743643287; cv=none; b=TYc1HMDjG1WmTjLkvOLagEFCK5amVf7DUGxjt9ckdrrMlZCwWJnitHvJJDy8ZFIrz12O8E8MxMGcvMxJDeO6gK4TZ6bqsYZ3HTJYOPjynrO5ShGPU3tYVpcg4J8Oud9iVIaH2FjH1pfP+c1rdiv0Mwdye+MbUOUzzE4jS8MXTZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743643136; c=relaxed/simple;
-	bh=+wbkhxA7fgD+jDjAsUlqMd94lyd4waCkfNu2fzgAVx8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o4fCGseuUmrIhcbp2fWypH6CRdGhoyNLb3bAKmxupTv42cXgObnNzOdOht1hom0D0J4WUPjPFuQwpvNRyi1t1F4pGDvc8hQZAfhUyEIAaOpnl0/5HwO/1U1hN4993WLfLtDHH4mrjjw0RA0aiTK5dV6Q5dumwNibLbhbtFYQj3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GQZYXtlS; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GQZYXtlS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69DE0C4CEDD;
-	Thu,  3 Apr 2025 01:18:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743643134;
-	bh=+wbkhxA7fgD+jDjAsUlqMd94lyd4waCkfNu2fzgAVx8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GQZYXtlS1kTONy4KCRgddTQItMECmZ40kJOUa9mZxQD3DJoX6fnX57B7zBNBglio1
-	 f2+8n2S/bZY2oIFq4Gd6nfsjqp46LwIpmT5HGCZV0qBfMuXHtC62jkFiibVkZoxL++
-	 FiLNfg2aU/q2S3AL4WRCjRdrR/eV1qg8QIpjwTE5Jtw/tE79aTvHkKqxrSjtRAF7Co
-	 n1Q1uWRp8Qr3livcCEB9vxE1AWrjGSTHkItxWr3oDj1i6gFY/yrl5hDp1whcEV04Vq
-	 UT9sccF/J1Gdih52OAy6PM1mu1PFNzh6t8GW4SeS0LDE6V4xHyYDPzILW2M+sd4F9K
-	 omLDifo9MEbKw==
-Date: Wed, 2 Apr 2025 18:18:49 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: open list <linux-kernel@vger.kernel.org>,
-	Linux ARM <linux-arm-kernel@lists.infradead.org>,
-	lkft-triage@lists.linaro.org,
-	Linux Regressions <regressions@lists.linux.dev>,
-	clang-built-linux <llvm@lists.linux.dev>,
-	Arnd Bergmann <arnd@arndb.de>, Ard Biesheuvel <ardb@kernel.org>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Anders Roxell <anders.roxell@linaro.org>
-Subject: Re: v6.14-12245-g91e5bfe317d8: Boot regression: rk3399-rock-pi-4b
- dragonboard-410c dragonboard-845c no console output
-Message-ID: <20250403011849.GA3138383@ax162>
-References: <CA+G9fYve7+nXJNoV48TksXoMeVjgJuP8Gs=+1br+Qur1DPWV4A@mail.gmail.com>
+	s=arc-20240116; t=1743643287; c=relaxed/simple;
+	bh=tgs0e8XeIN7q0WyRcw+06bmb50vMDJ4P4L/t0bTxsUs=;
+	h=Message-ID:Date:MIME-Version:CC:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=DjygnorW/ts+TZ8WDjBOKEFlNkRYgiHly/5nEzL6AH6I4X7NTFtcfoJPLHkmLANmg1rtJZpyR3rNEmcTxL3T8Xctrx6sFmrsF+QJXuwvdmLejod/xlHxYMlTxqU864nSjE6NsXEEeLOWFTvolWGFsW+9c7WrwrL+MYGTInu7F0w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4ZSkNy1VJMzvWs8;
+	Thu,  3 Apr 2025 09:17:22 +0800 (CST)
+Received: from kwepemk100013.china.huawei.com (unknown [7.202.194.61])
+	by mail.maildlp.com (Postfix) with ESMTPS id 5D0061800E4;
+	Thu,  3 Apr 2025 09:21:22 +0800 (CST)
+Received: from [10.67.120.192] (10.67.120.192) by
+ kwepemk100013.china.huawei.com (7.202.194.61) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Thu, 3 Apr 2025 09:21:21 +0800
+Message-ID: <88dcf938-f43d-44f8-a943-ab84aa2edf2b@huawei.com>
+Date: Thu, 3 Apr 2025 09:21:20 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+G9fYve7+nXJNoV48TksXoMeVjgJuP8Gs=+1br+Qur1DPWV4A@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+CC: <shaojijie@huawei.com>, <davem@davemloft.net>, <edumazet@google.com>,
+	<kuba@kernel.org>, <pabeni@redhat.com>, <andrew+netdev@lunn.ch>,
+	<shenjian15@huawei.com>, <wangpeiyang1@huawei.com>, <liuyonglong@huawei.com>,
+	<chenhao418@huawei.com>, <jonathan.cameron@huawei.com>,
+	<shameerali.kolothum.thodi@huawei.com>, <salil.mehta@huawei.com>,
+	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net 3/3] net: hns3: store rx VLAN tag offload state for VF
+To: Simon Horman <horms@kernel.org>
+References: <20250402121001.663431-1-shaojijie@huawei.com>
+ <20250402121001.663431-4-shaojijie@huawei.com>
+ <20250402140155.GR214849@horms.kernel.org>
+From: Jijie Shao <shaojijie@huawei.com>
+In-Reply-To: <20250402140155.GR214849@horms.kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemk100013.china.huawei.com (7.202.194.61)
 
-Hi Naresh,
 
-On Wed, Apr 02, 2025 at 06:19:19PM +0530, Naresh Kamboju wrote:
-> Regressions on rk3399-rock-pi-4b, dragonboard-410c and dragonboard-845c
-> the lto-thing, hardening and lto-full config boot failed with toolchain
-> clang-nightly on the mainline master branch with no console output.
-> 
-> First seen on the v6.14-12245-g91e5bfe317d8
->  Good: v6.14-11270-g08733088b566
->  Bad: v6.14-12245-g91e5bfe317d8
-> 
-> Regressions found on rk3399-rock-pi-4b:
->   - boot/clang-nightly-lkftconfig-kselftest
->   - boot/clang-nightly-lkftconfig-lto-thing
->   - boot/clang-nightly-lkftconfig-hardening
->   - boot/clang-nightly-lkftconfig-lto-full
-> 
-> Regressions found on dragonboard-410c:
->   - boot/clang-nightly-lkftconfig-lto-thing
->   - boot/clang-nightly-lkftconfig-lto-full
->   - boot/clang-nightly-lkftconfig-hardening
-> 
-> Regressions found on dragonboard-845c:
->   - boot/clang-nightly-lkftconfig-hardening
->   - boot/clang-nightly-lkftconfig-lto-thing
-> 
-> Regression Analysis:
->  - New regression? Yes
->  - Reproducibility? Yes
-> 
-> Boot regression: rk3399-rock-pi-4b dragonboard-410c dragonboard-845c
-> no console output
-> 
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> 
-> ## Boot log
-> Starting kernel
+on 2025/4/2 22:01, Simon Horman wrote:
+> On Wed, Apr 02, 2025 at 08:10:01PM +0800, Jijie Shao wrote:
+>> From: Jian Shen <shenjian15@huawei.com>
+>>
+>> The VF driver missed to store the rx VLAN tag strip state when
+>> user change the rx VLAN tag offload state. And it will default
+>> to enable the rx vlan tag strip when re-init VF device after
+>> reset. So if user disable rx VLAN tag offload, and trig reset,
+>> then the HW will still strip the VLAN tag from packet nad fill
+>> into RX BD, but the VF driver will ignore it for rx VLAN tag
+>> offload disabled. It may cause the rx VLAN tag dropped.
+>>
+>> Fixes: b2641e2ad456 ("net: hns3: Add support of hardware rx-vlan-offload to HNS3 VF driver")
+>> Signed-off-by: Jian Shen <shenjian15@huawei.com>
+>> Signed-off-by: Jijie Shao <shaojijie@huawei.com>
+> Overall this looks good to me.
+>
+> Reviewed-by: Simon Horman <horms@kernel.org>
+>
 > ...
-> <No console output>
-> 
-> 
-> ## Source
-> * Kernel version: 6.14.0
-> * Git tree: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-> * Git sha: 91e5bfe317d8f8471fbaa3e70cf66cae1314a516
-> * Git describe: v6.14-12245-g91e5bfe317d8
-> * Project details:
-> https://qa-reports.linaro.org/lkft/linux-mainline-master/build/v6.14-12245-g91e5bfe317d8/
-> * Architectures: arm64 (rk3399-rock-pi-4b, dragonboard-410c, dragonboard-845c)
-> * Toolchains: clang-nightly (Debian clang version 21.0.0 )
+>
+>> diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h
+>> index cccef3228461..1e452b14b04e 100644
+>> --- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h
+>> +++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h
+>> @@ -252,7 +252,8 @@ struct hclgevf_dev {
+>>   	u16 *vector_status;
+>>   	int *vector_irq;
+>>   
+>> -	bool gro_en;
+>> +	u32 gro_en :1;
+>> +	u32 rxvtag_strip_en :1;
+> FWIIW, as there is space I would have used two bools here.
 
-The version string for the toolchain seems to be slightly truncated but
-from the configuration it is:
+ok, I will change to bool in v2
 
-  Debian clang version 21.0.0 (++20250330105456+3b3d1a5c2614-1~exp1~20250330225508.1357)
+Thanks,
+Jijie Shao
 
-which can be parsed with our parse-debian-clang.py [1] to get more
-information:
-
-  $ scripts/parse-debian-clang.py -p -v 'Debian clang version 21.0.0 (++20250330105456+3b3d1a5c2614-1~exp1~20250330225508.1357)'
-  clang checkout date: 2025-03-30 10:54 UTC (3 days, 14:17:24.134272 ago)
-  clang revision: 3b3d1a5c2614
-  clang revision link: https://github.com/llvm/llvm-project/commit/3b3d1a5c2614
-
-Our CI is using a slightly newer version:
-
-  $ scripts/parse-debian-clang.py -p -v 'Debian clang version 21.0.0 (++20250401112529+290d7b82cb5d-1~exp1~20250401112547.1360)'
-  clang checkout date: 2025-04-01 11:25 UTC (1 day, 13:49:39.394836 ago)
-  clang revision: 290d7b82cb5d
-  clang revision link: https://github.com/llvm/llvm-project/commit/290d7b82cb5d
-
-Can you see if it is reproducible with that revision? For what it's
-worth, both of the arm64 boxes I have can boot a ThinLTO kernel compiled
-with a version of LLVM @ 749535ba2808e133682074f712ac6829335f8875, so it
-could be something that was broken for a little bit but Debian happened
-to sync before the fix was committed.
-
-[1]: https://github.com/ClangBuiltLinux/continuous-integration2/blob/fe4844afc1be91d469fc162c8a179f23fafb9384/scripts/parse-debian-clang.py
-
-Cheers,
-Nathan
+>
+>>   
+>>   	unsigned long vlan_del_fail_bmap[BITS_TO_LONGS(VLAN_N_VID)];
+>>   
+>> -- 
+>> 2.33.0
+>>
