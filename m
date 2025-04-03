@@ -1,60 +1,40 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mout.web.de (mout.web.de [212.227.15.3])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCD4F24E004;
-	Thu,  3 Apr 2025 13:13:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC92124E004;
+	Thu,  3 Apr 2025 13:13:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743685986; cv=none; b=BHptxGcIi8w7R0ndmRTHGDT3ExdLJcZu+QWpAyJ9Cobqc+MKWCL1pXpY5vz1K3fqSUnFdIJ9D1Ds29YCzWDQ2K5DI7uQqkHuHeRw+Jm0fJD4szzd3mdbFfhMN6HL7CvCGkLxx2t6ss2KvfK1pTi5PvpRAHWJ/sfwvIKdqQ1s1DM=
+	t=1743686029; cv=none; b=eXXz+4LkoG1IVajozSG7EPnF8nBMKaS+vpWvajlpTu/a21LwSBM8Ddj72HeyCroGyiYKFX4l6bXIgICwcQQTuaVHJyhQgv6azuZKqUIy3+YkiIzayzRD98mKcKpRkqHlNVJU5sfwu15XGqX1ycZYq+5ENlHza6PTKJpSd4EtZqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743685986; c=relaxed/simple;
-	bh=5PQtbwEoH1ime2NIIHH/Tl3NtKI6Qa7OnDQh1ZfSalM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kRWM0oS52pS/T6VHgxG2WBbi28sbVBZam3aSt/TE9CmUXVSzIIX47YwDPFsScff2sblJOuCQ5fBJKIBb8JY8uCOaCvuuYOBhem8lMZ9LetGwDXUd9DsW5jEMUGIZKhz8hE/fydBhh6Kk1zC5XUEGUYJig29XXjNcVQULw+Fxdfw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=VMOxqC5Y; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1743686029; c=relaxed/simple;
+	bh=oO2YyQYecVr+L4x0Yq8tpuXt1Blol50iC56ZhetCIAw=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=WW7w/EQnT+3WNJA3b4Sqvilg6+N78IOHtSgNcA3E+ID7q4K69Pq2SY7mf9Qj7pumma8Lawfx3dkWS8w8/BmtEK4kk476Q93n4H10P0kyfE2hpFSTu+oWuQKe6fcGO/BSRgxt+BH4sQNfxFd/G5LY5ahqtk053us4/urMLR2nqlA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=frank.scheiner@web.de header.b=jfpaWPDn; arc=none smtp.client-ip=212.227.15.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="VMOxqC5Y"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 533A9Fhs024797;
-	Thu, 3 Apr 2025 13:12:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=5PQtbw
-	EoH1ime2NIIHH/Tl3NtKI6Qa7OnDQh1ZfSalM=; b=VMOxqC5YnuW2Hj7Cb7CVYb
-	g31xUYj4c/zUEYA9w40rGsdUWmpXq+xNgeIOoRBPILaIKfzK6KPXcoKuC/QHJm8p
-	r3fpH/cWOzrR6vyihIc8q+eVkPpTT4cAcB/qIiJtktIT25aLA7CObemupkc5+Fik
-	ITv6W7abukMgg6fLVrTMJve/8DpS1qzU5arYXq+2qLp/ji5PN83kwmEWmOOHv2CC
-	KIh4yhFjVUvF8qRTHtai2plpC5XWQcBkZVJZmC1K4td2Fem9nmMBcZkKDgRF1FYw
-	ZsFvTUCNWTKgIQY+v4jqCXYNc0R2dWuoNeHt78MgB39NXJutogPIqi0U8vPkMeeQ
-	==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45scdr3r38-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 03 Apr 2025 13:12:58 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 533A1jvB009923;
-	Thu, 3 Apr 2025 13:12:57 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45pv6p4wsj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 03 Apr 2025 13:12:57 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 533DCr8v54198736
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 3 Apr 2025 13:12:53 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6A10A20043;
-	Thu,  3 Apr 2025 13:12:53 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 83B2F2004B;
-	Thu,  3 Apr 2025 13:12:52 +0000 (GMT)
-Received: from [9.179.17.170] (unknown [9.179.17.170])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu,  3 Apr 2025 13:12:52 +0000 (GMT)
-Message-ID: <e73b185d-2a33-400d-b351-3e353d78cb4a@linux.ibm.com>
-Date: Thu, 3 Apr 2025 15:12:52 +0200
+	dkim=pass (2048-bit key) header.d=web.de header.i=frank.scheiner@web.de header.b="jfpaWPDn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1743686000; x=1744290800; i=frank.scheiner@web.de;
+	bh=tq7Ewy84FWklJ0DM2lQqRrm1CFpORg7fNcv68fsFdoI=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=jfpaWPDnqJlnn7d/eeKA+Q2dZ6gal+i27mW+REj0gdj86oe2hrp1rhPGmf7hy4Ps
+	 ucG7L7EDOF3MG/YJSYMNsvXaoeAKKiuPIFKvghBUxWs4T0rF+acXD/NDt/siXGzgj
+	 X8f+hJQZhTuPvqizGbwQAxuDK/ujk+GUPNZiM23PgGRC+xqSE/cfFEUrP53QV4RkI
+	 /N9DJ3bgz0roFD3YAqpyx7Bhmo015EwlCP2gSdoAbC8cJABBh/AsC+r5dxNClp5Tq
+	 L8ZyLbPeuNYG25J7trpGWIC1FtQp75NBD/OGH5SqZaeU8skoKP3ftavD+VnXM6vfa
+	 S+xM5OLloka1ig34xA==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.30] ([84.152.250.142]) by smtp.web.de (mrweb005
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1MZSBG-1tco0U2pmQ-00IJ9N; Thu, 03
+ Apr 2025 15:13:20 +0200
+Message-ID: <667d272f-2b51-49d6-84ea-1156027e00a7@web.de>
+Date: Thu, 3 Apr 2025 15:13:17 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,61 +42,105 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] s390/virtio_ccw: don't allocate/assign airqs for
- non-existing queues
-To: David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org
-Cc: linux-s390@vger.kernel.org, virtualization@lists.linux.dev,
-        kvm@vger.kernel.org, Chandra Merla <cmerla@redhat.com>,
-        Stable@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>,
-        Thomas Huth <thuth@redhat.com>, Halil Pasic <pasic@linux.ibm.com>,
-        Eric Farman <farman@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev
- <agordeev@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>, Wei Wang <wei.w.wang@intel.com>
-References: <20250402203621.940090-1-david@redhat.com>
+To: apatel@ventanamicro.com
+Cc: ajones@ventanamicro.com, andrew@lunn.ch, anup@brainfault.org,
+ atishp@atishpatra.org, bp@alien8.de, dave.hansen@linux.intel.com,
+ gregory.clement@bootlin.com, hpa@zytor.com, imx@lists.linux.dev,
+ kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+ maz@kernel.org, mingo@redhat.com, palmer@dabbelt.com,
+ paul.walmsley@sifive.com, s.hauer@pengutronix.de,
+ sebastian.hesselbarth@gmail.com, shawnguo@kernel.org,
+ sunilvl@ventanamicro.com, tglx@linutronix.de, x86@kernel.org,
+ linux-ia64@vger.kernel.org
+References: <20250217085657.789309-5-apatel@ventanamicro.com>
+Subject: Re: [PATCH v6 04/10] genirq: Introduce common
+ irq_force_complete_move() implementation
 Content-Language: en-US
-From: Christian Borntraeger <borntraeger@linux.ibm.com>
-In-Reply-To: <20250402203621.940090-1-david@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Frank Scheiner <frank.scheiner@web.de>
+In-Reply-To: <20250217085657.789309-5-apatel@ventanamicro.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: q6wVE3KcHk-luemwwcUmDRRd8C2FoJv9
-X-Proofpoint-GUID: q6wVE3KcHk-luemwwcUmDRRd8C2FoJv9
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-03_05,2025-04-02_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 clxscore=1011
- adultscore=0 priorityscore=1501 bulkscore=0 phishscore=0 mlxlogscore=449
- lowpriorityscore=0 mlxscore=0 impostorscore=0 malwarescore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504030057
+X-Provags-ID: V03:K1:XEpgZJH4hjXKrAVtN6WYfb76caRsH3G/1YZh0k6iv/5gAuOD6JZ
+ /5tde3RwkXrkd/Pey4Lz/oZqXIOJwitxEp+fORe/ccUTmOxTdKdt1JHSPo7f6gtuJfxNzDZ
+ CT0pBBS+/1TDZFBQT8c7xRTvQ04Ld/hNbLksOh9snnDnKPRk4pMuFmuPo7JqqG7e0gsfnuM
+ o7r8alGP5hXS3FrAzPIkg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:Of7XFgulvNQ=;OVh5LHzbZMeUCHWhdl2nXotRgit
+ jM6j1jgD5opSeNE7yy/Joxn4dWxgFOVQNAKd/9JrMF5rl1I5wvE1WrzuIA55muGKCafDi+qNf
+ VM/TKsQ5FYBPmRxIMIODE9vSzoN8nXhbs4547OCs/oQraFxSR2fQCUvX+/XD/H2fu07WZxDF5
+ JiKyCXLZkwYuP49khkI1RPsWSuznFlZUD8xkeB8OkRIsOAAn1AmhQGeWaigIF8080IM0X8SJC
+ /Q0MEC4U0PoYB6fVozKBItqDoDSyPT8v2xUPgpM4eqIEUz/mnXKAAbNZqlQhNx7VJQwkdljWy
+ hanRggjC+qcyvNnLv4+wWV361WVPE0XqVtSWkPJVSerVB5ZvzYYDvKDy3rAZSunshNvPPkjjd
+ nF2CDEmIkniaETkOsdfzv/bGnskgZxhNsUDmjt12xjJgtp7/OfqAJ4sV12Ni2o06jYqHCIntJ
+ lAv1rJYy7HWdYf1eu5xtCgIz2GZossoQJvhoC6EMXI4aAS2+xuYfuaoQARne38XIb6Vp4yv7p
+ LJ2UP9ONGwFBoW/2qaBKubFr/6edJ0npfgdLzR0HkovRPwe1Xw1xCOO6OOwvVoklqrUOZ2iQ3
+ EJVg8HRlqql/7e0imy9xYuEaQpU6K7d9u4FYppWQILPTr0N8xW1vJ9P0YUf7Rf4znCKxsoS1F
+ MKPB83tuLCXlQ5bG+q1Q9bxzHNyPNlhWh6AuWdY0+XbRKYXf1JTDJUlxSn3J464O2RPfPmqdH
+ HDVSisM8e0I7C2Fzl9Gi2irOvjG78Pena6EpnNuhC2GbMVwM0HuEH9dVI8ZqtVQp9koggzIzA
+ h126Bu/qYCnPX6wXzAfJAnf4X/8HbAQowX13W7CCxhdd4U+PioOYYWXHPkYx6nO5OiCCvJ6wC
+ t4DcaQPA6IPUC2xmwpZ1iuyUMpNNT/3wbfPwE64sa6/CZXKN9f+9j4UnsQDKfw4okD1iQnwhd
+ Me4LKEO/bYQrmX4ZB7PwRFV4KFK7498IYaO26+frpSRi3Qdo8SKDIS462jGpd0qsELf3rporN
+ VSGoBRFYikvqgrNVjiF9ItOmcRROIjXooW4kWaQj0kEyKbuqUP/QBtx+e553himBLKWRbXQgL
+ 2mT4LxpzgUB8pez1+EeTuoBBpnKPHLs8Lb5+MyIBhjxgyhlQcXmCWF8K/4PyimOqbld6BVBkB
+ b9c897IE7qU4qZr4claegKPHTOt4zT3q3ERrHiC9shhf1l2jKNJAghCAwuQFOgZ2fudl7W8dH
+ KvEZ3v9n2hpNTq6auTCW9guBFFRV8x/yI6TBWhZCNwS1me+uL8jO2BFF7UsXh1k0o21Lr6g01
+ 9aVgDoQ7l/vgmrgyB4Q8U0n33dGHKGuujhqJuFENBBhBe/faxIMPYUI8/pmGoK9/KWTKz1rqf
+ Mtr0mYNyydPx0M/YfvQCBhIITMLSUsU8z8F7zjYKtscMJFtszwQTLMRjqgV9A/k+5dxBAIvcW
+ KOMwjXQ==
 
-Am 02.04.25 um 22:36 schrieb David Hildenbrand:
-[...]>
-> Fixes: a229989d975e ("virtio: don't allocate vqs when names[i] = NULL")
-> Reported-by: Chandra Merla <cmerla@redhat.com>
-> Cc: <Stable@vger.kernel.org>
-> Cc: Cornelia Huck <cohuck@redhat.com>
-> Cc: Thomas Huth <thuth@redhat.com>
-> Cc: Halil Pasic <pasic@linux.ibm.com>
-> Cc: Eric Farman <farman@linux.ibm.com>
-> Cc: Heiko Carstens <hca@linux.ibm.com>
-> Cc: Vasily Gorbik <gor@linux.ibm.com>
-> Cc: Alexander Gordeev <agordeev@linux.ibm.com>
-> Cc: Christian Borntraeger <borntraeger@linux.ibm.com>
-> Cc: Sven Schnelle <svens@linux.ibm.com>
-> Cc: "Michael S. Tsirkin" <mst@redhat.com>
-> Cc: Wei Wang <wei.w.wang@intel.com>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
+Hi there,
 
-Acked-by: Christian Borntraeger <borntraeger@linux.ibm.com>
+this change, specfically the introduction of irq_force_complete_move()
+to `kernel/irq/migration.c`, strangely breaks our builds for the hp-sim
+platform (i.e. Linux/ia64 for Ski):
 
-I will apply this to our internal s390 tree and let it sit for a
-day to get CI coverage.
+```
+  CC      kernel/irq/affinity.o
+kernel/irq/migration.c: In function 'irq_force_complete_move':
+kernel/irq/migration.c:40:72: error: 'struct irq_data' has no member named 'parent_data'
+   40 |         for (struct irq_data *d = irq_desc_get_irq_data(desc); d; d = d->parent_data) {
+      |                                                                        ^~
+make[4]: *** [scripts/Makefile.build:207: kernel/irq/migration.o] Error 1
+```
 
-Alexander, Vasily, Heiko,
-please then schedule for the s390/fixes branch if there is no CI fallout.
+The reason seems to be that "d->parent_data" (i.e.
+"irq_data.parent_data") is used unguarded in this function:
 
+```
+void irq_force_complete_move(struct irq_desc *desc)
+{
+    for (struct irq_data *d = irq_desc_get_irq_data(desc); d; d = d->parent_data) {
+        if (d->chip && d->chip->irq_force_complete_move) {
+            d->chip->irq_force_complete_move(d);
+            return;
+        }
+    }
+}
+```
+
+...but "parent_data" is only present in `include/linux/irq.h` if
+`CONFIG_IRQ_DOMAIN_HIERARCHY` was selected.
+
+```
+struct irq_data {
+    u32            mask;
+    unsigned int        irq;
+    irq_hw_number_t        hwirq;
+    struct irq_common_data    *common;
+    struct irq_chip        *chip;
+    struct irq_domain    *domain;
+#ifdef    CONFIG_IRQ_DOMAIN_HIERARCHY
+    struct irq_data        *parent_data;
+#endif
+    void            *chip_data;
+};
+```
+
+So I guess, either the requirement in `linux/include/linux/irq.h` needs
+to go, or the use of "d->parent_data" or the whole of
+irq_force_complete_move() and its use needs to be guarded as well.
+
+Cheers,
+Frank
 
