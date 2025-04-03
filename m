@@ -1,123 +1,95 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E33133DB;
-	Thu,  3 Apr 2025 17:23:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2FE01547C3;
+	Thu,  3 Apr 2025 17:27:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743700992; cv=none; b=Ls42wscHQLZ/4Jve439L0rj+wOzwacmkYIVmr9wTHsDg2m9oD3oBioXVdAYfemPSQ3AclqmkdgdmY5qlY+myNWHfrvB6TrPDJasauUqcoUeYMow6y8kEDeyzSJDCj/qPmHqgQgwaUJT6oOgf71Wox7D5Qv99sUGOf7Alje2jCzw=
+	t=1743701276; cv=none; b=TPmt2fbroyjRvejK/e4nkzCzGhF8O9zSavEZX3kdVY1CjucNLAXRZwVQSvdQi5iGcUQHPSjoJNQH+M2MihgRt9zIEC02B1cb/bI8i64zhhR54ZlYC5eB05lvXESOw5Ii1OFw+J/2KONdgnJZ1ODDb28cbYi7tGKA9cLDux/OEJQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743700992; c=relaxed/simple;
-	bh=ONT5hyP9dAVamP+G+ulFE46eRCan0impzfRCpp3f67I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KXJ+ke0sa0qAF+aDYaFW5L4Hb9oFFHQ7NVnni0s2EpCFvmkP5YAZDJRgrZWoq+RA7fOMZDUpTPBAp01JwOLAjxjGw+XqCPgbCOHIDi+hKXmwZ28F3JkDtfI9jYhXzQJcpPge2G4RTNC0JITu4F0wwPY3pfKyqRTx72oY5dFEsyg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f0TodopX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743701276; c=relaxed/simple;
+	bh=bYRGDxwUgmJOdrUaQaMSOv+cxYHSKhylhTsWPM09ziw=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LsEsPfU2+wTLepitCHhSlOPrp5Uq6b8O3HsQYB6bsZgOvN1gZh+1jUxTzGCOOIgH6vs6xSOEzD9sefAfgtx5wlpa4ZSgWT1OXpj64fV8h8NnJswr7lgjkvFviGsbeH93tWK8wFLZBNm32o/dJ1igJ3jAU/AD9C4i+sTfIy/UFGo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uTy9IWnZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f0TodopX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA2D1C4AF09;
-	Thu,  3 Apr 2025 17:23:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uTy9IWnZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11BB5C4CEE3;
+	Thu,  3 Apr 2025 17:27:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743700991;
-	bh=ONT5hyP9dAVamP+G+ulFE46eRCan0impzfRCpp3f67I=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=f0TodopXamtJcPuXFkIFGmXEMFVjCtZ26awby3r6CbOcoRrVUdsKFM7fGkEDmUdEX
-	 BG/AKQulIqCH6NiNwsUCMTEvgBPaqHY8FT1+jXx2DZioFyQO+/BH3K+sHO/iUwiycq
-	 adqhmahQixU30j9r4Bry9W8s0+qYsOiBn/Q5iUrYiScw3FqZImVh5qCvddkzDtit/z
-	 ao98GbtNaNCEFYUisU9DLc8wgkNAm+Tgxx0FBGYfVIrPzsl38QsSAw43CGqR5UEgNc
-	 04Dxrb/7C5Mruv4jfLrlx3PiNSebwWV7bom1HzOil+g3XiO4r066zp6m5WbwlpnLcD
-	 roFnHogRGW7CQ==
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-abec8b750ebso187781766b.0;
-        Thu, 03 Apr 2025 10:23:11 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU3PTxuEG5oSPvpCrlcb4Cbr0iETijQT9M64ymnquQ/4Ow90eTyhzBamP4fySLPvt0OJi29zs/7bTxk9V6xU2A=@vger.kernel.org, AJvYcCVV7+V5mhRfhfXsfPMLL56/NPQCZO7ydzonQhBve3mMwIVmxHhtyyRJSWZzJ9U+CCIitXvc+Or1kuER@vger.kernel.org, AJvYcCVZz5psvvP3rwOKfoOh8xHe4zbTOzzZ+Tt5oJCaMCMH3//EvV06XU3HEmLfgF4oXxnaun/I0+Tgs3MIEQ==@vger.kernel.org, AJvYcCWnvFjgFMTE4TlXRJ70n2FqcU1vEVkBM6fzbkiLAgVXCoSix8Gn6Y945yxo/jtTsGmqIOsGYO+0D+aH7nHX@vger.kernel.org
-X-Gm-Message-State: AOJu0YxCPUOoJv5jxWEU9Up+rSYySuYmOWfeDRvfpK8buswn4C1h6chY
-	BMAw9L1rjp6VcOcGh+rVdxSsEi3H+Weo15T89bIA6WjzhtYzvlYjQErxIwU9LsHrhxu+HeGpj0E
-	sfuD3X8udP308kqO40FXzSBxxPQ==
-X-Google-Smtp-Source: AGHT+IGBcTXIQpTZHaJO2gzh+xeqhW5vsmM/rL+gIC9Bk/L2lfLs2jI8YNuoDA0HhaIYMlttzKS2dmFDu5RSdENUZSU=
-X-Received: by 2002:a17:907:d25:b0:ac3:b115:21b8 with SMTP id
- a640c23a62f3a-ac7d1b16d1bmr34388366b.47.1743700990242; Thu, 03 Apr 2025
- 10:23:10 -0700 (PDT)
+	s=k20201202; t=1743701276;
+	bh=bYRGDxwUgmJOdrUaQaMSOv+cxYHSKhylhTsWPM09ziw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=uTy9IWnZfGwj/kOhXEx60AAN+jzV4EcbW45eoOMKQf2yLE48fMFvIx+wyTf0eyIGn
+	 rVTUe1L26I6oh1IKpyXZy1ZL2+5peL3p9EDWNTmIIR7yBo+sS56xGY/K2Ri1KTxpGD
+	 m4J+ta6FC7L6M2IE8e/vJz13uEvUN6i/E7yuxffoXJGSA1UuMPMtYNQsnonLM249q4
+	 rAUYwI5ZCT/IL8Betqt01DBc0D8MqlJKTBcWUFX5IVRSrpc28QeTupRm9jol3oWB6i
+	 U/oRgG2O4Dmovd4zjyGpfjAcK7DhYe0ZXaRq0yxzWAldZmLUxhOPqnqwLATPlCD0IK
+	 0sDrtAMzw1aIg==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=lobster-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1u0OM5-0021yp-KD;
+	Thu, 03 Apr 2025 18:27:53 +0100
+Date: Thu, 03 Apr 2025 18:27:55 +0100
+Message-ID: <874iz5yx2c.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Christian Bruel <christian.bruel@foss.st.com>
+Cc: <tglx@linutronix.de>,
+	<robh@kernel.org>,
+	<krzk+dt@kernel.org>,
+	<conor+dt@kernel.org>,
+	<mcoquelin.stm32@gmail.com>,
+	<alexandre.torgue@foss.st.com>,
+	<linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>,
+	<devicetree@vger.kernel.org>,
+	<linux-stm32@st-md-mailman.stormreply.com>
+Subject: Re: [PATCH 3/3] arm64: dts: st: add st,stm32mp2-cortex-a7-gic in intc node in stm32mp251.dtsi
+In-Reply-To: <20250403122805.1574086-4-christian.bruel@foss.st.com>
+References: <20250403122805.1574086-1-christian.bruel@foss.st.com>
+	<20250403122805.1574086-4-christian.bruel@foss.st.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250326171411.590681-1-remo@buenzli.dev> <20250326171411.590681-4-remo@buenzli.dev>
- <Z-UPJyD41LOMM3o2@smile.fi.intel.com> <D8WA3WIHEQRN.3LQS84K8Z46OW@buenzli.dev>
- <Z-6NG7fSfyKH-vW_@smile.fi.intel.com> <CAL_JsqLPZc1LB09auMOJp90hbhJin75Yaa09h12ziZZgExSsBg@mail.gmail.com>
- <D8X60PODTV0B.2ENFYEXH7EZP0@buenzli.dev>
-In-Reply-To: <D8X60PODTV0B.2ENFYEXH7EZP0@buenzli.dev>
-From: Rob Herring <robh@kernel.org>
-Date: Thu, 3 Apr 2025 12:22:59 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqLtRuzpQH=LnV45FFN=Gr_U403H2qfoPQskrCOknnwoyA@mail.gmail.com>
-X-Gm-Features: ATxdqUFBJeZLouUdX7Kpe6dUgmjxFi1XjK6oFW_um6EtcJfr1DDYj3hJqn8yqqU
-Message-ID: <CAL_JsqLtRuzpQH=LnV45FFN=Gr_U403H2qfoPQskrCOknnwoyA@mail.gmail.com>
-Subject: Re: [PATCH 03/10] device property: Add fwnode_property_read_int_array()
-To: Remo Senekowitsch <remo@buenzli.dev>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>, 
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, Dirk Behme <dirk.behme@de.bosch.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Saravana Kannan <saravanak@google.com>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, linux-kernel@vger.kernel.org, 
-	linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: christian.bruel@foss.st.com, tglx@linutronix.de, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Thu, Apr 3, 2025 at 12:04=E2=80=AFPM Remo Senekowitsch <remo@buenzli.dev=
-> wrote:
->
-> On Thu Apr 3, 2025 at 6:08 PM CEST, Rob Herring wrote:
-> > On Thu, Apr 3, 2025 at 8:29=E2=80=AFAM Andy Shevchenko
-> > <andriy.shevchenko@linux.intel.com> wrote:
-> >>
-> >> On Wed, Apr 02, 2025 at 06:04:13PM +0200, Remo Senekowitsch wrote:
-> >> > On Thu Mar 27, 2025 at 9:41 AM CET, Andy Shevchenko wrote:
-> >> > > On Wed, Mar 26, 2025 at 06:13:42PM +0100, Remo Senekowitsch wrote:
-> >> > >> The rust bindings for reading device properties has a single
-> >> > >> implementation supporting differing sizes of integers. The fwnode=
- C API
-> >> > >> already has a similar interface, but it is not exposed with the
-> >> > >> fwnode_property_ API. Add the fwnode_property_read_int_array() wr=
-apper.
-> >>
-> >> ...
-> >>
-> >> > >> +EXPORT_SYMBOL_GPL(fwnode_property_read_int_array);
-> >> > >
-> >> > > I'm not sure about this. We have a lot of assumptions in the code =
-that the
-> >> > > arrays beneath are only represented by the selected number of inte=
-ger types.
-> >> > > This opens a Pandora's box, e.g., reading in u24, which is not sup=
-ported by
-> >> > > the upper layers..
-> >> > >
-> >> > >> +int fwnode_property_read_int_array(const struct fwnode_handle *f=
-wnode, const char *propname,
-> >> > >> +                             unsigned int elem_size, void *val, =
-size_t nval);
-> >> >
-> >> > Here's an alternative approach using a macro to map each integer typ=
-e explicitly
-> >> > to its corresponding read function. There are some additional change=
-s that will
-> >> > be necessary to make the rest work, but this is the gist of it.
-> >>
-> >> I don;'t know Rust to tell anything about this, but at least it feels =
-much
-> >> better approach.
-> >
-> > I know a little Rust and it is much worse. It is implementing the same
-> > code 8 times instead of 1 time just to work-around the C API.
->
-> I prepared a functioning version of the macro-based approach. I'll post
-> the patch for reference and discussion. We don't have to go with it.
+On Thu, 03 Apr 2025 13:28:05 +0100,
+Christian Bruel <christian.bruel@foss.st.com> wrote:
+> 
+> Add st,stm32mp2-cortex-a7-gic to enable the GICC_DIR register remap
+> 
+> Signed-off-by: Christian Bruel <christian.bruel@foss.st.com>
+> ---
+>  arch/arm64/boot/dts/st/stm32mp251.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/st/stm32mp251.dtsi b/arch/arm64/boot/dts/st/stm32mp251.dtsi
+> index f3c6cdfd7008..030e5da67a7e 100644
+> --- a/arch/arm64/boot/dts/st/stm32mp251.dtsi
+> +++ b/arch/arm64/boot/dts/st/stm32mp251.dtsi
+> @@ -115,7 +115,7 @@ scmi_vdda18adc: regulator@7 {
+>  	};
+>  
+>  	intc: interrupt-controller@4ac00000 {
+> -		compatible = "arm,cortex-a7-gic";
+> +		compatible = "st,stm32mp2-cortex-a7-gic", "arm,cortex-a7-gic";
 
-Please wait for the discussion to finish.
+What nonsense is this? This is an *arm64* machine, with I expect a
+GIC400. Where is this A7 compat coming from?
 
-Rob
+	M.
+
+-- 
+Jazz isn't dead. It just smells funny.
