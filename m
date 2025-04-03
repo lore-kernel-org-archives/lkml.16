@@ -1,110 +1,141 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE0587F7FC
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 14:13:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73F68210FB
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 14:13:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743689603; cv=none; b=nOE5E8CL9WxW96XTTvSP6NIrtafwu2AI0Ee1zrGnWL4CuCnh1c92+JihLyn4oOmaflH8OnlIx5fLass73bQfAqdSa9enMNzHqfImVSktJCIyfb+WZHYHh+u2T5RMaJmi8TUJ4Y2LEDivbp58A/DpE2nmar1Q3nf0eCY+57BZX3c=
+	t=1743689621; cv=none; b=V8PKW04MhemzD5+1CrroAY2GY+QvZ8OZ4m2HiPX+71tLl81EqlrbuJsUPYHmDdL9ysfG/Vu5tYiBmjxjoeU/K03XLb+4ZgOrfylI/N35XvRi4DOwVRp3wKmxO8A2M1X5lrA3qsxssrKJmdwVOyUWz0KsXcNqJfbOMUolT3snbwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743689603; c=relaxed/simple;
-	bh=/vMOGYJHU3N99XcnouH6J7FcQMuSYe+/VfJBY8ovNzM=;
+	s=arc-20240116; t=1743689621; c=relaxed/simple;
+	bh=gHhxqBxljXYX4c7qemwpJh4WVb2cArmJo9uV0JF9qnU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lMPttwzPrADZhePrKob1BXqVS33uh85B2qNtCesLupEOY/mV8ueJhjZjBZoOR1iubM4mfIDTgXeQjlID2C5ewsneRunE3vQqqg2rKsFNQK+aviDqntVoS3vLrzMoTz9rdDFmQFrN8Cqfr1CEFgp4EzVg0Et5dGaiVGUbUkCpuvk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u+p6CC+g; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Uj14eJXYi0/39If0WAKm0uhCBMWguc/j8bolLZnP8E5mwTihcg1sFSVUkPc6tesacgn9bIzmulvGjTGjjz/30wmGLojqS1ex0RMpFBq5rI6AspQYEH3gROfgAZquMJmBSKb0eZTJ1KvONfOnSOKWggqeGKzTAaybIe6UIseZbo8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D+yMbUF4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u+p6CC+g"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 035D5C4CEE3;
-	Thu,  3 Apr 2025 14:13:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D+yMbUF4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D727C4CEE3;
+	Thu,  3 Apr 2025 14:13:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743689603;
-	bh=/vMOGYJHU3N99XcnouH6J7FcQMuSYe+/VfJBY8ovNzM=;
+	s=k20201202; t=1743689621;
+	bh=gHhxqBxljXYX4c7qemwpJh4WVb2cArmJo9uV0JF9qnU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=u+p6CC+gU0sA+GjrzK/KJv1pZ28LBj4hRjALrTyZbw16A9CGhfbMug7igY/rxzRQV
-	 /UxPjojecDRtbWVa9Efjv/g53zKGzhNpDUKjjGnQASZSdl7kOxE8igx9mw2rZF9xGn
-	 qOC3O+xLy7oMbLEd3bipPxt20w0LqK1DDp+tYASP14qVXo5x/dWpWB5Z+bObiOn5fJ
-	 fhiDEWaGO7x88pGpdoPwWpg6g2Ayo9E+Ul12jTcJlwZ+wKu18rNwiZqAegeBqgbejr
-	 OHS+kVO31Da0hKq1Q5oHfiw3AB6ttxEo+CXVCUvqa6mJyNYZpEhPpu19QyH+CxDtTl
-	 BYxMrp7QrYYXw==
-Date: Thu, 3 Apr 2025 17:13:15 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: David Woodhouse <dwmw2@infradead.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	"Sauerwein, David" <dssauerw@amazon.de>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	David Hildenbrand <david@redhat.com>, Marc Zyngier <maz@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mike Rapoport <rppt@linux.ibm.com>, Will Deacon <will@kernel.org>,
-	kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [RFC PATCH 3/3] mm: Implement for_each_valid_pfn() for
- CONFIG_SPARSEMEM
-Message-ID: <Z-6XexJWecbxnrmK@kernel.org>
-References: <Z-vn-sMtNfwyJ9VW@kernel.org>
- <20250402201841.3245371-1-dwmw2@infradead.org>
- <20250402201841.3245371-3-dwmw2@infradead.org>
- <Z-4phOInXZlxFwk9@kernel.org>
- <e465ba32fb34b31eddb18890587960671b73234f.camel@infradead.org>
- <380d9bff359150f67ca6e0468f99ee746c1abdea.camel@infradead.org>
+	b=D+yMbUF48CaPQ/dmGnC6Qx3HmczFvNfHnyu/pKcbuPYko/xj3z0SlFylUWqU0fpNm
+	 NrGBEWLRhQ4uuJVh2VcFDK7QshUU9nzaR4BZB/3yVX47Sil4s/GBJV11h2YoqZXJjv
+	 SodHKSMxXlUHLwhkfiaDfknCoe3XBTK0pOG++7MQy//s6LliEcpF4n2rMkpXVPDt9L
+	 +V2N6z5xZxoek3cAfWuIk2axToXioCp5yud5xe2GIhzp1QKzFQRTEV+jLT9gyhYTg0
+	 OGA0PJzj2qLl/TqJ+FgnBwbN/ir4lVGpVhihn+4qYY0tZkIE7G4LG7+95GEYDDmSBf
+	 OLp8frc/xiMxw==
+Date: Thu, 3 Apr 2025 16:13:36 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Nikolay Borisov <nik.borisov@suse.com>
+Cc: linux-kernel@vger.kernel.org, Juergen Gross <jgross@suse.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH 37/49] x86/alternatives: Move text_poke_array completion
+ from smp_text_poke_batch_finish() and smp_text_poke_batch_flush() to
+ smp_text_poke_batch_process()
+Message-ID: <Z-6XkEpiXg4stqLY@gmail.com>
+References: <20250328132704.1901674-1-mingo@kernel.org>
+ <20250328132704.1901674-38-mingo@kernel.org>
+ <65e8ed9d-0fff-4f70-b095-8df52493ebec@suse.com>
+ <Z-6PWWyopb86UC6y@gmail.com>
+ <a64bc000-4226-4d5c-8486-a230f4ff5065@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <380d9bff359150f67ca6e0468f99ee746c1abdea.camel@infradead.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a64bc000-4226-4d5c-8486-a230f4ff5065@suse.com>
 
-On Thu, Apr 03, 2025 at 08:15:41AM +0100, David Woodhouse wrote:
-> On Thu, 2025-04-03 at 08:07 +0100, David Woodhouse wrote:
+
+* Nikolay Borisov <nik.borisov@suse.com> wrote:
+
+> 
+> 
+> On 3.04.25 г. 16:38 ч., Ingo Molnar wrote:
 > > 
-> > I'll see if I can make it neater. I may drop the 'ret' variable
-> > completely and just turn the match clause into unlock-and-return-true.
-> > I *like* having a single unlock site. But I think I like simpler loop
-> > code more than that.
+> > * Nikolay Borisov <nik.borisov@suse.com> wrote:
+> > 
+> > > 
+> > > 
+> > > On 28.03.25 г. 15:26 ч., Ingo Molnar wrote:
+> > > > Simplifies the code and improves code generation a bit:
+> > > > 
+> > > >      text	   data	    bss	    dec	    hex	filename
+> > > >     14769	   1017	   4112	  19898	   4dba	alternative.o.before
+> > > >     14742	   1017	   4112	  19871	   4d9f	alternative.o.after
+> > > > 
+> > > > Signed-off-by: Ingo Molnar <mingo@kernel.org>
+> > > > ---
+> > > >    arch/x86/kernel/alternative.c | 11 +++++------
+> > > >    1 file changed, 5 insertions(+), 6 deletions(-)
+> > > > 
+> > > > diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+> > > > index 1df8fac6740d..5293929488f0 100644
+> > > > --- a/arch/x86/kernel/alternative.c
+> > > > +++ b/arch/x86/kernel/alternative.c
+> > > > @@ -2750,6 +2750,9 @@ static void smp_text_poke_batch_process(void)
+> > > >    		if (unlikely(!atomic_dec_and_test(refs)))
+> > > >    			atomic_cond_read_acquire(refs, !VAL);
+> > > >    	}
+> > > > +
+> > > > +	/* They are all completed: */
+> > > > +	text_poke_array.nr_entries = 0;
+> > > >    }
+> > > >    static void __smp_text_poke_batch_add(void *addr, const void *opcode, size_t len, const void *emulate)
+> > > > @@ -2857,20 +2860,16 @@ static bool text_poke_addr_ordered(void *addr)
+> > > >    void smp_text_poke_batch_finish(void)
+> > > >    {
+> > > > -	if (text_poke_array.nr_entries) {
+> > > > +	if (text_poke_array.nr_entries)
+> > > >    		smp_text_poke_batch_process();
+> > > > -		text_poke_array.nr_entries = 0;
+> > > > -	}
+> > > >    }
+> > > 
+> > > This function becomes trivial, why not simply move the check into
+> > > smp_text_poke_batch_process and rename it to smp_text_poke_batch_finish ?
+> > 
+> > Yeah, that's pretty much what happens in patch #47:
+> > 
+> >    x86/alternatives: Remove 'smp_text_poke_batch_flush()'
 > 
-> That's better (IMO).
-> 
-> And I note that pfn_valid() already doesn't follow the modern fetish
-> for having only one unlock site even when it makes the surrounding code
-> more complex to do so.
-> 
-> static inline bool first_valid_pfn(unsigned long *p_pfn)
-> {
-> 	unsigned long pfn = *p_pfn;
-> 	unsigned long nr = pfn_to_section_nr(pfn);
-> 	struct mem_section *ms;
-> 
-> 	rcu_read_lock_sched();
-> 
-> 	while (nr <= __highest_present_section_nr) {
-> 		ms = __pfn_to_section(pfn);
+> Well, that patch removes poke_batch_flush but still retains
+> poke_batch_finish + poke_batch_process. My suggestion is to eliminate
+> poke_batch_process name and turn it into poke_batch_finish by moving the
+> check from poke_batch_finish into poke_batch_process.
 
-Maybe move the declaration here:
+So, in the context of the full tree at:
 
- 	struct mem_section *ms = __pfn_to_section(pfn);
+  git://git.kernel.org/pub/scm/linux/kernel/git/mingo/tip.git WIP.x86/alternatives
 
-> 
-> 		if (valid_section(ms) &&
-> 		    (early_section(ms) || pfn_section_first_valid(ms, &pfn))) {
-> 			*p_pfn = pfn;
-> 			rcu_read_unlock_sched();
-> 			return true;
-> 		}
-> 
-> 		/* Nothing left in this section? Skip to next section */
-> 		nr++;
-> 		pfn = section_nr_to_pfn(nr);
-> 	}
-> 
-> 	rcu_read_unlock_sched();
-> 
-> 	return false;
-> }
+Standalone smp_text_poke_batch_process() is still needed, because 
+smp_text_poke_batch_add() uses it to drive the whole 'batching' 
+machinery.
 
--- 
-Sincerely yours,
-Mike.
+If smp_text_poke_batch_process() finishes for each call, if I 
+understand your suggestion correctly, that reduces the amount of 
+batching done, which is a disadvantage.
+
+Note how right now it's possible to do something like this:
+
+	smp_text_poke_batch_add(1);
+	smp_text_poke_batch_add(1);
+	smp_text_poke_batch_add(1);
+	smp_text_poke_batch_add(1);
+	smp_text_poke_batch_finish();
+
+This results in a single call to smp_text_poke_batch_process(), with 4 
+entries, a single 4-entry flush in essence.
+
+Thanks,
+
+	Ingo
