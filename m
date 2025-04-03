@@ -1,114 +1,93 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D0C019CC39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A85EF2512C9
 	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 16:48:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743698893; cv=none; b=VobXEuWS+TD/kBXiqD5033asJ0w/YYxRBRV6hfJBld8Ov3Wql5sEU0R9RKoQapFeU5YSBXillGMrufpucOUenCg8x4hY4J/pYSVYARgQZ24NwKt6zqGa09fjcPgUU78A2I/cfH9Rbu3+mGs5PMdNEusjTqYb5d7hjswmmysE8Hs=
+	t=1743698894; cv=none; b=pImtZKrc6xRbxa58HvVOLtGYjuL+qVw0J7nA1EA6TdtOeKgD+wXdpCbXvevsHgus6LyXbRzQOCuHn41pAv/W5468Q8e+hqnk8QBs0X8QFzveCpdS27pyaNXsk4tDE6m/TyJ8er8IQq9J/fqTy1xhrV6P3eHRKY4QxX846FkFJhY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743698893; c=relaxed/simple;
-	bh=tOhPfAjNck/fuEMBPjbaUAakEcHx5aW4W6Mm4+qEg6o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jC6zsR3Pvlrc+2n5ymfLyovUzArWfLpGxdyxn85NLW7oFmjON/uAz04Sd8vEC7SkBKTI1I8C51Nkj2y8wkdNHElENF4z+DtlrAS/+T6XpzoUVdhk8Lv3X/LC61IWvwQDW+svohdaWRFrChaQk1Qp5wvQ+LDG70Sde/zZvcRdVP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=B2QY69jc; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1743698894; c=relaxed/simple;
+	bh=4wuv9Dt/9rj9cF2a6+xai4em1wNvUS1HPV5q6UbrWUc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BDugB5TiVZaCCU6PAiJVpZl04ueqfUc1MvF+4wVArkNTpi5NULtBW9T8G9XnntES+xOlYDr9g+HYY6wSuDJCfjwxAcMCojUPpAhUGPmFff95tqgKzYjMs8u3PrMnhV48I4I0io4sHXKKDTwnxcVZCaX7CJY2tY3KDgCSrktK9lI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=qcI5+E/B; arc=none smtp.client-ip=209.85.210.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="B2QY69jc"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-abec8b750ebso182273366b.0
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="qcI5+E/B"
+Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-72c3b863b8eso764008a34.2
         for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 09:48:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1743698890; x=1744303690; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=5IeBQ5EurNMkDT+fQ3nS/eQb46kO76MprunhtwmK6a4=;
-        b=B2QY69jciSslWGGIl5tSiU2zq7lhABiHbYUXup0NlogFaNrgwMz6jXR4NDoPRwyUQd
-         KGAkQa3l//maVeWHxghTr9f43zkVpDnaBY4MXfFP443p+tSl9rucCfIEA5YqJo0Ux1Dg
-         oLX32nf9h+4ejZ392+WqZkQ1RQIt7GD29FhF8=
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1743698891; x=1744303691; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=YSC+FUFy0d9lpIsypY5Nl8Mx6gi/Bcekgwf80nw84HU=;
+        b=qcI5+E/BAMUqLNMLWOxjRN+MGmAaw/lfkN8AYIMxn9c52qcobC/3x8AiMyfeBpR353
+         Ld2gtJnmGa/G9qvTeVl5TSw7ApYH3RnoFtC9uwxKd9QXy5QEXojXnzh6jQkq059ZaRub
+         Ysrm+M0I7fmFRY1zFNV98+Z5cmhJCU+aM+0xQ5hpfu+OyMBZxm7SR/DWnyO1qQEKxv7Z
+         VINdf5/gw0PmUbDPCwdwb/h3K3SiI+o3uKYFQm4A/mnAueisCrvCTiwvJD9MTOHmoUaj
+         ITpfimb6PgHKSvuUFtzLIzuICpyQP6W/sL5i5JHC2qHIZCim6/e17TBTszKJIr/ou/S4
+         dXJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743698890; x=1744303690;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5IeBQ5EurNMkDT+fQ3nS/eQb46kO76MprunhtwmK6a4=;
-        b=Gl/fFPkQZ9H5T20qa+nEtCXNAAVArFdE2x26N8Z8tdfF6B3bKkJuef/txbHRWVVeik
-         W1+Iq2lS8V0W0qEwywf8qMHt4+h+DKrSX0hS3GBkpA49NSA9W7BDmE+hp7hky1w/w1rd
-         pKvHNl7TB+K7L2Eb6aux3V9rBLEcijeB0yJpfcl9PDJ4Sc/S9hvGlwlH1uP0PhrMjmeV
-         2U77WsS0oPxmJR7QpvXTXusBWiMrnl63TXrdrar69o3/hIA0B7yRGU1MWJmm05XxkhJw
-         aAonZ1W1J8dQNZkbDmQt7HIFf7AI9214PaIXWSvmZfSuQtEhjcvTrZZzI8IhZ//0bvyx
-         IYxw==
-X-Forwarded-Encrypted: i=1; AJvYcCVow1ZTVaKXJovQ+vcM0de0LYiUJtYeBRDlZsr6QHYAxCDKMftQHKcsarFU+kySRYcvh52ML6IT5L1EBp0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy83FLvo1mmI3zzosY9pZdXy8WM7ApLrR6QU5Kvui+aJsEMJmYe
-	RRs0MaDZISg4soCbmNiSEseM4Y52uLpeDZpAsBAKhUHZ+e1sEUWMjunrDt4LZ+mNdFZOwo/OzX5
-	adxY=
-X-Gm-Gg: ASbGncsj7sEsF9ILg/nir5U5bnBuafDrbAMrpS9SUFaJCzGWCqaR7ftl8Qy17cdAyCc
-	KJaMNNyXXq5ASmOW2ERSKd1qcOxZ4I0fymoEIX3np8+76xtzqjZIdW4BZYbgTwimzwj5n/8Vdzq
-	ZnsGu5T3RY7oUTnAFECozB2yaSVpKkoHbWCBnUa56/Xelt6xTfpO0vxMAaZySw4eWMWrrG0FjMz
-	Duc+05GmWBx8kL9+iOJPdk5xRQBzB0IOtVK3xMyy0odWN5B79/SInZkVNB0S6J0W2rQv+ZGMxwS
-	QDCTr01D3D53spiiA0nTRPbCoKP9xefF7S957/eFyER/HGSkSe1I5mnTu/XnuoQBRWa2dVAb0fB
-	GEuz8+S41VPXLk5EadVo=
-X-Google-Smtp-Source: AGHT+IEKJyd6de0YPCoan1HREXgL49jXgCs+wTNOU/QJ19r8aGqKYa7yHkS4eKLzj2gqPboG3Iwx7w==
-X-Received: by 2002:a17:906:f5a9:b0:ac7:b363:862f with SMTP id a640c23a62f3a-ac7d1918b56mr24704466b.28.1743698889576;
-        Thu, 03 Apr 2025 09:48:09 -0700 (PDT)
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com. [209.85.218.49])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7c0185f84sm120101366b.140.2025.04.03.09.48.08
-        for <linux-kernel@vger.kernel.org>
+        d=1e100.net; s=20230601; t=1743698891; x=1744303691;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=YSC+FUFy0d9lpIsypY5Nl8Mx6gi/Bcekgwf80nw84HU=;
+        b=URS/nZl1Bs8RKUWEiIOmc6dhhgt93NC2FvaZPu6NTIDU6p/Rk8YdlNSy1Amg6kaZue
+         fXnKdep/BzIbBjJ9XX4OqCHY9c85vV5IU02bT1SbOOgKpkJoKRPneizWHKIhMmPbBXh0
+         G74Xa3qQ6q7acFamsRYooYfmz8hhF96zoMMJpQrmW0WNhH/EyA/o1LgvQHcJWz+vW1DZ
+         F3mO7tMDNhrrVGnu/9JKURDY59+kb6bFGxysrS2DcHszomD97SCANG7M+wJXYnFIhETW
+         cRwFl/x35lqCHJ+EVBnvvJfIxT/UE9hwh4uU60hwziAwO9sUo14C6wvz1Qcu2Rp9IdkZ
+         MBOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWSpbdCrz4hLykKxqRe5uPxNDIHCMO90P7hWMlaMDsszG+XOYqBENsVv5u6Qc94N8NQ/4V/NL3hNzQ+TW4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyNoSGZap17nVeDB4RgyeiQ0Gy+C8sZW6zNxhuPvRXJZM5/7Pdy
+	EhzFZOygTMsuo5165TKXuhp8/41U+Y451W+U/ajhvi6lcXl0KpULqXQOOV7Fqrk=
+X-Gm-Gg: ASbGncviChOzIL5O8Ie6IKAy3t7PQBxZSbAjyCIhgpc/8ix+9tyFOZTgbTnVGonoMeg
+	+1sRiaN+FTJojkSScJXigVdpE/AwHSNlX3+FC5HuLHP4PsfGlRPorQvd/9TBNOwdhpV4ceYXJQz
+	8jK0YLFtB9QfNG5XPoQteo6zxY/nGns3q7yGWXXEaYAyDxIrrIiFQD6hdMnsDuMtQmFmihp3Hok
+	4wyURZRa0IiP3BnQxxJ11V1mWM2JP62YGg+mgNGP8KqhUuSXQMayc62xah5XQ/NIsfXkJ5BMETo
+	lREw/p8cTXJm7hcFdZYUl5wZopt+JGIcgf19QOLHBDR/snPI64njAdybRXsQSJnV9acOcAn2nu0
+	VmzsO7Q==
+X-Google-Smtp-Source: AGHT+IHMO8mKj7XI4u0FpdUX8+XWGlKjBQ/8BZn9Gd3V/HfCKgUeXNkn3/hksONPqG77YFoErY/6nA==
+X-Received: by 2002:a05:6830:4987:b0:72a:1d2a:4acf with SMTP id 46e09a7af769-72e3696f946mr147011a34.17.1743698890734;
+        Thu, 03 Apr 2025 09:48:10 -0700 (PDT)
+Received: from [192.168.0.113] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-72e30511237sm281580a34.15.2025.04.03.09.48.09
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Apr 2025 09:48:09 -0700 (PDT)
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-abec8b750ebso182270766b.0
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 09:48:08 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVGJAeI1dTnh0PEy+raE4RO9nARb+EgLtZ/tjWfRzYbn81L3ggVSmnbR1wp85P0h8ylqrxCzdyekPZOoXk=@vger.kernel.org
-X-Received: by 2002:a17:907:3da3:b0:ac2:7a97:87fb with SMTP id
- a640c23a62f3a-ac7d199c916mr29245166b.33.1743698888537; Thu, 03 Apr 2025
- 09:48:08 -0700 (PDT)
+        Thu, 03 Apr 2025 09:48:10 -0700 (PDT)
+Message-ID: <c146175f-6a21-4039-8c81-5933a9ef5ef6@baylibre.com>
+Date: Thu, 3 Apr 2025 11:48:09 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAHk-=wg0wQb+CbUk2GY0CeVuTQvq67-oYR0nL8wGgySia3ce7g@mail.gmail.com>
- <Z-4jzImykAbHK2Gz@gondor.apana.org.au>
-In-Reply-To: <Z-4jzImykAbHK2Gz@gondor.apana.org.au>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Thu, 3 Apr 2025 09:47:51 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whch6fMKH8FadOigqm_xrXfgWJyn=jz32GM6tUuM=nqvg@mail.gmail.com>
-X-Gm-Features: ATxdqUEfHA6tq4tIjCHeUdY_kmVbwhB0XtABIt9Eygs4AQmADpeBZZvH_WAQpHA
-Message-ID: <CAHk-=whch6fMKH8FadOigqm_xrXfgWJyn=jz32GM6tUuM=nqvg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] tracing: ring-buffer: Have the ring buffer code do
- the vmap of physical memory
-To: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: rostedt@goodmis.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, mhiramat@kernel.org, mark.rutland@arm.com, 
-	mathieu.desnoyers@efficios.com, akpm@linux-foundation.org, 
-	vdonnefort@google.com, vbabka@suse.cz, rppt@kernel.org, kees@kernel.org, 
-	tony.luck@intel.com, gpiccoli@igalia.com, linux-hardening@vger.kernel.org, 
-	willy@infradead.org, Eric Biggers <ebiggers@kernel.org>, 
-	Michael Ellerman <mpe@ellerman.id.au>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/3] iio: ad7606: add SPI offload support
+To: Angelo Dureghello <adureghello@baylibre.com>,
+ Lars-Peter Clausen <lars@metafoo.de>,
+ Michael Hennerich <Michael.Hennerich@analog.com>,
+ Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+References: <20250403-wip-bl-spi-offload-ad7606-v1-0-1b00cb638b12@baylibre.com>
+Content-Language: en-US
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <20250403-wip-bl-spi-offload-ad7606-v1-0-1b00cb638b12@baylibre.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, 2 Apr 2025 at 23:00, Herbert Xu <herbert@gondor.apana.org.au> wrote:
->
-> There is no fallback implementation of flush_dcache_range for the
-> architectures that don't need it.
+On 4/3/25 11:19 AM, Angelo Dureghello wrote:
+> Add SPI offload support for the ad7606 ADC.
+> 
+> Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
+> ---
 
-Yeah, that literally looks like an oversight.
+Reviewed-by: David Lechner <dlechner@baylibre.com>
 
-Probably because nobody needed it - or people didn't realize it was an
-option and did the "loop over each page by hand" as in your example.
-
-So yeah, I think it would be good to just expose flush_dcache_range()
-as a dummy empty function in <asm-generic/cacheflush.h>, with the
-usual "if the architecture defines this, that will override it" rule.
-
-However, part of the problem is likely just unclear semantics. Because
-the existing flush_cache_range() is about pure virtual caches and how
-they need to be flushed before the TLB is flushed.
-
-Also about D$ aliasing, but there isn't necessarily any TLB issues.
-
-Honestly, I'd personally be perfectly fine saying "nobody sane cares,
-and if your D$ isn't coherent, your perf mmap won't work".
-
-                Linus
