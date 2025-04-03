@@ -1,151 +1,518 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A1891FFC56
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 20:39:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 111A520011B
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 20:39:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743712765; cv=none; b=qJ0xCMQ8g9ipRrGdSH3NV/q5EWE0D+Fj6bpTgxb4ZaooDWJfvQfM/1P2iO9kmyFME+Zaba3Y60YrVxDjGUPCMeIvKuluNB9CSckb2zquGIJeemGsXI6AMkExjw4uoc0Hm1lYi/NMwi8aEZSxaSZnQrRz0zZOOC44wLVGugXIGUE=
+	t=1743712776; cv=none; b=tvmFwEPBvpuJiNGRIlyqLkj3FGY6dSXKwGJ35UjvBiZHJxjmYcRGx0mIlw+/KPkseML+pIXSt81iyW/0jf9TSk+ogi1StYZ35E1stvRKVghwSZzMKqV/3YLc5VWuAF9oEHJcfKwsKTpIW3tVWYuzjBvYQ4m5nE1mQBIzGAYsy+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743712765; c=relaxed/simple;
-	bh=ZKFPJnkH5cmy2Hcw7v2o0zv/8xKsrpwsfbr6qB8cQMs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Xop6i8z9qWAWopWma5i9g76LPXvNHCG/kZhcr+bb4p90uYj3RHpMhVbZ4/NfbarCM2LHJIusAHGrQozvaHG47q5JIMnMmX9qp16yQBKCt5uRFdBKvhki3X5YoL0syYC8JGCqbazbRVjI/rlibFKTrU7MRBpP7s4J2foE8cvn3p0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=DMX1CcR7; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1743712776; c=relaxed/simple;
+	bh=EShZpaMpcKMcXMarqyk0Jqf+GJAYVMRBIxLLbquNCms=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sWSUsSqrznJ8xUjKVXBalFp0Oyu0oNn+dj7fFdANRf8EJnRBmUFWOt9+9mU/aAZ6CxzJHmL6degJaklLqTtJmjzXulJ+7LOBpW+zrtE1B6Yhy3kg+H5u1D4pHjHVEVrEU4TxMszgVrIsJVvVzbnHciWpeVBvHVVdLtDzdjAwO90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BXmOX4GN; arc=none smtp.client-ip=209.85.160.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="DMX1CcR7"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 533JhXqM011993
-	for <linux-kernel@vger.kernel.org>; Thu, 3 Apr 2025 20:39:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=ERTqFw99lQe4ymdVVi0XfW
-	QaFdEOwt0186MaC7JTYqw=; b=DMX1CcR784DWe0oVKnUl80n8WeDwZlMIcvHE8x
-	7PYrnShOnkkj5xfOQfhi2BTV1AUtLDRIYj3RJrVPIcDMubEOiV6d1/zbQrGmsMPG
-	MVtU7GYwksWnrdGfHho2YyAbQbNmCQ9IVyqAJj9BRvSsZwhMlG0sngGnJWS+/NWX
-	ZuBXbjwrkxwUZ/f8VlgsOFKHqwiZrdxC5Br+1J92FKddqXkAmHLUKw14iE1yGbkN
-	8iUK7caBzayOqYZkNg0MYYZ1jR0RbOeCDtr0GQ6WxFqdSzGVnjgejdNrBwctyeST
-	bpYVNlXzvPqhp8BXVNGK/zNxGl0cpho8YO69SKIm4y9j3kAg==
-Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com [209.85.210.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45ruadx6mb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 20:39:21 +0000 (GMT)
-Received: by mail-pf1-f200.google.com with SMTP id d2e1a72fcca58-736b5f9279cso1253549b3a.2
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 13:39:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BXmOX4GN"
+Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-47666573242so118221cf.0
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 13:39:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1743712773; x=1744317573; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=9gzKoe90ZfM4o/7GbmHUnknhoKPfawda3x0icnfdTpk=;
+        b=BXmOX4GNXGzFlPmDJmbFheub7HoZ8AOjIicnpZP9K+UprE0hFPephudU3B1sl5m+PO
+         f1OfwLE3Rcp0OE/p8SZ04R9GBBvRo83zEZbrR6We2gYRfv6X9jDp6Gd2vNVgCiTf538w
+         T7DFP6O//iuxS7tOY39a0nLNyBTsvez/RLW3+upscCw8u6+qPbfLhYzJX147hohsxcBs
+         QS9oftqT9iSEsLZV8b/XpUvuQuSFO77vP3FW0YAdKEKrw/APu/KN4qNPBbSTJwtA5aWW
+         WKKy+V8DDynM1XBt7WJqRBYAe9g/0j4h+pf93mCftbjb0dUmtBa6iDq91YGeZbRfltEB
+         b/zw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743712760; x=1744317560;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ERTqFw99lQe4ymdVVi0XfWQaFdEOwt0186MaC7JTYqw=;
-        b=H+CLi9oXBJxdkQWSziTmZ75ndNF4g6+uybqU+ixBJJwhUH8yjMmjEBu+coyhPaznsN
-         6GFDN2lIBMXyraahoe2QpfijjwQfAroAa6Wzwx2Uk66JRRvcVzIej7NcXGMguDDiNmgI
-         jA99ubtl7aphZ050GYNQKVqOsDSxKnrS+ioJYgeh+pDVjH5QIxotSaUCIouMx9uA6cLP
-         1iKiVK3XWKeDHkbzH3LrZxnRgCE5A1YtvV87Oo07wZ9kEHGKh6ZFY8XluQJ/I20oF9do
-         vBK6xtzK+5uzAWn0HfUo9IHPZlHyL9uDJ0dusZK/Vu79XciicB8iae9jNU0Z+f49EJaX
-         qutQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXyWFPt71vK7bqPhD3iPnjapclxigA7Z3Nlh+s3LUxIUhFGI9GUz36dEVeqCGkgHXadpR506cSiE32Bjv0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxttodfAgKus9/GW5U1YEjKcIlCqgzDP4zeMPMAxcALIKl0Q5X9
-	pRWZpaqvArQdsIN+DTakJI1AVq7fO3Nr1bpaJQwynQffXTm/9kLWx5D7fx4ggeptHNhpud0BttW
-	yQZd365wkQPHRhA4J1kPQsJjBqaEKLT5ABcLD5c23AwAu7oFg+N/dSkpYkYKi1tU=
-X-Gm-Gg: ASbGnctaRU7cM4Cp8fym5PvRt9m3L/uEvHn2EBbm7/DO0gN5AISDaeKi/b8wBuGwphc
-	cOgVrOnTXViDqTpvXmY8sqJn2umJmkXY019tX7KoXXmsqdQx8kq3snBC+m0gRNbhwP+c4g7nF2C
-	BEgwBdtrD/3FJQBmgmfiLN8UlG+rKCT0PZDG+RVElvGPvUrVZzqqUO+XB+IfkIb4Ii70xLot7/O
-	q2llmk6h4ZcNLjyfWG3vUvBC2qG37B53s0xoyZ883ykiDQ8WCavUmhPtEkjMVkVQUxG9JAleWgn
-	IqNL4OtfO/aVwjUSyxvZBVf2CJzBHkZjffH4S0DfZcijHEg/CQkQKkvWvB7rZjjpmfscyZJUk4i
-	d4PiM0NQ=
-X-Received: by 2002:a05:6a21:7794:b0:1f5:7710:fd18 with SMTP id adf61e73a8af0-2010461cd6emr989747637.17.1743712760217;
-        Thu, 03 Apr 2025 13:39:20 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH30wcg6IUYNPzq+c1OsjGFHZabqoyu1Jtq+nS+/9NjU1pr36JgCCvFMewrTVBT1qWRO67YfQ==
-X-Received: by 2002:a05:6a21:7794:b0:1f5:7710:fd18 with SMTP id adf61e73a8af0-2010461cd6emr989725637.17.1743712759884;
-        Thu, 03 Apr 2025 13:39:19 -0700 (PDT)
-Received: from hu-uchalich-lv.qualcomm.com (Global_NAT1.qualcomm.com. [129.46.96.20])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af9bc323839sm1657530a12.30.2025.04.03.13.39.18
+        d=1e100.net; s=20230601; t=1743712773; x=1744317573;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9gzKoe90ZfM4o/7GbmHUnknhoKPfawda3x0icnfdTpk=;
+        b=ii1B0gkSoVmT2rBr9xMf4SVzeU3CF9x8Rhfnp4oxgTvMasKWrvNJc04OzW6iGHFgjn
+         8C3WOPBK0f8BZXPC/ghp/A6/tB4UmWgZ0dRA57AC1Xa4d2wcURkS3MJv754kz64d6unY
+         grifVLBCqlKAttY3WPJvUd04OCVZg8Oxl4S/jhrRM/99LCYFte/BGjVgAEQvCUt4+blj
+         KVT7JBkEqVBck+QCUjrOB7MXrY7niZK2ENKWhTi9vJgIT6NWD/g/czfcWt2DSDepxTFp
+         YDT6j6twCIqLywakZcZSIIHbNCrzMwzSwZt7LN9QIgHvebwnH6MJpzXMVSefOnm4mgOx
+         kAEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVMJ1KgZcZR+OeQ5hWIHJX67/GgTp82Q/Mp4z1CrU10yXr8pFJR+GEe8Pc5veo+RT8tsGlcuPAZAC/vybE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy9potF+YXF6RM5mnuhvzkrJNPjBv3x6rC+RBnx9ay3FpQn+IkS
+	Xv/ADg9VHBgWHYp3DVERybQNHvaLntI7CIOH+67HCr9DADEjXASNnJjg8LRE6A==
+X-Gm-Gg: ASbGnctLjtd+mqrfjz8nSdayrcNr++h5g0GcSH7QlttUfE3cqF5dj/7zT2XA4Ma9Y2Y
+	c2lMRUDYd0MDgSzSkZ8D4GPDmf6+XZNR6i4WyibyLqB+049JxYoSv/HgBgwqQglFxV51tKj3yvd
+	KXwfqBL6IKkkqrsFdnwaWEMUk4kxgq9Kq8MbknwkB7Lgmf7lw3hx5ndoYvTWmefb7GLren1jRyr
+	cZB3q1mxElu56CEeytmIUzqOvPbDlCCl5o3hmkqjEZoKF50sD7hKfub12qT36WhkweWaBPeB2qM
+	wBn0ecjERcROtmX2wh27dL6oNcIpYpA6/mZ/Q4bduospWtCsAa1XTP7In5h3HzRLkhEz4fDwpFE
+	VdvU=
+X-Google-Smtp-Source: AGHT+IHNyJ7vs36NQlUP+/ypTWRilwDQLm735Q4Rad62mUsm20rDamhxTRr00Zy4tOacBCXmKpd0yA==
+X-Received: by 2002:ac8:59c3:0:b0:476:77be:9102 with SMTP id d75a77b69052e-47926715486mr32371cf.7.1743712772527;
+        Thu, 03 Apr 2025 13:39:32 -0700 (PDT)
+Received: from google.com (154.75.48.34.bc.googleusercontent.com. [34.48.75.154])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4791b071b86sm12031601cf.28.2025.04.03.13.39.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Apr 2025 13:39:19 -0700 (PDT)
-From: Unnathi Chalicheemala <unnathi.chalicheemala@oss.qualcomm.com>
-Date: Thu, 03 Apr 2025 13:38:24 -0700
-Subject: [PATCH] docs: firmware: qcom_scm: Fix kernel-doc warning
+        Thu, 03 Apr 2025 13:39:32 -0700 (PDT)
+Date: Thu, 3 Apr 2025 20:39:29 +0000
+From: Brian Geffon <bgeffon@google.com>
+To: Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Richard Chang <richardycc@google.com>,
+	Minchan Kim <minchan@kernel.org>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, sawlani@google.com
+Subject: Re: [PATCHv2] zram: modernize writeback interface
+Message-ID: <Z-7yAWG3IE7dnOKi@google.com>
+References: <20250327015818.4148660-1-senozhatsky@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250403-fix_scm_doc_warn-v1-1-9cd36345db77@oss.qualcomm.com>
-X-B4-Tracking: v=1; b=H4sIAMDx7mcC/x2MQQqAIBAAvyJ7TlCpyL4SIbVutYc0FCqI/p50H
- JiZBzIlpgy9eCDRyZljKKArAbhNYSXJvjAYZRpVKy0Xvl3G3fmI7ppSkJ3ypm1xQTtbKNmRqDj
- /chjf9wMUNOvyYgAAAA==
-X-Change-ID: 20250401-fix_scm_doc_warn-80d266cfc9b9
-To: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        quic_satyap@quicinc.com, kernel@oss.qualcomm.com,
-        Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
-        Unnathi Chalicheemala <unnathi.chalicheemala@oss.qualcomm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1743712758; l=1394;
- i=unnathi.chalicheemala@oss.qualcomm.com; s=20240514;
- h=from:subject:message-id; bh=ZKFPJnkH5cmy2Hcw7v2o0zv/8xKsrpwsfbr6qB8cQMs=;
- b=oHny9g1HrYSo20lV2kB7j8fbRV+XAVRCUM8Yth2gGD0hhpBvA6jEvRkbgMLm+FEh9rXjsO5oC
- /JUlfIso4+FCzIDaQ9E/jYdH/1eCuR4PngmJNDszL4MBZWNjaR9DdDQ
-X-Developer-Key: i=unnathi.chalicheemala@oss.qualcomm.com; a=ed25519;
- pk=o+hVng49r5k2Gc/f9xiwzvR3y1q4kwLOASwo+cFowXI=
-X-Authority-Analysis: v=2.4 cv=VI/dn8PX c=1 sm=1 tr=0 ts=67eef1f9 cx=c_pps a=mDZGXZTwRPZaeRUbqKGCBw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=k3TILi5Bbk-7JZiMJ-QA:9 a=QEXdDO2ut3YA:10
- a=zc0IvFSfCIW2DFIPzwfm:22
-X-Proofpoint-ORIG-GUID: GY7lukYHl8Va6HQ3gDJH_T9SaGDALJJd
-X-Proofpoint-GUID: GY7lukYHl8Va6HQ3gDJH_T9SaGDALJJd
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-03_09,2025-04-03_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1015
- priorityscore=1501 mlxscore=0 adultscore=0 suspectscore=0 impostorscore=0
- phishscore=0 lowpriorityscore=0 mlxlogscore=999 malwarescore=0 bulkscore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504030109
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250327015818.4148660-1-senozhatsky@chromium.org>
 
-Add description for members of qcom_scm_desc struct to avoid:
+On Thu, Mar 27, 2025 at 10:58:09AM +0900, Sergey Senozhatsky wrote:
+> The writeback interface supports a page_index=N parameter which
+> performs writeback of the given page.  Since we rarely need to
+> writeback just one single page, the typical use case involves
+> a number of writeback calls, each performing writeback of one
+> page:
+> 
+>   echo page_index=100 > zram0/writeback
+>   ...
+>   echo page_index=200 > zram0/writeback
+>   echo page_index=500 > zram0/writeback
+>   ...
+>   echo page_index=700 > zram0/writeback
+> 
+> One obvious downside of this is that it increases the number of
+> syscalls.  Less obvious, but a significantly more important downside,
+> is that when given only one page to post-process zram cannot perform
+> an optimal target selection.  This becomes a critical limitation
+> when writeback_limit is enabled, because under writeback_limit we
+> want to guarantee the highest memory savings hence we first need
+> to writeback pages that release the highest amount of zsmalloc pool
+> memory.
+> 
+> This patch adds page_indexes=LOW-HIGH parameter to the writeback
+> interface:
+> 
+>   echo page_indexes=100-200 page_indexes=500-700 > zram0/writeback
+> 
+> This gives zram a chance to apply an optimal target selection
+> strategy on each iteration of the writeback loop.
+> 
+> We also now permit multiple page_index parameters per call (previously
+> zram would recognize only one page_index) and a mix or single pages and
+> page ranges:
+> 
+>   echo page_index=42 page_index=99 page_indexes=100-200 \
+>        page_indexes=500-700 > zram0/writeback
+> 
+> Apart from that the patch also unifies parameters passing and resembles
+> other "modern" zram device attributes (e.g. recompression), while the
+> old interface used a mixed scheme: values-less parameters for mode and
+> a key=value format for page_index.  We still support the "old" value-less
+> format for compatibility reasons.
+> 
+> Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
 
-drivers/firmware/qcom/qcom_scm.h:56: warning: Function parameter or struct
-member 'svc' not described in 'qcom_scm_desc'
+Reviewed-by: Brian Geffon <bgeffon@google.com>
 
-drivers/firmware/qcom/qcom_scm.h:56: warning: Function parameter or struct
-member 'cmd' not described in 'qcom_scm_desc'
+> ---
+>  Documentation/admin-guide/blockdev/zram.rst |  17 ++
+>  drivers/block/zram/zram_drv.c               | 320 +++++++++++++-------
+>  2 files changed, 232 insertions(+), 105 deletions(-)
+> 
+> diff --git a/Documentation/admin-guide/blockdev/zram.rst b/Documentation/admin-guide/blockdev/zram.rst
+> index 9bdb30901a93..b8d36134a151 100644
+> --- a/Documentation/admin-guide/blockdev/zram.rst
+> +++ b/Documentation/admin-guide/blockdev/zram.rst
+> @@ -369,6 +369,23 @@ they could write a page index into the interface::
+>  
+>  	echo "page_index=1251" > /sys/block/zramX/writeback
+>  
+> +In Linux 6.16 this interface underwent some rework.  First, the interface
+> +now supports `key=value` format for all of its parameters (`type=huge_idle`,
+> +etc.)  Second, the support for `page_indexes` was introduced, which specify
+> +`LOW-HIGH` range (or ranges) of pages to be written-back.  This reduces the
+> +number of syscalls, but more importantly this enables optimal post-processing
+> +target selection strategy. Usage example::
+> +
+> +	echo "type=idle" > /sys/block/zramX/writeback
+> +	echo "page_indexes=1-100 page_indexes=200-300" > \
+> +		/sys/block/zramX/writeback
+> +
+> +We also now permit multiple page_index params per call and a mix of
+> +single pages and page ranges::
+> +
+> +	echo page_index=42 page_index=99 page_indexes=100-200 \
+> +		page_indexes=500-700 > /sys/block/zramX/writeback
+> +
 
-drivers/firmware/qcom/qcom_scm.h:56: warning: Function parameter or struct
-member 'owner' not described in 'qcom_scm_desc'
+This new interface will be very useful, thanks for adding it Sergey!
 
-Signed-off-by: Unnathi Chalicheemala <unnathi.chalicheemala@oss.qualcomm.com>
----
- drivers/firmware/qcom/qcom_scm.h | 3 +++
- 1 file changed, 3 insertions(+)
+>  If there are lots of write IO with flash device, potentially, it has
+>  flash wearout problem so that admin needs to design write limitation
+>  to guarantee storage health for entire product life.
+> diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
+> index fda7d8624889..9e8ed1bf308b 100644
+> --- a/drivers/block/zram/zram_drv.c
+> +++ b/drivers/block/zram/zram_drv.c
+> @@ -734,114 +734,19 @@ static void read_from_bdev_async(struct zram *zram, struct page *page,
+>  	submit_bio(bio);
+>  }
+>  
+> -#define PAGE_WB_SIG "page_index="
+> -
+> -#define PAGE_WRITEBACK			0
+> -#define HUGE_WRITEBACK			(1<<0)
+> -#define IDLE_WRITEBACK			(1<<1)
+> -#define INCOMPRESSIBLE_WRITEBACK	(1<<2)
+> -
+> -static int scan_slots_for_writeback(struct zram *zram, u32 mode,
+> -				    unsigned long nr_pages,
+> -				    unsigned long index,
+> -				    struct zram_pp_ctl *ctl)
+> +static int zram_writeback_slots(struct zram *zram, struct zram_pp_ctl *ctl)
+>  {
+> -	for (; nr_pages != 0; index++, nr_pages--) {
+> -		bool ok = true;
+> -
+> -		zram_slot_lock(zram, index);
+> -		if (!zram_allocated(zram, index))
+> -			goto next;
+> -
+> -		if (zram_test_flag(zram, index, ZRAM_WB) ||
+> -		    zram_test_flag(zram, index, ZRAM_SAME))
+> -			goto next;
+> -
+> -		if (mode & IDLE_WRITEBACK &&
+> -		    !zram_test_flag(zram, index, ZRAM_IDLE))
+> -			goto next;
+> -		if (mode & HUGE_WRITEBACK &&
+> -		    !zram_test_flag(zram, index, ZRAM_HUGE))
+> -			goto next;
+> -		if (mode & INCOMPRESSIBLE_WRITEBACK &&
+> -		    !zram_test_flag(zram, index, ZRAM_INCOMPRESSIBLE))
+> -			goto next;
+> -
+> -		ok = place_pp_slot(zram, ctl, index);
+> -next:
+> -		zram_slot_unlock(zram, index);
+> -		if (!ok)
+> -			break;
+> -	}
+> -
+> -	return 0;
+> -}
+> -
+> -static ssize_t writeback_store(struct device *dev,
+> -		struct device_attribute *attr, const char *buf, size_t len)
+> -{
+> -	struct zram *zram = dev_to_zram(dev);
+> -	unsigned long nr_pages = zram->disksize >> PAGE_SHIFT;
+> -	struct zram_pp_ctl *ctl = NULL;
+> +	unsigned long blk_idx = 0;
+> +	struct page *page = NULL;
+>  	struct zram_pp_slot *pps;
+> -	unsigned long index = 0;
+> -	struct bio bio;
+>  	struct bio_vec bio_vec;
+> -	struct page *page = NULL;
+> -	ssize_t ret = len;
+> -	int mode, err;
+> -	unsigned long blk_idx = 0;
+> -
+> -	if (sysfs_streq(buf, "idle"))
+> -		mode = IDLE_WRITEBACK;
+> -	else if (sysfs_streq(buf, "huge"))
+> -		mode = HUGE_WRITEBACK;
+> -	else if (sysfs_streq(buf, "huge_idle"))
+> -		mode = IDLE_WRITEBACK | HUGE_WRITEBACK;
+> -	else if (sysfs_streq(buf, "incompressible"))
+> -		mode = INCOMPRESSIBLE_WRITEBACK;
+> -	else {
+> -		if (strncmp(buf, PAGE_WB_SIG, sizeof(PAGE_WB_SIG) - 1))
+> -			return -EINVAL;
+> -
+> -		if (kstrtol(buf + sizeof(PAGE_WB_SIG) - 1, 10, &index) ||
+> -				index >= nr_pages)
+> -			return -EINVAL;
+> -
+> -		nr_pages = 1;
+> -		mode = PAGE_WRITEBACK;
+> -	}
+> -
+> -	down_read(&zram->init_lock);
+> -	if (!init_done(zram)) {
+> -		ret = -EINVAL;
+> -		goto release_init_lock;
+> -	}
+> -
+> -	/* Do not permit concurrent post-processing actions. */
+> -	if (atomic_xchg(&zram->pp_in_progress, 1)) {
+> -		up_read(&zram->init_lock);
+> -		return -EAGAIN;
+> -	}
+> -
+> -	if (!zram->backing_dev) {
+> -		ret = -ENODEV;
+> -		goto release_init_lock;
+> -	}
+> +	struct bio bio;
+> +	int ret, err;
+> +	u32 index;
+>  
+>  	page = alloc_page(GFP_KERNEL);
+> -	if (!page) {
+> -		ret = -ENOMEM;
+> -		goto release_init_lock;
+> -	}
+> -
+> -	ctl = init_pp_ctl();
+> -	if (!ctl) {
+> -		ret = -ENOMEM;
+> -		goto release_init_lock;
+> -	}
+> -
+> -	scan_slots_for_writeback(zram, mode, nr_pages, index, ctl);
+> +	if (!page)
+> +		return -ENOMEM;
+>  
+>  	while ((pps = select_pp_slot(ctl))) {
+>  		spin_lock(&zram->wb_limit_lock);
+> @@ -929,10 +834,215 @@ static ssize_t writeback_store(struct device *dev,
+>  
+>  	if (blk_idx)
+>  		free_block_bdev(zram, blk_idx);
+> -
+> -release_init_lock:
+>  	if (page)
+>  		__free_page(page);
+> +
+> +	return ret;
+> +}
+> +
+> +#define PAGE_WRITEBACK			0
+> +#define HUGE_WRITEBACK			(1 << 0)
+> +#define IDLE_WRITEBACK			(1 << 1)
+> +#define INCOMPRESSIBLE_WRITEBACK	(1 << 2)
+> +
+> +static int parse_page_index(char *val, unsigned long nr_pages,
+> +			    unsigned long *lo, unsigned long *hi)
+> +{
+> +	int ret;
+> +
+> +	ret = kstrtoul(val, 10, lo);
+> +	if (ret)
+> +		return ret;
+> +	*hi = *lo + 1;
+> +	if (*lo >= nr_pages || *hi > nr_pages)
 
-diff --git a/drivers/firmware/qcom/qcom_scm.h b/drivers/firmware/qcom/qcom_scm.h
-index 097369d38b84efbce5d672c4f36cc87373aac24b..3133d826f5fae8d135a8f03758173903a87e718b 100644
---- a/drivers/firmware/qcom/qcom_scm.h
-+++ b/drivers/firmware/qcom/qcom_scm.h
-@@ -44,8 +44,11 @@ enum qcom_scm_arg_types {
- 
- /**
-  * struct qcom_scm_desc
-+ * @svc: Service identifier
-+ * @cmd: Command identifier
-  * @arginfo:	Metadata describing the arguments in args[]
-  * @args:	The array of arguments for the secure syscall
-+ * @owner: Owner identifier
-  */
- struct qcom_scm_desc {
- 	u32 svc;
+I think you can do just:
+if (*lo >= nr_pages)
 
----
-base-commit: 91e5bfe317d8f8471fbaa3e70cf66cae1314a516
-change-id: 20250401-fix_scm_doc_warn-80d266cfc9b9
+The *hi > nr_pages check seems superfluous given the
+assignment directly above this.
 
-Best regards,
--- 
-Unnathi Chalicheemala <unnathi.chalicheemala@oss.qualcomm.com>
-
+> +		return -ERANGE;
+> +	return 0;
+> +}
+> +
+> +static int parse_page_indexes(char *val, unsigned long nr_pages,
+> +			      unsigned long *lo, unsigned long *hi)
+> +{
+> +	char *delim;
+> +	int ret;
+> +
+> +	delim = strchr(val, '-');
+> +	if (!delim)
+> +		return -EINVAL;
+> +
+> +	*delim = 0x00;
+> +	ret = kstrtoul(val, 10, lo);
+> +	if (ret)
+> +		return ret;
+> +	if (*lo >= nr_pages)
+> +		return -ERANGE;
+> +
+> +	ret = kstrtoul(delim + 1, 10, hi);
+> +	if (ret)
+> +		return ret;
+> +	if (*hi >= nr_pages || *lo > *hi)
+> +		return -ERANGE;
+> +	*hi += 1;
+> +	return 0;
+> +}
+> +
+> +static int parse_mode(char *val, u32 *mode)
+> +{
+> +	*mode = 0;
+> +
+> +	if (!strcmp(val, "idle"))
+> +		*mode = IDLE_WRITEBACK;
+> +	if (!strcmp(val, "huge"))
+> +		*mode = HUGE_WRITEBACK;
+> +	if (!strcmp(val, "huge_idle"))
+> +		*mode = IDLE_WRITEBACK | HUGE_WRITEBACK;
+> +	if (!strcmp(val, "incompressible"))
+> +		*mode = INCOMPRESSIBLE_WRITEBACK;
+> +
+> +	if (*mode == 0)
+> +		return -EINVAL;
+> +	return 0;
+> +}
+> +
+> +static int scan_slots_for_writeback(struct zram *zram, u32 mode,
+> +				    unsigned long lo, unsigned long hi,
+> +				    struct zram_pp_ctl *ctl)
+> +{
+> +	u32 index = lo;
+> +
+> +	while (index < hi) {
+> +		bool ok = true;
+> +
+> +		zram_slot_lock(zram, index);
+> +		if (!zram_allocated(zram, index))
+> +			goto next;
+> +
+> +		if (zram_test_flag(zram, index, ZRAM_WB) ||
+> +		    zram_test_flag(zram, index, ZRAM_SAME))
+> +			goto next;
+> +
+> +		if (mode & IDLE_WRITEBACK &&
+> +		    !zram_test_flag(zram, index, ZRAM_IDLE))
+> +			goto next;
+> +		if (mode & HUGE_WRITEBACK &&
+> +		    !zram_test_flag(zram, index, ZRAM_HUGE))
+> +			goto next;
+> +		if (mode & INCOMPRESSIBLE_WRITEBACK &&
+> +		    !zram_test_flag(zram, index, ZRAM_INCOMPRESSIBLE))
+> +			goto next;
+> +
+> +		ok = place_pp_slot(zram, ctl, index);
+> +next:
+> +		zram_slot_unlock(zram, index);
+> +		if (!ok)
+> +			break;
+> +		index++;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static ssize_t writeback_store(struct device *dev,
+> +			       struct device_attribute *attr,
+> +			       const char *buf, size_t len)
+> +{
+> +	struct zram *zram = dev_to_zram(dev);
+> +	u64 nr_pages = zram->disksize >> PAGE_SHIFT;
+> +	unsigned long lo = 0, hi = nr_pages;
+> +	struct zram_pp_ctl *ctl = NULL;
+> +	char *args, *param, *val;
+> +	ssize_t ret = len;
+> +	int err, mode = 0;
+> +
+> +	down_read(&zram->init_lock);
+> +	if (!init_done(zram)) {
+> +		up_read(&zram->init_lock);
+> +		return -EINVAL;
+> +	}
+> +
+> +	/* Do not permit concurrent post-processing actions. */
+> +	if (atomic_xchg(&zram->pp_in_progress, 1)) {
+> +		up_read(&zram->init_lock);
+> +		return -EAGAIN;
+> +	}
+> +
+> +	if (!zram->backing_dev) {
+> +		ret = -ENODEV;
+> +		goto release_init_lock;
+> +	}
+> +
+> +	ctl = init_pp_ctl();
+> +	if (!ctl) {
+> +		ret = -ENOMEM;
+> +		goto release_init_lock;
+> +	}
+> +
+> +	args = skip_spaces(buf);
+> +	while (*args) {
+> +		args = next_arg(args, &param, &val);
+> +
+> +		/*
+> +		 * Workaround to support the old writeback interface.
+> +		 *
+> +		 * The old writeback interface has a minor inconsistency and
+> +		 * requires key=value only for page_index parameter, while the
+> +		 * writeback mode is a valueless parameter.
+> +		 *
+> +		 * This is not the case anymore and now all parameters are
+> +		 * required to have values, however, we need to support the
+> +		 * legacy writeback interface format so we check if we can
+> +		 * recognize a valueless parameter as the (legacy) writeback
+> +		 * mode.
+> +		 */
+> +		if (!val || !*val) {
+> +			err = parse_mode(param, &mode);
+> +			if (err) {
+> +				ret = err;
+> +				goto release_init_lock;
+> +			}
+> +
+> +			scan_slots_for_writeback(zram, mode, lo, hi, ctl);
+> +			break;
+> +		}
+> +
+> +		if (!strcmp(param, "type")) {
+> +			err = parse_mode(val, &mode);
+> +			if (err) {
+> +				ret = err;
+> +				goto release_init_lock;
+> +			}
+> +
+> +			scan_slots_for_writeback(zram, mode, lo, hi, ctl);
+> +			break;
+> +		}
+> +
+> +		if (!strcmp(param, "page_index")) {
+> +			err = parse_page_index(val, nr_pages, &lo, &hi);
+> +			if (err) {
+> +				ret = err;
+> +				goto release_init_lock;
+> +			}
+> +
+> +			scan_slots_for_writeback(zram, mode, lo, hi, ctl);
+> +			continue;
+> +		}
+> +
+> +		if (!strcmp(param, "page_indexes")) {
+> +			err = parse_page_indexes(val, nr_pages, &lo, &hi);
+> +			if (err) {
+> +				ret = err;
+> +				goto release_init_lock;
+> +			}
+> +
+> +			scan_slots_for_writeback(zram, mode, lo, hi, ctl);
+> +			continue;
+> +		}
+> +	}
+> +
+> +	err = zram_writeback_slots(zram, ctl);
+> +	if (err)
+> +		ret = err;
+> +
+> +release_init_lock:
+>  	release_pp_ctl(zram, ctl);
+>  	atomic_set(&zram->pp_in_progress, 0);
+>  	up_read(&zram->init_lock);
+> -- 
+> 2.49.0.395.g12beb8f557-goog
+> 
