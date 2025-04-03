@@ -1,182 +1,113 @@
-Received: from mail-oo1-f50.google.com (mail-oo1-f50.google.com [209.85.161.50])
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43DC31DA5F;
-	Thu,  3 Apr 2025 18:38:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA38F253B4E
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 18:38:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743705487; cv=none; b=rvglYYviQappk62M9gmfq91N90rak1i0MpM9hFS+CYfmwjyiHNCppjbT4kOt3kYfs3/pbiicrY98bR7cMgN2ChsMLX/LkTkx3/P0j4FqM9rY0w3+RpC45k39wTtEE/H7r/krFsqAElVOHZ6qQBuhUdkhvzXwT2JZJHN7RTrQsCg=
+	t=1743705491; cv=none; b=Qv0XRfGIjlUVSHozO0OnpkMwVlnUC6lnIpXLesPrZzYcsR0lnYDi7CkPsdwSyoVqwD/VDnkzJGnoRDLre0IvwNSHf9XUOuOCQTH6CqFfxIWbp8cAuqFitx5odCtZC6+H1ObmZgp98yLV6JnAiYykcs3Znp6Wvz17wWho8RwA250=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743705487; c=relaxed/simple;
-	bh=etqrvu6eqFXhJg9zVqWNF1ht4ENkca557JVME6Zz5eg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nPekOxRKf/h/t4W4BWHBAgJN1RpNGQsyQ5SKO/78FM6OyCQNgScE9i5DTzQB3uZPgdbCbaZHjozgPIh+f9W0m4jcD3X4fOu/G8QAJ283bFZOnFDT8UhZN7Fxo/yG8ylxBpTtQzc0//f+UpVpEbWmWaSszMabU+WN+QMLSr8dChM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KmhmupSE; arc=none smtp.client-ip=209.85.161.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743705491; c=relaxed/simple;
+	bh=qORaiLaULs6L5dF+BXjhP23XyfyDBYFgK2j1vKkDrsk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=HYM4dcPdKlhNpXCcfoZ0RqwApViquiy61EZ9grGjcoAA7FSZ3acuJoOSxoAOdIyEgYFpTqFPVCex/Aog93lwz5W4Tu9EdbWR58k4HB0t3ych9CG1jaZPTSIpdpnTBX+0bT+7v2tyep0Q3fZzLaoMiaIc/6+akq90miW2ham3vC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=U/XFVTIb; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KmhmupSE"
-Received: by mail-oo1-f50.google.com with SMTP id 006d021491bc7-60219a77334so623604eaf.1;
-        Thu, 03 Apr 2025 11:38:04 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="U/XFVTIb"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3913958ebf2so900546f8f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 11:38:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743705484; x=1744310284; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=4L3ln2jeTwthCguk4absdUq2mPo9WJoclx7MaUiCztw=;
-        b=KmhmupSEGSVDR4oGwWcvMXum2di9gapWDurd40RIJ3rISFy85x/Ewxt9wAQKOMwcJp
-         9oKgMY1MYHcllo05LRH+tHQTZ4FwwiSCWOENF+L5mEorNwuK7+dxxg1pEZvVd/SJ8uCj
-         6MaF1yhzrKTrHgBqWqVvO+lhxL97TyPETOW8JvPqzpdZtQSPN9onUq+I69y2ADDrfwxW
-         AD8/ECz3Xum+HlO+o8UafngCURD8z5NVHNWSpx79bqwTvczqTfzsvSHnNy6wIZuvkCPc
-         nUhkmdJSKlri7uvfu+R0MGrAyVfSODOKhA0bBn+MBtx57tdfXQjt6pUnM5bnJZGeWrr8
-         HXzw==
+        d=chromium.org; s=google; t=1743705488; x=1744310288; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=RAUmoadrt4LgkAajp/0Serm5kZVa1HxkqsvCZqwwdbs=;
+        b=U/XFVTIblEWLgsY55e4vq3yJvS7xtveO1iAoi7MscgeBo12Vtxz1dZgBU48L5dKkGf
+         gQ5DLZl1+lCXDcoq1V7+8w7iijPhJ/3EdvSbOy+n9SFxK2yIgq65gOvqq+5JxXbBGcYs
+         2OkqiGMBPDEmzpvgndac5AhxWAydpoQWam+PQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743705484; x=1744310284;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4L3ln2jeTwthCguk4absdUq2mPo9WJoclx7MaUiCztw=;
-        b=sGn/aXrZnpYqpKSDk3EKCHy2eNd+p755FUZRpGUjk3IlIIn9VJ/Ag8sQx7jWxDIH01
-         vDsVz/juPM8k8ClE0NzU6vVXap7DY8lwZBUDGjSXa6WVIlsFxK2TbKdd8569jqEWLyzG
-         DjisktYUfxtzCZ06UyQMjjJp5mfnHMkCK9GDIuUq/3/NAMSYZMlL68Hwxcog/p8hyqdV
-         WRc+bH/aavEwNHDPffTEV77+/0Hn1SSn+UVV2OrSoyulvQeVEMzOikYoXRR7wMkF5Zet
-         RAB1nuEbxUL4BAsYKhsXDZQhpVzb5ZaJCjDX0cnvkEJ2WXYJrKqAaIqtsRjzndikx8H4
-         qDpw==
-X-Forwarded-Encrypted: i=1; AJvYcCVJUsA2DsR36pDTn6aI4WXeliTrDebylqVwqVoQr/lU7a5q/yT17wcc2qkPhPow1UC/S88Zo+A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwgNTTY9sZcfc0LHqPshhIqLNEJvadqM9ktxbQUsVDRfFfBdyyD
-	mOwt1jluzu83XWc8/hQXVC2oXlWY8JaiuCHWJAHzB+S6YIU5DMoknFRf2A==
-X-Gm-Gg: ASbGncs+kw4b3liFbZGowQ6zk+eF7yqmnruF75A8iPJTNBdRKOTuhZNb5UfEk92XyNQ
-	5gKgNPD5L9wsSbyC+eG5vMp5G8HAy7NRJ5X+0GvTZ3Cim7EAyF9LFRSbSW59eU8gYSL0f+wRLr9
-	Zl80uRdnuTcx9j+OhvapSwercsbT/4xwcWgbsa3emsoTqHHvHtkmya52c2FfCEvMo1/gotRhGR+
-	bbSl6KkBoREWQ7uX6prakJCZxueOFMo585W/L5AddKuSJusI0druibHhwcutDnjjHNJ68I4qLIM
-	KpINK1NGT4ruU5lgJXfV0FnUjexK6XFD5HmkIUqbBKtIoiF1iJXlXxdCdR5EbR1iO48x6ahB
-X-Google-Smtp-Source: AGHT+IGfWKBnS43OmkokpsQ/SDRgnDZNViE25/7bxtxC9l8m55KQzQc/PD+cDo2YWk0pIWeXkXyODw==
-X-Received: by 2002:a05:6871:6083:b0:2c8:33ab:e80e with SMTP id 586e51a60fabf-2cca19d74b7mr16501fac.19.1743705484188;
-        Thu, 03 Apr 2025 11:38:04 -0700 (PDT)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-72e305b66fcsm331037a34.65.2025.04.03.11.38.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Apr 2025 11:38:02 -0700 (PDT)
-Message-ID: <0e2a50d9-ee7c-4c15-8c31-a42fff1522e6@gmail.com>
-Date: Thu, 3 Apr 2025 11:37:58 -0700
+        d=1e100.net; s=20230601; t=1743705488; x=1744310288;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RAUmoadrt4LgkAajp/0Serm5kZVa1HxkqsvCZqwwdbs=;
+        b=Y3eLjdu3uTbjw0Yy92p8QMKs2MKlPOxEnWVCLNAeR33KPQ0+ay3SKnAX+sFrMtF0XW
+         LX22t+XtjvvOAqe4XwPfRsPDaHLNkyX2tPFTcuQccjKi8b0SlPyN3UxtnRDO8FSRLk66
+         jiWmcOdVKEdufjFHzj4GgCBK60Q7xU/l9bLiIw3lskepv+GtFkEd66PpSqBpe61pNcCK
+         6+QQObWQCfuzCvpkDs3nZk1ur5zUHp5aaUByDPwduHw3oe4zGo+k7Mzged5llFzSA3B+
+         xj5wxa8Nc7YMZn+5hE3B3T89yQy21N1lTGTtQfd569oHecksE9/yzpt5nOsZIvpNtY7D
+         sVGQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW7tnnUI8VNpLZPhbx2uJp0bNq5sypj4Efx6TZ7f7bOdB9rSFuZQ4Apqodkz8I667tMi5/8dleoCv8ZA+w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyLaPtbV35hEMmy5Dr89qFHM9VLQjjb6ED3T/RkFt3/XlBYUGZt
+	OO0vAzBQF3VagwYSFnqIjDXUlZ4ySwt2w3j1zM2+kmCFd3u0s/gEivsu73PJaw==
+X-Gm-Gg: ASbGncsfls7/iQzxH2DLjFv76KQXAxoGPXHZXsTob4fxwS6/PdmquqnTVaUFkALmsqm
+	e5nkb4dP6e0mfiysMLGSNTsYrG1I1Jsr0RXKwwhearFUGw0dX/egTZkHw+2k0HJMwZD/ptUzbuP
+	WaOZZBYvCEBrkQchDhC+vLk3gJWmkh7I5ZST8ThIhY8eMZb5DDPDkvoJI6ZcBmqXjNA0E3cPlLi
+	8NDr8Jk+DqVKH6Z/FjK/XUKT+CWZ3dsH08u+TdNOeFz9afnDbqWCs0BJIuvm+Vib/aXwcK54h1z
+	0SL6EP9eXnx7EiA6m/iJyEaNI5ZH+R/m0WDYMnmUAaozBnES/doE5X1FcmbhNJNS+hzknPIfY/F
+	pakCX0xr7pCz9LKk76yWjTzQZCX66
+X-Google-Smtp-Source: AGHT+IFU+JA0wj4Gwdhmn0pvtzq12d4oTDVMfB0PZk2I2SR11ArXvCwfIkLV7Wt6NWMVRvs/m32Wsg==
+X-Received: by 2002:a05:6000:400a:b0:391:2fe4:de0a with SMTP id ffacd0b85a97d-39cb357b0ccmr382060f8f.2.1743705488199;
+        Thu, 03 Apr 2025 11:38:08 -0700 (PDT)
+Received: from orzel1.c.googlers.com.com (105.168.195.35.bc.googleusercontent.com. [35.195.168.105])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c30096896sm2503496f8f.19.2025.04.03.11.38.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Apr 2025 11:38:07 -0700 (PDT)
+From: "=?UTF-8?q?Kornel=20Dul=C4=99ba?=" <korneld@chromium.org>
+X-Google-Original-From: =?UTF-8?q?Kornel=20Dul=C4=99ba?= <korneld@google.com>
+To: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>
+Cc: Steve Capper <steve.capper@arm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	ssradjacoumar@google.com,
+	chromeos-krk-upstreaming@google.com,
+	=?UTF-8?q?Kornel=20Dul=C4=99ba?= <korneld@google.com>
+Subject: [PATCH] arm64: Support ARM64_VA_BITS=52 when setting ARCH_MMAP_RND_BITS_MAX
+Date: Thu,  3 Apr 2025 18:36:38 +0000
+Message-ID: <20250403183638.3386628-1-korneld@google.com>
+X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC net-next PATCH 06/13] net: phy: Export some functions
-To: Sean Anderson <sean.anderson@linux.dev>, netdev@vger.kernel.org,
- Andrew Lunn <andrew+netdev@lunn.ch>, "David S . Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Russell King <linux@armlinux.org.uk>
-Cc: linux-kernel@vger.kernel.org, Christian Marangi <ansuelsmth@gmail.com>,
- upstream@airoha.com, Heiner Kallweit <hkallweit1@gmail.com>
-References: <20250403181907.1947517-1-sean.anderson@linux.dev>
- <20250403181907.1947517-7-sean.anderson@linux.dev>
-Content-Language: en-US
-From: Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; keydata=
- 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
- WlfRzlpjIPmdjgoicA==
-In-Reply-To: <20250403181907.1947517-7-sean.anderson@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 4/3/25 11:19, Sean Anderson wrote:
-> Export a few functions so they can be used outside the phy subsystem:
-> 
-> get_phy_c22_id is useful when probing MDIO devices which present a
-> phy-like interface despite not using the Linux ethernet phy subsystem.
-> 
-> mdio_device_bus_match is useful when creating MDIO devices manually
-> (e.g. on non-devicetree platforms).
-> 
-> Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
-> ---
-> 
->   drivers/net/phy/mdio_device.c | 1 +
->   drivers/net/phy/phy_device.c  | 3 ++-
->   include/linux/phy.h           | 1 +
->   3 files changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/phy/mdio_device.c b/drivers/net/phy/mdio_device.c
-> index e747ee63c665..cce3f405d1a4 100644
-> --- a/drivers/net/phy/mdio_device.c
-> +++ b/drivers/net/phy/mdio_device.c
-> @@ -45,6 +45,7 @@ int mdio_device_bus_match(struct device *dev, const struct device_driver *drv)
->   
->   	return strcmp(mdiodev->modalias, drv->name) == 0;
->   }
-> +EXPORT_SYMBOL_GPL(mdio_device_bus_match);
->   
->   struct mdio_device *mdio_device_create(struct mii_bus *bus, int addr)
->   {
-> diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-> index 675fbd225378..45d8bc13eb64 100644
-> --- a/drivers/net/phy/phy_device.c
-> +++ b/drivers/net/phy/phy_device.c
-> @@ -859,7 +859,7 @@ static int get_phy_c45_ids(struct mii_bus *bus, int addr,
->    * valid, %-EIO on bus access error, or %-ENODEV if no device responds
->    * or invalid ID.
->    */
-> -static int get_phy_c22_id(struct mii_bus *bus, int addr, u32 *phy_id)
-> +int get_phy_c22_id(struct mii_bus *bus, int addr, u32 *phy_id)
->   {
->   	int phy_reg;
->   
-> @@ -887,6 +887,7 @@ static int get_phy_c22_id(struct mii_bus *bus, int addr, u32 *phy_id)
->   
->   	return 0;
->   }
-> +EXPORT_SYMBOL_GPL(get_phy_c22_id);
->   
->   /* Extract the phy ID from the compatible string of the form
->    * ethernet-phy-idAAAA.BBBB.
-> diff --git a/include/linux/phy.h b/include/linux/phy.h
-> index a2bfae80c449..c648f1699c5c 100644
-> --- a/include/linux/phy.h
-> +++ b/include/linux/phy.h
-> @@ -1754,6 +1754,7 @@ struct phy_device *phy_device_create(struct mii_bus *bus, int addr, u32 phy_id,
->   				     bool is_c45,
->   				     struct phy_c45_device_ids *c45_ids);
->   #if IS_ENABLED(CONFIG_PHYLIB)
-> +int get_phy_c22_id(struct mii_bus *bus, int addr, u32 *phy_id);
+When the 52-bit virtual addressing was enabled the select like
+ARCH_MMAP_RND_BITS_MAX logic was never updated to account for it.
+Because of that the rnd max bits would be set to the default value of
+18 when ARM64_VA_BITS=52.
+Fix this by setting ARCH_MMAP_RND_BITS_MAX to the same value that would
+be used if 48-bit addressing was used. That's because the 52-bit
+addressing is used only if the caller provides a hint to mmap, with a
+fallback to 48-bit addressing.
 
-Seems like you will need to provide an empty inline stub for when 
-CONFIG_PHYLIB=n?
+Fixes: b6d00d47e81a ("arm64: mm: Introduce 52-bit Kernel VAs")
+Signed-off-by: Kornel Dulęba <korneld@google.com>
+---
+ arch/arm64/Kconfig | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index 748c34dc953c..38e0bac567f5 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -332,9 +332,9 @@ config ARCH_MMAP_RND_BITS_MAX
+ 	default 24 if ARM64_VA_BITS=39
+ 	default 27 if ARM64_VA_BITS=42
+ 	default 30 if ARM64_VA_BITS=47
+-	default 29 if ARM64_VA_BITS=48 && ARM64_64K_PAGES
+-	default 31 if ARM64_VA_BITS=48 && ARM64_16K_PAGES
+-	default 33 if ARM64_VA_BITS=48
++	default 29 if (ARM64_VA_BITS=48 || ARM64_VA_BITS=52) && ARM64_64K_PAGES
++	default 31 if (ARM64_VA_BITS=48 || ARM64_VA_BITS=52) && ARM64_16K_PAGES
++	default 33 if (ARM64_VA_BITS=48 || ARM64_VA_BITS=52)
+ 	default 14 if ARM64_64K_PAGES
+ 	default 16 if ARM64_16K_PAGES
+ 	default 18
 -- 
-Florian
+2.49.0.504.g3bcea36a83-goog
+
