@@ -1,156 +1,195 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DE0F205AA4
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 20:49:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AAE92E62A0
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 20:50:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743713358; cv=none; b=SL4EEFSPZ8C6O2S8OhEQcwIrntjPbT6l+HziIcL4WlSksZX0JemvWXPiVAB87wBmUOmotpu6WpaRfax9VmCKDOlDXzbaEQtbkUuEKeDVezM8d3+7D+zG+fddjY+DZiu1JJ0JHBVa75ZBJPDrSEccIFIL3BKKMI+9ajnVl1d3RCI=
+	t=1743713424; cv=none; b=Gxk9XMEbK5yK9Gxk5cXP6wlKNcsadvWIYmai7gJGw7hwZRT9CIv/Kxvn+JLt9zqSQ9gCTu6QiEisoHFrTUHlDUXQwute31c7OM2HKy/dIw/T9fduNzZO7ate6L2/CHabb7eD4bngsz8NiOYpE97s+rYl0L2H4od8NDUruez+UNE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743713358; c=relaxed/simple;
-	bh=LlaPfj4DUKuXPP98nymvRSQmhdWDT9UBooca9aD10/E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QHx/pnOKTZvXBijLreuQY+tsbtxo0FjMo4Rii00cI7ydyooO9bQ4+xKtNSMIl2oWsIbok2xsqLvOR1KwI5wBsaxEtFDDytBS1RnWL3wXI8ZkOxEpncJZ6NEFl9OxfQ31fouAbxv1LaV6kdoLBiE4SUoRQkVBlE6b0x2kZN8OhyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=SvG8y7wY; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="SvG8y7wY"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 533JhCoR013039
-	for <linux-kernel@vger.kernel.org>; Thu, 3 Apr 2025 20:49:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	s28f5mtAS44+kte+MljByntcVA76CObSAGStiZKJ2DM=; b=SvG8y7wYV+4o1qAc
-	A4FGbbZXQxUSjdTG4Sb+T1AmSKICqex8QA8CUPGsha2oiCpMff1gVYApxr1OV3ud
-	aZb958B/Y+fCsoQGOo3B8gNrTv2UoKpYFsHGRmxk1yvpxvwA7iXES234tJIH8Mba
-	m/QV3zzdEH3wPMqbdqS16CumOYUsavVj2kWkhlc5VdqL8zkMVcgdCqULN7NAKN3g
-	bIQ+1s2YIY5H5pyHpfOaBQa9MTFRDdorBTEj7xjIq2gsZJ7VpEEwB3b3lrA6BkdG
-	HS9G4A+c3Komo+1gC6pGpXijOW+alvanhYpHyq5NCxqaU3onTCdSJvm+78vr1gTW
-	XheYuQ==
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45rxapwtg9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 20:49:16 +0000 (GMT)
-Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-476a4a83106so169091cf.2
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 13:49:16 -0700 (PDT)
+	s=arc-20240116; t=1743713424; c=relaxed/simple;
+	bh=sgqb28suoVfHMMzBlJyy9wO1Z5VDQ+DKGssa0c3nyNA=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Av9MFthm1KFSl6NcJOneK5HoTC0FRPjagjAReKEuCJCq4uMcWEELs6t3eBUcIbXeh2TXV4SJjw3Ul5V3dAwZbfZnZ+4qDwVskEKLdsUxhkkxtFR2Yog9QsJx/IjHEsKm6itZ8MuUvqT/6EgMTOJ4I5T2dzohPYM8HCdz3h8YNfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3d5b381656dso31124475ab.2
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 13:50:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743713355; x=1744318155;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=s28f5mtAS44+kte+MljByntcVA76CObSAGStiZKJ2DM=;
-        b=MxSn1OeNtbhy+MtlLnP59XwqWwDRYD1HJzXFZ3uI9pHXRRPKLXKrfTtMkAVPQ3vP/1
-         zkpKz3nQekxgn5Ebg6WJJnlip9F/fcq++O2V9WrAucyXy3VA9mRm6i+DVXalhiKPI+/F
-         HKpqP6Z+3jIJEt2vp1wBivcJaOyzmhlF2EQeZ5af/mgO+/MlSJF8XgZfcKmF+1KfhbZ8
-         x7MdBGZadWC3CfB4eXp57n2Agq1VprNxdY8NqRpKtEH1v35Hw0WfKivxK6GB0V9Qw0r2
-         M+PFTA+f4v0Ed3MhwUPa7TupU2/vE0e5r8PkHJNaQhOTeWGKDqzKeMOCT1Iwpm/L2HPV
-         Q4iw==
-X-Forwarded-Encrypted: i=1; AJvYcCWmHKB7G5BA6m9ImgqJvP0mlntMx6Dt8yPqf1O8Xq2wLTW+P3ExWc/eg+0WThcI3olsXe8kKdpCV+RDUgI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx9sT/VfOe1P1Ajux+H6RsfgtKl1KXaNtMFdmd7EUcZ/i9Ithf0
-	SSM9cu1j+ng6T2gMH5hiJQdLyrnHN2CJWPu02wTarEB1aqm3OLnPKXA81VvF0O/sAh5Lt1zmtif
-	ALKIzaA9psXwa1BMEs9ze/a9gsFOHPvrbPIMk99aUKZnFp6lXLyBycwwgtQn/qrE=
-X-Gm-Gg: ASbGncuvyv77e0jB463ge/367XOp2Y4nfrIH/2tcU4nIjGetZTBNMBY8Ky9wV4JAIYs
-	A++TyKV8DMpO5LUfn4+QEPWwBUQrus2F080FoVfcJk7sS1Dx6RMnWLGZ0fhAdcuG795SxZBUozL
-	UUe/fYvfvU3tr/VCzYxug11H/pWwQi7XIccT8mNg8TPvPpYeTl03t1SppsFgJeF36tOg7zaPl7G
-	FkRoXvv/rVC8wCJgkG7ivVF/Y61zSqUcFNxQ6W65RO2QgykX75HB8LBJBKEYbjN/PhqtOZavV9/
-	Q3YyHxbkEMWSefKH4/Wp0rpBJ1xUV7PVvWNMV+Gtk8NyKIWN92iLquS0FwS8b0BvrYuuvg==
-X-Received: by 2002:a05:622a:1347:b0:472:2122:5a43 with SMTP id d75a77b69052e-479249040cemr4830071cf.1.1743713355200;
-        Thu, 03 Apr 2025 13:49:15 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFVOq1tnzj3l0Pbxcf+TO8tXH+CP8A4Kfy0+V/nltEpUR+qVzOp0CXhKKc7GDQwdFdQ43jjFQ==
-X-Received: by 2002:a05:622a:1347:b0:472:2122:5a43 with SMTP id d75a77b69052e-479249040cemr4829861cf.1.1743713354683;
-        Thu, 03 Apr 2025 13:49:14 -0700 (PDT)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f087eedf61sm1366015a12.32.2025.04.03.13.49.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Apr 2025 13:49:14 -0700 (PDT)
-Message-ID: <5de57d38-4cc3-44ab-87c4-cdd99911d343@oss.qualcomm.com>
-Date: Thu, 3 Apr 2025 22:49:11 +0200
+        d=1e100.net; s=20230601; t=1743713421; x=1744318221;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=qCxNO/wj+OGDObYICYck8puXYXkoDJ5yVmBZfl+FJKw=;
+        b=Q0FWoITnITrORp+lCG3SSxtsopJyvCQb5eqamkTXUu3Qe5NEI7KFtO2yjkPj8qYpK0
+         9IDKOCyOs1PJrj/hz7o0TGxkSfnypDO3Yxc3utxIE70mkhwiKZ/L0ziFsN38vfet7qv5
+         nN+GC3zQTDkVvTwf47B3rnNd+RMddHhCUDExUhR3uH4jJ35WnyFYdXzoK/GVRqe3cSm/
+         zTn8aJ1EgvPQGwt6ldqudQ5aFR8QH6Xxrx73PKo9FR0VuOJ7HQu5hpeM438Wa226Kcid
+         gyn/OkGqmu0YbBeQOVbxwYwTu/iDAuSqSKsCMlkI87/vicg+ZLQGPHlQLkcQW6d6X46g
+         oaAg==
+X-Forwarded-Encrypted: i=1; AJvYcCWlGDyxJ8fVjSoxPREV80CiRjxmdGKmA7sL/Oub4WtFdMSM7Zip8xdS70OtsLiDzmwMYLIRsiw9sxpcfUI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwQ1ZoXvgmxMQ7et1Y4FW43yZjE4mJvcGyl6E+VamOPiizhGSpD
+	HdNgE8EW6mtL3f+khrm6F0UdGdJ4H/itVdKmR+Ykm3Ux/W3Mc6SLFMmOu4TPjKSEMxmXBX/f6h2
+	xv08aUR42i05skkxRULpedSoVmirwgsbKeh/0igaTtFtPbOalc83TXxc=
+X-Google-Smtp-Source: AGHT+IH2SP7oqdPR154EMfw0t+YQbXEaaARss25Ao4kq70IANKV/m9842xzDsrNK/TksxWwaMFLn9ct5OGK4zrFXeu9rMQrmTMEc
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 2/2] arm64: dts: qcom: ipq5424: Enable PCIe PHYs and
- controllers
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-        Manikanta Mylavarapu <quic_mmanikan@quicinc.com>
-Cc: andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org,
-        krzk+dt@kernel.org, conor+dt@kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        quic_varada@quicinc.com, quic_srichara@quicinc.com
-References: <20250402102723.219960-1-quic_mmanikan@quicinc.com>
- <20250402102723.219960-3-quic_mmanikan@quicinc.com>
- <ezodm6qh63fs43xx6cw3smspfqkwqb5qscwfee36k5vtktguc4@tlqhuvjg2bly>
- <bcbd2f83-2599-4a2e-ad69-64edcb97dfbe@quicinc.com>
- <CAO9ioeVTyWL0-vzzNs3isDodi8jXQ9pHknyyhnWKcb+0tyf1FQ@mail.gmail.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <CAO9ioeVTyWL0-vzzNs3isDodi8jXQ9pHknyyhnWKcb+0tyf1FQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Authority-Analysis: v=2.4 cv=Vbj3PEp9 c=1 sm=1 tr=0 ts=67eef44c cx=c_pps a=WeENfcodrlLV9YRTxbY/uA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=OqglutSo4cKLNd8Ow6wA:9 a=QEXdDO2ut3YA:10
- a=kacYvNCVWA4VmyqE58fU:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: vYxk6Cm68T37Zfq0ng-GfMlx1ct3LJzz
-X-Proofpoint-GUID: vYxk6Cm68T37Zfq0ng-GfMlx1ct3LJzz
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-03_09,2025-04-03_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
- suspectscore=0 clxscore=1015 mlxscore=0 phishscore=0 bulkscore=0
- priorityscore=1501 spamscore=0 lowpriorityscore=0 mlxlogscore=778
- impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504030110
+X-Received: by 2002:a05:6e02:19cf:b0:3d3:d00c:3602 with SMTP id
+ e9e14a558f8ab-3d6e3f056a2mr10364025ab.10.1743713421693; Thu, 03 Apr 2025
+ 13:50:21 -0700 (PDT)
+Date: Thu, 03 Apr 2025 13:50:21 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67eef48d.050a0220.9040b.0262.GAE@google.com>
+Subject: [syzbot] [bcachefs?] general protection fault in bch2_snapshot_tree_oldest_subvol
+From: syzbot <syzbot+baee8591f336cab0958b@syzkaller.appspotmail.com>
+To: kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 4/3/25 11:32 AM, Dmitry Baryshkov wrote:
-> On Thu, 3 Apr 2025 at 08:08, Manikanta Mylavarapu
-> <quic_mmanikan@quicinc.com> wrote:
->>
->>
->>
->> On 4/2/2025 7:50 PM, Dmitry Baryshkov wrote:
->>> On Wed, Apr 02, 2025 at 03:57:23PM +0530, Manikanta Mylavarapu wrote:
->>>> Enable the PCIe controller and PHY nodes corresponding to RDP466.
->>>>
->>>> Signed-off-by: Manikanta Mylavarapu <quic_mmanikan@quicinc.com>
->>>> ---
->>>> Changes in V6:
->>>>      - No change.
->>>>
->>>>  arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts | 41 ++++++++++++++++++++-
->>>>  1 file changed, 40 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts b/arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts
->>>> index 0fd0ebe0251d..1f89530cb035 100644
->>>> --- a/arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts
->>>> +++ b/arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts
->>>> @@ -82,6 +82,32 @@ &dwc_1 {
->>>>      dr_mode = "host";
->>>>  };
->>>>
->>>> +&pcie2 {
->>>> +    pinctrl-0 = <&pcie2_default_state>;
->>>> +    pinctrl-names = "default";
->>>> +
->>>> +    perst-gpios = <&tlmm 31 GPIO_ACTIVE_LOW>;
->>>
->>>
->>> No wake-gpios? Please document it in the commit message.
->>>
->>
->> Hi Dmitry,
->>
->> Thank you for reviewing the patch.
->>
->> The wake GPIO is dropped because the PCIe on the IPQ5424 doesn't support low power mode.
->> I will document this information in the commit message and post the next version.
-> 
-> If the GPIO is routed on the PCB I think it should still be described in the DT.
+Hello,
 
-Even basic s2idle can be woken up from, please describe it.
+syzbot found the following issue on:
 
-Konrad
+HEAD commit:    a2cc6ff5ec8f Merge tag 'firewire-updates-6.15' of git://gi..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=12482fb0580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=6fe3b5e6a2cb1cc2
+dashboard link: https://syzkaller.appspot.com/bug?extid=baee8591f336cab0958b
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10530be4580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13d6d404580000
+
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-a2cc6ff5.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/c58c1555aab7/vmlinux-a2cc6ff5.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/61fb9d013359/bzImage-a2cc6ff5.xz
+mounted in repro: https://storage.googleapis.com/syzbot-assets/86cf46d3a5d9/mount_0.gz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+baee8591f336cab0958b@syzkaller.appspotmail.com
+
+ done
+bcachefs (loop0): accounting_read... done
+bcachefs (loop0): alloc_read... done
+bcachefs (loop0): snapshots_read... done
+bcachefs (loop0): check_allocations...
+Oops: general protection fault, probably for non-canonical address 0xdffffc0000000004: 0000 [#1] SMP KASAN NOPTI
+KASAN: null-ptr-deref in range [0x0000000000000020-0x0000000000000027]
+CPU: 0 UID: 0 PID: 5318 Comm: syz-executor394 Not tainted 6.14.0-syzkaller-12966-ga2cc6ff5ec8f #0 PREEMPT(full) 
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+RIP: 0010:bch2_snapshot_tree_oldest_subvol+0x1d3/0x6a0 fs/bcachefs/snapshot.c:400
+Code: e6 e8 81 dd 36 fd 4c 39 e5 0f 86 c9 03 00 00 e8 13 db 36 fd 49 6b c4 38 49 01 c6 49 83 c6 18 49 83 c6 20 4c 89 f0 48 c1 e8 03 <42> 0f b6 04 28 84 c0 0f 85 c6 03 00 00 41 8b 2e 31 ff 89 ee e8 24
+RSP: 0018:ffffc9000d46e020 EFLAGS: 00010202
+RAX: 0000000000000004 RBX: 0000000000000001 RCX: ffff888000f98000
+RDX: 0000000000000000 RSI: 00000000ffeb487f RDI: 0000000000000001
+RBP: 0000000000000001 R08: ffffffff848c7c5f R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 00000000ffeb487f
+R13: dffffc0000000000 R14: 0000000000000020 R15: 000000000014b780
+FS:  0000555584fe3380(0000) GS:ffff88808c599000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000055835cf3c000 CR3: 0000000044318000 CR4: 0000000000352ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ bch2_inum_snap_offset_err_msg_trans+0x374/0x680 fs/bcachefs/error.c:691
+ bch2_indirect_extent_missing_error+0x411/0x1290 fs/bcachefs/reflink.c:192
+ gc_trigger_reflink_p_segment fs/bcachefs/reflink.c:392 [inline]
+ __trigger_reflink_p+0x196c/0x1cc0 fs/bcachefs/reflink.c:432
+ bch2_trigger_reflink_p+0x299/0x380 fs/bcachefs/reflink.c:451
+ bch2_key_trigger fs/bcachefs/bkey_methods.h:88 [inline]
+ bch2_gc_mark_key+0x6bd/0x1180 fs/bcachefs/btree_gc.c:639
+ bch2_gc_btree fs/bcachefs/btree_gc.c:677 [inline]
+ bch2_gc_btrees fs/bcachefs/btree_gc.c:740 [inline]
+ bch2_check_allocations+0x1488/0x6ab0 fs/bcachefs/btree_gc.c:1042
+ bch2_run_recovery_pass+0xf0/0x1e0 fs/bcachefs/recovery_passes.c:226
+ bch2_run_recovery_passes+0x2ad/0xa90 fs/bcachefs/recovery_passes.c:285
+ bch2_fs_recovery+0x292a/0x3e20 fs/bcachefs/recovery.c:936
+ bch2_fs_start+0x2fb/0x610 fs/bcachefs/super.c:1060
+ bch2_fs_get_tree+0x113e/0x18f0 fs/bcachefs/fs.c:2253
+ vfs_get_tree+0x90/0x2b0 fs/super.c:1759
+ do_new_mount+0x2cf/0xb70 fs/namespace.c:3878
+ do_mount fs/namespace.c:4218 [inline]
+ __do_sys_mount fs/namespace.c:4429 [inline]
+ __se_sys_mount+0x38c/0x400 fs/namespace.c:4406
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f22f815ae2a
+Code: d8 64 89 02 48 c7 c0 ff ff ff ff eb a6 e8 5e 04 00 00 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007ffd84c61a58 EFLAGS: 00000282 ORIG_RAX: 00000000000000a5
+RAX: ffffffffffffffda RBX: 00007ffd84c61a70 RCX: 00007f22f815ae2a
+RDX: 0000200000000040 RSI: 0000200000000000 RDI: 00007ffd84c61a70
+RBP: 0000200000000000 R08: 00007ffd84c61ab0 R09: 0000000000005995
+R10: 0000000000800001 R11: 0000000000000282 R12: 0000200000000040
+R13: 0000000000000004 R14: 0000000000000003 R15: 00007ffd84c61ab0
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:bch2_snapshot_tree_oldest_subvol+0x1d3/0x6a0 fs/bcachefs/snapshot.c:400
+Code: e6 e8 81 dd 36 fd 4c 39 e5 0f 86 c9 03 00 00 e8 13 db 36 fd 49 6b c4 38 49 01 c6 49 83 c6 18 49 83 c6 20 4c 89 f0 48 c1 e8 03 <42> 0f b6 04 28 84 c0 0f 85 c6 03 00 00 41 8b 2e 31 ff 89 ee e8 24
+RSP: 0018:ffffc9000d46e020 EFLAGS: 00010202
+RAX: 0000000000000004 RBX: 0000000000000001 RCX: ffff888000f98000
+RDX: 0000000000000000 RSI: 00000000ffeb487f RDI: 0000000000000001
+RBP: 0000000000000001 R08: ffffffff848c7c5f R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 00000000ffeb487f
+R13: dffffc0000000000 R14: 0000000000000020 R15: 000000000014b780
+FS:  0000555584fe3380(0000) GS:ffff88808c599000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000556b9781f0c8 CR3: 0000000044318000 CR4: 0000000000352ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+----------------
+Code disassembly (best guess):
+   0:	e6 e8                	out    %al,$0xe8
+   2:	81 dd 36 fd 4c 39    	sbb    $0x394cfd36,%ebp
+   8:	e5 0f                	in     $0xf,%eax
+   a:	86 c9                	xchg   %cl,%cl
+   c:	03 00                	add    (%rax),%eax
+   e:	00 e8                	add    %ch,%al
+  10:	13 db                	adc    %ebx,%ebx
+  12:	36 fd                	ss std
+  14:	49 6b c4 38          	imul   $0x38,%r12,%rax
+  18:	49 01 c6             	add    %rax,%r14
+  1b:	49 83 c6 18          	add    $0x18,%r14
+  1f:	49 83 c6 20          	add    $0x20,%r14
+  23:	4c 89 f0             	mov    %r14,%rax
+  26:	48 c1 e8 03          	shr    $0x3,%rax
+* 2a:	42 0f b6 04 28       	movzbl (%rax,%r13,1),%eax <-- trapping instruction
+  2f:	84 c0                	test   %al,%al
+  31:	0f 85 c6 03 00 00    	jne    0x3fd
+  37:	41 8b 2e             	mov    (%r14),%ebp
+  3a:	31 ff                	xor    %edi,%edi
+  3c:	89 ee                	mov    %ebp,%esi
+  3e:	e8                   	.byte 0xe8
+  3f:	24                   	.byte 0x24
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
