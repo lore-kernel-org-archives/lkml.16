@@ -1,71 +1,71 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E25212500DF
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 14:45:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27A162505A5
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 14:45:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743691527; cv=none; b=SCCnkHy/5JHBhXrOkFBRiFL+A26BVOvUlNipMiMfTCLN9mM48c8kLO3Tn6xbZ9/WNWeCoH9FZispJMFx2hXioR3zDijYra1QxAAa7vhDNIguCWUhBIk7yiwdDrP+PaHtCVFnH17YbtBiPzczE7N4UYy6FAMk96UMmfAMcZ7VZA0=
+	t=1743691527; cv=none; b=Y+j03MOOjzlc18UZyxyZJv3JFBuIKIGVjxEjDfpkaw+YKpzlBXDniZP/8JBysOy8SYY9bnfnREDdMvxD29YpBviHelDCK06PWTjX2z2AsQc7iIQpA6ddT14HG5fYhZFyhX9/nteqgJoYjmWNy7/p2hUmur7ZqhN1a47dXr7MnNc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1743691527; c=relaxed/simple;
-	bh=pN/3K0c07mgtPTRPXPCJpX/AGnbpoFURyIzTH/nlVaY=;
+	bh=7MXpC1UsPTFkEH6w3Dr3IjWHrLN92YVeJc/OuOPJTDw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=SBSF6+o8YwjED+sw8icy7k5hoNas6It9AgQcejMgjM1MVdVEJB/DafxOHBWm8IacCgkxjRDlYr9Fgv27TXEpYK4+M3n42oBcVD25KNTE0tG8UtKyGVOJIwDHBN5P+9rOIVeJeKYKuh7h867b4LQqiVdFPERdqt/PZC74+ZCMsS8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Lrszz3y/; arc=none smtp.client-ip=209.85.128.43
+	 MIME-Version; b=U0HI5+S0oLILn3VwrFhoOL+3BfGjS/ekComfJasqCbBCYZJqz89F3rAGNZsd4PUWAkdIQ4rjwy39H8fQWwz+865Fm0ynRKlNSqzFfFyTlrKnF+NkBtR3Tx4BKPpH8dEVsRpJFkQbsaZOuYnF3IP6/0MKMROdsF1oQke8fFzwMfI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JC4jMe2R; arc=none smtp.client-ip=209.85.221.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Lrszz3y/"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43cfecdd8b2so7531115e9.2
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 07:45:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JC4jMe2R"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-39c1ee0fd43so905015f8f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 07:45:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743691523; x=1744296323; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1743691524; x=1744296324; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=9r0/g7jMkIS31rWPP+0eYALjsbxAMAbdDJjBS2LpzoY=;
-        b=Lrszz3y/0lLO37p7rjDsFPpQs3bw6oMcMBFvIQB+pEIZvA2rrlvA9s/e7MZ+tGTomC
-         6mUPen5QASJ8om0J+ZCLJhiPRpmHnGOZN/ZI0yyd3vAOvctryAHEhNxxcUPX14bmLT2E
-         Ky4ermhs+ysh4KpmURDFsv2osldrIsc9UW3EGigDgGdQtXKR+gn7wl/d5VRl/fqzmJbG
-         2eeF/kCivJcVIdgN2dwZpf/EiQjkoXplE8PlRFkmD56JAIKp5kkzDiK02rkzsBLhfcUm
-         YsJ5mlQ7qRRWMVVRAMXifwiWQ5rlAGTtrS25mmWoD81DwzcpJ0VdgAA6IZQaLJIPUxsZ
-         lebg==
+        bh=u0Dr+cnFlbJ+1l2BNrPM33eKwGXGKx+rxyRsMaRmDtw=;
+        b=JC4jMe2RosL3Ro33nhOAFK1a1k00leTLux4DaJHFAdz2yX7B5/Ifi84nXcp0CKDCUw
+         WXJuPfqR3mWnGjQ8/cSNdSblupRDN0mNN14UFH4dJY9GEw5rIa83iTZD+e/nOJhvZHc/
+         LRqqhEOTCIZGPQgSP9bYvZXN+63Y5Q4YWaqPM1z+PNm/fuNFaWFRLMOL9iwZNq+wW5WH
+         7QYHZaJ4Rv33VaXmWuBAE4N7jdjYxN9iCOwA52OK1cF2P9X0fTzAyDLrqI6uMi0ID8TK
+         jnH/0ETs5P0SVklDjXQ7MzKazpAXvUbH1oG7IhFqs/Pf+xOQkeqxwkMgfybKITnRFAaN
+         pORA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743691523; x=1744296323;
+        d=1e100.net; s=20230601; t=1743691524; x=1744296324;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=9r0/g7jMkIS31rWPP+0eYALjsbxAMAbdDJjBS2LpzoY=;
-        b=kmKoe7UDI1QdhVJOLUivTW52rj2v+izd1KltokH2erfH1DZec1RW1yo29mSU4fXR6o
-         h6j/t+2GROFHNfxNCRJShBLdg5CG4Fx372W0zlD6aLvHCQLXPnR5VqLVtL5hGq8gJWMX
-         3HXq6+gX/8eYc7+0bu+uu04Yr9jl+ruUhAuJoYDSIsx0FdOGHI/oiw9ctIISrK0XWsZT
-         WOH0hxp1HXIpknJh+bEeccvkADpCf+c/zootS4TnOFRWaasvU+KljdSOdS8cfuVWfejy
-         WPYhJCFAJDzHL8HThOUHOfkhZRYW1La4p+C5tfea13JtlHcjWIIL2Sdqd5Gba6Kp9p6J
-         +WSw==
-X-Gm-Message-State: AOJu0YzLxPGbhfxPnnB4T35J2IV8CkhQjM2s289M9wSG/bjXz+kTtCNi
-	weBTZXz5EWRK7pJ/1My7weFthSe2FBAAhdvdHTF72bPLNIBtZvQEvSVtnG6NTnH+Gx9GJPtImhq
-	7Sr0=
-X-Gm-Gg: ASbGncvo1HERp0bnx46FndU/m9AnlpndvNbpZabRpMnL3LSUhA9rcZk591OfW4bc7oE
-	V6pJ7eFSVJfLQbLSQ1U4de4GUhsEMPLNKgqBRpsm79Ec5HJclKOklzds5YjMWzzXlv4crmteruf
-	cIjMyL4X/h7l2PyF9uv2Vz0T3qy59qQh92UR68Uo4uNJMf1AyyjwZpDfis1KniGXh7r1kXPGrJM
-	aUJF8FpfGcErL17s+65DCnylChroKv1qPM2eV/KPLc4MW8y7t4lFL8inFq9hkL6VmWkXnFgMK5Y
-	RrLQCZ0tOGhLA4Rb8DJTyls+uTTtIIijDUeW1NgtpnIbSOrbr2ttE57lT64BkYDvAU3V4g==
-X-Google-Smtp-Source: AGHT+IGruTH9Dv/rwifz2YwU8yxpPKuZ/RpQRWyxBaoGZpvsUk/RyXjU/itW/UwthJg+CQNE79HSuw==
-X-Received: by 2002:a5d:588a:0:b0:391:3fa7:bf77 with SMTP id ffacd0b85a97d-39c120e3519mr17418153f8f.31.1743691523139;
-        Thu, 03 Apr 2025 07:45:23 -0700 (PDT)
+        bh=u0Dr+cnFlbJ+1l2BNrPM33eKwGXGKx+rxyRsMaRmDtw=;
+        b=xPOKPPNcutlsorsxmDsB2tkoT4VDl8bMOS/ObyCDDBU6najBHrn75ZsjL+VvFVdDM3
+         C2VhVr4P8Fs8lTEp5FuzzzwPEGOGWQry2VHgcOpPYb7FJxdze/Hhu/AjlUv6HP6t7w9J
+         IVeidnZVsvk3djWb/JXsXGXjhIFz59EZc9YeQsK85yLXYCKHxzGs1XDYAnLT/gpMxbl5
+         0db9NXjs0c8CebmoDlE9nyAQ0c6ZBfMi/RRqKKyDDbEDX4v3KgMpOr3ekbhor8QMXfx0
+         4EBvIfxrrVYUkGMW6KCpMAXc0OUXLQ+lJXGhOn6AzqfTbhO6U0+j7BFQvv9J8g0kw2YL
+         UP9Q==
+X-Gm-Message-State: AOJu0YyoJZ9hK5udjjzMbdBaE6l5QvooPm02zZ8wGcWtDQsdj/otjt7i
+	YH3aKJeWLi6slA888rv3XLDMqnHLdhiuxGuZdepARdk+zy4CD6307lsqrxKFcw0=
+X-Gm-Gg: ASbGncvngc8vrnW0iuNswXwP/VZfDjUqm8b1vQXPl+L6wL4YZQdf8D9QVEnP3/2AcCu
+	3plR+tDSiZPBlXJ30pYURvMlDSyb7m3qhgPHwTsxNinuODhXwgKVSmxoBVMNCCphCu4P8xrYpe6
+	XCeihzyT60Jz3INFWVV5ZaJxg+5P1vJwmLNlHJg/zVFBE3yOdb3wG7UgwhyBlsmObu2HnCmbyb9
+	q8wGh38YxK70n0e05rneq09WVS8x+YZ7bGtZZ9IU0ClBSrazkBpZ40RzqMPJ8c55MkOm3ZQRmkM
+	bUE7F22zAmgoX5SW5vi65ikeRFj3ukEaIdcVI/Md5TuQyPQhyvgf2IlLy/uAkvlz47FQGlw/RM0
+	IbKSr
+X-Google-Smtp-Source: AGHT+IGPg/iZf5OpeWncmzmuhbyNUVV+h4b0tK9HpRCQQOw3mAIMcH1ko/zsdVH3FuU2w1FIrxX5KQ==
+X-Received: by 2002:a5d:638c:0:b0:39c:2678:302e with SMTP id ffacd0b85a97d-39c2f94be2dmr2230339f8f.45.1743691524417;
+        Thu, 03 Apr 2025 07:45:24 -0700 (PDT)
 Received: from localhost.localdomain ([5.133.47.210])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c3020d661sm2044374f8f.66.2025.04.03.07.45.22
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c3020d661sm2044374f8f.66.2025.04.03.07.45.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Apr 2025 07:45:22 -0700 (PDT)
+        Thu, 03 Apr 2025 07:45:23 -0700 (PDT)
 From: srinivas.kandagatla@linaro.org
 To: gregkh@linuxfoundation.org
 Cc: linux-kernel@vger.kernel.org,
-	Heiko Stuebner <heiko@sntech.de>,
-	Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
+	Akhil P Oommen <quic_akhilpo@quicinc.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
 	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH v3 04/13] nvmem: rockchip-otp: add rk3576 variant data
-Date: Thu,  3 Apr 2025 15:44:52 +0100
-Message-Id: <20250403144501.202742-5-srinivas.kandagatla@linaro.org>
+Subject: [PATCH v3 05/13] dt-bindings: nvmem: qfprom: Add X1E80100 compatible
+Date: Thu,  3 Apr 2025 15:44:53 +0100
+Message-Id: <20250403144501.202742-6-srinivas.kandagatla@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20250403144501.202742-1-srinivas.kandagatla@linaro.org>
 References: <20250403144501.202742-1-srinivas.kandagatla@linaro.org>
@@ -75,52 +75,33 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1278; i=srinivas.kandagatla@linaro.org; h=from:subject; bh=3Ys4IkX8eCFRNDyZ5cOnVGSBTrGSodl3ymtNu0NI9Wg=; b=owEBbQGS/pANAwAKAXqh/VnHNFU3AcsmYgBn7p7izrcabPVsgwcqQzznbddwl7Md0kDIrrWvM 52dXNcO/WyJATMEAAEKAB0WIQQi509axvzi9vce3Y16of1ZxzRVNwUCZ+6e4gAKCRB6of1ZxzRV Nx6TB/9Lw6/txzgETuJT+ceFi9jMm5UiPtOprJrfirdxGcemA2ER4ZtO6sKwQQVXqj7ZOBE3UK/ DzTO9v2EBLrotQi9Oai5qmCJEwzb1aXwMvga6sS+WpEkTg7/7IRoVKC6ycYsMcB6D7XeRY+nRrN 6BJBDnzpCPrSndb+5wXytkCmXv2DAsilP5BNTay+c8TXG0ZzJ0Y0xphlSpZstXgf6HirW3ZEH+D G8G4/QibUFw2vo/NcE+33bf6kWnJXMXNNDAUkEIy2oBQk2Az+GI7gqtpNgJj+Z9PBbkHL8383mw MYQwP3NIpref/UdH9p3tSZ3LCxD6DArw7nW3ePyeAgfBBuE6
+X-Developer-Signature: v=1; a=openpgp-sha256; l=884; i=srinivas.kandagatla@linaro.org; h=from:subject; bh=zQ+XDU22w1KeN1u2R0sBn32K6zj/nRUuBnAFl5n+VVw=; b=owEBbQGS/pANAwAKAXqh/VnHNFU3AcsmYgBn7p7ih90iMu8k4UWTZMM/77qH5t4+r/N3S94Id NPORNO+EZKJATMEAAEKAB0WIQQi509axvzi9vce3Y16of1ZxzRVNwUCZ+6e4gAKCRB6of1ZxzRV NxDrB/4y5wwhNgyqBHpTf+QkISxKEz+Dv8X8zHpHU2vCfhlGauogP4f9oKmwypuovmXZsvnl7nQ mEBp/PChSJgTg041HKONEifpy8At4X9wpKqCM57/FReXuFEpY1mncrKMB4OuPm+XuchFC48ghnd zaZxoGAwbvTCtVapj0tC4db9WU+0ZJ41QLDVpUnxXHsmj0h2yE9aH/fsAOkq5sAOkCGZbJ9ulTB padoWzkA584eOGc/mOeeRfp1hFka5roHKrOjpJKButcHwc8UduB3e92QgwOlUjrN3e3OpuHZzpJ mvf/LKWI+fcrFIyHauuZV209ngfirNb3CHWWR5W+Hm/JdQ3L
 X-Developer-Key: i=srinivas.kandagatla@linaro.org; a=openpgp; fpr=ED6472765AB36EC43B3EF97AD77E3FC0562560D6
 Content-Transfer-Encoding: 8bit
 
-From: Heiko Stuebner <heiko@sntech.de>
+From: Akhil P Oommen <quic_akhilpo@quicinc.com>
 
-The variant works very similar to the rk3588, just with a different
-read-offset and size.
+Document compatible string for the QFPROM on X1E80100 platform.
 
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-Tested-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Signed-off-by: Akhil P Oommen <quic_akhilpo@quicinc.com>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- drivers/nvmem/rockchip-otp.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/nvmem/rockchip-otp.c b/drivers/nvmem/rockchip-otp.c
-index 3edfbfc2d722..d88f12c53242 100644
---- a/drivers/nvmem/rockchip-otp.c
-+++ b/drivers/nvmem/rockchip-otp.c
-@@ -274,6 +274,14 @@ static const struct rockchip_data px30_data = {
- 	.reg_read = px30_otp_read,
- };
+diff --git a/Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml b/Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml
+index d37f544ab8aa..a85f817b015d 100644
+--- a/Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml
++++ b/Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml
+@@ -50,6 +50,7 @@ properties:
+           - qcom,sm8450-qfprom
+           - qcom,sm8550-qfprom
+           - qcom,sm8650-qfprom
++          - qcom,x1e80100-qfprom
+       - const: qcom,qfprom
  
-+static const struct rockchip_data rk3576_data = {
-+	.size = 0x100,
-+	.read_offset = 0x700,
-+	.clks = px30_otp_clocks,
-+	.num_clks = ARRAY_SIZE(px30_otp_clocks),
-+	.reg_read = rk3588_otp_read,
-+};
-+
- static const char * const rk3588_otp_clocks[] = {
- 	"otp", "apb_pclk", "phy", "arb",
- };
-@@ -295,6 +303,10 @@ static const struct of_device_id rockchip_otp_match[] = {
- 		.compatible = "rockchip,rk3308-otp",
- 		.data = &px30_data,
- 	},
-+	{
-+		.compatible = "rockchip,rk3576-otp",
-+		.data = &rk3576_data,
-+	},
- 	{
- 		.compatible = "rockchip,rk3588-otp",
- 		.data = &rk3588_data,
+   reg:
 -- 
 2.25.1
 
