@@ -1,20 +1,20 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A8E5204598
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 20:47:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3199204683
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 20:47:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743713238; cv=none; b=K9McjVeqnpdj6bqmT0VWGauL3cf0mtYCIx9H7ofzrCSwlJaXWk4gXfDSiP0bcPqAO9LiiVE91KtOlan/dmiayDpTjkHYA0gPUAuPXR+KvN5E1b4jS0wGF9i99qACV1xkSreJvtRIpQUM5tMu39LL01HaaPUn2hRWoEJ+P93A5Gg=
+	t=1743713255; cv=none; b=KmMbU2bd5uoySvAlUjYboS+uJFKTDhO+F2BV9MfM29UFCgZa0H2DPwT67iXzc1gD7M9/T9ToaIJo2ULwdlns2OOsJqR3Snd0loJOxZNVeteZbz6BpfVEAgjd5hdvkMeDp+Qvb5H5r/hZ8s3f4wEM/KPhCFDrduC3MGv6JrylF4c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743713238; c=relaxed/simple;
-	bh=W0XbDU2ClWwDgGLKcBLdaZLrDW9guPw9/6q6PamdSJs=;
+	s=arc-20240116; t=1743713255; c=relaxed/simple;
+	bh=Ie0PmPpy1vuBO9+b5GNtSA5V6mtQSL8iiRSdXYJZ2Kg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kgEcZ/YEjTtADa6CrXPEOghth92pEC5q28qDoksltZm9m8LX7DUDsEe0gfhUBHlYlEaqUCrCNg4wcb/TNYx7M/bMzlg1v9z9pTZgv520NVyDRMuWMo1qvFozLVaR00IGaH4g4A75OUGh9C/AytPG3x0hDnzEX3tT+D7+FhwLb1Q=
+	 Content-Type:Content-Disposition:In-Reply-To; b=qA15w9KO4HuFj7kNl2u7zXwHyl4ykqYYUzJy1kxvO6jHwCRGxsoxp4LSRu0+k8wxcf6bwkc+2tO1rp/7Kfdb1cdQRhW5Dahhyy9Gs80UFp1Pp9WrLDfs3h6QiuRWz6Rfil001I/5REsBu86IDRQhHtnTanPl6eo+cB2egkD7bmo=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94C91C4CEE3;
-	Thu,  3 Apr 2025 20:47:13 +0000 (UTC)
-Date: Thu, 3 Apr 2025 21:47:10 +0100
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CFFAC4CEE3;
+	Thu,  3 Apr 2025 20:47:31 +0000 (UTC)
+Date: Thu, 3 Apr 2025 21:47:29 +0100
 From: Catalin Marinas <catalin.marinas@arm.com>
 To: Ryan Roberts <ryan.roberts@arm.com>
 Cc: Will Deacon <will@kernel.org>,
@@ -30,10 +30,11 @@ Cc: Will Deacon <will@kernel.org>,
 	Kevin Brodsky <kevin.brodsky@arm.com>,
 	linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 02/11] arm64: hugetlb: Refine tlb maintenance scope
-Message-ID: <Z-7zznsJ91ZCCTeS@arm.com>
+Subject: Re: [PATCH v3 05/11] arm64: hugetlb: Use set_ptes_anysz() and
+ ptep_get_and_clear_anysz()
+Message-ID: <Z-7z4ZFGIZCrNq6h@arm.com>
 References: <20250304150444.3788920-1-ryan.roberts@arm.com>
- <20250304150444.3788920-3-ryan.roberts@arm.com>
+ <20250304150444.3788920-6-ryan.roberts@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,25 +43,32 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250304150444.3788920-3-ryan.roberts@arm.com>
+In-Reply-To: <20250304150444.3788920-6-ryan.roberts@arm.com>
 
-On Tue, Mar 04, 2025 at 03:04:32PM +0000, Ryan Roberts wrote:
-> When operating on contiguous blocks of ptes (or pmds) for some hugetlb
-> sizes, we must honour break-before-make requirements and clear down the
-> block to invalid state in the pgtable then invalidate the relevant tlb
-> entries before making the pgtable entries valid again.
+On Tue, Mar 04, 2025 at 03:04:35PM +0000, Ryan Roberts wrote:
+> Refactor the huge_pte helpers to use the new common set_ptes_anysz() and
+> ptep_get_and_clear_anysz() APIs.
+
+Nitpick: maybe add underscores to this new API to suggest it's private.
+Up to you.
+
+> This provides 2 benefits; First, when page_table_check=on, hugetlb is
+> now properly/fully checked. Previously only the first page of a hugetlb
+> folio was checked. Second, instead of having to call __set_ptes(nr=1)
+> for each pte in a loop, the whole contiguous batch can now be set in one
+> go, which enables some efficiencies and cleans up the code.
 > 
-> However, the tlb maintenance is currently always done assuming the worst
-> case stride (PAGE_SIZE), last_level (false) and tlb_level
-> (TLBI_TTL_UNKNOWN). We can do much better with the hinting; In reality,
-> we know the stride from the huge_pte pgsize, we are always operating
-> only on the last level, and we always know the tlb_level, again based on
-> pgsize. So let's start providing these hints.
-> 
-> Additionally, avoid tlb maintenace in set_huge_pte_at().
-> Break-before-make is only required if we are transitioning the
-> contiguous pte block from valid -> valid. So let's elide the
-> clear-and-flush ("break") if the pte range was previously invalid.
+> One detail to note is that huge_ptep_clear_flush() was previously
+> calling ptep_clear_flush() for a non-contiguous pte (i.e. a pud or pmd
+> block mapping). This has a couple of disadvantages; first
+> ptep_clear_flush() calls ptep_get_and_clear() which transparently
+> handles contpte. Given we only call for non-contiguous ptes, it would be
+> safe, but a waste of effort. It's preferable to go straight to the layer
+> below. However, more problematic is that ptep_get_and_clear() is for
+> PAGE_SIZE entries so it calls page_table_check_pte_clear() and would not
+> clear the whole hugetlb folio. So let's stop special-casing the non-cont
+> case and just rely on get_clear_contig_flush() to do the right thing for
+> non-cont entries.
 > 
 > Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
 
