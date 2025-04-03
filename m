@@ -1,122 +1,121 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E502134CF
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 14:02:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C47A13AA2D
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 14:02:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743688963; cv=none; b=H6OXEpV01wvnTva1EB2ysF9WleSoKY3X4uEtv2EUZox/PaEYrKRkMs2rHFdiIygRHdLuBph+cTzpwaHmbTkFVJDFDs+tHn2ZI19kFdCmW0va9mxyzVzkwppdskfEZ+ObGotmBXkeqEI/hqQPGFnFllZrlA3LhNftyCAtLOadIik=
+	t=1743688974; cv=none; b=T4ImHocClpzmbfVWIHUMnGWs4iTr2fU6Zrj6vLOIQRWDGgkBmiGjARxcgZQO8hsgCQGlsWYBJWkBdQ3NF/BEndoxSG6OY5OJx4nrJr0U5ItxQTjZpcY1ZN9JC/7yIzf03wgJWH4+puFK/eo6PKGfmN5NR4+VP4sGZaKHAfflB84=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743688963; c=relaxed/simple;
-	bh=S2I5uMGMmzaswrHxMNr8vYNfkMq3kEcFyspItbcpvic=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oPa5FImG1g/pyR5SuwWStVG/FJGyBbILl1BPWJMsA/XuZlI354CxvwTTOvQN7UItfrZPaPbMy+nKRC0qiO3QpUR8PnX1tG88qVzGGvZhmRUeqIXL+Uo4quwR+niEi/wODooWdKZfZQZoWs1Ubkz0Y/mv4RTSlN4a2Xw/ZybXe40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LXd5qort; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1743688974; c=relaxed/simple;
+	bh=ySplVsZrYa7uam53Eqf2wzVsuoFtCZr2JBmfEDqL/9k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QqAgD+2B9WiLuM/cc7RBjJqxP5mf4bSbUsDNJb/D/1Dbebwu/7uOEXF6AFAz1EfRebvooSQbRKkn4gjrl+RodOxorfDYLhw2CdMtK3S1ZsgaS0dP/GZ+dIP0cU8iB0yoeSRi9C+YYfk/jBK/c2DuWMMaBz1sRdxVCK10oJBY5hk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BdmjGGja; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LXd5qort"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743688959;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3kWqXe38cLRXw8rlot99ne3jbC4BOsP79Qw7Xj1goMU=;
-	b=LXd5qortuvM3CTozhSiBpQQ93+w/ckXyB+acnhouNiK123OcaXJXlxpYjKuZtc5fZSfkOI
-	zLY6aWutK8GCcQWffmOa5wohcygaJioJmde09lSL4HLmrUQ/pAPzp5eS9P3wJyy9QkpUCo
-	pQszNWjrj8V430TbWAiFE1qC1LZUGMs=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-439-cMVQfG9eP6akGKAZCTHjJg-1; Thu, 03 Apr 2025 10:02:37 -0400
-X-MC-Unique: cMVQfG9eP6akGKAZCTHjJg-1
-X-Mimecast-MFC-AGG-ID: cMVQfG9eP6akGKAZCTHjJg_1743688956
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43bd0586b86so5307575e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 07:02:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BdmjGGja"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-39c1efc457bso590570f8f.2
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 07:02:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1743688971; x=1744293771; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=+P/fcwwuOwqQIjU9mMQ4nxLBcbO4x0MJwAiL+Bionew=;
+        b=BdmjGGjai1OzwNGchhTf3cbs97Jbl0uGmrAtcaunDi97XUyCqqUc6Sgm5OyNcB82R6
+         H9opB5sdR3PYzKRl7zLaNXtNTSKTfRG+nHtZc/a/hE/EZAcJK24Y311Oy9aV6YxyjmEF
+         +rNoxdf5ZcqE1rqLDEt9M0m24x9Db0a1n5UI8shwxLkR0MEwb6BZ1+6Yxr0TiQ4qqZcv
+         ufDEfCvhhP8xwOfsmUg3i0YbJp4AxqJ9zNd29htV+m5FrZnm05Prn7cb/pCSlIxuSmfo
+         xkcDA3t4V1Bnon6zxFI5I/JsYlyCf4dt9k0X5U5kFxcmbx1p6pFIy12lDiLIv/b8GPkB
+         gIOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743688956; x=1744293756;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3kWqXe38cLRXw8rlot99ne3jbC4BOsP79Qw7Xj1goMU=;
-        b=Pat7dQiQvA1UetaAfJxkMtwGiQOAxEOpaIaqT8f0iO4CToymp4+WUoKx2hp+3ikNT4
-         ahsg2AzCpzX3iDMJwetox/ZRSaGC3Hi8NSKVWWaIPmgkGz4oEIIZn1/rLXlLG6Hrz5ke
-         GxiS1tyxpBuc0b4WAhrwUPrjiU7OISGl9xlzQ6+pmzZUPmqcHJRu4C7dYyAZZdb81t02
-         v89S0G0YncZVzDVHxdNGjBr4+8COq4v1ZWOiXonbIXd2fAf3wivFprtrn7s5CQBLYpZD
-         Z/UR5xICuHUj9RsRz1fGWlzILm0OpM7BWE4MVklMlkWc72ocbQoyqmlZDlUN2ZEciG49
-         2CFA==
-X-Forwarded-Encrypted: i=1; AJvYcCUeOcR/7W/KJ+DxbJneHWPri7LDz5Ifm/T0wz2ezi7xDO39wM14FNS+p5L1MDRBPxpd4ZjfDJ61/tRd6ZM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzzXGcNcZaCTHS5moIGiEwV3vWTR/Nlgd/nQ/o7XRYsNXYqRQQL
-	teAS6MwVDbKy5HrXgRNJE9BgXLjgKQSJ8g8q5QlOZMk2DGO1/lL36TM6eOVaJUhQIYRdSaU3Bz5
-	Ixb2NcdYgjmpSzSJWmwhEgYw1/j1SlS83x1cJJXLQhHDrVwyhrjf8rt1vl4mcWQ==
-X-Gm-Gg: ASbGncvIHgtWiVKwklC0Q0uSteDhRHzhwdY77mHzW7dV1xWv4NiC259qMJyfupFgSfZ
-	UXiYOaxrNDJsV46LImZ6NqAhG4x71hQwnvRtaChwdgc2tdAXGXVdMKgjs1vGEJrNI9f6vXtVnMh
-	yPTkLEtee/bJl0Hu3hrkLZhEOwoAoC83wHv0Te4oFbKlHnc8wS4bYn2qxCZpFJGXbH1R+vaGx5r
-	zr+XwHF/1rA+UUiwd6YRcOqNWfJNONNZc9ABPvotYkE71C+1RSSNYW2hgDujrwW4MUb9hc1tEHR
-	4ocwrgg7SjGMeQWVFiQDIhxs+70mjCyBl3DgbO7M+DZ08g==
-X-Received: by 2002:a05:600c:1e0d:b0:43d:2313:7b54 with SMTP id 5b1f17b1804b1-43db61d78c9mr209456355e9.3.1743688956066;
-        Thu, 03 Apr 2025 07:02:36 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHEcH3URdYpyXxENBkWaOZCl6SCATd9gstr45DnynhqDGmUUru1LNLrjf8EszoAacInIZ8pkg==
-X-Received: by 2002:a05:600c:1e0d:b0:43d:2313:7b54 with SMTP id 5b1f17b1804b1-43db61d78c9mr209455765e9.3.1743688955644;
-        Thu, 03 Apr 2025 07:02:35 -0700 (PDT)
-Received: from [192.168.88.253] (146-241-68-231.dyn.eolo.it. [146.241.68.231])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ea978378esm51169005e9.1.2025.04.03.07.02.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Apr 2025 07:02:35 -0700 (PDT)
-Message-ID: <d99b52d7-bdd7-4c67-9be5-f5c48edc8afa@redhat.com>
-Date: Thu, 3 Apr 2025 16:02:33 +0200
+        d=1e100.net; s=20230601; t=1743688971; x=1744293771;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+P/fcwwuOwqQIjU9mMQ4nxLBcbO4x0MJwAiL+Bionew=;
+        b=uhrSUy5ATadgr1/5kMKO3ocStntRblcVaEqlLoC9cZrbh0KmPpIBKbl9ZhRSVIdHBp
+         AueoRzA2XRMNhDSzv4UFR+/OSjT6PEBRXKiP+U1an1PySbqvENXJpC+ku1LDIXFu+UbL
+         a1MBJ/8C0L9altGnJTngOe4CODA98uUFwTHYeIBqD+YHJr92nQry9958pOAiEkjqxVNL
+         xu0d2tG5BSyO2jdnrHvp0QViZSMSd8KWofiFAGjsPKzF4AhcJgDppcqVy9RP9dUdaFgJ
+         bLwigv5TQe2F/hDIQENcDylLqqgYFigMl9ZTKBQrL+nunR9oIUgUNbVQicZlEXCkzXEa
+         LrhQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU5rvtPufqq6d4suGL/HIvXyWkEkzr2aLBKH6PU63zi+D86U8hc7ces7V07fx5vrj4jsrKaHGM35spcv7M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzD4vVpmCGSAAvOdtukjhkATU47U7qYrl4WhcKFyTxYO3E0/ESp
+	79SY/5PJa2XpJbPKcKbdfxpvkgBN3QmWtcOdnFY+UCyqz7Pq7etnF1ZwcF7Bo0U=
+X-Gm-Gg: ASbGnctM9kc2FnqokoGsj6tZp2RMHsMzyarzFj8EvBzAxZBlnqL/NjtqkF+iQLxRSoD
+	jd45sSEnv0byil1xdagBy/7N8GGVPw77NpGrTQxFBBRouftFACR2Q2M2BQnINi9PXRYrTGNP8+j
+	C6TAMxsOuGP/cKYvhKYEzXYvrRt5t8b6KrJ7zIzDjMUXMm6DhiaiIPUvh6VTeRPRPX1nzIkGwo8
+	7KXtB3bPbHEbZZxr98wp4IRsdYyS1KZ5C3ghUbYyZIo3yGc4dzK871guWt2GbQ0mviyfzUPDuak
+	VwLDbY37Zz9Won4qUhne8MGn4e4CEp/iqF841TYF+jTwkK16
+X-Google-Smtp-Source: AGHT+IHdAKPVx7bRmLNoSto9EYVr8heMhSN7sP5UdtAYzrd+fzO6tg2jM76VfLIEkZhp8W8Fo8l1pw==
+X-Received: by 2002:a05:6000:430c:b0:39c:1f19:f0c3 with SMTP id ffacd0b85a97d-39c2f951283mr2442185f8f.46.1743688970579;
+        Thu, 03 Apr 2025 07:02:50 -0700 (PDT)
+Received: from localhost ([41.210.145.136])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-39c301b72d5sm1858765f8f.47.2025.04.03.07.02.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Apr 2025 07:02:50 -0700 (PDT)
+Date: Thu, 3 Apr 2025 17:02:45 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Samuel Abraham <abrahamadekunle50@gmail.com>,
+	Julia Lawall <julia.lawall@inria.fr>, outreachy@lists.linux.dev,
+	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: rtl8723bs: modify struct field to use standard
+ bool type
+Message-ID: <c3ae531d-259c-4bfc-863d-45d08bdd6189@stanley.mountain>
+References: <Z+05IEjV3pczMLNQ@HP-650>
+ <4c35ae41-c834-e25a-ccab-5cdd34aa4680@inria.fr>
+ <CADYq+faUTmNcUgk5jB3YHT4UCQZhf=Wsah1WUcPHqky6kp_cUA@mail.gmail.com>
+ <2025040304-overdrive-snugness-8b05@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net] bonding: use permanent address for MAC swapping if
- device address is same
-To: Hangbin Liu <liuhangbin@gmail.com>, netdev@vger.kernel.org
-Cc: Jay Vosburgh <jv@jvosburgh.net>, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Nikolay Aleksandrov <razor@blackwall.org>,
- Simon Horman <horms@kernel.org>, Cosmin Ratiu <cratiu@nvidia.com>,
- linux-kernel@vger.kernel.org, Liang Li <liali@redhat.com>
-References: <20250319080947.2001-1-liuhangbin@gmail.com>
-Content-Language: en-US
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <20250319080947.2001-1-liuhangbin@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2025040304-overdrive-snugness-8b05@gregkh>
 
-On 3/19/25 9:09 AM, Hangbin Liu wrote:
-> Similar with a951bc1e6ba5 ("bonding: correct the MAC address for "follow"
-> fail_over_mac policy"). The fail_over_mac follow mode requires the formerly
-> active slave to swap MAC addresses with the newly active slave during
-> failover. However, the slave's MAC address can be same under certain
-> conditions:
+On Thu, Apr 03, 2025 at 02:54:01PM +0100, Greg Kroah-Hartman wrote:
+> > > > diff --git a/drivers/staging/rtl8723bs/include/sta_info.h b/drivers/staging/rtl8723bs/include/sta_info.h
+> > > > index b3535fed3de7..63343998266a 100644
+> > > > --- a/drivers/staging/rtl8723bs/include/sta_info.h
+> > > > +++ b/drivers/staging/rtl8723bs/include/sta_info.h
+> > > > @@ -86,7 +86,7 @@ struct sta_info {
+> > > >       uint qos_option;
+> > > >       u8 hwaddr[ETH_ALEN];
+> > > >
+> > > > -     uint    ieee8021x_blocked;      /* 0: allowed, 1:blocked */
+> > > > +     bool ieee8021x_blocked;
+> > 
+> > > You should also check whether this is a structure that is read from the
+> > > hardware.  In that case, it would be a concern if the bool field does not
+> > > have the same size as the uint one.
+> > Hello Julia
+> > So following the conversation here,
+> > https://lore.kernel.org/outreachy/bf8994cc-b812-f628-ff43-5dae8426e266@inria.fr/T/#u
+> > I was able to compare the assembly code of the file before and after
+> > my patch and this were my findings
+> > 
+> > Original assembly code for
+> > # drivers/staging/rtl8723bs/core/rtw_ap.c:392    psta->ieee8021x_blocked = 0;
+> > movl  $0, 436(%r12)    #,  psta->ieee8021x_blocked
+> > 
+> > Assembly Code After Patch
+> > # drivers/staging/rtl8723bs/core/rtw_ap.c:392
+> > psta->ieee8021x_blocked = false;
+> > movb  $0, 434(%r12)    #,  psta->ieee8021x_blocked
 > 
-> 1) ip link set eth0 master bond0
->    bond0 adopts eth0's MAC address (MAC0).
+> So the structure size changed?  That's not good at all, and is what I
+> was worried about :(
 > 
-> 1) ip link set eth1 master bond0
->    eth1 is added as a backup with its own MAC (MAC1).
-> 
-> 3) ip link set eth0 nomaster
->    eth0 is released and restores its MAC (MAC0).
->    eth1 becomes the active slave, and bond0 assigns MAC0 to eth1.
 
-It was not immediately clear to me that the mac-dance in the code below
-happens only at failover time.
+You had complained about a different struct.  struct rx_pkt_attrib.  It's
+fine to modify this one.
 
-I second Jakub's doubt, I think it would be better to change eth0 mac
-address here (possibly to permanent eth1 mac, to preserve some consistency?)
-
-Doing that in ndo_del_slave() should allow bonding to change the mac
-while still owning the old slave and avoid races with user-space.
-
-WDYT?
-
-Thanks,
-
-Paolo
+regards,
+dan carpenter
 
