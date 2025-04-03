@@ -1,159 +1,245 @@
 Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5BD61EBA0D
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 14:11:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E455C24EAA8
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 14:11:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743689477; cv=none; b=sdNzBG3iu105V5uEH6BlbtIMPJY6759du5S3+fZhls1WqTd8Yav/HIraFwImvEVV7KqBaxtpzlj4X5EuHBxJsf6BQw7AJcJwUNNRW4cO7gLqgnfh68rSBX1Y5sTwH2q6xi7Mkem3sviZkjFyt5v/GKDX2mQO6xMaVnZWblkYGqo=
+	t=1743689486; cv=none; b=X/+MoseZkF2OzQYx70ZuxMnoFcHRWLCYCj4F8Ud2rBDO7DQqosdhxpqWAfDq4By9sK0YWqzf4fRHhWxjWPY+HH0dL+fBu8eYloUfcOagwenWdunbWStuEHw6+Jw5eLpINn9NCWAplR2jY0OZRiopkLtKLCviJoxCHcpJovERuVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743689477; c=relaxed/simple;
-	bh=JtSnJoto7h55fuUb9kOA0kOw4yepVrv8NgRsZFMwEjE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ab8mrCXmvx9iBC6naSHlth1IDrkAINbQe7UYGOVB66hqxX8SvMXOd/9fzxPrUyJghO6Ey/tDEgfgiCE/m7ahsuBuJT5W6e5TU05yO7C1Np8RGQLGU0reRsVMOA5qonGAFwtKf6f0aqGjymW4vRL5Ey4uWv530pUttk77crvkxB8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=zevQqobj; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=BTAQsYGh; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=zevQqobj; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=BTAQsYGh; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1743689486; c=relaxed/simple;
+	bh=+WKjDzZj9IcTEhtSM9Sb8z9iwCc0GDB+JKmfQKdnd5k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=p2e+1s3OK4m0HxCtHtg9xngRF5UFgEFh0pDSyRTHg1nzsWSTlVCyZNQDgl8meFYbVtFsUL1MKjb8akQpXCey8L6wnuEOe3XKIgnU9ApArOJwmn+Zj4lFOX1+9+QLXw20YSeIAmsTpeT5+QLU1U+9aisN+2Mj2wxzwBvk404Hsqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=2l64JBxQ; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=kuc3/WQF; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=2l64JBxQ; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=kuc3/WQF; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="zevQqobj";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="BTAQsYGh";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="zevQqobj";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="BTAQsYGh"
-Received: from kitsune.suse.cz (unknown [10.100.12.127])
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="2l64JBxQ";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="kuc3/WQF";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="2l64JBxQ";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="kuc3/WQF"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 03CD21F38A;
-	Thu,  3 Apr 2025 14:11:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1743689474; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 0CC531F390;
+	Thu,  3 Apr 2025 14:11:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1743689483; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=/XdPFBNoxJow3BVmJqoDsA4dufgRlFkIIwxZ5CyP4FI=;
-	b=zevQqobj2muTuEDq8B82c638PmRfqguF5Ocgy3Lkyu7JiGzrb5HOCaA8MsI0qvY5JlDgxe
-	dcaKqRjVZzpYyyQPhvuHp7lU4rdfgDCzpPtfRUePjZfLip3wCbidTKcNm0EBcEbt8tfGBo
-	/ogM4KZewG8Oyw3AhbagjdZ5P7lumPY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1743689474;
+	bh=IpKQJ1DZO4HDvv1M1OG+goh5mFQUpBNjEB6oS1DI/0Q=;
+	b=2l64JBxQfvX4U/Pp4BW677aGlOZFcFy558f1v4eM7STMGl4vU5EZgf6o/rUzVISL4dTOdM
+	X9WU/TYp6wuEYYRR26b0W2ZbsYy0u4arRo62Zlxs8sHm9kP8yp2UzYqU0SRnkUx+Nclxj7
+	f/Ye8MhAcsCShLTkVMbXJqFfKB0l1Jc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1743689483;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=/XdPFBNoxJow3BVmJqoDsA4dufgRlFkIIwxZ5CyP4FI=;
-	b=BTAQsYGhYHZ8W5JabfmC+UeRzPWepcTd2g8UIsg5u54vjHHFOE+G4AMzICp/QhHuWzmgqu
-	GF8ALC/G4brqiADg==
+	bh=IpKQJ1DZO4HDvv1M1OG+goh5mFQUpBNjEB6oS1DI/0Q=;
+	b=kuc3/WQFmJXoAHMkRqgoLcY32DnurrQeMaYlD45gyuqrLCeQQXdZHwfSSHVm2BYzGYXpOW
+	F50N78k+LmAhtQAA==
 Authentication-Results: smtp-out2.suse.de;
 	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1743689474; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1743689483; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=/XdPFBNoxJow3BVmJqoDsA4dufgRlFkIIwxZ5CyP4FI=;
-	b=zevQqobj2muTuEDq8B82c638PmRfqguF5Ocgy3Lkyu7JiGzrb5HOCaA8MsI0qvY5JlDgxe
-	dcaKqRjVZzpYyyQPhvuHp7lU4rdfgDCzpPtfRUePjZfLip3wCbidTKcNm0EBcEbt8tfGBo
-	/ogM4KZewG8Oyw3AhbagjdZ5P7lumPY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1743689474;
+	bh=IpKQJ1DZO4HDvv1M1OG+goh5mFQUpBNjEB6oS1DI/0Q=;
+	b=2l64JBxQfvX4U/Pp4BW677aGlOZFcFy558f1v4eM7STMGl4vU5EZgf6o/rUzVISL4dTOdM
+	X9WU/TYp6wuEYYRR26b0W2ZbsYy0u4arRo62Zlxs8sHm9kP8yp2UzYqU0SRnkUx+Nclxj7
+	f/Ye8MhAcsCShLTkVMbXJqFfKB0l1Jc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1743689483;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=/XdPFBNoxJow3BVmJqoDsA4dufgRlFkIIwxZ5CyP4FI=;
-	b=BTAQsYGhYHZ8W5JabfmC+UeRzPWepcTd2g8UIsg5u54vjHHFOE+G4AMzICp/QhHuWzmgqu
-	GF8ALC/G4brqiADg==
-Date: Thu, 3 Apr 2025 16:11:12 +0200
-From: Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
-To: Jonathan McDowell <noodles@earth.li>
-Cc: Peter Huewe <peterhuewe@gmx.de>, Jarkko Sakkinen <jarkko@kernel.org>,
-	Jason Gunthorpe <jgg@ziepe.ca>, linux-integrity@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] tpm: tis: Increase the default for timeouts B and C
-Message-ID: <Z-6XAKxrRTuBIvRy@kitsune.suse.cz>
-References: <20250402172134.7751-1-msuchanek@suse.de>
- <Z-13xOebA3LvQQ-8@earth.li>
- <Z-2ZC2Ew2EtNAW6-@kitsune.suse.cz>
- <Z-5qVBjeRfEdRAP5@earth.li>
- <Z-53dR25MT8OUDhW@kitsune.suse.cz>
- <Z-6Gau3aCB7B3pB9@earth.li>
+	bh=IpKQJ1DZO4HDvv1M1OG+goh5mFQUpBNjEB6oS1DI/0Q=;
+	b=kuc3/WQFmJXoAHMkRqgoLcY32DnurrQeMaYlD45gyuqrLCeQQXdZHwfSSHVm2BYzGYXpOW
+	F50N78k+LmAhtQAA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E55081392A;
+	Thu,  3 Apr 2025 14:11:22 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id gOGZNwqX7mePUAAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Thu, 03 Apr 2025 14:11:22 +0000
+Message-ID: <81ffcfee-8f18-4392-a9ce-ff3f60f7b5b1@suse.cz>
+Date: Thu, 3 Apr 2025 16:11:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z-6Gau3aCB7B3pB9@earth.li>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC v3 2/8] slab: add opt-in caching layer of percpu
+ sheaves
+Content-Language: en-US
+To: Harry Yoo <harry.yoo@oracle.com>
+Cc: Suren Baghdasaryan <surenb@google.com>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, Christoph Lameter
+ <cl@linux.com>, David Rientjes <rientjes@google.com>,
+ Roman Gushchin <roman.gushchin@linux.dev>,
+ Uladzislau Rezki <urezki@gmail.com>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
+ maple-tree@lists.infradead.org
+References: <20250317-slub-percpu-caches-v3-0-9d9884d8b643@suse.cz>
+ <20250317-slub-percpu-caches-v3-2-9d9884d8b643@suse.cz>
+ <Z-5HWApFjrOr7Q8_@harry>
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <Z-5HWApFjrOr7Q8_@harry>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-Spam-Score: -4.30
 X-Spamd-Result: default: False [-4.30 / 50.00];
 	BAYES_HAM(-3.00)[100.00%];
 	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.998];
+	NEURAL_HAM_SHORT(-0.20)[-0.999];
 	MIME_GOOD(-0.10)[text/plain];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
 	MIME_TRACE(0.00)[0:+];
-	MISSING_XM_UA(0.00)[];
-	RCVD_COUNT_ZERO(0.00)[0];
 	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmx.de];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FREEMAIL_CC(0.00)[gmx.de,kernel.org,ziepe.ca,vger.kernel.org];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
 	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FREEMAIL_CC(0.00)[google.com,oracle.com,linux.com,linux.dev,gmail.com,kvack.org,vger.kernel.org,lists.infradead.org];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_ALL(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	FROM_EQ_ENVFROM(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6]
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	MID_RHS_MATCH_FROM(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:mid,imap1.dmz-prg2.suse.org:helo]
 X-Spam-Flag: NO
 X-Spam-Level: 
 
-On Thu, Apr 03, 2025 at 02:00:26PM +0100, Jonathan McDowell wrote:
-> On Thu, Apr 03, 2025 at 01:56:37PM +0200, Michal Suchánek wrote:
-> > On Thu, Apr 03, 2025 at 12:00:36PM +0100, Jonathan McDowell wrote:
-> > > On Wed, Apr 02, 2025 at 10:07:39PM +0200, Michal Suchánek wrote:
-> > > > On Wed, Apr 02, 2025 at 06:45:40PM +0100, Jonathan McDowell wrote:
-> > > > > On Wed, Apr 02, 2025 at 07:21:30PM +0200, Michal Suchanek wrote:
-> > > > > > With some Infineon chips the timeouts in tpm_tis_send_data (both B and
-> > > > > > C) can reach up to about 2250 ms.
-> > > > > >
-> > > > > > Extend the timeout duration to accommodate this.
-> > > > >
-> > > > > The problem here is the bump of timeout_c is going to interact poorly with
-> > > > > the Infineon errata workaround, as now we'll wait 4s instead of 200ms to
-> > > > > detect the stuck status change.
-> > > >
-> > > > Yes, that's problematic. Is it possible to detect the errata by anything
-> > > > other than waiting for the timeout to expire?
-> > > 
-> > > Not that I'm aware of, nor have seen in my experimentation. It's a "stuck"
-> > > status, so the timeout is how it's detected.
-> > > 
-> > > OOI, have you tried back porting the fixes that are in mainline for 6.15 to
-> > > your frankenkernel? I _think_ the errata fix might end up resolving at least
-> > > the timeout for valid for you, as a side effect? We're currently rolling
-> > > them out across our fleet, but I don't have enough runtime yet to be sure
-> > > they've sorted all the timeout instances we see.
-> > 
-> > When was that merged?
+On 4/3/25 10:31, Harry Yoo wrote:
+>> +/*
+>> + * Bulk free objects to the percpu sheaves.
+>> + * Unlike free_to_pcs() this includes the calls to all necessary hooks
+>> + * and the fallback to freeing to slab pages.
+>> + */
+>> +static void free_to_pcs_bulk(struct kmem_cache *s, size_t size, void **p)
+>> +{
 > 
-> It hit Linus' tree last Friday I believe.
+> [...snip...]
 > 
-> > The change I see is that sometimes EAGAIN is returned instead of ETIME
-> > but based on the previous discussion this is unlikely to help.
+>> +next_batch:
+>> +	if (!localtry_trylock(&s->cpu_sheaves->lock))
+>> +		goto fallback;
+>> +
+>> +	pcs = this_cpu_ptr(s->cpu_sheaves);
+>> +
+>> +	if (unlikely(pcs->main->size == s->sheaf_capacity)) {
+>> +
+>> +		struct slab_sheaf *empty;
+>> +
+>> +		if (!pcs->spare) {
+>> +			empty = barn_get_empty_sheaf(pcs->barn);
+>> +			if (empty) {
+>> +				pcs->spare = pcs->main;
+>> +				pcs->main = empty;
+>> +				goto do_free;
+>> +			}
+>> +			goto no_empty;
 > 
-> That sounds like you might have picked up the version with the typo that I
-> posted to the list; it got fixed up before making it to mainline. The two
-> patches I've backported locally are in mainline as:
-> 
-> 7146dffa875cd00e7a7f918e1fce79c7593ac1fa tpm, tpm_tis: Fix timeout handling when waiting for TPM status
-> de9e33df7762abbfc2a1568291f2c3a3154c6a9d tpm, tpm_tis: Workaround failed command reception on Infineon devices
+> Maybe a silly question, but if neither of alloc_from_pcs_bulk() or
+> free_to_pcs_bulk() allocates empty sheaves (and sometimes put empty or full
+> sheaves in the barn), you should expect usually sheaves not to be in the barn
+> when using bulk interfces?
 
-Indeed, it adds a retry in tpm_send_main as well. That might work, needs
-some testing on the affected hardware. With that changing only the B
-timeout should suffice.
+Hm maybe, but with patch 5/8 it becomes cheap to check? And there might be
+caches mixing both bulk and individual allocs?
+But maybe I should at least add the free sheaf alloc with GFP_NOWAIT attempt
+to bulk free? Can't recall if I missed it intentionally or forgot.
 
-Thanks
+>> -static void
+>> -init_kmem_cache_node(struct kmem_cache_node *n)
+>> +static bool
+>> +init_kmem_cache_node(struct kmem_cache_node *n, struct node_barn *barn)
+>>  {
+> 
+> Why is the return type bool, when it always succeeds?
 
-Michal
+I guess leftover from earlier versions. Will fix.
+
+>> @@ -5421,20 +6295,27 @@ static int init_kmem_cache_nodes(struct kmem_cache *s)
+>>  
+>>  	for_each_node_mask(node, slab_nodes) {
+>>  		struct kmem_cache_node *n;
+>> +		struct node_barn *barn = NULL;
+>>  
+>>  		if (slab_state == DOWN) {
+>>  			early_kmem_cache_node_alloc(node);
+>>  			continue;
+>>  		}
+>> +
+>> +		if (s->cpu_sheaves) {
+>> +			barn = kmalloc_node(sizeof(*barn), GFP_KERNEL, node);
+>> +
+>> +			if (!barn)
+>> +				return 0;
+>> +		}
+>> +
+>>  		n = kmem_cache_alloc_node(kmem_cache_node,
+>>  						GFP_KERNEL, node);
+>> -
+>> -		if (!n) {
+>> -			free_kmem_cache_nodes(s);
+>> +		if (!n)
+>>  			return 0;
+>> -		}
+> 
+> Looks like it's leaking the barn
+> if the allocation of kmem_cache_node fails?
+
+Oops right, will add kfree(barn) before return 0;
+
+> 
+>> -		init_kmem_cache_node(n);
+>> +		init_kmem_cache_node(n, barn);
+>> +
+>>  		s->node[node] = n;
+>>  	}
+>>  	return 1;
+>> @@ -6005,12 +6891,24 @@ static int slab_mem_going_online_callback(void *arg)
+>>  	 */
+>>  	mutex_lock(&slab_mutex);
+>>  	list_for_each_entry(s, &slab_caches, list) {
+>> +		struct node_barn *barn = NULL;
+>> +
+>>  		/*
+>>  		 * The structure may already exist if the node was previously
+>>  		 * onlined and offlined.
+>>  		 */
+>>  		if (get_node(s, nid))
+>>  			continue;
+>> +
+>> +		if (s->cpu_sheaves) {
+>> +			barn = kmalloc_node(sizeof(*barn), GFP_KERNEL, nid);
+>> +
+>> +			if (!barn) {
+>> +				ret = -ENOMEM;
+>> +				goto out;
+>> +			}
+>> +		}
+>> +
+> 
+> Ditto.
+> 
+> Otherwise looks good to me :)
+
+Thanks a lot!
+
