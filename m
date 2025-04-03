@@ -1,22 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30CC224EA96
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 14:27:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3297C24EA9D
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 14:27:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743690435; cv=none; b=UVq1pUAvab2hEpXLCn2EH+NIy4ig27UuVzrSq/bZEBRF5wQp0TXUSYlxG62mECKpVwrIMusInYJMLJp+5a1/+qLD6m+huDGGzIXA1Nl9uMZ/+0ONz61iWveeCC7AdlXAjffP9sPa7jCSPwWi0jIL8utzq62rMz8pKbeiJmlsZrw=
+	t=1743690439; cv=none; b=kNt5kktCAF5aG5Yutys8IxZzKNMs2bV4EMBnoeQsgRomT5TyRNvkIIEgc/izA46gLMF99BoHqH8kPto5IzLbk5g/DLNxWQ/ZsMwXN3xrdXDXxff43mi9uQ+idHCHXLzKopU/m5sOpapGI5ZtAKqGec8Hno2J97bERQ7z+at4hFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743690435; c=relaxed/simple;
-	bh=0G0dgMDGY/LnFiozwv0Qbw0fNXb52V06kGln700h4MM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Z9fI4Pjncgtj6KaYe9UDISvsHSsgRlOyRFE4wHdWxNO/j93yupvdsLBXAMuPpq2U8/9N5P6Q4Fa+sDJrZeu3jVF2whI9NnnZoASpcK44Mnlqs7+roWcsHKtl5RJoEMPdu62Yu/vvMGuhksIeIaf+UCU7Bn/X4ZUOOe5JMGPKAGY=
+	s=arc-20240116; t=1743690439; c=relaxed/simple;
+	bh=QCX0Q8gtFH5EmTPBTu3X7RwlwTOnJGnAk3KWiGgQELk=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=DyapkwbPkcF2bMjj38YY+zqDdGghcGvpQUnL6uPgtTmX+DL9+qLJ+fxLfz9q/F15YWeGMTyx1IpDCOhGhgzSxoQYLj69u8cxG3IwIN5Vy83SGdgig4xsIt98U2f+L0hQpQB+7snNRgwES9qXJMxx/yw7a3hDJnEnBDHhDj8frlo=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E1FEC339;
-	Thu,  3 Apr 2025 07:27:15 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EA3F1106F;
+	Thu,  3 Apr 2025 07:27:19 -0700 (PDT)
 Received: from e129823.cambridge.arm.com (e129823.arm.com [10.1.197.6])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 753FE3F59E;
-	Thu,  3 Apr 2025 07:27:09 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 8F42E3F59E;
+	Thu,  3 Apr 2025 07:27:13 -0700 (PDT)
 From: Yeoreum Yun <yeoreum.yun@arm.com>
 To: catalin.marinas@arm.com,
 	will@kernel.org,
@@ -46,10 +47,12 @@ Cc: linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	nd@arm.com,
 	Yeoreum Yun <yeoreum.yun@arm.com>
-Subject: [PATCH 0/3] support FEAT_MTE_STORE_ONLY feature
-Date: Thu,  3 Apr 2025 15:27:04 +0100
-Message-Id: <20250403142707.26397-1-yeoreum.yun@arm.com>
+Subject: [PATCH 1/3] arm64/feature: add MTE_STORE_ONLY feature
+Date: Thu,  3 Apr 2025 15:27:05 +0100
+Message-Id: <20250403142707.26397-2-yeoreum.yun@arm.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250403142707.26397-1-yeoreum.yun@arm.com>
+References: <20250403142707.26397-1-yeoreum.yun@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,29 +61,98 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The FEAT_MTE_STORE_ONLY feature provides support for
-tag check for store operation only. read operation is considered
-as unchecked operation so it doesn't raise tag check fault.
+add MTE_STORE_ONLY feature and HWCAP.
 
-NOTE:
-  This patches based on https://lore.kernel.org/all/20250403141535.23496-1-yeoreum.yun@arm.com/
+Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
+---
+ arch/arm64/include/asm/hwcap.h      | 1 +
+ arch/arm64/include/uapi/asm/hwcap.h | 1 +
+ arch/arm64/kernel/cpufeature.c      | 9 +++++++++
+ arch/arm64/kernel/cpuinfo.c         | 1 +
+ arch/arm64/tools/cpucaps            | 1 +
+ 5 files changed, 13 insertions(+)
 
-Yeoreum Yun (3):
-  arm64/feature: add MTE_STORE_ONLY feature
-  prtcl: introduce PR_MTE_STORE_ONLY
-  arm64/kernel: support store-only mte tag check
-
- arch/arm64/include/asm/hwcap.h      |  1 +
- arch/arm64/include/asm/processor.h  |  2 ++
- arch/arm64/include/uapi/asm/hwcap.h |  1 +
- arch/arm64/kernel/cpufeature.c      |  9 +++++++++
- arch/arm64/kernel/cpuinfo.c         |  1 +
- arch/arm64/kernel/mte.c             | 11 ++++++++++-
- arch/arm64/kernel/process.c         |  6 +++++-
- arch/arm64/tools/cpucaps            |  1 +
- include/uapi/linux/prctl.h          |  2 ++
- 9 files changed, 32 insertions(+), 2 deletions(-)
-
---
+diff --git a/arch/arm64/include/asm/hwcap.h b/arch/arm64/include/asm/hwcap.h
+index 28dd1ac29ecc..13f94c8ddfc0 100644
+--- a/arch/arm64/include/asm/hwcap.h
++++ b/arch/arm64/include/asm/hwcap.h
+@@ -177,6 +177,7 @@
+ 
+ #define __khwcap3_feature(x)		(const_ilog2(HWCAP3_ ## x) + 128)
+ #define KERNEL_HWCAP_MTE_FAR		__khwcap3_feature(MTE_FAR)
++#define KERNEL_HWCAP_MTE_STORE_ONLY	__khwcap3_feature(MTE_STORE_ONLY)
+ 
+ /*
+  * This yields a mask that user programs can use to figure out what
+diff --git a/arch/arm64/include/uapi/asm/hwcap.h b/arch/arm64/include/uapi/asm/hwcap.h
+index 7d22527a7975..72c78468b806 100644
+--- a/arch/arm64/include/uapi/asm/hwcap.h
++++ b/arch/arm64/include/uapi/asm/hwcap.h
+@@ -144,5 +144,6 @@
+  * HWCAP3 flags - for AT_HWCAP3
+  */
+ #define HWCAP3_MTE_FAR		(1UL << 0)
++#define HWCAP3_MTE_STORE_ONLY		(1UL << 1)
+ 
+ #endif /* _UAPI__ASM_HWCAP_H */
+diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+index 183b4b7e3074..a2f25a8bed96 100644
+--- a/arch/arm64/kernel/cpufeature.c
++++ b/arch/arm64/kernel/cpufeature.c
+@@ -313,6 +313,7 @@ static const struct arm64_ftr_bits ftr_id_aa64pfr1[] = {
+ static const struct arm64_ftr_bits ftr_id_aa64pfr2[] = {
+ 	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64PFR2_EL1_FPMR_SHIFT, 4, 0),
+ 	ARM64_FTR_BITS(FTR_VISIBLE, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64PFR2_EL1_MTEFAR_SHIFT, 4, ID_AA64PFR2_EL1_MTEFAR_NI),
++	ARM64_FTR_BITS(FTR_VISIBLE, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64PFR2_EL1_MTESTOREONLY_SHIFT, 4, ID_AA64PFR2_EL1_MTESTOREONLY_NI),
+ 	ARM64_FTR_END,
+ };
+ 
+@@ -2869,6 +2870,13 @@ static const struct arm64_cpu_capabilities arm64_features[] = {
+ 		.matches = has_cpuid_feature,
+ 		ARM64_CPUID_FIELDS(ID_AA64PFR2_EL1, MTEFAR, IMP)
+ 	},
++	{
++		.desc = "Store Only MTE Tag Check",
++		.capability = ARM64_MTE_STORE_ONLY,
++		.type = ARM64_CPUCAP_SYSTEM_FEATURE,
++		.matches = has_cpuid_feature,
++		ARM64_CPUID_FIELDS(ID_AA64PFR2_EL1, MTESTOREONLY, IMP)
++	},
+ #endif /* CONFIG_ARM64_MTE */
+ 	{
+ 		.desc = "RCpc load-acquire (LDAPR)",
+@@ -3200,6 +3208,7 @@ static const struct arm64_cpu_capabilities arm64_elf_hwcaps[] = {
+ 	HWCAP_CAP(ID_AA64PFR1_EL1, MTE, MTE2, CAP_HWCAP, KERNEL_HWCAP_MTE),
+ 	HWCAP_CAP(ID_AA64PFR1_EL1, MTE, MTE3, CAP_HWCAP, KERNEL_HWCAP_MTE3),
+ 	HWCAP_CAP(ID_AA64PFR2_EL1, MTEFAR, IMP, CAP_HWCAP, KERNEL_HWCAP_MTE_FAR),
++	HWCAP_CAP(ID_AA64PFR2_EL1, MTESTOREONLY, IMP, CAP_HWCAP , KERNEL_HWCAP_MTE_STORE_ONLY),
+ #endif /* CONFIG_ARM64_MTE */
+ 	HWCAP_CAP(ID_AA64MMFR0_EL1, ECV, IMP, CAP_HWCAP, KERNEL_HWCAP_ECV),
+ 	HWCAP_CAP(ID_AA64MMFR1_EL1, AFP, IMP, CAP_HWCAP, KERNEL_HWCAP_AFP),
+diff --git a/arch/arm64/kernel/cpuinfo.c b/arch/arm64/kernel/cpuinfo.c
+index e2b13454e38a..40f85ec01fe4 100644
+--- a/arch/arm64/kernel/cpuinfo.c
++++ b/arch/arm64/kernel/cpuinfo.c
+@@ -161,6 +161,7 @@ static const char *const hwcap_str[] = {
+ 	[KERNEL_HWCAP_SME_STMOP]	= "smestmop",
+ 	[KERNEL_HWCAP_SME_SMOP4]	= "smesmop4",
+ 	[KERNEL_HWCAP_MTE_FAR]		= "mte_far",
++	[KERNEL_HWCAP_MTE_STORE_ONLY]	= "mte_store_only",
+ };
+ 
+ #ifdef CONFIG_COMPAT
+diff --git a/arch/arm64/tools/cpucaps b/arch/arm64/tools/cpucaps
+index ef62ea04ba37..282a1dbb8bc9 100644
+--- a/arch/arm64/tools/cpucaps
++++ b/arch/arm64/tools/cpucaps
+@@ -68,6 +68,7 @@ MPAM_HCR
+ MTE
+ MTE_ASYMM
+ MTE_FAR
++MTE_STORE_ONLY
+ SME
+ SME_FA64
+ SME2
+-- 
 LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
 
