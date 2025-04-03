@@ -1,96 +1,199 @@
-Received: from out-183.mta0.migadu.com (out-183.mta0.migadu.com [91.218.175.183])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EA1325F7A1
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 19:04:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE0C725F980;
+	Thu,  3 Apr 2025 19:04:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743707059; cv=none; b=XgMRN71M+0hFUDzSsYaKiWEVWRRAWKNqIa1gLDeYteJCiPgOBkqDUF+cx4hLAIErvqHNQ3UkUl1ZQbvI0gTRjbDTpTyruueoq/UY7qc/rhZl99DoJSEZOPsXU4c0OLFmxgiJmsIycbO5EQigs5SZrC90EydXRyYofRuBD6z85g0=
+	t=1743707061; cv=none; b=g75ySPNEK+p3NoNhZlnfPoUtRpM3Bhel81B6YHlcG95Sqv6JyR45VfyjgwhxSeF2OOGyMC2jTK5ZSvMKcFbWVuEtUuraUWSnu4cJOBLXOm7VVCaumDN7RU4wOpdg4FZupCoVXRNU/D8CwDNKxje4GLFg/AwXsmfdgqC/LNL1SqM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743707059; c=relaxed/simple;
-	bh=iuOOwB3RhF2+wmWM3TB/6mKD+N4PJ/l0AgT6T28qZdc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Oe3R2YpOz1DEg4cWkaDexm95bpQyw+sl5PG34QxR4t/5HkpGpOFF9NJqgIi2kIcPWARSt/rWw+4FsVQo1Q5qGe5t/FZ6s1/39raOwhD0Rhjp2Kisy2WE7ofTE7geZCmUa7L+SvRqovvdVZ5FHSuukBXnruszlvEF+nMnCnubL9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Jn7Fb+Ug; arc=none smtp.client-ip=91.218.175.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1743707061; c=relaxed/simple;
+	bh=gLc83+S0ze4qE4mtl3apedfw1/l3NHZMYy4g/7Qo6g8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=I9k3oXSpkGepX97cBS7fZiqqKubcideKKurXehUgtiZf1CfobZR2p331cBJ9/75cucjTEPhxUyanurPtFBhRe4m5JHp9fzq895Uh4H6e7K2QGT4SjZRwYdGoJJh3MzNt/N7ERz6FEPgWI9v3381d4QJg8gscRZQZAoXcVko0W7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sAVTjHFb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Jn7Fb+Ug"
-Message-ID: <0eb36d4f-ab6c-4bb3-aad0-99c09bcd56ec@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1743707053;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OR6tAQCdTqWMdGnoueGRPKReRRRQNdIbvhVIHJWD5vI=;
-	b=Jn7Fb+UgY/OlS/fnuFJSgz2OVlcdAmgKv8H1oVFoc46n/wT4ubopRD4mJlVLWxZMgP1Wnu
-	05Q7iiyh/mwHPQ6Dw+H10z3jRi2jjgr8S6+WImf8VczgxbWlw9h7NRIvnmN38tQ9ge6NVM
-	kpjzXJKKqFnlUwXJb1TnwDaYvPaqCNs=
-Date: Thu, 3 Apr 2025 15:04:08 -0400
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sAVTjHFb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF76EC4CEE9;
+	Thu,  3 Apr 2025 19:04:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743707060;
+	bh=gLc83+S0ze4qE4mtl3apedfw1/l3NHZMYy4g/7Qo6g8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=sAVTjHFbMKVHzKz4FOtA1QqBEf4O90uC78rDDxvixK+ExMFOHcv3k951oeilav5Nj
+	 2gEvKkcDSBVzJt75MiEIzFXAhxGj/6ebHtyxlg3YEGcg4UAoGQAqz2lCI4uZign4Uq
+	 cXxM1MxXdQBlE6t+4OuMa2U3V/Bdi7wtyLLZT1+9BRwgSxHnqQylxh4Q0XRFiRhnXJ
+	 lJXCSjU9sJlIc6T1t9Ic94rrzfH5yPmTUNUl39vYwBgSALcJfyNUad8Lfms1vRhZ8d
+	 ku01Bz8UzelbtBz1Hyp6BmXBo/PfZdOI2+TMckXxuqb2wxwEjCXcK+K9LepAN9W7MQ
+	 8rhcZGKqCyAfA==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Niklas Cassel <cassel@kernel.org>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Sasha Levin <sashal@kernel.org>,
+	corbet@lwn.net,
+	akpm@linux-foundation.org,
+	paulmck@kernel.org,
+	rostedt@goodmis.org,
+	thuth@redhat.com,
+	bp@alien8.de,
+	ardb@kernel.org,
+	gregkh@linuxfoundation.org,
+	jpoimboe@kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-ide@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.13 05/49] ata: libata-core: Add 'external' to the libata.force kernel parameter
+Date: Thu,  3 Apr 2025 15:03:24 -0400
+Message-Id: <20250403190408.2676344-5-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250403190408.2676344-1-sashal@kernel.org>
+References: <20250403190408.2676344-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [RFC net-next PATCH 11/13] of: property: Add device link support
- for PCS
-To: Saravana Kannan <saravanak@google.com>
-Cc: netdev@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S . Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Russell King <linux@armlinux.org.uk>,
- Christian Marangi <ansuelsmth@gmail.com>,
- Heiner Kallweit <hkallweit1@gmail.com>, linux-kernel@vger.kernel.org,
- upstream@airoha.com, Rob Herring <robh@kernel.org>,
- devicetree@vger.kernel.org
-References: <20250403181907.1947517-1-sean.anderson@linux.dev>
- <20250403182758.1948569-1-sean.anderson@linux.dev>
- <CAGETcx9v610XhvU705R=Mjth=iAbCU04rqNnQPhQua37Jc4TRQ@mail.gmail.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Sean Anderson <sean.anderson@linux.dev>
-In-Reply-To: <CAGETcx9v610XhvU705R=Mjth=iAbCU04rqNnQPhQua37Jc4TRQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.13.9
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-On 4/3/25 14:32, Saravana Kannan wrote:
-> On Thu, Apr 3, 2025 at 11:28 AM Sean Anderson <sean.anderson@linux.dev> wrote:
->>
->> This adds device link support for PCS devices, providing
->> better probe ordering.
->>
->> Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
->> ---
->>
->>  drivers/of/property.c | 2 ++
->>  1 file changed, 2 insertions(+)
->>
->> diff --git a/drivers/of/property.c b/drivers/of/property.c
->> index c1feb631e383..f3e0c390ddba 100644
->> --- a/drivers/of/property.c
->> +++ b/drivers/of/property.c
->> @@ -1379,6 +1379,7 @@ DEFINE_SIMPLE_PROP(pses, "pses", "#pse-cells")
->>  DEFINE_SIMPLE_PROP(power_supplies, "power-supplies", NULL)
->>  DEFINE_SUFFIX_PROP(regulators, "-supply", NULL)
->>  DEFINE_SUFFIX_PROP(gpio, "-gpio", "#gpio-cells")
->> +DEFINE_SIMPLE_PROP(pcs_handle, "pcs-handle", NULL)
->>
->>  static struct device_node *parse_gpios(struct device_node *np,
->>                                        const char *prop_name, int index)
->> @@ -1535,6 +1536,7 @@ static const struct supplier_bindings of_supplier_bindings[] = {
->>                 .parse_prop = parse_post_init_providers,
->>                 .fwlink_flags = FWLINK_FLAG_IGNORE,
->>         },
->> +       { .parse_prop = parse_pcs_handle, },
-> 
-> Can you add this in the right order please? All the simple ones come
-> before the SUFFIX ones so that it's less expensive/fewer comparisons
-> before you parse the simple properties.
+From: Niklas Cassel <cassel@kernel.org>
 
-Ah, I couldn't figure out what the intended order was so I just stuck
-it at the end.
+[ Upstream commit deca423213cb33feda15e261e7b5b992077a6a08 ]
 
---Sean
+Commit ae1f3db006b7 ("ata: ahci: do not enable LPM on external ports")
+changed so that LPM is not enabled on external ports (hotplug-capable or
+eSATA ports).
+
+This is because hotplug and LPM are mutually exclusive, see 7.3.1 Hot Plug
+Removal Detection and Power Management Interaction in AHCI 1.3.1.
+
+This does require that firmware has set the appropate bits (HPCP or ESP)
+in PxCMD (which is a per port register in the AHCI controller).
+
+If the firmware has failed to mark a port as hotplug-capable or eSATA in
+PxCMD, then there is currently not much a user can do.
+
+If LPM is enabled on the port, hotplug insertions and removals will not be
+detected on that port.
+
+In order to allow a user to fix up broken firmware, add 'external' to the
+libata.force kernel parameter.
+
+libata.force can be specified either on the kernel command line, or as a
+kernel module parameter.
+
+For more information, see Documentation/admin-guide/kernel-parameters.txt.
+
+Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
+Link: https://lore.kernel.org/r/20250130133544.219297-4-cassel@kernel.org
+Signed-off-by: Niklas Cassel <cassel@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ .../admin-guide/kernel-parameters.txt         |  2 +
+ drivers/ata/libata-core.c                     | 38 +++++++++++++++++++
+ 2 files changed, 40 insertions(+)
+
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 3872bc6ec49d6..d9c55dcbf4a21 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -3036,6 +3036,8 @@
+ 			* max_sec_lba48: Set or clear transfer size limit to
+ 			  65535 sectors.
+ 
++			* external: Mark port as external (hotplug-capable).
++
+ 			* [no]lpm: Enable or disable link power management.
+ 
+ 			* [no]setxfer: Indicate if transfer speed mode setting
+diff --git a/drivers/ata/libata-core.c b/drivers/ata/libata-core.c
+index c085dd81ebe7f..52b78d22c831a 100644
+--- a/drivers/ata/libata-core.c
++++ b/drivers/ata/libata-core.c
+@@ -88,6 +88,7 @@ struct ata_force_param {
+ 	unsigned int	xfer_mask;
+ 	unsigned int	quirk_on;
+ 	unsigned int	quirk_off;
++	unsigned int	pflags_on;
+ 	u16		lflags_on;
+ 	u16		lflags_off;
+ };
+@@ -331,6 +332,35 @@ void ata_force_cbl(struct ata_port *ap)
+ 	}
+ }
+ 
++/**
++ *	ata_force_pflags - force port flags according to libata.force
++ *	@ap: ATA port of interest
++ *
++ *	Force port flags according to libata.force and whine about it.
++ *
++ *	LOCKING:
++ *	EH context.
++ */
++static void ata_force_pflags(struct ata_port *ap)
++{
++	int i;
++
++	for (i = ata_force_tbl_size - 1; i >= 0; i--) {
++		const struct ata_force_ent *fe = &ata_force_tbl[i];
++
++		if (fe->port != -1 && fe->port != ap->print_id)
++			continue;
++
++		/* let pflags stack */
++		if (fe->param.pflags_on) {
++			ap->pflags |= fe->param.pflags_on;
++			ata_port_notice(ap,
++					"FORCE: port flag 0x%x forced -> 0x%x\n",
++					fe->param.pflags_on, ap->pflags);
++		}
++	}
++}
++
+ /**
+  *	ata_force_link_limits - force link limits according to libata.force
+  *	@link: ATA link of interest
+@@ -486,6 +516,7 @@ static void ata_force_quirks(struct ata_device *dev)
+ 	}
+ }
+ #else
++static inline void ata_force_pflags(struct ata_port *ap) { }
+ static inline void ata_force_link_limits(struct ata_link *link) { }
+ static inline void ata_force_xfermask(struct ata_device *dev) { }
+ static inline void ata_force_quirks(struct ata_device *dev) { }
+@@ -5452,6 +5483,8 @@ struct ata_port *ata_port_alloc(struct ata_host *host)
+ #endif
+ 	ata_sff_port_init(ap);
+ 
++	ata_force_pflags(ap);
++
+ 	return ap;
+ }
+ EXPORT_SYMBOL_GPL(ata_port_alloc);
+@@ -6264,6 +6297,9 @@ EXPORT_SYMBOL_GPL(ata_platform_remove_one);
+ 	{ "no" #name,	.lflags_on	= (flags) },	\
+ 	{ #name,	.lflags_off	= (flags) }
+ 
++#define force_pflag_on(name, flags)			\
++	{ #name,	.pflags_on	= (flags) }
++
+ #define force_quirk_on(name, flag)			\
+ 	{ #name,	.quirk_on	= (flag) }
+ 
+@@ -6323,6 +6359,8 @@ static const struct ata_force_param force_tbl[] __initconst = {
+ 	force_lflag_on(rstonce,		ATA_LFLAG_RST_ONCE),
+ 	force_lflag_onoff(dbdelay,	ATA_LFLAG_NO_DEBOUNCE_DELAY),
+ 
++	force_pflag_on(external,	ATA_PFLAG_EXTERNAL),
++
+ 	force_quirk_onoff(ncq,		ATA_QUIRK_NONCQ),
+ 	force_quirk_onoff(ncqtrim,	ATA_QUIRK_NO_NCQ_TRIM),
+ 	force_quirk_onoff(ncqati,	ATA_QUIRK_NO_NCQ_ON_ATI),
+-- 
+2.39.5
+
