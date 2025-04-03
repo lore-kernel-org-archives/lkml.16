@@ -1,162 +1,264 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F1B924EF75;
-	Thu,  3 Apr 2025 14:26:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C394124BCF9;
+	Thu,  3 Apr 2025 14:26:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743690405; cv=none; b=tBsbfhZkpQ5YCj2fySMO3rNJwVNqAKFs2ROpaB1V2zvUQpmysDszHx9SABgjFlGYWAxwvJ7iODY9+zbzf+tmcD6qeNtqJ8SPWR9SdGDDAZLlTMHYFs09LlMCV9xBdJ2b6XOk1ayQj6bGQy2QZRpXT+ey4RFfEcqRxXdKPp5EglM=
+	t=1743690420; cv=none; b=ZJFQsWyK/PFwcDBqNBmc6dRyESLc3PyIeVITyPmF3d44uupx+p9nicC11XspNLMQ2ZW/vCdb5IYad6yrraKKk0GQyKvV6WVoNv03yaz5gtZBlzPDCE8XDRNFENcKW/nhTVE04TZY4vKBBKYMXRxALn9AjtbXWHRFpqP8UP0ocz0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743690405; c=relaxed/simple;
-	bh=udWx3sXynBeCKyH2cn9MPdye1p1GgTvwWlCqpxIZr1k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d8y6/4YInZdFgSzPx9YCjjsms4S6UMO6XZF1hR4k6NV/aAogM45iEn9eVXmT/vsvd41Kddq05lO6u+mEPvudrpNnbHaVtol7Tu9G+Mn8QTdQnyn3UM3hxG6GmWZ7F7s384/227K8fZv/oQGgnpoHrqSeocLiuBW1uAR1Z6XiJQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iLWFgbwp; arc=none smtp.client-ip=209.85.216.43
+	s=arc-20240116; t=1743690420; c=relaxed/simple;
+	bh=3H/q3VCbKUvTmxT5KHpB3sPOrrtaG+j/5ZoBSAeRGAk=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 Mime-Version:Content-Type; b=Tqcq4Oh7zYxZ0sxf3kE0qQSwUZxsKCq2k4ko78kY0Pe56NvEU/GKQg/NRAX/Le+XLeRc5GCqx5VnZIE+qRL7SI0cmyKEcXyqmp+Arcd9erJ6UmDsgIL+6xJLGTG6GGo+W06Od2khjFqertxN140Z8cL4Asq3xizjv2N2Z607cJ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e37LRQeV; arc=none smtp.client-ip=209.85.219.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iLWFgbwp"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2ff784dc055so932837a91.1;
-        Thu, 03 Apr 2025 07:26:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e37LRQeV"
+Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-6e8f94c2698so5775796d6.0;
+        Thu, 03 Apr 2025 07:26:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743690403; x=1744295203; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=dAqtWD0ADgEG56estGUMwFFZOWZtTFqA2jD3PNCtf2o=;
-        b=iLWFgbwpzBc+owroak/XvmCW0A542VFOPvJ6/59jkk4Ii1c3GemJ78msb5Ex8b5SY6
-         ENtawRrn3nnrhLpRGDFDZ3PPCfKHl9jrXmvRzLZyncstHhY54R97gSQeGqSTfH0tK73V
-         7D1zKYEo/BoF0pyAPxD26Ler3SB1Kf8TDUEw9DQ0qcPINr5Ecryzs9TR8DybnUjTCI0Y
-         2jx6BUTthRT62wWKzLPJC8nt8UGvxkJfa7dLKNg9BOoXulAbnV1W//hJCANyyVV/eNDS
-         OV66J6qflTMrEgbvWZwea3MXlmFv7YFzgMxxo5oqAYNPrBq03iAQRqVU8D1x/4ZLeNY4
-         gjhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743690403; x=1744295203;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1743690417; x=1744295217; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=dAqtWD0ADgEG56estGUMwFFZOWZtTFqA2jD3PNCtf2o=;
-        b=D71+BQlxlIBj7wsFYiFq5pJ2Ys8UE7b5rLOQYdvH4F+kfuaBlYo3ATIaMDroFwtPh1
-         hKeUcXGY+LKNwUMVJ/lNS48BjrD0AIA0PmRwJL7bef8WY/G+H0C2afCM2rOQxA0KaNct
-         0aQ7ebXBZDFyUV5KK6q+9EeBcSLEPxqvIq+jk0WxooawoSBKZnfhJVAQzPEI3yx7oVhk
-         0MvJs/JSkmfy0ZM0Kd3u6HrqyJPuDqDjV2FR1kd7oq82bQJhZiuLaWkvE6qTpBYwqy0Z
-         4UgCsFCBmz4fKchQuBvUNcroJF913mgDKzC0fM4bfW1e12mxpTpjtt6MDPc3m/XWesfd
-         aSCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWviRsVAzhakPyElNYL3bnI1cApUdk0Wbu+vkwZYKdblOI9fOJoAYGVOccNGMAHTeIepEErKdm5gNiuaj4=@vger.kernel.org, AJvYcCXLvkVwc46x7OnL7jcls0CPRG9CHEkCNXZ2O7KmeVZcJOjUwXuAx3eTGi4tHKk2ZTNNqoHF51diTbrMqImPVwKSqg==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz2KydPx4mv/kWKoRFakVwCGGg5S2gZXk7A731xZ1mr/4vuwlHl
-	fuuumluftIe3RTvoyhfUP/p2F9R/NkeAtPAs0Fqt4c828pa/Yhz2
-X-Gm-Gg: ASbGncshKNPp/DL2Q+LsQAEt8TjyDXAtBKkObRYKgmdIa1t1hCM+/lo/KBiLESNu2jA
-	PcYdhLQghArtmYX/3y3dMcwO44iUURic94ZDuvA+taWurEI7yAzi483j9n3PTWkNDJtKivGGmos
-	1SdqcoYFKbYX2WFnlCPoZm2UwwOy43vSf5er18zeMO43WqV94hrSwuTn2web3+j5WnWcfupoPkV
-	Ou0EtFm/l3YLuIBfM2yvB1jowgAAfcECzQeTB8pdwa41Lr9ev18TFkHSNea+nWgdZHjmLdE1l+Y
-	8b3Woc6ccdVaEERJIcVzId+3x02ofKii1yfWxfS2GyU98Rz5MYsp0Cg=
-X-Google-Smtp-Source: AGHT+IFj+34X21Ko9H2G+bwo7MdL+I8gIE9fAmN87oglS5pPqEZNB1wO4Hk8sbSK66cTHRHvmK8RIg==
-X-Received: by 2002:a17:90a:d003:b0:2ee:edae:780 with SMTP id 98e67ed59e1d1-3056ee4868dmr9516913a91.15.1743690403134;
-        Thu, 03 Apr 2025 07:26:43 -0700 (PDT)
-Received: from localhost ([216.228.125.129])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-305827d70b1sm1548261a91.4.2025.04.03.07.26.41
+        bh=1CZAmNn5KUIQDDBuM8wsmsl+fKPlZ/xNdDm5B7P8SPg=;
+        b=e37LRQeVR4EO1+wvB7v342uUP+UYlXPtsHMWHQvx6b7yrq8YM5gY/ZQ2i+peJtcg4Z
+         yc1097wsAH4Sv9E6z/zOPF7ksUK7egKhu0NcsFwVz2OmNUabPwadH/aQuoWFcSUkpDFF
+         DJSR+6Qawk6qol5g170yJTaV4N/6CMs8U5Y0gAD49gYvzu3Cn/OGqBZL0JR1gEbnhVLm
+         3kZln9/GHYj9w8mjb9L9tHg7KDA3fDhVO9fd7nnjkBSzAdFgyTpxnQ8tDuZ/4snp+1z8
+         7/VvweiNpLLmrevFe4rtk8TFMMX+kXqAmZfg/0TcPVMvpmKsS61lp5U+WOpGbi7NCsSZ
+         R3wA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743690417; x=1744295217;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=1CZAmNn5KUIQDDBuM8wsmsl+fKPlZ/xNdDm5B7P8SPg=;
+        b=l9ImyEVuTkIwOKoNA34OfctvalO1QqSDpgjwEpf9iZAqY5AiglxK80tIoNXzT2MCdB
+         oENF8I+ygywtAfYnTh3zjcmu2ZSuAU3i5f1QMYvfrfI5igNwXqMunepHpYvDTmzvcl1i
+         SeiCBXCx+cYcmQcX3MdWO4LJDQEZSf75q+HwCdsYuSsYX0t+dFhnmywwX16r6I7ui8h1
+         1LCsQx7RZA4a7ymLLwfEoXJx3lRff4Hc2etsdebLa9iwvUe8Lz1rasnDcOn/sNYFUIPL
+         Ih/e8RRz0SmCCcBL6ux6aRPR8JXN+jipAnH+513AVHZKE3O10ND4NxuN0ZEVG/zOZ0oa
+         1dBA==
+X-Forwarded-Encrypted: i=1; AJvYcCUpfkswZNtAWSXjGn71bjVF9wm8bKibJz3ULO6RdSMYEilz0cNohn0I1EuFELZ7NaP8ySXci/e+@vger.kernel.org, AJvYcCX484qhorCThZo4DLiD4tecoMX0hv7TdNe4TlHzDXDrd7oSIbT8XDx6XBfkvB7V5RscD2bNNBGzqjB9ELM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwQLYbP/K+ciubeNG2J8h6wgkbNOzqd88caCiaWLY31WaW5TPhJ
+	DAdG8NvsZae03NL67vlxqX5tWvRtYQ2RMlMZAxQAU76LCzfZnPUpscGYHA==
+X-Gm-Gg: ASbGncvtfkTCbC8FK2XsSIYBOXoEExqCWrwIxHOtqmOg++LVAcMHHYj6oyaBCVYT9au
+	pLk4YNTOgsmLX50q/qtjpSWPxItlf/I3LTyjb8vkC97k04BFwduX6dl5U6jTTJqXGK+uB9c7WSF
+	dKlgOP/xx595/W258mrsistMSB8xC89ieZwPH677uniHvTZVvN5CtOs8gLlRxy324qvHdJDyF/z
+	j3uONYt4f5xH+zTV5GmBO5iEpnp6FqgqgcYhcsnELj6O1dgCkivzRC3W1sOsf+Y30FsRIkUPfz0
+	/LFGN98u7FH7fwxDfZ6lE0Ami5xB40X2tC59Px1vSP37rEGGH4OY/8vaH8sZJyC7J4PbaDfjRjH
+	92+UJuY/RlCEun95XQphLRA==
+X-Google-Smtp-Source: AGHT+IFlRHBw2ikpgIutCACR/qwVGVZnnXg5ZN0d8jVb1lzRGOGU/wMd718oZ4+RUAzNMauzG0xZww==
+X-Received: by 2002:a05:6214:20c3:b0:6e8:955b:141e with SMTP id 6a1803df08f44-6eed6023f5bmr348001696d6.21.1743690417447;
+        Thu, 03 Apr 2025 07:26:57 -0700 (PDT)
+Received: from localhost (86.235.150.34.bc.googleusercontent.com. [34.150.235.86])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6ef0f00f2e0sm8170696d6.36.2025.04.03.07.26.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Apr 2025 07:26:42 -0700 (PDT)
-Date: Thu, 3 Apr 2025 10:26:40 -0400
-From: Yury Norov <yury.norov@gmail.com>
-To: Ian Rogers <irogers@google.com>
-Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Darren Hart <dvhart@infradead.org>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	=?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>,
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
-	James Clark <james.clark@linaro.org>,
-	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
-	Yicong Yang <yangyicong@hisilicon.com>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Al Viro <viro@zeniv.linux.org.uk>, Kyle Meyer <kyle.meyer@hpe.com>,
-	Ben Gainey <ben.gainey@arm.com>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	Kajol Jain <kjain@linux.ibm.com>,
-	Aditya Gupta <adityag@linux.ibm.com>,
-	Eder Zulian <ezulian@redhat.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	Kuan-Wei Chiu <visitorckw@gmail.com>, He Zhe <zhe.he@windriver.com>,
-	Dirk Gouders <dirk@gouders.net>, Brian Geffon <bgeffon@google.com>,
-	Ravi Bangoria <ravi.bangoria@amd.com>,
-	Howard Chu <howardchu95@gmail.com>,
-	Charlie Jenkins <charlie@rivosinc.com>,
-	Colin Ian King <colin.i.king@gmail.com>,
-	Dominique Martinet <asmadeus@codewreck.org>,
-	Jann Horn <jannh@google.com>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Yang Jihong <yangjihong@bytedance.com>,
-	Dmitry Vyukov <dvyukov@google.com>, Andi Kleen <ak@linux.intel.com>,
-	Graham Woodward <graham.woodward@arm.com>,
-	Ilkka Koskinen <ilkka@os.amperecomputing.com>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Zhongqiu Han <quic_zhonhan@quicinc.com>, Hao Ge <gehao@kylinos.cn>,
-	Tengda Wu <wutengda@huaweicloud.com>,
-	Gabriele Monaco <gmonaco@redhat.com>,
-	Chun-Tse Shao <ctshao@google.com>,
-	Casey Chen <cachen@purestorage.com>,
-	"Dr. David Alan Gilbert" <linux@treblig.org>,
-	Li Huafei <lihuafei1@huawei.com>,
-	"Steinar H. Gunderson" <sesse@google.com>,
-	Levi Yun <yeoreum.yun@arm.com>, Weilin Wang <weilin.wang@intel.com>,
-	Thomas Falcon <thomas.falcon@intel.com>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	Andrew Kreimer <algonell@gmail.com>,
-	Krzysztof =?utf-8?Q?=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>,
-	Junhao He <hejunhao3@huawei.com>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	Xu Yang <xu.yang_2@nxp.com>,
-	Steve Clevenger <scclevenger@os.amperecomputing.com>,
-	Zixian Cai <fzczx123@gmail.com>,
-	Stephen Brennan <stephen.s.brennan@oracle.com>,
-	Yujie Liu <yujie.liu@intel.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v1 02/48] tools headers: Silence -Wshorten-64-to-32
- warnings
-Message-ID: <Z-6aoJ3ohVHPsF0A@thinkpad>
-References: <20250401182347.3422199-1-irogers@google.com>
- <20250401182347.3422199-3-irogers@google.com>
- <Z-6WY4a6RV1bEbNU@thinkpad>
+        Thu, 03 Apr 2025 07:26:57 -0700 (PDT)
+Date: Thu, 03 Apr 2025 10:26:56 -0400
+From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+To: "Michael S. Tsirkin" <mst@redhat.com>, 
+ Markus Fohrer <markus.fohrer@webked.de>
+Cc: virtualization@lists.linux-foundation.org, 
+ jasowang@redhat.com, 
+ davem@davemloft.net, 
+ edumazet@google.com, 
+ netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
+Message-ID: <67ee9ab0a1665_136b7c29412@willemb.c.googlers.com.notmuch>
+In-Reply-To: <20250403100206-mutt-send-email-mst@kernel.org>
+References: <1d388413ab9cfd765cd2c5e05b5e69cdb2ec5a10.camel@webked.de>
+ <20250403090001-mutt-send-email-mst@kernel.org>
+ <f8909f5bbc2532ea234cdaa8dbdb46a48249803f.camel@webked.de>
+ <20250403100206-mutt-send-email-mst@kernel.org>
+Subject: Re: [REGRESSION] Massive virtio-net throughput drop in guest VM with
+ Linux 6.8+
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z-6WY4a6RV1bEbNU@thinkpad>
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 03, 2025 at 10:08:39AM -0400, Yury Norov wrote:
-> On Tue, Apr 01, 2025 at 11:23:00AM -0700, Ian Rogers wrote:
-> > The clang warning -Wshorten-64-to-32 can be useful to catch
-> > inadvertent truncation. In some instances this truncation can lead to
-> > changing the sign of a result, for example, truncation to return an
-> > int to fit a sort routine. Silence the warning by making the implicit
-> > truncation explicit.
-> > 
-> > Signed-off-by: Ian Rogers <irogers@google.com>
+Michael S. Tsirkin wrote:
+> On Thu, Apr 03, 2025 at 03:51:01PM +0200, Markus Fohrer wrote:
+> > Am Donnerstag, dem 03.04.2025 um 09:04 -0400 schrieb Michael S.
+> > Tsirkin:
+> > > On Wed, Apr 02, 2025 at 11:12:07PM +0200, Markus Fohrer wrote:
+> > > > Hi,
+> > > > =
 
-I'm the first person in the To list, but only a couple patches in the
-series are related to my area. If you want to move it with me, can you
-send bitmaps, bitfields etc. separately?
+> > > > I'm observing a significant performance regression in KVM guest V=
+Ms
+> > > > using virtio-net with recent Linux kernels (6.8.1+ and 6.14).
+> > > > =
 
-Thanks,
-Yury
+> > > > When running on a host system equipped with a Broadcom NetXtreme-=
+E
+> > > > (bnxt_en) NIC and AMD EPYC CPUs, the network throughput in the
+> > > > guest drops to 100=E2=80=93200 KB/s. The same guest configuration=
+ performs
+> > > > normally (~100 MB/s) when using kernel 6.8.0 or when the VM is
+> > > > moved to a host with Intel NICs.
+> > > > =
+
+> > > > Test environment:
+> > > > - Host: QEMU/KVM, Linux 6.8.1 and 6.14.0
+> > > > - Guest: Linux with virtio-net interface
+> > > > - NIC: Broadcom BCM57416 (bnxt_en driver, no issues at host level=
+)
+> > > > - CPU: AMD EPYC
+> > > > - Storage: virtio-scsi
+> > > > - VM network: virtio-net, virtio-scsi (no CPU or IO bottlenecks)
+> > > > - Traffic test: iperf3, scp, wget consistently slow in guest
+> > > > =
+
+> > > > This issue is not present:
+> > > > - On 6.8.0 =
+
+> > > > - On hosts with Intel NICs (same VM config)
+> > > > =
+
+> > > > I have bisected the issue to the following upstream commit:
+> > > > =
+
+> > > > =C2=A0 49d14b54a527 ("virtio-net: Suppress tx timeout warning for=
+ small
+> > > > tx")
+> > > > =C2=A0 https://git.kernel.org/linus/49d14b54a527
+> > > =
+
+> > > Thanks a lot for the info!
+> > > =
+
+> > > =
+
+> > > both the link and commit point at:
+> > > =
+
+> > > commit 49d14b54a527289d09a9480f214b8c586322310a
+> > > Author: Eric Dumazet <edumazet@google.com>
+> > > Date:=C2=A0=C2=A0 Thu Sep 26 16:58:36 2024 +0000
+> > > =
+
+> > > =C2=A0=C2=A0=C2=A0 net: test for not too small csum_start in virtio=
+_net_hdr_to_skb()
+> > > =C2=A0=C2=A0=C2=A0 =
+
+> > > =
+
+> > > is this what you mean?
+> > > =
+
+> > > I don't know which commit is "virtio-net: Suppress tx timeout warni=
+ng
+> > > for small tx"
+> > > =
+
+> > > =
+
+> > > =
+
+> > > > Reverting this commit restores normal network performance in
+> > > > affected guest VMs.
+> > > > =
+
+> > > > I=E2=80=99m happy to provide more data or assist with testing a p=
+otential
+> > > > fix.
+> > > > =
+
+> > > > Thanks,
+> > > > Markus Fohrer
+> > > =
+
+> > > =
+
+> > > Thanks! First I think it's worth checking what is the setup, e.g.
+> > > which offloads are enabled.
+> > > Besides that, I'd start by seeing what's doing on. Assuming I'm rig=
+ht
+> > > about
+> > > Eric's patch:
+> > > =
+
+> > > diff --git a/include/linux/virtio_net.h b/include/linux/virtio_net.=
+h
+> > > index 276ca543ef44d8..02a9f4dc594d02 100644
+> > > --- a/include/linux/virtio_net.h
+> > > +++ b/include/linux/virtio_net.h
+> > > @@ -103,8 +103,10 @@ static inline int virtio_net_hdr_to_skb(struct=
+
+> > > sk_buff *skb,
+> > > =C2=A0
+> > > =C2=A0		if (!skb_partial_csum_set(skb, start, off))
+> > > =C2=A0			return -EINVAL;
+> > > +		if (skb_transport_offset(skb) < nh_min_len)
+> > > +			return -EINVAL;
+> > > =C2=A0
+> > > -		nh_min_len =3D max_t(u32, nh_min_len,
+> > > skb_transport_offset(skb));
+> > > +		nh_min_len =3D skb_transport_offset(skb);
+> > > =C2=A0		p_off =3D nh_min_len + thlen;
+> > > =C2=A0		if (!pskb_may_pull(skb, p_off))
+> > > =C2=A0			return -EINVAL;
+> > > =
+
+> > > =
+
+> > > sticking a printk before return -EINVAL to show the offset and
+> > > nh_min_len
+> > > would be a good 1st step. Thanks!
+> > > =
+
+> > =
+
+> > =
+
+> > Hi Eric,
+> > =
+
+> > thanks a lot for the quick response =E2=80=94 and yes, you're absolut=
+ely right.
+> > =
+
+> > Apologies for the confusion: I mistakenly wrote the wrong commit
+> > description in my initial mail.
+> > =
+
+> > The correct commit is indeed:
+> > =
+
+> > commit 49d14b54a527289d09a9480f214b8c586322310a
+> > Author: Eric Dumazet <edumazet@google.com>
+> > Date:   Thu Sep 26 16:58:36 2024 +0000
+> > =
+
+> >     net: test for not too small csum_start in virtio_net_hdr_to_skb()=
+
+> > =
+
+> > This is the one I bisected and which causes the performance regressio=
+n
+> > in my environment.
+
+This commit is introduced in v6.12.
+
+You say 6.8 is good, but 6.8.1 is bad. This commit is not in 6.8.1.
+Nor any virtio-net related change:
+
+$ git log --oneline linux/v6.8..linux/v6.8.1 -- include/linux/virtio_net.=
+h drivers/net/virtio_net.c | wc -l
+0
+
+Is it perhaps a 6.8.1 derived distro kernel?
+
+That patch detects silly packets created by a fuzzer. It should not
+affect sane traffic. Not saying your analysis is wrong. We just need
+more data to understand the regression better.=
