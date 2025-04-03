@@ -1,158 +1,178 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81FCF2E3385
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 10:52:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 337552E3385;
+	Thu,  3 Apr 2025 10:54:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743677578; cv=none; b=DB+Z0qwhBabaaL3pcuALRa7D+7xPC0KuW1DmTEGrHHM0yYkm6k2N6N3W8+xtyrB3b9+cMs4/CliKuzfLFljPzWYZU+SOdC2Q92ZV1kT+aMAh4HhPGynTsyE29jgTkrMm0CLi7I5qYl35FPjgKyMzZydtR+6BO+psmJZz/Z1Z+tI=
+	t=1743677648; cv=none; b=djxrzf6ZZzL9jaV9orazBeeWuUNyYji0coW6ta8L0O1ns5PyJu0AWec/E4lo7/X5hmohUSwzlcGTvVAhMkhE++eRFRSxirNN3AVqbd476fyyqvREF5JBNny0R4SerBoo+9PrV/cWhnsS2tTzffo+O/GyTfYh7kZe4jAfEj3Q4OM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743677578; c=relaxed/simple;
-	bh=SWg2hKOjyoZYJKlnzcYdNywCSuGj3SLTw51+7g4s9T4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GUe+BGECq12fJ1RjQRlJryv2v73NPJ/lp1YVUCTH5uEBIKeCfTiu85UD8PmegnNQFZcLa6D+FXV4PiPB/fG5AWlyXXBgNxhy6JWO4SQPpqCEiaqI1bIN2FDz4JHhpw9qbXcOh0R4TtNcyrMas72/XL2rV9aur+2gkW7pP76h9jI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ucnJKdiM; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=CjPRKR3v; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ucnJKdiM; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=CjPRKR3v; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1743677648; c=relaxed/simple;
+	bh=HL2bZeN/6TrOkvPvEDWvjU2rnNHuuFI0DJdwxDFEfpQ=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=i7RX9XtfgVzO41xIQGaed2cve8zAJUtAlOul32sHg1Jz9s0SYjX2EcRDzEduyzt7sisgIKLyyQxyxrqaYwvxHtGzmykB2BENDUDSQDgc1KU0yf0yWBOR97ZMYdGsK5lvmhl19bXNaor/u7mZSrYaWRpaOzvEapSuwvleGanfAQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fxLsZ69Z; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ucnJKdiM";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="CjPRKR3v";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ucnJKdiM";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="CjPRKR3v"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 7C8D9211B3;
-	Thu,  3 Apr 2025 10:52:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1743677574; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RJRwADuh9Gf8w3cJ3qkn0sEpYgoWwqfQMCfDUgsVJYo=;
-	b=ucnJKdiMegpOJAdc2tH5ka7+226kXUodBZMjJOuH8o7n/l4F3VZl53M+C1+Jg0RD+JAcXA
-	wWyEeEhrGSqmqmvZG4QGaAY/k1ax7ymRyFZrJeuduL/9BITbQp9PAHxk2ZnWjWHlotXj5D
-	Vnxn0hnMxKJxTCgtybHZlzSZ9Juw+yk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1743677574;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RJRwADuh9Gf8w3cJ3qkn0sEpYgoWwqfQMCfDUgsVJYo=;
-	b=CjPRKR3vdRJbDa0YIb0G/MQr/L2JCsmTMz2xbLc2iXEdn6EM9PYT/smyZRDaO+9bLxmDLX
-	j0Drw6N2bPE2+dBQ==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=ucnJKdiM;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=CjPRKR3v
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1743677574; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RJRwADuh9Gf8w3cJ3qkn0sEpYgoWwqfQMCfDUgsVJYo=;
-	b=ucnJKdiMegpOJAdc2tH5ka7+226kXUodBZMjJOuH8o7n/l4F3VZl53M+C1+Jg0RD+JAcXA
-	wWyEeEhrGSqmqmvZG4QGaAY/k1ax7ymRyFZrJeuduL/9BITbQp9PAHxk2ZnWjWHlotXj5D
-	Vnxn0hnMxKJxTCgtybHZlzSZ9Juw+yk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1743677574;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RJRwADuh9Gf8w3cJ3qkn0sEpYgoWwqfQMCfDUgsVJYo=;
-	b=CjPRKR3vdRJbDa0YIb0G/MQr/L2JCsmTMz2xbLc2iXEdn6EM9PYT/smyZRDaO+9bLxmDLX
-	j0Drw6N2bPE2+dBQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 048BC1392A;
-	Thu,  3 Apr 2025 10:52:53 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id XE+5OoVo7mfnDQAAD6G6ig
-	(envelope-from <jdelvare@suse.de>); Thu, 03 Apr 2025 10:52:53 +0000
-Date: Thu, 3 Apr 2025 12:52:52 +0200
-From: Jean Delvare <jdelvare@suse.de>
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Richard Weinberger <richard@nod.at>, Vignesh Raghavendra
- <vigneshr@ti.com>, Tudor Ambarus <tudor.ambarus@linaro.org>, Pratyush Yadav
- <pratyush@kernel.org>, Michael Walle <michael@walle.cc>,
- <linux-mtd@lists.infradead.org>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>, <linux-kernel@vger.kernel.org>, Steam Lin
- <stlin2@winbond.com>, kernel test robot <lkp@intel.com>,
- stable@vger.kernel.org
-Subject: Re: [PATCH] mtd: spinand: Fix build with gcc < 7.5
-Message-ID: <20250403125252.03432904@endymion>
-In-Reply-To: <20250401133637.219618-1-miquel.raynal@bootlin.com>
-References: <20250401133637.219618-1-miquel.raynal@bootlin.com>
-Organization: SUSE Linux
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.43; x86_64-suse-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fxLsZ69Z"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743677647; x=1775213647;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=HL2bZeN/6TrOkvPvEDWvjU2rnNHuuFI0DJdwxDFEfpQ=;
+  b=fxLsZ69ZQuXNqWczYBVh8FWa4j8pNYkCOaviXxqfEv3k/FQHl2bO9W5G
+   5Wwvdmalmkt8yo/lpQUd8G0oNfCIH2tVPwxB8XaXRdBdc5H9LqKtThRWr
+   LuDngDVZ/ZKBtJcNm4nlnrU2pXkY44h9u9YyjIc7LapF45iKBMCYYknLf
+   jqj6Dg1oB8f8hLfV2GWUycmNA9k9NpZpf1lJ0SltbWW0leIOmghpdQemF
+   EEiOm7JZFgMvL4AE1gWhjXExD4iVTNFj4UrJ2W7QtA5UcWtROIY6BsZeY
+   kFPuXcVmPWXKQx127vRf4pyRJ3tjtNvs3xJSH+RnFWFm/V/ORNY3ltkOS
+   A==;
+X-CSE-ConnectionGUID: bjb5qYENSiKB3O9S1s5rFg==
+X-CSE-MsgGUID: dRlBPgRnQBOw11var4MHQQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11392"; a="44791483"
+X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
+   d="scan'208";a="44791483"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 03:54:05 -0700
+X-CSE-ConnectionGUID: oxi6xKPlS/ClIRGIeX+iFA==
+X-CSE-MsgGUID: O7/WCy3ATK6shXcHXXc5XQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
+   d="scan'208";a="127483765"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.152])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 03:54:01 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 3 Apr 2025 13:53:58 +0300 (EEST)
+To: Derek John Clark <derekjohn.clark@gmail.com>
+cc: Hans de Goede <hdegoede@redhat.com>, Armin Wolf <W_Armin@gmx.de>, 
+    Jonathan Corbet <corbet@lwn.net>, Mario Limonciello <superm1@kernel.org>, 
+    Luke Jones <luke@ljones.dev>, Xino Ni <nijs1@lenovo.com>, 
+    Zhixin Zhang <zhangzx36@lenovo.com>, Mia Shao <shaohz1@lenovo.com>, 
+    Mark Pearson <mpearson-lenovo@squebb.ca>, 
+    "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>, 
+    "Cody T . -H . Chiu" <codyit@gmail.com>, 
+    John Martens <johnfanv2@gmail.com>, platform-driver-x86@vger.kernel.org, 
+    linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 6/6 RESEND] platform/x86: Add Lenovo Gamezone WMI
+ Driver
+In-Reply-To: <CAFqHKTk30hV5UuXjpfHs_0CT=5cfbPkiW4im4uHO4dC=9d9AqQ@mail.gmail.com>
+Message-ID: <345fc20a-5658-3c1d-3c3d-cfb3b2e31a3c@linux.intel.com>
+References: <20250317144326.5850-1-derekjohn.clark@gmail.com> <20250317144326.5850-7-derekjohn.clark@gmail.com> <be11f12b-d610-6130-180a-476d7958f2b9@linux.intel.com> <CAFqHKTk30hV5UuXjpfHs_0CT=5cfbPkiW4im4uHO4dC=9d9AqQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 7C8D9211B3
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.01 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	HAS_ORG_HEADER(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	FROM_HAS_DN(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:email,bootlin.com:email,intel.com:email]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -4.01
-X-Spam-Flag: NO
+Content-Type: multipart/mixed; boundary="8323328-1685862956-1743677638=:1302"
 
-On Tue,  1 Apr 2025 15:36:37 +0200, Miquel Raynal wrote:
-> __VA_OPT__ is a macro that is useful when some arguments can be present
-> or not to entirely skip some part of a definition. Unfortunately, it
-> is a too recent addition that some of the still supported old GCC
-> versions do not know about, and is anyway not part of C11 that is the
-> version used in the kernel.
-> 
-> Find a trick to remove this macro, typically '__VA_ARGS__ + 0' is a
-> workaround used in netlink.h which works very well here, as we either
-> expect:
-> - 0
-> - A positive value
-> - No value, which means the field should be 0.
-> 
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202503181330.YcDXGy7F-lkp@intel.com/
-> Fixes: 7ce0d16d5802 ("mtd: spinand: Add an optional frequency to read from cache macros")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Tested-by: Jean Delvare <jdelvare@suse.de>
+--8323328-1685862956-1743677638=:1302
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Thanks Miquel!
+On Wed, 2 Apr 2025, Derek John Clark wrote:
 
--- 
-Jean Delvare
-SUSE L3 Support
+> On Thu, Mar 27, 2025 at 6:56=E2=80=AFAM Ilpo J=C3=A4rvinen
+> <ilpo.jarvinen@linux.intel.com> wrote:
+> >
+> > On Mon, 17 Mar 2025, Derek J. Clark wrote:
+> >
+> > > Adds lenovo-wmi-gamezone driver which provides the Lenovo Gamezone WM=
+I
+> > > interface that comes on Lenovo "Gaming Series" hardware. Provides ACP=
+I
+> > > platform profiles over WMI.
+> > >
+> > > Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
+> >
+> > This has a few similar nits I flagged for the other patches but I won't
+> > mark them here again but please go through the patches to find similar
+> > cases.
+> >
+> > > ---
+> > > v4:
+> > > - Add notifier blocks for the Events and Other Mode drivers.
+> > > - Remove notifier block chain head and all reference to Thermal Mode
+> > >   Event GUID.
+> > > - Add header for Gamezone specific structs and functions.
+> > > - Various fixes from review.
+> > > v3:
+> > > - Use notifier chain to report platform profile changes to any
+> > >   subscribed drivers.
+> > > - Adds THERMAL_MODE_EVENT GUID and .notify function to trigger notifi=
+er
+> > >   chain.
+> > > - Adds support for Extreme Mode profile on supported hardware, as wel=
+l
+> > >   as a DMI quirk table for some devices that report extreme mode vers=
+ion
+> > >   support but so not have it fully implemented.
+> > > - Update to include recent changes to platform-profile.
+> > > v2:
+> > > - Use devm_kmalloc to ensure driver can be instanced, remove global
+> > >   reference.
+> > > - Ensure reverse Christmas tree for all variable declarations.
+> > > - Remove extra whitespace.
+> > > - Use guard(mutex) in all mutex instances, global mutex.
+> > > - Use pr_fmt instead of adding the driver name to each pr_err.
+> > > - Remove noisy pr_info usage.
+> > > - Rename gamezone_wmi to lenovo_wmi_gz_priv and gz_wmi to priv.
+> > > - Remove GZ_WMI symbol exporting.
+> > > ---
+> > >  MAINTAINERS                                |   2 +
+> > >  drivers/platform/x86/Kconfig               |  13 +
+> > >  drivers/platform/x86/Makefile              |   1 +
+> > >  drivers/platform/x86/lenovo-wmi-gamezone.c | 380 +++++++++++++++++++=
+++
+> > >  drivers/platform/x86/lenovo-wmi-gamezone.h |  18 +
+> > >  5 files changed, 414 insertions(+)
+> > >  create mode 100644 drivers/platform/x86/lenovo-wmi-gamezone.c
+> > >  create mode 100644 drivers/platform/x86/lenovo-wmi-gamezone.h
+> > >
+
+> > > diff --git a/drivers/platform/x86/lenovo-wmi-gamezone.h b/drivers/pla=
+tform/x86/lenovo-wmi-gamezone.h
+> > > new file mode 100644
+> > > index 000000000000..ac536803160b
+> > > --- /dev/null
+> > > +++ b/drivers/platform/x86/lenovo-wmi-gamezone.h
+> > > @@ -0,0 +1,18 @@
+> > > +/* SPDX-License-Identifier: GPL-2.0-or-later
+> > > + *
+> > > + * Copyright(C) 2025 Derek J. Clark <derekjohn.clark@gmail.com>
+> > > + *
+> > > + */
+> > > +
+> > > +#ifndef _LENOVO_WMI_GAMEZONE_H_
+> > > +#define _LENOVO_WMI_GAMEZONE_H_
+> > > +
+> > > +enum thermal_mode {
+> > > +     SMARTFAN_MODE_QUIET =3D 0x01,
+> > > +     SMARTFAN_MODE_BALANCED =3D 0x02,
+> > > +     SMARTFAN_MODE_PERFORMANCE =3D 0x03,
+> > > +     SMARTFAN_MODE_EXTREME =3D 0xE0, /* Ver 6+ */
+> > > +     SMARTFAN_MODE_CUSTOM =3D 0xFF,
+> > > +};
+> > > +
+> > > +#endif /* !_LENOVO_WMI_GAMEZONE_H_ */
+> > >
+> >
+> > Are these going the be used by other .c files?
+> >
+>=20
+> They are used across different c files in this series. The
+> lenovo-wmi-other driver uses every header.
+
+Oh, how can this then be the last patch of the series???
+
+Won't the build fail before this patch for lenovo-wmi-other.c?
+
+--=20
+ i.
+
+--8323328-1685862956-1743677638=:1302--
