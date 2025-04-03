@@ -1,80 +1,64 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8A2519340B
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 09:26:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40D9618DB10
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 09:27:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743672406; cv=none; b=V9WCGGp7AwPSFtJnUYkEIFMA3z1J5IHegrSE/mJ+5cYLhHDWw0cFdqpOHfMKSyjSXelt/6Bb3khqTdUYTXzz0o84HvIqFa7KDyYUFNVp5zAgSclr4XwymgOSjv8d5g+265uXvvgry1AoBlAcz4Gl1mBUQ51q1H+rxDTv+y4YTJg=
+	t=1743672429; cv=none; b=sldHp6XL0ZmJVOlGb5L5zRThkWsf0owPFWGAGnAMOi2KD0DYgQA1WH4zX8TPJnDlRFaJcxLaN/gIqNM82dQU8CS1ebp6WPVatmHlzfX9z2yVXcS67ClyGI7JgHyTFt4fsnz97O7ARqlM3kv5E0c/r/6BCPdtyiDBEgablmbS93M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743672406; c=relaxed/simple;
-	bh=3kt8uZWFqgd+7TiQBoV1mBy2E5+2zlC3Ohx8tCaBTJg=;
+	s=arc-20240116; t=1743672429; c=relaxed/simple;
+	bh=DFXiNGsUZS/prZTX0AohzGMataOwoc1Yd+ldROPQS/U=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rfmy7qOSsh2Ra++uo7dpWCcNDKbNZMxJKaRRac+8jP8eoRxLvjRglyfiKeHE+coZBU/lF3OAbWbiTBSrHU2/GGgeBNjN2H0eNH5bNeZihZD6b3/sF3j1TkNOGuN4FJhipsNw/W8XkjAWiV+or2Yau4j0nHqF6sVKkKOjmuUxQmI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Go74T+tU; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Yo5K1YJs; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Go74T+tU; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Yo5K1YJs; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	 In-Reply-To:Content-Type; b=phR+x9kY4jJRdW+YfBMvVSepaJ4hbC6s9Q+s2DNNidu8nmyIJcHjlAbwQul41EBcAYatBquuxKrapWZrQ7ZcjZ6wRHYn9t5uBzSATwr088vhl1LRBFMm0vASCqvRL/84Ro5FzusARWBD0NvTENoYRXrtna3gleOVRqbWRDa6GqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=krARmDtl; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Go74T+tU";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Yo5K1YJs";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Go74T+tU";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Yo5K1YJs"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 3946C2119C;
-	Thu,  3 Apr 2025 09:26:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1743672396; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=g5JBiagd/IaphZnNyD5cE9CP+4ou/BNEE11+z/xpLv8=;
-	b=Go74T+tUMTM6OYdgLA37QBOkBLwM+KvGmRKuScprELaI3wS+y+CEE0CAGHNeZpSu42E4HC
-	PS4zr7Qb+kuj+u0fqs7wZGYgJs+8ZJTPubY1mLgqZrdVKHNGouW1eOPXNA83eeDL7OXWaT
-	wz/auDH67aPVt+xsgV9PkVm2z0QNIrQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1743672396;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=g5JBiagd/IaphZnNyD5cE9CP+4ou/BNEE11+z/xpLv8=;
-	b=Yo5K1YJsEQjD37r4hoFAPojI/47BnHdlm4EGwH/fr7Ve751Vut4k5R/Mwyg8w3kGQRfuid
-	PkQezbA8/O+1sSCQ==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1743672396; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=g5JBiagd/IaphZnNyD5cE9CP+4ou/BNEE11+z/xpLv8=;
-	b=Go74T+tUMTM6OYdgLA37QBOkBLwM+KvGmRKuScprELaI3wS+y+CEE0CAGHNeZpSu42E4HC
-	PS4zr7Qb+kuj+u0fqs7wZGYgJs+8ZJTPubY1mLgqZrdVKHNGouW1eOPXNA83eeDL7OXWaT
-	wz/auDH67aPVt+xsgV9PkVm2z0QNIrQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1743672396;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=g5JBiagd/IaphZnNyD5cE9CP+4ou/BNEE11+z/xpLv8=;
-	b=Yo5K1YJsEQjD37r4hoFAPojI/47BnHdlm4EGwH/fr7Ve751Vut4k5R/Mwyg8w3kGQRfuid
-	PkQezbA8/O+1sSCQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 146AD13A2C;
-	Thu,  3 Apr 2025 09:26:36 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id JThnBExU7mdkbgAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Thu, 03 Apr 2025 09:26:36 +0000
-Message-ID: <78c2d3be-aa8e-4bb7-8883-7f144a06f866@suse.cz>
-Date: Thu, 3 Apr 2025 11:26:35 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="krARmDtl"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43cfe574976so3831665e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 02:27:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1743672425; x=1744277225; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=iJGDJldsHHtphvbrRdY3xvo2/HKpWaaiy6mJGk4cOVw=;
+        b=krARmDtl2uaYY/adrrcdc4bByKoN3jbrmj8QFyYmQWS2izPbivZ7Ai+9Owj5ZpWXLI
+         wV2IuACZ2zSD/LsqMH8bDAQBGEJFSBmrlzfMxa3rRgIOrgWc5Xns/MaWYGDklnYbH2iq
+         QCXSQO4alMgA3vkTStFaHmdXHtX1HPv/C0yDAzvAHeWo238pUDX+0UhhMyN3ReCXkSzw
+         zof4qfXYSIMb1WIYPJ4PlCjZ1VRZuhRuVFQb2JVxNiC+Mg9kFEtRQ40FC98EC/mOhaBQ
+         hZjMQqJ8eJVatOyVpA72eVVy2HEUQMY+/EjW9RmxTykQjQvSJJk1VTkKOFHuClNCsNzZ
+         QZ8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743672425; x=1744277225;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=iJGDJldsHHtphvbrRdY3xvo2/HKpWaaiy6mJGk4cOVw=;
+        b=gCHD7QnEgEYK5tQB97uH9g+WwbttQBzUHuBXK5mfoOLMF7U2DyCM1ZAKXMAouUMmLe
+         7M2sfk/yyMbFrRYOxsvvFoQgAyOiDuetbfedAkxE/mzpbVUkBYoIlTU2UvK21r8YOd1C
+         vqVLULznZYFzIzrad9U3I6gVrgyTxVxF2GlsEpngRld8rXr3LHqBbPosihmaKyrR6xG4
+         dLhlC65F6NtT5PsFQvwUn0bJX4+88NmvgVsTtz4IPODrvKlZPsAr9P4CKwlwdYqgxG82
+         8UgsUbJFgfxwOdFgISDDZ9DWMmju/1a53Zd2FtJjb7+3DkZpdjOBocRg6ScVRXEgA5id
+         Yi8A==
+X-Gm-Message-State: AOJu0Yzqqf3nhEgca8i4y7oCbS47Usbvn0rADbT4RrFGdo9+yYDH8HE/
+	a+vDK5w8GDRURVO5PbT5wv43oBntXbbbxHwp8VON3Pp3rHwQOxZLKWMfGSLyo445ghoBIDewShW
+	CHWg=
+X-Gm-Gg: ASbGncvak6BRtSsf8e4DyqZ4CnUPAB03z/rBNC58LTieEihHnaj5XcJxVsdioS4RJFd
+	TC7FCaNXRRCKvYRlgX96kWVhq/lussKkB6B5spTQJLkm1A2HNwuyCn9m5ZxhupZMAv2ENDLmAoH
+	jJsFPGS6uJdn2KKxL+B9F2X53aFvFCN7QDsJWfAkyqo0/VLqvFehe2a9XAR2w0pHW3TXgjy5kyK
+	Yz+lVg+QMpTatC8SMj7iN4Xz5343aqDCPkE2yZIvswu0SaQYWvbAe+cXlb2XULKbJ6m7CNfIRdz
+	9YoI81IlRGQlOMb+/UmaQUJ7SlI/Z+e7ewQTSHzousWGeuiV5EfIC5nZcYS7NaU=
+X-Google-Smtp-Source: AGHT+IHb374ieUWPcmM3fn26V5cLpqAG9MCExKHt91U29Au+ntrDfznKTSKKncx3a2Q6TekchVXZxA==
+X-Received: by 2002:a05:600c:49aa:b0:43d:fa58:81d4 with SMTP id 5b1f17b1804b1-43ec775b29fmr4842305e9.33.1743672425502;
+        Thu, 03 Apr 2025 02:27:05 -0700 (PDT)
+Received: from [192.168.68.117] ([5.133.47.210])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-43ec364d071sm12563725e9.32.2025.04.03.02.27.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Apr 2025 02:27:05 -0700 (PDT)
+Message-ID: <e8c91706-1a94-4e3d-b2a9-9d670021bbc8@linaro.org>
+Date: Thu, 3 Apr 2025 10:27:04 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -82,136 +66,133 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] locking/local_lock, mm: Replace localtry_ helpers with
- local_trylock_t type
+Subject: Re: [PATCH v2 00/13] nvmem: patches (set 1) for 6.15
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+ Greg KH <gregkh@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org
+References: <20250309145703.12974-1-srinivas.kandagatla@linaro.org>
+ <2025040143-espionage-poison-2345@gregkh>
+ <47a3a851-f737-4772-87c6-98613347435c@linaro.org>
+ <2025040230-showoff-spray-ac83@gregkh>
+ <283ac88b-c8d4-47c8-9ff7-935770eca566@linaro.org>
+ <b6e7abf3-b263-410a-8f4c-eb9a8e2efa2b@oss.qualcomm.com>
 Content-Language: en-US
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
- Shakeel Butt <shakeel.butt@linux.dev>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, bpf
- <bpf@vger.kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau
- <martin.lau@kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
- Peter Zijlstra <peterz@infradead.org>,
- Sebastian Sewior <bigeasy@linutronix.de>,
- Steven Rostedt <rostedt@goodmis.org>, Michal Hocko <mhocko@suse.com>,
- linux-mm <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
-References: <20250401205245.70838-1-alexei.starovoitov@gmail.com>
- <umfukiohyxcxxw5g6ca5g7stq7oonnr3sbvjyjshnbqalzffeq@2nrwqsmwcrug>
- <CAADnVQLHakKsVEbKiENF8eV0fEAtbVbL0b_QbJO2b0dH9r7PSw@mail.gmail.com>
-From: Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <CAADnVQLHakKsVEbKiENF8eV0fEAtbVbL0b_QbJO2b0dH9r7PSw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+In-Reply-To: <b6e7abf3-b263-410a-8f4c-eb9a8e2efa2b@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Spam-Level: 
-X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com,linux.dev];
-	ARC_NA(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[14];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	TO_DN_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.cz:email,suse.cz:mid,linux.dev:email]
-X-Spam-Score: -2.80
-X-Spam-Flag: NO
 
-On 4/2/25 23:40, Alexei Starovoitov wrote:
-> On Wed, Apr 2, 2025 at 1:56 PM Shakeel Butt <shakeel.butt@linux.dev> wrote:
+
+
+On 03/04/2025 10:25, Dmitry Baryshkov wrote:
+> On 03/04/2025 12:18, Srinivas Kandagatla wrote:
 >>
->> On Tue, Apr 01, 2025 at 01:52:45PM -0700, Alexei Starovoitov wrote:
->> > From: Alexei Starovoitov <ast@kernel.org>
->> >
->> > Partially revert commit 0aaddfb06882 ("locking/local_lock: Introduce localtry_lock_t").
->> > Remove localtry_*() helpers, since localtry_lock() name might
->> > be misinterpreted as "try lock".
->> >
->> > Introduce local_trylock[_irqsave]() helpers that only work
->> > with newly introduced local_trylock_t type.
->> > Note that attempt to use local_trylock[_irqsave]() with local_lock_t
->> > will cause compilation failure.
->> >
->> > Usage and behavior in !PREEMPT_RT:
->> >
->> > local_lock_t lock;                     // sizeof(lock) == 0
->> > local_lock(&lock);                     // preempt disable
->> > local_lock_irqsave(&lock, ...);        // irq save
->> > if (local_trylock_irqsave(&lock, ...)) // compilation error
->> >
->> > local_trylock_t lock;                  // sizeof(lock) == 4
 >>
->> Is there a reason for this 'acquired' to be int? Can it be uint8_t? No
->> need to change anything here but I plan to change it later to compact as
->> much as possible within one (or two) cachline for memcg stocks.
+>> On 02/04/2025 12:31, Greg KH wrote:
+>>> On Wed, Apr 02, 2025 at 09:19:17AM +0100, Srinivas Kandagatla wrote:
+>>>> HI Greg,
+>>>>
+>>>> On 01/04/2025 20:18, Greg KH wrote:
+>>>>> On Sun, Mar 09, 2025 at 02:56:50PM +0000, 
+>>>>> srinivas.kandagatla@linaro.org wrote:
+>>>>>> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>>>>>>
+>>>>>> Hi Greg,
+>>>>>>
+>>>>>> Here are few nvmem patches for 6.15, Could you queue
+>>>>>> these for 6.15.
+>>>>>>
+>>>>>> patche include
+>>>>>>     - updates to bindings to include MSM8960, X1E80100, MS8937,
+>>>>>>       IPQ5018
+>>>>>>     - add support to bit offsets for register strides exceeding
+>>>>>>       single byte
+>>>>>>     - add rockchip-otp variants.
+>>>>>>     - Few enhancements in qfprom and rochchip nvmem providers.
+>>>>>
+>>>>> Ok, I wanted to apply these, and tried to, but they fail horribly
+>>>>> because:
+>>>>>
+>>>>> Commit: 1b14625bd6d4 ("nvmem: qfprom: switch to 4-byte aligned reads")
+>>>>>     Fixes tag: Fixes: 11ccaa312111 ("nvmem: core: verify cell's 
+>>>>> raw_len")
+>>>>>     Has these problem(s):
+>>>>>         - Target SHA1 does not exist
+>>>>> Commit: a8a7c7e34093 ("nvmem: core: update raw_len if the bit 
+>>>>> reading is required")
+>>>>>     Fixes tag: Fixes: 11ccaa312111 ("nvmem: core: verify cell's 
+>>>>> raw_len")
+>>>>>     Has these problem(s):
+>>>>>         - Target SHA1 does not exist
+>>>>> Commit: d44f60348d8c ("nvmem: core: fix bit offsets of more than 
+>>>>> one byte")
+>>>>>     Fixes tag: Fixes: 11ccaa312111 ("nvmem: core: verify cell's 
+>>>>> raw_len")
+>>>>>     Has these problem(s):
+>>>>>         - Target SHA1 does not exist
+>>>>
+>>>> Looks some of your scripts or b4 is picking up older version v1 of the
+>>>> patchset
+>>>>
+>>>> None of the above patches have Fixes tags in the V2 patches that I 
+>>>> shared
+>>>> aswell as patches in linux-next.
+>>>
+>>> Yes, that looks odd, it looks like b4 pulled in the wrong series, yes.
+>>>
+>>
+>> Even that looked incorrect, as the v1 series only had one 
+>> patch("[PATCH 12/14] nvmem: make the misaligned raw_len non-fatal") 
+>> that had fixes tag. Not sure how these 3 patches are tagged as fixes.
+>>
+>>> But, that's even worse.  Those "fixes" are now not actually marked as
+>>> fixes of the previous patch.  So that information is totally lost, and
+>>
+>> Its because this patch("PATCH 12/14] nvmem: make the misaligned 
+>> raw_len non-fatal") is taken as fixup patch and wrapped into the 
+>> original patch ("nvmem: core: verify cell's raw_len"), Also the sha 
+>> will not be valid for linus or char-misc tree.
+>>
+>>> again, the first commit here, "nvmem: core: verify cell's raw_len" is
+>>> broken so much that it took 3 other changes to fix it, which implies
+>>> that bisection would cause problems if you hit it in the middle here.
+>>>
+>>
+>> All the patches related to this are enhancements to nvmem core to 
+>> allow specifying bit offsets for nvmem cell that have 4 bytes strides.
+>>
+>> Specially this check is also an additional check in core to make sure 
+>> that cell offsets are aligned to register strides.
+>>
+>>> While fixing patches is great, and something we do in the tree all the
+>>> time, let's not purposefully break things and then fix them up in the
+>>> same exact patch series please.  That's just sloppy engineering.
+>>>
+>>> Please redo this series completely.  I can take the "new device support"
+>>
+>> I can send them but its going to be exactly same series, I dont think 
+>> anything will change as all of these patches are enhancements and 
+>> there are no fixes.
+>>
+>> I hope this clarifies a bit, Please let me know if you still want me 
+>> to resend this series, which is going to be exactly same.
 > 
-> I don't see any issue. I can make it u8 right away.
+> I think Greg is asking to squash the fixup into the relevant patch.
 
-Are you planning to put the lock near other <64bit sized values in memcg
-stock? Otherwise it will be padded anyway?
+Its already squashed up in v2.
 
-I hope it won't hurt the performance though, AFAIK at least sub-word atomics
-are much slower than using a full word. But we use only read/write once for
-acquired so hopefully it's fine?
-
->> > local_lock(&lock);                     // preempt disable, acquired = 1
->> > local_lock_irqsave(&lock, ...);        // irq save, acquired = 1
->> > if (local_trylock(&lock))              // if (!acquired) preempt disable
->> > if (local_trylock_irqsave(&lock, ...)) // if (!acquired) irq save
->>
->> For above two ", acquired = 1" as well.
-> 
-> I felt it would be too verbose and not accurate anyway,
-> since irq save will be done before the check.
-> It's a pseudo code.
-> But sure, I can add.
+thanks,
+Srini
 > 
 >>
->> >
->> > The existing local_lock_*() macros can be used either with
->> > local_lock_t or local_trylock_t.
->> > With local_trylock_t they set acquired = 1 while local_unlock_*() clears it.
->> >
->> > In !PREEMPT_RT local_lock_irqsave(local_lock_t *) disables interrupts
->> > to protect critical section, but it doesn't prevent NMI, so the fully
->> > reentrant code cannot use local_lock_irqsave(local_lock_t *) for
->> > exclusive access.
->> >
->> > The local_lock_irqsave(local_trylock_t *) helper disables interrupts
->> > and sets acquired=1, so local_trylock_irqsave(local_trylock_t *) from
->> > NMI attempting to acquire the same lock will return false.
->> >
->> > In PREEMPT_RT local_lock_irqsave() maps to preemptible spin_lock().
->> > Map local_trylock_irqsave() to preemptible spin_trylock().
->> > When in hard IRQ or NMI return false right away, since
->> > spin_trylock() is not safe due to explicit locking in the underneath
->> > rt_spin_trylock() implementation. Removing this explicit locking and
->> > attempting only "trylock" is undesired due to PI implications.
->> >
->> > The local_trylock() without _irqsave can be used to avoid the cost of
->> > disabling/enabling interrupts by only disabling preemption, so
->> > local_trylock() in an interrupt attempting to acquire the same
->> > lock will return false.
->> >
->> > Note there is no need to use local_inc for acquired variable,
->> > since it's a percpu variable with strict nesting scopes.
->> >
->> > Acked-by: Vlastimil Babka <vbabka@suse.cz>
->> > Signed-off-by: Alexei Starovoitov <ast@kernel.org>
->>
->> Reviewed-by: Shakeel Butt <shakeel.butt@linux.dev>
+>> --srini
+>>> patches at any time, and really, those should be marked with Cc: stable
+>>> to get backported, right?  The other ones are written as if they are
+>>> fixes, so again, I can take them any time, no need to wait for the -rc1
+>>> merge cycle.
+>>>
+>>> thanks,
+>>>
+>>> greg k-h
 > 
-> Thanks!
-
+> 
