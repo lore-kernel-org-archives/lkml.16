@@ -1,50 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DF58190679
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 15:30:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C074A24EF7E;
+	Thu,  3 Apr 2025 15:31:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743694253; cv=none; b=uJGfoKerY3Kr/O9LMQpfGOfFSoKjANNU4bywVA5e5ZIOZ51T5vZ/QdGY7ypAnEiZG496lN1OTDhB3W7aXRoNANKCiASzi30uyDRYkXp6oJqZLn/ndWRwBqMC5SCjEk4IlwP8f+OFenyqrn6ABy4LLv/ld9Y153MSUTNfryEsOoo=
+	t=1743694294; cv=none; b=USlBhv8dk/l8tmxsbsgE6pjdpmzIi1+1abeHZB7lxIxehhIFkMC33QHz+ucikzOr69ywxUrpdPS/TUaVvLKqfr2asb/9DKRqZRAv+52NRVCdh4wXU3deTjKoNJzwG8d6mGsDtl2oEcGTWX5ODfU20BkgEsUuMlGTN2vVrwjfKgo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743694253; c=relaxed/simple;
-	bh=e5OGCFcEpqzuif9wQ2tcu+09Dt7ICSXT7RREEhwMDQ0=;
+	s=arc-20240116; t=1743694294; c=relaxed/simple;
+	bh=ywX+w2ejjtUoTP/P9MQhvoCasOtZWG+Jw8XsR6yk9go=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DKWEuDJQbt9mUbrAHfUGciG/kHPfwlA30mnFkoT3VwkGao1qZXlqrRmLMehQraljUy2gQv6Z82h129YrC+jm4yL1A8+PhhRJwQMLxjq6ZB7PB46OXgNhCDMFuX7gAKx1iYPETAg2eQcrrwq3fZe92Nu/tTLDKPMQBPT6OqfvdJg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QHniWGy0; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=PB+r0mlW45NhU2zrus+QhWbuI8e90HUnN1qlPZffDaD8WMvkOiYNsezZRD9Sh11coAKellXCXTvPsgkkAXP9YFfE5jteeW9fO4ZzQRic0FOImWBi6IMy9CHl0q1SwfweifXP7nCvkFTcvcVgnAlFnyLmNsvWHn1AQNAkJxf+rKc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lqfZ6V6U; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QHniWGy0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE8BBC4CEE3;
-	Thu,  3 Apr 2025 15:30:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lqfZ6V6U"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6767C4CEE3;
+	Thu,  3 Apr 2025 15:31:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743694253;
-	bh=e5OGCFcEpqzuif9wQ2tcu+09Dt7ICSXT7RREEhwMDQ0=;
+	s=k20201202; t=1743694294;
+	bh=ywX+w2ejjtUoTP/P9MQhvoCasOtZWG+Jw8XsR6yk9go=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QHniWGy08SM3VzkrCsjO5kDAwmb7zAd17SAv6Szzia9xKmbah9q5IELn2wvRBZZWc
-	 c1ifwj8JGA4pV8RMGOUQ+p3SPepp10dBuEuHhP+lvq1w54izU7QhuR2/+Wk7IYKKmA
-	 l1on8hmGdGBb2aRhXXyDFmtM2rLRb1Y6SCnsqvPLfSqBerpPBB2CVVyxf9ZW0FkP4s
-	 CNrhuhkxYLDBEFms+eEioogMZ20WZUaYfPec+NshjgVWGp69NrCmMogVc9nohkBRLh
-	 SrDEN0D52DULSU93RybqKojuLkUdugi4H7jk7IDrSTVSNVau8g6YoJHEclAySyZgx2
-	 wn3P5zST5cAlg==
-Date: Thu, 3 Apr 2025 16:30:44 +0100
+	b=lqfZ6V6UNUu3lFHFKlnWCFVf8rHkyRYnqyntQk3cBIEeN9D4/LoxCTSZJgW7yfBFw
+	 miqP/U+jpNlGpizBr3zB6cTiljXWfDLbAYLk+uRYUpf+vZ5Vq6EL0PPf7LHOEBuP6/
+	 vZ6IlzmuWuJ3ExrrU8Z2/cwIhh631e1RU4YiY1+VZUxfvvoAsWFmajL2dyn0AjxSma
+	 oCAMfxcoCySUelgF0jbMD7mQWKiXkECfibQzjHMBpa0Hi4lN8mDa2jZUaweIfFi3MA
+	 PSx5rzUZimG/QHVy+IrlfNtDP+2+y5nTp/2sSL4wqQKtCSLOxrCavn6nlDNngJfQAi
+	 5ofujHMot9g8A==
+Date: Thu, 3 Apr 2025 16:31:27 +0100
 From: Mark Brown <broonie@kernel.org>
 To: Yeoreum Yun <yeoreum.yun@arm.com>
 Cc: catalin.marinas@arm.com, will@kernel.org, anshuman.khandual@arm.com,
-	joey.gouly@arm.com, maz@kernel.org, oliver.upton@linux.dev,
-	frederic@kernel.org, james.morse@arm.com,
-	hardevsinh.palaniya@siliconsignals.io,
-	shameerali.kolothum.thodi@huawei.com, huangxiaojia2@huawei.com,
-	mark.rutland@arm.com, samuel.holland@sifive.com,
-	palmer@rivosinc.com, charlie@rivosinc.com,
-	thiago.bauermann@linaro.org, bgray@linux.ibm.com,
-	tglx@linutronix.de, puranjay@kernel.org, david@redhat.com,
-	yang@os.amperecomputing.com, mbenes@suse.cz,
-	joel.granados@kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, nd@arm.com
-Subject: Re: [PATCH 1/3] arm64/feature: add MTE_STORE_ONLY feature
-Message-ID: <0a430cca-a473-472b-bb1f-fdf3ed99da47@sirena.org.uk>
-References: <20250403142707.26397-1-yeoreum.yun@arm.com>
- <20250403142707.26397-2-yeoreum.yun@arm.com>
+	joey.gouly@arm.com, yury.khrustalev@arm.com, maz@kernel.org,
+	oliver.upton@linux.dev, frederic@kernel.org,
+	shameerali.kolothum.thodi@huawei.com, james.morse@arm.com,
+	mark.rutland@arm.com, huangxiaojia2@huawei.com,
+	akpm@linux-foundation.org, surenb@google.com, robin.murphy@arm.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Subject: Re: [PATCH 3/3] Documentation/arm64: reflects FEAT_MTE_TAGGED_FAR
+ description
+Message-ID: <93497fc3-3da9-43f1-8b22-cf0d3f3e7de2@sirena.org.uk>
+References: <20250403141535.23496-1-yeoreum.yun@arm.com>
+ <20250403141535.23496-4-yeoreum.yun@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,34 +49,44 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="5U5vDY5w/KdPL0Jc"
+	protocol="application/pgp-signature"; boundary="oxRN7uTMagz9u5lh"
 Content-Disposition: inline
-In-Reply-To: <20250403142707.26397-2-yeoreum.yun@arm.com>
+In-Reply-To: <20250403141535.23496-4-yeoreum.yun@arm.com>
 X-Cookie: Logic is the chastity belt of the mind!
 
 
---5U5vDY5w/KdPL0Jc
+--oxRN7uTMagz9u5lh
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 03, 2025 at 03:27:05PM +0100, Yeoreum Yun wrote:
-> add MTE_STORE_ONLY feature and HWCAP.
+On Thu, Apr 03, 2025 at 03:15:35PM +0100, Yeoreum Yun wrote:
+> When FEAT_MTE_TAGGED_FAR feature is supported, the value of address bits
+> [63:60] is preserved on synchronous tag check fault.
+>=20
+> This patch reflects the above feature in the documentation.
+>=20
+> Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
+> ---
+>  Documentation/arch/arm64/tagged-pointers.rst | 11 ++++++-----
+>  1 file changed, 6 insertions(+), 5 deletions(-)
 
-Please add this to the hwcaps selftest, and to elf_hwcaps.rst.
+I saw the subject line and was looking for the elf_hwcaps.rst update in
+this patch, though really it should be in patch 1.
 
---5U5vDY5w/KdPL0Jc
+--oxRN7uTMagz9u5lh
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmfuqaQACgkQJNaLcl1U
-h9B3kwf+OzHCE0Bl2Rnqj0KGk7Yv4hxlNu6svK81MlbHOecJtzdKFd9Lcu9osYV+
-bR8w7wXTxUjMoKLIfl5R2SIQcDuzTuWWQf2kLP0qoeOB4gDMLpBG/GfuJZB/xeyr
-1y/JllLinWHdu05f16QsC1s//i+fVrCB3MpoN4X40pcLtwSQrIYn3atD7xztLd2Z
-awccwLvmyCx9B8p2Zne3YBpdInixrixwaXBUQRhH3ayCdgRY4dP2y4tjoQnbW3DA
-mzmfEV7btEZLOlNU8fqYjDYdufRGMrJr3ffbqpXhFf2EJIYFCrbDkYlAfQxDAhMi
-Mro3jXA1TpaSK9ACOE7mUg69RFBqjQ==
-=XvZr
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmfuqc8ACgkQJNaLcl1U
+h9DNfwf+LDTdUjy+phURiCQ64ZN0TgTHnloTqsXKJJLs2WB63AGO04uu9pLprQ8q
+H5VcxoVmgSoFdTh0eRWorj5490VGcxWXOEBKfL3oe6/EC+KH+5uWu1RzUuV0W5Ff
+Rr6NRfix45cj4OaYCiTOxdC7+5Tbb5R76t5R+UFJn3Ap7fIOlT5l8PAnLMmsNzNu
+atAAI9WFGAS7I7Vu9CKjnFEwOhL200RgJNFpzyS+gg6WXlfMc3zaRCEoJQ0K/fgF
+wLhgmuFE2xk+ZoOBykztgNhGy0JtnrW/5csyLC1cGyEYsxz6L3S2bFqjuxiruCcO
+rM8gtkBASbMayS6KsVHTWp8RlbIZIg==
+=BWMY
 -----END PGP SIGNATURE-----
 
---5U5vDY5w/KdPL0Jc--
+--oxRN7uTMagz9u5lh--
